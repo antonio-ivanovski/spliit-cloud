@@ -12,16 +12,16 @@ import {
 } from '@spliit/domain/import'
 import { env as jobsEnv } from '@spliit/jobs'
 import { resolveConversion } from '../expense-conversion'
-import { scheduleDefaultNotificationDispatch } from '../notifications/dispatcher'
 import {
   buildExpenseActivityData,
   buildImportSummaryActivityData,
   logActivity,
+  planNotificationForActivity,
 } from './activities'
 import {
   buildRecurringTemplate,
   createSeriesForExpense,
-  getApiBoss,
+  getApiBossForWrite,
 } from './recurrence-series'
 import { randomId } from './shared'
 
@@ -102,7 +102,7 @@ export async function importGroup(
   )
   const queueBoss =
     jobsEnv.JOBS_ENABLED && recurringPlan.series.length > 0
-      ? await getApiBoss()
+      ? await getApiBossForWrite()
       : undefined
   const baseResult = await prisma.$transaction(async (tx) => {
     let groupId: string
@@ -559,6 +559,10 @@ export async function importGroup(
       tx,
     )
 
+    if (affectedParticipantIds.size > 0) {
+      await planNotificationForActivity(tx, summaryActivity)
+    }
+
     return {
       groupId,
       ledgerId,
@@ -577,30 +581,6 @@ export async function importGroup(
       },
     }
   })
-
-  if (baseResult.summaryActivity.affectedParticipants.length > 0) {
-    scheduleDefaultNotificationDispatch({
-      activityId: baseResult.summaryActivity.activityId,
-      type: 'EXPENSES_IMPORTED',
-      groupId: baseResult.groupId,
-      actor: {
-        type: 'ACCOUNT',
-        id: baseResult.summaryActivity.actorAccountId,
-      },
-      subject: { type: 'GROUP', id: baseResult.groupId },
-      data: buildImportSummaryActivityData({
-        summary: baseResult.summaryActivity.sourceProvider
-          ? `Imported from ${baseResult.summaryActivity.sourceProvider}`
-          : 'Imported expenses',
-        count: baseResult.summaryActivity.count,
-        totalAmount: baseResult.summaryActivity.totalAmount,
-        currencyCode: baseResult.summaryActivity.currencyCode,
-        sourceProvider: baseResult.summaryActivity.sourceProvider,
-        affectedParticipants: baseResult.summaryActivity.affectedParticipants,
-      }),
-      occurredAt: baseResult.summaryActivity.time,
-    })
-  }
 
   const { createEmailInvitation, createLinkInvitation, sendInvitationEmail } =
     await import('../invitations')

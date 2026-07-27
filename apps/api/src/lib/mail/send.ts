@@ -1,5 +1,6 @@
 import nodemailer, { type Transporter } from 'nodemailer'
 import { env } from '../env'
+import { PROVIDER_TIMEOUT_MS } from '../notifications/delivery-senders'
 
 export type EmailMessage = {
   to: string
@@ -25,6 +26,9 @@ function getTransporter(): Transporter {
     port,
     secure,
     requireTLS,
+    connectionTimeout: PROVIDER_TIMEOUT_MS,
+    greetingTimeout: PROVIDER_TIMEOUT_MS,
+    socketTimeout: PROVIDER_TIMEOUT_MS,
     auth:
       env.SMTP_USER && env.SMTP_PASS
         ? { user: env.SMTP_USER, pass: env.SMTP_PASS }

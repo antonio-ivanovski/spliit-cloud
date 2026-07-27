@@ -1,9 +1,6 @@
 import { app } from './app'
-import { stopApiBoss } from './lib/api/recurrence-series'
+import { stopApiBoss } from './lib/api/boss'
 import { env } from './lib/env'
-import { initializeDefaultNotificationDispatchers } from './lib/notifications/dispatcher'
-
-initializeDefaultNotificationDispatchers()
 
 const server = Bun.serve({
   fetch: app.fetch,

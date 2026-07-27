@@ -8,10 +8,9 @@ import {
 } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
 import {
-  buildExpenseActivityData,
   buildInvitationActivityData,
   logActivity,
-  scheduleActivityNotification,
+  planNotificationForActivity,
 } from '../api/activities'
 import {
   createSettlementExpensesForLeave,
@@ -20,7 +19,6 @@ import {
 import { randomId } from '../api/shared'
 import { sendEmail } from '../mail/send'
 import { renderInvitationEmail } from '../mail/templates/invitation'
-import { scheduleDefaultNotificationDispatch } from '../notifications/dispatcher'
 import { getInvitationDisplayName } from './display'
 import { reconcileMemberLedgerParticipant } from './ledger-reconciliation'
 
@@ -108,43 +106,40 @@ export async function createEmailInvitation({
   await assertNotExistingMember(groupId, normalizedEmail)
   await assertNoConflictingEmailInvitation(groupId, normalizedEmail)
 
-  const invitation = await prisma.groupInvitation.create({
-    data: {
-      id: randomId(),
-      type: GroupInvitationType.EMAIL,
+  return prisma.$transaction(async (tx) => {
+    const invitation = await tx.groupInvitation.create({
+      data: {
+        id: randomId(),
+        type: GroupInvitationType.EMAIL,
+        groupId,
+        email: normalizedEmail,
+        role,
+        temporaryName: temporaryName ?? null,
+        invitedById: inviterAccountId,
+        ...(ledgerParticipantId
+          ? { ledgerParticipantId: ledgerParticipantId }
+          : {}),
+      },
+    })
+
+    const activity = await logActivity(
       groupId,
-      email: normalizedEmail,
-      role,
-      temporaryName: temporaryName ?? null,
-      invitedById: inviterAccountId,
-      ...(ledgerParticipantId
-        ? { ledgerParticipantId: ledgerParticipantId }
-        : {}),
-    },
-  })
+      {
+        type: 'INVITATION_CREATED',
+        actor: { type: 'ACCOUNT', id: inviterAccountId },
+        subject: { type: 'INVITATION', id: invitation.id },
+        data: buildInvitationActivityData({
+          displayLabel: getInvitationDisplayName(invitation),
+          invitationType: 'EMAIL',
+          role,
+        }),
+      },
+      tx,
+    )
 
-  const activity = await logActivity(groupId, {
-    type: 'INVITATION_CREATED',
-    actor: { type: 'ACCOUNT', id: inviterAccountId },
-    subject: { type: 'INVITATION', id: invitation.id },
-    data: buildInvitationActivityData({
-      displayLabel: getInvitationDisplayName(invitation),
-      invitationType: 'EMAIL',
-      role,
-    }),
+    await planNotificationForActivity(tx, activity)
+    return invitation
   })
-
-  scheduleActivityNotification(activity, groupId, {
-    type: 'INVITATION_CREATED',
-    actor: { type: 'ACCOUNT', id: inviterAccountId },
-    subject: { type: 'INVITATION', id: invitation.id },
-    data: buildInvitationActivityData({
-      displayLabel: getInvitationDisplayName(invitation),
-      invitationType: 'EMAIL',
-      role,
-    }),
-  })
-  return invitation
 }
 
 export const createInvitation = createEmailInvitation
@@ -242,35 +237,15 @@ export async function revokeInvitation(opts: {
       })
     }
 
+    await planNotificationForActivity(tx, activity)
+    if (settlementActivities) {
+      for (const meta of settlementActivities) {
+        await planNotificationForActivity(tx, meta.activity)
+      }
+    }
+
     return { updated, settlementActivities, activity }
   })
-  scheduleActivityNotification(result.activity, opts.groupId, {
-    type: 'INVITATION_REVOKED',
-    actor: { type: 'ACCOUNT', id: opts.actor.accountId },
-    subject: { type: 'INVITATION', id: opts.invitationId },
-    data: buildInvitationActivityData({
-      displayLabel: getInvitationDisplayName(invitation),
-    }),
-  })
-  if (result.settlementActivities) {
-    for (const meta of result.settlementActivities) {
-      scheduleDefaultNotificationDispatch({
-        activityId: meta.activityId,
-        type: 'EXPENSE_CREATED',
-        groupId: opts.groupId,
-        actor: { type: 'ACCOUNT', id: opts.actor.accountId },
-        subject: { type: 'EXPENSE', id: meta.expenseId },
-        data: buildExpenseActivityData({
-          summary: meta.title,
-          title: meta.title,
-          amount: meta.amount,
-          currencyCode: meta.currencyCode,
-          date: meta.date,
-        }),
-        occurredAt: meta.time,
-      })
-    }
-  }
   return result.updated
 }
 
@@ -355,7 +330,7 @@ export async function declineInvitation(opts: {
     throw new InvitationError('Invitation is no longer pending.')
   }
   assertCanDeclineEmailInvitation(invitation, opts.accountEmail)
-  const { updated, activity } = await prisma.$transaction(async (tx) => {
+  const { updated } = await prisma.$transaction(async (tx) => {
     const [updated, activity] = await Promise.all([
       tx.groupInvitation.update({
         where: { id: opts.invitationId },
@@ -376,16 +351,8 @@ export async function declineInvitation(opts: {
         tx,
       ),
     ])
+    await planNotificationForActivity(tx, activity)
     return { updated, activity }
-  })
-
-  scheduleActivityNotification(activity, invitation.groupId, {
-    type: 'INVITATION_DECLINED',
-    actor: { type: 'ACCOUNT', id: opts.accountId },
-    subject: { type: 'INVITATION', id: opts.invitationId },
-    data: buildInvitationActivityData({
-      displayLabel: getInvitationDisplayName(invitation),
-    }),
   })
   return updated
 }
@@ -496,15 +463,9 @@ export async function acceptInvitation(opts: {
       tx,
     )
 
+    await planNotificationForActivity(tx, activity)
+
     return { member, activity }
-  })
-  scheduleActivityNotification(result.activity, invitation.groupId, {
-    type: 'INVITATION_ACCEPTED',
-    actor: { type: 'ACCOUNT', id: opts.accountId },
-    subject: { type: 'INVITATION', id: invitation.id },
-    data: buildInvitationActivityData({
-      displayLabel: getInvitationDisplayName(invitation),
-    }),
   })
   return result.member
 }

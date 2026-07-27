@@ -1,6 +1,10 @@
 import { prisma } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
-import { buildExpenseCommentActivityData, logActivity } from './activities'
+import {
+  buildExpenseCommentActivityData,
+  logActivity,
+  planNotificationForActivity,
+} from './activities'
 import { randomId } from './shared'
 
 export type ExpenseCommentListItem = {
@@ -108,6 +112,7 @@ export async function createExpenseComment(args: {
       },
       tx,
     )
+    await planNotificationForActivity(tx, activity)
     const { authorAccount, ...commentFields } = comment
     return {
       comment: {

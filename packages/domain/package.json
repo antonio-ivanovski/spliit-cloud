@@ -16,7 +16,8 @@
     "./totals": "./src/totals.ts",
     "./utils": "./src/utils.ts",
     "./calculator": "./src/calculator.ts",
-    "./import": "./src/import/index.ts"
+    "./import": "./src/import/index.ts",
+    "./notification-delivery": "./src/notification-delivery.ts"
   },
   "scripts": {
     "build": "tsc",

@@ -2,13 +2,24 @@ import { describe, expect, it, vi } from 'vitest'
 import {
   ensureQueues,
   hasDeadLetteredMaterialization,
+  JOB_QUEUE_OPTIONS,
+  JOB_SEND_OPTIONS,
   MATERIALIZATION_EXPIRE_SECONDS,
   materializationSingletonKey,
+  NOTIFICATION_DELIVER_EXPIRE_SECONDS,
+  NOTIFICATION_MAINTENANCE_EXPIRE_SECONDS,
+  notificationDeliverSingletonKey,
   sendJob,
   type SpliitBoss,
 } from './boss'
 import {
   JOB_NAMES,
+  NOTIFICATION_CLEANUP_DLQ,
+  NOTIFICATION_CLEANUP_QUEUE,
+  NOTIFICATION_DELIVER_DLQ,
+  NOTIFICATION_DELIVER_QUEUE,
+  NOTIFICATION_RECONCILE_DLQ,
+  NOTIFICATION_RECONCILE_QUEUE,
   RECURRING_MATERIALIZATION_DLQ,
   RECURRING_MATERIALIZATION_QUEUE,
   RECURRING_RECONCILIATION_DLQ,
@@ -139,6 +150,110 @@ describe('pg-boss queue configuration', () => {
         seriesId: 'series',
         sequence: 2,
         occurrenceDate: '2026-07-23',
+      }),
+    )
+  })
+})
+
+describe('notification job queue configuration', () => {
+  it('provisions every dead-letter queue before its source queue', async () => {
+    const boss = createBossMock()
+    const order: string[] = []
+    vi.mocked(boss.createQueue).mockImplementation(async (name: string) => {
+      order.push(name)
+    })
+
+    await ensureQueues(boss)
+
+    const dlqNames = [
+      RECURRING_MATERIALIZATION_DLQ,
+      RECURRING_RECONCILIATION_DLQ,
+      NOTIFICATION_DELIVER_DLQ,
+      NOTIFICATION_RECONCILE_DLQ,
+      NOTIFICATION_CLEANUP_DLQ,
+    ] as const
+    const sourceNames = [
+      RECURRING_MATERIALIZATION_QUEUE,
+      RECURRING_RECONCILIATION_QUEUE,
+      NOTIFICATION_DELIVER_QUEUE,
+      NOTIFICATION_RECONCILE_QUEUE,
+      NOTIFICATION_CLEANUP_QUEUE,
+    ] as const
+
+    for (let i = 0; i < dlqNames.length; i++) {
+      const dlqIndex = order.indexOf(dlqNames[i])
+      const sourceIndex = order.indexOf(sourceNames[i])
+      expect(dlqIndex).toBeGreaterThanOrEqual(0)
+      expect(sourceIndex).toBeGreaterThan(dlqIndex)
+    }
+
+    const firstSource = order.findIndex((name) => name === sourceNames[0])
+    const lastDlq = Math.max(...dlqNames.map((name) => order.indexOf(name)))
+    expect(firstSource).toBeGreaterThan(lastDlq)
+  })
+
+  it('configures the notification deliver queue as exclusive with notify enabled', async () => {
+    expect(JOB_QUEUE_OPTIONS[NOTIFICATION_DELIVER_QUEUE].policy).toBe(
+      'exclusive',
+    )
+    expect(JOB_QUEUE_OPTIONS[NOTIFICATION_DELIVER_QUEUE].notify).toBe(true)
+    expect(JOB_QUEUE_OPTIONS[NOTIFICATION_DELIVER_QUEUE].deadLetter).toBe(
+      NOTIFICATION_DELIVER_DLQ,
+    )
+  })
+
+  it('configures the notification maintenance queues with bounded expiry and no retries', async () => {
+    expect(JOB_SEND_OPTIONS[NOTIFICATION_RECONCILE_QUEUE].retryLimit).toBe(0)
+    expect(JOB_SEND_OPTIONS[NOTIFICATION_RECONCILE_QUEUE].expireInSeconds).toBe(
+      NOTIFICATION_MAINTENANCE_EXPIRE_SECONDS,
+    )
+    expect(JOB_SEND_OPTIONS[NOTIFICATION_CLEANUP_QUEUE].retryLimit).toBe(0)
+    expect(JOB_SEND_OPTIONS[NOTIFICATION_CLEANUP_QUEUE].expireInSeconds).toBe(
+      NOTIFICATION_MAINTENANCE_EXPIRE_SECONDS,
+    )
+    expect(NOTIFICATION_MAINTENANCE_EXPIRE_SECONDS).toBe(300)
+  })
+
+  it('sends notification deliveries with exponential backoff and a delivery-ID singleton key', async () => {
+    const boss = createBossMock()
+
+    await sendJob(boss, JOB_NAMES.NOTIFICATION_DELIVER, {
+      deliveryId: 'delivery-123',
+    })
+
+    expect(boss.send).toHaveBeenCalledWith(
+      JOB_NAMES.NOTIFICATION_DELIVER,
+      expect.objectContaining({ deliveryId: 'delivery-123' }),
+      expect.objectContaining({
+        retryLimit: 5,
+        retryBackoff: true,
+        expireInSeconds: NOTIFICATION_DELIVER_EXPIRE_SECONDS,
+        deadLetter: NOTIFICATION_DELIVER_DLQ,
+        singletonKey: 'delivery-123',
+      }),
+    )
+    expect(
+      notificationDeliverSingletonKey({ deliveryId: 'delivery-123' }),
+    ).toBe('delivery-123')
+    expect(NOTIFICATION_DELIVER_EXPIRE_SECONDS).toBe(300)
+  })
+
+  it('lets the caller override the notification delivery retry limit', async () => {
+    const boss = createBossMock()
+
+    await sendJob(
+      boss,
+      JOB_NAMES.NOTIFICATION_DELIVER,
+      { deliveryId: 'delivery-123' },
+      { retryLimit: 0 },
+    )
+
+    expect(boss.send).toHaveBeenCalledWith(
+      JOB_NAMES.NOTIFICATION_DELIVER,
+      expect.anything(),
+      expect.objectContaining({
+        retryLimit: 0,
+        singletonKey: 'delivery-123',
       }),
     )
   })

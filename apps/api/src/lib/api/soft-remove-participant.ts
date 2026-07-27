@@ -14,7 +14,7 @@ import { resolveParticipantDisplayName } from '../invitations/display'
 import {
   buildGroupActivityData,
   logActivity,
-  scheduleActivityNotification,
+  planNotificationForActivity,
 } from './activities'
 import {
   createSettlementExpensesForLeave,
@@ -259,10 +259,17 @@ export async function softRemoveParticipant(opts: {
     }),
   }
 
-  const activity = await prisma.$transaction(async (tx) => {
-    if (settleBalances) {
-      await createSettlementExpensesForLeave(groupId, participant.id, actor, tx)
-    }
+  await prisma.$transaction(async (tx) => {
+    const settlementActivities = settleBalances
+      ? (
+          await createSettlementExpensesForLeave(
+            groupId,
+            participant.id,
+            actor,
+            tx,
+          )
+        ).activities
+      : []
 
     if (
       participant.groupMemberId &&
@@ -297,10 +304,13 @@ export async function softRemoveParticipant(opts: {
       data: { removedAt: new Date() },
     })
 
-    return logActivity(groupId, activityArgs, tx)
+    const activity = await logActivity(groupId, activityArgs, tx)
+    await planNotificationForActivity(tx, activity)
+    for (const settlementActivity of settlementActivities) {
+      await planNotificationForActivity(tx, settlementActivity.activity)
+    }
   })
 
-  scheduleActivityNotification(activity, groupId, activityArgs)
   return { ledgerParticipantId, kind }
 }
 

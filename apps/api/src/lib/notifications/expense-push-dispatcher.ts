@@ -187,7 +187,7 @@ export class ExpensePushActivityNotificationDispatcher implements ActivityNotifi
       const payload: PushNotificationPayload = {
         version: 1,
         kind: 'expense',
-        activityId: event.activityId,
+        activityId: event.activityId ?? '',
         title:
           event.type === 'RECURRING_EXPENSE_CREATED'
             ? 'Recurring expense created'
@@ -196,7 +196,7 @@ export class ExpensePushActivityNotificationDispatcher implements ActivityNotifi
               : `Expense ${action}${stoppedSuffix ? ' and stopped' : ''}`,
         body,
         url,
-        tag: `activity:${event.activityId}`,
+        tag: `activity:${event.activityId ?? ''}`,
       }
       sends.push(this.sendToAccount(account.id, payload))
     }
@@ -234,13 +234,13 @@ export class ExpensePushActivityNotificationDispatcher implements ActivityNotifi
     const payload: PushNotificationPayload = {
       version: 1,
       kind: 'activity',
-      activityId: event.activityId,
+      activityId: event.activityId ?? '',
       title: isImport ? 'Expenses imported' : 'Expense categories updated',
       body: isImport
         ? `${actorName} imported ${parsed.count} ${noun}${parsed.sourceProvider ? ` from ${parsed.sourceProvider}` : ''} in ${displayName}.`
         : `${actorName} updated categories for ${parsed.count} ${noun} in ${displayName}.`,
       url: `${getWebBaseUrl()}/groups/${event.groupId}`,
-      tag: `activity:${event.activityId}`,
+      tag: `activity:${event.activityId ?? ''}`,
     }
     await this.sendToAccount(recipientAccountId, payload)
   }
@@ -290,11 +290,11 @@ export class ExpensePushActivityNotificationDispatcher implements ActivityNotifi
     await this.sendToAccount(recipientAccountId, {
       version: 1,
       kind: 'activity',
-      activityId: event.activityId,
+      activityId: event.activityId ?? '',
       title: content.title,
       body: content.body,
       url: `${getWebBaseUrl()}/groups/${event.groupId}`,
-      tag: `activity:${event.activityId}`,
+      tag: `activity:${event.activityId ?? ''}`,
     })
   }
 
@@ -334,11 +334,11 @@ export class ExpensePushActivityNotificationDispatcher implements ActivityNotifi
     await this.sendToAccount(recipientAccountId, {
       version: 1,
       kind: 'activity',
-      activityId: event.activityId,
+      activityId: event.activityId ?? '',
       title: 'Recurring expense stopped',
       body: `${actorName} stopped the recurring expense${title}${recurrenceDesc} in ${displayName}.`,
       url: `${getWebBaseUrl()}/groups/${event.groupId}`,
-      tag: `activity:${event.activityId}`,
+      tag: `activity:${event.activityId ?? ''}`,
     })
   }
 
@@ -375,11 +375,11 @@ export class ExpensePushActivityNotificationDispatcher implements ActivityNotifi
     await this.sendToAccount(recipientAccountId, {
       version: 1,
       kind: 'activity',
-      activityId: event.activityId,
+      activityId: event.activityId ?? '',
       title: 'New expense comment',
       body: `${actorName} commented on "${title}" in ${displayName}${excerpt ? `: "${excerpt}"` : '.'}`,
       url: `${getWebBaseUrl()}/groups/${event.groupId}/expenses/${event.subject.id}`,
-      tag: `activity:${event.activityId}`,
+      tag: `activity:${event.activityId ?? ''}`,
     })
   }
 

@@ -1,4 +1,4 @@
-import { prisma } from '@spliit/db'
+import { prisma, type Prisma } from '@spliit/db'
 import {
   NotificationChannel,
   getDefaultNotificationChannels,
@@ -6,9 +6,14 @@ import {
 import { isPushConfigured } from './push'
 import type { ActivityNotificationIntent } from './types'
 
-async function hasPushTargets(accountIds: string[]): Promise<Set<string>> {
+type PolicyClient = Prisma.TransactionClient | typeof prisma
+
+async function hasPushTargets(
+  accountIds: string[],
+  client: PolicyClient,
+): Promise<Set<string>> {
   if (!isPushConfigured) return new Set()
-  const withAccounts = await prisma.pushSubscription.findMany({
+  const withAccounts = await client.pushSubscription.findMany({
     where: { accountId: { in: accountIds } },
     select: { accountId: true },
   })
@@ -25,16 +30,18 @@ export async function resolveNotificationChannels(
 
 export async function resolveNotificationChannelsForIntents(
   intents: ReadonlyArray<Omit<ActivityNotificationIntent, 'channels'>>,
+  client?: Prisma.TransactionClient,
 ): Promise<NotificationChannel[][]> {
   if (intents.length === 0) return []
   const accountIds = [
     ...new Set(intents.map((intent) => intent.recipientAccountId)),
   ]
-  const rows = await prisma.accountNotificationPreference.findMany({
+  const db = client ?? prisma
+  const rows = await db.accountNotificationPreference.findMany({
     where: { accountId: { in: accountIds } },
     select: { accountId: true, category: true, channels: true },
   })
-  const pushTargets = await hasPushTargets(accountIds)
+  const pushTargets = await hasPushTargets(accountIds, db)
   return intents.map((intent) => {
     const accountRows = rows.filter(
       (row) => row.accountId === intent.recipientAccountId,

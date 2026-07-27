@@ -5,6 +5,7 @@ import {
 } from '@spliit/domain'
 import type { SpliitBoss } from '@spliit/jobs'
 import { resolveConversion } from '../../expense-conversion'
+import { planActivityNotificationDeliveries } from '../../notifications/delivery-planner'
 import { buildExpenseActivityData, logActivity } from '../activities'
 import { randomId } from '../shared'
 import { enqueueMaterialization } from './series-ops'
@@ -357,6 +358,24 @@ export async function materializeRecurringExpense(
       },
       tx,
     )
+
+    if (existingBoss && !batch) {
+      await planActivityNotificationDeliveries({
+        event: {
+          activityId: activity.id,
+          type: 'RECURRING_EXPENSE_CREATED',
+          groupId: series.ledger.group.id,
+          actor,
+          subject: { type: 'EXPENSE', id: expense.id },
+          data: activityData,
+          occurredAt: activity.time,
+          includeActorAsRecipient: true,
+        },
+        tx,
+        boss: existingBoss,
+      })
+    }
+
     const nextSequence = payload.sequence + 1
     const completed =
       endReached(series, payload.sequence, occurrenceDate) ||
@@ -390,6 +409,45 @@ export async function materializeRecurringExpense(
         existingBoss,
       )
     }
+
+    const finalizingBatch =
+      batch && batchCount >= 2 && (completed || nextDate > cutoff)
+    if (existingBoss && finalizingBatch) {
+      const participantIds = recurringTemplateParticipantIds(template)
+      const summaryId = `recurring-catchup-summary:${series.id}:${batch.startDate}:${date}`
+      await planActivityNotificationDeliveries({
+        event: {
+          activityId: activity.id,
+          customEventKey: summaryId,
+          type: 'RECURRING_EXPENSE_CREATED',
+          groupId: series.ledger.group.id,
+          actor,
+          subject: null,
+          data: {
+            kind: 'recurring_expense_summary',
+            title: expense.title,
+            count: batchCount,
+            startDate: batch.startDate,
+            endDate: date,
+            affectedParticipants: participantIds,
+            seriesId: series.id,
+            frequency: series.frequency,
+            interval: series.interval,
+            endType: series.endType,
+            occurrenceLimit: series.occurrenceLimit,
+            seriesEndDate: series.endDate
+              ? series.endDate.toISOString().slice(0, 10)
+              : null,
+            operation: 'create',
+          } as Record<string, unknown> as never,
+          occurredAt: activity.time,
+          includeActorAsRecipient: true,
+        },
+        tx,
+        boss: existingBoss,
+      })
+    }
+
     return {
       created: true,
       expenseId: expense.id,

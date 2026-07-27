@@ -70,17 +70,10 @@ describe.skipIf(!maildevReachable)('Email invitation flow — real DB', () => {
       },
     })
 
-    // Create the invitee account
-    await prisma.account.upsert({
-      where: { email: inviteeEmail },
-      update: {},
-      create: {
-        id: inviteeId,
-        email: inviteeEmail,
-        emailVerified: true,
-        name: 'Invited User',
-      },
-    })
+    // The invitee account is intentionally NOT created here: the router
+    // only sends the invitation email when the recipient has no account
+    // yet.  The account is created in the "accepts the invitation" test
+    // below, which runs after the email assertion.
 
     // Create a test group with ledger and admin member (mimics the
     // shape `createGroupAndLedger` in api.ts produces).
@@ -162,23 +155,36 @@ describe.skipIf(!maildevReachable)('Email invitation flow — real DB', () => {
     // Pull the invitation email out of MailDev's inbox. The lookup is
     // recipient-scoped, so a non-null result already proves the email was
     // delivered to `inviteeEmail`. The body assertions below check the
-    // template variant (existing-user link) and the target URL.
+    // template variant (new-user sign-up link) and the target URL.
     const captured = await expectEmailEventually({ recipient: inviteeEmail })
     const mailContent = captured.text
     expect(mailContent).toContain(groupName)
     expect(mailContent).toContain('You will appear as "Invited User"')
-    // Since invitee has an account, email should say "Open Spliit Cloud"
-    // and link to the group page (not the sign-up page).
-    expect(mailContent).toContain('Open Spliit Cloud')
-    expect(mailContent).toContain(`/groups/${groupId}`)
-    expect(captured.html).toContain('Open Spliit Cloud')
-    expect(captured.html).toContain(`/groups/${groupId}`)
+    // Since invitee has no account yet, email should say "Create an account"
+    // and link to the sign-up page with the invitation id.
+    expect(mailContent).toContain('Create an account')
+    expect(mailContent).toContain(`/?invitation=${result.invitationId}`)
+    expect(captured.html).toContain('Create an account')
+    expect(captured.html).toContain(`/?invitation=${result.invitationId}`)
   })
 
   // ------------------------------------------------------------------
   // 2. Accept the invitation
   // ------------------------------------------------------------------
   it('accepts the invitation and adds the user as a group member', async () => {
+    // Create the invitee account now — it was intentionally deferred so
+    // the invitation email test above exercises the new-user variant.
+    await prisma.account.upsert({
+      where: { email: inviteeEmail },
+      update: {},
+      create: {
+        id: inviteeId,
+        email: inviteeEmail,
+        emailVerified: true,
+        name: 'Invited User',
+      },
+    })
+
     const invitation = await prisma.groupInvitation.findFirst({
       where: { groupId, email: inviteeEmail.toLowerCase(), status: 'PENDING' },
     })

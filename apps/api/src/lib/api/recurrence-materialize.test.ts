@@ -11,6 +11,13 @@ vi.mock(import('@spliit/jobs'), async (importOriginal) => ({
   sendJob: jobMocks.sendJob,
 }))
 vi.mock('../expense-conversion', () => conversionMock)
+// Keep the unit test isolated from PostgreSQL: never start a real pg-boss
+// client. `enqueueMaterialization` falls back to `getApiBossForWrite()`
+// when no boss is injected, so stub it with a no-op client.
+vi.mock('./boss', async (importOriginal) => ({
+  ...(await importOriginal()),
+  getApiBossForWrite: vi.fn(() => ({})),
+}))
 
 import {
   asDate,

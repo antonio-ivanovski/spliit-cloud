@@ -11,7 +11,7 @@ import { TRPCError } from '@trpc/server'
 import {
   buildInvitationActivityData,
   logActivity,
-  scheduleActivityNotification,
+  planNotificationForActivity,
 } from '../api/activities'
 import { randomId } from '../api/shared'
 import { getWebBaseUrl } from '../auth/urls'
@@ -121,43 +121,41 @@ export async function createLinkInvitation(
   const expiresAt = resolveLinkExpiresAt(input.expiresAt)
   const webBase = getWebBaseUrl()
 
-  const invitation = await prisma.groupInvitation.create({
-    data: {
-      id: randomId(),
-      type: GroupInvitationType.LINK,
-      groupId: input.groupId,
-      email: buildLinkPlaceholderEmail(token),
-      role: input.role,
-      temporaryName: input.temporaryName ?? null,
-      invitedById: input.inviterAccountId,
-      tokenHash,
-      expiresAt,
-      ...(input.ledgerParticipantId
-        ? { ledgerParticipantId: input.ledgerParticipantId }
-        : {}),
-    },
-  })
+  const invitation = await prisma.$transaction(async (tx) => {
+    const inv = await tx.groupInvitation.create({
+      data: {
+        id: randomId(),
+        type: GroupInvitationType.LINK,
+        groupId: input.groupId,
+        email: buildLinkPlaceholderEmail(token),
+        role: input.role,
+        temporaryName: input.temporaryName ?? null,
+        invitedById: input.inviterAccountId,
+        tokenHash,
+        expiresAt,
+        ...(input.ledgerParticipantId
+          ? { ledgerParticipantId: input.ledgerParticipantId }
+          : {}),
+      },
+    })
 
-  const activity = await logActivity(invitation.groupId, {
-    type: 'INVITATION_CREATED',
-    actor: { type: 'ACCOUNT', id: input.inviterAccountId },
-    subject: { type: 'INVITATION', id: invitation.id },
-    data: buildInvitationActivityData({
-      displayLabel: getInvitationDisplayName(invitation),
-      invitationType: 'LINK',
-      role: input.role,
-    }),
-  })
+    const activity = await logActivity(
+      inv.groupId,
+      {
+        type: 'INVITATION_CREATED',
+        actor: { type: 'ACCOUNT', id: input.inviterAccountId },
+        subject: { type: 'INVITATION', id: inv.id },
+        data: buildInvitationActivityData({
+          displayLabel: getInvitationDisplayName(inv),
+          invitationType: 'LINK',
+          role: input.role,
+        }),
+      },
+      tx,
+    )
 
-  scheduleActivityNotification(activity, invitation.groupId, {
-    type: 'INVITATION_CREATED',
-    actor: { type: 'ACCOUNT', id: input.inviterAccountId },
-    subject: { type: 'INVITATION', id: invitation.id },
-    data: buildInvitationActivityData({
-      displayLabel: getInvitationDisplayName(invitation),
-      invitationType: 'LINK',
-      role: input.role,
-    }),
+    await planNotificationForActivity(tx, activity)
+    return inv
   })
   return {
     invitation: {
@@ -378,6 +376,8 @@ export async function acceptLinkInvitation(opts: {
         tx,
       )
 
+      await planNotificationForActivity(tx, activity)
+
       return {
         groupId: invitation.groupId,
         role: invitation.role,
@@ -397,11 +397,5 @@ export async function acceptLinkInvitation(opts: {
       throw err
     })
 
-  scheduleActivityNotification(result.activity, result.groupId, {
-    type: 'INVITATION_ACCEPTED',
-    actor: { type: 'ACCOUNT', id: opts.accountId },
-    subject: { type: 'INVITATION', id: result.invitationId },
-    data: buildInvitationActivityData({}),
-  })
   return { groupId: result.groupId, role: result.role }
 }

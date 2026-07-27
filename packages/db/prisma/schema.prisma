@@ -54,6 +54,7 @@ model Account {
   defaultSplits       AccountGroupDefaultSplit[]
   pushSubscriptions   PushSubscription[]
   notificationPreferences AccountNotificationPreference[]
+  notificationDeliveries NotificationDelivery[]
   recurringExpenseSeriesCreated RecurringExpenseSeries[] @relation("RecurringExpenseSeriesCreator")
   expenseComments ExpenseComment[]
 }
@@ -637,10 +638,48 @@ model Activity {
   // (and its comments) also removes the corresponding activity rows.
   expenseCommentId String?         @unique
   expenseComment   ExpenseComment? @relation("ExpenseCommentActivity", fields: [expenseCommentId], references: [id], onDelete: Cascade)
+  notificationDeliveries NotificationDelivery[]
 
   @@index([ledgerId, time])
   @@index([ledgerId, type, time])
   @@index([subjectType, subjectId])
+}
+
+model NotificationDelivery {
+  id                  String    @id
+  eventKey            String
+  activityId          String?
+  activity            Activity? @relation(fields: [activityId], references: [id], onDelete: SetNull)
+  recipientAccountId  String
+  recipientAccount    Account   @relation(fields: [recipientAccountId], references: [id], onDelete: Cascade)
+  category            String
+  channel             String
+  targetKey           String
+  pushSubscriptionId  String?
+  status              String    @default("PENDING")
+  snapshotVersion     Int       @default(1)
+  snapshot            Json
+  attemptCount        Int       @default(0)
+  lastAttemptAt       DateTime?
+  leaseToken          String?   @unique
+  leaseJobId          String?
+  leaseExpiresAt      DateTime?
+  lastErrorKind       String?
+  lastErrorCode       String?
+  lastProviderStatus  Int?
+  lastErrorMessage    String?   @db.Text
+  lastErrorAt         DateTime?
+  sentAt              DateTime?
+  terminalAt          DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  @@unique([eventKey, recipientAccountId, channel, targetKey])
+  @@index([status, leaseExpiresAt])
+  @@index([status, terminalAt])
+  @@index([recipientAccountId])
+  @@index([activityId])
+  @@index([eventKey])
 }
 
 model ExpenseComment {

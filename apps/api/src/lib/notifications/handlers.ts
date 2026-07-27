@@ -1,4 +1,4 @@
-import { prisma } from '@spliit/db'
+import { prisma, type Prisma } from '@spliit/db'
 import { parseActivityData } from '@spliit/domain/activities'
 import {
   NotificationCategoryFamily,
@@ -13,6 +13,7 @@ import type {
 } from './types'
 
 type Recipient = { id: string }
+type HandlerClient = Prisma.TransactionClient | typeof prisma
 
 function isExpenseCommentEvent(event: ActivityNotificationEvent): boolean {
   return event.type === 'EXPENSE_COMMENTED'
@@ -22,6 +23,7 @@ export interface ActivityHandler {
   supports(type: ActivityNotificationEvent['type']): boolean
   buildIntents(
     event: ActivityNotificationEvent,
+    client?: Prisma.TransactionClient,
   ): Promise<Array<Omit<ActivityNotificationIntent, 'channels'>>>
 }
 
@@ -54,11 +56,12 @@ function dedupeRecipients(
 
 async function activeActorAccount(
   event: ActivityNotificationEvent,
+  client: HandlerClient,
 ): Promise<Recipient[]> {
   if (!event.includeActorAsRecipient || event.actor?.type !== 'ACCOUNT') {
     return []
   }
-  const member = await prisma.groupMember.findFirst({
+  const member = await client.groupMember.findFirst({
     where: {
       groupId: event.groupId,
       accountId: event.actor.id,
@@ -69,8 +72,11 @@ async function activeActorAccount(
   return member ? [{ id: member.accountId }] : []
 }
 
-async function activeGroupAccounts(groupId: string): Promise<Recipient[]> {
-  const members = await prisma.groupMember.findMany({
+async function activeGroupAccounts(
+  groupId: string,
+  client: HandlerClient,
+): Promise<Recipient[]> {
+  const members = await client.groupMember.findMany({
     where: { groupId, status: 'ACTIVE' },
     select: { accountId: true },
   })
@@ -79,14 +85,15 @@ async function activeGroupAccounts(groupId: string): Promise<Recipient[]> {
 
 async function invitationRecipient(
   event: ActivityNotificationEvent,
+  client: HandlerClient,
 ): Promise<Recipient[]> {
   if (!event.subject?.id) return []
-  const invitation = await prisma.groupInvitation.findUnique({
+  const invitation = await client.groupInvitation.findUnique({
     where: { id: event.subject.id },
     select: { email: true },
   })
   if (!invitation?.email) return []
-  const account = await prisma.account.findFirst({
+  const account = await client.account.findFirst({
     where: { email: { equals: invitation.email, mode: 'insensitive' } },
     select: { id: true },
   })
@@ -95,6 +102,7 @@ async function invitationRecipient(
 
 async function expenseParticipantAccounts(
   event: ActivityNotificationEvent,
+  client: HandlerClient,
 ): Promise<Recipient[]> {
   if (isExpenseCommentEvent(event)) {
     const expenseId = event.subject?.id
@@ -105,7 +113,7 @@ async function expenseParticipantAccounts(
     // scopes independently, then let the common deduper suppress duplicates
     // and the actor policy remove the author of the current comment.
     const [raw, previousComments] = await Promise.all([
-      prisma.expense.findUnique({
+      client.expense.findUnique({
         where: { id: expenseId },
         select: {
           paidByList: { select: { ledgerParticipantId: true, shares: true } },
@@ -128,7 +136,7 @@ async function expenseParticipantAccounts(
           },
         },
       }),
-      prisma.expenseComment.findMany({
+      client.expenseComment.findMany({
         where: { expenseId, authorAccountId: { not: null } },
         select: { authorAccountId: true },
       }),
@@ -168,7 +176,7 @@ async function expenseParticipantAccounts(
       : []
     const participantRecipients =
       participantIds.length > 0
-        ? await prisma.ledgerParticipant.findMany({
+        ? await client.ledgerParticipant.findMany({
             where: { id: { in: [...new Set(participantIds)] } },
             select: {
               groupMember: { select: { accountId: true, status: true } },
@@ -189,7 +197,7 @@ async function expenseParticipantAccounts(
       ),
     ]
     if (authorIds.length === 0) return activeParticipants
-    const activeAuthors = await prisma.groupMember.findMany({
+    const activeAuthors = await client.groupMember.findMany({
       where: {
         groupId: event.groupId,
         status: 'ACTIVE',
@@ -211,7 +219,7 @@ async function expenseParticipantAccounts(
     parsed.kind !== 'recurring_expense_summary'
   ) {
     if (!event.subject?.id) return []
-    const raw = await prisma.expense.findUnique({
+    const raw = await client.expense.findUnique({
       where: { id: event.subject.id },
       select: {
         paidByList: { select: { ledgerParticipantId: true, shares: true } },
@@ -268,10 +276,10 @@ async function expenseParticipantAccounts(
     // Bulk category updates carry many expense ids rather than participant
     // rows. The safe recipient scope is the active group membership.
     if (event.type === 'EXPENSE_CATEGORIES_BULK_UPDATED')
-      return activeGroupAccounts(event.groupId)
+      return activeGroupAccounts(event.groupId, client)
     return []
   }
-  const participants = await prisma.ledgerParticipant.findMany({
+  const participants = await client.ledgerParticipant.findMany({
     where: { id: { in: [...new Set(participantIds)] } },
     select: {
       groupMember: { select: { accountId: true, status: true } },
@@ -294,16 +302,20 @@ export class ExpenseActivityHandler implements ActivityHandler {
     )
   }
 
-  async buildIntents(event: ActivityNotificationEvent) {
+  async buildIntents(
+    event: ActivityNotificationEvent,
+    client?: Prisma.TransactionClient,
+  ) {
     const category = eventCategory(event)
     if (!category) return []
     // Catch-up summaries intentionally have no expense subject: affected
     // participants receive one coalesced summary while each occurrence
     // activity remains available in the feed.
     const parsed = parseActivityData(event.data)
+    const db = client ?? prisma
     const [participants, actor] = await Promise.all([
-      expenseParticipantAccounts(event),
-      activeActorAccount(event),
+      expenseParticipantAccounts(event, db),
+      activeActorAccount(event, db),
     ])
     const recipients =
       event.type === 'RECURRING_EXPENSE_CREATED' &&
@@ -328,13 +340,17 @@ export class GroupActivityHandler implements ActivityHandler {
     )
   }
 
-  async buildIntents(event: ActivityNotificationEvent) {
+  async buildIntents(
+    event: ActivityNotificationEvent,
+    client?: Prisma.TransactionClient,
+  ) {
     const category = eventCategory(event)
     if (!category) return []
+    const db = client ?? prisma
     const recipients = event.recipientAccountId
       ? [{ id: event.recipientAccountId }]
       : event.type === 'INVITATION_CREATED'
-        ? await invitationRecipient(event)
+        ? await invitationRecipient(event, db)
         : []
     return dedupeRecipients(event, recipients, category)
   }

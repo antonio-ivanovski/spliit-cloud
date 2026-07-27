@@ -233,7 +233,7 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
       participants,
       actor: event.actor,
       includeActorAsRecipient: event.includeActorAsRecipient,
-      activityId: event.activityId,
+      activityId: event.activityId ?? '',
       group,
       buildSubject,
       buildText,
@@ -298,7 +298,7 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
     await this.sendToActiveMembers({
       participants,
       actor: event.actor,
-      activityId: event.activityId,
+      activityId: event.activityId ?? '',
       group,
       buildSubject: (displayName: string) =>
         `[Spliit Cloud] ${count} ${
@@ -368,7 +368,7 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
     await this.sendToActiveMembers({
       participants,
       actor: event.actor,
-      activityId: event.activityId,
+      activityId: event.activityId ?? '',
       group,
       buildSubject: (displayName) =>
         `[Spliit Cloud] Expense categories updated in ${displayName}`,
@@ -448,7 +448,7 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
       participants: [{ groupMember: member }],
       actor: event.actor,
       includeActorAsRecipient: true,
-      activityId: event.activityId,
+      activityId: event.activityId ?? '',
       group,
       buildSubject: () => content.subject,
       buildText: () => `${content.body}\n\nView the group here:\n${groupUrl}`,
@@ -524,7 +524,7 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
       participants: [{ groupMember: member }],
       actor: event.actor,
       includeActorAsRecipient: false,
-      activityId: event.activityId,
+      activityId: event.activityId ?? '',
       group,
       buildSubject: () =>
         `[Spliit Cloud] Recurring expense stopped in ${displayName}`,
@@ -596,7 +596,7 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
     await this.sendToActiveMembers({
       participants: [{ groupMember: member }],
       actor: event.actor,
-      activityId: event.activityId,
+      activityId: event.activityId ?? '',
       group,
       buildSubject: () => subject,
       buildText: () => text,

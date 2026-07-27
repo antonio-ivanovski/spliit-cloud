@@ -37,13 +37,13 @@ export class GroupPushActivityNotificationDispatcher implements ActivityNotifica
     const payload: PushNotificationPayload = {
       version: 1,
       kind: 'activity',
-      activityId: intent.activity.activityId,
+      activityId: intent.activity.activityId ?? '',
       title: isFriendAdded ? 'New friend ledger' : 'Group activity',
       body: isFriendAdded
         ? 'A friend ledger is ready in Spliit Cloud.'
         : 'Your group has new activity.',
       url: `${getWebBaseUrl()}/groups/${intent.activity.groupId}`,
-      tag: `activity:${intent.activity.activityId}`,
+      tag: `activity:${intent.activity.activityId ?? ''}`,
     }
     await Promise.all(
       subscriptions.map(async (subscription) => {
@@ -56,7 +56,7 @@ export class GroupPushActivityNotificationDispatcher implements ActivityNotifica
             })
           } else {
             console.warn(
-              `[notifications] failed to send group push for activity ${intent.activity.activityId}:`,
+              `[notifications] failed to send group push for activity ${intent.activity.activityId ?? ''}:`,
               error,
             )
           }

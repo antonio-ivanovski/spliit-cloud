@@ -1,4 +1,4 @@
-export { getApiBoss, stopApiBoss } from './recurrence/boss'
+export { getApiBoss, getApiBossForWrite, stopApiBoss } from './boss'
 export {
   materializeRecurringExpense,
   type MaterializationPayload,

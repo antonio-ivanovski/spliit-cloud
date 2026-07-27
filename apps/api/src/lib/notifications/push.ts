@@ -1,5 +1,6 @@
 import webpush from 'web-push'
 import { env } from '../env'
+import { PROVIDER_TIMEOUT_MS } from './delivery-senders'
 
 export type StoredPushSubscription = {
   id: string
@@ -52,6 +53,6 @@ export async function sendPushNotification(
       keys: { p256dh: subscription.p256dh, auth: subscription.auth },
     },
     JSON.stringify(payload),
-    { TTL: 60, urgency: 'normal' },
+    { TTL: 60, urgency: 'normal', timeout: PROVIDER_TIMEOUT_MS },
   )
 }

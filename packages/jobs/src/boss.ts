@@ -8,6 +8,12 @@ import { fromPrisma, PgBoss } from 'pg-boss'
 import { env } from './env'
 import {
   jobPayloadSchema,
+  NOTIFICATION_CLEANUP_DLQ,
+  NOTIFICATION_CLEANUP_QUEUE,
+  NOTIFICATION_DELIVER_DLQ,
+  NOTIFICATION_DELIVER_QUEUE,
+  NOTIFICATION_RECONCILE_DLQ,
+  NOTIFICATION_RECONCILE_QUEUE,
   RECURRING_MATERIALIZATION_DLQ,
   RECURRING_MATERIALIZATION_QUEUE,
   RECURRING_RECONCILIATION_DLQ,
@@ -17,6 +23,8 @@ import {
 } from './registry'
 
 export const MATERIALIZATION_EXPIRE_SECONDS = 300
+export const NOTIFICATION_DELIVER_EXPIRE_SECONDS = 300
+export const NOTIFICATION_MAINTENANCE_EXPIRE_SECONDS = 300
 
 export const JOB_SEND_OPTIONS = {
   [RECURRING_MATERIALIZATION_QUEUE]: {
@@ -33,6 +41,26 @@ export const JOB_SEND_OPTIONS = {
     retentionSeconds: env.JOBS_RETENTION_SECONDS,
     deadLetter: RECURRING_RECONCILIATION_DLQ,
   },
+  [NOTIFICATION_DELIVER_QUEUE]: {
+    retryLimit: env.JOBS_RETRY_LIMIT,
+    retryDelay: env.JOBS_RETRY_BACKOFF_SECONDS,
+    retryBackoff: true,
+    expireInSeconds: NOTIFICATION_DELIVER_EXPIRE_SECONDS,
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+    deadLetter: NOTIFICATION_DELIVER_DLQ,
+  },
+  [NOTIFICATION_RECONCILE_QUEUE]: {
+    retryLimit: 0,
+    expireInSeconds: NOTIFICATION_MAINTENANCE_EXPIRE_SECONDS,
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+    deadLetter: NOTIFICATION_RECONCILE_DLQ,
+  },
+  [NOTIFICATION_CLEANUP_QUEUE]: {
+    retryLimit: 0,
+    expireInSeconds: NOTIFICATION_MAINTENANCE_EXPIRE_SECONDS,
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+    deadLetter: NOTIFICATION_CLEANUP_DLQ,
+  },
 } as const satisfies Record<JobName, SendOptions>
 
 export const JOB_QUEUE_OPTIONS = {
@@ -45,6 +73,17 @@ export const JOB_QUEUE_OPTIONS = {
     ...JOB_SEND_OPTIONS[RECURRING_RECONCILIATION_QUEUE],
     policy: 'exclusive',
     notify: true,
+  },
+  [NOTIFICATION_DELIVER_QUEUE]: {
+    ...JOB_SEND_OPTIONS[NOTIFICATION_DELIVER_QUEUE],
+    policy: 'exclusive',
+    notify: true,
+  },
+  [NOTIFICATION_RECONCILE_QUEUE]: {
+    ...JOB_SEND_OPTIONS[NOTIFICATION_RECONCILE_QUEUE],
+  },
+  [NOTIFICATION_CLEANUP_QUEUE]: {
+    ...JOB_SEND_OPTIONS[NOTIFICATION_CLEANUP_QUEUE],
   },
 } as const satisfies Record<JobName, Omit<Queue, 'name'>>
 
@@ -150,6 +189,15 @@ export async function ensureQueues(boss: SpliitBoss): Promise<void> {
   await createOrConvergeQueue(boss, RECURRING_RECONCILIATION_DLQ, {
     retentionSeconds: env.JOBS_RETENTION_SECONDS,
   })
+  await createOrConvergeQueue(boss, NOTIFICATION_DELIVER_DLQ, {
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+  })
+  await createOrConvergeQueue(boss, NOTIFICATION_RECONCILE_DLQ, {
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+  })
+  await createOrConvergeQueue(boss, NOTIFICATION_CLEANUP_DLQ, {
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+  })
   await createOrConvergeQueue(
     boss,
     RECURRING_MATERIALIZATION_QUEUE,
@@ -159,6 +207,21 @@ export async function ensureQueues(boss: SpliitBoss): Promise<void> {
     boss,
     RECURRING_RECONCILIATION_QUEUE,
     JOB_QUEUE_OPTIONS[RECURRING_RECONCILIATION_QUEUE],
+  )
+  await createOrConvergeQueue(
+    boss,
+    NOTIFICATION_DELIVER_QUEUE,
+    JOB_QUEUE_OPTIONS[NOTIFICATION_DELIVER_QUEUE],
+  )
+  await createOrConvergeQueue(
+    boss,
+    NOTIFICATION_RECONCILE_QUEUE,
+    JOB_QUEUE_OPTIONS[NOTIFICATION_RECONCILE_QUEUE],
+  )
+  await createOrConvergeQueue(
+    boss,
+    NOTIFICATION_CLEANUP_QUEUE,
+    JOB_QUEUE_OPTIONS[NOTIFICATION_CLEANUP_QUEUE],
   )
 }
 
@@ -247,6 +310,12 @@ export function materializationSingletonKey(payload: {
   return `${payload.seriesId}:${payload.sequence}:${occurrenceDate}`
 }
 
+export function notificationDeliverSingletonKey(payload: {
+  deliveryId: string
+}): string {
+  return payload.deliveryId
+}
+
 export async function hasDeadLetteredMaterialization(
   boss: SpliitBoss,
   payload: { seriesId: string; sequence: number; occurrenceDate: string },
@@ -279,14 +348,20 @@ export async function sendJob<Name extends JobName>(
   options: SendOptions = {},
 ) {
   const parsed = jobPayloadSchema(name).parse(payload)
-  const requiredOptions =
+  const requiredOptions: SendOptions =
     name === RECURRING_MATERIALIZATION_QUEUE
       ? {
           singletonKey: materializationSingletonKey(
             parsed as JobPayload<'recurring-expense.materialize'>,
           ),
         }
-      : {}
+      : name === NOTIFICATION_DELIVER_QUEUE
+        ? {
+            singletonKey: notificationDeliverSingletonKey(
+              parsed as JobPayload<'notification.deliver'>,
+            ),
+          }
+        : {}
   return boss.send(name, parsed, {
     ...JOB_SEND_OPTIONS[name],
     ...options,

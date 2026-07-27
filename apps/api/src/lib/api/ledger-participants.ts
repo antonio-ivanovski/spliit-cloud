@@ -11,7 +11,7 @@ import type { GroupActivityChange } from '@spliit/domain/activities'
 import {
   buildGroupActivityData,
   logActivity,
-  scheduleActivityNotification,
+  planNotificationForActivity,
 } from './activities'
 import { randomId } from './shared'
 
@@ -131,6 +131,7 @@ export async function linkUnlinkedParticipantToAccount(opts: {
         tx,
       )
 
+      await planNotificationForActivity(tx, activity)
       return {
         result: { groupMemberId, ledgerParticipantId: existingLp.id },
         activity,
@@ -171,17 +172,12 @@ export async function linkUnlinkedParticipantToAccount(opts: {
       tx,
     )
 
+    await planNotificationForActivity(tx, activity)
     return {
       result: { groupMemberId, ledgerParticipantId: participant.id },
       activity,
       activityData,
     }
-  })
-  scheduleActivityNotification(outcome.activity, groupId, {
-    type: 'GROUP_UPDATED',
-    actor: { type: 'ACCOUNT', id: actor.accountId },
-    subject: { type: 'GROUP', id: groupId },
-    data: outcome.activityData,
   })
   return outcome.result
 }
@@ -453,17 +449,12 @@ export async function linkUnlinkedParticipantToPendingInvite(opts: {
       tx,
     )
 
+    await planNotificationForActivity(tx, activity)
     return {
       result: { groupMemberId: null, ledgerParticipantId: targetLp.id },
       activity,
       activityData,
     }
-  })
-  scheduleActivityNotification(outcome.activity, groupId, {
-    type: 'GROUP_UPDATED',
-    actor: { type: 'ACCOUNT', id: actor.accountId },
-    subject: { type: 'GROUP', id: groupId },
-    data: outcome.activityData,
   })
   return outcome.result
 }

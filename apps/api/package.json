@@ -9,6 +9,14 @@
     "./server": "./src/server.ts",
     "./lib/api/activities": "./src/lib/api/activities.ts",
     "./lib/api/recurrence-series": "./src/lib/api/recurrence-series.ts",
+    "./lib/notifications/delivery-repository": "./src/lib/notifications/delivery-repository.ts",
+    "./lib/notifications/delivery-senders": "./src/lib/notifications/delivery-senders.ts",
+    "./lib/notifications/delivery-snapshot": "./src/lib/notifications/delivery-snapshot.ts",
+    "./lib/notifications/delivery-cleanup": "./src/lib/notifications/delivery-cleanup.ts",
+    "./lib/notifications/delivery-reconciliation": "./src/lib/notifications/delivery-reconciliation.ts",
+    "./lib/notifications/delivery-planner": "./src/lib/notifications/delivery-planner.ts",
+    "./lib/notifications/email-delivery-sender": "./src/lib/notifications/email-delivery-sender.ts",
+    "./lib/notifications/push-delivery-sender": "./src/lib/notifications/push-delivery-sender.ts",
     "./lib/notifications/dispatcher": "./src/lib/notifications/dispatcher.ts"
   },
   "scripts": {

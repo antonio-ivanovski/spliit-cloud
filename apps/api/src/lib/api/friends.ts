@@ -6,6 +6,7 @@ import {
   GroupType,
   Prisma,
   prisma,
+  type Prisma as PrismaType,
 } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
 import { getWebBaseUrl } from '../auth/urls'
@@ -17,6 +18,8 @@ import {
   reconcileMemberLedgerParticipant,
 } from '../invitations'
 import { randomId } from './shared'
+
+type TxClient = PrismaType.TransactionClient
 
 export type CreateFriendLedgerPeer =
   | { accountId: string }
@@ -78,11 +81,12 @@ async function removeDuplicatePendingFriendLedger(
 }
 
 async function findExistingFriendGroupByPair(
+  client: TxClient,
   callerAccountId: string,
   peerAccountId: string,
 ): Promise<string | null> {
   const key = friendPairKey(callerAccountId, peerAccountId)
-  const existing = await prisma.group.findFirst({
+  const existing = await client.group.findFirst({
     where: { friendPairKey: key, groupType: GroupType.FRIEND },
     select: { id: true },
   })
@@ -90,11 +94,12 @@ async function findExistingFriendGroupByPair(
 }
 
 async function findExistingFriendGroupByPendingEmail(
+  client: TxClient,
   callerAccountId: string,
   email: string,
 ): Promise<string | null> {
   const normalizedEmail = email.toLowerCase()
-  const member = await prisma.groupMember.findFirst({
+  const member = await client.groupMember.findFirst({
     where: {
       accountId: callerAccountId,
       status: GroupMemberStatus.ACTIVE,
@@ -121,23 +126,20 @@ async function findExistingFriendGroupByPendingEmail(
  * is still sitting from before they signed up.
  */
 async function findExistingFriendGroupByPendingEmailViaAccount(
+  client: TxClient,
   callerAccountId: string,
   peerAccountId: string,
 ): Promise<string | null> {
-  const account = await prisma.account.findUnique({
+  const account = await client.account.findUnique({
     where: { id: peerAccountId },
     select: { email: true },
   })
   if (!account?.email) return null
-  return findExistingFriendGroupByPendingEmail(callerAccountId, account.email)
-}
-
-async function resolveAccountByEmail(email: string): Promise<string | null> {
-  const account = await prisma.account.findUnique({
-    where: { email: email.toLowerCase() },
-    select: { id: true },
-  })
-  return account?.id ?? null
+  return findExistingFriendGroupByPendingEmail(
+    client,
+    callerAccountId,
+    account.email,
+  )
 }
 
 /**
@@ -162,10 +164,15 @@ async function resolveAccountByEmail(email: string): Promise<string | null> {
  */
 export async function createFriendLedger(
   args: CreateFriendLedgerArgs,
+  tx?: TxClient,
 ): Promise<CreateFriendLedgerResult> {
   const { callerAccountId, peer, currency, currencyCode, information } = args
+  // Use the transaction client for all reads when one is provided, so
+  // lookups share the same connection as the writes and do not reserve
+  // extra pool connections during an interactive transaction.
+  const client: TxClient = tx ?? prisma
 
-  let resolvedPeer: CreateFriendLedgerPeer = peer
+  const resolvedPeer: CreateFriendLedgerPeer = peer
 
   if ('accountId' in resolvedPeer) {
     if (resolvedPeer.accountId === callerAccountId) {
@@ -175,6 +182,7 @@ export async function createFriendLedger(
       })
     }
     let existing = await findExistingFriendGroupByPair(
+      client,
       callerAccountId,
       resolvedPeer.accountId,
     )
@@ -186,18 +194,20 @@ export async function createFriendLedger(
     // cross-direction path so we don't create a duplicate.
     if (!existing) {
       existing = await findExistingFriendGroupByPendingEmailViaAccount(
+        client,
         callerAccountId,
         resolvedPeer.accountId,
       )
       if (existing) return { groupId: existing, existed: true }
     }
     if (!existing) {
-      const callerAccount = await prisma.account.findUnique({
+      const callerAccount = await client.account.findUnique({
         where: { id: callerAccountId },
         select: { email: true },
       })
       if (callerAccount?.email) {
         existing = await findExistingFriendGroupByPendingEmail(
+          client,
           resolvedPeer.accountId,
           callerAccount.email,
         )
@@ -205,43 +215,19 @@ export async function createFriendLedger(
       }
     }
   } else if ('email' in resolvedPeer) {
-    const resolved = await resolveAccountByEmail(resolvedPeer.email)
-    if (resolved) {
-      if (resolved === callerAccountId) {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'You cannot create a friend ledger with yourself.',
-        })
-      }
-      const existing = await findExistingFriendGroupByPair(
-        callerAccountId,
-        resolved,
-      )
-      if (existing) return { groupId: existing, existed: true }
-      // Cross-direction: the peer may have already created a friend
-      // ledger with a PENDING EMAIL invite for the caller's email.
-      const callerAccount = await prisma.account.findUnique({
-        where: { id: callerAccountId },
-        select: { email: true },
-      })
-      if (callerAccount?.email) {
-        const cross = await findExistingFriendGroupByPendingEmail(
-          resolved,
-          callerAccount.email,
-        )
-        if (cross) return { groupId: cross, existed: true }
-      }
-      resolvedPeer = { accountId: resolved }
-    } else {
-      const existing = await findExistingFriendGroupByPendingEmail(
-        callerAccountId,
-        resolvedPeer.email,
-      )
-      if (existing) return { groupId: existing, existed: true }
-    }
+    // The caller is responsible for resolving email → accountId before
+    // calling this function. If the peer is still email-shaped, no
+    // matching account existed at normalization time. Check only for an
+    // existing pending email invitation to avoid duplicates.
+    const existing = await findExistingFriendGroupByPendingEmail(
+      client,
+      callerAccountId,
+      resolvedPeer.email,
+    )
+    if (existing) return { groupId: existing, existed: true }
   }
 
-  return prisma.$transaction(async (tx) => {
+  const run = async (tx: TxClient) => {
     const ledger = await tx.ledger.create({
       data: {
         id: randomId(),
@@ -357,7 +343,11 @@ export async function createFriendLedger(
       inviteUrl,
       token,
     }
-  })
+  }
+  if (tx) {
+    return run(tx)
+  }
+  return prisma.$transaction(run)
 }
 
 /**

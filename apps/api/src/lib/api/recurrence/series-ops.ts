@@ -13,8 +13,8 @@ import {
   sendJob,
   type SpliitBoss,
 } from '@spliit/jobs'
+import { getApiBossForWrite } from '../boss'
 import { groupLedgerIdArchivedSelect } from '../selects/group-ledger-id-archived'
-import { getApiBoss } from './boss'
 import {
   initialSeriesCompleted,
   recurrenceJobStartAfter,
@@ -28,7 +28,7 @@ export async function enqueueMaterialization(
   existingBoss?: SpliitBoss,
 ) {
   if (!jobsEnv.JOBS_ENABLED) return null
-  const boss = existingBoss ?? (await getApiBoss())
+  const boss = existingBoss ?? (await getApiBossForWrite())
   return sendJob(
     boss,
     JOB_NAMES.MATERIALIZE_RECURRING_EXPENSE,
@@ -266,7 +266,7 @@ export async function resumeRecurringExpenseSeries(
   // disabled, keep the database state authoritative and let reconciliation
   // enqueue the occurrence once workers are enabled again.
   const boss = jobsEnv.JOBS_ENABLED
-    ? (existingBoss ?? (await getApiBoss()))
+    ? (existingBoss ?? (await getApiBossForWrite()))
     : undefined
 
   return prisma.$transaction(async (tx) => {

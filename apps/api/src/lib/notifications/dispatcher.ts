@@ -34,8 +34,11 @@ export { waitForScheduledNotificationDispatchesForTest }
 
 /**
  * Register the production coordinator in the process-wide dispatcher.
- * Entrypoints call this explicitly because workers do not load the API
- * server's side-effect module.
+ * Kept for backward compatibility with existing integration tests that
+ * flush microtask-dispatched events. Production uses the durable planner
+ * ({@link planActivityNotificationDeliveries}) instead.
+ *
+ * @deprecated Use {@link planActivityNotificationDeliveries} for production paths.
  */
 export function initializeDefaultNotificationDispatchers(): void {
   setDefaultActivityNotificationDispatchers([
@@ -44,15 +47,16 @@ export function initializeDefaultNotificationDispatchers(): void {
 }
 
 /**
- * Process-wide dispatcher used by expense create/update/delete
- * mutations. Phase 4 will register an expense email dispatcher here;
- * the array starts empty so any pre-Phase-4 activity fires no-op
- * dispatch.
+ * Process-wide composite dispatcher. Only used by legacy
+ * microtask-based dispatch via {@link scheduleDefaultNotificationDispatch}
+ * and {@link scheduleTargetedNotificationDispatch}.
  *
- * Held in a mutable array (not exported) so the singleton can be
- * appended to at module-load time without exposing mutation
- * primitives; tests can replace the singleton via
- * {@link setDefaultActivityNotificationDispatchers}.
+ * Production notification delivery flows through
+ * {@link planActivityNotificationDeliveries} which persists
+ * NotificationDelivery rows and enqueues pg-boss jobs for the worker.
+ *
+ * Kept for backward compatibility with integration tests that still
+ * flush dispatches via {@link waitForScheduledNotificationDispatchesForTest}.
  */
 const registered: ActivityNotificationDispatcher[] = []
 
@@ -83,9 +87,11 @@ export function setDefaultActivityNotificationDispatchers(
 
 /**
  * Convenience wrapper: schedule dispatch on the singleton dispatcher.
- * Mirrors {@link scheduleNotificationDispatch} but uses the default
- * singleton so call sites do not need to thread the dispatcher through
- * every helper signature.
+ *
+ * @deprecated Production paths use {@link planActivityNotificationDeliveries}
+ * which persists NotificationDelivery rows and enqueues pg-boss jobs.
+ * This function and {@link scheduleTargetedNotificationDispatch} are kept
+ * only for backward compatibility with integration tests.
  */
 export function scheduleDefaultNotificationDispatch(
   event: ActivityNotificationEvent,
@@ -103,7 +109,12 @@ export function scheduleDefaultNotificationDispatch(
   scheduleNotificationDispatch(singleton, event)
 }
 
-/** Schedule a non-activity notification with the same composed coordinator. */
+/**
+ * Schedule a non-activity notification with the same composed coordinator.
+ *
+ * @deprecated Kept only for backward compatibility with integration tests.
+ * Production paths use {@link planActivityNotificationDeliveries}.
+ */
 export function scheduleTargetedNotificationDispatch(args: {
   activityId: string
   groupId: string

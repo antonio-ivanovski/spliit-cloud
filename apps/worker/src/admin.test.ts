@@ -1,6 +1,20 @@
 import { markBossRunning, type SpliitBoss } from '@spliit/jobs'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createAdminFetch, createDisabledHealthFetch } from './admin'
+
+const hoisted = vi.hoisted(() => ({
+  deliveryCount: vi.fn(),
+  queryRawUnsafe: vi.fn(),
+}))
+
+vi.mock('@spliit/db', () => ({
+  prisma: {
+    notificationDelivery: {
+      count: hoisted.deliveryCount,
+    },
+    $queryRawUnsafe: hoisted.queryRawUnsafe,
+  },
+}))
 
 function createBossMock(installed = true) {
   return {
@@ -8,6 +22,45 @@ function createBossMock(installed = true) {
     on: vi.fn(),
   } as unknown as SpliitBoss
 }
+
+function mockTransportStats(
+  overrides: {
+    oldestRunnableMs?: number | null
+    overdue?: number
+    futureBackoff?: number
+    transportJobs?: number
+    missingTransport?: number
+  } = {},
+) {
+  const {
+    oldestRunnableMs = null,
+    overdue = 0,
+    futureBackoff = 0,
+    transportJobs = 0,
+    missingTransport = 0,
+  } = overrides
+  hoisted.queryRawUnsafe
+    .mockResolvedValueOnce([
+      {
+        oldest_runnable_ms: oldestRunnableMs,
+        overdue: BigInt(overdue),
+        future_backoff: BigInt(futureBackoff),
+        transport_jobs: BigInt(transportJobs),
+      },
+    ])
+    .mockResolvedValueOnce([{ missing: BigInt(missingTransport) }])
+}
+
+beforeEach(() => {
+  hoisted.deliveryCount.mockReset()
+  hoisted.deliveryCount.mockResolvedValue(0)
+  hoisted.queryRawUnsafe.mockReset()
+  mockTransportStats()
+})
+
+afterEach(() => {
+  vi.restoreAllMocks()
+})
 
 describe('worker health endpoints', () => {
   it('keeps a disabled worker healthy without pg-boss', async () => {
@@ -33,7 +86,7 @@ describe('worker health endpoints', () => {
     expect(boss.isInstalled).not.toHaveBeenCalled()
   })
 
-  it('reports readiness based on pg-boss installation state', async () => {
+  it('reports readiness with transport and lease health', async () => {
     const boss = createBossMock(true)
     markBossRunning(boss)
     const response = await createAdminFetch(boss)(
@@ -41,9 +94,26 @@ describe('worker health endpoints', () => {
     )
 
     expect(response.status).toBe(200)
-    expect(await response.json()).toMatchObject({
+    const body = await response.json()
+    expect(body).toMatchObject({
       status: 'healthy',
       boss: 'running',
+      delivery: {
+        healthy: true,
+        pending: 0,
+        processing: 0,
+        activeLeases: 0,
+        expiredLeases: 0,
+        permanentFailure: 0,
+        retryExhausted: 0,
+        sent: 0,
+        transport: {
+          oldestRunnableMs: null,
+          overdue: 0,
+          futureBackoff: 0,
+          missingTransport: 0,
+        },
+      },
     })
     expect(boss.isInstalled).toHaveBeenCalledOnce()
   })
@@ -60,6 +130,50 @@ describe('worker health endpoints', () => {
       status: 'unhealthy',
       boss: 'running',
     })
+  })
+
+  it('returns 503 when runnable lag exceeds threshold', async () => {
+    const boss = createBossMock(true)
+    markBossRunning(boss)
+    hoisted.queryRawUnsafe.mockReset()
+    mockTransportStats({
+      oldestRunnableMs: 600_000,
+      overdue: 5,
+      transportJobs: 5,
+    })
+
+    const response = await createAdminFetch(boss)(
+      new Request('http://worker/health/readiness'),
+    )
+
+    expect(response.status).toBe(503)
+    const body = await response.json()
+    expect(body.delivery.healthy).toBe(false)
+    expect(body.delivery.transport.oldestRunnableMs).toBe(600_000)
+  })
+
+  it('returns 503 when missing transport exceeds threshold', async () => {
+    const boss = createBossMock(true)
+    markBossRunning(boss)
+    hoisted.queryRawUnsafe.mockReset()
+    hoisted.deliveryCount
+      .mockResolvedValueOnce(15) // pending
+      .mockResolvedValueOnce(5) // processing
+      .mockResolvedValueOnce(0) // permanent
+      .mockResolvedValueOnce(0) // exhausted
+      .mockResolvedValueOnce(0) // sent
+      .mockResolvedValueOnce(3) // activeLeases
+      .mockResolvedValueOnce(2) // expiredLeases
+    mockTransportStats({ transportJobs: 5, missingTransport: 15 })
+
+    const response = await createAdminFetch(boss)(
+      new Request('http://worker/health/readiness'),
+    )
+
+    expect(response.status).toBe(503)
+    const body = await response.json()
+    expect(body.delivery.healthy).toBe(false)
+    expect(body.delivery.transport.missingTransport).toBe(15)
   })
 
   it('does not expose job inspection routes', async () => {

@@ -4,7 +4,7 @@ import { resolveParticipantDisplayName } from '../invitations/display'
 import {
   buildGroupActivityData,
   logActivity,
-  scheduleActivityNotification,
+  planNotificationForActivity,
 } from './activities'
 import type { DiffableGroup } from './group-activity-diff'
 import { getGroupChangeSummary } from './group-activity-diff'
@@ -139,18 +139,8 @@ export async function updateGroup(
       }),
     ])
 
+    await planNotificationForActivity(tx, activity)
     return { group, activity }
-  })
-  scheduleActivityNotification(result.activity, groupId, {
-    type: 'GROUP_UPDATED',
-    actor: { type: 'ACCOUNT', id: actor.accountId },
-    subject: { type: 'GROUP', id: groupId },
-    data: buildGroupActivityData({
-      summary: groupFormValues.name,
-      ...(summary
-        ? { changedFields: summary.changedFields, changes: summary.changes }
-        : {}),
-    }),
   })
   return result.group
 }

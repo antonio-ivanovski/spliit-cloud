@@ -14,6 +14,14 @@ export const jobPayloadSchemas = {
     /** Last series id processed by a bounded reconciliation page. */
     cursor: z.string().min(1).optional(),
   }),
+  'notification.deliver': z.object({
+    deliveryId: z.string().min(1),
+  }),
+  'notification.reconcile': z.object({
+    /** Last delivery id examined by a bounded reconciliation page. */
+    cursor: z.string().min(1).optional(),
+  }),
+  'notification.cleanup': z.object({}),
 } as const
 
 export type JobName = keyof typeof jobPayloadSchemas
@@ -25,6 +33,9 @@ export type JobPayload<Name extends JobName> = JobPayloadMap[Name]
 export const JOB_NAMES = {
   MATERIALIZE_RECURRING_EXPENSE: 'recurring-expense.materialize',
   RECONCILE_RECURRING_EXPENSES: 'recurring-expense.reconcile',
+  NOTIFICATION_DELIVER: 'notification.deliver',
+  NOTIFICATION_RECONCILE: 'notification.reconcile',
+  NOTIFICATION_CLEANUP: 'notification.cleanup',
 } as const satisfies Record<string, JobName>
 
 export const RECURRING_MATERIALIZATION_QUEUE =
@@ -34,9 +45,19 @@ export const RECURRING_RECONCILIATION_QUEUE =
 export const RECURRING_MATERIALIZATION_DLQ = `${RECURRING_MATERIALIZATION_QUEUE}.dead-letter`
 export const RECURRING_RECONCILIATION_DLQ = `${RECURRING_RECONCILIATION_QUEUE}.dead-letter`
 
+export const NOTIFICATION_DELIVER_QUEUE = JOB_NAMES.NOTIFICATION_DELIVER
+export const NOTIFICATION_RECONCILE_QUEUE = JOB_NAMES.NOTIFICATION_RECONCILE
+export const NOTIFICATION_CLEANUP_QUEUE = JOB_NAMES.NOTIFICATION_CLEANUP
+export const NOTIFICATION_DELIVER_DLQ = `${NOTIFICATION_DELIVER_QUEUE}.dead-letter`
+export const NOTIFICATION_RECONCILE_DLQ = `${NOTIFICATION_RECONCILE_QUEUE}.dead-letter`
+export const NOTIFICATION_CLEANUP_DLQ = `${NOTIFICATION_CLEANUP_QUEUE}.dead-letter`
+
 export const DEAD_LETTER_QUEUE_BY_SOURCE = {
   [RECURRING_MATERIALIZATION_QUEUE]: RECURRING_MATERIALIZATION_DLQ,
   [RECURRING_RECONCILIATION_QUEUE]: RECURRING_RECONCILIATION_DLQ,
+  [NOTIFICATION_DELIVER_QUEUE]: NOTIFICATION_DELIVER_DLQ,
+  [NOTIFICATION_RECONCILE_QUEUE]: NOTIFICATION_RECONCILE_DLQ,
+  [NOTIFICATION_CLEANUP_QUEUE]: NOTIFICATION_CLEANUP_DLQ,
 } as const satisfies Record<JobName, string>
 
 export function deadLetterQueueFor(sourceQueue: string): string | null {

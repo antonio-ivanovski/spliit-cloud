@@ -1,7 +1,5 @@
 import { prisma } from '@spliit/db'
-import { parseActivityData } from '@spliit/domain/activities'
-import { scheduleDefaultNotificationDispatch } from '../../notifications/dispatcher'
-import { logActivity } from '../activities'
+import { logActivity, planNotificationForActivity } from '../activities'
 import { getExpense } from './queries'
 
 /**
@@ -22,7 +20,7 @@ export async function stopRecurrence(
   }
   const seriesId = existingExpense.recurringSeriesId
 
-  const { activity } = await prisma.$transaction(async (tx) => {
+  await prisma.$transaction(async (tx) => {
     await tx.$queryRaw`SELECT id FROM "RecurringExpenseSeries" WHERE id = ${seriesId} FOR UPDATE`
     const series = await tx.recurringExpenseSeries.findUnique({
       where: { id: seriesId },
@@ -98,25 +96,7 @@ export async function stopRecurrence(
       tx,
     )
 
+    await planNotificationForActivity(tx, activity)
     return { activity }
   })
-
-  if (activity) {
-    const parsed = parseActivityData(activity.data)
-    scheduleDefaultNotificationDispatch({
-      activityId: activity.id,
-      type: 'RECURRING_EXPENSE_STOPPED',
-      groupId,
-      actor: { type: 'ACCOUNT', id: actor.accountId },
-      subject: { type: 'EXPENSE', id: expenseId },
-      data: parsed ?? {
-        kind: 'recurring_expense_stopped',
-        seriesId,
-        frequency: '',
-        interval: 1,
-        endType: '',
-      },
-      occurredAt: activity.time,
-    })
-  }
 }

@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import '../../../test/mocks'
 import {
   authState,
@@ -8,6 +8,22 @@ import {
 } from '../../../test/state'
 import { createTRPCContext } from '../../init'
 import { groupsRouter } from './index'
+
+// Keep the unit test isolated from PostgreSQL. The archive flow logs a
+// settlement activity and plans a notification for it, which would otherwise
+// open a real pg-boss producer client; stub the planner so no connection
+// is attempted. The unarchive path calls resumeRecurringExpenseSeries which
+// also resolves a boss client; stub it at the module boundary.
+vi.mock('../../../lib/api/activities', async (importOriginal) => ({
+  ...(await importOriginal()),
+  planNotificationForActivity: vi.fn(async () => []),
+}))
+
+const mockResumeRecurringExpenseSeries = vi.hoisted(() => vi.fn(async () => 0))
+vi.mock('../../../lib/api/recurrence-series', async (importOriginal) => ({
+  ...(await importOriginal()),
+  resumeRecurringExpenseSeries: mockResumeRecurringExpenseSeries,
+}))
 
 function makeCaller(authUserId: string) {
   return groupsRouter.createCaller({
@@ -102,10 +118,17 @@ describe('groupsRouter.archive', () => {
   it('unarchives a group when the caller is an ADMIN', async () => {
     await authAs('acct-admin')
     mockGroupWithMember('ADMIN')
+    prismaMock.group.findUnique.mockResolvedValue({
+      id: 'grp-1',
+      ledgerId: 'ledger-1',
+      archived: true,
+      ledger: { id: 'ledger-1' },
+    } as never)
     prismaMock.group.update.mockResolvedValue({
       id: 'grp-1',
       archived: false,
     } as never)
+    mockResumeRecurringExpenseSeries.mockClear()
 
     const caller = makeCaller('acct-admin')
     const result = await caller.archive({ groupId: 'grp-1', archived: false })
@@ -114,6 +137,7 @@ describe('groupsRouter.archive', () => {
     expect(prismaMock.group.update).toHaveBeenCalledWith(
       expect.objectContaining({ data: { archived: false } }),
     )
+    expect(mockResumeRecurringExpenseSeries).toHaveBeenCalledWith('grp-1')
   })
 
   it('rejects a MEMBER with FORBIDDEN', async () => {

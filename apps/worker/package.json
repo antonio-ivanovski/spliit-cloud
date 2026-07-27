@@ -13,6 +13,7 @@
   "dependencies": {
     "@spliit/api": "workspace:*",
     "@spliit/db": "workspace:*",
+    "@spliit/domain": "workspace:*",
     "@spliit/jobs": "workspace:*"
   },
   "devDependencies": {

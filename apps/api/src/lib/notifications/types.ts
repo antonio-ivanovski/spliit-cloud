@@ -15,34 +15,34 @@ export {
 } from '@spliit/domain/notifications'
 
 /**
- * Normalized event handed to every {@link ActivityNotificationDispatcher}.
+ * Discriminated identity for a notification event.
  *
- * `activityId` is stable across retries and is the natural identifier
- * for future durable delivery tracking (a `NotificationDelivery` row
- * created from this event must keep the activity referenced even when
- * upstream mutators are replayed).
+ * - Real events carry a non-null `activityId` (the Activity row FK) and may
+ *   optionally override the deduplication key with `customEventKey`.
+ * - Synthetic events (no Activity row) set `activityId: null` and MUST
+ *   provide a `customEventKey` so the planner never falls back to the
+ *   shared, collision-prone `activity:` key.
+ */
+export type EventIdentity =
+  | { activityId: string; customEventKey?: string }
+  | { activityId: null; customEventKey: string }
+
+/**
+ * Normalized event handed to every {@link ActivityNotificationDispatcher}.
  *
  * `groupId` is the current accessor scope; non-group activities would
  * carry the direct ledger id in a future revision. For this change all
  * activities are scoped through a `Group` and we ship just the id.
  */
-export type ActivityNotificationEvent = {
-  activityId: string
+export type ActivityNotificationEvent = EventIdentity & {
   type: ActivityType
   groupId: string
   actor: { type: ActivityActorType; id: string } | null
   subject: { type: ActivitySubjectType; id: string } | null
   data: ActivityData
   occurredAt: Date
-  /** Override the activity-to-category mapping for targeted synthetic events. */
   notificationCategory?: NotificationCategory
-  /**
-   * Recurring creation is the one expense event where the actor (the
-   * original series creator) is also an intended recipient. Keep this opt-in
-   * so ordinary actor suppression remains unchanged.
-   */
   includeActorAsRecipient?: boolean
-  /** Optional direct recipient, used for account-backed invite/friend events. */
   recipientAccountId?: string
 }
 

@@ -1,7 +1,6 @@
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { createExpenseComment } from '../../../../../lib/api'
-import { scheduleActivityNotification } from '../../../../../lib/api/activities'
 import { loadGroupContext, protectedProcedure } from '../../../../init'
 import { createExpenseCommentOutputSchema } from '../../../../outputs/expense-comments'
 
@@ -31,12 +30,6 @@ export const createExpenseCommentProcedure = protectedProcedure
       authorAccountId: ctx.auth.user.id,
       authorName: ctx.auth.user.name,
       text: input.body,
-    })
-    scheduleActivityNotification(result.activity, input.groupId, {
-      type: 'EXPENSE_COMMENTED',
-      actor: { type: 'ACCOUNT', id: ctx.auth.user.id },
-      subject: { type: 'EXPENSE', id: input.expenseId },
-      data: result.activityData,
     })
     return {
       comment: {

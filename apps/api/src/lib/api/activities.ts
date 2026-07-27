@@ -7,8 +7,15 @@ import {
   type ActivitySubjectType,
   type ActivityType,
 } from '@spliit/domain/activities'
+import { getNotificationCategoryForActivity } from '@spliit/domain/notifications'
 import { resolveParticipantDisplayName } from '../invitations/display'
-import { scheduleDefaultNotificationDispatch } from '../notifications/dispatcher'
+import { planActivityNotificationDeliveries } from '../notifications/delivery-planner'
+import {
+  getDefaultActivityNotificationDispatcher,
+  scheduleDefaultNotificationDispatch,
+} from '../notifications/dispatcher'
+import type { ActivityNotificationEvent } from '../notifications/types'
+import { getApiBoss } from './boss'
 import { participantDisplayNameSelect } from './selects/participant-display-name'
 import { randomId } from './shared'
 export {
@@ -32,6 +39,12 @@ export type LogActivityArgs = {
   includeActorAsRecipient?: boolean
 }
 
+/**
+ * @deprecated Use {@link planNotificationForActivity} which persists
+ * NotificationDelivery rows and enqueues pg-boss jobs inside the
+ * caller's transaction. Kept for backward compatibility with existing
+ * integration tests.
+ */
 export function scheduleActivityNotification(
   activity: Activity,
   groupId: string,
@@ -47,6 +60,58 @@ export function scheduleActivityNotification(
     occurredAt: activity.time,
     includeActorAsRecipient: args.includeActorAsRecipient,
   })
+}
+
+export async function planNotificationForActivity(
+  tx: Prisma.TransactionClient,
+  activity: Activity,
+  eventOverrides: Partial<Omit<ActivityNotificationEvent, 'activityId'>> = {},
+): Promise<string[]> {
+  const type = eventOverrides.type ?? activity.type
+  if (
+    !eventOverrides.notificationCategory &&
+    !getNotificationCategoryForActivity(type)
+  ) {
+    return []
+  }
+  const data = eventOverrides.data ?? parseActivityData(activity.data)
+  if (!data) return []
+  const groupId =
+    eventOverrides.groupId ??
+    (
+      await tx.group.findUnique({
+        where: { ledgerId: activity.ledgerId },
+        select: { id: true },
+      })
+    )?.id
+  if (!groupId) {
+    throw new Error('Cannot plan an activity notification without a group')
+  }
+  const event: ActivityNotificationEvent = {
+    activityId: activity.id,
+    type,
+    groupId,
+    actor:
+      activity.actorType && activity.actorId
+        ? { type: activity.actorType, id: activity.actorId }
+        : null,
+    subject:
+      activity.subjectType && activity.subjectId
+        ? { type: activity.subjectType, id: activity.subjectId }
+        : null,
+    data,
+    occurredAt: activity.time,
+    ...eventOverrides,
+  }
+  const deliveryIds = await planActivityNotificationDeliveries({
+    event,
+    tx,
+    boss: await getApiBoss(),
+  })
+  if (deliveryIds.length > 0) {
+    await getDefaultActivityNotificationDispatcher().dispatch(event)
+  }
+  return deliveryIds
 }
 
 /**

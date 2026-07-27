@@ -1,8 +1,13 @@
-import { initializeDefaultNotificationDispatchers } from '@spliit/api/lib/notifications/dispatcher'
+import {
+  assertDeliveryTimeoutOrdering,
+  DELIVERY_LEASE_MS,
+  PROVIDER_TIMEOUT_MS,
+} from '@spliit/api/lib/notifications/delivery-senders'
 import { prisma } from '@spliit/db'
 import {
   assertHandlersRegistered,
   env,
+  JOB_NAMES,
   registerHandlers,
   scheduleReconciliation,
   startBoss,
@@ -31,11 +36,27 @@ async function main() {
     return
   }
 
-  initializeDefaultNotificationDispatchers()
+  assertDeliveryTimeoutOrdering({
+    providerTimeoutMs: PROVIDER_TIMEOUT_MS,
+    leaseDurationMs: DELIVERY_LEASE_MS,
+    jobExpirySeconds: 300,
+  })
   const boss = await startBoss()
   assertHandlersRegistered(handlers)
   await registerHandlers(boss, handlers)
   await scheduleReconciliation(boss)
+  await boss.schedule(
+    JOB_NAMES.NOTIFICATION_RECONCILE,
+    '*/5 * * * *',
+    {},
+    { retryLimit: 0, key: 'notification-reconcile' },
+  )
+  await boss.schedule(
+    JOB_NAMES.NOTIFICATION_CLEANUP,
+    '0 * * * *',
+    {},
+    { retryLimit: 0, key: 'notification-cleanup' },
+  )
 
   const admin = Bun.serve({
     hostname: env.JOBS_ADMIN_HOST,

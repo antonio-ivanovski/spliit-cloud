@@ -45,6 +45,7 @@ export function hasUnsettledBalances(balances: Balances): boolean {
 }
 
 export type SettlementActivityMeta = {
+  activity: Awaited<ReturnType<typeof logActivity>>
   activityId: string
   expenseId: string
   title: string
@@ -113,6 +114,7 @@ export async function createSettlementExpensesForArchive(
       client,
     )
     activities.push({
+      activity,
       activityId: activity.id,
       expenseId,
       title: SETTLEMENT_TITLE,
@@ -209,6 +211,7 @@ export async function createSettlementExpensesForLeave(
       client,
     )
     activities.push({
+      activity,
       activityId: activity.id,
       expenseId,
       title: SETTLEMENT_ON_LEAVE_TITLE,

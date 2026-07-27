@@ -7,7 +7,18 @@ const envSchema = z.object({
     .url()
     .default('postgresql://postgres:1234@localhost'),
   JOBS_ENABLED: z.stringbool().optional().default(true),
-  PGBOSS_SCHEMA: z.string().min(1).default('pgboss'),
+  PGBOSS_SCHEMA: z
+    .string()
+    .transform((value) => value.toLowerCase())
+    .pipe(
+      z
+        .string()
+        .regex(
+          /^[a-z_][a-z0-9_]*$/,
+          'must be a valid PostgreSQL schema identifier',
+        ),
+    )
+    .default('pgboss'),
   JOBS_RECONCILIATION_CRON: z.string().min(1).default('* * * * *'),
   JOBS_MAX_CONCURRENCY: z.coerce.number().int().positive().default(5),
   JOBS_POOL_SIZE: z.coerce.number().int().positive().default(8),
@@ -20,6 +31,16 @@ const envSchema = z.object({
     .default(7 * 86_400),
   JOBS_ADMIN_PORT: z.coerce.number().int().positive().default(3003),
   JOBS_ADMIN_HOST: z.string().min(1).default('0.0.0.0'),
+  HEALTH_RUNNABLE_LAG_THRESHOLD_MS: z.coerce
+    .number()
+    .int()
+    .positive()
+    .default(300_000),
+  HEALTH_MISSING_TRANSPORT_THRESHOLD: z.coerce
+    .number()
+    .int()
+    .nonnegative()
+    .default(10),
 })
 
 export const env = envSchema.parse(process.env)

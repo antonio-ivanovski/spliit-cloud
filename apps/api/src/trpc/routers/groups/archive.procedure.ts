@@ -2,9 +2,9 @@ import { GroupType, prisma } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import {
-  buildExpenseActivityData,
   buildGroupActivityData,
   logActivity,
+  planNotificationForActivity,
 } from '../../../lib/api/activities'
 import {
   createSettlementExpensesForArchive,
@@ -12,7 +12,6 @@ import {
   hasUnsettledBalances,
 } from '../../../lib/api/balances'
 import { resumeRecurringExpenseSeries } from '../../../lib/api/recurrence-series'
-import { scheduleDefaultNotificationDispatch } from '../../../lib/notifications/dispatcher'
 import { loadGroupContext, protectedProcedure } from '../../init'
 import { archiveGroupOutputSchema } from '../../outputs/groups'
 
@@ -126,6 +125,12 @@ export const archiveGroupProcedure = protectedProcedure
               tx,
             )
           : null
+      if (activity) {
+        await planNotificationForActivity(tx, activity)
+      }
+      for (const settlementActivity of settlementActivities) {
+        await planNotificationForActivity(tx, settlementActivity.activity)
+      }
       return {
         group: updated,
         activity,
@@ -135,37 +140,6 @@ export const archiveGroupProcedure = protectedProcedure
       }
     })
 
-    if (result.activity) {
-      const activityType = result.willArchive
-        ? 'GROUP_ARCHIVED'
-        : 'GROUP_UNARCHIVED'
-      scheduleDefaultNotificationDispatch({
-        activityId: result.activity.id,
-        type: activityType,
-        groupId,
-        actor: { type: 'ACCOUNT', id: ctx.auth.user.id },
-        subject: { type: 'GROUP', id: groupId },
-        data: buildGroupActivityData({ summary: result.group.name }),
-        occurredAt: result.activity.time,
-      })
-    }
-    for (const meta of result.settlementActivities) {
-      scheduleDefaultNotificationDispatch({
-        activityId: meta.activityId,
-        type: 'EXPENSE_CREATED',
-        groupId,
-        actor: { type: 'ACCOUNT', id: ctx.auth.user.id },
-        subject: { type: 'EXPENSE', id: meta.expenseId },
-        data: buildExpenseActivityData({
-          summary: meta.title,
-          title: meta.title,
-          amount: meta.amount,
-          currencyCode: meta.currencyCode,
-          date: meta.date,
-        }),
-        occurredAt: meta.time,
-      })
-    }
     if (result.willUnarchive) await resumeRecurringExpenseSeries(groupId)
 
     return {

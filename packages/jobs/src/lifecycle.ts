@@ -1,4 +1,4 @@
-import type { Job, PgBoss } from 'pg-boss'
+import type { JobWithMetadata, PgBoss } from 'pg-boss'
 import { sendJob } from './boss'
 import { env } from './env'
 import {
@@ -15,6 +15,8 @@ export interface JobHandlerContext<Name extends JobName = JobName> {
   name: Name
   jobId: string
   signal: AbortSignal
+  retryCount: number
+  retryLimit: number
 }
 
 export type JobHandler<Name extends JobName> = (
@@ -67,8 +69,9 @@ export async function registerHandlers(
         batchSize: 1,
         localConcurrency: env.JOBS_MAX_CONCURRENCY,
         pollingIntervalSeconds: 1,
+        includeMetadata: true,
       },
-      async (jobs: Job<object>[]) => {
+      async (jobs: JobWithMetadata<object>[]) => {
         const job = jobs[0]
         if (!job) return
         const parsed = jobPayloadSchema(name).parse(job.data)
@@ -80,13 +83,21 @@ export async function registerHandlers(
               name,
               jobId: job.id,
               signal: job.signal,
+              retryCount: job.retryCount,
+              retryLimit: job.retryLimit,
             } as never,
           )
-          logJob('info', 'job completed', { name, jobId: job.id })
+          logJob('info', 'job completed', {
+            name,
+            jobId: job.id,
+            retryCount: job.retryCount,
+          })
         } catch (error) {
           logJob('error', 'job failed', {
             name,
             jobId: job.id,
+            retryCount: job.retryCount,
+            retryLimit: job.retryLimit,
             error: error instanceof Error ? error.message : String(error),
           })
           throw error

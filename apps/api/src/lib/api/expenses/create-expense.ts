@@ -7,12 +7,15 @@ import {
 } from '@spliit/domain'
 import { env as jobsEnv } from '@spliit/jobs'
 import { resolveConversion } from '../../expense-conversion'
-import { scheduleDefaultNotificationDispatch } from '../../notifications/dispatcher'
-import { buildExpenseActivityData, logActivity } from '../activities'
+import {
+  buildExpenseActivityData,
+  logActivity,
+  planNotificationForActivity,
+} from '../activities'
 import {
   buildRecurringTemplate,
   createSeriesForExpense,
-  getApiBoss,
+  getApiBossForWrite,
   getExpenseRecurrence,
 } from '../recurrence-series'
 import { randomId } from '../shared'
@@ -86,7 +89,7 @@ export async function createExpense(
   )
   const isCreateRecurrence = recurrence !== null
   const queueBoss =
-    recurrence && jobsEnv.JOBS_ENABLED ? await getApiBoss() : undefined
+    recurrence && jobsEnv.JOBS_ENABLED ? await getApiBossForWrite() : undefined
 
   const documents = await promoteExpenseDocuments(expense.documents)
   const recurringPaidFor =
@@ -153,7 +156,7 @@ export async function createExpense(
     }
   }
 
-  const { activity, createdExpense } = await prisma.$transaction(async (tx) => {
+  const createdExpense = await prisma.$transaction(async (tx) => {
     await tx.$queryRaw`SELECT id FROM "Group" WHERE id = ${groupId} FOR UPDATE`
     const lockedGroup = await tx.group.findUnique({
       where: { id: groupId },
@@ -315,49 +318,14 @@ export async function createExpense(
       },
     })
 
-    return { activity, createdExpense }
-  })
+    if (!catchUpSeed) {
+      await planNotificationForActivity(tx, activity, {
+        ...(isCreateRecurrence ? { includeActorAsRecipient: true } : {}),
+      })
+    }
 
-  // Suppress occurrence one's standalone notification when it seeds a
-  // catch-up batch; the worker will emit one combined summary instead.
-  if (!catchUpSeed) {
-    scheduleDefaultNotificationDispatch({
-      activityId: activity.id,
-      type: activityType,
-      groupId,
-      actor: { type: 'ACCOUNT', id: actor.accountId },
-      subject: { type: 'EXPENSE', id: expenseId },
-      data: buildExpenseActivityData({
-        summary: expense.title,
-        title: expense.title,
-        amount: expenseAmount,
-        currencyCode: conversion.originalCurrency,
-        date: expenseDateStr,
-        originalAmount: conversion.originalAmount ?? undefined,
-        conversionRate: conversion.conversionRate ?? undefined,
-        conversionSource: conversion.conversionSource,
-        ledgerCurrencyCode: group.ledger.currencyCode ?? null,
-        ...(recurrence
-          ? {
-              recurrence: {
-                seriesId: recurringSeriesId!,
-                frequency: recurrence.frequency,
-                interval: recurrence.interval,
-                endType: recurrence.end.type,
-                occurrenceLimit:
-                  recurrence.end.type === 'COUNT' ? recurrence.end.count : null,
-                endDate:
-                  recurrence.end.type === 'DATE'
-                    ? recurrence.end.endDate.toISOString().slice(0, 10)
-                    : null,
-              },
-            }
-          : {}),
-      }),
-      occurredAt: activity.time,
-      ...(isCreateRecurrence ? { includeActorAsRecipient: true } : {}),
-    })
-  }
+    return createdExpense
+  })
 
   return createdExpense
 }

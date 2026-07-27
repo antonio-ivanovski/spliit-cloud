@@ -2,13 +2,14 @@ import { prisma } from '@spliit/db'
 import { friendFormSchema } from '@spliit/domain'
 import { NotificationCategory } from '@spliit/domain/notifications'
 import { z } from 'zod'
+import { getApiBoss } from '../../../lib/api/boss'
 import {
   createFriendLedger,
   type CreateFriendLedgerPeer,
 } from '../../../lib/api/friends'
 import { sendEmail } from '../../../lib/mail/send'
 import { renderFriendLedgerEmail } from '../../../lib/mail/templates/friend-ledger'
-import { scheduleTargetedNotificationDispatch } from '../../../lib/notifications/dispatcher'
+import { planActivityNotificationDeliveries } from '../../../lib/notifications/delivery-planner'
 import { createTRPCRouter, protectedProcedure } from '../../init'
 
 /**
@@ -51,6 +52,11 @@ export const friendsRouter = createTRPCRouter({
     .mutation(async ({ input: { friendFormValues }, ctx }) => {
       const callerId = ctx.auth.user.id
 
+      // Normalize the peer exactly once, before resolving pg-boss. If the
+      // email maps to an existing account the peer becomes account-backed
+      // and durable notification planning is required. If the account
+      // appears after this read, treating the peer as a pending email
+      // invitation is acceptable — auto-accept reconciles it later.
       let peer: CreateFriendLedgerPeer
       if (friendFormValues.peerAccountId) {
         peer = { accountId: friendFormValues.peerAccountId }
@@ -76,45 +82,61 @@ export const friendsRouter = createTRPCRouter({
         peer = { link: true }
       }
 
-      const result = await createFriendLedger({
-        callerAccountId: callerId,
-        peer,
-        currency: friendFormValues.currency,
-        currencyCode: friendFormValues.currencyCode,
-        information: friendFormValues.information,
+      // Resolve the boss client only for account-backed peers that will
+      // receive a durable notification. Email and link paths never call
+      // the planner, so they must not depend on queue availability.
+      const boss = 'accountId' in peer ? await getApiBoss() : null
+      const result = await prisma.$transaction(async (tx) => {
+        const ledgerResult = await createFriendLedger(
+          {
+            callerAccountId: callerId,
+            peer,
+            currency: friendFormValues.currency,
+            currencyCode: friendFormValues.currencyCode,
+            information: friendFormValues.information,
+          },
+          tx,
+        )
+
+        if (!ledgerResult.existed && 'accountId' in peer) {
+          const inviterName = ctx.auth.user.name || ctx.auth.user.email
+          await planActivityNotificationDeliveries({
+            event: {
+              activityId: null,
+              type: 'INVITATION_CREATED',
+              groupId: ledgerResult.groupId,
+              actor: { type: 'ACCOUNT', id: callerId },
+              subject: null,
+              data: {
+                kind: 'invitation',
+                summary: `${inviterName} created a friend ledger with you`,
+              },
+              occurredAt: new Date(),
+              notificationCategory: NotificationCategory.FRIEND_ADDED,
+              recipientAccountId: peer.accountId,
+              customEventKey: `friend:${ledgerResult.groupId}:${peer.accountId}`,
+            },
+            tx,
+            boss,
+          })
+        }
+
+        return ledgerResult
       })
 
       // Send a notification email (not an invitation with an accept
       // link) when a friend ledger is created. The peer will see it
       // automatically on next login — the email is purely informational.
-      if (!result.existed) {
+      if (!result.existed && 'email' in peer) {
         const inviterName = ctx.auth.user.name || ctx.auth.user.email
-        if ('email' in peer) {
-          // Email tab: the peer is either an existing account that was
-          // resolved (direct-accept) or an unknown email (pending).
-          const isNewUser = !!result.invitationId
-          await sendFriendLedgerNotification({
-            recipientEmail: peer.email,
-            inviterName,
-            isNewUser,
-          })
-        } else if ('accountId' in peer) {
-          // Existing accounts receive the preference-aware coordinator event;
-          // unknown-email peers retain the required transactional email above.
-          scheduleTargetedNotificationDispatch({
-            activityId: `friend:${result.groupId}:${peer.accountId}`,
-            groupId: result.groupId,
-            category: NotificationCategory.FRIEND_ADDED,
-            recipientAccountId: peer.accountId,
-            actor: { type: 'ACCOUNT', id: callerId },
-            data: {
-              kind: 'invitation',
-              summary: `${inviterName} created a friend ledger with you`,
-            },
-          })
-        }
-        // Link tab: no email — the inviter shares the link off-channel.
+        const isNewUser = !!result.invitationId
+        await sendFriendLedgerNotification({
+          recipientEmail: peer.email,
+          inviterName,
+          isNewUser,
+        })
       }
+      // Link tab: no email — the inviter shares the link off-channel.
 
       return result
     }),

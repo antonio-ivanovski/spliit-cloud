@@ -1,12 +1,10 @@
 import { GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
 import { deleteS3Object } from '../../routes/upload'
-import { scheduleDefaultNotificationDispatch } from '../notifications/dispatcher'
 import {
-  buildExpenseActivityData,
   buildGroupActivityData,
   buildMemberActivityData,
   logActivity,
-  scheduleActivityNotification,
+  planNotificationForActivity,
 } from './activities'
 import {
   createSettlementExpensesForLeave,
@@ -88,18 +86,8 @@ export async function updateMemberRole(opts: {
         tx,
       ),
     ])
+    await planNotificationForActivity(tx, activity)
     return { updated, activity }
-  })
-  scheduleActivityNotification(result.activity, groupId, {
-    type: 'MEMBER_ROLE_CHANGED',
-    actor: { type: 'ACCOUNT', id: actor.accountId },
-    subject: { type: 'MEMBER', id: memberId },
-    data: buildMemberActivityData({
-      displayName: actorAccount?.name ?? undefined,
-      targetDisplayName: targetAccount?.name ?? undefined,
-      previousRole: target.role,
-      nextRole: role,
-    }),
   })
   return result.updated
 }
@@ -216,37 +204,12 @@ export async function removeMember(opts: {
         data: { removedAt: new Date() },
       })
     }
+    await planNotificationForActivity(tx, activity)
+    for (const settlementActivity of settlementActivities ?? []) {
+      await planNotificationForActivity(tx, settlementActivity.activity)
+    }
     return { updated, settlementActivities, activity }
   })
-  scheduleActivityNotification(result.activity, groupId, {
-    type: 'MEMBER_REMOVED',
-    actor: { type: 'ACCOUNT', id: actor.accountId },
-    subject: { type: 'MEMBER', id: memberId },
-    data: buildMemberActivityData({
-      displayName: actorAccount?.name ?? undefined,
-      targetDisplayName: target.account?.name ?? undefined,
-      summary: settleBalances ? 'member:removed:settled' : 'member:removed',
-    }),
-  })
-  if (result.settlementActivities) {
-    for (const meta of result.settlementActivities) {
-      scheduleDefaultNotificationDispatch({
-        activityId: meta.activityId,
-        type: 'EXPENSE_CREATED',
-        groupId,
-        actor: { type: 'ACCOUNT', id: actor.accountId },
-        subject: { type: 'EXPENSE', id: meta.expenseId },
-        data: buildExpenseActivityData({
-          summary: meta.title,
-          title: meta.title,
-          amount: meta.amount,
-          currencyCode: meta.currencyCode,
-          date: meta.date,
-        }),
-        occurredAt: meta.time,
-      })
-    }
-  }
   return result.updated
 }
 
@@ -433,41 +396,16 @@ export async function leaveGroup(opts: {
       tx,
     )
 
+    await planNotificationForActivity(tx, activity)
+    for (const settlementActivity of settlementActivities) {
+      await planNotificationForActivity(tx, settlementActivity.activity)
+    }
     return {
       promotedMemberId: isLastAdmin ? (promoteMemberId ?? null) : null,
       settlementActivities,
       activity,
     }
   })
-
-  scheduleActivityNotification(result.activity, groupId, {
-    type: 'MEMBER_LEFT',
-    actor: { type: 'ACCOUNT', id: actor.accountId },
-    subject: { type: 'MEMBER', id: member.id },
-    data: buildMemberActivityData({
-      displayName: member.account?.name ?? undefined,
-      targetDisplayName: member.account?.name ?? undefined,
-      summary: 'member:left',
-    }),
-  })
-
-  for (const meta of result.settlementActivities) {
-    scheduleDefaultNotificationDispatch({
-      activityId: meta.activityId,
-      type: 'EXPENSE_CREATED',
-      groupId,
-      actor: { type: 'ACCOUNT', id: actor.accountId },
-      subject: { type: 'EXPENSE', id: meta.expenseId },
-      data: buildExpenseActivityData({
-        summary: meta.title,
-        title: meta.title,
-        amount: meta.amount,
-        currencyCode: meta.currencyCode,
-        date: meta.date,
-      }),
-      occurredAt: meta.time,
-    })
-  }
 
   return { promotedMemberId: result.promotedMemberId }
 }
@@ -499,7 +437,7 @@ export async function archiveGroupForSelf(opts: {
     )
   }
 
-  const activity = await prisma.$transaction(async (tx) => {
+  await prisma.$transaction(async (tx) => {
     await tx.group.update({
       where: { id: groupId },
       data: { archived: true },
@@ -518,7 +456,7 @@ export async function archiveGroupForSelf(opts: {
       },
     })
 
-    return logActivity(
+    const activity = await logActivity(
       groupId,
       {
         type: 'GROUP_ARCHIVED',
@@ -528,13 +466,7 @@ export async function archiveGroupForSelf(opts: {
       },
       tx,
     )
-  })
-
-  scheduleActivityNotification(activity, groupId, {
-    type: 'GROUP_ARCHIVED',
-    actor: { type: 'ACCOUNT', id: accountId },
-    subject: { type: 'GROUP', id: groupId },
-    data: buildGroupActivityData({ summary: 'group:archived-on-leave' }),
+    await planNotificationForActivity(tx, activity)
   })
 
   return { archived: true }
