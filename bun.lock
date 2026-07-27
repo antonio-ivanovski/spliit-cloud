@@ -111,7 +111,6 @@
         "zod": "^4.4.3",
       },
       "devDependencies": {
-        "@playwright/test": "^1.61.1",
         "@spliit/api": "workspace:*",
         "@spliit/config": "workspace:*",
         "@spliit/db": "workspace:*",

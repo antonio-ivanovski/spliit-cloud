@@ -10,8 +10,6 @@ export default tseslint.config(
       '**/dist/**',
       '**/.turbo/**',
       '**/coverage/**',
-      '**/playwright-report/**',
-      '**/test-results/**',
       '**/*.gen.ts',
       'packages/db/src/generated/**',
     ],

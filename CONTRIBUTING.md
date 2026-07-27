@@ -34,7 +34,7 @@ Other useful commands:
 bun check-types
 bun check-formatting
 bun run test             # Vitest unit tests
-bun test-e2e             # Playwright
+bun test:integration     # Real-DB integration tests
 ```
 
 ## Pull request workflow
@@ -66,12 +66,7 @@ Commit messages: short imperative subject, optional body for the _why_.
 
 ## Key rules
 
-From [AGENTS.md](./AGENTS.md):
-
-- Money is integer cents; percentage shares use basis points (`2500` = 25%)
-- tRPC procedures stay thin: Zod in, domain/API helpers in
-- Import Prisma from `@spliit/db`
-- API runs TypeScript directly with Bun — no build step
+See [AGENTS.md](./AGENTS.md) for agent and contributor invariants (Bun, money units, translations, integration-test server rules).
 
 ## Translations
 

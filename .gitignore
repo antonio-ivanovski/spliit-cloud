@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+node_modules/
 /.pnp
 .pnp.js
 .yarn/install-state.gz
@@ -54,12 +55,3 @@ storage/maxio/buckets/*
 !storage/maxio/buckets/spliit-local/
 storage/maxio/buckets/spliit-local/*
 !storage/maxio/buckets/spliit-local/.bucket.json
-
-
-# Playwright
-node_modules/
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
-/playwright/.auth/

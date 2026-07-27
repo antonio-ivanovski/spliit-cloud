@@ -30,7 +30,6 @@
     "start-container": "docker compose --env-file container.env up",
     "test": "turbo --ui=tui run test",
     "test:integration": "turbo --ui=tui run test:integration --concurrency=1",
-    "test-e2e": "bun --filter @spliit/web test-e2e",
     "i18n": "bun scripts/i18n/src/cli.ts",
     "ci-checks": "turbo --ui=tui run ci-checks"
   },

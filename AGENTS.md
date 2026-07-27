@@ -1,104 +1,16 @@
 # AGENTS.md
 
-Spliit is a Bun monorepo: React/Vite web app, Hono+tRPC API, Prisma/PostgreSQL DB, and shared domain package.
+Spliit is a Bun monorepo (web, api, domain, db). Explore `package.json`, workspace packages, and the code for commands, layout, and conventions — do not invent parallel docs.
 
-## Commands
+## Hard rules
 
-Use Bun, not npm/yarn.
+- Use Bun, not npm/yarn.
+- Do not start `bun dev`, compose (`bun dev:up`), or other long-lived services unless the user explicitly asks.
+- Integration tests: never start the API yourself. Web integration needs an existing API on `:3001` — ask the user if it is not running. API `createCaller` tests need the DB only.
+- Money is integer cents. `BY_PERCENTAGE` shares are basis points (`2500` = 25%).
+- Never hand-edit `apps/web/src/messages/*`. Use `bun i18n` and [`.agents/skills/translate-strings/SKILL.md`](.agents/skills/translate-strings/SKILL.md).
 
-Local dev is three explicit steps. DO NOT START dev server/services automatically unless explicitly asked by the user.:
+## Skills
 
-```bash
-bun install
-bun dev:up                       # postgres, maxio, maildev via compose.dev.yaml
-bun prisma-migrate
-bun dev                          # web :3000, api :3001
-bun dev:down                     # stop local services
-```
-
-`bun dev` regenerates the Prisma client as a turbo dep, so `prisma-generate`
-is not a manual step. Run `bun prisma-generate` directly only when you need
-to regenerate without running any consumer task (rare).
-
-Other commands:
-
-```bash
-bun lint                         # ESLint
-bun check-types                  # TypeScript type-checking
-bun check-formatting             # Prettier formatting check
-bun check-formatting --write     # auto-fix formatting
-bun i18n check                   # audit translations
-bun run test                     # Vitest unit tests through turbo
-bun test-e2e                     # Playwright; starts web/API via config
-bun test:integration             # Real-DB integration tests (API + web)
-bun prisma-generate              # regenerate the Prisma client only
-bun prisma-migrate               # deploy migrations for local/container DB
-```
-
-## Integration tests
-
-The project has two kinds of integration tests that hit a real PostgreSQL database:
-
-- **API integration tests** (`apps/api/src/integration/`): Test tRPC procedures against a real database using `createCaller`. Covers group CRUD, expense CRUD, invitations (email + link), and email flows.
-- **Web integration tests** (`apps/web/src/tests/integration/`): Render React components with the real TRPCProvider, connecting to the existing API server. Covers group/expense rendering with data created via the real API.
-
-### Running integration tests
-
-```bash
-bun run test:integration
-```
-
-**Prerequisites:**
-
-- The test PostgreSQL database must be running (same connection as API dev: `postgresql://test:test@localhost:5432` or `DATABASE_URL` env var).
-- Migrations must be up to date (`bun prisma-migrate`).
-- For the **web integration tests**, the API server must be running on port 3001 (`bun dev` from project root or `bun --filter @spliit/api dev`).
-
-### ⚠️ Agent rules for integration tests
-
-- **Never start the dev server.** The integration tests assume an existing API server on port 3001. If the server is not running, the tests will fail with a clear error message.
-- If you need the server running and it is not, **ask the user for explicit permission** before starting it.
-- The API real-DB tests (`apps/api/src/integration/`) do not need a running server — they call tRPC procedures directly via `createCaller`. They only need the database.
-
-### Test architecture
-
-| Suite                                 | Command                | DB needed | API server needed | Speed   |
-| ------------------------------------- | ---------------------- | --------- | ----------------- | ------- |
-| Unit tests (mock)                     | `bun test`             | No        | No                | ~3s     |
-| API integration (real DB)             | `bun test:integration` | Yes       | No                | ~5s     |
-| Web integration (real API)            | `bun test:integration` | Yes       | Yes               | ~5s     |
-| E2E (Playwright) (broken, do not run) | `bun test-e2e`         | Yes       | Starts both       | Minutes |
-
-Default `bun test` runs all mock-based tests and skips integration suites.
-
-## Paths
-
-- `apps/web/`: React SPA. Routes are registered in `apps/web/src/router.tsx`; page components live under `apps/web/src/app/`.
-- `apps/api/`: Hono server. tRPC procedures live in `apps/api/src/trpc/routers/`; business logic is in `apps/api/src/lib/api.ts`.
-- `packages/domain/`: shared Zod schemas, split/balance math, currency, recurrence, i18n metadata.
-- `packages/db/`: Prisma schema/migrations and Prisma client singleton.
-
-## Easy-to-miss Rules
-
-- Money is stored as integer cents. `BY_PERCENTAGE` split shares are basis points: `2500` means 25%.
-- Keep tRPC procedures thin: validate with Zod, call shared/domain/API logic, and compose in router `index.ts` files.
-- Import Prisma from `@spliit/db`; the generated client lives under `packages/db/src/generated/` and is intentionally not the public import path.
-- When changing schema, commit `packages/db/prisma/schema.prisma` and the migration together, then run `bun prisma-generate`.
-- API runs TypeScript directly with Bun; do not add an API build step unless changing the runtime model.
-- Docker API stage runs `bun run apps/api/src/server.ts`; add another server as a new `FROM runner AS <name>` stage with its own `CMD`.
-- Keep code comments terse. JSDoc/inline comments should explain the _why_ (non-obvious behavior, constraints, seams) in a sentence or two, not re-narrate the code. When in doubt, drop the comment, add only when ABSOLUTELY necessary.
-
-More focused notes: [.agent/architecture.md](.agent/architecture.md), [.agent/database.md](.agent/database.md), [.agent/testing.md](.agent/testing.md), [.agent/trpc-procedures.md](.agent/trpc-procedures.md).
-
-## Translations
-
-`apps/web/src/messages/en-US.json` is the source of truth; other locales fall back to it at runtime. **Never hand-edit** any file in `apps/web/src/messages/` — use the `bun i18n` CLI.
-
-- ALWAYS use the `react-i18next` functions directly, NEVER create hacky custom wrapper to get around the type system.
-- Translation texts use single `{` and `}` for interpolation, not double `{{` and `}}`.
-- **Never paste English into another locale** as a placeholder — `bun i18n set` rejects identical-to-en values (unless auto-allowed or `--allow-english`).
-- **After editing en-US**: run `bun i18n plan --json` and follow its `mode` (`oneshot` / one subagent / family-parallel). Do not always spawn many translators for 1–2 keys.
-- **New / backfill locale**: `bun i18n init-locale … --family …` then loop `bun i18n next --locale L --json` → `set --stdin` until `done`, then `check --locale`. Do not explore the repo or web-search for i18n conventions — use the skill.
-- **Translator workflow**: `next`/`pack` → translate → `set --stdin` → `check`. Ambiguous strings: `bun i18n usages <key>`.
-- **Audit (canonical CI gate)**: `bun i18n check` exits 1 on missing keys, orphan keys, or untranslated English on keys introduced vs `HEAD`. Use `--changes-only` for PR-scoped missing-key audits.
-- **Skill**: `.agents/skills/translate-strings/SKILL.md`.
+- Translations: `.agents/skills/translate-strings/SKILL.md`
+- OpenSpec workflows: `.agents/skills/openspec-*/SKILL.md`

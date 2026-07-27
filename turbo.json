@@ -45,10 +45,6 @@
       "dependsOn": ["^build", "@spliit/db#prisma-generate"],
       "outputs": ["coverage/**"]
     },
-    "test-e2e": {
-      "dependsOn": ["^build"],
-      "cache": false
-    },
     "test:integration": {
       "dependsOn": ["^build", "@spliit/db#prisma-generate"],
       "cache": false,
