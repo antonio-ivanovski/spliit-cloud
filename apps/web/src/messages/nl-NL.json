@@ -810,7 +810,8 @@
       "defaultSplitLabel": "Standaardverdeling van items",
       "defaultSplitMixed": "Gemengd",
       "defaultSplitEdit": "Standaardverdeling van items bewerken",
-      "defaultSplitModalTitle": "Standaardverdeling van items"
+      "defaultSplitModalTitle": "Standaardverdeling van items",
+      "calculationError": "De verdeling per item kan niet worden berekend. Controleer de itemwaarden en de aandelen van de deelnemers."
     },
     "leaveItemized": {
       "title": "Verdeelmethode wijzigen?",
@@ -831,7 +832,8 @@
     "participantPercentageLabel": "Percentage voor {name}",
     "participantSharesLabel": "Aantal delen voor {name}",
     "decreaseShares": "Aantal delen voor {name} verlagen",
-    "increaseShares": "Aantal delen voor {name} verhogen"
+    "increaseShares": "Aantal delen voor {name} verhogen",
+    "validationSummary": "Corrigeer de gemarkeerde velden voordat je opslaat."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Document verwijderen",

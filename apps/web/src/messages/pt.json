@@ -919,7 +919,8 @@
       "defaultSplitLabel": "Divisão predefinida dos itens",
       "defaultSplitMixed": "Mista",
       "defaultSplitEdit": "Editar a divisão predefinida dos itens",
-      "defaultSplitModalTitle": "Divisão predefinida dos itens"
+      "defaultSplitModalTitle": "Divisão predefinida dos itens",
+      "calculationError": "Não foi possível calcular a divisão por itens. Verifique os valores dos itens e as partes dos participantes."
     },
     "leaveItemized": {
       "title": "Alterar o modo de divisão?",
@@ -940,7 +941,8 @@
     "participantPercentageLabel": "Percentagem para {name}",
     "participantSharesLabel": "Partes de {name}",
     "decreaseShares": "Diminuir partes de {name}",
-    "increaseShares": "Aumentar partes de {name}"
+    "increaseShares": "Aumentar partes de {name}",
+    "validationSummary": "Corrija os campos destacados antes de guardar."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Eliminar documento",

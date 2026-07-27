@@ -26,6 +26,7 @@ import {
   setCachedSource,
 } from '../../../lib/import-source-cache'
 import { protectedProcedure } from '../../init'
+import { lookupGroupOutputSchema } from '../../outputs/imports'
 
 const SPLIIT_FETCH_TIMEOUT_MS = 8000
 
@@ -59,6 +60,7 @@ export const lookupGroupProcedure = protectedProcedure
       groupId: z.string().min(1),
     }),
   )
+  .output(lookupGroupOutputSchema)
   .query(async ({ input: { groupId } }) => {
     const cached = getCachedSource(groupId)
     if (cached) {

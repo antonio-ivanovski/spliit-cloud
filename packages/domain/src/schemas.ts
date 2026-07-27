@@ -178,7 +178,7 @@ const itemSplitModeSchema = z
 
 const itemFormPaidForRowSchema = z.object({
   participant: z.string(),
-  shares: z.number(),
+  shares: z.coerce.number(),
 })
 
 const itemApiPaidForRowSchema = z.object({
@@ -207,6 +207,44 @@ const itemRowDuplicateGuard = (
       seen.add(row.participant)
     }
   })
+}
+
+type ItemShareRow = { shares: number }
+
+const validateItemShareTotal = (
+  rows: ItemShareRow[],
+  splitMode: z.infer<typeof itemSplitModeSchema>,
+  targetAmount: number,
+  ctx: z.RefinementCtx,
+  path: (string | number)[],
+  amountMessage: string,
+  percentageMessage: string,
+) => {
+  if (rows.length === 0) return
+  const sum = rows.reduce((total, { shares }) => total + shares, 0)
+  if (splitMode === 'BY_AMOUNT' && sum !== targetAmount) {
+    ctx.addIssue({ code: 'custom', message: amountMessage, path })
+  } else if (splitMode === 'BY_PERCENTAGE' && sum !== 10000) {
+    ctx.addIssue({ code: 'custom', message: percentageMessage, path })
+  }
+}
+
+const validateDisplayItemShareTotal = (
+  rows: ItemShareRow[],
+  splitMode: z.infer<typeof itemSplitModeSchema>,
+  targetAmount: number,
+  ctx: z.RefinementCtx,
+  path: (string | number)[],
+  amountMessage: string,
+  percentageMessage: string,
+) => {
+  if (rows.length === 0) return
+  const sum = rows.reduce((total, { shares }) => total + shares, 0)
+  if (splitMode === 'BY_AMOUNT' && Math.abs(sum - targetAmount) > 0.01) {
+    ctx.addIssue({ code: 'custom', message: amountMessage, path })
+  } else if (splitMode === 'BY_PERCENTAGE' && Math.abs(sum - 100) > 0.01) {
+    ctx.addIssue({ code: 'custom', message: percentageMessage, path })
+  }
 }
 
 // `defaultSplitSchema` is the persisted shape of a user's per-group
@@ -266,62 +304,93 @@ export const defaultSplitSchema = z
 
 export type SavedDefaultSplit = z.infer<typeof defaultSplitSchema>
 
-export const expenseItemFormInputSchema = z.object({
-  id: z.string().optional(),
-  title: z.string().min(1, { error: 'itemTitleRequired' }),
-  unitPrice: z.coerce
-    .number()
-    .refine((v) => !Number.isNaN(v), 'invalidNumber')
-    .refine((v) => v > 0, 'itemAmountPositive')
-    .refine((v) => v <= 10_000_000, 'amountTenMillion'),
-  quantity: z.coerce.number().int().min(1, { error: 'itemQuantityMin1' }),
-  paidFor: z
-    .array(itemFormPaidForRowSchema)
-    .min(0)
-    .superRefine((paidFor, ctx) => {
-      for (const { shares } of paidFor) {
-        if (shares <= 0) {
-          ctx.addIssue({
-            code: 'custom',
-            message: 'noZeroShares',
-          })
+export const expenseItemFormInputSchema = z
+  .object({
+    id: z.string().optional(),
+    title: z.string().min(1, { error: 'itemTitleRequired' }),
+    unitPrice: z.coerce
+      .number()
+      .refine((v) => !Number.isNaN(v), 'invalidNumber')
+      .refine((v) => v > 0, 'itemAmountPositive')
+      .refine((v) => v <= 10_000_000, 'amountTenMillion'),
+    quantity: z.coerce.number().int().min(1, { error: 'itemQuantityMin1' }),
+    paidFor: z
+      .array(itemFormPaidForRowSchema)
+      .min(0)
+      .superRefine((paidFor, ctx) => {
+        for (const { shares } of paidFor) {
+          if (shares <= 0) {
+            ctx.addIssue({
+              code: 'custom',
+              message: 'noZeroShares',
+            })
+          }
         }
-      }
-      itemRowDuplicateGuard(paidFor, ctx)
-    }),
-  splitMode: itemSplitModeSchema,
-})
+        itemRowDuplicateGuard(paidFor, ctx)
+      }),
+    splitMode: itemSplitModeSchema,
+  })
+  .superRefine((item, ctx) => {
+    validateDisplayItemShareTotal(
+      item.paidFor,
+      item.splitMode,
+      item.unitPrice * item.quantity,
+      ctx,
+      ['paidFor'],
+      'amountSum',
+      'percentageSum',
+    )
+  })
 
-export const expenseItemApiSchema = z.object({
-  id: z.string().optional(),
-  title: z.string().min(1, { error: 'itemTitleRequired' }),
-  unitPrice: z
-    .number()
-    .int()
-    .positive('itemAmountPositive')
-    .describe('Integer minor units of the expense currency.'),
-  quantity: z.number().int().min(1, { error: 'itemQuantityMin1' }),
-  amount: z
-    .number()
-    .int()
-    .positive('itemAmountPositive')
-    .describe('Integer minor units. Must equal unitPrice * quantity.'),
-  paidFor: z
-    .array(itemApiPaidForRowSchema)
-    .min(0)
-    .superRefine((paidFor, ctx) => {
-      for (const { shares } of paidFor) {
-        if (shares <= 0) {
-          ctx.addIssue({
-            code: 'custom',
-            message: 'noZeroShares',
-          })
+export const expenseItemApiSchema = z
+  .object({
+    id: z.string().optional(),
+    title: z.string().min(1, { error: 'itemTitleRequired' }),
+    unitPrice: z
+      .number()
+      .int()
+      .positive('itemAmountPositive')
+      .describe('Integer minor units of the expense currency.'),
+    quantity: z.number().int().min(1, { error: 'itemQuantityMin1' }),
+    amount: z
+      .number()
+      .int()
+      .positive('itemAmountPositive')
+      .describe('Integer minor units. Must equal unitPrice * quantity.'),
+    paidFor: z
+      .array(itemApiPaidForRowSchema)
+      .min(0)
+      .superRefine((paidFor, ctx) => {
+        for (const { shares } of paidFor) {
+          if (shares <= 0) {
+            ctx.addIssue({
+              code: 'custom',
+              message: 'noZeroShares',
+            })
+          }
         }
-      }
-      itemRowDuplicateGuard(paidFor, ctx)
-    }),
-  splitMode: itemSplitModeSchema,
-})
+        itemRowDuplicateGuard(paidFor, ctx)
+      }),
+    splitMode: itemSplitModeSchema,
+  })
+  .superRefine((item, ctx) => {
+    if (item.amount !== item.unitPrice * item.quantity) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'amountSum',
+        path: ['amount'],
+      })
+    }
+    validateItemShareTotal(
+      item.paidFor,
+      item.splitMode,
+      item.amount,
+      ctx,
+      ['paidFor'],
+      'amountSum',
+      'percentageSum',
+    )
+  })
 
 export type ExpenseFormItemValues = z.infer<typeof expenseItemFormInputSchema>
 export type ExpenseApiItem = z.infer<typeof expenseItemApiSchema>
@@ -528,6 +597,54 @@ export const expenseFormInputSchema = z
       }
     }
   })
+  .superRefine((expense, ctx) => {
+    const items = expense.items ?? []
+    if (expense.splitMode !== 'ITEMIZED') return
+
+    if (items.length === 0) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'paidForMin1',
+        path: ['items'],
+      })
+      return
+    }
+
+    items.forEach((item, index) => {
+      if (item.paidFor.length === 0) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'paidForMin1',
+          path: ['items', index, 'paidFor'],
+        })
+      }
+    })
+
+    const itemsSum = items.reduce(
+      (sum, item) => sum + item.unitPrice * item.quantity,
+      0,
+    )
+    if (itemsSum > expense.amount) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'amountSum',
+        path: ['items'],
+      })
+    }
+
+    const remainderAmount = expense.amount - itemsSum
+    if (remainderAmount > 0 && expense.itemizedRemainder) {
+      validateDisplayItemShareTotal(
+        expense.itemizedRemainder.paidFor,
+        expense.itemizedRemainder.splitMode,
+        remainderAmount,
+        ctx,
+        ['itemizedRemainder', 'paidFor'],
+        'amountSum',
+        'percentageSum',
+      )
+    }
+  })
 
 /**
  * Shared cross-cutting item validations for both form and API schemas.
@@ -539,11 +656,12 @@ export function validateExpenseItems(
   amount: number,
   splitMode: string,
   ctx: z.RefinementCtx,
+  itemizedRemainder?: z.infer<typeof itemizedRemainderApiSchema>,
 ): void {
   if (splitMode === 'ITEMIZED' && items.length === 0) {
     ctx.addIssue({
       code: 'custom',
-      message: 'itemizedRequiresItems',
+      message: 'paidForMin1',
       path: ['items'],
     })
     return
@@ -553,7 +671,7 @@ export function validateExpenseItems(
     if (splitMode === 'ITEMIZED' && item.paidFor.length === 0) {
       ctx.addIssue({
         code: 'custom',
-        message: 'itemHasNoParticipants',
+        message: 'paidForMin1',
         path: ['items', i, 'paidFor'],
       })
     }
@@ -563,9 +681,22 @@ export function validateExpenseItems(
   if (itemsSum > amount) {
     ctx.addIssue({
       code: 'custom',
-      message: 'itemsExceedAmount',
+      message: 'amountSum',
       path: ['items'],
     })
+  }
+
+  const remainderAmount = amount - itemsSum
+  if (splitMode === 'ITEMIZED' && itemizedRemainder && remainderAmount > 0) {
+    validateItemShareTotal(
+      itemizedRemainder.paidFor,
+      itemizedRemainder.splitMode,
+      remainderAmount,
+      ctx,
+      ['itemizedRemainder', 'paidFor'],
+      'amountSum',
+      'percentageSum',
+    )
   }
 }
 
@@ -712,7 +843,13 @@ export const expenseApiSchema = z
   .superRefine((expense, ctx) => {
     const items = expense.items ?? []
     // Items are always in expense currency (= `amount`).
-    validateExpenseItems(items, expense.amount, expense.splitMode, ctx)
+    validateExpenseItems(
+      items,
+      expense.amount,
+      expense.splitMode,
+      ctx,
+      expense.itemizedRemainder,
+    )
     // Exchange cannot price empty/custom codes — only ISO-ish codes.
     if (
       expense.conversion?.type === 'exchange' &&

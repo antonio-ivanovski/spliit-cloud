@@ -14,6 +14,7 @@ import {
   loadGroupViewer,
   protectedProcedure,
 } from '../../../init'
+import { listBalancesOutputSchema } from '../../../outputs/balances'
 
 export const listGroupBalancesProcedure = protectedProcedure
   .input(
@@ -24,6 +25,7 @@ export const listGroupBalancesProcedure = protectedProcedure
       ),
     }),
   )
+  .output(listBalancesOutputSchema)
   .query(async ({ input: { groupId, linkInviteToken }, ctx }) => {
     await loadGroupViewer({
       groupId,

@@ -9,6 +9,10 @@ import {
 } from '../../../../lib/api/soft-remove-participant'
 import { RevokeInvitationPreconditionError } from '../../../../lib/invitations'
 import { loadGroupContext, protectedProcedure } from '../../../init'
+import {
+  participantRemovalOutputSchema,
+  participantRemovalPreviewOutputSchema,
+} from '../../../outputs/members'
 
 function assertParticipantManagementAllowed(
   groupType: GroupType,
@@ -70,6 +74,7 @@ export const removeParticipantPreviewProcedure = protectedProcedure
       ledgerParticipantId: z.string().min(1),
     }),
   )
+  .output(participantRemovalPreviewOutputSchema)
   .query(async ({ input: { groupId, ledgerParticipantId }, ctx }) => {
     const { group, member } = await loadGroupContext({
       groupId,
@@ -96,6 +101,7 @@ export const removeParticipantProcedure = protectedProcedure
       settleBalances: z.boolean().optional(),
     }),
   )
+  .output(participantRemovalOutputSchema)
   .mutation(async ({ input, ctx }) => {
     const { group, member } = await loadGroupContext({
       groupId: input.groupId,

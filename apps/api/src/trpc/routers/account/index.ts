@@ -9,6 +9,7 @@ import { defaultSplitSchema } from '@spliit/domain'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { randomId } from '../../../lib/api'
+import { accountSummarySelect } from '../../../lib/api/selects/account-summary'
 import { isPlaceholderEmail } from '../../../lib/invitations'
 import {
   deleteS3Object,
@@ -16,6 +17,14 @@ import {
   validateProfileImageUpload,
 } from '../../../routes/upload'
 import { createTRPCRouter, protectedProcedure } from '../../init'
+import {
+  accountDefaultSplitSchema,
+  accountFriendsOutputSchema,
+  accountGroupsOutputSchema,
+  accountMembersOutputSchema,
+  accountPreferencesSchema,
+  accountProfileSchema,
+} from '../../outputs/account'
 
 /**
  * Account-scoped router. Used by the web client to bootstrap an authenticated
@@ -24,9 +33,16 @@ import { createTRPCRouter, protectedProcedure } from '../../init'
  */
 export const accountRouter = createTRPCRouter({
   // Current account profile.
-  me: protectedProcedure.query(async ({ ctx }) => {
-    return { account: ctx.auth.user }
-  }),
+  me: protectedProcedure
+    .output(z.object({ account: accountProfileSchema }))
+    .query(async ({ ctx }) => {
+      return {
+        account: {
+          ...ctx.auth.user,
+          image: ctx.auth.user.image ?? null,
+        },
+      }
+    }),
 
   /**
    * Update the display name. Used by the post-signup complete-profile flow.
@@ -44,6 +60,7 @@ export const accountRouter = createTRPCRouter({
           .max(50, { error: 'max50' }),
       }),
     )
+    .output(z.object({ account: accountProfileSchema }))
     .mutation(async ({ input, ctx }) => {
       const account = await prisma.account.update({
         where: { id: ctx.auth.user.id },
@@ -60,32 +77,41 @@ export const accountRouter = createTRPCRouter({
     }),
 
   /** Delete the profile avatar and clean up the S3 object. */
-  removeProfileImage: protectedProcedure.mutation(async ({ ctx }) => {
-    const existing = await prisma.account.findUnique({
-      where: { id: ctx.auth.user.id },
-      select: { image: true },
-    })
-    const account = await prisma.account.update({
-      where: { id: ctx.auth.user.id },
-      data: { image: null },
-      select: { id: true, image: true },
-    })
-    if (
-      existing?.image &&
-      isProfileImageUrlForAccount(existing.image, ctx.auth.user.id)
-    ) {
-      try {
-        await deleteS3Object(existing.image)
-      } catch (error) {
-        console.warn('Failed to delete profile image:', error)
+  removeProfileImage: protectedProcedure
+    .output(z.object({ account: accountProfileSchema }))
+    .mutation(async ({ ctx }) => {
+      const existing = await prisma.account.findUnique({
+        where: { id: ctx.auth.user.id },
+        select: { image: true },
+      })
+      const account = await prisma.account.update({
+        where: { id: ctx.auth.user.id },
+        data: { image: null },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          emailVerified: true,
+          image: true,
+        },
+      })
+      if (
+        existing?.image &&
+        isProfileImageUrlForAccount(existing.image, ctx.auth.user.id)
+      ) {
+        try {
+          await deleteS3Object(existing.image)
+        } catch (error) {
+          console.warn('Failed to delete profile image:', error)
+        }
       }
-    }
-    return { account }
-  }),
+      return { account }
+    }),
 
   /** Set the profile avatar. `fileUrl` must come from `uploads.profileImagePresign`. */
   setProfileImage: protectedProcedure
     .input(z.object({ fileUrl: z.string().url() }))
+    .output(z.object({ account: accountProfileSchema }))
     .mutation(async ({ input, ctx }) => {
       if (
         !(await validateProfileImageUpload(input.fileUrl, ctx.auth.user.id))
@@ -105,7 +131,13 @@ export const accountRouter = createTRPCRouter({
       const account = await prisma.account.update({
         where: { id: ctx.auth.user.id },
         data: { image: input.fileUrl },
-        select: { id: true, image: true },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          emailVerified: true,
+          image: true,
+        },
       })
       if (
         existing?.image &&
@@ -133,13 +165,16 @@ export const accountRouter = createTRPCRouter({
         })
         .default({ includeArchived: false }),
     )
+    .output(accountGroupsOutputSchema)
     .query(async ({ input: { includeArchived }, ctx }) => {
       const memberships = await prisma.groupMember.findMany({
         where: {
           accountId: ctx.auth.user.id,
           status: GroupMemberStatus.ACTIVE,
         },
-        include: {
+        select: {
+          groupId: true,
+          role: true,
           group: {
             include: {
               ledger: { select: { currency: true, currencyCode: true } },
@@ -149,7 +184,7 @@ export const accountRouter = createTRPCRouter({
                 orderBy: { joinedAt: 'asc' },
                 take: 4,
                 select: {
-                  account: { select: { id: true, name: true, image: true } },
+                  account: { select: accountSummarySelect },
                 },
               },
             },
@@ -230,16 +265,19 @@ export const accountRouter = createTRPCRouter({
               : undefined) ||
             ''
           : m.group.name
+        const { _count, members, ...group } = m.group
         return {
-          ...m.group,
-          createdAt: m.group.createdAt.toISOString(),
+          ...group,
+          createdAt: group.createdAt.toISOString(),
+          // Prisma's relation-count key is `_count`; expose a plain public field.
+          memberCount: _count.members,
           // The caller's role on this group. The web client uses it to gate
           // the group-level archive action (ADMIN only).
           currentMemberRole: m.role,
           preference: prefByGroupId.get(m.groupId) ?? defaultPref,
           displayName,
           friendAccount,
-          memberAccounts: (m.group.members ?? [])
+          memberAccounts: (members ?? [])
             .map((member) => member.account)
             // Friend ledgers: only show the other person's avatar, not the caller's.
             .filter((account) => !isFriend || account.id !== ctx.auth.user.id),
@@ -265,6 +303,7 @@ export const accountRouter = createTRPCRouter({
   // `AccountGroupPreference.hidden` column.
   preferences: protectedProcedure
     .input(z.object({ groupId: z.string().min(1) }))
+    .output(accountPreferencesSchema)
     .query(async ({ input: { groupId }, ctx }) => {
       const pref = await prisma.accountGroupPreference.findUnique({
         where: {
@@ -290,6 +329,7 @@ export const accountRouter = createTRPCRouter({
         hidden: z.boolean().optional(),
       }),
     )
+    .output(accountPreferencesSchema)
     .mutation(async ({ input, ctx }) => {
       const data: { starred?: boolean; hidden?: boolean } = {}
       if (input.starred !== undefined) data.starred = input.starred
@@ -326,6 +366,7 @@ export const accountRouter = createTRPCRouter({
   // the save action when the current split is itemized.
   defaultSplit: protectedProcedure
     .input(z.object({ groupId: z.string().min(1) }))
+    .output(accountDefaultSplitSchema)
     .query(async ({ input: { groupId }, ctx }) => {
       const row = await prisma.accountGroupDefaultSplit.findUnique({
         where: {
@@ -334,6 +375,7 @@ export const accountRouter = createTRPCRouter({
         include: { paidFor: true },
       })
       if (!row) return { defaultSplit: null }
+      if (row.splitMode === 'ITEMIZED') return { defaultSplit: null }
       return {
         defaultSplit: {
           splitMode: row.splitMode,
@@ -353,6 +395,7 @@ export const accountRouter = createTRPCRouter({
         defaultSplit: defaultSplitSchema,
       }),
     )
+    .output(z.object({ defaultSplit: defaultSplitSchema }))
     .mutation(async ({ input: { groupId, defaultSplit }, ctx }) => {
       // ITEMIZED is excluded by `defaultSplitSchema` at the zod level so
       // it cannot reach this resolver — the runtime check is intentionally
@@ -434,6 +477,7 @@ export const accountRouter = createTRPCRouter({
   // management UI.
   members: protectedProcedure
     .input(z.object({ groupId: z.string().min(1) }))
+    .output(accountMembersOutputSchema)
     .query(async ({ input: { groupId }, ctx }) => {
       // Authorise as a member of the group.
       const member = await prisma.groupMember.findUnique({
@@ -474,6 +518,7 @@ export const accountRouter = createTRPCRouter({
         })
         .default({}),
     )
+    .output(accountFriendsOutputSchema)
     .query(async ({ input: { groupId }, ctx }) => {
       const currentId = ctx.auth.user.id
 

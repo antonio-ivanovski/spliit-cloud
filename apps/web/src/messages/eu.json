@@ -817,7 +817,8 @@
       "defaultSplitLabel": "Lehenetsitako elementuen banaketa",
       "defaultSplitMixed": "Mistoa",
       "defaultSplitEdit": "Editatu lehenetsitako elementuen banaketa",
-      "defaultSplitModalTitle": "Lehenetsitako elementuen banaketa"
+      "defaultSplitModalTitle": "Lehenetsitako elementuen banaketa",
+      "calculationError": "Ezin izan da elementuen araberako banaketa kalkulatu. Egiaztatu elementuen balioak eta parte-hartzaileen zatiak."
     },
     "leaveItemized": {
       "title": "Banaketa-modua aldatu?",
@@ -838,7 +839,8 @@
     "participantPercentageLabel": "{name}(r)en ehunekoa",
     "participantSharesLabel": "{name}(r)en zatiak",
     "decreaseShares": "{name}(r)en zatiak murriztu",
-    "increaseShares": "{name}(r)en zatiak handitu"
+    "increaseShares": "{name}(r)en zatiak handitu",
+    "validationSummary": "Zuzendu nabarmendutako eremuak gorde aurretik."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Ezabatu dokumentua",

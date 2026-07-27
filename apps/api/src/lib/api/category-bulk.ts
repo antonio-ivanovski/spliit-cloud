@@ -10,6 +10,7 @@ import {
 import type { BulkUpdateExpenseCategoriesInput } from '@spliit/domain/schemas'
 import { scheduleDefaultNotificationDispatch } from '../notifications/dispatcher'
 import { logActivity } from './activities'
+import { groupLedgerIdArchivedSelect } from './selects/group-ledger-id-archived'
 
 /**
  * Re-export the hard limit for backwards-compatible call sites that
@@ -78,7 +79,7 @@ export async function bulkUpdateExpenseCategories(args: {
 
   const group = await prisma.group.findUnique({
     where: { id: groupId },
-    select: { ledgerId: true, archived: true },
+    select: groupLedgerIdArchivedSelect,
   })
   if (!group) {
     throw new Error(`Group not found: ${groupId}`)

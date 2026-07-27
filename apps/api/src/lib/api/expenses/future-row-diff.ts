@@ -2,6 +2,11 @@ import type { Prisma } from '@spliit/db'
 import { conversionFromStored, type Expense } from '@spliit/domain'
 import type { buildRecurringTemplate } from '../recurrence-series'
 import { toRecurrenceConfig } from '../recurrence-series'
+import {
+  expenseItemWithSharesSelect,
+  expenseItemizedRemainderSelect,
+} from '../selects/expense-item-with-shares'
+import { expenseParticipantSharesSelect } from '../selects/expense-participant-shares'
 
 // Narrow future-row snapshot select reused inside the THIS_AND_FUTURE update
 // transaction. Keep it tight: full per-row state needed to diff future
@@ -20,25 +25,10 @@ export const futureRowSnapshotSelect = {
   originalCurrency: true,
   conversionRate: true,
   conversionSource: true,
-  paidByList: { select: { ledgerParticipantId: true, shares: true } },
-  paidFor: { select: { ledgerParticipantId: true, shares: true } },
-  items: {
-    select: {
-      id: true,
-      title: true,
-      unitPrice: true,
-      quantity: true,
-      amount: true,
-      splitMode: true,
-      paidFor: { select: { ledgerParticipantId: true, shares: true } },
-    },
-  },
-  itemizedRemainder: {
-    select: {
-      splitMode: true,
-      paidFor: { select: { ledgerParticipantId: true, shares: true } },
-    },
-  },
+  paidByList: { select: expenseParticipantSharesSelect },
+  paidFor: { select: expenseParticipantSharesSelect },
+  items: { select: expenseItemWithSharesSelect },
+  itemizedRemainder: { select: expenseItemizedRemainderSelect },
   documents: { select: { id: true, url: true, width: true, height: true } },
 } satisfies Prisma.ExpenseSelect
 

@@ -27,6 +27,7 @@ import {
   isOutsideTermination,
   isScheduleConfigEqual,
 } from '../recurrence/reflow-series-from-anchor'
+import { participantDisplayNameSelect } from '../selects/participant-display-name'
 import { randomId } from '../shared'
 import {
   futureRowAfterShape,
@@ -81,20 +82,7 @@ export async function updateExpense(
         { kind: 'UNLINKED_PARTICIPANT' },
       ],
     },
-    select: {
-      id: true,
-      displayName: true,
-      groupMember: {
-        select: {
-          account: { select: { id: true, name: true, image: true } },
-        },
-      },
-      invitations: {
-        where: { status: 'PENDING' },
-        select: { email: true, temporaryName: true },
-        take: 1,
-      },
-    },
+    select: participantDisplayNameSelect({ pendingInvitationsOnly: true }),
   })
   const participantIds = new Set(participants.map((p) => p.id))
   for (const participantId of [

@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { useToast } from '@/components/ui/use-toast'
 import { trpc } from '@/trpc/client'
 import type { ExpenseFormInputValues } from '@spliit/domain'
 import {
@@ -30,10 +31,14 @@ export function SaveDefaultButton(props: {
 }) {
   const { form, group, groupCurrency } = props
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
+  const { toast } = useToast()
   const utils = trpc.useUtils()
   const setDefaultSplit = trpc.account.setDefaultSplit.useMutation({
     onSuccess: () => {
       utils.account.defaultSplit.invalidate({ groupId: group.id })
+    },
+    onError: (error) => {
+      toast({ description: error.message, variant: 'destructive' })
     },
   })
 

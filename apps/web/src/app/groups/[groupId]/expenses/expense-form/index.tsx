@@ -12,8 +12,14 @@ import { trpc } from '@/trpc/client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { AppRouterOutput } from '@spliit/api/router'
 import { amountAsDecimal, type Currency } from '@spliit/domain'
-import { useEffect, useRef } from 'react'
-import { useForm, useWatch, type Resolver } from 'react-hook-form'
+import { useEffect, useRef, useState } from 'react'
+import {
+  useForm,
+  useWatch,
+  type FieldErrors,
+  type FieldPath,
+  type Resolver,
+} from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type {
   ReceiptDocument,
@@ -36,6 +42,30 @@ import { buildSubmitValues } from './submit-values'
 import { useExpenseCurrencyConversion } from './use-expense-currency-conversion'
 import { useExpenseFormBalancing } from './use-expense-form-balancing'
 
+function firstErrorPath(errors: FieldErrors, prefix = ''): string | undefined {
+  if (!errors || typeof errors !== 'object') return undefined
+  for (const [key, value] of Object.entries(errors)) {
+    if (key === 'ref' || key === 'types') continue
+    const path = prefix ? `${prefix}.${key}` : key
+    if (
+      value &&
+      typeof value === 'object' &&
+      'message' in value &&
+      (value as { message?: unknown }).message != null
+    ) {
+      return path
+    }
+    const childPath = firstErrorPath(value as FieldErrors, path)
+    if (childPath) return childPath
+  }
+  return undefined
+}
+
+function focusableErrorPath(path: string): string {
+  const itemMatch = path.match(/^items(?:\.(\d+))?/)
+  return itemMatch ? `items.${itemMatch[1] ?? 0}.title` : path
+}
+
 export function ExpenseForm(props: {
   group: NonNullable<AppRouterOutput['groups']['get']['group']>
   expense?: AppRouterOutput['groups']['expenses']['get']['expense']
@@ -53,6 +83,7 @@ export function ExpenseForm(props: {
   editScope?: 'OCCURRENCE' | 'THIS_AND_FUTURE' | null
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
+  const [hasValidationError, setHasValidationError] = useState(false)
   // Copy and fresh-create both surface as a Create flow even though
   // props.expense is set in copy mode (for field prefill).
   const isCreate = props.expense === undefined || props.isCopy === true
@@ -239,6 +270,7 @@ export function ExpenseForm(props: {
 
   const submit = async (values: ExpenseFormInputValues) => {
     if (props.readOnly) return
+    setHasValidationError(false)
     const rate = Number(values.conversionRate)
     if (
       conversion.conversionRequired &&
@@ -258,10 +290,25 @@ export function ExpenseForm(props: {
     )
   }
 
+  const handleInvalidSubmit = (errors: FieldErrors<ExpenseFormInputValues>) => {
+    setHasValidationError(true)
+    const path = firstErrorPath(errors)
+    if (!path) return
+    form.setFocus(focusableErrorPath(path) as FieldPath<ExpenseFormInputValues>)
+    window.setTimeout(() => {
+      const active = document.activeElement as HTMLElement | null
+      const invalid = document.querySelector<HTMLElement>(
+        '[aria-invalid="true"]',
+      )
+      const target = active && active !== document.body ? active : invalid
+      target?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }, 0)
+  }
+
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(submit)}
+        onSubmit={form.handleSubmit(submit, handleInvalidSubmit)}
         noValidate
         className="-mx-4 min-w-0 w-[calc(100%+2rem)] overflow-x-hidden pb-24 sm:mx-0 sm:w-auto sm:pb-20"
       >
@@ -358,6 +405,15 @@ export function ExpenseForm(props: {
             receiptContext={receiptScanContext}
             onReceiptAccepted={applyReceiptResult}
           />
+        )}
+        {hasValidationError && (
+          <div
+            role="alert"
+            aria-live="assertive"
+            className="mb-3 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive"
+          >
+            {t('validationSummary')}
+          </div>
         )}
         <FormActions
           isCreate={isCreate}

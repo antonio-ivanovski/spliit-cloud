@@ -146,13 +146,14 @@ export function StatsDashboard() {
       </Card>
     )
   }
-  const periodDates = `${dateRange.format(dashboard.period.from)} – ${dateRange.format(dashboard.period.to)}`
+  const activePeriod = dashboard.period
+  const periodDates = `${dateRange.format(activePeriod.from)} – ${dateRange.format(activePeriod.to)}`
 
   const handlePeriodChange = (nextPeriod: StatsPeriod) => {
     if (nextPeriod === 'CUSTOM' && !customRange) {
       setCustomRange({
-        from: formatDateInput(dashboard.period.from),
-        to: formatDateInput(dashboard.period.to),
+        from: formatDateInput(activePeriod.from),
+        to: formatDateInput(activePeriod.to),
       })
     }
     setPeriod(nextPeriod)

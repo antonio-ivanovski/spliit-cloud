@@ -1,6 +1,8 @@
 import { prisma } from '@spliit/db'
 import { getCategoryById } from '@spliit/domain'
 import { create as contentDisposition } from 'content-disposition'
+import { expenseJsonExportSelect } from '../lib/api/selects/expense-list'
+import { participantDisplayNameSelect } from '../lib/api/selects/participant-display-name'
 import { getAuthFromRequest } from '../lib/auth/session'
 import { resolveParticipantDisplayName } from '../lib/invitations'
 
@@ -11,6 +13,7 @@ export async function exportGroupJson(request: Request, groupId: string) {
   }
   const member = await prisma.groupMember.findUnique({
     where: { groupId_accountId: { groupId, accountId: auth.user.id } },
+    select: { status: true },
   })
   if (!member || member.status !== 'ACTIVE') {
     return Response.json({ error: 'Forbidden' }, { status: 403 })
@@ -19,10 +22,10 @@ export async function exportGroupJson(request: Request, groupId: string) {
   const group = await prisma.group.findUnique({
     where: { id: groupId },
     include: {
-      ledger: true,
+      ledger: { select: { currency: true, currencyCode: true } },
       members: {
         where: { status: 'ACTIVE' },
-        include: { ledgerParticipant: true },
+        select: { ledgerParticipant: { select: { id: true } } },
       },
     },
   })
@@ -33,57 +36,7 @@ export async function exportGroupJson(request: Request, groupId: string) {
   const ledgerId = group.ledgerId
 
   const expenses = await prisma.expense.findMany({
-    select: {
-      createdAt: true,
-      expenseDate: true,
-      title: true,
-      categoryId: true,
-      amount: true,
-      originalAmount: true,
-      originalCurrency: true,
-      conversionRate: true,
-      conversionSource: true,
-      paidBySplitMode: true,
-      paidByList: {
-        select: {
-          ledgerParticipant: {
-            select: {
-              id: true,
-              groupMember: { select: { account: { select: { name: true } } } },
-              invitations: {
-                select: { email: true, temporaryName: true },
-                take: 1,
-                orderBy: { createdAt: 'desc' },
-              },
-            },
-          },
-          shares: true,
-        },
-      },
-      paidFor: { select: { ledgerParticipantId: true, shares: true } },
-      isReimbursement: true,
-      splitMode: true,
-      recurringSeries: {
-        select: { frequency: true, interval: true, endType: true },
-      },
-      items: {
-        select: {
-          id: true,
-          title: true,
-          unitPrice: true,
-          quantity: true,
-          amount: true,
-          splitMode: true,
-          paidFor: { select: { ledgerParticipantId: true, shares: true } },
-        },
-      },
-      itemizedRemainder: {
-        select: {
-          splitMode: true,
-          paidFor: { select: { ledgerParticipantId: true, shares: true } },
-        },
-      },
-    },
+    select: expenseJsonExportSelect,
     where: { ledgerId },
     orderBy: [{ expenseDate: 'asc' }, { createdAt: 'asc' }],
   })
@@ -108,16 +61,10 @@ export async function exportGroupJson(request: Request, groupId: string) {
       ledgerId,
       id: { in: Array.from(participantIds) },
     },
-    select: {
-      id: true,
-      groupMember: { select: { account: { select: { name: true } } } },
-      invitations: {
-        select: { email: true, temporaryName: true },
-        take: 1,
-        orderBy: { createdAt: 'desc' },
-      },
+    select: participantDisplayNameSelect(),
+    orderBy: {
+      groupMember: { account: { name: 'asc' } },
     },
-    orderBy: { groupMember: { account: { name: 'asc' } } },
   })
   const participantOrder = new Map(
     Array.from(participantIds).map((id, index) => [id, index]),

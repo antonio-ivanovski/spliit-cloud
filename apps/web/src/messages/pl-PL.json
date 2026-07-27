@@ -824,7 +824,8 @@
       "defaultSplitLabel": "Domyślny podział pozycji",
       "defaultSplitMixed": "Mieszane",
       "defaultSplitEdit": "Edytuj domyślny podział pozycji",
-      "defaultSplitModalTitle": "Domyślny podział pozycji"
+      "defaultSplitModalTitle": "Domyślny podział pozycji",
+      "calculationError": "Nie można obliczyć podziału na pozycje. Sprawdź wartości pozycji i udziały uczestników."
     },
     "leaveItemized": {
       "title": "Zmienić sposób podziału?",
@@ -845,7 +846,8 @@
     "participantPercentageLabel": "Procent dla {name}",
     "participantSharesLabel": "Liczba udziałów dla {name}",
     "decreaseShares": "Zmniejsz liczbę udziałów dla {name}",
-    "increaseShares": "Zwiększ liczbę udziałów dla {name}"
+    "increaseShares": "Zwiększ liczbę udziałów dla {name}",
+    "validationSummary": "Popraw wyróżnione pola przed zapisaniem."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Usuń dokument",

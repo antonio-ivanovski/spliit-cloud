@@ -6,6 +6,7 @@ import {
   loadGroupViewer,
   protectedProcedure,
 } from '../../../init'
+import { recurringSeriesProgressOutputSchema } from '../../../outputs/expenses'
 
 export const seriesProgressProcedure = protectedProcedure
   .input(
@@ -15,6 +16,7 @@ export const seriesProgressProcedure = protectedProcedure
       linkInviteToken: linkInviteTokenInput,
     }),
   )
+  .output(recurringSeriesProgressOutputSchema)
   .query(async ({ input, ctx }) => {
     await loadGroupViewer({
       groupId: input.groupId,

@@ -893,7 +893,7 @@ describe('Friend ledger — real DB', () => {
 
       const participants = await prisma.ledgerParticipant.findMany({
         where: { ledger: { group: { id: result.groupId } } },
-        include: { groupMember: { select: { accountId: true } } },
+        select: { id: true, groupMember: { select: { accountId: true } } },
       })
       expect(participants).toHaveLength(2)
       const aP = participants.find((p) => p.groupMember.accountId === aId)!
@@ -994,7 +994,7 @@ describe('Friend ledger — real DB', () => {
 
       const participants = await prisma.ledgerParticipant.findMany({
         where: { ledger: { group: { id: result.groupId } } },
-        include: { groupMember: { select: { accountId: true } } },
+        select: { id: true, groupMember: { select: { accountId: true } } },
       })
       const aP = participants.find((p) => p.groupMember.accountId === aId)!
       const bP = participants.find((p) => p.groupMember.accountId === bId)!

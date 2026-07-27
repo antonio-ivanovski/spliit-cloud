@@ -824,7 +824,8 @@
       "defaultSplitLabel": "Разделение позиций по умолчанию",
       "defaultSplitMixed": "Смешанное",
       "defaultSplitEdit": "Редактировать разделение позиций по умолчанию",
-      "defaultSplitModalTitle": "Разделение позиций по умолчанию"
+      "defaultSplitModalTitle": "Разделение позиций по умолчанию",
+      "calculationError": "Не удалось рассчитать разбивку по позициям. Проверьте значения позиций и доли участников."
     },
     "leaveItemized": {
       "title": "Изменить способ распределения?",
@@ -845,7 +846,8 @@
     "participantPercentageLabel": "Процент для {name}",
     "participantSharesLabel": "Количество долей для {name}",
     "decreaseShares": "Уменьшить количество долей для {name}",
-    "increaseShares": "Увеличить количество долей для {name}"
+    "increaseShares": "Увеличить количество долей для {name}",
+    "validationSummary": "Исправьте выделенные поля перед сохранением."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Удалить документ",

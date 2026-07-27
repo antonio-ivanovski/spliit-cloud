@@ -838,7 +838,8 @@
       "defaultSplitLabel": "Standardaufteilung der Ausgabenposten",
       "defaultSplitMixed": "Gemischt",
       "defaultSplitEdit": "Standardaufteilung der Ausgabenposten bearbeiten",
-      "defaultSplitModalTitle": "Standardaufteilung der Ausgabenposten"
+      "defaultSplitModalTitle": "Standardaufteilung der Ausgabenposten",
+      "calculationError": "Die Aufteilung nach Positionen konnte nicht berechnet werden. Prüfen Sie die Werte der Positionen und die Anteile der Teilnehmer."
     },
     "leaveItemized": {
       "title": "Aufteilungsart wechseln?",
@@ -859,7 +860,8 @@
     "participantPercentageLabel": "Prozentsatz für {name}",
     "participantSharesLabel": "Anteile für {name}",
     "decreaseShares": "Anteile für {name} verringern",
-    "increaseShares": "Anteile für {name} erhöhen"
+    "increaseShares": "Anteile für {name} erhöhen",
+    "validationSummary": "Bitte korrigieren Sie die hervorgehobenen Felder, bevor Sie speichern."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Dokument löschen",

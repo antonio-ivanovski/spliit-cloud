@@ -6,6 +6,7 @@ import {
   loadGroupViewer,
   protectedProcedure,
 } from '../../../init'
+import { listExpensesOutputSchema } from '../../../outputs/expenses'
 
 const matchModeSchema = z
   .enum(['any', 'all', 'exact'])
@@ -40,6 +41,7 @@ const listExpensesInputSchema = z.object({
 
 export const listGroupExpensesProcedure = protectedProcedure
   .input(listExpensesInputSchema)
+  .output(listExpensesOutputSchema)
   .query(
     async ({
       input: {

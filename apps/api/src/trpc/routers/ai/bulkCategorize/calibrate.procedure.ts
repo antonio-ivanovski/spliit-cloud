@@ -17,6 +17,7 @@ import {
 } from '../../../../lib/api/category-bulk'
 import { env } from '../../../../lib/env'
 import { loadGroupContext, protectedProcedure } from '../../../init'
+import { calibrateBulkCategorizeOutputSchema } from '../../../outputs/ai'
 
 const calibrateInputSchema = z.object({
   groupId: z.string().min(1),
@@ -58,6 +59,7 @@ const calibrateInputSchema = z.object({
 
 export const aiBulkCategorizeCalibrateProcedure = protectedProcedure
   .input(calibrateInputSchema)
+  .output(calibrateBulkCategorizeOutputSchema)
   .mutation(async ({ ctx, input }) => {
     const { member, group } = await loadGroupContext({
       groupId: input.groupId,
@@ -184,7 +186,7 @@ export const aiBulkCategorizeCalibrateProcedure = protectedProcedure
       candidates: candidates.map((c) => ({
         id: c.id,
         title: c.title,
-        expenseDate: c.expenseDate.toISOString(),
+        expenseDate: c.expenseDate,
         amount: c.amount,
       })),
       totalEligible,

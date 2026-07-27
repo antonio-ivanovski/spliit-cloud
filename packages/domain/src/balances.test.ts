@@ -30,7 +30,7 @@ const makeExpense = (overrides: Partial<BalancesExpense>): BalancesExpense =>
         shares: 1,
       },
     ],
-    _count: { documents: 0 },
+    documentCount: 0,
     ...overrides,
   }) as BalancesExpense
 

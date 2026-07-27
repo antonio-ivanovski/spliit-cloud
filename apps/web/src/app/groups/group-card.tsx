@@ -48,7 +48,7 @@ export function GroupCard({
   const isHidden = group.preference.hidden
   const isArchived = group.archived
   const isFriend = group.groupType === 'FRIEND'
-  const isPending = isFriend && group._count.members === 1
+  const isPending = isFriend && group.memberCount === 1
   const memberAccounts = group.memberAccounts ?? []
   const formattedDate = new Date(group.createdAt).toLocaleDateString(locale, {
     dateStyle: 'medium',
@@ -173,12 +173,12 @@ export function GroupCard({
                 </span>
               ) : (
                 <div className="flex items-center gap-2">
-                  <span>{group._count.members}</span>
+                  <span>{group.memberCount}</span>
                   {memberAccounts.length > 0 && (
                     <AvatarStack
                       accounts={memberAccounts}
                       size="sm"
-                      label={`${group._count.members} members`}
+                      label={`${group.memberCount} members`}
                     />
                   )}
                 </div>

@@ -28,7 +28,7 @@ function makeFriendGroup(overrides: Record<string, unknown> = {}) {
     archived: false,
     createdAt: '2026-06-01T00:00:00Z',
     displayName: 'Alice',
-    _count: { members: 2 },
+    memberCount: 2,
     currentMemberRole: 'ADMIN' as const,
     preference: { starred: false, hidden: false },
     information: null,
@@ -58,7 +58,7 @@ function makeRegularGroup(overrides: Record<string, unknown> = {}) {
     archived: false,
     createdAt: '2026-06-01T00:00:00Z',
     displayName: 'Trip',
-    _count: { members: 4 },
+    memberCount: 4,
     currentMemberRole: 'ADMIN' as const,
     preference: { starred: false, hidden: false },
     information: null,
@@ -144,7 +144,7 @@ describe('GroupCard — friend-ledger behavior', () => {
   it('shows a Pending badge for a FRIEND card with only one ACTIVE member', () => {
     render(
       <GroupCard
-        group={makeFriendGroup({ _count: { members: 1 } })}
+        group={makeFriendGroup({ memberCount: 1 })}
         onToggleStar={() => {}}
         onToggleHidden={() => {}}
       />,
@@ -155,7 +155,7 @@ describe('GroupCard — friend-ledger behavior', () => {
   it('does not show a Pending badge for a FRIEND card with two ACTIVE members', () => {
     render(
       <GroupCard
-        group={makeFriendGroup({ _count: { members: 2 } })}
+        group={makeFriendGroup({ memberCount: 2 })}
         onToggleStar={() => {}}
         onToggleHidden={() => {}}
       />,

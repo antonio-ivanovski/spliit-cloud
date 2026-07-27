@@ -6,6 +6,7 @@ import {
   loadGroupViewer,
   protectedProcedure,
 } from '../../../init'
+import { listActivitiesOutputSchema } from '../../../outputs/activities'
 
 export const listGroupActivitiesProcedure = protectedProcedure
   .input(
@@ -18,6 +19,7 @@ export const listGroupActivitiesProcedure = protectedProcedure
       ),
     }),
   )
+  .output(listActivitiesOutputSchema)
   .query(
     async ({ input: { groupId, cursor, limit, linkInviteToken }, ctx }) => {
       await loadGroupViewer({
@@ -31,7 +33,10 @@ export const listGroupActivitiesProcedure = protectedProcedure
         length: limit + 1,
       })
       return {
-        activities: activities.slice(0, limit),
+        activities: activities.slice(0, limit).map((activity) => ({
+          ...activity,
+          expense: activity.expense ?? null,
+        })),
         hasMore: !!activities[limit],
         nextCursor: cursor + limit,
       }

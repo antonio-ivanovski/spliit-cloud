@@ -13,6 +13,7 @@ import {
   loadGroupContext,
   protectedProcedure,
 } from '../../init'
+import { getGroupOutputSchema } from '../../outputs/groups'
 
 /**
  * State of the URL-borne link-invite token. The group page surfaces a
@@ -44,6 +45,7 @@ export const getGroupProcedure = protectedProcedure
       ),
     }),
   )
+  .output(getGroupOutputSchema)
   .query(async ({ input: { groupId, linkInviteToken }, ctx }) => {
     const account = ctx.auth.user
 
@@ -74,7 +76,10 @@ export const getGroupProcedure = protectedProcedure
         accountId: account.id,
       })
       const group = await getGroup(groupId)
-      const displayName = group ? resolveDisplayName(group, account.id) : ''
+      if (!group) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Group not found' })
+      }
+      const displayName = resolveDisplayName(group, account.id)
       const linkInviteState = linkInviteToken
         ? await resolveLinkInviteState(groupId, linkInviteToken)
         : null
@@ -145,9 +150,13 @@ export const getGroupProcedure = protectedProcedure
               accountId: account.id,
             })
             const group = await getGroup(groupId)
-            const displayName = group
-              ? resolveDisplayName(group, account.id)
-              : ''
+            if (!group) {
+              throw new TRPCError({
+                code: 'NOT_FOUND',
+                message: 'Group not found',
+              })
+            }
+            const displayName = resolveDisplayName(group, account.id)
             return {
               group,
               displayName,
@@ -164,7 +173,10 @@ export const getGroupProcedure = protectedProcedure
         }
       }
       const group = await getGroup(groupId)
-      const displayName = group ? resolveDisplayName(group, account.id) : ''
+      if (!group) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Group not found' })
+      }
+      const displayName = resolveDisplayName(group, account.id)
       const linkRow = await prisma.groupInvitation.findFirst({
         where: {
           groupId,
@@ -205,7 +217,10 @@ export const getGroupProcedure = protectedProcedure
       })
       if (invitation) {
         const group = await getGroup(groupId)
-        const displayName = group ? resolveDisplayName(group, account.id) : ''
+        if (!group) {
+          throw new TRPCError({ code: 'NOT_FOUND', message: 'Group not found' })
+        }
+        const displayName = resolveDisplayName(group, account.id)
         return {
           group,
           displayName,

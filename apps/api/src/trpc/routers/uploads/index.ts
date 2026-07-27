@@ -5,6 +5,10 @@ import {
   mintProfileImagePresign,
 } from '../../../routes/upload'
 import { createTRPCRouter, protectedProcedure } from '../../init'
+import {
+  profileImagePresignOutputSchema,
+  uploadPresignOutputSchema,
+} from '../../outputs/uploads'
 
 const presignInput = z.object({
   ledgerId: z.string().min(1),
@@ -45,6 +49,7 @@ export const uploadsRouter = createTRPCRouter({
   /** Get a presigned PUT URL for an expense document upload. The client uploads directly to S3/R2, then passes the returned `fileUrl` in the expense's `documents` array. */
   presign: protectedProcedure
     .input(presignInput)
+    .output(uploadPresignOutputSchema)
     .mutation(async ({ ctx, input }) => {
       const response = await createUploadPresignForAccount({
         ledgerId: input.ledgerId,
@@ -64,6 +69,7 @@ export const uploadsRouter = createTRPCRouter({
   /** Get a presigned PUT URL for a profile image upload. Pass the returned `fileUrl` to `account.setProfileImage`. */
   profileImagePresign: protectedProcedure
     .input(profileImageInput)
+    .output(profileImagePresignOutputSchema)
     .mutation(async ({ ctx, input }) => {
       const response = await mintProfileImagePresign({
         fileSize: input.fileSize,

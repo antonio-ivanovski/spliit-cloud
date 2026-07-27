@@ -1,5 +1,10 @@
 import { Button } from '@/components/ui/button'
-import { FormControl, FormField, FormItem } from '@/components/ui/form'
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { cn, formatCurrency } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
@@ -147,6 +152,7 @@ export function ExpenseItemRow({
                       onFocus={(event) => event.target.select()}
                     />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -189,6 +195,7 @@ export function ExpenseItemRow({
                       onFocus={(event) => event.target.select()}
                     />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -231,6 +238,7 @@ export function ExpenseItemRow({
                       />
                     </div>
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -273,9 +281,24 @@ export function ExpenseItemRow({
           )}
         </div>
       </div>
-      <div className="mt-2 min-w-0 text-xs leading-5 text-muted-foreground md:pr-16">
-        <span className="block truncate">{participantsLabel}</span>
-      </div>
+      {!isFiller ? (
+        <FormField
+          control={control}
+          name={itemPath(itemIndex, 'paidFor')}
+          render={() => (
+            <FormItem className="mt-2 min-w-0 space-y-1 text-xs leading-5 md:pr-16">
+              <span className="block truncate text-muted-foreground">
+                {participantsLabel}
+              </span>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      ) : (
+        <div className="mt-2 min-w-0 text-xs leading-5 text-muted-foreground md:pr-16">
+          <span className="block truncate">{participantsLabel}</span>
+        </div>
+      )}
     </div>
   )
 }

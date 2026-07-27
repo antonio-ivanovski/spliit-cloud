@@ -31,7 +31,7 @@ export async function getMemberLedgerParticipantId(
 ): Promise<string | null> {
   const member = await client.groupMember.findUnique({
     where: { groupId_accountId: { groupId, accountId } },
-    include: { ledgerParticipant: { select: { id: true } } },
+    select: { ledgerParticipant: { select: { id: true } } },
   })
   return member?.ledgerParticipant?.id ?? null
 }

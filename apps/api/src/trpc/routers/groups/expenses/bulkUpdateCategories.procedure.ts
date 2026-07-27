@@ -2,9 +2,11 @@ import { bulkUpdateExpenseCategoriesInputSchema } from '@spliit/domain/schemas'
 import { TRPCError } from '@trpc/server'
 import { bulkUpdateExpenseCategories } from '../../../../lib/api/category-bulk'
 import { loadGroupContext, protectedProcedure } from '../../../init'
+import { bulkUpdateCategoriesOutputSchema } from '../../../outputs/expenses'
 
 export const bulkUpdateExpenseCategoriesProcedure = protectedProcedure
   .input(bulkUpdateExpenseCategoriesInputSchema)
+  .output(bulkUpdateCategoriesOutputSchema)
   .mutation(async ({ ctx, input }) => {
     const { member, group } = await loadGroupContext({
       groupId: input.groupId,
@@ -28,7 +30,13 @@ export const bulkUpdateExpenseCategoriesProcedure = protectedProcedure
         accountId: ctx.auth.user.id,
         input,
       })
-      return result
+      return {
+        ...result,
+        rows: result.rows.map((row) => ({
+          ...row,
+          title: row.title ?? '',
+        })),
+      }
     } catch (err) {
       if (err instanceof Error) {
         throw new TRPCError({

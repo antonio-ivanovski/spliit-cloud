@@ -2,7 +2,7 @@ import { ParticipantRowAmountPreview } from '@/components/participant-row-amount
 import { Button } from '@/components/ui/button'
 import { FormControl, FormField, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { calculateShare } from '@/lib/totals'
+import { calculateShare, percentageToBasisPoints } from '@/lib/totals'
 import { amountAsMinorUnits, cn } from '@/lib/utils'
 import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
 import { Minus, Plus } from 'lucide-react'
@@ -138,7 +138,9 @@ export function PaidForRow({
                           groupId: '',
                         },
                         shares:
-                          splitMode === 'BY_PERCENTAGE' ? shares * 100 : shares,
+                          splitMode === 'BY_PERCENTAGE'
+                            ? percentageToBasisPoints(shares)
+                            : shares,
                         expenseId: '',
                         participantId: '',
                       }),

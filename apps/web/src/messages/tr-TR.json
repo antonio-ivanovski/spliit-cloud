@@ -810,7 +810,8 @@
       "defaultSplitLabel": "Varsayılan öğe paylaşımı",
       "defaultSplitMixed": "Karışık",
       "defaultSplitEdit": "Varsayılan öğe paylaşımını düzenle",
-      "defaultSplitModalTitle": "Varsayılan öğe paylaşımı"
+      "defaultSplitModalTitle": "Varsayılan öğe paylaşımı",
+      "calculationError": "Kalemlere göre bölme hesaplanamadı. Kalem değerlerini ve katılımcı paylarını kontrol edin."
     },
     "leaveItemized": {
       "title": "Bölüşüm yöntemi değiştirilsin mi?",
@@ -831,7 +832,8 @@
     "participantPercentageLabel": "{name} için yüzde",
     "participantSharesLabel": "{name} için pay",
     "decreaseShares": "{name} için payları azalt",
-    "increaseShares": "{name} için payları artır"
+    "increaseShares": "{name} için payları artır",
+    "validationSummary": "Kaydetmeden önce vurgulanan alanları düzeltin."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Belgeyi sil",

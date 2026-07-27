@@ -105,7 +105,7 @@ function makeExpense(overrides: Record<string, unknown> = {}) {
     isReimbursement: false,
     splitMode: 'EVENLY',
     recurrenceRule: null,
-    _count: { documents: 0 },
+    documentCount: 0,
     items: [],
     ...overrides,
   }

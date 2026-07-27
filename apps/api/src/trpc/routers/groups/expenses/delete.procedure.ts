@@ -2,6 +2,7 @@ import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { deleteExpense } from '../../../../lib/api'
 import { loadGroupContext, protectedProcedure } from '../../../init'
+import { deleteExpenseOutputSchema } from '../../../outputs/expenses'
 
 export const deleteGroupExpenseProcedure = protectedProcedure
   .input(
@@ -25,6 +26,7 @@ export const deleteGroupExpenseProcedure = protectedProcedure
         }
       }),
   )
+  .output(deleteExpenseOutputSchema)
   .mutation(
     async ({ input: { expenseId, groupId, scope, stopRecurrence }, ctx }) => {
       const { group } = await loadGroupContext({

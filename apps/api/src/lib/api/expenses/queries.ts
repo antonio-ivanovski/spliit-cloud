@@ -6,6 +6,7 @@ import {
 } from '@spliit/domain'
 import { resolveParticipantDisplayName } from '../../invitations'
 import { toRecurrenceConfig } from '../recurrence-series'
+import { groupExpenseListSelect } from '../selects/expense-list'
 import { narrowCategoryId, resolveCategory } from './helpers'
 
 export async function getGroupExpensesParticipants(groupId: string) {
@@ -141,165 +142,70 @@ export async function getGroupExpenses(
       : [primaryOrder, { id: 'desc' }]
 
   const rows = await prisma.expense.findMany({
-    select: {
-      amount: true,
-      conversionRate: true,
-      conversionSource: true,
-      categoryId: true,
-      createdAt: true,
-      expenseDate: true,
-      id: true,
-      recurrenceSequence: true,
-      isReimbursement: true,
-      originalAmount: true,
-      originalCurrency: true,
-      paidBySplitMode: true,
-      paidByList: {
-        select: {
-          ledgerParticipant: {
-            select: {
-              id: true,
-              displayName: true,
-              removedAt: true,
-              groupMember: {
-                select: {
-                  account: { select: { id: true, name: true, image: true } },
-                },
-              },
-              invitations: {
-                select: { email: true, temporaryName: true },
-                take: 1,
-                orderBy: { createdAt: 'desc' },
-              },
-            },
-          },
-          shares: true,
-        },
-      },
-      paidFor: {
-        select: {
-          ledgerParticipant: {
-            select: {
-              id: true,
-              displayName: true,
-              removedAt: true,
-              groupMember: {
-                select: {
-                  account: { select: { id: true, name: true, image: true } },
-                },
-              },
-              invitations: {
-                select: { email: true, temporaryName: true },
-                take: 1,
-                orderBy: { createdAt: 'desc' },
-              },
-            },
-          },
-          shares: true,
-        },
-      },
-      splitMode: true,
-      recurringSeries: {
-        select: {
-          id: true,
-          frequency: true,
-          interval: true,
-          endType: true,
-          occurrenceLimit: true,
-          endDate: true,
-          status: true,
-          anchorDate: true,
-          nextOccurrenceDate: true,
-        },
-      },
-      title: true,
-      _count: { select: { documents: true } },
-      items: {
-        select: {
-          id: true,
-          title: true,
-          unitPrice: true,
-          quantity: true,
-          amount: true,
-          splitMode: true,
-          paidFor: {
-            select: {
-              ledgerParticipantId: true,
-              shares: true,
-            },
-          },
-        },
-      },
-      itemizedRemainder: {
-        select: {
-          splitMode: true,
-          paidFor: {
-            select: {
-              ledgerParticipantId: true,
-              shares: true,
-            },
-          },
-        },
-      },
-    },
+    select: groupExpenseListSelect,
     where,
     orderBy,
     skip: options && options.offset,
     take: options && options.length,
   })
 
-  return rows.map((row) => ({
-    ...row,
-    paidByList: row.paidByList.map((pb) => ({
-      ledgerParticipant: {
-        id: pb.ledgerParticipant.id,
-        name: resolveParticipantDisplayName(pb.ledgerParticipant),
-        account: pb.ledgerParticipant.groupMember?.account ?? null,
-        removed: pb.ledgerParticipant.removedAt != null,
-      },
-      shares: pb.shares,
-    })),
-    paidFor: row.paidFor.map((pf) => ({
-      ledgerParticipant: {
-        id: pf.ledgerParticipant.id,
-        name: resolveParticipantDisplayName(pf.ledgerParticipant),
-        account: pf.ledgerParticipant.groupMember?.account ?? null,
-        removed: pf.ledgerParticipant.removedAt != null,
-      },
-      shares: pf.shares,
-    })),
-    items: (row.items ?? []).map((item) => ({
-      id: item.id,
-      title: item.title,
-      unitPrice: item.unitPrice,
-      quantity: item.quantity,
-      amount: item.amount,
-      splitMode: item.splitMode,
-      paidFor: item.paidFor.map((pf) => ({
-        participant: pf.ledgerParticipantId,
+  return rows.map((row) => {
+    const { _count, ...rest } = row
+    return {
+      ...rest,
+      // Prisma's relation-count key is `_count`; expose a plain public field.
+      documentCount: _count.documents,
+      paidByList: row.paidByList.map((pb) => ({
+        ledgerParticipant: {
+          id: pb.ledgerParticipant.id,
+          name: resolveParticipantDisplayName(pb.ledgerParticipant),
+          account: pb.ledgerParticipant.groupMember?.account ?? null,
+          removed: pb.ledgerParticipant.removedAt != null,
+        },
+        shares: pb.shares,
+      })),
+      paidFor: row.paidFor.map((pf) => ({
+        ledgerParticipant: {
+          id: pf.ledgerParticipant.id,
+          name: resolveParticipantDisplayName(pf.ledgerParticipant),
+          account: pf.ledgerParticipant.groupMember?.account ?? null,
+          removed: pf.ledgerParticipant.removedAt != null,
+        },
         shares: pf.shares,
       })),
-    })),
-    itemizedRemainder: row.itemizedRemainder
-      ? {
-          splitMode: row.itemizedRemainder.splitMode,
-          paidFor: row.itemizedRemainder.paidFor.map((pf) => ({
-            participant: pf.ledgerParticipantId,
-            shares: pf.shares,
-          })),
-        }
-      : undefined,
-    categoryId: narrowCategoryId(row.categoryId),
-    category: resolveCategory(row.categoryId),
-    conversionRate: row.conversionRate ?? null,
-    conversionSource: row.conversionSource,
-    recurringSeriesId: row.recurringSeries?.id ?? null,
-    recurrenceSequence: row.recurrenceSequence,
-    recurrence: row.recurringSeries
-      ? toRecurrenceConfig(row.recurringSeries)
-      : null,
-    recurringSeriesStatus: row.recurringSeries?.status ?? null,
-  }))
+      items: (row.items ?? []).map((item) => ({
+        id: item.id,
+        title: item.title,
+        unitPrice: item.unitPrice,
+        quantity: item.quantity,
+        amount: item.amount,
+        splitMode: item.splitMode,
+        paidFor: item.paidFor.map((pf) => ({
+          participant: pf.ledgerParticipantId,
+          shares: pf.shares,
+        })),
+      })),
+      itemizedRemainder: row.itemizedRemainder
+        ? {
+            splitMode: row.itemizedRemainder.splitMode,
+            paidFor: row.itemizedRemainder.paidFor.map((pf) => ({
+              participant: pf.ledgerParticipantId,
+              shares: pf.shares,
+            })),
+          }
+        : undefined,
+      categoryId: narrowCategoryId(row.categoryId),
+      category: resolveCategory(row.categoryId),
+      conversionRate: row.conversionRate ?? null,
+      conversionSource: row.conversionSource,
+      recurringSeriesId: row.recurringSeries?.id ?? null,
+      recurrenceSequence: row.recurrenceSequence,
+      recurrence: row.recurringSeries
+        ? toRecurrenceConfig(row.recurringSeries)
+        : null,
+      recurringSeriesStatus: row.recurringSeries?.status ?? null,
+    }
+  })
 }
 export async function getGroupExpenseCount(groupId: string) {
   const group = await prisma.group.findUnique({

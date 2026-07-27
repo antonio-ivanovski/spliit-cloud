@@ -5,6 +5,7 @@ import { z } from 'zod'
 import { importGroup } from '../../../lib/api'
 import { ConversionError } from '../../../lib/expense-conversion'
 import { loadGroupContext, protectedProcedure } from '../../init'
+import { importGroupOutputSchema } from '../../outputs/imports'
 
 const importParticipantMappingSchema = z.discriminatedUnion('mode', [
   z.object({
@@ -100,6 +101,7 @@ export const importGroupProcedure = protectedProcedure
         }
       }),
   )
+  .output(importGroupOutputSchema)
   .mutation(async ({ input, ctx }) => {
     if (input.targetGroupId) {
       const { group, member } = await loadGroupContext({

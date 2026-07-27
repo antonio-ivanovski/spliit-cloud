@@ -1,4 +1,5 @@
 import { prisma } from '@spliit/db'
+import { notificationCategorySchema } from '@spliit/domain/notifications'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { randomId } from '../../../lib/api/shared'
@@ -17,6 +18,11 @@ import {
   protectedProcedure,
   publicProcedure,
 } from '../../init'
+import {
+  notificationPreferencesOutputSchema,
+  pushConfigOutputSchema,
+  pushSubscriptionOutputSchema,
+} from '../../outputs/notifications'
 
 const unsubscribeTokenSchema = z.string().min(1).max(4096)
 
@@ -33,6 +39,11 @@ export const notificationsRouter = createTRPCRouter({
     /** Public token-scoped preview; no account data is returned. */
     preview: publicProcedure
       .input(z.object({ token: unsubscribeTokenSchema }))
+      .output(
+        z.object({
+          category: notificationCategorySchema,
+        }),
+      )
       .query(async ({ input }) => {
         const preview = await previewEmailUnsubscribeToken(input.token)
         if (!preview) {
@@ -47,6 +58,7 @@ export const notificationsRouter = createTRPCRouter({
   preferences: createTRPCRouter({
     get: protectedProcedure
       .input(z.object({ accountId: z.string().min(1) }))
+      .output(notificationPreferencesOutputSchema)
       .query(({ ctx, input }) => {
         if (input.accountId !== ctx.auth.user.id) {
           throw new TRPCError({ code: 'FORBIDDEN' })
@@ -55,12 +67,13 @@ export const notificationsRouter = createTRPCRouter({
       }),
     save: protectedProcedure
       .input(preferenceInputSchema)
+      .output(notificationPreferencesOutputSchema)
       .mutation(({ ctx, input }) =>
         saveNotificationPreferences(ctx.auth.user.id, input),
       ),
   }),
   push: createTRPCRouter({
-    getConfig: protectedProcedure.query(() => ({
+    getConfig: protectedProcedure.output(pushConfigOutputSchema).query(() => ({
       configured: isPushConfigured,
       vapidPublicKey: pushVapidPublicKey,
     })),
@@ -71,6 +84,7 @@ export const notificationsRouter = createTRPCRouter({
           userAgent: z.string().max(512).nullish(),
         }),
       )
+      .output(pushSubscriptionOutputSchema)
       .mutation(async ({ ctx, input }) => {
         const accountId = ctx.auth.user.id
         const existing = await prisma.pushSubscription.findUnique({
@@ -134,6 +148,7 @@ export const notificationsRouter = createTRPCRouter({
 
     remove: protectedProcedure
       .input(z.object({ endpoint: z.url().max(4096) }))
+      .output(z.object({ removed: z.boolean() }))
       .mutation(async ({ ctx, input }) => {
         await prisma.pushSubscription.deleteMany({
           where: { endpoint: input.endpoint, accountId: ctx.auth.user.id },
@@ -143,6 +158,7 @@ export const notificationsRouter = createTRPCRouter({
 
     status: protectedProcedure
       .input(z.object({ endpoint: z.url().max(4096) }))
+      .output(z.object({ subscribed: z.boolean() }))
       .query(async ({ ctx, input }) => {
         const subscription = await prisma.pushSubscription.findUnique({
           where: { endpoint: input.endpoint },

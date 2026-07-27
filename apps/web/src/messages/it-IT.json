@@ -817,7 +817,8 @@
       "defaultSplitLabel": "Divisione predefinita delle voci",
       "defaultSplitMixed": "Mista",
       "defaultSplitEdit": "Modifica la divisione predefinita delle voci",
-      "defaultSplitModalTitle": "Divisione predefinita delle voci"
+      "defaultSplitModalTitle": "Divisione predefinita delle voci",
+      "calculationError": "Impossibile calcolare la divisione per elementi. Controlla i valori degli elementi e le quote dei partecipanti."
     },
     "leaveItemized": {
       "title": "Cambiare modalità di divisione?",
@@ -838,7 +839,8 @@
     "participantPercentageLabel": "Percentuale per {name}",
     "participantSharesLabel": "Quote di {name}",
     "decreaseShares": "Diminuisci le quote di {name}",
-    "increaseShares": "Aumenta le quote di {name}"
+    "increaseShares": "Aumenta le quote di {name}",
+    "validationSummary": "Correggi i campi evidenziati prima di salvare."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Elimina documento",

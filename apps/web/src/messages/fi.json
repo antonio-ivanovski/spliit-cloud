@@ -810,7 +810,8 @@
       "defaultSplitLabel": "Kohteiden oletusjako",
       "defaultSplitMixed": "Sekalaiset",
       "defaultSplitEdit": "Muokkaa kohteiden oletusjakoa",
-      "defaultSplitModalTitle": "Kohteiden oletusjako"
+      "defaultSplitModalTitle": "Kohteiden oletusjako",
+      "calculationError": "Osakohtaista jakoa ei voitu laskea. Tarkista osien arvot ja osallistujien osuudet."
     },
     "leaveItemized": {
       "title": "Vaihdetaanko jakotapaa?",
@@ -831,7 +832,8 @@
     "participantPercentageLabel": "Prosenttiosuus henkilölle {name}",
     "participantSharesLabel": "Osuudet henkilölle {name}",
     "decreaseShares": "Vähennä henkilön {name} osuuksia",
-    "increaseShares": "Lisää henkilön {name} osuuksia"
+    "increaseShares": "Lisää henkilön {name} osuuksia",
+    "validationSummary": "Korjaa korostetut kentät ennen tallentamista."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Poista asiakirja",

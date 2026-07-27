@@ -13,6 +13,7 @@ import {
   sendJob,
   type SpliitBoss,
 } from '@spliit/jobs'
+import { groupLedgerIdArchivedSelect } from '../selects/group-ledger-id-archived'
 import { getApiBoss } from './boss'
 import {
   initialSeriesCompleted,
@@ -241,7 +242,7 @@ export async function reconcileDueRecurringExpenses(
 export async function pauseRecurringExpenseSeries(groupId: string) {
   const group = await prisma.group.findUnique({
     where: { id: groupId },
-    select: { ledgerId: true, archived: true },
+    select: groupLedgerIdArchivedSelect,
   })
   if (!group?.ledgerId || !group.archived) return 0
   return prisma.recurringExpenseSeries.updateMany({

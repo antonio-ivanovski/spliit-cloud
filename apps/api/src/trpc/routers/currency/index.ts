@@ -6,6 +6,10 @@ import {
   type BatchRateResult,
 } from '../../../lib/currency-rates'
 import { baseProcedure, createTRPCRouter, protectedProcedure } from '../../init'
+import {
+  currencyRateSchema,
+  currencyRatesOutputSchema,
+} from '../../outputs/currency'
 
 // `YYYY-MM-DD` (no time component). Frankfurter's date is the
 // requested date for the rate, not a timestamp.
@@ -62,26 +66,30 @@ function raiseBatchError(
 
 export const currencyRouter = createTRPCRouter({
   /** Public: single FX rate for a date from the Frankfurter provider. */
-  getRate: baseProcedure.input(singleRateInput).query(async ({ input }) => {
-    const [result] = await getCurrencyRates([
-      {
-        date: input.date,
-        base: input.base.toUpperCase(),
-        target: input.target.toUpperCase(),
-      },
-    ])
-    // Result is always present (one input → one result). Treat both
-    // the success and the impossible `undefined` branches as success
-    // for type-narrowing purposes; failures throw.
-    if (!result || result.ok) {
-      return result?.rate
-    }
-    raiseBatchError(result.error)
-  }),
+  getRate: baseProcedure
+    .input(singleRateInput)
+    .output(currencyRateSchema.optional())
+    .query(async ({ input }) => {
+      const [result] = await getCurrencyRates([
+        {
+          date: input.date,
+          base: input.base.toUpperCase(),
+          target: input.target.toUpperCase(),
+        },
+      ])
+      // Result is always present (one input → one result). Treat both
+      // the success and the impossible `undefined` branches as success
+      // for type-narrowing purposes; failures throw.
+      if (!result || result.ok) {
+        return result?.rate
+      }
+      raiseBatchError(result.error)
+    }),
 
   /** Bulk-fetch up to 500 FX rates in one call. */
   rates: protectedProcedure
     .input(batchRateInput)
+    .output(currencyRatesOutputSchema)
     .mutation(async ({ input }) => {
       const items: BatchRateRequest[] = input.items.map((item) => ({
         date: item.date,

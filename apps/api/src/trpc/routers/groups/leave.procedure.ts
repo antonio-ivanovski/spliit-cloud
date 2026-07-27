@@ -8,6 +8,11 @@ import {
   leaveGroup,
 } from '../../../lib/api'
 import { loadGroupContext, protectedProcedure } from '../../init'
+import {
+  archiveForSelfOutputSchema,
+  leaveOutputSchema,
+  leavePreviewOutputSchema,
+} from '../../outputs/groups'
 
 /**
  * Read-only summary the web client uses to render the leave-group dialog.
@@ -24,6 +29,7 @@ import { loadGroupContext, protectedProcedure } from '../../init'
  */
 export const leavePreviewProcedure = protectedProcedure
   .input(z.object({ groupId: z.string().min(1) }))
+  .output(leavePreviewOutputSchema)
   .query(async ({ input: { groupId }, ctx }) => {
     try {
       return await getLeavePreview({
@@ -75,6 +81,7 @@ export const leaveGroupProcedure = protectedProcedure
         ),
     }),
   )
+  .output(leaveOutputSchema)
   .mutation(async ({ input: { groupId, force, promoteMemberId }, ctx }) => {
     // Authenticate the caller as an active member before we start
     // counting admins / checking balances. `loadGroupContext` already
@@ -160,6 +167,7 @@ function mapLeaveError(err: unknown): TRPCError {
  */
 export const archiveGroupForSelfProcedure = protectedProcedure
   .input(z.object({ groupId: z.string().min(1) }))
+  .output(archiveForSelfOutputSchema)
   .mutation(async ({ input: { groupId }, ctx }) => {
     try {
       const result = await archiveGroupForSelf({

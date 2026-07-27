@@ -803,7 +803,8 @@
       "defaultSplitLabel": "デフォルトの品目分割",
       "defaultSplitMixed": "混在",
       "defaultSplitEdit": "デフォルトの品目分割を編集",
-      "defaultSplitModalTitle": "デフォルトの品目分割"
+      "defaultSplitModalTitle": "デフォルトの品目分割",
+      "calculationError": "項目ごとの分割を計算できませんでした。項目の値と参加者の分担を確認してください。"
     },
     "leaveItemized": {
       "title": "分割方法を変更しますか？",
@@ -824,7 +825,8 @@
     "participantPercentageLabel": "{name}の割合",
     "participantSharesLabel": "{name}のシェア",
     "decreaseShares": "{name}のシェアを減らす",
-    "increaseShares": "{name}のシェアを増やす"
+    "increaseShares": "{name}のシェアを増やす",
+    "validationSummary": "保存する前に、強調表示されたフィールドを修正してください。"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "書類を削除",

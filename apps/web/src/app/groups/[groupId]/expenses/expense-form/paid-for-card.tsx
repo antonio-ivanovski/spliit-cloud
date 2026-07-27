@@ -283,8 +283,8 @@ export function PaidForCard(props: {
     resetItemParticipants(to)
   }
 
-  const itemizedPaidFor = (() => {
-    if (splitMode !== 'ITEMIZED') return []
+  const itemizedPaidForResult = (() => {
+    if (splitMode !== 'ITEMIZED') return { paidFor: [], hasError: false }
     try {
       const inputCurrency = conversionRequired
         ? originalCurrency
@@ -303,39 +303,44 @@ export function PaidForCard(props: {
                 ? Math.round((Number(shares) || 0) * 100)
                 : Math.round(Number(shares) || 0),
         }))
-      return computePaidForFromItems(
-        items.map((item) => {
-          const unitPrice = amountAsMinorUnits(
-            Number(item.unitPrice) || 0,
-            inputCurrency,
-          )
-          const quantity = Math.max(1, Math.round(Number(item.quantity) || 1))
-          return {
-            id: item.id,
-            title: item.title,
-            unitPrice,
-            quantity,
-            amount: unitPrice * quantity,
-            splitMode: item.splitMode,
-            paidFor: toApiRows(item.paidFor, item.splitMode),
-          }
-        }),
-        group.participants.map((participant) => participant.id),
-        amountAsMinorUnits(Number(amount) || 0, inputCurrency),
-        itemizedRemainder
-          ? {
-              splitMode: itemizedRemainder.splitMode,
-              paidFor: toApiRows(
-                itemizedRemainder.paidFor,
-                itemizedRemainder.splitMode,
-              ),
+      return {
+        paidFor: computePaidForFromItems(
+          items.map((item) => {
+            const unitPrice = amountAsMinorUnits(
+              Number(item.unitPrice) || 0,
+              inputCurrency,
+            )
+            const quantity = Math.max(1, Math.round(Number(item.quantity) || 1))
+            return {
+              id: item.id,
+              title: item.title,
+              unitPrice,
+              quantity,
+              amount: unitPrice * quantity,
+              splitMode: item.splitMode,
+              paidFor: toApiRows(item.paidFor, item.splitMode),
             }
-          : undefined,
-      ).paidFor
-    } catch {
-      return []
+          }),
+          group.participants.map((participant) => participant.id),
+          amountAsMinorUnits(Number(amount) || 0, inputCurrency),
+          itemizedRemainder
+            ? {
+                splitMode: itemizedRemainder.splitMode,
+                paidFor: toApiRows(
+                  itemizedRemainder.paidFor,
+                  itemizedRemainder.splitMode,
+                ),
+              }
+            : undefined,
+        ).paidFor,
+        hasError: false,
+      }
+    } catch (error) {
+      console.error('Unable to calculate itemized paid-for shares', error)
+      return { paidFor: [], hasError: true }
     }
   })()
+  const itemizedPaidFor = itemizedPaidForResult.paidFor
 
   const handlePaidForSplitModeChange = (nextMode: SplitMode) => {
     const currentMode = form.getValues('splitMode')
@@ -479,6 +484,11 @@ export function PaidForCard(props: {
 
         {splitMode === 'ITEMIZED' && (
           <div className="space-y-0">
+            {itemizedPaidForResult.hasError && (
+              <p className="mb-3 text-sm text-red-600" role="alert">
+                {t('items.calculationError')}
+              </p>
+            )}
             {group.participants.map((participant) => {
               const row = itemizedPaidFor.find(
                 (paidFor) => paidFor.participant === participant.id,

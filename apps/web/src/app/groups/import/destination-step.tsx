@@ -148,7 +148,7 @@ export function DestinationStep({
                     <p className="font-medium">{g.name}</p>
                     <p className="text-xs text-muted-foreground">
                       {t('Groups.Import.Destination.memberCount', {
-                        count: g._count.members,
+                        count: g.memberCount,
                       })}
                     </p>
                   </CardContent>

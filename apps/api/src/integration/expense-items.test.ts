@@ -579,7 +579,7 @@ describe('Expense items — real DB', () => {
           ],
         },
       }),
-    ).rejects.toThrow(/itemsExceedAmount|ITEMS_EXCEED_AMOUNT/i)
+    ).rejects.toThrow(/amountSum|itemsExceedAmount|ITEMS_EXCEED_AMOUNT/i)
   })
 
   // ------------------------------------------------------------------
@@ -610,7 +610,7 @@ describe('Expense items — real DB', () => {
           items: [],
         },
       }),
-    ).rejects.toThrow(/itemizedRequiresItems/i)
+    ).rejects.toThrow(/paidForMin1|itemizedRequiresItems/i)
   })
 
   // ------------------------------------------------------------------

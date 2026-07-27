@@ -1153,7 +1153,8 @@
       "defaultSplitLabel": "Default items split",
       "defaultSplitMixed": "Mixed",
       "defaultSplitEdit": "Edit default items split",
-      "defaultSplitModalTitle": "Default items split"
+      "defaultSplitModalTitle": "Default items split",
+      "calculationError": "Could not calculate the itemized split. Check the item values and participant shares."
     },
     "leaveItemized": {
       "title": "Switch split mode?",
@@ -1174,7 +1175,8 @@
     "participantPercentageLabel": "Percentage for {name}",
     "participantSharesLabel": "Shares for {name}",
     "decreaseShares": "Decrease shares for {name}",
-    "increaseShares": "Increase shares for {name}"
+    "increaseShares": "Increase shares for {name}",
+    "validationSummary": "Please correct the highlighted fields before saving."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Delete document",

@@ -12,6 +12,7 @@ export const updateGroupProcedure = protectedProcedure
       groupFormValues: groupFormSchema,
     }),
   )
+  .output(z.void())
   .mutation(async ({ input: { groupId, groupFormValues }, ctx }) => {
     const { group, member } = await loadGroupContext({
       groupId,

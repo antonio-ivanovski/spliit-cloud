@@ -11,6 +11,7 @@ import {
   setCachedSource,
 } from '../../../lib/import-source-cache'
 import { protectedProcedure } from '../../init'
+import { importPreviewOutputSchema } from '../../outputs/imports'
 
 const SPLIIT_FETCH_TIMEOUT_MS = 8000
 const RATE_LIMIT_WINDOW_MS = 10 * 1000
@@ -89,6 +90,7 @@ export const previewFromUrlProcedure = protectedProcedure
       sourceUrl: z.string().min(1),
     }),
   )
+  .output(importPreviewOutputSchema)
   .query(async ({ input: { sourceUrl } }) => {
     const sourceGroupId = extractSpliitGroupIdFromUrl(sourceUrl)
     if (!sourceGroupId) {

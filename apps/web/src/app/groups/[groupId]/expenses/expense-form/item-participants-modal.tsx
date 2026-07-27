@@ -11,7 +11,7 @@ import {
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
-import { calculateShare } from '@/lib/totals'
+import { calculateShare, percentageToBasisPoints } from '@/lib/totals'
 import { amountAsMinorUnits, cn } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type {
@@ -251,7 +251,9 @@ export function ItemParticipantsModal(props: {
                       groupId: '',
                     },
                     shares:
-                      mode === 'BY_PERCENTAGE' ? p.shares * 100 : p.shares,
+                      mode === 'BY_PERCENTAGE'
+                        ? percentageToBasisPoints(p.shares)
+                        : p.shares,
                     expenseId: '',
                     participantId: '',
                   })),

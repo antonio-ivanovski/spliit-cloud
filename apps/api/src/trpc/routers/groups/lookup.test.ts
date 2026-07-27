@@ -55,7 +55,9 @@ describe('groups.lookup — not-found hand-off', () => {
 
   it('returns IMPORTABLE on a cache hit without re-fetching', async () => {
     setCachedSource('src-1', {
+      provider: 'SPLIIT',
       sourceGroupId: 'src-1',
+      sourceUrl: 'https://spliit.app/groups/src-1',
       name: 'Source',
       currency: '$',
       currencyCode: 'USD',

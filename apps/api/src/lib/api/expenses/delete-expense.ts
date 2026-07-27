@@ -113,24 +113,20 @@ export async function deleteExpense(
         },
         select: {
           id: true,
+          expenseDate: true,
           title: true,
           amount: true,
-          expenseDate: true,
-          originalCurrency: true,
           originalAmount: true,
+          originalCurrency: true,
           conversionRate: true,
           conversionSource: true,
           paidByList: { select: { ledgerParticipantId: true } },
           paidFor: { select: { ledgerParticipantId: true } },
           items: {
-            select: {
-              paidFor: { select: { ledgerParticipantId: true } },
-            },
+            select: { paidFor: { select: { ledgerParticipantId: true } } },
           },
           itemizedRemainder: {
-            select: {
-              paidFor: { select: { ledgerParticipantId: true } },
-            },
+            select: { paidFor: { select: { ledgerParticipantId: true } } },
           },
           documents: { select: { url: true } },
         },

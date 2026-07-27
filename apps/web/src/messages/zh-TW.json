@@ -803,7 +803,8 @@
       "defaultSplitLabel": "預設項目分攤",
       "defaultSplitMixed": "混合",
       "defaultSplitEdit": "編輯預設項目分攤",
-      "defaultSplitModalTitle": "預設項目分攤"
+      "defaultSplitModalTitle": "預設項目分攤",
+      "calculationError": "無法計算按項目拆分。請檢查項目金額和參與者份額。"
     },
     "leaveItemized": {
       "title": "切換分攤方式？",
@@ -824,7 +825,8 @@
     "participantPercentageLabel": "{name} 的百分比",
     "participantSharesLabel": "{name} 的份額",
     "decreaseShares": "減少 {name} 的份額",
-    "increaseShares": "增加 {name} 的份額"
+    "increaseShares": "增加 {name} 的份額",
+    "validationSummary": "儲存前請修正醒目的欄位。"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "刪除文檔",

@@ -817,7 +817,8 @@
       "defaultSplitLabel": "Împărțire implicită a elementelor",
       "defaultSplitMixed": "Mixtă",
       "defaultSplitEdit": "Modifică împărțirea implicită a elementelor",
-      "defaultSplitModalTitle": "Împărțire implicită a elementelor"
+      "defaultSplitModalTitle": "Împărțire implicită a elementelor",
+      "calculationError": "Împărțirea pe articole nu a putut fi calculată. Verifică valorile articolelor și cotele participanților."
     },
     "leaveItemized": {
       "title": "Schimbi modul de împărțire?",
@@ -838,7 +839,8 @@
     "participantPercentageLabel": "Procentaj pentru {name}",
     "participantSharesLabel": "Părți pentru {name}",
     "decreaseShares": "Micșorează părțile lui {name}",
-    "increaseShares": "Mărește părțile lui {name}"
+    "increaseShares": "Mărește părțile lui {name}",
+    "validationSummary": "Corectează câmpurile evidențiate înainte de salvare."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Șterge documentul",

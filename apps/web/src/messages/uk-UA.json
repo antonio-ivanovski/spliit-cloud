@@ -824,7 +824,8 @@
       "defaultSplitLabel": "Розподіл позицій за замовчуванням",
       "defaultSplitMixed": "Змішане",
       "defaultSplitEdit": "Редагувати розподіл позицій за замовчуванням",
-      "defaultSplitModalTitle": "Розподіл позицій за замовчуванням"
+      "defaultSplitModalTitle": "Розподіл позицій за замовчуванням",
+      "calculationError": "Не вдалося обчислити розподіл за позиціями. Перевірте значення позицій і частки учасників."
     },
     "leaveItemized": {
       "title": "Змінити спосіб розподілу?",
@@ -845,7 +846,8 @@
     "participantPercentageLabel": "Відсоток для {name}",
     "participantSharesLabel": "Кількість часток для {name}",
     "decreaseShares": "Зменшити кількість часток для {name}",
-    "increaseShares": "Збільшити кількість часток для {name}"
+    "increaseShares": "Збільшити кількість часток для {name}",
+    "validationSummary": "Виправте виділені поля перед збереженням."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Видалити документ",

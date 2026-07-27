@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { createExpense } from '../../../../lib/api'
 import { ConversionError } from '../../../../lib/expense-conversion'
 import { loadGroupContext, protectedProcedure } from '../../../init'
+import { createExpenseOutputSchema } from '../../../outputs/expenses'
 
 export const createGroupExpenseProcedure = protectedProcedure
   .input(
@@ -12,6 +13,7 @@ export const createGroupExpenseProcedure = protectedProcedure
       expense: expenseApiSchema,
     }),
   )
+  .output(createExpenseOutputSchema)
   .mutation(async ({ input: { groupId, expense }, ctx }) => {
     const { group } = await loadGroupContext({
       groupId,

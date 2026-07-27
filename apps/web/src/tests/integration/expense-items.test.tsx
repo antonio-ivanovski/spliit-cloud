@@ -321,7 +321,7 @@ describe('Expense items — ExpenseCard via existing API', () => {
             paidBySplitMode: 'BY_AMOUNT',
             splitMode: 'EVENLY',
             recurrenceRule: 'NONE',
-            _count: { documents: 0 },
+            documentCount: 0,
             items: [],
           } as unknown as GroupExpense
         }

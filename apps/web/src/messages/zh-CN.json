@@ -803,7 +803,8 @@
       "defaultSplitLabel": "默认项目分摊",
       "defaultSplitMixed": "混合",
       "defaultSplitEdit": "编辑默认项目分摊",
-      "defaultSplitModalTitle": "默认项目分摊"
+      "defaultSplitModalTitle": "默认项目分摊",
+      "calculationError": "无法计算按项目拆分。请检查项目金额和参与者份额。"
     },
     "leaveItemized": {
       "title": "切换分摊方式？",
@@ -824,7 +825,8 @@
     "participantPercentageLabel": "{name} 的百分比",
     "participantSharesLabel": "{name} 的份额",
     "decreaseShares": "减少 {name} 的份额",
-    "increaseShares": "增加 {name} 的份额"
+    "increaseShares": "增加 {name} 的份额",
+    "validationSummary": "保存前请修正突出显示的字段。"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "删除文档",

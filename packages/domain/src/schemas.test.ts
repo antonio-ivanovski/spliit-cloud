@@ -214,6 +214,31 @@ describe('expenseFormInputSchema', () => {
       { participant: 'p1', shares: 30 },
     ])
   })
+
+  it('coerces item and remainder BY_AMOUNT shares from text inputs', () => {
+    const result = expenseFormInputSchema.safeParse({
+      ...baseInput,
+      amount: 10,
+      splitMode: 'ITEMIZED',
+      items: [
+        {
+          title: 'Coffee',
+          unitPrice: '10.00',
+          quantity: '1',
+          splitMode: 'BY_AMOUNT',
+          paidFor: [{ participant: 'p0', shares: '10.' }],
+        },
+      ],
+      itemizedRemainder: {
+        splitMode: 'BY_AMOUNT',
+        paidFor: [{ participant: 'p0', shares: '1.00' }],
+      },
+    })
+    expect(result.success).toBe(true)
+    if (!result.success) return
+    expect(result.data.items?.[0]?.paidFor[0]?.shares).toBe(10)
+    expect(result.data.itemizedRemainder?.paidFor[0]?.shares).toBe(1)
+  })
 })
 
 describe('expenseApiSchema', () => {
@@ -355,6 +380,64 @@ describe('expenseApiSchema', () => {
       paidFor: [{ participant: 'p0', shares: 1.5 }],
     })
     expect(result.success).toBe(false)
+  })
+
+  it('rejects malformed item totals and accepts documentation-only items', () => {
+    const invalid = expenseApiSchema.safeParse({
+      ...baseApi,
+      amount: 1000,
+      splitMode: 'ITEMIZED',
+      paidFor: [{ participant: 'p0', shares: 1000 }],
+      items: [
+        {
+          title: 'Coffee',
+          unitPrice: 1000,
+          quantity: 1,
+          amount: 1000,
+          splitMode: 'BY_AMOUNT',
+          paidFor: [{ participant: 'p0', shares: 900 }],
+        },
+      ],
+    })
+    expect(invalid.success).toBe(false)
+
+    const invalidPercentage = expenseApiSchema.safeParse({
+      ...baseApi,
+      amount: 1000,
+      splitMode: 'ITEMIZED',
+      paidFor: [{ participant: 'p0', shares: 1000 }],
+      items: [
+        {
+          title: 'Coffee',
+          unitPrice: 1000,
+          quantity: 1,
+          amount: 1000,
+          splitMode: 'BY_PERCENTAGE',
+          paidFor: [
+            { participant: 'p0', shares: 6000 },
+            { participant: 'p1', shares: 3000 },
+          ],
+        },
+      ],
+    })
+    expect(invalidPercentage.success).toBe(false)
+
+    const documentationOnly = expenseApiSchema.safeParse({
+      ...baseApi,
+      amount: 1000,
+      splitMode: 'EVENLY',
+      items: [
+        {
+          title: 'Receipt detail',
+          unitPrice: 1000,
+          quantity: 1,
+          amount: 1000,
+          splitMode: 'BY_AMOUNT',
+          paidFor: [],
+        },
+      ],
+    })
+    expect(documentationOnly.success).toBe(true)
   })
 })
 

@@ -803,7 +803,8 @@
       "defaultSplitLabel": "Pembagian default item",
       "defaultSplitMixed": "Bervariasi",
       "defaultSplitEdit": "Edit pembagian default item",
-      "defaultSplitModalTitle": "Pembagian default item"
+      "defaultSplitModalTitle": "Pembagian default item",
+      "calculationError": "Tidak dapat menghitung pembagian per item. Periksa nilai item dan bagian peserta."
     },
     "leaveItemized": {
       "title": "Ganti metode pembagian?",
@@ -824,7 +825,8 @@
     "participantPercentageLabel": "Persentase untuk {name}",
     "participantSharesLabel": "Porsi untuk {name}",
     "decreaseShares": "Kurangi porsi untuk {name}",
-    "increaseShares": "Tambah porsi untuk {name}"
+    "increaseShares": "Tambah porsi untuk {name}",
+    "validationSummary": "Perbaiki bidang yang ditandai sebelum menyimpan."
   },
   "Currencies": {
     "search": "Cari mata uang...",

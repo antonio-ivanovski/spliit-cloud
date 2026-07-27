@@ -78,7 +78,7 @@ describe('Group flow — real DB', () => {
       where: { id: groupId },
       include: {
         ledger: true,
-        members: { include: { account: true, ledgerParticipant: true } },
+        members: { include: { ledgerParticipant: true } },
       },
     })
     expect(group).not.toBeNull()

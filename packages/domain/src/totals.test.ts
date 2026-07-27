@@ -40,7 +40,7 @@ const makeExpense = (overrides: Partial<TotalsExpense>): TotalsExpense =>
         shares: 1,
       },
     ],
-    _count: { documents: 0 },
+    documentCount: 0,
     ...overrides,
   }) as TotalsExpense
 

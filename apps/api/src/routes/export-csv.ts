@@ -9,6 +9,8 @@ import {
   getCurrencyFromGroup,
 } from '@spliit/domain'
 import { create as contentDisposition } from 'content-disposition'
+import { expenseCsvExportSelect } from '../lib/api/selects/expense-list'
+import { participantDisplayNameSelect } from '../lib/api/selects/participant-display-name'
 import { getAuthFromRequest } from '../lib/auth/session'
 import { resolveParticipantDisplayName } from '../lib/invitations'
 
@@ -35,6 +37,7 @@ async function ensureMemberOr404(request: Request, groupId: string) {
   }
   const member = await prisma.groupMember.findUnique({
     where: { groupId_accountId: { groupId, accountId: auth.user.id } },
+    select: { status: true },
   })
   if (!member || member.status !== 'ACTIVE') {
     return Response.json({ error: 'Forbidden' }, { status: 403 })
@@ -49,10 +52,10 @@ export async function exportGroupCsv(request: Request, groupId: string) {
   const group = await prisma.group.findUnique({
     where: { id: groupId },
     include: {
-      ledger: true,
+      ledger: { select: { currency: true, currencyCode: true } },
       members: {
         where: { status: 'ACTIVE' },
-        include: { ledgerParticipant: true },
+        select: { ledgerParticipant: { select: { id: true } } },
       },
     },
   })
@@ -69,22 +72,7 @@ export async function exportGroupCsv(request: Request, groupId: string) {
   const currency = getCurrencyFromGroup(groupForCurrency)
 
   const expenses = await prisma.expense.findMany({
-    select: {
-      id: true,
-      expenseDate: true,
-      title: true,
-      categoryId: true,
-      amount: true,
-      originalAmount: true,
-      originalCurrency: true,
-      conversionRate: true,
-      conversionSource: true,
-      paidBySplitMode: true,
-      paidByList: { select: { ledgerParticipantId: true, shares: true } },
-      paidFor: { select: { ledgerParticipantId: true, shares: true } },
-      isReimbursement: true,
-      splitMode: true,
-    },
+    select: expenseCsvExportSelect,
     where: { ledgerId },
     orderBy: [{ expenseDate: 'asc' }, { createdAt: 'asc' }],
   })
@@ -103,16 +91,10 @@ export async function exportGroupCsv(request: Request, groupId: string) {
       ledgerId,
       id: { in: Array.from(participantIds) },
     },
-    select: {
-      id: true,
-      groupMember: { select: { account: { select: { name: true } } } },
-      invitations: {
-        select: { email: true, temporaryName: true },
-        take: 1,
-        orderBy: { createdAt: 'desc' },
-      },
+    select: participantDisplayNameSelect(),
+    orderBy: {
+      groupMember: { account: { name: 'asc' } },
     },
-    orderBy: { groupMember: { account: { name: 'asc' } } },
   })
   const participantOrder = new Map(
     Array.from(participantIds).map((id, index) => [id, index]),

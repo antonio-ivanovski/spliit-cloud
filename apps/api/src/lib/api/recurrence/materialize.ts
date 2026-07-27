@@ -120,7 +120,11 @@ export async function materializeRecurringExpense(
   const occurrenceDate = asDate(payload.occurrenceDate)
   const snapshot = await prisma.recurringExpenseSeries.findUnique({
     where: { id: payload.seriesId },
-    include: { ledger: { include: { group: true } } },
+    include: {
+      ledger: {
+        select: { currencyCode: true, group: { select: { id: true } } },
+      },
+    },
   })
   if (!snapshot || !snapshot.ledger.group) return { created: false }
   if (snapshot.status !== RecurringExpenseSeriesStatus.ACTIVE)
@@ -183,7 +187,14 @@ export async function materializeRecurringExpense(
     await tx.$queryRaw`SELECT id FROM "RecurringExpenseSeries" WHERE id = ${payload.seriesId} FOR UPDATE`
     const series = await tx.recurringExpenseSeries.findUnique({
       where: { id: payload.seriesId },
-      include: { ledger: { include: { group: true } } },
+      include: {
+        ledger: {
+          select: {
+            currencyCode: true,
+            group: { select: { id: true, archived: true } },
+          },
+        },
+      },
     })
     if (!series || !series.ledger.group) return { created: false }
     if (series.version !== snapshot.version) return { created: false }

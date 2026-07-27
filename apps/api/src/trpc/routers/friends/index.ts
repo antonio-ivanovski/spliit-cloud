@@ -39,6 +39,15 @@ export const friendsRouter = createTRPCRouter({
   /** Create a friend ledger via one of three modes (account id, email, or shareable link). Exactly one mode must be set on `friendFormValues`. */
   create: protectedProcedure
     .input(z.object({ friendFormValues: friendFormSchema }))
+    .output(
+      z.object({
+        groupId: z.string(),
+        existed: z.boolean(),
+        invitationId: z.string().optional(),
+        inviteUrl: z.string().url().optional(),
+        token: z.string().optional(),
+      }),
+    )
     .mutation(async ({ input: { friendFormValues }, ctx }) => {
       const callerId = ctx.auth.user.id
 

@@ -152,6 +152,7 @@ export function useUpdateExpenseMutation({
 }: {
   linkInviteToken: string | undefined
 }) {
+  const { toast } = useToast()
   const invalidateExpenseDependencies =
     useInvalidateExpenseDependencies(linkInviteToken)
 
@@ -162,6 +163,9 @@ export function useUpdateExpenseMutation({
         expenseId: variables.expenseId,
       })
     },
+    onError: (error) => {
+      toast({ description: error.message, variant: 'destructive' })
+    },
   })
 }
 
@@ -170,6 +174,7 @@ export function useCreateExpenseMutation({
 }: {
   linkInviteToken: string | undefined
 }) {
+  const { toast } = useToast()
   const utils = trpc.useUtils()
   const invalidateExpenseDependencies =
     useInvalidateExpenseDependencies(linkInviteToken)
@@ -200,6 +205,9 @@ export function useCreateExpenseMutation({
         groupId: variables.groupId,
         expenseId: data.expenseId,
       })
+    },
+    onError: (error) => {
+      toast({ description: error.message, variant: 'destructive' })
     },
   })
 }

@@ -3,6 +3,7 @@ import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { deleteGroup } from '../../../lib/api'
 import { loadGroupContext, protectedProcedure } from '../../init'
+import { deleteGroupOutputSchema } from '../../outputs/groups'
 
 /**
  * Permanently delete a group, its ledger, expenses, invitations, and
@@ -25,6 +26,7 @@ export const deleteGroupProcedure = protectedProcedure
       groupId: z.string().min(1),
     }),
   )
+  .output(deleteGroupOutputSchema)
   .mutation(async ({ input: { groupId }, ctx }) => {
     const { group, member } = await loadGroupContext({
       groupId,

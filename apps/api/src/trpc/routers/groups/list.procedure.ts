@@ -2,6 +2,7 @@ import { prisma } from '@spliit/db'
 import { z } from 'zod'
 import { getGroups } from '../../../lib/api'
 import { protectedProcedure } from '../../init'
+import { listGroupsOutputSchema } from '../../outputs/groups'
 
 /**
  * Returns the groups the current account is an active member of. The legacy
@@ -15,6 +16,7 @@ export const listGroupsProcedure = protectedProcedure
       groupIds: z.array(z.string().min(1)).default([]),
     }),
   )
+  .output(listGroupsOutputSchema)
   .query(async ({ input: { groupIds }, ctx }) => {
     let ids = groupIds
     if (ids.length === 0) {

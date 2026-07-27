@@ -1075,7 +1075,8 @@
       "defaultSplitLabel": "Standardfördelning av rader",
       "defaultSplitMixed": "Blandad",
       "defaultSplitEdit": "Redigera standardfördelning av rader",
-      "defaultSplitModalTitle": "Standardfördelning av rader"
+      "defaultSplitModalTitle": "Standardfördelning av rader",
+      "calculationError": "Det gick inte att beräkna fördelningen per artikel. Kontrollera artikelvärdena och deltagarnas andelar."
     },
     "leaveItemized": {
       "title": "Byta fördelningssätt?",
@@ -1091,7 +1092,8 @@
     "shares": "andel(ar)",
     "participant": {
       "pending": "(inbjuden)"
-    }
+    },
+    "validationSummary": "Korrigera de markerade fälten innan du sparar."
   },
   "ExpensePreview": {
     "title": "Utgiftsförhandsvisning",

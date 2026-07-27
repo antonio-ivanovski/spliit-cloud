@@ -7,6 +7,10 @@ import {
   removeMember,
 } from '../../../../lib/api'
 import { loadGroupContext, protectedProcedure } from '../../../init'
+import {
+  removeMemberOutputSchema,
+  removeMemberPreviewOutputSchema,
+} from '../../../outputs/members'
 
 /**
  * Read-only summary the web client uses to render the admin "remove
@@ -17,6 +21,7 @@ import { loadGroupContext, protectedProcedure } from '../../../init'
  */
 export const removeMemberPreviewProcedure = protectedProcedure
   .input(z.object({ groupId: z.string().min(1), memberId: z.string().min(1) }))
+  .output(removeMemberPreviewOutputSchema)
   .query(async ({ input: { groupId, memberId }, ctx }) => {
     const { group, member } = await loadGroupContext({
       groupId,
@@ -79,6 +84,7 @@ export const removeMemberProcedure = protectedProcedure
         ),
     }),
   )
+  .output(removeMemberOutputSchema)
   .mutation(async ({ input: { groupId, memberId, settleBalances }, ctx }) => {
     const { group, member } = await loadGroupContext({
       groupId,

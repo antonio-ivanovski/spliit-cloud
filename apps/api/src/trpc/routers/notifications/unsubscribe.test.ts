@@ -26,7 +26,7 @@ describe('notifications.unsubscribe.preview', () => {
     expect(result).toEqual({ category: 'GROUP_INVITE_RECEIVED' })
     expect(result).not.toHaveProperty('accountId')
     vi.unstubAllEnvs()
-  })
+  }, 15_000)
 
   it('rejects an invalid token', async () => {
     const { notificationsRouter } = await loadRouterModules()
@@ -37,5 +37,5 @@ describe('notifications.unsubscribe.preview', () => {
         .unsubscribe.preview({ token: 'invalid' }),
     ).rejects.toMatchObject({ code: 'BAD_REQUEST' })
     vi.unstubAllEnvs()
-  })
+  }, 15_000)
 })

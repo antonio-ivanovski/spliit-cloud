@@ -3,6 +3,7 @@ import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { updateMemberRole } from '../../../../lib/api'
 import { loadGroupContext, protectedProcedure } from '../../../init'
+import { memberRoleOutputSchema } from '../../../outputs/members'
 
 /**
  * Promote a member to admin or demote an admin to member. The caller
@@ -21,6 +22,7 @@ export const updateMemberRoleProcedure = protectedProcedure
       role: z.enum(['ADMIN', 'MEMBER']),
     }),
   )
+  .output(memberRoleOutputSchema)
   .mutation(async ({ input: { groupId, memberId, role }, ctx }) => {
     const { group, member } = await loadGroupContext({
       groupId,

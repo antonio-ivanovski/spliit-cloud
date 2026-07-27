@@ -14,6 +14,7 @@ import {
 import { resumeRecurringExpenseSeries } from '../../../lib/api/recurrence-series'
 import { scheduleDefaultNotificationDispatch } from '../../../lib/notifications/dispatcher'
 import { loadGroupContext, protectedProcedure } from '../../init'
+import { archiveGroupOutputSchema } from '../../outputs/groups'
 
 /**
  * Set or clear the group-level `archived` flag. ADMIN only.
@@ -38,6 +39,7 @@ export const archiveGroupProcedure = protectedProcedure
         .describe('Archive even when the group has non-zero balances.'),
     }),
   )
+  .output(archiveGroupOutputSchema)
   .mutation(async ({ input: { groupId, archived, force = false }, ctx }) => {
     const { group, member } = await loadGroupContext({
       groupId,
@@ -109,6 +111,7 @@ export const archiveGroupProcedure = protectedProcedure
       const updated = await tx.group.update({
         where: { id: groupId },
         data: { archived },
+        select: { id: true, name: true, archived: true },
       })
       const activity =
         willArchive || willUnarchive
@@ -165,5 +168,7 @@ export const archiveGroupProcedure = protectedProcedure
     }
     if (result.willUnarchive) await resumeRecurringExpenseSeries(groupId)
 
-    return { group: result.group }
+    return {
+      group: { id: result.group.id, archived: result.group.archived },
+    }
   })

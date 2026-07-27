@@ -28,6 +28,14 @@ import {
   protectedProcedure,
   publicProcedure,
 } from '../../init'
+import { emptyOutputSchema } from '../../outputs/common'
+import {
+  accountInvitationsListOutputSchema,
+  createLinkInvitationOutputSchema,
+  invitationsListOutputSchema,
+  linkInvitationPreviewSchema,
+  revokeInvitationPreviewSchema,
+} from '../../outputs/invitations'
 
 // Only ADMIN and MEMBER roles are exposed in the invitation form. The
 // group creator becomes an ADMIN at create time, so admins invite new
@@ -51,6 +59,7 @@ export const invitationsRouter = createTRPCRouter({
   // `listGroupInvitations` for the unfiltered query.
   list: protectedProcedure
     .input(z.object({ groupId: z.string().min(1) }))
+    .output(invitationsListOutputSchema)
     .query(async ({ input: { groupId }, ctx }) => {
       const { member } = await loadGroupContext({
         groupId,
@@ -87,6 +96,7 @@ export const invitationsRouter = createTRPCRouter({
           .optional(),
       }),
     )
+    .output(createLinkInvitationOutputSchema)
     .mutation(async ({ input, ctx }) => {
       const { group, member } = await loadGroupContext({
         groupId: input.groupId,
@@ -126,6 +136,7 @@ export const invitationsRouter = createTRPCRouter({
   // fields, not the full invitation row.
   previewLink: publicProcedure
     .input(z.object({ token: linkTokenSchema }))
+    .output(z.object({ preview: linkInvitationPreviewSchema.nullable() }))
     .query(async ({ input }) => {
       const preview = await getLinkInvitationPreview(input.token)
       return { preview }
@@ -137,6 +148,9 @@ export const invitationsRouter = createTRPCRouter({
   // double-active-member case.
   acceptLink: protectedProcedure
     .input(z.object({ token: linkTokenSchema }))
+    .output(
+      z.object({ groupId: z.string(), role: z.enum(['ADMIN', 'MEMBER']) }),
+    )
     .mutation(async ({ input: { token }, ctx }) => {
       const result = await acceptLinkInvitation({
         token,
@@ -167,6 +181,7 @@ export const invitationsRouter = createTRPCRouter({
           .optional(),
       }),
     )
+    .output(z.object({ invitationId: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const { group, member } = await loadGroupContext({
         groupId: input.groupId,
@@ -228,6 +243,7 @@ export const invitationsRouter = createTRPCRouter({
         groupId: z.string().min(1),
       }),
     )
+    .output(revokeInvitationPreviewSchema)
     .query(async ({ input: { invitationId, groupId }, ctx }) => {
       const { member } = await loadGroupContext({
         groupId,
@@ -274,10 +290,14 @@ export const invitationsRouter = createTRPCRouter({
           .optional(),
       }),
     )
+    .output(emptyOutputSchema)
     .mutation(async ({ input: { invitationId, settleBalances }, ctx }) => {
       const existing = await prisma.groupInvitation.findUnique({
         where: { id: invitationId },
-        include: { group: { select: { groupType: true } } },
+        select: {
+          groupId: true,
+          group: { select: { groupType: true } },
+        },
       })
       if (!existing) {
         throw new TRPCError({
@@ -315,6 +335,7 @@ export const invitationsRouter = createTRPCRouter({
   // invitation type to swap the auth helper.
   accept: protectedProcedure
     .input(z.object({ invitationId: z.string().min(1) }))
+    .output(z.object({ groupId: z.string() }))
     .mutation(async ({ input: { invitationId }, ctx }) => {
       const account = ctx.auth.user
       const member = await acceptInvitation({
@@ -329,6 +350,7 @@ export const invitationsRouter = createTRPCRouter({
   // matches the invitation) can mark their own invitation as declined.
   decline: protectedProcedure
     .input(z.object({ invitationId: z.string().min(1) }))
+    .output(emptyOutputSchema)
     .mutation(async ({ input: { invitationId }, ctx }) => {
       await declineInvitation({
         invitationId,
@@ -339,12 +361,14 @@ export const invitationsRouter = createTRPCRouter({
     }),
 
   // Pending email invitations for the current account.
-  listForAccount: protectedProcedure.query(async ({ ctx }) => {
-    const invitations = await listPendingEmailInvitationsForAccount(
-      ctx.auth.user.email,
-    )
-    return { invitations }
-  }),
+  listForAccount: protectedProcedure
+    .output(accountInvitationsListOutputSchema)
+    .query(async ({ ctx }) => {
+      const invitations = await listPendingEmailInvitationsForAccount(
+        ctx.auth.user.email,
+      )
+      return { invitations }
+    }),
 })
 
 /**

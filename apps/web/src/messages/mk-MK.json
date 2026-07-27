@@ -1061,7 +1061,8 @@
       "defaultSplitLabel": "Стандардно разделување на ставки",
       "defaultSplitMixed": "Мешано",
       "defaultSplitEdit": "Измени стандардно разделување на ставки",
-      "defaultSplitModalTitle": "Стандардно разделување на ставки"
+      "defaultSplitModalTitle": "Стандардно разделување на ставки",
+      "calculationError": "Не може да се пресмета поделбата по ставки. Проверете ги вредностите на ставките и уделите на учесниците."
     },
     "leaveItemized": {
       "title": "Да се смени начинот на поделба?",
@@ -1082,7 +1083,8 @@
     "participantPercentageLabel": "Процент за {name}",
     "participantSharesLabel": "Број на удели за {name}",
     "decreaseShares": "Намали ги уделите на {name}",
-    "increaseShares": "Зголеми ги уделите на {name}"
+    "increaseShares": "Зголеми ги уделите на {name}",
+    "validationSummary": "Поправете ги означените полиња пред зачувување."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Избриши документ",

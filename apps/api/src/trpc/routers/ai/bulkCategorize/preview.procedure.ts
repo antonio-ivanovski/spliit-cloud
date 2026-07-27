@@ -17,6 +17,7 @@ import {
 } from '../../../../lib/api/category-bulk'
 import { env } from '../../../../lib/env'
 import { loadGroupContext, protectedProcedure } from '../../../init'
+import { previewBulkCategorizeOutputSchema } from '../../../outputs/ai'
 
 const previewInputSchema = z.object({
   groupId: z.string().min(1),
@@ -47,6 +48,7 @@ const previewInputSchema = z.object({
 
 export const aiBulkCategorizePreviewProcedure = protectedProcedure
   .input(previewInputSchema)
+  .output(previewBulkCategorizeOutputSchema)
   .mutation(async ({ ctx, input }) => {
     const { member, group } = await loadGroupContext({
       groupId: input.groupId,

@@ -817,7 +817,8 @@
       "defaultSplitLabel": "Répartition par défaut des articles",
       "defaultSplitMixed": "Mixte",
       "defaultSplitEdit": "Modifier la répartition par défaut des articles",
-      "defaultSplitModalTitle": "Répartition par défaut des articles"
+      "defaultSplitModalTitle": "Répartition par défaut des articles",
+      "calculationError": "Impossible de calculer la répartition par article. Vérifiez les valeurs des articles et les parts des participants."
     },
     "leaveItemized": {
       "title": "Changer de mode de répartition ?",
@@ -838,7 +839,8 @@
     "participantPercentageLabel": "Pourcentage pour {name}",
     "participantSharesLabel": "Parts de {name}",
     "decreaseShares": "Diminuer les parts de {name}",
-    "increaseShares": "Augmenter les parts de {name}"
+    "increaseShares": "Augmenter les parts de {name}",
+    "validationSummary": "Veuillez corriger les champs en surbrillance avant d’enregistrer."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Supprimer le document",

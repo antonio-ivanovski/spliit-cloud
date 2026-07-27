@@ -817,7 +817,8 @@
       "defaultSplitLabel": "Divisió per defecte dels articles",
       "defaultSplitMixed": "Mixta",
       "defaultSplitEdit": "Edita la divisió per defecte dels articles",
-      "defaultSplitModalTitle": "Divisió per defecte dels articles"
+      "defaultSplitModalTitle": "Divisió per defecte dels articles",
+      "calculationError": "No s’ha pogut calcular el repartiment per articles. Comprova els valors dels articles i les parts dels participants."
     },
     "leaveItemized": {
       "title": "Vols canviar el mode de repartiment?",
@@ -838,7 +839,8 @@
     "participantPercentageLabel": "Percentatge de {name}",
     "participantSharesLabel": "Parts de {name}",
     "decreaseShares": "Disminueix les parts de {name}",
-    "increaseShares": "Augmenta les parts de {name}"
+    "increaseShares": "Augmenta les parts de {name}",
+    "validationSummary": "Corregeix els camps destacats abans de desar."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Suprimeix el document",

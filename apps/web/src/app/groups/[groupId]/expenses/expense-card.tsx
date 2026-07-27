@@ -233,7 +233,7 @@ export function ExpenseCard({
           </div>
         )}
         <div className="text-xs text-muted-foreground">
-          <DocumentsCount count={expense._count.documents} />
+          <DocumentsCount count={expense.documentCount} />
         </div>
         <div
           className="text-xs text-muted-foreground"

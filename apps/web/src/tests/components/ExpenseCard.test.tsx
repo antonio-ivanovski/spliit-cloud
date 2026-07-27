@@ -63,7 +63,7 @@ function makeExpense(overrides: Record<string, unknown> = {}): GroupExpense {
       },
     ],
     category: { id: 'general', grouping: 'Food and Drink', name: 'Dining Out' },
-    _count: { documents: 0 },
+    documentCount: 0,
     items: [],
     itemizedRemainder: {
       splitMode: 'EVENLY',

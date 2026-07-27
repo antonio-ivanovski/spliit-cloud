@@ -191,7 +191,11 @@ export async function getLinkInvitationPreview(
   const tokenHash = await hashLinkToken(token)
   const invitation = await prisma.groupInvitation.findFirst({
     where: { tokenHash },
-    include: {
+    select: {
+      status: true,
+      expiresAt: true,
+      temporaryName: true,
+      role: true,
       group: { select: { id: true, name: true, groupType: true } },
       invitedBy: { select: { name: true } },
     },
@@ -290,7 +294,21 @@ export async function acceptLinkInvitation(opts: {
 
       const invitation = await tx.groupInvitation.findUnique({
         where: { tokenHash },
-        include: { group: { include: { ledger: true } } },
+        select: {
+          id: true,
+          groupId: true,
+          role: true,
+          invitedById: true,
+          email: true,
+          temporaryName: true,
+          ledgerParticipantId: true,
+          group: {
+            select: {
+              groupType: true,
+              ledger: { select: { id: true } },
+            },
+          },
+        },
       })
       if (!invitation || !invitation.group.ledger) {
         throw new InvitationError('Invitation is missing its group ledger.')
@@ -317,6 +335,7 @@ export async function acceptLinkInvitation(opts: {
           joinedAt: new Date(),
           leftAt: null,
         },
+        select: { id: true },
       })
 
       if (invitation.group.groupType === GroupType.FRIEND) {

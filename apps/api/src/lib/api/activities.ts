@@ -9,6 +9,7 @@ import {
 } from '@spliit/domain/activities'
 import { resolveParticipantDisplayName } from '../invitations/display'
 import { scheduleDefaultNotificationDispatch } from '../notifications/dispatcher'
+import { participantDisplayNameSelect } from './selects/participant-display-name'
 import { randomId } from './shared'
 export {
   buildExpenseActivityData,
@@ -169,23 +170,7 @@ export async function getActivities(
       ? []
       : await prisma.ledgerParticipant.findMany({
           where: { id: { in: lpActorIds } },
-          select: {
-            id: true,
-            displayName: true,
-            groupMember: {
-              select: {
-                account: { select: { name: true } },
-              },
-            },
-            invitations: {
-              select: {
-                email: true,
-                temporaryName: true,
-              },
-              take: 1,
-              orderBy: { createdAt: 'desc' },
-            },
-          },
+          select: participantDisplayNameSelect(),
         })
   const lpActorLabel = new Map(
     lpActors.map((lp) => [

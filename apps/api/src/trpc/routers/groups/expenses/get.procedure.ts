@@ -7,6 +7,7 @@ import {
   loadGroupViewer,
   protectedProcedure,
 } from '../../../init'
+import { getExpenseOutputSchema } from '../../../outputs/expenses'
 
 export const getGroupExpenseProcedure = protectedProcedure
   .input(
@@ -18,6 +19,7 @@ export const getGroupExpenseProcedure = protectedProcedure
       ),
     }),
   )
+  .output(getExpenseOutputSchema)
   .query(async ({ input: { groupId, expenseId, linkInviteToken }, ctx }) => {
     await loadGroupViewer({
       groupId,

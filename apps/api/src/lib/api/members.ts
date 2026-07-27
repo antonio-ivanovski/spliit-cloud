@@ -13,6 +13,7 @@ import {
   getGroupBalances,
   type SettlementActivityMeta,
 } from './balances'
+import { memberWithLedgerParticipantSelect } from './selects/member-with-ledger-participant'
 import { randomId } from './shared'
 
 /**
@@ -28,7 +29,7 @@ export async function updateMemberRole(opts: {
 
   const target = await prisma.groupMember.findUnique({
     where: { id: memberId },
-    include: { ledgerParticipant: { select: { id: true } } },
+    select: memberWithLedgerParticipantSelect({ includeAccount: false }),
   })
   if (!target || target.groupId !== groupId) {
     throw new Error('Member not found in this group')
@@ -123,10 +124,7 @@ export async function removeMember(opts: {
 
   const target = await prisma.groupMember.findUnique({
     where: { id: memberId },
-    include: {
-      ledgerParticipant: { select: { id: true } },
-      account: { select: { name: true } },
-    },
+    select: memberWithLedgerParticipantSelect({ includeAccount: true }),
   })
   if (!target || target.groupId !== groupId) {
     throw new Error('Member not found in this group')
@@ -308,10 +306,7 @@ export async function leaveGroup(opts: {
 
   const member = await prisma.groupMember.findUnique({
     where: { groupId_accountId: { groupId, accountId: actor.accountId } },
-    include: {
-      ledgerParticipant: { select: { id: true } },
-      account: { select: { name: true } },
-    },
+    select: memberWithLedgerParticipantSelect({ includeAccount: true }),
   })
   if (!member || member.status !== GroupMemberStatus.ACTIVE) {
     throw new Error('You are not an active member of this group')
@@ -363,6 +358,12 @@ export async function leaveGroup(opts: {
     }
     const target = await prisma.groupMember.findUnique({
       where: { id: promoteMemberId },
+      select: {
+        id: true,
+        groupId: true,
+        status: true,
+        accountId: true,
+      },
     })
     if (
       !target ||
@@ -479,6 +480,7 @@ export async function archiveGroupForSelf(opts: {
 
   const member = await prisma.groupMember.findUnique({
     where: { groupId_accountId: { groupId, accountId } },
+    select: memberWithLedgerParticipantSelect({ includeAccount: false }),
   })
   if (!member || member.status !== GroupMemberStatus.ACTIVE) {
     throw new Error('You are not an active member of this group')
@@ -553,7 +555,7 @@ export async function getLeavePreview(opts: {
 
   const member = await prisma.groupMember.findUnique({
     where: { groupId_accountId: { groupId, accountId } },
-    include: { ledgerParticipant: { select: { id: true } } },
+    select: memberWithLedgerParticipantSelect({ includeAccount: false }),
   })
   if (!member || member.status !== GroupMemberStatus.ACTIVE) {
     throw new Error('You are not an active member of this group')
@@ -571,7 +573,9 @@ export async function getLeavePreview(opts: {
       status: GroupMemberStatus.ACTIVE,
       NOT: { id: member.id },
     },
-    include: {
+    select: {
+      id: true,
+      role: true,
       account: { select: { id: true, name: true } },
     },
     orderBy: [{ joinedAt: 'asc' }, { createdAt: 'asc' }],
@@ -616,10 +620,7 @@ export async function getRemoveMemberPreview(opts: {
 
   const target = await prisma.groupMember.findUnique({
     where: { id: memberId },
-    include: {
-      account: { select: { name: true } },
-      ledgerParticipant: { select: { id: true } },
-    },
+    select: memberWithLedgerParticipantSelect({ includeAccount: true }),
   })
   if (!target || target.groupId !== groupId) {
     throw new Error('Member not found in this group')

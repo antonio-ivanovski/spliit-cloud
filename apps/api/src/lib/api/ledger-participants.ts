@@ -30,12 +30,14 @@ export async function linkUnlinkedParticipantToAccount(opts: {
   const outcome = await prisma.$transaction(async (tx) => {
     const participant = await tx.ledgerParticipant.findUnique({
       where: { id: ledgerParticipantId },
-      include: {
+      select: {
+        id: true,
+        kind: true,
+        removedAt: true,
+        groupMemberId: true,
+        displayName: true,
         ledger: {
-          select: {
-            id: true,
-            group: { select: { id: true, groupType: true } },
-          },
+          select: { group: { select: { id: true, groupType: true } } },
         },
       },
     })
@@ -365,7 +367,12 @@ export async function linkUnlinkedParticipantToPendingInvite(opts: {
   const outcome = await prisma.$transaction(async (tx) => {
     const participant = await tx.ledgerParticipant.findUnique({
       where: { id: ledgerParticipantId },
-      include: {
+      select: {
+        id: true,
+        kind: true,
+        removedAt: true,
+        groupMemberId: true,
+        displayName: true,
         ledger: { select: { id: true, group: { select: { id: true } } } },
       },
     })

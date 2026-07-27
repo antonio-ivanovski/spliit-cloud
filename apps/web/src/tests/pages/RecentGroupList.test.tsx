@@ -143,7 +143,7 @@ function makeGroup(overrides: Record<string, unknown> = {}) {
     archived: false,
     groupType: 'GROUP' as const,
     displayName: name,
-    _count: { members: 4 },
+    memberCount: 4,
     currentMemberRole: 'ADMIN' as const,
     preference: { starred: false, hidden: false },
     createdAt: '2026-06-01T00:00:00Z',

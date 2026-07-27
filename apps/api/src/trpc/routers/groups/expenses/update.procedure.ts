@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { updateExpense } from '../../../../lib/api'
 import { ConversionError } from '../../../../lib/expense-conversion'
 import { loadGroupContext, protectedProcedure } from '../../../init'
+import { updateExpenseOutputSchema } from '../../../outputs/expenses'
 
 export const updateGroupExpenseProcedure = protectedProcedure
   .input(
@@ -14,6 +15,7 @@ export const updateGroupExpenseProcedure = protectedProcedure
       scope: z.enum(['OCCURRENCE', 'THIS_AND_FUTURE']).optional(),
     }),
   )
+  .output(updateExpenseOutputSchema)
   .mutation(async ({ input: { expenseId, groupId, expense, scope }, ctx }) => {
     const { group } = await loadGroupContext({
       groupId,

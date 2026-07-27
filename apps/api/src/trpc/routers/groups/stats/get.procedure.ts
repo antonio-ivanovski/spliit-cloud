@@ -12,6 +12,7 @@ import {
   loadGroupViewer,
   protectedProcedure,
 } from '../../../init'
+import { getStatsOutputSchema } from '../../../outputs/stats'
 import {
   buildGroupStatsDashboard,
   statsPeriods,
@@ -46,6 +47,7 @@ export const getGroupStatsProcedure = protectedProcedure
         .optional(),
     }),
   )
+  .output(getStatsOutputSchema)
   .query(
     async ({
       input: { groupId, linkInviteToken, period, customRange },

@@ -8,6 +8,7 @@ import {
 } from './activities'
 import type { DiffableGroup } from './group-activity-diff'
 import { getGroupChangeSummary } from './group-activity-diff'
+import { accountSummarySelect } from './selects/account-summary'
 import { loadGroupWithLedger, randomId } from './shared'
 
 /**
@@ -161,7 +162,10 @@ export async function getGroup(groupId: string) {
       ledger: true,
       members: {
         where: { status: GroupMemberStatus.ACTIVE },
-        include: { account: true, ledgerParticipant: true },
+        include: {
+          account: { select: accountSummarySelect },
+          ledgerParticipant: true,
+        },
       },
       invitations: {
         where: { status: 'PENDING' },
@@ -291,16 +295,16 @@ export async function getGroup(groupId: string) {
 }
 
 export async function getGroups(groupIds: string[]) {
-  return (
-    await prisma.group.findMany({
-      where: { id: { in: groupIds } },
-      include: {
-        ledger: { select: { currency: true, currencyCode: true } },
-        _count: { select: { members: true } },
-      },
-    })
-  ).map((group) => ({
+  const groups = await prisma.group.findMany({
+    where: { id: { in: groupIds } },
+    include: {
+      ledger: { select: { currency: true, currencyCode: true } },
+      _count: { select: { members: true } },
+    },
+  })
+  // Prisma's relation-count key is `_count`; expose a plain public field.
+  return groups.map(({ _count, ...group }) => ({
     ...group,
-    createdAt: group.createdAt.toISOString(),
+    memberCount: _count.members,
   }))
 }

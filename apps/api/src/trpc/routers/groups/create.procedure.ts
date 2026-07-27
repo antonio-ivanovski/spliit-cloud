@@ -2,6 +2,7 @@ import { groupFormSchema } from '@spliit/domain'
 import { z } from 'zod'
 import { createGroup } from '../../../lib/api'
 import { protectedProcedure } from '../../init'
+import { createGroupOutputSchema } from '../../outputs/groups'
 
 export const createGroupProcedure = protectedProcedure
   .input(
@@ -9,6 +10,7 @@ export const createGroupProcedure = protectedProcedure
       groupFormValues: groupFormSchema,
     }),
   )
+  .output(createGroupOutputSchema)
   .mutation(async ({ input: { groupFormValues }, ctx }) => {
     const account = ctx.auth.user
     const result = await createGroup(groupFormValues, {

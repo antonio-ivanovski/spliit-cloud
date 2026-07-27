@@ -732,7 +732,8 @@
       "defaultSplitLabel": "기본 항목 분할",
       "defaultSplitMixed": "혼합",
       "defaultSplitEdit": "기본 항목 분할 편집",
-      "defaultSplitModalTitle": "기본 항목 분할"
+      "defaultSplitModalTitle": "기본 항목 분할",
+      "calculationError": "항목별 분할을 계산할 수 없습니다. 항목 값과 참가자 지분을 확인하세요."
     },
     "leaveItemized": {
       "title": "분할 방식을 바꿀까요?",
@@ -753,7 +754,8 @@
     "participantPercentageLabel": "{name}의 비율",
     "participantSharesLabel": "{name}의 몫",
     "decreaseShares": "{name}의 몫 줄이기",
-    "increaseShares": "{name}의 몫 늘리기"
+    "increaseShares": "{name}의 몫 늘리기",
+    "validationSummary": "저장하기 전에 강조 표시된 필드를 수정하세요."
   },
   "Balances": {
     "title": "잔액",

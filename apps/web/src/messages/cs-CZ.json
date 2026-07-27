@@ -824,7 +824,8 @@
       "defaultSplitLabel": "Výchozí rozdělení položek",
       "defaultSplitMixed": "Smíšené",
       "defaultSplitEdit": "Upravit výchozí rozdělení položek",
-      "defaultSplitModalTitle": "Výchozí rozdělení položek"
+      "defaultSplitModalTitle": "Výchozí rozdělení položek",
+      "calculationError": "Položkovou částku nelze vypočítat. Zkontrolujte hodnoty položek a podíly účastníků."
     },
     "leaveItemized": {
       "title": "Změnit způsob rozdělení?",
@@ -845,7 +846,8 @@
     "participantPercentageLabel": "Procento pro {name}",
     "participantSharesLabel": "Počet podílů pro {name}",
     "decreaseShares": "Snížit počet podílů u {name}",
-    "increaseShares": "Zvýšit počet podílů u {name}"
+    "increaseShares": "Zvýšit počet podílů u {name}",
+    "validationSummary": "Před uložením opravte zvýrazněná pole."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Smazat dokument",

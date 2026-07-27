@@ -1,9 +1,14 @@
+import { categoryIdSchema } from '@spliit/domain'
 import { z } from 'zod'
 import { getRecentExpenseContext } from '../../../lib/ai/context'
 import { extractCategoryFromTitle } from '../../../lib/expense-form-actions'
 import { hashLinkToken } from '../../../lib/invitations'
 import { extractExpenseInformationFromImage } from '../../../lib/receipt-actions'
 import { baseProcedure, createTRPCRouter, loadGroupViewer } from '../../init'
+import {
+  extractCategoryOutputSchema,
+  extractExpenseInformationOutputSchema,
+} from '../../outputs/ai'
 import { aiBulkCategorizeRouter } from './bulkCategorize'
 
 export const aiRouter = createTRPCRouter({
@@ -23,6 +28,7 @@ export const aiRouter = createTRPCRouter({
           ),
       }),
     )
+    .output(extractCategoryOutputSchema)
     .mutation(async ({ input, ctx }) => {
       // Validate group access, then fetch recent expense context + group
       // metadata. Authenticated callers: loadGroupViewer checks membership
@@ -92,6 +98,7 @@ export const aiRouter = createTRPCRouter({
           ),
       }),
     )
+    .output(extractExpenseInformationOutputSchema)
     .mutation(async ({ input, ctx }) => {
       let recentExpenses: Awaited<
         ReturnType<typeof getRecentExpenseContext>
@@ -111,7 +118,7 @@ export const aiRouter = createTRPCRouter({
         groupContext = context.group
       }
 
-      return extractExpenseInformationFromImage(
+      const result = await extractExpenseInformationFromImage(
         input.imageUrl,
         {
           currency: input.currency,
@@ -124,5 +131,10 @@ export const aiRouter = createTRPCRouter({
           currentExpense: input.currentExpense,
         },
       )
+      const categoryId = categoryIdSchema.safeParse(result.categoryId)
+      return {
+        ...result,
+        categoryId: categoryId.success ? categoryId.data : null,
+      }
     }),
 })

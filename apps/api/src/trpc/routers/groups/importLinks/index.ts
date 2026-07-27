@@ -11,6 +11,10 @@ import {
   loadGroupContext,
   protectedProcedure,
 } from '../../../init'
+import {
+  importLinkOutputSchema,
+  unlinkedParticipantsOutputSchema,
+} from '../../../outputs/import-links'
 import { candidatesProcedure } from './candidates.procedure'
 
 /**
@@ -34,6 +38,7 @@ export const importLinksRouter = createTRPCRouter({
    */
   listUnlinked: protectedProcedure
     .input(z.object({ groupId: z.string().min(1) }))
+    .output(unlinkedParticipantsOutputSchema)
     .query(async ({ input: { groupId }, ctx }) => {
       await loadGroupContext({ groupId, accountId: ctx.auth.user.id })
       const unlinked = await listUnlinkedParticipants(groupId)
@@ -71,6 +76,7 @@ export const importLinksRouter = createTRPCRouter({
           }
         }),
     )
+    .output(importLinkOutputSchema)
     .mutation(
       async ({
         input: {

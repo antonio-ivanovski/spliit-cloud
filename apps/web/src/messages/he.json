@@ -817,7 +817,8 @@
       "defaultSplitLabel": "חלוקת פריטים כברירת מחדל",
       "defaultSplitMixed": "מעורב",
       "defaultSplitEdit": "עריכת חלוקת פריטים כברירת מחדל",
-      "defaultSplitModalTitle": "חלוקת פריטים כברירת מחדל"
+      "defaultSplitModalTitle": "חלוקת פריטים כברירת מחדל",
+      "calculationError": "לא ניתן לחשב את החלוקה לפי פריטים. יש לבדוק את ערכי הפריטים ואת חלקי המשתתפים."
     },
     "leaveItemized": {
       "title": "להחליף את שיטת החלוקה?",
@@ -838,7 +839,8 @@
     "participantPercentageLabel": "אחוז עבור {name}",
     "participantSharesLabel": "חלקי השתתפות עבור {name}",
     "decreaseShares": "הפחתת חלקי ההשתתפות של {name}",
-    "increaseShares": "הגדלת חלקי ההשתתפות של {name}"
+    "increaseShares": "הגדלת חלקי ההשתתפות של {name}",
+    "validationSummary": "יש לתקן את השדות המודגשים לפני השמירה."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "מחיקת מסמך",

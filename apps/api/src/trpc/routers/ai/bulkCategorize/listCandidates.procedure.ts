@@ -3,6 +3,7 @@ import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { listBulkCategorizeCandidates } from '../../../../lib/api/category-bulk'
 import { loadGroupContext, protectedProcedure } from '../../../init'
+import { listBulkCategorizeCandidatesOutputSchema } from '../../../outputs/ai'
 
 /**
  * Cheap, no-AI listing of expenses eligible for bulk categorization.
@@ -22,6 +23,7 @@ export const aiBulkCategorizeListCandidatesProcedure = protectedProcedure
         ),
     }),
   )
+  .output(listBulkCategorizeCandidatesOutputSchema)
   .query(async ({ ctx, input }) => {
     const { member, group } = await loadGroupContext({
       groupId: input.groupId,
@@ -51,7 +53,7 @@ export const aiBulkCategorizeListCandidatesProcedure = protectedProcedure
       candidates: candidates.map((c) => ({
         id: c.id,
         title: c.title,
-        expenseDate: c.expenseDate.toISOString(),
+        expenseDate: c.expenseDate,
         amount: c.amount,
         categoryId: c.categoryId,
       })),

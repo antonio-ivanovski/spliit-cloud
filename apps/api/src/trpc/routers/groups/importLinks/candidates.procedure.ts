@@ -9,6 +9,7 @@ import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { randomId } from '../../../../lib/api'
 import { loadGroupContext, protectedProcedure } from '../../../init'
+import { importLinkCandidatesOutputSchema } from '../../../outputs/import-links'
 
 /**
  * Compute the list of destination `LedgerParticipant` ids that an
@@ -39,10 +40,11 @@ export const candidatesProcedure = protectedProcedure
         ),
     }),
   )
+  .output(importLinkCandidatesOutputSchema)
   .query(async ({ input: { unlinkedParticipantId }, ctx }) => {
     const participant = await prisma.ledgerParticipant.findUnique({
       where: { id: unlinkedParticipantId },
-      include: {
+      select: {
         ledger: {
           select: { id: true, group: { select: { id: true } } },
         },
