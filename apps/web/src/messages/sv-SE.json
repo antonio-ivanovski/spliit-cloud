@@ -1706,7 +1706,15 @@
         "description": "Fördela efter procent, andelar, exakt belopp eller en enkel lika andel."
       }
     },
-    "welcomeBack": "Välkommen tillbaka, {name}."
+    "welcomeBack": "Välkommen tillbaka, {name}.",
+    "overview": {
+      "youAreOwed": "Du har att få",
+      "youOwe": "Du är skyldig",
+      "acrossGroups": "Över dina grupper",
+      "viewGroups": "Visa grupper",
+      "noOneOwesYou": "Ingen är skyldig dig något",
+      "youOweNoOne": "Du är inte skyldig någon något"
+    }
   },
   "Information": {
     "title": "Information",

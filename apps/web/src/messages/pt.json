@@ -36,7 +36,15 @@
         "description": "Inicia sessão para proteger os teus dados e manter disponível o histórico de despesas."
       }
     },
-    "welcomeBack": "Bem-vindo de volta, {name}."
+    "welcomeBack": "Bem-vindo de volta, {name}.",
+    "overview": {
+      "youAreOwed": "Têm de lhe pagar",
+      "youOwe": "Deve",
+      "acrossGroups": "Entre os seus grupos",
+      "viewGroups": "Ver grupos",
+      "noOneOwesYou": "Ninguém lhe deve nada",
+      "youOweNoOne": "Não deve nada a ninguém"
+    }
   },
   "Header": {
     "signIn": "Iniciar sessão",

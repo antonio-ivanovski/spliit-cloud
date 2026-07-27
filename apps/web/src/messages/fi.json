@@ -36,7 +36,15 @@
         "description": "Kirjaudu kerran sisään suojataksesi tietosi ja pitääksesi kuluhistoriasi saatavilla."
       }
     },
-    "welcomeBack": "Tervetuloa takaisin, {name}."
+    "welcomeBack": "Tervetuloa takaisin, {name}.",
+    "overview": {
+      "youAreOwed": "Sinulle velkaa",
+      "youOwe": "Olet velkaa",
+      "acrossGroups": "Kaikissa ryhmissäsi",
+      "viewGroups": "Näytä ryhmät",
+      "noOneOwesYou": "Kukaan ei ole sinulle velkaa",
+      "youOweNoOne": "Et ole kenellekään velkaa"
+    }
   },
   "Header": {
     "signIn": "Kirjaudu sisään",

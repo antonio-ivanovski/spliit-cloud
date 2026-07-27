@@ -36,7 +36,15 @@
       "importGroup": "Import group from another service",
       "createFriendLedger": "Track expenses with a friend"
     },
-    "welcomeBack": "Welcome back, {name}."
+    "welcomeBack": "Welcome back, {name}.",
+    "overview": {
+      "youAreOwed": "You are owed",
+      "youOwe": "You owe",
+      "acrossGroups": "Across your groups",
+      "viewGroups": "View groups",
+      "noOneOwesYou": "No one owes you",
+      "youOweNoOne": "You don't owe anyone"
+    }
   },
   "Header": {
     "signIn": "Sign in",

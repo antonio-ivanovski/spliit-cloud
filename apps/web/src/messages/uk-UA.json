@@ -36,7 +36,15 @@
         "description": "Увійдіть один раз, щоб захистити дані й зберегти доступ до історії витрат."
       }
     },
-    "welcomeBack": "З поверненням, {name}."
+    "welcomeBack": "З поверненням, {name}.",
+    "overview": {
+      "youAreOwed": "Вам винні",
+      "youOwe": "Ви винні",
+      "acrossGroups": "У всіх ваших групах",
+      "viewGroups": "Показати групи",
+      "noOneOwesYou": "Ніхто вам нічого не винен",
+      "youOweNoOne": "Ви нікому нічого не винні"
+    }
   },
   "Header": {
     "signIn": "Увійти",

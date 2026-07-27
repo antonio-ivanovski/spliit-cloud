@@ -119,7 +119,7 @@ describe('HomePage (signed-out)', () => {
     expect(screen.getByText('Categories')).toBeInTheDocument()
   })
 
-  it('does not render hero create/import buttons (they live in RecentGroupList now)', () => {
+  it('does not render the authenticated marketing hero', () => {
     vi.mocked(useCurrentAccount).mockReturnValue({
       data: {
         id: 'user-1',
@@ -138,8 +138,8 @@ describe('HomePage (signed-out)', () => {
 
     render(<HomePage />)
 
-    // RecentGroupList is mocked; the hero no longer ships create/import buttons.
-    expect(screen.getByText('Welcome back, Alice.')).toBeInTheDocument()
+    expect(screen.queryByText('Share')).not.toBeInTheDocument()
+    expect(screen.getByTestId('recent-group-list')).toBeInTheDocument()
   })
 })
 
@@ -148,7 +148,7 @@ describe('HomePage (signed-in)', () => {
     vi.clearAllMocks()
   })
 
-  it('shows welcome back with account name', () => {
+  it('does not show the signed-in marketing title', () => {
     vi.mocked(useCurrentAccount).mockReturnValue({
       data: {
         id: 'user-1',
@@ -167,7 +167,7 @@ describe('HomePage (signed-in)', () => {
 
     render(<HomePage />)
 
-    expect(screen.getByText('Welcome back, Alice.')).toBeInTheDocument()
+    expect(screen.queryByText('Share')).not.toBeInTheDocument()
   })
 
   it('shows RecentGroupList container', () => {

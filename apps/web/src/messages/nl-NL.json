@@ -36,7 +36,15 @@
         "description": "Log één keer in om je gegevens te beschermen en je uitgavengeschiedenis beschikbaar te houden."
       }
     },
-    "welcomeBack": "Welkom terug, {name}."
+    "welcomeBack": "Welkom terug, {name}.",
+    "overview": {
+      "youAreOwed": "Je krijgt",
+      "youOwe": "Je bent verschuldigd",
+      "acrossGroups": "Over je groepen heen",
+      "viewGroups": "Groepen bekijken",
+      "noOneOwesYou": "Niemand is jou iets verschuldigd",
+      "youOweNoOne": "Je bent niemand iets verschuldigd"
+    }
   },
   "Header": {
     "signIn": "Inloggen",

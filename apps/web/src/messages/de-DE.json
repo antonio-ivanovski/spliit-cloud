@@ -36,7 +36,15 @@
         "description": "Melde dich einmal an, um deine Daten zu schützen und jederzeit auf deinen Ausgabenverlauf zuzugreifen."
       }
     },
-    "welcomeBack": "Willkommen zurück, {name}."
+    "welcomeBack": "Willkommen zurück, {name}.",
+    "overview": {
+      "youAreOwed": "Dir geschuldet",
+      "youOwe": "Du schuldest",
+      "acrossGroups": "Über deine Gruppen",
+      "viewGroups": "Gruppen anzeigen",
+      "noOneOwesYou": "Niemand schuldet dir etwas",
+      "youOweNoOne": "Du schuldest niemandem etwas"
+    }
   },
   "Header": {
     "signIn": "Anmelden",

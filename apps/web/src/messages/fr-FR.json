@@ -36,7 +36,15 @@
         "description": "Connectez-vous pour protéger vos données et conserver l’accès à votre historique de dépenses."
       }
     },
-    "welcomeBack": "Bon retour, {name}."
+    "welcomeBack": "Bon retour, {name}.",
+    "overview": {
+      "youAreOwed": "On vous doit",
+      "youOwe": "Vous devez",
+      "acrossGroups": "Dans vos groupes",
+      "viewGroups": "Voir les groupes",
+      "noOneOwesYou": "Personne ne vous doit rien",
+      "youOweNoOne": "Vous ne devez rien à personne"
+    }
   },
   "Header": {
     "signIn": "Se connecter",

@@ -36,7 +36,15 @@
         "description": "Masuk untuk melindungi data dan menjaga riwayat pengeluaran tetap tersedia."
       }
     },
-    "welcomeBack": "Selamat datang kembali, {name}."
+    "welcomeBack": "Selamat datang kembali, {name}.",
+    "overview": {
+      "youAreOwed": "Kamu memiliki piutang",
+      "youOwe": "Kamu berutang",
+      "acrossGroups": "Di seluruh grup Anda",
+      "viewGroups": "Lihat grup",
+      "noOneOwesYou": "Tidak ada yang berutang kepada Anda",
+      "youOweNoOne": "Anda tidak berutang kepada siapa pun"
+    }
   },
   "Header": {
     "signIn": "Masuk",

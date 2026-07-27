@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@/test/test-utils'
+import { render, screen, waitFor, within } from '@/test/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 /**
@@ -14,7 +14,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mocks = vi.hoisted(() => ({
   // Queries
-  mockUseGroupsQuery: vi.fn(),
+  mockUseOverviewQuery: vi.fn(),
   mockUseInvitationsQuery: vi.fn(),
   // Mutations (simple mutateAsync)
   mockSetPreference: vi.fn(),
@@ -23,6 +23,7 @@ const mocks = vi.hoisted(() => ({
   mockInvitationsAcceptMutate: vi.fn(),
   mockInvitationsDeclineMutate: vi.fn(),
   // Invalidation
+  mockInvalidateOverview: vi.fn(),
   mockInvalidateAccountGroups: vi.fn(),
   mockInvalidateGroupsGet: vi.fn(),
   mockInvalidateInvitationsList: vi.fn(),
@@ -40,10 +41,12 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock('@/trpc/client', () => ({
   trpc: {
-    account: {
-      groups: {
-        useQuery: mocks.mockUseGroupsQuery,
+    overview: {
+      get: {
+        useQuery: mocks.mockUseOverviewQuery,
       },
+    },
+    account: {
       setPreference: {
         useMutation: () => ({
           mutateAsync: mocks.mockSetPreference,
@@ -89,7 +92,15 @@ vi.mock('@/trpc/client', () => ({
       },
     },
     useUtils: () => ({
+      overview: {
+        get: {
+          invalidate: mocks.mockInvalidateOverview,
+        },
+      },
       account: {
+        overview: {
+          invalidate: mocks.mockInvalidateOverview,
+        },
         groups: {
           invalidate: mocks.mockInvalidateAccountGroups,
         },
@@ -106,6 +117,12 @@ vi.mock('@/trpc/client', () => ({
       },
     }),
   },
+}))
+
+vi.mock('@/lib/use-current-account', () => ({
+  useCurrentAccount: () => ({
+    data: { name: 'Alice' },
+  }),
 }))
 
 vi.mock('@/components/ui/use-toast', () => ({
@@ -147,6 +164,14 @@ function makeGroup(overrides: Record<string, unknown> = {}) {
     currentMemberRole: 'ADMIN' as const,
     preference: { starred: false, hidden: false },
     createdAt: '2026-06-01T00:00:00Z',
+    ledger: { currency: '$', currencyCode: 'USD' },
+    memberAccounts: [],
+    financialSummary: {
+      expenseCount: 0,
+      netBalance: 0,
+      state: 'NO_EXPENSES' as const,
+      latestExpenseCreatedAt: null,
+    },
     ...overrides,
   }
 }
@@ -175,8 +200,14 @@ describe('RecentGroupList', () => {
     mocks.declineOnError = null
 
     // Default mock return values
-    mocks.mockUseGroupsQuery.mockReturnValue({
-      data: { groups: [] },
+    mocks.mockUseOverviewQuery.mockReturnValue({
+      data: {
+        groups: [],
+        stats: {
+          balanceSummaries: [],
+          friendCount: 0,
+        },
+      },
       isLoading: false,
     })
     mocks.mockUseInvitationsQuery.mockReturnValue({
@@ -186,14 +217,121 @@ describe('RecentGroupList', () => {
     mocks.mockSetPreference.mockResolvedValue(undefined)
     mocks.mockArchiveGroup.mockResolvedValue(undefined)
     mocks.mockInvalidateAccountGroups.mockResolvedValue(undefined)
+    mocks.mockInvalidateOverview.mockResolvedValue(undefined)
     mocks.mockInvalidateGroupsGet.mockResolvedValue(undefined)
     mocks.mockInvalidateInvitationsList.mockResolvedValue(undefined)
+  })
+
+  it('groups cross-group balances by direction and currency', async () => {
+    mocks.mockUseOverviewQuery.mockReturnValue({
+      data: {
+        groups: [
+          makeGroup({
+            id: 'group-owed-1',
+            name: 'Beach trip',
+            displayName: 'Beach trip',
+            ledger: { currency: '$', currencyCode: 'USD' },
+            financialSummary: {
+              expenseCount: 2,
+              netBalance: 700,
+              state: 'OWED_TO_YOU',
+              latestExpenseCreatedAt: null,
+            },
+          }),
+          makeGroup({
+            id: 'group-owed-2',
+            name: 'Cabin weekend',
+            displayName: 'Cabin weekend',
+            ledger: { currency: '$', currencyCode: 'USD' },
+            financialSummary: {
+              expenseCount: 1,
+              netBalance: 500,
+              state: 'OWED_TO_YOU',
+              latestExpenseCreatedAt: null,
+            },
+          }),
+          makeGroup({
+            id: 'group-euro',
+            name: 'Paris trip',
+            displayName: 'Paris trip',
+            ledger: { currency: '€', currencyCode: 'EUR' },
+            financialSummary: {
+              expenseCount: 1,
+              netBalance: 1000,
+              state: 'OWED_TO_YOU',
+              latestExpenseCreatedAt: null,
+            },
+          }),
+        ],
+        stats: {
+          balanceSummaries: [
+            {
+              currency: '$',
+              currencyCode: 'USD',
+              owedToYou: 1200,
+              owedToYouGroupCount: 2,
+              youOwe: 0,
+              youOweGroupCount: 0,
+            },
+            {
+              currency: '€',
+              currencyCode: 'EUR',
+              owedToYou: 1000,
+              owedToYouGroupCount: 1,
+              youOwe: 0,
+              youOweGroupCount: 0,
+            },
+          ],
+          friendCount: 0,
+        },
+      },
+      isLoading: false,
+    })
+
+    const { user } = render(<RecentGroupList />)
+    const overview = within(screen.getByRole('region', { name: 'Balances' }))
+
+    expect(overview.getByText('Across your groups')).toBeInTheDocument()
+    expect(overview.getByText('You are owed')).toBeInTheDocument()
+    expect(overview.getByText('You owe')).toBeInTheDocument()
+    expect(overview.getByText("You don't owe anyone")).toBeInTheDocument()
+    expect(overview.getByText('$12.00')).toBeInTheDocument()
+    expect(overview.getByText('$12.00').parentElement).toHaveTextContent(
+      '2 groups',
+    )
+    expect(overview.getByText('€10.00').parentElement).toHaveTextContent(
+      '1 group',
+    )
+    await user.click(screen.getAllByRole('button', { name: 'View groups' })[0])
+    expect(screen.getAllByRole('link', { name: /Beach trip/ })).toHaveLength(1)
+    expect(screen.getAllByRole('link', { name: /Cabin weekend/ })).toHaveLength(
+      1,
+    )
+    expect(overview.queryByText(/friend/i)).not.toBeInTheDocument()
+  })
+
+  it('shows settled status when groups exist without rendering zero friend text', () => {
+    mocks.mockUseOverviewQuery.mockReturnValue({
+      data: {
+        groups: [makeGroup()],
+        stats: { balanceSummaries: [], friendCount: 0 },
+      },
+      isLoading: false,
+    })
+
+    render(<RecentGroupList />)
+
+    const summary = within(screen.getByRole('region', { name: 'Balances' }))
+    expect(summary.getByText('No one owes you')).toBeInTheDocument()
+    expect(summary.getByText("You don't owe anyone")).toBeInTheDocument()
+    expect(summary.getByText('Settled up')).toBeInTheDocument()
+    expect(summary.queryByText(/friend/i)).not.toBeInTheDocument()
   })
 
   // ── Loading state ───────────────────────────────────────────────────
 
   it('shows loader while groups are loading', () => {
-    mocks.mockUseGroupsQuery.mockReturnValue({
+    mocks.mockUseOverviewQuery.mockReturnValue({
       data: undefined,
       isLoading: true,
     })
@@ -207,8 +345,14 @@ describe('RecentGroupList', () => {
   // ── Empty state (no groups at all) ──────────────────────────────────
 
   it('shows inline create cards when no groups at all', () => {
-    mocks.mockUseGroupsQuery.mockReturnValue({
-      data: { groups: [] },
+    mocks.mockUseOverviewQuery.mockReturnValue({
+      data: {
+        groups: [],
+        stats: {
+          balanceSummaries: [],
+          friendCount: 0,
+        },
+      },
       isLoading: false,
     })
 
@@ -242,8 +386,14 @@ describe('RecentGroupList', () => {
     const hiddenGroup = makeGroup({
       preference: { starred: false, hidden: true },
     })
-    mocks.mockUseGroupsQuery.mockReturnValue({
-      data: { groups: [hiddenGroup] },
+    mocks.mockUseOverviewQuery.mockReturnValue({
+      data: {
+        groups: [hiddenGroup],
+        stats: {
+          balanceSummaries: [],
+          friendCount: 0,
+        },
+      },
       isLoading: false,
     })
 
@@ -270,8 +420,14 @@ describe('RecentGroupList', () => {
       displayName: 'Starred Trip',
       preference: { starred: true, hidden: false },
     })
-    mocks.mockUseGroupsQuery.mockReturnValue({
-      data: { groups: [starredGroup] },
+    mocks.mockUseOverviewQuery.mockReturnValue({
+      data: {
+        groups: [starredGroup],
+        stats: {
+          balanceSummaries: [],
+          friendCount: 0,
+        },
+      },
       isLoading: false,
     })
 
@@ -292,8 +448,14 @@ describe('RecentGroupList', () => {
       displayName: 'Active Trip',
       preference: { starred: false, hidden: false },
     })
-    mocks.mockUseGroupsQuery.mockReturnValue({
-      data: { groups: [activeGroup] },
+    mocks.mockUseOverviewQuery.mockReturnValue({
+      data: {
+        groups: [activeGroup],
+        stats: {
+          balanceSummaries: [],
+          friendCount: 0,
+        },
+      },
       isLoading: false,
     })
 
@@ -314,8 +476,14 @@ describe('RecentGroupList', () => {
       archived: true,
       preference: { starred: false, hidden: false },
     })
-    mocks.mockUseGroupsQuery.mockReturnValue({
-      data: { groups: [archivedGroup] },
+    mocks.mockUseOverviewQuery.mockReturnValue({
+      data: {
+        groups: [archivedGroup],
+        stats: {
+          balanceSummaries: [],
+          friendCount: 0,
+        },
+      },
       isLoading: false,
     })
 
@@ -332,7 +500,7 @@ describe('RecentGroupList', () => {
 
   it('star toggle calls setPreference and invalidates groups', async () => {
     const group = makeGroup({ id: 'g-star-toggle' })
-    mocks.mockUseGroupsQuery.mockReturnValue({
+    mocks.mockUseOverviewQuery.mockReturnValue({
       data: { groups: [group] },
       isLoading: false,
     })
@@ -357,7 +525,7 @@ describe('RecentGroupList', () => {
       id: 'g-unstar',
       preference: { starred: true, hidden: false },
     })
-    mocks.mockUseGroupsQuery.mockReturnValue({
+    mocks.mockUseOverviewQuery.mockReturnValue({
       data: { groups: [group] },
       isLoading: false,
     })
@@ -378,7 +546,7 @@ describe('RecentGroupList', () => {
 
   it('hide toggles hidden state from dropdown menu', async () => {
     const group = makeGroup({ id: 'g-hide' })
-    mocks.mockUseGroupsQuery.mockReturnValue({
+    mocks.mockUseOverviewQuery.mockReturnValue({
       data: { groups: [group] },
       isLoading: false,
     })
@@ -407,7 +575,7 @@ describe('RecentGroupList', () => {
       id: 'g-arch-admin',
       currentMemberRole: 'ADMIN',
     })
-    mocks.mockUseGroupsQuery.mockReturnValue({
+    mocks.mockUseOverviewQuery.mockReturnValue({
       data: { groups: [group] },
       isLoading: false,
     })
@@ -445,7 +613,7 @@ describe('RecentGroupList', () => {
       id: 'g-member',
       currentMemberRole: 'MEMBER',
     })
-    mocks.mockUseGroupsQuery.mockReturnValue({
+    mocks.mockUseOverviewQuery.mockReturnValue({
       data: { groups: [group] },
       isLoading: false,
     })
@@ -468,7 +636,7 @@ describe('RecentGroupList', () => {
       id: 'g-force',
       currentMemberRole: 'ADMIN',
     })
-    mocks.mockUseGroupsQuery.mockReturnValue({
+    mocks.mockUseOverviewQuery.mockReturnValue({
       data: { groups: [group] },
       isLoading: false,
     })
@@ -499,7 +667,7 @@ describe('RecentGroupList', () => {
       id: 'g-err',
       currentMemberRole: 'ADMIN',
     })
-    mocks.mockUseGroupsQuery.mockReturnValue({
+    mocks.mockUseOverviewQuery.mockReturnValue({
       data: { groups: [group] },
       isLoading: false,
     })

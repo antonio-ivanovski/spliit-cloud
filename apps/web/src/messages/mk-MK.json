@@ -36,7 +36,15 @@
       "importGroup": "Увезете група од друг сервис",
       "createFriendLedger": "Следете трошоци со пријател или пријателка"
     },
-    "welcomeBack": "Добредојдовте назад, {name}."
+    "welcomeBack": "Добредојдовте назад, {name}.",
+    "overview": {
+      "youAreOwed": "Ти должат",
+      "youOwe": "Ти должиш",
+      "acrossGroups": "Низ твоите групи",
+      "viewGroups": "Прикажи ги групите",
+      "noOneOwesYou": "Никој не ти должи",
+      "youOweNoOne": "Не му должиш никому"
+    }
   },
   "Header": {
     "signIn": "Најава",

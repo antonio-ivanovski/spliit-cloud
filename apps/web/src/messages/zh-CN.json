@@ -36,7 +36,15 @@
         "description": "登录一次即可保护数据，并随时查看支出记录。"
       }
     },
-    "welcomeBack": "欢迎回来，{name}。"
+    "welcomeBack": "欢迎回来，{name}。",
+    "overview": {
+      "youAreOwed": "应收",
+      "youOwe": "应付",
+      "acrossGroups": "所有群组",
+      "viewGroups": "查看群组",
+      "noOneOwesYou": "没有人欠你",
+      "youOweNoOne": "你不欠任何人"
+    }
   },
   "Header": {
     "signIn": "登录",

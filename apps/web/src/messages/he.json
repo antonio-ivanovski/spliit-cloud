@@ -36,7 +36,15 @@
         "description": "כניסה לחשבון מגנה על הנתונים ומשאירה את היסטוריית ההוצאות זמינה."
       }
     },
-    "welcomeBack": "ברוך השב, {name}."
+    "welcomeBack": "ברוך השב, {name}.",
+    "overview": {
+      "youAreOwed": "חייבים לך",
+      "youOwe": "אתה חייב",
+      "acrossGroups": "בכל הקבוצות שלך",
+      "viewGroups": "הצגת קבוצות",
+      "noOneOwesYou": "אף אחד לא חייב לך",
+      "youOweNoOne": "אינך חייב לאף אחד"
+    }
   },
   "Header": {
     "signIn": "התחבר",

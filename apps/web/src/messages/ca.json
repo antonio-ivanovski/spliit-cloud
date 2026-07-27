@@ -36,7 +36,15 @@
         "description": "Inicia la sessió una vegada per protegir les dades i mantenir disponible l’historial de despeses."
       }
     },
-    "welcomeBack": "Benvingut de nou, {name}."
+    "welcomeBack": "Benvingut de nou, {name}.",
+    "overview": {
+      "youAreOwed": "Et deuen",
+      "youOwe": "Deus",
+      "acrossGroups": "Entre els teus grups",
+      "viewGroups": "Veure grups",
+      "noOneOwesYou": "Ningú et deu",
+      "youOweNoOne": "No deus res a ningú"
+    }
   },
   "Header": {
     "signIn": "Inicia sessió",

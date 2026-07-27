@@ -36,7 +36,15 @@
         "description": "Hasi saioa datuak babesteko eta gastuen historia erabilgarri mantentzeko."
       }
     },
-    "welcomeBack": "Ongi etorri berriro, {name}."
+    "welcomeBack": "Ongi etorri berriro, {name}.",
+    "overview": {
+      "youAreOwed": "Zuri zor dizute",
+      "youOwe": "Zuk zor duzu",
+      "acrossGroups": "Zure taldeen artean",
+      "viewGroups": "Ikusi taldeak",
+      "noOneOwesYou": "Inork ez dizu ezer zor",
+      "youOweNoOne": "Ez diozu inori ezer zor"
+    }
   },
   "Header": {
     "signIn": "Hasi saioa",

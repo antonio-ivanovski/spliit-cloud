@@ -36,7 +36,15 @@
         "description": "Verilerinizi korumak ve masraf geçmişinize erişmek için oturum açın."
       }
     },
-    "welcomeBack": "Tekrar hoş geldin, {name}."
+    "welcomeBack": "Tekrar hoş geldin, {name}.",
+    "overview": {
+      "youAreOwed": "Sana borçlular",
+      "youOwe": "Borçlusun",
+      "acrossGroups": "Grupların genelinde",
+      "viewGroups": "Grupları görüntüle",
+      "noOneOwesYou": "Kimse sana borçlu değil",
+      "youOweNoOne": "Kimseye borcun yok"
+    }
   },
   "Header": {
     "signIn": "Oturum aç",

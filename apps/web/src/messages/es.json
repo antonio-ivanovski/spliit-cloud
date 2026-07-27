@@ -36,7 +36,15 @@
         "description": "Inicia sesión para proteger tus datos y mantener disponible tu historial de gastos."
       }
     },
-    "welcomeBack": "Bienvenido de nuevo, {name}."
+    "welcomeBack": "Bienvenido de nuevo, {name}.",
+    "overview": {
+      "youAreOwed": "Te deben",
+      "youOwe": "Debes",
+      "acrossGroups": "Entre tus grupos",
+      "viewGroups": "Ver grupos",
+      "noOneOwesYou": "Nadie te debe nada",
+      "youOweNoOne": "No le debes nada a nadie"
+    }
   },
   "Header": {
     "signIn": "Iniciar sesión",

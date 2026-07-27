@@ -36,7 +36,15 @@
         "description": "サインインしてデータを保護し、支出履歴をいつでも確認できます。"
       }
     },
-    "welcomeBack": "おかえりなさい、{name}。"
+    "welcomeBack": "おかえりなさい、{name}。",
+    "overview": {
+      "youAreOwed": "あなたが受け取る金額",
+      "youOwe": "あなたの支払い",
+      "acrossGroups": "グループ全体",
+      "viewGroups": "グループを表示",
+      "noOneOwesYou": "あなたに借りがある人はいません",
+      "youOweNoOne": "誰にも借りはありません"
+    }
   },
   "Header": {
     "signIn": "サインイン",

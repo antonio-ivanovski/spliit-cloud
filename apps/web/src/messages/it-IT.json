@@ -36,7 +36,15 @@
         "description": "Accedi per proteggere i tuoi dati e mantenere disponibile la cronologia delle spese."
       }
     },
-    "welcomeBack": "Bentornato, {name}."
+    "welcomeBack": "Bentornato, {name}.",
+    "overview": {
+      "youAreOwed": "Ti devono",
+      "youOwe": "Devi",
+      "acrossGroups": "Nei tuoi gruppi",
+      "viewGroups": "Visualizza gruppi",
+      "noOneOwesYou": "Nessuno ti deve nulla",
+      "youOweNoOne": "Non devi nulla a nessuno"
+    }
   },
   "Header": {
     "signIn": "Accedi",

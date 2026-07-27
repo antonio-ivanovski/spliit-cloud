@@ -36,7 +36,15 @@
         "description": "Autentifică-te pentru a-ți proteja datele și a păstra disponibil istoricul cheltuielilor."
       }
     },
-    "welcomeBack": "Bine ai revenit, {name}."
+    "welcomeBack": "Bine ai revenit, {name}.",
+    "overview": {
+      "youAreOwed": "Ai de primit",
+      "youOwe": "Ai de plată",
+      "acrossGroups": "În grupurile tale",
+      "viewGroups": "Vezi grupurile",
+      "noOneOwesYou": "Nimeni nu îți datorează nimic",
+      "youOweNoOne": "Nu datorezi nimic nimănui"
+    }
   },
   "Header": {
     "signIn": "Autentifică-te",

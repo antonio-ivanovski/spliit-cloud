@@ -1022,7 +1022,15 @@
         "description": "로그인하여 데이터를 보호하고 지출 내역을 계속 확인하세요."
       }
     },
-    "welcomeBack": "돌아오신 것을 환영합니다, {name}."
+    "welcomeBack": "돌아오신 것을 환영합니다, {name}.",
+    "overview": {
+      "youAreOwed": "받을 금액",
+      "youOwe": "지불할 금액",
+      "acrossGroups": "내 그룹 전체",
+      "viewGroups": "그룹 보기",
+      "noOneOwesYou": "아무도 당신에게 빚진 것이 없습니다",
+      "youOweNoOne": "아무에게도 빚진 것이 없습니다"
+    }
   },
   "Header": {
     "signIn": "로그인",

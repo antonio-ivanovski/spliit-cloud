@@ -36,7 +36,15 @@
         "description": "Jedním přihlášením ochráníte data a zachováte přístup k historii výdajů."
       }
     },
-    "welcomeBack": "Vítej zpátky, {name}."
+    "welcomeBack": "Vítej zpátky, {name}.",
+    "overview": {
+      "youAreOwed": "Dluží ti",
+      "youOwe": "Dlužíš",
+      "acrossGroups": "Mezi tvými skupinami",
+      "viewGroups": "Zobrazit skupiny",
+      "noOneOwesYou": "Nikdo ti nic nedluží",
+      "youOweNoOne": "Nikomu nic nedlužíš"
+    }
   },
   "Header": {
     "signIn": "Přihlásit se",

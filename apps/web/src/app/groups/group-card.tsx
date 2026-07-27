@@ -1,6 +1,7 @@
 import { AccountAvatar } from '@/components/account-avatar'
 import { AvatarStack } from '@/components/avatar-stack'
 import Link from '@/components/link'
+import { Money } from '@/components/money'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -8,10 +9,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useLocale } from '@/i18n/react'
+import { getCurrencyFromGroup } from '@/lib/currency'
 import {
   Archive,
   ArchiveRestore,
+  BanknoteArrowDown,
+  BanknoteArrowUp,
+  BanknoteCheck,
   Eye,
   EyeOff,
   MoreHorizontal,
@@ -43,16 +47,69 @@ export function GroupCard({
   onToggleArchived?: () => void
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
-  const locale = useLocale()
+  const { t: tOverview } = useTranslation(undefined, {
+    keyPrefix: 'Homepage.overview',
+  })
+  const { t: tBalances } = useTranslation(undefined, { keyPrefix: 'Balances' })
+  const { t: tStats } = useTranslation(undefined, { keyPrefix: 'Stats' })
   const isStarred = group.preference.starred
   const isHidden = group.preference.hidden
   const isArchived = group.archived
   const isFriend = group.groupType === 'FRIEND'
   const isPending = isFriend && group.memberCount === 1
   const memberAccounts = group.memberAccounts ?? []
-  const formattedDate = new Date(group.createdAt).toLocaleDateString(locale, {
-    dateStyle: 'medium',
-  })
+  const currency = getCurrencyFromGroup(group.ledger)
+  const financial = group.financialSummary ?? {
+    expenseCount: 0,
+    netBalance: null,
+    state: 'UNAVAILABLE' as const,
+    latestExpenseCreatedAt: null,
+  }
+
+  function renderFinancialSummary() {
+    switch (financial.state) {
+      case 'YOU_OWE':
+        return (
+          <span className="inline-flex items-center gap-1 font-medium text-destructive">
+            <BanknoteArrowUp className="h-3.5 w-3.5" aria-hidden />
+            <span>
+              {tOverview('youOwe')}{' '}
+              <Money
+                currency={currency}
+                amount={Math.abs(financial.netBalance ?? 0)}
+              />
+            </span>
+          </span>
+        )
+      case 'OWED_TO_YOU':
+        return (
+          <span className="inline-flex items-center gap-1 font-medium text-green-600 dark:text-green-400">
+            <BanknoteArrowDown className="h-3.5 w-3.5" aria-hidden />
+            <span>
+              {tOverview('youAreOwed')}{' '}
+              <Money currency={currency} amount={financial.netBalance ?? 0} />
+            </span>
+          </span>
+        )
+      case 'SETTLED':
+        return (
+          <span className="inline-flex items-center gap-1 text-muted-foreground">
+            <BanknoteCheck className="h-3.5 w-3.5" aria-hidden />
+            <span>{tBalances('direction.settledUp')}</span>
+          </span>
+        )
+      case 'UNAVAILABLE':
+        return (
+          <span className="text-muted-foreground">{tBalances('title')}</span>
+        )
+      case 'NO_EXPENSES':
+        return (
+          <span className="text-muted-foreground">
+            {tStats('Dashboard.emptyTitle')}
+          </span>
+        )
+    }
+  }
 
   return (
     <li key={group.id} className="min-w-0">
@@ -183,9 +240,7 @@ export function GroupCard({
                   )}
                 </div>
               )}
-              <div className="flex items-center gap-1.5 truncate">
-                <span className="truncate">{formattedDate}</span>
-              </div>
+              <div className="truncate">{renderFinancialSummary()}</div>
             </div>
           </div>
         </div>

@@ -1,7 +1,6 @@
 import type { AppRouterOutput } from '@spliit/api/router'
 
-export type AccountGroup =
-  AppRouterOutput['account']['groups']['groups'][number]
+export type AccountGroup = AppRouterOutput['overview']['get']['groups'][number]
 
 export type GroupType = AccountGroup['groupType']
 
@@ -61,6 +60,18 @@ export function partitionGroups(groups: AccountGroup[]) {
     if (group.preference.starred) starred.push(group)
     else grouped.push(group)
   }
+  const sortByRecentExpense = (a: AccountGroup, b: AccountGroup) => {
+    const aTime = a.financialSummary?.latestExpenseCreatedAt ?? a.createdAt
+    const bTime = b.financialSummary?.latestExpenseCreatedAt ?? b.createdAt
+    return bTime.localeCompare(aTime) || a.id.localeCompare(b.id)
+  }
+
+  grouped.sort(sortByRecentExpense)
+  friends.sort(sortByRecentExpense)
+  starred.sort(sortByRecentExpense)
+  archived.sort(sortByRecentExpense)
+  hidden.sort(sortByRecentExpense)
+
   return { groups: grouped, friends, starred, archived, hidden }
 }
 

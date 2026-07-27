@@ -36,7 +36,15 @@
         "description": "登入即可保護資料，並隨時查看支出記錄。"
       }
     },
-    "welcomeBack": "歡迎回來，{name}。"
+    "welcomeBack": "歡迎回來，{name}。",
+    "overview": {
+      "youAreOwed": "應收",
+      "youOwe": "應付",
+      "acrossGroups": "所有群組",
+      "viewGroups": "查看群組",
+      "noOneOwesYou": "沒有人欠你",
+      "youOweNoOne": "你不欠任何人"
+    }
   },
   "Header": {
     "signIn": "登入",

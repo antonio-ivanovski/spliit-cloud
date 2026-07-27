@@ -93,6 +93,32 @@ describe('bucketFor', () => {
 })
 
 describe('partitionGroups', () => {
+  it('sorts each bucket by newest expense creation time', () => {
+    const older = makeGroup({
+      id: 'older',
+      financialSummary: {
+        expenseCount: 1,
+        netBalance: 0,
+        state: 'SETTLED',
+        latestExpenseCreatedAt: '2026-06-02T00:00:00Z',
+      },
+    })
+    const newer = makeGroup({
+      id: 'newer',
+      financialSummary: {
+        expenseCount: 1,
+        netBalance: 0,
+        state: 'SETTLED',
+        latestExpenseCreatedAt: '2026-06-03T00:00:00Z',
+      },
+    })
+
+    expect(partitionGroups([older, newer]).groups.map((g) => g.id)).toEqual([
+      'newer',
+      'older',
+    ])
+  })
+
   it('partitions groups and friends into separate arrays', () => {
     const g1 = makeGroup({ id: 'g1', groupType: 'GROUP' })
     const g2 = makeGroup({ id: 'g2', groupType: 'GROUP' })

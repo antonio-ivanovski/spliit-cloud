@@ -36,7 +36,15 @@
         "description": "Entre na sua conta para proteger seus dados e manter disponível o histórico de despesas."
       }
     },
-    "welcomeBack": "Bem-vindo de volta, {name}."
+    "welcomeBack": "Bem-vindo de volta, {name}.",
+    "overview": {
+      "youAreOwed": "Você tem a receber",
+      "youOwe": "Você deve",
+      "acrossGroups": "Entre seus grupos",
+      "viewGroups": "Ver grupos",
+      "noOneOwesYou": "Ninguém te deve nada",
+      "youOweNoOne": "Você não deve nada a ninguém"
+    }
   },
   "Header": {
     "signIn": "Entrar",

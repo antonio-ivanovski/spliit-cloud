@@ -36,7 +36,15 @@
         "description": "Zaloguj się raz, aby chronić dane i zachować dostęp do historii wydatków."
       }
     },
-    "welcomeBack": "Witaj z powrotem, {name}."
+    "welcomeBack": "Witaj z powrotem, {name}.",
+    "overview": {
+      "youAreOwed": "Należy ci się",
+      "youOwe": "Masz do zapłaty",
+      "acrossGroups": "We wszystkich twoich grupach",
+      "viewGroups": "Pokaż grupy",
+      "noOneOwesYou": "Nikt nie jest ci nic winien",
+      "youOweNoOne": "Nikomu nic nie musisz oddawać"
+    }
   },
   "Header": {
     "signIn": "Zaloguj się",

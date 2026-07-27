@@ -77,7 +77,6 @@ export default function HomePage() {
 
   return (
     <main className="flex-1 max-w-(--breakpoint-md) w-full mx-auto px-4 py-6 flex flex-col gap-6">
-      <SignedInHero />
       {isPending ? (
         <div className="flex items-center justify-center py-10">
           <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
@@ -86,30 +85,6 @@ export default function HomePage() {
         account && <RecentGroupList />
       )}
     </main>
-  )
-}
-
-function SignedInHero() {
-  const { t } = useTranslation()
-  const { data: account, isPending } = useCurrentAccount()
-
-  return (
-    <section className="flex flex-col gap-4 text-center sm:text-left">
-      {!isPending && account?.name ? (
-        <p className="text-sm text-muted-foreground">
-          {t('Homepage.welcomeBack', { name: account.name })}
-        </p>
-      ) : null}
-      <h1 className="leading-none! font-bold text-2xl sm:text-3xl md:text-4xl landing-header py-2">
-        <Trans i18nKey="Homepage.title" components={{ strong: <strong /> }} />
-      </h1>
-      <p className="leading-normal text-muted-foreground sm:text-lg sm:leading-7">
-        <Trans
-          i18nKey="Homepage.description"
-          components={{ strong: <strong /> }}
-        />
-      </p>
-    </section>
   )
 }
 

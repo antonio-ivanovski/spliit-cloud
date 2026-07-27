@@ -46,6 +46,12 @@ function makeFriendGroup(overrides: Record<string, unknown> = {}) {
     },
     members: [],
     invitations: [],
+    financialSummary: {
+      expenseCount: 0,
+      netBalance: 0,
+      state: 'NO_EXPENSES' as const,
+      latestExpenseCreatedAt: null,
+    },
     ...overrides,
   } as unknown as AccountGroup
 }
@@ -76,11 +82,85 @@ function makeRegularGroup(overrides: Record<string, unknown> = {}) {
     },
     members: [],
     invitations: [],
+    memberAccounts: [
+      { id: 'acct-me', name: 'Me', image: null },
+      { id: 'acct-bob', name: 'Bob', image: null },
+    ],
+    financialSummary: {
+      expenseCount: 0,
+      netBalance: 0,
+      state: 'NO_EXPENSES' as const,
+      latestExpenseCreatedAt: null,
+    },
     ...overrides,
   } as unknown as AccountGroup
 }
 
 describe('GroupCard — friend-ledger behavior', () => {
+  it('renders the current user balance state in the card', () => {
+    const { container } = render(
+      <GroupCard
+        group={makeRegularGroup({
+          ledger: { currency: '$', currencyCode: 'USD' },
+          financialSummary: {
+            expenseCount: 1,
+            netBalance: -1250,
+            state: 'YOU_OWE',
+            latestExpenseCreatedAt: '2026-06-02T00:00:00Z',
+          },
+        })}
+        onToggleStar={() => {}}
+        onToggleHidden={() => {}}
+      />,
+    )
+    expect(screen.getByText('You owe')).toBeInTheDocument()
+    expect(screen.getByText('$12.50')).toBeInTheDocument()
+    expect(
+      container.querySelector('.lucide-banknote-arrow-up'),
+    ).toBeInTheDocument()
+  })
+
+  it('renders owed and settled states without relying on color', () => {
+    const { container, rerender } = render(
+      <GroupCard
+        group={makeRegularGroup({
+          financialSummary: {
+            expenseCount: 1,
+            netBalance: 850,
+            state: 'OWED_TO_YOU',
+            latestExpenseCreatedAt: '2026-06-02T00:00:00Z',
+          },
+        })}
+        onToggleStar={() => {}}
+        onToggleHidden={() => {}}
+      />,
+    )
+    expect(screen.getByText('You are owed')).toBeInTheDocument()
+    expect(screen.getByText('$8.50')).toBeInTheDocument()
+    expect(
+      container.querySelector('.lucide-banknote-arrow-down'),
+    ).toBeInTheDocument()
+
+    rerender(
+      <GroupCard
+        group={makeRegularGroup({
+          financialSummary: {
+            expenseCount: 2,
+            netBalance: 0,
+            state: 'SETTLED',
+            latestExpenseCreatedAt: '2026-06-02T00:00:00Z',
+          },
+        })}
+        onToggleStar={() => {}}
+        onToggleHidden={() => {}}
+      />,
+    )
+    expect(screen.getByText('Settled up')).toBeInTheDocument()
+    expect(
+      container.querySelector('.lucide-banknote-check'),
+    ).toBeInTheDocument()
+  })
+
   it('renders displayName (not group.name) for a FRIEND card', () => {
     render(
       <GroupCard
@@ -126,7 +206,7 @@ describe('GroupCard — friend-ledger behavior', () => {
     expect(screen.getByText('?')).toBeInTheDocument()
   })
 
-  it('does not show an avatar for GROUP cards', () => {
+  it('keeps the member count and avatar stack on GROUP cards', () => {
     render(
       <GroupCard
         group={makeRegularGroup()}
@@ -134,10 +214,8 @@ describe('GroupCard — friend-ledger behavior', () => {
         onToggleHidden={() => {}}
       />,
     )
-    // No avatar/initial for GROUP cards; the title "Trip" is rendered
-    // without a preceding initials span. The aria-hidden initials
-    // element only renders for isFriend.
-    expect(screen.queryByText('T')).not.toBeInTheDocument()
+    expect(screen.getByText('4')).toBeInTheDocument()
+    expect(screen.getByLabelText('4 members')).toBeInTheDocument()
     expect(screen.getByText('Trip')).toBeInTheDocument()
   })
 

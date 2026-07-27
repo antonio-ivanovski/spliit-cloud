@@ -1,0 +1,39 @@
+import { z } from 'zod'
+import { accountGroupSchema } from './account'
+
+export const overviewFinancialStateSchema = z.enum([
+  'NO_EXPENSES',
+  'YOU_OWE',
+  'OWED_TO_YOU',
+  'SETTLED',
+  'UNAVAILABLE',
+])
+export type OverviewFinancialState = z.infer<
+  typeof overviewFinancialStateSchema
+>
+
+export const overviewGroupSchema = accountGroupSchema.extend({
+  financialSummary: z.object({
+    expenseCount: z.number().int().nonnegative(),
+    netBalance: z.number().int().nullable(),
+    state: overviewFinancialStateSchema,
+    latestExpenseCreatedAt: z.string().nullable(),
+  }),
+})
+
+export const overviewOutputSchema = z.object({
+  stats: z.object({
+    balanceSummaries: z.array(
+      z.object({
+        currency: z.string(),
+        currencyCode: z.string().nullable(),
+        owedToYou: z.number().int().nonnegative(),
+        owedToYouGroupCount: z.number().int().nonnegative(),
+        youOwe: z.number().int().nonnegative(),
+        youOweGroupCount: z.number().int().nonnegative(),
+      }),
+    ),
+    friendCount: z.number().int().nonnegative(),
+  }),
+  groups: z.array(overviewGroupSchema),
+})
