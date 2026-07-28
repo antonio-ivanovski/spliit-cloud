@@ -4,7 +4,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { I18nProvider } from '@/i18n/react'
 import { defaultLocale } from '@/i18n/request'
-import { detectLocale, i18n, loadLocale, setUserLocale } from '@/i18n/setup'
+import {
+  detectBrowserLocale,
+  detectLocale,
+  i18n,
+  loadLocale,
+  matchSupportedLocale,
+  setUserLocale,
+} from '@/i18n/setup'
 
 // ── Helpers ────────────────────────────────────────────────────────────
 
@@ -24,6 +31,37 @@ async function resetLocale() {
     await i18n.changeLanguage(defaultLocale)
   }
 }
+
+function mockBrowserLocales(...locales: string[]) {
+  vi.spyOn(navigator, 'languages', 'get').mockReturnValue(locales)
+  vi.spyOn(navigator, 'language', 'get').mockReturnValue(locales[0] ?? '')
+}
+
+describe('matchSupportedLocale', () => {
+  it.each([
+    ['fr-FR', 'fr-FR'],
+    ['FR-fr', 'fr-FR'],
+    ['en-GB', 'en-US'],
+    ['fr-CA', 'fr-FR'],
+    ['de-AT', 'de-DE'],
+    ['es-MX', 'es'],
+    ['pt-BR', 'pt-BR'],
+    ['pt-PT', 'pt'],
+    ['pt-AO', 'pt'],
+    ['zh-Hant', 'zh-TW'],
+    ['zh-HK', 'zh-TW'],
+    ['zh-SG', 'zh-CN'],
+    ['xx-XX', undefined],
+    ['not_a_locale', undefined],
+  ])('matches %s to %s', (browserLocale, expected) => {
+    expect(matchSupportedLocale(browserLocale)).toBe(expected)
+  })
+
+  it('uses the first supported browser preference', () => {
+    mockBrowserLocales('xx-XX', 'fr-CA', 'de-DE')
+    expect(detectBrowserLocale()).toBe('fr-FR')
+  })
+})
 
 // ── detectLocale ───────────────────────────────────────────────────────
 
@@ -45,22 +83,23 @@ describe('detectLocale', () => {
   it('favors cookie over navigator.language', () => {
     // Set both — cookie should win
     document.cookie = `${COOKIE_NAME}=de-DE;path=/`
-    vi.spyOn(navigator, 'language', 'get').mockReturnValue('en-US')
+    mockBrowserLocales('en-US')
     expect(detectLocale()).toBe('de-DE')
   })
 
-  it('falls back to navigator.language when no cookie is set', () => {
-    vi.spyOn(navigator, 'language', 'get').mockReturnValue('fr-FR')
+  it('falls back to the closest navigator locale when no cookie is set', () => {
+    mockBrowserLocales('fr-CA')
     expect(detectLocale()).toBe('fr-FR')
   })
 
   it('falls back to defaultLocale when navigator.language is not supported', () => {
-    vi.spyOn(navigator, 'language', 'get').mockReturnValue('xx-XX')
+    mockBrowserLocales('xx-XX')
     expect(detectLocale()).toBe(defaultLocale)
   })
 
   it('falls back to defaultLocale when cookie is set to an unsupported locale', () => {
     document.cookie = `${COOKIE_NAME}=xx-XX;path=/`
+    mockBrowserLocales('xx-XX')
     expect(detectLocale()).toBe(defaultLocale)
   })
 })

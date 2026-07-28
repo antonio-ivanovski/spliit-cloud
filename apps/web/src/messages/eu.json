@@ -2095,5 +2095,16 @@
     "staleRate": "Honako tasa:",
     "fromLabel": "Nondik",
     "toLabel": "Nora"
+  },
+  "LanguageSwitcher": {
+    "title": "Aukeratu hizkuntza",
+    "search": "Bilatu hizkuntzak...",
+    "noLanguage": "Ez da hizkuntzarik aurkitu.",
+    "suggested": "Gomendatutakoak",
+    "popular": "Herrikoiak",
+    "americas": "Amerikak",
+    "asiaPacific": "Asia-Pazifikoa",
+    "europe": "Europa",
+    "middleEastAndNorthAfrica": "Ekialde Hurbila eta Afrika Iparraldea"
   }
 }

@@ -2062,5 +2062,16 @@
     "staleRate": "レート情報:",
     "fromLabel": "From",
     "toLabel": "To"
+  },
+  "LanguageSwitcher": {
+    "title": "言語を選択",
+    "search": "言語を検索...",
+    "noLanguage": "言語が見つかりません。",
+    "suggested": "おすすめ",
+    "popular": "人気",
+    "americas": "南北アメリカ",
+    "asiaPacific": "アジア太平洋地域",
+    "europe": "ヨーロッパ",
+    "middleEastAndNorthAfrica": "中東・北アフリカ"
   }
 }

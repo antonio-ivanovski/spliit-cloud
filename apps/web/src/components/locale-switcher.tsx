@@ -1,7 +1,23 @@
 import { Check } from 'lucide-react'
-import { forwardRef, useState } from 'react'
+import { forwardRef, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
+import {
+  getLocalizedLocaleLabels,
+  localeFlags,
+  localeRegionOrder,
+  localeRegions,
+  popularLocales,
+} from '@/components/locale-switcher-data'
 import { Button, type ButtonProps } from '@/components/ui/button'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command'
 import {
   Drawer,
   DrawerContent,
@@ -10,84 +26,40 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer'
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import { useLocale } from '@/i18n/react'
 import type { Locale } from '@/i18n/request'
 import { localeLabels, locales } from '@/i18n/request'
-import { setUserLocale } from '@/i18n/setup'
+import { detectBrowserLocale, setUserLocale } from '@/i18n/setup'
 import { useMediaQuery } from '@/lib/hooks'
 import { cn } from '@/lib/utils'
-
-export const localeFlags = {
-  'ar-SA': '🇸🇦',
-  'bn-BD': '🇧🇩',
-  'hi-IN': '🇮🇳',
-  id: '🇮🇩',
-  ca: '🇦🇩',
-  'cs-CZ': '🇨🇿',
-  'de-DE': '🇩🇪',
-  'en-US': '🇺🇸',
-  es: '🇪🇸',
-  eu: '🇪🇸',
-  'fr-FR': '🇫🇷',
-  'it-IT': '🇮🇹',
-  'nl-NL': '🇳🇱',
-  'pl-PL': '🇵🇱',
-  pt: '🇵🇹',
-  'pt-BR': '🇧🇷',
-  ro: '🇷🇴',
-  fi: '🇫🇮',
-  'sv-SE': '🇸🇪',
-  'tr-TR': '🇹🇷',
-  'ru-RU': '🇷🇺',
-  'uk-UA': '🇺🇦',
-  he: '🇮🇱',
-  ko: '🇰🇷',
-  'mk-MK': '🇲🇰',
-  'ja-JP': '🇯🇵',
-  'ur-PK': '🇵🇰',
-  vi: '🇻🇳',
-  'zh-CN': '🇨🇳',
-  'zh-TW': '🇹🇼',
-} satisfies Record<Locale, string>
 
 export function LocaleSwitcher() {
   const locale = useLocale() as Locale
   const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery('(min-width: 768px)')
+  const { t } = useTranslation(undefined, { keyPrefix: 'LanguageSwitcher' })
 
   const selectLocale = (nextLocale: Locale) => {
     setOpen(false)
     void setUserLocale(nextLocale)
   }
 
+  const picker = <LocaleCommand locale={locale} onValueChange={selectLocale} />
+
   if (isDesktop) {
     return (
-      <DropdownMenu open={open} onOpenChange={setOpen}>
-        <DropdownMenuTrigger asChild>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
           <LocaleButton locale={locale} showLabel />
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="min-w-56">
-          {locales.map((option) => (
-            <DropdownMenuItem
-              key={option}
-              aria-current={option === locale ? 'true' : undefined}
-              className="gap-3"
-              onSelect={() => selectLocale(option)}
-            >
-              <LocaleFlag locale={option} />
-              <span className="flex-1">{localeLabels[option]}</span>
-              {option === locale && (
-                <Check className="size-4 text-primary" aria-hidden="true" />
-              )}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
+        </PopoverTrigger>
+        <PopoverContent align="end" className="w-80 p-0">
+          {picker}
+        </PopoverContent>
+      </Popover>
     )
   }
 
@@ -96,31 +68,117 @@ export function LocaleSwitcher() {
       <DrawerTrigger asChild>
         <LocaleButton locale={locale} />
       </DrawerTrigger>
-      <DrawerContent>
+      <DrawerContent className="p-0">
         <DrawerHeader className="pb-2 text-start">
-          <DrawerTitle>{localeLabels[locale]}</DrawerTitle>
+          <DrawerTitle>{t('title')}</DrawerTitle>
         </DrawerHeader>
-        <div className="overflow-y-auto overscroll-contain px-3 pb-4">
-          <div className="grid gap-1">
-            {locales.map((option) => (
-              <button
-                key={option}
-                type="button"
-                aria-current={option === locale ? 'true' : undefined}
-                className="flex min-h-12 w-full items-center gap-3 rounded-lg px-3 text-start text-sm font-medium transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden aria-[current=true]:bg-primary/10 aria-[current=true]:text-primary"
-                onClick={() => selectLocale(option)}
-              >
-                <LocaleFlag locale={option} />
-                <span className="flex-1">{localeLabels[option]}</span>
-                {option === locale && (
-                  <Check className="size-4 shrink-0" aria-hidden="true" />
-                )}
-              </button>
-            ))}
-          </div>
-        </div>
+        {picker}
       </DrawerContent>
     </Drawer>
+  )
+}
+
+function LocaleCommand({
+  locale,
+  onValueChange,
+}: {
+  locale: Locale
+  onValueChange: (locale: Locale) => void
+}) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'LanguageSwitcher' })
+  const localizedLabels = useMemo(
+    () => getLocalizedLocaleLabels(locale),
+    [locale],
+  )
+  const groups = useMemo(() => {
+    const assigned = new Set<Locale>()
+    const takeUnassigned = (options: ReadonlyArray<Locale>) =>
+      options.filter((option) => {
+        if (assigned.has(option)) return false
+        assigned.add(option)
+        return true
+      })
+
+    const suggested = takeUnassigned(
+      [locale, detectBrowserLocale()].filter(
+        (option): option is Locale => option !== undefined,
+      ),
+    )
+    const popular = takeUnassigned(popularLocales)
+    const collator = new Intl.Collator(locale, { sensitivity: 'base' })
+    const regions = localeRegionOrder.map((region) => ({
+      id: region,
+      locales: takeUnassigned(
+        locales
+          .filter((option) => localeRegions[option] === region)
+          .toSorted((a, b) =>
+            collator.compare(localizedLabels[a], localizedLabels[b]),
+          ),
+      ),
+    }))
+
+    return { suggested, popular, regions }
+  }, [locale, localizedLabels])
+
+  const renderItems = (options: ReadonlyArray<Locale>) =>
+    options.map((option) => {
+      const nativeLabel = localeLabels[option]
+      const localizedLabel = localizedLabels[option]
+      const showLocalizedLabel =
+        nativeLabel.localeCompare(localizedLabel, locale, {
+          sensitivity: 'base',
+        }) !== 0
+
+      return (
+        <CommandItem
+          key={option}
+          value={`${option} ${nativeLabel} ${localizedLabel}`}
+          aria-current={option === locale ? 'true' : undefined}
+          className="gap-3 py-2"
+          onSelect={() => onValueChange(option)}
+        >
+          <LocaleFlag locale={option} />
+          <span className="min-w-0 flex-1">
+            <span className="block truncate">{nativeLabel}</span>
+            {showLocalizedLabel && (
+              <span className="block truncate text-xs text-muted-foreground">
+                {localizedLabel}
+              </span>
+            )}
+          </span>
+          {option === locale && (
+            <Check
+              className="size-4 shrink-0 text-primary"
+              aria-hidden="true"
+            />
+          )}
+        </CommandItem>
+      )
+    })
+
+  return (
+    <Command>
+      <CommandInput placeholder={t('search')} className="text-base" />
+      <CommandEmpty>{t('noLanguage')}</CommandEmpty>
+      <CommandList className="max-h-[min(60vh,420px)] overscroll-contain">
+        <CommandGroup heading={t('suggested')}>
+          {renderItems(groups.suggested)}
+        </CommandGroup>
+        {groups.popular.length > 0 && (
+          <CommandGroup heading={t('popular')}>
+            {renderItems(groups.popular)}
+          </CommandGroup>
+        )}
+        {groups.regions.map(
+          (group) =>
+            group.locales.length > 0 && (
+              <CommandGroup key={group.id} heading={t(group.id)}>
+                {renderItems(group.locales)}
+              </CommandGroup>
+            ),
+        )}
+      </CommandList>
+    </Command>
   )
 }
 

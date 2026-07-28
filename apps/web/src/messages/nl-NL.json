@@ -2078,5 +2078,16 @@
     "staleRate": "Koers van:",
     "fromLabel": "Van",
     "toLabel": "Naar"
+  },
+  "LanguageSwitcher": {
+    "title": "Kies taal",
+    "search": "Talen zoeken...",
+    "noLanguage": "Geen taal gevonden.",
+    "suggested": "Voorgesteld",
+    "popular": "Populair",
+    "americas": "Amerika's",
+    "asiaPacific": "Azië-Pacific",
+    "europe": "Europa",
+    "middleEastAndNorthAfrica": "Midden-Oosten & Noord-Afrika"
   }
 }

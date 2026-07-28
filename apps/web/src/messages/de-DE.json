@@ -2146,5 +2146,16 @@
     "staleRate": "Kurs vom:",
     "fromLabel": "Von",
     "toLabel": "Zu"
+  },
+  "LanguageSwitcher": {
+    "title": "Sprache auswählen",
+    "search": "Sprachen suchen...",
+    "noLanguage": "Keine Sprache gefunden.",
+    "suggested": "Vorgeschlagen",
+    "popular": "Beliebt",
+    "americas": "Amerika",
+    "asiaPacific": "Asien-Pazifik",
+    "europe": "Europa",
+    "middleEastAndNorthAfrica": "Nahost & Nordafrika"
   }
 }

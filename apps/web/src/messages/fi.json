@@ -2078,5 +2078,16 @@
     "staleRate": "Kurssi:",
     "fromLabel": "Mistä",
     "toLabel": "Mihin"
+  },
+  "LanguageSwitcher": {
+    "title": "Valitse kieli",
+    "search": "Hae kieliä...",
+    "noLanguage": "Kieltä ei löytynyt.",
+    "suggested": "Ehdotetut",
+    "popular": "Suositut",
+    "americas": "Amerikat",
+    "asiaPacific": "Aasia-Tyynimeri",
+    "europe": "Eurooppa",
+    "middleEastAndNorthAfrica": "Lähi-itä ja Pohjois-Afrikka"
   }
 }

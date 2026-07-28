@@ -2074,5 +2074,16 @@
     "staleRate": "হার:",
     "fromLabel": "থেকে",
     "toLabel": "তে"
+  },
+  "LanguageSwitcher": {
+    "title": "ভাষা নির্বাচন করুন",
+    "search": "ভাষা খুঁজুন...",
+    "noLanguage": "কোনো ভাষা পাওয়া যায়নি।",
+    "suggested": "প্রস্তাবিত",
+    "popular": "জনপ্রিয়",
+    "americas": "আমেরিকা",
+    "asiaPacific": "এশিয়া-প্রশান্ত মহাসাগরীয়",
+    "europe": "ইউরোপ",
+    "middleEastAndNorthAfrica": "মধ্যপ্রাচ্য ও উত্তর আফ্রিকা"
   }
 }

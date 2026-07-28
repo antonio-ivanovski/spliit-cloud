@@ -215,27 +215,25 @@ export async function revokeInvitation(opts: {
       settlementActivities = r.activities
     }
 
-    const [updated, activity] = await Promise.all([
-      tx.groupInvitation.update({
-        where: { id: opts.invitationId },
-        data: {
-          status: GroupInvitationStatus.REVOKED,
-          revokedAt: new Date(),
-        },
-      }),
-      logActivity(
-        opts.groupId,
-        {
-          type: 'INVITATION_REVOKED',
-          actor: { type: 'ACCOUNT', id: opts.actor.accountId },
-          subject: { type: 'INVITATION', id: opts.invitationId },
-          data: buildInvitationActivityData({
-            displayLabel: getInvitationDisplayName(invitation),
-          }),
-        },
-        tx,
-      ),
-    ])
+    const updated = await tx.groupInvitation.update({
+      where: { id: opts.invitationId },
+      data: {
+        status: GroupInvitationStatus.REVOKED,
+        revokedAt: new Date(),
+      },
+    })
+    const activity = await logActivity(
+      opts.groupId,
+      {
+        type: 'INVITATION_REVOKED',
+        actor: { type: 'ACCOUNT', id: opts.actor.accountId },
+        subject: { type: 'INVITATION', id: opts.invitationId },
+        data: buildInvitationActivityData({
+          displayLabel: getInvitationDisplayName(invitation),
+        }),
+      },
+      tx,
+    )
 
     if (
       invitation.ledgerParticipantId &&
@@ -340,26 +338,24 @@ export async function declineInvitation(opts: {
   assertCanDeclineEmailInvitation(invitation, opts.accountEmail)
   const boss = await getApiBoss()
   const { updated } = await prisma.$transaction(async (tx) => {
-    const [updated, activity] = await Promise.all([
-      tx.groupInvitation.update({
-        where: { id: opts.invitationId },
-        data: {
-          status: GroupInvitationStatus.DECLINED,
-        },
-      }),
-      logActivity(
-        invitation.groupId,
-        {
-          type: 'INVITATION_DECLINED',
-          actor: { type: 'ACCOUNT', id: opts.accountId },
-          subject: { type: 'INVITATION', id: opts.invitationId },
-          data: buildInvitationActivityData({
-            displayLabel: getInvitationDisplayName(invitation),
-          }),
-        },
-        tx,
-      ),
-    ])
+    const updated = await tx.groupInvitation.update({
+      where: { id: opts.invitationId },
+      data: {
+        status: GroupInvitationStatus.DECLINED,
+      },
+    })
+    const activity = await logActivity(
+      invitation.groupId,
+      {
+        type: 'INVITATION_DECLINED',
+        actor: { type: 'ACCOUNT', id: opts.accountId },
+        subject: { type: 'INVITATION', id: opts.invitationId },
+        data: buildInvitationActivityData({
+          displayLabel: getInvitationDisplayName(invitation),
+        }),
+      },
+      tx,
+    )
     await planNotificationForActivity(tx, activity, {}, { boss })
     return { updated, activity }
   })

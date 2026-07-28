@@ -2096,5 +2096,16 @@
     "staleRate": "שער מ:",
     "fromLabel": "מ",
     "toLabel": "עד"
+  },
+  "LanguageSwitcher": {
+    "title": "בחירת שפה",
+    "search": "חיפוש שפות...",
+    "noLanguage": "לא נמצאה שפה.",
+    "suggested": "מוצעות",
+    "popular": "פופולריות",
+    "americas": "אמריקה",
+    "asiaPacific": "אסיה והאוקיינוס השקט",
+    "europe": "אירופה",
+    "middleEastAndNorthAfrica": "המזרח התיכון וצפון אפריקה"
   }
 }

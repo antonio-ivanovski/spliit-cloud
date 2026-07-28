@@ -2096,5 +2096,16 @@
     "staleRate": "Tasso del:",
     "fromLabel": "Da",
     "toLabel": "A"
+  },
+  "LanguageSwitcher": {
+    "title": "Scegli la lingua",
+    "search": "Cerca lingue...",
+    "noLanguage": "Nessuna lingua trovata.",
+    "suggested": "Suggerite",
+    "popular": "Popolari",
+    "americas": "Americhe",
+    "asiaPacific": "Asia-Pacifico",
+    "europe": "L'Europa",
+    "middleEastAndNorthAfrica": "Medio Oriente e Nord Africa"
   }
 }

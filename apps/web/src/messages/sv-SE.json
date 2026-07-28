@@ -2074,5 +2074,16 @@
     "staleRate": "Kurs från:",
     "fromLabel": "Från",
     "toLabel": "Till"
+  },
+  "LanguageSwitcher": {
+    "title": "Välj språk",
+    "search": "Sök språk...",
+    "noLanguage": "Inget språk hittades.",
+    "suggested": "Föreslagna",
+    "popular": "Populära",
+    "americas": "Amerika",
+    "asiaPacific": "Asien och Stillahavsområdet",
+    "europe": "Europa",
+    "middleEastAndNorthAfrica": "Mellanöstern och Nordafrika"
   }
 }

@@ -2096,5 +2096,16 @@
     "staleRate": "Tipo del:",
     "fromLabel": "De",
     "toLabel": "A"
+  },
+  "LanguageSwitcher": {
+    "title": "Elegir idioma",
+    "search": "Buscar idiomas...",
+    "noLanguage": "No se ha encontrado ningún idioma.",
+    "suggested": "Sugeridos",
+    "popular": "Populares",
+    "americas": "Américas",
+    "asiaPacific": "Asia-Pacífico",
+    "europe": "Europa",
+    "middleEastAndNorthAfrica": "Oriente Medio y Norte de África"
   }
 }

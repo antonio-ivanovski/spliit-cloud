@@ -2114,5 +2114,16 @@
     "staleRate": "Курс від:",
     "fromLabel": "З",
     "toLabel": "У"
+  },
+  "LanguageSwitcher": {
+    "title": "Виберіть мову",
+    "search": "Пошук мов...",
+    "noLanguage": "Мову не знайдено.",
+    "suggested": "Рекомендовані",
+    "popular": "Популярні",
+    "americas": "Америка",
+    "asiaPacific": "Азійсько-Тихоокеанський регіон",
+    "europe": "Європа",
+    "middleEastAndNorthAfrica": "Близький Схід і Північна Африка"
   }
 }

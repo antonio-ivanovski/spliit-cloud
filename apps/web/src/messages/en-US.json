@@ -2150,5 +2150,16 @@
     "staleRate": "Using rate from:",
     "fromLabel": "From",
     "toLabel": "To"
+  },
+  "LanguageSwitcher": {
+    "title": "Choose language",
+    "search": "Search languages...",
+    "noLanguage": "No language found.",
+    "suggested": "Suggested",
+    "popular": "Popular",
+    "americas": "Americas",
+    "asiaPacific": "Asia-Pacific",
+    "europe": "Europe",
+    "middleEastAndNorthAfrica": "Middle East & North Africa"
   }
 }

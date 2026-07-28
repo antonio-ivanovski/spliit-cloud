@@ -2096,5 +2096,16 @@
     "staleRate": "Rată din:",
     "fromLabel": "Din",
     "toLabel": "În"
+  },
+  "LanguageSwitcher": {
+    "title": "Alege limba",
+    "search": "Caută limbi...",
+    "noLanguage": "Nu s-a găsit nicio limbă.",
+    "suggested": "Sugestii",
+    "popular": "Populare",
+    "americas": "Americile",
+    "asiaPacific": "Asia și Pacific",
+    "europe": "Europa",
+    "middleEastAndNorthAfrica": "Orientul Mijlociu și Africa de Nord"
   }
 }

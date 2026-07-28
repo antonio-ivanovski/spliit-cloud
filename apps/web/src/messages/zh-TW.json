@@ -2062,5 +2062,16 @@
     "staleRate": "匯率日期:",
     "fromLabel": "From",
     "toLabel": "To"
+  },
+  "LanguageSwitcher": {
+    "title": "選擇語言",
+    "search": "搜尋語言...",
+    "noLanguage": "找不到語言。",
+    "suggested": "建議",
+    "popular": "熱門",
+    "americas": "美洲",
+    "asiaPacific": "亞太地區",
+    "europe": "歐洲",
+    "middleEastAndNorthAfrica": "中東和北非"
   }
 }

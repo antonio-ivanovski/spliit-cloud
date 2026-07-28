@@ -2150,5 +2150,16 @@
     "staleRate": "سعر من:",
     "fromLabel": "من",
     "toLabel": "إلى"
+  },
+  "LanguageSwitcher": {
+    "title": "اختر لغة",
+    "search": "البحث عن اللغات...",
+    "noLanguage": "لم يتم العثور على لغة.",
+    "suggested": "مقترحة",
+    "popular": "الأكثر شيوعًا",
+    "americas": "الأمريكتان",
+    "asiaPacific": "آسيا والمحيط الهادئ",
+    "europe": "أوروبا",
+    "middleEastAndNorthAfrica": "الشرق الأوسط وشمال أفريقيا"
   }
 }

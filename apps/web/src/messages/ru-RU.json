@@ -2114,5 +2114,16 @@
     "staleRate": "Курс от:",
     "fromLabel": "Из",
     "toLabel": "В"
+  },
+  "LanguageSwitcher": {
+    "title": "Выберите язык",
+    "search": "Поиск языков...",
+    "noLanguage": "Язык не найден.",
+    "suggested": "Рекомендуемые",
+    "popular": "Популярные",
+    "americas": "Америка",
+    "asiaPacific": "Азиатско-Тихоокеанский регион",
+    "europe": "Европа",
+    "middleEastAndNorthAfrica": "Ближний Восток и Северная Африка"
   }
 }

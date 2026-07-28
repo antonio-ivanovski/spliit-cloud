@@ -66,27 +66,25 @@ export async function updateMemberRole(opts: {
         throw new Error('Group must keep at least one admin')
       }
     }
-    const [updated, activity] = await Promise.all([
-      tx.groupMember.update({
-        where: { id: memberId },
-        data: { role },
-      }),
-      logActivity(
-        groupId,
-        {
-          type: 'MEMBER_ROLE_CHANGED',
-          actor: { type: 'ACCOUNT', id: actor.accountId },
-          subject: { type: 'MEMBER', id: memberId },
-          data: buildMemberActivityData({
-            displayName: actorAccount?.name ?? undefined,
-            targetDisplayName: targetAccount?.name ?? undefined,
-            previousRole: target.role,
-            nextRole: role,
-          }),
-        },
-        tx,
-      ),
-    ])
+    const updated = await tx.groupMember.update({
+      where: { id: memberId },
+      data: { role },
+    })
+    const activity = await logActivity(
+      groupId,
+      {
+        type: 'MEMBER_ROLE_CHANGED',
+        actor: { type: 'ACCOUNT', id: actor.accountId },
+        subject: { type: 'MEMBER', id: memberId },
+        data: buildMemberActivityData({
+          displayName: actorAccount?.name ?? undefined,
+          targetDisplayName: targetAccount?.name ?? undefined,
+          previousRole: target.role,
+          nextRole: role,
+        }),
+      },
+      tx,
+    )
     await planNotificationForActivity(tx, activity, {}, { boss })
     return { updated, activity }
   })
@@ -175,31 +173,27 @@ export async function removeMember(opts: {
         throw new Error('Group must keep at least one admin')
       }
     }
-    const [updated, activity] = await Promise.all([
-      tx.groupMember.update({
-        where: { id: memberId },
-        data: {
-          status: GroupMemberStatus.REMOVED,
-          leftAt: new Date(),
-        },
-      }),
-      logActivity(
-        groupId,
-        {
-          type: 'MEMBER_REMOVED',
-          actor: { type: 'ACCOUNT', id: actor.accountId },
-          subject: { type: 'MEMBER', id: memberId },
-          data: buildMemberActivityData({
-            displayName: actorAccount?.name ?? undefined,
-            targetDisplayName: target.account?.name ?? undefined,
-            summary: settleBalances
-              ? 'member:removed:settled'
-              : 'member:removed',
-          }),
-        },
-        tx,
-      ),
-    ])
+    const updated = await tx.groupMember.update({
+      where: { id: memberId },
+      data: {
+        status: GroupMemberStatus.REMOVED,
+        leftAt: new Date(),
+      },
+    })
+    const activity = await logActivity(
+      groupId,
+      {
+        type: 'MEMBER_REMOVED',
+        actor: { type: 'ACCOUNT', id: actor.accountId },
+        subject: { type: 'MEMBER', id: memberId },
+        data: buildMemberActivityData({
+          displayName: actorAccount?.name ?? undefined,
+          targetDisplayName: target.account?.name ?? undefined,
+          summary: settleBalances ? 'member:removed:settled' : 'member:removed',
+        }),
+      },
+      tx,
+    )
     if (target.ledgerParticipant?.id) {
       await tx.ledgerParticipant.update({
         where: { id: target.ledgerParticipant.id },

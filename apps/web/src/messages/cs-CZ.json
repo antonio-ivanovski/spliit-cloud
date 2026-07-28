@@ -2114,5 +2114,16 @@
     "staleRate": "Kurz z:",
     "fromLabel": "Z",
     "toLabel": "Na"
+  },
+  "LanguageSwitcher": {
+    "title": "Vyberte jazyk",
+    "search": "Hledat jazyky...",
+    "noLanguage": "Jazyk nebyl nalezen.",
+    "suggested": "Doporučené",
+    "popular": "Oblíbené",
+    "americas": "Amerika",
+    "asiaPacific": "Asie a Tichomoří",
+    "europe": "Evropa",
+    "middleEastAndNorthAfrica": "Blízký východ a severní Afrika"
   }
 }

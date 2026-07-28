@@ -34,11 +34,71 @@ export const i18n = i18next.createInstance()
 
 const loadedLocales = new Set<Locale>()
 
+const canonicalLocaleMap = new Map(
+  locales.map((locale) => [new Intl.Locale(locale).toString(), locale]),
+)
+
 export async function loadLocale(locale: Locale) {
   if (loadedLocales.has(locale)) return
   const messages = await loadLocaleMessages(locale)
   i18n.addResourceBundle(locale, defaultNS, messages, true, true)
   loadedLocales.add(locale)
+}
+
+/**
+ * Match a browser locale tag to the closest locale supported by Spliit.
+ *
+ * Browser preferences commonly include a region that differs from the
+ * translation bundle (for example en-GB or fr-CA), so exact matching alone is
+ * not sufficient.
+ */
+export function matchSupportedLocale(localeTag: string): Locale | undefined {
+  let browserLocale: Intl.Locale
+  try {
+    browserLocale = new Intl.Locale(localeTag)
+  } catch {
+    return undefined
+  }
+
+  const exact = canonicalLocaleMap.get(browserLocale.toString())
+  if (exact) return exact
+
+  if (browserLocale.language === 'pt') {
+    return browserLocale.region === 'BR' ? 'pt-BR' : 'pt'
+  }
+
+  if (browserLocale.language === 'zh') {
+    const maximized = browserLocale.maximize()
+    const isTraditional =
+      browserLocale.script === 'Hant' ||
+      maximized.script === 'Hant' ||
+      ['TW', 'HK', 'MO'].includes(
+        browserLocale.region ?? maximized.region ?? '',
+      )
+    return isTraditional ? 'zh-TW' : 'zh-CN'
+  }
+
+  const languageMatches = locales.filter(
+    (locale) => new Intl.Locale(locale).language === browserLocale.language,
+  )
+  return languageMatches.length === 1 ? languageMatches[0] : undefined
+}
+
+export function detectBrowserLocale(): Locale | undefined {
+  if (typeof navigator === 'undefined') return undefined
+
+  const preferences =
+    navigator.languages.length > 0
+      ? navigator.languages
+      : navigator.language
+        ? [navigator.language]
+        : []
+
+  for (const preference of preferences) {
+    const match = matchSupportedLocale(preference)
+    if (match) return match
+  }
+  return undefined
 }
 
 export function detectLocale(): Locale {
@@ -50,10 +110,7 @@ export function detectLocale(): Locale {
   if (cookieLocale && (locales as readonly string[]).includes(cookieLocale)) {
     return cookieLocale as Locale
   }
-  const browserLocale = navigator.language
-  return (locales as readonly string[]).includes(browserLocale)
-    ? (browserLocale as Locale)
-    : defaultLocale
+  return detectBrowserLocale() ?? defaultLocale
 }
 
 export async function initI18n() {

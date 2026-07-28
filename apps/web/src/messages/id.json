@@ -2062,5 +2062,16 @@
     "staleRate": "Kurs dari:",
     "fromLabel": "Dari",
     "toLabel": "Ke"
+  },
+  "LanguageSwitcher": {
+    "title": "Pilih bahasa",
+    "search": "Cari bahasa...",
+    "noLanguage": "Bahasa tidak ditemukan.",
+    "suggested": "Disarankan",
+    "popular": "Populer",
+    "americas": "Amerika",
+    "asiaPacific": "Asia-Pasifik",
+    "europe": "Eropa",
+    "middleEastAndNorthAfrica": "Timur Tengah & Afrika Utara"
   }
 }

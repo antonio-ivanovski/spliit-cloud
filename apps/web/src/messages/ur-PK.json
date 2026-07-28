@@ -2075,5 +2075,16 @@
     "staleRate": "شرح:",
     "fromLabel": "سے",
     "toLabel": "میں"
+  },
+  "LanguageSwitcher": {
+    "title": "زبان منتخب کریں",
+    "search": "زبانیں تلاش کریں...",
+    "noLanguage": "کوئی زبان نہیں ملی۔",
+    "suggested": "تجویز کردہ",
+    "popular": "مقبول",
+    "americas": "امریکا",
+    "asiaPacific": "ایشیا-بحرالکاہل",
+    "europe": "یورپ",
+    "middleEastAndNorthAfrica": "مشرق وسطیٰ اور شمالی افریقہ"
   }
 }

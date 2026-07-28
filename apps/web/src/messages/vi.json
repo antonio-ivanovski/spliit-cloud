@@ -2150,5 +2150,16 @@
     "staleRate": "Tỷ giá từ:",
     "fromLabel": "Từ",
     "toLabel": "Sang"
+  },
+  "LanguageSwitcher": {
+    "title": "Chọn ngôn ngữ",
+    "search": "Tìm kiếm ngôn ngữ...",
+    "noLanguage": "Không tìm thấy ngôn ngữ.",
+    "suggested": "Đề xuất",
+    "popular": "Phổ biến",
+    "americas": "Châu Mỹ",
+    "asiaPacific": "Châu Á - Thái Bình Dương",
+    "europe": "Châu Âu",
+    "middleEastAndNorthAfrica": "Trung Đông & Bắc Phi"
   }
 }

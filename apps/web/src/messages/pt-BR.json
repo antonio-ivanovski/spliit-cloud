@@ -2096,5 +2096,16 @@
     "staleRate": "Taxa de:",
     "fromLabel": "De",
     "toLabel": "Para"
+  },
+  "LanguageSwitcher": {
+    "title": "Escolher idioma",
+    "search": "Pesquisar idiomas...",
+    "noLanguage": "Nenhum idioma encontrado.",
+    "suggested": "Sugeridos",
+    "popular": "Populares",
+    "americas": "Américas",
+    "asiaPacific": "Ásia-Pacífico",
+    "europe": "Europa",
+    "middleEastAndNorthAfrica": "Oriente Médio e Norte da África"
   }
 }

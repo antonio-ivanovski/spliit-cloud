@@ -2096,5 +2096,16 @@
     "staleRate": "Taux du :",
     "fromLabel": "De",
     "toLabel": "À"
+  },
+  "LanguageSwitcher": {
+    "title": "Choisir la langue",
+    "search": "Rechercher des langues...",
+    "noLanguage": "Aucune langue trouvée.",
+    "suggested": "Suggérées",
+    "popular": "Populaires",
+    "americas": "Amériques",
+    "asiaPacific": "Asie-Pacifique",
+    "europe": "L’Europe",
+    "middleEastAndNorthAfrica": "Moyen-Orient et Afrique du Nord"
   }
 }

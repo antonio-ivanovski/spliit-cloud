@@ -2062,5 +2062,16 @@
     "staleRate": "환율 정보:",
     "fromLabel": "From",
     "toLabel": "To"
+  },
+  "LanguageSwitcher": {
+    "title": "언어 선택",
+    "search": "언어 검색...",
+    "noLanguage": "언어를 찾을 수 없습니다.",
+    "suggested": "추천",
+    "popular": "인기",
+    "americas": "아메리카",
+    "asiaPacific": "아시아·태평양",
+    "europe": "유럽",
+    "middleEastAndNorthAfrica": "중동 및 북아프리카"
   }
 }

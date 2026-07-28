@@ -2078,5 +2078,16 @@
     "staleRate": "Kur:",
     "fromLabel": "Kaynak",
     "toLabel": "Hedef"
+  },
+  "LanguageSwitcher": {
+    "title": "Dil seçin",
+    "search": "Dil ara...",
+    "noLanguage": "Dil bulunamadı.",
+    "suggested": "Önerilen",
+    "popular": "Popüler",
+    "americas": "Amerika Kıtaları",
+    "asiaPacific": "Asya-Pasifik",
+    "europe": "Avrupa",
+    "middleEastAndNorthAfrica": "Orta Doğu ve Kuzey Afrika"
   }
 }

@@ -2096,5 +2096,16 @@
     "staleRate": "Tipus del:",
     "fromLabel": "De",
     "toLabel": "A"
+  },
+  "LanguageSwitcher": {
+    "title": "Tria l'idioma",
+    "search": "Cerca idiomes...",
+    "noLanguage": "No s'ha trobat cap idioma.",
+    "suggested": "Suggerits",
+    "popular": "Més populars",
+    "americas": "Amèriques",
+    "asiaPacific": "Àsia-Pacífic",
+    "europe": "Europa",
+    "middleEastAndNorthAfrica": "Orient Mitjà i Nord d'Àfrica"
   }
 }

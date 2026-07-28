@@ -2074,5 +2074,16 @@
     "staleRate": "दर:",
     "fromLabel": "से",
     "toLabel": "में"
+  },
+  "LanguageSwitcher": {
+    "title": "भाषा चुनें",
+    "search": "भाषाएँ खोजें...",
+    "noLanguage": "कोई भाषा नहीं मिली।",
+    "suggested": "सुझाई गई",
+    "popular": "लोकप्रिय",
+    "americas": "अमेरिका",
+    "asiaPacific": "एशिया-प्रशांत",
+    "europe": "यूरोप",
+    "middleEastAndNorthAfrica": "मध्य पूर्व और उत्तरी अफ्रीका"
   }
 }

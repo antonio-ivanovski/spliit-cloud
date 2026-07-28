@@ -2078,5 +2078,16 @@
     "staleRate": "Курс од:",
     "fromLabel": "Од",
     "toLabel": "Кон"
+  },
+  "LanguageSwitcher": {
+    "title": "Изберете јазик",
+    "search": "Пребарај јазици...",
+    "noLanguage": "Не е пронајден јазик.",
+    "suggested": "Предложени",
+    "popular": "Популарни",
+    "americas": "Америка",
+    "asiaPacific": "Азија и Пацифик",
+    "europe": "Европа",
+    "middleEastAndNorthAfrica": "Блискиот Исток и Северна Африка"
   }
 }

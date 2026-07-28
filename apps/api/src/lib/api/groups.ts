@@ -107,40 +107,38 @@ export async function updateGroup(
 
   const boss = await getApiBoss()
   const result = await prisma.$transaction(async (tx) => {
-    const [activity, group] = await Promise.all([
-      logActivity(
-        groupId,
-        {
-          type: 'GROUP_UPDATED',
-          actor: { type: 'ACCOUNT', id: actor.accountId },
-          subject: { type: 'GROUP', id: groupId },
-          data: buildGroupActivityData({
-            summary: groupFormValues.name,
-            ...(summary
-              ? {
-                  changedFields: summary.changedFields,
-                  changes: summary.changes,
-                }
-              : {}),
-          }),
-        },
-        tx,
-      ),
-      tx.group.update({
-        where: { id: groupId },
-        data: {
-          name: groupFormValues.name,
-          information: groupFormValues.information,
-        },
-      }),
-      tx.ledger.update({
-        where: { id: existingGroup.ledgerId },
-        data: {
-          currency: groupFormValues.currency,
-          currencyCode: groupFormValues.currencyCode || null,
-        },
-      }),
-    ])
+    const group = await tx.group.update({
+      where: { id: groupId },
+      data: {
+        name: groupFormValues.name,
+        information: groupFormValues.information,
+      },
+    })
+    await tx.ledger.update({
+      where: { id: existingGroup.ledgerId },
+      data: {
+        currency: groupFormValues.currency,
+        currencyCode: groupFormValues.currencyCode || null,
+      },
+    })
+    const activity = await logActivity(
+      groupId,
+      {
+        type: 'GROUP_UPDATED',
+        actor: { type: 'ACCOUNT', id: actor.accountId },
+        subject: { type: 'GROUP', id: groupId },
+        data: buildGroupActivityData({
+          summary: groupFormValues.name,
+          ...(summary
+            ? {
+                changedFields: summary.changedFields,
+                changes: summary.changes,
+              }
+            : {}),
+        }),
+      },
+      tx,
+    )
 
     await planNotificationForActivity(tx, activity, {}, { boss })
     return { group, activity }

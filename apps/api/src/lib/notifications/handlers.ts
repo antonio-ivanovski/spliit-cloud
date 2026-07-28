@@ -113,35 +113,33 @@ async function expenseParticipantAccounts(
     // plus active accounts that have commented previously. Resolve both
     // scopes independently, then let the common deduper suppress duplicates
     // and the actor policy remove the author of the current comment.
-    const [raw, previousComments] = await Promise.all([
-      client.expense.findUnique({
-        where: { id: expenseId },
-        select: {
-          paidByList: { select: { ledgerParticipantId: true, shares: true } },
-          paidFor: { select: { ledgerParticipantId: true, shares: true } },
-          items: {
-            select: {
-              id: true,
-              paidFor: {
-                select: { ledgerParticipantId: true, shares: true },
-              },
-            },
-          },
-          itemizedRemainder: {
-            select: {
-              splitMode: true,
-              paidFor: {
-                select: { ledgerParticipantId: true, shares: true },
-              },
+    const raw = await client.expense.findUnique({
+      where: { id: expenseId },
+      select: {
+        paidByList: { select: { ledgerParticipantId: true, shares: true } },
+        paidFor: { select: { ledgerParticipantId: true, shares: true } },
+        items: {
+          select: {
+            id: true,
+            paidFor: {
+              select: { ledgerParticipantId: true, shares: true },
             },
           },
         },
-      }),
-      client.expenseComment.findMany({
-        where: { expenseId, authorAccountId: { not: null } },
-        select: { authorAccountId: true },
-      }),
-    ])
+        itemizedRemainder: {
+          select: {
+            splitMode: true,
+            paidFor: {
+              select: { ledgerParticipantId: true, shares: true },
+            },
+          },
+        },
+      },
+    })
+    const previousComments = await client.expenseComment.findMany({
+      where: { expenseId, authorAccountId: { not: null } },
+      select: { authorAccountId: true },
+    })
 
     const participantIds: string[] = raw
       ? [
@@ -314,10 +312,8 @@ export class ExpenseActivityHandler implements ActivityHandler {
     // activity remains available in the feed.
     const parsed = parseActivityData(event.data)
     const db = client ?? prisma
-    const [participants, actor] = await Promise.all([
-      expenseParticipantAccounts(event, db),
-      activeActorAccount(event, db),
-    ])
+    const participants = await expenseParticipantAccounts(event, db)
+    const actor = await activeActorAccount(event, db)
     const recipients =
       event.type === 'RECURRING_EXPENSE_CREATED' &&
       parsed?.kind === 'recurring_expense_summary' &&
