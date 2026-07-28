@@ -24,7 +24,10 @@ export function SubmitButton({
       className={cn('min-w-28', className)}
       {...props}
     >
-      <span className="inline-flex items-center whitespace-nowrap">
+      <span
+        key={isSubmitting ? 'submitting' : 'idle'}
+        className="motion-content-swap inline-flex items-center whitespace-nowrap"
+      >
         {isSubmitting ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />

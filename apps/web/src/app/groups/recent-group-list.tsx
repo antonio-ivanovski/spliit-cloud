@@ -195,7 +195,7 @@ export function RecentGroupList() {
             defaultOpen
             title={t('starred')}
           >
-            <ul className="grid items-stretch gap-3 sm:grid-cols-2">
+            <ul className="motion-stagger grid items-stretch gap-3 sm:grid-cols-2">
               {renderGroupItems(starred, 'starred')}
             </ul>
           </CollapsibleSection>
@@ -206,7 +206,7 @@ export function RecentGroupList() {
           defaultOpen
           title={t('groups')}
         >
-          <ul className="grid items-stretch gap-3 sm:grid-cols-2">
+          <ul className="motion-stagger grid items-stretch gap-3 sm:grid-cols-2">
             <CreateCard
               href="/groups/create"
               icon={<Plus className="h-4 w-4" />}
@@ -229,7 +229,7 @@ export function RecentGroupList() {
           defaultOpen
           title={t('friends')}
         >
-          <ul className="grid items-stretch gap-3 sm:grid-cols-2">
+          <ul className="motion-stagger grid items-stretch gap-3 sm:grid-cols-2">
             <CreateCard
               href="/friends/create"
               icon={<Users className="h-4 w-4" />}
@@ -247,9 +247,7 @@ export function RecentGroupList() {
             defaultOpen={false}
             title={t('archived')}
           >
-            <ul
-              className={`grid items-stretch gap-3 opacity-60 sm:grid-cols-2`}
-            >
+            <ul className="motion-stagger grid items-stretch gap-3 opacity-60 sm:grid-cols-2">
               {renderGroupItems(archived, 'archived')}
             </ul>
           </CollapsibleSection>
@@ -261,9 +259,7 @@ export function RecentGroupList() {
             defaultOpen={false}
             title={t('hidden')}
           >
-            <ul
-              className={`grid items-stretch gap-3 opacity-60 sm:grid-cols-2`}
-            >
+            <ul className="motion-stagger grid items-stretch gap-3 opacity-60 sm:grid-cols-2">
               {renderGroupItems(hidden, 'hidden')}
             </ul>
           </CollapsibleSection>

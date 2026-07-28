@@ -278,6 +278,7 @@ describe('ReimbursementList', () => {
     })
     expect(mockToast).toHaveBeenCalledWith({
       description: 'Settlement payment recorded',
+      variant: 'success',
     })
   })
 

@@ -213,6 +213,7 @@ describe('CreateReimbursementModal', () => {
     expect(mockInvalidateBalances).toHaveBeenCalledTimes(1)
     expect(mockToast).toHaveBeenCalledWith({
       description: 'Settlement payment recorded',
+      variant: 'success',
     })
     expect(onOpenChange).toHaveBeenCalledWith(false)
   })

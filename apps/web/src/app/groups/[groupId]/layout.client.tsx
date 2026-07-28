@@ -207,6 +207,8 @@ export function GroupLayoutClient({
 
   return (
     <CurrentGroupProvider {...props}>
+      {/* Keep this wrapper transform-free: expense forms contain a
+          viewport-fixed action bar. */}
       <div
         className={`flex min-w-0 flex-col gap-3 ${showMobileNav ? 'pb-[calc(5rem+env(safe-area-inset-bottom))] sm:pb-0' : ''}`}
       >

@@ -30,7 +30,10 @@ export function PendingInvitations() {
 
   const acceptMutation = trpc.invitations.accept.useMutation({
     onSuccess: (data) => {
-      toast({ description: t('invitations.accepted') })
+      toast({
+        description: t('invitations.accepted'),
+        variant: 'success',
+      })
       void navigate({
         to: '/groups/$groupId',
         params: { groupId: data.groupId },

@@ -393,6 +393,40 @@ describe('ExpenseForm', () => {
     expect(screen.getByText('Create expense')).toBeInTheDocument()
   })
 
+  it('keeps the primary create and edit actions fixed to the viewport', () => {
+    const assertFixedSubmitBar = () => {
+      const submitButton = screen
+        .getAllByRole('button')
+        .find((button) => (button as HTMLButtonElement).type === 'submit')
+      expect(submitButton).toBeDefined()
+      expect(submitButton?.closest('.fixed')).toHaveClass(
+        'inset-x-0',
+        'bottom-0',
+        'z-40',
+      )
+    }
+
+    const createView = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+    assertFixedSubmitBar()
+    createView.unmount()
+
+    render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        expense={mockExpense as unknown as LoadedExpense}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+    assertFixedSubmitBar()
+  })
+
   it('collapses an empty expense items section until requested', async () => {
     const { user } = render(
       <ExpenseForm

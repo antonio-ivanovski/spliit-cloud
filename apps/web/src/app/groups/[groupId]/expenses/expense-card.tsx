@@ -163,8 +163,7 @@ export function ExpenseCard({
       key={expense.id}
       data-testid={`expense-item-${expense.id}`}
       className={cn(
-        'flex items-stretch justify-between gap-1 px-4 py-4 text-sm sm:mx-6 sm:rounded-lg sm:pr-2 sm:pl-4',
-        'cursor-pointer hover:bg-accent',
+        'motion-surface motion-surface-interactive flex cursor-pointer items-stretch justify-between gap-1 px-4 py-4 text-sm hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-hidden sm:mx-6 sm:rounded-lg sm:pr-2 sm:pl-4',
         expense.isReimbursement && 'italic',
       )}
       role="button"

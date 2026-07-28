@@ -166,7 +166,7 @@ export function CreateFriend() {
     }
 
     if (result.invitationId) {
-      toast({ description: t('inviteSent') })
+      toast({ description: t('inviteSent'), variant: 'success' })
       await navigate({
         to: '/groups/$groupId',
         params: { groupId: result.groupId },

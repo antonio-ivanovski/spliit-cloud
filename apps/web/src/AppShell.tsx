@@ -27,10 +27,21 @@ function Content() {
   const { t } = useTranslation()
   const pathname = useLocation({ select: (location) => location.pathname })
   const focusedMobileRoute = isFocusedMobilePath(pathname)
+  const showAmbientBackdrop =
+    pathname === '/' ||
+    pathname.startsWith('/groups') ||
+    pathname.startsWith('/friends') ||
+    pathname.startsWith('/account')
 
   return (
     <TRPCProvider>
-      <div className="app-shell flex min-h-screen flex-col">
+      <div className="app-shell relative isolate flex min-h-screen flex-col overflow-x-clip">
+        {showAmbientBackdrop && (
+          <div className="ambient-backdrop" aria-hidden="true">
+            <span className="ambient-backdrop__orb ambient-backdrop__orb--emerald" />
+            <span className="ambient-backdrop__orb ambient-backdrop__orb--coral" />
+          </div>
+        )}
         <header className="fixed inset-x-0 top-0 z-50 hidden h-16 justify-between border-b bg-white/50 p-2 backdrop-blur-xs sm:flex dark:bg-gray-950/50">
           <Link
             className="flex items-center gap-2 transition-transform hover:scale-105"
@@ -91,14 +102,14 @@ function Content() {
         <PushNotificationOnboarding />
         <InstallPromotionDialog />
 
-        <div className="flex flex-1 flex-col pt-(--app-header-height)">
+        <div className="relative z-20 flex flex-1 flex-col pt-(--app-header-height)">
           <ProfileGate>
             <Outlet />
           </ProfileGate>
         </div>
 
         <footer
-          className={`${focusedMobileRoute ? 'hidden sm:flex' : 'flex'} mt-8 flex-col gap-4 border-t bg-slate-50 p-6 text-xs sm:mt-16 sm:flex-row sm:justify-between sm:p-8 sm:text-sm md:mt-32 md:p-16 md:text-base dark:bg-card [&_a]:underline`}
+          className={`${focusedMobileRoute ? 'hidden sm:flex' : 'flex'} relative z-10 mt-8 flex-col gap-4 border-t bg-slate-50 p-6 text-xs sm:mt-16 sm:flex-row sm:justify-between sm:p-8 sm:text-sm md:mt-32 md:p-16 md:text-base dark:bg-card [&_a]:underline`}
         >
           <div className="flex flex-col space-y-2">
             <div className="flex items-center space-x-2 text-base font-semibold sm:text-lg">

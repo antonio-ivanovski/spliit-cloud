@@ -219,15 +219,17 @@ const ExpenseListForSearch = ({
   if (!useDateGrouping) {
     return (
       <>
-        {expenses.map((expense) => (
-          <ExpenseCard
-            key={expense.id}
-            expense={expense}
-            currency={getCurrencyFromGroup(group)}
-            groupId={groupId}
-            participantCount={group.participants.length}
-          />
-        ))}
+        <div className="motion-stagger">
+          {expenses.map((expense) => (
+            <ExpenseCard
+              key={expense.id}
+              expense={expense}
+              currency={getCurrencyFromGroup(group)}
+              groupId={groupId}
+              participantCount={group.participants.length}
+            />
+          ))}
+        </div>
         {hasMore && <ExpensesLoading ref={loadingRef} />}
       </>
     )
@@ -240,7 +242,7 @@ const ExpenseListForSearch = ({
         if (!groupExpenses || groupExpenses.length === 0) return null
 
         return (
-          <div key={expenseGroup}>
+          <div key={expenseGroup} className="motion-stagger">
             <div
               className={
                 'sticky top-(--app-header-height) bg-white py-1 pl-4 text-xs font-semibold text-muted-foreground sm:pl-6 dark:bg-[#1b1917]'

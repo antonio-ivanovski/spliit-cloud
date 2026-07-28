@@ -232,6 +232,7 @@ export function CreateReimbursementModal({
         selectedLegs.length > 1
           ? t('successToastMultiple', { count: selectedLegs.length })
           : t('successToast'),
+      variant: 'success',
     })
     onOpenChange(false)
     await utils.groups.balances.invalidate()

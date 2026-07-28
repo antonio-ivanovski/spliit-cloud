@@ -48,7 +48,7 @@ export const CreateGroup = () => {
           const { groupId } = await createGroup({ groupFormValues })
           // Invite happens in the Members tab once the group exists. Surface
           // a hint so the user knows to head there next.
-          toast({ description: t('createdInviteHint') })
+          toast({ description: t('createdInviteHint'), variant: 'success' })
           await navigate({
             to: '/groups/$groupId/members',
             params: { groupId },

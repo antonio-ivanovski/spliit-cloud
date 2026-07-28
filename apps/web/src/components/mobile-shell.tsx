@@ -123,7 +123,7 @@ export function MobileGroupNav({ groupId }: GroupNavProps) {
                 className={`flex min-w-0 flex-col items-center justify-center gap-1 rounded-lg px-1 text-[10px] font-medium transition-colors ${active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
               >
                 <Icon
-                  className="size-5"
+                  className="motion-nav-icon size-5"
                   strokeWidth={active ? 2.5 : 2}
                   aria-hidden="true"
                 />
@@ -138,7 +138,10 @@ export function MobileGroupNav({ groupId }: GroupNavProps) {
             onClick={() => setMoreOpen(true)}
             className={`flex min-w-0 flex-col items-center justify-center gap-1 rounded-lg px-1 text-[10px] font-medium transition-colors ${activeMore ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
           >
-            <MoreHorizontal className="size-5" aria-hidden="true" />
+            <MoreHorizontal
+              className="motion-nav-icon size-5"
+              aria-hidden="true"
+            />
             <span>{t('Groups.groupActions')}</span>
           </button>
         </div>

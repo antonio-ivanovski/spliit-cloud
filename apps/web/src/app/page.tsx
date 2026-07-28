@@ -69,7 +69,7 @@ export default function HomePage() {
   if (!isPending && !account) {
     return (
       <main className="flex-1 px-4 py-8 sm:py-12 lg:py-16">
-        <div className="container grid min-h-[calc(100vh-12rem)] max-w-(--breakpoint-lg) items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(360px,420px)]">
+        <div className="motion-stagger container grid min-h-[calc(100vh-12rem)] max-w-(--breakpoint-lg) items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(360px,420px)]">
           <LandingIntro />
           <AuthPanel />
         </div>
@@ -106,7 +106,7 @@ function LandingIntro() {
           />
         </p>
       </div>
-      <div className="grid gap-2 text-left sm:grid-cols-2">
+      <div className="motion-stagger grid gap-2 text-left sm:grid-cols-2">
         {signedOutFeatures.map((feature) => (
           <FeatureItem
             key={feature.key}

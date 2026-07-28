@@ -32,12 +32,20 @@ export function AsyncButton({
       {...props}
     >
       {loading ? (
-        <>
+        <span
+          key="loading"
+          className="motion-content-swap inline-flex items-center"
+        >
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />{' '}
           {loadingContent ?? children}
-        </>
+        </span>
       ) : (
-        children
+        <span
+          key="idle"
+          className="motion-content-swap inline-flex items-center"
+        >
+          {children}
+        </span>
       )}
     </Button>
   )

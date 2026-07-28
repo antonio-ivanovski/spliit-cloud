@@ -39,7 +39,10 @@ export const GroupHeader = () => {
 
   const acceptLinkMutation = trpc.invitations.acceptLink.useMutation({
     onSuccess: () => {
-      toast({ description: tGroups('invitationAccepted') })
+      toast({
+        description: tGroups('invitationAccepted'),
+        variant: 'success',
+      })
       // Strip the consumed `?invite=<token>` so the URL returns to the
       // plain group page — otherwise the "already a member" banner
       // would reappear on the next load.
@@ -63,7 +66,10 @@ export const GroupHeader = () => {
 
   const acceptMutation = trpc.invitations.accept.useMutation({
     onSuccess: () => {
-      toast({ description: tGroups('invitationAccepted') })
+      toast({
+        description: tGroups('invitationAccepted'),
+        variant: 'success',
+      })
       void utils.groups.get.invalidate({ groupId })
       void utils.account.groups.invalidate()
       void utils.invitations.listForAccount.invalidate()
