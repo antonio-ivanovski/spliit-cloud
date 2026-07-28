@@ -870,7 +870,8 @@
       "fillTitle": "レシートから支出を入力",
       "fillNext": "提案された内容を確認して、この支出に適用してください。",
       "scanningHint": "スキャンには少し時間がかかる場合があります — しばらくお待ちください。",
-      "fillBody": "添付済みのレシートを選ぶか新しくアップロードしてください — スキャンしてこの支出の詳細を提案します。"
+      "fillBody": "添付済みのレシートを選ぶか新しくアップロードしてください — スキャンしてこの支出の詳細を提案します。",
+      "translateToLocale": "タイトルと項目を{language}に翻訳する"
     },
     "unknown": "不明",
     "TooBigToast": {
@@ -2047,5 +2048,19 @@
     "badgeRunning": "定期 · 実行中",
     "badgeStopped": "定期 · 停止中",
     "badgeCompleted": "定期 · 完了"
+  },
+  "CurrencyConverter": {
+    "trigger": "通貨換算",
+    "title": "通貨換算",
+    "description": "任意の金額を換算し、元の通貨で支出を作成します。",
+    "swap": "通貨を入れ替える",
+    "rateError": "為替レートを読み込めませんでした。",
+    "rateInfo": "1 {from} = {rate} {to}",
+    "providerNote": "Frankfurterによるレート",
+    "createIn": "支出を作成するグループ…",
+    "noGroups": "該当するグループが見つかりません。",
+    "staleRate": "レート情報:",
+    "fromLabel": "From",
+    "toLabel": "To"
   }
 }

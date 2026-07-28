@@ -884,7 +884,8 @@
       "fillTitle": "Completar gasto desde el recibo",
       "fillNext": "Revisa los datos sugeridos y aplícalos a este gasto.",
       "scanningHint": "El escaneo puede tardar un poco — ten paciencia.",
-      "fillBody": "Elige un recibo adjunto o sube uno nuevo — lo escanearemos para sugerir datos para este gasto."
+      "fillBody": "Elige un recibo adjunto o sube uno nuevo — lo escanearemos para sugerir datos para este gasto.",
+      "translateToLocale": "Traducir título y artículos a {language}"
     },
     "unknown": "Desconocido",
     "TooBigToast": {
@@ -2081,5 +2082,19 @@
     "badgeRunning": "Recurrente · En curso",
     "badgeStopped": "Recurrente · Detenida",
     "badgeCompleted": "Recurrente · Completada"
+  },
+  "CurrencyConverter": {
+    "trigger": "Conversión de moneda",
+    "title": "Conversión de moneda",
+    "description": "Convierta cualquier cantidad y cree un gasto con la moneda original.",
+    "swap": "Intercambiar monedas",
+    "rateError": "No se pudo cargar el tipo de cambio.",
+    "rateInfo": "1 {from} = {rate} {to}",
+    "providerNote": "Tipos de Frankfurter",
+    "createIn": "Crear gasto en…",
+    "noGroups": "No se encontraron grupos elegibles.",
+    "staleRate": "Tipo del:",
+    "fromLabel": "De",
+    "toLabel": "A"
   }
 }

@@ -891,7 +891,8 @@
       "fillTitle": "Wypełnij wydatek z paragonu",
       "fillNext": "Sprawdź sugerowane dane i zastosuj je do tego wydatku.",
       "scanningHint": "Skanowanie może chwilę potrwać — prosimy o cierpliwość.",
-      "fillBody": "Wybierz dołączony paragon lub prześlij nowy — zeskanujemy go, aby zasugerować dane tego wydatku."
+      "fillBody": "Wybierz dołączony paragon lub prześlij nowy — zeskanujemy go, aby zasugerować dane tego wydatku.",
+      "translateToLocale": "Przetłumacz tytuł i elementy na {language}"
     },
     "unknown": "Nieznany",
     "TooBigToast": {
@@ -2099,5 +2100,19 @@
     "badgeRunning": "Cykliczny · W toku",
     "badgeStopped": "Cykliczny · Zatrzymany",
     "badgeCompleted": "Cykliczny · Ukończony"
+  },
+  "CurrencyConverter": {
+    "trigger": "Przeliczanie waluty",
+    "title": "Przeliczanie waluty",
+    "description": "Przelicz dowolną kwotę i utwórz wydatek w oryginalnej walucie.",
+    "swap": "Zamień waluty",
+    "rateError": "Nie można załadować kursu wymiany.",
+    "rateInfo": "1 {from} = {rate} {to}",
+    "providerNote": "Kursy z Frankfurter",
+    "createIn": "Utwórz wydatek w…",
+    "noGroups": "Nie znaleziono kwalifikujących się grup.",
+    "staleRate": "Kurs z:",
+    "fromLabel": "Z",
+    "toLabel": "Na"
   }
 }

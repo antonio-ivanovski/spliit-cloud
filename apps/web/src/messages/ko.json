@@ -1107,7 +1107,8 @@
       "fillTitle": "영수증에서 지출 정보 채우기",
       "fillNext": "제안된 세부 정보를 검토한 후 이 지출에 적용하세요.",
       "scanningHint": "스캔에 시간이 조금 걸릴 수 있습니다 — 잠시만 기다려 주세요.",
-      "fillBody": "첨부된 영수증을 선택하거나 새 영수증을 업로드하세요 — 스캔하여 이 지출의 세부 정보를 제안합니다."
+      "fillBody": "첨부된 영수증을 선택하거나 새 영수증을 업로드하세요 — 스캔하여 이 지출의 세부 정보를 제안합니다.",
+      "translateToLocale": "제목과 항목을 {language}(으)로 번역"
     },
     "TooBigToast": {
       "title": "파일이 너무 커요",
@@ -2047,5 +2048,19 @@
     "badgeRunning": "반복 · 실행 중",
     "badgeStopped": "반복 · 중지됨",
     "badgeCompleted": "반복 · 완료됨"
+  },
+  "CurrencyConverter": {
+    "trigger": "통화 변환",
+    "title": "통화 변환",
+    "description": "모든 금액을 변환하고 원래 통화로 지출을 생성합니다.",
+    "swap": "통화 교환",
+    "rateError": "환율을 불러올 수 없습니다.",
+    "rateInfo": "1 {from} = {rate} {to}",
+    "providerNote": "Frankfurter 제공 환율",
+    "createIn": "지출 생성 대상…",
+    "noGroups": "해당 그룹을 찾을 수 없습니다.",
+    "staleRate": "환율 정보:",
+    "fromLabel": "From",
+    "toLabel": "To"
   }
 }

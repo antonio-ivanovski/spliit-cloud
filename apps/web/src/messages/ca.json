@@ -884,7 +884,8 @@
       "fillTitle": "Omple la despesa a partir del rebut",
       "fillNext": "Revisa els detalls suggerits i aplica’ls a aquesta despesa.",
       "scanningHint": "L’escaneig pot trigar una mica — tingues paciència.",
-      "fillBody": "Tria un rebut adjunt o puja’n un de nou — l’escanejarem per suggerir detalls per a aquesta despesa."
+      "fillBody": "Tria un rebut adjunt o puja’n un de nou — l’escanejarem per suggerir detalls per a aquesta despesa.",
+      "translateToLocale": "Traduir títol i articles a {language}"
     },
     "unknown": "Desconegut",
     "TooBigToast": {
@@ -2081,5 +2082,19 @@
     "badgeRunning": "Recurrent · En curs",
     "badgeStopped": "Recurrent · Aturada",
     "badgeCompleted": "Recurrent · Completada"
+  },
+  "CurrencyConverter": {
+    "trigger": "Conversió de moneda",
+    "title": "Conversió de moneda",
+    "description": "Converteix qualsevol import i crea una despesa amb la moneda original.",
+    "swap": "Intercanviar monedes",
+    "rateError": "No s'ha pogut carregar el tipus de canvi.",
+    "rateInfo": "1 {from} = {rate} {to}",
+    "providerNote": "Tipus de Frankfurter",
+    "createIn": "Crear despesa a…",
+    "noGroups": "No s'han trobat grups elegibles.",
+    "staleRate": "Tipus del:",
+    "fromLabel": "De",
+    "toLabel": "A"
   }
 }

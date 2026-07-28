@@ -884,7 +884,8 @@
       "fillTitle": "Gastua ordainagitik bete",
       "fillNext": "Berrikusi iradokitako xehetasunak eta aplikatu gastu honetan.",
       "scanningHint": "Eskaneatzeak pixka bat iraun dezake — izan pazientzia.",
-      "fillBody": "Aukeratu erantsitako ordainagiri bat edo igo berri bat — eskaneatu eta gastu honetarako xehetasunak proposatuko ditugu."
+      "fillBody": "Aukeratu erantsitako ordainagiri bat edo igo berri bat — eskaneatu eta gastu honetarako xehetasunak proposatuko ditugu.",
+      "translateToLocale": "Itzuldu izenburua eta elementuak {language}(e)ra"
     },
     "unknown": "Ezezaguna",
     "TooBigToast": {
@@ -2080,5 +2081,19 @@
     "badgeRunning": "Errepikaria · Martxan",
     "badgeStopped": "Errepikaria · Geldituta",
     "badgeCompleted": "Errepikaria · Osatuta"
+  },
+  "CurrencyConverter": {
+    "trigger": "Moneda bihurketa",
+    "title": "Moneda bihurketa",
+    "description": "Bihurtu edozein kopuru eta sortu gastua jatorrizko monetarekin.",
+    "swap": "Trukatu monedak",
+    "rateError": "Ezin izan da truke-tasa kargatu.",
+    "rateInfo": "1 {from} = {rate} {to}",
+    "providerNote": "Frankfurterren tasak",
+    "createIn": "Sortu gastua hemen…",
+    "noGroups": "Ez da talde egokirik aurkitu.",
+    "staleRate": "Honako tasa:",
+    "fromLabel": "Nondik",
+    "toLabel": "Nora"
   }
 }

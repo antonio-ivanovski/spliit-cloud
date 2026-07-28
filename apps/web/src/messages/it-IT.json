@@ -884,7 +884,8 @@
       "fillTitle": "Compila spesa dalla ricevuta",
       "fillNext": "Controlla i dettagli suggeriti e applicali a questa spesa.",
       "scanningHint": "La scansione potrebbe richiedere un po’ di tempo — attendi.",
-      "fillBody": "Scegli una ricevuta allegata o caricane una nuova — la scansioneremo per suggerire i dettagli di questa spesa."
+      "fillBody": "Scegli una ricevuta allegata o caricane una nuova — la scansioneremo per suggerire i dettagli di questa spesa.",
+      "translateToLocale": "Traduci titolo e articoli in {language}"
     },
     "unknown": "Sconosciuto",
     "TooBigToast": {
@@ -2081,5 +2082,19 @@
     "badgeRunning": "Ricorrente · In corso",
     "badgeStopped": "Ricorrente · Interrotta",
     "badgeCompleted": "Ricorrente · Completata"
+  },
+  "CurrencyConverter": {
+    "trigger": "Conversione valuta",
+    "title": "Conversione valuta",
+    "description": "Converti qualsiasi importo e crea una spesa con la valuta originale.",
+    "swap": "Scambia valute",
+    "rateError": "Impossibile caricare il tasso di cambio.",
+    "rateInfo": "1 {from} = {rate} {to}",
+    "providerNote": "Tassi di Frankfurter",
+    "createIn": "Crea spesa in…",
+    "noGroups": "Nessun gruppo idoneo trovato.",
+    "staleRate": "Tasso del:",
+    "fromLabel": "Da",
+    "toLabel": "A"
   }
 }

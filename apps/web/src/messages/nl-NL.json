@@ -877,7 +877,8 @@
       "fillTitle": "Uitgave invullen vanaf bon",
       "fillNext": "Controleer de voorgestelde gegevens en pas ze toe op deze uitgave.",
       "scanningHint": "Het scannen kan even duren — heb geduld.",
-      "fillBody": "Kies een bijgevoegde bon of upload een nieuwe — we scannen die en stellen gegevens voor deze uitgave voor."
+      "fillBody": "Kies een bijgevoegde bon of upload een nieuwe — we scannen die en stellen gegevens voor deze uitgave voor.",
+      "translateToLocale": "Vertaal titel en artikelen naar {language}"
     },
     "unknown": "Onbekend",
     "TooBigToast": {
@@ -2063,5 +2064,19 @@
     "badgeRunning": "Terugkerend · Lopend",
     "badgeStopped": "Terugkerend · Gestopt",
     "badgeCompleted": "Terugkerend · Voltooid"
+  },
+  "CurrencyConverter": {
+    "trigger": "Valutaconversie",
+    "title": "Valutaconversie",
+    "description": "Converteer elk bedrag en maak een uitgave met de originele valuta.",
+    "swap": "Valuta wisselen",
+    "rateError": "Wisselkoers kon niet worden geladen.",
+    "rateInfo": "1 {from} = {rate} {to}",
+    "providerNote": "Koersen van Frankfurter",
+    "createIn": "Uitgave aanmaken in…",
+    "noGroups": "Geen geschikte groepen gevonden.",
+    "staleRate": "Koers van:",
+    "fromLabel": "Van",
+    "toLabel": "Naar"
   }
 }

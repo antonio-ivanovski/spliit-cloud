@@ -4,6 +4,7 @@ import {
   buildGroupContextSection,
   buildLocaleHint,
   buildRecentExpensesSection,
+  buildTranslationDirective,
   resolveLanguageName,
 } from './prompt'
 
@@ -95,5 +96,40 @@ describe('buildRecentExpensesSection', () => {
     ])
     const matches = section.match(/"Mercadona" -> groceries/g)
     expect(matches?.length).toBe(2)
+  })
+})
+
+describe('buildTranslationDirective', () => {
+  it('returns empty string when translation is not requested', () => {
+    expect(buildTranslationDirective('es', false)).toBe('')
+    expect(buildTranslationDirective('es', undefined)).toBe('')
+  })
+
+  it('returns empty string when locale is missing', () => {
+    expect(buildTranslationDirective(undefined, true)).toBe('')
+    expect(buildTranslationDirective('', true)).toBe('')
+  })
+
+  it('returns empty string for unknown locales', () => {
+    expect(buildTranslationDirective('xx', true)).toBe('')
+  })
+
+  it('names the resolved language and targets title and item titles', () => {
+    const directive = buildTranslationDirective('es', true)
+    expect(directive).toContain('Español')
+    expect(directive).toContain('expense title')
+    expect(directive).toContain('every item title')
+  })
+
+  it('instructs preserving proper names', () => {
+    const directive = buildTranslationDirective('fr-FR', true)
+    expect(directive).toContain('Français')
+    expect(directive).toContain('proper names')
+  })
+
+  it('forbids original text and annotations', () => {
+    const directive = buildTranslationDirective('de-DE', true)
+    expect(directive).toContain('do not include the original text')
+    expect(directive).toContain('Do not change any non-title fields')
   })
 })

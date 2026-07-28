@@ -1220,7 +1220,8 @@
       "fillTitle": "Chi phí từ biên lai",
       "fillNext": "Điền tiếp",
       "scanningHint": "Đang quét…",
-      "fillBody": "Chọn một biên lai đính kèm hoặc tải lên ảnh mới — chúng tôi sẽ quét để gợi ý thông tin cho chi phí này."
+      "fillBody": "Chọn một biên lai đính kèm hoặc tải lên ảnh mới — chúng tôi sẽ quét để gợi ý thông tin cho chi phí này.",
+      "translateToLocale": "Dịch tiêu đề và mục sang {language}"
     },
     "unknown": "Không xác định",
     "TooBigToast": {
@@ -2135,5 +2136,19 @@
       "description": "Đã hủy đăng ký. {category}"
     },
     "scope": "Chỉ email này sẽ bị tắt. Các email và thông báo đẩy khác vẫn hoạt động."
+  },
+  "CurrencyConverter": {
+    "trigger": "Chuyển đổi tiền tệ",
+    "title": "Chuyển đổi tiền tệ",
+    "description": "Chuyển đổi bất kỳ số tiền nào và tạo khoản chi bằng loại tiền gốc.",
+    "swap": "Hoán đổi tiền tệ",
+    "rateError": "Không thể tải tỷ giá.",
+    "rateInfo": "1 {from} = {rate} {to}",
+    "providerNote": "Tỷ giá từ Frankfurter",
+    "createIn": "Tạo khoản chi trong…",
+    "noGroups": "Không tìm thấy nhóm phù hợp.",
+    "staleRate": "Tỷ giá từ:",
+    "fromLabel": "Từ",
+    "toLabel": "Sang"
   }
 }

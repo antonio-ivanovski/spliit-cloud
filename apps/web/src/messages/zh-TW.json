@@ -870,7 +870,8 @@
       "fillTitle": "從收據填寫支出",
       "fillNext": "查看建議的詳細資料，然後套用至這筆支出。",
       "scanningHint": "掃描可能需要一點時間 — 請耐心等候。",
-      "fillBody": "選擇已附加的收據或上傳新的收據 — 我們會掃描它，為這筆支出建議詳細資料。"
+      "fillBody": "選擇已附加的收據或上傳新的收據 — 我們會掃描它，為這筆支出建議詳細資料。",
+      "translateToLocale": "將標題和項目翻譯為{language}"
     },
     "unknown": "未知",
     "TooBigToast": {
@@ -2047,5 +2048,19 @@
     "badgeRunning": "定期 · 執行中",
     "badgeStopped": "定期 · 已停止",
     "badgeCompleted": "定期 · 已完成"
+  },
+  "CurrencyConverter": {
+    "trigger": "貨幣轉換",
+    "title": "貨幣轉換",
+    "description": "轉換任意金額並以原始貨幣建立支出。",
+    "swap": "交換貨幣",
+    "rateError": "無法載入匯率。",
+    "rateInfo": "1 {from} = {rate} {to}",
+    "providerNote": "匯率由 Frankfurter 提供",
+    "createIn": "建立支出於…",
+    "noGroups": "未找到符合條件的群組。",
+    "staleRate": "匯率日期:",
+    "fromLabel": "From",
+    "toLabel": "To"
   }
 }

@@ -34,6 +34,21 @@ export function buildGroupContextSection(
 }
 
 /**
+ * Translation directive appended to the extraction prompt when the user
+ * opts in to locale translation. Returns empty string when disabled or
+ * the locale cannot be resolved to a language name.
+ */
+export function buildTranslationDirective(
+  locale: string | undefined,
+  translateToLocale: boolean | undefined,
+): string {
+  if (!translateToLocale) return ''
+  const name = locale ? resolveLanguageName(locale) : undefined
+  if (!name) return ''
+  return `Translate the returned expense title and every item title into ${name}. Preserve brand, merchant, and other proper names when they have no natural translation. Return only the translated display text; do not include the original text, language annotations, explanations, or parenthetical alternatives. Do not change any non-title fields.`
+}
+
+/**
  * Past-expense examples section. Empty string when there are no
  * examples. Repetition is intentional and reflects the raw frequency of
  * each title in the group's history.

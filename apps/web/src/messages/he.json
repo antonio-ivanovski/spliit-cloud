@@ -884,7 +884,8 @@
       "fillTitle": "מילוי הוצאה מקבלה",
       "fillNext": "בדקו את הפרטים שהוצעו והחילו אותם על הוצאה זו.",
       "scanningHint": "הסריקה עשויה להימשך מעט — נא להמתין בסבלנות.",
-      "fillBody": "בחרו קבלה מצורפת או העלו חדשה — נסרוק אותה כדי להציע פרטים להוצאה הזו."
+      "fillBody": "בחרו קבלה מצורפת או העלו חדשה — נסרוק אותה כדי להציע פרטים להוצאה הזו.",
+      "translateToLocale": "תרגם כותרת ופריטים ל{language}"
     },
     "unknown": "לא ידוע",
     "TooBigToast": {
@@ -2081,5 +2082,19 @@
     "badgeRunning": "חוזרת · פועלת",
     "badgeStopped": "חוזרת · נעצרה",
     "badgeCompleted": "חוזרת · הושלמה"
+  },
+  "CurrencyConverter": {
+    "trigger": "המרת מטבע",
+    "title": "המרת מטבע",
+    "description": "המר כל סכום וצור הוצאה במטבע המקורי.",
+    "swap": "החלף מטבעות",
+    "rateError": "לא ניתן לטעון את שער החליפין.",
+    "rateInfo": "1 {from} = {rate} {to}",
+    "providerNote": "שערים מ-Frankfurter",
+    "createIn": "צור הוצאה ב…",
+    "noGroups": "לא נמצאו קבוצות מתאימות.",
+    "staleRate": "שער מ:",
+    "fromLabel": "מ",
+    "toLabel": "עד"
   }
 }

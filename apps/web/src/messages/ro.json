@@ -884,7 +884,8 @@
       "fillTitle": "Completează cheltuiala din chitanță",
       "fillNext": "Verifică detaliile sugerate și aplică-le acestei cheltuieli.",
       "scanningHint": "Scanarea poate dura puțin — te rugăm să ai răbdare.",
-      "fillBody": "Alege o chitanță atașată sau încarcă una nouă — o vom scana pentru a sugera detaliile acestei cheltuieli."
+      "fillBody": "Alege o chitanță atașată sau încarcă una nouă — o vom scana pentru a sugera detaliile acestei cheltuieli.",
+      "translateToLocale": "Traduceți titlul și articolele în {language}"
     },
     "unknown": "Necunoscut",
     "TooBigToast": {
@@ -2081,5 +2082,19 @@
     "badgeRunning": "Recurentă · În desfășurare",
     "badgeStopped": "Recurentă · Oprită",
     "badgeCompleted": "Recurentă · Finalizată"
+  },
+  "CurrencyConverter": {
+    "trigger": "Conversie monetară",
+    "title": "Conversie monetară",
+    "description": "Convertiți orice sumă și creați o cheltuială cu moneda originală.",
+    "swap": "Schimbă monedele",
+    "rateError": "Nu s-a putut încărca rata de schimb.",
+    "rateInfo": "1 {from} = {rate} {to}",
+    "providerNote": "Rate de la Frankfurter",
+    "createIn": "Creează cheltuială în…",
+    "noGroups": "Nu s-au găsit grupuri eligibile.",
+    "staleRate": "Rată din:",
+    "fromLabel": "Din",
+    "toLabel": "În"
   }
 }

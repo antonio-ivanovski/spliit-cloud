@@ -877,7 +877,8 @@
       "fillTitle": "Fişi kullanarak harcamayı doldur",
       "fillNext": "Önerilen ayrıntıları inceleyip bu harcamaya uygulayın.",
       "scanningHint": "Tarama biraz sürebilir — lütfen bekleyin.",
-      "fillBody": "Ekli bir fiş seçin veya yeni bir fiş yükleyin — bu harcamanın ayrıntılarını önermek için tarayacağız."
+      "fillBody": "Ekli bir fiş seçin veya yeni bir fiş yükleyin — bu harcamanın ayrıntılarını önermek için tarayacağız.",
+      "translateToLocale": "Başlığı ve öğeleri {language} diline çevir"
     },
     "unknown": "Bilinmiyor",
     "TooBigToast": {
@@ -2063,5 +2064,19 @@
     "badgeRunning": "Yinelenen · Devam Ediyor",
     "badgeStopped": "Yinelenen · Durduruldu",
     "badgeCompleted": "Yinelenen · Tamamlandı"
+  },
+  "CurrencyConverter": {
+    "trigger": "Para Birimi Dönüşümü",
+    "title": "Para Birimi Dönüşümü",
+    "description": "Herhangi bir tutarı dönüştürün ve orijinal para birimiyle gider oluşturun.",
+    "swap": "Para birimlerini değiştir",
+    "rateError": "Döviz kuru yüklenemedi.",
+    "rateInfo": "1 {from} = {rate} {to}",
+    "providerNote": "Frankfurter kurları",
+    "createIn": "Şurada gider oluştur…",
+    "noGroups": "Uygun grup bulunamadı.",
+    "staleRate": "Kur:",
+    "fromLabel": "Kaynak",
+    "toLabel": "Hedef"
   }
 }

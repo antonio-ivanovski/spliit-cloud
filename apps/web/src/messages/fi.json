@@ -877,7 +877,8 @@
       "fillTitle": "Täytä kulu kuitin perusteella",
       "fillNext": "Tarkista ehdotetut tiedot ja käytä niitä tähän kululaskuun.",
       "scanningHint": "Skannaus voi kestää hetken — ole kärsivällinen.",
-      "fillBody": "Valitse liitetty kuitti tai lataa uusi — skannaamme sen ja ehdotamme tämän kulun tietoja."
+      "fillBody": "Valitse liitetty kuitti tai lataa uusi — skannaamme sen ja ehdotamme tämän kulun tietoja.",
+      "translateToLocale": "Käännä otsikko ja kohteet kielelle {language}"
     },
     "unknown": "Tuntematon",
     "TooBigToast": {
@@ -2063,5 +2064,19 @@
     "badgeRunning": "Toistuva · Käynnissä",
     "badgeStopped": "Toistuva · Pysäytetty",
     "badgeCompleted": "Toistuva · Valmis"
+  },
+  "CurrencyConverter": {
+    "trigger": "Valuuttamuunnos",
+    "title": "Valuuttamuunnos",
+    "description": "Muunna mikä tahansa summa ja luo kulu alkuperäisellä valuutalla.",
+    "swap": "Vaihda valuuttoja",
+    "rateError": "Vaihtokurssia ei voitu ladata.",
+    "rateInfo": "1 {from} = {rate} {to}",
+    "providerNote": "Kurssit Frankfurterilta",
+    "createIn": "Luo kulu kohteeseen…",
+    "noGroups": "Ei kelvollisia ryhmiä löytynyt.",
+    "staleRate": "Kurssi:",
+    "fromLabel": "Mistä",
+    "toLabel": "Mihin"
   }
 }

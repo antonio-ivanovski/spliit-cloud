@@ -523,7 +523,8 @@
       "fillTitle": "Fyll i utgift från kvitto",
       "fillNext": "Granska de föreslagna detaljerna och tillämpa dem på utgiften.",
       "scanningHint": "Skanningen kan ta en stund — ha tålamod.",
-      "fillBody": "Välj ett bifogat kvitto eller ladda upp ett nytt — vi skannar det och föreslår detaljer för utgiften."
+      "fillBody": "Välj ett bifogat kvitto eller ladda upp ett nytt — vi skannar det och föreslår detaljer för utgiften.",
+      "translateToLocale": "Översätt titel och artiklar till {language}"
     },
     "ErrorToast": {
       "title": "Fel vid uppladdning av dokument",
@@ -2059,5 +2060,19 @@
       "title": "Dessa e-postmeddelanden är avstängda",
       "description": "Du får inte längre e-post för {category}. Dina andra notisinställningar har inte ändrats."
     }
+  },
+  "CurrencyConverter": {
+    "trigger": "Valutakonvertering",
+    "title": "Valutakonvertering",
+    "description": "Konvertera valfritt belopp och skapa en utgift med originalvalutan.",
+    "swap": "Växla valutor",
+    "rateError": "Kunde inte ladda växelkurs.",
+    "rateInfo": "1 {from} = {rate} {to}",
+    "providerNote": "Kurser från Frankfurter",
+    "createIn": "Skapa utgift i…",
+    "noGroups": "Inga kvalificerade grupper hittades.",
+    "staleRate": "Kurs från:",
+    "fromLabel": "Från",
+    "toLabel": "Till"
   }
 }

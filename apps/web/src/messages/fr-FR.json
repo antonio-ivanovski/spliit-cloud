@@ -884,7 +884,8 @@
       "fillTitle": "Remplir la dépense depuis le reçu",
       "fillNext": "Vérifiez les détails suggérés, puis appliquez-les à cette dépense.",
       "scanningHint": "L’analyse peut prendre un moment — merci de patienter.",
-      "fillBody": "Choisissez un reçu joint ou importez-en un nouveau — nous l’analyserons pour suggérer les détails de cette dépense."
+      "fillBody": "Choisissez un reçu joint ou importez-en un nouveau — nous l’analyserons pour suggérer les détails de cette dépense.",
+      "translateToLocale": "Traduire le titre et les articles en {language}"
     },
     "unknown": "Inconnu",
     "TooBigToast": {
@@ -2081,5 +2082,19 @@
     "badgeRunning": "Récurrente · En cours",
     "badgeStopped": "Récurrente · Arrêtée",
     "badgeCompleted": "Récurrente · Terminée"
+  },
+  "CurrencyConverter": {
+    "trigger": "Conversion de devise",
+    "title": "Conversion de devise",
+    "description": "Convertissez n'importe quel montant et créez une dépense avec la devise d'origine.",
+    "swap": "Échanger les devises",
+    "rateError": "Impossible de charger le taux de change.",
+    "rateInfo": "1 {from} = {rate} {to}",
+    "providerNote": "Taux fournis par Frankfurter",
+    "createIn": "Créer une dépense dans…",
+    "noGroups": "Aucun groupe éligible trouvé.",
+    "staleRate": "Taux du :",
+    "fromLabel": "De",
+    "toLabel": "À"
   }
 }

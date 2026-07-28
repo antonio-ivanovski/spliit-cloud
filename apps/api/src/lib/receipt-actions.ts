@@ -16,6 +16,7 @@ import {
   buildGroupContextSection,
   buildLocaleHint,
   buildRecentExpensesSection,
+  buildTranslationDirective,
 } from './ai/prompt'
 import { env } from './env'
 
@@ -38,6 +39,7 @@ export type ReceiptAIContext = {
   recentExpenses?: RecentExpense[]
   locale?: string
   groupContext?: GroupContext
+  translateToLocale?: boolean
 }
 
 function parseAIAmount(value: unknown) {
@@ -164,6 +166,10 @@ export async function extractExpenseInformationFromImage(
   const groupCurrency = getCurrencyFromGroup(groupCurrencyInput)
   const groupSection = buildGroupContextSection(context.groupContext)
   const localeHint = buildLocaleHint(context.locale)
+  const translationDirective = buildTranslationDirective(
+    context.locale,
+    context.translateToLocale,
+  )
   const recentSection = buildRecentExpensesSection(context.recentExpenses ?? [])
   const currentExpenseSection = context.currentExpense
     ? `\nCurrent form values are soft hints only. Re-check them against the receipt and improve or replace them when the image supports it:\n${JSON.stringify(context.currentExpense)}`
@@ -192,6 +198,7 @@ export async function extractExpenseInformationFromImage(
               )}.
               ${groupSection}
               ${localeHint}
+              ${translationDirective}
               ${recentSection}
               ${currentExpenseSection}
               Use the group context and past-expense examples only as soft hints for currency, merchant/title, and category; the receipt image is the source of truth. Do not copy an example's amount, date, or items.

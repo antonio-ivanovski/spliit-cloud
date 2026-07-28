@@ -870,7 +870,8 @@
       "fillTitle": "从收据填写支出",
       "fillNext": "查看建议的详细信息，然后将其应用到这笔支出。",
       "scanningHint": "扫描可能需要一点时间 — 请耐心等待。",
-      "fillBody": "选择已附加的收据或上传新的收据 — 我们会扫描它，为这笔支出建议详细信息。"
+      "fillBody": "选择已附加的收据或上传新的收据 — 我们会扫描它，为这笔支出建议详细信息。",
+      "translateToLocale": "将标题和项目翻译为{language}"
     },
     "unknown": "未知",
     "TooBigToast": {
@@ -2047,5 +2048,19 @@
     "badgeRunning": "定期 · 运行中",
     "badgeStopped": "定期 · 已停止",
     "badgeCompleted": "定期 · 已完成"
+  },
+  "CurrencyConverter": {
+    "trigger": "货币转换",
+    "title": "货币转换",
+    "description": "转换任意金额并以原始货币创建支出。",
+    "swap": "交换货币",
+    "rateError": "无法加载汇率。",
+    "rateInfo": "1 {from} = {rate} {to}",
+    "providerNote": "汇率由 Frankfurter 提供",
+    "createIn": "创建支出于…",
+    "noGroups": "未找到符合条件的群组。",
+    "staleRate": "汇率日期:",
+    "fromLabel": "From",
+    "toLabel": "To"
   }
 }

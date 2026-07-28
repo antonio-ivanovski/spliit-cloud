@@ -891,7 +891,8 @@
       "fillTitle": "Vyplnit výdaj z účtenky",
       "fillNext": "Zkontrolujte navržené údaje a použijte je pro tento výdaj.",
       "scanningHint": "Skenování může chvíli trvat — buďte prosím trpěliví.",
-      "fillBody": "Vyberte přiloženou účtenku nebo nahrajte novou — naskenujeme ji a navrhneme údaje pro tento výdaj."
+      "fillBody": "Vyberte přiloženou účtenku nebo nahrajte novou — naskenujeme ji a navrhneme údaje pro tento výdaj.",
+      "translateToLocale": "Přeložit název a položky do {language}"
     },
     "unknown": "Neznámé",
     "TooBigToast": {
@@ -2099,5 +2100,19 @@
     "badgeRunning": "Opakovaný · Probíhá",
     "badgeStopped": "Opakovaný · Zastavený",
     "badgeCompleted": "Opakovaný · Dokončený"
+  },
+  "CurrencyConverter": {
+    "trigger": "Převod měny",
+    "title": "Převod měny",
+    "description": "Převeďte libovolnou částku a vytvořte výdaj v původní měně.",
+    "swap": "Prohodit měny",
+    "rateError": "Nelze načíst směnný kurz.",
+    "rateInfo": "1 {from} = {rate} {to}",
+    "providerNote": "Kurzy od Frankfurter",
+    "createIn": "Vytvořit výdaj v…",
+    "noGroups": "Nebyly nalezeny žádné způsobilé skupiny.",
+    "staleRate": "Kurz z:",
+    "fromLabel": "Z",
+    "toLabel": "Na"
   }
 }

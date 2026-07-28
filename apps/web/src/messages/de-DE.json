@@ -905,7 +905,8 @@
       "fillTitle": "Ausgabe aus Beleg ausfüllen",
       "fillNext": "Prüfe die vorgeschlagenen Angaben und übernimm sie für diese Ausgabe.",
       "scanningHint": "Das Scannen kann etwas dauern — bitte hab Geduld.",
-      "fillBody": "Wähle einen angehängten Beleg oder lade einen neuen hoch — wir scannen ihn und schlagen Details für diese Ausgabe vor."
+      "fillBody": "Wähle einen angehängten Beleg oder lade einen neuen hoch — wir scannen ihn und schlagen Details für diese Ausgabe vor.",
+      "translateToLocale": "Titel und Artikel in {language} übersetzen"
     },
     "unknown": "Unbekannt",
     "TooBigToast": {
@@ -2131,5 +2132,19 @@
     "badgeRunning": "Wiederkehrend · Laufend",
     "badgeStopped": "Wiederkehrend · Gestoppt",
     "badgeCompleted": "Wiederkehrend · Abgeschlossen"
+  },
+  "CurrencyConverter": {
+    "trigger": "Währungsumrechnung",
+    "title": "Währungsumrechnung",
+    "description": "Konvertieren Sie einen beliebigen Betrag und erstellen Sie eine Ausgabe mit der ursprünglichen Währung.",
+    "swap": "Währungen tauschen",
+    "rateError": "Wechselkurs konnte nicht geladen werden.",
+    "rateInfo": "1 {from} = {rate} {to}",
+    "providerNote": "Kurse von Frankfurter",
+    "createIn": "Ausgabe erstellen in…",
+    "noGroups": "Keine geeigneten Gruppen gefunden.",
+    "staleRate": "Kurs vom:",
+    "fromLabel": "Von",
+    "toLabel": "Zu"
   }
 }

@@ -2,6 +2,8 @@ import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
 import Image from '@/components/app-image'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Label } from '@/components/ui/label'
 import {
   ResponsiveDialog,
   ResponsiveDialogBody,
@@ -27,7 +29,9 @@ import { trpc } from '@/trpc/client'
 import {
   categoryIdSchema,
   getCategoryById,
+  localeLabels,
   type CategoryId,
+  type Locale,
 } from '@spliit/domain'
 import { useNavigate } from '@tanstack/react-router'
 import { Check, FileQuestion, ScanLine, Sparkles } from 'lucide-react'
@@ -36,6 +40,23 @@ import { useTranslation } from 'react-i18next'
 import { useCurrentGroup } from '../current-group-context'
 
 const MAX_FILE_SIZE = 2 * 1024 ** 2
+const TRANSLATE_STORAGE_KEY = 'spliit-receipt-translate-to-locale'
+
+function readTranslatePreference(): boolean {
+  try {
+    return window.localStorage.getItem(TRANSLATE_STORAGE_KEY) === 'true'
+  } catch {
+    return false
+  }
+}
+
+function writeTranslatePreference(value: boolean): void {
+  try {
+    window.localStorage.setItem(TRANSLATE_STORAGE_KEY, String(value))
+  } catch {
+    // storage unavailable — preference simply won't persist
+  }
+}
 
 export type ReceiptExtractedInfo = {
   amount: number
@@ -224,6 +245,13 @@ function ReceiptDialogContent({
   const [receiptInfo, setReceiptInfo] = useState<ReceiptExtractedInfo | null>(
     null,
   )
+  const [translateToLocale, setTranslateToLocale] = useState(
+    readTranslatePreference,
+  )
+  const translateRef = useRef(translateToLocale)
+  useEffect(() => {
+    translateRef.current = translateToLocale
+  })
   const { uploadToS3, FileInput, openFileDialog } = usePresignedUpload(
     group?.ledgerId,
   )
@@ -231,7 +259,10 @@ function ReceiptDialogContent({
   const extractReceiptMutation =
     trpc.ai.extractExpenseInformationFromImage.useMutation()
 
-  const scan = async (document: ReceiptDocument) => {
+  const scan = async (
+    document: ReceiptDocument,
+    translate = translateToLocale,
+  ) => {
     if (!group) return
     setSelectedDocument(document)
     setReceiptInfo(null)
@@ -243,6 +274,7 @@ function ReceiptDialogContent({
         currencyCode: group.currencyCode,
         groupId: group.id,
         locale,
+        translateToLocale: translate,
         currentExpense,
       })
       setReceiptInfo(result)
@@ -255,7 +287,7 @@ function ReceiptDialogContent({
         action: (
           <ToastAction
             altText={t('ErrorToast.retry')}
-            onClick={() => scan(document)}
+            onClick={() => scan(document, translateRef.current)}
           >
             {t('ErrorToast.retry')}
           </ToastAction>
@@ -311,6 +343,17 @@ function ReceiptDialogContent({
     }
   }
 
+  const languageLabel = localeLabels[locale as Locale] ?? localeLabels['en-US']
+
+  const handleTranslateChange = (checked: boolean | 'indeterminate') => {
+    const next = checked === true
+    setTranslateToLocale(next)
+    writeTranslatePreference(next)
+    if (selectedDocument && receiptInfo && !pending) {
+      void scan(selectedDocument, next)
+    }
+  }
+
   const parsedCategory = receiptInfo?.categoryId
     ? categoryIdSchema.safeParse(receiptInfo.categoryId)
     : null
@@ -321,6 +364,20 @@ function ReceiptDialogContent({
   return (
     <div className="prose prose-sm dark:prose-invert">
       <p>{t(mode === 'fill' ? 'Dialog.fillBody' : 'Dialog.body')}</p>
+      <div className="not-prose mb-4 flex items-center gap-2">
+        <Checkbox
+          id="receipt-translate-to-locale"
+          checked={translateToLocale}
+          onCheckedChange={handleTranslateChange}
+          disabled={pending}
+        />
+        <Label
+          htmlFor="receipt-translate-to-locale"
+          className="cursor-pointer font-normal"
+        >
+          {t('Dialog.translateToLocale', { language: languageLabel })}
+        </Label>
+      </div>
       <FileInput
         onChange={handleFileChange}
         accept="image/jpeg,image/png,image/webp,image/heic,image/heif"

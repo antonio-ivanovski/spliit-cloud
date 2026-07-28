@@ -1053,7 +1053,8 @@
       "fillTitle": "Isi pengeluaran dari struk",
       "fillNext": "Tinjau detail yang disarankan, lalu terapkan ke pengeluaran ini.",
       "scanningHint": "Pemindaian mungkin memerlukan waktu — harap bersabar.",
-      "fillBody": "Pilih struk terlampir atau unggah yang baru — kami akan memindainya untuk menyarankan detail pengeluaran ini."
+      "fillBody": "Pilih struk terlampir atau unggah yang baru — kami akan memindainya untuk menyarankan detail pengeluaran ini.",
+      "translateToLocale": "Terjemahkan judul dan item ke {language}"
     },
     "unknown": "Tidak diketahui",
     "TooBigToast": {
@@ -2047,5 +2048,19 @@
     "badgeRunning": "Berulang · Berjalan",
     "badgeStopped": "Berulang · Berhenti",
     "badgeCompleted": "Berulang · Selesai"
+  },
+  "CurrencyConverter": {
+    "trigger": "Konversi Mata Uang",
+    "title": "Konversi Mata Uang",
+    "description": "Konversi jumlah berapa pun dan buat pengeluaran dengan mata uang asli.",
+    "swap": "Tukar mata uang",
+    "rateError": "Gagal memuat kurs.",
+    "rateInfo": "1 {from} = {rate} {to}",
+    "providerNote": "Kurs dari Frankfurter",
+    "createIn": "Buat pengeluaran di…",
+    "noGroups": "Tidak ada grup yang memenuhi syarat ditemukan.",
+    "staleRate": "Kurs dari:",
+    "fromLabel": "Dari",
+    "toLabel": "Ke"
   }
 }

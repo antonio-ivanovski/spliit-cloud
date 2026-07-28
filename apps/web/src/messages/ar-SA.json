@@ -2029,7 +2029,8 @@
       "title": "إنشاء من إيصال",
       "continue": "متابعة",
       "description": "استخراج معلومات المصروفات من صورة إيصال.",
-      "existingDocuments": "اختيار إيصال مرفق"
+      "existingDocuments": "اختيار إيصال مرفق",
+      "translateToLocale": "ترجمة العنوان والعناصر إلى {language}"
     },
     "ErrorToast": {
       "description": "حدث خطأ ما أثناء رفع المستند. يرجى إعادة المحاولة لاحقاً أو اختيار ملف آخر.",
@@ -2135,5 +2136,19 @@
     "title": "مشاركة",
     "warningHelp": "أي شخص لديه رابط المجموعة يمكنه عرض وتعديل المصروفات. شارك بحذر!",
     "warning": "تحذير!"
+  },
+  "CurrencyConverter": {
+    "trigger": "تحويل العملة",
+    "title": "تحويل العملة",
+    "description": "حول أي مبلغ وأنشئ مصروفًا بالعملة الأصلية.",
+    "swap": "تبديل العملات",
+    "rateError": "تعذر تحميل سعر الصرف.",
+    "rateInfo": "1 {from} = {rate} {to}",
+    "providerNote": "أسعار من Frankfurter",
+    "createIn": "إنشاء مصروف في…",
+    "noGroups": "لم يتم العثور على مجموعات مؤهلة.",
+    "staleRate": "سعر من:",
+    "fromLabel": "من",
+    "toLabel": "إلى"
   }
 }

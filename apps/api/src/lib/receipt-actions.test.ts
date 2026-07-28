@@ -196,4 +196,126 @@ describe('extractExpenseInformationFromImage', () => {
     expect(prompt).toContain('"Mercadona" -> groceries')
     expect(prompt).toContain('soft hints')
   })
+
+  it('does not add a forced-translation instruction when translateToLocale is omitted', async () => {
+    generateTextMock.mockResolvedValue({
+      text: JSON.stringify({ amount: 1, items: [] }),
+    })
+
+    await extractExpenseInformationFromImage(
+      'https://example.com/receipt.jpg',
+      groupCurrency,
+      { locale: 'es' },
+    )
+
+    const request = generateTextMock.mock.calls[0]?.[0] as {
+      messages: Array<{
+        content: Array<{ type: string; text?: string }>
+      }>
+    }
+    const prompt = request.messages[0]?.content.find(
+      (part) => part.type === 'text',
+    )?.text
+
+    expect(prompt).not.toContain('Translate the returned expense title')
+  })
+
+  it('does not add a forced-translation instruction when translateToLocale is false', async () => {
+    generateTextMock.mockResolvedValue({
+      text: JSON.stringify({ amount: 1, items: [] }),
+    })
+
+    await extractExpenseInformationFromImage(
+      'https://example.com/receipt.jpg',
+      groupCurrency,
+      { locale: 'es', translateToLocale: false },
+    )
+
+    const request = generateTextMock.mock.calls[0]?.[0] as {
+      messages: Array<{
+        content: Array<{ type: string; text?: string }>
+      }>
+    }
+    const prompt = request.messages[0]?.content.find(
+      (part) => part.type === 'text',
+    )?.text
+
+    expect(prompt).not.toContain('Translate the returned expense title')
+  })
+
+  it('adds a forced-translation instruction naming the language when enabled', async () => {
+    generateTextMock.mockResolvedValue({
+      text: JSON.stringify({ amount: 1, items: [] }),
+    })
+
+    await extractExpenseInformationFromImage(
+      'https://example.com/receipt.jpg',
+      groupCurrency,
+      { locale: 'es', translateToLocale: true },
+    )
+
+    const request = generateTextMock.mock.calls[0]?.[0] as {
+      messages: Array<{
+        content: Array<{ type: string; text?: string }>
+      }>
+    }
+    const prompt = request.messages[0]?.content.find(
+      (part) => part.type === 'text',
+    )?.text
+
+    expect(prompt).toContain('Translate the returned expense title')
+    expect(prompt).toContain('Español')
+    expect(prompt).toContain('every item title')
+  })
+
+  it('does not add a malformed instruction for unknown locale even when enabled', async () => {
+    generateTextMock.mockResolvedValue({
+      text: JSON.stringify({ amount: 1, items: [] }),
+    })
+
+    await extractExpenseInformationFromImage(
+      'https://example.com/receipt.jpg',
+      groupCurrency,
+      { locale: 'xx-UNKNOWN', translateToLocale: true },
+    )
+
+    const request = generateTextMock.mock.calls[0]?.[0] as {
+      messages: Array<{
+        content: Array<{ type: string; text?: string }>
+      }>
+    }
+    const prompt = request.messages[0]?.content.find(
+      (part) => part.type === 'text',
+    )?.text
+
+    expect(prompt).not.toContain('Translate the returned expense title')
+  })
+
+  it('preserves parsing and money conversion with translation enabled', async () => {
+    generateTextMock.mockResolvedValue({
+      text: JSON.stringify({
+        amount: 25.99,
+        categoryId: 'groceries',
+        currencyCode: 'EUR',
+        date: '2025-06-15',
+        title: 'Restaurante El Sol',
+        items: [{ title: 'Paella', unitPrice: 25.99, quantity: 1 }],
+      }),
+    })
+
+    const result = await extractExpenseInformationFromImage(
+      'https://example.com/receipt.jpg',
+      groupCurrency,
+      { locale: 'es', translateToLocale: true },
+    )
+
+    expect(result).toMatchObject({
+      amount: 2599,
+      categoryId: 'groceries',
+      currencyCode: 'EUR',
+      date: '2025-06-15',
+      title: 'Restaurante El Sol',
+      items: [{ title: 'Paella', unitPrice: 25.99, quantity: 1 }],
+    })
+  })
 })

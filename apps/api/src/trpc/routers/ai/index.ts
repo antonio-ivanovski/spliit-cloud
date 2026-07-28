@@ -75,6 +75,7 @@ export const aiRouter = createTRPCRouter({
         currencyCode: z.string().nullish(),
         groupId: z.string().min(1),
         locale: z.string().optional(),
+        translateToLocale: z.boolean().optional().default(false),
         currentExpense: z
           .object({
             title: z.string().optional(),
@@ -128,6 +129,7 @@ export const aiRouter = createTRPCRouter({
           recentExpenses,
           groupContext,
           locale: input.locale,
+          translateToLocale: input.translateToLocale,
           currentExpense: input.currentExpense,
         },
       )

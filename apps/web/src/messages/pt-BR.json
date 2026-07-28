@@ -884,7 +884,8 @@
       "fillTitle": "Preencher despesa a partir do recibo",
       "fillNext": "Revise os detalhes sugeridos e aplique-os a esta despesa.",
       "scanningHint": "A digitalização pode demorar um pouco — aguarde.",
-      "fillBody": "Escolha um recibo anexado ou envie um novo — vamos digitalizá-lo para sugerir os detalhes desta despesa."
+      "fillBody": "Escolha um recibo anexado ou envie um novo — vamos digitalizá-lo para sugerir os detalhes desta despesa.",
+      "translateToLocale": "Traduzir título e itens para {language}"
     },
     "unknown": "Desconhecido",
     "TooBigToast": {
@@ -2081,5 +2082,19 @@
     "badgeRunning": "Recorrente · Em andamento",
     "badgeStopped": "Recorrente · Parada",
     "badgeCompleted": "Recorrente · Concluída"
+  },
+  "CurrencyConverter": {
+    "trigger": "Conversão de moeda",
+    "title": "Conversão de moeda",
+    "description": "Converta qualquer valor e crie uma despesa com a moeda original.",
+    "swap": "Trocar moedas",
+    "rateError": "Não foi possível carregar a taxa de câmbio.",
+    "rateInfo": "1 {from} = {rate} {to}",
+    "providerNote": "Taxas de Frankfurter",
+    "createIn": "Criar despesa em…",
+    "noGroups": "Nenhum grupo elegível encontrado.",
+    "staleRate": "Taxa de:",
+    "fromLabel": "De",
+    "toLabel": "Para"
   }
 }
