@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { ActivityList } from '@/app/groups/[groupId]/activity/activity-list'
 import {
   Card,
@@ -6,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { useTranslation } from 'react-i18next'
 
 export function ActivityPageClient() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Activity' })

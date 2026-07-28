@@ -1,3 +1,5 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { ExpenseForm } from '@/app/groups/[groupId]/expenses/expense-form'
 import type {
   GroupShape,
@@ -6,8 +8,8 @@ import type {
 import { ParticipantDistributionFooter } from '@/components/participant-distribution-footer'
 import { getCurrency, useCurrencies } from '@/lib/currency'
 import { useCurrencyRate } from '@/lib/hooks'
+import type { Expense } from '@/lib/schemas'
 import { act, fireEvent, render, screen } from '@/test/test-utils'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
@@ -63,33 +65,39 @@ const {
     .mockResolvedValue({ categoryId: 'general' })
   const mockCategoryReset = vi.fn()
 
-  const mockCurrencyGetRate = vi.fn((_opts?: unknown): MockQueryResult => ({
-    data: undefined,
-    error: null,
-    isLoading: false,
-    isSuccess: false,
-    refetch: vi.fn(),
-  }))
+  const mockCurrencyGetRate = vi.fn(
+    (_opts?: unknown): MockQueryResult => ({
+      data: undefined,
+      error: null,
+      isLoading: false,
+      isSuccess: false,
+      refetch: vi.fn(),
+    }),
+  )
 
   // Defaults to `data: undefined` (no saved default) — individual
   // tests override per-call to exercise the Load/Save buttons.
-  const mockAccountDefaultSplit = vi.fn((_opts?: unknown): MockQueryResult => ({
-    data: undefined,
-    error: null,
-    isLoading: false,
-    isSuccess: false,
-    refetch: vi.fn(),
-  }))
+  const mockAccountDefaultSplit = vi.fn(
+    (_opts?: unknown): MockQueryResult => ({
+      data: undefined,
+      error: null,
+      isLoading: false,
+      isSuccess: false,
+      refetch: vi.fn(),
+    }),
+  )
 
   // No group history by default; selector keeps static common fallback
   // while `isSuccess` is false.
-  const mockCommonCurrencies = vi.fn((_opts?: unknown): MockQueryResult => ({
-    data: undefined,
-    error: null,
-    isLoading: false,
-    isSuccess: false,
-    refetch: vi.fn(),
-  }))
+  const mockCommonCurrencies = vi.fn(
+    (_opts?: unknown): MockQueryResult => ({
+      data: undefined,
+      error: null,
+      isLoading: false,
+      isSuccess: false,
+      refetch: vi.fn(),
+    }),
+  )
 
   const mockInvalidateDefaultSplit = vi.fn()
 
@@ -575,7 +583,11 @@ describe('ExpenseForm', () => {
   })
 
   it('submit converts originalAmount to minor units when currency conversion is active', async () => {
-    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    let resolveSubmit!: () => void
+    const submission = new Promise<void>((resolve) => {
+      resolveSubmit = resolve
+    })
+    const onSubmit = vi.fn((_values: Expense) => submission)
     const { user } = render(
       <ExpenseForm
         group={
@@ -620,6 +632,14 @@ describe('ExpenseForm', () => {
       currency: 'EUR',
     })
     expect(submittedValues.amount).toBe(5000)
+
+    await act(async () => {
+      resolveSubmit()
+      await submission
+    })
+    await vi.waitFor(() => {
+      expect(saveButton).not.toBeDisabled()
+    })
   })
 
   it('submits conversion none when currencies match', async () => {
@@ -1056,8 +1076,8 @@ describe('ExpenseForm', () => {
     ).toBeInTheDocument()
   })
 
-  it('expands recurrence settings and opens the schedule drawer', () => {
-    render(
+  it('expands recurrence settings and opens the schedule drawer', async () => {
+    const { user } = render(
       <ExpenseForm
         group={mockGroup as unknown as GroupShape}
         onSubmit={vi.fn()}
@@ -1065,13 +1085,9 @@ describe('ExpenseForm', () => {
       />,
     )
 
-    act(() => {
-      fireEvent.click(screen.getByRole('checkbox', { name: 'Recurring' }))
-    })
+    await user.click(screen.getByRole('checkbox', { name: 'Recurring' }))
     expect(screen.getByText('Repeat every')).toBeInTheDocument()
-    act(() => {
-      fireEvent.click(screen.getByRole('button', { name: 'View all' }))
-    })
+    await user.click(screen.getByRole('button', { name: 'View all' }))
     expect(screen.getByText('Recurrence schedule')).toBeInTheDocument()
     const projectedSchedule = screen.getByRole('list', {
       name: 'Recurrence schedule',
@@ -1605,7 +1621,7 @@ describe('ExpenseForm Total/Missing footer (paid by)', () => {
 })
 
 describe('ExpenseForm Total/Missing footer (paid for)', () => {
-  it('BY_AMOUNT: shows "Missing X of Y" in red when shares under-sum', () => {
+  it('BY_AMOUNT: shows "Missing X of Y" in red when shares under-sum', async () => {
     const expense = {
       ...mockExpense,
       originalCurrency: '',
@@ -1625,12 +1641,12 @@ describe('ExpenseForm Total/Missing footer (paid for)', () => {
       />,
     )
 
-    const footer = screen.getByTestId('paid-for-distribution-footer')
+    const footer = await screen.findByTestId('paid-for-distribution-footer')
     expect(footer).toHaveTextContent('Missing $10.00 of $100.00')
     expect(footer.className).toContain('text-red-600')
   })
 
-  it('BY_AMOUNT: shows "✓ Matches" in green when shares sum to the target', () => {
+  it('BY_AMOUNT: shows "✓ Matches" in green when shares sum to the target', async () => {
     const expense = {
       ...mockExpense,
       originalCurrency: '',
@@ -1650,7 +1666,7 @@ describe('ExpenseForm Total/Missing footer (paid for)', () => {
       />,
     )
 
-    const footer = screen.getByTestId('paid-for-distribution-footer')
+    const footer = await screen.findByTestId('paid-for-distribution-footer')
     expect(footer).toHaveTextContent('✓ Matches $100.00')
     expect(footer.className).toContain('text-emerald-600')
   })
@@ -2038,8 +2054,8 @@ describe('ParticipantShareRow click behavior', () => {
     expect(aliceRow?.querySelector('button[aria-pressed]')).toBeTruthy()
   })
 
-  it('clicking a participant row (name text) toggles the selection', () => {
-    render(
+  it('clicking a participant row (name text) toggles the selection', async () => {
+    const { user } = render(
       <ExpenseForm
         group={mockGroup as unknown as GroupShape}
         expense={
@@ -2073,7 +2089,7 @@ describe('ParticipantShareRow click behavior', () => {
       '[data-id="lp-1/BY_AMOUNT/USD"]',
     )
     expect(row).toBeTruthy()
-    fireEvent.click(row!)
+    await user.click(row!)
 
     // After clicking Alice's row, she should be toggled off
     const checkedAfter = toggles().filter(

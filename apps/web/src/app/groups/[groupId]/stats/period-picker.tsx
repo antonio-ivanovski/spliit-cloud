@@ -1,8 +1,10 @@
+import { CalendarRange } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
-import { CalendarRange } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+
 import type { StatsCustomRange, StatsPeriod } from './dashboard-types'
 
 const periods: Array<StatsPeriod> = [

@@ -1,8 +1,10 @@
+import { Ellipsis } from 'lucide-react'
+import type { CSSProperties, ReactNode } from 'react'
+
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { cn, formatDateOnly } from '@/lib/utils'
-import { Ellipsis } from 'lucide-react'
-import type { CSSProperties, ReactNode } from 'react'
+
 import {
   getOccurrenceScheduleStatus,
   type RecurrenceScheduleEntry,
@@ -15,7 +17,9 @@ const NODE_COLUMN_CLASS = 'w-10'
 const NODE_CENTER_LEFT = 'left-5'
 
 export type OccurrenceTimelineOrientation =
-  'vertical' | 'horizontal' | 'responsive'
+  | 'vertical'
+  | 'horizontal'
+  | 'responsive'
 
 export type OccurrenceTimelineStatus = 'current' | 'completed' | 'upcoming'
 
@@ -31,7 +35,7 @@ export function OccurrenceTimelineNode({
   return (
     <span
       className={cn(
-        'relative z-10 flex size-7 shrink-0 items-center justify-center rounded-full border-2 text-[11px] font-semibold tabular-nums leading-none',
+        'relative z-10 flex size-7 shrink-0 items-center justify-center rounded-full border-2 text-[11px] leading-none font-semibold tabular-nums',
         status === 'current' &&
           'border-primary bg-primary text-primary-foreground ring-4 ring-primary/15',
         status === 'completed' &&
@@ -64,7 +68,7 @@ export function OccurrenceStatusLabel({
       <Badge
         variant="default"
         className={cn(
-          'mt-1 px-1.5 py-0 text-[10px] font-semibold leading-4',
+          'mt-1 px-1.5 py-0 text-[10px] leading-4 font-semibold',
           className,
         )}
       >
@@ -128,7 +132,7 @@ function TimelineConnectors({
         <span
           aria-hidden="true"
           className={cn(
-            'absolute bottom-0 top-[calc(50%+0.875rem)] w-px -translate-x-1/2 bg-border',
+            'absolute top-[calc(50%+0.875rem)] bottom-0 w-px -translate-x-1/2 bg-border',
             NODE_CENTER_LEFT,
             !verticalOnly && 'sm:hidden',
           )}
@@ -147,7 +151,7 @@ function TimelineConnectors({
         <span
           aria-hidden="true"
           className={cn(
-            'absolute top-3.5 left-1/2 right-0 h-px -translate-y-1/2 bg-border',
+            'absolute top-3.5 right-0 left-1/2 h-px -translate-y-1/2 bg-border',
             horizontalOnly ? 'block' : 'hidden sm:block',
           )}
         />

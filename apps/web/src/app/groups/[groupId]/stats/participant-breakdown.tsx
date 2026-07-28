@@ -1,9 +1,11 @@
+import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { ParticipantAvatar } from '@/components/participant-avatar'
 import { useLocale } from '@/i18n/react'
 import type { Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
-import { useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
+
 import type { StatsDashboardData } from './dashboard-types'
 
 type Props = {
@@ -63,7 +65,7 @@ export function ParticipantBreakdown({ data, currency }: Props) {
                   }}
                 />
               </div>
-              <span className="w-9 text-right text-xs tabular-nums text-muted-foreground">
+              <span className="w-9 text-right text-xs text-muted-foreground tabular-nums">
                 {percentFormatter.format(participant.percentage)}
               </span>
             </div>

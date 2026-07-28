@@ -1,5 +1,7 @@
-import type { NormalizedSource } from '@spliit/domain/import'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+import type { NormalizedSource } from '@spliit/domain/import'
+
 import {
   clearSourceCache,
   getCachedSource,

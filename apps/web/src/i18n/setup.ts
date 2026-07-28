@@ -1,6 +1,7 @@
-import { defaultLocale, locales, type Locale } from '@spliit/domain/i18n'
 import i18next from 'i18next'
 import { initReactI18next } from 'react-i18next'
+
+import { defaultLocale, locales, type Locale } from '@spliit/domain/i18n'
 
 const COOKIE_NAME = 'NEXT_LOCALE'
 

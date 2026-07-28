@@ -1,8 +1,9 @@
+import { z } from 'zod'
+
 import {
   notificationCategorySchema,
   notificationChannelSchema,
 } from '@spliit/domain/notifications'
-import { z } from 'zod'
 
 const channelsOutputSchema = z.array(notificationChannelSchema)
 

@@ -1,5 +1,6 @@
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
+
 import {
   getCurrencyRates,
   type BatchRateRequest,
@@ -33,9 +34,9 @@ const batchRateInput = z.object({
 })
 
 /**
- * Translate a `BatchRateResult` error into a tRPC error with a stable code
- * the client can switch on. The shape is preserved so the caller can
- * decide whether to surface `currency`/`target`/`date` to the user.
+ * Translate a `BatchRateResult` error into a tRPC error with a stable code the
+ * client can switch on. The shape is preserved so the caller can decide whether
+ * to surface `currency`/`target`/`date` to the user.
  */
 function raiseBatchError(
   err: Extract<BatchRateResult, { ok: false }>['error'],

@@ -6,7 +6,9 @@ import {
   S3Client,
 } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
+
 import { prisma } from '@spliit/db'
+
 import { randomId } from '../lib/api'
 import { getAuthFromRequest } from '../lib/auth/session'
 import { env } from '../lib/env'
@@ -93,10 +95,9 @@ export async function createProfileImageUploadUrl(
 
 /**
  * Account-bound variant used by the tRPC `uploads.profileImagePresign`
- * mutation. `protectedProcedure` has already resolved the caller, so
- * we skip the cookie round-trip and the size/env-config checks are
- * duplicated from `createProfileImageUploadUrl` to keep both entry
- * points' behavior identical.
+ * mutation. `protectedProcedure` has already resolved the caller, so we skip
+ * the cookie round-trip and the size/env-config checks are duplicated from
+ * `createProfileImageUploadUrl` to keep both entry points' behavior identical.
  */
 export async function mintProfileImagePresign({
   fileSize,
@@ -160,8 +161,8 @@ export async function validateProfileImageUpload(
 }
 
 /**
- * Promote an uploaded document from the temporary `tmp/` prefix to a
- * permanent `documents/` prefix by copying and deleting the temp object.
+ * Promote an uploaded document from the temporary `tmp/` prefix to a permanent
+ * `documents/` prefix by copying and deleting the temp object.
  */
 export async function promoteUploadedDocument(
   fileUrl: string,
@@ -194,12 +195,11 @@ export async function promoteUploadedDocument(
 const MAX_UPLOAD_SIZE = 2 * 1024 ** 2
 
 /**
- * Internal helper used by both the legacy HTTP `/uploads/presign`
- * route (via `createUploadUrl`) and the tRPC `uploads.presign`
- * mutation. Performs the post-auth work — membership check,
- * file-size validation, S3 presign — given an already-resolved
- * account id. Returns a `Response` so the caller decides how to map
- * the status code (HTTP route maps to itself; the tRPC procedure
+ * Internal helper used by both the legacy HTTP `/uploads/presign` route (via
+ * `createUploadUrl`) and the tRPC `uploads.presign` mutation. Performs the
+ * post-auth work — membership check, file-size validation, S3 presign — given
+ * an already-resolved account id. Returns a `Response` so the caller decides
+ * how to map the status code (HTTP route maps to itself; the tRPC procedure
  * maps via `statusToTRPCCode`).
  */
 async function mintUploadPresign({
@@ -305,10 +305,10 @@ export async function createUploadUrl(
 }
 
 /**
- * Presign a document upload for an already-authenticated account. Used
- * by the tRPC `uploads.presign` mutation — the `protectedProcedure`
- * middleware has already enforced auth, so we skip the
- * `getAuthFromRequest` round-trip the HTTP-shaped helper requires.
+ * Presign a document upload for an already-authenticated account. Used by the
+ * tRPC `uploads.presign` mutation — the `protectedProcedure` middleware has
+ * already enforced auth, so we skip the `getAuthFromRequest` round-trip the
+ * HTTP-shaped helper requires.
  */
 export async function createUploadPresignForAccount({
   ledgerId,

@@ -1,4 +1,7 @@
+/* oxlint-disable jsx-a11y/prefer-tag-over-role, jsx-a11y/role-has-required-aria-props -- popover triggers expose combobox semantics; popup IDs are managed by the UI primitive. */
 import { Check, ChevronDown, ChevronsUpDown, Sparkles } from 'lucide-react'
+import { forwardRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
 import type { ButtonProps } from '@/components/ui/button'
@@ -27,13 +30,14 @@ import { useMediaQuery } from '@/lib/hooks'
 import { cn } from '@/lib/utils'
 import type { DEFAULT_CATEGORIES } from '@spliit/domain'
 import { type Category, type CategoryId } from '@spliit/domain'
-import { forwardRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 type Props = {
   categories: ReadonlyArray<Category>
   onValueChange: (categoryId: CategoryId) => void
-  /** Category ID to be selected by default. Overwriting this value will update current selection, too. */
+  /**
+   * Category ID to be selected by default. Overwriting this value will update
+   * current selection, too.
+   */
   defaultValue: CategoryId
   isLoading: boolean
   disabled?: boolean
@@ -93,9 +97,10 @@ export function CategorySelector({
               type="button"
               variant="outline"
               role="combobox"
+              aria-haspopup="listbox"
               aria-expanded={open}
               disabled={disabled}
-              className="h-9 px-3 text-sm justify-between font-normal"
+              className="h-9 justify-between px-3 text-sm font-normal"
             >
               <span className="truncate">
                 {selectedValues.length > 0
@@ -131,9 +136,10 @@ export function CategorySelector({
             type="button"
             variant="outline"
             role="combobox"
+            aria-haspopup="listbox"
             aria-expanded={open}
             disabled={disabled}
-            className="h-9 px-3 text-sm justify-between font-normal"
+            className="h-9 justify-between px-3 text-sm font-normal"
           >
             <span className="truncate">
               {selectedValues.length > 0
@@ -225,7 +231,7 @@ function CategoryCommand({
     <Command>
       <CommandInput placeholder={t('search')} className="text-base" />
       <CommandEmpty>{t('noCategory')}</CommandEmpty>
-      <div className="w-full max-h-[300px] overflow-y-auto">
+      <div className="max-h-[300px] w-full overflow-y-auto">
         {Object.entries(categoriesByGroup).map(([group, groupCategories]) => (
           <CommandGroup
             key={group}
@@ -323,12 +329,13 @@ const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>(
       <Button
         variant="outline"
         role="combobox"
+        aria-haspopup="listbox"
         aria-expanded={open}
         aria-busy={isLoading}
         aria-label={t(categoryLabelKey(category))}
         className={
           compact
-            ? `h-10 w-16 shrink-0 rounded-none border-0 px-3 gap-2 ${className ?? ''}`
+            ? `h-10 w-16 shrink-0 gap-2 rounded-none border-0 px-3 ${className ?? ''}`
             : `flex w-full ${className ?? ''}`
         }
         ref={ref}
@@ -344,7 +351,7 @@ const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>(
         {isLoading ? (
           <Sparkles
             aria-hidden="true"
-            className="h-4 w-4 shrink-0 text-primary motion-reduce:animate-none animate-sparkle-pulse"
+            className="h-4 w-4 shrink-0 animate-sparkle-pulse text-primary motion-reduce:animate-none"
           />
         ) : (
           <ChevronDown className={iconClassName} />
@@ -365,7 +372,7 @@ function CategoryLabel({
   const { t } = useTranslation(undefined, { keyPrefix: 'Categories' })
   return (
     <div className="flex items-center gap-3">
-      <CategoryIcon category={category} className="w-4 h-4" />
+      <CategoryIcon category={category} className="h-4 w-4" />
       {!compact && t(categoryLabelKey(category))}
     </div>
   )

@@ -1,3 +1,8 @@
+/* oxlint-disable jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- Trans injects the contributor link's accessible text at runtime. */
+import { Outlet, useLocation } from '@tanstack/react-router'
+import { Suspense } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
+
 import { AccountMenu } from '@/components/account-menu'
 import Image from '@/components/app-image'
 import { InstallPromotionDialog } from '@/components/install-promotion-dialog'
@@ -15,9 +20,7 @@ import { Toaster } from '@/components/ui/toaster'
 import { I18nProvider } from '@/i18n/react'
 import { isFocusedMobilePath } from '@/lib/mobile-nav'
 import { TRPCProvider } from '@/trpc/client'
-import { Outlet, useLocation } from '@tanstack/react-router'
-import { Suspense } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+
 import githubSvg from './components/auth/github.svg'
 
 function Content() {
@@ -28,9 +31,9 @@ function Content() {
   return (
     <TRPCProvider>
       <div className="app-shell flex min-h-screen flex-col">
-        <header className="fixed inset-x-0 top-0 z-50 hidden h-16 justify-between border-b bg-white/50 p-2 backdrop-blur-xs dark:bg-gray-950/50 sm:flex">
+        <header className="fixed inset-x-0 top-0 z-50 hidden h-16 justify-between border-b bg-white/50 p-2 backdrop-blur-xs sm:flex dark:bg-gray-950/50">
           <Link
-            className="flex items-center gap-2 hover:scale-105 transition-transform"
+            className="flex items-center gap-2 transition-transform hover:scale-105"
             href="/"
           >
             <div className="flex items-center gap-2" aria-label="Spliit">
@@ -44,7 +47,7 @@ function Content() {
             </div>
           </Link>
           <nav aria-label={t('Header.menu')} className="flex">
-            <ul className="flex items-center text-sm gap-1">
+            <ul className="flex items-center gap-1 text-sm">
               <li>
                 <LocaleSwitcher />
               </li>
@@ -66,7 +69,7 @@ function Content() {
             </div>
           </div>
         ) : (
-          <div className="fixed inset-x-0 top-0 z-50 flex h-(--app-header-height) items-center justify-between border-b bg-white/90 px-3 backdrop-blur dark:bg-gray-950/90 sm:hidden">
+          <div className="fixed inset-x-0 top-0 z-50 flex h-(--app-header-height) items-center justify-between border-b bg-white/90 px-3 backdrop-blur sm:hidden dark:bg-gray-950/90">
             <Link href="/" aria-label="Spliit" className="flex items-center">
               <Image
                 src="/logo-with-text.svg"
@@ -95,10 +98,10 @@ function Content() {
         </div>
 
         <footer
-          className={`${focusedMobileRoute ? 'hidden sm:flex' : 'flex'} sm:p-8 md:p-16 sm:mt-16 sm:text-sm md:text-base md:mt-32 bg-slate-50 dark:bg-card border-t p-6 mt-8 flex-col sm:flex-row sm:justify-between gap-4 text-xs [&_a]:underline`}
+          className={`${focusedMobileRoute ? 'hidden sm:flex' : 'flex'} mt-8 flex-col gap-4 border-t bg-slate-50 p-6 text-xs sm:mt-16 sm:flex-row sm:justify-between sm:p-8 sm:text-sm md:mt-32 md:p-16 md:text-base dark:bg-card [&_a]:underline`}
         >
           <div className="flex flex-col space-y-2">
-            <div className="sm:text-lg font-semibold text-base flex space-x-2 items-center">
+            <div className="flex items-center space-x-2 text-base font-semibold sm:text-lg">
               <Link className="flex items-center gap-2" href="/">
                 <Image
                   src="/logo-with-text.svg"
@@ -109,7 +112,7 @@ function Content() {
                 />
               </Link>
             </div>
-            <div className="flex flex-col space-y a--no-underline-text-white">
+            <div className="space-y a--no-underline-text-white flex flex-col">
               <span>{t('Footer.madeIn')}</span>
               <span>
                 <Trans
@@ -137,7 +140,7 @@ function Content() {
           </div>
           <Button asChild variant="secondary" size="sm">
             <Link href="https://github.com/antonio-ivanovski/spliit-cloud">
-              <img src={githubSvg} alt="" className="w-4 h-4 mr-2" />
+              <img src={githubSvg} alt="" className="mr-2 h-4 w-4" />
               GitHub
             </Link>
           </Button>

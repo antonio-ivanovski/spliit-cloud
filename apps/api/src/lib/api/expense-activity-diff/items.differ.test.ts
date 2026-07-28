@@ -1,5 +1,7 @@
-import type { Expense, ExpenseApiItem } from '@spliit/domain'
 import { describe, expect, it } from 'vitest'
+
+import type { Expense, ExpenseApiItem } from '@spliit/domain'
+
 import { itemsDiffer } from './items.differ'
 import type { ChangeContext } from './types'
 

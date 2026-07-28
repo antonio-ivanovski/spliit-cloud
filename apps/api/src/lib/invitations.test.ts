@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+
 import '../test/mocks'
 import {
   PLACEHOLDER_EMAIL_DOMAIN,
@@ -79,7 +80,7 @@ describe('generateLinkToken', () => {
   })
 
   it('produces a different value on every call', () => {
-    const a = new Set(new Array(64).fill(0).map(() => generateLinkToken()))
+    const a = new Set(Array.from({ length: 64 }, () => generateLinkToken()))
     expect(a.size).toBe(64)
   })
 })

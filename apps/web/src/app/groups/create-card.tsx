@@ -1,7 +1,8 @@
-import Link from '@/components/link'
-import { cn } from '@/lib/utils'
 import { Plus } from 'lucide-react'
 import type { ReactNode } from 'react'
+
+import Link from '@/components/link'
+import { cn } from '@/lib/utils'
 
 type SecondaryAction = {
   href: string
@@ -42,13 +43,13 @@ export function CreateCard({
     <li className="min-w-0">
       <div
         className={cn(
-          'relative w-full h-full min-h-[5.5rem] rounded-lg border border-primary/25 bg-linear-to-br from-primary/8 via-background to-background shadow-[0_1px_0_0_hsl(var(--primary)/0.08)] text-base overflow-hidden transition-colors hover:border-primary/35',
+          'relative h-full min-h-[5.5rem] w-full overflow-hidden rounded-lg border border-primary/25 bg-linear-to-br from-primary/8 via-background to-background text-base shadow-[0_1px_0_0_hsl(var(--primary)/0.08)] transition-colors hover:border-primary/35',
           className,
         )}
       >
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-10 -top-12 h-28 w-28 rounded-full bg-primary/10 blur-2xl"
+          className="pointer-events-none absolute -top-12 -right-10 h-28 w-28 rounded-full bg-primary/10 blur-2xl"
         />
         <div
           className={cn(
@@ -75,7 +76,7 @@ export function CreateCard({
             <Link
               href={secondaryAction.href}
               data-testid={secondaryAction['data-testid']}
-              className="flex min-w-0 flex-col items-center justify-center gap-1 border-l border-primary/15 px-2 py-2 text-center text-xs font-medium leading-tight text-primary no-underline outline-hidden transition-colors hover:bg-primary/8 focus-visible:bg-primary/8 focus-visible:underline"
+              className="flex min-w-0 flex-col items-center justify-center gap-1 border-l border-primary/15 px-2 py-2 text-center text-xs leading-tight font-medium text-primary no-underline outline-hidden transition-colors hover:bg-primary/8 focus-visible:bg-primary/8 focus-visible:underline"
             >
               <span aria-hidden className="text-primary">
                 {secondaryAction.icon}

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+
 import {
   CATEGORY_IDS,
   DEFAULT_CATEGORIES,

@@ -1,5 +1,7 @@
-import { groupFormSchema } from '@spliit/domain'
 import { z } from 'zod'
+
+import { groupFormSchema } from '@spliit/domain'
+
 import { createGroup } from '../../../lib/api'
 import { protectedProcedure } from '../../init'
 import { createGroupOutputSchema } from '../../outputs/groups'

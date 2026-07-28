@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { StatsDashboard } from '@/app/groups/[groupId]/stats/dashboard'
 import {
   Card,
@@ -6,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { useTranslation } from 'react-i18next'
 
 export function TotalsPageClient() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Stats' })

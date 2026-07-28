@@ -1,6 +1,7 @@
-import { render, screen, waitFor } from '@/test/test-utils'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { render, screen, waitFor } from '@/test/test-utils'
 
 const mocks = vi.hoisted(() => ({
   getPushSubscription: vi.fn(),

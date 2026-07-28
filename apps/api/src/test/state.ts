@@ -1,6 +1,8 @@
-import type { PrismaClient } from '@spliit/db'
 import { vi, type Mock } from 'vitest'
 import { mockDeep, mockReset, type DeepMockProxy } from 'vitest-mock-extended'
+
+import type { PrismaClient } from '@spliit/db'
+
 import type { EmailMessage } from '../lib/mail/send'
 
 export type PrismaMock = DeepMockProxy<PrismaClient>

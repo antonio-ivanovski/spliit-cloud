@@ -1,5 +1,6 @@
-import { categoryIdSchema } from '@spliit/domain'
 import { z } from 'zod'
+
+import { categoryIdSchema } from '@spliit/domain'
 
 const confidenceSchema = z.enum(['high', 'medium', 'low'])
 

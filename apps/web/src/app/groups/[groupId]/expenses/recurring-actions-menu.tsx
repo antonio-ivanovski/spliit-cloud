@@ -1,3 +1,7 @@
+import { MoreHorizontal, Pencil, Repeat2, Trash2 } from 'lucide-react'
+import { useState, type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { Button } from '@/components/ui/button'
 import {
   ResponsiveDialog,
@@ -10,13 +14,13 @@ import {
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
 import { cn } from '@/lib/utils'
-import { MoreHorizontal, Pencil, Repeat2, Trash2 } from 'lucide-react'
-import { useState, type ReactNode } from 'react'
-import { useTranslation } from 'react-i18next'
+
 import type { SeriesMutationScope } from './series-scope-dialog'
 
 export type RecurringDeleteOption =
-  'OCCURRENCE' | 'THIS_AND_FUTURE' | 'THIS_AND_FUTURE_STOP'
+  | 'OCCURRENCE'
+  | 'THIS_AND_FUTURE'
+  | 'THIS_AND_FUTURE_STOP'
 
 type Action =
   | { kind: 'edit'; scope: SeriesMutationScope }
@@ -123,7 +127,7 @@ export function RecurringActionsMenu({
             <section aria-labelledby="recurring-edit-actions">
               <h3
                 id="recurring-edit-actions"
-                className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+                className="mb-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase"
               >
                 {t('editActions')}
               </h3>
@@ -148,7 +152,7 @@ export function RecurringActionsMenu({
             <section aria-labelledby="recurring-delete-actions">
               <h3
                 id="recurring-delete-actions"
-                className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+                className="mb-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase"
               >
                 {t('deleteActions')}
               </h3>
@@ -258,7 +262,7 @@ function ActionButton({
       type="button"
       variant="outline"
       className={cn(
-        'h-auto min-h-12 items-start justify-start gap-3 whitespace-normal px-3 py-2.5 text-left',
+        'h-auto min-h-12 items-start justify-start gap-3 px-3 py-2.5 text-left whitespace-normal',
         destructive &&
           'border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive',
       )}

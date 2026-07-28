@@ -1,6 +1,7 @@
+import { describe, expect, it, vi } from 'vitest'
+
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { render, screen } from '@/test/test-utils'
-import { describe, expect, it, vi } from 'vitest'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 

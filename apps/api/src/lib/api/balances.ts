@@ -8,13 +8,12 @@ import {
   type Balances,
   type Reimbursement,
 } from '@spliit/domain'
+
 import { buildExpenseActivityData, logActivity } from './activities'
 import { getGroupExpenses } from './expenses'
 import { randomId } from './shared'
 
-/**
- * Compute the per-ledger-participant balance for every member of a group.
- */
+/** Compute the per-ledger-participant balance for every member of a group. */
 export async function getGroupBalances(groupId: string): Promise<Balances> {
   const rows = await getGroupExpenses(groupId)
   const expenses: BalanceExpense[] = rows.map((row) => ({
@@ -34,8 +33,8 @@ export async function getGroupBalances(groupId: string): Promise<Balances> {
 }
 
 /**
- * Returns `true` if any ledger participant in the balance map has a
- * non-zero total.
+ * Returns `true` if any ledger participant in the balance map has a non-zero
+ * total.
  */
 export function hasUnsettledBalances(balances: Balances): boolean {
   for (const id in balances) {
@@ -58,8 +57,8 @@ export type SettlementActivityMeta = {
 const SETTLEMENT_TITLE = 'Settlement on archive'
 
 /**
- * Build the optimal list of "settlement legs" (from, to, amount) that
- * zero out the group's balances.
+ * Build the optimal list of "settlement legs" (from, to, amount) that zero out
+ * the group's balances.
  */
 export function buildSettlementLegs(balances: Balances): Reimbursement[] {
   return getSuggestedReimbursements(balances)
@@ -155,8 +154,8 @@ export async function createSettlementExpensesForArchive(
 const SETTLEMENT_ON_LEAVE_TITLE = 'Settlement on leave'
 
 /**
- * Filter the optimal set of settlement legs down to the subset that
- * involves a specific ledger participant.
+ * Filter the optimal set of settlement legs down to the subset that involves a
+ * specific ledger participant.
  */
 export function getSettlementLegsForParticipant(
   balances: Balances,

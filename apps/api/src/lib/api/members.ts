@@ -1,4 +1,5 @@
 import { GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
+
 import { deleteS3Object } from '../../routes/upload'
 import {
   buildGroupActivityData,
@@ -15,9 +16,7 @@ import { getApiBoss } from './boss'
 import { memberWithLedgerParticipantSelect } from './selects/member-with-ledger-participant'
 import { randomId } from './shared'
 
-/**
- * Update a member's role inside a group.
- */
+/** Update a member's role inside a group. */
 export async function updateMemberRole(opts: {
   groupId: string
   memberId: string
@@ -224,7 +223,9 @@ export async function removeMember(opts: {
 export class LeaveGroupPreconditionError extends Error {
   constructor(
     public readonly reason:
-      'lastMemberMustDelete' | 'promotionRequired' | 'unsettledBalance',
+      | 'lastMemberMustDelete'
+      | 'promotionRequired'
+      | 'unsettledBalance',
     message: string,
   ) {
     super(message)
@@ -233,15 +234,15 @@ export class LeaveGroupPreconditionError extends Error {
 }
 
 /**
- * Permanently delete a group, its ledger, expenses, invitations, and
- * attached S3 documents. Used by the admin "Delete group" affordance
- * surfaced on the settings page. The caller must be an active member
- * of the group; the admin-only authorization is enforced by the
- * surrounding tRPC procedure so this helper stays reusable.
+ * Permanently delete a group, its ledger, expenses, invitations, and attached
+ * S3 documents. Used by the admin "Delete group" affordance surfaced on the
+ * settings page. The caller must be an active member of the group; the
+ * admin-only authorization is enforced by the surrounding tRPC procedure so
+ * this helper stays reusable.
  *
- * The S3 cleanup mirrors `deleteExpense`: enumerate every document on
- * the group's ledger and delete the remote object before the cascade
- * removes the row, so we never leave orphans behind.
+ * The S3 cleanup mirrors `deleteExpense`: enumerate every document on the
+ * group's ledger and delete the remote object before the cascade removes the
+ * row, so we never leave orphans behind.
  */
 export async function deleteGroup(opts: {
   groupId: string

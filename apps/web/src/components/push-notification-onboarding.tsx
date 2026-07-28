@@ -1,3 +1,7 @@
+import { BellRing, Mail, Smartphone } from 'lucide-react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { Button } from '@/components/ui/button'
 import {
   ResponsiveDialog,
@@ -16,9 +20,6 @@ import {
   NotificationChannel,
   RECOMMENDED_NOTIFICATION_CHANNELS,
 } from '@spliit/domain/notifications'
-import { BellRing, Mail, Smartphone } from 'lucide-react'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 export const PUSH_ONBOARDING_ACTIVE_KEY = 'spliit-push-onboarding-active'
 export const PUSH_ONBOARDING_COMPLETE_PREFIX =

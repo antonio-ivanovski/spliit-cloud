@@ -1,8 +1,10 @@
+import { useTranslation } from 'react-i18next'
+
 import {
   WizardNav as SharedWizardNav,
   WizardStepHeader,
 } from '@/components/wizard'
-import { useTranslation } from 'react-i18next'
+
 import {
   type CustomContinueLabelKey,
   type ImportStep,
@@ -24,22 +26,22 @@ export function StepHeader({ step }: { step: ImportStep }) {
 export type WizardNavProps = {
   step: ImportStep
   /**
-   * Back-button handler. Steps whose position has no previous step
-   * simply omit this prop and the Back button is hidden.
+   * Back-button handler. Steps whose position has no previous step simply omit
+   * this prop and the Back button is hidden.
    */
   onBack?: () => void
   /**
-   * Continue-button handler. If both `onContinue` and
-   * `continueAsFormId` are absent, the Continue button is hidden
-   * (used by the source step, which transitions via its own
-   * inputs, and the done step, which renders its own CTA).
+   * Continue-button handler. If both `onContinue` and `continueAsFormId` are
+   * absent, the Continue button is hidden (used by the source step, which
+   * transitions via its own inputs, and the done step, which renders its own
+   * CTA).
    */
   onContinue?: () => void
   /**
    * When set, the Continue button submits the given `<form>` via
-   * `form={continueAsFormId}` instead of firing `onContinue`. Used
-   * by the destination step whose forward action lives in the
-   * group-creation `<form>` it renders.
+   * `form={continueAsFormId}` instead of firing `onContinue`. Used by the
+   * destination step whose forward action lives in the group-creation `<form>`
+   * it renders.
    */
   continueAsFormId?: string
   continueDisabled?: boolean
@@ -47,9 +49,9 @@ export type WizardNavProps = {
 }
 
 /**
- * The bottom Back/Continue strip for one wizard step. Each step
- * renders this directly from its own derived state — no parent
- * registration, no shared effect, no cross-render coupling.
+ * The bottom Back/Continue strip for one wizard step. Each step renders this
+ * directly from its own derived state — no parent registration, no shared
+ * effect, no cross-render coupling.
  */
 export function WizardNav({
   step,

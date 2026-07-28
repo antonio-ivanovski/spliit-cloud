@@ -33,7 +33,7 @@ import type { RecurringExpenseTemplate as DomainRecurringExpenseTemplate } from 
 export {}
 
 declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
+  // oxlint-disable-next-line typescript/no-namespace
   namespace PrismaJson {
     type ActivityType = DomainActivityType
     type ActivityActorType = DomainActivityActorType

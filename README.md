@@ -309,7 +309,7 @@ Financial support links are TBD. See [Support the project](#support-the-project)
 
 - Unit tests live next to the code they cover and run with `bun run test`.
 - Critical flows (balances, splits, recurrence, currency conversion) are expected to have tests before they ship.
-- Type safety is enforced with `bun check-types`; CI should not be the first place a type error surfaces.
+- Formatting, linting, and TypeScript checks are enforced with `bun run check`; CI should not be the first place a static error surfaces.
 
 ## FAQ
 

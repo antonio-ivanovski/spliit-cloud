@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
 import type { CurrencyRate } from '../currency-rates'
 import { ConversionError, resolveConversion } from '../expense-conversion'
 

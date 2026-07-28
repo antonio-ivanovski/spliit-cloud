@@ -1,9 +1,10 @@
+import { describe, expect, it, vi } from 'vitest'
+
 import {
   SeriesControls,
   type ExpenseSeriesMetadata,
 } from '@/app/groups/[groupId]/expenses/series-controls'
 import { render, screen } from '@/test/test-utils'
-import { describe, expect, it, vi } from 'vitest'
 
 vi.mock('@/app/groups/[groupId]/use-link-invite-token', () => ({
   useLinkInviteToken: vi.fn(() => undefined),

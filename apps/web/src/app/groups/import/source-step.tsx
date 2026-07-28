@@ -1,3 +1,8 @@
+import { getRouteApi, useNavigate } from '@tanstack/react-router'
+import { AlertTriangle, Clock } from 'lucide-react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
@@ -5,10 +10,7 @@ import {
   guessGroupNameFromFilename,
   type NormalizedSource,
 } from '@spliit/domain/import'
-import { getRouteApi, useNavigate } from '@tanstack/react-router'
-import { AlertTriangle, Clock } from 'lucide-react'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+
 import { DomainSwapCard } from './domain-swap-card'
 import { FileUploadCard } from './file-upload-card'
 import { PasteUrlCard } from './paste-url-card'
@@ -21,11 +23,10 @@ type Props = {
   onLoaded: (source: NormalizedSource) => void
   onError: (message: string) => void
   /**
-   * Shared import-source state owned by the wizard so manual paste and
-   * the prefill URL flow write to one `submittedUrl`. The wizard's
-   * effect dispatches SOURCE_LOADED whenever the shared preview
-   * resolves to OK, so the server-fetch path doesn't need an
-   * onLoaded callback here.
+   * Shared import-source state owned by the wizard so manual paste and the
+   * prefill URL flow write to one `submittedUrl`. The wizard's effect
+   * dispatches SOURCE_LOADED whenever the shared preview resolves to OK, so the
+   * server-fetch path doesn't need an onLoaded callback here.
    */
   sourcePreview?: ImportSourceState['data']
   isSourcePreviewLoading?: boolean
@@ -33,9 +34,9 @@ type Props = {
   submitPreview: ImportSourceState['submit']
   resetPreview: ImportSourceState['reset']
   /**
-   * Error message from a wizard-level prefill that failed before the
-   * shared preview resolved to OK. Shown inline next to the URL input
-   * until the user starts interacting.
+   * Error message from a wizard-level prefill that failed before the shared
+   * preview resolved to OK. Shown inline next to the URL input until the user
+   * starts interacting.
    */
   initialError?: string | null
 }
@@ -116,7 +117,7 @@ export function SourceStep({
   const handleFileChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0]
-      if (file) handleFile(file)
+      if (file) void handleFile(file)
       e.target.value = ''
     },
     [handleFile],
@@ -141,7 +142,7 @@ export function SourceStep({
       e.preventDefault()
       setIsDragging(false)
       const file = e.dataTransfer.files?.[0]
-      if (file) handleFile(file)
+      if (file) void handleFile(file)
     },
     [cfg.fileImport, handleFile],
   )
@@ -198,7 +199,7 @@ export function SourceStep({
       >
         <TabsList
           ref={tabsListRef}
-          className="w-full sm:w-auto overflow-x-auto justify-start"
+          className="w-full justify-start overflow-x-auto sm:w-auto"
         >
           <TabsTrigger value="spliit">
             {t('Groups.Import.Source.fromSpliit')}
@@ -359,7 +360,7 @@ function ComingSoonCard({
 
 function OrDivider({ label }: { label: string }) {
   return (
-    <div className="flex items-center gap-3 text-xs uppercase tracking-wide text-muted-foreground">
+    <div className="flex items-center gap-3 text-xs tracking-wide text-muted-foreground uppercase">
       <div className="h-px flex-1 bg-border" />
       <span>{label}</span>
       <div className="h-px flex-1 bg-border" />

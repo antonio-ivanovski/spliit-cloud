@@ -1,6 +1,7 @@
-import { render, screen } from '@/test/test-utils'
 import { Cloud, Plus, Users } from 'lucide-react'
 import { describe, expect, it, vi } from 'vitest'
+
+import { render, screen } from '@/test/test-utils'
 
 vi.mock('@tanstack/react-router', () => ({
   Link: ({

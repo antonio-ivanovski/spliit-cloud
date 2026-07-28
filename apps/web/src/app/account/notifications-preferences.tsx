@@ -1,3 +1,8 @@
+/* oxlint-disable jsx-a11y/prefer-tag-over-role, jsx-a11y/role-has-required-aria-props -- popover trigger exposes combobox semantics; popup IDs are managed by the UI primitive. */
+import { Bell, Check, ChevronsUpDown, Smartphone } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import {
@@ -34,9 +39,7 @@ import {
   NOTIFICATION_CHANNELS,
   NotificationChannel,
 } from '@spliit/domain/notifications'
-import { Bell, Check, ChevronsUpDown, Smartphone } from 'lucide-react'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+
 import {
   NOTIFICATION_SECTIONS,
   type NotificationRow,
@@ -158,6 +161,7 @@ function ChannelSelector({
       type="button"
       variant="outline"
       role="combobox"
+      aria-haspopup="listbox"
       aria-expanded={open}
       disabled={disabled || saving}
       className="h-9 min-w-28 justify-between px-3 text-sm font-normal sm:min-w-32"
@@ -411,7 +415,7 @@ export function NotificationsPreferences() {
                       {pushWarning ? (
                         <p
                           className="mt-1 text-xs text-amber-700 dark:text-amber-400"
-                          role="status"
+                          aria-live="polite"
                         >
                           {t('pushMissingTarget')}
                         </p>
@@ -475,7 +479,7 @@ export function NotificationsPreferences() {
           {noPushTargetWarning ? (
             <Alert
               className="border-amber-500/50 bg-amber-50 py-3 text-amber-950 dark:bg-amber-950/20 dark:text-amber-100"
-              role="status"
+              aria-live="polite"
             >
               <AlertDescription className="text-sm">
                 {t('push.noDevices')}

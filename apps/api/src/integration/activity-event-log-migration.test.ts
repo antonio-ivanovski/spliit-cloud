@@ -1,3 +1,5 @@
+import { afterAll, describe, expect, it } from 'vitest'
+
 import { prisma } from '@spliit/db'
 import {
   activityActorTypeSchema,
@@ -5,29 +7,28 @@ import {
   activityTypeSchema,
   type ActivityData,
 } from '@spliit/domain/activities'
-import { afterAll, describe, expect, it } from 'vitest'
+
 import { randomId } from '../lib/api'
 import { checkDbConnection } from './setup'
 
 await checkDbConnection()
 
 /**
- * Confirms the activity table produced by the generic event-log
- * migration:
+ * Confirms the activity table produced by the generic event-log migration:
  *
- *   - every existing row has the new typed `type` value
- *     (EXPENSE_CREATED / EXPENSE_UPDATED / EXPENSE_DELETED / GROUP_UPDATED)
- *   - `actorType` / `actorId` are populated for every row that had a
- *     legacy actor reference
- *   - `subjectType` / `subjectId` are populated for expense rows
- *   - `data` is null or a JSON object (never a bare string)
- *   - the specialized `accountId`, `ledgerParticipantId`, and
- *     `expenseId` columns no longer exist
+ * - Every existing row has the new typed `type` value (EXPENSE_CREATED /
+ *   EXPENSE_UPDATED / EXPENSE_DELETED / GROUP_UPDATED)
+ * - `actorType` / `actorId` are populated for every row that had a legacy actor
+ *   reference
+ * - `subjectType` / `subjectId` are populated for expense rows
+ * - `data` is null or a JSON object (never a bare string)
+ * - The specialized `accountId`, `ledgerParticipantId`, and `expenseId` columns
+ *   no longer exist
  *
  * The migration is already applied to the test DB, so we test the
- * post-migration shape directly. The integration test also creates
- * a fresh row through Prisma and confirms the new columns accept the
- * typed `type` / `actorType` / `subjectType` / JSON `data` inputs.
+ * post-migration shape directly. The integration test also creates a fresh row
+ * through Prisma and confirms the new columns accept the typed `type` /
+ * `actorType` / `subjectType` / JSON `data` inputs.
  */
 describe('Generic activity event log migration', () => {
   const ledgerIds: string[] = []

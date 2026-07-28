@@ -1,3 +1,7 @@
+import { useNavigate } from '@tanstack/react-router'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import {
@@ -9,9 +13,7 @@ import {
 } from '@/components/ui/card'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { trpc } from '@/trpc/client'
-import { useNavigate } from '@tanstack/react-router'
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
+
 import { useIsPendingInvitee } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
 import { ExpenseForm } from './expense-form'
@@ -62,7 +64,11 @@ export function EditExpenseForm({
     (
       expense as typeof expense & {
         recurringSeriesStatus?:
-          'ACTIVE' | 'PAUSED' | 'COMPLETED' | 'CANCELLED' | null
+          | 'ACTIVE'
+          | 'PAUSED'
+          | 'COMPLETED'
+          | 'CANCELLED'
+          | null
       }
     )?.recurringSeriesStatus ??
     undefined
@@ -116,7 +122,7 @@ export function EditExpenseForm({
       {seriesId && selectedScope && (
         <div
           className="mb-4 rounded-md border bg-muted/50 px-4 py-2.5 text-sm text-muted-foreground"
-          role="status"
+          aria-live="polite"
         >
           {tExpenseForm(
             selectedScope === 'OCCURRENCE'
@@ -154,7 +160,7 @@ export function EditExpenseForm({
             return
           }
           await updateExpenseMutateAsync({ expenseId, groupId, expense })
-          navigate({
+          await navigate({
             to: '/groups/$groupId/expenses/$expenseId',
             params: { groupId: group.id, expenseId },
             replace: true,

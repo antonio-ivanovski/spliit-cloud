@@ -1,5 +1,7 @@
-import { prisma } from '@spliit/db'
 import { afterAll, describe, expect, it } from 'vitest'
+
+import { prisma } from '@spliit/db'
+
 import { randomId } from '../lib/api'
 import { checkDbConnection } from './setup'
 
@@ -8,14 +10,14 @@ await checkDbConnection()
 /**
  * Verifies the clean migrated shape produced by the multi-payer backfill.
  *
- * The backfill INSERT ... SELECT chooses shares per the domain invariant:
- * - Cross-currency expenses (originalCurrency set, non-empty): shares = originalAmount
- * - Same-currency expenses: shares = amount
- * - Zero-amount guard: GREATEST(..., 1)
+ * The backfill INSERT ... SELECT chooses shares per the domain invariant: -
+ * Cross-currency expenses (originalCurrency set, non-empty): shares =
+ * originalAmount - Same-currency expenses: shares = amount - Zero-amount guard:
+ * GREATEST(..., 1)
  *
- * Each test inserts a single-payer expense with backfilled data matching
- * the correct migration logic, then verifies the stored row satisfies the
- * expected invariant.
+ * Each test inserts a single-payer expense with backfilled data matching the
+ * correct migration logic, then verifies the stored row satisfies the expected
+ * invariant.
  */
 describe('Migrated shape — ExpensePaidBy backfill', () => {
   const ledgerIds: string[] = []

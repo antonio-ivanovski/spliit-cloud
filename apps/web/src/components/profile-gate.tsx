@@ -1,8 +1,9 @@
-import { needsDisplayName } from '@/lib/account'
-import { useCurrentAccount } from '@/lib/use-current-account'
 import { Navigate, useRouterState } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
 import type { PropsWithChildren } from 'react'
+
+import { needsDisplayName } from '@/lib/account'
+import { useCurrentAccount } from '@/lib/use-current-account'
 
 const ungatedPaths = new Set([
   '/auth/complete-profile',
@@ -13,13 +14,13 @@ const ungatedPaths = new Set([
 ])
 
 /**
- * Global guard that ensures authenticated users with missing display names
- * are redirected to the complete-profile page on every route.
+ * Global guard that ensures authenticated users with missing display names are
+ * redirected to the complete-profile page on every route.
  *
- * Unlike `RequireAuth`, which only wraps specific protected routes, this
- * gate runs at the root shell level and catches ALL routes — including the
- * public homepage (`/`). The complete-profile and legal-information routes
- * are excluded so people can always read them.
+ * Unlike `RequireAuth`, which only wraps specific protected routes, this gate
+ * runs at the root shell level and catches ALL routes — including the public
+ * homepage (`/`). The complete-profile and legal-information routes are
+ * excluded so people can always read them.
  *
  * Signed-out visitors pass through unchanged.
  */
@@ -30,8 +31,8 @@ export function ProfileGate({ children }: PropsWithChildren) {
 
   if (isPending) {
     return (
-      <div className="flex-1 flex items-center justify-center py-10">
-        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+      <div className="flex flex-1 items-center justify-center py-10">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
       </div>
     )
   }

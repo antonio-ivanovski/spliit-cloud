@@ -1,8 +1,9 @@
-import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form'
-import { render, screen } from '@/test/test-utils'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { describe, expect, it } from 'vitest'
+
+import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form'
+import { render, screen } from '@/test/test-utils'
 
 function TestForm({ message }: { message: string }) {
   const form = useForm({ defaultValues: { test: '' } })

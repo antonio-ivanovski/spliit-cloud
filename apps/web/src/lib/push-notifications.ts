@@ -67,7 +67,10 @@ export function serializePushSubscription(
   }
 }
 
-/** Disconnect the browser subscription during logout; server cleanup is best effort. */
+/**
+ * Disconnect the browser subscription during logout; server cleanup is best
+ * effort.
+ */
 export async function disconnectPushSubscription(): Promise<boolean> {
   try {
     const subscription = await getPushSubscription()

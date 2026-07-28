@@ -1,7 +1,7 @@
-import { render, screen } from '@/test/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 
 import { ScopePickerDialog } from '@/app/groups/scope-picker-dialog'
+import { render, screen } from '@/test/test-utils'
 
 describe('ScopePickerDialog', () => {
   it('renders the title and description when open', () => {

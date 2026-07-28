@@ -10,13 +10,13 @@ export const aiBulkCategorizeRouter = createTRPCRouter({
    */
   listCandidates: aiBulkCategorizeListCandidatesProcedure,
   /**
-   * Fetch the next batch of AI category suggestions, optionally conditioned
-   * on prior selections.
+   * Fetch the next batch of AI category suggestions, optionally conditioned on
+   * prior selections.
    */
   calibrate: aiBulkCategorizeCalibrateProcedure,
   /**
-   * Compute AI category suggestions for all eligible expenses without
-   * applying them.
+   * Compute AI category suggestions for all eligible expenses without applying
+   * them.
    */
   preview: aiBulkCategorizePreviewProcedure,
 })

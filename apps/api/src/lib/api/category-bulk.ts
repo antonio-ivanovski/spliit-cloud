@@ -8,24 +8,31 @@ import {
   type ExpenseCategoriesBulkUpdatedRow,
 } from '@spliit/domain'
 import type { BulkUpdateExpenseCategoriesInput } from '@spliit/domain/schemas'
+
 import { logActivity, planNotificationForActivity } from './activities'
 import { getApiBoss } from './boss'
 import { groupLedgerIdArchivedSelect } from './selects/group-ledger-id-archived'
 
 /**
- * Re-export the hard limit for backwards-compatible call sites that
- * imported it from `apps/api/src/lib/api/category-bulk`.
+ * Re-export the hard limit for backwards-compatible call sites that imported it
+ * from `apps/api/src/lib/api/category-bulk`.
  */
 export { BULK_APPLY_HARD_LIMIT }
 
 export type BulkCategorizeApplyResult = {
   /** Number of expenses whose category was actually changed. */
   applied: number
-  /** Number of expenses whose stored category already matched the request (skipped). */
+  /**
+   * Number of expenses whose stored category already matched the request
+   * (skipped).
+   */
   skipped: number
   /** Number of distinct destination categories applied. */
   distinctCategories: number
-  /** Per-row before/after for the activity row. Capped at 2000 by the input schema. */
+  /**
+   * Per-row before/after for the activity row. Capped at 2000 by the input
+   * schema.
+   */
   rows: ExpenseCategoriesBulkUpdatedRow[]
 }
 
@@ -33,20 +40,19 @@ export type BulkCategorizeApplyResult = {
  * Bulk-apply category edits across many expenses in one transaction.
  *
  * Validations:
- *  - every `change.expenseId` must belong to the target group
- *  - the row must currently sit on `fromCategoryId` (default
- *    "general") AND not be a reimbursement row
- *  - everything else (the destination `categoryId`) is enforced by
- *    Zod upstream
  *
- * After the update we log a single
- * `EXPENSE_CATEGORIES_BULK_UPDATED` activity row carrying the
- * per-expense before/after so the activity feed / drawer can render
- * the affected rows without an extra round-trip.
+ * - Every `change.expenseId` must belong to the target group
+ * - The row must currently sit on `fromCategoryId` (default "general") AND not be
+ *   a reimbursement row
+ * - Everything else (the destination `categoryId`) is enforced by Zod upstream
  *
- * This helper is intentionally narrow: it only mutates `categoryId`.
- * Amounts, splits, dates, recurrence, etc. stay untouched; callers
- * that need to touch those should still go through `updateExpense`.
+ * After the update we log a single `EXPENSE_CATEGORIES_BULK_UPDATED` activity
+ * row carrying the per-expense before/after so the activity feed / drawer can
+ * render the affected rows without an extra round-trip.
+ *
+ * This helper is intentionally narrow: it only mutates `categoryId`. Amounts,
+ * splits, dates, recurrence, etc. stay untouched; callers that need to touch
+ * those should still go through `updateExpense`.
  */
 export async function bulkUpdateExpenseCategories(args: {
   groupId: string
@@ -196,11 +202,10 @@ export async function bulkUpdateExpenseCategories(args: {
 }
 
 /**
- * Read-side helper used by the AI preview / calibrate endpoints.
- * Returns the expenses eligible for bulk categorization: non-
- * reimbursements whose `categoryId` matches `fromCategoryId` and
- * whose `ledgerId` is the group's. Read-only — no side effects,
- * so safe to call many times during calibration.
+ * Read-side helper used by the AI preview / calibrate endpoints. Returns the
+ * expenses eligible for bulk categorization: non- reimbursements whose
+ * `categoryId` matches `fromCategoryId` and whose `ledgerId` is the group's.
+ * Read-only — no side effects, so safe to call many times during calibration.
  */
 export async function listBulkCategorizeCandidates(args: {
   groupId: string
@@ -241,8 +246,8 @@ export async function listBulkCategorizeCandidates(args: {
 }
 
 /**
- * Type-only narrow used by callers that want a {@link DbExpense}-
- * shaped row but only have the lite projection above.
+ * Type-only narrow used by callers that want a {@link DbExpense}- shaped row but
+ * only have the lite projection above.
  */
 export type BulkCategorizeCandidateRow = Awaited<
   ReturnType<typeof listBulkCategorizeCandidates>

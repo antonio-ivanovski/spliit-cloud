@@ -1,10 +1,10 @@
 /**
  * Lightweight server-side error logging helpers.
  *
- * We deliberately keep this dependency-free: the existing codebase uses
- * bare `console.*` calls with a `[domain]` prefix. Centralising the
- * formatting here keeps the prefixes consistent and gives us a single
- * place to evolve later (structured logs, sinks, redaction, ...).
+ * We deliberately keep this dependency-free: the existing codebase uses bare
+ * `console.*` calls with a `[domain]` prefix. Centralising the formatting here
+ * keeps the prefixes consistent and gives us a single place to evolve later
+ * (structured logs, sinks, redaction, ...).
  */
 
 /** Format an unknown thrown value as a safe, single-line message. */

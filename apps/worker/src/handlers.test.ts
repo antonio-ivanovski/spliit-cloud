@@ -11,6 +11,7 @@ vi.mock('@spliit/api/lib/api/recurrence-series', () => ({
 }))
 
 import { JOB_NAMES } from '@spliit/jobs'
+
 import { handlers } from './handlers'
 
 describe('recurring materialization worker handler', () => {

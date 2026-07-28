@@ -8,12 +8,14 @@
     "./dmmf": "./src/dmmf.ts"
   },
   "scripts": {
-    "build": "tsc",
-    "lint": "eslint .",
+    "check-formatting": "oxfmt --check .",
     "check-types": "tsc --noEmit",
-    "prisma-migrate": "prisma migrate deploy --schema prisma/schema.prisma",
+    "format": "oxfmt .",
+    "lint": "oxlint -c ../../.oxlintrc.json --format=unix --report-unused-disable-directives .",
+    "lint:fix": "oxlint -c ../../.oxlintrc.json --format=unix --report-unused-disable-directives --fix .",
     "prisma-create-migration": "prisma migrate dev",
     "prisma-generate": "prisma generate --schema prisma/schema.prisma",
+    "prisma-migrate": "prisma migrate deploy --schema prisma/schema.prisma",
     "test": "vitest run --globals src"
   },
   "dependencies": {
@@ -28,9 +30,9 @@
     "@spliit/config": "workspace:*",
     "@types/node": "24.13.2",
     "@types/pg": "^8.20.0",
-    "prisma-json-types-generator": "^5.1.0",
+    "prisma-json-types-generator": "^5.1.1",
     "prisma-mock": "^1.1.0",
-    "typescript": "6.0.3",
+    "typescript": "7.0.2",
     "vitest": "5.0.0-beta.5"
   }
 }

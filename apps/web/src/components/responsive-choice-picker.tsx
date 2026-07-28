@@ -1,3 +1,4 @@
+/* oxlint-disable jsx-a11y/prefer-tag-over-role, jsx-a11y/role-has-required-aria-props -- custom roving-focus listbox uses ARIA semantics. */
 import { Check, ChevronsUpDown } from 'lucide-react'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 
@@ -66,6 +67,7 @@ export function ResponsiveChoicePicker<T extends string>({
   const displayValue = selected?.label ?? placeholder
 
   useEffect(() => {
+    // oxlint-disable-next-line react/react-compiler -- active option must follow the controlled value for keyboard navigation.
     setActiveIndex(selectedIndex)
   }, [selectedIndex])
 

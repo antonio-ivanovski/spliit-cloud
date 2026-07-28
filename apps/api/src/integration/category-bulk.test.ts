@@ -1,6 +1,8 @@
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+
 import { prisma } from '@spliit/db'
 import { DEFAULT_CATEGORY_ID } from '@spliit/domain'
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+
 import {
   bulkUpdateExpenseCategories,
   listBulkCategorizeCandidates,

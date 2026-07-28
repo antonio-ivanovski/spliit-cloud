@@ -1,5 +1,6 @@
-import { Button } from '@/components/ui/button'
 import { type ReactNode } from 'react'
+
+import { Button } from '@/components/ui/button'
 
 export function WizardStepHeader(props: {
   eyebrow: string
@@ -8,10 +9,10 @@ export function WizardStepHeader(props: {
 }) {
   return (
     <div className="flex flex-col gap-1">
-      <p className="text-sm uppercase tracking-wide text-muted-foreground">
+      <p className="text-sm tracking-wide text-muted-foreground uppercase">
         {props.eyebrow}
       </p>
-      <h1 className="text-2xl font-semibold leading-none">{props.title}</h1>
+      <h1 className="text-2xl leading-none font-semibold">{props.title}</h1>
       {props.description && (
         <p className="text-sm text-muted-foreground">{props.description}</p>
       )}

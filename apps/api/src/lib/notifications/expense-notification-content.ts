@@ -1,8 +1,7 @@
 /**
- * Shared notification content builders consumed by email and push
- * expense dispatchers. Keeps recurrence description formatting and
- * body/subject construction in one place so the two channel renderers
- * never diverge.
+ * Shared notification content builders consumed by email and push expense
+ * dispatchers. Keeps recurrence description formatting and body/subject
+ * construction in one place so the two channel renderers never diverge.
  */
 import type {
   RecurrenceActivityMetadata,

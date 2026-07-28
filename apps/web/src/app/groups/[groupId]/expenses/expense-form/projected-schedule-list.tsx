@@ -28,9 +28,9 @@ export type ProjectedScheduleListProps = {
 }
 
 /**
- * A bounded-DOM vertical timeline schedule viewer. Rows are resolved by
- * index, so opening a very long or indefinite recurrence never allocates
- * the entire series.
+ * A bounded-DOM vertical timeline schedule viewer. Rows are resolved by index,
+ * so opening a very long or indefinite recurrence never allocates the entire
+ * series.
  */
 export function ProjectedScheduleList({
   schedule,

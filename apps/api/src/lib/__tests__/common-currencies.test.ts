@@ -2,6 +2,7 @@
 // loads better-auth or @spliit/db so vi.mock is registered before those
 // modules are evaluated.
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import '../../test/mocks'
 import { prismaMock } from '../../test/state'
 import { getGroupCommonCurrencies } from '../api'

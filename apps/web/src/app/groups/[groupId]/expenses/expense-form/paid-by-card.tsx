@@ -1,3 +1,9 @@
+import type { SetStateAction } from 'react'
+import { useCallback, useEffect, type Dispatch } from 'react'
+import type { UseFormReturn } from 'react-hook-form'
+import { useWatch } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+
 import { ParticipantDistributionFooter } from '@/components/participant-distribution-footer'
 import { ParticipantSelector } from '@/components/participant-selector'
 import { Button } from '@/components/ui/button'
@@ -13,11 +19,7 @@ import { amountAsMinorUnits } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
 import { type SplitMode } from '@spliit/domain'
-import type { SetStateAction } from 'react'
-import { useCallback, useEffect, type Dispatch } from 'react'
-import type { UseFormReturn } from 'react-hook-form'
-import { useWatch } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
+
 import { PaidByRow } from './paid-by-row'
 import {
   buildEqualParticipantRows,

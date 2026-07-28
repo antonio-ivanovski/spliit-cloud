@@ -1,3 +1,6 @@
+import { generateText } from 'ai'
+import * as z from 'zod'
+
 import {
   BULK_APPLY_HARD_LIMIT,
   BULK_CALIBRATION_CANDIDATE_POOL_SIZE,
@@ -12,8 +15,7 @@ import {
   formatCategoryForAIPrompt,
   type CategoryId,
 } from '@spliit/domain'
-import { generateText } from 'ai'
-import * as z from 'zod'
+
 import { getModel } from '../ai'
 import { extractAllowedIdFromAIResponse } from '../ai-response'
 import type { GroupContext, RecentExpense } from './context'
@@ -24,14 +26,13 @@ import {
 } from './prompt'
 
 /**
- * Soft cap on the number of characters of every title that reaches
- * the AI. Re-exported from `@spliit/domain` so the web layer imports
- * the exact same constant without duplication.
+ * Soft cap on the number of characters of every title that reaches the AI.
+ * Re-exported from `@spliit/domain` so the web layer imports the exact same
+ * constant without duplication.
  *
- * Re-exports kept for backwards compatibility with existing
- * server-only call sites that imported these names from
- * `apps/api/src/lib/ai/categorize`. Prefer importing the constants
- * directly from `@spliit/domain`.
+ * Re-exports kept for backwards compatibility with existing server-only call
+ * sites that imported these names from `apps/api/src/lib/ai/categorize`. Prefer
+ * importing the constants directly from `@spliit/domain`.
  */
 export {
   BULK_APPLY_HARD_LIMIT,
@@ -50,15 +51,13 @@ export type CategorizationContext = {
 }
 
 /**
- * Compose the system prompt preamble shared by every categorization
- * endpoint (single title + bulk calibrate/preview). Encapsulates:
- *   - the category allowlist
- *   - the fallback rule
- *   - the optional group, locale, and past-examples sections
- *   - the final "boundaries" sentence
+ * Compose the system prompt preamble shared by every categorization endpoint
+ * (single title + bulk calibrate/preview). Encapsulates: - the category
+ * allowlist - the fallback rule - the optional group, locale, and past-examples
+ * sections - the final "boundaries" sentence
  *
- * Sections return empty strings when their input is missing, so a
- * caller does not need to branch.
+ * Sections return empty strings when their input is missing, so a caller does
+ * not need to branch.
  */
 export function buildCategorizationSystemPrompt(
   ctx: CategorizationContext,
@@ -69,9 +68,7 @@ export function buildCategorizationSystemPrompt(
 
   return `
 Task: Classify expense titles using the most relevant category ID from the list below.
-Categories: ${DEFAULT_CATEGORIES.map((category) =>
-    formatCategoryForAIPrompt(category),
-  )}
+        Categories: ${DEFAULT_CATEGORIES.map((category) => formatCategoryForAIPrompt(category)).join(', ')}
 Fallback: If no category fits, default to ${formatCategoryForAIPrompt(
     DEFAULT_CATEGORIES[0]!,
   )}.
@@ -83,13 +80,14 @@ Boundaries: Do not respond anything else than what has been defined above. Do no
 }
 
 /**
- * Resolve an AI-returned category id to a {@link CategoryId}. The
- * parser tolerates:
- *   - bare ids on any line
- *   - ids prefixed with a quote or escaped
+ * Resolve an AI-returned category id to a {@link CategoryId}. The parser
+ * tolerates:
  *
- * Returns `DEFAULT_CATEGORY_ID` when the model produces anything that
- * isn't in the in-code allowlist.
+ * - Bare ids on any line
+ * - Ids prefixed with a quote or escaped
+ *
+ * Returns `DEFAULT_CATEGORY_ID` when the model produces anything that isn't in
+ * the in-code allowlist.
  */
 export function parseCategoryId(
   aiContent: string | null | undefined,
@@ -101,9 +99,8 @@ export function parseCategoryId(
 }
 
 /**
- * JSON Schema for the single-title flow's response. Restricts the
- * model to a plain string — the parser above validates it against the
- * allowlist.
+ * JSON Schema for the single-title flow's response. Restricts the model to a
+ * plain string — the parser above validates it against the allowlist.
  */
 const confidenceSchema = z.preprocess(
   (value) => (typeof value === 'string' ? value.trim().toLowerCase() : value),
@@ -114,14 +111,14 @@ export const BULK_CATEGORIZATION_TIMEOUT_MS = 245_000
 export const BULK_CATEGORIZATION_MAX_RETRIES = 0
 
 /**
- * JSON Schema for a calibration round. The AI returns 0–20
- * representative ids from the supplied pool together with its
- * guessed category id per row. `needsFeedback` says whether the AI
- * wants another round; when false, `selections` should be empty.
+ * JSON Schema for a calibration round. The AI returns 0–20 representative ids
+ * from the supplied pool together with its guessed category id per row.
+ * `needsFeedback` says whether the AI wants another round; when false,
+ * `selections` should be empty.
  *
- * We deliberately keep `needsFeedback` separate from the sample size
- * so the schema cannot be used to both protest "no more feedback
- * needed" and ship 20 selections at the same time.
+ * We deliberately keep `needsFeedback` separate from the sample size so the
+ * schema cannot be used to both protest "no more feedback needed" and ship 20
+ * selections at the same time.
  */
 export const calibrationResponseSchema = z.object({
   needsFeedback: z.boolean(),
@@ -139,8 +136,8 @@ export const calibrationResponseSchema = z.object({
 export type CalibrationResponse = z.infer<typeof calibrationResponseSchema>
 
 /**
- * JSON Schema (zod -> JSON Schema) for a calibration response. Used
- * for validating structured replies from the model.
+ * JSON Schema (zod -> JSON Schema) for a calibration response. Used for
+ * validating structured replies from the model.
  */
 export const calibrationJsonSchema = {
   type: 'object',
@@ -170,8 +167,8 @@ export const calibrationJsonSchema = {
 
 /**
  * JSON Schema for the bulk preview response. Same shape as
- * `calibrationJsonSchema` but with a per-row confidence field that
- * drives the preview's grouping.
+ * `calibrationJsonSchema` but with a per-row confidence field that drives the
+ * preview's grouping.
  */
 export const bulkPreviewJsonSchema = {
   type: 'object',
@@ -211,9 +208,9 @@ export const bulkPreviewResponseSchema = z.object({
 export type BulkPreviewResponse = z.infer<typeof bulkPreviewResponseSchema>
 
 /**
- * Shared AI call for bulk calibration and preview. Keeps the request
- * bounded with an explicit timeout and no SDK retries so a slow
- * provider cannot hang the tRPC handler.
+ * Shared AI call for bulk calibration and preview. Keeps the request bounded
+ * with an explicit timeout and no SDK retries so a slow provider cannot hang
+ * the tRPC handler.
  */
 export async function callBulkCategorizationModel(args: {
   operation: 'bulk-calibration' | 'bulk-preview'

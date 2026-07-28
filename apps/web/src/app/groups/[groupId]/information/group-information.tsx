@@ -1,3 +1,6 @@
+import { Pencil } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import {
@@ -8,8 +11,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Pencil } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
 
 export default function GroupInformation({ groupId }: { groupId: string }) {
@@ -28,7 +30,7 @@ export default function GroupInformation({ groupId }: { groupId: string }) {
             {!isPendingInvitee && (
               <Button size="icon" asChild className="-mb-12">
                 <Link href={`/groups/${groupId}/edit`}>
-                  <Pencil className="w-4 h-4" />
+                  <Pencil className="h-4 w-4" />
                 </Link>
               </Button>
             )}
@@ -37,16 +39,16 @@ export default function GroupInformation({ groupId }: { groupId: string }) {
             {t('description')}
           </CardDescription>
         </CardHeader>
-        <CardContent className="prose prose-sm sm:prose-base max-w-full whitespace-break-spaces">
+        <CardContent className="prose prose-sm max-w-full whitespace-break-spaces sm:prose-base">
           {isLoading ? (
-            <div className="py-1 flex flex-col gap-2">
+            <div className="flex flex-col gap-2 py-1">
               <Skeleton className="h-3 w-3/4" />
               <Skeleton className="h-3 w-1/2" />
             </div>
           ) : group.information ? (
             <p className="text-foreground">{group.information}</p>
           ) : (
-            <p className="text-muted-foreground text-sm">{t('empty')}</p>
+            <p className="text-sm text-muted-foreground">{t('empty')}</p>
           )}
         </CardContent>
       </Card>

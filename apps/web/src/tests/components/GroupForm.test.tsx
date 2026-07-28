@@ -1,7 +1,8 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { GroupForm, type Props } from '@/components/group-form'
 import { getCurrency, useCurrencies } from '@/lib/currency'
 import { render, screen } from '@/test/test-utils'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('@/lib/hooks', () => ({
   useMediaQuery: vi.fn(() => true),

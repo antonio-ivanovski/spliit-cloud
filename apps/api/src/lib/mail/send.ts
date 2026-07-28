@@ -1,4 +1,5 @@
 import nodemailer, { type Transporter } from 'nodemailer'
+
 import { env } from '../env'
 import { PROVIDER_TIMEOUT_MS } from '../notifications/delivery-senders'
 

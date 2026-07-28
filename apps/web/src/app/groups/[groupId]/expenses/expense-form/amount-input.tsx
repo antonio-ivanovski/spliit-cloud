@@ -1,7 +1,8 @@
+import type { ComponentProps } from 'react'
+
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import type { Currency } from '@spliit/domain'
-import type { ComponentProps } from 'react'
 
 export function AmountInput({
   currency,

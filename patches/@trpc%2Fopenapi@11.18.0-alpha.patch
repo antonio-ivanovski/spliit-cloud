@@ -1,0 +1,52 @@
+diff --git a/dist/index.cjs b/dist/index.cjs
+index da5f2e112c1af395d398b9c6e2325f42a018f6c0..2a8776edd64fa79267ba03737a2258b1c7cd84a6 100644
+--- a/dist/index.cjs
++++ b/dist/index.cjs
+@@ -1,7 +1,7 @@
+ const require_objectSpread2$1 = require('./objectSpread2-Cw30I7tb.cjs');
+ const node_fs = require_objectSpread2$1.__toESM(require("node:fs"));
+ const node_path = require_objectSpread2$1.__toESM(require("node:path"));
+-const typescript = require_objectSpread2$1.__toESM(require("typescript"));
++const typescript = require_objectSpread2$1.__toESM(require("typescript-compiler-api"));
+ const node_url = require_objectSpread2$1.__toESM(require("node:url"));
+ 
+ //#region src/schemaExtraction.ts
+diff --git a/dist/index.mjs b/dist/index.mjs
+index 119378c5ebde5f4b89795546995da68da6124633..b92264eb9757132689bd2ad37ab96a2baecbaa8a 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -2,7 +2,7 @@ import { __toESM } from "./chunk-CJ2cON1m.mjs";
+ import { require_objectSpread2 } from "./objectSpread2-Blgb1OZh.mjs";
+ import * as fs from "node:fs";
+ import * as path from "node:path";
+-import * as ts from "typescript";
++import * as ts from "typescript-compiler-api";
+ import { pathToFileURL } from "node:url";
+ 
+ //#region src/schemaExtraction.ts
+diff --git a/package.json b/package.json
+index 99f97006834a2b25d962d23e8e9e563021174ab7..1b38b0eee249872db346a9f376b8c520c6b34c2b 100644
+--- a/package.json
++++ b/package.json
+@@ -74,7 +74,8 @@
+     "access": "public"
+   },
+   "dependencies": {
+-    "openapi-types": "^12.1.3"
++    "openapi-types": "^12.1.3",
++    "typescript-compiler-api": "npm:typescript@6.0.3"
+   },
+   "devDependencies": {
+     "@hey-api/openapi-ts": "^0.94.5",
+diff --git a/src/generate.ts b/src/generate.ts
+index 123672decbbd4a6f8748da207b54e1b440e9a113..57896dc32b16ad7c5f283a932b2d57c375a0c36d 100644
+--- a/src/generate.ts
++++ b/src/generate.ts
+@@ -1,6 +1,6 @@
+ import * as fs from 'node:fs';
+ import * as path from 'node:path';
+-import * as ts from 'typescript';
++import * as ts from 'typescript-compiler-api';
+ import {
+   applyDescriptions,
+   collectRuntimeDescriptions,

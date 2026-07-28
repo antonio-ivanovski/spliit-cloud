@@ -1,10 +1,11 @@
+import { describe, expect, it, vi } from 'vitest'
+
 import {
   useCurrentGroup,
   useIsPendingInvitee,
 } from '@/app/groups/[groupId]/current-group-context'
 import { ReimbursementList } from '@/app/groups/[groupId]/reimbursement-list'
 import { render, screen, waitFor, within } from '@/test/test-utils'
-import { describe, expect, it, vi } from 'vitest'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 

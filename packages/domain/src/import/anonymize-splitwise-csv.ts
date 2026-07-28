@@ -1,4 +1,5 @@
 import Papa from 'papaparse'
+
 import { isSplitwiseHeader } from './splitwise-headers'
 
 const PARTICIPANT_START_INDEX = 5
@@ -12,16 +13,15 @@ export type AnonymizedSplitwiseCsv = {
 }
 
 /**
- * Produces an anonymized copy of a Splitwise CSV export, suitable for
- * attaching to a public bug report. The mapping is intentionally simple:
- * each participant header gets a stable `Person N` label, and each
- * distinct description (case-insensitive) becomes `Expense N`. All
- * numeric data — dates, costs, currencies, per-participant amounts,
- * categories — is left untouched because it is what makes the file
- * useful for diagnosing an import issue.
+ * Produces an anonymized copy of a Splitwise CSV export, suitable for attaching
+ * to a public bug report. The mapping is intentionally simple: each participant
+ * header gets a stable `Person N` label, and each distinct description
+ * (case-insensitive) becomes `Expense N`. All numeric data — dates, costs,
+ * currencies, per-participant amounts, categories — is left untouched because
+ * it is what makes the file useful for diagnosing an import issue.
  *
- * Throws if the input does not look like a Splitwise export (same
- * header shape that `tryParseSplitwiseCsv` requires).
+ * Throws if the input does not look like a Splitwise export (same header shape
+ * that `tryParseSplitwiseCsv` requires).
  */
 export function anonymizeSplitwiseCsv(input: string): AnonymizedSplitwiseCsv {
   const cleaned = input.charCodeAt(0) === 0xfeff ? input.slice(1) : input

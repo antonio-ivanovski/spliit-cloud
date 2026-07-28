@@ -9,6 +9,7 @@ import {
 } from '@spliit/domain/activities'
 import { getNotificationCategoryForActivity } from '@spliit/domain/notifications'
 import type { SpliitBoss } from '@spliit/jobs'
+
 import { resolveParticipantDisplayName } from '../invitations/display'
 import { planActivityNotificationDeliveries } from '../notifications/delivery-planner'
 import {
@@ -16,7 +17,6 @@ import {
   scheduleDefaultNotificationDispatch,
 } from '../notifications/dispatcher'
 import type { ActivityNotificationEvent } from '../notifications/types'
-
 import { participantDisplayNameSelect } from './selects/participant-display-name'
 import { randomId } from './shared'
 export {
@@ -117,10 +117,10 @@ export async function planNotificationForActivity(
 }
 
 /**
- * Persist a typed activity row against the given group's ledger. The
- * helper resolves the `ledgerId` internally so call sites only need to
- * pass the `groupId`. Returns the created row so callers can pass the
- * `id` to post-commit notification dispatch.
+ * Persist a typed activity row against the given group's ledger. The helper
+ * resolves the `ledgerId` internally so call sites only need to pass the
+ * `groupId`. Returns the created row so callers can pass the `id` to
+ * post-commit notification dispatch.
  */
 export async function logActivity(
   groupId: string,
@@ -168,16 +168,18 @@ export type ActivityListItem = Activity & {
  * Read recent activities for a group's ledger.
  *
  * - Activities are ordered desc by time, offset/length as before.
- * - Expense metadata is fetched on demand for rows whose subject is an
- *   `EXPENSE` (the same-group lookup still works because we scope by
- *   the group's `ledgerId`).
+ * - Expense metadata is fetched on demand for rows whose subject is an `EXPENSE`
+ *   (the same-group lookup still works because we scope by the group's
+ *   `ledgerId`).
  * - Actor display falls back through:
- *     1. ACCOUNT: `Account.name`
- *     2. LEDGER_PARTICIPANT: `GroupMember → Account` → `temporaryName` → `email`
- *     3. `data.expense.title` / `data.member.displayName` / `data.invitation.displayLabel`
- * - `data` is parsed through {@link parseActivityData} so the web layer
- *   can render directly from a known shape; legacy/null rows return
- *   `null` rather than throw.
+ *
+ *   1. ACCOUNT: `Account.name`
+ *   2. LEDGER_PARTICIPANT: `GroupMember → Account` → `temporaryName` → `email`
+ *   3. `data.expense.title` / `data.member.displayName` /
+ *      `data.invitation.displayLabel`
+ * - `data` is parsed through {@link parseActivityData} so the web layer can
+ *   render directly from a known shape; legacy/null rows return `null` rather
+ *   than throw.
  */
 export async function getActivities(
   groupId: string,

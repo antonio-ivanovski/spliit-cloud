@@ -4,6 +4,7 @@ import {
   commonCurrencyLookbackDate,
   rankCommonCurrencies,
 } from '@spliit/domain'
+
 import { resolveParticipantDisplayName } from '../../invitations'
 import { toRecurrenceConfig } from '../recurrence-series'
 import { groupExpenseListSelect } from '../selects/expense-list'
@@ -119,16 +120,16 @@ export async function getGroupExpenses(
         : undefined,
     expenseDate: expenseDateRange,
     amount: amountRange,
-    ...(buildParticipantMatch(
+    ...buildParticipantMatch(
       options?.paidBy,
       options?.paidByMatch,
       'paidByList',
-    ) ?? {}),
-    ...(buildParticipantMatch(
+    ),
+    ...buildParticipantMatch(
       options?.paidFor,
       options?.paidForMatch,
       'paidFor',
-    ) ?? {}),
+    ),
   }
 
   const sortField = options?.sortBy ?? 'expenseDate'
@@ -219,8 +220,8 @@ export async function getGroupExpenseCount(groupId: string) {
 /**
  * Rank currencies previously used in the group (excluding the pinned group
  * ledger currency). Loads only `originalCurrency` + `expenseDate` within a
- * recency lookback so large ledgers stay cheap; scoring uses a 90-day
- * half-life (see `@spliit/domain` `rankCommonCurrencies`).
+ * recency lookback so large ledgers stay cheap; scoring uses a 90-day half-life
+ * (see `@spliit/domain` `rankCommonCurrencies`).
  */
 export async function getGroupCommonCurrencies(groupId: string) {
   const group = await prisma.group.findUnique({

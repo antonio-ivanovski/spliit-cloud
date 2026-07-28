@@ -31,8 +31,9 @@ for a clean reset.
 Other useful commands:
 
 ```bash
-bun check-types
-bun check-formatting
+bun run check            # Oxfmt, Oxlint, and TypeScript
+bun run format:affected  # Format only affected Turbo tasks
+bun run lint:fix         # Apply Oxlint's behavior-preserving fixes
 bun run test             # Vitest unit tests
 bun test:integration     # Real-DB integration tests
 ```
@@ -41,7 +42,7 @@ bun test:integration     # Real-DB integration tests
 
 1. Branch off `main` (`fix/...`, `feat/...`, `docs/...`)
 2. One logical change per PR. Add or update tests.
-3. Run `bun check-types`, `bun check-formatting`, `bun run test` before pushing.
+3. Run `bun run check` and `bun run test` before pushing.
 4. Schema changes: commit schema, migration, and generated client together.
 5. Reference the issue with `Closes #123`.
 

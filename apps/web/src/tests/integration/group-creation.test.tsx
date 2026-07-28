@@ -1,3 +1,5 @@
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+
 import type { GroupExpense } from '@/lib/api'
 import {
   cleanupTestAccount,
@@ -5,22 +7,21 @@ import {
   probeExistingApi,
 } from '@/test/integration/client'
 import { render, screen, waitFor } from '@/test/integration/test-utils'
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 /**
  * Integration tests: real API + real TRPCProvider.
  *
- * These tests connect to an already-running API server on port 3001
- * (or VITE_API_URL), create a test session, and use the real tRPC
- * endpoints to create data. Components are rendered with the real
- * TRPCProvider but context hooks are mocked so we don't need a full
- * route / provider setup.
+ * These tests connect to an already-running API server on port 3001 (or
+ * VITE_API_URL), create a test session, and use the real tRPC endpoints to
+ * create data. Components are rendered with the real TRPCProvider but context
+ * hooks are mocked so we don't need a full route / provider setup.
  *
  * If the API is not running the entire suite is skipped.
  *
  * Prerequisites:
- *   - API server running (e.g. `bun dev` from project root)
- *   - PostgreSQL test database up to date
+ *
+ * - API server running (e.g. `bun dev` from project root)
+ * - PostgreSQL test database up to date
  */
 
 // ── Skip guard (evaluated once at module load) ───────────────────────────
@@ -99,8 +100,8 @@ let testExpenseId: string
 // ── Helper ───────────────────────────────────────────────────────────────
 
 /**
- * tRPC procedure types — used to pick the HTTP method.
- * Queries use GET, mutations use POST.
+ * TRPC procedure types — used to pick the HTTP method. Queries use GET,
+ * mutations use POST.
  */
 const queryProcedures = new Set([
   'groups.get',
@@ -112,10 +113,9 @@ const queryProcedures = new Set([
 /**
  * Call a tRPC procedure on the existing API server via raw fetch.
  *
- * Wire format (superjson-wrapped):
- *   POST (mutation):  body: { json: input }
- *   GET  (query):     ?input={ json: input }
- *   Response:         { result: { data: { json: output } } }
+ * Wire format (superjson-wrapped): POST (mutation): body: { json: input } GET
+ * (query): ?input={ json: input } Response: { result: { data: { json: output }
+ * } }
  */
 async function trpcCall<T = unknown>(
   procedure: string,

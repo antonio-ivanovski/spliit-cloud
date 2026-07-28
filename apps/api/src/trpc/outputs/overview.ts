@@ -1,4 +1,5 @@
 import { z } from 'zod'
+
 import { accountGroupSchema } from './account'
 
 export const overviewFinancialStateSchema = z.enum([

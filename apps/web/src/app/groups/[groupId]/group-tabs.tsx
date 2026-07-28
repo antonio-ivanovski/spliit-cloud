@@ -1,3 +1,7 @@
+import { useLocation, useNavigate } from '@tanstack/react-router'
+import { Archive as ArchiveIcon, ArchiveRestore } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -5,9 +9,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useToast } from '@/components/ui/use-toast'
 import { shouldHideMobileGroupTabs } from '@/lib/mobile-nav'
 import { trpc } from '@/trpc/client'
-import { useLocation, useNavigate } from '@tanstack/react-router'
-import { Archive as ArchiveIcon, ArchiveRestore } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+
 import { useCurrentGroup } from './current-group-context'
 
 type Props = {
@@ -59,13 +61,17 @@ export function GroupTabs({ groupId }: Props) {
     <>
       {isArchived && (
         <Alert>
-          <ArchiveIcon className="w-4 h-4" />
+          <ArchiveIcon className="h-4 w-4" />
           <AlertTitle>{tGroups('bannerArchivedTitle')}</AlertTitle>
-          <AlertDescription className="flex flex-col items-start sm:flex-row sm:items-center sm:justify-between gap-2">
+          <AlertDescription className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
             <span>{tGroups('bannerArchivedDescription')}</span>
             {canUnarchive && (
-              <Button size="sm" variant="secondary" onClick={handleUnarchive}>
-                <ArchiveRestore className="w-4 h-4 mr-2" />
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() => void handleUnarchive()}
+              >
+                <ArchiveRestore className="mr-2 h-4 w-4" />
                 {tGroups('bannerUnarchive')}
               </Button>
             )}
@@ -75,9 +81,9 @@ export function GroupTabs({ groupId }: Props) {
       <div className={hideMobileTabs ? 'hidden sm:block' : undefined}>
         <Tabs
           value={value}
-          className="*:border overflow-x-auto"
+          className="overflow-x-auto *:border"
           onValueChange={(value) => {
-            navigate({ href: `/groups/${groupId}/${value}` })
+            void navigate({ href: `/groups/${groupId}/${value}` })
           }}
         >
           <TabsList>
@@ -94,7 +100,7 @@ export function GroupTabs({ groupId }: Props) {
                 {memberCount > 0 && (
                   <Badge
                     variant="outline"
-                    className="px-1.5 py-0 text-current border-current"
+                    className="border-current px-1.5 py-0 text-current"
                   >
                     {memberCount}
                   </Badge>

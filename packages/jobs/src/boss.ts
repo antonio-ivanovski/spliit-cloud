@@ -5,6 +5,7 @@ import type {
   SendOptions,
 } from 'pg-boss'
 import { fromPrisma, PgBoss } from 'pg-boss'
+
 import { env } from './env'
 import {
   jobPayloadSchema,
@@ -125,7 +126,8 @@ function lifecycleFor(boss: SpliitBoss): BossLifecycle {
         level: 'warning',
         component: 'pg-boss',
         message: 'pg-boss warning',
-        warning: warning instanceof Error ? warning.message : String(warning),
+        warning:
+          warning instanceof Error ? warning.message : JSON.stringify(warning),
       }),
     )
   })
@@ -248,7 +250,10 @@ export function createBoss(
   return boss
 }
 
-/** Start a client used by API-side enqueue calls (workers use this via server.ts). */
+/**
+ * Start a client used by API-side enqueue calls (workers use this via
+ * server.ts).
+ */
 export async function startBoss(
   databaseUrl = env.DATABASE_URL,
 ): Promise<SpliitBoss> {
@@ -268,7 +273,10 @@ export async function startBoss(
   }
 }
 
-/** Start the API's low-footprint enqueue client without worker maintenance loops. */
+/**
+ * Start the API's low-footprint enqueue client without worker maintenance
+ * loops.
+ */
 export async function startApiBoss(
   databaseUrl = env.DATABASE_URL,
 ): Promise<SpliitBoss> {

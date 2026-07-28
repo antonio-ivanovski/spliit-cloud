@@ -3,6 +3,7 @@ import {
   notificationCategoryFamily,
   NotificationChannel,
 } from '@spliit/domain/notifications'
+
 import { resolveNotificationChannelsForIntents } from './coordinator-policy'
 import { ExpenseEmailActivityNotificationDispatcher } from './expense-email-dispatcher'
 import { ExpensePushActivityNotificationDispatcher } from './expense-push-dispatcher'

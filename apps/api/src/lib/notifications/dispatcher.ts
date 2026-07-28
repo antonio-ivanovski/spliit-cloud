@@ -7,6 +7,7 @@ import {
   getNotificationCategoryForActivity,
   type NotificationCategory,
 } from '@spliit/domain/notifications'
+
 import { CompositeActivityNotificationDispatcher } from './composite'
 import { ActivityNotificationCoordinator } from './coordinator'
 import {
@@ -33,12 +34,13 @@ export type {
 export { waitForScheduledNotificationDispatchesForTest }
 
 /**
- * Register the production coordinator in the process-wide dispatcher.
- * Kept for backward compatibility with existing integration tests that
- * flush microtask-dispatched events. Production uses the durable planner
- * ({@link planActivityNotificationDeliveries}) instead.
+ * Register the production coordinator in the process-wide dispatcher. Kept for
+ * backward compatibility with existing integration tests that flush
+ * microtask-dispatched events. Production uses the durable planner ({@link
+ * planActivityNotificationDeliveries}) instead.
  *
- * @deprecated Use {@link planActivityNotificationDeliveries} for production paths.
+ * @deprecated Use {@link planActivityNotificationDeliveries} for production
+ *   paths.
  */
 export function initializeDefaultNotificationDispatchers(): void {
   setDefaultActivityNotificationDispatchers([
@@ -47,16 +49,16 @@ export function initializeDefaultNotificationDispatchers(): void {
 }
 
 /**
- * Process-wide composite dispatcher. Only used by legacy
- * microtask-based dispatch via {@link scheduleDefaultNotificationDispatch}
- * and {@link scheduleTargetedNotificationDispatch}.
+ * Process-wide composite dispatcher. Only used by legacy microtask-based
+ * dispatch via {@link scheduleDefaultNotificationDispatch} and
+ * {@link scheduleTargetedNotificationDispatch}.
  *
  * Production notification delivery flows through
- * {@link planActivityNotificationDeliveries} which persists
- * NotificationDelivery rows and enqueues pg-boss jobs for the worker.
+ * {@link planActivityNotificationDeliveries} which persists NotificationDelivery
+ * rows and enqueues pg-boss jobs for the worker.
  *
- * Kept for backward compatibility with integration tests that still
- * flush dispatches via {@link waitForScheduledNotificationDispatchesForTest}.
+ * Kept for backward compatibility with integration tests that still flush
+ * dispatches via {@link waitForScheduledNotificationDispatchesForTest}.
  */
 const registered: ActivityNotificationDispatcher[] = []
 
@@ -64,8 +66,8 @@ let singleton: ActivityNotificationDispatcher =
   new CompositeActivityNotificationDispatcher(registered)
 
 /**
- * Read-only access to the singleton. Mutation call sites import this
- * and call `dispatch(event)` themselves; helpers such as
+ * Read-only access to the singleton. Mutation call sites import this and call
+ * `dispatch(event)` themselves; helpers such as
  * {@link scheduleDefaultNotificationDispatch} defer the actual dispatch.
  */
 export function getDefaultActivityNotificationDispatcher(): ActivityNotificationDispatcher {
@@ -73,9 +75,9 @@ export function getDefaultActivityNotificationDispatcher(): ActivityNotification
 }
 
 /**
- * Replace the dispatcher list. Intended for tests; production code
- * never needs to call this. The new dispatcher is wrapped in a fresh
- * composite over the supplied list.
+ * Replace the dispatcher list. Intended for tests; production code never needs
+ * to call this. The new dispatcher is wrapped in a fresh composite over the
+ * supplied list.
  */
 export function setDefaultActivityNotificationDispatchers(
   dispatchers: ReadonlyArray<ActivityNotificationDispatcher>,

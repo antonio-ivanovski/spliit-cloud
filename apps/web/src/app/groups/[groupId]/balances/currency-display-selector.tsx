@@ -1,9 +1,10 @@
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import type { Currency } from '@/lib/currency'
-import { cn } from '@/lib/utils'
 import { ArrowLeftRight } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
+
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import type { Currency } from '@/lib/currency'
+import { cn } from '@/lib/utils'
 
 type CurrencyDisplay = 'group' | 'original'
 
@@ -28,7 +29,7 @@ export function CurrencyDisplaySelector({
       className={cn('w-full min-w-0', className)}
       aria-label={t('currencyDisplay.label')}
     >
-      <span className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-muted-foreground">
+      <span className="mb-1.5 block text-xs font-medium tracking-wide text-muted-foreground uppercase">
         {t('currencyDisplay.label')}
       </span>
       <RadioGroup
@@ -104,7 +105,7 @@ function DisplayCurrencyOption({
         </span>
       )}
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-xs font-medium leading-tight sm:text-sm">
+        <span className="block truncate text-xs leading-tight font-medium sm:text-sm">
           {title}
         </span>
         <span className="sr-only">{description}</span>

@@ -1,9 +1,10 @@
+import { createLazyFileRoute, getRouteApi } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
+
 import { BulkCategorizePage } from '@/app/groups/[groupId]/bulk-categorize/bulk-categorize-page'
 import { Card, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { trpc } from '@/trpc/client'
-import { createLazyFileRoute, getRouteApi } from '@tanstack/react-router'
-import { useTranslation } from 'react-i18next'
 
 const routeApi = getRouteApi('/groups/bulk-categorize/$groupId')
 

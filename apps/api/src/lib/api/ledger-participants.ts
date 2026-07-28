@@ -8,6 +8,7 @@ import {
   type Prisma,
 } from '@spliit/db'
 import type { GroupActivityChange } from '@spliit/domain/activities'
+
 import {
   buildGroupActivityData,
   logActivity,
@@ -16,10 +17,7 @@ import {
 import { getApiBoss } from './boss'
 import { randomId } from './shared'
 
-/**
- * One-way admin migration of an unlinked `LedgerParticipant` to an
- * account.
- */
+/** One-way admin migration of an unlinked `LedgerParticipant` to an account. */
 export async function linkUnlinkedParticipantToAccount(opts: {
   groupId: string
   ledgerParticipantId: string
@@ -184,9 +182,7 @@ export async function linkUnlinkedParticipantToAccount(opts: {
   return outcome.result
 }
 
-/**
- * Rewrite all expense references from one `LedgerParticipant` id to another.
- */
+/** Rewrite all expense references from one `LedgerParticipant` id to another. */
 export async function mergeLedgerParticipantReferences(
   tx: Prisma.TransactionClient,
   opts: { sourceId: string; targetId: string },
@@ -462,9 +458,7 @@ export async function linkUnlinkedParticipantToPendingInvite(opts: {
   return outcome.result
 }
 
-/**
- * List the unlinked `LedgerParticipant` rows in a group.
- */
+/** List the unlinked `LedgerParticipant` rows in a group. */
 export async function listUnlinkedParticipants(groupId: string): Promise<
   Array<{
     id: string

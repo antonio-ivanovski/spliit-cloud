@@ -1,3 +1,7 @@
+import { Delete, ListPlus } from 'lucide-react'
+import { useEffect, useMemo, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { Button } from '@/components/ui/button'
 import {
   ResponsiveDialog,
@@ -14,9 +18,6 @@ import {
   formatCalculatorAmount,
   type CalculatorItem,
 } from '@spliit/domain/calculator'
-import { Delete, ListPlus } from 'lucide-react'
-import { useEffect, useMemo, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
 
 type Key = {
   value: string
@@ -25,7 +26,11 @@ type Key = {
 }
 
 type ItemTransferState =
-  'empty' | 'invalid' | 'unsupported' | 'create' | 'replace'
+  | 'empty'
+  | 'invalid'
+  | 'unsupported'
+  | 'create'
+  | 'replace'
 
 // react-doctor-disable-next-line react-doctor/no-giant-component -- cohesive calculator dialog, keypad+display share expression state
 export function AmountCalculatorDialog({
@@ -266,7 +271,7 @@ export function AmountCalculatorDialog({
           <div className="overflow-hidden rounded-lg border bg-muted/35 px-4 py-3 text-right shadow-inner">
             <div
               aria-live="polite"
-              className="min-h-8 overflow-x-auto whitespace-nowrap font-mono text-2xl tracking-tight tabular-nums"
+              className="min-h-8 overflow-x-auto font-mono text-2xl tracking-tight whitespace-nowrap tabular-nums"
               data-testid="calculator-expression"
             >
               {expression || '0'}

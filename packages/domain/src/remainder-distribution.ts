@@ -5,7 +5,10 @@ import {
 } from './exact-math'
 
 export type TieBreakStrategy =
-  'EXPENSE_ID_SEEDED' | 'PARTICIPANT_ID_DESC' | 'ROUND_ROBIN' | 'RANDOM_SEEDED'
+  | 'EXPENSE_ID_SEEDED'
+  | 'PARTICIPANT_ID_DESC'
+  | 'ROUND_ROBIN'
+  | 'RANDOM_SEEDED'
 
 export type DistributeRemainderOpts = {
   seed?: number
@@ -13,7 +16,10 @@ export type DistributeRemainderOpts = {
   strategy?: TieBreakStrategy
 }
 
-/** Build participant order: frac desc, id asc; seed rotates within equal-frac ties. */
+/**
+ * Build participant order: frac desc, id asc; seed rotates within equal-frac
+ * ties.
+ */
 function orderForRemainder(
   entries: Array<{
     id: string

@@ -3,8 +3,8 @@
 // ---------------------------------------------------------------------------
 
 /**
- * A single diff emission produced by one narrow-purpose differ.
- * TField is the discriminated field union (e.g. ExpenseChangedField).
+ * A single diff emission produced by one narrow-purpose differ. TField is the
+ * discriminated field union (e.g. ExpenseChangedField).
  */
 export type DiffEmission<TField extends string = string> = {
   field: TField
@@ -13,11 +13,11 @@ export type DiffEmission<TField extends string = string> = {
 }
 
 /**
- * A self-contained differ that detects and formats changes for a single
- * field group. Each differ has a single narrow responsibility.
+ * A self-contained differ that detects and formats changes for a single field
+ * group. Each differ has a single narrow responsibility.
  *
- * Differ objects are plain objects — no classes — that are composed by
- * a composite differ which iterates through them collecting emissions.
+ * Differ objects are plain objects — no classes — that are composed by a
+ * composite differ which iterates through them collecting emissions.
  */
 export interface ActivityDiffer<
   TEntity,
@@ -35,8 +35,8 @@ export interface ActivityDiffer<
   check(oldValue: TEntity, newValue: TEntity): boolean
 
   /**
-   * Full diff: returns a human-readable emission when the field changed,
-   * or `null` when it has not.
+   * Full diff: returns a human-readable emission when the field changed, or
+   * `null` when it has not.
    */
   diff(oldValue: TEntity, newValue: TEntity, ctx: TContext): TEmission | null
 }

@@ -1,3 +1,8 @@
+import { Hash, Trash2, UserPen } from 'lucide-react'
+import type { FieldPath, UseFormReturn } from 'react-hook-form'
+import { useWatch } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+
 import { Button } from '@/components/ui/button'
 import {
   FormControl,
@@ -14,10 +19,7 @@ import type {
   ExpenseFormItemValues,
   SplitMode,
 } from '@spliit/domain'
-import { Hash, Trash2, UserPen } from 'lucide-react'
-import type { FieldPath, UseFormReturn } from 'react-hook-form'
-import { useWatch } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
+
 import { AmountInput } from './amount-input'
 import { enforceCurrencyPattern, enforceIntegerPattern } from './currency-utils'
 
@@ -181,9 +183,10 @@ export function ExpenseItemRow({
                       disabled={readOnly}
                       // Keep raw string (incl. trailing ".") like expense amount
                       value={
-                        field.value == null || field.value === ''
-                          ? ''
-                          : String(field.value)
+                        typeof field.value === 'string' ||
+                        typeof field.value === 'number'
+                          ? String(field.value)
+                          : ''
                       }
                       inputMode="decimal"
                       step={10 ** -groupCurrency.decimal_digits}
@@ -218,11 +221,11 @@ export function ExpenseItemRow({
                     <div className="relative">
                       <Hash
                         aria-hidden="true"
-                        className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground"
+                        className="pointer-events-none absolute top-1/2 left-2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground"
                       />
                       <Input
                         aria-label={displayColumnQuantity}
-                        className="h-9 pl-7 pr-2 text-right tabular-nums"
+                        className="h-9 pr-2 pl-7 text-right tabular-nums"
                         type="text"
                         disabled={readOnly}
                         value={(field.value as number) ?? ''}

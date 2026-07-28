@@ -48,7 +48,8 @@ vi.mock('./generated/prisma/client/client', () => {
       constructor(options: Record<string, unknown>) {
         prismaCalls.push(options ?? {})
         const adapter = options?.adapter as
-          { pool?: { end: () => Promise<void> } } | undefined
+          | { pool?: { end: () => Promise<void> } }
+          | undefined
         this.$disconnect = vi.fn().mockImplementation(async () => {
           await adapter?.pool?.end()
         })

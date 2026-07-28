@@ -1,4 +1,5 @@
 import { prisma } from '@spliit/db'
+
 import { logActivity, planNotificationForActivity } from '../activities'
 import { getApiBoss } from '../boss'
 import { getExpense } from './queries'

@@ -1,5 +1,6 @@
 import { GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
 import { type GroupFormValues } from '@spliit/domain'
+
 import { resolveParticipantDisplayName } from '../invitations/display'
 import {
   buildGroupActivityData,
@@ -13,9 +14,9 @@ import { accountSummarySelect } from './selects/account-summary'
 import { loadGroupWithLedger, randomId } from './shared'
 
 /**
- * Create a cloud group with its accounting Ledger. The current account is
- * added as an ADMIN/ACTIVE member and a matching LedgerParticipant is created
- * so expenses can be recorded against them.
+ * Create a cloud group with its accounting Ledger. The current account is added
+ * as an ADMIN/ACTIVE member and a matching LedgerParticipant is created so
+ * expenses can be recorded against them.
  */
 export async function createGroup(
   groupFormValues: GroupFormValues,

@@ -8,7 +8,10 @@ export type LanguageFamily = {
   refsHint: string
 }
 
-/** Fixed family groupings for translation dispatch (every non-en locale exactly once). */
+/**
+ * Fixed family groupings for translation dispatch (every non-en locale exactly
+ * once).
+ */
 export const LANGUAGE_FAMILIES: LanguageFamily[] = [
   {
     id: 'romance',

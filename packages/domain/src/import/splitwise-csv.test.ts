@@ -1,6 +1,8 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
+
 import { describe, expect, it } from 'vitest'
+
 import { tryParseSplitwiseCsv } from './splitwise-csv'
 import type { NormalizedSource } from './types'
 
@@ -76,8 +78,10 @@ function extractTotalBalances(csv: string): TotalBalance[] {
   return result
 }
 
-/** Recompute per-currency balances from parsed expenses so they can be
- *  compared against the CSV's Total balance footer rows. */
+/**
+ * Recompute per-currency balances from parsed expenses so they can be compared
+ * against the CSV's Total balance footer rows.
+ */
 function computeBalancesByCurrency(
   source: NormalizedSource,
 ): Map<string, Record<string, number>> {

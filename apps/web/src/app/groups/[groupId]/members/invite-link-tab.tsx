@@ -1,3 +1,7 @@
+import { Link2, Share2 } from 'lucide-react'
+import type { UseFormReturn } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+
 import { CopyButton } from '@/components/copy-button'
 import { Button } from '@/components/ui/button'
 import {
@@ -15,9 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Link2, Share2 } from 'lucide-react'
-import type { UseFormReturn } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
+
 import {
   formatDate,
   type GeneratedLink,
@@ -95,7 +97,7 @@ export function InviteLinkTab({
               </FormControl>
             </FormItem>
             <Button type="submit" disabled={isPending}>
-              <Link2 className="w-4 h-4 mr-2" />
+              <Link2 className="mr-2 h-4 w-4" />
               {isPending
                 ? t('invite.link.generating')
                 : generatedLink
@@ -133,7 +135,7 @@ export function InviteLinkTab({
                 onClick={onShare}
                 aria-label={t('invite.link.share')}
               >
-                <Share2 className="w-4 h-4" />
+                <Share2 className="h-4 w-4" />
               </Button>
             )}
           </div>

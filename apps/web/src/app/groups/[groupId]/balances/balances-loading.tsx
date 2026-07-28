@@ -12,7 +12,7 @@ export function ReimbursementsLoading({
         .fill(undefined)
         .map((_, index) => (
           <div key={index} className="flex justify-between py-5">
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
               <Skeleton className="h-3 w-32" />
               <Skeleton className="h-3 w-24" />
             </div>

@@ -1,7 +1,9 @@
-import { GroupInvitationStatus, GroupInvitationType, prisma } from '@spliit/db'
 import { initTRPC, TRPCError } from '@trpc/server'
 import superjson from 'superjson'
 import { z } from 'zod'
+
+import { GroupInvitationStatus, GroupInvitationType, prisma } from '@spliit/db'
+
 import type { ResolvedAuth } from '../lib/auth/session'
 import { getAuthFromRequest } from '../lib/auth/session'
 import { hashLinkToken } from '../lib/invitations'
@@ -28,9 +30,7 @@ export async function createTRPCContext(opts: {
 // For instance, the use of a t variable
 // is common in i18n libraries.
 const t = initTRPC.context<AuthContext>().create({
-  /**
-   * @see https://trpc.io/docs/server/data-transformers
-   */
+  /** @see https://trpc.io/docs/server/data-transformers */
   transformer: superjson,
 })
 
@@ -39,15 +39,15 @@ export const createTRPCRouter = t.router
 export const baseProcedure = t.procedure
 
 /**
- * Public procedure: anyone can call this. `ctx.auth` may still be non-null
- * if the caller is signed in (e.g. a "current user" hint), but the
- * procedure must not rely on it.
+ * Public procedure: anyone can call this. `ctx.auth` may still be non-null if
+ * the caller is signed in (e.g. a "current user" hint), but the procedure must
+ * not rely on it.
  */
 export const publicProcedure = baseProcedure
 
 /**
- * Procedure that requires an authenticated account. The account is exposed
- * to the procedure via `ctx.auth.user`.
+ * Procedure that requires an authenticated account. The account is exposed to
+ * the procedure via `ctx.auth.user`.
  */
 export const protectedProcedure = baseProcedure.use(async ({ ctx, next }) => {
   if (!ctx.auth) {
@@ -67,8 +67,8 @@ export const protectedProcedure = baseProcedure.use(async ({ ctx, next }) => {
 
 /**
  * Procedure that requires an active group membership for the given groupId.
- * Resolves the group, the group member row, and the ledger, and exposes them
- * on `ctx` for downstream resolvers. Optional minimum role can be passed.
+ * Resolves the group, the group member row, and the ledger, and exposes them on
+ * `ctx` for downstream resolvers. Optional minimum role can be passed.
  */
 export function groupProcedure(opts: {
   /** Minimum group role required to call this procedure. */
@@ -105,19 +105,18 @@ export function groupProcedure(opts: {
 }
 
 /**
- * Shared input field for a raw link-invite token carried in the page URL.
- * Use in any read procedure that should be accessible to pending
- * link-invitees (in addition to active members and pending email-invitees,
- * which the viewer already accepts). Token validity is enforced by
- * `loadGroupViewer` against the stored hash, so no client-side format
- * check is needed.
+ * Shared input field for a raw link-invite token carried in the page URL. Use
+ * in any read procedure that should be accessible to pending link-invitees (in
+ * addition to active members and pending email-invitees, which the viewer
+ * already accepts). Token validity is enforced by `loadGroupViewer` against the
+ * stored hash, so no client-side format check is needed.
  */
 export const linkInviteTokenInput = z.string().optional()
 
 /**
  * Hash a raw link-invite token for use with {@link loadGroupViewer}'s
- * `linkTokenHash` parameter. Returns `null` when no token is present so
- * callers can forward the value unchanged.
+ * `linkTokenHash` parameter. Returns `null` when no token is present so callers
+ * can forward the value unchanged.
  */
 export async function hashLinkInviteToken(
   token: string | undefined,
@@ -128,8 +127,8 @@ export async function hashLinkInviteToken(
 
 /**
  * Resolve the current account's membership, role, status, and the group +
- * ledger records for a given groupId. Throws when the account is not an
- * active member. Designed to be called from within a `groupProcedure` (or
+ * ledger records for a given groupId. Throws when the account is not an active
+ * member. Designed to be called from within a `groupProcedure` (or
  * `protectedProcedure`) resolver.
  */
 export async function loadGroupContext({
@@ -163,8 +162,8 @@ export async function loadGroupContext({
 
 /**
  * Read-only group viewer: ACTIVE member, or PENDING email invitee (the
- * account's email matches a PENDING EMAIL GroupInvitation). Mutations
- * must still use `loadGroupContext` to enforce the ACTIVE-only check.
+ * account's email matches a PENDING EMAIL GroupInvitation). Mutations must
+ * still use `loadGroupContext` to enforce the ACTIVE-only check.
  */
 export type GroupViewer =
   | { kind: 'ACTIVE' }
@@ -204,10 +203,9 @@ export async function loadGroupViewer({
   accountId: string
   accountEmail: string
   /**
-   * Optional SHA-256 hash of the raw link-invite token carried in the
-   * page URL. When present, a PENDING LINK invitation with a matching
-   * `tokenHash` is enough to grant the read-only viewer — the token
-   * itself is the credential.
+   * Optional SHA-256 hash of the raw link-invite token carried in the page URL.
+   * When present, a PENDING LINK invitation with a matching `tokenHash` is
+   * enough to grant the read-only viewer — the token itself is the credential.
    */
   linkTokenHash?: string | null
 }): Promise<GroupViewerContext> {

@@ -1,7 +1,8 @@
-import { trpc } from '@/trpc/client'
-import type { AppRouter, AppRouterOutput } from '@spliit/api/router'
 import type { TRPCClientErrorLike } from '@trpc/client'
 import { useCallback, useState } from 'react'
+
+import { trpc } from '@/trpc/client'
+import type { AppRouter, AppRouterOutput } from '@spliit/api/router'
 
 type PreviewFromUrlResult = AppRouterOutput['groups']['importPreview']
 
@@ -16,9 +17,8 @@ export type ImportSourceState = {
 }
 
 /**
- * Shared fetch hook for both the wizard (?source=<url> handoff) and
- * SourceStep (URL-paste). Wraps `useQuery` so Strict-Mode and deduping
- * are free.
+ * Shared fetch hook for both the wizard (?source=<url> handoff) and SourceStep
+ * (URL-paste). Wraps `useQuery` so Strict-Mode and deduping are free.
  */
 export function useImportSource(): ImportSourceState {
   const [submittedUrl, setSubmittedUrl] = useState<string | null>(null)

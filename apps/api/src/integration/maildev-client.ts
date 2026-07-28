@@ -1,8 +1,8 @@
 /**
- * Tiny MailDev HTTP client used by integration tests to inspect and clear
- * the local MailDev inbox. MailDev runs as part of `bun dev:up` via
- * `compose.dev.yaml` on http://localhost:1080 (web UI) + 1025 (SMTP).
- * SMTP delivery is asynchronous, so callers must poll.
+ * Tiny MailDev HTTP client used by integration tests to inspect and clear the
+ * local MailDev inbox. MailDev runs as part of `bun dev:up` via
+ * `compose.dev.yaml` on http://localhost:1080 (web UI) + 1025 (SMTP). SMTP
+ * delivery is asynchronous, so callers must poll.
  *
  * Reference: https://github.com/maildev/maildev/blob/master/docs/http.md
  */
@@ -55,8 +55,8 @@ export async function clearMaildevInbox(): Promise<void> {
 // ---------------------------------------------------------------------------
 
 /**
- * Fetch a summary of every message in the MailDev inbox.
- * Used for diagnostics when an expected email is missing.
+ * Fetch a summary of every message in the MailDev inbox. Used for diagnostics
+ * when an expected email is missing.
  */
 export async function getMaildevInboxSummary(): Promise<
   Array<{ id: string; to: string[]; subject: string }>
@@ -79,8 +79,8 @@ export async function getMaildevInboxSummary(): Promise<
 }
 
 /**
- * Single-shot lookup for an email by recipient (and optional subject).
- * Returns the full CapturedEmail or null if no match is found.
+ * Single-shot lookup for an email by recipient (and optional subject). Returns
+ * the full CapturedEmail or null if no match is found.
  */
 export async function getEmailForRecipient({
   recipient,
@@ -144,8 +144,8 @@ export async function getEmailForRecipient({
 
 /**
  * Poll for an email matching recipient (and optional subject) with a short
- * bounded retry window. Throws a diagnostic error if the email does not
- * appear, including the full inbox summary.
+ * bounded retry window. Throws a diagnostic error if the email does not appear,
+ * including the full inbox summary.
  */
 export async function expectEmailEventually({
   recipient,

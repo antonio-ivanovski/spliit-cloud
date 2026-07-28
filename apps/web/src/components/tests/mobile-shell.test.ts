@@ -1,10 +1,11 @@
+import { describe, expect, it } from 'vitest'
+
 import {
   getFocusedRouteMeta,
   isFocusedMobilePath,
   isMobileGroupNavPath,
   shouldHideMobileGroupTabs,
 } from '@/lib/mobile-nav'
-import { describe, expect, it } from 'vitest'
 
 const translate = (key: string) => key
 

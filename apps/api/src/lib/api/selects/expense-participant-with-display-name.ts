@@ -1,4 +1,5 @@
 import type { Prisma } from '@spliit/db'
+
 import { participantDisplayNameSelect } from './participant-display-name'
 
 // Projection for an expense's paidBy/paidFor row when the caller needs to

@@ -1,20 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 /**
- * Self-contained typing animation that demonstrates the "swap .app for
- * .cloud" trick. The component owns its animation state and timing —
- * the parent just renders it where the visual should appear.
+ * Self-contained typing animation that demonstrates the "swap .app for .cloud"
+ * trick. The component owns its animation state and timing — the parent just
+ * renders it where the visual should appear.
  *
- * Phases (per cycle):
- *  1. Type `https://spliit.app/groups/yourGroupId` character-by-character
- *  2. Strike through `app` in red
- *  3. Backspace `app` character-by-character — the cursor stays put at
- *     position 16 and the deleted characters drop from its left while
- *     `/groups/yourGroupId` remains visible to its right
- *  4. Pause to let the eye register the empty gap
- *  5. Type `cloud` character-by-character in place of `app`
- *  6. Hold the final `https://spliit.cloud/groups/yourGroupId` URL
- *  7. Brief gap, then loop
+ * Phases (per cycle): 1. Type `https://spliit.app/groups/yourGroupId`
+ * character-by-character 2. Strike through `app` in red 3. Backspace `app`
+ * character-by-character — the cursor stays put at position 16 and the deleted
+ * characters drop from its left while `/groups/yourGroupId` remains visible to
+ * its right 4. Pause to let the eye register the empty gap 5. Type `cloud`
+ * character-by-character in place of `app` 6. Hold the final
+ * `https://spliit.cloud/groups/yourGroupId` URL 7. Brief gap, then loop
  */
 
 const APP_URL = 'https://spliit.app/groups/yourGroupId'
@@ -35,7 +32,10 @@ const GAP_MS = 350
 type TypingFrame = {
   /** Text rendered to the LEFT of the cursor. */
   beforeCursor: string
-  /** Text rendered to the RIGHT of the cursor (stays put during backspace/typing-cloud). */
+  /**
+   * Text rendered to the RIGHT of the cursor (stays put during
+   * backspace/typing-cloud).
+   */
   afterCursor: string
   showStrike: boolean
   duration: number
@@ -220,7 +220,7 @@ export function DomainSwapTyping() {
         {renderBeforeCursor(beforeCursor, showStrike)}
         <span
           aria-hidden
-          className="ml-px inline-block h-[1.1em] w-[3px] -translate-y-px bg-current align-middle animate-cursor-blink"
+          className="ml-px inline-block h-[1.1em] w-[3px] -translate-y-px animate-cursor-blink bg-current align-middle"
         />
         {afterCursor}
       </span>

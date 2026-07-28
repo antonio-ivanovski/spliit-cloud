@@ -1,5 +1,6 @@
-import { render, screen, within } from '@/test/test-utils'
 import { describe, expect, it, vi } from 'vitest'
+
+import { render, screen, within } from '@/test/test-utils'
 
 const mocks = vi.hoisted(() => ({
   mockFriendsQuery: vi.fn(),

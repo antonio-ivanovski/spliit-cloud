@@ -72,10 +72,9 @@ function _countSelected(rows: ParticipantRow[]): number {
 
 /**
  * Produce a numeric share value appropriate for the target split mode.
- * BY_PERCENTAGE: 2-decimal precision (e.g. 33.33)
- * BY_AMOUNT: precision aligned to the currency's decimal_digits
- * BY_SHARES: integer (rounded)
- * EVENLY: 0 (irrelevant — the consumer distributes evenly regardless)
+ * BY_PERCENTAGE: 2-decimal precision (e.g. 33.33) BY_AMOUNT: precision aligned
+ * to the currency's decimal_digits BY_SHARES: integer (rounded) EVENLY: 0
+ * (irrelevant — the consumer distributes evenly regardless)
  */
 function formatShare(
   value: number,
@@ -158,14 +157,15 @@ export function convertParticipantShares(args: {
   // ── EVENLY → * ────────────────────────────────────────────
 
   if (fromMode === 'EVENLY' && toMode === 'BY_SHARES') {
-    return buildOutput(new Array(selectedCount).fill(1), 'BY_SHARES')
+    return buildOutput(
+      Array.from({ length: selectedCount }, () => 1),
+      'BY_SHARES',
+    )
   }
 
   if (fromMode === 'EVENLY' && toMode === 'BY_PERCENTAGE') {
     const raw = 100 / selectedCount
-    const values = new Array(selectedCount)
-      .fill(null)
-      .map(() => roundTo(raw, 2))
+    const values = Array.from({ length: selectedCount }, () => roundTo(raw, 2))
     const sum = values.reduce((a, b) => a + b, 0)
     const diff = roundTo(100 - sum, 2)
     if (diff !== 0)
@@ -175,9 +175,9 @@ export function convertParticipantShares(args: {
 
   if (fromMode === 'EVENLY' && toMode === 'BY_AMOUNT') {
     const raw = targetAmount / selectedCount
-    const values = new Array(selectedCount)
-      .fill(null)
-      .map(() => roundTo(raw, precision))
+    const values = Array.from({ length: selectedCount }, () =>
+      roundTo(raw, precision),
+    )
     const sum = values.reduce((a, b) => a + b, 0)
     const diff = roundTo(targetAmount - sum, precision)
     if (diff !== 0)

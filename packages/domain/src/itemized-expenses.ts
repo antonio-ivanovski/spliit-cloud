@@ -19,9 +19,9 @@ type ItemizedRemainderLike = {
 }
 
 /**
- * Exact (non-truncated) paidFor shares from items + filler.
- * Used by getBalances so multi-expense totals don't inherit per-expense
- * remainder tie-breaks sealed into stored paidFor cents.
+ * Exact (non-truncated) paidFor shares from items + filler. Used by getBalances
+ * so multi-expense totals don't inherit per-expense remainder tie-breaks sealed
+ * into stored paidFor cents.
  */
 export function computeExactSharesFromItems(
   items: ItemLike[],
@@ -83,9 +83,9 @@ export function computeExactSharesFromItems(
  * Accumulates exact rational shares across all items (and optional filler),
  * then truncates once via distributeRemainder so cross-item drift is zero.
  *
- * If sum(item.amount) < expenseAmount, a synthetic "Other (unaccounted)"
- * filler is distributed using itemizedRemainder (or EVENLY across members).
- * If sum(item.amount) > expenseAmount, throws Error('ITEMS_EXCEED_AMOUNT').
+ * If sum(item.amount) < expenseAmount, a synthetic "Other (unaccounted)" filler
+ * is distributed using itemizedRemainder (or EVENLY across members). If
+ * sum(item.amount) > expenseAmount, throws Error('ITEMS_EXCEED_AMOUNT').
  */
 export function computePaidForFromItems(
   items: ExpenseApiItem[],
@@ -124,6 +124,7 @@ export function computePaidForFromItems(
  * non-Itemized splitMode and group members.
  *
  * Canonical weights/BPS (no last-absorbs remainder):
+ *
  * - EVENLY / BY_SHARES → shares: 1
  * - BY_PERCENTAGE → Math.floor(10000 / n)
  * - BY_AMOUNT → Math.floor(amount / n)

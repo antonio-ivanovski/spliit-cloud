@@ -25,7 +25,7 @@ export function AvatarStack({
 
   return (
     <div
-      className={cn('flex items-center isolate', className)}
+      className={cn('isolate flex items-center', className)}
       aria-label={label}
     >
       {visible.map((account, index) => (
@@ -40,7 +40,7 @@ export function AvatarStack({
       {hiddenCount > 0 && (
         <span
           className={cn(
-            'grid place-items-center -ml-2 rounded-full border-2 border-background bg-muted text-[10px] font-medium text-muted-foreground',
+            '-ml-2 grid place-items-center rounded-full border-2 border-background bg-muted text-[10px] font-medium text-muted-foreground',
             sizeClass[size],
           )}
         >

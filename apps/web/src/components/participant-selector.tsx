@@ -1,4 +1,7 @@
+/* oxlint-disable jsx-a11y/prefer-tag-over-role, jsx-a11y/role-has-required-aria-props -- popover trigger exposes combobox semantics; popup IDs are managed by the UI primitive. */
 import { Check, ChevronsUpDown } from 'lucide-react'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { ParticipantAvatar } from '@/components/participant-avatar'
 import { Button } from '@/components/ui/button'
@@ -24,8 +27,6 @@ import {
 } from '@/components/ui/popover'
 import { useMediaQuery } from '@/lib/hooks'
 import { cn } from '@/lib/utils'
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 type Participant = {
   id: string
@@ -89,11 +90,12 @@ export function ParticipantSelector({
     <Button
       variant="outline"
       role="combobox"
+      aria-haspopup="listbox"
       aria-expanded={open}
       aria-label={triggerAriaLabel}
       disabled={disabled}
       className={cn(
-        'h-9 px-3 text-sm justify-between font-normal',
+        'h-9 justify-between px-3 text-sm font-normal',
         className,
         triggerClassName,
       )}
@@ -206,7 +208,7 @@ function ParticipantCommand({
                 />
                 <span className="truncate">{participant.name}</span>
                 {participant.pending && (
-                  <span className="text-xs text-muted-foreground ml-auto">
+                  <span className="ml-auto text-xs text-muted-foreground">
                     {t('ExpenseForm.participant.pending')}
                   </span>
                 )}

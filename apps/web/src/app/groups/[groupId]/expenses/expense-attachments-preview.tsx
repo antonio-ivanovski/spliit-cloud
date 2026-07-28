@@ -1,3 +1,6 @@
+import { Paperclip } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
 import Image from '@/components/app-image'
 import { Button } from '@/components/ui/button'
 import {
@@ -8,8 +11,6 @@ import {
   ResponsiveDialogTitle,
   ResponsiveDialogTrigger,
 } from '@/components/ui/responsive-dialog'
-import { Paperclip } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 
 type Attachment = {
   id: string
@@ -28,7 +29,7 @@ export function ExpenseAttachmentsPreview({
 
   return (
     <section className="space-y-2">
-      <h3 className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+      <h3 className="flex items-center gap-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">
         <Paperclip className="h-3.5 w-3.5" />
         {t('attachments', { count: documents.length })}
       </h3>

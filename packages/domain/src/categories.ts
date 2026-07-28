@@ -3,21 +3,19 @@ import * as z from 'zod'
 /**
  * Default categories and groupings used across the app.
  *
- * Categories are stored on `Expense.categoryId` as a string slug. The
- * display `name` of each category is a translation key (e.g. `"Movies"`)
- * that is resolved against the `Categories.<grouping>.<name>` message
- * path. The `grouping` is also used as a translation key to fetch the
- * grouping heading.
+ * Categories are stored on `Expense.categoryId` as a string slug. The display
+ * `name` of each category is a translation key (e.g. `"Movies"`) that is
+ * resolved against the `Categories.<grouping>.<name>` message path. The
+ * `grouping` is also used as a translation key to fetch the grouping heading.
  *
- * We keep this list in code (rather than seeding a `Category` table) so
- * that:
- *  - the same names/groupings feed i18n without a DB roundtrip;
- *  - there is no need to seed a fresh database for a list of static
- *    values.
+ * We keep this list in code (rather than seeding a `Category` table) so that:
+ *
+ * - The same names/groupings feed i18n without a DB roundtrip;
+ * - There is no need to seed a fresh database for a list of static values.
  *
  * When user-created categories are introduced in a future change, the
- * `Category` table will be re-added; the in-code ids will be reserved
- * for the defaults and a new id namespace will be introduced alongside.
+ * `Category` table will be re-added; the in-code ids will be reserved for the
+ * defaults and a new id namespace will be introduced alongside.
  */
 
 export type CategoryDefinition<Id extends string = string> = {
@@ -37,11 +35,12 @@ function defineCategories<
 
 /**
  * Slug rules:
- *  - The id is the lower-kebab-case of the name when the name is unique
- *    across the whole list (e.g. `"Movies"` -> `"movies"`).
- *  - The id falls back to `<grouping>-<name>` slug when the name alone
- *    would be ambiguous across groupings (e.g. two categories named
- *    `"Home"` in different groupings).
+ *
+ * - The id is the lower-kebab-case of the name when the name is unique across the
+ *   whole list (e.g. `"Movies"` -> `"movies"`).
+ * - The id falls back to `<grouping>-<name>` slug when the name alone would be
+ *   ambiguous across groupings (e.g. two categories named `"Home"` in different
+ *   groupings).
  */
 export const DEFAULT_CATEGORIES = defineCategories([
   { id: 'general', grouping: 'Uncategorized', name: 'General' },
@@ -136,9 +135,9 @@ export const CATEGORY_IDS = DEFAULT_CATEGORIES.map(
 ) as [CategoryId, ...CategoryId[]]
 
 /**
- * Zod schema that constrains a category id to one of the in-code
- * defaults. Use this in any code that needs to validate an untyped
- * value (e.g. URL parameters, API inputs, JSON columns).
+ * Zod schema that constrains a category id to one of the in-code defaults. Use
+ * this in any code that needs to validate an untyped value (e.g. URL
+ * parameters, API inputs, JSON columns).
  */
 export const categoryIdSchema = z.enum(CATEGORY_IDS)
 

@@ -1,8 +1,10 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import {
   NotificationCategory,
   NotificationChannel,
 } from '@spliit/domain/notifications'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import '../../test/mocks'
 import { prismaMock, sendEmailMock } from '../../test/state'
 import { ExpenseEmailActivityNotificationDispatcher } from './expense-email-dispatcher'

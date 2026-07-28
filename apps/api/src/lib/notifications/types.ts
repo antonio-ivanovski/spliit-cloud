@@ -19,9 +19,9 @@ export {
  *
  * - Real events carry a non-null `activityId` (the Activity row FK) and may
  *   optionally override the deduplication key with `customEventKey`.
- * - Synthetic events (no Activity row) set `activityId: null` and MUST
- *   provide a `customEventKey` so the planner never falls back to the
- *   shared, collision-prone `activity:` key.
+ * - Synthetic events (no Activity row) set `activityId: null` and MUST provide a
+ *   `customEventKey` so the planner never falls back to the shared,
+ *   collision-prone `activity:` key.
  */
 export type EventIdentity =
   | { activityId: string; customEventKey?: string }
@@ -30,9 +30,9 @@ export type EventIdentity =
 /**
  * Normalized event handed to every {@link ActivityNotificationDispatcher}.
  *
- * `groupId` is the current accessor scope; non-group activities would
- * carry the direct ledger id in a future revision. For this change all
- * activities are scoped through a `Group` and we ship just the id.
+ * `groupId` is the current accessor scope; non-group activities would carry the
+ * direct ledger id in a future revision. For this change all activities are
+ * scoped through a `Group` and we ship just the id.
  */
 export type ActivityNotificationEvent = EventIdentity & {
   type: ActivityType
@@ -55,11 +55,11 @@ export type ActivityNotificationIntent = {
 }
 
 /**
- * Single channel for activity notifications. Implementations MUST catch
- * their own errors and treat dispatch as best-effort: the dispatch
- * scheduler (`scheduleNotificationDispatch`) calls into dispatchers
- * from a later event-loop turn without awaiting the result, so any
- * thrown error would otherwise become an uncaught rejection.
+ * Single channel for activity notifications. Implementations MUST catch their
+ * own errors and treat dispatch as best-effort: the dispatch scheduler
+ * (`scheduleNotificationDispatch`) calls into dispatchers from a later
+ * event-loop turn without awaiting the result, so any thrown error would
+ * otherwise become an uncaught rejection.
  */
 export interface ActivityNotificationDispatcher {
   dispatch(event: ActivityNotificationEvent): Promise<void>

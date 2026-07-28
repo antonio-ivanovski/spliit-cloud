@@ -1,18 +1,18 @@
-import { categoryIdSchema } from '@spliit/domain'
 import { z } from 'zod'
 
+import { categoryIdSchema } from '@spliit/domain'
+
 /**
- * Path-param and search-param schemas for every route that needs typed
- * values. These are wired up via `params.parse` / `validateSearch` on each
- * `createFileRoute(...)` definition, so consumers can call
- * `Route.useParams()` / `Route.useSearch()` (or `getRouteApi(...).useParams()`
- * / `.useSearch()` from code-split files) and get strongly-typed values out
- * of the URL.
+ * Path-param and search-param schemas for every route that needs typed values.
+ * These are wired up via `params.parse` / `validateSearch` on each
+ * `createFileRoute(...)` definition, so consumers can call `Route.useParams()`
+ * / `Route.useSearch()` (or `getRouteApi(...).useParams()` / `.useSearch()`
+ * from code-split files) and get strongly-typed values out of the URL.
  *
  * The route shapes here are intentionally permissive (`z.string().catch(...)`
- * for free-form fields, `z.optional()` for everything) so that an
- * out-of-band navigation never throws a `PathParamError` / `SearchParamError`
- * at the user — the page just renders with sensible defaults.
+ * for free-form fields, `z.optional()` for everything) so that an out-of-band
+ * navigation never throws a `PathParamError` / `SearchParamError` at the user —
+ * the page just renders with sensible defaults.
  */
 
 const cuidLike = z.string().min(1).catch('')
@@ -41,11 +41,10 @@ const dateString = z
   .catch(undefined)
 
 /**
- * Search-param schema for the `/groups/import` wizard. The `prefill`
- * field carries an encoded `spliit.app` group URL when the user
- * arrived from the not-found hand-off; the wizard opens on the
- * destination step when this is set. The `source` field selects
- * the active import-source tab.
+ * Search-param schema for the `/groups/import` wizard. The `prefill` field
+ * carries an encoded `spliit.app` group URL when the user arrived from the
+ * not-found hand-off; the wizard opens on the destination step when this is
+ * set. The `source` field selects the active import-source tab.
  */
 export const importGroupSearchSchema = z.object({
   prefill: z.string().optional(),
@@ -53,22 +52,22 @@ export const importGroupSearchSchema = z.object({
 })
 
 /**
- * Search-param schema for the `/groups/$groupId` route. The `invite`
- * field carries a link-invite token. Any string (or absence) is
- * captured and forwarded to the server, which is the source of truth
- * for token validity — malformed or empty tokens are rejected with
- * FORBIDDEN, rendered as the "invalid link" page by the layout.
+ * Search-param schema for the `/groups/$groupId` route. The `invite` field
+ * carries a link-invite token. Any string (or absence) is captured and
+ * forwarded to the server, which is the source of truth for token validity —
+ * malformed or empty tokens are rejected with FORBIDDEN, rendered as the
+ * "invalid link" page by the layout.
  *
- * `friendLinkInvite` carries the invite URL returned by
- * `friends.create` on the link path. The layout surfaces it as a
- * one-time dialog so the user can copy/share it before continuing.
+ * `friendLinkInvite` carries the invite URL returned by `friends.create` on the
+ * link path. The layout surfaces it as a one-time dialog so the user can
+ * copy/share it before continuing.
  *
- * The `exp*` fields drive the expense-list filter panel. Multi-value
- * filters (categories, paid by/for, currencies) are encoded as
- * comma-separated strings so a single search param holds the whole
- * set; they are parsed to arrays by the expense-filters hook.
- * `expShowSettlements` flips the settlement visibility alongside the
- * other filters (it is omitted when at the default `true`).
+ * The `exp*` fields drive the expense-list filter panel. Multi-value filters
+ * (categories, paid by/for, currencies) are encoded as comma-separated strings
+ * so a single search param holds the whole set; they are parsed to arrays by
+ * the expense-filters hook. `expShowSettlements` flips the settlement
+ * visibility alongside the other filters (it is omitted when at the default
+ * `true`).
  */
 export const groupSearchSchema = z.object({
   invite: z.string().optional(),

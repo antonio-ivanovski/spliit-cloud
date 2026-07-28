@@ -1,5 +1,7 @@
-import { prisma } from '@spliit/db'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+
+import { prisma } from '@spliit/db'
+
 import { hashLinkToken } from '../lib/invitations'
 import { groupsRouter } from '../trpc/routers/groups'
 import { invitationsRouter } from '../trpc/routers/invitations'

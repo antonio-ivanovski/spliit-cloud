@@ -1,7 +1,11 @@
 import * as z from 'zod'
+
 import type { ActivityType } from './activities/types'
 
-/** Stable channel identifiers persisted in account preferences and delivery intents. */
+/**
+ * Stable channel identifiers persisted in account preferences and delivery
+ * intents.
+ */
 export const NotificationChannel = {
   EMAIL: 'EMAIL',
   PUSH: 'PUSH',
@@ -53,7 +57,10 @@ export const ACTIVE_NOTIFICATION_CATEGORIES = [
   NotificationCategory.EXPENSE_COMMENT,
 ] as const
 
-/** Account defaults. Comment delivery prefers Push when the account can receive it. */
+/**
+ * Account defaults. Comment delivery prefers Push when the account can receive
+ * it.
+ */
 export const DEFAULT_NOTIFICATION_CHANNELS: Readonly<
   Record<NotificationCategory, readonly NotificationChannel[]>
 > = {
@@ -90,7 +97,10 @@ export const RECOMMENDED_NOTIFICATION_CHANNELS: Readonly<
 
 export const recommendedNotificationChannels = RECOMMENDED_NOTIFICATION_CHANNELS
 
-/** `hasPushTarget` is retained for call-site compatibility; explicit defaults never fall back to email. */
+/**
+ * `hasPushTarget` is retained for call-site compatibility; explicit defaults
+ * never fall back to email.
+ */
 export function getRecommendedNotificationChannels(
   category: NotificationCategory,
   _hasPushTarget = true,

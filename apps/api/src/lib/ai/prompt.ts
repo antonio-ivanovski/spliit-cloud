@@ -1,18 +1,19 @@
 import { localeLabels, type Locale } from '@spliit/domain'
+
 import type { GroupContext, RecentExpense } from './context'
 
 /**
- * Human-readable language name for the AI, e.g. "Español" or "日本語".
- * Returns `undefined` for unknown locales.
+ * Human-readable language name for the AI, e.g. "Español" or "日本語". Returns
+ * `undefined` for unknown locales.
  */
 export function resolveLanguageName(locale: string): string | undefined {
   return localeLabels[locale as Locale]
 }
 
 /**
- * Locale hint line. Soft hint — the user's app language doesn't force
- * the title language. Empty string when no locale is provided or the
- * locale is not a known one, letting callers compose without branching.
+ * Locale hint line. Soft hint — the user's app language doesn't force the title
+ * language. Empty string when no locale is provided or the locale is not a
+ * known one, letting callers compose without branching.
  */
 export function buildLocaleHint(locale: string | undefined): string {
   const name = locale ? resolveLanguageName(locale) : undefined
@@ -21,9 +22,9 @@ export function buildLocaleHint(locale: string | undefined): string {
 }
 
 /**
- * Group context line. Empty string when no group is provided, letting
- * callers compose without conditional branching. Uses the ISO code when
- * available and falls back to the currency symbol for custom currencies.
+ * Group context line. Empty string when no group is provided, letting callers
+ * compose without conditional branching. Uses the ISO code when available and
+ * falls back to the currency symbol for custom currencies.
  */
 export function buildGroupContextSection(
   group: GroupContext | undefined,
@@ -34,9 +35,9 @@ export function buildGroupContextSection(
 }
 
 /**
- * Translation directive appended to the extraction prompt when the user
- * opts in to locale translation. Returns empty string when disabled or
- * the locale cannot be resolved to a language name.
+ * Translation directive appended to the extraction prompt when the user opts in
+ * to locale translation. Returns empty string when disabled or the locale
+ * cannot be resolved to a language name.
  */
 export function buildTranslationDirective(
   locale: string | undefined,
@@ -49,9 +50,9 @@ export function buildTranslationDirective(
 }
 
 /**
- * Past-expense examples section. Empty string when there are no
- * examples. Repetition is intentional and reflects the raw frequency of
- * each title in the group's history.
+ * Past-expense examples section. Empty string when there are no examples.
+ * Repetition is intentional and reflects the raw frequency of each title in the
+ * group's history.
  */
 export function buildRecentExpensesSection(expenses: RecentExpense[]): string {
   if (expenses.length === 0) return ''

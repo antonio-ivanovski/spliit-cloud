@@ -1,3 +1,6 @@
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { Button } from '@/components/ui/button'
 import {
   ResponsiveDialog,
@@ -12,14 +15,12 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
 import { isPlaceholderEmail } from '@/lib/account'
 import { trpc } from '@/trpc/client'
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 /**
- * Server-filtered "link to account" picker. The candidates procedure
- * excludes the unlinked LP itself and any LP on the opposite side of
- * an expense leg, so the admin only sees compatible destinations and
- * never hits the unique-constraint error from the old inline form.
+ * Server-filtered "link to account" picker. The candidates procedure excludes
+ * the unlinked LP itself and any LP on the opposite side of an expense leg, so
+ * the admin only sees compatible destinations and never hits the
+ * unique-constraint error from the old inline form.
  */
 export function LinkUnlinkedParticipantDialog({
   groupId,
@@ -108,11 +109,11 @@ export function LinkUnlinkedParticipantDialog({
               <Skeleton className="h-10 w-full" />
             </div>
           ) : candidates.length === 0 ? (
-            <p className="text-sm text-muted-foreground py-2">
+            <p className="py-2 text-sm text-muted-foreground">
               {t('unlinked.linkDialog.noCandidates')}
             </p>
           ) : (
-            <div className="flex flex-col gap-4 max-h-[60vh] overflow-y-auto">
+            <div className="flex max-h-[60vh] flex-col gap-4 overflow-y-auto">
               {members.length > 0 && (
                 <div className="flex flex-col gap-2">
                   <p className="text-xs font-medium text-muted-foreground">
@@ -124,7 +125,7 @@ export function LinkUnlinkedParticipantDialog({
                       return (
                         <label
                           key={candidate.id}
-                          className="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-muted/40 disabled:cursor-not-allowed"
+                          className="flex cursor-pointer items-center gap-3 px-3 py-2 hover:bg-muted/40 disabled:cursor-not-allowed"
                         >
                           <input
                             type="radio"
@@ -136,11 +137,11 @@ export function LinkUnlinkedParticipantDialog({
                             className="h-4 w-4 shrink-0 accent-primary"
                           />
                           <span className="min-w-0 flex-1">
-                            <span className="block text-sm font-medium truncate">
+                            <span className="block truncate text-sm font-medium">
                               {candidate.name}
                             </span>
                             {!isPlaceholderEmail(candidate.email) && (
-                              <span className="block text-xs text-muted-foreground truncate">
+                              <span className="block truncate text-xs text-muted-foreground">
                                 {candidate.email}
                               </span>
                             )}
@@ -162,7 +163,7 @@ export function LinkUnlinkedParticipantDialog({
                       return (
                         <label
                           key={candidate.id}
-                          className="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-muted/40 disabled:cursor-not-allowed"
+                          className="flex cursor-pointer items-center gap-3 px-3 py-2 hover:bg-muted/40 disabled:cursor-not-allowed"
                         >
                           <input
                             type="radio"
@@ -175,15 +176,15 @@ export function LinkUnlinkedParticipantDialog({
                           />
                           <span className="min-w-0 flex-1">
                             <span className="flex items-center gap-2">
-                              <span className="block text-sm font-medium truncate">
+                              <span className="block truncate text-sm font-medium">
                                 {candidate.name}
                               </span>
-                              <span className="inline-flex shrink-0 items-center rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+                              <span className="inline-flex shrink-0 items-center rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium tracking-wide text-muted-foreground uppercase">
                                 {t('unlinked.linkDialog.pendingSuffix')}
                               </span>
                             </span>
                             {!isPlaceholderEmail(candidate.email) && (
-                              <span className="block text-xs text-muted-foreground truncate">
+                              <span className="block truncate text-xs text-muted-foreground">
                                 {candidate.email}
                               </span>
                             )}

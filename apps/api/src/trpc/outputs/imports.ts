@@ -1,5 +1,6 @@
-import { recurrenceConfigSchema } from '@spliit/domain'
 import { z } from 'zod'
+
+import { recurrenceConfigSchema } from '@spliit/domain'
 
 const normalizedSourceParticipantSchema = z.object({
   sourceId: z.string(),

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+
 import { informationDiffer } from './information.differ'
 import type { DiffableGroup } from './types'
 

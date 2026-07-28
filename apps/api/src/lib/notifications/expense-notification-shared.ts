@@ -1,14 +1,15 @@
 /**
- * Shared building blocks for the expense channel dispatchers (email and
- * push). Both channels walk the same activity pipeline: parse the
- * activity data, resolve a recipient scope (participants + group + actor),
- * and pick up any targeted account that the activity handler flagged.
- * Extracting those primitives here keeps the two dispatchers aligned
- * without forcing either to bend around the other's per-channel shape.
+ * Shared building blocks for the expense channel dispatchers (email and push).
+ * Both channels walk the same activity pipeline: parse the activity data,
+ * resolve a recipient scope (participants + group + actor), and pick up any
+ * targeted account that the activity handler flagged. Extracting those
+ * primitives here keeps the two dispatchers aligned without forcing either to
+ * bend around the other's per-channel shape.
  */
 import { prisma } from '@spliit/db'
 import type { Expense } from '@spliit/domain'
 import { getCurrency } from '@spliit/domain'
+
 import { getAffectedParticipantIds } from '../api/expense-activity-diff'
 import type { ActivityNotificationEvent } from './types'
 
@@ -18,9 +19,9 @@ import type { ActivityNotificationEvent } from './types'
 
 /**
  * Active group member projection used by both channels for friend-ledger
- * display name resolution. Each channel may select a different account
- * subset (email needs `email`, push needs `name`), so additional account
- * fields are kept optional and accessors guard accordingly.
+ * display name resolution. Each channel may select a different account subset
+ * (email needs `email`, push needs `name`), so additional account fields are
+ * kept optional and accessors guard accordingly.
  */
 export type ExpenseNotificationMember = {
   account: { id: string; name?: string | null; email?: string | null } | null
@@ -48,7 +49,10 @@ export type ExpenseNotificationActorAccount = {
 // Constants
 // ---------------------------------------------------------------------------
 
-/** Shared `prisma.group.findUnique` projection for friend-ledger display name resolution. */
+/**
+ * Shared `prisma.group.findUnique` projection for friend-ledger display name
+ * resolution.
+ */
 export const EXPENSE_GROUP_SELECT = {
   name: true,
   groupType: true,
@@ -65,7 +69,10 @@ export const EXPENSE_GROUP_SELECT = {
   },
 } as const
 
-/** Fields needed to call `getAffectedParticipantIds` without a full Expense hydration. */
+/**
+ * Fields needed to call `getAffectedParticipantIds` without a full Expense
+ * hydration.
+ */
 const EXPENSE_AFFECTED_SELECT = {
   paidByList: { select: { ledgerParticipantId: true, shares: true } },
   paidFor: { select: { ledgerParticipantId: true, shares: true } },
@@ -88,9 +95,9 @@ const EXPENSE_AFFECTED_SELECT = {
 // ---------------------------------------------------------------------------
 
 /**
- * Render a minor-unit amount with its currency code. Falls back to bare
- * digits when no code is provided so callers can stage text without a
- * currency prefix.
+ * Render a minor-unit amount with its currency code. Falls back to bare digits
+ * when no code is provided so callers can stage text without a currency
+ * prefix.
  */
 export function formatExpenseAmount(
   cents: number,
@@ -103,8 +110,8 @@ export function formatExpenseAmount(
 }
 
 /**
- * Render an amount that may have been recorded in a foreign currency,
- * showing both original and ledger values when they differ.
+ * Render an amount that may have been recorded in a foreign currency, showing
+ * both original and ledger values when they differ.
  */
 export function formatExpenseDualAmount(
   amount: number,
@@ -132,10 +139,9 @@ export function formatExpenseDualAmount(
 
 /**
  * Resolve the human-readable group label from a recipient's perspective.
- * Friend-ledger groups use peer-aware phrasing; all other groups use
- * the raw group name. `recipientAccountId` is optional so broadcast
- * callers (no single recipient) can fall through to the invitation
- * temporary name.
+ * Friend-ledger groups use peer-aware phrasing; all other groups use the raw
+ * group name. `recipientAccountId` is optional so broadcast callers (no single
+ * recipient) can fall through to the invitation temporary name.
  */
 export function resolveGroupDisplayName(
   groupType: string,
@@ -165,9 +171,9 @@ export function resolveGroupDisplayName(
 
 /**
  * Reload the freshly-created expense and return every `ledgerParticipantId`
- * affected by it. Used for `EXPENSE_CREATED` and
- * `RECURRING_EXPENSE_CREATED` where the activity payload does not yet
- * carry a pre-computed `affectedParticipants` union.
+ * affected by it. Used for `EXPENSE_CREATED` and `RECURRING_EXPENSE_CREATED`
+ * where the activity payload does not yet carry a pre-computed
+ * `affectedParticipants` union.
  */
 export async function resolveCreatedExpenseRecipientIds(
   expenseId: string,
@@ -207,10 +213,10 @@ export async function resolveCreatedExpenseRecipientIds(
 }
 
 /**
- * Resolve and attach a targeted active member (typically the original
- * series creator) to the participant list when the activity handler
- * flagged them via `includeActorAsRecipient`. Returns the original array
- * unchanged when the account is already present or cannot be found.
+ * Resolve and attach a targeted active member (typically the original series
+ * creator) to the participant list when the activity handler flagged them via
+ * `includeActorAsRecipient`. Returns the original array unchanged when the
+ * account is already present or cannot be found.
  */
 export async function ensureAccountIncludedAsParticipant(args: {
   groupId: string
@@ -249,10 +255,9 @@ export async function ensureAccountIncludedAsParticipant(args: {
 // ---------------------------------------------------------------------------
 
 /**
- * Fetch the participants, group, and actor account in a single
- * `Promise.all`. Both channel dispatchers need this exact trio for
- * their main (`EXPENSE_CREATED/UPDATED/DELETED`) and import-summary
- * code paths.
+ * Fetch the participants, group, and actor account in a single `Promise.all`.
+ * Both channel dispatchers need this exact trio for their main
+ * (`EXPENSE_CREATED/UPDATED/DELETED`) and import-summary code paths.
  */
 export async function loadActivityChannelContext(args: {
   groupId: string
@@ -288,8 +293,8 @@ export async function loadActivityChannelContext(args: {
 
 /**
  * Fetch the group and the actor account only. Used by the summary and
- * recurrence-stopped paths that address a single recipient directly and
- * do not need a participant-list fan-out.
+ * recurrence-stopped paths that address a single recipient directly and do not
+ * need a participant-list fan-out.
  */
 export async function loadActivityGroupAndActor(args: {
   groupId: string
@@ -317,9 +322,9 @@ export async function loadActivityGroupAndActor(args: {
 }
 
 /**
- * Fetch the recurring-summary / recurrence-stopped subject member for a
- * direct `recipientAccountId`. Both channels look this up with the same
- * shape and use it as the single-recipient participant for their fan-out.
+ * Fetch the recurring-summary / recurrence-stopped subject member for a direct
+ * `recipientAccountId`. Both channels look this up with the same shape and use
+ * it as the single-recipient participant for their fan-out.
  */
 export async function loadActivityRecipientMember(args: {
   groupId: string

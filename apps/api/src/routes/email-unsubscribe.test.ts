@@ -1,5 +1,6 @@
 import { Hono } from 'hono'
 import { describe, expect, it, vi } from 'vitest'
+
 import '../test/mocks'
 import type {
   emailUnsubscribeGet as EmailUnsubscribeGet,

@@ -1,5 +1,6 @@
 import type { JobWithMetadata, PgBoss } from 'pg-boss'
 import { describe, expect, it, vi } from 'vitest'
+
 import { registerHandlers } from './lifecycle'
 import { JOB_NAMES } from './registry'
 

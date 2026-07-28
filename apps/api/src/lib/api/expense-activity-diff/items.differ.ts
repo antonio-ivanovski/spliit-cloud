@@ -1,4 +1,5 @@
 import type { ExpenseApiItem } from '@spliit/domain'
+
 import { itemsKey } from './helpers'
 import type { ChangeContext, ExpenseDiffer } from './types'
 
@@ -51,15 +52,13 @@ function formatItemLine(
 /**
  * Detects and formats changes to expense items (line items).
  *
- * Emits a multi-line summary grouped by:
- *   - modified items: "before → after"
- *   - added items: prefixed with "+ "
- *   - removed items: prefixed with "- "
+ * Emits a multi-line summary grouped by: - modified items: "before → after" -
+ * added items: prefixed with "+ " - removed items: prefixed with "- "
  *
  * The UI strips the prefix and styles each line independently (added gets
- * emphasis, removed gets muted + strikethrough). For items where only the
- * split (paidFor / splitMode) changed, a compact "name (split updated)"
- * marker is emitted instead of duplicating the unchanged price line.
+ * emphasis, removed gets muted + strikethrough). For items where only the split
+ * (paidFor / splitMode) changed, a compact "name (split updated)" marker is
+ * emitted instead of duplicating the unchanged price line.
  */
 export const itemsDiffer: ExpenseDiffer = {
   field: 'items',

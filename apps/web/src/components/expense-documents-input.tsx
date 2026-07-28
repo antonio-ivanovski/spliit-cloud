@@ -1,3 +1,7 @@
+import { Loader2, Plus, Trash, X } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import {
   ReceiptScanTrigger,
   type ReceiptDocument,
@@ -32,9 +36,6 @@ import { randomId } from '@/lib/api'
 import type { ExpenseFormInputValues } from '@/lib/schemas'
 import { resizeImage, usePresignedUpload } from '@/lib/upload'
 import { cn, formatFileSize } from '@/lib/utils'
-import { Loader2, Plus, Trash, X } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 type Props = {
   documents: ExpenseFormInputValues['documents']
@@ -105,7 +106,7 @@ export function ExpenseDocumentsInput({
         setPending(false)
       }
     }
-    upload()
+    void upload()
   }
 
   return (
@@ -137,13 +138,13 @@ export function ExpenseDocumentsInput({
               variant="secondary"
               type="button"
               onClick={openFileDialog}
-              className="w-full h-full"
+              className="h-full w-full"
               disabled={pending}
             >
               {pending ? (
-                <Loader2 className="w-8 h-8 animate-spin" />
+                <Loader2 className="h-8 w-8 animate-spin" />
               ) : (
-                <Plus className="w-8 h-8" />
+                <Plus className="h-8 w-8" />
               )}
             </Button>
           </div>
@@ -229,16 +230,16 @@ export function DocumentThumbnail({
                 documents={[document]}
                 currentExpense={receiptContext}
                 onAccept={onReceiptAccepted}
-                className="h-10 min-w-0 basis-0 flex-1 rounded-t-none rounded-bl-md rounded-br-none border-r border-secondary-foreground/20 bg-secondary/70 backdrop-blur-sm hover:bg-pink-200/70"
+                className="h-10 min-w-0 flex-1 basis-0 rounded-t-none rounded-br-none rounded-bl-md border-r border-secondary-foreground/20 bg-secondary/70 backdrop-blur-sm hover:bg-pink-200/70"
               />
             )}
             <Button
               type="button"
               variant="secondary"
               className={cn(
-                'h-10 min-w-0 basis-0 flex-1 rounded-t-none bg-secondary/70 text-destructive backdrop-blur-sm hover:bg-destructive/70 hover:text-destructive-foreground',
+                'h-10 min-w-0 flex-1 basis-0 rounded-t-none bg-secondary/70 text-destructive backdrop-blur-sm hover:bg-destructive/70 hover:text-destructive-foreground',
                 enableReceiptExtract && onReceiptAccepted
-                  ? 'rounded-bl-none rounded-br-md border-l-0'
+                  ? 'rounded-br-md rounded-bl-none border-l-0'
                   : 'rounded-b-md',
               )}
               title={t('deleteDocument')}
@@ -250,7 +251,7 @@ export function DocumentThumbnail({
           </div>
         )}
       </div>
-      <DialogContent className="p-4 w-screen max-w-[100vw] h-dvh max-h-dvh sm:max-w-[calc(100vw-32px)] sm:max-h-[calc(100dvh-32px)] *:last:hidden">
+      <DialogContent className="h-dvh max-h-dvh w-screen max-w-[100vw] p-4 *:last:hidden sm:max-h-[calc(100dvh-32px)] sm:max-w-[calc(100vw-32px)]">
         <DialogTitle className="sr-only">{t('document')}</DialogTitle>
         <DialogDescription className="sr-only"></DialogDescription>
         <div className="flex flex-col gap-4">
@@ -288,7 +289,7 @@ export function DocumentThumbnail({
             )}
             <DialogClose asChild>
               <Button variant="ghost">
-                <X className="w-4 h-4 mr-2" /> {t('close')}
+                <X className="mr-2 h-4 w-4" /> {t('close')}
               </Button>
             </DialogClose>
           </div>
@@ -305,7 +306,7 @@ export function DocumentThumbnail({
               {documents.map((document) => (
                 <CarouselItem key={document.url}>
                   <Image
-                    className="object-contain w-[calc(100vw-32px)] h-[calc(100dvh-32px-40px-16px-48px)] sm:w-[calc(100vw-32px-32px)] sm:h-[calc(100dvh-32px-40px-16px-32px-48px)]"
+                    className="h-[calc(100dvh-32px-40px-16px-48px)] w-[calc(100vw-32px)] object-contain sm:h-[calc(100dvh-32px-40px-16px-32px-48px)] sm:w-[calc(100vw-32px-32px)]"
                     src={document.url}
                     width={document.width}
                     height={document.height}
@@ -314,8 +315,8 @@ export function DocumentThumbnail({
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="left-0 top-auto -bottom-16" />
-            <CarouselNext className="right-0 top-auto -bottom-16" />
+            <CarouselPrevious className="top-auto -bottom-16 left-0" />
+            <CarouselNext className="top-auto right-0 -bottom-16" />
           </Carousel>
         </div>
       </DialogContent>

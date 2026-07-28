@@ -1,10 +1,12 @@
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+
 import {
   GroupInvitationStatus,
   LedgerParticipantKind,
   prisma,
   SplitMode,
 } from '@spliit/db'
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+
 import {
   linkUnlinkedParticipantToPendingInvite,
   mergeLedgerParticipantReferences,
@@ -15,15 +17,15 @@ import { checkDbConnection, testRunId } from './setup'
 await checkDbConnection()
 
 /**
- * Regression tests for `mergeLedgerParticipantReferences` and the
- * same-expense path through `linkUnlinkedParticipantToPendingInvite`.
+ * Regression tests for `mergeLedgerParticipantReferences` and the same-expense
+ * path through `linkUnlinkedParticipantToPendingInvite`.
  *
- * Both `ExpensePaidBy` and `ExpensePaidFor` use the composite primary
- * key `(expenseId, ledgerParticipantId)`, so a naive
- * `updateMany({ ledgerParticipantId: sourceId }, { ledgerParticipantId: targetId })`
- * trips the unique constraint whenever source and target already share
- * an expense. The merge must coalesce (sum shares onto the target row
- * and delete the source row) before the rewrite runs.
+ * Both `ExpensePaidBy` and `ExpensePaidFor` use the composite primary key
+ * `(expenseId, ledgerParticipantId)`, so a naive `updateMany({
+ * ledgerParticipantId: sourceId }, { ledgerParticipantId: targetId })` trips
+ * the unique constraint whenever source and target already share an expense.
+ * The merge must coalesce (sum shares onto the target row and delete the source
+ * row) before the rewrite runs.
  */
 describe('mergeLedgerParticipantReferences — same-expense coalesce', () => {
   const runId = testRunId()

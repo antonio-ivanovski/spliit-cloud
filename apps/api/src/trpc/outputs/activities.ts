@@ -1,10 +1,11 @@
+import { z } from 'zod'
+
 import {
   activityActorTypeSchema,
   activityDataSchema,
   activitySubjectTypeSchema,
   activityTypeSchema,
 } from '@spliit/domain/activities'
-import { z } from 'zod'
 
 const activityExpenseSchema = z.object({
   id: z.string(),

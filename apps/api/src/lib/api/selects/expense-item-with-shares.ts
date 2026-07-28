@@ -1,4 +1,5 @@
 import type { Prisma } from '@spliit/db'
+
 import { expenseParticipantSharesSelect } from './expense-participant-shares'
 
 /** Expense line item scalars + paidFor share rows (list / JSON export / diffs). */

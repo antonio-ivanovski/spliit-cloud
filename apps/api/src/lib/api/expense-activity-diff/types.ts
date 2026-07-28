@@ -1,5 +1,6 @@
 import type { Expense } from '@spliit/domain'
 import type { ExpenseChangedField } from '@spliit/domain/activities'
+
 import type {
   ActivityDiffer,
   DiffEmission as GenericDiffEmission,
@@ -33,11 +34,11 @@ export type ChangeContext = {
 export type DiffEmission = GenericDiffEmission<ExpenseChangedField>
 
 /**
- * A self-contained differ that detects and formats changes for a single
- * expense field group. Each differ has a single narrow responsibility.
+ * A self-contained differ that detects and formats changes for a single expense
+ * field group. Each differ has a single narrow responsibility.
  *
- * Differs are plain objects — no classes — that are composed by the
- * composite differ which iterates through them collecting emissions.
+ * Differs are plain objects — no classes — that are composed by the composite
+ * differ which iterates through them collecting emissions.
  */
 export type ExpenseDiffer = ActivityDiffer<
   DifferenceableExpense,

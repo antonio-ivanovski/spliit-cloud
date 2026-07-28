@@ -1,5 +1,7 @@
-import { prisma } from '@spliit/db'
 import { z } from 'zod'
+
+import { prisma } from '@spliit/db'
+
 import { getGroups } from '../../../lib/api'
 import { protectedProcedure } from '../../init'
 import { listGroupsOutputSchema } from '../../outputs/groups'
@@ -7,8 +9,8 @@ import { listGroupsOutputSchema } from '../../outputs/groups'
 /**
  * Returns the groups the current account is an active member of. The legacy
  * `groupIds` input is still accepted so the web client can keep using
- * localStorage for now, but when empty we fall back to the server-backed
- * list derived from `GroupMember`.
+ * localStorage for now, but when empty we fall back to the server-backed list
+ * derived from `GroupMember`.
  */
 export const listGroupsProcedure = protectedProcedure
   .input(

@@ -1,9 +1,9 @@
-import { render, screen } from '@/test/test-utils'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
 import { AccountMenu } from '@/components/account-menu'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { render, screen } from '@/test/test-utils'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 

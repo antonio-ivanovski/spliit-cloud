@@ -1,6 +1,7 @@
+import { describe, expect, it } from 'vitest'
+
 import { BalancesList } from '@/app/groups/[groupId]/balances-list'
 import { render, screen } from '@/test/test-utils'
-import { describe, expect, it } from 'vitest'
 
 // ── Helpers ──────────────────────────────────────────────────────────────
 

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+
 import { compositeGroupDiffer } from './composite.differ'
 import { currencyDiffer } from './currency.differ'
 import { informationDiffer } from './information.differ'

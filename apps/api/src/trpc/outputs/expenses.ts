@@ -1,9 +1,10 @@
+import { z } from 'zod'
+
 import {
   categoryIdSchema,
   recurrenceFrequencySchema,
   RecurringExpenseSeriesStatus,
 } from '@spliit/domain'
-import { z } from 'zod'
 
 const splitModeSchema = z.enum([
   'EVENLY',

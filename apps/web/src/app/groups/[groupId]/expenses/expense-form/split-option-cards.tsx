@@ -1,9 +1,10 @@
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { cn } from '@/lib/utils'
-import type { SplitMode } from '@spliit/domain'
 import { Coins, Hash, Percent, User, Users } from 'lucide-react'
 import type { ComponentType, ReactNode, SVGProps } from 'react'
 import { useTranslation } from 'react-i18next'
+
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { cn } from '@/lib/utils'
+import type { SplitMode } from '@spliit/domain'
 
 type IconType = ComponentType<
   SVGProps<SVGSVGElement> & { size?: number | string }
@@ -128,7 +129,7 @@ function OptionHeader({
         <Icon size={16} strokeWidth={2} aria-hidden="true" />
       </span>
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-medium leading-tight">{title}</p>
+        <p className="text-sm leading-tight font-medium">{title}</p>
         <p className="mt-0.5 text-xs leading-snug text-muted-foreground">
           {helper}
         </p>
@@ -140,7 +141,7 @@ function OptionHeader({
 
 function SectionLabel({ children }: { children: ReactNode }) {
   return (
-    <p className="px-1 text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground">
+    <p className="px-1 text-[11px] font-medium tracking-[0.08em] text-muted-foreground uppercase">
       {children}
     </p>
   )
@@ -239,9 +240,11 @@ export function PaidForSplitOptionCards(props: {
   onChange: (next: SplitMode) => void
   readOnly?: boolean
   renderContent?: (mode: Exclude<SplitMode, 'ITEMIZED'>) => ReactNode
-  /** Modes to omit from the rendered radio group. The selected mode is
-   *  NOT auto-snapped — callers must ensure `value` is not in the
-   *  hidden list, or no card will appear as selected. */
+  /**
+   * Modes to omit from the rendered radio group. The selected mode is NOT
+   * auto-snapped — callers must ensure `value` is not in the hidden list, or no
+   * card will appear as selected.
+   */
   hiddenModes?: Exclude<SplitMode, 'ITEMIZED'>[]
 }) {
   const { value, onChange, readOnly, renderContent, hiddenModes } = props

@@ -1,5 +1,7 @@
-import { bulkUpdateExpenseCategoriesInputSchema } from '@spliit/domain/schemas'
 import { TRPCError } from '@trpc/server'
+
+import { bulkUpdateExpenseCategoriesInputSchema } from '@spliit/domain/schemas'
+
 import { bulkUpdateExpenseCategories } from '../../../../lib/api/category-bulk'
 import { loadGroupContext, protectedProcedure } from '../../../init'
 import { bulkUpdateCategoriesOutputSchema } from '../../../outputs/expenses'

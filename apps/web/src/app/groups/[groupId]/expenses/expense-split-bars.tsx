@@ -44,12 +44,12 @@ export function ExpenseSplitBars({
 
   return (
     <section className="space-y-2" aria-label={label}>
-      <h3 className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+      <h3 className="flex items-center gap-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">
         {label}
         {modeLabel && (
           <Badge
             variant="outline"
-            className="px-1.5 py-0 text-[10px] font-medium normal-case tracking-normal"
+            className="px-1.5 py-0 text-[10px] font-medium tracking-normal normal-case"
           >
             {modeLabel}
           </Badge>
@@ -96,11 +96,11 @@ export function ExpenseSplitBars({
             )}
             <span className="min-w-0 flex-1 truncate">{row.name}</span>
             {row.value && (
-              <span className="shrink-0 tabular-nums text-muted-foreground/60">
+              <span className="shrink-0 text-muted-foreground/60 tabular-nums">
                 {row.value}
               </span>
             )}
-            <span className="shrink-0 tabular-nums text-muted-foreground">
+            <span className="shrink-0 text-muted-foreground tabular-nums">
               {formatCurrency(currency, row.amount, locale)}
             </span>
           </div>

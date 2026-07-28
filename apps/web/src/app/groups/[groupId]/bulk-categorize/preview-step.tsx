@@ -1,3 +1,6 @@
+import { Loader2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
 import { CategorySelector } from '@/components/category-selector'
 import { Button } from '@/components/ui/button'
 import {
@@ -11,8 +14,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox'
 import { WizardNav } from '@/components/wizard'
 import { DEFAULT_CATEGORIES, type CategoryId } from '@spliit/domain'
-import { Loader2 } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+
 import type { PreviewRow } from './bulk-categorize-wizard-state'
 import { ConfidenceBadge } from './category-field'
 

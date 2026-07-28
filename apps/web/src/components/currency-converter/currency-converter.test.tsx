@@ -1,8 +1,9 @@
-import { ConverterContent } from '@/components/currency-converter/currency-converter'
-import { fireEvent, render, screen, waitFor } from '@/test/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const rateMock = vi.fn()
+import { ConverterContent } from '@/components/currency-converter/currency-converter'
+import { fireEvent, render, screen, waitFor } from '@/test/test-utils'
+
+const _rateMock = vi.fn()
 const useCurrencyRateSpy = vi.fn()
 const navigateMock = vi.fn()
 const overviewQuerySpy = vi.fn()

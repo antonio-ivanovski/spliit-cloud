@@ -1,14 +1,15 @@
+import type { Dispatch, SetStateAction } from 'react'
+import { useEffect, useState } from 'react'
+import type { UseFormReturn } from 'react-hook-form'
+import { useWatch } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+
 import type { Group } from '@/lib/api'
 import { getCurrency, useCurrencies } from '@/lib/currency'
 import { useCurrencyRate } from '@/lib/hooks'
 import { trpc } from '@/trpc/client'
 import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
 import { utcTodayIso } from '@spliit/domain'
-import type { Dispatch, SetStateAction } from 'react'
-import { useEffect, useState } from 'react'
-import type { UseFormReturn } from 'react-hook-form'
-import { useWatch } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
 
 export function useExpenseCurrencyConversion(args: {
   form: UseFormReturn<ExpenseFormInputValues>
@@ -25,23 +26,23 @@ export function useExpenseCurrencyConversion(args: {
   conversionRateMessage: string
   exchangeRate: ReturnType<typeof useCurrencyRate>
   /**
-   * Whether the typed amount is negative (income rather than expense).
-   * Derived directly from the watched `amount` field; the parent can
-   * react to it without a callback prop.
+   * Whether the typed amount is negative (income rather than expense). Derived
+   * directly from the watched `amount` field; the parent can react to it
+   * without a callback prop.
    */
   isIncome: boolean
   /**
-   * Read-only preview of the typed `amount` after conversion into the
-   * group (Ledger) currency. Undefined when no conversion is needed or
-   * the rate is not yet known. Form state is never mutated from this
-   * value — it is purely for display.
+   * Read-only preview of the typed `amount` after conversion into the group
+   * (Ledger) currency. Undefined when no conversion is needed or the rate is
+   * not yet known. Form state is never mutated from this value — it is purely
+   * for display.
    */
   convertedAmountPreview: number | undefined
   /** Group ledger currency code to pin first in the expense selector. */
   pinnedCurrencyCode: string | undefined
   /**
-   * Ranked recommendation codes once the query succeeds. `undefined`
-   * while loading/on error so the selector keeps its static fallback.
+   * Ranked recommendation codes once the query succeeds. `undefined` while
+   * loading/on error so the selector keeps its static fallback.
    */
   recommendedCurrencyCodes: string[] | undefined
 } {

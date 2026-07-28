@@ -1,9 +1,10 @@
-import type { ButtonProps } from '@/components/ui/button'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
 import { Loader2 } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useFormState } from 'react-hook-form'
+
+import type { ButtonProps } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 type Props = {
   loadingContent: ReactNode
@@ -26,7 +27,7 @@ export function SubmitButton({
       <span className="inline-flex items-center whitespace-nowrap">
         {isSubmitting ? (
           <>
-            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             {loadingContent}
           </>
         ) : (

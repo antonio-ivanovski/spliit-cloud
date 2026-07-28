@@ -1,3 +1,5 @@
+import { TRPCError } from '@trpc/server'
+
 import {
   GroupInvitationStatus,
   GroupInvitationType,
@@ -7,7 +9,7 @@ import {
   prisma,
   type GroupRole,
 } from '@spliit/db'
-import { TRPCError } from '@trpc/server'
+
 import {
   buildInvitationActivityData,
   logActivity,
@@ -114,9 +116,7 @@ export type CreateLinkInvitationResult = {
   inviteUrl: string
 }
 
-/**
- * Create a link invitation.
- */
+/** Create a link invitation. */
 export async function createLinkInvitation(
   input: CreateLinkInvitationInput,
 ): Promise<CreateLinkInvitationResult> {
@@ -189,9 +189,7 @@ export type LinkInvitationPreview = {
   expiresAt: Date | null
 }
 
-/**
- * Public-safe preview of a link invitation, looked up by the raw token.
- */
+/** Public-safe preview of a link invitation, looked up by the raw token. */
 export async function getLinkInvitationPreview(
   token: string,
 ): Promise<LinkInvitationPreview | null> {
@@ -240,9 +238,7 @@ export async function getLinkInvitationPreview(
   }
 }
 
-/**
- * Accept a link invitation for the current account.
- */
+/** Accept a link invitation for the current account. */
 export async function acceptLinkInvitation(opts: {
   token: string
   accountId: string

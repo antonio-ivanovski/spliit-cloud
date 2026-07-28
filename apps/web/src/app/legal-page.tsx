@@ -10,7 +10,7 @@ export function LegalPage({ title, children }: LegalPageProps) {
     <main className="flex-1 px-4 py-10 sm:py-16">
       <article className="mx-auto max-w-3xl rounded-2xl border bg-card px-5 py-8 shadow-sm sm:px-10 sm:py-12">
         <header className="mb-10 border-b pb-7">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          <p className="mb-2 text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">
             Spliit Cloud
           </p>
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">

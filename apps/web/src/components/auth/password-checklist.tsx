@@ -1,11 +1,12 @@
+import { Check, Circle } from 'lucide-react'
+import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { cn } from '@/lib/utils'
 import {
   getPasswordRequirements,
   type PasswordRequirementId,
 } from '@spliit/domain/password'
-import { Check, Circle } from 'lucide-react'
-import { useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 
 export function PasswordChecklist({ password }: { password: string }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })

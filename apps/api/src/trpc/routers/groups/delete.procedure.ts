@@ -1,24 +1,25 @@
-import { GroupType } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
+
+import { GroupType } from '@spliit/db'
+
 import { deleteGroup } from '../../../lib/api'
 import { loadGroupContext, protectedProcedure } from '../../init'
 import { deleteGroupOutputSchema } from '../../outputs/groups'
 
 /**
- * Permanently delete a group, its ledger, expenses, invitations, and
- * attached S3 documents. ADMIN-only: surfaced on the group settings
- * page, gated to admins by the surrounding UI.
+ * Permanently delete a group, its ledger, expenses, invitations, and attached
+ * S3 documents. ADMIN-only: surfaced on the group settings page, gated to
+ * admins by the surrounding UI.
  *
- * The procedure does not take a `confirmDelete` flag: the surrounding
- * dialog requires the caller to check an "I understand" box before it
- * enables the destructive button, so the confirmation lives in the UI
- * rather than the API. Keeping the API narrow also lets any future
- * cleanup jobs reuse `deleteGroup` directly without changing the
- * mutation shape.
+ * The procedure does not take a `confirmDelete` flag: the surrounding dialog
+ * requires the caller to check an "I understand" box before it enables the
+ * destructive button, so the confirmation lives in the UI rather than the API.
+ * Keeping the API narrow also lets any future cleanup jobs reuse `deleteGroup`
+ * directly without changing the mutation shape.
  *
- * Archived groups are rejected: there is nothing left to delete and the
- * setting already shows the group as read-only.
+ * Archived groups are rejected: there is nothing left to delete and the setting
+ * already shows the group as read-only.
  */
 export const deleteGroupProcedure = protectedProcedure
   .input(

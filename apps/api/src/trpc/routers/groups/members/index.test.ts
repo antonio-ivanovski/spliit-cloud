@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+
 import '../../../../test/mocks'
 import {
   authState,
@@ -664,10 +665,9 @@ describe('groupsRouter.members.remove', () => {
 })
 
 /**
- * Build a single "expense" record as `getGroupExpenses` would return it
- * after the row is materialised by Prisma. Mirrors the shape used in
- * `leave.test.ts` so the balance pipeline runs end-to-end on the mock
- * prisma client.
+ * Build a single "expense" record as `getGroupExpenses` would return it after
+ * the row is materialised by Prisma. Mirrors the shape used in `leave.test.ts`
+ * so the balance pipeline runs end-to-end on the mock prisma client.
  */
 function makeExpenseRow(args: {
   id: string

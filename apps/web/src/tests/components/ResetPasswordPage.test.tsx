@@ -1,7 +1,7 @@
-import { render, screen } from '@/test/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { ResetPasswordPage } from '@/app/auth/reset-password'
+import { render, screen } from '@/test/test-utils'
 
 // ── Hoisted mocks ───────────────────────────────────────────────────────
 

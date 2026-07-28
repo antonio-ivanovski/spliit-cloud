@@ -1,5 +1,7 @@
-import { prisma } from '@spliit/db'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+
+import { prisma } from '@spliit/db'
+
 import { randomId } from '../lib/api'
 import '../lib/notifications'
 import { waitForScheduledNotificationDispatchesForTest } from '../lib/notifications/dispatcher'

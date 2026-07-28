@@ -2,21 +2,21 @@
  * Best-effort split-mode resolution from pre-computed paidFor shares.
  *
  * The parsers produce paidFor.shares as exact integer cents summing to
- * amountCents (with drift correction applied).  `guessSplitMode` inspects
- * the distribution and returns both the detected `splitMode` and the
- * **normalised** `paidFor` entries:
+ * amountCents (with drift correction applied). `guessSplitMode` inspects the
+ * distribution and returns both the detected `splitMode` and the **normalised**
+ * `paidFor` entries:
  *
- *  - `EVENLY`  — shares are passed through unchanged (ignored by the
- *    balance engine; the parsers keep them as their cent values).
- *  - `BY_SHARES` — cents are reduced by their GCD so that the stored
- *    shares are the true ratio weights (e.g. `[200, 300]` → `[2, 3]`).
- *  - `BY_AMOUNT` — shares are passed through as literal cents.
+ * - `EVENLY` — shares are passed through unchanged (ignored by the balance
+ *   engine; the parsers keep them as their cent values).
+ * - `BY_SHARES` — cents are reduced by their GCD so that the stored shares are
+ *   the true ratio weights (e.g. `[200, 300]` → `[2, 3]`).
+ * - `BY_AMOUNT` — shares are passed through as literal cents.
  *
  * `guessByShares` is the only guesser that modifies shares; `guessEvenly`
  * remains read-only and returns a label.
  *
- * Config can be tuned per guesser (e.g. by a future import-wizard step)
- * without touching the parsers.
+ * Config can be tuned per guesser (e.g. by a future import-wizard step) without
+ * touching the parsers.
  */
 
 export type PaidForEntry = { sourceId: string; shares: number }
@@ -43,28 +43,27 @@ export function gcdOf(values: number[]): number {
 
 export type GuessEvenlyConfig = {
   /**
-   * When `true`, shares within ±1 cent of each other are treated as
-   * "evenly split" (the old heuristic from before 2025-07-04).
+   * When `true`, shares within ±1 cent of each other are treated as "evenly
+   * split" (the old heuristic from before 2025-07-04).
    *
    * **Warning:** enabling this can reintroduce the EVENLY drift bug
-   * (getBalances reflows via amount/N with floating-point, losing the
-   * exact cent distribution that the parser painstakingly computed).
-   * The default is `false` — only truly identical shares are EVENLY.
+   * (getBalances reflows via amount/N with floating-point, losing the exact
+   * cent distribution that the parser painstakingly computed). The default is
+   * `false` — only truly identical shares are EVENLY.
    *
    * @default false
    */
   allowOneCentDrift?: boolean
 
   /**
-   * Total number of unique participants involved in this expense
-   * (the union of paidBy and paidFor).
+   * Total number of unique participants involved in this expense (the union of
+   * paidBy and paidFor).
    *
-   * Defaults to `paidFor.length`.  Setting this is only needed when
-   * `paidFor` has fewer entries than the true participant count —
-   * e.g. a 1‑to‑1 payment where the payer consumed no share and is
-   * therefore absent from `paidFor`.  In that case `paidFor.length === 1`
-   * but `involvedParticipantCount === 2`, and the split is recognised as
-   * an even 50/50.
+   * Defaults to `paidFor.length`. Setting this is only needed when `paidFor`
+   * has fewer entries than the true participant count — e.g. a 1‑to‑1 payment
+   * where the payer consumed no share and is therefore absent from `paidFor`.
+   * In that case `paidFor.length === 1` but `involvedParticipantCount === 2`,
+   * and the split is recognised as an even 50/50.
    */
   involvedParticipantCount?: number
 }
@@ -72,10 +71,10 @@ export type GuessEvenlyConfig = {
 /**
  * Detect an even split.
  *
- * Returns `'EVENLY'` when all shares are identical (or within ±1 cent
- * when `allowOneCentDrift` is enabled), or when the expense involves
- * exactly two participants and `paidFor` contains a single entry
- * (the payer absorbed the full amount — implied 50/50).
+ * Returns `'EVENLY'` when all shares are identical (or within ±1 cent when
+ * `allowOneCentDrift` is enabled), or when the expense involves exactly two
+ * participants and `paidFor` contains a single entry (the payer absorbed the
+ * full amount — implied 50/50).
  */
 export function guessEvenly(
   paidFor: readonly PaidForEntry[],
@@ -111,18 +110,17 @@ export function guessEvenly(
 
 export type GuessBySharesConfig = {
   /**
-   * Maximum normalized weight.  Ratios whose largest weight exceeds this
-   * value are considered "not humanly sane" (merely large round numbers
-   * with a coincidental GCD) and fall through to BY_AMOUNT.
+   * Maximum normalized weight. Ratios whose largest weight exceeds this value
+   * are considered "not humanly sane" (merely large round numbers with a
+   * coincidental GCD) and fall through to BY_AMOUNT.
    *
-   * For example, shares [20000, 10000] have GCD=10000 → weights [2, 1],
-   * which fits under any reasonable cap.  But shares [200000, 100000]
-   * with GCD=100000 → weights still [2, 1] also fits.  The cap filters
-   * ratios where the individual weights are implausibly large — e.g.
-   * [300, 200, 100] → GCD=100 → weights [3, 2, 1] is fine, but
-   * [99999, 33333] → GCD=33333 → weights [3, 1] is also fine (weights
-   * themselves are small).  The cap is on the *normalised weight*, not
-   * the original cent values.
+   * For example, shares [20000, 10000] have GCD=10000 → weights [2, 1], which
+   * fits under any reasonable cap. But shares [200000, 100000] with GCD=100000
+   * → weights still [2, 1] also fits. The cap filters ratios where the
+   * individual weights are implausibly large — e.g. [300, 200, 100] → GCD=100 →
+   * weights [3, 2, 1] is fine, but [99999, 33333] → GCD=33333 → weights [3, 1]
+   * is also fine (weights themselves are small). The cap is on the _normalised
+   * weight_, not the original cent values.
    *
    * @default 25
    */
@@ -132,14 +130,14 @@ export type GuessBySharesConfig = {
 const DEFAULT_MAX_WEIGHT = 25
 
 /**
- * Detect a clean integer-ratio split (BY_SHARES) and return the
- * normalised ratio weights.
+ * Detect a clean integer-ratio split (BY_SHARES) and return the normalised
+ * ratio weights.
  *
- * Divides the cent values by their GCD so the result carries the true
- * ratio — e.g. shares `[200, 300]` → `[{ shares: 2 }, { shares: 3 }]`.
+ * Divides the cent values by their GCD so the result carries the true ratio —
+ * e.g. shares `[200, 300]` → `[{ shares: 2 }, { shares: 3 }]`.
  *
- * Returns `null` when the ratio isn't clean (GCD ≤ 1) or when the
- * largest normalised weight exceeds `maxWeight` (default 25).
+ * Returns `null` when the ratio isn't clean (GCD ≤ 1) or when the largest
+ * normalised weight exceeds `maxWeight` (default 25).
  */
 export function guessByShares(
   paidFor: readonly PaidForEntry[],
@@ -171,16 +169,19 @@ export type GuessResult = {
 
 /**
  * Best-effort split-mode guess — chains `guessEvenly` and `guessByShares`,
- * falling back to `'BY_AMOUNT'` when neither rule matches.  When
- * `BY_SHARES` is chosen the returned `paidFor` carries the GCD-reduced
- * ratio weights (e.g. `[200, 300]` → `[2, 3]`); for `EVENLY` and
- * `BY_AMOUNT` the shares are passed through unchanged.
+ * falling back to `'BY_AMOUNT'` when neither rule matches. When `BY_SHARES` is
+ * chosen the returned `paidFor` carries the GCD-reduced ratio weights (e.g.
+ * `[200, 300]` → `[2, 3]`); for `EVENLY` and `BY_AMOUNT` the shares are passed
+ * through unchanged.
  *
  * Accepts combined configuration for all guessers:
  *
  * ```ts
  * guessSplitMode(paidFor, amountCents)
- * guessSplitMode(paidFor, amountCents, { allowOneCentDrift: true, maxWeight: 30 })
+ * guessSplitMode(paidFor, amountCents, {
+ *   allowOneCentDrift: true,
+ *   maxWeight: 30,
+ * })
  * ```
  */
 export function guessSplitMode(

@@ -1,3 +1,10 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useNavigate } from '@tanstack/react-router'
+import { ArrowLeft } from 'lucide-react'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+
 import { CurrencySelector } from '@/components/currency-selector'
 import Link from '@/components/link'
 import { SubmitButton } from '@/components/submit-button'
@@ -33,13 +40,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/components/ui/use-toast'
 import { getCurrency, useCurrencies } from '@/lib/currency'
 import { trpc } from '@/trpc/client'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { friendFormSchema, type FriendFormValues } from '@spliit/domain/schemas'
-import { useNavigate } from '@tanstack/react-router'
-import { ArrowLeft } from 'lucide-react'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
 
 type CreateFriendResponse = {
   groupId: string
@@ -86,8 +87,8 @@ export function CreateFriend() {
 
   const { mutateAsync: createFriend } = trpc.friends.create.useMutation({
     onSuccess: () => {
-      utils.account.groups.invalidate()
-      utils.account.friends.invalidate()
+      void utils.account.groups.invalidate()
+      void utils.account.friends.invalidate()
     },
   })
 
@@ -148,7 +149,7 @@ export function CreateFriend() {
     if (!result) return
 
     if (result.existed) {
-      navigate({
+      await navigate({
         to: '/groups/$groupId',
         params: { groupId: result.groupId },
       })
@@ -156,7 +157,7 @@ export function CreateFriend() {
     }
 
     if (result.inviteUrl) {
-      navigate({
+      await navigate({
         to: '/groups/$groupId',
         params: { groupId: result.groupId },
         search: { friendLinkInvite: result.inviteUrl },
@@ -166,14 +167,14 @@ export function CreateFriend() {
 
     if (result.invitationId) {
       toast({ description: t('inviteSent') })
-      navigate({
+      await navigate({
         to: '/groups/$groupId',
         params: { groupId: result.groupId },
       })
       return
     }
 
-    navigate({
+    await navigate({
       to: '/groups/$groupId/expenses',
       params: { groupId: result.groupId },
     })
@@ -183,13 +184,13 @@ export function CreateFriend() {
     if (typeof window !== 'undefined' && window.history.length > 1) {
       window.history.back()
     } else {
-      navigate({ to: '/', replace: true })
+      void navigate({ to: '/', replace: true })
     }
   }
 
   return (
     <>
-      <h1 className="hidden text-2xl font-semibold items-center gap-2 sm:flex">
+      <h1 className="hidden items-center gap-2 text-2xl font-semibold sm:flex">
         <Button
           variant="ghost"
           size="icon"
@@ -198,7 +199,7 @@ export function CreateFriend() {
           title={tCommon('back')}
           aria-label={tCommon('back')}
         >
-          <ArrowLeft className="w-5 h-5" />
+          <ArrowLeft className="h-5 w-5" />
         </Button>
         {t('title')}
       </h1>
@@ -477,7 +478,7 @@ export function CreateFriend() {
                 )}
               />
 
-              <div className="flex gap-2 justify-end">
+              <div className="flex justify-end gap-2">
                 <Button asChild variant="ghost">
                   <Link href="/">{tCommon('back')}</Link>
                 </Button>

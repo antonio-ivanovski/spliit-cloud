@@ -1,7 +1,8 @@
-import { ParticipantSegmentBar } from '@/components/participant-segment-bar'
-import { participantSegmentColor } from '@/components/participant-segment-utils'
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+
+import { ParticipantSegmentBar } from '@/components/participant-segment-bar'
+import { participantSegmentColor } from '@/components/participant-segment-utils'
 
 const EUR = {
   code: 'EUR',

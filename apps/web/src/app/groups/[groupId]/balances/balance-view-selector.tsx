@@ -1,7 +1,9 @@
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { cn } from '@/lib/utils'
+/* oxlint-disable jsx-a11y/label-has-associated-control -- RadioGroupItem is the associated control rendered by the UI primitive. */
 import { BarChart3, ListChecks } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { cn } from '@/lib/utils'
 
 export type BalanceView = 'simple' | 'visual'
 
@@ -21,7 +23,7 @@ export function BalanceViewSelector({
       className={cn('w-full min-w-0', className)}
       aria-label={t('view.label')}
     >
-      <span className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-muted-foreground">
+      <span className="mb-1.5 block text-xs font-medium tracking-wide text-muted-foreground uppercase">
         {t('view.label')}
       </span>
       <RadioGroup
@@ -85,7 +87,7 @@ function ViewOption({
         <Icon size={14} strokeWidth={2} className="sm:size-4" />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-xs font-medium leading-tight sm:text-sm">
+        <span className="block truncate text-xs leading-tight font-medium sm:text-sm">
           {title}
         </span>
         <span className="sr-only">{description}</span>

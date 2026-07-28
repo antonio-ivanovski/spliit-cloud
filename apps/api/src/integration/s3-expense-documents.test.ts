@@ -1,5 +1,7 @@
-import { prisma } from '@spliit/db'
 import { afterAll, describe, expect, it } from 'vitest'
+
+import { prisma } from '@spliit/db'
+
 import { app } from '../app'
 import { randomId } from '../lib/api'
 import { appRouter } from '../trpc/routers/_app'
@@ -31,8 +33,8 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
   }
 
   /**
-   * Sign up or sign in via the app's auth endpoints.
-   * Returns the session cookie and account ID.
+   * Sign up or sign in via the app's auth endpoints. Returns the session cookie
+   * and account ID.
    */
   async function createSession(
     email: string,

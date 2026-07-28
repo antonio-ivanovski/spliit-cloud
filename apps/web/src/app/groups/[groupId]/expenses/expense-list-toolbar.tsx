@@ -1,3 +1,17 @@
+import {
+  ArrowDownWideNarrow,
+  ArrowUpDown,
+  ArrowUpNarrowWide,
+  CalendarArrowDown,
+  CalendarArrowUp,
+  ClockArrowDown,
+  ClockArrowUp,
+  Filter,
+  X,
+} from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { useCurrentGroup } from '@/app/groups/[groupId]/current-group-context'
 import { categoryLabel } from '@/app/groups/[groupId]/stats/category-utils'
 import { useLinkInviteToken } from '@/app/groups/[groupId]/use-link-invite-token'
@@ -22,19 +36,7 @@ import { useMediaQuery } from '@/lib/hooks'
 import { cn } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import type { CategoryId } from '@spliit/domain'
-import {
-  ArrowDownWideNarrow,
-  ArrowUpDown,
-  ArrowUpNarrowWide,
-  CalendarArrowDown,
-  CalendarArrowUp,
-  ClockArrowDown,
-  ClockArrowUp,
-  Filter,
-  X,
-} from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+
 import { ExpenseFiltersContent } from './expense-filters-content'
 import { useExpenseFiltersContext } from './expense-filters-context'
 import { DEFAULT_FILTERS, type ExpenseFilters } from './use-expense-filters'
@@ -115,7 +117,7 @@ function SortControl() {
                       setMobileOpen(false)
                     }}
                     className={cn(
-                      'flex items-center gap-2 rounded-md px-3 py-2.5 text-sm text-left cursor-pointer hover:bg-muted/40',
+                      'flex cursor-pointer items-center gap-2 rounded-md px-3 py-2.5 text-left text-sm hover:bg-muted/40',
                       isActive && 'bg-muted/60 font-semibold',
                     )}
                   >
@@ -144,7 +146,7 @@ function SortControl() {
       }}
     >
       <SelectTrigger
-        className="h-9 w-9 p-0 justify-center [&>svg:last-child]:hidden"
+        className="h-9 w-9 justify-center p-0 [&>svg:last-child]:hidden"
         aria-label={tFilters('sort.title')}
       >
         <ArrowUpDown className="h-4 w-4" />
@@ -187,7 +189,7 @@ export function ExpenseListToolbar() {
         aria-controls="expense-filters-panel"
         onClick={() => setFiltersOpen((open) => !open)}
       >
-        <Filter className="h-3.5 w-3.5 mr-1" />
+        <Filter className="mr-1 h-3.5 w-3.5" />
         {tFilters('button')}
         {activeCount > 0 ? (
           <Badge
@@ -338,16 +340,16 @@ export function ExpenseListFilterChips({ className }: { className?: string }) {
         <Badge
           key={chip.key}
           variant="secondary"
-          className="gap-1 pr-1 py-0 text-xs"
+          className="gap-1 py-0 pr-1 text-xs"
         >
-          <span className="truncate max-w-40">{chip.label}</span>
+          <span className="max-w-40 truncate">{chip.label}</span>
           <button
             type="button"
             onClick={chip.onRemove}
             aria-label={tFilters('removeFilter')}
             className="ml-0.5 rounded-sm hover:bg-muted-foreground/20"
           >
-            <X className="w-3 h-3" />
+            <X className="h-3 w-3" />
           </button>
         </Badge>
       ))}
@@ -368,7 +370,10 @@ export function ExpenseListFiltersPanel() {
 
   const [draft, setDraft] = useState<ExpenseFilters>(filters)
   useEffect(() => {
-    if (filtersOpen) setDraft(filters)
+    if (filtersOpen) {
+      // oxlint-disable-next-line react/react-compiler -- draft filters mirror the context when the panel opens.
+      setDraft(filters)
+    }
   }, [filtersOpen, filters])
 
   if (!group) return null
@@ -404,7 +409,7 @@ export function ExpenseListFiltersPanel() {
     >
       <CollapsibleContent
         id="expense-filters-panel"
-        className="border-y sm:border rounded-md p-3 sm:p-4 mt-1 mb-2 bg-muted/30"
+        className="mt-1 mb-2 rounded-md border-y bg-muted/30 p-3 sm:border sm:p-4"
       >
         {content}
       </CollapsibleContent>

@@ -2,8 +2,8 @@
 // loads better-auth or @spliit/db so vi.mock is registered before those
 // modules are evaluated.
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import '../test/mocks'
-import { prismaMock } from '../test/state'
 import {
   deleteExpense,
   getActivities,
@@ -13,6 +13,7 @@ import {
   mergeLedgerParticipantReferences,
   stopRecurrence,
 } from '../lib/api'
+import { prismaMock } from '../test/state'
 
 vi.mock('../routes/upload', () => ({
   deleteS3Object: vi.fn(),

@@ -1,4 +1,5 @@
 import type { Context } from 'hono'
+
 import { removeEmailPreference } from '../lib/notifications/preferences'
 import {
   getEmailUnsubscribePreviewUrl,

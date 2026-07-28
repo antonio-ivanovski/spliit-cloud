@@ -1,4 +1,5 @@
 import * as z from 'zod'
+
 import { DEFAULT_CATEGORIES } from '../categories'
 import { legacyRuleToRecurrence } from './recurrence'
 import {
@@ -12,10 +13,10 @@ import type {
 } from './types'
 
 /**
- * This parser intentionally targets the immutable legacy export produced by
- * the original spliit.app. Keep this wire schema stable; map its fields to
- * the current internal model in `normalizeSpliitExport` instead of adding
- * current Spliit Cloud recurrence state here.
+ * This parser intentionally targets the immutable legacy export produced by the
+ * original spliit.app. Keep this wire schema stable; map its fields to the
+ * current internal model in `normalizeSpliitExport` instead of adding current
+ * Spliit Cloud recurrence state here.
  */
 export const spliitExportSchema = z.object({
   id: z.string().min(1),

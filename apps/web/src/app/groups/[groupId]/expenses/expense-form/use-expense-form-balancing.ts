@@ -1,7 +1,8 @@
-import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import { useWatch } from 'react-hook-form'
+
+import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
 
 export function useExpenseFormBalancing(args: {
   form: UseFormReturn<ExpenseFormInputValues>

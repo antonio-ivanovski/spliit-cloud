@@ -4,6 +4,7 @@ import {
   type RecurringExpenseTemplate,
 } from '@spliit/domain'
 import type { SpliitBoss } from '@spliit/jobs'
+
 import { resolveConversion } from '../../expense-conversion'
 import { planActivityNotificationDeliveries } from '../../notifications/delivery-planner'
 import { buildExpenseActivityData, logActivity } from '../activities'
@@ -22,9 +23,11 @@ export type RecurringCatchUpBatch = {
   startDate: string
   count: number
   mode?: 'INITIAL_CREATION'
-  /** Immutable cutoff date (ISO) set when the batch opens. Later jobs
-   * use this instead of recomputing today, preventing midnight-crossing
-   * from absorbing occurrences that were not due when the batch began. */
+  /**
+   * Immutable cutoff date (ISO) set when the batch opens. Later jobs use this
+   * instead of recomputing today, preventing midnight-crossing from absorbing
+   * occurrences that were not due when the batch began.
+   */
   dueThrough?: string
 }
 

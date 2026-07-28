@@ -17,6 +17,7 @@ export const Link = forwardRef<HTMLAnchorElement, Props>(function Link(
   ref,
 ) {
   if (/^(https?:|mailto:|tel:)/.test(href)) {
+    // oxlint-disable-next-line jsx-a11y/anchor-has-content -- Link forwards children from consumers.
     return <a ref={ref} href={href} {...props} />
   }
   return (

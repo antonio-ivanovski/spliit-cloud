@@ -1,3 +1,5 @@
+import { Trans, useTranslation } from 'react-i18next'
+
 import { ParticipantAvatar } from '@/components/participant-avatar'
 import { ParticipantSegmentBar } from '@/components/participant-segment-bar'
 import { participantSegmentColor } from '@/components/participant-segment-utils'
@@ -13,7 +15,7 @@ import { useLocale } from '@/i18n/react'
 import type { Balances, Reimbursement } from '@/lib/balances'
 import type { Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
-import { Trans, useTranslation } from 'react-i18next'
+
 import { BalancesLoading } from './balances-loading'
 import type { CurrencyBalance } from './currency-balances'
 import { CurrencySection } from './currency-section'
@@ -170,14 +172,14 @@ function SettlementSection({
       )}
       {settled.length > 0 && (
         <section aria-label={t('direction.settledUp')} className="space-y-3">
-          <h3 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          <h3 className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
             {t('direction.settledUp')}
           </h3>
           <div className="flex flex-wrap gap-2">
             {settled.map((participant) => (
               <div
                 key={participant.id}
-                className="flex items-center gap-2 rounded-full border border-border/70 bg-muted/30 py-1 pl-1 pr-3 text-xs text-muted-foreground"
+                className="flex items-center gap-2 rounded-full border border-border/70 bg-muted/30 py-1 pr-3 pl-1 text-xs text-muted-foreground"
               >
                 <ParticipantAvatar participant={participant} size="xs" />
                 <span className="max-w-32 truncate">{participant.name}</span>
@@ -225,7 +227,7 @@ function SettlementDirection({
   return (
     <>
       <section aria-label={title} className="space-y-4">
-        <h3 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+        <h3 className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
           {title}
         </h3>
         <p className="-mt-2 text-xs leading-snug text-muted-foreground/70">
@@ -296,7 +298,7 @@ function SettlementDirection({
                         ) : null}
                       </div>
                       <div className="flex items-center gap-1">
-                        <span className="shrink-0 tabular-nums text-sm font-medium">
+                        <span className="shrink-0 text-sm font-medium tabular-nums">
                           {formatCurrency(currency, total, locale)}
                         </span>
                         <SettlementGroupButton
@@ -349,7 +351,7 @@ function SettlementDirection({
                               {counterparty.removed ? (
                                 <RemovedParticipantBadge />
                               ) : null}
-                              <span className="shrink-0 tabular-nums text-muted-foreground">
+                              <span className="shrink-0 text-muted-foreground tabular-nums">
                                 {formatCurrency(currency, leg.amount, locale)}
                               </span>
                               {direction === 'pay' && (

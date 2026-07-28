@@ -1,13 +1,14 @@
-import { render, screen, waitFor, within } from '@/test/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { render, screen, waitFor, within } from '@/test/test-utils'
 
 /**
  * BLOCK A: Mock-based tests for RecentGroupList
  *
- * Tests cover: loading, empty, empty-with-hidden, starred/active/archived/hidden
- * partitioning, star toggle, hide toggle, archive toggle (ADMIN only),
- * ForceArchiveDialog on PRECONDITION_FAILED, and PendingInvitations with
- * accept/decline.
+ * Tests cover: loading, empty, empty-with-hidden,
+ * starred/active/archived/hidden partitioning, star toggle, hide toggle,
+ * archive toggle (ADMIN only), ForceArchiveDialog on PRECONDITION_FAILED, and
+ * PendingInvitations with accept/decline.
  */
 
 // ── Hoisted mocks ───────────────────────────────────────────────────────
@@ -730,7 +731,7 @@ describe('RecentGroupList', () => {
     })
 
     // Simulate the onSuccess callback (fires after the real mutation succeeds)
-    await mocks.acceptOnSuccess?.({ groupId: 'group-1' })
+    mocks.acceptOnSuccess?.({ groupId: 'group-1' })
 
     // After success: navigate to the group
     await waitFor(() => {
@@ -762,7 +763,7 @@ describe('RecentGroupList', () => {
     })
 
     // Simulate the onSuccess callback
-    await mocks.declineOnSuccess?.()
+    mocks.declineOnSuccess?.()
 
     await waitFor(() => {
       expect(mocks.mockInvalidateInvitationsList).toHaveBeenCalled()

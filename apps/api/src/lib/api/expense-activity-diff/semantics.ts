@@ -8,9 +8,9 @@ import type { ChangeContext, ItemizedRemainderLike, ShareRow } from './types'
  * Encapsulates the payer-row comparison semantics that prevent false-positive
  * payer diffs when shares are derived from the total amount.
  *
- * When `paidBySplitMode` is `BY_AMOUNT`, shares are proportional to the
- * expense total. Changing only the amount should NOT flag a payer change even
- * though share numbers change.
+ * When `paidBySplitMode` is `BY_AMOUNT`, shares are proportional to the expense
+ * total. Changing only the amount should NOT flag a payer change even though
+ * share numbers change.
  */
 export const payerSemantics = {
   /** Stable, order-independent, mode-aware comparison key for payer rows. */

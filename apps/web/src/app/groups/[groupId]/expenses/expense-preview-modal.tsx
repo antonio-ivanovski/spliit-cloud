@@ -1,3 +1,8 @@
+import { useNavigate } from '@tanstack/react-router'
+import { FileInput, Pencil } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
 import { ExpenseAttachmentsPreview } from '@/app/groups/[groupId]/expenses/expense-attachments-preview'
 import { ExpenseComments } from '@/app/groups/[groupId]/expenses/expense-comments'
@@ -35,10 +40,7 @@ import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type { SplitMode } from '@spliit/domain'
 import { calculatePaidByShares, calculateShares } from '@spliit/domain'
-import { useNavigate } from '@tanstack/react-router'
-import { FileInput, Pencil } from 'lucide-react'
-import { useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
 import {
@@ -62,7 +64,10 @@ export type ExpensePreviewModalProps = {
   onClose?: () => void
   /** Override the default navigation to the full expense edit page. */
   onEdit?: (scope?: SeriesMutationScope) => void
-  /** Override the default navigation that prefills the create form from this expense. */
+  /**
+   * Override the default navigation that prefills the create form from this
+   * expense.
+   */
   onMakeCopy?: () => void
 }
 
@@ -278,7 +283,7 @@ export function ExpensePreviewModal({
     if (onOpenChange) {
       onOpenChange(nextOpen)
     } else if (!nextOpen && !onClose) {
-      navigate({
+      void navigate({
         to: '/groups/$groupId/expenses',
         params: { groupId },
       })
@@ -296,7 +301,7 @@ export function ExpensePreviewModal({
       params: { groupId },
       replace: true,
     })
-    navigate({
+    await navigate({
       to: '/groups/$groupId/expenses/$expenseId/edit',
       params: { groupId, expenseId },
       search: scope ? { scope } : undefined,
@@ -309,7 +314,7 @@ export function ExpensePreviewModal({
       return
     }
     toast({ description: tCard('copyToast') })
-    navigate({
+    void navigate({
       to: '/groups/$groupId/expenses/create',
       params: { groupId },
       search: { fromExpenseId: expenseId },
@@ -401,7 +406,7 @@ export function ExpensePreviewModal({
           {!isLoading && !error && expense && currency && (
             <div className="space-y-5">
               <div>
-                <div className="text-3xl font-bold tabular-nums tracking-tight">
+                <div className="text-3xl font-bold tracking-tight tabular-nums">
                   {formatCurrency(currency, expense.amount, locale)}
                 </div>
                 {showOriginalAmount && (
@@ -443,7 +448,7 @@ export function ExpensePreviewModal({
 
               {currentLedgerParticipantId && (
                 <div className="rounded-lg border bg-muted/30 px-4 py-3">
-                  <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  <div className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
                     {t('yourBalance')}
                   </div>
                   <div className="mt-1 text-lg font-semibold tabular-nums">
@@ -464,10 +469,10 @@ export function ExpensePreviewModal({
 
               {expense.notes?.trim() && (
                 <div className="space-y-1">
-                  <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  <div className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
                     {t('notes')}
                   </div>
-                  <p className="whitespace-pre-wrap break-words text-sm text-muted-foreground">
+                  <p className="text-sm break-words whitespace-pre-wrap text-muted-foreground">
                     {expense.notes.trim().length > 160
                       ? `${expense.notes.trim().slice(0, 160)}…`
                       : expense.notes.trim()}

@@ -45,8 +45,8 @@ export function createStringFieldDiffer<
 /**
  * Creates a differ for a field where comparison logic and formatting are
  * separated: `equals` defines semantic equality and `format` produces the
- * display value. When `equals` is omitted, the default behavior is to
- * always flag the field as changed (caller must handle comparison).
+ * display value. When `equals` is omitted, the default behavior is to always
+ * flag the field as changed (caller must handle comparison).
  */
 export function createFormattedValueDiffer<
   TEntity,

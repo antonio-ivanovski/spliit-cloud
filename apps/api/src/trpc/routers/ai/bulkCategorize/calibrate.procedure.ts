@@ -1,6 +1,8 @@
-import { categoryIdSchema } from '@spliit/domain'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
+
+import { categoryIdSchema } from '@spliit/domain'
+
 import {
   BULK_CALIBRATION_CANDIDATE_POOL_SIZE,
   BULK_CALIBRATION_SAMPLE_SIZE,
@@ -144,7 +146,7 @@ export const aiBulkCategorizeCalibrateProcedure = protectedProcedure
     try {
       const json = JSON.parse(raw ?? '{}')
       parsed = calibrationResponseSchema.parse(json)
-    } catch (error) {
+    } catch {
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',
         message:

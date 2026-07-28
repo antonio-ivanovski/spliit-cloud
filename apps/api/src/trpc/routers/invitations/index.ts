@@ -1,11 +1,13 @@
+import { TRPCError } from '@trpc/server'
+import { z } from 'zod'
+
 import {
   GroupInvitationStatus,
   GroupType,
   prisma,
   type GroupRole,
 } from '@spliit/db'
-import { TRPCError } from '@trpc/server'
-import { z } from 'zod'
+
 import {
   RevokeInvitationPreconditionError,
   acceptInvitation,
@@ -127,7 +129,10 @@ export const invitationsRouter = createTRPCRouter({
       }
     }),
 
-  /** Public: preview a link invitation by token (no auth). Shows group name and role before accepting. */
+  /**
+   * Public: preview a link invitation by token (no auth). Shows group name and
+   * role before accepting.
+   */
   // Public preview of a link invitation. The accept page calls this
   // before showing the Accept button so unauthenticated visitors can
   // see the group name and inviter (and a clear error message when the
@@ -142,7 +147,10 @@ export const invitationsRouter = createTRPCRouter({
       return { preview }
     }),
 
-  /** Accept a link invitation by token. Joins the group with the invitation's role. */
+  /**
+   * Accept a link invitation by token. Joins the group with the invitation's
+   * role.
+   */
   // Accept a link invitation for the current account. The helper
   // refuses expired / revoked / already-used tokens and the
   // double-active-member case.
@@ -267,7 +275,10 @@ export const invitationsRouter = createTRPCRouter({
       }
     }),
 
-  /** Revoke a pending invitation. Requires `settleBalances: true` when the invitee has unsettled balances. */
+  /**
+   * Revoke a pending invitation. Requires `settleBalances: true` when the
+   * invitee has unsettled balances.
+   */
   // Revoke a pending invitation (ADMIN only).
   //
   // If the invitation's materialized ledger participant has unsettled
@@ -373,9 +384,8 @@ export const invitationsRouter = createTRPCRouter({
 
 /**
  * Translate the helper errors into TRPC errors. The web client uses
- * `PRECONDITION_FAILED` to decide whether to re-render the revoke
- * dialog with the missing confirmation (e.g. unsettled balances
- * without `settleBalances`).
+ * `PRECONDITION_FAILED` to decide whether to re-render the revoke dialog with
+ * the missing confirmation (e.g. unsettled balances without `settleBalances`).
  */
 function mapRevokeError(err: unknown): TRPCError {
   if (err instanceof TRPCError) return err

@@ -70,7 +70,7 @@ function readInstalled(): boolean {
   if (typeof window === 'undefined') return false
   const standalone = window.matchMedia('(display-mode: standalone)').matches
   // iOS Safari exposes its own private flag for "added to home screen".
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // oxlint-disable-next-line typescript/no-explicit-any
   const iosStandalone = (navigator as any).standalone === true
   return standalone || iosStandalone
 }
@@ -89,16 +89,18 @@ export interface UseInstallPromptResult {
   remindLater: () => void
   /** "Don't show again" — permanent suppression via localStorage. */
   dismiss: () => void
-  /** Trigger the deferred prompt (native-install only). Resolves to the user choice. */
+  /**
+   * Trigger the deferred prompt (native-install only). Resolves to the user
+   * choice.
+   */
   install: () => Promise<'accepted' | 'dismissed' | 'unavailable'>
 }
 
 /**
- * Drives the install promotion dialog. Combines:
- * - UA-based browser support detection
- * - The `beforeinstallprompt` / `appinstalled` window events
- * - The current display mode (already-installed check)
- * - Two localStorage flags for the user's dismiss / remind preferences
+ * Drives the install promotion dialog. Combines: - UA-based browser support
+ * detection - The `beforeinstallprompt` / `appinstalled` window events - The
+ * current display mode (already-installed check) - Two localStorage flags for
+ * the user's dismiss / remind preferences
  *
  * The hook never opens the dialog itself; it exposes `readyToShow` so the
  * component can decide when (and whether) to pop it.
@@ -148,7 +150,11 @@ export function useInstallPrompt(): UseInstallPromptResult {
   // dialog to open after a brief delay so the page has time to settle.
   // Re-runs whenever any gate flips on.
   const inRemindLater =
-    remindAt !== null && Date.now() < remindAt ? remindAt : null
+    remindAt !== null &&
+    // oxlint-disable-next-line react/react-compiler -- current time is intentionally sampled during render for the reminder gate.
+    Date.now() < remindAt
+      ? remindAt
+      : null
 
   const readyToShow =
     browserSupport !== 'unsupported' &&
@@ -163,6 +169,7 @@ export function useInstallPrompt(): UseInstallPromptResult {
   // remind-later kicks in, …) the open dialog must follow.
   useEffect(() => {
     if (!readyToShow && isOpen) {
+      // oxlint-disable-next-line react/react-compiler -- close when install eligibility disappears.
       setIsOpen(false)
     }
   }, [readyToShow, isOpen])

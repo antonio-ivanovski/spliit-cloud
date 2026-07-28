@@ -1,3 +1,9 @@
+import dayjs, { type Dayjs } from 'dayjs'
+import { forwardRef, useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useInView } from 'react-intersection-observer'
+import { useDebounce } from 'use-debounce'
+
 import { ExpenseCard } from '@/app/groups/[groupId]/expenses/expense-card'
 import {
   ExpenseFiltersProvider,
@@ -20,11 +26,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { getCurrencyFromGroup } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
-import dayjs, { type Dayjs } from 'dayjs'
-import { forwardRef, useEffect, useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useInView } from 'react-intersection-observer'
-import { useDebounce } from 'use-debounce'
+
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
 import { EXPENSE_LIST_PAGE_SIZE } from './expense-list-query'
@@ -99,7 +101,7 @@ export function ExpenseList() {
 
   return (
     <ExpenseFiltersProvider value={filtersApi}>
-      <div className="mx-4 sm:mx-6 py-2 flex flex-col sm:flex-row sm:items-center gap-2">
+      <div className="mx-4 flex flex-col gap-2 py-2 sm:mx-6 sm:flex-row sm:items-center">
         <SearchBar
           containerClassName="flex-1"
           onValueChange={(value) => setSearchText(value)}
@@ -107,7 +109,7 @@ export function ExpenseList() {
         <ExpenseListToolbar />
       </div>
       <ExpenseListFiltersPanel />
-      <ExpenseListFilterChips className="mx-4 sm:mx-6 mb-2" />
+      <ExpenseListFilterChips className="mx-4 mb-2 sm:mx-6" />
       <ExpenseListForSearch
         groupId={groupId}
         searchText={debouncedSearchText}
@@ -162,7 +164,7 @@ const ExpenseListForSearch = ({
   const isLoading = expensesAreLoading || !expenses || !group
 
   useEffect(() => {
-    if (inView && hasMore && !isLoading) fetchNextPage()
+    if (inView && hasMore && !isLoading) void fetchNextPage()
   }, [fetchNextPage, hasMore, inView, isLoading])
 
   // Date grouping only applies when the user is sorting by expense
@@ -241,7 +243,7 @@ const ExpenseListForSearch = ({
           <div key={expenseGroup}>
             <div
               className={
-                'text-muted-foreground text-xs pl-4 sm:pl-6 py-1 font-semibold sticky top-(--app-header-height) bg-white dark:bg-[#1b1917]'
+                'sticky top-(--app-header-height) bg-white py-1 pl-4 text-xs font-semibold text-muted-foreground sm:pl-6 dark:bg-[#1b1917]'
               }
             >
               {t(EXPENSE_GROUP_I18N_KEYS[expenseGroup])}
@@ -266,20 +268,20 @@ const ExpenseListForSearch = ({
 const ExpensesLoading = forwardRef<HTMLDivElement>((_, ref) => {
   return (
     <div ref={ref}>
-      <Skeleton className="mx-4 sm:mx-6 mt-1 mb-2 h-3 w-32 rounded-full" />
+      <Skeleton className="mx-4 mt-1 mb-2 h-3 w-32 rounded-full sm:mx-6" />
       {[0, 1, 2].map((i) => (
         <div
           key={i}
-          className="flex justify-between items-start px-2 sm:px-6 py-4 text-sm gap-2"
+          className="flex items-start justify-between gap-2 px-2 py-4 text-sm sm:px-6"
         >
-          <div className="flex-0 pl-2 pr-1">
+          <div className="flex-0 pr-1 pl-2">
             <Skeleton className="h-4 w-4 rounded-full" />
           </div>
-          <div className="flex-1 flex flex-col gap-2">
+          <div className="flex flex-1 flex-col gap-2">
             <Skeleton className="h-4 w-16 rounded-full" />
             <Skeleton className="h-4 w-32 rounded-full" />
           </div>
-          <div className="flex-0 flex flex-col gap-2 items-end mr-2 sm:mr-12">
+          <div className="mr-2 flex flex-0 flex-col items-end gap-2 sm:mr-12">
             <Skeleton className="h-4 w-16 rounded-full" />
             <Skeleton className="h-4 w-20 rounded-full" />
           </div>

@@ -1,3 +1,8 @@
+import { useNavigate } from '@tanstack/react-router'
+import { ArrowLeft, Loader2 } from 'lucide-react'
+import { useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { AccountAvatar } from '@/components/account-avatar'
 import { RequireAuth } from '@/components/require-auth'
 import { Button } from '@/components/ui/button'
@@ -14,18 +19,14 @@ import { useToast } from '@/components/ui/use-toast'
 import { prepareProfileImage } from '@/lib/upload'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
-import { useNavigate } from '@tanstack/react-router'
-import { ArrowLeft, Loader2 } from 'lucide-react'
-import { useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+
 import { NotificationsPreferences } from './notifications-preferences'
 
 /**
- * Account settings page. Allows a signed-in user to update their display
- * name and view (read-only) the email tied to their account. Reuses the
- * same `account.updateProfile` mutation as the magic-link
- * `complete-profile` flow, with matching validation (trimmed name,
- * 2-50 characters).
+ * Account settings page. Allows a signed-in user to update their display name
+ * and view (read-only) the email tied to their account. Reuses the same
+ * `account.updateProfile` mutation as the magic-link `complete-profile` flow,
+ * with matching validation (trimmed name, 2-50 characters).
  */
 export function AccountSettingsPage() {
   return (
@@ -84,8 +85,8 @@ function AccountSettingsContent() {
 
   if (isPending || !account) {
     return (
-      <main className="flex-1 max-w-(--breakpoint-md) w-full mx-auto px-3 py-4 sm:px-4 sm:py-6 flex items-center justify-center">
-        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+      <main className="mx-auto flex w-full max-w-(--breakpoint-md) flex-1 items-center justify-center px-3 py-4 sm:px-4 sm:py-6">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
       </main>
     )
   }
@@ -97,7 +98,7 @@ function AccountSettingsContent() {
     if (typeof window !== 'undefined' && window.history.length > 1) {
       window.history.back()
     } else {
-      navigate({ to: '/', replace: true })
+      void navigate({ to: '/', replace: true })
     }
   }
 
@@ -164,8 +165,8 @@ function AccountSettingsContent() {
   const isDirty = name.trim() !== (account.name ?? '')
 
   return (
-    <main className="flex-1 max-w-(--breakpoint-md) w-full mx-auto px-3 py-4 sm:px-4 sm:py-6 flex flex-col gap-6">
-      <h1 className="hidden text-2xl font-semibold items-center gap-2 sm:flex">
+    <main className="mx-auto flex w-full max-w-(--breakpoint-md) flex-1 flex-col gap-6 px-3 py-4 sm:px-4 sm:py-6">
+      <h1 className="hidden items-center gap-2 text-2xl font-semibold sm:flex">
         <Button
           variant="ghost"
           size="icon"
@@ -174,7 +175,7 @@ function AccountSettingsContent() {
           title={tCommon('back')}
           aria-label={tCommon('back')}
         >
-          <ArrowLeft className="w-5 h-5" />
+          <ArrowLeft className="h-5 w-5" />
         </Button>
         {t('title')}
       </h1>
@@ -188,8 +189,8 @@ function AccountSettingsContent() {
             <div className="flex items-center gap-4 rounded-lg border border-dashed border-primary/20 bg-primary/3 p-3">
               <AccountAvatar account={account} size="xl" />
               <div className="min-w-0 flex-1">
-                <p className="font-medium text-sm">{t('image.label')}</p>
-                <p className="text-xs text-muted-foreground mt-0.5">
+                <p className="text-sm font-medium">{t('image.label')}</p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
                   {t('image.help')}
                 </p>
                 <div className="mt-2 flex flex-wrap gap-2">
@@ -264,7 +265,7 @@ function AccountSettingsContent() {
                 disabled={submitting || updateProfile.isPending || !isDirty}
               >
                 {(submitting || updateProfile.isPending) && (
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
                 {submitting || updateProfile.isPending
                   ? t('saving')

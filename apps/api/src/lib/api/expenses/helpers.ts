@@ -7,15 +7,16 @@ import {
   type CategoryId,
   type Expense,
 } from '@spliit/domain'
+
 import { promoteUploadedDocument } from '../../../routes/upload'
 import { toRecurrenceConfig } from '../recurrence-series'
 import type { getExpense } from './queries'
 
 /**
  * Resolve a `categoryId` string from the database to the in-code
- * {@link Category} object. Returns the default "General" category when
- * the stored id is not in the in-code list (e.g. it was written by an
- * older version of the app or is otherwise invalid).
+ * {@link Category} object. Returns the default "General" category when the
+ * stored id is not in the in-code list (e.g. it was written by an older version
+ * of the app or is otherwise invalid).
  */
 export function resolveCategory(categoryId: string): Category {
   const parsedCategoryId = categoryIdSchema.safeParse(categoryId)
@@ -28,8 +29,8 @@ export function resolveCategory(categoryId: string): Category {
 
 /**
  * Narrow a `categoryId` string from the database to the {@link CategoryId}
- * literal union, falling back to the default category if the stored id is
- * not in the in-code list.
+ * literal union, falling back to the default category if the stored id is not
+ * in the in-code list.
  */
 export function narrowCategoryId(categoryId: string): CategoryId {
   const parsed = categoryIdSchema.safeParse(categoryId)
@@ -37,15 +38,15 @@ export function narrowCategoryId(categoryId: string): CategoryId {
 }
 
 /**
- * Normalize the Prisma `getExpense` return value to the domain
- * `Expense` shape expected by diff and affected-participant utilities.
- * The Prisma model stores `ledgerParticipantId` while the domain uses
- * `participant` for payer / split / item references.
+ * Normalize the Prisma `getExpense` return value to the domain `Expense` shape
+ * expected by diff and affected-participant utilities. The Prisma model stores
+ * `ledgerParticipantId` while the domain uses `participant` for payer / split /
+ * item references.
  */
 /**
- * Map a stored expense into the shape used by activity diffs.
- * `amount` is the ledger total; flat conversion fields are attached for
- * amount/conversion differs (in addition to the `conversion` discriminant).
+ * Map a stored expense into the shape used by activity diffs. `amount` is the
+ * ledger total; flat conversion fields are attached for amount/conversion
+ * differs (in addition to the `conversion` discriminant).
  */
 export function toExpenseDomainShape(
   existing: NonNullable<Awaited<ReturnType<typeof getExpense>>>,

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+
 import { getGroupChangeSummary, getGroupChangedFields } from './index'
 import type { DiffableGroup, GroupChangeContext } from './types'
 

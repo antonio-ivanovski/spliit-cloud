@@ -1,6 +1,7 @@
+import { createLazyFileRoute } from '@tanstack/react-router'
+
 import { CreateGroup } from '@/app/groups/create/create-group'
 import { RequireAuth } from '@/components/require-auth'
-import { createLazyFileRoute } from '@tanstack/react-router'
 
 function CreateGroupRoute() {
   return (

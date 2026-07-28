@@ -1,3 +1,5 @@
+import { Trans, useTranslation } from 'react-i18next'
+
 import { ParticipantAvatar } from '@/components/participant-avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -11,7 +13,7 @@ import { useLocale } from '@/i18n/react'
 import type { Balances, Reimbursement } from '@/lib/balances'
 import type { Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
-import { Trans, useTranslation } from 'react-i18next'
+
 import { BalancesLoading, ReimbursementsLoading } from './balances-loading'
 import type { CurrencyBalance } from './currency-balances'
 import { CurrencySection } from './currency-section'
@@ -145,7 +147,7 @@ function SimpleCurrencyContent({
     <div className="space-y-7">
       {activeParticipants.length > 0 && (
         <section aria-label={t('simple.netBalances')} className="space-y-3">
-          <h3 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          <h3 className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
             {t('simple.netBalances')}
           </h3>
           <div className="divide-y divide-border/60 rounded-lg border border-border/70">
@@ -178,7 +180,7 @@ function SimpleCurrencyContent({
         </section>
       )}
       <section aria-label={t('simple.suggestedPayments')} className="space-y-3">
-        <h3 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+        <h3 className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
           {t('simple.suggestedPayments')}
         </h3>
         <SimpleSettlementDirections
@@ -246,7 +248,7 @@ function SimpleSettlementDirections({
         if (groups.length === 0) return null
         return (
           <section key={direction} aria-label={title} className="space-y-3">
-            <h4 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            <h4 className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
               {title}
             </h4>
             <div className="space-y-3">
@@ -289,7 +291,7 @@ function SimpleSettlementDirections({
                             ) : null}
                           </div>
                           <div className="flex items-center gap-1">
-                            <span className="shrink-0 tabular-nums text-sm font-medium">
+                            <span className="shrink-0 text-sm font-medium tabular-nums">
                               {formatCurrency(currency, total, locale)}
                             </span>
                             <SettlementGroupButton
@@ -333,7 +335,7 @@ function SimpleSettlementDirections({
                                 {counterparty?.removed ? (
                                   <RemovedParticipantBadge />
                                 ) : null}
-                                <span className="shrink-0 tabular-nums text-muted-foreground">
+                                <span className="shrink-0 text-muted-foreground tabular-nums">
                                   {formatCurrency(currency, leg.amount, locale)}
                                 </span>
                                 {direction === 'pay' && (

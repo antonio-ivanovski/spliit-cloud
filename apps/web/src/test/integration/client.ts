@@ -1,19 +1,16 @@
 /**
  * Integration test client.
  *
- * Provides helpers to connect to an existing Spliit API server
- * (expected on http://localhost:3001 by default) for integration tests.
+ * Provides helpers to connect to an existing Spliit API server (expected on
+ * http://localhost:3001 by default) for integration tests.
  *
- * Prerequisites:
- * - API server must be running on the expected port.
- * - PostgreSQL test database must be running and migrated.
+ * Prerequisites: - API server must be running on the expected port. -
+ * PostgreSQL test database must be running and migrated.
  */
 
 const DEFAULT_API_URL = 'http://localhost:3001'
 
-/**
- * Check if the API is reachable by hitting /health.
- */
+/** Check if the API is reachable by hitting /health. */
 export async function probeExistingApi(
   baseUrl = DEFAULT_API_URL,
 ): Promise<boolean> {
@@ -28,9 +25,9 @@ export async function probeExistingApi(
 /**
  * Sign up or sign in via the existing API's auth endpoints.
  *
- * Because the API requires email verification before a session can be
- * created, this helper marks the account as verified via Prisma after
- * sign-up so that the subsequent sign-in produces a session cookie.
+ * Because the API requires email verification before a session can be created,
+ * this helper marks the account as verified via Prisma after sign-up so that
+ * the subsequent sign-in produces a session cookie.
  *
  * Returns the session cookie string.
  */
@@ -99,8 +96,8 @@ export async function createTestSession(
 }
 
 /**
- * Clean up test account and all its data via Prisma (cascading deletes).
- * Wraps in try/catch in case the database is not available.
+ * Clean up test account and all its data via Prisma (cascading deletes). Wraps
+ * in try/catch in case the database is not available.
  */
 export async function cleanupTestAccount(email: string): Promise<void> {
   try {

@@ -1,11 +1,12 @@
-import { ExpensePreviewModal } from '@/app/groups/[groupId]/expenses/expense-preview-modal'
-import GroupExpensesPageClient from '@/app/groups/[groupId]/expenses/page.client'
-import { trpc } from '@/trpc/client'
 import {
   createLazyFileRoute,
   getRouteApi,
   useNavigate,
 } from '@tanstack/react-router'
+
+import { ExpensePreviewModal } from '@/app/groups/[groupId]/expenses/expense-preview-modal'
+import GroupExpensesPageClient from '@/app/groups/[groupId]/expenses/page.client'
+import { trpc } from '@/trpc/client'
 
 const expenseRouteApi = getRouteApi('/groups/$groupId/expenses/$expenseId/')
 

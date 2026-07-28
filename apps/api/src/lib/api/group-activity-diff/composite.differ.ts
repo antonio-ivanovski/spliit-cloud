@@ -1,4 +1,5 @@
 import type { GroupChangedField } from '@spliit/domain/activities'
+
 import { createCompositeDiffer } from '../activity-diff/composite.differ'
 import type {
   DiffableGroup,

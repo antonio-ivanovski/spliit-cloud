@@ -1,7 +1,9 @@
-import { GroupType } from '@spliit/db'
-import { groupFormSchema } from '@spliit/domain'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
+
+import { GroupType } from '@spliit/db'
+import { groupFormSchema } from '@spliit/domain'
+
 import { updateGroup } from '../../../lib/api'
 import { loadGroupContext, protectedProcedure } from '../../init'
 

@@ -1,5 +1,7 @@
-import { NotificationCategory } from '@spliit/domain/notifications'
 import { beforeEach, describe, expect, it } from 'vitest'
+
+import { NotificationCategory } from '@spliit/domain/notifications'
+
 import '../../test/mocks'
 import { prismaMock } from '../../test/state'
 import { ExpenseActivityHandler } from './handlers'

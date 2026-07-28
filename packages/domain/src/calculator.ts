@@ -24,7 +24,8 @@ export type CalculatorItem = {
 export type CalculatorEvaluation = { ok: true; value: number } | { ok: false }
 
 export type CalculatorDecomposition =
-  { ok: true; items: CalculatorItem[] } | { ok: false }
+  | { ok: true; items: CalculatorItem[] }
+  | { ok: false }
 
 function tokenize(input: string): Token[] | null {
   const tokens: Token[] = []
@@ -323,9 +324,9 @@ function decomposeExpression(expression: Expression): CalculatorItem[] | null {
 }
 
 /**
- * Convert an addition/multiplication expression into receipt-like quantity
- * and unit-price rows. Subtraction, division, and negative values do not map
- * safely to expense items and therefore return `ok: false`.
+ * Convert an addition/multiplication expression into receipt-like quantity and
+ * unit-price rows. Subtraction, division, and negative values do not map safely
+ * to expense items and therefore return `ok: false`.
  */
 export function decomposeCalculatorExpression(
   input: string,

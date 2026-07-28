@@ -1,7 +1,8 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { ResponsiveChoicePicker } from '@/components/responsive-choice-picker'
 import { useMediaQuery } from '@/lib/hooks'
 import { fireEvent, render, screen } from '@/test/test-utils'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('@/lib/hooks', () => ({
   useMediaQuery: vi.fn(() => true),

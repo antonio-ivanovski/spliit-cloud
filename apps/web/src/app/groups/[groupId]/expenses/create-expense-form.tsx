@@ -1,3 +1,6 @@
+import { getRouteApi, useNavigate } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
+
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import {
@@ -10,8 +13,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { trpc } from '@/trpc/client'
-import { getRouteApi, useNavigate } from '@tanstack/react-router'
-import { useTranslation } from 'react-i18next'
+
 import { useIsPendingInvitee } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
 import { ExpenseForm } from './expense-form'
@@ -141,7 +143,7 @@ export function CreateExpenseForm({
           groupId,
           expense,
         })
-        navigate({
+        await navigate({
           to: '/groups/$groupId/expenses',
           params: { groupId: group.id },
           replace: true,

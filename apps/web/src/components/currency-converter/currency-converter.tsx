@@ -1,3 +1,8 @@
+import { useNavigate } from '@tanstack/react-router'
+import { ArrowDownUp, Loader2, Star } from 'lucide-react'
+import { useCallback, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import type { AccountGroup } from '@/app/groups/group-buckets'
 import { CurrencySelector } from '@/components/currency-selector'
 import { Button } from '@/components/ui/button'
@@ -16,10 +21,7 @@ import { enforceCurrencyPattern } from '@/lib/currency-input'
 import { useCurrencyRate } from '@/lib/hooks'
 import { trpc } from '@/trpc/client'
 import { amountAsMinorUnits, getCurrency, utcTodayIso } from '@spliit/domain'
-import { useNavigate } from '@tanstack/react-router'
-import { ArrowDownUp, Loader2, Star } from 'lucide-react'
-import { useCallback, useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+
 import currencyExchangeSvg from './currency-exchange.svg'
 import { rankGroupsForConverter } from './rank-groups'
 
@@ -264,7 +266,7 @@ export function ConverterContent() {
     const currency = getCurrency(fromCode)
     if (!currency) return
     const minor = amountAsMinorUnits(parsedAmount, currency)
-    navigate({
+    void navigate({
       to: '/groups/$groupId/expenses/create',
       params: { groupId: group.id },
       search: {
@@ -335,7 +337,7 @@ export function ConverterContent() {
         <div className="flex min-h-10 w-full min-w-0 overflow-hidden rounded-md border border-input bg-muted/40">
           <div
             id="converter-to"
-            className="min-w-0 flex-1 basis-0 truncate px-3 text-lg font-medium tabular-nums text-muted-foreground flex items-center"
+            className="flex min-w-0 flex-1 basis-0 items-center truncate px-3 text-lg font-medium text-muted-foreground tabular-nums"
           >
             {previewAmount != null && toCurrency ? (
               new Intl.NumberFormat(locale, {

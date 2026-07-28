@@ -1,4 +1,5 @@
 import type { Currency, ExpenseFormItemValues } from '@spliit/domain'
+
 import { roundTo, type ParticipantRow } from './split-mode-conversions'
 
 type ItemSplitMode = ExpenseFormItemValues['splitMode']
@@ -39,8 +40,8 @@ function sameParticipantShares(
 }
 
 /**
- * Scale BY_AMOUNT shares proportionally to a new target total, rounding to
- * the currency's precision with remainder-to-last (mirroring the rounding
+ * Scale BY_AMOUNT shares proportionally to a new target total, rounding to the
+ * currency's precision with remainder-to-last (mirroring the rounding
  * convention used elsewhere in the form). Other split modes are amount-
  * independent and returned verbatim. Zero-share rows are dropped, with a
  * minimum-unit fallback that guarantees at least one row when input is

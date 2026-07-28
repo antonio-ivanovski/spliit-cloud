@@ -1,26 +1,27 @@
 /**
- * "Group not found" hand-off: when a group id does not exist locally,
- * the web client calls this procedure to see whether the source group
- * is reachable on a configured import provider (currently `spliit.app`).
+ * "Group not found" hand-off: when a group id does not exist locally, the web
+ * client calls this procedure to see whether the source group is reachable on a
+ * configured import provider (currently `spliit.app`).
  *
- * A cache hit is the signal that the source group is reachable: the
- * in-memory cache stores the parsed source payload from a recent
- * successful fetch, so we can return `IMPORTABLE` without
- * re-fetching. A cache miss attempts a fresh `spliit.app` fetch and
- * caches the result on success.
+ * A cache hit is the signal that the source group is reachable: the in-memory
+ * cache stores the parsed source payload from a recent successful fetch, so we
+ * can return `IMPORTABLE` without re-fetching. A cache miss attempts a fresh
+ * `spliit.app` fetch and caches the result on success.
  *
- * This is a discovery convenience, not a bypass: the user still
- * walks the import wizard, maps participants, and confirms. The
- * destination group id is always a fresh `randomId()`; the source
- * id is recorded in the activity feed for traceability.
+ * This is a discovery convenience, not a bypass: the user still walks the
+ * import wizard, maps participants, and confirms. The destination group id is
+ * always a fresh `randomId()`; the source id is recorded in the activity feed
+ * for traceability.
  */
+
+import { TRPCError } from '@trpc/server'
+import { z } from 'zod'
 
 import {
   buildSpliitGroupFetchUrl,
   tryParseSpliitExport,
 } from '@spliit/domain/import'
-import { TRPCError } from '@trpc/server'
-import { z } from 'zod'
+
 import {
   getCachedSource,
   setCachedSource,

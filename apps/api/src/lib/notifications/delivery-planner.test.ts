@@ -1,16 +1,18 @@
 // organize-imports-ignore: test/mocks must register the Prisma mock first.
 import '../../test/mocks'
-import { prismaMock } from '../../test/state'
-import {
-  NotificationCategory,
-  NotificationChannel,
-} from '@spliit/domain/notifications'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
 import {
   NotificationDeliveryStatus,
   emailTargetKey,
   pushTargetKey,
 } from '@spliit/domain/notification-delivery'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import {
+  NotificationCategory,
+  NotificationChannel,
+} from '@spliit/domain/notifications'
+
+import { prismaMock } from '../../test/state'
 
 const jobMocks = vi.hoisted(() => ({
   sendJob: vi.fn(),
@@ -28,9 +30,10 @@ vi.mock(import('@spliit/jobs'), async (importOriginal) => {
 
 vi.mock('./push', () => ({ isPushConfigured: true }))
 
+import type { SpliitBoss } from '@spliit/jobs'
+
 import { planActivityNotificationDeliveries } from './delivery-planner'
 import type { ActivityNotificationEvent } from './types'
-import type { SpliitBoss } from '@spliit/jobs'
 
 function event(
   overrides: Partial<ActivityNotificationEvent> = {},
@@ -312,9 +315,10 @@ describe('planActivityNotificationDeliveries', () => {
     const createCall =
       prismaMock.notificationDelivery.createMany.mock.calls[0]?.[0]
     expect(createCall?.skipDuplicates).toBe(true)
-    expect((createCall?.data as Array<{ eventKey: string }>)[0]?.eventKey).toBe(
-      'activity:activity-1',
-    )
+    expect(
+      (createCall?.data as Array<{ eventKey: string }> | undefined)?.[0]
+        ?.eventKey,
+    ).toBe('activity:activity-1')
   })
 
   it('deduplicates drafts that share eventKey/account/channel/target', async () => {

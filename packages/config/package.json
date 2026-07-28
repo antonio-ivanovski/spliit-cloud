@@ -4,5 +4,9 @@
   "private": true,
   "files": [
     "tsconfig.base.json"
-  ]
+  ],
+  "scripts": {
+    "check-formatting": "oxfmt --check .",
+    "format": "oxfmt ."
+  }
 }

@@ -1,5 +1,6 @@
-import GroupInformation from '@/app/groups/[groupId]/information/group-information'
 import { createLazyFileRoute, getRouteApi } from '@tanstack/react-router'
+
+import GroupInformation from '@/app/groups/[groupId]/information/group-information'
 
 const groupRouteApi = getRouteApi('/groups/$groupId/information')
 

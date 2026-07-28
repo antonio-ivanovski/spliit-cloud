@@ -3,6 +3,7 @@ import {
   NotificationChannel,
   getDefaultNotificationChannels,
 } from '@spliit/domain/notifications'
+
 import { isPushConfigured } from './push'
 import type { ActivityNotificationIntent } from './types'
 

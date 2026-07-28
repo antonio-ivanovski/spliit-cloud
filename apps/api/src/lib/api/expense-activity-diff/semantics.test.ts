@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+
 import { payerSemantics, splitSemantics } from './semantics'
 import type { ChangeContext } from './types'
 

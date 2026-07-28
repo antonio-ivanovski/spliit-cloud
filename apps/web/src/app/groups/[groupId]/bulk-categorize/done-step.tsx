@@ -1,3 +1,6 @@
+import { Check } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import {
@@ -7,8 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Check } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 
 export function DoneStep(props: { groupId: string; applied: number }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'BulkCategorize' })

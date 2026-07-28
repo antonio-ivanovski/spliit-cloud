@@ -1,4 +1,5 @@
 import type { Prisma } from '@spliit/db'
+
 import {
   expenseItemWithSharesSelect,
   expenseItemizedRemainderSelect,

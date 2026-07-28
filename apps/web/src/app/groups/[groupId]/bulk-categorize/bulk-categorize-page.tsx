@@ -1,3 +1,7 @@
+import { ArrowLeft } from 'lucide-react'
+import { useEffect, useMemo, useReducer, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import {
@@ -10,9 +14,7 @@ import { WizardStepHeader } from '@/components/wizard'
 import { useLocale } from '@/i18n/react'
 import { trpc } from '@/trpc/client'
 import { DEFAULT_CATEGORY_ID } from '@spliit/domain'
-import { ArrowLeft } from 'lucide-react'
-import { useEffect, useMemo, useReducer, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+
 import {
   bulkCategorizeWizardReducer,
   initialBulkCategorizeWizardState,
@@ -31,7 +33,7 @@ export type BulkCategorizePageProps = {
 }
 
 export function BulkCategorizePage(props: BulkCategorizePageProps) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'BulkCategorize' })
+  const { t: _t } = useTranslation(undefined, { keyPrefix: 'BulkCategorize' })
   const locale = useLocale()
   const [state, dispatch] = useReducer(
     bulkCategorizeWizardReducer,

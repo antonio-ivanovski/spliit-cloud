@@ -1,5 +1,6 @@
 import { prisma } from '@spliit/db'
 import { DEFAULT_CATEGORY_ID } from '@spliit/domain'
+
 import { env } from '../env'
 
 export type RecentExpense = { title: string; categoryId: string }
@@ -18,21 +19,21 @@ export type RecentExpenseContext = {
 }
 
 /**
- * Fetch the most recent non-reimbursement, non-default expenses for a
- * group's ledger, plus group metadata useful as AI hints.
+ * Fetch the most recent non-reimbursement, non-default expenses for a group's
+ * ledger, plus group metadata useful as AI hints.
  *
- * Expenses left on the default category (`general`) are excluded because
- * they carry no categorization signal and would bias the AI toward the
- * fallback. If every recent expense is "general", `expenses` is `[]`
- * and the prompt builder returns an empty string.
+ * Expenses left on the default category (`general`) are excluded because they
+ * carry no categorization signal and would bias the AI toward the fallback. If
+ * every recent expense is "general", `expenses` is `[]` and the prompt builder
+ * returns an empty string.
  *
  * Access-agnostic — the caller must have already validated group access.
  * Repetition is intentional: frequency in the prompt acts as an implicit
  * weighting signal for the AI.
  *
- * `limit` defaults to env.AI_CATEGORY_RECENT_EXPENSES_LIMIT (50). The
- * function does not trigger any side effects (no recurring-expense
- * materialization) so it is safe to call from batch/backfill jobs.
+ * `limit` defaults to env.AI_CATEGORY_RECENT_EXPENSES_LIMIT (50). The function
+ * does not trigger any side effects (no recurring-expense materialization) so
+ * it is safe to call from batch/backfill jobs.
  */
 export async function getRecentExpenseContext(
   groupId: string,

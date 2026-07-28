@@ -1,6 +1,8 @@
-import { categoryIdSchema } from '@spliit/domain'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
+
+import { categoryIdSchema } from '@spliit/domain'
+
 import {
   BULK_CALIBRATION_SAMPLE_SIZE,
   BULK_PREVIEW_CHUNK_SIZE,
@@ -141,7 +143,7 @@ export const aiBulkCategorizePreviewProcedure = protectedProcedure
               )
             : [],
         })
-      } catch (error) {
+      } catch {
         // Skip this chunk; the UI shows the surviving rows and
         // the admin can correct the rest manually.
         continue

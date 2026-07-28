@@ -1,6 +1,8 @@
-import { Card, CardContent } from '@/components/ui/card'
+/* oxlint-disable jsx-a11y/no-noninteractive-element-interactions -- label receives drag-and-drop events for its file input. */
 import { FileUp } from 'lucide-react'
 import type { ChangeEvent, DragEvent } from 'react'
+
+import { Card, CardContent } from '@/components/ui/card'
 
 type FileUploadCardProps = {
   disabled: boolean
@@ -41,7 +43,7 @@ export function FileUploadCard({
         >
           <FileUp className="h-5 w-5 text-muted-foreground" />
           <span className="text-sm font-medium">{labels.dropFile}</span>
-          <span className="text-xs text-muted-foreground text-center max-w-md">
+          <span className="max-w-md text-center text-xs text-muted-foreground">
             {labels.dropFileDescription}
           </span>
           <input

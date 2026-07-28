@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+
 import { renderCalibrationUserPrompt } from './calibrate.procedure'
 
 describe('renderCalibrationUserPrompt', () => {

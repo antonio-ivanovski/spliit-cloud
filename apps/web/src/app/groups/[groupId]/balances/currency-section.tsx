@@ -1,5 +1,6 @@
-import { getCurrency, type Currency } from '@/lib/currency'
 import type { ReactNode } from 'react'
+
+import { getCurrency, type Currency } from '@/lib/currency'
 
 export function CurrencySection({
   currency,

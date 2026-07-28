@@ -1,3 +1,6 @@
+import { Navigate } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
+
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -7,8 +10,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { useLocale } from '@/i18n/react'
-import { Navigate } from '@tanstack/react-router'
-import { useTranslation } from 'react-i18next'
+
 import { useCurrentGroup } from '../current-group-context'
 import { InviteCard } from './invite-card'
 import { LeaveGroupDialog } from './leave-group-dialog'
@@ -179,7 +181,7 @@ function GroupMembersBody() {
             )}
             <Button
               variant="outline"
-              className="text-destructive border-destructive/40 hover:bg-destructive/10 hover:text-destructive w-fit"
+              className="w-fit border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive"
               onClick={() => setLeaveDialogOpen(true)}
               disabled={isOnlyActiveMember}
             >

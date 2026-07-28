@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import {
   Card,
   CardContent,
@@ -5,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { useTranslation } from 'react-i18next'
 
 type Mode = 'sign-in' | 'sign-up'
 

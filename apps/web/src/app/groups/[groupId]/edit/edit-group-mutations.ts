@@ -1,7 +1,8 @@
-import { useToast } from '@/components/ui/use-toast'
-import { trpc } from '@/trpc/client'
 import { useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
+
+import { useToast } from '@/components/ui/use-toast'
+import { trpc } from '@/trpc/client'
 
 function useArchiveTranslations() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
@@ -67,7 +68,7 @@ export function useDeleteGroupMutation() {
     onSuccess: async () => {
       toast({ description: labels.deletedToast })
       await utils.account.groups.invalidate()
-      navigate({ to: '/', replace: true })
+      await navigate({ to: '/', replace: true })
     },
     onError: (error) => {
       toast({ description: error.message, variant: 'destructive' })

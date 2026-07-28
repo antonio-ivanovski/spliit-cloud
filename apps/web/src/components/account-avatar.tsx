@@ -42,7 +42,7 @@ export function AccountAvatar({
         className,
       )}
     >
-      <AvatarFallback className="bg-primary/15 font-semibold text-[inherit] leading-none text-primary">
+      <AvatarFallback className="bg-primary/15 leading-none font-semibold text-[inherit] text-primary">
         {initials}
       </AvatarFallback>
       {account.image && (

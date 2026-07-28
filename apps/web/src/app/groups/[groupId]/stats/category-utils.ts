@@ -1,5 +1,6 @@
-import { type Category, type CategoryId, getCategoryById } from '@spliit/domain'
 import type { TFunction } from 'i18next'
+
+import { type Category, type CategoryId, getCategoryById } from '@spliit/domain'
 
 const categoryColors = [
   '#0f766e',

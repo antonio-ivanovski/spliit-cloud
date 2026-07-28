@@ -1,3 +1,15 @@
+/* oxlint-disable jsx-a11y/prefer-tag-over-role, jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events -- custom radio controls and event-isolating wrappers preserve keyboard behavior. */
+import {
+  AlertTriangle,
+  Calendar,
+  Check,
+  Globe,
+  Loader2,
+  RefreshCw,
+} from 'lucide-react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -10,16 +22,7 @@ import type {
   NormalizedSourceExpense,
 } from '@spliit/domain/import'
 import { computeImportRateKeys } from '@spliit/domain/import'
-import {
-  AlertTriangle,
-  Calendar,
-  Check,
-  Globe,
-  Loader2,
-  RefreshCw,
-} from 'lucide-react'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+
 import type { ConversionMode } from './import-wizard-state'
 import { WizardNav } from './wizard-nav'
 
@@ -40,8 +43,10 @@ type Props = {
   conversionModes: Record<string, ConversionMode>
   fixedRateDates: Record<string, string>
   fixedRateOverrides: Record<string, number>
-  /** Previously computed rates (date|base|target -> rate). Used to
-   *  pre-populate fixed-rate values when the user navigates back. */
+  /**
+   * Previously computed rates (date|base|target -> rate). Used to pre-populate
+   * fixed-rate values when the user navigates back.
+   */
   initialRates: Record<string, number>
   onBack: () => void
   onContinue: (result: ConversionResult) => void
@@ -157,7 +162,7 @@ function OptionCard({
           <Icon size={16} strokeWidth={2} aria-hidden="true" />
         </span>
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-medium leading-tight">{title}</p>
+          <p className="text-sm leading-tight font-medium">{title}</p>
           <p className="mt-0.5 text-xs leading-snug text-muted-foreground">
             {helper}
           </p>
@@ -183,7 +188,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
         aria-hidden="true"
         className="inline-block size-1.5 -translate-y-px rounded-full bg-primary/60"
       />
-      <p className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+      <p className="font-mono text-[11px] font-medium tracking-[0.14em] text-muted-foreground uppercase">
         {children}
       </p>
     </div>
@@ -345,7 +350,7 @@ function PairConversionCard({
 
                 {fixedRate !== undefined && (
                   <div className="flex items-center gap-1.5 rounded-md border border-border/50 bg-muted/30 px-2.5 py-1.5">
-                    <span className="font-mono text-xs tabular-nums text-foreground">
+                    <span className="font-mono text-xs text-foreground tabular-nums">
                       {t('Groups.Import.CurrencyConversion.fixedRateRow', {
                         source: pair.base,
                         rate: fixedRate.toFixed(4),

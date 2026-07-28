@@ -1,6 +1,7 @@
+import { useTranslation } from 'react-i18next'
+
 import type { Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
-import { useTranslation } from 'react-i18next'
 
 type Item = {
   id: string
@@ -24,14 +25,14 @@ export function ExpenseItemsSummary({
 
   return (
     <section className="space-y-2">
-      <h3 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+      <h3 className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
         {t('items.title')}
       </h3>
       <div className="space-y-1 text-sm">
         {visibleItems.map((item) => (
           <div key={item.id} className="flex items-center gap-3">
             <span className="min-w-0 flex-1 truncate">{item.title}</span>
-            <span className="shrink-0 tabular-nums text-muted-foreground">
+            <span className="shrink-0 text-muted-foreground tabular-nums">
               {formatCurrency(currency, item.amount, locale)}
             </span>
           </div>

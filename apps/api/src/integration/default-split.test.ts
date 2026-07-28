@@ -1,5 +1,7 @@
-import { prisma } from '@spliit/db'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+
+import { prisma } from '@spliit/db'
+
 import { accountRouter } from '../trpc/routers/account'
 import { groupsRouter } from '../trpc/routers/groups'
 import { checkDbConnection, testRunId } from './setup'
@@ -7,14 +9,14 @@ import { checkDbConnection, testRunId } from './setup'
 await checkDbConnection()
 
 /**
- * Integration tests for the per-user, per-group default split
- * persistence. The default lives in `AccountGroupPreference.defaultSplit`
- * and is round-tripped through `accountRouter.defaultSplit` (query) and
+ * Integration tests for the per-user, per-group default split persistence. The
+ * default lives in `AccountGroupPreference.defaultSplit` and is round-tripped
+ * through `accountRouter.defaultSplit` (query) and
  * `accountRouter.setDefaultSplit` (mutation).
  *
- * These tests use a real PostgreSQL database via Prisma so they cover
- * the membership check, the JSON column shape, and the read-back path
- * in addition to zod validation.
+ * These tests use a real PostgreSQL database via Prisma so they cover the
+ * membership check, the JSON column shape, and the read-back path in addition
+ * to zod validation.
  */
 describe('defaultSplit — real DB', () => {
   const runId = testRunId()

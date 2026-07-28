@@ -1,10 +1,12 @@
+import { z } from 'zod'
+
 import {
   getTotalActiveUserPaidFor,
   getTotalActiveUserShare,
   getTotalGroupSpending,
   type TotalsExpense,
 } from '@spliit/domain'
-import { z } from 'zod'
+
 import { getGroupExpenses } from '../../../../lib/api'
 import {
   hashLinkInviteToken,
@@ -23,9 +25,9 @@ import {
  * The new "active user" is the signed-in account. We resolve it from the
  * server-side membership/ledger participant mapping so the totals no longer
  * depend on the browser's localStorage active-participant selection. For
- * pending invitees (PENDING GroupInvitation, no membership yet), there is
- * no `activeParticipantId` and the per-user totals are 0 — the FE surfaces
- * the Accept/Decline banner in that case.
+ * pending invitees (PENDING GroupInvitation, no membership yet), there is no
+ * `activeParticipantId` and the per-user totals are 0 — the FE surfaces the
+ * Accept/Decline banner in that case.
  */
 export const getGroupStatsProcedure = protectedProcedure
   .input(

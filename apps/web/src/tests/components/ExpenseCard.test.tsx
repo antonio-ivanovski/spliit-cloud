@@ -1,6 +1,7 @@
+import { describe, expect, it, vi } from 'vitest'
+
 import type { GroupExpense } from '@/lib/api'
 import { render, screen } from '@/test/test-utils'
-import { describe, expect, it, vi } from 'vitest'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 

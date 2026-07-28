@@ -1,5 +1,7 @@
-import type { Currency, ExpenseFormItemValues } from '@spliit/domain'
 import { describe, expect, it } from 'vitest'
+
+import type { Currency, ExpenseFormItemValues } from '@spliit/domain'
+
 import {
   applySplitToAll,
   getCommonItemSplit,

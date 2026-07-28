@@ -1,3 +1,8 @@
+import { useNavigate } from '@tanstack/react-router'
+import { Check, FileQuestion, ScanLine, Sparkles } from 'lucide-react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
 import Image from '@/components/app-image'
 import { Badge } from '@/components/ui/badge'
@@ -33,10 +38,7 @@ import {
   type CategoryId,
   type Locale,
 } from '@spliit/domain'
-import { useNavigate } from '@tanstack/react-router'
-import { Check, FileQuestion, ScanLine, Sparkles } from 'lucide-react'
-import { useEffect, useRef, useState, type ReactNode } from 'react'
-import { useTranslation } from 'react-i18next'
+
 import { useCurrentGroup } from '../current-group-context'
 
 const MAX_FILE_SIZE = 2 * 1024 ** 2
@@ -134,7 +136,7 @@ export function ReceiptScanTrigger({
         >
           <span className={cn('relative inline-flex', showText && 'mr-2')}>
             <ScanLine className="h-6 w-6 sm:h-4 sm:w-4" />
-            <Sparkles className="absolute -right-[1px] -top-[2px] h-3.5 w-3.5 sm:h-2.5 sm:w-2.5 animate-[pulse_2.4s_ease-in-out_infinite] text-pink-600 drop-shadow-[0_0_4px_rgba(236,72,153,0.75)]" />
+            <Sparkles className="absolute -top-[2px] -right-[1px] h-3.5 w-3.5 animate-[pulse_2.4s_ease-in-out_infinite] text-pink-600 drop-shadow-[0_0_4px_rgba(236,72,153,0.75)] sm:h-2.5 sm:w-2.5" />
           </span>
           {showText && (
             <span className={cn(isResponsiveIconOnly && 'hidden sm:inline')}>
@@ -194,7 +196,7 @@ export function CreateFromReceiptButton({
       title={t('Dialog.triggerTitle')}
       onAccept={({ info, document }) => {
         if (!group) return
-        navigate({
+        void navigate({
           to: '/groups/$groupId/expenses/create',
           params: { groupId: group.id },
           search: {
@@ -434,7 +436,7 @@ function ReceiptDialogContent({
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-background/75 p-3 text-center text-xs font-medium text-foreground backdrop-blur-[1px]">
                   <span className="relative inline-flex h-12 w-12 items-center justify-center rounded-full bg-pink-500/15 text-pink-600 shadow-[0_0_24px_rgba(236,72,153,0.55)]">
                     <ScanLine className="h-7 w-7 animate-pulse" />
-                    <Sparkles className="absolute -right-1 -top-1 h-6 w-6 animate-[pulse_1.2s_ease-in-out_infinite] text-pink-600 drop-shadow-[0_0_9px_rgba(236,72,153,1)]" />
+                    <Sparkles className="absolute -top-1 -right-1 h-6 w-6 animate-[pulse_1.2s_ease-in-out_infinite] text-pink-600 drop-shadow-[0_0_9px_rgba(236,72,153,1)]" />
                   </span>
                   <span>{t('Dialog.scanningHint')}</span>
                 </div>

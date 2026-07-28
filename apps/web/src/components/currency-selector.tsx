@@ -1,4 +1,7 @@
+/* oxlint-disable jsx-a11y/prefer-tag-over-role, jsx-a11y/role-has-required-aria-props -- popover triggers expose combobox semantics; popup IDs are managed by the UI primitive. */
 import { Check, ChevronDown, ChevronsUpDown, Loader2 } from 'lucide-react'
+import { forwardRef, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import type { ButtonProps } from '@/components/ui/button'
 import { Button } from '@/components/ui/button'
@@ -26,8 +29,6 @@ import {
 import { type DisplayCurrency } from '@/lib/currency'
 import { useMediaQuery } from '@/lib/hooks'
 import { cn } from '@/lib/utils'
-import { forwardRef, useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 /** Static fallback for non-expense selectors and failed recommendation queries. */
 const STATIC_COMMON_CURRENCY_CODES = [
@@ -41,19 +42,22 @@ const STATIC_COMMON_CURRENCY_CODES = [
 type Props = {
   currencies: DisplayCurrency[]
   onValueChange: (currencyCode: DisplayCurrency['code']) => void
-  /** Currency code to be selected by default. Overwriting this value will update current selection, too. */
+  /**
+   * Currency code to be selected by default. Overwriting this value will update
+   * current selection, too.
+   */
   defaultValue: DisplayCurrency['code']
   isLoading: boolean
   disabled?: boolean
   /**
-   * When set, rendered first in the pinned section and excluded from
-   * the rest of the catalog.
+   * When set, rendered first in the pinned section and excluded from the rest
+   * of the catalog.
    */
   pinnedCurrencyCode?: string
   /**
    * Group-specific recommendations in server rank order. When provided
-   * (including an empty array), replaces the static USD/EUR/JPY/GBP/CNY
-   * common list. Omit / leave undefined to keep the static fallback.
+   * (including an empty array), replaces the static USD/EUR/JPY/GBP/CNY common
+   * list. Omit / leave undefined to keep the static fallback.
    */
   recommendedCurrencyCodes?: string[]
   /** Render a compact trigger for embedding beside an amount input. */
@@ -132,9 +136,10 @@ export function CurrencySelector({
               type="button"
               variant="outline"
               role="combobox"
+              aria-haspopup="listbox"
               aria-expanded={open}
               disabled={disabled}
-              className="h-9 px-3 text-sm justify-between font-normal"
+              className="h-9 justify-between px-3 text-sm font-normal"
             >
               <span className="truncate">
                 {selectedValues.length > 0
@@ -170,9 +175,10 @@ export function CurrencySelector({
             type="button"
             variant="outline"
             role="combobox"
+            aria-haspopup="listbox"
             aria-expanded={open}
             disabled={disabled}
-            className="h-9 px-3 text-sm justify-between font-normal"
+            className="h-9 justify-between px-3 text-sm font-normal"
           >
             <span className="truncate">
               {selectedValues.length > 0
@@ -314,7 +320,7 @@ function CurrencyCommand({
     <Command>
       <CommandInput placeholder={t('search')} className="text-base" />
       <CommandEmpty>{t('noCurrency')}</CommandEmpty>
-      <div className="w-full max-h-[300px] overflow-y-auto">
+      <div className="max-h-[300px] w-full overflow-y-auto">
         {priority.length > 0 && (
           <CommandGroup>{renderItems(priority)}</CommandGroup>
         )}
@@ -349,6 +355,7 @@ const CurrencyButton = forwardRef<HTMLButtonElement, CurrencyButtonProps>(
       <Button
         variant="outline"
         role="combobox"
+        aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={
           compact

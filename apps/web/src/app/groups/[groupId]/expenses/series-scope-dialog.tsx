@@ -1,3 +1,6 @@
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { Button } from '@/components/ui/button'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import {
@@ -8,12 +11,12 @@ import {
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 export type SeriesMutationScope = 'OCCURRENCE' | 'THIS_AND_FUTURE'
 export type SeriesDeleteOption =
-  'OCCURRENCE' | 'THIS_AND_FUTURE' | 'THIS_AND_FUTURE_STOP'
+  | 'OCCURRENCE'
+  | 'THIS_AND_FUTURE'
+  | 'THIS_AND_FUTURE_STOP'
 
 export function SeriesScopeDialog({
   open,

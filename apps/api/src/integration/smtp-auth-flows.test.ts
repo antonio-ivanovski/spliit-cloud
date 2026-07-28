@@ -1,4 +1,3 @@
-import { prisma } from '@spliit/db'
 import {
   afterAll,
   beforeAll,
@@ -8,6 +7,9 @@ import {
   it,
   vi,
 } from 'vitest'
+
+import { prisma } from '@spliit/db'
+
 import { app } from '../app'
 import { randomId } from '../lib/api'
 import { sendEmail } from '../lib/mail/send'

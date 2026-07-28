@@ -1,5 +1,6 @@
 import { access, copyFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
+
 import { locales, type Locale } from '../../../packages/domain/src/i18n.ts'
 import { LANGUAGE_FAMILIES } from './families'
 import { localeFileName } from './fs-helpers'

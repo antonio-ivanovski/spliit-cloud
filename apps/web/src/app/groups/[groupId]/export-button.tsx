@@ -1,3 +1,6 @@
+import { Download, FileDown, FileJson } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import {
@@ -6,8 +9,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Download, FileDown, FileJson } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 
 export default function ExportButton({
   groupId,
@@ -26,7 +27,7 @@ export default function ExportButton({
           variant="secondary"
           size={showLabel ? 'default' : 'icon'}
         >
-          <Download className="w-4 h-4" />
+          <Download className="h-4 w-4" />
           {showLabel && <span className="ml-2">{t('export')}</span>}
         </Button>
       </DropdownMenuTrigger>
@@ -38,7 +39,7 @@ export default function ExportButton({
             title={t('exportJson')}
           >
             <div className="flex items-center gap-2">
-              <FileJson className="w-4 h-4" />
+              <FileJson className="h-4 w-4" />
               <p>{t('exportJson')}</p>
             </div>
           </Link>
@@ -50,7 +51,7 @@ export default function ExportButton({
             title={t('exportCsv')}
           >
             <div className="flex items-center gap-2">
-              <FileDown className="w-4 h-4" />
+              <FileDown className="h-4 w-4" />
               <p>{t('exportCsv')}</p>
             </div>
           </Link>

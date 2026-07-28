@@ -1,6 +1,7 @@
+import { describe, expect, it } from 'vitest'
+
 import { RecurringBadge } from '@/app/groups/[groupId]/expenses/series-controls'
 import { render, screen } from '@/test/test-utils'
-import { describe, expect, it } from 'vitest'
 
 describe('RecurringBadge', () => {
   it('renders the Running label for an ACTIVE series', () => {

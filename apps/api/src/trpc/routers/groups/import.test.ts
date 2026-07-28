@@ -2,6 +2,7 @@
 // loads better-auth or @spliit/db so vi.mock is registered before those
 // modules are evaluated.
 import { describe, expect, it } from 'vitest'
+
 import '../../../test/mocks'
 import {
   importGroup,
@@ -10,8 +11,8 @@ import {
   listUnlinkedParticipants,
 } from '../../../lib/api'
 import { prisma$Transaction, prismaMock } from '../../../test/state'
-import { groupsRouter } from './index'
 import { importExpenseSchema } from './import.procedure'
+import { groupsRouter } from './index'
 
 function _makeCaller(authUserId: string) {
   return {

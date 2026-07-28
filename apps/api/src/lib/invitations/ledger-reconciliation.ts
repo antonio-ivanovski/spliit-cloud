@@ -1,4 +1,5 @@
 import { type Prisma } from '@spliit/db'
+
 import { randomId } from '../api/shared'
 
 export async function materializePendingInvitationParticipant(
@@ -45,8 +46,8 @@ export async function materializePendingInvitationParticipant(
 }
 
 /**
- * After flipping the invitation to ACCEPTED and upserting the GroupMember,
- * the new member needs a `LedgerParticipant` linked through `groupMemberId`.
+ * After flipping the invitation to ACCEPTED and upserting the GroupMember, the
+ * new member needs a `LedgerParticipant` linked through `groupMemberId`.
  */
 export async function reconcileMemberLedgerParticipant(
   tx: Prisma.TransactionClient,

@@ -32,7 +32,10 @@ export type LegacyRecurringSeriesPlan = {
   anchorIndex: number
   occurrenceCount: number
   nextOccurrenceDate: Date
-  /** 1-based anchored ordinal for `nextOccurrenceDate` (may be > 2 after skipping overdue). */
+  /**
+   * 1-based anchored ordinal for `nextOccurrenceDate` (may be > 2 after
+   * skipping overdue).
+   */
   nextOccurrenceOrdinal: number
 }
 
@@ -91,8 +94,8 @@ export function fingerprintLegacyRecurringExpense(
 /**
  * Advance from the day after the latest occurrence until the first date
  * strictly after `today` (UTC calendar day). Uses anchored occurrence math
- * (same as materialization), not iterative next-from-previous stepping.
- * Returns both the date and the 1-based anchored ordinal for that date.
+ * (same as materialization), not iterative next-from-previous stepping. Returns
+ * both the date and the 1-based anchored ordinal for that date.
  */
 export function firstRecurrenceAfterToday(
   rule: RecurrenceFrequency,

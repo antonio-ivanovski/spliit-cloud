@@ -1,8 +1,9 @@
-import type { ButtonProps } from '@/components/ui/button'
-import { Button } from '@/components/ui/button'
 import { Loader2 } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useState } from 'react'
+
+import type { ButtonProps } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 
 type Props = ButtonProps & {
   action?: () => Promise<void>
@@ -32,7 +33,7 @@ export function AsyncButton({
     >
       {loading ? (
         <>
-          <Loader2 className="w-4 h-4 mr-2 animate-spin" />{' '}
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />{' '}
           {loadingContent ?? children}
         </>
       ) : (

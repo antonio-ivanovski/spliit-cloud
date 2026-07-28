@@ -1,3 +1,9 @@
+/* oxlint-disable jsx-a11y/prefer-tag-over-role -- labeled checkbox groups use explicit ARIA semantics. */
+import { useNavigate } from '@tanstack/react-router'
+import { Check, Pencil } from 'lucide-react'
+import { useEffect, useState, type Dispatch, type SetStateAction } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
 import { useCreateExpenseMutation } from '@/app/groups/[groupId]/expenses/expense-mutation-hooks'
 import { categoryLabel } from '@/app/groups/[groupId]/stats/category-utils'
@@ -24,10 +30,7 @@ import {
 } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import { PAYMENT_CATEGORY_ID } from '@spliit/domain'
-import { useNavigate } from '@tanstack/react-router'
-import { Check, Pencil } from 'lucide-react'
-import { useEffect, useState, type Dispatch, type SetStateAction } from 'react'
-import { useTranslation } from 'react-i18next'
+
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
 import { RemovedParticipantBadge } from './removed-participant-badge'
@@ -126,6 +129,7 @@ export function CreateReimbursementModal({
 
   useEffect(() => {
     if (open) {
+      // oxlint-disable-next-line react/react-compiler -- initialize selection from the controlled default when opened.
       setSelectedKeys(
         (defaultSelectedValue ? defaultSelectedValue.split('|') : []).filter(
           Boolean,
@@ -144,7 +148,7 @@ export function CreateReimbursementModal({
     onOpenChange(false)
 
     if (selectedLegs.length > 1 && settlementGroup) {
-      navigate({
+      void navigate({
         to: '/groups/$groupId/expenses/create',
         params: { groupId },
         search: {
@@ -164,7 +168,7 @@ export function CreateReimbursementModal({
     }
 
     const selected = selectedLegs[0]
-    navigate({
+    void navigate({
       to: '/groups/$groupId/expenses/create',
       params: { groupId },
       search: {
@@ -258,7 +262,7 @@ export function CreateReimbursementModal({
         </ResponsiveDialogHeader>
 
         <ResponsiveDialogBody className="max-h-[70vh] space-y-5 overflow-y-auto">
-          <div className="text-3xl font-bold tabular-nums tracking-tight">
+          <div className="text-3xl font-bold tracking-tight tabular-nums">
             {formatCurrency(currency, selectedTotal, locale)}
           </div>
 
@@ -467,7 +471,7 @@ function ReimbursementSelectionList({
                   })}
             </span>
             {counterparty?.removed ? <RemovedParticipantBadge /> : null}
-            <span className="shrink-0 tabular-nums text-sm">
+            <span className="shrink-0 text-sm tabular-nums">
               {formatCurrency(currency, leg.amount, locale)}
             </span>
           </label>

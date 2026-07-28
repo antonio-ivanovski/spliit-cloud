@@ -1,6 +1,8 @@
+import { describe, expect, it } from 'vitest'
+
 import type { ExpenseFormInputValues } from '@spliit/domain'
 import { getCurrency } from '@spliit/domain'
-import { describe, expect, it } from 'vitest'
+
 import { buildSubmitValues } from './submit-values'
 
 const baseValues: ExpenseFormInputValues = {

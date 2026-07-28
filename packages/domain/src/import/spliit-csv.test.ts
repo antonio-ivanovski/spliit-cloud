@@ -1,5 +1,6 @@
 import Papa from 'papaparse'
 import { describe, expect, it } from 'vitest'
+
 import { tryParseSpliitCsv } from './spliit-csv'
 
 const sampleCsv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"

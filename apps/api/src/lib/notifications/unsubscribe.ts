@@ -1,8 +1,10 @@
+import { Jwt } from 'hono/utils/jwt'
+
 import {
   notificationCategorySchema,
   type NotificationCategory,
 } from '@spliit/domain/notifications'
-import { Jwt } from 'hono/utils/jwt'
+
 import { getApiBaseUrl, getWebBaseUrl } from '../auth/urls'
 import { env } from '../env'
 

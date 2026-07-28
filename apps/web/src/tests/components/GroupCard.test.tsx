@@ -1,6 +1,7 @@
+import { describe, expect, it, vi } from 'vitest'
+
 import type { AccountGroup } from '@/app/groups/group-buckets'
 import { render, screen } from '@/test/test-utils'
-import { describe, expect, it, vi } from 'vitest'
 
 vi.mock('@tanstack/react-router', () => ({
   Link: ({

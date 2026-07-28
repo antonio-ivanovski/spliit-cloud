@@ -1,5 +1,3 @@
-import { ThemeProvider } from '@/components/theme-provider'
-import { I18nProvider } from '@/i18n/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import {
   cleanup,
@@ -9,6 +7,9 @@ import {
 import userEvent from '@testing-library/user-event'
 import { type ReactElement } from 'react'
 import { afterEach } from 'vitest'
+
+import { ThemeProvider } from '@/components/theme-provider'
+import { I18nProvider } from '@/i18n/react'
 
 afterEach(() => {
   cleanup()

@@ -1,9 +1,10 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { useCurrentGroup } from '@/app/groups/[groupId]/current-group-context'
 import GroupMembers from '@/app/groups/[groupId]/members/members'
 import type { Group } from '@/lib/api'
 import { useCurrentAccount } from '@/lib/use-current-account'
-import { render, screen } from '@/test/test-utils'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { act, render, screen } from '@/test/test-utils'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
@@ -426,7 +427,9 @@ describe('GroupMembers', () => {
 
     // Trigger the onSuccess callback (the component sets it on useMutation)
     if (createLinkMutationOnSuccess) {
-      createLinkMutationOnSuccess(inviteData)
+      act(() => {
+        createLinkMutationOnSuccess?.(inviteData)
+      })
     }
 
     // The generated link section should appear

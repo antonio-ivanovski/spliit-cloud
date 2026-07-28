@@ -1,10 +1,11 @@
+import { Save } from 'lucide-react'
+import type { ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { DeletePopup } from '@/components/delete-popup'
 import Link from '@/components/link'
 import { SubmitButton } from '@/components/submit-button'
 import { Button } from '@/components/ui/button'
-import { Save } from 'lucide-react'
-import type { ReactNode } from 'react'
-import { useTranslation } from 'react-i18next'
 
 export function FormActions(props: {
   isCreate: boolean
@@ -33,7 +34,7 @@ export function FormActions(props: {
         <Link href={props.cancelHref}>{t('cancel')}</Link>
       </Button>
       <SubmitButton loadingContent={t(props.isCreate ? 'creating' : 'saving')}>
-        <Save className="w-4 h-4 mr-2" />
+        <Save className="mr-2 h-4 w-4" />
         {t(props.isCreate ? 'create' : 'save')}
       </SubmitButton>
     </FixedBar>
@@ -44,7 +45,7 @@ export function FormActions(props: {
 // Still inside the form so Enter-to-submit and validation work.
 function FixedBar({ children }: { children: ReactNode }) {
   return (
-    <div className="fixed inset-x-0 bottom-0 z-20 border-t bg-background/95 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+    <div className="fixed inset-x-0 bottom-0 z-20 border-t bg-background/95 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="mx-auto flex w-full max-w-(--breakpoint-md) flex-row items-center justify-end gap-2 px-4">
         {children}
       </div>

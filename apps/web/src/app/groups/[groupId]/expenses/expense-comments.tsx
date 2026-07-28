@@ -1,12 +1,14 @@
+import { LoaderCircle, Send, Trash2 } from 'lucide-react'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { AccountAvatar } from '@/components/account-avatar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useLocale } from '@/i18n/react'
 import { formatDate } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
-import { LoaderCircle, Send, Trash2 } from 'lucide-react'
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
+
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
 
@@ -17,8 +19,10 @@ type ExpenseCommentsProps = {
   expenseId: string
 }
 
-/** Comments attached to an expense. Read access is available to every group
- * viewer; writing is reserved for accepted members of active groups. */
+/**
+ * Comments attached to an expense. Read access is available to every group
+ * viewer; writing is reserved for accepted members of active groups.
+ */
 export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
   const { group, currentMember } = useCurrentGroup()
   const isPendingInvitee = useIsPendingInvitee()
@@ -95,7 +99,9 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
   }
 
   const queryData = commentsQuery.data as
-    { comments?: CommentItem[] } | CommentItem[] | undefined
+    | { comments?: CommentItem[] }
+    | CommentItem[]
+    | undefined
   const comments = Array.isArray(queryData)
     ? queryData
     : (queryData?.comments ?? [])
@@ -107,7 +113,7 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
     >
       <h3
         id="expense-comments-title"
-        className="text-xs font-medium uppercase tracking-wide text-muted-foreground"
+        className="text-xs font-medium tracking-wide text-muted-foreground uppercase"
       >
         {t('commentsTitle')}
       </h3>
@@ -159,7 +165,7 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
                       type="button"
                       variant="ghost"
                       size="icon"
-                      className="-mr-2 -mt-2 h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
+                      className="-mt-2 -mr-2 h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
                       aria-label={t('commentDelete')}
                       disabled={deletingCommentId === comment.id}
                       onClick={() => void handleDelete(comment.id)}
@@ -168,7 +174,7 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
                     </Button>
                   )}
                 </div>
-                <p className="mt-1 whitespace-pre-wrap break-words text-sm">
+                <p className="mt-1 text-sm break-words whitespace-pre-wrap">
                   {comment.body}
                 </p>
               </div>

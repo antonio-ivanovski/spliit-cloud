@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+
 import type { createEmailUnsubscribeToken as createEmailUnsubscribeTokenType } from '../../../lib/notifications/unsubscribe'
 import '../../../test/mocks'
 import type { notificationsRouter as notificationsRouterType } from './index'

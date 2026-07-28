@@ -37,6 +37,7 @@ const AvatarImage = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <img
     ref={ref}
+    alt={props.alt ?? ''}
     className={cn('absolute inset-0 h-full w-full object-cover', className)}
     {...props}
   />

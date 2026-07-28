@@ -1,17 +1,18 @@
+import { useTranslation } from 'react-i18next'
+
 import { useLocale } from '@/i18n/react'
 import { cn, formatCurrency } from '@/lib/utils'
 import type { Currency, SplitMode } from '@spliit/domain'
-import { useTranslation } from 'react-i18next'
 
 /**
- * Footer summary for the "Paid by" and "Paid for" participant lists.
- * For `BY_AMOUNT` and `BY_PERCENTAGE` it tells the user how much is
- * missing or overflowing vs the expense target; for `EVENLY` and
- * `BY_SHARES` it shows a static muted label.
+ * Footer summary for the "Paid by" and "Paid for" participant lists. For
+ * `BY_AMOUNT` and `BY_PERCENTAGE` it tells the user how much is missing or
+ * overflowing vs the expense target; for `EVENLY` and `BY_SHARES` it shows a
+ * static muted label.
  *
- * Call sites are responsible for normalising shares to the unit the
- * component expects per mode: minor units for BY_AMOUNT, percent for
- * BY_PERCENTAGE, raw weights for BY_SHARES, irrelevant for EVENLY.
+ * Call sites are responsible for normalising shares to the unit the component
+ * expects per mode: minor units for BY_AMOUNT, percent for BY_PERCENTAGE, raw
+ * weights for BY_SHARES, irrelevant for EVENLY.
  */
 export function ParticipantDistributionFooter({
   splitMode,
@@ -93,9 +94,8 @@ export function ParticipantDistributionFooter({
   if (!message) return null
 
   return (
-    <div
+    <output
       data-testid={dataTestId}
-      role="status"
       aria-live="polite"
       aria-atomic="true"
       className={cn(
@@ -104,6 +104,6 @@ export function ParticipantDistributionFooter({
       )}
     >
       <span>{message}</span>
-    </div>
+    </output>
   )
 }

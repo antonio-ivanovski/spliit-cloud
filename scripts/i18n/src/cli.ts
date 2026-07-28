@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs'
+
 import {
   addString,
   auditMessages,
@@ -108,13 +109,13 @@ function formatDiffHuman(result: Awaited<ReturnType<typeof diffMessages>>) {
       const { missing, present } = translationWork[locale]
       if (missing.length > 0) {
         lines.push('')
-        lines.push(`${locale} (missing):`)
+        lines.push(`${String(locale)} (missing):`)
         for (const k of missing) lines.push(`  - ${k}`)
       }
       if (present.length > 0) {
         lines.push('')
         lines.push(
-          `${locale} (present — may need re-check if English changed):`,
+          `${String(locale)} (present — may need re-check if English changed):`,
         )
         for (const k of present) lines.push(`  + ${k}`)
       }
@@ -292,7 +293,7 @@ function printSetResult(
   result: { count: number; allowEnglishKeys: string[]; dryRun: boolean },
 ) {
   const verb = result.dryRun ? 'Validated' : 'Set'
-  console.log(`${verb} ${result.count} key(s) in ${locale}.`)
+  console.log(`${verb} ${result.count} key(s) in ${String(locale)}.`)
   if (result.allowEnglishKeys.length > 0) {
     console.log(
       `Allowed English (via --allow-english): ${result.allowEnglishKeys.join(', ')}`,
@@ -339,7 +340,7 @@ async function main() {
       const locale = positional[1]
       if (!locale)
         die('usage: bun i18n set <locale> <path> "<value>" | --stdin')
-      if (!isLocale(locale)) die(`unknown locale: ${locale}`, 2)
+      if (!isLocale(locale)) die(`unknown locale: ${String(locale)}`, 2)
       const allowEnglish = flags.has('allow-english')
       const dryRun = flags.has('dry-run')
 
@@ -440,7 +441,7 @@ async function main() {
       const locale = positional[1]
       const path = positional[2]
       if (!locale || !path) die('usage: bun i18n get <locale> <path>', 2)
-      if (!isLocale(locale)) die(`unknown locale: ${locale}`, 2)
+      if (!isLocale(locale)) die(`unknown locale: ${String(locale)}`, 2)
       const data = await readMessagesFile(locale)
       const value = getAt(data, path)
       if (value === undefined) {
@@ -453,7 +454,7 @@ async function main() {
 
     case 'list': {
       const locale = (positional[1] ?? 'en-US') as Locale
-      if (!isLocale(locale)) die(`unknown locale: ${locale}`, 2)
+      if (!isLocale(locale)) die(`unknown locale: ${String(locale)}`, 2)
       const data = await readMessagesFile(locale)
       const keys = flattenKeys(data)
       for (const k of keys) console.log(k)
@@ -470,7 +471,7 @@ async function main() {
         die('--locale and --locales are mutually exclusive', 2)
       }
       if (locale) {
-        if (!isLocale(locale)) die(`unknown locale: ${locale}`, 2)
+        if (!isLocale(locale)) die(`unknown locale: ${String(locale)}`, 2)
         if (locale === 'en-US') {
           die('pack is not meaningful for en-US (it is the source of truth)', 2)
         }
@@ -562,7 +563,7 @@ async function main() {
     case 'next': {
       const locale = kvFlags.locale as Locale | undefined
       if (!locale) die('usage: bun i18n next --locale <l> [--size 40] [...]', 2)
-      if (!isLocale(locale)) die(`unknown locale: ${locale}`, 2)
+      if (!isLocale(locale)) die(`unknown locale: ${String(locale)}`, 2)
       if (locale === 'en-US') {
         die('next is not meaningful for en-US', 2)
       }
@@ -622,7 +623,8 @@ async function main() {
         )
       }
       const from = kvFlags.from as Locale | undefined
-      if (from && !isLocale(from)) die(`unknown --from locale: ${from}`, 2)
+      if (from && !isLocale(from))
+        die(`unknown --from locale: ${String(from)}`, 2)
       try {
         const result = await initLocale({
           code,
@@ -659,7 +661,7 @@ async function main() {
           for (const locale of locales.filter((l) => l !== 'en-US')) {
             const missing = allMissing[locale]
             total += missing.length
-            console.log(`${locale}: ${missing.length} missing`)
+            console.log(`${String(locale)}: ${missing.length} missing`)
           }
           console.log(`Total: ${total} missing across all locales.`)
         }
@@ -667,7 +669,7 @@ async function main() {
       }
       const locale = kvFlags.locale as Locale | undefined
       const target = locale ?? 'en-US'
-      if (!isLocale(target)) die(`unknown locale: ${target}`, 2)
+      if (!isLocale(target)) die(`unknown locale: ${String(target)}`, 2)
       if (target === 'en-US') {
         die(
           'missing is not meaningful for en-US (it is the source of truth)',
@@ -678,7 +680,7 @@ async function main() {
       if (json) {
         console.log(JSON.stringify({ locale: target, missing }, null, 2))
       } else {
-        console.log(`${missing.length} key(s) missing in ${target}:`)
+        console.log(`${missing.length} key(s) missing in ${String(target)}:`)
         for (const k of missing) console.log(`  ${k}`)
       }
       return
@@ -686,7 +688,8 @@ async function main() {
 
     case 'identical': {
       const locale = kvFlags.locale as Locale | undefined
-      if (locale && !isLocale(locale)) die(`unknown locale: ${locale}`, 2)
+      if (locale && !isLocale(locale))
+        die(`unknown locale: ${String(locale)}`, 2)
       if (locale === 'en-US') {
         die('identical is not meaningful for en-US', 2)
       }
@@ -710,7 +713,8 @@ async function main() {
       const ref = kvFlags.ref
       const locale = kvFlags.locale as Locale | undefined
       const json = flags.has('json')
-      if (locale && !isLocale(locale)) die(`unknown locale: ${locale}`, 2)
+      if (locale && !isLocale(locale))
+        die(`unknown locale: ${String(locale)}`, 2)
       const result = await diffMessages({ staged, ref, locale })
       if (json) {
         console.log(JSON.stringify(result, null, 2))
@@ -736,7 +740,8 @@ async function main() {
       const changesOnly = flags.has('changes-only')
       const locale = kvFlags.locale as Locale | undefined
       const ref = kvFlags.ref
-      if (locale && !isLocale(locale)) die(`unknown locale: ${locale}`, 2)
+      if (locale && !isLocale(locale))
+        die(`unknown locale: ${String(locale)}`, 2)
       if (locale === 'en-US') {
         die('check is not meaningful for en-US (it is the source of truth)', 2)
       }

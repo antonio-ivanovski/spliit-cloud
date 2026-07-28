@@ -1,3 +1,8 @@
+import { useNavigate } from '@tanstack/react-router'
+import { Loader2 } from 'lucide-react'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { Button } from '@/components/ui/button'
 import {
   ResponsiveDialog,
@@ -9,17 +14,13 @@ import {
 } from '@/components/ui/responsive-dialog'
 import { useToast } from '@/components/ui/use-toast'
 import { trpc } from '@/trpc/client'
-import { useNavigate } from '@tanstack/react-router'
-import { Loader2 } from 'lucide-react'
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 type Props = {
   /**
    * When non-null, the dialog is open and the user is being asked to confirm
    * archiving the group identified by this id. The dialog manages the
-   * `force-archive` mutation and invalidates the queries that the group
-   * page relies on.
+   * `force-archive` mutation and invalidates the queries that the group page
+   * relies on.
    */
   groupId: string | null
   onClose: () => void
@@ -71,7 +72,7 @@ export function ForceArchiveDialog({ groupId, onClose }: Props) {
   function handleViewBalances() {
     if (!openGroupId) return
     onClose()
-    navigate({
+    void navigate({
       to: '/groups/$groupId/balances',
       params: { groupId: openGroupId },
     })
@@ -111,7 +112,7 @@ export function ForceArchiveDialog({ groupId, onClose }: Props) {
             {t('archiveWithBalancesView')}
           </Button>
           <Button type="button" disabled={pending} onClick={handleForceArchive}>
-            {pending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+            {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {t('archiveWithBalancesForce')}
           </Button>
         </ResponsiveDialogFooter>

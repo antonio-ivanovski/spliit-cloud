@@ -1,24 +1,23 @@
 /**
- * Compile-time check that the Prisma JSON/string generator actually
- * narrows `Activity.type`, `Activity.actorType`, and
- * `Activity.subjectType` to the unions inferred from the domain Zod
- * schemas, rather than leaving them as raw `string`.
+ * Compile-time check that the Prisma JSON/string generator actually narrows
+ * `Activity.type`, `Activity.actorType`, and `Activity.subjectType` to the
+ * unions inferred from the domain Zod schemas, rather than leaving them as raw
+ * `string`.
  *
- * The Prisma client types the activity fields against the global
- * `PrismaJson` namespace declared in `@spliit/db`'s `prisma-json.d.ts`.
- * If that wiring breaks (or someone replaces the domain types with raw
- * string literals), every valid assignment here would still compile and
- * the test would silently pass. To detect that, the test mixes:
+ * The Prisma client types the activity fields against the global `PrismaJson`
+ * namespace declared in `@spliit/db`'s `prisma-json.d.ts`. If that wiring
+ * breaks (or someone replaces the domain types with raw string literals), every
+ * valid assignment here would still compile and the test would silently pass.
+ * To detect that, the test mixes:
  *
- *   1. valid assignments — they must compile and the type must accept
- *      every literal from the union.
- *   2. invalid assignments annotated with `@ts-expect-error` — they
- *      must fail to compile (any other behaviour means the field is
- *      too permissive).
+ * 1. Valid assignments — they must compile and the type must accept every literal
+ *    from the union.
+ * 2. Invalid assignments annotated with `@ts-expect-error` — they must fail to
+ *    compile (any other behaviour means the field is too permissive).
  *
- * The runtime assertions are minimal because the value of this file is
- * at the type level; the Vitest `expect` calls just keep the test from
- * being tree-shaken by the typechecker.
+ * The runtime assertions are minimal because the value of this file is at the
+ * type level; the Vitest `expect` calls just keep the test from being
+ * tree-shaken by the typechecker.
  */
 import type { ActivityData } from './payload'
 import {

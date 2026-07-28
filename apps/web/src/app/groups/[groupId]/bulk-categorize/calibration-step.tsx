@@ -1,3 +1,6 @@
+import { Loader2, Sparkles } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
 import { CategorySelector } from '@/components/category-selector'
 import { Button } from '@/components/ui/button'
 import {
@@ -10,8 +13,7 @@ import {
 } from '@/components/ui/card'
 import { WizardNav } from '@/components/wizard'
 import { DEFAULT_CATEGORIES, type CategoryId } from '@spliit/domain'
-import { Loader2, Sparkles } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+
 import type { CalibrationSelection } from './bulk-categorize-wizard-state'
 import { ConfidenceBadge } from './category-field'
 

@@ -1,7 +1,9 @@
+import { Trans, useTranslation } from 'react-i18next'
+
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Trans, useTranslation } from 'react-i18next'
+
 import { AuthCard } from './auth-card'
 import { AuthSuccess } from './auth-success'
 import { MagicLinkForm } from './magic-link-form'
@@ -66,7 +68,7 @@ export function AuthPanel() {
         )}
 
         {socialEnabled && (
-          <div className="flex items-center gap-3 text-xs uppercase text-muted-foreground">
+          <div className="flex items-center gap-3 text-xs text-muted-foreground uppercase">
             <div className="h-px flex-1 bg-border" />
             <span>{t('orContinueWithEmail')}</span>
             <div className="h-px flex-1 bg-border" />
@@ -118,7 +120,7 @@ export function AuthPanel() {
           )}
         </section>
 
-        <div className="text-sm text-muted-foreground text-center w-full">
+        <div className="w-full text-center text-sm text-muted-foreground">
           {mode === 'sign-in' ? t('noAccount') : t('haveAccount')}{' '}
           <Button
             type="button"

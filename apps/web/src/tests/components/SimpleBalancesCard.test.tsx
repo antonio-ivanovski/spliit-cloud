@@ -1,10 +1,11 @@
+import { describe, expect, it, vi } from 'vitest'
+
 import { SimpleBalancesCard } from '@/app/groups/[groupId]/balances/simple-balances-card'
 import {
   useCurrentGroup,
   useIsPendingInvitee,
 } from '@/app/groups/[groupId]/current-group-context'
 import { render, screen } from '@/test/test-utils'
-import { describe, expect, it, vi } from 'vitest'
 
 vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useCurrentGroup: vi.fn(),

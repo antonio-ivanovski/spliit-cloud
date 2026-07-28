@@ -1,11 +1,12 @@
+import { CheckCircle2, Share2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
 import { CopyButton } from '@/components/copy-button'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { isPlaceholderEmail } from '@/lib/account'
 import type { AppRouterOutput } from '@spliit/api/router'
-import { CheckCircle2, Share2 } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 
 type ImportInvite = NonNullable<
   AppRouterOutput['groups']['import']
@@ -20,17 +21,15 @@ type Props = {
 /**
  * Final step of the import wizard.
  *
- * Surfaces shareable-link URLs the server generated during the
- * import. The user copies and distributes these links manually (we
- * don't have the invitees' emails for them). Email-targeted
- * invitations are also listed for transparency but have no
- * copyable URL — the server sent the invite mail directly.
+ * Surfaces shareable-link URLs the server generated during the import. The user
+ * copies and distributes these links manually (we don't have the invitees'
+ * emails for them). Email-targeted invitations are also listed for transparency
+ * but have no copyable URL — the server sent the invite mail directly.
  *
- * The shareable-link UX mirrors the per-group invite-link card on
- * the Members tab: read-only input, copy button, and a Share button
- * (rendered only when `navigator.share` is available). Reusing the
- * same affordances keeps the import path consistent with the rest
- * of the app.
+ * The shareable-link UX mirrors the per-group invite-link card on the Members
+ * tab: read-only input, copy button, and a Share button (rendered only when
+ * `navigator.share` is available). Reusing the same affordances keeps the
+ * import path consistent with the rest of the app.
  */
 export function DoneStep({ groupId: _groupId, invites, onContinue }: Props) {
   const { t } = useTranslation()
@@ -62,8 +61,8 @@ export function DoneStep({ groupId: _groupId, invites, onContinue }: Props) {
   return (
     <div className="flex flex-col gap-4">
       <Card>
-        <CardContent className="p-6 flex flex-col items-center gap-3 text-center">
-          <CheckCircle2 className="w-10 h-10 text-green-500" />
+        <CardContent className="flex flex-col items-center gap-3 p-6 text-center">
+          <CheckCircle2 className="h-10 w-10 text-green-500" />
           <h2 className="text-lg font-medium">
             {t('Groups.Import.Done.importComplete')}
           </h2>
@@ -110,7 +109,7 @@ export function DoneStep({ groupId: _groupId, invites, onContinue }: Props) {
                           }
                           aria-label={t('Groups.Import.Done.shareAriaLabel')}
                         >
-                          <Share2 className="w-4 h-4" />
+                          <Share2 className="h-4 w-4" />
                         </Button>
                       )}
                     </div>
@@ -124,7 +123,7 @@ export function DoneStep({ groupId: _groupId, invites, onContinue }: Props) {
 
       {emailInvites.length > 0 && (
         <Card>
-          <CardContent className="p-4 flex flex-col gap-2">
+          <CardContent className="flex flex-col gap-2 p-4">
             <h2 className="text-base font-medium">
               {t('Groups.Import.Done.emailInvitesTitle')}
             </h2>

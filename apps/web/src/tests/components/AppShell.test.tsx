@@ -1,6 +1,7 @@
+import { afterEach, describe, expect, it, vi } from 'vitest'
+
 import { AppShell } from '@/AppShell'
 import { render, screen } from '@/test/test-utils'
-import { afterEach, describe, expect, it, vi } from 'vitest'
 
 const route = vi.hoisted(() => ({ pathname: '/' }))
 
@@ -14,7 +15,7 @@ vi.mock('@/components/account-menu', () => ({
   AccountMenu: () => <button type="button">Account</button>,
 }))
 vi.mock('@/components/app-image', () => ({
-  default: ({ alt }: { alt: string }) => <span role="img" aria-label={alt} />,
+  default: ({ alt }: { alt: string }) => <img alt={alt} />,
 }))
 vi.mock('@/components/install-promotion-dialog', () => ({
   InstallPromotionDialog: () => null,

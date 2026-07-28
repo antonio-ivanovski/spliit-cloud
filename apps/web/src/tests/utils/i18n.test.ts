@@ -1,17 +1,16 @@
-import { I18nProvider } from '@/i18n/react'
-import { defaultLocale } from '@/i18n/request'
-import { detectLocale, i18n, loadLocale, setUserLocale } from '@/i18n/setup'
 import { act, cleanup, render } from '@testing-library/react'
 import { createElement } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { I18nProvider } from '@/i18n/react'
+import { defaultLocale } from '@/i18n/request'
+import { detectLocale, i18n, loadLocale, setUserLocale } from '@/i18n/setup'
 
 // ── Helpers ────────────────────────────────────────────────────────────
 
 const COOKIE_NAME = 'NEXT_LOCALE'
 
-/**
- * Read a cookie value from jsdom's cookie jar.
- */
+/** Read a cookie value from jsdom's cookie jar. */
 function getCookie(name: string): string | undefined {
   return document.cookie
     .split('; ')
@@ -19,9 +18,7 @@ function getCookie(name: string): string | undefined {
     ?.split('=')[1]
 }
 
-/**
- * Restore i18n language to default after tests that change it.
- */
+/** Restore i18n language to default after tests that change it. */
 async function resetLocale() {
   if (i18n.language !== defaultLocale) {
     await i18n.changeLanguage(defaultLocale)

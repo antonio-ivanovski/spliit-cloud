@@ -1,3 +1,5 @@
+import { useCallback, useEffect, useRef, useState } from 'react'
+
 import {
   disconnectPushSubscription,
   getPushSubscription,
@@ -7,7 +9,6 @@ import {
   subscribeToPush,
 } from '@/lib/push-notifications'
 import { trpc } from '@/trpc/client'
-import { useCallback, useEffect, useRef, useState } from 'react'
 
 export const PUSH_SUBSCRIPTION_CHANGED_EVENT =
   'spliit:push-subscription-changed'
@@ -61,6 +62,7 @@ export function usePushNotifications() {
   useEffect(() => {
     if (!supported) return
     const handleSubscriptionChanged = () => void refreshSubscription()
+    // oxlint-disable-next-line react/react-compiler -- refresh state from the browser push subscription event.
     void refreshSubscription()
     window.addEventListener(
       PUSH_SUBSCRIPTION_CHANGED_EVENT,
@@ -93,6 +95,7 @@ export function usePushNotifications() {
     }
   }, [status.data?.subscribed, status.isFetching, subscription, utils])
 
+  // oxlint-disable-next-line react/react-compiler -- this callback is intentionally stable for consumers.
   const enable = useCallback(async () => {
     setError(null)
     if (!config.data?.vapidPublicKey) throw new Error('Push is not configured')

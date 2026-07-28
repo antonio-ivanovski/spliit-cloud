@@ -1,8 +1,8 @@
-import { render, screen } from '@/test/test-utils'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 
 import { ThemeToggle } from '@/components/theme-toggle'
+import { render, screen } from '@/test/test-utils'
 
 describe('ThemeToggle', () => {
   it('renders a dropdown trigger with Sun/Moon icons', () => {

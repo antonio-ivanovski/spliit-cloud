@@ -1,3 +1,6 @@
+import { Trash2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
 import { AccountAvatar } from '@/components/account-avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -17,8 +20,7 @@ import {
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { isPlaceholderEmail } from '@/lib/account'
-import { Trash2 } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+
 import { badgeVariantForRole, formatDate, roleLabel } from './members-hooks'
 
 type Member = {
@@ -72,7 +74,7 @@ export function MemberListCard({
             <Skeleton className="h-8 w-full" />
           </div>
         ) : members.length === 0 ? (
-          <p className="text-sm text-muted-foreground py-2">{t('empty')}</p>
+          <p className="py-2 text-sm text-muted-foreground">{t('empty')}</p>
         ) : (
           <ul className="flex flex-col divide-y">
             {members.map((member) => {
@@ -94,7 +96,7 @@ export function MemberListCard({
                   )}
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-medium text-foreground truncate">
+                      <span className="truncate font-medium text-foreground">
                         {displayName}
                       </span>
                       {isMe && (
@@ -111,12 +113,12 @@ export function MemberListCard({
                     </div>
                     {member.account?.email &&
                       !isPlaceholderEmail(member.account.email) && (
-                        <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                        <p className="mt-0.5 truncate text-xs text-muted-foreground">
                           {member.account.email}
                         </p>
                       )}
                     {member.joinedAt && (
-                      <p className="text-xs text-muted-foreground mt-0.5">
+                      <p className="mt-0.5 text-xs text-muted-foreground">
                         {t('joinedOn', {
                           date: formatDate(member.joinedAt, locale),
                         })}

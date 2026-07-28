@@ -19,25 +19,23 @@ import {
 } from '@/lib/use-install-prompt'
 
 /**
- * Auto-opening promotion dialog that nudges the user to install Spliit Cloud
- * as a PWA. Replaces the previous toolbar icon button so the affordance is
- * visible on every browser that supports installation, not just Chromium
- * (which alone fires `beforeinstallprompt`).
+ * Auto-opening promotion dialog that nudges the user to install Spliit Cloud as
+ * a PWA. Replaces the previous toolbar icon button so the affordance is visible
+ * on every browser that supports installation, not just Chromium (which alone
+ * fires `beforeinstallprompt`).
  *
- * Browser-adaptive content:
- * - Chrome / Edge / Brave / Samsung / Arc (Chromium, native install):
- *   primary "Install" button that triggers `deferredPrompt.prompt()`.
- * - iOS Safari (and every WebKit-based iOS browser): inline 3-step Share →
- *   Add to Home Screen instructions; no install button (programmatic install
- *   is not possible on iOS).
- * - Firefox on Android: inline 2-step menu (⋮) → Install instructions; no
- *   install button (Firefox does not expose `beforeinstallprompt`).
- * - Other browsers (Firefox desktop, Safari desktop, etc.): renders nothing.
+ * Browser-adaptive content: - Chrome / Edge / Brave / Samsung / Arc (Chromium,
+ * native install): primary "Install" button that triggers
+ * `deferredPrompt.prompt()`. - iOS Safari (and every WebKit-based iOS browser):
+ * inline 3-step Share → Add to Home Screen instructions; no install button
+ * (programmatic install is not possible on iOS). - Firefox on Android: inline
+ * 2-step menu (⋮) → Install instructions; no install button (Firefox does not
+ * expose `beforeinstallprompt`). - Other browsers (Firefox desktop, Safari
+ * desktop, etc.): renders nothing.
  *
- * Persistence via localStorage:
- * - "Remind me later" sets a 24h cooldown.
- * - "Don't show again" sets a permanent dismissal flag.
- * - Successful install (`appinstalled`) clears both flags.
+ * Persistence via localStorage: - "Remind me later" sets a 24h cooldown. -
+ * "Don't show again" sets a permanent dismissal flag. - Successful install
+ * (`appinstalled`) clears both flags.
  *
  * Esc / backdrop close count as "Remind me later" so an accidental dismissal
  * does not silently suppress the prompt forever.
@@ -216,7 +214,7 @@ function InstallStep({
 }) {
   return (
     <li className="flex items-start gap-3">
-      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-semibold">
+      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
         {n}
       </span>
       <div className="flex items-start gap-2 pt-1">

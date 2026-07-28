@@ -1,3 +1,7 @@
+import { useNavigate } from '@tanstack/react-router'
+import { ArrowRight, Check, X } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
 import Link from '@/components/link'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -13,9 +17,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
 import { isPlaceholderEmail } from '@/lib/account'
 import { trpc } from '@/trpc/client'
-import { useNavigate } from '@tanstack/react-router'
-import { ArrowRight, Check, X } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+
 import { formatDate } from './group-buckets'
 
 export function PendingInvitations() {
@@ -29,9 +31,12 @@ export function PendingInvitations() {
   const acceptMutation = trpc.invitations.accept.useMutation({
     onSuccess: (data) => {
       toast({ description: t('invitations.accepted') })
-      navigate({ to: '/groups/$groupId', params: { groupId: data.groupId } })
-      utils.account.groups.invalidate()
-      utils.invitations.listForAccount.invalidate()
+      void navigate({
+        to: '/groups/$groupId',
+        params: { groupId: data.groupId },
+      })
+      void utils.account.groups.invalidate()
+      void utils.invitations.listForAccount.invalidate()
     },
     onError: (error) => {
       toast({ description: error.message, variant: 'destructive' })
@@ -41,7 +46,7 @@ export function PendingInvitations() {
   const declineMutation = trpc.invitations.decline.useMutation({
     onSuccess: () => {
       toast({ description: t('invitations.declined') })
-      utils.invitations.listForAccount.invalidate()
+      void utils.invitations.listForAccount.invalidate()
     },
     onError: (error) => {
       toast({ description: error.message, variant: 'destructive' })
@@ -94,7 +99,7 @@ export function PendingInvitations() {
                   {groupId ? (
                     <Link
                       href={`/groups/${groupId}`}
-                      className="font-medium text-foreground no-underline outline-hidden focus-visible:underline before:absolute before:inset-0 before:rounded-md before:content-['']"
+                      className="font-medium text-foreground no-underline outline-hidden before:absolute before:inset-0 before:rounded-md before:content-[''] focus-visible:underline"
                       title={
                         invitation.group?.name ?? t('invitations.unknownGroup')
                       }
@@ -102,11 +107,11 @@ export function PendingInvitations() {
                       {invitation.group?.name ?? t('invitations.unknownGroup')}
                     </Link>
                   ) : (
-                    <p className="font-medium text-foreground truncate">
+                    <p className="truncate font-medium text-foreground">
                       {invitation.group?.name ?? t('invitations.unknownGroup')}
                     </p>
                   )}
-                  <p className="text-xs text-muted-foreground mt-0.5">
+                  <p className="mt-0.5 text-xs text-muted-foreground">
                     {t('invitations.invitedBy', { name: inviterName })}
                   </p>
                   <p className="text-xs text-muted-foreground">
@@ -115,7 +120,7 @@ export function PendingInvitations() {
                     })}
                   </p>
                 </div>
-                <div className="flex gap-2 sm:shrink-0 relative z-10">
+                <div className="relative z-10 flex gap-2 sm:shrink-0">
                   <Button
                     size="sm"
                     variant="ghost"
@@ -124,7 +129,7 @@ export function PendingInvitations() {
                       declineMutation.mutate({ invitationId: invitation.id })
                     }
                   >
-                    <X className="w-4 h-4 mr-1" />
+                    <X className="mr-1 h-4 w-4" />
                     {t('invitations.decline')}
                   </Button>
                   <Button
@@ -134,9 +139,9 @@ export function PendingInvitations() {
                       acceptMutation.mutate({ invitationId: invitation.id })
                     }
                   >
-                    <Check className="w-4 h-4 mr-1" />
+                    <Check className="mr-1 h-4 w-4" />
                     {t('invitations.accept')}
-                    <ArrowRight className="w-4 h-4 ml-1" />
+                    <ArrowRight className="ml-1 h-4 w-4" />
                   </Button>
                 </div>
               </li>

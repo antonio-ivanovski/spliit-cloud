@@ -1,12 +1,12 @@
-import { render, screen, waitFor } from '@/test/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { render, screen, waitFor } from '@/test/test-utils'
 
 /**
  * BLOCK B: Mock-based tests for ExpenseList
  *
- * Tests cover: search bar, loading skeletons, date-based grouping,
- * empty state, archived/pending-invitee empty state variations,
- * and debounced search.
+ * Tests cover: search bar, loading skeletons, date-based grouping, empty state,
+ * archived/pending-invitee empty state variations, and debounced search.
  */
 
 // ── Hoisted mocks ───────────────────────────────────────────────────────

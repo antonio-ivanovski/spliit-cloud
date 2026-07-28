@@ -12,6 +12,7 @@ import {
   ListObjectsV2Command,
   S3Client,
 } from '@aws-sdk/client-s3'
+
 import { env } from '../lib/env'
 
 const MAXIO_BASE = process.env.MAXIO_URL ?? 'http://localhost:9000'
@@ -117,7 +118,10 @@ export async function prefixIsEmpty(prefix: string): Promise<boolean> {
   return keys.length === 0
 }
 
-/** Base URL the API emits for public file URLs (matches env.S3_UPLOAD_PUBLIC_URL). */
+/**
+ * Base URL the API emits for public file URLs (matches
+ * env.S3_UPLOAD_PUBLIC_URL).
+ */
 export function maxioPublicBase(): string {
   return MAXIO_BASE
 }

@@ -5,25 +5,27 @@ export type AccountGroup = AppRouterOutput['overview']['get']['groups'][number]
 export type GroupType = AccountGroup['groupType']
 
 export type GroupBucket =
-  'starred' | 'groups' | 'friends' | 'archived' | 'hidden'
+  | 'starred'
+  | 'groups'
+  | 'friends'
+  | 'archived'
+  | 'hidden'
 
 /**
  * Decide which visual bucket a group belongs to on the homepage. The
- * `partitionGroups` helper applies this function imperatively, but
- * exposing it lets consumers (tests, future filtering) reason about
- * bucketing in isolation.
+ * `partitionGroups` helper applies this function imperatively, but exposing it
+ * lets consumers (tests, future filtering) reason about bucketing in
+ * isolation.
  *
- * Buckets are mutually exclusive in priority order:
- *  - hidden  (per-account preference, beats everything else)
- *  - archived (group-level flag, GROUP-only — FRIEND ledgers are
- *    server-rejected from archiving so they never land here)
- *  - starred  (mixed; appears regardless of groupType)
- *  - groups   (non-starred GROUP)
- *  - friends  (non-starred FRIEND)
+ * Buckets are mutually exclusive in priority order: - hidden (per-account
+ * preference, beats everything else) - archived (group-level flag, GROUP-only —
+ * FRIEND ledgers are server-rejected from archiving so they never land here) -
+ * starred (mixed; appears regardless of groupType) - groups (non-starred GROUP)
+ * - friends (non-starred FRIEND)
  *
- * FRIEND groups skip the `archived` bucket as a defense-in-depth — the
- * server prevents archive for FRIEND, but if a stale row ever slipped
- * through we'd rather hide it from the archived section.
+ * FRIEND groups skip the `archived` bucket as a defense-in-depth — the server
+ * prevents archive for FRIEND, but if a stale row ever slipped through we'd
+ * rather hide it from the archived section.
  */
 export function bucketFor(group: AccountGroup): GroupBucket {
   if (group.preference.hidden) return 'hidden'

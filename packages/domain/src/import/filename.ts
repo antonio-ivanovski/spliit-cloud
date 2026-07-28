@@ -1,20 +1,19 @@
 /**
  * Guess a sensible default group name from an import filename.
  *
- * Spliit and Splitwise exports don't carry a group name in the file body,
- * so the parsers default to "Imported from CSV"/"Imported from Splitwise".
- * When the filename follows a recognizable Splitwise pattern we can do
- * better:
+ * Spliit and Splitwise exports don't carry a group name in the file body, so
+ * the parsers default to "Imported from CSV"/"Imported from Splitwise". When
+ * the filename follows a recognizable Splitwise pattern we can do better:
  *
- *   - Personal Splitwise exports use `<first>-<lastInitial>-and-..._<date>_export`
- *     e.g. `antonio-i-and-dejan-i_2026-06-30_export.csv` → "John D. and Jane D."
- *   - Group exports use `<group-name>_<date>_export.csv`
- *     e.g. `london_2022_2026-07-01_export.csv` → "London 2022"
- *     Empty prefixes are common when Splitwise cannot export the original
- *     group name; those return null.
+ * - Personal Splitwise exports use `<first>-<lastInitial>-and-..._<date>_export`
+ *   e.g. `antonio-i-and-dejan-i_2026-06-30_export.csv` → "John D. and Jane D."
+ * - Group exports use `<group-name>_<date>_export.csv` e.g.
+ *   `london_2022_2026-07-01_export.csv` → "London 2022" Empty prefixes are
+ *   common when Splitwise cannot export the original group name; those return
+ *   null.
  *
- * Returns `null` when the filename doesn't match a known pattern. The
- * caller should keep the parser's default in that case.
+ * Returns `null` when the filename doesn't match a known pattern. The caller
+ * should keep the parser's default in that case.
  */
 export function guessGroupNameFromFilename(filename: string): string | null {
   const base = filename.replace(/\.(csv|json)$/i, '')

@@ -1,7 +1,8 @@
 // organize-imports-ignore: test/mocks must register the Prisma mock first.
 import '../../test/mocks'
-import { prisma$QueryRaw, prismaMock } from '../../test/state'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { prisma$QueryRaw, prismaMock } from '../../test/state'
 
 const jobMocks = vi.hoisted(() => ({
   sendJob: vi.fn(),

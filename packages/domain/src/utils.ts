@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+
 import type { Category } from './categories'
 import { getCurrency, getCurrencyFromGroup, type Currency } from './currency'
 
@@ -26,7 +27,10 @@ export function hashStringToSeed(value: string): number {
   return hash >>> 0
 }
 
-/** Remainder-distribution seed from expense id; 0 when id is missing (create/preview). */
+/**
+ * Remainder-distribution seed from expense id; 0 when id is missing
+ * (create/preview).
+ */
 export function expenseIdSeed(expenseId: string | null | undefined): number {
   if (expenseId == null || expenseId === '') return 0
   return hashStringToSeed(expenseId)
@@ -50,11 +54,12 @@ export function formatDate(
 }
 
 /**
- * Formats a date-only field (without time) for display.
- * Extracts UTC date components to avoid timezone shifts that can cause off-by-one day errors.
- * Use this for dates stored as DATE type in the database (e.g., expenseDate).
+ * Formats a date-only field (without time) for display. Extracts UTC date
+ * components to avoid timezone shifts that can cause off-by-one day errors. Use
+ * this for dates stored as DATE type in the database (e.g., expenseDate).
  *
- * @param date - The date to format (typically from a database DATE field, e.g., 2025-10-17T00:00:00.000Z)
+ * @param date - The date to format (typically from a database DATE field, e.g.,
+ *   2025-10-17T00:00:00.000Z)
  * @param locale - The locale string (e.g., 'en-US', 'fr-FR')
  * @param options - Formatting options (dateStyle, timeStyle)
  * @returns Formatted date string in the specified locale
@@ -84,9 +89,10 @@ export function formatCategoryForAIPrompt(
 }
 
 /**
- * @param fractions Financial values in this app are generally processed in cents (or equivalent).
- * They are are therefore integer representations of the amount (e.g. 100 for USD 1.00).
- * Set this to `true` if you need to pass a value with decimal fractions instead (e.g. 1.00 for USD 1.00).
+ * @param fractions Financial values in this app are generally processed in
+ *   cents (or equivalent). They are are therefore integer representations of
+ *   the amount (e.g. 100 for USD 1.00). Set this to `true` if you need to pass
+ *   a value with decimal fractions instead (e.g. 1.00 for USD 1.00).
  */
 export function formatCurrency(
   currency: Currency,
@@ -113,13 +119,14 @@ export function formatCurrency(
 export { getCurrencyFromGroup }
 
 /**
- * Converts monetary amounts in minor units to the corresponding amount in major units in the given currency.
- * e.g.
- *  - 150 "minor units" of euros = 1.5
- *  - 1000 "minor units" of yen = 1000 (the yen does not have minor units in practice)
+ * Converts monetary amounts in minor units to the corresponding amount in major
+ * units in the given currency. e.g. - 150 "minor units" of euros = 1.5 - 1000
+ * "minor units" of yen = 1000 (the yen does not have minor units in practice)
  *
- * @param amount The amount, as the number of minor units of currency (cents for most currencies)
- * @param round Whether to round the amount to the nearest minor unit (e.g.: 1.5612 € => 1.56 €)
+ * @param amount The amount, as the number of minor units of currency (cents for
+ *   most currencies)
+ * @param round Whether to round the amount to the nearest minor unit (e.g.:
+ *   1.5612 € => 1.56 €)
  */
 export function amountAsDecimal(
   amount: number,
@@ -134,10 +141,10 @@ export function amountAsDecimal(
 }
 
 /**
- * Converts decimal monetary amounts in major units to the amount in minor units in the given currency.
- * e.g.
- *  - €1.5 = 150 "minor units" of euros (cents)
- *  - JPY 1000 = 1000 "minor units" of yen (the yen does not have minor units in practice)
+ * Converts decimal monetary amounts in major units to the amount in minor units
+ * in the given currency. e.g. - €1.5 = 150 "minor units" of euros (cents) - JPY
+ * 1000 = 1000 "minor units" of yen (the yen does not have minor units in
+ * practice)
  *
  * @param amount The amount in decimal major units (always an integer)
  */
@@ -147,8 +154,8 @@ export function amountAsMinorUnits(amount: number, currency: Currency) {
 
 /**
  * Converts a decimal major-unit amount to minor units using the currency's
- * decimal digits, resolved from an ISO 4217 code.  Unknown codes fall back
- * to 2 decimal digits (preserving the legacy behaviour).
+ * decimal digits, resolved from an ISO 4217 code. Unknown codes fall back to 2
+ * decimal digits (preserving the legacy behaviour).
  */
 export function amountAsMinorUnitsByCode(amount: number, currencyCode: string) {
   const c = getCurrency(currencyCode) ?? {
@@ -169,9 +176,9 @@ function decimalDigitsForCode(code: string | null | undefined): number {
  * Scale factor that converts source-currency minor units to target-currency
  * minor units for a major-unit FX rate (1 source major = `rate` target major).
  *
- * When currencies share the same `decimal_digits` this equals `rate`. When
- * they differ (e.g. USD→JPY), it adjusts so $100 (10000¢) at 150 JPY/USD
- * becomes 15_000 yen, not 1_500_000.
+ * When currencies share the same `decimal_digits` this equals `rate`. When they
+ * differ (e.g. USD→JPY), it adjusts so $100 (10000¢) at 150 JPY/USD becomes
+ * 15_000 yen, not 1_500_000.
  */
 export function conversionMinorScale(
   rate: number,
@@ -199,10 +206,11 @@ export function convertMinorUnitsByRate(
 }
 
 /**
- * Formats monetary amounts in minor units to the corresponding amount in major units in the given currency,
- * as a string, with correct rounding.
+ * Formats monetary amounts in minor units to the corresponding amount in major
+ * units in the given currency, as a string, with correct rounding.
  *
- * @param amount The amount, as the number of minor units of currency (cents for most currencies)
+ * @param amount The amount, as the number of minor units of currency (cents for
+ *   most currencies)
  */
 export function formatAmountAsDecimal(amount: number, currency: Currency) {
   return amountAsDecimal(amount, currency).toFixed(currency.decimal_digits)

@@ -2,6 +2,7 @@ import type {
   GroupActivityChange,
   GroupChangedField,
 } from '@spliit/domain/activities'
+
 import { compositeGroupDiffer } from './composite.differ'
 import { currencyDiffer } from './currency.differ'
 import { informationDiffer } from './information.differ'

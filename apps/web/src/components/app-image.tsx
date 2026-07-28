@@ -5,5 +5,5 @@ type Props = ImgHTMLAttributes<HTMLImageElement> & {
 }
 
 export default function Image({ priority: _priority, ...props }: Props) {
-  return <img {...props} />
+  return <img alt={props.alt ?? ''} {...props} />
 }

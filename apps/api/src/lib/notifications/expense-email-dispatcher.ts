@@ -6,6 +6,7 @@ import {
   notificationCategoryFamily,
   NotificationCategoryFamily,
 } from '@spliit/domain/notifications'
+
 import { getWebBaseUrl } from '../auth/urls'
 import { isPlaceholderEmail } from '../invitations/display'
 import { sendEmail } from '../mail/send'
@@ -262,9 +263,9 @@ export class ExpenseEmailActivityNotificationDispatcher implements ActivityNotif
   }
 
   /**
-   * Dispatch a single summary email for a bulk import. Instead of N
-   * per-expense emails, send one email to every active group member
-   * affected by any of the imported expenses.
+   * Dispatch a single summary email for a bulk import. Instead of N per-expense
+   * emails, send one email to every active group member affected by any of the
+   * imported expenses.
    */
   private async dispatchImportSummary(
     event: ActivityNotificationEvent,

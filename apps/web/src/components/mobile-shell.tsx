@@ -1,14 +1,3 @@
-import { useCurrentGroup } from '@/app/groups/[groupId]/current-group-context'
-import Link from '@/components/link'
-import {
-  ResponsiveDialog,
-  ResponsiveDialogBody,
-  ResponsiveDialogClose,
-  ResponsiveDialogContent,
-  ResponsiveDialogHeader,
-  ResponsiveDialogTitle,
-} from '@/components/ui/responsive-dialog'
-import { getFocusedRouteMeta } from '@/lib/mobile-nav'
 import { useLocation } from '@tanstack/react-router'
 import {
   Activity,
@@ -23,6 +12,18 @@ import {
 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+
+import { useCurrentGroup } from '@/app/groups/[groupId]/current-group-context'
+import Link from '@/components/link'
+import {
+  ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogClose,
+  ResponsiveDialogContent,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/ui/responsive-dialog'
+import { getFocusedRouteMeta } from '@/lib/mobile-nav'
 
 export function MobileAppBar() {
   const pathname = useLocation({ select: (location) => location.pathname })
@@ -43,7 +44,7 @@ export function MobileAppBar() {
     <header className="fixed inset-x-0 top-0 z-50 flex h-(--app-header-height) items-center gap-2 border-b bg-background/95 px-2 backdrop-blur supports-backdrop-filter:bg-background/80 sm:hidden">
       <Link
         href={meta.backHref}
-        className="inline-flex size-10 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
+        className="inline-flex size-10 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden"
         aria-label={t('Header.back')}
       >
         <ArrowLeft className="size-5" aria-hidden="true" />

@@ -1,6 +1,7 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { render, screen } from '@/test/test-utils'
 import type { NormalizedSource } from '@spliit/domain/import'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mocks = vi.hoisted(() => ({
   useGroupsQuery: vi.fn(),

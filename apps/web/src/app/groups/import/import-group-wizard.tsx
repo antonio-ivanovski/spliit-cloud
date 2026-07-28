@@ -1,3 +1,8 @@
+import { getRouteApi, useNavigate } from '@tanstack/react-router'
+import { Loader2 } from 'lucide-react'
+import { useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { Card, CardContent } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
 import { useCurrentAccount } from '@/lib/use-current-account'
@@ -8,10 +13,7 @@ import type {
   ParticipantMappingState,
 } from '@spliit/domain/import'
 import { buildImportBatch } from '@spliit/domain/import'
-import { getRouteApi, useNavigate } from '@tanstack/react-router'
-import { Loader2 } from 'lucide-react'
-import { useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
+
 import { ConfirmStep } from './confirm-step'
 import {
   CurrencyConversionStep,
@@ -288,12 +290,12 @@ export function ImportGroupWizard() {
 
   const handleDoneNavigate = useCallback(() => {
     if (importResultGroupId) {
-      navigate({
+      void navigate({
         to: '/groups/$groupId',
         params: { groupId: importResultGroupId },
       })
     } else {
-      navigate({ to: '/' })
+      void navigate({ to: '/' })
     }
   }, [importResultGroupId, navigate])
 

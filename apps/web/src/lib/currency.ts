@@ -1,10 +1,11 @@
 export * from '@spliit/domain/currency'
+import { useTranslation } from 'react-i18next'
+
 import {
   type Currency,
   type SupportedCurrencyCode,
   currencyList,
 } from '@spliit/domain/currency'
-import { useTranslation } from 'react-i18next'
 
 /**
  * A `Currency` with a localized display name. The domain's `Currency` is
@@ -24,15 +25,15 @@ const nameKey = (code: SupportedCurrencyCode): CurrencyNameKey =>
   `Currencies.byCode.${code}.name`
 
 /**
- * Returns the canonical currency list with each entry's localized name
- * resolved from i18n. Prepends a "custom currency" entry whose name is the
- * provided label (typically `t('CurrencyCodeField.customOption')`).
+ * Returns the canonical currency list with each entry's localized name resolved
+ * from i18n. Prepends a "custom currency" entry whose name is the provided
+ * label (typically `t('CurrencyCodeField.customOption')`).
  *
- * @param customChoiceLabel  Label for the "add custom currency" option. When
+ * @param customChoiceLabel Label for the "add custom currency" option. When
  *   empty, no custom entry is added.
- * @param currentCustomValue  When set, the custom entry uses this as its
- *   `name` and `symbol` (the user-typed text). Lets the combobox display a
- *   saved custom currency's actual value rather than a generic "Custom".
+ * @param currentCustomValue When set, the custom entry uses this as its `name`
+ *   and `symbol` (the user-typed text). Lets the combobox display a saved
+ *   custom currency's actual value rather than a generic "Custom".
  */
 export function useCurrencies(
   customChoiceLabel: string,

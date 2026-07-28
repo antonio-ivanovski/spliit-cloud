@@ -1,5 +1,6 @@
-import { buildImportExpenses } from '@/app/groups/import/import-wizard-state'
 import { describe, expect, it } from 'vitest'
+
+import { buildImportExpenses } from '@/app/groups/import/import-wizard-state'
 
 describe('buildImportExpenses', () => {
   it('passes through expenses with paidByList and paidBySplitMode unchanged', () => {

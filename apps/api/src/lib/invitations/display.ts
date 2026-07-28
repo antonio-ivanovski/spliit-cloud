@@ -1,12 +1,10 @@
 /**
- * Generic "Pending invite" fallback label for invitations with no email
- * and no temporary name.
+ * Generic "Pending invite" fallback label for invitations with no email and no
+ * temporary name.
  */
 export const PENDING_INVITEE_FALLBACK_LABEL = 'Pending invite'
 
-/**
- * Reserved TLDs used for synthetic placeholder emails.
- */
+/** Reserved TLDs used for synthetic placeholder emails. */
 export const PLACEHOLDER_EMAIL_DOMAIN = 'placeholder.local'
 
 /** True when the email is a synthetic placeholder, not a real address. */
@@ -30,8 +28,8 @@ export function buildLinkPlaceholderEmail(token: string): string {
 }
 
 /**
- * Display name for an invitation row. Priority:
- * `temporaryName` → `email` → {@link PENDING_INVITEE_FALLBACK_LABEL}.
+ * Display name for an invitation row. Priority: `temporaryName` → `email` →
+ * {@link PENDING_INVITEE_FALLBACK_LABEL}.
  */
 export function getInvitationDisplayName(invitation: {
   email: string | null
@@ -45,8 +43,8 @@ export function getInvitationDisplayName(invitation: {
 }
 
 /**
- * Display name for a `LedgerParticipant`. Priority: accepted
- * `Account.name` → invitation `temporaryName` → invitation `email`.
+ * Display name for a `LedgerParticipant`. Priority: accepted `Account.name` →
+ * invitation `temporaryName` → invitation `email`.
  */
 export function resolveParticipantDisplayName(participant: {
   groupMember: { account: { name: string } } | null

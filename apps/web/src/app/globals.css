@@ -193,7 +193,7 @@
 }
 
 .landing-header {
-  @apply bg-linear-to-br from-emerald-800 to-emerald-600 dark:from-emerald-300 dark:to-emerald-600 bg-clip-text;
+  @apply bg-linear-to-br from-emerald-800 to-emerald-600 bg-clip-text dark:from-emerald-300 dark:to-emerald-600;
 }
 
 .landing-header strong {

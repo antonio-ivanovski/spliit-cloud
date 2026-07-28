@@ -175,17 +175,15 @@ function dateOrUndefined(value: string | undefined): Date | undefined {
 /**
  * Owns the expense-list filter + sort state.
  *
- * - Filters/sort are URL search params (shareable, survive navigation
- *   to/from an expense detail). `showSettlements` is part of the same
- *   draft/apply flow as the other filters — toggling it routes through
- *   `setApplied` so the toolbar reflects the URL state.
- * - `filtersOpen` is ephemeral UI state shared between the toolbar
- *   trigger and the panel so they re-render together. Not persisted, not in
- *   the URL.
+ * - Filters/sort are URL search params (shareable, survive navigation to/from an
+ *   expense detail). `showSettlements` is part of the same draft/apply flow as
+ *   the other filters — toggling it routes through `setApplied` so the toolbar
+ *   reflects the URL state.
+ * - `filtersOpen` is ephemeral UI state shared between the toolbar trigger and
+ *   the panel so they re-render together. Not persisted, not in the URL.
  *
- * Returned `queryInput` merges everything into the tRPC
- * `groups.expenses.list` input shape so the parent component can spread
- * it into the query.
+ * Returned `queryInput` merges everything into the tRPC `groups.expenses.list`
+ * input shape so the parent component can spread it into the query.
  */
 export function useExpenseFilters(groupId: string) {
   const search = useSearch({ from: '/groups/$groupId' })
@@ -209,7 +207,7 @@ export function useExpenseFilters(groupId: string) {
         nextFilters,
         nextSort,
       )
-      navigate({
+      void navigate({
         to: '/groups/$groupId',
         params: { groupId },
         search: next,

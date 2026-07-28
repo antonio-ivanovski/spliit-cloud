@@ -1,3 +1,8 @@
+import { ArrowLeft, Calculator } from 'lucide-react'
+import { useRef, useState, type Dispatch, type SetStateAction } from 'react'
+import { useWatch, type UseFormReturn } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+
 import { CategorySelector } from '@/components/category-selector'
 import { CurrencySelector } from '@/components/currency-selector'
 import Link from '@/components/link'
@@ -43,10 +48,7 @@ import {
   formatCalculatorAmount,
   type CalculatorItem,
 } from '@spliit/domain/calculator'
-import { ArrowLeft, Calculator } from 'lucide-react'
-import { useRef, useState, type Dispatch, type SetStateAction } from 'react'
-import { useWatch, type UseFormReturn } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
+
 import type {
   ReceiptDocument,
   ReceiptExtractedInfo,
@@ -115,8 +117,10 @@ export function BasicDetailsCard(props: {
     info: ReceiptExtractedInfo
     document: ReceiptDocument
   }) => void
-  /** Persisted per-user-per-group default split, used to seed new
-   *  items created by the calculator flow when switching to itemized. */
+  /**
+   * Persisted per-user-per-group default split, used to seed new items created
+   * by the calculator flow when switching to itemized.
+   */
   savedDefault?: SavedSplit | null
 }) {
   const {
@@ -231,7 +235,7 @@ export function BasicDetailsCard(props: {
 
   return (
     <Card className="mobile-surface">
-      <CardHeader className="hidden sm:flex flex-row items-center gap-2 space-y-0">
+      <CardHeader className="hidden flex-row items-center gap-2 space-y-0 sm:flex">
         <Button
           variant="ghost"
           size="icon"
@@ -242,7 +246,7 @@ export function BasicDetailsCard(props: {
             href={`/groups/${group.id}/expenses`}
             title={tGroups('backToExpenses')}
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
         <CardTitle className="hidden min-w-0 flex-1 truncate sm:block">
@@ -497,9 +501,9 @@ export function BasicDetailsCard(props: {
               <FormMessage />
 
               {props.conversionRequired && (
-                <div className="rounded-md border bg-muted/40 px-3 py-2 space-y-1">
+                <div className="space-y-1 rounded-md border bg-muted/40 px-3 py-2">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-muted-foreground text-xs">
+                    <span className="text-xs text-muted-foreground">
                       {t('convertedAmountField.label')} ({group.currency})
                     </span>
                     <span
@@ -570,7 +574,7 @@ export function BasicDetailsCard(props: {
                               </span>
                               <FormControl>
                                 <Input
-                                  className="text-base max-w-[120px]"
+                                  className="max-w-[120px] text-base"
                                   type="text"
                                   inputMode="decimal"
                                   placeholder="0.00"

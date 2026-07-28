@@ -1,5 +1,7 @@
-import type { CreateExpenseSearch } from '@/router/schemas'
 import { describe, expect, it } from 'vitest'
+
+import type { CreateExpenseSearch } from '@/router/schemas'
+
 import { buildExpenseFormDefaults, type GroupShape } from './default-values'
 
 const EUR = { code: 'EUR', symbol: '€', decimal_digits: 2, rounding: 0 }

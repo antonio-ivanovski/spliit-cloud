@@ -1,6 +1,8 @@
-import { prisma } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
+
+import { prisma } from '@spliit/db'
+
 import { getGroup, getGroupExpensesParticipants } from '../../../lib/api'
 import {
   hashLinkInviteToken,

@@ -5,6 +5,7 @@ import {
   type RecurrenceConfig,
   type RecurringExpenseTemplate,
 } from '@spliit/domain'
+
 import { randomId } from '../shared'
 
 /** Accept the new config and the legacy rule during the rollout window. */

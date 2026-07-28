@@ -1,5 +1,7 @@
-import { prisma } from '@spliit/db'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+
+import { prisma } from '@spliit/db'
+
 import { randomId } from '../lib/api'
 import { groupsRouter } from '../trpc/routers/groups'
 import { checkDbConnection, testRunId } from './setup'
@@ -186,13 +188,13 @@ describe('Expense items — real DB', () => {
     expect(sharesSum).toBe(10000)
     // Global-across-items: Item A 3000 EVENLY/3 + Item B 7000 BY_SHARES 2:1
     // exact Admin 5666.66…, Alice 3333.33…, Bob 1000 → remainder to Admin
-    expect(saved!.paidFor.sort()).toContainEqual(
+    expect(saved!.paidFor.sort((a, b) => a.shares - b.shares)).toContainEqual(
       expect.objectContaining({ shares: 5667 }),
     )
-    expect(saved!.paidFor.sort()).toContainEqual(
+    expect(saved!.paidFor.sort((a, b) => a.shares - b.shares)).toContainEqual(
       expect.objectContaining({ shares: 3333 }),
     )
-    expect(saved!.paidFor.sort()).toContainEqual(
+    expect(saved!.paidFor.sort((a, b) => a.shares - b.shares)).toContainEqual(
       expect.objectContaining({ shares: 1000 }),
     )
   })

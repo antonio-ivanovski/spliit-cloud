@@ -1,3 +1,15 @@
+import {
+  Navigate,
+  Outlet,
+  useLocation,
+  useNavigate,
+  useSearch,
+} from '@tanstack/react-router'
+import { Cloud, Loader2, Share2 } from 'lucide-react'
+import type { PropsWithChildren } from 'react'
+import { useEffect, useState, useSyncExternalStore } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { CopyButton } from '@/components/copy-button'
 import Link from '@/components/link'
 import { MobileGroupNav } from '@/components/mobile-shell'
@@ -15,17 +27,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { isFocusedMobilePath, isMobileGroupNavPath } from '@/lib/mobile-nav'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
-import {
-  Navigate,
-  Outlet,
-  useLocation,
-  useNavigate,
-  useSearch,
-} from '@tanstack/react-router'
-import { Cloud, Loader2, Share2 } from 'lucide-react'
-import type { PropsWithChildren } from 'react'
-import { useEffect, useState, useSyncExternalStore } from 'react'
-import { useTranslation } from 'react-i18next'
+
 import { CurrentGroupProvider } from './current-group-context'
 import { GroupHeader } from './group-header'
 import { SaveGroupLocally } from './save-recent-group'
@@ -63,8 +65,9 @@ export function GroupLayoutClient({
   // from the URL immediately so a page refresh won't reopen the dialog.
   useEffect(() => {
     if (friendLinkInviteUrl) {
+      // oxlint-disable-next-line react/react-compiler -- open the one-time dialog from a URL event.
       setFriendLinkDialogUrl(friendLinkInviteUrl)
-      navigate({
+      void navigate({
         to: '/groups/$groupId',
         params: { groupId },
         search: { friendLinkInvite: undefined },
@@ -137,8 +140,8 @@ export function GroupLayoutClient({
   // member" message.
   if (!isLoading && error?.data?.code === 'FORBIDDEN' && hasInviteInUrl) {
     return (
-      <main className="flex-1 flex items-center justify-center px-4 py-10">
-        <div className="flex flex-col items-center gap-3 text-center max-w-md">
+      <main className="flex flex-1 items-center justify-center px-4 py-10">
+        <div className="flex max-w-md flex-col items-center gap-3 text-center">
           <h1 className="text-2xl font-semibold">{tInvalid('title')}</h1>
           <p className="text-sm text-muted-foreground">
             {tInvalid('description')}
@@ -153,8 +156,8 @@ export function GroupLayoutClient({
 
   if (!isLoading && error?.data?.code === 'FORBIDDEN') {
     return (
-      <main className="flex-1 flex items-center justify-center px-4 py-10">
-        <div className="flex flex-col items-center gap-3 text-center max-w-md">
+      <main className="flex flex-1 items-center justify-center px-4 py-10">
+        <div className="flex max-w-md flex-col items-center gap-3 text-center">
           <h1 className="text-2xl font-semibold">
             {tForbidden('Unauthorized.title')}
           </h1>
@@ -255,7 +258,7 @@ export function GroupLayoutClient({
                   }}
                   aria-label={tFriends('share')}
                 >
-                  <Share2 className="w-4 h-4" />
+                  <Share2 className="h-4 w-4" />
                 </Button>
               )}
             </div>
@@ -276,9 +279,9 @@ function NotFoundGroup({ groupId }: { groupId: string }) {
   const lookup = trpc.groups.lookup.useQuery({ groupId }, { retry: false })
   if (lookup.isLoading) {
     return (
-      <main className="flex-1 flex items-center justify-center px-4 py-10">
+      <main className="flex flex-1 items-center justify-center px-4 py-10">
         <div className="flex flex-col items-center gap-2 text-muted-foreground">
-          <Loader2 className="w-5 h-5 animate-spin" />
+          <Loader2 className="h-5 w-5 animate-spin" />
           <p className="text-sm">{tNotFound('lookingUp')}</p>
         </div>
       </main>
@@ -287,9 +290,9 @@ function NotFoundGroup({ groupId }: { groupId: string }) {
   if (lookup.data?.status === 'IMPORTABLE') {
     const sourceUrl = lookup.data.sourceUrl
     return (
-      <main className="flex-1 flex items-center justify-center px-4 py-10">
-        <div className="flex flex-col items-center gap-3 text-center max-w-md">
-          <Cloud className="w-8 h-8 text-primary" />
+      <main className="flex flex-1 items-center justify-center px-4 py-10">
+        <div className="flex max-w-md flex-col items-center gap-3 text-center">
+          <Cloud className="h-8 w-8 text-primary" />
           <h1 className="text-2xl font-semibold">{tImportable('title')}</h1>
           <p className="text-sm text-muted-foreground">
             {tImportable('description', { name: lookup.data.source.name })}
@@ -311,8 +314,8 @@ function NotFoundGroup({ groupId }: { groupId: string }) {
     )
   }
   return (
-    <main className="flex-1 flex items-center justify-center px-4 py-10">
-      <div className="flex flex-col items-center gap-3 text-center max-w-md">
+    <main className="flex flex-1 items-center justify-center px-4 py-10">
+      <div className="flex max-w-md flex-col items-center gap-3 text-center">
         <h1 className="text-2xl font-semibold">{tNotFound('text')}</h1>
         <Button asChild variant="outline">
           <Link href="/">{tNotFound('link')}</Link>

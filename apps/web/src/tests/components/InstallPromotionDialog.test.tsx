@@ -1,7 +1,8 @@
-import { InstallPromotionDialog } from '@/components/install-promotion-dialog'
-import { act, render, screen, waitFor } from '@/test/test-utils'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { InstallPromotionDialog } from '@/components/install-promotion-dialog'
+import { act, render, screen, waitFor } from '@/test/test-utils'
 
 // Mirror the hook's local interface so tests can fabricate the event.
 interface FakeInstallPromptEvent extends Event {
@@ -61,7 +62,9 @@ function fireBeforeInstallPrompt(
   const event = new Event('beforeinstallprompt') as FakeInstallPromptEvent
   event.prompt = vi.fn().mockResolvedValue(undefined)
   event.userChoice = Promise.resolve({ outcome })
-  window.dispatchEvent(event)
+  act(() => {
+    window.dispatchEvent(event)
+  })
   return event
 }
 

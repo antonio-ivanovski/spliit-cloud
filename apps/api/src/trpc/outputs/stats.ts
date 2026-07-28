@@ -1,5 +1,7 @@
-import { categoryIdSchema } from '@spliit/domain'
 import { z } from 'zod'
+
+import { categoryIdSchema } from '@spliit/domain'
+
 import { accountSummarySchema } from './common'
 
 const statsPeriodSchema = z.object({

@@ -1,3 +1,7 @@
+import { useLocation, useNavigate, useSearch } from '@tanstack/react-router'
+import { ArrowLeft, Check, Info, X } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
 import { GroupTabs } from '@/app/groups/[groupId]/group-tabs'
 import Link from '@/components/link'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -6,9 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
 import { isFocusedMobilePath } from '@/lib/mobile-nav'
 import { trpc } from '@/trpc/client'
-import { useLocation, useNavigate, useSearch } from '@tanstack/react-router'
-import { ArrowLeft, Check, Info, X } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+
 import { useCurrentGroup } from './current-group-context'
 
 export const GroupHeader = () => {
@@ -41,15 +43,15 @@ export const GroupHeader = () => {
       // Strip the consumed `?invite=<token>` so the URL returns to the
       // plain group page — otherwise the "already a member" banner
       // would reappear on the next load.
-      navigate({
+      void navigate({
         to: '/groups/$groupId',
         params: { groupId },
         search: { invite: undefined },
       })
-      utils.groups.get.invalidate({ groupId })
-      utils.account.groups.invalidate()
-      utils.invitations.listForAccount.invalidate()
-      utils.invitations.list.invalidate({ groupId })
+      void utils.groups.get.invalidate({ groupId })
+      void utils.account.groups.invalidate()
+      void utils.invitations.listForAccount.invalidate()
+      void utils.invitations.list.invalidate({ groupId })
     },
     onError: (err) => {
       toast({
@@ -62,9 +64,9 @@ export const GroupHeader = () => {
   const acceptMutation = trpc.invitations.accept.useMutation({
     onSuccess: () => {
       toast({ description: tGroups('invitationAccepted') })
-      utils.groups.get.invalidate({ groupId })
-      utils.account.groups.invalidate()
-      utils.invitations.listForAccount.invalidate()
+      void utils.groups.get.invalidate({ groupId })
+      void utils.account.groups.invalidate()
+      void utils.invitations.listForAccount.invalidate()
       // Full page reload to ensure everything is fresh after joining.
       window.location.reload()
     },
@@ -79,8 +81,8 @@ export const GroupHeader = () => {
   const declineMutation = trpc.invitations.decline.useMutation({
     onSuccess: () => {
       toast({ description: tGroups('invitationDeclined') })
-      utils.groups.get.invalidate({ groupId })
-      utils.invitations.listForAccount.invalidate()
+      void utils.groups.get.invalidate({ groupId })
+      void utils.invitations.listForAccount.invalidate()
       window.location.reload()
     },
     onError: (err) => {
@@ -139,11 +141,11 @@ export const GroupHeader = () => {
   return (
     <div className="flex flex-col justify-between gap-3">
       <h1
-        className={`font-bold text-2xl flex items-center gap-2 ${focusedMobileRoute ? 'hidden sm:flex' : ''}`}
+        className={`flex items-center gap-2 text-2xl font-bold ${focusedMobileRoute ? 'hidden sm:flex' : ''}`}
       >
         <Button variant="ghost" size="icon" asChild className="-ml-2">
           <Link href="/" title={tGroups('backToHome')}>
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="h-5 w-5" />
           </Link>
         </Button>
         <Link href={`/groups/${groupId}`}>
@@ -170,7 +172,7 @@ export const GroupHeader = () => {
               </span>
               {isLinkBanner && (
                 <p className="flex items-start gap-1.5 text-xs text-muted-foreground">
-                  <Info className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+                  <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
                   <span>{tGroups('linkInvitationSingleUse')}</span>
                 </p>
               )}
@@ -199,7 +201,7 @@ export const GroupHeader = () => {
                   acceptLinkMutation.isPending
                 }
               >
-                <Check className="w-4 h-4 mr-2" />
+                <Check className="mr-2 h-4 w-4" />
                 {tGroups('invitationAccept')}
               </Button>
               {isLinkBanner ? (
@@ -213,7 +215,7 @@ export const GroupHeader = () => {
                   onClick={leaveToGroupsList}
                   disabled={acceptLinkMutation.isPending}
                 >
-                  <X className="w-4 h-4 mr-2" />
+                  <X className="mr-2 h-4 w-4" />
                   {tGroups('invitationDecline')}
                 </Button>
               ) : (
@@ -229,7 +231,7 @@ export const GroupHeader = () => {
                     acceptMutation.isPending || declineMutation.isPending
                   }
                 >
-                  <X className="w-4 h-4 mr-2" />
+                  <X className="mr-2 h-4 w-4" />
                   {tGroups('invitationDecline')}
                 </Button>
               )}

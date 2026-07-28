@@ -1,4 +1,5 @@
 import * as z from 'zod'
+
 import { categoryIdSchema } from './categories'
 import {
   conversionSourceSchema,
@@ -647,9 +648,9 @@ export const expenseFormInputSchema = z
   })
 
 /**
- * Shared cross-cutting item validations for both form and API schemas.
- * Ensures ITEMIZED mode has at least one item, no item with empty paidFor
- * in ITEMIZED mode, and items don't exceed the expense amount.
+ * Shared cross-cutting item validations for both form and API schemas. Ensures
+ * ITEMIZED mode has at least one item, no item with empty paidFor in ITEMIZED
+ * mode, and items don't exceed the expense amount.
  */
 export function validateExpenseItems(
   items: ExpenseApiItem[],
@@ -866,11 +867,11 @@ export const expenseApiSchema = z
 export type Expense = z.infer<typeof expenseApiSchema>
 
 /**
- * Input to the admin bulk-categorize apply step. Each row pairs an
- * expense id with the destination category. The server validates that
- * the expense is eligible for the bulk operation (still on
- * `general`, scoped to the group's ledger, non-reimbursement, etc.)
- * before applying the change in a single transaction.
+ * Input to the admin bulk-categorize apply step. Each row pairs an expense id
+ * with the destination category. The server validates that the expense is
+ * eligible for the bulk operation (still on `general`, scoped to the group's
+ * ledger, non-reimbursement, etc.) before applying the change in a single
+ * transaction.
  */
 export const bulkUpdateExpenseCategoriesInputSchema = z.object({
   groupId: z.string().min(1),

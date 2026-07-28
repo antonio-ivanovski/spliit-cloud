@@ -1,6 +1,8 @@
-import { cn } from '@/lib/utils'
 import { Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+
+import { cn } from '@/lib/utils'
+
 import { AsyncButton } from './async-button'
 import { Button } from './ui/button'
 import {
@@ -34,7 +36,7 @@ export function DeletePopup({
             className,
           )}
         >
-          <Trash2 className="w-4 h-4 min-[420px]:mr-2" />
+          <Trash2 className="h-4 w-4 min-[420px]:mr-2" />
           <span className="hidden min-[420px]:inline">{t('label')}</span>
         </Button>
       </ResponsiveDialogTrigger>

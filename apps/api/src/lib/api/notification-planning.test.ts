@@ -1,6 +1,8 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { NotificationChannel } from '@spliit/domain/notifications'
 import type { SpliitBoss } from '@spliit/jobs'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import '../../test/mocks'
 import { prisma$Transaction, prismaMock } from '../../test/state'
 

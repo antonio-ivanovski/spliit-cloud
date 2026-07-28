@@ -1,5 +1,6 @@
-import { render, screen } from '@/test/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { render, screen } from '@/test/test-utils'
 
 const mocks = vi.hoisted(() => ({
   mockCreateGroup: vi.fn(),

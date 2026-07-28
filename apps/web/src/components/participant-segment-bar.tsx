@@ -1,7 +1,9 @@
+import type { ReactNode } from 'react'
+
 import { ParticipantAvatar } from '@/components/participant-avatar'
 import type { Currency } from '@/lib/currency'
 import { cn, formatCurrency } from '@/lib/utils'
-import type { ReactNode } from 'react'
+
 import {
   type ParticipantSegment,
   participantSegmentColor,

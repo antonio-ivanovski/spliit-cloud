@@ -2,13 +2,18 @@
   "name": "@spliit/i18n-tools",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "description": "Internal CLI/lib for editing apps/web/src/messages JSON files. en-US is the source of truth.",
+  "type": "module",
   "scripts": {
+    "check-formatting": "oxfmt --check .",
     "cli": "bun src/cli.ts",
+    "format": "oxfmt .",
+    "lint": "oxlint -c ../../.oxlintrc.json --format=unix --report-unused-disable-directives .",
+    "lint:fix": "oxlint -c ../../.oxlintrc.json --format=unix --report-unused-disable-directives --fix .",
     "test": "vitest run"
   },
   "devDependencies": {
+    "@types/bun": "^1.3.14",
     "vitest": "^4.1.9"
   }
 }

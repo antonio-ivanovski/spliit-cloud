@@ -1,6 +1,7 @@
-import { render, screen, waitFor } from '@/test/test-utils'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { act, render, screen, waitFor } from '@/test/test-utils'
 
 const mocks = vi.hoisted(() => ({
   useCurrentAccount: vi.fn(),
@@ -139,18 +140,22 @@ describe('PushNotificationOnboarding', () => {
     )
     render(<PushNotificationOnboarding />)
 
-    await new Promise((resolve) => window.setTimeout(resolve, 800))
+    await act(async () => {
+      await new Promise((resolve) => window.setTimeout(resolve, 800))
+    })
     expect(screen.queryByTestId('push-notification-onboarding')).toBeNull()
 
     const oldValue = localStorage.getItem(PUSH_ONBOARDING_ACTIVE_KEY)
     localStorage.removeItem(PUSH_ONBOARDING_ACTIVE_KEY)
-    window.dispatchEvent(
-      new StorageEvent('storage', {
-        key: PUSH_ONBOARDING_ACTIVE_KEY,
-        oldValue,
-        newValue: null,
-      }),
-    )
+    act(() => {
+      window.dispatchEvent(
+        new StorageEvent('storage', {
+          key: PUSH_ONBOARDING_ACTIVE_KEY,
+          oldValue,
+          newValue: null,
+        }),
+      )
+    })
 
     expect(
       await screen.findByTestId('push-notification-onboarding'),
@@ -186,7 +191,9 @@ describe('PushNotificationOnboarding', () => {
       }),
     )
 
-    await new Promise((resolve) => window.setTimeout(resolve, 800))
+    await act(async () => {
+      await new Promise((resolve) => window.setTimeout(resolve, 800))
+    })
     expect(screen.queryByTestId('push-notification-onboarding')).toBeNull()
   })
 
@@ -196,13 +203,15 @@ describe('PushNotificationOnboarding', () => {
 
     const key = `${PUSH_ONBOARDING_COMPLETE_PREFIX}account-1`
     localStorage.setItem(key, 'true')
-    window.dispatchEvent(
-      new StorageEvent('storage', {
-        key,
-        oldValue: null,
-        newValue: 'true',
-      }),
-    )
+    act(() => {
+      window.dispatchEvent(
+        new StorageEvent('storage', {
+          key,
+          oldValue: null,
+          newValue: 'true',
+        }),
+      )
+    })
 
     await waitFor(() => {
       expect(screen.queryByTestId('push-notification-onboarding')).toBeNull()

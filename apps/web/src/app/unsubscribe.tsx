@@ -1,13 +1,4 @@
-import Link from '@/components/link'
-import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-} from '@/components/ui/card'
-import { useCurrentAccount } from '@/lib/use-current-account'
+/* oxlint-disable jsx-a11y/prefer-tag-over-role -- status role is retained for live-region compatibility with consumers. */
 import { useMutation } from '@tanstack/react-query'
 import { getRouteApi } from '@tanstack/react-router'
 import {
@@ -20,6 +11,18 @@ import {
 } from 'lucide-react'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+
+import Link from '@/components/link'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+} from '@/components/ui/card'
+import { useCurrentAccount } from '@/lib/use-current-account'
+
 import { NOTIFICATION_CATEGORY_METADATA } from './account/notification-category-metadata'
 
 const apiBaseUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3001'
@@ -51,7 +54,7 @@ export default function UnsubscribePage() {
 
   useEffect(() => {
     unsubscribeMutation.reset()
-  }, [token])
+  }, [token]) // oxlint-disable-line react-hooks/exhaustive-deps -- reset only when the route token changes.
 
   const category = preview?.category
   const metadata = category
@@ -74,7 +77,7 @@ export default function UnsubscribePage() {
                 aria-hidden="true"
               />
             </div>
-            <h1 className="text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">
+            <h1 className="text-2xl leading-tight font-semibold tracking-tight sm:text-3xl">
               {t('invalid.title')}
             </h1>
             <CardDescription className="max-w-md text-base leading-relaxed">
@@ -84,7 +87,7 @@ export default function UnsubscribePage() {
           <CardFooter className="border-t bg-muted/20 p-6 sm:px-8">
             <Button
               asChild
-              className="h-auto min-h-10 min-w-0 whitespace-normal py-2.5 text-center leading-5"
+              className="h-auto min-h-10 min-w-0 py-2.5 text-center leading-5 whitespace-normal"
             >
               <Link href={homeHref}>{t('manageSettings')}</Link>
             </Button>
@@ -107,7 +110,7 @@ export default function UnsubscribePage() {
             <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary/10">
               <MailCheck className="h-5 w-5 text-primary" aria-hidden="true" />
             </div>
-            <h1 className="text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">
+            <h1 className="text-2xl leading-tight font-semibold tracking-tight sm:text-3xl">
               {t('success.title')}
             </h1>
             <CardDescription className="max-w-md text-base leading-relaxed">
@@ -120,13 +123,13 @@ export default function UnsubscribePage() {
             <Button
               asChild
               variant="outline"
-              className="h-auto min-h-10 min-w-0 whitespace-normal py-2.5 text-center leading-5"
+              className="h-auto min-h-10 min-w-0 py-2.5 text-center leading-5 whitespace-normal"
             >
               <Link href="/">{t('backHome')}</Link>
             </Button>
             <Button
               asChild
-              className="h-auto min-h-10 min-w-0 whitespace-normal py-2.5 text-center leading-5"
+              className="h-auto min-h-10 min-w-0 py-2.5 text-center leading-5 whitespace-normal"
             >
               <Link href={homeHref}>{t('manageSettings')}</Link>
             </Button>
@@ -143,7 +146,7 @@ export default function UnsubscribePage() {
           <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary/10">
             <MailMinus className="h-5 w-5 text-primary" aria-hidden="true" />
           </div>
-          <h1 className="text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">
+          <h1 className="text-2xl leading-tight font-semibold tracking-tight sm:text-3xl">
             {t('title')}
           </h1>
           <CardDescription className="max-w-md text-base leading-relaxed">
@@ -157,7 +160,7 @@ export default function UnsubscribePage() {
                 <Mail className="h-4 w-4 text-primary" aria-hidden="true" />
               </div>
               <div className="min-w-0">
-                <p className="font-medium leading-6">
+                <p className="leading-6 font-medium">
                   {tNotifications(metadata.titleKey)}
                 </p>
                 <p className="mt-0.5 text-sm leading-6 text-muted-foreground">
@@ -183,7 +186,7 @@ export default function UnsubscribePage() {
             <Button
               asChild
               size="lg"
-              className="h-auto min-h-11 min-w-0 whitespace-normal py-2.5 text-center leading-5"
+              className="h-auto min-h-11 min-w-0 py-2.5 text-center leading-5 whitespace-normal"
             >
               <Link href="/">{t('cancel')}</Link>
             </Button>
@@ -191,7 +194,7 @@ export default function UnsubscribePage() {
               type="button"
               variant="outline"
               size="lg"
-              className="h-auto min-h-11 min-w-0 whitespace-normal border-destructive/40 py-2.5 text-center leading-5 text-destructive hover:bg-destructive/10 hover:text-destructive"
+              className="h-auto min-h-11 min-w-0 border-destructive/40 py-2.5 text-center leading-5 whitespace-normal text-destructive hover:bg-destructive/10 hover:text-destructive"
               onClick={() => unsubscribeMutation.mutate()}
               disabled={unsubscribeMutation.isPending}
             >
@@ -207,7 +210,7 @@ export default function UnsubscribePage() {
           <Button
             asChild
             variant="link"
-            className="h-auto min-w-0 self-center whitespace-normal p-0 text-center leading-5"
+            className="h-auto min-w-0 self-center p-0 text-center leading-5 whitespace-normal"
           >
             <Link href={homeHref}>
               {t('manageSettings')}

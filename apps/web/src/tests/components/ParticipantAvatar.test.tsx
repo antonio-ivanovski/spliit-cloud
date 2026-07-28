@@ -1,6 +1,7 @@
-import { ParticipantAvatar } from '@/components/participant-avatar'
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+
+import { ParticipantAvatar } from '@/components/participant-avatar'
 
 describe('ParticipantAvatar', () => {
   it('shows initials with an opaque background for an unlinked participant', () => {

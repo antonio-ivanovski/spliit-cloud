@@ -1,6 +1,7 @@
+import { useTranslation } from 'react-i18next'
+
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useTranslation } from 'react-i18next'
 
 export function EmailField(props: {
   value: string

@@ -1,11 +1,13 @@
+import { readFile } from 'node:fs/promises'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
 import { Scalar } from '@scalar/hono-api-reference'
 import { TRPCError } from '@trpc/server'
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-import { readFile } from 'node:fs/promises'
-import { dirname, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
+
 import { auth } from './lib/auth'
 import { webOrigins } from './lib/env'
 import { checkLiveness, checkReadiness } from './lib/health'

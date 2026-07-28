@@ -1,3 +1,7 @@
+import { Archive, ArchiveRestore, Sparkles, Trash2 } from 'lucide-react'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { ForceArchiveDialog } from '@/components/force-archive-dialog'
 import { GroupForm } from '@/components/group-form'
 import Link from '@/components/link'
@@ -10,9 +14,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { trpc } from '@/trpc/client'
-import { Archive, ArchiveRestore, Sparkles, Trash2 } from 'lucide-react'
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
+
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
 import ExportButton from '../export-button'
 import { useLinkInviteToken } from '../use-link-invite-token'
@@ -130,7 +132,7 @@ export const EditGroup = () => {
           <CardContent>
             <Button asChild variant="secondary">
               <Link href={`/groups/bulk-categorize/${groupId}`}>
-                <Sparkles className="w-4 h-4 mr-2" />
+                <Sparkles className="mr-2 h-4 w-4" />
                 {t('bulkCategorizeButton')}
               </Link>
             </Button>
@@ -160,12 +162,12 @@ export const EditGroup = () => {
             >
               {isArchived ? (
                 <>
-                  <ArchiveRestore className="w-4 h-4 mr-2" />
+                  <ArchiveRestore className="mr-2 h-4 w-4" />
                   {tGroups('unarchiveGroup')}
                 </>
               ) : (
                 <>
-                  <Archive className="w-4 h-4 mr-2" />
+                  <Archive className="mr-2 h-4 w-4" />
                   {tGroups('archiveGroup')}
                 </>
               )}
@@ -190,7 +192,7 @@ export const EditGroup = () => {
               variant="destructive"
               onClick={() => setDeleteDialogOpen(true)}
             >
-              <Trash2 className="w-4 h-4 mr-2" />
+              <Trash2 className="mr-2 h-4 w-4" />
               {tGroups('delete.button')}
             </Button>
           </CardContent>

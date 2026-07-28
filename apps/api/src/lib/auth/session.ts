@@ -1,4 +1,5 @@
 import { prisma } from '@spliit/db'
+
 import { auth } from './index'
 
 export type ResolvedAuth = NonNullable<
@@ -7,8 +8,8 @@ export type ResolvedAuth = NonNullable<
 
 /**
  * Resolve the authenticated account (and its better-auth session) for a given
- * request. Returns `null` when the request is unauthenticated or the session
- * is no longer valid. Account is eagerly refreshed from the database so that
+ * request. Returns `null` when the request is unauthenticated or the session is
+ * no longer valid. Account is eagerly refreshed from the database so that
  * callers always observe the latest email-verified / display-name state.
  */
 export async function getAuthFromRequest(

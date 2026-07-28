@@ -8,7 +8,7 @@ export function ParticipantPendingLabel({
   className?: string
 }) {
   return (
-    <span className={cn('text-muted-foreground text-xs ml-1', className)}>
+    <span className={cn('ml-1 text-xs text-muted-foreground', className)}>
       {text}
     </span>
   )

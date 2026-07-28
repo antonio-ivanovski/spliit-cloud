@@ -1,3 +1,6 @@
+import { Plus } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
 import { CreateFromReceiptButton } from '@/app/groups/[groupId]/expenses/create-from-receipt-button'
 import { ExpenseList } from '@/app/groups/[groupId]/expenses/expense-list'
 import Link from '@/components/link'
@@ -9,8 +12,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
-import { Plus } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
 
 export default function GroupExpensesPageClient({
@@ -29,7 +31,7 @@ export default function GroupExpensesPageClient({
   const showReceiptButton = enableReceiptExtract && canEdit
 
   return (
-    <Card className="mb-4 rounded-none -mx-4 border-x-0 sm:border-x sm:rounded-lg sm:mx-0">
+    <Card className="-mx-4 mb-4 rounded-none border-x-0 sm:mx-0 sm:rounded-lg sm:border-x">
       <div className="flex flex-row items-center gap-4 p-4 sm:justify-between sm:gap-x-6 sm:p-6">
         <div className="min-w-0 flex-1">
           <CardTitle>{t('title')}</CardTitle>
@@ -57,7 +59,7 @@ export default function GroupExpensesPageClient({
                 title={t('create')}
                 aria-label={t('create')}
               >
-                <Plus className="h-6 w-6 sm:h-4 sm:w-4 sm:mr-2" />
+                <Plus className="h-6 w-6 sm:mr-2 sm:h-4 sm:w-4" />
                 <span className="hidden sm:inline">{t('create')}</span>
               </Link>
             </Button>
@@ -65,7 +67,7 @@ export default function GroupExpensesPageClient({
         )}
       </div>
 
-      <CardContent className="p-0 pt-2 pb-4 sm:pb-6 flex flex-col gap-4 relative">
+      <CardContent className="relative flex flex-col gap-4 p-0 pt-2 pb-4 sm:pb-6">
         <ExpenseList />
       </CardContent>
     </Card>

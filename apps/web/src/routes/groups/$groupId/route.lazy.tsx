@@ -1,5 +1,6 @@
-import { GroupLayoutClient } from '@/app/groups/[groupId]/layout.client'
 import { createLazyFileRoute, getRouteApi } from '@tanstack/react-router'
+
+import { GroupLayoutClient } from '@/app/groups/[groupId]/layout.client'
 
 const groupRouteApi = getRouteApi('/groups/$groupId')
 

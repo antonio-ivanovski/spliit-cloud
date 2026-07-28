@@ -3,15 +3,15 @@ import type { ExpenseDiffer } from './types'
 /**
  * Detects and formats changes to the expense notes.
  *
- * The check is purely about presence/absence (not content), avoiding
- * leaking note text into the activity feed. Before/after use semantic
- * labels: "Added", "Removed", or "Present" (when content changed but
- * notes exist on both sides).
+ * The check is purely about presence/absence (not content), avoiding leaking
+ * note text into the activity feed. Before/after use semantic labels: "Added",
+ * "Removed", or "Present" (when content changed but notes exist on both
+ * sides).
  *
- * Empty / null / undefined / whitespace-only notes are normalized to a
- * single canonical representation so the round-trip between DB (nullable
- * text) and the form (empty string) does not produce a false-positive
- * diff when the user did not actually change the notes.
+ * Empty / null / undefined / whitespace-only notes are normalized to a single
+ * canonical representation so the round-trip between DB (nullable text) and the
+ * form (empty string) does not produce a false-positive diff when the user did
+ * not actually change the notes.
  */
 function normalize(notes: string | null | undefined): string {
   return (notes ?? '').trim()

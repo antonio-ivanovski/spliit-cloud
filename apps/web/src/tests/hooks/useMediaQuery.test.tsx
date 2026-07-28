@@ -1,6 +1,7 @@
+import { afterEach, describe, expect, it, vi } from 'vitest'
+
 import { useMediaQuery } from '@/lib/hooks'
 import { act, render, screen } from '@/test/test-utils'
-import { afterEach, describe, expect, it, vi } from 'vitest'
 
 // ── Helper component ───────────────────────────────────────────────────
 

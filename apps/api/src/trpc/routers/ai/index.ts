@@ -1,5 +1,7 @@
-import { categoryIdSchema } from '@spliit/domain'
 import { z } from 'zod'
+
+import { categoryIdSchema } from '@spliit/domain'
+
 import { getRecentExpenseContext } from '../../../lib/ai/context'
 import { extractCategoryFromTitle } from '../../../lib/expense-form-actions'
 import { hashLinkToken } from '../../../lib/invitations'
@@ -105,7 +107,8 @@ export const aiRouter = createTRPCRouter({
         ReturnType<typeof getRecentExpenseContext>
       >['expenses'] = []
       let groupContext:
-        Awaited<ReturnType<typeof getRecentExpenseContext>>['group'] | undefined
+        | Awaited<ReturnType<typeof getRecentExpenseContext>>['group']
+        | undefined
 
       if (ctx.auth) {
         await loadGroupViewer({

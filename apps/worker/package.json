@@ -4,10 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "bun --env-file=../../.env run src/server.ts",
-    "dev": "bun --env-file=../../.env --watch src/server.ts",
-    "lint": "eslint .",
+    "check-formatting": "oxfmt --check .",
     "check-types": "tsc --noEmit",
+    "dev": "bun --env-file=../../.env --watch src/server.ts",
+    "format": "oxfmt .",
+    "lint": "oxlint -c ../../.oxlintrc.json --format=unix --report-unused-disable-directives .",
+    "lint:fix": "oxlint -c ../../.oxlintrc.json --format=unix --report-unused-disable-directives --fix .",
+    "start": "bun --env-file=../../.env run src/server.ts",
     "test": "vitest run --globals src"
   },
   "dependencies": {
@@ -19,7 +22,7 @@
   "devDependencies": {
     "@spliit/config": "workspace:*",
     "@types/bun": "^1.3.14",
-    "typescript": "6.0.3",
+    "typescript": "7.0.2",
     "vitest": "5.0.0-beta.5"
   }
 }

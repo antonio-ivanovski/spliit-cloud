@@ -1,4 +1,5 @@
 import { z } from 'zod'
+
 import {
   getCurrencyRates,
   type BatchRateResult,
@@ -25,8 +26,8 @@ const batchRateInput = z.object({
 
 /**
  * JSON shape returned to the client. Mirrors the previous tRPC
- * `currency.getRates` payload so callers can swap transports without
- * changing how they read the response.
+ * `currency.getRates` payload so callers can swap transports without changing
+ * how they read the response.
  */
 export type CurrencyRatesResponse = Array<
   | {
@@ -55,11 +56,11 @@ function toResponse(results: BatchRateResult[]): CurrencyRatesResponse {
 }
 
 /**
- * Bulk FX lookup. Accepts POST so the request body can carry up to 500
- * (date, base, target) triples without hitting the URL length limit. Per-item
- * failures are returned alongside successes so the caller can block on a
- * specific offending expense without aborting the batch — the same contract
- * the old tRPC `currency.getRates` exposed.
+ * Bulk FX lookup. Accepts POST so the request body can carry up to 500 (date,
+ * base, target) triples without hitting the URL length limit. Per-item failures
+ * are returned alongside successes so the caller can block on a specific
+ * offending expense without aborting the batch — the same contract the old tRPC
+ * `currency.getRates` exposed.
  *
  * `fetchImpl` is test-only and defaults to the live provider; it lets unit
  * tests swap in a stub for the upstream call.

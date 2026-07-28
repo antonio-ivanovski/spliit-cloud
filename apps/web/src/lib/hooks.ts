@@ -1,8 +1,9 @@
+import { useQuery } from '@tanstack/react-query'
+import { useEffect, useMemo, useState } from 'react'
+
 import { useCurrentGroupOrNull } from '@/app/groups/[groupId]/current-group-context'
 import { trpc } from '@/trpc/client'
 import { exchangeRateLookupDate, utcTodayIso } from '@spliit/domain'
-import { useQuery } from '@tanstack/react-query'
-import { useEffect, useMemo, useState } from 'react'
 
 export function useMediaQuery(query: string): boolean {
   const [matches, setMatches] = useState<boolean>(() => {
@@ -36,13 +37,13 @@ export function useBaseUrl() {
 }
 
 /**
- * Resolve the active ledger participant id for a group. With the
- * account-backed product, the active user is the signed-in account and the
- * matching `LedgerParticipant` id is resolved server-side via `groups.get`.
+ * Resolve the active ledger participant id for a group. With the account-backed
+ * product, the active user is the signed-in account and the matching
+ * `LedgerParticipant` id is resolved server-side via `groups.get`.
  *
  * This hook now reads from the `CurrentGroupContext` rather than
- * `localStorage`. Callers that are not inside a group layout will get
- * `null`. Returns `null` while the group is still loading.
+ * `localStorage`. Callers that are not inside a group layout will get `null`.
+ * Returns `null` while the group is still loading.
  */
 function useCurrentGroupSafe() {
   return useCurrentGroupOrNull()
@@ -64,17 +65,17 @@ type UseCurrencyRateResult = {
 }
 
 /**
- * Fetch the exchange rate for an expense-form conversion via the API
- * (which itself talks to the Frankfurter rate provider and caches the
- * result in-process). Going through the API sidesteps the CORS error the
- * browser raises when calling `api.frankfurter.app` directly: that
- * endpoint 301-redirects to `api.frankfurter.dev/v1/...` without
- * `Access-Control-Allow-Origin` headers, so the redirect itself is
- * blocked. The server-side fetch has no such restriction.
+ * Fetch the exchange rate for an expense-form conversion via the API (which
+ * itself talks to the Frankfurter rate provider and caches the result
+ * in-process). Going through the API sidesteps the CORS error the browser
+ * raises when calling `api.frankfurter.app` directly: that endpoint
+ * 301-redirects to `api.frankfurter.dev/v1/...` without
+ * `Access-Control-Allow-Origin` headers, so the redirect itself is blocked. The
+ * server-side fetch has no such restriction.
  *
- * Future expense dates request today's rate (same rule as server
- * persistence). Returns a `RangeError` when the provider's as-of date
- * still differs from the lookup date (weekend / holiday fallback).
+ * Future expense dates request today's rate (same rule as server persistence).
+ * Returns a `RangeError` when the provider's as-of date still differs from the
+ * lookup date (weekend / holiday fallback).
  */
 export function useCurrencyRate(
   date: Date,
@@ -155,10 +156,10 @@ export type CurrencyRatesResponse = Array<
 >
 
 /**
- * Bulk FX lookup routed via the tRPC `currency.rates` mutation so a
- * 500-item batch fits in the request body without blowing the URL
- * length limit (HTTP 431). React Query gives us caching, refetch
- * control, and loading/error state around the mutation.
+ * Bulk FX lookup routed via the tRPC `currency.rates` mutation so a 500-item
+ * batch fits in the request body without blowing the URL length limit (HTTP
+ * 431). React Query gives us caching, refetch control, and loading/error state
+ * around the mutation.
  */
 export function useCurrencyRates(
   items: CurrencyRatesItem[],

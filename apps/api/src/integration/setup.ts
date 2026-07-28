@@ -1,12 +1,13 @@
 import { prisma } from '@spliit/db'
+
 import type {
   ActivityNotificationDispatcher,
   ActivityNotificationEvent,
 } from '../lib/notifications/dispatcher'
 
 /**
- * Verify the test database is reachable.
- * Throws with a clear message if not — the test file will fail at load time.
+ * Verify the test database is reachable. Throws with a clear message if not —
+ * the test file will fail at load time.
  */
 export async function checkDbConnection(): Promise<void> {
   try {

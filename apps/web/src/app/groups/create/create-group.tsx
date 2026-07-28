@@ -1,10 +1,11 @@
+import { useNavigate } from '@tanstack/react-router'
+import { ArrowLeft } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
 import { GroupForm } from '@/components/group-form'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { trpc } from '@/trpc/client'
-import { useNavigate } from '@tanstack/react-router'
-import { ArrowLeft } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 
 export const CreateGroup = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
@@ -12,8 +13,8 @@ export const CreateGroup = () => {
   const utils = trpc.useUtils()
   const { mutateAsync: createGroup } = trpc.groups.create.useMutation({
     onSuccess: () => {
-      utils.account.groups.invalidate()
-      utils.invitations.listForAccount.invalidate()
+      void utils.account.groups.invalidate()
+      void utils.invitations.listForAccount.invalidate()
     },
   })
   const navigate = useNavigate()
@@ -23,13 +24,13 @@ export const CreateGroup = () => {
     if (typeof window !== 'undefined' && window.history.length > 1) {
       window.history.back()
     } else {
-      navigate({ to: '/', replace: true })
+      void navigate({ to: '/', replace: true })
     }
   }
 
   return (
     <>
-      <h1 className="hidden text-2xl font-semibold items-center gap-2 sm:flex">
+      <h1 className="hidden items-center gap-2 text-2xl font-semibold sm:flex">
         <Button
           variant="ghost"
           size="icon"
@@ -38,7 +39,7 @@ export const CreateGroup = () => {
           title={tCommon('back')}
           aria-label={tCommon('back')}
         >
-          <ArrowLeft className="w-5 h-5" />
+          <ArrowLeft className="h-5 w-5" />
         </Button>
         {t('createGroupCard.title')}
       </h1>
@@ -48,7 +49,7 @@ export const CreateGroup = () => {
           // Invite happens in the Members tab once the group exists. Surface
           // a hint so the user knows to head there next.
           toast({ description: t('createdInviteHint') })
-          navigate({
+          await navigate({
             to: '/groups/$groupId/members',
             params: { groupId },
           })

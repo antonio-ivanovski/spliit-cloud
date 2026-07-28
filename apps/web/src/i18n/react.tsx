@@ -1,6 +1,8 @@
-import { defaultLocale } from '@spliit/domain/i18n'
 import { type ReactNode, useLayoutEffect } from 'react'
 import { I18nextProvider, useTranslation } from 'react-i18next'
+
+import { defaultLocale } from '@spliit/domain/i18n'
+
 import { i18n } from './setup'
 
 const RTL_LOCALES = new Set(['he', 'ar-SA', 'ur-PK'])

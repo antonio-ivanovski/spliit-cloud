@@ -1,3 +1,6 @@
+import { useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { Badge } from '@/components/ui/badge'
 import { randomId } from '@/lib/api'
 import type { AuthAccount } from '@/lib/auth'
@@ -7,8 +10,7 @@ import type {
   ParticipantMappingState,
 } from '@spliit/domain/import'
 import { findImportConflicts } from '@spliit/domain/import'
-import { useCallback, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
+
 import { MappingRow } from './mapping-row'
 import { useMappingValidation } from './mapping-validation'
 import { WizardNav } from './wizard-nav'

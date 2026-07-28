@@ -1,8 +1,10 @@
+import { describe, expect, it } from 'vitest'
+
 import type {
   DestinationParticipant,
   NormalizedSource,
 } from '@spliit/domain/import'
-import { describe, expect, it } from 'vitest'
+
 import {
   importWizardReducer,
   initialWizardState,

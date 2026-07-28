@@ -2,47 +2,54 @@
   "name": "spliit",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "bun@1.3.14",
   "workspaces": [
     "apps/*",
     "packages/*",
     "scripts/i18n"
   ],
+  "type": "module",
+  "scripts": {
+    "build": "turbo --ui=tui run build",
+    "check": "turbo --ui=tui run check-formatting check-formatting:root lint check-types",
+    "check-formatting": "turbo --ui=tui run check-formatting check-formatting:root",
+    "check-formatting:root": "oxfmt --check package.json turbo.json oxfmt.config.ts .oxlintrc.json AGENTS.md CODE_OF_CONDUCT.md CONTRIBUTING.md PRIVACY.md README.md ROADMAP.md SECURITY.md .devcontainer .github docs handoff compose.dev.yaml compose.dokploy.yaml compose.yaml doctor.config.json",
+    "check-types": "turbo --ui=tui run check-types",
+    "ci-checks": "turbo --ui=tui run ci-checks",
+    "dev": "turbo --ui=tui run dev",
+    "dev:down": "docker compose -f compose.dev.yaml down",
+    "dev:up": "docker compose -f compose.dev.yaml up -d --wait",
+    "format": "turbo --ui=tui run format format:root",
+    "format:affected": "turbo --ui=tui run format format:root --affected",
+    "format:root": "oxfmt package.json turbo.json oxfmt.config.ts .oxlintrc.json AGENTS.md CODE_OF_CONDUCT.md CONTRIBUTING.md PRIVACY.md README.md ROADMAP.md SECURITY.md .devcontainer .github docs handoff compose.dev.yaml compose.dokploy.yaml compose.yaml doctor.config.json",
+    "i18n": "bun scripts/i18n/src/cli.ts",
+    "lint": "turbo --ui=tui run lint",
+    "lint:fix": "turbo --ui=tui run lint:fix",
+    "prisma-generate": "bun run --filter @spliit/db prisma-generate",
+    "prisma-migrate": "bun run --filter @spliit/db prisma-migrate",
+    "start": "bun --filter @spliit/api start",
+    "start-container": "docker compose --env-file container.env up",
+    "test": "turbo --ui=tui run test",
+    "test:integration": "turbo --ui=tui run test:integration --concurrency=1"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "24.13.2",
+    "oxfmt": "0.61.0",
+    "oxlint": "1.76.0",
+    "oxlint-tsgolint": "7.0.2001",
+    "turbo": "^2.10.7",
+    "typescript": "7.0.2",
+    "typescript-compiler-api": "npm:typescript@6.0.3"
+  },
+  "packageManager": "bun@1.3.14",
+  "patchedDependencies": {
+    "@trpc/openapi@11.18.0-alpha": "patches/@trpc%2Fopenapi@11.18.0-alpha.patch"
+  },
   "trustedDependencies": [
     "@prisma/adapter-pg",
     "@prisma/client",
     "@prisma/engines",
     "esbuild",
     "prisma"
-  ],
-  "scripts": {
-    "dev": "turbo --ui=tui run dev",
-    "dev:up": "docker compose -f compose.dev.yaml up -d --wait",
-    "dev:down": "docker compose -f compose.dev.yaml down",
-    "build": "turbo --ui=tui run build",
-    "start": "bun --filter @spliit/api start",
-    "lint": "turbo --ui=tui run lint",
-    "check-types": "turbo --ui=tui run check-types",
-    "check-formatting": "prettier -c .",
-    "prettier": "prettier -w .",
-    "prisma-migrate": "bun run --filter @spliit/db prisma-migrate",
-    "prisma-generate": "bun run --filter @spliit/db prisma-generate",
-    "start-container": "docker compose --env-file container.env up",
-    "test": "turbo --ui=tui run test",
-    "test:integration": "turbo --ui=tui run test:integration --concurrency=1",
-    "i18n": "bun scripts/i18n/src/cli.ts",
-    "ci-checks": "turbo --ui=tui run ci-checks"
-  },
-  "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@types/node": "24.13.2",
-    "eslint": "^10.6.0",
-    "eslint-plugin-react-hooks": "^7.1.1",
-    "prettier": "^3.9.4",
-    "prettier-plugin-organize-imports": "^4.3.0",
-    "turbo": "^2.10.2",
-    "typescript": "6.0.3",
-    "typescript-eslint": "^8.62.1"
-  },
-  "dependencies": {}
+  ]
 }

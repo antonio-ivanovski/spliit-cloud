@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+
 import { getPasswordRequirements, isStrongPassword } from './password'
 
 describe('password policy', () => {

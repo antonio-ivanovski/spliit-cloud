@@ -1,9 +1,0 @@
-node_modules
-dist
-.turbo
-coverage
-apps/*/dist
-apps/web/src/components/ui
-apps/web/src/routeTree.gen.ts
-packages/db/src/generated
-openspec/**/*.md

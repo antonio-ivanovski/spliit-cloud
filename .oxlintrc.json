@@ -1,0 +1,90 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "eslint",
+    "typescript",
+    "unicorn",
+    "oxc",
+    "react",
+    "import",
+    "jsx-a11y"
+  ],
+  "options": {
+    "typeAware": true,
+    "typeCheck": false,
+    "denyWarnings": true,
+    "respectEslintDisableDirectives": false
+  },
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/.turbo/**",
+    "**/coverage/**",
+    "**/*.gen.ts",
+    "packages/db/src/generated/**"
+  ],
+  "rules": {
+    "no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ],
+    "typescript/consistent-type-imports": [
+      "error",
+      {
+        "prefer": "type-imports"
+      }
+    ],
+    "typescript/no-explicit-any": "error",
+    "typescript/no-namespace": "error"
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/*.{test,spec}.{ts,tsx}",
+        "**/test/**/*.{ts,tsx}",
+        "**/tests/**/*.{ts,tsx}"
+      ],
+      "rules": {
+        "typescript/unbound-method": "off"
+      }
+    },
+    {
+      "files": ["apps/web/**/*.{ts,tsx}"],
+      "rules": {
+        "react/rules-of-hooks": "error",
+        "react/exhaustive-deps": "warn",
+        "react/react-compiler": "warn",
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "@/components/ui/dialog",
+                "message": "Use '@/components/ui/responsive-dialog' for app interactions so mobile uses a drawer and desktop uses a modal."
+              }
+            ],
+            "patterns": [
+              {
+                "group": ["@/components/ui/dialog"],
+                "message": "Use '@/components/ui/responsive-dialog' for app interactions so mobile uses a drawer and desktop uses a modal."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "apps/web/src/components/ui/responsive-dialog.tsx",
+        "apps/web/src/components/ui/command.tsx",
+        "apps/web/src/components/expense-documents-input.tsx"
+      ],
+      "rules": {
+        "no-restricted-imports": "off"
+      }
+    }
+  ]
+}

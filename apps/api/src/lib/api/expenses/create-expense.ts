@@ -6,6 +6,7 @@ import {
   type Expense,
 } from '@spliit/domain'
 import { env as jobsEnv } from '@spliit/jobs'
+
 import { resolveConversion } from '../../expense-conversion'
 import {
   buildExpenseActivityData,
@@ -324,9 +325,7 @@ export async function createExpense(
       await planNotificationForActivity(
         tx,
         activity,
-        {
-          ...(isCreateRecurrence ? { includeActorAsRecipient: true } : {}),
-        },
+        isCreateRecurrence ? { includeActorAsRecipient: true } : {},
         { boss },
       )
     }

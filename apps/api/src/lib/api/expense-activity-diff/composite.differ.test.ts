@@ -1,5 +1,7 @@
-import type { Expense } from '@spliit/domain'
 import { describe, expect, it } from 'vitest'
+
+import type { Expense } from '@spliit/domain'
+
 import { amountDiffer } from './amount.differ'
 import { categoryDiffer } from './category.differ'
 import { compositeExpenseDiffer } from './composite.differ'

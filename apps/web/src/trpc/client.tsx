@@ -1,10 +1,12 @@
-import type { AppRouter } from '@spliit/api/router'
 import type { QueryClient } from '@tanstack/react-query'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { httpBatchLink } from '@trpc/client'
 import { createTRPCReact } from '@trpc/react-query'
 import { useState } from 'react'
 import superjson from 'superjson'
+
+import type { AppRouter } from '@spliit/api/router'
+
 import { makeQueryClient } from './query-client'
 
 // react-doctor-disable-next-line react-doctor/only-export-components -- tRPC client singleton co-exported with provider

@@ -1,4 +1,5 @@
 import type { Expense, ExpenseApiItem } from '@spliit/domain'
+
 import type { ChangeContext, DifferenceableExpense } from './types'
 
 // ---------------------------------------------------------------------------

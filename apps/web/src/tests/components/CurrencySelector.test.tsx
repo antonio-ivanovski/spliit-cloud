@@ -1,8 +1,9 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { CurrencySelector } from '@/components/currency-selector'
 import type { DisplayCurrency } from '@/lib/currency'
 import { useMediaQuery } from '@/lib/hooks'
 import { fireEvent, render, screen } from '@/test/test-utils'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('@/lib/hooks', () => ({
   useMediaQuery: vi.fn(() => true),

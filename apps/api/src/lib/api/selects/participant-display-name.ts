@@ -2,8 +2,8 @@ import type { Prisma } from '@spliit/db'
 
 /**
  * Projection for a ledger participant together with the fields needed to
- * resolve its human-readable display name (account name, invitation
- * temporary name, or raw display name).
+ * resolve its human-readable display name (account name, invitation temporary
+ * name, or raw display name).
  *
  * Default: latest invitation of any status (`createdAt desc`, `take: 1`) —
  * activity feeds and exports still resolve labels for revoked/accepted invites.

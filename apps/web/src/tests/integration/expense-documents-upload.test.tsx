@@ -1,3 +1,5 @@
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+
 import {
   cleanupTestAccount,
   createTestSession,
@@ -5,7 +7,6 @@ import {
 } from '@/test/integration/client'
 import { fireEvent, render, waitFor } from '@/test/integration/test-utils'
 import { prisma } from '@spliit/db'
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 // ── Skip guard (evaluated once at module load) ───────────────────────────
 

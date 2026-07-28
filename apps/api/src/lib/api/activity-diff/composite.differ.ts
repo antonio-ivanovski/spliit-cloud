@@ -8,8 +8,8 @@ import type { ActivityDiffer, DiffEmission } from './types'
  * Create a composite differ that iterates through all child differs and
  * collects results. This is the composition root for the diff pipeline.
  *
- * Each child differ is independently testable; the composite is tested
- * with smoke-level integration tests.
+ * Each child differ is independently testable; the composite is tested with
+ * smoke-level integration tests.
  */
 export function createCompositeDiffer<
   TEntity,
@@ -37,8 +37,8 @@ export function createCompositeDiffer<
     },
 
     /**
-     * Run all child differs' `diff()` methods and collect emissions.
-     * Returns `null` when nothing changed.
+     * Run all child differs' `diff()` methods and collect emissions. Returns
+     * `null` when nothing changed.
      */
     changeSummary(
       oldValue: TEntity,

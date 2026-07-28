@@ -1,5 +1,7 @@
-import type { Currency } from '@/lib/currency'
 import { lazy, Suspense } from 'react'
+
+import type { Currency } from '@/lib/currency'
+
 import type { StatsDashboardData } from './dashboard-types'
 
 type Props = {

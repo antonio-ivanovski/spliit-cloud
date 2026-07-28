@@ -1,4 +1,5 @@
 import { GroupRole } from '@spliit/db'
+
 import { InvitationEmail } from './invitation'
 
 const props = {

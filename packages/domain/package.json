@@ -20,9 +20,11 @@
     "./notification-delivery": "./src/notification-delivery.ts"
   },
   "scripts": {
-    "build": "tsc",
-    "lint": "eslint .",
+    "check-formatting": "oxfmt --check .",
     "check-types": "tsc --noEmit",
+    "format": "oxfmt .",
+    "lint": "oxlint -c ../../.oxlintrc.json --format=unix --report-unused-disable-directives .",
+    "lint:fix": "oxlint -c ../../.oxlintrc.json --format=unix --report-unused-disable-directives --fix .",
     "test": "vitest run --globals src"
   },
   "dependencies": {
@@ -38,7 +40,7 @@
     "@spliit/config": "workspace:*",
     "@types/node": "24.13.2",
     "@types/papaparse": "^5.3.14",
-    "typescript": "6.0.3",
+    "typescript": "7.0.2",
     "vitest": "5.0.0-beta.5"
   }
 }

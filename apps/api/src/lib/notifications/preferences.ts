@@ -1,3 +1,5 @@
+import { z } from 'zod'
+
 import { prisma } from '@spliit/db'
 import {
   NotificationChannel,
@@ -9,7 +11,7 @@ import {
   notificationChannelsSchema,
   type NotificationCategory,
 } from '@spliit/domain/notifications'
-import { z } from 'zod'
+
 import { randomId } from '../api/shared'
 import { isPushConfigured } from './push'
 

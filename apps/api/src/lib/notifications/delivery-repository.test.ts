@@ -1,5 +1,7 @@
-import { NotificationDeliveryStatus } from '@spliit/domain/notification-delivery'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { NotificationDeliveryStatus } from '@spliit/domain/notification-delivery'
+
 import '../../test/mocks'
 import { prismaMock } from '../../test/state'
 import {

@@ -1,6 +1,7 @@
+import { createLazyFileRoute } from '@tanstack/react-router'
+
 import { CreateFriend } from '@/app/friends/create/create-friend'
 import { RequireAuth } from '@/components/require-auth'
-import { createLazyFileRoute } from '@tanstack/react-router'
 
 function CreateFriendRoute() {
   return (

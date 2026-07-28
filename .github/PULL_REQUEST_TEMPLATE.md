@@ -8,8 +8,7 @@
 
 ## Verification
 
-- [ ] `bun check-types`
-- [ ] `bun check-formatting`
+- [ ] `bun run check`
 - [ ] `bun run test`
 - [ ] I added or updated tests where appropriate.
 

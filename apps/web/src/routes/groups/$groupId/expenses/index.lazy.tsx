@@ -1,6 +1,7 @@
+import { createLazyFileRoute } from '@tanstack/react-router'
+
 import GroupExpensesPageClient from '@/app/groups/[groupId]/expenses/page.client'
 import { trpc } from '@/trpc/client'
-import { createLazyFileRoute } from '@tanstack/react-router'
 
 function ExpensesRoute() {
   const { data } = trpc.features.get.useQuery()

@@ -1,9 +1,9 @@
 import { amountAsDecimal, type Currency, type SplitMode } from '@spliit/domain'
 
 /**
- * Display-unit row shape used by the form. Shares carry the same units as
- * the live form state — decimal major units for BY_AMOUNT, display
- * percentages for BY_PERCENTAGE, raw counts otherwise.
+ * Display-unit row shape used by the form. Shares carry the same units as the
+ * live form state — decimal major units for BY_AMOUNT, display percentages for
+ * BY_PERCENTAGE, raw counts otherwise.
  */
 export type SplitRowDisplay = {
   participant: string
@@ -11,10 +11,10 @@ export type SplitRowDisplay = {
 }
 
 /**
- * Storage-unit row shape returned by `trpc.account.defaultSplit` and
- * stored on `AccountGroupPreference.defaultSplit`. Shares are integer
- * minor units (BY_AMOUNT), basis points (BY_PERCENTAGE), or raw counts
- * (BY_SHARES / EVENLY).
+ * Storage-unit row shape returned by `trpc.account.defaultSplit` and stored on
+ * `AccountGroupPreference.defaultSplit`. Shares are integer minor units
+ * (BY_AMOUNT), basis points (BY_PERCENTAGE), or raw counts (BY_SHARES /
+ * EVENLY).
  */
 export type SplitRowStored = {
   participant: string
@@ -33,16 +33,16 @@ export type SavedSplit = {
 }
 
 /**
- * Tolerance for comparing numeric shares across the two shapes. The
- * form keeps display percentages to 2 decimals and BY_AMOUNT shares
- * to the currency's decimal_digits, so 0.005 is comfortably wider
- * than the smallest round trip in either unit space.
+ * Tolerance for comparing numeric shares across the two shapes. The form keeps
+ * display percentages to 2 decimals and BY_AMOUNT shares to the currency's
+ * decimal_digits, so 0.005 is comfortably wider than the smallest round trip in
+ * either unit space.
  */
 const NUMERIC_TOLERANCE = 0.005
 
 /**
- * Convert a stored `paidFor` row into display units so it can be
- * compared to live form state.
+ * Convert a stored `paidFor` row into display units so it can be compared to
+ * live form state.
  */
 function storedRowToDisplay(
   row: SplitRowStored,
@@ -62,10 +62,9 @@ function storedRowToDisplay(
 }
 
 /**
- * Order-independent equality for an EVENLY split: the same set of
- * participants is included in both. The actual share values are
- * ignored because EVENLY does not encode them in user-meaningful
- * numbers — what matters is "who is in".
+ * Order-independent equality for an EVENLY split: the same set of participants
+ * is included in both. The actual share values are ignored because EVENLY does
+ * not encode them in user-meaningful numbers — what matters is "who is in".
  */
 function evenlyRowsEqual(
   currentRows: SplitRowDisplay[],
@@ -83,12 +82,11 @@ function evenlyRowsEqual(
 }
 
 /**
- * Order-independent equality for numeric splits (BY_SHARES /
- * BY_PERCENTAGE / BY_AMOUNT). Each participant's share must match
- * within `NUMERIC_TOLERANCE`, and the union of participants must be
- * the same — so a row in one side with `shares = 0` is treated as
- * "not included" and a missing row on the other side is "not
- * included" as well.
+ * Order-independent equality for numeric splits (BY_SHARES / BY_PERCENTAGE /
+ * BY_AMOUNT). Each participant's share must match within `NUMERIC_TOLERANCE`,
+ * and the union of participants must be the same — so a row in one side with
+ * `shares = 0` is treated as "not included" and a missing row on the other side
+ * is "not included" as well.
  */
 function numericRowsEqual(
   currentRows: SplitRowDisplay[],
@@ -119,9 +117,9 @@ function numericRowsEqual(
 /**
  * Returns `true` when the current form split matches `saved`.
  *
- * `null` `saved` always returns `false` (any non-ITEMIZED form state
- * diverges from "no default"). ITEMIZED is excluded at the type
- * level — saving an itemized default is not allowed by the API.
+ * `null` `saved` always returns `false` (any non-ITEMIZED form state diverges
+ * from "no default"). ITEMIZED is excluded at the type level — saving an
+ * itemized default is not allowed by the API.
  */
 export function splitEqual(
   currentMode: SplitMode,

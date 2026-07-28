@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest'
+
 import {
   amountAsDecimal,
   amountAsMinorUnits,
@@ -6,7 +8,6 @@ import {
   getCurrencyFromGroup,
 } from '@/lib/utils'
 import type { Currency } from '@spliit/domain/currency'
-import { describe, expect, it } from 'vitest'
 
 // ── Fixtures ───────────────────────────────────────────────────────────
 

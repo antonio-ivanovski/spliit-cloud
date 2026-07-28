@@ -1,3 +1,8 @@
+/* oxlint-disable jsx-a11y/prefer-tag-over-role -- grouped toggle buttons use an explicit accessible label. */
+import { X } from 'lucide-react'
+import { type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { categoryLabel } from '@/app/groups/[groupId]/stats/category-utils'
 import { CategorySelector } from '@/components/category-selector'
 import { CurrencySelector } from '@/components/currency-selector'
@@ -22,9 +27,7 @@ import {
   DEFAULT_CATEGORIES,
   type CategoryId,
 } from '@spliit/domain'
-import { X } from 'lucide-react'
-import { type ReactNode } from 'react'
-import { useTranslation } from 'react-i18next'
+
 import {
   DEFAULT_FILTERS,
   type ExpenseFilters,
@@ -38,9 +41,9 @@ export type ExpenseFiltersContentProps = {
   group: Group
   commonCurrencies: CommonCurrencies | undefined
   /**
-   * Working (uncommitted) state seeded from the currently applied filters
-   * when the panel opens. The parent owns updating this so changes don't
-   * leak into the URL until the user clicks Apply.
+   * Working (uncommitted) state seeded from the currently applied filters when
+   * the panel opens. The parent owns updating this so changes don't leak into
+   * the URL until the user clicks Apply.
    */
   draft: ExpenseFilters
   onDraftChange: (next: ExpenseFilters) => void
@@ -70,11 +73,11 @@ function FilterRow({
   children: ReactNode
 }) {
   return (
-    <div className="flex flex-col sm:flex-row sm:items-start gap-2">
-      <span className="text-sm font-medium sm:w-28 shrink-0 sm:pt-1.5">
+    <div className="flex flex-col gap-2 sm:flex-row sm:items-start">
+      <span className="shrink-0 text-sm font-medium sm:w-28 sm:pt-1.5">
         {label}
       </span>
-      <div className="flex flex-col gap-2 flex-1 min-w-0">
+      <div className="flex min-w-0 flex-1 flex-col gap-2">
         <div className="flex flex-wrap items-center gap-2">{children}</div>
       </div>
     </div>
@@ -101,7 +104,7 @@ function FilterChips({
           <Badge
             key={id}
             variant="secondary"
-            className="gap-1 pr-1 py-0 text-xs"
+            className="gap-1 py-0 pr-1 text-xs"
           >
             {opt.label}
             <button
@@ -110,7 +113,7 @@ function FilterChips({
               aria-label={t('removeFilter')}
               className="ml-0.5 rounded-sm hover:bg-muted-foreground/20"
             >
-              <X className="w-3 h-3" />
+              <X className="h-3 w-3" />
             </button>
           </Badge>
         )
@@ -153,7 +156,7 @@ function MatchModeSelect({
               onClick={() => onChange(option.value)}
               className={cn(
                 'min-h-8 flex-1 rounded px-2 text-xs font-medium transition-colors',
-                'focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring',
+                'focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden',
                 isActive
                   ? 'bg-primary text-primary-foreground shadow-sm'
                   : 'text-muted-foreground hover:bg-muted',
@@ -172,7 +175,7 @@ function MatchModeSelect({
       value={value}
       onValueChange={(v) => onChange(v as ExpenseMatchMode)}
     >
-      <SelectTrigger className="h-9 text-xs w-[130px]">
+      <SelectTrigger className="h-9 w-[130px] text-xs">
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
@@ -322,7 +325,7 @@ export function ExpenseFiltersContent({
       </FilterRow>
 
       <FilterRow label={t('dateRange')}>
-        <div className="grid grid-cols-2 gap-2 flex-1">
+        <div className="grid flex-1 grid-cols-2 gap-2">
           <Input
             type="date"
             value={draft.dateFrom ?? ''}
@@ -343,7 +346,7 @@ export function ExpenseFiltersContent({
       </FilterRow>
 
       <FilterRow label={t('amountRange')}>
-        <div className="grid grid-cols-2 gap-2 flex-1">
+        <div className="grid flex-1 grid-cols-2 gap-2">
           <Input
             type="number"
             inputMode="decimal"
@@ -409,7 +412,7 @@ export function ExpenseFiltersContent({
         />
         <label
           htmlFor="show-settlements-toggle"
-          className="text-sm font-medium cursor-pointer select-none"
+          className="cursor-pointer text-sm font-medium select-none"
         >
           {tExpenses('showSettlements')}
         </label>

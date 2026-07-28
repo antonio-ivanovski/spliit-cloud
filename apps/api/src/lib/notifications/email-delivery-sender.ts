@@ -1,4 +1,5 @@
 import { prisma } from '@spliit/db'
+
 import { getWebBaseUrl } from '../auth/urls'
 import { isPlaceholderEmail } from '../invitations/display'
 import { sendEmail } from '../mail/send'

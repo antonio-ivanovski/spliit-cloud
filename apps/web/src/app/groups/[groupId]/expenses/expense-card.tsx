@@ -1,3 +1,8 @@
+/* oxlint-disable jsx-a11y/prefer-tag-over-role -- card is an interactive container with a nested link button. */
+import { useNavigate } from '@tanstack/react-router'
+import { ChevronRight } from 'lucide-react'
+import { Trans, useTranslation } from 'react-i18next'
+
 import { ActiveUserBalance } from '@/app/groups/[groupId]/expenses/active-user-balance'
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
 import { DocumentsCount } from '@/app/groups/[groupId]/expenses/documents-count'
@@ -8,9 +13,7 @@ import { useLocale } from '@/i18n/react'
 import type { getGroupExpenses } from '@/lib/api'
 import { getCurrency, type Currency } from '@/lib/currency'
 import { cn, formatCurrency, formatDateOnly } from '@/lib/utils'
-import { useNavigate } from '@tanstack/react-router'
-import { ChevronRight } from 'lucide-react'
-import { Trans, useTranslation } from 'react-i18next'
+
 import { RecurringBadge } from './series-controls'
 
 type Expense = Awaited<ReturnType<typeof getGroupExpenses>>[number]
@@ -147,7 +150,11 @@ export function ExpenseCard({
     (
       expense as typeof expense & {
         recurringSeriesStatus?:
-          'ACTIVE' | 'PAUSED' | 'COMPLETED' | 'CANCELLED' | null
+          | 'ACTIVE'
+          | 'PAUSED'
+          | 'COMPLETED'
+          | 'CANCELLED'
+          | null
       }
     ).recurringSeriesStatus ?? undefined
 
@@ -156,14 +163,14 @@ export function ExpenseCard({
       key={expense.id}
       data-testid={`expense-item-${expense.id}`}
       className={cn(
-        'flex justify-between sm:mx-6 px-4 sm:rounded-lg sm:pr-2 sm:pl-4 py-4 text-sm gap-1 items-stretch',
+        'flex items-stretch justify-between gap-1 px-4 py-4 text-sm sm:mx-6 sm:rounded-lg sm:pr-2 sm:pl-4',
         'cursor-pointer hover:bg-accent',
         expense.isReimbursement && 'italic',
       )}
       role="button"
       tabIndex={0}
       onClick={() => {
-        navigate({
+        void navigate({
           to: '/groups/$groupId/expenses/$expenseId',
           params: { groupId, expenseId: expense.id },
         })
@@ -171,7 +178,7 @@ export function ExpenseCard({
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault()
-          navigate({
+          void navigate({
             to: '/groups/$groupId/expenses/$expenseId',
             params: { groupId, expenseId: expense.id },
           })
@@ -180,7 +187,7 @@ export function ExpenseCard({
     >
       <CategoryIcon
         category={expense.category}
-        className="w-4 h-4 mr-2 mt-0.5 text-muted-foreground"
+        className="mt-0.5 mr-2 h-4 w-4 text-muted-foreground"
       />
       <div className="flex-1">
         <div
@@ -212,10 +219,10 @@ export function ExpenseCard({
           <ActiveUserBalance {...{ groupId, currency, expense }} />
         </div>
       </div>
-      <div className="flex flex-col justify-between items-end">
+      <div className="flex flex-col items-end justify-between">
         <div
           className={cn(
-            'tabular-nums whitespace-nowrap',
+            'whitespace-nowrap tabular-nums',
             expense.isReimbursement ? 'italic' : 'font-bold',
           )}
           data-testid="expense-amount"
@@ -224,7 +231,7 @@ export function ExpenseCard({
         </div>
         {showOriginalAmount && (
           <div
-            className="mt-0.5 flex items-center gap-1 whitespace-nowrap text-xs tabular-nums text-muted-foreground"
+            className="mt-0.5 flex items-center gap-1 text-xs whitespace-nowrap text-muted-foreground tabular-nums"
             data-testid="expense-original-amount"
           >
             <span>
@@ -245,11 +252,11 @@ export function ExpenseCard({
       <Button
         size="icon"
         variant="link"
-        className="self-center hidden sm:flex"
+        className="hidden self-center sm:flex"
         asChild
       >
         <Link href={`/groups/${groupId}/expenses/${expense.id}`}>
-          <ChevronRight className="w-4 h-4" />
+          <ChevronRight className="h-4 w-4" />
         </Link>
       </Button>
     </div>

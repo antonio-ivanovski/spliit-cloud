@@ -1,5 +1,6 @@
 import { Heading, Link, Section, Text } from '@react-email/components'
 import type { ReactElement } from 'react'
+
 import { EmailButton } from './components/email-button'
 import { EmailLayout } from './components/email-layout'
 import { renderTemplate } from './render'
@@ -113,7 +114,7 @@ export function ExpenseActivityEmail(
     >
       <Heading
         as="h1"
-        className="m-0 mb-3 text-[22px] font-semibold text-[#0f172a] tracking-tight"
+        className="m-0 mb-3 text-[22px] font-semibold tracking-tight text-[#0f172a]"
       >
         {headline}
       </Heading>
@@ -122,7 +123,7 @@ export function ExpenseActivityEmail(
         {props.amountStr ? <> · {props.amountStr}</> : null}
         {props.date ? <> · {props.date}</> : null}.
       </Text>
-      <Section className="bg-[#f8fafc] border border-solid border-[#e5e7eb] rounded-md px-5 py-4 my-4">
+      <Section className="my-4 rounded-md border border-solid border-[#e5e7eb] bg-[#f8fafc] px-5 py-4">
         <Text className="m-0 text-[14px] leading-[22px] text-[#0f172a]">
           <strong>Expense:</strong> "{props.title}"
         </Text>
@@ -152,7 +153,7 @@ export function ExpenseActivityEmail(
           </Text>
         ) : null}
       </Section>
-      <Section className="text-center my-6">
+      <Section className="my-6 text-center">
         <EmailButton
           href={props.expenseUrl}
           label={
@@ -165,7 +166,7 @@ export function ExpenseActivityEmail(
       <Text className="m-0 mb-2 text-[14px] leading-[22px] text-[#0f172a]">
         If the button doesn't work, copy and paste this URL into your browser:
       </Text>
-      <Text className="m-0 mb-4 text-[13px] leading-[20px] text-[#64748b] break-all">
+      <Text className="m-0 mb-4 text-[13px] leading-[20px] break-all text-[#64748b]">
         <Link href={props.expenseUrl} className="text-[#64748b] underline">
           {props.expenseUrl}
         </Link>
@@ -185,7 +186,7 @@ export function ExpenseCommentEmail(
     >
       <Heading
         as="h1"
-        className="m-0 mb-3 text-[22px] font-semibold text-[#0f172a] tracking-tight"
+        className="m-0 mb-3 text-[22px] font-semibold tracking-tight text-[#0f172a]"
       >
         {props.actorName} commented on &quot;{props.title}&quot;
       </Heading>
@@ -193,20 +194,20 @@ export function ExpenseCommentEmail(
         in <strong>{props.groupDisplayName}</strong>.
       </Text>
       {props.excerpt ? (
-        <Section className="bg-[#f8fafc] border border-solid border-[#e5e7eb] rounded-md px-5 py-4 my-4">
+        <Section className="my-4 rounded-md border border-solid border-[#e5e7eb] bg-[#f8fafc] px-5 py-4">
           <Text className="m-0 text-[14px] leading-[22px] text-[#0f172a]">
             &quot;{props.excerpt}&quot;
           </Text>
         </Section>
       ) : null}
-      <Section className="text-center my-6">
+      <Section className="my-6 text-center">
         <EmailButton href={props.expenseUrl} label="View expense" />
       </Section>
       <Text className="m-0 mb-2 text-[14px] leading-[22px] text-[#0f172a]">
         If the button doesn&apos;t work, copy and paste this URL into your
         browser:
       </Text>
-      <Text className="m-0 mb-4 text-[13px] leading-[20px] text-[#64748b] break-all">
+      <Text className="m-0 mb-4 text-[13px] leading-[20px] break-all text-[#64748b]">
         <Link href={props.expenseUrl} className="text-[#64748b] underline">
           {props.expenseUrl}
         </Link>
@@ -229,7 +230,7 @@ export function ExpenseImportSummaryEmail(
     >
       <Heading
         as="h1"
-        className="m-0 mb-3 text-[22px] font-semibold text-[#0f172a] tracking-tight"
+        className="m-0 mb-3 text-[22px] font-semibold tracking-tight text-[#0f172a]"
       >
         {heading}
       </Heading>
@@ -242,13 +243,13 @@ export function ExpenseImportSummaryEmail(
         <strong>{props.groupDisplayName}</strong>
         {props.totalStr ? <> (total {props.totalStr})</> : null}.
       </Text>
-      <Section className="text-center my-6">
+      <Section className="my-6 text-center">
         <EmailButton href={props.groupUrl} label="Open group" />
       </Section>
       <Text className="m-0 mb-2 text-[14px] leading-[22px] text-[#0f172a]">
         If the button doesn't work, copy and paste this URL into your browser:
       </Text>
-      <Text className="m-0 mb-4 text-[13px] leading-[20px] text-[#64748b] break-all">
+      <Text className="m-0 mb-4 text-[13px] leading-[20px] break-all text-[#64748b]">
         <Link href={props.groupUrl} className="text-[#64748b] underline">
           {props.groupUrl}
         </Link>
@@ -269,7 +270,7 @@ export function ExpenseCategoryBulkSummaryEmail(
     >
       <Heading
         as="h1"
-        className="m-0 mb-3 text-[22px] font-semibold text-[#0f172a] tracking-tight"
+        className="m-0 mb-3 text-[22px] font-semibold tracking-tight text-[#0f172a]"
       >
         Expense categories updated
       </Heading>
@@ -284,13 +285,13 @@ export function ExpenseCategoryBulkSummaryEmail(
           : null}
         .
       </Text>
-      <Section className="text-center my-6">
+      <Section className="my-6 text-center">
         <EmailButton href={props.groupUrl} label="Open group" />
       </Section>
       <Text className="m-0 mb-2 text-[14px] leading-[22px] text-[#0f172a]">
         If the button doesn't work, copy and paste this URL into your browser:
       </Text>
-      <Text className="m-0 mb-4 text-[13px] leading-[20px] text-[#64748b] break-all">
+      <Text className="m-0 mb-4 text-[13px] leading-[20px] break-all text-[#64748b]">
         <Link href={props.groupUrl} className="text-[#64748b] underline">
           {props.groupUrl}
         </Link>
@@ -333,7 +334,7 @@ export function RecurringExpenseSummaryEmail(
     >
       <Heading
         as="h1"
-        className="m-0 mb-3 text-[22px] font-semibold text-[#0f172a] tracking-tight"
+        className="m-0 mb-3 text-[22px] font-semibold tracking-tight text-[#0f172a]"
       >
         {heading}
       </Heading>
@@ -347,13 +348,13 @@ export function RecurringExpenseSummaryEmail(
         {props.startDate} through {props.endDate}
         {stoppedSuffix}.
       </Text>
-      <Section className="text-center my-6">
+      <Section className="my-6 text-center">
         <EmailButton href={props.groupUrl} label="Open group" />
       </Section>
       <Text className="m-0 mb-2 text-[14px] leading-[22px] text-[#0f172a]">
         If the button doesn't work, copy and paste this URL into your browser:
       </Text>
-      <Text className="m-0 mb-4 text-[13px] leading-[20px] text-[#64748b] break-all">
+      <Text className="m-0 mb-4 text-[13px] leading-[20px] break-all text-[#64748b]">
         <Link href={props.groupUrl} className="text-[#64748b] underline">
           {props.groupUrl}
         </Link>

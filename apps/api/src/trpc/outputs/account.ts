@@ -1,5 +1,7 @@
-import { defaultSplitSchema } from '@spliit/domain'
 import { z } from 'zod'
+
+import { defaultSplitSchema } from '@spliit/domain'
+
 import {
   accountContactSchema,
   accountProfileSchema,

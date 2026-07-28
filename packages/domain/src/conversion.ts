@@ -1,8 +1,8 @@
 import * as z from 'zod'
 
 /**
- * How a converted expense got its rate. Same-currency expenses store
- * `null` in the DB — there is no `NONE` value.
+ * How a converted expense got its rate. Same-currency expenses store `null` in
+ * the DB — there is no `NONE` value.
  */
 export const ConversionSource = {
   EXCHANGE: 'EXCHANGE',
@@ -117,8 +117,8 @@ export function utcTodayIso(now: Date = new Date()): string {
 
 /**
  * EXCHANGE rate lookup date: expense date for past/today, today when the
- * expense date is in the future. Client preview and server persistence
- * both use this rule so they request the same provider date.
+ * expense date is in the future. Client preview and server persistence both use
+ * this rule so they request the same provider date.
  */
 export function exchangeRateLookupDate(
   expenseDateIso: string,

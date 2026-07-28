@@ -1,4 +1,5 @@
 import * as z from 'zod'
+
 import { categoryIdSchema } from '../categories'
 import { conversionSourceSchema } from '../conversion'
 
@@ -28,8 +29,10 @@ export const expenseActivityChangeSchema = z.object({
 })
 export type ExpenseActivityChange = z.infer<typeof expenseActivityChangeSchema>
 
-/** Metadata attached to individual recurring expense activities so the
- * feed can render recurrence context without reloading the series row. */
+/**
+ * Metadata attached to individual recurring expense activities so the feed can
+ * render recurrence context without reloading the series row.
+ */
 export const recurrenceActivityMetadataSchema = z.object({
   seriesId: z.string(),
   frequency: z.string(),
@@ -141,10 +144,10 @@ export type InvitationActivityData = z.infer<
 >
 
 /**
- * Summary data for a bulk import of expenses (e.g. from Splitwise).
- * The activity log records one such row per import so the feed can show
- * "Alice imported 25 expenses from Splitwise" once instead of N rows,
- * while a single notification fan-outs to all affected active members.
+ * Summary data for a bulk import of expenses (e.g. from Splitwise). The
+ * activity log records one such row per import so the feed can show "Alice
+ * imported 25 expenses from Splitwise" once instead of N rows, while a single
+ * notification fan-outs to all affected active members.
  */
 export const importSummaryActivityDataSchema = z.object({
   kind: z.literal('import_summary'),
@@ -164,12 +167,11 @@ export type ImportSummaryActivityData = z.infer<
 >
 
 /**
- * One-line summary of a bulk category reassignment (e.g. the admin
- * utility that classifies every expense on `general` in one pass). The
- * feed records a single row per save — instead of one row per
- * expense — and stores enough metadata for the UI to render an
- * expandable list of the affected expenses and their previous
- * categories.
+ * One-line summary of a bulk category reassignment (e.g. the admin utility that
+ * classifies every expense on `general` in one pass). The feed records a single
+ * row per save — instead of one row per expense — and stores enough metadata
+ * for the UI to render an expandable list of the affected expenses and their
+ * previous categories.
  */
 export const expenseCategoriesBulkUpdatedRowSchema = z.object({
   expenseId: z.string().min(1),
@@ -266,10 +268,10 @@ export const activityDataSchema = z.discriminatedUnion('kind', [
 export type ActivityData = z.infer<typeof activityDataSchema>
 
 /**
- * Safely parse an unknown value into an {@link ActivityData}. Returns
- * null for null/undefined inputs, non-object inputs, or values that
- * fail Zod validation. This lets the activity feed render a safe
- * fallback for legacy or malformed rows without crashing.
+ * Safely parse an unknown value into an {@link ActivityData}. Returns null for
+ * null/undefined inputs, non-object inputs, or values that fail Zod validation.
+ * This lets the activity feed render a safe fallback for legacy or malformed
+ * rows without crashing.
  */
 export function parseActivityData(value: unknown): ActivityData | null {
   if (value === null || value === undefined) return null

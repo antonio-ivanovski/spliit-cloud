@@ -1,8 +1,10 @@
+import { afterEach, describe, expect, it, vi } from 'vitest'
+
 import {
   NotificationCategory,
   NotificationChannel,
 } from '@spliit/domain/notifications'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+
 import '../../test/mocks'
 import { prismaMock } from '../../test/state'
 import { resolveNotificationChannelsForIntents } from './coordinator-policy'

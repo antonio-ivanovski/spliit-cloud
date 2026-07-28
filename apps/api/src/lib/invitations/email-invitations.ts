@@ -1,3 +1,5 @@
+import { TRPCError } from '@trpc/server'
+
 import {
   GroupInvitationStatus,
   GroupInvitationType,
@@ -6,7 +8,7 @@ import {
   prisma,
   type GroupRole,
 } from '@spliit/db'
-import { TRPCError } from '@trpc/server'
+
 import {
   buildInvitationActivityData,
   logActivity,
@@ -93,9 +95,7 @@ async function assertNoConflictingEmailInvitation(
   }
 }
 
-/**
- * Create an email-targeted invitation.
- */
+/** Create an email-targeted invitation. */
 export async function createEmailInvitation({
   groupId,
   email,
@@ -322,9 +322,7 @@ export function assertCanDeclineEmailInvitation(
   }
 }
 
-/**
- * Mark a pending invitation as declined by the invitee.
- */
+/** Mark a pending invitation as declined by the invitee. */
 export async function declineInvitation(opts: {
   invitationId: string
   accountEmail: string
@@ -399,9 +397,7 @@ export async function sendInvitationEmail(opts: {
   }
 }
 
-/**
- * Accept a pending email-targeted invitation for the current account.
- */
+/** Accept a pending email-targeted invitation for the current account. */
 export async function acceptInvitation(opts: {
   invitationId: string
   accountId: string

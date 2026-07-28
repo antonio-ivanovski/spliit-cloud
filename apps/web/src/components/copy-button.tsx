@@ -1,6 +1,7 @@
-import { Button } from '@/components/ui/button'
 import { Check, Copy } from 'lucide-react'
 import { useEffect, useState } from 'react'
+
+import { Button } from '@/components/ui/button'
 
 type Props = { text: string }
 
@@ -23,11 +24,11 @@ export function CopyButton({ text }: Props) {
       variant="secondary"
       type="button"
       onClick={() => {
-        navigator.clipboard.writeText(text)
+        void navigator.clipboard.writeText(text)
         setCopied(true)
       }}
     >
-      {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+      {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
     </Button>
   )
 }

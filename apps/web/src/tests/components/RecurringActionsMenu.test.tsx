@@ -1,9 +1,10 @@
+import { afterEach, describe, expect, it, vi } from 'vitest'
+
 import {
   RecurringActionsMenu,
   type RecurringDeleteOption,
 } from '@/app/groups/[groupId]/expenses/recurring-actions-menu'
 import { render, screen, waitFor } from '@/test/test-utils'
-import { afterEach, describe, expect, it, vi } from 'vitest'
 
 function mockDesktopMediaQuery() {
   vi.spyOn(window, 'matchMedia').mockImplementation((query: string) => ({

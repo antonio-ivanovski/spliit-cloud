@@ -7,9 +7,9 @@ export const COMMON_CURRENCY_HALF_LIFE_DAYS = 90
 export const COMMON_CURRENCY_LIMIT = 5
 
 /**
- * Look back this many days when loading expense currency history.
- * Beyond ~2 half-lives weights are tiny; beyond this window they are
- * negligible for ranking while keeping the DB scan bounded.
+ * Look back this many days when loading expense currency history. Beyond ~2
+ * half-lives weights are tiny; beyond this window they are negligible for
+ * ranking while keeping the DB scan bounded.
  */
 export const COMMON_CURRENCY_LOOKBACK_DAYS = 730
 
@@ -20,8 +20,8 @@ export type ExpenseCurrencyHistoryRow = {
 }
 
 /**
- * Effective expense currency: original when present, otherwise the group
- * ledger currency. Returns null when neither is a usable code.
+ * Effective expense currency: original when present, otherwise the group ledger
+ * currency. Returns null when neither is a usable code.
  */
 export function effectiveExpenseCurrency(
   originalCurrency: string | null | undefined,
@@ -44,8 +44,8 @@ function utcDateOnlyMs(date: Date): number {
 }
 
 /**
- * Age in whole UTC days from expenseDate to today. Future dates clamp to 0
- * so they score as "today" rather than negative age.
+ * Age in whole UTC days from expenseDate to today. Future dates clamp to 0 so
+ * they score as "today" rather than negative age.
  */
 export function currencyRecencyAgeDays(
   expenseDate: Date,

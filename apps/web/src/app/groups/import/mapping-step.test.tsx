@@ -1,3 +1,6 @@
+import userEvent from '@testing-library/user-event'
+import { describe, expect, it, vi } from 'vitest'
+
 import type { AuthAccount } from '@/lib/auth'
 import { render, screen } from '@/test/test-utils'
 import type {
@@ -5,8 +8,7 @@ import type {
   NormalizedSource,
   ParticipantMappingState,
 } from '@spliit/domain/import'
-import userEvent from '@testing-library/user-event'
-import { describe, expect, it, vi } from 'vitest'
+
 import { MappingStep } from './mapping-step'
 
 // ── Fixtures ────────────────────────────────────────────────────────────

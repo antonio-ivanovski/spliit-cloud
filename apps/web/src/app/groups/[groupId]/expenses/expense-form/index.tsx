@@ -1,3 +1,14 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect, useRef, useState } from 'react'
+import {
+  useForm,
+  useWatch,
+  type FieldErrors,
+  type FieldPath,
+  type Resolver,
+} from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+
 import { Form } from '@/components/ui/form'
 import { getCurrency } from '@/lib/currency'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
@@ -9,18 +20,9 @@ import {
 import { getCurrencyFromGroup } from '@/lib/utils'
 import type { CreateExpenseSearch } from '@/router/schemas'
 import { trpc } from '@/trpc/client'
-import { zodResolver } from '@hookform/resolvers/zod'
 import type { AppRouterOutput } from '@spliit/api/router'
 import { amountAsDecimal, type Currency } from '@spliit/domain'
-import { useEffect, useRef, useState } from 'react'
-import {
-  useForm,
-  useWatch,
-  type FieldErrors,
-  type FieldPath,
-  type Resolver,
-} from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
+
 import type {
   ReceiptDocument,
   ReceiptExtractedInfo,
@@ -310,7 +312,7 @@ export function ExpenseForm(props: {
       <form
         onSubmit={form.handleSubmit(submit, handleInvalidSubmit)}
         noValidate
-        className="-mx-4 min-w-0 w-[calc(100%+2rem)] overflow-x-hidden pb-24 sm:mx-0 sm:w-auto sm:pb-20"
+        className="-mx-4 w-[calc(100%+2rem)] min-w-0 overflow-x-hidden pb-24 sm:mx-0 sm:w-auto sm:pb-20"
       >
         {props.readOnly && <ReadOnlyNotice />}
         <BasicDetailsCard
@@ -429,6 +431,6 @@ export function ExpenseForm(props: {
 function ReadOnlyNotice() {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   return (
-    <p className="text-sm text-muted-foreground mb-4">{t('readOnlyNotice')}</p>
+    <p className="mb-4 text-sm text-muted-foreground">{t('readOnlyNotice')}</p>
   )
 }

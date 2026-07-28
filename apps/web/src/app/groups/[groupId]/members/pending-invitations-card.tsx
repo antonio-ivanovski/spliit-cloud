@@ -1,3 +1,6 @@
+import { Ban } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -9,8 +12,7 @@ import {
 } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { isPlaceholderEmail } from '@/lib/account'
-import { Ban } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+
 import { formatDate } from './members-hooks'
 
 type Invitation = {
@@ -50,7 +52,7 @@ export function PendingInvitationsCard({
             <Skeleton className="h-8 w-full" />
           </div>
         ) : invitations.length === 0 ? (
-          <p className="text-sm text-muted-foreground py-2">
+          <p className="py-2 text-sm text-muted-foreground">
             {t('invitations.empty')}
           </p>
         ) : (
@@ -72,7 +74,7 @@ export function PendingInvitationsCard({
                 >
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-medium text-foreground truncate">
+                      <span className="truncate font-medium text-foreground">
                         {label}
                       </span>
                       <Badge variant="outline" className="shrink-0">
@@ -82,7 +84,7 @@ export function PendingInvitationsCard({
                       </Badge>
                     </div>
                     {invitation.createdAt && (
-                      <p className="text-xs text-muted-foreground mt-0.5">
+                      <p className="mt-0.5 text-xs text-muted-foreground">
                         {t('invitations.sentOn', {
                           date: formatDate(invitation.createdAt, locale),
                         })}

@@ -1,6 +1,8 @@
 import { Heading, Link, Section, Text } from '@react-email/components'
-import type { GroupRole } from '@spliit/db'
 import type { ReactElement } from 'react'
+
+import type { GroupRole } from '@spliit/db'
+
 import { getWebBaseUrl } from '../../auth/urls'
 import { EmailButton } from './components/email-button'
 import { EmailInfoBlock } from './components/email-info-block'
@@ -59,7 +61,7 @@ export function InvitationEmail(
     >
       <Heading
         as="h1"
-        className="m-0 mb-4 text-[24px] font-semibold text-[#0f172a] tracking-tight"
+        className="m-0 mb-4 text-[24px] font-semibold tracking-tight text-[#0f172a]"
       >
         You're invited to {props.groupName}
       </Heading>
@@ -72,13 +74,13 @@ export function InvitationEmail(
           group.
         </Text>
       ) : null}
-      <Section className="text-center my-6">
+      <Section className="my-6 text-center">
         <EmailButton href={primaryHref} label={primaryLabel} />
       </Section>
       <Text className="m-0 mb-2 text-[14px] leading-[22px] text-[#0f172a]">
         If the button doesn't work, copy and paste this URL into your browser:
       </Text>
-      <Text className="m-0 mb-4 text-[13px] leading-[20px] text-[#64748b] break-all">
+      <Text className="m-0 mb-4 text-[13px] leading-[20px] break-all text-[#64748b]">
         <Link href={fallbackHref} className="text-[#64748b] underline">
           {fallbackHref}
         </Link>

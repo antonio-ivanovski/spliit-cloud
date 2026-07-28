@@ -1,7 +1,3 @@
-import Link from '@/components/link'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
 import {
   Check,
   ChevronLeft,
@@ -11,6 +7,12 @@ import {
   X,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+
+import Link from '@/components/link'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+
 import { useLinkInviteToken } from '../use-link-invite-token'
 
 export type ExpenseSeriesMetadata = {

@@ -1,3 +1,5 @@
+import { TRPCError } from '@trpc/server'
+
 import {
   GroupInvitationStatus,
   GroupInvitationType,
@@ -8,7 +10,7 @@ import {
   prisma,
   type Prisma as PrismaType,
 } from '@spliit/db'
-import { TRPCError } from '@trpc/server'
+
 import { getWebBaseUrl } from '../auth/urls'
 import {
   buildLinkPlaceholderEmail,
@@ -121,9 +123,9 @@ async function findExistingFriendGroupByPendingEmail(
 
 /**
  * Look up a pending FRIEND email group by the peer's account ID. Used as a
- * fallback when the DIRECT path doesn't find a friendPairKey match — the
- * peer may have recently created their account so a PENDING email invite
- * is still sitting from before they signed up.
+ * fallback when the DIRECT path doesn't find a friendPairKey match — the peer
+ * may have recently created their account so a PENDING email invite is still
+ * sitting from before they signed up.
  */
 async function findExistingFriendGroupByPendingEmailViaAccount(
   client: TxClient,
@@ -146,21 +148,21 @@ async function findExistingFriendGroupByPendingEmailViaAccount(
  * Create (or rejoin) a friend ledger between the caller and the chosen peer.
  *
  * Three entry paths:
- * - **Direct**: the peer is a known account. The function creates the
- *   Group, two ADMIN/ACTIVE members, two LedgerParticipants, and sets the
- *   friendPairKey on the Group.
- * - **Pending email**: the peer email is not yet an account. The function
- *   creates the Group with caller as the only active member, creates a
- *   PENDING EMAIL invitation (with pre-materialized LedgerParticipant
- *   attached), and returns the new groupId. friendPairKey is null until
- *   the peer joins.
- * - **Pending link**: same shape as the pending email path, but the
- *   invitation is a shareable LINK and the caller receives a one-time
- *   `inviteUrl` to send to the peer.
  *
- * When a matching friendPairKey already exists (direct) or a matching
- * pending FRIEND invitation already exists (email/link), the function
- * short-circuits and returns `{ groupId, existed: true }`.
+ * - **Direct**: the peer is a known account. The function creates the Group, two
+ *   ADMIN/ACTIVE members, two LedgerParticipants, and sets the friendPairKey on
+ *   the Group.
+ * - **Pending email**: the peer email is not yet an account. The function creates
+ *   the Group with caller as the only active member, creates a PENDING EMAIL
+ *   invitation (with pre-materialized LedgerParticipant attached), and returns
+ *   the new groupId. friendPairKey is null until the peer joins.
+ * - **Pending link**: same shape as the pending email path, but the invitation is
+ *   a shareable LINK and the caller receives a one-time `inviteUrl` to send to
+ *   the peer.
+ *
+ * When a matching friendPairKey already exists (direct) or a matching pending
+ * FRIEND invitation already exists (email/link), the function short-circuits
+ * and returns `{ groupId, existed: true }`.
  */
 export async function createFriendLedger(
   args: CreateFriendLedgerArgs,
@@ -351,12 +353,12 @@ export async function createFriendLedger(
 }
 
 /**
- * Reconcile PENDING email invitations on FRIEND-typed groups for the
- * given account. Called lazily on first authenticated visit (the
- * `account.me` query) so that an account created via better-auth
- * auto-claims any friend ledgers that were opened for the address
- * before the account existed. Each invitation is materialized in its
- * own transaction so one failure does not block the rest.
+ * Reconcile PENDING email invitations on FRIEND-typed groups for the given
+ * account. Called lazily on first authenticated visit (the `account.me` query)
+ * so that an account created via better-auth auto-claims any friend ledgers
+ * that were opened for the address before the account existed. Each invitation
+ * is materialized in its own transaction so one failure does not block the
+ * rest.
  */
 export async function autoAcceptPendingFriendInvitationsForAccount(opts: {
   accountId: string

@@ -1,8 +1,8 @@
-import { fireEvent, render, screen } from '@/test/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { CompleteProfilePage } from '@/app/auth/complete-profile'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { fireEvent, render, screen } from '@/test/test-utils'
 
 // ── Hoisted mocks ───────────────────────────────────────────────────────
 

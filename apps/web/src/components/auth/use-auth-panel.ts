@@ -1,10 +1,11 @@
-import { needsDisplayName } from '@/lib/account'
-import { authClient } from '@/lib/auth'
-import { isStrongPassword } from '@spliit/domain/password'
 import { useMutation } from '@tanstack/react-query'
 import { getRouteApi, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+
+import { needsDisplayName } from '@/lib/account'
+import { authClient } from '@/lib/auth'
+import { isStrongPassword } from '@spliit/domain/password'
 
 const homeRouteApi = getRouteApi('/')
 
@@ -165,14 +166,14 @@ export function useAuthPanel() {
   }
 
   function handleGoogle() {
-    authClient.signIn.social({
+    void authClient.signIn.social({
       provider: 'google',
       callbackURL,
     })
   }
 
   function handleGithub() {
-    authClient.signIn.social({
+    void authClient.signIn.social({
       provider: 'github',
       callbackURL,
     })

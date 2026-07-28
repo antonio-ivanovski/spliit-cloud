@@ -1,3 +1,5 @@
+import { generateText } from 'ai'
+
 import {
   DEFAULT_CATEGORIES,
   amountAsMinorUnits,
@@ -5,7 +7,7 @@ import {
   getCurrency,
   getCurrencyFromGroup,
 } from '@spliit/domain'
-import { generateText } from 'ai'
+
 import { getModel } from './ai'
 import {
   extractAllowedIdFromAIResponse,
@@ -193,9 +195,7 @@ export async function extractExpenseInformationFromImage(
               If those clues strongly indicate a country, use that country's normal currency.
               Only return an empty string when there is no reasonable currency inference.
               Return the date as yyyy-mm-dd. If the date is unreadable, return an empty string.
-              Return the categoryId from this allowed list only: ${categories.map(
-                (category) => formatCategoryForAIPrompt(category),
-              )}.
+              Return the categoryId from this allowed list only: ${categories.map((category) => formatCategoryForAIPrompt(category)).join(', ')}.
               ${groupSection}
               ${localeHint}
               ${translationDirective}

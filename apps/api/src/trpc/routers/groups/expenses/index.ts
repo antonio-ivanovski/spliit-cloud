@@ -15,15 +15,20 @@ export const groupExpensesRouter = createTRPCRouter({
   comments: expenseCommentsRouter,
   list: listGroupExpensesProcedure,
   series: listRecurringExpenseSeriesProcedure,
-  /** Per-series progress used by the web client to poll after creating
-   * a past-dated series. Returns null when the series is not in the group. */
+  /**
+   * Per-series progress used by the web client to poll after creating a
+   * past-dated series. Returns null when the series is not in the group.
+   */
   seriesProgress: seriesProgressProcedure,
   get: getGroupExpenseProcedure,
-  /** Currencies actually used by the group's expenses, for driving the UI filter. */
+  /**
+   * Currencies actually used by the group's expenses, for driving the UI
+   * filter.
+   */
   commonCurrencies: commonCurrenciesProcedure,
   /**
-   * Create an expense in a group.
-   * Rejects if the group is archived. May fetch an FX rate when `conversion.type` is 'exchange'.
+   * Create an expense in a group. Rejects if the group is archived. May fetch
+   * an FX rate when `conversion.type` is 'exchange'.
    */
   create: createGroupExpenseProcedure,
   /** Update an existing expense. Same conversion rules as create. */
@@ -31,8 +36,8 @@ export const groupExpensesRouter = createTRPCRouter({
   delete: deleteGroupExpenseProcedure,
   stopRecurrence: stopRecurrenceProcedure,
   /**
-   * Recategorize up to 2000 expenses in one transaction.
-   * Only expenses still on `fromCategoryId` are eligible.
+   * Recategorize up to 2000 expenses in one transaction. Only expenses still on
+   * `fromCategoryId` are eligible.
    */
   bulkUpdateCategories: bulkUpdateExpenseCategoriesProcedure,
 })

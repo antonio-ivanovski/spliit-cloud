@@ -2,9 +2,9 @@ import { formatDate, sameDate } from './helpers'
 import type { ExpenseDiffer } from './types'
 
 /**
- * Detects and formats changes to the expense date.
- * Handles both Date objects and ISO-string representations across the API
- * boundary (DB round-tripping may produce string dates).
+ * Detects and formats changes to the expense date. Handles both Date objects
+ * and ISO-string representations across the API boundary (DB round-tripping may
+ * produce string dates).
  */
 export const dateDiffer: ExpenseDiffer = {
   field: 'date',

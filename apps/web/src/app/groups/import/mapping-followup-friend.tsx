@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { Label } from '@/components/ui/label'
 import {
   Select,
@@ -9,7 +11,6 @@ import {
 import { isPlaceholderEmail } from '@/lib/account'
 import type { AuthAccount } from '@/lib/auth'
 import type { ParticipantMappingState } from '@spliit/domain/import'
-import { useTranslation } from 'react-i18next'
 
 type Friend = {
   accountId: string

@@ -1,10 +1,13 @@
-import { useToast } from '@/components/ui/use-toast'
-import { trpc } from '@/trpc/client'
 import { useNavigate } from '@tanstack/react-router'
 
-/** Mirrors `getRecurringSeriesProgress`'s return shape. Kept inline so the
- * web package doesn't depend on @trpc/server; the procedure is the
- * authoritative source. */
+import { useToast } from '@/components/ui/use-toast'
+import { trpc } from '@/trpc/client'
+
+/**
+ * Mirrors `getRecurringSeriesProgress`'s return shape. Kept inline so the web
+ * package doesn't depend on @trpc/server; the procedure is the authoritative
+ * source.
+ */
 type SeriesProgress = {
   seriesId: string
   status: string
@@ -14,10 +17,12 @@ type SeriesProgress = {
   pending: boolean
 } | null
 
-/** Options bag for invalidating a single group's dependent queries after an
+/**
+ * Options bag for invalidating a single group's dependent queries after an
  * expense mutation. Pass `financial: false` when the mutation changes no
- * amounts (e.g. stopping a schedule) so balance/leave/revoke previews are
- * not refetched. */
+ * amounts (e.g. stopping a schedule) so balance/leave/revoke previews are not
+ * refetched.
+ */
 type InvalidateExpenseOptions = {
   groupId: string
   expenseId?: string
@@ -65,9 +70,11 @@ function useInvalidateExpenseDependencies(linkInviteToken: string | undefined) {
   }
 }
 
-/** Tracks the in-flight catch-up poll per series so overlapping creates
- * don't double-poll, and so a re-mount of the consumer does not leave a
- * dangling interval. Cancellation aborts the next scheduled tick. */
+/**
+ * Tracks the in-flight catch-up poll per series so overlapping creates don't
+ * double-poll, and so a re-mount of the consumer does not leave a dangling
+ * interval. Cancellation aborts the next scheduled tick.
+ */
 type CatchUpHandle = { abort: () => void }
 const catchUpPolls = new Map<string, CatchUpHandle>()
 
@@ -229,7 +236,7 @@ export function useDeleteExpenseMutation({
       await invalidateExpenseDependencies({
         groupId: variables.groupId,
       })
-      navigate({
+      await navigate({
         to: '/groups/$groupId/expenses',
         params: { groupId: variables.groupId },
         replace: true,

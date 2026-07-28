@@ -1,11 +1,13 @@
+import { TRPCError } from '@trpc/server'
+import { z } from 'zod'
+
 import {
   GroupInvitationStatus,
   GroupInvitationType,
   GroupType,
   prisma,
 } from '@spliit/db'
-import { TRPCError } from '@trpc/server'
-import { z } from 'zod'
+
 import { getGroup } from '../../../lib/api'
 import { acceptLinkInvitation, hashLinkToken } from '../../../lib/invitations'
 import {
@@ -16,21 +18,23 @@ import {
 import { getGroupOutputSchema } from '../../outputs/groups'
 
 /**
- * State of the URL-borne link-invite token. The group page surfaces a
- * specific banner (or a "no longer valid" warning) based on this
- * signal.
+ * State of the URL-borne link-invite token. The group page surfaces a specific
+ * banner (or a "no longer valid" warning) based on this signal.
  *
- *  - `PENDING`   — valid, never used, the Accept/Decline banner is shown
- *  - `ACCEPTED`  — already used (either by the current account, in
- *                  which case they're a member, or by someone else);
- *                  the "already a member" / "no longer valid" banner
- *                  is shown
- *  - `REVOKED`   — admin revoked the link
- *  - `DECLINED`  — recipient declined
- *  - `EXPIRED`   — past the expiry timestamp
+ * - `PENDING` — valid, never used, the Accept/Decline banner is shown
+ * - `ACCEPTED` — already used (either by the current account, in which case
+ *   they're a member, or by someone else); the "already a member" / "no longer
+ *   valid" banner is shown
+ * - `REVOKED` — admin revoked the link
+ * - `DECLINED` — recipient declined
+ * - `EXPIRED` — past the expiry timestamp
  */
 export type LinkInviteState =
-  'PENDING' | 'ACCEPTED' | 'REVOKED' | 'DECLINED' | 'EXPIRED'
+  | 'PENDING'
+  | 'ACCEPTED'
+  | 'REVOKED'
+  | 'DECLINED'
+  | 'EXPIRED'
 
 export const getGroupProcedure = protectedProcedure
   .input(
@@ -243,10 +247,10 @@ export const getGroupProcedure = protectedProcedure
   })
 
 /**
- * Compute a human-readable display name for the group. For FRIEND-typed
- * groups whose `name` is always empty, resolve the name from the peer
- * active member's account, a pending invitation's temporary name, or the
- * invitation email. For regular groups, returns the stored name.
+ * Compute a human-readable display name for the group. For FRIEND-typed groups
+ * whose `name` is always empty, resolve the name from the peer active member's
+ * account, a pending invitation's temporary name, or the invitation email. For
+ * regular groups, returns the stored name.
  */
 function resolveDisplayName(
   group: NonNullable<Awaited<ReturnType<typeof getGroup>>>,
@@ -262,9 +266,9 @@ function resolveDisplayName(
 }
 
 /**
- * Resolve a link-invite token to its current state. Returns `null`
- * when the token does not match any LINK invitation for the group
- * (forged or mistyped links).
+ * Resolve a link-invite token to its current state. Returns `null` when the
+ * token does not match any LINK invitation for the group (forged or mistyped
+ * links).
  */
 async function resolveLinkInviteState(
   groupId: string,

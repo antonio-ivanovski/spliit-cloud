@@ -1,3 +1,7 @@
+import { FolderPlus, Layers } from 'lucide-react'
+import { useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
+
 import { GroupForm } from '@/components/group-form'
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -6,9 +10,7 @@ import {
   appendImportedFromNote,
   type NormalizedSource,
 } from '@spliit/domain/import'
-import { FolderPlus, Layers } from 'lucide-react'
-import { useState } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+
 import { WizardNav } from './wizard-nav'
 
 const DESTINATION_FORM_ID = 'import-wizard-destination-form'
@@ -135,7 +137,7 @@ export function DestinationStep({
               {groups.map((g) => (
                 <Card
                   key={g.id}
-                  className="cursor-pointer hover:border-primary transition"
+                  className="cursor-pointer transition hover:border-primary"
                   onClick={() =>
                     onContinue({
                       mode: 'EXISTING_GROUP',
@@ -144,7 +146,7 @@ export function DestinationStep({
                     })
                   }
                 >
-                  <CardContent className="py-3 px-4">
+                  <CardContent className="px-4 py-3">
                     <p className="font-medium">{g.name}</p>
                     <p className="text-xs text-muted-foreground">
                       {t('Groups.Import.Destination.memberCount', {

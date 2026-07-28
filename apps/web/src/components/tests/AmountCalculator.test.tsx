@@ -1,8 +1,9 @@
+import { useState, type ComponentProps } from 'react'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+
 import { AmountCalculatorDialog } from '@/app/groups/[groupId]/expenses/expense-form/amount-calculator-dialog'
 import { fireEvent, render, screen } from '@/test/test-utils'
 import type { Currency } from '@spliit/domain'
-import { useState, type ComponentProps } from 'react'
-import { afterEach, describe, expect, it, vi } from 'vitest'
 
 const currency: Currency = {
   code: 'USD',

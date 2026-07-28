@@ -1,3 +1,5 @@
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+
 import {
   GroupInvitationStatus,
   GroupInvitationType,
@@ -6,7 +8,7 @@ import {
   GroupType,
   prisma,
 } from '@spliit/db'
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+
 import { autoAcceptPendingFriendInvitationsForAccount } from '../lib/api/friends'
 import { accountRouter } from '../trpc/routers/account'
 import { friendsRouter } from '../trpc/routers/friends'
@@ -19,20 +21,15 @@ await checkDbConnection()
 /**
  * Friend-ledger API tests against a real PostgreSQL database.
  *
- * Covers:
- *  - `friends.create` direct-accept path (peer is a known account)
- *  - `friends.create` direct-accept via email of an existing account
- *  - `friends.create` pending email path (peer is unknown)
- *  - `friends.create` pending link path
- *  - Lookup-or-create idempotency
- *  - Auto-accept on signup (Better Auth `databaseHooks.user.create.after`)
- *  - Auto-accept on link-open (`groups.get` link-token branch)
- *  - `invitations.listForAccount` filtering
- *  - Restricted actions on FRIEND-typed groups
- *  - `account.groups` displayName + groupType
- *  - `account.friends` hasFriendLedger
- *  - `invitations.previewLink` FRIEND-aware display name
- *  - Migration data verification (preference cleanup)
+ * Covers: - `friends.create` direct-accept path (peer is a known account) -
+ * `friends.create` direct-accept via email of an existing account -
+ * `friends.create` pending email path (peer is unknown) - `friends.create`
+ * pending link path - Lookup-or-create idempotency - Auto-accept on signup
+ * (Better Auth `databaseHooks.user.create.after`) - Auto-accept on link-open
+ * (`groups.get` link-token branch) - `invitations.listForAccount` filtering -
+ * Restricted actions on FRIEND-typed groups - `account.groups` displayName +
+ * groupType - `account.friends` hasFriendLedger - `invitations.previewLink`
+ * FRIEND-aware display name - Migration data verification (preference cleanup)
  */
 describe('Friend ledger — real DB', () => {
   const runId = testRunId()

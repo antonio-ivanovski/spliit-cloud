@@ -1,6 +1,8 @@
-import { GroupType, prisma } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
+
+import { GroupType, prisma } from '@spliit/db'
+
 import {
   buildGroupActivityData,
   logActivity,
@@ -17,16 +19,15 @@ import { loadGroupContext, protectedProcedure } from '../../init'
 import { archiveGroupOutputSchema } from '../../outputs/groups'
 
 /**
- * Set or clear the group-level `archived` flag. ADMIN only.
- * Affects every member of the group; the UI uses this to show the
- * "Archived" section in everyone's group list and to block new expenses.
+ * Set or clear the group-level `archived` flag. ADMIN only. Affects every
+ * member of the group; the UI uses this to show the "Archived" section in
+ * everyone's group list and to block new expenses.
  *
- * When archiving (`archived = true`) and the group has unsettled balances,
- * the mutation throws `FAILED_PRECONDITION` unless the caller passes
- * `force: true`, in which case it auto-creates one reimbursement-style
- * "Settlement" expense per non-zero leg (inside the same transaction as
- * the archive flip) so the new `Group.archived = true` state matches a
- * zeroed-out ledger.
+ * When archiving (`archived = true`) and the group has unsettled balances, the
+ * mutation throws `FAILED_PRECONDITION` unless the caller passes `force: true`,
+ * in which case it auto-creates one reimbursement-style "Settlement" expense
+ * per non-zero leg (inside the same transaction as the archive flip) so the new
+ * `Group.archived = true` state matches a zeroed-out ledger.
  */
 export const archiveGroupProcedure = protectedProcedure
   .input(

@@ -1,3 +1,6 @@
+import { Loader2, Sparkles } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -11,8 +14,6 @@ import {
   BULK_CALIBRATION_CANDIDATE_POOL_SIZE,
   BULK_CALIBRATION_SAMPLE_SIZE,
 } from '@spliit/domain'
-import { Loader2, Sparkles } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 
 export function IntroStep(props: {
   totalEligible: number

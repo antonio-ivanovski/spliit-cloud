@@ -1,13 +1,15 @@
+/* oxlint-disable jsx-a11y/no-static-element-interactions -- expense activity rows expose button semantics conditionally. */
+import { useNavigate } from '@tanstack/react-router'
+import { ChevronRight } from 'lucide-react'
+import type { ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/i18n/react'
 import type { DateTimeStyle } from '@/lib/utils'
 import { cn, formatDate } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
 import { parseActivityData } from '@spliit/domain/activities'
-import { useNavigate } from '@tanstack/react-router'
-import { ChevronRight } from 'lucide-react'
-import type { ReactNode } from 'react'
-import { useTranslation } from 'react-i18next'
 
 export type Activity =
   AppRouterOutput['groups']['activities']['list']['activities'][number]
@@ -261,14 +263,14 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
   return (
     <div
       className={cn(
-        'flex min-w-0 justify-between sm:rounded-lg px-2 sm:pr-1 sm:pl-2 py-2 text-sm hover:bg-accent gap-1 items-stretch',
+        'flex min-w-0 items-stretch justify-between gap-1 px-2 py-2 text-sm hover:bg-accent sm:rounded-lg sm:pr-1 sm:pl-2',
         expenseExists && 'cursor-pointer',
       )}
       role={expenseExists ? 'button' : undefined}
       tabIndex={expenseExists ? 0 : undefined}
       onClick={() => {
         if (expenseExists) {
-          navigate({
+          void navigate({
             href: `/groups/${groupId}/expenses/${activity.expense!.id}`,
           })
         }
@@ -277,14 +279,14 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
         if (!expenseExists) return
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault()
-          navigate({
+          void navigate({
             href: `/groups/${groupId}/expenses/${activity.expense!.id}`,
           })
         }
       }}
       data-testid={`activity-item-${activity.id}`}
     >
-      <div className="flex shrink-0 flex-col justify-between items-start">
+      <div className="flex shrink-0 flex-col items-start justify-between">
         {dateStyle !== undefined && (
           <div className="mt-1 text-xs/5 text-muted-foreground">
             {formatDate(activity.time, locale, { dateStyle })}
@@ -297,7 +299,7 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
       <div className="min-w-0 flex-1">
         <div className="m-1 break-words">{message}</div>
         {changes && changes.length > 0 && (
-          <div className="mx-1 mt-0.5 mb-1 min-w-0 border-l-2 border-muted-foreground/20 pl-2 space-y-0.5">
+          <div className="mx-1 mt-0.5 mb-1 min-w-0 space-y-0.5 border-l-2 border-muted-foreground/20 pl-2">
             {changes.map((change) => (
               <div
                 key={change.field}
@@ -329,14 +331,14 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
         <Button
           size="icon"
           variant="link"
-          className="self-center hidden sm:flex w-5 h-5"
+          className="hidden h-5 w-5 self-center sm:flex"
           asChild
         >
           <a
             href={`/groups/${groupId}/expenses/${activity.expense!.id}`}
             aria-label={t('openExpense')}
           >
-            <ChevronRight className="w-4 h-4" />
+            <ChevronRight className="h-4 w-4" />
           </a>
         </Button>
       )}

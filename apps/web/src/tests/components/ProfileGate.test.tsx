@@ -1,5 +1,6 @@
-import { render, screen } from '@/test/test-utils'
 import { describe, expect, it, vi } from 'vitest'
+
+import { render, screen } from '@/test/test-utils'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
@@ -30,9 +31,10 @@ vi.mock('@/lib/use-current-account', () => ({
 
 // ── SUT ─────────────────────────────────────────────────────────────────
 
+import { type Mock } from 'vitest'
+
 import { ProfileGate } from '@/components/profile-gate'
 import { useCurrentAccount } from '@/lib/use-current-account'
-import { type Mock } from 'vitest'
 
 // ── Tests ───────────────────────────────────────────────────────────────
 

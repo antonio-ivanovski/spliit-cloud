@@ -228,9 +228,8 @@ export type BatchRateRequest = {
 
 /**
  * Discriminated union describing a single rate lookup outcome. Per-item
- * failures are returned alongside successes so the caller can block or
- * surface a specific message per offending expense instead of failing the
- * whole batch.
+ * failures are returned alongside successes so the caller can block or surface
+ * a specific message per offending expense instead of failing the whole batch.
  */
 export type BatchRateResult =
   | { ok: true; rate: CurrencyRate }
@@ -244,21 +243,21 @@ export type BatchRateResult =
     }
 
 /**
- * Resolve multiple rates in parallel. The requests are grouped by
- * (date, base) so a single batch with N targets on the same (date, base)
- * costs one upstream call — Frankfurter's bulk endpoint returns every
- * quote for a base in one response, and we extract the requested targets
- * from there. Per-target failures are returned alongside successes so
- * the caller can block on a specific expense without aborting the batch.
+ * Resolve multiple rates in parallel. The requests are grouped by (date, base)
+ * so a single batch with N targets on the same (date, base) costs one upstream
+ * call — Frankfurter's bulk endpoint returns every quote for a base in one
+ * response, and we extract the requested targets from there. Per-target
+ * failures are returned alongside successes so the caller can block on a
+ * specific expense without aborting the batch.
  *
- * The shared in-process cache is checked first; only cache misses reach
- * the provider. Cached entries therefore participate in batch
- * deduplication transparently and protect the caller from provider
- * outages when the rate has already been warmed by `getCurrencyRate`
- * or a previous `getCurrencyRates` call.
+ * The shared in-process cache is checked first; only cache misses reach the
+ * provider. Cached entries therefore participate in batch deduplication
+ * transparently and protect the caller from provider outages when the rate has
+ * already been warmed by `getCurrencyRate` or a previous `getCurrencyRates`
+ * call.
  *
- * `fetchImpl` is test-only and defaults to the live provider; it lets
- * unit tests swap in a stub for the upstream call.
+ * `fetchImpl` is test-only and defaults to the live provider; it lets unit
+ * tests swap in a stub for the upstream call.
  */
 export async function getCurrencyRates(
   requests: BatchRateRequest[],
@@ -275,7 +274,7 @@ export async function getCurrencyRates(
   // Resolve cache hits synchronously so a fully-cached batch never
   // touches the network. Cache misses fall through to the per-group
   // provider call below and get written back to the cache on success.
-  const output: BatchRateResult[] = new Array(requests.length)
+  const output: BatchRateResult[] = Array.from({ length: requests.length })
   type Key = string
   const groupKey = (date: string, base: string): Key =>
     `${date}|${base.toUpperCase()}`

@@ -1,3 +1,6 @@
+import { Loader2, UserPlus } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
 import { AccountAvatar } from '@/components/account-avatar'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -9,8 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { isPlaceholderEmail } from '@/lib/account'
-import { Loader2, UserPlus } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+
 import type { InvitableRole } from './members-hooks'
 
 type Friend = {
@@ -126,7 +128,7 @@ export function InviteFriendsTab({
               disabled={isPending || !selectedFriendAccountId}
               onClick={onSubmit}
             >
-              <UserPlus className="w-4 h-4 mr-2" />
+              <UserPlus className="mr-2 h-4 w-4" />
               {t('invite.send')}
             </Button>
           </div>

@@ -1,8 +1,10 @@
 import { Parser } from '@json2csv/plainjs'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+
 import { prisma } from '@spliit/db'
 import { getBalances, type Expense } from '@spliit/domain'
 import { parseSpliitExport } from '@spliit/domain/import'
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+
 import { randomId } from '../lib/api'
 import { groupsRouter } from '../trpc/routers/groups'
 import { checkDbConnection, testRunId } from './setup'
@@ -12,9 +14,9 @@ await checkDbConnection()
 /**
  * Multi-payer expense integration tests against a real PostgreSQL DB.
  *
- * Pattern matches `expense-crud.test.ts`: an admin account is
- * upserted once, every group is created via `groupsRouter.createCaller`,
- * and the ledger/group ids are tracked for `afterAll` cleanup.
+ * Pattern matches `expense-crud.test.ts`: an admin account is upserted once,
+ * every group is created via `groupsRouter.createCaller`, and the ledger/group
+ * ids are tracked for `afterAll` cleanup.
  */
 describe('Multi-payer expenses — real DB', () => {
   const runId = testRunId()
@@ -73,10 +75,10 @@ describe('Multi-payer expenses — real DB', () => {
   // ────────────────────────────────────────────────────────────────────────
 
   /**
-   * Create a fresh group via the tRPC caller and additional ledger
-   * participants (UNLINKED rows — `createGroup` only mints an LP for
-   * the admin). Returns the group id and a name→ledgerParticipantId
-   * map so the test can address participants by name.
+   * Create a fresh group via the tRPC caller and additional ledger participants
+   * (UNLINKED rows — `createGroup` only mints an LP for the admin). Returns the
+   * group id and a name→ledgerParticipantId map so the test can address
+   * participants by name.
    */
   async function createGroupWithParticipants(
     name: string,
@@ -131,8 +133,8 @@ describe('Multi-payer expenses — real DB', () => {
   }
 
   /**
-   * Read an expense with `paidByList`+`paidFor` includes. Mirrors the
-   * shape `groups.expenses.get` would return over the wire.
+   * Read an expense with `paidByList`+`paidFor` includes. Mirrors the shape
+   * `groups.expenses.get` would return over the wire.
    */
   async function readExpense(expenseId: string) {
     return prisma.expense.findUnique({

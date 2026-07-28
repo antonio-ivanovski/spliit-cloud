@@ -1,3 +1,6 @@
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import {
@@ -16,8 +19,7 @@ import {
   getCurrencyFromGroup,
 } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
-import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+
 import { useLinkInviteToken } from '../use-link-invite-token'
 import { RecurringBadge } from './series-controls'
 
@@ -47,6 +49,7 @@ export function SeriesListDialog({
   >([])
   useEffect(() => {
     if (!open) return
+    // oxlint-disable-next-line react/react-compiler -- reset dialog-local pagination when its target changes.
     setOccurrenceCursor(undefined)
     setLoadedExpenses([])
   }, [open, seriesId])
@@ -71,6 +74,7 @@ export function SeriesListDialog({
   const series = seriesQuery.data?.series.find((item) => item.id === seriesId)
   useEffect(() => {
     if (!series || !seriesQuery.data) return
+    // oxlint-disable-next-line react/react-compiler -- append newly fetched occurrences to dialog-local state.
     setLoadedExpenses((current) => {
       if (!occurrenceCursor) return series.expenses
       const seen = new Set(current.map((expense) => expense.id))
@@ -118,7 +122,7 @@ export function SeriesListDialog({
                     className="flex items-center gap-3 px-3 py-3 transition-colors hover:bg-accent focus-visible:bg-accent"
                     onClick={() => onOpenChange(false)}
                   >
-                    <span className="w-7 text-center text-xs tabular-nums text-muted-foreground">
+                    <span className="w-7 text-center text-xs text-muted-foreground tabular-nums">
                       {expense.recurrenceSequence}
                     </span>
                     <span className="min-w-0 flex-1">

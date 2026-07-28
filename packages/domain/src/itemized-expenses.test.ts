@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+
 import {
   buildDefaultPaidForForSplitMode,
   computeExactSharesFromItems,
@@ -67,7 +68,9 @@ describe('computePaidForFromItems', () => {
     ]
     const result = computePaidForFromItems(items, ['p1', 'p2'], 200)
     // Weighted: p1 = 200*1/4 = 50, p2 = 200*3/4 = 150
-    expect(result.paidFor.sort()).toEqual([
+    expect(
+      result.paidFor.sort((a, b) => a.participant.localeCompare(b.participant)),
+    ).toEqual([
       { participant: 'p1', shares: 50 },
       { participant: 'p2', shares: 150 },
     ])
@@ -87,7 +90,9 @@ describe('computePaidForFromItems', () => {
     ]
     const result = computePaidForFromItems(items, ['p1', 'p2'], 1000)
     // p1 = 1000*2500/10000 = 250, p2 = 1000*7500/10000 = 750
-    expect(result.paidFor.sort()).toEqual([
+    expect(
+      result.paidFor.sort((a, b) => a.participant.localeCompare(b.participant)),
+    ).toEqual([
       { participant: 'p1', shares: 250 },
       { participant: 'p2', shares: 750 },
     ])
@@ -106,7 +111,9 @@ describe('computePaidForFromItems', () => {
       }),
     ]
     const result = computePaidForFromItems(items, ['p1', 'p2'], 1000)
-    expect(result.paidFor.sort()).toEqual([
+    expect(
+      result.paidFor.sort((a, b) => a.participant.localeCompare(b.participant)),
+    ).toEqual([
       { participant: 'p1', shares: 300 },
       { participant: 'p2', shares: 700 },
     ])
@@ -124,11 +131,11 @@ describe('computePaidForFromItems', () => {
     const result = computePaidForFromItems(items, ['p1', 'p2', 'p3'], 1000)
     // Global: p1=733.33…, p2=p3=133.33… → seed 0: 734/133/133
     expect(result.paidFor).toHaveLength(3)
-    expect(result.paidFor.map((p) => p.participant).sort()).toEqual([
-      'p1',
-      'p2',
-      'p3',
-    ])
+    expect(
+      result.paidFor
+        .map((p) => p.participant)
+        .sort((a, b) => a.localeCompare(b)),
+    ).toEqual(['p1', 'p2', 'p3'])
     const sum = result.paidFor.reduce((s, p) => s + p.shares, 0)
     expect(sum).toBe(1000)
     expect(result.effectiveAmount).toBe(1000)
@@ -154,7 +161,9 @@ describe('computePaidForFromItems', () => {
       ],
     })
 
-    expect(result.paidFor.sort()).toEqual([
+    expect(
+      result.paidFor.sort((a, b) => a.participant.localeCompare(b.participant)),
+    ).toEqual([
       { participant: 'p1', shares: 600 },
       { participant: 'p2', shares: 300 },
       { participant: 'p3', shares: 100 },
@@ -187,11 +196,14 @@ describe('computePaidForFromItems', () => {
     // Empty paidFor contributes no shares; its amount is absorbed into filler
     // so Σ paidFor === expenseAmount (1000 EVENLY → 500 each)
     expect(result.paidFor).toHaveLength(2)
-    expect(result.paidFor.map((p) => p.participant).sort()).toEqual([
-      'p1',
-      'p2',
-    ])
-    expect(result.paidFor.sort()).toEqual([
+    expect(
+      result.paidFor
+        .map((p) => p.participant)
+        .sort((a, b) => a.localeCompare(b)),
+    ).toEqual(['p1', 'p2'])
+    expect(
+      result.paidFor.sort((a, b) => a.participant.localeCompare(b.participant)),
+    ).toEqual([
       { participant: 'p1', shares: 500 },
       { participant: 'p2', shares: 500 },
     ])
@@ -230,14 +242,16 @@ describe('computePaidForFromItems', () => {
     // Filler: 300 evenly across [p1,p2,p3] → [100,100,100]
     // p1: 125+150+100 = 375, p2: 125+200+100 = 425, p3: 100+100 = 200
     expect(result.paidFor).toHaveLength(3)
-    expect(result.paidFor.map((p) => p.participant).sort()).toEqual([
-      'p1',
-      'p2',
-      'p3',
-    ])
+    expect(
+      result.paidFor
+        .map((p) => p.participant)
+        .sort((a, b) => a.localeCompare(b)),
+    ).toEqual(['p1', 'p2', 'p3'])
     const sum = result.paidFor.reduce((s, p) => s + p.shares, 0)
     expect(sum).toBe(1000)
-    expect(result.paidFor.sort()).toEqual([
+    expect(
+      result.paidFor.sort((a, b) => a.participant.localeCompare(b.participant)),
+    ).toEqual([
       { participant: 'p1', shares: 375 },
       { participant: 'p2', shares: 425 },
       { participant: 'p3', shares: 200 },
@@ -270,7 +284,9 @@ describe('computePaidForFromItems', () => {
     // p1: 300, p2: 600, p3: 100
     const sum = result.paidFor.reduce((s, p) => s + p.shares, 0)
     expect(sum).toBe(1000)
-    expect(result.paidFor.sort()).toEqual([
+    expect(
+      result.paidFor.sort((a, b) => a.participant.localeCompare(b.participant)),
+    ).toEqual([
       { participant: 'p1', shares: 300 },
       { participant: 'p2', shares: 600 },
       { participant: 'p3', shares: 100 },

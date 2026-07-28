@@ -1,7 +1,9 @@
-import { prisma } from '@spliit/db'
-import { notificationCategorySchema } from '@spliit/domain/notifications'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
+
+import { prisma } from '@spliit/db'
+import { notificationCategorySchema } from '@spliit/domain/notifications'
+
 import { randomId } from '../../../lib/api/shared'
 import {
   getNotificationPreferences,

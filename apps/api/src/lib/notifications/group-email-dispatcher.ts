@@ -6,6 +6,7 @@ import {
   getNotificationCategoryForActivity,
   notificationCategoryFamily,
 } from '@spliit/domain/notifications'
+
 import { getWebBaseUrl } from '../auth/urls'
 import { isPlaceholderEmail } from '../invitations/display'
 import { sendEmail } from '../mail/send'

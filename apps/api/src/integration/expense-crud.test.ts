@@ -1,5 +1,7 @@
-import { prisma } from '@spliit/db'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+
+import { prisma } from '@spliit/db'
+
 import { groupsRouter } from '../trpc/routers/groups'
 import { checkDbConnection, testRunId } from './setup'
 
@@ -49,7 +51,10 @@ describe('Expense CRUD — real DB', () => {
     await prisma.account.delete({ where: { id: adminId } }).catch(() => {})
   })
 
-  /** Helper: create a group and return its id + the admin's ledger participant id. */
+  /**
+   * Helper: create a group and return its id + the admin's ledger participant
+   * id.
+   */
   async function createGroup(
     name: string,
     currency: { symbol: string; code: string } = { symbol: '$', code: 'USD' },

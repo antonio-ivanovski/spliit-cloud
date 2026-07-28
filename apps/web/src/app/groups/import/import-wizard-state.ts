@@ -21,27 +21,26 @@ const STEP_ORDER: ImportStep[] = [
 ]
 
 /**
- * i18n keys describing the wizard's nav buttons for a given step.
+ * I18n keys describing the wizard's nav buttons for a given step.
  *
  * `customBackLabel` / `customContinueLabel` are plain i18n keys (no
- * interpolation). The wizard looks them up directly. The "continue"
- * labels point to the next step in `STEP_ORDER`; the "back" labels
- * point to the previous step. `destination` and `done` have no entry
- * — the wizard renders no Continue or Back button respectively.
+ * interpolation). The wizard looks them up directly. The "continue" labels
+ * point to the next step in `STEP_ORDER`; the "back" labels point to the
+ * previous step. `destination` and `done` have no entry — the wizard renders no
+ * Continue or Back button respectively.
  */
 export type StepNavigation = {
   previousStepKey?: ImportStep
   nextStepKey?: ImportStep
   /**
-   * i18n key for the back-button label. Defaults to
+   * I18n key for the back-button label. Defaults to
    * `Groups.Import.StepHeader.<previousStep>` ("Back to <prev>" template).
    */
   customBackLabel?: string
   /**
-   * i18n key for the continue-button label. Defaults to
+   * I18n key for the continue-button label. Defaults to
    * `Groups.Import.StepHeader.<nextStep>` ("Continue to <next>" template).
-   * Steps that want a fixed label (e.g. confirm → "Execute import")
-   * set this.
+   * Steps that want a fixed label (e.g. confirm → "Execute import") set this.
    */
   customContinueLabel?: string
 }
@@ -58,10 +57,9 @@ export function getStepNavigation(step: ImportStep): StepNavigation {
 }
 
 /**
- * i18n keys a wizard step can register as its Continue button label.
- * Narrow union so `t(customContinueLabel)` is strictly typed.
- * Extend here when a new step needs to override the default
- * "Continue to <next>" label.
+ * I18n keys a wizard step can register as its Continue button label. Narrow
+ * union so `t(customContinueLabel)` is strictly typed. Extend here when a new
+ * step needs to override the default "Continue to <next>" label.
  */
 export type CustomContinueLabelKey =
   | 'Groups.Import.Confirm.importingButton'
@@ -96,9 +94,7 @@ export const initialGroupFormValues = (source: NormalizedSource | null) => ({
   currencyCode: source?.currencyCode ?? '',
 })
 
-/**
- * Map the batched expenses into the shape the import mutation expects.
- */
+/** Map the batched expenses into the shape the import mutation expects. */
 export function buildImportExpenses<
   T extends {
     paidByList: Array<{ participant: string; shares: number }>

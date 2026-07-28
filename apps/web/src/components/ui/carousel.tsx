@@ -1,5 +1,6 @@
 
 
+/* oxlint-disable jsx-a11y/prefer-tag-over-role -- carousel regions and slides use required ARIA semantics. */
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from 'embla-carousel-react'

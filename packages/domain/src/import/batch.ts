@@ -14,7 +14,8 @@ export type ImportConversionMode = 'perDate' | 'fixed'
 
 export type ImportBatchState = {
   source:
-    (Pick<NormalizedSource, 'currencyCode'> & Record<string, unknown>) | null
+    | (Pick<NormalizedSource, 'currencyCode'> & Record<string, unknown>)
+    | null
   mode: 'NEW_GROUP' | 'EXISTING_GROUP' | null
   targetGroupId: string | null
   groupFormValues: {
@@ -34,9 +35,7 @@ export type ImportBatchState = {
   conversionModes?: Record<string, ImportConversionMode>
 }
 
-/**
- * Cache key for an exchange rate lookup.
- */
+/** Cache key for an exchange rate lookup. */
 export function makeRateKey(
   date: string,
   base: string,
@@ -45,9 +44,7 @@ export function makeRateKey(
   return `${date}|${base.toUpperCase()}|${target.toUpperCase()}`
 }
 
-/**
- * Pre-fetched exchange rates keyed by `makeRateKey(date, base, target)`.
- */
+/** Pre-fetched exchange rates keyed by `makeRateKey(date, base, target)`. */
 export type ImportRatesByKey = Record<string, number>
 
 export type ImportRateKeyItem = {
@@ -88,8 +85,8 @@ export function resolveImportExpenseMoney(
 }
 
 /**
- * Compute the unique exchange-rate lookups required to import a set of
- * resolved expenses into a destination ledger.
+ * Compute the unique exchange-rate lookups required to import a set of resolved
+ * expenses into a destination ledger.
  */
 export function computeImportRateKeys(
   expenses: NormalizedSourceExpense[],
@@ -227,7 +224,7 @@ function currencyOrFallback(code: string | null | undefined): Currency {
   return getCurrency(code) ?? { ...FALLBACK_CURRENCY, code, symbol: code }
 }
 
-/** paidBy stays in expense currency minor units. */
+/** PaidBy stays in expense currency minor units. */
 function normalizePaidByOriginal(
   paidByList: Array<{ participant: string; shares: number }>,
   originalCurrency: Currency,
@@ -261,9 +258,9 @@ function normalizePaidByOriginal(
 }
 
 /**
- * Scale BY_AMOUNT paidFor shares so they sum to `targetAmount`.
- * Converted Spliit sources often store paidFor in ledger units while the
- * import amount is the original-currency expense amount.
+ * Scale BY_AMOUNT paidFor shares so they sum to `targetAmount`. Converted
+ * Spliit sources often store paidFor in ledger units while the import amount is
+ * the original-currency expense amount.
  */
 function normalizePaidForByAmount(
   paidFor: Array<{ participant: string; shares: number }>,

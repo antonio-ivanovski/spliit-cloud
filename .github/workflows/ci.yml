@@ -81,17 +81,11 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Check Prettier formatting
-        run: bun run check-formatting
-
       - name: Audit translations
         run: bun i18n check
 
-      - name: Check ESLint
-        run: bun run lint
-
-      - name: Check TypeScript types
-        run: bun run check-types
+      - name: Check formatting, lint, and TypeScript types
+        run: bun run check
 
       - name: Build
         run: bun run build

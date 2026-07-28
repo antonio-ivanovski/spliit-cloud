@@ -1,9 +1,11 @@
+import { Loader2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Loader2 } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+
 import { EmailField } from './email-field'
 import { PasswordChecklist } from './password-checklist'
 
@@ -95,7 +97,7 @@ export function PasswordForm(props: {
         className="w-full"
         disabled={props.isPending || !props.canSubmit}
       >
-        {props.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+        {props.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         {props.mode === 'sign-in'
           ? t('signInWithPassword')
           : t('signUpWithPassword')}

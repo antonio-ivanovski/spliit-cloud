@@ -1,5 +1,7 @@
-import { GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest'
+
+import { GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
+
 import { randomId } from '../lib/api'
 import {
   setDefaultActivityNotificationDispatchers,
@@ -14,16 +16,17 @@ await checkDbConnection()
  * THIS_AND_FUTURE update/delete — per-row activity + notification correctness.
  *
  * Covers review findings F1–F5:
- *   1. Future-row update diffs must be derived from a full snapshot diff,
- *      with real `changedFields`/`changes` and a per-row `affectedParticipants`
- *      union (NOT the hard-coded `['recurrence']`).
- *   2. When exactly one future row differs and the selected row already
- *      matches the new template, the single-row notification must still
- *      fire (sole-changed-future-row case).
- *   3. Notes-only updates to future rows must log a `notes` field change,
- *      not just `recurrence`.
- *   4. THIS_AND_FUTURE delete snapshots must include documents on later
- *      occurrences; cadence fields must surface in the summary data.
+ *
+ * 1. Future-row update diffs must be derived from a full snapshot diff, with real
+ *    `changedFields`/`changes` and a per-row `affectedParticipants` union (NOT
+ *    the hard-coded `['recurrence']`).
+ * 2. When exactly one future row differs and the selected row already matches the
+ *    new template, the single-row notification must still fire
+ *    (sole-changed-future-row case).
+ * 3. Notes-only updates to future rows must log a `notes` field change, not just
+ *    `recurrence`.
+ * 4. THIS_AND_FUTURE delete snapshots must include documents on later occurrences;
+ *    cadence fields must surface in the summary data.
  */
 describe('Recurring bulk updates — real DB', () => {
   const runId = testRunId()
@@ -91,10 +94,10 @@ describe('Recurring bulk updates — real DB', () => {
   })
 
   /**
-   * Create a group with admin + extra UNLINKED participants. The admin
-   * comes from the tRPC caller; extras are inserted directly as
-   * UNLINKED_PARTICIPANT ledger rows (matches the multi-payer harness).
-   * Returns the group id, ledger id, and a name → ledgerParticipantId map.
+   * Create a group with admin + extra UNLINKED participants. The admin comes
+   * from the tRPC caller; extras are inserted directly as UNLINKED_PARTICIPANT
+   * ledger rows (matches the multi-payer harness). Returns the group id, ledger
+   * id, and a name → ledgerParticipantId map.
    */
   async function createGroupWithParticipants(
     name: string,
@@ -139,10 +142,10 @@ describe('Recurring bulk updates — real DB', () => {
   }
 
   /**
-   * Add a real account-based member (active) to a freshly-created
-   * group. Returns that member's ledgerParticipantId, so tests can
-   * exercise the notification path that excludes the actor — only
-   * account-backed LedgerParticipants resolve to a recipient.
+   * Add a real account-based member (active) to a freshly-created group.
+   * Returns that member's ledgerParticipantId, so tests can exercise the
+   * notification path that excludes the actor — only account-backed
+   * LedgerParticipants resolve to a recipient.
    */
   async function addActiveMember(
     groupId: string,
@@ -170,9 +173,9 @@ describe('Recurring bulk updates — real DB', () => {
   }
 
   /**
-   * Materialize a recurring expense past its next occurrence boundary, so
-   * the recurring series has at least the original occurrence + 1 future
-   * occurrence persisted. Returns the ids in creation order.
+   * Materialize a recurring expense past its next occurrence boundary, so the
+   * recurring series has at least the original occurrence + 1 future occurrence
+   * persisted. Returns the ids in creation order.
    */
   async function seedSeriesWithFutureOccurrences(args: {
     groupId: string

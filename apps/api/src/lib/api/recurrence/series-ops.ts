@@ -13,6 +13,7 @@ import {
   sendJob,
   type SpliitBoss,
 } from '@spliit/jobs'
+
 import { getApiBossForWrite } from '../boss'
 import { groupLedgerIdArchivedSelect } from '../selects/group-ledger-id-archived'
 import {
@@ -55,9 +56,11 @@ export async function createSeriesForExpense(args: {
   config: RecurrenceConfig
   template: RecurringExpenseTemplate
   boss?: SpliitBoss
-  /** Seed a catch-up batch when past-dated creation makes multiple
-   * occurrences immediately due. The worker appends later occurrences
-   * and emits one combined summary instead of per-occurrence fan-out. */
+  /**
+   * Seed a catch-up batch when past-dated creation makes multiple occurrences
+   * immediately due. The worker appends later occurrences and emits one
+   * combined summary instead of per-occurrence fan-out.
+   */
   catchUpBatch?: {
     id: string
     startDate: string
@@ -236,9 +239,11 @@ export async function reconcileDueRecurringExpenses(
   return due.length
 }
 
-/** Pause/resume hooks used by group archive mutations. Skipped archive dates
- * are not counted as occurrences; the anchor is moved to the resumed date so
- * the next created row remains the next sequence number. */
+/**
+ * Pause/resume hooks used by group archive mutations. Skipped archive dates are
+ * not counted as occurrences; the anchor is moved to the resumed date so the
+ * next created row remains the next sequence number.
+ */
 export async function pauseRecurringExpenseSeries(groupId: string) {
   const group = await prisma.group.findUnique({
     where: { id: groupId },

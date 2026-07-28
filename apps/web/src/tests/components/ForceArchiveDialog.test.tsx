@@ -1,6 +1,7 @@
+import { describe, expect, it, vi } from 'vitest'
+
 import { ForceArchiveDialog } from '@/components/force-archive-dialog'
 import { render, screen, waitFor } from '@/test/test-utils'
-import { describe, expect, it, vi } from 'vitest'
 
 // ── Mocks ───────────────────────────────────────────────────────────────
 

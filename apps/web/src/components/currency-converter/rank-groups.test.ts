@@ -1,5 +1,7 @@
-import type { AccountGroup } from '@/app/groups/group-buckets'
 import { describe, expect, it } from 'vitest'
+
+import type { AccountGroup } from '@/app/groups/group-buckets'
+
 import { rankGroupsForConverter } from './rank-groups'
 
 function makeGroup(

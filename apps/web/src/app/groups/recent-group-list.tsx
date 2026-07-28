@@ -1,3 +1,17 @@
+import {
+  AlertCircle,
+  BanknoteArrowDown,
+  BanknoteArrowUp,
+  BanknoteCheck,
+  ChevronRight,
+  Cloud,
+  Loader2,
+  Plus,
+  Users,
+} from 'lucide-react'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { CurrencyConverterButton } from '@/components/currency-converter/currency-converter'
 import Link from '@/components/link'
 import { Money } from '@/components/money'
@@ -19,19 +33,7 @@ import { getCurrencyFromGroup } from '@/lib/currency'
 import { useMediaQuery } from '@/lib/hooks'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
-import {
-  AlertCircle,
-  BanknoteArrowDown,
-  BanknoteArrowUp,
-  BanknoteCheck,
-  ChevronRight,
-  Cloud,
-  Loader2,
-  Plus,
-  Users,
-} from 'lucide-react'
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
+
 import { CollapsibleSection } from './collapsible-section'
 import { CreateCard } from './create-card'
 import { ForceArchiveDialogSection } from './force-archive-dialog-section'
@@ -193,7 +195,7 @@ export function RecentGroupList() {
             defaultOpen
             title={t('starred')}
           >
-            <ul className="grid gap-3 sm:grid-cols-2 items-stretch">
+            <ul className="grid items-stretch gap-3 sm:grid-cols-2">
               {renderGroupItems(starred, 'starred')}
             </ul>
           </CollapsibleSection>
@@ -204,7 +206,7 @@ export function RecentGroupList() {
           defaultOpen
           title={t('groups')}
         >
-          <ul className="grid gap-3 sm:grid-cols-2 items-stretch">
+          <ul className="grid items-stretch gap-3 sm:grid-cols-2">
             <CreateCard
               href="/groups/create"
               icon={<Plus className="h-4 w-4" />}
@@ -227,7 +229,7 @@ export function RecentGroupList() {
           defaultOpen
           title={t('friends')}
         >
-          <ul className="grid gap-3 sm:grid-cols-2 items-stretch">
+          <ul className="grid items-stretch gap-3 sm:grid-cols-2">
             <CreateCard
               href="/friends/create"
               icon={<Users className="h-4 w-4" />}
@@ -246,7 +248,7 @@ export function RecentGroupList() {
             title={t('archived')}
           >
             <ul
-              className={`grid gap-3 sm:grid-cols-2 items-stretch opacity-60`}
+              className={`grid items-stretch gap-3 opacity-60 sm:grid-cols-2`}
             >
               {renderGroupItems(archived, 'archived')}
             </ul>
@@ -260,7 +262,7 @@ export function RecentGroupList() {
             title={t('hidden')}
           >
             <ul
-              className={`grid gap-3 sm:grid-cols-2 items-stretch opacity-60`}
+              className={`grid items-stretch gap-3 opacity-60 sm:grid-cols-2`}
             >
               {renderGroupItems(hidden, 'hidden')}
             </ul>
@@ -504,7 +506,7 @@ function BalanceGroupBreakdown({
   const trigger = (
     <button
       type="button"
-      className="inline-flex min-h-8 shrink-0 items-center gap-1 rounded-md px-1.5 text-xs text-muted-foreground underline decoration-muted-foreground/40 underline-offset-4 transition-colors hover:bg-background hover:text-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
+      className="inline-flex min-h-8 shrink-0 items-center gap-1 rounded-md px-1.5 text-xs text-muted-foreground underline decoration-muted-foreground/40 underline-offset-4 transition-colors hover:bg-background hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden"
       aria-label={t('overview.viewGroups')}
     >
       <span>

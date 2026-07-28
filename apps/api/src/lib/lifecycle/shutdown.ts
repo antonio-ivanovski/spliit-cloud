@@ -9,10 +9,9 @@ export type ShutdownDependencies = {
 export type ShutdownResult = {
   clean: boolean
   /**
-   * `true` when this invocation actually ran the cleanup. The first
-   * caller observes the real outcome; subsequent callers see
-   * `{ clean, ran: false }` so they can still await the same promise
-   * without re-running side effects.
+   * `true` when this invocation actually ran the cleanup. The first caller
+   * observes the real outcome; subsequent callers see `{ clean, ran: false }`
+   * so they can still await the same promise without re-running side effects.
    */
   ran: boolean
 }
@@ -22,14 +21,14 @@ let inFlight: Promise<ShutdownResult> | null = null
 function noop() {}
 
 /**
- * Run every resource cleanup step exactly once, even when the signal
- * arrives twice (SIGINT + SIGTERM, or a test that races two callers).
- * Each step has its own try/catch so a server-stop failure does not
- * leak the Prisma connection or pg-boss worker.
+ * Run every resource cleanup step exactly once, even when the signal arrives
+ * twice (SIGINT + SIGTERM, or a test that races two callers). Each step has its
+ * own try/catch so a server-stop failure does not leak the Prisma connection or
+ * pg-boss worker.
  *
- * The first caller is marked `ran: true` so signal handlers can use
- * it to decide whether to escalate to a non-zero exit. Subsequent
- * callers receive `ran: false` and share the same in-flight promise.
+ * The first caller is marked `ran: true` so signal handlers can use it to
+ * decide whether to escalate to a non-zero exit. Subsequent callers receive
+ * `ran: false` and share the same in-flight promise.
  */
 export function runShutdown(
   deps: ShutdownDependencies = {},

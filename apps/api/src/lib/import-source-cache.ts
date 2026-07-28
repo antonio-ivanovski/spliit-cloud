@@ -55,8 +55,8 @@ export function clearSourceCache(): void {
 }
 
 /**
- * Test/utility export. Reports the current entry count after TTL
- * eviction so admin tooling can surface cache health.
+ * Test/utility export. Reports the current entry count after TTL eviction so
+ * admin tooling can surface cache health.
  */
 export function sourceCacheSize(): number {
   evictExpired(Date.now())

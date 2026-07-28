@@ -1,3 +1,9 @@
+import { useMutation } from '@tanstack/react-query'
+import { getRouteApi, useNavigate } from '@tanstack/react-router'
+import { Check, Circle, Loader2 } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import {
@@ -16,25 +22,20 @@ import {
   isStrongPassword,
   type PasswordRequirementId,
 } from '@spliit/domain/password'
-import { useMutation } from '@tanstack/react-query'
-import { getRouteApi, useNavigate } from '@tanstack/react-router'
-import { Check, Circle, Loader2 } from 'lucide-react'
-import { useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 const resetPasswordRouteApi = getRouteApi('/auth/reset-password')
 
 /**
- * Reset-password screen. Reached via the link emailed by the
- * forgot-password flow: better-auth's `/reset-password/:token` GET handler
- * validates the token and 302s to `/auth/reset-password?token=...`. If the
- * token is missing, expired, or already consumed, better-auth appends
- * `?error=INVALID_TOKEN` instead.
+ * Reset-password screen. Reached via the link emailed by the forgot-password
+ * flow: better-auth's `/reset-password/:token` GET handler validates the token
+ * and 302s to `/auth/reset-password?token=...`. If the token is missing,
+ * expired, or already consumed, better-auth appends `?error=INVALID_TOKEN`
+ * instead.
  *
- * On success we navigate to `/` — the user re-authenticates
- * with the new password. We deliberately do not auto-sign-in: better-auth
- * is configured with `revokeSessionsOnPasswordReset: true` for security,
- * so any existing session is already invalid.
+ * On success we navigate to `/` — the user re-authenticates with the new
+ * password. We deliberately do not auto-sign-in: better-auth is configured with
+ * `revokeSessionsOnPasswordReset: true` for security, so any existing session
+ * is already invalid.
  */
 export function ResetPasswordPage() {
   const { t } = useTranslation(undefined, { keyPrefix: 'ResetPassword' })
@@ -92,7 +93,7 @@ export function ResetPasswordPage() {
 
   if (hasInvalidToken) {
     return (
-      <main className="flex-1 flex items-center justify-center px-4 py-10">
+      <main className="flex flex-1 items-center justify-center px-4 py-10">
         <Card className="w-full max-w-sm">
           <CardHeader className="space-y-2 text-center">
             <CardTitle className="text-2xl">{t('invalidTokenTitle')}</CardTitle>
@@ -113,7 +114,7 @@ export function ResetPasswordPage() {
 
   if (done) {
     return (
-      <main className="flex-1 flex items-center justify-center px-4 py-10">
+      <main className="flex flex-1 items-center justify-center px-4 py-10">
         <Card className="w-full max-w-sm">
           <CardHeader className="space-y-2 text-center">
             <CardTitle className="text-2xl">{t('success')}</CardTitle>
@@ -135,7 +136,7 @@ export function ResetPasswordPage() {
   const canSubmit = isStrongPassword(password) && password === confirmPassword
 
   return (
-    <main className="flex-1 flex items-center justify-center px-4 py-10">
+    <main className="flex flex-1 items-center justify-center px-4 py-10">
       <Card className="w-full max-w-sm">
         <CardHeader className="space-y-2 text-center">
           <CardTitle className="text-2xl">{t('title')}</CardTitle>
@@ -149,7 +150,6 @@ export function ResetPasswordPage() {
                 id="reset-password"
                 type="password"
                 autoComplete="new-password"
-                autoFocus
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -180,7 +180,7 @@ export function ResetPasswordPage() {
               disabled={resetPassword.isPending || !canSubmit}
             >
               {resetPassword.isPending && (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
               {resetPassword.isPending ? t('submitting') : t('submit')}
             </Button>

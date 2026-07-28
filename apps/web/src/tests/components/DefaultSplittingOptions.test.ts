@@ -1,3 +1,5 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { splitEqual } from '@/app/groups/[groupId]/expenses/expense-form/default-split/split-equal'
 import {
   buildExpenseFormDefaults,
@@ -11,7 +13,6 @@ import {
   PAYMENT_CATEGORY_ID,
   RecurrenceRule,
 } from '@spliit/domain'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mockGroup = {
   id: 'group-1',

@@ -1,27 +1,27 @@
+import { useWatch, type UseFormReturn } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+
 import type {
   Currency,
   ExpenseFormInputValues,
   SplitMode,
 } from '@spliit/domain'
-import { useWatch, type UseFormReturn } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
+
 import type { GroupShape } from '../default-values'
 import { LoadDefaultButton } from './load-default-button'
 import { SaveDefaultButton } from './save-default-button'
 import { splitEqual, type SavedSplit } from './split-equal'
 
 /**
- * Renders the Load / Save default-split affordances for the PaidFor
- * card. Both buttons live in the card header — together they form a
- * small pair of link-style actions next to "Select all/None".
+ * Renders the Load / Save default-split affordances for the PaidFor card. Both
+ * buttons live in the card header — together they form a small pair of
+ * link-style actions next to "Select all/None".
  *
- * Visibility rules:
- * - `readOnly` → nothing renders.
- * - Load button renders whenever a `savedDefault` exists. In
- *   ITEMIZED mode this is the only available action (Save is
- *   disallowed for itemized splits at the API level).
- * - Save button renders when the current split is not itemized and
- *   diverges from the saved default (or no saved default exists).
+ * Visibility rules: - `readOnly` → nothing renders. - Load button renders
+ * whenever a `savedDefault` exists. In ITEMIZED mode this is the only available
+ * action (Save is disallowed for itemized splits at the API level). - Save
+ * button renders when the current split is not itemized and diverges from the
+ * saved default (or no saved default exists).
  */
 export function DefaultSplitActions(props: {
   form: UseFormReturn<ExpenseFormInputValues>
@@ -58,7 +58,7 @@ export function DefaultSplitActions(props: {
 
   return (
     <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 text-xs text-muted-foreground">
-      <span className="uppercase tracking-wide">
+      <span className="tracking-wide uppercase">
         {t('DefaultSplit.heading')}
       </span>
       <div className="flex items-center gap-1">

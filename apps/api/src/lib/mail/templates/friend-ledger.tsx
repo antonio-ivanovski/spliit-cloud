@@ -1,5 +1,6 @@
 import { Heading, Link, Section, Text } from '@react-email/components'
 import type { ReactElement } from 'react'
+
 import { getWebBaseUrl } from '../../auth/urls'
 import { EmailButton } from './components/email-button'
 import { EmailLayout } from './components/email-layout'
@@ -22,7 +23,7 @@ export function FriendLedgerEmail(props: {
     >
       <Heading
         as="h1"
-        className="m-0 mb-4 text-[24px] font-semibold text-[#0f172a] tracking-tight"
+        className="m-0 mb-4 text-[24px] font-semibold tracking-tight text-[#0f172a]"
       >
         {props.inviterName} started a friend ledger with you
       </Heading>
@@ -30,13 +31,13 @@ export function FriendLedgerEmail(props: {
         {props.inviterName} started a friend ledger with you on Spliit Cloud.
         Use the button below to view it.
       </Text>
-      <Section className="text-center my-6">
+      <Section className="my-6 text-center">
         <EmailButton href={props.webBase} label={label} />
       </Section>
       <Text className="m-0 mb-2 text-[14px] leading-[22px] text-[#0f172a]">
         If the button doesn't work, copy and paste this URL into your browser:
       </Text>
-      <Text className="m-0 mb-4 text-[13px] leading-[20px] text-[#64748b] break-all">
+      <Text className="m-0 mb-4 text-[13px] leading-[20px] break-all text-[#64748b]">
         <Link href={props.webBase} className="text-[#64748b] underline">
           {props.webBase}
         </Link>

@@ -1,18 +1,20 @@
-import { GroupType } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
+
+import { GroupType } from '@spliit/db'
+
 import { updateMemberRole } from '../../../../lib/api'
 import { loadGroupContext, protectedProcedure } from '../../../init'
 import { memberRoleOutputSchema } from '../../../outputs/members'
 
 /**
- * Promote a member to admin or demote an admin to member. The caller
- * must be an active ADMIN of the group, the target must be an active
- * member of the same group, and the caller cannot change their own
- * role through this mutation (use the leave flow to step down).
+ * Promote a member to admin or demote an admin to member. The caller must be an
+ * active ADMIN of the group, the target must be an active member of the same
+ * group, and the caller cannot change their own role through this mutation (use
+ * the leave flow to step down).
  *
- * Rejects with `PRECONDITION_FAILED` when the mutation would leave
- * the group without any active ADMIN (e.g. demoting the last admin).
+ * Rejects with `PRECONDITION_FAILED` when the mutation would leave the group
+ * without any active ADMIN (e.g. demoting the last admin).
  */
 export const updateMemberRoleProcedure = protectedProcedure
   .input(
@@ -61,8 +63,8 @@ export const updateMemberRoleProcedure = protectedProcedure
   })
 
 /**
- * Convert domain-level errors raised by the lib helper into tRPC errors
- * with stable codes the FE can branch on.
+ * Convert domain-level errors raised by the lib helper into tRPC errors with
+ * stable codes the FE can branch on.
  */
 function mapMemberError(err: unknown): TRPCError {
   const message = err instanceof Error ? err.message : 'Unable to update role'

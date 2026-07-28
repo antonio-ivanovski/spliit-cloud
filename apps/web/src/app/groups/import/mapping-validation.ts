@@ -1,4 +1,7 @@
 import { useTranslation } from 'react-i18next'
+
+import type { ParticipantMappingState } from '@spliit/domain/import'
+
 import {
   CONTACT_VALUE,
   EMAIL_VALUE,
@@ -6,8 +9,6 @@ import {
   SELF_VALUE,
   getCurrentModeValue,
 } from './mapping-mode-select'
-
-import type { ParticipantMappingState } from '@spliit/domain/import'
 
 export function useMappingValidation() {
   const { t } = useTranslation()

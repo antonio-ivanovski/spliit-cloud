@@ -1,6 +1,8 @@
 import * as fs from 'fs'
 import * as path from 'path'
+
 import { describe, expect, it } from 'vitest'
+
 import { tryParseSpliitExport } from './spliit'
 
 describe('complex spliit.app export with all features', () => {

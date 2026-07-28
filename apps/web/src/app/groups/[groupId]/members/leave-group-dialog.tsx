@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import {
@@ -17,18 +19,16 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useTranslation } from 'react-i18next'
 
 /**
- * Leave-group dialog. Renders one of three shapes:
- *   - last-admin promotion picker when the caller is the last admin
- *     and other members exist,
- *   - unsettled-balance warning when the caller has non-zero balances,
- *   - the simple confirm otherwise.
+ * Leave-group dialog. Renders one of three shapes: - last-admin promotion
+ * picker when the caller is the last admin and other members exist, -
+ * unsettled-balance warning when the caller has non-zero balances, - the simple
+ * confirm otherwise.
  *
- * The "last active member" branch is intentionally absent: the dedicated
- * delete flow on the settings page is now the only way to leave a group
- * with a single member, so the leave dialog never renders for that case.
+ * The "last active member" branch is intentionally absent: the dedicated delete
+ * flow on the settings page is now the only way to leave a group with a single
+ * member, so the leave dialog never renders for that case.
  */
 // react-doctor-disable-next-line react-doctor/no-many-boolean-props -- independent section flags, not mutually-exclusive variants
 export function LeaveGroupDialog({
@@ -76,7 +76,7 @@ export function LeaveGroupDialog({
         onOpenChange(open)
       }}
     >
-      <ResponsiveDialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+      <ResponsiveDialogContent className="max-h-[90vh] max-w-lg overflow-y-auto">
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>{t('leave.title')}</ResponsiveDialogTitle>
           <ResponsiveDialogDescription>
@@ -114,7 +114,7 @@ export function LeaveGroupDialog({
                   )}
 
                   {needsPromotion && (
-                    <div className="flex flex-col gap-2 rounded-md border border-amber-500/40 bg-amber-50 dark:bg-amber-950/30 p-3">
+                    <div className="flex flex-col gap-2 rounded-md border border-amber-500/40 bg-amber-50 p-3 dark:bg-amber-950/30">
                       <p className="text-sm font-medium">
                         {t('leave.body.lastAdmin.title')}
                       </p>
@@ -152,7 +152,7 @@ export function LeaveGroupDialog({
                   )}
 
                   {hasUnsettledBalance && (
-                    <div className="flex flex-col gap-1 rounded-md border border-amber-500/40 bg-amber-50 dark:bg-amber-950/30 p-3">
+                    <div className="flex flex-col gap-1 rounded-md border border-amber-500/40 bg-amber-50 p-3 dark:bg-amber-950/30">
                       <p className="text-sm font-medium">
                         {t('leave.body.unsettled.title')}
                       </p>

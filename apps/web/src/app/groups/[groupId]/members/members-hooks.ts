@@ -1,10 +1,12 @@
-import { useToast } from '@/components/ui/use-toast'
-import { useCurrentAccount } from '@/lib/use-current-account'
-import { trpc } from '@/trpc/client'
 import { useNavigate } from '@tanstack/react-router'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
+
+import { useToast } from '@/components/ui/use-toast'
+import { useCurrentAccount } from '@/lib/use-current-account'
+import { trpc } from '@/trpc/client'
+
 import { useCurrentGroup } from '../current-group-context'
 
 export type InvitableRole = 'ADMIN' | 'MEMBER'
@@ -209,8 +211,8 @@ export function useMembersDialogs() {
     onSuccess: async () => {
       toast({ description: t('leave.toast.left') })
       setLeaveDialogOpen(false)
-      navigate({ to: '/' })
-      utils.account.groups.invalidate()
+      await navigate({ to: '/' })
+      void utils.account.groups.invalidate()
     },
     onError: (error) => {
       toast({ description: error.message, variant: 'destructive' })

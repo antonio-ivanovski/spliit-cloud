@@ -32,7 +32,12 @@ export type StatsDashboardData = {
   }>
 }
 export type StatsPeriod =
-  'LATEST_ACTIVITY' | 'WEEK' | 'MONTH' | 'QUARTER' | 'YEAR' | 'CUSTOM'
+  | 'LATEST_ACTIVITY'
+  | 'WEEK'
+  | 'MONTH'
+  | 'QUARTER'
+  | 'YEAR'
+  | 'CUSTOM'
 
 export type StatsCustomRange = {
   from: string

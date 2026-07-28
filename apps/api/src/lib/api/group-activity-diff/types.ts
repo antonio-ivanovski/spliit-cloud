@@ -1,4 +1,5 @@
 import type { GroupChangedField } from '@spliit/domain/activities'
+
 import type {
   ActivityDiffer,
   DiffEmission as GenericDiffEmission,

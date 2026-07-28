@@ -1,4 +1,5 @@
 import { recurrenceConfigSchema, type RecurrenceConfig } from '@spliit/domain'
+
 import type { ExpenseDiffer } from './types'
 
 const recurrenceLabels: Record<string, string> = {

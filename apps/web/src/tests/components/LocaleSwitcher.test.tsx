@@ -1,8 +1,9 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { LocaleSwitcher, localeFlags } from '@/components/locale-switcher'
 import { localeLabels, locales } from '@/i18n/request'
 import * as i18nSetup from '@/i18n/setup'
 import { render, screen, waitFor, within } from '@/test/test-utils'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 function mockViewport(desktop: boolean) {
   vi.spyOn(window, 'matchMedia').mockImplementation((query: string) => ({

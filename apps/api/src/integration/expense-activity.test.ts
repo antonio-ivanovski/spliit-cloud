@@ -1,4 +1,3 @@
-import { GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
 import {
   afterAll,
   afterEach,
@@ -8,6 +7,9 @@ import {
   expect,
   it,
 } from 'vitest'
+
+import { GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
+
 import {
   setDefaultActivityNotificationDispatchers,
   waitForScheduledNotificationDispatchesForTest,

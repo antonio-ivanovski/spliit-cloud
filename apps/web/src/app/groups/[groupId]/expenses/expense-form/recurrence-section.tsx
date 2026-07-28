@@ -1,3 +1,13 @@
+import { AlertTriangle, CalendarClock, Minus, Plus } from 'lucide-react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  useWatch,
+  type FieldValues,
+  type Path,
+  type UseFormReturn,
+} from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+
 import { ResponsiveChoicePicker } from '@/components/responsive-choice-picker'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
@@ -21,15 +31,7 @@ import {
 } from '@/components/ui/responsive-dialog'
 import { useLocale } from '@/i18n/react'
 import { cn } from '@/lib/utils'
-import { AlertTriangle, CalendarClock, Minus, Plus } from 'lucide-react'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import {
-  useWatch,
-  type FieldValues,
-  type Path,
-  type UseFormReturn,
-} from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
+
 import {
   OccurrenceTimeline,
   OccurrenceTimelineItem,
@@ -170,13 +172,16 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
         })
     : ''
 
-  const updateRecurrence = (next: RecurrenceConfig | null) => {
-    form.setValue('recurrence' as Path<T>, next as never, {
-      shouldDirty: true,
-      shouldTouch: true,
-      shouldValidate: true,
-    })
-  }
+  const updateRecurrence = useCallback(
+    (next: RecurrenceConfig | null) => {
+      form.setValue('recurrence' as Path<T>, next as never, {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      })
+    },
+    [form],
+  )
 
   const updateEnd = (next: RecurrenceEnd) => {
     if (!recurrence) return
@@ -197,8 +202,9 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
       ...recurrence,
       end: { type: 'DATE', endDate: expenseDate },
     })
+    // oxlint-disable-next-line react/react-compiler -- clear the draft after normalizing the controlled date.
     setEndDateDraft(null)
-  }, [expenseDate, recurrence])
+  }, [expenseDate, recurrence, updateRecurrence])
 
   const normalizeIntervalDraft = () => {
     if (!recurrence || intervalDraft === null) return
@@ -240,7 +246,7 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
         control={form.control}
         name={'recurrence' as Path<T>}
         render={() => (
-          <FormItem className="order-9 col-span-1 min-w-0 w-full sm:col-span-2 md:col-span-2">
+          <FormItem className="order-9 col-span-1 w-full min-w-0 sm:col-span-2 md:col-span-2">
             <div className="w-full min-w-0 rounded-lg border bg-muted/20 p-3 sm:p-4">
               <div className="flex items-center gap-3">
                 <FormControl>
@@ -257,7 +263,7 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
                 <div className="min-w-0 flex-1">
                   <FormLabel
                     htmlFor="recurrence-enabled"
-                    className="cursor-pointer text-sm font-semibold leading-tight"
+                    className="cursor-pointer text-sm leading-tight font-semibold"
                   >
                     {t('recurrence.checkboxLabel')}
                   </FormLabel>
@@ -542,7 +548,7 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
                     {scheduleChanged && (
                       <Alert
                         className="mt-4 border-amber-500/50 bg-amber-50 text-amber-950 dark:bg-amber-950/20 dark:text-amber-100"
-                        role="status"
+                        aria-live="polite"
                       >
                         <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
                         <AlertTitle>
@@ -560,7 +566,7 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
                           'mt-4 border-l-2 border-primary/40 pl-3 text-sm text-muted-foreground',
                           scheduleChanged && 'mt-3',
                         )}
-                        role="status"
+                        aria-live="polite"
                       >
                         {t('recurrence.pastDateBackfillNote')}
                       </p>

@@ -1,3 +1,10 @@
+import { Minus, Plus } from 'lucide-react'
+import type { Dispatch, SetStateAction } from 'react'
+import type { UseFormReturn } from 'react-hook-form'
+import { useWatch } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { match } from 'ts-pattern'
+
 import { ParticipantRowAmountPreview } from '@/components/participant-row-amount-preview'
 import { Button } from '@/components/ui/button'
 import { FormControl, FormField, FormMessage } from '@/components/ui/form'
@@ -5,12 +12,7 @@ import { Input } from '@/components/ui/input'
 import { calculatePaidByShare, percentageToBasisPoints } from '@/lib/totals'
 import { amountAsMinorUnits, cn } from '@/lib/utils'
 import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
-import { Minus, Plus } from 'lucide-react'
-import type { Dispatch, SetStateAction } from 'react'
-import type { UseFormReturn } from 'react-hook-form'
-import { useWatch } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
-import { match } from 'ts-pattern'
+
 import {
   enforceCurrencyPattern,
   enforceIntegerPattern,

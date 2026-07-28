@@ -1,3 +1,19 @@
+import {
+  ChevronDown,
+  ChevronRight,
+  ChevronUp,
+  Coins,
+  Hash,
+  Percent,
+  Plus,
+  UserPen,
+  Users,
+} from 'lucide-react'
+import { type ReactNode, useEffect, useState } from 'react'
+import type { FieldPath, UseFormReturn } from 'react-hook-form'
+import { useWatch } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -26,21 +42,7 @@ import type {
   ExpenseFormInputValues,
   ExpenseFormItemValues,
 } from '@spliit/domain'
-import {
-  ChevronDown,
-  ChevronRight,
-  ChevronUp,
-  Coins,
-  Hash,
-  Percent,
-  Plus,
-  UserPen,
-  Users,
-} from 'lucide-react'
-import { type ReactNode, useEffect, useMemo, useState } from 'react'
-import type { FieldPath, UseFormReturn } from 'react-hook-form'
-import { useWatch } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
+
 import { applySplitToAll, getCommonItemSplit } from './default-item-split'
 import type { SavedSplit } from './default-split/split-equal'
 import {
@@ -53,7 +55,9 @@ import { isFillerItem, withAutoOtherFiller } from './use-auto-other-filler'
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
 type ItemSplitMode = ExpenseFormItemValues['splitMode']
 type EditingTarget =
-  { kind: 'item'; index: number } | { kind: 'filler' } | { kind: 'default' }
+  | { kind: 'item'; index: number }
+  | { kind: 'filler' }
+  | { kind: 'default' }
 
 function makeDefaultItem(
   group: Group,
@@ -108,9 +112,11 @@ export function ExpenseItemsCard({
   group: Group
   groupCurrency: Currency
   readOnly?: boolean
-  /** Persisted per-user-per-group default split, used to seed items when
-   *  switching to itemized and surfaced in the per-item modal as a
-   *  "Load default" action. */
+  /**
+   * Persisted per-user-per-group default split, used to seed items when
+   * switching to itemized and surfaced in the per-item modal as a "Load
+   * default" action.
+   */
   savedDefault?: SavedSplit | null
   renderItemParticipantsModal?: (props: {
     itemIndex: number
@@ -148,7 +154,7 @@ export function ExpenseItemsCard({
   const exceedsAmount = itemsSumMajor > amountMajor + 0.01
   const fillerItem = itemsWithFiller.find(isFillerItem)
 
-  const commonSplit = useMemo(() => getCommonItemSplit(items), [items])
+  const commonSplit = getCommonItemSplit(items)
   const displayedDefaultSplit =
     commonSplit ??
     (items.length === 0
@@ -217,6 +223,7 @@ export function ExpenseItemsCard({
 
   useEffect(() => {
     if (splitMode === 'ITEMIZED' || items.length > 0) {
+      // oxlint-disable-next-line react/react-compiler -- open the item editor when controlled items become available.
       setItemsOpen(true)
     }
   }, [items.length, splitMode])
@@ -362,7 +369,7 @@ export function ExpenseItemsCard({
                 <div>
                   <div
                     className={cn(
-                      'mt-5 hidden border-t py-2 text-[11px] font-medium uppercase text-muted-foreground md:grid md:gap-x-3',
+                      'mt-5 hidden border-t py-2 text-[11px] font-medium text-muted-foreground uppercase md:grid md:gap-x-3',
                       expenseItemGridClass,
                     )}
                   >
@@ -465,7 +472,7 @@ export function ExpenseItemsCard({
                 </div>
               )}
 
-              <div className="border-t pt-3 mt-2">
+              <div className="mt-2 border-t pt-3">
                 <div className="flex justify-between text-sm font-medium">
                   <span>{t('items.total')}</span>
                   <span>
@@ -595,7 +602,7 @@ function DefaultSplitAction({
         <Icon className="size-4" strokeWidth={2} />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block text-sm font-medium leading-tight">{label}</span>
+        <span className="block text-sm leading-tight font-medium">{label}</span>
         <span className="mt-1 block text-xs leading-snug text-muted-foreground sm:text-sm">
           {summary}
         </span>
@@ -620,7 +627,7 @@ function DefaultSplitAction({
       type="button"
       onClick={onClick}
       aria-label={editLabel}
-      className="group flex w-full items-center gap-3 border-y py-3 text-left transition-colors hover:bg-muted/30 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      className="group flex w-full items-center gap-3 border-y py-3 text-left transition-colors hover:bg-muted/30 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-hidden"
     >
       {content}
     </button>

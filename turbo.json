@@ -3,6 +3,7 @@
   "tasks": {
     "ci-checks": {
       "dependsOn": [
+        "//#check-formatting:root",
         "check-formatting",
         "lint",
         "check-types",
@@ -30,9 +31,66 @@
       "passThroughEnv": ["DATABASE_URL"]
     },
     "lint": {
-      "dependsOn": ["^build", "@spliit/db#prisma-generate"]
+      "dependsOn": ["^build", "@spliit/db#prisma-generate"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.oxlintrc.json"]
     },
-    "check-formatting": {},
+    "lint:fix": {
+      "dependsOn": ["^build", "@spliit/db#prisma-generate"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.oxlintrc.json"],
+      "cache": false
+    },
+    "check-formatting": {
+      "inputs": [
+        "**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx,json,jsonc,json5,yaml,yml,toml,html,css,scss,less,md,mdx,graphql,gql}",
+        "!src/routeTree.gen.ts",
+        "!src/components/ui/**",
+        "!src/generated/**",
+        "$TURBO_ROOT$/oxfmt.config.ts",
+        "$TURBO_ROOT$/package.json"
+      ]
+    },
+    "format": {
+      "cache": false,
+      "inputs": [
+        "**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx,json,jsonc,json5,yaml,yml,toml,html,css,scss,less,md,mdx,graphql,gql}",
+        "!src/routeTree.gen.ts",
+        "!src/components/ui/**",
+        "!src/generated/**",
+        "$TURBO_ROOT$/oxfmt.config.ts",
+        "$TURBO_ROOT$/package.json"
+      ]
+    },
+    "//#check-formatting:root": {
+      "inputs": [
+        "oxfmt.config.ts",
+        ".oxlintrc.json",
+        "package.json",
+        "turbo.json",
+        "*.md",
+        ".devcontainer/**",
+        ".github/**",
+        "docs/**",
+        "handoff/**",
+        "compose*.yaml",
+        "doctor.config.json"
+      ]
+    },
+    "//#format:root": {
+      "cache": false,
+      "inputs": [
+        "oxfmt.config.ts",
+        ".oxlintrc.json",
+        "package.json",
+        "turbo.json",
+        "*.md",
+        ".devcontainer/**",
+        ".github/**",
+        "docs/**",
+        "handoff/**",
+        "compose*.yaml",
+        "doctor.config.json"
+      ]
+    },
     "check-types": {
       "dependsOn": ["^build", "@spliit/db#prisma-generate"]
     },

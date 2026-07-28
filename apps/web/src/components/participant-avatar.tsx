@@ -1,6 +1,7 @@
+import type { ComponentProps } from 'react'
+
 import { AccountAvatar } from '@/components/account-avatar'
 import type { AccountIdentity } from '@/lib/account'
-import type { ComponentProps } from 'react'
 
 type ParticipantIdentity = {
   id: string

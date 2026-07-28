@@ -1,6 +1,8 @@
-import { GroupRole, GroupType } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
+
+import { GroupRole, GroupType } from '@spliit/db'
+
 import { RemoveMemberPreconditionError } from '../../../../lib/api/members'
 import {
   SoftRemoveParticipantPreconditionError,

@@ -1,3 +1,7 @@
+import { UserPlus } from 'lucide-react'
+import type { UseFormReturn } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -15,9 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { UserPlus } from 'lucide-react'
-import type { UseFormReturn } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
+
 import type { EmailFormValues, InvitableRole } from './members-hooks'
 
 export function InviteEmailTab({
@@ -105,7 +107,7 @@ export function InviteEmailTab({
               </FormControl>
             </FormItem>
             <Button type="submit" disabled={isPending || !email}>
-              <UserPlus className="w-4 h-4 mr-2" />
+              <UserPlus className="mr-2 h-4 w-4" />
               {t('invite.send')}
             </Button>
           </div>

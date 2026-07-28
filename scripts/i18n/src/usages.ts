@@ -1,5 +1,6 @@
 import { readdir, readFile, stat } from 'node:fs/promises'
 import { join, relative } from 'node:path'
+
 import { PLURAL_SUFFIXES } from './message-validation'
 
 export type UsageHit = {
@@ -13,7 +14,10 @@ const MAX_HITS = 10
 
 const pluralSuffixPattern = new RegExp(`_(${PLURAL_SUFFIXES.join('|')})$`)
 
-/** Strip plural category suffix for search (previewWillCreate_one → previewWillCreate). */
+/**
+ * Strip plural category suffix for search (previewWillCreate_one →
+ * previewWillCreate).
+ */
 export function usageSearchKey(key: string): string {
   return key.replace(pluralSuffixPattern, '')
 }
@@ -124,8 +128,8 @@ export type FindUsagesOptions = {
 }
 
 /**
- * Best-effort: find where a message key is referenced in app source.
- * Does not resolve dynamic template keys.
+ * Best-effort: find where a message key is referenced in app source. Does not
+ * resolve dynamic template keys.
  */
 export async function findUsages(
   key: string,

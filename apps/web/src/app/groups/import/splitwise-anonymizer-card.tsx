@@ -1,19 +1,24 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { anonymizeSplitwiseCsv } from '@spliit/domain/import'
 import { HatGlasses } from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { anonymizeSplitwiseCsv } from '@spliit/domain/import'
 
 const SPLITWISE_ISSUES_URL =
   'https://github.com/antonio-ivanovski/spliit-cloud/issues'
 
 type Status =
-  { kind: 'idle' } | { kind: 'working' } | { kind: 'error'; message: string }
+  | { kind: 'idle' }
+  | { kind: 'working' }
+  | { kind: 'error'; message: string }
 
-/** Triggers a browser download for a blob URL and immediately revokes the
- *  handle. Keeping this server-side safe requires no upload — the file lives
- *  as an in-memory Blob the whole time. */
+/**
+ * Triggers a browser download for a blob URL and immediately revokes the
+ * handle. Keeping this server-side safe requires no upload — the file lives as
+ * an in-memory Blob the whole time.
+ */
 function triggerBrowserDownload(blobUrl: string, fileName: string) {
   const a = document.createElement('a')
   a.href = blobUrl
@@ -60,7 +65,7 @@ export function SplitwiseAnonymizerCard() {
   )
 
   return (
-    <Card className="border-amber-200 bg-amber-50/60 dark:border-amber-900/60 dark:bg-amber-950/30 mt-2">
+    <Card className="mt-2 border-amber-200 bg-amber-50/60 dark:border-amber-900/60 dark:bg-amber-950/30">
       <CardContent className="flex flex-col gap-3 p-4">
         <div className="flex items-start gap-2">
           <HatGlasses className="mt-0.5 h-4 w-4 shrink-0 text-amber-700 dark:text-amber-300" />

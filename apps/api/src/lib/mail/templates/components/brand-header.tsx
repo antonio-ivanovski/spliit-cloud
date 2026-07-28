@@ -14,7 +14,7 @@ type BrandHeaderProps = {
  */
 export function BrandHeader({ brandBaseUrl }: BrandHeaderProps) {
   return (
-    <Section className="border-b border-solid border-[#e5e7eb] pb-4 mb-6">
+    <Section className="mb-6 border-b border-solid border-[#e5e7eb] pb-4">
       <Img
         src={`${brandBaseUrl}/logo-with-text-email.png`}
         alt="Spliit Cloud"

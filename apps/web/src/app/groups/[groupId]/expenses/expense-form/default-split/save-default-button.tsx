@@ -1,3 +1,7 @@
+import { useEffect, useState } from 'react'
+import type { UseFormReturn } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { trpc } from '@/trpc/client'
@@ -7,22 +11,18 @@ import {
   type Currency,
   type SplitMode,
 } from '@spliit/domain'
-import { useEffect, useState } from 'react'
-import type { UseFormReturn } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
+
 import type { GroupShape } from '../default-values'
 
 const CONFIRMATION_DURATION_MS = 2000
 
 /**
- * Renders a "Save default" link button. After a successful save it
- * swaps to a non-interactive "Saved as default" label for 2 seconds,
- * mirroring the visual rhythm of the existing copy-action feedback,
- * then unmounts.
+ * Renders a "Save default" link button. After a successful save it swaps to a
+ * non-interactive "Saved as default" label for 2 seconds, mirroring the visual
+ * rhythm of the existing copy-action feedback, then unmounts.
  *
- * The save is rejected (server + client) when the current split is
- * itemized, so this button should not be rendered in that case (see
- * `DefaultSplitActions`).
+ * The save is rejected (server + client) when the current split is itemized, so
+ * this button should not be rendered in that case (see `DefaultSplitActions`).
  */
 export function SaveDefaultButton(props: {
   form: UseFormReturn<ExpenseFormInputValues>
@@ -35,7 +35,7 @@ export function SaveDefaultButton(props: {
   const utils = trpc.useUtils()
   const setDefaultSplit = trpc.account.setDefaultSplit.useMutation({
     onSuccess: () => {
-      utils.account.defaultSplit.invalidate({ groupId: group.id })
+      void utils.account.defaultSplit.invalidate({ groupId: group.id })
     },
     onError: (error) => {
       toast({ description: error.message, variant: 'destructive' })
@@ -87,7 +87,7 @@ export function SaveDefaultButton(props: {
 
   if (justSaved === 'saved') {
     return (
-      <span className="text-sm text-muted-foreground -my-2 -mx-4 px-4 py-2">
+      <span className="-mx-4 -my-2 px-4 py-2 text-sm text-muted-foreground">
         {t('DefaultSplit.savedAsDefault')}
       </span>
     )
@@ -97,7 +97,7 @@ export function SaveDefaultButton(props: {
     <Button
       variant="link"
       type="button"
-      className="-my-2 -mx-4"
+      className="-mx-4 -my-2"
       disabled={setDefaultSplit.isPending}
       onClick={onClick}
     >

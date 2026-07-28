@@ -1,6 +1,8 @@
-import { GroupType } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
+
+import { GroupType } from '@spliit/db'
+
 import {
   LeaveGroupPreconditionError,
   archiveGroupForSelf,
@@ -16,16 +18,14 @@ import {
 
 /**
  * Read-only summary the web client uses to render the leave-group dialog.
- * Returns the data the dialog needs in a single query:
- *   - the caller's role on this group,
- *   - whether the caller is the last active member,
- *   - whether the caller is the last admin,
- *   - whether the caller has unsettled balances,
- *   - the list of remaining admins (so the dialog can show who keeps control),
- *   - the list of promotable members (for the last-admin promotion selector).
+ * Returns the data the dialog needs in a single query: - the caller's role on
+ * this group, - whether the caller is the last active member, - whether the
+ * caller is the last admin, - whether the caller has unsettled balances, - the
+ * list of remaining admins (so the dialog can show who keeps control), - the
+ * list of promotable members (for the last-admin promotion selector).
  *
- * The preview never throws on a missing precondition — those checks live in
- * the `leave` mutation so the dialog can render the appropriate copy.
+ * The preview never throws on a missing precondition — those checks live in the
+ * `leave` mutation so the dialog can render the appropriate copy.
  */
 export const leavePreviewProcedure = protectedProcedure
   .input(z.object({ groupId: z.string().min(1) }))
@@ -44,23 +44,23 @@ export const leavePreviewProcedure = protectedProcedure
   })
 
 /**
- * Leave a group as an active member. Used by the dedicated "leave group"
- * entry point in the members page.
+ * Leave a group as an active member. Used by the dedicated "leave group" entry
+ * point in the members page.
  *
  * Business rules (enforced inside `leaveGroup`):
- *   - caller must be an active member,
- *   - the group must not be archived,
- *   - if the caller is the last active member, the mutation throws
- *     `PRECONDITION_FAILED` with the `lastMemberMustDelete` reason so the
- *     caller is steered to the dedicated delete flow on the settings page,
- *   - if the caller is the last admin and other active members exist,
- *     `promoteMemberId` must point at another active member of the group,
- *   - if the caller has unsettled balances and `force` is not `true`, the
- *     mutation throws `PRECONDITION_FAILED` so the UI can prompt for the
- *     forced settlement,
- *   - on `force`, one reimbursement-style settlement expense is created per
- *     leg involving the leaving user before flipping the membership to
- *     `LEFT`.
+ *
+ * - Caller must be an active member,
+ * - The group must not be archived,
+ * - If the caller is the last active member, the mutation throws
+ *   `PRECONDITION_FAILED` with the `lastMemberMustDelete` reason so the caller
+ *   is steered to the dedicated delete flow on the settings page,
+ * - If the caller is the last admin and other active members exist,
+ *   `promoteMemberId` must point at another active member of the group,
+ * - If the caller has unsettled balances and `force` is not `true`, the mutation
+ *   throws `PRECONDITION_FAILED` so the UI can prompt for the forced
+ *   settlement,
+ * - On `force`, one reimbursement-style settlement expense is created per leg
+ *   involving the leaving user before flipping the membership to `LEFT`.
  */
 export const leaveGroupProcedure = protectedProcedure
   .input(
@@ -116,10 +116,10 @@ export const leaveGroupProcedure = protectedProcedure
 
 /**
  * Translate the helper errors into TRPC errors. The web client uses
- * `PRECONDITION_FAILED` to decide whether to re-render the leave dialog
- * with the missing confirmation (e.g. missing admin promotion target or
- * unsettled balances without `force`) or to redirect the caller to the
- * delete flow on the settings page (last active member).
+ * `PRECONDITION_FAILED` to decide whether to re-render the leave dialog with
+ * the missing confirmation (e.g. missing admin promotion target or unsettled
+ * balances without `force`) or to redirect the caller to the delete flow on the
+ * settings page (last active member).
  */
 function mapLeaveError(err: unknown): TRPCError {
   if (err instanceof TRPCError) return err
@@ -153,17 +153,17 @@ function mapLeaveError(err: unknown): TRPCError {
 }
 
 /**
- * Non-destructive alternative to the last-member leave flow. The default
- * action when the last active member leaves is to permanently delete the
- * group; this procedure lets the same caller instead archive the group
- * for themselves (set `Group.archived = true` plus the caller's per-account
- * hide preference) and keep the membership intact. The group becomes
- * read-only and disappears from the caller's main list, but the ledger,
- * expenses, and activity history are preserved.
+ * Non-destructive alternative to the last-member leave flow. The default action
+ * when the last active member leaves is to permanently delete the group; this
+ * procedure lets the same caller instead archive the group for themselves (set
+ * `Group.archived = true` plus the caller's per-account hide preference) and
+ * keep the membership intact. The group becomes read-only and disappears from
+ * the caller's main list, but the ledger, expenses, and activity history are
+ * preserved.
  *
- * Only valid as the last active member. Other callers must use the
- * regular `leave` mutation (which keeps the group around anyway when
- * other members exist) or the admin-only `archive` mutation.
+ * Only valid as the last active member. Other callers must use the regular
+ * `leave` mutation (which keeps the group around anyway when other members
+ * exist) or the admin-only `archive` mutation.
  */
 export const archiveGroupForSelfProcedure = protectedProcedure
   .input(z.object({ groupId: z.string().min(1) }))

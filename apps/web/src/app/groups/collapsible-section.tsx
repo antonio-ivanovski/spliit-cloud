@@ -1,11 +1,13 @@
+/* oxlint-disable jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events -- wrapper stops propagation for the optional action inside a trigger. */
+import { ChevronDown } from 'lucide-react'
+import type { ReactNode } from 'react'
+
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible'
 import { cn } from '@/lib/utils'
-import { ChevronDown } from 'lucide-react'
-import type { ReactNode } from 'react'
 
 /**
  * Read a stored section-open preference from `localStorage` and fall back to
@@ -41,15 +43,15 @@ type Props = {
   /** Whether the section is open by default. */
   defaultOpen: boolean
   /**
-   * Storage key used to remember the user's open/closed choice. The same
-   * key must be reused across renders for the same logical section so the
+   * Storage key used to remember the user's open/closed choice. The same key
+   * must be reused across renders for the same logical section so the
    * preference persists across reloads.
    */
   storageKey: string
   /**
-   * Optional content rendered to the right of the title in the trigger
-   * header (e.g., a small action button). It stays clickable and is not
-   * affected by the collapse/expand toggle.
+   * Optional content rendered to the right of the title in the trigger header
+   * (e.g., a small action button). It stays clickable and is not affected by
+   * the collapse/expand toggle.
    */
   headerAction?: ReactNode
   /** The section content that gets collapsed. */
@@ -62,9 +64,9 @@ type Props = {
 
 /**
  * A small collapsible section with a chevron-driven header. Used on the
- * homepage to group starred/groups/friends (default open) and
- * archived/hidden (default closed) buckets. Open/closed state is persisted
- * per `storageKey` in `localStorage` when available.
+ * homepage to group starred/groups/friends (default open) and archived/hidden
+ * (default closed) buckets. Open/closed state is persisted per `storageKey` in
+ * `localStorage` when available.
  *
  * Uses a light divider between sections so the homepage list stays structured
  * without competing with the cards themselves.
@@ -86,16 +88,16 @@ export function CollapsibleSection({
     >
       <CollapsibleTrigger
         className={cn(
-          'group flex w-full cursor-pointer items-center justify-between gap-2 rounded-md -mx-2 px-2 py-1 text-left transition-colors hover:bg-muted/40 hover:text-foreground/80',
+          'group -mx-2 flex w-full cursor-pointer items-center justify-between gap-2 rounded-md px-2 py-1 text-left transition-colors hover:bg-muted/40 hover:text-foreground/80',
           triggerClassName,
         )}
       >
-        <span className="flex flex-1 items-center gap-2 min-w-0">
+        <span className="flex min-w-0 flex-1 items-center gap-2">
           <ChevronDown
             aria-hidden
-            className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-0 group-data-[state=closed]:-rotate-90"
+            className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 group-data-[state=closed]:-rotate-90 group-data-[state=open]:rotate-0"
           />
-          <span className="font-semibold truncate">{title}</span>
+          <span className="truncate font-semibold">{title}</span>
         </span>
         {headerAction ? (
           <span

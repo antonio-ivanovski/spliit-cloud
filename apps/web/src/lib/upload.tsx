@@ -1,7 +1,8 @@
-import { trpc } from '@/trpc/client'
 import { useMutation } from '@tanstack/react-query'
 import type { ChangeEvent, InputHTMLAttributes } from 'react'
 import { useRef } from 'react'
+
+import { trpc } from '@/trpc/client'
 
 const MAX_DIMENSION = 2560
 const JPEG_QUALITY = 0.8

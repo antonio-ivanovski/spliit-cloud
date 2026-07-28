@@ -1,6 +1,7 @@
+import { describe, expect, it } from 'vitest'
+
 import type { AccountGroup } from '@/app/groups/group-buckets'
 import { bucketFor, partitionGroups } from '@/app/groups/group-buckets'
-import { describe, expect, it } from 'vitest'
 
 function makeGroup(overrides: Record<string, unknown> = {}) {
   return {

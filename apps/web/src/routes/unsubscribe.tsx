@@ -1,5 +1,6 @@
-import { getTrpcClient } from '@/trpc/client'
 import { createFileRoute } from '@tanstack/react-router'
+
+import { getTrpcClient } from '@/trpc/client'
 
 export function readUnsubscribeToken(hash: string): string {
   const params = new URLSearchParams(hash.replace(/^#/, ''))

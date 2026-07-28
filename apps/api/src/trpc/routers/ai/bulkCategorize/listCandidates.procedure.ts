@@ -1,14 +1,16 @@
-import { BULK_PREVIEW_MAX_TARGETS } from '@spliit/domain'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
+
+import { BULK_PREVIEW_MAX_TARGETS } from '@spliit/domain'
+
 import { listBulkCategorizeCandidates } from '../../../../lib/api/category-bulk'
 import { loadGroupContext, protectedProcedure } from '../../../init'
 import { listBulkCategorizeCandidatesOutputSchema } from '../../../outputs/ai'
 
 /**
- * Cheap, no-AI listing of expenses eligible for bulk categorization.
- * Used by the page on mount so the admin sees the candidate count
- * before spending an OpenAI call on calibration.
+ * Cheap, no-AI listing of expenses eligible for bulk categorization. Used by
+ * the page on mount so the admin sees the candidate count before spending an
+ * OpenAI call on calibration.
  */
 export const aiBulkCategorizeListCandidatesProcedure = protectedProcedure
   .input(

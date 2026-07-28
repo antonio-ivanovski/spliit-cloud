@@ -1,5 +1,7 @@
-import { markBossRunning, type SpliitBoss } from '@spliit/jobs'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { markBossRunning, type SpliitBoss } from '@spliit/jobs'
+
 import { createAdminFetch, createDisabledHealthFetch } from './admin'
 
 const hoisted = vi.hoisted(() => ({

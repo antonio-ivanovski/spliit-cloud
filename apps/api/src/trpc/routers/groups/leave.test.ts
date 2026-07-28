@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
+
 import '../../../test/mocks'
 import { authState, prisma$Transaction, prismaMock } from '../../../test/state'
 import { createTRPCContext } from '../../init'
@@ -39,13 +40,14 @@ async function authAs(userId: string) {
 
 /**
  * Build the prisma stubs the leave procedure needs to:
- *   - resolve the group and the caller's membership (`loadGroupContext`),
- *   - count remaining active admins / members,
- *   - run balance queries via `getGroupBalances`.
  *
- * `role` is the caller's role. `activeMemberCount` is the number of
- * *other* active members in the group (excluding the caller). `archived`
- * defaults to false so the happy path doesn't have to opt out.
+ * - Resolve the group and the caller's membership (`loadGroupContext`),
+ * - Count remaining active admins / members,
+ * - Run balance queries via `getGroupBalances`.
+ *
+ * `role` is the caller's role. `activeMemberCount` is the number of _other_
+ * active members in the group (excluding the caller). `archived` defaults to
+ * false so the happy path doesn't have to opt out.
  */
 function seedLeaveContext(args: {
   callerRole: 'ADMIN' | 'MEMBER'
@@ -129,8 +131,8 @@ function seedLeaveContext(args: {
 }
 
 /**
- * Build a single "expense" record as `getGroupExpenses` would return it
- * after the row is materialised by Prisma. Mirrors the shape used in
+ * Build a single "expense" record as `getGroupExpenses` would return it after
+ * the row is materialised by Prisma. Mirrors the shape used in
  * `archive.test.ts` so the leave tests share the same balance pipeline.
  */
 function makeExpenseRow(args: {

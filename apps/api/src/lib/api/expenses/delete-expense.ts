@@ -1,4 +1,5 @@
 import { prisma } from '@spliit/db'
+
 import { deleteS3Object } from '../../../routes/upload'
 import {
   buildExpenseActivityData,
@@ -194,7 +195,9 @@ export async function deleteExpense(
               ? Number(row.conversionRate)
               : undefined,
             conversionSource: row.conversionSource as
-              'EXCHANGE' | 'CUSTOM' | null,
+              | 'EXCHANGE'
+              | 'CUSTOM'
+              | null,
             ledgerCurrencyCode: group?.ledger.currencyCode ?? null,
           }),
         },

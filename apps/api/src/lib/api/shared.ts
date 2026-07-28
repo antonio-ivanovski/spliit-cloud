@@ -15,14 +15,13 @@ export async function loadGroupWithLedger(groupId: string) {
 }
 
 /**
- * Resolve the ledger participant id backing a given account's membership
- * in a group. Returns `null` when the account is not an active member or
- * has no ledger participant materialized yet.
+ * Resolve the ledger participant id backing a given account's membership in a
+ * group. Returns `null` when the account is not an active member or has no
+ * ledger participant materialized yet.
  *
- * Accepts an optional Prisma client (transactional or top-level) so the
- * lookup can reuse the same client as the surrounding write — important
- * for the leave/remove/archive flows that log activity from inside a
- * transaction.
+ * Accepts an optional Prisma client (transactional or top-level) so the lookup
+ * can reuse the same client as the surrounding write — important for the
+ * leave/remove/archive flows that log activity from inside a transaction.
  */
 export async function getMemberLedgerParticipantId(
   groupId: string,

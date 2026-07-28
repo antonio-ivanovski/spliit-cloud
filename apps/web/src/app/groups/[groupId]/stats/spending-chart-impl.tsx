@@ -1,10 +1,8 @@
-import { useLocale } from '@/i18n/react'
-import type { Currency } from '@/lib/currency'
-import { amountAsDecimal, formatCurrency } from '@/lib/utils'
-import type { CategoryId } from '@spliit/domain'
 import { MoreHorizontal } from 'lucide-react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+
+import type { CategoryId } from '@spliit/domain'
 // react-doctor-disable-next-line react-doctor/prefer-dynamic-import -- file is lazy-loaded via React.lazy() from spending-chart.tsx
 import {
   Bar,
@@ -18,6 +16,11 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
+
+import { useLocale } from '@/i18n/react'
+import type { Currency } from '@/lib/currency'
+import { amountAsDecimal, formatCurrency } from '@/lib/utils'
+
 import { CategoryIcon } from '../expenses/category-icon'
 import {
   categoryFromId,

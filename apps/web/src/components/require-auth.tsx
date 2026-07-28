@@ -1,8 +1,9 @@
-import { needsDisplayName } from '@/lib/account'
-import { useCurrentAccount } from '@/lib/use-current-account'
 import { Navigate } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
 import type { PropsWithChildren } from 'react'
+
+import { needsDisplayName } from '@/lib/account'
+import { useCurrentAccount } from '@/lib/use-current-account'
 
 function currentPathWithSearch(): string {
   if (typeof window === 'undefined') return '/'
@@ -11,16 +12,16 @@ function currentPathWithSearch(): string {
 
 /**
  * Route guard. Shows a loader while the session is being resolved, redirects
- * unauthenticated users to `/` (preserving the original target in
- * a `redirect` query parameter), and otherwise renders the protected content.
+ * unauthenticated users to `/` (preserving the original target in a `redirect`
+ * query parameter), and otherwise renders the protected content.
  */
 export function RequireAuth({ children }: PropsWithChildren) {
   const { data: account, isPending } = useCurrentAccount()
 
   if (isPending) {
     return (
-      <div className="flex-1 flex items-center justify-center py-10">
-        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+      <div className="flex flex-1 items-center justify-center py-10">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
       </div>
     )
   }

@@ -1,5 +1,6 @@
 import { PrismaPg } from '@prisma/adapter-pg'
 import { Pool } from 'pg'
+
 import { PrismaClient } from './generated/prisma/client/client'
 // Pull in prisma-json.d.ts global declarations so consumers see the
 // PrismaJson namespace and bare ActivityType aliases.
@@ -125,18 +126,18 @@ export function getDatabasePoolStats(): DatabasePoolStats {
 }
 
 /**
- * Wraps `prisma.$transaction` so that any transaction-level failure is
- * logged once at the database boundary, with the kind of transaction as
- * context. This catches failures that bubble up out of the transaction
- * callback (e.g. a thrown precondition that aborted the rollback, or a
- * connection error during commit). Per-query failures inside the callback
- * still surface through the regular tRPC/Hono error handlers.
+ * Wraps `prisma.$transaction` so that any transaction-level failure is logged
+ * once at the database boundary, with the kind of transaction as context. This
+ * catches failures that bubble up out of the transaction callback (e.g. a
+ * thrown precondition that aborted the rollback, or a connection error during
+ * commit). Per-query failures inside the callback still surface through the
+ * regular tRPC/Hono error handlers.
  *
  * We avoid `client.$extends({ query: { $allModels: { $allOperations } } })`
- * because Prisma 7 narrows the model method signatures on the extended
- * client in a way that is incompatible with the `TransactionClient` type
- * expected by `$transaction` callbacks — see the typecheck errors that
- * prompted this workaround.
+ * because Prisma 7 narrows the model method signatures on the extended client
+ * in a way that is incompatible with the `TransactionClient` type expected by
+ * `$transaction` callbacks — see the typecheck errors that prompted this
+ * workaround.
  */
 function logDbError(context: string, err: unknown) {
   const name = err instanceof Error ? err.name : 'Error'

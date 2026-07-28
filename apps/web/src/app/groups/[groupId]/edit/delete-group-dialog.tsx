@@ -1,3 +1,7 @@
+import { AlertTriangle } from 'lucide-react'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -9,9 +13,6 @@ import {
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
-import { AlertTriangle } from 'lucide-react'
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 export function DeleteGroupDialog({
   open,
@@ -66,7 +67,7 @@ export function DeleteGroupDialog({
               <li>{t('delete.dialog.warningList.invitations')}</li>
               <li>{t('delete.dialog.warningList.receipts')}</li>
             </ul>
-            <label className="flex items-start gap-2 pt-1 text-sm cursor-pointer">
+            <label className="flex cursor-pointer items-start gap-2 pt-1 text-sm">
               <Checkbox
                 checked={confirmChecked}
                 onCheckedChange={(checked) =>

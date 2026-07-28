@@ -1,9 +1,9 @@
 import type { ImportStep } from './import-wizard-state'
 
 /**
- * i18n key for the step's short label shown in the wizard header.
- * Const-typed so `t(STEP_HEADER_LABEL_KEYS[step])` validates each
- * literal against the strict key check without `as any`.
+ * I18n key for the step's short label shown in the wizard header. Const-typed
+ * so `t(STEP_HEADER_LABEL_KEYS[step])` validates each literal against the
+ * strict key check without `as any`.
  */
 export const STEP_HEADER_LABEL_KEYS = {
   source: 'Groups.Import.StepHeader.source',

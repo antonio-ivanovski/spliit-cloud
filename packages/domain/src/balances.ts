@@ -411,9 +411,9 @@ export function getPublicBalances(reimbursements: Reimbursement[]): Balances {
 }
 
 /**
- * A comparator that is stable across reimbursements.
- * This ensures that a participant executing a suggested reimbursement
- * does not result in completely new repayment suggestions.
+ * A comparator that is stable across reimbursements. This ensures that a
+ * participant executing a suggested reimbursement does not result in completely
+ * new repayment suggestions.
  */
 function compareBalancesForReimbursements(
   b1: { participantId: string; total: number },

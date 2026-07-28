@@ -1,3 +1,9 @@
+import { Minus, Plus } from 'lucide-react'
+import { useState } from 'react'
+import type { UseFormReturn } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { match } from 'ts-pattern'
+
 import { ParticipantDistributionFooter } from '@/components/participant-distribution-footer'
 import { ParticipantRowAmountPreview } from '@/components/participant-row-amount-preview'
 import { Button } from '@/components/ui/button'
@@ -20,11 +26,7 @@ import type {
   ExpenseFormItemValues,
   SplitMode,
 } from '@spliit/domain'
-import { Minus, Plus } from 'lucide-react'
-import { useState } from 'react'
-import type { UseFormReturn } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
-import { match } from 'ts-pattern'
+
 import {
   enforceCurrencyPattern,
   enforceIntegerPattern,
@@ -55,18 +57,23 @@ export function ItemParticipantsModal(props: {
   item: ExpenseFormItemValues
   onSaveItem?: (item: ExpenseFormItemValues) => void
   readOnly?: boolean
-  /** Optional override for the modal header title (used by the
-   *  expense-level "default items split" editor). */
+  /**
+   * Optional override for the modal header title (used by the expense-level
+   * "default items split" editor).
+   */
   titleOverride?: string
   /** Hide the "qty × unitPrice" description under the title. */
   hideAmountDescription?: boolean
-  /** Hide the BY_AMOUNT split card. Used by the "default items split"
-   *  editor, where amounts are relative to each item's total. */
+  /**
+   * Hide the BY_AMOUNT split card. Used by the "default items split" editor,
+   * where amounts are relative to each item's total.
+   */
   hideAmountMode?: boolean
-  /** Persisted per-user-per-group default split. When present, the
-   *  modal renders a "Load default" link above the radio cards that
-   *  resets the local `draft` to this default (visible regardless of
-   *  whether the draft already matches). */
+  /**
+   * Persisted per-user-per-group default split. When present, the modal renders
+   * a "Load default" link above the radio cards that resets the local `draft`
+   * to this default (visible regardless of whether the draft already matches).
+   */
   savedDefault?: SavedSplit | null
 }) {
   const {
@@ -410,24 +417,26 @@ export function ItemParticipantsModal(props: {
 
         <ResponsiveDialogBody>
           <div>
-            {savedDefault && !isCurrentEqualSaved && !readOnly && (
-              // Default-split action row, mirrors PaidForCard's header
-              // strip: heading label + Load link, separated from the
-              // radio cards by a top border.
-              <div className="mb-3 flex items-center justify-end gap-3 border-b pb-3 text-xs text-muted-foreground">
-                <span className="uppercase tracking-wide">
-                  {t('DefaultSplit.heading')}
-                </span>
-                <Button
-                  variant="link"
-                  type="button"
-                  className="-my-2 -mx-4"
-                  onClick={handleLoadDefault}
-                >
-                  {t('DefaultSplit.load')}
-                </Button>
-              </div>
-            )}
+            {savedDefault &&
+              !isCurrentEqualSaved &&
+              !readOnly && (
+                // Default-split action row, mirrors PaidForCard's header
+                // strip: heading label + Load link, separated from the
+                // radio cards by a top border.
+                <div className="mb-3 flex items-center justify-end gap-3 border-b pb-3 text-xs text-muted-foreground">
+                  <span className="tracking-wide uppercase">
+                    {t('DefaultSplit.heading')}
+                  </span>
+                  <Button
+                    variant="link"
+                    type="button"
+                    className="-mx-4 -my-2"
+                    onClick={handleLoadDefault}
+                  >
+                    {t('DefaultSplit.load')}
+                  </Button>
+                </div>
+              )}
             <div className="mb-4">
               <PaidForSplitOptionCards
                 value={draft.splitMode}

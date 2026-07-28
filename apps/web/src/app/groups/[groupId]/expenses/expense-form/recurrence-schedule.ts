@@ -12,8 +12,8 @@ export type RecurrenceConfig = DomainRecurrenceConfig
 
 /**
  * Date-only recurrence math. Using UTC here keeps a date picked in the form
- * stable around DST boundaries, while month/year calculations stay anchored
- * to the original calendar day instead of accumulating clamped dates.
+ * stable around DST boundaries, while month/year calculations stay anchored to
+ * the original calendar day instead of accumulating clamped dates.
  */
 export function calculateRecurrenceDate(
   anchor: Date,
@@ -283,7 +283,10 @@ export function isScheduleConfigEqual(
   return true
 }
 
-/** Count projected occurrences after the current one that fall on or before today. */
+/**
+ * Count projected occurrences after the current one that fall on or before
+ * today.
+ */
 export function countDueBackfillOccurrences(
   schedule: RecurrenceSchedule,
   today: Date = utcTodayDate(),

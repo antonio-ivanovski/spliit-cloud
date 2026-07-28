@@ -1,8 +1,10 @@
+import { useTranslation } from 'react-i18next'
+
 import { Card, CardContent } from '@/components/ui/card'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import type { AuthAccount } from '@/lib/auth'
 import type { ParticipantMappingState } from '@spliit/domain/import'
-import { useTranslation } from 'react-i18next'
+
 import { EmailFollowUp } from './mapping-followup-email'
 import { FriendFollowUp } from './mapping-followup-friend'
 import { LinkFollowUp } from './mapping-followup-link'

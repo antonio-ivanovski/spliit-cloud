@@ -1,8 +1,9 @@
+import { Loader2, Mail } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Loader2, Mail } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 
 export function MagicLinkForm(props: {
   email: string
@@ -25,8 +26,8 @@ export function MagicLinkForm(props: {
         className="w-full"
         disabled={props.isPending || !props.email.trim()}
       >
-        {props.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-        <Mail className="w-4 h-4 mr-2" />
+        {props.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        <Mail className="mr-2 h-4 w-4" />
         {t('sendMagicLink')}
       </Button>
     </form>

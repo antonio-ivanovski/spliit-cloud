@@ -1,3 +1,6 @@
+import { Calendar, Globe } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
 import { Card, CardContent } from '@/components/ui/card'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type { NormalizedSource } from '@spliit/domain/import'
@@ -5,8 +8,7 @@ import {
   collapseExpenseFromNormalized,
   summarizeLegacyRecurringImport,
 } from '@spliit/domain/import'
-import { Calendar, Globe } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+
 import type {
   ConversionMode,
   ParticipantMappingState,
@@ -200,7 +202,7 @@ export function ConfirmStep({
                           target,
                         })}
                       </span>
-                      <span className="ml-auto rounded-full bg-muted px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                      <span className="ml-auto rounded-full bg-muted px-2 py-0.5 font-mono text-[10px] tracking-wider text-muted-foreground uppercase">
                         {isPerDate
                           ? t('Groups.Import.Confirm.conversionPerDate')
                           : t('Groups.Import.Confirm.conversionFixed')}
@@ -217,7 +219,7 @@ export function ConfirmStep({
                               <span className="font-mono tabular-nums">
                                 {row.date}
                               </span>
-                              <span className="font-mono tabular-nums text-foreground">
+                              <span className="font-mono text-foreground tabular-nums">
                                 {t(
                                   'Groups.Import.CurrencyConversion.fixedRateRow',
                                   {
@@ -234,7 +236,7 @@ export function ConfirmStep({
                         <p className="ml-6 text-xs text-muted-foreground">—</p>
                       )
                     ) : rows.length > 0 ? (
-                      <p className="ml-6 font-mono text-xs tabular-nums text-foreground">
+                      <p className="ml-6 font-mono text-xs text-foreground tabular-nums">
                         {t('Groups.Import.CurrencyConversion.fixedRateRow', {
                           source: base,
                           rate: formatRate(rows[0].rate),

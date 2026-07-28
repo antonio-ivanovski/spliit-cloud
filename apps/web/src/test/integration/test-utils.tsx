@@ -1,14 +1,11 @@
 /**
  * Integration test utilities.
  *
- * For integration tests that hit the real API, use these helpers.
- * Import and use the real TRPCProvider, and mock auth at the hook
- * level (bypassing better-auth but letting through real tRPC calls).
+ * For integration tests that hit the real API, use these helpers. Import and
+ * use the real TRPCProvider, and mock auth at the hook level (bypassing
+ * better-auth but letting through real tRPC calls).
  */
 
-import { ThemeProvider } from '@/components/theme-provider'
-import { I18nProvider } from '@/i18n/react'
-import { TRPCProvider } from '@/trpc/client'
 import {
   cleanup,
   render as rtlRender,
@@ -17,6 +14,10 @@ import {
 import userEvent from '@testing-library/user-event'
 import { type ReactElement } from 'react'
 import { afterEach } from 'vitest'
+
+import { ThemeProvider } from '@/components/theme-provider'
+import { I18nProvider } from '@/i18n/react'
+import { TRPCProvider } from '@/trpc/client'
 
 afterEach(() => {
   cleanup()

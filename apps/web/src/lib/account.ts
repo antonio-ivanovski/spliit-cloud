@@ -14,7 +14,10 @@ export function needsDisplayName(account: {
 
 const PLACEHOLDER_EMAIL_DOMAIN = 'placeholder.local'
 
-/** Whether an email is a generated placeholder (link invite, OAuth without a verified email). */
+/**
+ * Whether an email is a generated placeholder (link invite, OAuth without a
+ * verified email).
+ */
 export function isPlaceholderEmail(email?: string | null): boolean {
   if (!email) return false
   return email.toLowerCase().endsWith(`.${PLACEHOLDER_EMAIL_DOMAIN}`)

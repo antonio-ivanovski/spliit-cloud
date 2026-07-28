@@ -1,6 +1,7 @@
+import { afterEach, describe, expect, it, vi } from 'vitest'
+
 import { DeletePopup } from '@/components/delete-popup'
 import { render, screen, waitFor } from '@/test/test-utils'
-import { afterEach, describe, expect, it, vi } from 'vitest'
 
 // The component now uses the responsive primitive, which switches between
 // Radix Dialog (desktop) and vaul Drawer (mobile) based on matchMedia.

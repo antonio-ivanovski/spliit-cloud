@@ -1,3 +1,5 @@
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+
 import type { GroupExpense } from '@/lib/api'
 import {
   cleanupTestAccount,
@@ -7,16 +9,14 @@ import {
 import { render, screen, within } from '@/test/integration/test-utils'
 import { prisma } from '@spliit/db'
 import { randomId } from '@spliit/domain'
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 /**
  * Integration tests for expense items.
  *
- * These tests use the same pattern as `group-creation.test.tsx`:
- * - Connect to a real API server on port 3001 (via `probeExistingApi`).
- * - Create a real group + expense via tRPC.
- * - Render React components (here `ExpenseCard`) with mocked context
- *   hooks, so we don't need a full router setup.
+ * These tests use the same pattern as `group-creation.test.tsx`: - Connect to a
+ * real API server on port 3001 (via `probeExistingApi`). - Create a real group
+ * + expense via tRPC. - Render React components (here `ExpenseCard`) with
+ * mocked context hooks, so we don't need a full router setup.
  *
  * The suite is skipped if the API is not running. Items are exercised
  * end-to-end through the API and the `ItemsPreview` part of the card.

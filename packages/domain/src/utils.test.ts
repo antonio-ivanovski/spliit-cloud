@@ -86,9 +86,8 @@ describe('formatCurrency', () => {
   }
 
   /**
-   * Variations to be tested, chosen as follows
-   * - `en-US` is a very common i18n fallback
-   * - `de-DE` exhibited faulty behavior in previous versions
+   * Variations to be tested, chosen as follows - `en-US` is a very common i18n
+   * fallback - `de-DE` exhibited faulty behavior in previous versions
    */
   const variations: variation[] = [
     {

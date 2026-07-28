@@ -6,6 +6,7 @@ import {
   notificationCategoryFamily,
   type NotificationCategory,
 } from '@spliit/domain/notifications'
+
 import { getAffectedParticipantIds } from '../api/expense-activity-diff'
 import type {
   ActivityNotificationEvent,

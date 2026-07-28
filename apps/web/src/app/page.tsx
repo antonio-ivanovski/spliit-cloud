@@ -1,5 +1,3 @@
-import { AuthPanel } from '@/components/auth/auth-panel'
-import { useCurrentAccount } from '@/lib/use-current-account'
 import type { Image } from 'lucide-react'
 import {
   Cloud,
@@ -11,6 +9,10 @@ import {
   Tags,
 } from 'lucide-react'
 import { Trans, useTranslation } from 'react-i18next'
+
+import { AuthPanel } from '@/components/auth/auth-panel'
+import { useCurrentAccount } from '@/lib/use-current-account'
+
 import { RecentGroupList } from './groups/recent-group-list'
 
 const signedOutFeatures = [
@@ -76,10 +78,10 @@ export default function HomePage() {
   }
 
   return (
-    <main className="flex-1 max-w-(--breakpoint-md) w-full mx-auto px-4 py-6 flex flex-col gap-6">
+    <main className="mx-auto flex w-full max-w-(--breakpoint-md) flex-1 flex-col gap-6 px-4 py-6">
       {isPending ? (
         <div className="flex items-center justify-center py-10">
-          <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
         </div>
       ) : (
         account && <RecentGroupList />
@@ -94,7 +96,7 @@ function LandingIntro() {
   return (
     <section className="mx-auto flex max-w-2xl flex-col gap-6 text-center lg:mx-0 lg:text-left">
       <div className="flex flex-col gap-4">
-        <h1 className="landing-header py-2 text-3xl font-bold leading-none! sm:text-4xl lg:text-5xl">
+        <h1 className="landing-header py-2 text-3xl leading-none! font-bold sm:text-4xl lg:text-5xl">
           <Trans i18nKey="Homepage.title" components={{ strong: <strong /> }} />
         </h1>
         <p className="text-base leading-7 text-muted-foreground sm:text-lg">
@@ -131,7 +133,7 @@ function FeatureItem({
     <div className="grid grid-cols-[auto_1fr] gap-3 rounded-lg bg-muted/35 px-3 py-3">
       <Icon className="mt-0.5 h-4 w-4 text-primary" />
       <div className="min-w-0">
-        <h2 className="text-sm font-medium leading-5">{title}</h2>
+        <h2 className="text-sm leading-5 font-medium">{title}</h2>
         <p className="mt-0.5 text-xs leading-5 text-muted-foreground">
           {description}
         </p>

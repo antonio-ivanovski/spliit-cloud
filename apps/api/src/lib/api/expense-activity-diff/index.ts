@@ -2,6 +2,7 @@ import type {
   ExpenseActivityChange,
   ExpenseChangedField,
 } from '@spliit/domain/activities'
+
 import { amountDiffer } from './amount.differ'
 import { categoryDiffer } from './category.differ'
 import { compositeExpenseDiffer } from './composite.differ'
@@ -72,9 +73,9 @@ const defaultDiffer = compositeExpenseDiffer([
 // ---------------------------------------------------------------------------
 
 /**
- * Lightweight, field-grouped diff between two expense versions. Returns
- * the list of field groups whose value differs, or `null` when nothing
- * meaningful changed.
+ * Lightweight, field-grouped diff between two expense versions. Returns the
+ * list of field groups whose value differs, or `null` when nothing meaningful
+ * changed.
  *
  * Delegates to the default composite differ's `changedFields()`.
  */
@@ -86,9 +87,9 @@ export function getExpenseChangedFields(
 }
 
 /**
- * Full change summary for the activity feed. Returns both a
- * backward-compatible `changedFields` list and per-field before/after
- * strings suitable for compact rendering in the activity feed.
+ * Full change summary for the activity feed. Returns both a backward-compatible
+ * `changedFields` list and per-field before/after strings suitable for compact
+ * rendering in the activity feed.
  *
  * Delegates to the default composite differ.
  */

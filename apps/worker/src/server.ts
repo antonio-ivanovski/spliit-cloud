@@ -13,6 +13,7 @@ import {
   startBoss,
   stopBoss,
 } from '@spliit/jobs'
+
 import { createAdminFetch, createDisabledHealthFetch } from './admin'
 import { handlers } from './handlers'
 
@@ -82,7 +83,7 @@ async function main() {
         signal,
       }),
     )
-    admin.stop(true)
+    await admin.stop(true)
     await stopBoss(boss)
     await prisma.$disconnect()
   }

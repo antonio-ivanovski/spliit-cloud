@@ -1,6 +1,7 @@
-import { AsyncButton } from '@/components/async-button'
-import { render, screen } from '@/test/test-utils'
 import { describe, expect, it, vi } from 'vitest'
+
+import { AsyncButton } from '@/components/async-button'
+import { act, render, screen } from '@/test/test-utils'
 
 describe('AsyncButton', () => {
   it('renders children when idle', () => {
@@ -76,7 +77,10 @@ describe('AsyncButton', () => {
     ).toBeInTheDocument()
 
     // Resolve the action
-    resolvePromise()
+    await act(async () => {
+      resolvePromise()
+      await deferred
+    })
     // Wait for the state update
     await vi.waitFor(() => {
       expect(screen.getByRole('button')).toHaveTextContent('Click me')

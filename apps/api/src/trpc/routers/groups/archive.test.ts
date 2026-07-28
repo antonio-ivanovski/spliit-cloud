@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
+
 import '../../../test/mocks'
 import {
   authState,
@@ -186,11 +187,10 @@ describe('groupsRouter.archive', () => {
 })
 
 /**
- * Build a single "expense" record as `getGroupExpenses` would return it
- * after the row is materialised by Prisma. The archive flow reads these
- * rows through `getGroupBalances` to decide whether settlement expenses
- * are required, so the shape must match the `select` clause of
- * `getGroupExpenses`.
+ * Build a single "expense" record as `getGroupExpenses` would return it after
+ * the row is materialised by Prisma. The archive flow reads these rows through
+ * `getGroupBalances` to decide whether settlement expenses are required, so the
+ * shape must match the `select` clause of `getGroupExpenses`.
  */
 function makeExpenseRow(args: {
   id: string

@@ -1,6 +1,7 @@
-import { ExpenseSplitBars } from '@/app/groups/[groupId]/expenses/expense-split-bars'
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+
+import { ExpenseSplitBars } from '@/app/groups/[groupId]/expenses/expense-split-bars'
 
 const EUR = {
   code: 'EUR',

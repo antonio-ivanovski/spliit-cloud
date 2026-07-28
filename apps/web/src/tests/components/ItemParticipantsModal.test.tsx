@@ -1,17 +1,18 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { type ReactElement } from 'react'
+import { useForm } from 'react-hook-form'
+import { describe, expect, it } from 'vitest'
+
 import type { SavedSplit } from '@/app/groups/[groupId]/expenses/expense-form/default-split/split-equal'
 import type { GroupShape } from '@/app/groups/[groupId]/expenses/expense-form/default-values'
 import { ItemParticipantsModal } from '@/app/groups/[groupId]/expenses/expense-form/item-participants-modal'
 import { expenseFormInputSchema } from '@/lib/schemas'
 import { render, screen } from '@/test/test-utils'
-import { zodResolver } from '@hookform/resolvers/zod'
 import type {
   Currency,
   ExpenseFormInputValues,
   ExpenseFormItemValues,
 } from '@spliit/domain'
-import { type ReactElement } from 'react'
-import { useForm } from 'react-hook-form'
-import { describe, expect, it } from 'vitest'
 
 const EUR: Currency = {
   code: 'EUR',

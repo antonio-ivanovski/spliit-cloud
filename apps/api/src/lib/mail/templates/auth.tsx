@@ -1,5 +1,6 @@
 import { Heading, Link, Section, Text } from '@react-email/components'
 import type { ReactElement } from 'react'
+
 import { getWebBaseUrl } from '../../auth/urls'
 import { EmailButton } from './components/email-button'
 import { EmailLayout } from './components/email-layout'
@@ -28,7 +29,7 @@ export function PasswordRecoveryEmail(props: {
     >
       <Heading
         as="h1"
-        className="m-0 mb-4 text-[24px] font-semibold text-[#0f172a] tracking-tight"
+        className="m-0 mb-4 text-[24px] font-semibold tracking-tight text-[#0f172a]"
       >
         Reset your Spliit Cloud password
       </Heading>
@@ -36,13 +37,13 @@ export function PasswordRecoveryEmail(props: {
         We received a request to reset the password for your Spliit Cloud
         account. Click the button below to choose a new password.
       </Text>
-      <Section className="text-center my-6">
+      <Section className="my-6 text-center">
         <EmailButton href={props.resetUrl} label="Reset password" />
       </Section>
       <Text className="m-0 mb-2 text-[14px] leading-[22px] text-[#0f172a]">
         If the button doesn't work, copy and paste this URL into your browser:
       </Text>
-      <Text className="m-0 mb-4 text-[13px] leading-[20px] text-[#64748b] break-all">
+      <Text className="m-0 mb-4 text-[13px] leading-[20px] break-all text-[#64748b]">
         <Link href={props.resetUrl} className="text-[#64748b] underline">
           {props.resetUrl}
         </Link>
@@ -71,7 +72,7 @@ export function SignInGuidanceEmail(props: {
     >
       <Heading
         as="h1"
-        className="m-0 mb-4 text-[24px] font-semibold text-[#0f172a] tracking-tight"
+        className="m-0 mb-4 text-[24px] font-semibold tracking-tight text-[#0f172a]"
       >
         Sign in to Spliit Cloud
       </Heading>
@@ -80,7 +81,7 @@ export function SignInGuidanceEmail(props: {
         it does not have a password sign-in method. Please use one of the other
         sign-in methods instead.
       </Text>
-      <Section className="bg-[#f8fafc] border border-solid border-[#e5e7eb] rounded-md px-5 py-4 my-4">
+      <Section className="my-4 rounded-md border border-solid border-[#e5e7eb] bg-[#f8fafc] px-5 py-4">
         <Text className="m-0 text-[14px] leading-[20px] text-[#0f172a]">
           <strong>Available methods:</strong> {props.methods}.
         </Text>
@@ -103,7 +104,7 @@ export function VerificationEmail(props: {
     >
       <Heading
         as="h1"
-        className="m-0 mb-4 text-[24px] font-semibold text-[#0f172a] tracking-tight"
+        className="m-0 mb-4 text-[24px] font-semibold tracking-tight text-[#0f172a]"
       >
         Verify your Spliit Cloud account
       </Heading>
@@ -111,13 +112,13 @@ export function VerificationEmail(props: {
         Tap the button below to confirm your email and finish creating your
         Spliit Cloud account.
       </Text>
-      <Section className="text-center my-6">
+      <Section className="my-6 text-center">
         <EmailButton href={props.verificationUrl} label="Verify my email" />
       </Section>
       <Text className="m-0 mb-2 text-[14px] leading-[22px] text-[#0f172a]">
         If the button doesn't work, copy and paste this URL into your browser:
       </Text>
-      <Text className="m-0 mb-4 text-[13px] leading-[20px] text-[#64748b] break-all">
+      <Text className="m-0 mb-4 text-[13px] leading-[20px] break-all text-[#64748b]">
         <Link href={props.verificationUrl} className="text-[#64748b] underline">
           {props.verificationUrl}
         </Link>
@@ -141,7 +142,7 @@ export function MagicLinkEmail(props: {
     >
       <Heading
         as="h1"
-        className="m-0 mb-4 text-[24px] font-semibold text-[#0f172a] tracking-tight"
+        className="m-0 mb-4 text-[24px] font-semibold tracking-tight text-[#0f172a]"
       >
         Your Spliit Cloud sign-in link
       </Heading>
@@ -149,13 +150,13 @@ export function MagicLinkEmail(props: {
         Click the button below to sign in to your Spliit Cloud account. The link
         will expire once used.
       </Text>
-      <Section className="text-center my-6">
+      <Section className="my-6 text-center">
         <EmailButton href={props.signInUrl} label="Sign in to Spliit Cloud" />
       </Section>
       <Text className="m-0 mb-2 text-[14px] leading-[22px] text-[#0f172a]">
         If the button doesn't work, copy and paste this URL into your browser:
       </Text>
-      <Text className="m-0 mb-4 text-[13px] leading-[20px] text-[#64748b] break-all">
+      <Text className="m-0 mb-4 text-[13px] leading-[20px] break-all text-[#64748b]">
         <Link href={props.signInUrl} className="text-[#64748b] underline">
           {props.signInUrl}
         </Link>
@@ -174,10 +175,10 @@ export function MagicLinkEmail(props: {
 /**
  * Render the password-recovery email.
  *
- * The credential-account variant carries a reset CTA plus a note
- * listing the other sign-in methods on this account. The
- * magic-link-only variant explains that there is no password to reset
- * and instructs the user to use one of the other methods.
+ * The credential-account variant carries a reset CTA plus a note listing the
+ * other sign-in methods on this account. The magic-link-only variant explains
+ * that there is no password to reset and instructs the user to use one of the
+ * other methods.
  *
  * The text and HTML bodies share the same action and security guidance.
  */

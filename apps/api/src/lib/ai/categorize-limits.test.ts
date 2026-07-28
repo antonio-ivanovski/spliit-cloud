@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest'
+
 import {
   BULK_APPLY_HARD_LIMIT,
   BULK_CALIBRATION_CANDIDATE_POOL_SIZE,
@@ -7,7 +9,6 @@ import {
   BULK_PREVIEW_MAX_TARGETS,
   TITLE_CHAR_LIMIT,
 } from '@spliit/domain'
-import { describe, expect, it } from 'vitest'
 
 describe('AI shared limits', () => {
   it('exposes bounded values', () => {

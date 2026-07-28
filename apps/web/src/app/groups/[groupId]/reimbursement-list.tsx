@@ -1,3 +1,6 @@
+import { useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
+
 import { ParticipantAvatar } from '@/components/participant-avatar'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/i18n/react'
@@ -5,8 +8,7 @@ import type { AccountIdentity } from '@/lib/account'
 import type { Reimbursement } from '@/lib/balances'
 import type { Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
-import { useState } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+
 import { CreateReimbursementModal } from './balances/create-reimbursement-modal'
 import { RemovedParticipantBadge } from './balances/removed-participant-badge'
 
@@ -41,7 +43,7 @@ export function ReimbursementList({
 
   if (reimbursements.length === 0) {
     return (
-      <p className="text-sm pb-6" data-testid="no-reimbursements">
+      <p className="pb-6 text-sm" data-testid="no-reimbursements">
         {t('noImbursements')}
       </p>
     )
@@ -57,12 +59,12 @@ export function ReimbursementList({
         const toName = to?.name ?? ''
         return (
           <div
-            className="py-4 flex min-w-0 justify-between gap-2"
+            className="flex min-w-0 justify-between gap-2 py-4"
             key={`${reimbursement.from}-${reimbursement.to}`}
             data-testid={`reimbursement-row-${fromName}-${toName}`}
           >
-            <div className="flex min-w-0 flex-1 flex-col gap-1 items-start sm:flex-row sm:items-center sm:gap-4">
-              <div className="flex items-center gap-2 min-w-0">
+            <div className="flex min-w-0 flex-1 flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-4">
+              <div className="flex min-w-0 items-center gap-2">
                 {from && (
                   <span className="inline-flex shrink-0 items-center gap-1">
                     <ParticipantAvatar

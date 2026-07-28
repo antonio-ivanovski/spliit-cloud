@@ -79,7 +79,7 @@ export function parseCurrencyPaste(
   if (!/^\d[\d.,]*$/.test(numeric)) return null
 
   const separators = [...numeric.matchAll(/[.,]/g)].map((match) => match.index!)
-  const separatorChars = [...numeric].filter(
+  const separatorChars = Array.from(numeric).filter(
     (char) => char === '.' || char === ',',
   )
   let integerPart = numeric

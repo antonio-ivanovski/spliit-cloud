@@ -12,9 +12,9 @@ const pendingDispatches: Promise<void>[] = []
 
 /**
  * Await all in-flight notification dispatches scheduled via
- * {@link scheduleNotificationDispatch}. Calling this between test
- * assertions makes the side-effect timing deterministic instead of
- * relying on imprecise timers.
+ * {@link scheduleNotificationDispatch}. Calling this between test assertions
+ * makes the side-effect timing deterministic instead of relying on imprecise
+ * timers.
  *
  * Safe to call when no dispatches are pending — returns immediately.
  */
@@ -33,17 +33,16 @@ export async function waitForScheduledNotificationDispatchesForTest(): Promise<v
 }
 
 /**
- * Hand the event to the dispatcher on a later loop turn so the calling
- * mutation can return to the client before delivery starts.
+ * Hand the event to the dispatcher on a later loop turn so the calling mutation
+ * can return to the client before delivery starts.
  *
- * - Microtask scheduling is preferred: it runs before the next macrotask
- *   so the mutation's transaction commit and the dispatch start are
- *   separated by at most a turn, which keeps integration tests that
- *   assert on the singleton dispatcher deterministic.
- * - The dispatcher contract already documents best-effort delivery, but
- *   this helper also wraps the call in `try`/`catch` so an unforeseen
- *   throw becomes a `console.warn` instead of an uncaught promise
- *   rejection.
+ * - Microtask scheduling is preferred: it runs before the next macrotask so the
+ *   mutation's transaction commit and the dispatch start are separated by at
+ *   most a turn, which keeps integration tests that assert on the singleton
+ *   dispatcher deterministic.
+ * - The dispatcher contract already documents best-effort delivery, but this
+ *   helper also wraps the call in `try`/`catch` so an unforeseen throw becomes
+ *   a `console.warn` instead of an uncaught promise rejection.
  *
  * The helper intentionally does NOT await the dispatch — call sites can
  * fire-and-forget after their transaction commits.

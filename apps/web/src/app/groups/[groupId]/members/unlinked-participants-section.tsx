@@ -1,3 +1,7 @@
+import { Link2, Trash2 } from 'lucide-react'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -8,9 +12,7 @@ import {
 } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { trpc } from '@/trpc/client'
-import { Link2, Trash2 } from 'lucide-react'
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
+
 import { LinkUnlinkedParticipantDialog } from './link-unlinked-participant-dialog'
 
 export function UnlinkedParticipantsSection({

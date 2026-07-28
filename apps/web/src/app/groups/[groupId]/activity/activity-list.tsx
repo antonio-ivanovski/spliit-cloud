@@ -1,11 +1,13 @@
-import type { Activity } from '@/app/groups/[groupId]/activity/activity-item'
-import { ActivityItem } from '@/app/groups/[groupId]/activity/activity-item'
-import { Skeleton } from '@/components/ui/skeleton'
-import { trpc } from '@/trpc/client'
 import dayjs, { type Dayjs } from 'dayjs'
 import { forwardRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useInView } from 'react-intersection-observer'
+
+import type { Activity } from '@/app/groups/[groupId]/activity/activity-item'
+import { ActivityItem } from '@/app/groups/[groupId]/activity/activity-item'
+import { Skeleton } from '@/components/ui/skeleton'
+import { trpc } from '@/trpc/client'
+
 import { useCurrentGroup } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
 
@@ -115,7 +117,7 @@ export function ActivityList() {
   const hasMore = activitiesData?.pages.at(-1)?.hasMore ?? false
 
   useEffect(() => {
-    if (inView && hasMore && !isLoading) fetchNextPage()
+    if (inView && hasMore && !isLoading) void fetchNextPage()
   }, [fetchNextPage, hasMore, inView, isLoading])
 
   if (isLoading || !activities || !group) return <ActivitiesLoading />
@@ -136,7 +138,7 @@ export function ActivityList() {
           <div key={dateGroup} data-testid={`activity-date-group-${dateGroup}`}>
             <div
               className={
-                'text-muted-foreground text-xs py-1 font-semibold sticky top-(--app-header-height) bg-white dark:bg-[#1b1917]'
+                'sticky top-(--app-header-height) bg-white py-1 text-xs font-semibold text-muted-foreground dark:bg-[#1b1917]'
               }
             >
               {t(DATE_GROUP_I18N_KEYS[dateGroup])}
@@ -155,7 +157,7 @@ export function ActivityList() {
       {hasMore && <ActivitiesLoading ref={loadingRef} />}
     </div>
   ) : (
-    <p className="text-sm py-6" data-testid="activity-list-empty">
+    <p className="py-6 text-sm" data-testid="activity-list-empty">
       {t('noActivity')}
     </p>
   )

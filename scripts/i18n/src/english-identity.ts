@@ -1,8 +1,8 @@
 /**
  * Detects when a non-en-US locale value is identical to the English source.
  * Some identical values are language-neutral and auto-allowed (brands, URLs,
- * placeholder-only templates); everything else needs a real translation or
- * an explicit --allow-english escape hatch.
+ * placeholder-only templates); everything else needs a real translation or an
+ * explicit --allow-english escape hatch.
  */
 
 const BRAND_TOKENS = new Set([

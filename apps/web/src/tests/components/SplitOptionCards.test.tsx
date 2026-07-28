@@ -1,9 +1,10 @@
+import { describe, expect, it, vi } from 'vitest'
+
 import {
   PaidBySplitOptionCards,
   PaidForSplitOptionCards,
 } from '@/app/groups/[groupId]/expenses/expense-form/split-option-cards'
 import { render, screen } from '@/test/test-utils'
-import { describe, expect, it, vi } from 'vitest'
 
 describe('PaidBySplitOptionCards', () => {
   it('renders 5 options across two section labels', () => {

@@ -1,8 +1,9 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
 import {
   NotificationCategory,
   NotificationChannel,
 } from '@spliit/domain/notifications'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { handleNotificationDelivery } from './notification-delivery'
 

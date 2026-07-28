@@ -1,7 +1,7 @@
-import { render, screen, waitFor } from '@/test/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
 
 import { OfflineBanner } from '@/components/offline-banner'
+import { act, render, screen, waitFor } from '@/test/test-utils'
 
 describe('OfflineBanner', () => {
   afterEach(() => {
@@ -40,7 +40,9 @@ describe('OfflineBanner', () => {
     render(<OfflineBanner />)
     expect(screen.queryByTestId('offline-banner')).not.toBeInTheDocument()
 
-    window.dispatchEvent(new Event('offline'))
+    act(() => {
+      window.dispatchEvent(new Event('offline'))
+    })
 
     expect(await screen.findByTestId('offline-banner')).toBeInTheDocument()
   })
@@ -53,7 +55,9 @@ describe('OfflineBanner', () => {
     render(<OfflineBanner />)
     expect(screen.getByTestId('offline-banner')).toBeInTheDocument()
 
-    window.dispatchEvent(new Event('online'))
+    act(() => {
+      window.dispatchEvent(new Event('online'))
+    })
 
     await waitFor(() => {
       expect(screen.queryByTestId('offline-banner')).not.toBeInTheDocument()

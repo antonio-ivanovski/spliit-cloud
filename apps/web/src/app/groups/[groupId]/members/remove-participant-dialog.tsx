@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { ParticipantAvatar } from '@/components/participant-avatar'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -13,7 +15,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { useLocale } from '@/i18n/react'
 import { formatCurrency, getCurrencyFromGroup } from '@/lib/utils'
-import { useTranslation } from 'react-i18next'
+
 import {
   settlementLegKey,
   sumSettlementLegs,
@@ -133,7 +135,7 @@ export function RemoveParticipantDialog({
             </div>
           ) : preview.hasUnsettledBalance ? (
             <>
-              <label className="flex items-start gap-2 text-sm cursor-pointer text-amber-700 dark:text-amber-400">
+              <label className="flex cursor-pointer items-start gap-2 text-sm text-amber-700 dark:text-amber-400">
                 <Checkbox
                   checked={participantRemoveSettleChecked}
                   onCheckedChange={(checked) =>
@@ -152,7 +154,7 @@ export function RemoveParticipantDialog({
                       count: settlementLegs.length,
                     })}
                   </div>
-                  <div className="text-2xl font-bold tabular-nums tracking-tight">
+                  <div className="text-2xl font-bold tracking-tight tabular-nums">
                     {formatCurrency(currency, settlementTotal, locale)}
                   </div>
                   <div className="text-sm text-muted-foreground">
@@ -192,7 +194,7 @@ export function RemoveParticipantDialog({
                                   name: counterparty?.name ?? '',
                                 })}
                           </span>
-                          <span className="shrink-0 tabular-nums text-sm">
+                          <span className="shrink-0 text-sm tabular-nums">
                             {formatCurrency(currency, leg.amount, locale)}
                           </span>
                         </div>

@@ -1,6 +1,8 @@
-import { GroupRole, GroupType } from '@spliit/db'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
+
+import { GroupRole, GroupType } from '@spliit/db'
+
 import {
   linkUnlinkedParticipantToAccount,
   linkUnlinkedParticipantToPendingInvite,
@@ -18,23 +20,23 @@ import {
 import { candidatesProcedure } from './candidates.procedure'
 
 /**
- * Post-import admin flow: list unlinked participants for a group and
- * migrate one to an account as a one-way move. After the link, the
- * historical and future balances of the `LedgerParticipant` are
- * associated with the account and appear in account-level views.
+ * Post-import admin flow: list unlinked participants for a group and migrate
+ * one to an account as a one-way move. After the link, the historical and
+ * future balances of the `LedgerParticipant` are associated with the account
+ * and appear in account-level views.
  *
  * Both procedures require the caller to be an ADMIN of the group.
  */
 export const importLinksRouter = createTRPCRouter({
   /**
-   * Accounts and pending invitations that could be linked to an
-   * unlinked imported participant.
+   * Accounts and pending invitations that could be linked to an unlinked
+   * imported participant.
    */
   candidates: candidatesProcedure,
 
   /**
-   * List imported participants that are not yet linked to an account
-   * or pending invitation.
+   * List imported participants that are not yet linked to an account or pending
+   * invitation.
    */
   listUnlinked: protectedProcedure
     .input(z.object({ groupId: z.string().min(1) }))
@@ -46,8 +48,8 @@ export const importLinksRouter = createTRPCRouter({
     }),
 
   /**
-   * Link an unlinked imported participant to an account, email, or
-   * pending invitation (exactly one).
+   * Link an unlinked imported participant to an account, email, or pending
+   * invitation (exactly one).
    */
   link: protectedProcedure
     .input(

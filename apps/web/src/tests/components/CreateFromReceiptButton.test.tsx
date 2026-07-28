@@ -1,7 +1,8 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { useCurrentGroup } from '@/app/groups/[groupId]/current-group-context'
 import { ReceiptScanTrigger } from '@/app/groups/[groupId]/expenses/create-from-receipt-button'
-import { fireEvent, render, screen, waitFor } from '@/test/test-utils'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { act, render, screen, waitFor } from '@/test/test-utils'
 
 const mockMutateAsync = vi.fn()
 const mockToast = vi.fn()
@@ -88,8 +89,16 @@ beforeEach(() => {
 async function openDialog() {
   const result = renderTrigger()
   const trigger = screen.getByRole('button', { name: /ai receipt scan/i })
-  fireEvent.click(trigger)
+  await result.user.click(trigger)
   return result
+}
+
+async function waitForSettledCheckbox() {
+  const checkbox = await screen.findByRole('checkbox', { name: /translate/i })
+  await waitFor(() => {
+    expect(checkbox).toBeEnabled()
+  })
+  return checkbox
 }
 
 describe('ReceiptScanTrigger translate checkbox', () => {
@@ -102,7 +111,7 @@ describe('ReceiptScanTrigger translate checkbox', () => {
 
     expect(mockMutateAsync.mock.calls[0][0].translateToLocale).toBe(false)
 
-    const checkbox = await screen.findByRole('checkbox', { name: /translate/i })
+    const checkbox = await waitForSettledCheckbox()
     expect(checkbox).not.toBeChecked()
   })
 
@@ -117,19 +126,19 @@ describe('ReceiptScanTrigger translate checkbox', () => {
 
     expect(mockMutateAsync.mock.calls[0][0].translateToLocale).toBe(true)
 
-    const checkbox = await screen.findByRole('checkbox', { name: /translate/i })
+    const checkbox = await waitForSettledCheckbox()
     expect(checkbox).toBeChecked()
   })
 
   it('persists the checkbox value to localStorage on toggle', async () => {
-    await openDialog()
+    const { user } = await openDialog()
 
     await waitFor(() => {
       expect(mockMutateAsync).toHaveBeenCalledTimes(1)
     })
 
-    const checkbox = await screen.findByRole('checkbox', { name: /translate/i })
-    fireEvent.click(checkbox)
+    const checkbox = await waitForSettledCheckbox()
+    await user.click(checkbox)
 
     expect(localStorage.getItem('spliit-receipt-translate-to-locale')).toBe(
       'true',
@@ -137,14 +146,14 @@ describe('ReceiptScanTrigger translate checkbox', () => {
   })
 
   it('rescans with the new value when toggled after a completed scan', async () => {
-    await openDialog()
+    const { user } = await openDialog()
 
     await waitFor(() => {
       expect(mockMutateAsync).toHaveBeenCalledTimes(1)
     })
 
-    const checkbox = await screen.findByRole('checkbox', { name: /translate/i })
-    fireEvent.click(checkbox)
+    const checkbox = await waitForSettledCheckbox()
+    await user.click(checkbox)
 
     await waitFor(() => {
       expect(mockMutateAsync).toHaveBeenCalledTimes(2)
@@ -168,7 +177,9 @@ describe('ReceiptScanTrigger translate checkbox', () => {
     const checkbox = await screen.findByRole('checkbox', { name: /translate/i })
     expect(checkbox).toBeDisabled()
 
-    resolveScan!(scanResult)
+    await act(async () => {
+      resolveScan!(scanResult)
+    })
 
     await waitFor(() => {
       expect(screen.getByRole('checkbox', { name: /translate/i })).toBeEnabled()
@@ -192,14 +203,14 @@ describe('ReceiptScanTrigger translate checkbox', () => {
     })
 
     expect(mockMutateAsync.mock.calls[0][0].translateToLocale).toBe(false)
-    const checkbox = await screen.findByRole('checkbox', { name: /translate/i })
+    const checkbox = await waitForSettledCheckbox()
     expect(checkbox).not.toBeChecked()
 
     getItemSpy.mockRestore()
   })
 
   it('does not break when localStorage.setItem throws on toggle', async () => {
-    await openDialog()
+    const { user } = await openDialog()
 
     await waitFor(() => {
       expect(mockMutateAsync).toHaveBeenCalledTimes(1)
@@ -211,8 +222,8 @@ describe('ReceiptScanTrigger translate checkbox', () => {
         throw new Error('storage unavailable')
       })
 
-    const checkbox = await screen.findByRole('checkbox', { name: /translate/i })
-    fireEvent.click(checkbox)
+    const checkbox = await waitForSettledCheckbox()
+    await user.click(checkbox)
 
     await waitFor(() => {
       expect(mockMutateAsync).toHaveBeenCalledTimes(2)
@@ -231,7 +242,7 @@ describe('ReceiptScanTrigger translate checkbox', () => {
     )
     mockMutateAsync.mockResolvedValue(scanResult)
 
-    await openDialog()
+    const { user } = await openDialog()
 
     await waitFor(() => {
       expect(mockMutateAsync).toHaveBeenCalledTimes(1)
@@ -239,7 +250,9 @@ describe('ReceiptScanTrigger translate checkbox', () => {
 
     // Fail the first scan → selectedDocument is set, receiptInfo stays null,
     // and a destructive Retry toast is registered.
-    rejectScan!(new Error('AI service unavailable'))
+    await act(async () => {
+      rejectScan!(new Error('AI service unavailable'))
+    })
 
     await waitFor(() => {
       expect(mockToast).toHaveBeenCalled()
@@ -254,18 +267,23 @@ describe('ReceiptScanTrigger translate checkbox', () => {
     expect(mockMutateAsync).toHaveBeenCalledTimes(1)
 
     // Toggling the checkbox after a failed scan must NOT trigger another request.
-    const checkbox = await screen.findByRole('checkbox', { name: /translate/i })
-    fireEvent.click(checkbox)
+    const checkbox = await waitForSettledCheckbox()
+    await user.click(checkbox)
 
     // Give any rogue effect a chance to fire.
-    await new Promise((r) => setTimeout(r, 0))
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 0))
+    })
     expect(mockMutateAsync).toHaveBeenCalledTimes(1)
 
     // Invoking the Retry action must send the latest translateToLocale value.
-    retryAction.props.onClick()
+    act(() => {
+      retryAction.props.onClick()
+    })
 
     await waitFor(() => {
       expect(mockMutateAsync).toHaveBeenCalledTimes(2)
+      expect(checkbox).toBeEnabled()
     })
 
     expect(mockMutateAsync.mock.calls[1][0].translateToLocale).toBe(true)

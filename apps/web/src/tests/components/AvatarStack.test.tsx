@@ -1,6 +1,7 @@
-import { AvatarStack } from '@/components/avatar-stack'
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+
+import { AvatarStack } from '@/components/avatar-stack'
 
 describe('AvatarStack', () => {
   it('keeps fallback avatars opaque when they overlap', () => {

@@ -33,6 +33,7 @@ const CardTitle = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLHeadingElement>
 >(({ className, ...props }, ref) => (
+  // oxlint-disable-next-line jsx-a11y/heading-has-content -- CardTitle forwards children from consumers.
   <h3
     ref={ref}
     className={cn(

@@ -1,9 +1,11 @@
-import type { Balances, Reimbursement } from '@/lib/balances'
-import { getCurrencyFromGroup } from '@/lib/utils'
-import { trpc } from '@/trpc/client'
 import { getRouteApi, useNavigate } from '@tanstack/react-router'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+
+import type { Balances, Reimbursement } from '@/lib/balances'
+import { getCurrencyFromGroup } from '@/lib/utils'
+import { trpc } from '@/trpc/client'
+
 import { useCurrentGroup } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
 import { BalanceViewSelector, type BalanceView } from './balance-view-selector'
@@ -29,7 +31,8 @@ type CurrencyBalanceBucket = {
 function mergeBalanceParticipants(
   groupParticipants: BalanceParticipant[],
   balanceParticipants:
-    Array<{ id: string; name: string; removed?: boolean }> | undefined,
+    | Array<{ id: string; name: string; removed?: boolean }>
+    | undefined,
 ): BalanceParticipant[] {
   if (!balanceParticipants?.length) return groupParticipants
   const byId = new Map(groupParticipants.map((p) => [p.id, { ...p }]))
@@ -96,13 +99,16 @@ export default function BalancesAndReimbursements() {
   useEffect(() => {
     // Until we use tRPC more widely and can invalidate the cache on expense
     // update, it's easier and safer to invalidate the cache on page load.
-    utils.groups.balances.invalidate()
+    void utils.groups.balances.invalidate()
   }, [utils])
 
   useEffect(() => {
     try {
       const saved = window.localStorage.getItem('spliit-balances-view')
-      if (saved === 'simple' || saved === 'visual') setStoredView(saved)
+      if (saved === 'simple' || saved === 'visual') {
+        // oxlint-disable-next-line react/react-compiler -- restore the persisted view after reading browser storage.
+        setStoredView(saved)
+      }
     } catch {
       // Private browsing and disabled storage should not block the balances page.
     }

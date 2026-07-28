@@ -1,5 +1,6 @@
 import type { Prisma } from '@spliit/db'
 import { conversionFromStored, type Expense } from '@spliit/domain'
+
 import type { buildRecurringTemplate } from '../recurrence-series'
 import { toRecurrenceConfig } from '../recurrence-series'
 import {
@@ -41,8 +42,10 @@ export type RecurrenceShape = {
   recurrenceRule: Expense['recurrenceRule']
 }
 
-/** Recurrence identity is shared between before/after shapes for a future row:
- * series recurrence is per-series, not per-row, so it cancels in the diff. */
+/**
+ * Recurrence identity is shared between before/after shapes for a future row:
+ * series recurrence is per-series, not per-row, so it cancels in the diff.
+ */
 export function sharedRecurrenceFromSeries(
   series: {
     frequency: string
@@ -59,10 +62,12 @@ export function sharedRecurrenceFromSeries(
   }
 }
 
-/** Map a snapshot row to the BEFORE shape used by activity diffs.
- * Recurrence is supplied separately so before/after use the same identity.
- * Item ids are dropped on BOTH sides: template propagation recreates items
- * wholesale, so ephemeral DB ids would otherwise fake an all-items diff. */
+/**
+ * Map a snapshot row to the BEFORE shape used by activity diffs. Recurrence is
+ * supplied separately so before/after use the same identity. Item ids are
+ * dropped on BOTH sides: template propagation recreates items wholesale, so
+ * ephemeral DB ids would otherwise fake an all-items diff.
+ */
 export function futureRowBeforeShape(
   row: FutureRowSnapshot,
   shared: RecurrenceShape,
@@ -134,10 +139,12 @@ export function futureRowBeforeShape(
   }
 }
 
-/** Build the AFTER shape from the new template + this row's resolved
- * conversion. The row's `documents` and the shared series recurrence
- * identity are passed through unchanged (no per-row document or
- * recurrence diff). Pass `expenseDate` when a schedule reflow moves the row. */
+/**
+ * Build the AFTER shape from the new template + this row's resolved conversion.
+ * The row's `documents` and the shared series recurrence identity are passed
+ * through unchanged (no per-row document or recurrence diff). Pass
+ * `expenseDate` when a schedule reflow moves the row.
+ */
 export function futureRowAfterShape(args: {
   row: FutureRowSnapshot
   template: ReturnType<typeof buildRecurringTemplate>

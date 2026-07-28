@@ -4,13 +4,12 @@ import type { ExpenseDiffer } from './types'
 /**
  * Detects and formats changes to the expense split configuration.
  *
- * The split is considered changed if any of the following differ:
- * - paid-for row shares (order-independent)
- * - split mode
- * - itemized remainder configuration (only when both sides are ITEMIZED;
- *   the remainder is semantically meaningless for non-itemized expenses
- *   and the form fabricates a default value for them, so comparing it
- *   here would produce false positives on otherwise no-op edits)
+ * The split is considered changed if any of the following differ: - paid-for
+ * row shares (order-independent) - split mode - itemized remainder
+ * configuration (only when both sides are ITEMIZED; the remainder is
+ * semantically meaningless for non-itemized expenses and the form fabricates a
+ * default value for them, so comparing it here would produce false positives on
+ * otherwise no-op edits)
  *
  * Wraps {@link splitSemantics} for comparison and formatting logic.
  */

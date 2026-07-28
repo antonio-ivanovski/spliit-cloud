@@ -1,3 +1,5 @@
+import { z } from 'zod'
+
 import type { CreateExpenseSearch } from '@/router/schemas'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type {
@@ -14,7 +16,6 @@ import {
   getCurrency,
   randomId,
 } from '@spliit/domain'
-import { z } from 'zod'
 
 // Storage-units shape returned by `trpc.account.defaultSplit`. Matches
 // `defaultSplitSchema` in packages/domain: shares in basis points for
@@ -180,8 +181,8 @@ function parsePrefilledSettlement(
 
 /**
  * Resolve the "neutral" default split for a group (no per-user override):
- * `EVENLY` over all participants. The form later applies the saved
- * default when present (see `buildExpenseFormDefaults`).
+ * `EVENLY` over all participants. The form later applies the saved default when
+ * present (see `buildExpenseFormDefaults`).
  */
 export function getNeutralDefaultSplit(
   group: GroupShape,
@@ -196,11 +197,10 @@ export function getNeutralDefaultSplit(
 }
 
 /**
- * Convert a persisted default split (storage units: basis points,
- * minor units, raw counts) into the form's display units, filtering
- * out any participant ids that are no longer in the group. Returns
- * null when nothing remains after filtering, so the caller can fall
- * back to the neutral default.
+ * Convert a persisted default split (storage units: basis points, minor units,
+ * raw counts) into the form's display units, filtering out any participant ids
+ * that are no longer in the group. Returns null when nothing remains after
+ * filtering, so the caller can fall back to the neutral default.
  */
 export function savedDefaultToFormValues(
   raw: unknown,

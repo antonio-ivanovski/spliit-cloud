@@ -5,11 +5,11 @@ import type { DifferenceableExpense } from './types'
 // ---------------------------------------------------------------------------
 
 /**
- * Union of every `ledgerParticipantId` referenced by old and new expense
- * payer / split / item / remainder data. Used to determine who must be
- * notified of an update: anyone whose presence in the expense changed,
- * including someone who used to be referenced but no longer is, as long
- * as they are still an active group member.
+ * Union of every `ledgerParticipantId` referenced by old and new expense payer
+ * / split / item / remainder data. Used to determine who must be notified of an
+ * update: anyone whose presence in the expense changed, including someone who
+ * used to be referenced but no longer is, as long as they are still an active
+ * group member.
  *
  * Tolerates undefined for both sides so the helper supports create (old
  * undefined) and delete (new undefined) without explicit branching.

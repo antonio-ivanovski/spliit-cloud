@@ -1,3 +1,5 @@
+import { afterEach, describe, expect, it, vi } from 'vitest'
+
 import {
   ResponsiveDialog,
   ResponsiveDialogBody,
@@ -9,7 +11,6 @@ import {
   ResponsiveDialogTrigger,
 } from '@/components/ui/responsive-dialog'
 import { render, screen } from '@/test/test-utils'
-import { afterEach, describe, expect, it, vi } from 'vitest'
 
 // ── Helpers ─────────────────────────────────────────────────────────────
 

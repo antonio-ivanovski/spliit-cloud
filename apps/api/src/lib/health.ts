@@ -1,4 +1,5 @@
 import { getDatabasePoolStats, prisma } from '@spliit/db'
+
 import { hasDatabaseEnv } from './env'
 
 export interface HealthCheckStatus {

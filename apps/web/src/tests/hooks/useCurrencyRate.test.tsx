@@ -1,6 +1,7 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { useCurrencyRate } from '@/lib/hooks'
 import { render, screen } from '@/test/test-utils'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 // ── Mock tRPC client ───────────────────────────────────────────────────
 
@@ -43,7 +44,7 @@ function TestComponent({
       <button
         data-testid="refresh"
         onClick={() => {
-          result.refresh()
+          void result.refresh()
         }}
       >
         refresh

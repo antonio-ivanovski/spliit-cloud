@@ -1,4 +1,5 @@
 import type { ConversionSource, ExpenseConversionInput } from '@spliit/domain'
+
 import type { ExpenseDiffer } from './types'
 
 const sourceLabels = {
@@ -58,8 +59,8 @@ export const conversionSourceDiffer: ExpenseDiffer = {
 }
 
 /**
- * Detects and formats changes to the conversion rate. Rate-only edits
- * show up even when the source stays the same.
+ * Detects and formats changes to the conversion rate. Rate-only edits show up
+ * even when the source stays the same.
  */
 export const conversionRateDiffer: ExpenseDiffer = {
   field: 'conversionRate',

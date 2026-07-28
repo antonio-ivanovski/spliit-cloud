@@ -1,5 +1,6 @@
 import { Heading, Link, Section, Text } from '@react-email/components'
 import type { ReactElement } from 'react'
+
 import { EmailButton } from './components/email-button'
 import { EmailLayout } from './components/email-layout'
 import { renderTemplate } from './render'
@@ -30,7 +31,7 @@ export function GroupActivityEmail(
     >
       <Heading
         as="h1"
-        className="m-0 mb-3 text-[22px] font-semibold text-[#0f172a] tracking-tight"
+        className="m-0 mb-3 text-[22px] font-semibold tracking-tight text-[#0f172a]"
       >
         {props.activityLabel}
       </Heading>
@@ -40,19 +41,19 @@ export function GroupActivityEmail(
         <strong>{props.actorName}</strong>.
       </Text>
       {props.summary ? (
-        <Section className="bg-[#f8fafc] border border-solid border-[#e5e7eb] rounded-md px-5 py-4 my-4">
+        <Section className="my-4 rounded-md border border-solid border-[#e5e7eb] bg-[#f8fafc] px-5 py-4">
           <Text className="m-0 text-[14px] leading-[22px] text-[#0f172a]">
             {props.summary}
           </Text>
         </Section>
       ) : null}
-      <Section className="text-center my-6">
+      <Section className="my-6 text-center">
         <EmailButton href={props.groupUrl} label="View group" />
       </Section>
       <Text className="m-0 mb-2 text-[14px] leading-[22px] text-[#0f172a]">
         If the button doesn't work, copy and paste this URL into your browser:
       </Text>
-      <Text className="m-0 text-[13px] leading-[20px] text-[#64748b] break-all">
+      <Text className="m-0 text-[13px] leading-[20px] break-all text-[#64748b]">
         <Link href={props.groupUrl} className="text-[#64748b] underline">
           {props.groupUrl}
         </Link>

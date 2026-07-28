@@ -1,3 +1,6 @@
+import { TRPCError } from '@trpc/server'
+import { z } from 'zod'
+
 import {
   GroupInvitationStatus,
   GroupInvitationType,
@@ -6,8 +9,7 @@ import {
   prisma,
 } from '@spliit/db'
 import { defaultSplitSchema } from '@spliit/domain'
-import { TRPCError } from '@trpc/server'
-import { z } from 'zod'
+
 import { randomId } from '../../../lib/api'
 import { accountSummarySelect } from '../../../lib/api/selects/account-summary'
 import { isPlaceholderEmail } from '../../../lib/invitations'
@@ -44,9 +46,7 @@ export const accountRouter = createTRPCRouter({
       }
     }),
 
-  /**
-   * Update the display name. Used by the post-signup complete-profile flow.
-   */
+  /** Update the display name. Used by the post-signup complete-profile flow. */
   // Update the current account's display name. Used by the
   // `complete-profile` flow that runs after a magic-link sign-up (or any
   // other first-time sign-in) when the account has no display name yet.
@@ -108,7 +108,10 @@ export const accountRouter = createTRPCRouter({
       return { account }
     }),
 
-  /** Set the profile avatar. `fileUrl` must come from `uploads.profileImagePresign`. */
+  /**
+   * Set the profile avatar. `fileUrl` must come from
+   * `uploads.profileImagePresign`.
+   */
   setProfileImage: protectedProcedure
     .input(z.object({ fileUrl: z.string().url() }))
     .output(z.object({ account: accountProfileSchema }))
@@ -151,7 +154,8 @@ export const accountRouter = createTRPCRouter({
     }),
 
   /**
-   * List the caller's groups. Skips archived and hidden unless `includeArchived` is true.
+   * List the caller's groups. Skips archived and hidden unless
+   * `includeArchived` is true.
    */
   // Account group memberships (active ones by default).
   groups: protectedProcedure
@@ -358,7 +362,8 @@ export const accountRouter = createTRPCRouter({
     }),
 
   /**
-   * Get the caller's persisted default split for a group. Returns null when none is saved.
+   * Get the caller's persisted default split for a group. Returns null when
+   * none is saved.
    */
   // Per-user, per-group saved default split. Null means "no default".
   // ITEMIZED is not allowed: itemized expenses carry an `items` array
@@ -387,7 +392,10 @@ export const accountRouter = createTRPCRouter({
       }
     }),
 
-  /** Persist the caller's default split for a group. ITEMIZED is rejected by the schema. */
+  /**
+   * Persist the caller's default split for a group. ITEMIZED is rejected by the
+   * schema.
+   */
   setDefaultSplit: protectedProcedure
     .input(
       z.object({
@@ -502,8 +510,8 @@ export const accountRouter = createTRPCRouter({
     }),
 
   /**
-   * List accounts the caller has shared groups with, ordered by shared group count.
-   * When `groupId` is provided, each friend carries an `isMember` flag.
+   * List accounts the caller has shared groups with, ordered by shared group
+   * count. When `groupId` is provided, each friend carries an `isMember` flag.
    */
   // Friends: accounts the current user has shared groups with,
   // ordered by number of shared groups descending. Excludes accounts

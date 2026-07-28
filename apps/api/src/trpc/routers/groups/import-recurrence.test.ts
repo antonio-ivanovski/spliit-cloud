@@ -1,5 +1,6 @@
 // organize-imports-ignore: ./mocks must be imported before modules that load @spliit/db.
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import '../../../test/mocks'
 import { prismaMock } from '../../../test/state'
 

@@ -1,3 +1,6 @@
+import { TRPCError } from '@trpc/server'
+import { z } from 'zod'
+
 import {
   GroupInvitationStatus,
   GroupMemberStatus,
@@ -5,29 +8,26 @@ import {
   LedgerParticipantKind,
   prisma,
 } from '@spliit/db'
-import { TRPCError } from '@trpc/server'
-import { z } from 'zod'
+
 import { randomId } from '../../../../lib/api'
 import { loadGroupContext, protectedProcedure } from '../../../init'
 import { importLinkCandidatesOutputSchema } from '../../../outputs/import-links'
 
 /**
- * Compute the list of destination `LedgerParticipant` ids that an
- * admin can pick from when linking an unlinked `LedgerParticipant`
- * to an account. Candidates are existing account-backed participants
- * in the same group, minus the unlinked LP itself and minus the LPs
- * that appear on the OTHER side of any expense leg involving the
- * unlinked LP (a participant that is both payer and payee of the
- * same expense would be a self-deal).
+ * Compute the list of destination `LedgerParticipant` ids that an admin can
+ * pick from when linking an unlinked `LedgerParticipant` to an account.
+ * Candidates are existing account-backed participants in the same group, minus
+ * the unlinked LP itself and minus the LPs that appear on the OTHER side of any
+ * expense leg involving the unlinked LP (a participant that is both payer and
+ * payee of the same expense would be a self-deal).
  *
- * Pending EMAIL and LINK-type invitations are also candidates: the
- * link flow can migrate the unlinked LP's references onto the
- * invitee's materialized `LedgerParticipant` and drop the unlinked
- * row. LINK-type invitations carry a synthetic `*.placeholder.local`
- * email by design, but matching is by `invitationId`, not by email,
- * so the synthetic address is irrelevant to the link mutation — the
- * dialog passes `pendingInvitationId` alongside (or instead of) an
- * email.
+ * Pending EMAIL and LINK-type invitations are also candidates: the link flow
+ * can migrate the unlinked LP's references onto the invitee's materialized
+ * `LedgerParticipant` and drop the unlinked row. LINK-type invitations carry a
+ * synthetic `*.placeholder.local` email by design, but matching is by
+ * `invitationId`, not by email, so the synthetic address is irrelevant to the
+ * link mutation — the dialog passes `pendingInvitationId` alongside (or instead
+ * of) an email.
  */
 export const candidatesProcedure = protectedProcedure
   .input(

@@ -1,3 +1,9 @@
+import type { Dispatch, SetStateAction } from 'react'
+import { useState } from 'react'
+import type { UseFormReturn } from 'react-hook-form'
+import { useWatch } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+
 import { ParticipantDistributionFooter } from '@/components/participant-distribution-footer'
 import { ParticipantRowAmountPreview } from '@/components/participant-row-amount-preview'
 import { Button } from '@/components/ui/button'
@@ -18,11 +24,7 @@ import type {
   ExpenseFormItemValues,
 } from '@spliit/domain'
 import { computePaidForFromItems, type SplitMode } from '@spliit/domain'
-import type { Dispatch, SetStateAction } from 'react'
-import { useState } from 'react'
-import type { UseFormReturn } from 'react-hook-form'
-import { useWatch } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
+
 import { DefaultSplitActions } from './default-split/default-split-actions'
 import type { SavedSplit } from './default-split/split-equal'
 import { LeaveItemizedDialog } from './leave-itemized-dialog'
@@ -116,9 +118,9 @@ export function PaidForCard(props: {
         if (itemMode === 'BY_AMOUNT') {
           const raw = count > 0 ? targetAmount / count : 0
           const precision = originalCurrency.decimal_digits
-          const values = new Array(count)
-            .fill(null)
-            .map(() => roundTo(raw, precision))
+          const values = Array.from({ length: count }, () =>
+            roundTo(raw, precision),
+          )
           const sum = values.reduce((a, b) => a + b, 0)
           const diff = roundTo(targetAmount - sum, precision)
           if (diff !== 0 && values.length > 0) {
@@ -134,7 +136,7 @@ export function PaidForCard(props: {
         }
         if (itemMode === 'BY_PERCENTAGE') {
           const raw = count > 0 ? 100 / count : 0
-          const values = new Array(count).fill(null).map(() => roundTo(raw, 2))
+          const values = Array.from({ length: count }, () => roundTo(raw, 2))
           const sum = values.reduce((a, b) => a + b, 0)
           const diff = roundTo(100 - sum, 2)
           if (diff !== 0 && values.length > 0) {
@@ -193,9 +195,9 @@ export function PaidForCard(props: {
             conversionRequired ? originalCurrency : groupCurrency
           ).decimal_digits
           const raw = targetAmount / count
-          const values = new Array(count)
-            .fill(null)
-            .map(() => roundTo(raw, precision))
+          const values = Array.from({ length: count }, () =>
+            roundTo(raw, precision),
+          )
           const sum = values.reduce((a, b) => a + b, 0)
           const diff = roundTo(targetAmount - sum, precision)
           if (diff !== 0)
@@ -213,7 +215,7 @@ export function PaidForCard(props: {
           )
         } else if (to === 'BY_PERCENTAGE') {
           const raw = 100 / count
-          const values = new Array(count).fill(null).map(() => roundTo(raw, 2))
+          const values = Array.from({ length: count }, () => roundTo(raw, 2))
           const sum = values.reduce((a, b) => a + b, 0)
           const diff = roundTo(100 - sum, 2)
           if (diff !== 0)

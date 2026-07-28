@@ -6,11 +6,15 @@ export type RecurringSeriesProgress = {
   occurrencesCreated: number
   /** ISO date (YYYY-MM-DD) the worker will materialize next. */
   nextOccurrenceDate: string
-  /** Cutoff date from `catchUpBatch.dueThrough`, when the worker has
-   * coalesced a run into a single batch; null otherwise. */
+  /**
+   * Cutoff date from `catchUpBatch.dueThrough`, when the worker has coalesced a
+   * run into a single batch; null otherwise.
+   */
   dueThrough: string | null
-  /** True while an ACTIVE series still has occurrences to materialize
-   * within the current UTC day or earlier. */
+  /**
+   * True while an ACTIVE series still has occurrences to materialize within the
+   * current UTC day or earlier.
+   */
   pending: boolean
 }
 
@@ -31,15 +35,16 @@ function readDueThrough(batch: unknown): string | null {
   return typeof value === 'string' ? value.slice(0, 10) : null
 }
 
-/** Read-only snapshot of where a recurring-expense series is in its
- * catch-up pipeline. Used by the web client to poll after creating a
- * past-dated series: it returns `pending=true` while occurrences remain
- * due, and `pending=false` once the worker drains the queue or the
- * series moves to a terminal status.
+/**
+ * Read-only snapshot of where a recurring-expense series is in its catch-up
+ * pipeline. Used by the web client to poll after creating a past-dated series:
+ * it returns `pending=true` while occurrences remain due, and `pending=false`
+ * once the worker drains the queue or the series moves to a terminal status.
  *
  * Returns null when the series does not exist or belongs to a different
- * group/ledger — the procedure surfaces this as a normal `null` result
- * rather than a 404. */
+ * group/ledger — the procedure surfaces this as a normal `null` result rather
+ * than a 404.
+ */
 export async function getRecurringSeriesProgress(
   groupId: string,
   seriesId: string,

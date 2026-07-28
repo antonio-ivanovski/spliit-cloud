@@ -4,15 +4,14 @@ import type {
 } from './types'
 
 /**
- * Dispatch to a list of {@link ActivityNotificationDispatcher}s in
- * parallel. Each dispatcher owns its own error channel: a throw from
- * one implementation is captured and logged with `console.warn` so a
- * broken downstream (e.g. SMTP outage) never breaks another (e.g. a
- * future PushNotification writer).
+ * Dispatch to a list of {@link ActivityNotificationDispatcher}s in parallel.
+ * Each dispatcher owns its own error channel: a throw from one implementation
+ * is captured and logged with `console.warn` so a broken downstream (e.g. SMTP
+ * outage) never breaks another (e.g. a future PushNotification writer).
  *
- * Used by the singleton `defaultActivityNotificationDispatcher` so
- * mutation call sites only ever see one dispatcher, while every
- * concrete implementation can be added or removed at registration time.
+ * Used by the singleton `defaultActivityNotificationDispatcher` so mutation
+ * call sites only ever see one dispatcher, while every concrete implementation
+ * can be added or removed at registration time.
  */
 export class CompositeActivityNotificationDispatcher implements ActivityNotificationDispatcher {
   private readonly dispatchers: ReadonlyArray<ActivityNotificationDispatcher>

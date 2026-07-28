@@ -1,5 +1,6 @@
-import { NotificationCategory } from '@spliit/domain/notifications'
 import { describe, expect, it, vi } from 'vitest'
+
+import { NotificationCategory } from '@spliit/domain/notifications'
 
 describe('signed email unsubscribe tokens', () => {
   it('round-trips claims and rejects tampering', async () => {

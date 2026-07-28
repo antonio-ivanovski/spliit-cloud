@@ -2,6 +2,7 @@ import type { Prisma } from '@spliit/db'
 import { prisma } from '@spliit/db'
 import { computePaidForFromItems, type Expense } from '@spliit/domain'
 import { env as jobsEnv } from '@spliit/jobs'
+
 import { deleteS3Object } from '../../../routes/upload'
 import { resolveConversion } from '../../expense-conversion'
 import { resolveParticipantDisplayName } from '../../invitations'
@@ -735,7 +736,9 @@ export async function updateExpense(
                     ? Number(row.conversionRate)
                     : undefined,
                   conversionSource: row.conversionSource as
-                    'EXCHANGE' | 'CUSTOM' | null,
+                    | 'EXCHANGE'
+                    | 'CUSTOM'
+                    | null,
                   ledgerCurrencyCode: group.ledger.currencyCode ?? null,
                 }),
               },
@@ -944,9 +947,11 @@ export async function updateExpense(
 
   return updatedExpense
 }
-/** Replace the mutable template fields on a materialized occurrence.
- * Recurrence identity and documents intentionally remain untouched.
- * Pass `expenseDate` when a schedule reflow moves the occurrence. */
+/**
+ * Replace the mutable template fields on a materialized occurrence. Recurrence
+ * identity and documents intentionally remain untouched. Pass `expenseDate`
+ * when a schedule reflow moves the occurrence.
+ */
 async function updateMaterializedOccurrence(
   tx: Prisma.TransactionClient,
   row: { id: string },

@@ -31,7 +31,7 @@ describe('CategoryIcon', () => {
     const { container } = render(
       <CategoryIcon
         category={{ grouping: 'Entertainment', name: 'Movies' }}
-        className="w-5 h-5"
+        className="h-5 w-5"
       />,
     )
     const svg = container.querySelector('svg')

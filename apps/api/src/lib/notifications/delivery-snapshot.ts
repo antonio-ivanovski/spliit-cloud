@@ -1,6 +1,7 @@
+import { z } from 'zod'
+
 import { NotificationSnapshotVersion } from '@spliit/domain/notification-delivery'
 import { notificationCategorySchema } from '@spliit/domain/notifications'
-import { z } from 'zod'
 
 const snapshotVersionSchema = z.literal(NotificationSnapshotVersion.V1)
 

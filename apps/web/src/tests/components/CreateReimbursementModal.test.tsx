@@ -1,3 +1,5 @@
+import { describe, expect, it, vi } from 'vitest'
+
 import { CreateReimbursementModal } from '@/app/groups/[groupId]/balances/create-reimbursement-modal'
 import {
   useCurrentGroup,
@@ -5,7 +7,6 @@ import {
 } from '@/app/groups/[groupId]/current-group-context'
 import { render, screen, waitFor, within } from '@/test/test-utils'
 import { PAYMENT_CATEGORY_ID } from '@spliit/domain'
-import { describe, expect, it, vi } from 'vitest'
 
 // ── Mocks ───────────────────────────────────────────────────────────────
 

@@ -1,5 +1,7 @@
-import type { ActivityData } from '@spliit/domain/activities'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+
+import type { ActivityData } from '@spliit/domain/activities'
+
 import {
   CompositeActivityNotificationDispatcher,
   getDefaultActivityNotificationDispatcher,

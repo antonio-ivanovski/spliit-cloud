@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+
 import '../../../test/mocks'
 import {
   authState,
@@ -709,16 +710,16 @@ describe('invitationsRouter.decline', () => {
 })
 
 /**
- * Build the prisma stubs the revoke procedure needs:
- *   - resolve the group context for the caller (`loadGroupContext`),
- *   - resolve the invitation by id (the pre-check + transaction both query it),
- *   - empty recurring-expense + expense stubs so `getGroupBalances` doesn't
- *     hit the `null is not iterable` path used by other helper flows.
+ * Build the prisma stubs the revoke procedure needs: - resolve the group
+ * context for the caller (`loadGroupContext`), - resolve the invitation by id
+ * (the pre-check + transaction both query it), - empty recurring-expense +
+ * expense stubs so `getGroupBalances` doesn't hit the `null is not iterable`
+ * path used by other helper flows.
  *
- * `invitationStatus` defaults to PENDING so the normal happy path doesn't
- * have to opt in. `participantId` controls whether the invitation has a
- * materialized ledger participant (real invitees always do once the
- * invitee appears as paid-by / paid-for on an expense).
+ * `invitationStatus` defaults to PENDING so the normal happy path doesn't have
+ * to opt in. `participantId` controls whether the invitation has a materialized
+ * ledger participant (real invitees always do once the invitee appears as
+ * paid-by / paid-for on an expense).
  */
 function seedRevokeContext(args: {
   callerRole?: 'ADMIN' | 'MEMBER'
@@ -768,10 +769,10 @@ function seedRevokeContext(args: {
 }
 
 /**
- * Build a single "expense" record as `getGroupExpenses` would return it
- * after the row is materialised by Prisma. Mirrors the shape used in
- * `members/index.test.ts` so the balance pipeline runs end-to-end on
- * the mock prisma client.
+ * Build a single "expense" record as `getGroupExpenses` would return it after
+ * the row is materialised by Prisma. Mirrors the shape used in
+ * `members/index.test.ts` so the balance pipeline runs end-to-end on the mock
+ * prisma client.
  */
 function makeExpenseRow(args: {
   id: string

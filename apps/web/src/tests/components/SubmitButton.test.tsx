@@ -1,13 +1,14 @@
-import { SubmitButton } from '@/components/submit-button'
-import { render, screen } from '@/test/test-utils'
 import type { ReactNode } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { describe, expect, it, vi } from 'vitest'
 
+import { SubmitButton } from '@/components/submit-button'
+import { act, render, screen } from '@/test/test-utils'
+
 /**
- * A test wrapper that provides react-hook-form context via FormProvider.
- * It wraps children in a <form> with an async onSubmit so that
- * clicking a type="submit" button sets isSubmitting to true.
+ * A test wrapper that provides react-hook-form context via FormProvider. It
+ * wraps children in a <form> with an async onSubmit so that clicking a
+ * type="submit" button sets isSubmitting to true.
  */
 function TestForm({
   onSubmit = vi.fn().mockResolvedValue(undefined),
@@ -58,7 +59,10 @@ describe('SubmitButton', () => {
     expect(screen.getByRole('button')).toHaveTextContent('Saving…')
 
     // Resolve the submission
-    resolveSubmit()
+    await act(async () => {
+      resolveSubmit()
+      await submitPromise
+    })
     // Wait for state to settle
     await vi.waitFor(() => {
       expect(screen.getByRole('button')).toHaveTextContent('Save')
@@ -83,7 +87,10 @@ describe('SubmitButton', () => {
     // The button should be disabled while submitting
     expect(screen.getByRole('button')).toBeDisabled()
 
-    resolveSubmit()
+    await act(async () => {
+      resolveSubmit()
+      await submitPromise
+    })
     await vi.waitFor(() => {
       expect(screen.getByRole('button')).not.toBeDisabled()
     })

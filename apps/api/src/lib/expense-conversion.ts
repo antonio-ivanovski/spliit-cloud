@@ -7,6 +7,7 @@ import {
   type StoredConversionFields,
 } from '@spliit/domain'
 import { supportedCurrencyCodes } from '@spliit/domain/currency'
+
 import {
   UnsupportedCurrencyError,
   getCurrencyRate,
@@ -65,7 +66,7 @@ export type ConversionResolverOptions = {
  * Resolve how the server should convert an expense into the Ledger base
  * currency from the optional discriminated `conversion` input.
  *
- * - absent / undefined → same currency as ledger; no rate/source stored
+ * - Absent / undefined → same currency as ledger; no rate/source stored
  * - `custom` → apply client rate; store CUSTOM
  * - `exchange` → fetch provider rate; store EXCHANGE (client rate ignored)
  */

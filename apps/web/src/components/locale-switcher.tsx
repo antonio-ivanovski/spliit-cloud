@@ -1,3 +1,6 @@
+import { Check } from 'lucide-react'
+import { forwardRef, useState } from 'react'
+
 import { Button, type ButtonProps } from '@/components/ui/button'
 import {
   Drawer,
@@ -18,8 +21,6 @@ import { localeLabels, locales } from '@/i18n/request'
 import { setUserLocale } from '@/i18n/setup'
 import { useMediaQuery } from '@/lib/hooks'
 import { cn } from '@/lib/utils'
-import { Check } from 'lucide-react'
-import { forwardRef, useState } from 'react'
 
 export const localeFlags = {
   'ar-SA': '🇸🇦',
@@ -106,7 +107,7 @@ export function LocaleSwitcher() {
                 key={option}
                 type="button"
                 aria-current={option === locale ? 'true' : undefined}
-                className="flex min-h-12 w-full items-center gap-3 rounded-lg px-3 text-start text-sm font-medium transition-colors hover:bg-muted focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring aria-[current=true]:bg-primary/10 aria-[current=true]:text-primary"
+                className="flex min-h-12 w-full items-center gap-3 rounded-lg px-3 text-start text-sm font-medium transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden aria-[current=true]:bg-primary/10 aria-[current=true]:text-primary"
                 onClick={() => selectLocale(option)}
               >
                 <LocaleFlag locale={option} />

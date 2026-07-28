@@ -15,6 +15,7 @@ import {
   insertJobs,
   type SpliitBoss,
 } from '@spliit/jobs'
+
 import { randomId } from '../api/shared'
 import { getWebBaseUrl } from '../auth/urls'
 import { resolveNotificationChannelsForIntents } from './coordinator-policy'
@@ -203,16 +204,15 @@ function unique<T>(values: ReadonlyArray<T>): T[] {
 
 /**
  * Resolve every entity `buildSnapshot` reads in constant time per event,
- * regardless of fan-out size. The shape mirrors the previous per-call
- * loads so callers can index by accountId without falling back to the
- * transaction client.
+ * regardless of fan-out size. The shape mirrors the previous per-call loads so
+ * callers can index by accountId without falling back to the transaction
+ * client.
  *
- * Queries are dispatched sequentially because an interactive Prisma
- * transaction holds exactly one pg connection: `Promise.all` on the
- * same client fires concurrent queries on the same connection, which
- * `pg` already deprecates and the handoff forbids. The expense query
- * is skipped entirely when no draft will need it (i.e. the snapshot
- * kind is neither an expense nor a comment).
+ * Queries are dispatched sequentially because an interactive Prisma transaction
+ * holds exactly one pg connection: `Promise.all` on the same client fires
+ * concurrent queries on the same connection, which `pg` already deprecates and
+ * the handoff forbids. The expense query is skipped entirely when no draft will
+ * need it (i.e. the snapshot kind is neither an expense nor a comment).
  */
 async function preloadSnapshotContext(args: {
   tx: PlannerClient

@@ -1,7 +1,9 @@
+import { z } from 'zod'
+
 import { prisma } from '@spliit/db'
 import { friendFormSchema } from '@spliit/domain'
 import { NotificationCategory } from '@spliit/domain/notifications'
-import { z } from 'zod'
+
 import { getApiBoss } from '../../../lib/api/boss'
 import {
   createFriendLedger,
@@ -14,8 +16,8 @@ import { createTRPCRouter, protectedProcedure } from '../../init'
 
 /**
  * Send a notification email (not an invitation) when a friend ledger is
- * created. No accept/decline link — the friend ledger auto-appears on
- * next login.
+ * created. No accept/decline link — the friend ledger auto-appears on next
+ * login.
  */
 async function sendFriendLedgerNotification(opts: {
   recipientEmail: string
@@ -37,7 +39,10 @@ async function sendFriendLedgerNotification(opts: {
 }
 
 export const friendsRouter = createTRPCRouter({
-  /** Create a friend ledger via one of three modes (account id, email, or shareable link). Exactly one mode must be set on `friendFormValues`. */
+  /**
+   * Create a friend ledger via one of three modes (account id, email, or
+   * shareable link). Exactly one mode must be set on `friendFormValues`.
+   */
   create: protectedProcedure
     .input(z.object({ friendFormValues: friendFormSchema }))
     .output(

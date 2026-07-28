@@ -1,18 +1,19 @@
 /**
  * Scalar `/docs` configuration.
  *
- * Centralizes Scalar's universal config so `app.ts` stays a wiring file.
- * The custom CSS overrides Scalar's `--scalar-color-accent` (and a few
- * siblings) with Spliit's emerald brand color so the docs don't visually
- * clash with the rest of the app.
+ * Centralizes Scalar's universal config so `app.ts` stays a wiring file. The
+ * custom CSS overrides Scalar's `--scalar-color-accent` (and a few siblings)
+ * with Spliit's emerald brand color so the docs don't visually clash with the
+ * rest of the app.
  *
- * Brand assets (favicon, logo) live on the **web** app, not the API.
- * Scalar's `favicon` value becomes a `<link rel="icon">` in the served
- * HTML, so the browser fetches it directly from the web origin — no
- * need to bundle copies of `apps/web/public/` into the API image.
+ * Brand assets (favicon, logo) live on the **web** app, not the API. Scalar's
+ * `favicon` value becomes a `<link rel="icon">` in the served HTML, so the
+ * browser fetches it directly from the web origin — no need to bundle copies of
+ * `apps/web/public/` into the API image.
  */
 
 import type { ApiReferenceConfiguration } from '@scalar/hono-api-reference'
+
 import { webOrigins } from './env'
 
 const SPLIIT_ACCENT_LIGHT = '#0CAA76'

@@ -1,6 +1,8 @@
-import { render, screen } from '@/test/test-utils'
 import userEvent from '@testing-library/user-event'
 import { beforeAll, describe, expect, it, vi } from 'vitest'
+
+import { render, screen } from '@/test/test-utils'
+
 import { SourceStep } from './source-step'
 
 // jsdom doesn't implement scrollIntoView; the SourceStep mount effect

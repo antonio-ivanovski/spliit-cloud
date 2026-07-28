@@ -1,5 +1,6 @@
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { join, resolve } from 'node:path'
+
 import { describe, expect, it } from 'vitest'
 
 describe('notification architecture boundaries', () => {

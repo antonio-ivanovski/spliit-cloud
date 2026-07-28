@@ -1,7 +1,8 @@
+import { useTranslation } from 'react-i18next'
+
 import githubSvg from '@/components/auth/github.svg'
 import googleSvg from '@/components/auth/google.svg'
 import { Button } from '@/components/ui/button'
-import { useTranslation } from 'react-i18next'
 
 export function SocialButtons({
   googleEnabled,
@@ -30,7 +31,7 @@ export function SocialButtons({
           onClick={onGoogle}
           disabled={disabled}
         >
-          <img src={googleSvg} alt="" className="w-4 h-4 mr-2" />
+          <img src={googleSvg} alt="" className="mr-2 h-4 w-4" />
           {t('signInWithGoogle')}
         </Button>
       )}
@@ -42,7 +43,7 @@ export function SocialButtons({
           onClick={onGithub}
           disabled={disabled}
         >
-          <img src={githubSvg} alt="" className="w-4 h-4 mr-2" />
+          <img src={githubSvg} alt="" className="mr-2 h-4 w-4" />
           {t('signInWithGithub')}
         </Button>
       )}

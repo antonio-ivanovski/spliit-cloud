@@ -1,6 +1,8 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
+
 import { describe, expect, it } from 'vitest'
+
 import { anonymizeSplitwiseCsv } from './anonymize-splitwise-csv'
 import { tryParseSplitwiseCsv } from './splitwise-csv'
 
@@ -21,9 +23,10 @@ function readFixture(name: string): string {
   return readFileSync(join(__dirname, '../fixtures', name), 'utf-8')
 }
 
-/** Asserts the anonymizer produced a structurally valid Splitwise CSV
- *  that the importer can still parse, with no leakage of any original
- *  participant name. */
+/**
+ * Asserts the anonymizer produced a structurally valid Splitwise CSV that the
+ * importer can still parse, with no leakage of any original participant name.
+ */
 function assertAnonymized(input: string) {
   const originalParsed = tryParseSplitwiseCsv(input)
   expect(originalParsed.ok).toBe(true)
