@@ -9,6 +9,7 @@ import {
 } from '@spliit/domain'
 import type { BulkUpdateExpenseCategoriesInput } from '@spliit/domain/schemas'
 import { logActivity, planNotificationForActivity } from './activities'
+import { getApiBoss } from './boss'
 import { groupLedgerIdArchivedSelect } from './selects/group-ledger-id-archived'
 
 /**
@@ -87,6 +88,7 @@ export async function bulkUpdateExpenseCategories(args: {
     throw new Error('Cannot bulk-update categories on an archived group')
   }
 
+  const boss = await getApiBoss()
   const result = await prisma.$transaction(async (tx) => {
     // Lock the candidate rows by selecting them. Update via updateMany
     // below would not surface the prior categoryIds for the activity
@@ -180,7 +182,7 @@ export async function bulkUpdateExpenseCategories(args: {
       },
       tx,
     )
-    await planNotificationForActivity(tx, activity)
+    await planNotificationForActivity(tx, activity, {}, { boss })
 
     return {
       applied: rows.length,

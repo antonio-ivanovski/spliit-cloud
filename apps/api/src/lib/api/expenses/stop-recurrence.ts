@@ -1,5 +1,6 @@
 import { prisma } from '@spliit/db'
 import { logActivity, planNotificationForActivity } from '../activities'
+import { getApiBoss } from '../boss'
 import { getExpense } from './queries'
 
 /**
@@ -20,6 +21,7 @@ export async function stopRecurrence(
   }
   const seriesId = existingExpense.recurringSeriesId
 
+  const boss = await getApiBoss()
   await prisma.$transaction(async (tx) => {
     await tx.$queryRaw`SELECT id FROM "RecurringExpenseSeries" WHERE id = ${seriesId} FOR UPDATE`
     const series = await tx.recurringExpenseSeries.findUnique({
@@ -96,7 +98,7 @@ export async function stopRecurrence(
       tx,
     )
 
-    await planNotificationForActivity(tx, activity)
+    await planNotificationForActivity(tx, activity, {}, { boss })
     return { activity }
   })
 }

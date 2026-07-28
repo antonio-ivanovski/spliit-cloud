@@ -32,7 +32,7 @@ describe('getGroup — pending invitations as participants', () => {
   const groupId = 'grp-1'
   const ledgerId = 'ledger-1'
 
-  it('materializes a LedgerParticipant for a pending invitation and includes it in participants', async () => {
+  it('includes a pending invitation with a pre-materialized LedgerParticipant in participants', async () => {
     prismaMock.group.findUnique.mockResolvedValue({
       id: groupId,
       name: 'Trip',
@@ -63,34 +63,19 @@ describe('getGroup — pending invitations as participants', () => {
           groupId,
           email: 'bob@example.com',
           status: 'PENDING',
-          ledgerParticipantId: null,
+          ledgerParticipantId: 'lp-bob',
         },
       ],
     } as never)
 
-    prismaMock.groupInvitation.findFirst.mockResolvedValue(null)
-    prismaMock.ledgerParticipant.findFirst.mockResolvedValue(null)
-    // Capture the id used when creating the participant and return it from the
-    // re-read so the API's response includes it as the materialized id.
-    let createdId: string | undefined
-    prismaMock.ledgerParticipant.create.mockImplementation((async (
-      args: unknown,
-    ) => {
-      createdId = (args as { data: { id: string } }).data.id
-      return { id: createdId } as never
-    }) as never)
-    prismaMock.groupInvitation.update.mockResolvedValue({} as never)
-    prismaMock.groupInvitation.findMany.mockImplementation(
-      (async () =>
-        [
-          {
-            id: 'inv-1',
-            groupId,
-            email: 'bob@example.com',
-            ledgerParticipant: createdId ? { id: createdId } : null,
-          },
-        ] as never) as never,
-    )
+    prismaMock.groupInvitation.findMany.mockResolvedValue([
+      {
+        id: 'inv-1',
+        groupId,
+        email: 'bob@example.com',
+        ledgerParticipant: { id: 'lp-bob' },
+      },
+    ] as never)
 
     const group = await getGroup(groupId)
 
@@ -111,24 +96,12 @@ describe('getGroup — pending invitations as participants', () => {
     expect(owner.name).toBe('Alice')
     expect(bob.pending).toBe(true)
     expect(bob.name).toBe('bob@example.com')
-    expect(typeof bob.id).toBe('string')
-    expect(bob.id.length).toBeGreaterThan(0)
-    expect(prismaMock.ledgerParticipant.create).toHaveBeenCalledWith(
-      expect.objectContaining({
-        data: expect.objectContaining({
-          ledgerId,
-        }),
-      }),
-    )
-    expect(prismaMock.groupInvitation.update).toHaveBeenCalledWith(
-      expect.objectContaining({
-        where: { id: 'inv-1' },
-        data: expect.objectContaining({ ledgerParticipantId: bob.id }),
-      }),
-    )
+    expect(bob.id).toBe('lp-bob')
+    expect(prismaMock.ledgerParticipant.create).not.toHaveBeenCalled()
+    expect(prismaMock.groupInvitation.update).not.toHaveBeenCalled()
   })
 
-  it('reuses an existing orphaned LedgerParticipant with a matching name when one is found', async () => {
+  it('getGroup performs no writes (read-only)', async () => {
     prismaMock.group.findUnique.mockResolvedValue({
       id: groupId,
       name: 'Trip',
@@ -143,16 +116,11 @@ describe('getGroup — pending invitations as participants', () => {
           groupId,
           email: 'carol@example.com',
           status: 'PENDING',
-          ledgerParticipantId: null,
+          ledgerParticipantId: 'lp-existing',
         },
       ],
     } as never)
 
-    prismaMock.groupInvitation.findFirst.mockResolvedValue(null)
-    prismaMock.ledgerParticipant.findFirst.mockResolvedValue({
-      id: 'lp-existing',
-    } as never)
-    prismaMock.groupInvitation.update.mockResolvedValue({} as never)
     prismaMock.groupInvitation.findMany.mockResolvedValue([
       {
         id: 'inv-2',
@@ -172,12 +140,8 @@ describe('getGroup — pending invitations as participants', () => {
       pending: true,
     })
     expect(prismaMock.ledgerParticipant.create).not.toHaveBeenCalled()
-    expect(prismaMock.groupInvitation.update).toHaveBeenCalledWith(
-      expect.objectContaining({
-        where: { id: 'inv-2' },
-        data: { ledgerParticipantId: 'lp-existing' },
-      }),
-    )
+    expect(prismaMock.groupInvitation.update).not.toHaveBeenCalled()
+    expect(prismaMock.$transaction).not.toHaveBeenCalled()
   })
 
   it('does not touch the database when the group has no pending invitations', async () => {

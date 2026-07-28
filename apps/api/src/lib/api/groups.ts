@@ -6,6 +6,7 @@ import {
   logActivity,
   planNotificationForActivity,
 } from './activities'
+import { getApiBoss } from './boss'
 import type { DiffableGroup } from './group-activity-diff'
 import { getGroupChangeSummary } from './group-activity-diff'
 import { accountSummarySelect } from './selects/account-summary'
@@ -103,6 +104,7 @@ export async function updateGroup(
 
   const summary = getGroupChangeSummary(oldGroup, newGroup, {})
 
+  const boss = await getApiBoss()
   const result = await prisma.$transaction(async (tx) => {
     const [activity, group] = await Promise.all([
       logActivity(
@@ -139,7 +141,7 @@ export async function updateGroup(
       }),
     ])
 
-    await planNotificationForActivity(tx, activity)
+    await planNotificationForActivity(tx, activity, {}, { boss })
     return { group, activity }
   })
   return result.group
@@ -164,41 +166,6 @@ export async function getGroup(groupId: string) {
     },
   })
   if (!group) return null
-
-  // Materialize a virtual LedgerParticipant for each pending invitation that
-  // does not yet have one.
-  if (group.ledgerId && group.invitations.length > 0) {
-    await prisma.$transaction(async (tx) => {
-      for (const invitation of group.invitations) {
-        if (invitation.ledgerParticipantId) continue
-
-        const existing = await tx.ledgerParticipant.findFirst({
-          where: {
-            ledgerId: group.ledgerId!,
-            groupMemberId: null,
-            invitations: {
-              some: { email: invitation.email, status: 'PENDING' },
-            },
-          },
-          select: { id: true },
-        })
-
-        const participantId = existing?.id ?? randomId()
-        if (!existing) {
-          await tx.ledgerParticipant.create({
-            data: {
-              id: participantId,
-              ledgerId: group.ledgerId!,
-            },
-          })
-        }
-        await tx.groupInvitation.update({
-          where: { id: invitation.id },
-          data: { ledgerParticipantId: participantId },
-        })
-      }
-    })
-  }
 
   const invitationsWithParticipants =
     group.invitations.length > 0

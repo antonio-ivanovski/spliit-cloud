@@ -10,6 +10,7 @@ import {
   logActivity,
   planNotificationForActivity,
 } from '../activities'
+import { getApiBoss } from '../boss'
 import {
   getAffectedParticipantIds,
   getExpenseChangeSummary,
@@ -330,6 +331,7 @@ export async function updateExpense(
   }
 
   // Transaction: activity log + all DB writes are atomic
+  const boss = await getApiBoss()
   const { updatedExpense } = await prisma.$transaction(async (tx) => {
     if (existingExpense.recurringSeriesId) {
       await tx.$queryRaw`SELECT id FROM "RecurringExpenseSeries" WHERE id = ${existingExpense.recurringSeriesId} FOR UPDATE`
@@ -865,7 +867,12 @@ export async function updateExpense(
       }
     }
     if (changedRows.length === 1) {
-      await planNotificationForActivity(tx, changedRows[0]!.activity)
+      await planNotificationForActivity(
+        tx,
+        changedRows[0]!.activity,
+        {},
+        { boss },
+      )
     } else if (changedRows.length > 1) {
       const sortedDates = changedRows.map((row) => row.scheduledDate).sort()
       const unionParticipantIds: string[] = []
@@ -888,27 +895,32 @@ export async function updateExpense(
             },
           })
         : null
-      await planNotificationForActivity(tx, changedRows[0]!.activity, {
-        subject: { type: 'EXPENSE', id: expenseId },
-        data: {
-          kind: 'recurring_expense_summary',
-          summary: `${changedRows.length} expenses updated`,
-          title: updated.title,
-          count: changedRows.length,
-          startDate: sortedDates[0] ?? expenseDateStr,
-          endDate: sortedDates.at(-1) ?? expenseDateStr,
-          affectedParticipants: unionParticipantIds,
-          seriesId: existingExpense.recurringSeriesId ?? undefined,
-          frequency: series?.frequency ?? undefined,
-          interval: series?.interval ?? undefined,
-          endType: series?.endType ?? undefined,
-          occurrenceLimit: series?.occurrenceLimit ?? undefined,
-          seriesEndDate:
-            series?.endDate?.toISOString().slice(0, 10) ?? undefined,
-          operation: 'update',
-          stopped: false,
+      await planNotificationForActivity(
+        tx,
+        changedRows[0]!.activity,
+        {
+          subject: { type: 'EXPENSE', id: expenseId },
+          data: {
+            kind: 'recurring_expense_summary',
+            summary: `${changedRows.length} expenses updated`,
+            title: updated.title,
+            count: changedRows.length,
+            startDate: sortedDates[0] ?? expenseDateStr,
+            endDate: sortedDates.at(-1) ?? expenseDateStr,
+            affectedParticipants: unionParticipantIds,
+            seriesId: existingExpense.recurringSeriesId ?? undefined,
+            frequency: series?.frequency ?? undefined,
+            interval: series?.interval ?? undefined,
+            endType: series?.endType ?? undefined,
+            occurrenceLimit: series?.occurrenceLimit ?? undefined,
+            seriesEndDate:
+              series?.endDate?.toISOString().slice(0, 10) ?? undefined,
+            operation: 'update',
+            stopped: false,
+          },
         },
-      })
+        { boss },
+      )
     }
     return { updatedExpense: updated, changedRows }
   })

@@ -21,6 +21,7 @@ import {
   getGroupBalances,
   getSettlementLegsForParticipant,
 } from './balances'
+import { getApiBoss } from './boss'
 import { RemoveMemberPreconditionError, removeMember } from './members'
 
 export type SoftRemoveParticipantKind = 'member' | 'invitation' | 'unlinked'
@@ -259,6 +260,7 @@ export async function softRemoveParticipant(opts: {
     }),
   }
 
+  const boss = await getApiBoss()
   await prisma.$transaction(async (tx) => {
     const settlementActivities = settleBalances
       ? (
@@ -305,9 +307,14 @@ export async function softRemoveParticipant(opts: {
     })
 
     const activity = await logActivity(groupId, activityArgs, tx)
-    await planNotificationForActivity(tx, activity)
+    await planNotificationForActivity(tx, activity, {}, { boss })
     for (const settlementActivity of settlementActivities) {
-      await planNotificationForActivity(tx, settlementActivity.activity)
+      await planNotificationForActivity(
+        tx,
+        settlementActivity.activity,
+        {},
+        { boss },
+      )
     }
   })
 

@@ -16,11 +16,15 @@ import {
   createSettlementExpensesForLeave,
   getGroupBalances,
 } from '../api/balances'
+import { getApiBoss } from '../api/boss'
 import { randomId } from '../api/shared'
 import { sendEmail } from '../mail/send'
 import { renderInvitationEmail } from '../mail/templates/invitation'
 import { getInvitationDisplayName } from './display'
-import { reconcileMemberLedgerParticipant } from './ledger-reconciliation'
+import {
+  materializePendingInvitationParticipant,
+  reconcileMemberLedgerParticipant,
+} from './ledger-reconciliation'
 
 export type CreateInvitationInput = {
   groupId: string
@@ -106,7 +110,14 @@ export async function createEmailInvitation({
   await assertNotExistingMember(groupId, normalizedEmail)
   await assertNoConflictingEmailInvitation(groupId, normalizedEmail)
 
+  const boss = await getApiBoss()
   return prisma.$transaction(async (tx) => {
+    const participantId = await materializePendingInvitationParticipant(tx, {
+      groupId,
+      suppliedParticipantId: ledgerParticipantId,
+      displayName: temporaryName,
+    })
+
     const invitation = await tx.groupInvitation.create({
       data: {
         id: randomId(),
@@ -116,9 +127,7 @@ export async function createEmailInvitation({
         role,
         temporaryName: temporaryName ?? null,
         invitedById: inviterAccountId,
-        ...(ledgerParticipantId
-          ? { ledgerParticipantId: ledgerParticipantId }
-          : {}),
+        ledgerParticipantId: participantId,
       },
     })
 
@@ -137,7 +146,7 @@ export async function createEmailInvitation({
       tx,
     )
 
-    await planNotificationForActivity(tx, activity)
+    await planNotificationForActivity(tx, activity, {}, { boss })
     return invitation
   })
 }
@@ -185,6 +194,7 @@ export async function revokeInvitation(opts: {
     )
   }
 
+  const boss = await getApiBoss()
   const result = await prisma.$transaction(async (tx) => {
     let settlementActivities = undefined as
       | Awaited<
@@ -237,10 +247,10 @@ export async function revokeInvitation(opts: {
       })
     }
 
-    await planNotificationForActivity(tx, activity)
+    await planNotificationForActivity(tx, activity, {}, { boss })
     if (settlementActivities) {
       for (const meta of settlementActivities) {
-        await planNotificationForActivity(tx, meta.activity)
+        await planNotificationForActivity(tx, meta.activity, {}, { boss })
       }
     }
 
@@ -330,6 +340,7 @@ export async function declineInvitation(opts: {
     throw new InvitationError('Invitation is no longer pending.')
   }
   assertCanDeclineEmailInvitation(invitation, opts.accountEmail)
+  const boss = await getApiBoss()
   const { updated } = await prisma.$transaction(async (tx) => {
     const [updated, activity] = await Promise.all([
       tx.groupInvitation.update({
@@ -351,7 +362,7 @@ export async function declineInvitation(opts: {
         tx,
       ),
     ])
-    await planNotificationForActivity(tx, activity)
+    await planNotificationForActivity(tx, activity, {}, { boss })
     return { updated, activity }
   })
   return updated
@@ -411,6 +422,7 @@ export async function acceptInvitation(opts: {
     throw new Error('Group has no ledger')
   }
 
+  const boss = await getApiBoss()
   const result = await prisma.$transaction(async (tx) => {
     const member = await tx.groupMember.upsert({
       where: {
@@ -463,7 +475,7 @@ export async function acceptInvitation(opts: {
       tx,
     )
 
-    await planNotificationForActivity(tx, activity)
+    await planNotificationForActivity(tx, activity, {}, { boss })
 
     return { member, activity }
   })

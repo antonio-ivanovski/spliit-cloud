@@ -8,30 +8,45 @@ import type { ActivityNotificationIntent } from './types'
 
 type PolicyClient = Prisma.TransactionClient | typeof prisma
 
-async function hasPushTargets(
+export type PushSubscriptionsByAccountId = Map<string, Array<{ id: string }>>
+
+async function fetchPushTargets(
   accountIds: string[],
   client: PolicyClient,
-): Promise<Set<string>> {
-  if (!isPushConfigured) return new Set()
-  const withAccounts = await client.pushSubscription.findMany({
+): Promise<PushSubscriptionsByAccountId> {
+  if (!isPushConfigured) return new Map()
+  const rows = await client.pushSubscription.findMany({
     where: { accountId: { in: accountIds } },
-    select: { accountId: true },
+    select: { id: true, accountId: true },
   })
-  return new Set(withAccounts.map((row) => row.accountId))
+  const grouped: PushSubscriptionsByAccountId = new Map()
+  for (const row of rows) {
+    const list = grouped.get(row.accountId) ?? []
+    list.push({ id: row.id })
+    grouped.set(row.accountId, list)
+  }
+  return grouped
+}
+
+export type ResolvedChannelPlan = {
+  channels: NotificationChannel[]
+  /** Push subscriptions fetched once and reused by the planner. */
+  pushSubscriptionsByAccountId: PushSubscriptionsByAccountId
 }
 
 /** Resolve sparse account/category preferences into independent channels. */
 export async function resolveNotificationChannels(
   intent: Omit<ActivityNotificationIntent, 'channels'>,
+  client?: Prisma.TransactionClient,
 ): Promise<NotificationChannel[]> {
-  const result = await resolveNotificationChannelsForIntents([intent])
-  return result[0] ?? []
+  const plan = await resolveNotificationChannelsForIntents([intent], client)
+  return plan[0]?.channels ?? []
 }
 
 export async function resolveNotificationChannelsForIntents(
   intents: ReadonlyArray<Omit<ActivityNotificationIntent, 'channels'>>,
   client?: Prisma.TransactionClient,
-): Promise<NotificationChannel[][]> {
+): Promise<ResolvedChannelPlan[]> {
   if (intents.length === 0) return []
   const accountIds = [
     ...new Set(intents.map((intent) => intent.recipientAccountId)),
@@ -41,29 +56,30 @@ export async function resolveNotificationChannelsForIntents(
     where: { accountId: { in: accountIds } },
     select: { accountId: true, category: true, channels: true },
   })
-  const pushTargets = await hasPushTargets(accountIds, db)
+  const pushTargetsByAccountId = await fetchPushTargets(accountIds, db)
   return intents.map((intent) => {
     const accountRows = rows.filter(
       (row) => row.accountId === intent.recipientAccountId,
     )
     const explicit = accountRows.find((row) => row.category === intent.category)
     const channels = explicit?.channels ?? null
+    const hasPush = pushTargetsByAccountId.has(intent.recipientAccountId)
+    let resolved: NotificationChannel[]
     if (channels) {
-      if (
-        channels.includes(NotificationChannel.PUSH) &&
-        !pushTargets.has(intent.recipientAccountId)
-      ) {
+      if (channels.includes(NotificationChannel.PUSH) && !hasPush) {
         console.warn(
           `[notifications] push selected but no active push target exists for account ${intent.recipientAccountId}; delivery skipped`,
         )
       }
       // Keep the resolved preference unchanged. A missing push target must not
       // silently turn an explicit PUSH choice into email delivery.
-      return channels
+      resolved = channels
+    } else {
+      resolved = getDefaultNotificationChannels(intent.category, hasPush)
     }
-    return getDefaultNotificationChannels(
-      intent.category,
-      pushTargets.has(intent.recipientAccountId),
-    )
+    return {
+      channels: resolved,
+      pushSubscriptionsByAccountId: pushTargetsByAccountId,
+    }
   })
 }

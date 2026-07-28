@@ -11,6 +11,7 @@ import {
   getGroupBalances,
   type SettlementActivityMeta,
 } from './balances'
+import { getApiBoss } from './boss'
 import { memberWithLedgerParticipantSelect } from './selects/member-with-ledger-participant'
 import { randomId } from './shared'
 
@@ -51,6 +52,7 @@ export async function updateMemberRole(opts: {
     select: { name: true },
   })
 
+  const boss = await getApiBoss()
   const result = await prisma.$transaction(async (tx) => {
     if (role !== GroupRole.ADMIN && target.role === GroupRole.ADMIN) {
       const remainingAdmins = await tx.groupMember.count({
@@ -86,7 +88,7 @@ export async function updateMemberRole(opts: {
         tx,
       ),
     ])
-    await planNotificationForActivity(tx, activity)
+    await planNotificationForActivity(tx, activity, {}, { boss })
     return { updated, activity }
   })
   return result.updated
@@ -144,6 +146,7 @@ export async function removeMember(opts: {
     select: { name: true },
   })
 
+  const boss = await getApiBoss()
   const result = await prisma.$transaction(async (tx) => {
     let settlementActivities = undefined as
       | Awaited<
@@ -204,9 +207,14 @@ export async function removeMember(opts: {
         data: { removedAt: new Date() },
       })
     }
-    await planNotificationForActivity(tx, activity)
+    await planNotificationForActivity(tx, activity, {}, { boss })
     for (const settlementActivity of settlementActivities ?? []) {
-      await planNotificationForActivity(tx, settlementActivity.activity)
+      await planNotificationForActivity(
+        tx,
+        settlementActivity.activity,
+        {},
+        { boss },
+      )
     }
     return { updated, settlementActivities, activity }
   })
@@ -354,6 +362,7 @@ export async function leaveGroup(opts: {
     )
   }
 
+  const boss = await getApiBoss()
   const result = await prisma.$transaction(async (tx) => {
     let settlementActivities: SettlementActivityMeta[] = []
     if (needsSettlement && participantId) {
@@ -396,9 +405,14 @@ export async function leaveGroup(opts: {
       tx,
     )
 
-    await planNotificationForActivity(tx, activity)
+    await planNotificationForActivity(tx, activity, {}, { boss })
     for (const settlementActivity of settlementActivities) {
-      await planNotificationForActivity(tx, settlementActivity.activity)
+      await planNotificationForActivity(
+        tx,
+        settlementActivity.activity,
+        {},
+        { boss },
+      )
     }
     return {
       promotedMemberId: isLastAdmin ? (promoteMemberId ?? null) : null,
@@ -437,6 +451,7 @@ export async function archiveGroupForSelf(opts: {
     )
   }
 
+  const boss = await getApiBoss()
   await prisma.$transaction(async (tx) => {
     await tx.group.update({
       where: { id: groupId },
@@ -466,7 +481,7 @@ export async function archiveGroupForSelf(opts: {
       },
       tx,
     )
-    await planNotificationForActivity(tx, activity)
+    await planNotificationForActivity(tx, activity, {}, { boss })
   })
 
   return { archived: true }

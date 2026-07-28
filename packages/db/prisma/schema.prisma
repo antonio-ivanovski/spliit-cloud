@@ -361,8 +361,9 @@ model GroupInvitation {
 
   // Optional virtual LedgerParticipant materialized for this pending invitation
   // so expenses can be recorded against the invitee before they accept. The
-  // link is set when the group's participants list is read; it is reused when
-  // the invitation is accepted, and cleared on revoke.
+  // link is created at invitation write time (email/link send) and populated
+  // by the migration backfill for pre-existing rows; it is reused when the
+  // invitation is accepted, and cleared on revoke.
   ledgerParticipant   LedgerParticipant? @relation(fields: [ledgerParticipantId], references: [id], onDelete: SetNull)
   ledgerParticipantId String?
 

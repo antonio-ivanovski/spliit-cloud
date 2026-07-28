@@ -5,6 +5,7 @@ import {
   logActivity,
   planNotificationForActivity,
 } from './activities'
+import { getApiBoss } from './boss'
 import { randomId } from './shared'
 
 export type ExpenseCommentListItem = {
@@ -65,6 +66,7 @@ export async function createExpenseComment(args: {
   authorName: string
   text: string
 }) {
+  const boss = await getApiBoss()
   const result = await prisma.$transaction(async (tx) => {
     const group = await tx.group.findUnique({
       where: { id: args.groupId },
@@ -112,7 +114,7 @@ export async function createExpenseComment(args: {
       },
       tx,
     )
-    await planNotificationForActivity(tx, activity)
+    await planNotificationForActivity(tx, activity, {}, { boss })
     const { authorAccount, ...commentFields } = comment
     return {
       comment: {

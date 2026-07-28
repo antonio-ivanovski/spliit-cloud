@@ -1,4 +1,4 @@
-import { prisma } from '@spliit/db'
+import { getDatabasePoolStats, prisma } from '@spliit/db'
 import { hasDatabaseEnv } from './env'
 
 export interface HealthCheckStatus {
@@ -7,6 +7,11 @@ export interface HealthCheckStatus {
     database?: {
       status: 'healthy' | 'unhealthy'
       error?: string
+      pool?: {
+        total: number
+        idle: number
+        waiting: number
+      }
     }
   }
 }
@@ -14,6 +19,7 @@ export interface HealthCheckStatus {
 async function checkDatabase(): Promise<{
   status: 'healthy' | 'unhealthy'
   error?: string
+  pool?: { total: number; idle: number; waiting: number }
 }> {
   try {
     if (!hasDatabaseEnv) {
@@ -27,12 +33,20 @@ async function checkDatabase(): Promise<{
     await prisma.$queryRaw`SELECT 1`
     return {
       status: 'healthy',
+      pool: getDatabasePoolStats(),
     }
   } catch (error) {
+    let pool: { total: number; idle: number; waiting: number } | undefined
+    try {
+      pool = getDatabasePoolStats()
+    } catch {
+      // stats unavailable
+    }
     return {
       status: 'unhealthy',
       error:
         error instanceof Error ? error.message : 'Database connection failed',
+      ...(pool ? { pool } : {}),
     }
   }
 }

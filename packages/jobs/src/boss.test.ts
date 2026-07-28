@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import {
   ensureQueues,
   hasDeadLetteredMaterialization,
+  insertJobs,
   JOB_QUEUE_OPTIONS,
   JOB_SEND_OPTIONS,
   MATERIALIZATION_EXPIRE_SECONDS,
@@ -34,6 +35,7 @@ function createBossMock(getQueue = vi.fn().mockResolvedValue(null)) {
     deleteQueue: vi.fn().mockResolvedValue(undefined),
     send: vi.fn().mockResolvedValue('job-id'),
     findJobs: vi.fn().mockResolvedValue([]),
+    insert: vi.fn().mockResolvedValue(['job-id-1', 'job-id-2']),
   } as unknown as SpliitBoss
 }
 
@@ -256,5 +258,126 @@ describe('notification job queue configuration', () => {
         singletonKey: 'delivery-123',
       }),
     )
+  })
+})
+
+describe('insertJobs', () => {
+  it('returns null for an empty payload array and never calls boss.insert', async () => {
+    const boss = createBossMock()
+
+    const result = await insertJobs(boss, JOB_NAMES.NOTIFICATION_DELIVER, [])
+
+    expect(result).toBeNull()
+    expect(boss.insert).not.toHaveBeenCalled()
+  })
+
+  it('spreads per-job send options into every job object so retry/expiry/DLQ match sendJob', async () => {
+    const boss = createBossMock()
+    vi.mocked(boss.insert).mockResolvedValue(['id-1', 'id-2'])
+
+    const db = { query: vi.fn() } as never
+    await insertJobs(
+      boss,
+      JOB_NAMES.NOTIFICATION_DELIVER,
+      [{ deliveryId: 'delivery-A' }, { deliveryId: 'delivery-B' }],
+      { db },
+    )
+
+    expect(boss.insert).toHaveBeenCalledTimes(1)
+    const [queue, jobs, options] = vi.mocked(boss.insert).mock.calls[0]!
+    expect(queue).toBe(JOB_NAMES.NOTIFICATION_DELIVER)
+    expect(options).toEqual({ db, returnId: true })
+    expect(jobs).toEqual([
+      expect.objectContaining({
+        data: { deliveryId: 'delivery-A' },
+        retryLimit: 5,
+        retryBackoff: true,
+        expireInSeconds: NOTIFICATION_DELIVER_EXPIRE_SECONDS,
+        deadLetter: NOTIFICATION_DELIVER_DLQ,
+        singletonKey: 'delivery-A',
+      }),
+      expect.objectContaining({
+        data: { deliveryId: 'delivery-B' },
+        retryLimit: 5,
+        retryBackoff: true,
+        expireInSeconds: NOTIFICATION_DELIVER_EXPIRE_SECONDS,
+        deadLetter: NOTIFICATION_DELIVER_DLQ,
+        singletonKey: 'delivery-B',
+      }),
+    ])
+  })
+
+  it('forwards the transaction-bound db exactly as supplied', async () => {
+    const boss = createBossMock()
+    const db = { __txBound: true, query: vi.fn() } as never
+
+    await insertJobs(
+      boss,
+      JOB_NAMES.NOTIFICATION_DELIVER,
+      [{ deliveryId: 'delivery-1' }],
+      { db },
+    )
+
+    const options = vi.mocked(boss.insert).mock.calls[0]?.[2]
+    expect(options).toEqual({ db, returnId: true })
+    expect((options as { db: unknown }).db).toBe(db)
+  })
+
+  it('omits the db option when none is supplied', async () => {
+    const boss = createBossMock()
+
+    await insertJobs(boss, JOB_NAMES.NOTIFICATION_DELIVER, [
+      { deliveryId: 'delivery-1' },
+    ])
+
+    const options = vi.mocked(boss.insert).mock.calls[0]?.[2]
+    expect(options).toEqual({ returnId: true })
+  })
+
+  it('forwards the singleton key derived from the payload for materialization jobs', async () => {
+    const boss = createBossMock()
+    vi.mocked(boss.insert).mockResolvedValue(['id-1'])
+
+    await insertJobs(boss, JOB_NAMES.MATERIALIZE_RECURRING_EXPENSE, [
+      { seriesId: 'series-1', sequence: 7, occurrenceDate: '2026-07-22' },
+    ])
+
+    const jobs = vi.mocked(boss.insert).mock.calls[0]?.[1] as Array<{
+      data: { seriesId: string; sequence: number; occurrenceDate: string }
+      singletonKey?: string
+    }>
+    expect(jobs[0]).toMatchObject({
+      data: { seriesId: 'series-1', sequence: 7, occurrenceDate: '2026-07-22' },
+      singletonKey: 'series-1:7:2026-07-22',
+    })
+    expect(jobs[0]).toMatchObject({
+      retryLimit: JOB_SEND_OPTIONS[RECURRING_MATERIALIZATION_QUEUE].retryLimit,
+      deadLetter: RECURRING_MATERIALIZATION_DLQ,
+    })
+  })
+
+  it('rejects payloads that do not satisfy the registered schema', async () => {
+    const boss = createBossMock()
+
+    await expect(
+      insertJobs(boss, JOB_NAMES.NOTIFICATION_DELIVER, [
+        // Missing `deliveryId`.
+        {} as never,
+      ]),
+    ).rejects.toThrow()
+    expect(boss.insert).not.toHaveBeenCalled()
+  })
+
+  it('returns the ids pg-boss hands back so the caller can persist them', async () => {
+    const boss = createBossMock()
+    vi.mocked(boss.insert).mockResolvedValue(['id-1', 'id-2', 'id-3'])
+
+    const ids = await insertJobs(boss, JOB_NAMES.NOTIFICATION_DELIVER, [
+      { deliveryId: 'd-1' },
+      { deliveryId: 'd-2' },
+      { deliveryId: 'd-3' },
+    ])
+
+    expect(ids).toEqual(['id-1', 'id-2', 'id-3'])
   })
 })

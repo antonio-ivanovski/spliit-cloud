@@ -369,6 +369,46 @@ export async function sendJob<Name extends JobName>(
   })
 }
 
+export type InsertJobsOptions = {
+  db?: SendOptions['db']
+}
+
+export async function insertJobs<Name extends JobName>(
+  boss: SpliitBoss,
+  name: Name,
+  payloads: JobPayload<Name>[],
+  options: InsertJobsOptions = {},
+): Promise<string[] | null> {
+  if (payloads.length === 0) return null
+
+  const schema = jobPayloadSchema(name)
+  const sendOptions = JOB_SEND_OPTIONS[name]
+  const jobs = payloads.map((payload) => {
+    const parsed = schema.parse(payload)
+    const singletonKey =
+      name === RECURRING_MATERIALIZATION_QUEUE
+        ? materializationSingletonKey(
+            parsed as JobPayload<'recurring-expense.materialize'>,
+          )
+        : name === NOTIFICATION_DELIVER_QUEUE
+          ? notificationDeliverSingletonKey(
+              parsed as JobPayload<'notification.deliver'>,
+            )
+          : undefined
+    return {
+      data: parsed,
+      ...sendOptions,
+      ...(singletonKey ? { singletonKey } : {}),
+    }
+  })
+
+  const result = await boss.insert(name, jobs, {
+    ...(options.db ? { db: options.db } : {}),
+    returnId: true,
+  })
+  return result as string[] | null
+}
+
 export async function scheduleJob<Name extends JobName>(
   boss: SpliitBoss,
   name: Name,

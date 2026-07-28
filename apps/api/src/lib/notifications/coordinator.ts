@@ -44,7 +44,7 @@ export class ActivityNotificationCoordinator implements ActivityNotificationDisp
       await resolveNotificationChannelsForIntents(baseIntents)
     await Promise.all(
       baseIntents.map(async (baseIntent, index) => {
-        const channels = channelPlans[index] ?? []
+        const channels = channelPlans[index]?.channels ?? []
         const intent: ActivityNotificationIntent = { ...baseIntent, channels }
         await Promise.all(
           channels.map(async (channel) => {

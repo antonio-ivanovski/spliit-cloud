@@ -13,10 +13,14 @@ import {
   logActivity,
   planNotificationForActivity,
 } from '../api/activities'
+import { getApiBoss } from '../api/boss'
 import { randomId } from '../api/shared'
 import { getWebBaseUrl } from '../auth/urls'
 import { buildLinkPlaceholderEmail, getInvitationDisplayName } from './display'
-import { reconcileMemberLedgerParticipant } from './ledger-reconciliation'
+import {
+  materializePendingInvitationParticipant,
+  reconcileMemberLedgerParticipant,
+} from './ledger-reconciliation'
 
 export class InvitationError extends TRPCError {
   constructor(message: string) {
@@ -120,8 +124,15 @@ export async function createLinkInvitation(
   const tokenHash = await hashLinkToken(token)
   const expiresAt = resolveLinkExpiresAt(input.expiresAt)
   const webBase = getWebBaseUrl()
+  const boss = await getApiBoss()
 
   const invitation = await prisma.$transaction(async (tx) => {
+    const participantId = await materializePendingInvitationParticipant(tx, {
+      groupId: input.groupId,
+      suppliedParticipantId: input.ledgerParticipantId,
+      displayName: input.temporaryName,
+    })
+
     const inv = await tx.groupInvitation.create({
       data: {
         id: randomId(),
@@ -133,9 +144,7 @@ export async function createLinkInvitation(
         invitedById: input.inviterAccountId,
         tokenHash,
         expiresAt,
-        ...(input.ledgerParticipantId
-          ? { ledgerParticipantId: input.ledgerParticipantId }
-          : {}),
+        ledgerParticipantId: participantId,
       },
     })
 
@@ -154,7 +163,7 @@ export async function createLinkInvitation(
       tx,
     )
 
-    await planNotificationForActivity(tx, activity)
+    await planNotificationForActivity(tx, activity, {}, { boss })
     return inv
   })
   return {
@@ -272,6 +281,7 @@ export async function acceptLinkInvitation(opts: {
     )
   }
 
+  const boss = await getApiBoss()
   const result = await prisma
     .$transaction(async (tx) => {
       const flipped = await tx.groupInvitation.updateMany({
@@ -376,7 +386,7 @@ export async function acceptLinkInvitation(opts: {
         tx,
       )
 
-      await planNotificationForActivity(tx, activity)
+      await planNotificationForActivity(tx, activity, {}, { boss })
 
       return {
         groupId: invitation.groupId,

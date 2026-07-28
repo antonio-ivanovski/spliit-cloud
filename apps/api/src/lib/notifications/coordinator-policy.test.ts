@@ -44,9 +44,10 @@ describe('resolveNotificationChannelsForIntents', () => {
     prismaMock.pushSubscription.findMany.mockResolvedValue([])
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
 
-    await expect(
-      resolveNotificationChannelsForIntents([intent()]),
-    ).resolves.toEqual([[NotificationChannel.PUSH]])
+    const plans = await resolveNotificationChannelsForIntents([intent()])
+    expect(plans.map((plan) => plan.channels)).toEqual([
+      [NotificationChannel.PUSH],
+    ])
     expect(warn).toHaveBeenCalledWith(
       expect.stringContaining('no active push target exists'),
     )
@@ -56,23 +57,23 @@ describe('resolveNotificationChannelsForIntents', () => {
     prismaMock.accountNotificationPreference.findMany.mockResolvedValue([])
     prismaMock.pushSubscription.findMany.mockResolvedValue([])
 
-    await expect(
-      resolveNotificationChannelsForIntents([intent()]),
-    ).resolves.toEqual([[NotificationChannel.EMAIL]])
+    const plans = await resolveNotificationChannelsForIntents([intent()])
+    expect(plans.map((plan) => plan.channels)).toEqual([
+      [NotificationChannel.EMAIL],
+    ])
   })
 
   it('keeps Email defaults even when a push target exists', async () => {
     prismaMock.accountNotificationPreference.findMany.mockResolvedValue([])
     prismaMock.pushSubscription.findMany.mockResolvedValue([
-      { accountId: 'account-1' },
+      { id: 'sub-1', accountId: 'account-1' },
     ] as never)
 
-    await expect(
-      resolveNotificationChannelsForIntents([
-        intent({ category: NotificationCategory.EXPENSE_CHANGED }),
-        intent({ category: NotificationCategory.GROUP_INVITE_RECEIVED }),
-      ]),
-    ).resolves.toEqual([
+    const plans = await resolveNotificationChannelsForIntents([
+      intent({ category: NotificationCategory.EXPENSE_CHANGED }),
+      intent({ category: NotificationCategory.GROUP_INVITE_RECEIVED }),
+    ])
+    expect(plans.map((plan) => plan.channels)).toEqual([
       [NotificationChannel.EMAIL],
       [NotificationChannel.EMAIL],
     ])
@@ -81,24 +82,42 @@ describe('resolveNotificationChannelsForIntents', () => {
   it('prefers push for implicit comment notifications when a target exists', async () => {
     prismaMock.accountNotificationPreference.findMany.mockResolvedValue([])
     prismaMock.pushSubscription.findMany.mockResolvedValue([
-      { accountId: 'account-1' },
+      { id: 'sub-1', accountId: 'account-1' },
     ] as never)
 
-    await expect(
-      resolveNotificationChannelsForIntents([
-        intent({ category: NotificationCategory.EXPENSE_COMMENT }),
-      ]),
-    ).resolves.toEqual([[NotificationChannel.PUSH]])
+    const plans = await resolveNotificationChannelsForIntents([
+      intent({ category: NotificationCategory.EXPENSE_COMMENT }),
+    ])
+    expect(plans.map((plan) => plan.channels)).toEqual([
+      [NotificationChannel.PUSH],
+    ])
   })
 
   it('falls implicit comment notifications back to email without a push target', async () => {
     prismaMock.accountNotificationPreference.findMany.mockResolvedValue([])
     prismaMock.pushSubscription.findMany.mockResolvedValue([])
 
-    await expect(
-      resolveNotificationChannelsForIntents([
-        intent({ category: NotificationCategory.EXPENSE_COMMENT }),
-      ]),
-    ).resolves.toEqual([[NotificationChannel.EMAIL]])
+    const plans = await resolveNotificationChannelsForIntents([
+      intent({ category: NotificationCategory.EXPENSE_COMMENT }),
+    ])
+    expect(plans.map((plan) => plan.channels)).toEqual([
+      [NotificationChannel.EMAIL],
+    ])
+  })
+
+  it('returns the same push subscription map for every plan entry', async () => {
+    prismaMock.accountNotificationPreference.findMany.mockResolvedValue([])
+    prismaMock.pushSubscription.findMany.mockResolvedValue([
+      { id: 'sub-1', accountId: 'account-1' },
+    ] as never)
+
+    const plans = await resolveNotificationChannelsForIntents([
+      intent({ recipientAccountId: 'account-1' }),
+      intent({ recipientAccountId: 'account-1' }),
+    ])
+    const mapA = plans[0]?.pushSubscriptionsByAccountId
+    const mapB = plans[1]?.pushSubscriptionsByAccountId
+    expect(mapA).toBe(mapB)
+    expect(mapA?.get('account-1')).toEqual([{ id: 'sub-1' }])
   })
 })

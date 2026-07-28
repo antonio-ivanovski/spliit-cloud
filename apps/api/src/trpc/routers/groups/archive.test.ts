@@ -16,7 +16,14 @@ import { groupsRouter } from './index'
 // also resolves a boss client; stub it at the module boundary.
 vi.mock('../../../lib/api/activities', async (importOriginal) => ({
   ...(await importOriginal()),
-  planNotificationForActivity: vi.fn(async () => []),
+  planNotificationForActivity: vi.fn(
+    async (
+      _tx: unknown,
+      _activity: unknown,
+      _eventOverrides: unknown,
+      _options: unknown,
+    ) => [],
+  ),
 }))
 
 const mockResumeRecurringExpenseSeries = vi.hoisted(() => vi.fn(async () => 0))

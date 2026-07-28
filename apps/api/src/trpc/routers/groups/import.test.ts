@@ -65,6 +65,15 @@ function stubGroupWithLedger(groupId = 'grp-1', ledgerId = 'ledger-1'): void {
       ledger: { id: ledgerId, currency: '€', currencyCode: 'EUR' },
     } as never
   })
+  prismaMock.$queryRaw.mockResolvedValue([
+    {
+      id: groupId,
+      ledgerId,
+      archived: false,
+      groupType: 'GROUP',
+      currencyCode: 'EUR',
+    },
+  ] as never)
 }
 
 const baseExpense = {
@@ -724,11 +733,15 @@ describe('importGroup', () => {
 
   it('throws when target group is archived', async () => {
     await authAs('acct-importer')
-    prismaMock.group.findUnique.mockResolvedValue({
-      id: 'grp-archived',
-      ledgerId: 'ledger-1',
-      archived: true,
-    } as never)
+    prismaMock.$queryRaw.mockResolvedValue([
+      {
+        id: 'grp-archived',
+        ledgerId: 'ledger-1',
+        archived: true,
+        groupType: 'GROUP',
+        currencyCode: 'EUR',
+      },
+    ] as never)
     await expect(
       importGroup(
         {
@@ -743,11 +756,15 @@ describe('importGroup', () => {
 
   it('throws when target group is missing its ledger', async () => {
     await authAs('acct-importer')
-    prismaMock.group.findUnique.mockResolvedValue({
-      id: 'grp-no-ledger',
-      ledgerId: null,
-      archived: false,
-    } as never)
+    prismaMock.$queryRaw.mockResolvedValue([
+      {
+        id: 'grp-no-ledger',
+        ledgerId: null,
+        archived: false,
+        groupType: 'GROUP',
+        currencyCode: null,
+      },
+    ] as never)
     await expect(
       importGroup(
         {
@@ -762,10 +779,21 @@ describe('importGroup', () => {
 
   it('throws when LINK_ACCOUNT linked account does not exist', async () => {
     await authAs('acct-importer')
+    prismaMock.$queryRaw.mockResolvedValue([
+      {
+        id: 'dest-grp',
+        ledgerId: 'ledger-1',
+        archived: false,
+        groupType: 'GROUP',
+        currencyCode: 'EUR',
+      },
+    ] as never)
     prismaMock.group.findUnique.mockResolvedValue({
       id: 'dest-grp',
       ledgerId: 'ledger-1',
       archived: false,
+      groupType: 'GROUP',
+      ledger: { currencyCode: 'EUR' },
     } as never)
     // The mapping loop queries existing LedgerParticipants to
     // validate LINK_EXISTING_PARTICIPANT refs. Stub as empty.

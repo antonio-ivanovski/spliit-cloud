@@ -12,7 +12,7 @@ import {
 import {
   JOB_NAMES,
   bossTransactionDb,
-  sendJob,
+  insertJobs,
   type SpliitBoss,
 } from '@spliit/jobs'
 import { randomId } from '../api/shared'
@@ -41,6 +41,17 @@ type DraftDelivery = {
   snapshot: Prisma.InputJsonValue
 }
 
+type PreloadedSnapshotContext = {
+  accountsById: Map<string, { id: string; name: string }>
+  group: { id: string; name: string; groupType: string } | null
+  expense: {
+    id: string
+    description: string
+    amount: number
+    currencyCode: string | null
+  } | null
+}
+
 const DELIVERY_STATUS_PENDING = 'PENDING' as const
 
 export async function planActivityNotificationDeliveries(args: {
@@ -67,66 +78,92 @@ export async function planActivityNotificationDeliveries(args: {
       '[notifications] invalid event identity: synthetic events (activityId=null) must provide a customEventKey',
     )
   }
-  const deliveryActivityId = event.activityId
-  const drafts: DraftDelivery[] = []
+
+  // Construct both EMAIL and PUSH draft specs before touching the
+  // database for snapshot data. When every channel is suppressed (empty
+  // preference, or PUSH selected with no subscription) the planner must
+  // return without issuing account/group/expense queries.
+  const draftSpecs: Array<{
+    recipientAccountId: string
+    category: NotificationCategory
+    channel: NotificationChannel
+    pushSubscriptionId: string | null
+  }> = []
+
+  // Reuse the push subscriptions the channel resolver already fetched —
+  // a second findMany here would double the round-trips per event.
+  const pushSubscriptionsByAccountId =
+    channelPlans[0]?.pushSubscriptionsByAccountId ?? new Map()
+
   for (let i = 0; i < baseIntents.length; i++) {
     const baseIntent = baseIntents[i]!
-    const channels = channelPlans[i] ?? []
+    const channels = channelPlans[i]?.channels ?? []
     for (const channel of channels) {
       if (channel === NotificationChannel.EMAIL) {
-        const targetKey = emailTargetKey(baseIntent.recipientAccountId)
-        const snapshot = await buildSnapshot({
-          tx,
-          event,
-          eventKey,
+        draftSpecs.push({
           recipientAccountId: baseIntent.recipientAccountId,
           category: baseIntent.category,
           channel,
-        })
-        drafts.push({
-          id: randomId(),
-          eventKey,
-          activityId: deliveryActivityId,
-          recipientAccountId: baseIntent.recipientAccountId,
-          category: baseIntent.category,
-          channel,
-          targetKey,
           pushSubscriptionId: null,
-          snapshotVersion: NotificationSnapshotVersion.V1,
-          snapshot: snapshot as unknown as Prisma.InputJsonValue,
         })
-        continue
-      }
-      const subscriptions = await tx.pushSubscription.findMany({
-        where: { accountId: baseIntent.recipientAccountId },
-        select: { id: true },
-      })
-      for (const subscription of subscriptions) {
-        const targetKey = pushTargetKey(subscription.id)
-        const snapshot = await buildSnapshot({
-          tx,
-          event,
-          eventKey,
-          recipientAccountId: baseIntent.recipientAccountId,
-          category: baseIntent.category,
-          channel,
-          pushSubscriptionId: subscription.id,
-        })
-        drafts.push({
-          id: randomId(),
-          eventKey,
-          activityId: deliveryActivityId,
-          recipientAccountId: baseIntent.recipientAccountId,
-          category: baseIntent.category,
-          channel,
-          targetKey,
-          pushSubscriptionId: subscription.id,
-          snapshotVersion: NotificationSnapshotVersion.V1,
-          snapshot: snapshot as unknown as Prisma.InputJsonValue,
-        })
+      } else if (channel === NotificationChannel.PUSH) {
+        const subs =
+          pushSubscriptionsByAccountId.get(baseIntent.recipientAccountId) ?? []
+        for (const subscription of subs) {
+          draftSpecs.push({
+            recipientAccountId: baseIntent.recipientAccountId,
+            category: baseIntent.category,
+            channel: NotificationChannel.PUSH,
+            pushSubscriptionId: subscription.id,
+          })
+        }
       }
     }
   }
+
+  if (draftSpecs.length === 0) return []
+
+  // Derive recipientIds from the completed specs so the preload only
+  // fetches accounts that will actually appear in a snapshot.
+  const recipientIds = new Set<string>()
+  for (const spec of draftSpecs) {
+    recipientIds.add(spec.recipientAccountId)
+  }
+
+  const preloaded = await preloadSnapshotContext({
+    tx,
+    event,
+    recipientIds,
+  })
+
+  const deliveryActivityId = event.activityId
+  const drafts: DraftDelivery[] = draftSpecs.map((spec) => {
+    const targetKey =
+      spec.channel === NotificationChannel.EMAIL
+        ? emailTargetKey(spec.recipientAccountId)
+        : pushTargetKey(spec.pushSubscriptionId!)
+    const snapshot = buildSnapshot({
+      event,
+      eventKey,
+      recipientAccountId: spec.recipientAccountId,
+      category: spec.category,
+      channel: spec.channel,
+      pushSubscriptionId: spec.pushSubscriptionId ?? undefined,
+      preloaded,
+    })
+    return {
+      id: randomId(),
+      eventKey,
+      activityId: deliveryActivityId,
+      recipientAccountId: spec.recipientAccountId,
+      category: spec.category,
+      channel: spec.channel,
+      targetKey,
+      pushSubscriptionId: spec.pushSubscriptionId,
+      snapshotVersion: NotificationSnapshotVersion.V1,
+      snapshot: snapshot as unknown as Prisma.InputJsonValue,
+    }
+  })
   if (drafts.length === 0) return []
   await tx.notificationDelivery.createMany({
     data: drafts.map(({ id, ...rest }) => ({
@@ -150,14 +187,12 @@ export async function planActivityNotificationDeliveries(args: {
     .map((draft) => draft.id)
     .filter((id) => persistedIds.has(id))
   if (boss) {
-    for (const id of newIds) {
-      await sendJob(
-        boss,
-        JOB_NAMES.NOTIFICATION_DELIVER,
-        { deliveryId: id },
-        { db: bossTransactionDb(tx), singletonKey: id },
-      )
-    }
+    await insertJobs(
+      boss,
+      JOB_NAMES.NOTIFICATION_DELIVER,
+      newIds.map((id) => ({ deliveryId: id })),
+      { db: bossTransactionDb(tx) },
+    )
   }
   return newIds
 }
@@ -166,81 +201,118 @@ function unique<T>(values: ReadonlyArray<T>): T[] {
   return [...new Set(values)]
 }
 
-async function loadGroup(
-  tx: PlannerClient,
-  groupId: string,
-): Promise<{ id: string; name: string; groupType: string } | null> {
-  const group = await tx.group.findUnique({
-    where: { id: groupId },
+/**
+ * Resolve every entity `buildSnapshot` reads in constant time per event,
+ * regardless of fan-out size. The shape mirrors the previous per-call
+ * loads so callers can index by accountId without falling back to the
+ * transaction client.
+ *
+ * Queries are dispatched sequentially because an interactive Prisma
+ * transaction holds exactly one pg connection: `Promise.all` on the
+ * same client fires concurrent queries on the same connection, which
+ * `pg` already deprecates and the handoff forbids. The expense query
+ * is skipped entirely when no draft will need it (i.e. the snapshot
+ * kind is neither an expense nor a comment).
+ */
+async function preloadSnapshotContext(args: {
+  tx: PlannerClient
+  event: ActivityNotificationEvent
+  recipientIds: ReadonlySet<string>
+}): Promise<PreloadedSnapshotContext> {
+  const { tx, event, recipientIds } = args
+  const accountIds = new Set<string>(recipientIds)
+  if (event.actor?.type === 'ACCOUNT') {
+    accountIds.add(event.actor.id)
+  }
+  const accountIdList = [...accountIds]
+  const accounts =
+    accountIdList.length > 0
+      ? await tx.account.findMany({
+          where: { id: { in: accountIdList } },
+          select: { id: true, name: true },
+        })
+      : ([] as Array<{ id: string; name: string }>)
+  const groupRow = await tx.group.findUnique({
+    where: { id: event.groupId },
     select: { id: true, name: true, groupType: true },
   })
-  return group
-    ? { id: group.id, name: group.name, groupType: String(group.groupType) }
+
+  const accountsById = new Map<string, { id: string; name: string }>()
+  for (const account of accounts) {
+    accountsById.set(account.id, { id: account.id, name: account.name })
+  }
+  const group = groupRow
+    ? {
+        id: groupRow.id,
+        name: groupRow.name,
+        groupType: String(groupRow.groupType),
+      }
     : null
-}
 
-async function loadAccount(
-  tx: PlannerClient,
-  accountId: string,
-): Promise<{ id: string; name: string } | null> {
-  const account = await tx.account.findUnique({
-    where: { id: accountId },
-    select: { id: true, name: true },
-  })
-  return account ? { id: account.id, name: account.name } : null
-}
+  let expense: PreloadedSnapshotContext['expense'] = null
+  const snapshotKind = pickSnapshotKind(event)
+  if (
+    event.subject?.id &&
+    (snapshotKind === 'expense_created' ||
+      snapshotKind === 'expense_updated' ||
+      snapshotKind === 'expense_deleted' ||
+      snapshotKind === 'recurring_created' ||
+      snapshotKind === 'recurring_occurrence' ||
+      snapshotKind === 'settlement' ||
+      snapshotKind === 'expense_comment')
+  ) {
+    const row = await tx.expense.findUnique({
+      where: { id: event.subject.id },
+      select: {
+        id: true,
+        title: true,
+        amount: true,
+        ledger: { select: { currencyCode: true } },
+      },
+    })
+    expense = row
+      ? {
+          id: row.id,
+          description: row.title,
+          amount: row.amount,
+          currencyCode: row.ledger.currencyCode,
+        }
+      : null
+  }
 
-async function loadExpenseSummary(
-  tx: PlannerClient,
-  expenseId: string,
-): Promise<{
-  id: string
-  description: string
-  amount: number
-  currencyCode: string | null
-} | null> {
-  const expense = await tx.expense.findUnique({
-    where: { id: expenseId },
-    select: {
-      id: true,
-      title: true,
-      amount: true,
-      ledger: { select: { currencyCode: true } },
-    },
-  })
-  if (!expense) return null
   return {
-    id: expense.id,
-    description: expense.title,
-    amount: expense.amount,
-    currencyCode: expense.ledger.currencyCode,
+    accountsById,
+    group,
+    expense,
   }
 }
 
-async function buildSnapshot(args: {
-  tx: PlannerClient
+function buildSnapshot(args: {
   event: ActivityNotificationEvent
   eventKey: string
   recipientAccountId: string
   category: NotificationCategory
   channel: NotificationChannel
   pushSubscriptionId?: string
-}): Promise<DeliverySnapshotV1> {
+  preloaded: PreloadedSnapshotContext
+}): DeliverySnapshotV1 {
   const {
-    tx,
     event,
     eventKey,
     recipientAccountId,
     category,
     channel,
     pushSubscriptionId,
+    preloaded,
   } = args
-  const recipientAccount = await loadAccount(tx, recipientAccountId)
-  const group = await loadGroup(tx, event.groupId)
+  const recipientAccount =
+    preloaded.accountsById.get(recipientAccountId) ?? null
+  const group = preloaded.group
   const actor =
     event.actor?.type === 'ACCOUNT'
-      ? await loadAccount(tx, event.actor.id)
+      ? (preloaded.accountsById.get(event.actor.id) ?? null)
       : null
+  const expense = preloaded.expense
   const parsed = parseActivityData(event.data)
   const occurredAtIso = event.occurredAt.toISOString()
   const recipientSnapshot = {
@@ -298,7 +370,6 @@ async function buildSnapshot(args: {
     kind === 'settlement'
   ) {
     if (event.subject?.id) {
-      const expense = await loadExpenseSummary(tx, event.subject.id)
       if (expense) {
         draft.expense = expense
       } else if (parsed && parsed.kind === 'expense') {
@@ -332,7 +403,6 @@ async function buildSnapshot(args: {
     }
   }
   if (kind === 'expense_comment' && event.subject?.id) {
-    const expense = await loadExpenseSummary(tx, event.subject.id)
     draft.expense = {
       id: expense?.id ?? event.subject.id,
       description:

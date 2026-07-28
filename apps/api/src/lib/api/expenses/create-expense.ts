@@ -12,6 +12,7 @@ import {
   logActivity,
   planNotificationForActivity,
 } from '../activities'
+import { getApiBoss } from '../boss'
 import {
   buildRecurringTemplate,
   createSeriesForExpense,
@@ -156,6 +157,7 @@ export async function createExpense(
     }
   }
 
+  const boss = await getApiBoss()
   const createdExpense = await prisma.$transaction(async (tx) => {
     await tx.$queryRaw`SELECT id FROM "Group" WHERE id = ${groupId} FOR UPDATE`
     const lockedGroup = await tx.group.findUnique({
@@ -319,9 +321,14 @@ export async function createExpense(
     })
 
     if (!catchUpSeed) {
-      await planNotificationForActivity(tx, activity, {
-        ...(isCreateRecurrence ? { includeActorAsRecipient: true } : {}),
-      })
+      await planNotificationForActivity(
+        tx,
+        activity,
+        {
+          ...(isCreateRecurrence ? { includeActorAsRecipient: true } : {}),
+        },
+        { boss },
+      )
     }
 
     return createdExpense

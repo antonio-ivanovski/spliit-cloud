@@ -1,6 +1,7 @@
 import { app } from './app'
 import { stopApiBoss } from './lib/api/boss'
 import { env } from './lib/env'
+import { runShutdown } from './lib/lifecycle/shutdown'
 
 const server = Bun.serve({
   fetch: app.fetch,
@@ -9,15 +10,17 @@ const server = Bun.serve({
 })
 console.log(`Spliit Cloud API listening on http://localhost:${env.PORT}`)
 
-let shuttingDown = false
+let stopping = false
+
 async function shutdown(signal: string) {
-  if (shuttingDown) return
-  shuttingDown = true
+  if (stopping) return
+  stopping = true
   console.log(`Spliit Cloud API stopping (${signal})`)
-  server.stop(true)
-  await stopApiBoss().catch((error) => {
-    console.error('Failed to stop API job client', error)
+  const result = await runShutdown({
+    stopServer: () => server.stop(true),
+    stopBoss: stopApiBoss,
   })
+  if (!result.clean) process.exitCode = 1
 }
 
 process.once('SIGINT', () => void shutdown('SIGINT'))

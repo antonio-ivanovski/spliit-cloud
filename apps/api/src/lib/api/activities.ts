@@ -8,6 +8,7 @@ import {
   type ActivityType,
 } from '@spliit/domain/activities'
 import { getNotificationCategoryForActivity } from '@spliit/domain/notifications'
+import type { SpliitBoss } from '@spliit/jobs'
 import { resolveParticipantDisplayName } from '../invitations/display'
 import { planActivityNotificationDeliveries } from '../notifications/delivery-planner'
 import {
@@ -15,7 +16,7 @@ import {
   scheduleDefaultNotificationDispatch,
 } from '../notifications/dispatcher'
 import type { ActivityNotificationEvent } from '../notifications/types'
-import { getApiBoss } from './boss'
+
 import { participantDisplayNameSelect } from './selects/participant-display-name'
 import { randomId } from './shared'
 export {
@@ -66,6 +67,7 @@ export async function planNotificationForActivity(
   tx: Prisma.TransactionClient,
   activity: Activity,
   eventOverrides: Partial<Omit<ActivityNotificationEvent, 'activityId'>> = {},
+  options: { boss: SpliitBoss | null },
 ): Promise<string[]> {
   const type = eventOverrides.type ?? activity.type
   if (
@@ -106,7 +108,7 @@ export async function planNotificationForActivity(
   const deliveryIds = await planActivityNotificationDeliveries({
     event,
     tx,
-    boss: await getApiBoss(),
+    boss: options.boss,
   })
   if (deliveryIds.length > 0) {
     await getDefaultActivityNotificationDispatcher().dispatch(event)

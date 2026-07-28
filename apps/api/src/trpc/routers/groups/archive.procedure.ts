@@ -11,6 +11,7 @@ import {
   getGroupBalances,
   hasUnsettledBalances,
 } from '../../../lib/api/balances'
+import { getApiBoss } from '../../../lib/api/boss'
 import { resumeRecurringExpenseSeries } from '../../../lib/api/recurrence-series'
 import { loadGroupContext, protectedProcedure } from '../../init'
 import { archiveGroupOutputSchema } from '../../outputs/groups'
@@ -61,6 +62,7 @@ export const archiveGroupProcedure = protectedProcedure
     // materializer follows the same Group -> RecurringExpenseSeries order,
     // so a due occurrence cannot be created between the balance precheck and
     // pausing the series.
+    const boss = await getApiBoss()
     const result = await prisma.$transaction(async (tx) => {
       await tx.$queryRaw`SELECT "id" FROM "Group" WHERE "id" = ${groupId} FOR UPDATE`
       const lockedGroup = await tx.group.findUnique({
@@ -126,10 +128,15 @@ export const archiveGroupProcedure = protectedProcedure
             )
           : null
       if (activity) {
-        await planNotificationForActivity(tx, activity)
+        await planNotificationForActivity(tx, activity, {}, { boss })
       }
       for (const settlementActivity of settlementActivities) {
-        await planNotificationForActivity(tx, settlementActivity.activity)
+        await planNotificationForActivity(
+          tx,
+          settlementActivity.activity,
+          {},
+          { boss },
+        )
       }
       return {
         group: updated,

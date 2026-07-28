@@ -169,9 +169,11 @@
       "devDependencies": {
         "@spliit/config": "workspace:*",
         "@types/node": "24.13.2",
+        "@types/pg": "^8.20.0",
         "prisma-json-types-generator": "^5.1.0",
         "prisma-mock": "^1.1.0",
         "typescript": "6.0.3",
+        "vitest": "5.0.0-beta.5",
       },
     },
     "packages/domain": {

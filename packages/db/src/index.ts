@@ -1,4 +1,5 @@
 import { PrismaPg } from '@prisma/adapter-pg'
+import { Pool } from 'pg'
 import { PrismaClient } from './generated/prisma/client/client'
 // Pull in prisma-json.d.ts global declarations so consumers see the
 // PrismaJson namespace and bare ActivityType aliases.
@@ -6,21 +7,122 @@ import './prisma-json'
 
 export * from './generated/prisma/client/client'
 
-const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient }
+export type DatabasePoolStats = {
+  total: number
+  idle: number
+  waiting: number
+}
 
-const databaseUrl =
-  process.env.DATABASE_URL ?? 'postgresql://postgres:1234@localhost'
+export type DatabaseRuntime = {
+  basePrisma: PrismaClient
+  pool: Pool
+}
 
-const adapter = new PrismaPg({
-  connectionString: databaseUrl,
-})
+export type DatabaseRuntimeOptions = {
+  connectionString?: string
+  poolSize?: number
+  acquireTimeoutMs?: number
+  transactionMaxWaitMs?: number
+  transactionTimeoutMs?: number
+  applicationName?: string
+  logQueries?: boolean
+}
 
-const basePrisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    adapter,
-    log: process.env.PRISMA_QUERY_LOG === 'true' ? ['query'] : [],
+const DEFAULT_POOL_SIZE = 10
+const DEFAULT_ACQUIRE_TIMEOUT_MS = 5000
+const DEFAULT_TRANSACTION_MAX_WAIT_MS = 2000
+const DEFAULT_TRANSACTION_TIMEOUT_MS = 5000
+
+export function parsePositiveInt(
+  name: string,
+  raw: string | undefined,
+  fallback: number,
+): number {
+  if (raw === undefined || raw === '') return fallback
+  const parsed = Number(raw)
+  if (!Number.isInteger(parsed) || parsed <= 0) {
+    throw new Error(`[db] ${name} must be a positive integer, got "${raw}"`)
+  }
+  return parsed
+}
+
+export function createDatabaseRuntime(
+  env: NodeJS.ProcessEnv = process.env,
+  poolFactory: typeof Pool = Pool,
+  adapterFactory: typeof PrismaPg = PrismaPg,
+): DatabaseRuntime {
+  const connectionString =
+    env.DATABASE_URL ?? 'postgresql://postgres:1234@localhost'
+
+  const max = parsePositiveInt(
+    'DATABASE_POOL_SIZE',
+    env.DATABASE_POOL_SIZE,
+    DEFAULT_POOL_SIZE,
+  )
+  const connectionTimeoutMillis = parsePositiveInt(
+    'DATABASE_POOL_ACQUIRE_TIMEOUT_MS',
+    env.DATABASE_POOL_ACQUIRE_TIMEOUT_MS,
+    DEFAULT_ACQUIRE_TIMEOUT_MS,
+  )
+  const maxWait = parsePositiveInt(
+    'DATABASE_TRANSACTION_MAX_WAIT_MS',
+    env.DATABASE_TRANSACTION_MAX_WAIT_MS,
+    DEFAULT_TRANSACTION_MAX_WAIT_MS,
+  )
+  const timeout = parsePositiveInt(
+    'DATABASE_TRANSACTION_TIMEOUT_MS',
+    env.DATABASE_TRANSACTION_TIMEOUT_MS,
+    DEFAULT_TRANSACTION_TIMEOUT_MS,
+  )
+  const applicationName = env.DATABASE_APPLICATION_NAME || 'spliit'
+
+  const pool = new poolFactory({
+    connectionString,
+    max,
+    connectionTimeoutMillis,
+    application_name: applicationName,
   })
+
+  pool.on('error', (err: Error) => {
+    console.error(
+      `[db] idle client error (app=${applicationName}): ${err.message}`,
+    )
+  })
+
+  const adapter = new adapterFactory(pool, {
+    disposeExternalPool: true,
+  })
+
+  const basePrisma = new PrismaClient({
+    adapter,
+    log: env.PRISMA_QUERY_LOG === 'true' ? ['query'] : [],
+    transactionOptions: {
+      maxWait,
+      timeout,
+    },
+  })
+
+  return { basePrisma, pool }
+}
+
+const globalForDb = globalThis as unknown as {
+  __spliitDbRuntime?: DatabaseRuntime
+}
+
+const runtime: DatabaseRuntime =
+  process.env.NODE_ENV !== 'production'
+    ? (globalForDb.__spliitDbRuntime ??= createDatabaseRuntime())
+    : createDatabaseRuntime()
+
+const { basePrisma, pool: dbPool } = runtime
+
+export function getDatabasePoolStats(): DatabasePoolStats {
+  return {
+    total: dbPool.totalCount,
+    idle: dbPool.idleCount,
+    waiting: dbPool.waitingCount,
+  }
+}
 
 /**
  * Wraps `prisma.$transaction` so that any transaction-level failure is
@@ -70,7 +172,3 @@ export const prisma = new Proxy(basePrisma, {
     return Reflect.get(target, prop, receiver)
   },
 }) as PrismaClient
-
-if (process.env.NODE_ENV !== 'production') {
-  globalForPrisma.prisma = basePrisma
-}

@@ -13,6 +13,7 @@ import {
   logActivity,
   planNotificationForActivity,
 } from './activities'
+import { getApiBoss } from './boss'
 import { randomId } from './shared'
 
 /**
@@ -26,6 +27,7 @@ export async function linkUnlinkedParticipantToAccount(opts: {
   actor: { accountId: string }
 }): Promise<{ groupMemberId: string; ledgerParticipantId: string }> {
   const { groupId, ledgerParticipantId, accountId, actor } = opts
+  const boss = await getApiBoss()
 
   const outcome = await prisma.$transaction(async (tx) => {
     const participant = await tx.ledgerParticipant.findUnique({
@@ -131,7 +133,7 @@ export async function linkUnlinkedParticipantToAccount(opts: {
         tx,
       )
 
-      await planNotificationForActivity(tx, activity)
+      await planNotificationForActivity(tx, activity, {}, { boss })
       return {
         result: { groupMemberId, ledgerParticipantId: existingLp.id },
         activity,
@@ -172,7 +174,7 @@ export async function linkUnlinkedParticipantToAccount(opts: {
       tx,
     )
 
-    await planNotificationForActivity(tx, activity)
+    await planNotificationForActivity(tx, activity, {}, { boss })
     return {
       result: { groupMemberId, ledgerParticipantId: participant.id },
       activity,
@@ -359,6 +361,7 @@ export async function linkUnlinkedParticipantToPendingInvite(opts: {
   actor: { accountId: string }
 }): Promise<{ groupMemberId: null; ledgerParticipantId: string }> {
   const { groupId, ledgerParticipantId, pendingInvitationId, actor } = opts
+  const boss = await getApiBoss()
 
   const outcome = await prisma.$transaction(async (tx) => {
     const participant = await tx.ledgerParticipant.findUnique({
@@ -449,7 +452,7 @@ export async function linkUnlinkedParticipantToPendingInvite(opts: {
       tx,
     )
 
-    await planNotificationForActivity(tx, activity)
+    await planNotificationForActivity(tx, activity, {}, { boss })
     return {
       result: { groupMemberId: null, ledgerParticipantId: targetLp.id },
       activity,

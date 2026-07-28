@@ -14,6 +14,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const jobMocks = vi.hoisted(() => ({
   sendJob: vi.fn(),
+  insertJobs: vi.fn(),
 }))
 
 vi.mock(import('@spliit/jobs'), async (importOriginal) => {
@@ -21,6 +22,7 @@ vi.mock(import('@spliit/jobs'), async (importOriginal) => {
   return {
     ...jobs,
     sendJob: jobMocks.sendJob,
+    insertJobs: jobMocks.insertJobs,
   }
 })
 
@@ -116,6 +118,16 @@ beforeEach(() => {
   prismaMock.account.findUnique.mockImplementation((async (args: {
     where: { id: string }
   }) => mockAccount(args.where.id)) as never)
+  prismaMock.account.findMany.mockImplementation((async (args: {
+    where?: { id?: { in?: string[] } | string }
+  }) => {
+    const ids = (() => {
+      if (!args?.where?.id) return [] as string[]
+      if (typeof args.where.id === 'string') return [args.where.id]
+      return args.where.id.in ?? []
+    })()
+    return ids.map((id) => mockAccount(id))
+  }) as never)
 })
 
 afterEach(() => {
@@ -153,8 +165,8 @@ describe('planActivityNotificationDeliveries', () => {
       },
     ] as never)
     prismaMock.pushSubscription.findMany.mockResolvedValue([
-      { id: 'push-1' },
-      { id: 'push-2' },
+      { id: 'push-1', accountId: 'account-bob' },
+      { id: 'push-2', accountId: 'account-bob' },
     ] as never)
 
     const ids = await planActivityNotificationDeliveries({
@@ -208,6 +220,8 @@ describe('planActivityNotificationDeliveries', () => {
       },
     ] as never)
 
+    const accountCallsBefore = prismaMock.account.findMany.mock.calls.length
+
     const ids = await planActivityNotificationDeliveries({
       event: event(),
       tx,
@@ -216,6 +230,11 @@ describe('planActivityNotificationDeliveries', () => {
 
     expect(ids).toEqual([])
     expect(prismaMock.notificationDelivery.createMany).not.toHaveBeenCalled()
+    // The snapshot preload (account.findMany) must not run when no
+    // delivery can be created.
+    expect(prismaMock.account.findMany.mock.calls.length).toBe(
+      accountCallsBefore,
+    )
   })
 
   it('creates one row per push subscription for the same recipient', async () => {
@@ -227,9 +246,9 @@ describe('planActivityNotificationDeliveries', () => {
       },
     ] as never)
     prismaMock.pushSubscription.findMany.mockResolvedValue([
-      { id: 'push-1' },
-      { id: 'push-2' },
-      { id: 'push-3' },
+      { id: 'push-1', accountId: 'account-bob' },
+      { id: 'push-2', accountId: 'account-bob' },
+      { id: 'push-3', accountId: 'account-bob' },
     ] as never)
 
     const ids = await planActivityNotificationDeliveries({
@@ -258,6 +277,8 @@ describe('planActivityNotificationDeliveries', () => {
     ] as never)
     prismaMock.pushSubscription.findMany.mockResolvedValue([] as never)
 
+    const accountCallsBefore = prismaMock.account.findMany.mock.calls.length
+
     const ids = await planActivityNotificationDeliveries({
       event: event(),
       tx,
@@ -266,6 +287,11 @@ describe('planActivityNotificationDeliveries', () => {
 
     expect(ids).toEqual([])
     expect(prismaMock.notificationDelivery.createMany).not.toHaveBeenCalled()
+    // The snapshot preload (account.findMany) must not run when no
+    // delivery can be created.
+    expect(prismaMock.account.findMany.mock.calls.length).toBe(
+      accountCallsBefore,
+    )
   })
 
   it('relies on skipDuplicates so a replayed event yields no extra rows', async () => {
@@ -331,12 +357,12 @@ describe('planActivityNotificationDeliveries', () => {
 
     expect(ids).toHaveLength(1)
     const deliveryId = ids[0]!
-    expect(jobMocks.sendJob).toHaveBeenCalledTimes(1)
-    expect(jobMocks.sendJob).toHaveBeenCalledWith(
+    expect(jobMocks.insertJobs).toHaveBeenCalledTimes(1)
+    expect(jobMocks.insertJobs).toHaveBeenCalledWith(
       boss,
       'notification.deliver',
-      { deliveryId },
-      expect.objectContaining({ singletonKey: deliveryId }),
+      [{ deliveryId }],
+      expect.objectContaining({ db: expect.anything() }),
     )
     expect(prismaMock.notificationDelivery.createMany).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -352,6 +378,73 @@ describe('planActivityNotificationDeliveries', () => {
         ]),
       }),
     )
+  })
+
+  it('keeps the snapshot preloads constant regardless of fan-out size', async () => {
+    // 25 EMAIL recipients × 4 PUSH subscriptions each = 125 drafts.
+    // The planner must still resolve accounts / group / expense in
+    // O(1) round-trips so the transaction connection is not pinned
+    // for the duration of N look-ups.
+    const recipientIds = Array.from(
+      { length: 25 },
+      (_, i) => `account-recipient-${i}`,
+    )
+    const subscriptions = recipientIds.flatMap((accountId) =>
+      [0, 1, 2, 3].map((j) => ({
+        id: `${accountId}-sub-${j}`,
+        accountId,
+      })),
+    )
+    prismaMock.ledgerParticipant.findMany.mockResolvedValue(
+      recipientIds.map((accountId) => ({
+        groupMember: { accountId, status: 'ACTIVE' },
+      })) as never,
+    )
+    prismaMock.accountNotificationPreference.findMany.mockResolvedValue(
+      recipientIds.map((accountId) => ({
+        accountId,
+        category: NotificationCategory.EXPENSE_CREATED,
+        channels: [NotificationChannel.EMAIL, NotificationChannel.PUSH],
+      })) as never,
+    )
+    prismaMock.pushSubscription.findMany.mockResolvedValue(
+      subscriptions as never,
+    )
+    const accountFindManyCalls: unknown[] = []
+    prismaMock.account.findMany.mockImplementation((async (args: unknown) => {
+      accountFindManyCalls.push(args)
+      const ids =
+        (args as { where?: { id?: { in?: string[] } } })?.where?.id?.in ?? []
+      return ids.map((id) => ({ id: String(id), name: `User ${id}` }))
+    }) as never)
+    const groupCallsBefore = prismaMock.group.findUnique.mock.calls.length
+    const expenseCallsBefore = prismaMock.expense.findUnique.mock.calls.length
+    const pushCallsBefore =
+      prismaMock.pushSubscription.findMany.mock.calls.length
+
+    const ids = await planActivityNotificationDeliveries({
+      event: event(),
+      tx,
+      boss: null,
+    })
+
+    expect(ids).toHaveLength(25 + 25 * 4)
+    // Snapshot preloads must stay O(1) regardless of recipient count.
+    // The handler also reads expense/group once to resolve participants, so
+    // the relevant assertion is that fan-out does not multiply these calls.
+    expect(accountFindManyCalls).toHaveLength(1)
+    expect(
+      prismaMock.group.findUnique.mock.calls.length - groupCallsBefore,
+    ).toBe(1)
+    // The handler reads expense once for participant resolution; the
+    // preloader reads it once for the snapshot summary. Both are
+    // independent of fan-out, so the total should be small and constant.
+    expect(
+      prismaMock.expense.findUnique.mock.calls.length - expenseCallsBefore,
+    ).toBeLessThanOrEqual(2)
+    expect(
+      prismaMock.pushSubscription.findMany.mock.calls.length - pushCallsBefore,
+    ).toBe(1)
   })
 })
 
@@ -378,7 +471,7 @@ describe('planActivityNotificationDeliveries transaction rollback', () => {
     expect(jobMocks.sendJob).not.toHaveBeenCalled()
   })
 
-  it('propagates errors from sendJob', async () => {
+  it('propagates errors from insertJobs', async () => {
     prismaMock.accountNotificationPreference.findMany.mockResolvedValue([
       {
         accountId: 'account-bob',
@@ -386,7 +479,7 @@ describe('planActivityNotificationDeliveries transaction rollback', () => {
         channels: [NotificationChannel.EMAIL],
       },
     ] as never)
-    jobMocks.sendJob.mockRejectedValue(new Error('enqueue boom'))
+    jobMocks.insertJobs.mockRejectedValue(new Error('enqueue boom'))
 
     await expect(
       planActivityNotificationDeliveries({

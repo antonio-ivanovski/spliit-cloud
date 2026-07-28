@@ -7,11 +7,12 @@ import { prisma$Transaction, prismaMock } from '../../test/state'
 const jobMocks = vi.hoisted(() => ({
   getApiBoss: vi.fn(),
   sendJob: vi.fn(),
+  insertJobs: vi.fn(),
 }))
 
 vi.mock(import('@spliit/jobs'), async (importOriginal) => {
   const jobs = await importOriginal()
-  return { ...jobs, sendJob: jobMocks.sendJob }
+  return { ...jobs, sendJob: jobMocks.sendJob, insertJobs: jobMocks.insertJobs }
 })
 
 vi.mock('./boss', () => ({
@@ -53,6 +54,8 @@ beforeEach(() => {
   jobMocks.getApiBoss.mockResolvedValue(boss)
   jobMocks.sendJob.mockReset()
   jobMocks.sendJob.mockResolvedValue('job-1')
+  jobMocks.insertJobs.mockReset()
+  jobMocks.insertJobs.mockResolvedValue(['delivery-1'])
 
   prisma$Transaction.mockImplementation(async (callback) => {
     try {
@@ -121,6 +124,20 @@ beforeEach(() => {
     id: 'account-bob',
     name: 'Bob',
   } as never)
+  prismaMock.account.findMany.mockImplementation((async (args: {
+    where?: { id?: { in?: string[] } | string }
+  }) => {
+    const ids = (() => {
+      if (!args?.where?.id) return [] as string[]
+      if (typeof args.where.id === 'string') return [args.where.id]
+      return args.where.id.in ?? []
+    })()
+    return ids.map((id) =>
+      id === 'account-alice'
+        ? { id, name: 'Alice' }
+        : { id, name: id === 'account-bob' ? 'Bob' : `User ${id}` },
+    )
+  }) as never)
   prismaMock.notificationDelivery.createMany.mockImplementation((async (args: {
     data: Array<{ id: string }>
   }) => {
@@ -155,11 +172,11 @@ describe('API activity notification planning', () => {
         ]),
       }),
     )
-    expect(jobMocks.sendJob).toHaveBeenCalledTimes(1)
+    expect(jobMocks.insertJobs).toHaveBeenCalledTimes(1)
   })
 
   it('does not commit when enqueue fails', async () => {
-    jobMocks.sendJob.mockRejectedValue(new Error('enqueue failed'))
+    jobMocks.insertJobs.mockRejectedValue(new Error('enqueue failed'))
 
     await expect(
       createExpenseComment({
@@ -195,6 +212,6 @@ describe('API activity notification planning', () => {
         ]),
       }),
     )
-    expect(jobMocks.sendJob).not.toHaveBeenCalled()
+    expect(jobMocks.insertJobs).not.toHaveBeenCalled()
   })
 })

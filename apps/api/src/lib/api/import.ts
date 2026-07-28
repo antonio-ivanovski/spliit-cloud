@@ -7,17 +7,33 @@ import {
 } from '@spliit/db'
 import type { Expense, GroupFormValues } from '@spliit/domain'
 import {
+  exchangeRateLookupDate,
+  type Expense as DomainExpense,
+} from '@spliit/domain'
+import { supportedCurrencyCodes } from '@spliit/domain/currency'
+import {
   collapseExpenseFromApi,
   planLegacyRecurringImport,
 } from '@spliit/domain/import'
 import { env as jobsEnv } from '@spliit/jobs'
-import { resolveConversion } from '../expense-conversion'
+import {
+  CurrencyRateProviderError,
+  UnsupportedCurrencyError,
+  getCurrencyRates,
+  type BatchRateRequest,
+  type CurrencyRate,
+} from '../currency-rates'
+import {
+  resolveConversion,
+  type ConversionResolution,
+} from '../expense-conversion'
 import {
   buildExpenseActivityData,
   buildImportSummaryActivityData,
   logActivity,
   planNotificationForActivity,
 } from './activities'
+import { getApiBoss } from './boss'
 import {
   buildRecurringTemplate,
   createSeriesForExpense,
@@ -104,15 +120,168 @@ export async function importGroup(
     jobsEnv.JOBS_ENABLED && recurringPlan.series.length > 0
       ? await getApiBossForWrite()
       : undefined
+
+  // ── Preflight: resolve ledger currency and conversions BEFORE the transaction ──
+  let preflightLedgerCurrency: string | null
+  let preflightSnapshot: {
+    id: string
+    ledgerId: string
+    archived: boolean
+    groupType: string
+    currencyCode: string | null
+  } | null = null
+
+  if (input.targetGroupId) {
+    const existing = await prisma.group.findUnique({
+      where: { id: input.targetGroupId },
+      select: {
+        id: true,
+        ledgerId: true,
+        archived: true,
+        groupType: true,
+        ledger: { select: { currencyCode: true } },
+      },
+    })
+    if (!existing) {
+      throw new Error('Target group not found')
+    }
+    if (existing.archived) {
+      throw new Error('Cannot import into an archived group')
+    }
+    if (existing.groupType === GroupType.FRIEND) {
+      throw new Error('Cannot import into a friend ledger')
+    }
+    if (!existing.ledgerId) {
+      throw new Error('Target group is missing its ledger')
+    }
+    preflightLedgerCurrency = existing.ledger?.currencyCode ?? null
+    preflightSnapshot = {
+      id: existing.id,
+      ledgerId: existing.ledgerId,
+      archived: existing.archived,
+      groupType: existing.groupType,
+      currencyCode: preflightLedgerCurrency,
+    }
+  } else {
+    if (!input.groupFormValues) {
+      throw new Error('Either targetGroupId or groupFormValues is required')
+    }
+    preflightLedgerCurrency = input.groupFormValues.currencyCode || null
+  }
+
+  // Batch every EXCHANGE-converted expense into one provider call. The
+  // loop below would otherwise issue one upstream request per expense
+  // (N × provider latency on cache misses) and pin this handler for the
+  // duration of the slowest look-up. getCurrencyRates dedupes
+  // (date, base, target) triples so the import latency is bounded by
+  // the distinct currency pairs and dates in the input.
+  const exchangeRequests: BatchRateRequest[] = []
+  const expenseIsoDate = (expense: DomainExpense) =>
+    `${expense.expenseDate.getUTCFullYear()}-${String(
+      expense.expenseDate.getUTCMonth() + 1,
+    ).padStart(2, '0')}-${String(expense.expenseDate.getUTCDate()).padStart(
+      2,
+      '0',
+    )}`
+  for (const expense of input.expenses) {
+    const conversion = expense.conversion ?? undefined
+    if (conversion?.type !== 'exchange') continue
+    const expenseIso = conversion.currency?.toUpperCase()
+    const ledgerIso = preflightLedgerCurrency?.toUpperCase()
+    if (!expenseIso || !ledgerIso || expenseIso === ledgerIso) continue
+    if (
+      !(supportedCurrencyCodes as readonly string[]).includes(expenseIso) ||
+      !(supportedCurrencyCodes as readonly string[]).includes(ledgerIso)
+    ) {
+      // Let resolveConversion throw the precise validation error below.
+      continue
+    }
+    const lookupDate = exchangeRateLookupDate(expenseIsoDate(expense))
+    exchangeRequests.push({
+      date: lookupDate,
+      base: expenseIso,
+      target: ledgerIso,
+    })
+  }
+
+  const batchResults =
+    exchangeRequests.length > 0 ? await getCurrencyRates(exchangeRequests) : []
+  const rateByKey = new Map<
+    string,
+    | { ok: true; rate: ReturnType<typeof Object> }
+    | { ok: false; error: unknown }
+  >()
+  for (let i = 0; i < exchangeRequests.length; i++) {
+    const req = exchangeRequests[i]!
+    const result = batchResults[i]
+    rateByKey.set(
+      `${req.date}|${req.base}|${req.target}`,
+      result ?? {
+        ok: false,
+        error: { code: 'PROVIDER_ERROR', message: 'Missing batch result' },
+      },
+    )
+  }
+
+  const cachedFetch = async (args: {
+    date: string
+    base: string
+    target: string
+  }): Promise<CurrencyRate> => {
+    const key = `${args.date}|${args.base.toUpperCase()}|${args.target.toUpperCase()}`
+    const entry = rateByKey.get(key)
+    if (!entry || !entry.ok) {
+      const err = (entry as { ok: false; error: unknown } | undefined)
+        ?.error as
+        | { code: string; currency?: string; message?: string; target?: string }
+        | undefined
+      if (err?.code === 'UNSUPPORTED_CURRENCY') {
+        throw new UnsupportedCurrencyError(err.currency ?? args.base)
+      }
+      const message =
+        err?.message ??
+        `Rate unavailable for ${args.base}→${args.target} on ${args.date}`
+      throw new CurrencyRateProviderError(message)
+    }
+    return entry.rate as CurrencyRate
+  }
+
+  const resolvedConversions: ConversionResolution[] = []
+  for (const expense of input.expenses) {
+    resolvedConversions.push(
+      await resolveConversion(
+        expense,
+        {
+          ledgerCurrency: preflightLedgerCurrency,
+          expenseDate: expense.expenseDate,
+        },
+        { fetchImpl: cachedFetch },
+      ),
+    )
+  }
+
+  const boss = await getApiBoss()
   const baseResult = await prisma.$transaction(async (tx) => {
     let groupId: string
     let ledgerId: string
 
     if (input.targetGroupId) {
-      const existing = await tx.group.findUnique({
-        where: { id: input.targetGroupId },
-        select: { id: true, ledgerId: true, archived: true, groupType: true },
-      })
+      const locked = await tx.$queryRaw<
+        Array<{
+          id: string
+          ledgerId: string | null
+          archived: boolean
+          groupType: string
+          currencyCode: string | null
+        }>
+      >`
+        SELECT g.id, g."ledgerId", g.archived, g."groupType"::text AS "groupType", l."currencyCode"
+        FROM "Group" g
+        INNER JOIN "Ledger" l ON l.id = g."ledgerId"
+        WHERE g.id = ${input.targetGroupId}
+        FOR UPDATE OF g, l
+      `
+      const existing = locked[0]
       if (!existing) {
         throw new Error('Target group not found')
       }
@@ -124,6 +293,16 @@ export async function importGroup(
       }
       if (!existing.ledgerId) {
         throw new Error('Target group is missing its ledger')
+      }
+      const currentCurrency = existing.currencyCode ?? null
+      if (
+        preflightSnapshot &&
+        (existing.ledgerId !== preflightSnapshot.ledgerId ||
+          currentCurrency !== preflightSnapshot.currencyCode)
+      ) {
+        throw new Error(
+          'Target group ledger changed between preflight and import; retry the import',
+        )
       }
       groupId = existing.id
       ledgerId = existing.ledgerId
@@ -284,29 +463,13 @@ export async function importGroup(
       destIdByClientKey.set(destId, destId)
     }
 
-    const ledgerCurrency = (
-      await tx.ledger.findUnique({
-        where: { id: ledgerId },
-        select: { currencyCode: true },
-      })
-    )?.currencyCode
+    const ledgerCurrency = preflightLedgerCurrency
     // Union of LedgerParticipant IDs touched by any imported expense
     // (paidBy ∪ paidFor). The post-commit notification dispatcher
     // filters this down to active group members with a real email so
     // one summary email fans out to everyone affected.
     const affectedParticipantIds = new Set<string>()
     let totalAmount = 0
-    // Resolve per expense by index — titles are not unique in imports.
-    const resolvedConversions: Awaited<ReturnType<typeof resolveConversion>>[] =
-      []
-    for (const expense of input.expenses) {
-      resolvedConversions.push(
-        await resolveConversion(expense, {
-          ledgerCurrency: ledgerCurrency ?? null,
-          expenseDate: expense.expenseDate,
-        }),
-      )
-    }
 
     const seriesIdByKey = new Map(
       recurringPlan.series.map((plan) => [plan.seriesKey, randomId()] as const),
@@ -560,7 +723,7 @@ export async function importGroup(
     )
 
     if (affectedParticipantIds.size > 0) {
-      await planNotificationForActivity(tx, summaryActivity)
+      await planNotificationForActivity(tx, summaryActivity, {}, { boss })
     }
 
     return {

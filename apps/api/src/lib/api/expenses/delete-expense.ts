@@ -5,6 +5,7 @@ import {
   logActivity,
   planNotificationForActivity,
 } from '../activities'
+import { getApiBoss } from '../boss'
 import { getAffectedParticipantIds } from '../expense-activity-diff'
 import { toExpenseDomainShape } from './helpers'
 import { getExpense } from './queries'
@@ -50,6 +51,7 @@ export async function deleteExpense(
     throw new Error('THIS_AND_FUTURE deletion requires a recurring expense')
   }
 
+  const boss = await getApiBoss()
   const { documentUrls } = await prisma.$transaction(async (tx) => {
     if (existingExpense.recurringSeriesId) {
       await tx.$queryRaw`SELECT id FROM "RecurringExpenseSeries" WHERE id = ${existingExpense.recurringSeriesId} FOR UPDATE`
@@ -281,46 +283,56 @@ export async function deleteExpense(
     }
 
     if (loggedActivities.length === 1) {
-      await planNotificationForActivity(tx, loggedActivities[0]!, {
-        data: buildExpenseActivityData({
-          summary: existingExpense.title,
-          title: existingExpense.title,
-          amount: existingExpense.amount,
-          currencyCode: existingExpense.originalCurrency ?? null,
-          date: expenseDateStr,
-          affectedParticipants: affectedParticipantIds,
-          originalAmount: existingExpense.originalAmount ?? undefined,
-          conversionRate: existingExpense.conversionRate
-            ? Number(existingExpense.conversionRate)
-            : undefined,
-          conversionSource: existingExpense.conversionSource,
-          ledgerCurrencyCode: group?.ledger.currencyCode ?? null,
-          ...(stopAct ? { stopped: true } : {}),
-        }),
-      })
+      await planNotificationForActivity(
+        tx,
+        loggedActivities[0]!,
+        {
+          data: buildExpenseActivityData({
+            summary: existingExpense.title,
+            title: existingExpense.title,
+            amount: existingExpense.amount,
+            currencyCode: existingExpense.originalCurrency ?? null,
+            date: expenseDateStr,
+            affectedParticipants: affectedParticipantIds,
+            originalAmount: existingExpense.originalAmount ?? undefined,
+            conversionRate: existingExpense.conversionRate
+              ? Number(existingExpense.conversionRate)
+              : undefined,
+            conversionSource: existingExpense.conversionSource,
+            ledgerCurrencyCode: group?.ledger.currencyCode ?? null,
+            ...(stopAct ? { stopped: true } : {}),
+          }),
+        },
+        { boss },
+      )
     } else if (loggedActivities.length >= 2) {
       const primaryActivity = loggedActivities[0]!
-      await planNotificationForActivity(tx, primaryActivity, {
-        subject: null,
-        data: {
-          kind: 'recurring_expense_summary',
-          title: existingExpense.title,
-          count: loggedActivities.length,
-          startDate: summaryDateRange.startDate,
-          endDate: summaryDateRange.endDate,
-          affectedParticipants: unionParticipantIds,
-          seriesId: existingExpense.recurringSeriesId ?? undefined,
-          frequency: series?.frequency ?? undefined,
-          interval: series?.interval ?? undefined,
-          endType: series?.endType ?? undefined,
-          occurrenceLimit: series?.occurrenceLimit ?? undefined,
-          seriesEndDate: series?.endDate
-            ? series.endDate.toISOString().slice(0, 10)
-            : undefined,
-          operation: 'delete',
-          stopped: stopAct != null,
+      await planNotificationForActivity(
+        tx,
+        primaryActivity,
+        {
+          subject: null,
+          data: {
+            kind: 'recurring_expense_summary',
+            title: existingExpense.title,
+            count: loggedActivities.length,
+            startDate: summaryDateRange.startDate,
+            endDate: summaryDateRange.endDate,
+            affectedParticipants: unionParticipantIds,
+            seriesId: existingExpense.recurringSeriesId ?? undefined,
+            frequency: series?.frequency ?? undefined,
+            interval: series?.interval ?? undefined,
+            endType: series?.endType ?? undefined,
+            occurrenceLimit: series?.occurrenceLimit ?? undefined,
+            seriesEndDate: series?.endDate
+              ? series.endDate.toISOString().slice(0, 10)
+              : undefined,
+            operation: 'delete',
+            stopped: stopAct != null,
+          },
         },
-      })
+        { boss },
+      )
     }
 
     return {
