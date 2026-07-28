@@ -277,4 +277,107 @@ describe('getCurrencyRates', () => {
     expect(fetchImpl).toHaveBeenCalledWith('2026-06-28', 'EUR', ['USD', 'GBP'])
     expect(currencyRateCacheSize()).toBe(2)
   })
+
+  it('does not call the provider when every request is already cached', async () => {
+    const fetchImpl = mockFn<FetchRatesFn>().mockResolvedValue(
+      makePayload({ rates: { USD: 1.1, GBP: 0.85 } }),
+    )
+    // Warm the cache so the next batch sees everything as a hit.
+    await getCurrencyRates(
+      [
+        { date: '2026-06-28', base: 'EUR', target: 'USD' },
+        { date: '2026-06-28', base: 'EUR', target: 'GBP' },
+      ],
+      { fetchImpl },
+    )
+    fetchImpl.mockClear()
+
+    const results = await getCurrencyRates(
+      [
+        { date: '2026-06-28', base: 'EUR', target: 'USD' },
+        { date: '2026-06-28', base: 'EUR', target: 'GBP' },
+      ],
+      { fetchImpl },
+    )
+
+    expect(fetchImpl).not.toHaveBeenCalled()
+    expect(results[0]).toMatchObject({ ok: true, rate: { target: 'USD' } })
+    expect(results[1]).toMatchObject({ ok: true, rate: { target: 'GBP' } })
+  })
+
+  it('reuses rates warmed by getCurrencyRate without a second provider call', async () => {
+    const fetchImpl = mockFn<FetchRatesFn>().mockResolvedValue(
+      makePayload({ rates: { USD: 1.1 } }),
+    )
+
+    await getCurrencyRate({
+      date: '2026-06-28',
+      base: 'EUR',
+      target: 'USD',
+      fetchImpl,
+    })
+    expect(fetchImpl).toHaveBeenCalledTimes(1)
+
+    const results = await getCurrencyRates(
+      [{ date: '2026-06-28', base: 'EUR', target: 'USD' }],
+      { fetchImpl },
+    )
+    expect(fetchImpl).toHaveBeenCalledTimes(1)
+    expect(results[0]).toMatchObject({
+      ok: true,
+      rate: { rate: 1.1, base: 'EUR', target: 'USD' },
+    })
+  })
+
+  it('partitions cached and uncached requests: cache hits skip the network', async () => {
+    const fetchImpl = mockFn<FetchRatesFn>().mockResolvedValue(
+      makePayload({ rates: { USD: 1.1, GBP: 0.85 } }),
+    )
+    // Warm the EUR→USD pair.
+    await getCurrencyRate({
+      date: '2026-06-28',
+      base: 'EUR',
+      target: 'USD',
+      fetchImpl,
+    })
+    fetchImpl.mockClear()
+
+    const results = await getCurrencyRates(
+      [
+        { date: '2026-06-28', base: 'EUR', target: 'USD' },
+        { date: '2026-06-28', base: 'EUR', target: 'GBP' },
+      ],
+      { fetchImpl },
+    )
+
+    expect(fetchImpl).toHaveBeenCalledTimes(1)
+    expect(fetchImpl).toHaveBeenCalledWith('2026-06-28', 'EUR', ['GBP'])
+    expect(results[0]).toMatchObject({ ok: true, rate: { target: 'USD' } })
+    expect(results[1]).toMatchObject({ ok: true, rate: { target: 'GBP' } })
+  })
+
+  it('does not propagate provider failures when every request is cached', async () => {
+    const fetchImpl = mockFn<FetchRatesFn>().mockResolvedValue(
+      makePayload({ rates: { USD: 1.1 } }),
+    )
+    await getCurrencyRates(
+      [{ date: '2026-06-28', base: 'EUR', target: 'USD' }],
+      { fetchImpl },
+    )
+
+    const failingFetch = mockFn<FetchRatesFn>().mockRejectedValue(
+      new Error('provider down'),
+    )
+
+    const results = await getCurrencyRates(
+      [{ date: '2026-06-28', base: 'EUR', target: 'USD' }],
+      { fetchImpl: failingFetch },
+    )
+
+    expect(failingFetch).not.toHaveBeenCalled()
+    expect(results[0]).toMatchObject({
+      ok: true,
+      rate: { rate: 1.1, target: 'USD' },
+    })
+  })
 })

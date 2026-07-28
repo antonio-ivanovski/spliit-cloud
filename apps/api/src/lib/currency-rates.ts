@@ -251,6 +251,12 @@ export type BatchRateResult =
  * from there. Per-target failures are returned alongside successes so
  * the caller can block on a specific expense without aborting the batch.
  *
+ * The shared in-process cache is checked first; only cache misses reach
+ * the provider. Cached entries therefore participate in batch
+ * deduplication transparently and protect the caller from provider
+ * outages when the rate has already been warmed by `getCurrencyRate`
+ * or a previous `getCurrencyRates` call.
+ *
  * `fetchImpl` is test-only and defaults to the live provider; it lets
  * unit tests swap in a stub for the upstream call.
  */
@@ -266,9 +272,10 @@ export async function getCurrencyRates(
 ): Promise<BatchRateResult[]> {
   const fetchImpl = options.fetchImpl ?? fetchFromProvider
 
-  // Group requests by (date, base) so each upstream call is shared by
-  // every target that pair covers. We preserve the original input order
-  // in the returned array.
+  // Resolve cache hits synchronously so a fully-cached batch never
+  // touches the network. Cache misses fall through to the per-group
+  // provider call below and get written back to the cache on success.
+  const output: BatchRateResult[] = new Array(requests.length)
   type Key = string
   const groupKey = (date: string, base: string): Key =>
     `${date}|${base.toUpperCase()}`
@@ -281,9 +288,16 @@ export async function getCurrencyRates(
       indicesByTarget: Map<string, number[]>
     }
   >()
+  let allCached = true
   requests.forEach((req, idx) => {
     const base = req.base.toUpperCase()
     const target = req.target.toUpperCase()
+    const cached = readCache(cacheKey(base, target, req.date))
+    if (cached) {
+      output[idx] = { ok: true, rate: cached }
+      return
+    }
+    allCached = false
     const key = groupKey(req.date, base)
     const existing = groups.get(key)
     if (existing) {
@@ -303,6 +317,8 @@ export async function getCurrencyRates(
       })
     }
   })
+
+  if (allCached) return output
 
   type ResolvedGroup = {
     byTarget: Map<string, BatchRateResult>
@@ -356,7 +372,6 @@ export async function getCurrencyRates(
     }),
   )
 
-  const output: BatchRateResult[] = new Array(requests.length)
   for (const [key, group] of groups) {
     const { byTarget } = resolvedByKey.get(key)!
     for (const target of group.targets) {

@@ -1,3 +1,4 @@
+import { CurrencyConverterButton } from '@/components/currency-converter/currency-converter'
 import Link from '@/components/link'
 import { Money } from '@/components/money'
 import {
@@ -327,9 +328,12 @@ function OverviewHeader({
 
   return (
     <section className="flex flex-col gap-3" aria-label={tBalances('title')}>
-      <p className="text-lg font-semibold tracking-tight sm:text-xl">
-        {t('welcomeBack', { name: name ?? '' })}
-      </p>
+      <div className="flex items-center justify-between">
+        <p className="text-lg font-semibold tracking-tight sm:text-xl">
+          {t('welcomeBack', { name: name ?? '' })}
+        </p>
+        <CurrencyConverterButton />
+      </div>
       {stats && hasGroupSummary ? (
         <div className="rounded-lg border bg-card px-4 py-3 shadow-xs sm:px-5">
           <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b pb-3">

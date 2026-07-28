@@ -363,6 +363,27 @@ For now, the best ways to support Spliit Cloud are:
 - help with translations
 - share feedback from real usage
 
+## Providers & supporters
+
+Spliit Cloud relies on a small set of external services for features that are impractical to run entirely in-house (exchange rates, email delivery, AI inference, and similar). This section credits the providers we use today and lists openings where we are looking for partners who can offer sustainable free or sponsored capacity for the public instance.
+
+If you run a service that could help and are willing to support Spliit Cloud, email **[contact@spliit.cloud](mailto:contact@spliit.cloud)**.
+
+### Active
+
+| Provider                                | What we use it for                                                        | Notes                                                                                                                                    |
+| --------------------------------------- | ------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| [Frankfurter](https://frankfurter.dev/) | Currency exchange rates for expense conversion and the currency converter | Thank you for the generous free API quotas — rates for the public instance are provided via [frankfurter.dev](https://frankfurter.dev/). |
+
+### Looking for partners
+
+| Need                  | Status | Details                                                                                 |
+| --------------------- | ------ | --------------------------------------------------------------------------------------- |
+| SMTP / email delivery | Open   | Transactional email for invitations, notifications, and account flows.                  |
+| AI inference          | Open   | Inference capacity for receipt scanning, category suggestions, and related AI features. |
+
+Other providers may be listed here as the stack grows.
+
 ## Links
 
 - App: [spliit.cloud](https://spliit.cloud)
