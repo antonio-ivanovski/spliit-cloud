@@ -21,6 +21,9 @@ vi.mock('@/trpc/client', () => ({
       account: {
         groups: { invalidate: vi.fn() },
       },
+      overview: {
+        get: { invalidate: vi.fn() },
+      },
       invitations: {
         listForAccount: { invalidate: vi.fn() },
       },

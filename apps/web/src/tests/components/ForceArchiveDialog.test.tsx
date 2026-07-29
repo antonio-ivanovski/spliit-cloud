@@ -7,6 +7,7 @@ import { render, screen, waitFor } from '@/test/test-utils'
 
 const mockMutateAsync = vi.fn()
 const mockInvalidateAccountGroups = vi.fn()
+const mockInvalidateOverview = vi.fn()
 const mockInvalidateGroupsGet = vi.fn()
 const mockToast = vi.fn()
 const mockNavigate = vi.fn()
@@ -24,6 +25,11 @@ vi.mock('@/trpc/client', () => ({
       account: {
         groups: {
           invalidate: mockInvalidateAccountGroups,
+        },
+      },
+      overview: {
+        get: {
+          invalidate: mockInvalidateOverview,
         },
       },
       groups: {
@@ -101,6 +107,7 @@ describe('ForceArchiveDialog', () => {
   it('calls archive mutation and invalidates queries on force archive', async () => {
     mockMutateAsync.mockResolvedValue(undefined)
     mockInvalidateAccountGroups.mockResolvedValue(undefined)
+    mockInvalidateOverview.mockResolvedValue(undefined)
     mockInvalidateGroupsGet.mockResolvedValue(undefined)
     const onClose = vi.fn()
 
@@ -119,6 +126,7 @@ describe('ForceArchiveDialog', () => {
     await waitFor(() => {
       expect(mockInvalidateAccountGroups).toHaveBeenCalledTimes(1)
     })
+    expect(mockInvalidateOverview).toHaveBeenCalledTimes(1)
     expect(mockInvalidateGroupsGet).toHaveBeenCalledWith({ groupId: 'group-1' })
     expect(mockToast).toHaveBeenCalledWith({
       description: 'Settlement expenses created and group archived.',

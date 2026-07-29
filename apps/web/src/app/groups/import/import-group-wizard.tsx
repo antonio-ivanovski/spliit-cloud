@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Card, CardContent } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
+import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 import type {
@@ -97,7 +98,7 @@ export function ImportGroupWizard() {
   const importMutation = trpc.groups.import.useMutation({
     onSuccess: async (data) => {
       await Promise.all([
-        utils.account.groups.invalidate(),
+        invalidateAccountGroupLists(utils),
         utils.invitations.listForAccount.invalidate(),
         utils.groups.get.invalidate({ groupId: data.groupId }),
         utils.groups.importLinks.listUnlinked.invalidate({

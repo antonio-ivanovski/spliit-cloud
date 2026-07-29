@@ -8,6 +8,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
+import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { isFocusedMobilePath } from '@/lib/mobile-nav'
 import { trpc } from '@/trpc/client'
 
@@ -52,7 +53,7 @@ export const GroupHeader = () => {
         search: { invite: undefined },
       })
       void utils.groups.get.invalidate({ groupId })
-      void utils.account.groups.invalidate()
+      void invalidateAccountGroupLists(utils)
       void utils.invitations.listForAccount.invalidate()
       void utils.invitations.list.invalidate({ groupId })
     },
@@ -71,7 +72,7 @@ export const GroupHeader = () => {
         variant: 'success',
       })
       void utils.groups.get.invalidate({ groupId })
-      void utils.account.groups.invalidate()
+      void invalidateAccountGroupLists(utils)
       void utils.invitations.listForAccount.invalidate()
       // Full page reload to ensure everything is fresh after joining.
       window.location.reload()

@@ -201,8 +201,9 @@ export const assistantRouter = createTRPCRouter({
     .query(async ({ input, ctx }) => {
       const member = await getAssistantGroup(input.groupId, ctx.auth.user.id)
       const [balances, expenses, savedDefault] = await Promise.all([
-        getGroupBalances(input.groupId),
+        getGroupBalances(input.groupId, member.group.ledger.id),
         getGroupExpenses(input.groupId, {
+          ledgerId: member.group.ledger.id,
           length: input.recentExpenseLimit,
         }),
         prisma.accountGroupDefaultSplit.findUnique({

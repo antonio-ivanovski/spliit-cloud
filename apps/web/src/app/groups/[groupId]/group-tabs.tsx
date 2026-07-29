@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useToast } from '@/components/ui/use-toast'
+import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { shouldHideMobileGroupTabs } from '@/lib/mobile-nav'
 import { trpc } from '@/trpc/client'
 
@@ -44,7 +45,7 @@ export function GroupTabs({ groupId }: Props) {
     try {
       await archiveGroup({ groupId, archived: false })
       await Promise.all([
-        utils.account.groups.invalidate(),
+        invalidateAccountGroupLists(utils),
         utils.groups.get.invalidate({ groupId }),
       ])
       toast({ description: tGroups('bannerUnarchiveSuccess') })

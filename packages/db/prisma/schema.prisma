@@ -410,6 +410,7 @@ model GroupMember {
 
   @@unique([groupId, accountId])
   @@index([accountId])
+  @@index([accountId, status])
 }
 
 enum GroupInvitationStatus {
@@ -613,6 +614,8 @@ model Expense {
   // ledgerId prefix covers group-scoped scans; expenseDate supports
   // recency-bounded currency recommendation queries.
   @@index([ledgerId, expenseDate])
+  @@index([ledgerId, createdAt])
+  @@index([ledgerId, amount])
   @@index([recurringSeriesId, recurrenceSequence])
 }
 
@@ -697,6 +700,7 @@ model ExpensePaidFor {
   shares              Int               @default(1)
 
   @@id([expenseId, ledgerParticipantId])
+  @@index([ledgerParticipantId])
 }
 
 model ExpensePaidBy {

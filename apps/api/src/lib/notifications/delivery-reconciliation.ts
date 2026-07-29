@@ -8,6 +8,8 @@ const RECONCILE_BATCH_SIZE = 100
 // enqueued jobs) so a table full of healthy rows whose singleton jobs
 // already exist cannot cause an unbounded scan.
 const RECONCILE_SCAN_LIMIT = 1000
+/** Skip fresh PENDING rows that the mutation TX already enqueued. */
+export const RECONCILE_PENDING_MIN_AGE_MS = 2 * 60 * 1000
 
 export async function reconcileMissingDeliveryJobs(
   boss: SpliitBoss,
@@ -17,15 +19,21 @@ export async function reconcileMissingDeliveryJobs(
   let reconciled = 0
   let scanned = 0
   let exhausted = false
+  const now = new Date()
+  const pendingCutoff = new Date(now.getTime() - RECONCILE_PENDING_MIN_AGE_MS)
   for (;;) {
     const deliveries = await prisma.notificationDelivery.findMany({
       where: {
-        status: {
-          in: [
-            NotificationDeliveryStatus.PENDING,
-            NotificationDeliveryStatus.PROCESSING,
-          ],
-        },
+        OR: [
+          {
+            status: NotificationDeliveryStatus.PENDING,
+            createdAt: { lte: pendingCutoff },
+          },
+          {
+            status: NotificationDeliveryStatus.PROCESSING,
+            OR: [{ leaseExpiresAt: { lte: now } }, { leaseExpiresAt: null }],
+          },
+        ],
         ...(cursor ? { id: { gt: cursor } } : {}),
       },
       orderBy: { id: 'asc' },

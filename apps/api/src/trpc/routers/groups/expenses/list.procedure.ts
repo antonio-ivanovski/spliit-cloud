@@ -67,13 +67,14 @@ export const listGroupExpensesProcedure = protectedProcedure
       },
       ctx,
     }) => {
-      await loadGroupViewer({
+      const { ledger } = await loadGroupViewer({
         groupId,
         accountId: ctx.auth.user.id,
         accountEmail: ctx.auth.user.email,
         linkTokenHash: await hashLinkInviteToken(linkInviteToken),
       })
       const expenses = await getGroupExpenses(groupId, {
+        ledgerId: ledger.id,
         offset: cursor,
         length: limit + 1,
         filter,

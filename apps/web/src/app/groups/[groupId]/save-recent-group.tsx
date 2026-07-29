@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 
+import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { trpc } from '@/trpc/client'
 
 import { useCurrentGroup } from './current-group-context'
@@ -18,7 +19,7 @@ export function SaveGroupLocally() {
     if (group) {
       // Refresh the server-backed group list so the visited group shows up
       // in the "recent" section on the groups page.
-      void utils.account.groups.invalidate()
+      void invalidateAccountGroupLists(utils)
     }
   }, [group, utils])
 

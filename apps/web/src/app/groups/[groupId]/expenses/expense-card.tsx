@@ -141,22 +141,8 @@ export function ExpenseCard({
   const originalAmount = expense.originalAmount ?? undefined
   const showOriginalAmount =
     originalCurrency !== undefined && originalAmount !== undefined
-  const seriesId = (
-    expense as typeof expense & {
-      recurringSeriesId?: string | null
-    }
-  ).recurringSeriesId
-  const seriesStatus =
-    (
-      expense as typeof expense & {
-        recurringSeriesStatus?:
-          | 'ACTIVE'
-          | 'PAUSED'
-          | 'COMPLETED'
-          | 'CANCELLED'
-          | null
-      }
-    ).recurringSeriesStatus ?? undefined
+  const seriesId = expense.recurringSeriesId
+  const seriesStatus = expense.recurringSeriesStatus ?? undefined
 
   return (
     <div

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
 import { useToast } from '@/components/ui/use-toast'
+import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 
@@ -210,7 +211,15 @@ export function useMembersDialogs() {
 
   const leavePreviewQuery = trpc.groups.leavePreview.useQuery(
     { groupId },
-    { enabled: leaveDialogOpen },
+    {
+      enabled: leaveDialogOpen,
+      staleTime: 0,
+      // The dialog may already be mounted when a balance-changing expense
+      // mutation lands. `staleTime: 0` only marks the cache stale; it does
+      // not refetch on a quiet mount. Force a fresh query each open so the
+      // preview always reflects the latest settlement state.
+      refetchOnMount: 'always',
+    },
   )
 
   const leaveMutation = trpc.groups.leave.useMutation({
@@ -218,7 +227,7 @@ export function useMembersDialogs() {
       toast({ description: t('leave.toast.left') })
       setLeaveDialogOpen(false)
       await navigate({ to: '/' })
-      void utils.account.groups.invalidate()
+      void invalidateAccountGroupLists(utils)
     },
     onError: (error) => {
       toast({ description: error.message, variant: 'destructive' })

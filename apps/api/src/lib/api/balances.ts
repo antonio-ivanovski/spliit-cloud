@@ -4,29 +4,22 @@ import {
   getPublicBalances,
   getSuggestedReimbursements,
   PAYMENT_CATEGORY_ID,
-  type BalanceExpense,
   type Balances,
   type Reimbursement,
 } from '@spliit/domain'
 
 import { buildExpenseActivityData, logActivity } from './activities'
-import { getGroupExpenses } from './expenses'
+import { getGroupBalanceExpenses } from './expenses'
+import { toBalanceExpense } from './selects/balance-expense'
 import { randomId } from './shared'
 
 /** Compute the per-ledger-participant balance for every member of a group. */
-export async function getGroupBalances(groupId: string): Promise<Balances> {
-  const rows = await getGroupExpenses(groupId)
-  const expenses: BalanceExpense[] = rows.map((row) => ({
-    ...row,
-    paidByList: row.paidByList.map((pb) => ({
-      shares: pb.shares,
-      participant: pb.ledgerParticipant,
-    })),
-    paidFor: row.paidFor.map((pf) => ({
-      shares: pf.shares,
-      participant: pf.ledgerParticipant,
-    })),
-  }))
+export async function getGroupBalances(
+  groupId: string,
+  ledgerId?: string,
+): Promise<Balances> {
+  const rows = await getGroupBalanceExpenses(groupId, ledgerId)
+  const expenses = rows.map(toBalanceExpense)
   const balances = getBalances(expenses)
   const reimbursements = getSuggestedReimbursements(balances)
   return getPublicBalances(reimbursements)

@@ -9,19 +9,56 @@ import {
 
 import { resolveParticipantDisplayName } from '../../invitations'
 import { toRecurrenceConfig } from '../recurrence-series'
-import { groupExpenseListSelect } from '../selects/expense-list'
+import { balanceExpenseSelect } from '../selects/balance-expense'
+import { groupExpenseListCardSelect } from '../selects/expense-list'
 import { narrowCategoryId, resolveCategory } from './helpers'
 
 export async function getGroupExpensesParticipants(groupId: string) {
-  const expenses = await getGroupExpenses(groupId)
+  const group = await prisma.group.findUnique({
+    where: { id: groupId },
+    select: { ledgerId: true },
+  })
+  if (!group?.ledgerId) return []
+
+  const [paidBy, paidFor] = await Promise.all([
+    prisma.expensePaidBy.findMany({
+      where: { expense: { ledgerId: group.ledgerId } },
+      select: { ledgerParticipantId: true },
+      distinct: ['ledgerParticipantId'],
+    }),
+    prisma.expensePaidFor.findMany({
+      where: { expense: { ledgerId: group.ledgerId } },
+      select: { ledgerParticipantId: true },
+      distinct: ['ledgerParticipantId'],
+    }),
+  ])
+
   return Array.from(
-    new Set(
-      expenses.flatMap((e) => [
-        ...e.paidByList.map((pb) => pb.ledgerParticipant.id),
-        ...e.paidFor.map((pf) => pf.ledgerParticipant.id),
-      ]),
-    ),
+    new Set([
+      ...paidBy.map((row) => row.ledgerParticipantId),
+      ...paidFor.map((row) => row.ledgerParticipantId),
+    ]),
   )
+}
+
+export async function getGroupBalanceExpenses(
+  groupId: string,
+  ledgerId?: string,
+) {
+  const resolvedLedgerId =
+    ledgerId ??
+    (
+      await prisma.group.findUnique({
+        where: { id: groupId },
+        select: { ledgerId: true },
+      })
+    )?.ledgerId
+  if (!resolvedLedgerId) return []
+
+  return prisma.expense.findMany({
+    where: { ledgerId: resolvedLedgerId },
+    select: balanceExpenseSelect,
+  })
 }
 
 type GetGroupExpensesSortBy = 'expenseDate' | 'createdAt' | 'amount'
@@ -29,6 +66,7 @@ type GetGroupExpensesSortDir = 'asc' | 'desc'
 type GetGroupExpensesMatch = 'any' | 'all' | 'exact'
 
 type GetGroupExpensesOptions = {
+  ledgerId?: string
   offset?: number
   length?: number
   filter?: string
@@ -80,11 +118,15 @@ export async function getGroupExpenses(
   groupId: string,
   options?: GetGroupExpensesOptions,
 ) {
-  const group = await prisma.group.findUnique({
-    where: { id: groupId },
-    select: { ledgerId: true },
-  })
-  if (!group?.ledgerId) return []
+  const ledgerId =
+    options?.ledgerId ??
+    (
+      await prisma.group.findUnique({
+        where: { id: groupId },
+        select: { ledgerId: true },
+      })
+    )?.ledgerId
+  if (!ledgerId) return []
 
   const expenseDateRange: Prisma.DateTimeFilter | undefined =
     options?.dateFrom || options?.dateTo
@@ -107,7 +149,7 @@ export async function getGroupExpenses(
       : undefined
 
   const where: Prisma.ExpenseWhereInput = {
-    ledgerId: group.ledgerId,
+    ledgerId,
     title: options?.filter
       ? { contains: options.filter, mode: 'insensitive' }
       : undefined,
@@ -145,7 +187,7 @@ export async function getGroupExpenses(
       : [primaryOrder, { id: 'desc' }]
 
   const rows = await prisma.expense.findMany({
-    select: groupExpenseListSelect,
+    select: groupExpenseListCardSelect,
     where,
     orderBy,
     skip: options && options.offset,
@@ -153,7 +195,7 @@ export async function getGroupExpenses(
   })
 
   return rows.map((row) => {
-    const { _count, ...rest } = row
+    const { _count, recurringSeries, ...rest } = row
     return {
       ...rest,
       // Prisma's relation-count key is `_count`; expose a plain public field.
@@ -176,37 +218,18 @@ export async function getGroupExpenses(
         },
         shares: pf.shares,
       })),
-      items: (row.items ?? []).map((item) => ({
+      items: row.items.map((item) => ({
         id: item.id,
         title: item.title,
-        unitPrice: item.unitPrice,
-        quantity: item.quantity,
         amount: item.amount,
-        splitMode: item.splitMode,
-        paidFor: item.paidFor.map((pf) => ({
-          participant: pf.ledgerParticipantId,
-          shares: pf.shares,
-        })),
       })),
-      itemizedRemainder: row.itemizedRemainder
-        ? {
-            splitMode: row.itemizedRemainder.splitMode,
-            paidFor: row.itemizedRemainder.paidFor.map((pf) => ({
-              participant: pf.ledgerParticipantId,
-              shares: pf.shares,
-            })),
-          }
-        : undefined,
       categoryId: narrowCategoryId(row.categoryId),
       category: resolveCategory(row.categoryId),
       conversionRate: row.conversionRate ?? null,
       conversionSource: row.conversionSource,
-      recurringSeriesId: row.recurringSeries?.id ?? null,
+      recurringSeriesId: recurringSeries?.id ?? null,
       recurrenceSequence: row.recurrenceSequence,
-      recurrence: row.recurringSeries
-        ? toRecurrenceConfig(row.recurringSeries)
-        : null,
-      recurringSeriesStatus: row.recurringSeries?.status ?? null,
+      recurringSeriesStatus: recurringSeries?.status ?? null,
     }
   })
 }

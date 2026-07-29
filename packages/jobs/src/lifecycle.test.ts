@@ -1,12 +1,19 @@
 import type { JobWithMetadata, PgBoss } from 'pg-boss'
 import { describe, expect, it, vi } from 'vitest'
 
+import { JOB_WORK_OPTIONS } from './boss'
+import { env } from './env'
 import { registerHandlers } from './lifecycle'
 import { JOB_NAMES } from './registry'
 
 interface WorkCall {
   name: string
-  options: { includeMetadata?: boolean; batchSize?: number }
+  options: {
+    includeMetadata?: boolean
+    batchSize?: number
+    localConcurrency?: number
+    pollingIntervalSeconds?: number
+  }
   handler: (jobs: JobWithMetadata<object>[]) => Promise<void>
 }
 
@@ -15,7 +22,7 @@ function createBossMock() {
   const work = vi.fn(
     async (
       name: string,
-      options: { includeMetadata?: boolean; batchSize?: number },
+      options: WorkCall['options'],
       handler: (jobs: JobWithMetadata<object>[]) => Promise<void>,
     ) => {
       workCalls.push({ name, options, handler })
@@ -96,6 +103,47 @@ describe('worker handler context', () => {
         retryLimit: 5,
       }),
     )
+  })
+
+  it('registers each queue with its JOB_WORK_OPTIONS concurrency and poll', async () => {
+    const { boss, workCalls, work } = createBossMock()
+    const handler = vi.fn(async () => undefined)
+
+    await registerHandlers(boss, {
+      [JOB_NAMES.NOTIFICATION_DELIVER]: handler,
+      [JOB_NAMES.MATERIALIZE_RECURRING_EXPENSE]: handler,
+      [JOB_NAMES.RECONCILE_RECURRING_EXPENSES]: handler,
+      [JOB_NAMES.NOTIFICATION_RECONCILE]: handler,
+      [JOB_NAMES.NOTIFICATION_CLEANUP]: handler,
+    })
+
+    expect(work).toHaveBeenCalledTimes(5)
+    for (const call of workCalls) {
+      const expected =
+        JOB_WORK_OPTIONS[call.name as keyof typeof JOB_WORK_OPTIONS]
+      expect(call.options).toEqual(
+        expect.objectContaining({
+          batchSize: 1,
+          includeMetadata: true,
+          localConcurrency: expected.localConcurrency,
+          pollingIntervalSeconds: expected.pollingIntervalSeconds,
+        }),
+      )
+    }
+
+    expect(
+      JOB_WORK_OPTIONS[JOB_NAMES.NOTIFICATION_DELIVER].pollingIntervalSeconds,
+    ).toBe(env.JOBS_POLLING_INTERVAL_SECONDS)
+    expect(
+      JOB_WORK_OPTIONS[JOB_NAMES.MATERIALIZE_RECURRING_EXPENSE]
+        .pollingIntervalSeconds,
+    ).toBe(env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS)
+    expect(
+      JOB_WORK_OPTIONS[JOB_NAMES.NOTIFICATION_RECONCILE].localConcurrency,
+    ).toBe(1)
+    expect(
+      JOB_WORK_OPTIONS[JOB_NAMES.NOTIFICATION_CLEANUP].localConcurrency,
+    ).toBe(1)
   })
 
   it('logs retryCount on success and failure', async () => {

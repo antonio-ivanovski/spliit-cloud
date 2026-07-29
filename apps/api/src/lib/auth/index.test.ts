@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import '../../test/mocks'
 import { prismaMock, sendEmailMock } from '../../test/state'
+import { clearAccountCache, getCachedAccount } from './account-cache'
 
 // `vi.importActual` returns the real (un-mocked) module so we can inspect the
 // better-auth options we configured in `lib/auth/index.ts`. The existing
@@ -36,6 +37,12 @@ const realAuthModule = (await vi.importActual('./index')) as {
         updateAge?: number
       }
       hooks?: { before?: unknown }
+      databaseHooks?: {
+        user?: {
+          update?: { after?: (user: { id: string }) => void | Promise<void> }
+          delete?: { after?: (user: { id: string }) => void | Promise<void> }
+        }
+      }
       account?: {
         accountLinking?: {
           enabled?: boolean
@@ -100,6 +107,29 @@ describe('better-auth session config', () => {
     )
 
     expect(jwtPlugin?.options?.adapter).toBeDefined()
+  })
+  it('invalidates cached accounts after Better Auth user updates and deletes', async () => {
+    clearAccountCache()
+    const account = {
+      id: 'acct-hook',
+      email: 'alice@example.com',
+      emailVerified: false,
+      name: 'Alice',
+      image: null,
+    }
+    prismaMock.account.findUnique.mockResolvedValue(account as never)
+    await getCachedAccount(account.id)
+
+    await realAuthModule.auth.options.databaseHooks?.user?.update?.after?.({
+      id: account.id,
+    })
+    await getCachedAccount(account.id)
+    await realAuthModule.auth.options.databaseHooks?.user?.delete?.after?.({
+      id: account.id,
+    })
+    await getCachedAccount(account.id)
+
+    expect(prismaMock.account.findUnique).toHaveBeenCalledTimes(3)
   })
 })
 

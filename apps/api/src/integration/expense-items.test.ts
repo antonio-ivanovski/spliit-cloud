@@ -675,6 +675,9 @@ describe('Expense items — real DB', () => {
     expect(listed).toHaveProperty('items')
     expect(listed.items).toHaveLength(1)
     expect(listed.items[0].title).toBe('List item')
+    expect(listed.items[0].amount).toBe(3000)
+    expect(listed.items[0]).not.toHaveProperty('paidFor')
+    expect(listed.items[0]).not.toHaveProperty('splitMode')
   })
 
   // ------------------------------------------------------------------

@@ -21,12 +21,18 @@ type Props = {
  */
 function toBalanceExpense(expense: GroupExpense): BalanceExpense {
   return {
-    ...expense,
+    id: expense.id,
+    amount: expense.amount,
+    splitMode: expense.splitMode,
+    paidBySplitMode: expense.paidBySplitMode,
+    originalAmount: expense.originalAmount,
+    originalCurrency: expense.originalCurrency,
+    conversionRate: expense.conversionRate,
+    conversionSource: expense.conversionSource,
     paidByList: expense.paidByList.map((pb) => ({
       shares: pb.shares,
       participant: pb.ledgerParticipant,
     })),
-    paidBySplitMode: expense.paidBySplitMode,
     paidFor: expense.paidFor.map((pf) => ({
       shares: pf.shares,
       participant: pf.ledgerParticipant,

@@ -24,6 +24,7 @@ import {
   renderPasswordRecoveryEmail,
   renderVerificationEmail,
 } from '../mail/templates'
+import { invalidateAccountCache } from './account-cache'
 import { getApiBaseUrl } from './urls'
 
 const authMethodLabels: Record<string, string> = {
@@ -277,6 +278,16 @@ export const auth = betterAuth({
               accountEmail: user.email,
             })
           }
+        },
+      },
+      update: {
+        after: async (user) => {
+          invalidateAccountCache(user.id)
+        },
+      },
+      delete: {
+        after: async (user) => {
+          invalidateAccountCache(user.id)
         },
       },
     },

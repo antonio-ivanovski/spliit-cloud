@@ -60,8 +60,12 @@ export const accountPreferenceOutputSchema = z.object({
   preferences: accountPreferenceSchema,
 })
 
+export const accountGroupWithLatestExpenseSchema = accountGroupSchema.extend({
+  latestExpenseCreatedAt: z.string().nullable(),
+})
+
 export const accountGroupsOutputSchema = z.object({
-  groups: z.array(accountGroupSchema),
+  groups: z.array(accountGroupWithLatestExpenseSchema),
 })
 
 export const accountMembersOutputSchema = z.object({

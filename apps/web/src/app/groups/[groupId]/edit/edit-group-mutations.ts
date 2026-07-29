@@ -2,6 +2,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 
 import { useToast } from '@/components/ui/use-toast'
+import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { trpc } from '@/trpc/client'
 
 function useArchiveTranslations() {
@@ -38,7 +39,7 @@ export function useArchiveGroupMutation({
   return trpc.groups.archive.useMutation({
     onSuccess: async (_data, variables) => {
       await Promise.all([
-        utils.account.groups.invalidate(),
+        invalidateAccountGroupLists(utils),
         utils.groups.get.invalidate({ groupId: variables.groupId }),
       ])
       toast({
@@ -67,7 +68,7 @@ export function useDeleteGroupMutation() {
   return trpc.groups.delete.useMutation({
     onSuccess: async () => {
       toast({ description: labels.deletedToast })
-      await utils.account.groups.invalidate()
+      await invalidateAccountGroupLists(utils)
       await navigate({ to: '/', replace: true })
     },
     onError: (error) => {

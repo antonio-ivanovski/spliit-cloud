@@ -82,11 +82,46 @@ export const JOB_QUEUE_OPTIONS = {
   },
   [NOTIFICATION_RECONCILE_QUEUE]: {
     ...JOB_SEND_OPTIONS[NOTIFICATION_RECONCILE_QUEUE],
+    notify: true,
   },
   [NOTIFICATION_CLEANUP_QUEUE]: {
     ...JOB_SEND_OPTIONS[NOTIFICATION_CLEANUP_QUEUE],
+    notify: true,
   },
 } as const satisfies Record<JobName, Omit<Queue, 'name'>>
+
+export type JobWorkOptions = {
+  localConcurrency: number
+  pollingIntervalSeconds: number
+}
+
+/**
+ * Per-queue worker poll/concurrency. Hot notification delivery stays on the
+ * shorter poll; materialization and maintenance use a slower backstop so idle
+ * empty-fetches do not dominate VPS CPU when LISTEN/NOTIFY is unavailable.
+ */
+export const JOB_WORK_OPTIONS = {
+  [NOTIFICATION_DELIVER_QUEUE]: {
+    localConcurrency: env.JOBS_MAX_CONCURRENCY,
+    pollingIntervalSeconds: env.JOBS_POLLING_INTERVAL_SECONDS,
+  },
+  [RECURRING_MATERIALIZATION_QUEUE]: {
+    localConcurrency: env.JOBS_MAX_CONCURRENCY,
+    pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
+  },
+  [RECURRING_RECONCILIATION_QUEUE]: {
+    localConcurrency: 1,
+    pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
+  },
+  [NOTIFICATION_RECONCILE_QUEUE]: {
+    localConcurrency: 1,
+    pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
+  },
+  [NOTIFICATION_CLEANUP_QUEUE]: {
+    localConcurrency: 1,
+    pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
+  },
+} as const satisfies Record<JobName, JobWorkOptions>
 
 export type SpliitBoss = PgBoss
 

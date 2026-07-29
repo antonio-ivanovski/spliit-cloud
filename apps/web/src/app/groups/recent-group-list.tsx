@@ -31,6 +31,7 @@ import {
 import { useToast } from '@/components/ui/use-toast'
 import { getCurrencyFromGroup } from '@/lib/currency'
 import { useMediaQuery } from '@/lib/hooks'
+import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 
@@ -55,10 +56,8 @@ export function RecentGroupList() {
   const { t: tStats } = useTranslation(undefined, { keyPrefix: 'Stats' })
   const { data: account } = useCurrentAccount()
   const utils = trpc.useUtils()
-  const { data, error, isLoading, refetch } = trpc.overview.get.useQuery(
-    undefined,
-    { staleTime: 0 },
-  )
+  const { data, error, isLoading, refetch } =
+    trpc.overview.get.useQuery(undefined)
   const [forceArchiveTarget, setForceArchiveTarget] =
     useState<AccountGroup | null>(null)
   const { mutateAsync: setPreference } =
@@ -71,10 +70,7 @@ export function RecentGroupList() {
     patch: Partial<AccountGroup['preference']>,
   ) {
     await setPreference({ groupId, ...patch })
-    await Promise.all([
-      utils.account.groups.invalidate(),
-      utils.overview.get.invalidate(),
-    ])
+    await invalidateAccountGroupLists(utils)
   }
 
   async function archiveGroupWithBalancesCheck(
@@ -84,8 +80,7 @@ export function RecentGroupList() {
     try {
       await archiveGroup({ groupId: group.id, archived: nextArchived })
       await Promise.all([
-        utils.account.groups.invalidate(),
-        utils.overview.get.invalidate(),
+        invalidateAccountGroupLists(utils),
         utils.groups.get.invalidate({ groupId: group.id }),
       ])
       toast({

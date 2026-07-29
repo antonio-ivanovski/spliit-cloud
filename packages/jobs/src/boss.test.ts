@@ -6,6 +6,7 @@ import {
   insertJobs,
   JOB_QUEUE_OPTIONS,
   JOB_SEND_OPTIONS,
+  JOB_WORK_OPTIONS,
   MATERIALIZATION_EXPIRE_SECONDS,
   materializationSingletonKey,
   NOTIFICATION_DELIVER_EXPIRE_SECONDS,
@@ -14,6 +15,7 @@ import {
   sendJob,
   type SpliitBoss,
 } from './boss'
+import { env } from './env'
 import {
   JOB_NAMES,
   NOTIFICATION_CLEANUP_DLQ,
@@ -236,7 +238,7 @@ describe('notification job queue configuration', () => {
     )
   })
 
-  it('configures the notification maintenance queues with bounded expiry and no retries', async () => {
+  it('configures the notification maintenance queues with bounded expiry, no retries, and notify', async () => {
     expect(JOB_SEND_OPTIONS[NOTIFICATION_RECONCILE_QUEUE].retryLimit).toBe(0)
     expect(JOB_SEND_OPTIONS[NOTIFICATION_RECONCILE_QUEUE].expireInSeconds).toBe(
       NOTIFICATION_MAINTENANCE_EXPIRE_SECONDS,
@@ -246,6 +248,37 @@ describe('notification job queue configuration', () => {
       NOTIFICATION_MAINTENANCE_EXPIRE_SECONDS,
     )
     expect(NOTIFICATION_MAINTENANCE_EXPIRE_SECONDS).toBe(300)
+    expect(JOB_QUEUE_OPTIONS[NOTIFICATION_RECONCILE_QUEUE].notify).toBe(true)
+    expect(JOB_QUEUE_OPTIONS[NOTIFICATION_CLEANUP_QUEUE].notify).toBe(true)
+  })
+
+  it('uses slower per-queue work options to cut idle polling', () => {
+    expect(JOB_WORK_OPTIONS[NOTIFICATION_DELIVER_QUEUE]).toEqual({
+      localConcurrency: env.JOBS_MAX_CONCURRENCY,
+      pollingIntervalSeconds: env.JOBS_POLLING_INTERVAL_SECONDS,
+    })
+    expect(JOB_WORK_OPTIONS[RECURRING_MATERIALIZATION_QUEUE]).toEqual({
+      localConcurrency: env.JOBS_MAX_CONCURRENCY,
+      pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
+    })
+    expect(JOB_WORK_OPTIONS[RECURRING_RECONCILIATION_QUEUE]).toEqual({
+      localConcurrency: 1,
+      pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
+    })
+    expect(JOB_WORK_OPTIONS[NOTIFICATION_RECONCILE_QUEUE]).toEqual({
+      localConcurrency: 1,
+      pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
+    })
+    expect(JOB_WORK_OPTIONS[NOTIFICATION_CLEANUP_QUEUE]).toEqual({
+      localConcurrency: 1,
+      pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
+    })
+    expect(env.JOBS_MAX_CONCURRENCY).toBe(1)
+    expect(env.JOBS_POLLING_INTERVAL_SECONDS).toBe(60)
+    expect(env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS).toBe(300)
+    expect(env.JOBS_RECONCILIATION_CRON).toBe('*/30 * * * *')
+    expect(env.JOBS_NOTIFICATION_RECONCILE_CRON).toBe('*/15 * * * *')
+    expect(env.HEALTH_RUNNABLE_LAG_THRESHOLD_MS).toBe(900_000)
   })
 
   it('sends notification deliveries with exponential backoff and a delivery-ID singleton key', async () => {

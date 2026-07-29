@@ -1,5 +1,6 @@
 import { z } from 'zod'
 
+import { prisma } from '@spliit/db'
 import {
   getTotalActiveUserPaidFor,
   getTotalActiveUserShare,
@@ -7,7 +8,14 @@ import {
   type TotalsExpense,
 } from '@spliit/domain'
 
-import { getGroupExpenses } from '../../../../lib/api'
+import { getGroupBalanceExpenses } from '../../../../lib/api'
+import { narrowCategoryId } from '../../../../lib/api/expenses/helpers'
+import { toBalanceExpense } from '../../../../lib/api/selects/balance-expense'
+import {
+  participantDisplayNameSelect,
+  type ParticipantDisplayName,
+} from '../../../../lib/api/selects/participant-display-name'
+import { resolveParticipantDisplayName } from '../../../../lib/invitations'
 import {
   hashLinkInviteToken,
   linkInviteTokenInput,
@@ -55,7 +63,7 @@ export const getGroupStatsProcedure = protectedProcedure
       input: { groupId, linkInviteToken, period, customRange },
       ctx,
     }) => {
-      const { member } = await loadGroupViewer({
+      const { member, ledger } = await loadGroupViewer({
         groupId,
         accountId: ctx.auth.user.id,
         accountEmail: ctx.auth.user.email,
@@ -64,17 +72,11 @@ export const getGroupStatsProcedure = protectedProcedure
 
       const activeParticipantId = member?.ledgerParticipant?.id ?? null
 
-      const rows = await getGroupExpenses(groupId)
+      const rows = await getGroupBalanceExpenses(groupId, ledger.id)
       const expenses: TotalsExpense[] = rows.map((row) => ({
-        ...row,
-        paidByList: row.paidByList.map((pb) => ({
-          shares: pb.shares,
-          participant: pb.ledgerParticipant,
-        })),
-        paidFor: row.paidFor.map((pf) => ({
-          shares: pf.shares,
-          participant: pf.ledgerParticipant,
-        })),
+        ...toBalanceExpense(row),
+        expenseDate: row.expenseDate,
+        isReimbursement: row.isReimbursement,
       }))
 
       const totalGroupSpendings = getTotalGroupSpending(expenses)
@@ -86,16 +88,66 @@ export const getGroupStatsProcedure = protectedProcedure
         activeParticipantId,
         expenses,
       )
+
+      // The lean `BalanceExpense` shape only carries `participant.id`; the
+      // dashboard needs `name` + `account` for the participant breakdown UI.
+      // Resolve them in a single follow-up `ledgerParticipant.findMany` so the
+      // lean main query stays cheap.
+      const participantIds = Array.from(
+        new Set(
+          rows.flatMap((row) => [
+            ...row.paidByList.map((share) => share.ledgerParticipantId),
+            ...row.paidFor.map((share) => share.ledgerParticipantId),
+            ...row.items.flatMap((item) =>
+              item.paidFor.map((share) => share.ledgerParticipantId),
+            ),
+            ...(row.itemizedRemainder?.paidFor.map(
+              (share) => share.ledgerParticipantId,
+            ) ?? []),
+          ]),
+        ),
+      )
+      const participants =
+        participantIds.length === 0
+          ? ([] as ParticipantDisplayName[])
+          : await prisma.ledgerParticipant.findMany({
+              where: { id: { in: participantIds } },
+              select: participantDisplayNameSelect(),
+            })
+      const participantDisplay = new Map<string, ParticipantDisplayName>(
+        participants.map((participant) => [participant.id, participant]),
+      )
+      const enrichParticipant = (
+        id: string,
+      ): {
+        id: string
+        name?: string
+        account?: { id: string; name: string; image: string | null } | null
+      } => {
+        const participant = participantDisplay.get(id)
+        if (!participant) return { id }
+        const account = participant.groupMember?.account ?? null
+        return {
+          id: participant.id,
+          name: resolveParticipantDisplayName(participant),
+          account: account
+            ? { id: account.id, name: account.name, image: account.image }
+            : null,
+        }
+      }
+
       const dashboardExpenses: StatsExpense[] = rows.map((row) => ({
-        ...row,
+        ...toBalanceExpense(row),
         expenseDate: new Date(row.expenseDate),
-        paidByList: row.paidByList.map((paidBy) => ({
-          shares: paidBy.shares,
-          participant: paidBy.ledgerParticipant,
+        categoryId: narrowCategoryId(row.categoryId),
+        isReimbursement: row.isReimbursement,
+        paidByList: row.paidByList.map((share) => ({
+          shares: share.shares,
+          participant: enrichParticipant(share.ledgerParticipantId),
         })),
-        paidFor: row.paidFor.map((paidFor) => ({
-          shares: paidFor.shares,
-          participant: paidFor.ledgerParticipant,
+        paidFor: row.paidFor.map((share) => ({
+          shares: share.shares,
+          participant: enrichParticipant(share.ledgerParticipantId),
         })),
       }))
 

@@ -1,6 +1,7 @@
 import { useNavigate } from '@tanstack/react-router'
 
 import { useToast } from '@/components/ui/use-toast'
+import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { trpc } from '@/trpc/client'
 
 /**
@@ -17,12 +18,6 @@ type SeriesProgress = {
   pending: boolean
 } | null
 
-/**
- * Options bag for invalidating a single group's dependent queries after an
- * expense mutation. Pass `financial: false` when the mutation changes no
- * amounts (e.g. stopping a schedule) so balance/leave/revoke previews are not
- * refetched.
- */
 type InvalidateExpenseOptions = {
   groupId: string
   expenseId?: string
@@ -32,42 +27,42 @@ type InvalidateExpenseOptions = {
 const CATCH_UP_POLL_INTERVAL_MS = 1500
 const CATCH_UP_POLL_TIMEOUT_MS = 30_000
 
+export function invalidateExpenseDependencies(
+  utils: ReturnType<typeof trpc.useUtils>,
+  linkInviteToken: string | undefined,
+  { groupId, expenseId, financial = true }: InvalidateExpenseOptions,
+) {
+  const tokens = { groupId, linkInviteToken }
+  const tasks: Promise<unknown>[] = [
+    utils.groups.expenses.list.invalidate(tokens),
+    expenseId
+      ? utils.groups.expenses.get.invalidate({
+          groupId,
+          expenseId,
+          linkInviteToken,
+        })
+      : Promise.resolve(),
+    utils.groups.expenses.series.invalidate(tokens),
+    utils.groups.expenses.commonCurrencies.invalidate(tokens),
+    utils.groups.activities.list.invalidate(tokens),
+  ]
+  if (financial) {
+    // Financial mutations change per-group totals AND the account-wide group
+    // list (recent activity, ledger summary) that the currency converter
+    // consumes. Bust both so neither ranks against a stale summary.
+    tasks.push(
+      utils.groups.balances.list.invalidate({ groupId }),
+      invalidateAccountGroupLists(utils),
+    )
+  }
+  return Promise.all(tasks)
+}
+
 function useInvalidateExpenseDependencies(linkInviteToken: string | undefined) {
   const utils = trpc.useUtils()
 
-  return async ({
-    groupId,
-    expenseId,
-    financial = true,
-  }: InvalidateExpenseOptions) => {
-    const tokens = { groupId, linkInviteToken }
-    const tasks: Promise<unknown>[] = [
-      // Broadly invalidate every expense-list variant so filtered,
-      // paginated, and series-scoped caches converge after multi-row
-      // mutations. Reset alone targets only one exact input. Pass
-      // { groupId, linkInviteToken } so only this group's variants are
-      // busted (not every group's caches).
-      utils.groups.expenses.list.invalidate(tokens),
-      expenseId
-        ? utils.groups.expenses.get.invalidate({
-            groupId,
-            expenseId,
-            linkInviteToken,
-          })
-        : Promise.resolve(),
-      utils.groups.expenses.series.invalidate(tokens),
-      utils.groups.expenses.commonCurrencies.invalidate(tokens),
-      utils.groups.activities.list.invalidate(tokens),
-    ]
-    if (financial) {
-      tasks.push(
-        utils.groups.balances.list.invalidate({ groupId }),
-        utils.groups.leavePreview.invalidate({ groupId }),
-        utils.invitations.revokePreview.invalidate({ groupId }),
-      )
-    }
-    return Promise.all(tasks)
-  }
+  return (options: InvalidateExpenseOptions) =>
+    invalidateExpenseDependencies(utils, linkInviteToken, options)
 }
 
 /**

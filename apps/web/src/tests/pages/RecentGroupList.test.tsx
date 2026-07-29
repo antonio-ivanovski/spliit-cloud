@@ -518,6 +518,7 @@ describe('RecentGroupList', () => {
     })
     await waitFor(() => {
       expect(mocks.mockInvalidateAccountGroups).toHaveBeenCalled()
+      expect(mocks.mockInvalidateOverview).toHaveBeenCalled()
     })
   })
 
@@ -604,6 +605,7 @@ describe('RecentGroupList', () => {
       })
     })
     expect(mocks.mockInvalidateAccountGroups).toHaveBeenCalled()
+    expect(mocks.mockInvalidateOverview).toHaveBeenCalled()
     expect(mocks.mockInvalidateGroupsGet).toHaveBeenCalledWith({
       groupId: 'g-arch-admin',
     })
@@ -742,6 +744,7 @@ describe('RecentGroupList', () => {
     })
     // Also invalidates account groups and invitations list
     expect(mocks.mockInvalidateAccountGroups).toHaveBeenCalled()
+    expect(mocks.mockInvalidateOverview).toHaveBeenCalled()
     expect(mocks.mockInvalidateInvitationsList).toHaveBeenCalled()
   })
 

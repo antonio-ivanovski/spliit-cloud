@@ -70,16 +70,7 @@ const listParticipantResponseSchema = z.object({
 const listItemResponseSchema = z.object({
   id: z.string(),
   title: z.string(),
-  unitPrice: z.number().int(),
-  quantity: z.number().int(),
   amount: z.number().int(),
-  splitMode: splitModeSchema,
-  paidFor: z.array(
-    z.object({
-      participant: z.string(),
-      shares: z.number().int(),
-    }),
-  ),
 })
 
 const getItemResponseSchema = z.object({
@@ -90,16 +81,6 @@ const getItemResponseSchema = z.object({
   amount: z.number().int(),
   splitMode: splitModeSchema,
   paidFor: z.array(participantShareResponseSchema),
-})
-
-const itemizedRemainderListResponseSchema = z.object({
-  splitMode: splitModeSchema,
-  paidFor: z.array(
-    z.object({
-      participant: z.string(),
-      shares: z.number().int(),
-    }),
-  ),
 })
 
 const itemizedRemainderGetResponseSchema = z.object({
@@ -142,10 +123,7 @@ export const expenseListItemResponseSchema = z.object({
   createdAt: z.date(),
   paidByList: z.array(listParticipantResponseSchema),
   paidFor: z.array(listParticipantResponseSchema),
-  itemizedRemainder: itemizedRemainderListResponseSchema.optional(),
-  recurringSeries: recurringSeriesResponseSchema.nullable(),
   recurringSeriesId: z.string().nullable(),
-  recurrence: recurrenceResponseSchema.nullable(),
   recurringSeriesStatus: recurringSeriesStatusSchema.nullable(),
   documentCount: z.number().int().nonnegative(),
 })

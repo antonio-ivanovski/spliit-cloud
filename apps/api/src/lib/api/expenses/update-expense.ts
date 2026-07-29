@@ -380,6 +380,7 @@ export async function updateExpense(
           }),
         },
         tx,
+        group.ledgerId,
       )
       changedRows.push({
         activity,
@@ -744,6 +745,7 @@ export async function updateExpense(
                 }),
               },
               tx,
+              group.ledgerId,
             )
             for (const doc of row.documents) {
               reflowDeletedDocumentUrls.push(doc.url)
@@ -848,6 +850,7 @@ export async function updateExpense(
               data: rowActivityData,
             },
             tx,
+            group.ledgerId,
           )
           changedRows.push({
             activity: rowAct,

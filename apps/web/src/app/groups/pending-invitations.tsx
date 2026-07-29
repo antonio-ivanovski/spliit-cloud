@@ -18,6 +18,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
 import { isPlaceholderEmail } from '@/lib/account'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
+import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { trpc } from '@/trpc/client'
 
 import { formatDate } from './group-buckets'
@@ -41,7 +42,7 @@ export function PendingInvitations() {
         to: '/groups/$groupId',
         params: { groupId: data.groupId },
       })
-      void utils.account.groups.invalidate()
+      void invalidateAccountGroupLists(utils)
       void utils.invitations.listForAccount.invalidate()
     },
     onError: (error) => {

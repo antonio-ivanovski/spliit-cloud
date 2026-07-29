@@ -47,34 +47,27 @@ function makeExpenseRow(args: {
 }) {
   return {
     id: args.id,
+    ledgerId: 'ledger-1',
     amount: args.amount,
-    expenseDate: new Date(),
     createdAt: new Date(),
-    title: 'Test expense',
+    expenseDate: new Date(),
     categoryId: 'general',
     isReimbursement: false,
-    recurrenceRule: 'NONE',
     splitMode: 'EVENLY',
     paidBySplitMode: 'BY_AMOUNT',
-    paidByList: [
-      {
-        shares: args.amount,
-        ledgerParticipant: {
-          id: args.paidById,
-          groupMember: { account: { name: args.paidById } },
-          invitations: [],
-        },
-      },
-    ],
+    originalAmount: null,
+    originalCurrency: null,
+    conversionRate: null,
+    conversionSource: null,
+    recurrenceSequence: null,
+    paidByList: [{ shares: args.amount, ledgerParticipantId: args.paidById }],
     paidFor: args.paidFor.map((pf) => ({
       shares: pf.shares,
-      ledgerParticipant: {
-        id: pf.participantId,
-        groupMember: { account: { name: pf.participantId } },
-        invitations: [],
-      },
+      ledgerParticipantId: pf.participantId,
     })),
-    _count: { documents: 0 },
+    items: [],
+    itemizedRemainder: null,
+    recurringSeries: null,
   }
 }
 

@@ -139,7 +139,7 @@ describe('worker health endpoints', () => {
     markBossRunning(boss)
     hoisted.queryRawUnsafe.mockReset()
     mockTransportStats({
-      oldestRunnableMs: 600_000,
+      oldestRunnableMs: 1_200_000,
       overdue: 5,
       transportJobs: 5,
     })
@@ -151,7 +151,7 @@ describe('worker health endpoints', () => {
     expect(response.status).toBe(503)
     const body = await response.json()
     expect(body.delivery.healthy).toBe(false)
-    expect(body.delivery.transport.oldestRunnableMs).toBe(600_000)
+    expect(body.delivery.transport.oldestRunnableMs).toBe(1_200_000)
   })
 
   it('returns 503 when missing transport exceeds threshold', async () => {

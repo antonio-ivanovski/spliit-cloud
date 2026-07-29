@@ -116,29 +116,28 @@ export async function planNotificationForActivity(
   return deliveryIds
 }
 
-/**
- * Persist a typed activity row against the given group's ledger. The helper
- * resolves the `ledgerId` internally so call sites only need to pass the
- * `groupId`. Returns the created row so callers can pass the `id` to
- * post-commit notification dispatch.
- */
 export async function logActivity(
   groupId: string,
   args: LogActivityArgs,
   client: ActivityClient = prisma,
+  ledgerId?: string,
 ): Promise<Activity> {
-  const group = await client.group.findUnique({
-    where: { id: groupId },
-    select: { ledgerId: true },
-  })
-  if (!group?.ledgerId) {
+  const resolvedLedgerId =
+    ledgerId ??
+    (
+      await client.group.findUnique({
+        where: { id: groupId },
+        select: { ledgerId: true },
+      })
+    )?.ledgerId
+  if (!resolvedLedgerId) {
     throw new Error('Cannot log activity for a group without a ledger')
   }
 
   return client.activity.create({
     data: {
       id: randomId(),
-      ledgerId: group.ledgerId,
+      ledgerId: resolvedLedgerId,
       type: args.type,
       actorType: args.actor?.type ?? null,
       actorId: args.actor?.id ?? null,

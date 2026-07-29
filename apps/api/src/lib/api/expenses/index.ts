@@ -2,6 +2,7 @@ export { createExpense } from './create-expense'
 export { deleteExpense } from './delete-expense'
 export {
   getExpense,
+  getGroupBalanceExpenses,
   getGroupCommonCurrencies,
   getGroupExpenseCount,
   getGroupExpenses,

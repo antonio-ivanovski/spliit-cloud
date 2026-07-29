@@ -1,6 +1,6 @@
 import type { JobWithMetadata, PgBoss } from 'pg-boss'
 
-import { sendJob } from './boss'
+import { JOB_WORK_OPTIONS, sendJob } from './boss'
 import { env } from './env'
 import {
   JOB_NAMES,
@@ -64,12 +64,13 @@ export async function registerHandlers(
     JobHandler<JobName> | undefined,
   ][]) {
     if (!handler) continue
+    const workOptions = JOB_WORK_OPTIONS[name]
     await boss.work(
       name,
       {
         batchSize: 1,
-        localConcurrency: env.JOBS_MAX_CONCURRENCY,
-        pollingIntervalSeconds: 1,
+        localConcurrency: workOptions.localConcurrency,
+        pollingIntervalSeconds: workOptions.pollingIntervalSeconds,
         includeMetadata: true,
       },
       async (jobs: JobWithMetadata<object>[]) => {

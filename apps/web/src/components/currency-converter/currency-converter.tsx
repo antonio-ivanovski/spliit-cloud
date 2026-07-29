@@ -3,7 +3,6 @@ import { ArrowDownUp, Loader2, Star } from 'lucide-react'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { AccountGroup } from '@/app/groups/group-buckets'
 import { CurrencySelector } from '@/components/currency-selector'
 import { Button } from '@/components/ui/button'
 import {
@@ -23,7 +22,7 @@ import { trpc } from '@/trpc/client'
 import { amountAsMinorUnits, getCurrency, utcTodayIso } from '@spliit/domain'
 
 import currencyExchangeSvg from './currency-exchange.svg'
-import { rankGroupsForConverter } from './rank-groups'
+import { rankGroupsForConverter, type ConverterGroup } from './rank-groups'
 
 const FROM_KEY = 'spliit:converter:fromCurrency'
 const TO_KEY = 'spliit:converter:toCurrency'
@@ -209,9 +208,10 @@ export function ConverterContent() {
   const [toCode, setToCode] = useState(() => resolveInitialCode(TO_KEY))
   const [amountStr, setAmountStr] = useState('')
 
-  const { data: groupsData } = trpc.overview.get.useQuery(undefined, {
-    staleTime: 60_000,
-  })
+  const { data: groupsData } = trpc.account.groups.useQuery(
+    { includeArchived: false },
+    { staleTime: 60_000 },
+  )
 
   const today = useMemo(() => new Date(`${utcTodayIso()}T12:00:00.000Z`), [])
 
@@ -261,7 +261,7 @@ export function ConverterContent() {
     writeStored(TO_KEY, fromCode)
   }, [fromCode, toCode])
 
-  const handleGroupClick = (group: AccountGroup) => {
+  const handleGroupClick = (group: ConverterGroup) => {
     if (!amountValid || !fromCode) return
     const currency = getCurrency(fromCode)
     if (!currency) return
@@ -400,7 +400,7 @@ export function ConverterContent() {
                 {group.preference.starred && (
                   <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
                 )}
-                {group.name}
+                {group.displayName || group.name}
                 {group.ledger.currencyCode && (
                   <span className="text-xs text-muted-foreground">
                     {group.ledger.currencyCode}

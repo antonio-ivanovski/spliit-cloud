@@ -50,10 +50,14 @@ function makeExpense(overrides: Record<string, unknown> = {}): GroupExpense {
     expenseDate: new Date('2025-06-15T00:00:00.000Z'),
     createdAt: new Date('2025-06-15T00:00:00.000Z'),
     categoryId: 'general',
-    recurrenceRule: 'NONE',
     isReimbursement: false,
     splitMode: 'EVENLY',
     paidBySplitMode: 'BY_AMOUNT',
+    originalAmount: null,
+    originalCurrency: null,
+    conversionRate: null,
+    conversionSource: null,
+    recurrenceSequence: null,
     paidByList: [
       { ledgerParticipant: { id: 'user-alice', name: 'Alice' }, shares: 3000 },
     ],
@@ -66,10 +70,8 @@ function makeExpense(overrides: Record<string, unknown> = {}): GroupExpense {
     category: { id: 'general', grouping: 'Food and Drink', name: 'Dining Out' },
     documentCount: 0,
     items: [],
-    itemizedRemainder: {
-      splitMode: 'EVENLY',
-      paidFor: [{ participant: 'user-alice', shares: 1 }],
-    },
+    recurringSeriesId: null,
+    recurringSeriesStatus: null,
     ...overrides,
   } as unknown as GroupExpense
 }
@@ -288,6 +290,46 @@ describe('ExpenseCard', () => {
     // The ActiveUserBalance renders "Your balance:" text
     expect(container.textContent).toContain('Your balance:')
     expect(container.textContent).toContain('€10.00')
+  })
+
+  it('uses stored top-level shares for itemized balances with slim item rows', () => {
+    vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+    vi.mocked(useActiveUser).mockReturnValue('user-bob')
+
+    const expense = makeExpense({
+      amount: 1001,
+      splitMode: 'ITEMIZED',
+      paidByList: [
+        {
+          ledgerParticipant: { id: 'user-alice', name: 'Alice' },
+          shares: 1001,
+        },
+      ],
+      paidFor: [
+        {
+          ledgerParticipant: { id: 'user-alice', name: 'Alice' },
+          shares: 401,
+        },
+        {
+          ledgerParticipant: { id: 'user-bob', name: 'Bob' },
+          shares: 600,
+        },
+      ],
+      items: [{ id: 'item-1', title: 'Shared items', amount: 800 }],
+    })
+
+    const { container } = render(
+      <ExpenseCard
+        expense={expense}
+        currency={EUR}
+        groupId="group-1"
+        participantCount={2}
+      />,
+    )
+
+    expect(container.textContent).toContain('Your balance:')
+    expect(container.textContent).toContain('€6.00')
+    expect(container.textContent).not.toContain('€5.01')
   })
 
   describe('multi-payer rendering', () => {

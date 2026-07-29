@@ -19,8 +19,15 @@ const envSchema = z.object({
         ),
     )
     .default('pgboss'),
-  JOBS_RECONCILIATION_CRON: z.string().min(1).default('* * * * *'),
-  JOBS_MAX_CONCURRENCY: z.coerce.number().int().positive().default(5),
+  JOBS_RECONCILIATION_CRON: z.string().min(1).default('*/30 * * * *'),
+  JOBS_NOTIFICATION_RECONCILE_CRON: z.string().min(1).default('*/15 * * * *'),
+  JOBS_MAX_CONCURRENCY: z.coerce.number().int().positive().default(1),
+  JOBS_POLLING_INTERVAL_SECONDS: z.coerce.number().int().positive().default(60),
+  JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS: z.coerce
+    .number()
+    .int()
+    .positive()
+    .default(300),
   JOBS_POOL_SIZE: z.coerce.number().int().positive().default(8),
   JOBS_RETRY_LIMIT: z.coerce.number().int().nonnegative().default(5),
   JOBS_RETRY_BACKOFF_SECONDS: z.coerce.number().int().nonnegative().default(30),
@@ -35,7 +42,7 @@ const envSchema = z.object({
     .number()
     .int()
     .positive()
-    .default(300_000),
+    .default(900_000),
   HEALTH_MISSING_TRANSPORT_THRESHOLD: z.coerce
     .number()
     .int()

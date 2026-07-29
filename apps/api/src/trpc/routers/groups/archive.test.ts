@@ -186,63 +186,42 @@ describe('groupsRouter.archive', () => {
   })
 })
 
-/**
- * Build a single "expense" record as `getGroupExpenses` would return it after
- * the row is materialised by Prisma. The archive flow reads these rows through
- * `getGroupBalances` to decide whether settlement expenses are required, so the
- * shape must match the `select` clause of `getGroupExpenses`.
- */
 function makeExpenseRow(args: {
   id: string
   amount: number
   paidById: string
-  paidByName?: string
   paidFor: Array<{
     participantId: string
-    participantName?: string
     shares: number
   }>
   splitMode?: 'EVENLY' | 'BY_SHARES' | 'BY_PERCENTAGE' | 'BY_AMOUNT'
 }) {
-  // `getGroupExpenses` resolves the display name at read time through
-  // `GroupMember.account.name`. Tests that exercise the archive flow
-  // don't model GroupMembers, so they supply the name via the `account`
-  // relation (the post-processing step in `getGroupExpenses` falls back
-  // to `account.name` when `groupMember` is null).
-  const paidByName = args.paidByName ?? args.paidById
   return {
     id: args.id,
+    ledgerId: 'ledger-1',
     amount: args.amount,
     expenseDate: new Date(),
     createdAt: new Date(),
-    title: 'Test expense',
     categoryId: 'general',
     isReimbursement: false,
-    recurrenceRule: 'NONE',
     splitMode: args.splitMode ?? 'EVENLY',
     paidBySplitMode: 'BY_AMOUNT',
+    originalAmount: null,
+    originalCurrency: null,
+    conversionRate: null,
+    conversionSource: null,
     paidByList: [
       {
         shares: args.amount,
-        ledgerParticipant: {
-          id: args.paidById,
-          groupMember: { account: { name: paidByName } },
-          invitations: [],
-        },
+        ledgerParticipantId: args.paidById,
       },
     ],
-    paidFor: args.paidFor.map((pf) => {
-      const participantName = pf.participantName ?? pf.participantId
-      return {
-        shares: pf.shares,
-        ledgerParticipant: {
-          id: pf.participantId,
-          groupMember: { account: { name: participantName } },
-          invitations: [],
-        },
-      }
-    }),
-    _count: { documents: 0 },
+    paidFor: args.paidFor.map((paidFor) => ({
+      shares: paidFor.shares,
+      ledgerParticipantId: paidFor.participantId,
+    })),
+    items: [],
+    itemizedRemainder: null,
   }
 }
 

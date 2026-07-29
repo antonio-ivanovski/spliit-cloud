@@ -1,6 +1,7 @@
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 
 import '../test/mocks'
+import { clearAccountCache } from '../lib/auth/account-cache'
 import { authState, prismaMock } from '../test/state'
 import {
   assistantProcedure,
@@ -15,6 +16,10 @@ function makeRequest(): Request {
     headers: new Headers({ cookie: 'spliit.session=test-token' }),
   })
 }
+
+beforeEach(() => {
+  clearAccountCache()
+})
 
 describe('createTRPCContext', () => {
   it('returns null auth when better-auth reports no session', async () => {

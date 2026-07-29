@@ -42,6 +42,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/components/ui/use-toast'
 import type { AccountPreferences } from '@/lib/account-preferences'
 import { getCurrency, useCurrencies } from '@/lib/currency'
+import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { trpc } from '@/trpc/client'
 import { friendFormSchema, type FriendFormValues } from '@spliit/domain/schemas'
 
@@ -93,7 +94,7 @@ export function CreateFriend() {
 
   const { mutateAsync: createFriend } = trpc.friends.create.useMutation({
     onSuccess: () => {
-      void utils.account.groups.invalidate()
+      void invalidateAccountGroupLists(utils)
       void utils.account.friends.invalidate()
     },
   })

@@ -21,12 +21,15 @@ vi.mock('@spliit/jobs', () => ({
 
 import type { SpliitBoss } from '@spliit/jobs'
 
-import { reconcileMissingDeliveryJobs } from './delivery-reconciliation'
+import {
+  RECONCILE_PENDING_MIN_AGE_MS,
+  reconcileMissingDeliveryJobs,
+} from './delivery-reconciliation'
 
 const boss = {} as SpliitBoss
 
 describe('delivery-reconciliation', () => {
-  it('enqueues missing delivery jobs for PENDING and PROCESSING rows', async () => {
+  it('enqueues missing delivery jobs for aged PENDING and expired PROCESSING rows', async () => {
     hoisted.findMany.mockReset()
     hoisted.sendJob.mockReset()
     hoisted.sendJob.mockResolvedValue('job-1')
@@ -147,24 +150,52 @@ describe('delivery-reconciliation', () => {
     )
   })
 
-  it('queries for PENDING and PROCESSING statuses only', async () => {
+  it('age-gates PENDING rows and only re-enqueues expired PROCESSING leases', async () => {
     hoisted.findMany.mockReset()
     hoisted.sendJob.mockReset()
     hoisted.sendJob.mockResolvedValue('job-1')
     hoisted.findMany.mockResolvedValue([{ id: 'd' }])
 
+    const before = Date.now()
     await reconcileMissingDeliveryJobs(boss)
+    const after = Date.now()
 
     expect(hoisted.findMany).toHaveBeenCalledWith(
       expect.objectContaining({
         where: {
-          status: {
-            in: ['PENDING', 'PROCESSING'],
-          },
+          OR: [
+            {
+              status: 'PENDING',
+              createdAt: {
+                lte: expect.any(Date),
+              },
+            },
+            {
+              status: 'PROCESSING',
+              OR: [
+                { leaseExpiresAt: { lte: expect.any(Date) } },
+                { leaseExpiresAt: null },
+              ],
+            },
+          ],
         },
         orderBy: { id: 'asc' },
         take: 100,
       }),
     )
+
+    const where = hoisted.findMany.mock.calls[0]![0].where
+    const pendingCutoff = where.OR[0].createdAt.lte as Date
+    const processingCutoff = where.OR[1].OR[0].leaseExpiresAt.lte as Date
+
+    expect(pendingCutoff.getTime()).toBeGreaterThanOrEqual(
+      before - RECONCILE_PENDING_MIN_AGE_MS,
+    )
+    expect(pendingCutoff.getTime()).toBeLessThanOrEqual(
+      after - RECONCILE_PENDING_MIN_AGE_MS,
+    )
+    expect(processingCutoff.getTime()).toBeGreaterThanOrEqual(before)
+    expect(processingCutoff.getTime()).toBeLessThanOrEqual(after)
+    expect(RECONCILE_PENDING_MIN_AGE_MS).toBe(2 * 60 * 1000)
   })
 })

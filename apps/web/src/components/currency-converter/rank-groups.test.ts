@@ -1,27 +1,20 @@
 import { describe, expect, it } from 'vitest'
 
-import type { AccountGroup } from '@/app/groups/group-buckets'
-
-import { rankGroupsForConverter } from './rank-groups'
+import { rankGroupsForConverter, type ConverterGroup } from './rank-groups'
 
 function makeGroup(
-  overrides: Partial<AccountGroup> & { id: string },
-): AccountGroup {
+  overrides: Partial<ConverterGroup> & { id: string },
+): ConverterGroup {
   return {
     name: `Group ${overrides.id}`,
     groupType: 'GROUP',
     archived: false,
     createdAt: '2025-01-01T00:00:00.000Z',
+    latestExpenseCreatedAt: null,
     ledger: { currency: '$', currencyCode: 'USD' },
-    financialSummary: {
-      expenseCount: 0,
-      netBalance: null,
-      state: 'NO_EXPENSES',
-      latestExpenseCreatedAt: null,
-    },
     preference: { starred: false, hidden: false },
     ...overrides,
-  } as AccountGroup
+  } as ConverterGroup
 }
 
 describe('rankGroupsForConverter', () => {
@@ -104,21 +97,11 @@ describe('rankGroupsForConverter', () => {
     const groups = [
       makeGroup({
         id: 'old',
-        financialSummary: {
-          expenseCount: 1,
-          netBalance: null,
-          state: 'NO_EXPENSES',
-          latestExpenseCreatedAt: '2025-01-01T00:00:00.000Z',
-        },
+        latestExpenseCreatedAt: '2025-01-01T00:00:00.000Z',
       }),
       makeGroup({
         id: 'new',
-        financialSummary: {
-          expenseCount: 1,
-          netBalance: null,
-          state: 'NO_EXPENSES',
-          latestExpenseCreatedAt: '2025-06-01T00:00:00.000Z',
-        },
+        latestExpenseCreatedAt: '2025-06-01T00:00:00.000Z',
       }),
     ]
     const result = rankGroupsForConverter(groups, 'USD')

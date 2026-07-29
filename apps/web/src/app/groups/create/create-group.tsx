@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { GroupForm } from '@/components/group-form'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
+import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { trpc } from '@/trpc/client'
 
 export const CreateGroup = () => {
@@ -13,7 +14,7 @@ export const CreateGroup = () => {
   const utils = trpc.useUtils()
   const { mutateAsync: createGroup } = trpc.groups.create.useMutation({
     onSuccess: () => {
-      void utils.account.groups.invalidate()
+      void invalidateAccountGroupLists(utils)
       void utils.invitations.listForAccount.invalidate()
     },
   })

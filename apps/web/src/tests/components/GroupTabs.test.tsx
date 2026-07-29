@@ -29,6 +29,7 @@ vi.mock('@/trpc/client', () => ({
     },
     useUtils: () => ({
       account: { groups: { invalidate: vi.fn() } },
+      overview: { get: { invalidate: vi.fn() } },
       groups: { get: { invalidate: vi.fn() } },
     }),
   },

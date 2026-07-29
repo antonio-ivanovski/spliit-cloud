@@ -20,6 +20,7 @@ import {
 
 import { randomId } from '../../../lib/api'
 import { accountSummarySelect } from '../../../lib/api/selects/account-summary'
+import { invalidateAccountCache } from '../../../lib/auth/account-cache'
 import { env } from '../../../lib/env'
 import { isPlaceholderEmail } from '../../../lib/invitations'
 import {
@@ -225,6 +226,7 @@ export const accountRouter = createTRPCRouter({
         })
       })
 
+      invalidateAccountCache(ctx.auth.user.id)
       return { preferences: parseAccountPreference(preferences) }
     }),
 
@@ -243,6 +245,7 @@ export const accountRouter = createTRPCRouter({
         update: input,
         select: accountPreferenceSelect,
       })
+      invalidateAccountCache(ctx.auth.user.id)
       return { preferences: parseAccountPreference(preferences) }
     }),
 
@@ -273,6 +276,7 @@ export const accountRouter = createTRPCRouter({
           image: true,
         },
       })
+      invalidateAccountCache(ctx.auth.user.id)
       return { account }
     }),
 
@@ -295,6 +299,7 @@ export const accountRouter = createTRPCRouter({
           image: true,
         },
       })
+      invalidateAccountCache(ctx.auth.user.id)
       if (
         existing?.image &&
         isProfileImageUrlForAccount(existing.image, ctx.auth.user.id)
@@ -342,6 +347,7 @@ export const accountRouter = createTRPCRouter({
           image: true,
         },
       })
+      invalidateAccountCache(ctx.auth.user.id)
       if (
         existing?.image &&
         isProfileImageUrlForAccount(existing.image, ctx.auth.user.id)
@@ -381,7 +387,9 @@ export const accountRouter = createTRPCRouter({
           role: true,
           group: {
             include: {
-              ledger: { select: { currency: true, currencyCode: true } },
+              ledger: {
+                select: { id: true, currency: true, currencyCode: true },
+              },
               _count: { select: { members: true } },
               members: {
                 where: { status: GroupMemberStatus.ACTIVE },
@@ -398,17 +406,32 @@ export const accountRouter = createTRPCRouter({
       })
 
       const groupIds = memberships.map((m) => m.groupId)
-      const prefRecords = await prisma.accountGroupPreference.findMany({
-        where: {
-          accountId: ctx.auth.user.id,
-          groupId: { in: groupIds },
-        },
-        select: {
-          groupId: true,
-          starred: true,
-          hidden: true,
-        },
-      })
+      const ledgerIds = memberships.map(
+        (membership) => membership.group.ledger.id,
+      )
+      const [prefRecords, latestExpenseRows] = await Promise.all([
+        prisma.accountGroupPreference.findMany({
+          where: {
+            accountId: ctx.auth.user.id,
+            groupId: { in: groupIds },
+          },
+          select: {
+            groupId: true,
+            starred: true,
+            hidden: true,
+          },
+        }),
+        ledgerIds.length === 0
+          ? Promise.resolve([])
+          : prisma.expense.groupBy({
+              by: ['ledgerId'],
+              where: { ledgerId: { in: ledgerIds } },
+              _max: { createdAt: true },
+            }),
+      ])
+      const latestExpenseByLedgerId = new Map(
+        latestExpenseRows.map((row) => [row.ledgerId, row._max.createdAt]),
+      )
       const prefByGroupId = new Map(
         prefRecords.map((p) => [
           p.groupId,
@@ -469,10 +492,16 @@ export const accountRouter = createTRPCRouter({
               : undefined) ||
             ''
           : m.group.name
-        const { _count, members, ...group } = m.group
+        const { _count, members, ledger, ...group } = m.group
         return {
           ...group,
           createdAt: group.createdAt.toISOString(),
+          latestExpenseCreatedAt:
+            latestExpenseByLedgerId.get(ledger.id)?.toISOString() ?? null,
+          ledger: {
+            currency: ledger.currency,
+            currencyCode: ledger.currencyCode,
+          },
           // Prisma's relation-count key is `_count`; expose a plain public field.
           memberCount: _count.members,
           // The caller's role on this group. The web client uses it to gate

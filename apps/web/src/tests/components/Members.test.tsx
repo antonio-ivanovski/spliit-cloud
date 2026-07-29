@@ -79,6 +79,9 @@ vi.mock('@/trpc/client', () => {
           groups: { invalidate: vi.fn().mockResolvedValue(undefined) },
           friends: { invalidate: vi.fn().mockResolvedValue(undefined) },
         },
+        overview: {
+          get: { invalidate: vi.fn().mockResolvedValue(undefined) },
+        },
       }),
       invitations: {
         create: {

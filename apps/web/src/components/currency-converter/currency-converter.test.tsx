@@ -6,7 +6,7 @@ import { fireEvent, render, screen, waitFor } from '@/test/test-utils'
 const _rateMock = vi.fn()
 const useCurrencyRateSpy = vi.fn()
 const navigateMock = vi.fn()
-const overviewQuerySpy = vi.fn()
+const accountGroupsQuerySpy = vi.fn()
 
 vi.mock('@/lib/hooks', () => ({
   useCurrencyRate: (...args: unknown[]) => useCurrencyRateSpy(...args),
@@ -19,12 +19,12 @@ vi.mock('@tanstack/react-router', () => ({
 
 vi.mock('@/trpc/client', () => ({
   trpc: {
-    overview: {
-      get: {
+    account: {
+      groups: {
         useQuery: (...args: unknown[]) => {
-          overviewQuerySpy(...args)
+          accountGroupsQuerySpy(...args)
           return (
-            overviewQuerySpy.getMockImplementation()?.(...args) ?? {
+            accountGroupsQuerySpy.getMockImplementation()?.(...args) ?? {
               data: { groups: [] },
               isLoading: false,
             }
@@ -76,9 +76,9 @@ function makeGroup(
     groupType: 'GROUP' as const,
     archived: false,
     createdAt: '2024-01-01T00:00:00.000Z',
-    financialSummary: null,
+    latestExpenseCreatedAt: null,
     preference: { starred, hidden: false },
-    ledger: { currencyCode },
+    ledger: { currency: '$', currencyCode },
   }
 }
 
@@ -87,8 +87,11 @@ describe('CurrencyConverter stale rate gating', () => {
     window.localStorage.clear()
     useCurrencyRateSpy.mockReset()
     navigateMock.mockReset()
-    overviewQuerySpy.mockReset()
-    overviewQuerySpy.mockReturnValue({ data: { groups: [] }, isLoading: false })
+    accountGroupsQuerySpy.mockReset()
+    accountGroupsQuerySpy.mockReturnValue({
+      data: { groups: [] },
+      isLoading: false,
+    })
   })
 
   it('shows muted stale note when rate is stale (RangeError) but still renders preview', async () => {
@@ -155,11 +158,11 @@ describe('CurrencyConverter group navigation', () => {
     window.localStorage.clear()
     useCurrencyRateSpy.mockReset()
     navigateMock.mockReset()
-    overviewQuerySpy.mockReset()
+    accountGroupsQuerySpy.mockReset()
   })
 
   it('navigates with amount as minor units for 2-decimal currencies (USD)', async () => {
-    overviewQuerySpy.mockReturnValue({
+    accountGroupsQuerySpy.mockReturnValue({
       data: { groups: [makeGroup('group-1', 'Trip', 'USD')] },
       isLoading: false,
     })
@@ -172,6 +175,11 @@ describe('CurrencyConverter group navigation', () => {
     })
 
     render(<ConverterContent />)
+
+    expect(accountGroupsQuerySpy).toHaveBeenCalledWith(
+      { includeArchived: false },
+      { staleTime: 60_000 },
+    )
 
     const amountInput = screen.getByLabelText(/from/i)
     fireEvent.change(amountInput, { target: { value: '100.50' } })
@@ -193,7 +201,7 @@ describe('CurrencyConverter group navigation', () => {
   })
 
   it('navigates with integer minor units for 0-decimal currencies (JPY)', async () => {
-    overviewQuerySpy.mockReturnValue({
+    accountGroupsQuerySpy.mockReturnValue({
       data: { groups: [makeGroup('group-1', 'Tokyo', 'JPY')] },
       isLoading: false,
     })
@@ -227,7 +235,7 @@ describe('CurrencyConverter group navigation', () => {
   })
 
   it('does not navigate when amount is invalid (empty)', async () => {
-    overviewQuerySpy.mockReturnValue({
+    accountGroupsQuerySpy.mockReturnValue({
       data: { groups: [makeGroup('group-1', 'Trip', 'USD')] },
       isLoading: false,
     })

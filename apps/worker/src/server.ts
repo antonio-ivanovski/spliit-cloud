@@ -48,7 +48,7 @@ async function main() {
   await scheduleReconciliation(boss)
   await boss.schedule(
     JOB_NAMES.NOTIFICATION_RECONCILE,
-    '*/5 * * * *',
+    env.JOBS_NOTIFICATION_RECONCILE_CRON,
     {},
     { retryLimit: 0, key: 'notification-reconcile' },
   )

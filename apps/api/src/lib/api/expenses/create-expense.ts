@@ -237,6 +237,7 @@ export async function createExpense(
         }),
       },
       tx,
+      ledgerId,
     )
 
     if (recurrence && recurringSeriesId) {

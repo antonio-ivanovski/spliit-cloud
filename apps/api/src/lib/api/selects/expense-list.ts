@@ -7,8 +7,7 @@ import {
 import { expenseParticipantSharesSelect } from './expense-participant-shares'
 import { expenseParticipantWithDisplayNameSelect } from './expense-participant-with-display-name'
 
-/** Shared expense list projection (group expenses list). */
-export const groupExpenseListSelect = {
+export const groupExpenseListCardSelect = {
   id: true,
   title: true,
   amount: true,
@@ -28,18 +27,16 @@ export const groupExpenseListSelect = {
   recurringSeries: {
     select: {
       id: true,
-      frequency: true,
-      interval: true,
-      endType: true,
-      occurrenceLimit: true,
-      endDate: true,
       status: true,
-      anchorDate: true,
-      nextOccurrenceDate: true,
     },
   },
-  items: { select: expenseItemWithSharesSelect },
-  itemizedRemainder: { select: expenseItemizedRemainderSelect },
+  items: {
+    select: {
+      id: true,
+      title: true,
+      amount: true,
+    },
+  },
   _count: { select: { documents: true } },
 } satisfies Prisma.ExpenseSelect
 

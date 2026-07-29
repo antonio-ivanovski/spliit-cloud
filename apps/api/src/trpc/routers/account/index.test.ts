@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest'
 
 import '../../../test/mocks'
+import {
+  clearAccountCache,
+  getCachedAccount,
+} from '../../../lib/auth/account-cache'
 import { authState, prismaMock } from '../../../test/state'
 import { createTRPCContext } from '../../init'
 import { accountRouter } from './index'
@@ -67,7 +71,11 @@ function mockGroupWithMembership(
         information: null,
         archived: g.archived,
         createdAt: new Date(),
-        ledger: { currency: '$', currencyCode: 'USD' },
+        ledger: {
+          id: `ledger-${g.id}`,
+          currency: '$',
+          currencyCode: 'USD',
+        },
         _count: { members: g.members },
       },
     })) as never,
@@ -81,6 +89,7 @@ function mockGroupWithMembership(
       ...g.preferences,
     }))
   prismaMock.accountGroupPreference.findMany.mockResolvedValue(prefs as never)
+  prismaMock.expense.groupBy.mockResolvedValue([] as never)
 }
 
 describe('accountRouter account preferences', () => {
@@ -477,6 +486,31 @@ describe('accountRouter.preferences — hide API', () => {
   })
 })
 
+describe('accountRouter profile cache invalidation', () => {
+  it('invalidates the cached account after a profile update', async () => {
+    clearAccountCache()
+    const initialAccount = {
+      id: 'acct-profile',
+      email: 'alice@example.com',
+      emailVerified: true,
+      name: 'Alice',
+      image: null,
+    }
+    const updatedAccount = { ...initialAccount, name: 'Alice Updated' }
+    prismaMock.account.findUnique.mockResolvedValueOnce(initialAccount as never)
+    prismaMock.account.update.mockResolvedValue(updatedAccount as never)
+
+    await getCachedAccount('acct-profile')
+    await makeCaller('acct-profile').updateProfile({ name: 'Alice Updated' })
+    prismaMock.account.findUnique.mockResolvedValueOnce(updatedAccount as never)
+
+    await expect(getCachedAccount('acct-profile')).resolves.toEqual(
+      updatedAccount,
+    )
+    expect(prismaMock.account.findUnique).toHaveBeenCalledTimes(2)
+  })
+})
+
 describe('accountRouter.groups — archive + hide filters', () => {
   it('excludes group-archived and user-hidden groups by default', async () => {
     await authAs('acct-1')
@@ -540,5 +574,35 @@ describe('accountRouter.groups — archive + hide filters', () => {
     expect(result.groups.find((g) => g.id === 'g-2')?.currentMemberRole).toBe(
       'MEMBER',
     )
+  })
+
+  it('attaches the latest expense timestamp with one ledger aggregation', async () => {
+    await authAs('acct-1')
+    mockGroupWithMembership('acct-1', [
+      { id: 'g-1', archived: false, role: 'ADMIN', members: 2 },
+      { id: 'g-2', archived: false, role: 'MEMBER', members: 3 },
+    ])
+    prismaMock.expense.groupBy.mockResolvedValue([
+      {
+        ledgerId: 'ledger-g-1',
+        _max: { createdAt: new Date('2026-07-20T12:00:00.000Z') },
+      },
+    ] as never)
+
+    const result = await makeCaller('acct-1').groups({
+      includeArchived: false,
+    })
+
+    expect(prismaMock.expense.groupBy).toHaveBeenCalledWith({
+      by: ['ledgerId'],
+      where: { ledgerId: { in: ['ledger-g-1', 'ledger-g-2'] } },
+      _max: { createdAt: true },
+    })
+    expect(result.groups.find((group) => group.id === 'g-1')).toMatchObject({
+      latestExpenseCreatedAt: '2026-07-20T12:00:00.000Z',
+    })
+    expect(result.groups.find((group) => group.id === 'g-2')).toMatchObject({
+      latestExpenseCreatedAt: null,
+    })
   })
 })

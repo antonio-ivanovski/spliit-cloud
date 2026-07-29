@@ -13,6 +13,7 @@ import {
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
 import { useToast } from '@/components/ui/use-toast'
+import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { trpc } from '@/trpc/client'
 
 type Props = {
@@ -51,7 +52,7 @@ export function ForceArchiveDialog({ groupId, onClose }: Props) {
         force: true,
       })
       await Promise.all([
-        utils.account.groups.invalidate(),
+        invalidateAccountGroupLists(utils),
         utils.groups.get.invalidate({ groupId: openGroupId }),
       ])
       toast({ description: t('archiveWithBalancesSuccess') })
