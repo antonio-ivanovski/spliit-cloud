@@ -273,7 +273,10 @@ describe.skipIf(!apiReachable || !maildevReachable)(
       // Request magic link
       const sendRes = await fetch(`${apiBase}/auth/sign-in/magic-link`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          origin: 'http://localhost:3000',
+        },
         body: JSON.stringify({
           email: testEmail,
           callbackURL: 'http://localhost:3000',

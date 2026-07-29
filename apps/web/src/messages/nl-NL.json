@@ -2089,5 +2089,50 @@
     "asiaPacific": "Azië-Pacific",
     "europe": "Europa",
     "middleEastAndNorthAfrica": "Midden-Oosten & Noord-Afrika"
+  },
+  "OAuth": {
+    "consent": {
+      "title": "Spliit verbinden met {client}?",
+      "description": "Bekijk hieronder het account en de toegang. Jij houdt de controle over het aanmaken van elke uitgave.",
+      "connectionDetails": "Verbindingsdetails",
+      "spliitAccount": "Spliit-account",
+      "connectingTo": "Verbinden met",
+      "assistantVia": "via Spliit-assistent",
+      "defaultClient": "je AI-assistent",
+      "defaultUser": "Spliit-gebruiker",
+      "sessionUnavailable": "Sessie niet beschikbaar. Ga terug en meld je opnieuw aan.",
+      "sharedData": "Wat wordt gedeeld",
+      "identityTitle": "Je Spliit-identiteit",
+      "identityDescription": "Je naam en e-mailadres identificeren het account dat wordt verbonden. Je wachtwoord en aanmeldmethode worden nooit gedeeld.",
+      "groupsTitle": "Context van groep en uitgaven",
+      "groupsDescription": "Groepsnamen, deelnemers, opgeslagen verdelingen, saldi en recente uitgaven zodat de assistent je verzoek begrijpt.",
+      "expensesTitle": "Aanmaken van uitgave bevestigd",
+      "expensesDescription": "De assistent kan alleen de exacte uitgave uit het voorbeeld aanmaken nadat je op Uitgave aanmaken hebt gedrukt.",
+      "privacyTitle": "Een korte privacyopmerking",
+      "privacyDescription": "Financiële groepsgegevens kunnen gevoelig zijn. Ze zijn tijdens de verbinding beschikbaar voor {client}, maar de assistent kan uitgaven niet bewerken of verwijderen en kan er geen aanmaken zonder jouw bevestiging van het voorbeeld.",
+      "authorityNote": "Spliit blijft de bron van waarheid. Bestaande validatie, saldi, activiteitengeschiedenis en meldingen blijven van toepassing.",
+      "allow": "Toestaan en verbinden",
+      "cancel": "Annuleren",
+      "missingRequest": "Het autorisatieverzoek ontbreekt. Ga terug naar je assistent."
+    },
+    "login": {
+      "missingTitle": "Autorisatieverzoek ontbreekt",
+      "missingDescription": "Ga terug naar je assistent en start de verbinding opnieuw.",
+      "missingError": "Spliit heeft de OAuth-autorisatiegegevens niet ontvangen.",
+      "connectingTitle": "Je account verbinden",
+      "connectingDescription": "Je bestaande Spliit Cloud-sessie is gevonden. Je hoeft je niet opnieuw aan te melden.",
+      "checkingSession": "Je Spliit-sessie controleren…",
+      "continuing": "Veilig doorgaan…",
+      "signInTitle": "Aanmelden om te verbinden",
+      "signInDescription": "Gebruik je gebruikelijke aanmeldmethode voor Spliit Cloud. Je assistent verstrekt nooit de accountidentiteit die voor uitgaven wordt gebruikt."
+    },
+    "shell": {
+      "label": "Spliit-assistent",
+      "mobileDescription": "AI-hulp, door jou bevestigd",
+      "title": "Uitgaven uit een gesprek, door jou bevestigd.",
+      "previewBullet": "Bekijk vóór het aanmaken een exact, niet-bewerkbaar voorbeeld",
+      "authorityBullet": "Je Spliit-account blijft de autoriteit",
+      "validationBullet": "Bestaande validatie, saldi en meldingen blijven intact"
+    }
   }
 }

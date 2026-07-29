@@ -16,7 +16,6 @@ import { sendEmail } from '../lib/mail/send'
 import { groupsRouter } from '../trpc/routers/groups'
 import { invitationsRouter } from '../trpc/routers/invitations'
 import {
-  clearMaildevInbox,
   expectEmailEventually,
   getEmailForRecipient,
   probeMaildev,
@@ -35,10 +34,6 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
   const runId = testRunId()
   const accountIds: string[] = []
   const ledgerIds: string[] = []
-
-  beforeEach(async () => {
-    await clearMaildevInbox()
-  })
 
   afterAll(async () => {
     await prisma.verification
@@ -94,8 +89,6 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
 
       const acct = await prisma.account.findUnique({ where: { email } })
       if (acct) accountIds.push(acct.id)
-
-      await clearMaildevInbox()
 
       const forgotRes = await app.request('/auth/request-password-reset', {
         method: 'POST',
@@ -158,8 +151,6 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
     })
 
     it('sends "Sign in to Spliit Cloud" email for users with only magic-link identity', async () => {
-      await clearMaildevInbox()
-
       const forgotRes = await app.request('/auth/request-password-reset', {
         method: 'POST',
         headers: {
@@ -312,8 +303,6 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
     })
 
     it('sends invitation emails for each INVITE_BY_EMAIL participant mapping', async () => {
-      await clearMaildevInbox()
-
       const destLp1 = randomId()
       const destLp2 = randomId()
 
@@ -461,7 +450,6 @@ describe.skipIf(!maildevReachable)('SMTP graceful degradation', () => {
   })
 
   beforeEach(async () => {
-    await clearMaildevInbox()
     vi.mocked(sendEmail).mockClear()
   })
 

@@ -45,11 +45,6 @@ export async function probeMaildev(): Promise<boolean> {
   }
 }
 
-/** Drop every email currently in the MailDev inbox. */
-export async function clearMaildevInbox(): Promise<void> {
-  await fetch(`${MAILDEV_BASE}/email/all`, { method: 'DELETE' })
-}
-
 // ---------------------------------------------------------------------------
 // New diagnostic helpers
 // ---------------------------------------------------------------------------

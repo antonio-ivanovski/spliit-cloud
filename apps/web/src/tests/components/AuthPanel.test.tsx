@@ -36,12 +36,10 @@ vi.mock('@/lib/auth', () => ({
 }))
 
 vi.mock('@tanstack/react-router', () => ({
-  getRouteApi: () => ({
-    useSearch: () => ({
-      redirect: undefined,
-      mode: undefined,
-      email: undefined,
-    }),
+  useSearch: () => ({
+    redirect: undefined,
+    mode: undefined,
+    email: undefined,
   }),
   useNavigate: () => mockNavigate,
   Link: ({ to, children, ...props }: Record<string, unknown>) => (
@@ -240,6 +238,23 @@ describe('AuthPanel', () => {
 
     expect(screen.getByText('Continue with Google')).toBeInTheDocument()
     expect(screen.getByText('Continue with GitHub')).toBeInTheDocument()
+  })
+
+  it('returns social sign-in to an overridden OAuth continuation path', async () => {
+    import.meta.env.VITE_ENABLE_GOOGLE_OAUTH = 'true'
+    const redirectTo =
+      '/oauth/login?oauth_query=client_id%3Dassistant-client%26scope%3Dopenid'
+    const { user } = render(<AuthPanel embedded redirectTo={redirectTo} />)
+
+    await user.click(screen.getByText('Continue with Google'))
+
+    expect(mockSignInSocial).toHaveBeenCalledWith({
+      provider: 'google',
+      callbackURL: `${window.location.origin}${redirectTo}`,
+    })
+    expect(
+      screen.queryByText('Sign in to Spliit Cloud'),
+    ).not.toBeInTheDocument()
   })
 
   // ── Forgot password link ────────────────────────────────────────────

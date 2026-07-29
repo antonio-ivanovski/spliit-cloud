@@ -2089,5 +2089,50 @@
     "asiaPacific": "Asya-Pasifik",
     "europe": "Avrupa",
     "middleEastAndNorthAfrica": "Orta Doğu ve Kuzey Afrika"
+  },
+  "OAuth": {
+    "shell": {
+      "label": "Spliit Asistanı",
+      "mobileDescription": "Sizin onayınızla AI desteği",
+      "title": "Sohbetten giderler, sizin onayınızla.",
+      "previewBullet": "Oluşturmadan önce düzenlenemeyen kesin önizlemeyi inceleyin",
+      "authorityBullet": "Spliit hesabınız yetkili kaynak olmaya devam eder",
+      "validationBullet": "Mevcut doğrulama, bakiyeler ve bildirimler aynen geçerlidir"
+    },
+    "consent": {
+      "title": "Spliit, {client} ile bağlansın mı?",
+      "description": "Aşağıdaki hesap ve erişim bilgilerini inceleyin. Her gider oluşturma işlemi sizin kontrolünüzdedir.",
+      "connectionDetails": "Bağlantı ayrıntıları",
+      "spliitAccount": "Spliit hesabı",
+      "connectingTo": "Bağlanıyor:",
+      "assistantVia": "Spliit Asistanı üzerinden",
+      "defaultClient": "AI asistanınız",
+      "defaultUser": "Spliit kullanıcısı",
+      "sessionUnavailable": "Oturum kullanılamıyor. Geri dönüp tekrar giriş yapın.",
+      "sharedData": "Paylaşılacak bilgiler",
+      "identityTitle": "Spliit kimliğiniz",
+      "identityDescription": "Adınız ve e-posta adresiniz bağlanan hesabı tanımlar. Şifreniz ve giriş yönteminiz hiçbir zaman paylaşılmaz.",
+      "groupsTitle": "Grup ve harcama bağlamı",
+      "groupsDescription": "Asistanın isteğinizi anlayabilmesi için grup adları, katılımcılar, kayıtlı bölüşümler, bakiyeler ve son giderler.",
+      "expensesTitle": "Onaylı gider oluşturma",
+      "expensesDescription": "Asistan, yalnızca Gider oluştur düğmesine bastıktan sonra önizlemede gösterilen giderin aynısını oluşturabilir.",
+      "privacyTitle": "Kısa bir gizlilik notu",
+      "privacyDescription": "Finansal grup ayrıntıları hassas olabilir. Bağlıyken {client} tarafından kullanılabilir; ancak asistan giderleri düzenleyemez veya silemez ve önizlemenizi onaylamadan gider oluşturamaz.",
+      "authorityNote": "Doğru bilgilerin kaynağı Spliit olmaya devam eder. Mevcut doğrulama, bakiyeler, etkinlik geçmişi ve bildirimler uygulanır.",
+      "allow": "İzin ver ve bağlan",
+      "cancel": "İptal",
+      "missingRequest": "Yetkilendirme isteği eksik. Asistanınıza dönün."
+    },
+    "login": {
+      "missingTitle": "Yetkilendirme isteği eksik",
+      "missingDescription": "Asistanınıza dönüp bağlantıyı yeniden başlatın.",
+      "missingError": "Spliit OAuth yetkilendirme ayrıntılarını alamadı.",
+      "connectingTitle": "Hesabınız bağlanıyor",
+      "connectingDescription": "Mevcut Spliit Cloud oturumunuz bulundu. Ek giriş yapmanız gerekmez.",
+      "checkingSession": "Spliit oturumunuz kontrol ediliyor…",
+      "continuing": "Güvenli şekilde devam ediliyor…",
+      "signInTitle": "Bağlanmak için giriş yapın",
+      "signInDescription": "Her zamanki Spliit Cloud giriş yönteminizi kullanın. Asistanınız giderlerde kullanılacak hesap kimliğini hiçbir zaman sağlamaz."
+    }
   }
 }

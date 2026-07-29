@@ -4,13 +4,17 @@ import { z } from 'zod'
 
 import { GroupInvitationStatus, GroupInvitationType, prisma } from '@spliit/db'
 
-import type { ResolvedAuth } from '../lib/auth/session'
-import { getAuthFromRequest } from '../lib/auth/session'
+import type { OAuthResolvedAuth, ResolvedAuth } from '../lib/auth/session'
+import {
+  getAuthFromRequest,
+  getOAuthAuthFromRequest,
+} from '../lib/auth/session'
 import { hashLinkToken } from '../lib/invitations'
+import { FixedWindowLimiter } from '../lib/rate-limit'
 
 export type AuthContext = {
   /** Authenticated account + better-auth session, or null. */
-  auth: ResolvedAuth | null
+  auth: ResolvedAuth | OAuthResolvedAuth | null
   /** Outgoing fetch Request, when available (tRPC context only sees headers). */
   req?: Request
 }
@@ -21,7 +25,9 @@ export async function createTRPCContext(opts: {
 }): Promise<AuthContext> {
   const request =
     opts.req ?? new Request('http://localhost', { headers: new Headers() })
-  const auth = await getAuthFromRequest(request).catch(() => null)
+  const auth =
+    (await getAuthFromRequest(request).catch(() => null)) ??
+    (await getOAuthAuthFromRequest(request).catch(() => null))
   return { auth, req: opts.req }
 }
 
@@ -45,12 +51,20 @@ export const baseProcedure = t.procedure
  */
 export const publicProcedure = baseProcedure
 
+const assistantRequestLimiter = new FixedWindowLimiter({
+  limit: 120,
+  windowMs: 60_000,
+})
+
 /**
  * Procedure that requires an authenticated account. The account is exposed to
  * the procedure via `ctx.auth.user`.
  */
 export const protectedProcedure = baseProcedure.use(async ({ ctx, next }) => {
-  if (!ctx.auth) {
+  if (
+    !ctx.auth ||
+    ('credentialKind' in ctx.auth && ctx.auth.credentialKind === 'oauth')
+  ) {
     throw new TRPCError({
       code: 'UNAUTHORIZED',
       message: 'Authentication required',
@@ -64,6 +78,35 @@ export const protectedProcedure = baseProcedure.use(async ({ ctx, next }) => {
     },
   })
 })
+
+export function assistantProcedure(requiredScope: string) {
+  return baseProcedure.use(async ({ ctx, next }) => {
+    if (
+      !ctx.auth ||
+      !('credentialKind' in ctx.auth) ||
+      ctx.auth.credentialKind !== 'oauth'
+    ) {
+      throw new TRPCError({
+        code: 'UNAUTHORIZED',
+        message: 'OAuth bearer authentication required',
+      })
+    }
+    if (!ctx.auth.scopes.includes(requiredScope)) {
+      throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: `Missing required scope: ${requiredScope}`,
+      })
+    }
+    const decision = assistantRequestLimiter.hit(ctx.auth.user.id)
+    if (!decision.allowed) {
+      throw new TRPCError({
+        code: 'TOO_MANY_REQUESTS',
+        message: 'Assistant request limit exceeded; try again shortly',
+      })
+    }
+    return next({ ctx: { ...ctx, auth: ctx.auth } })
+  })
+}
 
 /**
  * Procedure that requires an active group membership for the given groupId.

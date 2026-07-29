@@ -6,6 +6,21 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
+const publicWebHosts = (process.env.WEB_ORIGINS ?? '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean)
+  .flatMap((origin) => {
+    try {
+      const hostname = new URL(origin).hostname
+      return hostname === 'localhost' || hostname === '127.0.0.1'
+        ? []
+        : [hostname]
+    } catch {
+      return []
+    }
+  })
+
 export default defineConfig({
   plugins: [
     tanstackRouter({
@@ -70,6 +85,7 @@ export default defineConfig({
   ],
   server: {
     port: 3000,
+    allowedHosts: publicWebHosts,
   },
   preview: {
     port: 3000,

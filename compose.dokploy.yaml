@@ -24,6 +24,7 @@ services:
     environment:
       PORT: 3001
       WEB_ORIGINS: ${WEB_ORIGINS}
+      TRUST_PROXY: ${TRUST_PROXY:-true}
       DATABASE_URL: ${DATABASE_URL}
       DATABASE_APPLICATION_NAME: spliit-api
       DATABASE_POOL_SIZE: ${DATABASE_POOL_SIZE:-10}
@@ -118,6 +119,37 @@ services:
         [
           'CMD-SHELL',
           'bun -e "fetch(''http://127.0.0.1:3003/health/readiness'').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
+
+  mcp:
+    image: ghcr.io/antonio-ivanovski/spliit-cloud-mcp:latest
+    pull_policy: always
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    env_file:
+      - .env
+    ports:
+      - 3002:3002
+    environment:
+      NODE_ENV: production
+      PORT: 3002
+      HOST: 0.0.0.0
+      MCP_PUBLIC_URL: ${MCP_PUBLIC_URL:?MCP_PUBLIC_URL must be set}
+      MCP_API_URL: ${MCP_API_URL:?MCP_API_URL must be set}
+      MCP_WEB_URL: ${MCP_WEB_URL:?MCP_WEB_URL must be set}
+    networks:
+      - dokploy-network
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'node -e "fetch(''http://127.0.0.1:3002/health/readiness'').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"',
         ]
       interval: 10s
       timeout: 5s

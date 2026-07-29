@@ -73,6 +73,7 @@ describe('envSchema — production', () => {
     vi.stubEnv('PUSH_VAPID_PRIVATE_KEY', 'private-key')
     vi.stubEnv('PUSH_VAPID_SUBJECT', 'mailto:test@example.com')
     vi.stubEnv('EMAIL_UNSUBSCRIBE_SECRET', 'a'.repeat(32))
+    vi.stubEnv('ASSISTANT_CONFIRMATION_SECRET', 'b'.repeat(32))
     vi.resetModules()
     const { env } = await import('./env')
     expect(env.SMTP_HOST).toBe('smtp.test')

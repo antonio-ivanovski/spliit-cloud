@@ -3,7 +3,7 @@ import { initReactI18next } from 'react-i18next'
 
 import { defaultLocale, locales, type Locale } from '@spliit/domain/i18n'
 
-const COOKIE_NAME = 'NEXT_LOCALE'
+const COOKIE_NAME = 'SPLIIT_LOCALE'
 
 export const defaultNS = 'translation'
 

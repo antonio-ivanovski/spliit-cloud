@@ -2085,5 +2085,50 @@
     "asiaPacific": "Asien och Stillahavsområdet",
     "europe": "Europa",
     "middleEastAndNorthAfrica": "Mellanöstern och Nordafrika"
+  },
+  "OAuth": {
+    "consent": {
+      "title": "Anslut Spliit till {client}?",
+      "description": "Granska kontot och åtkomsten nedan. Du behåller kontrollen över att skapa varje utgift.",
+      "connectionDetails": "Anslutningsdetaljer",
+      "spliitAccount": "Spliit-konto",
+      "connectingTo": "Ansluter till",
+      "assistantVia": "via Spliit-assistenten",
+      "defaultClient": "din AI-assistent",
+      "defaultUser": "Spliit-användare",
+      "sessionUnavailable": "Sessionen är inte tillgänglig. Gå tillbaka och logga in igen.",
+      "sharedData": "Vad som delas",
+      "identityTitle": "Din Spliit-identitet",
+      "identityDescription": "Ditt namn och din e-postadress identifierar kontot som ansluts. Ditt lösenord och din inloggningsmetod delas aldrig.",
+      "groupsTitle": "Grupp- och utgiftskontext",
+      "groupsDescription": "Gruppnamn, deltagare, sparade delningar, saldon och senaste utgifter så att assistenten kan förstå din begäran.",
+      "expensesTitle": "Bekräftat skapande av utgift",
+      "expensesDescription": "Assistenten får bara skapa den exakta utgiften som visas i förhandsgranskningen när du trycker på Skapa utgift.",
+      "privacyTitle": "En kort integritetsnotis",
+      "privacyDescription": "Ekonomiska gruppuppgifter kan vara känsliga. De blir tillgängliga för {client} medan anslutningen är aktiv, men assistenten kan inte redigera eller ta bort utgifter och kan inte skapa någon utan din bekräftelse av förhandsgranskningen.",
+      "authorityNote": "Spliit förblir den auktoritativa källan. Befintlig validering, saldon, aktivitetshistorik och aviseringar gäller fortfarande.",
+      "allow": "Tillåt och anslut",
+      "cancel": "Avbryt",
+      "missingRequest": "Auktoriseringsbegäran saknas. Gå tillbaka till din assistent."
+    },
+    "login": {
+      "missingTitle": "Auktoriseringsbegäran saknas",
+      "missingDescription": "Gå tillbaka till din assistent och starta anslutningen igen.",
+      "missingError": "Spliit tog inte emot OAuth-auktoriseringsuppgifterna.",
+      "connectingTitle": "Ansluter ditt konto",
+      "connectingDescription": "Din befintliga Spliit Cloud-session hittades. Ingen ytterligare inloggning krävs.",
+      "checkingSession": "Kontrollerar din Spliit-session…",
+      "continuing": "Fortsätter säkert…",
+      "signInTitle": "Logga in för att ansluta",
+      "signInDescription": "Använd din vanliga inloggningsmetod för Spliit Cloud. Din assistent anger aldrig kontoidentiteten som används för utgifter."
+    },
+    "shell": {
+      "label": "Spliit-assistent",
+      "mobileDescription": "AI-hjälp, bekräftad av dig",
+      "title": "Utgifter från en konversation, bekräftade av dig.",
+      "previewBullet": "Granska en exakt, icke-redigerbar förhandsgranskning innan skapandet",
+      "authorityBullet": "Ditt Spliit-konto förblir den auktoritativa källan",
+      "validationBullet": "Befintlig validering, saldon och aviseringar förblir intakta"
+    }
   }
 }

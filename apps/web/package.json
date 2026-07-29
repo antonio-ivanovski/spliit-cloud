@@ -17,6 +17,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@better-auth/oauth-provider": "^1.6.25",
     "@hookform/resolvers": "^5.4.0",
     "@radix-ui/react-checkbox": "^1.3.6",
     "@radix-ui/react-collapsible": "^1.1.15",
@@ -35,7 +36,7 @@
     "@tanstack/react-virtual": "^3.14.8",
     "@trpc/client": "^11.18.0",
     "@trpc/react-query": "^11.18.0",
-    "better-auth": "^1.6.23",
+    "better-auth": "^1.6.25",
     "class-variance-authority": "^0.7.1",
     "cmdk": "^1.1.1",
     "dayjs": "^1.11.21",

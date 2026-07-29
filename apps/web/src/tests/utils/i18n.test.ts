@@ -15,7 +15,7 @@ import {
 
 // ── Helpers ────────────────────────────────────────────────────────────
 
-const COOKIE_NAME = 'NEXT_LOCALE'
+const COOKIE_NAME = 'SPLIIT_LOCALE'
 
 /** Read a cookie value from jsdom's cookie jar. */
 function getCookie(name: string): string | undefined {

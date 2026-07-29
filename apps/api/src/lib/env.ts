@@ -54,6 +54,19 @@ const envSchema = z
     GOOGLE_CLIENT_SECRET: z.string().optional(),
     GITHUB_CLIENT_ID: z.string().optional(),
     GITHUB_CLIENT_SECRET: z.string().optional(),
+    MCP_PUBLIC_URL: z
+      .string()
+      .url()
+      .optional()
+      .default('http://localhost:3002'),
+    ASSISTANT_CONFIRMATION_SECRET: z.string().optional(),
+    // Set when the API sits behind a trusted reverse proxy (Dokploy, Caddy,
+    // a CDN). Only then are X-Forwarded-For / X-Real-IP honored for rate-limit
+    // identity; the edge proxy must overwrite, not append to, the client IP.
+    TRUST_PROXY: z.preprocess(
+      interpretEnvVarAsBool,
+      z.boolean().default(false),
+    ),
 
     // Email delivery (magic link + verification)
     SMTP_HOST: z.string().optional(),
@@ -77,6 +90,18 @@ const envSchema = z
         code: 'custom',
         path: ['BETTER_AUTH_SECRET'],
         message: 'BETTER_AUTH_SECRET is required in production',
+      })
+    }
+    if (
+      env.NODE_ENV === 'production' &&
+      (!env.ASSISTANT_CONFIRMATION_SECRET ||
+        Buffer.byteLength(env.ASSISTANT_CONFIRMATION_SECRET, 'utf8') < 32)
+    ) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['ASSISTANT_CONFIRMATION_SECRET'],
+        message:
+          'ASSISTANT_CONFIRMATION_SECRET must be at least 32 bytes in production',
       })
     }
     if (env.NODE_ENV === 'production' && !env.SMTP_HOST) {

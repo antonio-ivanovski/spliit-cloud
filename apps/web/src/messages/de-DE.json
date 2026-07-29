@@ -2157,5 +2157,50 @@
     "asiaPacific": "Asien-Pazifik",
     "europe": "Europa",
     "middleEastAndNorthAfrica": "Nahost & Nordafrika"
+  },
+  "OAuth": {
+    "consent": {
+      "title": "Spliit mit {client} verbinden?",
+      "description": "Prüfe unten das Konto und die Zugriffsrechte. Du behältst die Kontrolle über jede Ausgabenerstellung.",
+      "connectionDetails": "Verbindungsdetails",
+      "spliitAccount": "Spliit-Konto",
+      "connectingTo": "Verbindung zu",
+      "assistantVia": "über den Spliit-Assistenten",
+      "defaultClient": "deinen KI-Assistenten",
+      "defaultUser": "Spliit-Nutzer",
+      "sessionUnavailable": "Sitzung nicht verfügbar. Gehe zurück und melde dich erneut an.",
+      "sharedData": "Geteilte Daten",
+      "identityTitle": "Deine Spliit-Identität",
+      "identityDescription": "Dein Name und deine E-Mail-Adresse identifizieren das verbundene Konto. Dein Passwort und deine Anmeldemethode werden niemals weitergegeben.",
+      "groupsTitle": "Gruppen- und Ausgabenkontext",
+      "groupsDescription": "Gruppennamen, Teilnehmende, gespeicherte Aufteilungen, Salden und aktuelle Ausgaben, damit der Assistent deine Anfrage versteht.",
+      "expensesTitle": "Bestätigte Ausgabenerstellung",
+      "expensesDescription": "Der Assistent darf erst nach einem Klick auf Ausgabe erstellen genau die in der Vorschau angezeigte Ausgabe anlegen.",
+      "privacyTitle": "Kurzer Datenschutzhinweis",
+      "privacyDescription": "Finanzielle Gruppendetails können sensibel sein. Während der Verbindung sind sie für {client} verfügbar. Der Assistent kann Ausgaben jedoch weder bearbeiten noch löschen und ohne deine Vorschau-Bestätigung keine Ausgabe erstellen.",
+      "authorityNote": "Spliit bleibt die maßgebliche Quelle. Die bestehenden Prüfungen, Salden, Aktivitätsverläufe und Benachrichtigungen gelten weiterhin.",
+      "allow": "Erlauben und verbinden",
+      "cancel": "Abbrechen",
+      "missingRequest": "Die Autorisierungsanfrage fehlt. Kehre zu deinem Assistenten zurück."
+    },
+    "login": {
+      "missingTitle": "Autorisierungsanfrage fehlt",
+      "missingDescription": "Kehre zu deinem Assistenten zurück und starte die Verbindung erneut.",
+      "missingError": "Spliit hat keine OAuth-Autorisierungsdaten erhalten.",
+      "connectingTitle": "Dein Konto wird verbunden",
+      "connectingDescription": "Deine bestehende Spliit-Cloud-Sitzung wurde gefunden. Eine zusätzliche Anmeldung ist nicht erforderlich.",
+      "checkingSession": "Deine Spliit-Sitzung wird geprüft…",
+      "continuing": "Sicher wird fortgefahren…",
+      "signInTitle": "Zum Verbinden anmelden",
+      "signInDescription": "Verwende deine übliche Anmeldemethode für Spliit Cloud. Dein Assistent liefert niemals die für Ausgaben verwendete Kontoidentität."
+    },
+    "shell": {
+      "label": "Spliit-Assistent",
+      "mobileDescription": "KI-Hilfe, von dir bestätigt",
+      "title": "Ausgaben aus dem Gespräch – von dir bestätigt.",
+      "previewBullet": "Prüfe vor der Erstellung eine exakte, nicht bearbeitbare Vorschau",
+      "authorityBullet": "Dein Spliit-Konto bleibt maßgeblich",
+      "validationBullet": "Bestehende Prüfungen, Salden und Benachrichtigungen bleiben erhalten"
+    }
   }
 }

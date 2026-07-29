@@ -2107,5 +2107,50 @@
     "asiaPacific": "Asia-Pacífico",
     "europe": "Europa",
     "middleEastAndNorthAfrica": "Oriente Medio y Norte de África"
+  },
+  "OAuth": {
+    "consent": {
+      "title": "¿Conectar Spliit con {client}?",
+      "description": "Revisa la cuenta y el acceso que aparecen a continuación. Tú mantienes el control de cada creación de gasto.",
+      "connectionDetails": "Detalles de la conexión",
+      "spliitAccount": "Cuenta de Spliit",
+      "connectingTo": "Conectando con",
+      "assistantVia": "vía Asistente de Spliit",
+      "defaultClient": "tu asistente de IA",
+      "defaultUser": "usuario de Spliit",
+      "sessionUnavailable": "Sesión no disponible. Vuelve atrás e inicia sesión de nuevo.",
+      "sharedData": "Qué se compartirá",
+      "identityTitle": "Tu identidad de Spliit",
+      "identityDescription": "Tu nombre y correo electrónico identifican la cuenta que se conectará. Nunca se comparten tu contraseña ni tu método de inicio de sesión.",
+      "groupsTitle": "Contexto del grupo y los gastos",
+      "groupsDescription": "Nombres de grupos, participantes, repartos guardados, saldos y gastos recientes para que el asistente pueda entender tu solicitud.",
+      "expensesTitle": "Creación de gastos confirmada",
+      "expensesDescription": "El asistente solo puede crear exactamente el gasto mostrado en la vista previa después de que pulses Crear gasto.",
+      "privacyTitle": "Una nota rápida sobre privacidad",
+      "privacyDescription": "Los detalles financieros de los grupos pueden ser sensibles. Estarán disponibles para {client} mientras esté conectado, pero el asistente no puede editar ni eliminar gastos y no puede crear uno sin tu confirmación de la vista previa.",
+      "authorityNote": "Spliit sigue siendo la fuente de verdad. Se mantienen las validaciones, los saldos, el historial de actividad y las notificaciones existentes.",
+      "allow": "Permitir y conectar",
+      "cancel": "Cancelar",
+      "missingRequest": "Falta la solicitud de autorización. Vuelve a tu asistente."
+    },
+    "login": {
+      "missingTitle": "Falta la solicitud de autorización",
+      "missingDescription": "Vuelve a tu asistente e inicia de nuevo la conexión.",
+      "missingError": "Spliit no recibió los datos de autorización de OAuth.",
+      "connectingTitle": "Conectando tu cuenta",
+      "connectingDescription": "Se ha encontrado tu sesión existente de Spliit Cloud. No es necesario iniciar sesión de nuevo.",
+      "checkingSession": "Comprobando tu sesión de Spliit…",
+      "continuing": "Continuando de forma segura…",
+      "signInTitle": "Inicia sesión para conectar",
+      "signInDescription": "Usa tu método habitual para iniciar sesión en Spliit Cloud. Tu asistente nunca proporciona la identidad de la cuenta utilizada para los gastos."
+    },
+    "shell": {
+      "label": "Asistente de Spliit",
+      "mobileDescription": "Ayuda de IA, confirmada por ti",
+      "title": "Gastos de una conversación, confirmados por ti.",
+      "previewBullet": "Revisa una vista previa exacta y no editable antes de crear",
+      "authorityBullet": "Tu cuenta de Spliit sigue siendo la autoridad",
+      "validationBullet": "Las validaciones, los saldos y las notificaciones existentes se mantienen"
+    }
   }
 }

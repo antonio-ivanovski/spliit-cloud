@@ -38,3 +38,20 @@ CMD ["bun", "--filter", "@spliit/db", "prisma-migrate"]
 FROM runner AS worker
 EXPOSE 3003
 CMD ["bun", "run", "apps/worker/src/server.ts"]
+
+FROM installer AS mcp-builder
+ENV NODE_ENV=production
+COPY --from=pruner /app/out/full/ ./
+# mcp-use imports the server while compiling widgets. These non-routable
+# origins are build-time placeholders only; the runtime MCP image requires
+# MCP_PUBLIC_URL, MCP_API_URL, and MCP_WEB_URL from deployment env. Clear
+# NODE_ENV so runtime-only widget-domain preparation does not run before
+# mcp-use has created the manifest.
+RUN NODE_ENV= MCP_API_URL=https://api-build.invalid MCP_PUBLIC_URL=https://mcp-build.invalid MCP_WEB_URL=https://web-build.invalid bun --filter @spliit/mcp build
+
+FROM node:24.12.0-bookworm-slim AS mcp
+WORKDIR /app/apps/mcp
+ENV NODE_ENV=production
+COPY --from=mcp-builder /app /app
+EXPOSE 3002
+CMD ["node", "dist/index.js"]

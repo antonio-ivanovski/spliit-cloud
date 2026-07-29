@@ -2107,5 +2107,50 @@
     "asiaPacific": "Asia-Pacifico",
     "europe": "L'Europa",
     "middleEastAndNorthAfrica": "Medio Oriente e Nord Africa"
+  },
+  "OAuth": {
+    "shell": {
+      "label": "Assistente Spliit",
+      "mobileDescription": "Aiuto con IA, confermato da te",
+      "title": "Spese dalla conversazione, confermate da te.",
+      "previewBullet": "Esamina un'anteprima esatta e non modificabile prima della creazione",
+      "authorityBullet": "Il tuo account Spliit rimane l'autorità",
+      "validationBullet": "La convalida, i saldi e le notifiche esistenti restano invariati"
+    },
+    "consent": {
+      "title": "Collegare Spliit a {client}?",
+      "description": "Esamina l'account e l'accesso qui sotto. Mantieni il controllo su ogni creazione di spesa.",
+      "connectionDetails": "Dettagli della connessione",
+      "spliitAccount": "Account Spliit",
+      "connectingTo": "Connessione a",
+      "assistantVia": "tramite Assistente Spliit",
+      "defaultClient": "il tuo assistente IA",
+      "defaultUser": "Utente Spliit",
+      "sessionUnavailable": "Sessione non disponibile. Torna indietro e accedi di nuovo.",
+      "sharedData": "Cosa verrà condiviso",
+      "identityTitle": "La tua identità Spliit",
+      "identityDescription": "Il tuo nome e la tua email identificano l'account collegato. La password e il metodo di accesso non vengono mai condivisi.",
+      "groupsTitle": "Contesto di gruppi e spese",
+      "groupsDescription": "Nomi dei gruppi, partecipanti, divisioni salvate, saldi e spese recenti, così l'assistente può comprendere la tua richiesta.",
+      "expensesTitle": "Creazione della spesa confermata",
+      "expensesDescription": "L'assistente può creare solo la spesa esatta mostrata nell'anteprima dopo che hai premuto Crea spesa.",
+      "privacyTitle": "Una breve nota sulla privacy",
+      "privacyDescription": "I dettagli finanziari del gruppo possono essere sensibili. Diventano disponibili per {client} durante la connessione, ma l'assistente non può modificare o eliminare spese né crearne una senza la conferma dell'anteprima.",
+      "authorityNote": "Spliit rimane la fonte di verità. Si applicano ancora la convalida, i saldi, la cronologia delle attività e le notifiche esistenti.",
+      "allow": "Consenti e collega",
+      "cancel": "Annulla",
+      "missingRequest": "Manca la richiesta di autorizzazione. Torna al tuo assistente."
+    },
+    "login": {
+      "missingTitle": "Richiesta di autorizzazione mancante",
+      "missingDescription": "Torna al tuo assistente e avvia di nuovo la connessione.",
+      "missingError": "Spliit non ha ricevuto i dettagli di autorizzazione OAuth.",
+      "connectingTitle": "Connessione al tuo account",
+      "connectingDescription": "È stata trovata la tua sessione Spliit Cloud esistente. Non è necessario effettuare un altro accesso.",
+      "checkingSession": "Controllo della sessione Spliit…",
+      "continuing": "Continuazione sicura…",
+      "signInTitle": "Accedi per collegare",
+      "signInDescription": "Usa il tuo metodo abituale di accesso a Spliit Cloud. Il tuo assistente non fornisce mai l'identità dell'account usato per le spese."
+    }
   }
 }

@@ -44,6 +44,10 @@ model Account {
 
   authIdentities AuthIdentity[]
   sessions       Session[]
+  oauthClients       OauthClient[]
+  oauthRefreshTokens OauthRefreshToken[]
+  oauthAccessTokens  OauthAccessToken[]
+  oauthConsents      OauthConsent[]
 
   groupMemberships    GroupMember[]
   // Invitations this account has been the target of (accepted-by).
@@ -129,8 +133,122 @@ model Session {
   token     String   @unique
   ipAddress String?
   userAgent String?
+  oauthRefreshTokens OauthRefreshToken[]
+  oauthAccessTokens  OauthAccessToken[]
 
   @@index([userId])
+}
+
+model OauthClient {
+  id                      String   @id
+  clientId                String   @unique
+  clientSecret            String?
+  disabled                Boolean? @default(false)
+  skipConsent             Boolean?
+  enableEndSession        Boolean?
+  subjectType             String?
+  scopes                  String[] @default([])
+  userId                  String?
+  account                 Account? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt               DateTime?
+  updatedAt               DateTime?
+  name                    String?
+  uri                     String?
+  icon                    String?
+  contacts                String[] @default([])
+  tos                     String?
+  policy                  String?
+  softwareId              String?
+  softwareVersion         String?
+  softwareStatement       String?
+  redirectUris            String[]
+  postLogoutRedirectUris  String[] @default([])
+  tokenEndpointAuthMethod String?
+  grantTypes              String[] @default([])
+  responseTypes           String[] @default([])
+  public                  Boolean?
+  type                    String?
+  requirePKCE             Boolean?
+  referenceId             String?
+  metadata                Json?
+  oauthRefreshTokens      OauthRefreshToken[]
+  oauthAccessTokens       OauthAccessToken[]
+  oauthConsents           OauthConsent[]
+
+  @@index([userId])
+  @@map("oauthClient")
+}
+
+model OauthRefreshToken {
+  id                String             @id
+  token             String             @unique
+  clientId          String
+  oauthClient       OauthClient        @relation(fields: [clientId], references: [clientId], onDelete: Cascade)
+  sessionId         String?
+  session           Session?           @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+  userId            String
+  account           Account            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  referenceId       String?
+  expiresAt         DateTime?
+  createdAt         DateTime?
+  revoked           DateTime?
+  authTime          DateTime?
+  scopes            String[]
+  oauthAccessTokens OauthAccessToken[]
+
+  @@index([clientId])
+  @@index([sessionId])
+  @@index([userId])
+  @@map("oauthRefreshToken")
+}
+
+model OauthAccessToken {
+  id                String             @id
+  token             String?            @unique
+  clientId          String
+  oauthClient       OauthClient        @relation(fields: [clientId], references: [clientId], onDelete: Cascade)
+  sessionId         String?
+  session           Session?           @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+  userId            String?
+  account           Account?           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  referenceId       String?
+  refreshId         String?
+  oauthRefreshToken OauthRefreshToken? @relation(fields: [refreshId], references: [id], onDelete: Cascade)
+  expiresAt         DateTime?
+  createdAt         DateTime?
+  scopes            String[]
+
+  @@index([clientId])
+  @@index([sessionId])
+  @@index([userId])
+  @@index([refreshId])
+  @@map("oauthAccessToken")
+}
+
+model OauthConsent {
+  id          String      @id
+  clientId    String
+  oauthClient OauthClient @relation(fields: [clientId], references: [clientId], onDelete: Cascade)
+  userId      String?
+  account     Account?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  referenceId String?
+  scopes      String[]
+  createdAt   DateTime?
+  updatedAt   DateTime?
+
+  @@index([clientId])
+  @@index([userId])
+  @@map("oauthConsent")
+}
+
+model Jwks {
+  id         String    @id
+  publicKey  String
+  privateKey String
+  createdAt  DateTime
+  expiresAt  DateTime?
+
+  @@map("jwks")
 }
 
 model Verification {
@@ -465,6 +583,7 @@ model Expense {
   createdAt        DateTime          @default(now())
   documents        ExpenseDocument[]
   notes            String?
+  assistantRequestId String? @unique
 
   recurringSeriesId    String?
   recurrenceSequence  Int?

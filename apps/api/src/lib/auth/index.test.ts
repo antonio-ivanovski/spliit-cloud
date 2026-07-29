@@ -22,6 +22,14 @@ const realAuthModule = (await vi.importActual('./index')) as {
   } | null>
   auth: {
     options: {
+      disabledPaths?: string[]
+      plugins?: Array<{
+        id?: string
+        options?: {
+          disableSettingJwtHeader?: boolean
+          adapter?: unknown
+        }
+      }>
       emailVerification?: { autoSignInAfterVerification?: boolean }
       session?: {
         expiresIn?: number
@@ -72,6 +80,26 @@ describe('better-auth session config', () => {
       60 * 60 * 24 * 180,
     )
     expect(realAuthModule.auth.options.session?.updateAge).toBe(60 * 60 * 24)
+  })
+
+  it('keeps the standalone JWT token endpoint disabled in OAuth Provider mode', () => {
+    expect(realAuthModule.auth.options.disabledPaths).toContain('/token')
+  })
+
+  it('does not attach a JWT header to ordinary cookie-session responses', () => {
+    const jwtPlugin = realAuthModule.auth.options.plugins?.find(
+      (plugin) => plugin.id === 'jwt',
+    )
+
+    expect(jwtPlugin?.options?.disableSettingJwtHeader).toBe(true)
+  })
+
+  it('uses an isolated JWKS adapter in the test environment', () => {
+    const jwtPlugin = realAuthModule.auth.options.plugins?.find(
+      (plugin) => plugin.id === 'jwt',
+    )
+
+    expect(jwtPlugin?.options?.adapter).toBeDefined()
   })
 })
 

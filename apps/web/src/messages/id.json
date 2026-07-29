@@ -2073,5 +2073,50 @@
     "asiaPacific": "Asia-Pasifik",
     "europe": "Eropa",
     "middleEastAndNorthAfrica": "Timur Tengah & Afrika Utara"
+  },
+  "OAuth": {
+    "shell": {
+      "label": "Asisten Spliit",
+      "mobileDescription": "Bantuan AI, dikonfirmasi oleh Anda",
+      "title": "Pengeluaran dari percakapan, dikonfirmasi oleh Anda.",
+      "previewBullet": "Tinjau pratinjau yang tepat dan tidak dapat diedit sebelum membuatnya",
+      "authorityBullet": "Akun Spliit Anda tetap menjadi sumber otoritas",
+      "validationBullet": "Validasi, saldo, dan notifikasi yang ada tetap berlaku"
+    },
+    "consent": {
+      "title": "Hubungkan Spliit ke {client}?",
+      "description": "Tinjau akun dan akses di bawah ini. Anda tetap mengendalikan setiap pembuatan pengeluaran.",
+      "connectionDetails": "Detail koneksi",
+      "spliitAccount": "Akun Spliit",
+      "connectingTo": "Menghubungkan ke",
+      "assistantVia": "melalui Asisten Spliit",
+      "defaultClient": "asisten AI Anda",
+      "defaultUser": "pengguna Spliit",
+      "sessionUnavailable": "Sesi tidak tersedia. Kembali dan masuk lagi.",
+      "sharedData": "Yang akan dibagikan",
+      "identityTitle": "Identitas Spliit Anda",
+      "identityDescription": "Nama dan email Anda mengidentifikasi akun yang terhubung. Kata sandi dan metode masuk Anda tidak pernah dibagikan.",
+      "groupsTitle": "Konteks grup dan pengeluaran",
+      "groupsDescription": "Nama grup, peserta, pembagian tersimpan, saldo, dan pengeluaran terbaru agar asisten dapat memahami permintaan Anda.",
+      "expensesTitle": "Pembuatan pengeluaran terkonfirmasi",
+      "expensesDescription": "Asisten hanya dapat membuat pengeluaran yang persis seperti yang ditampilkan di pratinjau setelah Anda menekan Buat pengeluaran.",
+      "privacyTitle": "Catatan privasi singkat",
+      "privacyDescription": "Detail grup keuangan dapat bersifat sensitif. Detail tersebut tersedia untuk {client} saat terhubung, tetapi asisten tidak dapat mengedit atau menghapus pengeluaran dan tidak dapat membuatnya tanpa konfirmasi pratinjau Anda.",
+      "authorityNote": "Spliit tetap menjadi sumber kebenaran. Validasi, saldo, riwayat aktivitas, dan notifikasi yang ada tetap berlaku.",
+      "allow": "Izinkan dan hubungkan",
+      "cancel": "Batal",
+      "missingRequest": "Permintaan otorisasi tidak ditemukan. Kembali ke asisten Anda."
+    },
+    "login": {
+      "missingTitle": "Permintaan otorisasi tidak ditemukan",
+      "missingDescription": "Kembali ke asisten Anda dan mulai koneksi lagi.",
+      "missingError": "Spliit tidak menerima detail otorisasi OAuth.",
+      "connectingTitle": "Menghubungkan akun Anda",
+      "connectingDescription": "Sesi Spliit Cloud Anda yang sudah ada ditemukan. Tidak diperlukan login tambahan.",
+      "checkingSession": "Memeriksa sesi Spliit Anda…",
+      "continuing": "Melanjutkan dengan aman…",
+      "signInTitle": "Masuk untuk menghubungkan",
+      "signInDescription": "Gunakan metode masuk Spliit Cloud seperti biasa. Asisten Anda tidak pernah memasok identitas akun yang digunakan untuk pengeluaran."
+    }
   }
 }

@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import '../test/mocks'
 import { authState, prismaMock } from '../test/state'
 import {
+  assistantProcedure,
   createTRPCContext,
   loadGroupContext,
   loadGroupViewer,
@@ -92,6 +93,61 @@ describe('protectedProcedure', () => {
     expect(prismaMock.account.findUnique).toHaveBeenCalledWith({
       where: { id: 'acct-1' },
     })
+  })
+
+  it('does not accept OAuth bearer credentials on existing procedures', async () => {
+    await expect(
+      callProbe({
+        auth: {
+          credentialKind: 'oauth',
+          accessToken: 'redacted',
+          scopes: ['spliit:groups:read'],
+          user: { id: 'acct-1' },
+          session: { id: 'oauth-session' },
+        } as never,
+      }),
+    ).rejects.toMatchObject({ code: 'UNAUTHORIZED' })
+  })
+})
+
+describe('assistantProcedure', () => {
+  const probe = assistantProcedure('spliit:groups:read').query(({ ctx }) => ({
+    accountId: ctx.auth.user.id,
+  }))
+
+  function callProbe(auth: Record<string, unknown>) {
+    return probe({
+      ctx: { auth },
+      type: 'query',
+      path: 'assistantProbe',
+      getRawInput: async () => undefined,
+      meta: undefined,
+      signal: undefined,
+    } as never)
+  }
+
+  it('requires an OAuth credential with the requested scope', async () => {
+    await expect(
+      callProbe({
+        credentialKind: 'oauth',
+        accessToken: 'redacted',
+        scopes: [],
+        user: { id: 'acct-1' },
+        session: { id: 'oauth-session' },
+      }),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+  })
+
+  it('accepts the verified OAuth account, not host identity metadata', async () => {
+    await expect(
+      callProbe({
+        credentialKind: 'oauth',
+        accessToken: 'redacted',
+        scopes: ['spliit:groups:read'],
+        user: { id: 'verified-spliit-account' },
+        session: { id: 'oauth-session' },
+      }),
+    ).resolves.toEqual({ accountId: 'verified-spliit-account' })
   })
 })
 

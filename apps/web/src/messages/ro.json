@@ -2107,5 +2107,50 @@
     "asiaPacific": "Asia și Pacific",
     "europe": "Europa",
     "middleEastAndNorthAfrica": "Orientul Mijlociu și Africa de Nord"
+  },
+  "OAuth": {
+    "shell": {
+      "label": "Asistentul Spliit",
+      "mobileDescription": "Ajutor AI, confirmat de tine",
+      "title": "Cheltuieli din conversație, confirmate de tine.",
+      "previewBullet": "Examinează o previzualizare exactă, needitabilă, înainte de creare",
+      "authorityBullet": "Contul tău Spliit rămâne autoritatea",
+      "validationBullet": "Validarea, soldurile și notificările existente rămân intacte"
+    },
+    "consent": {
+      "title": "Conectezi Spliit la {client}?",
+      "description": "Verifică mai jos contul și accesul. Tu rămâi în controlul fiecărei creări de cheltuială.",
+      "connectionDetails": "Detalii conexiune",
+      "spliitAccount": "Cont Spliit",
+      "connectingTo": "Se conectează la",
+      "assistantVia": "prin Asistentul Spliit",
+      "defaultClient": "asistentul tău AI",
+      "defaultUser": "utilizator Spliit",
+      "sessionUnavailable": "Sesiune indisponibilă. Revino și autentifică-te din nou.",
+      "sharedData": "Ce se va partaja",
+      "identityTitle": "Identitatea ta Spliit",
+      "identityDescription": "Numele și adresa ta de e-mail identifică contul conectat. Parola și metoda de autentificare nu sunt partajate niciodată.",
+      "groupsTitle": "Contextul grupurilor și al cheltuielilor",
+      "groupsDescription": "Numele grupurilor, participanții, împărțirile salvate, soldurile și cheltuielile recente, pentru ca asistentul să înțeleagă solicitarea.",
+      "expensesTitle": "Crearea confirmată a cheltuielii",
+      "expensesDescription": "Asistentul poate crea doar cheltuiala exactă afișată în previzualizare după ce apeși Creează cheltuiala.",
+      "privacyTitle": "O notă rapidă despre confidențialitate",
+      "privacyDescription": "Detaliile financiare ale grupului pot fi sensibile. Devin disponibile pentru {client} cât timp este conectat, dar asistentul nu poate edita sau șterge cheltuieli și nu poate crea una fără confirmarea previzualizării.",
+      "authorityNote": "Spliit rămâne sursa de adevăr. Validarea, soldurile, istoricul activității și notificările existente se aplică în continuare.",
+      "allow": "Permite și conectează",
+      "cancel": "Anulează",
+      "missingRequest": "Cererea de autorizare lipsește. Revino la asistent."
+    },
+    "login": {
+      "missingTitle": "Cerere de autorizare lipsă",
+      "missingDescription": "Revino la asistent și începe din nou conectarea.",
+      "missingError": "Spliit nu a primit detaliile de autorizare OAuth.",
+      "connectingTitle": "Se conectează contul tău",
+      "connectingDescription": "A fost găsită sesiunea existentă Spliit Cloud. Nu este necesară o autentificare suplimentară.",
+      "checkingSession": "Se verifică sesiunea Spliit…",
+      "continuing": "Se continuă în siguranță…",
+      "signInTitle": "Autentifică-te pentru conectare",
+      "signInDescription": "Folosește metoda obișnuită de autentificare în Spliit Cloud. Asistentul tău nu furnizează niciodată identitatea contului folosit pentru cheltuieli."
+    }
   }
 }

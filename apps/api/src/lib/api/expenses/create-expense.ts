@@ -7,7 +7,10 @@ import {
 } from '@spliit/domain'
 import { env as jobsEnv } from '@spliit/jobs'
 
-import { resolveConversion } from '../../expense-conversion'
+import {
+  resolveConversion,
+  type ConversionResolution,
+} from '../../expense-conversion'
 import {
   buildExpenseActivityData,
   logActivity,
@@ -27,6 +30,21 @@ export async function createExpense(
   expense: Expense,
   groupId: string,
   actor: { accountId: string },
+  options?: {
+    assistantRequestId?: string
+    /**
+     * A server-resolved conversion sealed into an assistant confirmation. This
+     * keeps the persisted conversion identical to the preview even if an
+     * exchange-rate provider changes between preview and confirmation.
+     */
+    conversionResolution?: ConversionResolution
+    /**
+     * Aggregate itemized shares already normalized and sealed by the assistant
+     * preview. Ordinary callers continue to use the canonical expense-id-seeded
+     * calculation below.
+     */
+    itemizedPaidForResolution?: Expense['paidFor']
+  },
 ): Promise<DbExpense> {
   const group = await prisma.group.findUnique({
     where: { id: groupId },
@@ -36,10 +54,12 @@ export async function createExpense(
 
   const ledgerId = group.ledgerId
 
-  const conversion = await resolveConversion(expense, {
-    ledgerCurrency: group.ledger.currencyCode ?? null,
-    expenseDate: expense.expenseDate,
-  })
+  const conversion =
+    options?.conversionResolution ??
+    (await resolveConversion(expense, {
+      ledgerCurrency: group.ledger.currencyCode ?? null,
+      expenseDate: expense.expenseDate,
+    }))
 
   const expenseAmount = conversion.ledgerAmountMinor
 
@@ -94,16 +114,19 @@ export async function createExpense(
     recurrence && jobsEnv.JOBS_ENABLED ? await getApiBossForWrite() : undefined
 
   const documents = await promoteExpenseDocuments(expense.documents)
-  const recurringPaidFor =
+  const itemizedPaidFor =
     expense.splitMode === 'ITEMIZED'
-      ? computePaidForFromItems(
+      ? (options?.itemizedPaidForResolution ??
+        computePaidForFromItems(
           expense.items ?? [],
           [...participantIds],
           conversion.originalAmount ?? expenseAmount,
           expense.itemizedRemainder,
           expenseId,
-        ).paidFor
-      : expense.paidFor
+        ).paidFor)
+      : null
+  const recurringPaidFor =
+    expense.splitMode === 'ITEMIZED' ? itemizedPaidFor! : expense.paidFor
 
   const activityType = isCreateRecurrence
     ? ('RECURRING_EXPENSE_CREATED' as const)
@@ -252,13 +275,7 @@ export async function createExpense(
           createMany: {
             data:
               expense.splitMode === 'ITEMIZED'
-                ? computePaidForFromItems(
-                    expense.items ?? [],
-                    [...participantIds],
-                    conversion.originalAmount ?? expenseAmount,
-                    expense.itemizedRemainder,
-                    expenseId,
-                  ).paidFor.map((p) => ({
+                ? itemizedPaidFor!.map((p) => ({
                     ledgerParticipantId: p.participant,
                     shares: p.shares,
                   }))
@@ -318,6 +335,7 @@ export async function createExpense(
           },
         },
         notes: expense.notes,
+        assistantRequestId: options?.assistantRequestId,
       },
     })
 

@@ -2089,5 +2089,50 @@
     "asiaPacific": "Aasia-Tyynimeri",
     "europe": "Eurooppa",
     "middleEastAndNorthAfrica": "Lähi-itä ja Pohjois-Afrikka"
+  },
+  "OAuth": {
+    "consent": {
+      "title": "Yhdistetäänkö Spliit palveluun {client}?",
+      "description": "Tarkista alla oleva tili ja käyttöoikeudet. Säilytät hallinnan jokaisen kulun luomisesta.",
+      "connectionDetails": "Yhteyden tiedot",
+      "spliitAccount": "Spliit-tili",
+      "connectingTo": "Yhdistetään palveluun",
+      "assistantVia": "Spliit-avustajan kautta",
+      "defaultClient": "tekoälyavustajasi",
+      "defaultUser": "Spliit-käyttäjä",
+      "sessionUnavailable": "Istunto ei ole käytettävissä. Palaa takaisin ja kirjaudu uudelleen.",
+      "sharedData": "Mitä jaetaan",
+      "identityTitle": "Spliit-identiteettisi",
+      "identityDescription": "Nimesi ja sähköpostiosoitteesi tunnistavat yhdistettävän tilin. Salasanaasi ja kirjautumistapaasi ei koskaan jaeta.",
+      "groupsTitle": "Ryhmän ja kulutuksen konteksti",
+      "groupsDescription": "Ryhmien nimet, osallistujat, tallennetut jaot, saldot ja viimeisimmät kulut, jotta avustaja ymmärtää pyyntösi.",
+      "expensesTitle": "Vahvistettu kulun luonti",
+      "expensesDescription": "Avustaja voi luoda vain esikatselussa näkyvän täsmällisen kulun, kun painat Luo kulu.",
+      "privacyTitle": "Lyhyt tietosuojahuomio",
+      "privacyDescription": "Taloudelliset ryhmätiedot voivat olla arkaluonteisia. Ne ovat yhteyden aikana {client} saatavilla, mutta avustaja ei voi muokata tai poistaa kuluja eikä luoda kuluja ilman esikatselun vahvistustasi.",
+      "authorityNote": "Spliit säilyy totuuden lähteenä. Nykyinen validointi, saldot, toimintohistoria ja ilmoitukset ovat edelleen voimassa.",
+      "allow": "Salli ja yhdistä",
+      "cancel": "Peruuta",
+      "missingRequest": "Valtuutuspyyntö puuttuu. Palaa avustajaasi."
+    },
+    "login": {
+      "missingTitle": "Valtuutuspyyntö puuttuu",
+      "missingDescription": "Palaa avustajaasi ja aloita yhteys uudelleen.",
+      "missingError": "Spliit ei saanut OAuth-valtuutustietoja.",
+      "connectingTitle": "Tiliäsi yhdistetään",
+      "connectingDescription": "Olemassa oleva Spliit Cloud -istuntosi löytyi. Uutta kirjautumista ei tarvita.",
+      "checkingSession": "Tarkistetaan Spliit-istuntoasi…",
+      "continuing": "Jatketaan suojatusti…",
+      "signInTitle": "Kirjaudu sisään yhdistääksesi",
+      "signInDescription": "Käytä tavallista Spliit Cloud -kirjautumistapaasi. Avustajasi ei koskaan anna kuluihin käytettävän tilin henkilöllisyyttä."
+    },
+    "shell": {
+      "label": "Spliit-avustaja",
+      "mobileDescription": "Tekoälyapu, jonka sinä vahvistat",
+      "title": "Keskustelusta kuluksi, sinun vahvistamanasi.",
+      "previewBullet": "Tarkista täsmällinen, muokkaamaton esikatselu ennen luontia",
+      "authorityBullet": "Spliit-tilisi säilyy auktoriteettina",
+      "validationBullet": "Nykyinen validointi, saldot ja ilmoitukset säilyvät ennallaan"
+    }
   }
 }

@@ -2107,5 +2107,50 @@
     "asiaPacific": "אסיה והאוקיינוס השקט",
     "europe": "אירופה",
     "middleEastAndNorthAfrica": "המזרח התיכון וצפון אפריקה"
+  },
+  "OAuth": {
+    "shell": {
+      "label": "העוזר של Spliit",
+      "mobileDescription": "עזרת AI, באישורך",
+      "title": "הוצאות מהשיחה, באישורך.",
+      "previewBullet": "בדקו תצוגה מקדימה מדויקת שאינה ניתנת לעריכה לפני היצירה",
+      "authorityBullet": "חשבון Spliit שלכם נשאר הגורם המוסמך",
+      "validationBullet": "האימות, היתרות וההתראות הקיימים ממשיכים לחול"
+    },
+    "consent": {
+      "title": "לחבר את Spliit אל {client}?",
+      "description": "בדקו את החשבון והגישה שלמטה. השליטה בכל יצירת הוצאה נשארת בידיכם.",
+      "connectionDetails": "פרטי החיבור",
+      "spliitAccount": "חשבון Spliit",
+      "connectingTo": "מתחבר אל",
+      "assistantVia": "באמצעות העוזר של Spliit",
+      "defaultClient": "עוזר ה-AI שלכם",
+      "defaultUser": "משתמש Spliit",
+      "sessionUnavailable": "הסשן אינו זמין. חזרו והתחברו מחדש.",
+      "sharedData": "מה ישותף",
+      "identityTitle": "זהות ה-Spliit שלכם",
+      "identityDescription": "השם וכתובת האימייל שלכם מזהים את החשבון שמחובר. הסיסמה ושיטת ההתחברות שלכם לעולם אינן משותפות.",
+      "groupsTitle": "הקשר של קבוצות והוצאות",
+      "groupsDescription": "שמות קבוצות, משתתפים, חלוקות שמורות, יתרות והוצאות אחרונות כדי שהעוזר יבין את הבקשה שלכם.",
+      "expensesTitle": "יצירת הוצאה מאושרת",
+      "expensesDescription": "העוזר יכול ליצור רק את ההוצאה המדויקת שמוצגת בתצוגה המקדימה לאחר שתלחצו על יצירת הוצאה.",
+      "privacyTitle": "הערת פרטיות קצרה",
+      "privacyDescription": "פרטי קבוצות פיננסיות עשויים להיות רגישים. בזמן החיבור הם יהיו זמינים ל-{client}, אך העוזר אינו יכול לערוך או למחוק הוצאות ואינו יכול ליצור הוצאה ללא אישור תצוגת התצוגה המקדימה שלכם.",
+      "authorityNote": "Spliit נשאר מקור האמת. האימות, היתרות, היסטוריית הפעילות וההתראות הקיימים עדיין חלים.",
+      "allow": "אישור וחיבור",
+      "cancel": "ביטול",
+      "missingRequest": "בקשת ההרשאה חסרה. חזרו לעוזר שלכם."
+    },
+    "login": {
+      "missingTitle": "בקשת הרשאה חסרה",
+      "missingDescription": "חזרו לעוזר והתחילו את החיבור מחדש.",
+      "missingError": "Spliit לא קיבל את פרטי הרשאת OAuth.",
+      "connectingTitle": "החשבון שלכם מתחבר",
+      "connectingDescription": "נמצא סשן Spliit Cloud הקיים שלכם. אין צורך להתחבר שוב.",
+      "checkingSession": "בודק את סשן Spliit שלכם…",
+      "continuing": "ממשיך באופן מאובטח…",
+      "signInTitle": "התחברו כדי להתחבר",
+      "signInDescription": "השתמשו בשיטת ההתחברות הרגילה שלכם ל-Spliit Cloud. העוזר לעולם אינו מספק את זהות החשבון המשמשת להוצאות."
+    }
   }
 }

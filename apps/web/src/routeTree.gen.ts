@@ -15,6 +15,8 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ImprintRouteImport } from './routes/imprint'
 import { Route as GroupsRouteRouteImport } from './routes/groups/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as OauthLoginRouteImport } from './routes/oauth/login'
+import { Route as OauthConsentRouteImport } from './routes/oauth/consent'
 import { Route as GroupsImportRouteImport } from './routes/groups/import'
 import { Route as GroupsCreateRouteImport } from './routes/groups/create'
 import { Route as FriendsCreateRouteImport } from './routes/friends/create'
@@ -67,6 +69,16 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+const OauthLoginRoute = OauthLoginRouteImport.update({
+  id: '/oauth/login',
+  path: '/oauth/login',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/oauth/login.lazy').then((d) => d.Route))
+const OauthConsentRoute = OauthConsentRouteImport.update({
+  id: '/oauth/consent',
+  path: '/oauth/consent',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/oauth/consent.lazy').then((d) => d.Route))
 const GroupsImportRoute = GroupsImportRouteImport.update({
   id: '/import',
   path: '/import',
@@ -240,6 +252,8 @@ export interface FileRoutesByFullPath {
   '/friends/create': typeof FriendsCreateRoute
   '/groups/create': typeof GroupsCreateRoute
   '/groups/import': typeof GroupsImportRoute
+  '/oauth/consent': typeof OauthConsentRoute
+  '/oauth/login': typeof OauthLoginRoute
   '/groups/$groupId/activity': typeof GroupsGroupIdActivityRoute
   '/groups/$groupId/balances': typeof GroupsGroupIdBalancesRoute
   '/groups/$groupId/edit': typeof GroupsGroupIdEditRoute
@@ -268,6 +282,8 @@ export interface FileRoutesByTo {
   '/friends/create': typeof FriendsCreateRoute
   '/groups/create': typeof GroupsCreateRoute
   '/groups/import': typeof GroupsImportRoute
+  '/oauth/consent': typeof OauthConsentRoute
+  '/oauth/login': typeof OauthLoginRoute
   '/groups/$groupId/activity': typeof GroupsGroupIdActivityRoute
   '/groups/$groupId/balances': typeof GroupsGroupIdBalancesRoute
   '/groups/$groupId/edit': typeof GroupsGroupIdEditRoute
@@ -297,6 +313,8 @@ export interface FileRoutesById {
   '/friends/create': typeof FriendsCreateRoute
   '/groups/create': typeof GroupsCreateRoute
   '/groups/import': typeof GroupsImportRoute
+  '/oauth/consent': typeof OauthConsentRoute
+  '/oauth/login': typeof OauthLoginRoute
   '/groups/$groupId/activity': typeof GroupsGroupIdActivityRoute
   '/groups/$groupId/balances': typeof GroupsGroupIdBalancesRoute
   '/groups/$groupId/edit': typeof GroupsGroupIdEditRoute
@@ -328,6 +346,8 @@ export interface FileRouteTypes {
     | '/friends/create'
     | '/groups/create'
     | '/groups/import'
+    | '/oauth/consent'
+    | '/oauth/login'
     | '/groups/$groupId/activity'
     | '/groups/$groupId/balances'
     | '/groups/$groupId/edit'
@@ -356,6 +376,8 @@ export interface FileRouteTypes {
     | '/friends/create'
     | '/groups/create'
     | '/groups/import'
+    | '/oauth/consent'
+    | '/oauth/login'
     | '/groups/$groupId/activity'
     | '/groups/$groupId/balances'
     | '/groups/$groupId/edit'
@@ -384,6 +406,8 @@ export interface FileRouteTypes {
     | '/friends/create'
     | '/groups/create'
     | '/groups/import'
+    | '/oauth/consent'
+    | '/oauth/login'
     | '/groups/$groupId/activity'
     | '/groups/$groupId/balances'
     | '/groups/$groupId/edit'
@@ -411,6 +435,8 @@ export interface RootRouteChildren {
   AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
   AuthResetPasswordRoute: typeof AuthResetPasswordRoute
   FriendsCreateRoute: typeof FriendsCreateRoute
+  OauthConsentRoute: typeof OauthConsentRoute
+  OauthLoginRoute: typeof OauthLoginRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -455,6 +481,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/oauth/login': {
+      id: '/oauth/login'
+      path: '/oauth/login'
+      fullPath: '/oauth/login'
+      preLoaderRoute: typeof OauthLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/oauth/consent': {
+      id: '/oauth/consent'
+      path: '/oauth/consent'
+      fullPath: '/oauth/consent'
+      preLoaderRoute: typeof OauthConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/groups/import': {
@@ -683,6 +723,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthForgotPasswordRoute: AuthForgotPasswordRoute,
   AuthResetPasswordRoute: AuthResetPasswordRoute,
   FriendsCreateRoute: FriendsCreateRoute,
+  OauthConsentRoute: OauthConsentRoute,
+  OauthLoginRoute: OauthLoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

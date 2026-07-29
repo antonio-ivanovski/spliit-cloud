@@ -2107,5 +2107,50 @@
     "asiaPacific": "Ásia-Pacífico",
     "europe": "Europa",
     "middleEastAndNorthAfrica": "Oriente Médio e Norte da África"
+  },
+  "OAuth": {
+    "shell": {
+      "label": "Assistente Spliit",
+      "mobileDescription": "Ajuda com IA, confirmada por você",
+      "title": "Despesas da conversa, confirmadas por você.",
+      "previewBullet": "Revise uma prévia exata e não editável antes da criação",
+      "authorityBullet": "Sua conta Spliit continua sendo a autoridade",
+      "validationBullet": "A validação, os saldos e as notificações existentes permanecem intactos"
+    },
+    "consent": {
+      "title": "Conectar o Spliit a {client}?",
+      "description": "Revise a conta e o acesso abaixo. Você continua no controle de cada criação de despesa.",
+      "connectionDetails": "Detalhes da conexão",
+      "spliitAccount": "Conta Spliit",
+      "connectingTo": "Conectando a",
+      "assistantVia": "via Assistente Spliit",
+      "defaultClient": "seu assistente de IA",
+      "defaultUser": "usuário Spliit",
+      "sessionUnavailable": "Sessão indisponível. Volte e entre novamente.",
+      "sharedData": "O que será compartilhado",
+      "identityTitle": "Sua identidade Spliit",
+      "identityDescription": "Seu nome e e-mail identificam a conta conectada. Sua senha e método de login nunca são compartilhados.",
+      "groupsTitle": "Contexto de grupos e gastos",
+      "groupsDescription": "Nomes dos grupos, participantes, divisões salvas, saldos e despesas recentes para que o assistente entenda sua solicitação.",
+      "expensesTitle": "Criação de despesa confirmada",
+      "expensesDescription": "O assistente só poderá criar a despesa exata mostrada na prévia depois que você pressionar Criar despesa.",
+      "privacyTitle": "Uma nota rápida de privacidade",
+      "privacyDescription": "Os detalhes financeiros do grupo podem ser sensíveis. Eles ficam disponíveis para {client} enquanto conectado, mas o assistente não pode editar ou excluir despesas nem criar uma sem a confirmação da prévia.",
+      "authorityNote": "O Spliit continua sendo a fonte de verdade. A validação, os saldos, o histórico de atividades e as notificações existentes continuam valendo.",
+      "allow": "Permitir e conectar",
+      "cancel": "Cancelar",
+      "missingRequest": "A solicitação de autorização está ausente. Volte ao seu assistente."
+    },
+    "login": {
+      "missingTitle": "Solicitação de autorização ausente",
+      "missingDescription": "Volte ao seu assistente e inicie a conexão novamente.",
+      "missingError": "O Spliit não recebeu os detalhes de autorização OAuth.",
+      "connectingTitle": "Conectando sua conta",
+      "connectingDescription": "Sua sessão existente do Spliit Cloud foi encontrada. Não é necessário fazer login adicional.",
+      "checkingSession": "Verificando sua sessão do Spliit…",
+      "continuing": "Continuando com segurança…",
+      "signInTitle": "Entre para conectar",
+      "signInDescription": "Use seu método habitual de login no Spliit Cloud. Seu assistente nunca fornece a identidade da conta usada nas despesas."
+    }
   }
 }

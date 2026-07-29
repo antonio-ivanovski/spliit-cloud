@@ -1,7 +1,16 @@
+import { randomUUID } from 'node:crypto'
+
+import { oauthProvider } from '@better-auth/oauth-provider'
 import { betterAuth } from 'better-auth'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { APIError, createAuthMiddleware } from 'better-auth/api'
-import { magicLink, openAPI } from 'better-auth/plugins'
+import {
+  jwt,
+  magicLink,
+  openAPI,
+  type Jwk,
+  type JwtOptions,
+} from 'better-auth/plugins'
 
 import { prisma, type Account } from '@spliit/db'
 import { isStrongPassword } from '@spliit/domain/password'
@@ -64,6 +73,26 @@ const passwordPolicyMiddleware = createAuthMiddleware(async (ctx) => {
     })
   }
 })
+
+// Integration and unit tests share the local PostgreSQL database with the
+// already-running development API. Persisting test signing keys there would
+// replace or conflict with keys encrypted by the development secret. Keep test
+// JWKS process-local while development and production continue using Better
+// Auth's default database-backed adapter.
+const testJwks: Jwk[] = []
+const testJwtAdapter: JwtOptions['adapter'] | undefined =
+  env.NODE_ENV === 'test'
+    ? {
+        async getJwks() {
+          return [...testJwks]
+        },
+        async createJwk(data) {
+          const key: Jwk = { ...data, id: randomUUID() }
+          testJwks.push(key)
+          return key
+        },
+      }
+    : undefined
 
 type OAuthToken = {
   accessToken?: string
@@ -189,6 +218,9 @@ export const auth = betterAuth({
   // basePath defaults to `/api/auth` and every endpoint (sign-in, callback,
   // social, session, …) returns 404.
   basePath: '/auth',
+  // OAuth Provider mode exposes `/oauth2/token`; Better Auth's standalone JWT
+  // token endpoint is redundant and must not be advertised or callable.
+  disabledPaths: ['/token'],
   secret: env.BETTER_AUTH_SECRET ?? 'spliit-dev-secret-change-me',
   // CORS already allows every configured WEB_ORIGINS entry; pass the full
   // list to better-auth so its trusted-origin check agrees. With only the
@@ -340,6 +372,50 @@ export const auth = betterAuth({
   })(),
 
   plugins: [
+    oauthProvider({
+      loginPage: `${webOrigins[0]}/oauth/login`,
+      consentPage: `${webOrigins[0]}/oauth/consent`,
+      scopes: [
+        'openid',
+        'profile',
+        'email',
+        'offline_access',
+        'spliit:groups:read',
+        'spliit:expenses:write',
+      ],
+      validAudiences: [`${env.MCP_PUBLIC_URL}/mcp`],
+      allowDynamicClientRegistration: true,
+      allowUnauthenticatedClientRegistration: true,
+      allowPublicClientPrelogin: true,
+      silenceWarnings: { oauthAuthServerConfig: true },
+      grantTypes: ['authorization_code', 'refresh_token'],
+      clientRegistrationDefaultScopes: [
+        'openid',
+        'profile',
+        'email',
+        'offline_access',
+        'spliit:groups:read',
+        'spliit:expenses:write',
+      ],
+      clientRegistrationAllowedScopes: [
+        'openid',
+        'profile',
+        'email',
+        'offline_access',
+        'spliit:groups:read',
+        'spliit:expenses:write',
+      ],
+      customAccessTokenClaims: ({ user }) => ({
+        account_id: user?.id,
+      }),
+    }),
+    jwt({
+      // OAuth access tokens are minted by the OAuth Provider flow. Adding a
+      // JWT header to every cookie-session response is unnecessary and makes
+      // ordinary `/get-session` reads depend on the OAuth signing key.
+      disableSettingJwtHeader: true,
+      adapter: testJwtAdapter,
+    }),
     magicLink({
       disableSignUp: false,
       sendMagicLink: async ({ email, url }) => {

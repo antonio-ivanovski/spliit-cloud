@@ -122,6 +122,12 @@ export const completeProfileSearchSchema = z.object({
   redirect: optionalString,
 })
 
+export const oauthFlowSearchSchema = z.object({
+  oauth_query: optionalString,
+  client_id: optionalString,
+  scope: optionalString,
+})
+
 export const createExpenseSearchSchema = z.object({
   reimbursement: optionalString,
   settlements: optionalString,

@@ -1,13 +1,12 @@
 import { useMutation } from '@tanstack/react-query'
-import { getRouteApi, useNavigate } from '@tanstack/react-router'
+import { useNavigate, useSearch } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { needsDisplayName } from '@/lib/account'
 import { authClient } from '@/lib/auth'
+import type { HomeSearch } from '@/router/schemas'
 import { isStrongPassword } from '@spliit/domain/password'
-
-const homeRouteApi = getRouteApi('/')
 
 export type Mode = 'sign-in' | 'sign-up'
 export type EmailVariant = 'magic-link' | 'password'
@@ -23,15 +22,15 @@ export function isFeatureFlagEnabled(name: string): boolean {
   return value === 'true' || value === '1'
 }
 
-export function useAuthPanel() {
+export function useAuthPanel(options?: { redirectTo?: string }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
   const navigate = useNavigate()
   const {
     redirect,
     mode: initialSearchMode,
     email: initialEmail,
-  } = homeRouteApi.useSearch()
-  const redirectTo = redirect ?? '/'
+  } = useSearch({ strict: false }) as HomeSearch
+  const redirectTo = options?.redirectTo ?? redirect ?? '/'
   const initialMode = initialSearchMode === 'sign-up' ? 'sign-up' : 'sign-in'
 
   const webOrigin =

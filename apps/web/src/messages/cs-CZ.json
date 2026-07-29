@@ -2125,5 +2125,50 @@
     "asiaPacific": "Asie a Tichomoří",
     "europe": "Evropa",
     "middleEastAndNorthAfrica": "Blízký východ a severní Afrika"
+  },
+  "OAuth": {
+    "consent": {
+      "title": "Připojit Spliit k {client}?",
+      "description": "Zkontrolujte níže uvedený účet a přístup. Každé vytvoření výdaje máte pod kontrolou.",
+      "connectionDetails": "Podrobnosti připojení",
+      "spliitAccount": "Účet Spliit",
+      "connectingTo": "Připojení k",
+      "assistantVia": "přes asistenta Spliit",
+      "defaultClient": "váš AI asistent",
+      "defaultUser": "Uživatel Spliit",
+      "sessionUnavailable": "Relace není k dispozici. Vraťte se a znovu se přihlaste.",
+      "sharedData": "Co bude sdíleno",
+      "identityTitle": "Vaše identita Spliit",
+      "identityDescription": "Vaše jméno a e-mail identifikují připojovaný účet. Vaše heslo ani způsob přihlášení se nikdy nesdílejí.",
+      "groupsTitle": "Kontext skupin a výdajů",
+      "groupsDescription": "Názvy skupin, účastníci, uložená rozdělení, zůstatky a nedávné výdaje, aby asistent rozuměl vašemu požadavku.",
+      "expensesTitle": "Potvrzené vytvoření výdaje",
+      "expensesDescription": "Asistent může vytvořit pouze přesný výdaj z náhledu po stisknutí tlačítka Vytvořit výdaj.",
+      "privacyTitle": "Krátká poznámka k soukromí",
+      "privacyDescription": "Podrobnosti finančních skupin mohou být citlivé. Po dobu připojení budou dostupné pro {client}, ale asistent nemůže upravovat ani mazat výdaje a nemůže vytvořit výdaj bez vašeho potvrzení náhledu.",
+      "authorityNote": "Spliit zůstává zdrojem pravdy. Nadále platí stávající ověřování, zůstatky, historie aktivit a oznámení.",
+      "allow": "Povolit a připojit",
+      "cancel": "Zrušit",
+      "missingRequest": "Autorizační požadavek chybí. Vraťte se ke svému asistentovi."
+    },
+    "login": {
+      "missingTitle": "Autorizační požadavek chybí",
+      "missingDescription": "Vraťte se ke svému asistentovi a spusťte připojení znovu.",
+      "missingError": "Spliit neobdržel podrobnosti autorizace OAuth.",
+      "connectingTitle": "Připojování účtu",
+      "connectingDescription": "Byla nalezena vaše stávající relace Spliit Cloud. Další přihlášení není potřeba.",
+      "checkingSession": "Kontroluji vaši relaci Spliit…",
+      "continuing": "Bezpečně pokračuji…",
+      "signInTitle": "Přihlaste se pro připojení",
+      "signInDescription": "Použijte svůj obvyklý způsob přihlášení do Spliit Cloud. Váš asistent nikdy nepředává identitu účtu použitou u výdajů."
+    },
+    "shell": {
+      "label": "Asistent Spliit",
+      "mobileDescription": "Pomoc AI, kterou potvrzujete vy",
+      "title": "Výdaje z konverzace, které potvrzujete vy.",
+      "previewBullet": "Před vytvořením zkontrolujete přesný náhled, který nelze upravovat",
+      "authorityBullet": "Váš účet Spliit zůstává autoritou",
+      "validationBullet": "Stávající ověřování, zůstatky a oznámení zůstávají zachována"
+    }
   }
 }

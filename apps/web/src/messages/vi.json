@@ -2161,5 +2161,50 @@
     "asiaPacific": "Châu Á - Thái Bình Dương",
     "europe": "Châu Âu",
     "middleEastAndNorthAfrica": "Trung Đông & Bắc Phi"
+  },
+  "OAuth": {
+    "shell": {
+      "label": "Trợ lý Spliit",
+      "mobileDescription": "Trợ giúp AI, do bạn xác nhận",
+      "title": "Chi phí từ cuộc trò chuyện, do bạn xác nhận.",
+      "previewBullet": "Xem trước chính xác, không thể chỉnh sửa trước khi tạo",
+      "authorityBullet": "Tài khoản Spliit của bạn vẫn là nguồn quyết định",
+      "validationBullet": "Các quy trình xác thực, số dư và thông báo hiện có vẫn được áp dụng"
+    },
+    "consent": {
+      "title": "Kết nối Spliit với {client}?",
+      "description": "Xem lại tài khoản và quyền truy cập bên dưới. Bạn vẫn kiểm soát mọi lần tạo chi phí.",
+      "connectionDetails": "Chi tiết kết nối",
+      "spliitAccount": "Tài khoản Spliit",
+      "connectingTo": "Đang kết nối với",
+      "assistantVia": "qua Trợ lý Spliit",
+      "defaultClient": "trợ lý AI của bạn",
+      "defaultUser": "người dùng Spliit",
+      "sessionUnavailable": "Không có phiên. Hãy quay lại và đăng nhập lại.",
+      "sharedData": "Dữ liệu sẽ được chia sẻ",
+      "identityTitle": "Danh tính Spliit của bạn",
+      "identityDescription": "Tên và email của bạn xác định tài khoản được kết nối. Mật khẩu và phương thức đăng nhập của bạn không bao giờ được chia sẻ.",
+      "groupsTitle": "Thông tin nhóm và chi tiêu",
+      "groupsDescription": "Tên nhóm, người tham gia, cách chia đã lưu, số dư và các khoản chi gần đây để trợ lý hiểu yêu cầu của bạn.",
+      "expensesTitle": "Tạo chi phí có xác nhận",
+      "expensesDescription": "Trợ lý chỉ có thể tạo đúng khoản chi hiển thị trong bản xem trước sau khi bạn nhấn Tạo chi phí.",
+      "privacyTitle": "Lưu ý nhanh về quyền riêng tư",
+      "privacyDescription": "Thông tin nhóm tài chính có thể nhạy cảm. Thông tin này sẽ được cung cấp cho {client} khi kết nối, nhưng trợ lý không thể chỉnh sửa hoặc xóa chi phí và không thể tạo chi phí nếu bạn chưa xác nhận bản xem trước.",
+      "authorityNote": "Spliit vẫn là nguồn dữ liệu chính xác. Các quy trình xác thực, số dư, lịch sử hoạt động và thông báo hiện có vẫn được áp dụng.",
+      "allow": "Cho phép và kết nối",
+      "cancel": "Hủy",
+      "missingRequest": "Thiếu yêu cầu cấp quyền. Hãy quay lại trợ lý của bạn."
+    },
+    "login": {
+      "missingTitle": "Thiếu yêu cầu cấp quyền",
+      "missingDescription": "Hãy quay lại trợ lý và bắt đầu kết nối lại.",
+      "missingError": "Spliit không nhận được thông tin cấp quyền OAuth.",
+      "connectingTitle": "Đang kết nối tài khoản",
+      "connectingDescription": "Đã tìm thấy phiên Spliit Cloud hiện tại của bạn. Không cần đăng nhập thêm.",
+      "checkingSession": "Đang kiểm tra phiên Spliit…",
+      "continuing": "Đang tiếp tục an toàn…",
+      "signInTitle": "Đăng nhập để kết nối",
+      "signInDescription": "Sử dụng phương thức đăng nhập Spliit Cloud quen thuộc của bạn. Trợ lý không bao giờ cung cấp danh tính tài khoản được dùng cho các khoản chi."
+    }
   }
 }

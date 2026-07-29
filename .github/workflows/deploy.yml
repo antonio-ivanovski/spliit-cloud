@@ -40,6 +40,10 @@ jobs:
             scope: '@spliit/worker'
             target: worker
             image: spliit-cloud-worker
+          - app: mcp
+            scope: '@spliit/mcp'
+            target: mcp
+            image: spliit-cloud-mcp
     steps:
       - name: Checkout
         uses: actions/checkout@v6

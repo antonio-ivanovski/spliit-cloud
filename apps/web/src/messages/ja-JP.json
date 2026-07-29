@@ -2073,5 +2073,50 @@
     "asiaPacific": "アジア太平洋地域",
     "europe": "ヨーロッパ",
     "middleEastAndNorthAfrica": "中東・北アフリカ"
+  },
+  "OAuth": {
+    "consent": {
+      "title": "Spliitを{client}に接続しますか？",
+      "description": "以下のアカウントとアクセス権を確認してください。支出の作成はすべてあなたが管理します。",
+      "connectionDetails": "接続の詳細",
+      "spliitAccount": "Spliitアカウント",
+      "connectingTo": "接続先",
+      "assistantVia": "Spliitアシスタント経由",
+      "defaultClient": "AIアシスタント",
+      "defaultUser": "Spliitユーザー",
+      "sessionUnavailable": "セッションを利用できません。戻ってもう一度ログインしてください。",
+      "sharedData": "共有される情報",
+      "identityTitle": "Spliitの本人情報",
+      "identityDescription": "名前とメールアドレスは接続するアカウントの識別に使用されます。パスワードやログイン方法は共有されません。",
+      "groupsTitle": "グループと支出のコンテキスト",
+      "groupsDescription": "アシスタントがリクエストを理解するために、グループ名、参加者、保存済みの分割、残高、最近の支出を共有します。",
+      "expensesTitle": "確認済みの支出作成",
+      "expensesDescription": "アシスタントが作成できるのは、「支出を作成」を押した後にプレビューに表示された内容と完全に同じ支出だけです。",
+      "privacyTitle": "プライバシーに関する注意",
+      "privacyDescription": "グループの財務情報には機密性があります。接続中は{client}が利用できますが、アシスタントは支出の編集・削除を行えず、プレビューの確認なしに作成することもできません。",
+      "authorityNote": "Spliitが正規の情報源です。既存の検証、残高、アクティビティ履歴、通知が引き続き適用されます。",
+      "allow": "許可して接続",
+      "cancel": "キャンセル",
+      "missingRequest": "認証リクエストが見つかりません。アシスタントに戻ってください。"
+    },
+    "login": {
+      "missingTitle": "認証リクエストがありません",
+      "missingDescription": "アシスタントに戻り、接続をもう一度開始してください。",
+      "missingError": "SpliitはOAuth認証情報を受け取れませんでした。",
+      "connectingTitle": "アカウントを接続中",
+      "connectingDescription": "既存のSpliit Cloudセッションが見つかりました。追加のログインは不要です。",
+      "checkingSession": "Spliitセッションを確認中…",
+      "continuing": "安全に続行しています…",
+      "signInTitle": "ログインして接続",
+      "signInDescription": "普段お使いのSpliit Cloudのログイン方法を使用してください。支出に使用するアカウント情報をアシスタントが提供することはありません。"
+    },
+    "shell": {
+      "label": "Spliitアシスタント",
+      "mobileDescription": "あなたが確認するAIサポート",
+      "title": "会話から作成する支出を、あなたが確認します。",
+      "previewBullet": "作成前に、編集できない正確なプレビューを確認",
+      "authorityBullet": "Spliitアカウントが引き続き権限を持ちます",
+      "validationBullet": "既存の検証、残高、通知はそのまま維持されます"
+    }
   }
 }

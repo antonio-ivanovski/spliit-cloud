@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-24.04-arm
     env:
       DATABASE_URL: postgresql://postgres:1234@localhost
-      NEXT_PUBLIC_DEFAULT_CURRENCY_CODE: USD
+      VITE_DEFAULT_CURRENCY_CODE: USD
 
       # SMTP (MailDev) — integration tests + API server need these to deliver mail
       SMTP_HOST: localhost

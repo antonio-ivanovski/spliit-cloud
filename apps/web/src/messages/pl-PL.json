@@ -2125,5 +2125,50 @@
     "asiaPacific": "Azja i Pacyfik",
     "europe": "Europa",
     "middleEastAndNorthAfrica": "Bliski Wschód i Afryka Północna"
+  },
+  "OAuth": {
+    "consent": {
+      "title": "Połączyć Spliit z {client}?",
+      "description": "Sprawdź poniżej konto i zakres dostępu. To Ty kontrolujesz każde utworzenie wydatku.",
+      "connectionDetails": "Szczegóły połączenia",
+      "spliitAccount": "Konto Spliit",
+      "connectingTo": "Łączenie z",
+      "assistantVia": "przez Asystenta Spliit",
+      "defaultClient": "Twój asystent AI",
+      "defaultUser": "Użytkownik Spliit",
+      "sessionUnavailable": "Sesja jest niedostępna. Wróć i zaloguj się ponownie.",
+      "sharedData": "Co zostanie udostępnione",
+      "identityTitle": "Twoja tożsamość Spliit",
+      "identityDescription": "Twoje imię i adres e-mail identyfikują łączone konto. Twoje hasło i metoda logowania nigdy nie są udostępniane.",
+      "groupsTitle": "Kontekst grup i wydatków",
+      "groupsDescription": "Nazwy grup, uczestnicy, zapisane podziały, salda i ostatnie wydatki, aby asystent mógł zrozumieć Twoją prośbę.",
+      "expensesTitle": "Potwierdzone utworzenie wydatku",
+      "expensesDescription": "Asystent może utworzyć tylko dokładny wydatek pokazany w podglądzie po naciśnięciu „Utwórz wydatek”.",
+      "privacyTitle": "Krótka uwaga dotycząca prywatności",
+      "privacyDescription": "Szczegóły grup finansowych mogą być wrażliwe. Podczas połączenia będą dostępne dla {client}, ale asystent nie może edytować ani usuwać wydatków i nie utworzy żadnego bez potwierdzenia podglądu.",
+      "authorityNote": "Spliit pozostaje źródłem prawdy. Nadal obowiązują dotychczasowa walidacja, salda, historia aktywności i powiadomienia.",
+      "allow": "Zezwól i połącz",
+      "cancel": "Anuluj",
+      "missingRequest": "Brakuje żądania autoryzacji. Wróć do swojego asystenta."
+    },
+    "login": {
+      "missingTitle": "Brak żądania autoryzacji",
+      "missingDescription": "Wróć do swojego asystenta i rozpocznij połączenie ponownie.",
+      "missingError": "Spliit nie otrzymał danych autoryzacji OAuth.",
+      "connectingTitle": "Łączenie konta",
+      "connectingDescription": "Znaleziono Twoją istniejącą sesję Spliit Cloud. Dodatkowe logowanie nie jest wymagane.",
+      "checkingSession": "Sprawdzanie sesji Spliit…",
+      "continuing": "Bezpieczna kontynuacja…",
+      "signInTitle": "Zaloguj się, aby połączyć",
+      "signInDescription": "Użyj zwykłej metody logowania do Spliit Cloud. Asystent nigdy nie podaje tożsamości konta używanego przy wydatkach."
+    },
+    "shell": {
+      "label": "Asystent Spliit",
+      "mobileDescription": "Pomoc AI, potwierdzona przez Ciebie",
+      "title": "Wydatki z rozmowy, potwierdzone przez Ciebie.",
+      "previewBullet": "Przejrzyj dokładny, nieedytowalny podgląd przed utworzeniem",
+      "authorityBullet": "Twoje konto Spliit pozostaje źródłem prawdy",
+      "validationBullet": "Dotychczasowa walidacja, salda i powiadomienia pozostają bez zmian"
+    }
   }
 }

@@ -2073,5 +2073,50 @@
     "asiaPacific": "亞太地區",
     "europe": "歐洲",
     "middleEastAndNorthAfrica": "中東和北非"
+  },
+  "OAuth": {
+    "shell": {
+      "label": "Spliit 助理",
+      "mobileDescription": "AI 協助，由你確認",
+      "title": "對話產生支出，由你確認。",
+      "previewBullet": "建立前查看準確且不可編輯的預覽",
+      "authorityBullet": "你的 Spliit 帳戶仍是最終依據",
+      "validationBullet": "現有驗證、餘額和通知均保持不變"
+    },
+    "consent": {
+      "title": "要將 Spliit 連接至 {client} 嗎？",
+      "description": "請查看下方的帳戶和存取權限。每筆支出的建立仍由你掌控。",
+      "connectionDetails": "連線詳細資料",
+      "spliitAccount": "Spliit 帳戶",
+      "connectingTo": "連線至",
+      "assistantVia": "透過 Spliit 助理",
+      "defaultClient": "你的 AI 助理",
+      "defaultUser": "Spliit 使用者",
+      "sessionUnavailable": "工作階段無法使用。請返回並重新登入。",
+      "sharedData": "將分享的內容",
+      "identityTitle": "你的 Spliit 身分",
+      "identityDescription": "你的姓名和電子郵件用於識別要連線的帳戶。你的密碼和登入方式絕不會被分享。",
+      "groupsTitle": "群組與支出背景",
+      "groupsDescription": "群組名稱、參與者、已儲存的分攤、餘額和最近支出，讓助理能理解你的請求。",
+      "expensesTitle": "已確認的支出建立",
+      "expensesDescription": "按下「建立支出」後，助理只能建立預覽中顯示的完全相同支出。",
+      "privacyTitle": "簡短的隱私提示",
+      "privacyDescription": "財務群組詳細資料可能較為敏感。連線期間，{client}可以存取這些資訊，但助理無法編輯或刪除支出，也不能在未經你預覽確認的情況下建立支出。",
+      "authorityNote": "Spliit 仍是唯一可信來源。現有驗證、餘額、活動記錄和通知仍然適用。",
+      "allow": "允許並連線",
+      "cancel": "取消",
+      "missingRequest": "缺少授權請求。請返回你的助理。"
+    },
+    "login": {
+      "missingTitle": "缺少授權請求",
+      "missingDescription": "返回你的助理並重新開始連線。",
+      "missingError": "Spliit 未收到 OAuth 授權詳細資料。",
+      "connectingTitle": "正在連線你的帳戶",
+      "connectingDescription": "已找到你現有的 Spliit Cloud 工作階段。不需要額外登入。",
+      "checkingSession": "正在檢查你的 Spliit 工作階段…",
+      "continuing": "正在安全地繼續…",
+      "signInTitle": "登入以連線",
+      "signInDescription": "使用你平常的 Spliit Cloud 登入方式。你的助理絕不會提供用於支出的帳戶身分。"
+    }
   }
 }

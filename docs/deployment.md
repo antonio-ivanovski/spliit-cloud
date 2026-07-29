@@ -15,6 +15,15 @@ Copy `container.env.example` to `container.env`, set the required values (see th
 - `BETTER_AUTH_SECRET` — generate with `openssl rand -base64 32`
 - `BETTER_AUTH_URL` — the public API origin (HTTPS), e.g. `https://api.spliit.example.com`
 - `WEB_ORIGINS` — the public web origin
+- `MCP_PUBLIC_URL` — the public Spliit Assistant MCP service origin; used as the
+  OAuth resource audience
+- `ASSISTANT_CONFIRMATION_SECRET` — a dedicated random secret of at least 32
+  bytes used to encrypt 15-minute expense confirmation tokens
+
+The separately deployed `apps/mcp` service requires `MCP_PUBLIC_URL`,
+`MCP_API_URL`, and `MCP_WEB_URL`. Its `MCP_PUBLIC_URL` must match the value
+configured on the API.
+
 - `SMTP_HOST`, `EMAIL_FROM` — required for magic-link sign-in and invitations
 - `PUSH_VAPID_PUBLIC_KEY`, `PUSH_VAPID_PRIVATE_KEY`, `PUSH_VAPID_SUBJECT` —
   required together for Web Push delivery. Generate the key pair with
