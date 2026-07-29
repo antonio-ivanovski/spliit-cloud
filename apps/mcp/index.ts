@@ -11,6 +11,7 @@ import superjson from 'superjson'
 import { z } from 'zod'
 
 import { parseMcpEnv } from './config'
+import { createOpenAiAppsChallengeResponse } from './domain-verification'
 import { createExpensePreviewResult } from './expense-preview-response'
 import { createReadinessChecker } from './readiness'
 import {
@@ -112,6 +113,10 @@ server.app.get('/health/readiness', async () => {
     },
   })
 })
+
+server.app.get('/.well-known/openai-apps-challenge', () =>
+  createOpenAiAppsChallengeResponse(),
+)
 
 if (mcpEnv.nodeEnv === 'production') {
   const hideBrowserSurface = async (
