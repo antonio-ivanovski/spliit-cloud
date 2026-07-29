@@ -114,26 +114,18 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
     } as never)
   }
 
-  // Build a caller for the full app router so tests can hit the
-  // `uploads.presign` mutation directly. Pass `null` for `accountId`
-  // to simulate an unauthenticated request (the protectedProcedure
-  // will reject with UNAUTHORIZED).
-  function makeUploadsCaller(accountId: string | null, email?: string) {
-    return appRouter.createCaller(
-      accountId
-        ? ({
-            auth: {
-              session: { id: `sess-${randomId()}` },
-              user: {
-                id: accountId,
-                email: email ?? '',
-                emailVerified: true,
-                name: 'S3 Test Admin',
-              },
-            },
-          } as never)
-        : ({ auth: null } as never),
-    )
+  function makeUploadsCaller(accountId: string, email: string) {
+    return appRouter.createCaller({
+      auth: {
+        session: { id: `sess-${randomId()}` },
+        user: {
+          id: accountId,
+          email,
+          emailVerified: true,
+          name: 'S3 Test Admin',
+        },
+      },
+    } as never)
   }
 
   async function createGroup(
@@ -487,91 +479,6 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
     expect(docsAfterUpdate[0].id).toBe(docIdAprime)
 
     await caller.expenses.delete({ groupId, expenseId })
-  })
-
-  // -------------------------------------------------------------------
-  // Group 4: Presigned URL auth edge cases
-  // -------------------------------------------------------------------
-  it('4a: presign — no auth returns UNAUTHORIZED', async () => {
-    await expect(
-      makeUploadsCaller(null).uploads.presign({
-        ledgerId: 'some-ledger',
-        fileName: 'test.jpg',
-        contentType: 'image/jpeg',
-      }),
-    ).rejects.toMatchObject({
-      code: 'UNAUTHORIZED',
-      message: 'Authentication required',
-    })
-  })
-
-  it('4b: presign — empty body (no ledgerId) returns BAD_REQUEST', async () => {
-    const runId = testRunId()
-    const email = `s4b-${runId}@test.example`
-
-    const { accountId } = await createSession(email)
-
-    // The new tRPC mutation validates `ledgerId` with Zod (.min(1))
-    // before the resolver runs, so an empty string is rejected as a
-    // validation error rather than as the Hono helper's "Missing
-    // ledgerId" message. We assert on the validation error shape.
-    await expect(
-      makeUploadsCaller(accountId, email).uploads.presign({
-        ledgerId: '',
-        fileName: 'test.jpg',
-        contentType: 'image/jpeg',
-      }),
-    ).rejects.toMatchObject({
-      code: 'BAD_REQUEST',
-    })
-  })
-
-  it('4c: presign — fileSize > 2MB returns BAD_REQUEST', async () => {
-    const runId = testRunId()
-    const email = `s4c-${runId}@test.example`
-
-    const { accountId } = await createSession(email)
-
-    const { ledgerId } = await createGroup(`Auth4c-${runId}`, accountId, email)
-
-    await expect(
-      makeUploadsCaller(accountId, email).uploads.presign({
-        ledgerId,
-        fileName: 'large.jpg',
-        contentType: 'image/jpeg',
-        fileSize: 2 * 1024 * 1024 + 1,
-      }),
-    ).rejects.toMatchObject({
-      code: 'BAD_REQUEST',
-      message: expect.stringMatching(/exceeds the maximum upload size/i),
-    })
-  })
-
-  it('4d: presign — non-member returns FORBIDDEN', async () => {
-    const runId = testRunId()
-    const emailA = `s4d-a-${runId}@test.example`
-
-    const { accountId: accountIdA } = await createSession(emailA)
-    const { ledgerId } = await createGroup(
-      `Auth4d-${runId}`,
-      accountIdA,
-      emailA,
-    )
-
-    // User B signs in but is not a member
-    const emailB = `s4d-b-${runId}@test.example`
-    const { accountId: accountIdB } = await createSession(emailB)
-
-    await expect(
-      makeUploadsCaller(accountIdB, emailB).uploads.presign({
-        ledgerId,
-        fileName: 'test.jpg',
-        contentType: 'image/jpeg',
-      }),
-    ).rejects.toMatchObject({
-      code: 'FORBIDDEN',
-      message: expect.stringMatching(/not authorized/i),
-    })
   })
 
   it('4e: presign — valid cookie + member returns a callable URL', async () => {

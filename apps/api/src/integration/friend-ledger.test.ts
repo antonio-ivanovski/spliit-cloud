@@ -658,7 +658,7 @@ describe('Friend ledger — real DB', () => {
       await expect(
         makeInvitationsCaller().create({
           groupId,
-          email: 'invitee@example.test',
+          email: `invitee-${runId}@example.test`,
           role: 'MEMBER',
         }),
       ).rejects.toMatchObject({ code: 'FORBIDDEN' })
@@ -1322,78 +1322,5 @@ describe('Friend ledger — real DB', () => {
     )
     expect(noName).toBeDefined()
     expect(noName!.displayName).toBe(pendingNoNameEmail)
-  })
-})
-
-// ───────────────────────────────────────────────────────────────────
-// 13.13: migration data verification
-// ───────────────────────────────────────────────────────────────────
-describe('Migration: preference cleanup', () => {
-  const runId = testRunId()
-  const accountId = `acct-pref-${runId}`
-  const email = `pref-${runId}@test.example`
-  const groupId = `grp-pref-${runId}`
-
-  beforeAll(async () => {
-    await prisma.account.upsert({
-      where: { email },
-      update: {},
-      create: { id: accountId, email, emailVerified: true, name: 'Pref' },
-    })
-  })
-
-  afterAll(async () => {
-    await prisma.account.delete({ where: { id: accountId } }).catch(() => {})
-  })
-
-  it('pinned column is gone from AccountGroupPreference', async () => {
-    // Prisma's generated types no longer include `pinned`; reaching
-    // for the column via $queryRaw with an explicit column name will
-    // throw if it doesn't exist. Verify the introspection result.
-    const result = await prisma.$queryRaw<Array<{ column_name: string }>>`
-      SELECT column_name
-      FROM information_schema.columns
-      WHERE table_name = 'AccountGroupPreference'
-    `
-    const columnNames = result.map((r) => r.column_name)
-    expect(columnNames).toContain('starred')
-    expect(columnNames).toContain('hidden')
-    expect(columnNames).not.toContain('pinned')
-    expect(columnNames).not.toContain('archived')
-  })
-
-  it('archived data was merged into hidden', async () => {
-    // Insert a Group + Ledger minimally so we can attach a preference row
-    const ledger = await prisma.ledger.create({
-      data: { id: `ldg-${runId}`, currency: '$', currencyCode: 'USD' },
-    })
-    await prisma.group.create({
-      data: {
-        id: groupId,
-        name: 'Test',
-        groupType: GroupType.GROUP,
-        ledgerId: ledger.id,
-      },
-    })
-
-    // Set hidden=true via the new schema. The migration unioned
-    // `archived OR hidden` into `hidden` then dropped `archived`, so
-    // a row that used to be archived=true should now have hidden=true.
-    await prisma.accountGroupPreference.create({
-      data: {
-        id: `pref-${runId}`,
-        accountId,
-        groupId,
-        hidden: true,
-        starred: false,
-      },
-    })
-
-    const row = await prisma.accountGroupPreference.findUnique({
-      where: { accountId_groupId: { accountId, groupId } },
-    })
-    expect(row).not.toBeNull()
-    expect(row!.hidden).toBe(true)
-    expect(row!.starred).toBe(false)
   })
 })

@@ -5,8 +5,7 @@ export default defineConfig({
     globals: true,
     include: ['src/integration/**/*.test.ts'],
     environment: 'node',
-    // Integration tests rely on a real PostgreSQL — run one file at
-    // a time to avoid DB-level contention on the shared schema.
-    fileParallelism: false,
+    fileParallelism: true,
+    maxWorkers: 4,
   },
 })

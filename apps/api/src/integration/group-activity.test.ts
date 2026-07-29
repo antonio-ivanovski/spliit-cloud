@@ -493,7 +493,7 @@ describe('Group activity — real DB', () => {
     const invCaller = makeInvitationCaller(fixture)
     const { invitationId } = await invCaller.create({
       groupId: fixture.groupId,
-      email: 'new-invitee@test.example',
+      email: `new-invitee-${fixture.groupId}@test.example`,
       role: 'MEMBER',
     })
     expect(invitationId).toBeDefined()

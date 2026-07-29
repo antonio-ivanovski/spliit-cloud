@@ -12,8 +12,8 @@ export default defineConfig({
     setupFiles: ['./src/test/setup.ts'],
     css: false,
     restoreMocks: true,
-    // Integration tests hit a real API server — run one file at a time
-    fileParallelism: false,
+    fileParallelism: true,
+    maxWorkers: 2,
   },
   resolve: {
     alias: {

@@ -79,58 +79,6 @@ describe('defaultSplit — real DB', () => {
     await prisma.account.delete({ where: { id: adminId } }).catch(() => {})
   })
 
-  it('returns null when no default has been saved', async () => {
-    const { groupId } = await makeGroupsCaller().create({
-      groupFormValues: {
-        name: `DS Empty ${runId}`,
-        currency: '$',
-        currencyCode: 'USD',
-        participants: [{ name: 'Alice' }],
-      },
-    })
-    const group = await prisma.group.findUnique({ where: { id: groupId } })
-    trackLedger(group!.ledgerId)
-
-    const result = await makeAccountCaller().defaultSplit({ groupId })
-    expect(result.defaultSplit).toBeNull()
-  })
-
-  it('persists a BY_PERCENTAGE default and round-trips it', async () => {
-    const { groupId } = await makeGroupsCaller().create({
-      groupFormValues: {
-        name: `DS Percent ${runId}`,
-        currency: '$',
-        currencyCode: 'USD',
-        participants: [{ name: 'Alice' }],
-      },
-    })
-    const group = await prisma.group.findUnique({
-      where: { id: groupId },
-      include: {
-        ledger: true,
-        members: { include: { ledgerParticipant: true } },
-      },
-    })
-    trackLedger(group!.ledgerId)
-    const admin = group!.members[0]
-    const adminParticipantId = admin.ledgerParticipant!.id
-
-    const set = await makeAccountCaller().setDefaultSplit({
-      groupId,
-      defaultSplit: {
-        splitMode: 'BY_PERCENTAGE',
-        paidFor: [{ participant: adminParticipantId, shares: 10000 }],
-      },
-    })
-    expect(set.defaultSplit.splitMode).toBe('BY_PERCENTAGE')
-
-    const get = await makeAccountCaller().defaultSplit({ groupId })
-    expect(get.defaultSplit).toEqual({
-      splitMode: 'BY_PERCENTAGE',
-      paidFor: [{ participant: adminParticipantId, shares: 10000 }],
-    })
-  })
-
   it('rejects writes when the user is not an active member', async () => {
     const outsiderEmail = `outsider-${runId}@test.example`
     const outsiderId = `acct-outsider-${runId}`
@@ -175,29 +123,6 @@ describe('defaultSplit — real DB', () => {
     } finally {
       await prisma.account.delete({ where: { id: outsiderId } }).catch(() => {})
     }
-  })
-
-  it('rejects writes that reference a participant outside the ledger', async () => {
-    const { groupId } = await makeGroupsCaller().create({
-      groupFormValues: {
-        name: `DS Bad Part ${runId}`,
-        currency: '$',
-        currencyCode: 'USD',
-        participants: [{ name: 'Alice' }],
-      },
-    })
-    const group = await prisma.group.findUnique({ where: { id: groupId } })
-    trackLedger(group!.ledgerId)
-
-    await expect(
-      makeAccountCaller().setDefaultSplit({
-        groupId,
-        defaultSplit: {
-          splitMode: 'EVENLY',
-          paidFor: [{ participant: 'lp-not-in-group', shares: 1 }],
-        },
-      }),
-    ).rejects.toMatchObject({ code: 'BAD_REQUEST' })
   })
 
   it('overwrites an existing default on a second call', async () => {

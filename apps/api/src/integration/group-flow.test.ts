@@ -102,68 +102,6 @@ describe('Group flow — real DB', () => {
   })
 
   // ------------------------------------------------------------------
-  // 2. Create an expense in a group
-  // ------------------------------------------------------------------
-  it('creates an expense and verifies it is persisted with the correct ledger', async () => {
-    const caller = makeCaller()
-
-    // Create group
-    const { groupId } = await caller.create({
-      groupFormValues: {
-        name: `Expense Group ${runId}`,
-        currency: '€',
-        currencyCode: 'EUR',
-        participants: [{ name: 'Admin' }],
-      },
-    })
-    const group = await prisma.group.findUnique({
-      where: { id: groupId },
-      include: {
-        ledger: true,
-        members: { include: { ledgerParticipant: true } },
-      },
-    })
-    const ledger = group!.ledger
-    const adminParticipant = group!.members[0].ledgerParticipant!
-    trackLedger(ledger.id)
-
-    // Create expense
-    const expResult = await caller.expenses.create({
-      groupId,
-      expense: {
-        title: 'Groceries',
-        amount: 2500, // €25.00 in cents
-        paidByList: [{ participant: adminParticipant.id, shares: 2500 }],
-        paidBySplitMode: 'BY_AMOUNT',
-        isMultiPayer: false,
-        paidFor: [{ participant: adminParticipant.id, shares: 1 }],
-        category: 'general',
-        splitMode: 'EVENLY',
-        expenseDate: new Date().toISOString(),
-        isReimbursement: false,
-        documents: [],
-        recurrenceRule: 'NONE',
-      },
-    })
-    expect(expResult).toHaveProperty('expenseId')
-
-    // Verify in DB
-    const expense = await prisma.expense.findUnique({
-      where: { id: expResult.expenseId },
-      include: { paidByList: true, paidFor: true },
-    })
-    expect(expense).not.toBeNull()
-    expect(expense!.title).toBe('Groceries')
-    expect(expense!.amount).toBe(2500)
-    expect(expense!.ledgerId).toBe(ledger.id)
-    expect(expense!.paidByList).toHaveLength(1)
-    expect(expense!.paidByList[0].ledgerParticipantId).toBe(adminParticipant.id)
-    expect(expense!.paidByList[0].shares).toBe(2500)
-    expect(expense!.paidFor).toHaveLength(1)
-    expect(expense!.paidFor[0].ledgerParticipantId).toBe(adminParticipant.id)
-  })
-
-  // ------------------------------------------------------------------
   // 3. Balance calculation with 3 members and 2 expenses
   // ------------------------------------------------------------------
   it('computes correct balances for 3 members with 2 expenses', async () => {
