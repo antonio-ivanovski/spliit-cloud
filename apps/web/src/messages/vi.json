@@ -226,7 +226,8 @@
     "loadMore": "Tải thêm",
     "badgeRunning": "Đang chạy",
     "badgeStopped": "Đã dừng",
-    "badgeCompleted": "Đã hoàn thành"
+    "badgeCompleted": "Đã hoàn thành",
+    "timeZone": "Chạy lúc 15:00 theo {timeZone}"
   },
   "Groups": {
     "myGroups": "Nhóm của tôi",
@@ -767,6 +768,17 @@
       "loadError": "Không thể tải tùy chọn.",
       "retry": "Thử lại",
       "pushChannel": "Push"
+    },
+    "preferences": {
+      "title": "Tùy chọn ứng dụng",
+      "description": "Sử dụng cùng cài đặt mặc định và giao diện trên mọi thiết bị đã đăng nhập.",
+      "saveError": "Không thể lưu tùy chọn",
+      "defaultCurrency": "Tiền tệ mặc định",
+      "timeZone": "Múi giờ tài khoản",
+      "timeZoneHelp": "Dùng cho dấu thời gian, ngày tương đối và các khoản chi định kỳ mới.",
+      "language": "Ngôn ngữ",
+      "theme": "Giao diện",
+      "chooseTheme": "Chọn"
     }
   },
   "CompleteProfile": {
@@ -973,7 +985,9 @@
         "scheduleChangeWarning": "Lưu sẽ lên lịch lại lần này và các lần sau. Các chi phí tương lai hiện có có thể chuyển sang ngày mới hoặc bị xóa, và các ngày đến hạn thiếu có thể được tạo tự động.",
         "pastDateBackfillNote": "Ngày quá khứ — tạo cho các lần trước.",
         "completedOccurrence": "Đã hoàn thành",
-        "upcomingOccurrence": "Sắp tới"
+        "upcomingOccurrence": "Sắp tới",
+        "timeZoneDescription": "Các khoản chi định kỳ mới chạy lúc 15:00 theo {timeZone}. Lịch hiện có giữ nguyên múi giờ ban đầu.",
+        "timeZonePending": "Đang chờ múi giờ của tài khoản trước khi có thể bật tính năng lặp lại."
       },
       "paidFor": {
         "title": "Chia cho",
@@ -2206,5 +2220,18 @@
       "signInTitle": "Đăng nhập để kết nối",
       "signInDescription": "Sử dụng phương thức đăng nhập Spliit Cloud quen thuộc của bạn. Trợ lý không bao giờ cung cấp danh tính tài khoản được dùng cho các khoản chi."
     }
+  },
+  "TimeZoneSelector": {
+    "search": "Tìm múi giờ hoặc thành phố",
+    "noTimeZone": "Không tìm thấy múi giờ.",
+    "title": "Chọn múi giờ"
+  },
+  "TimeZoneMismatch": {
+    "title": "Cập nhật múi giờ của bạn?",
+    "description": "Tài khoản của bạn dùng {accountTimeZone}, nhưng thiết bị này được đặt thành {browserTimeZone}.",
+    "impact": "Việc cập nhật thay đổi cách hiển thị dấu thời gian và ngày tương đối, đồng thời áp dụng cho các khoản chi định kỳ mới. Lịch hiện có giữ nguyên múi giờ ban đầu.",
+    "saveError": "Không thể cập nhật múi giờ của bạn. Vui lòng thử lại.",
+    "keep": "Giữ {timeZone}",
+    "update": "Cập nhật thành {timeZone}"
   }
 }

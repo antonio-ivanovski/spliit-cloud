@@ -642,7 +642,9 @@
         "scheduleChangeWarning": "Bij het opslaan worden dit en toekomstige voorkomens opnieuw ingepland. Bestaande toekomstige uitgaven kunnen naar nieuwe data worden verplaatst of worden verwijderd, en ontbrekende vervaldata kunnen automatisch worden aangemaakt.",
         "pastDateBackfillNote": "Omdat deze uitgave in het verleden begint, worden voorkomens tot en met vandaag automatisch aangemaakt nadat je opslaat.",
         "completedOccurrence": "Aangemaakt",
-        "upcomingOccurrence": "Aankomend"
+        "upcomingOccurrence": "Aankomend",
+        "timeZoneDescription": "Nieuwe terugkerende uitgaven worden om 15:00 uitgevoerd in {timeZone}. Bestaande schema's behouden hun oorspronkelijke tijdzone.",
+        "timeZonePending": "Wachten op de tijdzone van je account voordat herhaling kan worden ingeschakeld."
       },
       "recurringEditScopeOccurrence": "Alleen dit voorkomen bewerken",
       "recurringEditScopeFuture": "Deze en toekomstige voorkomens bewerken"
@@ -1715,6 +1717,17 @@
         "expenses": "Uitgaven",
         "summaries": "Samenvattingen"
       }
+    },
+    "preferences": {
+      "title": "Appvoorkeuren",
+      "description": "Gebruik dezelfde standaardinstellingen en weergave op elk apparaat waarop je bent ingelogd.",
+      "saveError": "Voorkeuren konden niet worden opgeslagen",
+      "defaultCurrency": "Standaardvaluta",
+      "timeZone": "Tijdzone van account",
+      "timeZoneHelp": "Wordt gebruikt voor tijdstempels, relatieve datums en nieuwe terugkerende uitgaven.",
+      "language": "Taal",
+      "theme": "Thema",
+      "chooseTheme": "Kiezen"
     }
   },
   "Activities": {
@@ -2063,7 +2076,8 @@
     },
     "badgeRunning": "Terugkerend · Lopend",
     "badgeStopped": "Terugkerend · Gestopt",
-    "badgeCompleted": "Terugkerend · Voltooid"
+    "badgeCompleted": "Terugkerend · Voltooid",
+    "timeZone": "Wordt om 15:00 uitgevoerd in {timeZone}"
   },
   "CurrencyConverter": {
     "trigger": "Valutaconversie",
@@ -2134,5 +2148,18 @@
       "authorityBullet": "Je Spliit-account blijft de autoriteit",
       "validationBullet": "Bestaande validatie, saldi en meldingen blijven intact"
     }
+  },
+  "TimeZoneSelector": {
+    "search": "Zoek tijdzones of steden",
+    "noTimeZone": "Geen tijdzone gevonden.",
+    "title": "Kies een tijdzone"
+  },
+  "TimeZoneMismatch": {
+    "title": "Je tijdzone bijwerken?",
+    "description": "Je account gebruikt {accountTimeZone}, maar dit apparaat is ingesteld op {browserTimeZone}.",
+    "impact": "Bijwerken wijzigt hoe tijdstempels en relatieve datums worden weergegeven en wordt gebruikt voor nieuwe terugkerende uitgaven. Bestaande schema's behouden hun oorspronkelijke tijdzone.",
+    "saveError": "Je tijdzone kon niet worden bijgewerkt. Probeer het opnieuw.",
+    "keep": "{timeZone} behouden",
+    "update": "Bijwerken naar {timeZone}"
   }
 }

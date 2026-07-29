@@ -54,9 +54,9 @@ vi.mock('@tanstack/react-router', () => ({
 }))
 
 vi.mock('@/lib/currency', () => ({
-  getCurrency: () => ({
-    code: 'USD',
-    symbol: '$',
+  getCurrency: (code: string) => ({
+    code,
+    symbol: code === 'EUR' ? '€' : '$',
     rounding: 0,
     decimal_digits: 2,
   }),
@@ -68,10 +68,18 @@ vi.mock('@/lib/currency', () => ({
       rounding: 0,
       decimal_digits: 2,
     },
+    {
+      code: 'EUR',
+      symbol: '€',
+      name: 'Euro',
+      rounding: 0,
+      decimal_digits: 2,
+    },
   ],
 }))
 
 import { CreateFriend } from '@/app/friends/create/create-friend'
+import { SyncedAccountPreferencesProvider } from '@/components/account-preferences-sync'
 
 describe('CreateFriend', () => {
   beforeEach(() => {
@@ -93,6 +101,35 @@ describe('CreateFriend', () => {
     expect(
       screen.getByRole('tab', { name: 'Shareable link' }),
     ).toBeInTheDocument()
+  })
+
+  it('hydrates currency after an unrelated information edit', async () => {
+    const view = render(
+      <SyncedAccountPreferencesProvider value={null}>
+        <CreateFriend />
+      </SyncedAccountPreferencesProvider>,
+    )
+    await view.user.type(
+      screen.getByPlaceholderText("Add context like 'Roommate expenses'"),
+      'Shared flat',
+    )
+
+    view.rerender(
+      <SyncedAccountPreferencesProvider
+        value={{
+          defaultCurrencyCode: 'EUR',
+          timeZone: 'Europe/Paris',
+          locale: null,
+          theme: null,
+        }}
+      >
+        <CreateFriend />
+      </SyncedAccountPreferencesProvider>,
+    )
+
+    expect(
+      screen.getByRole('combobox', { name: 'Main currency' }),
+    ).toHaveTextContent('Euro')
   })
 
   it('renders the currency selector', () => {

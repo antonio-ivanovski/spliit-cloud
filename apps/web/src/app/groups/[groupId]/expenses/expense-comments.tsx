@@ -3,10 +3,12 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AccountAvatar } from '@/components/account-avatar'
+import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useLocale } from '@/i18n/react'
-import { formatDate } from '@/lib/utils'
+import { detectDeviceTimeZone } from '@/lib/account-preferences'
+import { formatZonedDate } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
@@ -28,6 +30,9 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
   const isPendingInvitee = useIsPendingInvitee()
   const linkInviteToken = useLinkInviteToken()
   const locale = useLocale()
+  const accountPreferences = useSyncedAccountPreferences()
+  const accountTimeZone =
+    accountPreferences?.timeZone ?? detectDeviceTimeZone() ?? 'UTC'
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpensePreview' })
   const utils = trpc.useUtils()
 
@@ -158,7 +163,11 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
                     dateTime={new Date(comment.createdAt).toISOString()}
                     className="shrink-0 text-muted-foreground"
                   >
-                    {formatDate(new Date(comment.createdAt), locale)}
+                    {formatZonedDate(
+                      new Date(comment.createdAt),
+                      locale,
+                      accountTimeZone,
+                    )}
                   </time>
                   {comment.canDelete && (
                     <Button

@@ -648,7 +648,9 @@
         "scheduleChangeWarning": "En desar, es reprogramaran aquesta ocurrència i les futures. Les despeses futures existents poden passar a noves dates o eliminar-se, i les dates de venciment que faltin es poden crear automàticament.",
         "pastDateBackfillNote": "Com que aquesta despesa comença en el passat, les ocurrències fins avui es crearan automàticament després de desar.",
         "completedOccurrence": "Creada",
-        "upcomingOccurrence": "Propera"
+        "upcomingOccurrence": "Propera",
+        "timeZoneDescription": "Les noves despeses recurrents s'executen a les 15:00 a {timeZone}. Les programacions existents mantenen la seva zona horària original.",
+        "timeZonePending": "S’està esperant la zona horària del compte abans de poder activar la recurrència."
       },
       "recurringEditScopeOccurrence": "Editant només aquesta ocurrència",
       "recurringEditScopeFuture": "Editant aquesta ocurrència i les futures"
@@ -1724,6 +1726,17 @@
         "expenses": "Despeses",
         "summaries": "Resums"
       }
+    },
+    "preferences": {
+      "title": "Preferències de l'aplicació",
+      "description": "Fes servir els mateixos valors predeterminats i la mateixa aparença en tots els dispositius on hagis iniciat la sessió.",
+      "saveError": "No s'han pogut desar les preferències",
+      "defaultCurrency": "Moneda predeterminada",
+      "timeZone": "Zona horària del compte",
+      "timeZoneHelp": "S'utilitza per a les marques de temps, les dates relatives i les noves despeses recurrents.",
+      "language": "Idioma",
+      "theme": "Tema",
+      "chooseTheme": "Tria"
     }
   },
   "Activities": {
@@ -2081,7 +2094,8 @@
     },
     "badgeRunning": "Recurrent · En curs",
     "badgeStopped": "Recurrent · Aturada",
-    "badgeCompleted": "Recurrent · Completada"
+    "badgeCompleted": "Recurrent · Completada",
+    "timeZone": "S'executa a les 15:00 a {timeZone}"
   },
   "CurrencyConverter": {
     "trigger": "Conversió de moneda",
@@ -2152,5 +2166,18 @@
       "signInTitle": "Inicia sessió per connectar",
       "signInDescription": "Fes servir el teu mètode habitual d'inici de sessió a Spliit Cloud. El teu assistent mai proporciona la identitat del compte utilitzat per a les despeses."
     }
+  },
+  "TimeZoneSelector": {
+    "search": "Cerca zones horàries o ciutats",
+    "noTimeZone": "No s’ha trobat cap zona horària.",
+    "title": "Tria una zona horària"
+  },
+  "TimeZoneMismatch": {
+    "title": "Vols actualitzar la zona horària?",
+    "description": "El teu compte utilitza {accountTimeZone}, però aquest dispositiu està configurat amb {browserTimeZone}.",
+    "impact": "L'actualització canvia com es mostren les marques de temps i les dates relatives, i s'utilitza per a les noves despeses recurrents. Les programacions recurrents existents mantenen la seva zona horària original.",
+    "saveError": "No s'ha pogut actualitzar la zona horària. Torna-ho a provar.",
+    "keep": "Mantén {timeZone}",
+    "update": "Actualitza a {timeZone}"
   }
 }

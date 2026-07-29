@@ -16,7 +16,7 @@ RUN --mount=type=cache,target=/root/.bun/install/cache bun install --frozen-lock
 
 FROM base AS builder
 ARG VITE_API_URL=http://localhost:3001
-ARG VITE_DEFAULT_CURRENCY_CODE
+ARG VITE_DEFAULT_CURRENCY_CODE=USD
 ENV VITE_API_URL=$VITE_API_URL
 ENV VITE_DEFAULT_CURRENCY_CODE=$VITE_DEFAULT_CURRENCY_CODE
 COPY --from=installer /app/node_modules ./node_modules

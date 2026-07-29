@@ -238,6 +238,7 @@ export function buildExpenseFormDefaults(args: {
   groupCurrency: Currency
   currentLedgerParticipantId: string | null | undefined
   reimbursementTitle: string
+  today?: Date
   /** Persisted default for this user+group, if any. */
   savedDefault?: unknown
 }): ExpenseFormInputValues {
@@ -251,11 +252,12 @@ export function buildExpenseFormDefaults(args: {
     currentLedgerParticipantId,
     reimbursementTitle,
     savedDefault,
+    today = new Date(),
   } = args
 
   // Copy: prefill like edit, but force today's date.
   if (isCopy && expense) {
-    const copyDate = new Date()
+    const copyDate = today
     const defaults = buildExpenseFormDefaults({
       isCreate: false,
       expense,
@@ -264,6 +266,7 @@ export function buildExpenseFormDefaults(args: {
       groupCurrency,
       currentLedgerParticipantId,
       reimbursementTitle,
+      today,
     })
     return {
       ...defaults,
@@ -413,7 +416,7 @@ export function buildExpenseFormDefaults(args: {
 
     return {
       title: expense.title,
-      expenseDate: expense.expenseDate ?? new Date(),
+      expenseDate: expense.expenseDate ?? today,
       amount: conversionRequired
         ? expense.originalAmount != null
           ? amountAsDecimal(expense.originalAmount, originalCurrency)
@@ -513,7 +516,7 @@ export function buildExpenseFormDefaults(args: {
             ]
       return {
         title: reimbursementTitle,
-        expenseDate: new Date(),
+        expenseDate: today,
         amount: totalDisplay,
         originalCurrency: searchOriginalCurrency,
         conversionRate: undefined,
@@ -541,7 +544,7 @@ export function buildExpenseFormDefaults(args: {
     }
     return {
       title: reimbursementTitle,
-      expenseDate: new Date(),
+      expenseDate: today,
       amount:
         searchParams.amount != null
           ? amountAsDecimal(Number(searchParams.amount) || 0, searchCurrency)
@@ -589,7 +592,7 @@ export function buildExpenseFormDefaults(args: {
 
   return {
     title: searchParams.title ?? '',
-    expenseDate: searchParams.date ? new Date(searchParams.date) : new Date(),
+    expenseDate: searchParams.date ? new Date(searchParams.date) : today,
     amount:
       searchParams.amount != null
         ? amountAsDecimal(Number(searchParams.amount) || 0, searchCurrency)

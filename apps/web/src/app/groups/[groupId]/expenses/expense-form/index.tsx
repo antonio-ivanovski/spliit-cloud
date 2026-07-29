@@ -9,7 +9,9 @@ import {
 } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
+import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import { Form } from '@/components/ui/form'
+import { detectDeviceTimeZone } from '@/lib/account-preferences'
 import { getCurrency } from '@/lib/currency'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import {
@@ -17,7 +19,7 @@ import {
   type Expense,
   type ExpenseFormInputValues,
 } from '@/lib/schemas'
-import { getCurrencyFromGroup } from '@/lib/utils'
+import { dateOnlyInAccountTimeZone, getCurrencyFromGroup } from '@/lib/utils'
 import type { CreateExpenseSearch } from '@/router/schemas'
 import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
@@ -85,6 +87,9 @@ export function ExpenseForm(props: {
   editScope?: 'OCCURRENCE' | 'THIS_AND_FUTURE' | null
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
+  const accountPreferences = useSyncedAccountPreferences()
+  const accountTimeZone =
+    accountPreferences?.timeZone ?? detectDeviceTimeZone() ?? 'UTC'
   const [hasValidationError, setHasValidationError] = useState(false)
   // Copy and fresh-create both surface as a Create flow even though
   // props.expense is set in copy mode (for field prefill).
@@ -116,6 +121,7 @@ export function ExpenseForm(props: {
       currentLedgerParticipantId: props.currentLedgerParticipantId,
       reimbursementTitle: t('reimbursement'),
       savedDefault,
+      today: dateOnlyInAccountTimeZone(new Date(), accountTimeZone),
     }),
   })
 
@@ -321,6 +327,7 @@ export function ExpenseForm(props: {
           readOnly={!!props.readOnly}
           sExpense={sExpense}
           isCreate={isCreate}
+          isCopy={props.isCopy}
           recurrenceSequence={
             !props.isCopy
               ? (props.expense?.recurrenceSequence ?? undefined)

@@ -1,6 +1,7 @@
 import i18next from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
+import { ACCOUNT_LOCALE_CHANGED_EVENT } from '@/lib/account-preferences'
 import { defaultLocale, locales, type Locale } from '@spliit/domain/i18n'
 
 const COOKIE_NAME = 'SPLIIT_LOCALE'
@@ -131,8 +132,18 @@ export async function initI18n() {
   return i18n
 }
 
-export async function setUserLocale(locale: Locale) {
-  document.cookie = `${COOKIE_NAME}=${locale};path=/;max-age=31536000;samesite=lax`
+export async function setUserLocale(
+  locale: Locale,
+  options: { notify?: boolean; persist?: boolean } = {},
+) {
+  if (options.persist !== false) {
+    document.cookie = `${COOKIE_NAME}=${locale};path=/;max-age=31536000;samesite=lax`
+  }
   await loadLocale(locale)
   await i18n.changeLanguage(locale)
+  if (options.notify !== false) {
+    window.dispatchEvent(
+      new CustomEvent(ACCOUNT_LOCALE_CHANGED_EVENT, { detail: locale }),
+    )
+  }
 }

@@ -642,7 +642,9 @@
         "scheduleChangeWarning": "Tallentaminen ajoittaa tämän ja tulevat toistot uudelleen. Olemassa olevat tulevat kulut voivat siirtyä uusiin päiviin tai poistua, ja puuttuvat eräpäivät voidaan luoda automaattisesti.",
         "pastDateBackfillNote": "Koska tämä kulu alkaa menneisyydessä, tämän päivän loppuun asti olevat toistot luodaan automaattisesti tallennuksen jälkeen.",
         "completedOccurrence": "Luotu",
-        "upcomingOccurrence": "Tulossa"
+        "upcomingOccurrence": "Tulossa",
+        "timeZoneDescription": "Uudet toistuvat kulut suoritetaan klo 15.00 aikavyöhykkeellä {timeZone}. Nykyiset ajoitukset säilyttävät alkuperäisen aikavyöhykkeensä.",
+        "timeZonePending": "Odotetaan tilisi aikavyöhykettä, ennen kuin toistuvuus voidaan ottaa käyttöön."
       },
       "recurringEditScopeOccurrence": "Muokataan vain tätä esiintymää",
       "recurringEditScopeFuture": "Muokataan tätä ja tulevia esiintymiä"
@@ -1715,6 +1717,17 @@
         "expenses": "Kulut",
         "summaries": "Yhteenvedot"
       }
+    },
+    "preferences": {
+      "title": "Sovellusasetukset",
+      "description": "Käytä samoja oletusasetuksia ja ulkoasua kaikilla laitteilla, joilla olet kirjautuneena sisään.",
+      "saveError": "Asetusten tallentaminen epäonnistui",
+      "defaultCurrency": "Oletusvaluutta",
+      "timeZone": "Tilin aikavyöhyke",
+      "timeZoneHelp": "Käytetään aikaleimoihin, suhteellisiin päivämääriin ja uusiin toistuviin kuluihin.",
+      "language": "Kieli",
+      "theme": "Teema",
+      "chooseTheme": "Valitse"
     }
   },
   "Activities": {
@@ -2063,7 +2076,8 @@
     },
     "badgeRunning": "Toistuva · Käynnissä",
     "badgeStopped": "Toistuva · Pysäytetty",
-    "badgeCompleted": "Toistuva · Valmis"
+    "badgeCompleted": "Toistuva · Valmis",
+    "timeZone": "Suoritetaan klo 15.00 aikavyöhykkeellä {timeZone}"
   },
   "CurrencyConverter": {
     "trigger": "Valuuttamuunnos",
@@ -2134,5 +2148,18 @@
       "authorityBullet": "Spliit-tilisi säilyy auktoriteettina",
       "validationBullet": "Nykyinen validointi, saldot ja ilmoitukset säilyvät ennallaan"
     }
+  },
+  "TimeZoneSelector": {
+    "search": "Hae aikavyöhykkeitä tai kaupunkeja",
+    "noTimeZone": "Aikavyöhykettä ei löytynyt.",
+    "title": "Valitse aikavyöhyke"
+  },
+  "TimeZoneMismatch": {
+    "title": "Päivitetäänkö aikavyöhyke?",
+    "description": "Tilisi käyttää aikavyöhykettä {accountTimeZone}, mutta tämän laitteen aikavyöhyke on {browserTimeZone}.",
+    "impact": "Päivitys muuttaa aikaleimojen ja suhteellisten päivämäärien näyttämistä ja koskee uusia toistuvia kuluja. Nykyiset ajoitukset säilyttävät alkuperäisen aikavyöhykkeensä.",
+    "saveError": "Aikavyöhykettä ei voitu päivittää. Yritä uudelleen.",
+    "keep": "Pidä {timeZone}",
+    "update": "Vaihda aikavyöhykkeeseen {timeZone}"
   }
 }

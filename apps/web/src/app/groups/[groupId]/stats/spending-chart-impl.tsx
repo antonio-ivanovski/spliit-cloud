@@ -19,7 +19,7 @@ import {
 
 import { useLocale } from '@/i18n/react'
 import type { Currency } from '@/lib/currency'
-import { amountAsDecimal, formatCurrency } from '@/lib/utils'
+import { amountAsDecimal, formatCurrency, formatDateOnly } from '@/lib/utils'
 
 import { CategoryIcon } from '../expenses/category-icon'
 import {
@@ -49,35 +49,18 @@ type CategoryBarShapeProps = BarShapeProps & {
   categoryId: StackKey
 }
 
-const dateFormatCache = new Map<string, Intl.DateTimeFormat>()
-
-function getDateFormat(
-  locale: string,
-  granularity: 'DAY' | 'WEEK' | 'MONTH',
-  includeYear: boolean,
-) {
-  const key = `${locale}:${granularity}:${includeYear ? 'Y' : 'N'}`
-  let fmt = dateFormatCache.get(key)
-  if (!fmt) {
-    const opts: Intl.DateTimeFormatOptions = {
-      ...(granularity === 'MONTH'
-        ? { month: 'short' }
-        : { day: 'numeric', month: 'short' }),
-      ...(includeYear ? { year: '2-digit' } : {}),
-    }
-    fmt = new Intl.DateTimeFormat(locale, opts)
-    dateFormatCache.set(key, fmt)
-  }
-  return fmt
-}
-
 function formatBucket(
   date: Date,
   granularity: 'DAY' | 'WEEK' | 'MONTH',
   locale: string,
 ) {
   const includeYear = date.getUTCFullYear() !== new Date().getUTCFullYear()
-  return getDateFormat(locale, granularity, includeYear).format(date)
+  return formatDateOnly(date, locale, {
+    ...(granularity === 'MONTH'
+      ? { month: 'short' }
+      : { day: 'numeric', month: 'short' }),
+    ...(includeYear ? { year: '2-digit' } : {}),
+  })
 }
 
 const compactNumberFormatCache = new Map<string, Intl.NumberFormat>()

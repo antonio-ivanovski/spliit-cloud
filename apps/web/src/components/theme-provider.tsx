@@ -1,11 +1,17 @@
 import type { PropsWithChildren } from 'react'
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 
-type Theme = 'light' | 'dark' | 'system'
+import {
+  ACCOUNT_THEME_CHANGED_EVENT,
+  type AccountTheme as Theme,
+} from '@/lib/account-preferences'
 
 type ThemeContextValue = {
   theme: Theme
-  setTheme: (theme: Theme) => void
+  setTheme: (
+    theme: Theme,
+    options?: { notify?: boolean; persist?: boolean },
+  ) => void
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null)
@@ -33,9 +39,19 @@ export function ThemeProvider({ children }: PropsWithChildren<object>) {
   const value = useMemo(
     () => ({
       theme,
-      setTheme: (nextTheme: Theme) => {
-        localStorage.setItem('theme', nextTheme)
+      setTheme: (
+        nextTheme: Theme,
+        options?: { notify?: boolean; persist?: boolean },
+      ) => {
+        if (options?.persist !== false) {
+          localStorage.setItem('theme', nextTheme)
+        }
         setThemeState(nextTheme)
+        if (options?.notify !== false) {
+          window.dispatchEvent(
+            new CustomEvent(ACCOUNT_THEME_CHANGED_EVENT, { detail: nextTheme }),
+          )
+        }
       },
     }),
     [theme],

@@ -326,7 +326,11 @@ export function notificationDeliverSingletonKey(payload: {
 
 export async function hasDeadLetteredMaterialization(
   boss: SpliitBoss,
-  payload: { seriesId: string; sequence: number; occurrenceDate: string },
+  payload: {
+    seriesId: string
+    sequence: number
+    occurrenceDate: string
+  },
 ): Promise<boolean> {
   const jobs = await boss.findJobs<JobPayload<'recurring-expense.materialize'>>(
     RECURRING_MATERIALIZATION_DLQ,

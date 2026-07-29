@@ -7,7 +7,11 @@ import { parseSpliitExport } from '@spliit/domain/import'
 
 import { randomId } from '../lib/api'
 import { groupsRouter } from '../trpc/routers/groups'
-import { checkDbConnection, testRunId } from './setup'
+import {
+  checkDbConnection,
+  initializeTestAccountTimeZone,
+  testRunId,
+} from './setup'
 
 await checkDbConnection()
 
@@ -58,6 +62,7 @@ describe('Multi-payer expenses — real DB', () => {
         name: 'Test Admin',
       },
     })
+    await initializeTestAccountTimeZone(adminId)
     trackAccount(adminId)
   })
 

@@ -1,5 +1,8 @@
 import { GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
-import { type GroupFormValues } from '@spliit/domain'
+import {
+  type GroupFormValues,
+  type GroupUpdateFormValues,
+} from '@spliit/domain'
 
 import { resolveParticipantDisplayName } from '../invitations/display'
 import {
@@ -11,7 +14,7 @@ import { getApiBoss } from './boss'
 import type { DiffableGroup } from './group-activity-diff'
 import { getGroupChangeSummary } from './group-activity-diff'
 import { accountSummarySelect } from './selects/account-summary'
-import { loadGroupWithLedger, randomId } from './shared'
+import { randomId } from './shared'
 
 /**
  * Create a cloud group with its accounting Ledger. The current account is added
@@ -65,48 +68,50 @@ export async function createGroup(
 
 export async function updateGroup(
   groupId: string,
-  groupFormValues: GroupFormValues,
+  groupFormValues: GroupUpdateFormValues,
   actor: { accountId: string },
 ) {
-  const existingGroup = await loadGroupWithLedger(groupId)
-  if (!existingGroup) throw new Error('Invalid group ID')
-  if (!existingGroup.ledgerId) throw new Error('Group has no ledger')
-  if (existingGroup.archived) {
-    throw new Error('Cannot modify settings of an archived group')
-  }
-
-  const oldGroup: DiffableGroup = {
-    name: existingGroup.name,
-    information: existingGroup.information,
-    currency: existingGroup.ledger.currency,
-    currencyCode: existingGroup.ledger.currencyCode,
-  }
-  const newGroup: DiffableGroup = {
-    name: groupFormValues.name,
-    information: groupFormValues.information ?? null,
-    currency: groupFormValues.currency,
-    currencyCode: groupFormValues.currencyCode || null,
-  }
-
-  const currencyChanged =
-    oldGroup.currency !== newGroup.currency ||
-    (oldGroup.currencyCode ?? null) !== (newGroup.currencyCode ?? null)
-
-  if (currencyChanged) {
-    const expenseCount = await prisma.expense.count({
-      where: { ledgerId: existingGroup.ledgerId },
-    })
-    if (expenseCount > 0) {
-      throw new Error(
-        'Cannot change the group currency after expenses exist. Ledger amounts would no longer match.',
-      )
-    }
-  }
-
-  const summary = getGroupChangeSummary(oldGroup, newGroup, {})
-
   const boss = await getApiBoss()
   const result = await prisma.$transaction(async (tx) => {
+    await tx.$queryRaw`SELECT "id" FROM "Group" WHERE "id" = ${groupId} FOR UPDATE`
+    const existingGroup = await tx.group.findUnique({
+      where: { id: groupId },
+      include: { ledger: true },
+    })
+    if (!existingGroup) throw new Error('Invalid group ID')
+    if (!existingGroup.ledgerId || !existingGroup.ledger)
+      throw new Error('Group has no ledger')
+    if (existingGroup.archived) {
+      throw new Error('Cannot modify settings of an archived group')
+    }
+
+    const oldGroup: DiffableGroup = {
+      name: existingGroup.name,
+      information: existingGroup.information,
+      currency: existingGroup.ledger.currency,
+      currencyCode: existingGroup.ledger.currencyCode,
+    }
+    const newGroup: DiffableGroup = {
+      name: groupFormValues.name,
+      information: groupFormValues.information ?? null,
+      currency: groupFormValues.currency,
+      currencyCode: groupFormValues.currencyCode || null,
+    }
+    const currencyChanged =
+      oldGroup.currency !== newGroup.currency ||
+      (oldGroup.currencyCode ?? null) !== (newGroup.currencyCode ?? null)
+    if (currencyChanged) {
+      const expenseCount = await tx.expense.count({
+        where: { ledgerId: existingGroup.ledgerId },
+      })
+      if (expenseCount > 0) {
+        throw new Error(
+          'Cannot change the group currency after expenses exist. Ledger amounts would no longer match.',
+        )
+      }
+    }
+    const summary = getGroupChangeSummary(oldGroup, newGroup, {})
+
     const group = await tx.group.update({
       where: { id: groupId },
       data: {
@@ -254,7 +259,9 @@ export async function getGroups(groupIds: string[]) {
   const groups = await prisma.group.findMany({
     where: { id: { in: groupIds } },
     include: {
-      ledger: { select: { currency: true, currencyCode: true } },
+      ledger: {
+        select: { currency: true, currencyCode: true },
+      },
       _count: { select: { members: true } },
     },
   })

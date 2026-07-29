@@ -642,7 +642,9 @@
         "scheduleChangeWarning": "Kaydetmek bu ve gelecekteki yinelemeleri yeniden planlar. Mevcut gelecekteki giderler yeni tarihlere taşınabilir veya kaldırılabilir; eksik vade tarihleri otomatik olarak oluşturulabilir.",
         "pastDateBackfillNote": "Bu gider geçmişte başladığı için bugüne kadar olan yinelemeler kaydettikten sonra otomatik olarak oluşturulacaktır.",
         "completedOccurrence": "Oluşturuldu",
-        "upcomingOccurrence": "Yaklaşan"
+        "upcomingOccurrence": "Yaklaşan",
+        "timeZoneDescription": "Yeni yinelenen giderler {timeZone} saat diliminde 15:00'te çalışır. Mevcut planlar özgün saat dilimlerini korur.",
+        "timeZonePending": "Tekrarlama etkinleştirilmeden önce hesap saat diliminiz bekleniyor."
       },
       "recurringEditScopeOccurrence": "Yalnızca bu yineleme düzenleniyor",
       "recurringEditScopeFuture": "Bu ve gelecekteki yinelemeler düzenleniyor"
@@ -1715,6 +1717,17 @@
         "expenses": "Harcamalar",
         "summaries": "Özetler"
       }
+    },
+    "preferences": {
+      "title": "Uygulama tercihleri",
+      "description": "Oturum açtığınız tüm cihazlarda aynı varsayılan ayarları ve görünümü kullanın.",
+      "saveError": "Tercihler kaydedilemedi",
+      "defaultCurrency": "Varsayılan para birimi",
+      "timeZone": "Hesap saat dilimi",
+      "timeZoneHelp": "Zaman damgaları, göreli tarihler ve yeni yinelenen giderler için kullanılır.",
+      "language": "Dil",
+      "theme": "Tema",
+      "chooseTheme": "Seçin"
     }
   },
   "Activities": {
@@ -2063,7 +2076,8 @@
     },
     "badgeRunning": "Yinelenen · Devam Ediyor",
     "badgeStopped": "Yinelenen · Durduruldu",
-    "badgeCompleted": "Yinelenen · Tamamlandı"
+    "badgeCompleted": "Yinelenen · Tamamlandı",
+    "timeZone": "{timeZone} saat diliminde 15:00'te çalışır"
   },
   "CurrencyConverter": {
     "trigger": "Para Birimi Dönüşümü",
@@ -2134,5 +2148,18 @@
       "signInTitle": "Bağlanmak için giriş yapın",
       "signInDescription": "Her zamanki Spliit Cloud giriş yönteminizi kullanın. Asistanınız giderlerde kullanılacak hesap kimliğini hiçbir zaman sağlamaz."
     }
+  },
+  "TimeZoneSelector": {
+    "search": "Saat dilimi veya şehir ara",
+    "noTimeZone": "Saat dilimi bulunamadı.",
+    "title": "Saat dilimi seç"
+  },
+  "TimeZoneMismatch": {
+    "title": "Saat diliminiz güncellensin mi?",
+    "description": "Hesabınız {accountTimeZone} kullanıyor, ancak bu cihaz {browserTimeZone} olarak ayarlı.",
+    "impact": "Güncelleme, zaman damgalarının ve göreli tarihlerin gösterimini değiştirir ve yeni yinelenen giderlerde kullanılır. Mevcut planlar özgün saat dilimlerini korur.",
+    "saveError": "Saat diliminiz güncellenemedi. Lütfen tekrar deneyin.",
+    "keep": "{timeZone} kalsın",
+    "update": "{timeZone} olarak güncelle"
   }
 }

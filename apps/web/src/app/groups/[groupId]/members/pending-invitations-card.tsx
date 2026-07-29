@@ -31,11 +31,13 @@ export function PendingInvitationsCard({
   isLoading,
   onRevoke,
   locale,
+  timeZone,
 }: {
   invitations: Invitation[]
   isLoading: boolean
   onRevoke: (invitation: { ledgerParticipantId: string; label: string }) => void
   locale: string
+  timeZone: string
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
 
@@ -86,7 +88,11 @@ export function PendingInvitationsCard({
                     {invitation.createdAt && (
                       <p className="mt-0.5 text-xs text-muted-foreground">
                         {t('invitations.sentOn', {
-                          date: formatDate(invitation.createdAt, locale),
+                          date: formatDate(
+                            invitation.createdAt,
+                            locale,
+                            timeZone,
+                          ),
                         })}
                       </p>
                     )}

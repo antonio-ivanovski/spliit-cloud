@@ -80,6 +80,7 @@ export function BasicDetailsCard(props: {
   sExpense: 'Expense' | 'Income'
   isIncome: boolean
   isCreate: boolean
+  isCopy?: boolean
   recurrenceSequence?: number
   editScope?: 'OCCURRENCE' | 'THIS_AND_FUTURE' | null
   initialRecurrence?: ExpenseFormInputValues['recurrence']
@@ -379,6 +380,7 @@ export function BasicDetailsCard(props: {
             <RecurrenceSection
               form={form}
               readOnly={readOnly}
+              isCopy={props.isCopy}
               currentSequence={props.recurrenceSequence}
               editScope={props.editScope}
               initialRecurrence={props.initialRecurrence}

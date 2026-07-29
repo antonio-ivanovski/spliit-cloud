@@ -2,9 +2,11 @@ import { BellRing, Mail, Smartphone } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { useStartupTimeZoneCheck } from '@/components/account-preferences-sync'
 import { Button } from '@/components/ui/button'
 import {
   ResponsiveDialog,
+  ResponsiveDialogBody,
   ResponsiveDialogContent,
   ResponsiveDialogDescription,
   ResponsiveDialogFooter,
@@ -145,6 +147,7 @@ type PreferenceData = {
 export function PushNotificationOnboarding() {
   const { t } = useTranslation()
   const { data: account, isPending: accountPending } = useCurrentAccount()
+  const timeZoneCheck = useStartupTimeZoneCheck()
   const push = usePushNotifications()
   const utils = trpc.useUtils()
   const preferences = trpc.notifications.preferences.get.useQuery(
@@ -182,6 +185,8 @@ export function PushNotificationOnboarding() {
   const eligible = useMemo(
     () =>
       !!accountId &&
+      timeZoneCheck.checked &&
+      !timeZoneCheck.promptActive &&
       !accountPending &&
       !needsDisplayName(account) &&
       !preferences.isPending &&
@@ -196,6 +201,8 @@ export function PushNotificationOnboarding() {
       account,
       accountId,
       accountPending,
+      timeZoneCheck.checked,
+      timeZoneCheck.promptActive,
       mode,
       preferences.isError,
       preferences.isPending,
@@ -377,21 +384,21 @@ export function PushNotificationOnboarding() {
       }}
     >
       <ResponsiveDialogContent
-        className="max-w-md"
+        className="max-w-md min-w-0"
         data-testid="push-notification-onboarding"
       >
-        <ResponsiveDialogHeader>
+        <ResponsiveDialogHeader className="min-w-0">
           <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary sm:mx-0">
             <BellRing className="h-6 w-6" aria-hidden="true" />
           </div>
-          <ResponsiveDialogTitle>
+          <ResponsiveDialogTitle className="break-words">
             {result === 'denied'
               ? t('PushOnboarding.deniedTitle')
               : result === 'failed'
                 ? t('PushOnboarding.failedTitle')
                 : t('PushOnboarding.title')}
           </ResponsiveDialogTitle>
-          <ResponsiveDialogDescription>
+          <ResponsiveDialogDescription className="break-words">
             {result === 'denied'
               ? t('PushOnboarding.deniedDescription')
               : result === 'failed'
@@ -399,96 +406,115 @@ export function PushNotificationOnboarding() {
                 : t('PushOnboarding.description')}
           </ResponsiveDialogDescription>
         </ResponsiveDialogHeader>
-        {result ? (
-          <div className="flex flex-col gap-3 text-sm">
-            <div className="flex items-start gap-3 rounded-lg border bg-muted/30 p-3">
-              <Mail
-                className="mt-0.5 h-4 w-4 shrink-0 text-primary"
-                aria-hidden="true"
-              />
-              <p>{t('PushOnboarding.emailUsage')}</p>
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {t('PushOnboarding.settingsHint')}
-            </p>
-            {preferenceError ? (
-              <p className="text-sm text-destructive" role="alert">
-                {t('AccountSettings.notifications.saveError')}
-              </p>
-            ) : null}
-            <ResponsiveDialogFooter className="mt-2">
-              <Button
-                type="button"
-                onClick={dismiss}
-                disabled={savePreferences.isPending}
-              >
-                {t('PushOnboarding.done')}
-              </Button>
-            </ResponsiveDialogFooter>
-          </div>
-        ) : (
-          <>
-            <div className="flex flex-col gap-3 text-sm">
-              <div className="flex items-start gap-3 rounded-lg border bg-muted/30 p-3">
-                <Smartphone
+        <ResponsiveDialogBody className="min-w-0">
+          {result ? (
+            <div className="flex min-w-0 flex-col gap-3 text-sm">
+              <div className="flex min-w-0 items-start gap-3 rounded-lg border bg-muted/30 p-3">
+                <Mail
                   className="mt-0.5 h-4 w-4 shrink-0 text-primary"
                   aria-hidden="true"
                 />
-                <p>{t('PushOnboarding.pushBenefit')}</p>
+                <p className="min-w-0 break-words">
+                  {t('PushOnboarding.emailUsage')}
+                </p>
               </div>
-              {mode === 'initial' ? (
-                <div className="flex items-start gap-3 rounded-lg border bg-muted/30 p-3">
-                  <Mail
-                    className="mt-0.5 h-4 w-4 shrink-0 text-primary"
-                    aria-hidden="true"
-                  />
-                  <p>{t('PushOnboarding.emailFallback')}</p>
-                </div>
-              ) : mode === 'email-only-device' ? (
-                <div className="flex items-start gap-3 rounded-lg border bg-muted/30 p-3">
-                  <Mail
-                    className="mt-0.5 h-4 w-4 shrink-0 text-primary"
-                    aria-hidden="true"
-                  />
-                  <p>{t('PushOnboarding.emailUsage')}</p>
-                </div>
-              ) : null}
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs break-words text-muted-foreground">
                 {t('PushOnboarding.settingsHint')}
               </p>
+              {preferenceError ? (
+                <p
+                  className="text-sm break-words text-destructive"
+                  role="alert"
+                >
+                  {t('AccountSettings.notifications.saveError')}
+                </p>
+              ) : null}
+              <ResponsiveDialogFooter className="mt-2 min-w-0">
+                <Button
+                  type="button"
+                  className="max-w-full whitespace-normal"
+                  onClick={dismiss}
+                  disabled={savePreferences.isPending}
+                >
+                  {t('PushOnboarding.done')}
+                </Button>
+              </ResponsiveDialogFooter>
             </div>
-            <ResponsiveDialogFooter className="mt-2 flex flex-col gap-2 sm:flex-row sm:justify-end">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() =>
-                  mode === 'initial' ? void chooseEmail() : dismiss()
-                }
-                disabled={isEnabling || savePreferences.isPending}
-              >
-                {preferenceError
-                  ? t('AccountSettings.notifications.retry')
-                  : mode === 'initial'
-                    ? t('PushOnboarding.useEmail')
-                    : t('InstallPromotion.dismiss')}
-              </Button>
-              <Button
-                type="button"
-                onClick={() => void enable()}
-                disabled={isEnabling || savePreferences.isPending}
-              >
-                {isEnabling
-                  ? t('PushOnboarding.enabling')
-                  : t('PushOnboarding.enable')}
-              </Button>
-            </ResponsiveDialogFooter>
-            {preferenceError ? (
-              <p className="text-sm text-destructive" role="alert">
-                {t('AccountSettings.notifications.saveError')}
-              </p>
-            ) : null}
-          </>
-        )}
+          ) : (
+            <>
+              <div className="flex min-w-0 flex-col gap-3 text-sm">
+                <div className="flex min-w-0 items-start gap-3 rounded-lg border bg-muted/30 p-3">
+                  <Smartphone
+                    className="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                    aria-hidden="true"
+                  />
+                  <p className="min-w-0 break-words">
+                    {t('PushOnboarding.pushBenefit')}
+                  </p>
+                </div>
+                {mode === 'initial' ? (
+                  <div className="flex min-w-0 items-start gap-3 rounded-lg border bg-muted/30 p-3">
+                    <Mail
+                      className="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                      aria-hidden="true"
+                    />
+                    <p className="min-w-0 break-words">
+                      {t('PushOnboarding.emailFallback')}
+                    </p>
+                  </div>
+                ) : mode === 'email-only-device' ? (
+                  <div className="flex min-w-0 items-start gap-3 rounded-lg border bg-muted/30 p-3">
+                    <Mail
+                      className="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                      aria-hidden="true"
+                    />
+                    <p className="min-w-0 break-words">
+                      {t('PushOnboarding.emailUsage')}
+                    </p>
+                  </div>
+                ) : null}
+                <p className="text-xs break-words text-muted-foreground">
+                  {t('PushOnboarding.settingsHint')}
+                </p>
+              </div>
+              <ResponsiveDialogFooter className="mt-2 flex min-w-0 flex-col gap-2 sm:flex-row sm:justify-end">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="max-w-full whitespace-normal"
+                  onClick={() =>
+                    mode === 'initial' ? void chooseEmail() : dismiss()
+                  }
+                  disabled={isEnabling || savePreferences.isPending}
+                >
+                  {preferenceError
+                    ? t('AccountSettings.notifications.retry')
+                    : mode === 'initial'
+                      ? t('PushOnboarding.useEmail')
+                      : t('InstallPromotion.dismiss')}
+                </Button>
+                <Button
+                  type="button"
+                  className="max-w-full whitespace-normal"
+                  onClick={() => void enable()}
+                  disabled={isEnabling || savePreferences.isPending}
+                >
+                  {isEnabling
+                    ? t('PushOnboarding.enabling')
+                    : t('PushOnboarding.enable')}
+                </Button>
+              </ResponsiveDialogFooter>
+              {preferenceError ? (
+                <p
+                  className="text-sm break-words text-destructive"
+                  role="alert"
+                >
+                  {t('AccountSettings.notifications.saveError')}
+                </p>
+              ) : null}
+            </>
+          )}
+        </ResponsiveDialogBody>
       </ResponsiveDialogContent>
     </ResponsiveDialog>
   )

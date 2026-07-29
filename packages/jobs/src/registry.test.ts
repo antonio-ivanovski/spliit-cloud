@@ -26,6 +26,20 @@ function createBossMock() {
 }
 
 describe('notification job registry', () => {
+  it('accepts legacy v1 materialization payloads without a schedule version', () => {
+    expect(
+      jobPayloadSchema('recurring-expense.materialize').parse({
+        seriesId: 'series-1',
+        sequence: 2,
+        occurrenceDate: '2026-07-22',
+      }),
+    ).toEqual({
+      seriesId: 'series-1',
+      sequence: 2,
+      occurrenceDate: '2026-07-22',
+    })
+  })
+
   it('declares every job name with a payload schema', () => {
     expect(JOB_NAMES.NOTIFICATION_DELIVER).toBe('notification.deliver')
     expect(JOB_NAMES.NOTIFICATION_RECONCILE).toBe('notification.reconcile')

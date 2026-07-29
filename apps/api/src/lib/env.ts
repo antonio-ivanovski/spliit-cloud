@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+import { supportedCurrencyCodeSchema } from '@spliit/domain'
+
 const interpretEnvVarAsBool = (val: unknown): boolean => {
   if (typeof val !== 'string') return false
   return ['true', 'yes', '1', 'on'].includes(val.toLowerCase())
@@ -15,7 +17,7 @@ const envSchema = z
       interpretEnvVarAsBool,
       z.boolean().default(false),
     ),
-    PUBLIC_DEFAULT_CURRENCY_CODE: z.string().optional(),
+    PUBLIC_DEFAULT_CURRENCY_CODE: supportedCurrencyCodeSchema.default('USD'),
     S3_UPLOAD_KEY: z.string().optional(),
     S3_UPLOAD_SECRET: z.string().optional(),
     S3_UPLOAD_BUCKET: z.string().optional(),

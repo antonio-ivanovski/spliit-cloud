@@ -666,6 +666,7 @@ export async function updateExpense(
                 completed,
                 config: recurrence,
                 maxSequence,
+                timeZone: existingSeries.timeZone,
               })
             : null
         await tx.recurringExpenseSeries.update({

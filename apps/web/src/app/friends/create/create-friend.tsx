@@ -1,10 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
 import { ArrowLeft } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import type { z } from 'zod'
 
+import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import { CurrencySelector } from '@/components/currency-selector'
 import Link from '@/components/link'
 import { SubmitButton } from '@/components/submit-button'
@@ -38,6 +40,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/components/ui/use-toast'
+import type { AccountPreferences } from '@/lib/account-preferences'
 import { getCurrency, useCurrencies } from '@/lib/currency'
 import { trpc } from '@/trpc/client'
 import { friendFormSchema, type FriendFormValues } from '@spliit/domain/schemas'
@@ -50,6 +53,7 @@ type CreateFriendResponse = {
 }
 
 type PeerTab = 'friends' | 'email' | 'link'
+type FriendFormInput = z.input<typeof friendFormSchema>
 
 function FriendOptionContent({
   name,
@@ -82,6 +86,8 @@ export function CreateFriend() {
   const [peerTab, setPeerTab] = useState<PeerTab>('friends')
 
   const friendsQuery = trpc.account.friends.useQuery()
+  const accountPreferences =
+    useSyncedAccountPreferences() as AccountPreferences | null
   const friends = friendsQuery.data?.friends ?? []
   const hasInvitableFriend = friends.length > 0
 
@@ -93,7 +99,9 @@ export function CreateFriend() {
   })
 
   const defaultCurrencyCode =
-    import.meta.env.VITE_DEFAULT_CURRENCY_CODE || 'USD'
+    accountPreferences?.defaultCurrencyCode ??
+    import.meta.env.VITE_DEFAULT_CURRENCY_CODE ??
+    'USD'
   const defaultCurrency = getCurrency(defaultCurrencyCode) ?? {
     code: 'USD',
     symbol: '$',
@@ -101,7 +109,7 @@ export function CreateFriend() {
     decimal_digits: 2,
   }
 
-  const form = useForm<FriendFormValues>({
+  const form = useForm<FriendFormInput, unknown, FriendFormValues>({
     resolver: zodResolver(friendFormSchema),
     defaultValues: {
       peerAccountId: undefined,
@@ -113,6 +121,25 @@ export function CreateFriend() {
       information: '',
     },
   })
+
+  useEffect(() => {
+    if (!accountPreferences) return
+    const currencyCodeState = form.getFieldState('currencyCode')
+    const currencyState = form.getFieldState('currency')
+    if (
+      accountPreferences.defaultCurrencyCode &&
+      !currencyCodeState.isDirty &&
+      !currencyCodeState.isTouched &&
+      !currencyState.isDirty &&
+      !currencyState.isTouched
+    ) {
+      const currency = getCurrency(accountPreferences.defaultCurrencyCode)
+      if (currency) {
+        form.setValue('currencyCode', currency.code)
+        form.setValue('currency', currency.symbol)
+      }
+    }
+  }, [accountPreferences, form])
 
   const currencies = useCurrencies(
     tGroupForm('CurrencyCodeField.customOption'),
@@ -415,8 +442,10 @@ export function CreateFriend() {
                       {tGroupForm('CurrencyCodeField.label')}
                     </FormLabel>
                     <CurrencySelector
+                      aria-label={tGroupForm('CurrencyCodeField.label')}
                       currencies={currencies}
                       defaultValue={form.watch(field.name) ?? ''}
+                      pinnedCurrencyCode={form.watch(field.name) ?? undefined}
                       onValueChange={(newCurrency) => {
                         field.onChange(newCurrency)
                         const currency =

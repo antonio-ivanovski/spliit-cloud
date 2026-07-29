@@ -1,7 +1,8 @@
-import { Check } from 'lucide-react'
+import { Check, ChevronDown } from 'lucide-react'
 import { forwardRef, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { useAccountPreferenceUpdater } from '@/components/account-preferences-sync'
 import {
   getLocalizedLocaleLabels,
   localeFlags,
@@ -39,24 +40,73 @@ import { cn } from '@/lib/utils'
 
 export function LocaleSwitcher() {
   const locale = useLocale() as Locale
+  const updater = useAccountPreferenceUpdater()
+  const selectLocale = (nextLocale: Locale) => {
+    if (updater) {
+      void setUserLocale(nextLocale, { persist: false, notify: false })
+      void updater.patchPreferences({ locale: nextLocale })
+    } else {
+      void setUserLocale(nextLocale)
+    }
+  }
+  return (
+    <LocaleSelector
+      value={locale}
+      onValueChange={selectLocale}
+      showLabelOnDesktop
+      disabled={updater !== null && !updater.ready}
+    />
+  )
+}
+
+export function LocaleSelector({
+  value,
+  onValueChange,
+  showLabel = false,
+  showLabelOnDesktop = false,
+  field = false,
+  className,
+  variant,
+  disabled = false,
+}: {
+  value: Locale
+  onValueChange: (locale: Locale) => void
+  showLabel?: boolean
+  showLabelOnDesktop?: boolean
+  field?: boolean
+  className?: string
+  variant?: ButtonProps['variant']
+  disabled?: boolean
+}) {
   const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery('(min-width: 768px)')
   const { t } = useTranslation(undefined, { keyPrefix: 'LanguageSwitcher' })
-
   const selectLocale = (nextLocale: Locale) => {
     setOpen(false)
-    void setUserLocale(nextLocale)
+    onValueChange(nextLocale)
   }
-
-  const picker = <LocaleCommand locale={locale} onValueChange={selectLocale} />
-
+  const picker = <LocaleCommand locale={value} onValueChange={selectLocale} />
   if (isDesktop) {
     return (
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <LocaleButton locale={locale} showLabel />
+          <LocaleButton
+            locale={value}
+            showLabel={field || showLabel || showLabelOnDesktop}
+            field={field}
+            open={open}
+            className={className}
+            variant={variant}
+            disabled={disabled}
+          />
         </PopoverTrigger>
-        <PopoverContent align="end" className="w-80 p-0">
+        <PopoverContent
+          align={field ? 'start' : 'end'}
+          className={cn(
+            'p-0',
+            field ? 'w-[min(20rem,calc(100vw-2rem))]' : 'w-80',
+          )}
+        >
           {picker}
         </PopoverContent>
       </Popover>
@@ -66,7 +116,15 @@ export function LocaleSwitcher() {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <LocaleButton locale={locale} />
+        <LocaleButton
+          locale={value}
+          showLabel={field || showLabel}
+          field={field}
+          open={open}
+          className={className}
+          variant={variant}
+          disabled={disabled}
+        />
       </DrawerTrigger>
       <DrawerContent className="p-0">
         <DrawerHeader className="pb-2 text-start">
@@ -185,33 +243,70 @@ function LocaleCommand({
 type LocaleButtonProps = {
   locale: Locale
   showLabel?: boolean
+  field?: boolean
+  open?: boolean
 }
 
 const LocaleButton = forwardRef<
   HTMLButtonElement,
   ButtonProps & LocaleButtonProps
->(({ locale, showLabel = false, className, ...props }, ref) => {
-  const label = localeLabels[locale]
+>(
+  (
+    {
+      locale,
+      showLabel = false,
+      field = false,
+      open = false,
+      className,
+      variant,
+      ...props
+    },
+    ref,
+  ) => {
+    const label = localeLabels[locale]
 
-  return (
-    <Button
-      ref={ref}
-      type="button"
-      variant="ghost"
-      size={showLabel ? 'sm' : 'icon'}
-      className={cn(
-        showLabel ? '-my-3 gap-2 text-primary' : 'size-10 text-primary',
-        className,
-      )}
-      aria-label={label}
-      title={label}
-      {...props}
-    >
-      <LocaleFlag locale={locale} />
-      {showLabel && <span>{label}</span>}
-    </Button>
-  )
-})
+    return (
+      <Button
+        ref={ref}
+        type="button"
+        variant={variant ?? (field ? 'outline' : 'ghost')}
+        size={field ? 'default' : showLabel ? 'sm' : 'icon'}
+        className={cn(
+          field
+            ? 'h-10 w-full min-w-0 justify-between px-3 py-2 text-start font-normal text-foreground'
+            : showLabel
+              ? '-my-3 gap-2 text-primary'
+              : 'size-10 text-primary',
+          className,
+        )}
+        role={field ? 'combobox' : undefined}
+        aria-haspopup={field ? 'listbox' : undefined}
+        aria-expanded={field ? open : undefined}
+        aria-label={label}
+        title={label}
+        {...props}
+      >
+        {field ? (
+          <>
+            <span className="flex min-w-0 items-center gap-3">
+              <LocaleFlag locale={locale} />
+              <span className="truncate">{label}</span>
+            </span>
+            <ChevronDown
+              className="ms-2 size-4 shrink-0 opacity-50"
+              aria-hidden="true"
+            />
+          </>
+        ) : (
+          <>
+            <LocaleFlag locale={locale} />
+            {showLabel && <span>{label}</span>}
+          </>
+        )}
+      </Button>
+    )
+  },
+)
 LocaleButton.displayName = 'LocaleButton'
 
 function LocaleFlag({ locale }: { locale: Locale }) {

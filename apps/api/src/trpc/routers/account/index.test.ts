@@ -19,6 +19,10 @@ function makeCaller(authUserId: string) {
   } as never)
 }
 
+function makeAnonymousCaller() {
+  return accountRouter.createCaller({ auth: null } as never)
+}
+
 async function authAs(userId: string) {
   authState.session = {
     user: { id: userId },
@@ -78,6 +82,318 @@ function mockGroupWithMembership(
     }))
   prismaMock.accountGroupPreference.findMany.mockResolvedValue(prefs as never)
 }
+
+describe('accountRouter account preferences', () => {
+  it('requires authentication', async () => {
+    await expect(makeAnonymousCaller().getPreferences()).rejects.toMatchObject({
+      code: 'UNAUTHORIZED',
+    })
+  })
+
+  it('returns an unset preference shape when no row exists', async () => {
+    prismaMock.accountPreference.findUnique.mockResolvedValue(null)
+
+    await expect(makeCaller('acct-1').getPreferences()).resolves.toEqual({
+      preferences: {
+        defaultCurrencyCode: null,
+        timeZone: null,
+        locale: null,
+        theme: null,
+      },
+    })
+  })
+
+  it('initializes each device value only while its field is null', async () => {
+    prismaMock.accountPreference.findUnique.mockResolvedValue({
+      defaultCurrencyCode: 'USD',
+      timeZone: 'Europe/Skopje',
+      locale: 'mk-MK',
+      theme: 'dark',
+    } as never)
+
+    const result = await makeCaller('acct-1').initializePreferences({
+      locale: 'mk-MK',
+      theme: 'dark',
+      timeZone: 'Europe/Skopje',
+    })
+
+    expect(prismaMock.accountPreference.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { accountId: 'acct-1' },
+        create: expect.objectContaining({
+          accountId: 'acct-1',
+          locale: 'mk-MK',
+          theme: 'dark',
+          timeZone: 'Europe/Skopje',
+        }),
+        update: {},
+      }),
+    )
+    expect(prismaMock.accountPreference.updateMany).toHaveBeenCalledWith({
+      where: { accountId: 'acct-1', locale: null },
+      data: { locale: 'mk-MK' },
+    })
+    expect(prismaMock.accountPreference.updateMany).toHaveBeenCalledWith({
+      where: { accountId: 'acct-1', theme: null },
+      data: { theme: 'dark' },
+    })
+    expect(prismaMock.accountPreference.updateMany).toHaveBeenCalledWith({
+      where: { accountId: 'acct-1', timeZone: null },
+      data: { timeZone: 'Europe/Skopje' },
+    })
+    expect(result.preferences).toEqual({
+      defaultCurrencyCode: 'USD',
+      timeZone: 'Europe/Skopje',
+      locale: 'mk-MK',
+      theme: 'dark',
+    })
+  })
+
+  it('infers the most common supported currency from active admin groups', async () => {
+    prismaMock.accountPreference.findUnique
+      .mockResolvedValueOnce({
+        defaultCurrencyCode: null,
+        timeZone: 'UTC',
+        locale: 'en-US',
+        theme: 'system',
+      } as never)
+      .mockResolvedValueOnce({
+        defaultCurrencyCode: 'EUR',
+        timeZone: 'UTC',
+        locale: 'en-US',
+        theme: 'system',
+      } as never)
+    prismaMock.groupMember.findMany.mockResolvedValue([
+      {
+        role: 'ADMIN',
+        group: {
+          createdAt: new Date('2026-01-01'),
+          ledger: { currencyCode: 'EUR' },
+        },
+      },
+      {
+        role: 'ADMIN',
+        group: {
+          createdAt: new Date('2026-02-01'),
+          ledger: { currencyCode: 'EUR' },
+        },
+      },
+      {
+        role: 'ADMIN',
+        group: {
+          createdAt: new Date('2026-03-01'),
+          ledger: { currencyCode: 'USD' },
+        },
+      },
+    ] as never)
+
+    const result = await makeCaller('acct-1').initializePreferences({})
+
+    expect(prismaMock.groupMember.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: {
+          accountId: 'acct-1',
+          status: 'ACTIVE',
+          group: { archived: false },
+        },
+      }),
+    )
+    expect(prismaMock.accountPreference.updateMany).toHaveBeenCalledWith({
+      where: {
+        accountId: 'acct-1',
+        defaultCurrencyCode: null,
+      },
+      data: { defaultCurrencyCode: 'EUR' },
+    })
+    expect(result.preferences.defaultCurrencyCode).toBe('EUR')
+  })
+
+  it('breaks currency-frequency ties using the newest admin group', async () => {
+    prismaMock.accountPreference.findUnique
+      .mockResolvedValueOnce({
+        defaultCurrencyCode: null,
+        timeZone: null,
+        locale: null,
+        theme: null,
+      } as never)
+      .mockResolvedValueOnce({
+        defaultCurrencyCode: 'USD',
+        timeZone: null,
+        locale: null,
+        theme: null,
+      } as never)
+    prismaMock.groupMember.findMany.mockResolvedValue([
+      {
+        role: 'ADMIN',
+        group: {
+          createdAt: new Date('2026-01-01'),
+          ledger: { currencyCode: 'EUR' },
+        },
+      },
+      {
+        role: 'ADMIN',
+        group: {
+          createdAt: new Date('2026-02-01'),
+          ledger: { currencyCode: 'USD' },
+        },
+      },
+    ] as never)
+
+    await makeCaller('acct-1').initializePreferences({})
+
+    expect(prismaMock.accountPreference.updateMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: { defaultCurrencyCode: 'USD' },
+      }),
+    )
+  })
+
+  it('uses member currencies only when there is no supported admin currency', async () => {
+    prismaMock.accountPreference.findUnique
+      .mockResolvedValueOnce({
+        defaultCurrencyCode: null,
+        timeZone: null,
+        locale: null,
+        theme: null,
+      } as never)
+      .mockResolvedValueOnce({
+        defaultCurrencyCode: 'GBP',
+        timeZone: null,
+        locale: null,
+        theme: null,
+      } as never)
+    prismaMock.groupMember.findMany.mockResolvedValue([
+      {
+        role: 'ADMIN',
+        group: {
+          createdAt: new Date('2026-03-01'),
+          ledger: { currencyCode: null },
+        },
+      },
+      {
+        role: 'MEMBER',
+        group: {
+          createdAt: new Date('2026-02-01'),
+          ledger: { currencyCode: 'GBP' },
+        },
+      },
+      {
+        role: 'MEMBER',
+        group: {
+          createdAt: new Date('2026-01-01'),
+          ledger: { currencyCode: 'GBP' },
+        },
+      },
+    ] as never)
+
+    await makeCaller('acct-1').initializePreferences({})
+
+    expect(prismaMock.accountPreference.updateMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: { defaultCurrencyCode: 'GBP' },
+      }),
+    )
+  })
+
+  it('falls back to the USD instance currency when groups have no ISO currency', async () => {
+    prismaMock.accountPreference.findUnique
+      .mockResolvedValueOnce({
+        defaultCurrencyCode: null,
+        timeZone: null,
+        locale: null,
+        theme: null,
+      } as never)
+      .mockResolvedValueOnce({
+        defaultCurrencyCode: 'USD',
+        timeZone: null,
+        locale: null,
+        theme: null,
+      } as never)
+    prismaMock.groupMember.findMany.mockResolvedValue([
+      {
+        role: 'ADMIN',
+        group: {
+          createdAt: new Date('2026-01-01'),
+          ledger: { currencyCode: null },
+        },
+      },
+    ] as never)
+
+    await makeCaller('acct-1').initializePreferences({})
+
+    expect(prismaMock.accountPreference.updateMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: { defaultCurrencyCode: 'USD' },
+      }),
+    )
+  })
+
+  it('does not inspect groups or replace an existing account currency', async () => {
+    prismaMock.accountPreference.findUnique.mockResolvedValue({
+      defaultCurrencyCode: 'AED',
+      timeZone: 'UTC',
+      locale: 'en-US',
+      theme: 'system',
+    } as never)
+
+    const result = await makeCaller('acct-1').initializePreferences({})
+
+    expect(prismaMock.groupMember.findMany).not.toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          group: { archived: false },
+        }),
+      }),
+    )
+    expect(prismaMock.accountPreference.updateMany).not.toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          defaultCurrencyCode: expect.anything(),
+        }),
+      }),
+    )
+    expect(result.preferences.defaultCurrencyCode).toBe('AED')
+  })
+
+  it('patches only supplied fields', async () => {
+    prismaMock.accountPreference.upsert.mockResolvedValue({
+      defaultCurrencyCode: 'EUR',
+      timeZone: 'Europe/Paris',
+      locale: 'fr-FR',
+      theme: 'system',
+    } as never)
+
+    const result = await makeCaller('acct-1').updatePreferences({
+      defaultCurrencyCode: 'EUR',
+    })
+
+    expect(prismaMock.accountPreference.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { accountId: 'acct-1' },
+        create: expect.objectContaining({
+          accountId: 'acct-1',
+          defaultCurrencyCode: 'EUR',
+        }),
+        update: {
+          defaultCurrencyCode: 'EUR',
+        },
+      }),
+    )
+    expect(result.preferences.defaultCurrencyCode).toBe('EUR')
+  })
+
+  it.each([
+    [{ defaultCurrencyCode: 'ZZZ' }, 'unsupported default currency'],
+    [{ timeZone: 'Mars/Olympus' }, 'invalid timezone'],
+    [{ locale: 'xx-XX' }, 'unsupported locale'],
+    [{ theme: 'sepia' }, 'unsupported theme'],
+  ])('rejects %s (%s)', async (input) => {
+    await expect(
+      makeCaller('acct-1').updatePreferences(input as never),
+    ).rejects.toMatchObject({ code: 'BAD_REQUEST' })
+    expect(prismaMock.accountPreference.upsert).not.toHaveBeenCalled()
+  })
+})
 
 describe('accountRouter.setPreference — hide API', () => {
   it('writes `hidden` directly to the `hidden` column', async () => {

@@ -1,11 +1,6 @@
 import { calculateRecurrenceDate, type RecurrenceConfig } from '@spliit/domain'
 
-function utcTodayDate(): Date {
-  const now = new Date()
-  return new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
-  )
-}
+import { catchUpDueThrough } from './catch-up-date'
 
 /** True when frequency, interval, or end differ (template-only edits are equal). */
 export function isScheduleConfigEqual(
@@ -88,6 +83,7 @@ export function buildCatchUpSeedAfterReflow(args: {
   completed: boolean
   config: RecurrenceConfig
   maxSequence: number
+  timeZone?: string
 }): {
   id: string
   startDate: string
@@ -102,9 +98,11 @@ export function buildCatchUpSeedAfterReflow(args: {
     completed,
     config,
     maxSequence,
+    timeZone = 'UTC',
   } = args
   if (completed) return null
-  const today = utcTodayDate()
+  const dueThrough = catchUpDueThrough(new Date(), timeZone)
+  const today = new Date(`${dueThrough}T00:00:00.000Z`)
   if (nextOccurrenceDate.getTime() > today.getTime()) return null
   const nextPermitted = !isOutsideTermination(
     config,
@@ -118,6 +116,6 @@ export function buildCatchUpSeedAfterReflow(args: {
     startDate,
     count: 0,
     mode: 'INITIAL_CREATION',
-    dueThrough: today.toISOString().slice(0, 10),
+    dueThrough,
   }
 }

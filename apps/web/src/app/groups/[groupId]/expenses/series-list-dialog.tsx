@@ -102,6 +102,11 @@ export function SeriesListDialog({
           </ResponsiveDialogDescription>
         </ResponsiveDialogHeader>
         <ResponsiveDialogBody className="max-h-[65vh] space-y-2 overflow-y-auto">
+          {series && (
+            <p className="text-sm text-muted-foreground">
+              {t('timeZone', { timeZone: series.timeZone })}
+            </p>
+          )}
           {seriesQuery.isLoading && (
             <div className="space-y-2" aria-busy="true">
               <Skeleton className="h-12 w-full" />

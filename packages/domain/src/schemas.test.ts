@@ -614,6 +614,7 @@ describe('friendFormSchema', () => {
     const result = friendFormSchema.safeParse({
       peerEmail: 'friend@example.com',
       currency: '$',
+      timeZone: 'UTC',
     })
     expect(result.success).toBe(true)
   })
@@ -623,6 +624,7 @@ describe('friendFormSchema', () => {
       useLink: true,
       temporaryName: 'Bob',
       currency: '$',
+      timeZone: 'UTC',
     })
     expect(result.success).toBe(true)
   })
@@ -630,6 +632,7 @@ describe('friendFormSchema', () => {
   it('rejects 0 modes — none of peerAccountId/peerEmail/useLink set, fails superRefine', () => {
     const result = friendFormSchema.safeParse({
       currency: '$',
+      timeZone: 'UTC',
     })
     expect(result.success).toBe(false)
     if (!result.success) {
@@ -644,6 +647,7 @@ describe('friendFormSchema', () => {
       peerAccountId: 'some-account-id',
       peerEmail: 'friend@example.com',
       currency: '$',
+      timeZone: 'UTC',
     })
     expect(result.success).toBe(false)
     if (!result.success) {
@@ -658,6 +662,7 @@ describe('friendFormSchema', () => {
       peerAccountId: 'some-account-id',
       useLink: true,
       currency: '$',
+      timeZone: 'UTC',
     })
     expect(result.success).toBe(false)
     if (!result.success) {
@@ -672,6 +677,7 @@ describe('friendFormSchema', () => {
       peerEmail: 'friend@example.com',
       useLink: true,
       currency: '$',
+      timeZone: 'UTC',
     })
     expect(result.success).toBe(false)
     if (!result.success) {
@@ -687,6 +693,7 @@ describe('friendFormSchema', () => {
       peerEmail: 'friend@example.com',
       useLink: true,
       currency: '$',
+      timeZone: 'UTC',
     })
     expect(result.success).toBe(false)
     if (!result.success) {
@@ -701,6 +708,7 @@ describe('friendFormSchema', () => {
       peerAccountId: 'some-account-id',
       peerEmail: 'not-an-email',
       currency: '$',
+      timeZone: 'UTC',
     })
     expect(result.success).toBe(false)
   })
@@ -709,6 +717,7 @@ describe('friendFormSchema', () => {
     const result = friendFormSchema.safeParse({
       peerEmail: 'user@example.com',
       currency: '$',
+      timeZone: 'UTC',
     })
     expect(result.success).toBe(true)
   })
@@ -717,6 +726,7 @@ describe('friendFormSchema', () => {
     const empty = friendFormSchema.safeParse({
       peerAccountId: 'some-account-id',
       currency: '$',
+      timeZone: 'UTC',
       temporaryName: '',
     })
     expect(empty.success).toBe(false)
@@ -724,6 +734,7 @@ describe('friendFormSchema', () => {
     const whitespace = friendFormSchema.safeParse({
       peerAccountId: 'some-account-id',
       currency: '$',
+      timeZone: 'UTC',
       temporaryName: '   ',
     })
     expect(whitespace.success).toBe(false)
@@ -733,6 +744,7 @@ describe('friendFormSchema', () => {
     const result = friendFormSchema.safeParse({
       peerAccountId: 'some-account-id',
       currency: '$',
+      timeZone: 'UTC',
       temporaryName: 'a'.repeat(121),
     })
     expect(result.success).toBe(false)
@@ -742,6 +754,7 @@ describe('friendFormSchema', () => {
     const result = friendFormSchema.safeParse({
       peerAccountId: 'some-account-id',
       currency: '$',
+      timeZone: 'UTC',
       temporaryName: 'Roommate',
     })
     expect(result.success).toBe(true)
@@ -751,6 +764,7 @@ describe('friendFormSchema', () => {
     const result = friendFormSchema.safeParse({
       useLink: true,
       currency: '$',
+      timeZone: 'UTC',
       temporaryName: '',
     })
     expect(result.success).toBe(false)
@@ -769,6 +783,7 @@ describe('friendFormSchema', () => {
     const result = friendFormSchema.safeParse({
       useLink: true,
       currency: '$',
+      timeZone: 'UTC',
       temporaryName: 'Bob',
     })
     expect(result.success).toBe(true)
@@ -778,6 +793,7 @@ describe('friendFormSchema', () => {
     const result = friendFormSchema.safeParse({
       peerEmail: 'friend@example.com',
       currency: '$',
+      timeZone: 'UTC',
     })
     expect(result.success).toBe(true)
   })
@@ -793,6 +809,7 @@ describe('friendFormSchema', () => {
     const result = friendFormSchema.safeParse({
       peerAccountId: 'some-account-id',
       currency: '$',
+      timeZone: 'UTC',
       currencyCode: 'USD',
       information: 'Notes',
     })

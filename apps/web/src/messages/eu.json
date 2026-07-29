@@ -648,7 +648,9 @@
         "scheduleChangeWarning": "Gordetzean, hau eta etorkizuneko gertaerak berriro programatuko dira. Etorkizuneko gastu existenteak data berrietara mugi daitezke edo kendu, eta falta diren epemuga-datak automatikoki sortu daitezke.",
         "pastDateBackfillNote": "Gastu hau iraganean hasten delako, gaur arteko gertaerak automatikoki sortuko dira gordetzean.",
         "completedOccurrence": "Sortua",
-        "upcomingOccurrence": "Hurrengoa"
+        "upcomingOccurrence": "Hurrengoa",
+        "timeZoneDescription": "Gastu errepikari berriak 15:00etan exekutatzen dira {timeZone} ordu-eremuan. Lehendik dauden programazioek jatorrizko ordu-eremua mantentzen dute.",
+        "timeZonePending": "Kontuaren ordu-zonaren zain, errepikapena gaitu ahal izateko."
       },
       "recurringEditScopeOccurrence": "Editatu agerraldi hau soilik",
       "recurringEditScopeFuture": "Editatu agerraldi hau eta etorkizunekoak"
@@ -1723,6 +1725,17 @@
         "expenses": "Gastuak",
         "summaries": "Laburpenak"
       }
+    },
+    "preferences": {
+      "title": "Aplikazioaren hobespenak",
+      "description": "Erabili lehenespen eta itxura berak saioa hasita duzun gailu guztietan.",
+      "saveError": "Ezin izan dira hobespenak gorde",
+      "defaultCurrency": "Moneta lehenetsia",
+      "timeZone": "Kontuaren ordu-zona",
+      "timeZoneHelp": "Denbora-zigiluetarako, data erlatiboetarako eta gastu errepikari berrietarako erabiltzen da.",
+      "language": "Hizkuntza",
+      "theme": "Gaia",
+      "chooseTheme": "Aukeratu"
     }
   },
   "Activities": {
@@ -2080,7 +2093,8 @@
     },
     "badgeRunning": "Errepikaria · Martxan",
     "badgeStopped": "Errepikaria · Geldituta",
-    "badgeCompleted": "Errepikaria · Osatuta"
+    "badgeCompleted": "Errepikaria · Osatuta",
+    "timeZone": "15:00etan exekutatzen da {timeZone} ordu-eremuan"
   },
   "CurrencyConverter": {
     "trigger": "Moneda bihurketa",
@@ -2151,5 +2165,18 @@
       "signInTitle": "Hasi saioa konektatzeko",
       "signInDescription": "Erabili Spliit Cloud-en saioa hasteko ohiko metodoa. Zure laguntzaileak ez du inoiz gastuetarako erabilitako kontuaren identitatea ematen."
     }
+  },
+  "TimeZoneSelector": {
+    "search": "Bilatu ordu-eremuak edo hiriak",
+    "noTimeZone": "Ez da ordu-eremurik aurkitu.",
+    "title": "Aukeratu ordu-eremua"
+  },
+  "TimeZoneMismatch": {
+    "title": "Ordu-eremua eguneratu?",
+    "description": "Zure kontuak {accountTimeZone} erabiltzen du, baina gailu hau {browserTimeZone} ordu-eremuan dago.",
+    "impact": "Eguneratzeak denbora-zigiluak eta data erlatiboak nola erakusten diren aldatzen du, eta gastu errepikari berrietarako erabiltzen da. Lehendik dauden programazioek jatorrizko ordu-eremua mantentzen dute.",
+    "saveError": "Ezin izan da ordu-eremua eguneratu. Saiatu berriro.",
+    "keep": "Mantendu {timeZone}",
+    "update": "Eguneratu hona: {timeZone}"
   }
 }

@@ -78,10 +78,10 @@ These are upstream issues that affect every user of Spliit Cloud too. Each one i
 ### Headline features
 
 - [x] **Profile photos** — upload and manage profile avatars, displayed across account, group, and expense contexts
-- [x] **App theme** — light, dark, and system theme preference persisted per account and synced across devices
-- [x] **Favourite currencies** — user-curated list of preferred currencies that replaces the hardcoded "common currencies" in the expense creation flow. Addresses the steady stream of currency addition PRs by making the selector personal.
+- [x] **Account preferences** — default currency, timezone, app language, and light/dark/system theme persisted per account and synced across devices
+- [x] **Group timezone** — new ledgers inherit the creator's account timezone, remain independently configurable, and materialize recurring expenses on the group's local date
 - [ ] **Bring-your-own AI key (per-user)** — per-user API key configuration for receipt scanning and category extraction, allowing users to bring their own OpenAI-compatible endpoint and model. Complements the server-level BYOK from Phase 4.
-- [x] **Settings sync across devices** — preferences, favourite currencies, theme, and AI configuration are stored server-side and synced across all sessions. Builds on the account system from Phase 1.
+- [x] **Settings sync across devices** — account currency, timezone, language, and theme preferences are stored server-side and synced across sessions. Builds on the account system from Phase 1.
 
 ## Cross-cutting
 

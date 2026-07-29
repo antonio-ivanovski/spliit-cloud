@@ -316,4 +316,32 @@ describe('reflow-series-from-anchor', () => {
     expect(seed?.id).toBe('recurring-catchup:series-reflow:2026-01-01:reflow')
     expect(seed?.id.endsWith(':reflow')).toBe(true)
   })
+
+  it('uses the positive-offset ledger calendar day at a UTC date boundary', () => {
+    vi.setSystemTime(new Date('2026-01-01T23:30:00.000Z'))
+    const seed = buildCatchUpSeedAfterReflow({
+      seriesId: 'series-tokyo',
+      anchorDate: new Date('2026-01-01T00:00:00.000Z'),
+      nextOccurrenceDate: new Date('2026-01-02T00:00:00.000Z'),
+      completed: false,
+      config: daily,
+      maxSequence: 1,
+      timeZone: 'Asia/Tokyo',
+    })
+    expect(seed?.dueThrough).toBe('2026-01-02')
+  })
+
+  it('uses the negative-offset ledger calendar day at a UTC date boundary', () => {
+    vi.setSystemTime(new Date('2026-01-02T00:30:00.000Z'))
+    const seed = buildCatchUpSeedAfterReflow({
+      seriesId: 'series-los-angeles',
+      anchorDate: new Date('2025-12-31T00:00:00.000Z'),
+      nextOccurrenceDate: new Date('2026-01-01T00:00:00.000Z'),
+      completed: false,
+      config: daily,
+      maxSequence: 1,
+      timeZone: 'America/Los_Angeles',
+    })
+    expect(seed?.dueThrough).toBe('2026-01-01')
+  })
 })

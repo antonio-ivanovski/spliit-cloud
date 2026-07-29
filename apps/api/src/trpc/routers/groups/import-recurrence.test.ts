@@ -90,6 +90,9 @@ describe('importGroup recurring collapse', () => {
       id: 'dest-ledger',
       currencyCode: 'EUR',
     } as never)
+    prismaMock.accountPreference.findUnique.mockResolvedValue({
+      timeZone: 'Europe/Paris',
+    } as never)
     prismaMock.recurringExpenseSeries.create.mockResolvedValue({
       id: 'series-1',
     } as never)

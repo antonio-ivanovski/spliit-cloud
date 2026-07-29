@@ -654,7 +654,9 @@
         "scheduleChangeWarning": "Zapisanie spowoduje przeplanowanie tego i przyszłych wystąpień. Istniejące przyszłe wydatki mogą zostać przeniesione na nowe daty lub usunięte, a brakujące terminy mogą zostać utworzone automatycznie.",
         "pastDateBackfillNote": "Ponieważ ten wydatek zaczyna się w przeszłości, wystąpienia do dzisiejszego dnia zostaną utworzone automatycznie po zapisaniu.",
         "completedOccurrence": "Utworzono",
-        "upcomingOccurrence": "Nadchodzące"
+        "upcomingOccurrence": "Nadchodzące",
+        "timeZoneDescription": "Nowe wydatki cykliczne są uruchamiane o 15:00 w strefie {timeZone}. Istniejące harmonogramy zachowują pierwotną strefę czasową.",
+        "timeZonePending": "Oczekiwanie na strefę czasową konta przed włączeniem cykliczności."
       },
       "recurringEditScopeOccurrence": "Edytowanie tylko tego wystąpienia",
       "recurringEditScopeFuture": "Edytowanie tego i przyszłych wystąpień"
@@ -1733,6 +1735,17 @@
         "expenses": "Wydatki",
         "summaries": "Podsumowania"
       }
+    },
+    "preferences": {
+      "title": "Preferencje aplikacji",
+      "description": "Używaj tych samych ustawień domyślnych i wyglądu na każdym urządzeniu, na którym się zalogujesz.",
+      "saveError": "Nie udało się zapisać preferencji",
+      "defaultCurrency": "Domyślna waluta",
+      "timeZone": "Strefa czasowa konta",
+      "timeZoneHelp": "Używana do znaczników czasu, dat względnych i nowych wydatków cyklicznych.",
+      "language": "Język",
+      "theme": "Motyw",
+      "chooseTheme": "Wybierz"
     }
   },
   "Activities": {
@@ -2099,7 +2112,8 @@
     },
     "badgeRunning": "Cykliczny · W toku",
     "badgeStopped": "Cykliczny · Zatrzymany",
-    "badgeCompleted": "Cykliczny · Ukończony"
+    "badgeCompleted": "Cykliczny · Ukończony",
+    "timeZone": "Uruchamiany o 15:00 w strefie {timeZone}"
   },
   "CurrencyConverter": {
     "trigger": "Przeliczanie waluty",
@@ -2170,5 +2184,18 @@
       "authorityBullet": "Twoje konto Spliit pozostaje źródłem prawdy",
       "validationBullet": "Dotychczasowa walidacja, salda i powiadomienia pozostają bez zmian"
     }
+  },
+  "TimeZoneSelector": {
+    "search": "Szukaj stref czasowych lub miast",
+    "noTimeZone": "Nie znaleziono strefy czasowej.",
+    "title": "Wybierz strefę czasową"
+  },
+  "TimeZoneMismatch": {
+    "title": "Zaktualizować strefę czasową?",
+    "description": "Twoje konto używa strefy {accountTimeZone}, ale to urządzenie jest ustawione na {browserTimeZone}.",
+    "impact": "Aktualizacja zmienia sposób wyświetlania znaczników czasu i dat względnych oraz dotyczy nowych wydatków cyklicznych. Istniejące harmonogramy zachowują pierwotną strefę czasową.",
+    "saveError": "Nie udało się zaktualizować strefy czasowej. Spróbuj ponownie.",
+    "keep": "Zachowaj {timeZone}",
+    "update": "Zmień na {timeZone}"
   }
 }

@@ -27,6 +27,26 @@ export function testRunId(): string {
   return `int-${Date.now()}-${runCounter}-${Math.random().toString(36).slice(2, 6)}`
 }
 
+/**
+ * Recurring-expense creation deliberately requires the account bootstrap to
+ * have persisted a timezone. Integration callers bypass the browser bootstrap,
+ * so recurrence suites must establish that account invariant explicitly.
+ */
+export async function initializeTestAccountTimeZone(
+  accountId: string,
+  timeZone = 'UTC',
+): Promise<void> {
+  await prisma.accountPreference.upsert({
+    where: { accountId },
+    create: {
+      id: `pref-${accountId}`,
+      accountId,
+      timeZone,
+    },
+    update: { timeZone },
+  })
+}
+
 export class CapturingDispatcher implements ActivityNotificationDispatcher {
   events: ActivityNotificationEvent[] = []
 

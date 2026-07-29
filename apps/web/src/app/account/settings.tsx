@@ -20,6 +20,7 @@ import { prepareProfileImage } from '@/lib/upload'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 
+import { AccountPreferences } from './account-preferences'
 import { NotificationsPreferences } from './notifications-preferences'
 
 /**
@@ -165,7 +166,7 @@ function AccountSettingsContent() {
   const isDirty = name.trim() !== (account.name ?? '')
 
   return (
-    <main className="mx-auto flex w-full max-w-(--breakpoint-md) flex-1 flex-col gap-6 px-3 py-4 sm:px-4 sm:py-6">
+    <main className="mx-auto flex w-full max-w-(--breakpoint-md) min-w-0 flex-1 flex-col gap-6 px-3 py-4 sm:px-4 sm:py-6">
       <h1 className="hidden items-center gap-2 text-2xl font-semibold sm:flex">
         <Button
           variant="ghost"
@@ -275,6 +276,7 @@ function AccountSettingsContent() {
           </form>
         </CardContent>
       </Card>
+      <AccountPreferences />
       <NotificationsPreferences />
     </main>
   )

@@ -14,6 +14,9 @@ vi.mock('@tanstack/react-router', () => ({
 vi.mock('@/components/account-menu', () => ({
   AccountMenu: () => <button type="button">Account</button>,
 }))
+vi.mock('@/components/account-preferences-sync', () => ({
+  AccountPreferencesSync: ({ children }: React.PropsWithChildren) => children,
+}))
 vi.mock('@/components/app-image', () => ({
   default: ({ alt }: { alt: string }) => <img alt={alt} />,
 }))

@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
 import { useCreateExpenseMutation } from '@/app/groups/[groupId]/expenses/expense-mutation-hooks'
 import { categoryLabel } from '@/app/groups/[groupId]/stats/category-utils'
+import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import { ParticipantAvatar } from '@/components/participant-avatar'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -21,9 +22,11 @@ import {
 } from '@/components/ui/responsive-dialog'
 import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
+import { detectDeviceTimeZone } from '@/lib/account-preferences'
 import type { Reimbursement } from '@/lib/balances'
 import type { Currency } from '@/lib/currency'
 import {
+  dateOnlyInAccountTimeZone,
   formatCurrency,
   formatDateOnly,
   getCurrencyFromGroup,
@@ -78,6 +81,10 @@ export function CreateReimbursementModal({
   const isPendingInvitee = useIsPendingInvitee()
   const linkInviteToken = useLinkInviteToken()
   const locale = useLocale()
+  const accountPreferences = useSyncedAccountPreferences()
+  const accountTimeZone =
+    accountPreferences?.timeZone ?? detectDeviceTimeZone() ?? 'UTC'
+  const today = dateOnlyInAccountTimeZone(new Date(), accountTimeZone)
   const navigate = useNavigate()
   const utils = trpc.useUtils()
   const { toast } = useToast()
@@ -205,7 +212,7 @@ export function CreateReimbursementModal({
     await createExpenseMutateAsync({
       groupId,
       expense: {
-        expenseDate: new Date(),
+        expenseDate: today,
         title: tForm('reimbursement'),
         category: PAYMENT_CATEGORY_ID,
         amount: selectedTotal,
@@ -350,7 +357,7 @@ export function CreateReimbursementModal({
           <div className="text-sm text-muted-foreground">
             {t('date')}:{' '}
             <span className="text-foreground">
-              {formatDateOnly(new Date(), locale, { dateStyle: 'medium' })}
+              {formatDateOnly(today, locale, { dateStyle: 'medium' })}
             </span>
           </div>
 

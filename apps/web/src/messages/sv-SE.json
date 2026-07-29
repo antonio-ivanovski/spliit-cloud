@@ -146,6 +146,17 @@
     "profile": {
       "title": "Profil",
       "description": "Uppdatera hur du visas för dina grupper."
+    },
+    "preferences": {
+      "title": "Appinställningar",
+      "description": "Använd samma standardinställningar och utseende på alla enheter där du är inloggad.",
+      "saveError": "Det gick inte att spara inställningarna",
+      "defaultCurrency": "Standardvaluta",
+      "timeZone": "Kontots tidszon",
+      "timeZoneHelp": "Används för tidsstämplar, relativa datum och nya återkommande utgifter.",
+      "language": "Språk",
+      "theme": "Tema",
+      "chooseTheme": "Välj"
     }
   },
   "Activities": {
@@ -880,7 +891,9 @@
           "monthly": "månad(er)",
           "yearly": "år"
         },
-        "upcomingOccurrence": "Kommande"
+        "upcomingOccurrence": "Kommande",
+        "timeZoneDescription": "Nya återkommande utgifter körs kl. 15.00 i {timeZone}. Befintliga scheman behåller sin ursprungliga tidszon.",
+        "timeZonePending": "Väntar på kontots tidszon innan upprepning kan aktiveras."
       },
       "recurrenceRule": {
         "label": "Utgiftens upprepning",
@@ -1173,7 +1186,8 @@
       "OCCURRENCE": "Endast denna förekomst tas bort.",
       "THIS_AND_FUTURE": "Denna och följande förekomster tas bort. Upprepningen fortsätter med nästa schemalagda förekomst.",
       "THIS_AND_FUTURE_STOP": "Denna och följande förekomster tas bort och upprepningen stoppas."
-    }
+    },
+    "timeZone": "Körs kl. 15.00 i {timeZone}"
   },
   "Expenses": {
     "title": "Utgifter",
@@ -2130,5 +2144,18 @@
       "authorityBullet": "Ditt Spliit-konto förblir den auktoritativa källan",
       "validationBullet": "Befintlig validering, saldon och aviseringar förblir intakta"
     }
+  },
+  "TimeZoneSelector": {
+    "search": "Sök efter tidszoner eller städer",
+    "noTimeZone": "Ingen tidszon hittades.",
+    "title": "Välj tidszon"
+  },
+  "TimeZoneMismatch": {
+    "title": "Uppdatera din tidszon?",
+    "description": "Ditt konto använder {accountTimeZone}, men den här enheten är inställd på {browserTimeZone}.",
+    "impact": "Uppdateringen ändrar hur tidsstämplar och relativa datum visas och används för nya återkommande utgifter. Befintliga scheman behåller sin ursprungliga tidszon.",
+    "saveError": "Det gick inte att uppdatera din tidszon. Försök igen.",
+    "keep": "Behåll {timeZone}",
+    "update": "Uppdatera till {timeZone}"
   }
 }

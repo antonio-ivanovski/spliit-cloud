@@ -226,7 +226,8 @@
     "loadMore": "Load more occurrences",
     "badgeRunning": "Recurring · Running",
     "badgeStopped": "Recurring · Stopped",
-    "badgeCompleted": "Recurring · Completed"
+    "badgeCompleted": "Recurring · Completed",
+    "timeZone": "Runs at 3:00 PM in {timeZone}"
   },
   "Groups": {
     "myGroups": "My groups",
@@ -767,6 +768,17 @@
       "loadError": "Could not load notification preferences.",
       "retry": "Try again",
       "pushChannel": "Push"
+    },
+    "preferences": {
+      "title": "App preferences",
+      "description": "Use the same defaults and appearance on every signed-in device.",
+      "saveError": "Could not save preferences",
+      "defaultCurrency": "Default currency",
+      "timeZone": "Account timezone",
+      "timeZoneHelp": "Used for displayed timestamps, relative dates, and new recurring expenses.",
+      "language": "Language",
+      "theme": "Theme",
+      "chooseTheme": "Choose"
     }
   },
   "CompleteProfile": {
@@ -973,7 +985,9 @@
         "scheduleChangeWarning": "Saving will reschedule this and future occurrences. Existing future expenses may move to new dates or be removed, and missing due dates may be created automatically.",
         "pastDateBackfillNote": "Because this expense starts in the past, occurrences through today will be created automatically after you save.",
         "completedOccurrence": "Created",
-        "upcomingOccurrence": "Upcoming"
+        "upcomingOccurrence": "Upcoming",
+        "timeZoneDescription": "New recurring expenses run at 3:00 PM in {timeZone}. Existing schedules keep their original timezone.",
+        "timeZonePending": "Waiting for your account timezone before recurrence can be enabled."
       },
       "paidFor": {
         "title": "Split between",
@@ -2206,5 +2220,18 @@
       "signInTitle": "Sign in to connect",
       "signInDescription": "Use your usual Spliit Cloud sign-in method. Your assistant never supplies the account identity used for expenses."
     }
+  },
+  "TimeZoneSelector": {
+    "search": "Search timezones or cities",
+    "noTimeZone": "No timezone found.",
+    "title": "Choose timezone"
+  },
+  "TimeZoneMismatch": {
+    "title": "Update your timezone?",
+    "description": "Your account uses {accountTimeZone}, but this device is set to {browserTimeZone}.",
+    "impact": "Updating changes how timestamps and relative dates are shown and is used for new recurring expenses. Existing recurring schedules keep their original timezone.",
+    "saveError": "Could not update your timezone. Please try again.",
+    "keep": "Keep {timeZone}",
+    "update": "Update to {timeZone}"
   }
 }

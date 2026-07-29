@@ -52,22 +52,28 @@ export type GeneratedLink = {
 
 const dateFormatCache = new Map<string, Intl.DateTimeFormat>()
 
-function getDateFormat(locale: string) {
-  let fmt = dateFormatCache.get(locale)
+function getDateFormat(locale: string, timeZone: string) {
+  const key = `${locale}:${timeZone}`
+  let fmt = dateFormatCache.get(key)
   if (!fmt) {
     fmt = new Intl.DateTimeFormat(locale, {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
+      timeZone,
     })
-    dateFormatCache.set(locale, fmt)
+    dateFormatCache.set(key, fmt)
   }
   return fmt
 }
 
-export function formatDate(value: string | Date, locale: string) {
+export function formatDate(
+  value: string | Date,
+  locale: string,
+  timeZone = 'UTC',
+) {
   const date = typeof value === 'string' ? new Date(value) : value
-  return getDateFormat(locale).format(date)
+  return getDateFormat(locale, timeZone).format(date)
 }
 
 export function useMembersDialogs() {

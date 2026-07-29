@@ -109,6 +109,17 @@ describe('PushNotificationOnboarding', () => {
     expect(screen.queryByTestId('push-notification-onboarding')).toBeNull()
   })
 
+  it('keeps long onboarding content inside the responsive scroll body', async () => {
+    render(<PushNotificationOnboarding />)
+
+    const dialog = await screen.findByTestId('push-notification-onboarding')
+    expect(dialog).toHaveClass('min-w-0')
+    expect(dialog.querySelector('.min-w-0')).not.toBeNull()
+    expect(
+      screen.getByRole('button', { name: /enable push notifications/i }),
+    ).toHaveClass('max-w-full', 'whitespace-normal')
+  })
+
   it('releases install-promotion coordination when eligibility disappears', async () => {
     const { rerender } = render(<PushNotificationOnboarding />)
 

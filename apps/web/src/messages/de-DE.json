@@ -666,7 +666,9 @@
         "scheduleChangeWarning": "Beim Speichern werden dieses und künftige Vorkommen neu geplant. Bestehende zukünftige Ausgaben können auf neue Termine verschoben oder entfernt werden, und fehlende Fälligkeitstermine können automatisch erstellt werden.",
         "pastDateBackfillNote": "Da diese Ausgabe in der Vergangenheit beginnt, werden Vorkommen bis einschließlich heute nach dem Speichern automatisch erstellt.",
         "completedOccurrence": "Erstellt",
-        "upcomingOccurrence": "Bevorstehend"
+        "upcomingOccurrence": "Bevorstehend",
+        "timeZoneDescription": "Neue wiederkehrende Ausgaben werden um 15:00 Uhr in {timeZone} ausgeführt. Bestehende Zeitpläne behalten ihre ursprüngliche Zeitzone.",
+        "timeZonePending": "Die Zeitzone deines Kontos wird abgewartet, bevor die Wiederholung aktiviert werden kann."
       },
       "recurringEditScopeOccurrence": "Nur dieses Vorkommen bearbeiten",
       "recurringEditScopeFuture": "Dieses und zukünftige Vorkommen bearbeiten"
@@ -1747,6 +1749,17 @@
         "expenses": "Ausgaben",
         "summaries": "Zusammenfassungen"
       }
+    },
+    "preferences": {
+      "title": "App-Einstellungen",
+      "description": "Verwenden Sie auf jedem angemeldeten Gerät dieselben Standardeinstellungen und dieselbe Darstellung.",
+      "saveError": "Einstellungen konnten nicht gespeichert werden",
+      "defaultCurrency": "Standardwährung",
+      "timeZone": "Zeitzone des Kontos",
+      "timeZoneHelp": "Wird für Zeitstempel, relative Daten und neue wiederkehrende Ausgaben verwendet.",
+      "language": "Sprache",
+      "theme": "Design",
+      "chooseTheme": "Auswählen"
     }
   },
   "Activities": {
@@ -2131,7 +2144,8 @@
     },
     "badgeRunning": "Wiederkehrend · Laufend",
     "badgeStopped": "Wiederkehrend · Gestoppt",
-    "badgeCompleted": "Wiederkehrend · Abgeschlossen"
+    "badgeCompleted": "Wiederkehrend · Abgeschlossen",
+    "timeZone": "Wird um 15:00 Uhr in {timeZone} ausgeführt"
   },
   "CurrencyConverter": {
     "trigger": "Währungsumrechnung",
@@ -2202,5 +2216,18 @@
       "authorityBullet": "Dein Spliit-Konto bleibt maßgeblich",
       "validationBullet": "Bestehende Prüfungen, Salden und Benachrichtigungen bleiben erhalten"
     }
+  },
+  "TimeZoneSelector": {
+    "search": "Zeitzonen oder Städte suchen",
+    "noTimeZone": "Keine Zeitzone gefunden.",
+    "title": "Zeitzone auswählen"
+  },
+  "TimeZoneMismatch": {
+    "title": "Zeitzone aktualisieren?",
+    "description": "Dein Konto verwendet {accountTimeZone}, dieses Gerät ist jedoch auf {browserTimeZone} eingestellt.",
+    "impact": "Die Aktualisierung ändert die Anzeige von Zeitstempeln und relativen Daten und gilt für neue wiederkehrende Ausgaben. Bestehende Zeitpläne behalten ihre ursprüngliche Zeitzone.",
+    "saveError": "Deine Zeitzone konnte nicht aktualisiert werden. Versuche es erneut.",
+    "keep": "{timeZone} beibehalten",
+    "update": "Auf {timeZone} aktualisieren"
   }
 }

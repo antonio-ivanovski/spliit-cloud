@@ -1,6 +1,7 @@
 import { prisma, RecurringExpenseSeriesStatus } from '@spliit/db'
 import {
   calculateRecurrenceDate,
+  dateOnlyInTimeZone,
   type RecurringExpenseTemplate,
 } from '@spliit/domain'
 import type { SpliitBoss } from '@spliit/jobs'
@@ -102,13 +103,6 @@ export function parseCatchUpBatch(
     : null
 }
 
-export function utcTodayDate(): Date {
-  const now = new Date()
-  return new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
-  )
-}
-
 export function asDate(value: string) {
   const parsed = new Date(`${value.slice(0, 10)}T00:00:00.000Z`)
   if (Number.isNaN(parsed.getTime()))
@@ -126,7 +120,10 @@ export async function materializeRecurringExpense(
     where: { id: payload.seriesId },
     include: {
       ledger: {
-        select: { currencyCode: true, group: { select: { id: true } } },
+        select: {
+          currencyCode: true,
+          group: { select: { id: true } },
+        },
       },
     },
   })
@@ -275,7 +272,7 @@ export async function materializeRecurringExpense(
       nextOrdinal,
     )
     const date = occurrenceDate.toISOString().slice(0, 10)
-    const today = utcTodayDate()
+    const today = dateOnlyInTimeZone(new Date(), series.timeZone)
     const storedBatch = parseCatchUpBatch(series.catchUpBatch)
     // Use the persisted boundary when the batch is already open;
     // otherwise compute today. This prevents a UTC-midnight crossing

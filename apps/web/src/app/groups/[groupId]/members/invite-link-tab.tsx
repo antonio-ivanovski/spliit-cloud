@@ -2,6 +2,7 @@ import { Link2, Share2 } from 'lucide-react'
 import type { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
+import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import { CopyButton } from '@/components/copy-button'
 import { Button } from '@/components/ui/button'
 import {
@@ -19,6 +20,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useLocale } from '@/i18n/react'
+import { detectDeviceTimeZone } from '@/lib/account-preferences'
 
 import {
   formatDate,
@@ -49,7 +52,10 @@ export function InviteLinkTab({
   onShare: () => void
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
-
+  const locale = useLocale()
+  const accountPreferences = useSyncedAccountPreferences()
+  const accountTimeZone =
+    accountPreferences?.timeZone ?? detectDeviceTimeZone() ?? 'UTC'
   return (
     <>
       <p className="border-l-2 border-primary/40 pl-3 text-sm text-muted-foreground">
@@ -141,7 +147,11 @@ export function InviteLinkTab({
           </div>
           <p className="text-xs text-muted-foreground">
             {t('invite.link.expiresOn', {
-              date: formatDate(generatedLink.expiresAt, 'en'),
+              date: formatDate(
+                generatedLink.expiresAt,
+                locale,
+                accountTimeZone,
+              ),
             })}
           </p>
         </div>

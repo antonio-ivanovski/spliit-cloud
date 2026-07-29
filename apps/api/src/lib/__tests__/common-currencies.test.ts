@@ -79,4 +79,32 @@ describe('getGroupCommonCurrencies', () => {
       vi.useRealTimers()
     }
   })
+
+  it('dedupes learned currencies and caps recommendations at five', async () => {
+    prismaMock.group.findUnique.mockResolvedValue({
+      ledgerId,
+      ledger: { currencyCode: 'USD' },
+    } as never)
+    prismaMock.expense.findMany.mockResolvedValue([
+      { originalCurrency: 'CAD', expenseDate: new Date('2026-07-08') },
+      { originalCurrency: 'EUR', expenseDate: new Date('2026-07-07') },
+      { originalCurrency: 'JPY', expenseDate: new Date('2026-07-06') },
+      { originalCurrency: 'AUD', expenseDate: new Date('2026-07-05') },
+      { originalCurrency: 'CHF', expenseDate: new Date('2026-07-04') },
+    ] as never)
+
+    vi.useFakeTimers()
+    vi.setSystemTime(today)
+    try {
+      await expect(getGroupCommonCurrencies(groupId)).resolves.toEqual([
+        'CAD',
+        'EUR',
+        'JPY',
+        'AUD',
+        'CHF',
+      ])
+    } finally {
+      vi.useRealTimers()
+    }
+  })
 })

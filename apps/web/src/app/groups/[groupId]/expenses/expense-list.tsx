@@ -19,11 +19,17 @@ import {
   DEFAULT_SORT,
   useExpenseFilters,
 } from '@/app/groups/[groupId]/expenses/use-expense-filters'
+import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import { SearchBar } from '@/components/ui/search-bar'
 import { Skeleton } from '@/components/ui/skeleton'
-import { getCurrencyFromGroup } from '@/lib/utils'
+import { detectDeviceTimeZone } from '@/lib/account-preferences'
+import {
+  dateOnlyIso,
+  getCurrencyFromGroup,
+  zonedDateOnlyIso,
+} from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
 
@@ -74,8 +80,12 @@ function getExpenseGroup(date: Dayjs, today: Dayjs) {
   }
 }
 
-function getGroupedExpensesByDate(expenses: ExpensesType) {
-  const today = dayjs()
+function calendarDay(value: string) {
+  return dayjs(`${value}T12:00:00`)
+}
+
+function getGroupedExpensesByDate(expenses: ExpensesType, timeZone: string) {
+  const today = calendarDay(zonedDateOnlyIso(new Date(), timeZone))
   const expenseGroupValues = Object.values(EXPENSE_GROUPS) as Array<
     (typeof EXPENSE_GROUPS)[keyof typeof EXPENSE_GROUPS]
   >
@@ -86,7 +96,10 @@ function getGroupedExpensesByDate(expenses: ExpensesType) {
     ExpensesType
   >
   for (const expense of expenses) {
-    const expenseGroup = getExpenseGroup(dayjs(expense.expenseDate), today)
+    const expenseGroup = getExpenseGroup(
+      calendarDay(dateOnlyIso(expense.expenseDate)),
+      today,
+    )
     result[expenseGroup].push(expense)
   }
   return result
@@ -129,6 +142,9 @@ const ExpenseListForSearch = ({
   linkInviteToken: string | undefined
 }) => {
   const { group } = useCurrentGroup()
+  const accountPreferences = useSyncedAccountPreferences()
+  const accountTimeZone =
+    accountPreferences?.timeZone ?? detectDeviceTimeZone() ?? 'UTC'
   const isPendingInvitee = useIsPendingInvitee()
 
   const { queryInput, sort, activeCount, setFilters } =
@@ -177,9 +193,9 @@ const ExpenseListForSearch = ({
   >(
     () =>
       expenses && useDateGrouping
-        ? getGroupedExpensesByDate(expenses)
-        : getGroupedExpensesByDate([]),
-    [expenses, useDateGrouping],
+        ? getGroupedExpensesByDate(expenses, accountTimeZone)
+        : getGroupedExpensesByDate([], accountTimeZone),
+    [accountTimeZone, expenses, useDateGrouping],
   )
 
   if (isLoading) return <ExpensesLoading />

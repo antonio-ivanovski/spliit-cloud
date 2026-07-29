@@ -2,6 +2,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { ArrowRight, Check, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import Link from '@/components/link'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -16,6 +17,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
 import { isPlaceholderEmail } from '@/lib/account'
+import { detectDeviceTimeZone } from '@/lib/account-preferences'
 import { trpc } from '@/trpc/client'
 
 import { formatDate } from './group-buckets'
@@ -23,6 +25,7 @@ import { formatDate } from './group-buckets'
 export function PendingInvitations() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const locale = useLocale()
+  const accountPreferences = useSyncedAccountPreferences()
   const navigate = useNavigate()
   const { toast } = useToast()
   const utils = trpc.useUtils()
@@ -119,7 +122,13 @@ export function PendingInvitations() {
                   </p>
                   <p className="text-xs text-muted-foreground">
                     {t('invitations.sentOn', {
-                      date: formatDate(invitation.createdAt, locale),
+                      date: formatDate(
+                        invitation.createdAt,
+                        locale,
+                        accountPreferences?.timeZone ??
+                          detectDeviceTimeZone() ??
+                          'UTC',
+                      ),
                     })}
                   </p>
                 </div>

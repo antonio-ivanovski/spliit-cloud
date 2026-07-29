@@ -23,6 +23,7 @@ import {
   getApiBossForWrite,
   getExpenseRecurrence,
 } from '../recurrence-series'
+import { catchUpDueThrough } from '../recurrence/catch-up-date'
 import { randomId } from '../shared'
 import { promoteExpenseDocuments } from './helpers'
 
@@ -133,6 +134,21 @@ export async function createExpense(
     : ('EXPENSE_CREATED' as const)
 
   const recurringSeriesId = isCreateRecurrence ? randomId() : undefined
+  let creatorTimeZone: string | undefined
+  if (recurrence) {
+    const persistedTimeZone = (
+      await prisma.accountPreference.findUnique({
+        where: { accountId: actor.accountId },
+        select: { timeZone: true },
+      })
+    )?.timeZone
+    if (!persistedTimeZone) {
+      throw new Error(
+        'Account timezone must be initialized before creating a recurring expense',
+      )
+    }
+    creatorTimeZone = persistedTimeZone
+  }
 
   // When the anchor date is in the past and more than one occurrence is
   // immediately due, seed a catch-up batch so the worker produces one
@@ -148,14 +164,8 @@ export async function createExpense(
       }
     | undefined
   if (recurrence && recurringSeriesId) {
-    const today = new Date(
-      Date.UTC(
-        new Date().getUTCFullYear(),
-        new Date().getUTCMonth(),
-        new Date().getUTCDate(),
-      ),
-    )
-    const todayIso = today.toISOString().slice(0, 10)
+    const todayIso = catchUpDueThrough(new Date(), creatorTimeZone!)
+    const today = new Date(`${todayIso}T00:00:00.000Z`)
     const occ2Date = calculateRecurrenceDate(
       expense.expenseDate,
       recurrence.frequency,
@@ -235,6 +245,7 @@ export async function createExpense(
         seriesId: recurringSeriesId,
         ledgerId,
         creatorAccountId: actor.accountId,
+        timeZone: creatorTimeZone,
         anchorDate: expense.expenseDate,
         config: recurrence,
         template: buildRecurringTemplate({

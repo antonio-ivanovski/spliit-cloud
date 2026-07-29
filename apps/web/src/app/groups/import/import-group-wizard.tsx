@@ -257,7 +257,7 @@ export function ImportGroupWizard() {
       : state.groupFormValues.currencyCode
   const sourceCurrencyCode = state.source?.currencyCode ?? ''
 
-  const handleSubmit = useCallback(async () => {
+  async function handleSubmit() {
     if (!state.source) return
     if (!state.mode) return
     if (!account?.id) return
@@ -273,7 +273,13 @@ export function ImportGroupWizard() {
         state.rates ?? undefined,
       )
       const expenses = buildImportExpenses(batch.expenses)
-      await importGroup({ ...batch, expenses, sourceMeta })
+      await importGroup({
+        ...batch,
+        groupFormValues:
+          'groupFormValues' in batch ? batch.groupFormValues : undefined,
+        expenses,
+        sourceMeta,
+      })
     } catch (err) {
       toast({
         title: t('Groups.Import.Confirm.importErrorTitle'),
@@ -286,7 +292,7 @@ export function ImportGroupWizard() {
     }
     // Destructure fields used so the callback deps don't include the
     // mutable tRPC result object.
-  }, [state, importGroup, account?.id, destinationCurrencyCode, toast, t])
+  }
 
   const handleDoneNavigate = useCallback(() => {
     if (importResultGroupId) {

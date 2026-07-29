@@ -1,6 +1,7 @@
 import { Navigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 
+import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -10,6 +11,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { useLocale } from '@/i18n/react'
+import { detectDeviceTimeZone } from '@/lib/account-preferences'
 
 import { useCurrentGroup } from '../current-group-context'
 import { InviteCard } from './invite-card'
@@ -35,6 +37,9 @@ export default function GroupMembers() {
 function GroupMembersBody() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
   const locale = useLocale()
+  const accountPreferences = useSyncedAccountPreferences()
+  const accountTimeZone =
+    accountPreferences?.timeZone ?? detectDeviceTimeZone() ?? 'UTC'
   const { groupId, group, currentMember } = useCurrentGroup()
 
   const {
@@ -94,6 +99,7 @@ function GroupMembersBody() {
         }
         roleLabels={roleLabels}
         locale={locale}
+        timeZone={accountTimeZone}
       />
 
       <UnlinkedParticipantsSection
@@ -144,6 +150,7 @@ function GroupMembersBody() {
               })
             }
             locale={locale}
+            timeZone={accountTimeZone}
           />
         </>
       )}

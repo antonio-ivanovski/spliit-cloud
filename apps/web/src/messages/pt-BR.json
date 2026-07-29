@@ -648,7 +648,9 @@
         "scheduleChangeWarning": "Ao salvar, esta e as ocorrências futuras serão reagendadas. As despesas futuras existentes podem mudar para novas datas ou ser removidas, e as datas de vencimento faltantes podem ser criadas automaticamente.",
         "pastDateBackfillNote": "Como esta despesa começa no passado, as ocorrências até hoje serão criadas automaticamente depois de salvar.",
         "completedOccurrence": "Criada",
-        "upcomingOccurrence": "Próxima"
+        "upcomingOccurrence": "Próxima",
+        "timeZoneDescription": "As novas despesas recorrentes são executadas às 15:00 em {timeZone}. Os agendamentos existentes mantêm o fuso horário original.",
+        "timeZonePending": "Aguardando o fuso horário da sua conta antes de ativar a recorrência."
       },
       "recurringEditScopeOccurrence": "Editar apenas esta ocorrência",
       "recurringEditScopeFuture": "Editar esta ocorrência e as futuras"
@@ -1724,6 +1726,17 @@
         "expenses": "Despesas",
         "summaries": "Resumos"
       }
+    },
+    "preferences": {
+      "title": "Preferências do aplicativo",
+      "description": "Use os mesmos padrões e a mesma aparência em todos os dispositivos em que você estiver conectado.",
+      "saveError": "Não foi possível salvar as preferências",
+      "defaultCurrency": "Moeda padrão",
+      "timeZone": "Fuso horário da conta",
+      "timeZoneHelp": "Usado para horários, datas relativas e novas despesas recorrentes.",
+      "language": "Idioma",
+      "theme": "Tema",
+      "chooseTheme": "Escolher"
     }
   },
   "Activities": {
@@ -2081,7 +2094,8 @@
     },
     "badgeRunning": "Recorrente · Em andamento",
     "badgeStopped": "Recorrente · Parada",
-    "badgeCompleted": "Recorrente · Concluída"
+    "badgeCompleted": "Recorrente · Concluída",
+    "timeZone": "É executada às 15:00 em {timeZone}"
   },
   "CurrencyConverter": {
     "trigger": "Conversão de moeda",
@@ -2152,5 +2166,18 @@
       "signInTitle": "Entre para conectar",
       "signInDescription": "Use seu método habitual de login no Spliit Cloud. Seu assistente nunca fornece a identidade da conta usada nas despesas."
     }
+  },
+  "TimeZoneSelector": {
+    "search": "Pesquisar fusos horários ou cidades",
+    "noTimeZone": "Nenhum fuso horário encontrado.",
+    "title": "Escolher fuso horário"
+  },
+  "TimeZoneMismatch": {
+    "title": "Atualizar seu fuso horário?",
+    "description": "Sua conta usa {accountTimeZone}, mas este dispositivo está definido como {browserTimeZone}.",
+    "impact": "A atualização altera a exibição de horários e datas relativas e é usada para novas despesas recorrentes. Os agendamentos existentes mantêm o fuso horário original.",
+    "saveError": "Não foi possível atualizar seu fuso horário. Tente novamente.",
+    "keep": "Manter {timeZone}",
+    "update": "Atualizar para {timeZone}"
   }
 }

@@ -636,7 +636,9 @@
         "scheduleChangeWarning": "Menyimpan akan menjadwalkan ulang kejadian ini dan ke depannya. Pengeluaran mendatang yang ada dapat dipindah ke tanggal baru atau dihapus, dan tanggal jatuh tempo yang belum ada dapat dibuat secara otomatis.",
         "pastDateBackfillNote": "Karena pengeluaran ini dimulai di masa lalu, kejadian hingga hari ini akan dibuat secara otomatis setelah Anda menyimpan.",
         "completedOccurrence": "Dibuat",
-        "upcomingOccurrence": "Mendatang"
+        "upcomingOccurrence": "Mendatang",
+        "timeZoneDescription": "Pengeluaran berulang baru dijalankan pukul 15.00 di {timeZone}. Jadwal yang ada mempertahankan zona waktu aslinya.",
+        "timeZonePending": "Menunggu zona waktu akun Anda sebelum pengulangan dapat diaktifkan."
       },
       "recurringEditScopeOccurrence": "Edit hanya kejadian ini",
       "recurringEditScopeFuture": "Edit kejadian ini dan yang akan datang"
@@ -1708,6 +1710,17 @@
         "expenses": "Pengeluaran",
         "summaries": "Ringkasan"
       }
+    },
+    "preferences": {
+      "title": "Preferensi aplikasi",
+      "description": "Gunakan pengaturan bawaan dan tampilan yang sama di setiap perangkat tempat Anda masuk.",
+      "saveError": "Preferensi tidak dapat disimpan",
+      "defaultCurrency": "Mata uang bawaan",
+      "timeZone": "Zona waktu akun",
+      "timeZoneHelp": "Digunakan untuk stempel waktu, tanggal relatif, dan pengeluaran berulang baru.",
+      "language": "Bahasa",
+      "theme": "Tema",
+      "chooseTheme": "Pilih"
     }
   },
   "Activities": {
@@ -2047,7 +2060,8 @@
     },
     "badgeRunning": "Berulang · Berjalan",
     "badgeStopped": "Berulang · Berhenti",
-    "badgeCompleted": "Berulang · Selesai"
+    "badgeCompleted": "Berulang · Selesai",
+    "timeZone": "Dijalankan pukul 15.00 di {timeZone}"
   },
   "CurrencyConverter": {
     "trigger": "Konversi Mata Uang",
@@ -2118,5 +2132,18 @@
       "signInTitle": "Masuk untuk menghubungkan",
       "signInDescription": "Gunakan metode masuk Spliit Cloud seperti biasa. Asisten Anda tidak pernah memasok identitas akun yang digunakan untuk pengeluaran."
     }
+  },
+  "TimeZoneSelector": {
+    "search": "Cari zona waktu atau kota",
+    "noTimeZone": "Zona waktu tidak ditemukan.",
+    "title": "Pilih zona waktu"
+  },
+  "TimeZoneMismatch": {
+    "title": "Perbarui zona waktu Anda?",
+    "description": "Akun Anda menggunakan {accountTimeZone}, tetapi perangkat ini diatur ke {browserTimeZone}.",
+    "impact": "Pembaruan mengubah tampilan stempel waktu dan tanggal relatif serta digunakan untuk pengeluaran berulang baru. Jadwal yang ada mempertahankan zona waktu aslinya.",
+    "saveError": "Zona waktu Anda tidak dapat diperbarui. Coba lagi.",
+    "keep": "Pertahankan {timeZone}",
+    "update": "Perbarui ke {timeZone}"
   }
 }

@@ -1,6 +1,7 @@
 import { prisma, RecurringExpenseSeriesStatus, type Prisma } from '@spliit/db'
 import {
   calculateRecurrenceDate,
+  dateOnlyInTimeZone,
   type RecurrenceConfig,
   type RecurringExpenseTemplate,
 } from '@spliit/domain'
@@ -29,22 +30,26 @@ export async function enqueueMaterialization(
   existingBoss?: SpliitBoss,
 ) {
   if (!jobsEnv.JOBS_ENABLED) return null
+  const scheduling = await tx.recurringExpenseSeries.findUnique({
+    where: { id: payload.seriesId },
+    select: { timeZone: true },
+  })
+  if (!scheduling) return null
   const boss = existingBoss ?? (await getApiBossForWrite())
-  return sendJob(
-    boss,
-    JOB_NAMES.MATERIALIZE_RECURRING_EXPENSE,
-    {
-      seriesId: payload.seriesId,
-      sequence: payload.sequence,
-      occurrenceDate: payload.occurrenceDate.toISOString().slice(0, 10),
-    },
-    {
-      deadLetter: `${JOB_NAMES.MATERIALIZE_RECURRING_EXPENSE}.dead-letter`,
-      startAfter: recurrenceJobStartAfter(payload.occurrenceDate),
-      singletonKey: materializationSingletonKey(payload),
-      db: bossTransactionDb(tx),
-    },
-  )
+  const jobPayload = {
+    seriesId: payload.seriesId,
+    sequence: payload.sequence,
+    occurrenceDate: payload.occurrenceDate.toISOString().slice(0, 10),
+  }
+  return sendJob(boss, JOB_NAMES.MATERIALIZE_RECURRING_EXPENSE, jobPayload, {
+    deadLetter: `${JOB_NAMES.MATERIALIZE_RECURRING_EXPENSE}.dead-letter`,
+    startAfter: recurrenceJobStartAfter(
+      payload.occurrenceDate,
+      scheduling.timeZone,
+    ),
+    singletonKey: materializationSingletonKey(jobPayload),
+    db: bossTransactionDb(tx),
+  })
 }
 
 export async function createSeriesForExpense(args: {
@@ -52,6 +57,7 @@ export async function createSeriesForExpense(args: {
   seriesId: string
   ledgerId: string
   creatorAccountId: string
+  timeZone?: string
   anchorDate: Date
   config: RecurrenceConfig
   template: RecurringExpenseTemplate
@@ -74,6 +80,19 @@ export async function createSeriesForExpense(args: {
   nextOccurrenceDate?: Date
   nextOccurrenceOrdinal?: number
 }) {
+  const timeZone =
+    args.timeZone ??
+    (
+      await args.tx.accountPreference.findUnique({
+        where: { accountId: args.creatorAccountId },
+        select: { timeZone: true },
+      })
+    )?.timeZone
+  if (!timeZone) {
+    throw new Error(
+      'Account timezone must be initialized before creating a recurring expense',
+    )
+  }
   const nextOrdinal = args.nextOccurrenceOrdinal ?? 2
   const nextDate =
     args.nextOccurrenceDate ??
@@ -91,6 +110,7 @@ export async function createSeriesForExpense(args: {
       id: args.seriesId,
       ledgerId: args.ledgerId,
       creatorAccountId: args.creatorAccountId,
+      timeZone,
       frequency: fields.frequency,
       interval: fields.interval,
       anchorDate: args.anchorDate,
@@ -160,22 +180,41 @@ export async function reconcileDueRecurringExpenses(
       continue
     }
   }
-  const today = new Date()
+  const now = new Date()
+  // DATE cursors are stored at UTC midnight. Querying through the next UTC
+  // midnight covers dates already due in positive-offset timezones; each row
+  // is then filtered by its actual zoned 15:00 execution instant.
+  const safeDateHorizon = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1),
+  )
   const due = await prisma.recurringExpenseSeries.findMany({
     where: {
       status: RecurringExpenseSeriesStatus.ACTIVE,
-      nextOccurrenceDate: { lte: today },
+      nextOccurrenceDate: { lte: safeDateHorizon },
       ledger: { group: { archived: false } },
     },
     ...(options.cursor ? { cursor: { id: options.cursor }, skip: 1 } : {}),
     take: pageSize,
     orderBy: { id: 'asc' },
-    select: { id: true, occurrencesCreated: true, nextOccurrenceDate: true },
+    select: {
+      id: true,
+      occurrencesCreated: true,
+      nextOccurrenceDate: true,
+      timeZone: true,
+    },
   })
   for (let index = 0; index < due.length; index += enqueueBatchSize) {
     const batch = due.slice(index, index + enqueueBatchSize)
     await Promise.all(
       batch.map(async (series) => {
+        if (
+          recurrenceJobStartAfter(
+            series.nextOccurrenceDate,
+            series.timeZone,
+            now,
+          )
+        )
+          return
         const sequence = series.occurrencesCreated + 1
         const payload = {
           seriesId: series.id,
@@ -192,7 +231,10 @@ export async function reconcileDueRecurringExpenses(
             payload,
             {
               singletonKey: materializationSingletonKey(payload),
-              startAfter: recurrenceJobStartAfter(series.nextOccurrenceDate),
+              startAfter: recurrenceJobStartAfter(
+                series.nextOccurrenceDate,
+                series.timeZone,
+              ),
             },
           )
         } catch (error) {
@@ -266,7 +308,6 @@ export async function resumeRecurringExpenseSeries(
   groupId: string,
   existingBoss?: SpliitBoss,
 ) {
-  const today = new Date()
   // Resolve the enqueue client before opening the transaction. When jobs are
   // disabled, keep the database state authoritative and let reconciliation
   // enqueue the occurrence once workers are enabled again.
@@ -281,7 +322,10 @@ export async function resumeRecurringExpenseSeries(
     await tx.$queryRaw`SELECT "id" FROM "Group" WHERE "id" = ${groupId} FOR UPDATE`
     const group = await tx.group.findUnique({
       where: { id: groupId },
-      select: { ledgerId: true, archived: true },
+      select: {
+        ledgerId: true,
+        archived: true,
+      },
     })
     if (!group?.ledgerId || group.archived) return 0
 
@@ -302,6 +346,7 @@ export async function resumeRecurringExpenseSeries(
       })
       if (!series || series.status !== RecurringExpenseSeriesStatus.PAUSED)
         continue
+      const today = dateOnlyInTimeZone(new Date(), series.timeZone)
 
       let ordinal = Math.max(1, series.nextOccurrenceOrdinal)
       let next = calculateRecurrenceDate(

@@ -190,6 +190,12 @@ describe('importGroup', () => {
     expect(result.importedExpenses).toBe(1)
     expect(result.sourceGroupId).toBe('src-grp')
     expect(calls.some((c) => c.model === 'group')).toBe(true)
+    expect(prismaMock.ledger.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        currency: '€',
+        currencyCode: 'EUR',
+      }),
+    })
     // Destination id is the freshly-generated id, not the source id.
     expect(result.groupId).not.toBe(input.sourceMeta?.sourceGroupId)
   })

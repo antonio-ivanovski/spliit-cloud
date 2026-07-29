@@ -636,7 +636,9 @@
         "scheduleChangeWarning": "保存すると、この発生分と今後の発生分が再スケジュールされます。既存の将来の支出は新しい日付に移動したり削除されたりする場合があり、不足している発生日は自動的に作成される場合があります。",
         "pastDateBackfillNote": "この支出が過去の日付から始まるため、保存後に今日までの発生分が自動的に作成されます。",
         "completedOccurrence": "作成済み",
-        "upcomingOccurrence": "予定"
+        "upcomingOccurrence": "予定",
+        "timeZoneDescription": "新しい定期支出は、{timeZone}の午後3時に実行されます。既存のスケジュールは元のタイムゾーンを維持します。",
+        "timeZonePending": "繰り返しを有効にする前に、アカウントのタイムゾーンを待っています。"
       },
       "recurringEditScopeOccurrence": "この発生分のみ編集",
       "recurringEditScopeFuture": "この発生分と今後の発生分を編集"
@@ -1708,6 +1710,17 @@
         "expenses": "支出",
         "summaries": "サマリー"
       }
+    },
+    "preferences": {
+      "title": "アプリ設定",
+      "description": "ログインしているすべてのデバイスで、同じデフォルト設定と表示を使用します。",
+      "saveError": "設定を保存できませんでした",
+      "defaultCurrency": "デフォルト通貨",
+      "timeZone": "アカウントのタイムゾーン",
+      "timeZoneHelp": "時刻、相対日付、新しい定期支出に使用されます。",
+      "language": "言語",
+      "theme": "テーマ",
+      "chooseTheme": "選択"
     }
   },
   "Activities": {
@@ -2047,7 +2060,8 @@
     },
     "badgeRunning": "定期 · 実行中",
     "badgeStopped": "定期 · 停止中",
-    "badgeCompleted": "定期 · 完了"
+    "badgeCompleted": "定期 · 完了",
+    "timeZone": "{timeZone}の午後3時に実行"
   },
   "CurrencyConverter": {
     "trigger": "通貨換算",
@@ -2118,5 +2132,18 @@
       "authorityBullet": "Spliitアカウントが引き続き権限を持ちます",
       "validationBullet": "既存の検証、残高、通知はそのまま維持されます"
     }
+  },
+  "TimeZoneSelector": {
+    "search": "タイムゾーンまたは都市を検索",
+    "noTimeZone": "タイムゾーンが見つかりません。",
+    "title": "タイムゾーンを選択"
+  },
+  "TimeZoneMismatch": {
+    "title": "タイムゾーンを更新しますか？",
+    "description": "アカウントは{accountTimeZone}を使用していますが、このデバイスは{browserTimeZone}に設定されています。",
+    "impact": "更新すると、時刻や相対日付の表示、新しい定期支出に使用するタイムゾーンが変わります。既存の定期スケジュールは元のタイムゾーンを維持します。",
+    "saveError": "タイムゾーンを更新できませんでした。もう一度お試しください。",
+    "keep": "{timeZone}を維持",
+    "update": "{timeZone}に更新"
   }
 }

@@ -2,6 +2,7 @@ import { Menu, Share, Smartphone } from 'lucide-react'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { useStartupTimeZoneCheck } from '@/components/account-preferences-sync'
 import { isPushOnboardingActive } from '@/components/push-notification-onboarding'
 import { Button } from '@/components/ui/button'
 import {
@@ -51,12 +52,19 @@ export function InstallPromotionDialog() {
     dismiss,
     install,
   } = useInstallPrompt()
+  const timeZoneCheck = useStartupTimeZoneCheck()
 
   // Auto-open the dialog a short moment after every gate flips on, so the
   // user is greeted by it once the page has settled and the PWA install
   // signal has fired. The timer is re-armed on every `readyToShow` transition.
   useEffect(() => {
-    if (!readyToShow || isOpen) return
+    if (
+      !readyToShow ||
+      isOpen ||
+      !timeZoneCheck.checked ||
+      timeZoneCheck.promptActive
+    )
+      return
     let timer: number | undefined
     const schedule = (delay: number) => {
       timer = window.setTimeout(() => {
@@ -71,7 +79,13 @@ export function InstallPromotionDialog() {
     return () => {
       if (timer !== undefined) window.clearTimeout(timer)
     }
-  }, [readyToShow, isOpen, open])
+  }, [
+    readyToShow,
+    isOpen,
+    open,
+    timeZoneCheck.checked,
+    timeZoneCheck.promptActive,
+  ])
 
   if (browserSupport === 'unsupported') return null
 

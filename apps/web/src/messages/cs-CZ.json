@@ -654,7 +654,9 @@
         "scheduleChangeWarning": "Uložením přeplánujete tento a budoucí výskyty. Stávající budoucí výdaje se mohou přesunout na nová data nebo být odstraněny a chybějící termíny mohou být vytvořeny automaticky.",
         "pastDateBackfillNote": "Protože tento výdaj začíná v minulosti, výskyty do dnešního dne budou po uložení vytvořeny automaticky.",
         "completedOccurrence": "Vytvořeno",
-        "upcomingOccurrence": "Nadcházející"
+        "upcomingOccurrence": "Nadcházející",
+        "timeZoneDescription": "Nové opakované výdaje se spouštějí v 15:00 v pásmu {timeZone}. Stávající plány si zachovají původní časové pásmo.",
+        "timeZonePending": "Před povolením opakování se čeká na časové pásmo vašeho účtu."
       },
       "recurringEditScopeOccurrence": "Upravit pouze tento výskyt",
       "recurringEditScopeFuture": "Upravit tento a budoucí výskyty"
@@ -1733,6 +1735,17 @@
         "expenses": "Výdaje",
         "summaries": "Souhrny"
       }
+    },
+    "preferences": {
+      "title": "Předvolby aplikace",
+      "description": "Používejte stejná výchozí nastavení a vzhled na každém zařízení, na kterém jste přihlášeni.",
+      "saveError": "Předvolby se nepodařilo uložit",
+      "defaultCurrency": "Výchozí měna",
+      "timeZone": "Časové pásmo účtu",
+      "timeZoneHelp": "Používá se pro časové údaje, relativní data a nové opakované výdaje.",
+      "language": "Jazyk",
+      "theme": "Motiv",
+      "chooseTheme": "Vybrat"
     }
   },
   "Activities": {
@@ -2099,7 +2112,8 @@
     },
     "badgeRunning": "Opakovaný · Probíhá",
     "badgeStopped": "Opakovaný · Zastavený",
-    "badgeCompleted": "Opakovaný · Dokončený"
+    "badgeCompleted": "Opakovaný · Dokončený",
+    "timeZone": "Spouští se v 15:00 v pásmu {timeZone}"
   },
   "CurrencyConverter": {
     "trigger": "Převod měny",
@@ -2170,5 +2184,18 @@
       "authorityBullet": "Váš účet Spliit zůstává autoritou",
       "validationBullet": "Stávající ověřování, zůstatky a oznámení zůstávají zachována"
     }
+  },
+  "TimeZoneSelector": {
+    "search": "Hledat časová pásma nebo města",
+    "noTimeZone": "Nebylo nalezeno žádné časové pásmo.",
+    "title": "Vyberte časové pásmo"
+  },
+  "TimeZoneMismatch": {
+    "title": "Aktualizovat časové pásmo?",
+    "description": "Váš účet používá {accountTimeZone}, ale toto zařízení je nastaveno na {browserTimeZone}.",
+    "impact": "Aktualizace změní zobrazení časových údajů a relativních dat a použije se pro nové opakované výdaje. Stávající plány si zachovají původní časové pásmo.",
+    "saveError": "Časové pásmo se nepodařilo aktualizovat. Zkuste to znovu.",
+    "keep": "Ponechat {timeZone}",
+    "update": "Aktualizovat na {timeZone}"
   }
 }

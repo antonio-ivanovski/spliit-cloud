@@ -73,6 +73,7 @@ type Props = {
   /** Title and action label shown by the mobile multi-select drawer. */
   mobileTitle?: string
   mobileDoneLabel?: string
+  'aria-label'?: string
 }
 
 export function CurrencySelector({
@@ -90,11 +91,11 @@ export function CurrencySelector({
   multiPlaceholder,
   mobileTitle,
   mobileDoneLabel,
+  'aria-label': ariaLabel,
 }: Props) {
   const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery('(min-width: 768px)')
   const { t } = useTranslation()
-
   const selectedCurrency =
     currencies.find((currency) => (currency.code ?? '') === defaultValue) ??
     currencies[0]
@@ -138,6 +139,7 @@ export function CurrencySelector({
               role="combobox"
               aria-haspopup="listbox"
               aria-expanded={open}
+              aria-label={ariaLabel}
               disabled={disabled}
               className="h-9 justify-between px-3 text-sm font-normal"
             >
@@ -177,6 +179,7 @@ export function CurrencySelector({
             role="combobox"
             aria-haspopup="listbox"
             aria-expanded={open}
+            aria-label={ariaLabel}
             disabled={disabled}
             className="h-9 justify-between px-3 text-sm font-normal"
           >
@@ -188,7 +191,12 @@ export function CurrencySelector({
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="p-0" align="start">
+        <PopoverContent
+          className="p-0"
+          align="start"
+          onWheel={(e) => e.stopPropagation()}
+          onTouchMove={(e) => e.stopPropagation()}
+        >
           {command}
         </PopoverContent>
       </Popover>
@@ -205,9 +213,15 @@ export function CurrencySelector({
             isLoading={isLoading}
             disabled={disabled}
             compact={compact}
+            aria-label={ariaLabel}
           />
         </PopoverTrigger>
-        <PopoverContent className="p-0" align="start">
+        <PopoverContent
+          className="p-0"
+          align="start"
+          onWheel={(e) => e.stopPropagation()}
+          onTouchMove={(e) => e.stopPropagation()}
+        >
           {command}
         </PopoverContent>
       </Popover>
@@ -223,6 +237,7 @@ export function CurrencySelector({
           isLoading={isLoading}
           disabled={disabled}
           compact={compact}
+          aria-label={ariaLabel}
         />
       </DrawerTrigger>
       <DrawerContent className="p-0">{command}</DrawerContent>
@@ -276,6 +291,7 @@ function CurrencyCommand({
         : STATIC_COMMON_CURRENCY_CODES
 
     for (const code of commonCodes) {
+      if (priority.length - (pin ? 1 : 0) >= 5) break
       if (!code || assigned.has(code)) continue
       const currency = byCode.get(code)
       if (!currency) continue
@@ -365,12 +381,16 @@ const CurrencyButton = forwardRef<HTMLButtonElement, CurrencyButtonProps>(
         className={
           compact
             ? `h-10 shrink-0 gap-1 rounded-none border-0 px-3 ${className ?? ''}`
-            : `flex w-full ${className ?? ''}`
+            : `flex w-full min-w-0 overflow-hidden ${className ?? ''}`
         }
         ref={ref}
         {...props}
       >
-        <span className={compact ? 'text-left' : 'flex-1 text-left'}>
+        <span
+          className={
+            compact ? 'text-left' : 'min-w-0 flex-1 overflow-hidden text-left'
+          }
+        >
           <CurrencyLabel currency={currency} compact={compact} />
         </span>
         {isLoading ? (
@@ -395,11 +415,13 @@ function CurrencyLabel({
     currency?.code.length ? currency.code.slice(0, 2).toLowerCase() : 'un'
   }.png`
   return (
-    <div className="flex items-center gap-3">
-      <img src={flagUrl} className="w-4" alt="" />
-      {compact
-        ? currency.code || currency.symbol || currency.name
-        : `${currency.name}${currency.code ? ` (${currency.code})` : ''}`}
+    <div className="flex min-w-0 items-center gap-3">
+      <img src={flagUrl} className="w-4 shrink-0" alt="" />
+      <span className="truncate">
+        {compact
+          ? currency.code || currency.symbol || currency.name
+          : `${currency.name}${currency.code ? ` (${currency.code})` : ''}`}
+      </span>
     </div>
   )
 }

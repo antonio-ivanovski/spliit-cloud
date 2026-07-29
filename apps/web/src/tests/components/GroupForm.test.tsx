@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { SyncedAccountPreferencesProvider } from '@/components/account-preferences-sync'
 import { GroupForm, type Props } from '@/components/group-form'
 import { getCurrency, useCurrencies } from '@/lib/currency'
 import { render, screen } from '@/test/test-utils'
@@ -116,6 +117,36 @@ beforeEach(() => {
 // ── Tests ───────────────────────────────────────────────────────────────
 
 describe('GroupForm', () => {
+  it('hydrates currency after an unrelated name edit', async () => {
+    const onSubmit = vi.fn()
+    const view = render(
+      <SyncedAccountPreferencesProvider value={null}>
+        <GroupForm onSubmit={onSubmit} />
+      </SyncedAccountPreferencesProvider>,
+    )
+    await view.user.type(
+      screen.getByRole('textbox', { name: /group name/i }),
+      'Weekend',
+    )
+
+    view.rerender(
+      <SyncedAccountPreferencesProvider
+        value={{
+          defaultCurrencyCode: 'EUR',
+          timeZone: 'Europe/Paris',
+          locale: null,
+          theme: null,
+        }}
+      >
+        <GroupForm onSubmit={onSubmit} />
+      </SyncedAccountPreferencesProvider>,
+    )
+
+    expect(
+      screen.getByRole('combobox', { name: 'Main currency' }),
+    ).toHaveTextContent('Euro')
+  })
+
   it('renders form with name, currency, and info fields in create mode', () => {
     const onSubmit = vi.fn()
     render(<GroupForm onSubmit={onSubmit} />)
@@ -127,7 +158,9 @@ describe('GroupForm', () => {
     ).toBeInTheDocument()
 
     // Currency selector trigger (combobox) should be present
-    expect(screen.getByRole('combobox')).toBeInTheDocument()
+    expect(
+      screen.getByRole('combobox', { name: 'Main currency' }),
+    ).toBeInTheDocument()
 
     // Create button should be present in create mode
     expect(screen.getByRole('button', { name: /create/i })).toBeInTheDocument()
@@ -239,7 +272,9 @@ describe('GroupForm', () => {
     const onSubmit = vi.fn()
     render(<GroupForm onSubmit={onSubmit} />)
 
-    expect(screen.getByRole('combobox')).toBeInTheDocument()
+    expect(
+      screen.getByRole('combobox', { name: 'Main currency' }),
+    ).toBeInTheDocument()
   })
 
   it('edit mode pre-fills group data', () => {
@@ -296,7 +331,9 @@ describe('GroupForm', () => {
       />,
     )
 
-    expect(screen.getByRole('combobox')).not.toBeDisabled()
+    expect(
+      screen.getByRole('combobox', { name: 'Main currency' }),
+    ).not.toBeDisabled()
   })
 
   it('information textarea is enabled when hideNameField is true', () => {
@@ -324,7 +361,9 @@ describe('GroupForm', () => {
       />,
     )
 
-    const combobox = screen.getByRole('combobox')
+    const combobox = screen.getByRole('combobox', {
+      name: 'Main currency',
+    })
     await user.click(combobox)
 
     const euroOption = await screen.findByRole('option', { name: /Euro/ })
@@ -343,5 +382,6 @@ describe('GroupForm', () => {
     const values = onSubmit.mock.calls[0][0]
     expect(values).toHaveProperty('currencyCode', 'EUR')
     expect(values).toHaveProperty('information', 'Updated info text')
+    expect(values).not.toHaveProperty('timeZone')
   })
 })

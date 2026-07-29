@@ -1,5 +1,6 @@
 import { RecurrenceEndType, RecurrenceFrequency } from '@spliit/db'
 import {
+  occurrenceDateToUtcRunAt,
   recurrenceConfigSchema,
   validateRecurrenceConfig,
   type RecurrenceConfig,
@@ -162,17 +163,12 @@ export function initialSeriesCompleted(
 }
 
 /** Return the earliest execution time for a date-only occurrence. */
-export function recurrenceJobStartAfter(date: Date) {
-  const executionDate = new Date(
-    Date.UTC(
-      date.getUTCFullYear(),
-      date.getUTCMonth(),
-      date.getUTCDate(),
-      0,
-      5,
-    ),
-  )
-  const now = new Date()
+export function recurrenceJobStartAfter(
+  date: Date,
+  timeZone = 'UTC',
+  now = new Date(),
+) {
+  const executionDate = occurrenceDateToUtcRunAt(date, timeZone)
   return executionDate.getTime() <= now.getTime() ? undefined : executionDate
 }
 

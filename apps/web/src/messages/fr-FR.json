@@ -648,7 +648,9 @@
         "scheduleChangeWarning": "L’enregistrement replanifiera cette occurrence et les suivantes. Les dépenses futures existantes peuvent être déplacées à de nouvelles dates ou supprimées, et les échéances manquantes peuvent être créées automatiquement.",
         "pastDateBackfillNote": "Comme cette dépense commence dans le passé, les occurrences jusqu’à aujourd’hui seront créées automatiquement après l’enregistrement.",
         "completedOccurrence": "Créée",
-        "upcomingOccurrence": "À venir"
+        "upcomingOccurrence": "À venir",
+        "timeZoneDescription": "Les nouvelles dépenses récurrentes s'exécutent à 15 h dans le fuseau {timeZone}. Les planifications existantes conservent leur fuseau horaire d'origine.",
+        "timeZonePending": "En attente du fuseau horaire de votre compte avant de pouvoir activer la récurrence."
       },
       "recurringEditScopeOccurrence": "Modifier uniquement cette occurrence",
       "recurringEditScopeFuture": "Modifier cette occurrence et les suivantes"
@@ -1724,6 +1726,17 @@
         "expenses": "Dépenses",
         "summaries": "Résumés"
       }
+    },
+    "preferences": {
+      "title": "Préférences de l’application",
+      "description": "Utilisez les mêmes paramètres par défaut et la même apparence sur tous les appareils connectés.",
+      "saveError": "Impossible d’enregistrer les préférences",
+      "defaultCurrency": "Devise par défaut",
+      "timeZone": "Fuseau horaire du compte",
+      "timeZoneHelp": "Utilisé pour les horodatages, les dates relatives et les nouvelles dépenses récurrentes.",
+      "language": "Langue",
+      "theme": "Thème",
+      "chooseTheme": "Choisir"
     }
   },
   "Activities": {
@@ -2081,7 +2094,8 @@
     },
     "badgeRunning": "Récurrente · En cours",
     "badgeStopped": "Récurrente · Arrêtée",
-    "badgeCompleted": "Récurrente · Terminée"
+    "badgeCompleted": "Récurrente · Terminée",
+    "timeZone": "S'exécute à 15 h dans le fuseau {timeZone}"
   },
   "CurrencyConverter": {
     "trigger": "Conversion de devise",
@@ -2152,5 +2166,18 @@
       "authorityBullet": "Votre compte Spliit reste l’autorité",
       "validationBullet": "Les validations, soldes et notifications existants restent inchangés"
     }
+  },
+  "TimeZoneSelector": {
+    "search": "Rechercher des fuseaux horaires ou des villes",
+    "noTimeZone": "Aucun fuseau horaire trouvé.",
+    "title": "Choisir un fuseau horaire"
+  },
+  "TimeZoneMismatch": {
+    "title": "Mettre à jour votre fuseau horaire ?",
+    "description": "Votre compte utilise {accountTimeZone}, mais cet appareil est réglé sur {browserTimeZone}.",
+    "impact": "La mise à jour modifie l'affichage des horodatages et des dates relatives et s'applique aux nouvelles dépenses récurrentes. Les planifications existantes conservent leur fuseau horaire d'origine.",
+    "saveError": "Impossible de mettre à jour votre fuseau horaire. Réessayez.",
+    "keep": "Conserver {timeZone}",
+    "update": "Utiliser {timeZone}"
   }
 }

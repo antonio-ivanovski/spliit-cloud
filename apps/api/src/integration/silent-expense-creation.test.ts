@@ -8,7 +8,12 @@ import {
   waitForScheduledNotificationDispatchesForTest,
 } from '../lib/notifications/dispatcher'
 import { groupsRouter } from '../trpc/routers/groups'
-import { CapturingDispatcher, checkDbConnection, testRunId } from './setup'
+import {
+  CapturingDispatcher,
+  checkDbConnection,
+  initializeTestAccountTimeZone,
+  testRunId,
+} from './setup'
 
 await checkDbConnection()
 
@@ -61,6 +66,7 @@ describe('Silent expense creation — activity + notification', () => {
         name: 'Alice',
       },
     })
+    await initializeTestAccountTimeZone(adminId)
   })
 
   afterEach(async () => {

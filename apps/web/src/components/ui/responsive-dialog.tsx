@@ -92,11 +92,16 @@ ResponsiveDialogClose.displayName = 'ResponsiveDialogClose'
 // ── Content ─────────────────────────────────────────────────────────────
 
 const ResponsiveDialogContent = (
-  props: React.ComponentProps<typeof DialogContent>,
+  {
+    showCloseButton,
+    ...props
+  }: React.ComponentProps<typeof DialogContent>,
 ) => {
   const isDesktop = React.useContext(ResponsiveDialogContext)
   if (isDesktop) {
-    return <DialogContent {...props} />
+    return (
+      <DialogContent showCloseButton={showCloseButton} {...props} />
+    )
   }
   return <DrawerContent {...props} />
 }

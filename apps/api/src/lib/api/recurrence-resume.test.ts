@@ -45,6 +45,7 @@ describe('resumeRecurringExpenseSeries', () => {
     ] as never)
     prismaMock.recurringExpenseSeries.findUnique.mockResolvedValue({
       id: 'series-1',
+      timeZone: 'UTC',
       status: 'PAUSED',
       anchorDate: new Date('2030-01-01T00:00:00Z'),
       frequency: 'MONTHLY',
@@ -87,6 +88,7 @@ describe('resumeRecurringExpenseSeries', () => {
     ] as never)
     prismaMock.recurringExpenseSeries.findUnique.mockResolvedValue({
       id: 'series-1',
+      timeZone: 'UTC',
       status: 'PAUSED',
       anchorDate: new Date('2026-01-01T00:00:00.000Z'),
       frequency: 'MONTHLY',
@@ -126,6 +128,41 @@ describe('resumeRecurringExpenseSeries', () => {
     )
   })
 
+  it('uses the series local date when skipping paused occurrences', async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-07-15T00:03:00.000Z'))
+    prismaMock.group.findUnique.mockResolvedValue({
+      ledgerId: 'ledger-1',
+      archived: false,
+    } as never)
+    prismaMock.recurringExpenseSeries.findMany.mockResolvedValue([
+      { id: 'series-local-date' },
+    ] as never)
+    prismaMock.recurringExpenseSeries.findUnique.mockResolvedValue({
+      id: 'series-local-date',
+      timeZone: 'America/Los_Angeles',
+      status: 'PAUSED',
+      anchorDate: new Date('2026-07-14T00:00:00.000Z'),
+      frequency: 'DAILY',
+      interval: 1,
+      nextOccurrenceOrdinal: 2,
+      occurrencesCreated: 1,
+      endType: 'INDEFINITE',
+      occurrenceLimit: null,
+      endDate: null,
+    } as never)
+
+    await expect(resumeRecurringExpenseSeries('group-1')).resolves.toBe(1)
+    expect(prismaMock.recurringExpenseSeries.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          nextOccurrenceDate: new Date('2026-07-15T00:00:00.000Z'),
+          nextOccurrenceOrdinal: 2,
+        }),
+      }),
+    )
+  })
+
   it('completes a date-ended series when its next future occurrence passed the end date', async () => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date('2026-07-15T12:00:00.000Z'))
@@ -140,6 +177,7 @@ describe('resumeRecurringExpenseSeries', () => {
     ] as never)
     prismaMock.recurringExpenseSeries.findUnique.mockResolvedValue({
       id: 'series-date',
+      timeZone: 'UTC',
       status: 'PAUSED',
       anchorDate: new Date('2026-01-01T00:00:00.000Z'),
       frequency: 'MONTHLY',
@@ -176,6 +214,7 @@ describe('resumeRecurringExpenseSeries', () => {
     ] as never)
     prismaMock.recurringExpenseSeries.findUnique.mockResolvedValue({
       id: 'series-count',
+      timeZone: 'UTC',
       status: 'PAUSED',
       anchorDate: new Date('2026-01-01T00:00:00.000Z'),
       frequency: 'MONTHLY',

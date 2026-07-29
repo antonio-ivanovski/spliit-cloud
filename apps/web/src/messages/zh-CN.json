@@ -636,7 +636,9 @@
         "scheduleChangeWarning": "保存后将重新安排本次及后续的重复项。现有的未来支出可能会移至新日期或被删除，缺少的到期日可能会自动创建。",
         "pastDateBackfillNote": "由于此支出始于过去，保存后将自动创建截至今天的重复项。",
         "completedOccurrence": "已创建",
-        "upcomingOccurrence": "即将"
+        "upcomingOccurrence": "即将",
+        "timeZoneDescription": "新的定期支出将在 {timeZone} 下午 3:00 执行。现有计划会保留原时区。",
+        "timeZonePending": "正在等待账户时区，之后才能启用重复。"
       },
       "recurringEditScopeOccurrence": "仅编辑本次重复项",
       "recurringEditScopeFuture": "编辑本次及后续重复项"
@@ -1708,6 +1710,17 @@
         "expenses": "消费",
         "summaries": "摘要"
       }
+    },
+    "preferences": {
+      "title": "应用偏好设置",
+      "description": "在所有已登录的设备上使用相同的默认设置和外观。",
+      "saveError": "无法保存偏好设置",
+      "defaultCurrency": "默认货币",
+      "timeZone": "账户时区",
+      "timeZoneHelp": "用于显示时间戳、相对日期和新的定期支出。",
+      "language": "语言",
+      "theme": "主题",
+      "chooseTheme": "选择"
     }
   },
   "Activities": {
@@ -2047,7 +2060,8 @@
     },
     "badgeRunning": "定期 · 运行中",
     "badgeStopped": "定期 · 已停止",
-    "badgeCompleted": "定期 · 已完成"
+    "badgeCompleted": "定期 · 已完成",
+    "timeZone": "在 {timeZone} 下午 3:00 执行"
   },
   "CurrencyConverter": {
     "trigger": "货币转换",
@@ -2118,5 +2132,18 @@
       "signInTitle": "登录以连接",
       "signInDescription": "使用你平常的 Spliit Cloud 登录方式。你的助手不会提供用于支出记录的账户身份。"
     }
+  },
+  "TimeZoneSelector": {
+    "search": "搜索时区或城市",
+    "noTimeZone": "未找到时区。",
+    "title": "选择时区"
+  },
+  "TimeZoneMismatch": {
+    "title": "更新你的时区？",
+    "description": "你的账户使用 {accountTimeZone}，但此设备设置为 {browserTimeZone}。",
+    "impact": "更新后，时间戳和相对日期的显示方式以及新定期支出使用的时区会改变。现有定期计划会保留原时区。",
+    "saveError": "无法更新时间。请重试。",
+    "keep": "保留 {timeZone}",
+    "update": "更新为 {timeZone}"
   }
 }

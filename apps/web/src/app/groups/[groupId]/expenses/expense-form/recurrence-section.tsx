@@ -8,6 +8,10 @@ import {
 } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
+import {
+  useStartupTimeZoneCheck,
+  useSyncedAccountPreferences,
+} from '@/components/account-preferences-sync'
 import { ResponsiveChoicePicker } from '@/components/responsive-choice-picker'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
@@ -84,12 +88,14 @@ const parseIntegerDraft = (value: string) => {
 export function RecurrenceSection<T extends RecurrenceFormValues>({
   form,
   readOnly,
+  isCopy = false,
   currentSequence = 1,
   editScope,
   initialRecurrence,
 }: {
   form: UseFormReturn<T>
   readOnly: boolean
+  isCopy?: boolean
   currentSequence?: number
   /** Locked edit scope when editing an existing series. */
   editScope?: 'OCCURRENCE' | 'THIS_AND_FUTURE' | null
@@ -98,6 +104,10 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm.Expense' })
   const locale = useLocale()
+  const accountPreferences = useSyncedAccountPreferences()
+  const timeZoneCheck = useStartupTimeZoneCheck()
+  const accountTimeZone = accountPreferences?.timeZone ?? null
+  const recurrenceAvailable = accountTimeZone !== null && timeZoneCheck.checked
   const [scheduleOpen, setScheduleOpen] = useState(false)
   // Keep the raw text while a numeric field is being edited. The form value
   // stays valid, so an empty draft never reaches the API/schema validation.
@@ -183,6 +193,11 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
     [form],
   )
 
+  useEffect(() => {
+    if (!isCopy || recurrenceAvailable || !recurrence) return
+    updateRecurrence(null)
+  }, [isCopy, recurrence, recurrenceAvailable, updateRecurrence])
+
   const updateEnd = (next: RecurrenceEnd) => {
     if (!recurrence) return
     updateRecurrence({ ...recurrence, end: next })
@@ -256,7 +271,7 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
                     onCheckedChange={(checked) =>
                       toggleRecurrence(checked === true)
                     }
-                    disabled={readOnly}
+                    disabled={readOnly || (!recurrenceAvailable && !isEnabled)}
                     aria-controls="recurrence-settings"
                   />
                 </FormControl>
@@ -270,6 +285,21 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
                   <p className="mt-0.5 text-sm leading-snug text-muted-foreground">
                     {t('recurrence.checkboxDescription')}
                   </p>
+                  {accountTimeZone && (
+                    <p className="mt-1 text-xs leading-snug text-muted-foreground">
+                      {t('recurrence.timeZoneDescription', {
+                        timeZone: accountTimeZone,
+                      })}
+                    </p>
+                  )}
+                  {!recurrenceAvailable && (
+                    <p
+                      className="mt-1 text-xs leading-snug text-muted-foreground"
+                      aria-live="polite"
+                    >
+                      {t('recurrence.timeZonePending')}
+                    </p>
+                  )}
                 </div>
               </div>
 

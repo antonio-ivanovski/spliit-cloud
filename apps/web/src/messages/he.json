@@ -648,7 +648,9 @@
         "scheduleChangeWarning": "שמירה תשנה את מועדי המופע הנוכחי והמופעים העתידיים. הוצאות עתידיות קיימות עלולות לעבור לתאריכים חדשים או להימחק, ותאריכי יעד חסרים עלולים להיווצר אוטומטית.",
         "pastDateBackfillNote": "מכיוון שההוצאה מתחילה בעבר, מופעים עד היום ייווצרו אוטומטית לאחר השמירה.",
         "completedOccurrence": "נוצר",
-        "upcomingOccurrence": "עתידי"
+        "upcomingOccurrence": "עתידי",
+        "timeZoneDescription": "הוצאות מחזוריות חדשות מופעלות בשעה 15:00 באזור {timeZone}. תזמונים קיימים שומרים על אזור הזמן המקורי שלהם.",
+        "timeZonePending": "ממתין לאזור הזמן של החשבון לפני שניתן יהיה להפעיל חזרה."
       },
       "recurringEditScopeOccurrence": "עריכת מופע זה בלבד",
       "recurringEditScopeFuture": "עריכת מופע זה והמופעים הבאים"
@@ -1724,6 +1726,17 @@
         "expenses": "הוצאות",
         "summaries": "סיכומים"
       }
+    },
+    "preferences": {
+      "title": "העדפות האפליקציה",
+      "description": "השתמש באותן הגדרות ברירת מחדל ובאותו מראה בכל מכשיר שהתחברת בו.",
+      "saveError": "לא ניתן לשמור את ההעדפות",
+      "defaultCurrency": "מטבע ברירת המחדל",
+      "timeZone": "אזור הזמן של החשבון",
+      "timeZoneHelp": "משמש לחותמות זמן, לתאריכים יחסיים ולהוצאות מחזוריות חדשות.",
+      "language": "שפה",
+      "theme": "ערכת נושא",
+      "chooseTheme": "בחירה"
     }
   },
   "Activities": {
@@ -2081,7 +2094,8 @@
     },
     "badgeRunning": "חוזרת · פועלת",
     "badgeStopped": "חוזרת · נעצרה",
-    "badgeCompleted": "חוזרת · הושלמה"
+    "badgeCompleted": "חוזרת · הושלמה",
+    "timeZone": "מופעלת בשעה 15:00 באזור {timeZone}"
   },
   "CurrencyConverter": {
     "trigger": "המרת מטבע",
@@ -2152,5 +2166,18 @@
       "signInTitle": "התחברו כדי להתחבר",
       "signInDescription": "השתמשו בשיטת ההתחברות הרגילה שלכם ל-Spliit Cloud. העוזר לעולם אינו מספק את זהות החשבון המשמשת להוצאות."
     }
+  },
+  "TimeZoneSelector": {
+    "search": "חיפוש אזורי זמן או ערים",
+    "noTimeZone": "לא נמצא אזור זמן.",
+    "title": "בחירת אזור זמן"
+  },
+  "TimeZoneMismatch": {
+    "title": "לעדכן את אזור הזמן?",
+    "description": "החשבון שלך משתמש באזור {accountTimeZone}, אך מכשיר זה מוגדר לאזור {browserTimeZone}.",
+    "impact": "העדכון משנה את הצגת חותמות הזמן והתאריכים היחסיים ומשמש להוצאות מחזוריות חדשות. תזמונים קיימים שומרים על אזור הזמן המקורי שלהם.",
+    "saveError": "לא ניתן לעדכן את אזור הזמן. נסו שוב.",
+    "keep": "להשאיר את {timeZone}",
+    "update": "לעדכן ל־{timeZone}"
   }
 }

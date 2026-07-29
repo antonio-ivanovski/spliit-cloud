@@ -648,7 +648,9 @@
         "scheduleChangeWarning": "Al guardar, se reprogramarán esta y las ocurrencias futuras. Los gastos futuros existentes pueden moverse a nuevas fechas o eliminarse, y las fechas de vencimiento que falten pueden crearse automáticamente.",
         "pastDateBackfillNote": "Como este gasto comienza en el pasado, las ocurrencias hasta hoy se crearán automáticamente después de guardar.",
         "completedOccurrence": "Creada",
-        "upcomingOccurrence": "Próxima"
+        "upcomingOccurrence": "Próxima",
+        "timeZoneDescription": "Los nuevos gastos recurrentes se ejecutan a las 15:00 en {timeZone}. Las programaciones existentes conservan su zona horaria original.",
+        "timeZonePending": "Esperando la zona horaria de tu cuenta antes de poder activar la recurrencia."
       },
       "recurringEditScopeOccurrence": "Editar solo esta ocurrencia",
       "recurringEditScopeFuture": "Editar esta y las futuras ocurrencias"
@@ -1724,6 +1726,17 @@
         "expenses": "Gastos",
         "summaries": "Resúmenes"
       }
+    },
+    "preferences": {
+      "title": "Preferencias de la aplicación",
+      "description": "Usa los mismos valores predeterminados y la misma apariencia en todos los dispositivos en los que hayas iniciado sesión.",
+      "saveError": "No se han podido guardar las preferencias",
+      "defaultCurrency": "Moneda predeterminada",
+      "timeZone": "Zona horaria de la cuenta",
+      "timeZoneHelp": "Se usa para las marcas de tiempo, las fechas relativas y los nuevos gastos recurrentes.",
+      "language": "Idioma",
+      "theme": "Tema",
+      "chooseTheme": "Elegir"
     }
   },
   "Activities": {
@@ -2081,7 +2094,8 @@
     },
     "badgeRunning": "Recurrente · En curso",
     "badgeStopped": "Recurrente · Detenida",
-    "badgeCompleted": "Recurrente · Completada"
+    "badgeCompleted": "Recurrente · Completada",
+    "timeZone": "Se ejecuta a las 15:00 en {timeZone}"
   },
   "CurrencyConverter": {
     "trigger": "Conversión de moneda",
@@ -2152,5 +2166,18 @@
       "authorityBullet": "Tu cuenta de Spliit sigue siendo la autoridad",
       "validationBullet": "Las validaciones, los saldos y las notificaciones existentes se mantienen"
     }
+  },
+  "TimeZoneSelector": {
+    "search": "Buscar zonas horarias o ciudades",
+    "noTimeZone": "No se encontró ninguna zona horaria.",
+    "title": "Elegir zona horaria"
+  },
+  "TimeZoneMismatch": {
+    "title": "¿Actualizar tu zona horaria?",
+    "description": "Tu cuenta usa {accountTimeZone}, pero este dispositivo está configurado en {browserTimeZone}.",
+    "impact": "La actualización cambia cómo se muestran las marcas de tiempo y las fechas relativas, y se usa para los nuevos gastos recurrentes. Las programaciones recurrentes existentes conservan su zona horaria original.",
+    "saveError": "No se pudo actualizar tu zona horaria. Inténtalo de nuevo.",
+    "keep": "Mantener {timeZone}",
+    "update": "Actualizar a {timeZone}"
   }
 }

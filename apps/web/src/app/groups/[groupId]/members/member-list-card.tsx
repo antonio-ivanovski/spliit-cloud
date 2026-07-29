@@ -47,6 +47,7 @@ export function MemberListCard({
   onUpdateRole,
   roleLabels,
   locale,
+  timeZone,
 }: {
   members: Member[]
   isLoading: boolean
@@ -58,6 +59,7 @@ export function MemberListCard({
   onUpdateRole: (memberId: string, role: 'ADMIN' | 'MEMBER') => void
   roleLabels: { ADMIN: string; MEMBER: string }
   locale: string
+  timeZone: string
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
 
@@ -120,7 +122,7 @@ export function MemberListCard({
                     {member.joinedAt && (
                       <p className="mt-0.5 text-xs text-muted-foreground">
                         {t('joinedOn', {
-                          date: formatDate(member.joinedAt, locale),
+                          date: formatDate(member.joinedAt, locale, timeZone),
                         })}
                       </p>
                     )}

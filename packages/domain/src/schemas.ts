@@ -8,43 +8,51 @@ import {
 import type { RecurrenceRule, SplitMode } from './enums'
 import { recurrenceConfigSchema } from './recurring-expenses'
 
-export const groupFormSchema = z
-  .object({
-    name: z.string().min(2, { error: 'min2' }).max(50, { error: 'max50' }),
-    information: z.string().optional(),
-    currency: z.string().min(1, { error: 'min1' }).max(5, { error: 'max5' }),
-    currencyCode: z
-      .union([z.string().length(3).nullish(), z.literal('')])
-      .describe(
-        'ISO-4217 3-letter code, or empty string for custom currencies',
-      ),
-    participants: z
-      .array(
-        z.object({
-          id: z.string().optional(),
-          name: z
-            .string()
-            .min(2, { error: 'min2' })
-            .max(50, { error: 'max50' }),
-        }),
-      )
-      .min(1),
-  })
-  .superRefine(({ participants }, ctx) => {
-    participants.forEach((participant, i) => {
-      participants.slice(0, i).forEach((otherParticipant) => {
-        if (otherParticipant.name === participant.name) {
-          ctx.addIssue({
-            code: 'custom',
-            message: 'duplicateParticipantName',
-            path: ['participants', i, 'name'],
-          })
-        }
-      })
+const groupFormFields = {
+  name: z.string().min(2, { error: 'min2' }).max(50, { error: 'max50' }),
+  information: z.string().optional(),
+  currency: z.string().min(1, { error: 'min1' }).max(5, { error: 'max5' }),
+  currencyCode: z
+    .union([z.string().length(3).nullish(), z.literal('')])
+    .describe('ISO-4217 3-letter code, or empty string for custom currencies'),
+  participants: z
+    .array(
+      z.object({
+        id: z.string().optional(),
+        name: z.string().min(2, { error: 'min2' }).max(50, { error: 'max50' }),
+      }),
+    )
+    .min(1),
+}
+
+function validateGroupParticipants(
+  { participants }: { participants: Array<{ name: string }> },
+  ctx: z.RefinementCtx,
+) {
+  participants.forEach((participant, i) => {
+    participants.slice(0, i).forEach((otherParticipant) => {
+      if (otherParticipant.name === participant.name) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'duplicateParticipantName',
+          path: ['participants', i, 'name'],
+        })
+      }
     })
   })
+}
+
+export const groupFormSchema = z
+  .object(groupFormFields)
+  .superRefine(validateGroupParticipants)
 
 export type GroupFormValues = z.infer<typeof groupFormSchema>
+
+export const groupUpdateFormSchema = z
+  .object(groupFormFields)
+  .superRefine(validateGroupParticipants)
+
+export type GroupUpdateFormValues = z.infer<typeof groupUpdateFormSchema>
 
 // Friend-ledger creation form. The caller picks exactly one of three modes:
 // known peer account, email (which may resolve to an existing account or a

@@ -1,7 +1,9 @@
 import type { Prisma } from '@spliit/db'
 import { prisma } from '@spliit/db'
 import {
+  COMMON_CURRENCY_LIMIT,
   commonCurrencyLookbackDate,
+  isSupportedCurrencyCode,
   rankCommonCurrencies,
 } from '@spliit/domain'
 
@@ -223,6 +225,24 @@ export async function getGroupExpenseCount(groupId: string) {
  * recency lookback so large ledgers stay cheap; scoring uses a 90-day half-life
  * (see `@spliit/domain` `rankCommonCurrencies`).
  */
+export function mergeCurrencyRecommendations(
+  groupCurrency: string | null | undefined,
+  learnedCurrencyCodes: ReadonlyArray<string>,
+): string[] {
+  const recommendations: string[] = []
+  const seen = new Set<string>()
+
+  for (const code of learnedCurrencyCodes) {
+    if (code === groupCurrency || seen.has(code)) continue
+    if (!isSupportedCurrencyCode(code)) continue
+    seen.add(code)
+    recommendations.push(code)
+    if (recommendations.length === COMMON_CURRENCY_LIMIT) break
+  }
+
+  return recommendations
+}
+
 export async function getGroupCommonCurrencies(groupId: string) {
   const group = await prisma.group.findUnique({
     where: { id: groupId },
@@ -245,9 +265,13 @@ export async function getGroupCommonCurrencies(groupId: string) {
     },
   })
 
-  return rankCommonCurrencies(rows, {
+  const learnedCurrencyCodes = rankCommonCurrencies(rows, {
     groupCurrency: group.ledger.currencyCode,
   })
+  return mergeCurrencyRecommendations(
+    group.ledger.currencyCode,
+    learnedCurrencyCodes,
+  )
 }
 
 export async function getExpense(groupId: string, expenseId: string) {
@@ -357,6 +381,7 @@ export async function getRecurringExpenseSeries(
       const occurrenceLimit = options?.occurrenceLimit ?? 50
       return {
         id: series.id,
+        timeZone: series.timeZone,
         frequency: series.frequency,
         interval: series.interval,
         anchorDate: series.anchorDate,

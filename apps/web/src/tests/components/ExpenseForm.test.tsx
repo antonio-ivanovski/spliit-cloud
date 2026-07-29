@@ -13,8 +13,32 @@ import { act, fireEvent, render, screen } from '@/test/test-utils'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
+const accountPreferenceMocks = vi.hoisted(() => ({
+  preferences: {
+    defaultCurrencyCode: 'USD',
+    timeZone: 'UTC',
+    locale: 'en-US',
+    theme: 'system',
+  } as {
+    defaultCurrencyCode: string | null
+    timeZone: string | null
+    locale: 'en-US' | null
+    theme: 'system' | null
+  },
+  timeZoneCheck: {
+    checked: true,
+    promptActive: false,
+  },
+}))
+
 vi.mock('@trpc/react-query', () => ({
   createTRPCReact: () => {},
+}))
+
+vi.mock('@/components/account-preferences-sync', async (importOriginal) => ({
+  ...(await importOriginal()),
+  useSyncedAccountPreferences: () => accountPreferenceMocks.preferences,
+  useStartupTimeZoneCheck: () => accountPreferenceMocks.timeZoneCheck,
 }))
 
 // All tRPC mocks are hoisted alongside each other so the `@/trpc/client`
@@ -306,6 +330,16 @@ type MockQueryResult = {
 }
 
 beforeEach(() => {
+  accountPreferenceMocks.preferences = {
+    defaultCurrencyCode: 'USD',
+    timeZone: 'UTC',
+    locale: 'en-US',
+    theme: 'system',
+  }
+  accountPreferenceMocks.timeZoneCheck = {
+    checked: true,
+    promptActive: false,
+  }
   mockCategoryMutateAsync.mockReset()
   mockCategoryMutateAsync.mockResolvedValue({ categoryId: 'general' })
   mockCategoryReset.mockReset()
@@ -1014,6 +1048,44 @@ describe('ExpenseForm', () => {
     } finally {
       vi.useRealTimers()
     }
+  })
+
+  it('clears copied recurrence while account timezone sync is pending', async () => {
+    accountPreferenceMocks.preferences = {
+      ...accountPreferenceMocks.preferences,
+      timeZone: null,
+    }
+    accountPreferenceMocks.timeZoneCheck = {
+      checked: false,
+      promptActive: false,
+    }
+    const recurringExpense = {
+      ...mockExpense,
+      recurrence: {
+        frequency: 'WEEKLY',
+        interval: 1,
+        end: { type: 'INDEFINITE' },
+      },
+    }
+
+    render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        expense={recurringExpense as unknown as LoadedExpense}
+        isCopy
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const recurrence = screen.getByRole('checkbox', { name: 'Recurring' })
+    await vi.waitFor(() => expect(recurrence).not.toBeChecked())
+    expect(recurrence).toBeDisabled()
+    expect(
+      screen.getByText(
+        'Waiting for your account timezone before recurrence can be enabled.',
+      ),
+    ).toBeInTheDocument()
   })
 
   it('edit mode renders the resolved "{title}" heading when supplied', () => {

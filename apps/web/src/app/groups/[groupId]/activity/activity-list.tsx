@@ -5,7 +5,10 @@ import { useInView } from 'react-intersection-observer'
 
 import type { Activity } from '@/app/groups/[groupId]/activity/activity-item'
 import { ActivityItem } from '@/app/groups/[groupId]/activity/activity-item'
+import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import { Skeleton } from '@/components/ui/skeleton'
+import { detectDeviceTimeZone } from '@/lib/account-preferences'
+import { zonedDateOnlyIso } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 
 import { useCurrentGroup } from '../current-group-context'
@@ -62,8 +65,12 @@ function getDateGroup(date: Dayjs, today: Dayjs) {
   }
 }
 
-function getGroupedActivitiesByDate(activities: Activity[]) {
-  const today = dayjs()
+function calendarDay(value: string) {
+  return dayjs(`${value}T12:00:00`)
+}
+
+function getGroupedActivitiesByDate(activities: Activity[], timeZone: string) {
+  const today = calendarDay(zonedDateOnlyIso(new Date(), timeZone))
   const dateGroupValues = Object.values(DATE_GROUPS) as Array<
     (typeof DATE_GROUPS)[keyof typeof DATE_GROUPS]
   >
@@ -71,7 +78,10 @@ function getGroupedActivitiesByDate(activities: Activity[]) {
     dateGroupValues.map((g) => [g, [] as Activity[]]),
   ) as Record<(typeof DATE_GROUPS)[keyof typeof DATE_GROUPS], Activity[]>
   for (const activity of activities) {
-    const activityGroup = getDateGroup(dayjs(activity.time), today)
+    const activityGroup = getDateGroup(
+      calendarDay(zonedDateOnlyIso(activity.time, timeZone)),
+      today,
+    )
     result[activityGroup].push(activity)
   }
   return result
@@ -101,6 +111,9 @@ ActivitiesLoading.displayName = 'ActivitiesLoading'
 export function ActivityList() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Activity' })
   const { group, groupId } = useCurrentGroup()
+  const accountPreferences = useSyncedAccountPreferences()
+  const accountTimeZone =
+    accountPreferences?.timeZone ?? detectDeviceTimeZone() ?? 'UTC'
   const linkInviteToken = useLinkInviteToken()
 
   const {
@@ -122,7 +135,10 @@ export function ActivityList() {
 
   if (isLoading || !activities || !group) return <ActivitiesLoading />
 
-  const groupedActivitiesByDate = getGroupedActivitiesByDate(activities)
+  const groupedActivitiesByDate = getGroupedActivitiesByDate(
+    activities,
+    accountTimeZone,
+  )
 
   return activities.length > 0 ? (
     <div data-testid="activity-list">

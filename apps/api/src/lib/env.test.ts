@@ -92,6 +92,20 @@ describe('envSchema — development', () => {
     expect(env.SMTP_USER).toBeUndefined()
     expect(env.SMTP_PASS).toBeUndefined()
   })
+
+  it('defaults the instance currency to USD', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.resetModules()
+    const { env } = await import('./env')
+    expect(env.PUBLIC_DEFAULT_CURRENCY_CODE).toBe('USD')
+  })
+
+  it('rejects an unsupported instance currency', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('PUBLIC_DEFAULT_CURRENCY_CODE', 'ZZZ')
+    vi.resetModules()
+    await expect(import('./env')).rejects.toThrow(/unsupportedCurrencyCode/)
+  })
 })
 
 describe('envSchema — AI', () => {

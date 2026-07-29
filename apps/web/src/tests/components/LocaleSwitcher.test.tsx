@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { LocaleSwitcher } from '@/components/locale-switcher'
+import { LocaleSelector, LocaleSwitcher } from '@/components/locale-switcher'
 import { localeFlags, localeRegions } from '@/components/locale-switcher-data'
 import { localeLabels, locales } from '@/i18n/request'
 import * as i18nSetup from '@/i18n/setup'
@@ -45,6 +45,37 @@ describe('LocaleSwitcher', () => {
     }
   })
 
+  it('supports controlled selection without changing language itself', async () => {
+    mockViewport(true)
+    const onValueChange = vi.fn()
+    const { user } = render(
+      <LocaleSelector value="en-US" onValueChange={onValueChange} showLabel />,
+    )
+
+    await user.click(
+      screen.getByRole('button', { name: localeLabels['en-US'] }),
+    )
+    await user.click(screen.getByRole('option', { name: /Français/ }))
+
+    expect(onValueChange).toHaveBeenCalledWith('fr-FR')
+    expect(i18nSetup.setUserLocale).not.toHaveBeenCalled()
+  })
+
+  it('renders a bounded field trigger with the standard dropdown chevron', () => {
+    mockViewport(true)
+    render(
+      <LocaleSelector value="en-US" onValueChange={() => undefined} field />,
+    )
+
+    const trigger = screen.getByRole('combobox', {
+      name: localeLabels['en-US'],
+    })
+    expect(trigger).toHaveClass('w-full', 'min-w-0', 'bg-background')
+    expect(trigger).not.toHaveClass('bg-primary')
+    expect(trigger.querySelectorAll('svg')).toHaveLength(1)
+    expect(trigger).toHaveTextContent(localeLabels['en-US'])
+  })
+
   it('shows every locale once in prioritized, regional groups', async () => {
     mockViewport(true)
     const { user } = render(<LocaleSwitcher />)
@@ -54,6 +85,7 @@ describe('LocaleSwitcher', () => {
     })
     expect(trigger).toHaveTextContent(localeFlags['en-US'])
     expect(trigger).toHaveTextContent(localeLabels['en-US'])
+    expect(trigger).not.toHaveClass('bg-primary')
 
     await user.click(trigger)
 

@@ -4,10 +4,12 @@ import { ChevronRight } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/i18n/react'
+import { detectDeviceTimeZone } from '@/lib/account-preferences'
 import type { DateTimeStyle } from '@/lib/utils'
-import { cn, formatDate } from '@/lib/utils'
+import { cn, formatZonedDate } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
 import { parseActivityData } from '@spliit/domain/activities'
 
@@ -85,7 +87,9 @@ function useMessage(activity: Activity) {
             changes:
               data.changes?.map((change) => ({
                 field: change.field,
-                label: t(`group.changedFields.${change.field}` as const),
+                label: t(`group.changedFields.${change.field}` as never, {
+                  defaultValue: change.field,
+                }),
                 before: change.before ?? null,
                 after: change.after ?? null,
               })) ?? null,
@@ -249,6 +253,9 @@ function renderItemsDiff(before: string | null): ReactNode {
 }
 
 export function ActivityItem({ groupId, activity, dateStyle }: Props) {
+  const accountPreferences = useSyncedAccountPreferences()
+  const accountTimeZone =
+    accountPreferences?.timeZone ?? detectDeviceTimeZone() ?? 'UTC'
   const navigate = useNavigate()
   const locale = useLocale()
   const { t } = useTranslation(undefined, { keyPrefix: 'Activities' })
@@ -289,11 +296,15 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
       <div className="flex shrink-0 flex-col items-start justify-between">
         {dateStyle !== undefined && (
           <div className="mt-1 text-xs/5 text-muted-foreground">
-            {formatDate(activity.time, locale, { dateStyle })}
+            {formatZonedDate(activity.time, locale, accountTimeZone, {
+              dateStyle,
+            })}
           </div>
         )}
         <div className="my-1 text-xs/5 text-muted-foreground">
-          {formatDate(activity.time, locale, { timeStyle: 'short' })}
+          {formatZonedDate(activity.time, locale, accountTimeZone, {
+            timeStyle: 'short',
+          })}
         </div>
       </div>
       <div className="min-w-0 flex-1">

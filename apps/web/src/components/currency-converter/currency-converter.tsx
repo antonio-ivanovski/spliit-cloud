@@ -387,7 +387,7 @@ export function ConverterContent() {
       )}
 
       {previewReady && rankedGroups.length > 0 && (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 max-sm:sticky max-sm:bottom-0 max-sm:-mx-4 max-sm:border-t max-sm:bg-background max-sm:px-4 max-sm:pt-3 max-sm:pb-4">
           <p className="text-sm font-medium">{t('createIn')}</p>
           <div className="flex gap-2 overflow-x-auto pb-1">
             {rankedGroups.map((group) => (

@@ -42,25 +42,26 @@ model Account {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  authIdentities AuthIdentity[]
-  sessions       Session[]
+  authIdentities     AuthIdentity[]
+  sessions           Session[]
   oauthClients       OauthClient[]
   oauthRefreshTokens OauthRefreshToken[]
   oauthAccessTokens  OauthAccessToken[]
   oauthConsents      OauthConsent[]
 
-  groupMemberships    GroupMember[]
+  groupMemberships              GroupMember[]
   // Invitations this account has been the target of (accepted-by).
-  receivedInvitations GroupInvitation[]        @relation("InvitationInviteeAccount")
+  receivedInvitations           GroupInvitation[]               @relation("InvitationInviteeAccount")
   // Invitations this account has issued as an owner/admin.
-  sentInvitations     GroupInvitation[]        @relation("InvitationInviter")
-  groupPreferences    AccountGroupPreference[]
-  defaultSplits       AccountGroupDefaultSplit[]
-  pushSubscriptions   PushSubscription[]
-  notificationPreferences AccountNotificationPreference[]
-  notificationDeliveries NotificationDelivery[]
-  recurringExpenseSeriesCreated RecurringExpenseSeries[] @relation("RecurringExpenseSeriesCreator")
-  expenseComments ExpenseComment[]
+  sentInvitations               GroupInvitation[]               @relation("InvitationInviter")
+  groupPreferences              AccountGroupPreference[]
+  preference                    AccountPreference?
+  defaultSplits                 AccountGroupDefaultSplit[]
+  pushSubscriptions             PushSubscription[]
+  notificationPreferences       AccountNotificationPreference[]
+  notificationDeliveries        NotificationDelivery[]
+  recurringExpenseSeriesCreated RecurringExpenseSeries[]        @relation("RecurringExpenseSeriesCreator")
+  expenseComments               ExpenseComment[]
 }
 
 model PushSubscription {
@@ -123,16 +124,16 @@ model AuthIdentity {
 }
 
 model Session {
-  id        String   @id
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                 String              @id
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
   // The signed-in account this session belongs to.
-  account   Account  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  expiresAt DateTime
-  token     String   @unique
-  ipAddress String?
-  userAgent String?
+  account            Account             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId             String
+  expiresAt          DateTime
+  token              String              @unique
+  ipAddress          String?
+  userAgent          String?
   oauthRefreshTokens OauthRefreshToken[]
   oauthAccessTokens  OauthAccessToken[]
 
@@ -140,32 +141,32 @@ model Session {
 }
 
 model OauthClient {
-  id                      String   @id
-  clientId                String   @unique
+  id                      String              @id
+  clientId                String              @unique
   clientSecret            String?
-  disabled                Boolean? @default(false)
+  disabled                Boolean?            @default(false)
   skipConsent             Boolean?
   enableEndSession        Boolean?
   subjectType             String?
-  scopes                  String[] @default([])
+  scopes                  String[]            @default([])
   userId                  String?
-  account                 Account? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account                 Account?            @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt               DateTime?
   updatedAt               DateTime?
   name                    String?
   uri                     String?
   icon                    String?
-  contacts                String[] @default([])
+  contacts                String[]            @default([])
   tos                     String?
   policy                  String?
   softwareId              String?
   softwareVersion         String?
   softwareStatement       String?
   redirectUris            String[]
-  postLogoutRedirectUris  String[] @default([])
+  postLogoutRedirectUris  String[]            @default([])
   tokenEndpointAuthMethod String?
-  grantTypes              String[] @default([])
-  responseTypes           String[] @default([])
+  grantTypes              String[]            @default([])
+  responseTypes           String[]            @default([])
   public                  Boolean?
   type                    String?
   requirePKCE             Boolean?
@@ -271,17 +272,17 @@ model Verification {
 // ---------------------------------------------------------------------------
 
 model Ledger {
-  id           String   @id
+  id                        String   @id
   // The base currency of the ledger. `currency` is the display symbol (e.g. "$"),
   // `currencyCode` is the ISO-4217 code (e.g. "USD") or null for custom currencies.
-  currency     String   @default("$")
-  currencyCode String?
-  createdAt    DateTime @default(now())
+  currency                  String   @default("$")
+  currencyCode              String?
+  createdAt                 DateTime @default(now())
 
-  participants          LedgerParticipant[]
-  expenses              Expense[]
-  activities            Activity[]
-  documents             ExpenseDocument[]      @relation("LedgerDocuments")
+  participants           LedgerParticipant[]
+  expenses               Expense[]
+  activities             Activity[]
+  documents              ExpenseDocument[]        @relation("LedgerDocuments")
   recurringExpenseSeries RecurringExpenseSeries[]
 
   group Group?
@@ -343,17 +344,17 @@ enum GroupType {
 }
 
 model Group {
-  id          String   @id
+  id          String    @id
   name        String
-  information String?  @db.Text
+  information String?   @db.Text
   // Group-level archive flag. When true, the group is read-only for all
   // members (no new expenses can be added) and it appears in the "Archived"
   // section of every member's group list. The setting is owned by
   // OWNER/ADMIN through the `groups.archive` tRPC mutation. This is
   // distinct from the per-account `AccountGroupPreference.archived` column
   // — see that model for the rename history.
-  archived    Boolean  @default(false)
-  createdAt   DateTime @default(now())
+  archived    Boolean   @default(false)
+  createdAt   DateTime  @default(now())
   // Discriminates regular multi-member groups (`GROUP`) from two-person
   // friend ledgers (`FRIEND`). Friend ledgers carry additional server-side
   // restrictions (no rename, no archive, no leave, etc.) and feed the
@@ -495,6 +496,21 @@ model GroupInvitation {
 // Account-level group preferences (server source of truth, cross-device)
 // ---------------------------------------------------------------------------
 
+model AccountPreference {
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId String  @unique
+
+  // Values are validated against shared @spliit/domain schemas at API boundaries.
+  defaultCurrencyCode   String?
+  timeZone              String?
+  locale                String?
+  theme                 String?
+}
+
 model AccountGroupPreference {
   id        String   @id
   createdAt DateTime @default(now())
@@ -519,12 +535,12 @@ model AccountGroupDefaultSplit {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  account   Account                           @relation(fields: [accountId], references: [id], onDelete: Cascade)
   accountId String
-  group     Group   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  group     Group                             @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId   String
   splitMode SplitMode
-  paidFor AccountGroupDefaultSplitPaidFor[]
+  paidFor   AccountGroupDefaultSplitPaidFor[]
 
   @@unique([accountId, groupId])
   @@index([groupId])
@@ -533,9 +549,10 @@ model AccountGroupDefaultSplit {
 model AccountGroupDefaultSplitPaidFor {
   defaultSplit   AccountGroupDefaultSplit @relation(fields: [defaultSplitId], references: [id], onDelete: Cascade)
   defaultSplitId String
-  participant   LedgerParticipant @relation(fields: [participantId], references: [id], onDelete: Restrict)
-  participantId String
-  shares Int
+  participant    LedgerParticipant        @relation(fields: [participantId], references: [id], onDelete: Restrict)
+  participantId  String
+  shares         Int
+
   @@id([defaultSplitId, participantId])
   @@index([participantId])
 }
@@ -559,48 +576,48 @@ enum ConversionSource {
 }
 
 model Expense {
-  id               String            @id
-  ledger           Ledger            @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
-  ledgerId         String
-  expenseDate      DateTime          @default(dbgenerated("CURRENT_DATE")) @db.Date
-  title            String
+  id                 String            @id
+  ledger             Ledger            @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
+  ledgerId           String
+  expenseDate        DateTime          @default(dbgenerated("CURRENT_DATE")) @db.Date
+  title              String
   // Descriptive id from the in-code category list, e.g. "general",
   // "payment", "movies". See `packages/domain/src/categories.ts`.
-  categoryId       String            @default("general")
+  categoryId         String            @default("general")
   // Normalized amount in ledger base-currency minor units.
-  amount           Int
+  amount             Int
   // Present when conversionSource is set: input amount + currency + rate.
-  originalAmount   Int?
-  originalCurrency String?
-  conversionRate   Float?
+  originalAmount     Int?
+  originalCurrency   String?
+  conversionRate     Float?
   // EXCHANGE (provider) or CUSTOM (user rate). Null = same currency.
-  conversionSource ConversionSource?
-  paidBySplitMode  SplitMode         @default(BY_AMOUNT)
-  paidByList       ExpensePaidBy[]
-  paidFor          ExpensePaidFor[]
-  isReimbursement  Boolean           @default(false)
-  splitMode        SplitMode         @default(EVENLY)
-  createdAt        DateTime          @default(now())
-  documents        ExpenseDocument[]
-  notes            String?
-  assistantRequestId String? @unique
+  conversionSource   ConversionSource?
+  paidBySplitMode    SplitMode         @default(BY_AMOUNT)
+  paidByList         ExpensePaidBy[]
+  paidFor            ExpensePaidFor[]
+  isReimbursement    Boolean           @default(false)
+  splitMode          SplitMode         @default(EVENLY)
+  createdAt          DateTime          @default(now())
+  documents          ExpenseDocument[]
+  notes              String?
+  assistantRequestId String?           @unique
 
-  recurringSeriesId    String?
-  recurrenceSequence  Int?
-  recurringSeries      RecurringExpenseSeries? @relation(fields: [recurringSeriesId], references: [id], onDelete: SetNull)
-  items                ExpenseItem[]
-  itemizedRemainder    ExpenseItemizedRemainder?
+  recurringSeriesId  String?
+  recurrenceSequence Int?
+  recurringSeries    RecurringExpenseSeries?   @relation(fields: [recurringSeriesId], references: [id], onDelete: SetNull)
+  items              ExpenseItem[]
+  itemizedRemainder  ExpenseItemizedRemainder?
   comments           ExpenseComment[]
 
+  @@unique([recurringSeriesId, recurrenceSequence])
   // ledgerId prefix covers group-scoped scans; expenseDate supports
   // recency-bounded currency recommendation queries.
   @@index([ledgerId, expenseDate])
   @@index([recurringSeriesId, recurrenceSequence])
-  @@unique([recurringSeriesId, recurrenceSequence])
 }
 
 model ExpenseDocument {
-  id        String  @id
+  id        String   @id
   url       String
   width     Int
   height    Int
@@ -641,30 +658,32 @@ enum RecurringExpenseSeriesStatus {
 }
 
 model RecurringExpenseSeries {
-  id                 String                        @id
-  ledger             Ledger                        @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
-  ledgerId           String
-  creatorAccount     Account?                      @relation("RecurringExpenseSeriesCreator", fields: [creatorAccountId], references: [id], onDelete: SetNull)
-  creatorAccountId   String?
-  frequency          RecurrenceFrequency
-  interval           Int
-  anchorDate         DateTime                      @db.Date
-  anchorSequence     Int                           @default(1)
-  nextOccurrenceDate DateTime                      @db.Date
-  nextOccurrenceOrdinal Int                        @default(2)
-  endType            RecurrenceEndType             @default(INDEFINITE)
-  occurrenceLimit    Int?
-  endDate            DateTime?                     @db.Date
-  occurrencesCreated Int                          @default(1)
-  status             RecurringExpenseSeriesStatus @default(ACTIVE)
+  id                    String                       @id
+  ledger                Ledger                       @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
+  ledgerId              String
+  creatorAccount        Account?                     @relation("RecurringExpenseSeriesCreator", fields: [creatorAccountId], references: [id], onDelete: SetNull)
+  creatorAccountId      String?
+  // Immutable scheduling timezone captured from the creator's account.
+  timeZone              String                       @default("UTC")
+  frequency             RecurrenceFrequency
+  interval              Int
+  anchorDate            DateTime                     @db.Date
+  anchorSequence        Int                          @default(1)
+  nextOccurrenceDate    DateTime                     @db.Date
+  nextOccurrenceOrdinal Int                          @default(2)
+  endType               RecurrenceEndType            @default(INDEFINITE)
+  occurrenceLimit       Int?
+  endDate               DateTime?                    @db.Date
+  occurrencesCreated    Int                          @default(1)
+  status                RecurringExpenseSeriesStatus @default(ACTIVE)
   /// [RecurringExpenseTemplate]
-  template           Json
+  template              Json
   /// [RecurringExpenseCatchUpBatch] Persisted notification coalescing state.
-  catchUpBatch       Json?
-  version            Int                           @default(1)
-  createdAt          DateTime                      @default(now())
-  updatedAt          DateTime                      @updatedAt
-  expenses           Expense[]
+  catchUpBatch          Json?
+  version               Int                          @default(1)
+  createdAt             DateTime                     @default(now())
+  updatedAt             DateTime                     @updatedAt
+  expenses              Expense[]
 
   @@index([ledgerId, status, nextOccurrenceDate])
   @@index([ledgerId, anchorDate])
@@ -735,10 +754,10 @@ model ExpenseItemizedRemainderPaidFor {
 }
 
 model Activity {
-  id     String   @id
-  ledger Ledger   @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
+  id       String   @id
+  ledger   Ledger   @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
   ledgerId String
-  time   DateTime @default(now())
+  time     DateTime @default(now())
 
   /// ![ActivityType]
   type String
@@ -756,8 +775,8 @@ model Activity {
 
   // Comment activities are linked to their comment so deleting an expense
   // (and its comments) also removes the corresponding activity rows.
-  expenseCommentId String?         @unique
-  expenseComment   ExpenseComment? @relation("ExpenseCommentActivity", fields: [expenseCommentId], references: [id], onDelete: Cascade)
+  expenseCommentId       String?                @unique
+  expenseComment         ExpenseComment?        @relation("ExpenseCommentActivity", fields: [expenseCommentId], references: [id], onDelete: Cascade)
   notificationDeliveries NotificationDelivery[]
 
   @@index([ledgerId, time])
@@ -766,33 +785,33 @@ model Activity {
 }
 
 model NotificationDelivery {
-  id                  String    @id
-  eventKey            String
-  activityId          String?
-  activity            Activity? @relation(fields: [activityId], references: [id], onDelete: SetNull)
-  recipientAccountId  String
-  recipientAccount    Account   @relation(fields: [recipientAccountId], references: [id], onDelete: Cascade)
-  category            String
-  channel             String
-  targetKey           String
-  pushSubscriptionId  String?
-  status              String    @default("PENDING")
-  snapshotVersion     Int       @default(1)
-  snapshot            Json
-  attemptCount        Int       @default(0)
-  lastAttemptAt       DateTime?
-  leaseToken          String?   @unique
-  leaseJobId          String?
-  leaseExpiresAt      DateTime?
-  lastErrorKind       String?
-  lastErrorCode       String?
-  lastProviderStatus  Int?
-  lastErrorMessage    String?   @db.Text
-  lastErrorAt         DateTime?
-  sentAt              DateTime?
-  terminalAt          DateTime?
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
+  id                 String    @id
+  eventKey           String
+  activityId         String?
+  activity           Activity? @relation(fields: [activityId], references: [id], onDelete: SetNull)
+  recipientAccountId String
+  recipientAccount   Account   @relation(fields: [recipientAccountId], references: [id], onDelete: Cascade)
+  category           String
+  channel            String
+  targetKey          String
+  pushSubscriptionId String?
+  status             String    @default("PENDING")
+  snapshotVersion    Int       @default(1)
+  snapshot           Json
+  attemptCount       Int       @default(0)
+  lastAttemptAt      DateTime?
+  leaseToken         String?   @unique
+  leaseJobId         String?
+  leaseExpiresAt     DateTime?
+  lastErrorKind      String?
+  lastErrorCode      String?
+  lastProviderStatus Int?
+  lastErrorMessage   String?   @db.Text
+  lastErrorAt        DateTime?
+  sentAt             DateTime?
+  terminalAt         DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
 
   @@unique([eventKey, recipientAccountId, channel, targetKey])
   @@index([status, leaseExpiresAt])

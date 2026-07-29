@@ -215,6 +215,7 @@ const recurringOccurrenceResponseSchema = z.object({
 
 const recurringSeriesListItemResponseSchema = z.object({
   id: z.string(),
+  timeZone: z.string(),
   frequency: recurrenceFrequencySchema,
   interval: z.number().int(),
   anchorDate: z.date(),

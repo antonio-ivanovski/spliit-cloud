@@ -5,13 +5,22 @@ import {
   GroupInvitationStatus,
   GroupInvitationType,
   GroupMemberStatus,
+  GroupRole,
   GroupType,
   prisma,
 } from '@spliit/db'
-import { defaultSplitSchema } from '@spliit/domain'
+import {
+  accountLocaleSchema,
+  accountPreferenceSchema,
+  accountThemeSchema,
+  defaultSplitSchema,
+  supportedCurrencyCodeSchema,
+  timeZoneSchema,
+} from '@spliit/domain'
 
 import { randomId } from '../../../lib/api'
 import { accountSummarySelect } from '../../../lib/api/selects/account-summary'
+import { env } from '../../../lib/env'
 import { isPlaceholderEmail } from '../../../lib/invitations'
 import {
   deleteS3Object,
@@ -22,11 +31,89 @@ import { createTRPCRouter, protectedProcedure } from '../../init'
 import {
   accountDefaultSplitSchema,
   accountFriendsOutputSchema,
+  accountGroupPreferencesOutputSchema,
   accountGroupsOutputSchema,
   accountMembersOutputSchema,
-  accountPreferencesSchema,
+  accountPreferenceOutputSchema,
   accountProfileSchema,
 } from '../../outputs/account'
+
+const accountPreferenceSelect = {
+  defaultCurrencyCode: true,
+  timeZone: true,
+  locale: true,
+  theme: true,
+} as const
+
+const emptyAccountPreference = {
+  defaultCurrencyCode: null,
+  timeZone: null,
+  locale: null,
+  theme: null,
+}
+
+function parseAccountPreference(preferences: unknown) {
+  return accountPreferenceSchema.parse(preferences ?? emptyAccountPreference)
+}
+
+const initializePreferencesInputSchema = z.object({
+  locale: accountLocaleSchema.optional(),
+  theme: accountThemeSchema.optional(),
+  timeZone: timeZoneSchema.optional(),
+})
+
+const updatePreferencesInputSchema = z.object({
+  defaultCurrencyCode: supportedCurrencyCodeSchema.nullable().optional(),
+  timeZone: timeZoneSchema.nullable().optional(),
+  locale: accountLocaleSchema.nullable().optional(),
+  theme: accountThemeSchema.nullable().optional(),
+})
+
+type CurrencyMembership = {
+  role: GroupRole
+  group: {
+    createdAt: Date
+    ledger: { currencyCode: string | null }
+  }
+}
+
+function mostCommonCurrency(memberships: CurrencyMembership[]) {
+  const ranked = new Map<string, { count: number; newestGroup: number }>()
+
+  for (const membership of memberships) {
+    const parsed = supportedCurrencyCodeSchema.safeParse(
+      membership.group.ledger.currencyCode,
+    )
+    if (!parsed.success) continue
+
+    const current = ranked.get(parsed.data)
+    const createdAt = membership.group.createdAt.getTime()
+    ranked.set(parsed.data, {
+      count: (current?.count ?? 0) + 1,
+      newestGroup: Math.max(current?.newestGroup ?? 0, createdAt),
+    })
+  }
+
+  return [...ranked.entries()].toSorted(
+    ([currencyA, rankA], [currencyB, rankB]) =>
+      rankB.count - rankA.count ||
+      rankB.newestGroup - rankA.newestGroup ||
+      currencyA.localeCompare(currencyB),
+  )[0]?.[0]
+}
+
+function inferDefaultCurrency(memberships: CurrencyMembership[]) {
+  const adminCurrency = mostCommonCurrency(
+    memberships.filter((membership) => membership.role === GroupRole.ADMIN),
+  )
+  if (adminCurrency) return adminCurrency
+
+  return (
+    mostCommonCurrency(
+      memberships.filter((membership) => membership.role === GroupRole.MEMBER),
+    ) ?? env.PUBLIC_DEFAULT_CURRENCY_CODE
+  )
+}
 
 /**
  * Account-scoped router. Used by the web client to bootstrap an authenticated
@@ -44,6 +131,119 @@ export const accountRouter = createTRPCRouter({
           image: ctx.auth.user.image ?? null,
         },
       }
+    }),
+
+  /** Read the caller's server-synced account preferences. */
+  getPreferences: protectedProcedure
+    .output(accountPreferenceOutputSchema)
+    .query(async ({ ctx }) => {
+      const preferences = await prisma.accountPreference.findUnique({
+        where: { accountId: ctx.auth.user.id },
+        select: accountPreferenceSelect,
+      })
+      return { preferences: parseAccountPreference(preferences) }
+    }),
+
+  /**
+   * Adopt explicit device values for preferences that have never been set.
+   * Every field is guarded independently so subsequent devices cannot replace a
+   * preference already established by the account.
+   */
+  initializePreferences: protectedProcedure
+    .input(initializePreferencesInputSchema)
+    .output(accountPreferenceOutputSchema)
+    .mutation(async ({ input, ctx }) => {
+      const preferences = await prisma.$transaction(async (tx) => {
+        await tx.accountPreference.upsert({
+          where: { accountId: ctx.auth.user.id },
+          create: {
+            id: randomId(),
+            accountId: ctx.auth.user.id,
+            locale: input.locale,
+            theme: input.theme,
+            timeZone: input.timeZone,
+          },
+          update: {},
+        })
+
+        const currentPreferences = await tx.accountPreference.findUnique({
+          where: { accountId: ctx.auth.user.id },
+          select: accountPreferenceSelect,
+        })
+        if (!currentPreferences?.defaultCurrencyCode) {
+          const memberships = await tx.groupMember.findMany({
+            where: {
+              accountId: ctx.auth.user.id,
+              status: GroupMemberStatus.ACTIVE,
+              group: { archived: false },
+            },
+            select: {
+              role: true,
+              group: {
+                select: {
+                  createdAt: true,
+                  ledger: { select: { currencyCode: true } },
+                },
+              },
+            },
+          })
+          await tx.accountPreference.updateMany({
+            where: {
+              accountId: ctx.auth.user.id,
+              defaultCurrencyCode: null,
+            },
+            data: {
+              defaultCurrencyCode: inferDefaultCurrency(
+                Array.isArray(memberships) ? memberships : [],
+              ),
+            },
+          })
+        }
+
+        if (input.locale !== undefined) {
+          await tx.accountPreference.updateMany({
+            where: { accountId: ctx.auth.user.id, locale: null },
+            data: { locale: input.locale },
+          })
+        }
+        if (input.theme !== undefined) {
+          await tx.accountPreference.updateMany({
+            where: { accountId: ctx.auth.user.id, theme: null },
+            data: { theme: input.theme },
+          })
+        }
+        if (input.timeZone !== undefined) {
+          await tx.accountPreference.updateMany({
+            where: { accountId: ctx.auth.user.id, timeZone: null },
+            data: { timeZone: input.timeZone },
+          })
+        }
+
+        return tx.accountPreference.findUnique({
+          where: { accountId: ctx.auth.user.id },
+          select: accountPreferenceSelect,
+        })
+      })
+
+      return { preferences: parseAccountPreference(preferences) }
+    }),
+
+  /** Patch only the supplied account-preference fields. */
+  updatePreferences: protectedProcedure
+    .input(updatePreferencesInputSchema)
+    .output(accountPreferenceOutputSchema)
+    .mutation(async ({ input, ctx }) => {
+      const preferences = await prisma.accountPreference.upsert({
+        where: { accountId: ctx.auth.user.id },
+        create: {
+          id: randomId(),
+          accountId: ctx.auth.user.id,
+          ...input,
+        },
+        update: input,
+        select: accountPreferenceSelect,
+      })
+      return { preferences: parseAccountPreference(preferences) }
     }),
 
   /** Update the display name. Used by the post-signup complete-profile flow. */
@@ -307,7 +507,7 @@ export const accountRouter = createTRPCRouter({
   // `AccountGroupPreference.hidden` column.
   preferences: protectedProcedure
     .input(z.object({ groupId: z.string().min(1) }))
-    .output(accountPreferencesSchema)
+    .output(accountGroupPreferencesOutputSchema)
     .query(async ({ input: { groupId }, ctx }) => {
       const pref = await prisma.accountGroupPreference.findUnique({
         where: {
@@ -333,7 +533,7 @@ export const accountRouter = createTRPCRouter({
         hidden: z.boolean().optional(),
       }),
     )
-    .output(accountPreferencesSchema)
+    .output(accountGroupPreferencesOutputSchema)
     .mutation(async ({ input, ctx }) => {
       const data: { starred?: boolean; hidden?: boolean } = {}
       if (input.starred !== undefined) data.starred = input.starred

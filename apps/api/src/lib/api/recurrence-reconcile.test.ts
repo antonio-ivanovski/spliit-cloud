@@ -31,6 +31,7 @@ describe('recurring expense reconciliation', () => {
           id: 'series-1',
           occurrencesCreated: 1,
           nextOccurrenceDate: new Date('2026-07-22T00:00:00Z'),
+          timeZone: 'UTC',
         },
       ] as never)
     jobMocks.hasDeadLetteredMaterialization.mockResolvedValue(true)
@@ -46,9 +47,41 @@ describe('recurring expense reconciliation', () => {
     expect(jobMocks.sendJob).not.toHaveBeenCalled()
   })
 
+  it('reconciles a positive-offset occurrence after its local afternoon', async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-07-23T01:10:00.000Z'))
+    prismaMock.recurringExpenseSeries.findMany
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([
+        {
+          id: 'series-kiritimati',
+          occurrencesCreated: 1,
+          nextOccurrenceDate: new Date('2026-07-23T00:00:00.000Z'),
+          timeZone: 'Pacific/Kiritimati',
+        },
+      ] as never)
+    jobMocks.hasDeadLetteredMaterialization.mockResolvedValue(false)
+
+    await expect(reconcileDueRecurringExpenses({} as never)).resolves.toBe(1)
+    expect(jobMocks.sendJob).toHaveBeenCalledWith(
+      expect.anything(),
+      'recurring-expense.materialize',
+      {
+        seriesId: 'series-kiritimati',
+        sequence: 2,
+        occurrenceDate: '2026-07-23',
+      },
+      expect.objectContaining({
+        singletonKey: 'series-kiritimati:2:2026-07-23',
+      }),
+    )
+    vi.useRealTimers()
+  })
+
   it('bounds reconciliation pages and schedules a continuation', async () => {
     const due = Array.from({ length: 250 }, (_, index) => ({
       id: `series-${index}`,
+      timeZone: 'UTC',
       occurrencesCreated: 1,
       nextOccurrenceDate: new Date('2026-07-22T00:00:00Z'),
     }))
@@ -75,16 +108,19 @@ describe('recurring expense reconciliation', () => {
     const due = [
       {
         id: 'series-a',
+        timeZone: 'UTC',
         occurrencesCreated: 1,
         nextOccurrenceDate: new Date('2026-07-22T00:00:00Z'),
       },
       {
         id: 'series-b',
+        timeZone: 'UTC',
         occurrencesCreated: 1,
         nextOccurrenceDate: new Date('2026-07-22T00:00:00Z'),
       },
       {
         id: 'series-c',
+        timeZone: 'UTC',
         occurrencesCreated: 1,
         nextOccurrenceDate: new Date('2026-07-22T00:00:00Z'),
       },
@@ -116,6 +152,7 @@ describe('recurring expense reconciliation', () => {
   it('swallows a singleton collision on the pagination continuation', async () => {
     const due = Array.from({ length: 250 }, (_, index) => ({
       id: `series-${index}`,
+      timeZone: 'UTC',
       occurrencesCreated: 1,
       nextOccurrenceDate: new Date('2026-07-22T00:00:00Z'),
     }))
@@ -143,11 +180,13 @@ describe('recurring expense reconciliation', () => {
     const due = [
       {
         id: 'series-1',
+        timeZone: 'UTC',
         occurrencesCreated: 1,
         nextOccurrenceDate: new Date('2026-07-22T00:00:00Z'),
       },
       {
         id: 'series-2',
+        timeZone: 'UTC',
         occurrencesCreated: 1,
         nextOccurrenceDate: new Date('2026-07-22T00:00:00Z'),
       },

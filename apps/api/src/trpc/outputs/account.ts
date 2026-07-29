@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { defaultSplitSchema } from '@spliit/domain'
+import { accountPreferenceSchema, defaultSplitSchema } from '@spliit/domain'
 
 import {
   accountContactSchema,
@@ -52,8 +52,12 @@ export const accountDefaultSplitSchema = z.object({
   defaultSplit: defaultSplitSchema.nullable(),
 })
 
-export const accountPreferencesSchema = z.object({
+export const accountGroupPreferencesOutputSchema = z.object({
   preferences: accountGroupPreferenceSchema,
+})
+
+export const accountPreferenceOutputSchema = z.object({
+  preferences: accountPreferenceSchema,
 })
 
 export const accountGroupsOutputSchema = z.object({

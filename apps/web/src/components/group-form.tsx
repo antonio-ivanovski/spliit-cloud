@@ -1,8 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Save, UserPlus } from 'lucide-react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import type { z } from 'zod'
 
+import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import Link from '@/components/link'
 import { SubmitButton } from '@/components/submit-button'
 import { Button } from '@/components/ui/button'
@@ -17,6 +20,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import type { AccountPreferences } from '@/lib/account-preferences'
 import type { getGroup } from '@/lib/api'
 import { getCurrency, useCurrencies } from '@/lib/currency'
 import type { GroupFormValues } from '@/lib/schemas'
@@ -103,6 +107,7 @@ export type Props = {
  * nothing).
  */
 const PARTICIPANTS_PLACEHOLDER = [{ name: 'Owner' }]
+type GroupFormInput = z.input<typeof groupFormSchema>
 
 export function GroupForm({
   group,
@@ -120,8 +125,16 @@ export function GroupForm({
   const { t } = useTranslation(undefined, { keyPrefix: 'GroupForm' })
   const readOnly = !!group && currentMemberRole === 'MEMBER'
   const isArchived = !!group && archived
+  const accountPreferences =
+    useSyncedAccountPreferences() as AccountPreferences | null
+  const deploymentCurrencyCode =
+    import.meta.env.VITE_DEFAULT_CURRENCY_CODE || 'USD'
+  const initialCurrencyCode =
+    initialValues?.currencyCode ??
+    accountPreferences?.defaultCurrencyCode ??
+    deploymentCurrencyCode
 
-  const form = useForm<GroupFormValues>({
+  const form = useForm<GroupFormInput, unknown, GroupFormValues>({
     resolver: zodResolver(groupFormSchema),
     defaultValues: group
       ? {
@@ -143,18 +156,32 @@ export function GroupForm({
           information: initialValues?.information ?? '',
           currency:
             initialValues?.currency ??
-            getCurrency(
-              (initialValues?.currencyCode ??
-                import.meta.env.VITE_DEFAULT_CURRENCY_CODE) ||
-                'USD',
-            )?.symbol ??
+            getCurrency(initialCurrencyCode || 'USD')?.symbol ??
             '',
-          currencyCode:
-            initialValues?.currencyCode ??
-            (import.meta.env.VITE_DEFAULT_CURRENCY_CODE || 'USD'),
+          currencyCode: initialCurrencyCode,
           participants: PARTICIPANTS_PLACEHOLDER,
         },
   })
+
+  useEffect(() => {
+    if (group || !accountPreferences) return
+    const currencyCodeState = form.getFieldState('currencyCode')
+    const currencyState = form.getFieldState('currency')
+    const currencyWasEdited =
+      currencyCodeState.isDirty ||
+      currencyCodeState.isTouched ||
+      currencyState.isDirty ||
+      currencyState.isTouched
+    if (
+      !initialValues?.currencyCode &&
+      accountPreferences.defaultCurrencyCode &&
+      !currencyWasEdited
+    ) {
+      const code = accountPreferences.defaultCurrencyCode
+      form.setValue('currencyCode', code)
+      form.setValue('currency', getCurrency(code)?.symbol ?? '')
+    }
+  }, [accountPreferences, form, group, initialValues])
 
   const currencies = useCurrencies(
     t('CurrencyCodeField.customOption'),
@@ -217,8 +244,10 @@ export function GroupForm({
                 <FormItem>
                   <FormLabel>{t('CurrencyCodeField.label')}</FormLabel>
                   <CurrencySelector
+                    aria-label={t('CurrencyCodeField.label')}
                     currencies={currencies}
                     defaultValue={form.watch(field.name) ?? ''}
+                    pinnedCurrencyCode={form.watch(field.name) ?? undefined}
                     disabled={readOnly || isArchived || currencyLocked}
                     onValueChange={(newCurrency) => {
                       field.onChange(newCurrency)

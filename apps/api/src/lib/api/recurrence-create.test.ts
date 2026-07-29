@@ -61,6 +61,12 @@ describe('createSeriesForExpense', () => {
   beforeEach(() => {
     jobMocks.sendJob.mockReset()
     jobMocks.hasDeadLetteredMaterialization.mockReset()
+    prismaMock.accountPreference.findUnique.mockResolvedValue({
+      timeZone: 'UTC',
+    } as never)
+    prismaMock.recurringExpenseSeries.findUnique.mockResolvedValue({
+      timeZone: 'UTC',
+    } as never)
   })
 
   it('creates a COMPLETED series without enqueueing when the DATE end falls on the anchor', async () => {
@@ -135,6 +141,95 @@ describe('createSeriesForExpense', () => {
         occurrenceDate: '2026-02-01',
       }),
       expect.objectContaining({ db: expect.anything() }),
+    )
+  })
+
+  it('snapshots the creator account timezone when creating the series', async () => {
+    prismaMock.accountPreference.findUnique.mockResolvedValue({
+      timeZone: 'Europe/Paris',
+    } as never)
+    prismaMock.recurringExpenseSeries.create.mockResolvedValue({
+      id: 'series-account-zone',
+    } as never)
+    prismaMock.recurringExpenseSeries.findUnique.mockResolvedValue({
+      timeZone: 'Europe/Paris',
+    } as never)
+
+    await createSeriesForExpense({
+      tx: prismaMock,
+      seriesId: 'series-account-zone',
+      ledgerId: 'ledger-1',
+      creatorAccountId: 'acct-1',
+      anchorDate: new Date('2030-01-01T00:00:00.000Z'),
+      config: monthlyIndefinite,
+      template,
+      boss,
+    })
+
+    expect(prismaMock.accountPreference.findUnique).toHaveBeenCalledWith({
+      where: { accountId: 'acct-1' },
+      select: { timeZone: true },
+    })
+    expect(prismaMock.recurringExpenseSeries.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ timeZone: 'Europe/Paris' }),
+      }),
+    )
+  })
+
+  it('refuses to create a series before the account timezone is initialized', async () => {
+    prismaMock.accountPreference.findUnique.mockResolvedValue({
+      timeZone: null,
+    } as never)
+
+    await expect(
+      createSeriesForExpense({
+        tx: prismaMock,
+        seriesId: 'series-without-zone',
+        ledgerId: 'ledger-1',
+        creatorAccountId: 'acct-1',
+        anchorDate: new Date('2030-01-01T00:00:00.000Z'),
+        config: monthlyDate,
+        template,
+        boss,
+      }),
+    ).rejects.toThrow('Account timezone must be initialized')
+    expect(prismaMock.recurringExpenseSeries.create).not.toHaveBeenCalled()
+  })
+
+  it('uses the captured series timezone for the queued occurrence', async () => {
+    const anchor = new Date('2030-01-01T00:00:00.000Z')
+    prismaMock.recurringExpenseSeries.create.mockResolvedValue({
+      id: 'series-zoned',
+    } as never)
+    prismaMock.recurringExpenseSeries.findUnique.mockResolvedValue({
+      timeZone: 'America/New_York',
+    } as never)
+
+    await createSeriesForExpense({
+      tx: prismaMock,
+      seriesId: 'series-zoned',
+      ledgerId: 'ledger-1',
+      creatorAccountId: 'acct-1',
+      timeZone: 'America/New_York',
+      anchorDate: anchor,
+      config: monthlyIndefinite,
+      template,
+      boss,
+    })
+
+    expect(jobMocks.sendJob).toHaveBeenCalledWith(
+      expect.anything(),
+      'recurring-expense.materialize',
+      {
+        seriesId: 'series-zoned',
+        sequence: 2,
+        occurrenceDate: '2030-02-01',
+      },
+      expect.objectContaining({
+        startAfter: new Date('2030-02-01T20:00:00.000Z'),
+        singletonKey: 'series-zoned:2:2030-02-01',
+      }),
     )
   })
 

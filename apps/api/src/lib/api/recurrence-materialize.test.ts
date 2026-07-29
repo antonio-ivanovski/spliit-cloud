@@ -22,6 +22,7 @@ vi.mock('./boss', async (importOriginal) => ({
 
 import {
   asDate,
+  type MaterializationPayload,
   materializeRecurringExpense,
   parseCatchUpBatch,
 } from './recurrence/materialize'
@@ -45,6 +46,7 @@ function series(overrides: Record<string, unknown> = {}) {
     id: 'series-1',
     ledgerId: 'ledger-1',
     creatorAccountId: null,
+    timeZone: 'UTC',
     status: 'ACTIVE',
     occurrencesCreated: 0,
     nextOccurrenceDate: date('2026-07-20'),
@@ -58,7 +60,10 @@ function series(overrides: Record<string, unknown> = {}) {
     version: 1,
     template,
     catchUpBatch: null,
-    ledger: { currencyCode: 'USD', group: { id: 'group-1', archived: false } },
+    ledger: {
+      currencyCode: 'USD',
+      group: { id: 'group-1', archived: false },
+    },
     ...overrides,
   }
 }
@@ -67,11 +72,16 @@ function setup(snapshot = series(), locked = snapshot) {
   prismaMock.recurringExpenseSeries.findUnique
     .mockResolvedValueOnce(snapshot as never)
     .mockResolvedValueOnce(locked as never)
+    .mockResolvedValue(snapshot as never)
 }
 
 async function run(
   overrides: Record<string, unknown> = {},
-  payload = { seriesId: 'series-1', sequence: 1, occurrenceDate: '2026-07-20' },
+  payload: MaterializationPayload = {
+    seriesId: 'series-1',
+    sequence: 1,
+    occurrenceDate: '2026-07-20',
+  },
 ) {
   const snapshot = series(overrides)
   setup(snapshot, snapshot)
@@ -242,7 +252,11 @@ describe('recurring expense materialization', () => {
         nextOccurrenceDate: date('2026-07-20'),
         nextOccurrenceOrdinal: 1,
       },
-      { seriesId: 'series-1', sequence: 1, occurrenceDate: '2026-07-20' },
+      {
+        seriesId: 'series-1',
+        sequence: 1,
+        occurrenceDate: '2026-07-20',
+      },
     )
     expect(result).toEqual(
       expect.objectContaining({ created: true, seriesStatus: 'COMPLETED' }),

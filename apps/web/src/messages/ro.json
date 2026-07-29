@@ -648,7 +648,9 @@
         "scheduleChangeWarning": "La salvare, această apariție și cele viitoare vor fi reprogramate. Cheltuielile viitoare existente pot fi mutate la date noi sau eliminate, iar datele scadente lipsă pot fi create automat.",
         "pastDateBackfillNote": "Deoarece această cheltuială începe în trecut, aparițiile până astăzi vor fi create automat după salvare.",
         "completedOccurrence": "Creată",
-        "upcomingOccurrence": "Viitoare"
+        "upcomingOccurrence": "Viitoare",
+        "timeZoneDescription": "Cheltuielile recurente noi rulează la ora 15:00 în {timeZone}. Programările existente își păstrează fusul orar inițial.",
+        "timeZonePending": "Se așteaptă fusul orar al contului înainte ca recurența să poată fi activată."
       },
       "recurringEditScopeOccurrence": "Editarea doar a acestei apariții",
       "recurringEditScopeFuture": "Editarea acestei apariții și a celor viitoare"
@@ -1724,6 +1726,17 @@
         "expenses": "Cheltuieli",
         "summaries": "Rezumate"
       }
+    },
+    "preferences": {
+      "title": "Preferințele aplicației",
+      "description": "Folosește aceleași valori implicite și același aspect pe fiecare dispozitiv pe care ești autentificat.",
+      "saveError": "Preferințele nu au putut fi salvate",
+      "defaultCurrency": "Moneda implicită",
+      "timeZone": "Fusul orar al contului",
+      "timeZoneHelp": "Folosit pentru marcajele temporale, datele relative și cheltuielile recurente noi.",
+      "language": "Limbă",
+      "theme": "Temă",
+      "chooseTheme": "Alege"
     }
   },
   "Activities": {
@@ -2081,7 +2094,8 @@
     },
     "badgeRunning": "Recurentă · În desfășurare",
     "badgeStopped": "Recurentă · Oprită",
-    "badgeCompleted": "Recurentă · Finalizată"
+    "badgeCompleted": "Recurentă · Finalizată",
+    "timeZone": "Rulează la ora 15:00 în {timeZone}"
   },
   "CurrencyConverter": {
     "trigger": "Conversie monetară",
@@ -2152,5 +2166,18 @@
       "signInTitle": "Autentifică-te pentru conectare",
       "signInDescription": "Folosește metoda obișnuită de autentificare în Spliit Cloud. Asistentul tău nu furnizează niciodată identitatea contului folosit pentru cheltuieli."
     }
+  },
+  "TimeZoneSelector": {
+    "search": "Caută fusuri orare sau orașe",
+    "noTimeZone": "Nu a fost găsit niciun fus orar.",
+    "title": "Alege fusul orar"
+  },
+  "TimeZoneMismatch": {
+    "title": "Actualizezi fusul orar?",
+    "description": "Contul tău folosește {accountTimeZone}, dar acest dispozitiv este setat la {browserTimeZone}.",
+    "impact": "Actualizarea schimbă modul de afișare a marcajelor temporale și a datelor relative și este folosită pentru cheltuielile recurente noi. Programările existente își păstrează fusul orar inițial.",
+    "saveError": "Fusul orar nu a putut fi actualizat. Încearcă din nou.",
+    "keep": "Păstrează {timeZone}",
+    "update": "Actualizează la {timeZone}"
   }
 }

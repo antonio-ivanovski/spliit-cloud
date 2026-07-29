@@ -67,7 +67,7 @@ export function formatDate(
 export function formatDateOnly(
   date: Date,
   locale: string,
-  options: { dateStyle?: DateTimeStyle; timeStyle?: DateTimeStyle } = {},
+  options: Intl.DateTimeFormatOptions = {},
 ) {
   // Extract UTC date components to avoid timezone shifts
   const year = date.getUTCFullYear()

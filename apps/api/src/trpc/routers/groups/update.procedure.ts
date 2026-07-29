@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
 import { GroupType } from '@spliit/db'
-import { groupFormSchema } from '@spliit/domain'
+import { groupUpdateFormSchema } from '@spliit/domain'
 
 import { updateGroup } from '../../../lib/api'
 import { loadGroupContext, protectedProcedure } from '../../init'
@@ -11,7 +11,7 @@ export const updateGroupProcedure = protectedProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
-      groupFormValues: groupFormSchema,
+      groupFormValues: groupUpdateFormSchema,
     }),
   )
   .output(z.void())

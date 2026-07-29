@@ -156,6 +156,37 @@ describe('pg-boss queue configuration', () => {
       }),
     )
   })
+
+  it('matches dead-lettered materializations', async () => {
+    const boss = createBossMock()
+    vi.mocked(boss.findJobs).mockResolvedValue([
+      {
+        sourceName: RECURRING_MATERIALIZATION_QUEUE,
+        data: {
+          seriesId: 'series',
+          sequence: 2,
+          occurrenceDate: '2026-07-22',
+        },
+      },
+    ] as never)
+
+    await expect(
+      hasDeadLetteredMaterialization(boss, {
+        seriesId: 'series',
+        sequence: 2,
+        occurrenceDate: '2026-07-22',
+      }),
+    ).resolves.toBe(true)
+    expect(boss.findJobs).toHaveBeenCalledWith(RECURRING_MATERIALIZATION_DLQ, {
+      queued: true,
+      key: 'series:2:2026-07-22',
+      data: {
+        seriesId: 'series',
+        sequence: 2,
+        occurrenceDate: '2026-07-22',
+      },
+    })
+  })
 })
 
 describe('notification job queue configuration', () => {
