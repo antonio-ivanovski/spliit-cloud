@@ -1,13 +1,52 @@
+# deps / VCS / caches
 node_modules
+**/node_modules
 .git
 .turbo
+**/.turbo
+.cache
+**/.vite
+
+# build outputs
 dist
-apps/*/dist
+**/dist
 coverage
+**/coverage
+apps/api/openapi.json
+
+# local / runtime data
 postgres-data
+storage
+*.db
+*.db-journal
+
+# secrets (keep examples + lockfile)
 .env
 *.env
 !.env.example
 !container.env.example
 !bun.lock
-apps/api/openapi.json
+
+# agent / editor / local tooling
+.agents
+.opencode
+.vscode
+.devcontainer
+.cursor
+.DS_Store
+
+# docs & non-runtime repo content
+openspec
+docs
+handoff
+.github
+*.md
+
+# tests (not needed in runtime images)
+**/*.test.ts
+**/*.test.tsx
+**/vitest.config.ts
+**/vitest.integration.config.ts
+**/src/tests
+**/src/test
+**/src/integration

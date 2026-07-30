@@ -89,6 +89,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          provenance: false
+          sbom: false
           cache-from: |
             type=gha,scope=${{ matrix.app }}
             type=registry,ref=${{ env.REGISTRY }}/${{ steps.image.outputs.name }}:buildcache

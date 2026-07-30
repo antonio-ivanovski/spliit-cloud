@@ -4,10 +4,9 @@ FROM oven/bun:1.3.14 AS base
 WORKDIR /app
 
 FROM base AS pruner
-ARG APP_SCOPE=web
+ARG APP_SCOPE=@spliit/web
 COPY . .
-RUN bun install --frozen-lockfile
-RUN bun run turbo prune "$APP_SCOPE" --docker
+RUN --mount=type=cache,target=/root/.bun/install/cache bunx turbo@2.10.7 prune "$APP_SCOPE" --docker
 
 FROM base AS installer
 COPY --from=pruner /app/out/json/ ./
@@ -19,9 +18,8 @@ ARG VITE_API_URL=http://localhost:3001
 ARG VITE_DEFAULT_CURRENCY_CODE=USD
 ENV VITE_API_URL=$VITE_API_URL
 ENV VITE_DEFAULT_CURRENCY_CODE=$VITE_DEFAULT_CURRENCY_CODE
-COPY --from=installer /app/node_modules ./node_modules
+COPY --from=installer /app ./
 COPY --from=pruner /app/out/full/ ./
-RUN --mount=type=cache,target=/root/.bun/install/cache bun install --frozen-lockfile
 RUN bun --filter @spliit/web build
 
 FROM nginx:1.27-alpine

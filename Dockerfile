@@ -7,19 +7,27 @@ FROM base AS pruner
 ARG APP_SCOPE
 COPY . .
 RUN test -n "$APP_SCOPE"
-RUN --mount=type=cache,target=/root/.bun/install/cache bunx turbo@2.9.18 prune "$APP_SCOPE" --docker
+RUN --mount=type=cache,target=/root/.bun/install/cache bunx turbo@2.10.7 prune "$APP_SCOPE" --docker
 
 FROM base AS installer
 COPY --from=pruner /app/out/json/ ./
 COPY --from=pruner /app/out/bun.lock ./bun.lock
-RUN --mount=type=cache,target=/root/.bun/install/cache bun install
+RUN --mount=type=cache,target=/root/.bun/install/cache bun install --frozen-lockfile
+
+# Generate the Prisma client from schema inputs only so app-source-only
+# commits can reuse this layer via BuildKit content hashing.
+FROM installer AS prisma
+COPY --from=pruner /app/out/full/packages/db/prisma ./packages/db/prisma
+COPY --from=pruner /app/out/full/packages/db/prisma.config.ts ./packages/db/prisma.config.ts
+RUN mkdir -p packages/db/src \
+  && bun --filter @spliit/db prisma-generate
 
 FROM base AS runner
 ENV NODE_ENV=production
 RUN mkdir -p /data
 COPY --from=installer /app ./
 COPY --from=pruner /app/out/full/ ./
-RUN bun --filter @spliit/db prisma-generate
+COPY --from=prisma /app/packages/db/src/generated ./packages/db/src/generated
 
 FROM runner AS api
 # Regenerate the OpenAPI spec during build — the source is gitignored and

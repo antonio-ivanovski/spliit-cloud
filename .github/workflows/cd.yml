@@ -1,46 +1,87 @@
-name: Create and publish a Docker image
+name: Create and publish Docker images
 
 on:
   push:
     tags:
       - '*'
 
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+
 jobs:
   build-and-push-image:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
+    name: Build and push server images
+    runs-on: ubuntu-24.04-arm
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - app: api
+            scope: '@spliit/api'
+            target: api
+            image: spliit-cloud-api
+          - app: migrate
+            scope: '@spliit/db'
+            target: migrate
+            image: spliit-cloud-migrate
+          - app: worker
+            scope: '@spliit/worker'
+            target: worker
+            image: spliit-cloud-worker
+          - app: mcp
+            scope: '@spliit/mcp'
+            target: mcp
+            image: spliit-cloud-mcp
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
-      - name: Login to Github Container Registry
-        uses: docker/login-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
         with:
-          registry: ghcr.io
+          registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Downcase repo
+      - name: Resolve image name
+        id: image
         run: |
-          echo "REPO=${GITHUB_REPOSITORY@L}" >> "${GITHUB_ENV}"
+          image_name="${{ github.repository_owner }}/${{ matrix.image }}"
+          echo "name=${image_name,,}" >> "$GITHUB_OUTPUT"
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ env.REGISTRY }}/${{ steps.image.outputs.name }}
+          tags: |
+            type=ref,event=tag
+            type=raw,value=latest
 
       - name: Build and push
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
-          platforms: linux/amd64,linux/arm64
+          file: Dockerfile
+          target: ${{ matrix.target }}
+          platforms: linux/arm64
+          build-args: |
+            APP_SCOPE=${{ matrix.scope }}
           push: true
-          tags: |
-            ghcr.io/${{ env.REPO }}:${{ github.ref_name }}
-            ghcr.io/${{ env.REPO }}:latest
-          provenance: false # Disable provenance to avoid unknown/unknown
-          sbom: false # Disable sbom to avoid unknown/unknown
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          provenance: false
+          sbom: false
+          cache-from: |
+            type=gha,scope=cd-${{ matrix.app }}
+            type=registry,ref=${{ env.REGISTRY }}/${{ steps.image.outputs.name }}:buildcache
+          cache-to: |
+            type=gha,mode=max,scope=cd-${{ matrix.app }}
+            type=registry,ref=${{ env.REGISTRY }}/${{ steps.image.outputs.name }}:buildcache,mode=max
