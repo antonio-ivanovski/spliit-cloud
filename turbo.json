@@ -24,7 +24,13 @@
       "persistent": true
     },
     "prisma-generate": {
-      "cache": false
+      "inputs": [
+        "prisma/schema.prisma",
+        "prisma.config.ts",
+        "package.json",
+        "$TURBO_ROOT$/bun.lock"
+      ],
+      "outputs": ["src/generated/prisma/**"]
     },
     "prisma-migrate": {
       "cache": false,
