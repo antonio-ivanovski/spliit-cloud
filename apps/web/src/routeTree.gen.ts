@@ -9,106 +9,72 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
-import { Route as TermsRouteImport } from './routes/terms'
-import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as ImprintRouteImport } from './routes/imprint'
-import { Route as GroupsRouteRouteImport } from './routes/groups/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as OauthLoginRouteImport } from './routes/oauth/login'
-import { Route as OauthConsentRouteImport } from './routes/oauth/consent'
-import { Route as GroupsImportRouteImport } from './routes/groups/import'
-import { Route as GroupsCreateRouteImport } from './routes/groups/create'
-import { Route as FriendsCreateRouteImport } from './routes/friends/create'
-import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-password'
-import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
-import { Route as AuthCompleteProfileRouteImport } from './routes/auth/complete-profile'
+import { Route as GroupsRouteRouteImport } from './routes/groups/route'
+import { Route as ImprintRouteImport } from './routes/imprint'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as AccountSettingsRouteImport } from './routes/account/settings'
+import { Route as AuthCompleteProfileRouteImport } from './routes/auth/complete-profile'
+import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
+import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-password'
+import { Route as FriendsCreateRouteImport } from './routes/friends/create'
 import { Route as GroupsGroupIdRouteRouteImport } from './routes/groups/$groupId/route'
+import { Route as GroupsCreateRouteImport } from './routes/groups/create'
+import { Route as GroupsImportRouteImport } from './routes/groups/import'
+import { Route as OauthConsentRouteImport } from './routes/oauth/consent'
+import { Route as OauthLoginRouteImport } from './routes/oauth/login'
 import { Route as GroupsGroupIdIndexRouteImport } from './routes/groups/$groupId/index'
-import { Route as GroupsBulkCategorizeGroupIdRouteImport } from './routes/groups/bulk-categorize/$groupId'
-import { Route as GroupsGroupIdStatsRouteImport } from './routes/groups/$groupId/stats'
-import { Route as GroupsGroupIdMembersRouteImport } from './routes/groups/$groupId/members'
-import { Route as GroupsGroupIdInformationRouteImport } from './routes/groups/$groupId/information'
-import { Route as GroupsGroupIdExpensesRouteImport } from './routes/groups/$groupId/expenses'
-import { Route as GroupsGroupIdEditRouteImport } from './routes/groups/$groupId/edit'
-import { Route as GroupsGroupIdBalancesRouteImport } from './routes/groups/$groupId/balances'
 import { Route as GroupsGroupIdActivityRouteImport } from './routes/groups/$groupId/activity'
+import { Route as GroupsGroupIdBalancesRouteImport } from './routes/groups/$groupId/balances'
+import { Route as GroupsGroupIdEditRouteImport } from './routes/groups/$groupId/edit'
+import { Route as GroupsGroupIdExpensesRouteImport } from './routes/groups/$groupId/expenses'
+import { Route as GroupsGroupIdInformationRouteImport } from './routes/groups/$groupId/information'
+import { Route as GroupsGroupIdMembersRouteImport } from './routes/groups/$groupId/members'
+import { Route as GroupsGroupIdStatsRouteImport } from './routes/groups/$groupId/stats'
+import { Route as GroupsBulkCategorizeGroupIdRouteImport } from './routes/groups/bulk-categorize/$groupId'
 import { Route as GroupsGroupIdExpensesIndexRouteImport } from './routes/groups/$groupId/expenses/index'
 import { Route as GroupsGroupIdExpensesCreateRouteImport } from './routes/groups/$groupId/expenses/create'
 import { Route as GroupsGroupIdExpensesExpenseIdIndexRouteImport } from './routes/groups/$groupId/expenses/$expenseId/index'
 import { Route as GroupsGroupIdExpensesExpenseIdEditRouteImport } from './routes/groups/$groupId/expenses/$expenseId/edit'
 
-const UnsubscribeRoute = UnsubscribeRouteImport.update({
-  id: '/unsubscribe',
-  path: '/unsubscribe',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/unsubscribe.lazy').then((d) => d.Route))
-const TermsRoute = TermsRouteImport.update({
-  id: '/terms',
-  path: '/terms',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/terms.lazy').then((d) => d.Route))
-const PrivacyRoute = PrivacyRouteImport.update({
-  id: '/privacy',
-  path: '/privacy',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/privacy.lazy').then((d) => d.Route))
-const ImprintRoute = ImprintRouteImport.update({
-  id: '/imprint',
-  path: '/imprint',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/imprint.lazy').then((d) => d.Route))
-const GroupsRouteRoute = GroupsRouteRouteImport.update({
-  id: '/groups',
-  path: '/groups',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/groups/route.lazy').then((d) => d.Route))
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
-const OauthLoginRoute = OauthLoginRouteImport.update({
-  id: '/oauth/login',
-  path: '/oauth/login',
+const GroupsRouteRoute = GroupsRouteRouteImport.update({
+  id: '/groups',
+  path: '/groups',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/oauth/login.lazy').then((d) => d.Route))
-const OauthConsentRoute = OauthConsentRouteImport.update({
-  id: '/oauth/consent',
-  path: '/oauth/consent',
+} as any).lazy(() => import('./routes/groups/route.lazy').then((d) => d.Route))
+const ImprintRoute = ImprintRouteImport.update({
+  id: '/imprint',
+  path: '/imprint',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/oauth/consent.lazy').then((d) => d.Route))
-const GroupsImportRoute = GroupsImportRouteImport.update({
-  id: '/import',
-  path: '/import',
-  getParentRoute: () => GroupsRouteRoute,
-} as any).lazy(() => import('./routes/groups/import.lazy').then((d) => d.Route))
-const GroupsCreateRoute = GroupsCreateRouteImport.update({
-  id: '/create',
-  path: '/create',
-  getParentRoute: () => GroupsRouteRoute,
-} as any).lazy(() => import('./routes/groups/create.lazy').then((d) => d.Route))
-const FriendsCreateRoute = FriendsCreateRouteImport.update({
-  id: '/friends/create',
-  path: '/friends/create',
+} as any).lazy(() => import('./routes/imprint.lazy').then((d) => d.Route))
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() =>
-  import('./routes/friends/create.lazy').then((d) => d.Route),
-)
-const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
-  id: '/auth/reset-password',
-  path: '/auth/reset-password',
+} as any).lazy(() => import('./routes/privacy.lazy').then((d) => d.Route))
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/terms.lazy').then((d) => d.Route))
+const UnsubscribeRoute = UnsubscribeRouteImport.update({
+  id: '/unsubscribe',
+  path: '/unsubscribe',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/unsubscribe.lazy').then((d) => d.Route))
+const AccountSettingsRoute = AccountSettingsRouteImport.update({
+  id: '/account/settings',
+  path: '/account/settings',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() =>
-  import('./routes/auth/reset-password.lazy').then((d) => d.Route),
-)
-const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
-  id: '/auth/forgot-password',
-  path: '/auth/forgot-password',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() =>
-  import('./routes/auth/forgot-password.lazy').then((d) => d.Route),
+  import('./routes/account/settings.lazy').then((d) => d.Route),
 )
 const AuthCompleteProfileRoute = AuthCompleteProfileRouteImport.update({
   id: '/auth/complete-profile',
@@ -117,12 +83,26 @@ const AuthCompleteProfileRoute = AuthCompleteProfileRouteImport.update({
 } as any).lazy(() =>
   import('./routes/auth/complete-profile.lazy').then((d) => d.Route),
 )
-const AccountSettingsRoute = AccountSettingsRouteImport.update({
-  id: '/account/settings',
-  path: '/account/settings',
+const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
+  id: '/auth/forgot-password',
+  path: '/auth/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() =>
-  import('./routes/account/settings.lazy').then((d) => d.Route),
+  import('./routes/auth/forgot-password.lazy').then((d) => d.Route),
+)
+const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
+  id: '/auth/reset-password',
+  path: '/auth/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() =>
+  import('./routes/auth/reset-password.lazy').then((d) => d.Route),
+)
+const FriendsCreateRoute = FriendsCreateRouteImport.update({
+  id: '/friends/create',
+  path: '/friends/create',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() =>
+  import('./routes/friends/create.lazy').then((d) => d.Route),
 )
 const GroupsGroupIdRouteRoute = GroupsGroupIdRouteRouteImport.update({
   id: '/$groupId',
@@ -131,12 +111,82 @@ const GroupsGroupIdRouteRoute = GroupsGroupIdRouteRouteImport.update({
 } as any).lazy(() =>
   import('./routes/groups/$groupId/route.lazy').then((d) => d.Route),
 )
+const GroupsCreateRoute = GroupsCreateRouteImport.update({
+  id: '/create',
+  path: '/create',
+  getParentRoute: () => GroupsRouteRoute,
+} as any).lazy(() => import('./routes/groups/create.lazy').then((d) => d.Route))
+const GroupsImportRoute = GroupsImportRouteImport.update({
+  id: '/import',
+  path: '/import',
+  getParentRoute: () => GroupsRouteRoute,
+} as any).lazy(() => import('./routes/groups/import.lazy').then((d) => d.Route))
+const OauthConsentRoute = OauthConsentRouteImport.update({
+  id: '/oauth/consent',
+  path: '/oauth/consent',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/oauth/consent.lazy').then((d) => d.Route))
+const OauthLoginRoute = OauthLoginRouteImport.update({
+  id: '/oauth/login',
+  path: '/oauth/login',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/oauth/login.lazy').then((d) => d.Route))
 const GroupsGroupIdIndexRoute = GroupsGroupIdIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => GroupsGroupIdRouteRoute,
 } as any).lazy(() =>
   import('./routes/groups/$groupId/index.lazy').then((d) => d.Route),
+)
+const GroupsGroupIdActivityRoute = GroupsGroupIdActivityRouteImport.update({
+  id: '/activity',
+  path: '/activity',
+  getParentRoute: () => GroupsGroupIdRouteRoute,
+} as any).lazy(() =>
+  import('./routes/groups/$groupId/activity.lazy').then((d) => d.Route),
+)
+const GroupsGroupIdBalancesRoute = GroupsGroupIdBalancesRouteImport.update({
+  id: '/balances',
+  path: '/balances',
+  getParentRoute: () => GroupsGroupIdRouteRoute,
+} as any).lazy(() =>
+  import('./routes/groups/$groupId/balances.lazy').then((d) => d.Route),
+)
+const GroupsGroupIdEditRoute = GroupsGroupIdEditRouteImport.update({
+  id: '/edit',
+  path: '/edit',
+  getParentRoute: () => GroupsGroupIdRouteRoute,
+} as any).lazy(() =>
+  import('./routes/groups/$groupId/edit.lazy').then((d) => d.Route),
+)
+const GroupsGroupIdExpensesRoute = GroupsGroupIdExpensesRouteImport.update({
+  id: '/expenses',
+  path: '/expenses',
+  getParentRoute: () => GroupsGroupIdRouteRoute,
+} as any).lazy(() =>
+  import('./routes/groups/$groupId/expenses.lazy').then((d) => d.Route),
+)
+const GroupsGroupIdInformationRoute =
+  GroupsGroupIdInformationRouteImport.update({
+    id: '/information',
+    path: '/information',
+    getParentRoute: () => GroupsGroupIdRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/groups/$groupId/information.lazy').then((d) => d.Route),
+  )
+const GroupsGroupIdMembersRoute = GroupsGroupIdMembersRouteImport.update({
+  id: '/members',
+  path: '/members',
+  getParentRoute: () => GroupsGroupIdRouteRoute,
+} as any).lazy(() =>
+  import('./routes/groups/$groupId/members.lazy').then((d) => d.Route),
+)
+const GroupsGroupIdStatsRoute = GroupsGroupIdStatsRouteImport.update({
+  id: '/stats',
+  path: '/stats',
+  getParentRoute: () => GroupsGroupIdRouteRoute,
+} as any).lazy(() =>
+  import('./routes/groups/$groupId/stats.lazy').then((d) => d.Route),
 )
 const GroupsBulkCategorizeGroupIdRoute =
   GroupsBulkCategorizeGroupIdRouteImport.update({
@@ -148,56 +198,6 @@ const GroupsBulkCategorizeGroupIdRoute =
       (d) => d.Route,
     ),
   )
-const GroupsGroupIdStatsRoute = GroupsGroupIdStatsRouteImport.update({
-  id: '/stats',
-  path: '/stats',
-  getParentRoute: () => GroupsGroupIdRouteRoute,
-} as any).lazy(() =>
-  import('./routes/groups/$groupId/stats.lazy').then((d) => d.Route),
-)
-const GroupsGroupIdMembersRoute = GroupsGroupIdMembersRouteImport.update({
-  id: '/members',
-  path: '/members',
-  getParentRoute: () => GroupsGroupIdRouteRoute,
-} as any).lazy(() =>
-  import('./routes/groups/$groupId/members.lazy').then((d) => d.Route),
-)
-const GroupsGroupIdInformationRoute =
-  GroupsGroupIdInformationRouteImport.update({
-    id: '/information',
-    path: '/information',
-    getParentRoute: () => GroupsGroupIdRouteRoute,
-  } as any).lazy(() =>
-    import('./routes/groups/$groupId/information.lazy').then((d) => d.Route),
-  )
-const GroupsGroupIdExpensesRoute = GroupsGroupIdExpensesRouteImport.update({
-  id: '/expenses',
-  path: '/expenses',
-  getParentRoute: () => GroupsGroupIdRouteRoute,
-} as any).lazy(() =>
-  import('./routes/groups/$groupId/expenses.lazy').then((d) => d.Route),
-)
-const GroupsGroupIdEditRoute = GroupsGroupIdEditRouteImport.update({
-  id: '/edit',
-  path: '/edit',
-  getParentRoute: () => GroupsGroupIdRouteRoute,
-} as any).lazy(() =>
-  import('./routes/groups/$groupId/edit.lazy').then((d) => d.Route),
-)
-const GroupsGroupIdBalancesRoute = GroupsGroupIdBalancesRouteImport.update({
-  id: '/balances',
-  path: '/balances',
-  getParentRoute: () => GroupsGroupIdRouteRoute,
-} as any).lazy(() =>
-  import('./routes/groups/$groupId/balances.lazy').then((d) => d.Route),
-)
-const GroupsGroupIdActivityRoute = GroupsGroupIdActivityRouteImport.update({
-  id: '/activity',
-  path: '/activity',
-  getParentRoute: () => GroupsGroupIdRouteRoute,
-} as any).lazy(() =>
-  import('./routes/groups/$groupId/activity.lazy').then((d) => d.Route),
-)
 const GroupsGroupIdExpensesIndexRoute =
   GroupsGroupIdExpensesIndexRouteImport.update({
     id: '/',
@@ -441,32 +441,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/unsubscribe': {
-      id: '/unsubscribe'
-      path: '/unsubscribe'
-      fullPath: '/unsubscribe'
-      preLoaderRoute: typeof UnsubscribeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/terms': {
-      id: '/terms'
-      path: '/terms'
-      fullPath: '/terms'
-      preLoaderRoute: typeof TermsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/privacy': {
-      id: '/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof PrivacyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/imprint': {
-      id: '/imprint'
-      path: '/imprint'
-      fullPath: '/imprint'
-      preLoaderRoute: typeof ImprintRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/groups': {
@@ -476,67 +455,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GroupsRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/imprint': {
+      id: '/imprint'
+      path: '/imprint'
+      fullPath: '/imprint'
+      preLoaderRoute: typeof ImprintRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/oauth/login': {
-      id: '/oauth/login'
-      path: '/oauth/login'
-      fullPath: '/oauth/login'
-      preLoaderRoute: typeof OauthLoginRouteImport
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/oauth/consent': {
-      id: '/oauth/consent'
-      path: '/oauth/consent'
-      fullPath: '/oauth/consent'
-      preLoaderRoute: typeof OauthConsentRouteImport
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/groups/import': {
-      id: '/groups/import'
-      path: '/import'
-      fullPath: '/groups/import'
-      preLoaderRoute: typeof GroupsImportRouteImport
-      parentRoute: typeof GroupsRouteRoute
-    }
-    '/groups/create': {
-      id: '/groups/create'
-      path: '/create'
-      fullPath: '/groups/create'
-      preLoaderRoute: typeof GroupsCreateRouteImport
-      parentRoute: typeof GroupsRouteRoute
-    }
-    '/friends/create': {
-      id: '/friends/create'
-      path: '/friends/create'
-      fullPath: '/friends/create'
-      preLoaderRoute: typeof FriendsCreateRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth/reset-password': {
-      id: '/auth/reset-password'
-      path: '/auth/reset-password'
-      fullPath: '/auth/reset-password'
-      preLoaderRoute: typeof AuthResetPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth/forgot-password': {
-      id: '/auth/forgot-password'
-      path: '/auth/forgot-password'
-      fullPath: '/auth/forgot-password'
-      preLoaderRoute: typeof AuthForgotPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth/complete-profile': {
-      id: '/auth/complete-profile'
-      path: '/auth/complete-profile'
-      fullPath: '/auth/complete-profile'
-      preLoaderRoute: typeof AuthCompleteProfileRouteImport
+    '/unsubscribe': {
+      id: '/unsubscribe'
+      path: '/unsubscribe'
+      fullPath: '/unsubscribe'
+      preLoaderRoute: typeof UnsubscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/account/settings': {
@@ -546,12 +490,68 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountSettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/complete-profile': {
+      id: '/auth/complete-profile'
+      path: '/auth/complete-profile'
+      fullPath: '/auth/complete-profile'
+      preLoaderRoute: typeof AuthCompleteProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/forgot-password': {
+      id: '/auth/forgot-password'
+      path: '/auth/forgot-password'
+      fullPath: '/auth/forgot-password'
+      preLoaderRoute: typeof AuthForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/reset-password': {
+      id: '/auth/reset-password'
+      path: '/auth/reset-password'
+      fullPath: '/auth/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/friends/create': {
+      id: '/friends/create'
+      path: '/friends/create'
+      fullPath: '/friends/create'
+      preLoaderRoute: typeof FriendsCreateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/groups/$groupId': {
       id: '/groups/$groupId'
       path: '/$groupId'
       fullPath: '/groups/$groupId'
       preLoaderRoute: typeof GroupsGroupIdRouteRouteImport
       parentRoute: typeof GroupsRouteRoute
+    }
+    '/groups/create': {
+      id: '/groups/create'
+      path: '/create'
+      fullPath: '/groups/create'
+      preLoaderRoute: typeof GroupsCreateRouteImport
+      parentRoute: typeof GroupsRouteRoute
+    }
+    '/groups/import': {
+      id: '/groups/import'
+      path: '/import'
+      fullPath: '/groups/import'
+      preLoaderRoute: typeof GroupsImportRouteImport
+      parentRoute: typeof GroupsRouteRoute
+    }
+    '/oauth/consent': {
+      id: '/oauth/consent'
+      path: '/oauth/consent'
+      fullPath: '/oauth/consent'
+      preLoaderRoute: typeof OauthConsentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/oauth/login': {
+      id: '/oauth/login'
+      path: '/oauth/login'
+      fullPath: '/oauth/login'
+      preLoaderRoute: typeof OauthLoginRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/groups/$groupId/': {
       id: '/groups/$groupId/'
@@ -560,46 +560,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GroupsGroupIdIndexRouteImport
       parentRoute: typeof GroupsGroupIdRouteRoute
     }
-    '/groups/bulk-categorize/$groupId': {
-      id: '/groups/bulk-categorize/$groupId'
-      path: '/bulk-categorize/$groupId'
-      fullPath: '/groups/bulk-categorize/$groupId'
-      preLoaderRoute: typeof GroupsBulkCategorizeGroupIdRouteImport
-      parentRoute: typeof GroupsRouteRoute
-    }
-    '/groups/$groupId/stats': {
-      id: '/groups/$groupId/stats'
-      path: '/stats'
-      fullPath: '/groups/$groupId/stats'
-      preLoaderRoute: typeof GroupsGroupIdStatsRouteImport
-      parentRoute: typeof GroupsGroupIdRouteRoute
-    }
-    '/groups/$groupId/members': {
-      id: '/groups/$groupId/members'
-      path: '/members'
-      fullPath: '/groups/$groupId/members'
-      preLoaderRoute: typeof GroupsGroupIdMembersRouteImport
-      parentRoute: typeof GroupsGroupIdRouteRoute
-    }
-    '/groups/$groupId/information': {
-      id: '/groups/$groupId/information'
-      path: '/information'
-      fullPath: '/groups/$groupId/information'
-      preLoaderRoute: typeof GroupsGroupIdInformationRouteImport
-      parentRoute: typeof GroupsGroupIdRouteRoute
-    }
-    '/groups/$groupId/expenses': {
-      id: '/groups/$groupId/expenses'
-      path: '/expenses'
-      fullPath: '/groups/$groupId/expenses'
-      preLoaderRoute: typeof GroupsGroupIdExpensesRouteImport
-      parentRoute: typeof GroupsGroupIdRouteRoute
-    }
-    '/groups/$groupId/edit': {
-      id: '/groups/$groupId/edit'
-      path: '/edit'
-      fullPath: '/groups/$groupId/edit'
-      preLoaderRoute: typeof GroupsGroupIdEditRouteImport
+    '/groups/$groupId/activity': {
+      id: '/groups/$groupId/activity'
+      path: '/activity'
+      fullPath: '/groups/$groupId/activity'
+      preLoaderRoute: typeof GroupsGroupIdActivityRouteImport
       parentRoute: typeof GroupsGroupIdRouteRoute
     }
     '/groups/$groupId/balances': {
@@ -609,12 +574,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GroupsGroupIdBalancesRouteImport
       parentRoute: typeof GroupsGroupIdRouteRoute
     }
-    '/groups/$groupId/activity': {
-      id: '/groups/$groupId/activity'
-      path: '/activity'
-      fullPath: '/groups/$groupId/activity'
-      preLoaderRoute: typeof GroupsGroupIdActivityRouteImport
+    '/groups/$groupId/edit': {
+      id: '/groups/$groupId/edit'
+      path: '/edit'
+      fullPath: '/groups/$groupId/edit'
+      preLoaderRoute: typeof GroupsGroupIdEditRouteImport
       parentRoute: typeof GroupsGroupIdRouteRoute
+    }
+    '/groups/$groupId/expenses': {
+      id: '/groups/$groupId/expenses'
+      path: '/expenses'
+      fullPath: '/groups/$groupId/expenses'
+      preLoaderRoute: typeof GroupsGroupIdExpensesRouteImport
+      parentRoute: typeof GroupsGroupIdRouteRoute
+    }
+    '/groups/$groupId/information': {
+      id: '/groups/$groupId/information'
+      path: '/information'
+      fullPath: '/groups/$groupId/information'
+      preLoaderRoute: typeof GroupsGroupIdInformationRouteImport
+      parentRoute: typeof GroupsGroupIdRouteRoute
+    }
+    '/groups/$groupId/members': {
+      id: '/groups/$groupId/members'
+      path: '/members'
+      fullPath: '/groups/$groupId/members'
+      preLoaderRoute: typeof GroupsGroupIdMembersRouteImport
+      parentRoute: typeof GroupsGroupIdRouteRoute
+    }
+    '/groups/$groupId/stats': {
+      id: '/groups/$groupId/stats'
+      path: '/stats'
+      fullPath: '/groups/$groupId/stats'
+      preLoaderRoute: typeof GroupsGroupIdStatsRouteImport
+      parentRoute: typeof GroupsGroupIdRouteRoute
+    }
+    '/groups/bulk-categorize/$groupId': {
+      id: '/groups/bulk-categorize/$groupId'
+      path: '/bulk-categorize/$groupId'
+      fullPath: '/groups/bulk-categorize/$groupId'
+      preLoaderRoute: typeof GroupsBulkCategorizeGroupIdRouteImport
+      parentRoute: typeof GroupsRouteRoute
     }
     '/groups/$groupId/expenses/': {
       id: '/groups/$groupId/expenses/'

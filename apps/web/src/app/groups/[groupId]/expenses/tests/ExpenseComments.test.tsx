@@ -146,6 +146,9 @@ describe('ExpenseComments', () => {
     render(<ExpenseComments groupId="group-1" expenseId="expense-1" />)
 
     const input = screen.getByRole('textbox')
+    // happy-dom enforces HTML maxlength on value assignment; drop it so we
+    // can exercise the JS length guard that still runs on submit.
+    input.removeAttribute('maxLength')
     fireEvent.change(input, { target: { value: 'x'.repeat(501) } })
     await user.click(screen.getByRole('button', { name: 'Send comment' }))
 

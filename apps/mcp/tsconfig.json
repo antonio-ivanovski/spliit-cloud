@@ -19,6 +19,7 @@
   "include": [
     "index.ts",
     "global.d.ts",
+    "vitest-jest-dom.d.ts",
     "src/**/*",
     "resources/**/*",
     "server.ts",

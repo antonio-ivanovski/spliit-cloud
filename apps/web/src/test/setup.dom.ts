@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom'
+import './setup.shared'
 
 // ── Polyfill window.matchMedia ──────────────────────────────────────────
 // Radix UI primitives and useMediaQuery hook depend on it.
@@ -66,8 +67,7 @@ if (!globalThis.PointerEvent) {
 
 // ── Polyfill pointer-capture methods (vaul) ──────────────────────────────
 // vaul's drawer calls setPointerCapture / releasePointerCapture on
-// pointer events to track drag gestures. jsdom does not implement
-// these on Element.prototype, so stub them to no-ops.
+// pointer events to track drag gestures. Stub them to no-ops when missing.
 if (typeof Element !== 'undefined') {
   if (!Element.prototype.setPointerCapture) {
     Element.prototype.setPointerCapture = function () {}
@@ -83,14 +83,16 @@ if (typeof Element !== 'undefined') {
 }
 
 // ── Polyfill HTMLDialogElement (used by some Radix dialog internals) ───
-if (!HTMLDialogElement.prototype.showModal) {
-  HTMLDialogElement.prototype.showModal = function () {
-    this.open = true
+if (typeof HTMLDialogElement !== 'undefined' && HTMLDialogElement.prototype) {
+  if (!HTMLDialogElement.prototype.showModal) {
+    HTMLDialogElement.prototype.showModal = function () {
+      this.open = true
+    }
   }
-}
-if (!HTMLDialogElement.prototype.close) {
-  HTMLDialogElement.prototype.close = function () {
-    this.open = false
+  if (!HTMLDialogElement.prototype.close) {
+    HTMLDialogElement.prototype.close = function () {
+      this.open = false
+    }
   }
 }
 
@@ -108,8 +110,6 @@ vi.stubGlobal('requestAnimationFrame', (_cb: FrameRequestCallback) => {
 vi.stubGlobal('cancelAnimationFrame', () => {})
 
 // Make navigator writable so userEvent can attach its clipboard stub.
-// jsdom defines navigator.clipboard as non-configurable; deleting it
-// from the prototype lets userEvent.setup() attach its own stub.
 const navProto = Object.getPrototypeOf(navigator)
 if (navProto && Object.getOwnPropertyDescriptor(navProto, 'clipboard')) {
   delete (navProto as { clipboard?: PropertyDescriptor }).clipboard
@@ -120,21 +120,5 @@ Object.defineProperty(navigator, 'clipboard', {
   value: {
     writeText: () => Promise.resolve(),
     readText: () => Promise.resolve(''),
-  },
-})
-
-// ── Initialize i18n (loads en-US locale for tests) ─────────────────────
-import { initI18n } from '@/i18n/setup'
-await initI18n()
-
-// ── Stub import.meta.env defaults ──────────────────────────────────────
-vi.stubGlobal('import.meta', {
-  env: {
-    VITE_API_URL: 'http://localhost:3001',
-    VITE_ENABLE_GOOGLE_OAUTH: 'false',
-    VITE_ENABLE_GITHUB_OAUTH: 'false',
-    MODE: 'test',
-    DEV: true,
-    PROD: false,
   },
 })

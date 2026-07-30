@@ -7,9 +7,9 @@ export default defineConfig({
   plugins: [react()],
   test: {
     globals: true,
-    environment: 'jsdom',
+    environment: 'happy-dom',
     include: ['src/tests/integration/**/*.test.{ts,tsx}'],
-    setupFiles: ['./src/test/setup.ts'],
+    setupFiles: ['./src/test/setup.dom.ts'],
     css: false,
     restoreMocks: true,
     fileParallelism: true,

@@ -3,20 +3,55 @@ import path from 'node:path'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vitest/config'
 
+const alias = {
+  '@': path.resolve(__dirname, './src'),
+}
+
+const sharedTest = {
+  globals: true as const,
+  css: false,
+  restoreMocks: true,
+  exclude: ['src/tests/integration/**'],
+}
+
 export default defineConfig({
   plugins: [react()],
+  resolve: { alias },
   test: {
-    globals: true,
-    environment: 'jsdom',
-    include: ['src/**/*.test.{ts,tsx}'],
-    exclude: ['src/tests/integration/**'],
-    setupFiles: ['./src/test/setup.ts'],
-    css: false,
-    restoreMocks: true,
-  },
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-    },
+    // Root options (reporters/coverage) live here; environments are per-project.
+    projects: [
+      {
+        extends: true,
+        resolve: { alias },
+        test: {
+          ...sharedTest,
+          name: 'node',
+          environment: 'node',
+          include: ['src/**/*.test.ts'],
+          // These .test.ts files touch document/localStorage/navigator/RTL.
+          exclude: [
+            ...sharedTest.exclude,
+            'src/tests/utils/i18n.test.ts',
+            'src/tests/utils/account-preferences.test.ts',
+          ],
+          setupFiles: ['./src/test/setup.node.ts'],
+        },
+      },
+      {
+        extends: true,
+        resolve: { alias },
+        test: {
+          ...sharedTest,
+          name: 'dom',
+          environment: 'happy-dom',
+          include: [
+            'src/**/*.test.tsx',
+            'src/tests/utils/i18n.test.ts',
+            'src/tests/utils/account-preferences.test.ts',
+          ],
+          setupFiles: ['./src/test/setup.dom.ts'],
+        },
+      },
+    ],
   },
 })
