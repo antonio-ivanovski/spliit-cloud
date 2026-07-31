@@ -142,7 +142,18 @@
       "settlementsHidden": "Liquidaciones ocultas",
       "title": "Filtros"
     },
-    "showSettlements": "Mostrar liquidaciones"
+    "showSettlements": "Mostrar liquidaciones",
+    "globalTitle": "Todos los gastos",
+    "globalDescription": "Busca y consulta gastos de todos tus grupos.",
+    "globalGroups": "Grupos",
+    "globalInactive": "inactivo",
+    "globalCurrency": "Moneda base",
+    "globalAllCurrencies": "Todas las monedas",
+    "globalCurrencyRequired": "Elige una moneda base para filtrar u ordenar por importe.",
+    "globalFiltersActive": "{count} filtros activos",
+    "globalEmpty": "Ningún gasto coincide con tus filtros.",
+    "clearSearch": "Borrar búsqueda",
+    "loading": "Cargando gastos…"
   },
   "ExpenseCard": {
     "receivedBy": "Recibido por <strong>{paidBy}</strong> · asignado a <paidFor></paidFor>",
@@ -486,7 +497,8 @@
       "title": "Registrar gastos con un amigo"
     },
     "importGroup": "Importar grupo",
-    "exportDescription": "Descargar los gastos del grupo en formato JSON o CSV."
+    "exportDescription": "Descargar los gastos del grupo en formato JSON o CSV.",
+    "allExpenses": "Todos los gastos"
   },
   "GroupForm": {
     "title": "Información del grupo",

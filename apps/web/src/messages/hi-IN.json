@@ -1263,7 +1263,18 @@
       },
       "title": "फ़िल्टर"
     },
-    "showSettlements": "निपटान दिखाएं"
+    "showSettlements": "निपटान दिखाएं",
+    "globalTitle": "सभी खर्च",
+    "globalDescription": "अपने सभी समूहों के खर्च खोजें और देखें।",
+    "globalGroups": "समूह",
+    "globalInactive": "निष्क्रिय",
+    "globalCurrency": "आधार मुद्रा",
+    "globalAllCurrencies": "सभी मुद्राएँ",
+    "globalCurrencyRequired": "राशि के आधार पर फ़िल्टर या क्रमबद्ध करने के लिए आधार मुद्रा चुनें।",
+    "globalFiltersActive": "{count} फ़िल्टर सक्रिय",
+    "globalEmpty": "कोई भी खर्च आपके फ़िल्टर से मेल नहीं खाता।",
+    "clearSearch": "खोज साफ़ करें",
+    "loading": "खर्च लोड हो रहे हैं…"
   },
   "Footer": {
     "madeIn": "ओपन-सोर्स समुदाय द्वारा प्यार से बनाया गया ❤️",
@@ -1686,7 +1697,8 @@
     "linkInvitationInvalid": {
       "title": "यह आमंत्रण लिंक अमान्य है",
       "description": "लिंक खराब है या इस समूह पर किसी निमंत्रण से मेल नहीं खाता।"
-    }
+    },
+    "allExpenses": "सभी खर्च"
   },
   "Header": {
     "signIn": "साइन इन करें",

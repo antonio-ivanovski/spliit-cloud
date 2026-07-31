@@ -141,7 +141,18 @@
       "settlementsHidden": "Tilitykset piilotettu",
       "title": "Suodattimet"
     },
-    "showSettlements": "Näytä tilitykset"
+    "showSettlements": "Näytä tilitykset",
+    "globalTitle": "Kaikki kulut",
+    "globalDescription": "Hae ja selaa kaikkien ryhmiesi kuluja.",
+    "globalGroups": "Ryhmät",
+    "globalInactive": "passiivinen",
+    "globalCurrency": "Perusvaluutta",
+    "globalAllCurrencies": "Kaikki valuutat",
+    "globalCurrencyRequired": "Valitse perusvaluutta, jotta voit suodattaa tai lajitella summan mukaan.",
+    "globalFiltersActive": "{count} suodatinta käytössä",
+    "globalEmpty": "Mikään kulu ei vastaa suodattimia.",
+    "clearSearch": "Tyhjennä haku",
+    "loading": "Ladataan kuluja…"
   },
   "ExpenseCard": {
     "receivedBy": "Vastaanottaja <strong>{paidBy}</strong> · kohdistettu osallistujille <paidFor></paidFor>",
@@ -480,7 +491,8 @@
       "title": "Seuraa yhteisiä kuluja ystävän kanssa"
     },
     "importGroup": "Tuo ryhmä",
-    "exportDescription": "Lataa ryhmän kulut JSON- tai CSV-muodossa."
+    "exportDescription": "Lataa ryhmän kulut JSON- tai CSV-muodossa.",
+    "allExpenses": "Kaikki kulut"
   },
   "GroupForm": {
     "title": "Ryhmän tiedot",

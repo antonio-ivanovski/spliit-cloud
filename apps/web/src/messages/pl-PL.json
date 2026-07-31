@@ -143,7 +143,18 @@
       "settlementsHidden": "Rozliczenia ukryte",
       "title": "Filtry"
     },
-    "showSettlements": "Pokaż rozliczenia"
+    "showSettlements": "Pokaż rozliczenia",
+    "globalTitle": "Wszystkie wydatki",
+    "globalDescription": "Wyszukuj i przeglądaj wydatki ze wszystkich swoich grup.",
+    "globalGroups": "Grupy",
+    "globalInactive": "nieaktywna",
+    "globalCurrency": "Waluta bazowa",
+    "globalAllCurrencies": "Wszystkie waluty",
+    "globalCurrencyRequired": "Wybierz walutę bazową, aby filtrować lub sortować według kwoty.",
+    "globalFiltersActive": "{count} aktywnych filtrów",
+    "globalEmpty": "Żadne wydatki nie pasują do filtrów.",
+    "clearSearch": "Wyczyść wyszukiwanie",
+    "loading": "Ładowanie wydatków…"
   },
   "ExpenseCard": {
     "paidBy": "Opłacone przez <strong>{paidBy}</strong> dla <paidFor></paidFor>",
@@ -492,7 +503,8 @@
       "title": "Utwórz rozliczenie z przyjacielem"
     },
     "importGroup": "Importuj grupę",
-    "exportDescription": "Pobierz wydatki grupy jako JSON lub CSV."
+    "exportDescription": "Pobierz wydatki grupy jako JSON lub CSV.",
+    "allExpenses": "Wszystkie wydatki"
   },
   "GroupForm": {
     "title": "Informacje o grupie",

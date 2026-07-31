@@ -141,7 +141,18 @@
       "settlementsHidden": "Ödemeler gizli",
       "title": "Filtreler"
     },
-    "showSettlements": "Ödemeleri göster"
+    "showSettlements": "Ödemeleri göster",
+    "globalTitle": "Tüm harcamalar",
+    "globalDescription": "Tüm gruplarınızdaki harcamaları arayın ve inceleyin.",
+    "globalGroups": "Gruplar",
+    "globalInactive": "etkin değil",
+    "globalCurrency": "Temel para birimi",
+    "globalAllCurrencies": "Tüm para birimleri",
+    "globalCurrencyRequired": "Tutarla filtrelemek veya sıralamak için bir temel para birimi seçin.",
+    "globalFiltersActive": "{count} filtre etkin",
+    "globalEmpty": "Filtrelerinizle eşleşen harcama yok.",
+    "clearSearch": "Aramayı temizle",
+    "loading": "Harcamalar yükleniyor…"
   },
   "ExpenseCard": {
     "receivedBy": "<strong>{paidBy}</strong> aldı · <paidFor></paidFor> için paylaştırıldı",
@@ -480,7 +491,8 @@
       "title": "Arkadaşla ortak harcamaları takip et"
     },
     "importGroup": "Grubu içe aktar",
-    "exportDescription": "Grup harcamalarını JSON veya CSV olarak indirin."
+    "exportDescription": "Grup harcamalarını JSON veya CSV olarak indirin.",
+    "allExpenses": "Tüm harcamalar"
   },
   "GroupForm": {
     "title": "Grup bilgileri",

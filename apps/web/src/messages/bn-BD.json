@@ -1263,7 +1263,18 @@
       },
       "title": "ফিল্টার"
     },
-    "showSettlements": "নিষ্পত্তি দেখান"
+    "showSettlements": "নিষ্পত্তি দেখান",
+    "globalTitle": "সব খরচ",
+    "globalDescription": "আপনার সব গ্রুপের খরচ খুঁজুন ও দেখুন।",
+    "globalGroups": "গ্রুপ",
+    "globalInactive": "নিষ্ক্রিয়",
+    "globalCurrency": "মূল মুদ্রা",
+    "globalAllCurrencies": "সব মুদ্রা",
+    "globalCurrencyRequired": "পরিমাণ অনুসারে ফিল্টার বা সাজাতে একটি মূল মুদ্রা বেছে নিন।",
+    "globalFiltersActive": "{count}টি ফিল্টার সক্রিয়",
+    "globalEmpty": "কোনও খরচ আপনার ফিল্টারের সঙ্গে মেলেনি।",
+    "clearSearch": "অনুসন্ধান পরিষ্কার করুন",
+    "loading": "খরচ লোড হচ্ছে…"
   },
   "Footer": {
     "madeIn": "ওপেন-সোর্স সম্প্রদায় দ্বারা ভালোবাসা দিয়ে তৈরি ❤️",
@@ -1686,7 +1697,8 @@
     "linkInvitationInvalid": {
       "title": "এই আমন্ত্রণ লিংক অবৈধ",
       "description": "লিংকটি বিকৃত বা এই গ্রুপে কোনো আমন্ত্রণের সাথে মেলে না।"
-    }
+    },
+    "allExpenses": "সব খরচ"
   },
   "Header": {
     "signIn": "সাইন ইন",

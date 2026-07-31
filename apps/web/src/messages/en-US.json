@@ -156,7 +156,18 @@
       "settlementsHidden": "Settlements hidden",
       "title": "Filters"
     },
-    "showSettlements": "Show settlements"
+    "showSettlements": "Show settlements",
+    "globalTitle": "All expenses",
+    "globalDescription": "Search and browse expenses across your groups.",
+    "globalGroups": "Groups",
+    "globalInactive": "inactive",
+    "globalCurrency": "Base currency",
+    "globalAllCurrencies": "All currencies",
+    "globalCurrencyRequired": "Choose a base currency to filter or sort by amount.",
+    "globalFiltersActive": "{count} filters active",
+    "globalEmpty": "No expenses match your filters.",
+    "clearSearch": "Clear search",
+    "loading": "Loading expenses…"
   },
   "ExpenseCard": {
     "paidBy": "Paid by <strong>{paidBy}</strong> · split between <paidFor></paidFor>",
@@ -569,7 +580,8 @@
       "description": "Track shared expenses with friends, family, or roommates."
     },
     "importGroup": "Import group",
-    "exportDescription": "Download the group expenses as JSON or CSV."
+    "exportDescription": "Download the group expenses as JSON or CSV.",
+    "allExpenses": "All expenses"
   },
   "Auth": {
     "title": "Sign in to Spliit Cloud",

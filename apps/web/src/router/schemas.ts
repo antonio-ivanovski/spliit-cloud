@@ -40,6 +40,12 @@ const dateString = z
   .optional()
   .catch(undefined)
 
+const globalExpensesReturnTo = z
+  .string()
+  .regex(/^\/expenses(?:\?[^#]*)?$/)
+  .optional()
+  .catch(undefined)
+
 /**
  * Search-param schema for the `/groups/import` wizard. The `prefill` field
  * carries an encoded `spliit.app` group URL when the user arrived from the
@@ -72,6 +78,7 @@ export const importGroupSearchSchema = z.object({
 export const groupSearchSchema = z.object({
   invite: z.string().optional(),
   friendLinkInvite: optionalString,
+  returnTo: globalExpensesReturnTo,
   expCategories: z.string().optional().catch(undefined),
   expPaidBy: z.string().optional().catch(undefined),
   expPaidByMatch: z.enum(['any', 'all', 'exact']).optional().catch(undefined),
@@ -101,12 +108,40 @@ export const expenseParamsSchema = z.object({
 
 export const editExpenseSearchSchema = z.object({
   scope: z.enum(['OCCURRENCE', 'THIS_AND_FUTURE']).optional().catch(undefined),
+  returnTo: globalExpensesReturnTo,
 })
 
 export const homeSearchSchema = z.object({
   redirect: optionalString,
   mode: z.enum(['sign-in', 'sign-up']).optional().catch(undefined),
   email: optionalString,
+})
+
+export const globalExpensesSearchSchema = z.object({
+  q: optionalString,
+  groups: optionalString,
+  categories: optionalString,
+  paidBy: optionalString,
+  paidByMatch: z.enum(['any', 'all', 'exact']).optional().catch(undefined),
+  paidFor: optionalString,
+  paidForMatch: z.enum(['any', 'all', 'exact']).optional().catch(undefined),
+  dateFrom: dateString,
+  dateTo: dateString,
+  minAmount: numericString,
+  maxAmount: numericString,
+  currencies: optionalString,
+  showSettlements: z.enum(['true', 'false']).optional().catch(undefined),
+  sortBy: z
+    .enum(['expenseDate', 'createdAt', 'amount'])
+    .optional()
+    .catch(undefined),
+  sortDir: z.enum(['asc', 'desc']).optional().catch(undefined),
+  expenseId: optionalString,
+  expenseGroupId: optionalString,
+})
+
+export const expensePreviewSearchSchema = z.object({
+  returnTo: globalExpensesReturnTo,
 })
 
 export const forgotPasswordSearchSchema = z.object({
@@ -145,6 +180,7 @@ export const createExpenseSearchSchema = z.object({
   // When set, the create form pre-populates from this source expense
   // and overrides `expenseDate` to today (a.k.a. "Make a copy" flow).
   fromExpenseId: z.string().optional().catch(undefined),
+  returnTo: globalExpensesReturnTo,
 })
 
 export const balancesSearchSchema = z.object({

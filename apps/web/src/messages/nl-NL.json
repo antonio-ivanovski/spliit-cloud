@@ -141,7 +141,18 @@
       "settlementsHidden": "Verrekeningen verborgen",
       "title": "Filters"
     },
-    "showSettlements": "Verrekeningen tonen"
+    "showSettlements": "Verrekeningen tonen",
+    "globalTitle": "Alle uitgaven",
+    "globalDescription": "Zoek en bekijk uitgaven uit al je groepen.",
+    "globalGroups": "Groepen",
+    "globalInactive": "inactief",
+    "globalCurrency": "Basisvaluta",
+    "globalAllCurrencies": "Alle valuta's",
+    "globalCurrencyRequired": "Kies een basisvaluta om op bedrag te filteren of sorteren.",
+    "globalFiltersActive": "{count} filters actief",
+    "globalEmpty": "Geen uitgaven komen overeen met je filters.",
+    "clearSearch": "Zoekopdracht wissen",
+    "loading": "Uitgaven laden…"
   },
   "ExpenseCard": {
     "paidBy": "Betaald door <strong>{paidBy}</strong> · verdeeld over <paidFor></paidFor>",
@@ -480,7 +491,8 @@
       "title": "Uitgaven met een vriend(in) bijhouden"
     },
     "importGroup": "Groep importeren",
-    "exportDescription": "Download de groepsuitgaven als JSON of CSV."
+    "exportDescription": "Download de groepsuitgaven als JSON of CSV.",
+    "allExpenses": "Alle uitgaven"
   },
   "GroupForm": {
     "title": "Groepsinformatie",

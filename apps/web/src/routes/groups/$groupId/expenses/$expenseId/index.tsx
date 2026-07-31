@@ -1,6 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { expenseParamsSchema } from '@/router/schemas'
+import {
+  expenseParamsSchema,
+  expensePreviewSearchSchema,
+} from '@/router/schemas'
 
 // The bare expense URL is the route-backed lightweight expense preview.
 export const Route = createFileRoute('/groups/$groupId/expenses/$expenseId/')({
@@ -11,4 +14,5 @@ export const Route = createFileRoute('/groups/$groupId/expenses/$expenseId/')({
       expenseId: params.expenseId,
     }),
   },
+  validateSearch: expensePreviewSearchSchema,
 })

@@ -11,6 +11,10 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
+import {
+  getGlobalExpensesSearch,
+  isGlobalExpensesReturnTo,
+} from '@/lib/expense-navigation'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { trpc } from '@/trpc/client'
 
@@ -131,6 +135,7 @@ export function CreateExpenseForm({
       group={group}
       {...(sourceExpense ? { expense: sourceExpense, isCopy: true } : {})}
       searchParams={searchParams}
+      cancelHref={searchParams.returnTo ?? `/groups/${group.id}`}
       currentLedgerParticipantId={currentLedgerParticipantId}
       linkInviteToken={linkInviteToken}
       heading={
@@ -143,11 +148,19 @@ export function CreateExpenseForm({
           groupId,
           expense,
         })
-        await navigate({
-          to: '/groups/$groupId/expenses',
-          params: { groupId: group.id },
-          replace: true,
-        })
+        if (isGlobalExpensesReturnTo(searchParams.returnTo)) {
+          await navigate({
+            to: '/expenses',
+            search: getGlobalExpensesSearch(searchParams.returnTo) as never,
+            replace: true,
+          })
+        } else {
+          await navigate({
+            to: '/groups/$groupId/expenses',
+            params: { groupId: group.id },
+            replace: true,
+          })
+        }
       }}
       runtimeFeatureFlags={runtimeFeatureFlags}
     />

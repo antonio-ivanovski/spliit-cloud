@@ -145,7 +145,18 @@
       "settlementsHidden": "Ausgleichszahlungen ausgeblendet",
       "title": "Filter"
     },
-    "showSettlements": "Ausgleichszahlungen anzeigen"
+    "showSettlements": "Ausgleichszahlungen anzeigen",
+    "globalTitle": "Alle Ausgaben",
+    "globalDescription": "Durchsuche die Ausgaben aus allen deinen Gruppen.",
+    "globalGroups": "Gruppen",
+    "globalInactive": "inaktiv",
+    "globalCurrency": "Basiswährung",
+    "globalAllCurrencies": "Alle Währungen",
+    "globalCurrencyRequired": "Wähle eine Basiswährung, um nach Betrag zu filtern oder zu sortieren.",
+    "globalFiltersActive": "{count} Filter aktiv",
+    "globalEmpty": "Keine Ausgaben entsprechen deinen Filtern.",
+    "clearSearch": "Suche löschen",
+    "loading": "Ausgaben werden geladen…"
   },
   "ExpenseCard": {
     "receivedBy": "Erhalten von <strong>{paidBy}</strong> · zugeordnet zu <paidFor></paidFor>",
@@ -504,7 +515,8 @@
       "title": "Ausgaben mit einer befreundeten Person erfassen"
     },
     "importGroup": "Gruppe importieren",
-    "exportDescription": "Lade die Gruppenausgaben als JSON oder CSV herunter."
+    "exportDescription": "Lade die Gruppenausgaben als JSON oder CSV herunter.",
+    "allExpenses": "Alle Ausgaben"
   },
   "GroupForm": {
     "title": "Gruppeninformationen",

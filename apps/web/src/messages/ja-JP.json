@@ -140,7 +140,18 @@
       "settlementsHidden": "精算非表示",
       "title": "フィルター"
     },
-    "showSettlements": "精算を表示"
+    "showSettlements": "精算を表示",
+    "globalTitle": "すべての支出",
+    "globalDescription": "すべてのグループの支出を検索して確認できます。",
+    "globalGroups": "グループ",
+    "globalInactive": "非アクティブ",
+    "globalCurrency": "基準通貨",
+    "globalAllCurrencies": "すべての通貨",
+    "globalCurrencyRequired": "金額で絞り込んだり並べ替えたりするには、基準通貨を選択してください。",
+    "globalFiltersActive": "{count}件のフィルターが有効",
+    "globalEmpty": "条件に一致する支出はありません。",
+    "clearSearch": "検索をクリア",
+    "loading": "支出を読み込み中…"
   },
   "ExpenseCard": {
     "receivedBy": "<strong>{paidBy}</strong>が受取 · <paidFor></paidFor>に配分",
@@ -474,7 +485,8 @@
       "title": "友人との支出を記録"
     },
     "importGroup": "グループをインポート",
-    "exportDescription": "グループの支出を JSON または CSV としてダウンロードします。"
+    "exportDescription": "グループの支出を JSON または CSV としてダウンロードします。",
+    "allExpenses": "すべての支出"
   },
   "GroupForm": {
     "title": "グループ情報",

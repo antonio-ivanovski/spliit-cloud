@@ -1263,7 +1263,18 @@
       },
       "title": "فلٹرز"
     },
-    "showSettlements": "تصفیے دکھائیں"
+    "showSettlements": "تصفیے دکھائیں",
+    "globalTitle": "تمام اخراجات",
+    "globalDescription": "اپنے تمام گروپس کے اخراجات تلاش کریں اور دیکھیں۔",
+    "globalGroups": "گروپس",
+    "globalInactive": "غیر فعال",
+    "globalCurrency": "بنیادی کرنسی",
+    "globalAllCurrencies": "تمام کرنسیاں",
+    "globalCurrencyRequired": "رقم کے لحاظ سے فلٹر یا ترتیب دینے کے لیے بنیادی کرنسی منتخب کریں۔",
+    "globalFiltersActive": "{count} فلٹر فعال",
+    "globalEmpty": "کوئی خرچ آپ کے فلٹرز سے مطابقت نہیں رکھتا۔",
+    "clearSearch": "تلاش صاف کریں",
+    "loading": "اخراجات لوڈ ہو رہے ہیں…"
   },
   "Footer": {
     "madeIn": "اوپن سورس کمیونٹی نے محبت سے بنایا ❤️",
@@ -1686,7 +1697,8 @@
     "linkInvitationInvalid": {
       "title": "یہ دعوت کا لنک غلط ہے",
       "description": "لنک خراب ہے یا اس گروپ پر کسی دعوت سے مماثل نہیں ہے۔"
-    }
+    },
+    "allExpenses": "تمام اخراجات"
   },
   "Header": {
     "signIn": "سائن ان",

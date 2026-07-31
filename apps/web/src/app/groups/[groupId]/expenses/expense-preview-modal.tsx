@@ -59,6 +59,7 @@ type Expense = NonNullable<
 export type ExpensePreviewModalProps = {
   groupId: string
   expenseId: string
+  returnTo?: string
   open?: boolean
   onOpenChange?: (open: boolean) => void
   /** Called when the dialog closes, e.g. to restore the previous route. */
@@ -123,6 +124,7 @@ function toBalanceExpense(
 export function ExpensePreviewModal({
   groupId,
   expenseId,
+  returnTo,
   open = true,
   onOpenChange,
   onClose,
@@ -301,14 +303,12 @@ export function ExpensePreviewModal({
       return
     }
     await navigate({
-      to: '/groups/$groupId/expenses',
-      params: { groupId },
-      replace: true,
-    })
-    await navigate({
       to: '/groups/$groupId/expenses/$expenseId/edit',
       params: { groupId, expenseId },
-      search: scope ? { scope } : undefined,
+      search: {
+        ...(scope ? { scope } : {}),
+        ...(returnTo ? { returnTo } : {}),
+      },
     })
   }
 
@@ -321,12 +321,13 @@ export function ExpensePreviewModal({
     void navigate({
       to: '/groups/$groupId/expenses/create',
       params: { groupId },
-      search: { fromExpenseId: expenseId },
+      search: { fromExpenseId: expenseId, ...(returnTo ? { returnTo } : {}) },
     })
   }
 
   const { mutateAsync: deleteExpenseMutateAsync } = useDeleteExpenseMutation({
     linkInviteToken,
+    onDeleted: onClose,
   })
   const { mutateAsync: stopRecurrenceMutateAsync } = useStopRecurrenceMutation({
     linkInviteToken,

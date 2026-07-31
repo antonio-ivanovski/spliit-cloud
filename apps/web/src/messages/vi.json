@@ -156,7 +156,18 @@
       "settlementsHidden": "Đã ẩn thanh toán",
       "title": "Bộ lọc"
     },
-    "showSettlements": "Hiện thanh toán"
+    "showSettlements": "Hiện thanh toán",
+    "globalTitle": "Tất cả chi phí",
+    "globalDescription": "Tìm kiếm và xem chi phí từ tất cả các nhóm của bạn.",
+    "globalGroups": "Nhóm",
+    "globalInactive": "không hoạt động",
+    "globalCurrency": "Tiền tệ cơ sở",
+    "globalAllCurrencies": "Tất cả tiền tệ",
+    "globalCurrencyRequired": "Chọn tiền tệ cơ sở để lọc hoặc sắp xếp theo số tiền.",
+    "globalFiltersActive": "{count} bộ lọc đang hoạt động",
+    "globalEmpty": "Không có chi phí nào khớp với bộ lọc.",
+    "clearSearch": "Xóa tìm kiếm",
+    "loading": "Đang tải chi phí…"
   },
   "ExpenseCard": {
     "paidBy": "Được trả bởi <strong>{paidBy}</strong> · chia cho <paidFor></paidFor>",
@@ -569,7 +580,8 @@
       "description": "Chia chi phí nhóm."
     },
     "importGroup": "Nhập dữ liệu",
-    "exportDescription": "Xuất chi phí ra tệp."
+    "exportDescription": "Xuất chi phí ra tệp.",
+    "allExpenses": "Tất cả chi phí"
   },
   "Auth": {
     "title": "Đăng nhập",

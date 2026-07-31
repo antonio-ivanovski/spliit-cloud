@@ -130,6 +130,12 @@ type Props = {
    * surface each expense's contribution toward the budget.
    */
   contributionAmount?: number
+  /** Optional internal return path when opened from another expense feed. */
+  returnTo?: string
+  /** Optional same-page opener used by cross-group feeds. */
+  onOpen?: () => void
+  /** Optional group label shown when the card is rendered across groups. */
+  groupLabel?: string
 }
 
 export function ExpenseCard({
@@ -138,6 +144,9 @@ export function ExpenseCard({
   groupId,
   participantCount,
   contributionAmount,
+  returnTo,
+  onOpen,
+  groupLabel,
 }: Props) {
   const showContribution =
     typeof contributionAmount === 'number' &&
@@ -154,6 +163,17 @@ export function ExpenseCard({
     originalCurrency !== undefined && originalAmount !== undefined
   const seriesId = expense.recurringSeriesId
   const seriesStatus = expense.recurringSeriesStatus ?? undefined
+  const openExpense = () => {
+    if (onOpen) {
+      onOpen()
+      return
+    }
+    void navigate({
+      to: '/groups/$groupId/expenses/$expenseId',
+      params: { groupId, expenseId: expense.id },
+      search: returnTo ? { returnTo } : undefined,
+    })
+  }
 
   return (
     <div
@@ -165,19 +185,11 @@ export function ExpenseCard({
       )}
       role="button"
       tabIndex={0}
-      onClick={() => {
-        void navigate({
-          to: '/groups/$groupId/expenses/$expenseId',
-          params: { groupId, expenseId: expense.id },
-        })
-      }}
+      onClick={openExpense}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault()
-          void navigate({
-            to: '/groups/$groupId/expenses/$expenseId',
-            params: { groupId, expenseId: expense.id },
-          })
+          openExpense()
         }
       }}
     >
@@ -186,6 +198,11 @@ export function ExpenseCard({
         className="mt-0.5 mr-2 h-4 w-4 text-muted-foreground"
       />
       <div className="flex-1">
+        {groupLabel && (
+          <div className="mb-1 text-[0.68rem] font-medium tracking-wide text-muted-foreground uppercase">
+            {groupLabel}
+          </div>
+        )}
         <div
           className={cn(
             'mb-1 flex items-center gap-2',
@@ -261,16 +278,34 @@ export function ExpenseCard({
           )}
         </div>
       </div>
-      <Button
-        size="icon"
-        variant="link"
-        className="hidden self-center sm:flex"
-        asChild
-      >
-        <Link href={`/groups/${groupId}/expenses/${expense.id}`}>
+      {onOpen ? (
+        <Button
+          size="icon"
+          variant="link"
+          className="hidden self-center sm:flex"
+          onClick={(event) => {
+            event.stopPropagation()
+            onOpen()
+          }}
+          aria-label={expense.title}
+        >
           <ChevronRight className="h-4 w-4" />
-        </Link>
-      </Button>
+        </Button>
+      ) : (
+        <Button
+          size="icon"
+          variant="link"
+          className="hidden self-center sm:flex"
+          asChild
+        >
+          <Link
+            href={`/groups/${groupId}/expenses/${expense.id}`}
+            search={returnTo ? { returnTo } : undefined}
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Link>
+        </Button>
+      )}
     </div>
   )
 }

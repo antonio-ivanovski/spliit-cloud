@@ -76,6 +76,8 @@ export function ExpenseForm(props: {
   isCopy?: boolean
   searchParams?: CreateExpenseSearch
   heading?: string
+  /** Internal path to return to when the form was opened from another feed. */
+  cancelHref?: string
   onSubmit: (value: Expense) => Promise<void>
   onDelete?: () => Promise<void>
   runtimeFeatureFlags: RuntimeFeatureFlags
@@ -334,6 +336,7 @@ export function ExpenseForm(props: {
               : undefined
           }
           editScope={props.editScope}
+          cancelHref={props.cancelHref}
           initialRecurrence={
             !isCreate ? (props.expense?.recurrence ?? null) : undefined
           }
@@ -428,7 +431,7 @@ export function ExpenseForm(props: {
           isCreate={isCreate}
           readOnly={!!props.readOnly}
           onDelete={props.onDelete}
-          cancelHref={`/groups/${props.group.id}`}
+          cancelHref={props.cancelHref ?? `/groups/${props.group.id}`}
         />
       </form>
     </Form>

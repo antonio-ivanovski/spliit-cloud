@@ -12,6 +12,7 @@ export function isFocusedMobilePath(pathname: string) {
     pathname === '/groups/create' ||
     pathname === '/groups/import' ||
     pathname === '/friends/create' ||
+    pathname === '/expenses' ||
     pathname === '/account/settings' ||
     pathname.startsWith('/groups/bulk-categorize/') ||
     /^\/groups\/[^/]+\/edit$/.test(pathname) ||
@@ -50,6 +51,9 @@ export function getFocusedRouteMeta(
   }
   if (pathname === '/friends/create') {
     return { title: t('Groups.createFriendLedgerCard.title'), backHref: '/' }
+  }
+  if (pathname === '/expenses') {
+    return { title: t('Expenses.globalTitle'), backHref: '/' }
   }
   if (pathname === '/account/settings') {
     return { title: t('AccountSettings.title'), backHref: '/' }

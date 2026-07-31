@@ -142,7 +142,18 @@
       "settlementsHidden": "סליקות מוסתרות",
       "title": "סינונים"
     },
-    "showSettlements": "הצג סליקות"
+    "showSettlements": "הצג סליקות",
+    "globalTitle": "כל ההוצאות",
+    "globalDescription": "חיפוש ועיון בהוצאות מכל הקבוצות שלך.",
+    "globalGroups": "קבוצות",
+    "globalInactive": "לא פעילה",
+    "globalCurrency": "מטבע בסיס",
+    "globalAllCurrencies": "כל המטבעות",
+    "globalCurrencyRequired": "בחר מטבע בסיס כדי לסנן או למיין לפי סכום.",
+    "globalFiltersActive": "{count} מסננים פעילים",
+    "globalEmpty": "אין הוצאות התואמות למסננים.",
+    "clearSearch": "נקה חיפוש",
+    "loading": "טוען הוצאות…"
   },
   "ExpenseCard": {
     "paidBy": "שולם על ידי <strong>{paidBy}</strong> · פוצל בין <paidFor></paidFor>",
@@ -486,7 +497,8 @@
       "title": "מעקב אחר הוצאות עם חברים"
     },
     "importGroup": "ייבא קבוצה",
-    "exportDescription": "הורדת הוצאות הקבוצה כקובץ JSON או CSV."
+    "exportDescription": "הורדת הוצאות הקבוצה כקובץ JSON או CSV.",
+    "allExpenses": "כל ההוצאות"
   },
   "GroupForm": {
     "title": "מידע על הקבוצה",

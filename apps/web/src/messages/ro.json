@@ -142,7 +142,18 @@
       "settlementsHidden": "Decontări ascunse",
       "title": "Filtre"
     },
-    "showSettlements": "Arată decontările"
+    "showSettlements": "Arată decontările",
+    "globalTitle": "Toate cheltuielile",
+    "globalDescription": "Caută și răsfoiește cheltuielile din toate grupurile tale.",
+    "globalGroups": "Grupuri",
+    "globalInactive": "inactiv",
+    "globalCurrency": "Monedă de bază",
+    "globalAllCurrencies": "Toate monedele",
+    "globalCurrencyRequired": "Alege o monedă de bază pentru a filtra sau sorta după sumă.",
+    "globalFiltersActive": "{count} filtre active",
+    "globalEmpty": "Nicio cheltuială nu corespunde filtrelor.",
+    "clearSearch": "Șterge căutarea",
+    "loading": "Se încarcă cheltuielile…"
   },
   "ExpenseCard": {
     "receivedBy": "Primit de <strong>{paidBy}</strong> pentru <paidFor></paidFor>",
@@ -486,7 +497,8 @@
       "title": "Urmărește cheltuielile cu un prieten"
     },
     "importGroup": "Importă grup",
-    "exportDescription": "Descarcă cheltuielile grupului în format JSON sau CSV."
+    "exportDescription": "Descarcă cheltuielile grupului în format JSON sau CSV.",
+    "allExpenses": "Toate cheltuielile"
   },
   "GroupForm": {
     "title": "Informații despre grup",

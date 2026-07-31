@@ -30,6 +30,7 @@ function Content() {
   const focusedMobileRoute = isFocusedMobilePath(pathname)
   const showAmbientBackdrop =
     pathname === '/' ||
+    pathname.startsWith('/expenses') ||
     pathname.startsWith('/groups') ||
     pathname.startsWith('/friends') ||
     pathname.startsWith('/account')

@@ -122,7 +122,18 @@
       "lastMonth": "الشهر الماضي",
       "earlierThisYear": "في وقت سابق من هذا العام",
       "upcoming": "القادمة"
-    }
+    },
+    "globalTitle": "جميع النفقات",
+    "globalDescription": "ابحث وتصفح النفقات من جميع مجموعاتك.",
+    "globalGroups": "المجموعات",
+    "globalInactive": "غير نشطة",
+    "globalCurrency": "العملة الأساسية",
+    "globalAllCurrencies": "جميع العملات",
+    "globalCurrencyRequired": "اختر عملة أساسية للتصفية أو الفرز حسب المبلغ.",
+    "globalFiltersActive": "{count} من عوامل التصفية نشطة",
+    "globalEmpty": "لا توجد نفقات تطابق عوامل التصفية.",
+    "clearSearch": "مسح البحث",
+    "loading": "جارٍ تحميل النفقات…"
   },
   "GroupForm": {
     "CurrencyField": {
@@ -933,7 +944,8 @@
       "accept": "قبول",
       "declined": "تم رفض الدعوة."
     },
-    "linkInvitationDismiss": "إغلاق"
+    "linkInvitationDismiss": "إغلاق",
+    "allExpenses": "جميع النفقات"
   },
   "Unsubscribe": {
     "submitting": "جارٍ إلغاء الاشتراك…",

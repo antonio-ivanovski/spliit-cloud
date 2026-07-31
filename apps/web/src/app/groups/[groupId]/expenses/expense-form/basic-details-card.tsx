@@ -85,6 +85,7 @@ export function BasicDetailsCard(props: {
   editScope?: 'OCCURRENCE' | 'THIS_AND_FUTURE' | null
   initialRecurrence?: ExpenseFormInputValues['recurrence']
   heading?: string
+  cancelHref?: string
   /** Link-invite token carried in the URL for pending invitees. */
   linkInviteToken?: string
   extractCategoryMutation: ReturnType<
@@ -244,7 +245,7 @@ export function BasicDetailsCard(props: {
           className="-ml-2 hidden shrink-0 sm:inline-flex"
         >
           <Link
-            href={`/groups/${group.id}/expenses`}
+            href={props.cancelHref ?? `/groups/${group.id}/expenses`}
             title={tGroups('backToExpenses')}
           >
             <ArrowLeft className="h-4 w-4" />

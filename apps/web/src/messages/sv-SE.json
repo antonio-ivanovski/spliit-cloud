@@ -1263,7 +1263,18 @@
       },
       "title": "Filter"
     },
-    "showSettlements": "Visa regleringar"
+    "showSettlements": "Visa regleringar",
+    "globalTitle": "Alla utgifter",
+    "globalDescription": "Sök och bläddra bland utgifter från alla dina grupper.",
+    "globalGroups": "Grupper",
+    "globalInactive": "inaktiv",
+    "globalCurrency": "Basvaluta",
+    "globalAllCurrencies": "Alla valutor",
+    "globalCurrencyRequired": "Välj en basvaluta för att filtrera eller sortera efter belopp.",
+    "globalFiltersActive": "{count} filter aktiva",
+    "globalEmpty": "Inga utgifter matchar dina filter.",
+    "clearSearch": "Rensa sökning",
+    "loading": "Laddar utgifter…"
   },
   "Footer": {
     "madeIn": "Gjord med kärlek av open source-communityn ❤️",
@@ -1686,7 +1697,8 @@
     "linkInvitationInvalid": {
       "title": "Denna inbjudningslänk är ogiltig",
       "description": "Länken är felaktig eller matchar ingen inbjudan till denna grupp."
-    }
+    },
+    "allExpenses": "Alla utgifter"
   },
   "Header": {
     "signIn": "Logga in",

@@ -142,7 +142,18 @@
       "settlementsHidden": "Liquidacions ocultes",
       "title": "Filtres"
     },
-    "showSettlements": "Mostra les liquidacions"
+    "showSettlements": "Mostra les liquidacions",
+    "globalTitle": "Totes les despeses",
+    "globalDescription": "Cerca i consulta despeses de tots els teus grups.",
+    "globalGroups": "Grups",
+    "globalInactive": "inactiu",
+    "globalCurrency": "Moneda base",
+    "globalAllCurrencies": "Totes les monedes",
+    "globalCurrencyRequired": "Tria una moneda base per filtrar o ordenar per import.",
+    "globalFiltersActive": "{count} filtres actius",
+    "globalEmpty": "No hi ha despeses que coincideixin amb els filtres.",
+    "clearSearch": "Neteja la cerca",
+    "loading": "Carregant despeses…"
   },
   "ExpenseCard": {
     "receivedBy": "Rebut per <strong>{paidBy}</strong> · assignat a <paidFor></paidFor>",
@@ -486,7 +497,8 @@
       "title": "Registra despeses amb una amistat"
     },
     "importGroup": "Importa un grup",
-    "exportDescription": "Baixa les despeses del grup en format JSON o CSV."
+    "exportDescription": "Baixa les despeses del grup en format JSON o CSV.",
+    "allExpenses": "Totes les despeses"
   },
   "GroupForm": {
     "title": "Informació del grup",

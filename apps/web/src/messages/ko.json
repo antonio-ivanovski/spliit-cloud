@@ -73,7 +73,18 @@
       "settlementsHidden": "정산 숨김",
       "title": "필터"
     },
-    "showSettlements": "정산 표시"
+    "showSettlements": "정산 표시",
+    "globalTitle": "모든 지출",
+    "globalDescription": "모든 그룹의 지출을 검색하고 살펴보세요.",
+    "globalGroups": "그룹",
+    "globalInactive": "비활성",
+    "globalCurrency": "기본 통화",
+    "globalAllCurrencies": "모든 통화",
+    "globalCurrencyRequired": "금액으로 필터링하거나 정렬하려면 기본 통화를 선택하세요.",
+    "globalFiltersActive": "{count}개 필터 활성화",
+    "globalEmpty": "필터와 일치하는 지출이 없습니다.",
+    "clearSearch": "검색 지우기",
+    "loading": "지출을 불러오는 중…"
   },
   "Groups": {
     "myGroups": "내 그룹",
@@ -391,7 +402,8 @@
       "title": "친구와의 지출 기록"
     },
     "importGroup": "그룹 가져오기",
-    "exportDescription": "그룹 지출을 JSON 또는 CSV로 다운로드합니다."
+    "exportDescription": "그룹 지출을 JSON 또는 CSV로 다운로드합니다.",
+    "allExpenses": "모든 지출"
   },
   "GroupForm": {
     "title": "그룹 정보",

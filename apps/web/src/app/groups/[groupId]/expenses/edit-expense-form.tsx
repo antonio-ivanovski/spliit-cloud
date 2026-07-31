@@ -11,6 +11,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  getGlobalExpensesSearch,
+  isGlobalExpensesReturnTo,
+} from '@/lib/expense-navigation'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { trpc } from '@/trpc/client'
 
@@ -31,11 +35,13 @@ export function EditExpenseForm({
   expenseId,
   runtimeFeatureFlags,
   initialScope,
+  returnTo,
 }: {
   groupId: string
   expenseId: string
   runtimeFeatureFlags: RuntimeFeatureFlags
   initialScope?: SeriesMutationScope
+  returnTo?: string
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const { t: tExpenseForm } = useTranslation(undefined, {
@@ -84,8 +90,33 @@ export function EditExpenseForm({
   })
   const { mutateAsync: deleteExpenseMutateAsync } = useDeleteExpenseMutation({
     linkInviteToken,
+    onDeleted: isGlobalExpensesReturnTo(returnTo)
+      ? () =>
+          navigate({
+            to: '/expenses',
+            search: getGlobalExpensesSearch(returnTo) as never,
+            replace: true,
+          })
+      : undefined,
   })
   const selectedScope = initialScope ?? null
+
+  const navigateAfterUpdate = async () => {
+    if (isGlobalExpensesReturnTo(returnTo)) {
+      await navigate({
+        to: '/expenses',
+        search: getGlobalExpensesSearch(returnTo) as never,
+        replace: true,
+      })
+      return
+    }
+    await navigate({
+      to: '/groups/$groupId/expenses/$expenseId',
+      params: { groupId: groupId, expenseId },
+      search: returnTo ? { returnTo } : undefined,
+      replace: true,
+    })
+  }
 
   if (!group || !expense) return null
 
@@ -108,7 +139,7 @@ export function EditExpenseForm({
           </p>
           <div>
             <Button asChild variant="secondary">
-              <Link href={`/groups/${groupId}/expenses`}>
+              <Link href={returnTo ?? `/groups/${groupId}/expenses`}>
                 {t('backToExpenses')}
               </Link>
             </Button>
@@ -135,6 +166,7 @@ export function EditExpenseForm({
       <ExpenseForm
         group={group}
         expense={expense}
+        cancelHref={returnTo ?? `/groups/${group.id}`}
         currentLedgerParticipantId={currentLedgerParticipantId}
         linkInviteToken={linkInviteToken}
         readOnly={readOnly}
@@ -150,22 +182,14 @@ export function EditExpenseForm({
                 expense,
                 scope: selectedScope,
               } as Parameters<typeof updateExpenseMutateAsync>[0])
-              await navigate({
-                to: '/groups/$groupId/expenses/$expenseId',
-                params: { groupId: group.id, expenseId },
-                replace: true,
-              })
+              await navigateAfterUpdate()
               return
             }
             setScopeDialog({ mode: 'update', expense })
             return
           }
           await updateExpenseMutateAsync({ expenseId, groupId, expense })
-          await navigate({
-            to: '/groups/$groupId/expenses/$expenseId',
-            params: { groupId: group.id, expenseId },
-            replace: true,
-          })
+          await navigateAfterUpdate()
         }}
         onDelete={async () => {
           if (readOnly) return
@@ -207,11 +231,7 @@ export function EditExpenseForm({
             expense: pending.expense,
             scope,
           } as Parameters<typeof updateExpenseMutateAsync>[0])
-          await navigate({
-            to: '/groups/$groupId/expenses/$expenseId',
-            params: { groupId: group.id, expenseId },
-            replace: true,
-          })
+          await navigateAfterUpdate()
         }}
       />
     </>

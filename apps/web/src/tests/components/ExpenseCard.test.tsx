@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 
 import type { GroupExpense } from '@/lib/api'
-import { render, screen } from '@/test/test-utils'
+import { fireEvent, render, screen } from '@/test/test-utils'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
@@ -215,6 +215,25 @@ describe('ExpenseCard', () => {
     const card = screen.getByTestId('expense-item-exp-1')
     expect(card.className).toContain('cursor-pointer')
     expect(card.className).toContain('hover:bg-accent')
+  })
+
+  it('uses a same-page opener when provided', () => {
+    vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+    vi.mocked(useActiveUser).mockReturnValue(null)
+    const onOpen = vi.fn()
+
+    render(
+      <ExpenseCard
+        expense={makeExpense()}
+        currency={EUR}
+        groupId="group-1"
+        participantCount={2}
+        onOpen={onOpen}
+      />,
+    )
+
+    fireEvent.click(screen.getByTestId('expense-item-exp-1'))
+    expect(onOpen).toHaveBeenCalledTimes(1)
   })
 
   it('renders the RecurringBadge for expenses that belong to a recurring series', () => {

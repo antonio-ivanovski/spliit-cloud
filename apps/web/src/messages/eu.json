@@ -142,7 +142,18 @@
       "settlementsHidden": "Kitapenak ezkutatuta",
       "title": "Iragazkiak"
     },
-    "showSettlements": "Erakutsi kitapenak"
+    "showSettlements": "Erakutsi kitapenak",
+    "globalTitle": "Gastu guztiak",
+    "globalDescription": "Bilatu eta arakatu talde guztietako gastuak.",
+    "globalGroups": "Taldeak",
+    "globalInactive": "inaktibo",
+    "globalCurrency": "Oinarrizko moneta",
+    "globalAllCurrencies": "Moneta guztiak",
+    "globalCurrencyRequired": "Aukeratu oinarrizko moneta bat zenbatekoaren arabera iragazi edo ordenatzeko.",
+    "globalFiltersActive": "{count} iragazki aktibo",
+    "globalEmpty": "Ez dago iragazkiekin bat datorren gasturik.",
+    "clearSearch": "Bilaketa garbitu",
+    "loading": "Gastuak kargatzen…"
   },
   "ExpenseCard": {
     "paidBy": "<strong>{paidBy}</strong>(e)k ordaindua · <paidFor></paidFor> hauen artean banatuta",
@@ -486,7 +497,8 @@
       "title": "Jarraitu lagun batekin izandako gastuak"
     },
     "importGroup": "Inportatu taldea",
-    "exportDescription": "Deskargatu taldeko gastuak JSON edo CSV formatuan."
+    "exportDescription": "Deskargatu taldeko gastuak JSON edo CSV formatuan.",
+    "allExpenses": "Gastu guztiak"
   },
   "GroupForm": {
     "title": "Taldeko informazioa",

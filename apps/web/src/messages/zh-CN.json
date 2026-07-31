@@ -140,7 +140,18 @@
       "settlementsHidden": "结算隐藏",
       "title": "筛选"
     },
-    "showSettlements": "显示结算"
+    "showSettlements": "显示结算",
+    "globalTitle": "所有支出",
+    "globalDescription": "搜索并浏览所有群组中的支出。",
+    "globalGroups": "群组",
+    "globalInactive": "非活动",
+    "globalCurrency": "基础货币",
+    "globalAllCurrencies": "所有货币",
+    "globalCurrencyRequired": "选择基础货币后才能按金额筛选或排序。",
+    "globalFiltersActive": "已启用 {count} 个筛选条件",
+    "globalEmpty": "没有符合筛选条件的支出。",
+    "clearSearch": "清除搜索",
+    "loading": "正在加载支出…"
   },
   "ExpenseCard": {
     "receivedBy": "收款人：<strong>{paidBy}</strong> · 分配给 <paidFor></paidFor>",
@@ -474,7 +485,8 @@
       "title": "记录与好友的共同支出"
     },
     "importGroup": "导入群组",
-    "exportDescription": "将群组支出下载为 JSON 或 CSV。"
+    "exportDescription": "将群组支出下载为 JSON 或 CSV。",
+    "allExpenses": "所有支出"
   },
   "GroupForm": {
     "title": "群组信息",

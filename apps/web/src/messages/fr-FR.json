@@ -142,7 +142,18 @@
       "settlementsHidden": "Règlements masqués",
       "title": "Filtres"
     },
-    "showSettlements": "Afficher les règlements"
+    "showSettlements": "Afficher les règlements",
+    "globalTitle": "Toutes les dépenses",
+    "globalDescription": "Recherchez et parcourez les dépenses de tous vos groupes.",
+    "globalGroups": "Groupes",
+    "globalInactive": "inactif",
+    "globalCurrency": "Devise de base",
+    "globalAllCurrencies": "Toutes les devises",
+    "globalCurrencyRequired": "Choisissez une devise de base pour filtrer ou trier par montant.",
+    "globalFiltersActive": "{count} filtres actifs",
+    "globalEmpty": "Aucune dépense ne correspond à vos filtres.",
+    "clearSearch": "Effacer la recherche",
+    "loading": "Chargement des dépenses…"
   },
   "ExpenseCard": {
     "receivedBy": "Reçu par <strong>{paidBy}</strong> pour <paidFor></paidFor>",
@@ -486,7 +497,8 @@
       "title": "Suivre les dépenses avec un proche"
     },
     "importGroup": "Importer un groupe",
-    "exportDescription": "Télécharger les dépenses du groupe au format JSON ou CSV."
+    "exportDescription": "Télécharger les dépenses du groupe au format JSON ou CSV.",
+    "allExpenses": "Toutes les dépenses"
   },
   "GroupForm": {
     "title": "Informations sur le groupe",

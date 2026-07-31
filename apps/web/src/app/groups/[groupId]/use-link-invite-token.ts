@@ -7,8 +7,9 @@ import { useSearch } from '@tanstack/react-router'
  * procedures so pending link-invitees can browse the group before accepting.
  */
 export function useLinkInviteToken(): string | undefined {
-  const { invite } = useSearch({
+  const search = useSearch({
     from: '/groups/$groupId',
+    shouldThrow: false,
   })
-  return invite
+  return search?.invite
 }

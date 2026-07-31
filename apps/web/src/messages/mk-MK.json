@@ -141,7 +141,18 @@
       "settlementsHidden": "Порамнувања скриени",
       "title": "Филтри"
     },
-    "showSettlements": "Прикажи порамнувања"
+    "showSettlements": "Прикажи порамнувања",
+    "globalTitle": "Сите трошоци",
+    "globalDescription": "Пребарувајте и прегледувајте трошоци од сите ваши групи.",
+    "globalGroups": "Групи",
+    "globalInactive": "неактивна",
+    "globalCurrency": "Основна валута",
+    "globalAllCurrencies": "Сите валути",
+    "globalCurrencyRequired": "Изберете основна валута за филтрирање или подредување според износ.",
+    "globalFiltersActive": "{count} активни филтри",
+    "globalEmpty": "Ниту еден трошок не одговара на филтрите.",
+    "clearSearch": "Исчисти пребарување",
+    "loading": "Се вчитуваат трошоци…"
   },
   "ExpenseCard": {
     "paidBy": "Платено од <strong>{paidBy}</strong> · поделено меѓу <paidFor></paidFor>",
@@ -480,7 +491,8 @@
       "title": "Следете трошоци со пријател или пријателка"
     },
     "importGroup": "Увезете група",
-    "exportDescription": "Преземете ги трошоците на групата како JSON или CSV."
+    "exportDescription": "Преземете ги трошоците на групата како JSON или CSV.",
+    "allExpenses": "Сите трошоци"
   },
   "Auth": {
     "title": "Најавете се на Spliit Cloud",

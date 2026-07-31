@@ -33,6 +33,14 @@ export function invalidateExpenseDependencies(
   { groupId, expenseId, financial = true }: InvalidateExpenseOptions,
 ) {
   const tokens = { groupId, linkInviteToken }
+  const globalExpenses = (
+    utils as unknown as {
+      expenses?: {
+        list: { invalidate: () => Promise<unknown> }
+        filterOptions: { invalidate: () => Promise<unknown> }
+      }
+    }
+  ).expenses
   const tasks: Promise<unknown>[] = [
     utils.groups.expenses.list.invalidate(tokens),
     expenseId
@@ -46,6 +54,12 @@ export function invalidateExpenseDependencies(
     utils.groups.expenses.commonCurrencies.invalidate(tokens),
     utils.groups.activities.list.invalidate(tokens),
   ]
+  if (globalExpenses) {
+    tasks.push(
+      globalExpenses.list.invalidate(),
+      globalExpenses.filterOptions.invalidate(),
+    )
+  }
   if (financial) {
     // Financial mutations change per-group totals AND the account-wide group
     // list (recent activity, ledger summary) that the currency converter
@@ -216,8 +230,10 @@ export function useCreateExpenseMutation({
 
 export function useDeleteExpenseMutation({
   linkInviteToken,
+  onDeleted,
 }: {
   linkInviteToken: string | undefined
+  onDeleted?: () => void | Promise<void>
 }) {
   const navigate = useNavigate()
   const { toast } = useToast()
@@ -231,11 +247,15 @@ export function useDeleteExpenseMutation({
       await invalidateExpenseDependencies({
         groupId: variables.groupId,
       })
-      await navigate({
-        to: '/groups/$groupId/expenses',
-        params: { groupId: variables.groupId },
-        replace: true,
-      })
+      if (onDeleted) {
+        await onDeleted()
+      } else {
+        await navigate({
+          to: '/groups/$groupId/expenses',
+          params: { groupId: variables.groupId },
+          replace: true,
+        })
+      }
     },
     onError: (error) => {
       toast({ description: error.message, variant: 'destructive' })

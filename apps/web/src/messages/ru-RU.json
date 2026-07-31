@@ -143,7 +143,18 @@
       "settlementsHidden": "Расчёты скрыты",
       "title": "Фильтры"
     },
-    "showSettlements": "Показать расчёты"
+    "showSettlements": "Показать расчёты",
+    "globalTitle": "Все расходы",
+    "globalDescription": "Ищите и просматривайте расходы из всех ваших групп.",
+    "globalGroups": "Группы",
+    "globalInactive": "неактивна",
+    "globalCurrency": "Базовая валюта",
+    "globalAllCurrencies": "Все валюты",
+    "globalCurrencyRequired": "Выберите базовую валюту для фильтрации или сортировки по сумме.",
+    "globalFiltersActive": "Активных фильтров: {count}",
+    "globalEmpty": "Нет расходов, соответствующих фильтрам.",
+    "clearSearch": "Очистить поиск",
+    "loading": "Загрузка расходов…"
   },
   "ExpenseCard": {
     "paidBy": "Потратил <strong>{paidBy}</strong> за <paidFor></paidFor>",
@@ -492,7 +503,8 @@
       "title": "Создать расчёт с другом"
     },
     "importGroup": "Импортировать группу",
-    "exportDescription": "Скачайте расходы группы в формате JSON или CSV."
+    "exportDescription": "Скачайте расходы группы в формате JSON или CSV.",
+    "allExpenses": "Все расходы"
   },
   "GroupForm": {
     "title": "Сведения о группе",

@@ -5,6 +5,8 @@ import {
   BanknoteCheck,
   ChevronRight,
   Cloud,
+  ReceiptText,
+  ArrowRight,
   Loader2,
   Plus,
   Users,
@@ -301,6 +303,17 @@ export function RecentGroupList() {
         groups={allGroups}
       />
       <PendingInvitations />
+      <Link
+        href="/expenses"
+        data-testid="all-expenses-link"
+        className="flex items-center justify-between rounded-lg border bg-card px-4 py-3 text-sm transition-colors hover:bg-accent"
+      >
+        <span className="flex items-center gap-2 font-medium">
+          <ReceiptText className="h-4 w-4 text-muted-foreground" />
+          {t('allExpenses')}
+        </span>
+        <ArrowRight className="h-4 w-4 text-muted-foreground" />
+      </Link>
       {body}
       <ForceArchiveDialogSection
         target={forceArchiveTarget}

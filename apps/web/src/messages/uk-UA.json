@@ -143,7 +143,18 @@
       "settlementsHidden": "Розрахунки приховано",
       "title": "Фільтри"
     },
-    "showSettlements": "Показати розрахунки"
+    "showSettlements": "Показати розрахунки",
+    "globalTitle": "Усі витрати",
+    "globalDescription": "Шукайте та переглядайте витрати з усіх ваших груп.",
+    "globalGroups": "Групи",
+    "globalInactive": "неактивна",
+    "globalCurrency": "Базова валюта",
+    "globalAllCurrencies": "Усі валюти",
+    "globalCurrencyRequired": "Виберіть базову валюту, щоб фільтрувати або сортувати за сумою.",
+    "globalFiltersActive": "Активних фільтрів: {count}",
+    "globalEmpty": "Немає витрат, що відповідають фільтрам.",
+    "clearSearch": "Очистити пошук",
+    "loading": "Завантаження витрат…"
   },
   "ExpenseCard": {
     "paidBy": "Сплачено <strong>{paidBy}</strong> за <paidFor></paidFor>",
@@ -492,7 +503,8 @@
       "description": "Відстежуйте спільні витрати з друзями, родиною або сусідами по кімнаті."
     },
     "importGroup": "Імпортувати групу",
-    "exportDescription": "Завантажити витрати групи у форматі JSON або CSV."
+    "exportDescription": "Завантажити витрати групи у форматі JSON або CSV.",
+    "allExpenses": "Усі витрати"
   },
   "GroupForm": {
     "title": "Інформація про групу",

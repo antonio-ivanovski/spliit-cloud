@@ -140,7 +140,18 @@
       "settlementsHidden": "Pembayaran tersembunyi",
       "title": "Filter"
     },
-    "showSettlements": "Tampilkan pembayaran"
+    "showSettlements": "Tampilkan pembayaran",
+    "globalTitle": "Semua pengeluaran",
+    "globalDescription": "Cari dan jelajahi pengeluaran dari semua grup Anda.",
+    "globalGroups": "Grup",
+    "globalInactive": "tidak aktif",
+    "globalCurrency": "Mata uang dasar",
+    "globalAllCurrencies": "Semua mata uang",
+    "globalCurrencyRequired": "Pilih mata uang dasar untuk memfilter atau mengurutkan berdasarkan jumlah.",
+    "globalFiltersActive": "{count} filter aktif",
+    "globalEmpty": "Tidak ada pengeluaran yang cocok dengan filter.",
+    "clearSearch": "Hapus pencarian",
+    "loading": "Memuat pengeluaran…"
   },
   "ExpenseCard": {
     "paidBy": "Dibayar oleh <strong>{paidBy}</strong> · dibagi antara <paidFor></paidFor>",
@@ -474,7 +485,8 @@
       "title": "Catat pengeluaran bersama teman"
     },
     "importGroup": "Impor grup",
-    "exportDescription": "Unduh pengeluaran grup sebagai JSON atau CSV."
+    "exportDescription": "Unduh pengeluaran grup sebagai JSON atau CSV.",
+    "allExpenses": "Semua pengeluaran"
   },
   "GroupForm": {
     "title": "Informasi grup",
