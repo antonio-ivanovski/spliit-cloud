@@ -34,6 +34,7 @@ export function InviteLinkTab({
   linkForm,
   onSubmit,
   linkRoleValue,
+  canInviteAdmin,
   onRoleChange,
   isPending,
   generatedLink,
@@ -44,6 +45,7 @@ export function InviteLinkTab({
   linkForm: UseFormReturn<LinkFormValues>
   onSubmit: () => void
   linkRoleValue: InvitableRole
+  canInviteAdmin: boolean
   onRoleChange: (value: InvitableRole) => void
   isPending: boolean
   generatedLink: GeneratedLink | null
@@ -83,25 +85,27 @@ export function InviteLinkTab({
             )}
           />
           <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-end">
-            <FormItem className="space-y-0 sm:w-40">
-              <FormLabel className="sm:sr-only">{t('invite.role')}</FormLabel>
-              <FormControl>
-                <Select
-                  value={linkRoleValue}
-                  onValueChange={(value) =>
-                    onRoleChange(value as InvitableRole)
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="MEMBER">{t('role.member')}</SelectItem>
-                    <SelectItem value="ADMIN">{t('role.admin')}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormControl>
-            </FormItem>
+            {canInviteAdmin && (
+              <FormItem className="space-y-0 sm:w-40">
+                <FormLabel className="sm:sr-only">{t('invite.role')}</FormLabel>
+                <FormControl>
+                  <Select
+                    value={linkRoleValue}
+                    onValueChange={(value) =>
+                      onRoleChange(value as InvitableRole)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="MEMBER">{t('role.member')}</SelectItem>
+                      <SelectItem value="ADMIN">{t('role.admin')}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+              </FormItem>
+            )}
             <Button type="submit" disabled={isPending}>
               <Link2 className="mr-2 h-4 w-4" />
               {isPending

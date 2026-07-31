@@ -2,6 +2,11 @@ import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
 import { deleteExpense } from '../../../../lib/api/expenses/delete-expense'
+import { getExpense } from '../../../../lib/api/expenses/queries'
+import {
+  assertCanManageOwnedResource,
+  expenseOwnerAccountId,
+} from '../../../../lib/api/resource-permissions'
 import { enqueueBudgetEvaluation } from '../../../../lib/budgets/enqueue'
 import { loadGroupContext, protectedProcedure } from '../../../init'
 import { deleteExpenseOutputSchema } from '../../../outputs/expenses'
@@ -31,7 +36,7 @@ export const deleteGroupExpenseProcedure = protectedProcedure
   .output(deleteExpenseOutputSchema)
   .mutation(
     async ({ input: { expenseId, groupId, scope, stopRecurrence }, ctx }) => {
-      const { group } = await loadGroupContext({
+      const { group, member } = await loadGroupContext({
         groupId,
         accountId: ctx.auth.user.id,
       })
@@ -41,6 +46,18 @@ export const deleteGroupExpenseProcedure = protectedProcedure
           message: 'This group is archived and expenses cannot be modified',
         })
       }
+      const existingExpense = await getExpense(groupId, expenseId)
+      if (!existingExpense) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Expense not found' })
+      }
+      assertCanManageOwnedResource(
+        {
+          role: member.role,
+          accountId: ctx.auth.user.id,
+          createdByAccountId: expenseOwnerAccountId(existingExpense),
+        },
+        'You can only delete expenses you created',
+      )
       await deleteExpense(
         groupId,
         expenseId,

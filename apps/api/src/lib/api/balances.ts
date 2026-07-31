@@ -119,6 +119,7 @@ export async function createSettlementExpensesForArchive(
       data: {
         id: expenseId,
         ledgerId: group.ledgerId,
+        createdByAccountId: actor.accountId,
         expenseDate: now,
         title: SETTLEMENT_TITLE,
         categoryId: PAYMENT_CATEGORY_ID,
@@ -216,6 +217,7 @@ export async function createSettlementExpensesForLeave(
       data: {
         id: expenseId,
         ledgerId: group.ledgerId,
+        createdByAccountId: actor.accountId,
         expenseDate: now,
         title: SETTLEMENT_ON_LEAVE_TITLE,
         categoryId: PAYMENT_CATEGORY_ID,

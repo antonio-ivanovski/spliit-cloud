@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import { getGroupExpenses } from '../../../../lib/api'
+import { expensePermissions } from '../../../../lib/api/resource-permissions'
 import {
   hashLinkInviteToken,
   linkInviteTokenInput,
@@ -67,7 +68,7 @@ export const listGroupExpensesProcedure = protectedProcedure
       },
       ctx,
     }) => {
-      const { ledger } = await loadGroupViewer({
+      const { group, ledger, member, viewer } = await loadGroupViewer({
         groupId,
         accountId: ctx.auth.user.id,
         accountEmail: ctx.auth.user.email,
@@ -93,11 +94,36 @@ export const listGroupExpensesProcedure = protectedProcedure
         sortDir,
       })
       return {
-        expenses: expenses.slice(0, limit).map((expense) => ({
-          ...expense,
-          createdAt: new Date(expense.createdAt),
-          expenseDate: new Date(expense.expenseDate),
-        })),
+        expenses: expenses.slice(0, limit).map((expense) => {
+          const {
+            recurringSeriesCreatorAccountId,
+            createdByAccountId,
+            ...publicExpense
+          } = expense
+          return {
+            ...publicExpense,
+            createdAt: new Date(expense.createdAt),
+            expenseDate: new Date(expense.expenseDate),
+            permissions:
+              viewer.kind === 'ACTIVE' && member
+                ? expensePermissions({
+                    role: member.role,
+                    accountId: ctx.auth.user.id,
+                    createdByAccountId,
+                    recurringSeries: expense.recurringSeriesId
+                      ? {
+                          creatorAccountId: recurringSeriesCreatorAccountId,
+                        }
+                      : null,
+                    archived: group.archived,
+                  })
+                : {
+                    canEdit: false,
+                    canDelete: false,
+                    canManageRecurrence: false,
+                  },
+          }
+        }),
         hasMore: !!expenses[limit],
         nextCursor: cursor + limit,
       }

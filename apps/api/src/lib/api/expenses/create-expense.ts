@@ -262,6 +262,7 @@ export async function createExpense(
       data: {
         id: expenseId,
         ledgerId,
+        createdByAccountId: actor.accountId,
         expenseDate: expense.expenseDate,
         categoryId: expense.category,
         amount: expenseAmount,

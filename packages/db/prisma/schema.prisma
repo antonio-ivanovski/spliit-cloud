@@ -61,6 +61,7 @@ model Account {
   notificationPreferences       AccountNotificationPreference[]
   notificationDeliveries        NotificationDelivery[]
   recurringExpenseSeriesCreated RecurringExpenseSeries[]        @relation("RecurringExpenseSeriesCreator")
+  expensesCreated               Expense[]                       @relation("ExpenseCreator")
   expenseComments               ExpenseComment[]
 }
 
@@ -641,6 +642,10 @@ model Expense {
   id                 String            @id
   ledger             Ledger            @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
   ledgerId           String
+  // Nullable so pre-ownership expenses and expenses whose creator account was
+  // deleted remain preserved. Null-owned expenses are admin-managed.
+  createdByAccount   Account?          @relation("ExpenseCreator", fields: [createdByAccountId], references: [id], onDelete: SetNull)
+  createdByAccountId String?
   expenseDate        DateTime          @default(dbgenerated("CURRENT_DATE")) @db.Date
   title              String
   // Descriptive id from the in-code category list, e.g. "general",
@@ -676,6 +681,7 @@ model Expense {
   // recency-bounded currency recommendation queries.
   @@index([ledgerId, expenseDate])
   @@index([ledgerId, createdAt])
+  @@index([createdByAccountId])
   @@index([ledgerId, amount])
   @@index([recurringSeriesId, recurrenceSequence])
 }

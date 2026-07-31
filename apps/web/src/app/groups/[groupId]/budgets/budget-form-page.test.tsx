@@ -69,6 +69,11 @@ const fakeBudget = {
   archived: false,
   notifyTrending: true,
   notifyOver: false,
+  permissions: {
+    canEdit: true,
+    canArchive: true,
+    canDelete: true,
+  },
   period: {
     from: '2026-07-01',
     to: '2026-07-31',
@@ -142,13 +147,13 @@ describe('BudgetFormPage', () => {
     expect(screen.getByRole('heading', { name: 'Edit' })).toBeInTheDocument()
   })
 
-  it('shows a not-allowed card for non-admins', () => {
+  it('lets members create budgets', () => {
     mockMemberRole = 'MEMBER'
     render(<BudgetFormPage groupId="group-1" />)
+    expect(screen.getByLabelText('Budget name')).toBeInTheDocument()
     expect(
-      screen.getByText('Only group admins can manage budgets.'),
+      screen.getByRole('heading', { name: 'Create budget' }),
     ).toBeInTheDocument()
-    expect(screen.queryByLabelText('Budget name')).toBeNull()
     mockMemberRole = 'ADMIN'
   })
 })

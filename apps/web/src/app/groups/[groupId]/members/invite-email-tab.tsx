@@ -26,6 +26,7 @@ export function InviteEmailTab({
   form,
   onSubmit,
   roleValue,
+  canInviteAdmin,
   onRoleChange,
   isPending,
   email,
@@ -33,6 +34,7 @@ export function InviteEmailTab({
   form: UseFormReturn<EmailFormValues>
   onSubmit: () => void
   roleValue: InvitableRole
+  canInviteAdmin: boolean
   onRoleChange: (value: InvitableRole) => void
   isPending: boolean
   email: string
@@ -87,25 +89,27 @@ export function InviteEmailTab({
             )}
           />
           <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-end">
-            <FormItem className="space-y-0 sm:w-40">
-              <FormLabel className="sm:sr-only">{t('invite.role')}</FormLabel>
-              <FormControl>
-                <Select
-                  value={roleValue}
-                  onValueChange={(value) =>
-                    onRoleChange(value as InvitableRole)
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="MEMBER">{t('role.member')}</SelectItem>
-                    <SelectItem value="ADMIN">{t('role.admin')}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormControl>
-            </FormItem>
+            {canInviteAdmin && (
+              <FormItem className="space-y-0 sm:w-40">
+                <FormLabel className="sm:sr-only">{t('invite.role')}</FormLabel>
+                <FormControl>
+                  <Select
+                    value={roleValue}
+                    onValueChange={(value) =>
+                      onRoleChange(value as InvitableRole)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="MEMBER">{t('role.member')}</SelectItem>
+                      <SelectItem value="ADMIN">{t('role.admin')}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+              </FormItem>
+            )}
             <Button type="submit" disabled={isPending || !email}>
               <UserPlus className="mr-2 h-4 w-4" />
               {t('invite.send')}

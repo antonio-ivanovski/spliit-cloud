@@ -116,6 +116,11 @@ const expenseCommonFieldsSchema = {
   conversionSource: z.enum(['EXCHANGE', 'CUSTOM']).nullable(),
   recurrenceSequence: z.number().int().nullable(),
   items: z.array(listItemResponseSchema),
+  permissions: z.object({
+    canEdit: z.boolean(),
+    canDelete: z.boolean(),
+    canManageRecurrence: z.boolean(),
+  }),
 }
 
 export const expenseListItemResponseSchema = z.object({

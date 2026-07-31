@@ -99,7 +99,7 @@ describe('invitationsRouter.list', () => {
     expect(result.invitations).toEqual([])
   })
 
-  it('rejects a MEMBER with FORBIDDEN', async () => {
+  it('returns only invitations created by a MEMBER', async () => {
     await authAs('acct-member')
     prismaMock.group.findUnique.mockResolvedValue({
       id: 'grp-1',
@@ -112,11 +112,114 @@ describe('invitationsRouter.list', () => {
       role: 'MEMBER',
       status: 'ACTIVE',
     } as never)
+    prismaMock.groupInvitation.findMany.mockResolvedValue([
+      {
+        id: 'inv-own',
+        groupId: 'grp-1',
+        email: 'bob@example.com',
+        type: 'EMAIL',
+        temporaryName: null,
+        role: 'MEMBER',
+        status: 'PENDING',
+        createdAt: new Date(),
+        expiresAt: null,
+        ledgerParticipantId: null,
+        invitedById: 'acct-member',
+      },
+      {
+        id: 'inv-other',
+        groupId: 'grp-1',
+        email: 'eve@example.com',
+        type: 'EMAIL',
+        temporaryName: null,
+        role: 'MEMBER',
+        status: 'PENDING',
+        createdAt: new Date(),
+        expiresAt: null,
+        ledgerParticipantId: null,
+        invitedById: 'acct-admin',
+      },
+    ] as never)
 
     const caller = makeCaller('acct-member')
-    await expect(caller.list({ groupId: 'grp-1' })).rejects.toMatchObject({
-      code: 'FORBIDDEN',
-    })
+    const result = await caller.list({ groupId: 'grp-1' })
+    expect(result.invitations).toEqual([
+      expect.objectContaining({ id: 'inv-own', canRevoke: true }),
+    ])
+  })
+
+  it('computes member revocation capabilities with one balance load', async () => {
+    await authAs('acct-member')
+    prismaMock.group.findUnique.mockResolvedValue({
+      id: 'grp-1',
+      ledgerId: 'ledger-1',
+      ledger: { id: 'ledger-1' },
+      archived: false,
+    } as never)
+    prismaMock.groupMember.findUnique.mockResolvedValue({
+      groupId: 'grp-1',
+      accountId: 'acct-member',
+      role: 'MEMBER',
+      status: 'ACTIVE',
+    } as never)
+    prismaMock.groupInvitation.findMany.mockResolvedValue([
+      {
+        id: 'inv-unused',
+        groupId: 'grp-1',
+        email: 'unused@example.com',
+        type: 'EMAIL',
+        temporaryName: null,
+        role: 'MEMBER',
+        status: 'PENDING',
+        createdAt: new Date(),
+        expiresAt: null,
+        ledgerParticipantId: 'lp-unused',
+        invitedById: 'acct-member',
+      },
+      {
+        id: 'inv-used',
+        groupId: 'grp-1',
+        email: 'used@example.com',
+        type: 'EMAIL',
+        temporaryName: null,
+        role: 'MEMBER',
+        status: 'PENDING',
+        createdAt: new Date(),
+        expiresAt: null,
+        ledgerParticipantId: 'lp-used',
+        invitedById: 'acct-member',
+      },
+    ] as never)
+    prismaMock.ledgerParticipant.findMany.mockResolvedValue([
+      {
+        id: 'lp-unused',
+        _count: {
+          expensesPaidByList: 0,
+          expensesPaidFor: 0,
+          expenseItemPaidFor: 0,
+          expenseItemizedRemainderPaidFor: 0,
+        },
+      },
+      {
+        id: 'lp-used',
+        _count: {
+          expensesPaidByList: 1,
+          expensesPaidFor: 0,
+          expenseItemPaidFor: 0,
+          expenseItemizedRemainderPaidFor: 0,
+        },
+      },
+    ] as never)
+    prismaMock.expense.findMany.mockResolvedValue([])
+
+    const result = await makeCaller('acct-member').list({ groupId: 'grp-1' })
+
+    expect(result.invitations).toEqual([
+      expect.objectContaining({ id: 'inv-unused', canRevoke: true }),
+      expect.objectContaining({ id: 'inv-used', canRevoke: false }),
+    ])
+    expect(prismaMock.ledgerParticipant.findMany).toHaveBeenCalledTimes(1)
+    expect(prismaMock.expense.findMany).toHaveBeenCalledTimes(1)
   })
 
   it('rejects a non-member with FORBIDDEN', async () => {
@@ -188,7 +291,33 @@ describe('invitationsRouter.create', () => {
     )
   })
 
-  it('rejects a MEMBER with FORBIDDEN', async () => {
+  it('lets a MEMBER create a MEMBER invitation', async () => {
+    await authAs('acct-member')
+    prismaMock.group.findUnique.mockResolvedValue({
+      id: 'grp-1',
+      ledgerId: 'ledger-1',
+      ledger: { id: 'ledger-1' },
+    } as never)
+    prismaMock.groupMember.findUnique.mockResolvedValue({
+      groupId: 'grp-1',
+      accountId: 'acct-member',
+      role: 'MEMBER',
+      status: 'ACTIVE',
+    } as never)
+    prismaMock.groupInvitation.create.mockResolvedValue({
+      id: 'inv-member',
+    } as never)
+
+    const caller = makeCaller('acct-member')
+    const result = await caller.create({
+      groupId: 'grp-1',
+      email: 'bob@example.com',
+      role: 'MEMBER',
+    })
+    expect(result.invitationId).toBe('inv-member')
+  })
+
+  it('rejects an ADMIN invitation created by a MEMBER', async () => {
     await authAs('acct-member')
     prismaMock.group.findUnique.mockResolvedValue({
       id: 'grp-1',
@@ -202,12 +331,11 @@ describe('invitationsRouter.create', () => {
       status: 'ACTIVE',
     } as never)
 
-    const caller = makeCaller('acct-member')
     await expect(
-      caller.create({
+      makeCaller('acct-member').create({
         groupId: 'grp-1',
         email: 'bob@example.com',
-        role: 'MEMBER',
+        role: 'ADMIN',
       }),
     ).rejects.toMatchObject({ code: 'FORBIDDEN' })
   })
@@ -728,6 +856,7 @@ function seedRevokeContext(args: {
   invitationId?: string
   groupId?: string
   ledgerId?: string
+  invitedById?: string
 }) {
   const groupId = args.groupId ?? 'grp-1'
   const ledgerId = args.ledgerId ?? 'ledger-1'
@@ -757,6 +886,7 @@ function seedRevokeContext(args: {
     role: 'MEMBER',
     status: invitationStatus,
     ledgerParticipantId: participantId,
+    invitedById: args.invitedById ?? 'acct-admin',
     group: { groupType: 'GROUP' },
   } as never)
   prismaMock.groupInvitation.update.mockResolvedValue({
@@ -1024,7 +1154,22 @@ describe('invitationsRouter.revoke — unsettled balances', () => {
 })
 
 describe('invitationsRouter.revoke — guards', () => {
-  it('rejects a MEMBER with FORBIDDEN', async () => {
+  it('rejects a resolved invitation', async () => {
+    await authAs('acct-member')
+    seedRevokeContext({
+      callerRole: 'MEMBER',
+      invitationStatus: 'ACCEPTED',
+      invitedById: 'acct-member',
+    })
+
+    const caller = makeCaller('acct-member')
+    await expect(
+      caller.revoke({ invitationId: 'inv-1' }),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+    expect(prismaMock.groupInvitation.update).not.toHaveBeenCalled()
+  })
+
+  it('rejects a MEMBER who did not create the invitation', async () => {
     await authAs('acct-member')
     seedRevokeContext({ callerRole: 'MEMBER' })
 
@@ -1122,7 +1267,7 @@ describe('invitationsRouter.createLink', () => {
     expect(createArgs.data.email).not.toContain(result.inviteUrl)
   })
 
-  it('rejects a MEMBER with FORBIDDEN', async () => {
+  it('lets a MEMBER create a MEMBER link invitation', async () => {
     await authAs('acct-member')
     prismaMock.group.findUnique.mockResolvedValue({
       id: 'grp-1',
@@ -1135,12 +1280,18 @@ describe('invitationsRouter.createLink', () => {
       role: 'MEMBER',
       status: 'ACTIVE',
     } as never)
+    prismaMock.groupInvitation.create.mockResolvedValue({
+      id: 'inv-link-member',
+      groupId: 'grp-1',
+      role: 'MEMBER',
+      temporaryName: null,
+      expiresAt: new Date('2030-01-01T00:00:00Z'),
+      tokenHash: 'hash',
+    } as never)
 
     const caller = makeCaller('acct-member')
-    await expect(caller.createLink({ groupId: 'grp-1' })).rejects.toMatchObject(
-      { code: 'FORBIDDEN' },
-    )
-    expect(prismaMock.groupInvitation.create).not.toHaveBeenCalled()
+    const result = await caller.createLink({ groupId: 'grp-1' })
+    expect(result.invitationId).toBe('inv-link-member')
   })
 })
 

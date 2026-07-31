@@ -185,16 +185,15 @@ describe('groupsRouter.budgets authorization', () => {
     expect(result.budget.name).toBe('Shared')
   })
 
-  it('rejects a MEMBER caller with FORBIDDEN', async () => {
+  it('allows a MEMBER caller to create a budget', async () => {
     usePrismaMemoryStore(baseData({ role: 'MEMBER' }))
-    await expect(
-      makeCaller('acct-self').budgets.create({
-        groupId: 'grp-1',
-        name: 'Groceries',
-        amount: 1000,
-        periodType: 'MONTHLY',
-      }),
-    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+    const result = await makeCaller('acct-self').budgets.create({
+      groupId: 'grp-1',
+      name: 'Groceries',
+      amount: 1000,
+      periodType: 'MONTHLY',
+    })
+    expect(result.budget.permissions.canEdit).toBe(true)
   })
 
   it('rejects mutations on an archived group but still allows reads', async () => {
@@ -485,10 +484,25 @@ describe('groupsRouter.budgets lifecycle', () => {
     expect(result.budget.summary.trendStatus).toBe('OVER')
   })
 
-  it('rejects update from a MEMBER', async () => {
+  it('allows a MEMBER to update their own budget', async () => {
     usePrismaMemoryStore({
       ...baseData({ role: 'MEMBER' }),
       groupBudget: [budgetRow()],
+    })
+    const result = await makeCaller('acct-self').budgets.update({
+      groupId: 'grp-1',
+      budgetId: 'bgt-1',
+      name: 'Renamed',
+      amount: 500,
+      periodType: 'MONTHLY',
+    })
+    expect(result.budget.name).toBe('Renamed')
+  })
+
+  it('rejects update of another member budget', async () => {
+    usePrismaMemoryStore({
+      ...baseData({ role: 'MEMBER' }),
+      groupBudget: [budgetRow({ createdByAccountId: 'acct-other' })],
     })
     await expect(
       makeCaller('acct-self').budgets.update({

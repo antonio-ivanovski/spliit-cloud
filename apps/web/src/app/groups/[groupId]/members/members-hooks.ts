@@ -91,6 +91,7 @@ export function useMembersDialogs() {
   const isArchived = !!group?.archived
   const isAdmin = role === 'ADMIN'
   const canManage = !isArchived && isAdmin
+  const canInvite = !isArchived && !!currentMember
   const currentMemberId = currentMember?.id ?? null
 
   const utils = trpc.useUtils()
@@ -292,6 +293,7 @@ export function useMembersDialogs() {
     isArchived,
     isAdmin,
     canManage,
+    canInvite,
     currentMemberId,
     membersQuery,
     invitationsQuery,

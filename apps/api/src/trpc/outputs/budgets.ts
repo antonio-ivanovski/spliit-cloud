@@ -71,6 +71,11 @@ export const budgetSchema = z.object({
   archivedAt: z.date().nullable(),
   createdAt: z.date(),
   updatedAt: z.date(),
+  permissions: z.object({
+    canEdit: z.boolean(),
+    canArchive: z.boolean(),
+    canDelete: z.boolean(),
+  }),
   summary: budgetSummarySchema,
 })
 

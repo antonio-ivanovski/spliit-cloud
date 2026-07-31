@@ -92,7 +92,8 @@ export function EditExpenseForm({
   // The expense form is read-only when the group is archived or when the
   // viewer is a PENDING invitee. The server enforces the same rule on
   // `groups.expenses.update` and `groups.expenses.delete`.
-  const readOnly = !!group.archived || isPendingInvitee
+  const readOnly =
+    !!group.archived || isPendingInvitee || !expense.permissions.canEdit
 
   if (isPendingInvitee) {
     return (

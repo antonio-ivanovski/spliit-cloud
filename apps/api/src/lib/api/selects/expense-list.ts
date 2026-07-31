@@ -9,6 +9,7 @@ import { expenseParticipantWithDisplayNameSelect } from './expense-participant-w
 
 export const groupExpenseListCardSelect = {
   id: true,
+  createdByAccountId: true,
   title: true,
   amount: true,
   createdAt: true,
@@ -28,6 +29,7 @@ export const groupExpenseListCardSelect = {
     select: {
       id: true,
       status: true,
+      creatorAccountId: true,
     },
   },
   items: {

@@ -2,6 +2,11 @@ import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
 import { stopRecurrence } from '../../../../lib/api'
+import { getExpense } from '../../../../lib/api/expenses/queries'
+import {
+  assertCanManageOwnedResource,
+  expenseOwnerAccountId,
+} from '../../../../lib/api/resource-permissions'
 import { loadGroupContext, protectedProcedure } from '../../../init'
 import { deleteExpenseOutputSchema } from '../../../outputs/expenses'
 
@@ -14,7 +19,7 @@ export const stopRecurrenceProcedure = protectedProcedure
   )
   .output(deleteExpenseOutputSchema)
   .mutation(async ({ input: { expenseId, groupId }, ctx }) => {
-    const { group } = await loadGroupContext({
+    const { group, member } = await loadGroupContext({
       groupId,
       accountId: ctx.auth.user.id,
     })
@@ -24,6 +29,18 @@ export const stopRecurrenceProcedure = protectedProcedure
         message: 'This group is archived and expenses cannot be modified',
       })
     }
+    const existingExpense = await getExpense(groupId, expenseId)
+    if (!existingExpense) {
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'Expense not found' })
+    }
+    assertCanManageOwnedResource(
+      {
+        role: member.role,
+        accountId: ctx.auth.user.id,
+        createdByAccountId: expenseOwnerAccountId(existingExpense),
+      },
+      'You can only manage recurring expenses you created',
+    )
     await stopRecurrence(groupId, expenseId, { accountId: ctx.auth.user.id })
     return {}
   })

@@ -38,6 +38,11 @@ export function mapExpenseListRow(row: ExpenseListDbRow) {
   void _items
   return {
     ...rest,
+    permissions: {
+      canEdit: false,
+      canDelete: false,
+      canManageRecurrence: false,
+    },
     documentCount: _count.documents,
     paidByList: row.paidByList.map((pb) => ({
       ledgerParticipant: {
@@ -67,6 +72,7 @@ export function mapExpenseListRow(row: ExpenseListDbRow) {
     conversionRate: row.conversionRate ?? null,
     conversionSource: row.conversionSource,
     recurringSeriesId: recurringSeries?.id ?? null,
+    recurringSeriesCreatorAccountId: recurringSeries?.creatorAccountId ?? null,
     recurrenceSequence: row.recurrenceSequence,
     recurringSeriesStatus: recurringSeries?.status ?? null,
   }

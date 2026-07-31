@@ -3,7 +3,12 @@ import { z } from 'zod'
 
 import { expenseApiSchema } from '@spliit/domain'
 
+import { getExpense } from '../../../../lib/api/expenses/queries'
 import { updateExpense } from '../../../../lib/api/expenses/update-expense'
+import {
+  assertCanManageOwnedResource,
+  expenseOwnerAccountId,
+} from '../../../../lib/api/resource-permissions'
 import { enqueueBudgetEvaluation } from '../../../../lib/budgets/enqueue'
 import { ConversionError } from '../../../../lib/expense-conversion'
 import { loadGroupContext, protectedProcedure } from '../../../init'
@@ -20,7 +25,7 @@ export const updateGroupExpenseProcedure = protectedProcedure
   )
   .output(updateExpenseOutputSchema)
   .mutation(async ({ input: { expenseId, groupId, expense, scope }, ctx }) => {
-    const { group } = await loadGroupContext({
+    const { group, member } = await loadGroupContext({
       groupId,
       accountId: ctx.auth.user.id,
     })
@@ -30,6 +35,18 @@ export const updateGroupExpenseProcedure = protectedProcedure
         message: 'This group is archived and expenses cannot be modified',
       })
     }
+    const existingExpense = await getExpense(groupId, expenseId)
+    if (!existingExpense) {
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'Expense not found' })
+    }
+    assertCanManageOwnedResource(
+      {
+        role: member.role,
+        accountId: ctx.auth.user.id,
+        createdByAccountId: expenseOwnerAccountId(existingExpense),
+      },
+      'You can only edit expenses you created',
+    )
     try {
       const { id } = await updateExpense(
         groupId,

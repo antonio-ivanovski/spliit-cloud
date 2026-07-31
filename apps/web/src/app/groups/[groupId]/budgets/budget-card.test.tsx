@@ -35,6 +35,11 @@ function makeBudget(overrides: Partial<BudgetSummary> = {}): BudgetSummary {
     categoryNodeIds: [],
     participantScope: 'ALL',
     participantIds: [],
+    permissions: {
+      canEdit: true,
+      canArchive: true,
+      canDelete: true,
+    },
     period: {
       from: '2026-07-01T00:00:00Z',
       to: '2026-07-31T00:00:00Z',

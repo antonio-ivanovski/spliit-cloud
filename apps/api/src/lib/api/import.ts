@@ -658,6 +658,7 @@ export async function importGroup(
         data: {
           id: expenseId,
           ledgerId,
+          createdByAccountId: actor.accountId,
           expenseDate: expense.expenseDate,
           title: expense.title,
           categoryId: expense.category,

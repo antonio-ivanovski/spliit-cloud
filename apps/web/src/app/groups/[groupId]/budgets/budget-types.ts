@@ -43,6 +43,11 @@ export type BudgetSummary = {
   archived?: boolean
   archivedAt?: Date | string | null
   createdAt?: Date | string
+  permissions: {
+    canEdit: boolean
+    canArchive: boolean
+    canDelete: boolean
+  }
   period: BudgetPeriod
 }
 

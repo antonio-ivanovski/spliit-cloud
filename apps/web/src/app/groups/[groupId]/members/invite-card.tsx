@@ -21,6 +21,7 @@ import {
 export function InviteCard({
   groupId,
   groupName,
+  canInviteAdmin,
   createMutation,
   createLinkMutation,
   onInvite,
@@ -28,6 +29,7 @@ export function InviteCard({
 }: {
   groupId: string
   groupName: string
+  canInviteAdmin: boolean
   createMutation: { isPending: boolean }
   createLinkMutation: { isPending: boolean }
   onInvite: (values: {
@@ -89,12 +91,15 @@ export function InviteCard({
   })
 
   const email = form.watch('email')
+  const effectiveRoleValue = canInviteAdmin ? roleValue : 'MEMBER'
+  const effectiveLinkRoleValue = canInviteAdmin ? linkRoleValue : 'MEMBER'
+  const effectiveFriendRoleValue = canInviteAdmin ? friendRoleValue : 'MEMBER'
 
   const handleEmailSubmit = form.handleSubmit(async (values) => {
     const temporaryName = values.temporaryName?.trim()
     onInvite({
       email: values.email,
-      role: roleValue,
+      role: effectiveRoleValue,
       temporaryName: temporaryName ? temporaryName : undefined,
     })
     form.reset({ email: '', temporaryName: '' })
@@ -103,7 +108,7 @@ export function InviteCard({
   const handleLinkSubmit = linkForm.handleSubmit(async (values) => {
     const temporaryName = values.temporaryName?.trim()
     const data = await onGenerateLink({
-      role: linkRoleValue,
+      role: effectiveLinkRoleValue,
       temporaryName: temporaryName ? temporaryName : undefined,
     })
     if (data) {
@@ -121,7 +126,7 @@ export function InviteCard({
     if (!selectedFriend) return
     onInvite({
       email: selectedFriend.email,
-      role: friendRoleValue,
+      role: effectiveFriendRoleValue,
       temporaryName: selectedFriend.name,
     })
     setSelectedFriendAccountId('')
@@ -169,7 +174,8 @@ export function InviteCard({
               isLoading={friendsQuery.isLoading}
               selectedFriendAccountId={selectedFriendAccountId}
               onSelectFriend={setSelectedFriendAccountId}
-              friendRoleValue={friendRoleValue}
+              friendRoleValue={effectiveFriendRoleValue}
+              canInviteAdmin={canInviteAdmin}
               onRoleChange={setFriendRoleValue}
               isPending={createMutation.isPending}
               onSubmit={handleFriendSubmit}
@@ -180,7 +186,8 @@ export function InviteCard({
             <InviteEmailTab
               form={form}
               onSubmit={handleEmailSubmit}
-              roleValue={roleValue}
+              roleValue={effectiveRoleValue}
+              canInviteAdmin={canInviteAdmin}
               onRoleChange={setRoleValue}
               isPending={createMutation.isPending}
               email={email}
@@ -191,7 +198,8 @@ export function InviteCard({
             <InviteLinkTab
               linkForm={linkForm}
               onSubmit={handleLinkSubmit}
-              linkRoleValue={linkRoleValue}
+              linkRoleValue={effectiveLinkRoleValue}
+              canInviteAdmin={canInviteAdmin}
               onRoleChange={setLinkRoleValue}
               isPending={createLinkMutation.isPending}
               generatedLink={generatedLink}

@@ -20,10 +20,7 @@ import {
 } from '@/app/groups/[groupId]/budgets/budget-scope'
 import { resolveBudgetStatus } from '@/app/groups/[groupId]/budgets/budget-status'
 import { normalizeBudgetDetail } from '@/app/groups/[groupId]/budgets/budget-types'
-import {
-  useCurrentGroup,
-  useIsPendingInvitee,
-} from '@/app/groups/[groupId]/current-group-context'
+import { useCurrentGroup } from '@/app/groups/[groupId]/current-group-context'
 import { ExpenseCard } from '@/app/groups/[groupId]/expenses/expense-card'
 import { DeletePopup } from '@/components/delete-popup'
 import { EditButton } from '@/components/edit-button'
@@ -69,14 +66,8 @@ export function BudgetDetailModal({
     keyPrefix: 'Categories',
   })
   const locale = useLocale()
-  const { groupId, group, currentMember } = useCurrentGroup()
-  const isPendingInvitee = useIsPendingInvitee()
+  const { groupId, group } = useCurrentGroup()
   const navigate = useNavigate()
-  const canEdit =
-    !!currentMember &&
-    currentMember.role === 'ADMIN' &&
-    !group?.archived &&
-    !isPendingInvitee
   const [detailOpen, setDetailOpen] = useState(true)
   const { toast } = useToast()
   const utils = trpc.useUtils()
@@ -108,6 +99,9 @@ export function BudgetDetailModal({
   const budget = rawBudget
     ? normalizeBudgetDetail(rawBudget as unknown as Record<string, unknown>)
     : null
+  const canEdit = Boolean(budget?.permissions.canEdit)
+  const canArchive = Boolean(budget?.permissions.canArchive)
+  const canDelete = Boolean(budget?.permissions.canDelete)
   const currency = group ? getCurrencyFromGroup(group) : null
   const period = budget?.period
   const lifecycle = budget?.archived ? 'ARCHIVED' : period?.lifecycle
@@ -531,24 +525,26 @@ export function BudgetDetailModal({
           </ResponsiveDialogBody>
 
           <ResponsiveDialogFooter className="flex-row gap-2 sm:justify-end">
-            {canEdit && budget && (
+            {budget && (canEdit || canArchive || canDelete) && (
               <>
-                <DeletePopup
-                  className="mr-auto"
-                  labels={{
-                    label: t('delete'),
-                    title: t('delete'),
-                    description: t('deleteDescription'),
-                    deleting: t('deleting'),
-                  }}
-                  onDelete={async () => {
-                    await deleteMutation.mutateAsync({
-                      groupId,
-                      budgetId,
-                    })
-                  }}
-                />
-                {budget.archived ? (
+                {canDelete && (
+                  <DeletePopup
+                    className="mr-auto"
+                    labels={{
+                      label: t('delete'),
+                      title: t('delete'),
+                      description: t('deleteDescription'),
+                      deleting: t('deleting'),
+                    }}
+                    onDelete={async () => {
+                      await deleteMutation.mutateAsync({
+                        groupId,
+                        budgetId,
+                      })
+                    }}
+                  />
+                )}
+                {budget.archived && canArchive ? (
                   <Button
                     variant="outline"
                     className="flex-1 sm:flex-none"
@@ -567,34 +563,38 @@ export function BudgetDetailModal({
                     />
                     {tCommon('Groups.bannerUnarchive')}
                   </Button>
-                ) : (
+                ) : !budget.archived ? (
                   <>
-                    <Button
-                      variant="outline"
-                      className="flex-1 sm:flex-none"
-                      onClick={() =>
-                        archiveMutation.mutate({
-                          groupId,
-                          budgetId,
-                          archived: true,
-                        })
-                      }
-                      disabled={archiveMutation.isPending}
-                    >
-                      <Archive className="mr-2 size-4" aria-hidden="true" />
-                      {t('archive')}
-                    </Button>
-                    <EditButton
-                      label={t('edit')}
-                      onClick={() =>
-                        navigate({
-                          to: '/groups/$groupId/budgets/$budgetId/edit',
-                          params: { groupId, budgetId },
-                        })
-                      }
-                    />
+                    {canArchive && (
+                      <Button
+                        variant="outline"
+                        className="flex-1 sm:flex-none"
+                        onClick={() =>
+                          archiveMutation.mutate({
+                            groupId,
+                            budgetId,
+                            archived: true,
+                          })
+                        }
+                        disabled={archiveMutation.isPending}
+                      >
+                        <Archive className="mr-2 size-4" aria-hidden="true" />
+                        {t('archive')}
+                      </Button>
+                    )}
+                    {canEdit && (
+                      <EditButton
+                        label={t('edit')}
+                        onClick={() =>
+                          navigate({
+                            to: '/groups/$groupId/budgets/$budgetId/edit',
+                            params: { groupId, budgetId },
+                          })
+                        }
+                      />
+                    )}
                   </>
-                )}
+                ) : null}
               </>
             )}
           </ResponsiveDialogFooter>

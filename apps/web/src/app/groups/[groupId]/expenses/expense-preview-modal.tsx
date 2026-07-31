@@ -129,7 +129,7 @@ export function ExpensePreviewModal({
   onEdit,
   onMakeCopy,
 }: ExpensePreviewModalProps) {
-  const { group, currentLedgerParticipantId } = useCurrentGroup()
+  const { group, currentLedgerParticipantId, currentMember } = useCurrentGroup()
   const isPendingInvitee = useIsPendingInvitee()
   const linkInviteToken = useLinkInviteToken()
   const locale = useLocale()
@@ -175,8 +175,11 @@ export function ExpensePreviewModal({
     }
   }, [expense])
   const currency = group ? getCurrencyFromGroup(group) : undefined
-  const canEdit = Boolean(
-    expense && group && !group.archived && !isPendingInvitee,
+  const canEdit = Boolean(expense?.permissions.canEdit)
+  const canDelete = Boolean(expense?.permissions.canDelete)
+  const canManageRecurrence = Boolean(expense?.permissions.canManageRecurrence)
+  const canCopy = Boolean(
+    expense && group && currentMember && !group.archived && !isPendingInvitee,
   )
   const participants = group?.participants ?? []
   const balanceExpense = expense
@@ -504,8 +507,8 @@ export function ExpensePreviewModal({
         </ResponsiveDialogBody>
 
         <ResponsiveDialogFooter className="flex-row gap-2 sm:justify-end">
-          {canEdit &&
-            (series ? (
+          {series ? (
+            canManageRecurrence ? (
               <RecurringActionsMenu
                 className="mr-auto"
                 seriesStatus={series.status}
@@ -517,13 +520,11 @@ export function ExpensePreviewModal({
                     : handleStopRecurrence
                 }
               />
-            ) : (
-              <DeletePopup
-                onDelete={() => handleDelete()}
-                className="mr-auto"
-              />
-            ))}
-          {canEdit && (
+            ) : null
+          ) : canDelete ? (
+            <DeletePopup onDelete={() => handleDelete()} className="mr-auto" />
+          ) : null}
+          {canCopy && (
             <>
               <Button
                 type="button"
@@ -535,7 +536,7 @@ export function ExpensePreviewModal({
                 <FileInput className="mr-2 h-4 w-4" />
                 {t('makeCopy')}
               </Button>
-              {!series && (
+              {canEdit && !series && (
                 <EditButton label={t('edit')} onClick={() => handleEdit()} />
               )}
             </>

@@ -1,35 +1,69 @@
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
-import { GroupRole, GroupType } from '@spliit/db'
+import { GroupRole, GroupType, prisma } from '@spliit/db'
 
 import { RemoveMemberPreconditionError } from '../../../../lib/api/members'
+import { canRevokeInvitation } from '../../../../lib/api/resource-permissions'
 import {
   SoftRemoveParticipantPreconditionError,
   getSoftRemoveParticipantPreview,
   softRemoveParticipant,
 } from '../../../../lib/api/soft-remove-participant'
 import { RevokeInvitationPreconditionError } from '../../../../lib/invitations'
+import { isInvitationParticipantUnused } from '../../../../lib/invitations/email-invitations'
 import { loadGroupContext, protectedProcedure } from '../../../init'
 import {
   participantRemovalOutputSchema,
   participantRemovalPreviewOutputSchema,
 } from '../../../outputs/members'
 
-function assertParticipantManagementAllowed(
+async function assertParticipantManagementAllowed(
   groupType: GroupType,
   role: GroupRole,
+  args: {
+    groupId: string
+    accountId: string
+    ledgerParticipantId: string
+  },
 ) {
-  if (role !== GroupRole.ADMIN) {
-    throw new TRPCError({
-      code: 'FORBIDDEN',
-      message: 'Only admins can manage participants',
-    })
-  }
   if (groupType === GroupType.FRIEND) {
     throw new TRPCError({
       code: 'FORBIDDEN',
       message: 'Friend ledger participant management is not allowed',
+    })
+  }
+  if (role === GroupRole.ADMIN) return
+
+  const invitation = await prisma.groupInvitation.findFirst({
+    where: {
+      groupId: args.groupId,
+      ledgerParticipantId: args.ledgerParticipantId,
+      status: 'PENDING',
+    },
+    select: { invitedById: true, ledgerParticipantId: true },
+  })
+  const isUnused = invitation
+    ? await isInvitationParticipantUnused({
+        groupId: args.groupId,
+        ledgerParticipantId: invitation.ledgerParticipantId,
+      })
+    : false
+  if (
+    !invitation ||
+    !canRevokeInvitation({
+      role,
+      accountId: args.accountId,
+      invitedById: invitation.invitedById,
+      isUnused,
+    })
+  ) {
+    throw new TRPCError({
+      code: 'FORBIDDEN',
+      message:
+        invitation?.invitedById === args.accountId
+          ? 'Only an admin can remove an invitation already used in expenses'
+          : 'Only admins can manage participants',
     })
   }
 }
@@ -82,7 +116,11 @@ export const removeParticipantPreviewProcedure = protectedProcedure
       groupId,
       accountId: ctx.auth.user.id,
     })
-    assertParticipantManagementAllowed(group.groupType, member.role)
+    await assertParticipantManagementAllowed(group.groupType, member.role, {
+      groupId,
+      accountId: ctx.auth.user.id,
+      ledgerParticipantId,
+    })
 
     try {
       return await getSoftRemoveParticipantPreview({
@@ -109,7 +147,11 @@ export const removeParticipantProcedure = protectedProcedure
       groupId: input.groupId,
       accountId: ctx.auth.user.id,
     })
-    assertParticipantManagementAllowed(group.groupType, member.role)
+    await assertParticipantManagementAllowed(group.groupType, member.role, {
+      groupId: input.groupId,
+      accountId: ctx.auth.user.id,
+      ledgerParticipantId: input.ledgerParticipantId,
+    })
     if (group.archived) {
       throw new TRPCError({
         code: 'FORBIDDEN',

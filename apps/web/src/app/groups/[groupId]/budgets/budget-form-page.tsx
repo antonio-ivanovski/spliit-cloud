@@ -68,9 +68,9 @@ export function BudgetFormPage({ groupId, budgetId }: Props) {
 
   const canEdit =
     !!currentMember &&
-    currentMember.role === 'ADMIN' &&
     !group?.archived &&
-    !isPendingInvitee
+    !isPendingInvitee &&
+    (isEdit ? Boolean(budget?.permissions.canEdit) : true)
 
   if (!group) {
     return (

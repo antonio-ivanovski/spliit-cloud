@@ -8,13 +8,19 @@ import {
   type GroupRole,
 } from '@spliit/db'
 
+import {
+  canCreateInvitationWithRole,
+  canRevokeInvitation,
+} from '../../../lib/api/resource-permissions'
 import { getPlaceholderEmailDisplayName } from '../../../lib/invitations/display'
 import {
   RevokeInvitationPreconditionError,
   acceptInvitation,
   createEmailInvitation,
   declineInvitation,
+  getUnusedInvitationParticipantIds,
   getRevokeInvitationPreview,
+  isInvitationParticipantUnused,
   listGroupInvitations,
   listPendingEmailInvitationsForAccount,
   revokeInvitation,
@@ -53,7 +59,8 @@ const linkTokenSchema = z
   .regex(/^[A-Za-z0-9_-]+$/, 'Invalid invitation token')
 
 export const invitationsRouter = createTRPCRouter({
-  // List pending invitations for a group (ADMIN only). The UI labels
+  // Admins see every pending invitation; members see only invitations they
+  // created.
   // this section "Pending invitations" / "Invitations awaiting
   // acceptance" and only acts on `PENDING` rows (revoke button), so
   // resolved invitations (accepted / declined / revoked) are
@@ -64,18 +71,43 @@ export const invitationsRouter = createTRPCRouter({
     .input(z.object({ groupId: z.string().min(1) }))
     .output(invitationsListOutputSchema)
     .query(async ({ input: { groupId }, ctx }) => {
-      const { member } = await loadGroupContext({
+      const { group, member } = await loadGroupContext({
         groupId,
         accountId: ctx.auth.user.id,
       })
-      if (member.role !== 'ADMIN') {
-        throw new TRPCError({ code: 'FORBIDDEN', message: 'Admin only' })
-      }
       const allInvitations = await listGroupInvitations(groupId)
       const invitations = allInvitations.filter(
-        (invitation) => invitation.status === GroupInvitationStatus.PENDING,
+        (invitation) =>
+          invitation.status === GroupInvitationStatus.PENDING &&
+          (member.role === 'ADMIN' ||
+            invitation.invitedById === ctx.auth.user.id),
       )
-      return { invitations }
+      const unusedParticipantIds =
+        member.role === 'ADMIN'
+          ? new Set<string>()
+          : await getUnusedInvitationParticipantIds({
+              groupId,
+              ledgerParticipantIds: invitations.map(
+                (invitation) => invitation.ledgerParticipantId,
+              ),
+            })
+      return {
+        invitations: invitations.map((invitation) => ({
+          ...invitation,
+          canRevoke:
+            !group.archived &&
+            canRevokeInvitation({
+              role: member.role,
+              accountId: ctx.auth.user.id,
+              invitedById: invitation.invitedById,
+              isUnused:
+                member.role === 'ADMIN'
+                  ? true
+                  : invitation.ledgerParticipantId === null ||
+                    unusedParticipantIds.has(invitation.ledgerParticipantId),
+            }),
+        })),
+      }
     }),
 
   /** Create a shareable link invitation. Returns the full invite URL and expiry. */
@@ -105,8 +137,17 @@ export const invitationsRouter = createTRPCRouter({
         groupId: input.groupId,
         accountId: ctx.auth.user.id,
       })
-      if (member.role !== 'ADMIN') {
-        throw new TRPCError({ code: 'FORBIDDEN', message: 'Admin only' })
+      if (!canCreateInvitationWithRole(member.role, input.role)) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Members can only invite other members',
+        })
+      }
+      if (group.archived) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Archived groups cannot create invitations',
+        })
       }
       if (group.groupType === GroupType.FRIEND) {
         throw new TRPCError({
@@ -196,8 +237,17 @@ export const invitationsRouter = createTRPCRouter({
         groupId: input.groupId,
         accountId: ctx.auth.user.id,
       })
-      if (member.role !== 'ADMIN') {
-        throw new TRPCError({ code: 'FORBIDDEN', message: 'Admin only' })
+      if (!canCreateInvitationWithRole(member.role, input.role)) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Members can only invite other members',
+        })
+      }
+      if (group.archived) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Archived groups cannot create invitations',
+        })
       }
       if (group.groupType === GroupType.FRIEND) {
         throw new TRPCError({
@@ -257,7 +307,7 @@ export const invitationsRouter = createTRPCRouter({
     )
     .output(revokeInvitationPreviewSchema)
     .query(async ({ input: { invitationId, groupId }, ctx }) => {
-      const { member } = await loadGroupContext({
+      const { group, member } = await loadGroupContext({
         groupId,
         accountId: ctx.auth.user.id,
       }).catch(() => {
@@ -266,12 +316,33 @@ export const invitationsRouter = createTRPCRouter({
           message: 'You are not a member of this group',
         })
       })
-      if (member.role !== 'ADMIN') {
+      if (group.archived) {
         throw new TRPCError({
           code: 'FORBIDDEN',
-          message: 'Only admins can revoke invitations',
+          message: 'Archived groups cannot revoke invitations',
         })
       }
+      const invitation = await prisma.groupInvitation.findUnique({
+        where: { id: invitationId },
+        select: {
+          groupId: true,
+          invitedById: true,
+          ledgerParticipantId: true,
+          status: true,
+        },
+      })
+      if (!invitation || invitation.groupId !== groupId) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Invitation not found',
+        })
+      }
+      await assertInvitationRevocationAllowed({
+        groupId,
+        accountId: ctx.auth.user.id,
+        role: member.role,
+        invitation,
+      })
       try {
         return await getRevokeInvitationPreview({ invitationId, groupId })
       } catch (err) {
@@ -311,6 +382,9 @@ export const invitationsRouter = createTRPCRouter({
         where: { id: invitationId },
         select: {
           groupId: true,
+          invitedById: true,
+          ledgerParticipantId: true,
+          status: true,
           group: { select: { groupType: true } },
         },
       })
@@ -326,13 +400,22 @@ export const invitationsRouter = createTRPCRouter({
           message: 'friendLedgerNotRevocable',
         })
       }
-      const { member } = await loadGroupContext({
+      const { group, member } = await loadGroupContext({
         groupId: existing.groupId,
         accountId: ctx.auth.user.id,
       })
-      if (member.role !== 'ADMIN') {
-        throw new TRPCError({ code: 'FORBIDDEN', message: 'Admin only' })
+      if (group.archived) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Archived groups cannot revoke invitations',
+        })
       }
+      await assertInvitationRevocationAllowed({
+        groupId: existing.groupId,
+        accountId: ctx.auth.user.id,
+        role: member.role,
+        invitation: existing,
+      })
       try {
         await revokeInvitation({
           invitationId,
@@ -385,6 +468,47 @@ export const invitationsRouter = createTRPCRouter({
       return { invitations }
     }),
 })
+
+async function assertInvitationRevocationAllowed(args: {
+  groupId: string
+  accountId: string
+  role: GroupRole
+  invitation: {
+    invitedById: string
+    ledgerParticipantId: string | null
+    status: GroupInvitationStatus
+  }
+}) {
+  if (args.invitation.status !== GroupInvitationStatus.PENDING) {
+    throw new TRPCError({
+      code: 'FORBIDDEN',
+      message: 'Only pending invitations can be revoked',
+    })
+  }
+  const isUnused =
+    args.role === 'ADMIN'
+      ? true
+      : await isInvitationParticipantUnused({
+          groupId: args.groupId,
+          ledgerParticipantId: args.invitation.ledgerParticipantId,
+        })
+  if (
+    !canRevokeInvitation({
+      role: args.role,
+      accountId: args.accountId,
+      invitedById: args.invitation.invitedById,
+      isUnused,
+    })
+  ) {
+    throw new TRPCError({
+      code: 'FORBIDDEN',
+      message:
+        args.invitation.invitedById !== args.accountId
+          ? 'You can only revoke invitations you created'
+          : 'Only an admin can revoke an invitation already used in expenses',
+    })
+  }
+}
 
 /**
  * Translate the helper errors into TRPC errors. The web client uses

@@ -610,7 +610,10 @@ export async function updateExpense(
           tx,
           seriesId,
           ledgerId: group.ledgerId,
-          creatorAccountId: actor.accountId,
+          // Converting an existing expense into a series must not transfer
+          // ownership when an admin edits a member-created expense.
+          creatorAccountId:
+            existingExpense.createdByAccountId ?? actor.accountId,
           anchorDate: expense.expenseDate,
           config: recurrence,
           template,

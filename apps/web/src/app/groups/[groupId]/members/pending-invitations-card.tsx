@@ -24,6 +24,7 @@ type Invitation = {
   status: string
   createdAt: Date | string | null
   ledgerParticipantId: string | null
+  canRevoke: boolean
 }
 
 export function PendingInvitationsCard({
@@ -97,19 +98,23 @@ export function PendingInvitationsCard({
                       </p>
                     )}
                   </div>
-                  {invitation.status === 'PENDING' && ledgerParticipantId && (
-                    <div className="flex w-full flex-wrap items-center justify-start gap-2 sm:w-auto sm:justify-end">
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        className="h-9 shrink-0 gap-1.5 px-3"
-                        onClick={() => onRevoke({ ledgerParticipantId, label })}
-                      >
-                        <Ban className="size-4" aria-hidden="true" />
-                        {t('invitations.revokeButton')}
-                      </Button>
-                    </div>
-                  )}
+                  {invitation.status === 'PENDING' &&
+                    invitation.canRevoke &&
+                    ledgerParticipantId && (
+                      <div className="flex w-full flex-wrap items-center justify-start gap-2 sm:w-auto sm:justify-end">
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          className="h-9 shrink-0 gap-1.5 px-3"
+                          onClick={() =>
+                            onRevoke({ ledgerParticipantId, label })
+                          }
+                        >
+                          <Ban className="size-4" aria-hidden="true" />
+                          {t('invitations.revokeButton')}
+                        </Button>
+                      </div>
+                    )}
                 </li>
               )
             })}

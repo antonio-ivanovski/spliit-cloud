@@ -3,7 +3,12 @@ import { randomUUID } from 'node:crypto'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
-import { prisma, type BudgetAlertType, type GroupBudget } from '@spliit/db'
+import {
+  prisma,
+  type BudgetAlertType,
+  type GroupBudget,
+  type GroupRole,
+} from '@spliit/db'
 import {
   budgetPeriodSchema,
   budgetScopeModeSchema,
@@ -27,6 +32,10 @@ import {
   mapExpenseListRow,
   type ExpenseListDbRow,
 } from '../../../lib/api/expenses/queries'
+import {
+  assertCanManageOwnedResource,
+  canManageOwnedResource,
+} from '../../../lib/api/resource-permissions'
 import { groupExpenseListCardSelect } from '../../../lib/api/selects/expense-list'
 import { budgetCategoryMatches } from '../../../lib/budgets/category-match'
 import { loadGroupContext, protectedProcedure } from '../../init'
@@ -329,7 +338,19 @@ async function loadSharedCurrentRows(budgets: GroupBudget[]) {
 function output(
   budget: GroupBudget,
   budgetSummary: Awaited<ReturnType<typeof summary>>,
+  viewer: {
+    role: GroupRole
+    accountId: string
+    groupArchived: boolean
+  },
 ) {
+  const canManage =
+    !viewer.groupArchived &&
+    canManageOwnedResource({
+      role: viewer.role,
+      accountId: viewer.accountId,
+      createdByAccountId: budget.createdByAccountId,
+    })
   return {
     id: budget.id,
     groupId: budget.groupId,
@@ -350,6 +371,11 @@ function output(
     archivedAt: budget.archivedAt ?? null,
     createdAt: budget.createdAt,
     updatedAt: budget.updatedAt,
+    permissions: {
+      canEdit: canManage && !budget.archived,
+      canArchive: canManage,
+      canDelete: canManage,
+    },
     summary: budgetSummary,
   }
 }
@@ -393,7 +419,7 @@ const list = protectedProcedure
   )
   .output(listBudgetsOutputSchema)
   .query(async ({ input, ctx }) => {
-    const { group } = await loadGroupContext({
+    const { group, member } = await loadGroupContext({
       groupId: input.groupId,
       accountId: ctx.auth.user.id,
     })
@@ -408,7 +434,11 @@ const list = protectedProcedure
     return {
       budgets: await Promise.all(
         budgets.map(async (budget) =>
-          output(budget, await summary(budget, false, sharedCurrentRows)),
+          output(budget, await summary(budget, false, sharedCurrentRows), {
+            role: member.role,
+            accountId: ctx.auth.user.id,
+            groupArchived: group.archived,
+          }),
         ),
       ),
     }
@@ -418,7 +448,7 @@ const get = protectedProcedure
   .input(z.object({ groupId: z.string().min(1), budgetId: z.string().min(1) }))
   .output(getBudgetOutputSchema)
   .query(async ({ input, ctx }) => {
-    const { group } = await loadGroupContext({
+    const { group, member } = await loadGroupContext({
       groupId: input.groupId,
       accountId: ctx.auth.user.id,
     })
@@ -427,7 +457,13 @@ const get = protectedProcedure
     })
     if (!budget)
       throw new TRPCError({ code: 'NOT_FOUND', message: 'Budget not found' })
-    return { budget: output(budget, await summary(budget)) }
+    return {
+      budget: output(budget, await summary(budget), {
+        role: member.role,
+        accountId: ctx.auth.user.id,
+        groupArchived: group.archived,
+      }),
+    }
   })
 
 const create = protectedProcedure
@@ -438,11 +474,6 @@ const create = protectedProcedure
       groupId: input.groupId,
       accountId: ctx.auth.user.id,
     })
-    if (member.role !== 'ADMIN')
-      throw new TRPCError({
-        code: 'FORBIDDEN',
-        message: 'Only admins can manage budgets',
-      })
     if (group.archived)
       throw new TRPCError({
         code: 'FORBIDDEN',
@@ -501,7 +532,13 @@ const create = protectedProcedure
     })
     const currentSummary = await summary(budget)
     await establishAlertBaseline(budget, currentSummary)
-    return { budget: output(budget, currentSummary) }
+    return {
+      budget: output(budget, currentSummary, {
+        role: member.role,
+        accountId: ctx.auth.user.id,
+        groupArchived: group.archived,
+      }),
+    }
   })
 
 const update = protectedProcedure
@@ -512,11 +549,6 @@ const update = protectedProcedure
       groupId: input.groupId,
       accountId: ctx.auth.user.id,
     })
-    if (member.role !== 'ADMIN')
-      throw new TRPCError({
-        code: 'FORBIDDEN',
-        message: 'Only admins can manage budgets',
-      })
     if (group.archived)
       throw new TRPCError({
         code: 'FORBIDDEN',
@@ -527,6 +559,14 @@ const update = protectedProcedure
     })
     if (!existing)
       throw new TRPCError({ code: 'NOT_FOUND', message: 'Budget not found' })
+    assertCanManageOwnedResource(
+      {
+        role: member.role,
+        accountId: ctx.auth.user.id,
+        createdByAccountId: existing.createdByAccountId,
+      },
+      'You can only edit budgets you created',
+    )
     if (
       input.periodType === 'CUSTOM' &&
       (!input.customStart ||
@@ -567,7 +607,13 @@ const update = protectedProcedure
     })
     const currentSummary = await summary(budget)
     await establishAlertBaseline(budget, currentSummary, true)
-    return { budget: output(budget, currentSummary) }
+    return {
+      budget: output(budget, currentSummary, {
+        role: member.role,
+        accountId: ctx.auth.user.id,
+        groupArchived: group.archived,
+      }),
+    }
   })
 
 const archive = protectedProcedure
@@ -584,25 +630,31 @@ const archive = protectedProcedure
       groupId: input.groupId,
       accountId: ctx.auth.user.id,
     })
-    if (member.role !== 'ADMIN')
-      throw new TRPCError({
-        code: 'FORBIDDEN',
-        message: 'Only admins can manage budgets',
-      })
     if (group.archived)
       throw new TRPCError({
         code: 'FORBIDDEN',
         message: 'Archived groups cannot change budgets',
       })
-    const budget = await prisma.groupBudget.updateMany({
+    const existing = await prisma.groupBudget.findFirst({
+      where: { id: input.budgetId, groupId: group.id },
+    })
+    if (!existing)
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'Budget not found' })
+    assertCanManageOwnedResource(
+      {
+        role: member.role,
+        accountId: ctx.auth.user.id,
+        createdByAccountId: existing.createdByAccountId,
+      },
+      'You can only archive budgets you created',
+    )
+    await prisma.groupBudget.updateMany({
       where: { id: input.budgetId, groupId: group.id },
       data: {
         archived: input.archived,
         archivedAt: input.archived ? new Date() : null,
       },
     })
-    if (budget.count === 0)
-      throw new TRPCError({ code: 'NOT_FOUND', message: 'Budget not found' })
     return { archived: input.archived }
   })
 
@@ -614,21 +666,27 @@ const remove = protectedProcedure
       groupId: input.groupId,
       accountId: ctx.auth.user.id,
     })
-    if (member.role !== 'ADMIN')
-      throw new TRPCError({
-        code: 'FORBIDDEN',
-        message: 'Only admins can manage budgets',
-      })
     if (group.archived)
       throw new TRPCError({
         code: 'FORBIDDEN',
         message: 'Archived groups cannot change budgets',
       })
-    const budget = await prisma.groupBudget.deleteMany({
+    const existing = await prisma.groupBudget.findFirst({
       where: { id: input.budgetId, groupId: group.id },
     })
-    if (budget.count === 0)
+    if (!existing)
       throw new TRPCError({ code: 'NOT_FOUND', message: 'Budget not found' })
+    assertCanManageOwnedResource(
+      {
+        role: member.role,
+        accountId: ctx.auth.user.id,
+        createdByAccountId: existing.createdByAccountId,
+      },
+      'You can only delete budgets you created',
+    )
+    await prisma.groupBudget.deleteMany({
+      where: { id: input.budgetId, groupId: group.id },
+    })
     return { deleted: true as const }
   })
 

@@ -160,6 +160,64 @@ export async function listGroupInvitations(groupId: string) {
   })
 }
 
+export async function isInvitationParticipantUnused(args: {
+  groupId: string
+  ledgerParticipantId: string | null
+}): Promise<boolean> {
+  if (!args.ledgerParticipantId) return true
+  const unusedParticipantIds = await getUnusedInvitationParticipantIds({
+    groupId: args.groupId,
+    ledgerParticipantIds: [args.ledgerParticipantId],
+  })
+  return unusedParticipantIds.has(args.ledgerParticipantId)
+}
+
+export async function getUnusedInvitationParticipantIds(args: {
+  groupId: string
+  ledgerParticipantIds: Array<string | null>
+}): Promise<Set<string>> {
+  const participantIds = [
+    ...new Set(
+      args.ledgerParticipantIds.filter(
+        (participantId): participantId is string => participantId !== null,
+      ),
+    ),
+  ]
+  if (participantIds.length === 0) return new Set()
+
+  const [participants, balances] = await Promise.all([
+    prisma.ledgerParticipant.findMany({
+      where: { id: { in: participantIds } },
+      select: {
+        id: true,
+        _count: {
+          select: {
+            expensesPaidByList: true,
+            expensesPaidFor: true,
+            expenseItemPaidFor: true,
+            expenseItemizedRemainderPaidFor: true,
+          },
+        },
+      },
+    }),
+    getGroupBalances(args.groupId),
+  ])
+
+  return new Set(
+    participants
+      .filter((participant) => {
+        const counts = participant._count
+        const usedInExpense =
+          counts.expensesPaidByList > 0 ||
+          counts.expensesPaidFor > 0 ||
+          counts.expenseItemPaidFor > 0 ||
+          counts.expenseItemizedRemainderPaidFor > 0
+        return !usedInExpense && (balances[participant.id]?.total ?? 0) === 0
+      })
+      .map((participant) => participant.id),
+  )
+}
+
 export class RevokeInvitationPreconditionError extends Error {
   constructor(
     public readonly reason: 'unsettledBalance',

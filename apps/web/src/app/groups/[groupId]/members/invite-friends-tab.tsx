@@ -31,6 +31,7 @@ export function InviteFriendsTab({
   selectedFriendAccountId,
   onSelectFriend,
   friendRoleValue,
+  canInviteAdmin,
   onRoleChange,
   isPending,
   onSubmit,
@@ -40,6 +41,7 @@ export function InviteFriendsTab({
   selectedFriendAccountId: string
   onSelectFriend: (value: string) => void
   friendRoleValue: InvitableRole
+  canInviteAdmin: boolean
   onRoleChange: (value: InvitableRole) => void
   isPending: boolean
   onSubmit: () => void
@@ -108,21 +110,25 @@ export function InviteFriendsTab({
             </Select>
           </div>
           <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-end">
-            <div className="sm:w-40">
-              <Label className="sm:sr-only">{t('invite.role')}</Label>
-              <Select
-                value={friendRoleValue}
-                onValueChange={(value) => onRoleChange(value as InvitableRole)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="MEMBER">{t('role.member')}</SelectItem>
-                  <SelectItem value="ADMIN">{t('role.admin')}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            {canInviteAdmin && (
+              <div className="sm:w-40">
+                <Label className="sm:sr-only">{t('invite.role')}</Label>
+                <Select
+                  value={friendRoleValue}
+                  onValueChange={(value) =>
+                    onRoleChange(value as InvitableRole)
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="MEMBER">{t('role.member')}</SelectItem>
+                    <SelectItem value="ADMIN">{t('role.admin')}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
             <Button
               type="button"
               disabled={isPending || !selectedFriendAccountId}

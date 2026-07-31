@@ -17,6 +17,7 @@ export const invitationSchema = z.object({
   createdAt: z.date(),
   expiresAt: z.date().nullable().default(null),
   ledgerParticipantId: z.string().nullable().default(null),
+  canRevoke: z.boolean().default(false),
 })
 
 export const accountInvitationSchema = invitationSchema.extend({

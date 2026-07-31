@@ -367,7 +367,7 @@ describe('GroupMembers', () => {
     expect(screen.getByText('Invite member')).toBeInTheDocument()
   })
 
-  it('non-admin sees no manage permission message', () => {
+  it('member can see the invite form without management controls', () => {
     vi.mocked(useCurrentGroup).mockReturnValue({
       isLoading: false,
       groupId: 'group-1',
@@ -381,7 +381,10 @@ describe('GroupMembers', () => {
 
     render(<GroupMembers />)
 
-    expect(screen.getByText(/only admins can invite/i)).toBeInTheDocument()
+    expect(screen.getByText('Invite member')).toBeInTheDocument()
+    expect(
+      screen.queryByText(/only admins can invite/i),
+    ).not.toBeInTheDocument()
   })
 
   it('submit creates invitation via email', async () => {

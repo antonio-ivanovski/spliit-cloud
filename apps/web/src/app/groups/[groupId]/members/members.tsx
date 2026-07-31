@@ -45,7 +45,9 @@ function GroupMembersBody() {
   const {
     account,
     isArchived,
+    isAdmin,
     canManage,
+    canInvite,
     listMembers,
     membersQuery,
     invitations,
@@ -108,19 +110,16 @@ function GroupMembersBody() {
         onRemove={(participant) => setParticipantPendingRemove(participant)}
       />
 
-      {!canManage && (
-        <p className="text-sm text-muted-foreground">
-          {isArchived && currentMember?.role === 'ADMIN'
-            ? t('archivedNotice')
-            : t('noManagePermission')}
-        </p>
+      {!canManage && isArchived && (
+        <p className="text-sm text-muted-foreground">{t('archivedNotice')}</p>
       )}
 
-      {canManage && (
+      {canInvite && (
         <>
           <InviteCard
             groupId={groupId}
             groupName={group?.name ?? ''}
+            canInviteAdmin={isAdmin}
             createMutation={createMutation}
             createLinkMutation={createLinkMutation}
             onInvite={async (values) => {

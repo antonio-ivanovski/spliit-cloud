@@ -322,6 +322,7 @@ export async function materializeRecurringExpense(
           conversion,
         ),
         ledgerId: series.ledgerId,
+        createdByAccountId: series.creatorAccountId,
       },
     })
     const actor = series.creatorAccountId

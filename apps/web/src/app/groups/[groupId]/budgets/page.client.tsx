@@ -57,11 +57,7 @@ export default function GroupBudgetsPageClient() {
   const { groupId, group, currentMember } = useCurrentGroup()
   const isPendingInvitee = useIsPendingInvitee()
   const navigate = useNavigate()
-  const canEdit =
-    !!currentMember &&
-    currentMember.role === 'ADMIN' &&
-    !group?.archived &&
-    !isPendingInvitee
+  const canCreate = !!currentMember && !group?.archived && !isPendingInvitee
   const budgetsQuery = trpc.groups.budgets.list.useQuery({
     groupId,
     includeArchived: true,
@@ -129,7 +125,7 @@ export default function GroupBudgetsPageClient() {
                 {t('empty.description')}
               </p>
             </div>
-            {canEdit && (
+            {canCreate && (
               <Button variant="outline" onClick={goToCreate}>
                 {t('create')}
               </Button>
@@ -138,7 +134,7 @@ export default function GroupBudgetsPageClient() {
         </Card>
       ) : (
         <div className="flex flex-col gap-4">
-          {canEdit && <CreateBudgetCard onClick={goToCreate} />}
+          {canCreate && <CreateBudgetCard onClick={goToCreate} />}
           {current.length > 0 && (
             <div className="mobile-divide-y flex flex-col gap-0 sm:gap-4">
               {current.map((budget) => (

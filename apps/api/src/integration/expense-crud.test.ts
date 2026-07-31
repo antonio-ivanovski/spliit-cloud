@@ -11,21 +11,27 @@ describe('Expense CRUD — real DB', () => {
   const runId = testRunId()
   const adminId = `acct-exp-${runId}`
   const adminEmail = `exp-${runId}@test.example`
+  const memberId = `acct-exp-member-${runId}`
+  const memberEmail = `exp-member-${runId}@test.example`
 
   const ledgerIds: string[] = []
   function trackLedger(id: string) {
     ledgerIds.push(id)
   }
 
-  function makeCaller() {
+  function makeCaller(
+    accountId = adminId,
+    email = adminEmail,
+    name = 'Test Admin',
+  ) {
     return groupsRouter.createCaller({
       auth: {
         session: { id: 'sess-test' },
         user: {
-          id: adminId,
-          email: adminEmail,
+          id: accountId,
+          email,
           emailVerified: true,
-          name: 'Test Admin',
+          name,
         },
       },
     } as never)
@@ -42,6 +48,16 @@ describe('Expense CRUD — real DB', () => {
         name: 'Test Admin',
       },
     })
+    await prisma.account.upsert({
+      where: { email: memberEmail },
+      update: {},
+      create: {
+        id: memberId,
+        email: memberEmail,
+        emailVerified: true,
+        name: 'Test Member',
+      },
+    })
   })
 
   afterAll(async () => {
@@ -49,6 +65,7 @@ describe('Expense CRUD — real DB', () => {
       await prisma.ledger.delete({ where: { id: lid } }).catch(() => {})
     }
     await prisma.account.delete({ where: { id: adminId } }).catch(() => {})
+    await prisma.account.delete({ where: { id: memberId } }).catch(() => {})
   })
 
   /**
@@ -78,6 +95,92 @@ describe('Expense CRUD — real DB', () => {
     trackLedger(group!.ledger.id)
     return { groupId, participantId: group!.members[0].ledgerParticipant!.id }
   }
+
+  async function addMember(groupId: string) {
+    const group = await prisma.group.findUniqueOrThrow({
+      where: { id: groupId },
+      select: { ledgerId: true },
+    })
+    const membership = await prisma.groupMember.create({
+      data: {
+        id: `gm-${runId}-${groupId}`,
+        groupId,
+        accountId: memberId,
+        role: 'MEMBER',
+        status: 'ACTIVE',
+        joinedAt: new Date(),
+      },
+    })
+    const participant = await prisma.ledgerParticipant.create({
+      data: {
+        id: `lp-${runId}-${groupId}`,
+        ledgerId: group.ledgerId,
+        groupMemberId: membership.id,
+      },
+    })
+    return participant.id
+  }
+
+  it('enforces member ownership while preserving the admin override', async () => {
+    const adminCaller = makeCaller()
+    const memberCaller = makeCaller(memberId, memberEmail, 'Test Member')
+    const { groupId, participantId: adminParticipantId } = await createGroup(
+      `Ownership ${runId}`,
+    )
+    const memberParticipantId = await addMember(groupId)
+    const expenseInput = (title: string, participant: string) => ({
+      title,
+      amount: 1000,
+      paidByList: [{ participant, shares: 1000 }],
+      paidBySplitMode: 'BY_AMOUNT' as const,
+      isMultiPayer: false,
+      paidFor: [{ participant, shares: 1 }],
+      category: 'general' as const,
+      splitMode: 'EVENLY' as const,
+      expenseDate: new Date().toISOString(),
+      isReimbursement: false,
+      documents: [],
+      recurrenceRule: 'NONE' as const,
+    })
+
+    const memberExpense = await memberCaller.expenses.create({
+      groupId,
+      expense: expenseInput('Member owned', memberParticipantId),
+    })
+    await memberCaller.expenses.update({
+      groupId,
+      expenseId: memberExpense.expenseId,
+      expense: expenseInput('Member updated', memberParticipantId),
+    })
+
+    const adminExpense = await adminCaller.expenses.create({
+      groupId,
+      expense: expenseInput('Admin owned', adminParticipantId),
+    })
+    await expect(
+      memberCaller.expenses.delete({
+        groupId,
+        expenseId: adminExpense.expenseId,
+      }),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+
+    await prisma.expense.update({
+      where: { id: adminExpense.expenseId },
+      data: { createdByAccountId: null },
+    })
+    await expect(
+      memberCaller.expenses.update({
+        groupId,
+        expenseId: adminExpense.expenseId,
+        expense: expenseInput('Legacy edit', memberParticipantId),
+      }),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+
+    await adminCaller.expenses.delete({
+      groupId,
+      expenseId: memberExpense.expenseId,
+    })
+  })
 
   // ------------------------------------------------------------------
   // 5. Update expense title

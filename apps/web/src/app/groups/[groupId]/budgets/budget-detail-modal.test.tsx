@@ -134,6 +134,11 @@ function buildExpense(overrides: Record<string, unknown>) {
     recurringSeriesId: null,
     recurringSeriesStatus: null,
     documentCount: 0,
+    permissions: {
+      canEdit: true,
+      canDelete: true,
+      canManageRecurrence: false,
+    },
     contribution: 20000,
     ...overrides,
   }
@@ -153,6 +158,11 @@ const fakeBudget = {
   archived: false,
   notifyTrending: true,
   notifyOver: false,
+  permissions: {
+    canEdit: true,
+    canArchive: true,
+    canDelete: true,
+  },
   period: {
     from: '2026-07-01',
     to: '2026-07-31',
