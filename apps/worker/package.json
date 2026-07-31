@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "bundle:runtime": "bun build src/server.ts --target=bun --production --keep-names --outfile=dist/server.js",
     "check-formatting": "oxfmt --check .",
     "check-types": "tsc --noEmit",
     "dev": "bun --env-file=../../.env --watch src/server.ts",

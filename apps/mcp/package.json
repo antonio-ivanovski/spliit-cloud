@@ -23,6 +23,7 @@
   "scripts": {
     "build": "if [ -f ../../.env ]; then bun --env-file=../../.env run build:server; else bun run build:server; fi",
     "build:server": "mcp-use build",
+    "bundle:runtime": "bun build dist/index.js --target=node --format=esm --production --keep-names --external @mcp-use/inspector --outfile=dist/runtime.mjs",
     "check-formatting": "oxfmt --check .",
     "check-types": "tsc --noEmit",
     "deploy": "mcp-use deploy",

@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM oven/bun:1.3.14 AS base
+FROM oven/bun:1.3.14-slim AS base
 WORKDIR /app
 
 FROM base AS pruner
@@ -22,18 +22,14 @@ COPY --from=pruner /app/out/full/packages/db/prisma.config.ts ./packages/db/pris
 RUN mkdir -p packages/db/src \
   && bun --filter @spliit/db prisma-generate
 
-FROM base AS runner
-ENV NODE_ENV=production
-RUN mkdir -p /data
-COPY --from=installer /app ./
+FROM installer AS source-builder
 COPY --from=pruner /app/out/full/ ./
 COPY --from=prisma /app/packages/db/src/generated ./packages/db/src/generated
 
-FROM runner AS api
+FROM source-builder AS api-builder
 # Regenerate the OpenAPI spec during build — the source is gitignored and
-# excluded from turbo prune's `out/full/`, so the runner stage doesn't
-# carry a copy. `NODE_ENV=` overrides the runner-stage `ENV NODE_ENV=production`
-# to avoid production-only env validation at build time. Enable MCP with
+# excluded from turbo prune's `out/full/`. Keep generation in the full-dependency
+# builder because @trpc/openapi requires TypeScript tooling. Enable MCP with
 # non-routable placeholders so the generated document includes the optional
 # OAuth/assistant surface as well.
 RUN NODE_ENV= \
@@ -41,15 +37,30 @@ RUN NODE_ENV= \
   MCP_PUBLIC_URL=https://mcp-build.invalid \
   ASSISTANT_CONFIRMATION_SECRET=assistant-build-secret-at-least-32-bytes \
   bun run apps/api/scripts/generate-openapi.ts
+RUN bun --filter @spliit/api bundle:runtime
+
+FROM base AS api
+ENV NODE_ENV=production
+RUN mkdir -p /data
+COPY --from=api-builder /app/apps/api/dist/server.js ./apps/api/dist/server.js
+COPY --from=api-builder /app/apps/api/openapi.json ./apps/api/openapi.json
 EXPOSE 3001
-CMD ["bun", "run", "apps/api/src/server.ts"]
+CMD ["bun", "run", "apps/api/dist/server.js"]
 
-FROM runner AS migrate
-CMD ["bun", "--filter", "@spliit/db", "prisma-migrate"]
+FROM installer AS migrate
+ENV NODE_ENV=production
+COPY --from=pruner /app/out/full/ ./
+CMD ["bun", "run", "--filter", "@spliit/db", "prisma-migrate"]
 
-FROM runner AS worker
+FROM source-builder AS worker-builder
+RUN bun --filter @spliit/worker bundle:runtime
+
+FROM base AS worker
+ENV NODE_ENV=production
+RUN mkdir -p /data
+COPY --from=worker-builder /app/apps/worker/dist/server.js ./apps/worker/dist/server.js
 EXPOSE 3003
-CMD ["bun", "run", "apps/worker/src/server.ts"]
+CMD ["bun", "run", "apps/worker/dist/server.js"]
 
 FROM installer AS mcp-builder
 ENV NODE_ENV=production
@@ -60,10 +71,12 @@ COPY --from=pruner /app/out/full/ ./
 # NODE_ENV so runtime-only widget-domain preparation does not run before
 # mcp-use has created the manifest.
 RUN NODE_ENV= MCP_API_URL=https://api-build.invalid MCP_PUBLIC_URL=https://mcp-build.invalid MCP_WEB_URL=https://web-build.invalid bun --filter @spliit/mcp build
+RUN bun --filter @spliit/mcp bundle:runtime
+RUN find apps/mcp/dist -type f -name '*.map' -delete
 
 FROM node:24.12.0-bookworm-slim AS mcp
 WORKDIR /app/apps/mcp
 ENV NODE_ENV=production
-COPY --from=mcp-builder /app /app
+COPY --from=mcp-builder /app/apps/mcp/dist ./dist
 EXPOSE 3002
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/runtime.mjs"]

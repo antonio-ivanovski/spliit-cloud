@@ -23,13 +23,13 @@
     "@prisma/client": "^7.9.1",
     "@spliit/domain": "workspace:*",
     "dotenv": "^17.4.2",
-    "pg": "8.22.0",
-    "prisma": "^7.9.1"
+    "pg": "8.22.0"
   },
   "devDependencies": {
     "@spliit/config": "workspace:*",
     "@types/node": "24.13.2",
     "@types/pg": "^8.20.0",
+    "prisma": "^7.9.1",
     "prisma-json-types-generator": "^5.1.1",
     "prisma-mock": "^1.1.0",
     "typescript": "7.0.2",
