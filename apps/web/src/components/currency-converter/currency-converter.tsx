@@ -364,26 +364,26 @@ export function ConverterContent() {
         </div>
       </div>
 
-      {rateFailed && amountValid && !sameCurrency && (
-        <p className="text-sm text-destructive">{t('rateError')}</p>
-      )}
-
-      {isStaleRate && rate != null && !sameCurrency && (
-        <p className="text-xs text-muted-foreground">
-          {t('staleRate')} {rateError?.message}
-        </p>
-      )}
-
-      {rate != null && !sameCurrency && previewReady && (
-        <p className="text-xs text-muted-foreground">
-          {t('rateInfo', {
-            rate: rate.toFixed(4),
-            from: fromCode,
-            to: toCode,
-          })}
-          {' · '}
-          {t('providerNote')}
-        </p>
+      {!sameCurrency && (
+        <div className="min-h-8" aria-live="polite">
+          {rateFailed && amountValid ? (
+            <p className="text-sm text-destructive">{t('rateError')}</p>
+          ) : isStaleRate && rate != null ? (
+            <p className="text-xs text-muted-foreground">
+              {t('staleRate')} {rateError?.message}
+            </p>
+          ) : rate != null && previewReady ? (
+            <p className="text-xs text-muted-foreground">
+              {t('rateInfo', {
+                rate: rate.toFixed(4),
+                from: fromCode,
+                to: toCode,
+              })}
+              {' · '}
+              {t('providerNote')}
+            </p>
+          ) : null}
+        </div>
       )}
 
       {rankedGroups.length > 0 && (
