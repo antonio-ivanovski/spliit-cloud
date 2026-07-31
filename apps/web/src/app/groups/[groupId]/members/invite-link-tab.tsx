@@ -82,7 +82,7 @@ export function InviteLinkTab({
               </FormItem>
             )}
           />
-          <div className="flex flex-col-reverse items-stretch gap-2 sm:flex-row sm:items-center sm:justify-end">
+          <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-end">
             <FormItem className="space-y-0 sm:w-40">
               <FormLabel className="sm:sr-only">{t('invite.role')}</FormLabel>
               <FormControl>

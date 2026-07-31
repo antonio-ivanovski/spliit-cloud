@@ -234,7 +234,7 @@ describe('CurrencyConverter group navigation', () => {
     })
   })
 
-  it('does not navigate when amount is invalid (empty)', async () => {
+  it('shows groups disabled when amount is empty and does not navigate', async () => {
     accountGroupsQuerySpy.mockReturnValue({
       data: { groups: [makeGroup('group-1', 'Trip', 'USD')] },
       isLoading: false,
@@ -249,9 +249,9 @@ describe('CurrencyConverter group navigation', () => {
 
     render(<ConverterContent />)
 
-    expect(
-      screen.queryByRole('button', { name: /Trip/i }),
-    ).not.toBeInTheDocument()
+    const groupButton = await screen.findByRole('button', { name: /Trip/i })
+    expect(groupButton).toBeDisabled()
+    fireEvent.click(groupButton)
     expect(navigateMock).not.toHaveBeenCalled()
   })
 })

@@ -386,16 +386,17 @@ export function ConverterContent() {
         </p>
       )}
 
-      {previewReady && rankedGroups.length > 0 && (
-        <div className="flex flex-col gap-2 max-sm:sticky max-sm:bottom-0 max-sm:-mx-4 max-sm:border-t max-sm:bg-background max-sm:px-4 max-sm:pt-3 max-sm:pb-4">
+      {rankedGroups.length > 0 && (
+        <div className="flex flex-col gap-2">
           <p className="text-sm font-medium">{t('createIn')}</p>
           <div className="flex gap-2 overflow-x-auto pb-1">
             {rankedGroups.map((group) => (
               <button
                 key={group.id}
                 type="button"
+                disabled={!amountValid}
                 onClick={() => handleGroupClick(group)}
-                className="flex shrink-0 items-center gap-1.5 rounded-full border bg-card px-3 py-1.5 text-sm font-medium shadow-xs hover:bg-accent"
+                className="flex shrink-0 items-center gap-1.5 rounded-full border bg-card px-3 py-1.5 text-sm font-medium shadow-xs hover:bg-accent disabled:pointer-events-none disabled:opacity-50"
               >
                 {group.preference.starred && (
                   <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
@@ -412,7 +413,7 @@ export function ConverterContent() {
         </div>
       )}
 
-      {previewReady && rankedGroups.length === 0 && (
+      {groupsData && rankedGroups.length === 0 && (
         <p className="text-sm text-muted-foreground">{t('noGroups')}</p>
       )}
     </div>

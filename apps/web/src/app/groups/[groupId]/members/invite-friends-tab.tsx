@@ -107,7 +107,7 @@ export function InviteFriendsTab({
               </SelectContent>
             </Select>
           </div>
-          <div className="flex flex-col-reverse items-stretch gap-2 sm:flex-row sm:items-center sm:justify-end">
+          <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-end">
             <div className="sm:w-40">
               <Label className="sm:sr-only">{t('invite.role')}</Label>
               <Select
