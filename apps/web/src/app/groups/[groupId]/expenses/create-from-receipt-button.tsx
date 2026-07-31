@@ -121,30 +121,32 @@ export function ReceiptScanTrigger({
   const showText = !isAlwaysIconOnly
   return (
     <ResponsiveDialog open={open} onOpenChange={setOpen}>
-      <ResponsiveDialogTrigger asChild>
-        <Button
-          type="button"
-          variant="secondary"
-          size={isAlwaysIconOnly ? 'icon' : 'default'}
-          className={cn(
-            isResponsiveIconOnly &&
-              'h-11 w-11 p-0 sm:h-10 sm:w-auto sm:px-4 sm:py-2',
-            className,
-          )}
-          title={title}
-          aria-label={title}
-        >
-          <span className={cn('relative inline-flex', showText && 'mr-2')}>
-            <ScanLine className="h-6 w-6 sm:h-4 sm:w-4" />
-            <Sparkles className="absolute -top-[2px] -right-[1px] h-3.5 w-3.5 animate-[pulse_2.4s_ease-in-out_infinite] text-pink-600 drop-shadow-[0_0_4px_rgba(236,72,153,0.75)] sm:h-2.5 sm:w-2.5" />
-          </span>
-          {showText && (
-            <span className={cn(isResponsiveIconOnly && 'hidden sm:inline')}>
-              {children ?? t('Dialog.triggerTitle')}
+      <ResponsiveDialogTrigger
+        render={
+          <Button
+            type="button"
+            variant="secondary"
+            size={isAlwaysIconOnly ? 'icon' : 'default'}
+            className={cn(
+              isResponsiveIconOnly &&
+                'h-11 w-11 p-0 sm:h-10 sm:w-auto sm:px-4 sm:py-2',
+              className,
+            )}
+            title={title}
+            aria-label={title}
+          >
+            <span className={cn('relative inline-flex', showText && 'mr-2')}>
+              <ScanLine className="h-6 w-6 sm:h-4 sm:w-4" />
+              <Sparkles className="absolute -top-[2px] -right-[1px] h-3.5 w-3.5 animate-[pulse_2.4s_ease-in-out_infinite] text-pink-600 drop-shadow-[0_0_4px_rgba(236,72,153,0.75)] sm:h-2.5 sm:w-2.5" />
             </span>
-          )}
-        </Button>
-      </ResponsiveDialogTrigger>
+            {showText && (
+              <span className={cn(isResponsiveIconOnly && 'hidden sm:inline')}>
+                {children ?? t('Dialog.triggerTitle')}
+              </span>
+            )}
+          </Button>
+        }
+      />
       <ResponsiveDialogContent>
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle className="flex items-center gap-2">

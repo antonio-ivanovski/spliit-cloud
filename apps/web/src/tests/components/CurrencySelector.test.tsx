@@ -133,7 +133,7 @@ describe('CurrencySelector', () => {
     expect(screen.getByRole('dialog')).toBeInTheDocument()
 
     fireEvent.click(screen.getByRole('button', { name: 'Done' }))
-    expect(screen.getByRole('dialog')).toHaveAttribute('data-state', 'closed')
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
   it('pins the group currency first in the priority block', () => {

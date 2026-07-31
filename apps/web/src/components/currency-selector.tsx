@@ -132,27 +132,29 @@ export function CurrencySelector({
     if (!isDesktop) {
       return (
         <Drawer open={open} onOpenChange={setOpen}>
-          <DrawerTrigger asChild>
-            <Button
-              type="button"
-              variant="outline"
-              role="combobox"
-              aria-haspopup="listbox"
-              aria-expanded={open}
-              aria-label={ariaLabel}
-              disabled={disabled}
-              className="h-9 justify-between px-3 text-sm font-normal"
-            >
-              <span className="truncate">
-                {selectedValues.length > 0
-                  ? t('Expenses.filters.nSelected', {
-                      count: selectedValues.length,
-                    })
-                  : (multiPlaceholder ?? 'Select')}
-              </span>
-              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-          </DrawerTrigger>
+          <DrawerTrigger
+            render={
+              <Button
+                type="button"
+                variant="outline"
+                role="combobox"
+                aria-haspopup="listbox"
+                aria-expanded={open}
+                aria-label={ariaLabel}
+                disabled={disabled}
+                className="h-9 justify-between px-3 text-sm font-normal"
+              >
+                <span className="truncate">
+                  {selectedValues.length > 0
+                    ? t('Expenses.filters.nSelected', {
+                        count: selectedValues.length,
+                      })
+                    : (multiPlaceholder ?? 'Select')}
+                </span>
+                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            }
+          />
           <DrawerContent className="p-0">
             <DrawerHeader className="pb-2 text-start">
               <DrawerTitle>
@@ -230,16 +232,18 @@ export function CurrencySelector({
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
-        <CurrencyButton
-          currency={selectedCurrency}
-          open={open}
-          isLoading={isLoading}
-          disabled={disabled}
-          compact={compact}
-          aria-label={ariaLabel}
-        />
-      </DrawerTrigger>
+      <DrawerTrigger
+        render={
+          <CurrencyButton
+            currency={selectedCurrency}
+            open={open}
+            isLoading={isLoading}
+            disabled={disabled}
+            compact={compact}
+            aria-label={ariaLabel}
+          />
+        }
+      />
       <DrawerContent className="p-0">{command}</DrawerContent>
     </Drawer>
   )

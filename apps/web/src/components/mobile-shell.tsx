@@ -162,18 +162,21 @@ export function MobileGroupNav({ groupId }: GroupNavProps) {
           </ResponsiveDialogHeader>
           <ResponsiveDialogBody className="flex flex-col gap-2 pb-[env(safe-area-inset-bottom)]">
             {moreTabs.map(({ href, label, icon: Icon }) => (
-              <ResponsiveDialogClose key={href} asChild>
-                <Link
-                  href={href}
-                  className="flex min-h-12 items-center gap-3 rounded-lg border px-3 text-sm font-medium hover:bg-muted"
-                >
-                  <Icon
-                    className="size-5 text-muted-foreground"
-                    aria-hidden="true"
-                  />
-                  {label}
-                </Link>
-              </ResponsiveDialogClose>
+              <ResponsiveDialogClose
+                key={href}
+                render={
+                  <Link
+                    href={href}
+                    className="flex min-h-12 items-center gap-3 rounded-lg border px-3 text-sm font-medium hover:bg-muted"
+                  >
+                    <Icon
+                      className="size-5 text-muted-foreground"
+                      aria-hidden="true"
+                    />
+                    {label}
+                  </Link>
+                }
+              />
             ))}
           </ResponsiveDialogBody>
         </ResponsiveDialogContent>

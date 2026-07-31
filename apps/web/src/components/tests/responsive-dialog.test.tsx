@@ -45,9 +45,7 @@ function mockMobileMediaQuery() {
 function SampleDialog() {
   return (
     <ResponsiveDialog defaultOpen>
-      <ResponsiveDialogTrigger asChild>
-        <button type="button">Open</button>
-      </ResponsiveDialogTrigger>
+      <ResponsiveDialogTrigger render={<button type="button">Open</button>} />
       <ResponsiveDialogContent>
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>Confirm action</ResponsiveDialogTitle>
@@ -104,11 +102,11 @@ describe('ResponsiveDialog', () => {
     document.documentElement.dir = 'ltr'
   })
 
-  it('renders mobile content as a bottom drawer (vaul)', () => {
+  it('renders mobile content as a bottom drawer (Base UI)', () => {
     mockMobileMediaQuery()
     render(<SampleDialog />)
 
-    // vaul also exposes role="dialog" on the drawer container so
+    // Base UI exposes role="dialog" on the drawer popup so
     // accessibility tooling treats it the same as a modal.
     const dialog = screen.getByRole('dialog')
     expect(dialog).toBeInTheDocument()

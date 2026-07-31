@@ -61,10 +61,9 @@ describe('TimeZoneMismatchDialog', () => {
 
     await user.click(screen.getByRole('button', { name: /^keep /i }))
 
-    expect(screen.getByTestId('time-zone-mismatch-dialog')).toHaveAttribute(
-      'data-state',
-      'closed',
-    )
+    expect(
+      screen.queryByTestId('time-zone-mismatch-dialog'),
+    ).not.toBeInTheDocument()
     expect(
       hasKeptTimeZoneMismatch(
         'account-a',
@@ -99,10 +98,9 @@ describe('TimeZoneMismatchDialog', () => {
       { optimistic: false },
     )
     await waitFor(() =>
-      expect(screen.getByTestId('time-zone-mismatch-dialog')).toHaveAttribute(
-        'data-state',
-        'closed',
-      ),
+      expect(
+        screen.queryByTestId('time-zone-mismatch-dialog'),
+      ).not.toBeInTheDocument(),
     )
   })
 
@@ -137,8 +135,7 @@ describe('TimeZoneMismatchDialog', () => {
       <TimeZoneMismatchDialog {...props} accountTimeZone={accountTimeZone} />,
     )
     expect(screen.getByTestId('time-zone-mismatch-dialog')).toHaveAttribute(
-      'data-state',
-      'open',
+      'data-open',
     )
 
     keepTimeZoneMismatch('account-a', accountTimeZone, browserTimeZone)
@@ -149,10 +146,9 @@ describe('TimeZoneMismatchDialog', () => {
       }),
     )
     await waitFor(() =>
-      expect(screen.getByTestId('time-zone-mismatch-dialog')).toHaveAttribute(
-        'data-state',
-        'closed',
-      ),
+      expect(
+        screen.queryByTestId('time-zone-mismatch-dialog'),
+      ).not.toBeInTheDocument(),
     )
 
     view.rerender(

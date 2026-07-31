@@ -255,7 +255,7 @@ describe('LocaleSwitcher', () => {
 
     expect(i18nSetup.setUserLocale).toHaveBeenCalledWith('ja-JP')
     await waitFor(() => {
-      expect(drawer).toHaveAttribute('data-state', 'closed')
+      expect(drawer).toHaveAttribute('data-closed')
     })
   })
 })

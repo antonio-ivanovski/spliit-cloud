@@ -85,17 +85,19 @@ function SortControl() {
   if (!isDesktop) {
     return (
       <ResponsiveDialog open={mobileOpen} onOpenChange={setMobileOpen}>
-        <ResponsiveDialogTrigger asChild>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="h-9 w-9 p-0"
-            aria-label={tFilters('sort.title')}
-          >
-            <ArrowUpDown className="h-4 w-4" />
-          </Button>
-        </ResponsiveDialogTrigger>
+        <ResponsiveDialogTrigger
+          render={
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="h-9 w-9 p-0"
+              aria-label={tFilters('sort.title')}
+            >
+              <ArrowUpDown className="h-4 w-4" />
+            </Button>
+          }
+        />
         <ResponsiveDialogContent className="sm:max-w-md">
           <ResponsiveDialogHeader>
             <ResponsiveDialogTitle>

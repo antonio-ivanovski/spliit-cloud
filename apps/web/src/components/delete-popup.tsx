@@ -39,20 +39,22 @@ export function DeletePopup({ onDelete, className, labels }: Props) {
   })
   return (
     <ResponsiveDialog>
-      <ResponsiveDialogTrigger asChild>
-        <Button
-          variant="outline"
-          className={cn(
-            'border-destructive text-destructive hover:bg-destructive/10 hover:text-destructive',
-            className,
-          )}
-        >
-          <Trash2 className="h-4 w-4 min-[420px]:mr-2" />
-          <span className="hidden min-[420px]:inline">
-            {labels?.label ?? t('label')}
-          </span>
-        </Button>
-      </ResponsiveDialogTrigger>
+      <ResponsiveDialogTrigger
+        render={
+          <Button
+            variant="outline"
+            className={cn(
+              'border-destructive text-destructive hover:bg-destructive/10 hover:text-destructive',
+              className,
+            )}
+          >
+            <Trash2 className="h-4 w-4 min-[420px]:mr-2" />
+            <span className="hidden min-[420px]:inline">
+              {labels?.label ?? t('label')}
+            </span>
+          </Button>
+        }
+      />
       <ResponsiveDialogContent>
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>
@@ -71,11 +73,13 @@ export function DeletePopup({ onDelete, className, labels }: Props) {
           >
             {labels?.yes ?? t('yes')}
           </AsyncButton>
-          <ResponsiveDialogClose asChild>
-            <Button variant={'secondary'}>
-              {labels?.cancel ?? t('cancel')}
-            </Button>
-          </ResponsiveDialogClose>
+          <ResponsiveDialogClose
+            render={
+              <Button variant={'secondary'}>
+                {labels?.cancel ?? t('cancel')}
+              </Button>
+            }
+          />
         </ResponsiveDialogFooter>
       </ResponsiveDialogContent>
     </ResponsiveDialog>

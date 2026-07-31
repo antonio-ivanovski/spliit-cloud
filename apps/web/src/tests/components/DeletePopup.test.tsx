@@ -4,8 +4,8 @@ import { DeletePopup } from '@/components/delete-popup'
 import { render, screen, waitFor } from '@/test/test-utils'
 
 // The component now uses the responsive primitive, which switches between
-// Radix Dialog (desktop) and vaul Drawer (mobile) based on matchMedia.
-// The vaul Drawer keeps the dialog element in the DOM during its close
+// Radix Dialog (desktop) and Base UI Drawer (mobile) based on matchMedia.
+// The Base UI Drawer keeps the dialog element in the DOM during its close
 // animation, so we drive these tests in desktop mode to assert Radix's
 // mount/unmount behaviour. The mobile path is covered by the primitive
 // test in src/components/tests/responsive-dialog.test.tsx.

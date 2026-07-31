@@ -158,21 +158,23 @@ export function CurrencyConverterButton() {
 
   return (
     <ResponsiveDialog open={open} onOpenChange={setOpen}>
-      <ResponsiveDialogTrigger asChild>
-        <Button
-          type="button"
-          variant="secondary"
-          size="sm"
-          aria-label={t('trigger')}
-        >
-          <img
-            src={currencyExchangeSvg}
-            alt=""
-            className="mr-0 h-6 w-6 shrink-0 sm:mr-2 dark:invert"
-          />
-          <span className="hidden sm:inline">{t('trigger')}</span>
-        </Button>
-      </ResponsiveDialogTrigger>
+      <ResponsiveDialogTrigger
+        render={
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            aria-label={t('trigger')}
+          >
+            <img
+              src={currencyExchangeSvg}
+              alt=""
+              className="mr-0 h-6 w-6 shrink-0 sm:mr-2 dark:invert"
+            />
+            <span className="hidden sm:inline">{t('trigger')}</span>
+          </Button>
+        }
+      />
       <ResponsiveDialogContent className="sm:max-w-lg">
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>{t('title')}</ResponsiveDialogTitle>

@@ -623,7 +623,7 @@ function PeopleGroupBreakdown({
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>{trigger}</DrawerTrigger>
+      <DrawerTrigger render={trigger} />
       <DrawerContent>
         <DrawerHeader className="text-start">
           <DrawerTitle>{personName}</DrawerTitle>
@@ -825,7 +825,7 @@ function BalanceGroupBreakdown({
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>{trigger}</DrawerTrigger>
+      <DrawerTrigger render={trigger} />
       <DrawerContent>
         <DrawerHeader className="text-start">
           <DrawerTitle>{label}</DrawerTitle>

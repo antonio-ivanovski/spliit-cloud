@@ -1,16 +1,10 @@
+import { Drawer as DrawerPrimitive } from '@base-ui/react/drawer'
 import * as React from 'react'
-import { Drawer as DrawerPrimitive } from 'vaul'
 
 import { cn } from '@/lib/utils'
 
-const Drawer = ({
-  shouldScaleBackground = true,
-  ...props
-}: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
-  <DrawerPrimitive.Root
-    shouldScaleBackground={shouldScaleBackground}
-    {...props}
-  />
+const Drawer = (props: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
+  <DrawerPrimitive.Root {...props} />
 )
 Drawer.displayName = 'Drawer'
 
@@ -21,34 +15,41 @@ const DrawerPortal = DrawerPrimitive.Portal
 const DrawerClose = DrawerPrimitive.Close
 
 const DrawerOverlay = React.forwardRef<
-  React.ElementRef<typeof DrawerPrimitive.Overlay>,
-  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Overlay>
+  React.ElementRef<typeof DrawerPrimitive.Backdrop>,
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Backdrop>
 >(({ className, ...props }, ref) => (
-  <DrawerPrimitive.Overlay
+  <DrawerPrimitive.Backdrop
     ref={ref}
-    className={cn('motion-overlay fixed inset-0 z-50 bg-black/80', className)}
+    className={cn(
+      'motion-overlay fixed inset-0 z-50 min-h-dvh bg-black/80 opacity-[calc(1-var(--drawer-swipe-progress))] data-[starting-style]:opacity-0 data-[ending-style]:opacity-0 supports-[-webkit-touch-callout:none]:absolute',
+      className,
+    )}
     {...props}
   />
 ))
-DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName
+DrawerOverlay.displayName = 'DrawerOverlay'
 
 const DrawerContent = React.forwardRef<
-  React.ElementRef<typeof DrawerPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content>
+  React.ElementRef<typeof DrawerPrimitive.Popup>,
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Popup>
 >(({ className, children, ...props }, ref) => (
   <DrawerPortal>
     <DrawerOverlay />
-    <DrawerPrimitive.Content
-      ref={ref}
-      className={cn(
-        'motion-drawer fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto max-h-[calc(100dvh-3rem)] flex-col overflow-hidden rounded-t-[10px] border bg-background pb-[env(safe-area-inset-bottom)]',
-        className,
-      )}
-      {...props}
-    >
-      <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted" />
-      {children}
-    </DrawerPrimitive.Content>
+    <DrawerPrimitive.Viewport className="fixed inset-0 z-50 flex items-end justify-center touch-none">
+      <DrawerPrimitive.Popup
+        ref={ref}
+        className={cn(
+          'motion-drawer relative flex w-full max-h-[calc(100dvh-3rem)] min-h-0 flex-col overflow-hidden rounded-t-[14px] border bg-background pb-[env(safe-area-inset-bottom)] outline-none shadow-xl touch-auto overscroll-contain [transform:translateY(var(--drawer-swipe-movement-y))] transition-[transform,box-shadow] duration-[var(--motion-duration-slow)] ease-[var(--motion-ease-out)] data-[swiping]:select-none data-[starting-style]:[transform:translateY(calc(100%+2px))] data-[ending-style]:[transform:translateY(calc(100%+2px))] data-[ending-style]:duration-[calc(var(--drawer-swipe-strength)*400ms)]',
+          className,
+        )}
+        {...props}
+      >
+        <div className="mx-auto mt-3 h-1.5 w-16 shrink-0 rounded-full bg-muted-foreground/35" />
+        <DrawerPrimitive.Content className="flex min-h-0 flex-1 flex-col outline-none">
+          {children}
+        </DrawerPrimitive.Content>
+      </DrawerPrimitive.Popup>
+    </DrawerPrimitive.Viewport>
   </DrawerPortal>
 ))
 DrawerContent.displayName = 'DrawerContent'
@@ -88,7 +89,7 @@ const DrawerTitle = React.forwardRef<
     {...props}
   />
 ))
-DrawerTitle.displayName = DrawerPrimitive.Title.displayName
+DrawerTitle.displayName = 'DrawerTitle'
 
 const DrawerDescription = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Description>,
@@ -100,7 +101,7 @@ const DrawerDescription = React.forwardRef<
     {...props}
   />
 ))
-DrawerDescription.displayName = DrawerPrimitive.Description.displayName
+DrawerDescription.displayName = 'DrawerDescription'
 
 export {
   Drawer,

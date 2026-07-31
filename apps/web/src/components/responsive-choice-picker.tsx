@@ -232,7 +232,7 @@ export function ResponsiveChoicePicker<T extends string>({
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>{trigger}</DrawerTrigger>
+      <DrawerTrigger render={trigger} />
       <DrawerContent className="p-0">
         <DrawerHeader className="pb-2 text-left">
           <DrawerTitle>{mobileTitle ?? ariaLabel}</DrawerTitle>

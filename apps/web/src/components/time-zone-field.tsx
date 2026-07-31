@@ -199,7 +199,7 @@ export const TimeZoneField = forwardRef<HTMLButtonElement, Props>(
 
     return (
       <Drawer open={open} onOpenChange={setOpen}>
-        <DrawerTrigger asChild>{trigger}</DrawerTrigger>
+        <DrawerTrigger render={trigger} />
         <DrawerContent className="p-0">
           <DrawerHeader className="pb-2 text-start">
             <DrawerTitle>

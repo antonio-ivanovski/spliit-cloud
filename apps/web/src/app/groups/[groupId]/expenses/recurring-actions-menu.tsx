@@ -232,11 +232,13 @@ export function RecurringActionsMenu({
               </Button>
             </>
           ) : (
-            <ResponsiveDialogClose asChild>
-              <Button type="button" variant="secondary" className="w-full">
-                {t('cancel')}
-              </Button>
-            </ResponsiveDialogClose>
+            <ResponsiveDialogClose
+              render={
+                <Button type="button" variant="secondary" className="w-full">
+                  {t('cancel')}
+                </Button>
+              }
+            />
           )}
         </ResponsiveDialogFooter>
       </ResponsiveDialogContent>

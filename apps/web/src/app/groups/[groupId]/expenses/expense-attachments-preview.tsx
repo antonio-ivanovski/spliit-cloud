@@ -36,21 +36,23 @@ export function ExpenseAttachmentsPreview({
       <div className="flex gap-2 overflow-x-auto pb-1">
         {documents.slice(0, 4).map((document) => (
           <ResponsiveDialog key={document.id}>
-            <ResponsiveDialogTrigger asChild>
-              <Button
-                variant="secondary"
-                className="h-16 w-16 shrink-0 overflow-hidden rounded-md border p-0 shadow-inner"
-                aria-label={t('attachments', { count: 1 })}
-              >
-                <Image
-                  src={document.url}
-                  width={document.width}
-                  height={document.height}
-                  className="h-full w-full object-cover"
-                  alt=""
-                />
-              </Button>
-            </ResponsiveDialogTrigger>
+            <ResponsiveDialogTrigger
+              render={
+                <Button
+                  variant="secondary"
+                  className="h-16 w-16 shrink-0 overflow-hidden rounded-md border p-0 shadow-inner"
+                  aria-label={t('attachments', { count: 1 })}
+                >
+                  <Image
+                    src={document.url}
+                    width={document.width}
+                    height={document.height}
+                    className="h-full w-full object-cover"
+                    alt=""
+                  />
+                </Button>
+              }
+            />
             <ResponsiveDialogContent className="flex h-[calc(100dvh-2rem)] max-h-[calc(100dvh-2rem)] w-[calc(100vw-2rem)] max-w-4xl items-center justify-center p-4">
               <ResponsiveDialogTitle className="sr-only">
                 {t('attachments', { count: 1 })}

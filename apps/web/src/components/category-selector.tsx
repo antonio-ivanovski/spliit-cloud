@@ -113,26 +113,28 @@ export function CategorySelector({
     if (!isDesktop) {
       return (
         <Drawer open={open} onOpenChange={setOpen}>
-          <DrawerTrigger asChild>
-            <Button
-              type="button"
-              variant="outline"
-              role="combobox"
-              aria-haspopup="listbox"
-              aria-expanded={open}
-              disabled={disabled}
-              className="h-9 w-full justify-between px-3 text-sm font-normal"
-            >
-              <span className="truncate">
-                {multiCount > 0
-                  ? t('Expenses.filters.nSelected', {
-                      count: multiCount,
-                    })
-                  : (multiPlaceholder ?? 'Select')}
-              </span>
-              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-          </DrawerTrigger>
+          <DrawerTrigger
+            render={
+              <Button
+                type="button"
+                variant="outline"
+                role="combobox"
+                aria-haspopup="listbox"
+                aria-expanded={open}
+                disabled={disabled}
+                className="h-9 w-full justify-between px-3 text-sm font-normal"
+              >
+                <span className="truncate">
+                  {multiCount > 0
+                    ? t('Expenses.filters.nSelected', {
+                        count: multiCount,
+                      })
+                    : (multiPlaceholder ?? 'Select')}
+                </span>
+                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            }
+          />
           <DrawerContent className="p-0">
             <DrawerHeader className="pb-2 text-start">
               <DrawerTitle>
@@ -217,15 +219,17 @@ export function CategorySelector({
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
-        <CategoryButton
-          category={selectedCategory}
-          open={open}
-          isLoading={isLoading}
-          disabled={disabled}
-          compact={compact}
-        />
-      </DrawerTrigger>
+      <DrawerTrigger
+        render={
+          <CategoryButton
+            category={selectedCategory}
+            open={open}
+            isLoading={isLoading}
+            disabled={disabled}
+            compact={compact}
+          />
+        }
+      />
       <DrawerContent className="p-0">
         <CategoryCommand
           hierarchy={hierarchy}

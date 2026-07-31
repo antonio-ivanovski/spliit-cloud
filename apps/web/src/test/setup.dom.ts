@@ -65,9 +65,9 @@ if (!globalThis.PointerEvent) {
   })
 }
 
-// ── Polyfill pointer-capture methods (vaul) ──────────────────────────────
-// vaul's drawer calls setPointerCapture / releasePointerCapture on
-// pointer events to track drag gestures. Stub them to no-ops when missing.
+// ── Polyfill pointer-capture methods (drawer swipe gestures) ────────────
+// Base UI's drawer calls setPointerCapture / releasePointerCapture on
+// pointer events to track swipe gestures. Stub them to no-ops when missing.
 if (typeof Element !== 'undefined') {
   if (!Element.prototype.setPointerCapture) {
     Element.prototype.setPointerCapture = function () {}

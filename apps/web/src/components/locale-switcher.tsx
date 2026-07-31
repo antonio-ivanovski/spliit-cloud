@@ -115,17 +115,19 @@ export function LocaleSelector({
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
-        <LocaleButton
-          locale={value}
-          showLabel={field || showLabel}
-          field={field}
-          open={open}
-          className={className}
-          variant={variant}
-          disabled={disabled}
-        />
-      </DrawerTrigger>
+      <DrawerTrigger
+        render={
+          <LocaleButton
+            locale={value}
+            showLabel={field || showLabel}
+            field={field}
+            open={open}
+            className={className}
+            variant={variant}
+            disabled={disabled}
+          />
+        }
+      />
       <DrawerContent className="p-0">
         <DrawerHeader className="pb-2 text-start">
           <DrawerTitle>{t('title')}</DrawerTitle>
