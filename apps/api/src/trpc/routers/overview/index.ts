@@ -536,17 +536,10 @@ export const overviewRouter = createTRPCRouter({
         peopleParticipants,
       )
 
-      const visibleForCounts = groups.filter(({ archived }) => !archived)
-      const friendCount = visibleForCounts.filter(
-        ({ groupType, memberCount }) =>
-          groupType === GroupType.FRIEND && memberCount > 1,
-      ).length
-
       return {
         stats: {
           balanceSummaries: summarizeBalances(groups),
           peopleBalances,
-          friendCount,
         },
         groups: groups.sort((a, b) => {
           const aTime = a.financialSummary.latestExpenseCreatedAt ?? a.createdAt

@@ -275,11 +275,13 @@ describe('overviewRouter.get', () => {
       },
     } as never)
 
-    await expect(caller.get()).resolves.toEqual({
+    const result = await caller.get()
+
+    expect(result.stats).not.toHaveProperty('friendCount')
+    expect(result).toEqual({
       stats: {
         balanceSummaries: [],
         peopleBalances: [],
-        friendCount: 0,
       },
       groups: [],
     })

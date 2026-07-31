@@ -56,7 +56,6 @@ export const overviewOutputSchema = z.object({
         ),
       }),
     ),
-    friendCount: z.number().int().nonnegative(),
   }),
   groups: z.array(overviewGroupSchema),
 })

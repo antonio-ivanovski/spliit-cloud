@@ -79,7 +79,6 @@ type OverviewStats = {
     youOweGroupCount: number
   }>
   peopleBalances: OverviewPeopleBalance[]
-  friendCount: number
 }
 
 export function RecentGroupList() {
@@ -327,10 +326,7 @@ function OverviewHeader({
   })
   const balanceSummaries = stats?.balanceSummaries ?? []
   const peopleBalances = stats?.peopleBalances ?? []
-  const hasGroupSummary =
-    balanceSummaries.length > 0 ||
-    (stats?.friendCount ?? 0) > 0 ||
-    groups.length > 0
+  const hasGroupSummary = balanceSummaries.length > 0 || groups.length > 0
   const hasAnyBalance = balanceSummaries.some(
     (summary) => summary.owedToYou > 0 || summary.youOwe > 0,
   )
@@ -363,14 +359,6 @@ function OverviewHeader({
                     {t('overview.peopleTab')}
                   </TabsTrigger>
                 </TabsList>
-                {stats.friendCount > 0 && (
-                  <span className="text-xs text-muted-foreground">
-                    {stats.friendCount}{' '}
-                    {stats.friendCount === 1
-                      ? tLabels('friendLedger')
-                      : tLabels('friendLedgerPlural')}
-                  </span>
-                )}
               </div>
             </div>
             <TabsContent value="groups" className="mt-0">
@@ -459,37 +447,42 @@ function PeopleBalanceDirection({
         <span>{label}</span>
       </div>
       {rows.length > 0 ? (
-        <div className="grid gap-1.5">
-          {rows.map(({ person, currencies }) => (
-            <div
-              key={person.key}
-              className="rounded-md bg-muted/35 px-3 py-2.5"
-            >
-              <div className="flex min-w-0 items-center gap-2">
-                <ParticipantAvatar
-                  participant={{
-                    id: person.key,
-                    name: person.name || t('overview.unknownPerson'),
-                    account: person.account,
-                  }}
-                  size="sm"
-                />
-                <span className="min-w-0 truncate text-sm font-medium">
-                  {person.name || t('overview.unknownPerson')}
-                </span>
-              </div>
-              <div className="mt-2 grid gap-1.5 border-t border-border/60 pt-1.5">
-                {currencies.map((currency) => (
-                  <PeopleBalanceRow
-                    key={`${currency.currencyCode ?? currency.currency}-${direction}`}
-                    personName={person.name || t('overview.unknownPerson')}
-                    currency={currency}
-                    label={label}
+        <div
+          className="max-h-[min(65vh,32rem)] overflow-y-auto overscroll-contain pr-1"
+          data-testid={`overview-people-${direction}-rows`}
+        >
+          <div className="grid gap-1.5">
+            {rows.map(({ person, currencies }) => (
+              <div
+                key={person.key}
+                className="rounded-md bg-muted/35 px-3 py-2.5"
+              >
+                <div className="flex min-w-0 items-center gap-2">
+                  <ParticipantAvatar
+                    participant={{
+                      id: person.key,
+                      name: person.name || t('overview.unknownPerson'),
+                      account: person.account,
+                    }}
+                    size="sm"
                   />
-                ))}
+                  <span className="min-w-0 truncate text-sm font-medium">
+                    {person.name || t('overview.unknownPerson')}
+                  </span>
+                </div>
+                <div className="mt-2 grid gap-1.5 border-t border-border/60 pt-1.5">
+                  {currencies.map((currency) => (
+                    <PeopleBalanceRow
+                      key={`${currency.currencyCode ?? currency.currency}-${direction}`}
+                      personName={person.name || t('overview.unknownPerson')}
+                      currency={currency}
+                      label={label}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       ) : (
         <div className="rounded-md bg-muted/35 px-3 py-2 text-sm text-muted-foreground">
@@ -668,17 +661,22 @@ function BalanceDirection({
         <span>{label}</span>
       </div>
       {rows.length > 0 ? (
-        <div className="grid gap-1.5">
-          {rows.map((summary) => (
-            <BalanceSummaryRow
-              key={`${summary.currencyCode ?? summary.currency}-${direction}`}
-              direction={direction}
-              summary={summary}
-              groups={groups}
-              groupLabel={groupLabel}
-              label={label}
-            />
-          ))}
+        <div
+          className="max-h-[min(65vh,32rem)] overflow-y-auto overscroll-contain pr-1"
+          data-testid={`overview-groups-${direction}-rows`}
+        >
+          <div className="grid gap-1.5">
+            {rows.map((summary) => (
+              <BalanceSummaryRow
+                key={`${summary.currencyCode ?? summary.currency}-${direction}`}
+                direction={direction}
+                summary={summary}
+                groups={groups}
+                groupLabel={groupLabel}
+                label={label}
+              />
+            ))}
+          </div>
         </div>
       ) : (
         <div className="rounded-md bg-muted/35 px-3 py-2 text-sm text-muted-foreground">

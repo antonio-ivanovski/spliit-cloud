@@ -206,7 +206,6 @@ describe('RecentGroupList', () => {
         groups: [],
         stats: {
           balanceSummaries: [],
-          friendCount: 0,
         },
       },
       isLoading: false,
@@ -283,7 +282,6 @@ describe('RecentGroupList', () => {
               youOweGroupCount: 0,
             },
           ],
-          friendCount: 0,
         },
       },
       isLoading: false,
@@ -296,6 +294,11 @@ describe('RecentGroupList', () => {
     expect(overview.getByText('You are owed')).toBeInTheDocument()
     expect(overview.getByText('You owe')).toBeInTheDocument()
     expect(overview.getByText("You don't owe anyone")).toBeInTheDocument()
+    expect(overview.queryByText(/friend/i)).not.toBeInTheDocument()
+    expect(overview.getByTestId('overview-groups-owed-rows')).toHaveClass(
+      'max-h-[min(65vh,32rem)]',
+      'overflow-y-auto',
+    )
     expect(overview.getByText('$12.00')).toBeInTheDocument()
     expect(overview.getByText('$12.00').parentElement).toHaveTextContent(
       '2 groups',
@@ -308,7 +311,6 @@ describe('RecentGroupList', () => {
     expect(screen.getAllByRole('link', { name: /Cabin weekend/ })).toHaveLength(
       1,
     )
-    expect(overview.queryByText(/friend/i)).not.toBeInTheDocument()
   })
 
   it('switches to people balances and drills into contributing groups', async () => {
@@ -355,7 +357,6 @@ describe('RecentGroupList', () => {
               ],
             },
           ],
-          friendCount: 0,
         },
       },
       isLoading: false,
@@ -368,6 +369,10 @@ describe('RecentGroupList', () => {
     expect(overview.getByText('Bob')).toBeInTheDocument()
     expect(overview.getByText('$6.00')).toBeInTheDocument()
     expect(overview.getByText('€5.00')).toBeInTheDocument()
+    expect(overview.getByTestId('overview-people-owed-rows')).toHaveClass(
+      'max-h-[min(65vh,32rem)]',
+      'overflow-y-auto',
+    )
     expect(
       overview.getAllByRole('button', { name: /View groups for Bob/ }),
     ).toHaveLength(2)
@@ -381,11 +386,106 @@ describe('RecentGroupList', () => {
     ).toBeInTheDocument()
   })
 
+  it('keeps each populated direction independently scrollable', async () => {
+    mocks.mockUseOverviewQuery.mockReturnValue({
+      data: {
+        groups: [
+          makeGroup({
+            id: 'group-owed',
+            financialSummary: {
+              expenseCount: 1,
+              netBalance: 100,
+              state: 'OWED_TO_YOU',
+              latestExpenseCreatedAt: null,
+            },
+          }),
+          makeGroup({
+            id: 'group-owe',
+            financialSummary: {
+              expenseCount: 1,
+              netBalance: -100,
+              state: 'YOU_OWE',
+              latestExpenseCreatedAt: null,
+            },
+          }),
+        ],
+        stats: {
+          balanceSummaries: [
+            {
+              currency: '$',
+              currencyCode: 'USD',
+              owedToYou: 100,
+              owedToYouGroupCount: 1,
+              youOwe: 100,
+              youOweGroupCount: 1,
+            },
+          ],
+          peopleBalances: [
+            {
+              key: 'account-bob',
+              name: 'Bob',
+              account: { id: 'account-bob', name: 'Bob', image: null },
+              currencies: [
+                {
+                  currency: '$',
+                  currencyCode: 'USD',
+                  netAmount: 100,
+                  groups: [
+                    { groupId: 'group-owed', groupName: 'Owed', amount: 100 },
+                  ],
+                },
+              ],
+            },
+            {
+              key: 'account-cara',
+              name: 'Cara',
+              account: { id: 'account-cara', name: 'Cara', image: null },
+              currencies: [
+                {
+                  currency: '$',
+                  currencyCode: 'USD',
+                  netAmount: -100,
+                  groups: [
+                    { groupId: 'group-owe', groupName: 'Owe', amount: -100 },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      },
+      isLoading: false,
+    })
+
+    const { user } = render(<RecentGroupList />)
+    const overview = within(screen.getByRole('region', { name: 'Balances' }))
+    const scrollClasses = [
+      'max-h-[min(65vh,32rem)]',
+      'overflow-y-auto',
+    ] as const
+
+    expect(overview.getByTestId('overview-groups-owed-rows')).toHaveClass(
+      ...scrollClasses,
+    )
+    expect(overview.getByTestId('overview-groups-owe-rows')).toHaveClass(
+      ...scrollClasses,
+    )
+
+    await user.click(screen.getByRole('tab', { name: 'People' }))
+
+    expect(overview.getByTestId('overview-people-owed-rows')).toHaveClass(
+      ...scrollClasses,
+    )
+    expect(overview.getByTestId('overview-people-owe-rows')).toHaveClass(
+      ...scrollClasses,
+    )
+  })
+
   it('shows settled status when groups exist without rendering zero friend text', () => {
     mocks.mockUseOverviewQuery.mockReturnValue({
       data: {
         groups: [makeGroup()],
-        stats: { balanceSummaries: [], friendCount: 0 },
+        stats: { balanceSummaries: [] },
       },
       isLoading: false,
     })
@@ -421,7 +521,6 @@ describe('RecentGroupList', () => {
         groups: [],
         stats: {
           balanceSummaries: [],
-          friendCount: 0,
         },
       },
       isLoading: false,
@@ -462,7 +561,6 @@ describe('RecentGroupList', () => {
         groups: [hiddenGroup],
         stats: {
           balanceSummaries: [],
-          friendCount: 0,
         },
       },
       isLoading: false,
@@ -496,7 +594,6 @@ describe('RecentGroupList', () => {
         groups: [starredGroup],
         stats: {
           balanceSummaries: [],
-          friendCount: 0,
         },
       },
       isLoading: false,
@@ -524,7 +621,6 @@ describe('RecentGroupList', () => {
         groups: [activeGroup],
         stats: {
           balanceSummaries: [],
-          friendCount: 0,
         },
       },
       isLoading: false,
@@ -552,7 +648,6 @@ describe('RecentGroupList', () => {
         groups: [archivedGroup],
         stats: {
           balanceSummaries: [],
-          friendCount: 0,
         },
       },
       isLoading: false,
