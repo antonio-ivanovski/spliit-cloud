@@ -43,7 +43,11 @@
       "acrossGroups": "Низ твоите групи",
       "viewGroups": "Прикажи ги групите",
       "noOneOwesYou": "Никој не ти должи",
-      "youOweNoOne": "Не му должиш никому"
+      "youOweNoOne": "Не му должиш никому",
+      "groupsTab": "Групи",
+      "peopleTab": "Луѓе",
+      "unknownPerson": "Непознат учесник",
+      "viewPersonGroups": "Прикажи ги групите на {name} ({currency})"
     }
   },
   "Header": {

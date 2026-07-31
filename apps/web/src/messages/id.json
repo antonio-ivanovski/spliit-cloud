@@ -43,7 +43,11 @@
       "acrossGroups": "Di seluruh grup Anda",
       "viewGroups": "Lihat grup",
       "noOneOwesYou": "Tidak ada yang berutang kepada Anda",
-      "youOweNoOne": "Anda tidak berutang kepada siapa pun"
+      "youOweNoOne": "Anda tidak berutang kepada siapa pun",
+      "groupsTab": "Grup",
+      "peopleTab": "Orang",
+      "unknownPerson": "Peserta tidak dikenal",
+      "viewPersonGroups": "Lihat grup untuk {name} ({currency})"
     }
   },
   "Header": {

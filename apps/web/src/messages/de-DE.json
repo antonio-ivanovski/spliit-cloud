@@ -43,7 +43,11 @@
       "acrossGroups": "Über deine Gruppen",
       "viewGroups": "Gruppen anzeigen",
       "noOneOwesYou": "Niemand schuldet dir etwas",
-      "youOweNoOne": "Du schuldest niemandem etwas"
+      "youOweNoOne": "Du schuldest niemandem etwas",
+      "groupsTab": "Gruppen",
+      "peopleTab": "Personen",
+      "unknownPerson": "Unbekannter Teilnehmer",
+      "viewPersonGroups": "Gruppen von {name} anzeigen ({currency})"
     }
   },
   "Header": {

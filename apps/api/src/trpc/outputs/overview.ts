@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import { accountGroupSchema } from './account'
+import { accountSummarySchema } from './common'
 
 export const overviewFinancialStateSchema = z.enum([
   'NO_EXPENSES',
@@ -32,6 +33,27 @@ export const overviewOutputSchema = z.object({
         owedToYouGroupCount: z.number().int().nonnegative(),
         youOwe: z.number().int().nonnegative(),
         youOweGroupCount: z.number().int().nonnegative(),
+      }),
+    ),
+    peopleBalances: z.array(
+      z.object({
+        key: z.string(),
+        name: z.string(),
+        account: accountSummarySchema.nullable(),
+        currencies: z.array(
+          z.object({
+            currency: z.string(),
+            currencyCode: z.string().nullable(),
+            netAmount: z.number().int(),
+            groups: z.array(
+              z.object({
+                groupId: z.string(),
+                groupName: z.string(),
+                amount: z.number().int(),
+              }),
+            ),
+          }),
+        ),
       }),
     ),
     friendCount: z.number().int().nonnegative(),

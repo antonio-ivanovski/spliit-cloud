@@ -43,7 +43,11 @@
       "acrossGroups": "În grupurile tale",
       "viewGroups": "Vezi grupurile",
       "noOneOwesYou": "Nimeni nu îți datorează nimic",
-      "youOweNoOne": "Nu datorezi nimic nimănui"
+      "youOweNoOne": "Nu datorezi nimic nimănui",
+      "groupsTab": "Grupuri",
+      "peopleTab": "Persoane",
+      "unknownPerson": "Participant necunoscut",
+      "viewPersonGroups": "Vezi grupurile lui {name} ({currency})"
     }
   },
   "Header": {

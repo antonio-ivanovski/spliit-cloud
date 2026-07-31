@@ -6,8 +6,11 @@ import {
   buildLinkPlaceholderEmail,
   buildProviderPlaceholderEmail,
   generateLinkToken,
+  getInvitationDisplayName,
+  getPlaceholderEmailDisplayName,
   hashLinkToken,
   isPlaceholderEmail,
+  resolveParticipantDisplayName,
 } from './invitations'
 
 describe('isPlaceholderEmail', () => {
@@ -29,6 +32,68 @@ describe('isPlaceholderEmail', () => {
     expect(isPlaceholderEmail(null)).toBe(false)
     expect(isPlaceholderEmail(undefined)).toBe(false)
     expect(isPlaceholderEmail('')).toBe(false)
+  })
+})
+
+describe('placeholder participant labels', () => {
+  it('shortens a placeholder username to eight characters', () => {
+    expect(
+      getPlaceholderEmailDisplayName(
+        'qN2sMas2gSOPm5hRetmBa97B-BoR0oBjUj0pu60d9mM@link.placeholder.local',
+      ),
+    ).toBe('qN2sMas2…')
+  })
+
+  it('keeps short placeholder usernames intact', () => {
+    expect(getPlaceholderEmailDisplayName('token@link.placeholder.local')).toBe(
+      'token',
+    )
+  })
+
+  it('returns null for real, missing, or malformed placeholder addresses', () => {
+    expect(getPlaceholderEmailDisplayName('alice@example.com')).toBeNull()
+    expect(getPlaceholderEmailDisplayName(null)).toBeNull()
+    expect(getPlaceholderEmailDisplayName('')).toBeNull()
+    expect(getPlaceholderEmailDisplayName('@link.placeholder.local')).toBeNull()
+  })
+
+  it('preserves real emails while hiding synthetic emails in invitation labels', () => {
+    expect(
+      getInvitationDisplayName({
+        email: 'alice@example.com',
+        temporaryName: null,
+      }),
+    ).toBe('alice@example.com')
+    expect(
+      getInvitationDisplayName({
+        email: 'abcdefghijk@link.placeholder.local',
+        temporaryName: null,
+      }),
+    ).toBe('abcdefgh…')
+    expect(getInvitationDisplayName({ email: null, temporaryName: null })).toBe(
+      'Pending invite',
+    )
+  })
+
+  it('keeps temporary and account names ahead of email fallbacks', () => {
+    expect(
+      getInvitationDisplayName({
+        email: 'abcdefghijk@link.placeholder.local',
+        temporaryName: 'Temporary person',
+      }),
+    ).toBe('Temporary person')
+    expect(
+      resolveParticipantDisplayName({
+        groupMember: { account: { name: 'Account person' } },
+        invitations: [
+          {
+            email: 'abcdefghijk@link.placeholder.local',
+            temporaryName: 'Temporary person',
+          },
+        ],
+        displayName: 'Ledger person',
+      }),
+    ).toBe('Account person')
   })
 })
 

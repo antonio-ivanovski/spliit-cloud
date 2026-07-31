@@ -9,6 +9,7 @@ import {
 } from '@spliit/db'
 import type { GroupActivityChange } from '@spliit/domain/activities'
 
+import { getInvitationDisplayName } from '../invitations/display'
 import {
   buildGroupActivityData,
   logActivity,
@@ -425,15 +426,12 @@ export async function linkUnlinkedParticipantToPendingInvite(opts: {
       {
         field: 'linkedParticipant',
         before: participant.displayName ?? 'Unknown participant',
-        after:
-          invitation.temporaryName ??
-          invitation.email ??
-          'Linked to invitation',
+        after: getInvitationDisplayName(invitation),
       },
     ]
 
     const activityData = buildGroupActivityData({
-      summary: invitation.email ?? 'Participant linked to invitation',
+      summary: getInvitationDisplayName(invitation),
       changedFields: ['linkedParticipant'],
       changes: mergedInviteChanges,
     })

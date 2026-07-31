@@ -43,7 +43,11 @@
       "acrossGroups": "Entre els teus grups",
       "viewGroups": "Veure grups",
       "noOneOwesYou": "Ningú et deu",
-      "youOweNoOne": "No deus res a ningú"
+      "youOweNoOne": "No deus res a ningú",
+      "groupsTab": "Grups",
+      "peopleTab": "Persones",
+      "unknownPerson": "Participant desconegut",
+      "viewPersonGroups": "Veure els grups de {name} ({currency})"
     }
   },
   "Header": {

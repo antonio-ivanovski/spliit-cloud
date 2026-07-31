@@ -43,7 +43,11 @@
       "acrossGroups": "Zure taldeen artean",
       "viewGroups": "Ikusi taldeak",
       "noOneOwesYou": "Inork ez dizu ezer zor",
-      "youOweNoOne": "Ez diozu inori ezer zor"
+      "youOweNoOne": "Ez diozu inori ezer zor",
+      "groupsTab": "Taldeak",
+      "peopleTab": "Pertsonak",
+      "unknownPerson": "Parte-hartzaile ezezaguna",
+      "viewPersonGroups": "Ikusi {name}(r)en taldeak ({currency})"
     }
   },
   "Header": {

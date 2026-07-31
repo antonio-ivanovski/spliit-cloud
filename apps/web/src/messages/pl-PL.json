@@ -43,7 +43,11 @@
       "acrossGroups": "We wszystkich twoich grupach",
       "viewGroups": "Pokaż grupy",
       "noOneOwesYou": "Nikt nie jest ci nic winien",
-      "youOweNoOne": "Nikomu nic nie musisz oddawać"
+      "youOweNoOne": "Nikomu nic nie musisz oddawać",
+      "groupsTab": "Grupy",
+      "peopleTab": "Osoby",
+      "unknownPerson": "Nieznany uczestnik",
+      "viewPersonGroups": "Wyświetl grupy użytkownika {name} ({currency})"
     }
   },
   "Header": {

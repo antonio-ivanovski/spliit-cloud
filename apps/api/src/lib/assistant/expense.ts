@@ -23,6 +23,7 @@ import {
   resolveConversion,
   type ConversionResolution,
 } from '../expense-conversion'
+import { resolveParticipantDisplayName } from '../invitations'
 
 const decimalString = z
   .string()
@@ -253,13 +254,7 @@ function participantName(
     ReturnType<typeof getAssistantGroup>
   >['group']['ledger']['participants'][number],
 ) {
-  return (
-    participant.groupMember?.account.name ||
-    participant.displayName ||
-    participant.invitations[0]?.temporaryName ||
-    participant.invitations[0]?.email ||
-    'Pending participant'
-  )
+  return resolveParticipantDisplayName(participant) || 'Pending participant'
 }
 
 function ensureUniqueParticipantIds(rows: Array<{ participant: string }>) {

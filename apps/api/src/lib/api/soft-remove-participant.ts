@@ -3,7 +3,6 @@ import {
   GroupMemberStatus,
   GroupRole,
   GroupType,
-  LedgerParticipantKind,
   prisma,
 } from '@spliit/db'
 
@@ -92,19 +91,7 @@ export function getSoftRemoveParticipantKind(
 export function getSoftRemoveParticipantName(
   participant: Awaited<ReturnType<typeof loadSoftRemoveParticipant>>,
 ) {
-  if (
-    participant.kind === LedgerParticipantKind.ACCOUNT_MEMBER &&
-    participant.groupMember
-  ) {
-    return participant.groupMember.account.name
-  }
-  const invitation = participant.invitations[0]
-  return (
-    invitation?.temporaryName ??
-    invitation?.email ??
-    participant.displayName ??
-    'Unknown participant'
-  )
+  return resolveParticipantDisplayName(participant) || 'Unknown participant'
 }
 
 const previewParticipantSelect = {

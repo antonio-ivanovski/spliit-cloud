@@ -43,7 +43,11 @@
       "acrossGroups": "Grupların genelinde",
       "viewGroups": "Grupları görüntüle",
       "noOneOwesYou": "Kimse sana borçlu değil",
-      "youOweNoOne": "Kimseye borcun yok"
+      "youOweNoOne": "Kimseye borcun yok",
+      "groupsTab": "Gruplar",
+      "peopleTab": "Kişiler",
+      "unknownPerson": "Bilinmeyen katılımcı",
+      "viewPersonGroups": "{name} için grupları görüntüle ({currency})"
     }
   },
   "Header": {

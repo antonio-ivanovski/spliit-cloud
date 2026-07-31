@@ -22,7 +22,10 @@ import { randomId } from '../../../lib/api'
 import { accountSummarySelect } from '../../../lib/api/selects/account-summary'
 import { invalidateAccountCache } from '../../../lib/auth/account-cache'
 import { env } from '../../../lib/env'
-import { isPlaceholderEmail } from '../../../lib/invitations'
+import {
+  getInvitationDisplayName,
+  isPlaceholderEmail,
+} from '../../../lib/invitations'
 import {
   deleteS3Object,
   isProfileImageUrlForAccount,
@@ -487,8 +490,11 @@ export const accountRouter = createTRPCRouter({
         const displayName = isFriend
           ? friendAccount?.name ||
             pendingInv?.name ||
-            (pendingInv?.email && !isPlaceholderEmail(pendingInv.email)
-              ? pendingInv.email
+            (pendingInv?.email
+              ? getInvitationDisplayName({
+                  email: pendingInv.email,
+                  temporaryName: pendingInv.name,
+                })
               : undefined) ||
             ''
           : m.group.name

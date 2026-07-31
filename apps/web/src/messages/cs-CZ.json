@@ -43,7 +43,11 @@
       "acrossGroups": "Mezi tvými skupinami",
       "viewGroups": "Zobrazit skupiny",
       "noOneOwesYou": "Nikdo ti nic nedluží",
-      "youOweNoOne": "Nikomu nic nedlužíš"
+      "youOweNoOne": "Nikomu nic nedlužíš",
+      "groupsTab": "Skupiny",
+      "peopleTab": "Lidé",
+      "unknownPerson": "Neznámý účastník",
+      "viewPersonGroups": "Zobrazit skupiny pro {name} ({currency})"
     }
   },
   "Header": {

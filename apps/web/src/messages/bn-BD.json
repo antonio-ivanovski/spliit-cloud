@@ -1740,7 +1740,11 @@
       "acrossGroups": "আপনার গ্রুপ জুড়ে",
       "viewGroups": "গ্রুপ দেখুন",
       "noOneOwesYou": "কেউ আপনাকে ঋণী নয়",
-      "youOweNoOne": "আপনি কাউকে ঋণী নন"
+      "youOweNoOne": "আপনি কাউকে ঋণী নন",
+      "groupsTab": "গোষ্ঠী",
+      "peopleTab": "মানুষ",
+      "unknownPerson": "অজানা অংশগ্রহণকারী",
+      "viewPersonGroups": "{name}-এর গোষ্ঠীগুলো দেখুন ({currency})"
     }
   },
   "Information": {

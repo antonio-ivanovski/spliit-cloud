@@ -173,7 +173,8 @@ export type ActivityListItem = Activity & {
  * - Actor display falls back through:
  *
  *   1. ACCOUNT: `Account.name`
- *   2. LEDGER_PARTICIPANT: `GroupMember → Account` → `temporaryName` → `email`
+ *   2. LEDGER_PARTICIPANT: `GroupMember → Account` → `temporaryName` → shortened
+ *      placeholder username or real `email`
  *   3. `data.expense.title` / `data.member.displayName` /
  *      `data.invitation.displayLabel`
  * - `data` is parsed through {@link parseActivityData} so the web layer can
@@ -247,7 +248,8 @@ export async function getActivities(
     lpActors.map((lp) => [
       lp.id,
       // `resolveParticipantDisplayName` accepts the same shape used for
-      // non-PENDING invitees — temporaryName > email > displayName. The
+      // non-PENDING invitees — temporaryName > placeholder username/real email
+      // > displayName. The
       // invitation lookup includes every status, so a deleted/revoked
       // invitee's last-known label is still resolved.
       resolveParticipantDisplayName({

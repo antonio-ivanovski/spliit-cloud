@@ -711,7 +711,7 @@ describe('importLinksRouter.candidates', () => {
     expect(result.candidates).toEqual([
       {
         id: 'lp-link-1',
-        name: 'token@link.placeholder.local',
+        name: 'token',
         email: 'token@link.placeholder.local',
         kind: 'PENDING',
         invitationId: 'inv-link-1',

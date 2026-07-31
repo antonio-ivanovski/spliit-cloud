@@ -155,6 +155,41 @@ describe('assistant listGroups account isolation', () => {
       ),
     ).toEqual(['Alice · nt-alice', 'alice · -alice-2'])
   })
+
+  it('shortens placeholder emails in participant labels', async () => {
+    prismaMock.groupMember.findMany.mockResolvedValue([
+      {
+        group: {
+          ...group,
+          ledger: {
+            ...group.ledger,
+            participants: [
+              {
+                id: 'participant-placeholder',
+                displayName: null,
+                groupMember: null,
+                invitations: [
+                  {
+                    email: 'abcdefghijk@link.placeholder.local',
+                    temporaryName: null,
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      },
+    ] as never)
+
+    const result = await assistantRouter
+      .createCaller(oauthContext('account-a'))
+      .listGroups()
+
+    expect(result.groups[0]?.participants[0]).toMatchObject({
+      id: 'participant-placeholder',
+      name: 'abcdefgh…',
+    })
+  })
 })
 
 function makeGroup(id: string, name: string) {

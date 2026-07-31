@@ -43,7 +43,11 @@
       "acrossGroups": "Kaikissa ryhmissäsi",
       "viewGroups": "Näytä ryhmät",
       "noOneOwesYou": "Kukaan ei ole sinulle velkaa",
-      "youOweNoOne": "Et ole kenellekään velkaa"
+      "youOweNoOne": "Et ole kenellekään velkaa",
+      "groupsTab": "Ryhmät",
+      "peopleTab": "Ihmiset",
+      "unknownPerson": "Tuntematon osallistuja",
+      "viewPersonGroups": "Näytä henkilön {name} ryhmät ({currency})"
     }
   },
   "Header": {

@@ -1740,7 +1740,11 @@
       "acrossGroups": "آپ کے گروپس میں",
       "viewGroups": "گروپس دیکھیں",
       "noOneOwesYou": "کوئی آپ کو مقروض نہیں",
-      "youOweNoOne": "آپ کسی کو مقروض نہیں ہیں"
+      "youOweNoOne": "آپ کسی کو مقروض نہیں ہیں",
+      "groupsTab": "گروپس",
+      "peopleTab": "لوگ",
+      "unknownPerson": "نامعلوم شریک",
+      "viewPersonGroups": "{name} کے گروپس دیکھیں ({currency})"
     }
   },
   "Information": {

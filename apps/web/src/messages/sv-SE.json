@@ -1740,7 +1740,11 @@
       "acrossGroups": "Över dina grupper",
       "viewGroups": "Visa grupper",
       "noOneOwesYou": "Ingen är skyldig dig något",
-      "youOweNoOne": "Du är inte skyldig någon något"
+      "youOweNoOne": "Du är inte skyldig någon något",
+      "groupsTab": "Grupper",
+      "peopleTab": "Personer",
+      "unknownPerson": "Okänd deltagare",
+      "viewPersonGroups": "Visa grupper för {name} ({currency})"
     }
   },
   "Information": {

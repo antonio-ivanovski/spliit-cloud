@@ -10,6 +10,7 @@ import {
 } from '@spliit/db'
 
 import { randomId } from '../../../../lib/api'
+import { getInvitationDisplayName } from '../../../../lib/invitations'
 import { loadGroupContext, protectedProcedure } from '../../../init'
 import { importLinkCandidatesOutputSchema } from '../../../outputs/import-links'
 
@@ -228,7 +229,7 @@ export const candidatesProcedure = protectedProcedure
       if (blocked.has(lp.id)) continue
       candidates.push({
         id: lp.id,
-        name: inv.temporaryName || inv.email,
+        name: getInvitationDisplayName(inv),
         kind: 'PENDING',
         email: inv.email,
         invitationId: inv.id,

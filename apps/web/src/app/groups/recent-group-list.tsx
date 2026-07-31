@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next'
 import { CurrencyConverterButton } from '@/components/currency-converter/currency-converter'
 import Link from '@/components/link'
 import { Money } from '@/components/money'
+import { ParticipantAvatar } from '@/components/participant-avatar'
 import {
   Drawer,
   DrawerContent,
@@ -28,6 +29,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useToast } from '@/components/ui/use-toast'
 import { getCurrencyFromGroup } from '@/lib/currency'
 import { useMediaQuery } from '@/lib/hooks'
@@ -50,6 +52,35 @@ const STORAGE_KEYS = {
   archived: 'spliit:home:section:archived',
   hidden: 'spliit:home:section:hidden',
 } as const
+
+type OverviewPeopleBalance = {
+  key: string
+  name: string
+  account: { id: string; name: string; image: string | null } | null
+  currencies: Array<{
+    currency: string
+    currencyCode: string | null
+    netAmount: number
+    groups: Array<{
+      groupId: string
+      groupName: string
+      amount: number
+    }>
+  }>
+}
+
+type OverviewStats = {
+  balanceSummaries: Array<{
+    currency: string
+    currencyCode: string | null
+    owedToYou: number
+    owedToYouGroupCount: number
+    youOwe: number
+    youOweGroupCount: number
+  }>
+  peopleBalances: OverviewPeopleBalance[]
+  friendCount: number
+}
 
 export function RecentGroupList() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
@@ -287,19 +318,7 @@ function OverviewHeader({
 }: {
   name?: string
   groups: AccountGroup[]
-  stats:
-    | {
-        balanceSummaries: Array<{
-          currency: string
-          currencyCode: string | null
-          owedToYou: number
-          owedToYouGroupCount: number
-          youOwe: number
-          youOweGroupCount: number
-        }>
-        friendCount: number
-      }
-    | undefined
+  stats: OverviewStats | undefined
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Homepage' })
   const { t: tBalances } = useTranslation(undefined, { keyPrefix: 'Balances' })
@@ -307,6 +326,7 @@ function OverviewHeader({
     keyPrefix: 'EmptyState.labels',
   })
   const balanceSummaries = stats?.balanceSummaries ?? []
+  const peopleBalances = stats?.peopleBalances ?? []
   const hasGroupSummary =
     balanceSummaries.length > 0 ||
     (stats?.friendCount ?? 0) > 0 ||
@@ -329,42 +349,285 @@ function OverviewHeader({
       </div>
       {stats && hasGroupSummary ? (
         <div className="rounded-lg border bg-card px-4 py-3 shadow-xs sm:px-5">
-          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b pb-3">
-            <p className="text-sm font-medium">{t('overview.acrossGroups')}</p>
-            {stats.friendCount > 0 && (
-              <span className="text-xs text-muted-foreground">
-                {stats.friendCount}{' '}
-                {stats.friendCount === 1
-                  ? tLabels('friendLedger')
-                  : tLabels('friendLedgerPlural')}
-              </span>
-            )}
-          </div>
-          <div className="grid gap-3 pt-3 sm:grid-cols-2">
-            <BalanceDirection
-              direction="owed"
-              summaries={balanceSummaries}
-              groups={groups}
-              groupLabel={groupLabel}
-              label={t('overview.youAreOwed')}
-            />
-            <BalanceDirection
-              direction="owe"
-              summaries={balanceSummaries}
-              groups={groups}
-              groupLabel={groupLabel}
-              label={t('overview.youOwe')}
-            />
-          </div>
-          {!hasAnyBalance && (
-            <div className="mt-3 flex items-center justify-center gap-2 border-t pt-3 text-sm text-muted-foreground">
-              <BanknoteCheck className="h-4 w-4" aria-hidden />
-              <span>{tBalances('direction.settledUp')}</span>
+          <Tabs defaultValue="groups">
+            <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b pb-3">
+              <p className="text-sm font-medium">
+                {t('overview.acrossGroups')}
+              </p>
+              <div className="flex flex-wrap items-center justify-end gap-2">
+                <TabsList className="h-8">
+                  <TabsTrigger value="groups" className="h-6 px-2.5 text-xs">
+                    {t('overview.groupsTab')}
+                  </TabsTrigger>
+                  <TabsTrigger value="people" className="h-6 px-2.5 text-xs">
+                    {t('overview.peopleTab')}
+                  </TabsTrigger>
+                </TabsList>
+                {stats.friendCount > 0 && (
+                  <span className="text-xs text-muted-foreground">
+                    {stats.friendCount}{' '}
+                    {stats.friendCount === 1
+                      ? tLabels('friendLedger')
+                      : tLabels('friendLedgerPlural')}
+                  </span>
+                )}
+              </div>
             </div>
-          )}
+            <TabsContent value="groups" className="mt-0">
+              <div className="grid gap-3 pt-3 sm:grid-cols-2">
+                <BalanceDirection
+                  direction="owed"
+                  summaries={balanceSummaries}
+                  groups={groups}
+                  groupLabel={groupLabel}
+                  label={t('overview.youAreOwed')}
+                />
+                <BalanceDirection
+                  direction="owe"
+                  summaries={balanceSummaries}
+                  groups={groups}
+                  groupLabel={groupLabel}
+                  label={t('overview.youOwe')}
+                />
+              </div>
+              {!hasAnyBalance && (
+                <SettledSummary label={tBalances('direction.settledUp')} />
+              )}
+            </TabsContent>
+            <TabsContent value="people" className="mt-0">
+              <div className="grid gap-3 pt-3 sm:grid-cols-2">
+                <PeopleBalanceDirection
+                  direction="owed"
+                  people={peopleBalances}
+                  label={t('overview.youAreOwed')}
+                />
+                <PeopleBalanceDirection
+                  direction="owe"
+                  people={peopleBalances}
+                  label={t('overview.youOwe')}
+                />
+              </div>
+              {!peopleBalances.some((person) =>
+                person.currencies.some((currency) => currency.netAmount !== 0),
+              ) && <SettledSummary label={tBalances('direction.settledUp')} />}
+            </TabsContent>
+          </Tabs>
         </div>
       ) : null}
     </section>
+  )
+}
+
+function SettledSummary({ label }: { label: string }) {
+  return (
+    <div className="mt-3 flex items-center justify-center gap-2 border-t pt-3 text-sm text-muted-foreground">
+      <BanknoteCheck className="h-4 w-4" aria-hidden />
+      <span>{label}</span>
+    </div>
+  )
+}
+
+function PeopleBalanceDirection({
+  direction,
+  people,
+  label,
+}: {
+  direction: 'owed' | 'owe'
+  people: OverviewPeopleBalance[]
+  label: string
+}) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'Homepage' })
+  const isOwed = direction === 'owed'
+  const rows = people
+    .map((person) => ({
+      person,
+      currencies: person.currencies.filter((currency) =>
+        isOwed ? currency.netAmount > 0 : currency.netAmount < 0,
+      ),
+    }))
+    .filter(({ currencies }) => currencies.length > 0)
+  const Icon = isOwed ? BanknoteArrowDown : BanknoteArrowUp
+
+  return (
+    <div className="min-w-0">
+      <div
+        className={`mb-2 flex items-center gap-1.5 text-sm font-medium ${
+          isOwed ? 'text-green-600 dark:text-green-400' : 'text-destructive'
+        }`}
+      >
+        <Icon className="h-4 w-4" aria-hidden />
+        <span>{label}</span>
+      </div>
+      {rows.length > 0 ? (
+        <div className="grid gap-1.5">
+          {rows.map(({ person, currencies }) => (
+            <div
+              key={person.key}
+              className="rounded-md bg-muted/35 px-3 py-2.5"
+            >
+              <div className="flex min-w-0 items-center gap-2">
+                <ParticipantAvatar
+                  participant={{
+                    id: person.key,
+                    name: person.name || t('overview.unknownPerson'),
+                    account: person.account,
+                  }}
+                  size="sm"
+                />
+                <span className="min-w-0 truncate text-sm font-medium">
+                  {person.name || t('overview.unknownPerson')}
+                </span>
+              </div>
+              <div className="mt-2 grid gap-1.5 border-t border-border/60 pt-1.5">
+                {currencies.map((currency) => (
+                  <PeopleBalanceRow
+                    key={`${currency.currencyCode ?? currency.currency}-${direction}`}
+                    personName={person.name || t('overview.unknownPerson')}
+                    currency={currency}
+                    label={label}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="rounded-md bg-muted/35 px-3 py-2 text-sm text-muted-foreground">
+          {t(isOwed ? 'overview.noOneOwesYou' : 'overview.youOweNoOne')}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function PeopleBalanceRow({
+  personName,
+  currency,
+  label,
+}: {
+  personName: string
+  currency: OverviewPeopleBalance['currencies'][number]
+  label: string
+}) {
+  const moneyCurrency = getCurrencyFromGroup(currency)
+  return (
+    <div className="flex items-center justify-between gap-3">
+      <Money
+        currency={moneyCurrency}
+        amount={Math.abs(currency.netAmount)}
+        bold
+      />
+      <PeopleGroupBreakdown
+        personName={personName}
+        amount={Math.abs(currency.netAmount)}
+        currency={moneyCurrency}
+        groups={currency.groups}
+        label={label}
+      />
+    </div>
+  )
+}
+
+function PeopleGroupBreakdown({
+  personName,
+  amount,
+  currency,
+  groups,
+  label,
+}: {
+  personName: string
+  amount: number
+  currency: ReturnType<typeof getCurrencyFromGroup>
+  groups: OverviewPeopleBalance['currencies'][number]['groups']
+  label: string
+}) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'Homepage' })
+  const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
+  const { t: tLabels } = useTranslation(undefined, {
+    keyPrefix: 'EmptyState.labels',
+  })
+  const isDesktop = useMediaQuery('(min-width: 640px)')
+  const [open, setOpen] = useState(false)
+  const trigger = (
+    <button
+      type="button"
+      className="inline-flex min-h-8 shrink-0 items-center gap-1 rounded-md px-1.5 text-xs text-muted-foreground underline decoration-muted-foreground/40 underline-offset-4 transition-colors hover:bg-background hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden"
+      aria-label={t('overview.viewPersonGroups', {
+        name: personName,
+        currency: currency.code || currency.symbol,
+      })}
+    >
+      <span>
+        {groups.length} {tLabels(groups.length === 1 ? 'group' : 'groupPlural')}
+      </span>
+      <ChevronRight className="h-3.5 w-3.5" aria-hidden />
+    </button>
+  )
+  const title = (
+    <div className="flex items-center justify-between gap-3">
+      <span className="font-medium">{label}</span>
+      <Money currency={currency} amount={amount} bold />
+    </div>
+  )
+  const list = (
+    <ul className="grid gap-1.5">
+      {groups.map((group) => {
+        const groupOwesYou = group.amount > 0
+        return (
+          <li key={group.groupId}>
+            <Link
+              href={`/groups/${group.groupId}`}
+              className="flex items-center justify-between gap-3 rounded-md px-2.5 py-2 text-sm no-underline transition-colors hover:bg-muted focus-visible:bg-muted focus-visible:outline-hidden"
+            >
+              <span className="flex min-w-0 flex-col truncate">
+                <span className="truncate">
+                  {group.groupName || tGroups('invitations.unknownGroup')}
+                </span>
+                <span
+                  className={`text-xs ${
+                    groupOwesYou
+                      ? 'text-green-600 dark:text-green-400'
+                      : 'text-destructive'
+                  }`}
+                >
+                  {groupOwesYou
+                    ? t('overview.youAreOwed')
+                    : t('overview.youOwe')}
+                </span>
+              </span>
+              <Money currency={currency} amount={Math.abs(group.amount)} bold />
+            </Link>
+          </li>
+        )
+      })}
+    </ul>
+  )
+
+  if (isDesktop) {
+    return (
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>{trigger}</PopoverTrigger>
+        <PopoverContent align="end" className="w-80 p-0">
+          <div className="border-b px-4 py-3">{title}</div>
+          <div className="max-h-64 overflow-y-auto p-2">{list}</div>
+        </PopoverContent>
+      </Popover>
+    )
+  }
+
+  return (
+    <Drawer open={open} onOpenChange={setOpen}>
+      <DrawerTrigger asChild>{trigger}</DrawerTrigger>
+      <DrawerContent>
+        <DrawerHeader className="text-start">
+          <DrawerTitle>{personName}</DrawerTitle>
+          <DrawerDescription>
+            {label} · <Money currency={currency} amount={amount} bold />
+          </DrawerDescription>
+        </DrawerHeader>
+        <div className="overflow-y-auto px-2 pb-4">{list}</div>
+      </DrawerContent>
+    </Drawer>
   )
 }
 

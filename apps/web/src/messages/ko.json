@@ -1026,7 +1026,11 @@
       "acrossGroups": "내 그룹 전체",
       "viewGroups": "그룹 보기",
       "noOneOwesYou": "아무도 당신에게 빚진 것이 없습니다",
-      "youOweNoOne": "아무에게도 빚진 것이 없습니다"
+      "youOweNoOne": "아무에게도 빚진 것이 없습니다",
+      "groupsTab": "그룹",
+      "peopleTab": "사람",
+      "unknownPerson": "알 수 없는 참가자",
+      "viewPersonGroups": "{name}의 그룹 보기 ({currency})"
     }
   },
   "Header": {

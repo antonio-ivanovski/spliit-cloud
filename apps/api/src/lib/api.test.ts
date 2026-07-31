@@ -274,6 +274,48 @@ describe('getGroup — pending invitations as participants', () => {
     ])
   })
 
+  it('shortens a placeholder email when the pending invitation has no temporaryName', async () => {
+    prismaMock.group.findUnique.mockResolvedValue({
+      id: groupId,
+      name: 'Trip',
+      information: null,
+      createdAt: new Date(),
+      ledgerId,
+      ledger: { id: ledgerId, currency: '$', currencyCode: 'USD' },
+      members: [],
+      invitations: [
+        {
+          id: 'inv-link',
+          groupId,
+          email:
+            'qN2sMas2gSOPm5hRetmBa97B-BoR0oBjUj0pu60d9mM@link.placeholder.local',
+          temporaryName: null,
+          status: 'PENDING',
+          ledgerParticipantId: 'lp-link',
+        },
+      ],
+    } as never)
+    prismaMock.groupInvitation.findMany.mockResolvedValue([
+      {
+        id: 'inv-link',
+        groupId,
+        email:
+          'qN2sMas2gSOPm5hRetmBa97B-BoR0oBjUj0pu60d9mM@link.placeholder.local',
+        temporaryName: null,
+        ledgerParticipant: { id: 'lp-link' },
+      },
+    ] as never)
+
+    const group = await getGroup(groupId)
+
+    expect(group!.participants[0]).toMatchObject({
+      id: 'lp-link',
+      name: 'qN2sMas2…',
+      pending: true,
+      unlinked: false,
+    })
+  })
+
   it('skips an unlinked LedgerParticipant that a pending invitation already references', async () => {
     // When an INVITE_BY_LINK import materializes the invitee's LP
     // before the commit (so expenses already point at it), the

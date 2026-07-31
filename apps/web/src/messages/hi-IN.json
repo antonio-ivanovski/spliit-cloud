@@ -1740,7 +1740,11 @@
       "acrossGroups": "आपके समूहों में",
       "viewGroups": "समूह देखें",
       "noOneOwesYou": "कोई आपको नहीं देता",
-      "youOweNoOne": "आप किसी को नहीं देते"
+      "youOweNoOne": "आप किसी को नहीं देते",
+      "groupsTab": "समूह",
+      "peopleTab": "लोग",
+      "unknownPerson": "अज्ञात प्रतिभागी",
+      "viewPersonGroups": "{name} के समूह देखें ({currency})"
     }
   },
   "Information": {

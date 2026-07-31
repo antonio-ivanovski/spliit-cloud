@@ -311,6 +311,76 @@ describe('RecentGroupList', () => {
     expect(overview.queryByText(/friend/i)).not.toBeInTheDocument()
   })
 
+  it('switches to people balances and drills into contributing groups', async () => {
+    mocks.mockUseOverviewQuery.mockReturnValue({
+      data: {
+        groups: [makeGroup()],
+        stats: {
+          balanceSummaries: [],
+          peopleBalances: [
+            {
+              key: 'account-bob',
+              name: 'Bob',
+              account: { id: 'account-bob', name: 'Bob', image: null },
+              currencies: [
+                {
+                  currency: '$',
+                  currencyCode: 'USD',
+                  netAmount: 600,
+                  groups: [
+                    {
+                      groupId: 'group-1',
+                      groupName: 'Beach trip',
+                      amount: 800,
+                    },
+                    {
+                      groupId: 'group-2',
+                      groupName: 'Cabin weekend',
+                      amount: -200,
+                    },
+                  ],
+                },
+                {
+                  currency: '€',
+                  currencyCode: 'EUR',
+                  netAmount: 500,
+                  groups: [
+                    {
+                      groupId: 'group-3',
+                      groupName: 'Paris trip',
+                      amount: 500,
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+          friendCount: 0,
+        },
+      },
+      isLoading: false,
+    })
+
+    const { user } = render(<RecentGroupList />)
+    await user.click(screen.getByRole('tab', { name: 'People' }))
+
+    const overview = within(screen.getByRole('region', { name: 'Balances' }))
+    expect(overview.getByText('Bob')).toBeInTheDocument()
+    expect(overview.getByText('$6.00')).toBeInTheDocument()
+    expect(overview.getByText('€5.00')).toBeInTheDocument()
+    expect(
+      overview.getAllByRole('button', { name: /View groups for Bob/ }),
+    ).toHaveLength(2)
+
+    await user.click(
+      overview.getAllByRole('button', { name: /View groups for Bob/ })[0],
+    )
+    expect(screen.getByRole('link', { name: /Beach trip/ })).toBeInTheDocument()
+    expect(
+      screen.getByRole('link', { name: /Cabin weekend/ }),
+    ).toBeInTheDocument()
+  })
+
   it('shows settled status when groups exist without rendering zero friend text', () => {
     mocks.mockUseOverviewQuery.mockReturnValue({
       data: {
@@ -401,7 +471,7 @@ describe('RecentGroupList', () => {
     render(<RecentGroupList />)
 
     // Groups section heading is always visible even when Groups is empty.
-    expect(screen.getByText('Groups')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Groups' })).toBeInTheDocument()
     // The Hidden section exists with its heading trigger collapsed.
     const hiddenHeading = screen.getByText('Hidden')
     const hiddenTrigger = hiddenHeading.closest('button')!
@@ -463,7 +533,7 @@ describe('RecentGroupList', () => {
     render(<RecentGroupList />)
 
     // "Groups" heading appears when there are non-starred groups
-    expect(screen.getByText('Groups')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Groups' })).toBeInTheDocument()
     expect(screen.getByText('Active Trip')).toBeInTheDocument()
   })
 

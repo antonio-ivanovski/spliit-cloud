@@ -43,7 +43,11 @@
       "acrossGroups": "Tổng quan các nhóm",
       "viewGroups": "Xem nhóm",
       "noOneOwesYou": "Không ai nợ bạn.",
-      "youOweNoOne": "Bạn không nợ ai."
+      "youOweNoOne": "Bạn không nợ ai.",
+      "groupsTab": "Nhóm",
+      "peopleTab": "Mọi người",
+      "unknownPerson": "Người tham gia không xác định",
+      "viewPersonGroups": "Xem các nhóm của {name} ({currency})"
     }
   },
   "Header": {

@@ -9,6 +9,7 @@ import {
   createFriendLedger,
   type CreateFriendLedgerPeer,
 } from '../../../lib/api/friends'
+import { getPlaceholderEmailDisplayName } from '../../../lib/invitations/display'
 import { sendEmail } from '../../../lib/mail/send'
 import { renderFriendLedgerEmail } from '../../../lib/mail/templates/friend-ledger'
 import { planActivityNotificationDeliveries } from '../../../lib/notifications/delivery-planner'
@@ -104,7 +105,10 @@ export const friendsRouter = createTRPCRouter({
         )
 
         if (!ledgerResult.existed && 'accountId' in peer) {
-          const inviterName = ctx.auth.user.name || ctx.auth.user.email
+          const inviterName =
+            ctx.auth.user.name ||
+            getPlaceholderEmailDisplayName(ctx.auth.user.email) ||
+            ctx.auth.user.email
           await planActivityNotificationDeliveries({
             event: {
               activityId: null,
@@ -133,7 +137,10 @@ export const friendsRouter = createTRPCRouter({
       // link) when a friend ledger is created. The peer will see it
       // automatically on next login — the email is purely informational.
       if (!result.existed && 'email' in peer) {
-        const inviterName = ctx.auth.user.name || ctx.auth.user.email
+        const inviterName =
+          ctx.auth.user.name ||
+          getPlaceholderEmailDisplayName(ctx.auth.user.email) ||
+          ctx.auth.user.email
         const isNewUser = !!result.invitationId
         await sendFriendLedgerNotification({
           recipientEmail: peer.email,

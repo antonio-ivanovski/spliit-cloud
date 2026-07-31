@@ -43,7 +43,11 @@
       "acrossGroups": "グループ全体",
       "viewGroups": "グループを表示",
       "noOneOwesYou": "あなたに借りがある人はいません",
-      "youOweNoOne": "誰にも借りはありません"
+      "youOweNoOne": "誰にも借りはありません",
+      "groupsTab": "グループ",
+      "peopleTab": "ユーザー",
+      "unknownPerson": "不明な参加者",
+      "viewPersonGroups": "{name} のグループを表示 ({currency})"
     }
   },
   "Header": {

@@ -43,7 +43,11 @@
       "acrossGroups": "Over je groepen heen",
       "viewGroups": "Groepen bekijken",
       "noOneOwesYou": "Niemand is jou iets verschuldigd",
-      "youOweNoOne": "Je bent niemand iets verschuldigd"
+      "youOweNoOne": "Je bent niemand iets verschuldigd",
+      "groupsTab": "Groepen",
+      "peopleTab": "Personen",
+      "unknownPerson": "Onbekende deelnemer",
+      "viewPersonGroups": "Groepen van {name} bekijken ({currency})"
     }
   },
   "Header": {

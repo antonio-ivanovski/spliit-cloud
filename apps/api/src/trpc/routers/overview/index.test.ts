@@ -2,7 +2,12 @@ import { describe, expect, it } from 'vitest'
 
 import '../../../test/mocks'
 import { prismaMock } from '../../../test/state'
-import { getFinancialSummary, overviewRouter, summarizeBalances } from './index'
+import {
+  getFinancialSummary,
+  overviewRouter,
+  summarizeBalances,
+  summarizePeopleBalances,
+} from './index'
 
 const expense = (overrides: Record<string, unknown> = {}) =>
   ({
@@ -112,6 +117,145 @@ describe('overview financial summaries', () => {
       },
     ])
   })
+
+  it('nets account-backed people by currency while preserving group contributions', () => {
+    expect(
+      summarizePeopleBalances(
+        [
+          {
+            id: 'group-1',
+            displayName: 'Beach trip',
+            currency: { currency: '$', currencyCode: 'USD' },
+            currentParticipantId: 'alice-1',
+            balances: {
+              'alice-1': { paid: 100, paidFor: 0, total: 100 },
+              'bob-1': { paid: 0, paidFor: 100, total: -100 },
+            },
+          },
+          {
+            id: 'group-2',
+            displayName: 'Cabin weekend',
+            currency: { currency: '$', currencyCode: 'USD' },
+            currentParticipantId: 'alice-2',
+            balances: {
+              'alice-2': { paid: 0, paidFor: 40, total: -40 },
+              'bob-2': { paid: 40, paidFor: 0, total: 40 },
+            },
+          },
+          {
+            id: 'group-3',
+            displayName: 'Paris trip',
+            currency: { currency: '€', currencyCode: 'EUR' },
+            currentParticipantId: 'alice-3',
+            balances: {
+              'alice-3': { paid: 100, paidFor: 0, total: 100 },
+              'bob-3': { paid: 0, paidFor: 100, total: -100 },
+            },
+          },
+        ],
+        [
+          {
+            id: 'bob-1',
+            name: 'Bob',
+            account: { id: 'account-bob', name: 'Bob', image: null },
+          },
+          {
+            id: 'bob-2',
+            name: 'Bob',
+            account: { id: 'account-bob', name: 'Bob', image: null },
+          },
+          {
+            id: 'bob-3',
+            name: 'Bob',
+            account: { id: 'account-bob', name: 'Bob', image: null },
+          },
+        ],
+      ),
+    ).toEqual([
+      {
+        key: 'account:account-bob',
+        name: 'Bob',
+        account: { id: 'account-bob', name: 'Bob', image: null },
+        currencies: [
+          {
+            currency: '€',
+            currencyCode: 'EUR',
+            netAmount: 100,
+            groups: [
+              { groupId: 'group-3', groupName: 'Paris trip', amount: 100 },
+            ],
+          },
+          {
+            currency: '$',
+            currencyCode: 'USD',
+            netAmount: 60,
+            groups: [
+              { groupId: 'group-1', groupName: 'Beach trip', amount: 100 },
+              { groupId: 'group-2', groupName: 'Cabin weekend', amount: -40 },
+            ],
+          },
+        ],
+      },
+    ])
+  })
+
+  it('keeps name-only participants separate across groups', () => {
+    expect(
+      summarizePeopleBalances(
+        [
+          {
+            id: 'group-1',
+            displayName: 'One',
+            currency: { currency: '$', currencyCode: 'USD' },
+            currentParticipantId: 'alice-1',
+            balances: {
+              'alice-1': { paid: 50, paidFor: 0, total: 50 },
+              'person-1': { paid: 0, paidFor: 50, total: -50 },
+            },
+          },
+          {
+            id: 'group-2',
+            displayName: 'Two',
+            currency: { currency: '$', currencyCode: 'USD' },
+            currentParticipantId: 'alice-2',
+            balances: {
+              'alice-2': { paid: 50, paidFor: 0, total: 50 },
+              'person-2': { paid: 0, paidFor: 50, total: -50 },
+            },
+          },
+        ],
+        [
+          { id: 'person-1', name: 'Sam', account: null },
+          { id: 'person-2', name: 'Sam', account: null },
+        ],
+      ).map(({ key, name, currencies }) => ({ key, name, currencies })),
+    ).toEqual([
+      {
+        key: 'participant:person-1',
+        name: 'Sam',
+        currencies: [
+          {
+            currency: '$',
+            currencyCode: 'USD',
+            netAmount: 50,
+            groups: [{ groupId: 'group-1', groupName: 'One', amount: 50 }],
+          },
+        ],
+      },
+      {
+        key: 'participant:person-2',
+        name: 'Sam',
+        currencies: [
+          {
+            currency: '$',
+            currencyCode: 'USD',
+            netAmount: 50,
+            groups: [{ groupId: 'group-2', groupName: 'Two', amount: 50 }],
+          },
+        ],
+      },
+    ])
+  })
 })
 
 describe('overviewRouter.get', () => {
@@ -134,6 +278,7 @@ describe('overviewRouter.get', () => {
     await expect(caller.get()).resolves.toEqual({
       stats: {
         balanceSummaries: [],
+        peopleBalances: [],
         friendCount: 0,
       },
       groups: [],

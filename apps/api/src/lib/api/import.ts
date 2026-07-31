@@ -28,6 +28,7 @@ import {
   resolveConversion,
   type ConversionResolution,
 } from '../expense-conversion'
+import { getPlaceholderEmailDisplayName } from '../invitations/display'
 import {
   buildExpenseActivityData,
   buildImportSummaryActivityData,
@@ -759,7 +760,11 @@ export async function importGroup(
     where: { id: actor.accountId },
     select: { name: true, email: true },
   })
-  const inviterDisplayName = inviter?.name || inviter?.email || 'Someone'
+  const inviterDisplayName =
+    inviter?.name ||
+    getPlaceholderEmailDisplayName(inviter?.email) ||
+    inviter?.email ||
+    'Someone'
 
   const inviteResults: ImportInviteResult[] = []
   for (const invite of baseResult.inviteMappings) {

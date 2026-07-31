@@ -389,6 +389,39 @@ describe('groupsRouter.participants.remove — soft remove', () => {
     ])
   })
 
+  it('shortens a placeholder email in an invitation preview', async () => {
+    await authAs('acct-admin')
+    seedGroupContext()
+    prismaMock.ledgerParticipant.findFirst.mockResolvedValue({
+      id: 'lp-invite',
+      kind: 'UNLINKED_PARTICIPANT',
+      displayName: null,
+      ledgerId: 'ledger-1',
+      removedAt: null,
+      groupMemberId: null,
+      groupMember: null,
+      invitations: [
+        {
+          id: 'inv-link',
+          email: 'abcdefghijk@link.placeholder.local',
+          temporaryName: null,
+        },
+      ],
+    } as never)
+
+    const caller = makeCaller('acct-admin')
+    const result = await caller.participants.removePreview({
+      groupId: 'grp-1',
+      ledgerParticipantId: 'lp-invite',
+    })
+
+    expect(result).toMatchObject({
+      participantName: 'abcdefgh…',
+      participantKind: 'invitation',
+      participants: [{ id: 'lp-invite', name: 'abcdefgh…' }],
+    })
+  })
+
   it('rejects an unauthenticated caller with UNAUTHORIZED', async () => {
     authState.session = null
     const ctx = await createTRPCContext({

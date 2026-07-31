@@ -43,7 +43,11 @@
       "acrossGroups": "У всіх ваших групах",
       "viewGroups": "Показати групи",
       "noOneOwesYou": "Ніхто вам нічого не винен",
-      "youOweNoOne": "Ви нікому нічого не винні"
+      "youOweNoOne": "Ви нікому нічого не винні",
+      "groupsTab": "Групи",
+      "peopleTab": "Люди",
+      "unknownPerson": "Невідомий учасник",
+      "viewPersonGroups": "Переглянути групи для {name} ({currency})"
     }
   },
   "Header": {

@@ -8,6 +8,7 @@ import {
   type GroupRole,
 } from '@spliit/db'
 
+import { getPlaceholderEmailDisplayName } from '../../../lib/invitations/display'
 import {
   RevokeInvitationPreconditionError,
   acceptInvitation,
@@ -227,7 +228,10 @@ export const invitationsRouter = createTRPCRouter({
           invitationId: invitation.id,
           groupId: group.id,
           groupName: group.name,
-          inviterDisplayName: ctx.auth.user.name || ctx.auth.user.email,
+          inviterDisplayName:
+            ctx.auth.user.name ||
+            getPlaceholderEmailDisplayName(ctx.auth.user.email) ||
+            ctx.auth.user.email,
           inviterRole: member.role,
           recipientEmail: invitation.email,
           recipientIsExistingUser: false,

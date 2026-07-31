@@ -9,7 +9,11 @@ import {
 } from '@spliit/db'
 
 import { getGroup } from '../../../lib/api'
-import { acceptLinkInvitation, hashLinkToken } from '../../../lib/invitations'
+import {
+  acceptLinkInvitation,
+  getInvitationDisplayName,
+  hashLinkToken,
+} from '../../../lib/invitations'
 import {
   linkInviteTokenInput,
   loadGroupContext,
@@ -249,8 +253,8 @@ export const getGroupProcedure = protectedProcedure
 /**
  * Compute a human-readable display name for the group. For FRIEND-typed groups
  * whose `name` is always empty, resolve the name from the peer active member's
- * account, a pending invitation's temporary name, or the invitation email. For
- * regular groups, returns the stored name.
+ * account, a pending invitation's temporary name, or the invitation display
+ * label. For regular groups, returns the stored name.
  */
 function resolveDisplayName(
   group: NonNullable<Awaited<ReturnType<typeof getGroup>>>,
@@ -261,7 +265,7 @@ function resolveDisplayName(
   if (peerMember?.account.name) return peerMember.account.name
   const pendingInv = group.invitations[0]
   if (pendingInv?.temporaryName) return pendingInv.temporaryName
-  if (pendingInv?.email) return pendingInv.email
+  if (pendingInv?.email) return getInvitationDisplayName(pendingInv)
   return ''
 }
 

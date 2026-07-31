@@ -3,8 +3,10 @@ export {
   PLACEHOLDER_EMAIL_DOMAIN,
   buildLinkPlaceholderEmail,
   buildProviderPlaceholderEmail,
+  getPlaceholderEmailDisplayName,
   getInvitationDisplayName,
   isPlaceholderEmail,
+  PLACEHOLDER_USERNAME_DISPLAY_LENGTH,
   resolveParticipantDisplayName,
 } from './display'
 

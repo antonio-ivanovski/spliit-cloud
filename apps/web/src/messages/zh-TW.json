@@ -43,7 +43,11 @@
       "acrossGroups": "所有群組",
       "viewGroups": "查看群組",
       "noOneOwesYou": "沒有人欠你",
-      "youOweNoOne": "你不欠任何人"
+      "youOweNoOne": "你不欠任何人",
+      "groupsTab": "群組",
+      "peopleTab": "人員",
+      "unknownPerson": "未知參與者",
+      "viewPersonGroups": "查看 {name} 的群組（{currency}）"
     }
   },
   "Header": {

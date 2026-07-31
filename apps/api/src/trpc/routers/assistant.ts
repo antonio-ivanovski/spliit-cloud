@@ -14,6 +14,7 @@ import {
   prepareAssistantExpense,
   prepareExpenseInputSchema,
 } from '../../lib/assistant/expense'
+import { resolveParticipantDisplayName } from '../../lib/invitations'
 import { assistantProcedure, createTRPCRouter } from '../init'
 
 const readProcedure = assistantProcedure('spliit:groups:read')
@@ -34,6 +35,12 @@ function countByLower(values: string[]): Map<string, number> {
     counts.set(key, (counts.get(key) ?? 0) + 1)
   }
   return counts
+}
+
+function assistantParticipantName(
+  participant: Parameters<typeof resolveParticipantDisplayName>[0],
+) {
+  return resolveParticipantDisplayName(participant) || 'Pending participant'
 }
 
 function displayGroupName(
@@ -124,12 +131,7 @@ export const assistantRouter = createTRPCRouter({
         const name = groupNames[index]
         const participants = group.ledger.participants.map((participant) => ({
           id: participant.id,
-          name:
-            participant.groupMember?.account.name ||
-            participant.displayName ||
-            participant.invitations[0]?.temporaryName ||
-            participant.invitations[0]?.email ||
-            'Pending participant',
+          name: assistantParticipantName(participant),
           status: participant.groupMember
             ? ('ACTIVE' as const)
             : participant.invitations.length > 0
@@ -219,12 +221,7 @@ export const assistantRouter = createTRPCRouter({
       const participants = member.group.ledger.participants.map(
         (participant) => ({
           id: participant.id,
-          name:
-            participant.groupMember?.account.name ||
-            participant.displayName ||
-            participant.invitations[0]?.temporaryName ||
-            participant.invitations[0]?.email ||
-            'Pending participant',
+          name: assistantParticipantName(participant),
           status: participant.groupMember ? 'ACTIVE' : 'PENDING_OR_UNLINKED',
         }),
       )

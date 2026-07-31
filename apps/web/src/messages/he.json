@@ -43,7 +43,11 @@
       "acrossGroups": "בכל הקבוצות שלך",
       "viewGroups": "הצגת קבוצות",
       "noOneOwesYou": "אף אחד לא חייב לך",
-      "youOweNoOne": "אינך חייב לאף אחד"
+      "youOweNoOne": "אינך חייב לאף אחד",
+      "groupsTab": "קבוצות",
+      "peopleTab": "אנשים",
+      "unknownPerson": "משתתף לא ידוע",
+      "viewPersonGroups": "הצגת הקבוצות של {name} ({currency})"
     }
   },
   "Header": {

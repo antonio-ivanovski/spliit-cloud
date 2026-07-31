@@ -43,7 +43,11 @@
       "acrossGroups": "Across your groups",
       "viewGroups": "View groups",
       "noOneOwesYou": "No one owes you",
-      "youOweNoOne": "You don't owe anyone"
+      "youOweNoOne": "You don't owe anyone",
+      "groupsTab": "Groups",
+      "peopleTab": "People",
+      "unknownPerson": "Unknown participant",
+      "viewPersonGroups": "View groups for {name} ({currency})"
     }
   },
   "Header": {

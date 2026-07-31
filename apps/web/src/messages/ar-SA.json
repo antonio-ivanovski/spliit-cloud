@@ -470,7 +470,11 @@
       "acrossGroups": "عبر مجموعاتك",
       "noOneOwesYou": "لا أحد مدين لك",
       "viewGroups": "عرض المجموعات",
-      "youOweNoOne": "أنت لا تدين لأحد"
+      "youOweNoOne": "أنت لا تدين لأحد",
+      "groupsTab": "المجموعات",
+      "peopleTab": "الأشخاص",
+      "unknownPerson": "مشارك غير معروف",
+      "viewPersonGroups": "عرض مجموعات {name} ({currency})"
     }
   },
   "ExpensePreview": {
