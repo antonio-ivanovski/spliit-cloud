@@ -1,6 +1,8 @@
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { useCallback, useMemo, useState } from 'react'
 
+import { normalizeCategoryId } from '@spliit/domain'
+
 export type ExpenseSortBy = 'expenseDate' | 'createdAt' | 'amount'
 export type ExpenseSortDir = 'asc' | 'desc'
 export type ExpenseMatchMode = 'any' | 'all' | 'exact'
@@ -78,7 +80,9 @@ function readFiltersFromSearch(search: Record<string, unknown>): {
 } {
   const filters: ExpenseFilters = {
     showSettlements: search.expShowSettlements !== 'false',
-    categories: splitCsv(search.expCategories as string | undefined),
+    categories: splitCsv(search.expCategories as string | undefined).map(
+      (id) => normalizeCategoryId(id) ?? id,
+    ),
     paidBy: splitCsv(search.expPaidBy as string | undefined),
     paidByMatch:
       (search.expPaidByMatch as ExpenseMatchMode | undefined) ?? 'any',

@@ -9,6 +9,7 @@ import {
   Scale,
   Settings2,
   Users,
+  WalletCards,
 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -73,17 +74,22 @@ export function MobileGroupNav({ groupId }: GroupNavProps) {
       icon: Scale,
     },
     {
-      href: `/groups/${groupId}/activity`,
-      label: t('Activity.title'),
-      icon: Activity,
-    },
-    {
       href: `/groups/${groupId}/stats`,
       label: t('Stats.title'),
       icon: BarChart3,
     },
+    {
+      href: `/groups/${groupId}/budgets`,
+      label: t('Budgets.title'),
+      icon: WalletCards,
+    },
   ] as const
   const moreTabs = [
+    {
+      href: `/groups/${groupId}/activity`,
+      label: t('Activity.title'),
+      icon: Activity,
+    },
     {
       href: `/groups/${groupId}/information`,
       label: t('Information.title'),

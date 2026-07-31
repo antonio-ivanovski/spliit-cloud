@@ -2,6 +2,7 @@ import { createTRPCRouter } from '../../init'
 import { activitiesRouter } from './activities'
 import { archiveGroupProcedure } from './archive.procedure'
 import { groupBalancesRouter } from './balances'
+import { groupBudgetsRouter } from './budgets'
 import { createGroupProcedure } from './create.procedure'
 import { deleteGroupProcedure } from './delete.procedure'
 import { groupExpensesRouter } from './expenses'
@@ -30,6 +31,7 @@ export const groupsRouter = createTRPCRouter({
   members: groupMembersRouter,
   participants: groupParticipantsRouter,
   importLinks: importLinksRouter,
+  budgets: groupBudgetsRouter,
 
   /**
    * Get a single group plus the caller's membership and link-invite state.

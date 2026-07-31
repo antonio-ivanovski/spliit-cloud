@@ -164,7 +164,8 @@ describe('NotificationsPreferences', () => {
     expect(screen.getByText('Added to a group')).toBeInTheDocument()
     expect(screen.getByText('Friend ledger')).toBeInTheDocument()
     expect(screen.getByText('New comment')).toBeInTheDocument()
-    expect(screen.getAllByRole('combobox')).toHaveLength(6)
+    expect(screen.getByText('Budget alerts')).toBeInTheDocument()
+    expect(screen.getAllByRole('combobox')).toHaveLength(7)
     expect(screen.getAllByText('Coming soon').length).toBeGreaterThan(0)
   })
 

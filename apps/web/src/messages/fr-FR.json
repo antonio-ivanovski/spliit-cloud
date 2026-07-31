@@ -1071,7 +1071,6 @@
     },
     "Entertainment": {
       "heading": "Divertissement",
-      "Entertainment": "Divertissement",
       "Games": "Jeux",
       "Movies": "Films",
       "Music": "Musique",
@@ -1079,14 +1078,12 @@
     },
     "Food and Drink": {
       "heading": "Nourriture et boissons",
-      "Food and Drink": "Nourriture et boissons",
       "Dining Out": "Repas au restaurant",
       "Groceries": "Épicerie",
       "Liquor": "Alcool"
     },
     "Home": {
       "heading": "Maison",
-      "Home": "Maison",
       "Electronics": "Électronique",
       "Furniture": "Mobilier",
       "Household Supplies": "Fournitures ménagères",
@@ -1109,7 +1106,6 @@
     },
     "Transportation": {
       "heading": "Transport",
-      "Transportation": "Transport",
       "Bicycle": "Bicyclette",
       "Bus/Train": "Bus/Train",
       "Car": "Voiture",
@@ -1121,7 +1117,6 @@
     },
     "Utilities": {
       "heading": "Services publics",
-      "Utilities": "Services publics",
       "Cleaning": "Nettoyage",
       "Electricity": "Électricité",
       "Heat/Gas": "Chauffage/Gaz",
@@ -1134,14 +1129,14 @@
       "Events and Activities": "Événements et activités"
     },
     "Personal Care and Wellness": {
-      "heading": "Soins personnels et bien-être",
-      "Personal Care and Wellness": "Soins personnels et bien-être"
+      "heading": "Soins personnels et bien-être"
     },
     "Subscriptions and Memberships": {
       "heading": "Abonnements et adhésions",
       "Digital Subscriptions": "Abonnements numériques",
       "Memberships": "Adhésions"
-    }
+    },
+    "groupIncludes": "Inclut les sous-catégories"
   },
   "Currencies": {
     "search": "Chercher une devise...",
@@ -1719,6 +1714,10 @@
         "recurringExpense": {
           "title": "Dépense récurrente",
           "description": "Lorsqu’une dépense récurrente planifiée est créée dans un groupe."
+        },
+        "budgetAlert": {
+          "title": "Alertes de budget",
+          "description": "Lorsqu’un budget partagé du groupe est en passe d’être dépassé ou a dépassé sa limite."
         }
       },
       "sections": {
@@ -2179,5 +2178,131 @@
     "saveError": "Impossible de mettre à jour votre fuseau horaire. Réessayez.",
     "keep": "Conserver {timeZone}",
     "update": "Utiliser {timeZone}"
+  },
+  "Budgets": {
+    "daysRemaining_zero": "Il reste {count} jours",
+    "daysRemaining_two": "Il reste {count} jours",
+    "daysRemaining_few": "Il reste {count} jours",
+    "daysRemaining_many": "Il reste {count} jours",
+    "title": "Suivis budgétaires",
+    "detailTitle": "Suivi du budget",
+    "description": "Suivez les dépenses du groupe avec des limites partagées.",
+    "create": "Créer un budget",
+    "new": "Nouveau",
+    "edit": "Modifier",
+    "archive": "Archiver",
+    "delete": "Supprimer",
+    "deleting": "Suppression…",
+    "save": "Enregistrer le budget",
+    "cancel": "Annuler",
+    "saving": "Enregistrement…",
+    "created": "Budget créé",
+    "updated": "Budget mis à jour",
+    "archivedSuccess": "Budget archivé",
+    "backToBudgets": "Retour aux budgets",
+    "daysRemaining_one": "Il reste {count} jour",
+    "daysRemaining_other": "Il reste {count} jours",
+    "ofLimit": "sur {amount}",
+    "overBy": "{amount} de dépassement",
+    "remaining": "{amount} restants",
+    "projected": "Prévision : {amount}",
+    "progressLabel": "{percentage} % du budget utilisé",
+    "paceTick": "{percent}% attendu pour l'instant",
+    "categoriesScope": "Catégories : {scope}",
+    "all": "Tous",
+    "selected": "Sélectionné",
+    "viewDetails": "Voir les détails",
+    "allCategories": "Toutes les catégories",
+    "selectedCategories": "Catégories sélectionnées",
+    "allParticipants": "Tous les participants",
+    "selectedParticipants": "Participants sélectionnés",
+    "archived": "Budgets archivés",
+    "matchingExpenses": "Dépenses correspondantes",
+    "matchingExpensesDescription": "Dépenses prises en compte dans ce budget pour la période actuelle.",
+    "noMatchingExpenses": "Aucune dépense correspondante pour cette période.",
+    "upcoming": "Dépenses à venir",
+    "upcomingDescription": "Dépenses futures dans cette période. Le statut et la tendance les excluent pour éviter une fausse alerte de dépassement.",
+    "noUpcoming": "Aucune dépense future dans cette période.",
+    "upcomingTotal": "Total à venir : {amount}",
+    "committedSubline": "+ {amount} engagés",
+    "history": "Historique des périodes",
+    "historyDescription": "Les périodes précédentes sont recalculées avec la limite et le périmètre actuels.",
+    "noHistory": "Aucune période terminée pour le moment.",
+    "deleteDescription": "Supprime définitivement ce budget et son historique d’alertes. Les dépenses du groupe ne seront pas affectées.",
+    "validation": "Complétez tous les champs obligatoires du budget.",
+    "form": {
+      "description": "Définissez la limite, la période, les catégories et les participants suivis par ce budget.",
+      "notAllowed": "Seuls les administrateurs du groupe peuvent gérer les budgets.",
+      "name": "Nom du budget",
+      "namePlaceholder": "Par exemple, courses du foyer",
+      "amount": "Montant",
+      "period": "Période",
+      "startDate": "Date de début",
+      "endDate": "Date de fin",
+      "categories": "Catégories",
+      "participants": "Membres",
+      "chooseCategories": "Choisir des catégories",
+      "chooseParticipants": "Choisir des participants",
+      "notifications": "Alertes",
+      "notifyTrending": "Tendance au dépassement",
+      "notifyTrendingDescription": "Avertissez les membres sélectionnés lorsque les dépenses prévues dépassent la limite après 20 % de la période.",
+      "notifyOver": "Dépassement du budget",
+      "notifyOverDescription": "Avertissez les membres sélectionnés lorsque les dépenses réelles dépassent la limite pour la première fois.",
+      "periodHint": "Période en cours : {range}",
+      "categoryScopeHint": "Inclut la catégorie parente et toutes ses sous-catégories.",
+      "participantScopeHint": "Seules les parts dues par les participants sélectionnés sont comptées.",
+      "overlapHint": "Une dépense peut compter dans plusieurs budgets lorsque leurs périmètres se chevauchent.",
+      "notificationRecipients": "Les alertes sont envoyées aux membres du compte inclus dans le périmètre des participants et ayant activé les notifications de budget.",
+      "allSubcategories": "toutes les sous-catégories"
+    },
+    "empty": {
+      "title": "Aucun budget pour le moment",
+      "description": "Créez un budget partagé pour suivre les dépenses de tout le groupe ou de participants sélectionnés."
+    },
+    "period": {
+      "weekly": "Hebdomadaire",
+      "monthly": "Mensuel",
+      "yearly": "Annuel",
+      "custom": "Période personnalisée"
+    },
+    "status": {
+      "over": "Budget dépassé",
+      "trending": "Tendance au dépassement",
+      "onTrack": "Dans les limites",
+      "archived": "Archivé",
+      "scheduled": "Planifié",
+      "completed": "Terminé"
+    },
+    "unarchivedSuccess": "Budget désarchivé",
+    "notificationsOff": "Aucune alerte activée",
+    "createCard": {
+      "title": "Créer un budget",
+      "description": "Définissez une limite de dépenses et recevez une alerte avant de la dépasser."
+    },
+    "chart": {
+      "heading": "Dépenses à ce jour",
+      "sectionLabel": "Graphique des dépenses cumulées",
+      "legendSpent": "Dépensé",
+      "legendPace": "Rythme prévu",
+      "legendCommitted": "Engagé",
+      "limitLine": "Limite",
+      "srSummary": "Dépensé {spent} sur {limit} ; engagé {committed}."
+    },
+    "usedTooltip": "{used} utilisés sur {limit}",
+    "paceTooltip": "Rythme attendu : jour {elapsed} sur {total}",
+    "scope": "Périmètre",
+    "remove": "Retirer",
+    "retry": "Réessayer",
+    "completedBudgets": "Budgets terminés",
+    "completed": "Terminé",
+    "validationName": "Ajoutez un nom de budget.",
+    "validationAmount": "Saisissez un montant supérieur à zéro.",
+    "validationDates": "Choisissez des dates de début et de fin valides.",
+    "validationCategories": "Sélectionnez au moins une catégorie.",
+    "validationParticipants": "Sélectionnez au moins un participant.",
+    "startsIn": "Commence dans {count} jours",
+    "startsToday": "Commence aujourd'hui",
+    "moreExpenses": "{count} dépenses supplémentaires sont incluses dans le total.",
+    "moreUpcomingExpenses": "{count} dépenses à venir supplémentaires sont incluses dans le total engagé."
   }
 }

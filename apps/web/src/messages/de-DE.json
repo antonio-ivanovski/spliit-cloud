@@ -1095,7 +1095,6 @@
     },
     "Entertainment": {
       "heading": "Vergnügen",
-      "Entertainment": "Vergnügen",
       "Games": "Spiele",
       "Movies": "Filme",
       "Music": "Musik",
@@ -1103,14 +1102,12 @@
     },
     "Food and Drink": {
       "heading": "Essen und Trinken",
-      "Food and Drink": "Essen und Trinken",
       "Dining Out": "Essen gehen",
       "Groceries": "Lebensmittel",
       "Liquor": "Alkohol"
     },
     "Home": {
       "heading": "Zuhause",
-      "Home": "Zuhause",
       "Electronics": "Elektronik",
       "Furniture": "Möbel",
       "Household Supplies": "Haushaltsgegenstände",
@@ -1133,7 +1130,6 @@
     },
     "Transportation": {
       "heading": "Transport",
-      "Transportation": "Transport",
       "Bicycle": "Fahrrad",
       "Bus/Train": "Bus/Bahn",
       "Car": "Auto",
@@ -1145,7 +1141,6 @@
     },
     "Utilities": {
       "heading": "Versorgung",
-      "Utilities": "Versorgung",
       "Cleaning": "Reinigung/Putzen",
       "Electricity": "Strom",
       "Heat/Gas": "Heizung",
@@ -1158,14 +1153,14 @@
       "Events and Activities": "Veranstaltungen und Aktivitäten"
     },
     "Personal Care and Wellness": {
-      "heading": "Körperpflege und Wellness",
-      "Personal Care and Wellness": "Körperpflege und Wellness"
+      "heading": "Körperpflege und Wellness"
     },
     "Subscriptions and Memberships": {
       "heading": "Abonnements und Mitgliedschaften",
       "Digital Subscriptions": "Digitale Abonnements",
       "Memberships": "Mitgliedschaften"
-    }
+    },
+    "groupIncludes": "Enthält Unterkategorien"
   },
   "Currencies": {
     "search": "Währung suchen...",
@@ -1742,6 +1737,10 @@
         "recurringExpense": {
           "title": "Wiederkehrende Ausgabe",
           "description": "Wenn eine geplante wiederkehrende Ausgabe in einer Gruppe erstellt wird."
+        },
+        "budgetAlert": {
+          "title": "Budgetwarnungen",
+          "description": "Wenn ein gemeinsames Gruppenbudget voraussichtlich überschritten wird oder sein Limit überschritten hat."
         }
       },
       "sections": {
@@ -2229,5 +2228,131 @@
     "saveError": "Deine Zeitzone konnte nicht aktualisiert werden. Versuche es erneut.",
     "keep": "{timeZone} beibehalten",
     "update": "Auf {timeZone} aktualisieren"
+  },
+  "Budgets": {
+    "title": "Haushaltsbudgets",
+    "detailTitle": "Budgetübersicht",
+    "description": "Gruppenausgaben mit gemeinsamen Limits verfolgen.",
+    "create": "Budget erstellen",
+    "new": "Neu",
+    "edit": "Bearbeiten",
+    "archive": "Archivieren",
+    "delete": "Löschen",
+    "deleting": "Wird gelöscht…",
+    "save": "Budget speichern",
+    "cancel": "Abbrechen",
+    "saving": "Wird gespeichert…",
+    "created": "Budget erstellt",
+    "updated": "Budget aktualisiert",
+    "archivedSuccess": "Budget archiviert",
+    "backToBudgets": "Zurück zu den Budgets",
+    "daysRemaining_one": "{count} Tag verbleibt",
+    "daysRemaining_other": "{count} Tage verbleiben",
+    "ofLimit": "von {amount}",
+    "overBy": "{amount} darüber",
+    "remaining": "{amount} verbleibend",
+    "projected": "Prognose: {amount}",
+    "progressLabel": "{percentage} % des Budgets verwendet",
+    "paceTick": "{percent}% bis jetzt erwartet",
+    "categoriesScope": "Kategorien: {scope}",
+    "all": "Alle",
+    "selected": "Ausgewählt",
+    "viewDetails": "Details anzeigen",
+    "allCategories": "Alle Kategorien",
+    "selectedCategories": "Ausgewählte Kategorien",
+    "allParticipants": "Alle Teilnehmenden",
+    "selectedParticipants": "Ausgewählte Teilnehmende",
+    "archived": "Archivierte Budgets",
+    "matchingExpenses": "Passende Ausgaben",
+    "matchingExpensesDescription": "Ausgaben, die im aktuellen Zeitraum zu diesem Budget beitragen.",
+    "noMatchingExpenses": "Keine passenden Ausgaben in diesem Zeitraum.",
+    "upcoming": "Ausstehende Ausgaben",
+    "upcomingDescription": "Künftig datierte Ausgaben in diesem Zeitraum. Status und Trend schließen diese aus, damit kein falscher Überschreitung-erwartet-Alarm ausgelöst wird.",
+    "noUpcoming": "Keine künftigen Ausgaben in diesem Zeitraum.",
+    "upcomingTotal": "Ausstehende Gesamtsumme: {amount}",
+    "committedSubline": "+ {amount} gebunden",
+    "history": "Periodenverlauf",
+    "historyDescription": "Frühere Zeiträume werden mit dem aktuellen Limit und Bereich dieses Budgets neu berechnet.",
+    "noHistory": "Noch keine abgeschlossenen Zeiträume.",
+    "deleteDescription": "Dieses Budget und seinen Warnungsverlauf dauerhaft löschen. Gruppenausgaben bleiben unberührt.",
+    "empty": {
+      "title": "Noch keine Budgets",
+      "description": "Erstelle ein gemeinsames Budget, um Ausgaben für die gesamte Gruppe oder ausgewählte Teilnehmende zu verfolgen."
+    },
+    "validation": "Fülle alle erforderlichen Budgetfelder aus.",
+    "form": {
+      "description": "Lege Limit, Zeitraum, Kategorien und Teilnehmende für dieses Budget fest.",
+      "notAllowed": "Nur Gruppenadministratoren können Budgets verwalten.",
+      "name": "Budgetname",
+      "namePlaceholder": "Zum Beispiel: Haushaltseinkäufe",
+      "amount": "Betrag",
+      "period": "Zeitraum",
+      "startDate": "Startdatum",
+      "endDate": "Enddatum",
+      "categories": "Kategorien",
+      "participants": "Teilnehmende",
+      "chooseCategories": "Kategorien auswählen",
+      "chooseParticipants": "Teilnehmende auswählen",
+      "notifications": "Benachrichtigungen",
+      "notifyTrending": "Überschreitung erwartet",
+      "notifyTrendingDescription": "Ausgewählte Mitglieder benachrichtigen, wenn die prognostizierten Ausgaben nach 20 % des Zeitraums das Limit überschreiten.",
+      "notifyOver": "Budget überschritten",
+      "notifyOverDescription": "Ausgewählte Mitglieder benachrichtigen, wenn die tatsächlichen Ausgaben das Limit erstmals überschreiten.",
+      "periodHint": "Aktueller Zeitraum: {range}",
+      "categoryScopeHint": "Bezieht die übergeordnete Kategorie und alle Unterkategorien ein.",
+      "participantScopeHint": "Nur die von ausgewählten Teilnehmern geschuldeten Anteile zählen.",
+      "overlapHint": "Eine Ausgabe kann bei überschneidenden Bereichen in mehrere Budgets einfließen.",
+      "notificationRecipients": "Benachrichtigungen erhalten Kontomitglieder im Teilnehmerbereich, die Budgetbenachrichtigungen aktiviert haben.",
+      "allSubcategories": "alle Unterkategorien"
+    },
+    "period": {
+      "weekly": "Wöchentlich",
+      "monthly": "Monatlich",
+      "yearly": "Jährlich",
+      "custom": "Benutzerdefinierter Zeitraum"
+    },
+    "status": {
+      "over": "Budget überschritten",
+      "trending": "Überschreitung erwartet",
+      "onTrack": "Im Plan",
+      "archived": "Archiviert",
+      "scheduled": "Geplant",
+      "completed": "Abgeschlossen"
+    },
+    "daysRemaining_zero": "{count} Tage verbleiben",
+    "daysRemaining_two": "{count} Tage verbleiben",
+    "daysRemaining_few": "{count} Tage verbleiben",
+    "daysRemaining_many": "{count} Tage verbleiben",
+    "unarchivedSuccess": "Budget wiederhergestellt",
+    "notificationsOff": "Keine Benachrichtigungen aktiviert",
+    "createCard": {
+      "title": "Budget erstellen",
+      "description": "Lege ein Ausgabenlimit fest und werde benachrichtigt, bevor du zu viel ausgibst."
+    },
+    "chart": {
+      "heading": "Bisherige Ausgaben",
+      "sectionLabel": "Diagramm der kumulierten Ausgaben",
+      "legendSpent": "Ausgegeben",
+      "legendPace": "Erwartet",
+      "legendCommitted": "Gebunden",
+      "limitLine": "Obergrenze",
+      "srSummary": "Ausgegeben {spent} von {limit}; gebunden {committed}."
+    },
+    "usedTooltip": "{used} von {limit} verwendet",
+    "paceTooltip": "Erwartetes Tempo: Tag {elapsed} von {total}",
+    "scope": "Umfang",
+    "remove": "Entfernen",
+    "retry": "Erneut versuchen",
+    "completedBudgets": "Abgeschlossene Budgets",
+    "completed": "Abgeschlossen",
+    "validationName": "Füge einen Budgetnamen hinzu.",
+    "validationAmount": "Gib einen Betrag größer als null ein.",
+    "validationDates": "Wähle gültige Start- und Enddaten.",
+    "validationCategories": "Wähle mindestens eine Kategorie aus.",
+    "validationParticipants": "Wähle mindestens einen Teilnehmer aus.",
+    "startsIn": "Beginnt in {count} Tagen",
+    "startsToday": "Beginnt heute",
+    "moreExpenses": "Weitere {count} Ausgaben sind in der Gesamtsumme enthalten.",
+    "moreUpcomingExpenses": "Weitere {count} bevorstehende Ausgaben sind in der zugesagten Summe enthalten."
   }
 }

@@ -47,14 +47,14 @@ export function getInvitationDisplayName(invitation: {
  * invitation `temporaryName` → invitation `email`.
  */
 export function resolveParticipantDisplayName(participant: {
-  groupMember: { account: { name: string } } | null
+  groupMember: { account: { name: string | null } | null } | null
   invitations: Array<{
     email: string | null
     temporaryName: string | null
   }>
   displayName?: string | null
 }): string {
-  const accountName = participant.groupMember?.account.name
+  const accountName = participant.groupMember?.account?.name ?? null
   if (accountName) return accountName
   const invitation = participant.invitations[0]
   if (invitation) return getInvitationDisplayName(invitation)

@@ -22,6 +22,7 @@ export const jobPayloadSchemas = {
     cursor: z.string().min(1).optional(),
   }),
   'notification.cleanup': z.object({}),
+  'budget.evaluate': z.object({ groupId: z.string().min(1).optional() }),
 } as const
 
 export type JobName = keyof typeof jobPayloadSchemas
@@ -36,6 +37,7 @@ export const JOB_NAMES = {
   NOTIFICATION_DELIVER: 'notification.deliver',
   NOTIFICATION_RECONCILE: 'notification.reconcile',
   NOTIFICATION_CLEANUP: 'notification.cleanup',
+  EVALUATE_BUDGETS: 'budget.evaluate',
 } as const satisfies Record<string, JobName>
 
 export const RECURRING_MATERIALIZATION_QUEUE =
@@ -51,6 +53,8 @@ export const NOTIFICATION_CLEANUP_QUEUE = JOB_NAMES.NOTIFICATION_CLEANUP
 export const NOTIFICATION_DELIVER_DLQ = `${NOTIFICATION_DELIVER_QUEUE}.dead-letter`
 export const NOTIFICATION_RECONCILE_DLQ = `${NOTIFICATION_RECONCILE_QUEUE}.dead-letter`
 export const NOTIFICATION_CLEANUP_DLQ = `${NOTIFICATION_CLEANUP_QUEUE}.dead-letter`
+export const BUDGET_EVALUATE_QUEUE = JOB_NAMES.EVALUATE_BUDGETS
+export const BUDGET_EVALUATE_DLQ = `${BUDGET_EVALUATE_QUEUE}.dead-letter`
 
 export const DEAD_LETTER_QUEUE_BY_SOURCE = {
   [RECURRING_MATERIALIZATION_QUEUE]: RECURRING_MATERIALIZATION_DLQ,
@@ -58,6 +62,7 @@ export const DEAD_LETTER_QUEUE_BY_SOURCE = {
   [NOTIFICATION_DELIVER_QUEUE]: NOTIFICATION_DELIVER_DLQ,
   [NOTIFICATION_RECONCILE_QUEUE]: NOTIFICATION_RECONCILE_DLQ,
   [NOTIFICATION_CLEANUP_QUEUE]: NOTIFICATION_CLEANUP_DLQ,
+  [BUDGET_EVALUATE_QUEUE]: BUDGET_EVALUATE_DLQ,
 } as const satisfies Record<JobName, string>
 
 export function deadLetterQueueFor(sourceQueue: string): string | null {

@@ -159,6 +159,23 @@ function emailSnapshotForKind(kind: string): Record<string, unknown> {
         group: { id: 'grp-1', name: 'abc123' },
         friendName: 'Alice',
       }
+    case 'budget_alert':
+      return {
+        ...base,
+        kind,
+        category: NotificationCategory.BUDGET_ALERT,
+        budget: {
+          id: 'b1',
+          name: 'Monthly',
+          used: 1200,
+          limit: 1000,
+          currencyCode: 'EUR',
+          alertType: 'OVER',
+          periodStart: '2026-07-01',
+          periodEnd: '2026-07-31',
+        },
+        group: { id: 'grp-1', name: 'Trip', type: 'GROUP' },
+      }
     default:
       throw new Error(`Unknown kind: ${kind}`)
   }

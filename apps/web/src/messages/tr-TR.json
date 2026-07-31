@@ -1063,7 +1063,6 @@
     },
     "Entertainment": {
       "heading": "Eğlence",
-      "Entertainment": "Eğlence",
       "Games": "Oyunlar",
       "Movies": "Filmler",
       "Music": "Müzik",
@@ -1071,14 +1070,12 @@
     },
     "Food and Drink": {
       "heading": "Yiyecek ve İçecek",
-      "Food and Drink": "Yiyecek ve İçecek",
       "Dining Out": "Dışarıda Yemek",
       "Groceries": "Market Alışverişi",
       "Liquor": "Alkollü İçecekler"
     },
     "Home": {
       "heading": "Ev",
-      "Home": "Ev",
       "Electronics": "Elektronik",
       "Furniture": "Mobilya",
       "Household Supplies": "Ev İhtiyaçları",
@@ -1101,7 +1098,6 @@
     },
     "Transportation": {
       "heading": "Ulaşım",
-      "Transportation": "Ulaşım",
       "Bicycle": "Bisiklet",
       "Bus/Train": "Otobüs/Tren",
       "Car": "Araba",
@@ -1113,7 +1109,6 @@
     },
     "Utilities": {
       "heading": "Faturalar",
-      "Utilities": "Faturalar",
       "Cleaning": "Temizlik",
       "Electricity": "Elektrik",
       "Heat/Gas": "Isınma/Gaz",
@@ -1126,14 +1121,14 @@
       "Events and Activities": "Etkinlikler ve Aktiviteler"
     },
     "Personal Care and Wellness": {
-      "heading": "Kişisel Bakım ve Sağlık",
-      "Personal Care and Wellness": "Kişisel Bakım ve Sağlık"
+      "heading": "Kişisel Bakım ve Sağlık"
     },
     "Subscriptions and Memberships": {
       "heading": "Abonelikler ve Üyelikler",
       "Digital Subscriptions": "Dijital Abonelikler",
       "Memberships": "Üyelikler"
-    }
+    },
+    "groupIncludes": "Alt kategorileri içerir"
   },
   "Auth": {
     "title": "Spliit Cloud'da oturum açın",
@@ -1710,6 +1705,10 @@
         "recurringExpense": {
           "title": "Yinelenen harcama",
           "description": "Bir grupta planlanmış yinelenen harcama oluşturulduğunda."
+        },
+        "budgetAlert": {
+          "title": "Bütçe uyarıları",
+          "description": "Paylaşılan bir grup bütçesi limiti aşma eğilimindeyken veya limiti aştığında."
         }
       },
       "sections": {
@@ -2161,5 +2160,131 @@
     "saveError": "Saat diliminiz güncellenemedi. Lütfen tekrar deneyin.",
     "keep": "{timeZone} kalsın",
     "update": "{timeZone} olarak güncelle"
+  },
+  "Budgets": {
+    "title": "Bütçeler",
+    "detailTitle": "Bütçe",
+    "description": "Grup harcamalarını ortak limitlere göre takip edin.",
+    "create": "Bütçe oluştur",
+    "new": "Yeni",
+    "edit": "Düzenle",
+    "archive": "Arşivle",
+    "delete": "Sil",
+    "deleting": "Siliniyor…",
+    "save": "Bütçeyi kaydet",
+    "cancel": "İptal",
+    "saving": "Kaydediliyor…",
+    "created": "Bütçe oluşturuldu",
+    "updated": "Bütçe güncellendi",
+    "archivedSuccess": "Bütçe arşivlendi",
+    "backToBudgets": "Bütçelere dön",
+    "daysRemaining_one": "{count} gün kaldı",
+    "daysRemaining_other": "{count} gün kaldı",
+    "ofLimit": "{amount} limitinden",
+    "overBy": "{amount} aşıldı",
+    "remaining": "{amount} kaldı",
+    "projected": "Tahmini {amount}",
+    "progressLabel": "Bütçenin %{percentage} kadarı kullanıldı",
+    "paceTick": "{percent}% şu ana kadar bekleniyor",
+    "categoriesScope": "Kategoriler: {scope}",
+    "all": "Tümü",
+    "selected": "Seçili",
+    "viewDetails": "Ayrıntıları görüntüle",
+    "allCategories": "Tüm kategoriler",
+    "selectedCategories": "Seçili kategoriler",
+    "allParticipants": "Tüm katılımcılar",
+    "selectedParticipants": "Seçili katılımcılar",
+    "archived": "Arşivlenmiş bütçeler",
+    "matchingExpenses": "Eşleşen harcamalar",
+    "matchingExpensesDescription": "Geçerli dönemde bu bütçeye dahil edilen harcamalar.",
+    "noMatchingExpenses": "Bu dönemde eşleşen harcama yok.",
+    "upcoming": "Yaklaşan harcamalar",
+    "upcomingDescription": "Bu dönemdeki ileri tarihli harcamalar. Durum ve eğilim hesaplamaları bunları hariç tutar, böylece yanlış bir 'aşılma eğilimi' uyarısı almazsınız.",
+    "noUpcoming": "Bu dönemde ileri tarihli harcama yok.",
+    "upcomingTotal": "Yaklaşan toplam: {amount}",
+    "committedSubline": "+ {amount} taahhüt edilen",
+    "history": "Dönem geçmişi",
+    "historyDescription": "Önceki dönemler bu bütçenin mevcut limiti ve kapsamıyla yeniden hesaplanır.",
+    "noHistory": "Henüz tamamlanmış dönem yok.",
+    "deleteDescription": "Bu bütçe ve uyarı geçmişi kalıcı olarak silinecek. Grup harcamaları etkilenmeyecek.",
+    "daysRemaining_zero": "{count} gün kaldı",
+    "daysRemaining_two": "{count} gün kaldı",
+    "daysRemaining_few": "{count} gün kaldı",
+    "daysRemaining_many": "{count} gün kaldı",
+    "empty": {
+      "title": "Henüz bütçe yok",
+      "description": "Grubun tamamının veya seçili katılımcıların harcamalarını takip etmek için ortak bir bütçe oluşturun."
+    },
+    "validation": "Gerekli tüm bütçe alanlarını doldurun.",
+    "form": {
+      "description": "Bu bütçenin takip edeceği limiti, dönemi, kategorileri ve katılımcıları belirleyin.",
+      "notAllowed": "Bütçeleri yalnızca grup yöneticileri yönetebilir.",
+      "name": "Bütçe adı",
+      "namePlaceholder": "Örneğin, evin market alışverişi",
+      "amount": "Tutar",
+      "period": "Dönem",
+      "startDate": "Başlangıç tarihi",
+      "endDate": "Bitiş tarihi",
+      "categories": "Kategoriler",
+      "participants": "Katılımcılar",
+      "chooseCategories": "Kategorileri seç",
+      "chooseParticipants": "Katılımcıları seç",
+      "notifications": "Bildirimler",
+      "notifyTrending": "Bütçeyi aşma eğilimi",
+      "notifyTrendingDescription": "Tahmini harcamalar, dönemin %20'sinden sonra limiti aştığında seçili üyelere bildirim gönderin.",
+      "notifyOver": "Bütçe limiti aşıldığında",
+      "notifyOverDescription": "Gerçek harcamalar limiti ilk kez aştığında seçili üyelere bildirim gönderin.",
+      "periodHint": "Geçerli dönem: {range}",
+      "categoryScopeHint": "Üst kategoriyi ve tüm alt kategorilerini içerir.",
+      "participantScopeHint": "Yalnızca seçili katılımcıların borçlu olduğu paylar sayılır.",
+      "overlapHint": "Kapsamlar çakıştığında bir harcama birden fazla bütçeye dahil olabilir.",
+      "notificationRecipients": "Uyarılar, katılımcı kapsamına dahil olan ve bütçe bildirimlerini etkinleştiren hesap üyelerine gönderilir.",
+      "allSubcategories": "tüm alt kategoriler"
+    },
+    "period": {
+      "weekly": "Haftalık",
+      "monthly": "Aylık",
+      "yearly": "Yıllık",
+      "custom": "Özel tarih aralığı"
+    },
+    "status": {
+      "over": "Bütçe aşıldı",
+      "trending": "Aşılma eğiliminde",
+      "onTrack": "Plan dahilinde",
+      "archived": "Arşivlendi",
+      "scheduled": "Planlandı",
+      "completed": "Tamamlandı"
+    },
+    "unarchivedSuccess": "Bütçe arşivden çıkarıldı",
+    "notificationsOff": "Bildirimler kapalı",
+    "createCard": {
+      "title": "Bütçe oluştur",
+      "description": "Harcama limiti belirleyin ve fazla harcama yapmadan önce uyarı alın."
+    },
+    "chart": {
+      "heading": "Bugüne kadar harcanan",
+      "sectionLabel": "Kümülatif harcama grafiği",
+      "legendSpent": "Harcanan",
+      "legendPace": "Beklenen hız",
+      "legendCommitted": "Taahhüt edilen",
+      "limitLine": "Sınır",
+      "srSummary": "{limit} limitinin {spent}'i harcandı; {committed} taahhüt edildi."
+    },
+    "usedTooltip": "Kullanılan: {used} / {limit}",
+    "paceTooltip": "Beklenen tempo: {total} günün {elapsed}. günü",
+    "scope": "Kapsam",
+    "remove": "Kaldır",
+    "retry": "Tekrar dene",
+    "completedBudgets": "Tamamlanan bütçeler",
+    "completed": "Tamamlandı",
+    "validationName": "Bütçe adı ekleyin.",
+    "validationAmount": "Sıfırdan büyük bir tutar girin.",
+    "validationDates": "Geçerli başlangıç ve bitiş tarihleri seçin.",
+    "validationCategories": "En az bir kategori seçin.",
+    "validationParticipants": "En az bir katılımcı seçin.",
+    "startsIn": "{count} gün içinde başlar",
+    "startsToday": "Bugün başlar",
+    "moreExpenses": "Toplama {count} ek harcama dahil edildi.",
+    "moreUpcomingExpenses": "Taahhüt edilen toplama {count} ek gelecek harcaması dahil edildi."
   }
 }

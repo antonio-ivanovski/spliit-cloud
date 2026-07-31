@@ -1056,7 +1056,6 @@
     },
     "Entertainment": {
       "heading": "娛樂",
-      "Entertainment": "娛樂",
       "Games": "遊戲",
       "Movies": "電影",
       "Music": "音樂",
@@ -1064,14 +1063,12 @@
     },
     "Food and Drink": {
       "heading": "飲食",
-      "Food and Drink": "飲食",
       "Dining Out": "外食",
       "Groceries": "食材",
       "Liquor": "酒水"
     },
     "Home": {
       "heading": "居家",
-      "Home": "居家",
       "Electronics": "電子產品",
       "Furniture": "家具",
       "Household Supplies": "日用品",
@@ -1094,7 +1091,6 @@
     },
     "Transportation": {
       "heading": "交通",
-      "Transportation": "交通",
       "Bicycle": "自行車",
       "Bus/Train": "公車/火車",
       "Car": "汽車",
@@ -1106,7 +1102,6 @@
     },
     "Utilities": {
       "heading": "日常帳單",
-      "Utilities": "日常帳單",
       "Cleaning": "清潔費",
       "Electricity": "電費",
       "Heat/Gas": "暖氣/瓦斯",
@@ -1119,14 +1114,14 @@
       "Events and Activities": "活動與賽事"
     },
     "Personal Care and Wellness": {
-      "heading": "個人護理與健康",
-      "Personal Care and Wellness": "個人護理與健康"
+      "heading": "個人護理與健康"
     },
     "Subscriptions and Memberships": {
       "heading": "訂閱與會員",
       "Digital Subscriptions": "數位訂閱",
       "Memberships": "會員"
-    }
+    },
+    "groupIncludes": "包括子類別"
   },
   "Auth": {
     "title": "登入 Spliit Cloud",
@@ -1703,6 +1698,10 @@
         "recurringExpense": {
           "title": "週期性支出",
           "description": "在群組中建立排程的週期性支出時."
+        },
+        "budgetAlert": {
+          "title": "預算提醒",
+          "description": "共享群組預算有超支趨勢或已超過限額時。"
         }
       },
       "sections": {
@@ -2145,5 +2144,130 @@
     "saveError": "無法更新你的時區。請再試一次。",
     "keep": "保留 {timeZone}",
     "update": "更新為 {timeZone}"
+  },
+  "Budgets": {
+    "title": "預算",
+    "detailTitle": "預算",
+    "description": "依照共享限額追蹤群組支出。",
+    "create": "建立預算",
+    "new": "新增",
+    "edit": "編輯",
+    "archive": "封存",
+    "delete": "刪除",
+    "deleting": "刪除中…",
+    "save": "儲存預算",
+    "cancel": "取消",
+    "saving": "正在儲存…",
+    "created": "預算已建立",
+    "updated": "預算已更新",
+    "archivedSuccess": "預算已封存",
+    "backToBudgets": "返回預算",
+    "daysRemaining_other": "剩餘 {count} 天",
+    "ofLimit": "限額 {amount}",
+    "overBy": "超出 {amount}",
+    "remaining": "剩餘 {amount}",
+    "projected": "預計 {amount}",
+    "progressLabel": "已使用預算的 {percentage}%",
+    "paceTick": "目前預期{percent}%",
+    "categoriesScope": "類別：{scope}",
+    "all": "全部",
+    "selected": "已選擇",
+    "viewDetails": "查看詳細資料",
+    "allCategories": "所有類別",
+    "selectedCategories": "所選類別",
+    "allParticipants": "所有參與者",
+    "selectedParticipants": "所選參與者",
+    "archived": "已封存的預算",
+    "matchingExpenses": "符合條件的支出",
+    "matchingExpensesDescription": "目前週期內計入此預算的支出。",
+    "noMatchingExpenses": "此週期內沒有符合條件的支出。",
+    "upcoming": "即將發生的支出",
+    "upcomingDescription": "此期間內未來日期的支出。狀態和趨勢中排除這些項目，以免出現錯誤的「即將超支」警示。",
+    "noUpcoming": "此期間內沒有未來日期的支出。",
+    "upcomingTotal": "即將發生總計：{amount}",
+    "committedSubline": "+ {amount} 已保留",
+    "history": "週期記錄",
+    "historyDescription": "先前的期間會根據此預算目前的上限和範圍重新計算。",
+    "noHistory": "尚無已完成的週期。",
+    "deleteDescription": "永久刪除此預算及其提醒記錄。群組支出不受影響。",
+    "empty": {
+      "title": "尚無預算",
+      "description": "建立共享預算，以追蹤整個群組或所選參與者的支出。"
+    },
+    "validation": "請填寫所有必填的預算欄位。",
+    "form": {
+      "description": "設定此預算追蹤的限額、週期、類別和參與者。",
+      "notAllowed": "只有群組管理員可以管理預算。",
+      "name": "預算名稱",
+      "namePlaceholder": "例如：家庭雜貨",
+      "amount": "金額",
+      "period": "週期",
+      "startDate": "開始日期",
+      "endDate": "結束日期",
+      "categories": "類別",
+      "participants": "參與者",
+      "chooseCategories": "選擇類別",
+      "chooseParticipants": "選擇參與者",
+      "notifications": "通知",
+      "notifyTrending": "預計超出預算",
+      "notifyTrendingDescription": "週期過了 20% 後，若預計支出超過限額，則通知所選成員。",
+      "notifyOver": "超出預算",
+      "notifyOverDescription": "實際支出首次超過限額時，通知所選成員。",
+      "periodHint": "目前週期：{range}",
+      "categoryScopeHint": "包含父類別及其所有子類別。",
+      "participantScopeHint": "只計算所選參與者應負擔的份額。",
+      "overlapHint": "範圍重疊時，一筆支出可能計入多個預算。",
+      "notificationRecipients": "提醒會傳送給參與者範圍內且已開啟預算通知的帳戶成員。",
+      "allSubcategories": "所有子類別"
+    },
+    "period": {
+      "weekly": "每週",
+      "monthly": "每月",
+      "yearly": "每年",
+      "custom": "自訂日期範圍"
+    },
+    "status": {
+      "over": "超出預算",
+      "trending": "預計超出",
+      "onTrack": "進度正常",
+      "archived": "已封存",
+      "scheduled": "已排程",
+      "completed": "已完成"
+    },
+    "daysRemaining_zero": "剩餘 {count} 天",
+    "daysRemaining_two": "剩餘 {count} 天",
+    "daysRemaining_few": "剩餘 {count} 天",
+    "daysRemaining_many": "剩餘 {count} 天",
+    "unarchivedSuccess": "預算已取消封存",
+    "notificationsOff": "未啟用任何通知",
+    "createCard": {
+      "title": "建立預算",
+      "description": "設定支出上限，在超支前收到提醒。"
+    },
+    "chart": {
+      "heading": "截至目前支出",
+      "sectionLabel": "累計支出圖表",
+      "legendSpent": "已支出",
+      "legendPace": "預期速度",
+      "legendCommitted": "已保留",
+      "limitLine": "上限",
+      "srSummary": "已支出 {spent}（上限 {limit}），已保留 {committed}。"
+    },
+    "usedTooltip": "已用 {used} / 共 {limit}",
+    "paceTooltip": "預期進度:第 {elapsed} 天 / 共 {total} 天",
+    "scope": "範圍",
+    "remove": "移除",
+    "retry": "重試",
+    "completedBudgets": "已完成的預算",
+    "completed": "已完成",
+    "validationName": "新增預算名稱。",
+    "validationAmount": "請輸入大於零的金額。",
+    "validationDates": "請選擇有效的開始和結束日期。",
+    "validationCategories": "至少選取一個類別。",
+    "validationParticipants": "至少選取一位參與者。",
+    "startsIn": "{count} 天後開始",
+    "startsToday": "今天開始",
+    "moreExpenses": "總額還包含 {count} 筆其他支出。",
+    "moreUpcomingExpenses": "承諾總額還包含 {count} 筆其他即將發生的支出。"
   }
 }

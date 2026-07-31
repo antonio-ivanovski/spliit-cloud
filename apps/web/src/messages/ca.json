@@ -1071,7 +1071,6 @@
     },
     "Entertainment": {
       "heading": "Oci",
-      "Entertainment": "Oci",
       "Games": "Jocs",
       "Movies": "Pel·lícules",
       "Music": "Música",
@@ -1079,14 +1078,12 @@
     },
     "Food and Drink": {
       "heading": "Menjar i beure",
-      "Food and Drink": "Menjar i beure",
       "Dining Out": "Menjar fora",
       "Groceries": "Queviures",
       "Liquor": "Licors"
     },
     "Home": {
       "heading": "Casa",
-      "Home": "Casa",
       "Electronics": "Electrònica",
       "Furniture": "Mobles",
       "Household Supplies": "Subministres",
@@ -1109,7 +1106,6 @@
     },
     "Transportation": {
       "heading": "Transport",
-      "Transportation": "Transport",
       "Bicycle": "Bicicleta",
       "Bus/Train": "Autobús/Tren",
       "Car": "Cotxe",
@@ -1121,7 +1117,6 @@
     },
     "Utilities": {
       "heading": "Utilitats",
-      "Utilities": "Utilitats",
       "Cleaning": "Neteja",
       "Electricity": "Electricitat",
       "Heat/Gas": "Calefacció/Gas",
@@ -1134,14 +1129,14 @@
       "Events and Activities": "Esdeveniments i activitats"
     },
     "Personal Care and Wellness": {
-      "heading": "Cura personal i benestar",
-      "Personal Care and Wellness": "Cura personal i benestar"
+      "heading": "Cura personal i benestar"
     },
     "Subscriptions and Memberships": {
       "heading": "Subscripcions i membresies",
       "Digital Subscriptions": "Subscripcions digitals",
       "Memberships": "Membresies"
-    }
+    },
+    "groupIncludes": "Inclou subcategories"
   },
   "Currencies": {
     "search": "Cercar moneda...",
@@ -1719,6 +1714,10 @@
         "recurringExpense": {
           "title": "Despesa recurrent",
           "description": "Quan es crea una despesa recurrent programada en un grup."
+        },
+        "budgetAlert": {
+          "title": "Alertes de pressupost",
+          "description": "Quan un pressupost compartit del grup tendeix a superar-se o ja ha excedit el seu límit."
         }
       },
       "sections": {
@@ -2179,5 +2178,131 @@
     "saveError": "No s'ha pogut actualitzar la zona horària. Torna-ho a provar.",
     "keep": "Mantén {timeZone}",
     "update": "Actualitza a {timeZone}"
+  },
+  "Budgets": {
+    "title": "Pressupostos",
+    "detailTitle": "Pressupost",
+    "description": "Fes seguiment de la despesa del grup amb límits compartits.",
+    "create": "Crea un pressupost",
+    "new": "Nou",
+    "edit": "Edita",
+    "archive": "Arxiva",
+    "delete": "Suprimeix",
+    "deleting": "S'està suprimint…",
+    "save": "Desa el pressupost",
+    "cancel": "Cancel·la",
+    "saving": "Desant…",
+    "created": "Pressupost creat",
+    "updated": "Pressupost actualitzat",
+    "archivedSuccess": "Pressupost arxivat",
+    "backToBudgets": "Torna als pressupostos",
+    "daysRemaining_zero": "{count} dies restants",
+    "daysRemaining_two": "Queden {count} dies",
+    "daysRemaining_few": "Queden {count} dies",
+    "daysRemaining_many": "Queden {count} dies",
+    "daysRemaining_one": "Queda {count} dia",
+    "daysRemaining_other": "Queden {count} dies",
+    "ofLimit": "de {amount}",
+    "overBy": "{amount} per sobre",
+    "remaining": "Queden {amount}",
+    "projected": "Previsió {amount}",
+    "progressLabel": "{percentage}% del pressupost utilitzat",
+    "paceTick": "{percent}% previst fins ara",
+    "categoriesScope": "Categories — {scope}",
+    "all": "Tots",
+    "selected": "Seleccionats",
+    "viewDetails": "Mostra els detalls",
+    "allCategories": "Totes les categories",
+    "selectedCategories": "Categories seleccionades",
+    "allParticipants": "Tots els participants",
+    "selectedParticipants": "Participants seleccionats",
+    "archived": "Pressupostos arxivats",
+    "matchingExpenses": "Despeses coincidents",
+    "matchingExpensesDescription": "Despeses que contribueixen a aquest pressupost en el període actual.",
+    "noMatchingExpenses": "No hi ha despeses coincidents en aquest període.",
+    "upcoming": "Despeses pròximes",
+    "upcomingDescription": "Despeses amb data futura en aquest període. L'estat i la tendència les exclouen perquè no rebis un fals avís de tendència per sobre.",
+    "noUpcoming": "No hi ha despeses amb data futura en aquest període.",
+    "upcomingTotal": "Total de pròximes: {amount}",
+    "committedSubline": "+ {amount} compromeses",
+    "history": "Historial de períodes",
+    "historyDescription": "Els períodes anteriors es recalculen amb el límit i l'àmbit actuals.",
+    "noHistory": "Encara no hi ha períodes completats.",
+    "deleteDescription": "Suprimeix permanentment aquest pressupost i el seu historial d’alertes. Les despeses del grup no es veuran afectades.",
+    "validation": "Completa tots els camps obligatoris del pressupost.",
+    "form": {
+      "description": "Defineix el límit, el període, les categories i els participants que segueix aquest pressupost.",
+      "notAllowed": "Només els administradors del grup poden gestionar pressupostos.",
+      "name": "Nom del pressupost",
+      "namePlaceholder": "Per exemple, compres de la llar",
+      "amount": "Import",
+      "period": "Període",
+      "startDate": "Data d’inici",
+      "endDate": "Data de finalització",
+      "categories": "Tipus de despesa",
+      "participants": "Membres",
+      "chooseCategories": "Tria categories",
+      "chooseParticipants": "Tria participants",
+      "notifications": "Notificacions",
+      "notifyTrending": "Tendència per sobre del pressupost",
+      "notifyTrendingDescription": "Avisa els membres seleccionats quan la despesa prevista superi el límit després del 20% del període.",
+      "notifyOver": "Per sobre del pressupost",
+      "notifyOverDescription": "Avisa els membres seleccionats quan la despesa real superi per primera vegada el límit.",
+      "periodHint": "Període actual: {range}",
+      "categoryScopeHint": "Inclou la categoria pare i totes les seves subcategories.",
+      "participantScopeHint": "Només compten les parts degudes pels participants seleccionats.",
+      "overlapHint": "Una despesa pot comptar en més d'un pressupost si els àmbits se superposen.",
+      "notificationRecipients": "Les alertes arriben als membres del compte inclosos en l'àmbit de participants amb les notificacions activades.",
+      "allSubcategories": "totes les subcategories"
+    },
+    "empty": {
+      "title": "Encara no hi ha pressupostos",
+      "description": "Crea un pressupost compartit per fer seguiment de la despesa de tot el grup o de participants seleccionats."
+    },
+    "period": {
+      "weekly": "Setmanal",
+      "monthly": "Mensual",
+      "yearly": "Anual",
+      "custom": "Interval personalitzat"
+    },
+    "status": {
+      "over": "Pressupost superat",
+      "trending": "Tendència per sobre",
+      "onTrack": "En curs",
+      "archived": "Arxivat",
+      "scheduled": "Programat",
+      "completed": "Completat"
+    },
+    "unarchivedSuccess": "Pressupost desarxivat",
+    "notificationsOff": "Cap alerta activada",
+    "createCard": {
+      "title": "Crea un pressupost",
+      "description": "Estableix un límit de despesa i rep un avís abans de passar-te."
+    },
+    "chart": {
+      "heading": "Despesa fins ara",
+      "sectionLabel": "Gràfic de despesa acumulada",
+      "legendSpent": "Gastat",
+      "legendPace": "Al ritme",
+      "legendCommitted": "Compromès",
+      "limitLine": "Límit",
+      "srSummary": "S'han gastat {spent} de {limit}; compromès {committed}."
+    },
+    "usedTooltip": "S'han utilitzat {used} de {limit}",
+    "paceTooltip": "Ritme esperat: dia {elapsed} de {total}",
+    "scope": "Abast",
+    "remove": "Elimina",
+    "retry": "Torna-ho a provar",
+    "completedBudgets": "Pressupostos completats",
+    "completed": "Complet",
+    "validationName": "Afegeix un nom al pressupost.",
+    "validationAmount": "Introdueix un import superior a zero.",
+    "validationDates": "Tria dates d'inici i final vàlides.",
+    "validationCategories": "Selecciona almenys una categoria.",
+    "validationParticipants": "Selecciona almenys un participant.",
+    "startsIn": "Comença en {count} dies",
+    "startsToday": "Comença avui",
+    "moreExpenses": "{count} despeses addicionals s'inclouen al total.",
+    "moreUpcomingExpenses": "{count} despeses futures addicionals s'inclouen al total compromès."
   }
 }

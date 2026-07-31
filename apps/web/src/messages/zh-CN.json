@@ -1056,7 +1056,6 @@
     },
     "Entertainment": {
       "heading": "娱乐",
-      "Entertainment": "娱乐",
       "Games": "游戏",
       "Movies": "电影",
       "Music": "音乐",
@@ -1064,14 +1063,12 @@
     },
     "Food and Drink": {
       "heading": "饮食",
-      "Food and Drink": "饮食",
       "Dining Out": "下馆子",
       "Groceries": "便利店",
       "Liquor": "酒水"
     },
     "Home": {
       "heading": "居家",
-      "Home": "居家",
       "Electronics": "电费",
       "Furniture": "家具",
       "Household Supplies": "家庭日用品",
@@ -1094,7 +1091,6 @@
     },
     "Transportation": {
       "heading": "交通",
-      "Transportation": "交通",
       "Bicycle": "自行车",
       "Bus/Train": "巴士/列车",
       "Car": "汽车",
@@ -1106,7 +1102,6 @@
     },
     "Utilities": {
       "heading": "日常账单",
-      "Utilities": "日常账单",
       "Cleaning": "清洁费",
       "Electricity": "电费",
       "Heat/Gas": "暖气/瓦斯",
@@ -1119,14 +1114,14 @@
       "Events and Activities": "活动与赛事"
     },
     "Personal Care and Wellness": {
-      "heading": "个人护理与健康",
-      "Personal Care and Wellness": "个人护理与健康"
+      "heading": "个人护理与健康"
     },
     "Subscriptions and Memberships": {
       "heading": "订阅与会员",
       "Digital Subscriptions": "数字订阅",
       "Memberships": "会员"
-    }
+    },
+    "groupIncludes": "包括子类别"
   },
   "Currencies": {
     "search": "搜索币种...",
@@ -1703,6 +1698,10 @@
         "recurringExpense": {
           "title": "周期性支出",
           "description": "在群组中创建计划的周期性支出时。"
+        },
+        "budgetAlert": {
+          "title": "预算提醒",
+          "description": "共享群组预算有超支趋势或已超过限额时。"
         }
       },
       "sections": {
@@ -2145,5 +2144,130 @@
     "saveError": "无法更新时间。请重试。",
     "keep": "保留 {timeZone}",
     "update": "更新为 {timeZone}"
+  },
+  "Budgets": {
+    "title": "预算",
+    "detailTitle": "预算",
+    "description": "根据共享限额跟踪群组支出。",
+    "create": "创建预算",
+    "new": "新建",
+    "edit": "编辑",
+    "archive": "归档",
+    "delete": "删除",
+    "deleting": "删除中…",
+    "save": "保存预算",
+    "cancel": "取消",
+    "saving": "正在保存…",
+    "created": "预算已创建",
+    "updated": "预算已更新",
+    "archivedSuccess": "预算已归档",
+    "backToBudgets": "返回预算",
+    "daysRemaining_other": "剩余 {count} 天",
+    "ofLimit": "限额 {amount}",
+    "overBy": "超出 {amount}",
+    "remaining": "剩余 {amount}",
+    "projected": "预计 {amount}",
+    "progressLabel": "已使用预算的 {percentage}%",
+    "paceTick": "目前预期{percent}%",
+    "categoriesScope": "类别：{scope}",
+    "all": "全部",
+    "selected": "已选择",
+    "viewDetails": "查看详情",
+    "allCategories": "所有类别",
+    "selectedCategories": "所选类别",
+    "allParticipants": "所有参与者",
+    "selectedParticipants": "所选参与者",
+    "archived": "已归档的预算",
+    "matchingExpenses": "符合条件的支出",
+    "matchingExpensesDescription": "当前周期内计入此预算的支出。",
+    "noMatchingExpenses": "此周期内没有符合条件的支出。",
+    "upcoming": "即将发生的支出",
+    "upcomingDescription": "此期间内未来日期的支出。状态和趋势中排除这些项目，以免出现错误的「即将超支」警报。",
+    "noUpcoming": "此期间内没有未来日期的支出。",
+    "upcomingTotal": "即将发生总计：{amount}",
+    "committedSubline": "+ {amount} 已预留",
+    "history": "周期记录",
+    "historyDescription": "之前的周期会根据此预算当前的限额和范围重新计算。",
+    "noHistory": "尚无已完成的周期。",
+    "deleteDescription": "永久删除此预算及其提醒记录。群组支出不会受到影响。",
+    "empty": {
+      "title": "尚无预算",
+      "description": "创建共享预算，以跟踪整个群组或所选参与者的支出。"
+    },
+    "validation": "请填写所有必填的预算字段。",
+    "form": {
+      "description": "设置此预算跟踪的限额、周期、类别和参与者。",
+      "notAllowed": "只有群组管理员可以管理预算。",
+      "name": "预算名称",
+      "namePlaceholder": "例如：家庭杂货",
+      "amount": "金额",
+      "period": "周期",
+      "startDate": "开始日期",
+      "endDate": "结束日期",
+      "categories": "类别",
+      "participants": "参与者",
+      "chooseCategories": "选择类别",
+      "chooseParticipants": "选择参与者",
+      "notifications": "通知",
+      "notifyTrending": "预计超出预算",
+      "notifyTrendingDescription": "周期过了 20% 后，若预计支出超过限额，则通知所选成员。",
+      "notifyOver": "超出预算",
+      "notifyOverDescription": "实际支出首次超过限额时，通知所选成员。",
+      "periodHint": "当前周期：{range}",
+      "categoryScopeHint": "包含父类别及其所有子类别。",
+      "participantScopeHint": "只计算所选参与者应承担的份额。",
+      "overlapHint": "当范围重叠时，一笔支出可能计入多个预算。",
+      "notificationRecipients": "提醒会发送给参与者范围内且已开启预算通知的账户成员。",
+      "allSubcategories": "所有子类别"
+    },
+    "period": {
+      "weekly": "每周",
+      "monthly": "每月",
+      "yearly": "每年",
+      "custom": "自定义日期范围"
+    },
+    "status": {
+      "over": "超出预算",
+      "trending": "预计超出",
+      "onTrack": "进度正常",
+      "archived": "已归档",
+      "scheduled": "已计划",
+      "completed": "已完成"
+    },
+    "daysRemaining_zero": "剩余 {count} 天",
+    "daysRemaining_two": "剩余 {count} 天",
+    "daysRemaining_few": "剩余 {count} 天",
+    "daysRemaining_many": "剩余 {count} 天",
+    "unarchivedSuccess": "预算已取消归档",
+    "notificationsOff": "未启用任何通知",
+    "createCard": {
+      "title": "创建预算",
+      "description": "设定支出上限，在超支前收到提醒。"
+    },
+    "chart": {
+      "heading": "截至目前支出",
+      "sectionLabel": "累计支出图表",
+      "legendSpent": "已支出",
+      "legendPace": "预期速度",
+      "legendCommitted": "已预留",
+      "limitLine": "限额",
+      "srSummary": "已支出 {spent}（限额 {limit}），已预留 {committed}。"
+    },
+    "usedTooltip": "已用 {used} / 共 {limit}",
+    "paceTooltip": "预期进度:第 {elapsed} 天 / 共 {total} 天",
+    "scope": "范围",
+    "remove": "移除",
+    "retry": "重试",
+    "completedBudgets": "已完成的预算",
+    "completed": "已完成",
+    "validationName": "添加预算名称。",
+    "validationAmount": "请输入大于零的金额。",
+    "validationDates": "请选择有效的开始和结束日期。",
+    "validationCategories": "至少选择一个类别。",
+    "validationParticipants": "至少选择一位参与者。",
+    "startsIn": "{count} 天后开始",
+    "startsToday": "今天开始",
+    "moreExpenses": "总额还包含 {count} 笔其他支出。",
+    "moreUpcomingExpenses": "承诺总额还包含 {count} 笔其他即将发生的支出。"
   }
 }

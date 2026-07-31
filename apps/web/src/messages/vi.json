@@ -727,6 +727,10 @@
         "cloudNews": {
           "title": "Tin tức Spliit",
           "description": "Tin tức sản phẩm và cập nhật."
+        },
+        "budgetAlert": {
+          "title": "Cảnh báo ngân sách",
+          "description": "Khi ngân sách dùng chung của nhóm có xu hướng vượt mức hoặc đã vượt quá hạn mức."
         }
       },
       "inherited": "Kế thừa",
@@ -1422,7 +1426,6 @@
     },
     "Entertainment": {
       "heading": "Giải trí",
-      "Entertainment": "Giải trí",
       "Games": "Trò chơi",
       "Movies": "Phim ảnh",
       "Music": "Âm nhạc",
@@ -1430,14 +1433,12 @@
     },
     "Food and Drink": {
       "heading": "Đồ ăn & Thức uống",
-      "Food and Drink": "Đồ ăn & Thức uống",
       "Dining Out": "Ăn ngoài",
       "Groceries": "Tạp hóa",
       "Liquor": "Rượu bia"
     },
     "Home": {
       "heading": "Gia đình",
-      "Home": "Gia đình",
       "Electronics": "Điện tử",
       "Furniture": "Nội thất",
       "Household Supplies": "Vật dụng gia đình",
@@ -1460,7 +1461,6 @@
     },
     "Transportation": {
       "heading": "Di chuyển",
-      "Transportation": "Di chuyển",
       "Bicycle": "Xe đạp",
       "Bus/Train": "Xe buýt/Xe lửa",
       "Car": "Xe hơi",
@@ -1472,7 +1472,6 @@
     },
     "Utilities": {
       "heading": "Tiện ích",
-      "Utilities": "Tiện ích",
       "Cleaning": "Vệ sinh",
       "Electricity": "Điện",
       "Heat/Gas": "Sưởi/Gas",
@@ -1490,9 +1489,9 @@
       "Memberships": "Hội viên"
     },
     "Personal Care and Wellness": {
-      "heading": "Chăm sóc cá nhân",
-      "Personal Care and Wellness": "Chăm sóc cá nhân"
-    }
+      "heading": "Chăm sóc cá nhân"
+    },
+    "groupIncludes": "Bao gồm các danh mục con"
   },
   "Currencies": {
     "search": "Tìm loại tiền…",
@@ -2233,5 +2232,131 @@
     "saveError": "Không thể cập nhật múi giờ của bạn. Vui lòng thử lại.",
     "keep": "Giữ {timeZone}",
     "update": "Cập nhật thành {timeZone}"
+  },
+  "Budgets": {
+    "title": "Ngân sách",
+    "detailTitle": "Ngân sách",
+    "description": "Theo dõi chi tiêu của nhóm so với hạn mức chung.",
+    "create": "Tạo ngân sách",
+    "new": "Mới",
+    "edit": "Chỉnh sửa",
+    "archive": "Lưu trữ",
+    "delete": "Xóa",
+    "deleting": "Đang xóa…",
+    "save": "Lưu ngân sách",
+    "cancel": "Hủy",
+    "saving": "Đang lưu…",
+    "created": "Đã tạo ngân sách",
+    "updated": "Đã cập nhật ngân sách",
+    "archivedSuccess": "Đã lưu trữ ngân sách",
+    "backToBudgets": "Quay lại danh sách ngân sách",
+    "daysRemaining_one": "Còn {count} ngày",
+    "daysRemaining_other": "Còn {count} ngày",
+    "ofLimit": "trên {amount}",
+    "overBy": "Vượt {amount}",
+    "remaining": "Còn lại {amount}",
+    "projected": "Dự kiến {amount}",
+    "progressLabel": "Đã sử dụng {percentage}% ngân sách",
+    "paceTick": "{percent}% dự kiến đến hiện tại",
+    "categoriesScope": "Danh mục: {scope}",
+    "all": "Tất cả",
+    "selected": "Đã chọn",
+    "viewDetails": "Xem chi tiết",
+    "allCategories": "Tất cả danh mục",
+    "selectedCategories": "Danh mục đã chọn",
+    "allParticipants": "Tất cả người tham gia",
+    "selectedParticipants": "Người tham gia đã chọn",
+    "archived": "Ngân sách đã lưu trữ",
+    "matchingExpenses": "Các khoản chi phù hợp",
+    "matchingExpensesDescription": "Các khoản chi được tính vào ngân sách này trong kỳ hiện tại.",
+    "noMatchingExpenses": "Không có khoản chi phù hợp trong kỳ này.",
+    "upcoming": "Chi phí sắp tới",
+    "upcomingDescription": "Các khoản chi có ngày trong tương lai trong kỳ này. Trạng thái và xu hướng không bao gồm các khoản này để bạn không bị cảnh báo vượt xu hướng sai.",
+    "noUpcoming": "Không có khoản chi nào sắp tới trong kỳ này.",
+    "upcomingTotal": "Tổng sắp tới: {amount}",
+    "committedSubline": "+ {amount} đã cam kết",
+    "history": "Lịch sử các kỳ",
+    "historyDescription": "Các kỳ trước được tính lại theo giới hạn và phạm vi hiện tại của ngân sách này.",
+    "noHistory": "Chưa có kỳ nào hoàn tất.",
+    "deleteDescription": "Xóa vĩnh viễn ngân sách này và lịch sử cảnh báo của ngân sách. Các khoản chi của nhóm sẽ không bị ảnh hưởng.",
+    "daysRemaining_zero": "Còn {count} ngày",
+    "daysRemaining_two": "Còn {count} ngày",
+    "daysRemaining_few": "Còn {count} ngày",
+    "daysRemaining_many": "Còn {count} ngày",
+    "empty": {
+      "title": "Chưa có ngân sách",
+      "description": "Tạo ngân sách dùng chung để theo dõi chi tiêu của cả nhóm hoặc những người tham gia đã chọn."
+    },
+    "validation": "Hoàn tất tất cả các trường ngân sách bắt buộc.",
+    "form": {
+      "description": "Đặt hạn mức, kỳ, danh mục và người tham gia mà ngân sách này theo dõi.",
+      "notAllowed": "Chỉ quản trị viên nhóm mới có thể quản lý ngân sách.",
+      "name": "Tên ngân sách",
+      "namePlaceholder": "Ví dụ: thực phẩm gia đình",
+      "amount": "Số tiền",
+      "period": "Kỳ",
+      "startDate": "Ngày bắt đầu",
+      "endDate": "Ngày kết thúc",
+      "categories": "Danh mục",
+      "participants": "Người tham gia",
+      "chooseCategories": "Chọn danh mục",
+      "chooseParticipants": "Chọn người tham gia",
+      "notifications": "Thông báo",
+      "notifyTrending": "Có xu hướng vượt ngân sách",
+      "notifyTrendingDescription": "Thông báo cho các thành viên đã chọn khi chi tiêu dự kiến vượt hạn mức sau khi đã qua 20% kỳ.",
+      "notifyOver": "Vượt ngân sách",
+      "notifyOverDescription": "Thông báo cho các thành viên đã chọn khi chi tiêu thực tế lần đầu vượt hạn mức.",
+      "periodHint": "Kỳ hiện tại: {range}",
+      "categoryScopeHint": "Bao gồm danh mục cha và tất cả danh mục con.",
+      "participantScopeHint": "Chỉ tính phần mà những người tham gia được chọn phải trả.",
+      "overlapHint": "Một khoản chi có thể được tính vào nhiều ngân sách khi phạm vi chồng lấn.",
+      "notificationRecipients": "Cảnh báo được gửi đến thành viên tài khoản trong phạm vi người tham gia đã bật thông báo ngân sách.",
+      "allSubcategories": "tất cả danh mục con"
+    },
+    "period": {
+      "weekly": "Hàng tuần",
+      "monthly": "Hàng tháng",
+      "yearly": "Hàng năm",
+      "custom": "Khoảng tùy chỉnh"
+    },
+    "status": {
+      "over": "Vượt ngân sách",
+      "trending": "Có xu hướng vượt mức",
+      "onTrack": "Đúng kế hoạch",
+      "archived": "Đã lưu trữ",
+      "scheduled": "Đã lên lịch",
+      "completed": "Đã hoàn tất"
+    },
+    "unarchivedSuccess": "Đã khôi phục ngân sách",
+    "notificationsOff": "Chưa bật thông báo nào",
+    "createCard": {
+      "title": "Tạo ngân sách",
+      "description": "Đặt hạn mức chi tiêu và nhận cảnh báo trước khi bạn chi tiêu quá mức."
+    },
+    "chart": {
+      "heading": "Chi tiêu đến nay",
+      "sectionLabel": "Biểu đồ chi tiêu lũy kế",
+      "legendSpent": "Đã chi",
+      "legendPace": "Tốc độ",
+      "legendCommitted": "Đã cam kết",
+      "limitLine": "Giới hạn",
+      "srSummary": "Đã chi {spent} trên {limit}; đã cam kết {committed}."
+    },
+    "usedTooltip": "Đã dùng {used} / {limit}",
+    "paceTooltip": "Tiến độ kỳ vọng: ngày {elapsed}/{total}",
+    "scope": "Phạm vi",
+    "remove": "Xóa",
+    "retry": "Thử lại",
+    "completedBudgets": "Ngân sách đã hoàn tất",
+    "completed": "Đã hoàn tất",
+    "validationName": "Thêm tên ngân sách.",
+    "validationAmount": "Nhập số tiền lớn hơn không.",
+    "validationDates": "Chọn ngày bắt đầu và kết thúc hợp lệ.",
+    "validationCategories": "Chọn ít nhất một danh mục.",
+    "validationParticipants": "Chọn ít nhất một người tham gia.",
+    "startsIn": "Bắt đầu sau {count} ngày",
+    "startsToday": "Bắt đầu hôm nay",
+    "moreExpenses": "Tổng cộng còn bao gồm {count} khoản chi bổ sung.",
+    "moreUpcomingExpenses": "Tổng cam kết còn bao gồm {count} khoản chi sắp tới bổ sung."
   }
 }

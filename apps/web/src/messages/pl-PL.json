@@ -1079,7 +1079,6 @@
     },
     "Entertainment": {
       "heading": "Rozrywka",
-      "Entertainment": "Rozrywka",
       "Games": "Gry",
       "Movies": "Filmy",
       "Music": "Muzyka",
@@ -1087,14 +1086,12 @@
     },
     "Food and Drink": {
       "heading": "Jedzenie i Napoje",
-      "Food and Drink": "Jedzenie i Napoje",
       "Dining Out": "Jedzenie na mieście",
       "Groceries": "Zakupy",
       "Liquor": "Alkohole"
     },
     "Home": {
       "heading": "Dom",
-      "Home": "Dom",
       "Electronics": "Elektronika",
       "Furniture": "Meble",
       "Household Supplies": "Artykuły gospodarstwa domowego",
@@ -1117,7 +1114,6 @@
     },
     "Transportation": {
       "heading": "Transport",
-      "Transportation": "Transport",
       "Bicycle": "Rower",
       "Bus/Train": "Autobus/Pociąg",
       "Car": "Samochód",
@@ -1129,7 +1125,6 @@
     },
     "Utilities": {
       "heading": "Media",
-      "Utilities": "Media",
       "Cleaning": "Sprzątanie",
       "Electricity": "Prąd",
       "Heat/Gas": "Ogrzewanie/Gaz",
@@ -1142,14 +1137,14 @@
       "Events and Activities": "Wydarzenia i aktywności"
     },
     "Personal Care and Wellness": {
-      "heading": "Pielęgnacja osobista i dobre samopoczucie",
-      "Personal Care and Wellness": "Pielęgnacja osobista i dobre samopoczucie"
+      "heading": "Pielęgnacja osobista i dobre samopoczucie"
     },
     "Subscriptions and Memberships": {
       "heading": "Subskrypcje i członkostwa",
       "Digital Subscriptions": "Subskrypcje cyfrowe",
       "Memberships": "Członkostwa"
-    }
+    },
+    "groupIncludes": "Obejmuje podkategorie"
   },
   "Auth": {
     "title": "Zaloguj się do Spliit Cloud",
@@ -1728,6 +1723,10 @@
         "recurringExpense": {
           "title": "Wydatek cykliczny",
           "description": "Gdy w grupie zostanie utworzony zaplanowany wydatek cykliczny."
+        },
+        "budgetAlert": {
+          "title": "Alerty budżetowe",
+          "description": "Gdy prognoza wspólnego budżetu grupy wskazuje na przekroczenie limitu lub limit został już przekroczony."
         }
       },
       "sections": {
@@ -2197,5 +2196,129 @@
     "saveError": "Nie udało się zaktualizować strefy czasowej. Spróbuj ponownie.",
     "keep": "Zachowaj {timeZone}",
     "update": "Zmień na {timeZone}"
+  },
+  "Budgets": {
+    "title": "Budżety",
+    "detailTitle": "Budżet",
+    "description": "Śledź wydatki grupy względem wspólnych limitów.",
+    "create": "Utwórz budżet",
+    "new": "Nowy",
+    "edit": "Edytuj",
+    "archive": "Archiwizuj",
+    "delete": "Usuń",
+    "deleting": "Usuwanie…",
+    "save": "Zapisz budżet",
+    "cancel": "Anuluj",
+    "saving": "Zapisywanie…",
+    "created": "Budżet został utworzony",
+    "updated": "Budżet został zaktualizowany",
+    "archivedSuccess": "Budżet został zarchiwizowany",
+    "backToBudgets": "Wróć do budżetów",
+    "daysRemaining_one": "Pozostał {count} dzień",
+    "daysRemaining_other": "Pozostało {count} dni",
+    "ofLimit": "z {amount}",
+    "overBy": "{amount} ponad limit",
+    "remaining": "Pozostało {amount}",
+    "projected": "Prognoza: {amount}",
+    "progressLabel": "Wykorzystano {percentage}% budżetu",
+    "paceTick": "{percent}% oczekiwane do tej pory",
+    "categoriesScope": "Kategorie: {scope}",
+    "all": "Wszystkie",
+    "selected": "Wybrane",
+    "viewDetails": "Zobacz szczegóły",
+    "allCategories": "Wszystkie kategorie",
+    "selectedCategories": "Wybrane kategorie",
+    "allParticipants": "Wszyscy uczestnicy",
+    "selectedParticipants": "Wybrani uczestnicy",
+    "archived": "Zarchiwizowane budżety",
+    "matchingExpenses": "Pasujące wydatki",
+    "matchingExpensesDescription": "Wydatki zaliczane do tego budżetu w bieżącym okresie.",
+    "noMatchingExpenses": "Brak pasujących wydatków w tym okresie.",
+    "upcoming": "Nadchodzące wydatki",
+    "upcomingDescription": "Wydatki z przyszłą datą w tym okresie. Status i trend ich nie uwzględniają, aby nie generować fałszywego alertu o prognozowanym przekroczeniu.",
+    "noUpcoming": "Brak wydatków z przyszłą datą w tym okresie.",
+    "upcomingTotal": "Nadchodzące łącznie: {amount}",
+    "committedSubline": "+ {amount} zarezerwowane",
+    "history": "Historia okresów",
+    "historyDescription": "Poprzednie okresy są przeliczane według bieżącego limitu i zakresu budżetu.",
+    "noHistory": "Nie ma jeszcze zakończonych okresów.",
+    "deleteDescription": "Trwale usuń ten budżet i historię jego alertów. Wydatki grupy pozostaną bez zmian.",
+    "empty": {
+      "title": "Nie ma jeszcze budżetów",
+      "description": "Utwórz wspólny budżet, aby śledzić wydatki całej grupy lub wybranych uczestników."
+    },
+    "validation": "Wypełnij wszystkie wymagane pola budżetu.",
+    "form": {
+      "description": "Ustaw limit, okres, kategorie i uczestników uwzględnianych w tym budżecie.",
+      "notAllowed": "Tylko administratorzy grupy mogą zarządzać budżetami.",
+      "name": "Nazwa budżetu",
+      "namePlaceholder": "Na przykład zakupy spożywcze do domu",
+      "amount": "Kwota",
+      "period": "Okres",
+      "startDate": "Data początkowa",
+      "endDate": "Data końcowa",
+      "categories": "Kategorie",
+      "participants": "Uczestnicy",
+      "chooseCategories": "Wybierz kategorie",
+      "chooseParticipants": "Wybierz uczestników",
+      "notifications": "Powiadomienia",
+      "notifyTrending": "Prognozowane przekroczenie budżetu",
+      "notifyTrendingDescription": "Powiadom wybranych członków, gdy po upływie 20% okresu prognozowane wydatki przekroczą limit.",
+      "notifyOver": "Przekroczenie budżetu",
+      "notifyOverDescription": "Powiadom wybranych członków, gdy rzeczywiste wydatki po raz pierwszy przekroczą limit.",
+      "periodHint": "Bieżący okres: {range}",
+      "categoryScopeHint": "Obejmuje kategorię nadrzędną i wszystkie jej podkategorie.",
+      "participantScopeHint": "Liczą się tylko udziały należne od wybranych uczestników.",
+      "overlapHint": "Wydatek może być liczony w kilku budżetach, gdy ich zakresy się nakładają.",
+      "notificationRecipients": "Alerty otrzymują członkowie konta objęci zakresem uczestników, którzy mają włączone powiadomienia budżetowe.",
+      "allSubcategories": "wszystkie podkategorie"
+    },
+    "period": {
+      "weekly": "Co tydzień",
+      "monthly": "Miesięcznie",
+      "yearly": "Rocznie",
+      "custom": "Niestandardowy zakres"
+    },
+    "status": {
+      "over": "Budżet przekroczony",
+      "trending": "Grozi przekroczeniem",
+      "onTrack": "Zgodnie z planem",
+      "archived": "Zarchiwizowano",
+      "scheduled": "Zaplanowano",
+      "completed": "Ukończono"
+    },
+    "daysRemaining_few": "Pozostały {count} dni",
+    "daysRemaining_many": "Pozostało {count} dni",
+    "unarchivedSuccess": "Budżet został przywrócony z archiwum",
+    "notificationsOff": "Brak włączonych powiadomień",
+    "createCard": {
+      "title": "Utwórz budżet",
+      "description": "Ustaw limit wydatków i otrzymuj powiadomienia, zanim go przekroczysz."
+    },
+    "chart": {
+      "heading": "Wydatki dotychczas",
+      "sectionLabel": "Skumulowany wykres wydatków",
+      "legendSpent": "Wydane",
+      "legendPace": "Zgodnie z planem",
+      "legendCommitted": "Zarezerwowane",
+      "limitLine": "Granica",
+      "srSummary": "Wydano {spent} z {limit}; zarezerwowano {committed}."
+    },
+    "usedTooltip": "Wykorzystano {used} z {limit}",
+    "paceTooltip": "Oczekiwane tempo: dzień {elapsed} z {total}",
+    "scope": "Zakres",
+    "remove": "Usuń",
+    "retry": "Spróbuj ponownie",
+    "completedBudgets": "Ukończone budżety",
+    "completed": "Ukończono",
+    "validationName": "Dodaj nazwę budżetu.",
+    "validationAmount": "Wpisz kwotę większą od zera.",
+    "validationDates": "Wybierz prawidłowe daty początku i końca.",
+    "validationCategories": "Wybierz co najmniej jedną kategorię.",
+    "validationParticipants": "Wybierz co najmniej jednego uczestnika.",
+    "startsIn": "Zaczyna się za {count} dni",
+    "startsToday": "Zaczyna się dziś",
+    "moreExpenses": "W sumie uwzględniono jeszcze {count} wydatków.",
+    "moreUpcomingExpenses": "W zobowiązanej sumie uwzględniono jeszcze {count} przyszłych wydatków."
   }
 }

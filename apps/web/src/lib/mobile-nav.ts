@@ -15,13 +15,16 @@ export function isFocusedMobilePath(pathname: string) {
     pathname === '/account/settings' ||
     pathname.startsWith('/groups/bulk-categorize/') ||
     /^\/groups\/[^/]+\/edit$/.test(pathname) ||
+    /^\/groups\/[^/]+\/budgets\/create$/.test(pathname) ||
+    /^\/groups\/[^/]+\/budgets\/[^/]+$/.test(pathname) ||
+    /^\/groups\/[^/]+\/budgets\/[^/]+\/edit$/.test(pathname) ||
     /^\/groups\/[^/]+\/expenses\/create$/.test(pathname) ||
     /^\/groups\/[^/]+\/expenses\/[^/]+\/edit$/.test(pathname)
   )
 }
 
 export function isMobileGroupNavPath(pathname: string) {
-  return /^\/groups\/[^/]+\/(expenses|balances|activity|stats|information|members|edit)\/?$/.test(
+  return /^\/groups\/[^/]+\/(expenses|balances|budgets|activity|stats|information|members|edit)\/?$/.test(
     pathname,
   )
 }
@@ -61,6 +64,24 @@ export function getFocusedRouteMeta(
     return {
       title: t('Settings.title'),
       backHref: `/groups/${groupId}/expenses`,
+    }
+  }
+  if (groupId && pathname === `/groups/${groupId}/budgets/create`) {
+    return {
+      title: t('Budgets.create'),
+      backHref: `/groups/${groupId}/budgets`,
+    }
+  }
+  if (groupId && /^\/groups\/[^/]+\/budgets\/[^/]+\/edit$/.test(pathname)) {
+    return {
+      title: t('Budgets.edit'),
+      backHref: `/groups/${groupId}/budgets`,
+    }
+  }
+  if (groupId && /^\/groups\/[^/]+\/budgets\/[^/]+$/.test(pathname)) {
+    return {
+      title: t('Budgets.detailTitle'),
+      backHref: `/groups/${groupId}/budgets`,
     }
   }
   if (groupId && /^\/groups\/[^/]+\/expenses\/create$/.test(pathname)) {

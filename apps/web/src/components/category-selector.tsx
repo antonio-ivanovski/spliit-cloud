@@ -1,9 +1,16 @@
 /* oxlint-disable jsx-a11y/prefer-tag-over-role, jsx-a11y/role-has-required-aria-props -- popover triggers expose combobox semantics; popup IDs are managed by the UI primitive. */
-import { Check, ChevronDown, ChevronsUpDown, Sparkles } from 'lucide-react'
+import {
+  Check,
+  ChevronDown,
+  ChevronsUpDown,
+  Layers,
+  Sparkles,
+} from 'lucide-react'
 import { forwardRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
+import { categoryLabel } from '@/app/groups/[groupId]/stats/category-utils'
 import type { ButtonProps } from '@/components/ui/button'
 import { Button } from '@/components/ui/button'
 import {
@@ -28,8 +35,16 @@ import {
 } from '@/components/ui/popover'
 import { useMediaQuery } from '@/lib/hooks'
 import { cn } from '@/lib/utils'
-import type { DEFAULT_CATEGORIES } from '@spliit/domain'
-import { type Category, type CategoryId } from '@spliit/domain'
+import {
+  type DEFAULT_CATEGORIES,
+  type Category,
+  type CategoryId,
+  DEFAULT_CATEGORY_ID,
+  categorySelectionDisplayCount,
+  getCategoryById,
+  getChildCategories,
+  isParentCategory,
+} from '@spliit/domain'
 
 type Props = {
   categories: ReadonlyArray<Category>
@@ -47,7 +62,10 @@ type Props = {
   mode?: 'single' | 'multi'
   /** IDs currently selected (multi mode only). */
   selectedValues?: CategoryId[]
-  /** Toggle a category ID in multi mode. */
+  /**
+   * Toggle a category ID in multi mode (apply toggleCategorySelection at the
+   * call site).
+   */
   onValueToggle?: (categoryId: CategoryId) => void
   /** Trigger text when nothing selected in multi mode. */
   multiPlaceholder?: string
@@ -75,17 +93,20 @@ export function CategorySelector({
   const { t } = useTranslation()
 
   const selectedCategory =
-    categories.find((category) => category.id === defaultValue) ?? categories[0]
+    categories.find((category) => category.id === defaultValue) ??
+    categories.find((category) => category.id === DEFAULT_CATEGORY_ID) ??
+    getCategoryById(DEFAULT_CATEGORY_ID)!
+
+  const hierarchy = buildHierarchy(categories)
+  const multiCount = categorySelectionDisplayCount(selectedValues, categories)
 
   if (mode === 'multi') {
     const command = (
       <CategoryCommand
-        categories={categories}
+        hierarchy={hierarchy}
         mode="multi"
         selectedValues={selectedValues}
-        onValueToggle={(id) => {
-          onValueToggle?.(id)
-        }}
+        onValueToggle={onValueToggle}
       />
     )
 
@@ -100,12 +121,12 @@ export function CategorySelector({
               aria-haspopup="listbox"
               aria-expanded={open}
               disabled={disabled}
-              className="h-9 justify-between px-3 text-sm font-normal"
+              className="h-9 w-full justify-between px-3 text-sm font-normal"
             >
               <span className="truncate">
-                {selectedValues.length > 0
+                {multiCount > 0
                   ? t('Expenses.filters.nSelected', {
-                      count: selectedValues.length,
+                      count: multiCount,
                     })
                   : (multiPlaceholder ?? 'Select')}
               </span>
@@ -139,17 +160,23 @@ export function CategorySelector({
             aria-haspopup="listbox"
             aria-expanded={open}
             disabled={disabled}
-            className="h-9 justify-between px-3 text-sm font-normal"
+            className="h-9 w-full justify-between px-3 text-sm font-normal"
           >
             <span className="truncate">
-              {selectedValues.length > 0
-                ? `${selectedValues.length} selected`
+              {multiCount > 0
+                ? t('Expenses.filters.nSelected', { count: multiCount })
                 : (multiPlaceholder ?? 'Select')}
             </span>
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="p-0" align="start">
+        <PopoverContent
+          className="p-0"
+          align="start"
+          onFocusOutside={(event) => event.preventDefault()}
+          onWheel={(event) => event.stopPropagation()}
+          onTouchMove={(event) => event.stopPropagation()}
+        >
           {command}
         </PopoverContent>
       </Popover>
@@ -168,9 +195,16 @@ export function CategorySelector({
             compact={compact}
           />
         </PopoverTrigger>
-        <PopoverContent className="p-0" align="start">
+        <PopoverContent
+          className="p-0"
+          align="start"
+          onWheel={(event) => event.stopPropagation()}
+          onTouchMove={(event) => event.stopPropagation()}
+        >
           <CategoryCommand
-            categories={categories}
+            hierarchy={hierarchy}
+            mode="single"
+            selectedValues={[selectedCategory.id]}
             onValueChange={(id) => {
               onValueChange(id)
               setOpen(false)
@@ -194,7 +228,9 @@ export function CategorySelector({
       </DrawerTrigger>
       <DrawerContent className="p-0">
         <CategoryCommand
-          categories={categories}
+          hierarchy={hierarchy}
+          mode="single"
+          selectedValues={[selectedCategory.id]}
           onValueChange={(id) => {
             onValueChange(id)
             setOpen(false)
@@ -206,72 +242,125 @@ export function CategorySelector({
 }
 
 function CategoryCommand({
-  categories,
+  hierarchy,
   onValueChange,
   mode = 'single',
   selectedValues = [],
   onValueToggle,
 }: {
-  categories: ReadonlyArray<Category>
+  hierarchy: Hierarchy
   onValueChange?: (categoryId: CategoryId) => void
   mode?: 'single' | 'multi'
   selectedValues?: CategoryId[]
   onValueToggle?: (categoryId: CategoryId) => void
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Categories' })
-  const categoriesByGroup = categories.reduce<Record<string, Category[]>>(
-    (acc, category) => ({
-      ...acc,
-      [category.grouping]: [...(acc[category.grouping] ?? []), category],
-    }),
-    {},
-  )
+  const selectedSet = new Set(selectedValues)
+  const isEffectivelySelected = (category: Category) =>
+    selectedSet.has(category.id) ||
+    (category.parentId !== null && selectedSet.has(category.parentId))
 
   return (
     <Command>
       <CommandInput placeholder={t('search')} className="text-base" />
       <CommandEmpty>{t('noCategory')}</CommandEmpty>
       <div className="max-h-[300px] w-full overflow-y-auto">
-        {Object.entries(categoriesByGroup).map(([group, groupCategories]) => (
-          <CommandGroup
-            key={group}
-            heading={t(
-              CATEGORY_GROUPING_HEADINGS[
-                group as keyof typeof CATEGORY_GROUPING_HEADINGS
-              ],
-            )}
-          >
-            {groupCategories.map((category) => (
+        {hierarchy.map(({ parent, children }) => {
+          const groupLabel = t(
+            CATEGORY_GROUPING_HEADINGS[
+              parent.grouping as keyof typeof CATEGORY_GROUPING_HEADINGS
+            ],
+          )
+          const includesLabel = t('groupIncludes')
+          const parentSelected =
+            mode === 'multi'
+              ? isEffectivelySelected(parent)
+              : selectedSet.has(parent.id)
+
+          return (
+            <CommandGroup key={parent.id}>
               <CommandItem
-                key={category.id}
-                value={`${category.id} ${t(
-                  CATEGORY_GROUPING_HEADINGS[category.grouping],
-                )} ${t(categoryLabelKey(category))}`}
-                onSelect={(currentValue) => {
-                  const id = currentValue.split(' ')[0] as CategoryId
+                value={`${parent.id} ${String(groupLabel)} ${String(includesLabel)}`}
+                onSelect={() => {
                   if (mode === 'multi') {
-                    onValueToggle?.(id)
+                    onValueToggle?.(parent.id)
                   } else {
-                    onValueChange?.(id)
+                    onValueChange?.(parent.id)
                   }
                 }}
+                aria-label={
+                  children.length > 0
+                    ? `${String(groupLabel)} (${String(includesLabel)})`
+                    : String(groupLabel)
+                }
+                className="w-full bg-muted/40 font-semibold"
               >
                 {mode === 'multi' && (
                   <Check
                     className={cn(
                       'mr-2 h-4 w-4 shrink-0',
-                      selectedValues.includes(category.id) ? '' : 'invisible',
+                      parentSelected ? '' : 'invisible',
                     )}
                   />
                 )}
-                <CategoryLabel category={category} />
+                <Layers className="mr-2 h-4 w-4 shrink-0" aria-hidden="true" />
+                <span className="flex min-w-0 flex-1 items-baseline gap-2">
+                  <span className="truncate">{groupLabel}</span>
+                  {children.length > 0 && (
+                    <span className="truncate text-xs font-normal text-muted-foreground">
+                      {includesLabel}
+                    </span>
+                  )}
+                </span>
               </CommandItem>
-            ))}
-          </CommandGroup>
-        ))}
+              {children.map((category) => {
+                const childSelected =
+                  mode === 'multi'
+                    ? isEffectivelySelected(category)
+                    : selectedSet.has(category.id)
+                const childLabel = categoryLabel(t, category.id)
+                return (
+                  <CommandItem
+                    key={category.id}
+                    value={`${category.id} ${groupLabel} ${childLabel}`}
+                    onSelect={() => {
+                      if (mode === 'multi') {
+                        onValueToggle?.(category.id)
+                      } else {
+                        onValueChange?.(category.id)
+                      }
+                    }}
+                  >
+                    {mode === 'multi' && (
+                      <Check
+                        className={cn(
+                          'mr-2 h-4 w-4 shrink-0',
+                          childSelected ? '' : 'invisible',
+                        )}
+                      />
+                    )}
+                    <span className="pl-8">
+                      <CategoryLabel category={category} />
+                    </span>
+                  </CommandItem>
+                )
+              })}
+            </CommandGroup>
+          )
+        })}
       </div>
     </Command>
   )
+}
+
+type Hierarchy = Array<{ parent: Category; children: Category[] }>
+
+function buildHierarchy(categories: ReadonlyArray<Category>): Hierarchy {
+  const parents = categories.filter((category) => isParentCategory(category))
+  return parents.map((parent) => ({
+    parent,
+    children: getChildCategories(parent.id, categories),
+  }))
 }
 
 const CATEGORY_GROUPING_HEADINGS = {
@@ -289,20 +378,6 @@ const CATEGORY_GROUPING_HEADINGS = {
   (typeof DEFAULT_CATEGORIES)[number]['grouping'],
   string
 >
-
-type CategoryLabelKey = (typeof DEFAULT_CATEGORIES)[number] extends infer C
-  ? C extends { grouping: infer G; name: infer N }
-    ? G extends string
-      ? N extends string
-        ? `${G}.${N}`
-        : never
-      : never
-    : never
-  : never
-
-function categoryLabelKey(category: Category): CategoryLabelKey {
-  return `${category.grouping}.${category.name}` as CategoryLabelKey
-}
 
 type CategoryButtonProps = {
   category: Category
@@ -325,6 +400,7 @@ const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>(
   ) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'Categories' })
     const iconClassName = 'h-4 w-4 shrink-0 opacity-50'
+    const label = categoryLabel(t, category.id)
     return (
       <Button
         variant="outline"
@@ -332,7 +408,7 @@ const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>(
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-busy={isLoading}
-        aria-label={t(categoryLabelKey(category))}
+        aria-label={label}
         className={
           compact
             ? `h-10 w-16 shrink-0 gap-2 rounded-none border-0 px-3 ${className ?? ''}`
@@ -373,7 +449,7 @@ function CategoryLabel({
   return (
     <div className="flex items-center gap-3">
       <CategoryIcon category={category} className="h-4 w-4" />
-      {!compact && t(categoryLabelKey(category))}
+      {!compact && categoryLabel(t, category.id)}
     </div>
   )
 }

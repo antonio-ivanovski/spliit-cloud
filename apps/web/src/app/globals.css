@@ -133,6 +133,9 @@
     border-radius: 0;
     box-shadow: none;
   }
+  .mobile-divide-y > :not(:first-child) .mobile-surface {
+    border-top-width: 1px;
+  }
 }
 
 @layer base {

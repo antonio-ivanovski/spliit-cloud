@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+  renderBudgetAlertEmail,
   renderExpenseActivityEmail,
   renderFriendLedgerEmail,
   renderGroupActivityEmail,
@@ -196,6 +197,55 @@ describe('email templates', () => {
       expect(r.html).toContain(
         'https://spliit.test/email/unsubscribe?token=test-token',
       )
+    })
+  })
+
+  describe('renderBudgetAlertEmail', () => {
+    it('renders a trending-over alert with amounts, period, and CTA', async () => {
+      const r = await renderBudgetAlertEmail({
+        kind: 'budget_alert',
+        subject: '[Spliit Cloud] Budget trending over: Groceries',
+        text: 'Groceries: USD 180.00 of USD 200.00 spent in Roadtrip 2026.\n\nView budget:\nhttps://spliit.test/groups/grp-1/budgets/bgt-1',
+        brandBaseUrl: 'https://spliit.test',
+        budgetName: 'Groceries',
+        groupName: 'Roadtrip 2026',
+        usedStr: 'USD 180.00',
+        limitStr: 'USD 200.00',
+        percentage: 90,
+        periodRange: '01.07 – 31.07',
+        alertType: 'TRENDING_OVER',
+        budgetUrl: 'https://spliit.test/groups/grp-1/budgets/bgt-1',
+        unsubscribeUrl:
+          'https://spliit.test/email/unsubscribe?token=test-token',
+      })
+      expect(r.subject).toBe('[Spliit Cloud] Budget trending over: Groceries')
+      expect(r.text).toContain('USD 180.00 of USD 200.00')
+      expect(r.html).toContain('Budget trending over')
+      expect(r.html).toContain('Groceries')
+      expect(r.html).toContain('Roadtrip 2026')
+      expect(r.html).toContain('USD 180.00')
+      expect(r.html).toContain('01.07 – 31.07')
+      expect(r.html).toContain('View budget')
+      expect(r.html).toContain('https://spliit.test/groups/grp-1/budgets/bgt-1')
+    })
+
+    it('renders an over-limit alert with the exceeded headline', async () => {
+      const r = await renderBudgetAlertEmail({
+        kind: 'budget_alert',
+        subject: '[Spliit Cloud] Budget exceeded: Groceries',
+        text: 'Groceries: USD 250.00 of USD 200.00 spent in Roadtrip 2026.\n\nView budget:\nhttps://spliit.test/groups/grp-1/budgets/bgt-1',
+        brandBaseUrl: 'https://spliit.test',
+        budgetName: 'Groceries',
+        groupName: 'Roadtrip 2026',
+        usedStr: 'USD 250.00',
+        limitStr: 'USD 200.00',
+        percentage: 125,
+        periodRange: '07.26',
+        alertType: 'OVER',
+        budgetUrl: 'https://spliit.test/groups/grp-1/budgets/bgt-1',
+      })
+      expect(r.html).toContain('Budget exceeded')
+      expect(r.html).toContain('over its limit')
     })
   })
 

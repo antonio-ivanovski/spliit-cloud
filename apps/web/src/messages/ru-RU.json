@@ -1079,7 +1079,6 @@
     },
     "Entertainment": {
       "heading": "Развлечения",
-      "Entertainment": "Развлечения",
       "Games": "Игры",
       "Movies": "Кино",
       "Music": "Музыка",
@@ -1087,14 +1086,12 @@
     },
     "Food and Drink": {
       "heading": "Еда и напитки",
-      "Food and Drink": "Еда и напитки",
       "Dining Out": "Рестораны и кафе",
       "Groceries": "Продукты",
       "Liquor": "Напитки"
     },
     "Home": {
       "heading": "Дом",
-      "Home": "Дом",
       "Electronics": "Электроника",
       "Furniture": "Мебель",
       "Household Supplies": "Расходные материалы",
@@ -1117,7 +1114,6 @@
     },
     "Transportation": {
       "heading": "Транспорт",
-      "Transportation": "Транспорт",
       "Bicycle": "Велосипед",
       "Bus/Train": "Автобусы и поезда",
       "Car": "Авто",
@@ -1129,7 +1125,6 @@
     },
     "Utilities": {
       "heading": "Коммунальные расходы",
-      "Utilities": "Коммунальные расходы",
       "Cleaning": "Клининг",
       "Electricity": "Электричество",
       "Heat/Gas": "Отопление/Газ",
@@ -1142,14 +1137,14 @@
       "Events and Activities": "Мероприятия и активности"
     },
     "Personal Care and Wellness": {
-      "heading": "Личный уход и здоровье",
-      "Personal Care and Wellness": "Личный уход и здоровье"
+      "heading": "Личный уход и здоровье"
     },
     "Subscriptions and Memberships": {
       "heading": "Подписки и членство",
       "Digital Subscriptions": "Цифровые подписки",
       "Memberships": "Членство"
-    }
+    },
+    "groupIncludes": "Включает подкатегории"
   },
   "Auth": {
     "title": "Войти в Spliit Cloud",
@@ -1728,6 +1723,10 @@
         "recurringExpense": {
           "title": "Повторяющийся расход",
           "description": "Когда в группе создаётся запланированный повторяющийся расход."
+        },
+        "budgetAlert": {
+          "title": "Бюджетные уведомления",
+          "description": "Когда прогноз расходов по общему бюджету группы превышает лимит или лимит уже превышен."
         }
       },
       "sections": {
@@ -2197,5 +2196,129 @@
     "saveError": "Не удалось обновить часовой пояс. Повторите попытку.",
     "keep": "Оставить {timeZone}",
     "update": "Изменить на {timeZone}"
+  },
+  "Budgets": {
+    "title": "Бюджеты",
+    "detailTitle": "Бюджет",
+    "description": "Следите за расходами группы в рамках общих лимитов.",
+    "create": "Создать бюджет",
+    "new": "Новый",
+    "edit": "Изменить",
+    "archive": "Архивировать",
+    "delete": "Удалить",
+    "deleting": "Удаление…",
+    "save": "Сохранить бюджет",
+    "cancel": "Отмена",
+    "saving": "Сохранение…",
+    "created": "Бюджет создан",
+    "updated": "Бюджет обновлён",
+    "archivedSuccess": "Бюджет перемещён в архив",
+    "backToBudgets": "Назад к бюджетам",
+    "daysRemaining_one": "Остался {count} день",
+    "daysRemaining_other": "Осталось {count} дней",
+    "ofLimit": "из {amount}",
+    "overBy": "на {amount} сверх лимита",
+    "remaining": "Осталось {amount}",
+    "projected": "Прогноз: {amount}",
+    "progressLabel": "Использовано {percentage}% бюджета",
+    "paceTick": "{percent}% ожидаемо на данный момент",
+    "categoriesScope": "Категории: {scope}",
+    "all": "Все",
+    "selected": "Выбранные",
+    "viewDetails": "Подробнее",
+    "allCategories": "Все категории",
+    "selectedCategories": "Выбранные категории",
+    "allParticipants": "Все участники",
+    "selectedParticipants": "Выбранные участники",
+    "archived": "Архивные бюджеты",
+    "matchingExpenses": "Учитываемые расходы",
+    "matchingExpensesDescription": "Расходы, которые учитываются в этом бюджете за текущий период.",
+    "noMatchingExpenses": "В этом периоде нет учитываемых расходов.",
+    "upcoming": "Предстоящие расходы",
+    "upcomingDescription": "Расходы с будущей датой в этом периоде. Статус и тренд исключают их, чтобы вы не получили ложное предупреждение о прогнозе превышения.",
+    "noUpcoming": "Нет расходов с будущей датой в этом периоде.",
+    "upcomingTotal": "Предстоящие итого: {amount}",
+    "committedSubline": "+ {amount} зарезервировано",
+    "history": "История периодов",
+    "historyDescription": "Предыдущие периоды пересчитываются с текущим лимитом и областью бюджета.",
+    "noHistory": "Завершённых периодов пока нет.",
+    "deleteDescription": "Безвозвратно удалить этот бюджет и историю его уведомлений. Расходы группы не изменятся.",
+    "empty": {
+      "title": "Бюджетов пока нет",
+      "description": "Создайте общий бюджет, чтобы отслеживать расходы всей группы или выбранных участников."
+    },
+    "validation": "Заполните все обязательные поля бюджета.",
+    "form": {
+      "description": "Задайте лимит, период, категории и участников, расходы которых учитывает этот бюджет.",
+      "notAllowed": "Только администраторы группы могут управлять бюджетами.",
+      "name": "Название бюджета",
+      "namePlaceholder": "Например, продукты для дома",
+      "amount": "Сумма",
+      "period": "Период",
+      "startDate": "Дата начала",
+      "endDate": "Дата окончания",
+      "categories": "Категории",
+      "participants": "Участники",
+      "chooseCategories": "Выберите категории",
+      "chooseParticipants": "Выберите участников",
+      "notifications": "Уведомления",
+      "notifyTrending": "Прогноз превышения бюджета",
+      "notifyTrendingDescription": "Уведомить выбранных участников, если после 20% периода прогнозируемые расходы превышают лимит.",
+      "notifyOver": "Превышение бюджета",
+      "notifyOverDescription": "Уведомить выбранных участников, когда фактические расходы впервые превысят лимит.",
+      "periodHint": "Текущий период: {range}",
+      "categoryScopeHint": "Включает родительскую категорию и все её подкатегории.",
+      "participantScopeHint": "Учитываются только доли, причитающиеся выбранным участникам.",
+      "overlapHint": "Расход может учитываться в нескольких бюджетах при пересечении областей.",
+      "notificationRecipients": "Оповещения получают участники с аккаунтом, включённые в область участников и включившие уведомления о бюджете.",
+      "allSubcategories": "все подкатегории"
+    },
+    "period": {
+      "weekly": "Еженедельно",
+      "monthly": "Ежемесячно",
+      "yearly": "Ежегодно",
+      "custom": "Произвольный период"
+    },
+    "status": {
+      "over": "Бюджет превышен",
+      "trending": "Прогноз превышения",
+      "onTrack": "В рамках бюджета",
+      "archived": "В архиве",
+      "scheduled": "Запланировано",
+      "completed": "Завершено"
+    },
+    "daysRemaining_few": "Осталось {count} дня",
+    "daysRemaining_many": "Осталось {count} дней",
+    "unarchivedSuccess": "Бюджет восстановлен из архива",
+    "notificationsOff": "Уведомления отключены",
+    "createCard": {
+      "title": "Создать бюджет",
+      "description": "Установите лимит расходов и получайте уведомления, прежде чем его превысите."
+    },
+    "chart": {
+      "heading": "Потрачено на данный момент",
+      "sectionLabel": "График совокупных расходов",
+      "legendSpent": "Потрачено",
+      "legendPace": "По плану",
+      "legendCommitted": "Зарезервировано",
+      "limitLine": "Лимит",
+      "srSummary": "Потрачено {spent} из {limit}; зарезервировано {committed}."
+    },
+    "usedTooltip": "Использовано {used} из {limit}",
+    "paceTooltip": "Ожидаемый темп: день {elapsed} из {total}",
+    "scope": "Охват",
+    "remove": "Удалить",
+    "retry": "Повторить",
+    "completedBudgets": "Завершённые бюджеты",
+    "completed": "Завершено",
+    "validationName": "Добавьте название бюджета.",
+    "validationAmount": "Введите сумму больше нуля.",
+    "validationDates": "Выберите корректные даты начала и окончания.",
+    "validationCategories": "Выберите хотя бы одну категорию.",
+    "validationParticipants": "Выберите хотя бы одного участника.",
+    "startsIn": "Начнётся через {count} дн.",
+    "startsToday": "Начнётся сегодня",
+    "moreExpenses": "В итог включено ещё {count} расходов.",
+    "moreUpcomingExpenses": "В обязательный итог включено ещё {count} будущих расходов."
   }
 }

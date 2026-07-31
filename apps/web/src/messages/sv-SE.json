@@ -134,6 +134,10 @@
         "weeklySummary": {
           "title": "Veckoaktivitetssammanfattning",
           "description": "En veckosammanfattning av aktiviteten i dina grupper."
+        },
+        "budgetAlert": {
+          "title": "Budgetvarningar",
+          "description": "När en gemensam gruppbudget riskerar att överskridas eller redan har överskridit sin gräns."
         }
       },
       "sections": {
@@ -416,7 +420,6 @@
   "Categories": {
     "Entertainment": {
       "heading": "Underhållning",
-      "Entertainment": "Underhållning",
       "Games": "Spel",
       "Movies": "Filmer",
       "Music": "Musik",
@@ -424,14 +427,12 @@
     },
     "Food and Drink": {
       "heading": "Mat och dryck",
-      "Food and Drink": "Mat och dryck",
       "Dining Out": "Äta ute",
       "Groceries": "Livsmedel",
       "Liquor": "Alkohol"
     },
     "Home": {
       "heading": "Hem",
-      "Home": "Hem",
       "Electronics": "Elektronik",
       "Furniture": "Möbler",
       "Household Supplies": "Hushållsartiklar",
@@ -453,8 +454,7 @@
       "Taxes": "Skatter"
     },
     "Personal Care and Wellness": {
-      "heading": "Personlig vård och välbefinnande",
-      "Personal Care and Wellness": "Personlig vård och välbefinnande"
+      "heading": "Personlig vård och välbefinnande"
     },
     "Social and Activities": {
       "heading": "Socialt och aktiviteter",
@@ -467,7 +467,6 @@
     },
     "Transportation": {
       "heading": "Transport",
-      "Transportation": "Transport",
       "Bicycle": "Cykel",
       "Bus/Train": "Buss/Tåg",
       "Car": "Bil",
@@ -486,14 +485,14 @@
     },
     "Utilities": {
       "heading": "Hushållsavgifter",
-      "Utilities": "Hushållsavgifter",
       "Cleaning": "Städning",
       "Electricity": "El",
       "Heat/Gas": "Värme/Gas",
       "Trash": "Sophämtning",
       "TV/Phone/Internet": "TV/Telefon/Internet",
       "Water": "Vatten"
-    }
+    },
+    "groupIncludes": "Inkluderar underkategorier"
   },
   "Common": {
     "close": "Stäng",
@@ -2157,5 +2156,131 @@
     "saveError": "Det gick inte att uppdatera din tidszon. Försök igen.",
     "keep": "Behåll {timeZone}",
     "update": "Uppdatera till {timeZone}"
+  },
+  "Budgets": {
+    "title": "Budgetar",
+    "detailTitle": "Budgetöversikt",
+    "description": "Följ gruppens utgifter mot gemensamma gränser.",
+    "create": "Skapa budget",
+    "new": "Ny",
+    "edit": "Redigera",
+    "archive": "Arkivera",
+    "delete": "Ta bort",
+    "deleting": "Tar bort…",
+    "save": "Spara budget",
+    "cancel": "Avbryt",
+    "saving": "Sparar…",
+    "created": "Budgeten har skapats",
+    "updated": "Budgeten har uppdaterats",
+    "archivedSuccess": "Budgeten har arkiverats",
+    "backToBudgets": "Tillbaka till budgetar",
+    "daysRemaining_one": "{count} dag återstår",
+    "daysRemaining_other": "{count} dagar återstår",
+    "ofLimit": "av {amount}",
+    "overBy": "{amount} över",
+    "remaining": "{amount} återstår",
+    "projected": "Prognos {amount}",
+    "progressLabel": "{percentage} % av budgeten används",
+    "paceTick": "{percent}% väntat hittills",
+    "categoriesScope": "Kategorier: {scope}",
+    "all": "Alla",
+    "selected": "Valda",
+    "viewDetails": "Visa detaljer",
+    "allCategories": "Alla kategorier",
+    "selectedCategories": "Valda kategorier",
+    "allParticipants": "Alla deltagare",
+    "selectedParticipants": "Valda deltagare",
+    "archived": "Arkiverade budgetar",
+    "matchingExpenses": "Matchande utgifter",
+    "matchingExpensesDescription": "Utgifter som bidrar till denna budget under den aktuella perioden.",
+    "noMatchingExpenses": "Inga matchande utgifter under denna period.",
+    "upcoming": "Kommande utgifter",
+    "upcomingDescription": "Framtida utgifter under denna period. Status och trend exkluderar dessa så att du inte får en falsk riskerar-att-överskridas-varning.",
+    "noUpcoming": "Inga framtida utgifter under denna period.",
+    "upcomingTotal": "Kommande total: {amount}",
+    "committedSubline": "+ {amount} bundet",
+    "history": "Periodhistorik",
+    "historyDescription": "Tidigare perioder räknas om med budgetens aktuella gräns och omfattning.",
+    "noHistory": "Inga avslutade perioder ännu.",
+    "deleteDescription": "Ta bort denna budget och dess varningshistorik permanent. Gruppens utgifter påverkas inte.",
+    "empty": {
+      "title": "Inga budgetar ännu",
+      "description": "Skapa en gemensam budget för att följa utgifter för hela gruppen eller utvalda deltagare."
+    },
+    "validation": "Fyll i alla obligatoriska budgetfält.",
+    "form": {
+      "description": "Ange gräns, period, kategorier och deltagare som budgeten ska följa.",
+      "notAllowed": "Endast gruppadministratörer kan hantera budgetar.",
+      "name": "Budgetnamn",
+      "namePlaceholder": "Till exempel hushållets matinköp",
+      "amount": "Belopp",
+      "period": "Tidsperiod",
+      "startDate": "Startdatum",
+      "endDate": "Slutdatum",
+      "categories": "Kategorier",
+      "participants": "Deltagare",
+      "chooseCategories": "Välj kategorier",
+      "chooseParticipants": "Välj deltagare",
+      "notifications": "Aviseringar",
+      "notifyTrending": "Risk för budgetöverskridande",
+      "notifyTrendingDescription": "Avisera utvalda medlemmar när de beräknade utgifterna överskrider gränsen efter 20 % av perioden.",
+      "notifyOver": "Över budget",
+      "notifyOverDescription": "Avisera utvalda medlemmar när de faktiska utgifterna för första gången överskrider gränsen.",
+      "periodHint": "Nuvarande period: {range}",
+      "categoryScopeHint": "Inkluderar överordnad kategori och alla dess underkategorier.",
+      "participantScopeHint": "Endast valda deltagares andelar räknas med.",
+      "overlapHint": "En utgift kan räknas i flera budgetar när deras omfång överlappar.",
+      "notificationRecipients": "Aviseringar skickas till kontomedlemmar i deltagarurvalet som har aktiverat budgetaviseringar.",
+      "allSubcategories": "alla underkategorier"
+    },
+    "period": {
+      "weekly": "Veckovis",
+      "monthly": "Månadsvis",
+      "yearly": "Årsvis",
+      "custom": "Anpassat intervall"
+    },
+    "status": {
+      "over": "Över budget",
+      "trending": "Riskerar att överskridas",
+      "onTrack": "I fas",
+      "archived": "Arkiverad",
+      "scheduled": "Schemalagd",
+      "completed": "Slutförd"
+    },
+    "daysRemaining_zero": "{count} dagar återstår",
+    "daysRemaining_two": "{count} dagar återstår",
+    "daysRemaining_few": "{count} dagar återstår",
+    "daysRemaining_many": "{count} dagar återstår",
+    "unarchivedSuccess": "Budgeten har återställts",
+    "notificationsOff": "Inga aviseringar aktiverade",
+    "createCard": {
+      "title": "Skapa en budget",
+      "description": "Ange en utgiftsgräns och få en avisering innan du överskrider den."
+    },
+    "chart": {
+      "heading": "Utgifter hittills",
+      "sectionLabel": "Kumulativt utgiftsdiagram",
+      "legendSpent": "Spenderat",
+      "legendPace": "I fas",
+      "legendCommitted": "Bundet",
+      "limitLine": "Gräns",
+      "srSummary": "Spenderat {spent} av {limit}; bundet {committed}."
+    },
+    "usedTooltip": "{used} av {limit} använt",
+    "paceTooltip": "Förväntat tempo: dag {elapsed} av {total}",
+    "scope": "Omfattning",
+    "remove": "Ta bort",
+    "retry": "Försök igen",
+    "completedBudgets": "Slutförda budgetar",
+    "completed": "Slutförd",
+    "validationName": "Lägg till ett budgetnamn.",
+    "validationAmount": "Ange ett belopp större än noll.",
+    "validationDates": "Välj giltiga start- och slutdatum.",
+    "validationCategories": "Välj minst en kategori.",
+    "validationParticipants": "Välj minst en deltagare.",
+    "startsIn": "Börjar om {count} dagar",
+    "startsToday": "Börjar idag",
+    "moreExpenses": "Ytterligare {count} utgifter ingår i totalsumman.",
+    "moreUpcomingExpenses": "Ytterligare {count} kommande utgifter ingår i den reserverade totalsumman."
   }
 }

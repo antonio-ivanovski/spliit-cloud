@@ -3,6 +3,7 @@ import { TRPCError } from '@trpc/server'
 import { bulkUpdateExpenseCategoriesInputSchema } from '@spliit/domain/schemas'
 
 import { bulkUpdateExpenseCategories } from '../../../../lib/api/category-bulk'
+import { enqueueBudgetEvaluation } from '../../../../lib/budgets/enqueue'
 import { loadGroupContext, protectedProcedure } from '../../../init'
 import { bulkUpdateCategoriesOutputSchema } from '../../../outputs/expenses'
 
@@ -32,6 +33,7 @@ export const bulkUpdateExpenseCategoriesProcedure = protectedProcedure
         accountId: ctx.auth.user.id,
         input,
       })
+      if (result.applied > 0) await enqueueBudgetEvaluation(input.groupId)
       return {
         ...result,
         rows: result.rows.map((row) => ({

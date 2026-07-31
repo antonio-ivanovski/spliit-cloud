@@ -123,6 +123,13 @@ type Props = {
   currency: Currency
   groupId: string
   participantCount: number
+  /**
+   * Optional override of the amount shown on the right. When set and different
+   * from `expense.amount`, the override is shown as the primary amount and the
+   * full expense amount is shown muted beneath it. Used by the budget modal to
+   * surface each expense's contribution toward the budget.
+   */
+  contributionAmount?: number
 }
 
 export function ExpenseCard({
@@ -130,7 +137,11 @@ export function ExpenseCard({
   currency,
   groupId,
   participantCount,
+  contributionAmount,
 }: Props) {
+  const showContribution =
+    typeof contributionAmount === 'number' &&
+    contributionAmount !== expense.amount
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseCard' })
   const navigate = useNavigate()
   const locale = useLocale()
@@ -212,7 +223,9 @@ export function ExpenseCard({
           )}
           data-testid="expense-amount"
         >
-          {formatCurrency(currency, expense.amount, locale)}
+          {showContribution
+            ? formatCurrency(currency, contributionAmount, locale)
+            : formatCurrency(currency, expense.amount, locale)}
         </div>
         {showOriginalAmount && (
           <div
@@ -224,6 +237,14 @@ export function ExpenseCard({
             </span>
           </div>
         )}
+        {showContribution && (
+          <div
+            className="text-xs whitespace-nowrap text-muted-foreground tabular-nums"
+            data-testid="expense-amount-total"
+          >
+            {formatCurrency(currency, expense.amount, locale)}
+          </div>
+        )}
         <div className="text-xs text-muted-foreground">
           <DocumentsCount count={expense.documentCount} />
         </div>
@@ -231,7 +252,13 @@ export function ExpenseCard({
           className="text-xs text-muted-foreground"
           data-testid="expense-date"
         >
-          {formatDateOnly(expense.expenseDate, locale, { dateStyle: 'medium' })}
+          {formatDateOnly(
+            expense.expenseDate instanceof Date
+              ? expense.expenseDate
+              : new Date(expense.expenseDate),
+            locale,
+            { dateStyle: 'medium' },
+          )}
         </div>
       </div>
       <Button

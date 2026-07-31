@@ -1071,7 +1071,6 @@
     },
     "Entertainment": {
       "heading": "Divertisment",
-      "Entertainment": "Divertisment",
       "Games": "Jocuri",
       "Movies": "Filme",
       "Music": "Muzică",
@@ -1079,14 +1078,12 @@
     },
     "Food and Drink": {
       "heading": "Mâncare și Băutură",
-      "Food and Drink": "Mâncare și Băutură",
       "Dining Out": "Cină în oraș",
       "Groceries": "Alimente",
       "Liquor": "Băuturi alcoolice"
     },
     "Home": {
       "heading": "Acasă",
-      "Home": "Acasă",
       "Electronics": "Electronice",
       "Furniture": "Mobilier",
       "Household Supplies": "Produse de uz casnic",
@@ -1109,7 +1106,6 @@
     },
     "Transportation": {
       "heading": "Transport",
-      "Transportation": "Transport",
       "Bicycle": "Bicicletă",
       "Bus/Train": "Autobuz/Tren",
       "Car": "Mașină",
@@ -1121,7 +1117,6 @@
     },
     "Utilities": {
       "heading": "Utilități",
-      "Utilities": "Utilități",
       "Cleaning": "Curățenie",
       "Electricity": "Electricitate",
       "Heat/Gas": "Încălzire/Gaz",
@@ -1134,14 +1129,14 @@
       "Events and Activities": "Evenimente și activități"
     },
     "Personal Care and Wellness": {
-      "heading": "Îngrijire personală și stare de bine",
-      "Personal Care and Wellness": "Îngrijire personală și stare de bine"
+      "heading": "Îngrijire personală și stare de bine"
     },
     "Subscriptions and Memberships": {
       "heading": "Abonamente și membri",
       "Digital Subscriptions": "Abonamente digitale",
       "Memberships": "Membri"
-    }
+    },
+    "groupIncludes": "Include subcategorii"
   },
   "Currencies": {
     "search": "Caută monedă…",
@@ -1719,6 +1714,10 @@
         "recurringExpense": {
           "title": "Cheltuială recurentă",
           "description": "Când este creată o cheltuială recurentă programată într-un grup."
+        },
+        "budgetAlert": {
+          "title": "Alerte pentru buget",
+          "description": "Când bugetul comun al grupului este pe cale să depășească limita sau a depășit-o deja."
         }
       },
       "sections": {
@@ -2179,5 +2178,131 @@
     "saveError": "Fusul orar nu a putut fi actualizat. Încearcă din nou.",
     "keep": "Păstrează {timeZone}",
     "update": "Actualizează la {timeZone}"
+  },
+  "Budgets": {
+    "title": "Bugete",
+    "detailTitle": "Buget",
+    "description": "Urmărește cheltuielile grupului în limite comune.",
+    "create": "Creează buget",
+    "new": "Nou",
+    "edit": "Editează",
+    "archive": "Arhivează",
+    "delete": "Șterge",
+    "deleting": "Se șterge…",
+    "save": "Salvează bugetul",
+    "cancel": "Anulează",
+    "saving": "Se salvează…",
+    "created": "Buget creat",
+    "updated": "Buget actualizat",
+    "archivedSuccess": "Buget arhivat",
+    "backToBudgets": "Înapoi la bugete",
+    "daysRemaining_one": "Mai este {count} zi",
+    "daysRemaining_other": "Mai sunt {count} zile",
+    "ofLimit": "din {amount}",
+    "overBy": "{amount} peste limită",
+    "remaining": "Mai rămân {amount}",
+    "projected": "Proiecție {amount}",
+    "progressLabel": "{percentage}% din buget utilizat",
+    "paceTick": "{percent}% preconizat până acum",
+    "categoriesScope": "Categorii: {scope}",
+    "all": "Toate",
+    "selected": "Selectate",
+    "viewDetails": "Vezi detaliile",
+    "allCategories": "Toate categoriile",
+    "selectedCategories": "Categorii selectate",
+    "allParticipants": "Toți participanții",
+    "selectedParticipants": "Participanți selectați",
+    "archived": "Bugete arhivate",
+    "matchingExpenses": "Cheltuieli potrivite",
+    "matchingExpensesDescription": "Cheltuieli care contribuie la acest buget în perioada curentă.",
+    "noMatchingExpenses": "Nu există cheltuieli potrivite în această perioadă.",
+    "upcoming": "Cheltuieli viitoare",
+    "upcomingDescription": "Cheltuieli cu dată viitoare în această perioadă. Starea și tendința le exclud pentru a nu primi o alertă falsă de depășire.",
+    "noUpcoming": "Nu există cheltuieli viitoare în această perioadă.",
+    "upcomingTotal": "Total cheltuieli viitoare: {amount}",
+    "committedSubline": "+ {amount} angajate",
+    "history": "Istoricul perioadelor",
+    "historyDescription": "Perioadele anterioare sunt recalculate folosind limita și domeniul actuale.",
+    "noHistory": "Nu există încă perioade încheiate.",
+    "deleteDescription": "Șterge definitiv acest buget și istoricul alertelor sale. Cheltuielile grupului nu vor fi afectate.",
+    "empty": {
+      "title": "Nu există încă bugete",
+      "description": "Creează un buget comun pentru a urmări cheltuielile întregului grup sau ale participanților selectați."
+    },
+    "validation": "Completează toate câmpurile obligatorii ale bugetului.",
+    "form": {
+      "description": "Setează limita, perioada, categoriile și participanții urmăriți de acest buget.",
+      "notAllowed": "Doar administratorii grupului pot gestiona bugetele.",
+      "name": "Numele bugetului",
+      "namePlaceholder": "De exemplu, cumpărături pentru casă",
+      "amount": "Sumă",
+      "period": "Perioadă",
+      "startDate": "Data de început",
+      "endDate": "Data de sfârșit",
+      "categories": "Categorii",
+      "participants": "Participanți",
+      "chooseCategories": "Alege categoriile",
+      "chooseParticipants": "Alege participanții",
+      "notifications": "Notificări",
+      "notifyTrending": "În tendință de depășire",
+      "notifyTrendingDescription": "Alertează membrii selectați când cheltuielile proiectate depășesc limita după 20% din perioadă.",
+      "notifyOver": "Peste buget",
+      "notifyOverDescription": "Alertează membrii selectați când cheltuielile reale depășesc pentru prima dată limita.",
+      "periodHint": "Perioada curentă: {range}",
+      "categoryScopeHint": "Include categoria părinte și toate subcategoriile sale.",
+      "participantScopeHint": "Se iau în calcul doar părțile datorate de participanții selectați.",
+      "overlapHint": "O cheltuială poate conta în mai multe bugete dacă domeniile se suprapun.",
+      "notificationRecipients": "Alertele ajung la membrii contului incluși în lista participanților care au activat notificările pentru buget.",
+      "allSubcategories": "toate subcategoriile"
+    },
+    "period": {
+      "weekly": "Săptămânal",
+      "monthly": "Lunar",
+      "yearly": "Anual",
+      "custom": "Interval personalizat"
+    },
+    "status": {
+      "over": "Buget depășit",
+      "trending": "În tendință de depășire",
+      "onTrack": "În grafic",
+      "archived": "Arhivat",
+      "scheduled": "Programat",
+      "completed": "Finalizat"
+    },
+    "daysRemaining_zero": "Mai sunt {count} zile",
+    "daysRemaining_two": "Mai sunt {count} zile",
+    "daysRemaining_few": "Mai sunt {count} zile",
+    "daysRemaining_many": "Mai sunt {count} zile",
+    "unarchivedSuccess": "Buget dezarhivat",
+    "notificationsOff": "Nicio alertă activată",
+    "createCard": {
+      "title": "Creează un buget",
+      "description": "Stabilește o limită de cheltuieli și primești o alertă înainte să o depășești."
+    },
+    "chart": {
+      "heading": "Cheltuit până acum",
+      "sectionLabel": "Graficul cheltuielilor cumulative",
+      "legendSpent": "Cheltuit",
+      "legendPace": "În ritm",
+      "legendCommitted": "Angajat",
+      "limitLine": "Limită",
+      "srSummary": "Cheltuit {spent} din {limit}; angajat {committed}."
+    },
+    "usedTooltip": "Utilizat {used} din {limit}",
+    "paceTooltip": "Ritmul așteptat: ziua {elapsed} din {total}",
+    "scope": "Domeniu",
+    "remove": "Elimină",
+    "retry": "Încearcă din nou",
+    "completedBudgets": "Bugete finalizate",
+    "completed": "Finalizat",
+    "validationName": "Adaugă un nume bugetului.",
+    "validationAmount": "Introdu o sumă mai mare decât zero.",
+    "validationDates": "Alege date valide de început și sfârșit.",
+    "validationCategories": "Selectează cel puțin o categorie.",
+    "validationParticipants": "Selectează cel puțin un participant.",
+    "startsIn": "Începe peste {count} zile",
+    "startsToday": "Începe astăzi",
+    "moreExpenses": "În total sunt incluse încă {count} cheltuieli.",
+    "moreUpcomingExpenses": "În totalul angajat sunt incluse încă {count} cheltuieli viitoare."
   }
 }

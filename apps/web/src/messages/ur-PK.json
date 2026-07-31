@@ -134,6 +134,10 @@
         "weeklySummary": {
           "title": "ہفتہ وار سرگرمی کا خلاصہ",
           "description": "آپ کے گروپس کی سرگرمیوں کا ہفتہ وار خلاصہ۔"
+        },
+        "budgetAlert": {
+          "title": "بجٹ کے انتباہات",
+          "description": "جب کسی مشترکہ گروپ بجٹ میں حد سے بڑھنے کا رجحان ہو یا وہ اپنی حد سے تجاوز کر چکا ہو۔"
         }
       },
       "sections": {
@@ -416,7 +420,6 @@
   "Categories": {
     "Entertainment": {
       "heading": "تفریح",
-      "Entertainment": "تفریح",
       "Games": "گیمز",
       "Movies": "فلمیں",
       "Music": "موسیقی",
@@ -424,14 +427,12 @@
     },
     "Food and Drink": {
       "heading": "کھانا اور مشروب",
-      "Food and Drink": "کھانا اور مشروب",
       "Dining Out": "باہر کھانا",
       "Groceries": "گروسری",
       "Liquor": "شراب"
     },
     "Home": {
       "heading": "گھر",
-      "Home": "گھر",
       "Electronics": "الیکٹرانکس",
       "Furniture": "فرنیچر",
       "Household Supplies": "گھریلو سامان",
@@ -453,8 +454,7 @@
       "Taxes": "ٹیکس"
     },
     "Personal Care and Wellness": {
-      "heading": "ذاتی نگہداشت اور تندرستی",
-      "Personal Care and Wellness": "ذاتی نگہداشت اور تندرستی"
+      "heading": "ذاتی نگہداشت اور تندرستی"
     },
     "Social and Activities": {
       "heading": "سماجی اور سرگرمیاں",
@@ -467,7 +467,6 @@
     },
     "Transportation": {
       "heading": "آمد و رفت",
-      "Transportation": "آمد و رفت",
       "Bicycle": "سائیکل",
       "Bus/Train": "بس/ٹرین",
       "Car": "کار",
@@ -486,14 +485,14 @@
     },
     "Utilities": {
       "heading": "یوٹیلیٹیز",
-      "Utilities": "یوٹیلیٹیز",
       "Cleaning": "صفائی",
       "Electricity": "بجلی",
       "Heat/Gas": "حرارت/گیس",
       "Trash": "کوڑا کرکٹ",
       "TV/Phone/Internet": "TV/فون/انٹرنیٹ",
       "Water": "پانی"
-    }
+    },
+    "groupIncludes": "ذیلی زمرے شامل ہیں"
   },
   "Common": {
     "close": "بند کریں",
@@ -2158,5 +2157,131 @@
     "saveError": "آپ کا ٹائم زون اپ ڈیٹ نہیں ہو سکا۔ دوبارہ کوشش کریں۔",
     "keep": "{timeZone} برقرار رکھیں",
     "update": "{timeZone} پر اپ ڈیٹ کریں"
+  },
+  "Budgets": {
+    "title": "بجٹ",
+    "detailTitle": "بجٹ",
+    "description": "مشترکہ حدود کے مطابق گروپ کے اخراجات پر نظر رکھیں۔",
+    "create": "بجٹ بنائیں",
+    "new": "نیا",
+    "edit": "ترمیم کریں",
+    "archive": "محفوظ کریں",
+    "delete": "حذف کریں",
+    "deleting": "حذف کیا جا رہا ہے…",
+    "save": "بجٹ محفوظ کریں",
+    "cancel": "منسوخ کریں",
+    "saving": "محفوظ کیا جا رہا ہے…",
+    "created": "بجٹ بنا دیا گیا",
+    "updated": "بجٹ اپ ڈیٹ کر دیا گیا",
+    "archivedSuccess": "بجٹ محفوظ کر دیا گیا",
+    "backToBudgets": "بجٹ پر واپس جائیں",
+    "daysRemaining_one": "{count} دن باقی",
+    "daysRemaining_other": "{count} دن باقی",
+    "ofLimit": "{amount} میں سے",
+    "overBy": "{amount} زیادہ",
+    "remaining": "{amount} باقی",
+    "projected": "متوقع {amount}",
+    "progressLabel": "بجٹ کا {percentage}% استعمال ہو چکا ہے",
+    "paceTick": "اب تک متوقع {percent}%",
+    "categoriesScope": "زمرے: {scope}",
+    "all": "سبھی",
+    "selected": "منتخب",
+    "viewDetails": "تفصیلات دیکھیں",
+    "allCategories": "تمام زمرے",
+    "selectedCategories": "منتخب زمرے",
+    "allParticipants": "تمام شرکاء",
+    "selectedParticipants": "منتخب شرکاء",
+    "archived": "محفوظ شدہ بجٹ",
+    "matchingExpenses": "متعلقہ اخراجات",
+    "matchingExpensesDescription": "موجودہ مدت میں وہ اخراجات جو اس بجٹ میں شمار ہوتے ہیں۔",
+    "noMatchingExpenses": "اس مدت میں کوئی متعلقہ خرچ نہیں ہے۔",
+    "upcoming": "آنے والے اخراجات",
+    "upcomingDescription": "اس مدت میں مستقبل کی تاریخ والے اخراجات۔ حیثیت اور رجحان انہیں خارج کر دیتے ہیں تاکہ آپ کو غلط 'حد سے تجاوز' کا الرٹ نہ ملے۔",
+    "noUpcoming": "اس مدت میں کوئی مستقبل کی تاریخ والا خرچہ نہیں ہے۔",
+    "upcomingTotal": "آنے والا کل: {amount}",
+    "committedSubline": "+ {amount} مختص",
+    "history": "مدت کی سرگزشت",
+    "historyDescription": "پچھلے ادوار کا حساب اس بجٹ کی موجودہ حد اور دائرے کے مطابق دوبارہ کیا جاتا ہے۔",
+    "noHistory": "ابھی کوئی مکمل شدہ مدت نہیں ہے۔",
+    "deleteDescription": "اس بجٹ اور اس کی انتباہی سرگزشت کو مستقل طور پر حذف کریں۔ گروپ کے اخراجات متاثر نہیں ہوں گے۔",
+    "empty": {
+      "title": "ابھی کوئی بجٹ نہیں ہے",
+      "description": "پورے گروپ یا منتخب شرکاء کے اخراجات پر نظر رکھنے کے لیے مشترکہ بجٹ بنائیں۔"
+    },
+    "validation": "بجٹ کے تمام ضروری خانے مکمل کریں۔",
+    "form": {
+      "description": "اس بجٹ کی حد، مدت، زمرے اور شرکاء مقرر کریں۔",
+      "notAllowed": "صرف گروپ ایڈمنز بجٹ کا انتظام کر سکتے ہیں۔",
+      "name": "بجٹ کا نام",
+      "namePlaceholder": "مثلاً، گھر کا راشن",
+      "amount": "رقم",
+      "period": "مدت",
+      "startDate": "آغاز کی تاریخ",
+      "endDate": "اختتامی تاریخ",
+      "categories": "زمرے",
+      "participants": "شرکاء",
+      "chooseCategories": "زمرے منتخب کریں",
+      "chooseParticipants": "شرکاء منتخب کریں",
+      "notifications": "اطلاعات",
+      "notifyTrending": "بجٹ سے تجاوز کا رجحان",
+      "notifyTrendingDescription": "مدت کا 20% گزرنے کے بعد متوقع خرچ حد سے بڑھنے پر منتخب اراکین کو مطلع کریں۔",
+      "notifyOver": "بجٹ سے زیادہ",
+      "notifyOverDescription": "اصل خرچ پہلی بار حد سے بڑھنے پر منتخب اراکین کو مطلع کریں۔",
+      "periodHint": "موجودہ مدت: {range}",
+      "categoryScopeHint": "والد زمرہ اور اس کے تمام ذیلی زمرے شامل ہیں۔",
+      "participantScopeHint": "صرف منتخب شرکاء کے ذمے واجب حصے شمار ہوتے ہیں۔",
+      "overlapHint": "دائرے ایک دوسرے پر ہوں تو خرچ ایک سے زیادہ بجٹ میں شمار ہو سکتا ہے۔",
+      "notificationRecipients": "ان اکاؤنٹ اراکین کو الرٹس ملیں گے جو شرکاء کے دائرے میں شامل ہیں اور بجٹ اطلاعات فعال رکھتے ہیں۔",
+      "allSubcategories": "تمام ذیلی زمرے"
+    },
+    "period": {
+      "weekly": "ہفتہ وار",
+      "monthly": "ماہانہ",
+      "yearly": "سالانہ",
+      "custom": "حسبِ ضرورت مدت"
+    },
+    "status": {
+      "over": "بجٹ سے زیادہ",
+      "trending": "حد سے تجاوز کا رجحان",
+      "onTrack": "منصوبے کے مطابق",
+      "archived": "محفوظ شدہ",
+      "scheduled": "مقررہ",
+      "completed": "مکمل"
+    },
+    "daysRemaining_zero": "{count} دن باقی",
+    "daysRemaining_two": "{count} دن باقی",
+    "daysRemaining_few": "{count} دن باقی",
+    "daysRemaining_many": "{count} دن باقی",
+    "unarchivedSuccess": "بجٹ محفوظ سے نکالا گیا",
+    "notificationsOff": "کوئی اطلاع فعال نہیں",
+    "createCard": {
+      "title": "بجٹ بنائیں",
+      "description": "خرچ کی حد مقرر کریں اور زیادہ خرچ کرنے سے پہلے الرٹ حاصل کریں۔"
+    },
+    "chart": {
+      "heading": "اب تک کا خرچہ",
+      "sectionLabel": "مجموعی خرچ کا چارٹ",
+      "legendSpent": "خرچ",
+      "legendPace": "رفتار",
+      "legendCommitted": "مختص",
+      "limitLine": "حد",
+      "srSummary": "{limit} میں سے {spent} خرچ کیا؛ {committed} مختص۔"
+    },
+    "usedTooltip": "{limit} میں سے {used} استعمال شدہ",
+    "paceTooltip": "توقع شدہ رفتار: {total} میں سے {elapsed} دن",
+    "scope": "دائرہ",
+    "remove": "ہٹائیں",
+    "retry": "دوبارہ کوشش کریں",
+    "completedBudgets": "مکمل بجٹ",
+    "completed": "مکمل",
+    "validationName": "بجٹ کا نام شامل کریں۔",
+    "validationAmount": "صفر سے زیادہ رقم درج کریں۔",
+    "validationDates": "درست آغاز اور اختتام کی تاریخیں منتخب کریں۔",
+    "validationCategories": "کم از کم ایک زمرہ منتخب کریں۔",
+    "validationParticipants": "کم از کم ایک شریک منتخب کریں۔",
+    "startsIn": "{count} دن میں شروع ہوگا",
+    "startsToday": "آج شروع ہوگا",
+    "moreExpenses": "کل میں مزید {count} اخراجات شامل ہیں۔",
+    "moreUpcomingExpenses": "پابند کل میں مزید {count} آئندہ اخراجات شامل ہیں۔"
   }
 }

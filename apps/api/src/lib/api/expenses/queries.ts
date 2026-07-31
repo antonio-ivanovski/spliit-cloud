@@ -2,16 +2,75 @@ import type { Prisma } from '@spliit/db'
 import { prisma } from '@spliit/db'
 import {
   COMMON_CURRENCY_LIMIT,
+  expandCategorySelection,
   commonCurrencyLookbackDate,
   isSupportedCurrencyCode,
   rankCommonCurrencies,
 } from '@spliit/domain'
 
-import { resolveParticipantDisplayName } from '../../invitations'
+import { resolveParticipantDisplayName } from '../../invitations/display'
 import { toRecurrenceConfig } from '../recurrence-series'
 import { balanceExpenseSelect } from '../selects/balance-expense'
 import { groupExpenseListCardSelect } from '../selects/expense-list'
 import { narrowCategoryId, resolveCategory } from './helpers'
+
+/** Prisma row shape fed into `mapExpenseListRow`. */
+export type ExpenseListDbRow = Prisma.ExpenseGetPayload<{
+  select: typeof groupExpenseListCardSelect
+}>
+
+/**
+ * Map a Prisma row selected with `groupExpenseListCardSelect` into the public
+ * expense-list-item shape. Shared by `getGroupExpenses` and external callers
+ * (e.g. the budgets router) that need the same wire shape.
+ */
+export function mapExpenseListRow(row: ExpenseListDbRow) {
+  const {
+    _count,
+    recurringSeries,
+    paidByList: _paidByList,
+    paidFor: _paidFor,
+    items: _items,
+    ...rest
+  } = row
+  void _paidByList
+  void _paidFor
+  void _items
+  return {
+    ...rest,
+    documentCount: _count.documents,
+    paidByList: row.paidByList.map((pb) => ({
+      ledgerParticipant: {
+        id: pb.ledgerParticipant.id,
+        name: resolveParticipantDisplayName(pb.ledgerParticipant),
+        account: pb.ledgerParticipant.groupMember?.account ?? null,
+        removed: pb.ledgerParticipant.removedAt != null,
+      },
+      shares: pb.shares,
+    })),
+    paidFor: row.paidFor.map((pf) => ({
+      ledgerParticipant: {
+        id: pf.ledgerParticipant.id,
+        name: resolveParticipantDisplayName(pf.ledgerParticipant),
+        account: pf.ledgerParticipant.groupMember?.account ?? null,
+        removed: pf.ledgerParticipant.removedAt != null,
+      },
+      shares: pf.shares,
+    })),
+    items: row.items.map((item) => ({
+      id: item.id,
+      title: item.title,
+      amount: item.amount,
+    })),
+    categoryId: narrowCategoryId(row.categoryId),
+    category: resolveCategory(row.categoryId),
+    conversionRate: row.conversionRate ?? null,
+    conversionSource: row.conversionSource,
+    recurringSeriesId: recurringSeries?.id ?? null,
+    recurrenceSequence: row.recurrenceSequence,
+    recurringSeriesStatus: recurringSeries?.status ?? null,
+  }
+}
 
 export async function getGroupExpensesParticipants(groupId: string) {
   const group = await prisma.group.findUnique({
@@ -156,7 +215,14 @@ export async function getGroupExpenses(
     isReimbursement: options?.hideReimbursements ? false : undefined,
     categoryId:
       options?.categories && options.categories.length > 0
-        ? { in: options.categories }
+        ? {
+            in: (() => {
+              const expanded = expandCategorySelection(options.categories)
+              // Keep unknown legacy values restrictive rather than turning an
+              // invalid filter into an unfiltered query.
+              return expanded.length > 0 ? expanded : options.categories
+            })(),
+          }
         : undefined,
     originalCurrency:
       options?.currencies && options.currencies.length > 0
@@ -194,44 +260,7 @@ export async function getGroupExpenses(
     take: options && options.length,
   })
 
-  return rows.map((row) => {
-    const { _count, recurringSeries, ...rest } = row
-    return {
-      ...rest,
-      // Prisma's relation-count key is `_count`; expose a plain public field.
-      documentCount: _count.documents,
-      paidByList: row.paidByList.map((pb) => ({
-        ledgerParticipant: {
-          id: pb.ledgerParticipant.id,
-          name: resolveParticipantDisplayName(pb.ledgerParticipant),
-          account: pb.ledgerParticipant.groupMember?.account ?? null,
-          removed: pb.ledgerParticipant.removedAt != null,
-        },
-        shares: pb.shares,
-      })),
-      paidFor: row.paidFor.map((pf) => ({
-        ledgerParticipant: {
-          id: pf.ledgerParticipant.id,
-          name: resolveParticipantDisplayName(pf.ledgerParticipant),
-          account: pf.ledgerParticipant.groupMember?.account ?? null,
-          removed: pf.ledgerParticipant.removedAt != null,
-        },
-        shares: pf.shares,
-      })),
-      items: row.items.map((item) => ({
-        id: item.id,
-        title: item.title,
-        amount: item.amount,
-      })),
-      categoryId: narrowCategoryId(row.categoryId),
-      category: resolveCategory(row.categoryId),
-      conversionRate: row.conversionRate ?? null,
-      conversionSource: row.conversionSource,
-      recurringSeriesId: recurringSeries?.id ?? null,
-      recurrenceSequence: row.recurrenceSequence,
-      recurringSeriesStatus: recurringSeries?.status ?? null,
-    }
-  })
+  return rows.map(mapExpenseListRow)
 }
 export async function getGroupExpenseCount(groupId: string) {
   const group = await prisma.group.findUnique({

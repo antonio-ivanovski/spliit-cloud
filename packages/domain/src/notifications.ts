@@ -30,6 +30,7 @@ export const NotificationCategory = {
   EXPENSE_COMMENT: 'EXPENSE_COMMENT',
   WEEKLY_SUMMARY: 'WEEKLY_SUMMARY',
   PRODUCT_UPDATES: 'PRODUCT_UPDATES',
+  BUDGET_ALERT: 'BUDGET_ALERT',
 } as const
 
 export type NotificationCategory =
@@ -44,6 +45,7 @@ export const notificationCategoryValues = [
   NotificationCategory.EXPENSE_COMMENT,
   NotificationCategory.WEEKLY_SUMMARY,
   NotificationCategory.PRODUCT_UPDATES,
+  NotificationCategory.BUDGET_ALERT,
 ] as const
 export const NOTIFICATION_CATEGORIES = notificationCategoryValues
 
@@ -55,6 +57,7 @@ export const ACTIVE_NOTIFICATION_CATEGORIES = [
   NotificationCategory.RECURRING_EXPENSE_CREATED,
   NotificationCategory.EXPENSE_CHANGED,
   NotificationCategory.EXPENSE_COMMENT,
+  NotificationCategory.BUDGET_ALERT,
 ] as const
 
 /**
@@ -72,6 +75,7 @@ export const DEFAULT_NOTIFICATION_CHANNELS: Readonly<
   [NotificationCategory.EXPENSE_COMMENT]: [NotificationChannel.PUSH],
   [NotificationCategory.WEEKLY_SUMMARY]: [NotificationChannel.EMAIL],
   [NotificationCategory.PRODUCT_UPDATES]: [NotificationChannel.EMAIL],
+  [NotificationCategory.BUDGET_ALERT]: [NotificationChannel.EMAIL],
 }
 
 export const defaultNotificationChannels = DEFAULT_NOTIFICATION_CHANNELS
@@ -93,6 +97,10 @@ export const RECOMMENDED_NOTIFICATION_CHANNELS: Readonly<
   [NotificationCategory.EXPENSE_COMMENT]: [NotificationChannel.PUSH],
   [NotificationCategory.WEEKLY_SUMMARY]: [NotificationChannel.EMAIL],
   [NotificationCategory.PRODUCT_UPDATES]: [NotificationChannel.EMAIL],
+  [NotificationCategory.BUDGET_ALERT]: [
+    NotificationChannel.EMAIL,
+    NotificationChannel.PUSH,
+  ],
 }
 
 export const recommendedNotificationChannels = RECOMMENDED_NOTIFICATION_CHANNELS
@@ -139,6 +147,7 @@ export const notificationCategoryFamily: Readonly<
   [NotificationCategory.EXPENSE_COMMENT]: NotificationCategoryFamily.EXPENSE,
   [NotificationCategory.WEEKLY_SUMMARY]: NotificationCategoryFamily.GROUP,
   [NotificationCategory.PRODUCT_UPDATES]: NotificationCategoryFamily.GROUP,
+  [NotificationCategory.BUDGET_ALERT]: NotificationCategoryFamily.GROUP,
 }
 
 /** Only activity types with an active producer map to a delivery category. */

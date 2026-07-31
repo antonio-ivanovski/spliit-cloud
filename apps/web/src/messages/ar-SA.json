@@ -1295,7 +1295,6 @@
       "Electronics": "إلكترونيات",
       "Pets": "حيوانات أليفة",
       "Household Supplies": "لوازم منزلية",
-      "Home": "منزل",
       "Furniture": "أثاث",
       "Maintenance": "صيانة",
       "Services": "خدمات",
@@ -1303,7 +1302,6 @@
       "heading": "منزل"
     },
     "Personal Care and Wellness": {
-      "Personal Care and Wellness": "عناية شخصية وصحة",
       "heading": "عناية شخصية وصحة"
     },
     "Subscriptions and Memberships": {
@@ -1322,7 +1320,6 @@
       "Hotel": "فندق",
       "Plane": "طائرة",
       "Gas/Fuel": "وقود",
-      "Transportation": "مواصلات",
       "Bicycle": "دراجة",
       "heading": "مواصلات",
       "Car": "سيارة"
@@ -1342,7 +1339,6 @@
       "Sports": "رياضة",
       "Movies": "أفلام",
       "Music": "موسيقى",
-      "Entertainment": "ترفيه",
       "Games": "ألعاب",
       "heading": "ترفيه"
     },
@@ -1355,8 +1351,7 @@
       "Liquor": "مشروبات",
       "Groceries": "بقالة",
       "heading": "طعام وشراب",
-      "Dining Out": "تناول الطعام خارجاً",
-      "Food and Drink": "طعام وشراب"
+      "Dining Out": "تناول الطعام خارجاً"
     },
     "Utilities": {
       "Trash": "نفايات",
@@ -1365,9 +1360,9 @@
       "TV/Phone/Internet": "تلفاز/هاتف/إنترنت",
       "Water": "ماء",
       "Electricity": "كهرباء",
-      "Cleaning": "تنظيف",
-      "Utilities": "مرافق"
-    }
+      "Cleaning": "تنظيف"
+    },
+    "groupIncludes": "تشمل الفئات الفرعية"
   },
   "AccountSettings": {
     "emailHelp": "بريدك الإلكتروني مرتبط بحسابك ولا يمكن تغييره هنا.",
@@ -1450,6 +1445,10 @@
         "weeklySummary": {
           "description": "ملخص أسبوعي لنشاط مجموعتك.",
           "title": "ملخص أسبوعي"
+        },
+        "budgetAlert": {
+          "title": "تنبيهات الميزانية",
+          "description": "عندما يُتوقع أن تتجاوز ميزانية مشتركة للمجموعة حدها أو تكون قد تجاوزته."
         }
       },
       "rowSaved": "تم حفظ تفضيل الإشعارات.",
@@ -2233,5 +2232,131 @@
     "saveError": "تعذر تحديث منطقتك الزمنية. حاول مرة أخرى.",
     "keep": "الاحتفاظ بـ {timeZone}",
     "update": "التحديث إلى {timeZone}"
+  },
+  "Budgets": {
+    "title": "الميزانيات",
+    "detailTitle": "الميزانية",
+    "description": "تتبّع إنفاق المجموعة مقارنةً بالحدود المشتركة.",
+    "create": "إنشاء ميزانية",
+    "new": "جديد",
+    "edit": "تعديل",
+    "archive": "أرشفة",
+    "delete": "حذف",
+    "deleting": "جارٍ الحذف…",
+    "save": "حفظ الميزانية",
+    "cancel": "إلغاء",
+    "saving": "جارٍ الحفظ…",
+    "created": "تم إنشاء الميزانية",
+    "updated": "تم تحديث الميزانية",
+    "archivedSuccess": "تمت أرشفة الميزانية",
+    "backToBudgets": "العودة إلى الميزانيات",
+    "daysRemaining_one": "{count} يوم متبقٍ",
+    "daysRemaining_other": "{count} يوم متبقٍ",
+    "ofLimit": "من أصل {amount}",
+    "overBy": "تجاوز بمقدار {amount}",
+    "remaining": "المتبقي {amount}",
+    "projected": "المتوقع {amount}",
+    "progressLabel": "تم استخدام {percentage}% من الميزانية",
+    "paceTick": "{percent}% متوقع حتى الآن",
+    "categoriesScope": "الفئات: {scope}",
+    "all": "الكل",
+    "selected": "المحدد",
+    "viewDetails": "عرض التفاصيل",
+    "allCategories": "جميع الفئات",
+    "selectedCategories": "الفئات المحددة",
+    "allParticipants": "جميع المشاركين",
+    "selectedParticipants": "المشاركون المحددون",
+    "archived": "الميزانيات المؤرشفة",
+    "matchingExpenses": "المصروفات المطابقة",
+    "matchingExpensesDescription": "المصروفات التي تُحتسب ضمن هذه الميزانية في الفترة الحالية.",
+    "noMatchingExpenses": "لا توجد مصروفات مطابقة في هذه الفترة.",
+    "upcoming": "المصروفات القادمة",
+    "upcomingDescription": "مصروفات مؤرخة في المستقبل ضمن هذه الفترة. الحالة والاتجاه يستثنيانها لتجنب تنبيه خاطئ بتجاوز وشيك.",
+    "noUpcoming": "لا توجد مصروفات مؤرخة في المستقبل في هذه الفترة.",
+    "upcomingTotal": "إجمالي القادم: {amount}",
+    "committedSubline": "+ {amount} ملتزم به",
+    "history": "سجل الفترات",
+    "historyDescription": "الفترات السابقة محسوبة باستخدام حد الميزانية ونطاقها الحاليين.",
+    "noHistory": "لا توجد فترات مكتملة بعد.",
+    "deleteDescription": "احذف هذه الميزانية وسجل تنبيهاتها نهائيًا. لن تتأثر مصروفات المجموعة.",
+    "daysRemaining_zero": "{count} يوم متبقٍ",
+    "daysRemaining_two": "{count} يومان متبقيان",
+    "daysRemaining_few": "{count} أيام متبقية",
+    "daysRemaining_many": "{count} يومًا متبقيًا",
+    "empty": {
+      "title": "لا توجد ميزانيات بعد",
+      "description": "أنشئ ميزانية مشتركة لتتبّع إنفاق المجموعة بأكملها أو مشاركين محددين."
+    },
+    "validation": "أكمل جميع حقول الميزانية المطلوبة.",
+    "form": {
+      "description": "حدد الحد والفترة والفئات والمشاركين الذين تتبعهم هذه الميزانية.",
+      "notAllowed": "يمكن لمسؤولي المجموعة فقط إدارة الميزانيات.",
+      "name": "اسم الميزانية",
+      "namePlaceholder": "مثلاً، مشتريات المنزل",
+      "amount": "المبلغ",
+      "period": "الفترة",
+      "startDate": "تاريخ البدء",
+      "endDate": "تاريخ الانتهاء",
+      "categories": "الفئات",
+      "participants": "المشاركون",
+      "chooseCategories": "اختيار الفئات",
+      "chooseParticipants": "اختيار المشاركين",
+      "notifications": "الإشعارات",
+      "notifyTrending": "اتجاه لتجاوز الميزانية",
+      "notifyTrendingDescription": "نبّه الأعضاء المحددين عندما يتجاوز الإنفاق المتوقع الحد بعد انقضاء 20% من الفترة.",
+      "notifyOver": "تجاوز الميزانية",
+      "notifyOverDescription": "نبّه الأعضاء المحددين عندما يتجاوز الإنفاق الفعلي الحد لأول مرة.",
+      "periodHint": "الفترة الحالية: {range}",
+      "categoryScopeHint": "يشمل الفئة الأصلية وجميع فئاتها الفرعية.",
+      "participantScopeHint": "تُحتسب فقط الحصص المستحقة على المشاركين المحددين.",
+      "overlapHint": "قد تُحتسب المصروفات ضمن أكثر من ميزانية متداخلة.",
+      "notificationRecipients": "تصل التنبيهات إلى أعضاء الحساب المشمولين بنطاق المشاركين والذين فعّلوا إشعارات الميزانية.",
+      "allSubcategories": "كل الفئات الفرعية"
+    },
+    "period": {
+      "weekly": "أسبوعيًا",
+      "monthly": "شهريًا",
+      "yearly": "سنويًا",
+      "custom": "نطاق مخصص"
+    },
+    "status": {
+      "over": "متجاوزة للميزانية",
+      "trending": "متجهة نحو التجاوز",
+      "onTrack": "ضمن المسار",
+      "archived": "مؤرشف",
+      "scheduled": "مجدول",
+      "completed": "مكتمل"
+    },
+    "unarchivedSuccess": "تم إلغاء أرشفة الميزانية",
+    "notificationsOff": "لم يتم تفعيل أي تنبيهات",
+    "createCard": {
+      "title": "إنشاء ميزانية",
+      "description": "حدد حداً للإنفاق واحصل على تنبيه قبل تجاوز ميزانيتك."
+    },
+    "chart": {
+      "heading": "الإنفاق حتى الآن",
+      "sectionLabel": "مخطط الإنفاق التراكمي",
+      "legendSpent": "المنفق",
+      "legendPace": "بالمعدل المتوقع",
+      "legendCommitted": "الملتزم به",
+      "limitLine": "الحد",
+      "srSummary": "المنفق {spent} من {limit}؛ الملتزم به {committed}."
+    },
+    "usedTooltip": "استُخدم {used} من {limit}",
+    "paceTooltip": "الوتيرة المتوقعة: اليوم {elapsed} من {total}",
+    "scope": "النطاق",
+    "remove": "إزالة",
+    "retry": "حاول مرة أخرى",
+    "completedBudgets": "الميزانيات المكتملة",
+    "completed": "مكتمل",
+    "validationName": "أضف اسمًا للميزانية.",
+    "validationAmount": "أدخل مبلغًا أكبر من صفر.",
+    "validationDates": "اختر تاريخ بدء وانتهاء صالحين.",
+    "validationCategories": "حدد فئة واحدة على الأقل.",
+    "validationParticipants": "حدد مشاركًا واحدًا على الأقل.",
+    "startsIn": "يبدأ خلال {count} يومًا",
+    "startsToday": "يبدأ اليوم",
+    "moreExpenses": "هناك {count} مصروفات إضافية مشمولة في الإجمالي.",
+    "moreUpcomingExpenses": "هناك {count} مصروفات قادمة إضافية مشمولة في الإجمالي الملتزم."
   }
 }

@@ -1071,7 +1071,6 @@
     },
     "Entertainment": {
       "heading": "Entretenimento",
-      "Entertainment": "Entretenimento",
       "Games": "Jogos",
       "Movies": "Filmes",
       "Music": "Música",
@@ -1079,14 +1078,12 @@
     },
     "Food and Drink": {
       "heading": "Comida e Bebida",
-      "Food and Drink": "Comida e Bebida",
       "Dining Out": "Jantar fora",
       "Groceries": "Mercearia",
       "Liquor": "Bebidas alcoólicas"
     },
     "Home": {
       "heading": "Casa",
-      "Home": "Casa",
       "Electronics": "Eletrônicos",
       "Furniture": "Móveis",
       "Household Supplies": "Suprimentos domésticos",
@@ -1109,7 +1106,6 @@
     },
     "Transportation": {
       "heading": "Transporte",
-      "Transportation": "Transporte",
       "Bicycle": "Bicicleta",
       "Bus/Train": "Ônibus/Trem",
       "Car": "Carro",
@@ -1121,7 +1117,6 @@
     },
     "Utilities": {
       "heading": "Utilitários",
-      "Utilities": "Utilitários",
       "Cleaning": "Limpeza",
       "Electricity": "Eletricidade",
       "Heat/Gas": "Calor/Gás",
@@ -1134,14 +1129,14 @@
       "Events and Activities": "Eventos e atividades"
     },
     "Personal Care and Wellness": {
-      "heading": "Cuidados pessoais e bem-estar",
-      "Personal Care and Wellness": "Cuidados pessoais e bem-estar"
+      "heading": "Cuidados pessoais e bem-estar"
     },
     "Subscriptions and Memberships": {
       "heading": "Assinaturas e associações",
       "Digital Subscriptions": "Assinaturas digitais",
       "Memberships": "Associações"
-    }
+    },
+    "groupIncludes": "Inclui subcategorias"
   },
   "Currencies": {
     "search": "Pesquisar moeda...",
@@ -1719,6 +1714,10 @@
         "recurringExpense": {
           "title": "Despesa recorrente",
           "description": "Quando uma despesa recorrente agendada é criada em um grupo."
+        },
+        "budgetAlert": {
+          "title": "Alertas de orçamento",
+          "description": "Quando um orçamento compartilhado do grupo estiver prestes a ultrapassar o limite ou já o tiver excedido."
         }
       },
       "sections": {
@@ -2179,5 +2178,131 @@
     "saveError": "Não foi possível atualizar seu fuso horário. Tente novamente.",
     "keep": "Manter {timeZone}",
     "update": "Atualizar para {timeZone}"
+  },
+  "Budgets": {
+    "title": "Orçamentos",
+    "detailTitle": "Orçamento",
+    "description": "Acompanhe os gastos do grupo com limites compartilhados.",
+    "create": "Criar orçamento",
+    "new": "Novo",
+    "edit": "Editar",
+    "archive": "Arquivar",
+    "delete": "Excluir",
+    "deleting": "Excluindo…",
+    "save": "Salvar orçamento",
+    "cancel": "Cancelar",
+    "saving": "Salvando…",
+    "created": "Orçamento criado",
+    "updated": "Orçamento atualizado",
+    "archivedSuccess": "Orçamento arquivado",
+    "backToBudgets": "Voltar aos orçamentos",
+    "daysRemaining_one": "Falta {count} dia",
+    "daysRemaining_other": "Faltam {count} dias",
+    "ofLimit": "de {amount}",
+    "overBy": "{amount} acima",
+    "remaining": "{amount} restantes",
+    "projected": "Projeção {amount}",
+    "progressLabel": "{percentage}% do orçamento usado",
+    "paceTick": "{percent}% esperado até agora",
+    "categoriesScope": "Categorias: {scope}",
+    "all": "Todos",
+    "selected": "Selecionado",
+    "viewDetails": "Ver detalhes",
+    "allCategories": "Todas as categorias",
+    "selectedCategories": "Categorias selecionadas",
+    "allParticipants": "Todos os participantes",
+    "selectedParticipants": "Participantes selecionados",
+    "archived": "Orçamentos arquivados",
+    "matchingExpenses": "Despesas correspondentes",
+    "matchingExpensesDescription": "Despesas que contribuem para este orçamento no período atual.",
+    "noMatchingExpenses": "Não há despesas correspondentes neste período.",
+    "upcoming": "Despesas futuras",
+    "upcomingDescription": "Despesas com data futura neste período. O status e a tendência as excluem para que você não receba um falso alerta de tendência de estouro.",
+    "noUpcoming": "Não há despesas futuras neste período.",
+    "upcomingTotal": "Total futuro: {amount}",
+    "committedSubline": "+ {amount} comprometidos",
+    "history": "Histórico de períodos",
+    "historyDescription": "Os períodos anteriores são recalculados com o limite e o escopo atuais.",
+    "noHistory": "Ainda não há períodos concluídos.",
+    "deleteDescription": "Exclua permanentemente este orçamento e seu histórico de alertas. As despesas do grupo não serão afetadas.",
+    "empty": {
+      "title": "Ainda não há orçamentos",
+      "description": "Crie um orçamento compartilhado para acompanhar os gastos de todo o grupo ou de participantes selecionados."
+    },
+    "validation": "Preencha todos os campos obrigatórios do orçamento.",
+    "form": {
+      "description": "Defina o limite, o período, as categorias e os participantes acompanhados por este orçamento.",
+      "notAllowed": "Apenas administradores do grupo podem gerenciar orçamentos.",
+      "name": "Nome do orçamento",
+      "namePlaceholder": "Por exemplo, compras da casa",
+      "amount": "Valor",
+      "period": "Período",
+      "startDate": "Data inicial",
+      "endDate": "Data final",
+      "categories": "Categorias",
+      "participants": "Participantes",
+      "chooseCategories": "Escolher categorias",
+      "chooseParticipants": "Escolher participantes",
+      "notifications": "Notificações",
+      "notifyTrending": "Tendência de estouro",
+      "notifyTrendingDescription": "Alerte os membros selecionados quando os gastos projetados ultrapassarem o limite após 20% do período.",
+      "notifyOver": "Acima do orçamento",
+      "notifyOverDescription": "Alerte os membros selecionados quando os gastos reais ultrapassarem o limite pela primeira vez.",
+      "periodHint": "Período atual: {range}",
+      "categoryScopeHint": "Inclui a categoria principal e todas as suas subcategorias.",
+      "participantScopeHint": "Apenas as partes devidas pelos participantes selecionados são contabilizadas.",
+      "overlapHint": "Uma despesa pode contar para vários orçamentos quando os escopos se sobrepõem.",
+      "notificationRecipients": "Os alertas vão para membros com conta incluídos no escopo de participantes que ativaram as notificações de orçamento.",
+      "allSubcategories": "todas as subcategorias"
+    },
+    "period": {
+      "weekly": "Semanal",
+      "monthly": "Mensal",
+      "yearly": "Anual",
+      "custom": "Intervalo personalizado"
+    },
+    "status": {
+      "over": "Orçamento excedido",
+      "trending": "Tendência de estouro",
+      "onTrack": "No caminho certo",
+      "archived": "Arquivado",
+      "scheduled": "Agendado",
+      "completed": "Concluído"
+    },
+    "daysRemaining_zero": "Faltam {count} dias",
+    "daysRemaining_two": "Faltam {count} dias",
+    "daysRemaining_few": "Faltam {count} dias",
+    "daysRemaining_many": "Faltam {count} dias",
+    "unarchivedSuccess": "Orçamento desarquivado",
+    "notificationsOff": "Nenhum alerta ativado",
+    "createCard": {
+      "title": "Criar um orçamento",
+      "description": "Defina um limite de gastos e receba um aviso antes de estourar o orçamento."
+    },
+    "chart": {
+      "heading": "Gasto até agora",
+      "sectionLabel": "Gráfico de gasto acumulado",
+      "legendSpent": "Gasto",
+      "legendPace": "No ritmo",
+      "legendCommitted": "Comprometido",
+      "limitLine": "Limite",
+      "srSummary": "Gasto {spent} de {limit}; comprometido {committed}."
+    },
+    "usedTooltip": "Usado {used} de {limit}",
+    "paceTooltip": "Ritmo esperado: dia {elapsed} de {total}",
+    "scope": "Escopo",
+    "remove": "Remover",
+    "retry": "Tentar novamente",
+    "completedBudgets": "Orçamentos concluídos",
+    "completed": "Concluído",
+    "validationName": "Adicione um nome ao orçamento.",
+    "validationAmount": "Digite um valor maior que zero.",
+    "validationDates": "Escolha datas de início e fim válidas.",
+    "validationCategories": "Selecione pelo menos uma categoria.",
+    "validationParticipants": "Selecione pelo menos um participante.",
+    "startsIn": "Começa em {count} dias",
+    "startsToday": "Começa hoje",
+    "moreExpenses": "Mais {count} despesas estão incluídas no total.",
+    "moreUpcomingExpenses": "Mais {count} despesas futuras estão incluídas no total comprometido."
   }
 }

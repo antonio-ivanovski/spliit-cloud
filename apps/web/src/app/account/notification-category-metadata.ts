@@ -13,6 +13,7 @@ export type NotificationRow = {
     | 'rows.recurringExpense.title'
     | 'rows.expenseChanged.title'
     | 'rows.newComment.title'
+    | 'rows.budgetAlert.title'
     | 'rows.weeklySummary.title'
     | 'rows.cloudNews.title'
   descriptionKey:
@@ -22,6 +23,7 @@ export type NotificationRow = {
     | 'rows.recurringExpense.description'
     | 'rows.expenseChanged.description'
     | 'rows.newComment.description'
+    | 'rows.budgetAlert.description'
     | 'rows.weeklySummary.description'
     | 'rows.cloudNews.description'
   comingSoon?: boolean
@@ -40,6 +42,12 @@ export const NOTIFICATION_ROWS = {
       category: NotificationCategory.FRIEND_ADDED,
       titleKey: 'rows.addedAsFriend.title',
       descriptionKey: 'rows.addedAsFriend.description',
+    },
+    {
+      id: 'budget-alert',
+      category: NotificationCategory.BUDGET_ALERT,
+      titleKey: 'rows.budgetAlert.title',
+      descriptionKey: 'rows.budgetAlert.description',
     },
   ],
   expenses: [

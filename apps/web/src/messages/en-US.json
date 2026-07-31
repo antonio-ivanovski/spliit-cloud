@@ -727,6 +727,10 @@
         "cloudNews": {
           "title": "Spliit Cloud news and updates",
           "description": "Product news, tips, and service updates."
+        },
+        "budgetAlert": {
+          "title": "Budget alerts",
+          "description": "When a shared group budget is trending over or has exceeded its limit."
         }
       },
       "inherited": "Inherited",
@@ -1422,7 +1426,6 @@
     },
     "Entertainment": {
       "heading": "Entertainment",
-      "Entertainment": "Entertainment",
       "Games": "Games",
       "Movies": "Movies",
       "Music": "Music",
@@ -1430,14 +1433,12 @@
     },
     "Food and Drink": {
       "heading": "Food and Drink",
-      "Food and Drink": "Food and Drink",
       "Dining Out": "Dining Out",
       "Groceries": "Groceries",
       "Liquor": "Liquor"
     },
     "Home": {
       "heading": "Home",
-      "Home": "Home",
       "Electronics": "Electronics",
       "Furniture": "Furniture",
       "Household Supplies": "Household Supplies",
@@ -1460,7 +1461,6 @@
     },
     "Transportation": {
       "heading": "Transportation",
-      "Transportation": "Transportation",
       "Bicycle": "Bicycle",
       "Bus/Train": "Bus/Train",
       "Car": "Car",
@@ -1472,7 +1472,6 @@
     },
     "Utilities": {
       "heading": "Utilities",
-      "Utilities": "Utilities",
       "Cleaning": "Cleaning",
       "Electricity": "Electricity",
       "Heat/Gas": "Heat/Gas",
@@ -1490,9 +1489,9 @@
       "Memberships": "Memberships"
     },
     "Personal Care and Wellness": {
-      "heading": "Personal Care and Wellness",
-      "Personal Care and Wellness": "Personal Care and Wellness"
-    }
+      "heading": "Personal Care and Wellness"
+    },
+    "groupIncludes": "Includes subcategories"
   },
   "Currencies": {
     "search": "Search currency...",
@@ -2233,5 +2232,131 @@
     "saveError": "Could not update your timezone. Please try again.",
     "keep": "Keep {timeZone}",
     "update": "Update to {timeZone}"
+  },
+  "Budgets": {
+    "title": "Budgets",
+    "detailTitle": "Budget",
+    "description": "Track group spending against shared limits.",
+    "create": "Create budget",
+    "new": "New",
+    "edit": "Edit",
+    "archive": "Archive",
+    "delete": "Delete",
+    "deleting": "Deleting…",
+    "save": "Save budget",
+    "cancel": "Cancel",
+    "saving": "Saving…",
+    "created": "Budget created",
+    "updated": "Budget updated",
+    "archivedSuccess": "Budget archived",
+    "backToBudgets": "Back to budgets",
+    "status": {
+      "over": "Over budget",
+      "trending": "Trending over",
+      "onTrack": "On track",
+      "archived": "Archived",
+      "scheduled": "Scheduled",
+      "completed": "Completed"
+    },
+    "daysRemaining_one": "{count} day remaining",
+    "daysRemaining_other": "{count} days remaining",
+    "ofLimit": "of {amount}",
+    "overBy": "{amount} over",
+    "remaining": "{amount} remaining",
+    "projected": "Projected {amount}",
+    "progressLabel": "{percentage}% of the budget used",
+    "paceTick": "{percent}% expected by now",
+    "categoriesScope": "Categories: {scope}",
+    "all": "All",
+    "selected": "Selected",
+    "viewDetails": "View details",
+    "allCategories": "All categories",
+    "selectedCategories": "Selected categories",
+    "allParticipants": "All participants",
+    "selectedParticipants": "Selected participants",
+    "archived": "Archived budgets",
+    "empty": {
+      "title": "No budgets yet",
+      "description": "Create a shared budget to track spending for the whole group or selected participants."
+    },
+    "matchingExpenses": "Matching expenses",
+    "matchingExpensesDescription": "Expenses that contribute to this budget in the current period.",
+    "noMatchingExpenses": "No matching expenses in this period.",
+    "upcoming": "Upcoming expenses",
+    "upcomingDescription": "Future-dated expenses in this period. Status and trend exclude these so you don't get a false 'trending over' alert.",
+    "noUpcoming": "No future-dated expenses in this period.",
+    "upcomingTotal": "Upcoming total: {amount}",
+    "committedSubline": "+ {amount} committed",
+    "history": "Period history",
+    "historyDescription": "Earlier periods are recalculated using this budget's current limit and scope.",
+    "noHistory": "No completed periods yet.",
+    "deleteDescription": "Permanently delete this budget and its alert history. Group expenses will not be affected.",
+    "validation": "Complete all required budget fields.",
+    "form": {
+      "description": "Set the limit, period, categories, and participants this budget tracks.",
+      "notAllowed": "Only group admins can manage budgets.",
+      "name": "Budget name",
+      "namePlaceholder": "For example, household groceries",
+      "amount": "Amount",
+      "period": "Period",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "categories": "Categories",
+      "participants": "Participants",
+      "chooseCategories": "Choose categories",
+      "chooseParticipants": "Choose participants",
+      "notifications": "Notifications",
+      "notifyTrending": "Trending over budget",
+      "notifyTrendingDescription": "Alert selected members when projected spending exceeds the limit after 20% of the period.",
+      "notifyOver": "Over budget",
+      "notifyOverDescription": "Alert selected members when actual spending first exceeds the limit.",
+      "periodHint": "Current period: {range}",
+      "categoryScopeHint": "Selecting a parent includes the parent category and all of its subcategories.",
+      "participantScopeHint": "Only the shares owed by selected participants count toward this budget.",
+      "overlapHint": "An expense can count toward more than one budget when their scopes overlap.",
+      "notificationRecipients": "Alerts go to account members included in the participant scope who have budget notifications enabled.",
+      "allSubcategories": "all subcategories"
+    },
+    "period": {
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "custom": "Custom range"
+    },
+    "daysRemaining_zero": "{count} days remaining",
+    "daysRemaining_two": "{count} days remaining",
+    "daysRemaining_few": "{count} days remaining",
+    "daysRemaining_many": "{count} days remaining",
+    "unarchivedSuccess": "Budget unarchived",
+    "notificationsOff": "No alerts enabled",
+    "createCard": {
+      "title": "Create a budget",
+      "description": "Set a spending limit and get alerted before you overspend."
+    },
+    "chart": {
+      "heading": "Spend so far",
+      "sectionLabel": "Cumulative spend chart",
+      "legendSpent": "Spent",
+      "legendPace": "On pace",
+      "legendCommitted": "Committed",
+      "limitLine": "Limit",
+      "srSummary": "Spent {spent} of {limit}; committed {committed}."
+    },
+    "usedTooltip": "Used {used} of {limit}",
+    "paceTooltip": "Expected pace: day {elapsed} of {total}",
+    "scope": "Scope",
+    "remove": "Remove",
+    "retry": "Try again",
+    "completedBudgets": "Completed budgets",
+    "completed": "Completed",
+    "validationName": "Add a budget name.",
+    "validationAmount": "Enter an amount greater than zero.",
+    "validationDates": "Choose a valid start and end date.",
+    "validationCategories": "Select at least one category.",
+    "validationParticipants": "Select at least one participant.",
+    "startsIn": "Starts in {count} days",
+    "startsToday": "Starts today",
+    "moreExpenses": "{count} additional expenses are included in this total.",
+    "moreUpcomingExpenses": "{count} additional upcoming expenses are included in the committed total."
   }
 }

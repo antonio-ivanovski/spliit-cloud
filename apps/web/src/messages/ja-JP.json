@@ -1056,7 +1056,6 @@
     },
     "Entertainment": {
       "heading": "エンターテイメント",
-      "Entertainment": "エンターテイメント",
       "Games": "ゲーム",
       "Movies": "映画",
       "Music": "音楽",
@@ -1064,14 +1063,12 @@
     },
     "Food and Drink": {
       "heading": "食事と飲み物",
-      "Food and Drink": "食事と飲み物",
       "Dining Out": "外食",
       "Groceries": "食料品",
       "Liquor": "酒類"
     },
     "Home": {
       "heading": "住まい",
-      "Home": "住まい",
       "Electronics": "電子機器",
       "Furniture": "家具",
       "Household Supplies": "家庭用品",
@@ -1094,7 +1091,6 @@
     },
     "Transportation": {
       "heading": "交通",
-      "Transportation": "交通",
       "Bicycle": "自転車",
       "Bus/Train": "バス/電車",
       "Car": "車",
@@ -1106,7 +1102,6 @@
     },
     "Utilities": {
       "heading": "公共料金",
-      "Utilities": "公共料金",
       "Cleaning": "清掃",
       "Electricity": "電気",
       "Heat/Gas": "暖房/ガス",
@@ -1119,14 +1114,14 @@
       "Events and Activities": "イベントとアクティビティ"
     },
     "Personal Care and Wellness": {
-      "heading": "パーソナルケアとウェルネス",
-      "Personal Care and Wellness": "パーソナルケアとウェルネス"
+      "heading": "パーソナルケアとウェルネス"
     },
     "Subscriptions and Memberships": {
       "heading": "サブスクリプションと会員費",
       "Digital Subscriptions": "デジタルサブスクリプション",
       "Memberships": "会員費"
-    }
+    },
+    "groupIncludes": "サブカテゴリーを含む"
   },
   "Currencies": {
     "search": "通貨を検索…",
@@ -1703,6 +1698,10 @@
         "recurringExpense": {
           "title": "定期支出",
           "description": "グループで予定された定期支出が作成されたとき。"
+        },
+        "budgetAlert": {
+          "title": "予算アラート",
+          "description": "共有グループ予算が上限超過の傾向にある場合、または上限を超えた場合。"
         }
       },
       "sections": {
@@ -2145,5 +2144,130 @@
     "saveError": "タイムゾーンを更新できませんでした。もう一度お試しください。",
     "keep": "{timeZone}を維持",
     "update": "{timeZone}に更新"
+  },
+  "Budgets": {
+    "title": "予算",
+    "detailTitle": "予算",
+    "description": "共有上限に対するグループの支出を追跡します。",
+    "create": "予算を作成",
+    "new": "新規",
+    "edit": "編集",
+    "archive": "アーカイブ",
+    "delete": "削除",
+    "deleting": "削除中…",
+    "save": "予算を保存",
+    "cancel": "キャンセル",
+    "saving": "保存中…",
+    "created": "予算を作成しました",
+    "updated": "予算を更新しました",
+    "archivedSuccess": "予算をアーカイブしました",
+    "backToBudgets": "予算一覧に戻る",
+    "daysRemaining_other": "残り{count}日",
+    "ofLimit": "上限 {amount}",
+    "overBy": "{amount}超過",
+    "remaining": "残り{amount}",
+    "projected": "予測：{amount}",
+    "progressLabel": "予算の{percentage}%を使用",
+    "paceTick": "現在期待{percent}%",
+    "categoriesScope": "カテゴリー：{scope}",
+    "all": "すべて",
+    "selected": "選択済み",
+    "viewDetails": "詳細を見る",
+    "allCategories": "すべてのカテゴリー",
+    "selectedCategories": "選択したカテゴリー",
+    "allParticipants": "すべての参加者",
+    "selectedParticipants": "選択した参加者",
+    "archived": "アーカイブ済みの予算",
+    "matchingExpenses": "対象の支出",
+    "matchingExpensesDescription": "現在の期間にこの予算へ計上される支出です。",
+    "noMatchingExpenses": "この期間に対象となる支出はありません。",
+    "upcoming": "今後発生する支出",
+    "upcomingDescription": "この期間に日付が未来の支出です。ステータスとトレンドはこれらを除外するため、「超過傾向」の誤警告を防げます。",
+    "noUpcoming": "この期間に日付が未来の支出はありません。",
+    "upcomingTotal": "今後合計：{amount}",
+    "committedSubline": "+ {amount} 確定済み",
+    "history": "期間履歴",
+    "historyDescription": "過去の期間は、この予算の現在の上限と範囲で再計算されます。",
+    "noHistory": "完了した期間はまだありません。",
+    "deleteDescription": "この予算とアラート履歴を完全に削除します。グループの支出には影響しません。",
+    "empty": {
+      "title": "予算はまだありません",
+      "description": "グループ全体または選択した参加者の支出を追跡する共有予算を作成します。"
+    },
+    "validation": "予算の必須項目をすべて入力してください。",
+    "form": {
+      "description": "この予算で追跡する上限、期間、カテゴリー、参加者を設定します。",
+      "notAllowed": "グループ管理者のみが予算を管理できます。",
+      "name": "予算名",
+      "namePlaceholder": "例：家庭の食料品",
+      "amount": "金額",
+      "period": "期間",
+      "startDate": "開始日",
+      "endDate": "終了日",
+      "categories": "カテゴリー",
+      "participants": "参加者",
+      "chooseCategories": "カテゴリーを選択",
+      "chooseParticipants": "参加者を選択",
+      "notifications": "通知",
+      "notifyTrending": "予算超過の見込み",
+      "notifyTrendingDescription": "期間の20%を過ぎた時点で予測支出が上限を超える場合、選択したメンバーに通知します。",
+      "notifyOver": "予算超過",
+      "notifyOverDescription": "実際の支出が初めて上限を超えたときに、選択したメンバーに通知します。",
+      "periodHint": "現在の期間: {range}",
+      "categoryScopeHint": "親カテゴリとすべてのサブカテゴリを含みます。",
+      "participantScopeHint": "選択した参加者が負担する分だけが計上されます。",
+      "overlapHint": "範囲が重なる場合、支出は複数の予算に計上されます。",
+      "notificationRecipients": "参加者の範囲に含まれ、予算通知を有効にしているアカウントメンバーに通知されます。",
+      "allSubcategories": "すべてのサブカテゴリ"
+    },
+    "period": {
+      "weekly": "毎週",
+      "monthly": "毎月",
+      "yearly": "毎年",
+      "custom": "カスタム期間"
+    },
+    "status": {
+      "over": "予算超過",
+      "trending": "超過の見込み",
+      "onTrack": "順調",
+      "archived": "アーカイブ済み",
+      "scheduled": "予定",
+      "completed": "完了"
+    },
+    "daysRemaining_zero": "残り{count}日",
+    "daysRemaining_two": "残り{count}日",
+    "daysRemaining_few": "残り{count}日",
+    "daysRemaining_many": "残り{count}日",
+    "unarchivedSuccess": "予算のアーカイブを解除しました",
+    "notificationsOff": "通知は有効になっていません",
+    "createCard": {
+      "title": "予算を作成",
+      "description": "支出上限を設定し、使いすぎる前にお知らせします。"
+    },
+    "chart": {
+      "heading": "ここまでの支出",
+      "sectionLabel": "累計支出チャート",
+      "legendSpent": "支出済み",
+      "legendPace": "予想ペース",
+      "legendCommitted": "確定済み",
+      "limitLine": "上限",
+      "srSummary": "{spent} を支出（上限 {limit}）、確定済み {committed}。"
+    },
+    "usedTooltip": "{limit} 中 {used} を使用",
+    "paceTooltip": "想定ペース: {total} 日中 {elapsed} 日目",
+    "scope": "対象",
+    "remove": "削除",
+    "retry": "再試行",
+    "completedBudgets": "完了した予算",
+    "completed": "完了",
+    "validationName": "予算名を追加してください。",
+    "validationAmount": "0より大きい金額を入力してください。",
+    "validationDates": "有効な開始日と終了日を選択してください。",
+    "validationCategories": "カテゴリを1つ以上選択してください。",
+    "validationParticipants": "参加者を1人以上選択してください。",
+    "startsIn": "{count}日後に開始",
+    "startsToday": "今日開始",
+    "moreExpenses": "合計にはさらに{count}件の支出が含まれます。",
+    "moreUpcomingExpenses": "確定額にはさらに{count}件の今後の支出が含まれます。"
   }
 }

@@ -17,7 +17,9 @@
     "./lib/notifications/delivery-planner": "./src/lib/notifications/delivery-planner.ts",
     "./lib/notifications/email-delivery-sender": "./src/lib/notifications/email-delivery-sender.ts",
     "./lib/notifications/push-delivery-sender": "./src/lib/notifications/push-delivery-sender.ts",
-    "./lib/notifications/dispatcher": "./src/lib/notifications/dispatcher.ts"
+    "./lib/notifications/dispatcher": "./src/lib/notifications/dispatcher.ts",
+    "./lib/budgets/evaluate": "./src/lib/budgets/evaluate.ts",
+    "./lib/notifications/budget-planner": "./src/lib/notifications/budget-planner.ts"
   },
   "scripts": {
     "check-formatting": "oxfmt --check .",

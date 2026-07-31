@@ -58,6 +58,12 @@ async function main() {
     {},
     { retryLimit: 0, key: 'notification-cleanup' },
   )
+  await boss.schedule(
+    JOB_NAMES.EVALUATE_BUDGETS,
+    '15 0 * * *',
+    {},
+    { retryLimit: 0, key: 'budget-evaluation' },
+  )
 
   const admin = Bun.serve({
     hostname: env.JOBS_ADMIN_HOST,

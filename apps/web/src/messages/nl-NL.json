@@ -1063,7 +1063,6 @@
     },
     "Entertainment": {
       "heading": "Vermaak",
-      "Entertainment": "Vermaak",
       "Games": "Games",
       "Movies": "Film",
       "Music": "Muziek",
@@ -1071,14 +1070,12 @@
     },
     "Food and Drink": {
       "heading": "Eten en Drinken",
-      "Food and Drink": "Eten en Drinken",
       "Dining Out": "Uit eten",
       "Groceries": "Boodschappen",
       "Liquor": "Drank"
     },
     "Home": {
       "heading": "Thuis",
-      "Home": "Thuis",
       "Electronics": "Elektronica",
       "Furniture": "Meubels",
       "Household Supplies": "Huishoudelijke artikelen",
@@ -1101,7 +1098,6 @@
     },
     "Transportation": {
       "heading": "Vervoer",
-      "Transportation": "Vervoer",
       "Bicycle": "Fiets",
       "Bus/Train": "Bus/Trein",
       "Car": "Auto",
@@ -1113,7 +1109,6 @@
     },
     "Utilities": {
       "heading": "Nutsvoorzieningen",
-      "Utilities": "Nutsvoorzieningen",
       "Cleaning": "Schoonmaak",
       "Electricity": "Elektriciteit",
       "Heat/Gas": "Verwarming/Gas",
@@ -1126,14 +1121,14 @@
       "Events and Activities": "Evenementen en activiteiten"
     },
     "Personal Care and Wellness": {
-      "heading": "Persoonlijke verzorging en welzijn",
-      "Personal Care and Wellness": "Persoonlijke verzorging en welzijn"
+      "heading": "Persoonlijke verzorging en welzijn"
     },
     "Subscriptions and Memberships": {
       "heading": "Abonnementen en lidmaatschappen",
       "Digital Subscriptions": "Digitale abonnementen",
       "Memberships": "Lidmaatschappen"
-    }
+    },
+    "groupIncludes": "Inclusief subcategorieën"
   },
   "Currencies": {
     "search": "Valuta zoeken...",
@@ -1710,6 +1705,10 @@
         "recurringExpense": {
           "title": "Terugkerende uitgave",
           "description": "Wanneer een geplande terugkerende uitgave in een groep wordt aangemaakt."
+        },
+        "budgetAlert": {
+          "title": "Budgetmeldingen",
+          "description": "Wanneer een gedeeld groepsbudget dreigt te worden overschreden of de limiet al is overschreden."
         }
       },
       "sections": {
@@ -2161,5 +2160,131 @@
     "saveError": "Je tijdzone kon niet worden bijgewerkt. Probeer het opnieuw.",
     "keep": "{timeZone} behouden",
     "update": "Bijwerken naar {timeZone}"
+  },
+  "Budgets": {
+    "title": "Budgetten",
+    "detailTitle": "Budgetoverzicht",
+    "description": "Groepsuitgaven bijhouden tegenover gedeelde limieten.",
+    "create": "Budget maken",
+    "new": "Nieuw",
+    "edit": "Bewerken",
+    "archive": "Archiveren",
+    "delete": "Verwijderen",
+    "deleting": "Verwijderen…",
+    "save": "Budget opslaan",
+    "cancel": "Annuleren",
+    "saving": "Opslaan…",
+    "created": "Budget gemaakt",
+    "updated": "Budget bijgewerkt",
+    "archivedSuccess": "Budget gearchiveerd",
+    "backToBudgets": "Terug naar budgetten",
+    "daysRemaining_one": "{count} dag resterend",
+    "daysRemaining_other": "{count} dagen resterend",
+    "ofLimit": "van {amount}",
+    "overBy": "{amount} te veel",
+    "remaining": "{amount} resterend",
+    "projected": "Verwacht {amount}",
+    "progressLabel": "{percentage}% van het budget gebruikt",
+    "paceTick": "{percent}% tot nu toe verwacht",
+    "categoriesScope": "Categorieën: {scope}",
+    "all": "Alle",
+    "selected": "Geselecteerd",
+    "viewDetails": "Details bekijken",
+    "allCategories": "Alle categorieën",
+    "selectedCategories": "Geselecteerde categorieën",
+    "allParticipants": "Alle deelnemers",
+    "selectedParticipants": "Geselecteerde deelnemers",
+    "archived": "Gearchiveerde budgetten",
+    "matchingExpenses": "Overeenkomende uitgaven",
+    "matchingExpensesDescription": "Uitgaven die in de huidige periode bijdragen aan dit budget.",
+    "noMatchingExpenses": "Geen overeenkomende uitgaven in deze periode.",
+    "upcoming": "Aanstaande uitgaven",
+    "upcomingDescription": "Toekomstige uitgaven in deze periode. Status en trend sluiten deze uit zodat u geen onterechte dreigt-te-worden-overschreden-melding krijgt.",
+    "noUpcoming": "Geen toekomstige uitgaven in deze periode.",
+    "upcomingTotal": "Totaal aanstaand: {amount}",
+    "committedSubline": "+ {amount} vastgelegd",
+    "history": "Periodegeschiedenis",
+    "historyDescription": "Eerdere perioden worden opnieuw berekend met de huidige limiet en reikwijdte.",
+    "noHistory": "Nog geen voltooide perioden.",
+    "deleteDescription": "Verwijder dit budget en de meldingsgeschiedenis permanent. Groepsuitgaven worden niet beïnvloed.",
+    "empty": {
+      "title": "Nog geen budgetten",
+      "description": "Maak een gedeeld budget om uitgaven voor de hele groep of geselecteerde deelnemers bij te houden."
+    },
+    "validation": "Vul alle verplichte budgetvelden in.",
+    "form": {
+      "description": "Stel de limiet, periode, categorieën en deelnemers in die dit budget bijhoudt.",
+      "notAllowed": "Alleen groepsbeheerders kunnen budgetten beheren.",
+      "name": "Budgetnaam",
+      "namePlaceholder": "Bijvoorbeeld boodschappen voor het huishouden",
+      "amount": "Bedrag",
+      "period": "Periode",
+      "startDate": "Startdatum",
+      "endDate": "Einddatum",
+      "categories": "Categorieën",
+      "participants": "Deelnemers",
+      "chooseCategories": "Categorieën kiezen",
+      "chooseParticipants": "Deelnemers kiezen",
+      "notifications": "Meldingen",
+      "notifyTrending": "Dreigt te worden overschreden",
+      "notifyTrendingDescription": "Geselecteerde leden waarschuwen wanneer de verwachte uitgaven na 20% van de periode de limiet overschrijden.",
+      "notifyOver": "Budget overschreden",
+      "notifyOverDescription": "Geselecteerde leden waarschuwen wanneer de werkelijke uitgaven de limiet voor het eerst overschrijden.",
+      "periodHint": "Huidige periode: {range}",
+      "categoryScopeHint": "Omvat de bovenliggende categorie en alle subcategorieën.",
+      "participantScopeHint": "Alleen verschuldigde delen van geselecteerde deelnemers tellen mee.",
+      "overlapHint": "Een uitgave kan meetellen voor meerdere budgetten als de bereiken overlappen.",
+      "notificationRecipients": "Meldingen gaan naar accountleden binnen de deelnemersselectie die budgetmeldingen hebben ingeschakeld.",
+      "allSubcategories": "alle subcategorieën"
+    },
+    "period": {
+      "weekly": "Wekelijks",
+      "monthly": "Maandelijks",
+      "yearly": "Jaarlijks",
+      "custom": "Aangepaste periode"
+    },
+    "status": {
+      "over": "Budget overschreden",
+      "trending": "Dreigt te worden overschreden",
+      "onTrack": "Op schema",
+      "archived": "Gearchiveerd",
+      "scheduled": "Gepland",
+      "completed": "Voltooid"
+    },
+    "daysRemaining_zero": "{count} dagen resterend",
+    "daysRemaining_two": "{count} dagen resterend",
+    "daysRemaining_few": "{count} dagen resterend",
+    "daysRemaining_many": "{count} dagen resterend",
+    "unarchivedSuccess": "Budget gedearchiveerd",
+    "notificationsOff": "Geen meldingen ingeschakeld",
+    "createCard": {
+      "title": "Budget aanmaken",
+      "description": "Stel een uitgavenlimiet in en ontvang een melding voordat je te veel uitgeeft."
+    },
+    "chart": {
+      "heading": "Uitgaven tot nu toe",
+      "sectionLabel": "Cumulatieve uitgavengrafiek",
+      "legendSpent": "Uitgegeven",
+      "legendPace": "Op schema",
+      "legendCommitted": "Vastgelegd",
+      "limitLine": "Limiet",
+      "srSummary": "Uitgegeven {spent} van {limit}; vastgelegd {committed}."
+    },
+    "usedTooltip": "{used} van {limit} gebruikt",
+    "paceTooltip": "Verwacht tempo: dag {elapsed} van {total}",
+    "scope": "Bereik",
+    "remove": "Verwijderen",
+    "retry": "Opnieuw proberen",
+    "completedBudgets": "Voltooide budgetten",
+    "completed": "Voltooid",
+    "validationName": "Voeg een budgetnaam toe.",
+    "validationAmount": "Voer een bedrag groter dan nul in.",
+    "validationDates": "Kies geldige begin- en einddatums.",
+    "validationCategories": "Selecteer minstens één categorie.",
+    "validationParticipants": "Selecteer minstens één deelnemer.",
+    "startsIn": "Begint over {count} dagen",
+    "startsToday": "Begint vandaag",
+    "moreExpenses": "Nog {count} uitgaven zijn opgenomen in het totaal.",
+    "moreUpcomingExpenses": "Nog {count} toekomstige uitgaven zijn opgenomen in het toegezegde totaal."
   }
 }

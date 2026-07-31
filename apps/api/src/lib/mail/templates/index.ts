@@ -8,6 +8,11 @@ export {
   renderVerificationEmail,
 } from './auth'
 export {
+  BudgetAlertEmail,
+  renderBudgetAlertEmail,
+  type BudgetAlertInput,
+} from './budget-alert'
+export {
   ExpenseActivityEmail,
   ExpenseCommentEmail,
   ExpenseImportSummaryEmail,

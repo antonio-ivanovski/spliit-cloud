@@ -134,6 +134,10 @@
         "weeklySummary": {
           "title": "সাপ্তাহিক কার্যকলাপ সারসংক্ষেপ",
           "description": "আপনার গ্রুপ জুড়ে কার্যকলাপের একটি সাপ্তাহিক সারসংক্ষেপ।"
+        },
+        "budgetAlert": {
+          "title": "বাজেট সতর্কতা",
+          "description": "যখন কোনো যৌথ গ্রুপ বাজেটের সীমা ছাড়িয়ে যাওয়ার প্রবণতা দেখা দেয় বা সীমা ইতিমধ্যে অতিক্রম করে।"
         }
       },
       "sections": {
@@ -416,7 +420,6 @@
   "Categories": {
     "Entertainment": {
       "heading": "বিনোদন",
-      "Entertainment": "বিনোদন",
       "Games": "গেম",
       "Movies": "সিনেমা",
       "Music": "সঙ্গীত",
@@ -424,14 +427,12 @@
     },
     "Food and Drink": {
       "heading": "খাদ্য ও পানীয়",
-      "Food and Drink": "খাদ্য ও পানীয়",
       "Dining Out": "বাইরে খাওয়া",
       "Groceries": "মুদিখানা",
       "Liquor": "মদ"
     },
     "Home": {
       "heading": "বাসা",
-      "Home": "বাসা",
       "Electronics": "ইলেকট্রনিক্স",
       "Furniture": "আসবাবপত্র",
       "Household Supplies": "গৃহস্থালী জিনিসপত্র",
@@ -453,8 +454,7 @@
       "Taxes": "কর"
     },
     "Personal Care and Wellness": {
-      "heading": "ব্যক্তিগত যত্ন ও সুস্থতা",
-      "Personal Care and Wellness": "ব্যক্তিগত যত্ন ও সুস্থতা"
+      "heading": "ব্যক্তিগত যত্ন ও সুস্থতা"
     },
     "Social and Activities": {
       "heading": "সামাজিক ও কার্যক্রম",
@@ -467,7 +467,6 @@
     },
     "Transportation": {
       "heading": "পরিবহন",
-      "Transportation": "পরিবহন",
       "Bicycle": "সাইকেল",
       "Bus/Train": "বাস/ট্রেন",
       "Car": "গাড়ি",
@@ -486,14 +485,14 @@
     },
     "Utilities": {
       "heading": "ইউটিলিটি",
-      "Utilities": "ইউটিলিটি",
       "Cleaning": "পরিষ্কার",
       "Electricity": "বিদ্যুৎ",
       "Heat/Gas": "তাপ/গ্যাস",
       "Trash": "আবর্জনা",
       "TV/Phone/Internet": "টিভি/ফোন/ইন্টারনেট",
       "Water": "পানি"
-    }
+    },
+    "groupIncludes": "উপবিভাগ অন্তর্ভুক্ত"
   },
   "Common": {
     "close": "বন্ধ করুন",
@@ -2157,5 +2156,131 @@
     "saveError": "আপনার সময় অঞ্চল আপডেট করা যায়নি। আবার চেষ্টা করুন।",
     "keep": "{timeZone} রাখুন",
     "update": "{timeZone}-এ আপডেট করুন"
+  },
+  "Budgets": {
+    "title": "বাজেট",
+    "detailTitle": "বাজেট",
+    "description": "যৌথ সীমার বিপরীতে গ্রুপের খরচ নজরে রাখুন।",
+    "create": "বাজেট তৈরি করুন",
+    "new": "নতুন",
+    "edit": "সম্পাদনা করুন",
+    "archive": "আর্কাইভ করুন",
+    "delete": "মুছুন",
+    "deleting": "মুছে ফেলা হচ্ছে…",
+    "save": "বাজেট সংরক্ষণ করুন",
+    "cancel": "বাতিল করুন",
+    "saving": "সংরক্ষণ করা হচ্ছে…",
+    "created": "বাজেট তৈরি হয়েছে",
+    "updated": "বাজেট আপডেট করা হয়েছে",
+    "archivedSuccess": "বাজেট আর্কাইভ করা হয়েছে",
+    "backToBudgets": "বাজেটে ফিরে যান",
+    "daysRemaining_one": "{count} দিন বাকি",
+    "daysRemaining_other": "{count} দিন বাকি",
+    "ofLimit": "{amount}-এর মধ্যে",
+    "overBy": "{amount} বেশি",
+    "remaining": "{amount} বাকি",
+    "projected": "অনুমানিত {amount}",
+    "progressLabel": "বাজেটের {percentage}% ব্যবহৃত হয়েছে",
+    "paceTick": "এখন পর্যন্ত প্রত্যাশিত {percent}%",
+    "categoriesScope": "বিভাগ: {scope}",
+    "all": "সব",
+    "selected": "নির্বাচিত",
+    "viewDetails": "বিস্তারিত দেখুন",
+    "allCategories": "সব বিভাগ",
+    "selectedCategories": "নির্বাচিত বিভাগ",
+    "allParticipants": "সব অংশগ্রহণকারী",
+    "selectedParticipants": "নির্বাচিত অংশগ্রহণকারী",
+    "archived": "আর্কাইভ করা বাজেট",
+    "matchingExpenses": "প্রযোজ্য খরচ",
+    "matchingExpensesDescription": "বর্তমান সময়কালে এই বাজেটে গণনা করা খরচগুলো।",
+    "noMatchingExpenses": "এই সময়কালে কোনো প্রযোজ্য খরচ নেই।",
+    "upcoming": "আসন্ন খরচ",
+    "upcomingDescription": "এই সময়ের মধ্যে ভবিষ্যতের তারিখের খরচ। স্থিতি এবং প্রবণতা এগুলি বাদ দেয় যাতে আপনি মিথ্যা 'সীমা অতিক্রম করছে' সতর্কতা না পান।",
+    "noUpcoming": "এই সময়ের মধ্যে কোনো ভবিষ্যতের তারিখের খরচ নেই।",
+    "upcomingTotal": "আসন্ন মোট: {amount}",
+    "committedSubline": "+ {amount} প্রতিশ্রুত",
+    "history": "সময়কালের ইতিহাস",
+    "historyDescription": "আগের সময়কালগুলো এই বাজেটের বর্তমান সীমা ও পরিসর দিয়ে পুনরায় গণনা করা হয়েছে।",
+    "noHistory": "এখনো কোনো সময়কাল সম্পূর্ণ হয়নি।",
+    "deleteDescription": "এই বাজেট ও এর সতর্কতার ইতিহাস স্থায়ীভাবে মুছুন। গ্রুপের খরচ এতে প্রভাবিত হবে না।",
+    "empty": {
+      "title": "এখনো কোনো বাজেট নেই",
+      "description": "পুরো গ্রুপ বা নির্বাচিত অংশগ্রহণকারীদের খরচ নজরে রাখতে একটি যৌথ বাজেট তৈরি করুন।"
+    },
+    "validation": "বাজেটের সব আবশ্যিক ক্ষেত্র পূরণ করুন।",
+    "form": {
+      "description": "এই বাজেটের সীমা, সময়কাল, বিভাগ ও অংশগ্রহণকারী নির্ধারণ করুন।",
+      "notAllowed": "শুধুমাত্র গ্রুপ অ্যাডমিনরা বাজেট পরিচালনা করতে পারেন।",
+      "name": "বাজেটের নাম",
+      "namePlaceholder": "যেমন, বাড়ির বাজার",
+      "amount": "পরিমাণ",
+      "period": "সময়কাল",
+      "startDate": "শুরুর তারিখ",
+      "endDate": "শেষের তারিখ",
+      "categories": "বিভাগ",
+      "participants": "অংশগ্রহণকারী",
+      "chooseCategories": "বিভাগ বেছে নিন",
+      "chooseParticipants": "অংশগ্রহণকারী বেছে নিন",
+      "notifications": "বিজ্ঞপ্তি",
+      "notifyTrending": "বাজেট ছাড়ানোর প্রবণতা",
+      "notifyTrendingDescription": "সময়কালের 20% পার হওয়ার পর অনুমানিত খরচ সীমা ছাড়ালে নির্বাচিত সদস্যদের সতর্ক করুন।",
+      "notifyOver": "বাজেটের বেশি",
+      "notifyOverDescription": "প্রকৃত খরচ প্রথমবার সীমা ছাড়ালে নির্বাচিত সদস্যদের সতর্ক করুন।",
+      "periodHint": "বর্তমান সময়কাল: {range}",
+      "categoryScopeHint": "মূল শ্রেণি ও তার সব উপশ্রেণি অন্তর্ভুক্ত হবে।",
+      "participantScopeHint": "শুধু নির্বাচিত অংশগ্রহণকারীদের পাওনা অংশ গণনা হবে।",
+      "overlapHint": "একটি খরচ একাধিক ওভারল্যাপ করা বাজেটে গণনা হতে পারে।",
+      "notificationRecipients": "অংশগ্রহণকারী পরিসরে থাকা এবং বাজেট বিজ্ঞপ্তি চালু করা অ্যাকাউন্ট সদস্যরা সতর্কতা পাবেন।",
+      "allSubcategories": "সব উপশ্রেণি"
+    },
+    "period": {
+      "weekly": "সাপ্তাহিক",
+      "monthly": "মাসিক",
+      "yearly": "বার্ষিক",
+      "custom": "নিজস্ব সময়সীমা"
+    },
+    "status": {
+      "over": "বাজেটের বেশি",
+      "trending": "সীমা ছাড়ানোর প্রবণতা",
+      "onTrack": "লক্ষ্য অনুযায়ী",
+      "archived": "আর্কাইভ করা",
+      "scheduled": "নির্ধারিত",
+      "completed": "সম্পন্ন"
+    },
+    "daysRemaining_zero": "{count} দিন বাকি",
+    "daysRemaining_two": "{count} দিন বাকি",
+    "daysRemaining_few": "{count} দিন বাকি",
+    "daysRemaining_many": "{count} দিন বাকি",
+    "unarchivedSuccess": "বাজেট আর্কাইভ থেকে বের করা হয়েছে",
+    "notificationsOff": "কোনো বিজ্ঞপ্তি সক্রিয় নেই",
+    "createCard": {
+      "title": "বাজেট তৈরি করুন",
+      "description": "একটি খরচের সীমা নির্ধারণ করুন এবং বেশি খরচ করার আগে সতর্কতা পান।"
+    },
+    "chart": {
+      "heading": "এখন পর্যন্ত ব্যয়",
+      "sectionLabel": "ক্রমবর্ধমান ব্যয় চার্ট",
+      "legendSpent": "ব্যয়",
+      "legendPace": "গতি",
+      "legendCommitted": "প্রতিশ্রুত",
+      "limitLine": "সীমা",
+      "srSummary": "{limit} এর মধ্যে {spent} ব্যয় করেছেন; {committed} প্রতিশ্রুত।"
+    },
+    "usedTooltip": "{limit}-এর মধ্যে {used} ব্যবহৃত",
+    "paceTooltip": "প্রত্যাশিত গতি: {total} দিনের মধ্যে {elapsed} দিন",
+    "scope": "পরিসর",
+    "remove": "সরান",
+    "retry": "আবার চেষ্টা করুন",
+    "completedBudgets": "সম্পন্ন বাজেট",
+    "completed": "সম্পন্ন",
+    "validationName": "বাজেটের নাম যোগ করুন।",
+    "validationAmount": "শূন্যের বেশি একটি পরিমাণ দিন।",
+    "validationDates": "সঠিক শুরু ও শেষ তারিখ বেছে নিন।",
+    "validationCategories": "কমপক্ষে একটি শ্রেণি বেছে নিন।",
+    "validationParticipants": "কমপক্ষে একজন অংশগ্রহণকারী বেছে নিন।",
+    "startsIn": "{count} দিনে শুরু হবে",
+    "startsToday": "আজ শুরু হবে",
+    "moreExpenses": "মোটের মধ্যে আরও {count}টি খরচ অন্তর্ভুক্ত আছে।",
+    "moreUpcomingExpenses": "প্রতিশ্রুত মোটের মধ্যে আরও {count}টি আসন্ন খরচ অন্তর্ভুক্ত আছে।"
   }
 }

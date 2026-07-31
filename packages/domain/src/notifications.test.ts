@@ -38,6 +38,7 @@ describe('notification preference domain values', () => {
       NotificationCategory.EXPENSE_COMMENT,
       NotificationCategory.WEEKLY_SUMMARY,
       NotificationCategory.PRODUCT_UPDATES,
+      NotificationCategory.BUDGET_ALERT,
     ])
     expect(() => notificationCategorySchema.parse('GLOBAL')).toThrow()
   })

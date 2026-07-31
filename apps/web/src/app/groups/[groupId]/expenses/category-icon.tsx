@@ -57,6 +57,8 @@ export function CategoryIcon({
 
 function getCategoryIcon(category: string): LucideIcon {
   switch (category) {
+    case 'Uncategorized/Uncategorized':
+      return Banknote
     case 'Uncategorized/General':
       return Banknote
     case 'Uncategorized/Payment':
@@ -97,6 +99,8 @@ function getCategoryIcon(category: string): LucideIcon {
       return PiggyBank
     case 'Home/Services':
       return Wrench
+    case 'Life/Life':
+      return Landmark
     case 'Life/Childcare':
       return Baby
     case 'Life/Clothing':
@@ -145,8 +149,12 @@ function getCategoryIcon(category: string): LucideIcon {
       return Phone
     case 'Utilities/Water':
       return CupSoda
+    case 'Social and Activities/Social and Activities':
+      return FerrisWheel
     case 'Social and Activities/Events and Activities':
       return FerrisWheel
+    case 'Subscriptions and Memberships/Subscriptions and Memberships':
+      return Clapperboard
     case 'Subscriptions and Memberships/Digital Subscriptions':
       return Clapperboard
     case 'Subscriptions and Memberships/Memberships':

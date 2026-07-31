@@ -100,6 +100,7 @@ describe('PushNotificationOnboarding', () => {
           { category: 'RECURRING_EXPENSE_CREATED', channels: ['EMAIL'] },
           { category: 'EXPENSE_CHANGED', channels: ['EMAIL'] },
           { category: 'EXPENSE_COMMENT', channels: ['EMAIL'] },
+          { category: 'BUDGET_ALERT', channels: ['EMAIL'] },
         ],
       })
       expect(
@@ -261,6 +262,7 @@ describe('PushNotificationOnboarding', () => {
           { category: 'RECURRING_EXPENSE_CREATED', channels: ['PUSH'] },
           { category: 'EXPENSE_CHANGED', channels: ['PUSH'] },
           { category: 'EXPENSE_COMMENT', channels: ['PUSH'] },
+          { category: 'BUDGET_ALERT', channels: ['EMAIL', 'PUSH'] },
         ],
       })
     })

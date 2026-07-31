@@ -1,5 +1,6 @@
 import { z } from 'zod'
 
+import { budgetPeriodSchema } from '@spliit/domain'
 import { NotificationSnapshotVersion } from '@spliit/domain/notification-delivery'
 import { notificationCategorySchema } from '@spliit/domain/notifications'
 
@@ -277,6 +278,30 @@ const friendAddedSnapshotSchema = z.object({
   friendName: z.string(),
 })
 
+const budgetAlertSnapshotSchema = z.object({
+  version: snapshotVersionSchema,
+  kind: z.literal('budget_alert'),
+  category: notificationCategorySchema,
+  occurredAt: z.string(),
+  actor: snapshotActorSchema.nullable(),
+  recipient: snapshotRecipientSchema,
+  unsubscribeCategory: notificationCategorySchema.optional(),
+  push: snapshotPushFieldsSchema.optional(),
+  budget: z.object({
+    id: z.string(),
+    name: z.string(),
+    used: z.number().int(),
+    limit: z.number().int(),
+    currencyCode: z.string().nullable(),
+    alertType: z.enum(['TRENDING_OVER', 'OVER']),
+    periodStart: z.string(),
+    periodEnd: z.string(),
+    period: budgetPeriodSchema.optional(),
+  }),
+  group: snapshotGroupSchema,
+  link: z.string(),
+})
+
 export const deliverySnapshotV1Schema = z.discriminatedUnion('kind', [
   expenseCreatedSnapshotSchema,
   expenseUpdatedSnapshotSchema,
@@ -292,6 +317,7 @@ export const deliverySnapshotV1Schema = z.discriminatedUnion('kind', [
   settlementSnapshotSchema,
   invitationSnapshotSchema,
   friendAddedSnapshotSchema,
+  budgetAlertSnapshotSchema,
 ])
 
 export type DeliverySnapshotV1 = z.infer<typeof deliverySnapshotV1Schema>
@@ -311,6 +337,7 @@ export const DELIVERY_SNAPSHOT_KINDS = [
   'settlement',
   'invitation',
   'friend_added',
+  'budget_alert',
 ] as const
 
 export type DeliverySnapshotKind = (typeof DELIVERY_SNAPSHOT_KINDS)[number]

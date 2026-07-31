@@ -90,7 +90,7 @@ describe('notifications.preferences', () => {
     expect(result.systemDefault).toBe('EMAIL_BY_DEFAULT')
     expect(result.hasExplicitPreferences).toBe(false)
     expect(result).not.toHaveProperty('global')
-    expect(result.categories).toHaveLength(8)
+    expect(result.categories).toHaveLength(9)
     expect(result.categories[0].channels).toBeNull()
     expect(result.categories[0].recommendedChannels).toEqual([
       NotificationChannel.EMAIL,

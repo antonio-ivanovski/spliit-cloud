@@ -672,6 +672,10 @@
         "recurringExpense": {
           "title": "Повторлив трошок",
           "description": "Кога во група ќе се создаде закажан повторлив трошок."
+        },
+        "budgetAlert": {
+          "title": "Известувања за буџет",
+          "description": "Кога заедничкиот групен буџет се движи кон надминување или веќе го надминал својот лимит."
         }
       },
       "sections": {
@@ -1325,7 +1329,6 @@
     },
     "Entertainment": {
       "heading": "Забава",
-      "Entertainment": "Забава",
       "Games": "Игри",
       "Movies": "Филмови",
       "Music": "Музика",
@@ -1333,14 +1336,12 @@
     },
     "Food and Drink": {
       "heading": "Храна и пијалаци",
-      "Food and Drink": "Храна и пијалаци",
       "Dining Out": "Јадење надвор",
       "Groceries": "Намирници",
       "Liquor": "Алкохол"
     },
     "Home": {
       "heading": "Дом",
-      "Home": "Дом",
       "Electronics": "Електроника",
       "Furniture": "Мебел",
       "Household Supplies": "Канцелариски материјали",
@@ -1363,7 +1364,6 @@
     },
     "Transportation": {
       "heading": "Транспорт",
-      "Transportation": "Транспорт",
       "Bicycle": "Велосипед",
       "Bus/Train": "Автобус/Воз",
       "Car": "Автомобил",
@@ -1375,7 +1375,6 @@
     },
     "Utilities": {
       "heading": "Комуналии",
-      "Utilities": "Комуналии",
       "Cleaning": "Чистење",
       "Electricity": "Електрична енергија",
       "Heat/Gas": "Греење/Гас",
@@ -1388,14 +1387,14 @@
       "Events and Activities": "Настани и активности"
     },
     "Personal Care and Wellness": {
-      "heading": "Лична нега и благосостојба",
-      "Personal Care and Wellness": "Лична нега и благосостојба"
+      "heading": "Лична нега и благосостојба"
     },
     "Subscriptions and Memberships": {
       "heading": "Претплати и членарини",
       "Digital Subscriptions": "Дигитални претплати",
       "Memberships": "Членарини"
-    }
+    },
+    "groupIncludes": "Вклучува поткатегории"
   },
   "Currencies": {
     "search": "Пребарај валута...",
@@ -2161,5 +2160,129 @@
     "saveError": "Временската зона не може да се ажурира. Обидете се повторно.",
     "keep": "Задржи {timeZone}",
     "update": "Ажурирај на {timeZone}"
+  },
+  "Budgets": {
+    "title": "Буџети",
+    "detailTitle": "Буџет",
+    "description": "Следете ги групните трошоци во однос на заедничките лимити.",
+    "create": "Создај буџет",
+    "new": "Нов",
+    "edit": "Уреди",
+    "archive": "Архивирај",
+    "delete": "Избриши",
+    "deleting": "Бришење…",
+    "save": "Зачувај го буџетот",
+    "cancel": "Откажи",
+    "saving": "Се зачувува…",
+    "created": "Буџетот е создаден",
+    "updated": "Буџетот е ажуриран",
+    "archivedSuccess": "Буџетот е архивиран",
+    "backToBudgets": "Назад кон буџетите",
+    "daysRemaining_one": "Преостанува {count} ден",
+    "daysRemaining_other": "Преостануваат {count} дена",
+    "ofLimit": "од {amount}",
+    "overBy": "{amount} над лимитот",
+    "remaining": "Преостануваат {amount}",
+    "projected": "Проектирано {amount}",
+    "progressLabel": "Искористени се {percentage}% од буџетот",
+    "paceTick": "{percent}% се очекува досега",
+    "categoriesScope": "Категории: {scope}",
+    "all": "Сите",
+    "selected": "Избрани",
+    "viewDetails": "Прикажи детали",
+    "allCategories": "Сите категории",
+    "selectedCategories": "Избрани категории",
+    "allParticipants": "Сите учесници",
+    "selectedParticipants": "Избрани учесници",
+    "archived": "Архивирани буџети",
+    "matchingExpenses": "Соодветни трошоци",
+    "matchingExpensesDescription": "Трошоци што се вбројуваат во овој буџет во тековниот период.",
+    "noMatchingExpenses": "Нема соодветни трошоци во овој период.",
+    "upcoming": "Претстојни трошоци",
+    "upcomingDescription": "Трошоци со иден датум во овој период. Статусот и трендот ги исклучуваат за да не добиете лажно предупредување за очекувано надминување.",
+    "noUpcoming": "Нема трошоци со иден датум во овој период.",
+    "upcomingTotal": "Претстојни вкупно: {amount}",
+    "committedSubline": "+ {amount} резервирано",
+    "history": "Историја на периоди",
+    "historyDescription": "Претходните периоди се пресметуваат повторно со тековниот лимит и опфат.",
+    "noHistory": "Сè уште нема завршени периоди.",
+    "deleteDescription": "Трајно избришете го овој буџет и неговата историја на известувања. Групните трошоци нема да бидат засегнати.",
+    "empty": {
+      "title": "Сè уште нема буџети",
+      "description": "Создајте заеднички буџет за да ги следите трошоците на целата група или на избраните учесници."
+    },
+    "validation": "Пополнете ги сите задолжителни полиња за буџетот.",
+    "form": {
+      "description": "Поставете ги лимитот, периодот, категориите и учесниците што ги следи овој буџет.",
+      "notAllowed": "Само администраторите на групата можат да управуваат со буџети.",
+      "name": "Име на буџетот",
+      "namePlaceholder": "На пример, намирници за домаќинството",
+      "amount": "Износ",
+      "period": "Период",
+      "startDate": "Почетен датум",
+      "endDate": "Краен датум",
+      "categories": "Категории",
+      "participants": "Учесници",
+      "chooseCategories": "Изберете категории",
+      "chooseParticipants": "Изберете учесници",
+      "notifications": "Известувања",
+      "notifyTrending": "Се очекува надминување на буџетот",
+      "notifyTrendingDescription": "Известете ги избраните членови кога проектираните трошоци го надминуваат лимитот по 20% од периодот.",
+      "notifyOver": "Над буџетот",
+      "notifyOverDescription": "Известете ги избраните членови кога реалните трошоци првпат ќе го надминат лимитот.",
+      "periodHint": "Тековен период: {range}",
+      "categoryScopeHint": "Ја вклучува родителската категорија и сите нејзини подкатегории.",
+      "participantScopeHint": "Се бројат само уделите што им ги должат избраните учесници.",
+      "overlapHint": "Трошокот може да се брои во повеќе буџети кога нивните опфати се преклопуваат.",
+      "notificationRecipients": "Известувањата одат до членовите на сметката во опфатот на учесници што имаат овозможени известувања за буџет.",
+      "allSubcategories": "сите подкатегории"
+    },
+    "period": {
+      "weekly": "Неделно",
+      "monthly": "Месечно",
+      "yearly": "Годишно",
+      "custom": "Прилагоден период"
+    },
+    "status": {
+      "over": "Над буџетот",
+      "trending": "Се очекува надминување",
+      "onTrack": "Во рамките на планот",
+      "archived": "Архивирано",
+      "scheduled": "Закажано",
+      "completed": "Завршено"
+    },
+    "daysRemaining_few": "Преостануваат {count} дена",
+    "daysRemaining_many": "Преостануваат {count} дена",
+    "unarchivedSuccess": "Буџетот е вратен од архива",
+    "notificationsOff": "Нема вклучени известувања",
+    "createCard": {
+      "title": "Создај буџет",
+      "description": "Поставете лимит на трошење и добијте известување пред да го надминете."
+    },
+    "chart": {
+      "heading": "Потрошено досега",
+      "sectionLabel": "Кумулативен график на трошоци",
+      "legendSpent": "Потрошено",
+      "legendPace": "Според планот",
+      "legendCommitted": "Резервирано",
+      "limitLine": "Лимит",
+      "srSummary": "Потрошено {spent} од {limit}; резервирано {committed}."
+    },
+    "usedTooltip": "Искористено {used} од {limit}",
+    "paceTooltip": "Очекувано темпо: ден {elapsed} од {total}",
+    "scope": "Опсег",
+    "remove": "Отстрани",
+    "retry": "Обиди се повторно",
+    "completedBudgets": "Завршени буџети",
+    "completed": "Завршено",
+    "validationName": "Додадете име на буџетот.",
+    "validationAmount": "Внесете износ поголем од нула.",
+    "validationDates": "Изберете важечки датум за почеток и крај.",
+    "validationCategories": "Изберете најмалку една категорија.",
+    "validationParticipants": "Изберете најмалку еден учесник.",
+    "startsIn": "Започнува за {count} дена",
+    "startsToday": "Започнува денес",
+    "moreExpenses": "Во вкупниот износ се вклучени уште {count} трошоци.",
+    "moreUpcomingExpenses": "Во обврзаниот вкупен износ се вклучени уште {count} идни трошоци."
   }
 }

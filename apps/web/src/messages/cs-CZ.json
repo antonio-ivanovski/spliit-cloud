@@ -1079,7 +1079,6 @@
     },
     "Entertainment": {
       "heading": "Zábava",
-      "Entertainment": "Zábava",
       "Games": "Hry",
       "Movies": "Filmy",
       "Music": "Hudba",
@@ -1087,14 +1086,12 @@
     },
     "Food and Drink": {
       "heading": "Jídlo a pití",
-      "Food and Drink": "Jídlo a pití",
       "Dining Out": "Restaurace",
       "Groceries": "Potraviny",
       "Liquor": "Alkohol"
     },
     "Home": {
       "heading": "Domov",
-      "Home": "Domov",
       "Electronics": "Elektronika",
       "Furniture": "Nábytek",
       "Household Supplies": "Domácí potřeby",
@@ -1117,7 +1114,6 @@
     },
     "Transportation": {
       "heading": "Doprava",
-      "Transportation": "Doprava",
       "Bicycle": "Kolo",
       "Bus/Train": "Autobus/Vlak",
       "Car": "Auto",
@@ -1129,7 +1125,6 @@
     },
     "Utilities": {
       "heading": "Služby",
-      "Utilities": "Služby",
       "Cleaning": "Úklid",
       "Electricity": "Elektřina",
       "Heat/Gas": "Topení/Plyn",
@@ -1142,14 +1137,14 @@
       "Events and Activities": "Události a aktivity"
     },
     "Personal Care and Wellness": {
-      "heading": "Osobní péče a wellness",
-      "Personal Care and Wellness": "Osobní péče a wellness"
+      "heading": "Osobní péče a wellness"
     },
     "Subscriptions and Memberships": {
       "heading": "Předplatné a členství",
       "Digital Subscriptions": "Digitální předplatné",
       "Memberships": "Členství"
-    }
+    },
+    "groupIncludes": "Zahrnuje podkategorie"
   },
   "Auth": {
     "title": "Přihlásit se do Spliit Cloud",
@@ -1728,6 +1723,10 @@
         "recurringExpense": {
           "title": "Opakovaný výdaj",
           "description": "Když je ve skupině vytvořen naplánovaný opakovaný výdaj."
+        },
+        "budgetAlert": {
+          "title": "Upozornění na rozpočet",
+          "description": "Když sdílený skupinový rozpočet směřuje k překročení nebo již překročil svůj limit."
         }
       },
       "sections": {
@@ -2197,5 +2196,129 @@
     "saveError": "Časové pásmo se nepodařilo aktualizovat. Zkuste to znovu.",
     "keep": "Ponechat {timeZone}",
     "update": "Aktualizovat na {timeZone}"
+  },
+  "Budgets": {
+    "title": "Rozpočty",
+    "detailTitle": "Rozpočet",
+    "description": "Sledujte skupinové výdaje vůči sdíleným limitům.",
+    "create": "Vytvořit rozpočet",
+    "new": "Nový",
+    "edit": "Upravit",
+    "archive": "Archivovat",
+    "delete": "Smazat",
+    "deleting": "Odstraňování…",
+    "save": "Uložit rozpočet",
+    "cancel": "Zrušit",
+    "saving": "Ukládání…",
+    "created": "Rozpočet byl vytvořen",
+    "updated": "Rozpočet byl aktualizován",
+    "archivedSuccess": "Rozpočet byl archivován",
+    "backToBudgets": "Zpět na rozpočty",
+    "daysRemaining_one": "Zbývá {count} den",
+    "daysRemaining_other": "Zbývá {count} dní",
+    "ofLimit": "z {amount}",
+    "overBy": "o {amount} více",
+    "remaining": "Zbývá {amount}",
+    "projected": "Předpoklad {amount}",
+    "progressLabel": "Využito {percentage} % rozpočtu",
+    "paceTick": "{percent}% očekáváno do teď",
+    "categoriesScope": "Kategorie: {scope}",
+    "all": "Vše",
+    "selected": "Vybrané",
+    "viewDetails": "Zobrazit podrobnosti",
+    "allCategories": "Všechny kategorie",
+    "selectedCategories": "Vybrané kategorie",
+    "allParticipants": "Všichni účastníci",
+    "selectedParticipants": "Vybraní účastníci",
+    "archived": "Archivované rozpočty",
+    "matchingExpenses": "Odpovídající výdaje",
+    "matchingExpensesDescription": "Výdaje, které se v aktuálním období započítávají do tohoto rozpočtu.",
+    "noMatchingExpenses": "V tomto období nejsou žádné odpovídající výdaje.",
+    "upcoming": "Nadcházející výdaje",
+    "upcomingDescription": "Výdaje s budoucím datem v tomto období. Stav a trend je nezahrnují, abyste nedostali falešné upozornění na hrozící překročení.",
+    "noUpcoming": "Žádné výdaje s budoucím datem v tomto období.",
+    "upcomingTotal": "Nadcházející celkem: {amount}",
+    "committedSubline": "+ {amount} rezervováno",
+    "history": "Historie období",
+    "historyDescription": "Předchozí období se přepočítávají podle aktuálního limitu a rozsahu rozpočtu.",
+    "noHistory": "Zatím žádná dokončená období.",
+    "deleteDescription": "Trvale smaže tento rozpočet a jeho historii upozornění. Výdaje skupiny nebudou ovlivněny.",
+    "empty": {
+      "title": "Zatím žádné rozpočty",
+      "description": "Vytvořte sdílený rozpočet a sledujte výdaje celé skupiny nebo vybraných účastníků."
+    },
+    "validation": "Vyplňte všechna povinná pole rozpočtu.",
+    "form": {
+      "description": "Nastavte limit, období, kategorie a účastníky, které tento rozpočet sleduje.",
+      "notAllowed": "Pouze správci skupiny mohou spravovat rozpočty.",
+      "name": "Název rozpočtu",
+      "namePlaceholder": "Například potraviny do domácnosti",
+      "amount": "Částka",
+      "period": "Období",
+      "startDate": "Datum zahájení",
+      "endDate": "Datum ukončení",
+      "categories": "Kategorie",
+      "participants": "Účastníci",
+      "chooseCategories": "Vyberte kategorie",
+      "chooseParticipants": "Vyberte účastníky",
+      "notifications": "Upozornění",
+      "notifyTrending": "Hrozící překročení rozpočtu",
+      "notifyTrendingDescription": "Upozornit vybrané členy, když předpokládané výdaje po uplynutí 20 % období překročí limit.",
+      "notifyOver": "Překročení rozpočtu",
+      "notifyOverDescription": "Upozornit vybrané členy, když skutečné výdaje poprvé překročí limit.",
+      "periodHint": "Aktuální období: {range}",
+      "categoryScopeHint": "Zahrnuje nadřazenou kategorii a všechny její podkategorie.",
+      "participantScopeHint": "Počítají se pouze podíly dlužné vybranými účastníky.",
+      "overlapHint": "Výdaj může být započítán do více rozpočtů s překrývajícím se rozsahem.",
+      "notificationRecipients": "Upozornění dostanou členové účtu zahrnutí do rozsahu účastníků, kteří mají upozornění rozpočtu zapnutá.",
+      "allSubcategories": "všechny podkategorie"
+    },
+    "period": {
+      "weekly": "Týdně",
+      "monthly": "Měsíčně",
+      "yearly": "Ročně",
+      "custom": "Vlastní období"
+    },
+    "status": {
+      "over": "Překročený rozpočet",
+      "trending": "Hrozí překročení",
+      "onTrack": "V limitu",
+      "archived": "Archivováno",
+      "scheduled": "Naplánováno",
+      "completed": "Dokončeno"
+    },
+    "daysRemaining_few": "Zbývají {count} dny",
+    "daysRemaining_many": "Zbývá {count} dní",
+    "unarchivedSuccess": "Rozpočet byl obnoven z archivu",
+    "notificationsOff": "Žádná upozornění nejsou zapnuta",
+    "createCard": {
+      "title": "Vytvořit rozpočet",
+      "description": "Nastavte si limit výdajů a nechte se upozornit, než ho překročíte."
+    },
+    "chart": {
+      "heading": "Dosud utraceno",
+      "sectionLabel": "Kumulativní graf výdajů",
+      "legendSpent": "Utráceno",
+      "legendPace": "Podle plánu",
+      "legendCommitted": "Rezervováno",
+      "limitLine": "Limita",
+      "srSummary": "Utráceno {spent} z {limit}; rezervováno {committed}."
+    },
+    "usedTooltip": "Použito {used} z {limit}",
+    "paceTooltip": "Očekávané tempo: den {elapsed} z {total}",
+    "scope": "Rozsah",
+    "remove": "Odebrat",
+    "retry": "Zkusit znovu",
+    "completedBudgets": "Dokončené rozpočty",
+    "completed": "Dokončeno",
+    "validationName": "Přidejte název rozpočtu.",
+    "validationAmount": "Zadejte částku větší než nula.",
+    "validationDates": "Vyberte platné datum začátku a konce.",
+    "validationCategories": "Vyberte alespoň jednu kategorii.",
+    "validationParticipants": "Vyberte alespoň jednoho účastníka.",
+    "startsIn": "Začíná za {count} dní",
+    "startsToday": "Začíná dnes",
+    "moreExpenses": "Do celkové částky je zahrnuto dalších {count} výdajů.",
+    "moreUpcomingExpenses": "Do závazné částky je zahrnuto dalších {count} budoucích výdajů."
   }
 }

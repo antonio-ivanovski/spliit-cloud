@@ -4,7 +4,8 @@ import { z } from 'zod'
 import { GroupRole, GroupType } from '@spliit/db'
 import { expenseApiSchema, groupFormSchema } from '@spliit/domain'
 
-import { importGroup } from '../../../lib/api'
+import { importGroup } from '../../../lib/api/import'
+import { enqueueBudgetEvaluation } from '../../../lib/budgets/enqueue'
 import { ConversionError } from '../../../lib/expense-conversion'
 import { loadGroupContext, protectedProcedure } from '../../init'
 import { importGroupOutputSchema } from '../../outputs/imports'
@@ -19,7 +20,7 @@ const importParticipantMappingSchema = z.discriminatedUnion('mode', [
   z.object({
     mode: z.literal('INVITE_BY_EMAIL'),
     sourceName: z.string().min(1),
-    email: z.string().email(),
+    email: z.email(),
     destLedgerParticipantId: z.string().min(1),
   }),
   z.object({
@@ -40,7 +41,7 @@ const importParticipantMappingSchema = z.discriminatedUnion('mode', [
   z.object({
     mode: z.literal('INVITE_CONTACT'),
     sourceName: z.string().min(1),
-    email: z.string().email(),
+    email: z.email(),
     destLedgerParticipantId: z.string().min(1),
   }),
 ])
@@ -48,7 +49,7 @@ const importParticipantMappingSchema = z.discriminatedUnion('mode', [
 const importSourceMetaSchema = z.object({
   provider: z.string().min(1),
   sourceGroupId: z.string().min(1),
-  sourceUrl: z.string().url().optional(),
+  sourceUrl: z.url().optional(),
 })
 
 /**
@@ -128,6 +129,8 @@ export const importGroupProcedure = protectedProcedure
       const result = await importGroup(input as never, {
         accountId: ctx.auth.user.id,
       })
+      if (result.importedExpenses > 0)
+        await enqueueBudgetEvaluation(result.groupId)
       return result
     } catch (err) {
       if (err instanceof ConversionError) {

@@ -1071,7 +1071,6 @@
     },
     "Entertainment": {
       "heading": "בידור",
-      "Entertainment": "בידור",
       "Games": "משחקים",
       "Movies": "סרטים",
       "Music": "מוזיקה",
@@ -1079,14 +1078,12 @@
     },
     "Food and Drink": {
       "heading": "אוכל ומשקאות",
-      "Food and Drink": "אוכל ומשקאות",
       "Dining Out": "אכילה בחוץ",
       "Groceries": "מצרכים",
       "Liquor": "משקאות חריפים"
     },
     "Home": {
       "heading": "בית",
-      "Home": "בית",
       "Electronics": "אלקטרוניקה",
       "Furniture": "ריהוט",
       "Household Supplies": "ציוד ביתי",
@@ -1109,7 +1106,6 @@
     },
     "Transportation": {
       "heading": "תחבורה",
-      "Transportation": "תחבורה",
       "Bicycle": "אופניים",
       "Bus/Train": "אוטובוס/רכבת",
       "Car": "רכב",
@@ -1121,7 +1117,6 @@
     },
     "Utilities": {
       "heading": "שירותים",
-      "Utilities": "שירותים",
       "Cleaning": "ניקיון",
       "Electricity": "חשמל",
       "Heat/Gas": "חימום/גז",
@@ -1134,14 +1129,14 @@
       "Events and Activities": "אירועים ופעילויות"
     },
     "Personal Care and Wellness": {
-      "heading": "טיפוח אישי ובריאות",
-      "Personal Care and Wellness": "טיפוח אישי ובריאות"
+      "heading": "טיפוח אישי ובריאות"
     },
     "Subscriptions and Memberships": {
       "heading": "מינויים וחברויות",
       "Digital Subscriptions": "מינויים דיגיטליים",
       "Memberships": "חברויות"
-    }
+    },
+    "groupIncludes": "כולל קטגוריות משנה"
   },
   "Currencies": {
     "search": "חפש מטבע...",
@@ -1719,6 +1714,10 @@
         "recurringExpense": {
           "title": "הוצאה חוזרת",
           "description": "כאשר נוצרת הוצאה חוזרת מתוזמנת בקבוצה."
+        },
+        "budgetAlert": {
+          "title": "התראות תקציב",
+          "description": "כאשר תקציב משותף של הקבוצה צפוי לחרוג או כבר חרג מהמגבלה שלו."
         }
       },
       "sections": {
@@ -2179,5 +2178,131 @@
     "saveError": "לא ניתן לעדכן את אזור הזמן. נסו שוב.",
     "keep": "להשאיר את {timeZone}",
     "update": "לעדכן ל־{timeZone}"
+  },
+  "Budgets": {
+    "title": "תקציבים",
+    "detailTitle": "תקציב",
+    "description": "מעקב אחר הוצאות הקבוצה ביחס למגבלות משותפות.",
+    "create": "יצירת תקציב",
+    "new": "חדש",
+    "edit": "עריכה",
+    "archive": "העברה לארכיון",
+    "delete": "מחיקה",
+    "deleting": "מוחק…",
+    "save": "שמירת התקציב",
+    "cancel": "ביטול",
+    "saving": "שומר…",
+    "created": "התקציב נוצר",
+    "updated": "התקציב עודכן",
+    "archivedSuccess": "התקציב הועבר לארכיון",
+    "backToBudgets": "חזרה לתקציבים",
+    "daysRemaining_one": "נותר {count} יום",
+    "daysRemaining_other": "נותרו {count} ימים",
+    "ofLimit": "מתוך {amount}",
+    "overBy": "חריגה של {amount}",
+    "remaining": "נותרו {amount}",
+    "projected": "תחזית: {amount}",
+    "progressLabel": "נוצלו {percentage}% מהתקציב",
+    "paceTick": "{percent}% צפוי עד כאן",
+    "categoriesScope": "קטגוריות: {scope}",
+    "all": "הכול",
+    "selected": "נבחר",
+    "viewDetails": "הצגת פרטים",
+    "allCategories": "כל הקטגוריות",
+    "selectedCategories": "קטגוריות שנבחרו",
+    "allParticipants": "כל המשתתפים",
+    "selectedParticipants": "משתתפים שנבחרו",
+    "archived": "תקציבים בארכיון",
+    "matchingExpenses": "הוצאות תואמות",
+    "matchingExpensesDescription": "הוצאות שנכללות בתקציב הזה בתקופה הנוכחית.",
+    "noMatchingExpenses": "אין הוצאות תואמות בתקופה הזו.",
+    "upcoming": "הוצאות עתידיות",
+    "upcomingDescription": "הוצאות עתידיות בתקופה זו. הסטטוס והמגמה לא כוללים אותן כדי למנוע התראת שווא של חריגה צפויה.",
+    "noUpcoming": "אין הוצאות עתידיות בתקופה זו.",
+    "upcomingTotal": "סה\"כ עתידי: {amount}",
+    "committedSubline": "+ {amount} התחייבויות",
+    "history": "היסטוריית תקופות",
+    "historyDescription": "התקופות הקודמות מחושבות מחדש לפי המגבלה והטווח הנוכחיים של התקציב.",
+    "noHistory": "אין עדיין תקופות שהושלמו.",
+    "deleteDescription": "מחיקה לצמיתות של התקציב והיסטוריית ההתראות שלו. הוצאות הקבוצה לא יושפעו.",
+    "daysRemaining_zero": "נותרו {count} ימים",
+    "daysRemaining_two": "נותרו {count} ימים",
+    "daysRemaining_few": "נותרו {count} ימים",
+    "daysRemaining_many": "נותרו {count} ימים",
+    "empty": {
+      "title": "אין עדיין תקציבים",
+      "description": "צרו תקציב משותף כדי לעקוב אחר ההוצאות של כל הקבוצה או של משתתפים נבחרים."
+    },
+    "validation": "יש למלא את כל שדות החובה של התקציב.",
+    "form": {
+      "description": "הגדירו את המגבלה, התקופה, הקטגוריות והמשתתפים שהתקציב עוקב אחריהם.",
+      "notAllowed": "רק מנהלי קבוצה יכולים לנהל תקציבים.",
+      "name": "שם התקציב",
+      "namePlaceholder": "לדוגמה, קניות לבית",
+      "amount": "סכום",
+      "period": "תקופה",
+      "startDate": "תאריך התחלה",
+      "endDate": "תאריך סיום",
+      "categories": "קטגוריות",
+      "participants": "משתתפים",
+      "chooseCategories": "בחירת קטגוריות",
+      "chooseParticipants": "בחירת משתתפים",
+      "notifications": "התראות",
+      "notifyTrending": "חריגה צפויה מהתקציב",
+      "notifyTrendingDescription": "שלחו התראה לחברים שנבחרו כשההוצאות הצפויות חורגות מהמגבלה לאחר שעברו 20% מהתקופה.",
+      "notifyOver": "חריגה מהתקציב",
+      "notifyOverDescription": "שלחו התראה לחברים שנבחרו כשההוצאות בפועל חורגות מהמגבלה בפעם הראשונה.",
+      "periodHint": "התקופה הנוכחית: {range}",
+      "categoryScopeHint": "כולל את קטגוריית האב ואת כל קטגוריות המשנה שלה.",
+      "participantScopeHint": "רק החלקים שעל המשתתפים שנבחרו לשלם נספרים.",
+      "overlapHint": "הוצאה יכולה להיכלל ביותר מתקציב אחד כאשר הטווחים חופפים.",
+      "notificationRecipients": "התראות נשלחות לחברי חשבון הכלולים בטווח המשתתפים ושאפשרו התראות תקציב.",
+      "allSubcategories": "כל קטגוריות המשנה"
+    },
+    "period": {
+      "weekly": "שבועי",
+      "monthly": "חודשי",
+      "yearly": "שנתי",
+      "custom": "טווח מותאם אישית"
+    },
+    "status": {
+      "over": "חריגה מהתקציב",
+      "trending": "חריגה צפויה",
+      "onTrack": "במסלול",
+      "archived": "בארכיון",
+      "scheduled": "מתוזמן",
+      "completed": "הושלם"
+    },
+    "unarchivedSuccess": "התקציב הוצא מהארכיון",
+    "notificationsOff": "לא הופעלו התראות",
+    "createCard": {
+      "title": "צור תקציב",
+      "description": "קבע מגבלת הוצאות וקבל התראה לפני שתחרוג."
+    },
+    "chart": {
+      "heading": "הוצאות עד כה",
+      "sectionLabel": "תרשים הוצאות מצטבר",
+      "legendSpent": "הוצאה",
+      "legendPace": "בקצב צפוי",
+      "legendCommitted": "התחייבויות",
+      "limitLine": "מגבלה",
+      "srSummary": "הוצאה {spent} מתוך {limit}; התחייבויות {committed}."
+    },
+    "usedTooltip": "נוצל {used} מתוך {limit}",
+    "paceTooltip": "קצב צפוי: יום {elapsed} מתוך {total}",
+    "scope": "היקף",
+    "remove": "הסר",
+    "retry": "נסה שוב",
+    "completedBudgets": "תקציבים שהושלמו",
+    "completed": "הושלם",
+    "validationName": "הוסף שם לתקציב.",
+    "validationAmount": "הזן סכום גדול מאפס.",
+    "validationDates": "בחר תאריכי התחלה וסיום תקינים.",
+    "validationCategories": "בחר לפחות קטגוריה אחת.",
+    "validationParticipants": "בחר לפחות משתתף אחד.",
+    "startsIn": "מתחיל בעוד {count} ימים",
+    "startsToday": "מתחיל היום",
+    "moreExpenses": "עוד {count} הוצאות נכללות בסכום הכולל.",
+    "moreUpcomingExpenses": "עוד {count} הוצאות עתידיות נכללות בסכום המחויב."
   }
 }

@@ -23,8 +23,8 @@ import { useMediaQuery } from '@/lib/hooks'
 import { cn } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
 import {
-  CATEGORY_IDS,
   DEFAULT_CATEGORIES,
+  toggleCategorySelection,
   type CategoryId,
 } from '@spliit/domain'
 
@@ -213,9 +213,9 @@ export function ExpenseFiltersContent({
     label: p.name,
   }))
 
-  const categoryOptions = CATEGORY_IDS.map((id) => ({
-    value: id,
-    label: categoryLabel(tCategories, id),
+  const categoryOptions = DEFAULT_CATEGORIES.map((category) => ({
+    value: category.id,
+    label: categoryLabel(tCategories, category.id),
   }))
 
   const currencyOptions = (commonCurrencies?.currencies ?? []).map((code) => ({
@@ -256,7 +256,12 @@ export function ExpenseFiltersContent({
           }}
           selectedValues={draft.categories as CategoryId[]}
           onValueToggle={(id) =>
-            updateDraft({ categories: toggleArrayMember(draft.categories, id) })
+            updateDraft({
+              categories: toggleCategorySelection(
+                draft.categories as CategoryId[],
+                id,
+              ),
+            })
           }
           multiPlaceholder={t('allCategories')}
           mobileTitle={t('category')}
@@ -265,7 +270,12 @@ export function ExpenseFiltersContent({
           options={categoryOptions}
           selected={draft.categories}
           onToggle={(id) =>
-            updateDraft({ categories: toggleArrayMember(draft.categories, id) })
+            updateDraft({
+              categories: toggleCategorySelection(
+                draft.categories as CategoryId[],
+                id as CategoryId,
+              ),
+            })
           }
         />
       </FilterRow>

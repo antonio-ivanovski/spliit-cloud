@@ -94,6 +94,7 @@ export function GroupTabs({ groupId }: Props) {
               {t('Information.title')}
             </TabsTrigger>
             <TabsTrigger value="stats">{t('Stats.title')}</TabsTrigger>
+            <TabsTrigger value="budgets">{t('Budgets.title')}</TabsTrigger>
             <TabsTrigger value="activity">{t('Activity.title')}</TabsTrigger>
             {!isFriendLedger && (
               <TabsTrigger value="members" className="flex items-center gap-2">

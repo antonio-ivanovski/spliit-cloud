@@ -2,6 +2,7 @@ import {
   materializeRecurringExpense,
   reconcileDueRecurringExpenses,
 } from '@spliit/api/lib/api/recurrence-series'
+import { evaluateBudgets } from '@spliit/api/lib/budgets/evaluate'
 import { runNotificationCleanup } from '@spliit/api/lib/notifications/delivery-cleanup'
 import { reconcileMissingDeliveryJobs } from '@spliit/api/lib/notifications/delivery-reconciliation'
 import { JOB_NAMES, sendJob, type JobHandlers } from '@spliit/jobs'
@@ -42,6 +43,15 @@ export const handlers: JobHandlers = {
         component: 'notification-cleanup',
         sentDeleted: result.sentDeleted,
         failedDeleted: result.failedDeleted,
+      }),
+    )
+  },
+  [JOB_NAMES.EVALUATE_BUDGETS]: async (payload, context) => {
+    const results = await evaluateBudgets(payload.groupId, context.boss)
+    console.log(
+      JSON.stringify({
+        component: 'budget-evaluation',
+        evaluated: results.length,
       }),
     )
   },

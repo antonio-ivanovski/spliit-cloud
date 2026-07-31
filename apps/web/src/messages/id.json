@@ -1239,7 +1239,6 @@
     },
     "Entertainment": {
       "heading": "Hiburan",
-      "Entertainment": "Hiburan",
       "Games": "Game",
       "Movies": "Film",
       "Music": "Musik",
@@ -1247,14 +1246,12 @@
     },
     "Food and Drink": {
       "heading": "Makanan dan Minuman",
-      "Food and Drink": "Makanan dan Minuman",
       "Dining Out": "Makan luar",
       "Groceries": "Belanja",
       "Liquor": "Minuman Keras"
     },
     "Home": {
       "heading": "Rumah",
-      "Home": "Rumah",
       "Electronics": "Elektronik",
       "Furniture": "Furnitur",
       "Household Supplies": "Kebutuhan rumah",
@@ -1277,7 +1274,6 @@
     },
     "Transportation": {
       "heading": "Transportasi",
-      "Transportation": "Transpotrasi",
       "Bicycle": "Sepeda",
       "Bus/Train": "Bis/Kereta",
       "Car": "Mobil",
@@ -1289,7 +1285,6 @@
     },
     "Utilities": {
       "heading": "Utilitas",
-      "Utilities": "Utilitas",
       "Cleaning": "Kebersihan",
       "Electricity": "Listrik",
       "Heat/Gas": "Gas",
@@ -1302,14 +1297,14 @@
       "Events and Activities": "Acara dan Aktivitas"
     },
     "Personal Care and Wellness": {
-      "heading": "Perawatan Pribadi dan Kebugaran",
-      "Personal Care and Wellness": "Perawatan Pribadi dan Kebugaran"
+      "heading": "Perawatan Pribadi dan Kebugaran"
     },
     "Subscriptions and Memberships": {
       "heading": "Langganan dan Keanggotaan",
       "Digital Subscriptions": "Langganan digital",
       "Memberships": "Keanggotaan"
-    }
+    },
+    "groupIncludes": "Termasuk subkategori"
   },
   "Auth": {
     "title": "Masuk ke Spliit Cloud",
@@ -1703,6 +1698,10 @@
         "recurringExpense": {
           "title": "Pengeluaran berulang",
           "description": "Saat pengeluaran berulang terjadwal dibuat dalam grup."
+        },
+        "budgetAlert": {
+          "title": "Peringatan anggaran",
+          "description": "Saat anggaran bersama grup diproyeksikan akan melebihi atau telah melampaui batasnya."
         }
       },
       "sections": {
@@ -2145,5 +2144,131 @@
     "saveError": "Zona waktu Anda tidak dapat diperbarui. Coba lagi.",
     "keep": "Pertahankan {timeZone}",
     "update": "Perbarui ke {timeZone}"
+  },
+  "Budgets": {
+    "title": "Anggaran",
+    "detailTitle": "Anggaran",
+    "description": "Pantau pengeluaran grup terhadap batas bersama.",
+    "create": "Buat anggaran",
+    "new": "Baru",
+    "edit": "Ubah",
+    "archive": "Arsipkan",
+    "delete": "Hapus",
+    "deleting": "Menghapus…",
+    "save": "Simpan anggaran",
+    "cancel": "Batal",
+    "saving": "Menyimpan…",
+    "created": "Anggaran dibuat",
+    "updated": "Anggaran diperbarui",
+    "archivedSuccess": "Anggaran diarsipkan",
+    "backToBudgets": "Kembali ke anggaran",
+    "daysRemaining_one": "{count} hari tersisa",
+    "daysRemaining_other": "{count} hari tersisa",
+    "ofLimit": "dari {amount}",
+    "overBy": "melebihi {amount}",
+    "remaining": "tersisa {amount}",
+    "projected": "Proyeksi {amount}",
+    "progressLabel": "{percentage}% anggaran telah digunakan",
+    "paceTick": "{percent}% diharapkan saat ini",
+    "categoriesScope": "Kategori: {scope}",
+    "all": "Semua",
+    "selected": "Dipilih",
+    "viewDetails": "Lihat detail",
+    "allCategories": "Semua kategori",
+    "selectedCategories": "Kategori yang dipilih",
+    "allParticipants": "Semua peserta",
+    "selectedParticipants": "Peserta yang dipilih",
+    "archived": "Anggaran yang diarsipkan",
+    "matchingExpenses": "Pengeluaran yang sesuai",
+    "matchingExpensesDescription": "Pengeluaran yang diperhitungkan dalam anggaran ini pada periode berjalan.",
+    "noMatchingExpenses": "Tidak ada pengeluaran yang sesuai pada periode ini.",
+    "upcoming": "Pengeluaran mendatang",
+    "upcomingDescription": "Pengeluaran dengan tanggal di masa depan dalam periode ini. Status dan tren tidak menyertakannya sehingga Anda tidak mendapat peringatan melebihi tren yang palsu.",
+    "noUpcoming": "Tidak ada pengeluaran mendatang dalam periode ini.",
+    "upcomingTotal": "Total mendatang: {amount}",
+    "committedSubline": "+ {amount} komitmen",
+    "history": "Riwayat periode",
+    "historyDescription": "Periode sebelumnya dihitung ulang dengan batas dan cakupan anggaran saat ini.",
+    "noHistory": "Belum ada periode yang selesai.",
+    "deleteDescription": "Hapus anggaran ini beserta riwayat peringatannya secara permanen. Pengeluaran grup tidak akan terpengaruh.",
+    "daysRemaining_zero": "{count} hari tersisa",
+    "daysRemaining_two": "{count} hari tersisa",
+    "daysRemaining_few": "{count} hari tersisa",
+    "daysRemaining_many": "{count} hari tersisa",
+    "empty": {
+      "title": "Belum ada anggaran",
+      "description": "Buat anggaran bersama untuk memantau pengeluaran seluruh grup atau peserta yang dipilih."
+    },
+    "validation": "Lengkapi semua kolom anggaran yang wajib diisi.",
+    "form": {
+      "description": "Atur batas, periode, kategori, dan peserta yang dipantau oleh anggaran ini.",
+      "notAllowed": "Hanya admin grup yang dapat mengelola anggaran.",
+      "name": "Nama anggaran",
+      "namePlaceholder": "Misalnya, belanja kebutuhan rumah tangga",
+      "amount": "Jumlah",
+      "period": "Periode",
+      "startDate": "Tanggal mulai",
+      "endDate": "Tanggal akhir",
+      "categories": "Kategori",
+      "participants": "Peserta",
+      "chooseCategories": "Pilih kategori",
+      "chooseParticipants": "Pilih peserta",
+      "notifications": "Notifikasi",
+      "notifyTrending": "Diproyeksikan melebihi anggaran",
+      "notifyTrendingDescription": "Beri tahu anggota yang dipilih saat proyeksi pengeluaran melebihi batas setelah 20% periode berjalan.",
+      "notifyOver": "Melebihi anggaran",
+      "notifyOverDescription": "Beri tahu anggota yang dipilih saat pengeluaran aktual pertama kali melebihi batas.",
+      "periodHint": "Periode saat ini: {range}",
+      "categoryScopeHint": "Mencakup kategori induk dan semua subkategorinya.",
+      "participantScopeHint": "Hanya bagian yang harus dibayar peserta terpilih yang dihitung.",
+      "overlapHint": "Pengeluaran dapat dihitung dalam beberapa anggaran jika cakupannya tumpang tindih.",
+      "notificationRecipients": "Peringatan dikirim kepada anggota akun dalam cakupan peserta yang mengaktifkan notifikasi anggaran.",
+      "allSubcategories": "semua subkategori"
+    },
+    "period": {
+      "weekly": "Mingguan",
+      "monthly": "Bulanan",
+      "yearly": "Tahunan",
+      "custom": "Rentang khusus"
+    },
+    "status": {
+      "over": "Melebihi anggaran",
+      "trending": "Diproyeksikan melebihi",
+      "onTrack": "Sesuai rencana",
+      "archived": "Diarsipkan",
+      "scheduled": "Dijadwalkan",
+      "completed": "Selesai"
+    },
+    "unarchivedSuccess": "Anggaran dipulihkan",
+    "notificationsOff": "Tidak ada notifikasi yang diaktifkan",
+    "createCard": {
+      "title": "Buat anggaran",
+      "description": "Tetapkan batas pengeluaran dan dapatkan peringatan sebelum Anda melebihi batas."
+    },
+    "chart": {
+      "heading": "Pengeluaran sejauh ini",
+      "sectionLabel": "Grafik pengeluaran kumulatif",
+      "legendSpent": "Terpakai",
+      "legendPace": "Laju",
+      "legendCommitted": "Komitmen",
+      "limitLine": "Batas",
+      "srSummary": "Terpakai {spent} dari {limit}; komitmen {committed}."
+    },
+    "usedTooltip": "Terpakai {used} dari {limit}",
+    "paceTooltip": "Laju diharapkan: hari {elapsed} dari {total}",
+    "scope": "Cakupan",
+    "remove": "Hapus",
+    "retry": "Coba lagi",
+    "completedBudgets": "Anggaran selesai",
+    "completed": "Selesai",
+    "validationName": "Tambahkan nama anggaran.",
+    "validationAmount": "Masukkan jumlah lebih dari nol.",
+    "validationDates": "Pilih tanggal mulai dan selesai yang valid.",
+    "validationCategories": "Pilih setidaknya satu kategori.",
+    "validationParticipants": "Pilih setidaknya satu peserta.",
+    "startsIn": "Dimulai dalam {count} hari",
+    "startsToday": "Dimulai hari ini",
+    "moreExpenses": "{count} pengeluaran tambahan termasuk dalam total.",
+    "moreUpcomingExpenses": "{count} pengeluaran mendatang tambahan termasuk dalam total yang dikomitmenkan."
   }
 }

@@ -3,7 +3,8 @@ import { z } from 'zod'
 
 import { expenseApiSchema } from '@spliit/domain'
 
-import { createExpense } from '../../../../lib/api'
+import { createExpense } from '../../../../lib/api/expenses/create-expense'
+import { enqueueBudgetEvaluation } from '../../../../lib/budgets/enqueue'
 import { ConversionError } from '../../../../lib/expense-conversion'
 import { loadGroupContext, protectedProcedure } from '../../../init'
 import { createExpenseOutputSchema } from '../../../outputs/expenses'
@@ -32,6 +33,7 @@ export const createGroupExpenseProcedure = protectedProcedure
       const created = await createExpense(expense, groupId, {
         accountId: account.id,
       })
+      await enqueueBudgetEvaluation(groupId)
       return {
         expenseId: created.id,
         // Surface the series id so the web client can poll progress when

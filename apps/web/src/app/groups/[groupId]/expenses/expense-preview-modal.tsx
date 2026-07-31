@@ -1,5 +1,5 @@
 import { useNavigate } from '@tanstack/react-router'
-import { FileInput, Pencil } from 'lucide-react'
+import { FileInput } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -14,6 +14,7 @@ import {
 import { ExpenseSplitBars } from '@/app/groups/[groupId]/expenses/expense-split-bars'
 import { categoryLabel } from '@/app/groups/[groupId]/stats/category-utils'
 import { DeletePopup } from '@/components/delete-popup'
+import { EditButton } from '@/components/edit-button'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -535,14 +536,7 @@ export function ExpensePreviewModal({
                 {t('makeCopy')}
               </Button>
               {!series && (
-                <Button
-                  type="button"
-                  className="flex-1 sm:flex-none"
-                  onClick={() => handleEdit()}
-                >
-                  <Pencil className="mr-2 h-4 w-4" />
-                  {t('edit')}
-                </Button>
+                <EditButton label={t('edit')} onClick={() => handleEdit()} />
               )}
             </>
           )}

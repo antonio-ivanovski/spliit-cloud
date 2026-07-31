@@ -141,7 +141,13 @@ export function ParticipantSelector({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>{trigger}</PopoverTrigger>
-      <PopoverContent className="p-0" align="start">
+      <PopoverContent
+        className="p-0"
+        align="start"
+        onFocusOutside={(event) => event.preventDefault()}
+        onWheel={(event) => event.stopPropagation()}
+        onTouchMove={(event) => event.stopPropagation()}
+      >
         <ParticipantCommand
           participants={participants}
           mode={mode}
@@ -171,6 +177,7 @@ function ParticipantCommand({
   onClose: () => void
 }) {
   const { t } = useTranslation()
+  const selectedSet = new Set(selectedValues)
 
   return (
     <Command>
@@ -179,7 +186,7 @@ function ParticipantCommand({
       <div className="max-h-[300px] overflow-y-auto">
         <CommandGroup>
           {participants.map((participant) => {
-            const isSelected = selectedValues?.includes(participant.id)
+            const isSelected = selectedSet.has(participant.id)
             return (
               <CommandItem
                 key={participant.id}

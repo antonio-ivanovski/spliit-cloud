@@ -23,7 +23,11 @@ export function categoryFromId(categoryId: CategoryId): Category {
 
 export function categoryLabel(t: TFunction, categoryId: CategoryId): string {
   const category = categoryFromId(categoryId)
-  return t(`${category.grouping}.${category.name}` as never, {
+  const key =
+    category.parentId === null
+      ? `${category.grouping}.heading`
+      : `${category.grouping}.${category.name}`
+  return t(key as never, {
     ns: 'translation',
     keyPrefix: 'Categories',
   })

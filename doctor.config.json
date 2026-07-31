@@ -1,6 +1,7 @@
 {
   "$schema": "https://react.doctor/schema/config.json",
   "ignore": {
+    "files": ["src/routeTree.gen.ts"],
     "overrides": [
       {
         "files": ["src/i18n/types.ts"],

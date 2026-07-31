@@ -1,7 +1,8 @@
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
-import { deleteExpense } from '../../../../lib/api'
+import { deleteExpense } from '../../../../lib/api/expenses/delete-expense'
+import { enqueueBudgetEvaluation } from '../../../../lib/budgets/enqueue'
 import { loadGroupContext, protectedProcedure } from '../../../init'
 import { deleteExpenseOutputSchema } from '../../../outputs/expenses'
 
@@ -48,6 +49,7 @@ export const deleteGroupExpenseProcedure = protectedProcedure
         },
         { scope, stopRecurrence },
       )
+      await enqueueBudgetEvaluation(groupId)
       return {}
     },
   )

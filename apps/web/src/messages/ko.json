@@ -915,7 +915,6 @@
     },
     "Entertainment": {
       "heading": "엔터테인먼트",
-      "Entertainment": "엔터테인먼트",
       "Games": "게임",
       "Movies": "영화",
       "Music": "음악",
@@ -923,14 +922,12 @@
     },
     "Food and Drink": {
       "heading": "음식 및 음료",
-      "Food and Drink": "음식 및 음료",
       "Dining Out": "외식",
       "Groceries": "생필품",
       "Liquor": "주류"
     },
     "Home": {
       "heading": "집 / 가정",
-      "Home": "집 / 가정",
       "Electronics": "전자제품",
       "Furniture": "가구",
       "Household Supplies": "생활용품",
@@ -953,7 +950,6 @@
     },
     "Transportation": {
       "heading": "교통비",
-      "Transportation": "교통비",
       "Bicycle": "자전거",
       "Bus/Train": "버스/기차",
       "Car": "자동차",
@@ -965,7 +961,6 @@
     },
     "Utilities": {
       "heading": "공과금",
-      "Utilities": "공과금",
       "Cleaning": "청소",
       "Electricity": "전기료",
       "Heat/Gas": "난방/가스",
@@ -978,14 +973,14 @@
       "Events and Activities": "이벤트 및 활동"
     },
     "Personal Care and Wellness": {
-      "heading": "개인 관리 및 웰니스",
-      "Personal Care and Wellness": "개인 관리 및 웰니스"
+      "heading": "개인 관리 및 웰니스"
     },
     "Subscriptions and Memberships": {
       "heading": "구독 및 멤버십",
       "Digital Subscriptions": "디지털 구독",
       "Memberships": "멤버십"
-    }
+    },
+    "groupIncludes": "하위 카테고리 포함"
   },
   "Homepage": {
     "button": {
@@ -1703,6 +1698,10 @@
         "recurringExpense": {
           "title": "반복 지출",
           "description": "그룹에 예약된 반복 지출이 생성될 때."
+        },
+        "budgetAlert": {
+          "title": "예산 알림",
+          "description": "공유 그룹 예산이 한도를 초과할 것으로 예상되거나 이미 초과했을 때 알려드립니다."
         }
       },
       "sections": {
@@ -2145,5 +2144,130 @@
     "saveError": "시간대를 업데이트하지 못했습니다. 다시 시도해 주세요.",
     "keep": "{timeZone} 유지",
     "update": "{timeZone}으로 업데이트"
+  },
+  "Budgets": {
+    "title": "예산",
+    "detailTitle": "예산",
+    "description": "공유 한도를 기준으로 그룹 지출을 추적합니다.",
+    "create": "예산 만들기",
+    "new": "새로 만들기",
+    "edit": "수정",
+    "archive": "보관",
+    "delete": "삭제",
+    "deleting": "삭제 중…",
+    "save": "예산 저장",
+    "cancel": "취소",
+    "saving": "저장 중…",
+    "created": "예산을 만들었습니다",
+    "updated": "예산을 업데이트했습니다",
+    "archivedSuccess": "예산을 보관했습니다",
+    "backToBudgets": "예산 목록으로 돌아가기",
+    "daysRemaining_other": "{count}일 남음",
+    "ofLimit": "한도 {amount}",
+    "overBy": "{amount} 초과",
+    "remaining": "{amount} 남음",
+    "projected": "예상 {amount}",
+    "progressLabel": "예산의 {percentage}% 사용",
+    "paceTick": "{percent}% 예상됨",
+    "categoriesScope": "카테고리: {scope}",
+    "all": "모두",
+    "selected": "선택됨",
+    "viewDetails": "세부 정보 보기",
+    "allCategories": "모든 카테고리",
+    "selectedCategories": "선택한 카테고리",
+    "allParticipants": "모든 참여자",
+    "selectedParticipants": "선택한 참여자",
+    "archived": "보관된 예산",
+    "matchingExpenses": "해당 지출",
+    "matchingExpensesDescription": "현재 기간에 이 예산에 반영되는 지출입니다.",
+    "noMatchingExpenses": "이 기간에 해당하는 지출이 없습니다.",
+    "upcoming": "예정된 지출",
+    "upcomingDescription": "이 기간의 미래 날짜 지출입니다. 상태 및 추세에서 이를 제외하여 잘못된 '초과 추세' 경고를 방지합니다.",
+    "noUpcoming": "이 기간에 미래 날짜의 지출이 없습니다.",
+    "upcomingTotal": "예정 합계: {amount}",
+    "committedSubline": "+ {amount} 확정됨",
+    "history": "기간별 내역",
+    "historyDescription": "이전 기간은 이 예산의 현재 한도와 범위로 다시 계산됩니다.",
+    "noHistory": "아직 완료된 기간이 없습니다.",
+    "deleteDescription": "이 예산과 알림 내역을 영구적으로 삭제합니다. 그룹 지출에는 영향을 주지 않습니다.",
+    "empty": {
+      "title": "아직 예산이 없습니다",
+      "description": "그룹 전체 또는 선택한 참여자의 지출을 추적할 공유 예산을 만들어 보세요."
+    },
+    "validation": "예산의 필수 항목을 모두 입력해 주세요.",
+    "form": {
+      "description": "이 예산에서 추적할 한도, 기간, 카테고리, 참여자를 설정합니다.",
+      "notAllowed": "그룹 관리자만 예산을 관리할 수 있습니다.",
+      "name": "예산 이름",
+      "namePlaceholder": "예: 가정용 식료품",
+      "amount": "금액",
+      "period": "기간",
+      "startDate": "시작일",
+      "endDate": "종료일",
+      "categories": "카테고리",
+      "participants": "참여자",
+      "chooseCategories": "카테고리 선택",
+      "chooseParticipants": "참여자 선택",
+      "notifications": "알림",
+      "notifyTrending": "예산 초과 예상",
+      "notifyTrendingDescription": "기간의 20%가 지난 뒤 예상 지출이 한도를 초과하면 선택한 구성원에게 알립니다.",
+      "notifyOver": "예산 초과",
+      "notifyOverDescription": "실제 지출이 처음으로 한도를 초과하면 선택한 구성원에게 알립니다.",
+      "periodHint": "현재 기간: {range}",
+      "categoryScopeHint": "상위 카테고리와 모든 하위 카테고리를 포함합니다.",
+      "participantScopeHint": "선택한 참여자가 부담하는 금액만 계산됩니다.",
+      "overlapHint": "범위가 겹치면 지출이 여러 예산에 계산될 수 있습니다.",
+      "notificationRecipients": "참여자 범위에 포함되고 예산 알림을 켠 계정 회원에게 알림이 전송됩니다.",
+      "allSubcategories": "모든 하위 카테고리"
+    },
+    "period": {
+      "weekly": "주간",
+      "monthly": "월간",
+      "yearly": "연간",
+      "custom": "사용자 지정 기간"
+    },
+    "status": {
+      "over": "예산 초과",
+      "trending": "초과 예상",
+      "onTrack": "정상",
+      "archived": "보관됨",
+      "scheduled": "예약됨",
+      "completed": "완료됨"
+    },
+    "daysRemaining_zero": "{count}일 남음",
+    "daysRemaining_two": "{count}일 남음",
+    "daysRemaining_few": "{count}일 남음",
+    "daysRemaining_many": "{count}일 남음",
+    "unarchivedSuccess": "예산 보관이 해제되었습니다",
+    "notificationsOff": "활성화된 알림이 없습니다",
+    "createCard": {
+      "title": "예산 만들기",
+      "description": "지출 한도를 설정하고 과다 지출 전에 알림을 받으세요."
+    },
+    "chart": {
+      "heading": "현재까지 지출",
+      "sectionLabel": "누적 지출 차트",
+      "legendSpent": "지출 완료",
+      "legendPace": "예상 속도",
+      "legendCommitted": "확정됨",
+      "limitLine": "한도",
+      "srSummary": "{spent} 지출(한도 {limit}), 확정됨 {committed}。"
+    },
+    "usedTooltip": "{limit} 중 {used} 사용",
+    "paceTooltip": "예상 속도: {total}일 중 {elapsed}일째",
+    "scope": "범위",
+    "remove": "제거",
+    "retry": "다시 시도",
+    "completedBudgets": "완료된 예산",
+    "completed": "완료됨",
+    "validationName": "예산 이름을 추가하세요.",
+    "validationAmount": "0보다 큰 금액을 입력하세요.",
+    "validationDates": "유효한 시작일과 종료일을 선택하세요.",
+    "validationCategories": "카테고리를 하나 이상 선택하세요.",
+    "validationParticipants": "참여자를 한 명 이상 선택하세요.",
+    "startsIn": "{count}일 후 시작",
+    "startsToday": "오늘 시작",
+    "moreExpenses": "총액에 추가 지출 {count}건이 포함되어 있습니다.",
+    "moreUpcomingExpenses": "약정 총액에 추가 예정 지출 {count}건이 포함되어 있습니다."
   }
 }

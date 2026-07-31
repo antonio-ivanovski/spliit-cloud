@@ -286,6 +286,66 @@ model Ledger {
   recurringExpenseSeries RecurringExpenseSeries[]
 
   group Group?
+  budgets GroupBudget[]
+}
+
+enum BudgetPeriod {
+  WEEKLY
+  MONTHLY
+  YEARLY
+  CUSTOM
+}
+
+enum BudgetScopeMode {
+  ALL
+  SELECTED
+}
+
+model GroupBudget {
+  id                 String          @id
+  group              Group           @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId            String
+  ledger             Ledger          @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
+  ledgerId           String
+  name               String
+  amount             Int
+  period             BudgetPeriod
+  timeZone           String          @default("UTC")
+  customStartDate    DateTime?       @db.Date
+  customEndDate      DateTime?       @db.Date
+  categoryScope      BudgetScopeMode @default(ALL)
+  categoryNodeIds    String[]        @default([])
+  participantScope   BudgetScopeMode @default(ALL)
+  participantIds     String[]        @default([])
+  notifyTrending     Boolean         @default(true)
+  notifyOver         Boolean         @default(true)
+  archived           Boolean         @default(false)
+  archivedAt         DateTime?
+  createdByAccountId String
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  alerts             GroupBudgetAlert[]
+
+  @@index([groupId, archived])
+  @@index([ledgerId, archived])
+}
+
+enum BudgetAlertType {
+  TRENDING_OVER
+  OVER
+}
+
+model GroupBudgetAlert {
+  id            String          @id
+  budget        GroupBudget      @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  budgetId      String
+  periodStart   DateTime         @db.Date
+  alertType     BudgetAlertType
+  createdAt     DateTime         @default(now())
+  deliveredAt   DateTime?
+
+  @@unique([budgetId, periodStart, alertType])
+  @@index([budgetId, periodStart])
 }
 
 enum LedgerParticipantKind {
@@ -369,6 +429,7 @@ model Group {
   invitations        GroupInvitation[]
   accountPreferences AccountGroupPreference[]
   defaultSplits      AccountGroupDefaultSplit[]
+  budgets            GroupBudget[]
   // Two-person friend ledgers: the unordered account pair key stored as
   // "accountAId:accountBId" where accountAId < accountBId. Null during the
   // pending-invitation window (peer hasn't joined yet), populated on accept.

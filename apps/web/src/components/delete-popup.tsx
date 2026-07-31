@@ -16,13 +16,24 @@ import {
   ResponsiveDialogTrigger,
 } from './ui/responsive-dialog'
 
-export function DeletePopup({
-  onDelete,
-  className,
-}: {
+type Props = {
   onDelete: () => Promise<void>
   className?: string
-}) {
+  /**
+   * Customize every visible string. Defaults match the legacy
+   * `ExpenseForm.DeletePopup` strings so existing callers keep working.
+   */
+  labels?: {
+    label?: string
+    title?: string
+    description?: string
+    yes?: string
+    deleting?: string
+    cancel?: string
+  }
+}
+
+export function DeletePopup({ onDelete, className, labels }: Props) {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'ExpenseForm.DeletePopup',
   })
@@ -37,27 +48,33 @@ export function DeletePopup({
           )}
         >
           <Trash2 className="h-4 w-4 min-[420px]:mr-2" />
-          <span className="hidden min-[420px]:inline">{t('label')}</span>
+          <span className="hidden min-[420px]:inline">
+            {labels?.label ?? t('label')}
+          </span>
         </Button>
       </ResponsiveDialogTrigger>
       <ResponsiveDialogContent>
         <ResponsiveDialogHeader>
-          <ResponsiveDialogTitle>{t('title')}</ResponsiveDialogTitle>
+          <ResponsiveDialogTitle>
+            {labels?.title ?? t('title')}
+          </ResponsiveDialogTitle>
           <ResponsiveDialogDescription>
-            {t('description')}
+            {labels?.description ?? t('description')}
           </ResponsiveDialogDescription>
         </ResponsiveDialogHeader>
         <ResponsiveDialogFooter className="flex flex-col gap-2">
           <AsyncButton
             type="button"
             variant="destructive"
-            loadingContent={t('deleting')}
+            loadingContent={labels?.deleting ?? t('deleting')}
             action={onDelete}
           >
-            {t('yes')}
+            {labels?.yes ?? t('yes')}
           </AsyncButton>
           <ResponsiveDialogClose asChild>
-            <Button variant={'secondary'}>{t('cancel')}</Button>
+            <Button variant={'secondary'}>
+              {labels?.cancel ?? t('cancel')}
+            </Button>
           </ResponsiveDialogClose>
         </ResponsiveDialogFooter>
       </ResponsiveDialogContent>

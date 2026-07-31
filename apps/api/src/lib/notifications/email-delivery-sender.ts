@@ -1,8 +1,10 @@
 import { prisma } from '@spliit/db'
+import { formatBudgetPeriodRange } from '@spliit/domain'
 
 import { getWebBaseUrl } from '../auth/urls'
 import { isPlaceholderEmail } from '../invitations/display'
 import { sendEmail } from '../mail/send'
+import { renderBudgetAlertEmail } from '../mail/templates/budget-alert'
 import { renderExpenseActivityEmail } from '../mail/templates/expense-activity'
 import { renderFriendLedgerEmail } from '../mail/templates/friend-ledger'
 import { renderGroupActivityEmail } from '../mail/templates/group-activity'
@@ -94,6 +96,43 @@ function renderSnapshotEmail(args: {
   const link = snapshot.link
 
   switch (snapshot.kind) {
+    case 'budget_alert': {
+      const used =
+        formatAmount(snapshot.budget.used, snapshot.budget.currencyCode) ??
+        String(snapshot.budget.used)
+      const limit =
+        formatAmount(snapshot.budget.limit, snapshot.budget.currencyCode) ??
+        String(snapshot.budget.limit)
+      const percentage =
+        snapshot.budget.limit > 0
+          ? (snapshot.budget.used / snapshot.budget.limit) * 100
+          : 0
+      const periodStart = new Date(snapshot.budget.periodStart)
+      const periodEnd = new Date(snapshot.budget.periodEnd)
+      const periodRange = snapshot.budget.period
+        ? formatBudgetPeriodRange(
+            snapshot.budget.period,
+            periodStart,
+            periodEnd,
+            (date) => date.toLocaleDateString('en-US', { dateStyle: 'medium' }),
+          )
+        : `${periodStart.toLocaleDateString('en-US', { dateStyle: 'medium' })} – ${periodEnd.toLocaleDateString('en-US', { dateStyle: 'medium' })}`
+      return renderBudgetAlertEmail({
+        kind: 'budget_alert',
+        subject: `[Spliit Cloud] ${snapshot.budget.alertType === 'OVER' ? 'Budget exceeded' : 'Budget trending over'}: ${snapshot.budget.name}`,
+        text: `${snapshot.budget.name}: ${used} of ${limit} spent in ${groupDisplayName}.\n\nView budget:\n${link}`,
+        brandBaseUrl,
+        budgetName: snapshot.budget.name,
+        groupName: groupDisplayName,
+        usedStr: used,
+        limitStr: limit,
+        percentage,
+        periodRange,
+        alertType: snapshot.budget.alertType,
+        budgetUrl: link,
+        unsubscribeUrl,
+      })
+    }
     case 'expense_created':
       return renderExpenseActivityEmail({
         kind: 'expense',

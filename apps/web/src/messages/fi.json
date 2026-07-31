@@ -1063,7 +1063,6 @@
     },
     "Entertainment": {
       "heading": "Viihde",
-      "Entertainment": "Viihde",
       "Games": "Pelit",
       "Movies": "Elokuvat",
       "Music": "Musiikki",
@@ -1071,14 +1070,12 @@
     },
     "Food and Drink": {
       "heading": "Ruoka ja juoma",
-      "Food and Drink": "Ruoka ja juoma",
       "Dining Out": "Ulkona syöminen",
       "Groceries": "Marketti",
       "Liquor": "Alkoholi"
     },
     "Home": {
       "heading": "Koti",
-      "Home": "Koti",
       "Electronics": "Elektroniikka",
       "Furniture": "Huonekalut",
       "Household Supplies": "Taloustavarat",
@@ -1101,7 +1098,6 @@
     },
     "Transportation": {
       "heading": "Liikenne",
-      "Transportation": "Liikenne",
       "Bicycle": "Polkupyörä",
       "Bus/Train": "Bussi/juna",
       "Car": "Auto",
@@ -1113,7 +1109,6 @@
     },
     "Utilities": {
       "heading": "Sekalaiset",
-      "Utilities": "Sekalaiset",
       "Cleaning": "Siivous",
       "Electricity": "Sähkö",
       "Heat/Gas": "Lämmitys",
@@ -1126,14 +1121,14 @@
       "Events and Activities": "Tapahtumat ja aktiviteetit"
     },
     "Personal Care and Wellness": {
-      "heading": "Henkilökohtainen hoito ja hyvinvointi",
-      "Personal Care and Wellness": "Henkilökohtainen hoito ja hyvinvointi"
+      "heading": "Henkilökohtainen hoito ja hyvinvointi"
     },
     "Subscriptions and Memberships": {
       "heading": "Tilaukset ja jäsenyydet",
       "Digital Subscriptions": "Digitaaliset tilaukset",
       "Memberships": "Jäsenyydet"
-    }
+    },
+    "groupIncludes": "Sisältää alakategoriat"
   },
   "Currencies": {
     "search": "Etsi valuuttaa...",
@@ -1710,6 +1705,10 @@
         "recurringExpense": {
           "title": "Toistuva kulu",
           "description": "Kun ajastettu toistuva kulu luodaan ryhmään."
+        },
+        "budgetAlert": {
+          "title": "Budjettihälytykset",
+          "description": "Kun yhteinen ryhmäbudjetti on ylittymässä tai sen raja on ylitetty."
         }
       },
       "sections": {
@@ -2161,5 +2160,131 @@
     "saveError": "Aikavyöhykettä ei voitu päivittää. Yritä uudelleen.",
     "keep": "Pidä {timeZone}",
     "update": "Vaihda aikavyöhykkeeseen {timeZone}"
+  },
+  "Budgets": {
+    "title": "Budjetit",
+    "detailTitle": "Budjetti",
+    "description": "Seuraa ryhmän kulutusta yhteisiä rajoja vasten.",
+    "create": "Luo budjetti",
+    "new": "Uusi",
+    "edit": "Muokkaa",
+    "archive": "Arkistoi",
+    "delete": "Poista",
+    "deleting": "Poistetaan…",
+    "save": "Tallenna budjetti",
+    "cancel": "Peruuta",
+    "saving": "Tallennetaan…",
+    "created": "Budjetti luotu",
+    "updated": "Budjetti päivitetty",
+    "archivedSuccess": "Budjetti arkistoitu",
+    "backToBudgets": "Takaisin budjetteihin",
+    "daysRemaining_one": "{count} päivä jäljellä",
+    "daysRemaining_other": "{count} päivää jäljellä",
+    "ofLimit": "/ {amount}",
+    "overBy": "{amount} yli",
+    "remaining": "{amount} jäljellä",
+    "projected": "Ennuste {amount}",
+    "progressLabel": "{percentage} % budjetista käytetty",
+    "paceTick": "{percent}% odotettu tähän mennessä",
+    "categoriesScope": "Kategoriat: {scope}",
+    "all": "Kaikki",
+    "selected": "Valittu",
+    "viewDetails": "Näytä tiedot",
+    "allCategories": "Kaikki kategoriat",
+    "selectedCategories": "Valitut kategoriat",
+    "allParticipants": "Kaikki osallistujat",
+    "selectedParticipants": "Valitut osallistujat",
+    "archived": "Arkistoidut budjetit",
+    "matchingExpenses": "Täsmäävät kulut",
+    "matchingExpensesDescription": "Kulut, jotka vaikuttavat tähän budjettiin nykyisellä ajanjaksolla.",
+    "noMatchingExpenses": "Tällä ajanjaksolla ei ole täsmääviä kuluja.",
+    "upcoming": "Tulevat kulut",
+    "upcomingDescription": "Tulevaisuuteen ajoitetut kulut tällä ajanjaksolla. Tila ja trendi eivät huomioi näitä, jotta vältetään virheellinen ylittymässä-hälytys.",
+    "noUpcoming": "Ei tulevaisuuteen ajoitettuja kuluja tällä ajanjaksolla.",
+    "upcomingTotal": "Tulevat kulut yhteensä: {amount}",
+    "committedSubline": "+ {amount} sidottu",
+    "history": "Ajanjaksohistoria",
+    "historyDescription": "Aiemmat jaksot lasketaan uudelleen tämän budjetin nykyisellä rajalla ja rajauksella.",
+    "noHistory": "Valmiita ajanjaksoja ei vielä ole.",
+    "deleteDescription": "Poista tämä budjetti ja sen hälytyshistoria pysyvästi. Ryhmän kulut säilyvät.",
+    "empty": {
+      "title": "Ei vielä budjetteja",
+      "description": "Luo yhteinen budjetti seurataksesi koko ryhmän tai valittujen osallistujien kulutusta."
+    },
+    "validation": "Täytä kaikki budjetin pakolliset kentät.",
+    "form": {
+      "description": "Aseta raja, ajanjakso, kategoriat ja osallistujat, joita tämä budjetti seuraa.",
+      "notAllowed": "Vain ryhmän ylläpitäjät voivat hallinnoida budjetteja.",
+      "name": "Budjetin nimi",
+      "namePlaceholder": "Esimerkiksi kotitalouden ruokaostokset",
+      "amount": "Summa",
+      "period": "Ajanjakso",
+      "startDate": "Alkamispäivä",
+      "endDate": "Lopetuspäivä",
+      "categories": "Kategoriat",
+      "participants": "Osallistujat",
+      "chooseCategories": "Valitse kategoriat",
+      "chooseParticipants": "Valitse osallistujat",
+      "notifications": "Ilmoitukset",
+      "notifyTrending": "Budjetin ylitys uhkaa",
+      "notifyTrendingDescription": "Ilmoita valituille jäsenille, kun ennustetut kulut ylittävät rajan 20 %:n ajanjakson jälkeen.",
+      "notifyOver": "Budjetti ylitetty",
+      "notifyOverDescription": "Ilmoita valituille jäsenille, kun toteutuneet kulut ylittävät rajan ensimmäisen kerran.",
+      "periodHint": "Nykyinen jakso: {range}",
+      "categoryScopeHint": "Sisältää yläkategorian ja kaikki sen alakategoriat.",
+      "participantScopeHint": "Vain valittujen osallistujien maksettavat osuudet lasketaan.",
+      "overlapHint": "Kulu voi kuulua useaan budjettiin, jos niiden rajaukset ovat päällekkäisiä.",
+      "notificationRecipients": "Ilmoitukset lähetetään osallistujien piiriin kuuluville tilijäsenille, jotka ovat ottaneet budjetti-ilmoitukset käyttöön.",
+      "allSubcategories": "kaikki alakategoriat"
+    },
+    "period": {
+      "weekly": "Viikoittain",
+      "monthly": "Kuukausittain",
+      "yearly": "Vuosittain",
+      "custom": "Mukautettu ajanjakso"
+    },
+    "status": {
+      "over": "Budjetti ylitetty",
+      "trending": "Ylittymässä",
+      "onTrack": "Aikataulussa",
+      "archived": "Arkistoitu",
+      "scheduled": "Ajastettu",
+      "completed": "Valmis"
+    },
+    "daysRemaining_zero": "{count} päivää jäljellä",
+    "daysRemaining_two": "{count} päivää jäljellä",
+    "daysRemaining_few": "{count} päivää jäljellä",
+    "daysRemaining_many": "{count} päivää jäljellä",
+    "unarchivedSuccess": "Budjetti palautettu",
+    "notificationsOff": "Ei ilmoituksia käytössä",
+    "createCard": {
+      "title": "Luo budjetti",
+      "description": "Aseta kulutusraja, niin saat ilmoituksen ennen kuin ylität sen."
+    },
+    "chart": {
+      "heading": "Kulut tähän mennessä",
+      "sectionLabel": "Kumulatiivinen kulutuskaavio",
+      "legendSpent": "Käytetty",
+      "legendPace": "Vauhdilla",
+      "legendCommitted": "Sidottu",
+      "limitLine": "Raja",
+      "srSummary": "Käytetty {spent}/{limit}; sidottu {committed}."
+    },
+    "usedTooltip": "Käytetty {used} / {limit}",
+    "paceTooltip": "Odotettu tahti: päivä {elapsed}/{total}",
+    "scope": "Laajuus",
+    "remove": "Poista",
+    "retry": "Yritä uudelleen",
+    "completedBudgets": "Valmiit budjetit",
+    "completed": "Valmis",
+    "validationName": "Lisää budjetille nimi.",
+    "validationAmount": "Anna nollaa suurempi summa.",
+    "validationDates": "Valitse kelvolliset alku- ja loppupäivät.",
+    "validationCategories": "Valitse vähintään yksi luokka.",
+    "validationParticipants": "Valitse vähintään yksi osallistuja.",
+    "startsIn": "Alkaa {count} päivän kuluttua",
+    "startsToday": "Alkaa tänään",
+    "moreExpenses": "Yhteissummaan sisältyy vielä {count} kulua.",
+    "moreUpcomingExpenses": "Sitovaan kokonaissummaan sisältyy vielä {count} tulevaa kulua."
   }
 }

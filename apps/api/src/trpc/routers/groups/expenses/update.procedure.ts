@@ -3,7 +3,8 @@ import { z } from 'zod'
 
 import { expenseApiSchema } from '@spliit/domain'
 
-import { updateExpense } from '../../../../lib/api'
+import { updateExpense } from '../../../../lib/api/expenses/update-expense'
+import { enqueueBudgetEvaluation } from '../../../../lib/budgets/enqueue'
 import { ConversionError } from '../../../../lib/expense-conversion'
 import { loadGroupContext, protectedProcedure } from '../../../init'
 import { updateExpenseOutputSchema } from '../../../outputs/expenses'
@@ -39,6 +40,7 @@ export const updateGroupExpenseProcedure = protectedProcedure
         },
         { scope },
       )
+      await enqueueBudgetEvaluation(groupId)
       return { expenseId: id }
     } catch (err) {
       if (err instanceof ConversionError) {

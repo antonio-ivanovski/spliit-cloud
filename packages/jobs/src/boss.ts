@@ -11,6 +11,8 @@ import {
   jobPayloadSchema,
   NOTIFICATION_CLEANUP_DLQ,
   NOTIFICATION_CLEANUP_QUEUE,
+  BUDGET_EVALUATE_QUEUE,
+  BUDGET_EVALUATE_DLQ,
   NOTIFICATION_DELIVER_DLQ,
   NOTIFICATION_DELIVER_QUEUE,
   NOTIFICATION_RECONCILE_DLQ,
@@ -62,6 +64,12 @@ export const JOB_SEND_OPTIONS = {
     retentionSeconds: env.JOBS_RETENTION_SECONDS,
     deadLetter: NOTIFICATION_CLEANUP_DLQ,
   },
+  [BUDGET_EVALUATE_QUEUE]: {
+    retryLimit: 0,
+    expireInSeconds: NOTIFICATION_MAINTENANCE_EXPIRE_SECONDS,
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+    deadLetter: BUDGET_EVALUATE_DLQ,
+  },
 } as const satisfies Record<JobName, SendOptions>
 
 export const JOB_QUEUE_OPTIONS = {
@@ -86,6 +94,10 @@ export const JOB_QUEUE_OPTIONS = {
   },
   [NOTIFICATION_CLEANUP_QUEUE]: {
     ...JOB_SEND_OPTIONS[NOTIFICATION_CLEANUP_QUEUE],
+    notify: true,
+  },
+  [BUDGET_EVALUATE_QUEUE]: {
+    ...JOB_SEND_OPTIONS[BUDGET_EVALUATE_QUEUE],
     notify: true,
   },
 } as const satisfies Record<JobName, Omit<Queue, 'name'>>
@@ -118,6 +130,10 @@ export const JOB_WORK_OPTIONS = {
     pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
   },
   [NOTIFICATION_CLEANUP_QUEUE]: {
+    localConcurrency: 1,
+    pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
+  },
+  [BUDGET_EVALUATE_QUEUE]: {
     localConcurrency: 1,
     pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
   },
@@ -235,10 +251,18 @@ export async function ensureQueues(boss: SpliitBoss): Promise<void> {
   await createOrConvergeQueue(boss, NOTIFICATION_CLEANUP_DLQ, {
     retentionSeconds: env.JOBS_RETENTION_SECONDS,
   })
+  await createOrConvergeQueue(boss, BUDGET_EVALUATE_DLQ, {
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+  })
   await createOrConvergeQueue(
     boss,
     RECURRING_MATERIALIZATION_QUEUE,
     JOB_QUEUE_OPTIONS[RECURRING_MATERIALIZATION_QUEUE],
+  )
+  await createOrConvergeQueue(
+    boss,
+    BUDGET_EVALUATE_QUEUE,
+    JOB_QUEUE_OPTIONS[BUDGET_EVALUATE_QUEUE],
   )
   await createOrConvergeQueue(
     boss,

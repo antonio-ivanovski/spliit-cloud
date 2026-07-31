@@ -1079,7 +1079,6 @@
     },
     "Entertainment": {
       "heading": "Розваги",
-      "Entertainment": "Розваги",
       "Games": "Ігри",
       "Movies": "Фільми",
       "Music": "Музика",
@@ -1087,14 +1086,12 @@
     },
     "Food and Drink": {
       "heading": "Їжа та напої",
-      "Food and Drink": "Їжа та напої",
       "Dining Out": "Ресторани",
       "Groceries": "Продукти",
       "Liquor": "Алкоголь"
     },
     "Home": {
       "heading": "Дім",
-      "Home": "Дім",
       "Electronics": "Електроніка",
       "Furniture": "Меблі",
       "Household Supplies": "Домашні потреби",
@@ -1117,7 +1114,6 @@
     },
     "Transportation": {
       "heading": "Транспорт",
-      "Transportation": "Транспорт",
       "Bicycle": "Велосипед",
       "Bus/Train": "Автобус/Поїзд",
       "Car": "Автомобіль",
@@ -1129,7 +1125,6 @@
     },
     "Utilities": {
       "heading": "Комунальні послуги",
-      "Utilities": "Комунальні послуги",
       "Cleaning": "Прибирання",
       "Electricity": "Електроенергія",
       "Heat/Gas": "Опалення/Газ",
@@ -1142,14 +1137,14 @@
       "Events and Activities": "Події та активності"
     },
     "Personal Care and Wellness": {
-      "heading": "Особистий догляд і добробут",
-      "Personal Care and Wellness": "Особистий догляд і добробут"
+      "heading": "Особистий догляд і добробут"
     },
     "Subscriptions and Memberships": {
       "heading": "Підписки та членство",
       "Digital Subscriptions": "Цифрові підписки",
       "Memberships": "Членство"
-    }
+    },
+    "groupIncludes": "Містить підкатегорії"
   },
   "Auth": {
     "title": "Увійти до Spliit Cloud",
@@ -1728,6 +1723,10 @@
         "recurringExpense": {
           "title": "Періодична витрата",
           "description": "Коли в групі створюється запланована періодична витрата."
+        },
+        "budgetAlert": {
+          "title": "Сповіщення про бюджет",
+          "description": "Коли прогноз витрат за спільним бюджетом групи перевищує ліміт або ліміт уже перевищено."
         }
       },
       "sections": {
@@ -2197,5 +2196,129 @@
     "saveError": "Не вдалося оновити часовий пояс. Спробуйте ще раз.",
     "keep": "Залишити {timeZone}",
     "update": "Змінити на {timeZone}"
+  },
+  "Budgets": {
+    "title": "Бюджети",
+    "detailTitle": "Бюджет",
+    "description": "Стежте за витратами групи в межах спільних лімітів.",
+    "create": "Створити бюджет",
+    "new": "Новий",
+    "edit": "Редагувати",
+    "archive": "Архівувати",
+    "delete": "Видалити",
+    "deleting": "Видалення…",
+    "save": "Зберегти бюджет",
+    "cancel": "Скасувати",
+    "saving": "Збереження…",
+    "created": "Бюджет створено",
+    "updated": "Бюджет оновлено",
+    "archivedSuccess": "Бюджет переміщено в архів",
+    "backToBudgets": "Назад до бюджетів",
+    "daysRemaining_one": "Залишився {count} день",
+    "daysRemaining_other": "Залишилося {count} днів",
+    "ofLimit": "із {amount}",
+    "overBy": "на {amount} понад ліміт",
+    "remaining": "Залишилося {amount}",
+    "projected": "Прогноз: {amount}",
+    "progressLabel": "Використано {percentage}% бюджету",
+    "paceTick": "{percent}% очікувано на цей час",
+    "categoriesScope": "Категорії: {scope}",
+    "all": "Усі",
+    "selected": "Вибрані",
+    "viewDetails": "Докладніше",
+    "allCategories": "Усі категорії",
+    "selectedCategories": "Вибрані категорії",
+    "allParticipants": "Усі учасники",
+    "selectedParticipants": "Вибрані учасники",
+    "archived": "Архівні бюджети",
+    "matchingExpenses": "Враховані витрати",
+    "matchingExpensesDescription": "Витрати, які враховуються в цьому бюджеті за поточний період.",
+    "noMatchingExpenses": "У цьому періоді немає врахованих витрат.",
+    "upcoming": "Майбутні витрати",
+    "upcomingDescription": "Витрати з майбутньою датою в цьому періоді. Статус і тренд їх виключають, щоб ви не отримали хибне сповіщення про прогноз перевищення.",
+    "noUpcoming": "Немає витрат з майбутньою датою в цьому періоді.",
+    "upcomingTotal": "Майбутні всього: {amount}",
+    "committedSubline": "+ {amount} зарезервовано",
+    "history": "Історія періодів",
+    "historyDescription": "Попередні періоди перераховуються за поточним лімітом і областю бюджету.",
+    "noHistory": "Завершених періодів поки немає.",
+    "deleteDescription": "Назавжди видалити цей бюджет та історію його сповіщень. Витрати групи залишаться без змін.",
+    "empty": {
+      "title": "Бюджетів поки немає",
+      "description": "Створіть спільний бюджет, щоб відстежувати витрати всієї групи або вибраних учасників."
+    },
+    "validation": "Заповніть усі обов’язкові поля бюджету.",
+    "form": {
+      "description": "Установіть ліміт, період, категорії та учасників, витрати яких враховує цей бюджет.",
+      "notAllowed": "Лише адміністратори групи можуть керувати бюджетами.",
+      "name": "Назва бюджету",
+      "namePlaceholder": "Наприклад, продукти для дому",
+      "amount": "Сума",
+      "period": "Період",
+      "startDate": "Дата початку",
+      "endDate": "Дата завершення",
+      "categories": "Категорії",
+      "participants": "Учасники",
+      "chooseCategories": "Оберіть категорії",
+      "chooseParticipants": "Оберіть учасників",
+      "notifications": "Сповіщення",
+      "notifyTrending": "Прогноз перевищення бюджету",
+      "notifyTrendingDescription": "Сповістити вибраних учасників, якщо після 20% періоду прогнозовані витрати перевищують ліміт.",
+      "notifyOver": "Перевищення бюджету",
+      "notifyOverDescription": "Сповістити вибраних учасників, коли фактичні витрати вперше перевищать ліміт.",
+      "periodHint": "Поточний період: {range}",
+      "categoryScopeHint": "Включає батьківську категорію та всі її підкатегорії.",
+      "participantScopeHint": "Враховуються лише частки, належні вибраним учасникам.",
+      "overlapHint": "Витрата може враховуватися в кількох бюджетах, якщо їхні області перетинаються.",
+      "notificationRecipients": "Сповіщення отримують учасники з обліковим записом у вибраному переліку, які ввімкнули сповіщення бюджету.",
+      "allSubcategories": "усі підкатегорії"
+    },
+    "period": {
+      "weekly": "Щотижня",
+      "monthly": "Щомісяця",
+      "yearly": "Щороку",
+      "custom": "Власний період"
+    },
+    "status": {
+      "over": "Бюджет перевищено",
+      "trending": "Прогноз перевищення",
+      "onTrack": "У межах бюджету",
+      "archived": "Заархівовано",
+      "scheduled": "Заплановано",
+      "completed": "Завершено"
+    },
+    "daysRemaining_few": "Залишилося {count} дні",
+    "daysRemaining_many": "Залишилося {count} днів",
+    "unarchivedSuccess": "Бюджет відновлено з архіву",
+    "notificationsOff": "Сповіщення вимкнено",
+    "createCard": {
+      "title": "Створити бюджет",
+      "description": "Встановіть ліміт витрат і отримуйте сповіщення, перш ніж його перевищите."
+    },
+    "chart": {
+      "heading": "Витрачено на сьогодні",
+      "sectionLabel": "Графік сукупних витрат",
+      "legendSpent": "Витрачено",
+      "legendPace": "За планом",
+      "legendCommitted": "Зарезервовано",
+      "limitLine": "Ліміт",
+      "srSummary": "Витрачено {spent} з {limit}; зарезервовано {committed}."
+    },
+    "usedTooltip": "Використано {used} із {limit}",
+    "paceTooltip": "Очікуваний темп: день {elapsed} із {total}",
+    "scope": "Охоплення",
+    "remove": "Вилучити",
+    "retry": "Повторити",
+    "completedBudgets": "Завершені бюджети",
+    "completed": "Завершено",
+    "validationName": "Додайте назву бюджету.",
+    "validationAmount": "Введіть суму, більшу за нуль.",
+    "validationDates": "Виберіть дійсні дати початку й завершення.",
+    "validationCategories": "Виберіть принаймні одну категорію.",
+    "validationParticipants": "Виберіть принаймні одного учасника.",
+    "startsIn": "Почнеться через {count} днів",
+    "startsToday": "Почнеться сьогодні",
+    "moreExpenses": "До підсумку включено ще {count} витрат.",
+    "moreUpcomingExpenses": "До зобов'язаного підсумку включено ще {count} майбутніх витрат."
   }
 }

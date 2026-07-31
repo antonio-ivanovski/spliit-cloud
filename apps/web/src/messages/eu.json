@@ -1071,7 +1071,6 @@
     },
     "Entertainment": {
       "heading": "Aisia",
-      "Entertainment": "Aisia",
       "Games": "Jolasak",
       "Movies": "Filmak",
       "Music": "Musika",
@@ -1079,14 +1078,12 @@
     },
     "Food and Drink": {
       "heading": "Janari-edariak",
-      "Food and Drink": "Janari-edariak",
       "Dining Out": "Kanpoan afaltzea",
       "Groceries": "Janariak",
       "Liquor": "Likoreak"
     },
     "Home": {
       "heading": "Etxea",
-      "Home": "Etxea",
       "Electronics": "Elektronika",
       "Furniture": "Altzariak",
       "Household Supplies": "Etxeko hornidurak",
@@ -1109,7 +1106,6 @@
     },
     "Transportation": {
       "heading": "Garraioa",
-      "Transportation": "Garraioa",
       "Bicycle": "Bizikleta",
       "Bus/Train": "Autobusa/Trena",
       "Car": "Autoa",
@@ -1121,7 +1117,6 @@
     },
     "Utilities": {
       "heading": "Erabilgarritasunak",
-      "Utilities": "Erabilgarritasunak",
       "Cleaning": "Garbiketa",
       "Electricity": "Elektrizitatea",
       "Heat/Gas": "Berokuntza/Gasa",
@@ -1134,14 +1129,14 @@
       "Events and Activities": "Ekitaldiak eta jarduerak"
     },
     "Personal Care and Wellness": {
-      "heading": "Zainketa pertsonala eta ongizatea",
-      "Personal Care and Wellness": "Zainketa pertsonala eta ongizatea"
+      "heading": "Zainketa pertsonala eta ongizatea"
     },
     "Subscriptions and Memberships": {
       "heading": "Harpidetzak eta kidetzak",
       "Digital Subscriptions": "Harpidetza digitalak",
       "Memberships": "Kidetzak"
-    }
+    },
+    "groupIncludes": "Azpikategoriak barne"
   },
   "Currencies": {
     "search": "Bilatu moneta...",
@@ -1718,6 +1713,10 @@
         "recurringExpense": {
           "title": "Gastua errepikakorra",
           "description": "Talde batean programatutako gastu errepikakorra sortzen denean."
+        },
+        "budgetAlert": {
+          "title": "Aurrekontu-alertak",
+          "description": "Taldeko aurrekontu partekatua gainditzeko joera duenean edo muga gainditu duenean."
         }
       },
       "sections": {
@@ -2178,5 +2177,131 @@
     "saveError": "Ezin izan da ordu-eremua eguneratu. Saiatu berriro.",
     "keep": "Mantendu {timeZone}",
     "update": "Eguneratu hona: {timeZone}"
+  },
+  "Budgets": {
+    "title": "Aurrekontuak",
+    "detailTitle": "Aurrekontua",
+    "description": "Jarraitu taldeko gastua partekatutako mugen arabera.",
+    "create": "Sortu aurrekontua",
+    "new": "Berria",
+    "edit": "Editatu",
+    "archive": "Artxibatu",
+    "delete": "Ezabatu",
+    "deleting": "Ezabatzen…",
+    "save": "Gorde aurrekontua",
+    "cancel": "Utzi",
+    "saving": "Gordetzen…",
+    "created": "Aurrekontua sortuta",
+    "updated": "Aurrekontua eguneratuta",
+    "archivedSuccess": "Aurrekontua artxibatuta",
+    "backToBudgets": "Itzuli aurrekontuetara",
+    "daysRemaining_one": "{count} egun geratzen da",
+    "daysRemaining_other": "{count} egun geratzen dira",
+    "ofLimit": "{amount}-ren",
+    "overBy": "{amount} gainetik",
+    "remaining": "{amount} geratzen da",
+    "projected": "Aurreikuspena: {amount}",
+    "progressLabel": "Aurrekontuaren %{percentage} erabilita",
+    "paceTick": "{percent}% espero zen orain",
+    "categoriesScope": "Kategoriak: {scope}",
+    "all": "Guztiak",
+    "selected": "Hautatutakoak",
+    "viewDetails": "Ikusi xehetasunak",
+    "allCategories": "Kategoria guztiak",
+    "selectedCategories": "Hautatutako kategoriak",
+    "allParticipants": "Parte-hartzaile guztiak",
+    "selectedParticipants": "Hautatutako parte-hartzaileak",
+    "archived": "Artxibatutako aurrekontuak",
+    "matchingExpenses": "Bat datozen gastuak",
+    "matchingExpensesDescription": "Uneko aldian aurrekontu honetan sartzen diren gastuak.",
+    "noMatchingExpenses": "Ez dago aldi honetan bat datorren gasturik.",
+    "upcoming": "Datoa etorkizuneko gastuak",
+    "upcomingDescription": "Aldi honetan data etorkizuna duten gastuak. Egoerak eta joerak horiek kanpoan uzten dituzte, gainditzearen faltsu abisurik ez jasotzeko.",
+    "noUpcoming": "Aldi honetan ez dago data etorkizuna duen gasturik.",
+    "upcomingTotal": "Hurrengo guztira: {amount}",
+    "committedSubline": "+ {amount} konprometitua",
+    "history": "Aldien historia",
+    "historyDescription": "Aurreko aldiak aurrekontu honen egungo mugarekin eta esparruarekin kalkulatzen dira berriro.",
+    "noHistory": "Oraindik ez dago amaitutako aldirik.",
+    "deleteDescription": "Ezabatu betiko aurrekontu hau eta haren alerta-historia. Taldeko gastuei ez die eragingo.",
+    "empty": {
+      "title": "Oraindik ez dago aurrekonturik",
+      "description": "Sortu partekatutako aurrekontu bat talde osoaren edo hautatutako parte-hartzaileen gastua jarraitzeko."
+    },
+    "validation": "Bete aurrekontuaren nahitaezko eremu guztiak.",
+    "form": {
+      "description": "Ezarri aurrekontu honek jarraituko dituen muga, aldia, kategoriak eta parte-hartzaileak.",
+      "notAllowed": "Taldeko administratzaileek bakarrik kudeatu ditzakete aurrekontuak.",
+      "name": "Aurrekontuaren izena",
+      "namePlaceholder": "Adibidez, etxeko erosketak",
+      "amount": "Zenbatekoa",
+      "period": "Aldia",
+      "startDate": "Hasiera-data",
+      "endDate": "Amaiera-data",
+      "categories": "Kategoriak",
+      "participants": "Parte-hartzaileak",
+      "chooseCategories": "Aukeratu kategoriak",
+      "chooseParticipants": "Aukeratu parte-hartzaileak",
+      "notifications": "Jakinarazpenak",
+      "notifyTrending": "Aurrekontua gainditzeko joera",
+      "notifyTrendingDescription": "Jakinarazi hautatutako kideei aurreikusitako gastuak muga gainditzen duenean, aldiaren %20a igaro ondoren.",
+      "notifyOver": "Aurrekontuaren gainetik",
+      "notifyOverDescription": "Jakinarazi hautatutako kideei benetako gastuak muga lehen aldiz gainditzen duenean.",
+      "periodHint": "Uneko aldia: {range}",
+      "categoryScopeHint": "Guraso-kategoria eta haren azpikategoria guztiak sartzen ditu.",
+      "participantScopeHint": "Hautatutako parte-hartzaileek zor dituzten zatiak bakarrik zenbatzen dira.",
+      "overlapHint": "Gastu bat aurrekontu batean baino gehiagotan sar daiteke esparruak gainjartzen badira.",
+      "notificationRecipients": "Alertak parte-hartzaileen esparruan dauden eta aurrekontu-jakinarazpenak gaituta dituzten kontuko kideei iristen zaizkie.",
+      "allSubcategories": "azpikategoria guztiak"
+    },
+    "period": {
+      "weekly": "Astero",
+      "monthly": "Hilero",
+      "yearly": "Urtero",
+      "custom": "Tarte pertsonalizatua"
+    },
+    "status": {
+      "over": "Aurrekontua gaindituta",
+      "trending": "Gainditzeko joera",
+      "onTrack": "Bide onean",
+      "archived": "Artxibatuta",
+      "scheduled": "Programatuta",
+      "completed": "Osatua"
+    },
+    "daysRemaining_zero": "{count} egun geratzen dira",
+    "daysRemaining_two": "{count} egun geratzen dira",
+    "daysRemaining_few": "{count} egun geratzen dira",
+    "daysRemaining_many": "{count} egun geratzen dira",
+    "unarchivedSuccess": "Aurrekontua desartxibatuta",
+    "notificationsOff": "Jakinarazpenik aktibatu gabe",
+    "createCard": {
+      "title": "Sortu aurrekontu bat",
+      "description": "Ezarri gastu-muga bat eta jaso abisua gehiegi gastatu aurretik."
+    },
+    "chart": {
+      "heading": "Orain arteko gastua",
+      "sectionLabel": "Pilatutako gastuaren grafikoa",
+      "legendSpent": "Gastatua",
+      "legendPace": "Erritmoan",
+      "legendCommitted": "Konprometitua",
+      "limitLine": "Muga",
+      "srSummary": "Gastatua {spent} {limit}-tik; konprometitua {committed}."
+    },
+    "usedTooltip": "{limit}(e)tik {used} erabilita",
+    "paceTooltip": "Esperotako erritmoa: {elapsed}/{total} egun",
+    "scope": "Esparrua",
+    "remove": "Kendu",
+    "retry": "Saiatu berriro",
+    "completedBudgets": "Osatutako aurrekontuak",
+    "completed": "Osatua",
+    "validationName": "Gehitu aurrekontuaren izena.",
+    "validationAmount": "Sartu zero baino handiagoa den zenbatekoa.",
+    "validationDates": "Aukeratu hasiera eta amaiera data baliodunak.",
+    "validationCategories": "Hautatu gutxienez kategoria bat.",
+    "validationParticipants": "Hautatu gutxienez parte-hartzaile bat.",
+    "startsIn": "{count} egun barru hasiko da",
+    "startsToday": "Gaur hasiko da",
+    "moreExpenses": "Beste {count} gastu daude guztizkoan sartuta.",
+    "moreUpcomingExpenses": "Beste {count} etorkizuneko gastu daude konprometitutako guztizkoan sartuta."
   }
 }
