@@ -4,6 +4,7 @@ import type { GroupExpense } from '@/lib/api'
 import {
   cleanupTestAccount,
   createTestSession,
+  INTEGRATION_API_URL,
   probeExistingApi,
 } from '@/test/integration/client'
 import { render, screen, within } from '@/test/integration/test-utils'
@@ -14,7 +15,7 @@ import { randomId } from '@spliit/domain'
  * Integration tests for expense items.
  *
  * These tests use the same pattern as `group-creation.test.tsx`: - Connect to a
- * real API server on port 3001 (via `probeExistingApi`). - Create a real group
+ * real API server on port 3101 (via `probeExistingApi`). - Create a real group
  * + expense via tRPC. - Render React components (here `ExpenseCard`) with
  * mocked context hooks, so we don't need a full router setup.
  *
@@ -26,8 +27,8 @@ import { randomId } from '@spliit/domain'
 
 if (!(await probeExistingApi())) {
   throw new Error(
-    `API server not running on http://localhost:3001. ` +
-      `Start it with \`bun dev\` first.`,
+    `API server not running on ${INTEGRATION_API_URL}. ` +
+      `Start it with \`bun --filter @spliit/api start:integration\` first.`,
   )
 }
 
@@ -72,7 +73,7 @@ vi.mock('@tanstack/react-router', () => ({
 
 // ── Shared state ─────────────────────────────────────────────────────────
 
-const API_URL = 'http://localhost:3001'
+const API_URL = INTEGRATION_API_URL
 
 let sessionCookie: string
 const testEmail = `test-items-${Date.now()}@integration-spliit.local`

@@ -19,31 +19,46 @@ permissions:
 env:
   REGISTRY: ghcr.io
 
+concurrency:
+  group: deploy-main
+  cancel-in-progress: true
+
 jobs:
   build-and-push:
-    name: Build and push server images
+    name: Build ${{ matrix.app }} (${{ matrix.arch }})
     if: github.event.workflow_run.conclusion == 'success'
-    runs-on: ubuntu-24.04-arm
+    runs-on: ${{ matrix.arch == 'amd64' && 'ubuntu-24.04' || 'ubuntu-24.04-arm' }}
     strategy:
       fail-fast: false
       matrix:
+        app: [api, migrate, worker, mcp, web]
+        arch: [amd64, arm64]
         include:
           - app: api
             scope: '@spliit/api'
+            file: Dockerfile
             target: api
             image: spliit-cloud-api
           - app: migrate
             scope: '@spliit/db'
+            file: Dockerfile
             target: migrate
             image: spliit-cloud-migrate
           - app: worker
             scope: '@spliit/worker'
+            file: Dockerfile
             target: worker
             image: spliit-cloud-worker
           - app: mcp
             scope: '@spliit/mcp'
+            file: Dockerfile
             target: mcp
             image: spliit-cloud-mcp
+          - app: web
+            scope: '@spliit/web'
+            file: Dockerfile.web
+            target: web
+            image: spliit-cloud-web
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -74,16 +89,15 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ steps.image.outputs.name }}
           tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
-            type=sha,prefix=
+            type=raw,value=${{ github.event.workflow_run.head_sha }},suffix=-${{ matrix.arch }}
 
       - name: Build and push
         uses: docker/build-push-action@v7
         with:
           context: .
-          file: Dockerfile
+          file: ${{ matrix.file }}
           target: ${{ matrix.target }}
-          platforms: linux/arm64
+          platforms: linux/${{ matrix.arch }}
           build-args: |
             APP_SCOPE=${{ matrix.scope }}
           push: true
@@ -92,15 +106,63 @@ jobs:
           provenance: false
           sbom: false
           cache-from: |
-            type=gha,scope=${{ matrix.app }}
-            type=registry,ref=${{ env.REGISTRY }}/${{ steps.image.outputs.name }}:buildcache
+            type=gha,scope=${{ matrix.app }}-${{ matrix.arch }}
+            type=registry,ref=${{ env.REGISTRY }}/${{ steps.image.outputs.name }}:buildcache-${{ matrix.arch }}
           cache-to: |
-            type=gha,mode=max,scope=${{ matrix.app }}
-            type=registry,ref=${{ env.REGISTRY }}/${{ steps.image.outputs.name }}:buildcache,mode=max
+            type=gha,mode=max,scope=${{ matrix.app }}-${{ matrix.arch }}
+            type=registry,ref=${{ env.REGISTRY }}/${{ steps.image.outputs.name }}:buildcache-${{ matrix.arch }},mode=max
+
+  merge-images:
+    name: Publish ${{ matrix.app }} multi-arch manifest
+    needs: build-and-push
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - app: api
+            image: spliit-cloud-api
+          - app: migrate
+            image: spliit-cloud-migrate
+          - app: worker
+            image: spliit-cloud-worker
+          - app: mcp
+            image: spliit-cloud-mcp
+          - app: web
+            image: spliit-cloud-web
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Resolve image name
+        id: image
+        run: |
+          image_name="${{ github.repository_owner }}/${{ matrix.image }}"
+          echo "name=${image_name,,}" >> "$GITHUB_OUTPUT"
+
+      - name: Create multi-arch manifests
+        env:
+          IMAGE: ${{ env.REGISTRY }}/${{ steps.image.outputs.name }}
+          SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          docker buildx imagetools create \
+            --tag "${IMAGE}:${SHA}" \
+            --tag "${IMAGE}:latest" \
+            "${IMAGE}:${SHA}-amd64" \
+            "${IMAGE}:${SHA}-arm64"
+          docker buildx imagetools inspect "${IMAGE}:${SHA}"
+          docker buildx imagetools inspect "${IMAGE}:latest"
 
   deploy-dokploy:
     name: Trigger Dokploy deploy
-    needs: build-and-push
+    needs: merge-images
     runs-on: ubuntu-24.04-arm
     steps:
       - name: Trigger Dokploy compose deploy

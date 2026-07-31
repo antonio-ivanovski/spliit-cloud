@@ -12,6 +12,7 @@ jobs:
     env:
       DATABASE_URL: postgresql://postgres:1234@localhost
       VITE_DEFAULT_CURRENCY_CODE: USD
+      INTEGRATION_API_URL: http://localhost:3101
 
       # SMTP (MailDev) — integration tests + API server need these to deliver mail
       SMTP_HOST: localhost
@@ -106,7 +107,38 @@ jobs:
       - name: Build
         run: bun run build
 
+      - name: Validate self-hosting Compose files
+        env:
+          POSTGRES_PASSWORD: test-password
+          APP_URL: https://spliit.example.com
+          BETTER_AUTH_SECRET: test-better-auth-secret
+          SMTP_HOST: smtp.example.com
+          EMAIL_FROM: noreply@example.com
+          EMAIL_UNSUBSCRIBE_SECRET: 12345678901234567890123456789012
+        run: |
+          docker compose -f compose.yaml config --quiet
+          docker compose -f compose.yaml -f compose.api-port.yaml config --quiet
+          docker compose -f compose.yaml -f compose.build.yaml config --quiet
+          WEB_ORIGINS=https://web.example.com \
+            BETTER_AUTH_URL=https://api.example.com \
+            docker compose -f compose.yaml config --format json \
+            > /tmp/spliit-split-compose.json
+          jq -e '
+            .services.api.environment.WEB_ORIGINS == "https://web.example.com" and
+            .services.api.environment.BETTER_AUTH_URL == "https://api.example.com" and
+            .services.worker.environment.WEB_ORIGINS == "https://web.example.com" and
+            .services.worker.environment.BETTER_AUTH_URL == "https://api.example.com"
+          ' /tmp/spliit-split-compose.json
+          docker run --rm \
+            --add-host api:127.0.0.1 \
+            -v "$PWD/nginx.web.conf:/etc/nginx/conf.d/default.conf:ro" \
+            nginx:1.27-alpine nginx -t
+
       - name: Generate OpenAPI spec
+        env:
+          ENABLE_MCP: 'true'
+          MCP_PUBLIC_URL: https://mcp-build.invalid
+          ASSISTANT_CONFIRMATION_SECRET: assistant-build-secret-at-least-32-bytes
         run: bun run --filter @spliit/api generate-openapi
 
       - name: Run tests
@@ -119,11 +151,11 @@ jobs:
         run: |
           set -e
 
-          # Web integration tests probe http://localhost:3001/health at
+          # Web integration tests probe http://localhost:3101/health at
           # module load time and throw if the API is not running, so we
           # start the API server here and wait for it to respond.
           echo "Starting API server in the background..."
-          bun --filter @spliit/api start > /tmp/api-server.log 2>&1 &
+          bun --filter @spliit/api start:integration > /tmp/api-server.log 2>&1 &
           API_PID=$!
 
           cleanup() {
@@ -131,16 +163,16 @@ jobs:
           }
           trap cleanup EXIT
 
-          echo "Waiting for API server on http://localhost:3001/health..."
+          echo "Waiting for API server on http://localhost:3101/health..."
           for i in {1..60}; do
-            if curl -s -f http://localhost:3001/health > /dev/null; then
+            if curl -s -f http://localhost:3101/health > /dev/null; then
               echo "API server is ready after ${i}s"
               break
             fi
             sleep 1
           done
 
-          if ! curl -s -f http://localhost:3001/health > /dev/null; then
+          if ! curl -s -f http://localhost:3101/health > /dev/null; then
             echo "::error::API server failed to become ready within 60s"
             echo "--- API server log ---"
             cat /tmp/api-server.log

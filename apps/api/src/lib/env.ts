@@ -7,23 +7,35 @@ const interpretEnvVarAsBool = (val: unknown): boolean => {
   return ['true', 'yes', '1', 'on'].includes(val.toLowerCase())
 }
 
+const emptyStringAsUndefined = (val: unknown) =>
+  typeof val === 'string' && val.trim() === '' ? undefined : val
+
+const optionalString = z.preprocess(
+  emptyStringAsUndefined,
+  z.string().optional(),
+)
+const optionalUrl = z.preprocess(emptyStringAsUndefined, z.url().optional())
+
 const envSchema = z
   .object({
-    NODE_ENV: z.string().optional(),
+    NODE_ENV: optionalString,
     PORT: z.coerce.number().int().positive().default(3001),
-    WEB_ORIGINS: z.string().optional().default('http://localhost:3000'),
-    DATABASE_URL: z.string().url().optional(),
+    WEB_ORIGINS: z.preprocess(
+      emptyStringAsUndefined,
+      z.string().default('http://localhost:3000'),
+    ),
+    DATABASE_URL: optionalUrl,
     PUBLIC_ENABLE_EXPENSE_DOCUMENTS: z.preprocess(
       interpretEnvVarAsBool,
       z.boolean().default(false),
     ),
     PUBLIC_DEFAULT_CURRENCY_CODE: supportedCurrencyCodeSchema.default('USD'),
-    S3_UPLOAD_KEY: z.string().optional(),
-    S3_UPLOAD_SECRET: z.string().optional(),
-    S3_UPLOAD_BUCKET: z.string().optional(),
-    S3_UPLOAD_REGION: z.string().optional(),
-    S3_UPLOAD_ENDPOINT: z.string().optional(),
-    S3_UPLOAD_PUBLIC_URL: z.string().url().optional(),
+    S3_UPLOAD_KEY: optionalString,
+    S3_UPLOAD_SECRET: optionalString,
+    S3_UPLOAD_BUCKET: optionalString,
+    S3_UPLOAD_REGION: optionalString,
+    S3_UPLOAD_ENDPOINT: optionalString,
+    S3_UPLOAD_PUBLIC_URL: optionalUrl,
     PUBLIC_ENABLE_RECEIPT_EXTRACT: z.preprocess(
       interpretEnvVarAsBool,
       z.boolean().default(false),
@@ -39,10 +51,16 @@ const envSchema = z
     AI_PROVIDER: z
       .enum(['openai', 'anthropic', 'openai-compatible', 'google'])
       .default('openai'),
-    AI_API_KEY: z.string().optional(),
-    AI_BASE_URL: z.string().url().optional(),
-    AI_RECEIPT_MODEL: z.string().optional().default('gpt-5-nano'),
-    AI_CATEGORY_MODEL: z.string().optional().default('gpt-5-nano'),
+    AI_API_KEY: optionalString,
+    AI_BASE_URL: optionalUrl,
+    AI_RECEIPT_MODEL: z.preprocess(
+      emptyStringAsUndefined,
+      z.string().default('gpt-5-nano'),
+    ),
+    AI_CATEGORY_MODEL: z.preprocess(
+      emptyStringAsUndefined,
+      z.string().default('gpt-5-nano'),
+    ),
     AI_CATEGORY_RECENT_EXPENSES_LIMIT: z.coerce
       .number()
       .int()
@@ -50,41 +68,42 @@ const envSchema = z
       .default(50),
 
     // better-auth
-    BETTER_AUTH_SECRET: z.string().optional(),
-    BETTER_AUTH_URL: z.string().url().optional(),
-    GOOGLE_CLIENT_ID: z.string().optional(),
-    GOOGLE_CLIENT_SECRET: z.string().optional(),
-    GITHUB_CLIENT_ID: z.string().optional(),
-    GITHUB_CLIENT_SECRET: z.string().optional(),
-    MCP_PUBLIC_URL: z
-      .string()
-      .url()
-      .optional()
-      .default('http://localhost:3002'),
-    ASSISTANT_CONFIRMATION_SECRET: z.string().optional(),
+    BETTER_AUTH_SECRET: optionalString,
+    BETTER_AUTH_URL: optionalUrl,
+    GOOGLE_CLIENT_ID: optionalString,
+    GOOGLE_CLIENT_SECRET: optionalString,
+    GITHUB_CLIENT_ID: optionalString,
+    GITHUB_CLIENT_SECRET: optionalString,
+    ENABLE_MCP: z.preprocess(interpretEnvVarAsBool, z.boolean().default(false)),
+    MCP_PUBLIC_URL: optionalUrl,
+    ASSISTANT_CONFIRMATION_SECRET: optionalString,
     // Set when the API sits behind a trusted reverse proxy (Dokploy, Caddy,
     // a CDN). Only then are X-Forwarded-For / X-Real-IP honored for rate-limit
-    // identity; the edge proxy must overwrite, not append to, the client IP.
+    // identity; the edge proxy must ensure the right-most forwarded hop is the
+    // client address it observed.
     TRUST_PROXY: z.preprocess(
       interpretEnvVarAsBool,
       z.boolean().default(false),
     ),
 
     // Email delivery (magic link + verification)
-    SMTP_HOST: z.string().optional(),
-    SMTP_PORT: z.coerce.number().int().positive().optional(),
-    SMTP_USER: z.string().optional(),
-    SMTP_PASS: z.string().optional(),
-    EMAIL_FROM: z.string().optional(),
+    SMTP_HOST: optionalString,
+    SMTP_PORT: z.preprocess(
+      emptyStringAsUndefined,
+      z.coerce.number().int().positive().optional(),
+    ),
+    SMTP_USER: optionalString,
+    SMTP_PASS: optionalString,
+    EMAIL_FROM: optionalString,
 
     // Web Push delivery. These are intentionally optional outside production
     // so local development can run without a VAPID key pair.
-    PUSH_VAPID_PUBLIC_KEY: z.string().optional(),
-    PUSH_VAPID_PRIVATE_KEY: z.string().optional(),
-    PUSH_VAPID_SUBJECT: z.url().optional(),
+    PUSH_VAPID_PUBLIC_KEY: optionalString,
+    PUSH_VAPID_PRIVATE_KEY: optionalString,
+    PUSH_VAPID_SUBJECT: optionalUrl,
 
     // Dedicated secret for stateless optional-email unsubscribe links.
-    EMAIL_UNSUBSCRIBE_SECRET: z.string().optional(),
+    EMAIL_UNSUBSCRIBE_SECRET: optionalString,
   })
   .superRefine((env, ctx) => {
     if (env.NODE_ENV === 'production' && !env.BETTER_AUTH_SECRET) {
@@ -94,8 +113,15 @@ const envSchema = z
         message: 'BETTER_AUTH_SECRET is required in production',
       })
     }
+    if (env.ENABLE_MCP && !env.MCP_PUBLIC_URL) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['MCP_PUBLIC_URL'],
+        message: 'MCP_PUBLIC_URL is required when ENABLE_MCP is true',
+      })
+    }
     if (
-      env.NODE_ENV === 'production' &&
+      env.ENABLE_MCP &&
       (!env.ASSISTANT_CONFIRMATION_SECRET ||
         Buffer.byteLength(env.ASSISTANT_CONFIRMATION_SECRET, 'utf8') < 32)
     ) {
@@ -103,7 +129,7 @@ const envSchema = z
         code: 'custom',
         path: ['ASSISTANT_CONFIRMATION_SECRET'],
         message:
-          'ASSISTANT_CONFIRMATION_SECRET must be at least 32 bytes in production',
+          'ASSISTANT_CONFIRMATION_SECRET must be at least 32 bytes when ENABLE_MCP is true',
       })
     }
     if (env.NODE_ENV === 'production' && !env.SMTP_HOST) {
@@ -133,20 +159,13 @@ const envSchema = z
           'PUSH_VAPID_PUBLIC_KEY, PUSH_VAPID_PRIVATE_KEY and PUSH_VAPID_SUBJECT must be configured together',
       })
     }
-    // When SMTP is configured in production, require credentials. This rules
-    // out silent misconfiguration against real providers (SendGrid, Mailgun,
-    // Postmark, Gmail, ...), which all need a username + password. Local
-    // dev-only relays like MailHog are out of scope for production. Anyone
-    // who really needs anonymous relay in production can set dummy values.
-    if (
-      env.NODE_ENV === 'production' &&
-      env.SMTP_HOST &&
-      (!env.SMTP_USER || !env.SMTP_PASS)
-    ) {
+    // Authenticated SMTP requires both values; omitting both intentionally
+    // supports trusted self-hosted relays that do not require credentials.
+    if (!!env.SMTP_USER !== !!env.SMTP_PASS) {
       ctx.addIssue({
         code: 'custom',
-        message:
-          'SMTP_USER and SMTP_PASS are required in production when SMTP_HOST is set',
+        path: ['SMTP_USER'],
+        message: 'SMTP_USER and SMTP_PASS must be configured together',
       })
     }
     if (env.NODE_ENV === 'production' && env.SMTP_HOST) {

@@ -3,6 +3,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import {
   cleanupTestAccount,
   createTestSession,
+  INTEGRATION_API_URL,
   probeExistingApi,
 } from '@/test/integration/client'
 import { fireEvent, render, waitFor } from '@/test/integration/test-utils'
@@ -12,8 +13,8 @@ import { prisma } from '@spliit/db'
 
 if (!(await probeExistingApi())) {
   throw new Error(
-    `API server not running on http://localhost:3001. ` +
-      `Start it with \`bun dev\` first.`,
+    `API server not running on ${INTEGRATION_API_URL}. ` +
+      `Start it with \`bun --filter @spliit/api start:integration\` first.`,
   )
 }
 
@@ -70,7 +71,7 @@ vi.mock('@tanstack/react-router', () => ({
 
 // ── Shared state ─────────────────────────────────────────────────────────
 
-const API_URL = 'http://localhost:3001'
+const API_URL = INTEGRATION_API_URL
 
 let sessionCookie: string
 const testEmail = `test-doc-${Date.now()}@integration-spliit.local`
@@ -245,7 +246,7 @@ describe('ExpenseDocumentsInput — real API + real MaxIO', () => {
             ? input.href
             : (input as Request).url
 
-      if (url && url.includes('localhost:3001')) {
+      if (url && url.startsWith(API_URL)) {
         const h = new Headers(init?.headers)
         h.set('Cookie', sessionCookie)
         return originalFetch(input, {

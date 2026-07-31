@@ -31,6 +31,7 @@
     "lint": "oxlint -c ../../.oxlintrc.json --format=unix --report-unused-disable-directives .",
     "lint:fix": "oxlint -c ../../.oxlintrc.json --format=unix --report-unused-disable-directives --fix .",
     "start": "bun --env-file=../../.env run src/server.ts",
+    "start:integration": "bun --env-file=.env.integration run src/server.ts",
     "test": "bun --env-file=.env.test vitest run --globals src",
     "test:integration": "bun --env-file=.env.integration vitest run --config vitest.integration.config.ts --reporter=verbose"
   },

@@ -22,6 +22,9 @@ const publicWebHosts = (process.env.WEB_ORIGINS ?? '')
   })
 
 export default defineConfig({
+  // All workspace apps share the repository-level .env file. Vite otherwise
+  // resolves env files relative to apps/web when this task runs via Turbo.
+  envDir: path.resolve(__dirname, '../..'),
   plugins: [
     tanstackRouter({
       target: 'react',

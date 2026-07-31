@@ -42,6 +42,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/components/ui/use-toast'
 import type { AccountPreferences } from '@/lib/account-preferences'
 import { getCurrency, useCurrencies } from '@/lib/currency'
+import { useDeploymentConfig } from '@/lib/deployment-config'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { trpc } from '@/trpc/client'
 import { friendFormSchema, type FriendFormValues } from '@spliit/domain/schemas'
@@ -85,6 +86,7 @@ export function CreateFriend() {
   const utils = trpc.useUtils()
   const { toast } = useToast()
   const [peerTab, setPeerTab] = useState<PeerTab>('friends')
+  const deployment = useDeploymentConfig()
 
   const friendsQuery = trpc.account.friends.useQuery()
   const accountPreferences =
@@ -100,9 +102,7 @@ export function CreateFriend() {
   })
 
   const defaultCurrencyCode =
-    accountPreferences?.defaultCurrencyCode ??
-    import.meta.env.VITE_DEFAULT_CURRENCY_CODE ??
-    'USD'
+    accountPreferences?.defaultCurrencyCode ?? deployment.defaultCurrencyCode
   const defaultCurrency = getCurrency(defaultCurrencyCode) ?? {
     code: 'USD',
     symbol: '$',

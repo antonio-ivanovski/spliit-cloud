@@ -2,13 +2,16 @@
  * Integration test client.
  *
  * Provides helpers to connect to an existing Spliit API server (expected on
- * http://localhost:3001 by default) for integration tests.
+ * http://localhost:3101 by default) for integration tests.
  *
  * Prerequisites: - API server must be running on the expected port. -
  * PostgreSQL test database must be running and migrated.
  */
 
-const DEFAULT_API_URL = 'http://localhost:3001'
+const DEFAULT_API_URL = 'http://localhost:3101'
+
+export const INTEGRATION_API_URL =
+  process.env.INTEGRATION_API_URL ?? DEFAULT_API_URL
 
 /** Check if the API is reachable by hitting /health. */
 export async function probeExistingApi(

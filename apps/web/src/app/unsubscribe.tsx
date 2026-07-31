@@ -21,11 +21,12 @@ import {
   CardFooter,
   CardHeader,
 } from '@/components/ui/card'
+import { getApiBaseUrl } from '@/lib/api-url'
 import { useCurrentAccount } from '@/lib/use-current-account'
 
 import { NOTIFICATION_CATEGORY_METADATA } from './account/notification-category-metadata'
 
-const apiBaseUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3001'
+const apiBaseUrl = getApiBaseUrl()
 const unsubscribeRoute = getRouteApi('/unsubscribe')
 
 export default function UnsubscribePage() {

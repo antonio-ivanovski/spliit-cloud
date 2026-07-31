@@ -9,6 +9,7 @@ import {
   getAuthFromRequest,
   getOAuthAuthFromRequest,
 } from '../lib/auth/session'
+import { env } from '../lib/env'
 import { hashLinkToken } from '../lib/invitations'
 import { FixedWindowLimiter } from '../lib/rate-limit'
 
@@ -81,6 +82,12 @@ export const protectedProcedure = baseProcedure.use(async ({ ctx, next }) => {
 
 export function assistantProcedure(requiredScope: string) {
   return baseProcedure.use(async ({ ctx, next }) => {
+    if (!env.ENABLE_MCP) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'Assistant API is disabled',
+      })
+    }
     if (
       !ctx.auth ||
       !('credentialKind' in ctx.auth) ||

@@ -23,6 +23,7 @@ import { Input } from '@/components/ui/input'
 import type { AccountPreferences } from '@/lib/account-preferences'
 import type { getGroup } from '@/lib/api'
 import { getCurrency, useCurrencies } from '@/lib/currency'
+import { useDeploymentConfig } from '@/lib/deployment-config'
 import type { GroupFormValues } from '@/lib/schemas'
 import { groupFormSchema } from '@/lib/schemas'
 
@@ -127,8 +128,7 @@ export function GroupForm({
   const isArchived = !!group && archived
   const accountPreferences =
     useSyncedAccountPreferences() as AccountPreferences | null
-  const deploymentCurrencyCode =
-    import.meta.env.VITE_DEFAULT_CURRENCY_CODE || 'USD'
+  const deploymentCurrencyCode = useDeploymentConfig().defaultCurrencyCode
   const initialCurrencyCode =
     initialValues?.currencyCode ??
     accountPreferences?.defaultCurrencyCode ??

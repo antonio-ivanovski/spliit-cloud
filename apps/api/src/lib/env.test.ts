@@ -1,10 +1,19 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 // Standalone env-schema tests. We deliberately do not import `../test/mocks`
 // here — that file would pull in prisma, better-auth, and the mail module,
 // which would also evaluate `env.ts` against whatever env happens to be
 // present. Instead each case stubs its own env and dynamically imports
 // `./env` to re-parse with the new values.
+
+beforeEach(() => {
+  // Most schema cases exercise the baseline deployment. The package-level
+  // test environment enables MCP for assistant/auth suites, so explicitly
+  // disable it here unless a case is testing MCP validation.
+  vi.stubEnv('ENABLE_MCP', 'false')
+  vi.stubEnv('MCP_PUBLIC_URL', '')
+  vi.stubEnv('ASSISTANT_CONFIRMATION_SECRET', '')
+})
 
 afterEach(() => {
   vi.unstubAllEnvs()
@@ -35,15 +44,28 @@ describe('envSchema — production', () => {
     )
   })
 
-  it('throws when SMTP_USER/SMTP_PASS are missing while SMTP_HOST is set', async () => {
+  it('allows an anonymous SMTP relay when both credentials are absent', async () => {
     vi.stubEnv('NODE_ENV', 'production')
     vi.stubEnv('BETTER_AUTH_SECRET', 'test-secret')
     vi.stubEnv('SMTP_HOST', 'smtp.test')
     vi.stubEnv('EMAIL_FROM', 'Spliit <noreply@test>')
-    // SMTP_USER and SMTP_PASS intentionally not stubbed.
+    vi.stubEnv('EMAIL_UNSUBSCRIBE_SECRET', 'a'.repeat(32))
+    vi.resetModules()
+    const { env } = await import('./env')
+    expect(env.SMTP_USER).toBeUndefined()
+    expect(env.SMTP_PASS).toBeUndefined()
+  })
+
+  it('rejects partial SMTP credentials', async () => {
+    vi.stubEnv('NODE_ENV', 'production')
+    vi.stubEnv('BETTER_AUTH_SECRET', 'test-secret')
+    vi.stubEnv('SMTP_HOST', 'smtp.test')
+    vi.stubEnv('SMTP_USER', 'user')
+    vi.stubEnv('EMAIL_FROM', 'Spliit <noreply@test>')
+    vi.stubEnv('EMAIL_UNSUBSCRIBE_SECRET', 'a'.repeat(32))
     vi.resetModules()
     await expect(import('./env')).rejects.toThrow(
-      /SMTP_USER and SMTP_PASS are required in production when SMTP_HOST is set/,
+      /SMTP_USER and SMTP_PASS must be configured together/,
     )
   })
 
@@ -91,6 +113,40 @@ describe('envSchema — development', () => {
     expect(env.EMAIL_FROM).toBeUndefined()
     expect(env.SMTP_USER).toBeUndefined()
     expect(env.SMTP_PASS).toBeUndefined()
+  })
+
+  it('normalizes empty optional URLs to undefined', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('AI_BASE_URL', '')
+    vi.stubEnv('S3_UPLOAD_PUBLIC_URL', '')
+    vi.stubEnv('PUSH_VAPID_SUBJECT', '')
+    vi.stubEnv('MCP_PUBLIC_URL', '')
+    vi.resetModules()
+    const { env } = await import('./env')
+    expect(env.AI_BASE_URL).toBeUndefined()
+    expect(env.S3_UPLOAD_PUBLIC_URL).toBeUndefined()
+    expect(env.PUSH_VAPID_SUBJECT).toBeUndefined()
+    expect(env.MCP_PUBLIC_URL).toBeUndefined()
+  })
+
+  it('requires MCP secrets only when MCP is enabled', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('ENABLE_MCP', 'true')
+    vi.resetModules()
+    await expect(import('./env')).rejects.toThrow(
+      /MCP_PUBLIC_URL is required when ENABLE_MCP is true/,
+    )
+  })
+
+  it('accepts complete MCP configuration when enabled', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('ENABLE_MCP', 'true')
+    vi.stubEnv('MCP_PUBLIC_URL', 'https://mcp.example.com')
+    vi.stubEnv('ASSISTANT_CONFIRMATION_SECRET', 'b'.repeat(32))
+    vi.resetModules()
+    const { env } = await import('./env')
+    expect(env.ENABLE_MCP).toBe(true)
+    expect(env.MCP_PUBLIC_URL).toBe('https://mcp.example.com')
   })
 
   it('defaults the instance currency to USD', async () => {

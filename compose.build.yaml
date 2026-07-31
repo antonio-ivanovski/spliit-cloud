@@ -1,0 +1,30 @@
+services:
+  migrate:
+    pull_policy: never
+    build:
+      context: .
+      target: migrate
+      args:
+        APP_SCOPE: '@spliit/db'
+
+  api:
+    pull_policy: never
+    build:
+      context: .
+      target: api
+      args:
+        APP_SCOPE: '@spliit/api'
+
+  worker:
+    pull_policy: never
+    build:
+      context: .
+      target: worker
+      args:
+        APP_SCOPE: '@spliit/worker'
+
+  web:
+    pull_policy: never
+    build:
+      context: .
+      dockerfile: Dockerfile.web

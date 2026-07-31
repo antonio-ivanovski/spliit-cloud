@@ -12,6 +12,7 @@ const {
   mockSignInSocial,
   mockGetSession,
   mockNavigate,
+  mockDeploymentConfig,
 } = vi.hoisted(() => ({
   mockSignInEmail: vi.fn(),
   mockSignUpEmail: vi.fn(),
@@ -19,6 +20,11 @@ const {
   mockSignInSocial: vi.fn(),
   mockGetSession: vi.fn(),
   mockNavigate: vi.fn(),
+  mockDeploymentConfig: {
+    defaultCurrencyCode: 'USD',
+    enableGoogleOAuth: false,
+    enableGitHubOAuth: false,
+  },
 }))
 
 vi.mock('@/lib/auth', () => ({
@@ -33,6 +39,10 @@ vi.mock('@/lib/auth', () => ({
     },
     getSession: mockGetSession,
   },
+}))
+
+vi.mock('@/lib/deployment-config', () => ({
+  useDeploymentConfig: () => mockDeploymentConfig,
 }))
 
 vi.mock('@tanstack/react-router', () => ({
@@ -72,9 +82,8 @@ async function fillEmail(
 describe('AuthPanel', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    // Reset feature flags to defaults
-    import.meta.env.VITE_ENABLE_GOOGLE_OAUTH = 'false'
-    import.meta.env.VITE_ENABLE_GITHUB_OAUTH = 'false'
+    mockDeploymentConfig.enableGoogleOAuth = false
+    mockDeploymentConfig.enableGitHubOAuth = false
   })
 
   // ── Mode switching ──────────────────────────────────────────────────
@@ -231,8 +240,8 @@ describe('AuthPanel', () => {
   // ── Social buttons ──────────────────────────────────────────────────
 
   it('social buttons appear when feature flags are enabled', () => {
-    import.meta.env.VITE_ENABLE_GOOGLE_OAUTH = 'true'
-    import.meta.env.VITE_ENABLE_GITHUB_OAUTH = 'true'
+    mockDeploymentConfig.enableGoogleOAuth = true
+    mockDeploymentConfig.enableGitHubOAuth = true
 
     render(<AuthPanel />)
 
@@ -241,7 +250,7 @@ describe('AuthPanel', () => {
   })
 
   it('returns social sign-in to an overridden OAuth continuation path', async () => {
-    import.meta.env.VITE_ENABLE_GOOGLE_OAUTH = 'true'
+    mockDeploymentConfig.enableGoogleOAuth = true
     const redirectTo =
       '/oauth/login?oauth_query=client_id%3Dassistant-client%26scope%3Dopenid'
     const { user } = render(<AuthPanel embedded redirectTo={redirectTo} />)

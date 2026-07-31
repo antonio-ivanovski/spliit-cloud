@@ -1,53 +1,138 @@
-# Deployment
+# Self-hosting
 
-> Self-hosting guidance is preliminary. The project focus is on the cloud account system and public instance at [spliit.cloud](https://spliit.cloud). These notes will expand as self-hosting matures.
+The supported Docker deployment uses one public origin. The nginx-based web
+container serves the SPA and forwards the existing API paths to the private API
+container:
 
-For local development, see [Run locally](../README.md#run-locally) and [Run in a container](../README.md#run-in-a-container) in the README.
+```text
+internet -> HTTPS reverse proxy -> web:3000 -> api:3001
+                                   |
+                                   +-> static SPA
+```
 
-## Essentials
+PostgreSQL, migrations, the API, and the worker communicate only on the Compose
+network. The default stack does not publish ports `3001`, `3003`, or `5432`.
 
-The app needs: a web frontend (static SPA), an API service, PostgreSQL, and SMTP for sign-in/invitations. Optional: S3-compatible storage for expense documents and an AI provider for receipt scanning.
+## Quick start
 
-Copy `container.env.example` to `container.env`, set the required values (see the inline comments), then `bun start-container`. The API runs at `localhost:3001`; the database is only reachable on the internal Docker network.
+Copy `container.env.example` to `container.env` and set:
 
-## Key settings
+- `APP_URL` to the final HTTPS origin, such as `https://spliit.example.com`
+- a long random `POSTGRES_PASSWORD`
+- `BETTER_AUTH_SECRET` from `openssl rand -base64 32`
+- `SMTP_HOST`, `SMTP_PORT`, and `EMAIL_FROM`
+- both `SMTP_USER` and `SMTP_PASS` for authenticated SMTP, or neither for a
+  trusted anonymous relay
+- `EMAIL_UNSUBSCRIBE_SECRET` from `openssl rand -hex 32`
 
-- `BETTER_AUTH_SECRET` — generate with `openssl rand -base64 32`
-- `BETTER_AUTH_URL` — the public API origin (HTTPS), e.g. `https://api.spliit.example.com`
-- `WEB_ORIGINS` — the public web origin
-- `MCP_PUBLIC_URL` — the public Spliit Assistant MCP service origin; used as the
-  OAuth resource audience
-- `ASSISTANT_CONFIRMATION_SECRET` — a dedicated random secret of at least 32
-  bytes used to encrypt 15-minute expense confirmation tokens
+Then start the project:
 
-The separately deployed `apps/mcp` service requires `MCP_PUBLIC_URL`,
-`MCP_API_URL`, and `MCP_WEB_URL`. Its `MCP_PUBLIC_URL` must match the value
-configured on the API.
+```bash
+docker compose --env-file container.env up -d
+```
 
-- `SMTP_HOST`, `EMAIL_FROM` — required for magic-link sign-in and invitations
-- `PUSH_VAPID_PUBLIC_KEY`, `PUSH_VAPID_PRIVATE_KEY`, `PUSH_VAPID_SUBJECT` —
-  required together for Web Push delivery. Generate the key pair with
-  `bunx web-push generate-vapid-keys`; expose only the public key to clients.
-- `EMAIL_UNSUBSCRIBE_SECRET` — secret used to sign optional-email unsubscribe
-  links. Generate one with `openssl rand -hex 32`; use a separate value per
-  environment and keep it out of source control. Tokens expire after 90 days.
-- `S3_UPLOAD_*` — only if `PUBLIC_ENABLE_EXPENSE_DOCUMENTS=true`
-- `AI_PROVIDER` — optional: `openai`, `anthropic`, `openai-compatible`, or `google`; defaults to `openai`
-- `AI_API_KEY` — only if `PUBLIC_ENABLE_RECEIPT_EXTRACT=true` or `PUBLIC_ENABLE_CATEGORY_EXTRACT=true`
-- `AI_BASE_URL` — optional API root for the selected provider (e.g. `https://openrouter.ai/api/v1`)
-- `AI_RECEIPT_MODEL` — optional, defaults to `gpt-5-nano`
-- `AI_CATEGORY_MODEL` — optional, defaults to `gpt-5-nano`
+The web port binds to `127.0.0.1:3000`. Point Caddy, nginx, Traefik, HAProxy, or
+another TLS-terminating reverse proxy at that address. The proxy should preserve
+the public `Host` header and set `X-Forwarded-For`, `X-Real-IP`, and
+`X-Forwarded-Proto`. Spliit's web gateway preserves those values for the API.
 
-The web app is a Vite SPA. Build with `bun run build`, serve `apps/web/dist` from any static host, and set `VITE_API_URL` to your API origin.
+Useful checks:
 
-## Health checks
+```bash
+curl https://spliit.example.com/health/liveness
+curl https://spliit.example.com/health/readiness
+docker compose --env-file container.env ps
+docker compose --env-file container.env logs api worker
+```
 
-- `GET /health/readiness` — API and database are reachable
-- `GET /health/liveness` — API process is running
+The `migrate` container exiting successfully is expected.
+
+The bundled database image is PostgreSQL 18 and stores its data below
+`/var/lib/postgresql/<major>/docker`; the Compose volume is therefore mounted
+at `/var/lib/postgresql`. If upgrading an existing deployment that used the
+legacy `/var/lib/postgresql/data` mount, do not start the new image until the
+database has been migrated. Take a backup first, then use PostgreSQL's
+`pg_upgrade` procedure (or restore a `pg_dump` into a fresh PostgreSQL 18
+volume). A volume containing the old data at the legacy path cannot be reused
+by simply changing the image tag.
+
+## Ports and split-origin deployments
+
+Change `WEB_PORT` to move the local web port. Keep `BIND_ADDRESS=127.0.0.1`
+unless the reverse proxy runs on another host or cannot reach host loopback.
+
+The optional API override publishes port 3001:
+
+```bash
+docker compose \
+  --env-file container.env \
+  -f compose.yaml \
+  -f compose.api-port.yaml \
+  up -d
+```
+
+`API_BIND_ADDRESS` and `API_PORT` control that mapping. Direct API exposure is
+not needed for the normal same-origin setup, including most MCP deployments,
+because `/auth`, `/.well-known`, and `/trpc` are already available through the
+web origin.
+
+For a separately hosted SPA, build it with `VITE_API_URL` set to the public API
+origin. Set `WEB_ORIGINS` to the SPA origin and `BETTER_AUTH_URL` to the API
+origin; these override the same-origin `APP_URL` defaults. This is how the
+project can continue serving the web app from Cloudflare Pages while exposing
+the API from Dokploy or the API-port Compose override. No runtime `config.js` is
+used.
+
+## Optional features
+
+The example environment file contains every supported toggle. Optional values
+may remain empty.
+
+- OAuth buttons are enabled automatically when both credentials for Google or
+  GitHub are configured.
+- Expense documents require
+  `PUBLIC_ENABLE_EXPENSE_DOCUMENTS=true` and the required `S3_UPLOAD_*` values.
+- AI features require their corresponding `PUBLIC_ENABLE_*` flag and
+  `AI_API_KEY`. `AI_PROVIDER`, model names, and `AI_BASE_URL` are optional.
+- Web Push requires the public key, private key, and subject together.
+- MCP requires `ENABLE_MCP=true`, `MCP_PUBLIC_URL`, and a dedicated
+  `ASSISTANT_CONFIRMATION_SECRET` of at least 32 bytes. Deploy the MCP service
+  separately using [the MCP guide](./mcp-publishing.md).
+
+The background worker is part of the base stack because it handles recurring
+expenses as well as notifications.
+
+## Updates and rollback
+
+`latest` follows successful builds from `main`. Every build is also published
+with an immutable commit tag. For controlled upgrades, set `SPLIIT_TAG` to a
+known commit tag before pulling:
+
+```bash
+docker compose --env-file container.env pull
+docker compose --env-file container.env up -d
+```
+
+The one-shot migration service applies pending database migrations before the
+new API starts. Back up the database before upgrading. Roll back application
+images by restoring the previous `SPLIIT_TAG`; if a release includes an
+incompatible database migration, restore the matching database backup as well.
+
+## Backups
+
+The `postgres_data` volume contains the primary application data. Use regular
+off-host `pg_dump` backups or an equivalent PostgreSQL-aware backup system.
+Periodically test a full restore into a separate PostgreSQL instance. Object
+storage must be backed up separately when expense documents are enabled.
 
 ## Hardening
 
-- Keep `db` on a private network; only `api` should be publicly reachable
-- Use HTTPS with HSTS on both origins
-- Run off-server database backups with a tested restore procedure
-- Set up SPF/DKIM/DMARC for `EMAIL_FROM`
+- Terminate HTTPS before the web container and enable HSTS at the outer proxy.
+- Do not publish PostgreSQL or the worker health port.
+- Leave the API private unless a split-origin deployment requires it.
+- Keep `TRUST_PROXY=true` only when the gateway is reached through a trusted
+  reverse proxy. Set it to `false` if clients connect directly to a gateway
+  bound beyond loopback.
+- Protect `container.env`, database backups, SMTP credentials, and auth secrets.
+- Configure SPF, DKIM, and DMARC for `EMAIL_FROM`.
+- Pin `SPLIIT_TAG` when you prefer scheduled upgrades over tracking `latest`.

@@ -33,10 +33,14 @@ FROM runner AS api
 # Regenerate the OpenAPI spec during build — the source is gitignored and
 # excluded from turbo prune's `out/full/`, so the runner stage doesn't
 # carry a copy. `NODE_ENV=` overrides the runner-stage `ENV NODE_ENV=production`
-# to avoid env validation requiring BETTER_AUTH_SECRET / SMTP_HOST /
-# EMAIL_FROM at build time; the spec is derived from TypeScript types
-# and Zod schemas, so runtime env values don't affect the output.
-RUN NODE_ENV= bun run apps/api/scripts/generate-openapi.ts
+# to avoid production-only env validation at build time. Enable MCP with
+# non-routable placeholders so the generated document includes the optional
+# OAuth/assistant surface as well.
+RUN NODE_ENV= \
+  ENABLE_MCP=true \
+  MCP_PUBLIC_URL=https://mcp-build.invalid \
+  ASSISTANT_CONFIRMATION_SECRET=assistant-build-secret-at-least-32-bytes \
+  bun run apps/api/scripts/generate-openapi.ts
 EXPOSE 3001
 CMD ["bun", "run", "apps/api/src/server.ts"]
 

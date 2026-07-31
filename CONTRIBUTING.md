@@ -38,6 +38,14 @@ bun run test             # Vitest unit tests
 bun test:integration     # Real-DB integration tests
 ```
 
+Web integration tests expect an API using the integration profile. Start it in
+another terminal before running the suite:
+
+```bash
+bun --filter @spliit/api start:integration # API on :3101
+bun test:integration
+```
+
 ## Pull request workflow
 
 1. Branch off `main` (`fix/...`, `feat/...`, `docs/...`)

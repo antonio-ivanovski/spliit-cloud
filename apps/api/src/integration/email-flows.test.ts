@@ -3,11 +3,14 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { prisma } from '@spliit/db'
 
 import { randomId } from '../lib/api'
+import { env } from '../lib/env'
 import '../lib/notifications'
 import { waitForScheduledNotificationDispatchesForTest } from '../lib/notifications/dispatcher'
 import { invitationsRouter } from '../trpc/routers/invitations'
 import { expectEmailEventually, probeMaildev } from './maildev-client'
 import { checkDbConnection, testRunId } from './setup'
+
+const API_BASE_URL = env.BETTER_AUTH_URL ?? 'http://localhost:3101'
 
 await checkDbConnection()
 
@@ -225,9 +228,7 @@ describe.skipIf(!maildevReachable)('Email invitation flow — real DB', () => {
 // ---------------------------------------------------------------------------
 // Test 2: Magic link sign-in (HTTP-level, requires running API)
 // ---------------------------------------------------------------------------
-async function probeApiHealth(
-  baseUrl = 'http://localhost:3001',
-): Promise<boolean> {
+async function probeApiHealth(baseUrl = API_BASE_URL): Promise<boolean> {
   try {
     const res = await fetch(`${baseUrl}/health`)
     return res.ok
@@ -243,7 +244,7 @@ describe.skipIf(!apiReachable || !maildevReachable)(
   () => {
     const runId = testRunId()
     const testEmail = `magic-${runId}@test-magic-link.example`
-    const apiBase = 'http://localhost:3001'
+    const apiBase = API_BASE_URL
 
     beforeAll(async () => {
       // Clean any stale verification for this email before starting
@@ -295,7 +296,7 @@ describe.skipIf(!apiReachable || !maildevReachable)(
       // Format:
       //   Click the link below to sign in to Spliit.
       //
-      //   http://localhost:3001/auth/magic-link/verify?token=xxx...
+      //   http://localhost:3101/auth/magic-link/verify?token=xxx...
       const urlMatch = mailContent.match(
         /(https?:\/\/[^\s]+\/auth\/magic-link\/verify\?[^\s]+)/,
       )

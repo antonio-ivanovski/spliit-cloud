@@ -80,15 +80,12 @@ export async function disconnectPushSubscription(): Promise<boolean> {
     // React provider (for example the account menu tests). The request uses
     // the same batch JSON shape as httpBatchLink and remains authenticated by
     // the existing session cookie.
-    await fetch(
-      `${import.meta.env.VITE_API_URL ?? 'http://localhost:3001'}/trpc/notifications.push.remove?batch=1`,
-      {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify([{ json: { endpoint: subscription.endpoint } }]),
-      },
-    ).catch(() => undefined)
+    await fetch(`${getApiBaseUrl()}/trpc/notifications.push.remove?batch=1`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify([{ json: { endpoint: subscription.endpoint } }]),
+    }).catch(() => undefined)
     await subscription.unsubscribe().catch(() => undefined)
     return true
   } catch {
@@ -96,3 +93,4 @@ export async function disconnectPushSubscription(): Promise<boolean> {
     return false
   }
 }
+import { getApiBaseUrl } from './api-url'

@@ -2,6 +2,8 @@ import { oauthProviderClient } from '@better-auth/oauth-provider/client'
 import { magicLinkClient } from 'better-auth/client/plugins'
 import { createAuthClient } from 'better-auth/react'
 
+import { getApiBaseUrl } from './api-url'
+
 /**
  * Spliit web auth client. Talks to the better-auth handler mounted at `/auth/*`
  * on the API server. Cookies are sent with credentials so the SPA does not need
@@ -11,7 +13,7 @@ import { createAuthClient } from 'better-auth/react'
  * names; the client only needs to know the base URL and that sessions are
  * cookie-based.
  */
-const apiBaseUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3001'
+const apiBaseUrl = getApiBaseUrl()
 
 export const authClient = createAuthClient({
   baseURL: `${apiBaseUrl}/auth`,

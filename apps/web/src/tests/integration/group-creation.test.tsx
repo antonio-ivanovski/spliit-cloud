@@ -4,6 +4,7 @@ import type { GroupExpense } from '@/lib/api'
 import {
   cleanupTestAccount,
   createTestSession,
+  INTEGRATION_API_URL,
   probeExistingApi,
 } from '@/test/integration/client'
 import { render, screen, waitFor } from '@/test/integration/test-utils'
@@ -28,8 +29,8 @@ import { render, screen, waitFor } from '@/test/integration/test-utils'
 
 if (!(await probeExistingApi())) {
   throw new Error(
-    `API server not running on http://localhost:3001. ` +
-      `Start it with \`bun dev\` first.`,
+    `API server not running on ${INTEGRATION_API_URL}. ` +
+      `Start it with \`bun --filter @spliit/api start:integration\` first.`,
   )
 }
 
@@ -74,7 +75,7 @@ vi.mock('@tanstack/react-router', () => ({
 
 // ── Shared state ─────────────────────────────────────────────────────────
 
-const API_URL = 'http://localhost:3001'
+const API_URL = INTEGRATION_API_URL
 
 let sessionCookie: string
 const testEmail = `test-${Date.now()}@integration-spliit.local`

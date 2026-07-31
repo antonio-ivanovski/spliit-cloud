@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { needsDisplayName } from '@/lib/account'
 import { authClient } from '@/lib/auth'
+import { useDeploymentConfig } from '@/lib/deployment-config'
 import type { HomeSearch } from '@/router/schemas'
 import { isStrongPassword } from '@spliit/domain/password'
 
@@ -17,11 +18,6 @@ export function getErrorMessage(error: unknown): string {
   return String(error)
 }
 
-export function isFeatureFlagEnabled(name: string): boolean {
-  const value = import.meta.env[name as keyof ImportMetaEnv]
-  return value === 'true' || value === '1'
-}
-
 export function useAuthPanel(options?: { redirectTo?: string }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
   const navigate = useNavigate()
@@ -32,6 +28,7 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
   } = useSearch({ strict: false }) as HomeSearch
   const redirectTo = options?.redirectTo ?? redirect ?? '/'
   const initialMode = initialSearchMode === 'sign-up' ? 'sign-up' : 'sign-in'
+  const deployment = useDeploymentConfig()
 
   const webOrigin =
     typeof window !== 'undefined'
@@ -178,8 +175,8 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
     })
   }
 
-  const googleEnabled = isFeatureFlagEnabled('VITE_ENABLE_GOOGLE_OAUTH')
-  const githubEnabled = isFeatureFlagEnabled('VITE_ENABLE_GITHUB_OAUTH')
+  const googleEnabled = deployment.enableGoogleOAuth
+  const githubEnabled = deployment.enableGitHubOAuth
   const socialEnabled = googleEnabled || githubEnabled
 
   return {

@@ -9,6 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { getApiBaseUrl } from '@/lib/api-url'
 
 export default function ExportButton({
   groupId,
@@ -18,7 +19,7 @@ export default function ExportButton({
   showLabel?: boolean
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Expenses' })
-  const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3001'
+  const apiUrl = getApiBaseUrl()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

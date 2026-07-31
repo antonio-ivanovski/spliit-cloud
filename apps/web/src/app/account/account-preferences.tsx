@@ -33,6 +33,7 @@ import {
   type AccountTheme,
 } from '@/lib/account-preferences'
 import { useCurrencies } from '@/lib/currency'
+import { useDeploymentConfig } from '@/lib/deployment-config'
 import { trpc } from '@/trpc/client'
 
 const themes: AccountTheme[] = ['light', 'dark', 'system']
@@ -43,6 +44,7 @@ export function AccountPreferences() {
   const query = trpc.account.getPreferences.useQuery()
   const syncedPreferences = useSyncedAccountPreferences()
   const updater = useAccountPreferenceUpdater()
+  const deployment = useDeploymentConfig()
   const allCurrencies = useCurrencies(
     t('GroupForm.CurrencyCodeField.customOption'),
   )
@@ -53,7 +55,7 @@ export function AccountPreferences() {
   const sourcePreferences =
     syncedPreferences ??
     (query.data?.preferences as AccountPreferencesValue | undefined)
-  const deploymentCurrency = import.meta.env.VITE_DEFAULT_CURRENCY_CODE || 'USD'
+  const deploymentCurrency = deployment.defaultCurrencyCode
 
   const text = (key: string, fallback: string) =>
     t(`AccountSettings.preferences.${key}` as never, {

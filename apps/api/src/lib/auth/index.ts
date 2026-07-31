@@ -383,50 +383,54 @@ export const auth = betterAuth({
   })(),
 
   plugins: [
-    oauthProvider({
-      loginPage: `${webOrigins[0]}/oauth/login`,
-      consentPage: `${webOrigins[0]}/oauth/consent`,
-      scopes: [
-        'openid',
-        'profile',
-        'email',
-        'offline_access',
-        'spliit:groups:read',
-        'spliit:expenses:write',
-      ],
-      validAudiences: [`${env.MCP_PUBLIC_URL}/mcp`],
-      allowDynamicClientRegistration: true,
-      allowUnauthenticatedClientRegistration: true,
-      allowPublicClientPrelogin: true,
-      silenceWarnings: { oauthAuthServerConfig: true },
-      grantTypes: ['authorization_code', 'refresh_token'],
-      clientRegistrationDefaultScopes: [
-        'openid',
-        'profile',
-        'email',
-        'offline_access',
-        'spliit:groups:read',
-        'spliit:expenses:write',
-      ],
-      clientRegistrationAllowedScopes: [
-        'openid',
-        'profile',
-        'email',
-        'offline_access',
-        'spliit:groups:read',
-        'spliit:expenses:write',
-      ],
-      customAccessTokenClaims: ({ user }) => ({
-        account_id: user?.id,
-      }),
-    }),
-    jwt({
-      // OAuth access tokens are minted by the OAuth Provider flow. Adding a
-      // JWT header to every cookie-session response is unnecessary and makes
-      // ordinary `/get-session` reads depend on the OAuth signing key.
-      disableSettingJwtHeader: true,
-      adapter: testJwtAdapter,
-    }),
+    ...(env.ENABLE_MCP
+      ? [
+          oauthProvider({
+            loginPage: `${webOrigins[0]}/oauth/login`,
+            consentPage: `${webOrigins[0]}/oauth/consent`,
+            scopes: [
+              'openid',
+              'profile',
+              'email',
+              'offline_access',
+              'spliit:groups:read',
+              'spliit:expenses:write',
+            ],
+            validAudiences: [`${env.MCP_PUBLIC_URL!}/mcp`],
+            allowDynamicClientRegistration: true,
+            allowUnauthenticatedClientRegistration: true,
+            allowPublicClientPrelogin: true,
+            silenceWarnings: { oauthAuthServerConfig: true },
+            grantTypes: ['authorization_code', 'refresh_token'],
+            clientRegistrationDefaultScopes: [
+              'openid',
+              'profile',
+              'email',
+              'offline_access',
+              'spliit:groups:read',
+              'spliit:expenses:write',
+            ],
+            clientRegistrationAllowedScopes: [
+              'openid',
+              'profile',
+              'email',
+              'offline_access',
+              'spliit:groups:read',
+              'spliit:expenses:write',
+            ],
+            customAccessTokenClaims: ({ user }) => ({
+              account_id: user?.id,
+            }),
+          }),
+          jwt({
+            // OAuth access tokens are minted by the OAuth Provider flow. Adding a
+            // JWT header to every cookie-session response is unnecessary and makes
+            // ordinary `/get-session` reads depend on the OAuth signing key.
+            disableSettingJwtHeader: true,
+            adapter: testJwtAdapter,
+          }),
+        ]
+      : []),
     magicLink({
       disableSignUp: false,
       sendMagicLink: async ({ email, url }) => {

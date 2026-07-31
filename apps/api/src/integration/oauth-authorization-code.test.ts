@@ -15,7 +15,7 @@ await checkDbConnection()
 
 const PASSWORD = 'TestPass123!'
 const REDIRECT_URI = 'http://localhost:3002/oauth/callback'
-const ISSUER = 'http://localhost:3001/auth'
+const ISSUER = `${env.BETTER_AUTH_URL ?? 'http://localhost:3101'}/auth`
 const AUDIENCE = `${env.MCP_PUBLIC_URL}/mcp`
 const SCOPES =
   'openid profile email offline_access spliit:groups:read spliit:expenses:write'

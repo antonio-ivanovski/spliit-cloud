@@ -5,6 +5,7 @@ import { createTRPCReact } from '@trpc/react-query'
 import { useState } from 'react'
 import superjson from 'superjson'
 
+import { getApiBaseUrl } from '@/lib/api-url'
 import type { AppRouter } from '@spliit/api/router'
 
 import { makeQueryClient } from './query-client'
@@ -25,7 +26,7 @@ export function getQueryClient() {
 }
 
 function getUrl() {
-  return `${import.meta.env.VITE_API_URL ?? 'http://localhost:3001'}/trpc`
+  return `${getApiBaseUrl()}/trpc`
 }
 
 export function getTrpcClient() {

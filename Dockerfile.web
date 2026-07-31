@@ -14,7 +14,7 @@ COPY --from=pruner /app/out/bun.lock ./bun.lock
 RUN --mount=type=cache,target=/root/.bun/install/cache bun install --frozen-lockfile
 
 FROM base AS builder
-ARG VITE_API_URL=http://localhost:3001
+ARG VITE_API_URL
 ARG VITE_DEFAULT_CURRENCY_CODE=USD
 ENV VITE_API_URL=$VITE_API_URL
 ENV VITE_DEFAULT_CURRENCY_CODE=$VITE_DEFAULT_CURRENCY_CODE
@@ -22,7 +22,7 @@ COPY --from=installer /app ./
 COPY --from=pruner /app/out/full/ ./
 RUN bun --filter @spliit/web build
 
-FROM nginx:1.27-alpine
+FROM nginx:1.27-alpine AS web
 
 COPY nginx.web.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /app/apps/web/dist /usr/share/nginx/html

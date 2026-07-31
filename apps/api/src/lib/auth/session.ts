@@ -36,6 +36,7 @@ const oauthResource = oauthProviderResourceClient().getActions()
 export async function getOAuthAuthFromRequest(
   request: Request,
 ): Promise<OAuthResolvedAuth | null> {
+  if (!env.ENABLE_MCP || !env.MCP_PUBLIC_URL) return null
   const authorization = request.headers.get('authorization')
   if (!authorization?.startsWith('Bearer ')) return null
   const accessToken = authorization.slice('Bearer '.length)

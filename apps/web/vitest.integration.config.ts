@@ -3,7 +3,15 @@ import path from 'node:path'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vitest/config'
 
+const integrationApiUrl =
+  process.env.INTEGRATION_API_URL ?? 'http://localhost:3101'
+
 export default defineConfig({
+  // Keep the integration API separate from the sequential local-dev ports.
+  envDir: path.resolve(__dirname, '../..'),
+  define: {
+    'import.meta.env.VITE_API_URL': JSON.stringify(integrationApiUrl),
+  },
   plugins: [react()],
   test: {
     globals: true,

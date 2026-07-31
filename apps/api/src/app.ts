@@ -111,24 +111,32 @@ app.post('/email/unsubscribe', emailUnsubscribePost)
 // better-auth handler — exposes /auth/sign-in, /auth/sign-up, etc.
 app.on(['GET', 'POST'], '/auth/*', (c) => auth.handler(c.req.raw))
 app.get('/.well-known/oauth-authorization-server', (c) =>
-  oauthProviderAuthServerMetadata(auth, {
-    headers: { 'Access-Control-Allow-Origin': '*' },
-  })(c.req.raw),
+  env.ENABLE_MCP
+    ? oauthProviderAuthServerMetadata(auth, {
+        headers: { 'Access-Control-Allow-Origin': '*' },
+      })(c.req.raw)
+    : c.notFound(),
 )
 app.get('/.well-known/oauth-authorization-server/auth', (c) =>
-  oauthProviderAuthServerMetadata(auth, {
-    headers: { 'Access-Control-Allow-Origin': '*' },
-  })(c.req.raw),
+  env.ENABLE_MCP
+    ? oauthProviderAuthServerMetadata(auth, {
+        headers: { 'Access-Control-Allow-Origin': '*' },
+      })(c.req.raw)
+    : c.notFound(),
 )
 app.get('/.well-known/openid-configuration', (c) =>
-  oauthProviderOpenIdConfigMetadata(auth, {
-    headers: { 'Access-Control-Allow-Origin': '*' },
-  })(c.req.raw),
+  env.ENABLE_MCP
+    ? oauthProviderOpenIdConfigMetadata(auth, {
+        headers: { 'Access-Control-Allow-Origin': '*' },
+      })(c.req.raw)
+    : c.notFound(),
 )
 app.get('/.well-known/openid-configuration/auth', (c) =>
-  oauthProviderOpenIdConfigMetadata(auth, {
-    headers: { 'Access-Control-Allow-Origin': '*' },
-  })(c.req.raw),
+  env.ENABLE_MCP
+    ? oauthProviderOpenIdConfigMetadata(auth, {
+        headers: { 'Access-Control-Allow-Origin': '*' },
+      })(c.req.raw)
+    : c.notFound(),
 )
 
 app.get('/groups/:groupId/expenses/export/json', (c) =>

@@ -133,11 +133,14 @@ If you discover a security issue, please follow the responsible disclosure proce
 
 ## Self-hosting overview
 
-The current project focus is on the cloud account system and the public instance at [spliit.cloud](https://spliit.cloud). Self-hosting is supported but is not the primary development priority at this stage.
+The supported Docker setup runs the web app, API, background worker, migrations,
+and PostgreSQL as one Compose project. The web container is the only public
+entry point: it serves the SPA and proxies API/auth requests over the private
+Docker network. Point any HTTPS reverse proxy at the web port.
 
-Spliit Cloud can be self-hosted with a web frontend, an API service, PostgreSQL, optional S3-compatible storage for expense documents, and optional AI-provider configuration for receipt scanning and category extraction.
-
-The simplest local setup uses local Docker containers for PostgreSQL, object storage, and email capture.
+SMTP is required for sign-in links, email verification, recovery, and
+invitations. S3-compatible document storage, AI features, OAuth providers, Web
+Push, and the MCP assistant are optional.
 
 ## Run locally
 
@@ -168,28 +171,53 @@ ignored by Git.
 
 ## Run in a container
 
-1. Copy the file `container.env.example` as `container.env`.
-2. Set `POSTGRES_PASSWORD` to a long random value.
-3. Set `WEB_ORIGINS` to the public web origin.
-4. Run `bun start-container` to start the API and Postgres.
+1. Download `compose.yaml` and `container.env.example`, or clone this
+   repository.
+2. Copy `container.env.example` to `container.env`.
+3. Set `APP_URL`, `POSTGRES_PASSWORD`, `BETTER_AUTH_SECRET`, the SMTP settings,
+   `EMAIL_FROM`, and `EMAIL_UNSUBSCRIBE_SECRET`.
+4. Start the stack:
 
-The API is available at http://localhost:3001. The database is only reachable on the internal Docker network and stores data in the `postgres_data` Docker volume.
+   ```bash
+   docker compose --env-file container.env up -d
+   ```
 
-For Dokploy on a single Hetzner VPS, publish only the `api` service as your API domain and keep the `db` service private. If the web app is hosted on Cloudflare Pages, set `VITE_API_URL` there to the public Dokploy API origin, for example `https://api.spliit.example.com`. Configure off-server Postgres backups separately.
+The web gateway listens on `127.0.0.1:3000` by default. Configure your reverse
+proxy to forward the public `APP_URL` to that address. Change `WEB_PORT` when
+needed; set `BIND_ADDRESS=0.0.0.0` only when the port must be reachable beyond
+the local host.
 
-See [docs/deployment.md](./docs/deployment.md) for preliminary production notes.
+The API, worker, and database remain private. Migrations run automatically
+before the API starts, and PostgreSQL data is stored in the `postgres_data`
+volume.
+
+To expose the API directly for debugging or an intentional split-origin
+deployment:
+
+```bash
+docker compose \
+  --env-file container.env \
+  -f compose.yaml \
+  -f compose.api-port.yaml \
+  up -d
+```
+
+Developers can build the same stack from source with
+`-f compose.yaml -f compose.build.yaml`.
+
+See [docs/deployment.md](./docs/deployment.md) for configuration, reverse-proxy,
+upgrade, backup, and optional-feature guidance.
 
 ## Production deployment
 
-> Production self-hosting guidance is preliminary. The project is focused on the cloud account system; detailed deployment documentation will be expanded as self-hosting matures.
-
 Key requirements for a public instance:
 
-- `BETTER_AUTH_SECRET` (generate with `openssl rand -base64 32`)
-- HTTPS on both web and API origins
+- `BETTER_AUTH_SECRET` generated with `openssl rand -base64 32`
+- `EMAIL_UNSUBSCRIBE_SECRET` generated with `openssl rand -hex 32`
+- HTTPS on the configured `APP_URL`
 - persistent PostgreSQL storage with off-server backups
-- SMTP configured (`SMTP_HOST`, `EMAIL_FROM`) for sign-in and invitations
-- `db` service on a private network (only `api` reachable publicly)
+- working SMTP and correctly configured SPF/DKIM/DMARC
+- only the web gateway reachable publicly
 - tested database restore procedure
 
 ## Health check

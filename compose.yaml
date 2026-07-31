@@ -1,70 +1,87 @@
+name: spliit-cloud
+
 services:
+  db:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-spliit}
+      POSTGRES_USER: ${POSTGRES_USER:-spliit}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
+    volumes:
+      # PostgreSQL 18 stores data below a major-version-specific directory.
+      # Mount the parent directory so future major-version upgrades can use
+      # pg_upgrade without crossing a volume mount boundary.
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - spliit
+
   migrate:
-    build:
-      context: .
-      target: migrate
-      args:
-        APP_SCOPE: '@spliit/db'
-    image: spliit:latest
+    image: ghcr.io/antonio-ivanovski/spliit-cloud-migrate:${SPLIIT_TAG:-latest}
+    pull_policy: always
+    restart: 'no'
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-spliit}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-spliit}
     depends_on:
       db:
         condition: service_healthy
-    command: ['bun', '--filter', '@spliit/db', 'prisma-migrate']
     networks:
-      - spliit_network
+      - spliit
 
   api:
-    build:
-      context: .
-      target: api
-      args:
-        APP_SCOPE: '@spliit/api'
-    image: spliit:latest
+    image: ghcr.io/antonio-ivanovski/spliit-cloud-api:${SPLIIT_TAG:-latest}
+    pull_policy: always
     restart: unless-stopped
-    ports:
-      - 3001:3001
-    env_file:
-      - .env
+    expose:
+      - '3001'
     environment:
       PORT: 3001
-      WEB_ORIGINS: ${WEB_ORIGINS:-http://localhost:3000}
       DATABASE_URL: postgresql://${POSTGRES_USER:-spliit}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-spliit}
       DATABASE_APPLICATION_NAME: spliit-api
       DATABASE_POOL_SIZE: ${DATABASE_POOL_SIZE:-10}
+      WEB_ORIGINS: ${WEB_ORIGINS:-${APP_URL:?APP_URL must be set}}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL:-${APP_URL:?APP_URL must be set}}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?BETTER_AUTH_SECRET must be set}
+      TRUST_PROXY: ${TRUST_PROXY:-true}
+      SMTP_HOST: ${SMTP_HOST:?SMTP_HOST must be set}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      EMAIL_FROM: ${EMAIL_FROM:?EMAIL_FROM must be set}
+      EMAIL_UNSUBSCRIBE_SECRET: ${EMAIL_UNSUBSCRIBE_SECRET:?EMAIL_UNSUBSCRIBE_SECRET must be set}
       PUBLIC_DEFAULT_CURRENCY_CODE: ${PUBLIC_DEFAULT_CURRENCY_CODE:-USD}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
       PUBLIC_ENABLE_EXPENSE_DOCUMENTS: ${PUBLIC_ENABLE_EXPENSE_DOCUMENTS:-false}
-      PUBLIC_ENABLE_RECEIPT_EXTRACT: ${PUBLIC_ENABLE_RECEIPT_EXTRACT:-false}
-      PUBLIC_ENABLE_CATEGORY_EXTRACT: ${PUBLIC_ENABLE_CATEGORY_EXTRACT:-false}
       S3_UPLOAD_KEY: ${S3_UPLOAD_KEY:-}
       S3_UPLOAD_SECRET: ${S3_UPLOAD_SECRET:-}
       S3_UPLOAD_BUCKET: ${S3_UPLOAD_BUCKET:-}
       S3_UPLOAD_REGION: ${S3_UPLOAD_REGION:-}
       S3_UPLOAD_ENDPOINT: ${S3_UPLOAD_ENDPOINT:-}
       S3_UPLOAD_PUBLIC_URL: ${S3_UPLOAD_PUBLIC_URL:-}
+      PUBLIC_ENABLE_RECEIPT_EXTRACT: ${PUBLIC_ENABLE_RECEIPT_EXTRACT:-false}
+      PUBLIC_ENABLE_CATEGORY_EXTRACT: ${PUBLIC_ENABLE_CATEGORY_EXTRACT:-false}
+      PUBLIC_ENABLE_BULK_CATEGORIZE: ${PUBLIC_ENABLE_BULK_CATEGORIZE:-false}
       AI_PROVIDER: ${AI_PROVIDER:-openai}
       AI_API_KEY: ${AI_API_KEY:-}
       AI_BASE_URL: ${AI_BASE_URL:-}
       AI_RECEIPT_MODEL: ${AI_RECEIPT_MODEL:-gpt-5-nano}
       AI_CATEGORY_MODEL: ${AI_CATEGORY_MODEL:-gpt-5-nano}
-      # Better Auth (required in production: BETTER_AUTH_SECRET)
-      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?BETTER_AUTH_SECRET must be set}
-      BETTER_AUTH_URL: ${BETTER_AUTH_URL:-}
-      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
-      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
-      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
-      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
-      # SMTP (required in production: SMTP_HOST)
-      SMTP_HOST: ${SMTP_HOST:-}
-      SMTP_PORT: ${SMTP_PORT:-}
-      SMTP_USER: ${SMTP_USER:-}
-      SMTP_PASS: ${SMTP_PASS:-}
-      EMAIL_FROM: ${EMAIL_FROM:-}
+      AI_CATEGORY_RECENT_EXPENSES_LIMIT: ${AI_CATEGORY_RECENT_EXPENSES_LIMIT:-50}
       PUSH_VAPID_PUBLIC_KEY: ${PUSH_VAPID_PUBLIC_KEY:-}
       PUSH_VAPID_PRIVATE_KEY: ${PUSH_VAPID_PRIVATE_KEY:-}
       PUSH_VAPID_SUBJECT: ${PUSH_VAPID_SUBJECT:-}
-      EMAIL_UNSUBSCRIBE_SECRET: ${EMAIL_UNSUBSCRIBE_SECRET:-}
+      ENABLE_MCP: ${ENABLE_MCP:-false}
+      MCP_PUBLIC_URL: ${MCP_PUBLIC_URL:-}
+      ASSISTANT_CONFIRMATION_SECRET: ${ASSISTANT_CONFIRMATION_SECRET:-}
+      JOBS_ENABLED: ${JOBS_ENABLED:-true}
     depends_on:
       migrate:
         condition: service_completed_successfully
@@ -76,42 +93,49 @@ services:
         ]
       interval: 10s
       timeout: 5s
-      retries: 6
+      retries: 10
       start_period: 20s
     networks:
-      - spliit_network
+      - spliit
 
   worker:
-    build:
-      context: .
-      target: worker
-      args:
-        APP_SCOPE: '@spliit/worker'
-    image: spliit-worker:latest
+    image: ghcr.io/antonio-ivanovski/spliit-cloud-worker:${SPLIIT_TAG:-latest}
+    pull_policy: always
     restart: unless-stopped
     stop_grace_period: 40s
-    env_file:
-      - .env
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-spliit}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-spliit}
       DATABASE_APPLICATION_NAME: spliit-worker
       DATABASE_POOL_SIZE: ${DATABASE_POOL_SIZE:-10}
+      WEB_ORIGINS: ${WEB_ORIGINS:-${APP_URL:?APP_URL must be set}}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL:-${APP_URL:?APP_URL must be set}}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      EMAIL_FROM: ${EMAIL_FROM}
+      EMAIL_UNSUBSCRIBE_SECRET: ${EMAIL_UNSUBSCRIBE_SECRET}
+      PUSH_VAPID_PUBLIC_KEY: ${PUSH_VAPID_PUBLIC_KEY:-}
+      PUSH_VAPID_PRIVATE_KEY: ${PUSH_VAPID_PRIVATE_KEY:-}
+      PUSH_VAPID_SUBJECT: ${PUSH_VAPID_SUBJECT:-}
       JOBS_ENABLED: ${JOBS_ENABLED:-true}
-      JOBS_RECONCILIATION_CRON: ${JOBS_RECONCILIATION_CRON:-* * * * *}
-      JOBS_MAX_CONCURRENCY: ${JOBS_MAX_CONCURRENCY:-5}
+      JOBS_RECONCILIATION_CRON: ${JOBS_RECONCILIATION_CRON:-*/30 * * * *}
+      JOBS_NOTIFICATION_RECONCILE_CRON: ${JOBS_NOTIFICATION_RECONCILE_CRON:-*/15 * * * *}
+      JOBS_MAX_CONCURRENCY: ${JOBS_MAX_CONCURRENCY:-1}
+      JOBS_POLLING_INTERVAL_SECONDS: ${JOBS_POLLING_INTERVAL_SECONDS:-60}
+      JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS: ${JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS:-300}
       JOBS_POOL_SIZE: ${JOBS_POOL_SIZE:-8}
       JOBS_RETRY_LIMIT: ${JOBS_RETRY_LIMIT:-5}
       JOBS_RETRY_BACKOFF_SECONDS: ${JOBS_RETRY_BACKOFF_SECONDS:-30}
       JOBS_RETENTION_SECONDS: ${JOBS_RETENTION_SECONDS:-604800}
+      HEALTH_RUNNABLE_LAG_THRESHOLD_MS: ${HEALTH_RUNNABLE_LAG_THRESHOLD_MS:-900000}
+      HEALTH_MISSING_TRANSPORT_THRESHOLD: ${HEALTH_MISSING_TRANSPORT_THRESHOLD:-10}
       JOBS_ADMIN_HOST: 0.0.0.0
       JOBS_ADMIN_PORT: 3003
     depends_on:
-      db:
-        condition: service_healthy
       migrate:
         condition: service_completed_successfully
-    expose:
-      - 3003
     healthcheck:
       test:
         [
@@ -120,31 +144,33 @@ services:
         ]
       interval: 10s
       timeout: 5s
-      retries: 6
+      retries: 10
       start_period: 20s
     networks:
-      - spliit_network
+      - spliit
 
-  db:
-    image: postgres:16-alpine
+  web:
+    image: ghcr.io/antonio-ivanovski/spliit-cloud-web:${SPLIIT_TAG:-latest}
+    pull_policy: always
     restart: unless-stopped
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-spliit}
-      POSTGRES_USER: ${POSTGRES_USER:-spliit}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - '${BIND_ADDRESS:-127.0.0.1}:${WEB_PORT:-3000}:80'
+    depends_on:
+      api:
+        condition: service_healthy
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"']
-      interval: 5s
+      test:
+        ['CMD-SHELL', 'wget -qO- http://127.0.0.1/health/liveness >/dev/null']
+      interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
+      start_period: 10s
     networks:
-      - spliit_network
+      - spliit
 
 volumes:
   postgres_data:
 
 networks:
-  spliit_network:
+  spliit:
     driver: bridge
