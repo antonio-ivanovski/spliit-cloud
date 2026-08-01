@@ -14,6 +14,13 @@ vi.mock('@tanstack/react-router', () => ({
 vi.mock('@/components/account-menu', () => ({
   AccountMenu: () => <button type="button">Account</button>,
 }))
+vi.mock('@/components/currency-converter/currency-converter', () => ({
+  CurrencyConverterButton: () => (
+    <button type="button" data-testid="currency-converter">
+      Currency converter
+    </button>
+  ),
+}))
 vi.mock('@/components/account-preferences-sync', () => ({
   AccountPreferencesSync: ({ children }: React.PropsWithChildren) => children,
 }))
@@ -72,6 +79,7 @@ describe('AppShell locale switcher placement', () => {
     render(<AppShell />)
 
     expect(screen.getAllByTestId('locale-switcher')).toHaveLength(2)
+    expect(screen.getAllByTestId('currency-converter')).toHaveLength(2)
     expect(
       screen.getByRole('navigation', { name: 'Header.menu' }),
     ).toBeInTheDocument()
@@ -85,6 +93,7 @@ describe('AppShell locale switcher placement', () => {
     render(<AppShell />)
 
     expect(screen.getAllByTestId('locale-switcher')).toHaveLength(2)
+    expect(screen.getAllByTestId('currency-converter')).toHaveLength(2)
     expect(
       screen.getByRole('navigation', { name: 'Header.menu' }),
     ).toBeInTheDocument()

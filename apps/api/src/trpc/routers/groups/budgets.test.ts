@@ -19,9 +19,7 @@ function makeCaller(authUserId: string) {
 }
 
 const now = new Date()
-const thisMonth = new Date(
-  Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 15),
-)
+const thisMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1))
 const lastMonth = new Date(
   Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 1, 15),
 )
@@ -385,7 +383,7 @@ describe('groupsRouter.budgets read model', () => {
       evenExpense(
         `exp-${index}`,
         1,
-        new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 10)),
+        new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1)),
       ),
     )
     usePrismaMemoryStore({

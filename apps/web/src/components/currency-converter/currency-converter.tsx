@@ -18,6 +18,7 @@ import { useLocale } from '@/i18n/react'
 import { useCurrencies } from '@/lib/currency'
 import { enforceCurrencyPattern } from '@/lib/currency-input'
 import { useCurrencyRate } from '@/lib/hooks'
+import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 import { amountAsMinorUnits, getCurrency, utcTodayIso } from '@spliit/domain'
 
@@ -154,7 +155,10 @@ function getDeviceCurrency(availableCodes: Set<string>): string {
 
 export function CurrencyConverterButton() {
   const { t } = useTranslation(undefined, { keyPrefix: 'CurrencyConverter' })
+  const { data: account, isPending } = useCurrentAccount()
   const [open, setOpen] = useState(false)
+
+  if (isPending || !account) return null
 
   return (
     <ResponsiveDialog open={open} onOpenChange={setOpen}>

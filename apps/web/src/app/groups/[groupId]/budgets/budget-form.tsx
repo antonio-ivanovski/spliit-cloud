@@ -1,10 +1,11 @@
-import { Layers, Users } from 'lucide-react'
+import { Layers, Loader2, Save, Users } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AmountInput } from '@/app/groups/[groupId]/expenses/expense-form/amount-input'
 import { enforceCurrencyPattern } from '@/app/groups/[groupId]/expenses/expense-form/currency-utils'
 import { CategorySelector } from '@/components/category-selector'
+import { FixedActionBar } from '@/components/fixed-action-bar'
 import { ParticipantSelector } from '@/components/participant-selector'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -273,7 +274,7 @@ export function BudgetForm({
   return (
     <form
       onSubmit={(event) => void handleSubmit(event)}
-      className="flex flex-col gap-6"
+      className="flex flex-col gap-6 pb-24 sm:pb-20"
     >
       <div className="grid gap-4 sm:grid-cols-[1fr_13rem]">
         <div className="space-y-2">
@@ -509,14 +510,24 @@ export function BudgetForm({
           {error}
         </p>
       )}
-      <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-        <Button type="button" variant="outline" onClick={onCancel}>
+      <FixedActionBar>
+        <Button type="button" variant="ghost" onClick={onCancel}>
           {t('cancel')}
         </Button>
-        <Button type="submit" disabled={pending}>
-          {pending ? t('saving') : t('save')}
+        <Button type="submit" disabled={pending} className="min-w-28">
+          {pending ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              {t('saving')}
+            </>
+          ) : (
+            <>
+              <Save className="mr-2 h-4 w-4" />
+              {t('save')}
+            </>
+          )}
         </Button>
-      </div>
+      </FixedActionBar>
     </form>
   )
 }

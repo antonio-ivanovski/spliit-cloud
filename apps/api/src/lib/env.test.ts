@@ -172,6 +172,7 @@ describe('envSchema — AI', () => {
     expect(env.AI_PROVIDER).toBe('openai')
     expect(env.AI_RECEIPT_MODEL).toBe('gpt-5-nano')
     expect(env.AI_CATEGORY_MODEL).toBe('gpt-5-nano')
+    expect(env.AI_VOICE_MODEL).toBeUndefined()
   })
 
   it('parses custom provider and models', async () => {
@@ -272,5 +273,24 @@ describe('envSchema — AI', () => {
     // defaults still apply
     expect(env.AI_RECEIPT_MODEL).toBe('gpt-5-nano')
     expect(env.AI_CATEGORY_MODEL).toBe('gpt-5-nano')
+  })
+
+  it('requires an AI key when voice extraction is enabled', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('PUBLIC_ENABLE_VOICE_EXPENSE', 'true')
+    vi.resetModules()
+    await expect(import('./env')).rejects.toThrow(
+      /AI_API_KEY must be specified/,
+    )
+  })
+
+  it('requires a voice model when voice extraction is enabled', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('PUBLIC_ENABLE_VOICE_EXPENSE', 'true')
+    vi.stubEnv('AI_API_KEY', 'sk-test-key')
+    vi.resetModules()
+    await expect(import('./env')).rejects.toThrow(
+      /AI_VOICE_MODEL must be specified/,
+    )
   })
 })

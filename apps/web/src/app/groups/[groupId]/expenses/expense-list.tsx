@@ -132,7 +132,11 @@ const ExpenseListForSearch = ({
           <p>
             {t('noExpenses')}{' '}
             {group.archived || isPendingInvitee ? null : (
-              <Button variant="link" asChild className="-m-4">
+              <Button
+                variant="link"
+                asChild
+                className="-m-4 hidden sm:inline-flex"
+              >
                 <Link href={`/groups/${groupId}/expenses/create`}>
                   {t('createFirst')}
                 </Link>

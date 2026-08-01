@@ -3,6 +3,7 @@ import { ArrowLeft, Check, Info, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { GroupTabs } from '@/app/groups/[groupId]/group-tabs'
+import { CreateExpenseFab } from '@/app/groups/create-expense-fab'
 import Link from '@/components/link'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
@@ -14,7 +15,13 @@ import { trpc } from '@/trpc/client'
 
 import { useCurrentGroup } from './current-group-context'
 
-export const GroupHeader = () => {
+export const GroupHeader = ({
+  enableReceiptExtract,
+  enableVoiceExpense,
+}: {
+  enableReceiptExtract: boolean
+  enableVoiceExpense: boolean
+}) => {
   const {
     isLoading,
     groupId,
@@ -147,22 +154,28 @@ export const GroupHeader = () => {
 
   return (
     <div className="flex flex-col justify-between gap-3">
-      <h1
-        className={`flex items-center gap-2 text-2xl font-bold ${focusedMobileRoute ? 'hidden sm:flex' : ''}`}
-      >
-        <Button variant="ghost" size="icon" asChild className="-ml-2">
-          <Link href="/" title={tGroups('backToHome')}>
-            <ArrowLeft className="h-5 w-5" />
+      <div className="flex items-center justify-between gap-3">
+        <h1
+          className={`flex min-w-0 items-center gap-2 text-2xl font-bold ${focusedMobileRoute ? 'hidden sm:flex' : ''}`}
+        >
+          <Button variant="ghost" size="icon" asChild className="-ml-2">
+            <Link href="/" title={tGroups('backToHome')}>
+              <ArrowLeft className="h-5 w-5" />
+            </Link>
+          </Button>
+          <Link href={`/groups/${groupId}`} className="truncate">
+            {isLoading ? (
+              <Skeleton className="mt-1.5 mb-1.5 h-5 w-32" />
+            ) : (
+              <div className="truncate">{displayName || group.name}</div>
+            )}
           </Link>
-        </Button>
-        <Link href={`/groups/${groupId}`}>
-          {isLoading ? (
-            <Skeleton className="mt-1.5 mb-1.5 h-5 w-32" />
-          ) : (
-            <div className="flex">{displayName || group.name}</div>
-          )}
-        </Link>
-      </h1>
+        </h1>
+        <CreateExpenseFab
+          enableReceiptExtract={enableReceiptExtract}
+          enableVoiceExpense={enableVoiceExpense}
+        />
+      </div>
 
       {currentInvitation && (
         <Alert data-testid="invitation-banner">

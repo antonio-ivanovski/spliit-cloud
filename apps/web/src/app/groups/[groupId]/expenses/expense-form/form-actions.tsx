@@ -1,8 +1,8 @@
 import { Save } from 'lucide-react'
-import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { DeletePopup } from '@/components/delete-popup'
+import { FixedActionBar } from '@/components/fixed-action-bar'
 import Link from '@/components/link'
 import { SubmitButton } from '@/components/submit-button'
 import { Button } from '@/components/ui/button'
@@ -17,16 +17,16 @@ export function FormActions(props: {
 
   if (props.readOnly) {
     return (
-      <FixedBar>
+      <FixedActionBar>
         <Button variant="ghost" asChild>
           <Link href={props.cancelHref}>{t('cancel')}</Link>
         </Button>
-      </FixedBar>
+      </FixedActionBar>
     )
   }
 
   return (
-    <FixedBar>
+    <FixedActionBar>
       {!props.isCreate && props.onDelete && (
         <DeletePopup onDelete={() => props.onDelete!()} className="mr-auto" />
       )}
@@ -37,18 +37,6 @@ export function FormActions(props: {
         <Save className="mr-2 h-4 w-4" />
         {t(props.isCreate ? 'create' : 'save')}
       </SubmitButton>
-    </FixedBar>
-  )
-}
-
-// Fixed to the viewport so actions stay visible without scrolling.
-// Still inside the form so Enter-to-submit and validation work.
-function FixedBar({ children }: { children: ReactNode }) {
-  return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-background/95 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-[0_-8px_24px_rgb(0_0_0/0.06)] backdrop-blur supports-[backdrop-filter]:bg-background/80">
-      <div className="mx-auto flex w-full max-w-(--breakpoint-md) flex-row items-center justify-end gap-2 px-4">
-        {children}
-      </div>
-    </div>
+    </FixedActionBar>
   )
 }

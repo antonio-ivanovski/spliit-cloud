@@ -6,6 +6,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { AccountMenu } from '@/components/account-menu'
 import { AccountPreferencesSync } from '@/components/account-preferences-sync'
 import Image from '@/components/app-image'
+import { CurrencyConverterButton } from '@/components/currency-converter/currency-converter'
 import { InstallPromotionDialog } from '@/components/install-promotion-dialog'
 import Link from '@/components/link'
 import { LocaleSwitcher } from '@/components/locale-switcher'
@@ -63,6 +64,9 @@ function Content() {
             <nav aria-label={t('Header.menu')} className="flex">
               <ul className="flex items-center gap-1 text-sm">
                 <li>
+                  <CurrencyConverterButton />
+                </li>
+                <li>
                   <LocaleSwitcher />
                 </li>
                 <li>
@@ -78,7 +82,8 @@ function Content() {
           {focusedMobileRoute ? (
             <div className="sm:hidden [&>header]:pe-12">
               <MobileAppBar />
-              <div className="fixed end-2 top-0 z-50 flex h-(--app-header-height) items-center">
+              <div className="fixed end-2 top-0 z-50 flex h-(--app-header-height) items-center gap-1">
+                <CurrencyConverterButton />
                 <LocaleSwitcher />
               </div>
             </div>
@@ -94,6 +99,7 @@ function Content() {
                 />
               </Link>
               <div className="flex items-center gap-1">
+                <CurrencyConverterButton />
                 <LocaleSwitcher />
                 <ThemeToggle />
                 <AccountMenu />

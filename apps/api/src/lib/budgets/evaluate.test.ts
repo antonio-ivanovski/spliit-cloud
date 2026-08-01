@@ -15,9 +15,7 @@ vi.mock('../notifications/budget-planner', () => ({
 import { evaluateBudgets } from './evaluate'
 
 const now = new Date()
-const thisMonth = new Date(
-  Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 15),
-)
+const thisMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1))
 
 beforeEach(() => {
   mocks.planBudgetAlertDeliveries.mockReset()

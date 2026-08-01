@@ -95,6 +95,7 @@ export function GroupLayoutClient({
   const { t: tTitles } = useTranslation()
   const { toast } = useToast()
   const { isPending: accountPending } = useCurrentAccount()
+  const { data: runtimeFeatures } = trpc.features.get.useQuery()
 
   useEffect(() => {
     if (!data?.group || focusedMobileRoute) return
@@ -214,7 +215,10 @@ export function GroupLayoutClient({
       <div
         className={`flex min-w-0 flex-col gap-3 ${showMobileNav ? 'pb-[calc(5rem+env(safe-area-inset-bottom))] sm:pb-0' : ''}`}
       >
-        <GroupHeader />
+        <GroupHeader
+          enableReceiptExtract={Boolean(runtimeFeatures?.enableReceiptExtract)}
+          enableVoiceExpense={Boolean(runtimeFeatures?.enableVoiceExpense)}
+        />
         {children ?? <Outlet />}
       </div>
       {showMobileNav && <MobileGroupNav groupId={groupId} />}

@@ -177,6 +177,8 @@ export const createExpenseSearchSchema = z.object({
   imageWidth: integerString,
   imageHeight: integerString,
   items: optionalString,
+  payer: optionalString,
+  participants: optionalString,
   // When set, the create form pre-populates from this source expense
   // and overrides `expenseDate` to today (a.k.a. "Make a copy" flow).
   fromExpenseId: z.string().optional().catch(undefined),

@@ -9,6 +9,7 @@ export const featuresRouter = createTRPCRouter({
       z.object({
         enableExpenseDocuments: z.boolean(),
         enableReceiptExtract: z.boolean(),
+        enableVoiceExpense: z.boolean(),
         enableCategoryExtract: z.boolean(),
         enableBulkCategorize: z.boolean(),
         defaultCurrencyCode: z.string(),
@@ -19,6 +20,7 @@ export const featuresRouter = createTRPCRouter({
     .query(() => ({
       enableExpenseDocuments: env.PUBLIC_ENABLE_EXPENSE_DOCUMENTS,
       enableReceiptExtract: env.PUBLIC_ENABLE_RECEIPT_EXTRACT,
+      enableVoiceExpense: env.PUBLIC_ENABLE_VOICE_EXPENSE,
       enableCategoryExtract: env.PUBLIC_ENABLE_CATEGORY_EXTRACT,
       enableBulkCategorize: env.PUBLIC_ENABLE_BULK_CATEGORIZE,
       defaultCurrencyCode: env.PUBLIC_DEFAULT_CURRENCY_CODE,

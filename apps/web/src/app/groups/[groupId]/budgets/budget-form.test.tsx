@@ -121,4 +121,15 @@ describe('BudgetForm', () => {
       /Current period:\s*\d{2}\.\d{2}\.\d{4}\s*–\s*\d{2}\.\d{2}\.\d{4}\s*$/,
     )
   })
+
+  it('keeps the form actions fixed to the bottom of the viewport', () => {
+    const { container } = render(
+      <BudgetForm group={fakeGroup} onSubmit={vi.fn()} onCancel={vi.fn()} />,
+    )
+
+    const actionBar = container.querySelector('form > div.fixed')
+    expect(actionBar).toHaveClass('inset-x-0', 'bottom-0')
+    expect(actionBar).toHaveTextContent('Cancel')
+    expect(actionBar).toHaveTextContent('Save budget')
+  })
 })

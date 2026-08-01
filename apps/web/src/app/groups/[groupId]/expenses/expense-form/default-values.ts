@@ -475,6 +475,20 @@ export function buildExpenseFormDefaults(args: {
         },
       ]
     : []
+  const validParticipantIds = new Set(group.participants.map(({ id }) => id))
+  const prefilledPayer =
+    searchParams.payer && validParticipantIds.has(searchParams.payer)
+      ? searchParams.payer
+      : undefined
+  const prefilledParticipants = (searchParams.participants ?? '')
+    .split(',')
+    .map((participant) => participant.trim())
+    .filter(
+      (participant, index, values) =>
+        participant.length > 0 &&
+        validParticipantIds.has(participant) &&
+        values.indexOf(participant) === index,
+    )
 
   if (searchParams.reimbursement) {
     const reimbursementNeedsConversion =
@@ -608,13 +622,28 @@ export function buildExpenseFormDefaults(args: {
     conversionType: undefined,
     category: parseCategoryIdFromUrl(searchParams.categoryId),
     paidBySplitMode: 'BY_AMOUNT' as const,
-    paidByList: defaultPaidByList,
+    paidByList:
+      prefilledPayer && searchParams.amount != null
+        ? [
+            {
+              participant: prefilledPayer,
+              shares: amountAsDecimal(
+                Number(searchParams.amount) || 0,
+                searchCurrency,
+              ),
+            },
+          ]
+        : defaultPaidByList,
     isMultiPayer: false,
-    paidFor: defaultSplittingOptions.paidFor,
+    paidFor: prefilledParticipants.length
+      ? prefilledParticipants.map((participant) => ({ participant, shares: 1 }))
+      : defaultSplittingOptions.paidFor,
     isReimbursement: false,
     splitMode: hasPrefilledItemSplits
       ? ('ITEMIZED' as const)
-      : defaultSplittingOptions.splitMode,
+      : prefilledParticipants.length
+        ? ('EVENLY' as const)
+        : defaultSplittingOptions.splitMode,
     documents: searchParams.imageUrl
       ? [
           {

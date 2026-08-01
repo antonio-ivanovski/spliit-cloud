@@ -10,21 +10,16 @@ import {
   getGlobalExpensesSearch,
   isGlobalExpensesReturnTo,
 } from '@/lib/expense-navigation'
-import { trpc } from '@/trpc/client'
 
 const expenseRouteApi = getRouteApi('/groups/$groupId/expenses/$expenseId/')
 
 function ExpensePreviewRoute() {
   const { groupId, expenseId } = expenseRouteApi.useParams()
   const { returnTo } = expenseRouteApi.useSearch()
-  const { data } = trpc.features.get.useQuery()
   const navigate = useNavigate()
-  if (!data) return null
   return (
     <>
-      <GroupExpensesPageClient
-        enableReceiptExtract={data.enableReceiptExtract ?? false}
-      />
+      <GroupExpensesPageClient />
       <ExpensePreviewModal
         groupId={groupId}
         expenseId={expenseId}

@@ -12,7 +12,7 @@ Spliit Cloud is a community fork of [Spliit](https://github.com/spliit-app/splii
 
 ## Optional integrations
 
-- **OpenAI**: when receipt scanning or category extraction is enabled, the image or title is sent to OpenAI
+- **Configured AI provider**: when receipt scanning, category extraction, or voice expense extraction is enabled, relevant receipt images, expense text, or voice recordings/transcripts are sent to the configured provider. Voice recordings are processed transiently and are not stored by Spliit.
 - **S3 storage**: uploaded files are stored in the configured bucket
 
 ## What we do not do

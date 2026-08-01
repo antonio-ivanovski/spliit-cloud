@@ -31,6 +31,7 @@ describe('features.get', () => {
       defaultCurrencyCode: 'EUR',
       enableGoogleOAuth: true,
       enableGitHubOAuth: false,
+      enableVoiceExpense: false,
     })
   })
 })

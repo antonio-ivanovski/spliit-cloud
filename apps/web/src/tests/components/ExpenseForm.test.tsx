@@ -313,6 +313,7 @@ const mockExpense = {
 const runtimeFeatureFlags = {
   enableExpenseDocuments: false,
   enableReceiptExtract: false,
+  enableVoiceExpense: false,
   enableCategoryExtract: false,
   enableBulkCategorize: false,
 }

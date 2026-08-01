@@ -1,23 +1,16 @@
-import { useNavigate } from '@tanstack/react-router'
 import { Check, FileQuestion, ScanLine, Sparkles } from 'lucide-react'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import {
+  AiExpensePreview,
+  type AiExpenseDraft,
+} from '@/app/groups/[groupId]/expenses/ai-expense-preview'
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
 import Image from '@/components/app-image'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
-import {
-  ResponsiveDialog,
-  ResponsiveDialogBody,
-  ResponsiveDialogContent,
-  ResponsiveDialogDescription,
-  ResponsiveDialogHeader,
-  ResponsiveDialogTitle,
-  ResponsiveDialogTrigger,
-} from '@/components/ui/responsive-dialog'
 import { ToastAction } from '@/components/ui/toast'
 import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
@@ -39,7 +32,12 @@ import {
   type Locale,
 } from '@spliit/domain'
 
-import { useCurrentGroup } from '../current-group-context'
+import {
+  useCurrentGroup,
+  useCurrentGroupOrNull,
+} from '../current-group-context'
+import { AiCaptureDialog } from './ai-capture-dialog'
+import type { GroupShape } from './expense-form/default-values'
 
 const MAX_FILE_SIZE = 2 * 1024 ** 2
 const TRANSLATE_STORAGE_KEY = 'spliit-receipt-translate-to-locale'
@@ -96,6 +94,11 @@ export function ReceiptScanTrigger({
   autoScan = false,
   title,
   children,
+  group: groupOverride,
+  open: openOverride,
+  onOpenChange: onOpenChangeOverride,
+  hideTrigger = false,
+  directAccept = false,
 }: {
   documents?: ReceiptDocument[]
   currentExpense?: ReceiptScanContext
@@ -110,9 +113,17 @@ export function ReceiptScanTrigger({
   autoScan?: boolean
   title?: string
   children?: ReactNode
+  group?: GroupShape
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  hideTrigger?: boolean
+  /** Skip the receipt review step and hand the extracted result to the caller. */
+  directAccept?: boolean
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'CreateFromReceipt' })
-  const [open, setOpen] = useState(false)
+  const [internalOpen, setInternalOpen] = useState(false)
+  const open = openOverride ?? internalOpen
+  const setOpen = onOpenChangeOverride ?? setInternalOpen
   // iconOnly && !responsive → always icon-only
   // iconOnly && responsive → icon-only on mobile, full on desktop
   // !iconOnly → always full
@@ -120,126 +131,168 @@ export function ReceiptScanTrigger({
   const isResponsiveIconOnly = iconOnly && responsive
   const showText = !isAlwaysIconOnly
   return (
-    <ResponsiveDialog open={open} onOpenChange={setOpen}>
-      <ResponsiveDialogTrigger
-        render={
-          <Button
-            type="button"
-            variant="secondary"
-            size={isAlwaysIconOnly ? 'icon' : 'default'}
-            className={cn(
-              isResponsiveIconOnly &&
-                'h-11 w-11 p-0 sm:h-10 sm:w-auto sm:px-4 sm:py-2',
-              className,
-            )}
-            title={title}
-            aria-label={title}
-          >
-            <span className={cn('relative inline-flex', showText && 'mr-2')}>
-              <ScanLine className="h-6 w-6 sm:h-4 sm:w-4" />
-              <Sparkles className="absolute -top-[2px] -right-[1px] h-3.5 w-3.5 animate-[pulse_2.4s_ease-in-out_infinite] text-pink-600 drop-shadow-[0_0_4px_rgba(236,72,153,0.75)] sm:h-2.5 sm:w-2.5" />
-            </span>
-            {showText && (
-              <span className={cn(isResponsiveIconOnly && 'hidden sm:inline')}>
-                {children ?? t('Dialog.triggerTitle')}
+    <>
+      <AiCaptureDialog
+        open={open}
+        onOpenChange={setOpen}
+        icon={ScanLine}
+        title={t(mode === 'fill' ? 'Dialog.fillTitle' : 'Dialog.title')}
+        description={t('Dialog.description')}
+        trigger={
+          hideTrigger ? undefined : (
+            <Button
+              type="button"
+              variant="secondary"
+              size={isAlwaysIconOnly ? 'icon' : 'default'}
+              className={cn(
+                isResponsiveIconOnly &&
+                  'h-11 w-11 p-0 sm:h-10 sm:w-auto sm:px-4 sm:py-2',
+                className,
+              )}
+              title={title}
+              aria-label={title}
+            >
+              <span className={cn('relative inline-flex', showText && 'mr-2')}>
+                <ScanLine className="h-6 w-6 sm:h-4 sm:w-4" />
+                <Sparkles className="absolute -top-[2px] -right-[1px] h-3.5 w-3.5 animate-[pulse_2.4s_ease-in-out_infinite] text-pink-600 drop-shadow-[0_0_4px_rgba(236,72,153,0.75)] sm:h-2.5 sm:w-2.5" />
               </span>
-            )}
-          </Button>
+              {showText && (
+                <span
+                  className={cn(isResponsiveIconOnly && 'hidden sm:inline')}
+                >
+                  {children ?? t('Dialog.triggerTitle')}
+                </span>
+              )}
+            </Button>
+          )
         }
-      />
-      <ResponsiveDialogContent>
-        <ResponsiveDialogHeader>
-          <ResponsiveDialogTitle className="flex items-center gap-2">
-            <ScanLine className="h-5 w-5 text-pink-600" />
-            <span>
-              {t(mode === 'fill' ? 'Dialog.fillTitle' : 'Dialog.title')}
-            </span>
-            <Badge className="bg-pink-700 hover:bg-pink-600 dark:bg-pink-500 dark:hover:bg-pink-600">
-              AI
-            </Badge>
-          </ResponsiveDialogTitle>
-          <ResponsiveDialogDescription className="text-left">
-            {t('Dialog.description')}
-          </ResponsiveDialogDescription>
-        </ResponsiveDialogHeader>
-        <ResponsiveDialogBody>
-          <ReceiptDialogContent
-            documents={documents}
-            currentExpense={currentExpense}
-            mode={mode}
-            autoScan={autoScan}
-            open={open}
-            onAccept={(result) => {
-              onAccept?.(result)
-              setOpen(false)
-            }}
-          />
-        </ResponsiveDialogBody>
-      </ResponsiveDialogContent>
-    </ResponsiveDialog>
+      >
+        <ReceiptDialogContent
+          key={open ? 'open' : 'closed'}
+          documents={documents}
+          currentExpense={currentExpense}
+          groupOverride={groupOverride}
+          mode={mode}
+          autoScan={autoScan}
+          directAccept={directAccept}
+          open={open}
+          onAccept={(result) => {
+            onAccept?.(result)
+            setOpen(false)
+          }}
+        />
+      </AiCaptureDialog>
+    </>
   )
 }
 
 export function CreateFromReceiptButton({
   className,
   responsive = false,
+  iconOnly = false,
+  open,
+  onOpenChange,
+  onFlowActiveChange,
+  hideTrigger = false,
+  directAccept = true,
 }: {
   className?: string
   responsive?: boolean
+  iconOnly?: boolean
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  onFlowActiveChange?: (active: boolean) => void
+  hideTrigger?: boolean
+  directAccept?: boolean
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'CreateFromReceipt' })
-  const { group } = useCurrentGroup()
-  const navigate = useNavigate()
+  const { group, currentLedgerParticipantId } = useCurrentGroup()
+  const [internalOpen, setInternalOpen] = useState(false)
+  const [previewDraft, setPreviewDraft] = useState<AiExpenseDraft | null>(null)
+  const previewPendingRef = useRef(false)
+  const captureOpen = open ?? internalOpen
+  const setCaptureOpen = (nextOpen: boolean) => {
+    if (open === undefined) setInternalOpen(nextOpen)
+    onOpenChange?.(nextOpen)
+    onFlowActiveChange?.(
+      nextOpen || previewDraft !== null || previewPendingRef.current,
+    )
+  }
+
   return (
-    <ReceiptScanTrigger
-      className={className}
-      iconOnly
-      responsive={responsive}
-      title={t('Dialog.triggerTitle')}
-      onAccept={({ info, document }) => {
-        if (!group) return
-        void navigate({
-          to: '/groups/$groupId/expenses/create',
-          params: { groupId: group.id },
-          search: {
-            amount: info.amount.toString(),
-            categoryId:
-              (info.categoryId as CategoryId | undefined) ?? undefined,
-            originalCurrency: info.currencyCode ?? undefined,
-            date: info.date ?? undefined,
-            title: info.title ?? undefined,
-            items: info.items.length ? JSON.stringify(info.items) : undefined,
-            imageUrl: document.url,
-            imageWidth: document.width.toString(),
-            imageHeight: document.height.toString(),
-          },
-        })
-      }}
-    >
-      {t('Dialog.triggerTitle')}
-    </ReceiptScanTrigger>
+    <>
+      <ReceiptScanTrigger
+        className={className}
+        iconOnly={iconOnly}
+        responsive={responsive}
+        open={captureOpen}
+        onOpenChange={setCaptureOpen}
+        hideTrigger={hideTrigger}
+        directAccept={directAccept}
+        title={t('Dialog.triggerTitle')}
+        onAccept={({ info, document }) => {
+          if (!group) return
+          previewPendingRef.current = true
+          setPreviewDraft({
+            source: 'receipt',
+            title: info.title,
+            amount: info.amount,
+            amountUnit: 'minor',
+            currencyCode: info.currencyCode,
+            date: info.date,
+            categoryId: info.categoryId as CategoryId | null,
+            items: info.items,
+            document,
+            issues: [],
+          })
+          onFlowActiveChange?.(true)
+        }}
+      >
+        {t('Dialog.triggerTitle')}
+      </ReceiptScanTrigger>
+      {group && previewDraft && (
+        <AiExpensePreview
+          open
+          onOpenChange={(open) => {
+            if (!open) {
+              previewPendingRef.current = false
+              setPreviewDraft(null)
+              onFlowActiveChange?.(false)
+            }
+          }}
+          group={group}
+          currentLedgerParticipantId={currentLedgerParticipantId}
+          draft={previewDraft}
+        />
+      )}
+    </>
   )
 }
 
 function ReceiptDialogContent({
   documents,
   currentExpense,
+  groupOverride,
   mode,
   autoScan,
+  directAccept,
   open,
   onAccept,
 }: {
   documents: ReceiptDocument[]
   currentExpense?: ReceiptScanContext
+  groupOverride?: GroupShape
   mode: 'create' | 'fill'
   autoScan: boolean
+  directAccept: boolean
   open: boolean
   onAccept?: (result: {
     info: ReceiptExtractedInfo
     document: ReceiptDocument
   }) => void
 }) {
-  const { group } = useCurrentGroup()
+  const currentGroup = useCurrentGroupOrNull()
+  const group = groupOverride ?? currentGroup?.group
   const locale = useLocale()
   const { t } = useTranslation(undefined, { keyPrefix: 'CreateFromReceipt' })
   const { t: tExpenseForm } = useTranslation()
@@ -282,6 +335,9 @@ function ReceiptDialogContent({
         currentExpense,
       })
       setReceiptInfo(result)
+      if (mode === 'create' && directAccept) {
+        onAccept?.({ info: result, document })
+      }
     } catch (err) {
       console.error(err)
       toast({
@@ -343,6 +399,7 @@ function ReceiptDialogContent({
         description: t('ErrorToast.description'),
         variant: 'destructive',
       })
+    } finally {
       setPending(false)
     }
   }

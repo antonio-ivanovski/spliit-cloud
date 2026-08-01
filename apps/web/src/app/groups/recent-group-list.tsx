@@ -14,7 +14,6 @@ import {
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { CurrencyConverterButton } from '@/components/currency-converter/currency-converter'
 import Link from '@/components/link'
 import { Money } from '@/components/money'
 import { ParticipantAvatar } from '@/components/participant-avatar'
@@ -268,6 +267,8 @@ export function RecentGroupList() {
           </ul>
         </CollapsibleSection>
 
+        <AcrossGroupsBalanceCard stats={data?.stats} groups={allGroups} />
+
         {archived.length > 0 && (
           <CollapsibleSection
             storageKey={STORAGE_KEYS.archived}
@@ -291,29 +292,26 @@ export function RecentGroupList() {
             </ul>
           </CollapsibleSection>
         )}
+
+        <Link
+          href="/expenses"
+          data-testid="all-expenses-link"
+          className="flex items-center justify-between rounded-lg border bg-card px-4 py-3 text-sm transition-colors hover:bg-accent"
+        >
+          <span className="flex items-center gap-2 font-medium">
+            <ReceiptText className="h-4 w-4 text-muted-foreground" />
+            {t('allExpenses')}
+          </span>
+          <ArrowRight className="h-4 w-4 text-muted-foreground" />
+        </Link>
       </div>
     )
   }
 
   return (
     <>
-      <OverviewHeader
-        name={account?.name}
-        stats={data?.stats}
-        groups={allGroups}
-      />
+      <WelcomeBar name={account?.name} />
       <PendingInvitations />
-      <Link
-        href="/expenses"
-        data-testid="all-expenses-link"
-        className="flex items-center justify-between rounded-lg border bg-card px-4 py-3 text-sm transition-colors hover:bg-accent"
-      >
-        <span className="flex items-center gap-2 font-medium">
-          <ReceiptText className="h-4 w-4 text-muted-foreground" />
-          {t('allExpenses')}
-        </span>
-        <ArrowRight className="h-4 w-4 text-muted-foreground" />
-      </Link>
       {body}
       <ForceArchiveDialogSection
         target={forceArchiveTarget}
@@ -323,14 +321,23 @@ export function RecentGroupList() {
   )
 }
 
-function OverviewHeader({
-  name,
+function WelcomeBar({ name }: { name?: string }) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'Homepage' })
+  return (
+    <div className="flex items-center justify-between gap-3">
+      <p className="text-lg font-semibold tracking-tight sm:text-xl">
+        {t('welcomeBack', { name: name ?? '' })}
+      </p>
+    </div>
+  )
+}
+
+function AcrossGroupsBalanceCard({
   stats,
   groups,
 }: {
-  name?: string
-  groups: AccountGroup[]
   stats: OverviewStats | undefined
+  groups: AccountGroup[]
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Homepage' })
   const { t: tBalances } = useTranslation(undefined, { keyPrefix: 'Balances' })
@@ -349,13 +356,7 @@ function OverviewHeader({
   }
 
   return (
-    <section className="flex flex-col gap-3" aria-label={tBalances('title')}>
-      <div className="flex items-center justify-between">
-        <p className="text-lg font-semibold tracking-tight sm:text-xl">
-          {t('welcomeBack', { name: name ?? '' })}
-        </p>
-        <CurrencyConverterButton />
-      </div>
+    <section aria-label={tBalances('title')}>
       {stats && hasGroupSummary ? (
         <div className="rounded-lg border bg-card px-4 py-3 shadow-xs sm:px-5">
           <Tabs defaultValue="groups">

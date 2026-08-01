@@ -41,6 +41,27 @@ export const extractExpenseInformationOutputSchema = z.object({
   ),
 })
 
+export const extractExpenseInformationFromAudioOutputSchema = z.object({
+  transcript: z.string().nullable(),
+  groupId: z.string().min(1),
+  title: z.string().nullable(),
+  /** Decimal major units; normalized to ledger minor units in the preview. */
+  amount: z.string().nullable(),
+  currencyCode: z.string().nullable(),
+  date: z.string().nullable(),
+  categoryId: categoryIdSchema.nullable(),
+  payerParticipantId: z.string().nullable(),
+  participantIds: z.array(z.string()),
+  issues: z.array(
+    z.enum([
+      'missingTitle',
+      'missingAmount',
+      'invalidDate',
+      'unsupportedCurrency',
+    ]),
+  ),
+})
+
 export const listBulkCategorizeCandidatesOutputSchema = z.object({
   totalEligible: z.number().int().nonnegative(),
   candidates: z.array(

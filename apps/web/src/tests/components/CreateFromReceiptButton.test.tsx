@@ -1,6 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { useCurrentGroup } from '@/app/groups/[groupId]/current-group-context'
+import {
+  useCurrentGroup,
+  useCurrentGroupOrNull,
+} from '@/app/groups/[groupId]/current-group-context'
 import { ReceiptScanTrigger } from '@/app/groups/[groupId]/expenses/create-from-receipt-button'
 import { act, render, screen, waitFor } from '@/test/test-utils'
 
@@ -9,7 +12,7 @@ const mockToast = vi.fn()
 
 vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useCurrentGroup: vi.fn(),
-  useCurrentGroupOrNull: vi.fn().mockReturnValue(null),
+  useCurrentGroupOrNull: vi.fn(),
   useIsPendingInvitee: vi.fn().mockReturnValue(false),
 }))
 
@@ -78,6 +81,11 @@ function renderTrigger(
 beforeEach(() => {
   vi.mocked(useCurrentGroup).mockReturnValue({
     group,
+    isLoading: false,
+  } as never)
+  vi.mocked(useCurrentGroupOrNull).mockReturnValue({
+    group,
+    groupId: group.id,
     isLoading: false,
   } as never)
   mockMutateAsync.mockReset()

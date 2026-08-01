@@ -46,10 +46,12 @@ export default function PrivacyPage() {
         <p>
           The service uses hosting, database, backup, object-storage, email, and
           authentication providers to operate. If you choose receipt extraction
-          or expense categorisation, relevant receipt images, expense text,
-          currency context, and recent expense context may be sent to the
-          configured AI provider. Do not use those features for material you are
-          not comfortable sharing with that provider.
+          or expense categorisation, relevant receipt images, voice recordings,
+          transcripts, expense text, currency context, and recent expense
+          context may be sent to the configured AI provider. Voice recordings
+          are processed transiently and are not stored by Spliit. Do not use
+          those features for material you are not comfortable sharing with that
+          provider.
         </p>
       </section>
 

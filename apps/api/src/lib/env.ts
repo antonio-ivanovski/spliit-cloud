@@ -40,6 +40,10 @@ const envSchema = z
       interpretEnvVarAsBool,
       z.boolean().default(false),
     ),
+    PUBLIC_ENABLE_VOICE_EXPENSE: z.preprocess(
+      interpretEnvVarAsBool,
+      z.boolean().default(false),
+    ),
     PUBLIC_ENABLE_CATEGORY_EXTRACT: z.preprocess(
       interpretEnvVarAsBool,
       z.boolean().default(false),
@@ -61,6 +65,7 @@ const envSchema = z
       emptyStringAsUndefined,
       z.string().default('gpt-5-nano'),
     ),
+    AI_VOICE_MODEL: z.preprocess(emptyStringAsUndefined, z.string().optional()),
     AI_CATEGORY_RECENT_EXPENSES_LIMIT: z.coerce
       .number()
       .int()
@@ -196,13 +201,22 @@ const envSchema = z
     }
     if (
       (env.PUBLIC_ENABLE_RECEIPT_EXTRACT ||
-        env.PUBLIC_ENABLE_CATEGORY_EXTRACT) &&
+        env.PUBLIC_ENABLE_CATEGORY_EXTRACT ||
+        env.PUBLIC_ENABLE_VOICE_EXPENSE) &&
       !env.AI_API_KEY
     ) {
       ctx.addIssue({
         code: 'custom',
         message:
-          'If PUBLIC_ENABLE_RECEIPT_EXTRACT or PUBLIC_ENABLE_CATEGORY_EXTRACT is specified, then AI_API_KEY must be specified too',
+          'If PUBLIC_ENABLE_RECEIPT_EXTRACT, PUBLIC_ENABLE_CATEGORY_EXTRACT, or PUBLIC_ENABLE_VOICE_EXPENSE is specified, then AI_API_KEY must be specified too',
+      })
+    }
+    if (env.PUBLIC_ENABLE_VOICE_EXPENSE && !env.AI_VOICE_MODEL) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['AI_VOICE_MODEL'],
+        message:
+          'AI_VOICE_MODEL must be specified when PUBLIC_ENABLE_VOICE_EXPENSE is enabled',
       })
     }
   })

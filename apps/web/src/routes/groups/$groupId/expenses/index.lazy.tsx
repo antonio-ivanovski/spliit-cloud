@@ -1,15 +1,9 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
 
 import GroupExpensesPageClient from '@/app/groups/[groupId]/expenses/page.client'
-import { trpc } from '@/trpc/client'
 
 function ExpensesRoute() {
-  const { data } = trpc.features.get.useQuery()
-  return (
-    <GroupExpensesPageClient
-      enableReceiptExtract={data?.enableReceiptExtract ?? false}
-    />
-  )
+  return <GroupExpensesPageClient />
 }
 
 export const Route = createLazyFileRoute('/groups/$groupId/expenses/')({
