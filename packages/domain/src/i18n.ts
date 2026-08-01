@@ -1,6 +1,7 @@
 export const localeLabels = {
   'ar-SA': 'العربية',
   'bn-BD': 'বাংলা',
+  'en-GZ': 'English (Gen Z)',
   'hi-IN': 'हिन्दी',
   id: 'Bahasa Indonesia',
   ca: 'Català',

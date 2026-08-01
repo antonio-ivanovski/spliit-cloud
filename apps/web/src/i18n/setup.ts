@@ -79,6 +79,10 @@ export function matchSupportedLocale(localeTag: string): Locale | undefined {
     return isTraditional ? 'zh-TW' : 'zh-CN'
   }
 
+  // Keep generic English browser preferences on the default locale. The
+  // playful en-GZ bundle is opt-in through an exact locale or user choice.
+  if (browserLocale.language === 'en') return 'en-US'
+
   const languageMatches = locales.filter(
     (locale) => new Intl.Locale(locale).language === browserLocale.language,
   )

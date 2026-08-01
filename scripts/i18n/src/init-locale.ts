@@ -6,7 +6,7 @@ import { LANGUAGE_FAMILIES } from './families'
 import { localeFileName } from './fs-helpers'
 
 const DOMAIN_I18N = 'packages/domain/src/i18n.ts'
-const LOCALE_SWITCHER = 'apps/web/src/components/locale-switcher.tsx'
+const LOCALE_SWITCHER = 'apps/web/src/components/locale-switcher-data.ts'
 const I18N_REACT = 'apps/web/src/i18n/react.tsx'
 const FAMILIES_FILE = 'scripts/i18n/src/families.ts'
 const MESSAGES_DIR = 'apps/web/src/messages'

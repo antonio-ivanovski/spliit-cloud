@@ -1,7 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { LocaleSelector, LocaleSwitcher } from '@/components/locale-switcher'
-import { localeFlags, localeRegions } from '@/components/locale-switcher-data'
+import {
+  getLocalizedLocaleLabels,
+  localeFlags,
+  localeRegions,
+  popularLocales,
+} from '@/components/locale-switcher-data'
 import { localeLabels, locales } from '@/i18n/request'
 import * as i18nSetup from '@/i18n/setup'
 import { render, screen, waitFor, within } from '@/test/test-utils'
@@ -39,10 +44,20 @@ describe('LocaleSwitcher', () => {
   it('has exhaustive flags and geographic assignments', () => {
     expect(Object.keys(localeFlags)).toEqual(locales)
     expect(Object.keys(localeRegions)).toEqual(locales)
+    expect(localeFlags['en-GZ']).toBe('💀')
     for (const locale of locales) {
       expect(localeFlags[locale]).not.toBe('')
       expect(localeRegions[locale]).toBeTruthy()
     }
+  })
+
+  it('keeps Gen Z at the bottom of Popular with standard language labels', () => {
+    expect(popularLocales.at(-1)).toBe('en-GZ')
+
+    const labels = getLocalizedLocaleLabels('en-GZ')
+    const displayNames = new Intl.DisplayNames(['en-GZ'], { type: 'language' })
+    expect(labels['en-US']).toBe(displayNames.of('en-US'))
+    expect(labels['fr-FR']).toBe(displayNames.of('fr-FR'))
   })
 
   it('supports controlled selection without changing language itself', async () => {
@@ -133,6 +148,7 @@ describe('LocaleSwitcher', () => {
 
     const excluded = new Set([
       'en-US',
+      'en-GZ',
       'es',
       'fr-FR',
       'de-DE',

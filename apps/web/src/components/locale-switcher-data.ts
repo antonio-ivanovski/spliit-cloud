@@ -4,6 +4,7 @@ import { localeLabels, locales } from '@/i18n/request'
 export const localeFlags = {
   'ar-SA': '🇸🇦',
   'bn-BD': '🇧🇩',
+  'en-GZ': '💀',
   'hi-IN': '🇮🇳',
   id: '🇮🇩',
   ca: '🇦🇩',
@@ -41,6 +42,7 @@ export const popularLocales = [
   'de-DE',
   'pt-BR',
   'hi-IN',
+  'en-GZ',
 ] as const satisfies ReadonlyArray<Locale>
 
 export const localeRegionOrder = [
@@ -55,6 +57,7 @@ type LocaleRegion = (typeof localeRegionOrder)[number]
 export const localeRegions = {
   'ar-SA': 'middleEastAndNorthAfrica',
   'bn-BD': 'asiaPacific',
+  'en-GZ': 'europe',
   'hi-IN': 'asiaPacific',
   id: 'asiaPacific',
   ca: 'europe',
