@@ -1,17 +1,10 @@
 /* oxlint-disable jsx-a11y/prefer-tag-over-role, jsx-a11y/role-has-required-aria-props -- popover trigger exposes combobox semantics; popup IDs are managed by the UI primitive. */
-import { Bell, Check, ChevronsUpDown, Smartphone } from 'lucide-react'
+import { Bell, Check, ChevronsUpDown } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import { Command, CommandGroup, CommandItem } from '@/components/ui/command'
 import {
   Drawer,
@@ -44,6 +37,14 @@ import {
   NOTIFICATION_SECTIONS,
   type NotificationRow,
 } from './notification-category-metadata'
+import {
+  SettingsBadge,
+  SettingsFieldRow,
+  SettingsGroup,
+  SettingsRow,
+  SettingsSection,
+  SettingsSectionSkeleton,
+} from './settings-ui'
 
 type Channel = NotificationChannel
 type Category = NotificationCategory
@@ -109,6 +110,8 @@ type ChannelSelectorProps = {
   offLabel: string
   savingLabel: string
   doneLabel: string
+  /** Native id forwarded to the trigger button for label association. */
+  id?: string
 }
 
 /** Small responsive multi-select matching the other selectors in the app. */
@@ -124,6 +127,7 @@ function ChannelSelector({
   offLabel,
   savingLabel,
   doneLabel,
+  id,
 }: ChannelSelectorProps) {
   const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery('(min-width: 768px)')
@@ -163,8 +167,9 @@ function ChannelSelector({
       role="combobox"
       aria-haspopup="listbox"
       aria-expanded={open}
+      id={id}
       disabled={disabled || saving}
-      className="h-9 min-w-28 justify-between px-3 text-sm font-normal sm:min-w-32"
+      className="h-9 w-full min-w-28 justify-between px-3 text-sm font-normal sm:w-auto sm:min-w-32"
     >
       <span className="truncate">{saving ? savingLabel : summary}</span>
       <ChevronsUpDown
@@ -320,43 +325,46 @@ export function NotificationsPreferences() {
     }
   }
 
+  const sectionTitle = t('title')
+  const sectionDescription = t('description')
+
   if (preferences.isError) {
     return (
-      <Card className="mobile-surface">
-        <CardHeader>
-          <CardTitle className="text-lg">{t('title')}</CardTitle>
-          <CardDescription>{t('description')}</CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-3">
-          <p className="text-sm text-destructive" role="alert">
-            {t('loadError')}
-          </p>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => void preferences.refetch()}
-          >
-            {t('retry')}
-          </Button>
-        </CardContent>
-      </Card>
+      <SettingsSection
+        id="notifications"
+        title={sectionTitle}
+        description={sectionDescription}
+        icon={Bell}
+      >
+        <div className="px-4 pb-4 sm:px-6 sm:pb-6">
+          <Alert variant="destructive" className="py-3">
+            <AlertDescription className="text-sm">
+              {t('loadError')}
+            </AlertDescription>
+          </Alert>
+          <div className="pt-3">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => void preferences.refetch()}
+            >
+              {t('retry')}
+            </Button>
+          </div>
+        </div>
+      </SettingsSection>
     )
   }
 
   if (preferences.isPending || !preferences.data || !draft) {
     return (
-      <Card className="mobile-surface">
-        <CardHeader>
-          <CardTitle className="text-lg">{t('title')}</CardTitle>
-          <CardDescription>{t('description')}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div
-            className="h-24 animate-pulse rounded-md bg-muted"
-            aria-label={t('loading')}
-          />
-        </CardContent>
-      </Card>
+      <SettingsSectionSkeleton
+        id="notifications"
+        title={sectionTitle}
+        description={sectionDescription}
+        icon={Bell}
+        rows={4}
+      />
     )
   }
 
@@ -366,90 +374,91 @@ export function NotificationsPreferences() {
     items: section.rows as readonly NotificationRow[],
   }))
 
+  const comingSoonBadge = <SettingsBadge>{t('comingSoon')}</SettingsBadge>
+
   return (
-    <Card id="notifications" className="mobile-surface scroll-mt-6">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <Bell className="h-5 w-5" aria-hidden="true" />
-          {t('title')}
-        </CardTitle>
-        <CardDescription>{t('description')}</CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-7">
+    <SettingsSection
+      id="notifications"
+      title={sectionTitle}
+      description={sectionDescription}
+      icon={Bell}
+      className="scroll-mt-6"
+    >
+      <div className="flex flex-col gap-6">
         {rows.map((section) => (
-          <section
+          <SettingsGroup
             key={section.id}
-            aria-labelledby={`notification-${section.id}-heading`}
+            id={`notification-group-${section.id}`}
+            title={section.title}
           >
-            <h3
-              id={`notification-${section.id}-heading`}
-              className="mb-2 text-sm font-semibold text-foreground"
-            >
-              {section.title}
-            </h3>
-            <div className="divide-y rounded-lg border">
+            <>
               {section.items.map((row) => {
                 const channels = row.category ? draft[row.category] : []
                 const pushWarning =
                   row.category &&
                   channels.includes(NotificationChannel.PUSH) &&
                   !preferences.data.hasPushTargets
-                return (
-                  <div
-                    key={row.id}
-                    className={cn(
-                      'flex flex-col gap-3 px-3 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-4',
-                      row.comingSoon && 'opacity-65',
-                    )}
-                  >
-                    <div className="min-w-0">
-                      <p className="font-medium">{t(row.titleKey)}</p>
-                      <p className="mt-0.5 text-sm text-muted-foreground">
-                        {t(row.descriptionKey)}
-                      </p>
-                      {row.comingSoon ? (
-                        <p className="mt-1 text-xs text-muted-foreground">
-                          {t('comingSoon')}
-                        </p>
-                      ) : null}
-                      {pushWarning ? (
-                        <p
-                          className="mt-1 text-xs text-amber-700 dark:text-amber-400"
-                          aria-live="polite"
-                        >
-                          {t('pushMissingTarget')}
-                        </p>
-                      ) : null}
-                    </div>
-                    {row.category && !row.comingSoon ? (
-                      <ChannelSelector
-                        channels={channels}
-                        labels={channelLabels}
-                        title={t(row.titleKey)}
-                        emailDisabled={emailDisabled}
-                        pushDisabled={pushDisabled}
-                        offLabel={t('off')}
-                        savingLabel={t('saving')}
-                        doneLabel={tCommon('Groups.Import.StepHeader.done')}
-                        disabled={
-                          pendingCategory !== null &&
-                          pendingCategory !== row.category
-                        }
-                        saving={pendingCategory === row.category}
-                        onToggle={(channel) =>
-                          void toggleChannel(row.category!, channel)
-                        }
-                      />
-                    ) : (
-                      <span className="shrink-0 text-xs font-medium text-muted-foreground">
-                        {t('comingSoon')}
+                const description = (
+                  <>
+                    {t(row.descriptionKey)}
+                    {pushWarning ? (
+                      <span
+                        className="mt-1 block text-xs text-amber-700 dark:text-amber-400"
+                        aria-live="polite"
+                      >
+                        {t('pushMissingTarget')}
                       </span>
-                    )}
-                  </div>
+                    ) : null}
+                  </>
+                )
+                const control =
+                  row.category && !row.comingSoon ? (
+                    <ChannelSelector
+                      id={`notification-${row.id}`}
+                      channels={channels}
+                      labels={channelLabels}
+                      title={t(row.titleKey)}
+                      emailDisabled={emailDisabled}
+                      pushDisabled={pushDisabled}
+                      offLabel={t('off')}
+                      savingLabel={t('saving')}
+                      doneLabel={tCommon('Groups.Import.StepHeader.done')}
+                      disabled={
+                        pendingCategory !== null &&
+                        pendingCategory !== row.category
+                      }
+                      saving={pendingCategory === row.category}
+                      onToggle={(channel) =>
+                        void toggleChannel(row.category!, channel)
+                      }
+                    />
+                  ) : (
+                    comingSoonBadge
+                  )
+                if (row.category && !row.comingSoon) {
+                  return (
+                    <SettingsFieldRow
+                      key={row.id}
+                      id={`notification-${row.id}`}
+                      label={t(row.titleKey)}
+                      description={description}
+                      control={control}
+                    />
+                  )
+                }
+                return (
+                  <SettingsRow
+                    key={row.id}
+                    id={`notification-${row.id}`}
+                    label={t(row.titleKey)}
+                    description={description}
+                    badges={control}
+                    className="opacity-65"
+                  />
                 )
               })}
-            </div>
-          </section>
+            </>
+          </SettingsGroup>
         ))}
 
         {emailDisabled ? (
@@ -460,57 +469,55 @@ export function NotificationsPreferences() {
           </Alert>
         ) : null}
 
-        <section
-          aria-labelledby="notification-device-heading"
-          className="flex flex-col gap-3 border-t pt-5"
-        >
-          <div>
-            <h3
-              id="notification-device-heading"
-              className="flex items-center gap-2 font-medium"
-            >
-              <Smartphone className="h-4 w-4" aria-hidden="true" />
-              {t('push.deviceTitle')}
-            </h3>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {t('push.deviceDescription')}
-            </p>
-          </div>
-          {noPushTargetWarning ? (
-            <Alert
-              className="border-amber-500/50 bg-amber-50 py-3 text-amber-950 dark:bg-amber-950/20 dark:text-amber-100"
-              aria-live="polite"
-            >
-              <AlertDescription className="text-sm">
-                {t('push.noDevices')}
-              </AlertDescription>
-            </Alert>
-          ) : null}
-          {!push.supported ? (
-            <p className="text-sm text-muted-foreground">{t('unsupported')}</p>
-          ) : !push.configured ? (
-            <p className="text-sm text-muted-foreground">
-              {t('notConfigured')}
-            </p>
-          ) : push.iosHomeScreenRequired ? (
-            <p className="text-sm text-muted-foreground">{t('iosInstall')}</p>
-          ) : push.permission === 'denied' ? (
-            <p className="text-sm text-muted-foreground">
-              {t('permissionDenied')}
-            </p>
-          ) : (
-            <>
-              {!push.enabled ? (
+        <SettingsGroup
+          id="notification-group-device"
+          title={t('push.deviceTitle')}
+          description={t('push.deviceDescription')}
+          beforeRows={
+            <div className="flex flex-col gap-3">
+              {noPushTargetWarning ? (
+                <Alert
+                  className="border-amber-500/50 bg-amber-50 py-3 text-amber-950 dark:bg-amber-950/20 dark:text-amber-100"
+                  aria-live="polite"
+                >
+                  <AlertDescription className="text-sm">
+                    {t('push.noDevices')}
+                  </AlertDescription>
+                </Alert>
+              ) : null}
+              {!push.enabled &&
+              push.supported &&
+              push.configured &&
+              !push.iosHomeScreenRequired &&
+              push.permission !== 'denied' ? (
                 <Alert variant="destructive" className="py-3">
                   <AlertDescription className="text-sm">
                     {t('push.deviceDisabled')}
                   </AlertDescription>
                 </Alert>
               ) : null}
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-sm text-muted-foreground">
-                  {push.enabled ? t('enabled') : t('disabled')}
-                </p>
+            </div>
+          }
+        >
+          <SettingsRow
+            id="notifications-device"
+            label={push.enabled ? t('enabled') : t('disabled')}
+            description={
+              !push.supported
+                ? t('unsupported')
+                : !push.configured
+                  ? t('notConfigured')
+                  : push.iosHomeScreenRequired
+                    ? t('iosInstall')
+                    : push.permission === 'denied'
+                      ? t('permissionDenied')
+                      : undefined
+            }
+            control={
+              push.supported &&
+              push.configured &&
+              !push.iosHomeScreenRequired &&
+              push.permission !== 'denied' ? (
                 <Button
                   type="button"
                   className="w-full sm:w-auto"
@@ -526,11 +533,11 @@ export function NotificationsPreferences() {
                   ) : null}
                   {push.enabled ? t('disable') : t('enable')}
                 </Button>
-              </div>
-            </>
-          )}
-        </section>
-      </CardContent>
-    </Card>
+              ) : undefined
+            }
+          />
+        </SettingsGroup>
+      </div>
+    </SettingsSection>
   )
 }

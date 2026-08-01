@@ -27,11 +27,14 @@ vi.mock('@/components/account-preferences-sync', () => ({
 vi.mock('@/components/currency-selector', () => ({
   CurrencySelector: ({
     onValueChange,
+    id,
   }: {
     onValueChange: (currencyCode: string) => void
+    id?: string
   }) => (
     <button
       type="button"
+      id={id}
       aria-label="Default currency"
       onClick={() => onValueChange('EUR')}
     >
@@ -41,9 +44,16 @@ vi.mock('@/components/currency-selector', () => ({
 }))
 
 vi.mock('@/components/time-zone-field', () => ({
-  TimeZoneField: ({ onChange }: { onChange: (timeZone: string) => void }) => (
+  TimeZoneField: ({
+    onChange,
+    id,
+  }: {
+    onChange: (timeZone: string) => void
+    id?: string
+  }) => (
     <button
       type="button"
+      id={id}
       aria-label="Account timezone"
       onClick={() => onChange('Europe/Paris')}
     >
@@ -55,11 +65,14 @@ vi.mock('@/components/time-zone-field', () => ({
 vi.mock('@/components/locale-switcher', () => ({
   LocaleSelector: ({
     onValueChange,
+    id,
   }: {
     onValueChange: (locale: string) => void
+    id?: string
   }) => (
     <button
       type="button"
+      id={id}
       aria-label="Language"
       onClick={() => onValueChange('fr-FR')}
     >
@@ -93,6 +106,11 @@ vi.mock('@/trpc/client', () => ({
     account: {
       getPreferences: {
         useQuery: () => ({ data: { preferences: mocks.preferences } }),
+      },
+    },
+    features: {
+      get: {
+        useQuery: () => ({ data: undefined }),
       },
     },
   },
@@ -141,5 +159,26 @@ describe('AccountPreferences', () => {
       persist: false,
     })
     expect(mocks.patchPreferences).toHaveBeenCalledWith({ theme: 'dark' })
+  })
+
+  it('associates every row label with its control via htmlFor', () => {
+    render(<AccountPreferences />)
+
+    for (const labelText of [
+      'Default currency',
+      'Account timezone',
+      'Language',
+      'Theme',
+    ]) {
+      const label = screen.getByText(labelText).closest('label')
+      expect(label, `${labelText} should be a <label>`).not.toBeNull()
+      const targetId = label!.htmlFor
+      expect(targetId, `${labelText} should target an id`).not.toBe('')
+      const target = document.getElementById(targetId)
+      expect(
+        target,
+        `${labelText} label should point at an existing control`,
+      ).not.toBeNull()
+    }
   })
 })

@@ -2,7 +2,7 @@ import { createLazyFileRoute, getRouteApi } from '@tanstack/react-router'
 
 import { EditExpenseForm } from '@/app/groups/[groupId]/expenses/edit-expense-form'
 import { Skeleton } from '@/components/ui/skeleton'
-import { trpc } from '@/trpc/client'
+import { useEffectiveRuntimeFeatureFlags } from '@/lib/effective-runtime-feature-flags'
 
 const expenseEditRouteApi = getRouteApi(
   '/groups/$groupId/expenses/$expenseId/edit',
@@ -11,8 +11,8 @@ const expenseEditRouteApi = getRouteApi(
 function ExpenseEditRoute() {
   const { groupId, expenseId } = expenseEditRouteApi.useParams()
   const { scope, returnTo } = expenseEditRouteApi.useSearch()
-  const { data } = trpc.features.get.useQuery()
-  if (!data) {
+  const { flags, isLoading } = useEffectiveRuntimeFeatureFlags()
+  if (isLoading) {
     return (
       <div className="flex flex-col gap-4" aria-busy="true">
         <Skeleton className="h-12 w-full" />
@@ -24,7 +24,7 @@ function ExpenseEditRoute() {
     <EditExpenseForm
       groupId={groupId}
       expenseId={expenseId}
-      runtimeFeatureFlags={data}
+      runtimeFeatureFlags={flags}
       initialScope={scope}
       returnTo={returnTo}
     />

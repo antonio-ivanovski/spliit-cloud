@@ -56,7 +56,8 @@
     "account": "Tài khoản",
     "accountSettings": "Cài đặt",
     "back": "Quay lại",
-    "menu": "Menu"
+    "menu": "Menu",
+    "feedback": "Phản hồi"
   },
   "Common": {
     "close": "Đóng",
@@ -798,7 +799,27 @@
       "timeZoneHelp": "Dùng cho dấu thời gian, ngày tương đối và các khoản chi định kỳ mới.",
       "language": "Ngôn ngữ",
       "theme": "Giao diện",
-      "chooseTheme": "Chọn"
+      "chooseTheme": "Chọn",
+      "saving": "Đang lưu tùy chọn…"
+    },
+    "aiPreferences": {
+      "title": "Tính năng AI",
+      "description": "Cấu hình các tính năng AI và tùy chỉnh cách chúng hoạt động.",
+      "categoryExtractLabel": "Phân loại khoản chi",
+      "categoryExtractDescription": "Đề xuất danh mục tự động khi bạn nhập tiêu đề khoản chi.",
+      "receiptScanLabel": "Quét hóa đơn",
+      "receiptScanDescription": "Trích xuất chi tiết khoản chi từ ảnh hóa đơn.",
+      "voiceExpenseLabel": "Khoản chi bằng giọng nói",
+      "voiceExpenseDescription": "Tạo khoản chi từ đoạn ghi âm giọng nói ngắn.",
+      "comingSoon": "Sắp ra mắt",
+      "voiceLanguageLabel": "Ngôn ngữ giọng nói ưa thích",
+      "voiceLanguageDescription": "Chọn ngôn ngữ mà AI khoản chi bằng giọng nói lắng nghe.",
+      "receiptPromptsLabel": "Hướng dẫn tùy chỉnh cho quét hóa đơn",
+      "receiptPromptsDescription": "Điều chỉnh hành vi AI khi quét hóa đơn (gợi ý tiền tệ, nhóm các dòng mục, v.v.).",
+      "voicePromptsLabel": "Hướng dẫn tùy chỉnh cho khoản chi bằng giọng nói",
+      "voicePromptsDescription": "Điều chỉnh hành vi AI khi tạo khoản chi từ giọng nói của bạn (chia khoản, người thanh toán mặc định, v.v.).",
+      "saving": "Đang lưu tùy chọn…",
+      "masterLabel": "Bật tính năng AI"
     }
   },
   "CompleteProfile": {
@@ -2419,5 +2440,43 @@
       "unsupportedCurrency": "Loại tiền được nói không được hỗ trợ; hãy chọn trong biểu mẫu chi phí đầy đủ."
     },
     "addExpenseAction": "Thêm khoản chi"
+  },
+  "Feedback": {
+    "navigationLabel": "Phản hồi",
+    "title": "Cùng định hình Spliit Cloud",
+    "description": "Báo cáo sự cố, đề xuất cải tiến hoặc chia sẻ trải nghiệm của bạn. Chọn một danh mục để tiếp tục trên GitHub.",
+    "categoriesLabel": "Danh mục phản hồi",
+    "categories": {
+      "bug": {
+        "title": "Báo lỗi",
+        "description": "Hãy cho chúng tôi biết về hành vi bị lỗi hoặc ngoài dự kiến và cung cấp các bước tái hiện rõ ràng.",
+        "action": "Mở báo cáo lỗi"
+      },
+      "idea": {
+        "title": "Đề xuất ý tưởng",
+        "description": "Mô tả một vấn đề đáng giải quyết hoặc cải tiến giúp Spliit hữu ích hơn.",
+        "action": "Mở biểu mẫu ý tưởng"
+      },
+      "feedback": {
+        "title": "Chia sẻ phản hồi",
+        "description": "Hãy cho chúng tôi biết điều gì hữu ích, khó khăn, khó hiểu hoặc được thiết kế đặc biệt tốt.",
+        "action": "Mở biểu mẫu phản hồi"
+      }
+    },
+    "githubNotice": {
+      "title": "Báo cáo được công khai trên GitHub",
+      "description": "Bạn cần tài khoản GitHub để gửi. Bạn có thể xem lại và chỉnh sửa mọi nội dung trước khi vấn đề được công bố."
+    },
+    "privacy": {
+      "title": "Bảo vệ quyền riêng tư của bạn",
+      "description": "Xóa tên, địa chỉ email, số tiền, biên lai, liên kết nhóm, mã mời và dữ liệu riêng tư khác trước khi gửi."
+    },
+    "diagnostics": {
+      "title": "Thông tin chẩn đoán an toàn",
+      "description": "Sao chép ngữ cảnh kỹ thuật này vào báo cáo lỗi nếu có liên quan. Nội dung này không bao gồm dữ liệu tài khoản, nội dung biểu mẫu, mã định danh URL, chuỗi truy vấn hoặc mã mời.",
+      "copy": "Sao chép thông tin chẩn đoán",
+      "copied": "Đã sao chép",
+      "copyFailed": "Không thể truy cập bảng nhớ tạm. Hãy chọn và sao chép thông tin chẩn đoán theo cách thủ công."
+    }
   }
 }

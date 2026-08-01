@@ -56,7 +56,8 @@
     "account": "Account",
     "accountSettings": "Accountinstellingen",
     "back": "Terug",
-    "menu": "Menu"
+    "menu": "Menu",
+    "feedback": "Terugkoppeling"
   },
   "Footer": {
     "madeIn": "Gemaakt met liefde door de open-source community ❤️",
@@ -1742,7 +1743,27 @@
       "timeZoneHelp": "Wordt gebruikt voor tijdstempels, relatieve datums en nieuwe terugkerende uitgaven.",
       "language": "Taal",
       "theme": "Thema",
-      "chooseTheme": "Kiezen"
+      "chooseTheme": "Kiezen",
+      "saving": "Opslaan…"
+    },
+    "aiPreferences": {
+      "title": "AI-functies",
+      "description": "Configureer AI-functies en pas aan hoe ze zich gedragen.",
+      "categoryExtractLabel": "Uitgavencategoriseerder",
+      "categoryExtractDescription": "Stel automatisch een categorie voor wanneer je een titel voor een uitgave invult.",
+      "receiptScanLabel": "Bon scannen",
+      "receiptScanDescription": "Haalt uitgavendetails uit een bonfoto.",
+      "voiceExpenseLabel": "Spraakuitgave",
+      "voiceExpenseDescription": "Maak een uitgave op basis van een korte spraakopname.",
+      "comingSoon": "Binnenkort beschikbaar",
+      "voiceLanguageLabel": "Voorkeurstaal voor spraak",
+      "voiceLanguageDescription": "Kies de taal waar de AI voor spraakuitgaven naar luistert.",
+      "receiptPromptsLabel": "Aangepaste instructies voor bon scannen",
+      "receiptPromptsDescription": "Pas het AI-gedrag aan bij het scannen van bonnen (valutahints, groeperen van regels enz.).",
+      "voicePromptsLabel": "Aangepaste instructies voor spraakuitgaven",
+      "voicePromptsDescription": "Pas het AI-gedrag aan bij het maken van uitgaven met je stem (verdelen, standaardbetaler enz.).",
+      "saving": "Opslaan…",
+      "masterLabel": "AI-functies inschakelen"
     }
   },
   "Activities": {
@@ -2347,5 +2368,43 @@
       "unsupportedCurrency": "De gesproken valuta wordt niet ondersteund; kies er een in het volledige uitgavenformulier."
     },
     "addExpenseAction": "Uitgave toevoegen"
+  },
+  "Feedback": {
+    "navigationLabel": "Terugkoppeling",
+    "title": "Help Spliit Cloud vorm te geven",
+    "description": "Meld een probleem, stel een verbetering voor of vertel ons over je ervaring. Kies een categorie om verder te gaan op GitHub.",
+    "categoriesLabel": "Categorieën voor terugkoppeling",
+    "categories": {
+      "bug": {
+        "title": "Een fout melden",
+        "description": "Vertel ons over kapot of onverwacht gedrag en voeg duidelijke stappen toe om het te reproduceren.",
+        "action": "Foutrapport openen"
+      },
+      "idea": {
+        "title": "Een idee voorstellen",
+        "description": "Beschrijf een probleem dat het oplossen waard is of een verbetering die Spliit nuttiger zou maken.",
+        "action": "Ideeformulier openen"
+      },
+      "feedback": {
+        "title": "Terugkoppeling delen",
+        "description": "Vertel ons wat nuttig, moeilijk, verwarrend of bijzonder goed ontworpen aanvoelt.",
+        "action": "Terugkoppelingsformulier openen"
+      }
+    },
+    "githubNotice": {
+      "title": "Rapporten zijn openbaar op GitHub",
+      "description": "Je hebt een GitHub-account nodig om in te dienen. Je kunt alles controleren en bewerken voordat het issue wordt gepubliceerd."
+    },
+    "privacy": {
+      "title": "Bescherm je privacy",
+      "description": "Verwijder vóór het indienen namen, e-mailadressen, bedragen, bonnetjes, groepslinks, uitnodigingstokens en andere privégegevens."
+    },
+    "diagnostics": {
+      "title": "Veilige diagnostiek",
+      "description": "Kopieer deze technische context naar een foutrapport als die relevant is. Accountgegevens, formulierinhoud, URL-ID's, queryreeksen en uitnodigingstokens worden uitgesloten.",
+      "copy": "Diagnostiek kopiëren",
+      "copied": "Gekopieerd",
+      "copyFailed": "Toegang tot het klembord is mislukt. Selecteer en kopieer de diagnostiek handmatig."
+    }
   }
 }

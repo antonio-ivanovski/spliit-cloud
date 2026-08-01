@@ -56,7 +56,8 @@
     "account": "Hesap",
     "accountSettings": "Hesap ayarları",
     "back": "Geri",
-    "menu": "Menü"
+    "menu": "Menü",
+    "feedback": "Geri bildirim"
   },
   "Footer": {
     "madeIn": "Açık kaynak topluluğu tarafından sevgiyle yapıldı ❤️",
@@ -1742,7 +1743,27 @@
       "timeZoneHelp": "Zaman damgaları, göreli tarihler ve yeni yinelenen giderler için kullanılır.",
       "language": "Dil",
       "theme": "Tema",
-      "chooseTheme": "Seçin"
+      "chooseTheme": "Seçin",
+      "saving": "Tercihler kaydediliyor…"
+    },
+    "aiPreferences": {
+      "title": "Yapay zeka özellikleri",
+      "description": "Yapay zeka özelliklerini yapılandırın ve nasıl davranacaklarını özelleştirin.",
+      "categoryExtractLabel": "Harcama kategorileyicisi",
+      "categoryExtractDescription": "Bir harcama başlığı doldurduğunuzda otomatik olarak bir kategori önerir.",
+      "receiptScanLabel": "Fiş tara",
+      "receiptScanDescription": "Bir fiş fotoğrafından gider ayrıntılarını çıkarır.",
+      "voiceExpenseLabel": "Sesli gider",
+      "voiceExpenseDescription": "Kısa bir ses kaydından gider oluşturur.",
+      "comingSoon": "Yakında",
+      "voiceLanguageLabel": "Tercih edilen ses dili",
+      "voiceLanguageDescription": "Sesli gider yapay zekasının dinleyeceği dili seçin.",
+      "receiptPromptsLabel": "Fiş taraması için özel talimatlar",
+      "receiptPromptsDescription": "Fiş tararken yapay zeka davranışını uyarlayın (para birimi ipuçları, kalem gruplama vb.).",
+      "voicePromptsLabel": "Sesli gider için özel talimatlar",
+      "voicePromptsDescription": "Sesinizden gider oluştururken yapay zeka davranışını uyarlayın (bölüştürme, varsayılan ödeyen vb.).",
+      "saving": "Tercihler kaydediliyor…",
+      "masterLabel": "Yapay zekâ özelliklerini etkinleştir"
     }
   },
   "Activities": {
@@ -2347,5 +2368,43 @@
       "unsupportedCurrency": "Söylenen para birimi desteklenmiyor; tam harcama formundan bir para birimi seçin."
     },
     "addExpenseAction": "Gider ekle"
+  },
+  "Feedback": {
+    "navigationLabel": "Geri bildirim",
+    "title": "Spliit Cloud'u şekillendirmeye yardımcı olun",
+    "description": "Bir sorun bildirin, iyileştirme önerin veya deneyiminizi paylaşın. GitHub'da devam etmek için bir kategori seçin.",
+    "categoriesLabel": "Geri bildirim kategorileri",
+    "categories": {
+      "bug": {
+        "title": "Hata bildir",
+        "description": "Bozuk veya beklenmeyen davranışı açıklayın ve net yeniden oluşturma adımları ekleyin.",
+        "action": "Hata raporunu aç"
+      },
+      "idea": {
+        "title": "Fikir öner",
+        "description": "Çözülmeye değer bir sorunu veya Spliit'i daha kullanışlı hâle getirecek bir iyileştirmeyi açıklayın.",
+        "action": "Fikir formunu aç"
+      },
+      "feedback": {
+        "title": "Geri bildirim paylaş",
+        "description": "Nelerin yararlı, zor, kafa karıştırıcı veya özellikle iyi tasarlanmış olduğunu bize anlatın.",
+        "action": "Geri bildirim formunu aç"
+      }
+    },
+    "githubNotice": {
+      "title": "Raporlar GitHub'da herkese açıktır",
+      "description": "Göndermek için bir GitHub hesabına ihtiyacınız vardır. Sorun yayımlanmadan önce her şeyi inceleyebilir ve düzenleyebilirsiniz."
+    },
+    "privacy": {
+      "title": "Gizliliğinizi koruyun",
+      "description": "Göndermeden önce adları, e-posta adreslerini, tutarları, makbuzları, grup bağlantılarını, davet belirteçlerini ve diğer özel verileri kaldırın."
+    },
+    "diagnostics": {
+      "title": "Güvenli tanılama bilgileri",
+      "description": "İlgiliyse bu teknik bağlamı hata raporuna kopyalayın. Hesap verilerini, form içeriklerini, URL tanımlayıcılarını, sorgu dizelerini ve davet belirteçlerini içermez.",
+      "copy": "Tanılama bilgilerini kopyala",
+      "copied": "Kopyalandı",
+      "copyFailed": "Panoya erişilemedi. Tanılama bilgilerini seçip elle kopyalayın."
+    }
   }
 }

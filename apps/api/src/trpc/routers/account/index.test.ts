@@ -108,6 +108,10 @@ describe('accountRouter account preferences', () => {
         timeZone: null,
         locale: null,
         theme: null,
+        aiFeaturesEnabled: true,
+        aiCategoryExtractEnabled: true,
+        aiReceiptScanEnabled: true,
+        aiVoiceExpenseEnabled: true,
       },
     })
   })
@@ -155,6 +159,10 @@ describe('accountRouter account preferences', () => {
       timeZone: 'Europe/Skopje',
       locale: 'mk-MK',
       theme: 'dark',
+      aiFeaturesEnabled: true,
+      aiCategoryExtractEnabled: true,
+      aiReceiptScanEnabled: true,
+      aiVoiceExpenseEnabled: true,
     })
   })
 
@@ -389,6 +397,71 @@ describe('accountRouter account preferences', () => {
       }),
     )
     expect(result.preferences.defaultCurrencyCode).toBe('EUR')
+  })
+
+  it('patches AI feature preferences independently of other prefs', async () => {
+    prismaMock.accountPreference.upsert.mockResolvedValue({
+      defaultCurrencyCode: 'EUR',
+      timeZone: 'Europe/Skopje',
+      locale: 'en-US',
+      theme: 'system',
+      // Explicit false on receipt scan reflects what the user just wrote;
+      // the two untouched AI fields come back nullish so the response
+      // exercises the null → default-on normalization path.
+      aiFeaturesEnabled: null,
+      aiCategoryExtractEnabled: null,
+      aiReceiptScanEnabled: false,
+      aiVoiceExpenseEnabled: null,
+    } as never)
+
+    const result = await makeCaller('acct-1').updatePreferences({
+      aiReceiptScanEnabled: false,
+    })
+
+    expect(prismaMock.accountPreference.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { accountId: 'acct-1' },
+        update: { aiReceiptScanEnabled: false },
+      }),
+    )
+    // Server-side normalization: explicit false stays false; nullish fields
+    // become the default-on boolean before the response leaves the API.
+    expect(result.preferences.aiFeaturesEnabled).toBe(true)
+    expect(result.preferences.aiReceiptScanEnabled).toBe(false)
+    expect(result.preferences.aiVoiceExpenseEnabled).toBe(true)
+    expect(result.preferences.aiCategoryExtractEnabled).toBe(true)
+  })
+
+  it('patches the master AI preference without changing child preferences', async () => {
+    prismaMock.accountPreference.upsert.mockResolvedValue({
+      defaultCurrencyCode: 'EUR',
+      timeZone: 'Europe/Skopje',
+      locale: 'en-US',
+      theme: 'system',
+      aiFeaturesEnabled: false,
+      aiCategoryExtractEnabled: false,
+      aiReceiptScanEnabled: true,
+      aiVoiceExpenseEnabled: null,
+    } as never)
+
+    const result = await makeCaller('acct-1').updatePreferences({
+      aiFeaturesEnabled: false,
+    })
+
+    expect(prismaMock.accountPreference.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { accountId: 'acct-1' },
+        create: expect.objectContaining({
+          accountId: 'acct-1',
+          aiFeaturesEnabled: false,
+        }),
+        update: { aiFeaturesEnabled: false },
+      }),
+    )
+    expect(result.preferences.aiFeaturesEnabled).toBe(false)
+    expect(result.preferences.aiCategoryExtractEnabled).toBe(false)
+    expect(result.preferences.aiReceiptScanEnabled).toBe(true)
+    expect(result.preferences.aiVoiceExpenseEnabled).toBe(true)
   })
 
   it.each([

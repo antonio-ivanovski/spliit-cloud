@@ -16,8 +16,10 @@ RUN --mount=type=cache,target=/root/.bun/install/cache bun install --frozen-lock
 FROM base AS builder
 ARG VITE_API_URL
 ARG VITE_DEFAULT_CURRENCY_CODE=USD
+ARG VITE_BUILD_SHA=unknown
 ENV VITE_API_URL=$VITE_API_URL
 ENV VITE_DEFAULT_CURRENCY_CODE=$VITE_DEFAULT_CURRENCY_CODE
+ENV VITE_BUILD_SHA=$VITE_BUILD_SHA
 COPY --from=installer /app ./
 COPY --from=pruner /app/out/full/ ./
 RUN bun --filter @spliit/web build

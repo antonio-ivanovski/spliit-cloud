@@ -147,6 +147,11 @@ describe('AccountMenu', () => {
     // Account settings link should be present
     expect(screen.getByText('Account settings')).toBeInTheDocument()
 
+    expect(screen.getByRole('link', { name: 'Feedback' })).toHaveAttribute(
+      'href',
+      '/feedback',
+    )
+
     // Sign out item should be present
     expect(screen.getByText('Sign out')).toBeInTheDocument()
   })

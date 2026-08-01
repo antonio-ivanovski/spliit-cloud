@@ -9,6 +9,17 @@ export type AccountPreferences = {
   timeZone: string | null
   locale: Locale | null
   theme: AccountTheme | null
+  /** Account-level AI opt-out gate. Missing cached values default to true. */
+  aiFeaturesEnabled?: boolean
+  /**
+   * Per-user AI feature preferences. `null` means "use the default-on
+   * behaviour" and is treated as `true` at the API boundary. Client code that
+   * needs the effective value should compare against `false` rather than treat
+   * `null` as off.
+   */
+  aiCategoryExtractEnabled: boolean | null
+  aiReceiptScanEnabled: boolean | null
+  aiVoiceExpenseEnabled: boolean | null
 }
 
 export const ACCOUNT_THEME_CHANGED_EVENT = 'spliit:account-theme-changed'
@@ -38,6 +49,10 @@ function parseAccountPreferences(value: unknown): AccountPreferences | null {
   const timeZone = candidate.timeZone
   const locale = candidate.locale
   const theme = candidate.theme
+  const aiFeaturesEnabled = candidate.aiFeaturesEnabled
+  const aiCategoryExtractEnabled = candidate.aiCategoryExtractEnabled
+  const aiReceiptScanEnabled = candidate.aiReceiptScanEnabled
+  const aiVoiceExpenseEnabled = candidate.aiVoiceExpenseEnabled
 
   if (
     defaultCurrencyCode !== null &&
@@ -57,11 +72,53 @@ function parseAccountPreferences(value: unknown): AccountPreferences | null {
     (typeof theme !== 'string' || !supportedThemes.has(theme as AccountTheme))
   )
     return null
+  if (
+    aiFeaturesEnabled !== undefined &&
+    aiFeaturesEnabled !== null &&
+    typeof aiFeaturesEnabled !== 'boolean'
+  )
+    return null
+  // AI feature fields were introduced later: tolerate cached shapes that
+  // pre-date them by treating a missing key the same as an explicit `null`
+  // (which the API normalizes to "use the default-on behaviour").
+  if (
+    aiCategoryExtractEnabled !== undefined &&
+    aiCategoryExtractEnabled !== null &&
+    typeof aiCategoryExtractEnabled !== 'boolean'
+  )
+    return null
+  if (
+    aiReceiptScanEnabled !== undefined &&
+    aiReceiptScanEnabled !== null &&
+    typeof aiReceiptScanEnabled !== 'boolean'
+  )
+    return null
+  if (
+    aiVoiceExpenseEnabled !== undefined &&
+    aiVoiceExpenseEnabled !== null &&
+    typeof aiVoiceExpenseEnabled !== 'boolean'
+  )
+    return null
   return {
     defaultCurrencyCode: defaultCurrencyCode as string | null,
     timeZone: timeZone as string | null,
     locale: locale as Locale | null,
     theme: theme as AccountTheme | null,
+    // The master switch is default-on for accounts created before this field
+    // existed, including cached snapshots from older app versions.
+    aiFeaturesEnabled: aiFeaturesEnabled !== false,
+    aiCategoryExtractEnabled:
+      aiCategoryExtractEnabled === undefined
+        ? null
+        : (aiCategoryExtractEnabled as boolean | null),
+    aiReceiptScanEnabled:
+      aiReceiptScanEnabled === undefined
+        ? null
+        : (aiReceiptScanEnabled as boolean | null),
+    aiVoiceExpenseEnabled:
+      aiVoiceExpenseEnabled === undefined
+        ? null
+        : (aiVoiceExpenseEnabled as boolean | null),
   }
 }
 

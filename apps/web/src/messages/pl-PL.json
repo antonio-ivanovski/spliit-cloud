@@ -56,7 +56,8 @@
     "account": "Konto",
     "accountSettings": "Ustawienia konta",
     "back": "Wstecz",
-    "menu": "Menu"
+    "menu": "Menu",
+    "feedback": "Opinie"
   },
   "Footer": {
     "madeIn": "Stworzone przez społeczność open-source z miłością ❤️",
@@ -1760,7 +1761,27 @@
       "timeZoneHelp": "Używana do znaczników czasu, dat względnych i nowych wydatków cyklicznych.",
       "language": "Język",
       "theme": "Motyw",
-      "chooseTheme": "Wybierz"
+      "chooseTheme": "Wybierz",
+      "saving": "Zapisywanie preferencji…"
+    },
+    "aiPreferences": {
+      "title": "Funkcje AI",
+      "description": "Skonfiguruj funkcje AI i dostosuj ich działanie.",
+      "categoryExtractLabel": "Kategoryzator wydatków",
+      "categoryExtractDescription": "Sugeruj kategorię automatycznie podczas wpisywania tytułu wydatku.",
+      "receiptScanLabel": "Skan paragonu",
+      "receiptScanDescription": "Wyodrębnij szczegóły wydatku ze zdjęcia paragonu.",
+      "voiceExpenseLabel": "Wydatek głosowy",
+      "voiceExpenseDescription": "Utwórz wydatek z krótkiego nagrania głosowego.",
+      "comingSoon": "Już wkrótce",
+      "voiceLanguageLabel": "Preferowany język głosu",
+      "voiceLanguageDescription": "Wybierz język, w którym AI nasłuchuje przy wydatkach głosowych.",
+      "receiptPromptsLabel": "Własne instrukcje dla skanu paragonu",
+      "receiptPromptsDescription": "Dostosuj działanie AI podczas skanowania paragonów (podpowiedzi dotyczące waluty, grupowanie pozycji itp.).",
+      "voicePromptsLabel": "Własne instrukcje dla wydatku głosowego",
+      "voicePromptsDescription": "Dostosuj działanie AI przy tworzeniu wydatków z głosu (podział, domyślny płatnik itp.).",
+      "saving": "Zapisywanie preferencji…",
+      "masterLabel": "Włącz funkcje AI"
     }
   },
   "Activities": {
@@ -2381,5 +2402,43 @@
       "unsupportedCurrency": "Podana waluta nie jest obsługiwana; wybierz inną w pełnym formularzu wydatku."
     },
     "addExpenseAction": "Dodaj wydatek"
+  },
+  "Feedback": {
+    "navigationLabel": "Opinie",
+    "title": "Pomóż kształtować Spliit Cloud",
+    "description": "Zgłoś problem, zaproponuj ulepszenie lub opowiedz nam o swoich wrażeniach. Wybierz kategorię, aby kontynuować w serwisie GitHub.",
+    "categoriesLabel": "Kategorie opinii",
+    "categories": {
+      "bug": {
+        "title": "Zgłoś błąd",
+        "description": "Opisz nieprawidłowe lub nieoczekiwane działanie i podaj jasne kroki jego odtworzenia.",
+        "action": "Otwórz zgłoszenie błędu"
+      },
+      "idea": {
+        "title": "Zaproponuj pomysł",
+        "description": "Opisz problem wart rozwiązania lub ulepszenie, które zwiększyłoby użyteczność Spliit.",
+        "action": "Otwórz formularz pomysłu"
+      },
+      "feedback": {
+        "title": "Przekaż opinię",
+        "description": "Powiedz nam, co jest pomocne, trudne, niejasne lub wyjątkowo dobrze zaprojektowane.",
+        "action": "Otwórz formularz opinii"
+      }
+    },
+    "githubNotice": {
+      "title": "Zgłoszenia są publiczne w serwisie GitHub",
+      "description": "Do wysłania potrzebujesz konta GitHub. Przed publikacją zgłoszenia możesz wszystko sprawdzić i edytować."
+    },
+    "privacy": {
+      "title": "Chroń swoją prywatność",
+      "description": "Przed wysłaniem usuń imiona i nazwiska, adresy e-mail, kwoty, rachunki, linki do grup, tokeny zaproszeń i inne prywatne dane."
+    },
+    "diagnostics": {
+      "title": "Bezpieczna diagnostyka",
+      "description": "Skopiuj ten kontekst techniczny do zgłoszenia błędu, jeśli jest istotny. Nie zawiera on danych konta, zawartości formularzy, identyfikatorów URL, ciągów zapytań ani tokenów zaproszeń.",
+      "copy": "Kopiuj diagnostykę",
+      "copied": "Skopiowano",
+      "copyFailed": "Nie udało się uzyskać dostępu do schowka. Zaznacz i skopiuj diagnostykę ręcznie."
+    }
   }
 }

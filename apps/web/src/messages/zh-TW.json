@@ -56,7 +56,8 @@
     "account": "帳戶",
     "accountSettings": "帳戶設定",
     "back": "返回",
-    "menu": "選單"
+    "menu": "選單",
+    "feedback": "意見回饋"
   },
   "Footer": {
     "madeIn": "由開源社群用愛打造 ❤️",
@@ -1735,7 +1736,27 @@
       "timeZoneHelp": "用於顯示時間戳記、相對日期和新的週期性支出。",
       "language": "語言",
       "theme": "主題",
-      "chooseTheme": "選擇"
+      "chooseTheme": "選擇",
+      "saving": "儲存中…"
+    },
+    "aiPreferences": {
+      "title": "AI 功能",
+      "description": "設定 AI 功能並自訂其行為方式。",
+      "categoryExtractLabel": "支出分類器",
+      "categoryExtractDescription": "填寫支出標題時自動建議類別。",
+      "receiptScanLabel": "收據掃描",
+      "receiptScanDescription": "從收據照片中擷取支出詳細資料。",
+      "voiceExpenseLabel": "語音支出",
+      "voiceExpenseDescription": "透過簡短的語音錄音建立支出。",
+      "comingSoon": "即將推出",
+      "voiceLanguageLabel": "偏好的語音語言",
+      "voiceLanguageDescription": "選擇語音支出 AI 聆聽的語言。",
+      "receiptPromptsLabel": "收據掃描的自訂指示",
+      "receiptPromptsDescription": "掃描收據時量身調整 AI 行為（貨幣提示、明細行分組等）。",
+      "voicePromptsLabel": "語音支出的自訂指示",
+      "voicePromptsDescription": "透過語音建立支出時量身調整 AI 行為（分攤、預設付款人等）。",
+      "saving": "儲存中…",
+      "masterLabel": "啟用 AI 功能"
     }
   },
   "Activities": {
@@ -2330,5 +2351,43 @@
       "unsupportedCurrency": "語音指定的貨幣不受支援，請在完整支出表單中選擇。"
     },
     "addExpenseAction": "新增支出"
+  },
+  "Feedback": {
+    "navigationLabel": "意見回饋",
+    "title": "協助塑造 Spliit Cloud",
+    "description": "回報問題、提出改善建議或分享您的使用體驗。請選擇一個類別以在 GitHub 上繼續。",
+    "categoriesLabel": "意見回饋類別",
+    "categories": {
+      "bug": {
+        "title": "回報錯誤",
+        "description": "請告訴我們故障或非預期的行為，並提供清楚的重現步驟。",
+        "action": "開啟錯誤回報"
+      },
+      "idea": {
+        "title": "提出想法",
+        "description": "請描述一個值得解決的問題，或一項能讓 Spliit 更實用的改善。",
+        "action": "開啟想法表單"
+      },
+      "feedback": {
+        "title": "分享意見",
+        "description": "請告訴我們哪些地方有幫助、困難、令人困惑或設計得特別好。",
+        "action": "開啟意見表單"
+      }
+    },
+    "githubNotice": {
+      "title": "回報內容會在 GitHub 上公開",
+      "description": "您需要 GitHub 帳號才能提交。問題發布前，您可以檢查並編輯所有內容。"
+    },
+    "privacy": {
+      "title": "保護您的隱私",
+      "description": "提交前，請移除姓名、電子郵件地址、金額、收據、群組連結、邀請權杖及其他私人資料。"
+    },
+    "diagnostics": {
+      "title": "安全診斷資訊",
+      "description": "如有相關，請將此技術資訊複製到錯誤回報中。其中不包含帳號資料、表單內容、URL 識別碼、查詢字串或邀請權杖。",
+      "copy": "複製診斷資訊",
+      "copied": "已複製",
+      "copyFailed": "無法存取剪貼簿。請選取並手動複製診斷資訊。"
+    }
   }
 }

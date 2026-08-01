@@ -68,6 +68,7 @@ export function LocaleSelector({
   className,
   variant,
   disabled = false,
+  id,
 }: {
   value: Locale
   onValueChange: (locale: Locale) => void
@@ -77,6 +78,8 @@ export function LocaleSelector({
   className?: string
   variant?: ButtonProps['variant']
   disabled?: boolean
+  /** Native id forwarded to the trigger button for label association. */
+  id?: string
 }) {
   const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery('(min-width: 768px)')
@@ -98,6 +101,7 @@ export function LocaleSelector({
             className={className}
             variant={variant}
             disabled={disabled}
+            id={id}
           />
         </PopoverTrigger>
         <PopoverContent
@@ -125,6 +129,7 @@ export function LocaleSelector({
             className={className}
             variant={variant}
             disabled={disabled}
+            id={id}
           />
         }
       />

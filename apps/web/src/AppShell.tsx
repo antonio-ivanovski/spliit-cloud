@@ -155,6 +155,7 @@ function Content() {
                   <Link href="/privacy">{t('Footer.privacy')}</Link>
                   <Link href="/terms">{t('Footer.terms')}</Link>
                   <Link href="/imprint">{t('Footer.imprint')}</Link>
+                  <Link href="/feedback">{t('Feedback.navigationLabel')}</Link>
                 </nav>
               </div>
             </div>

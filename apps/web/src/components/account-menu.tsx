@@ -1,6 +1,10 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { LogOut, Settings as SettingsIcon } from 'lucide-react'
+import {
+  LogOut,
+  MessageSquareText,
+  Settings as SettingsIcon,
+} from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { AccountAvatar } from '@/components/account-avatar'
@@ -59,6 +63,12 @@ export function AccountMenu() {
           <Link to="/account/settings">
             <SettingsIcon className="mr-2 h-4 w-4" />
             {t('accountSettings')}
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link to="/feedback">
+            <MessageSquareText className="mr-2 h-4 w-4" />
+            {t('feedback')}
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />

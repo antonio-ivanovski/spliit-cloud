@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ExpensesRouteImport } from './routes/expenses'
+import { Route as FeedbackRouteImport } from './routes/feedback'
 import { Route as GroupsRouteRouteImport } from './routes/groups/route'
 import { Route as ImprintRouteImport } from './routes/imprint'
 import { Route as PrivacyRouteImport } from './routes/privacy'
@@ -64,6 +65,11 @@ const ExpensesRoute = ExpensesRouteImport.update({
   path: '/expenses',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/expenses.lazy').then((d) => d.Route))
+const FeedbackRoute = FeedbackRouteImport.update({
+  id: '/feedback',
+  path: '/feedback',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/feedback.lazy').then((d) => d.Route))
 const GroupsRouteRoute = GroupsRouteRouteImport.update({
   id: '/groups',
   path: '/groups',
@@ -304,6 +310,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/groups': typeof GroupsRouteRouteWithChildren
   '/expenses': typeof ExpensesRoute
+  '/feedback': typeof FeedbackRoute
   '/imprint': typeof ImprintRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
@@ -341,6 +348,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/groups': typeof GroupsRouteRouteWithChildren
   '/expenses': typeof ExpensesRoute
+  '/feedback': typeof FeedbackRoute
   '/imprint': typeof ImprintRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
@@ -376,6 +384,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/groups': typeof GroupsRouteRouteWithChildren
   '/expenses': typeof ExpensesRoute
+  '/feedback': typeof FeedbackRoute
   '/imprint': typeof ImprintRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
@@ -415,6 +424,7 @@ export interface FileRouteTypes {
     | '/'
     | '/groups'
     | '/expenses'
+    | '/feedback'
     | '/imprint'
     | '/privacy'
     | '/terms'
@@ -452,6 +462,7 @@ export interface FileRouteTypes {
     | '/'
     | '/groups'
     | '/expenses'
+    | '/feedback'
     | '/imprint'
     | '/privacy'
     | '/terms'
@@ -486,6 +497,7 @@ export interface FileRouteTypes {
     | '/'
     | '/groups'
     | '/expenses'
+    | '/feedback'
     | '/imprint'
     | '/privacy'
     | '/terms'
@@ -524,6 +536,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   GroupsRouteRoute: typeof GroupsRouteRouteWithChildren
   ExpensesRoute: typeof ExpensesRoute
+  FeedbackRoute: typeof FeedbackRoute
   ImprintRoute: typeof ImprintRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
@@ -551,6 +564,13 @@ declare module '@tanstack/react-router' {
       path: '/expenses'
       fullPath: '/expenses'
       preLoaderRoute: typeof ExpensesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/feedback': {
+      id: '/feedback'
+      path: '/feedback'
+      fullPath: '/feedback'
+      preLoaderRoute: typeof FeedbackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/groups': {
@@ -876,6 +896,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   GroupsRouteRoute: GroupsRouteRouteWithChildren,
   ExpensesRoute: ExpensesRoute,
+  FeedbackRoute: FeedbackRoute,
   ImprintRoute: ImprintRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,

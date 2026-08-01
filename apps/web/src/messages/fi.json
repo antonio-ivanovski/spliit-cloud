@@ -56,7 +56,8 @@
     "account": "Tili",
     "accountSettings": "Tilin asetukset",
     "back": "Takaisin",
-    "menu": "Valikko"
+    "menu": "Valikko",
+    "feedback": "Palaute"
   },
   "Footer": {
     "madeIn": "Avoimen lähdekoodin yhteisön rakkaudella tekemä ❤️",
@@ -1742,7 +1743,27 @@
       "timeZoneHelp": "Käytetään aikaleimoihin, suhteellisiin päivämääriin ja uusiin toistuviin kuluihin.",
       "language": "Kieli",
       "theme": "Teema",
-      "chooseTheme": "Valitse"
+      "chooseTheme": "Valitse",
+      "saving": "Tallennetaan…"
+    },
+    "aiPreferences": {
+      "title": "Tekoälyominaisuudet",
+      "description": "Määritä tekoälyominaisuudet ja muokkaa niiden toimintaa.",
+      "categoryExtractLabel": "Kulujen kategorisoija",
+      "categoryExtractDescription": "Ehdota kategoriaa automaattisesti, kun kirjoitat kulun otsikon.",
+      "receiptScanLabel": "Kuitin skannaus",
+      "receiptScanDescription": "Poimii kulutiedot kuittikuvasta.",
+      "voiceExpenseLabel": "Äänikulu",
+      "voiceExpenseDescription": "Luo kulu lyhyestä äänitallenteesta.",
+      "comingSoon": "Tulossa pian",
+      "voiceLanguageLabel": "Ensisijainen äänikieli",
+      "voiceLanguageDescription": "Valitse kieli, jota tekoäly kuuntelee äänikuluja varten.",
+      "receiptPromptsLabel": "Mukautetut ohjeet kuitin skannaukseen",
+      "receiptPromptsDescription": "Muokkaa tekoälyn toimintaa kuitteja skannatessa (valuuttavihjeet, rivikohtainen ryhmittely jne.).",
+      "voicePromptsLabel": "Mukautetut ohjeet äänikuluille",
+      "voicePromptsDescription": "Muokkaa tekoälyn toimintaa, kun se luo kuluja äänestäsi (jakaminen, oletusmaksaja jne.).",
+      "saving": "Tallennetaan…",
+      "masterLabel": "Ota tekoälyominaisuudet käyttöön"
     }
   },
   "Activities": {
@@ -2347,5 +2368,43 @@
       "unsupportedCurrency": "Puhuttua valuuttaa ei tueta; valitse valuutta kulujen täydellisessä lomakkeessa."
     },
     "addExpenseAction": "Lisää kulu"
+  },
+  "Feedback": {
+    "navigationLabel": "Palaute",
+    "title": "Auta kehittämään Spliit Cloudia",
+    "description": "Ilmoita ongelmasta, ehdota parannusta tai kerro kokemuksestasi. Valitse luokka jatkaaksesi GitHubissa.",
+    "categoriesLabel": "Palauteluokat",
+    "categories": {
+      "bug": {
+        "title": "Ilmoita virheestä",
+        "description": "Kerro rikkinäisestä tai odottamattomasta toiminnasta ja anna selkeät toistamisvaiheet.",
+        "action": "Avaa virheraportti"
+      },
+      "idea": {
+        "title": "Ehdota ideaa",
+        "description": "Kuvaile ratkaisemisen arvoinen ongelma tai parannus, joka tekisi Spliitistä hyödyllisemmän.",
+        "action": "Avaa idealomake"
+      },
+      "feedback": {
+        "title": "Anna palautetta",
+        "description": "Kerro, mikä tuntuu hyödylliseltä, vaikealta, hämmentävältä tai erityisen hyvin suunnitellulta.",
+        "action": "Avaa palautelomake"
+      }
+    },
+    "githubNotice": {
+      "title": "Raportit ovat julkisia GitHubissa",
+      "description": "Lähettämiseen tarvitaan GitHub-tili. Voit tarkistaa ja muokata kaikkea ennen ongelman julkaisemista."
+    },
+    "privacy": {
+      "title": "Suojaa yksityisyytesi",
+      "description": "Poista nimet, sähköpostiosoitteet, summat, kuitit, ryhmälinkit, kutsutunnukset ja muut yksityiset tiedot ennen lähettämistä."
+    },
+    "diagnostics": {
+      "title": "Turvalliset diagnostiikkatiedot",
+      "description": "Kopioi tämä tekninen konteksti virheraporttiin, jos se on olennainen. Se ei sisällä tilitietoja, lomakkeiden sisältöä, URL-tunnisteita, kyselymerkkijonoja eikä kutsutunnuksia.",
+      "copy": "Kopioi diagnostiikka",
+      "copied": "Kopioitu",
+      "copyFailed": "Leikepöydän käyttö epäonnistui. Valitse ja kopioi diagnostiikkatiedot käsin."
+    }
   }
 }

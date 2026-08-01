@@ -40,12 +40,20 @@ describe('account preference bootstrap inputs', () => {
       timeZone: 'Europe/Paris',
       locale: 'fr-FR' as const,
       theme: 'dark' as const,
+      aiFeaturesEnabled: true,
+      aiCategoryExtractEnabled: null,
+      aiReceiptScanEnabled: null,
+      aiVoiceExpenseEnabled: null,
     }
     const second = {
       defaultCurrencyCode: 'USD',
       timeZone: 'America/New_York',
       locale: 'en-US' as const,
       theme: 'light' as const,
+      aiFeaturesEnabled: true,
+      aiCategoryExtractEnabled: null,
+      aiReceiptScanEnabled: null,
+      aiVoiceExpenseEnabled: null,
     }
     cacheAccountPreferences('account-a', first)
     cacheAccountPreferences('account-b', second)
@@ -53,6 +61,25 @@ describe('account preference bootstrap inputs', () => {
     expect(readCachedAccountPreferences('account-a')).toEqual(first)
     expect(readCachedAccountPreferences('account-b')).toEqual(second)
     expect(readCachedAccountPreferences('account-c')).toBeNull()
+  })
+
+  it('defaults the master AI gate on for older cached snapshots', () => {
+    localStorage.setItem(
+      'accountPreferences:legacy-ai',
+      JSON.stringify({
+        defaultCurrencyCode: 'USD',
+        timeZone: 'UTC',
+        locale: 'en-US',
+        theme: 'system',
+        aiCategoryExtractEnabled: null,
+        aiReceiptScanEnabled: null,
+        aiVoiceExpenseEnabled: null,
+      }),
+    )
+
+    expect(readCachedAccountPreferences('legacy-ai')?.aiFeaturesEnabled).toBe(
+      true,
+    )
   })
 
   it('rejects corrupt or unsupported cached snapshots', () => {

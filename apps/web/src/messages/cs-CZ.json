@@ -56,7 +56,8 @@
     "account": "Účet",
     "accountSettings": "Nastavení účtu",
     "back": "Zpět",
-    "menu": "Nabídka"
+    "menu": "Nabídka",
+    "feedback": "Zpětná vazba"
   },
   "Footer": {
     "madeIn": "Vytvořeno open-source komunitou s láskou ❤️",
@@ -1760,7 +1761,27 @@
       "timeZoneHelp": "Používá se pro časové údaje, relativní data a nové opakované výdaje.",
       "language": "Jazyk",
       "theme": "Motiv",
-      "chooseTheme": "Vybrat"
+      "chooseTheme": "Vybrat",
+      "saving": "Ukládání předvoleb…"
+    },
+    "aiPreferences": {
+      "title": "Funkce AI",
+      "description": "Nakonfigurujte funkce AI a přizpůsobte si jejich chování.",
+      "categoryExtractLabel": "Kategorizátor výdajů",
+      "categoryExtractDescription": "Automaticky navrhujte kategorii při zadávání názvu výdaje.",
+      "receiptScanLabel": "Sken účtenky",
+      "receiptScanDescription": "Získejte detaily výdaje z fotografie účtenky.",
+      "voiceExpenseLabel": "Hlasový výdaj",
+      "voiceExpenseDescription": "Vytvořte výdaj z krátkého hlasového záznamu.",
+      "comingSoon": "Již brzy",
+      "voiceLanguageLabel": "Preferovaný jazyk hlasu",
+      "voiceLanguageDescription": "Vyberte jazyk, který AI poslouchá při vytváření hlasových výdajů.",
+      "receiptPromptsLabel": "Vlastní instrukce pro sken účtenky",
+      "receiptPromptsDescription": "Přizpůsobte chování AI při skenování účtenek (nápovědy k měně, seskupování položek atd.).",
+      "voicePromptsLabel": "Vlastní instrukce pro hlasový výdaj",
+      "voicePromptsDescription": "Přizpůsobte chování AI při vytváření výdajů z vašeho hlasu (rozdělení, výchozí plátce atd.).",
+      "saving": "Ukládání předvoleb…",
+      "masterLabel": "Povolit funkce AI"
     }
   },
   "Activities": {
@@ -2381,5 +2402,43 @@
       "unsupportedCurrency": "Mluvená měna není podporována; vyberte jinou v úplném formuláři výdaje."
     },
     "addExpenseAction": "Přidat výdaj"
+  },
+  "Feedback": {
+    "navigationLabel": "Zpětná vazba",
+    "title": "Pomozte utvářet Spliit Cloud",
+    "description": "Nahlaste problém, navrhněte zlepšení nebo nám popište svou zkušenost. Vyberte kategorii a pokračujte na GitHubu.",
+    "categoriesLabel": "Kategorie zpětné vazby",
+    "categories": {
+      "bug": {
+        "title": "Nahlásit chybu",
+        "description": "Popište nefunkční nebo neočekávané chování a uveďte jasný postup pro jeho zopakování.",
+        "action": "Otevřít hlášení chyby"
+      },
+      "idea": {
+        "title": "Navrhnout nápad",
+        "description": "Popište problém, který stojí za vyřešení, nebo zlepšení, díky němuž by byl Spliit užitečnější.",
+        "action": "Otevřít formulář nápadu"
+      },
+      "feedback": {
+        "title": "Sdílet zpětnou vazbu",
+        "description": "Řekněte nám, co je užitečné, obtížné, matoucí nebo mimořádně dobře navržené.",
+        "action": "Otevřít formulář zpětné vazby"
+      }
+    },
+    "githubNotice": {
+      "title": "Hlášení jsou na GitHubu veřejná",
+      "description": "K odeslání potřebujete účet GitHub. Před zveřejněním hlášení můžete vše zkontrolovat a upravit."
+    },
+    "privacy": {
+      "title": "Chraňte své soukromí",
+      "description": "Před odesláním odstraňte jména, e-mailové adresy, částky, účtenky, odkazy na skupiny, tokeny pozvánek a další soukromé údaje."
+    },
+    "diagnostics": {
+      "title": "Bezpečná diagnostika",
+      "description": "Pokud je to relevantní, zkopírujte tento technický kontext do hlášení chyby. Neobsahuje údaje účtu, obsah formulářů, identifikátory URL, řetězce dotazů ani tokeny pozvánek.",
+      "copy": "Kopírovat diagnostiku",
+      "copied": "Zkopírováno",
+      "copyFailed": "Přístup ke schránce se nezdařil. Vyberte a zkopírujte diagnostiku ručně."
+    }
   }
 }

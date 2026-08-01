@@ -86,6 +86,9 @@ describe('AppShell locale switcher placement', () => {
     expect(
       screen.queryByTestId('focused-mobile-app-bar'),
     ).not.toBeInTheDocument()
+    expect(
+      screen.getByRole('link', { name: 'Feedback.navigationLabel' }),
+    ).toHaveAttribute('href', '/feedback')
   })
 
   it('renders the locale switcher in the desktop and focused mobile headers', () => {

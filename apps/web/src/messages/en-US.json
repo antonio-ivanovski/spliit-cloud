@@ -56,7 +56,8 @@
     "account": "Account",
     "accountSettings": "Account settings",
     "back": "Back",
-    "menu": "Menu"
+    "menu": "Menu",
+    "feedback": "Feedback"
   },
   "Common": {
     "close": "Close",
@@ -798,7 +799,27 @@
       "timeZoneHelp": "Used for displayed timestamps, relative dates, and new recurring expenses.",
       "language": "Language",
       "theme": "Theme",
-      "chooseTheme": "Choose"
+      "chooseTheme": "Choose",
+      "saving": "Saving preferences…"
+    },
+    "aiPreferences": {
+      "title": "AI features",
+      "description": "Configure AI features and customize how they behave.",
+      "categoryExtractLabel": "Expense categorizer",
+      "categoryExtractDescription": "Suggest a category automatically when you fill in an expense title.",
+      "receiptScanLabel": "Receipt scan",
+      "receiptScanDescription": "Extract expense details from a receipt photo.",
+      "voiceExpenseLabel": "Voice expense",
+      "voiceExpenseDescription": "Create an expense from a short voice recording.",
+      "comingSoon": "Coming soon",
+      "voiceLanguageLabel": "Preferred voice language",
+      "voiceLanguageDescription": "Choose the language the voice expense AI listens for.",
+      "receiptPromptsLabel": "Custom instructions for receipt scan",
+      "receiptPromptsDescription": "Tailor the AI behavior when scanning receipts (currency hints, line-item grouping, etc.).",
+      "voicePromptsLabel": "Custom instructions for voice expense",
+      "voicePromptsDescription": "Tailor the AI behavior when creating expenses from your voice (splitting, payer defaults, etc.).",
+      "saving": "Saving preferences…",
+      "masterLabel": "Enable AI features"
     }
   },
   "CompleteProfile": {
@@ -2419,5 +2440,43 @@
       "unsupportedCurrency": "The spoken currency is not supported; choose one in the full expense form."
     },
     "addExpenseAction": "Add expense"
+  },
+  "Feedback": {
+    "navigationLabel": "Feedback",
+    "title": "Help shape Spliit Cloud",
+    "description": "Report a problem, suggest an improvement, or tell us about your experience. Choose a category to continue on GitHub.",
+    "categoriesLabel": "Feedback categories",
+    "categories": {
+      "bug": {
+        "title": "Report a bug",
+        "description": "Tell us about broken or unexpected behavior and include clear reproduction steps.",
+        "action": "Open bug report"
+      },
+      "idea": {
+        "title": "Suggest an idea",
+        "description": "Describe a problem worth solving or an improvement that would make Spliit more useful.",
+        "action": "Open idea form"
+      },
+      "feedback": {
+        "title": "Share feedback",
+        "description": "Tell us what feels helpful, difficult, confusing, or especially well designed.",
+        "action": "Open feedback form"
+      }
+    },
+    "githubNotice": {
+      "title": "Reports are public on GitHub",
+      "description": "You need a GitHub account to submit. You can review and edit everything before the issue is published."
+    },
+    "privacy": {
+      "title": "Protect your privacy",
+      "description": "Remove names, email addresses, amounts, receipts, group links, invitation tokens, and other private data before submitting."
+    },
+    "diagnostics": {
+      "title": "Safe diagnostics",
+      "description": "Copy this technical context into a bug report if it is relevant. It excludes account data, form contents, URL identifiers, query strings, and invitation tokens.",
+      "copy": "Copy diagnostics",
+      "copied": "Copied",
+      "copyFailed": "Clipboard access failed. Select and copy the diagnostics manually."
+    }
   }
 }

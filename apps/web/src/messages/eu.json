@@ -56,7 +56,8 @@
     "account": "Kontua",
     "accountSettings": "Kontuaren ezarpenak",
     "back": "Atzera",
-    "menu": "Menua"
+    "menu": "Menua",
+    "feedback": "Iritzia"
   },
   "Footer": {
     "madeIn": "Kode irekiko komunitateak maitasunez egina ❤️",
@@ -1750,7 +1751,27 @@
       "timeZoneHelp": "Denbora-zigiluetarako, data erlatiboetarako eta gastu errepikari berrietarako erabiltzen da.",
       "language": "Hizkuntza",
       "theme": "Gaia",
-      "chooseTheme": "Aukeratu"
+      "chooseTheme": "Aukeratu",
+      "saving": "Hobespenak gordetzen…"
+    },
+    "aiPreferences": {
+      "title": "IAren ezaugarriak",
+      "description": "Konfiguratu IAren ezaugarriak eta pertsonalizatu haien portaera.",
+      "categoryExtractLabel": "Gastuen kategorizatzailea",
+      "categoryExtractDescription": "Proposatu kategoria bat automatikoki gastu baten izenburua betetzen duzunean.",
+      "receiptScanLabel": "Ordainagiri-eskaneatzea",
+      "receiptScanDescription": "Erauzi gastuaren xehetasunak ordainagiri baten argazkitik.",
+      "voiceExpenseLabel": "Ahots-gastua",
+      "voiceExpenseDescription": "Sortu gastu bat ahots-grabazio labur batetik.",
+      "comingSoon": "Laster",
+      "voiceLanguageLabel": "Hobetsitako ahots-hizkuntza",
+      "voiceLanguageDescription": "Aukeratu ahots-gastuen IAk entzungo duen hizkuntza.",
+      "receiptPromptsLabel": "Instrukzio pertsonalizatuak ordainagiri-eskaneatzerako",
+      "receiptPromptsDescription": "Pertsonalizatu IAren portaera ordainagiriak eskaneatzean (moneta-oharrak, lerro-elementuen taldekatzea, etab.).",
+      "voicePromptsLabel": "Instrukzio pertsonalizatuak ahots-gasturako",
+      "voicePromptsDescription": "Pertsonalizatu IAren portaera zure ahotsetik gastuak sortzean (banaketa, ordaintzaile lehenetsiak, etab.).",
+      "saving": "Hobespenak gordetzen…",
+      "masterLabel": "AI funtzioak gaitu"
     }
   },
   "Activities": {
@@ -2364,5 +2385,43 @@
       "unsupportedCurrency": "Ahoz adierazitako moneta ez da onartzen; aukeratu bat gastuen formulario osoan."
     },
     "addExpenseAction": "Gehitu gastua"
+  },
+  "Feedback": {
+    "navigationLabel": "Iritzia",
+    "title": "Lagundu Spliit Cloud moldatzen",
+    "description": "Eman arazo baten berri, proposatu hobekuntza bat edo kontatu zure esperientzia. Aukeratu kategoria bat GitHub-en jarraitzeko.",
+    "categoriesLabel": "Iritzi-kategoriak",
+    "categories": {
+      "bug": {
+        "title": "Eman akats baten berri",
+        "description": "Kontatu hautsitako edo ustekabeko portaera bati buruz eta gehitu hura erreproduzitzeko urrats argiak.",
+        "action": "Ireki akats-txostena"
+      },
+      "idea": {
+        "title": "Proposatu ideia bat",
+        "description": "Deskribatu konpontzea merezi duen arazo bat edo Spliit erabilgarriago egingo lukeen hobekuntza bat.",
+        "action": "Ireki ideien inprimakia"
+      },
+      "feedback": {
+        "title": "Partekatu iritzia",
+        "description": "Kontatu zer iruditzen zaizun lagungarria, zaila, nahasgarria edo bereziki ongi diseinatua.",
+        "action": "Ireki iritzi-inprimakia"
+      }
+    },
+    "githubNotice": {
+      "title": "Txostenak publikoak dira GitHub-en",
+      "description": "GitHub kontu bat behar duzu bidaltzeko. Dena berrikusi eta editatu dezakezu arazoa argitaratu aurretik."
+    },
+    "privacy": {
+      "title": "Babestu zure pribatutasuna",
+      "description": "Kendu izenak, helbide elektronikoak, zenbatekoak, ordainagiriak, talde-estekak, gonbidapen-tokenak eta bestelako datu pribatuak bidali aurretik."
+    },
+    "diagnostics": {
+      "title": "Diagnostiko seguruak",
+      "description": "Kopiatu testuinguru tekniko hau akats-txosten batean garrantzitsua bada. Ez ditu sartzen kontuko datuak, inprimakien edukia, URL identifikatzaileak, kontsulta-kateak edo gonbidapen-tokenak.",
+      "copy": "Kopiatu diagnostikoak",
+      "copied": "Kopiatuta",
+      "copyFailed": "Ezin izan da arbelera sartu. Hautatu eta kopiatu diagnostikoak eskuz."
+    }
   }
 }

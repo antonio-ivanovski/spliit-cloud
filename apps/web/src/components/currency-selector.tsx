@@ -73,6 +73,8 @@ type Props = {
   /** Title and action label shown by the mobile multi-select drawer. */
   mobileTitle?: string
   mobileDoneLabel?: string
+  /** Native id forwarded to the trigger button for label association. */
+  id?: string
   'aria-label'?: string
 }
 
@@ -91,6 +93,7 @@ export function CurrencySelector({
   multiPlaceholder,
   mobileTitle,
   mobileDoneLabel,
+  id,
   'aria-label': ariaLabel,
 }: Props) {
   const [open, setOpen] = useState(false)
@@ -141,6 +144,7 @@ export function CurrencySelector({
                 aria-haspopup="listbox"
                 aria-expanded={open}
                 aria-label={ariaLabel}
+                id={id}
                 disabled={disabled}
                 className="h-9 justify-between px-3 text-sm font-normal"
               >
@@ -182,6 +186,7 @@ export function CurrencySelector({
             aria-haspopup="listbox"
             aria-expanded={open}
             aria-label={ariaLabel}
+            id={id}
             disabled={disabled}
             className="h-9 justify-between px-3 text-sm font-normal"
           >
@@ -215,6 +220,7 @@ export function CurrencySelector({
             isLoading={isLoading}
             disabled={disabled}
             compact={compact}
+            id={id}
             aria-label={ariaLabel}
           />
         </PopoverTrigger>
@@ -240,6 +246,7 @@ export function CurrencySelector({
             isLoading={isLoading}
             disabled={disabled}
             compact={compact}
+            id={id}
             aria-label={ariaLabel}
           />
         }
@@ -357,6 +364,8 @@ type CurrencyButtonProps = {
   isLoading: boolean
   disabled?: boolean
   compact?: boolean
+  /** Native id forwarded to the trigger button for label association. */
+  id?: string
 }
 const CurrencyButton = forwardRef<HTMLButtonElement, CurrencyButtonProps>(
   (

@@ -1,6 +1,12 @@
 import { ArrowLeft, Calculator } from 'lucide-react'
-import { useRef, useState, type Dispatch, type SetStateAction } from 'react'
-import { useWatch, type UseFormReturn } from 'react-hook-form'
+import {
+  useEffect,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from 'react'
+import { useFormContext, useWatch, type UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { CategorySelector } from '@/components/category-selector'
@@ -141,10 +147,27 @@ export function BasicDetailsCard(props: {
   const locale = useLocale() as Locale
   const [isCategoryLoading, setCategoryLoading] = useState(false)
   const categoryRequestRef = useRef(0)
+  const categoryAbortRef = useRef<AbortController | null>(null)
   const categorySourceRef = useRef<'default' | 'manual' | 'ai'>(
     form.getValues('category') === DEFAULT_CATEGORY_ID ? 'default' : 'manual',
   )
   const lastCategorizedTitleRef = useRef<string | null>(null)
+  // Abort any in-flight categorization when the form goes away (submit
+  // navigates us off this route). Saving the expense must never have to
+  // wait for a pending AI suggestion to resolve.
+  useEffect(() => {
+    return () => {
+      categoryAbortRef.current?.abort()
+    }
+  }, [])
+  // Also abort the moment the user submits — even before the form
+  // unmounts, any late AI response would try to setValue on a form
+  // that's about to navigate away.
+  const formContext = useFormContext()
+  useEffect(() => {
+    if (!formContext.formState.isSubmitting) return
+    categoryAbortRef.current?.abort()
+  }, [formContext.formState.isSubmitting])
   const [calculatorOpen, setCalculatorOpen] = useState(false)
   const [calculatorExpression, setCalculatorExpression] = useState<
     string | null
@@ -272,7 +295,11 @@ export function BasicDetailsCard(props: {
                       defaultValue={categoryField.value}
                       compact
                       onValueChange={(categoryId) => {
+                        // User picked a category — cancel any pending AI
+                        // suggestion rather than letting it clobber this
+                        // choice a moment later.
                         categoryRequestRef.current += 1
+                        categoryAbortRef.current?.abort()
                         categorySourceRef.current = 'manual'
                         setCategoryLoading(false)
                         props.extractCategoryMutation.reset?.()
@@ -304,8 +331,15 @@ export function BasicDetailsCard(props: {
                         if (!canSuggest) return
 
                         const requestId = ++categoryRequestRef.current
+                        categoryAbortRef.current?.abort()
+                        const abortController = new AbortController()
+                        categoryAbortRef.current = abortController
                         setCategoryLoading(true)
 
+                        // Suppress the result if the AI categorization has
+                        // been cancelled (form submitted, user picked a
+                        // category manually, or component unmounted). Save
+                        // therefore never blocks on the categorizer.
                         void props.extractCategoryMutation
                           .mutateAsync({
                             description: title,
@@ -316,6 +350,7 @@ export function BasicDetailsCard(props: {
                           .then(({ categoryId }) => {
                             if (
                               requestId !== categoryRequestRef.current ||
+                              abortController.signal.aborted ||
                               form.getValues('title').trim() !== title ||
                               (categorySourceRef.current !== 'default' &&
                                 categorySourceRef.current !== 'ai')
@@ -331,7 +366,9 @@ export function BasicDetailsCard(props: {
                               shouldValidate: true,
                             })
                           })
-                          .catch(() => undefined)
+                          .catch(() => {
+                            if (abortController.signal.aborted) return
+                          })
                           .finally(() => {
                             if (requestId === categoryRequestRef.current) {
                               setCategoryLoading(false)

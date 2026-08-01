@@ -160,7 +160,27 @@
       "timeZoneHelp": "Används för tidsstämplar, relativa datum och nya återkommande utgifter.",
       "language": "Språk",
       "theme": "Tema",
-      "chooseTheme": "Välj"
+      "chooseTheme": "Välj",
+      "saving": "Sparar…"
+    },
+    "aiPreferences": {
+      "title": "AI-funktioner",
+      "description": "Konfigurera AI-funktioner och anpassa hur de beter sig.",
+      "categoryExtractLabel": "Utgiftskategoriserare",
+      "categoryExtractDescription": "Föreslå en kategori automatiskt när du fyller i en utgiftstitel.",
+      "receiptScanLabel": "Kvittoskanning",
+      "receiptScanDescription": "Extraherar utgiftsdetaljer från ett kvittofoto.",
+      "voiceExpenseLabel": "Röstutgift",
+      "voiceExpenseDescription": "Skapa en utgift från en kort röstinspelning.",
+      "comingSoon": "Kommer snart",
+      "voiceLanguageLabel": "Föredraget röstspråk",
+      "voiceLanguageDescription": "Välj det språk som AI:n lyssnar efter för röstutgifter.",
+      "receiptPromptsLabel": "Anpassade instruktioner för kvittoskanning",
+      "receiptPromptsDescription": "Anpassa AI-beteendet när du skannar kvitton (valutatips, gruppering av rader osv.).",
+      "voicePromptsLabel": "Anpassade instruktioner för röstutgifter",
+      "voicePromptsDescription": "Anpassa AI-beteendet när du skapar utgifter med din röst (fördelning, standardbetalare osv.).",
+      "saving": "Sparar…",
+      "masterLabel": "Aktivera AI-funktioner"
     }
   },
   "Activities": {
@@ -1706,7 +1726,8 @@
     "account": "Konto",
     "accountSettings": "Kontoinställningar",
     "back": "Tillbaka",
-    "menu": "Meny"
+    "menu": "Meny",
+    "feedback": "Återkoppling"
   },
   "Homepage": {
     "title": "Dela <strong>utgifter</strong> med <strong>vänner & familj</strong>",
@@ -2343,5 +2364,43 @@
       "unsupportedCurrency": "Den talade valutan stöds inte; välj en i det fullständiga utgiftsformuläret."
     },
     "addExpenseAction": "Lägg till utgift"
+  },
+  "Feedback": {
+    "navigationLabel": "Återkoppling",
+    "title": "Hjälp till att forma Spliit Cloud",
+    "description": "Rapportera ett problem, föreslå en förbättring eller berätta om din upplevelse. Välj en kategori för att fortsätta på GitHub.",
+    "categoriesLabel": "Kategorier för återkoppling",
+    "categories": {
+      "bug": {
+        "title": "Rapportera ett fel",
+        "description": "Berätta om ett trasigt eller oväntat beteende och ange tydliga steg för att återskapa det.",
+        "action": "Öppna felrapport"
+      },
+      "idea": {
+        "title": "Föreslå en idé",
+        "description": "Beskriv ett problem som är värt att lösa eller en förbättring som skulle göra Spliit mer användbart.",
+        "action": "Öppna idéformulär"
+      },
+      "feedback": {
+        "title": "Dela återkoppling",
+        "description": "Berätta vad som känns hjälpsamt, svårt, förvirrande eller särskilt väl utformat.",
+        "action": "Öppna återkopplingsformulär"
+      }
+    },
+    "githubNotice": {
+      "title": "Rapporter är offentliga på GitHub",
+      "description": "Du behöver ett GitHub-konto för att skicka in. Du kan granska och redigera allt innan ärendet publiceras."
+    },
+    "privacy": {
+      "title": "Skydda din integritet",
+      "description": "Ta bort namn, e-postadresser, belopp, kvitton, grupplänkar, inbjudningstoken och andra privata uppgifter innan du skickar in."
+    },
+    "diagnostics": {
+      "title": "Säker diagnostik",
+      "description": "Kopiera detta tekniska sammanhang till en felrapport om det är relevant. Det utesluter kontodata, formulärinnehåll, URL-identifierare, frågesträngar och inbjudningstoken.",
+      "copy": "Kopiera diagnostik",
+      "copied": "Kopierat",
+      "copyFailed": "Åtkomst till urklipp misslyckades. Markera och kopiera diagnostiken manuellt."
+    }
   }
 }

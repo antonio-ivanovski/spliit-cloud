@@ -56,7 +56,8 @@
     "account": "アカウント",
     "accountSettings": "アカウント設定",
     "back": "戻る",
-    "menu": "メニュー"
+    "menu": "メニュー",
+    "feedback": "フィードバック"
   },
   "Footer": {
     "madeIn": "オープンソースコミュニティによって愛を込めて作られました ❤️",
@@ -1735,7 +1736,27 @@
       "timeZoneHelp": "時刻、相対日付、新しい定期支出に使用されます。",
       "language": "言語",
       "theme": "テーマ",
-      "chooseTheme": "選択"
+      "chooseTheme": "選択",
+      "saving": "保存中…"
+    },
+    "aiPreferences": {
+      "title": "AI機能",
+      "description": "AI機能を設定し、動作をカスタマイズします。",
+      "categoryExtractLabel": "支出カテゴリ分類",
+      "categoryExtractDescription": "支出のタイトルを入力するときに、カテゴリを自動的に提案します。",
+      "receiptScanLabel": "レシートスキャン",
+      "receiptScanDescription": "レシートの写真から支出の詳細を抽出します。",
+      "voiceExpenseLabel": "音声支出",
+      "voiceExpenseDescription": "短い音声録音から支出を作成します。",
+      "comingSoon": "近日公開",
+      "voiceLanguageLabel": "優先音声言語",
+      "voiceLanguageDescription": "音声支出AIが聞き取る言語を選択します。",
+      "receiptPromptsLabel": "レシートスキャンのカスタム指示",
+      "receiptPromptsDescription": "レシートをスキャンするときのAIの動作を調整します（通貨のヒント、明細行のグループ化など）。",
+      "voicePromptsLabel": "音声支出のカスタム指示",
+      "voicePromptsDescription": "音声から支出を作成するときのAIの動作を調整します（分割、支払い者のデフォルトなど）。",
+      "saving": "保存中…",
+      "masterLabel": "AI機能を有効にする"
     }
   },
   "Activities": {
@@ -2330,5 +2351,43 @@
       "unsupportedCurrency": "音声で指定された通貨は対応していません。完全な支出フォームで選択してください。"
     },
     "addExpenseAction": "支出を追加"
+  },
+  "Feedback": {
+    "navigationLabel": "フィードバック",
+    "title": "Spliit Cloud の改善にご協力ください",
+    "description": "問題の報告、改善案の提案、またはご利用体験をお聞かせください。カテゴリーを選ぶと GitHub に移動します。",
+    "categoriesLabel": "フィードバックのカテゴリー",
+    "categories": {
+      "bug": {
+        "title": "バグを報告",
+        "description": "不具合や予期しない動作について、明確な再現手順とともにお知らせください。",
+        "action": "バグ報告を開く"
+      },
+      "idea": {
+        "title": "アイデアを提案",
+        "description": "解決する価値のある問題や、Spliit をより便利にする改善案を説明してください。",
+        "action": "アイデアフォームを開く"
+      },
+      "feedback": {
+        "title": "フィードバックを共有",
+        "description": "役に立つ点、難しい点、分かりにくい点、特に優れている点をお聞かせください。",
+        "action": "フィードバックフォームを開く"
+      }
+    },
+    "githubNotice": {
+      "title": "報告は GitHub で公開されます",
+      "description": "送信には GitHub アカウントが必要です。Issue が公開される前に、すべての内容を確認して編集できます。"
+    },
+    "privacy": {
+      "title": "プライバシーを保護してください",
+      "description": "送信前に、氏名、メールアドレス、金額、領収書、グループリンク、招待トークン、その他の個人情報を削除してください。"
+    },
+    "diagnostics": {
+      "title": "安全な診断情報",
+      "description": "関連する場合は、この技術情報をバグ報告にコピーしてください。アカウントデータ、フォーム内容、URL 識別子、クエリ文字列、招待トークンは含まれません。",
+      "copy": "診断情報をコピー",
+      "copied": "コピーしました",
+      "copyFailed": "クリップボードにアクセスできませんでした。診断情報を選択して手動でコピーしてください。"
+    }
   }
 }

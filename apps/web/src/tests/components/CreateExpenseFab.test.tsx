@@ -180,7 +180,13 @@ describe('CreateExpenseFab', () => {
       />,
     )
 
-    await user.click(screen.getByRole('button', { name: 'Add expense' }))
+    // With both AI surfaces disabled the mobile FAB collapses to a single
+    // button; the desktop toolbar still exposes the same action. Scope the
+    // query to the desktop wrapper so both surfaces stay valid.
+    const control = screen.getByTestId('expense-action-control')
+    await user.click(
+      within(control).getByRole('button', { name: 'Add expense' }),
+    )
 
     expect(state.navigate).toHaveBeenCalledWith({
       to: '/groups/$groupId/expenses/create',
@@ -236,6 +242,57 @@ describe('CreateExpenseFab', () => {
     ).not.toBeInTheDocument()
 
     state.pathname = '/'
+    state.currentGroup = null
+  })
+
+  it('collapses the mobile FAB to a single button when no AI surface is available', async () => {
+    state.currentGroup = {
+      groupId: 'group-1',
+      group: { id: 'group-1', archived: false },
+      currentInvitation: null,
+    }
+
+    const { user } = render(
+      <CreateExpenseFab
+        enableReceiptExtract={false}
+        enableVoiceExpense={false}
+      />,
+    )
+
+    // SpeedDial trigger is gone; the single-action mobile FAB takes its
+    // place, and clicking it routes directly to the expense form.
+    expect(
+      screen.queryByRole('button', { name: 'Open expense actions' }),
+    ).not.toBeInTheDocument()
+    const control = screen.getByTestId('expense-action-control')
+    expect(
+      within(control).getByRole('button', { name: 'Add expense' }),
+    ).toBeInTheDocument()
+    expect(screen.getByTestId('create-expense-fab-mobile')).toBeInTheDocument()
+
+    await user.click(screen.getByTestId('create-expense-fab-mobile'))
+    expect(state.navigate).toHaveBeenCalledWith({
+      to: '/groups/$groupId/expenses/create',
+      params: { groupId: 'group-1' },
+    })
+    state.currentGroup = null
+  })
+
+  it('keeps the SpeedDial when at least one AI surface is available', () => {
+    state.currentGroup = {
+      groupId: 'group-1',
+      group: { id: 'group-1', archived: false },
+      currentInvitation: null,
+    }
+
+    render(<CreateExpenseFab enableReceiptExtract enableVoiceExpense={false} />)
+
+    // Scan enabled, voice disabled: still falls into the SpeedDial path
+    // because the user gets two affordances (scan + create).
+    expect(
+      screen.getByRole('button', { name: 'Open expense actions' }),
+    ).toBeInTheDocument()
+
     state.currentGroup = null
   })
 })

@@ -107,12 +107,18 @@ describe('AccountPreferencesSync cached account switching', () => {
       timeZone: 'Europe/Paris',
       locale: 'fr-FR',
       theme: 'dark',
+      aiCategoryExtractEnabled: null,
+      aiReceiptScanEnabled: null,
+      aiVoiceExpenseEnabled: null,
     })
     cacheAccountPreferences('account-b', {
       defaultCurrencyCode: 'USD',
       timeZone: 'America/New_York',
       locale: 'en-US',
       theme: 'light',
+      aiCategoryExtractEnabled: null,
+      aiReceiptScanEnabled: null,
+      aiVoiceExpenseEnabled: null,
     })
   })
 

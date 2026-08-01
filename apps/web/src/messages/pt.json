@@ -56,7 +56,8 @@
     "account": "Conta",
     "accountSettings": "Configurações da conta",
     "back": "Voltar",
-    "menu": "Menu"
+    "menu": "Menu",
+    "feedback": "Comentários"
   },
   "Footer": {
     "madeIn": "Feito pela comunidade de código aberto com amor ❤️",
@@ -1751,7 +1752,27 @@
       "timeZoneHelp": "Utilizado para horas, datas relativas e novas despesas recorrentes.",
       "language": "Idioma",
       "theme": "Tema",
-      "chooseTheme": "Escolher"
+      "chooseTheme": "Escolher",
+      "saving": "A guardar preferências…"
+    },
+    "aiPreferences": {
+      "title": "Funcionalidades de IA",
+      "description": "Configura as funcionalidades de IA e personaliza o seu comportamento.",
+      "categoryExtractLabel": "Categorizador de despesas",
+      "categoryExtractDescription": "Sugere automaticamente uma categoria quando preenches o título de uma despesa.",
+      "receiptScanLabel": "Digitalização de recibo",
+      "receiptScanDescription": "Extrai os detalhes da despesa a partir de uma foto de recibo.",
+      "voiceExpenseLabel": "Despesa por voz",
+      "voiceExpenseDescription": "Cria uma despesa a partir de uma gravação de voz curta.",
+      "comingSoon": "Em breve",
+      "voiceLanguageLabel": "Idioma de voz preferido",
+      "voiceLanguageDescription": "Escolhe o idioma que a IA de despesas por voz deve ouvir.",
+      "receiptPromptsLabel": "Instruções personalizadas para a digitalização de recibos",
+      "receiptPromptsDescription": "Personaliza o comportamento da IA ao digitalizar recibos (indicações de moeda, agrupamento de itens, etc.).",
+      "voicePromptsLabel": "Instruções personalizadas para a despesa por voz",
+      "voicePromptsDescription": "Personaliza o comportamento da IA ao criar despesas com a tua voz (divisão, pagador predefinido, etc.).",
+      "saving": "A guardar preferências…",
+      "masterLabel": "Ativar recursos de IA"
     }
   },
   "Activities": {
@@ -2365,5 +2386,43 @@
       "unsupportedCurrency": "A moeda indicada não é suportada; escolha uma no formulário completo da despesa."
     },
     "addExpenseAction": "Adicionar despesa"
+  },
+  "Feedback": {
+    "navigationLabel": "Comentários",
+    "title": "Ajude a moldar o Spliit Cloud",
+    "description": "Comunique um problema, sugira uma melhoria ou conte-nos a sua experiência. Escolha uma categoria para continuar no GitHub.",
+    "categoriesLabel": "Categorias de comentários",
+    "categories": {
+      "bug": {
+        "title": "Comunicar um erro",
+        "description": "Conte-nos sobre um comportamento incorreto ou inesperado e inclua passos claros para o reproduzir.",
+        "action": "Abrir relatório de erro"
+      },
+      "idea": {
+        "title": "Sugerir uma ideia",
+        "description": "Descreva um problema que valha a pena resolver ou uma melhoria que tornaria o Spliit mais útil.",
+        "action": "Abrir formulário de ideia"
+      },
+      "feedback": {
+        "title": "Partilhar comentários",
+        "description": "Conte-nos o que considera útil, difícil, confuso ou especialmente bem concebido.",
+        "action": "Abrir formulário de comentários"
+      }
+    },
+    "githubNotice": {
+      "title": "Os relatórios são públicos no GitHub",
+      "description": "Precisa de uma conta GitHub para enviar. Pode rever e editar tudo antes de o problema ser publicado."
+    },
+    "privacy": {
+      "title": "Proteja a sua privacidade",
+      "description": "Remova nomes, endereços de e-mail, valores, recibos, ligações de grupos, tokens de convite e outros dados privados antes de enviar."
+    },
+    "diagnostics": {
+      "title": "Diagnósticos seguros",
+      "description": "Copie este contexto técnico para um relatório de erro se for relevante. Exclui dados da conta, conteúdo de formulários, identificadores de URL, cadeias de consulta e tokens de convite.",
+      "copy": "Copiar diagnósticos",
+      "copied": "Copiado",
+      "copyFailed": "Falha ao aceder à área de transferência. Selecione e copie os diagnósticos manualmente."
+    }
   }
 }

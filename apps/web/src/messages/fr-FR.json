@@ -56,7 +56,8 @@
     "account": "Compte",
     "accountSettings": "Paramètres du compte",
     "back": "Retour",
-    "menu": "Menu"
+    "menu": "Menu",
+    "feedback": "Commentaires"
   },
   "Footer": {
     "madeIn": "Créé par la communauté open-source avec amour ❤️",
@@ -1751,7 +1752,27 @@
       "timeZoneHelp": "Utilisé pour les horodatages, les dates relatives et les nouvelles dépenses récurrentes.",
       "language": "Langue",
       "theme": "Thème",
-      "chooseTheme": "Choisir"
+      "chooseTheme": "Choisir",
+      "saving": "Enregistrement des préférences…"
+    },
+    "aiPreferences": {
+      "title": "Fonctionnalités d'IA",
+      "description": "Configurez les fonctionnalités d'IA et personnalisez leur comportement.",
+      "categoryExtractLabel": "Catégoriseur de dépenses",
+      "categoryExtractDescription": "Suggère automatiquement une catégorie lorsque vous saisissez le titre d'une dépense.",
+      "receiptScanLabel": "Numérisation de reçu",
+      "receiptScanDescription": "Extrayez les détails d'une dépense à partir d'une photo de reçu.",
+      "voiceExpenseLabel": "Dépense vocale",
+      "voiceExpenseDescription": "Créez une dépense à partir d'un court enregistrement vocal.",
+      "comingSoon": "À venir",
+      "voiceLanguageLabel": "Langue vocale préférée",
+      "voiceLanguageDescription": "Choisissez la langue que l'IA des dépenses vocales doit écouter.",
+      "receiptPromptsLabel": "Instructions personnalisées pour la numérisation des reçus",
+      "receiptPromptsDescription": "Personnalisez le comportement de l'IA lors de la numérisation des reçus (indications de devise, regroupement des lignes, etc.).",
+      "voicePromptsLabel": "Instructions personnalisées pour la dépense vocale",
+      "voicePromptsDescription": "Personnalisez le comportement de l'IA lors de la création de dépenses avec votre voix (répartition, payeur par défaut, etc.).",
+      "saving": "Enregistrement des préférences…",
+      "masterLabel": "Activer les fonctionnalités d’IA"
     }
   },
   "Activities": {
@@ -2365,5 +2386,43 @@
       "unsupportedCurrency": "La devise indiquée n’est pas prise en charge ; choisissez-en une dans le formulaire complet."
     },
     "addExpenseAction": "Ajouter une dépense"
+  },
+  "Feedback": {
+    "navigationLabel": "Commentaires",
+    "title": "Aidez à façonner Spliit Cloud",
+    "description": "Signalez un problème, suggérez une amélioration ou partagez votre expérience. Choisissez une catégorie pour continuer sur GitHub.",
+    "categoriesLabel": "Catégories de commentaires",
+    "categories": {
+      "bug": {
+        "title": "Signaler un bug",
+        "description": "Décrivez un comportement défectueux ou inattendu et indiquez des étapes claires pour le reproduire.",
+        "action": "Ouvrir le rapport de bug"
+      },
+      "idea": {
+        "title": "Suggérer une idée",
+        "description": "Décrivez un problème qui mérite d’être résolu ou une amélioration qui rendrait Spliit plus utile.",
+        "action": "Ouvrir le formulaire d’idée"
+      },
+      "feedback": {
+        "title": "Partager des commentaires",
+        "description": "Dites-nous ce qui vous semble utile, difficile, déroutant ou particulièrement bien conçu.",
+        "action": "Ouvrir le formulaire de commentaires"
+      }
+    },
+    "githubNotice": {
+      "title": "Les rapports sont publics sur GitHub",
+      "description": "Un compte GitHub est nécessaire pour envoyer un rapport. Vous pouvez tout relire et modifier avant la publication du ticket."
+    },
+    "privacy": {
+      "title": "Protégez votre vie privée",
+      "description": "Supprimez les noms, adresses e-mail, montants, reçus, liens de groupe, jetons d’invitation et autres données privées avant l’envoi."
+    },
+    "diagnostics": {
+      "title": "Diagnostics sûrs",
+      "description": "Copiez ce contexte technique dans un rapport de bug s’il est pertinent. Il exclut les données du compte, le contenu des formulaires, les identifiants d’URL, les chaînes de requête et les jetons d’invitation.",
+      "copy": "Copier les diagnostics",
+      "copied": "Copié",
+      "copyFailed": "Impossible d’accéder au presse-papiers. Sélectionnez et copiez les diagnostics manuellement."
+    }
   }
 }

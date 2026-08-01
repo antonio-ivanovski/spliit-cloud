@@ -56,7 +56,8 @@
     "account": "Konto",
     "accountSettings": "Kontoeinstellungen",
     "back": "Zurück",
-    "menu": "Menü"
+    "menu": "Menü",
+    "feedback": "Rückmeldung"
   },
   "Footer": {
     "madeIn": "Von der Open-Source-Community mit Liebe gemacht ❤️",
@@ -1774,7 +1775,27 @@
       "timeZoneHelp": "Wird für Zeitstempel, relative Daten und neue wiederkehrende Ausgaben verwendet.",
       "language": "Sprache",
       "theme": "Design",
-      "chooseTheme": "Auswählen"
+      "chooseTheme": "Auswählen",
+      "saving": "Speichern…"
+    },
+    "aiPreferences": {
+      "title": "KI-Funktionen",
+      "description": "Konfigurieren Sie KI-Funktionen und passen Sie ihr Verhalten an.",
+      "categoryExtractLabel": "Ausgabenkategorisierer",
+      "categoryExtractDescription": "Schlagen Sie automatisch eine Kategorie vor, wenn Sie einen Titel für die Ausgabe eingeben.",
+      "receiptScanLabel": "Belegscan",
+      "receiptScanDescription": "Extrahiert Ausgabendetails aus einem Belegfoto.",
+      "voiceExpenseLabel": "Sprachgesteuerte Ausgabe",
+      "voiceExpenseDescription": "Erstellt eine Ausgabe aus einer kurzen Sprachaufnahme.",
+      "comingSoon": "Bald verfügbar",
+      "voiceLanguageLabel": "Bevorzugte Sprache für sprachgesteuerte Ausgaben",
+      "voiceLanguageDescription": "Wählen Sie die Sprache, die die KI bei sprachgesteuerten Ausgaben verstehen soll.",
+      "receiptPromptsLabel": "Eigene Anweisungen für den Belegscan",
+      "receiptPromptsDescription": "Passen Sie das KI-Verhalten beim Scannen von Belegen an (Währungshinweise, Gruppierung von Einzelposten usw.).",
+      "voicePromptsLabel": "Eigene Anweisungen für sprachgesteuerte Ausgaben",
+      "voicePromptsDescription": "Passen Sie das KI-Verhalten beim Erstellen sprachgesteuerter Ausgaben an (Aufteilung, Standardzahler usw.).",
+      "saving": "Speichern…",
+      "masterLabel": "KI-Funktionen aktivieren"
     }
   },
   "Activities": {
@@ -2415,5 +2436,43 @@
       "unsupportedCurrency": "Die gesprochene Währung wird nicht unterstützt; wähle im vollständigen Ausgabenformular eine aus."
     },
     "addExpenseAction": "Ausgabe hinzufügen"
+  },
+  "Feedback": {
+    "navigationLabel": "Rückmeldung",
+    "title": "Hilf mit, Spliit Cloud zu gestalten",
+    "description": "Melde ein Problem, schlage eine Verbesserung vor oder erzähle uns von deiner Erfahrung. Wähle eine Kategorie, um auf GitHub fortzufahren.",
+    "categoriesLabel": "Kategorien für Rückmeldungen",
+    "categories": {
+      "bug": {
+        "title": "Fehler melden",
+        "description": "Beschreibe fehlerhaftes oder unerwartetes Verhalten und füge klare Schritte zur Reproduktion hinzu.",
+        "action": "Fehlerbericht öffnen"
+      },
+      "idea": {
+        "title": "Idee vorschlagen",
+        "description": "Beschreibe ein lösenswertes Problem oder eine Verbesserung, die Spliit nützlicher machen würde.",
+        "action": "Ideenformular öffnen"
+      },
+      "feedback": {
+        "title": "Rückmeldung geben",
+        "description": "Sag uns, was hilfreich, schwierig, verwirrend oder besonders gut gestaltet ist.",
+        "action": "Rückmeldungsformular öffnen"
+      }
+    },
+    "githubNotice": {
+      "title": "Berichte sind auf GitHub öffentlich",
+      "description": "Zum Absenden benötigst du ein GitHub-Konto. Du kannst alles prüfen und bearbeiten, bevor das Issue veröffentlicht wird."
+    },
+    "privacy": {
+      "title": "Schütze deine Privatsphäre",
+      "description": "Entferne vor dem Absenden Namen, E-Mail-Adressen, Beträge, Belege, Gruppenlinks, Einladungs-Tokens und andere private Daten."
+    },
+    "diagnostics": {
+      "title": "Sichere Diagnosedaten",
+      "description": "Kopiere diesen technischen Kontext in einen Fehlerbericht, wenn er relevant ist. Kontodaten, Formularinhalte, URL-Kennungen, Abfrageparameter und Einladungs-Tokens sind ausgeschlossen.",
+      "copy": "Diagnosedaten kopieren",
+      "copied": "Kopiert",
+      "copyFailed": "Kein Zugriff auf die Zwischenablage. Wähle die Diagnosedaten aus und kopiere sie manuell."
+    }
   }
 }

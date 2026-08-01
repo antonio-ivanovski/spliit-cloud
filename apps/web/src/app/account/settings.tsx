@@ -1,27 +1,27 @@
 import { useNavigate } from '@tanstack/react-router'
-import { ArrowLeft, Loader2 } from 'lucide-react'
+import { ArrowLeft, Loader2, UserRound, type LucideIcon } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AccountAvatar } from '@/components/account-avatar'
 import { RequireAuth } from '@/components/require-auth'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { useToast } from '@/components/ui/use-toast'
 import { prepareProfileImage } from '@/lib/upload'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { cn } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 
 import { AccountPreferences } from './account-preferences'
+import { AccountAiPreferences } from './ai-preferences'
 import { NotificationsPreferences } from './notifications-preferences'
+import {
+  SettingsFieldRow,
+  SettingsList,
+  SettingsRow,
+  SettingsSection,
+} from './settings-ui'
 
 /**
  * Account settings page. Allows a signed-in user to update their display name
@@ -180,87 +180,19 @@ function AccountSettingsContent() {
         </Button>
         {t('title')}
       </h1>
-      <Card className="mobile-surface">
-        <CardHeader>
-          <CardTitle className="text-lg">{t('profile.title')}</CardTitle>
-          <CardDescription>{t('profile.description')}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-            <div className="flex items-center gap-4 rounded-lg border border-dashed border-primary/20 bg-primary/3 p-3">
-              <AccountAvatar account={account} size="xl" />
-              <div className="min-w-0 flex-1">
-                <p className="text-sm font-medium">{t('image.label')}</p>
-                <p className="mt-0.5 text-xs text-muted-foreground">
-                  {t('image.help')}
+      <form className="flex flex-col gap-3" onSubmit={handleSubmit} noValidate>
+        <SettingsSection
+          id="profile"
+          title={t('profile.title')}
+          description={t('profile.description')}
+          icon={UserRound as LucideIcon}
+          footer={
+            <>
+              {error ? (
+                <p className="w-full text-sm text-destructive" role="alert">
+                  {error}
                 </p>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  <input
-                    ref={imageInputRef}
-                    type="file"
-                    accept="image/*,.heic,.heif"
-                    className="hidden"
-                    onChange={(event) => {
-                      const file = event.target.files?.[0]
-                      if (file) void handleImageChange(file)
-                      event.target.value = ''
-                    }}
-                  />
-                  <Button
-                    type="button"
-                    size="sm"
-                    onClick={() => imageInputRef.current?.click()}
-                    disabled={isUploadingImage || removeProfileImage.isPending}
-                  >
-                    {isUploadingImage
-                      ? t('image.uploading')
-                      : t('image.choose')}
-                  </Button>
-                  {account.image && (
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="outline"
-                      onClick={() => void handleRemoveImage()}
-                      disabled={
-                        isUploadingImage || removeProfileImage.isPending
-                      }
-                    >
-                      {t('image.remove')}
-                    </Button>
-                  )}
-                </div>
-              </div>
-            </div>
-            <div className="grid gap-1.5">
-              <Label htmlFor="account-settings-name">{t('nameLabel')}</Label>
-              <Input
-                id="account-settings-name"
-                type="text"
-                autoComplete="name"
-                value={name}
-                onChange={(e) => setDirtyName(e.target.value)}
-                required
-                maxLength={50}
-              />
-            </div>
-            <div className="grid gap-1.5">
-              <Label htmlFor="account-settings-email">{t('emailLabel')}</Label>
-              <Input
-                id="account-settings-email"
-                type="email"
-                value={account.email ?? ''}
-                readOnly
-                disabled
-              />
-              <p className="text-xs text-muted-foreground">{t('emailHelp')}</p>
-            </div>
-            {error && (
-              <p className="text-sm text-destructive" role="alert">
-                {error}
-              </p>
-            )}
-            <div className="flex justify-end">
+              ) : null}
               <Button
                 type="submit"
                 disabled={submitting || updateProfile.isPending || !isDirty}
@@ -272,12 +204,100 @@ function AccountSettingsContent() {
                   ? t('saving')
                   : t('submit')}
               </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+            </>
+          }
+        >
+          <SettingsList className="border-t border-border/70">
+            <SettingsRow
+              id="profile-photo"
+              label={t('image.label')}
+              description={t('image.help')}
+              control={
+                <div className="flex w-full min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+                  <AccountAvatar
+                    account={account}
+                    size="xl"
+                    className="shrink-0"
+                  />
+                  <div className="flex flex-wrap gap-2 sm:flex-1">
+                    <input
+                      ref={imageInputRef}
+                      type="file"
+                      accept="image/*,.heic,.heif"
+                      className="hidden"
+                      onChange={(event) => {
+                        const file = event.target.files?.[0]
+                        if (file) void handleImageChange(file)
+                        event.target.value = ''
+                      }}
+                    />
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      onClick={() => imageInputRef.current?.click()}
+                      disabled={
+                        isUploadingImage || removeProfileImage.isPending
+                      }
+                    >
+                      {isUploadingImage
+                        ? t('image.uploading')
+                        : t('image.choose')}
+                    </Button>
+                    {account.image ? (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={() => void handleRemoveImage()}
+                        disabled={
+                          isUploadingImage || removeProfileImage.isPending
+                        }
+                      >
+                        {t('image.remove')}
+                      </Button>
+                    ) : null}
+                  </div>
+                </div>
+              }
+            />
+            <SettingsFieldRow
+              id="account-settings-name"
+              label={t('nameLabel')}
+              control={
+                <Input
+                  id="account-settings-name"
+                  type="text"
+                  autoComplete="name"
+                  value={name}
+                  onChange={(e) => setDirtyName(e.target.value)}
+                  required
+                  maxLength={50}
+                  className={cn('w-full sm:max-w-xs')}
+                />
+              }
+            />
+            <SettingsFieldRow
+              id="account-settings-email"
+              label={t('emailLabel')}
+              description={t('emailHelp')}
+              control={
+                <Input
+                  id="account-settings-email"
+                  type="email"
+                  value={account.email ?? ''}
+                  readOnly
+                  disabled
+                  className={cn('w-full sm:max-w-xs')}
+                />
+              }
+            />
+          </SettingsList>
+        </SettingsSection>
+      </form>
       <AccountPreferences />
       <NotificationsPreferences />
+      <AccountAiPreferences />
     </main>
   )
 }

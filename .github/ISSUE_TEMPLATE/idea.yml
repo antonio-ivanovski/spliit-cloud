@@ -1,0 +1,66 @@
+name: Suggest an idea
+description: Propose an improvement or new capability for Spliit Cloud
+title: '[Idea] '
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Ideas are discussed publicly. Describe the user problem and desired outcome without including personal or financial data.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      description: Which part of Spliit would this improve?
+      options:
+        - Authentication and account
+        - Groups and members
+        - Expenses and reimbursements
+        - Balances and settlements
+        - Budgets and statistics
+        - Import and export
+        - Notifications and email
+        - AI, receipts, or voice entry
+        - Mobile app or PWA
+        - Self-hosting and operations
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or opportunity
+      description: What is difficult today, and who is affected?
+    validations:
+      required: true
+
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired outcome
+      description: Describe what a successful improvement would let people do.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives or workarounds
+      description: Optional. How do you handle this today?
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Optional sketches, examples, or related public links.
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues for similar ideas.
+          required: true
+        - label: I removed personal, financial, and secret information from this public proposal.
+          required: true

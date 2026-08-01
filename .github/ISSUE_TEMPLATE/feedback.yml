@@ -1,0 +1,70 @@
+name: Share feedback
+description: Tell us about your experience using Spliit Cloud
+title: '[Feedback] '
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Feedback is published as a public GitHub issue. Do not include names, amounts, receipts, private links, or other sensitive information.
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Feedback type
+      options:
+        - Something is confusing
+        - A workflow feels difficult
+        - Something works especially well
+        - Accessibility or usability feedback
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - Authentication and account
+        - Groups and members
+        - Expenses and reimbursements
+        - Balances and settlements
+        - Budgets and statistics
+        - Import and export
+        - Notifications and email
+        - AI, receipts, or voice entry
+        - Mobile app or PWA
+        - Overall experience
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: feedback
+    attributes:
+      label: Your feedback
+      description: What would you like the maintainers to know?
+    validations:
+      required: true
+
+  - type: textarea
+    id: improvement
+    attributes:
+      label: What would improve the experience?
+      description: Optional. Describe the change or outcome you would prefer.
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Optional public examples or related links.
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues for similar feedback.
+          required: true
+        - label: I removed personal, financial, and secret information from this public report.
+          required: true

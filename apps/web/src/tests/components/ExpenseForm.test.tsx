@@ -575,6 +575,60 @@ describe('ExpenseForm', () => {
     ).not.toBeInTheDocument()
     expect(mockCategoryReset).toHaveBeenCalled()
   })
+  it('cancels the AI categorizer on submit so a late response cannot clobber the saved value', async () => {
+    let resolveSuggestion: ((value: { categoryId: string }) => void) | undefined
+    mockCategoryMutateAsync.mockReturnValueOnce(
+      new Promise<{ categoryId: string }>((resolve) => {
+        resolveSuggestion = resolve
+      }),
+    )
+    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={onSubmit}
+        runtimeFeatureFlags={{
+          ...runtimeFeatureFlags,
+          enableCategoryExtract: true,
+        }}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    const titleInput = screen.getByPlaceholderText('Monday evening restaurant')
+    await user.type(titleInput, 'Whole Foods')
+    await user.tab()
+    await vi.waitFor(() => {
+      expect(mockCategoryMutateAsync).toHaveBeenCalledTimes(1)
+    })
+
+    const amountInput = screen.getByRole('textbox', { name: 'Amount' })
+    await user.type(amountInput, '42')
+
+    // The user hits save while the AI categorizer is still pending.
+    const submitButton = screen
+      .getAllByRole('button')
+      .find((b) => b.getAttribute('type') === 'submit')
+    if (!submitButton) throw new Error('submit button not found')
+    await user.click(submitButton)
+
+    await vi.waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1)
+    })
+
+    // Capture the submitted values so we can prove the late AI
+    // response never wrote back over them.
+    const submittedValues = onSubmit.mock.calls[0]?.[0] as {
+      category: string
+    }
+
+    // Now resolve the AI suggestion. Without cancel-on-submit this
+    // would race to overwrite the category before the form unmounts.
+    resolveSuggestion?.({ categoryId: 'groceries' })
+    await Promise.resolve()
+
+    expect(submittedValues.category).not.toBe('groceries')
+  })
 
   it('edit mode pre-fills expense data', () => {
     const onSubmit = vi.fn()

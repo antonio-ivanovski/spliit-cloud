@@ -149,66 +149,82 @@ export function CreateExpenseFab({
         </div>
       )}
 
-      {!actionFlowActive && (
-        <SpeedDial
-          open={speedDialOpen}
-          onOpenChange={setSpeedDialOpen}
-          className={cn(
-            'fixed end-6 z-40 sm:hidden',
-            'bottom-[calc(5.5rem+env(safe-area-inset-bottom))]',
-          )}
-        >
-          <SpeedDialContent>
-            {enableReceiptExtract && (
-              <SpeedDialItem>
-                <SpeedDialLabel>{t('receiptAction')}</SpeedDialLabel>
-                <SpeedDialAction
-                  aria-label={t('receiptAction')}
-                  onClick={openReceipt}
-                  className="flex size-11 items-center justify-center rounded-full border bg-background text-foreground shadow-lg transition-transform hover:scale-105 hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  <Camera className="size-5" />
-                </SpeedDialAction>
-              </SpeedDialItem>
-            )}
-            {enableVoiceExpense && (
-              <SpeedDialItem>
-                <SpeedDialLabel>{t('voiceAction')}</SpeedDialLabel>
-                <SpeedDialAction
-                  aria-label={t('voiceAction')}
-                  onClick={openVoice}
-                  className="flex size-11 items-center justify-center rounded-full border bg-background text-foreground shadow-lg transition-transform hover:scale-105 hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  <Mic className="size-5" />
-                </SpeedDialAction>
-              </SpeedDialItem>
-            )}
-            <SpeedDialItem>
-              <SpeedDialLabel>{t('addExpenseAction')}</SpeedDialLabel>
-              <SpeedDialAction
-                aria-label={t('addExpenseAction')}
-                onClick={goToManualExpense}
-                className="flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform hover:scale-105 hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                <Plus className="size-5" />
-              </SpeedDialAction>
-            </SpeedDialItem>
-          </SpeedDialContent>
-          <SpeedDialTrigger
-            aria-label={speedDialOpen ? t('closeActions') : t('openActions')}
+      {!actionFlowActive &&
+        (hasAiActions ? (
+          <SpeedDial
+            open={speedDialOpen}
+            onOpenChange={setSpeedDialOpen}
             className={cn(
-              'flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-xl transition-transform duration-200 hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring',
-              speedDialOpen && 'rotate-90',
+              'fixed end-6 z-40 sm:hidden',
+              'bottom-[calc(5.5rem+env(safe-area-inset-bottom))]',
             )}
           >
-            {speedDialOpen ? (
-              <X className="size-6" />
-            ) : (
-              <Plus className="size-6" />
-            )}
-          </SpeedDialTrigger>
-        </SpeedDial>
-      )}
+            <SpeedDialContent>
+              {enableReceiptExtract && (
+                <SpeedDialItem>
+                  <SpeedDialLabel>{t('receiptAction')}</SpeedDialLabel>
+                  <SpeedDialAction
+                    aria-label={t('receiptAction')}
+                    onClick={openReceipt}
+                    className="flex size-11 items-center justify-center rounded-full border bg-background text-foreground shadow-lg transition-transform hover:scale-105 hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <Camera className="size-5" />
+                  </SpeedDialAction>
+                </SpeedDialItem>
+              )}
+              {enableVoiceExpense && (
+                <SpeedDialItem>
+                  <SpeedDialLabel>{t('voiceAction')}</SpeedDialLabel>
+                  <SpeedDialAction
+                    aria-label={t('voiceAction')}
+                    onClick={openVoice}
+                    className="flex size-11 items-center justify-center rounded-full border bg-background text-foreground shadow-lg transition-transform hover:scale-105 hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <Mic className="size-5" />
+                  </SpeedDialAction>
+                </SpeedDialItem>
+              )}
+              <SpeedDialItem>
+                <SpeedDialLabel>{t('addExpenseAction')}</SpeedDialLabel>
+                <SpeedDialAction
+                  aria-label={t('addExpenseAction')}
+                  onClick={goToManualExpense}
+                  className="flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform hover:scale-105 hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  <Plus className="size-5" />
+                </SpeedDialAction>
+              </SpeedDialItem>
+            </SpeedDialContent>
+            <SpeedDialTrigger
+              aria-label={speedDialOpen ? t('closeActions') : t('openActions')}
+              className={cn(
+                'flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-xl transition-transform duration-200 hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring',
+                speedDialOpen && 'rotate-90',
+              )}
+            >
+              {speedDialOpen ? (
+                <X className="size-6" />
+              ) : (
+                <Plus className="size-6" />
+              )}
+            </SpeedDialTrigger>
+          </SpeedDial>
+        ) : (
+          // No AI features available for the current user: collapse the mobile
+          // FAB into a single primary button so taps don't go through a
+          // one-action speed dial.
+          <Button
+            type="button"
+            variant="default"
+            aria-label={t('addExpenseAction')}
+            onClick={goToManualExpense}
+            data-testid="create-expense-fab-mobile"
+            className="fixed end-6 z-40 size-14 rounded-full bg-primary p-0 text-primary-foreground shadow-xl hover:bg-primary/90 sm:hidden"
+            style={{ bottom: 'calc(5.5rem + env(safe-area-inset-bottom))' }}
+          >
+            <Plus className="size-6" />
+          </Button>
+        ))}
 
       {enableVoiceExpense && (
         <VoiceExpenseButton

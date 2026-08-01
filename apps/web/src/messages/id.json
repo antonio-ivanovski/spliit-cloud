@@ -56,7 +56,8 @@
     "account": "Akun",
     "accountSettings": "Pengaturan akun",
     "back": "Kembali",
-    "menu": "Menu"
+    "menu": "Menu",
+    "feedback": "Masukan"
   },
   "Footer": {
     "madeIn": "Dibuat oleh komunitas open-source dengan cinta ❤️",
@@ -1735,7 +1736,27 @@
       "timeZoneHelp": "Digunakan untuk stempel waktu, tanggal relatif, dan pengeluaran berulang baru.",
       "language": "Bahasa",
       "theme": "Tema",
-      "chooseTheme": "Pilih"
+      "chooseTheme": "Pilih",
+      "saving": "Menyimpan preferensi…"
+    },
+    "aiPreferences": {
+      "title": "Fitur AI",
+      "description": "Konfigurasikan fitur AI dan sesuaikan perilakunya.",
+      "categoryExtractLabel": "Kategorisasi pengeluaran",
+      "categoryExtractDescription": "Sarankan kategori secara otomatis saat Anda mengisi judul pengeluaran.",
+      "receiptScanLabel": "Pemindaian struk",
+      "receiptScanDescription": "Ekstrak detail pengeluaran dari foto struk.",
+      "voiceExpenseLabel": "Pengeluaran suara",
+      "voiceExpenseDescription": "Buat pengeluaran dari rekaman suara singkat.",
+      "comingSoon": "Segera hadir",
+      "voiceLanguageLabel": "Bahasa suara yang diinginkan",
+      "voiceLanguageDescription": "Pilih bahasa yang didengarkan AI pengeluaran suara.",
+      "receiptPromptsLabel": "Instruksi khusus untuk pemindaian struk",
+      "receiptPromptsDescription": "Sesuaikan perilaku AI saat memindai struk (petunjuk mata uang, pengelompokan item baris, dll.).",
+      "voicePromptsLabel": "Instruksi khusus untuk pengeluaran suara",
+      "voicePromptsDescription": "Sesuaikan perilaku AI saat membuat pengeluaran dari suara Anda (pembagian, pembayar bawaan, dll.).",
+      "saving": "Menyimpan preferensi…",
+      "masterLabel": "Aktifkan fitur AI"
     }
   },
   "Activities": {
@@ -2331,5 +2352,43 @@
       "unsupportedCurrency": "Mata uang yang disebutkan tidak didukung; pilih satu di formulir pengeluaran lengkap."
     },
     "addExpenseAction": "Tambah pengeluaran"
+  },
+  "Feedback": {
+    "navigationLabel": "Masukan",
+    "title": "Bantu membentuk Spliit Cloud",
+    "description": "Laporkan masalah, sarankan perbaikan, atau ceritakan pengalaman Anda. Pilih kategori untuk melanjutkan di GitHub.",
+    "categoriesLabel": "Kategori masukan",
+    "categories": {
+      "bug": {
+        "title": "Laporkan bug",
+        "description": "Beri tahu kami tentang perilaku yang rusak atau tidak terduga dan sertakan langkah reproduksi yang jelas.",
+        "action": "Buka laporan bug"
+      },
+      "idea": {
+        "title": "Sarankan ide",
+        "description": "Jelaskan masalah yang layak diselesaikan atau perbaikan yang akan membuat Spliit lebih berguna.",
+        "action": "Buka formulir ide"
+      },
+      "feedback": {
+        "title": "Bagikan masukan",
+        "description": "Beri tahu kami apa yang terasa membantu, sulit, membingungkan, atau dirancang dengan sangat baik.",
+        "action": "Buka formulir masukan"
+      }
+    },
+    "githubNotice": {
+      "title": "Laporan bersifat publik di GitHub",
+      "description": "Anda memerlukan akun GitHub untuk mengirimkan. Anda dapat meninjau dan mengedit semuanya sebelum masalah dipublikasikan."
+    },
+    "privacy": {
+      "title": "Lindungi privasi Anda",
+      "description": "Hapus nama, alamat email, jumlah, tanda terima, tautan grup, token undangan, dan data pribadi lainnya sebelum mengirimkan."
+    },
+    "diagnostics": {
+      "title": "Diagnostik aman",
+      "description": "Salin konteks teknis ini ke laporan bug jika relevan. Konteks ini tidak menyertakan data akun, isi formulir, pengenal URL, string kueri, atau token undangan.",
+      "copy": "Salin diagnostik",
+      "copied": "Disalin",
+      "copyFailed": "Akses papan klip gagal. Pilih dan salin diagnostik secara manual."
+    }
   }
 }

@@ -56,7 +56,8 @@
     "account": "账户",
     "accountSettings": "账户设置",
     "back": "返回",
-    "menu": "菜单"
+    "menu": "菜单",
+    "feedback": "反馈"
   },
   "Footer": {
     "madeIn": "由开源社区用爱打造 ❤️",
@@ -1735,7 +1736,27 @@
       "timeZoneHelp": "用于显示时间戳、相对日期和新的定期支出。",
       "language": "语言",
       "theme": "主题",
-      "chooseTheme": "选择"
+      "chooseTheme": "选择",
+      "saving": "保存中…"
+    },
+    "aiPreferences": {
+      "title": "AI 功能",
+      "description": "配置 AI 功能并自定义其行为方式。",
+      "categoryExtractLabel": "支出分类器",
+      "categoryExtractDescription": "填写支出标题时自动建议类别。",
+      "receiptScanLabel": "收据扫描",
+      "receiptScanDescription": "从收据照片中提取支出详情。",
+      "voiceExpenseLabel": "语音支出",
+      "voiceExpenseDescription": "通过简短的语音录音创建支出。",
+      "comingSoon": "即将推出",
+      "voiceLanguageLabel": "首选语音语言",
+      "voiceLanguageDescription": "选择语音支出 AI 聆听的语言。",
+      "receiptPromptsLabel": "收据扫描的自定义说明",
+      "receiptPromptsDescription": "扫描收据时定制 AI 行为（货币提示、明细行分组等）。",
+      "voicePromptsLabel": "语音支出的自定义说明",
+      "voicePromptsDescription": "通过语音创建支出时定制 AI 行为（分摊、默认付款人等）。",
+      "saving": "保存中…",
+      "masterLabel": "启用 AI 功能"
     }
   },
   "Activities": {
@@ -2330,5 +2351,43 @@
       "unsupportedCurrency": "语音中说出的货币不受支持，请在完整费用表单中选择。"
     },
     "addExpenseAction": "添加支出"
+  },
+  "Feedback": {
+    "navigationLabel": "反馈",
+    "title": "帮助塑造 Spliit Cloud",
+    "description": "报告问题、提出改进建议或分享您的使用体验。请选择一个类别以在 GitHub 上继续。",
+    "categoriesLabel": "反馈类别",
+    "categories": {
+      "bug": {
+        "title": "报告错误",
+        "description": "请告诉我们损坏或异常的行为，并提供清晰的复现步骤。",
+        "action": "打开错误报告"
+      },
+      "idea": {
+        "title": "提出想法",
+        "description": "请描述一个值得解决的问题，或一项能让 Spliit 更实用的改进。",
+        "action": "打开想法表单"
+      },
+      "feedback": {
+        "title": "分享反馈",
+        "description": "请告诉我们哪些地方有帮助、困难、令人困惑或设计得特别好。",
+        "action": "打开反馈表单"
+      }
+    },
+    "githubNotice": {
+      "title": "报告会在 GitHub 上公开",
+      "description": "您需要 GitHub 账户才能提交。问题发布前，您可以检查和编辑所有内容。"
+    },
+    "privacy": {
+      "title": "保护您的隐私",
+      "description": "提交前，请删除姓名、电子邮件地址、金额、收据、群组链接、邀请令牌及其他隐私数据。"
+    },
+    "diagnostics": {
+      "title": "安全诊断信息",
+      "description": "如果相关，请将此技术信息复制到错误报告中。其中不包含账户数据、表单内容、URL 标识符、查询字符串或邀请令牌。",
+      "copy": "复制诊断信息",
+      "copied": "已复制",
+      "copyFailed": "无法访问剪贴板。请选择并手动复制诊断信息。"
+    }
   }
 }

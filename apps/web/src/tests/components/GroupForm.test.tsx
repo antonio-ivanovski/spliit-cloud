@@ -136,6 +136,9 @@ describe('GroupForm', () => {
           timeZone: 'Europe/Paris',
           locale: null,
           theme: null,
+          aiCategoryExtractEnabled: null,
+          aiReceiptScanEnabled: null,
+          aiVoiceExpenseEnabled: null,
         }}
       >
         <GroupForm onSubmit={onSubmit} />

@@ -56,7 +56,8 @@
     "account": "Account",
     "accountSettings": "Impostazioni account",
     "back": "Indietro",
-    "menu": "Menu"
+    "menu": "Menu",
+    "feedback": "Segnalazioni"
   },
   "Footer": {
     "madeIn": "Realizzato dalla comunità open-source con amore ❤️",
@@ -1751,7 +1752,27 @@
       "timeZoneHelp": "Usato per orari, date relative e nuove spese ricorrenti.",
       "language": "Lingua",
       "theme": "Tema",
-      "chooseTheme": "Scegli"
+      "chooseTheme": "Scegli",
+      "saving": "Salvataggio delle preferenze…"
+    },
+    "aiPreferences": {
+      "title": "Funzioni IA",
+      "description": "Configura le funzioni IA e personalizzane il comportamento.",
+      "categoryExtractLabel": "Categorizzatore di spese",
+      "categoryExtractDescription": "Suggerisci automaticamente una categoria quando compili il titolo di una spesa.",
+      "receiptScanLabel": "Scansione ricevuta",
+      "receiptScanDescription": "Estrai i dettagli della spesa da una foto della ricevuta.",
+      "voiceExpenseLabel": "Spesa vocale",
+      "voiceExpenseDescription": "Crea una spesa da una breve registrazione vocale.",
+      "comingSoon": "In arrivo",
+      "voiceLanguageLabel": "Lingua vocale preferita",
+      "voiceLanguageDescription": "Scegli la lingua che l'IA delle spese vocali deve ascoltare.",
+      "receiptPromptsLabel": "Istruzioni personalizzate per la scansione delle ricevute",
+      "receiptPromptsDescription": "Personalizza il comportamento dell'IA durante la scansione delle ricevute (indicazioni sulla valuta, raggruppamento delle voci, ecc.).",
+      "voicePromptsLabel": "Istruzioni personalizzate per la spesa vocale",
+      "voicePromptsDescription": "Personalizza il comportamento dell'IA durante la creazione di spese con la tua voce (ripartizione, pagatore predefinito, ecc.).",
+      "saving": "Salvataggio delle preferenze…",
+      "masterLabel": "Abilita le funzioni IA"
     }
   },
   "Activities": {
@@ -2365,5 +2386,43 @@
       "unsupportedCurrency": "La valuta indicata non è supportata; scegline una nel modulo completo della spesa."
     },
     "addExpenseAction": "Aggiungi spesa"
+  },
+  "Feedback": {
+    "navigationLabel": "Segnalazioni",
+    "title": "Aiuta a dare forma a Spliit Cloud",
+    "description": "Segnala un problema, suggerisci un miglioramento o raccontaci la tua esperienza. Scegli una categoria per continuare su GitHub.",
+    "categoriesLabel": "Categorie di segnalazioni",
+    "categories": {
+      "bug": {
+        "title": "Segnala un bug",
+        "description": "Descrivi un comportamento errato o imprevisto e includi passaggi chiari per riprodurlo.",
+        "action": "Apri segnalazione bug"
+      },
+      "idea": {
+        "title": "Suggerisci un’idea",
+        "description": "Descrivi un problema che vale la pena risolvere o un miglioramento che renderebbe Spliit più utile.",
+        "action": "Apri modulo idea"
+      },
+      "feedback": {
+        "title": "Condividi un’opinione",
+        "description": "Raccontaci cosa trovi utile, difficile, poco chiaro o particolarmente ben progettato.",
+        "action": "Apri modulo opinioni"
+      }
+    },
+    "githubNotice": {
+      "title": "Le segnalazioni sono pubbliche su GitHub",
+      "description": "Per inviare serve un account GitHub. Puoi rivedere e modificare tutto prima che la segnalazione venga pubblicata."
+    },
+    "privacy": {
+      "title": "Proteggi la tua privacy",
+      "description": "Rimuovi nomi, indirizzi email, importi, ricevute, link ai gruppi, token di invito e altri dati privati prima dell’invio."
+    },
+    "diagnostics": {
+      "title": "Diagnostica sicura",
+      "description": "Copia questo contesto tecnico in una segnalazione bug se pertinente. Esclude dati dell’account, contenuti dei moduli, identificatori URL, stringhe di query e token di invito.",
+      "copy": "Copia diagnostica",
+      "copied": "Copiato",
+      "copyFailed": "Accesso agli appunti non riuscito. Seleziona e copia manualmente la diagnostica."
+    }
   }
 }

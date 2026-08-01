@@ -572,6 +572,11 @@ model AccountPreference {
   timeZone              String?
   locale                String?
   theme                 String?
+
+  aiFeaturesEnabled         Boolean  @default(true)
+  aiCategoryExtractEnabled  Boolean? @default(true)
+  aiReceiptScanEnabled      Boolean? @default(true)
+  aiVoiceExpenseEnabled     Boolean? @default(true)
 }
 
 model AccountGroupPreference {

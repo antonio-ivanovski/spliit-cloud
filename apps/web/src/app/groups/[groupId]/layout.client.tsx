@@ -24,6 +24,7 @@ import {
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
 import { useToast } from '@/components/ui/use-toast'
+import { useEffectiveRuntimeFeatureFlags } from '@/lib/effective-runtime-feature-flags'
 import { isFocusedMobilePath, isMobileGroupNavPath } from '@/lib/mobile-nav'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
@@ -95,7 +96,7 @@ export function GroupLayoutClient({
   const { t: tTitles } = useTranslation()
   const { toast } = useToast()
   const { isPending: accountPending } = useCurrentAccount()
-  const { data: runtimeFeatures } = trpc.features.get.useQuery()
+  const { flags: effectiveRuntimeFlags } = useEffectiveRuntimeFeatureFlags()
 
   useEffect(() => {
     if (!data?.group || focusedMobileRoute) return
@@ -216,8 +217,8 @@ export function GroupLayoutClient({
         className={`flex min-w-0 flex-col gap-3 ${showMobileNav ? 'pb-[calc(5rem+env(safe-area-inset-bottom))] sm:pb-0' : ''}`}
       >
         <GroupHeader
-          enableReceiptExtract={Boolean(runtimeFeatures?.enableReceiptExtract)}
-          enableVoiceExpense={Boolean(runtimeFeatures?.enableVoiceExpense)}
+          enableReceiptExtract={effectiveRuntimeFlags.enableReceiptExtract}
+          enableVoiceExpense={effectiveRuntimeFlags.enableVoiceExpense}
         />
         {children ?? <Outlet />}
       </div>

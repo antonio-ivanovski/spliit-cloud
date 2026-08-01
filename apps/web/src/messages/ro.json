@@ -56,7 +56,8 @@
     "account": "Cont",
     "accountSettings": "Setările contului",
     "back": "Înapoi",
-    "menu": "Meniu"
+    "menu": "Meniu",
+    "feedback": "Opinii"
   },
   "Footer": {
     "madeIn": "Realizat de comunitatea open-source cu dragoste ❤️",
@@ -1751,7 +1752,27 @@
       "timeZoneHelp": "Folosit pentru marcajele temporale, datele relative și cheltuielile recurente noi.",
       "language": "Limbă",
       "theme": "Temă",
-      "chooseTheme": "Alege"
+      "chooseTheme": "Alege",
+      "saving": "Se salvează preferințele…"
+    },
+    "aiPreferences": {
+      "title": "Funcții AI",
+      "description": "Configurează funcțiile AI și personalizează modul în care se comportă.",
+      "categoryExtractLabel": "Categorizator de cheltuieli",
+      "categoryExtractDescription": "Sugerează automat o categorie când completezi titlul unei cheltuieli.",
+      "receiptScanLabel": "Scanare chitanță",
+      "receiptScanDescription": "Extrage detaliile cheltuielii dintr-o fotografie a chitanței.",
+      "voiceExpenseLabel": "Cheltuială vocală",
+      "voiceExpenseDescription": "Creează o cheltuială dintr-o scurtă înregistrare vocală.",
+      "comingSoon": "În curând",
+      "voiceLanguageLabel": "Limba vocală preferată",
+      "voiceLanguageDescription": "Alege limba pe care AI-ul cheltuielilor vocale trebuie să o asculte.",
+      "receiptPromptsLabel": "Instrucțiuni personalizate pentru scanarea chitanțelor",
+      "receiptPromptsDescription": "Personalizează comportamentul AI la scanarea chitanțelor (indicații despre monedă, grupare pe linii, etc.).",
+      "voicePromptsLabel": "Instrucțiuni personalizate pentru cheltuiala vocală",
+      "voicePromptsDescription": "Personalizează comportamentul AI la crearea cheltuielilor din vocea ta (împărțire, plătitor implicit, etc.).",
+      "saving": "Se salvează preferințele…",
+      "masterLabel": "Activează funcțiile AI"
     }
   },
   "Activities": {
@@ -2365,5 +2386,43 @@
       "unsupportedCurrency": "Moneda rostită nu este acceptată; alege una în formularul complet al cheltuielii."
     },
     "addExpenseAction": "Adaugă cheltuială"
+  },
+  "Feedback": {
+    "navigationLabel": "Opinii",
+    "title": "Ajută la modelarea Spliit Cloud",
+    "description": "Raportează o problemă, sugerează o îmbunătățire sau povestește-ne despre experiența ta. Alege o categorie pentru a continua pe GitHub.",
+    "categoriesLabel": "Categorii de opinii",
+    "categories": {
+      "bug": {
+        "title": "Raportează o eroare",
+        "description": "Spune-ne despre un comportament defect sau neașteptat și include pași clari de reproducere.",
+        "action": "Deschide raportul de eroare"
+      },
+      "idea": {
+        "title": "Sugerează o idee",
+        "description": "Descrie o problemă care merită rezolvată sau o îmbunătățire care ar face Spliit mai util.",
+        "action": "Deschide formularul de idei"
+      },
+      "feedback": {
+        "title": "Trimite o opinie",
+        "description": "Spune-ne ce ți se pare util, dificil, confuz sau deosebit de bine conceput.",
+        "action": "Deschide formularul de opinii"
+      }
+    },
+    "githubNotice": {
+      "title": "Rapoartele sunt publice pe GitHub",
+      "description": "Ai nevoie de un cont GitHub pentru a trimite. Poți revizui și edita totul înainte ca problema să fie publicată."
+    },
+    "privacy": {
+      "title": "Protejează-ți confidențialitatea",
+      "description": "Elimină numele, adresele de e-mail, sumele, chitanțele, linkurile de grup, tokenurile de invitație și alte date private înainte de trimitere."
+    },
+    "diagnostics": {
+      "title": "Diagnosticare sigură",
+      "description": "Copiază acest context tehnic într-un raport de eroare dacă este relevant. Acesta exclude datele contului, conținutul formularelor, identificatorii URL, șirurile de interogare și tokenurile de invitație.",
+      "copy": "Copiază diagnosticul",
+      "copied": "Copiat",
+      "copyFailed": "Accesul la clipboard a eșuat. Selectează și copiază manual diagnosticul."
+    }
   }
 }

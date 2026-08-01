@@ -152,15 +152,11 @@ describe('NotificationsPreferences', () => {
   it('renders the compact three-section list and coming-soon rows', () => {
     render(<NotificationsPreferences />)
 
-    expect(
-      screen.getByRole('heading', { name: 'Groups and friends' }),
-    ).toBeInTheDocument()
-    expect(
-      screen.getByRole('heading', { name: 'Expenses' }),
-    ).toBeInTheDocument()
-    expect(
-      screen.getByRole('heading', { name: 'Summaries' }),
-    ).toBeInTheDocument()
+    for (const title of ['Groups and friends', 'Expenses', 'Summaries']) {
+      const heading = screen.getByRole('heading', { name: title })
+      expect(heading).toBeInTheDocument()
+      expect(heading.tagName).toBe('H3')
+    }
     expect(screen.getByText('Added to a group')).toBeInTheDocument()
     expect(screen.getByText('Friend ledger')).toBeInTheDocument()
     expect(screen.getByText('New comment')).toBeInTheDocument()

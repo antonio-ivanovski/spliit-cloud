@@ -56,7 +56,8 @@
     "account": "Compte",
     "accountSettings": "Configuració del compte",
     "back": "Enrere",
-    "menu": "Menú"
+    "menu": "Menú",
+    "feedback": "Comentaris"
   },
   "Footer": {
     "madeIn": "Fet per la comunitat de codi obert amb amor ❤️",
@@ -1751,7 +1752,27 @@
       "timeZoneHelp": "S'utilitza per a les marques de temps, les dates relatives i les noves despeses recurrents.",
       "language": "Idioma",
       "theme": "Tema",
-      "chooseTheme": "Tria"
+      "chooseTheme": "Tria",
+      "saving": "S'estan desant les preferències…"
+    },
+    "aiPreferences": {
+      "title": "Funcions d'IA",
+      "description": "Configura les funcions d'IA i personalitza'n el comportament.",
+      "categoryExtractLabel": "Categoritzador de despeses",
+      "categoryExtractDescription": "Suggereix automàticament una categoria quan escrius el títol d'una despesa.",
+      "receiptScanLabel": "Escaneig de tiquet",
+      "receiptScanDescription": "Extreu les dades de la despesa de la foto d'un tiquet.",
+      "voiceExpenseLabel": "Despesa per veu",
+      "voiceExpenseDescription": "Crea una despesa a partir d'una gravació de veu curta.",
+      "comingSoon": "Pròximament",
+      "voiceLanguageLabel": "Idioma de veu preferit",
+      "voiceLanguageDescription": "Tria l'idioma que la IA de despeses per veu ha d'escoltar.",
+      "receiptPromptsLabel": "Instruccions personalitzades per a l'escaneig de tiquets",
+      "receiptPromptsDescription": "Personalitza el comportament de la IA en escanejar tiquets (indicacions de moneda, agrupació d'articles, etc.).",
+      "voicePromptsLabel": "Instruccions personalitzades per a la despesa per veu",
+      "voicePromptsDescription": "Personalitza el comportament de la IA en crear despeses amb la teva veu (divisió, pagador per defecte, etc.).",
+      "saving": "S'estan desant les preferències…",
+      "masterLabel": "Activa les funcions d'IA"
     }
   },
   "Activities": {
@@ -2365,5 +2386,43 @@
       "unsupportedCurrency": "La moneda indicada no és compatible; tria'n una al formulari complet de despeses."
     },
     "addExpenseAction": "Afegeix una despesa"
+  },
+  "Feedback": {
+    "navigationLabel": "Comentaris",
+    "title": "Ajuda a donar forma a Spliit Cloud",
+    "description": "Informa d’un problema, suggereix una millora o explica’ns la teva experiència. Tria una categoria per continuar a GitHub.",
+    "categoriesLabel": "Categories de comentaris",
+    "categories": {
+      "bug": {
+        "title": "Informa d’un error",
+        "description": "Explica’ns un comportament defectuós o inesperat i inclou passos clars per reproduir-lo.",
+        "action": "Obre l’informe d’error"
+      },
+      "idea": {
+        "title": "Suggereix una idea",
+        "description": "Descriu un problema que valgui la pena resoldre o una millora que faria Spliit més útil.",
+        "action": "Obre el formulari d’idees"
+      },
+      "feedback": {
+        "title": "Comparteix comentaris",
+        "description": "Explica’ns què et resulta útil, difícil, confús o especialment ben dissenyat.",
+        "action": "Obre el formulari de comentaris"
+      }
+    },
+    "githubNotice": {
+      "title": "Els informes són públics a GitHub",
+      "description": "Necessites un compte de GitHub per enviar-los. Pots revisar i editar-ho tot abans de publicar la incidència."
+    },
+    "privacy": {
+      "title": "Protegeix la teva privadesa",
+      "description": "Elimina noms, adreces electròniques, imports, rebuts, enllaços de grups, testimonis d’invitació i altres dades privades abans d’enviar."
+    },
+    "diagnostics": {
+      "title": "Diagnòstics segurs",
+      "description": "Copia aquest context tècnic en un informe d’error si és rellevant. Exclou dades del compte, contingut de formularis, identificadors d’URL, cadenes de consulta i testimonis d’invitació.",
+      "copy": "Copia els diagnòstics",
+      "copied": "Copiat",
+      "copyFailed": "No s’ha pogut accedir al porta-retalls. Selecciona i copia els diagnòstics manualment."
+    }
   }
 }

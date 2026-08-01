@@ -1051,7 +1051,8 @@
     "account": "계정",
     "accountSettings": "계정 설정",
     "back": "뒤로",
-    "menu": "메뉴"
+    "menu": "메뉴",
+    "feedback": "피드백"
   },
   "Footer": {
     "madeIn": "오픈소스 커뮤니티가 사랑을 담아 만들었어요 ❤️",
@@ -1735,7 +1736,27 @@
       "timeZoneHelp": "타임스탬프, 상대 날짜 및 새 반복 지출에 사용됩니다.",
       "language": "언어",
       "theme": "테마",
-      "chooseTheme": "선택"
+      "chooseTheme": "선택",
+      "saving": "저장 중…"
+    },
+    "aiPreferences": {
+      "title": "AI 기능",
+      "description": "AI 기능을 구성하고 동작 방식을 맞춤 설정합니다.",
+      "categoryExtractLabel": "지출 분류기",
+      "categoryExtractDescription": "지출 제목을 입력할 때 카테고리를 자동으로 제안합니다.",
+      "receiptScanLabel": "영수증 스캔",
+      "receiptScanDescription": "영수증 사진에서 지출 세부 정보를 추출합니다.",
+      "voiceExpenseLabel": "음성 지출",
+      "voiceExpenseDescription": "짧은 음성 녹음으로 지출을 생성합니다.",
+      "comingSoon": "출시 예정",
+      "voiceLanguageLabel": "선호 음성 언어",
+      "voiceLanguageDescription": "음성 지출 AI가 듣는 언어를 선택하세요.",
+      "receiptPromptsLabel": "영수증 스캔 맞춤 지침",
+      "receiptPromptsDescription": "영수증 스캔 시 AI 동작을 조정합니다(통화 힌트, 품목별 그룹화 등).",
+      "voicePromptsLabel": "음성 지출 맞춤 지침",
+      "voicePromptsDescription": "음성으로 지출을 생성할 때 AI 동작을 조정합니다(분할, 지불자 기본값 등).",
+      "saving": "저장 중…",
+      "masterLabel": "AI 기능 사용"
     }
   },
   "Activities": {
@@ -2330,5 +2351,43 @@
       "unsupportedCurrency": "음성으로 입력한 통화는 지원되지 않습니다. 지출 전체 양식에서 선택하세요."
     },
     "addExpenseAction": "지출 추가"
+  },
+  "Feedback": {
+    "navigationLabel": "피드백",
+    "title": "Spliit Cloud를 함께 만들어 주세요",
+    "description": "문제를 신고하거나 개선 사항을 제안하고 사용 경험을 들려주세요. GitHub에서 계속하려면 카테고리를 선택하세요.",
+    "categoriesLabel": "피드백 카테고리",
+    "categories": {
+      "bug": {
+        "title": "버그 신고",
+        "description": "고장 나거나 예상치 못한 동작을 명확한 재현 단계와 함께 알려주세요.",
+        "action": "버그 신고 열기"
+      },
+      "idea": {
+        "title": "아이디어 제안",
+        "description": "해결할 가치가 있는 문제나 Spliit을 더 유용하게 만들 개선 사항을 설명해 주세요.",
+        "action": "아이디어 양식 열기"
+      },
+      "feedback": {
+        "title": "피드백 공유",
+        "description": "유용하거나 어렵거나 혼란스러운 점, 또는 특히 잘 설계된 점을 알려주세요.",
+        "action": "피드백 양식 열기"
+      }
+    },
+    "githubNotice": {
+      "title": "신고 내용은 GitHub에 공개됩니다",
+      "description": "제출하려면 GitHub 계정이 필요합니다. 이슈가 공개되기 전에 모든 내용을 검토하고 수정할 수 있습니다."
+    },
+    "privacy": {
+      "title": "개인정보를 보호하세요",
+      "description": "제출하기 전에 이름, 이메일 주소, 금액, 영수증, 그룹 링크, 초대 토큰 및 기타 개인 정보를 삭제하세요."
+    },
+    "diagnostics": {
+      "title": "안전한 진단 정보",
+      "description": "관련이 있다면 이 기술 정보를 버그 신고에 복사하세요. 계정 데이터, 양식 내용, URL 식별자, 쿼리 문자열 및 초대 토큰은 포함되지 않습니다.",
+      "copy": "진단 정보 복사",
+      "copied": "복사됨",
+      "copyFailed": "클립보드에 접근하지 못했습니다. 진단 정보를 선택하여 직접 복사하세요."
+    }
   }
 }

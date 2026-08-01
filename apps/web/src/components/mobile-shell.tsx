@@ -5,6 +5,7 @@ import {
   BarChart3,
   Info,
   MoreHorizontal,
+  MessageSquareText,
   ReceiptText,
   Scale,
   Settings2,
@@ -108,6 +109,11 @@ export function MobileGroupNav({ groupId }: GroupNavProps) {
       href: `/groups/${groupId}/edit`,
       label: t('Settings.title'),
       icon: Settings2,
+    },
+    {
+      href: '/feedback',
+      label: t('Feedback.navigationLabel'),
+      icon: MessageSquareText,
     },
   ] as const
   const activeMore = moreTabs.some((tab) => pathname === tab.href)

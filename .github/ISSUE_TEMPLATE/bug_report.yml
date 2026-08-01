@@ -1,0 +1,94 @@
+name: Bug report
+description: Report a reproducible problem in Spliit Cloud
+title: '[Bug] '
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve Spliit Cloud. GitHub issues are public. Remove names, email addresses, amounts, receipts, group links, invitation tokens, and other private data before submitting.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      description: Where did the problem occur?
+      options:
+        - Authentication and account
+        - Groups and members
+        - Expenses and reimbursements
+        - Balances and settlements
+        - Budgets and statistics
+        - Import and export
+        - Notifications and email
+        - AI, receipts, or voice entry
+        - Mobile app or PWA
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: observed
+    attributes:
+      label: What happened?
+      description: Describe the problem and its impact.
+      placeholder: Tell us what you saw. Use anonymized examples only.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+      description: Describe the behavior you expected instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      description: Give the smallest sequence that reproduces the problem.
+      placeholder: |
+        1. Open …
+        2. Select …
+        3. Observe …
+    validations:
+      required: true
+
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: Frequency
+      options:
+        - Every time
+        - Often
+        - Sometimes
+        - Once
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Safe diagnostics
+      description: Paste the diagnostics copied from Spliit's Feedback page. Review the text before submitting.
+      render: text
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Logs or screenshots
+      description: Optional. Redact all personal and financial data before attaching anything.
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues for the same problem.
+          required: true
+        - label: I removed personal, financial, and secret information from this public report.
+          required: true
