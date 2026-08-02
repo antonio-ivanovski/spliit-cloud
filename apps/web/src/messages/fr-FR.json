@@ -969,6 +969,29 @@
       "owes": "doit {amount}",
       "suggestedPayments": "Paiements suggérés",
       "empty": "Tous les comptes sont réglés."
+    },
+    "settlementMode": {
+      "label": "Régler les soldes par",
+      "individual": "Individuel",
+      "subgroups": "Sous-groupes"
+    },
+    "subgroups": {
+      "balanceTitle": "Soldes des sous-groupes",
+      "balanceDescription": "Utilisez chaque sous-groupe comme une unité de règlement pour les personnes qui partagent des dépenses, comme les couples ou les familles. Les répartitions individuelles des dépenses restent inchangées.",
+      "emptyBalances": "Chaque sous-groupe est réglé avec les autres.",
+      "internalBalancesNote": "Une fois les paiements des sous-groupes réglés, les membres peuvent encore avoir des soldes au sein de leur sous-groupe.",
+      "viewIndividual": "Voir les soldes individuels",
+      "suggestedPayments": "Paiements suggérés",
+      "emptyPayments": "Aucune somme n'est due entre les sous-groupes.",
+      "pays": "paie",
+      "receives": "reçoit",
+      "to": "à",
+      "from": "de",
+      "personPays": "paie",
+      "settle": "Régler",
+      "individualAllHint": "Vous consultez le plan individuel standard à l'échelle du groupe. Il peut inclure des paiements entre sous-groupes.",
+      "unknownParticipant": "Invitation en attente",
+      "individualWithinHint": "Vous consultez un plan individuel tenant compte des sous-groupes. Les paiements suggérés restent au sein de chaque sous-groupe lorsque les totaux des sous-groupes sont déjà réglés."
     }
   },
   "Stats": {
@@ -1591,6 +1614,44 @@
       "remove": "Supprimer",
       "changeRole": "Changer le rôle",
       "revoke": "Révoquer l'invitation"
+    },
+    "subgroups": {
+      "title": "Sous-groupes",
+      "description": "Regroupez les personnes qui gèrent ensemble les dépenses du voyage, comme les couples ou les familles. Dans Soldes, chaque sous-groupe peut être consulté et réglé comme une unité ; les dépenses et les répartitions restent individuelles.",
+      "enableAria": "Activer les sous-groupes",
+      "emptyTitle": "Aucun sous-groupe pour l'instant",
+      "emptyDescription": "Créez-en un pour un couple, un foyer ou toute personne qui règle en une seule unité.",
+      "ungroupedTitle": "Sans sous-groupe",
+      "ungroupedDescription": "Ces membres règlent individuellement jusqu'à ce qu'ils rejoignent un sous-groupe.",
+      "create": "Créer un sous-groupe",
+      "edit": "Modifier le sous-groupe",
+      "delete": "Supprimer le sous-groupe",
+      "editAria": "Modifier {{name}}",
+      "deleteAria": "Supprimer {{name}}",
+      "disableTitle": "Désactiver les sous-groupes ?",
+      "disableDescription": "La désactivation des sous-groupes supprimera définitivement toutes les définitions de sous-groupes de ce groupe.",
+      "disableImpact": "Les dépenses et soldes existants resteront inchangés, mais l'option de règlement par sous-groupe ne sera plus disponible.",
+      "keep": "Garder les sous-groupes",
+      "disable": "Désactiver les sous-groupes",
+      "disabling": "Désactivation…",
+      "deleteTitle": "Supprimer ce sous-groupe ?",
+      "deleteDescription": "Supprimer «{{name}}» de ce groupe ?",
+      "deleteImpact": "Cela supprime uniquement la définition du sous-groupe. Les dépenses et soldes existants restent inchangés.",
+      "cancel": "Annuler",
+      "deleting": "Suppression…",
+      "editorCreateTitle": "Créer un sous-groupe",
+      "editorEditTitle": "Modifier le sous-groupe",
+      "editorDescription": "Donnez-lui un nom et choisissez les personnes qui règlent ensemble.",
+      "namePlaceholder": "Nom du sous-groupe",
+      "notInTitle": "Sans sous-groupe",
+      "inTitle": "Dans un sous-groupe",
+      "assignedTo": "dans {{name}}",
+      "pickedCount": "{{count}} sélectionnés · 2 minimum requis",
+      "saving": "Enregistrement…",
+      "save": "Enregistrer le sous-groupe",
+      "validation": "Ajoutez un nom et au moins deux participants.",
+      "loadError": "Impossible de charger les sous-groupes.",
+      "disableAria": "Désactiver les sous-groupes"
     }
   },
   "AccountSettings": {
@@ -1811,7 +1872,8 @@
         "information": "Description",
         "currency": "Devise",
         "currencyCode": "Code devise",
-        "linkedParticipant": "Participant lié"
+        "linkedParticipant": "Participant lié",
+        "subgroupsEnabled": "Sous-groupes"
       }
     },
     "member": {

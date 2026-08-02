@@ -316,6 +316,10 @@ describe('groupsRouter.leave — happy path', () => {
       ],
     })
     prismaMock.groupMember.update.mockResolvedValue({ id: 'gm-self' } as never)
+    prismaMock.subgroupMember.findUnique.mockResolvedValue({
+      subgroupId: 'sg-self',
+    } as never)
+    prismaMock.subgroupMember.count.mockResolvedValue(1 as never)
 
     const caller = makeCaller('acct-self')
     const result = await caller.leave({ groupId: 'grp-1' })
@@ -331,6 +335,17 @@ describe('groupsRouter.leave — happy path', () => {
       }),
     )
     expect(prisma$Transaction).toHaveBeenCalledTimes(1)
+    expect(prismaMock.subgroupMember.delete).toHaveBeenCalledWith({
+      where: {
+        subgroupId_ledgerParticipantId: {
+          subgroupId: 'sg-self',
+          ledgerParticipantId: 'lp-self',
+        },
+      },
+    })
+    expect(prismaMock.subgroup.delete).toHaveBeenCalledWith({
+      where: { id: 'sg-self' },
+    })
   })
 
   it('lets an ADMIN leave when other admins remain', async () => {

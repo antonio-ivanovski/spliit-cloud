@@ -20,6 +20,7 @@ import { MemberListCard } from './member-list-card'
 import { useMembersDialogs } from './members-hooks'
 import { PendingInvitationsCard } from './pending-invitations-card'
 import { RemoveParticipantDialog } from './remove-participant-dialog'
+import { SubgroupsCard } from './subgroups-card'
 import { UnlinkedParticipantsSection } from './unlinked-participants-section'
 
 export default function GroupMembers() {
@@ -102,6 +103,12 @@ function GroupMembersBody() {
         roleLabels={roleLabels}
         locale={locale}
         timeZone={accountTimeZone}
+      />
+
+      <SubgroupsCard
+        groupId={groupId}
+        participants={group?.participants ?? []}
+        canManage={canManage}
       />
 
       <UnlinkedParticipantsSection

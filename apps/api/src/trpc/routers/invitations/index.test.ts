@@ -788,6 +788,41 @@ describe('invitationsRouter.decline', () => {
     )
   })
 
+  it('removes a declined invitee from its subgroup in the same transaction', async () => {
+    prismaMock.groupInvitation.findUnique.mockResolvedValue({
+      id: 'inv-1',
+      groupId: 'grp-1',
+      type: 'EMAIL',
+      email: 'bob@example.com',
+      status: 'PENDING',
+      role: 'MEMBER',
+      ledgerParticipantId: 'lp-bob',
+    } as never)
+    prismaMock.groupInvitation.update.mockResolvedValue({
+      id: 'inv-1',
+      status: 'DECLINED',
+    } as never)
+    prismaMock.subgroupMember.findUnique.mockResolvedValue({
+      subgroupId: 'sg-couple',
+    } as never)
+    prismaMock.subgroupMember.count.mockResolvedValue(1)
+
+    const caller = buildDeclineCaller('acct-bob', 'bob@example.com')
+    await caller.decline({ invitationId: 'inv-1' })
+
+    expect(prismaMock.subgroupMember.delete).toHaveBeenCalledWith({
+      where: {
+        subgroupId_ledgerParticipantId: {
+          subgroupId: 'sg-couple',
+          ledgerParticipantId: 'lp-bob',
+        },
+      },
+    })
+    expect(prismaMock.subgroup.delete).toHaveBeenCalledWith({
+      where: { id: 'sg-couple' },
+    })
+  })
+
   it('rejects a decline from an account whose email does not match', async () => {
     prismaMock.groupInvitation.findUnique.mockResolvedValue({
       id: 'inv-1',
@@ -1038,6 +1073,30 @@ describe('invitationsRouter.revoke — happy path', () => {
     )
     expect(prismaMock.expense.create).not.toHaveBeenCalled()
     expect(prisma$Transaction).toHaveBeenCalledTimes(1)
+  })
+
+  it('removes a revoked invitee from its subgroup in the same transaction', async () => {
+    await authAs('acct-admin')
+    seedRevokeContext({ participantId: 'lp-invitee' })
+    prismaMock.subgroupMember.findUnique.mockResolvedValue({
+      subgroupId: 'sg-invitee',
+    } as never)
+    prismaMock.subgroupMember.count.mockResolvedValue(1 as never)
+
+    const caller = makeCaller('acct-admin')
+    await caller.revoke({ invitationId: 'inv-1', settleBalances: false })
+
+    expect(prismaMock.subgroupMember.delete).toHaveBeenCalledWith({
+      where: {
+        subgroupId_ledgerParticipantId: {
+          subgroupId: 'sg-invitee',
+          ledgerParticipantId: 'lp-invitee',
+        },
+      },
+    })
+    expect(prismaMock.subgroup.delete).toHaveBeenCalledWith({
+      where: { id: 'sg-invitee' },
+    })
   })
 })
 

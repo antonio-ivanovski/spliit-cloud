@@ -201,4 +201,103 @@ describe('BalancesCard', () => {
       screen.getAllByRole('button', { name: /Mark .* as paid/ }).length,
     ).toBeGreaterThan(0)
   })
+
+  it('renders virtual subgroup units and segment bars in visual subgroup mode', async () => {
+    const { user } = render(
+      <BalancesCard
+        isLoading={false}
+        currencyDisplay="group"
+        settlementMode="subgroups"
+        balances={{
+          alice: { paid: 1000, paidFor: 0, total: 1000 },
+          bob: { paid: 0, paidFor: 500, total: -500 },
+          carol: { paid: 1000, paidFor: 0, total: 1000 },
+          dave: { paid: 0, paidFor: 1500, total: -1500 },
+        }}
+        reimbursements={[]}
+        currencyBalances={[]}
+        participants={[
+          { id: 'alice', name: 'Alice' },
+          { id: 'bob', name: 'Bob' },
+          { id: 'carol', name: 'Carol' },
+          { id: 'dave', name: 'Dave' },
+        ]}
+        groupCurrency={EUR}
+        groupId="group-1"
+        subgroups={[
+          { id: 'couple-a', name: 'Couple A', memberIds: ['alice', 'bob'] },
+          { id: 'couple-b', name: 'Couple B', memberIds: ['carol', 'dave'] },
+        ]}
+        subgroupSettlementPlan={{
+          units: [
+            {
+              kind: 'subgroup',
+              id: 'couple-a',
+              name: 'Couple A',
+              memberIds: ['alice', 'bob'],
+              total: 500,
+            },
+            {
+              kind: 'subgroup',
+              id: 'couple-b',
+              name: 'Couple B',
+              memberIds: ['carol', 'dave'],
+              total: -500,
+            },
+          ],
+          legs: [
+            {
+              from: { kind: 'subgroup', id: 'couple-b' },
+              to: { kind: 'subgroup', id: 'couple-a' },
+              fromMemberIds: ['carol', 'dave'],
+              toMemberIds: ['alice', 'bob'],
+              amount: 500,
+              payerId: 'dave',
+              receiverId: 'alice',
+            },
+          ],
+          hasInternalBalances: true,
+        }}
+      />,
+    )
+
+    expect(screen.getByTestId('visual-subgroup-settlement')).toBeInTheDocument()
+    expect(screen.getAllByText('Couple A').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Couple B').length).toBeGreaterThan(0)
+    expect(screen.getAllByTestId('participant-segment-bar').length).toBe(2)
+    expect(screen.getAllByText('Dave').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Alice').length).toBeGreaterThan(0)
+    await user.click(screen.getAllByText('Settle')[0])
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+  })
+
+  it('exposes the shared settlement picker in visual individual mode', () => {
+    render(
+      <BalancesCard
+        isLoading={false}
+        currencyDisplay="group"
+        settlementMode="individual"
+        onSettlementModeChange={vi.fn()}
+        balances={balances}
+        reimbursements={reimbursements}
+        currencyBalances={[]}
+        participants={participants}
+        groupCurrency={EUR}
+        groupId="group-1"
+        subgroups={[
+          { id: 'couple', name: 'Couple', memberIds: ['alice', 'bob'] },
+        ]}
+        individualSettlementPolicy="all-individual"
+      />,
+    )
+
+    expect(screen.getByText('Settle balances as')).toBeInTheDocument()
+    expect(screen.getByRole('radio', { name: 'Individual' })).toBeChecked()
+    expect(
+      screen.getByText(
+        'You are viewing the standard group-wide individual plan. It may include payments between subgroups.',
+      ),
+    ).toBeInTheDocument()
+    expect(screen.queryByRole('switch')).not.toBeInTheDocument()
+  })
 })

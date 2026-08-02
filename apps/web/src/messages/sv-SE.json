@@ -218,7 +218,8 @@
         "information": "Beskrivning",
         "currency": "Valuta",
         "currencyCode": "Valutakod",
-        "linkedParticipant": "Länkad deltagare"
+        "linkedParticipant": "Länkad deltagare",
+        "subgroupsEnabled": "Subgrupper"
       }
     },
     "import": {
@@ -368,6 +369,29 @@
       "simpleDescription": "Se vem som är skyldig vem och registrera regleringsbetalningar.",
       "visual": "Visuell",
       "visualDescription": "Balansuppdelning och diagram."
+    },
+    "settlementMode": {
+      "label": "Reglera balanser som",
+      "individual": "Individuellt",
+      "subgroups": "Subgrupper"
+    },
+    "subgroups": {
+      "balanceTitle": "Subgruppsbalanser",
+      "balanceDescription": "Använd varje subgrupp som en regleringsenhet för personer som delar utgifter, till exempel par eller familjer. Individuella uppdelningar av utgifter förblir oförändrade.",
+      "emptyBalances": "Varje subgrupp är kvitt med de andra.",
+      "internalBalancesNote": "Efter att subgruppsbetalningarna är reglerade kan medlemmar fortfarande ha balanser inom sin subgrupp.",
+      "viewIndividual": "Visa individuella balanser",
+      "suggestedPayments": "Föreslagna betalningar",
+      "emptyPayments": "Inget är skyldigt mellan subgrupperna.",
+      "pays": "betalar",
+      "receives": "får",
+      "to": "till",
+      "from": "från",
+      "personPays": "betalar",
+      "settle": "Reglera",
+      "individualAllHint": "Du tittar på den vanliga gruppomfattande individuella planen. Den kan innehålla betalningar mellan subgrupper.",
+      "unknownParticipant": "Väntande inbjudan",
+      "individualWithinHint": "Du tittar på en individuell plan som tar hänsyn till subgrupper. Föreslagna betalningar stannar inom varje subgrupp när subgruppens summor redan är reglerade."
     }
   },
   "BulkCategorize": {
@@ -1958,6 +1982,44 @@
         "pendingGroup": "Väntande inbjudningar",
         "pendingSuffix": "(väntande)"
       }
+    },
+    "subgroups": {
+      "title": "Subgrupper",
+      "description": "Gruppera personer som hanterar resutgifter tillsammans, till exempel par eller familjer. I Balanser kan varje subgrupp visas och regleras som en enhet; utgifter och uppdelningar förblir individuella.",
+      "enableAria": "Aktivera subgrupper",
+      "emptyTitle": "Inga subgrupper ännu",
+      "emptyDescription": "Skapa en för ett par, ett hushåll eller andra personer som reglerar som en enhet.",
+      "ungroupedTitle": "Inte i en subgrupp",
+      "ungroupedDescription": "Dessa medlemmar reglerar individuellt tills de går med i en subgrupp.",
+      "create": "Skapa subgrupp",
+      "edit": "Redigera subgrupp",
+      "delete": "Ta bort subgrupp",
+      "editAria": "Redigera {{name}}",
+      "deleteAria": "Ta bort {{name}}",
+      "disableTitle": "Inaktivera subgrupper?",
+      "disableDescription": "Om du stänger av Subgrupper raderas alla subgruppsdefinitioner i denna grupp permanent.",
+      "disableImpact": "Befintliga utgifter och balanser förblir oförändrade, men alternativet att reglera subgrupper är inte längre tillgängligt.",
+      "keep": "Behåll subgrupper",
+      "disable": "Inaktivera subgrupper",
+      "disabling": "Inaktiverar…",
+      "deleteTitle": "Ta bort subgrupp?",
+      "deleteDescription": "Ta bort ”{{name}}” från denna grupp?",
+      "deleteImpact": "Detta tar bara bort subgruppsdefinitionen. Befintliga utgifter och balanser förblir oförändrade.",
+      "cancel": "Avbryt",
+      "deleting": "Tar bort…",
+      "editorCreateTitle": "Skapa subgrupp",
+      "editorEditTitle": "Redigera subgrupp",
+      "editorDescription": "Ge den ett namn och välj de personer som reglerar tillsammans.",
+      "namePlaceholder": "Subgruppens namn",
+      "notInTitle": "Inte i en subgrupp",
+      "inTitle": "I en subgrupp",
+      "assignedTo": "i {{name}}",
+      "pickedCount": "{{count}} valda · minst 2 krävs",
+      "saving": "Sparar…",
+      "save": "Spara subgrupp",
+      "validation": "Lägg till ett namn och minst två deltagare.",
+      "loadError": "Subgrupperna kunde inte laddas.",
+      "disableAria": "Inaktivera subgrupper"
     }
   },
   "OfflineBanner": {

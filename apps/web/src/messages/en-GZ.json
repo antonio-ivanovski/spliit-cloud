@@ -263,7 +263,8 @@
         "information": "description",
         "currency": "currency",
         "currencyCode": "currency code",
-        "linkedParticipant": "linked bestie"
+        "linkedParticipant": "linked bestie",
+        "subgroupsEnabled": "subgroups"
       }
     },
     "import": {
@@ -413,6 +414,29 @@
       "simpleDescription": "see who owes whom and record settlement payments.",
       "visual": "visual mode",
       "visualDescription": "balance breakdown and chart tea."
+    },
+    "settlementMode": {
+      "label": "settle up as",
+      "individual": "solo",
+      "subgroups": "subgroups"
+    },
+    "subgroups": {
+      "balanceTitle": "subgroup balances",
+      "balanceDescription": "use each subgroup as one settle-up unit for people who share spending, like couples or families. individual expense splits stay unchanged.",
+      "emptyBalances": "every subgroup is settled up with the others. huge W",
+      "internalBalancesNote": "after the subgroup payments are settled, members may still have balances inside their own subgroup.",
+      "viewIndividual": "see individual balances",
+      "suggestedPayments": "suggested payments",
+      "emptyPayments": "no one owes anything between subgroups.",
+      "pays": "pays, fr",
+      "receives": "receives, slay",
+      "to": "straight to",
+      "from": "straight from",
+      "personPays": "is paying",
+      "settle": "settle up",
+      "individualAllHint": "this is the standard group-wide individual plan. it may include payments between subgroups.",
+      "unknownParticipant": "pending invite",
+      "individualWithinHint": "this is a subgroup-aware individual plan. suggested payments stay within each subgroup once the subgroup totals are already settled up."
     }
   },
   "Budgets": {
@@ -2188,6 +2212,44 @@
         "pendingGroup": "pending invites",
         "pendingSuffix": "(pending, bestie)"
       }
+    },
+    "subgroups": {
+      "title": "subgroups",
+      "description": "group people who handle trip spending together, like couples or families. in Balances, each subgroup can be viewed and settled as one unit; expenses and splits stay individual.",
+      "enableAria": "turn on subgroups",
+      "emptyTitle": "no subgroups yet",
+      "emptyDescription": "make one for a couple, household, or anyone who settles as a unit.",
+      "ungroupedTitle": "not in a subgroup",
+      "ungroupedDescription": "these members settle individually until they join a subgroup.",
+      "create": "make a subgroup",
+      "edit": "edit subgroup",
+      "delete": "delete subgroup",
+      "editAria": "edit {{name}}",
+      "deleteAria": "delete {{name}}",
+      "disableTitle": "turn off subgroups?",
+      "disableDescription": "turning off subgroups permanently deletes all subgroup definitions from this group.",
+      "disableImpact": "existing expenses and balances stay unchanged, but the subgroup settle-up option is gone for good.",
+      "keep": "keep subgroups",
+      "disable": "turn off subgroups",
+      "disabling": "turning off…",
+      "deleteTitle": "delete subgroup?",
+      "deleteDescription": "delete “{{name}}” from this group?",
+      "deleteImpact": "this only removes the subgroup definition. existing expenses and balances stay unchanged.",
+      "cancel": "cancel, never mind",
+      "deleting": "deleting…",
+      "editorCreateTitle": "make a subgroup",
+      "editorEditTitle": "edit subgroup",
+      "editorDescription": "give it a name and pick the people who settle together.",
+      "namePlaceholder": "subgroup name",
+      "notInTitle": "not in a subgroup",
+      "inTitle": "in a subgroup",
+      "assignedTo": "already in {{name}}",
+      "pickedCount": "{{count}} picked · need at least 2",
+      "saving": "saving…",
+      "save": "save subgroup",
+      "validation": "add a name and at least two people.",
+      "loadError": "couldn't load subgroups. rip.",
+      "disableAria": "turn off subgroups"
     }
   },
   "OAuth": {

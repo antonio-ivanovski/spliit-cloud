@@ -6,11 +6,11 @@ import {
   prisma,
 } from '@spliit/db'
 
+import { resolveParticipantDisplayName } from '../invitations/display'
 import {
   RevokeInvitationPreconditionError,
   revokeInvitation,
-} from '../invitations'
-import { resolveParticipantDisplayName } from '../invitations/display'
+} from '../invitations/email-invitations'
 import {
   buildGroupActivityData,
   logActivity,
@@ -23,6 +23,7 @@ import {
 } from './balances'
 import { getApiBoss } from './boss'
 import { RemoveMemberPreconditionError, removeMember } from './members'
+import { removeParticipantFromSubgroup } from './subgroups'
 
 export type SoftRemoveParticipantKind = 'member' | 'invitation' | 'unlinked'
 
@@ -293,6 +294,7 @@ export async function softRemoveParticipant(opts: {
       where: { id: participant.id },
       data: { removedAt: new Date() },
     })
+    await removeParticipantFromSubgroup(participant.id, tx)
 
     const activity = await logActivity(groupId, activityArgs, tx)
     await planNotificationForActivity(tx, activity, {}, { boss })

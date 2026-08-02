@@ -969,6 +969,29 @@
       "owes": "deu {amount}",
       "suggestedPayments": "Pagaments suggerits",
       "empty": "Tots els comptes estan saldats."
+    },
+    "settlementMode": {
+      "label": "Liquidar els saldos com a",
+      "individual": "Per separat",
+      "subgroups": "Subgrups"
+    },
+    "subgroups": {
+      "balanceTitle": "Saldos dels subgrups",
+      "balanceDescription": "Fes servir cada subgrup com una unitat de liquidació per a les persones que comparteixen despeses, com ara parelles o famílies. Els repartiments individuals de les despeses no canvien.",
+      "emptyBalances": "Tots els subgrups estan liquidats amb els altres.",
+      "internalBalancesNote": "Després de liquidar els pagaments dels subgrups, els membres poden tenir saldos dins del seu subgrup.",
+      "viewIndividual": "Veure els saldos individuals",
+      "suggestedPayments": "Pagaments suggerits",
+      "emptyPayments": "No es deu res entre subgrups.",
+      "pays": "paga",
+      "receives": "rep",
+      "to": "a",
+      "from": "de",
+      "personPays": "paga",
+      "settle": "Liquidar",
+      "individualAllHint": "Estàs veient el pla individual estàndard de tot el grup. Pot incloure pagaments entre subgrups.",
+      "unknownParticipant": "Invitació pendent",
+      "individualWithinHint": "Estàs veient un pla individual que té en compte els subgrups. Els pagaments suggerits es mantenen dins de cada subgrup quan els totals dels subgrups ja estan liquidats."
     }
   },
   "Stats": {
@@ -1591,6 +1614,44 @@
       "remove": "Eliminar",
       "changeRole": "Canvia el rol",
       "revoke": "Revoca la invitació"
+    },
+    "subgroups": {
+      "title": "Subgrups",
+      "description": "Agrupa les persones que gestionen les despeses del viatge conjuntament, com ara parelles o famílies. A Balanç, cada subgrup es pot veure i liquidar com una unitat; les despeses i els repartiments continuen sent individuals.",
+      "enableAria": "Activa els subgrups",
+      "emptyTitle": "Encara no hi ha subgrups",
+      "emptyDescription": "Crea'n un per a una parella, una llar o qualsevol grup de persones que liquidin com una unitat.",
+      "ungroupedTitle": "Sense subgrup",
+      "ungroupedDescription": "Aquests membres liquidaran individualment fins que s'uneixin a un subgrup.",
+      "create": "Crear subgrup",
+      "edit": "Edita el subgrup",
+      "delete": "Suprimeix el subgrup",
+      "editAria": "Edita {{name}}",
+      "deleteAria": "Suprimeix {{name}}",
+      "disableTitle": "Desactivar els subgrups?",
+      "disableDescription": "Si desactives els subgrups, se n'eliminaran definitivament totes les definicions d'aquest grup.",
+      "disableImpact": "Les despeses i els saldos existents no canviaran, però l'opció de liquidació per subgrups ja no estarà disponible.",
+      "keep": "Conserva els subgrups",
+      "disable": "Desactiva els subgrups",
+      "disabling": "Desactivant…",
+      "deleteTitle": "Suprimir el subgrup?",
+      "deleteDescription": "Suprimir «{{name}}» d'aquest grup?",
+      "deleteImpact": "Això només elimina la definició del subgrup. Les despeses i els saldos existents no canviaran.",
+      "cancel": "Cancel·la",
+      "deleting": "Suprimint…",
+      "editorCreateTitle": "Crear subgrup",
+      "editorEditTitle": "Edita el subgrup",
+      "editorDescription": "Posa-li un nom i tria les persones que liquidaran conjuntament.",
+      "namePlaceholder": "Nom del subgrup",
+      "notInTitle": "Sense subgrup",
+      "inTitle": "En un subgrup",
+      "assignedTo": "al subgrup {{name}}",
+      "pickedCount": "{{count}} seleccionats · calen almenys 2",
+      "saving": "Desant…",
+      "save": "Desa el subgrup",
+      "validation": "Afegeix un nom i almenys dos participants.",
+      "loadError": "No s'han pogut carregar els subgrups.",
+      "disableAria": "Desactiva els subgrups"
     }
   },
   "AccountSettings": {
@@ -1811,7 +1872,8 @@
         "information": "Descripció",
         "currency": "Moneda",
         "currencyCode": "Codi de moneda",
-        "linkedParticipant": "Participant vinculat"
+        "linkedParticipant": "Participant vinculat",
+        "subgroupsEnabled": "Subgrups"
       }
     },
     "member": {

@@ -7,11 +7,19 @@ import {
   getPublicBalances,
   getSuggestedReimbursements,
 } from '@spliit/domain'
+import {
+  getIndividualSettlementPlan,
+  getSubgroupSettlementPlan,
+} from '@spliit/domain/subgroup-settlements'
 
-import { getGroupBalanceExpenses } from '../../../../lib/api'
+import { getGroupBalanceExpenses } from '../../../../lib/api/expenses/queries'
 import { toBalanceExpense } from '../../../../lib/api/selects/balance-expense'
 import { participantDisplayNameSelect } from '../../../../lib/api/selects/participant-display-name'
-import { resolveParticipantDisplayName } from '../../../../lib/invitations'
+import {
+  mapSubgroup,
+  subgroupWithMembersSelect,
+} from '../../../../lib/api/subgroups'
+import { resolveParticipantDisplayName } from '../../../../lib/invitations/display'
 import {
   hashLinkInviteToken,
   linkInviteTokenInput,
@@ -31,7 +39,7 @@ export const listGroupBalancesProcedure = protectedProcedure
   )
   .output(listBalancesOutputSchema)
   .query(async ({ input: { groupId, linkInviteToken }, ctx }) => {
-    const { ledger } = await loadGroupViewer({
+    const { group, ledger } = await loadGroupViewer({
       groupId,
       accountId: ctx.auth.user.id,
       accountEmail: ctx.auth.user.email,
@@ -53,11 +61,48 @@ export const listGroupBalancesProcedure = protectedProcedure
         ? []
         : await prisma.ledgerParticipant.findMany({
             where: { id: { in: participantIds } },
-            select: participantDisplayNameSelect(),
+            // A participant can have older accepted/revoked invitations. For
+            // the live balances screen, prefer the current pending invite so
+            // its temporary name remains visible before acceptance.
+            select: participantDisplayNameSelect({
+              pendingInvitationsOnly: true,
+            }),
           })
     const balances = getBalances(expenses)
-    const reimbursements = getSuggestedReimbursements(balances)
-    const publicBalances = getPublicBalances(reimbursements)
+    const globalReimbursements = getSuggestedReimbursements(balances)
+    const publicBalances = getPublicBalances(globalReimbursements)
+    const subgroupRows = group.subgroupsEnabled
+      ? ((await prisma.subgroup.findMany({
+          where: { groupId },
+          orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+          select: subgroupWithMembersSelect,
+        })) ?? [])
+      : []
+    const subgroupDefinitions = subgroupRows.map(mapSubgroup)
+    const settlementParticipantIds = [
+      ...new Set([
+        ...participantIds,
+        ...subgroupDefinitions.flatMap((subgroup) => subgroup.participantIds),
+      ]),
+    ]
+    const subgroupSettlement = getSubgroupSettlementPlan(
+      balances,
+      settlementParticipantIds,
+      subgroupDefinitions.map((subgroup) => ({
+        id: subgroup.id,
+        name: subgroup.name,
+        memberIds: subgroup.participantIds,
+      })),
+    )
+    const individualSettlement = getIndividualSettlementPlan(
+      balances,
+      subgroupDefinitions.map((subgroup) => ({
+        id: subgroup.id,
+        name: subgroup.name,
+        memberIds: subgroup.participantIds,
+      })),
+      settlementParticipantIds,
+    )
     const currencyBalances = getCurrencyBalanceSummaries(
       expenses,
       ledger.currencyCode,
@@ -74,8 +119,15 @@ export const listGroupBalancesProcedure = protectedProcedure
 
     return {
       balances: publicBalances,
-      reimbursements,
+      // Keep the legacy root field aligned with the individual settlement
+      // projection. Consumers that need subgroup-unit legs should use the
+      // structured `settlement` payload below.
+      reimbursements: individualSettlement.reimbursements,
       currencyBalances,
       participants: publicParticipants,
+      settlement: {
+        subgroup: subgroupSettlement,
+        individual: individualSettlement,
+      },
     }
   })

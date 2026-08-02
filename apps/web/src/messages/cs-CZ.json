@@ -976,6 +976,29 @@
       "owes": "dluží {amount}",
       "suggestedPayments": "Navrhované platby",
       "empty": "Všichni jsou vyrovnaní."
+    },
+    "settlementMode": {
+      "label": "Vyrovnat zůstatky jako",
+      "individual": "Jednotlivě",
+      "subgroups": "Podskupiny"
+    },
+    "subgroups": {
+      "balanceTitle": "Zůstatky podskupin",
+      "balanceDescription": "Použijte každou podskupinu jako jednu jednotku vyrovnání pro lidi, kteří sdílejí výdaje, jako jsou páry nebo rodiny. Jednotlivé rozúčtování výdajů zůstává beze změny.",
+      "emptyBalances": "Každá podskupina je vyrovnaná s ostatními.",
+      "internalBalancesNote": "Po vyrovnání plateb mezi podskupinami mohou mít členové stále zůstatky uvnitř své podskupiny.",
+      "viewIndividual": "Zobrazit individuální zůstatky",
+      "suggestedPayments": "Navrhované platby",
+      "emptyPayments": "Mezi podskupinami není nic dlužno.",
+      "pays": "platí",
+      "receives": "přijímá",
+      "to": "pro",
+      "from": "od",
+      "personPays": "platí",
+      "settle": "Vyrovnat",
+      "individualAllHint": "Zobrazujete standardní individuální plán pro celou skupinu. Může obsahovat platby mezi podskupinami.",
+      "unknownParticipant": "Čekající pozvánka",
+      "individualWithinHint": "Zobrazujete individuální plán zohledňující podskupiny. Navrhované platby zůstávají v rámci každé podskupiny, pokud jsou součty podskupin již vyrovnané."
     }
   },
   "Stats": {
@@ -1600,6 +1623,44 @@
       "remove": "Odebrat",
       "changeRole": "Změnit roli",
       "revoke": "Odvolat pozvánku"
+    },
+    "subgroups": {
+      "title": "Podskupiny",
+      "description": "Sdružte lidi, kteří společně spravují výdaje na cestu, jako jsou páry nebo rodiny. V části Zůstatky lze každou podskupinu zobrazit a vyrovnat jako jeden celek; výdaje a rozúčtování zůstávají individuální.",
+      "enableAria": "Povolit podskupiny",
+      "emptyTitle": "Zatím žádné podskupiny",
+      "emptyDescription": "Vytvořte ji pro pár, domácnost nebo jakékoli lidi, kteří se vyrovnávají jako jeden celek.",
+      "ungroupedTitle": "Není v podskupině",
+      "ungroupedDescription": "Tito členové se vyrovnávají jednotlivě, dokud se nepřipojí k podskupině.",
+      "create": "Vytvořit podskupinu",
+      "edit": "Upravit podskupinu",
+      "delete": "Smazat podskupinu",
+      "editAria": "Upravit {{name}}",
+      "deleteAria": "Smazat {{name}}",
+      "disableTitle": "Zakázat podskupiny?",
+      "disableDescription": "Vypnutí podskupin trvale odstraní všechny definice podskupin z této skupiny.",
+      "disableImpact": "Stávající výdaje a zůstatky zůstanou beze změny, ale možnost vyrovnání podskupin již nebude k dispozici.",
+      "keep": "Ponechat podskupiny",
+      "disable": "Zakázat podskupiny",
+      "disabling": "Vypínání…",
+      "deleteTitle": "Smazat podskupinu?",
+      "deleteDescription": "Smazat „{{name}}“ z této skupiny?",
+      "deleteImpact": "Tím se odstraní pouze definice podskupiny. Stávající výdaje a zůstatky zůstanou beze změny.",
+      "cancel": "Zrušit",
+      "deleting": "Mazání…",
+      "editorCreateTitle": "Vytvořit podskupinu",
+      "editorEditTitle": "Upravit podskupinu",
+      "editorDescription": "Zadejte název a vyberte lidi, kteří se vyrovnávají společně.",
+      "namePlaceholder": "Název podskupiny",
+      "notInTitle": "Není v podskupině",
+      "inTitle": "V podskupině",
+      "assignedTo": "v {{name}}",
+      "pickedCount": "Vybráno: {{count}} · nutní alespoň 2",
+      "saving": "Ukládání…",
+      "save": "Uložit podskupinu",
+      "validation": "Přidejte název a alespoň dva účastníky.",
+      "loadError": "Podskupiny se nepodařilo načíst.",
+      "disableAria": "Zakázat podskupiny"
     }
   },
   "AccountSettings": {
@@ -1820,7 +1881,8 @@
         "information": "Popis",
         "currency": "Měna",
         "currencyCode": "Kód měny",
-        "linkedParticipant": "Propojený účastník"
+        "linkedParticipant": "Propojený účastník",
+        "subgroupsEnabled": "Podskupiny"
       }
     },
     "member": {

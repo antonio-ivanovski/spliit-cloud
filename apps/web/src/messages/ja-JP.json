@@ -955,6 +955,29 @@
       "owes": "{amount}を支払う",
       "suggestedPayments": "推奨される支払い",
       "empty": "全員の精算が完了しています。"
+    },
+    "settlementMode": {
+      "label": "残高の精算方法",
+      "individual": "個別",
+      "subgroups": "サブグループ"
+    },
+    "subgroups": {
+      "balanceTitle": "サブグループの残高",
+      "balanceDescription": "支出を共有するカップルや家族などのグループごとに、各サブグループを1つの精算単位として扱います。個々の支出の分割は変わりません。",
+      "emptyBalances": "すべてのサブグループの精算が完了しています。",
+      "internalBalancesNote": "サブグループ間の支払いを精算した後も、メンバーはサブグループ内に残高が残る場合があります。",
+      "viewIndividual": "個人別の残高を見る",
+      "suggestedPayments": "推奨される支払い",
+      "emptyPayments": "サブグループ間で支払う金額はありません。",
+      "pays": "が支払う",
+      "receives": "が受け取る",
+      "to": "→",
+      "from": "←",
+      "personPays": "→",
+      "settle": "精算",
+      "individualAllHint": "グループ全体の標準的な個人別プランを表示しています。サブグループ間の支払いが含まれる場合があります。",
+      "unknownParticipant": "招待待ち",
+      "individualWithinHint": "サブグループを考慮した個人別プランを表示しています。サブグループ間の合計が精算済みの場合、推奨される支払いは各サブグループ内に収まります。"
     }
   },
   "Stats": {
@@ -1575,6 +1598,44 @@
       "remove": "削除",
       "changeRole": "役割を変更",
       "revoke": "招待を取り消す"
+    },
+    "subgroups": {
+      "title": "サブグループ",
+      "description": "カップルや家族など、旅行の支出を一緒に管理する人をまとめます。残高では、各サブグループを1つの単位として表示・精算できます。支出と割り勘は個人単位のままです。",
+      "enableAria": "サブグループを有効化",
+      "emptyTitle": "サブグループはまだありません",
+      "emptyDescription": "カップルや家族など、まとめて精算したい人用に作成できます。",
+      "ungroupedTitle": "サブグループ外",
+      "ungroupedDescription": "このメンバーは、サブグループに参加するまで個別に精算します。",
+      "create": "サブグループを作成",
+      "edit": "サブグループを編集",
+      "delete": "サブグループを削除",
+      "editAria": "{{name}}を編集",
+      "deleteAria": "{{name}}を削除",
+      "disableTitle": "サブグループを無効化しますか？",
+      "disableDescription": "サブグループをオフにすると、このグループのすべてのサブグループ定義が完全に削除されます。",
+      "disableImpact": "既存の支出と残高は変更されませんが、サブグループでの精算オプションは利用できなくなります。",
+      "keep": "サブグループを維持",
+      "disable": "サブグループを無効化",
+      "disabling": "無効化中…",
+      "deleteTitle": "サブグループを削除しますか？",
+      "deleteDescription": "グループから「{{name}}」を削除しますか？",
+      "deleteImpact": "削除されるのはサブグループの定義のみです。既存の支出と残高は変更されません。",
+      "cancel": "キャンセル",
+      "deleting": "削除中…",
+      "editorCreateTitle": "サブグループを作成",
+      "editorEditTitle": "サブグループを編集",
+      "editorDescription": "名前を付けて、一緒に精算する人を選択します。",
+      "namePlaceholder": "サブグループ名",
+      "notInTitle": "サブグループ外",
+      "inTitle": "サブグループ内",
+      "assignedTo": "{{name}}に所属",
+      "pickedCount": "{{count}}人を選択中 · 最低2人必要",
+      "saving": "保存中…",
+      "save": "サブグループを保存",
+      "validation": "名前を入力し、参加者を2人以上選択してください。",
+      "loadError": "サブグループを読み込めませんでした。",
+      "disableAria": "サブグループを無効化"
     }
   },
   "AccountSettings": {
@@ -1795,7 +1856,8 @@
         "information": "説明",
         "currency": "通貨",
         "currencyCode": "通貨コード",
-        "linkedParticipant": "リンクされた参加者"
+        "linkedParticipant": "リンクされた参加者",
+        "subgroupsEnabled": "サブグループ"
       }
     },
     "member": {

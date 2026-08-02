@@ -1,30 +1,33 @@
+import { Info } from 'lucide-react'
 import { Trans, useTranslation } from 'react-i18next'
 
-import { ParticipantAvatar } from '@/components/participant-avatar'
 import { ParticipantSegmentBar } from '@/components/participant-segment-bar'
 import { participantSegmentColor } from '@/components/participant-segment-utils'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { useLocale } from '@/i18n/react'
 import type { Balances, Reimbursement } from '@/lib/balances'
 import type { Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
+import type {
+  IndividualSettlementPolicy,
+  SubgroupDefinition,
+  SubgroupSettlementPlan,
+} from '@spliit/domain/subgroup-settlements'
 
 import { BalancesLoading } from './balances-loading'
 import type { CurrencyBalance } from './currency-balances'
 import { CurrencySection } from './currency-section'
 import { RemovedParticipantBadge } from './removed-participant-badge'
+import { SettlementCardHeader } from './settlement-card-header'
+import type { SettlementMode } from './settlement-controls'
 import {
   SettlementGroupActions,
   SettlementGroupButton,
 } from './settlement-group-actions'
 import { settlementLegKey, type SettlementGroup } from './settlement-groups'
+import { SettlementAvatar } from './settlement-ui'
+import { VisualSubgroupSettlement } from './visual-subgroup-settlement'
 
 type Participant = {
   id: string
@@ -32,6 +35,8 @@ type Participant = {
   account?: { id: string; name?: string | null; image?: string | null } | null
   removed?: boolean
 }
+
+const EMPTY_SUBGROUPS: SubgroupDefinition[] = []
 
 export function BalancesCard({
   isLoading,
@@ -43,6 +48,11 @@ export function BalancesCard({
   participants,
   groupCurrency,
   groupId,
+  settlementMode = 'individual',
+  onSettlementModeChange,
+  subgroups = EMPTY_SUBGROUPS,
+  subgroupSettlementPlan,
+  individualSettlementPolicy,
 }: {
   isLoading: boolean
   participantCount?: number
@@ -53,16 +63,27 @@ export function BalancesCard({
   participants: Participant[]
   groupCurrency: Currency | undefined
   groupId: string
+  settlementMode?: SettlementMode
+  onSettlementModeChange?: (mode: SettlementMode) => void
+  subgroups?: SubgroupDefinition[]
+  subgroupSettlementPlan?: SubgroupSettlementPlan
+  individualSettlementPolicy?: IndividualSettlementPolicy
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Balances' })
 
   return (
     <Card className="mobile-surface mb-4">
-      <CardHeader>
-        <CardTitle>{t('title')}</CardTitle>
-        <CardDescription>{t('description')}</CardDescription>
-      </CardHeader>
-      <CardContent>
+      <SettlementCardHeader
+        title={t('title')}
+        description={t('description')}
+        settlementMode={
+          currencyDisplay === 'group' && onSettlementModeChange
+            ? settlementMode
+            : undefined
+        }
+        onSettlementModeChange={onSettlementModeChange}
+      />
+      <CardContent className="px-0 pb-5 sm:px-6 sm:pb-6">
         {isLoading ? (
           <BalancesLoading participantCount={participantCount} />
         ) : currencyDisplay === 'original' ? (
@@ -93,6 +114,16 @@ export function BalancesCard({
               ))
             )}
           </div>
+        ) : settlementMode === 'subgroups' &&
+          groupCurrency &&
+          subgroups.length > 0 ? (
+          <VisualSubgroupSettlement
+            groupId={groupId}
+            currency={groupCurrency}
+            participants={participants}
+            settlementPlan={subgroupSettlementPlan}
+            onSwitchToIndividual={() => onSettlementModeChange?.('individual')}
+          />
         ) : (
           <SettlementSection
             balances={balances ?? {}}
@@ -100,6 +131,11 @@ export function BalancesCard({
             participants={participants}
             currency={groupCurrency!}
             groupId={groupId}
+            individualSettlementPolicy={
+              settlementMode === 'individual'
+                ? individualSettlementPolicy
+                : undefined
+            }
           />
         )}
       </CardContent>
@@ -114,6 +150,7 @@ function SettlementSection({
   currency,
   groupId,
   includeOriginalCurrency,
+  individualSettlementPolicy,
 }: {
   balances: Balances
   reimbursements: Reimbursement[]
@@ -121,6 +158,7 @@ function SettlementSection({
   currency: Currency
   groupId: string
   includeOriginalCurrency?: boolean
+  individualSettlementPolicy?: IndividualSettlementPolicy
 }) {
   const locale = useLocale()
   const { t } = useTranslation(undefined, { keyPrefix: 'Balances' })
@@ -128,7 +166,11 @@ function SettlementSection({
   const participantIndex = new Map(participants.map((p, i) => [p.id, i]))
 
   const getParticipant = (id: string): Participant =>
-    participantById.get(id) ?? { id, name: id, removed: false }
+    participantById.get(id) ?? {
+      id,
+      name: t('subgroups.unknownParticipant'),
+      removed: false,
+    }
 
   const receiving = participants.filter(
     (participant) => (balances[participant.id]?.total ?? 0) > 0,
@@ -142,6 +184,7 @@ function SettlementSection({
 
   return (
     <div className="space-y-8" data-testid="settlement-balances">
+      <SettlementPolicyNote policy={individualSettlementPolicy} />
       {receiving.length > 0 && (
         <SettlementDirection
           title={t('direction.toReceive')}
@@ -181,7 +224,11 @@ function SettlementSection({
                 key={participant.id}
                 className="flex items-center gap-2 rounded-full border border-border/70 bg-muted/30 py-1 pr-3 pl-1 text-xs text-muted-foreground"
               >
-                <ParticipantAvatar participant={participant} size="xs" />
+                <SettlementAvatar
+                  members={[participant]}
+                  label={participant.name}
+                  size="xs"
+                />
                 <span className="max-w-32 truncate">{participant.name}</span>
                 {participant.removed ? <RemovedParticipantBadge /> : null}
               </div>
@@ -196,6 +243,31 @@ function SettlementSection({
             {t('Reimbursements.noImbursements')}
           </p>
         )}
+    </div>
+  )
+}
+
+function SettlementPolicyNote({
+  policy,
+}: {
+  policy?: IndividualSettlementPolicy
+}) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'Balances' })
+  const message =
+    policy === 'all-individual'
+      ? t('subgroups.individualAllHint')
+      : policy === 'within-subgroups'
+        ? t('subgroups.individualWithinHint')
+        : null
+  if (!message) return null
+
+  return (
+    <div className="flex items-start gap-2 rounded-lg border border-border/70 bg-muted/20 px-3 py-2 text-xs text-muted-foreground">
+      <Info
+        className="mt-0.5 size-4 shrink-0 text-primary"
+        aria-hidden="true"
+      />
+      <p>{message}</p>
     </div>
   )
 }
@@ -278,8 +350,9 @@ function SettlementDirection({
                   <article className="space-y-5 border-b border-border/60 pb-5 last:border-b-0 last:pb-0">
                     <div className="flex items-center justify-between gap-3">
                       <div className="flex min-w-0 items-center gap-2">
-                        <ParticipantAvatar
-                          participant={participant}
+                        <SettlementAvatar
+                          members={[participant]}
+                          label={participant.name}
                           size="sm"
                         />
                         <span className="min-w-0 truncate text-sm font-normal text-muted-foreground">

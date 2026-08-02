@@ -1,23 +1,24 @@
+import { Info } from 'lucide-react'
+import type { ReactNode } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
-import { ParticipantAvatar } from '@/components/participant-avatar'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { useLocale } from '@/i18n/react'
 import type { Balances, Reimbursement } from '@/lib/balances'
 import type { Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
+import type {
+  IndividualSettlementPolicy,
+  SubgroupDefinition,
+  SubgroupSettlementPlan,
+} from '@spliit/domain/subgroup-settlements'
 
 import { BalancesLoading, ReimbursementsLoading } from './balances-loading'
 import type { CurrencyBalance } from './currency-balances'
 import { CurrencySection } from './currency-section'
-import { RemovedParticipantBadge } from './removed-participant-badge'
+import { SettlementCardHeader } from './settlement-card-header'
+import type { SettlementMode } from './settlement-controls'
 import {
   SettlementGroupActions,
   SettlementGroupButton,
@@ -28,6 +29,13 @@ import {
   sumSettlementLegs,
   type SettlementDirection,
 } from './settlement-groups'
+import {
+  SettlementBalanceList,
+  SettlementGroupCard,
+  SettlementLegRow,
+  type SettlementIdentity,
+} from './settlement-ui'
+import { SubgroupSettlementCard } from './subgroup-settlement-card'
 
 type Participant = {
   id: string
@@ -35,6 +43,8 @@ type Participant = {
   account?: { id: string; name?: string | null; image?: string | null } | null
   removed?: boolean
 }
+
+const EMPTY_SUBGROUPS: SubgroupDefinition[] = []
 
 export function SimpleBalancesCard({
   isLoading,
@@ -46,6 +56,11 @@ export function SimpleBalancesCard({
   participants,
   groupCurrency,
   groupId,
+  settlementMode = 'individual',
+  onSettlementModeChange,
+  subgroups = EMPTY_SUBGROUPS,
+  subgroupSettlementPlan,
+  individualSettlementPolicy,
 }: {
   isLoading: boolean
   participantCount?: number
@@ -56,16 +71,27 @@ export function SimpleBalancesCard({
   participants: Participant[]
   groupCurrency: Currency | undefined
   groupId: string
+  individualSettlementPolicy?: IndividualSettlementPolicy
+  settlementMode?: SettlementMode
+  onSettlementModeChange?: (mode: SettlementMode) => void
+  subgroups?: SubgroupDefinition[]
+  subgroupSettlementPlan?: SubgroupSettlementPlan
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Balances' })
 
   return (
     <Card className="mobile-surface mb-4">
-      <CardHeader>
-        <CardTitle>{t('simple.title')}</CardTitle>
-        <CardDescription>{t('simple.description')}</CardDescription>
-      </CardHeader>
-      <CardContent>
+      <SettlementCardHeader
+        title={t('simple.title')}
+        description={t('simple.description')}
+        settlementMode={
+          currencyDisplay === 'group' && onSettlementModeChange
+            ? settlementMode
+            : undefined
+        }
+        onSettlementModeChange={onSettlementModeChange}
+      />
+      <CardContent className="px-0 pb-5 sm:px-6 sm:pb-6">
         {isLoading ? (
           <div className="space-y-6">
             <BalancesLoading participantCount={participantCount} />
@@ -97,6 +123,16 @@ export function SimpleBalancesCard({
               )
             )}
           </div>
+        ) : settlementMode === 'subgroups' &&
+          groupCurrency &&
+          subgroups.length > 0 ? (
+          <SubgroupSettlementCard
+            groupId={groupId}
+            currency={groupCurrency}
+            participants={participants}
+            settlementPlan={subgroupSettlementPlan}
+            onSwitchToIndividual={() => onSettlementModeChange?.('individual')}
+          />
         ) : (
           <SimpleCurrencyContent
             balances={balances ?? {}}
@@ -104,6 +140,11 @@ export function SimpleBalancesCard({
             participants={participants}
             currency={groupCurrency!}
             groupId={groupId}
+            individualSettlementPolicy={
+              settlementMode === 'individual'
+                ? individualSettlementPolicy
+                : undefined
+            }
           />
         )}
       </CardContent>
@@ -125,6 +166,7 @@ function SimpleCurrencyContent({
   currency,
   currencyCode,
   groupId,
+  individualSettlementPolicy,
 }: {
   balances: Balances
   reimbursements: Reimbursement[]
@@ -132,6 +174,7 @@ function SimpleCurrencyContent({
   currency: Currency
   currencyCode?: string
   groupId: string
+  individualSettlementPolicy?: IndividualSettlementPolicy
 }) {
   const locale = useLocale()
   const { t } = useTranslation(undefined, { keyPrefix: 'Balances' })
@@ -150,39 +193,39 @@ function SimpleCurrencyContent({
           <h3 className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
             {t('simple.netBalances')}
           </h3>
-          <div className="divide-y divide-border/60 rounded-lg border border-border/70">
-            {activeParticipants.map((participant) => {
-              const total = balances[participant.id]?.total ?? 0
-              const amount = formatCurrency(currency, Math.abs(total), locale)
-              return (
-                <div
-                  key={participant.id}
-                  className="flex min-h-12 items-center justify-between gap-3 px-3 py-2.5"
-                >
-                  <div className="flex min-w-0 items-center gap-2">
-                    <ParticipantAvatar participant={participant} size="sm" />
-                    <span className="min-w-0 truncate text-sm font-medium">
-                      {participant.name}
-                    </span>
-                    {participant.removed ? <RemovedParticipantBadge /> : null}
-                  </div>
-                  <span
-                    className={`shrink-0 text-sm tabular-nums ${total > 0 ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-700 dark:text-rose-400'}`}
-                  >
-                    {total > 0
-                      ? t('simple.isOwed', { amount })
-                      : t('simple.owes', { amount })}
-                  </span>
-                </div>
-              )
-            })}
-          </div>
+          <SettlementBalanceList
+            identities={activeParticipants.map(
+              (participant): SettlementIdentity => ({
+                id: participant.id,
+                name: participant.name,
+                members: [participant],
+                total: balances[participant.id]?.total ?? 0,
+                removed: participant.removed,
+              }),
+            )}
+            currency={currency}
+            locale={locale}
+            amountLabel={({ amount, isReceiving }) =>
+              isReceiving
+                ? t('simple.isOwed', { amount })
+                : t('simple.owes', { amount })
+            }
+          />
         </section>
       )}
       <section aria-label={t('simple.suggestedPayments')} className="space-y-3">
         <h3 className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
           {t('simple.suggestedPayments')}
         </h3>
+        {individualSettlementPolicy === 'all-individual' ? (
+          <SettlementPolicyNote>
+            {t('subgroups.individualAllHint')}
+          </SettlementPolicyNote>
+        ) : individualSettlementPolicy === 'within-subgroups' ? (
+          <SettlementPolicyNote>
+            {t('subgroups.individualWithinHint')}
+          </SettlementPolicyNote>
+        ) : null}
         <SimpleSettlementDirections
           balances={balances}
           reimbursements={reimbursements}
@@ -192,6 +235,18 @@ function SimpleCurrencyContent({
           groupId={groupId}
         />
       </section>
+    </div>
+  )
+}
+
+function SettlementPolicyNote({ children }: { children: ReactNode }) {
+  return (
+    <div className="flex items-start gap-2 rounded-lg border border-border/70 bg-muted/20 px-3 py-2 text-xs text-muted-foreground">
+      <Info
+        className="mt-0.5 size-4 shrink-0 text-primary"
+        aria-hidden="true"
+      />
+      <p>{children}</p>
     </div>
   )
 }
@@ -268,77 +323,71 @@ function SimpleSettlementDirections({
                     participants={participants}
                   >
                     {(openFor) => (
-                      <div className="rounded-lg border border-border/70">
-                        <div className="flex min-h-12 items-center justify-between gap-2 px-3 py-2">
-                          <div className="flex min-w-0 items-center gap-2">
-                            <ParticipantAvatar
-                              participant={participant}
-                              size="sm"
-                            />
-                            <span className="min-w-0 truncate text-sm font-normal text-muted-foreground">
-                              <Trans
-                                i18nKey={`Balances.direction.${direction === 'receive' ? 'participantReceives' : 'participantPays'}`}
-                                components={{
-                                  strong: (
-                                    <strong className="font-semibold text-foreground" />
-                                  ),
-                                }}
-                                values={{ name: participant.name }}
-                              />
-                            </span>
-                            {participant.removed ? (
-                              <RemovedParticipantBadge />
-                            ) : null}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <span className="shrink-0 text-sm font-medium tabular-nums">
-                              {formatCurrency(currency, total, locale)}
-                            </span>
-                            <SettlementGroupButton
-                              group={group}
+                      <SettlementGroupCard
+                        identity={{
+                          id: participant.id,
+                          name: participant.name,
+                          members: [participant],
+                          total,
+                          removed: participant.removed,
+                        }}
+                        title={
+                          <Trans
+                            i18nKey={`Balances.direction.${direction === 'receive' ? 'participantReceives' : 'participantPays'}`}
+                            components={{
+                              strong: (
+                                <strong className="font-semibold text-foreground" />
+                              ),
+                            }}
+                            values={{ name: participant.name }}
+                          />
+                        }
+                        amount={total}
+                        currency={currency}
+                        locale={locale}
+                        action={
+                          <SettlementGroupButton
+                            group={group}
+                            currency={currency}
+                            participantName={participant.name}
+                            onClick={() => openFor()}
+                          />
+                        }
+                      >
+                        {group.legs.map((leg) => {
+                          const counterparty = participants.find(
+                            (item) =>
+                              item.id ===
+                              (direction === 'pay' ? leg.to : leg.from),
+                          )
+                          if (!counterparty) return null
+                          const counterpartyName = counterparty.name
+                          return (
+                            <SettlementLegRow
+                              key={settlementLegKey(leg)}
+                              counterparty={{
+                                id: counterparty.id,
+                                name: counterparty.name,
+                                members: [counterparty],
+                                total: 0,
+                                removed: counterparty.removed,
+                              }}
+                              description={
+                                <Trans
+                                  i18nKey={`Balances.direction.${direction === 'receive' ? 'fromParticipant' : 'toParticipant'}`}
+                                  components={{
+                                    strong: (
+                                      <strong className="font-semibold text-foreground" />
+                                    ),
+                                  }}
+                                  values={{ name: counterpartyName }}
+                                />
+                              }
+                              amount={leg.amount}
                               currency={currency}
-                              participantName={participant.name}
-                              onClick={() => openFor()}
-                            />
-                          </div>
-                        </div>
-                        <div className="divide-y divide-border/60 border-t border-border/60">
-                          {group.legs.map((leg) => {
-                            const counterparty = participants.find(
-                              (item) =>
-                                item.id ===
-                                (direction === 'pay' ? leg.to : leg.from),
-                            )
-                            const counterpartyName = counterparty?.name ?? ''
-                            return (
-                              <div
-                                key={settlementLegKey(leg)}
-                                className="flex min-h-11 items-center gap-2 px-3 py-2 text-xs"
-                              >
-                                {counterparty && (
-                                  <ParticipantAvatar
-                                    participant={counterparty}
-                                    size="xs"
-                                  />
-                                )}
-                                <span className="min-w-0 flex-1 truncate text-muted-foreground">
-                                  <Trans
-                                    i18nKey={`Balances.direction.${direction === 'receive' ? 'fromParticipant' : 'toParticipant'}`}
-                                    components={{
-                                      strong: (
-                                        <strong className="font-semibold text-foreground" />
-                                      ),
-                                    }}
-                                    values={{ name: counterpartyName }}
-                                  />
-                                </span>
-                                {counterparty?.removed ? (
-                                  <RemovedParticipantBadge />
-                                ) : null}
-                                <span className="shrink-0 text-muted-foreground tabular-nums">
-                                  {formatCurrency(currency, leg.amount, locale)}
-                                </span>
-                                {direction === 'pay' && (
+                              locale={locale}
+                              action={
+                                direction === 'pay' ? (
                                   <Button
                                     type="button"
                                     variant="link"
@@ -362,12 +411,12 @@ function SimpleSettlementDirections({
                                   >
                                     {t('Reimbursements.markAsPaid')}
                                   </Button>
-                                )}
-                              </div>
-                            )
-                          })}
-                        </div>
-                      </div>
+                                ) : null
+                              }
+                            />
+                          )
+                        })}
+                      </SettlementGroupCard>
                     )}
                   </SettlementGroupActions>
                 )

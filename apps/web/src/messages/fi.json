@@ -962,6 +962,29 @@
       "owes": "on velkaa {amount}",
       "suggestedPayments": "Ehdotetut maksut",
       "empty": "Kaikki ovat tasoissa."
+    },
+    "settlementMode": {
+      "label": "Selvitä saldot",
+      "individual": "Yksitellen",
+      "subgroups": "Alaryhmät"
+    },
+    "subgroups": {
+      "balanceTitle": "Alaryhmien saldot",
+      "balanceDescription": "Käytä jokaista alaryhmää yhtenä tasausyksikkönä ihmisille, jotka jakavat kulut keskenään, kuten pareille tai perheille. Yksittäiset kulujen jako-osuudet pysyvät ennallaan.",
+      "emptyBalances": "Jokainen alaryhmä on tasoissa muiden kanssa.",
+      "internalBalancesNote": "Kun alaryhmien maksut on selvitetty, jäsenillä voi silti olla saldoja oman alaryhmänsä sisällä.",
+      "viewIndividual": "Näytä yksilölliset saldot",
+      "suggestedPayments": "Ehdotetut maksut",
+      "emptyPayments": "Alaryhmien välillä ei ole velkoja.",
+      "pays": "maksaa",
+      "receives": "saa",
+      "to": "henkilölle",
+      "from": "henkilöltä",
+      "personPays": "maksaa henkilölle",
+      "settle": "Selvitä",
+      "individualAllHint": "Näet tavallisen koko ryhmän kattavan yksilöllisen suunnitelman. Se voi sisältää maksuja alaryhmien välillä.",
+      "unknownParticipant": "Odottava kutsu",
+      "individualWithinHint": "Näet alaryhmät huomioivan yksilöllisen suunnitelman. Ehdotetut maksut pysyvät kunkin alaryhmän sisällä, kun alaryhmien summat on jo tasattu."
     }
   },
   "Stats": {
@@ -1582,6 +1605,44 @@
       "remove": "Poista",
       "changeRole": "Vaihda roolia",
       "revoke": "Peru kutsu"
+    },
+    "subgroups": {
+      "title": "Alaryhmät",
+      "description": "Ryhmittele ihmiset, jotka hoitavat matkakulut yhdessä, kuten parit tai perheet. Saldoissa jokaista alaryhmää voidaan tarkastella ja selvittää yhtenä yksikkönä; kulut ja jako-osuudet pysyvät yksilöllisinä.",
+      "enableAria": "Ota alaryhmät käyttöön",
+      "emptyTitle": "Ei vielä alaryhmiä",
+      "emptyDescription": "Luo sellainen parille, kotitaloudelle tai muille henkilöille, jotka selvittävät maksunsa yhtenä yksikkönä.",
+      "ungroupedTitle": "Ei alaryhmässä",
+      "ungroupedDescription": "Nämä jäsenet selvittävät maksunsa erikseen, kunnes he liittyvät alaryhmään.",
+      "create": "Luo alaryhmä",
+      "edit": "Muokkaa alaryhmää",
+      "delete": "Poista alaryhmä",
+      "editAria": "Muokkaa {{name}}",
+      "deleteAria": "Poista {{name}}",
+      "disableTitle": "Poistetaanko alaryhmät käytöstä?",
+      "disableDescription": "Kun poistat alaryhmät käytöstä, kaikki tämän ryhmän alaryhmämääritelmät poistetaan pysyvästi.",
+      "disableImpact": "Nykyiset kulut ja saldot säilyvät ennallaan, mutta alaryhmien tasausvaihtoehto ei ole enää käytettävissä.",
+      "keep": "Säilytä alaryhmät",
+      "disable": "Poista alaryhmät käytöstä",
+      "disabling": "Poistetaan käytöstä…",
+      "deleteTitle": "Poistetaanko alaryhmä?",
+      "deleteDescription": "Poistetaanko ”{{name}}” tästä ryhmästä?",
+      "deleteImpact": "Tämä poistaa vain alaryhmän määritelmän. Nykyiset kulut ja saldot säilyvät ennallaan.",
+      "cancel": "Peruuta",
+      "deleting": "Poistetaan…",
+      "editorCreateTitle": "Luo alaryhmä",
+      "editorEditTitle": "Muokkaa alaryhmää",
+      "editorDescription": "Anna sille nimi ja valitse henkilöt, jotka selvittävät yhdessä.",
+      "namePlaceholder": "Alaryhmän nimi",
+      "notInTitle": "Ei alaryhmässä",
+      "inTitle": "Alaryhmässä",
+      "assignedTo": "ryhmässä {{name}}",
+      "pickedCount": "{{count}} valittu · vähintään 2 vaaditaan",
+      "saving": "Tallennetaan…",
+      "save": "Tallenna alaryhmä",
+      "validation": "Lisää nimi ja vähintään kaksi osallistujaa.",
+      "loadError": "Alaryhmiä ei voitu ladata.",
+      "disableAria": "Poista alaryhmät käytöstä"
     }
   },
   "AccountSettings": {
@@ -1802,7 +1863,8 @@
         "information": "Kuvaus",
         "currency": "Valuutta",
         "currencyCode": "Valuuttakoodi",
-        "linkedParticipant": "Linkitetty osallistuja"
+        "linkedParticipant": "Linkitetty osallistuja",
+        "subgroupsEnabled": "Alaryhmät"
       }
     },
     "member": {

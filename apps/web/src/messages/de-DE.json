@@ -990,6 +990,29 @@
       "owes": "schuldet {amount}",
       "suggestedPayments": "Vorgeschlagene Zahlungen",
       "empty": "Alle sind ausgeglichen."
+    },
+    "settlementMode": {
+      "label": "Salden begleichen als",
+      "individual": "Einzeln",
+      "subgroups": "Untergruppen"
+    },
+    "subgroups": {
+      "balanceTitle": "Untergruppen-Salden",
+      "balanceDescription": "Verwende jede Untergruppe als eine Verrechnungseinheit für Personen, die sich Ausgaben teilen, etwa Paare oder Familien. Die individuelle Aufteilung der Ausgaben bleibt unverändert.",
+      "emptyBalances": "Jede Untergruppe ist mit den anderen ausgeglichen.",
+      "internalBalancesNote": "Nach dem Ausgleich der Untergruppen-Zahlungen können Mitglieder innerhalb ihrer Untergruppe weiterhin Salden haben.",
+      "viewIndividual": "Individuelle Salden anzeigen",
+      "suggestedPayments": "Vorgeschlagene Zahlungen",
+      "emptyPayments": "Zwischen den Untergruppen wird nichts geschuldet.",
+      "pays": "zahlt",
+      "receives": "erhält",
+      "to": "an",
+      "from": "von",
+      "personPays": "zahlt",
+      "settle": "Ausgleichen",
+      "individualAllHint": "Du siehst den standardmäßigen individuellen Plan für die gesamte Gruppe. Er kann Zahlungen zwischen Untergruppen enthalten.",
+      "unknownParticipant": "Ausstehende Einladung",
+      "individualWithinHint": "Du siehst einen individuellen Plan, der Untergruppen berücksichtigt. Vorgeschlagene Zahlungen bleiben innerhalb der jeweiligen Untergruppe, sobald deren Salden bereits ausgeglichen sind."
     }
   },
   "Stats": {
@@ -1614,6 +1637,44 @@
       "remove": "Entfernen",
       "changeRole": "Rolle ändern",
       "revoke": "Einladung widerrufen"
+    },
+    "subgroups": {
+      "title": "Untergruppen",
+      "description": "Fasse Personen zusammen, die Reiseausgaben gemeinsam verwalten, etwa Paare oder Familien. Unter „Salden“ kann jede Untergruppe als eine Einheit betrachtet und ausgeglichen werden; Ausgaben und Aufteilungen bleiben individuell.",
+      "enableAria": "Untergruppen aktivieren",
+      "emptyTitle": "Noch keine Untergruppen",
+      "emptyDescription": "Erstelle eine für ein Paar, einen Haushalt oder beliebige Personen, die als Einheit abrechnen.",
+      "ungroupedTitle": "In keiner Untergruppe",
+      "ungroupedDescription": "Diese Mitglieder rechnen einzeln ab, bis sie einer Untergruppe beitreten.",
+      "create": "Untergruppe erstellen",
+      "edit": "Untergruppe bearbeiten",
+      "delete": "Untergruppe löschen",
+      "editAria": "{{name}} bearbeiten",
+      "deleteAria": "{{name}} löschen",
+      "disableTitle": "Untergruppen deaktivieren?",
+      "disableDescription": "Wenn du Untergruppen deaktivierst, werden alle Untergruppen-Definitionen dieser Gruppe dauerhaft gelöscht.",
+      "disableImpact": "Vorhandene Ausgaben und Salden bleiben unverändert, aber die Option zum Ausgleich von Untergruppen ist dann nicht mehr verfügbar.",
+      "keep": "Untergruppen behalten",
+      "disable": "Untergruppen deaktivieren",
+      "disabling": "Wird deaktiviert…",
+      "deleteTitle": "Untergruppe löschen?",
+      "deleteDescription": "„{{name}}“ aus dieser Gruppe löschen?",
+      "deleteImpact": "Dadurch wird nur die Untergruppen-Definition entfernt. Vorhandene Ausgaben und Salden bleiben unverändert.",
+      "cancel": "Abbrechen",
+      "deleting": "Wird gelöscht…",
+      "editorCreateTitle": "Untergruppe erstellen",
+      "editorEditTitle": "Untergruppe bearbeiten",
+      "editorDescription": "Gib ihr einen Namen und wähle die Personen aus, die gemeinsam abrechnen.",
+      "namePlaceholder": "Name der Untergruppe",
+      "notInTitle": "In keiner Untergruppe",
+      "inTitle": "In einer Untergruppe",
+      "assignedTo": "bereits in {{name}}",
+      "pickedCount": "{{count}} ausgewählt · mindestens 2 erforderlich",
+      "saving": "Wird gespeichert…",
+      "save": "Untergruppe speichern",
+      "validation": "Füge einen Namen und mindestens zwei Teilnehmer hinzu.",
+      "loadError": "Untergruppen konnten nicht geladen werden.",
+      "disableAria": "Untergruppen deaktivieren"
     }
   },
   "AccountSettings": {
@@ -1834,7 +1895,8 @@
         "information": "Beschreibung",
         "currency": "Währung",
         "currencyCode": "Währungscode",
-        "linkedParticipant": "Verknüpfter Teilnehmer"
+        "linkedParticipant": "Verknüpfter Teilnehmer",
+        "subgroupsEnabled": "Untergruppen"
       }
     },
     "member": {

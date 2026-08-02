@@ -97,6 +97,10 @@ describe('groupsRouter.members.updateRole', () => {
       id: 'gm-target',
     } as never)
     prismaMock.activity.create.mockResolvedValue({} as never)
+    prismaMock.subgroupMember.findUnique.mockResolvedValue({
+      subgroupId: 'sg-target',
+    } as never)
+    prismaMock.subgroupMember.count.mockResolvedValue(1 as never)
 
     const caller = makeCaller('acct-admin')
     const result = await caller.members.updateRole({
@@ -422,11 +426,26 @@ describe('groupsRouter.members.remove', () => {
       id: 'gm-target',
     } as never)
     prismaMock.activity.create.mockResolvedValue({} as never)
+    prismaMock.subgroupMember.findUnique.mockResolvedValue({
+      subgroupId: 'sg-target',
+    } as never)
+    prismaMock.subgroupMember.count.mockResolvedValue(1 as never)
 
     const caller = makeCaller('acct-admin')
     await caller.members.remove({ groupId: 'grp-1', memberId: 'gm-target' })
 
     expect(prisma$Transaction).toHaveBeenCalledTimes(1)
+    expect(prismaMock.subgroupMember.delete).toHaveBeenCalledWith({
+      where: {
+        subgroupId_ledgerParticipantId: {
+          subgroupId: 'sg-target',
+          ledgerParticipantId: 'lp-target',
+        },
+      },
+    })
+    expect(prismaMock.subgroup.delete).toHaveBeenCalledWith({
+      where: { id: 'sg-target' },
+    })
   })
 
   it('rejects PRECONDITION_FAILED when the target has unsettled balances and no decision is supplied', async () => {

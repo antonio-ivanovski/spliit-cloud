@@ -955,6 +955,29 @@
       "owes": "应付 {amount}",
       "suggestedPayments": "建议付款",
       "empty": "所有人都已结清。"
+    },
+    "settlementMode": {
+      "label": "余额结算方式",
+      "individual": "按个人",
+      "subgroups": "子群组"
+    },
+    "subgroups": {
+      "balanceTitle": "子群组余额",
+      "balanceDescription": "将每个子群组作为一个结算单位，适用于共同分摊支出的人，例如情侣或家庭。个人支出分摊保持不变。",
+      "emptyBalances": "所有子群组之间均已结算。",
+      "internalBalancesNote": "子群组之间的付款结算后，成员在子群组内部可能仍有余额。",
+      "viewIndividual": "查看个人余额",
+      "suggestedPayments": "建议付款",
+      "emptyPayments": "子群组之间没有待支付的款项。",
+      "pays": "支付",
+      "receives": "收款",
+      "to": "到",
+      "from": "从",
+      "personPays": "支付给",
+      "settle": "结算",
+      "individualAllHint": "您正在查看标准的全组个人结算方案。其中可能包含子群组之间的付款。",
+      "unknownParticipant": "待接受邀请",
+      "individualWithinHint": "您正在查看考虑子群组的个人结算方案。当子群组之间已结算时，建议的付款将保持在每个子群组内部。"
     }
   },
   "Stats": {
@@ -1575,6 +1598,44 @@
       "remove": "移除",
       "changeRole": "更改角色",
       "revoke": "撤销邀请"
+    },
+    "subgroups": {
+      "title": "子群组",
+      "description": "将一起管理旅行支出的人归为一组，例如情侣或家庭。在余额中，每个子群组可作为整体查看和结算；支出和分摊仍按个人计算。",
+      "enableAria": "启用子群组",
+      "emptyTitle": "暂无子群组",
+      "emptyDescription": "为情侣、家庭或任何按整体结算的人创建一个子群组。",
+      "ungroupedTitle": "未在子群组中",
+      "ungroupedDescription": "这些成员在加入子群组之前将按个人结算。",
+      "create": "创建子群组",
+      "edit": "编辑子群组",
+      "delete": "删除子群组",
+      "editAria": "编辑{{name}}",
+      "deleteAria": "删除{{name}}",
+      "disableTitle": "停用子群组？",
+      "disableDescription": "关闭子群组将永久删除此群组中的所有子群组定义。",
+      "disableImpact": "现有支出和余额保持不变，但子群组结算选项将不再可用。",
+      "keep": "保留子群组",
+      "disable": "停用子群组",
+      "disabling": "正在停用…",
+      "deleteTitle": "删除子群组？",
+      "deleteDescription": "从该群组中删除「{{name}}」？",
+      "deleteImpact": "只会删除子群组定义。现有支出和余额保持不变。",
+      "cancel": "取消",
+      "deleting": "正在删除…",
+      "editorCreateTitle": "创建子群组",
+      "editorEditTitle": "编辑子群组",
+      "editorDescription": "为它命名，并选择一起结算的人。",
+      "namePlaceholder": "子群组名称",
+      "notInTitle": "未在子群组中",
+      "inTitle": "在子群组中",
+      "assignedTo": "所属 {{name}}",
+      "pickedCount": "已选{{count}}人 · 至少需要2人",
+      "saving": "正在保存…",
+      "save": "保存子群组",
+      "validation": "请输入名称并至少选择两名参与者。",
+      "loadError": "无法加载子群组。",
+      "disableAria": "停用子群组"
     }
   },
   "AccountSettings": {
@@ -1795,7 +1856,8 @@
         "information": "描述",
         "currency": "货币",
         "currencyCode": "货币代码",
-        "linkedParticipant": "关联参与者"
+        "linkedParticipant": "关联参与者",
+        "subgroupsEnabled": "子群组"
       }
     },
     "member": {

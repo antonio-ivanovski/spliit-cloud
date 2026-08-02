@@ -188,6 +188,10 @@ export const createExpenseSearchSchema = z.object({
 export const balancesSearchSchema = z.object({
   currencyDisplay: z.enum(['group', 'original']).optional().catch(undefined),
   view: z.enum(['simple', 'visual']).optional().catch(undefined),
+  settlementMode: z
+    .enum(['individual', 'subgroups'])
+    .optional()
+    .catch(undefined),
 })
 
 export type CreateExpenseSearch = z.infer<typeof createExpenseSearchSchema>

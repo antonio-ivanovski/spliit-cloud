@@ -241,6 +241,31 @@ describe('ActivityItem', () => {
     expect(change.textContent).toMatch(/Guest User.*→.*Alice/)
   })
 
+  it('renders subgroup enablement changes in the activity feed', () => {
+    renderItem(
+      makeActivity({
+        type: 'GROUP_UPDATED',
+        data: {
+          kind: 'group',
+          changedFields: ['subgroupsEnabled'],
+          changes: [
+            {
+              field: 'subgroupsEnabled',
+              before: 'Disabled',
+              after: 'Enabled',
+            },
+          ],
+        },
+      }),
+    )
+
+    expect(screen.getByText('Subgroups')).toBeInTheDocument()
+    const change = screen.getByTestId(
+      'activity-item-act-1-change-subgroupsEnabled',
+    )
+    expect(change.textContent).toMatch(/Disabled.*→.*Enabled/)
+  })
+
   it('renders group updated with changes but no changedFields (backward compat)', () => {
     renderItem(
       makeActivity({

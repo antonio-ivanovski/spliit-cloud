@@ -1341,6 +1341,29 @@
       "settle": "Thanh toán",
       "settlePaymentsBy": "Thanh toán {count} khoản qua {name}, {amount}",
       "settlePaymentsTo": "Thanh toán {count} khoản cho {name}, {amount}"
+    },
+    "settlementMode": {
+      "label": "Giải quyết số dư theo",
+      "individual": "Cá nhân",
+      "subgroups": "Nhóm con"
+    },
+    "subgroups": {
+      "balanceTitle": "Số dư nhóm con",
+      "balanceDescription": "Dùng mỗi nhóm con làm một đơn vị thanh toán cho những người dùng chung chi phí, chẳng hạn cặp đôi hoặc gia đình. Việc chia chi phí theo cá nhân vẫn không thay đổi.",
+      "emptyBalances": "Mọi nhóm con đã thanh toán xong với nhau.",
+      "internalBalancesNote": "Sau khi các khoản thanh toán của nhóm con được xử lý, các thành viên vẫn có thể còn số dư bên trong nhóm con của họ.",
+      "viewIndividual": "Xem số dư cá nhân",
+      "suggestedPayments": "Đề xuất",
+      "emptyPayments": "Không có khoản nợ nào giữa các nhóm con.",
+      "pays": "trả",
+      "receives": "nhận",
+      "to": "cho",
+      "from": "từ",
+      "personPays": "trả",
+      "settle": "Thanh toán",
+      "individualAllHint": "Bạn đang xem kế hoạch cá nhân tiêu chuẩn của cả nhóm. Kế hoạch này có thể gồm các khoản thanh toán giữa các nhóm con.",
+      "unknownParticipant": "Lời mời đang chờ",
+      "individualWithinHint": "Bạn đang xem kế hoạch cá nhân theo nhóm con. Các khoản thanh toán đề xuất nằm trong mỗi nhóm con khi tổng của nhóm con đã được thanh toán."
     }
   },
   "Stats": {
@@ -1867,6 +1890,44 @@
       "remove": "Xóa",
       "changeRole": "Đổi vai trò",
       "revoke": "Thu hồi"
+    },
+    "subgroups": {
+      "title": "Nhóm con",
+      "description": "Gom những người cùng quản lý chi phí chuyến đi, chẳng hạn cặp đôi hoặc gia đình. Trong Số dư, mỗi nhóm con có thể được xem và thanh toán như một đơn vị; chi phí và cách chia vẫn theo từng cá nhân.",
+      "enableAria": "Bật Nhóm con",
+      "emptyTitle": "Chưa có nhóm con",
+      "emptyDescription": "Tạo một nhóm cho cặp đôi, hộ gia đình hoặc bất kỳ ai thanh toán như một đơn vị.",
+      "ungroupedTitle": "Không trong nhóm con",
+      "ungroupedDescription": "Các thành viên này thanh toán riêng lẻ cho đến khi tham gia một nhóm con.",
+      "create": "Tạo nhóm con",
+      "edit": "Sửa nhóm con",
+      "delete": "Xóa nhóm con",
+      "editAria": "Sửa {{name}}",
+      "deleteAria": "Xóa {{name}}",
+      "disableTitle": "Tắt Nhóm con?",
+      "disableDescription": "Tắt Nhóm con sẽ xóa vĩnh viễn mọi định nghĩa nhóm con khỏi nhóm này.",
+      "disableImpact": "Các chi phí và số dư hiện có vẫn không thay đổi, nhưng tùy chọn thanh toán theo nhóm con sẽ không còn khả dụng.",
+      "keep": "Giữ Nhóm con",
+      "disable": "Tắt Nhóm con",
+      "disabling": "Đang tắt…",
+      "deleteTitle": "Xóa nhóm con?",
+      "deleteDescription": "Xóa “{{name}}” khỏi nhóm này?",
+      "deleteImpact": "Thao tác này chỉ xóa định nghĩa nhóm con. Các chi phí và số dư hiện có vẫn không thay đổi.",
+      "cancel": "Hủy",
+      "deleting": "Đang xóa…",
+      "editorCreateTitle": "Tạo nhóm con",
+      "editorEditTitle": "Sửa nhóm con",
+      "editorDescription": "Đặt tên và chọn những người thanh toán cùng nhau.",
+      "namePlaceholder": "Tên nhóm con",
+      "notInTitle": "Không trong nhóm con",
+      "inTitle": "Trong nhóm con",
+      "assignedTo": "trong {{name}}",
+      "pickedCount": "Đã chọn {{count}} · cần ít nhất 2",
+      "saving": "Đang lưu…",
+      "save": "Lưu nhóm con",
+      "validation": "Thêm tên và ít nhất hai người tham gia.",
+      "loadError": "Không thể tải nhóm con.",
+      "disableAria": "Tắt Nhóm con"
     }
   },
   "Activities": {
@@ -1903,7 +1964,8 @@
         "information": "Mô tả",
         "currency": "Loại tiền",
         "currencyCode": "Mã loại tiền",
-        "linkedParticipant": "Người tham gia"
+        "linkedParticipant": "Người tham gia",
+        "subgroupsEnabled": "Nhóm con"
       }
     },
     "member": {

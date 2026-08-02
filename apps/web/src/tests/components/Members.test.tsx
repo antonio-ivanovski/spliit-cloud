@@ -19,6 +19,7 @@ vi.mock('@tanstack/react-router', () => ({
     [key: string]: unknown
   }) => <a href={to}>{children}</a>,
   useNavigate: () => vi.fn(),
+  useSearch: () => ({}),
 }))
 
 vi.mock('@/components/link', () => ({
@@ -53,6 +54,7 @@ const mockMembersData: { members: Record<string, unknown>[] } = { members: [] }
 const mockInvitationsData: { invitations: Record<string, unknown>[] } = {
   invitations: [],
 }
+const mockSubgroupsData = { enabled: false, subgroups: [] }
 
 // Track onSuccess callbacks so tests can trigger them
 let _createMutationOnSuccess: ((data: unknown) => void) | null = null
@@ -73,6 +75,9 @@ vi.mock('@/trpc/client', () => {
           },
           leavePreview: { invalidate: vi.fn().mockResolvedValue(undefined) },
           balances: { invalidate: vi.fn().mockResolvedValue(undefined) },
+          subgroups: {
+            list: { invalidate: vi.fn().mockResolvedValue(undefined) },
+          },
         },
         account: {
           members: { invalidate: vi.fn().mockResolvedValue(undefined) },
@@ -109,6 +114,23 @@ vi.mock('@/trpc/client', () => {
         },
       },
       groups: {
+        subgroups: {
+          list: {
+            useQuery: () => ({ data: mockSubgroupsData, isLoading: false }),
+          },
+          setEnabled: {
+            useMutation: () => ({ mutate: vi.fn(), isPending: false }),
+          },
+          create: {
+            useMutation: () => ({ mutate: vi.fn(), isPending: false }),
+          },
+          update: {
+            useMutation: () => ({ mutate: vi.fn(), isPending: false }),
+          },
+          delete: {
+            useMutation: () => ({ mutate: vi.fn(), isPending: false }),
+          },
+        },
         get: {
           useQuery: () => ({ data: { group: mockGroup }, isLoading: false }),
         },

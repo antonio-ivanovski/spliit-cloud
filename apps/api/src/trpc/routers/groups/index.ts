@@ -21,6 +21,7 @@ import { lookupGroupProcedure } from './lookup.procedure'
 import { groupMembersRouter } from './members'
 import { groupParticipantsRouter } from './participants'
 import { groupStatsRouter } from './stats'
+import { groupSubgroupsRouter } from './subgroups'
 import { updateGroupProcedure } from './update.procedure'
 
 export const groupsRouter = createTRPCRouter({
@@ -32,6 +33,7 @@ export const groupsRouter = createTRPCRouter({
   participants: groupParticipantsRouter,
   importLinks: importLinksRouter,
   budgets: groupBudgetsRouter,
+  subgroups: groupSubgroupsRouter,
 
   /**
    * Get a single group plus the caller's membership and link-invite state.

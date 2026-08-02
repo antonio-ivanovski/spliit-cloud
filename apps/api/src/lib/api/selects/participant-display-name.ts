@@ -7,8 +7,9 @@ import type { Prisma } from '@spliit/db'
  *
  * Default: latest invitation of any status (`createdAt desc`, `take: 1`) —
  * activity feeds and exports still resolve labels for revoked/accepted invites.
- * Pass `pendingInvitationsOnly: true` for update-expense validation so only
- * PENDING invitations count toward active participants.
+ * Pass `pendingInvitationsOnly: true` for live-balance or update-expense
+ * validation paths where only the current PENDING invitation should label an
+ * unaccepted participant.
  */
 export function participantDisplayNameSelect(options?: {
   pendingInvitationsOnly?: boolean

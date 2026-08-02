@@ -146,7 +146,7 @@ describe('groupActivityDataSchema', () => {
     const result = groupActivityDataSchema.safeParse({
       kind: 'group',
       summary: 'Trip',
-      changedFields: ['name', 'currency'],
+      changedFields: ['name', 'currency', 'subgroupsEnabled'],
     })
     expect(result.success).toBe(true)
   })

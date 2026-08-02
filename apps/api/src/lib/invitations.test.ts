@@ -95,6 +95,21 @@ describe('placeholder participant labels', () => {
       }),
     ).toBe('Account person')
   })
+
+  it('resolves a pending participant to its temporary name for balance labels', () => {
+    expect(
+      resolveParticipantDisplayName({
+        groupMember: { account: null },
+        invitations: [
+          {
+            email: 'invitee@example.com',
+            temporaryName: 'Alex from the trip',
+          },
+        ],
+        displayName: null,
+      }),
+    ).toBe('Alex from the trip')
+  })
 })
 
 describe('buildProviderPlaceholderEmail', () => {

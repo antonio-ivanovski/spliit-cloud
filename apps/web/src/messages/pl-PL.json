@@ -976,6 +976,29 @@
       "owes": "jest winien {amount}",
       "suggestedPayments": "Sugerowane płatności",
       "empty": "Wszyscy są rozliczeni."
+    },
+    "settlementMode": {
+      "label": "Rozlicz salda jako",
+      "individual": "Indywidualnie",
+      "subgroups": "Podgrupy"
+    },
+    "subgroups": {
+      "balanceTitle": "Salda podgrup",
+      "balanceDescription": "Używaj każdej podgrupy jako jednej jednostki rozliczeniowej dla osób, które wspólnie ponoszą wydatki, np. par lub rodzin. Indywidualne podziały wydatków pozostają bez zmian.",
+      "emptyBalances": "Każda podgrupa jest rozliczona z pozostałymi.",
+      "internalBalancesNote": "Po rozliczeniu płatności podgrup członkowie mogą nadal mieć salda wewnątrz swojej podgrupy.",
+      "viewIndividual": "Zobacz indywidualne salda",
+      "suggestedPayments": "Sugerowane płatności",
+      "emptyPayments": "Podgrupy nie są sobie nic winne.",
+      "pays": "płaci",
+      "receives": "otrzymuje",
+      "to": "dla",
+      "from": "od",
+      "personPays": "płaci",
+      "settle": "Rozlicz",
+      "individualAllHint": "Wyświetlasz standardowy indywidualny plan dla całej grupy. Może on obejmować płatności między podgrupami.",
+      "unknownParticipant": "Oczekujące zaproszenie",
+      "individualWithinHint": "Wyświetlasz indywidualny plan uwzględniający podgrupy. Sugerowane płatności pozostają w obrębie każdej podgrupy, gdy jej saldo jest już rozliczone."
     }
   },
   "Stats": {
@@ -1600,6 +1623,44 @@
       "remove": "Usuń",
       "changeRole": "Zmień rolę",
       "revoke": "Cofnij zaproszenie"
+    },
+    "subgroups": {
+      "title": "Podgrupy",
+      "description": "Grupuj osoby, które wspólnie zarządzają wydatkami na podróż, np. pary lub rodziny. W sekcji Salda każdą podgrupę można przeglądać i rozliczać jako jedną jednostkę; wydatki i podziały pozostają indywidualne.",
+      "enableAria": "Włącz podgrupy",
+      "emptyTitle": "Brak podgrup",
+      "emptyDescription": "Utwórz ją dla pary, gospodarstwa domowego lub dowolnych osób rozliczających się jako jedna jednostka.",
+      "ungroupedTitle": "Nie w podgrupie",
+      "ungroupedDescription": "Ci członkowie rozliczają się indywidualnie, dopóki nie dołączą do podgrupy.",
+      "create": "Utwórz podgrupę",
+      "edit": "Edytuj podgrupę",
+      "delete": "Usuń podgrupę",
+      "editAria": "Edytuj {{name}}",
+      "deleteAria": "Usuń {{name}}",
+      "disableTitle": "Wyłączyć podgrupy?",
+      "disableDescription": "Wyłączenie podgrup trwale usunie wszystkie definicje podgrup z tej grupy.",
+      "disableImpact": "Istniejące wydatki i salda pozostaną bez zmian, ale opcja rozliczania podgrup nie będzie już dostępna.",
+      "keep": "Zachowaj podgrupy",
+      "disable": "Wyłącz podgrupy",
+      "disabling": "Wyłączanie…",
+      "deleteTitle": "Usunąć podgrupę?",
+      "deleteDescription": "Usunąć „{{name}}” z tej grupy?",
+      "deleteImpact": "Spowoduje to usunięcie tylko definicji podgrupy. Istniejące wydatki i salda pozostaną bez zmian.",
+      "cancel": "Anuluj",
+      "deleting": "Usuwanie…",
+      "editorCreateTitle": "Utwórz podgrupę",
+      "editorEditTitle": "Edytuj podgrupę",
+      "editorDescription": "Nadaj jej nazwę i wybierz osoby, które rozliczają się wspólnie.",
+      "namePlaceholder": "Nazwa podgrupy",
+      "notInTitle": "Nie w podgrupie",
+      "inTitle": "W podgrupie",
+      "assignedTo": "w {{name}}",
+      "pickedCount": "Wybrano {{count}} · wymagane co najmniej 2",
+      "saving": "Zapisywanie…",
+      "save": "Zapisz podgrupę",
+      "validation": "Dodaj nazwę i co najmniej dwóch uczestników.",
+      "loadError": "Nie udało się wczytać podgrup.",
+      "disableAria": "Wyłącz podgrupy"
     }
   },
   "AccountSettings": {
@@ -1820,7 +1881,8 @@
         "information": "Opis",
         "currency": "Waluta",
         "currencyCode": "Kod waluty",
-        "linkedParticipant": "Powiązany uczestnik"
+        "linkedParticipant": "Powiązany uczestnik",
+        "subgroupsEnabled": "Podgrupy"
       }
     },
     "member": {

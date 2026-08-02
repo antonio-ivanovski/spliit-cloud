@@ -962,6 +962,29 @@
       "owes": "is {amount} verschuldigd",
       "suggestedPayments": "Voorgestelde betalingen",
       "empty": "Iedereen staat quitte."
+    },
+    "settlementMode": {
+      "label": "Saldi vereffenen als",
+      "individual": "Individueel",
+      "subgroups": "Subgroepen"
+    },
+    "subgroups": {
+      "balanceTitle": "Subgroepsaldi",
+      "balanceDescription": "Gebruik elke subgroep als één vereffeningseenheid voor mensen die uitgaven delen, zoals stellen of gezinnen. Individuele splits van uitgaven blijven ongewijzigd.",
+      "emptyBalances": "Elke subgroep staat quitte met de andere.",
+      "internalBalancesNote": "Nadat de subgroepbetalingen zijn vereffend, kunnen leden binnen hun subgroep nog saldi hebben.",
+      "viewIndividual": "Individuele saldi bekijken",
+      "suggestedPayments": "Voorgestelde betalingen",
+      "emptyPayments": "Er is niets verschuldigd tussen subgroepen.",
+      "pays": "betaalt",
+      "receives": "ontvangt",
+      "to": "aan",
+      "from": "van",
+      "personPays": "betaalt",
+      "settle": "Vereffenen",
+      "individualAllHint": "Je bekijkt het standaard individuele plan voor de hele groep. Het kan betalingen tussen subgroepen bevatten.",
+      "unknownParticipant": "Openstaande uitnodiging",
+      "individualWithinHint": "Je bekijkt een individueel plan dat rekening houdt met subgroepen. Voorgestelde betalingen blijven binnen elke subgroep wanneer de subtotalen van de subgroepen al zijn vereffend."
     }
   },
   "Stats": {
@@ -1582,6 +1605,44 @@
       "remove": "Verwijderen",
       "changeRole": "Rol wijzigen",
       "revoke": "Uitnodiging intrekken"
+    },
+    "subgroups": {
+      "title": "Subgroepen",
+      "description": "Groep mensen die samen reisuitgaven beheren, zoals stellen of gezinnen. In Balans kan elke subgroep als één eenheid worden bekeken en vereffend; uitgaven en splits blijven individueel.",
+      "enableAria": "Subgroepen inschakelen",
+      "emptyTitle": "Nog geen subgroepen",
+      "emptyDescription": "Maak er een voor een stel, huishouden of andere mensen die als eenheid vereffenen.",
+      "ungroupedTitle": "Niet in een subgroep",
+      "ungroupedDescription": "Deze leden vereffenen individueel totdat ze lid worden van een subgroep.",
+      "create": "Subgroep maken",
+      "edit": "Subgroep bewerken",
+      "delete": "Subgroep verwijderen",
+      "editAria": "{{name}} bewerken",
+      "deleteAria": "{{name}} verwijderen",
+      "disableTitle": "Subgroepen uitschakelen?",
+      "disableDescription": "Als je Subgroepen uitschakelt, worden alle subgroepdefinities in deze groep permanent verwijderd.",
+      "disableImpact": "Bestaande uitgaven en saldi blijven ongewijzigd, maar de optie om subgroepen te vereffenen is niet langer beschikbaar.",
+      "keep": "Subgroepen behouden",
+      "disable": "Subgroepen uitschakelen",
+      "disabling": "Uitschakelen…",
+      "deleteTitle": "Subgroep verwijderen?",
+      "deleteDescription": "“{{name}}” uit deze groep verwijderen?",
+      "deleteImpact": "Dit verwijdert alleen de subgroepdefinitie. Bestaande uitgaven en saldi blijven ongewijzigd.",
+      "cancel": "Annuleren",
+      "deleting": "Verwijderen…",
+      "editorCreateTitle": "Subgroep maken",
+      "editorEditTitle": "Subgroep bewerken",
+      "editorDescription": "Geef hem een naam en kies de mensen die samen vereffenen.",
+      "namePlaceholder": "Naam van de subgroep",
+      "notInTitle": "Niet in een subgroep",
+      "inTitle": "In een subgroep",
+      "assignedTo": "al in {{name}}",
+      "pickedCount": "{{count}} geselecteerd · minimaal 2 vereist",
+      "saving": "Opslaan…",
+      "save": "Subgroep opslaan",
+      "validation": "Voeg een naam en minimaal twee deelnemers toe.",
+      "loadError": "Subgroepen konden niet worden geladen.",
+      "disableAria": "Subgroepen uitschakelen"
     }
   },
   "AccountSettings": {
@@ -1802,7 +1863,8 @@
         "information": "Beschrijving",
         "currency": "Valuta",
         "currencyCode": "Valutacode",
-        "linkedParticipant": "Gekoppelde deelnemer"
+        "linkedParticipant": "Gekoppelde deelnemer",
+        "subgroupsEnabled": "Subgroepen"
       }
     },
     "member": {

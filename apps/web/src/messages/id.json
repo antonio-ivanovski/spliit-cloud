@@ -1138,6 +1138,29 @@
       "owes": "berutang {amount}",
       "suggestedPayments": "Pembayaran yang disarankan",
       "empty": "Semua sudah lunas."
+    },
+    "settlementMode": {
+      "label": "Selesaikan saldo sebagai",
+      "individual": "Perorangan",
+      "subgroups": "Subgrup"
+    },
+    "subgroups": {
+      "balanceTitle": "Saldo subgrup",
+      "balanceDescription": "Gunakan setiap subgrup sebagai satu unit penyelesaian untuk orang-orang yang berbagi pengeluaran, seperti pasangan atau keluarga. Pembagian pengeluaran individual tetap tidak berubah.",
+      "emptyBalances": "Semua subgrup sudah saling dilunasi.",
+      "internalBalancesNote": "Setelah pembayaran subgrup dilunasi, anggota mungkin masih memiliki saldo di dalam subgrupnya.",
+      "viewIndividual": "Lihat saldo perorangan",
+      "suggestedPayments": "Pembayaran yang disarankan",
+      "emptyPayments": "Tidak ada yang berutang antar subgrup.",
+      "pays": "membayar",
+      "receives": "menerima",
+      "to": "kepada",
+      "from": "dari",
+      "personPays": "membayar",
+      "settle": "Lunasi",
+      "individualAllHint": "Anda melihat rencana individual standar untuk seluruh grup. Rencana ini dapat mencakup pembayaran antar subgrup.",
+      "unknownParticipant": "Undangan tertunda",
+      "individualWithinHint": "Anda melihat rencana individual yang memperhitungkan subgrup. Pembayaran yang disarankan tetap berada di dalam setiap subgrup jika total subgrup sudah dilunasi."
     }
   },
   "Stats": {
@@ -1575,6 +1598,44 @@
       "remove": "Hapus",
       "changeRole": "Ubah peran",
       "revoke": "Cabut undangan"
+    },
+    "subgroups": {
+      "title": "Subgrup",
+      "description": "Kelompokkan orang-orang yang mengelola pengeluaran perjalanan bersama, seperti pasangan atau keluarga. Di Saldo, setiap subgrup dapat dilihat dan diselesaikan sebagai satu unit; pengeluaran dan pembagiannya tetap individual.",
+      "enableAria": "Aktifkan Subgrup",
+      "emptyTitle": "Belum ada subgrup",
+      "emptyDescription": "Buat satu untuk pasangan, rumah tangga, atau siapa pun yang menyelesaikan sebagai satu unit.",
+      "ungroupedTitle": "Tidak dalam subgrup",
+      "ungroupedDescription": "Anggota ini menyelesaikan secara individual sampai mereka bergabung dengan subgrup.",
+      "create": "Buat subgrup",
+      "edit": "Ubah subgrup",
+      "delete": "Hapus subgrup",
+      "editAria": "Ubah {{name}}",
+      "deleteAria": "Hapus {{name}}",
+      "disableTitle": "Nonaktifkan Subgrup?",
+      "disableDescription": "Menonaktifkan Subgrup akan menghapus semua definisi subgrup dari grup ini secara permanen.",
+      "disableImpact": "Pengeluaran dan saldo yang ada akan tetap tidak berubah, tetapi opsi penyelesaian subgrup tidak akan tersedia lagi.",
+      "keep": "Pertahankan Subgrup",
+      "disable": "Nonaktifkan Subgrup",
+      "disabling": "Menonaktifkan…",
+      "deleteTitle": "Hapus subgrup?",
+      "deleteDescription": "Hapus “{{name}}” dari grup ini?",
+      "deleteImpact": "Ini hanya menghapus definisi subgrup. Pengeluaran dan saldo yang ada akan tetap tidak berubah.",
+      "cancel": "Batal",
+      "deleting": "Menghapus…",
+      "editorCreateTitle": "Buat subgrup",
+      "editorEditTitle": "Ubah subgrup",
+      "editorDescription": "Beri nama dan pilih orang-orang yang menyelesaikan bersama.",
+      "namePlaceholder": "Nama subgrup",
+      "notInTitle": "Tidak dalam subgrup",
+      "inTitle": "Dalam subgrup",
+      "assignedTo": "di {{name}}",
+      "pickedCount": "{{count}} dipilih · minimal 2",
+      "saving": "Menyimpan…",
+      "save": "Simpan subgrup",
+      "validation": "Tambahkan nama dan setidaknya dua peserta.",
+      "loadError": "Subgrup tidak dapat dimuat.",
+      "disableAria": "Nonaktifkan Subgrup"
     }
   },
   "AccountSettings": {
@@ -1795,7 +1856,8 @@
         "information": "Deskripsi",
         "currency": "Mata uang",
         "currencyCode": "Kode mata uang",
-        "linkedParticipant": "Peserta terkait"
+        "linkedParticipant": "Peserta terkait",
+        "subgroupsEnabled": "Subgrup"
       }
     },
     "member": {

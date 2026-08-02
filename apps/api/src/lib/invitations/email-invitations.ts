@@ -20,6 +20,7 @@ import {
 } from '../api/balances'
 import { getApiBoss } from '../api/boss'
 import { randomId } from '../api/shared'
+import { removeParticipantFromSubgroup } from '../api/subgroups'
 import { sendEmail } from '../mail/send'
 import { renderInvitationEmail } from '../mail/templates/invitation'
 import { getInvitationDisplayName } from './display'
@@ -302,6 +303,9 @@ export async function revokeInvitation(opts: {
         data: { removedAt: new Date() },
       })
     }
+    if (invitation.ledgerParticipantId) {
+      await removeParticipantFromSubgroup(invitation.ledgerParticipantId, tx)
+    }
 
     await planNotificationForActivity(tx, activity, {}, { boss })
     if (settlementActivities) {
@@ -402,6 +406,9 @@ export async function declineInvitation(opts: {
         status: GroupInvitationStatus.DECLINED,
       },
     })
+    if (invitation.ledgerParticipantId) {
+      await removeParticipantFromSubgroup(invitation.ledgerParticipantId, tx)
+    }
     const activity = await logActivity(
       invitation.groupId,
       {

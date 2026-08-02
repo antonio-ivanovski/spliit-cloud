@@ -969,6 +969,29 @@
       "owes": "debe {amount}",
       "suggestedPayments": "Pagos sugeridos",
       "empty": "Todos están saldados."
+    },
+    "settlementMode": {
+      "label": "Liquidar los saldos como",
+      "individual": "Por separado",
+      "subgroups": "Subgrupos"
+    },
+    "subgroups": {
+      "balanceTitle": "Saldos de los subgrupos",
+      "balanceDescription": "Usa cada subgrupo como una unidad de liquidación para las personas que comparten gastos, como parejas o familias. Los repartos individuales de los gastos no cambian.",
+      "emptyBalances": "Cada subgrupo está liquidado con los demás.",
+      "internalBalancesNote": "Después de liquidar los pagos de los subgrupos, los miembros pueden seguir teniendo saldos dentro de su subgrupo.",
+      "viewIndividual": "Ver saldos individuales",
+      "suggestedPayments": "Pagos sugeridos",
+      "emptyPayments": "No se debe nada entre subgrupos.",
+      "pays": "paga",
+      "receives": "recibe",
+      "to": "a",
+      "from": "de",
+      "personPays": "paga",
+      "settle": "Liquidar",
+      "individualAllHint": "Estás viendo el plan individual estándar de todo el grupo. Puede incluir pagos entre subgrupos.",
+      "unknownParticipant": "Invitación pendiente",
+      "individualWithinHint": "Estás viendo un plan individual que tiene en cuenta los subgrupos. Los pagos sugeridos se mantienen dentro de cada subgrupo cuando los totales de los subgrupos ya están liquidados."
     }
   },
   "Stats": {
@@ -1591,6 +1614,44 @@
       "remove": "Eliminar",
       "changeRole": "Cambiar rol",
       "revoke": "Revocar invitación"
+    },
+    "subgroups": {
+      "title": "Subgrupos",
+      "description": "Agrupa a las personas que gestionan juntas los gastos del viaje, como parejas o familias. En Balances, cada subgrupo puede verse y liquidarse como una unidad; los gastos y repartos siguen siendo individuales.",
+      "enableAria": "Activar Subgrupos",
+      "emptyTitle": "Aún no hay subgrupos",
+      "emptyDescription": "Crea uno para una pareja, una familia o cualquier grupo de personas que liquide como una unidad.",
+      "ungroupedTitle": "Sin subgrupo",
+      "ungroupedDescription": "Estos miembros liquidan individualmente hasta que se unan a un subgrupo.",
+      "create": "Crear subgrupo",
+      "edit": "Editar subgrupo",
+      "delete": "Eliminar subgrupo",
+      "editAria": "Editar {{name}}",
+      "deleteAria": "Eliminar {{name}}",
+      "disableTitle": "¿Desactivar Subgrupos?",
+      "disableDescription": "Al desactivar Subgrupos se eliminarán permanentemente todas las definiciones de subgrupos de este grupo.",
+      "disableImpact": "Los gastos y saldos existentes no cambiarán, pero la opción de liquidación por subgrupos dejará de estar disponible.",
+      "keep": "Mantener Subgrupos",
+      "disable": "Desactivar Subgrupos",
+      "disabling": "Desactivando…",
+      "deleteTitle": "¿Eliminar subgrupo?",
+      "deleteDescription": "¿Eliminar «{{name}}» de este grupo?",
+      "deleteImpact": "Esto solo elimina la definición del subgrupo. Los gastos y saldos existentes no cambiarán.",
+      "cancel": "Cancelar",
+      "deleting": "Eliminando…",
+      "editorCreateTitle": "Crear subgrupo",
+      "editorEditTitle": "Editar subgrupo",
+      "editorDescription": "Ponle un nombre y elige a las personas que liquidan juntas.",
+      "namePlaceholder": "Nombre del subgrupo",
+      "notInTitle": "Sin subgrupo",
+      "inTitle": "En un subgrupo",
+      "assignedTo": "en el subgrupo {{name}}",
+      "pickedCount": "{{count}} seleccionados · se requieren al menos 2",
+      "saving": "Guardando…",
+      "save": "Guardar subgrupo",
+      "validation": "Añade un nombre y al menos dos participantes.",
+      "loadError": "No se pudieron cargar los subgrupos.",
+      "disableAria": "Desactivar Subgrupos"
     }
   },
   "AccountSettings": {
@@ -1811,7 +1872,8 @@
         "information": "Descripción",
         "currency": "Moneda",
         "currencyCode": "Código de moneda",
-        "linkedParticipant": "Participante vinculado"
+        "linkedParticipant": "Participante vinculado",
+        "subgroupsEnabled": "Subgrupos"
       }
     },
     "member": {

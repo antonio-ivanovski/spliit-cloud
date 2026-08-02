@@ -386,6 +386,7 @@ model LedgerParticipant {
   // Pending invitations that materialized this ledger participant to allow
   // pre-accept expenses. The link is cleared when the invitation is revoked.
   invitations                     GroupInvitation[]
+  subgroupMembership              SubgroupMember?
 
   @@index([ledgerId])
 }
@@ -431,11 +432,36 @@ model Group {
   accountPreferences AccountGroupPreference[]
   defaultSplits      AccountGroupDefaultSplit[]
   budgets            GroupBudget[]
+  subgroupsEnabled   Boolean       @default(false)
+  subgroups          Subgroup[]
   // Two-person friend ledgers: the unordered account pair key stored as
   // "accountAId:accountBId" where accountAId < accountBId. Null during the
   // pending-invitation window (peer hasn't joined yet), populated on accept.
   // A partial unique index guarantees at most one FRIEND group per pair.
   friendPairKey      String?
+}
+
+model Subgroup {
+  id        String   @id
+  group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId   String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members SubgroupMember[]
+
+  @@unique([groupId, name])
+  @@index([groupId, createdAt])
+}
+
+model SubgroupMember {
+  subgroup             Subgroup          @relation(fields: [subgroupId], references: [id], onDelete: Cascade)
+  subgroupId           String
+  ledgerParticipant    LedgerParticipant @relation(fields: [ledgerParticipantId], references: [id], onDelete: Cascade)
+  ledgerParticipantId  String            @unique
+
+  @@id([subgroupId, ledgerParticipantId])
 }
 
 enum GroupRole {

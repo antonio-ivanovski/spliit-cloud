@@ -15,6 +15,7 @@ import {
 import { getApiBoss } from './boss'
 import { memberWithLedgerParticipantSelect } from './selects/member-with-ledger-participant'
 import { randomId } from './shared'
+import { removeParticipantFromSubgroup } from './subgroups'
 
 /** Update a member's role inside a group. */
 export async function updateMemberRole(opts: {
@@ -199,6 +200,7 @@ export async function removeMember(opts: {
         where: { id: target.ledgerParticipant.id },
         data: { removedAt: new Date() },
       })
+      await removeParticipantFromSubgroup(target.ledgerParticipant.id, tx)
     }
     await planNotificationForActivity(tx, activity, {}, { boss })
     for (const settlementActivity of settlementActivities ?? []) {
@@ -384,6 +386,9 @@ export async function leaveGroup(opts: {
         leftAt: new Date(),
       },
     })
+    if (participantId) {
+      await removeParticipantFromSubgroup(participantId, tx)
+    }
 
     const activity = await logActivity(
       groupId,

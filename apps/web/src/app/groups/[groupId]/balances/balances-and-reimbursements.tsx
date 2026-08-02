@@ -5,6 +5,10 @@ import { useTranslation } from 'react-i18next'
 import type { Balances, Reimbursement } from '@/lib/balances'
 import { getCurrencyFromGroup } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
+import type {
+  SubgroupDefinition,
+  SubgroupSettlementPlan,
+} from '@spliit/domain/subgroup-settlements'
 
 import { useCurrentGroup } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
@@ -45,8 +49,14 @@ function mergeBalanceParticipants(
         account: null,
         removed: participant.removed,
       })
-    } else if (participant.removed) {
-      existing.removed = true
+      continue
+    }
+    if (participant.removed) existing.removed = true
+    if (participant.name.trim()) {
+      // The balances endpoint resolves the current invitation, including its
+      // temporary name. Prefer that live value over the cached group summary
+      // so settlement units never fall back to a participant id.
+      existing.name = participant.name
     }
   }
   return Array.from(byId.values())
@@ -85,16 +95,22 @@ export default function BalancesAndReimbursements() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Balances' })
   const utils = trpc.useUtils()
   const { groupId, group } = useCurrentGroup()
-  const { currencyDisplay = 'group', view: viewParam } =
-    balancesRoute.useSearch()
+  const {
+    currencyDisplay = 'group',
+    view: viewParam,
+    settlementMode: settlementModeParam,
+  } = balancesRoute.useSearch()
   const navigate = useNavigate()
   const [storedView, setStoredView] = useState<BalanceView>('simple')
+  const settlementMode = settlementModeParam ?? 'individual'
   const linkInviteToken = useLinkInviteToken()
   const { data: balancesData, isLoading: balancesAreLoading } =
     trpc.groups.balances.list.useQuery({
       groupId,
       linkInviteToken,
     })
+  const { data: subgroupsData, isLoading: subgroupsAreLoading } =
+    trpc.groups.subgroups.list.useQuery({ groupId, linkInviteToken })
 
   useEffect(() => {
     // Until we use tRPC more widely and can invalidate the cache on expense
@@ -132,13 +148,38 @@ export default function BalancesAndReimbursements() {
     )
   }, [group?.participants, balancesData])
 
-  const isLoading = balancesAreLoading || !balancesData || !group
+  const isLoading =
+    balancesAreLoading || subgroupsAreLoading || !balancesData || !group
   const groupCurrency = group ? getCurrencyFromGroup(group) : undefined
   const currencyBalances =
     !isLoading && groupCurrency
       ? withDisplayCurrencies(balancesData.currencyBalances, groupCurrency)
       : []
   const view = viewParam ?? storedView
+  const settlementSubgroups = useMemo<SubgroupDefinition[]>(
+    () =>
+      subgroupsData?.enabled
+        ? subgroupsData.subgroups.map((subgroup) => ({
+            id: subgroup.id,
+            name: subgroup.name,
+            memberIds: subgroup.participantIds,
+          }))
+        : [],
+    [subgroupsData],
+  )
+  const canUseSubgroupSettlement =
+    !isLoading &&
+    subgroupsData?.enabled === true &&
+    settlementSubgroups.length > 0 &&
+    Boolean(groupCurrency)
+  const settlementBalances = balancesData?.balances
+  const subgroupSettlementPlan = balancesData?.settlement.subgroup as
+    | SubgroupSettlementPlan
+    | undefined
+  const individualSettlementPlan = balancesData?.settlement.individual ?? {
+    reimbursements: balancesData?.reimbursements ?? [],
+    policy: 'standard' as const,
+  }
 
   const changeView = (next: BalanceView) => {
     setStoredView(next)
@@ -151,7 +192,11 @@ export default function BalancesAndReimbursements() {
       to: '/groups/$groupId/balances',
       params: { groupId },
       replace: true,
-      search: { currencyDisplay, view: next },
+      search: {
+        currencyDisplay,
+        view: next,
+        settlementMode,
+      },
     })
   }
 
@@ -160,7 +205,24 @@ export default function BalancesAndReimbursements() {
       to: '/groups/$groupId/balances',
       params: { groupId },
       replace: true,
-      search: { currencyDisplay: next, view },
+      search: {
+        currencyDisplay: next,
+        view,
+        settlementMode,
+      },
+    })
+  }
+
+  const changeSettlementMode = (next: 'individual' | 'subgroups') => {
+    void navigate({
+      to: '/groups/$groupId/balances',
+      params: { groupId },
+      replace: true,
+      search: {
+        currencyDisplay,
+        view,
+        settlementMode: next,
+      },
     })
   }
 
@@ -187,12 +249,23 @@ export default function BalancesAndReimbursements() {
           isLoading={isLoading}
           participantCount={participants.length}
           currencyDisplay={currencyDisplay}
-          balances={balancesData?.balances}
-          reimbursements={balancesData?.reimbursements}
+          balances={settlementBalances}
+          reimbursements={
+            currencyDisplay === 'group'
+              ? individualSettlementPlan.reimbursements
+              : undefined
+          }
           currencyBalances={currencyBalances}
           participants={participants}
           groupCurrency={groupCurrency}
           groupId={groupId}
+          settlementMode={settlementMode}
+          onSettlementModeChange={
+            canUseSubgroupSettlement ? changeSettlementMode : undefined
+          }
+          subgroups={settlementSubgroups}
+          subgroupSettlementPlan={subgroupSettlementPlan}
+          individualSettlementPolicy={individualSettlementPlan.policy}
         />
       ) : (
         <BalancesCard
@@ -200,11 +273,22 @@ export default function BalancesAndReimbursements() {
           participantCount={participants.length}
           currencyDisplay={currencyDisplay}
           balances={balancesData?.balances}
-          reimbursements={balancesData?.reimbursements}
+          reimbursements={
+            currencyDisplay === 'group'
+              ? individualSettlementPlan.reimbursements
+              : balancesData?.reimbursements
+          }
           currencyBalances={currencyBalances}
           participants={participants}
           groupCurrency={groupCurrency}
           groupId={groupId}
+          settlementMode={settlementMode}
+          onSettlementModeChange={
+            canUseSubgroupSettlement ? changeSettlementMode : undefined
+          }
+          subgroups={settlementSubgroups}
+          subgroupSettlementPlan={subgroupSettlementPlan}
+          individualSettlementPolicy={individualSettlementPlan.policy}
         />
       )}
     </>

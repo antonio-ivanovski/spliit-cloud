@@ -962,6 +962,29 @@
       "owes": "{amount} borcu var",
       "suggestedPayments": "Önerilen ödemeler",
       "empty": "Herkesin hesabı kapandı."
+    },
+    "settlementMode": {
+      "label": "Bakiyeleri kapatma şekli",
+      "individual": "Bireysel",
+      "subgroups": "Alt gruplar"
+    },
+    "subgroups": {
+      "balanceTitle": "Alt grup bakiyeleri",
+      "balanceDescription": "Birlikte harcama yapan kişiler (çiftler veya aileler gibi) için her alt grubu tek bir kapatma birimi olarak kullanın. Bireysel masraf bölüşümleri değişmeden kalır.",
+      "emptyBalances": "Her alt grup diğerleriyle kapatılmış durumda.",
+      "internalBalancesNote": "Alt grup ödemeleri kapatıldıktan sonra üyelerin alt grupları içinde hâlâ bakiyeleri olabilir.",
+      "viewIndividual": "Bireysel bakiyeleri görüntüle",
+      "suggestedPayments": "Önerilen ödemeler",
+      "emptyPayments": "Alt gruplar arasında borç yok.",
+      "pays": "öder",
+      "receives": "alır",
+      "to": "şu kişiye",
+      "from": "şu kişiden",
+      "personPays": "ödeme yapar",
+      "settle": "Borcu kapat",
+      "individualAllHint": "Grup genelindeki standart bireysel planı görüntülüyorsunuz. Alt gruplar arası ödemeler içerebilir.",
+      "unknownParticipant": "Bekleyen davet",
+      "individualWithinHint": "Alt grupları dikkate alan bireysel planı görüntülüyorsunuz. Alt grup toplamları zaten kapatıldıysa önerilen ödemeler her alt grubun içinde kalır."
     }
   },
   "Stats": {
@@ -1582,6 +1605,44 @@
       "remove": "Kaldır",
       "changeRole": "Rolü değiştir",
       "revoke": "Daveti iptal et"
+    },
+    "subgroups": {
+      "title": "Alt gruplar",
+      "description": "Seyahat harcamalarını birlikte yöneten kişileri (çiftler veya aileler gibi) gruplandırın. Bakiyelerde her alt grup tek bir birim olarak görüntülenip kapatılabilir; masraflar ve bölüşümler bireysel kalır.",
+      "enableAria": "Alt grupları etkinleştir",
+      "emptyTitle": "Henüz alt grup yok",
+      "emptyDescription": "Bir çift, hane halkı veya tek bir birim olarak kapanan herkes için bir tane oluşturun.",
+      "ungroupedTitle": "Bir alt grupta değil",
+      "ungroupedDescription": "Bu üyeler bir alt gruba katılana kadar bireysel olarak kapanır.",
+      "create": "Alt grup oluştur",
+      "edit": "Alt grubu düzenle",
+      "delete": "Alt grubu sil",
+      "editAria": "{{name}} grubunu düzenle",
+      "deleteAria": "{{name}} grubunu sil",
+      "disableTitle": "Alt grupları devre dışı bırak?",
+      "disableDescription": "Alt grupları kapatmak, bu gruptaki tüm alt grup tanımlarını kalıcı olarak silecek.",
+      "disableImpact": "Mevcut masraflar ve bakiyeler değişmeden kalır, ancak alt grup kapatma seçeneği artık kullanılamayacak.",
+      "keep": "Alt grupları koru",
+      "disable": "Alt grupları devre dışı bırak",
+      "disabling": "Devre dışı bırakılıyor…",
+      "deleteTitle": "Alt grubu sil?",
+      "deleteDescription": "“{{name}}” grubu bu gruptan silinsin mi?",
+      "deleteImpact": "Bu yalnızca alt grup tanımını kaldırır. Mevcut masraflar ve bakiyeler değişmeden kalır.",
+      "cancel": "İptal",
+      "deleting": "Siliniyor…",
+      "editorCreateTitle": "Alt grup oluştur",
+      "editorEditTitle": "Alt grubu düzenle",
+      "editorDescription": "Bir ad verin ve birlikte kapanacak kişileri seçin.",
+      "namePlaceholder": "Alt grup adı",
+      "notInTitle": "Bir alt grupta değil",
+      "inTitle": "Bir alt grupta",
+      "assignedTo": "{{name}} grubunda",
+      "pickedCount": "{{count}} seçildi · en az 2 gerekli",
+      "saving": "Kaydediliyor…",
+      "save": "Alt grubu kaydet",
+      "validation": "Bir ad ve en az iki katılımcı ekleyin.",
+      "loadError": "Alt gruplar yüklenemedi.",
+      "disableAria": "Alt grupları devre dışı bırak"
     }
   },
   "AccountSettings": {
@@ -1802,7 +1863,8 @@
         "information": "Açıklama",
         "currency": "Para birimi",
         "currencyCode": "Para birimi kodu",
-        "linkedParticipant": "Bağlı katılımcı"
+        "linkedParticipant": "Bağlı katılımcı",
+        "subgroupsEnabled": "Alt gruplar"
       }
     },
     "member": {

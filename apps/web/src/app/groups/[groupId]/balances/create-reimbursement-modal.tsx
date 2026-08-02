@@ -8,7 +8,6 @@ import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
 import { useCreateExpenseMutation } from '@/app/groups/[groupId]/expenses/expense-mutation-hooks'
 import { categoryLabel } from '@/app/groups/[groupId]/stats/category-utils'
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
-import { ParticipantAvatar } from '@/components/participant-avatar'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -43,6 +42,7 @@ import {
   type SettlementDirection,
   type SettlementGroup,
 } from './settlement-groups'
+import { SettlementAvatar } from './settlement-ui'
 
 type CreateReimbursementModalProps = {
   groupId: string
@@ -310,10 +310,10 @@ export function CreateReimbursementModal({
             <div className="flex items-center gap-3">
               {centralParticipant && (
                 <div className="flex items-center gap-2">
-                  <ParticipantAvatar
-                    participant={centralParticipant}
+                  <SettlementAvatar
+                    members={[centralParticipant]}
+                    label={centralParticipant.name}
                     size="sm"
-                    className="shrink-0"
                   />
                   <span className="text-sm font-medium">
                     {centralParticipant.name}
@@ -337,8 +337,15 @@ export function CreateReimbursementModal({
                           : selectedLegs[0].from),
                     )
                     return (
-                      <span className="inline-flex items-center gap-1.5 text-sm font-medium">
-                        {other?.name ?? ''}
+                      <span className="inline-flex min-w-0 items-center gap-1.5 text-sm font-medium">
+                        {other && (
+                          <SettlementAvatar
+                            members={[other]}
+                            label={other.name}
+                            size="sm"
+                          />
+                        )}
+                        <span className="truncate">{other?.name ?? ''}</span>
                         {other?.removed ? <RemovedParticipantBadge /> : null}
                       </span>
                     )
@@ -465,10 +472,10 @@ function ReimbursementSelectionList({
               data-testid={`reimbursement-select-${key}`}
             />
             {counterparty && (
-              <ParticipantAvatar
-                participant={counterparty}
+              <SettlementAvatar
+                members={[counterparty]}
+                label={counterparty.name}
                 size="sm"
-                className="shrink-0"
               />
             )}
             <span className="min-w-0 flex-1 truncate text-sm font-medium">

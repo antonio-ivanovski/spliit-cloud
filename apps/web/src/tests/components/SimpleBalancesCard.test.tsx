@@ -170,4 +170,81 @@ describe('SimpleBalancesCard', () => {
     const skeletons = document.querySelectorAll('.animate-pulse')
     expect(skeletons.length).toBeGreaterThan(0)
   })
+
+  it('uses the resolved participant name for an ungrouped pending invite', () => {
+    const pendingId = 'lp-pending-invite'
+    render(
+      <SimpleBalancesCard
+        isLoading={false}
+        currencyDisplay="group"
+        settlementMode="subgroups"
+        balances={{
+          alice: { paid: 1000, paidFor: 0, total: 1000 },
+          bob: { paid: 0, paidFor: 1000, total: -1000 },
+          [pendingId]: { paid: 500, paidFor: 0, total: 500 },
+        }}
+        reimbursements={[]}
+        currencyBalances={[]}
+        participants={[
+          { id: 'alice', name: 'Alice' },
+          { id: 'bob', name: 'Bob' },
+          { id: pendingId, name: 'Alex from the trip' },
+        ]}
+        groupCurrency={EUR}
+        groupId="group-1"
+        subgroups={[
+          { id: 'couple', name: 'Couple', memberIds: ['alice', 'bob'] },
+        ]}
+        subgroupSettlementPlan={{
+          units: [
+            {
+              kind: 'subgroup',
+              id: 'couple',
+              name: 'Couple',
+              memberIds: ['alice', 'bob'],
+              total: 0,
+            },
+            {
+              kind: 'participant',
+              id: pendingId,
+              name: pendingId,
+              memberIds: [pendingId],
+              total: 500,
+            },
+          ],
+          legs: [],
+          hasInternalBalances: true,
+        }}
+      />,
+    )
+
+    expect(screen.getAllByText('Alex from the trip').length).toBeGreaterThan(0)
+    expect(screen.queryByText(pendingId)).not.toBeInTheDocument()
+  })
+
+  it('uses the group-wide individual plan when subgroups exist', () => {
+    render(
+      <SimpleBalancesCard
+        isLoading={false}
+        currencyDisplay="group"
+        balances={balances}
+        reimbursements={reimbursements}
+        currencyBalances={[]}
+        participants={participants}
+        groupCurrency={EUR}
+        groupId="group-1"
+        individualSettlementPolicy="all-individual"
+        subgroups={[
+          { id: 'couple', name: 'Couple', memberIds: ['alice', 'bob'] },
+        ]}
+      />,
+    )
+
+    expect(
+      screen.getByText(
+        'You are viewing the standard group-wide individual plan. It may include payments between subgroups.',
+      ),
+    ).toBeInTheDocument()
+    expect(screen.queryByRole('switch')).not.toBeInTheDocument()
+  })
 })

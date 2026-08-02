@@ -969,6 +969,29 @@
       "owes": "{amount} zor du",
       "suggestedPayments": "Iradokitako ordainketak",
       "empty": "Denak kitatuta daude."
+    },
+    "settlementMode": {
+      "label": "Kitatu saldoak honela",
+      "individual": "Banaka",
+      "subgroups": "Azpitaldeak"
+    },
+    "subgroups": {
+      "balanceTitle": "Azpitaldeen saldoak",
+      "balanceDescription": "Erabili azpitalde bakoitza kitapen-unitate gisa gastuak partekatzen dituzten pertsonentzat, hala nola bikoteak edo familiak. Gastuen banakako zatitzeak ez dira aldatzen.",
+      "emptyBalances": "Azpitalde guztiak kitatuta daude gainerakoekin.",
+      "internalBalancesNote": "Azpitaldeetako ordainketak kitatu ondoren, kideek oraindik saldoak izan ditzakete beren azpitaldearen barruan.",
+      "viewIndividual": "Ikusi banakako saldoak",
+      "suggestedPayments": "Iradokitako ordainketak",
+      "emptyPayments": "Ez da ezer zor azpitaldeen artean.",
+      "pays": "ordaintzen du",
+      "receives": "jasotzen du",
+      "to": "-ri",
+      "from": "-gandik",
+      "personPays": "ordaintzen du",
+      "settle": "Kitatu",
+      "individualAllHint": "Talde osoko banakako plan estandarra ikusten ari zara. Azpitaldeen arteko ordainketak izan ditzake.",
+      "unknownParticipant": "Gonbidapenaren zain",
+      "individualWithinHint": "Azpitaldeak kontuan hartzen dituen banakako plana ikusten ari zara. Iradokitako ordainketak azpitalde bakoitzaren barruan mantentzen dira azpitaldeen guztizkoak jada kitatuta daudenean."
     }
   },
   "Stats": {
@@ -1590,6 +1613,44 @@
       "remove": "Kendu",
       "changeRole": "Aldatu rola",
       "revoke": "Baliogabetu gonbidapena"
+    },
+    "subgroups": {
+      "title": "Azpitaldeak",
+      "description": "Bidaiaren gastuak elkarrekin kudeatzen dituzten pertsonak bildu, hala nola bikoteak edo familiak. Balantzean, azpitalde bakoitza unitate gisa ikusi eta kitatu daiteke; gastuak eta banaketak banakakoak izaten jarraitzen dute.",
+      "enableAria": "Aktibatu azpitaldeak",
+      "emptyTitle": "Oraindik ez dago azpitalderik",
+      "emptyDescription": "Sortu bat bikote, etxeko edo unitate gisa kitatzen duten pertsonentzat.",
+      "ungroupedTitle": "Azpitalderik gabe",
+      "ungroupedDescription": "Kide hauek banaka kitatzen dute azpitalde batean sartu arte.",
+      "create": "Sortu azpitaldea",
+      "edit": "Editatu azpitaldea",
+      "delete": "Ezabatu azpitaldea",
+      "editAria": "Editatu {{name}}",
+      "deleteAria": "Ezabatu {{name}}",
+      "disableTitle": "Azpitaldeak desaktibatu?",
+      "disableDescription": "Azpitaldeak desaktibatzean, azpitalde-definizio guztiak behin betiko ezabatuko dira talde honetan.",
+      "disableImpact": "Dauden gastuak eta saldoak ez dira aldatuko, baina azpitaldeka kitatzeko aukera ez da gehiago eskuragarri egongo.",
+      "keep": "Mantendu azpitaldeak",
+      "disable": "Desaktibatu azpitaldeak",
+      "disabling": "Desaktibatzen…",
+      "deleteTitle": "Ezabatu azpitaldea?",
+      "deleteDescription": "Ezabatu «{{name}}» talde honetatik?",
+      "deleteImpact": "Honek azpitaldearen definizioa soilik kentzen du. Dauden gastuak eta saldoak ez dira aldatuko.",
+      "cancel": "Utzi",
+      "deleting": "Ezabatzen…",
+      "editorCreateTitle": "Sortu azpitaldea",
+      "editorEditTitle": "Editatu azpitaldea",
+      "editorDescription": "Eman izen bat eta aukeratu elkarrekin kitatzen duten pertsonak.",
+      "namePlaceholder": "Azpitaldearen izena",
+      "notInTitle": "Azpitalderik gabe",
+      "inTitle": "Azpitalde batean",
+      "assignedTo": "{{name}} azpitaldean",
+      "pickedCount": "{{count}} hautatuta · gutxienez 2 behar dira",
+      "saving": "Gordetzen…",
+      "save": "Gorde azpitaldea",
+      "validation": "Gehitu izen bat eta gutxienez bi partaide.",
+      "loadError": "Ezin izan dira azpitaldeak kargatu.",
+      "disableAria": "Desaktibatu azpitaldeak"
     }
   },
   "AccountSettings": {
@@ -1810,7 +1871,8 @@
         "information": "Deskribapena",
         "currency": "Moneta",
         "currencyCode": "Moneta-kodea",
-        "linkedParticipant": "Lotutako parte-hartzailea"
+        "linkedParticipant": "Lotutako parte-hartzailea",
+        "subgroupsEnabled": "Azpitaldeak"
       }
     },
     "member": {

@@ -969,6 +969,29 @@
       "owes": "deve {amount}",
       "suggestedPayments": "Pagamenti suggeriti",
       "empty": "Tutti i conti sono saldati."
+    },
+    "settlementMode": {
+      "label": "Salda i saldi come",
+      "individual": "Individuale",
+      "subgroups": "Sottogruppi"
+    },
+    "subgroups": {
+      "balanceTitle": "Saldi dei sottogruppi",
+      "balanceDescription": "Usa ogni sottogruppo come unità di saldo per le persone che condividono le spese, come coppie o famiglie. Le suddivisioni individuali delle spese restano invariate.",
+      "emptyBalances": "Ogni sottogruppo è saldato con gli altri.",
+      "internalBalancesNote": "Dopo aver saldato i pagamenti dei sottogruppi, i membri possono avere ancora saldi all'interno del proprio sottogruppo.",
+      "viewIndividual": "Vedi i saldi individuali",
+      "suggestedPayments": "Pagamenti suggeriti",
+      "emptyPayments": "Non è dovuto nulla tra i sottogruppi.",
+      "pays": "paga",
+      "receives": "riceve",
+      "to": "a",
+      "from": "da",
+      "personPays": "paga",
+      "settle": "Salda",
+      "individualAllHint": "Stai visualizzando il piano individuale standard per l'intero gruppo. Può includere pagamenti tra sottogruppi.",
+      "unknownParticipant": "Invito in sospeso",
+      "individualWithinHint": "Stai visualizzando un piano individuale che tiene conto dei sottogruppi. I pagamenti suggeriti restano all'interno di ciascun sottogruppo quando i totali dei sottogruppi sono già saldati."
     }
   },
   "Stats": {
@@ -1591,6 +1614,44 @@
       "remove": "Rimuovi",
       "changeRole": "Cambia ruolo",
       "revoke": "Revoca invito"
+    },
+    "subgroups": {
+      "title": "Sottogruppi",
+      "description": "Raggruppa le persone che gestiscono insieme le spese del viaggio, come coppie o famiglie. In Saldi, ogni sottogruppo può essere visualizzato e saldato come un'unica unità; spese e suddivisioni restano individuali.",
+      "enableAria": "Attiva sottogruppi",
+      "emptyTitle": "Ancora nessun sottogruppo",
+      "emptyDescription": "Creane uno per una coppia, una famiglia o qualsiasi gruppo di persone che salda come un'unità.",
+      "ungroupedTitle": "Senza sottogruppo",
+      "ungroupedDescription": "Questi membri saldano individualmente finché non entrano in un sottogruppo.",
+      "create": "Crea sottogruppo",
+      "edit": "Modifica sottogruppo",
+      "delete": "Elimina sottogruppo",
+      "editAria": "Modifica {{name}}",
+      "deleteAria": "Elimina {{name}}",
+      "disableTitle": "Disattivare i sottogruppi?",
+      "disableDescription": "La disattivazione dei sottogruppi eliminerà definitivamente tutte le definizioni di sottogruppo da questo gruppo.",
+      "disableImpact": "Spese e saldi esistenti resteranno invariati, ma l'opzione di saldo per sottogruppi non sarà più disponibile.",
+      "keep": "Mantieni sottogruppi",
+      "disable": "Disattiva sottogruppi",
+      "disabling": "Disattivazione…",
+      "deleteTitle": "Eliminare questo sottogruppo?",
+      "deleteDescription": "Eliminare «{{name}}» da questo gruppo?",
+      "deleteImpact": "Questa operazione rimuove solo la definizione del sottogruppo. Spese e saldi esistenti restano invariati.",
+      "cancel": "Annulla",
+      "deleting": "Eliminazione…",
+      "editorCreateTitle": "Crea sottogruppo",
+      "editorEditTitle": "Modifica sottogruppo",
+      "editorDescription": "Dagli un nome e scegli le persone che saldano insieme.",
+      "namePlaceholder": "Nome del sottogruppo",
+      "notInTitle": "Senza sottogruppo",
+      "inTitle": "In un sottogruppo",
+      "assignedTo": "nel sottogruppo {{name}}",
+      "pickedCount": "{{count}} selezionati · ne servono almeno 2",
+      "saving": "Salvataggio…",
+      "save": "Salva sottogruppo",
+      "validation": "Aggiungi un nome e almeno due partecipanti.",
+      "loadError": "Impossibile caricare i sottogruppi.",
+      "disableAria": "Disattiva sottogruppi"
     }
   },
   "AccountSettings": {
@@ -1811,7 +1872,8 @@
         "information": "Descrizione",
         "currency": "Valuta",
         "currencyCode": "Codice valuta",
-        "linkedParticipant": "Partecipante collegato"
+        "linkedParticipant": "Partecipante collegato",
+        "subgroupsEnabled": "Sottogruppi"
       }
     },
     "member": {

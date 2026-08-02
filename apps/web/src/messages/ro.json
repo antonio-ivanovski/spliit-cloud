@@ -969,6 +969,29 @@
       "owes": "datorează {amount}",
       "suggestedPayments": "Plăți sugerate",
       "empty": "Toată lumea este la zi."
+    },
+    "settlementMode": {
+      "label": "Decontează soldurile ca",
+      "individual": "Pe persoană",
+      "subgroups": "Subgrupuri"
+    },
+    "subgroups": {
+      "balanceTitle": "Soldurile subgrupurilor",
+      "balanceDescription": "Folosește fiecare subgrup ca unitate de decontare pentru persoanele care împart cheltuielile, cum ar fi cuplurile sau familiile. Împărțirile individuale ale cheltuielilor rămân neschimbate.",
+      "emptyBalances": "Fiecare subgrup este decontat cu celelalte.",
+      "internalBalancesNote": "După decontarea plăților subgrupurilor, membrii pot avea în continuare solduri în interiorul subgrupului lor.",
+      "viewIndividual": "Vezi soldurile individuale",
+      "suggestedPayments": "Plăți sugerate",
+      "emptyPayments": "Nu se datorează nimic între subgrupuri.",
+      "pays": "plătește",
+      "receives": "primește",
+      "to": "către",
+      "from": "de la",
+      "personPays": "plătește",
+      "settle": "Decontează",
+      "individualAllHint": "Vizualizezi planul individual standard pentru întregul grup. Poate include plăți între subgrupuri.",
+      "unknownParticipant": "Invitație în așteptare",
+      "individualWithinHint": "Vizualizezi un plan individual care ține cont de subgrupuri. Plățile sugerate rămân în interiorul fiecărui subgrup atunci când totalurile subgrupurilor sunt deja decontate."
     }
   },
   "Stats": {
@@ -1591,6 +1614,44 @@
       "remove": "Elimină",
       "changeRole": "Schimbă rolul",
       "revoke": "Revocă invitația"
+    },
+    "subgroups": {
+      "title": "Subgrupuri",
+      "description": "Grupează persoanele care gestionează împreună cheltuielile călătoriei, cum ar fi cuplurile sau familiile. În Solduri, fiecare subgrup poate fi vizualizat și decontat ca o unitate; cheltuielile și împărțirile rămân individuale.",
+      "enableAria": "Activează subgrupurile",
+      "emptyTitle": "Încă nu există subgrupuri",
+      "emptyDescription": "Creează unul pentru un cuplu, o gospodărie sau orice persoane care decontează ca unitate.",
+      "ungroupedTitle": "Fără subgrup",
+      "ungroupedDescription": "Acești membri decontează individual până când se alătură unui subgrup.",
+      "create": "Creează subgrup",
+      "edit": "Editează subgrupul",
+      "delete": "Șterge subgrupul",
+      "editAria": "Editează {{name}}",
+      "deleteAria": "Șterge {{name}}",
+      "disableTitle": "Dezactivezi subgrupurile?",
+      "disableDescription": "Dezactivarea subgrupurilor va șterge definitiv toate definițiile de subgrup din acest grup.",
+      "disableImpact": "Cheltuielile și soldurile existente rămân neschimbate, dar opțiunea de decontare pe subgrupuri nu va mai fi disponibilă.",
+      "keep": "Păstrează subgrupurile",
+      "disable": "Dezactivează subgrupurile",
+      "disabling": "Se dezactivează…",
+      "deleteTitle": "Ștergi acest subgrup?",
+      "deleteDescription": "Ștergi «{{name}}» din acest grup?",
+      "deleteImpact": "Aceasta elimină doar definiția subgrupului. Cheltuielile și soldurile existente rămân neschimbate.",
+      "cancel": "Anulează",
+      "deleting": "Se șterge…",
+      "editorCreateTitle": "Creează subgrup",
+      "editorEditTitle": "Editează subgrupul",
+      "editorDescription": "Dă-i un nume și alege persoanele care decontează împreună.",
+      "namePlaceholder": "Numele subgrupului",
+      "notInTitle": "Fără subgrup",
+      "inTitle": "Într-un subgrup",
+      "assignedTo": "în {{name}}",
+      "pickedCount": "{{count}} selectate · sunt necesare cel puțin 2",
+      "saving": "Se salvează…",
+      "save": "Salvează subgrupul",
+      "validation": "Adaugă un nume și cel puțin doi participanți.",
+      "loadError": "Subgrupurile nu au putut fi încărcate.",
+      "disableAria": "Dezactivează subgrupurile"
     }
   },
   "AccountSettings": {
@@ -1811,7 +1872,8 @@
         "information": "Descriere",
         "currency": "Monedă",
         "currencyCode": "Cod monedă",
-        "linkedParticipant": "Participant legat"
+        "linkedParticipant": "Participant legat",
+        "subgroupsEnabled": "Subgrupuri"
       }
     },
     "member": {

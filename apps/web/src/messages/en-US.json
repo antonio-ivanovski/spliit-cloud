@@ -1341,6 +1341,29 @@
       "settle": "Settle",
       "settlePaymentsBy": "Settle {count} payments by {name}, {amount}",
       "settlePaymentsTo": "Settle {count} payments to {name}, {amount}"
+    },
+    "settlementMode": {
+      "label": "Settle balances as",
+      "individual": "Individual",
+      "subgroups": "Subgroups"
+    },
+    "subgroups": {
+      "balanceTitle": "Subgroup balances",
+      "balanceDescription": "Use each subgroup as one settlement unit for people who share spending, such as couples or families. Individual expense splits stay unchanged.",
+      "emptyBalances": "Every subgroup is settled with the others.",
+      "internalBalancesNote": "After the subgroup payments are settled, members may still have balances inside their subgroup.",
+      "viewIndividual": "View individual balances",
+      "suggestedPayments": "Suggested payments",
+      "emptyPayments": "Nothing is owed between subgroups.",
+      "pays": "pays",
+      "receives": "receives",
+      "to": "to",
+      "from": "from",
+      "personPays": "pays",
+      "settle": "Settle",
+      "individualAllHint": "You are viewing the standard group-wide individual plan. It may include payments between subgroups.",
+      "unknownParticipant": "Pending invite",
+      "individualWithinHint": "You are viewing a subgroup-aware individual plan. Suggested payments stay within each subgroup when the subgroup totals are already settled."
     }
   },
   "Stats": {
@@ -1867,6 +1890,44 @@
       "remove": "Remove",
       "changeRole": "Change role",
       "revoke": "Revoke invitation"
+    },
+    "subgroups": {
+      "title": "Subgroups",
+      "description": "Group people who manage trip spending together, such as couples or families. In Balances, each subgroup can be viewed and settled as one unit; expenses and splits remain individual.",
+      "enableAria": "Enable Subgroups",
+      "emptyTitle": "No subgroups yet",
+      "emptyDescription": "Create one for a couple, household, or any people who settle as a unit.",
+      "ungroupedTitle": "Not in a subgroup",
+      "ungroupedDescription": "These members settle individually until they join a subgroup.",
+      "create": "Create subgroup",
+      "edit": "Edit subgroup",
+      "delete": "Delete subgroup",
+      "editAria": "Edit {{name}}",
+      "deleteAria": "Delete {{name}}",
+      "disableTitle": "Disable Subgroups?",
+      "disableDescription": "Turning off Subgroups will permanently delete all subgroup definitions from this group.",
+      "disableImpact": "Existing expenses and balances will remain unchanged, but the subgroup settlement option will no longer be available.",
+      "keep": "Keep Subgroups",
+      "disable": "Disable Subgroups",
+      "disabling": "Disabling…",
+      "deleteTitle": "Delete subgroup?",
+      "deleteDescription": "Delete “{{name}}” from this group?",
+      "deleteImpact": "This removes only the subgroup definition. Existing expenses and balances will remain unchanged.",
+      "cancel": "Cancel",
+      "deleting": "Deleting…",
+      "editorCreateTitle": "Create subgroup",
+      "editorEditTitle": "Edit subgroup",
+      "editorDescription": "Give it a name and choose the people who settle together.",
+      "namePlaceholder": "Subgroup name",
+      "notInTitle": "Not in a subgroup",
+      "inTitle": "In a subgroup",
+      "assignedTo": "in {{name}}",
+      "pickedCount": "{{count}} picked · at least 2 required",
+      "saving": "Saving…",
+      "save": "Save subgroup",
+      "validation": "Add a name and at least two participants.",
+      "loadError": "Subgroups could not be loaded.",
+      "disableAria": "Disable Subgroups"
     }
   },
   "Activities": {
@@ -1903,7 +1964,8 @@
         "information": "Description",
         "currency": "Currency",
         "currencyCode": "Currency code",
-        "linkedParticipant": "Linked participant"
+        "linkedParticipant": "Linked participant",
+        "subgroupsEnabled": "Subgroups"
       }
     },
     "member": {
