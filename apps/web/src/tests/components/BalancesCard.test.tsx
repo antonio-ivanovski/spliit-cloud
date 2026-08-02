@@ -141,17 +141,16 @@ describe('BalancesCard', () => {
         .every((bar) => bar.querySelector('[aria-hidden="true"].h-4')),
     ).toBe(true)
     expect(screen.queryByText(/owes/)).not.toBeInTheDocument()
+    expect(screen.getAllByTestId(/reimbursement-settle-/)).toHaveLength(4)
     expect(
-      screen.getAllByRole('button', { name: /Mark .* as paid/ }),
-    ).toHaveLength(2)
+      screen.getByTestId('reimbursement-settle-pay-bob-alice'),
+    ).toHaveTextContent('Settle')
     expect(
-      screen.getByRole('button', {
-        name: 'Mark €20.00 from Bob to Alice as paid',
-      }),
+      screen.getByTestId('reimbursement-settle-receive-bob-alice'),
     ).toBeInTheDocument()
   })
 
-  it('opens the create reimbursement modal when clicking Mark as paid', async () => {
+  it('opens the create reimbursement modal when clicking a per-leg settle action', async () => {
     const { user } = render(
       <BalancesCard
         isLoading={false}
@@ -166,7 +165,7 @@ describe('BalancesCard', () => {
     )
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-    await user.click(screen.getAllByText('Mark as paid')[0])
+    await user.click(screen.getByTestId('reimbursement-settle-pay-bob-alice'))
 
     expect(screen.getByRole('dialog')).toBeInTheDocument()
     expect(screen.getByText('Settlement payment')).toBeInTheDocument()
@@ -198,7 +197,7 @@ describe('BalancesCard', () => {
       document.querySelector('img[src*="flagcdn.com/h24/eu.png"]'),
     ).toBeInTheDocument()
     expect(
-      screen.getAllByRole('button', { name: /Mark .* as paid/ }).length,
+      screen.getAllByTestId(/reimbursement-settle-/).length,
     ).toBeGreaterThan(0)
   })
 

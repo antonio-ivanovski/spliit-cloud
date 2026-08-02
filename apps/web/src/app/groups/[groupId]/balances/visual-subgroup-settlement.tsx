@@ -15,6 +15,7 @@ import {
 import {
   SettlementAvatar,
   SettlementGroupCard,
+  SettlementLegList,
   SettlementLegRow,
   hydrateSettlementUnits,
   type SettlementIdentity,
@@ -263,93 +264,96 @@ function VisualSubgroupDirection({
                   showAvatars={false}
                   showSingleParticipantBar
                 />
-                {unitLegs.map((leg) => {
-                  const counterparty = unitByKey.get(
-                    direction === 'receive'
-                      ? `${leg.from.kind}:${leg.from.id}`
-                      : `${leg.to.kind}:${leg.to.id}`,
-                  )
-                  if (!counterparty) return null
-                  const detailPayer = unitByKey
-                    .get(`${leg.from.kind}:${leg.from.id}`)
-                    ?.members.find((member) => member.id === leg.payerId)
-                  const detailReceiver = unitByKey
-                    .get(`${leg.to.kind}:${leg.to.id}`)
-                    ?.members.find((member) => member.id === leg.receiverId)
+                <SettlementLegList>
+                  {unitLegs.map((leg) => {
+                    const counterparty = unitByKey.get(
+                      direction === 'receive'
+                        ? `${leg.from.kind}:${leg.from.id}`
+                        : `${leg.to.kind}:${leg.to.id}`,
+                    )
+                    if (!counterparty) return null
+                    const detailPayer = unitByKey
+                      .get(`${leg.from.kind}:${leg.from.id}`)
+                      ?.members.find((member) => member.id === leg.payerId)
+                    const detailReceiver = unitByKey
+                      .get(`${leg.to.kind}:${leg.to.id}`)
+                      ?.members.find((member) => member.id === leg.receiverId)
 
-                  return (
-                    <SettlementLegRow
-                      key={leg.key}
-                      counterparty={{
-                        id: `${counterparty.kind}:${counterparty.id}`,
-                        name: counterparty.name,
-                        members: counterparty.members,
-                        total: 0,
-                      }}
-                      description={
-                        <>
-                          {t(
-                            direction === 'receive'
-                              ? 'subgroups.from'
-                              : 'subgroups.to',
-                          )}{' '}
-                          <strong className="font-semibold text-foreground">
-                            {counterparty.name}
-                          </strong>
-                        </>
-                      }
-                      detail={
-                        detailPayer || detailReceiver ? (
+                    return (
+                      <SettlementLegRow
+                        key={leg.key}
+                        counterparty={{
+                          id: `${counterparty.kind}:${counterparty.id}`,
+                          name: counterparty.name,
+                          members: counterparty.members,
+                          total: 0,
+                        }}
+                        description={
                           <>
-                            {detailPayer ? (
-                              <>
-                                <SettlementAvatar
-                                  members={[detailPayer]}
-                                  label={detailPayer.name}
-                                  size="xs"
-                                />
-                                <span className="min-w-0 font-medium break-words">
-                                  {detailPayer.name}
-                                </span>
-                              </>
-                            ) : null}
-                            {detailPayer && detailReceiver ? (
-                              <span className="px-0.5 text-muted-foreground">
-                                {t('subgroups.personPays')}
-                              </span>
-                            ) : null}
-                            {detailReceiver ? (
-                              <>
-                                <SettlementAvatar
-                                  members={[detailReceiver]}
-                                  label={detailReceiver.name}
-                                  size="xs"
-                                />
-                                <span className="min-w-0 font-medium break-words">
-                                  {detailReceiver.name}
-                                </span>
-                              </>
-                            ) : null}
+                            {t(
+                              direction === 'receive'
+                                ? 'subgroups.from'
+                                : 'subgroups.to',
+                            )}{' '}
+                            <strong className="font-semibold text-foreground">
+                              {counterparty.name}
+                            </strong>
                           </>
-                        ) : null
-                      }
-                      amount={leg.amount}
-                      currency={currency}
-                      locale={locale}
-                      action={
-                        <Button
-                          type="button"
-                          variant="link"
-                          className="h-auto shrink-0 p-0 text-xs"
-                          onClick={() => onSettle(leg)}
-                        >
-                          <Check className="mr-1 size-3.5" />
-                          {t('subgroups.settle')}
-                        </Button>
-                      }
-                    />
-                  )
-                })}
+                        }
+                        detail={
+                          detailPayer || detailReceiver ? (
+                            <>
+                              {detailPayer ? (
+                                <>
+                                  <SettlementAvatar
+                                    members={[detailPayer]}
+                                    label={detailPayer.name}
+                                    size="xs"
+                                  />
+                                  <span className="min-w-0 font-medium break-words">
+                                    {detailPayer.name}
+                                  </span>
+                                </>
+                              ) : null}
+                              {detailPayer && detailReceiver ? (
+                                <span className="px-0.5 text-muted-foreground">
+                                  {t('subgroups.personPays')}
+                                </span>
+                              ) : null}
+                              {detailReceiver ? (
+                                <>
+                                  <SettlementAvatar
+                                    members={[detailReceiver]}
+                                    label={detailReceiver.name}
+                                    size="xs"
+                                  />
+                                  <span className="min-w-0 font-medium break-words">
+                                    {detailReceiver.name}
+                                  </span>
+                                </>
+                              ) : null}
+                            </>
+                          ) : null
+                        }
+                        amount={leg.amount}
+                        currency={currency}
+                        locale={locale}
+                        showRail={false}
+                        action={
+                          <Button
+                            type="button"
+                            variant="link"
+                            className="h-auto shrink-0 p-0 text-xs"
+                            onClick={() => onSettle(leg)}
+                          >
+                            <Check className="mr-1 size-3.5" />
+                            {t('subgroups.settle')}
+                          </Button>
+                        }
+                      />
+                    )
+                  })}
+                </SettlementLegList>
               </div>
             </SettlementGroupCard>
           )

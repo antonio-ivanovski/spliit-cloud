@@ -104,7 +104,7 @@ describe('SimpleBalancesCard', () => {
       emphasizedLabels.some(
         (element) => element.parentElement?.textContent === 'Alice receives',
       ),
-    ).toBe(true)
+    ).toBe(false)
     expect(
       emphasizedLabels.some(
         (element) => element.parentElement?.textContent === 'Bob pays',
@@ -112,13 +112,68 @@ describe('SimpleBalancesCard', () => {
     ).toBe(true)
     expect(screen.queryByText(/<strong>/)).not.toBeInTheDocument()
     expect(
-      screen.getByRole('button', {
-        name: /Mark €30\.00 from Bob to Alice/,
-      }),
-    ).toBeInTheDocument()
+      screen.getByTestId('reimbursement-settle-pay-bob-alice'),
+    ).toHaveTextContent('Settle')
+    expect(
+      screen.getByTestId('reimbursement-settle-pay-bob-alice'),
+    ).toHaveAttribute('aria-label', 'Settle 1 payments by Bob, €30.00')
     expect(
       screen.queryByTestId('participant-segment-bar'),
     ).not.toBeInTheDocument()
+  })
+
+  it('splits payments from the balance overview and keeps visual detail local', () => {
+    render(
+      <SimpleBalancesCard
+        isLoading={false}
+        currencyDisplay="group"
+        balances={balances}
+        reimbursements={reimbursements}
+        currencyBalances={[]}
+        participants={participants}
+        groupCurrency={EUR}
+        groupId="group-1"
+        view="visual"
+      />,
+    )
+
+    expect(
+      screen.getByRole('heading', { name: 'Suggested payments' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { name: 'Balances' }),
+    ).toBeInTheDocument()
+    expect(screen.getByTestId('settlement-balances')).toBeInTheDocument()
+    expect(screen.getAllByTestId('participant-segment-bar')).toHaveLength(2)
+  })
+
+  it('can switch compact payments to receiver groups without duplicating legs', async () => {
+    const { user } = render(
+      <SimpleBalancesCard
+        isLoading={false}
+        currencyDisplay="group"
+        balances={balances}
+        reimbursements={reimbursements}
+        currencyBalances={[]}
+        participants={participants}
+        groupCurrency={EUR}
+        groupId="group-1"
+      />,
+    )
+
+    expect(screen.getByRole('radio', { name: 'To pay' })).toBeChecked()
+    expect(screen.getByRole('radio', { name: 'To receive' })).not.toBeChecked()
+
+    await user.click(screen.getByRole('radio', { name: 'To receive' }))
+
+    expect(screen.getByRole('radio', { name: 'To receive' })).toBeChecked()
+    expect(screen.getByRole('radio', { name: 'To pay' })).not.toBeChecked()
+    expect(
+      screen.getByTestId('reimbursement-settle-receive-bob-alice'),
+    ).toHaveTextContent('Settle')
+    expect(
+      screen.getByTestId('reimbursement-settle-receive-bob-alice'),
+    ).toHaveAttribute('aria-label', 'Settle 1 payments to Alice, €30.00')
   })
 
   it('preserves the native currency on original-currency settlement actions', () => {
@@ -142,12 +197,10 @@ describe('SimpleBalancesCard', () => {
       />,
     )
 
-    expect(screen.getByText('EUR')).toBeInTheDocument()
+    expect(screen.getAllByText('EUR')).toHaveLength(2)
     expect(
-      screen.getByRole('button', {
-        name: /Mark €30\.00 from Bob to Alice/,
-      }),
-    ).toBeInTheDocument()
+      screen.getAllByTestId(/reimbursement-settle-/).length,
+    ).toBeGreaterThan(0)
   })
 
   it('renders loading skeletons without crashing when participantCount is 0', () => {

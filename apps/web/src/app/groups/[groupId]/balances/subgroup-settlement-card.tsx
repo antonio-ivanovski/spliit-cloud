@@ -39,6 +39,9 @@ type Props = {
   participants: Participant[]
   settlementPlan?: SubgroupSettlementPlan
   onSwitchToIndividual?: () => void
+  /** Render only the balance overview or only the actionable payment plan. */
+  showBalances?: boolean
+  showPayments?: boolean
 }
 
 export function SubgroupSettlementCard({
@@ -47,6 +50,8 @@ export function SubgroupSettlementCard({
   participants,
   settlementPlan: serverSettlementPlan,
   onSwitchToIndividual,
+  showBalances = true,
+  showPayments = true,
 }: Props) {
   const locale = useLocale()
   const { t } = useTranslation(undefined, { keyPrefix: 'Balances' })
@@ -138,48 +143,52 @@ export function SubgroupSettlementCard({
 
   return (
     <div className="space-y-4" data-testid="subgroup-settlement">
-      <section className="space-y-5" aria-label={t('subgroups.balanceTitle')}>
-        <div>
-          <p className="text-sm font-medium">{t('subgroups.balanceTitle')}</p>
-          <p className="mt-1 text-xs text-muted-foreground">
-            {t('subgroups.balanceDescription')}
-          </p>
-        </div>
-
-        <SettlementBalanceList
-          identities={unitViews}
-          currency={currency}
-          locale={locale}
-          emptyMessage={t('subgroups.emptyBalances')}
-          amountLabel={({ amount, isReceiving }) =>
-            isReceiving
-              ? t('simple.isOwed', { amount })
-              : t('simple.owes', { amount })
-          }
-        />
-
-        {settlementPlan.hasInternalBalances ? (
-          <div className="flex items-start gap-3 rounded-lg border border-border/70 bg-muted/20 px-3 py-2.5 text-xs text-muted-foreground">
-            <Info
-              className="mt-0.5 size-4 shrink-0 text-primary"
-              aria-hidden="true"
-            />
-            <p className="min-w-0 flex-1">
-              {t('subgroups.internalBalancesNote')}{' '}
-              {onSwitchToIndividual ? (
-                <Button
-                  type="button"
-                  variant="link"
-                  className="h-auto p-0 text-xs"
-                  onClick={onSwitchToIndividual}
-                >
-                  {t('subgroups.viewIndividual')}
-                </Button>
-              ) : null}
+      {showBalances ? (
+        <section className="space-y-5" aria-label={t('subgroups.balanceTitle')}>
+          <div>
+            <p className="text-sm font-medium">{t('subgroups.balanceTitle')}</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {t('subgroups.balanceDescription')}
             </p>
           </div>
-        ) : null}
 
+          <SettlementBalanceList
+            identities={unitViews}
+            currency={currency}
+            locale={locale}
+            emptyMessage={t('subgroups.emptyBalances')}
+            amountLabel={({ amount, isReceiving }) =>
+              isReceiving
+                ? t('simple.isOwed', { amount })
+                : t('simple.owes', { amount })
+            }
+          />
+
+          {settlementPlan.hasInternalBalances ? (
+            <div className="flex items-start gap-3 rounded-lg border border-border/70 bg-muted/20 px-3 py-2.5 text-xs text-muted-foreground">
+              <Info
+                className="mt-0.5 size-4 shrink-0 text-primary"
+                aria-hidden="true"
+              />
+              <p className="min-w-0 flex-1">
+                {t('subgroups.internalBalancesNote')}{' '}
+                {onSwitchToIndividual ? (
+                  <Button
+                    type="button"
+                    variant="link"
+                    className="h-auto p-0 text-xs"
+                    onClick={onSwitchToIndividual}
+                  >
+                    {t('subgroups.viewIndividual')}
+                  </Button>
+                ) : null}
+              </p>
+            </div>
+          ) : null}
+        </section>
+      ) : null}
+
+      {showPayments ? (
         <section
           aria-label={t('subgroups.suggestedPayments')}
           className="space-y-3"
@@ -315,7 +324,7 @@ export function SubgroupSettlementCard({
             </div>
           )}
         </section>
-      </section>
+      ) : null}
 
       {pendingLeg && (
         <CreateReimbursementModal

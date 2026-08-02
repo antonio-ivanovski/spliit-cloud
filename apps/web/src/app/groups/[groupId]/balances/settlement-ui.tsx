@@ -192,25 +192,42 @@ export function SettlementGroupCard({
   children: ReactNode
 }) {
   return (
-    <div className="rounded-lg border border-border/70">
-      <div className="flex min-h-12 items-center justify-between gap-2 px-3 py-2">
-        <div className="flex min-w-0 items-center gap-2">
+    <div className="overflow-hidden rounded-xl border border-border/80 bg-card shadow-xs">
+      <div className="flex min-h-14 items-center justify-between gap-2 border-b border-dashed border-border/70 bg-background/70 px-3 py-2.5">
+        <div className="flex min-w-0 flex-1 items-center gap-2">
           <SettlementAvatar members={identity.members} label={identity.name} />
-          <span className="min-w-0 truncate text-sm font-normal text-muted-foreground">
+          <span className="min-w-0 truncate text-sm font-medium text-foreground sm:overflow-visible sm:break-words sm:whitespace-normal">
             {title}
           </span>
           {identity.removed ? <RemovedParticipantBadge /> : null}
         </div>
-        <div className="flex items-center gap-1">
-          <span className="shrink-0 text-sm font-medium tabular-nums">
+        <div className="flex shrink-0 items-center gap-1">
+          <span className="shrink-0 rounded-md bg-primary/10 px-2 py-1 text-sm font-semibold text-foreground tabular-nums">
             {formatCurrency(currency, amount, locale)}
           </span>
           {action}
         </div>
       </div>
-      <div className="divide-y divide-border/60 border-t border-border/60">
+      <div className="divide-y divide-border/50 bg-background/60">
         {children}
       </div>
+    </div>
+  )
+}
+
+/**
+ * Keeps the source rows visually attached to the segment bar above them. The
+ * rail starts at the bar's edge and continues through every source row, so the
+ * hierarchy reads as one small notebook-style entry.
+ */
+export function SettlementLegList({ children }: { children: ReactNode }) {
+  return (
+    <div className="relative -mx-3 -mt-3 border-t border-border/50 pt-3">
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-y-0 -top-1 left-5 border-l border-border/70"
+      />
+      <div className="relative divide-y divide-border/50">{children}</div>
     </div>
   )
 }
@@ -223,6 +240,7 @@ export function SettlementLegRow({
   currency,
   locale,
   action,
+  showRail = true,
 }: {
   counterparty: SettlementIdentity
   description: ReactNode
@@ -231,9 +249,20 @@ export function SettlementLegRow({
   currency: Currency
   locale: string
   action?: ReactNode
+  showRail?: boolean
 }) {
   return (
-    <div className="flex min-h-11 items-center gap-2 px-3 py-2 text-xs">
+    <div className="relative flex min-h-11 items-center gap-2 bg-background/40 py-2 pr-3 pl-12 text-xs transition-colors hover:bg-muted/20">
+      {showRail ? (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 left-5 border-l border-border/70"
+        />
+      ) : null}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute top-1/2 left-5 w-3 border-t border-border/70"
+      />
       <SettlementAvatar
         members={counterparty.members}
         label={counterparty.name}
@@ -248,7 +277,7 @@ export function SettlementLegRow({
         ) : null}
       </div>
       {counterparty.removed ? <RemovedParticipantBadge /> : null}
-      <span className="shrink-0 text-muted-foreground tabular-nums">
+      <span className="shrink-0 font-medium text-muted-foreground tabular-nums">
         {formatCurrency(currency, amount, locale)}
       </span>
       {action}

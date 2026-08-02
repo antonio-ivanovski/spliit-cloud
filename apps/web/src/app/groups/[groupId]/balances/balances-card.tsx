@@ -2,7 +2,6 @@ import { Info } from 'lucide-react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { ParticipantSegmentBar } from '@/components/participant-segment-bar'
-import { participantSegmentColor } from '@/components/participant-segment-utils'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { useLocale } from '@/i18n/react'
@@ -26,7 +25,13 @@ import {
   SettlementGroupButton,
 } from './settlement-group-actions'
 import { settlementLegKey, type SettlementGroup } from './settlement-groups'
-import { SettlementAvatar } from './settlement-ui'
+import {
+  SettlementAvatar,
+  SettlementGroupCard,
+  SettlementLegList,
+  SettlementLegRow,
+  type SettlementIdentity,
+} from './settlement-ui'
 import { VisualSubgroupSettlement } from './visual-subgroup-settlement'
 
 type Participant = {
@@ -143,7 +148,7 @@ export function BalancesCard({
   )
 }
 
-function SettlementSection({
+export function SettlementSection({
   balances,
   reimbursements,
   participants,
@@ -297,178 +302,161 @@ function SettlementDirection({
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Balances' })
   return (
-    <>
-      <section aria-label={title} className="space-y-4">
-        <h3 className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-          {title}
-        </h3>
-        <p className="-mt-2 text-xs leading-snug text-muted-foreground/70">
-          {t(
+    <section aria-label={title} className="space-y-4">
+      <h3 className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
+        {title}
+      </h3>
+      <p className="-mt-2 text-xs leading-snug text-muted-foreground/70">
+        {t(
+          direction === 'receive'
+            ? 'direction.toReceiveDescription'
+            : 'direction.toPayDescription',
+        )}
+      </p>
+      <div className="space-y-5">
+        {participants.map((participant) => {
+          const legs = reimbursements.filter((reimbursement) =>
             direction === 'receive'
-              ? 'direction.toReceiveDescription'
-              : 'direction.toPayDescription',
-          )}
-        </p>
-        <div className="space-y-5">
-          {participants.map((participant) => {
-            const legs = reimbursements.filter((reimbursement) =>
-              direction === 'receive'
-                ? reimbursement.to === participant.id
-                : reimbursement.from === participant.id,
+              ? reimbursement.to === participant.id
+              : reimbursement.from === participant.id,
+          )
+          const rows = legs.map((leg) => {
+            const counterparty = getParticipant(
+              direction === 'receive' ? leg.from : leg.to,
             )
-            const rows = legs.map((leg) => {
-              const counterparty = getParticipant(
-                direction === 'receive' ? leg.from : leg.to,
-              )
-              return {
-                id: `${leg.from}-${leg.to}`,
-                name: counterparty.name,
-                amount: leg.amount,
-                participant: counterparty,
-                colorIndex: participantIndex.get(counterparty.id) ?? 0,
-              }
-            })
-            const total = rows.reduce((sum, row) => sum + row.amount, 0)
-
-            const group: SettlementGroup = {
-              direction,
-              participantId: participant.id,
-              legs,
+            return {
+              id: `${leg.from}-${leg.to}`,
+              name: counterparty.name,
+              amount: leg.amount,
+              participant: counterparty,
+              colorIndex: participantIndex.get(counterparty.id) ?? 0,
             }
-            return (
-              <SettlementGroupActions
-                key={participant.id}
-                group={group}
-                currency={currency}
-                groupId={groupId}
-                participants={participants}
-                originalCurrencyCode={
-                  includeOriginalCurrency ? currency.code : undefined
-                }
-              >
-                {(openFor) => (
-                  <article className="space-y-5 border-b border-border/60 pb-5 last:border-b-0 last:pb-0">
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="flex min-w-0 items-center gap-2">
-                        <SettlementAvatar
-                          members={[participant]}
-                          label={participant.name}
-                          size="sm"
-                        />
-                        <span className="min-w-0 truncate text-sm font-normal text-muted-foreground">
-                          <Trans
-                            i18nKey={`Balances.direction.${direction === 'receive' ? 'participantReceives' : 'participantPays'}`}
-                            components={{
-                              strong: (
-                                <strong className="font-semibold text-foreground" />
-                              ),
-                            }}
-                            values={{ name: participant.name }}
-                          />
-                        </span>
-                        {participant.removed ? (
-                          <RemovedParticipantBadge />
-                        ) : null}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <span className="shrink-0 text-sm font-medium tabular-nums">
-                          {formatCurrency(currency, total, locale)}
-                        </span>
-                        <SettlementGroupButton
-                          group={group}
-                          currency={currency}
-                          participantName={participant.name}
-                          onClick={() => openFor()}
-                        />
-                      </div>
-                    </div>
+          })
+          const total = rows.reduce((sum, row) => sum + row.amount, 0)
+          const identity: SettlementIdentity = {
+            id: participant.id,
+            name: participant.name,
+            members: [participant],
+            total: direction === 'receive' ? total : -total,
+            removed: participant.removed,
+          }
+
+          const group: SettlementGroup = {
+            direction,
+            participantId: participant.id,
+            legs,
+          }
+          return (
+            <SettlementGroupActions
+              key={participant.id}
+              group={group}
+              currency={currency}
+              groupId={groupId}
+              participants={participants}
+              originalCurrencyCode={
+                includeOriginalCurrency ? currency.code : undefined
+              }
+            >
+              {(openFor) => (
+                <SettlementGroupCard
+                  identity={identity}
+                  title={
+                    <Trans
+                      i18nKey={`Balances.direction.${direction === 'receive' ? 'participantReceives' : 'participantPays'}`}
+                      components={{
+                        strong: (
+                          <strong className="font-semibold text-foreground" />
+                        ),
+                      }}
+                      values={{ name: participant.name }}
+                    />
+                  }
+                  amount={total}
+                  currency={currency}
+                  locale={locale}
+                  action={
+                    <SettlementGroupButton
+                      group={group}
+                      currency={currency}
+                      participantName={participant.name}
+                      onClick={() => openFor()}
+                    />
+                  }
+                >
+                  <div className="space-y-3 p-3">
                     <ParticipantSegmentBar
                       rows={rows}
                       currency={currency}
                       locale={locale}
                       showSingleParticipantBar
-                    >
-                      <div className="grid grid-cols-1 gap-y-1">
-                        {legs.map((leg, index) => {
-                          const to = getParticipant(leg.to)
-                          const counterparty = getParticipant(
-                            direction === 'receive' ? leg.from : leg.to,
-                          )
-                          const color = participantSegmentColor(
-                            rows[index],
-                            index,
-                          )
-                          return (
-                            <div
-                              key={`${leg.from}-${leg.to}`}
-                              className="flex min-w-0 items-center gap-2 text-xs"
-                            >
-                              <span
-                                aria-hidden="true"
-                                className={`h-2 w-2 shrink-0 rounded-full ${color}`}
+                    />
+                    <SettlementLegList>
+                      {legs.map((leg) => {
+                        const counterparty = getParticipant(
+                          direction === 'receive' ? leg.from : leg.to,
+                        )
+                        const legAmount = formatCurrency(
+                          currency,
+                          leg.amount,
+                          locale,
+                        )
+                        return (
+                          <SettlementLegRow
+                            key={`${leg.from}-${leg.to}`}
+                            counterparty={{
+                              id: counterparty.id,
+                              name: counterparty.name,
+                              members: [counterparty],
+                              total: 0,
+                              removed: counterparty.removed,
+                            }}
+                            description={
+                              <Trans
+                                i18nKey={`Balances.direction.${direction === 'receive' ? 'fromParticipant' : 'toParticipant'}`}
+                                components={{
+                                  strong: (
+                                    <strong className="font-semibold text-foreground" />
+                                  ),
+                                }}
+                                values={{ name: counterparty.name }}
                               />
-                              <span
-                                className="min-w-0 flex-1 truncate font-normal text-muted-foreground"
-                                title={counterparty.name}
+                            }
+                            amount={leg.amount}
+                            currency={currency}
+                            locale={locale}
+                            showRail={false}
+                            action={
+                              <Button
+                                type="button"
+                                variant="link"
+                                onClick={() => openFor([settlementLegKey(leg)])}
+                                className="h-auto shrink-0 p-0 text-xs"
+                                aria-label={t(
+                                  direction === 'pay'
+                                    ? 'direction.settlePaymentsBy'
+                                    : 'direction.settlePaymentsTo',
+                                  {
+                                    count: 1,
+                                    name: participant.name,
+                                    amount: legAmount,
+                                  },
+                                )}
+                                data-testid={`reimbursement-settle-${direction}-${leg.from}-${leg.to}`}
                               >
-                                <Trans
-                                  i18nKey={`Balances.direction.${direction === 'receive' ? 'fromParticipant' : 'toParticipant'}`}
-                                  components={{
-                                    strong: (
-                                      <strong className="font-semibold text-foreground" />
-                                    ),
-                                  }}
-                                  values={{ name: counterparty.name }}
-                                />
-                              </span>
-                              {counterparty.removed ? (
-                                <RemovedParticipantBadge />
-                              ) : null}
-                              <span className="shrink-0 text-muted-foreground tabular-nums">
-                                {formatCurrency(currency, leg.amount, locale)}
-                              </span>
-                              {direction === 'pay' && (
-                                <Button
-                                  type="button"
-                                  variant="link"
-                                  onClick={() =>
-                                    openFor([settlementLegKey(leg)])
-                                  }
-                                  className="h-auto shrink-0 p-0 text-xs"
-                                  aria-label={t(
-                                    'Reimbursements.markAsPaidAria',
-                                    {
-                                      amount: formatCurrency(
-                                        currency,
-                                        leg.amount,
-                                        locale,
-                                      ),
-                                      from: getParticipant(leg.from).name,
-                                      to: to.name,
-                                    },
-                                  )}
-                                  data-testid={`reimbursement-mark-as-paid-${leg.from}-${leg.to}`}
-                                >
-                                  <span className="sr-only sm:not-sr-only">
-                                    {t('Reimbursements.markAsPaid')}
-                                  </span>
-                                  <span className="sm:hidden">
-                                    {t('Reimbursements.markAsPaid')}
-                                  </span>
-                                </Button>
-                              )}
-                            </div>
-                          )
-                        })}
-                      </div>
-                    </ParticipantSegmentBar>
-                  </article>
-                )}
-              </SettlementGroupActions>
-            )
-          })}
-        </div>
-      </section>
-    </>
+                                {t('direction.settle')}
+                              </Button>
+                            }
+                          />
+                        )
+                      })}
+                    </SettlementLegList>
+                  </div>
+                </SettlementGroupCard>
+              )}
+            </SettlementGroupActions>
+          )
+        })}
+      </div>
+    </section>
   )
 }

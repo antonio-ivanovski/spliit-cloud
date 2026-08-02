@@ -13,7 +13,6 @@ import type {
 import { useCurrentGroup } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
 import { BalanceViewSelector, type BalanceView } from './balance-view-selector'
-import { BalancesCard } from './balances-card'
 import { withDisplayCurrencies } from './currency-balances'
 import { CurrencyDisplaySelector } from './currency-display-selector'
 import { SimpleBalancesCard } from './simple-balances-card'
@@ -244,53 +243,29 @@ export default function BalancesAndReimbursements() {
           {t('currencyDisplay.originalNote')}
         </p>
       )}
-      {view === 'simple' ? (
-        <SimpleBalancesCard
-          isLoading={isLoading}
-          participantCount={participants.length}
-          currencyDisplay={currencyDisplay}
-          balances={settlementBalances}
-          reimbursements={
-            currencyDisplay === 'group'
-              ? individualSettlementPlan.reimbursements
-              : undefined
-          }
-          currencyBalances={currencyBalances}
-          participants={participants}
-          groupCurrency={groupCurrency}
-          groupId={groupId}
-          settlementMode={settlementMode}
-          onSettlementModeChange={
-            canUseSubgroupSettlement ? changeSettlementMode : undefined
-          }
-          subgroups={settlementSubgroups}
-          subgroupSettlementPlan={subgroupSettlementPlan}
-          individualSettlementPolicy={individualSettlementPlan.policy}
-        />
-      ) : (
-        <BalancesCard
-          isLoading={isLoading}
-          participantCount={participants.length}
-          currencyDisplay={currencyDisplay}
-          balances={balancesData?.balances}
-          reimbursements={
-            currencyDisplay === 'group'
-              ? individualSettlementPlan.reimbursements
-              : balancesData?.reimbursements
-          }
-          currencyBalances={currencyBalances}
-          participants={participants}
-          groupCurrency={groupCurrency}
-          groupId={groupId}
-          settlementMode={settlementMode}
-          onSettlementModeChange={
-            canUseSubgroupSettlement ? changeSettlementMode : undefined
-          }
-          subgroups={settlementSubgroups}
-          subgroupSettlementPlan={subgroupSettlementPlan}
-          individualSettlementPolicy={individualSettlementPlan.policy}
-        />
-      )}
+      <SimpleBalancesCard
+        isLoading={isLoading}
+        participantCount={participants.length}
+        currencyDisplay={currencyDisplay}
+        balances={settlementBalances}
+        reimbursements={
+          currencyDisplay === 'group'
+            ? individualSettlementPlan.reimbursements
+            : undefined
+        }
+        currencyBalances={currencyBalances}
+        participants={participants}
+        groupCurrency={groupCurrency}
+        groupId={groupId}
+        settlementMode={settlementMode}
+        onSettlementModeChange={
+          canUseSubgroupSettlement ? changeSettlementMode : undefined
+        }
+        subgroups={settlementSubgroups}
+        subgroupSettlementPlan={subgroupSettlementPlan}
+        individualSettlementPolicy={individualSettlementPlan.policy}
+        view={view}
+      />
     </>
   )
 }
