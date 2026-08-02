@@ -1146,7 +1146,8 @@
     "participantSharesLabel": "Број на удели за {name}",
     "decreaseShares": "Намали ги уделите на {name}",
     "increaseShares": "Зголеми ги уделите на {name}",
-    "validationSummary": "Поправете ги означените полиња пред зачувување."
+    "validationSummary": "Поправете ги означените полиња пред зачувување.",
+    "resetDistribution": "Ресетирај"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Избриши документ",
@@ -1354,7 +1355,8 @@
     "paidByMin1": "Мора да се избере најмалку еден плаќач.",
     "paidByAmountSum": "Збирот на износите на плаќачите мора да биде еднаков на износот на трошокот.",
     "paidByPercentageSum": "Збирот на процентите на плаќачите мора да биде 100.",
-    "duplicateParticipant": "Друг плаќач је већ изабран."
+    "duplicateParticipant": "Друг плаќач је већ изабран.",
+    "sharesInvalid": "Учествата мора да бидат помеѓу 0,01 и 1.000.000 со најмногу две децимали."
   },
   "Categories": {
     "search": "Пребарај категорија...",

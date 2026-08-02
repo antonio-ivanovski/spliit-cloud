@@ -125,7 +125,9 @@ export function computePaidForFromItems(
  *
  * Canonical weights/BPS (no last-absorbs remainder):
  *
- * - EVENLY / BY_SHARES → shares: 1
+ * - EVENLY / BY_SHARES → shares: 1 (EVENLY inclusion marker; BY_SHARES is the
+ *   display-unit value 1, serialized to fixed units by the form boundary before
+ *   it reaches the API)
  * - BY_PERCENTAGE → Math.floor(10000 / n)
  * - BY_AMOUNT → Math.floor(amount / n)
  */

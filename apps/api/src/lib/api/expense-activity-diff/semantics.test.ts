@@ -198,16 +198,34 @@ describe('splitSemantics', () => {
     })
 
     it('formats BY_SHARES split', () => {
+      // BY_SHARES rows carry fixed units (100 = 1 displayed share). The
+      // activity text formats them as the displayed value, so 200 fixed
+      // units renders as "2" and 100 as "1".
       expect(
         splitSemantics.format(
           'BY_SHARES',
           [
-            { participant: 'lp-alice', shares: 2 },
-            { participant: 'lp-bob', shares: 1 },
+            { participant: 'lp-alice', shares: 200 },
+            { participant: 'lp-bob', shares: 100 },
           ],
           ctx,
         ),
       ).toBe('Custom split: Alice 2, Bob 1')
+    })
+
+    it('formats BY_SHARES split with two-decimal displayed values', () => {
+      // 110 fixed units = 1.10 displayed shares. The activity feed must
+      // never expose the fixed-unit form to participants.
+      expect(
+        splitSemantics.format(
+          'BY_SHARES',
+          [
+            { participant: 'lp-alice', shares: 110 },
+            { participant: 'lp-bob', shares: 90 },
+          ],
+          ctx,
+        ),
+      ).toBe('Custom split: Alice 1.1, Bob 0.9')
     })
   })
 })

@@ -8,8 +8,11 @@
  *
  * - `EVENLY` — shares are passed through unchanged (ignored by the balance
  *   engine; the parsers keep them as their cent values).
- * - `BY_SHARES` — cents are reduced by their GCD so that the stored shares are
- *   the true ratio weights (e.g. `[200, 300]` → `[2, 3]`).
+ * - `BY_SHARES` — cents are reduced by their GCD to a unitless ratio, then the
+ *   ratio is scaled to the current internal fixed units (`SHARE_SCALE`, i.e.
+ *   100 × 1 share) so a legacy `[200, 300]` cent pair (GCD=100) lands in the
+ *   new contract as `[200, 300]` fixed units (= 2.00 / 3.00 displayed shares).
+ *   The displayed value is recoverable by `sharesAsDecimal(weights[i])`.
  * - `BY_AMOUNT` — shares are passed through as literal cents.
  *
  * `guessByShares` is the only guesser that modifies shares; `guessEvenly`
@@ -18,6 +21,8 @@
  * Config can be tuned per guesser (e.g. by a future import-wizard step) without
  * touching the parsers.
  */
+
+import { SHARE_SCALE } from '../shares'
 
 export type PaidForEntry = { sourceId: string; shares: number }
 
@@ -131,10 +136,13 @@ const DEFAULT_MAX_WEIGHT = 25
 
 /**
  * Detect a clean integer-ratio split (BY_SHARES) and return the normalised
- * ratio weights.
+ * ratio weights in current internal fixed units (100 = 1 displayed share).
  *
- * Divides the cent values by their GCD so the result carries the true ratio —
- * e.g. shares `[200, 300]` → `[{ shares: 2 }, { shares: 3 }]`.
+ * Divides the cent values by their GCD so the result carries the true ratio,
+ * then scales the unitless ratio into fixed units so the consumer can pass it
+ * to expense APIs without further conversion — e.g. cents `[200, 300]`
+ * (GCD=100, weights `[2, 3]`) becomes `[200, 300]` fixed units, i.e. displayed
+ * shares `[2.00, 3.00]`.
  *
  * Returns `null` when the ratio isn't clean (GCD ≤ 1) or when the largest
  * normalised weight exceeds `maxWeight` (default 25).
@@ -150,8 +158,8 @@ export function guessByShares(
   const g = gcdOf(shares)
   if (g <= 1) return null
 
-  const weights = shares.map((s) => s / g)
-  const maxWeight = Math.max(...weights)
+  const weights = shares.map((s) => (s / g) * SHARE_SCALE)
+  const maxWeight = Math.max(...weights) / SHARE_SCALE
   const cap = config?.maxWeight ?? DEFAULT_MAX_WEIGHT
   if (maxWeight > cap) return null
 
@@ -170,9 +178,10 @@ export type GuessResult = {
 /**
  * Best-effort split-mode guess — chains `guessEvenly` and `guessByShares`,
  * falling back to `'BY_AMOUNT'` when neither rule matches. When `BY_SHARES` is
- * chosen the returned `paidFor` carries the GCD-reduced ratio weights (e.g.
- * `[200, 300]` → `[2, 3]`); for `EVENLY` and `BY_AMOUNT` the shares are passed
- * through unchanged.
+ * chosen the returned `paidFor` carries the ratio in current internal fixed
+ * units: legacy `[200, 300]` cents reduce to GCD weights `[2, 3]` and scale
+ * back to stored `[200, 300]` fixed units, displayed as `2 / 3`. For `EVENLY`
+ * and `BY_AMOUNT` the shares are passed through unchanged.
  *
  * Accepts combined configuration for all guessers:
  *

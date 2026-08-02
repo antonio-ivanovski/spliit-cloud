@@ -26,11 +26,15 @@ import type {
   ExpenseFormItemValues,
   SplitMode,
 } from '@spliit/domain'
+import { MAX_DISPLAY_SHARES } from '@spliit/domain'
 
 import {
   enforceCurrencyPattern,
-  enforceIntegerPattern,
   enforcePercentagePattern,
+  enforceSharePattern,
+  nextShareRowsFromInput,
+  safeSharesToFixedUnits,
+  stepDisplayShares,
 } from './currency-utils'
 import type { SavedSplit } from './default-split/split-equal'
 import { splitEqual } from './default-split/split-equal'
@@ -169,16 +173,36 @@ export function ItemParticipantsModal(props: {
   const selectLabel = allSelected ? t('selectNone') : t('selectAll')
 
   const handleSelectAll = () => {
+    setDraft((prev) => {
+      if (prev.paidFor.length === group.participants.length) {
+        return { ...prev, paidFor: [] }
+      }
+      const equalRows = buildEqualParticipantRows({
+        participantIds: group.participants.map((p) => p.id),
+        splitMode: prev.splitMode,
+        targetAmount: itemTotal,
+        currency: groupCurrency,
+      })
+      const existing = new Set(prev.paidFor.map((p) => p.participant))
+      return {
+        ...prev,
+        paidFor: [
+          ...prev.paidFor,
+          ...equalRows.filter((row) => !existing.has(row.participant)),
+        ],
+      }
+    })
+  }
+
+  const handleResetDistribution = () => {
     setDraft((prev) => ({
       ...prev,
-      paidFor: allSelected
-        ? []
-        : buildEqualParticipantRows({
-            participantIds: group.participants.map((p) => p.id),
-            splitMode: prev.splitMode,
-            targetAmount: itemTotal,
-            currency: groupCurrency,
-          }),
+      paidFor: buildEqualParticipantRows({
+        participantIds: group.participants.map((p) => p.id),
+        splitMode: prev.splitMode,
+        targetAmount: itemTotal,
+        currency: groupCurrency,
+      }),
     }))
   }
 
@@ -196,12 +220,19 @@ export function ItemParticipantsModal(props: {
     const sanitizer = match(mode)
       .with('BY_AMOUNT', () => enforceCurrencyPattern)
       .with('BY_PERCENTAGE', () => enforcePercentagePattern)
-      .with('BY_SHARES', () => enforceIntegerPattern)
+      .with('BY_SHARES', () => enforceSharePattern)
       .otherwise(() => enforceCurrencyPattern)
     const sanitized = sanitizer(rawValue)
-    // BY_AMOUNT keeps the raw sanitized string so in-progress decimals
-    // like "10." or "0," survive the controlled-input round-trip.
-    // Other modes coerce to number as before.
+    // BY_AMOUNT and BY_SHARES keep the raw sanitized string so
+    // in-progress decimals like "10.", "0.", or "1." survive the
+    // controlled-input round-trip. Other modes coerce to number as before.
+    if (mode === 'BY_SHARES') {
+      setDraft((prev) => ({
+        ...prev,
+        paidFor: nextShareRowsFromInput(prev.paidFor, participantId, sanitized),
+      }))
+      return
+    }
     const shares =
       mode === 'BY_AMOUNT'
         ? (sanitized as unknown as number)
@@ -228,15 +259,26 @@ export function ItemParticipantsModal(props: {
       <>
         <div className="mb-2 flex items-center justify-between">
           <span className="text-sm font-medium">{t('items.modalTitle')}</span>
-          <Button
-            variant="link"
-            type="button"
-            className="-my-2 -mr-2"
-            disabled={readOnly}
-            onClick={handleSelectAll}
-          >
-            {selectLabel}
-          </Button>
+          <div className="flex items-center gap-1">
+            <Button
+              variant="link"
+              type="button"
+              className="-my-2 -mr-2"
+              disabled={readOnly}
+              onClick={handleResetDistribution}
+            >
+              {t('resetDistribution')}
+            </Button>
+            <Button
+              variant="link"
+              type="button"
+              className="-my-2 -mr-2"
+              disabled={readOnly}
+              onClick={handleSelectAll}
+            >
+              {selectLabel}
+            </Button>
+          </div>
         </div>
 
         {group.participants.map((participant) => {
@@ -260,7 +302,9 @@ export function ItemParticipantsModal(props: {
                     shares:
                       mode === 'BY_PERCENTAGE'
                         ? percentageToBasisPoints(p.shares)
-                        : p.shares,
+                        : mode === 'BY_SHARES'
+                          ? safeSharesToFixedUnits(p.shares)
+                          : p.shares,
                     expenseId: '',
                     participantId: '',
                   })),
@@ -305,12 +349,26 @@ export function ItemParticipantsModal(props: {
                         aria-label={t('decreaseShares', {
                           name: participant.name,
                         })}
-                        onClick={() =>
-                          handleShareChange(
-                            participant.id,
-                            String(Math.max(0, Number(row?.shares ?? 0) - 1)),
-                          )
-                        }
+                        onClick={() => {
+                          const nextValue = stepDisplayShares(row?.shares, -1)
+                          setDraft((prev) => ({
+                            ...prev,
+                            paidFor:
+                              nextValue > 0
+                                ? [
+                                    ...prev.paidFor.filter(
+                                      (p) => p.participant !== participant.id,
+                                    ),
+                                    {
+                                      participant: participant.id,
+                                      shares: nextValue,
+                                    },
+                                  ]
+                                : prev.paidFor.filter(
+                                    (p) => p.participant !== participant.id,
+                                  ),
+                          }))
+                        }}
                       >
                         <Minus className="size-4" aria-hidden="true" />
                       </Button>
@@ -327,6 +385,7 @@ export function ItemParticipantsModal(props: {
                         type="text"
                         disabled={readOnly}
                         value={String(row?.shares ?? '')}
+                        onFocus={(event) => event.currentTarget.select()}
                         aria-label={t('items.participantValueLabel', {
                           name: participant.name,
                         })}
@@ -335,11 +394,11 @@ export function ItemParticipantsModal(props: {
                         }
                         inputMode={match(mode)
                           .with('BY_PERCENTAGE', () => 'decimal' as const)
-                          .with('BY_SHARES', () => 'numeric' as const)
+                          .with('BY_SHARES', () => 'decimal' as const)
                           .otherwise(() => 'decimal' as const)}
                         step={match(mode)
                           .with('BY_PERCENTAGE', () => 0.01)
-                          .with('BY_SHARES', () => 1)
+                          .with('BY_SHARES', () => 0.01)
                           .otherwise(() => 10 ** -groupCurrency.decimal_digits)}
                       />
                       {mode === 'BY_PERCENTAGE' && (
@@ -354,16 +413,28 @@ export function ItemParticipantsModal(props: {
                         variant="ghost"
                         size="icon"
                         className="size-8 shrink-0"
-                        disabled={readOnly}
+                        disabled={
+                          readOnly ||
+                          Number(row?.shares ?? 0) >= MAX_DISPLAY_SHARES
+                        }
                         aria-label={t('increaseShares', {
                           name: participant.name,
                         })}
-                        onClick={() =>
-                          handleShareChange(
-                            participant.id,
-                            String(Number(row?.shares ?? 0) + 1),
-                          )
-                        }
+                        onClick={() => {
+                          const nextValue = stepDisplayShares(row?.shares, 1)
+                          setDraft((prev) => ({
+                            ...prev,
+                            paidFor: [
+                              ...prev.paidFor.filter(
+                                (p) => p.participant !== participant.id,
+                              ),
+                              {
+                                participant: participant.id,
+                                shares: nextValue,
+                              },
+                            ],
+                          }))
+                        }}
                       >
                         <Plus className="size-4" aria-hidden="true" />
                       </Button>

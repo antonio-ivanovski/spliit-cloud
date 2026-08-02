@@ -12,6 +12,7 @@ import {
   type ParticipantShare,
 } from './exact-math'
 import { distributeRemainder } from './remainder-distribution'
+import { sharesAsFixedUnits } from './shares'
 import { amountAsMinorUnits, expenseIdSeed } from './utils'
 
 export type TotalsExpense = {
@@ -335,6 +336,12 @@ export function serializePaidFor<T extends ParticipantShare>({
       case 'BY_PERCENTAGE':
         shares = Math.round(Number(p.shares) * 100)
         break
+      case 'BY_SHARES':
+        // Display share (e.g. 0.5, 1.1) → fixed units (50, 110). EVENLY
+        // is ignored by calculations and is left untouched so inclusion
+        // markers don't accidentally become "valid" share weights.
+        shares = sharesAsFixedUnits(Number(p.shares))
+        break
       default:
         shares = Math.round(Number(p.shares))
     }
@@ -364,6 +371,11 @@ export function serializePaidBy<T extends ParticipantShare>({
         break
       case 'BY_PERCENTAGE':
         shares = Math.round(Number(p.shares) * 100)
+        break
+      case 'BY_SHARES':
+        // Display share (e.g. 0.5, 1.1) → fixed units (50, 110). EVENLY
+        // inclusion markers are untouched so they remain ignored weights.
+        shares = sharesAsFixedUnits(Number(p.shares))
         break
       default:
         shares = Math.round(Number(p.shares))

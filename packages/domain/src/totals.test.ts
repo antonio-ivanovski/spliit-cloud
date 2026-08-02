@@ -390,6 +390,63 @@ describe('calculateExactShares', () => {
     expect(exactAmountToNumber(result.a)).toBe(0)
     expect(exactAmountToNumber(result.b)).toBe(0)
   })
+
+  it('BY_SHARES fixed units: 50 : 100 allocates the same as legacy 1 : 2', () => {
+    const legacy = calculateExactShares({
+      amount: 300,
+      splitMode: 'BY_SHARES',
+      participants: [
+        { id: 'a', shares: 1 },
+        { id: 'b', shares: 2 },
+      ],
+    })
+    const fixed = calculateExactShares({
+      amount: 300,
+      splitMode: 'BY_SHARES',
+      participants: [
+        { id: 'a', shares: 50 },
+        { id: 'b', shares: 100 },
+      ],
+    })
+    expect(exactAmountToNumber(fixed.a)).toBe(exactAmountToNumber(legacy.a))
+    expect(exactAmountToNumber(fixed.b)).toBe(exactAmountToNumber(legacy.b))
+    // 300 * 1/3 = 100, 300 * 2/3 = 200
+    expect(exactAmountToNumber(fixed.a)).toBe(100)
+    expect(exactAmountToNumber(fixed.b)).toBe(200)
+  })
+
+  it('BY_SHARES fixed units: 110 : 90 : 100 allocates as 1.1 : 0.9 : 1', () => {
+    const result = calculateExactShares({
+      amount: 600,
+      splitMode: 'BY_SHARES',
+      participants: [
+        { id: 'a', shares: 110 },
+        { id: 'b', shares: 90 },
+        { id: 'c', shares: 100 },
+      ],
+    })
+    // Total = 300; 600 * 110/300 = 220, 600 * 90/300 = 180, 600 * 100/300 = 200.
+    expect(exactAmountToNumber(result.a)).toBe(220)
+    expect(exactAmountToNumber(result.b)).toBe(180)
+    expect(exactAmountToNumber(result.c)).toBe(200)
+  })
+
+  it('BY_SHARES fixed units work independently for paid-by and paid-for', () => {
+    const expense = makeExpense({
+      amount: 1000,
+      splitMode: 'BY_SHARES',
+      paidFor: [makePaidFor('u1', 100), makePaidFor('u2', 100)],
+      paidBySplitMode: 'BY_SHARES',
+      paidByList: [makePaidBy('u1', 50), makePaidBy('u2', 150)],
+    })
+    const paidFor = calculateShares(expense)
+    expect(paidFor.u1).toBe(500)
+    expect(paidFor.u2).toBe(500)
+    const paidBy = calculatePaidByShares(expense)
+    // 1000 * 50/200 = 250, 1000 * 150/200 = 750.
+    expect(paidBy.u1).toBe(250)
+    expect(paidBy.u2).toBe(750)
+  })
 })
 
 describe('calculateShares', () => {
@@ -982,6 +1039,8 @@ describe('serializePaidFor', () => {
   })
 
   it('EVENLY/BY_SHARES round weights', () => {
+    // EVENLY is an inclusion marker — the consumer ignores the value but
+    // it still has to be a finite number.
     const evenly = serializePaidFor({
       splitMode: 'EVENLY',
       amount: 100,
@@ -993,6 +1052,8 @@ describe('serializePaidFor', () => {
     })
     expect(evenly.map((p) => p.shares)).toEqual([1, 2])
 
+    // BY_SHARES display values are now scaled to fixed units (100 = 1 share).
+    // 1.4 displayed → 140 stored, 2.6 displayed → 260 stored.
     const byShares = serializePaidFor({
       splitMode: 'BY_SHARES',
       amount: 100,
@@ -1002,7 +1063,7 @@ describe('serializePaidFor', () => {
         { participant: { id: 'b' }, shares: 2.6 },
       ],
     })
-    expect(byShares.map((p) => p.shares)).toEqual([1, 3])
+    expect(byShares.map((p) => p.shares)).toEqual([140, 260])
   })
 
   it('does not convert unitless modes with conversionRate', () => {

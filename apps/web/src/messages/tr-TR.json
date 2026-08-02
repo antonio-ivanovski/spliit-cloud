@@ -860,7 +860,8 @@
     "participantSharesLabel": "{name} için pay",
     "decreaseShares": "{name} için payları azalt",
     "increaseShares": "{name} için payları artır",
-    "validationSummary": "Kaydetmeden önce vurgulanan alanları düzeltin."
+    "validationSummary": "Kaydetmeden önce vurgulanan alanları düzeltin.",
+    "resetDistribution": "Sıfırla"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Belgeyi sil",
@@ -1068,7 +1069,8 @@
     "paidByMin1": "En az bir ödeyen seçilmelidir.",
     "paidByAmountSum": "Ödeyen tutarlarının toplamı masraf tutarına eşit olmalıdır.",
     "paidByPercentageSum": "Ödeyen yüzdelerinin toplamı 100 olmalıdır.",
-    "duplicateParticipant": "Başka bir ödeyen zaten seçili."
+    "duplicateParticipant": "Başka bir ödeyen zaten seçili.",
+    "sharesInvalid": "Paylar 0,01 ile 1.000.000 arasında olmalı ve en fazla iki ondalık basamak içermelidir."
   },
   "Categories": {
     "search": "Kategori ara...",

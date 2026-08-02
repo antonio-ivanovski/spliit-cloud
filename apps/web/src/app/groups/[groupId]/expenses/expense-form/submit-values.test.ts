@@ -44,8 +44,8 @@ const baseValues: ExpenseFormInputValues = {
       quantity: 2,
       splitMode: 'BY_SHARES',
       paidFor: [
-        { participant: 'p1', shares: 2 },
-        { participant: 'p2', shares: 1 },
+        { participant: 'p1', shares: 0.5 },
+        { participant: 'p2', shares: 1.5 },
       ],
     },
     {
@@ -63,7 +63,7 @@ const baseValues: ExpenseFormInputValues = {
   itemizedRemainder: {
     splitMode: 'BY_SHARES',
     paidFor: [
-      { participant: 'p1', shares: 1 },
+      { participant: 'p1', shares: 1.5 },
       { participant: 'p2', shares: 2 },
     ],
   },
@@ -92,6 +92,20 @@ describe('buildSubmitValues', () => {
     expect(result.items?.reduce((sum, item) => sum + item.amount, 0)).toBe(
       result.amount,
     )
+  })
+
+  it('serializes decimal BY_SHARES item shares to fixed units', () => {
+    const result = buildSubmitValues(baseValues, {
+      groupCurrency: getCurrency('USD')!,
+      conversionRequired: false,
+    })
+
+    const pizza = result.items?.find((item) => item.id === 'pizza')
+    expect(pizza?.splitMode).toBe('BY_SHARES')
+    expect(pizza?.paidFor).toEqual([
+      { participant: 'p1', shares: 50 },
+      { participant: 'p2', shares: 150 },
+    ])
   })
 
   it('clears conversion when conversion is not required', () => {
@@ -138,8 +152,10 @@ describe('buildSubmitValues', () => {
     expect(result.itemizedRemainder).toEqual({
       splitMode: 'BY_SHARES',
       paidFor: [
-        { participant: 'p1', shares: 1 },
-        { participant: 'p2', shares: 2 },
+        // Form-mode display values (`1.5`, `2`) are scaled to fixed units
+        // (×100) at the submit boundary.
+        { participant: 'p1', shares: 150 },
+        { participant: 'p2', shares: 200 },
       ],
     })
   })

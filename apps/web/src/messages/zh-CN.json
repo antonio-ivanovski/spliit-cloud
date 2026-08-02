@@ -853,7 +853,8 @@
     "participantSharesLabel": "{name} 的份额",
     "decreaseShares": "减少 {name} 的份额",
     "increaseShares": "增加 {name} 的份额",
-    "validationSummary": "保存前请修正突出显示的字段。"
+    "validationSummary": "保存前请修正突出显示的字段。",
+    "resetDistribution": "重置"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "删除文档",
@@ -1061,7 +1062,8 @@
     "paidByMin1": "至少需要选择一位付款人。",
     "paidByAmountSum": "付款人金额之和必须等于支出金额。",
     "paidByPercentageSum": "付款人百分比之和必须为100。",
-    "duplicateParticipant": "另一位付款人已经选择。"
+    "duplicateParticipant": "另一位付款人已经选择。",
+    "sharesInvalid": "份额必须在 0.01 到 1,000,000 之间，且最多保留两位小数。"
   },
   "Categories": {
     "search": "搜寻类别……",

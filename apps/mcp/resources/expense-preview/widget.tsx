@@ -83,6 +83,16 @@ export function ExpensePreview() {
     })
   }, [props?.preview?.conversion])
 
+  const shareFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat(undefined, {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 0,
+        useGrouping: false,
+      }),
+    [],
+  )
+
   if (isPending || !props?.preview) {
     return (
       <McpUseProvider autoSize>
@@ -120,7 +130,10 @@ export function ExpensePreview() {
       return formatMinor(shares)
     }
     if (mode === 'BY_SHARES') {
-      return `${shares} ${shares === 1 ? 'share' : 'shares'}`
+      // Preview transport keeps stored fixed units (100 = 1 displayed
+      // share); divide only here for display.
+      const display = shares / 100
+      return `${shareFormatter.format(display)} ${display === 1 ? 'share' : 'shares'}`
     }
     return 'Equal'
   }

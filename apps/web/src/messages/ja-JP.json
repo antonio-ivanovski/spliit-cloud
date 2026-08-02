@@ -853,7 +853,8 @@
     "participantSharesLabel": "{name}のシェア",
     "decreaseShares": "{name}のシェアを減らす",
     "increaseShares": "{name}のシェアを増やす",
-    "validationSummary": "保存する前に、強調表示されたフィールドを修正してください。"
+    "validationSummary": "保存する前に、強調表示されたフィールドを修正してください。",
+    "resetDistribution": "リセット"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "書類を削除",
@@ -1061,7 +1062,8 @@
     "paidByMin1": "請求者は少なくとも1人選択してください。",
     "paidByAmountSum": "請求者金額の合計が支出額と一致しません。",
     "paidByPercentageSum": "請求者パーセンテージの合計が100になる必要があります。",
-    "duplicateParticipant": "その請求者は既に選択されています。"
+    "duplicateParticipant": "その請求者は既に選択されています。",
+    "sharesInvalid": "シェアは0.01以上1,000,000以下で、小数点以下2桁以内で入力してください。"
   },
   "Categories": {
     "search": "カテゴリーを検索...",

@@ -389,6 +389,60 @@ describe('parseSpliitExport', () => {
     if (result.ok) return
     expect(result.error).toMatch(/non-positive share/i)
   })
+
+  it('scales BY_SHARES weights from whole shares into fixed units', () => {
+    // Legacy spliit.app JSON exports BY_SHARES as whole share counts; the
+    // new internal contract stores hundredths so 1 share → 100, 2 → 200.
+    const result = parseSpliitExport({
+      ...validExport,
+      expenses: [
+        {
+          ...validExport.expenses[0],
+          splitMode: 'BY_SHARES',
+          paidFor: [
+            { participantId: 'p-1', shares: 2 },
+            { participantId: 'p-2', shares: 1 },
+          ],
+        },
+      ],
+    })
+    expect(result.expenses[0].splitMode).toBe('BY_SHARES')
+    expect(result.expenses[0].paidFor).toEqual([
+      { sourceId: 'spliit-participant-0', shares: 200 },
+      { sourceId: 'spliit-participant-1', shares: 100 },
+    ])
+  })
+
+  it('does not touch EVENLY/PERCENTAGE/AMOUNT weights when normalising', () => {
+    const result = parseSpliitExport({
+      ...validExport,
+      expenses: [
+        {
+          ...validExport.expenses[0],
+          splitMode: 'EVENLY',
+          paidFor: [
+            { participantId: 'p-1', shares: 5000 },
+            { participantId: 'p-2', shares: 5000 },
+          ],
+        },
+        {
+          ...validExport.expenses[1],
+          paidFor: [
+            { participantId: 'p-1', shares: 2500 },
+            { participantId: 'p-2', shares: 7500 },
+          ],
+        },
+      ],
+    })
+    expect(result.expenses[0].paidFor).toEqual([
+      { sourceId: 'spliit-participant-0', shares: 5000 },
+      { sourceId: 'spliit-participant-1', shares: 5000 },
+    ])
+    expect(result.expenses[1].paidFor).toEqual([
+      { sourceId: 'spliit-participant-0', shares: 2500 },
+      { sourceId: 'spliit-participant-1', shares: 7500 },
+    ])
+  })
 })
 
 describe('buildSpliitGroupFetchUrl', () => {

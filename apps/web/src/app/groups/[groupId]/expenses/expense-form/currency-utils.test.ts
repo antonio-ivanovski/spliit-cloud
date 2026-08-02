@@ -1,11 +1,16 @@
 import { describe, expect, it } from 'vitest'
 
+import { MAX_DISPLAY_SHARES } from '@spliit/domain'
+
 import {
   enforceCurrencyPattern,
   enforceIntegerPattern,
   enforcePercentagePattern,
+  enforceSharePattern,
   formatDate,
+  nextShareRowsFromInput,
   parseCurrencyPaste,
+  stepDisplayShares,
 } from './currency-utils'
 
 const currencies = [
@@ -153,6 +158,136 @@ describe('enforceIntegerPattern', () => {
 
   it('strips exponent letter', () => {
     expect(enforceIntegerPattern('1e5')).toBe('15')
+  })
+})
+
+describe('enforceSharePattern', () => {
+  it('accepts whole share values unchanged', () => {
+    expect(enforceSharePattern('1')).toBe('1')
+    expect(enforceSharePattern('25')).toBe('25')
+  })
+
+  it('accepts up to two decimal places', () => {
+    expect(enforceSharePattern('0.5')).toBe('0.5')
+    expect(enforceSharePattern('1.1')).toBe('1.1')
+    expect(enforceSharePattern('25.75')).toBe('25.75')
+  })
+
+  it('preserves a trailing dot so the user can finish typing', () => {
+    expect(enforceSharePattern('1.')).toBe('1.')
+    expect(enforceSharePattern('0.')).toBe('0.')
+  })
+
+  it('truncates to two decimal places', () => {
+    expect(enforceSharePattern('0.123')).toBe('0.12')
+    expect(enforceSharePattern('25.999')).toBe('25.99')
+  })
+
+  it('normalizes comma separators to dot', () => {
+    expect(enforceSharePattern('1,5')).toBe('1.5')
+  })
+
+  it('strips letters and other non-numeric characters', () => {
+    expect(enforceSharePattern('abc123')).toBe('123')
+    expect(enforceSharePattern('1e5')).toBe('15')
+  })
+
+  it('normalizes a leading separator to 0.5 so sequential typing from empty stays complete', () => {
+    expect(enforceSharePattern('.5')).toBe('0.5')
+    expect(enforceSharePattern('.05')).toBe('0.05')
+  })
+
+  it('returns empty string unchanged', () => {
+    expect(enforceSharePattern('')).toBe('')
+  })
+
+  it('keeps only the first separator in the fractional part', () => {
+    expect(enforceSharePattern('1.2.3')).toBe('1.23')
+  })
+})
+
+describe('enforceSharePattern canonicalizes leading zeros', () => {
+  it.each([
+    ['0', '0'],
+    ['00', '0'],
+    ['00000', '0'],
+    ['04', '4'],
+    ['004', '4'],
+    ['00000.1', '0.1'],
+    ['000.10', '0.10'],
+    ['.5', '0.5'],
+    ['0.', '0.'],
+    ['-004', '-4'],
+    ['', ''],
+  ])('%s -> %s', (input, expected) => {
+    expect(enforceSharePattern(input)).toBe(expected)
+  })
+})
+
+describe('stepDisplayShares', () => {
+  it.each([
+    [undefined, 1, 1, 'plus from an empty row selects the participant at 1'],
+    ['0', 1, 1, 'plus from zero selects at 1'],
+    ['0.5', 1, 0.6, '0.5 + -> 0.6'],
+    ['0.6', -1, 0.5, '0.6 - -> 0.5'],
+    ['0.9', 1, 1, '0.9 + -> 1'],
+    ['1.1', 1, 1.2, '1.1 + -> 1.2'],
+    ['1.5', 1, 1.6, '1.5 + -> 1.6 (fractional values step by 0.1)'],
+    ['1.5', -1, 1.4, '1.5 - -> 1.4'],
+    ['2.75', 1, 2.85, '2.75 + -> 2.85'],
+    ['1.9', 1, 2, '1.9 + -> 2'],
+    [1, 1, 2, 'whole value steps by 1'],
+    ['1.0', 1, 2, 'numerically whole 1.0 steps by 1'],
+    ['2', 1, 3, '2 + -> 3'],
+    ['0.1', -1, 0, 'decrement to zero'],
+    [
+      MAX_DISPLAY_SHARES,
+      1,
+      MAX_DISPLAY_SHARES,
+      'increase clamps at the maximum',
+    ],
+    [0.05, -1, 0, '0.05 - -> 0 (fractional values step by 0.1)'],
+  ])('%s %s %s (%s)', (value, direction, expected, _description) => {
+    expect(stepDisplayShares(value, direction as 1 | -1)).toBe(expected)
+  })
+})
+
+describe('nextShareRowsFromInput', () => {
+  const rows = [
+    { participant: 'lp-1', shares: '1' },
+    { participant: 'lp-2', shares: '1' },
+  ]
+
+  it('preserves every non-empty sanitized string, including "0"', () => {
+    expect(nextShareRowsFromInput(rows, 'lp-1', '0')).toEqual([
+      { participant: 'lp-2', shares: '1' },
+      { participant: 'lp-1', shares: '0' },
+    ])
+    expect(nextShareRowsFromInput(rows, 'lp-1', '0.')).toEqual([
+      { participant: 'lp-2', shares: '1' },
+      { participant: 'lp-1', shares: '0.' },
+    ])
+    expect(nextShareRowsFromInput(rows, 'lp-1', '0.5')).toEqual([
+      { participant: 'lp-2', shares: '1' },
+      { participant: 'lp-1', shares: '0.5' },
+    ])
+  })
+
+  it('keeps an already-empty participant out of the list', () => {
+    const withoutLp1 = rows.filter((row) => row.participant !== 'lp-1')
+    expect(nextShareRowsFromInput(withoutLp1, 'lp-1', '')).toEqual(withoutLp1)
+  })
+
+  it('removes the row when the value is explicitly cleared', () => {
+    expect(nextShareRowsFromInput(rows, 'lp-1', '')).toEqual([
+      { participant: 'lp-2', shares: '1' },
+    ])
+  })
+
+  it('leaves unrelated rows untouched', () => {
+    const result = nextShareRowsFromInput(rows, 'lp-1', '0.5')
+    expect(result).toHaveLength(2)
+    expect(result[0]).toEqual({ participant: 'lp-2', shares: '1' })
   })
 })
 

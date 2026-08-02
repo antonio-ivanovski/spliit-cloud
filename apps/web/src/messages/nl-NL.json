@@ -860,7 +860,8 @@
     "participantSharesLabel": "Aantal delen voor {name}",
     "decreaseShares": "Aantal delen voor {name} verlagen",
     "increaseShares": "Aantal delen voor {name} verhogen",
-    "validationSummary": "Corrigeer de gemarkeerde velden voordat je opslaat."
+    "validationSummary": "Corrigeer de gemarkeerde velden voordat je opslaat.",
+    "resetDistribution": "Opnieuw instellen"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Document verwijderen",
@@ -1068,7 +1069,8 @@
     "paidByMin1": "Selecteer ten minste één betaler.",
     "paidByAmountSum": "Het totaal van de betalers moet gelijk zijn aan het uitgavenbedrag.",
     "paidByPercentageSum": "Het totaal van de percentages van de betalers moet 100 zijn.",
-    "duplicateParticipant": "Er is al een andere betaler geselecteerd."
+    "duplicateParticipant": "Er is al een andere betaler geselecteerd.",
+    "sharesInvalid": "Aandelen moeten tussen 0,01 en 1.000.000 liggen met maximaal twee decimalen."
   },
   "Categories": {
     "search": "Categorie zoeken…",

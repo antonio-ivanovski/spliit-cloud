@@ -534,6 +534,30 @@ describe('BY_SHARES output is always integer', () => {
   }
 })
 
+// ── BY_SHARES passthrough retains up to two decimal places ───────────
+
+describe('BY_SHARES passthrough keeps two-decimal values', () => {
+  it('keeps 0.5/1.5/2.5 as display shares', () => {
+    const result = convertParticipantShares({
+      rows: [row('a', 0.5), row('b', 1.5), row('c', 2.5)],
+      fromMode: 'BY_SHARES',
+      toMode: 'BY_SHARES',
+      targetAmount: 100,
+    })
+    expect(result.map((r) => r.shares)).toEqual([0.5, 1.5, 2.5])
+  })
+
+  it('EVENLY → BY_SHARES distributes display `1` to each selected row', () => {
+    const result = convertParticipantShares({
+      rows: [row('a', 1), row('b', 1), row('c', 1)],
+      fromMode: 'EVENLY',
+      toMode: 'BY_SHARES',
+      targetAmount: 100,
+    })
+    expect(result.map((r) => r.shares)).toEqual([1, 1, 1])
+  })
+})
+
 // ── BY_PERCENTAGE always sums to 100 ────────────────────────────────────
 
 describe('BY_PERCENTAGE always sums to 100', () => {

@@ -1,4 +1,27 @@
-## ADDED Requirements
+## Purpose
+
+Defines legacy Spliit JSON and CSV import: the immutable legacy expense shape accepted at the API boundary, recurrence collapse for historical JSON rows, the CSV recurrence limitation, and the exact-once conversion of legacy BY_SHARES weights into fixed units.
+
+## Requirements
+
+### Requirement: Legacy share weights convert to fixed units
+The Spliit JSON import SHALL convert legacy BY_SHARES whole-number weights to fixed units exactly once, by multiplying each weight by 100 while preserving the split's ratios (`1 : 3` stays `1 : 3` as `100 : 300`). The conversion SHALL be mode-gated: rows whose `splitMode` is not BY_SHARES SHALL pass through unchanged. The import SHALL NOT guess or detect a representation at runtime — legacy exports always carry whole-number share weights, so scaling is applied deterministically on the BY_SHARES path only.
+
+#### Scenario: BY_SHARES weights scale exactly once
+- **WHEN** an imported legacy expense has `splitMode = BY_SHARES` with whole weights
+- **THEN** each weight is multiplied by 100 during import and is never scaled again on any later read or write path
+
+#### Scenario: Import preserves ratios
+- **WHEN** a legacy split has weights `1` and `3`
+- **THEN** the imported fixed units are `100` and `300`, keeping the exact `1 : 3` allocation ratio
+
+#### Scenario: Other modes pass through unchanged
+- **WHEN** an imported expense uses BY_AMOUNT, BY_PERCENTAGE, EVENLY, or ITEMIZED
+- **THEN** its shares are imported without scaling, matching the pre-existing storage unit of that mode
+
+#### Scenario: No runtime scale guessing
+- **WHEN** the import reads a BY_SHARES expense
+- **THEN** it applies the fixed `× 100` conversion from the mode declaration alone, without inferring the scale from the magnitude of the values
 
 ### Requirement: Legacy JSON recurring import collapse
 The Spliit JSON import commit path SHALL collapse matching historical `recurrenceRule` rows into one `RecurringExpenseSeries` before creating expenses, using the same conservative fingerprint as legacy recurrence migration for link-less rows (title, recurrence rule, amount, split mode, reimbursement flag, sorted paid-by and paid-for participant shares, original currency, conversion rate). Overdue skip SHALL set `nextOccurrenceDate` and `nextOccurrenceOrdinal` with anchored occurrence math (same as materialization), not iterative next-from-previous stepping.

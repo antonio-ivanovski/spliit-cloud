@@ -114,18 +114,21 @@ describe('splitEqual', () => {
 
   describe('BY_SHARES', () => {
     it('returns true when each participant share matches within tolerance', () => {
+      // Both sides carry display units (e.g. 2.5 = 250 fixed units). The
+      // comparator only looks at the current/saved pair, so as long as
+      // they agree on the displayed value the result matches.
       expect(
         splitEqual(
           'BY_SHARES',
           [
-            { participant: 'lp-1', shares: 2 },
-            { participant: 'lp-2', shares: 1 },
+            { participant: 'lp-1', shares: 2.5 },
+            { participant: 'lp-2', shares: 1.1 },
           ],
           {
             splitMode: 'BY_SHARES',
             paidFor: [
-              { participant: 'lp-1', shares: 2 },
-              { participant: 'lp-2', shares: 1 },
+              { participant: 'lp-1', shares: 250 },
+              { participant: 'lp-2', shares: 110 },
             ],
           },
           usd(),
@@ -144,8 +147,8 @@ describe('splitEqual', () => {
           {
             splitMode: 'BY_SHARES',
             paidFor: [
-              { participant: 'lp-1', shares: 3 },
-              { participant: 'lp-2', shares: 1 },
+              { participant: 'lp-1', shares: 300 },
+              { participant: 'lp-2', shares: 100 },
             ],
           },
           usd(),
@@ -269,21 +272,24 @@ describe('savedDefaultToFormValues', () => {
     ])
   })
 
-  it('passes BY_SHARES / EVENLY shares through unchanged', () => {
+  it('converts BY_SHARES fixed units to display values', () => {
+    // Stored weights are fixed units (100 = 1 displayed share); the
+    // hydration path divides by SHARE_SCALE so the form sees `2.5`
+    // rather than `250`.
     const result = savedDefaultToFormValues(
       {
         splitMode: 'BY_SHARES',
         paidFor: [
-          { participant: 'lp-1', shares: 2 },
-          { participant: 'lp-2', shares: 1 },
+          { participant: 'lp-1', shares: 250 },
+          { participant: 'lp-2', shares: 110 },
         ],
       },
       mockGroup,
       usd(),
     )
     expect(result?.paidFor).toEqual([
-      { participant: 'lp-1', shares: 2 },
-      { participant: 'lp-2', shares: 1 },
+      { participant: 'lp-1', shares: 2.5 },
+      { participant: 'lp-2', shares: 1.1 },
     ])
   })
 })

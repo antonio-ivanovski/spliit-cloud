@@ -44,6 +44,7 @@ import { calculatePaidByShares, calculateShares } from '@spliit/domain'
 
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
+import { expenseShareRatioLabel } from './expense-share-ratio-label'
 import {
   RecurringActionsMenu,
   type RecurringDeleteOption,
@@ -52,7 +53,7 @@ import { SeriesControls, type ExpenseSeriesMetadata } from './series-controls'
 import { SeriesListDialog } from './series-list-dialog'
 import type { SeriesMutationScope } from './series-scope-dialog'
 
-type Expense = NonNullable<
+export type Expense = NonNullable<
   AppRouterOutput['groups']['expenses']['get']['expense']
 >
 
@@ -233,46 +234,18 @@ export function ExpensePreviewModal({
     }
   }
 
-  const percentageFormatter = useMemo(
-    () =>
-      new Intl.NumberFormat(locale, {
-        style: 'percent',
-        maximumFractionDigits: 2,
-      }),
-    [locale],
-  )
-
   const splitRows = (
     shares: Record<string, number>,
     sourceRows: Array<{ ledgerParticipantId: string; shares: number }>,
     mode: SplitMode,
   ) => {
-    const totalShares = sourceRows.reduce((sum, row) => sum + row.shares, 0)
-
-    const valueFor = (id: string): string | undefined => {
-      const source = sourceRows.find((row) => row.ledgerParticipantId === id)
-      if (!source) return undefined
-
-      switch (mode) {
-        case 'EVENLY':
-          return `1/${sourceRows.length}`
-        case 'BY_SHARES':
-          return totalShares > 0 ? `${source.shares}/${totalShares}` : undefined
-        case 'BY_PERCENTAGE':
-          return percentageFormatter.format(source.shares / 10000)
-        case 'BY_AMOUNT':
-        case 'ITEMIZED':
-          return undefined
-      }
-    }
-
     return Object.entries(shares).map(([id, amount]) => {
       const participant = participants.find((item) => item.id === id)
       return {
         id,
         name: participant?.name ?? id,
         amount,
-        value: valueFor(id),
+        value: expenseShareRatioLabel(mode, sourceRows, id, locale),
         participant,
       }
     })

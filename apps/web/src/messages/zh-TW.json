@@ -853,7 +853,8 @@
     "participantSharesLabel": "{name} 的份額",
     "decreaseShares": "減少 {name} 的份額",
     "increaseShares": "增加 {name} 的份額",
-    "validationSummary": "儲存前請修正醒目的欄位。"
+    "validationSummary": "儲存前請修正醒目的欄位。",
+    "resetDistribution": "重設"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "刪除文檔",
@@ -1061,7 +1062,8 @@
     "paidByMin1": "至少需要選取一位付款人。",
     "paidByAmountSum": "付款人金額之和必須等於支出金額。",
     "paidByPercentageSum": "付款人百分比之和必須為100。",
-    "duplicateParticipant": "另一位付款人已經被選取。"
+    "duplicateParticipant": "另一位付款人已經被選取。",
+    "sharesInvalid": "份額必須介於 0.01 到 1,000,000 之間，且最多保留兩位小數。"
   },
   "Categories": {
     "search": "搜尋類別……",

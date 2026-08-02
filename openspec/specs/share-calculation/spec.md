@@ -1,3 +1,9 @@
+## Purpose
+
+Defines the exact share-calculation core shared by expense previews, balances, and serialization: rational (BigInt) split math, integer-cent remainder distribution, seed-based tie-breaks, and the write-side storage units for every split mode — including fixed-point BY_SHARES weights where one displayed share equals 100 stored units.
+
+## Requirements
+
 ### Requirement: Shape-based exact share calculation
 The system SHALL compute per-participant exact shares via a single `calculateExactShares` function that accepts a shape-based input (`{ amount, splitMode, participants }`) and returns `Record<participantId, ExactAmount>` without truncation, using native `BigInt`-based rational arithmetic (`{ numerator: bigint, denominator: bigint }`). The function SHALL handle all five split modes: EVENLY (`amount / N`), BY_SHARES (`amount * shares / Σshares`), BY_PERCENTAGE (`amount * shares / 10000`), BY_AMOUNT (literal `shares`), and ITEMIZED (literal `shares`). The same function SHALL work for expense paidFor sides, expense paidBy sides, and individual expense items.
 
@@ -75,8 +81,23 @@ The system SHALL provide `calculateShare(participantId, expense)` and `calculate
 - **WHEN** `calculatePaidByShare('p1', expense)` is called
 - **THEN** it returns `calculatePaidByShares(expense)['p1'] ?? 0`
 
+### Requirement: Fixed-point BY_SHARES storage units
+The system SHALL store BY_SHARES weights as fixed units where one displayed share equals 100 stored units: `display share × 100 = stored fixed units` (`0.5 → 50`, `1 → 100`, `1.1 → 110`). Displayed shares SHALL accept at most two decimal places in the range 0.01 to 1,000,000 (inclusive), and stored units SHALL be integers in the range 1 to 100,000,000 (inclusive). The conversion SHALL be applied on the write side to expense paidFor, expense paidBy, item paidFor, itemized-remainder paidFor, and saved default-split paidFor rows.
+
+#### Scenario: Display share converts to fixed units
+- **WHEN** a user enters displayed shares `0.5`, `1`, and `1.1` in a BY_SHARES split
+- **THEN** the serialized storage units are `50`, `100`, and `110`
+
+#### Scenario: Item and remainder rows use the same fixed units
+- **WHEN** a BY_SHARES item paidFor row or itemized-remainder paidFor row is serialized
+- **THEN** it converts with the same `display share × 100` rule as expense-level rows
+
+#### Scenario: Fixed units are not currency-converted
+- **WHEN** a BY_SHARES expense crosses currencies
+- **THEN** the stored fixed units are used as unitless weights and are never multiplied by a conversion rate
+
 ### Requirement: Write-side share serializers
-The system SHALL provide `serializePaidFor({ splitMode, paidFor, amount, currency, conversionRate? })` and `serializePaidBy({ paidBySplitMode, paidByList, amount, inputCurrency, conversionRate? })` domain helpers that convert user-entered share values to storage units. BY_AMOUNT SHALL convert via `amountAsMinorUnits(shares * rate, currency)`; BY_PERCENTAGE SHALL produce basis points via `Math.round(shares * 100)`; EVENLY and BY_SHARES SHALL produce weights via `Math.round(shares)`. These helpers SHALL NOT distribute remainders.
+The system SHALL provide `serializePaidFor({ splitMode, paidFor, amount, currency, conversionRate? })` and `serializePaidBy({ paidBySplitMode, paidByList, amount, inputCurrency, conversionRate? })` domain helpers that convert user-entered share values to storage units. BY_AMOUNT SHALL convert via `amountAsMinorUnits(shares * rate, currency)`; BY_PERCENTAGE SHALL produce basis points via `Math.round(shares * 100)`; BY_SHARES SHALL produce fixed units via the `display share × 100` rule; EVENLY rows SHALL be left untouched so inclusion markers do not become valid weights. These helpers SHALL NOT distribute remainders.
 
 #### Scenario: BY_AMOUNT serialization converts to minor units
 - **WHEN** `serializePaidFor` is called with `splitMode: 'BY_AMOUNT'` and shares in major units
@@ -85,6 +106,10 @@ The system SHALL provide `serializePaidFor({ splitMode, paidFor, amount, currenc
 #### Scenario: BY_PERCENTAGE serialization converts to basis points
 - **WHEN** `serializePaidFor` is called with `splitMode: 'BY_PERCENTAGE'` and shares as percentages
 - **THEN** it converts each share to basis points via `Math.round(shares * 100)`
+
+#### Scenario: BY_SHARES serialization converts to fixed units
+- **WHEN** `serializePaidFor` is called with `splitMode: 'BY_SHARES'` and displayed shares such as `0.5` or `1.1`
+- **THEN** it stores fixed units `50` and `110` — the shared `display share × 100` rule, never `Math.round(shares)` of the raw display value
 
 #### Scenario: Serializer works for both expense and item paidFor
 - **WHEN** the same `serializePaidFor` is called for an expense-level paidFor or an item-level paidFor

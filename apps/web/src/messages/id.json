@@ -853,7 +853,8 @@
     "participantSharesLabel": "Porsi untuk {name}",
     "decreaseShares": "Kurangi porsi untuk {name}",
     "increaseShares": "Tambah porsi untuk {name}",
-    "validationSummary": "Perbaiki bidang yang ditandai sebelum menyimpan."
+    "validationSummary": "Perbaiki bidang yang ditandai sebelum menyimpan.",
+    "resetDistribution": "Atur ulang"
   },
   "Currencies": {
     "search": "Cari mata uang...",
@@ -1244,7 +1245,8 @@
     "paidByMin1": "Setidaknya satu pembayar harus dipilih.",
     "paidByAmountSum": "Total jumlah pembayaran harus sama dengan jumlah pengeluaran.",
     "paidByPercentageSum": "Total persentase pembayaran harus sama dengan 100.",
-    "duplicateParticipant": "Pembayar lain sudah dipilih."
+    "duplicateParticipant": "Pembayar lain sudah dipilih.",
+    "sharesInvalid": "Bagian harus antara 0,01 dan 1.000.000 dengan maksimal dua angka desimal."
   },
   "Categories": {
     "search": "Cari kategori...",

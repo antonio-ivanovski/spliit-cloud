@@ -1239,7 +1239,8 @@
     "participantSharesLabel": "Phần của {name}",
     "decreaseShares": "Giảm phần {name}",
     "increaseShares": "Tăng phần {name}",
-    "validationSummary": "Vui lòng sửa các lỗi."
+    "validationSummary": "Vui lòng sửa các lỗi.",
+    "resetDistribution": "Đặt lại"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Xóa tài liệu",
@@ -1451,7 +1452,8 @@
     "paidByMin1": "Cần ít nhất một người trả.",
     "paidByAmountSum": "Tổng tiền người trả phải khớp.",
     "paidByPercentageSum": "Tổng % người trả phải là 100%.",
-    "duplicateParticipant": "Người tham gia trùng lặp."
+    "duplicateParticipant": "Người tham gia trùng lặp.",
+    "sharesInvalid": "Phần chia phải nằm trong khoảng từ 0,01 đến 1.000.000 với tối đa hai chữ số thập phân."
   },
   "Categories": {
     "search": "Tìm danh mục…",

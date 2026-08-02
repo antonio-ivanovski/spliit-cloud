@@ -14,6 +14,8 @@ import {
   expenseApiSchema,
   getCategoryById,
   getCurrency,
+  isValidDisplayShare,
+  sharesAsFixedUnits,
   type ExactAmount,
   type Expense,
 } from '@spliit/domain'
@@ -46,7 +48,19 @@ const splitSchema = z.discriminatedUnion('mode', [
       .array(
         z.object({
           participantId: z.string().min(1),
-          shares: z.number().int().positive(),
+          // Display share with at most two decimal places (e.g. 0.5,
+          // 1.1, 25.75). `normalizeSplit` converts it to the internal
+          // fixed-unit form before the value reaches the expense payload.
+          shares: z
+            .number()
+            .positive()
+            .refine(isValidDisplayShare, {
+              message:
+                'BY_SHARES value must be a positive decimal with at most two places (0.01–1,000,000)',
+            })
+            .describe(
+              'Share weight. Decimals are allowed with up to two places, e.g. 0.5, 1.1, 25.75 (not hundredths).',
+            ),
         }),
       )
       .min(1),
@@ -295,7 +309,7 @@ function normalizeSplit(
       splitMode: 'BY_SHARES',
       paidFor: split.shares.map((row) => ({
         participant: row.participantId,
-        shares: row.shares,
+        shares: sharesAsFixedUnits(row.shares),
       })),
     }
   } else if (split.mode === 'BY_PERCENTAGE') {

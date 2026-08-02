@@ -4,6 +4,8 @@ import { useWatch } from 'react-hook-form'
 
 import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
 
+import { buildEqualParticipantRows } from './split-mode-conversions'
+
 export function useExpenseFormBalancing(args: {
   form: UseFormReturn<ExpenseFormInputValues>
   payerCurrency: Currency
@@ -94,42 +96,55 @@ export function useExpenseFormBalancing(args: {
     ) {
       const totalAmount = Number(args.form.getValues().amount) || 0
       const paidFor = args.form.getValues().paidFor
-      let newPaidFor = [...paidFor]
-
       const editedParticipants = manuallyEditedParticipants
       let remainingAmount = totalAmount
-      const remainingParticipants = newPaidFor.length - editedParticipants.size
-
-      newPaidFor = newPaidFor.map((participant) => {
+      const automaticIds: string[] = []
+      for (const participant of paidFor) {
         if (editedParticipants.has(participant.participant)) {
-          const participantShare = Number(participant.shares) || 0
-          if (splitMode === 'BY_AMOUNT') {
-            remainingAmount -= participantShare
-          }
-          return participant
+          remainingAmount -= Number(participant.shares) || 0
+        } else {
+          automaticIds.push(participant.participant)
         }
-        return participant
-      })
-
-      if (remainingParticipants > 0) {
-        let amountPerRemaining = 0
-        if (splitMode === 'BY_AMOUNT') {
-          amountPerRemaining = remainingAmount / remainingParticipants
-        }
-
-        newPaidFor = newPaidFor.map((participant) => {
-          if (!editedParticipants.has(participant.participant)) {
-            return {
-              ...participant,
-              shares: Number(
-                amountPerRemaining.toFixed(args.payerCurrency.decimal_digits),
-              ),
-            }
-          }
-          return participant
-        })
       }
-      args.form.setValue('paidFor', newPaidFor, { shouldValidate: true })
+
+      // Preserve automatic rows only while the total itself is temporarily
+      // zero (for example, while the amount input is cleared and retyped).
+      // A nonzero total fully consumed or exceeded by manual rows must remove
+      // the stale automatic allocations instead.
+      if (automaticIds.length > 0 && totalAmount !== 0) {
+        // Independently rounding the remaining amount per participant would
+        // lose the residual cent (10.00 over three rows -> 3.33 × 3 = 9.99).
+        // buildEqualParticipantRows distributes currency units so the
+        // automatic rows sum exactly to the remaining amount. Rows it omits
+        // (zero allocation, e.g. fewer cents than participants) are dropped
+        // from the list so their checkbox unselects.
+        const remainingHasTotalSign =
+          remainingAmount !== 0 &&
+          Math.sign(remainingAmount) === Math.sign(totalAmount)
+        const equalSharesById = new Map(
+          remainingHasTotalSign
+            ? buildEqualParticipantRows({
+                participantIds: automaticIds,
+                splitMode: 'BY_AMOUNT',
+                targetAmount: remainingAmount,
+                currency: {
+                  decimal_digits: args.payerCurrency.decimal_digits,
+                },
+              }).map((row) => [row.participant, row.shares])
+            : [],
+        )
+        const newPaidFor: typeof paidFor = []
+        for (const participant of paidFor) {
+          if (editedParticipants.has(participant.participant)) {
+            newPaidFor.push(participant)
+            continue
+          }
+          const share = equalSharesById.get(participant.participant)
+          if (share !== undefined)
+            newPaidFor.push({ ...participant, shares: share })
+        }
+        args.form.setValue('paidFor', newPaidFor, { shouldValidate: true })
+      }
     }
   }, [
     manuallyEditedParticipants,
@@ -148,38 +163,56 @@ export function useExpenseFormBalancing(args: {
         args.form.getFieldState('amount').isDirty)
     ) {
       const totalAmount = Number(args.form.getValues().amount) || 0
-
       const paidByList = args.form.getValues().paidByList
-      let newPaidByList = [...paidByList]
 
       const editedPayers = manuallyEditedPayers
       let remainingAmount = totalAmount
-      const remainingPayers = newPaidByList.length - editedPayers.size
-
-      newPaidByList = newPaidByList.map((payer) => {
+      const automaticIds: string[] = []
+      for (const payer of paidByList) {
         if (editedPayers.has(payer.participant)) {
-          const payerShare = Number(payer.shares) || 0
-          remainingAmount -= payerShare
-          return payer
+          remainingAmount -= Number(payer.shares) || 0
+        } else {
+          automaticIds.push(payer.participant)
         }
-        return payer
-      })
+      }
 
-      if (remainingPayers > 0) {
-        const amountPerRemaining = remainingAmount / remainingPayers
-        newPaidByList = newPaidByList.map((payer) => {
-          if (!editedPayers.has(payer.participant)) {
-            return {
-              ...payer,
-              shares: Number(
-                amountPerRemaining.toFixed(args.payerCurrency.decimal_digits),
-              ),
-            }
+      // Same total-zero guard as the paid-for effect: preserve rows while the
+      // amount is cleared, but remove stale automatic allocations when manual
+      // rows consume or exceed a nonzero total.
+      if (automaticIds.length > 0 && totalAmount !== 0) {
+        // Same residual-corrected distribution as the paid-for effect:
+        // automatic rows sum exactly to the remaining amount, and rows the
+        // helper omits (zero allocation) are dropped from the list so their
+        // checkbox unselects.
+        const remainingHasTotalSign =
+          remainingAmount !== 0 &&
+          Math.sign(remainingAmount) === Math.sign(totalAmount)
+        const equalSharesById = new Map(
+          remainingHasTotalSign
+            ? buildEqualParticipantRows({
+                participantIds: automaticIds,
+                splitMode: 'BY_AMOUNT',
+                targetAmount: remainingAmount,
+                currency: {
+                  decimal_digits: args.payerCurrency.decimal_digits,
+                },
+              }).map((row) => [row.participant, row.shares])
+            : [],
+        )
+        const newPaidByList: typeof paidByList = []
+        for (const payer of paidByList) {
+          if (editedPayers.has(payer.participant)) {
+            newPaidByList.push(payer)
+            continue
           }
-          return payer
+          const share = equalSharesById.get(payer.participant)
+          if (share !== undefined)
+            newPaidByList.push({ ...payer, shares: share })
+        }
+        args.form.setValue('paidByList', newPaidByList, {
+          shouldValidate: true,
         })
       }
-      args.form.setValue('paidByList', newPaidByList, { shouldValidate: true })
     }
   }, [
     manuallyEditedPayers,

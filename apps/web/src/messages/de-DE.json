@@ -888,7 +888,8 @@
     "participantSharesLabel": "Anteile für {name}",
     "decreaseShares": "Anteile für {name} verringern",
     "increaseShares": "Anteile für {name} erhöhen",
-    "validationSummary": "Bitte korrigieren Sie die hervorgehobenen Felder, bevor Sie speichern."
+    "validationSummary": "Bitte korrigieren Sie die hervorgehobenen Felder, bevor Sie speichern.",
+    "resetDistribution": "Zurücksetzen"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Dokument löschen",
@@ -1100,7 +1101,8 @@
     "paidByMin1": "Mindestens ein Zahler muss ausgewählt sein.",
     "paidByAmountSum": "Die Summe der Beträge der Zahler muss dem Ausgabenbetrag entsprechen.",
     "paidByPercentageSum": "Die Summe der Prozentsätze der Zahler muss 100 betragen.",
-    "duplicateParticipant": "Ein anderer Zahler ist bereits ausgewählt."
+    "duplicateParticipant": "Ein anderer Zahler ist bereits ausgewählt.",
+    "sharesInvalid": "Anteile müssen zwischen 0,01 und 1.000.000 liegen und höchstens zwei Dezimalstellen haben."
   },
   "Categories": {
     "search": "Nach Kategorie suchen...",

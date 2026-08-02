@@ -867,7 +867,8 @@
     "participantSharesLabel": "Partes de {name}",
     "decreaseShares": "Disminuir las partes de {name}",
     "increaseShares": "Aumentar las partes de {name}",
-    "validationSummary": "Corrige los campos resaltados antes de guardar."
+    "validationSummary": "Corrige los campos resaltados antes de guardar.",
+    "resetDistribution": "Restablecer"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Eliminar documento",
@@ -1076,7 +1077,8 @@
     "paidByMin1": "Debe seleccionar al menos un pagador.",
     "paidByAmountSum": "La suma de los importes de los pagadores debe ser igual al importe del gasto.",
     "paidByPercentageSum": "La suma de los porcentajes de los pagadores debe ser 100.",
-    "duplicateParticipant": "Ya hay otro pagador seleccionado."
+    "duplicateParticipant": "Ya hay otro pagador seleccionado.",
+    "sharesInvalid": "Las participaciones deben estar entre 0,01 y 1.000.000 con un máximo de dos decimales."
   },
   "Categories": {
     "search": "Buscar categoría...",

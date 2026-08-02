@@ -15,6 +15,7 @@ import { createOpenAiAppsChallengeResponse } from './domain-verification'
 import { createExpensePreviewResult } from './expense-preview-response'
 import { createReadinessChecker } from './readiness'
 import {
+  beneficiarySplitSchema,
   createExpenseOutputSchema,
   expenseContextOutputSchema,
   groupSummaryOutputSchema,
@@ -234,63 +235,6 @@ const allocation = z.object({
     'Exact amount paid by this participant, in the expense currency',
   ),
 })
-const beneficiarySplit = z.discriminatedUnion('mode', [
-  z.object({
-    mode: z.literal('EVENLY').describe('Split equally'),
-    participantIds: z
-      .array(
-        z.string().describe('Stable participant ID from get-expense-context'),
-      )
-      .min(1)
-      .optional()
-      .describe('Omit to split among all current participants'),
-  }),
-  z.object({
-    mode: z.literal('BY_SHARES').describe('Split by relative whole shares'),
-    shares: z
-      .array(
-        z.object({
-          participantId: z
-            .string()
-            .describe('Stable participant ID from get-expense-context'),
-          shares: z
-            .number()
-            .int()
-            .positive()
-            .describe('Positive whole-number share weight'),
-        }),
-      )
-      .min(1)
-      .describe('Participant share weights'),
-  }),
-  z.object({
-    mode: z
-      .literal('BY_PERCENTAGE')
-      .describe('Split by human percentages totaling 100'),
-    shares: z
-      .array(
-        z.object({
-          participantId: z
-            .string()
-            .describe('Stable participant ID from get-expense-context'),
-          percentage: decimalString.describe(
-            'Human percentage, e.g. 25 or 33.33; values must total 100',
-          ),
-        }),
-      )
-      .min(1)
-      .describe('Participant percentage allocations'),
-  }),
-  z.object({
-    mode: z
-      .literal('BY_AMOUNT')
-      .describe('Split by exact expense-currency amounts'),
-    shares: z
-      .array(allocation)
-      .min(1)
-      .describe('Participant exact-amount allocations'),
-  }),
-])
 const expenseItem = z.object({
   title: z
     .string()
@@ -306,7 +250,7 @@ const expenseItem = z.object({
     .positive()
     .default(1)
     .describe('Positive whole-number quantity shown on the receipt'),
-  split: beneficiarySplit
+  split: beneficiarySplitSchema
     .optional()
     .describe(
       'Who benefited from this item. Omit for the saved group split, falling back to even across current participants.',
@@ -432,7 +376,7 @@ server.tool(
         .min(1)
         .optional()
         .describe('Exact payer allocation; omit to use the authenticated user'),
-      split: beneficiarySplit.optional(),
+      split: beneficiarySplitSchema.optional(),
       items: z
         .array(expenseItem)
         .min(1)
@@ -441,7 +385,7 @@ server.tool(
         .describe(
           'Clearly readable receipt items. Supplying items creates an ITEMIZED expense and cannot be combined with the flat split field.',
         ),
-      remainderSplit: beneficiarySplit
+      remainderSplit: beneficiarySplitSchema
         .optional()
         .describe(
           'How to split tax, tip, or the gap between item subtotals and the expense total. Omit to allocate it proportionally to item subtotals.',

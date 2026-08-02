@@ -867,7 +867,8 @@
     "participantSharesLabel": "חלקי השתתפות עבור {name}",
     "decreaseShares": "הפחתת חלקי ההשתתפות של {name}",
     "increaseShares": "הגדלת חלקי ההשתתפות של {name}",
-    "validationSummary": "יש לתקן את השדות המודגשים לפני השמירה."
+    "validationSummary": "יש לתקן את השדות המודגשים לפני השמירה.",
+    "resetDistribution": "איפוס"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "מחיקת מסמך",
@@ -1076,7 +1077,8 @@
     "paidByMin1": "עליך לבחור לפחות משלם אחד.",
     "paidByAmountSum": "סיכום סכומי המשלמים חייב להיות שווה לסכום ההוצאה.",
     "paidByPercentageSum": "סיכום אחוזי המשלמים חייב להיות שווה ל-100.",
-    "duplicateParticipant": "משלם אחר כבר נבחר."
+    "duplicateParticipant": "משלם אחר כבר נבחר.",
+    "sharesInvalid": "המניות חייבות להיות בין 0.01 ל-1,000,000 עם עד שני מקומות עשרוניים."
   },
   "Categories": {
     "search": "חפש קטגוריה...",

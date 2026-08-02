@@ -60,6 +60,10 @@ export function PaidByCard(props: {
     ],
     [singlePayerTargetAmount],
   )
+  // The single-payer path emits the expense amount directly as a BY_AMOUNT
+  // share (the form's single-payer mode forces paidBySplitMode = BY_AMOUNT
+  // — see PaidBySplitOptionCards) so the BY_SHARES scaling is only
+  // applied in the multi-payer paid-by list preview.
   const initialMultiPayerShare = (splitMode: SplitMode) =>
     splitMode === 'BY_AMOUNT' ? singlePayerTargetAmount : 1
 
@@ -98,22 +102,51 @@ export function PaidByCard(props: {
     })
   }, [singlePayerTargetAmount, isMultiPayer, form, singlePayerPaidByList])
 
-  const togglePaidByParticipants = () => {
+  // Select all adds missing participants without overwriting edited values;
+  // Select none clears every row.
+  const handleSelectPaidByParticipants = () => {
     const currentPaidByList = form.getValues().paidByList
-    const allSelected = currentPaidByList.length === group.participants.length
-    const newPaidByList = allSelected
-      ? []
-      : buildEqualParticipantRows({
-          participantIds: group.participants.map((p) => p.id),
-          splitMode: paidBySplitMode as Exclude<SplitMode, 'ITEMIZED'>,
-          targetAmount: Number(amount) || 0,
-          currency: payerCurrency,
-        })
-    form.setValue('paidByList', newPaidByList, {
+    const options = {
       shouldDirty: true,
       shouldTouch: true,
       shouldValidate: true,
+    }
+    if (currentPaidByList.length === group.participants.length) {
+      form.setValue('paidByList', [], options)
+      return
+    }
+    const equalRows = buildEqualParticipantRows({
+      participantIds: group.participants.map((p) => p.id),
+      splitMode: paidBySplitMode as Exclude<SplitMode, 'ITEMIZED'>,
+      targetAmount: Number(amount) || 0,
+      currency: payerCurrency,
     })
+    const existing = new Set(currentPaidByList.map((p) => p.participant))
+    form.setValue(
+      'paidByList',
+      [
+        ...currentPaidByList,
+        ...equalRows.filter((row) => !existing.has(row.participant)),
+      ],
+      options,
+    )
+  }
+
+  // Reset rebuilds the current distribution equally for the mode; unlike
+  // Select all it overwrites every value, so edited payers become automatic
+  // again.
+  const handleResetPaidByDistribution = () => {
+    form.setValue(
+      'paidByList',
+      buildEqualParticipantRows({
+        participantIds: group.participants.map((p) => p.id),
+        splitMode: paidBySplitMode as Exclude<SplitMode, 'ITEMIZED'>,
+        targetAmount: Number(amount) || 0,
+        currency: payerCurrency,
+      }),
+      { shouldDirty: true, shouldTouch: true, shouldValidate: true },
+    )
+    props.setManuallyEditedPayers(new Set())
   }
 
   const renderPaidByContent = (option: PaidBySplitOption) => {
@@ -163,13 +196,22 @@ export function PaidByCard(props: {
 
     return (
       <>
-        <div className="mb-2 flex justify-end">
+        <div className="mb-2 flex justify-end gap-1">
           <Button
             variant="link"
             type="button"
             className="-my-2 -mr-2"
             disabled={readOnly}
-            onClick={togglePaidByParticipants}
+            onClick={handleResetPaidByDistribution}
+          >
+            {t('resetDistribution')}
+          </Button>
+          <Button
+            variant="link"
+            type="button"
+            className="-my-2 -mr-2"
+            disabled={readOnly}
+            onClick={handleSelectPaidByParticipants}
           >
             {paidByList.length === group.participants.length
               ? t('selectNone')

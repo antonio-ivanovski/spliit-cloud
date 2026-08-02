@@ -1324,8 +1324,9 @@ describe('tryParseSplitwiseCsv', () => {
   })
 
   it('suggests BY_SHARES when a clean ratio is detected', () => {
-    // 60/40 → GCD(6000, 4000) = 2000; shares normalised to ratio weights.
-    // paidFor order: negative-entry participants first, then positives.
+    // 60/40 → GCD(6000, 4000) = 2000; shares normalised to fixed units
+    // (= ratio × SHARE_SCALE). paidFor order: negative-entry participants
+    // first, then positives.
     const csv = splitwiseCsv([
       ['2026-01-15', 'Uneven', 'General', '100.00', 'MKD', '60.00', '-40.00'],
     ])
@@ -1335,8 +1336,8 @@ describe('tryParseSplitwiseCsv', () => {
     const e = result.source.expenses[0]
     expect(e.splitMode).toBe('BY_SHARES')
     expect(e.paidFor).toEqual([
-      pf(aid(result.source, 1), 2),
-      pf(aid(result.source, 0), 3),
+      pf(aid(result.source, 1), 200),
+      pf(aid(result.source, 0), 300),
     ])
   })
 

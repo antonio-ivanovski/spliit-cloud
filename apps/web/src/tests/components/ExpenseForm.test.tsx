@@ -9,7 +9,7 @@ import { ParticipantDistributionFooter } from '@/components/participant-distribu
 import { getCurrency, useCurrencies } from '@/lib/currency'
 import { useCurrencyRate } from '@/lib/hooks'
 import type { Expense } from '@/lib/schemas'
-import { act, fireEvent, render, screen } from '@/test/test-utils'
+import { act, fireEvent, render, screen, within } from '@/test/test-utils'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
@@ -1756,14 +1756,16 @@ describe('ExpenseForm Total/Missing footer (paid by)', () => {
     expect(footer.className).toContain('text-muted-foreground')
   })
 
-  it('BY_SHARES: shows "Total weight: <sum> shares" in muted color', () => {
+  it('BY_SHARES: shows "Total weight: <sum> shares" in muted color with the displayed value', () => {
+    // Stored fixed units (100 = 1 displayed share). 100 + 200 → 1 + 2
+    // displayed; the footer must never expose the fixed-unit form.
     const expense = {
       ...mockExpense,
       originalCurrency: '',
       paidBySplitMode: 'BY_SHARES' as const,
       paidByList: [
-        { ledgerParticipantId: 'lp-1', shares: 1 },
-        { ledgerParticipantId: 'lp-2', shares: 2 },
+        { ledgerParticipantId: 'lp-1', shares: 100 },
+        { ledgerParticipantId: 'lp-2', shares: 200 },
       ],
     }
     render(
@@ -2556,3 +2558,850 @@ function getDefaultSplitSaveButton(): HTMLButtonElement {
   }
   return candidates[0] as HTMLButtonElement
 }
+
+// ── BY_SHARES decimal entry and edit/resubmit ────────────────────────────
+
+describe('ExpenseForm BY_SHARES decimal entry', () => {
+  it('keeps intermediate decimal states while typing 0.5 in flat paid-for and submits 50', async () => {
+    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={onSubmit}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    await user.type(
+      screen.getByPlaceholderText('Monday evening restaurant'),
+      'Lunch',
+    )
+    await user.type(screen.getByRole('textbox', { name: 'Amount' }), '10')
+    await user.click(screen.getByRole('radio', { name: /split: by shares/i }))
+
+    const aliceInput = screen.getByRole('textbox', {
+      name: 'Shares for Alice',
+    })
+    // Character-by-character typing must keep "0", "0." and "0.5" visible:
+    // every non-empty value keeps the row, so the first digit never makes
+    // the input vanish.
+    await user.clear(aliceInput)
+    await user.type(aliceInput, '0')
+    expect(aliceInput).toHaveValue('0')
+    await user.type(aliceInput, '.')
+    expect(aliceInput).toHaveValue('0.')
+    await user.type(aliceInput, '5')
+    expect(aliceInput).toHaveValue('0.5')
+
+    await user.click(screen.getByRole('button', { name: /create/i }))
+    await vi.waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1)
+    })
+    // The removed-and-typed row is re-appended, so compare order-independently.
+    const paidFor = [...onSubmit.mock.calls[0][0].paidFor].sort(
+      (a: { participant: string }, b: { participant: string }) =>
+        a.participant.localeCompare(b.participant),
+    )
+    expect(paidFor).toEqual([
+      { participant: 'lp-1', shares: 50 },
+      { participant: 'lp-2', shares: 100 },
+    ])
+  })
+
+  it('removes the participant row when the share input is explicitly cleared', async () => {
+    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={onSubmit}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    await user.type(
+      screen.getByPlaceholderText('Monday evening restaurant'),
+      'Lunch',
+    )
+    await user.type(screen.getByRole('textbox', { name: 'Amount' }), '10')
+    await user.click(screen.getByRole('radio', { name: /split: by shares/i }))
+
+    const aliceInput = screen.getByRole('textbox', {
+      name: 'Shares for Alice',
+    })
+    await user.clear(aliceInput)
+    expect(aliceInput).toHaveValue('')
+
+    await user.click(screen.getByRole('button', { name: /create/i }))
+    await vi.waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1)
+    })
+    const paidFor = [...onSubmit.mock.calls[0][0].paidFor].sort(
+      (a: { participant: string }, b: { participant: string }) =>
+        a.participant.localeCompare(b.participant),
+    )
+    expect(paidFor).toEqual([{ participant: 'lp-2', shares: 100 }])
+  })
+
+  it('canonicalizes repeated leading zeros while typing', async () => {
+    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={onSubmit}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    await user.type(
+      screen.getByPlaceholderText('Monday evening restaurant'),
+      'Lunch',
+    )
+    await user.type(screen.getByRole('textbox', { name: 'Amount' }), '10')
+    await user.click(screen.getByRole('radio', { name: /split: by shares/i }))
+
+    const aliceInput = screen.getByRole('textbox', {
+      name: 'Shares for Alice',
+    })
+    await user.clear(aliceInput)
+    // Repeated zero keystrokes keep displaying a single "0"...
+    await user.type(aliceInput, '0')
+    expect(aliceInput).toHaveValue('0')
+    await user.type(aliceInput, '0')
+    expect(aliceInput).toHaveValue('0')
+    await user.type(aliceInput, '0')
+    expect(aliceInput).toHaveValue('0')
+    // ...and a non-zero digit immediately canonicalizes "0004" -> "4".
+    await user.type(aliceInput, '4')
+    expect(aliceInput).toHaveValue('4')
+  })
+
+  it('keeps "1." while typing .1 after a starting share of 1 and submits 110', async () => {
+    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={onSubmit}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    await user.type(
+      screen.getByPlaceholderText('Monday evening restaurant'),
+      'Lunch',
+    )
+    await user.type(screen.getByRole('textbox', { name: 'Amount' }), '10')
+    await user.click(screen.getByRole('radio', { name: /split: by shares/i }))
+
+    const aliceInput = screen.getByRole('textbox', {
+      name: 'Shares for Alice',
+    })
+    // Focus selects the starting value, so typing replaces it: '1' keeps
+    // the value, the '.' intermediate "1." state survives, and '1' finishes.
+    await user.type(aliceInput, '1')
+    await user.type(aliceInput, '.')
+    expect(aliceInput).toHaveValue('1.')
+    await user.type(aliceInput, '1')
+    expect(aliceInput).toHaveValue('1.1')
+
+    await user.click(screen.getByRole('button', { name: /create/i }))
+    await vi.waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1)
+    })
+    const paidFor = [...onSubmit.mock.calls[0][0].paidFor].sort(
+      (a: { participant: string }, b: { participant: string }) =>
+        a.participant.localeCompare(b.participant),
+    )
+    expect(paidFor).toEqual([
+      { participant: 'lp-1', shares: 110 },
+      { participant: 'lp-2', shares: 100 },
+    ])
+  })
+
+  it('steps fractional shares by 0.1 and removes the row at zero', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    await user.type(
+      screen.getByPlaceholderText('Monday evening restaurant'),
+      'Lunch',
+    )
+    await user.type(screen.getByRole('textbox', { name: 'Amount' }), '10')
+    await user.click(screen.getByRole('radio', { name: /split: by shares/i }))
+
+    const aliceInput = screen.getByRole('textbox', {
+      name: 'Shares for Alice',
+    })
+    await user.clear(aliceInput)
+    await user.type(aliceInput, '0.5')
+    // 0.5 + -> 0.6 (fractional values step by 0.1)
+    await user.click(
+      screen.getByRole('button', { name: 'Increase shares for Alice' }),
+    )
+    expect(aliceInput).toHaveValue('0.6')
+    // 0.6 - -> 0.5
+    await user.click(
+      screen.getByRole('button', { name: 'Decrease shares for Alice' }),
+    )
+    expect(aliceInput).toHaveValue('0.5')
+    // 0.9 + -> 1, then whole values step by 1 (1 + -> 2)
+    await user.clear(aliceInput)
+    await user.type(aliceInput, '0.9')
+    await user.click(
+      screen.getByRole('button', { name: 'Increase shares for Alice' }),
+    )
+    expect(aliceInput).toHaveValue('1')
+    await user.click(
+      screen.getByRole('button', { name: 'Increase shares for Alice' }),
+    )
+    expect(aliceInput).toHaveValue('2')
+    // 1.5 + -> 1.6 (fractional values above 1 still step by 0.1)
+    await user.clear(aliceInput)
+    await user.type(aliceInput, '1.5')
+    await user.click(
+      screen.getByRole('button', { name: 'Increase shares for Alice' }),
+    )
+    expect(aliceInput).toHaveValue('1.6')
+    // 1.6 - -> 1.5 (fractional decrease also steps by 0.1)
+    await user.click(
+      screen.getByRole('button', { name: 'Decrease shares for Alice' }),
+    )
+    expect(aliceInput).toHaveValue('1.5')
+    // 0.1 - removes the row
+    await user.clear(aliceInput)
+    await user.type(aliceInput, '0.1')
+    await user.click(
+      screen.getByRole('button', { name: 'Decrease shares for Alice' }),
+    )
+    expect(aliceInput).toHaveValue('')
+  })
+
+  it('keeps intermediate decimal states while typing 1.5 in multi-payer paid-by and submits 150', async () => {
+    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={onSubmit}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    await user.type(
+      screen.getByPlaceholderText('Monday evening restaurant'),
+      'Lunch',
+    )
+    await user.type(screen.getByRole('textbox', { name: 'Amount' }), '10')
+    await user.click(
+      screen.getByRole('radio', { name: /multiple payers.*by shares/i }),
+    )
+    // Multi-payer starts with the current payer only; add Bob via Select all.
+    await user.click(screen.getByRole('button', { name: /select all/i }))
+
+    const aliceInput = screen.getByRole('textbox', {
+      name: 'Shares for Alice',
+    })
+    await user.clear(aliceInput)
+    await user.type(aliceInput, '1.5')
+    expect(aliceInput).toHaveValue('1.5')
+
+    await user.click(screen.getByRole('button', { name: /create/i }))
+    await vi.waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1)
+    })
+    const paidByList = [...onSubmit.mock.calls[0][0].paidByList].sort(
+      (a: { participant: string }, b: { participant: string }) =>
+        a.participant.localeCompare(b.participant),
+    )
+    expect(paidByList).toEqual([
+      { participant: 'lp-1', shares: 150 },
+      { participant: 'lp-2', shares: 100 },
+    ])
+  })
+
+  it('edit mode hydrates stored 110 to 1.1 and resubmits 110 (scale-once round trip)', async () => {
+    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        expense={
+          {
+            ...mockExpense,
+            splitMode: 'BY_SHARES',
+            paidFor: [
+              { ledgerParticipantId: 'lp-1', shares: 110 },
+              { ledgerParticipantId: 'lp-2', shares: 50 },
+            ],
+          } as unknown as LoadedExpense
+        }
+        onSubmit={onSubmit}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    // Stored fixed units hydrate to display units.
+    const alice = screen.getByRole('textbox', { name: 'Shares for Alice' })
+    expect(alice).toHaveValue('1.1')
+    expect(screen.getByRole('textbox', { name: 'Shares for Bob' })).toHaveValue(
+      '0.5',
+    )
+
+    // The user edits one value; serialization must go back to fixed units.
+    await user.clear(alice)
+    await user.type(alice, '1.1')
+
+    const submitButton = screen
+      .getAllByRole('button', { name: /^save$/i })
+      .find((b) => (b as HTMLButtonElement).type === 'submit')
+    if (!submitButton) throw new Error('submit button not found')
+    await user.click(submitButton)
+    await vi.waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1)
+    })
+    const paidFor = [...onSubmit.mock.calls[0][0].paidFor].sort(
+      (a: { participant: string }, b: { participant: string }) =>
+        a.participant.localeCompare(b.participant),
+    )
+    expect(paidFor).toEqual([
+      { participant: 'lp-1', shares: 110 },
+      { participant: 'lp-2', shares: 50 },
+    ])
+  })
+
+  it('resets custom shares and deselection in flat paid-for to all ones', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    await user.type(
+      screen.getByPlaceholderText('Monday evening restaurant'),
+      'Lunch',
+    )
+    await user.type(screen.getByRole('textbox', { name: 'Amount' }), '10')
+    await user.click(screen.getByRole('radio', { name: /split: by shares/i }))
+
+    const aliceInput = screen.getByRole('textbox', {
+      name: 'Shares for Alice',
+    })
+    await user.clear(aliceInput)
+    await user.type(aliceInput, '0.5')
+    // Deselect Bob, then Reset: all participants back to 1.
+    const bobToggle = document.querySelector<HTMLButtonElement>(
+      '[data-id="lp-2/BY_SHARES/USD"] button[aria-pressed]',
+    )
+    if (!bobToggle) throw new Error('Bob row toggle not found')
+    await user.click(bobToggle)
+    await user.click(screen.getByRole('button', { name: /reset/i }))
+
+    expect(aliceInput).toHaveValue('1')
+    expect(screen.getByRole('textbox', { name: 'Shares for Bob' })).toHaveValue(
+      '1',
+    )
+  })
+
+  it('select all adds missing participants without overwriting edited values', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    await user.type(
+      screen.getByPlaceholderText('Monday evening restaurant'),
+      'Lunch',
+    )
+    await user.type(screen.getByRole('textbox', { name: 'Amount' }), '10')
+    await user.click(screen.getByRole('radio', { name: /split: by shares/i }))
+
+    const aliceInput = screen.getByRole('textbox', {
+      name: 'Shares for Alice',
+    })
+    await user.clear(aliceInput)
+    await user.type(aliceInput, '0.5')
+    // Deselect Bob, then Select all: Alice keeps 0.5, Bob is restored at 1.
+    const bobToggle = document.querySelector<HTMLButtonElement>(
+      '[data-id="lp-2/BY_SHARES/USD"] button[aria-pressed]',
+    )
+    if (!bobToggle) throw new Error('Bob row toggle not found')
+    await user.click(bobToggle)
+    await user.click(screen.getByRole('button', { name: /select all/i }))
+
+    expect(aliceInput).toHaveValue('0.5')
+    expect(screen.getByRole('textbox', { name: 'Shares for Bob' })).toHaveValue(
+      '1',
+    )
+  })
+
+  it('reset percentage distribution totals exactly 100', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    await user.type(
+      screen.getByPlaceholderText('Monday evening restaurant'),
+      'Lunch',
+    )
+    await user.type(screen.getByRole('textbox', { name: 'Amount' }), '10')
+    await user.click(
+      screen.getByRole('radio', { name: /split: by percentage/i }),
+    )
+
+    const aliceInput = screen.getByRole('textbox', {
+      name: 'Percentage for Alice',
+    })
+    await user.clear(aliceInput)
+    await user.type(aliceInput, '10')
+    await user.click(screen.getByRole('button', { name: /reset/i }))
+
+    // Two participants -> equal 50 / 50, exactly 100 in total.
+    expect(aliceInput).toHaveValue('50')
+    expect(
+      screen.getByRole('textbox', { name: 'Percentage for Bob' }),
+    ).toHaveValue('50')
+  })
+
+  it('reset amount distribution totals exactly the target amount', async () => {
+    const groupWith3 = {
+      ...mockGroup,
+      participants: [
+        ...mockGroup.participants,
+        {
+          id: 'lp-3',
+          name: 'Carol',
+          account: null,
+          pending: false,
+          unlinked: false,
+        },
+      ],
+    }
+    const { user } = render(
+      <ExpenseForm
+        group={groupWith3 as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    await user.type(
+      screen.getByPlaceholderText('Monday evening restaurant'),
+      'Lunch',
+    )
+    await user.type(screen.getByRole('textbox', { name: 'Amount' }), '10')
+    await user.click(
+      screen.getByRole('radio', { name: /multiple payers.*by amount/i }),
+    )
+
+    const paidByCard = screen
+      .getByTestId('paid-by-distribution-footer')
+      .closest('div.motion-surface')
+    if (!paidByCard) throw new Error('paid-by card not found')
+    await user.click(
+      within(paidByCard as HTMLElement).getByRole('button', {
+        name: /reset/i,
+      }),
+    )
+
+    // Three payers -> 3.33 / 3.33 / 3.34, exactly the 10 expense amount:
+    // the balancing effect must not flatten the residual cent to 3.33 x 3.
+    const aliceInput = within(paidByCard as HTMLElement).getByRole('textbox', {
+      name: 'Amount for Alice',
+    })
+    expect(aliceInput).toHaveValue('3.33')
+    expect(
+      within(paidByCard as HTMLElement).getByRole('textbox', {
+        name: 'Amount for Bob',
+      }),
+    ).toHaveValue('3.33')
+    expect(
+      within(paidByCard as HTMLElement).getByRole('textbox', {
+        name: 'Amount for Carol',
+      }),
+    ).toHaveValue('3.34')
+    expect(
+      screen.getByTestId('paid-by-distribution-footer'),
+    ).not.toHaveTextContent(/missing/i)
+
+    // Reset did not make the rows manual: changing the amount rebalances
+    // them automatically to an exact 11.00 total (3.66 / 3.67 / 3.67).
+    await user.clear(screen.getByRole('textbox', { name: 'Amount' }))
+    await user.type(screen.getByRole('textbox', { name: 'Amount' }), '11')
+    expect(aliceInput).toHaveValue('3.66')
+    expect(
+      within(paidByCard as HTMLElement).getByRole('textbox', {
+        name: 'Amount for Bob',
+      }),
+    ).toHaveValue('3.67')
+    expect(
+      within(paidByCard as HTMLElement).getByRole('textbox', {
+        name: 'Amount for Carol',
+      }),
+    ).toHaveValue('3.67')
+    expect(
+      screen.getByTestId('paid-by-distribution-footer'),
+    ).not.toHaveTextContent(/missing/i)
+  })
+
+  it('reset amount distribution in flat paid-for totals exactly the target amount', async () => {
+    const groupWith3 = {
+      ...mockGroup,
+      participants: [
+        ...mockGroup.participants,
+        {
+          id: 'lp-3',
+          name: 'Carol',
+          account: null,
+          pending: false,
+          unlinked: false,
+        },
+      ],
+    }
+    const { user } = render(
+      <ExpenseForm
+        group={groupWith3 as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    await user.type(
+      screen.getByPlaceholderText('Monday evening restaurant'),
+      'Lunch',
+    )
+    await user.type(screen.getByRole('textbox', { name: 'Amount' }), '10')
+    await user.click(screen.getByRole('radio', { name: /split.*by amount/i }))
+    await user.click(screen.getByRole('button', { name: /reset/i }))
+
+    // Three participants -> 3.33 / 3.33 / 3.34 = exactly 10.00 after the
+    // balancing effect settles (it must preserve the residual cent).
+    const aliceInput = screen.getByRole('textbox', {
+      name: 'Amount for Alice',
+    })
+    expect(aliceInput).toHaveValue('3.33')
+    expect(screen.getByRole('textbox', { name: 'Amount for Bob' })).toHaveValue(
+      '3.33',
+    )
+    expect(
+      screen.getByRole('textbox', { name: 'Amount for Carol' }),
+    ).toHaveValue('3.34')
+    expect(
+      screen.getByTestId('paid-for-distribution-footer'),
+    ).not.toHaveTextContent(/missing/i)
+
+    // Amount change rebalances the automatic rows to an exact 11.00 total,
+    // proving Reset did not mark them as manually edited.
+    await user.clear(screen.getByRole('textbox', { name: 'Amount' }))
+    await user.type(screen.getByRole('textbox', { name: 'Amount' }), '11')
+    expect(aliceInput).toHaveValue('3.66')
+    expect(screen.getByRole('textbox', { name: 'Amount for Bob' })).toHaveValue(
+      '3.67',
+    )
+    expect(
+      screen.getByRole('textbox', { name: 'Amount for Carol' }),
+    ).toHaveValue('3.67')
+    expect(
+      screen.getByTestId('paid-for-distribution-footer'),
+    ).not.toHaveTextContent(/missing/i)
+  })
+
+  it('steps fractional shares in multi-payer paid-by by 0.1', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    await user.type(
+      screen.getByPlaceholderText('Monday evening restaurant'),
+      'Lunch',
+    )
+    await user.type(screen.getByRole('textbox', { name: 'Amount' }), '10')
+    await user.click(
+      screen.getByRole('radio', { name: /multiple payers.*by shares/i }),
+    )
+    // Multi-payer starts with the current payer only; add Bob via Select all.
+    await user.click(screen.getByRole('button', { name: /select all/i }))
+
+    const aliceInput = screen.getByRole('textbox', {
+      name: 'Shares for Alice',
+    })
+    await user.clear(aliceInput)
+    await user.type(aliceInput, '1.5')
+    await user.click(
+      screen.getByRole('button', { name: 'Increase shares for Alice' }),
+    )
+    expect(aliceInput).toHaveValue('1.6')
+  })
+
+  it('selects the full paid-for share value on focus so typing replaces it', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    await user.type(
+      screen.getByPlaceholderText('Monday evening restaurant'),
+      'Lunch',
+    )
+    await user.type(screen.getByRole('textbox', { name: 'Amount' }), '10')
+    await user.click(screen.getByRole('radio', { name: /split: by shares/i }))
+
+    const aliceInput = screen.getByRole('textbox', {
+      name: 'Shares for Alice',
+    }) as HTMLInputElement
+    expect(aliceInput).toHaveValue('1')
+    fireEvent.focus(aliceInput)
+    expect(aliceInput.selectionStart).toBe(0)
+    expect(aliceInput.selectionEnd).toBe(1)
+    await user.type(aliceInput, '5')
+    expect(aliceInput).toHaveValue('5')
+  })
+
+  it('selects the full paid-for amount value on focus so typing replaces it', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    await user.type(
+      screen.getByPlaceholderText('Monday evening restaurant'),
+      'Lunch',
+    )
+    await user.type(screen.getByRole('textbox', { name: 'Amount' }), '10')
+    await user.click(screen.getByRole('radio', { name: /split.*by amount/i }))
+    await user.click(screen.getByRole('button', { name: /reset/i }))
+
+    const aliceInput = screen.getByRole('textbox', {
+      name: 'Amount for Alice',
+    }) as HTMLInputElement
+    expect(aliceInput).toHaveValue('5')
+    await user.click(aliceInput)
+    expect(aliceInput.selectionStart).toBe(0)
+    expect(aliceInput.selectionEnd).toBe(1)
+    await user.keyboard('7')
+    expect(aliceInput).toHaveValue('7')
+    expect(screen.getByRole('textbox', { name: 'Amount for Bob' })).toHaveValue(
+      '3',
+    )
+  })
+
+  it('selects the full paid-by amount value on focus so typing replaces it', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    await user.type(
+      screen.getByPlaceholderText('Monday evening restaurant'),
+      'Lunch',
+    )
+    await user.type(screen.getByRole('textbox', { name: 'Amount' }), '10')
+    await user.click(
+      screen.getByRole('radio', { name: /multiple payers.*by amount/i }),
+    )
+
+    const paidByCard = screen
+      .getByTestId('paid-by-distribution-footer')
+      .closest('div.motion-surface')
+    if (!paidByCard) throw new Error('paid-by card not found')
+    await user.click(
+      within(paidByCard as HTMLElement).getByRole('button', {
+        name: /reset/i,
+      }),
+    )
+
+    const aliceInput = within(paidByCard as HTMLElement).getByRole('textbox', {
+      name: 'Amount for Alice',
+    }) as HTMLInputElement
+    expect(aliceInput).toHaveValue('5')
+    fireEvent.focus(aliceInput)
+    expect(aliceInput.selectionStart).toBe(0)
+    expect(aliceInput.selectionEnd).toBe(1)
+    await user.type(aliceInput, '7')
+    expect(aliceInput).toHaveValue('7')
+  })
+
+  it('removes paid-for automatic rows when a manual row consumes the full amount', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    await user.type(
+      screen.getByPlaceholderText('Monday evening restaurant'),
+      'Lunch',
+    )
+    await user.type(screen.getByRole('textbox', { name: 'Amount' }), '10')
+    await user.click(screen.getByRole('radio', { name: /split.*by amount/i }))
+    await user.click(screen.getByRole('button', { name: /reset/i }))
+
+    const aliceInput = screen.getByRole('textbox', {
+      name: 'Amount for Alice',
+    })
+    await user.click(aliceInput)
+    await user.keyboard('10')
+
+    const paidForCard = screen
+      .getByTestId('paid-for-distribution-footer')
+      .closest('div.motion-surface')
+    if (!paidForCard) throw new Error('paid-for card not found')
+    expect(aliceInput).toHaveValue('10')
+    expect(
+      within(paidForCard as HTMLElement).getByRole('textbox', {
+        name: 'Amount for Bob',
+      }),
+    ).toHaveValue('')
+    expect(
+      within(paidForCard as HTMLElement).getByRole('button', { name: /Bob/ }),
+    ).toHaveAttribute('aria-pressed', 'false')
+    expect(
+      screen.getByTestId('paid-for-distribution-footer'),
+    ).not.toHaveTextContent(/missing/i)
+  })
+
+  it('removes paid-by automatic rows when a manual row consumes the full amount', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    await user.type(
+      screen.getByPlaceholderText('Monday evening restaurant'),
+      'Lunch',
+    )
+    await user.type(screen.getByRole('textbox', { name: 'Amount' }), '10')
+    await user.click(
+      screen.getByRole('radio', { name: /multiple payers.*by amount/i }),
+    )
+
+    const paidByCard = screen
+      .getByTestId('paid-by-distribution-footer')
+      .closest('div.motion-surface')
+    if (!paidByCard) throw new Error('paid-by card not found')
+    await user.click(
+      within(paidByCard as HTMLElement).getByRole('button', {
+        name: /reset/i,
+      }),
+    )
+
+    const aliceInput = within(paidByCard as HTMLElement).getByRole('textbox', {
+      name: 'Amount for Alice',
+    })
+    await user.click(aliceInput)
+    await user.keyboard('10')
+
+    expect(aliceInput).toHaveValue('10')
+    expect(
+      within(paidByCard as HTMLElement).getByRole('textbox', {
+        name: 'Amount for Bob',
+      }),
+    ).toHaveValue('')
+    expect(
+      within(paidByCard as HTMLElement).getByRole('button', { name: /Bob/ }),
+    ).toHaveAttribute('aria-pressed', 'false')
+    expect(
+      screen.getByTestId('paid-by-distribution-footer'),
+    ).not.toHaveTextContent(/missing/i)
+  })
+
+  it('omits zero-allocated automatic rows when the amount shrinks', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    await user.type(
+      screen.getByPlaceholderText('Monday evening restaurant'),
+      'Lunch',
+    )
+    await user.type(screen.getByRole('textbox', { name: 'Amount' }), '0.02')
+    await user.click(screen.getByRole('radio', { name: /split.*by amount/i }))
+    await user.click(screen.getByRole('button', { name: /reset/i }))
+
+    // 0.02 across two automatic participants -> 0.01 / 0.01.
+    expect(
+      screen.getByRole('textbox', { name: 'Amount for Alice' }),
+    ).toHaveValue('0.01')
+    expect(screen.getByRole('textbox', { name: 'Amount for Bob' })).toHaveValue(
+      '0.01',
+    )
+    expect(
+      screen.getByTestId('paid-for-distribution-footer'),
+    ).not.toHaveTextContent(/missing/i)
+
+    // Shrinking to 0.01 leaves a single cent, which the helper assigns to
+    // the last participant: Bob keeps 0.01, Alice's omitted automatic row is
+    // dropped (unselected) — not kept at zero. Selection is row presence, so
+    // the checkbox is the source of truth.
+    await user.clear(screen.getByRole('textbox', { name: 'Amount' }))
+    await user.type(screen.getByRole('textbox', { name: 'Amount' }), '0.01')
+    const aliceToggle = document.querySelector<HTMLButtonElement>(
+      '[data-id="lp-1/BY_AMOUNT/USD"] button[aria-pressed]',
+    )
+    const bobToggle = document.querySelector<HTMLButtonElement>(
+      '[data-id="lp-2/BY_AMOUNT/USD"] button[aria-pressed]',
+    )
+    expect(aliceToggle?.getAttribute('aria-pressed')).toBe('false')
+    expect(bobToggle?.getAttribute('aria-pressed')).toBe('true')
+    expect(
+      screen.getByRole('textbox', { name: 'Amount for Alice' }),
+    ).toHaveValue('')
+    expect(screen.getByRole('textbox', { name: 'Amount for Bob' })).toHaveValue(
+      '0.01',
+    )
+    expect(
+      screen.getByTestId('paid-for-distribution-footer'),
+    ).not.toHaveTextContent(/missing/i)
+  })
+})

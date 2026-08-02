@@ -1,9 +1,15 @@
-import { amountAsDecimal, type Currency, type SplitMode } from '@spliit/domain'
+import {
+  amountAsDecimal,
+  sharesAsDecimal,
+  type Currency,
+  type SplitMode,
+} from '@spliit/domain'
 
 /**
  * Display-unit row shape used by the form. Shares carry the same units as the
  * live form state — decimal major units for BY_AMOUNT, display percentages for
- * BY_PERCENTAGE, raw counts otherwise.
+ * BY_PERCENTAGE, display shares for BY_SHARES (1 = 1 share), inclusion markers
+ * for EVENLY.
  */
 export type SplitRowDisplay = {
   participant: string
@@ -13,8 +19,8 @@ export type SplitRowDisplay = {
 /**
  * Storage-unit row shape returned by `trpc.account.defaultSplit` and stored on
  * `AccountGroupPreference.defaultSplit`. Shares are integer minor units
- * (BY_AMOUNT), basis points (BY_PERCENTAGE), or raw counts (BY_SHARES /
- * EVENLY).
+ * (BY_AMOUNT), basis points (BY_PERCENTAGE), or fixed share units (BY_SHARES,
+ * 100 = 1 displayed share). EVENLY rows are inclusion markers.
  */
 export type SplitRowStored = {
   participant: string
@@ -56,6 +62,12 @@ function storedRowToDisplay(
     return {
       participant: row.participant,
       shares: amountAsDecimal(row.shares, groupCurrency),
+    }
+  }
+  if (splitMode === 'BY_SHARES') {
+    return {
+      participant: row.participant,
+      shares: sharesAsDecimal(row.shares),
     }
   }
   return { participant: row.participant, shares: row.shares }

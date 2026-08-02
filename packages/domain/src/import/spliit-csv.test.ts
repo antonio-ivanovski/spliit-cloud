@@ -54,12 +54,12 @@ describe('tryParseSpliitCsv', () => {
     const first = result.source.expenses[0]
     expect(first.title).toBe('Kafe plazha')
     expect(first.amount).toBe(360)
-    // 216 / 144 → GCD 72 → BY_SHARES; shares normalised to ratio weights.
+    // 216 / 144 → GCD 72 → BY_SHARES; shares normalised to fixed units.
     expect(first.splitMode).toBe('BY_SHARES')
     expect(first.paidBySourceId).toBe(result.source.participants[1].sourceId)
     expect(first.paidFor).toEqual([
-      { sourceId: result.source.participants[0].sourceId, shares: 3 },
-      { sourceId: result.source.participants[1].sourceId, shares: 2 },
+      { sourceId: result.source.participants[0].sourceId, shares: 300 },
+      { sourceId: result.source.participants[1].sourceId, shares: 200 },
     ])
   })
 
@@ -187,7 +187,9 @@ describe('tryParseSpliitCsv', () => {
   it('reconstructs paidFor from export nets (not abs of nets as shares)', () => {
     // Export nets: paidBy − paidFor. $100 paid by John, owes $30 / Jane owes $70
     // → nets +70 / −70. Must NOT become 70/70 EVENLY.
-    // guessSplitMode reduces 3000:7000 → BY_SHARES 3:7.
+    // guessSplitMode reduces 3000:7000 → BY_SHARES 3:7, then scales the
+    // ratio to the internal fixed units (×100) so the resulting shares
+    // are 300 and 700 (= 3.00 / 7.00 displayed).
     const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
 "2025-12-25","Uneven dinner","General","EUR","100.00",,,,"No","Unevenly – By amount",70.00,-70.00`
     const result = tryParseSpliitCsv(csv)
@@ -201,8 +203,8 @@ describe('tryParseSpliitCsv', () => {
     const byId = Object.fromEntries(
       e.paidFor.map((p) => [p.sourceId, p.shares]),
     )
-    expect(byId[john]).toBe(3)
-    expect(byId[jane]).toBe(7)
+    expect(byId[john]).toBe(300)
+    expect(byId[jane]).toBe(700)
     expect(e.splitMode).toBe('BY_SHARES')
   })
 
@@ -223,7 +225,7 @@ describe('tryParseSpliitCsv', () => {
 
   it('reconstructs 3-participant single-payer nets', () => {
     // Cost $100; John paid, owes $10; Jane $30; Bob $60 → nets +90,−30,−60
-    // 1000:3000:6000 → BY_SHARES 1:3:6
+    // 1000:3000:6000 → BY_SHARES 1:3:6, then ×100 to fixed units.
     const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane ","Bob"
 "2025-12-25","Trip","General","EUR","100.00",,,,"No","Unevenly – By amount",90.00,-30.00,-60.00`
     const result = tryParseSpliitCsv(csv)
@@ -234,9 +236,9 @@ describe('tryParseSpliitCsv', () => {
     const byId = Object.fromEntries(
       e.paidFor.map((p) => [p.sourceId, p.shares]),
     )
-    expect(byId[john]).toBe(1)
-    expect(byId[jane]).toBe(3)
-    expect(byId[bob]).toBe(6)
+    expect(byId[john]).toBe(100)
+    expect(byId[jane]).toBe(300)
+    expect(byId[bob]).toBe(600)
     expect(e.splitMode).toBe('BY_SHARES')
   })
 

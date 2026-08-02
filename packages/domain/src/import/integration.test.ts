@@ -134,7 +134,13 @@ describe('JSON integration: Spliit export round-trips', () => {
           `Missing paidFor row for ${srcRow.participantId}`,
         ).toBeDefined()
         if (!parsedRow) continue
-        expect(parsedRow.shares).toBe(srcRow.shares)
+        // BY_SHARES rows carry legacy whole-share counts from the
+        // spliit.app export; the internal contract stores fixed units
+        // (100 = 1 share), so multiply through. Other modes are the
+        // literal source values (cents / basis points / even marker).
+        const expectedShares =
+          parsed.splitMode === 'BY_SHARES' ? srcRow.shares * 100 : srcRow.shares
+        expect(parsedRow.shares).toBe(expectedShares)
       }
     }
   })

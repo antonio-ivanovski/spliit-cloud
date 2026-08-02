@@ -1,6 +1,7 @@
 import * as z from 'zod'
 
 import { DEFAULT_CATEGORIES } from '../categories'
+import { sharesAsFixedUnits } from '../shares'
 import { legacyRuleToRecurrence } from './recurrence'
 import {
   recoverSpliitOriginalAmount,
@@ -130,7 +131,17 @@ function normalizeSpliitExport(parsed: SpliitExport): NormalizedSource {
       if (!Number.isInteger(row.shares) || row.shares <= 0) {
         throw new ImportError(`Expense "${e.title}" has a non-positive share.`)
       }
-      paidFor.push({ sourceId, shares: row.shares })
+      // Legacy whole-share weights from spliit.app's BY_SHARES export.
+      // Spliit Cloud stores BY_SHARES as fixed units (`100 = 1 share`),
+      // so multiply legacy whole numbers once to land in the new
+      // internal representation. EVENLY/PERCENTAGE/AMOUNT modes pass
+      // through unchanged because the same column carries the literal
+      // mode-specific unit (basis points / minor units / even marker).
+      const normalizedShares =
+        e.splitMode === 'BY_SHARES'
+          ? sharesAsFixedUnits(row.shares)
+          : row.shares
+      paidFor.push({ sourceId, shares: normalizedShares })
     }
     if (!Number.isInteger(e.amount) || e.amount < 0) {
       throw new ImportError(`Expense "${e.title}" has an invalid amount.`)

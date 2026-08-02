@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useLocale } from '@/i18n/react'
 import { cn, formatCurrency } from '@/lib/utils'
 import type { Currency, SplitMode } from '@spliit/domain'
+import { formatDisplayShares } from '@spliit/domain'
 
 /**
  * Footer summary for the "Paid by" and "Paid for" participant lists. For
@@ -11,8 +12,8 @@ import type { Currency, SplitMode } from '@spliit/domain'
  * static muted label.
  *
  * Call sites are responsible for normalising shares to the unit the component
- * expects per mode: minor units for BY_AMOUNT, percent for BY_PERCENTAGE, raw
- * weights for BY_SHARES, irrelevant for EVENLY.
+ * expects per mode: minor units for BY_AMOUNT, percent for BY_PERCENTAGE,
+ * display shares for BY_SHARES (1 = 1 share), irrelevant for EVENLY.
  */
 export function ParticipantDistributionFooter({
   splitMode,
@@ -86,8 +87,13 @@ export function ParticipantDistributionFooter({
     })
     colorClass = 'text-muted-foreground'
   } else if (splitMode === 'BY_SHARES') {
-    const sum = shares.reduce((s, x) => s + x, 0)
-    message = t('sharesTotal', { sum })
+    // Shares arrive as display values (e.g. 0.5, 1.1, 25.75) and may
+    // still be raw input strings while the user is typing. Coerce to
+    // numbers before summing so "0.5" + 1 cannot string-concatenate.
+    // Format the sum with the shared helper so the user never sees the
+    // fixed-unit form.
+    const sum = shares.reduce((s, x) => s + Number(x), 0)
+    message = t('sharesTotal', { sum: formatDisplayShares(sum, locale) })
     colorClass = 'text-muted-foreground'
   }
 

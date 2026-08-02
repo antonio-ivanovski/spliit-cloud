@@ -1127,7 +1127,8 @@
     "participant": {
       "pending": "(inbjuden)"
     },
-    "validationSummary": "Korrigera de markerade fälten innan du sparar."
+    "validationSummary": "Korrigera de markerade fälten innan du sparar.",
+    "resetDistribution": "Återställ"
   },
   "ExpensePreview": {
     "title": "Utgiftsförhandsvisning",
@@ -2024,7 +2025,8 @@
     "paidByMin1": "Minst en betalare måste väljas.",
     "paidByAmountSum": "Summan av betalarnas belopp måste vara lika med utgiftsbeloppet.",
     "paidByPercentageSum": "Summan av betalarnas procentandelar måste vara 100.",
-    "duplicateParticipant": "En annan betalare är redan vald."
+    "duplicateParticipant": "En annan betalare är redan vald.",
+    "sharesInvalid": "Andelar måste vara mellan 0,01 och 1 000 000 med högst två decimaler."
   },
   "Settings": {
     "title": "Inställningar"

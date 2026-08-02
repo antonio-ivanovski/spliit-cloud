@@ -769,7 +769,12 @@ model ExpensePaidFor {
   ledgerParticipant   LedgerParticipant @relation(fields: [ledgerParticipantId], references: [id], onDelete: Restrict)
   expenseId           String
   ledgerParticipantId String
-  shares              Int               @default(1)
+  // Units depend on the owning split mode:
+  //   - BY_PERCENTAGE: basis points (10000 = 100%)
+  //   - BY_AMOUNT / ITEMIZED: currency minor units
+  //   - BY_SHARES: fixed share units (100 = 1 displayed share)
+  //   - EVENLY: ignored / inclusion marker
+  shares              Int               @default(100)
 
   @@id([expenseId, ledgerParticipantId])
   @@index([ledgerParticipantId])
@@ -780,7 +785,8 @@ model ExpensePaidBy {
   ledgerParticipant   LedgerParticipant @relation(fields: [ledgerParticipantId], references: [id], onDelete: Restrict)
   expenseId           String
   ledgerParticipantId String
-  shares              Int               @default(1)
+  // Units depend on the owning paidBySplitMode — see ExpensePaidFor.shares.
+  shares              Int               @default(100)
 
   @@id([expenseId, ledgerParticipantId])
   @@index([ledgerParticipantId])

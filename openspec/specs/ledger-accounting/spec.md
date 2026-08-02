@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Defines the ledger accounting core: one Ledger per group with a base currency, the storage units for every split mode (including fixed-point BY_SHARES weights), exact balance accumulation, and the transactional migration that converted legacy share weights to fixed units.
+
+## Requirements
 
 ### Requirement: Ledger-backed groups
 The system SHALL create one Ledger for every group, including imported groups, and SHALL attach expenses, balances, activities, documents, recurrence, exports, and base currency to the Ledger accounting core.
@@ -38,7 +42,7 @@ The system SHALL store base currency on the Ledger and SHALL store expense amoun
 - **THEN** the system suggests a base currency from account preference or locale and allows the user to choose a different base currency
 
 ### Requirement: Existing split units
-The system SHALL preserve current split units: BY_AMOUNT in ledger-currency minor units, BY_PERCENTAGE in basis points out of 10000, EVENLY as equal participation, and BY_SHARES as relative shares.
+The system SHALL store split units as follows: BY_AMOUNT in ledger-currency minor units, BY_PERCENTAGE in basis points out of 10000, EVENLY as equal participation, and BY_SHARES as positive integer hundredths of a share where `100 = 1 displayed share` (`0.5` displays as stored `50`, `1.1` displays as stored `110`). The fixed share units SHALL apply to expense paidFor rows, expense paidBy rows, item paidFor rows, itemized-remainder paidFor rows, and saved default-split paidFor rows.
 
 #### Scenario: Percentage split
 - **WHEN** a percentage split is saved
@@ -47,6 +51,33 @@ The system SHALL preserve current split units: BY_AMOUNT in ledger-currency mino
 #### Scenario: Amount split
 - **WHEN** an amount split is saved
 - **THEN** the paid-for shares are stored in Ledger base-currency minor units
+
+#### Scenario: Share split stores fixed units
+- **WHEN** a BY_SHARES split is saved with displayed shares
+- **THEN** the paid-for shares are stored as integer hundredths (`1.1` -> `110`, `0.5` -> `50`) with `100` equal to one displayed share
+
+#### Scenario: Saved default split uses fixed units
+- **WHEN** a user's saved default split uses BY_SHARES
+- **THEN** its paid-for rows are stored in the same fixed units (`100 = 1 displayed share`)
+
+### Requirement: Fixed-point share migration
+The system SHALL migrate legacy relative share weights to fixed units in a single transactional migration that multiplies stored shares by 100 only for rows owned by a BY_SHARES mode: expense paidFor rows whose expense `splitMode` is BY_SHARES, paidBy rows whose `paidBySplitMode` is BY_SHARES, item paidFor rows whose item `splitMode` is BY_SHARES, itemized-remainder paidFor rows whose remainder `splitMode` is BY_SHARES, saved default-split paidFor rows whose `splitMode` is BY_SHARES, and the matching recurring-template JSONB share paths. Rows owned by other modes SHALL be left unchanged. The migration SHALL run a preflight overflow check and abort (rolling back the whole transaction) if any BY_SHARES value exceeds the pre-migration integer bound, and it SHALL preserve allocation ratios because every weight in a split is scaled by the same constant.
+
+#### Scenario: BY_SHARES rows scale by 100 exactly once
+- **WHEN** a legacy expense has `splitMode = BY_SHARES` with stored weights
+- **THEN** its paidFor, paidBy, item, remainder, and default-split weights are multiplied by 100 in the migration and are never scaled again
+
+#### Scenario: Non-share modes stay unchanged
+- **WHEN** a row is owned by BY_AMOUNT, BY_PERCENTAGE, EVENLY, or ITEMIZED
+- **THEN** the migration does not touch its stored shares, and no later code path rescales it
+
+#### Scenario: Overflow aborts the migration
+- **WHEN** any BY_SHARES row or template path would exceed the pre-migration integer bound after scaling
+- **THEN** the migration raises an exception and the transaction rolls back, preserving the legacy schema
+
+#### Scenario: Ratios survive the scale
+- **WHEN** a BY_SHARES split with weights `1` and `3` is migrated
+- **THEN** the stored units are `100` and `300`, and the proportional allocation `1:3` is identical before and after migration
 
 ### Requirement: Global balance accumulation
 The system SHALL compute balances by accumulating exact `ExactAmount` (native `BigInt` rational) shares across all expenses per direction (paid and paidFor) into per-participant `ExactAmount` maps, applying cross-currency conversion via `convertByRate` per-expense, then truncating + distributing the single global leftover once via `distributeRemainder`. The sum of all participant `paidFor` values SHALL exactly equal the sum of all expense amounts. The sum of all participant `paid` values SHALL exactly equal the sum of all expense amounts.

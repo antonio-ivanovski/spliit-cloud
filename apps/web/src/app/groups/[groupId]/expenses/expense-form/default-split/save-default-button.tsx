@@ -6,11 +6,7 @@ import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { trpc } from '@/trpc/client'
 import type { ExpenseFormInputValues } from '@spliit/domain'
-import {
-  amountAsMinorUnits,
-  type Currency,
-  type SplitMode,
-} from '@spliit/domain'
+import { serializePaidFor, type Currency, type SplitMode } from '@spliit/domain'
 
 import type { GroupShape } from '../default-values'
 
@@ -55,23 +51,17 @@ export function SaveDefaultButton(props: {
     const splitMode = values.splitMode as Exclude<SplitMode, 'ITEMIZED'>
 
     // Convert display-unit shares back to storage units before sending
-    // to the server. The mutation validates against the schema and the
-    // participant ids it already knows about.
-    const paidFor = values.paidFor.flatMap((row) =>
-      Number(row.shares) > 0
-        ? [
-            {
-              participant: row.participant,
-              shares:
-                splitMode === 'BY_PERCENTAGE'
-                  ? Math.round(Number(row.shares) * 100)
-                  : splitMode === 'BY_AMOUNT'
-                    ? amountAsMinorUnits(Number(row.shares), groupCurrency)
-                    : Math.round(Number(row.shares)),
-            },
-          ]
-        : [],
-    )
+    // to the server. `serializePaidFor` is the central serializer and
+    // routes by splitMode (BY_SHARES → fixed units, BY_PERCENTAGE →
+    // basis points, BY_AMOUNT → minor units, EVENLY → ignored).
+    const filtered = values.paidFor.filter((row) => Number(row.shares) > 0)
+    if (filtered.length === 0) return
+    const paidFor = serializePaidFor({
+      splitMode,
+      amount: 0,
+      currency: groupCurrency,
+      paidFor: filtered,
+    })
     if (!paidFor.length) return
 
     setDefaultSplit.mutate(

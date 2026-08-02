@@ -769,7 +769,8 @@
     "participantSharesLabel": "{name}의 몫",
     "decreaseShares": "{name}의 몫 줄이기",
     "increaseShares": "{name}의 몫 늘리기",
-    "validationSummary": "저장하기 전에 강조 표시된 필드를 수정하세요."
+    "validationSummary": "저장하기 전에 강조 표시된 필드를 수정하세요.",
+    "resetDistribution": "초기화"
   },
   "Balances": {
     "title": "잔액",
@@ -915,7 +916,8 @@
     "paidByMin1": "적어도",
     "paidByAmountSum": "결제자",
     "paidByPercentageSum": "결제자",
-    "duplicateParticipant": "다른"
+    "duplicateParticipant": "다른",
+    "sharesInvalid": "지분은 0.01 이상 1,000,000 이하여야 하며 소수점 둘째 자리까지 입력할 수 있습니다."
   },
   "Categories": {
     "search": "카테고리 선택...",

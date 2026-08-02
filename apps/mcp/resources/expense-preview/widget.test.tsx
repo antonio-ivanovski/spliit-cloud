@@ -184,8 +184,8 @@ describe('ExpensePreview', () => {
             split: {
               mode: 'BY_SHARES',
               participants: [
-                { participantId: 'alice', name: 'Alice', shares: 3 },
-                { participantId: 'alex', name: 'Alex', shares: 2 },
+                { participantId: 'alice', name: 'Alice', shares: 300 },
+                { participantId: 'alex', name: 'Alex', shares: 200 },
               ],
             },
           },
@@ -225,6 +225,65 @@ describe('ExpensePreview', () => {
     expect(screen.getByText('2 shares')).toBeInTheDocument()
     expect(screen.getByText('Tax, tip & remainder')).toBeInTheDocument()
     expect(screen.getByText('$32.73')).toBeInTheDocument()
+  })
+
+  it('renders BY_SHARES splits as display shares across flat, item, and remainder routes', () => {
+    state.widget.props = {
+      ...props,
+      preview: {
+        ...props.preview,
+        amountMinor: 4250,
+        amount: '42.50',
+        split: {
+          mode: 'BY_SHARES',
+          participants: [
+            { participantId: 'alice', name: 'Alice', shares: 50 },
+            { participantId: 'bob', name: 'Bob', shares: 150 },
+          ],
+        },
+        items: [
+          {
+            lineId: 'beer-line',
+            title: 'Beer',
+            unitPriceMinor: 500,
+            quantity: 1,
+            amountMinor: 500,
+            split: {
+              mode: 'BY_SHARES',
+              participants: [
+                { participantId: 'alice', name: 'Alice', shares: 110 },
+                { participantId: 'bob', name: 'Bob', shares: 300 },
+              ],
+            },
+          },
+        ],
+        remainder: {
+          amountMinor: 3750,
+          split: {
+            mode: 'BY_SHARES',
+            participants: [
+              { participantId: 'alice', name: 'Alice', shares: 100 },
+              { participantId: 'bob', name: 'Bob', shares: 100 },
+            ],
+          },
+        },
+      },
+    }
+
+    render(<ExpensePreview />)
+
+    // Flat split: stored 50/150 → 0.5 / 1.5 shares.
+    expect(screen.getByText('0.5 shares')).toBeInTheDocument()
+    expect(screen.getByText('1.5 shares')).toBeInTheDocument()
+    // Item split: stored 110/300 → 1.1 / 3 shares.
+    expect(screen.getByText('1.1 shares')).toBeInTheDocument()
+    expect(screen.getByText('3 shares')).toBeInTheDocument()
+    // Remainder split: stored 100/100 → 1 share each (singular, no .00).
+    expect(screen.getAllByText('1 share')).toHaveLength(2)
+    // No raw fixed units leak into any label.
+    expect(screen.queryByText('50 shares')).not.toBeInTheDocument()
+    expect(screen.queryByText('110 shares')).not.toBeInTheDocument()
+    expect(screen.queryByText('300 shares')).not.toBeInTheDocument()
   })
 
   it('keeps the preview visible after a retryable failure', () => {

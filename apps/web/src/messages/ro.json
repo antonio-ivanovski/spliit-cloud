@@ -867,7 +867,8 @@
     "participantSharesLabel": "Părți pentru {name}",
     "decreaseShares": "Micșorează părțile lui {name}",
     "increaseShares": "Mărește părțile lui {name}",
-    "validationSummary": "Corectează câmpurile evidențiate înainte de salvare."
+    "validationSummary": "Corectează câmpurile evidențiate înainte de salvare.",
+    "resetDistribution": "Resetează"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Șterge documentul",
@@ -1076,7 +1077,8 @@
     "paidByMin1": "Trebuie selectat cel puțin un plătitor.",
     "paidByAmountSum": "Suma plătitorilor trebuie să fie egală cu suma cheltuielii.",
     "paidByPercentageSum": "Suma procentelor plătitorilor trebuie să fie 100.",
-    "duplicateParticipant": "Un alt plătitor este deja selectat."
+    "duplicateParticipant": "Un alt plătitor este deja selectat.",
+    "sharesInvalid": "Părțile trebuie să fie între 0,01 și 1.000.000, cu maximum două zecimale."
   },
   "Categories": {
     "search": "Căutați categorie…",

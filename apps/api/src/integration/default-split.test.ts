@@ -150,7 +150,8 @@ describe('defaultSplit — real DB', () => {
       groupId,
       defaultSplit: {
         splitMode: 'BY_SHARES',
-        paidFor: [{ participant: adminParticipantId, shares: 3 }],
+        // Fixed units: 300 = 3 displayed shares.
+        paidFor: [{ participant: adminParticipantId, shares: 300 }],
       },
     })
 
@@ -191,7 +192,8 @@ describe('defaultSplit — real DB', () => {
       groupId,
       defaultSplit: {
         splitMode: 'BY_SHARES',
-        paidFor: [{ participant: adminParticipantId, shares: 7 }],
+        // Fixed units: 700 = 7 displayed shares.
+        paidFor: [{ participant: adminParticipantId, shares: 700 }],
       },
     })
     // Second write with a different share count — should fully replace
@@ -200,7 +202,7 @@ describe('defaultSplit — real DB', () => {
       groupId,
       defaultSplit: {
         splitMode: 'BY_SHARES',
-        paidFor: [{ participant: adminParticipantId, shares: 1 }],
+        paidFor: [{ participant: adminParticipantId, shares: 100 }],
       },
     })
 
@@ -214,6 +216,6 @@ describe('defaultSplit — real DB', () => {
     // Exactly one child row, not two — the delete-then-create path
     // collapses the previous write.
     expect(header!.paidFor).toHaveLength(1)
-    expect(header!.paidFor[0].shares).toBe(1)
+    expect(header!.paidFor[0].shares).toBe(100)
   })
 })

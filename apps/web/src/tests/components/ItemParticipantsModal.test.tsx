@@ -7,7 +7,7 @@ import type { SavedSplit } from '@/app/groups/[groupId]/expenses/expense-form/de
 import type { GroupShape } from '@/app/groups/[groupId]/expenses/expense-form/default-values'
 import { ItemParticipantsModal } from '@/app/groups/[groupId]/expenses/expense-form/item-participants-modal'
 import { expenseFormInputSchema } from '@/lib/schemas'
-import { render, screen } from '@/test/test-utils'
+import { render, screen, fireEvent } from '@/test/test-utils'
 import type {
   Currency,
   ExpenseFormInputValues,
@@ -208,6 +208,246 @@ describe('ItemParticipantsModal — Load default action', () => {
       { participant: alice.id, shares: 60 },
       { participant: bob.id, shares: 40 },
     ])
+  })
+})
+
+describe('ItemParticipantsModal — BY_SHARES decimal entry', () => {
+  it('keeps intermediate decimal states while typing 0.5 and saves the display value', async () => {
+    const item: ExpenseFormItemValues = {
+      id: 'item-1',
+      title: 'Item',
+      unitPrice: 10,
+      quantity: 1,
+      splitMode: 'BY_SHARES',
+      paidFor: [
+        { participant: alice.id, shares: 1 },
+        { participant: bob.id, shares: 1 },
+      ],
+    }
+    const saved: { value: ExpenseFormItemValues | null } = { value: null }
+    const onSaveItem = (next: ExpenseFormItemValues) => {
+      saved.value = next
+    }
+
+    const { user } = render(
+      <ModalHarness item={item} savedDefault={null} onSaveItem={onSaveItem} />,
+    )
+
+    const aliceInput = screen.getByRole('textbox', {
+      name: 'Split value for Alice',
+    })
+    // Character-by-character typing must keep "0", "0." and "0.5" visible:
+    // every non-empty value keeps the row, so the first digit never makes
+    // the input vanish.
+    await user.clear(aliceInput)
+    await user.type(aliceInput, '0')
+    expect(aliceInput).toHaveValue('0')
+    await user.type(aliceInput, '.')
+    expect(aliceInput).toHaveValue('0.')
+    await user.type(aliceInput, '5')
+    expect(aliceInput).toHaveValue('0.5')
+
+    await user.click(screen.getByRole('button', { name: /save/i }))
+    expect(saved.value).not.toBeNull()
+    expect(saved.value!.paidFor).toEqual([
+      { participant: bob.id, shares: 1 },
+      { participant: alice.id, shares: '0.5' as unknown as number },
+    ])
+  })
+
+  it('keeps "1." while typing .1 after a starting share of 1', async () => {
+    const item: ExpenseFormItemValues = {
+      id: 'item-1',
+      title: 'Item',
+      unitPrice: 10,
+      quantity: 1,
+      splitMode: 'BY_SHARES',
+      paidFor: [{ participant: alice.id, shares: 1 }],
+    }
+    const saved: { value: ExpenseFormItemValues | null } = { value: null }
+
+    const { user } = render(
+      <ModalHarness
+        item={item}
+        savedDefault={null}
+        onSaveItem={(next) => {
+          saved.value = next
+        }}
+      />,
+    )
+
+    const aliceInput = screen.getByRole('textbox', {
+      name: 'Split value for Alice',
+    })
+    // Focus selects the starting value, so typing replaces it: '1' keeps
+    // the value, the '.' intermediate "1." state survives, and '1' finishes.
+    await user.type(aliceInput, '1')
+    await user.type(aliceInput, '.')
+    expect(aliceInput).toHaveValue('1.')
+    await user.type(aliceInput, '1')
+    expect(aliceInput).toHaveValue('1.1')
+
+    await user.click(screen.getByRole('button', { name: /save/i }))
+    expect(saved.value?.paidFor[0]?.shares).toBe('1.1' as unknown as number)
+  })
+
+  it('selects the full split value on focus so typing replaces it', async () => {
+    const item: ExpenseFormItemValues = {
+      id: 'item-1',
+      title: 'Item',
+      unitPrice: 10,
+      quantity: 1,
+      splitMode: 'BY_SHARES',
+      paidFor: [{ participant: alice.id, shares: 1 }],
+    }
+
+    const { user } = render(
+      <ModalHarness item={item} savedDefault={null} onSaveItem={() => {}} />,
+    )
+
+    const aliceInput = screen.getByRole('textbox', {
+      name: 'Split value for Alice',
+    }) as HTMLInputElement
+    expect(aliceInput).toHaveValue('1')
+    fireEvent.focus(aliceInput)
+    expect(aliceInput.selectionStart).toBe(0)
+    expect(aliceInput.selectionEnd).toBe(1)
+    await user.type(aliceInput, '5')
+    expect(aliceInput).toHaveValue('5')
+  })
+
+  it('steps fractional shares by 0.1 and removes the row at zero', async () => {
+    const item: ExpenseFormItemValues = {
+      id: 'item-1',
+      title: 'Item',
+      unitPrice: 10,
+      quantity: 1,
+      splitMode: 'BY_SHARES',
+      paidFor: [{ participant: alice.id, shares: 1 }],
+    }
+
+    const { user } = render(
+      <ModalHarness item={item} savedDefault={null} onSaveItem={() => {}} />,
+    )
+
+    const aliceInput = screen.getByRole('textbox', {
+      name: 'Split value for Alice',
+    })
+    await user.clear(aliceInput)
+    await user.type(aliceInput, '0.5')
+    // 0.5 + -> 0.6 (0.xx range steps by 0.1)
+    await user.click(
+      screen.getByRole('button', { name: 'Increase shares for Alice' }),
+    )
+    expect(aliceInput).toHaveValue('0.6')
+    // 0.6 - -> 0.5
+    await user.click(
+      screen.getByRole('button', { name: 'Decrease shares for Alice' }),
+    )
+    expect(aliceInput).toHaveValue('0.5')
+    // 0.1 - removes the row
+    await user.clear(aliceInput)
+    await user.type(aliceInput, '0.1')
+    await user.click(
+      screen.getByRole('button', { name: 'Decrease shares for Alice' }),
+    )
+    expect(aliceInput).toHaveValue('')
+  })
+
+  it('resets custom shares and deselection to all ones', async () => {
+    const item: ExpenseFormItemValues = {
+      id: 'item-1',
+      title: 'Item',
+      unitPrice: 10,
+      quantity: 1,
+      splitMode: 'BY_SHARES',
+      paidFor: [
+        { participant: alice.id, shares: 3 },
+        { participant: bob.id, shares: 1 },
+      ],
+    }
+    const saved: { value: ExpenseFormItemValues | null } = { value: null }
+
+    const { user } = render(
+      <ModalHarness
+        item={item}
+        savedDefault={null}
+        onSaveItem={(next) => {
+          saved.value = next
+        }}
+      />,
+    )
+
+    const aliceInput = screen.getByRole('textbox', {
+      name: 'Split value for Alice',
+    })
+    await user.clear(aliceInput)
+    await user.type(aliceInput, '0.5')
+    // Deselect Bob, then Reset: all participants at 1.
+    const bobToggle = document.querySelector<HTMLButtonElement>(
+      '[data-id="bob-id/BY_SHARES/EUR"] button[aria-pressed]',
+    )
+    if (!bobToggle) throw new Error('Bob row toggle not found')
+    await user.click(bobToggle)
+    await user.click(screen.getByRole('button', { name: /reset/i }))
+
+    expect(aliceInput).toHaveValue('1')
+    expect(
+      screen.getByRole('textbox', { name: 'Split value for Bob' }),
+    ).toHaveValue('1')
+    expect(
+      screen.getByRole('textbox', { name: 'Split value for Admin' }),
+    ).toHaveValue('1')
+
+    await user.click(screen.getByRole('button', { name: /save/i }))
+    expect(saved.value?.paidFor).toEqual([
+      { participant: admin.id, shares: 1 },
+      { participant: alice.id, shares: 1 },
+      { participant: bob.id, shares: 1 },
+    ])
+  })
+
+  it('select all adds missing participants without overwriting edited values', async () => {
+    const item: ExpenseFormItemValues = {
+      id: 'item-1',
+      title: 'Item',
+      unitPrice: 10,
+      quantity: 1,
+      splitMode: 'BY_SHARES',
+      paidFor: [
+        { participant: alice.id, shares: 3 },
+        { participant: bob.id, shares: 1 },
+      ],
+    }
+    const saved: { value: ExpenseFormItemValues | null } = { value: null }
+
+    const { user } = render(
+      <ModalHarness
+        item={item}
+        savedDefault={null}
+        onSaveItem={(next) => {
+          saved.value = next
+        }}
+      />,
+    )
+
+    const aliceInput = screen.getByRole('textbox', {
+      name: 'Split value for Alice',
+    })
+    await user.clear(aliceInput)
+    await user.type(aliceInput, '0.5')
+    // Deselect Bob, then Select all: Alice keeps 0.5, Bob is restored at 1.
+    const bobToggle = document.querySelector<HTMLButtonElement>(
+      '[data-id="bob-id/BY_SHARES/EUR"] button[aria-pressed]',
+    )
+    if (!bobToggle) throw new Error('Bob row toggle not found')
+    await user.click(bobToggle)
+    await user.click(screen.getByRole('button', { name: /select all/i }))
+
+    expect(aliceInput).toHaveValue('0.5')
+    expect(
+      screen.getByRole('textbox', { name: 'Split value for Bob' }),
+    ).toHaveValue('1')
   })
 })
 

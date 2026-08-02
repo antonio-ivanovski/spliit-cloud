@@ -860,7 +860,8 @@
     "participantSharesLabel": "Osuudet henkilölle {name}",
     "decreaseShares": "Vähennä henkilön {name} osuuksia",
     "increaseShares": "Lisää henkilön {name} osuuksia",
-    "validationSummary": "Korjaa korostetut kentät ennen tallentamista."
+    "validationSummary": "Korjaa korostetut kentät ennen tallentamista.",
+    "resetDistribution": "Palauta"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Poista asiakirja",
@@ -1068,7 +1069,8 @@
     "paidByMin1": "Vähintään yksi maksaja on valittava.",
     "paidByAmountSum": "Maksajien summan on oltava sama kuin kulun määrä.",
     "paidByPercentageSum": "Maksajien prosenttiosuuksien summan on oltava 100.",
-    "duplicateParticipant": "Toinen maksaja on jo valittu."
+    "duplicateParticipant": "Toinen maksaja on jo valittu.",
+    "sharesInvalid": "Osuuksien on oltava välillä 0,01–1 000 000 ja niissä saa olla enintään kaksi desimaalia."
   },
   "Categories": {
     "search": "Etsi kategoriaa...",

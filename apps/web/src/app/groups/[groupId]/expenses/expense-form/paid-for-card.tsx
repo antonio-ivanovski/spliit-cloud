@@ -25,6 +25,7 @@ import type {
 } from '@spliit/domain'
 import { computePaidForFromItems, type SplitMode } from '@spliit/domain'
 
+import { safeSharesToFixedUnits } from './currency-utils'
 import { DefaultSplitActions } from './default-split/default-split-actions'
 import type { SavedSplit } from './default-split/split-equal'
 import { LeaveItemizedDialog } from './leave-itemized-dialog'
@@ -303,7 +304,9 @@ export function PaidForCard(props: {
               ? amountAsMinorUnits(Number(shares) || 0, inputCurrency)
               : mode === 'BY_PERCENTAGE'
                 ? Math.round((Number(shares) || 0) * 100)
-                : Math.round(Number(shares) || 0),
+                : mode === 'BY_SHARES'
+                  ? safeSharesToFixedUnits(shares)
+                  : Math.round(Number(shares) || 0),
         }))
       return {
         paidFor: computePaidForFromItems(
@@ -359,33 +362,71 @@ export function PaidForCard(props: {
     applyPaidForSplitModeChange(currentMode, nextMode)
   }
 
-  const togglePaidForParticipants = () => {
+  // Select all adds missing participants without overwriting edited values;
+  // Select none clears every row.
+  const handleSelectPaidForParticipants = () => {
     const currentPaidFor = form.getValues().paidFor
-    const allSelected = currentPaidFor.length === group.participants.length
-    const newPaidFor = allSelected
-      ? []
-      : buildEqualParticipantRows({
-          participantIds: group.participants.map((p) => p.id),
-          splitMode: splitMode as ItemSplitMode,
-          targetAmount: Number(amount) || 0,
-          currency: conversionRequired ? originalCurrency : groupCurrency,
-        })
-    form.setValue('paidFor', newPaidFor, {
+    const options = {
       shouldDirty: true,
       shouldTouch: true,
       shouldValidate: true,
+    }
+    if (currentPaidFor.length === group.participants.length) {
+      form.setValue('paidFor', [], options)
+      return
+    }
+    const equalRows = buildEqualParticipantRows({
+      participantIds: group.participants.map((p) => p.id),
+      splitMode: splitMode as ItemSplitMode,
+      targetAmount: Number(amount) || 0,
+      currency: conversionRequired ? originalCurrency : groupCurrency,
     })
+    const existing = new Set(currentPaidFor.map((p) => p.participant))
+    form.setValue(
+      'paidFor',
+      [
+        ...currentPaidFor,
+        ...equalRows.filter((row) => !existing.has(row.participant)),
+      ],
+      options,
+    )
+  }
+
+  // Reset rebuilds the current distribution equally for the mode; unlike
+  // Select all it overwrites every value, so edited participants become
+  // automatic again.
+  const handleResetPaidForDistribution = () => {
+    form.setValue(
+      'paidFor',
+      buildEqualParticipantRows({
+        participantIds: group.participants.map((p) => p.id),
+        splitMode: splitMode as ItemSplitMode,
+        targetAmount: Number(amount) || 0,
+        currency: conversionRequired ? originalCurrency : groupCurrency,
+      }),
+      { shouldDirty: true, shouldTouch: true, shouldValidate: true },
+    )
+    props.setManuallyEditedParticipants(new Set())
   }
 
   const renderPaidForContent = (mode: ItemSplitMode) => (
     <>
-      <div className="mb-2 flex justify-end">
+      <div className="mb-2 flex justify-end gap-1">
         <Button
           variant="link"
           type="button"
           className="-my-2 -mr-2"
           disabled={readOnly}
-          onClick={togglePaidForParticipants}
+          onClick={handleResetPaidForDistribution}
+        >
+          {t('resetDistribution')}
+        </Button>
+        <Button
+          variant="link"
+          type="button"
+          className="-my-2 -mr-2"
+          disabled={readOnly}
+          onClick={handleSelectPaidForParticipants}
         >
           {paidFor.length === group.participants.length
             ? t('selectNone')

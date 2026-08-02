@@ -874,7 +874,8 @@
     "participantSharesLabel": "Liczba udziałów dla {name}",
     "decreaseShares": "Zmniejsz liczbę udziałów dla {name}",
     "increaseShares": "Zwiększ liczbę udziałów dla {name}",
-    "validationSummary": "Popraw wyróżnione pola przed zapisaniem."
+    "validationSummary": "Popraw wyróżnione pola przed zapisaniem.",
+    "resetDistribution": "Resetuj"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Usuń dokument",
@@ -1084,7 +1085,8 @@
     "paidByMin1": "Musisz wybrać przynajmniej jednego płatnika.",
     "paidByAmountSum": "Suma kwot płatników musi być równa kwocie wydatku.",
     "paidByPercentageSum": "Suma procentów płatników musi być równa 100.",
-    "duplicateParticipant": "Inny płatnik jest już wybrany."
+    "duplicateParticipant": "Inny płatnik jest już wybrany.",
+    "sharesInvalid": "Udziały muszą wynosić od 0,01 do 1 000 000 z maksymalnie dwoma miejscami po przecinku."
   },
   "Categories": {
     "search": "Szukaj kategorii…",

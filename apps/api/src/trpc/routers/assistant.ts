@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
 import { prisma } from '@spliit/db'
-import { DEFAULT_CATEGORIES } from '@spliit/domain'
+import { DEFAULT_CATEGORIES, sharesAsDecimal } from '@spliit/domain'
 
 import { getGroupBalances } from '../../lib/api/balances'
 import { createExpense } from '../../lib/api/expenses/create-expense'
@@ -56,6 +56,18 @@ function displayGroupName(
     group.members.find((member) => member.accountId !== accountId)?.account
       .name ?? (group.groupType === 'FRIEND' ? 'Friend' : 'Untitled group')
   )
+}
+
+/**
+ * Convert a share row to the display-unit form the AI model should see.
+ * BY_SHARES stored fixed units (100 = 1 displayed share) become the literal
+ * display value so the model can echo them back verbatim without
+ * `normalizeSplit` double-scaling them. Other modes are left untouched (basis
+ * points / minor units / even marker).
+ */
+function assistantShareDisplay(splitMode: string, shares: number): number {
+  if (splitMode === 'BY_SHARES') return sharesAsDecimal(shares)
+  return shares
 }
 
 export const assistantRouter = createTRPCRouter({
@@ -244,7 +256,10 @@ export const assistantRouter = createTRPCRouter({
                 mode: savedDefault.splitMode,
                 participants: savedDefault.paidFor.map((row) => ({
                   participantId: row.participantId,
-                  shares: row.shares,
+                  shares: assistantShareDisplay(
+                    savedDefault.splitMode,
+                    row.shares,
+                  ),
                 })),
               }
             : null,
@@ -255,8 +270,14 @@ export const assistantRouter = createTRPCRouter({
           amount: expense.amount,
           date: expense.expenseDate.toISOString().slice(0, 10),
           category: expense.categoryId,
-          paidBy: expense.paidByList,
-          paidFor: expense.paidFor,
+          paidBy: expense.paidByList.map((row) => ({
+            ...row,
+            shares: assistantShareDisplay(expense.paidBySplitMode, row.shares),
+          })),
+          paidFor: expense.paidFor.map((row) => ({
+            ...row,
+            shares: assistantShareDisplay(expense.splitMode, row.shares),
+          })),
         })),
       }
     }),

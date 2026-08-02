@@ -1,11 +1,100 @@
 import { z } from 'zod'
 
+import { isValidDisplayShare } from '@spliit/domain'
+
 const splitModeSchema = z.enum([
   'EVENLY',
   'BY_SHARES',
   'BY_PERCENTAGE',
   'BY_AMOUNT',
   'ITEMIZED',
+])
+
+const decimalStringSchema = z
+  .string()
+  .trim()
+  .regex(/^(?:0|[1-9]\d*)(?:\.\d+)?$/)
+  .describe(
+    'A positive decimal string in major currency units, for example 12.50',
+  )
+
+const allocationSchema = z.object({
+  participantId: z
+    .string()
+    .describe('Stable participant ID from get-expense-context'),
+  amount: decimalStringSchema.describe(
+    'Exact amount paid by this participant, in the expense currency',
+  ),
+})
+
+/**
+ * The `prepare-expense` split contract. `BY_SHARES` accepts the same
+ * display-unit values as the assistant API (0.01–1,000,000 with up to two
+ * decimals); the API normalizes them to stored fixed units.
+ */
+export const beneficiarySplitSchema = z.discriminatedUnion('mode', [
+  z.object({
+    mode: z.literal('EVENLY').describe('Split equally'),
+    participantIds: z
+      .array(
+        z.string().describe('Stable participant ID from get-expense-context'),
+      )
+      .min(1)
+      .optional()
+      .describe('Omit to split among all current participants'),
+  }),
+  z.object({
+    mode: z
+      .literal('BY_SHARES')
+      .describe('Split by relative shares; decimals are allowed'),
+    shares: z
+      .array(
+        z.object({
+          participantId: z
+            .string()
+            .describe('Stable participant ID from get-expense-context'),
+          shares: z
+            .number()
+            .positive()
+            .refine(isValidDisplayShare, {
+              message:
+                'BY_SHARES value must be a positive decimal between 0.01 and 1,000,000 with at most two decimal places',
+            })
+            .describe(
+              'Share weight. Decimals are allowed with up to two places, e.g. 0.5, 1.1, 25.75 (not hundredths).',
+            ),
+        }),
+      )
+      .min(1)
+      .describe('Participant share weights'),
+  }),
+  z.object({
+    mode: z
+      .literal('BY_PERCENTAGE')
+      .describe('Split by human percentages totaling 100'),
+    shares: z
+      .array(
+        z.object({
+          participantId: z
+            .string()
+            .describe('Stable participant ID from get-expense-context'),
+          percentage: decimalStringSchema.describe(
+            'Human percentage, e.g. 25 or 33.33; values must total 100',
+          ),
+        }),
+      )
+      .min(1)
+      .describe('Participant percentage allocations'),
+  }),
+  z.object({
+    mode: z
+      .literal('BY_AMOUNT')
+      .describe('Split by exact expense-currency amounts'),
+    shares: z
+      .array(allocationSchema)
+      .min(1)
+      .describe('Participant exact-amount allocations'),
+  }),
 ])
 
 const previewPersonSchema = z.object({
@@ -131,7 +220,9 @@ const recentExpenseParticipantSchema = z.object({
       .nullable(),
     removed: z.boolean(),
   }),
-  shares: z.number().int(),
+  // BY_SHARES rows are returned as display decimals (e.g. 0.5 for stored 50);
+  // other modes keep integers. Finite numbers accept both.
+  shares: z.number().finite(),
 })
 
 export const groupSummaryOutputSchema = z.object({
@@ -153,7 +244,9 @@ export const groupSummaryOutputSchema = z.object({
       participants: z.array(
         z.object({
           participantId: z.string(),
-          shares: z.number().int(),
+          // BY_SHARES defaults are returned as display decimals (e.g. 0.5);
+          // other modes keep integers. Finite numbers accept both.
+          shares: z.number().finite(),
         }),
       ),
     })

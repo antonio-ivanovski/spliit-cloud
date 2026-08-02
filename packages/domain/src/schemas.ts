@@ -7,6 +7,7 @@ import {
 } from './conversion'
 import type { RecurrenceRule, SplitMode } from './enums'
 import { recurrenceConfigSchema } from './recurring-expenses'
+import { MAX_STORED_SHARES, isValidDisplayShare } from './shares'
 
 const groupFormFields = {
   name: z.string().min(2, { error: 'min2' }).max(50, { error: 'max50' }),
@@ -143,7 +144,12 @@ const documentsSchema = z
   .default([])
 
 // Row shape used by the form schema. `shares` is a number in user-facing
-// units of the selected expense currency (the same currency as `amount`).
+// units of the selected expense currency (the same currency as `amount`),
+// with the following per-mode meaning:
+//   - BY_AMOUNT / ITEMIZED: currency major units
+//   - BY_PERCENTAGE:        display percentage
+//   - BY_SHARES:            display share (up to two decimal places)
+//   - EVENLY:               inclusion marker (any non-zero means "in")
 // Shares are stored as raw user input (string) and coerced to number
 // at validation time, matching the main `amount` field. This lets
 // BY_AMOUNT inputs preserve intermediate decimal states like "10."
@@ -158,16 +164,21 @@ const formPaidByRowSchema = z.object({
   shares: z.coerce.number(),
 })
 
-// Row shape used by the API/domain schema. Shares are integers: basis
-// points for BY_PERCENTAGE, minor units for BY_AMOUNT, raw counts for
-// BY_SHARES / EVENLY.
+// Row shape used by the API/domain schema. Shares are integers:
+//   - BY_PERCENTAGE:  basis points (10000 = 100%)
+//   - BY_AMOUNT / ITEMIZED: minor units of the expense currency
+//   - BY_SHARES:      fixed share units (100 = 1 displayed share)
+//   - EVENLY:         ignored / inclusion marker
+// The per-mode valid range is enforced by `validatePaidForRow` /
+// `validatePaidByRow` in the parent refinement because the row schema
+// itself is polymorphic.
 const apiPaidForRowSchema = z.object({
   participant: z.string(),
   shares: z
     .number()
     .int()
     .describe(
-      'Units depend on splitMode: basis points for BY_PERCENTAGE (10000=100%), minor units for BY_AMOUNT, raw counts for BY_SHARES/EVENLY.',
+      'Integer units. Meaning depends on splitMode: basis points for BY_PERCENTAGE (10000=100%), minor units for BY_AMOUNT, fixed share units for BY_SHARES (100 = 1 displayed share).',
     ),
 })
 
@@ -177,7 +188,7 @@ const apiPaidByRowSchema = z.object({
     .number()
     .int()
     .describe(
-      'Units depend on paidBySplitMode: basis points for BY_PERCENTAGE (10000=100%), minor units for BY_AMOUNT, raw counts for BY_SHARES/EVENLY.',
+      'Integer units. Meaning depends on paidBySplitMode: basis points for BY_PERCENTAGE (10000=100%), minor units for BY_AMOUNT, fixed share units for BY_SHARES (100 = 1 displayed share).',
     ),
 })
 
@@ -196,7 +207,7 @@ const itemApiPaidForRowSchema = z.object({
     .number()
     .int()
     .describe(
-      'Units depend on the item splitMode: basis points for BY_PERCENTAGE (10000=100%), minor units for BY_AMOUNT, raw counts for BY_SHARES/EVENLY.',
+      'Integer units. Meaning depends on the item splitMode: basis points for BY_PERCENTAGE (10000=100%), minor units for BY_AMOUNT, fixed share units for BY_SHARES (100 = 1 displayed share).',
     ),
 })
 
@@ -219,6 +230,29 @@ const itemRowDuplicateGuard = (
 }
 
 type ItemShareRow = { shares: number }
+
+/**
+ * Mode-aware magnitude validation for an itemized paid-for row. The row itself
+ * is polymorphic; the parent schema knows the owning split mode and passes it
+ * through. `BY_SHARES` rows are stored as positive fixed units (`1 ≤ shares ≤
+ * MAX_STORED_SHARES`); negative values are never valid for paid-for/default
+ * shares.
+ */
+export function validateItemShareRow(
+  row: ItemShareRow,
+  splitMode: z.infer<typeof itemSplitModeSchema>,
+  ctx: z.RefinementCtx,
+  path: (string | number)[],
+) {
+  if (splitMode !== 'BY_SHARES') return
+  if (row.shares < 1 || row.shares > MAX_STORED_SHARES) {
+    ctx.addIssue({
+      code: 'custom',
+      message: 'sharesInvalid',
+      path,
+    })
+  }
+}
 
 const validateItemShareTotal = (
   rows: ItemShareRow[],
@@ -259,10 +293,11 @@ const validateDisplayItemShareTotal = (
 // `defaultSplitSchema` is the persisted shape of a user's per-group
 // default split. It captures the same data as an expense's `paidFor` +
 // `splitMode`, expressed in the same units (BY_PERCENTAGE basis points,
-// BY_AMOUNT minor units, BY_SHARES / EVENLY raw counts). ITEMIZED is
-// not allowed — itemized splits involve an items array that is too
-// shape-heavy to be a useful "default". The API rejects ITEMIZED writes
-// and the UI hides the save action when the current split is itemized.
+// BY_AMOUNT minor units, BY_SHARES fixed share units where 100 = 1
+// displayed share, EVENLY inclusion markers). ITEMIZED is not allowed
+// — itemized splits involve an items array that is too shape-heavy to
+// be a useful "default". The API rejects ITEMIZED writes and the UI
+// hides the save action when the current split is itemized.
 export const defaultSplitSchema = z
   .object({
     splitMode: z
@@ -276,7 +311,7 @@ export const defaultSplitSchema = z
             .number()
             .int()
             .describe(
-              'Units depend on splitMode: basis points for BY_PERCENTAGE (10000=100%), minor units for BY_AMOUNT, raw counts for BY_SHARES/EVENLY.',
+              'Integer units. Meaning depends on splitMode: basis points for BY_PERCENTAGE (10000=100%), minor units for BY_AMOUNT, fixed share units for BY_SHARES (100 = 1 displayed share).',
             ),
         }),
       )
@@ -296,6 +331,11 @@ export const defaultSplitSchema = z
       // BY_AMOUNT sums to the expense amount (minor units). We cannot
       // validate the sum here without the amount — the API enforces it
       // post-merge by checking against the persisted group base amount.
+    } else if (split.splitMode === 'BY_SHARES') {
+      // BY_SHARES fixed units are positive: `1 <= shares <= MAX_STORED_SHARES`
+      // (100 = 1 displayed share). A zero row is a removed participant; the
+      // positive constraint is enforced here so a negative persisted value is
+      // rejected as well.
     }
     const seen = new Set<string>()
     split.paidFor.forEach((row, i) => {
@@ -307,6 +347,15 @@ export const defaultSplitSchema = z
         })
       } else {
         seen.add(row.participant)
+      }
+      if (split.splitMode === 'BY_SHARES') {
+        if (row.shares < 1 || row.shares > MAX_STORED_SHARES) {
+          ctx.addIssue({
+            code: 'custom',
+            message: 'sharesInvalid',
+            path: ['paidFor', i, 'shares'],
+          })
+        }
       }
     })
   })
@@ -327,19 +376,21 @@ export const expenseItemFormInputSchema = z
       .array(itemFormPaidForRowSchema)
       .min(0)
       .superRefine((paidFor, ctx) => {
-        for (const { shares } of paidFor) {
-          if (shares <= 0) {
-            ctx.addIssue({
-              code: 'custom',
-              message: 'noZeroShares',
-            })
-          }
-        }
         itemRowDuplicateGuard(paidFor, ctx)
       }),
     splitMode: itemSplitModeSchema,
   })
   .superRefine((item, ctx) => {
+    // Every item row validates against its owning split mode with the
+    // issue pointing at the actual `shares` field.
+    item.paidFor.forEach((row, i) => {
+      validateDisplayShareForMode(
+        row.shares,
+        item.splitMode,
+        ['paidFor', i, 'shares'],
+        ctx,
+      )
+    })
     validateDisplayItemShareTotal(
       item.paidFor,
       item.splitMode,
@@ -370,19 +421,22 @@ export const expenseItemApiSchema = z
       .array(itemApiPaidForRowSchema)
       .min(0)
       .superRefine((paidFor, ctx) => {
-        for (const { shares } of paidFor) {
-          if (shares <= 0) {
-            ctx.addIssue({
-              code: 'custom',
-              message: 'noZeroShares',
-            })
-          }
-        }
         itemRowDuplicateGuard(paidFor, ctx)
       }),
     splitMode: itemSplitModeSchema,
   })
   .superRefine((item, ctx) => {
+    item.paidFor.forEach((row, i) => {
+      if (item.splitMode === 'BY_SHARES') {
+        validateItemShareRow(row, item.splitMode, ctx, ['paidFor', i, 'shares'])
+      } else if (row.shares <= 0) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'noZeroShares',
+          path: ['paidFor', i, 'shares'],
+        })
+      }
+    })
     if (item.amount !== item.unitPrice * item.quantity) {
       ctx.addIssue({
         code: 'custom',
@@ -409,36 +463,91 @@ const itemizedRemainderFormSchema = z.object({
     .array(itemFormPaidForRowSchema)
     .min(0)
     .superRefine((paidFor, ctx) => {
-      for (const { shares } of paidFor) {
-        if (shares <= 0) {
-          ctx.addIssue({
-            code: 'custom',
-            message: 'noZeroShares',
-          })
-        }
-      }
       itemRowDuplicateGuard(paidFor, ctx)
     }),
   splitMode: itemSplitModeSchema,
 })
+
+// The remainder's own `splitMode` decides the unit of each row; errors point
+// at the row's `shares` field under the `itemizedRemainder` prefix.
+const itemizedRemainderFormRows = (
+  remainder: z.infer<typeof itemizedRemainderFormSchema>,
+  ctx: z.RefinementCtx,
+) => {
+  remainder.paidFor.forEach((row, i) => {
+    validateDisplayShareForMode(
+      row.shares,
+      remainder.splitMode,
+      ['itemizedRemainder', 'paidFor', i, 'shares'],
+      ctx,
+    )
+  })
+}
 
 const itemizedRemainderApiSchema = z.object({
   paidFor: z
     .array(itemApiPaidForRowSchema)
     .min(0)
     .superRefine((paidFor, ctx) => {
-      for (const { shares } of paidFor) {
-        if (shares <= 0) {
-          ctx.addIssue({
-            code: 'custom',
-            message: 'noZeroShares',
-          })
-        }
-      }
       itemRowDuplicateGuard(paidFor, ctx)
     }),
   splitMode: itemSplitModeSchema,
 })
+
+/**
+ * Mode-aware magnitude validation for the itemized-remainder rows. The
+ * remainder's own `splitMode` decides the unit of `shares`, so the same rule as
+ * the flat paid-for rows applies. Errors point at the `shares` field of the
+ * offending row under the `itemizedRemainder` prefix.
+ */
+function validateItemizedRemainderShareRows(
+  remainder: {
+    splitMode: z.infer<typeof itemSplitModeSchema>
+    paidFor: Array<{ shares: number }>
+  },
+  ctx: z.RefinementCtx,
+) {
+  remainder.paidFor.forEach((row, i) => {
+    validateItemShareRow(row, remainder.splitMode, ctx, [
+      'itemizedRemainder',
+      'paidFor',
+      i,
+      'shares',
+    ])
+  })
+}
+
+/**
+ * Shared mode-aware validator for polymorphic `paidFor` / `paidBy` rows. The
+ * row schema itself only constrains the integer type; the per-mode magnitude /
+ * precision is enforced here so the same call can serve the flat expense
+ * schema, item schemas, the itemized remainder, and saved default splits.
+ */
+function validateShareRowForMode(
+  shares: number,
+  mode: SplitMode,
+  path: (string | number)[],
+  ctx: z.RefinementCtx,
+  options: { allowNegative?: boolean } = {},
+) {
+  const { allowNegative = false } = options
+  if (mode === 'BY_SHARES') {
+    // Stored fixed units are positive: `1 ≤ shares ≤ MAX_STORED_SHARES`.
+    // Signed values are only valid on deliberately signed paths (the
+    // negative-expense paid-by BY_AMOUNT path), never for BY_SHARES.
+    if (shares < 1 || shares > MAX_STORED_SHARES) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'sharesInvalid',
+        path,
+      })
+    }
+    return
+  }
+  if (!allowNegative && shares <= 0) {
+    ctx.addIssue({ code: 'custom', message: 'noZeroShares', path })
+  }
+}
 
 const paidByDuplicateGuard = (
   paidByList: Array<{ participant: string }>,
@@ -462,6 +571,40 @@ const paidByDuplicateGuard = (
 // shares are in the selected expense currency (same units as `amount`).
 const paidByAmountSumOk = (sum: number, target: number): boolean =>
   sum === target
+
+/**
+ * Form-side counterpart of `validateShareRowForMode` — operates on the
+ * user-facing display units and reports the existing `noZeroShares` /
+ * `sharesInvalid` keys so the UI messages stay consistent.
+ *
+ * BY_AMOUNT paid-by shares may be negative (signed income expenses, see
+ * `paidByList signed and migrated shapes`); pass `allowNegative: true` for that
+ * path so the magnitude / precision check is what changes.
+ */
+function validateDisplayShareForMode(
+  value: number,
+  mode: SplitMode,
+  path: (string | number)[],
+  ctx: z.RefinementCtx,
+  options: { allowNegative?: boolean } = {},
+) {
+  const { allowNegative = false } = options
+  if (mode === 'BY_SHARES') {
+    // One shared range/precision contract for every BY_SHARES editor:
+    // 0.01–1,000,000 with at most two decimal places.
+    if (!isValidDisplayShare(value)) {
+      ctx.addIssue({ code: 'custom', message: 'sharesInvalid', path })
+    }
+    return
+  }
+  if (value === 0) {
+    ctx.addIssue({ code: 'custom', message: 'noZeroShares', path })
+    return
+  }
+  if (!allowNegative && value <= 0) {
+    ctx.addIssue({ code: 'custom', message: 'noZeroShares', path })
+  }
+}
 
 // `expenseFormInputSchema` validates the user-facing form values:
 // numbers in display units (decimal major units for amounts,
@@ -521,22 +664,21 @@ export const expenseFormInputSchema = z
     // the same state as a share-input problem while the user fixes it.
     if (expense.amount !== 0) {
       expense.paidByList.forEach(({ shares }, i) => {
-        if (shares === 0) {
-          ctx.addIssue({
-            code: 'custom',
-            message: 'noZeroShares',
-            path: ['paidByList', i, 'shares'],
-          })
-        }
+        validateDisplayShareForMode(
+          shares,
+          expense.paidBySplitMode,
+          ['paidByList', i, 'shares'],
+          ctx,
+          { allowNegative: true },
+        )
       })
       expense.paidFor.forEach(({ shares }, i) => {
-        if (shares <= 0) {
-          ctx.addIssue({
-            code: 'custom',
-            message: 'noZeroShares',
-            path: ['paidFor', i, 'shares'],
-          })
-        }
+        validateDisplayShareForMode(
+          shares,
+          expense.splitMode,
+          ['paidFor', i, 'shares'],
+          ctx,
+        )
       })
     }
 
@@ -643,6 +785,7 @@ export const expenseFormInputSchema = z
 
     const remainderAmount = expense.amount - itemsSum
     if (remainderAmount > 0 && expense.itemizedRemainder) {
+      itemizedRemainderFormRows(expense.itemizedRemainder, ctx)
       validateDisplayItemShareTotal(
         expense.itemizedRemainder.paidFor,
         expense.itemizedRemainder.splitMode,
@@ -707,6 +850,10 @@ export function validateExpenseItems(
       'percentageSum',
     )
   }
+
+  if (splitMode === 'ITEMIZED' && itemizedRemainder) {
+    validateItemizedRemainderShareRows(itemizedRemainder, ctx)
+  }
 }
 
 export type ExpenseFormInputValues = z.infer<typeof expenseFormInputSchema>
@@ -741,29 +888,9 @@ export const expenseApiSchema = z
       .array(apiPaidByRowSchema)
       .min(1, { error: 'paidByMin1' })
       .superRefine((paidByList, ctx) => {
-        for (const { shares } of paidByList) {
-          if (shares === 0) {
-            ctx.addIssue({
-              code: 'custom',
-              message: 'noZeroShares',
-            })
-          }
-        }
         paidByDuplicateGuard(paidByList, ctx)
       }),
-    paidFor: z
-      .array(apiPaidForRowSchema)
-      .min(1, { error: 'paidForMin1' })
-      .superRefine((paidFor, ctx) => {
-        for (const { shares } of paidFor) {
-          if (shares <= 0) {
-            ctx.addIssue({
-              code: 'custom',
-              message: 'noZeroShares',
-            })
-          }
-        }
-      }),
+    paidFor: z.array(apiPaidForRowSchema).min(1, { error: 'paidForMin1' }),
     isMultiPayer: z
       .boolean()
       .default(false)
@@ -788,6 +915,35 @@ export const expenseApiSchema = z
       ),
   })
   .superRefine((expense, ctx) => {
+    expense.paidFor.forEach(({ shares }, i) => {
+      validateShareRowForMode(
+        shares,
+        expense.splitMode,
+        ['paidFor', i, 'shares'],
+        ctx,
+      )
+    })
+    expense.paidByList.forEach(({ shares }, i) => {
+      validateShareRowForMode(
+        shares,
+        expense.paidBySplitMode,
+        ['paidByList', i, 'shares'],
+        ctx,
+        { allowNegative: true },
+      )
+      // The signed paid-by path (negative BY_AMOUNT income expenses) is the
+      // only deliberate exception; a zero payer row is still invalid in every
+      // mode, while BY_SHARES range/precision is handled by the validator
+      // above.
+      if (expense.paidBySplitMode !== 'BY_SHARES' && shares === 0) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'noZeroShares',
+          path: ['paidByList', i, 'shares'],
+        })
+      }
+    })
+
     switch (expense.splitMode) {
       case 'EVENLY':
         break

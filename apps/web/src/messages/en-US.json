@@ -1239,7 +1239,8 @@
     "participantSharesLabel": "Shares for {name}",
     "decreaseShares": "Decrease shares for {name}",
     "increaseShares": "Increase shares for {name}",
-    "validationSummary": "Please correct the highlighted fields before saving."
+    "validationSummary": "Please correct the highlighted fields before saving.",
+    "resetDistribution": "Reset"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Delete document",
@@ -1451,7 +1452,8 @@
     "paidByMin1": "At least one payer must be selected.",
     "paidByAmountSum": "Sum of payer amounts must equal the expense amount.",
     "paidByPercentageSum": "Sum of payer percentages must equal 100.",
-    "duplicateParticipant": "Another payer is already selected."
+    "duplicateParticipant": "Another payer is already selected.",
+    "sharesInvalid": "Shares must be between 0.01 and 1,000,000 with up to two decimals."
   },
   "Categories": {
     "search": "Search category...",

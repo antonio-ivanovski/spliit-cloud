@@ -12,11 +12,15 @@ import { Input } from '@/components/ui/input'
 import { calculateShare, percentageToBasisPoints } from '@/lib/totals'
 import { amountAsMinorUnits, cn } from '@/lib/utils'
 import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
+import { MAX_DISPLAY_SHARES } from '@spliit/domain'
 
 import {
   enforceCurrencyPattern,
-  enforceIntegerPattern,
   enforcePercentagePattern,
+  enforceSharePattern,
+  nextShareRowsFromInput,
+  safeSharesToFixedUnits,
+  stepDisplayShares,
 } from './currency-utils'
 import { ParticipantPendingLabel } from './participant-pending-label'
 import { ParticipantShareRow } from './participant-share-row'
@@ -139,10 +143,16 @@ export function PaidForRow({
                           name: '',
                           groupId: '',
                         },
+                        // BY_SHARES preview must use stored fixed units so
+                        // `calculateShare` sees the same ratio the
+                        // server-side calculation will. Display form
+                        // values get scaled once here.
                         shares:
                           splitMode === 'BY_PERCENTAGE'
                             ? percentageToBasisPoints(shares)
-                            : shares,
+                            : splitMode === 'BY_SHARES'
+                              ? safeSharesToFixedUnits(shares)
+                              : shares,
                         expenseId: '',
                         participantId: '',
                       }),
@@ -181,6 +191,9 @@ export function PaidForRow({
                                   name: participant.name,
                                 })}
                                 value={String(row?.shares ?? '')}
+                                onFocus={(event) =>
+                                  event.currentTarget.select()
+                                }
                                 onChange={(event) => {
                                   const sanitized = enforceCurrencyPattern(
                                     event.target.value,
@@ -225,9 +238,12 @@ export function PaidForRow({
                         labelKey: 'participantPercentageLabel' as const,
                       }))
                       .with('BY_SHARES', () => ({
-                        sanitizer: enforceIntegerPattern,
-                        inputMode: 'numeric' as const,
-                        step: 1,
+                        // BY_SHARES accepts up to two decimal places;
+                        // the input stays text so intermediate "1." or
+                        // "0." survives while typing.
+                        sanitizer: enforceSharePattern,
+                        inputMode: 'decimal' as const,
+                        step: 0.01,
                         labelKey: 'participantSharesLabel' as const,
                       }))
                       .otherwise(() => null)
@@ -245,9 +261,9 @@ export function PaidForRow({
                                 name: participant.name,
                               })}
                               onClick={() => {
-                                const nextValue = Math.max(
-                                  0,
-                                  Number(row?.shares ?? 0) - 1,
+                                const nextValue = stepDisplayShares(
+                                  row?.shares,
+                                  -1,
                                 )
                                 const next = field.value.filter(
                                   (p) => p.participant !== id,
@@ -282,16 +298,43 @@ export function PaidForRow({
                                   { name: participant.name },
                                 )}
                                 value={String(row?.shares ?? '')}
+                                onFocus={(event) =>
+                                  event.currentTarget.select()
+                                }
                                 onChange={(event) => {
-                                  const shares = Number(
-                                    (
-                                      modeProps?.sanitizer ??
-                                      enforceCurrencyPattern
-                                    )(event.target.value),
-                                  )
+                                  const sanitized = (
+                                    modeProps?.sanitizer ??
+                                    enforceCurrencyPattern
+                                  )(event.target.value)
                                   const next = field.value.filter(
                                     (p) => p.participant !== id,
                                   )
+                                  // BY_SHARES keeps the sanitized string in
+                                  // form state so intermediate states like
+                                  // "0", "0." or "1." survive while typing;
+                                  // the row is only removed on an explicit
+                                  // empty value.
+                                  if (splitMode === 'BY_SHARES') {
+                                    const nextRows = nextShareRowsFromInput(
+                                      field.value,
+                                      id,
+                                      sanitized,
+                                    )
+                                    const keepInList = nextRows.some(
+                                      (p) => p.participant === id,
+                                    )
+                                    form.setValue('paidFor', nextRows, {
+                                      shouldDirty: true,
+                                      shouldTouch: true,
+                                      shouldValidate: true,
+                                    })
+                                    if (keepInList)
+                                      setManuallyEditedParticipants((prev) =>
+                                        new Set(prev).add(id),
+                                      )
+                                    return
+                                  }
+                                  const shares = Number(sanitized)
                                   if (shares > 0)
                                     next.push({ participant: id, shares })
                                   form.setValue('paidFor', next, {
@@ -323,12 +366,18 @@ export function PaidForRow({
                               variant="ghost"
                               size="icon"
                               className="size-8 shrink-0"
-                              disabled={readOnly}
+                              disabled={
+                                readOnly ||
+                                Number(row?.shares ?? 0) >= MAX_DISPLAY_SHARES
+                              }
                               aria-label={t('increaseShares', {
                                 name: participant.name,
                               })}
                               onClick={() => {
-                                const nextValue = Number(row?.shares ?? 0) + 1
+                                const nextValue = stepDisplayShares(
+                                  row?.shares,
+                                  1,
+                                )
                                 const next = field.value.filter(
                                   (p) => p.participant !== id,
                                 )

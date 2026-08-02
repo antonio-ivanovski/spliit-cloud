@@ -1308,7 +1308,8 @@
     "participant": {
       "pending": "(invited, pending)"
     },
-    "validationSummary": "fix the highlighted fields before saving, fr."
+    "validationSummary": "fix the highlighted fields before saving, fr.",
+    "resetDistribution": "reset"
   },
   "ExpensePreview": {
     "title": "expense preview era",
@@ -2299,7 +2300,8 @@
     "paidByMin1": "pick at least one payer.",
     "paidByAmountSum": "payer amounts need to add up to the expense total.",
     "paidByPercentageSum": "payer percentages need to add up to 100.",
-    "duplicateParticipant": "another payer is already selected."
+    "duplicateParticipant": "another payer is already selected.",
+    "sharesInvalid": "shares must be between 0.01 and 1,000,000 with up to two decimals."
   },
   "Settings": {
     "title": "settings hub"

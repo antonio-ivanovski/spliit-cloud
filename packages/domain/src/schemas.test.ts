@@ -1,4 +1,5 @@
 import {
+  defaultSplitSchema,
   expenseApiSchema,
   expenseFormInputSchema,
   friendFormSchema,
@@ -239,6 +240,49 @@ describe('expenseFormInputSchema', () => {
     expect(result.data.items?.[0]?.paidFor[0]?.shares).toBe(10)
     expect(result.data.itemizedRemainder?.paidFor[0]?.shares).toBe(1)
   })
+
+  it('BY_SHARES: accepts display values with two decimals and rejects a third', () => {
+    const ok = expenseFormInputSchema.safeParse({
+      ...baseInput,
+      splitMode: 'BY_SHARES',
+      paidFor: [
+        { participant: 'p0', shares: 0.5 },
+        { participant: 'p1', shares: 1.1 },
+        { participant: 'p2', shares: 25.75 },
+      ],
+    })
+    expect(ok.success).toBe(true)
+
+    const bad = expenseFormInputSchema.safeParse({
+      ...baseInput,
+      splitMode: 'BY_SHARES',
+      paidFor: [{ participant: 'p0', shares: 1.001 }],
+    })
+    expect(bad.success).toBe(false)
+  })
+
+  it('BY_SHARES: enforces the display range (0.01–1,000,000)', () => {
+    const zero = expenseFormInputSchema.safeParse({
+      ...baseInput,
+      splitMode: 'BY_SHARES',
+      paidFor: [{ participant: 'p0', shares: 0 }],
+    })
+    expect(zero.success).toBe(false)
+
+    const overMax = expenseFormInputSchema.safeParse({
+      ...baseInput,
+      splitMode: 'BY_SHARES',
+      paidFor: [{ participant: 'p0', shares: 1_000_000.01 }],
+    })
+    expect(overMax.success).toBe(false)
+
+    const atMax = expenseFormInputSchema.safeParse({
+      ...baseInput,
+      splitMode: 'BY_SHARES',
+      paidFor: [{ participant: 'p0', shares: 1_000_000 }],
+    })
+    expect(atMax.success).toBe(true)
+  })
 })
 
 describe('expenseApiSchema', () => {
@@ -438,6 +482,335 @@ describe('expenseApiSchema', () => {
       ],
     })
     expect(documentationOnly.success).toBe(true)
+  })
+
+  it('BY_SHARES: accepts stored fixed units within the product range', () => {
+    // 100 fixed units = 1 displayed share; 110 = 1.1; 50 = 0.5.
+    const ok = expenseApiSchema.safeParse({
+      ...baseApi,
+      splitMode: 'BY_SHARES',
+      paidFor: [
+        { participant: 'p0', shares: 100 },
+        { participant: 'p1', shares: 110 },
+      ],
+    })
+    expect(ok.success).toBe(true)
+  })
+
+  it('BY_SHARES: rejects fixed units below 1 and above the product maximum', () => {
+    const below = expenseApiSchema.safeParse({
+      ...baseApi,
+      splitMode: 'BY_SHARES',
+      paidFor: [{ participant: 'p0', shares: 0 }],
+    })
+    expect(below.success).toBe(false)
+
+    const above = expenseApiSchema.safeParse({
+      ...baseApi,
+      splitMode: 'BY_SHARES',
+      paidFor: [{ participant: 'p0', shares: 100_000_001 }],
+    })
+    expect(above.success).toBe(false)
+    if (above.success) return
+    expect(
+      above.error.issues.some((issue) => issue.message === 'sharesInvalid'),
+    ).toBe(true)
+  })
+
+  it('BY_SHARES: does not apply the fixed-unit maximum to percentage or amount modes', () => {
+    // A 70% / 30% split (7000/3000 basis points) and a $10 BY_AMOUNT
+    // (1000 cents) must still validate — the share maximum only applies
+    // to BY_SHARES rows.
+    const percentage = expenseApiSchema.safeParse({
+      ...baseApi,
+      splitMode: 'BY_PERCENTAGE',
+      paidFor: [
+        { participant: 'p0', shares: 7000 },
+        { participant: 'p1', shares: 3000 },
+      ],
+    })
+    expect(percentage.success).toBe(true)
+
+    const amount = expenseApiSchema.safeParse({
+      ...baseApi,
+      amount: 1000,
+      splitMode: 'BY_AMOUNT',
+      paidFor: [{ participant: 'p0', shares: 1000 }],
+    })
+    expect(amount.success).toBe(true)
+  })
+
+  it('item BY_SHARES: validates the fixed-unit range for item paidFor rows', () => {
+    const badItem = expenseApiSchema.safeParse({
+      ...baseApi,
+      amount: 1000,
+      splitMode: 'ITEMIZED',
+      paidFor: [{ participant: 'p0', shares: 1000 }],
+      items: [
+        {
+          title: 'Coffee',
+          unitPrice: 1000,
+          quantity: 1,
+          amount: 1000,
+          splitMode: 'BY_SHARES',
+          paidFor: [{ participant: 'p0', shares: 0 }],
+        },
+      ],
+    })
+    expect(badItem.success).toBe(false)
+  })
+
+  it('itemized remainder BY_SHARES: validates the fixed-unit range', () => {
+    const badRemainder = expenseApiSchema.safeParse({
+      ...baseApi,
+      amount: 2000,
+      splitMode: 'ITEMIZED',
+      paidFor: [{ participant: 'p0', shares: 2000 }],
+      items: [
+        {
+          title: 'Coffee',
+          unitPrice: 1000,
+          quantity: 1,
+          amount: 1000,
+          splitMode: 'EVENLY',
+          paidFor: [{ participant: 'p0', shares: 1 }],
+        },
+      ],
+      itemizedRemainder: {
+        splitMode: 'BY_SHARES',
+        paidFor: [{ participant: 'p0', shares: 0 }],
+      },
+    })
+    expect(badRemainder.success).toBe(false)
+  })
+
+  it('BY_SHARES: rejects negative stored paid-by shares (signed values are BY_AMOUNT-only)', () => {
+    const result = expenseApiSchema.safeParse({
+      ...baseApi,
+      paidBySplitMode: 'BY_SHARES',
+      paidByList: [{ participant: 'p0', shares: -50 }],
+      splitMode: 'BY_SHARES',
+      paidFor: [{ participant: 'p0', shares: 100 }],
+    })
+    expect(result.success).toBe(false)
+    if (result.success) return
+    const issues = result.error.issues.filter(
+      (issue) => issue.path.join('.') === 'paidByList.0.shares',
+    )
+    expect(issues.some((issue) => issue.message === 'sharesInvalid')).toBe(true)
+  })
+
+  it('item BY_SHARES: rejects negative stored shares with the issue on the shares field', () => {
+    const result = expenseApiSchema.safeParse({
+      ...baseApi,
+      amount: 1000,
+      splitMode: 'ITEMIZED',
+      paidFor: [{ participant: 'p0', shares: 1000 }],
+      items: [
+        {
+          title: 'Coffee',
+          unitPrice: 1000,
+          quantity: 1,
+          amount: 1000,
+          splitMode: 'BY_SHARES',
+          paidFor: [{ participant: 'p0', shares: -50 }],
+        },
+      ],
+    })
+    expect(result.success).toBe(false)
+    if (result.success) return
+    const issues = result.error.issues.filter(
+      (issue) => issue.path.join('.') === 'items.0.paidFor.0.shares',
+    )
+    expect(issues.some((issue) => issue.message === 'sharesInvalid')).toBe(true)
+  })
+
+  it('itemized remainder BY_SHARES: errors point at itemizedRemainder.paidFor[i].shares', () => {
+    const result = expenseApiSchema.safeParse({
+      ...baseApi,
+      amount: 2000,
+      splitMode: 'ITEMIZED',
+      paidFor: [{ participant: 'p0', shares: 2000 }],
+      items: [
+        {
+          title: 'Coffee',
+          unitPrice: 1000,
+          quantity: 1,
+          amount: 1000,
+          splitMode: 'EVENLY',
+          paidFor: [{ participant: 'p0', shares: 1 }],
+        },
+      ],
+      itemizedRemainder: {
+        splitMode: 'BY_SHARES',
+        paidFor: [{ participant: 'p0', shares: 100_000_001 }],
+      },
+    })
+    expect(result.success).toBe(false)
+    if (result.success) return
+    const issues = result.error.issues.filter(
+      (issue) => issue.path.join('.') === 'itemizedRemainder.paidFor.0.shares',
+    )
+    expect(issues.some((issue) => issue.message === 'sharesInvalid')).toBe(true)
+  })
+})
+
+describe('expenseFormInputSchema nested BY_SHARES rows', () => {
+  const itemizedInput = {
+    ...baseInput,
+    amount: 10,
+    splitMode: 'ITEMIZED',
+    items: [
+      {
+        title: 'Coffee',
+        unitPrice: 5,
+        quantity: 1,
+        splitMode: 'EVENLY',
+        paidFor: [{ participant: 'p0', shares: 1 }],
+      },
+    ],
+    itemizedRemainder: {
+      splitMode: 'BY_SHARES',
+      paidFor: [{ participant: 'p0', shares: 1 }],
+    },
+  }
+
+  it('rejects an item BY_SHARES row above the display maximum with the issue on the shares field', () => {
+    const result = expenseFormInputSchema.safeParse({
+      ...itemizedInput,
+      items: [
+        {
+          title: 'Coffee',
+          unitPrice: 5,
+          quantity: 1,
+          splitMode: 'BY_SHARES',
+          paidFor: [{ participant: 'p0', shares: 1_000_000.01 }],
+        },
+      ],
+    })
+    expect(result.success).toBe(false)
+    if (result.success) return
+    const issues = result.error.issues.filter(
+      (issue) => issue.path.join('.') === 'items.0.paidFor.0.shares',
+    )
+    expect(issues.some((issue) => issue.message === 'sharesInvalid')).toBe(true)
+  })
+
+  it('rejects an item BY_SHARES row with a third decimal place', () => {
+    const result = expenseFormInputSchema.safeParse({
+      ...itemizedInput,
+      items: [
+        {
+          title: 'Coffee',
+          unitPrice: 5,
+          quantity: 1,
+          splitMode: 'BY_SHARES',
+          paidFor: [{ participant: 'p0', shares: 1.001 }],
+        },
+      ],
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('accepts exact display min and max for item rows', () => {
+    const atMin = expenseFormInputSchema.safeParse({
+      ...itemizedInput,
+      items: [
+        {
+          title: 'Coffee',
+          unitPrice: 5,
+          quantity: 1,
+          splitMode: 'BY_SHARES',
+          paidFor: [{ participant: 'p0', shares: 0.01 }],
+        },
+      ],
+    })
+    expect(atMin.success).toBe(true)
+
+    const atMax = expenseFormInputSchema.safeParse({
+      ...itemizedInput,
+      items: [
+        {
+          title: 'Coffee',
+          unitPrice: 5,
+          quantity: 1,
+          splitMode: 'BY_SHARES',
+          paidFor: [{ participant: 'p0', shares: 1_000_000 }],
+        },
+      ],
+    })
+    expect(atMax.success).toBe(true)
+  })
+
+  it('rejects an itemized-remainder BY_SHARES row outside the display range with a prefixed path', () => {
+    const zero = expenseFormInputSchema.safeParse({
+      ...itemizedInput,
+      itemizedRemainder: {
+        splitMode: 'BY_SHARES',
+        paidFor: [{ participant: 'p0', shares: 0 }],
+      },
+    })
+    expect(zero.success).toBe(false)
+    if (zero.success) return
+    const issues = zero.error.issues.filter(
+      (issue) => issue.path.join('.') === 'itemizedRemainder.paidFor.0.shares',
+    )
+    expect(issues.some((issue) => issue.message === 'sharesInvalid')).toBe(true)
+  })
+})
+
+describe('defaultSplitSchema', () => {
+  const baseDefault = {
+    splitMode: 'BY_SHARES' as const,
+    paidFor: [{ participant: 'p0', shares: 100 }],
+  }
+
+  it('accepts stored fixed units within the product range', () => {
+    expect(
+      defaultSplitSchema.safeParse({
+        splitMode: 'BY_SHARES',
+        paidFor: [
+          { participant: 'p0', shares: 50 },
+          { participant: 'p1', shares: 110 },
+        ],
+      }).success,
+    ).toBe(true)
+  })
+
+  it('rejects negative BY_SHARES shares (no absolute-magnitude forgiveness)', () => {
+    const result = defaultSplitSchema.safeParse({
+      ...baseDefault,
+      paidFor: [{ participant: 'p0', shares: -100 }],
+    })
+    expect(result.success).toBe(false)
+    if (result.success) return
+    const issues = result.error.issues.filter(
+      (issue) => issue.path.join('.') === 'paidFor.0.shares',
+    )
+    expect(issues.some((issue) => issue.message === 'sharesInvalid')).toBe(true)
+  })
+
+  it('rejects shares below 1 and above MAX_STORED_SHARES', () => {
+    const below = defaultSplitSchema.safeParse({
+      ...baseDefault,
+      paidFor: [{ participant: 'p0', shares: 0 }],
+    })
+    expect(below.success).toBe(false)
+
+    const above = defaultSplitSchema.safeParse({
+      ...baseDefault,
+      paidFor: [{ participant: 'p0', shares: 100_000_001 }],
+    })
+    expect(above.success).toBe(false)
+  })
+
+  it('accepts the exact stored maximum', () => {
+    expect(
+      defaultSplitSchema.safeParse({
+        ...baseDefault,
+        paidFor: [{ participant: 'p0', shares: 100_000_000 }],
+      }).success,
+    ).toBe(true)
   })
 })
 

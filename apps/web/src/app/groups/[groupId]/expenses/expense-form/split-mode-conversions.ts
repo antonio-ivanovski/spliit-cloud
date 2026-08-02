@@ -73,8 +73,10 @@ function _countSelected(rows: ParticipantRow[]): number {
 /**
  * Produce a numeric share value appropriate for the target split mode.
  * BY_PERCENTAGE: 2-decimal precision (e.g. 33.33) BY_AMOUNT: precision aligned
- * to the currency's decimal_digits BY_SHARES: integer (rounded) EVENLY: 0
- * (irrelevant — the consumer distributes evenly regardless)
+ * to the currency's decimal_digits BY_SHARES: up to 2 decimal places —
+ * form-mode display units; the central serializer scales these to fixed units
+ * at submit time. EVENLY: 0 (irrelevant — the consumer distributes evenly
+ * regardless)
  */
 function formatShare(
   value: number,
@@ -87,7 +89,7 @@ function formatShare(
     case 'BY_PERCENTAGE':
       return Number(value.toFixed(2))
     case 'BY_SHARES':
-      return Math.round(value)
+      return Number(value.toFixed(2))
     case 'EVENLY':
       return 0
     case 'ITEMIZED':

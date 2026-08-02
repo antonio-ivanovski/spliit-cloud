@@ -1,3 +1,5 @@
+import { sharesAsDecimal } from '@spliit/domain'
+
 import type { ChangeContext, ItemizedRemainderLike, ShareRow } from './types'
 
 // ---------------------------------------------------------------------------
@@ -63,7 +65,7 @@ export const splitSemantics = {
       .map((r) => {
         const name = ctx.getParticipantName(r.participant)
         if (mode === 'BY_PERCENTAGE') return `${name} ${r.shares / 100}%`
-        if (mode === 'BY_SHARES') return `${name} ${r.shares}`
+        if (mode === 'BY_SHARES') return `${name} ${sharesAsDecimal(r.shares)}`
         return name
       })
       .join(', ')

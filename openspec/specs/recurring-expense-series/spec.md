@@ -1,4 +1,23 @@
-## ADDED Requirements
+## Purpose
+
+Defines recurring expense series behavior: interval schedules anchored to an entered date, anchored next-cursor consistency across migration, import, and materialization, termination modes, mutation scopes, deletion semantics, navigation, lifecycle UI, legacy migration, and fixed share-unit template storage.
+
+## Requirements
+
+### Requirement: Templates store fixed share units
+Recurring templates SHALL store participant shares in fixed units (`100 = 1 displayed share`) for flat paidFor rows, paidBy rows, item paidFor rows, and itemized-remainder paidFor rows. Materialization SHALL copy the template's stored shares unchanged into each generated occurrence, because the display-to-fixed-unit conversion happens exactly once at expense-creation serialization; templates and occurrences SHALL never rescale share values.
+
+#### Scenario: Template stores fixed units
+- **WHEN** a recurring expense template is saved with displayed shares like `1.1` or `0.5`
+- **THEN** the template stores the fixed units `110` and `50`
+
+#### Scenario: Occurrence copies shares unchanged
+- **WHEN** a materialized occurrence is created from a template
+- **THEN** every flat paidFor and paidBy row copies the template's stored fixed share units verbatim
+
+#### Scenario: Item and remainder paths copy unchanged
+- **WHEN** a template contains itemized splits or an itemized remainder
+- **THEN** the generated occurrence copies each item's and the remainder's fixed share units verbatim
 
 ### Requirement: Interval recurrence schedule
 The system SHALL support recurrence every 1 through 99 days, weeks, months, or years, anchored to the entered expense date.

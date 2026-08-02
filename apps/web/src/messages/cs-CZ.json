@@ -874,7 +874,8 @@
     "participantSharesLabel": "Počet podílů pro {name}",
     "decreaseShares": "Snížit počet podílů u {name}",
     "increaseShares": "Zvýšit počet podílů u {name}",
-    "validationSummary": "Před uložením opravte zvýrazněná pole."
+    "validationSummary": "Před uložením opravte zvýrazněná pole.",
+    "resetDistribution": "Obnovit"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Smazat dokument",
@@ -1084,7 +1085,8 @@
     "paidByMin1": "Musíte vybrat alespoň jednoho plátce.",
     "paidByAmountSum": "Součet částek plátců se musí rovnat částce výdaje.",
     "paidByPercentageSum": "Součet procent plátců musí být 100.",
-    "duplicateParticipant": "Jiný plátce je již vybrán."
+    "duplicateParticipant": "Jiný plátce je již vybrán.",
+    "sharesInvalid": "Podíly musí být mezi 0,01 a 1 000 000 s maximálně dvěma desetinnými místy."
   },
   "Categories": {
     "search": "Hledat kategorii...",

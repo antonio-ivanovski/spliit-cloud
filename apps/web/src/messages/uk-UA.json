@@ -874,7 +874,8 @@
     "participantSharesLabel": "Кількість часток для {name}",
     "decreaseShares": "Зменшити кількість часток для {name}",
     "increaseShares": "Збільшити кількість часток для {name}",
-    "validationSummary": "Виправте виділені поля перед збереженням."
+    "validationSummary": "Виправте виділені поля перед збереженням.",
+    "resetDistribution": "Скинути"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Видалити документ",
@@ -1084,7 +1085,8 @@
     "paidByMin1": "Повинен бути обраний щонайменше один платник.",
     "paidByAmountSum": "Сума платників має дорівнювати сумі витрати.",
     "paidByPercentageSum": "Сума відсотків платників має становити 100.",
-    "duplicateParticipant": "Інший платник уже обраний."
+    "duplicateParticipant": "Інший платник уже обраний.",
+    "sharesInvalid": "Частки мають бути від 0,01 до 1 000 000 із не більш ніж двома знаками після коми."
   },
   "Categories": {
     "search": "Шукати категорію..",

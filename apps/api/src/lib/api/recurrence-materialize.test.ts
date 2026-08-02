@@ -158,6 +158,58 @@ describe('recurring expense materialization', () => {
     ).resolves.toEqual({ created: false })
     expect(prismaMock.expense.create).not.toHaveBeenCalled()
   })
+  it('materializes BY_SHARES template rows at their stored fixed units (scale-once)', async () => {
+    // The template already stores fixed units (110 = 1.1 displayed share,
+    // 50 = 0.5). Materialization must copy them verbatim — scaling happens
+    // exactly once, at template creation from the serialized expense.
+    const snapshot = series({
+      template: {
+        amount: 1000,
+        title: 'Rent',
+        description: null,
+        paidBySplitMode: 'BY_SHARES',
+        paidByList: [{ ledgerParticipantId: 'p1', shares: 110 }],
+        splitMode: 'BY_SHARES',
+        paidFor: [
+          { ledgerParticipantId: 'p1', shares: 110 },
+          { ledgerParticipantId: 'p2', shares: 50 },
+        ],
+        items: [],
+        itemizedRemainder: null,
+        originalCurrency: null,
+        conversionRate: null,
+        conversionSource: null,
+      },
+    })
+    setup(snapshot, snapshot)
+
+    await materializeRecurringExpense({
+      seriesId: 'series-1',
+      sequence: 1,
+      occurrenceDate: '2026-07-20',
+    })
+
+    expect(prismaMock.expense.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          splitMode: 'BY_SHARES',
+          paidBySplitMode: 'BY_SHARES',
+          paidFor: {
+            createMany: {
+              data: [
+                { ledgerParticipantId: 'p1', shares: 110 },
+                { ledgerParticipantId: 'p2', shares: 50 },
+              ],
+            },
+          },
+          paidByList: {
+            createMany: { data: [{ ledgerParticipantId: 'p1', shares: 110 }] },
+          },
+        }),
+      }),
+    )
+  })
+
   it('completes in-transaction COUNT termination', async () => {
     const snapshot = series({ occurrenceLimit: 0, endType: 'COUNT' })
     setup(series(), snapshot)

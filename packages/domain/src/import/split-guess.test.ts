@@ -190,8 +190,8 @@ describe('guessByShares', () => {
       ),
     ).toEqual(
       pf([
-        ['a', 2],
-        ['b', 1],
+        ['a', 200],
+        ['b', 100],
       ]),
     )
   })
@@ -208,9 +208,9 @@ describe('guessByShares', () => {
       ),
     ).toEqual(
       pf([
-        ['a', 3],
-        ['b', 2],
-        ['c', 1],
+        ['a', 300],
+        ['b', 200],
+        ['c', 100],
       ]),
     )
   })
@@ -227,9 +227,9 @@ describe('guessByShares', () => {
       ),
     ).toEqual(
       pf([
-        ['a', 4],
-        ['b', 3],
-        ['c', 1],
+        ['a', 400],
+        ['b', 300],
+        ['c', 100],
       ]),
     )
   })
@@ -245,8 +245,8 @@ describe('guessByShares', () => {
       ),
     ).toEqual(
       pf([
-        ['a', 3],
-        ['b', 2],
+        ['a', 300],
+        ['b', 200],
       ]),
     )
   })
@@ -300,17 +300,16 @@ describe('guessByShares', () => {
     )
     expect(result).toEqual(
       pf([
-        ['a', 3],
-        ['b', 2],
-        ['c', 1],
+        ['a', 300],
+        ['b', 200],
+        ['c', 100],
       ]),
     )
   })
 
   it('maxWeight: returns null when the largest normalized weight exceeds the cap', () => {
-    // GCD = 1 → weights [56, 1], not a clean ratio.  But let's test a real
-    // large-ratio case: [2800, 100] → GCD=100 → weights [28, 1], max=28.
-    // With cap=25 this should be rejected.
+    // [2800, 100] → GCD=100 → weights [28, 1], max=28. With cap=25 this
+    // should be rejected.
     const result = guessByShares(
       pf([
         ['a', 2800],
@@ -333,8 +332,8 @@ describe('guessByShares', () => {
     )
     expect(result).toEqual(
       pf([
-        ['a', 28],
-        ['b', 1],
+        ['a', 2800],
+        ['b', 100],
       ]),
     )
   })
@@ -351,8 +350,8 @@ describe('guessByShares', () => {
       ),
     ).toEqual(
       pf([
-        ['a', 24],
-        ['b', 1],
+        ['a', 2400],
+        ['b', 100],
       ]),
     )
     // GCD=10 → weights [26, 1], max=26 > default 25 → null.
@@ -379,8 +378,8 @@ describe('guessByShares', () => {
     )
     expect(result).toEqual(
       pf([
-        ['a', 2],
-        ['b', 1],
+        ['a', 200],
+        ['b', 100],
       ]),
     )
   })
@@ -419,8 +418,8 @@ describe('guessSplitMode', () => {
     ).toEqual({
       splitMode: 'BY_SHARES',
       paidFor: pf([
-        ['a', 2],
-        ['b', 1],
+        ['a', 200],
+        ['b', 100],
       ]),
     })
   })
@@ -545,7 +544,7 @@ describe('guessSplitMode', () => {
     })
   })
 
-  it('normalises [1152000, 768000] → BY_SHARES [3, 2] (reported bug)', () => {
+  it('normalises [1152000, 768000] → BY_SHARES fixed units [300, 200] (reported bug)', () => {
     const result = guessSplitMode(
       pf([
         ['a', 1152000],
@@ -556,13 +555,13 @@ describe('guessSplitMode', () => {
     expect(result).toEqual({
       splitMode: 'BY_SHARES',
       paidFor: pf([
-        ['a', 3],
-        ['b', 2],
+        ['a', 300],
+        ['b', 200],
       ]),
     })
   })
 
-  it('normalises [200, 300] → BY_SHARES [2, 3] (reported bug)', () => {
+  it('normalises [200, 300] → BY_SHARES fixed units [200, 300] (reported bug)', () => {
     const result = guessSplitMode(
       pf([
         ['a', 200],
@@ -573,8 +572,8 @@ describe('guessSplitMode', () => {
     expect(result).toEqual({
       splitMode: 'BY_SHARES',
       paidFor: pf([
-        ['a', 2],
-        ['b', 3],
+        ['a', 200],
+        ['b', 300],
       ]),
     })
   })

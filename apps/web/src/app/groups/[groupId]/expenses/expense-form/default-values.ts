@@ -15,11 +15,13 @@ import {
   categoryIdSchema,
   getCurrency,
   randomId,
+  sharesAsDecimal,
 } from '@spliit/domain'
 
 // Storage-units shape returned by `trpc.account.defaultSplit`. Matches
 // `defaultSplitSchema` in packages/domain: shares in basis points for
-// BY_PERCENTAGE, minor units for BY_AMOUNT, raw counts otherwise.
+// BY_PERCENTAGE, minor units for BY_AMOUNT, fixed share units for
+// BY_SHARES (100 = 1 displayed share), inclusion markers for EVENLY.
 const savedDefaultSplitSchema = z.object({
   splitMode: z.enum(['EVENLY', 'BY_SHARES', 'BY_PERCENTAGE', 'BY_AMOUNT']),
   paidFor: z.array(
@@ -198,9 +200,10 @@ export function getNeutralDefaultSplit(
 
 /**
  * Convert a persisted default split (storage units: basis points, minor units,
- * raw counts) into the form's display units, filtering out any participant ids
- * that are no longer in the group. Returns null when nothing remains after
- * filtering, so the caller can fall back to the neutral default.
+ * or fixed share units where 100 = 1 displayed share) into the form's display
+ * units, filtering out any participant ids that are no longer in the group.
+ * Returns null when nothing remains after filtering, so the caller can fall
+ * back to the neutral default.
  */
 export function savedDefaultToFormValues(
   raw: unknown,
@@ -220,7 +223,9 @@ export function savedDefaultToFormValues(
                 ? shares / 100
                 : parsed.data.splitMode === 'BY_AMOUNT'
                   ? amountAsDecimal(shares, groupCurrency)
-                  : shares,
+                  : parsed.data.splitMode === 'BY_SHARES'
+                    ? sharesAsDecimal(shares)
+                    : shares,
           },
         ]
       : [],
@@ -299,7 +304,8 @@ export function buildExpenseFormDefaults(args: {
     // conversion model stored BY_AMOUNT shares in the ledger currency;
     // detect that when the stored sum matches ledger `amount` rather
     // than `originalAmount`, then convert back to expense-currency
-    // display units via the stored rate (major ÷ rate).
+    // display units via the stored rate (major ÷ rate). BY_SHARES
+    // shares are stored as fixed units (100 = 1 displayed share).
     const storedSharesSum = expense.paidFor.reduce(
       (sum, { shares }) => sum + shares,
       0,
@@ -330,14 +336,20 @@ export function buildExpenseFormDefaults(args: {
               shares: amountAsDecimal(shares, groupCurrency),
             }
           })
-        : expense.paidFor.map(({ ledgerParticipantId, shares }) => ({
-            participant: ledgerParticipantId,
-            shares:
-              expense.splitMode === 'BY_PERCENTAGE' ? shares / 100 : shares,
-          }))
+        : expense.splitMode === 'BY_SHARES'
+          ? expense.paidFor.map(({ ledgerParticipantId, shares }) => ({
+              participant: ledgerParticipantId,
+              shares: sharesAsDecimal(shares),
+            }))
+          : expense.paidFor.map(({ ledgerParticipantId, shares }) => ({
+              participant: ledgerParticipantId,
+              shares:
+                expense.splitMode === 'BY_PERCENTAGE' ? shares / 100 : shares,
+            }))
 
     // paidBy shares are stored in originalCurrency minor units when
-    // conversion is required, otherwise in Ledger minor units.
+    // conversion is required, otherwise in Ledger minor units. BY_SHARES
+    // paidBy rows are stored as fixed units (100 = 1 displayed share).
     const paidByCurrency = conversionRequired ? originalCurrency : groupCurrency
     const paidByList =
       expense.paidBySplitMode === 'BY_AMOUNT'
@@ -345,13 +357,18 @@ export function buildExpenseFormDefaults(args: {
             participant: ledgerParticipantId,
             shares: amountAsDecimal(shares, paidByCurrency),
           }))
-        : expense.paidByList.map(({ ledgerParticipantId, shares }) => ({
-            participant: ledgerParticipantId,
-            shares:
-              expense.paidBySplitMode === 'BY_PERCENTAGE'
-                ? shares / 100
-                : shares,
-          }))
+        : expense.paidBySplitMode === 'BY_SHARES'
+          ? expense.paidByList.map(({ ledgerParticipantId, shares }) => ({
+              participant: ledgerParticipantId,
+              shares: sharesAsDecimal(shares),
+            }))
+          : expense.paidByList.map(({ ledgerParticipantId, shares }) => ({
+              participant: ledgerParticipantId,
+              shares:
+                expense.paidBySplitMode === 'BY_PERCENTAGE'
+                  ? shares / 100
+                  : shares,
+            }))
 
     const itemAmountAsDisplay = (amount: number) =>
       amountAsDecimal(amount, originalCurrency)
@@ -364,7 +381,9 @@ export function buildExpenseFormDefaults(args: {
         ? itemAmountAsDisplay(shares)
         : splitMode === 'BY_PERCENTAGE'
           ? shares / 100
-          : shares
+          : splitMode === 'BY_SHARES'
+            ? sharesAsDecimal(shares)
+            : shares
 
     const items: ExpenseFormItemValues[] = (expense.items ?? []).map((item) => {
       const splitMode = (item.splitMode ??

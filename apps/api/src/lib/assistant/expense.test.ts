@@ -279,6 +279,76 @@ describe('assistant expense normalization', () => {
     ).toBe(3400)
   })
 
+  it('accepts decimal BY_SHARES weights and stores fixed units', async () => {
+    mockAssistantGroup()
+
+    const prepared = await prepareAssistantExpense(
+      {
+        groupId: 'group-a',
+        amount: '10',
+        title: 'Decimal shares',
+        split: {
+          mode: 'BY_SHARES',
+          shares: [
+            { participantId: 'alice', shares: 0.5 },
+            { participantId: 'alex', shares: 1.5 },
+          ],
+        },
+      },
+      'account-a',
+      {
+        now: new Date('2026-07-28T10:00:00.000Z'),
+        resolveConversion: vi.fn().mockResolvedValue({
+          conversionSource: null,
+          conversionRate: null,
+          originalAmount: null,
+          originalCurrency: null,
+          ledgerAmountMinor: 1000,
+          inputAmountMinor: 1000,
+        }),
+      },
+    )
+
+    // 0.5 displayed → 50 fixed units; 1.5 displayed → 150 fixed units.
+    expect(prepared.expense.splitMode).toBe('BY_SHARES')
+    expect(prepared.expense.paidFor).toEqual([
+      { participant: 'alice', shares: 50 },
+      { participant: 'alex', shares: 150 },
+    ])
+    // The sealed confirmation round-trips the same fixed units.
+    const opened = await openConfirmation(prepared.confirmationToken)
+    expect(opened.expense.paidFor).toEqual(prepared.expense.paidFor)
+  })
+
+  it('rejects BY_SHARES weights with more than two decimal places', async () => {
+    mockAssistantGroup()
+
+    await expect(
+      prepareAssistantExpense(
+        {
+          groupId: 'group-a',
+          amount: '10',
+          title: 'Bad shares',
+          split: {
+            mode: 'BY_SHARES',
+            shares: [{ participantId: 'alice', shares: 1.001 }],
+          },
+        },
+        'account-a',
+        {
+          resolveConversion: vi.fn().mockResolvedValue({
+            conversionSource: null,
+            conversionRate: null,
+            originalAmount: null,
+            originalCurrency: null,
+            ledgerAmountMinor: 1000,
+            inputAmountMinor: 1000,
+          }),
+        },
+      ),
+    ).rejects.toThrow(/two places|at most/i)
+  })
+
   it('allocates receipt remainder proportionally to exact item subtotals', async () => {
     mockAssistantGroup()
 

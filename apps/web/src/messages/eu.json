@@ -867,7 +867,8 @@
     "participantSharesLabel": "{name}(r)en zatiak",
     "decreaseShares": "{name}(r)en zatiak murriztu",
     "increaseShares": "{name}(r)en zatiak handitu",
-    "validationSummary": "Zuzendu nabarmendutako eremuak gorde aurretik."
+    "validationSummary": "Zuzendu nabarmendutako eremuak gorde aurretik.",
+    "resetDistribution": "Berrezarri"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Ezabatu dokumentua",
@@ -1076,7 +1077,8 @@
     "paidByMin1": "Gutxienez ordaintzaile bat hautatu behar da.",
     "paidByAmountSum": "Ordaintzaileen zenbatekoen baturak gastuaren zenbatekoa berdindu behar du.",
     "paidByPercentageSum": "Ordaintzaileen ehunekoen baturak 100 izan behar du.",
-    "duplicateParticipant": "Beste ordaintzaile bat dago jada hautatuta."
+    "duplicateParticipant": "Beste ordaintzaile bat dago jada hautatuta.",
+    "sharesInvalid": "Partaidetzak 0,01 eta 1.000.000 artekoak izan behar dira, gehienez bi hamartarrekin."
   },
   "Categories": {
     "search": "Bilatu kategoria...",
