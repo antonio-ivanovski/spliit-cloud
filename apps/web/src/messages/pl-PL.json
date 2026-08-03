@@ -1470,6 +1470,111 @@
       },
       "ZAR": {
         "name": "Rand południowoafrykański"
+      },
+      "NPR": {
+        "name": "rupia nepalska"
+      },
+      "BHD": {
+        "name": "Dinar bahrański"
+      },
+      "BND": {
+        "name": "Dolar brunejski"
+      },
+      "BOB": {
+        "name": "Boliwijski boliviano"
+      },
+      "BWP": {
+        "name": "Pula botswańska"
+      },
+      "CRC": {
+        "name": "Colón kostarykański"
+      },
+      "DOP": {
+        "name": "Peso dominikańskie"
+      },
+      "ETB": {
+        "name": "Birr etiopski"
+      },
+      "GTQ": {
+        "name": "Quetzal gwatemalski"
+      },
+      "IQD": {
+        "name": "Dinar iracki"
+      },
+      "IRR": {
+        "name": "Rial irański"
+      },
+      "JOD": {
+        "name": "Dinar jordański"
+      },
+      "KGS": {
+        "name": "Som kirgiski"
+      },
+      "LAK": {
+        "name": "Kip laotański"
+      },
+      "LBP": {
+        "name": "Funt libański"
+      },
+      "MMK": {
+        "name": "Kiat birmański"
+      },
+      "MNT": {
+        "name": "Tugrik mongolski"
+      },
+      "MOP": {
+        "name": "Pataca makauńska"
+      },
+      "MUR": {
+        "name": "Rupia maurytyjska"
+      },
+      "MWK": {
+        "name": "Kwacha malawijska"
+      },
+      "MZN": {
+        "name": "Metical mozambicki"
+      },
+      "NAD": {
+        "name": "Dolar namibijski"
+      },
+      "NIO": {
+        "name": "Córdoba nikaraguańska"
+      },
+      "OMR": {
+        "name": "Rial omański"
+      },
+      "PAB": {
+        "name": "Balboa panamska"
+      },
+      "PYG": {
+        "name": "Guarani paragwajskie"
+      },
+      "RSD": {
+        "name": "Dinar serbski"
+      },
+      "TJS": {
+        "name": "Somoni tadżycki"
+      },
+      "TND": {
+        "name": "Dinar tunezyjski"
+      },
+      "TZS": {
+        "name": "Szyling tanzański"
+      },
+      "UGX": {
+        "name": "Szyling ugandyjski"
+      },
+      "UZS": {
+        "name": "Som uzbecki"
+      },
+      "XAF": {
+        "name": "Frank CFA z Afryki Środkowej"
+      },
+      "XOF": {
+        "name": "Frank CFA z Afryki Zachodniej"
+      },
+      "ZMW": {
+        "name": "Kwacha zambijska"
       }
     }
   },

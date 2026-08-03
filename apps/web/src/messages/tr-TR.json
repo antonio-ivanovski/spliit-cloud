@@ -1454,6 +1454,111 @@
       },
       "ZAR": {
         "name": "Güney Afrika randı"
+      },
+      "NPR": {
+        "name": "Nepal Rupisi"
+      },
+      "BHD": {
+        "name": "Bahreyn dinarı"
+      },
+      "BND": {
+        "name": "Brunei doları"
+      },
+      "BOB": {
+        "name": "Bolivya bolivianosu"
+      },
+      "BWP": {
+        "name": "Botsvana pulası"
+      },
+      "CRC": {
+        "name": "Kosta Rika kolonu"
+      },
+      "DOP": {
+        "name": "Dominik pesosu"
+      },
+      "ETB": {
+        "name": "Etiyopya birri"
+      },
+      "GTQ": {
+        "name": "Guatemala quetzalı"
+      },
+      "IQD": {
+        "name": "Irak dinarı"
+      },
+      "IRR": {
+        "name": "İran riyali"
+      },
+      "JOD": {
+        "name": "Ürdün dinarı"
+      },
+      "KGS": {
+        "name": "Kırgız somu"
+      },
+      "LAK": {
+        "name": "Laos kipi"
+      },
+      "LBP": {
+        "name": "Lübnan lirası"
+      },
+      "MMK": {
+        "name": "Myanmar kyatı"
+      },
+      "MNT": {
+        "name": "Moğol tögrögü"
+      },
+      "MOP": {
+        "name": "Makao patakası"
+      },
+      "MUR": {
+        "name": "Mauritius rupisi"
+      },
+      "MWK": {
+        "name": "Malavi kwachası"
+      },
+      "MZN": {
+        "name": "Mozambik meticali"
+      },
+      "NAD": {
+        "name": "Namibya doları"
+      },
+      "NIO": {
+        "name": "Nikaragua kordobası"
+      },
+      "OMR": {
+        "name": "Umman riyali"
+      },
+      "PAB": {
+        "name": "Panama balboası"
+      },
+      "PYG": {
+        "name": "Paraguay guaranisi"
+      },
+      "RSD": {
+        "name": "Sırp dinarı"
+      },
+      "TJS": {
+        "name": "Tacikistan somonisi"
+      },
+      "TND": {
+        "name": "Tunus dinarı"
+      },
+      "TZS": {
+        "name": "Tanzanya şilini"
+      },
+      "UGX": {
+        "name": "Uganda şilini"
+      },
+      "UZS": {
+        "name": "Özbekistan somu"
+      },
+      "XAF": {
+        "name": "Orta Afrika CFA frangı"
+      },
+      "XOF": {
+        "name": "Batı Afrika CFA frangı"
+      },
+      "ZMW": {
+        "name": "Zambiya kwachası"
       }
     }
   },

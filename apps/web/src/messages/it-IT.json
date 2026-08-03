@@ -1360,6 +1360,111 @@
       },
       "ZAR": {
         "name": "rand sudafricano"
+      },
+      "NPR": {
+        "name": "Rupia nepalese"
+      },
+      "BHD": {
+        "name": "dinaro del Bahrein"
+      },
+      "BND": {
+        "name": "dollaro del Brunei"
+      },
+      "BOB": {
+        "name": "boliviano boliviano"
+      },
+      "BWP": {
+        "name": "pula del Botswana"
+      },
+      "CRC": {
+        "name": "colón costaricano"
+      },
+      "DOP": {
+        "name": "peso dominicano"
+      },
+      "ETB": {
+        "name": "birr etiope"
+      },
+      "GTQ": {
+        "name": "quetzal guatemalteco"
+      },
+      "IQD": {
+        "name": "dinaro iracheno"
+      },
+      "IRR": {
+        "name": "rial iraniano"
+      },
+      "JOD": {
+        "name": "dinaro giordano"
+      },
+      "KGS": {
+        "name": "som kirghiso"
+      },
+      "LAK": {
+        "name": "kip laotiano"
+      },
+      "LBP": {
+        "name": "lira libanese"
+      },
+      "MMK": {
+        "name": "kyat birmano"
+      },
+      "MNT": {
+        "name": "tögrög mongolo"
+      },
+      "MOP": {
+        "name": "pataca di Macao"
+      },
+      "MUR": {
+        "name": "rupia mauriziana"
+      },
+      "MWK": {
+        "name": "kwacha malawiano"
+      },
+      "MZN": {
+        "name": "metical mozambicano"
+      },
+      "NAD": {
+        "name": "dollaro namibiano"
+      },
+      "NIO": {
+        "name": "córdoba nicaraguense"
+      },
+      "OMR": {
+        "name": "rial omanita"
+      },
+      "PAB": {
+        "name": "balboa panamense"
+      },
+      "PYG": {
+        "name": "guaraní paraguaiano"
+      },
+      "RSD": {
+        "name": "dinaro serbo"
+      },
+      "TJS": {
+        "name": "somoni tagiko"
+      },
+      "TND": {
+        "name": "dinaro tunisino"
+      },
+      "TZS": {
+        "name": "scellino tanzaniano"
+      },
+      "UGX": {
+        "name": "scellino ugandese"
+      },
+      "UZS": {
+        "name": "som uzbeko"
+      },
+      "XAF": {
+        "name": "franco CFA dell'Africa centrale"
+      },
+      "XOF": {
+        "name": "franco CFA dell'Africa occidentale"
+      },
+      "ZMW": {
+        "name": "kwacha zambiano"
       }
     }
   },

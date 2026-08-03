@@ -1352,6 +1352,111 @@
       },
       "ZAR": {
         "name": "Etelä-Afrikan rand"
+      },
+      "NPR": {
+        "name": "Nepalin rupia"
+      },
+      "BHD": {
+        "name": "Bahrainin dinaari"
+      },
+      "BND": {
+        "name": "Brunein dollari"
+      },
+      "BOB": {
+        "name": "Bolivian boliviano"
+      },
+      "BWP": {
+        "name": "Botswanan pula"
+      },
+      "CRC": {
+        "name": "Costa Rican colón"
+      },
+      "DOP": {
+        "name": "Dominikaaninen peso"
+      },
+      "ETB": {
+        "name": "Etiopian birr"
+      },
+      "GTQ": {
+        "name": "Guatemalan quetzal"
+      },
+      "IQD": {
+        "name": "Irakin dinaari"
+      },
+      "IRR": {
+        "name": "Iranin rial"
+      },
+      "JOD": {
+        "name": "Jordanian dinaari"
+      },
+      "KGS": {
+        "name": "Kirgisian som"
+      },
+      "LAK": {
+        "name": "Laosin kip"
+      },
+      "LBP": {
+        "name": "Libanonin punta"
+      },
+      "MMK": {
+        "name": "Myanmarin kyat"
+      },
+      "MNT": {
+        "name": "Mongolian tögrög"
+      },
+      "MOP": {
+        "name": "Macaon pataca"
+      },
+      "MUR": {
+        "name": "Mauritiuksen rupia"
+      },
+      "MWK": {
+        "name": "Malawin kwacha"
+      },
+      "MZN": {
+        "name": "Mosambikin metical"
+      },
+      "NAD": {
+        "name": "Namibian dollari"
+      },
+      "NIO": {
+        "name": "Nicaraguan córdoba"
+      },
+      "OMR": {
+        "name": "Omanin rial"
+      },
+      "PAB": {
+        "name": "Panaman balboa"
+      },
+      "PYG": {
+        "name": "Paraguayn guaraní"
+      },
+      "RSD": {
+        "name": "Serbian dinaari"
+      },
+      "TJS": {
+        "name": "Tadžikistanin somoni"
+      },
+      "TND": {
+        "name": "Tunisian dinaari"
+      },
+      "TZS": {
+        "name": "Tansanian shillinki"
+      },
+      "UGX": {
+        "name": "Ugandan shillinki"
+      },
+      "UZS": {
+        "name": "Uzbekistanin som"
+      },
+      "XAF": {
+        "name": "Keski-Afrikan CFA-frangi"
+      },
+      "XOF": {
+        "name": "Länsi-Afrikan CFA-frangi"
+      },
+      "ZMW": {
+        "name": "Sambian kwacha"
       }
     }
   },

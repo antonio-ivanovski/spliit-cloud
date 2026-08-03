@@ -1352,6 +1352,111 @@
       },
       "ZAR": {
         "name": "Zuid-Afrikaanse rand"
+      },
+      "NPR": {
+        "name": "Nepalese roepie"
+      },
+      "BHD": {
+        "name": "Bahreinse dinar"
+      },
+      "BND": {
+        "name": "Bruneise dollar"
+      },
+      "BOB": {
+        "name": "Boliviaanse boliviano"
+      },
+      "BWP": {
+        "name": "Botswaanse pula"
+      },
+      "CRC": {
+        "name": "Costa Ricaanse colón"
+      },
+      "DOP": {
+        "name": "Dominicaanse peso"
+      },
+      "ETB": {
+        "name": "Ethiopische birr"
+      },
+      "GTQ": {
+        "name": "Guatemalteekse quetzal"
+      },
+      "IQD": {
+        "name": "Iraakse dinar"
+      },
+      "IRR": {
+        "name": "Iraanse rial"
+      },
+      "JOD": {
+        "name": "Jordaanse dinar"
+      },
+      "KGS": {
+        "name": "Kirgizische som"
+      },
+      "LAK": {
+        "name": "Laotiaanse kip"
+      },
+      "LBP": {
+        "name": "Libanese pond"
+      },
+      "MMK": {
+        "name": "Myanmarese kyat"
+      },
+      "MNT": {
+        "name": "Mongoolse tögrög"
+      },
+      "MOP": {
+        "name": "Macause pataca"
+      },
+      "MUR": {
+        "name": "Mauritiaanse roepie"
+      },
+      "MWK": {
+        "name": "Malawische kwacha"
+      },
+      "MZN": {
+        "name": "Mozambikaanse metical"
+      },
+      "NAD": {
+        "name": "Namibische dollar"
+      },
+      "NIO": {
+        "name": "Nicaraguaanse córdoba"
+      },
+      "OMR": {
+        "name": "Omaanse rial"
+      },
+      "PAB": {
+        "name": "Panamese balboa"
+      },
+      "PYG": {
+        "name": "Paraguayaanse guaraní"
+      },
+      "RSD": {
+        "name": "Servische dinar"
+      },
+      "TJS": {
+        "name": "Tadzjiekse somoni"
+      },
+      "TND": {
+        "name": "Tunesische dinar"
+      },
+      "TZS": {
+        "name": "Tanzaniaanse shilling"
+      },
+      "UGX": {
+        "name": "Oegandese shilling"
+      },
+      "UZS": {
+        "name": "Oezbeekse som"
+      },
+      "XAF": {
+        "name": "Centraal-Afrikaanse CFA-frank"
+      },
+      "XOF": {
+        "name": "West-Afrikaanse CFA-frank"
+      },
+      "ZMW": {
+        "name": "Zambiaanse kwacha"
       }
     }
   },

@@ -1384,6 +1384,111 @@
       },
       "ZAR": {
         "name": "Südafrikanischer Rand"
+      },
+      "NPR": {
+        "name": "Nepalesische Rupie"
+      },
+      "BHD": {
+        "name": "Bahrainischer Dinar"
+      },
+      "BND": {
+        "name": "Brunei-Dollar"
+      },
+      "BOB": {
+        "name": "Bolivianischer Boliviano"
+      },
+      "BWP": {
+        "name": "Botswanischer Pula"
+      },
+      "CRC": {
+        "name": "Costa-Rica-Colón"
+      },
+      "DOP": {
+        "name": "Dominikanischer Peso"
+      },
+      "ETB": {
+        "name": "Äthiopischer Birr"
+      },
+      "GTQ": {
+        "name": "Guatemaltekischer Quetzal"
+      },
+      "IQD": {
+        "name": "Irakischer Dinar"
+      },
+      "IRR": {
+        "name": "Iranischer Rial"
+      },
+      "JOD": {
+        "name": "Jordanischer Dinar"
+      },
+      "KGS": {
+        "name": "Kirgisischer Som"
+      },
+      "LAK": {
+        "name": "Laotischer Kip"
+      },
+      "LBP": {
+        "name": "Libanesisches Pfund"
+      },
+      "MMK": {
+        "name": "Myanmar-Kyat"
+      },
+      "MNT": {
+        "name": "Mongolischer Tögrög"
+      },
+      "MOP": {
+        "name": "Macao-Pataca"
+      },
+      "MUR": {
+        "name": "Mauritius-Rupie"
+      },
+      "MWK": {
+        "name": "Malawischer Kwacha"
+      },
+      "MZN": {
+        "name": "Mosambikanischer Metical"
+      },
+      "NAD": {
+        "name": "Namibischer Dollar"
+      },
+      "NIO": {
+        "name": "Nicaraguanischer Córdoba"
+      },
+      "OMR": {
+        "name": "Omanischer Rial"
+      },
+      "PAB": {
+        "name": "Panamaischer Balboa"
+      },
+      "PYG": {
+        "name": "Paraguayischer Guaraní"
+      },
+      "RSD": {
+        "name": "Serbischer Dinar"
+      },
+      "TJS": {
+        "name": "Tadschikischer Somoni"
+      },
+      "TND": {
+        "name": "Tunesischer Dinar"
+      },
+      "TZS": {
+        "name": "Tansania-Schilling"
+      },
+      "UGX": {
+        "name": "Uganda-Schilling"
+      },
+      "UZS": {
+        "name": "Usbekischer Som"
+      },
+      "XAF": {
+        "name": "Zentralafrikanischer CFA-Franc"
+      },
+      "XOF": {
+        "name": "Westafrikanischer CFA-Franc"
+      },
+      "ZMW": {
+        "name": "Sambischer Kwacha"
       }
     }
   },

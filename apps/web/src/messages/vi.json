@@ -1735,6 +1735,111 @@
       },
       "ZAR": {
         "name": "ZAR - Rand Nam Phi"
+      },
+      "NPR": {
+        "name": "Rupee Nepal"
+      },
+      "BHD": {
+        "name": "BHD - Dinar Bahrain"
+      },
+      "BND": {
+        "name": "BND - Đô la Brunei"
+      },
+      "BOB": {
+        "name": "BOB - Boliviano Bolivia"
+      },
+      "BWP": {
+        "name": "BWP - Pula Botswana"
+      },
+      "CRC": {
+        "name": "CRC - Colón Costa Rica"
+      },
+      "DOP": {
+        "name": "DOP - Peso Dominica"
+      },
+      "ETB": {
+        "name": "ETB - Birr Ethiopia"
+      },
+      "GTQ": {
+        "name": "GTQ - Quetzal Guatemala"
+      },
+      "IQD": {
+        "name": "IQD - Dinar Iraq"
+      },
+      "IRR": {
+        "name": "IRR - Rial Iran"
+      },
+      "JOD": {
+        "name": "JOD - Dinar Jordan"
+      },
+      "KGS": {
+        "name": "KGS - Som Kyrgyzstan"
+      },
+      "LAK": {
+        "name": "LAK - Kip Lào"
+      },
+      "LBP": {
+        "name": "LBP - Bảng Lebanon"
+      },
+      "MMK": {
+        "name": "MMK - Kyat Myanmar"
+      },
+      "MNT": {
+        "name": "MNT - Tugrik Mông Cổ"
+      },
+      "MOP": {
+        "name": "MOP - Pataca Ma Cao"
+      },
+      "MUR": {
+        "name": "MUR - Rupee Mauritius"
+      },
+      "MWK": {
+        "name": "MWK - Kwacha Malawi"
+      },
+      "MZN": {
+        "name": "MZN - Metical Mozambique"
+      },
+      "NAD": {
+        "name": "NAD - Đô la Namibia"
+      },
+      "NIO": {
+        "name": "NIO - Córdoba Nicaragua"
+      },
+      "OMR": {
+        "name": "OMR - Rial Oman"
+      },
+      "PAB": {
+        "name": "PAB - Balboa Panama"
+      },
+      "PYG": {
+        "name": "PYG - Guarani Paraguay"
+      },
+      "RSD": {
+        "name": "RSD - Dinar Serbia"
+      },
+      "TJS": {
+        "name": "TJS - Somoni Tajikistan"
+      },
+      "TND": {
+        "name": "TND - Dinar Tunisia"
+      },
+      "TZS": {
+        "name": "TZS - Shilling Tanzania"
+      },
+      "UGX": {
+        "name": "UGX - Shilling Uganda"
+      },
+      "UZS": {
+        "name": "UZS - Som Uzbekistan"
+      },
+      "XAF": {
+        "name": "XAF - Franc CFA Trung Phi"
+      },
+      "XOF": {
+        "name": "XOF - Franc CFA Tây Phi"
+      },
+      "ZMW": {
+        "name": "ZMW - Kwacha Zambia"
       }
     }
   },

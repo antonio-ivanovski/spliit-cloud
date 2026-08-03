@@ -1036,6 +1036,111 @@
       },
       "ZAR": {
         "name": "Rand Afrika Selatan"
+      },
+      "NPR": {
+        "name": "Rupee Nepal"
+      },
+      "BHD": {
+        "name": "Dinar Bahrain"
+      },
+      "BND": {
+        "name": "Dolar Brunei"
+      },
+      "BOB": {
+        "name": "Boliviano Bolivia"
+      },
+      "BWP": {
+        "name": "Pula Botswana"
+      },
+      "CRC": {
+        "name": "Colón Kosta Rika"
+      },
+      "DOP": {
+        "name": "Peso Dominika"
+      },
+      "ETB": {
+        "name": "Birr Ethiopia"
+      },
+      "GTQ": {
+        "name": "Quetzal Guatemala"
+      },
+      "IQD": {
+        "name": "Dinar Irak"
+      },
+      "IRR": {
+        "name": "Rial Iran"
+      },
+      "JOD": {
+        "name": "Dinar Yordania"
+      },
+      "KGS": {
+        "name": "Som Kirgizstan"
+      },
+      "LAK": {
+        "name": "Kip Laos"
+      },
+      "LBP": {
+        "name": "Pound Lebanon"
+      },
+      "MMK": {
+        "name": "Kyat Myanmar"
+      },
+      "MNT": {
+        "name": "Tugrik Mongolia"
+      },
+      "MOP": {
+        "name": "Pataca Makau"
+      },
+      "MUR": {
+        "name": "Rupee Mauritius"
+      },
+      "MWK": {
+        "name": "Kwacha Malawi"
+      },
+      "MZN": {
+        "name": "Metical Mozambik"
+      },
+      "NAD": {
+        "name": "Dolar Namibia"
+      },
+      "NIO": {
+        "name": "Córdoba Nikaragua"
+      },
+      "OMR": {
+        "name": "Rial Oman"
+      },
+      "PAB": {
+        "name": "Balboa Panama"
+      },
+      "PYG": {
+        "name": "Guarani Paraguay"
+      },
+      "RSD": {
+        "name": "Dinar Serbia"
+      },
+      "TJS": {
+        "name": "Somoni Tajikistan"
+      },
+      "TND": {
+        "name": "Dinar Tunisia"
+      },
+      "TZS": {
+        "name": "Shilling Tanzania"
+      },
+      "UGX": {
+        "name": "Shilling Uganda"
+      },
+      "UZS": {
+        "name": "Som Uzbekistan"
+      },
+      "XAF": {
+        "name": "Franc CFA Afrika Tengah"
+      },
+      "XOF": {
+        "name": "Franc CFA Afrika Barat"
+      },
+      "ZMW": {
+        "name": "Kwacha Zambia"
       }
     }
   },

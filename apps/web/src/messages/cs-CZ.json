@@ -1470,6 +1470,111 @@
       },
       "ZAR": {
         "name": "Jihoafrický rand"
+      },
+      "NPR": {
+        "name": "Nepálská rupie"
+      },
+      "BHD": {
+        "name": "Bahrajnský dinár"
+      },
+      "BND": {
+        "name": "Brunejský dolar"
+      },
+      "BOB": {
+        "name": "Bolivijský boliviano"
+      },
+      "BWP": {
+        "name": "Botswanská pula"
+      },
+      "CRC": {
+        "name": "Kostarický colón"
+      },
+      "DOP": {
+        "name": "Dominikánské peso"
+      },
+      "ETB": {
+        "name": "Etiopský birr"
+      },
+      "GTQ": {
+        "name": "Guatemalský quetzal"
+      },
+      "IQD": {
+        "name": "Irácký dinár"
+      },
+      "IRR": {
+        "name": "Íránský rijál"
+      },
+      "JOD": {
+        "name": "Jordánský dinár"
+      },
+      "KGS": {
+        "name": "Kyrgyzský som"
+      },
+      "LAK": {
+        "name": "Laoský kip"
+      },
+      "LBP": {
+        "name": "Libanonská libra"
+      },
+      "MMK": {
+        "name": "Myanmarský kyat"
+      },
+      "MNT": {
+        "name": "Mongolský tugrik"
+      },
+      "MOP": {
+        "name": "Macajská pataca"
+      },
+      "MUR": {
+        "name": "Mauricijská rupie"
+      },
+      "MWK": {
+        "name": "Malawijská kwacha"
+      },
+      "MZN": {
+        "name": "Mosambický metical"
+      },
+      "NAD": {
+        "name": "Namibijský dolar"
+      },
+      "NIO": {
+        "name": "Nikaragujská córdoba"
+      },
+      "OMR": {
+        "name": "Ománský rijál"
+      },
+      "PAB": {
+        "name": "Panamská balboa"
+      },
+      "PYG": {
+        "name": "Paraguayský guaraní"
+      },
+      "RSD": {
+        "name": "Srbský dinár"
+      },
+      "TJS": {
+        "name": "Tádžický somoni"
+      },
+      "TND": {
+        "name": "Tuniský dinár"
+      },
+      "TZS": {
+        "name": "Tanzanský šilink"
+      },
+      "UGX": {
+        "name": "Ugandský šilink"
+      },
+      "UZS": {
+        "name": "Uzbecký som"
+      },
+      "XAF": {
+        "name": "Středoafrický frank CFA"
+      },
+      "XOF": {
+        "name": "Západoafrický frank CFA"
+      },
+      "ZMW": {
+        "name": "Zambijská kwacha"
       }
     }
   },

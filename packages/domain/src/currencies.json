@@ -30,8 +30,32 @@
     "decimal_digits": 2
   },
   {
+    "code": "BHD",
+    "symbol": "BD",
+    "rounding": 0,
+    "decimal_digits": 3
+  },
+  {
+    "code": "BND",
+    "symbol": "BN$",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "BOB",
+    "symbol": "Bs",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
     "code": "BRL",
     "symbol": "R$",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "BWP",
+    "symbol": "BWP",
     "rounding": 0,
     "decimal_digits": 2
   },
@@ -55,7 +79,7 @@
   },
   {
     "code": "CNY",
-    "symbol": "CN\u00a5",
+    "symbol": "CN¥",
     "rounding": 0,
     "decimal_digits": 2
   },
@@ -66,8 +90,14 @@
     "decimal_digits": 0
   },
   {
+    "code": "CRC",
+    "symbol": "₡",
+    "rounding": 0,
+    "decimal_digits": 0
+  },
+  {
     "code": "CZK",
-    "symbol": "K\u010d",
+    "symbol": "Kč",
     "rounding": 0,
     "decimal_digits": 2
   },
@@ -78,20 +108,32 @@
     "decimal_digits": 2
   },
   {
+    "code": "DOP",
+    "symbol": "RD$",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
     "code": "EGP",
     "symbol": "EGP",
     "rounding": 0,
     "decimal_digits": 2
   },
   {
+    "code": "ETB",
+    "symbol": "Br",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
     "code": "EUR",
-    "symbol": "\u20ac",
+    "symbol": "€",
     "rounding": 0,
     "decimal_digits": 2
   },
   {
     "code": "GBP",
-    "symbol": "\u00a3",
+    "symbol": "£",
     "rounding": 0,
     "decimal_digits": 2
   },
@@ -103,7 +145,13 @@
   },
   {
     "code": "GHS",
-    "symbol": "GH\u20b5",
+    "symbol": "GH₵",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "GTQ",
+    "symbol": "GTQ",
     "rounding": 0,
     "decimal_digits": 2
   },
@@ -139,7 +187,7 @@
   },
   {
     "code": "ILS",
-    "symbol": "\u20aa",
+    "symbol": "₪",
     "rounding": 0,
     "decimal_digits": 2
   },
@@ -150,20 +198,44 @@
     "decimal_digits": 2
   },
   {
+    "code": "IQD",
+    "symbol": "IQD",
+    "rounding": 0,
+    "decimal_digits": 0
+  },
+  {
+    "code": "IRR",
+    "symbol": "IRR",
+    "rounding": 0,
+    "decimal_digits": 0
+  },
+  {
     "code": "ISK",
     "symbol": "Ikr",
     "rounding": 0,
     "decimal_digits": 0
   },
   {
+    "code": "JOD",
+    "symbol": "JD",
+    "rounding": 0,
+    "decimal_digits": 3
+  },
+  {
     "code": "JPY",
-    "symbol": "\u00a5",
+    "symbol": "¥",
     "rounding": 0,
     "decimal_digits": 0
   },
   {
     "code": "KES",
     "symbol": "Ksh",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "KGS",
+    "symbol": "som",
     "rounding": 0,
     "decimal_digits": 2
   },
@@ -175,7 +247,7 @@
   },
   {
     "code": "KRW",
-    "symbol": "\u20a9",
+    "symbol": "₩",
     "rounding": 0,
     "decimal_digits": 0
   },
@@ -190,6 +262,18 @@
     "symbol": "KZT",
     "rounding": 0,
     "decimal_digits": 2
+  },
+  {
+    "code": "LAK",
+    "symbol": "₭",
+    "rounding": 0,
+    "decimal_digits": 0
+  },
+  {
+    "code": "LBP",
+    "symbol": "LB£",
+    "rounding": 0,
+    "decimal_digits": 0
   },
   {
     "code": "LKR",
@@ -216,6 +300,36 @@
     "decimal_digits": 2
   },
   {
+    "code": "MMK",
+    "symbol": "MMK",
+    "rounding": 0,
+    "decimal_digits": 0
+  },
+  {
+    "code": "MNT",
+    "symbol": "₮",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "MOP",
+    "symbol": "MOP$",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "MUR",
+    "symbol": "MURs",
+    "rounding": 0,
+    "decimal_digits": 0
+  },
+  {
+    "code": "MWK",
+    "symbol": "MK",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
     "code": "MXN",
     "symbol": "MX$",
     "rounding": 0,
@@ -228,8 +342,26 @@
     "decimal_digits": 2
   },
   {
+    "code": "MZN",
+    "symbol": "MTn",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "NAD",
+    "symbol": "N$",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
     "code": "NGN",
-    "symbol": "\u20a6",
+    "symbol": "₦",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "NIO",
+    "symbol": "C$",
     "rounding": 0,
     "decimal_digits": 2
   },
@@ -240,8 +372,26 @@
     "decimal_digits": 2
   },
   {
+    "code": "NPR",
+    "symbol": "Rs",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
     "code": "NZD",
     "symbol": "NZ$",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "OMR",
+    "symbol": "OMR",
+    "rounding": 0,
+    "decimal_digits": 3
+  },
+  {
+    "code": "PAB",
+    "symbol": "B/.",
     "rounding": 0,
     "decimal_digits": 2
   },
@@ -253,7 +403,7 @@
   },
   {
     "code": "PHP",
-    "symbol": "\u20b1",
+    "symbol": "₱",
     "rounding": 0,
     "decimal_digits": 2
   },
@@ -265,9 +415,15 @@
   },
   {
     "code": "PLN",
-    "symbol": "z\u0142",
+    "symbol": "zł",
     "rounding": 0,
     "decimal_digits": 2
+  },
+  {
+    "code": "PYG",
+    "symbol": "₲",
+    "rounding": 0,
+    "decimal_digits": 0
   },
   {
     "code": "QAR",
@@ -280,6 +436,12 @@
     "symbol": "RON",
     "rounding": 0,
     "decimal_digits": 2
+  },
+  {
+    "code": "RSD",
+    "symbol": "din.",
+    "rounding": 0,
+    "decimal_digits": 0
   },
   {
     "code": "RUB",
@@ -307,9 +469,21 @@
   },
   {
     "code": "THB",
-    "symbol": "\u0e3f",
+    "symbol": "฿",
     "rounding": 0,
     "decimal_digits": 2
+  },
+  {
+    "code": "TJS",
+    "symbol": "SM",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "TND",
+    "symbol": "DT",
+    "rounding": 0,
+    "decimal_digits": 3
   },
   {
     "code": "TRY",
@@ -324,10 +498,22 @@
     "decimal_digits": 2
   },
   {
+    "code": "TZS",
+    "symbol": "TSh",
+    "rounding": 0,
+    "decimal_digits": 0
+  },
+  {
     "code": "UAH",
-    "symbol": "\u20b4",
+    "symbol": "₴",
     "rounding": 0,
     "decimal_digits": 2
+  },
+  {
+    "code": "UGX",
+    "symbol": "USh",
+    "rounding": 0,
+    "decimal_digits": 0
   },
   {
     "code": "USD",
@@ -342,14 +528,38 @@
     "decimal_digits": 2
   },
   {
+    "code": "UZS",
+    "symbol": "UZS",
+    "rounding": 0,
+    "decimal_digits": 0
+  },
+  {
     "code": "VND",
-    "symbol": "\u20ab",
+    "symbol": "₫",
+    "rounding": 0,
+    "decimal_digits": 0
+  },
+  {
+    "code": "XAF",
+    "symbol": "FCFA",
+    "rounding": 0,
+    "decimal_digits": 0
+  },
+  {
+    "code": "XOF",
+    "symbol": "CFA",
     "rounding": 0,
     "decimal_digits": 0
   },
   {
     "code": "ZAR",
     "symbol": "R",
+    "rounding": 0,
+    "decimal_digits": 2
+  },
+  {
+    "code": "ZMW",
+    "symbol": "ZK",
     "rounding": 0,
     "decimal_digits": 2
   }

@@ -793,6 +793,111 @@
       },
       "ZAR": {
         "name": "Sydafrikansk rand"
+      },
+      "NPR": {
+        "name": "Nepalesisk rupie"
+      },
+      "BHD": {
+        "name": "Bahrainsk dinar"
+      },
+      "BND": {
+        "name": "Bruneisk dollar"
+      },
+      "BOB": {
+        "name": "Boliviansk boliviano"
+      },
+      "BWP": {
+        "name": "Botswansk pula"
+      },
+      "CRC": {
+        "name": "Costaricansk colón"
+      },
+      "DOP": {
+        "name": "Dominikansk peso"
+      },
+      "ETB": {
+        "name": "Etiopisk birr"
+      },
+      "GTQ": {
+        "name": "Guatemalansk quetzal"
+      },
+      "IQD": {
+        "name": "Irakisk dinar"
+      },
+      "IRR": {
+        "name": "Iransk rial"
+      },
+      "JOD": {
+        "name": "Jordansk dinar"
+      },
+      "KGS": {
+        "name": "Kirgizisk som"
+      },
+      "LAK": {
+        "name": "Laotisk kip"
+      },
+      "LBP": {
+        "name": "Libanesiskt pund"
+      },
+      "MMK": {
+        "name": "Myanmarsk kyat"
+      },
+      "MNT": {
+        "name": "Mongolisk tögrög"
+      },
+      "MOP": {
+        "name": "Makaansk pataca"
+      },
+      "MUR": {
+        "name": "Mauretisk rupie"
+      },
+      "MWK": {
+        "name": "Malawisk kwacha"
+      },
+      "MZN": {
+        "name": "Moçambikisk metical"
+      },
+      "NAD": {
+        "name": "Namibisk dollar"
+      },
+      "NIO": {
+        "name": "Nicaraguansk córdoba"
+      },
+      "OMR": {
+        "name": "Omansk rial"
+      },
+      "PAB": {
+        "name": "Panamansk balboa"
+      },
+      "PYG": {
+        "name": "Paraguayansk guaraní"
+      },
+      "RSD": {
+        "name": "Serbisk dinar"
+      },
+      "TJS": {
+        "name": "Tadzjikisk somoni"
+      },
+      "TND": {
+        "name": "Tunisisk dinar"
+      },
+      "TZS": {
+        "name": "Tanzanisk shilling"
+      },
+      "UGX": {
+        "name": "Ugandisk shilling"
+      },
+      "UZS": {
+        "name": "Uzbekisk som"
+      },
+      "XAF": {
+        "name": "Centralafrikansk CFA-franc"
+      },
+      "XOF": {
+        "name": "Västafrikansk CFA-franc"
+      },
+      "ZMW": {
+        "name": "Zambisk kwacha"
       }
     }
   },

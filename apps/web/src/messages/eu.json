@@ -1360,6 +1360,111 @@
       },
       "ZAR": {
         "name": "Hegoafrikako rand"
+      },
+      "NPR": {
+        "name": "Nepalgo errupia"
+      },
+      "BHD": {
+        "name": "Bahraingo dinarra"
+      },
+      "BND": {
+        "name": "Brunei dolarra"
+      },
+      "BOB": {
+        "name": "Boliviako bolivianoa"
+      },
+      "BWP": {
+        "name": "Botswanako pula"
+      },
+      "CRC": {
+        "name": "Costa Ricako colón"
+      },
+      "DOP": {
+        "name": "Dominikar pisoa"
+      },
+      "ETB": {
+        "name": "Etiopiako birra"
+      },
+      "GTQ": {
+        "name": "Guatemalako quetzala"
+      },
+      "IQD": {
+        "name": "Irakeko dinarra"
+      },
+      "IRR": {
+        "name": "Irango riala"
+      },
+      "JOD": {
+        "name": "Jordaniako dinarra"
+      },
+      "KGS": {
+        "name": "Kirgizistango soma"
+      },
+      "LAK": {
+        "name": "Laoseko kipa"
+      },
+      "LBP": {
+        "name": "Libanoko libera"
+      },
+      "MMK": {
+        "name": "Myanmarko kyata"
+      },
+      "MNT": {
+        "name": "Mongoliako tögrög"
+      },
+      "MOP": {
+        "name": "Macaoko pataca"
+      },
+      "MUR": {
+        "name": "Maurizioko errupia"
+      },
+      "MWK": {
+        "name": "Malawiko kwacha"
+      },
+      "MZN": {
+        "name": "Mozambikeko metikala"
+      },
+      "NAD": {
+        "name": "Namibiako dolarra"
+      },
+      "NIO": {
+        "name": "Nikaraguako córdoba"
+      },
+      "OMR": {
+        "name": "Omango riala"
+      },
+      "PAB": {
+        "name": "Panamako balboa"
+      },
+      "PYG": {
+        "name": "Paraguaiko guaraní"
+      },
+      "RSD": {
+        "name": "Serbiako dinarra"
+      },
+      "TJS": {
+        "name": "Tajikistango somonia"
+      },
+      "TND": {
+        "name": "Tunisiako dinarra"
+      },
+      "TZS": {
+        "name": "Tanzaniako shillinga"
+      },
+      "UGX": {
+        "name": "Ugandako shillinga"
+      },
+      "UZS": {
+        "name": "Uzbekistaneko soma"
+      },
+      "XAF": {
+        "name": "Erdialdeko Afrikako CFA frankoa"
+      },
+      "XOF": {
+        "name": "Mendebaldeko Afrikako CFA frankoa"
+      },
+      "ZMW": {
+        "name": "Zambiako kwacha"
       }
     }
   },
