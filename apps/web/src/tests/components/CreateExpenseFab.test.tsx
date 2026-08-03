@@ -295,4 +295,33 @@ describe('CreateExpenseFab', () => {
 
     state.currentGroup = null
   })
+
+  it('keeps closed SpeedDial actions inert until the menu is opened', async () => {
+    state.currentGroup = {
+      groupId: 'group-1',
+      group: { id: 'group-1', archived: false },
+      currentInvitation: null,
+    }
+
+    const { container, user } = render(
+      <CreateExpenseFab enableReceiptExtract enableVoiceExpense={false} />,
+    )
+    const manualAction = container.querySelector<HTMLButtonElement>(
+      '[data-speed-dial-action][aria-label="Add expense"]',
+    )
+
+    expect(manualAction).toBeDisabled()
+    expect(manualAction).toHaveClass('pointer-events-none')
+    manualAction?.click()
+    expect(state.navigate).not.toHaveBeenCalled()
+
+    await user.click(
+      screen.getByRole('button', { name: 'Open expense actions' }),
+    )
+
+    expect(manualAction).toBeEnabled()
+    expect(manualAction).toHaveClass('pointer-events-auto')
+
+    state.currentGroup = null
+  })
 })

@@ -77,7 +77,7 @@ function SpeedDial({
     >
       <div
         data-state={open ? 'open' : 'closed'}
-        className={cn('flex flex-col items-end', className)}
+        className={cn('pointer-events-none flex flex-col items-end', className)}
         {...props}
       >
         {children}
@@ -105,7 +105,7 @@ const SpeedDialTrigger = React.forwardRef<
         onClick?.(event)
         if (!event.defaultPrevented) setOpen(!open)
       }}
-      className={className}
+      className={cn('pointer-events-auto', className)}
       {...props}
     />
   )
@@ -127,10 +127,10 @@ const SpeedDialContent = React.forwardRef<
       role="menu"
       aria-hidden={!open}
       className={cn(
-        'flex flex-col-reverse items-end gap-2 pb-3 transition-[opacity,transform] duration-200',
+        'pointer-events-none flex flex-col-reverse items-end gap-2 pb-3 transition-[opacity,transform] duration-200',
         open
           ? 'translate-y-0 opacity-100'
-          : 'pointer-events-none translate-y-2 opacity-0',
+          : 'translate-y-2 opacity-0',
         className,
       )}
       {...props}
@@ -145,7 +145,7 @@ const SpeedDialItem = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn('flex items-center gap-2', className)}
+    className={cn('pointer-events-none flex items-center gap-2', className)}
     {...props}
   />
 ))
@@ -158,7 +158,7 @@ const SpeedDialLabel = React.forwardRef<
   <span
     ref={ref}
     className={cn(
-      'rounded-md border bg-background/95 px-2.5 py-1.5 text-xs font-medium whitespace-nowrap shadow-md backdrop-blur',
+      'pointer-events-none rounded-md border bg-background/95 px-2.5 py-1.5 text-xs font-medium whitespace-nowrap shadow-md backdrop-blur',
       className,
     )}
     {...props}
@@ -169,8 +169,9 @@ SpeedDialLabel.displayName = 'SpeedDialLabel'
 const SpeedDialAction = React.forwardRef<
   HTMLButtonElement,
   React.ButtonHTMLAttributes<HTMLButtonElement>
->(({ className, onClick, ...props }, ref) => {
+>(({ className, disabled, onClick, ...props }, ref) => {
   const { open, setOpen, triggerRef } = useSpeedDialContext()
+  const interactive = open && !disabled
   return (
     <button
       ref={ref}
@@ -178,7 +179,11 @@ const SpeedDialAction = React.forwardRef<
       role="menuitem"
       data-speed-dial-action
       tabIndex={open ? 0 : -1}
-      className={className}
+      disabled={!interactive}
+      className={cn(
+        interactive ? 'pointer-events-auto' : 'pointer-events-none',
+        className,
+      )}
       onClick={(event) => {
         onClick?.(event)
         if (!event.defaultPrevented) {

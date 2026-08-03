@@ -38,13 +38,16 @@ const SearchBar = React.forwardRef<HTMLInputElement, InputProps>(
           onChange={(e) => setValue(e.target.value)}
           {...props}
         />
-        <XCircle
-          className={cn(
-            'absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 cursor-pointer',
-            !value && 'hidden',
-          )}
-          onClick={() => setValue('')}
-        />
+        {!value ? null : (
+          <button
+            type="button"
+            className="absolute inset-y-0 right-0 flex w-10 touch-manipulation items-center justify-center rounded-r-md"
+            aria-label={t('clearSearch')}
+            onClick={() => setValue('')}
+          >
+            <XCircle className="size-4" aria-hidden="true" />
+          </button>
+        )}
       </div>
     )
   },
