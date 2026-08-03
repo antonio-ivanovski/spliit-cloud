@@ -50,12 +50,16 @@ export default defineConfig({
         'favicon/apple-touch-icon.png',
       ],
       manifest: {
+        id: '/',
         name: 'Spliit Cloud',
         short_name: 'Spliit',
         description: 'Share expenses with friends & family',
         start_url: '/',
         scope: '/',
         display: 'standalone',
+        launch_handler: {
+          client_mode: 'navigate-existing',
+        },
         background_color: '#ffffff',
         theme_color: '#047857',
         lang: 'en',
