@@ -1,5 +1,4 @@
-import type * as LabelPrimitive from '@radix-ui/react-label'
-import { Slot } from '@radix-ui/react-slot'
+import { mergeProps } from '@base-ui/react/merge-props'
 import * as React from 'react'
 import type {
   ControllerProps,
@@ -93,8 +92,8 @@ const FormItem = React.forwardRef<
 FormItem.displayName = 'FormItem'
 
 const FormLabel = React.forwardRef<
-  React.ElementRef<typeof LabelPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
+  HTMLLabelElement,
+  React.ComponentPropsWithoutRef<'label'>
 >(({ className, ...props }, ref) => {
   const { error, formItemId } = useFormField()
 
@@ -109,26 +108,37 @@ const FormLabel = React.forwardRef<
 })
 FormLabel.displayName = 'FormLabel'
 
-const FormControl = React.forwardRef<
-  React.ElementRef<typeof Slot>,
-  React.ComponentPropsWithoutRef<typeof Slot>
->(({ ...props }, ref) => {
+type FormControlProps = React.HTMLAttributes<HTMLElement> & {
+  children: React.ReactElement
+}
+
+/**
+ * Applies the field's id and aria wiring to its single child, the way the
+ * former Radix `Slot` did: the child's own props win, event handlers are
+ * chained and `className`/`style` are merged.
+ */
+const FormControl = ({ children, ...props }: FormControlProps) => {
   const { error, formItemId, formDescriptionId, formMessageId } = useFormField()
 
-  return (
-    <Slot
-      ref={ref}
-      id={formItemId}
-      aria-describedby={
-        !error
+  const child = React.Children.only(children) as React.ReactElement<
+    Record<string, unknown>
+  >
+
+  return React.cloneElement(
+    child,
+    mergeProps<'div'>(
+      {
+        id: formItemId,
+        'aria-describedby': !error
           ? `${formDescriptionId}`
-          : `${formDescriptionId} ${formMessageId}`
-      }
-      aria-invalid={!!error}
-      {...props}
-    />
+          : `${formDescriptionId} ${formMessageId}`,
+        'aria-invalid': !!error,
+      } as React.ComponentProps<'div'>,
+      props as React.ComponentProps<'div'>,
+      child.props as React.ComponentProps<'div'>,
+    ) as Record<string, unknown>,
   )
-})
+}
 FormControl.displayName = 'FormControl'
 
 const FormDescription = React.forwardRef<

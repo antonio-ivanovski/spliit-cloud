@@ -343,14 +343,14 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
           size="icon"
           variant="link"
           className="hidden h-5 w-5 self-center sm:flex"
-          asChild
+          render={
+            <a
+              href={`/groups/${groupId}/expenses/${activity.expense!.id}`}
+              aria-label={t('openExpense')}
+            />
+          }
         >
-          <a
-            href={`/groups/${groupId}/expenses/${activity.expense!.id}`}
-            aria-label={t('openExpense')}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </a>
+          <ChevronRight className="h-4 w-4" />
         </Button>
       )}
     </div>

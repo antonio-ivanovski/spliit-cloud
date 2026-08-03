@@ -261,11 +261,14 @@ function PageShell(props: {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-3">
-        <Button asChild variant="ghost" size="sm" className="-ml-2 w-fit">
-          <Link href={`/groups/${props.groupId}/edit`}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            {t('backToSettings')}
-          </Link>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="-ml-2 w-fit"
+          render={<Link href={`/groups/${props.groupId}/edit`} />}
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          {t('backToSettings')}
         </Button>
         <WizardStepHeader
           eyebrow={props.groupName}

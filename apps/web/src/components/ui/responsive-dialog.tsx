@@ -44,6 +44,11 @@ const ResponsiveDialogContext = React.createContext<boolean>(true)
 
 type ResponsiveDialogProps = React.ComponentProps<typeof Dialog>
 
+/**
+ * Base UI types Dialog and Drawer separately (each has its own set of
+ * `onOpenChange` reasons and popup state), so the shared prop bag has to be
+ * re-cast at the drawer boundary even though the runtime shape is identical.
+ */
 function ResponsiveDialog(props: ResponsiveDialogProps) {
   const isDesktop = useMediaQuery(DESKTOP_BREAKPOINT)
   return (
@@ -51,7 +56,7 @@ function ResponsiveDialog(props: ResponsiveDialogProps) {
       {isDesktop ? (
         <Dialog {...props} />
       ) : (
-        <Drawer {...props} />
+        <Drawer {...(props as React.ComponentProps<typeof Drawer>)} />
       )}
     </ResponsiveDialogContext.Provider>
   )
@@ -59,10 +64,7 @@ function ResponsiveDialog(props: ResponsiveDialogProps) {
 
 // ── Trigger ─────────────────────────────────────────────────────────────
 
-type ResponsiveDialogTriggerProps = Omit<
-  React.ComponentProps<typeof DialogTrigger>,
-  'asChild'
-> & {
+type ResponsiveDialogTriggerProps = React.ComponentProps<typeof DialogTrigger> & {
   render?: React.ReactElement
 }
 
@@ -74,8 +76,8 @@ const ResponsiveDialogTrigger = ({
   const isDesktop = React.useContext(ResponsiveDialogContext)
   if (isDesktop) {
     return (
-      <DialogTrigger asChild={render !== undefined} {...props}>
-        {render ?? children}
+      <DialogTrigger render={render} {...props}>
+        {children}
       </DialogTrigger>
     )
   }
@@ -89,10 +91,7 @@ ResponsiveDialogTrigger.displayName = 'ResponsiveDialogTrigger'
 
 // ── Close ───────────────────────────────────────────────────────────────
 
-type ResponsiveDialogCloseProps = Omit<
-  React.ComponentProps<typeof DialogClose>,
-  'asChild'
-> & {
+type ResponsiveDialogCloseProps = React.ComponentProps<typeof DialogClose> & {
   render?: React.ReactElement
 }
 
@@ -104,8 +103,8 @@ const ResponsiveDialogClose = ({
   const isDesktop = React.useContext(ResponsiveDialogContext)
   if (isDesktop) {
     return (
-      <DialogClose asChild={render !== undefined} {...props}>
-        {render ?? children}
+      <DialogClose render={render} {...props}>
+        {children}
       </DialogClose>
     )
   }
@@ -119,32 +118,30 @@ ResponsiveDialogClose.displayName = 'ResponsiveDialogClose'
 
 // ── Content ─────────────────────────────────────────────────────────────
 
-const ResponsiveDialogContent = (
-  {
-    showCloseButton,
-    onOpenAutoFocus,
-    onCloseAutoFocus,
-    onEscapeKeyDown,
-    onPointerDownOutside,
-    onInteractOutside,
-    ...props
-  }: React.ComponentProps<typeof DialogContent>,
-) => {
+const ResponsiveDialogContent = ({
+  showCloseButton,
+  initialFocus,
+  finalFocus,
+  ...props
+}: React.ComponentProps<typeof DialogContent>) => {
   const isDesktop = React.useContext(ResponsiveDialogContext)
   if (isDesktop) {
     return (
       <DialogContent
         showCloseButton={showCloseButton}
-        onOpenAutoFocus={onOpenAutoFocus}
-        onCloseAutoFocus={onCloseAutoFocus}
-        onEscapeKeyDown={onEscapeKeyDown}
-        onPointerDownOutside={onPointerDownOutside}
-        onInteractOutside={onInteractOutside}
+        initialFocus={initialFocus}
+        finalFocus={finalFocus}
         {...props}
       />
     )
   }
-  return <DrawerContent {...props} />
+  return (
+    <DrawerContent
+      initialFocus={initialFocus}
+      finalFocus={finalFocus}
+      {...(props as React.ComponentProps<typeof DrawerContent>)}
+    />
+  )
 }
 ResponsiveDialogContent.displayName = 'ResponsiveDialogContent'
 

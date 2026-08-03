@@ -37,13 +37,11 @@ function ExportOption({
 }: ExportOptionProps) {
   const action = href ? (
     <Button
-      asChild
       variant={accent ? 'default' : 'secondary'}
       className="h-10 w-full shrink-0 px-3 sm:w-auto"
+      render={<Link href={href} target="_blank" rel="noopener noreferrer" />}
     >
-      <Link href={href} target="_blank" rel="noopener noreferrer">
-        {actionLabel}
-      </Link>
+      {actionLabel}
     </Button>
   ) : (
     <Button

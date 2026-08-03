@@ -182,7 +182,7 @@ function ChannelSelector({
   if (isDesktop) {
     return (
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>{trigger}</PopoverTrigger>
+        <PopoverTrigger render={trigger} />
         <PopoverContent className="w-48 p-0" align="end">
           {content}
         </PopoverContent>

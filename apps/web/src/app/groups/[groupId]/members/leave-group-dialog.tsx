@@ -127,9 +127,9 @@ export function LeaveGroupDialog({
                         </Label>
                         <Select
                           value={promoteMemberId ?? ''}
-                          onValueChange={(value) =>
-                            onPromoteMemberChange(value)
-                          }
+                          onValueChange={(value) => {
+                            if (value != null) onPromoteMemberChange(value)
+                          }}
                           disabled={leaveMutation.isPending}
                         >
                           <SelectTrigger id="promote-member">

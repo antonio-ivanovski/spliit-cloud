@@ -158,10 +158,13 @@ export const GroupHeader = ({
         <h1
           className={`flex min-w-0 items-center gap-2 text-2xl font-bold ${focusedMobileRoute ? 'hidden sm:flex' : ''}`}
         >
-          <Button variant="ghost" size="icon" asChild className="-ml-2">
-            <Link href="/" title={tGroups('backToHome')}>
-              <ArrowLeft className="h-5 w-5" />
-            </Link>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="-ml-2"
+            render={<Link href="/" title={tGroups('backToHome')} />}
+          >
+            <ArrowLeft className="h-5 w-5" />
           </Button>
           <Link href={`/groups/${groupId}`} className="truncate">
             {isLoading ? (

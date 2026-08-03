@@ -183,14 +183,16 @@ describe('ReceiptScanTrigger translate checkbox', () => {
     await openDialog()
 
     const checkbox = await screen.findByRole('checkbox', { name: /translate/i })
-    expect(checkbox).toBeDisabled()
+    expect(checkbox).toHaveAttribute('aria-disabled', 'true')
 
     await act(async () => {
       resolveScan!(scanResult)
     })
 
     await waitFor(() => {
-      expect(screen.getByRole('checkbox', { name: /translate/i })).toBeEnabled()
+      expect(
+        screen.getByRole('checkbox', { name: /translate/i }),
+      ).not.toHaveAttribute('aria-disabled', 'true')
     })
   })
 

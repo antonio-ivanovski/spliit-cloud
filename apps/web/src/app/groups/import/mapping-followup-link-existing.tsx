@@ -38,9 +38,9 @@ export function LinkExistingFollowUp({
       <Label>{t('Groups.Import.Mapping.Row.selectExistingMember')}</Label>
       <Select
         value={existingLedgerParticipantId ?? ''}
-        onValueChange={(value) =>
-          onChange({ existingLedgerParticipantId: value })
-        }
+        onValueChange={(value) => {
+          if (value != null) onChange({ existingLedgerParticipantId: value })
+        }}
       >
         <SelectTrigger>
           <SelectValue

@@ -111,15 +111,15 @@ export function TimeZoneMismatchDialog({
   return (
     <ResponsiveDialog
       open={open}
-      onOpenChange={() => {
+      disablePointerDismissal
+      onOpenChange={(_open, details) => {
         // A timezone choice is required; Esc/backdrop cannot dismiss it.
+        details.cancel()
       }}
     >
       <ResponsiveDialogContent
         className="max-w-md"
         showCloseButton={false}
-        onEscapeKeyDown={(event) => event.preventDefault()}
-        onPointerDownOutside={(event) => event.preventDefault()}
         data-testid="time-zone-mismatch-dialog"
       >
         <ResponsiveDialogHeader>

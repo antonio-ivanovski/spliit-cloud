@@ -43,21 +43,21 @@ export function PasswordForm(props: {
       </div>
       {props.mode === 'sign-in' && (
         <Button
-          asChild
           variant="link"
           size="sm"
           className="h-auto self-start px-0 py-0"
+          render={
+            <Link
+              href="/auth/forgot-password"
+              search={
+                props.email.trim()
+                  ? { email: props.email.trim() }
+                  : { email: undefined }
+              }
+            />
+          }
         >
-          <Link
-            href="/auth/forgot-password"
-            search={
-              props.email.trim()
-                ? { email: props.email.trim() }
-                : { email: undefined }
-            }
-          >
-            {t('forgotPasswordLink')}
-          </Link>
+          {t('forgotPasswordLink')}
         </Button>
       )}
       {props.mode === 'sign-up' && (

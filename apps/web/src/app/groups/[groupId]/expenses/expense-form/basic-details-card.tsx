@@ -264,15 +264,15 @@ export function BasicDetailsCard(props: {
         <Button
           variant="ghost"
           size="icon"
-          asChild
           className="-ml-2 hidden shrink-0 sm:inline-flex"
+          render={
+            <Link
+              href={props.cancelHref ?? `/groups/${group.id}/expenses`}
+              title={tGroups('backToExpenses')}
+            />
+          }
         >
-          <Link
-            href={props.cancelHref ?? `/groups/${group.id}/expenses`}
-            title={tGroups('backToExpenses')}
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Link>
+          <ArrowLeft className="h-4 w-4" />
         </Button>
         <CardTitle className="hidden min-w-0 flex-1 truncate sm:block">
           {heading ?? t(`${sExpense}.${isCreate ? 'create' : 'edit'}`)}
@@ -587,17 +587,19 @@ export function BasicDetailsCard(props: {
                     open={props.usingCustomConversionRate}
                     onOpenChange={props.setUsingCustomConversionRate}
                   >
-                    <CollapsibleTrigger asChild>
-                      <Button
-                        type="button"
-                        variant="link"
-                        className="-mx-4 h-auto py-0"
-                        disabled={readOnly}
-                      >
-                        {props.usingCustomConversionRate
-                          ? t('conversionRateField.useApi')
-                          : t('conversionRateField.useCustom')}
-                      </Button>
+                    <CollapsibleTrigger
+                      render={
+                        <Button
+                          type="button"
+                          variant="link"
+                          className="-mx-4 h-auto py-0"
+                          disabled={readOnly}
+                        />
+                      }
+                    >
+                      {props.usingCustomConversionRate
+                        ? t('conversionRateField.useApi')
+                        : t('conversionRateField.useCustom')}
                     </CollapsibleTrigger>
                     <CollapsibleContent>
                       <FormField

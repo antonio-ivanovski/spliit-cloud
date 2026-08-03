@@ -165,18 +165,20 @@ export function GroupCard({
                 )}
               </Button>
               <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="-my-3 -mr-2 -ml-1.5"
-                    onClick={(event) => event.stopPropagation()}
-                    aria-label={
-                      isFriend ? t('friendActions') : t('groupActions')
-                    }
-                  >
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
+                <DropdownMenuTrigger
+                  render={
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="-my-3 -mr-2 -ml-1.5"
+                      onClick={(event) => event.stopPropagation()}
+                      aria-label={
+                        isFriend ? t('friendActions') : t('groupActions')
+                      }
+                    />
+                  }
+                >
+                  <MoreHorizontal className="h-4 w-4" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem

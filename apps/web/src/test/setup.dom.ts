@@ -1,8 +1,11 @@
 import '@testing-library/jest-dom'
+import { act } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+
 import './setup.shared'
 
 // ── Polyfill window.matchMedia ──────────────────────────────────────────
-// Radix UI primitives and useMediaQuery hook depend on it.
+// Base UI primitives and useMediaQuery depend on it.
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: (query: string): MediaQueryList => ({
@@ -39,7 +42,7 @@ Object.defineProperty(window, 'IntersectionObserver', {
 })
 
 // ── Polyfill ResizeObserver ─────────────────────────────────────────────
-// Required by Radix UI dialogs / popovers / drawers and embla carousel.
+// Required by Base UI dialogs / popovers / drawers and embla carousel.
 Object.defineProperty(window, 'ResizeObserver', {
   writable: true,
   value: class MockResizeObserver implements ResizeObserver {
@@ -51,7 +54,7 @@ Object.defineProperty(window, 'ResizeObserver', {
 })
 
 // ── Polyfill PointerEvent (canvas) ──────────────────────────────────────
-// Required by radix-ui focus management.
+// Required by Base UI / pointer interaction in jsdom.
 if (!globalThis.PointerEvent) {
   class PointerEvent extends Event {
     readonly pointerType = 'mouse'
@@ -82,7 +85,7 @@ if (typeof Element !== 'undefined') {
   }
 }
 
-// ── Polyfill HTMLDialogElement (used by some Radix dialog internals) ───
+// ── Polyfill HTMLDialogElement ──────────────────────────────────────────
 if (typeof HTMLDialogElement !== 'undefined' && HTMLDialogElement.prototype) {
   if (!HTMLDialogElement.prototype.showModal) {
     HTMLDialogElement.prototype.showModal = function () {
@@ -96,18 +99,62 @@ if (typeof HTMLDialogElement !== 'undefined' && HTMLDialogElement.prototype) {
   }
 }
 
-// ── Polyfill Element.scrollIntoView (Radix UI Select depends on it) ────
+// ── Polyfill Element.scrollIntoView (Select / focus management) ─────────
 if (typeof Element !== 'undefined' && !Element.prototype.scrollIntoView) {
   Element.prototype.scrollIntoView = function () {}
 }
 
-// ── Suppress Radix UI "missing data-state" act() warnings ──────────────
-let rafHandle = 0
-vi.stubGlobal('requestAnimationFrame', (_cb: FrameRequestCallback) => {
-  rafHandle++
-  return rafHandle
+// ── requestAnimationFrame ─────────────────────────────────────────────
+// Base UI opens menus/selects inside rAF (floating-ui useClick). Map rAF to
+// setTimeout(0) so the open runs after the full pointer sequence — a sync
+// stub remounts the trigger mid-click and poisons later tests.
+vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => {
+  return setTimeout(() => cb(performance.now()), 0) as unknown as number
 })
-vi.stubGlobal('cancelAnimationFrame', () => {})
+vi.stubGlobal('cancelAnimationFrame', (id: number) => {
+  clearTimeout(id)
+})
+
+// Flush Base UI's deferred open after user-event pointer/keyboard actions.
+const flushBaseUiFrames = async () => {
+  await act(async () => {
+    await new Promise<void>((resolve) => setTimeout(resolve, 0))
+  })
+}
+
+const originalUserSetup = userEvent.setup.bind(userEvent)
+Object.defineProperty(userEvent, 'setup', {
+  configurable: true,
+  value: (options?: Parameters<typeof userEvent.setup>[0]) => {
+    const user = originalUserSetup(options)
+    const wrap =
+      <A extends unknown[], R>(fn: (...args: A) => Promise<R>) =>
+      async (...args: A): Promise<R> => {
+        const result = await fn(...args)
+        await flushBaseUiFrames()
+        return result
+      }
+    return {
+      ...user,
+      click: wrap(user.click.bind(user)),
+      dblClick: wrap(user.dblClick.bind(user)),
+      tripleClick: wrap(user.tripleClick.bind(user)),
+      pointer: wrap(user.pointer.bind(user)),
+      keyboard: wrap(user.keyboard.bind(user)),
+      type: wrap(user.type.bind(user)),
+      clear: wrap(user.clear.bind(user)),
+      selectOptions: wrap(user.selectOptions.bind(user)),
+      deselectOptions: wrap(user.deselectOptions.bind(user)),
+      upload: wrap(user.upload.bind(user)),
+      tab: wrap(user.tab.bind(user)),
+      hover: wrap(user.hover.bind(user)),
+      unhover: wrap(user.unhover.bind(user)),
+      copy: wrap(user.copy.bind(user)),
+      cut: wrap(user.cut.bind(user)),
+      paste: wrap(user.paste.bind(user)),
+    }
+  },
+})
 
 // Make navigator writable so userEvent can attach its clipboard stub.
 const navProto = Object.getPrototypeOf(navigator)

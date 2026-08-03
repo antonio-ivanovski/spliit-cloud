@@ -28,10 +28,12 @@ export default function GroupInformation({ groupId }: { groupId: string }) {
             {/* PENDING invitees cannot edit group settings; the /edit route
                 renders a read-only explanation for them. */}
             {!isPendingInvitee && (
-              <Button size="icon" asChild className="-mb-12">
-                <Link href={`/groups/${groupId}/edit`}>
-                  <Pencil className="h-4 w-4" />
-                </Link>
+              <Button
+                size="icon"
+                className="-mb-12"
+                render={<Link href={`/groups/${groupId}/edit`} />}
+              >
+                <Pencil className="h-4 w-4" />
               </Button>
             )}
           </CardTitle>

@@ -58,8 +58,11 @@ export const EditGroup = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Button asChild variant="secondary">
-            <Link href={`/groups/${groupId}`}>{t('readOnlyBack')}</Link>
+          <Button
+            variant="secondary"
+            render={<Link href={`/groups/${groupId}`} />}
+          >
+            {t('readOnlyBack')}
           </Button>
         </CardContent>
       </Card>
@@ -75,8 +78,11 @@ export const EditGroup = () => {
             <CardDescription>{t('readOnlyNote')}</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button asChild variant="secondary">
-              <Link href={`/groups/${groupId}`}>{t('readOnlyBack')}</Link>
+            <Button
+              variant="secondary"
+              render={<Link href={`/groups/${groupId}`} />}
+            >
+              {t('readOnlyBack')}
             </Button>
           </CardContent>
         </Card>
@@ -130,11 +136,12 @@ export const EditGroup = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button asChild variant="secondary">
-              <Link href={`/groups/bulk-categorize/${groupId}`}>
-                <Sparkles className="mr-2 h-4 w-4" />
-                {t('bulkCategorizeButton')}
-              </Link>
+            <Button
+              variant="secondary"
+              render={<Link href={`/groups/bulk-categorize/${groupId}`} />}
+            >
+              <Sparkles className="mr-2 h-4 w-4" />
+              {t('bulkCategorizeButton')}
             </Button>
           </CardContent>
         </Card>

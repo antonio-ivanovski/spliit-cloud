@@ -159,11 +159,15 @@ function Content() {
                 </nav>
               </div>
             </div>
-            <Button asChild variant="secondary" size="sm">
-              <Link href="https://github.com/antonio-ivanovski/spliit-cloud">
-                <img src={githubSvg} alt="" className="mr-2 h-4 w-4" />
-                GitHub
-              </Link>
+            <Button
+              variant="secondary"
+              size="sm"
+              render={
+                <Link href="https://github.com/antonio-ivanovski/spliit-cloud" />
+              }
+            >
+              <img src={githubSvg} alt="" className="mr-2 h-4 w-4" />
+              GitHub
             </Button>
           </footer>
         </div>

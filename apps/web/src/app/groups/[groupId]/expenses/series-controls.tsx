@@ -87,11 +87,13 @@ export function SeriesControls({
         {t('occurrence', { sequence: series.sequence })}
       </span>
       {series.previousExpenseId ? (
-        <Button variant="outline" size="sm" asChild>
-          <Link href={expenseHref(series.previousExpenseId)}>
-            <ChevronLeft className="mr-1 h-4 w-4" aria-hidden="true" />
-            {t('previous')}
-          </Link>
+        <Button
+          variant="outline"
+          size="sm"
+          render={<Link href={expenseHref(series.previousExpenseId)} />}
+        >
+          <ChevronLeft className="mr-1 h-4 w-4" aria-hidden="true" />
+          {t('previous')}
         </Button>
       ) : (
         <Button variant="outline" size="sm" disabled aria-label={t('previous')}>
@@ -100,11 +102,13 @@ export function SeriesControls({
         </Button>
       )}
       {series.nextExpenseId ? (
-        <Button variant="outline" size="sm" asChild>
-          <Link href={expenseHref(series.nextExpenseId)}>
-            {t('next')}
-            <ChevronRight className="ml-1 h-4 w-4" aria-hidden="true" />
-          </Link>
+        <Button
+          variant="outline"
+          size="sm"
+          render={<Link href={expenseHref(series.nextExpenseId)} />}
+        >
+          {t('next')}
+          <ChevronRight className="ml-1 h-4 w-4" aria-hidden="true" />
         </Button>
       ) : (
         <Button variant="outline" size="sm" disabled aria-label={t('next')}>
@@ -117,16 +121,20 @@ export function SeriesControls({
           {t('viewSeries')}
         </Button>
       ) : (
-        <Button variant="ghost" size="sm" asChild>
-          <Link
-            href={`/groups/${groupId}/expenses?seriesId=${series.id}${
-              linkInviteToken
-                ? `&invite=${encodeURIComponent(linkInviteToken)}`
-                : ''
-            }`}
-          >
-            {t('viewSeries')}
-          </Link>
+        <Button
+          variant="ghost"
+          size="sm"
+          render={
+            <Link
+              href={`/groups/${groupId}/expenses?seriesId=${series.id}${
+                linkInviteToken
+                  ? `&invite=${encodeURIComponent(linkInviteToken)}`
+                  : ''
+              }`}
+            />
+          }
+        >
+          {t('viewSeries')}
         </Button>
       )}
     </div>

@@ -338,7 +338,8 @@ function GlobalExpenseFilters({
         <FilterChoice label={t('Expenses.globalCurrency')}>
           <Select
             value={filters.currencies[0] ?? 'all'}
-            onValueChange={(value) =>
+            onValueChange={(value) => {
+              if (value == null) return
               onChange({
                 ...filters,
                 currencies: value === 'all' ? [] : [value],
@@ -349,7 +350,7 @@ function GlobalExpenseFilters({
                     ? 'expenseDate'
                     : filters.sortBy,
               })
-            }
+            }}
           >
             <SelectTrigger className="h-9">
               <SelectValue />
@@ -414,6 +415,7 @@ function GlobalExpenseFilters({
           <Select
             value={`${filters.sortBy}-${filters.sortDir}`}
             onValueChange={(value) => {
+              if (value == null) return
               const [sortBy, sortDir] = value.split('-') as [
                 Filters['sortBy'],
                 Filters['sortDir'],

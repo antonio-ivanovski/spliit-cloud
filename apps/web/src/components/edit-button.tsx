@@ -3,7 +3,7 @@ import { Pencil } from 'lucide-react'
 import { Button, type ButtonProps } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
-type Props = Omit<ButtonProps, 'children' | 'asChild'> & {
+type Props = Omit<ButtonProps, 'children' | 'render'> & {
   onClick: () => void
   /** Label shown alongside the pencil icon. */
   label: string

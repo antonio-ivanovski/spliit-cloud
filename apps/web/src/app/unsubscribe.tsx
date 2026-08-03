@@ -87,10 +87,10 @@ export default function UnsubscribePage() {
           </CardHeader>
           <CardFooter className="border-t bg-muted/20 p-6 sm:px-8">
             <Button
-              asChild
               className="h-auto min-h-10 min-w-0 py-2.5 text-center leading-5 whitespace-normal"
+              render={<Link href={homeHref} />}
             >
-              <Link href={homeHref}>{t('manageSettings')}</Link>
+              {t('manageSettings')}
             </Button>
           </CardFooter>
         </Card>
@@ -122,17 +122,17 @@ export default function UnsubscribePage() {
           </CardHeader>
           <CardFooter className="grid w-full grid-cols-1 gap-2 border-t bg-muted/20 p-6 sm:grid-cols-2 sm:px-8">
             <Button
-              asChild
               variant="outline"
               className="h-auto min-h-10 min-w-0 py-2.5 text-center leading-5 whitespace-normal"
+              render={<Link href="/" />}
             >
-              <Link href="/">{t('backHome')}</Link>
+              {t('backHome')}
             </Button>
             <Button
-              asChild
               className="h-auto min-h-10 min-w-0 py-2.5 text-center leading-5 whitespace-normal"
+              render={<Link href={homeHref} />}
             >
-              <Link href={homeHref}>{t('manageSettings')}</Link>
+              {t('manageSettings')}
             </Button>
           </CardFooter>
         </Card>
@@ -185,11 +185,11 @@ export default function UnsubscribePage() {
         <CardFooter className="flex-col items-stretch gap-4 border-t bg-muted/20 p-6 sm:px-8">
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <Button
-              asChild
               size="lg"
               className="h-auto min-h-11 min-w-0 py-2.5 text-center leading-5 whitespace-normal"
+              render={<Link href="/" />}
             >
-              <Link href="/">{t('cancel')}</Link>
+              {t('cancel')}
             </Button>
             <Button
               type="button"
@@ -209,14 +209,12 @@ export default function UnsubscribePage() {
             </Button>
           </div>
           <Button
-            asChild
             variant="link"
             className="h-auto min-w-0 self-center p-0 text-center leading-5 whitespace-normal"
+            render={<Link href={homeHref} />}
           >
-            <Link href={homeHref}>
-              {t('manageSettings')}
-              <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
-            </Link>
+            {t('manageSettings')}
+            <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
           </Button>
         </CardFooter>
       </Card>

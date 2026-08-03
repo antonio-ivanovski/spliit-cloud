@@ -322,20 +322,22 @@ export function ExpenseItemsCard({
               <CardTitle>{t('items.title')}</CardTitle>
               <CardDescription>{t('items.description')}</CardDescription>
             </div>
-            <CollapsibleTrigger asChild>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="shrink-0 gap-1 px-2 text-muted-foreground hover:text-foreground"
-              >
-                {itemsOpen ? t('items.hideItems') : t('items.showItems')}
-                {itemsOpen ? (
-                  <ChevronUp className="h-4 w-4" aria-hidden="true" />
-                ) : (
-                  <ChevronDown className="h-4 w-4" aria-hidden="true" />
-                )}
-              </Button>
+            <CollapsibleTrigger
+              render={
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="shrink-0 gap-1 px-2 text-muted-foreground hover:text-foreground"
+                />
+              }
+            >
+              {itemsOpen ? t('items.hideItems') : t('items.showItems')}
+              {itemsOpen ? (
+                <ChevronUp className="h-4 w-4" aria-hidden="true" />
+              ) : (
+                <ChevronDown className="h-4 w-4" aria-hidden="true" />
+              )}
             </CollapsibleTrigger>
           </CardHeader>
           <CollapsibleContent>

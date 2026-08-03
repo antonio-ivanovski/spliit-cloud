@@ -100,11 +100,19 @@ export function ResetPasswordPage() {
             <CardDescription>{t('invalidTokenDescription')}</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
-            <Button asChild className="w-full">
-              <Link href="/auth/forgot-password">{t('requestNewLink')}</Link>
+            <Button
+              className="w-full"
+              render={<Link href="/auth/forgot-password" />}
+            >
+              {t('requestNewLink')}
             </Button>
-            <Button asChild variant="ghost" size="sm" className="w-full">
-              <Link href="/">{t('backToSignIn')}</Link>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full"
+              render={<Link href="/" />}
+            >
+              {t('backToSignIn')}
             </Button>
           </CardContent>
         </Card>
@@ -187,8 +195,13 @@ export function ResetPasswordPage() {
           </form>
         </CardContent>
         <div className="flex flex-col gap-3 px-6 pb-6">
-          <Button asChild variant="ghost" size="sm" className="w-full">
-            <Link href="/">{t('backToSignIn')}</Link>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full"
+            render={<Link href="/" />}
+          >
+            {t('backToSignIn')}
           </Button>
         </div>
       </Card>

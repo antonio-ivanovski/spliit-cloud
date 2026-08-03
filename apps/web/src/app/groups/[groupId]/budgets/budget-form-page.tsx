@@ -92,10 +92,11 @@ export function BudgetFormPage({ groupId, budgetId }: Props) {
             {t('form.notAllowed')}
           </p>
           <div>
-            <Button asChild variant="secondary">
-              <Link href={`/groups/${groupId}/budgets`}>
-                {t('backToBudgets')}
-              </Link>
+            <Button
+              variant="secondary"
+              render={<Link href={`/groups/${groupId}/budgets`} />}
+            >
+              {t('backToBudgets')}
             </Button>
           </div>
         </CardContent>
@@ -111,10 +112,11 @@ export function BudgetFormPage({ groupId, budgetId }: Props) {
             {budgetQuery.error.message}
           </p>
           <div>
-            <Button asChild variant="secondary">
-              <Link href={`/groups/${groupId}/budgets`}>
-                {t('backToBudgets')}
-              </Link>
+            <Button
+              variant="secondary"
+              render={<Link href={`/groups/${groupId}/budgets`} />}
+            >
+              {t('backToBudgets')}
             </Button>
           </div>
         </CardContent>
@@ -145,15 +147,15 @@ export function BudgetFormPage({ groupId, budgetId }: Props) {
           <Button
             variant="ghost"
             size="icon"
-            asChild
             className="-ml-2 hidden shrink-0 sm:inline-flex"
+            render={
+              <Link
+                href={`/groups/${groupId}/budgets`}
+                title={t('backToBudgets')}
+              />
+            }
           >
-            <Link
-              href={`/groups/${groupId}/budgets`}
-              title={t('backToBudgets')}
-            >
-              <ArrowLeft className="h-4 w-4" />
-            </Link>
+            <ArrowLeft className="h-4 w-4" />
           </Button>
           <CardTitle className="hidden min-w-0 flex-1 truncate sm:block">
             {isEdit ? t('edit') : t('create')}

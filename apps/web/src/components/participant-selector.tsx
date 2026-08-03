@@ -140,7 +140,7 @@ export function ParticipantSelector({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>{trigger}</PopoverTrigger>
+      <PopoverTrigger render={trigger} />
       <PopoverContent className="p-0" align="start">
         <ParticipantCommand
           participants={participants}

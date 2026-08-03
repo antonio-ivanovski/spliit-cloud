@@ -1135,7 +1135,7 @@ describe('ExpenseForm', () => {
 
     const recurrence = screen.getByRole('checkbox', { name: 'Recurring' })
     await vi.waitFor(() => expect(recurrence).not.toBeChecked())
-    expect(recurrence).toBeDisabled()
+    expect(recurrence).toHaveAttribute('aria-disabled', 'true')
     expect(
       screen.getByText(
         'Waiting for your account timezone before recurrence can be enabled.',

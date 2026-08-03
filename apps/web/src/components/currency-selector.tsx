@@ -178,25 +178,27 @@ export function CurrencySelector({
 
     return (
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            type="button"
-            variant="outline"
-            role="combobox"
-            aria-haspopup="listbox"
-            aria-expanded={open}
-            aria-label={ariaLabel}
-            id={id}
-            disabled={disabled}
-            className="h-9 justify-between px-3 text-sm font-normal"
-          >
-            <span className="truncate">
-              {selectedValues.length > 0
-                ? `${selectedValues.length} selected`
-                : (multiPlaceholder ?? 'Select')}
-            </span>
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
+        <PopoverTrigger
+          render={
+            <Button
+              type="button"
+              variant="outline"
+              role="combobox"
+              aria-haspopup="listbox"
+              aria-expanded={open}
+              aria-label={ariaLabel}
+              id={id}
+              disabled={disabled}
+              className="h-9 justify-between px-3 text-sm font-normal"
+            />
+          }
+        >
+          <span className="truncate">
+            {selectedValues.length > 0
+              ? `${selectedValues.length} selected`
+              : (multiPlaceholder ?? 'Select')}
+          </span>
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </PopoverTrigger>
         <PopoverContent className="p-0" align="start">
           {command}
@@ -208,17 +210,19 @@ export function CurrencySelector({
   if (isDesktop) {
     return (
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <CurrencyButton
-            currency={selectedCurrency}
-            open={open}
-            isLoading={isLoading}
-            disabled={disabled}
-            compact={compact}
-            id={id}
-            aria-label={ariaLabel}
-          />
-        </PopoverTrigger>
+        <PopoverTrigger
+          render={
+            <CurrencyButton
+              currency={selectedCurrency}
+              open={open}
+              isLoading={isLoading}
+              disabled={disabled}
+              compact={compact}
+              id={id}
+              aria-label={ariaLabel}
+            />
+          }
+        />
         <PopoverContent className="p-0" align="start">
           {command}
         </PopoverContent>
@@ -381,11 +385,12 @@ const CurrencyButton = forwardRef<HTMLButtonElement, CurrencyButtonProps>(
             ? `${currency.name}${currency.code ? ` (${currency.code})` : ''}`
             : undefined
         }
-        className={
+        className={cn(
           compact
-            ? `h-10 shrink-0 gap-1 rounded-none border-0 px-3 ${className ?? ''}`
-            : `flex w-full min-w-0 overflow-hidden ${className ?? ''}`
-        }
+            ? 'h-10 shrink-0 gap-1 rounded-none border-0 px-3'
+            : 'flex w-full min-w-0 overflow-hidden',
+          typeof className === 'string' ? className : undefined,
+        )}
         ref={ref}
         {...props}
       >

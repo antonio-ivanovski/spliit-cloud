@@ -12,6 +12,7 @@ import { clearPushOnboardingCompletion } from '@/components/push-notification-on
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -40,42 +41,41 @@ export function AccountMenu() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <button
-          type="button"
-          className="rounded-full focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-hidden"
-          aria-label={t('account')}
-        >
-          <AccountAvatar account={account} size="lg" />
-        </button>
+      <DropdownMenuTrigger
+        render={
+          <button
+            type="button"
+            className="rounded-full focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-hidden"
+            aria-label={t('account')}
+          />
+        }
+      >
+        <AccountAvatar account={account} size="lg" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuLabel className="flex flex-col gap-0.5">
-          <span className="font-medium">{account.name}</span>
-          {!isPlaceholderEmail(account.email) && (
-            <span className="text-xs font-normal text-muted-foreground">
-              {account.email}
-            </span>
-          )}
-        </DropdownMenuLabel>
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className="flex flex-col gap-0.5">
+            <span className="font-medium">{account.name}</span>
+            {!isPlaceholderEmail(account.email) && (
+              <span className="text-xs font-normal text-muted-foreground">
+                {account.email}
+              </span>
+            )}
+          </DropdownMenuLabel>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link to="/account/settings">
-            <SettingsIcon className="mr-2 h-4 w-4" />
-            {t('accountSettings')}
-          </Link>
+        <DropdownMenuItem render={<Link to="/account/settings" />}>
+          <SettingsIcon className="mr-2 h-4 w-4" />
+          {t('accountSettings')}
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link to="/feedback">
-            <MessageSquareText className="mr-2 h-4 w-4" />
-            {t('feedback')}
-          </Link>
+        <DropdownMenuItem render={<Link to="/feedback" />}>
+          <MessageSquareText className="mr-2 h-4 w-4" />
+          {t('feedback')}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className="text-destructive focus:text-destructive"
-          onSelect={async (event) => {
-            event.preventDefault()
+          onClick={async () => {
             const disconnected = await disconnectPushSubscription()
             if (disconnected) clearPushOnboardingCompletion(account.id)
             await authClient.signOut()

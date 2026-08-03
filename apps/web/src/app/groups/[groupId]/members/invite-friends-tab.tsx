@@ -64,7 +64,9 @@ export function InviteFriendsTab({
           <div className="grid gap-1.5">
             <Select
               value={selectedFriendAccountId}
-              onValueChange={onSelectFriend}
+              onValueChange={(value) => {
+                if (value != null) onSelectFriend(value)
+              }}
             >
               <SelectTrigger>
                 <SelectValue

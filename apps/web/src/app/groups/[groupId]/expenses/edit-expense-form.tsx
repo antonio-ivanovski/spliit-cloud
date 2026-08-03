@@ -138,10 +138,11 @@ export function EditExpenseForm({
             {t('pendingInviteeExpenseDescription')}
           </p>
           <div>
-            <Button asChild variant="secondary">
-              <Link href={returnTo ?? `/groups/${groupId}/expenses`}>
-                {t('backToExpenses')}
-              </Link>
+            <Button
+              variant="secondary"
+              render={<Link href={returnTo ?? `/groups/${groupId}/expenses`} />}
+            >
+              {t('backToExpenses')}
             </Button>
           </div>
         </CardContent>

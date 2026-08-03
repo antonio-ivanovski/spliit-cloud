@@ -107,7 +107,7 @@ describe('PaidBySplitOptionCards', () => {
     })
   })
 
-  it('selected option has aria-checked="true" and data-state="checked"', () => {
+  it('selected option has aria-checked="true" and data-checked', () => {
     render(
       <PaidBySplitOptionCards
         value={{ isMultiPayer: true, splitMode: 'BY_PERCENTAGE' }}
@@ -116,13 +116,13 @@ describe('PaidBySplitOptionCards', () => {
     )
     const selected = screen.getByRole('radio', { name: /by percentage/i })
     expect(selected).toHaveAttribute('aria-checked', 'true')
-    expect(selected).toHaveAttribute('data-state', 'checked')
+    expect(selected).toHaveAttribute('data-checked')
     expect(
       screen.getByRole('radio', { name: /single payer/i }),
     ).toHaveAttribute('aria-checked', 'false')
     expect(
       screen.getByRole('radio', { name: /single payer/i }),
-    ).toHaveAttribute('data-state', 'unchecked')
+    ).toHaveAttribute('data-unchecked')
   })
 
   it('disabled when readOnly is true', () => {
@@ -133,7 +133,9 @@ describe('PaidBySplitOptionCards', () => {
         readOnly
       />,
     )
-    screen.getAllByRole('radio').forEach((r) => expect(r).toBeDisabled())
+    screen
+      .getAllByRole('radio')
+      .forEach((r) => expect(r).toHaveAttribute('aria-disabled', 'true'))
   })
 
   it('renders selected option content and moves it when the mode changes', async () => {
@@ -195,23 +197,25 @@ describe('PaidForSplitOptionCards', () => {
     expect(onChange).toHaveBeenCalledWith('BY_AMOUNT')
   })
 
-  it('selected option is aria-checked="true" with data-state="checked"', () => {
+  it('selected option is aria-checked="true" with data-checked', () => {
     render(<PaidForSplitOptionCards value="BY_SHARES" onChange={vi.fn()} />)
     const selected = screen.getByRole('radio', { name: /by shares/i })
     expect(selected).toHaveAttribute('aria-checked', 'true')
-    expect(selected).toHaveAttribute('data-state', 'checked')
-    expect(selected).toHaveClass('data-[state=checked]:cursor-default')
+    expect(selected).toHaveAttribute('data-checked')
+    expect(selected).toHaveClass('data-[checked]:cursor-default')
     const notSelected = screen.getByRole('radio', { name: /evenly/i })
     expect(notSelected).toHaveAttribute('aria-checked', 'false')
-    expect(notSelected).toHaveAttribute('data-state', 'unchecked')
-    expect(notSelected).toHaveClass('data-[state=unchecked]:cursor-pointer')
+    expect(notSelected).toHaveAttribute('data-unchecked')
+    expect(notSelected).toHaveClass('data-[unchecked]:cursor-pointer')
   })
 
   it('disabled when readOnly is true', () => {
     render(
       <PaidForSplitOptionCards value="EVENLY" onChange={vi.fn()} readOnly />,
     )
-    screen.getAllByRole('radio').forEach((r) => expect(r).toBeDisabled())
+    screen
+      .getAllByRole('radio')
+      .forEach((r) => expect(r).toHaveAttribute('aria-disabled', 'true'))
   })
 
   it('omits modes listed in hiddenModes', () => {

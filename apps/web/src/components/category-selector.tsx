@@ -154,23 +154,25 @@ export function CategorySelector({
 
     return (
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            type="button"
-            variant="outline"
-            role="combobox"
-            aria-haspopup="listbox"
-            aria-expanded={open}
-            disabled={disabled}
-            className="h-9 w-full justify-between px-3 text-sm font-normal"
-          >
-            <span className="truncate">
-              {multiCount > 0
-                ? t('Expenses.filters.nSelected', { count: multiCount })
-                : (multiPlaceholder ?? 'Select')}
-            </span>
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
+        <PopoverTrigger
+          render={
+            <Button
+              type="button"
+              variant="outline"
+              role="combobox"
+              aria-haspopup="listbox"
+              aria-expanded={open}
+              disabled={disabled}
+              className="h-9 w-full justify-between px-3 text-sm font-normal"
+            />
+          }
+        >
+          <span className="truncate">
+            {multiCount > 0
+              ? t('Expenses.filters.nSelected', { count: multiCount })
+              : (multiPlaceholder ?? 'Select')}
+          </span>
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </PopoverTrigger>
         <PopoverContent className="p-0" align="start">
           {command}
@@ -182,15 +184,17 @@ export function CategorySelector({
   if (isDesktop) {
     return (
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <CategoryButton
-            category={selectedCategory}
-            open={open}
-            isLoading={isLoading}
-            disabled={disabled}
-            compact={compact}
-          />
-        </PopoverTrigger>
+        <PopoverTrigger
+          render={
+            <CategoryButton
+              category={selectedCategory}
+              open={open}
+              isLoading={isLoading}
+              disabled={disabled}
+              compact={compact}
+            />
+          }
+        />
         <PopoverContent className="p-0" align="start">
           <CategoryCommand
             hierarchy={hierarchy}
@@ -402,11 +406,12 @@ const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>(
         aria-expanded={open}
         aria-busy={isLoading}
         aria-label={label}
-        className={
+        className={cn(
           compact
-            ? `h-10 w-16 shrink-0 gap-2 rounded-none border-0 px-3 ${className ?? ''}`
-            : `flex w-full ${className ?? ''}`
-        }
+            ? 'h-10 w-16 shrink-0 gap-2 rounded-none border-0 px-3'
+            : 'flex w-full',
+          typeof className === 'string' ? className : undefined,
+        )}
         ref={ref}
         {...props}
       >

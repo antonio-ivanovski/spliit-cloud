@@ -219,9 +219,9 @@ export function ResponsiveChoicePicker<T extends string>({
   if (isDesktop) {
     return (
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>{trigger}</PopoverTrigger>
+        <PopoverTrigger render={trigger} />
         <PopoverContent
-          className="w-[var(--radix-popover-trigger-width)] min-w-40 p-1"
+          className="w-[var(--anchor-width)] min-w-40 p-1"
           align="start"
         >
           {choices}

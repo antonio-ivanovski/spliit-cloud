@@ -9,8 +9,8 @@ export default function NotFound() {
     <div className="flex flex-col gap-2">
       <p>{t('text')}</p>
       <p>
-        <Button asChild variant="secondary">
-          <Link href="/">{t('link')}</Link>
+        <Button variant="secondary" render={<Link href="/" />}>
+          {t('link')}
         </Button>
       </p>
     </div>

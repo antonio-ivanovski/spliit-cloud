@@ -95,7 +95,7 @@ export function CollapsibleSection({
         <span className="flex min-w-0 flex-1 items-center gap-2">
           <ChevronDown
             aria-hidden
-            className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 group-data-[state=closed]:-rotate-90 group-data-[state=open]:rotate-0"
+            className="h-4 w-4 shrink-0 -rotate-90 text-muted-foreground transition-transform duration-200 group-data-[panel-open]:rotate-0"
           />
           <span className="truncate font-semibold">{title}</span>
         </span>

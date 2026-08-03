@@ -48,6 +48,14 @@ export function AccountPreferences() {
   const allCurrencies = useCurrencies(
     t('GroupForm.CurrencyCodeField.customOption'),
   )
+  const themeItems = useMemo(
+    () =>
+      themes.map((theme) => ({
+        value: theme,
+        label: t(`Theme.${theme}` as never) as string,
+      })),
+    [t],
+  )
   const currencies = useMemo(
     () => allCurrencies.filter((currency) => currency.code.length === 3),
     [allCurrencies],
@@ -151,6 +159,7 @@ export function AccountPreferences() {
             <Select
               value={sourcePreferences.theme ?? 'system'}
               disabled={updater !== null && !updater.ready}
+              items={themeItems}
               onValueChange={(theme) => {
                 const accountTheme = theme as AccountTheme
                 setTheme(accountTheme, { notify: false, persist: false })
@@ -164,9 +173,9 @@ export function AccountPreferences() {
                 <SelectValue placeholder={text('chooseTheme', 'Choose')} />
               </SelectTrigger>
               <SelectContent>
-                {themes.map((theme) => (
-                  <SelectItem key={theme} value={theme}>
-                    {t(`Theme.${theme}` as never)}
+                {themeItems.map((theme) => (
+                  <SelectItem key={theme.value} value={theme.value}>
+                    {theme.label}
                   </SelectItem>
                 ))}
               </SelectContent>

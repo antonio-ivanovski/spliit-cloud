@@ -27,10 +27,8 @@ export function DoneStep(props: { groupId: string; applied: number }) {
         </p>
       </CardContent>
       <CardFooter className="justify-end">
-        <Button asChild>
-          <Link href={`/groups/${props.groupId}/edit`}>
-            {t('backToSettings')}
-          </Link>
+        <Button render={<Link href={`/groups/${props.groupId}/edit`} />}>
+          {t('backToSettings')}
         </Button>
       </CardFooter>
     </Card>

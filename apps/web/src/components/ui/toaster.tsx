@@ -1,5 +1,4 @@
-
-
+import { Toast as ToastPrimitive } from '@base-ui/react/toast'
 import { Sparkles } from 'lucide-react'
 
 import {
@@ -10,23 +9,16 @@ import {
   ToastTitle,
   ToastViewport,
 } from '@/components/ui/toast'
-import { useToast } from '@/components/ui/use-toast'
 
-export function Toaster() {
-  const { toasts } = useToast()
+function ToasterViewport() {
+  const { toasts } = ToastPrimitive.useToastManager()
 
   return (
-    <ToastProvider>
-      {toasts.map(function ({
-        id,
-        title,
-        description,
-        action,
-        variant,
-        ...props
-      }) {
+    <>
+      {toasts.map((toastItem) => {
+        const variant = toastItem.data?.variant ?? 'default'
         return (
-          <Toast key={id} variant={variant} {...props}>
+          <Toast key={toastItem.id} toast={toastItem} variant={variant}>
             {variant === 'success' && (
               <span
                 aria-hidden="true"
@@ -36,17 +28,28 @@ export function Toaster() {
               </span>
             )}
             <div className="grid gap-1">
-              {title && <ToastTitle>{title}</ToastTitle>}
-              {description && (
-                <ToastDescription>{description}</ToastDescription>
+              {toastItem.title != null && toastItem.title !== '' && (
+                <ToastTitle>{toastItem.title}</ToastTitle>
               )}
+              {toastItem.description != null &&
+                toastItem.description !== '' && (
+                  <ToastDescription>{toastItem.description}</ToastDescription>
+                )}
             </div>
-            {action}
+            {toastItem.data?.action}
             <ToastClose />
           </Toast>
         )
       })}
       <ToastViewport />
+    </>
+  )
+}
+
+export function Toaster() {
+  return (
+    <ToastProvider>
+      <ToasterViewport />
     </ToastProvider>
   )
 }

@@ -509,8 +509,8 @@ export function CreateFriend() {
               />
 
               <div className="flex justify-end gap-2">
-                <Button asChild variant="ghost">
-                  <Link href="/">{tCommon('back')}</Link>
+                <Button variant="ghost" render={<Link href="/" />}>
+                  {tCommon('back')}
                 </Button>
                 <SubmitButton loadingContent={t('title')}>
                   {t('title')}

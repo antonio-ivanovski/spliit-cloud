@@ -205,19 +205,21 @@ export function DocumentThumbnail({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <div className="relative aspect-square h-full w-full">
-        <DialogTrigger asChild>
-          <Button
-            variant="secondary"
-            className="h-full w-full overflow-hidden rounded border shadow-inner"
-          >
-            <Image
-              width={300}
-              height={300}
-              className="object-contain"
-              src={document.url}
-              alt=""
+        <DialogTrigger
+          render={
+            <Button
+              variant="secondary"
+              className="h-full w-full overflow-hidden rounded border shadow-inner"
             />
-          </Button>
+          }
+        >
+          <Image
+            width={300}
+            height={300}
+            className="object-contain"
+            src={document.url}
+            alt=""
+          />
         </DialogTrigger>
         {!readOnly && (
           <div className="absolute inset-x-0 bottom-0 z-10 flex">
@@ -287,10 +289,8 @@ export function DocumentThumbnail({
                 </Button>
               </div>
             )}
-            <DialogClose asChild>
-              <Button variant="ghost">
-                <X className="mr-2 h-4 w-4" /> {t('close')}
-              </Button>
+            <DialogClose render={<Button variant="ghost" />}>
+              <X className="mr-2 h-4 w-4" /> {t('close')}
             </DialogClose>
           </div>
 

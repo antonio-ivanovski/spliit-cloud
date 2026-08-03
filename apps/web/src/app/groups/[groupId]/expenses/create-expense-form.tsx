@@ -80,10 +80,11 @@ export function CreateExpenseForm({
             {tGroups('pendingInviteeExpenseDescription')}
           </p>
           <div>
-            <Button asChild variant="secondary">
-              <Link href={`/groups/${groupId}/expenses`}>
-                {tGroups('backToExpenses')}
-              </Link>
+            <Button
+              variant="secondary"
+              render={<Link href={`/groups/${groupId}/expenses`} />}
+            >
+              {tGroups('backToExpenses')}
             </Button>
           </div>
         </CardContent>
@@ -103,10 +104,11 @@ export function CreateExpenseForm({
             {tGroups('archivedReadOnly')}
           </p>
           <div>
-            <Button asChild variant="secondary">
-              <Link href={`/groups/${groupId}/expenses`}>
-                {tGroups('backToExpenses')}
-              </Link>
+            <Button
+              variant="secondary"
+              render={<Link href={`/groups/${groupId}/expenses`} />}
+            >
+              {tGroups('backToExpenses')}
             </Button>
           </div>
         </CardContent>

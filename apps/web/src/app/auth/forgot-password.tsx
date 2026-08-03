@@ -126,15 +126,20 @@ export function ForgotPasswordPage() {
           )}
         </CardContent>
         <div className="flex flex-col gap-3 px-6 pb-6">
-          <Button asChild variant="ghost" size="sm" className="w-full">
-            <Link
-              href="/"
-              search={
-                email.trim() ? { email: email.trim() } : { email: undefined }
-              }
-            >
-              {t('backToSignIn')}
-            </Link>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full"
+            render={
+              <Link
+                href="/"
+                search={
+                  email.trim() ? { email: email.trim() } : { email: undefined }
+                }
+              />
+            }
+          >
+            {t('backToSignIn')}
           </Button>
         </div>
       </Card>

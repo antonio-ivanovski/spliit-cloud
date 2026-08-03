@@ -186,7 +186,7 @@ export const TimeZoneField = forwardRef<HTMLButtonElement, Props>(
     if (isDesktop) {
       return (
         <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>{trigger}</PopoverTrigger>
+          <PopoverTrigger render={trigger} />
           <PopoverContent
             align="start"
             className="w-[min(24rem,calc(100vw-2rem))] p-0"

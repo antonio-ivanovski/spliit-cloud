@@ -92,18 +92,20 @@ export function LocaleSelector({
   if (isDesktop) {
     return (
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <LocaleButton
-            locale={value}
-            showLabel={field || showLabel || showLabelOnDesktop}
-            field={field}
-            open={open}
-            className={className}
-            variant={variant}
-            disabled={disabled}
-            id={id}
-          />
-        </PopoverTrigger>
+        <PopoverTrigger
+          render={
+            <LocaleButton
+              locale={value}
+              showLabel={field || showLabel || showLabelOnDesktop}
+              field={field}
+              open={open}
+              className={className}
+              variant={variant}
+              disabled={disabled}
+              id={id}
+            />
+          }
+        />
         <PopoverContent
           align={field ? 'start' : 'end'}
           className={cn(

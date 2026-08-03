@@ -151,8 +151,8 @@ export function GroupLayoutClient({
           <p className="text-sm text-muted-foreground">
             {tInvalid('description')}
           </p>
-          <Button asChild variant="outline">
-            <Link href="/">{tForbidden('backToHome')}</Link>
+          <Button variant="outline" render={<Link href="/" />}>
+            {tForbidden('backToHome')}
           </Button>
         </div>
       </main>
@@ -169,8 +169,8 @@ export function GroupLayoutClient({
           <p className="text-sm text-muted-foreground">
             {tForbidden('Unauthorized.description')}
           </p>
-          <Button asChild variant="outline">
-            <Link href="/">{tForbidden('backToHome')}</Link>
+          <Button variant="outline" render={<Link href="/" />}>
+            {tForbidden('backToHome')}
           </Button>
         </div>
       </main>
@@ -312,15 +312,17 @@ function NotFoundGroup({ groupId }: { groupId: string }) {
             {tImportable('description', { name: lookup.data.source.name })}
           </p>
           <div className="flex gap-2">
-            <Button asChild>
-              <Link
-                href={`/groups/import?prefill=${encodeURIComponent(sourceUrl)}`}
-              >
-                {tImportable('cta')}
-              </Link>
+            <Button
+              render={
+                <Link
+                  href={`/groups/import?prefill=${encodeURIComponent(sourceUrl)}`}
+                />
+              }
+            >
+              {tImportable('cta')}
             </Button>
-            <Button asChild variant="outline">
-              <Link href="/">{tImportable('backToHome')}</Link>
+            <Button variant="outline" render={<Link href="/" />}>
+              {tImportable('backToHome')}
             </Button>
           </div>
         </div>
@@ -331,8 +333,8 @@ function NotFoundGroup({ groupId }: { groupId: string }) {
     <main className="flex flex-1 items-center justify-center px-4 py-10">
       <div className="flex max-w-md flex-col items-center gap-3 text-center">
         <h1 className="text-2xl font-semibold">{tNotFound('text')}</h1>
-        <Button asChild variant="outline">
-          <Link href="/">{tNotFound('link')}</Link>
+        <Button variant="outline" render={<Link href="/" />}>
+          {tNotFound('link')}
         </Button>
       </div>
     </main>

@@ -296,14 +296,14 @@ export function ExpenseCard({
           size="icon"
           variant="link"
           className="hidden self-center sm:flex"
-          asChild
+          render={
+            <Link
+              href={`/groups/${groupId}/expenses/${expense.id}`}
+              search={returnTo ? { returnTo } : undefined}
+            />
+          }
         >
-          <Link
-            href={`/groups/${groupId}/expenses/${expense.id}`}
-            search={returnTo ? { returnTo } : undefined}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Link>
+          <ChevronRight className="h-4 w-4" />
         </Button>
       )}
     </div>

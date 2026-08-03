@@ -18,8 +18,8 @@ export function FormActions(props: {
   if (props.readOnly) {
     return (
       <FixedActionBar>
-        <Button variant="ghost" asChild>
-          <Link href={props.cancelHref}>{t('cancel')}</Link>
+        <Button variant="ghost" render={<Link href={props.cancelHref} />}>
+          {t('cancel')}
         </Button>
       </FixedActionBar>
     )
@@ -30,8 +30,8 @@ export function FormActions(props: {
       {!props.isCreate && props.onDelete && (
         <DeletePopup onDelete={() => props.onDelete!()} className="mr-auto" />
       )}
-      <Button variant="ghost" asChild>
-        <Link href={props.cancelHref}>{t('cancel')}</Link>
+      <Button variant="ghost" render={<Link href={props.cancelHref} />}>
+        {t('cancel')}
       </Button>
       <SubmitButton loadingContent={t(props.isCreate ? 'creating' : 'saving')}>
         <Save className="mr-2 h-4 w-4" />

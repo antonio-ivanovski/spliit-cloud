@@ -613,7 +613,7 @@ function PeopleGroupBreakdown({
   if (isDesktop) {
     return (
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>{trigger}</PopoverTrigger>
+        <PopoverTrigger render={trigger} />
         <PopoverContent align="end" className="w-80 p-0">
           <div className="border-b px-4 py-3">{title}</div>
           <div className="max-h-64 overflow-y-auto p-2">{list}</div>
@@ -815,7 +815,7 @@ function BalanceGroupBreakdown({
   if (isDesktop) {
     return (
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>{trigger}</PopoverTrigger>
+        <PopoverTrigger render={trigger} />
         <PopoverContent align="end" className="w-80 p-0">
           <div className="border-b px-4 py-3">{title}</div>
           <div className="max-h-64 overflow-y-auto p-2">{list}</div>
