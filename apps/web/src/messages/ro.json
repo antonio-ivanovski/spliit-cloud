@@ -173,7 +173,8 @@
     "exportPdfCancel": "Anulează",
     "exportPdfInvalidRange": "Data de sfârșit trebuie să fie ulterioară sau egală cu data de început.",
     "exportPdfError": "Raportul PDF nu a putut fi generat. Încearcă din nou.",
-    "exportPdfSuccess": "Raportul PDF a fost descărcat."
+    "exportPdfSuccess": "Raportul PDF a fost descărcat.",
+    "exportPdfRetryBounds": "Reîncearcă"
   },
   "ExpenseCard": {
     "receivedBy": "Primit de <strong>{paidBy}</strong> pentru <paidFor></paidFor>",

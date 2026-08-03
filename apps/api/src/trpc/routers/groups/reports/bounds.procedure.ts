@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 import { prisma } from '@spliit/db'
 
-import { formatIsoDate, todayUtc } from '../../../../lib/report/dates'
+import { formatIsoDate, todayInTimeZone } from '../../../../lib/report/dates'
 import { loadGroupContext, protectedProcedure } from '../../../init'
 
 /**
@@ -10,8 +10,13 @@ import { loadGroupContext, protectedProcedure } from '../../../init'
  * today. Empty groups default both bounds to today.
  */
 export const groupReportsBoundsProcedure = protectedProcedure
-  .input(z.object({ groupId: z.string().min(1) }))
-  .query(async ({ input: { groupId }, ctx }) => {
+  .input(
+    z.object({
+      groupId: z.string().min(1),
+      timeZone: z.string().min(1).max(100).optional(),
+    }),
+  )
+  .query(async ({ input: { groupId, timeZone }, ctx }) => {
     const { ledger } = await loadGroupContext({
       groupId,
       accountId: ctx.auth.user.id,
@@ -23,7 +28,7 @@ export const groupReportsBoundsProcedure = protectedProcedure
       select: { expenseDate: true },
     })
 
-    const today = todayUtc()
+    const today = todayInTimeZone(timeZone)
     return {
       from: earliestRow
         ? formatIsoDate(earliestRow.expenseDate)

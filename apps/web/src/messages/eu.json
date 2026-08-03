@@ -173,7 +173,8 @@
     "exportPdfCancel": "Utzi",
     "exportPdfInvalidRange": "Amaiera-datak hasiera-dataren ondorengoa edo berdina izan behar du.",
     "exportPdfError": "Ezin izan da PDFa sortu. Saiatu berriro.",
-    "exportPdfSuccess": "PDF txostena deskargatu da."
+    "exportPdfSuccess": "PDF txostena deskargatu da.",
+    "exportPdfRetryBounds": "Saiatu berriro"
   },
   "ExpenseCard": {
     "paidBy": "<strong>{paidBy}</strong>(e)k ordaindua · <paidFor></paidFor> hauen artean banatuta",

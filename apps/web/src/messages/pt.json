@@ -173,7 +173,8 @@
     "exportPdfCancel": "Cancelar",
     "exportPdfInvalidRange": "A data final deve ser igual ou posterior à data inicial.",
     "exportPdfError": "Não foi possível gerar o PDF. Tenta novamente.",
-    "exportPdfSuccess": "Relatório PDF descarregado."
+    "exportPdfSuccess": "Relatório PDF descarregado.",
+    "exportPdfRetryBounds": "Tentar novamente"
   },
   "ExpenseCard": {
     "paidBy": "Pago por <strong>{paidBy}</strong> · dividido entre <paidFor></paidFor>",

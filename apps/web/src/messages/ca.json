@@ -173,7 +173,8 @@
     "exportPdfCancel": "Cancel·lar",
     "exportPdfInvalidRange": "La data final ha de ser posterior o igual a la data inicial.",
     "exportPdfError": "No s'ha pogut generar el PDF. Torna-ho a provar.",
-    "exportPdfSuccess": "Informe PDF baixat."
+    "exportPdfSuccess": "Informe PDF baixat.",
+    "exportPdfRetryBounds": "Torna-ho a provar"
   },
   "ExpenseCard": {
     "receivedBy": "Rebut per <strong>{paidBy}</strong> · assignat a <paidFor></paidFor>",

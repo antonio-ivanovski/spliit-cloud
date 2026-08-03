@@ -31,6 +31,7 @@ export type ExpenseReportViewModel = {
     participantCount: string
   }
   participants: Array<{
+    id: string
     name: string
     paid: string
     share: string
@@ -49,8 +50,8 @@ export type ExpenseReportViewModel = {
     title: string
     category: string
     amount: string
-    payers: Array<{ name: string; amount: string }>
-    shares: Array<{ name: string; amount: string }>
+    payers: Array<{ id: string; name: string; amount: string }>
+    shares: Array<{ id: string; name: string; amount: string }>
     conversionNote: string | null
   }>
 }
@@ -92,20 +93,23 @@ export function formatExpenseReport(
     currency: currencyCode,
   })
   const formatAmount = (amount: number) => currencyFormat.format(amount / 100)
-  const dateFormat = new Intl.DateTimeFormat(locale, {
+  // Date-only report bounds are UTC midnights; force UTC so a non-UTC API
+  // host does not shift `2026-07-01` to the previous local calendar day.
+  const dateOnlyFormat = new Intl.DateTimeFormat(locale, {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
+    timeZone: 'UTC',
   })
   const formatDate = (isoDate: string) => {
     const [year, month, day] = isoDate.split('-').map(Number)
-    return dateFormat.format(new Date(Date.UTC(year, month - 1, day)))
+    return dateOnlyFormat.format(new Date(Date.UTC(year, month - 1, day)))
   }
 
   const categoryNames = (categoryId: string) =>
     labels.categoryNames[categoryId] ?? categoryId
 
-  const generatedOn = dateFormat.format(new Date())
+  const generatedOn = dateOnlyFormat.format(new Date())
 
   return {
     direction,
@@ -125,6 +129,7 @@ export function formatExpenseReport(
       ),
     },
     participants: model.participants.map((participant) => ({
+      id: participant.id,
       name: participant.name,
       paid: formatAmount(participant.periodPaid),
       share: formatAmount(participant.periodShare),
@@ -147,10 +152,12 @@ export function formatExpenseReport(
     })),
     expenses: model.expenses.map((expense) => {
       const payers = expense.payers.map((payer) => ({
+        id: payer.participantId,
         name: participantName(model, payer.participantId),
         amount: formatAmount(payer.amount),
       }))
       const shares = expense.shares.map((share) => ({
+        id: share.participantId,
         name: participantName(model, share.participantId),
         amount: formatAmount(share.amount),
       }))

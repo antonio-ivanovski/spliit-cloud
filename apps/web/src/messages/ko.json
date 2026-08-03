@@ -103,7 +103,8 @@
     "exportPdfCancel": "취소",
     "exportPdfInvalidRange": "종료일은 시작일과 같거나 이후여야 합니다.",
     "exportPdfError": "PDF를 생성할 수 없습니다. 다시 시도해 주세요.",
-    "exportPdfSuccess": "PDF 보고서가 다운로드되었습니다."
+    "exportPdfSuccess": "PDF 보고서가 다운로드되었습니다.",
+    "exportPdfRetryBounds": "다시 시도"
   },
   "Groups": {
     "myGroups": "내 그룹",

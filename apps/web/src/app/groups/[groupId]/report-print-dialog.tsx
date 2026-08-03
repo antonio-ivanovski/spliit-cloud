@@ -21,6 +21,14 @@ function isValidRange(from: string, to: string): boolean {
   return from !== '' && to !== '' && from <= to
 }
 
+function getBrowserTimeZone(): string {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'
+  } catch {
+    return 'UTC'
+  }
+}
+
 export function ReportPrintDialog({
   groupId,
   open,
@@ -32,20 +40,24 @@ export function ReportPrintDialog({
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Expenses' })
   const { toast } = useToast()
+  const timeZone = getBrowserTimeZone()
   const bounds = trpc.groups.reports.bounds.useQuery(
-    { groupId },
+    { groupId, timeZone },
     { enabled: open },
   )
   const [from, setFrom] = useState('')
   const [to, setTo] = useState('')
   const [opening, setOpening] = useState(false)
 
+  // oxlint-disable react/react-compiler -- initialize the date fields after the asynchronous bounds query resolves.
   useEffect(() => {
     if (!open || !bounds.data) return
-    // oxlint-disable-next-line react/react-compiler -- prefill date inputs from the bounds query once it arrives.
+    // react-doctor-disable-next-line react-doctor/no-adjust-state-on-prop-change -- bounds arrive asynchronously and initialize otherwise uncontrolled date fields without overwriting user edits.
     setFrom((current) => current || bounds.data!.from)
+    // react-doctor-disable-next-line react-doctor/no-adjust-state-on-prop-change -- bounds arrive asynchronously and initialize otherwise uncontrolled date fields without overwriting user edits.
     setTo((current) => current || bounds.data!.to)
   }, [open, bounds.data])
+  // oxlint-enable react/react-compiler
 
   const rangeInvalid = from !== '' && to !== '' && from > to
   const submitDisabled = opening || !isValidRange(from, to) || !bounds.data
@@ -62,7 +74,7 @@ export function ReportPrintDialog({
     setOpening(true)
     const params = new URLSearchParams({ from, to })
     const reportUrl = `/groups/${encodeURIComponent(groupId)}/expenses/print?${params.toString()}`
-    const reportWindow = window.open(reportUrl, '_blank', 'noopener,noreferrer')
+    const reportWindow = window.open(reportUrl, '_blank')
 
     if (!reportWindow) {
       toast({
@@ -72,6 +84,11 @@ export function ReportPrintDialog({
       setOpening(false)
       return
     }
+
+    // The report is same-origin, so we can clear the opener after opening the
+    // tab instead of using the `noopener` feature that makes `window.open`
+    // return null in some browsers even when the tab was created.
+    reportWindow.opener = null
 
     toast({ description: t('exportPdfSuccess') })
     onOpenChange(false)
@@ -153,7 +170,7 @@ export function ReportPrintDialog({
                   className="h-8 shrink-0 px-2 text-destructive hover:text-destructive"
                   onClick={() => void bounds.refetch()}
                 >
-                  {t('exportPdfGenerate')}
+                  {t('exportPdfRetryBounds')}
                 </Button>
               </div>
             )}

@@ -1443,7 +1443,8 @@
     "exportPdfCancel": "منسوخ کریں",
     "exportPdfInvalidRange": "آخری تاریخ، ابتدائی تاریخ کے برابر یا اس کے بعد کی ہونی چاہیے۔",
     "exportPdfError": "PDF رپورٹ تیار نہیں ہو سکی۔ براہ کرم دوبارہ کوشش کریں۔",
-    "exportPdfSuccess": "PDF رپورٹ ڈاؤن لوڈ ہو گئی۔"
+    "exportPdfSuccess": "PDF رپورٹ ڈاؤن لوڈ ہو گئی۔",
+    "exportPdfRetryBounds": "دوبارہ کوشش کریں"
   },
   "Footer": {
     "madeIn": "اوپن سورس کمیونٹی نے محبت سے بنایا ❤️",

@@ -171,7 +171,8 @@
     "exportPdfCancel": "取消",
     "exportPdfInvalidRange": "結束日期必須晚於或等於開始日期。",
     "exportPdfError": "無法產生 PDF。請重試。",
-    "exportPdfSuccess": "PDF 報告已下載。"
+    "exportPdfSuccess": "PDF 報告已下載。",
+    "exportPdfRetryBounds": "重試"
   },
   "ExpenseCard": {
     "receivedBy": "收款人：<strong>{paidBy}</strong> · 分配給 <paidFor></paidFor>",

@@ -73,7 +73,8 @@ describe('ReportPrintDialog', () => {
   })
 
   it('opens the print route with the selected dates', async () => {
-    const openMock = vi.spyOn(window, 'open').mockReturnValue({} as Window)
+    const openedWindow = {} as Window
+    const openMock = vi.spyOn(window, 'open').mockReturnValue(openedWindow)
     const onOpenChange = vi.fn()
     const { user } = render(
       <ReportPrintDialog groupId="grp-1" open onOpenChange={onOpenChange} />,
@@ -86,8 +87,8 @@ describe('ReportPrintDialog', () => {
     expect(openMock).toHaveBeenCalledWith(
       '/groups/grp-1/expenses/print?from=2026-07-01&to=2026-08-03',
       '_blank',
-      'noopener,noreferrer',
     )
+    expect(openedWindow.opener).toBeNull()
     expect(onOpenChange).toHaveBeenCalledWith(false)
     expect(mockToast).toHaveBeenCalledWith({
       description: 'Print report opened.',

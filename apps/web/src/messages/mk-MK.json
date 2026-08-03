@@ -172,7 +172,8 @@
     "exportPdfCancel": "Откажи",
     "exportPdfInvalidRange": "Крајниот датум мора да биде на или по почетниот датум.",
     "exportPdfError": "PDF-от не може да се генерира. Обидете се повторно.",
-    "exportPdfSuccess": "PDF извештајот е преземен."
+    "exportPdfSuccess": "PDF извештајот е преземен.",
+    "exportPdfRetryBounds": "Обиди се повторно"
   },
   "ExpenseCard": {
     "paidBy": "Платено од <strong>{paidBy}</strong> · поделено меѓу <paidFor></paidFor>",

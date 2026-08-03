@@ -174,7 +174,8 @@
     "exportPdfCancel": "Anuluj",
     "exportPdfInvalidRange": "Data końcowa musi przypadać na dzień początkowy lub późniejszy.",
     "exportPdfError": "Nie udało się wygenerować PDF. Spróbuj ponownie.",
-    "exportPdfSuccess": "Raport PDF został pobrany."
+    "exportPdfSuccess": "Raport PDF został pobrany.",
+    "exportPdfRetryBounds": "Spróbuj ponownie"
   },
   "ExpenseCard": {
     "paidBy": "Opłacone przez <strong>{paidBy}</strong> dla <paidFor></paidFor>",

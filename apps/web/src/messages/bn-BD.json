@@ -1443,7 +1443,8 @@
     "exportPdfCancel": "বাতিল করুন",
     "exportPdfInvalidRange": "শেষ তারিখটি শুরুর তারিখের সমান বা তার পরের হতে হবে।",
     "exportPdfError": "PDF প্রতিবেদন তৈরি করা যায়নি। আবার চেষ্টা করুন।",
-    "exportPdfSuccess": "PDF প্রতিবেদন ডাউনলোড হয়েছে।"
+    "exportPdfSuccess": "PDF প্রতিবেদন ডাউনলোড হয়েছে।",
+    "exportPdfRetryBounds": "আবার চেষ্টা করুন"
   },
   "Footer": {
     "madeIn": "ওপেন-সোর্স সম্প্রদায় দ্বারা ভালোবাসা দিয়ে তৈরি ❤️",

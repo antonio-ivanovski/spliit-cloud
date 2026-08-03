@@ -172,7 +172,8 @@
     "exportPdfCancel": "İptal",
     "exportPdfInvalidRange": "Bitiş tarihi, başlangıç tarihiyle aynı veya ondan sonraki bir tarih olmalıdır.",
     "exportPdfError": "PDF oluşturulamadı. Lütfen tekrar deneyin.",
-    "exportPdfSuccess": "PDF raporu indirildi."
+    "exportPdfSuccess": "PDF raporu indirildi.",
+    "exportPdfRetryBounds": "Yeniden dene"
   },
   "ExpenseCard": {
     "receivedBy": "<strong>{paidBy}</strong> aldı · <paidFor></paidFor> için paylaştırıldı",

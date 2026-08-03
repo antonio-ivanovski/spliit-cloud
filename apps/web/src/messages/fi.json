@@ -172,7 +172,8 @@
     "exportPdfCancel": "Peruuta",
     "exportPdfInvalidRange": "Päättymispäivän on oltava sama tai myöhempi kuin alkamispäivä.",
     "exportPdfError": "PDF:n luominen epäonnistui. Yritä uudelleen.",
-    "exportPdfSuccess": "PDF-raportti ladattu."
+    "exportPdfSuccess": "PDF-raportti ladattu.",
+    "exportPdfRetryBounds": "Yritä uudelleen"
   },
   "ExpenseCard": {
     "receivedBy": "Vastaanottaja <strong>{paidBy}</strong> · kohdistettu osallistujille <paidFor></paidFor>",

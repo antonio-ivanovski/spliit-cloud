@@ -172,7 +172,8 @@
     "exportPdfCancel": "Annuleren",
     "exportPdfInvalidRange": "De einddatum moet op of na de startdatum liggen.",
     "exportPdfError": "PDF kon niet worden gegenereerd. Probeer het opnieuw.",
-    "exportPdfSuccess": "PDF-rapport gedownload."
+    "exportPdfSuccess": "PDF-rapport gedownload.",
+    "exportPdfRetryBounds": "Opnieuw proberen"
   },
   "ExpenseCard": {
     "paidBy": "Betaald door <strong>{paidBy}</strong> · verdeeld over <paidFor></paidFor>",

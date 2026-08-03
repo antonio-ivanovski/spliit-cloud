@@ -164,11 +164,11 @@ describe('reportGroupData', () => {
     expect(body.metrics.total).toBe('€30.00')
     expect(body.expenses).toHaveLength(1)
     expect(body.expenses[0].payers).toEqual([
-      { name: 'Alice', amount: '€30.00' },
+      { id: 'alice', name: 'Alice', amount: '€30.00' },
     ])
     expect(body.expenses[0].shares).toEqual([
-      { name: 'Alice', amount: '€15.00' },
-      { name: 'Bob', amount: '€15.00' },
+      { id: 'alice', name: 'Alice', amount: '€15.00' },
+      { id: 'bob', name: 'Bob', amount: '€15.00' },
     ])
   })
 

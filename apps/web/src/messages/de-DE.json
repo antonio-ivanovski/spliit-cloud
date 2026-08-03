@@ -176,7 +176,8 @@
     "exportPdfCancel": "Abbrechen",
     "exportPdfInvalidRange": "Das Enddatum muss am oder nach dem Startdatum liegen.",
     "exportPdfError": "PDF konnte nicht erstellt werden. Bitte erneut versuchen.",
-    "exportPdfSuccess": "PDF-Bericht heruntergeladen."
+    "exportPdfSuccess": "PDF-Bericht heruntergeladen.",
+    "exportPdfRetryBounds": "Erneut versuchen"
   },
   "ExpenseCard": {
     "receivedBy": "Erhalten von <strong>{paidBy}</strong> · zugeordnet zu <paidFor></paidFor>",

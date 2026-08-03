@@ -3,6 +3,11 @@
   margin: 14mm;
 }
 
+@page print-report-letter {
+  size: Letter portrait;
+  margin: 14mm;
+}
+
 .print-report-shell {
   min-height: 100vh;
   background: #f6f8f7;
@@ -14,6 +19,10 @@
     BlinkMacSystemFont,
     'Segoe UI',
     sans-serif;
+}
+
+.print-report-page-letter {
+  page: print-report-letter;
 }
 
 .print-report-sheet {
@@ -254,8 +263,11 @@
 
   .print-report-section {
     margin-top: 0.85rem;
-    break-inside: avoid;
-    page-break-inside: avoid;
+  }
+
+  .print-report-section-heading {
+    break-after: avoid;
+    page-break-after: avoid;
   }
 
   .print-report-section-heading {

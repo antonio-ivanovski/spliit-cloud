@@ -17,8 +17,20 @@ const report = {
   asOfDate: 'Jul 31, 2026',
   metrics: { total: '€30.00', expenseCount: '1', participantCount: '2' },
   participants: [
-    { name: 'Alice', paid: '€30.00', share: '€15.00', balance: '€15.00' },
-    { name: 'Bob', paid: '€0.00', share: '€15.00', balance: '-€15.00' },
+    {
+      id: 'alice',
+      name: 'Alice',
+      paid: '€30.00',
+      share: '€15.00',
+      balance: '€15.00',
+    },
+    {
+      id: 'bob',
+      name: 'Bob',
+      paid: '€0.00',
+      share: '€15.00',
+      balance: '-€15.00',
+    },
   ],
   settlements: [{ from: 'Bob', to: 'Alice', amount: '€15.00' }],
   reimbursements: [],
@@ -29,10 +41,10 @@ const report = {
       title: 'Dinner',
       category: 'Food',
       amount: '€30.00',
-      payers: [{ name: 'Alice', amount: '€30.00' }],
+      payers: [{ id: 'alice', name: 'Alice', amount: '€30.00' }],
       shares: [
-        { name: 'Alice', amount: '€15.00' },
-        { name: 'Bob', amount: '€15.00' },
+        { id: 'alice', name: 'Alice', amount: '€15.00' },
+        { id: 'bob', name: 'Bob', amount: '€15.00' },
       ],
       conversionNote: null,
     },
@@ -65,6 +77,7 @@ describe('ReportPrintPage', () => {
     expect(screen.getByText('Suggested settlements')).toBeInTheDocument()
     expect(screen.getByText('Expense details')).toBeInTheDocument()
     expect(screen.queryByText('Category breakdown')).not.toBeInTheDocument()
+    expect(screen.getByRole('main')).toHaveClass('print-report-page-letter')
 
     const splitCell = screen.getByRole('cell', {
       name: 'Alice €15.00 Bob €15.00',

@@ -187,7 +187,8 @@
     "exportPdfCancel": "Cancel",
     "exportPdfInvalidRange": "The end date must be on or after the start date.",
     "exportPdfError": "Could not open the print report. Please try again.",
-    "exportPdfSuccess": "Print report opened."
+    "exportPdfSuccess": "Print report opened.",
+    "exportPdfRetryBounds": "Retry"
   },
   "ExpenseCard": {
     "paidBy": "Paid by <strong>{paidBy}</strong> · split between <paidFor></paidFor>",

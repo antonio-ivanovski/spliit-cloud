@@ -174,7 +174,8 @@
     "exportPdfCancel": "Zrušit",
     "exportPdfInvalidRange": "Koncové datum musí být stejné nebo pozdější než počáteční datum.",
     "exportPdfError": "PDF se nepodařilo vygenerovat. Zkuste to prosím znovu.",
-    "exportPdfSuccess": "Přehled v PDF byl stažen."
+    "exportPdfSuccess": "Přehled v PDF byl stažen.",
+    "exportPdfRetryBounds": "Zkusit znovu"
   },
   "ExpenseCard": {
     "receivedBy": "Přijal(a) <strong>{paidBy}</strong> · přiděleno účastníkům <paidFor></paidFor>",

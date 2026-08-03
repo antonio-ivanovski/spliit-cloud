@@ -173,7 +173,8 @@
     "exportPdfCancel": "ביטול",
     "exportPdfInvalidRange": "תאריך הסיום חייב להיות בתאריך ההתחלה או אחריו.",
     "exportPdfError": "יצירת ה-PDF נכשלה. אנא נסה שוב.",
-    "exportPdfSuccess": "דוח ה-PDF הורד."
+    "exportPdfSuccess": "דוח ה-PDF הורד.",
+    "exportPdfRetryBounds": "נסה שוב"
   },
   "ExpenseCard": {
     "paidBy": "שולם על ידי <strong>{paidBy}</strong> · פוצל בין <paidFor></paidFor>",

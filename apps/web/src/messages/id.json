@@ -171,7 +171,8 @@
     "exportPdfCancel": "Batalkan",
     "exportPdfInvalidRange": "Tanggal akhir harus sama dengan atau setelah tanggal mulai.",
     "exportPdfError": "Tidak dapat membuat PDF. Silakan coba lagi.",
-    "exportPdfSuccess": "Laporan PDF diunduh."
+    "exportPdfSuccess": "Laporan PDF diunduh.",
+    "exportPdfRetryBounds": "Coba lagi"
   },
   "ExpenseCard": {
     "paidBy": "Dibayar oleh <strong>{paidBy}</strong> · dibagi antara <paidFor></paidFor>",

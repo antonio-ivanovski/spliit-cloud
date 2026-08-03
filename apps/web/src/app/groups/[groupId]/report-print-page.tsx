@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/i18n/react'
 import { getApiBaseUrl } from '@/lib/api-url'
+import { cn } from '@/lib/utils'
 import type { ExpenseReportViewModel } from '@spliit/api/lib/report/format'
 
 import { buildReportLabels } from './report-labels'
@@ -61,15 +62,52 @@ function buildPrintDocumentTitle(
   return `Spliit Cloud - ${safeGroupName || 'Group'} - ${reportTitle} (${from} to ${to})`
 }
 
+function waitForPrintImages(): Promise<void> {
+  const images = Array.from(
+    document.querySelectorAll<HTMLImageElement>('.print-report-brand'),
+  )
+
+  return Promise.all(
+    images.map(
+      (image) =>
+        new Promise<void>((resolve) => {
+          if (image.complete) {
+            const decoded = image.decode?.()
+            if (decoded) {
+              void decoded.catch(() => undefined).then(() => resolve())
+            } else {
+              resolve()
+            }
+            return
+          }
+
+          let settled = false
+          let timeout: number | undefined
+          const finish = () => {
+            if (settled) return
+            settled = true
+            if (timeout !== undefined) window.clearTimeout(timeout)
+            image.removeEventListener('load', finish)
+            image.removeEventListener('error', finish)
+            resolve()
+          }
+          timeout = window.setTimeout(finish, 500)
+          image.addEventListener('load', finish, { once: true })
+          image.addEventListener('error', finish, { once: true })
+        }),
+    ),
+  ).then(() => undefined)
+}
+
 function AmountList({
   items,
 }: {
-  items: Array<{ name: string; amount: string }>
+  items: Array<{ id: string; name: string; amount: string }>
 }) {
   return (
     <ul className="print-report-split">
-      {items.map((item, index) => (
-        <li key={`${item.name}-${item.amount}-${index}`}>
+      {items.map((item) => (
+        <li key={item.id}>
           <span>{item.name}</span>
           <span>{item.amount}</span>
         </li>
@@ -107,7 +145,7 @@ function ParticipantTable({ report }: { report: ExpenseReportViewModel }) {
       </thead>
       <tbody>
         {report.participants.map((participant) => (
-          <tr key={participant.name}>
+          <tr key={participant.id}>
             <td className="strong">{participant.name}</td>
             <td className="numeric">{participant.paid}</td>
             <td className="numeric">{participant.share}</td>
@@ -133,8 +171,8 @@ function SettlementsTable({ report }: { report: ExpenseReportViewModel }) {
         </tr>
       </thead>
       <tbody>
-        {report.settlements.map((settlement, index) => (
-          <tr key={`${settlement.from}-${settlement.to}-${index}`}>
+        {report.settlements.map((settlement) => (
+          <tr key={`${settlement.from}-${settlement.to}-${settlement.amount}`}>
             <td>{settlement.from}</td>
             <td>{settlement.to}</td>
             <td className="numeric strong">{settlement.amount}</td>
@@ -160,8 +198,10 @@ function ReimbursementsTable({ report }: { report: ExpenseReportViewModel }) {
         </tr>
       </thead>
       <tbody>
-        {report.reimbursements.map((reimbursement, index) => (
-          <tr key={`${reimbursement.date}-${reimbursement.amount}-${index}`}>
+        {report.reimbursements.map((reimbursement) => (
+          <tr
+            key={`${reimbursement.date}-${reimbursement.from}-${reimbursement.to}-${reimbursement.amount}`}
+          >
             <td>{reimbursement.date}</td>
             <td>{reimbursement.from}</td>
             <td>{reimbursement.to}</td>
@@ -259,8 +299,16 @@ export function ReportPrintPage({ groupId, from, to }: ReportPrintPageProps) {
 
   useEffect(() => {
     if (!report || typeof window.print !== 'function') return
-    const timer = window.setTimeout(() => window.print(), 250)
-    return () => window.clearTimeout(timer)
+    let cancelled = false
+    const timer = window.setTimeout(() => {
+      void waitForPrintImages().then(() => {
+        if (!cancelled) window.print()
+      })
+    }, 250)
+    return () => {
+      cancelled = true
+      window.clearTimeout(timer)
+    }
   }, [report])
 
   if (reportQuery.isPending) {
@@ -286,7 +334,10 @@ export function ReportPrintPage({ groupId, from, to }: ReportPrintPageProps) {
 
   return (
     <main
-      className="print-report-shell"
+      className={cn(
+        'print-report-shell',
+        report.pageSize === 'LETTER' && 'print-report-page-letter',
+      )}
       dir={report.direction}
       aria-label={report.title}
     >

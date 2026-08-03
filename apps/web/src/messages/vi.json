@@ -187,7 +187,8 @@
     "exportPdfCancel": "Hủy",
     "exportPdfInvalidRange": "Ngày kết thúc phải trùng hoặc sau ngày bắt đầu.",
     "exportPdfError": "Không thể tạo PDF. Vui lòng thử lại.",
-    "exportPdfSuccess": "Đã tải báo cáo PDF."
+    "exportPdfSuccess": "Đã tải báo cáo PDF.",
+    "exportPdfRetryBounds": "Thử lại"
   },
   "ExpenseCard": {
     "paidBy": "Được trả bởi <strong>{paidBy}</strong> · chia cho <paidFor></paidFor>",

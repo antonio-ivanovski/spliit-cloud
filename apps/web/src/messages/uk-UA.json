@@ -174,7 +174,8 @@
     "exportPdfCancel": "Скасувати",
     "exportPdfInvalidRange": "Кінцева дата має бути не раніше початкової.",
     "exportPdfError": "Не вдалося створити PDF. Спробуйте ще раз.",
-    "exportPdfSuccess": "PDF-звіт завантажено."
+    "exportPdfSuccess": "PDF-звіт завантажено.",
+    "exportPdfRetryBounds": "Повторити"
   },
   "ExpenseCard": {
     "paidBy": "Сплачено <strong>{paidBy}</strong> за <paidFor></paidFor>",

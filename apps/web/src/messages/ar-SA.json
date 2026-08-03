@@ -152,7 +152,8 @@
     "exportPdfCancel": "إلغاء",
     "exportPdfInvalidRange": "يجب أن يكون تاريخ الانتهاء في نفس يوم تاريخ البدء أو بعده.",
     "exportPdfError": "تعذَّر إنشاء ملف PDF. يرجى المحاولة مرة أخرى.",
-    "exportPdfSuccess": "تم تنزيل تقرير PDF."
+    "exportPdfSuccess": "تم تنزيل تقرير PDF.",
+    "exportPdfRetryBounds": "إعادة المحاولة"
   },
   "GroupForm": {
     "CurrencyField": {

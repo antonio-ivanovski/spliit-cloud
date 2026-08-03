@@ -28,12 +28,38 @@ export function formatIsoDate(date: Date): string {
   return `${year}-${month}-${day}`
 }
 
-/** UTC midnight of today. */
+/** UTC midnight of today, used when no browser time zone is available. */
 export function todayUtc(): Date {
   const now = new Date()
   return new Date(
     Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
   )
+}
+
+/**
+ * Return today's calendar date at midnight UTC for a browser-provided IANA time
+ * zone. Invalid or missing zones fall back to UTC rather than preventing the
+ * report dialog from opening.
+ */
+export function todayInTimeZone(timeZone?: string, now = new Date()): Date {
+  if (!timeZone) return todayUtc()
+
+  try {
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).formatToParts(now)
+    const values = Object.fromEntries(
+      parts
+        .filter((part) => part.type !== 'literal')
+        .map((part) => [part.type, part.value]),
+    )
+    return parseReportDate(`${values.year}-${values.month}-${values.day}`)
+  } catch {
+    return todayUtc()
+  }
 }
 
 /** End of an inclusive `to` bound: everything through 23:59:59.999 UTC. */

@@ -1443,7 +1443,8 @@
     "exportPdfCancel": "Avbryt",
     "exportPdfInvalidRange": "Slutdatumet måste vara samma som eller senare än startdatumet.",
     "exportPdfError": "PDF:en kunde inte skapas. Försök igen.",
-    "exportPdfSuccess": "PDF-rapport nedladdad."
+    "exportPdfSuccess": "PDF-rapport nedladdad.",
+    "exportPdfRetryBounds": "Försök igen"
   },
   "Footer": {
     "madeIn": "Gjord med kärlek av open source-communityn ❤️",

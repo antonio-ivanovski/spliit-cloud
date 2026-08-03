@@ -173,7 +173,8 @@
     "exportPdfCancel": "Cancelar",
     "exportPdfInvalidRange": "La fecha final debe ser igual o posterior a la fecha inicial.",
     "exportPdfError": "No se ha podido generar el PDF. Inténtalo de nuevo.",
-    "exportPdfSuccess": "Informe PDF descargado."
+    "exportPdfSuccess": "Informe PDF descargado.",
+    "exportPdfRetryBounds": "Reintentar"
   },
   "ExpenseCard": {
     "receivedBy": "Recibido por <strong>{paidBy}</strong> · asignado a <paidFor></paidFor>",

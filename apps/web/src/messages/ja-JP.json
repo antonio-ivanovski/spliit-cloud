@@ -171,7 +171,8 @@
     "exportPdfCancel": "キャンセル",
     "exportPdfInvalidRange": "終了日は開始日以降にしてください。",
     "exportPdfError": "PDFを生成できませんでした。もう一度お試しください。",
-    "exportPdfSuccess": "PDFレポートをダウンロードしました。"
+    "exportPdfSuccess": "PDFレポートをダウンロードしました。",
+    "exportPdfRetryBounds": "再試行"
   },
   "ExpenseCard": {
     "receivedBy": "<strong>{paidBy}</strong>が受取 · <paidFor></paidFor>に配分",

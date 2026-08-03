@@ -1624,7 +1624,8 @@
     "exportPdfCancel": "cancel",
     "exportPdfInvalidRange": "the end date must be on or after the start date.",
     "exportPdfError": "could not generate the PDF. please try again.",
-    "exportPdfSuccess": "pdf report downloaded."
+    "exportPdfSuccess": "pdf report downloaded.",
+    "exportPdfRetryBounds": "hit retry"
   },
   "Feedback": {
     "navigationLabel": "feedback zone",

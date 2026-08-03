@@ -173,7 +173,8 @@
     "exportPdfCancel": "Annuler",
     "exportPdfInvalidRange": "La date de fin doit être postérieure ou égale à la date de début.",
     "exportPdfError": "Impossible de générer le PDF. Veuillez réessayer.",
-    "exportPdfSuccess": "Rapport PDF téléchargé."
+    "exportPdfSuccess": "Rapport PDF téléchargé.",
+    "exportPdfRetryBounds": "Réessayer"
   },
   "ExpenseCard": {
     "receivedBy": "Reçu par <strong>{paidBy}</strong> pour <paidFor></paidFor>",
