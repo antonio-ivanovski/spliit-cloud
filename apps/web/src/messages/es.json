@@ -154,7 +154,26 @@
     "globalFiltersActive": "{count} filtros activos",
     "globalEmpty": "Ningún gasto coincide con tus filtros.",
     "clearSearch": "Borrar búsqueda",
-    "loading": "Cargando gastos…"
+    "loading": "Cargando gastos…",
+    "exportPdfTitle": "Informe PDF",
+    "exportCsvTitle": "Hoja de cálculo CSV",
+    "exportJsonTitle": "Copia de seguridad JSON",
+    "exportPdfPurpose": "Informe con marca que incluye gastos, saldos y transferencias sugeridas.",
+    "exportCsvPurpose": "Historial completo en una hoja de cálculo para Excel o Sheets.",
+    "exportJsonPurpose": "Copia de seguridad legible por máquinas de todos los gastos del grupo.",
+    "exportPdfAction": "Crear PDF",
+    "exportCsvAction": "Descargar CSV",
+    "exportJsonAction": "Descargar JSON",
+    "exportPdfDialogTitle": "Generar informe PDF",
+    "exportPdfDialogDescription": "Elige el periodo que quieres incluir. Los gastos corresponden a las fechas seleccionadas; los saldos y las transferencias se muestran a fecha final.",
+    "exportPdfFromLabel": "Desde",
+    "exportPdfToLabel": "Hasta",
+    "exportPdfGenerate": "Generar PDF",
+    "exportPdfGenerating": "Generando…",
+    "exportPdfCancel": "Cancelar",
+    "exportPdfInvalidRange": "La fecha final debe ser igual o posterior a la fecha inicial.",
+    "exportPdfError": "No se ha podido generar el PDF. Inténtalo de nuevo.",
+    "exportPdfSuccess": "Informe PDF descargado."
   },
   "ExpenseCard": {
     "receivedBy": "Recibido por <strong>{paidBy}</strong> · asignado a <paidFor></paidFor>",
@@ -498,7 +517,7 @@
       "title": "Registrar gastos con un amigo"
     },
     "importGroup": "Importar grupo",
-    "exportDescription": "Descargar los gastos del grupo en formato JSON o CSV.",
+    "exportDescription": "Descarga los gastos del grupo como informe PDF, hoja de cálculo CSV o copia de seguridad JSON.",
     "allExpenses": "Todos los gastos"
   },
   "GroupForm": {
@@ -2593,5 +2612,34 @@
       "copied": "Copiado",
       "copyFailed": "No se pudo acceder al portapapeles. Selecciona y copia los diagnósticos manualmente."
     }
+  },
+  "ExpenseReport": {
+    "title": "Informe de gastos",
+    "generatedOnLabel": "Generado el",
+    "periodLabel": "Periodo seleccionado",
+    "balanceAsOfLabel": "Saldo a fecha de",
+    "totalSpentLabel": "Total gastado",
+    "expensesCountLabel": "Gastos",
+    "participantsCountLabel": "Participantes",
+    "participantsSectionLabel": "Resumen de participantes",
+    "settlementsSectionLabel": "Liquidaciones sugeridas",
+    "reimbursementsSectionLabel": "Reembolsos registrados",
+    "expensesSectionLabel": "Detalles de gastos",
+    "amountColumnLabel": "Importe",
+    "participantColumnLabel": "Participante",
+    "paidColumnLabel": "Pagado",
+    "shareColumnLabel": "Parte",
+    "balanceColumnLabel": "Saldo",
+    "dateColumnLabel": "Fecha",
+    "fromColumnLabel": "De",
+    "toColumnLabel": "A",
+    "splitLabel": "Reparto",
+    "noExpensesLabel": "No hay gastos en el periodo seleccionado.",
+    "noParticipantsLabel": "No hay participantes con actividad en el periodo seleccionado.",
+    "noSettlementsLabel": "Todo está saldado a fecha final.",
+    "noReimbursementsLabel": "No hay reembolsos registrados hasta la fecha final.",
+    "originalAmountLabel": "Importe original",
+    "expenseColumnLabel": "Gasto",
+    "categoryColumnLabel": "Categoria"
   }
 }

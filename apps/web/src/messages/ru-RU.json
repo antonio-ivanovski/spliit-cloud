@@ -155,7 +155,26 @@
     "globalFiltersActive": "Активных фильтров: {count}",
     "globalEmpty": "Нет расходов, соответствующих фильтрам.",
     "clearSearch": "Очистить поиск",
-    "loading": "Загрузка расходов…"
+    "loading": "Загрузка расходов…",
+    "exportPdfTitle": "PDF-отчёт",
+    "exportCsvTitle": "Таблица CSV",
+    "exportJsonTitle": "Резервная копия JSON",
+    "exportPdfPurpose": "Фирменный отчёт с расходами, балансами и предлагаемыми переводами.",
+    "exportCsvPurpose": "Полная история в электронной таблице для Excel или Sheets.",
+    "exportJsonPurpose": "Машиночитаемая резервная копия всех расходов группы.",
+    "exportPdfAction": "Создать PDF",
+    "exportCsvAction": "Скачать CSV",
+    "exportJsonAction": "Скачать JSON",
+    "exportPdfDialogTitle": "Создать PDF-отчёт",
+    "exportPdfDialogDescription": "Выберите период для включения. Расходы охватывают выбранные даты, а балансы и переводы указаны на конечную дату.",
+    "exportPdfFromLabel": "От",
+    "exportPdfToLabel": "До",
+    "exportPdfGenerate": "Создать PDF",
+    "exportPdfGenerating": "Создание…",
+    "exportPdfCancel": "Отмена",
+    "exportPdfInvalidRange": "Конечная дата должна быть не раньше начальной.",
+    "exportPdfError": "Не удалось создать PDF. Попробуйте ещё раз.",
+    "exportPdfSuccess": "PDF-отчёт скачан."
   },
   "ExpenseCard": {
     "paidBy": "Потратил <strong>{paidBy}</strong> за <paidFor></paidFor>",
@@ -504,7 +523,7 @@
       "title": "Создать расчёт с другом"
     },
     "importGroup": "Импортировать группу",
-    "exportDescription": "Скачайте расходы группы в формате JSON или CSV.",
+    "exportDescription": "Скачайте расходы группы в виде PDF-отчёта, электронной таблицы CSV или резервной копии JSON.",
     "allExpenses": "Все расходы"
   },
   "GroupForm": {
@@ -2609,5 +2628,34 @@
       "copied": "Скопировано",
       "copyFailed": "Не удалось получить доступ к буферу обмена. Выделите и скопируйте диагностику вручную."
     }
+  },
+  "ExpenseReport": {
+    "title": "Отчёт о расходах",
+    "generatedOnLabel": "Сформировано",
+    "periodLabel": "Выбранный период",
+    "balanceAsOfLabel": "Баланс на",
+    "totalSpentLabel": "Всего потрачено",
+    "expensesCountLabel": "Расходы",
+    "participantsCountLabel": "Участники",
+    "participantsSectionLabel": "Сводка по участникам",
+    "settlementsSectionLabel": "Предлагаемые расчёты",
+    "reimbursementsSectionLabel": "Зарегистрированные возмещения",
+    "expensesSectionLabel": "Детали расходов",
+    "amountColumnLabel": "Сумма",
+    "participantColumnLabel": "Участник",
+    "paidColumnLabel": "Оплачено",
+    "shareColumnLabel": "Доля",
+    "balanceColumnLabel": "Баланс",
+    "dateColumnLabel": "Дата",
+    "fromColumnLabel": "От",
+    "toColumnLabel": "Кому",
+    "splitLabel": "Разделение",
+    "noExpensesLabel": "За выбранный период расходов нет.",
+    "noParticipantsLabel": "За выбранный период нет участников с активностью.",
+    "noSettlementsLabel": "На конечную дату всё рассчитано.",
+    "noReimbursementsLabel": "До конечной даты возмещения не зарегистрированы.",
+    "originalAmountLabel": "Исходная сумма",
+    "expenseColumnLabel": "Расход",
+    "categoryColumnLabel": "Категория"
   }
 }

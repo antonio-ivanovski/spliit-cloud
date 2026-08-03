@@ -1424,7 +1424,26 @@
     "globalFiltersActive": "{count} फ़िल्टर सक्रिय",
     "globalEmpty": "कोई भी खर्च आपके फ़िल्टर से मेल नहीं खाता।",
     "clearSearch": "खोज साफ़ करें",
-    "loading": "खर्च लोड हो रहे हैं…"
+    "loading": "खर्च लोड हो रहे हैं…",
+    "exportPdfTitle": "PDF रिपोर्ट",
+    "exportCsvTitle": "CSV स्प्रेडशीट",
+    "exportJsonTitle": "JSON बैकअप",
+    "exportPdfPurpose": "खर्च, शेष राशियों और सुझाए गए हस्तांतरणों वाला ब्रांडेड विवरण।",
+    "exportCsvPurpose": "Excel या Sheets के लिए स्प्रेडशीट में पूरा इतिहास।",
+    "exportJsonPurpose": "समूह के हर खर्च का मशीन-पठनीय बैकअप।",
+    "exportPdfAction": "PDF बनाएं",
+    "exportCsvAction": "CSV डाउनलोड करें",
+    "exportJsonAction": "JSON डाउनलोड करें",
+    "exportPdfDialogTitle": "PDF रिपोर्ट बनाएं",
+    "exportPdfDialogDescription": "शामिल करने के लिए अवधि चुनें। खर्च में चुनी गई तारीखें शामिल होंगी; शेष राशियां और हस्तांतरण अंतिम तारीख तक की स्थिति के अनुसार दिखाए जाएंगे।",
+    "exportPdfFromLabel": "से",
+    "exportPdfToLabel": "तक",
+    "exportPdfGenerate": "PDF बनाएं",
+    "exportPdfGenerating": "तैयार की जा रही है…",
+    "exportPdfCancel": "रद्द करें",
+    "exportPdfInvalidRange": "अंतिम तारीख, शुरुआती तारीख के समान या उसके बाद की होनी चाहिए।",
+    "exportPdfError": "PDF रिपोर्ट नहीं बनाई जा सकी। कृपया फिर से कोशिश करें।",
+    "exportPdfSuccess": "PDF रिपोर्ट डाउनलोड हो गई।"
   },
   "Footer": {
     "madeIn": "ओपन-सोर्स समुदाय द्वारा प्यार से बनाया गया ❤️",
@@ -1831,7 +1850,6 @@
       }
     },
     "importGroup": "समूह आयात करें",
-    "exportDescription": "समूह खर्चों को JSON या CSV के रूप में डाउनलोड करें।",
     "invitations": {
       "title": "लंबित निमंत्रण",
       "description": "आपको निम्नलिखित समूहों में शामिल होने के लिए आमंत्रित किया गया है।",
@@ -1848,6 +1866,7 @@
       "title": "यह आमंत्रण लिंक अमान्य है",
       "description": "लिंक खराब है या इस समूह पर किसी निमंत्रण से मेल नहीं खाता।"
     },
+    "exportDescription": "समूह के खर्चों को PDF रिपोर्ट, CSV स्प्रेडशीट या JSON बैकअप के रूप में डाउनलोड करें।",
     "allExpenses": "सभी खर्च"
   },
   "Header": {
@@ -2571,5 +2590,34 @@
       "copied": "कॉपी किया गया",
       "copyFailed": "क्लिपबोर्ड तक पहुँच विफल रही। निदान जानकारी चुनें और उसे मैन्युअल रूप से कॉपी करें।"
     }
+  },
+  "ExpenseReport": {
+    "title": "खर्च रिपोर्ट",
+    "generatedOnLabel": "तैयार करने की तारीख",
+    "periodLabel": "चुनी गई अवधि",
+    "balanceAsOfLabel": "इस तारीख तक की शेष राशि",
+    "totalSpentLabel": "कुल खर्च",
+    "expensesCountLabel": "खर्च",
+    "participantsCountLabel": "प्रतिभागी",
+    "participantsSectionLabel": "प्रतिभागी सारांश",
+    "settlementsSectionLabel": "सुझाए गए निपटान",
+    "reimbursementsSectionLabel": "दर्ज की गई प्रतिपूर्तियां",
+    "expensesSectionLabel": "खर्च का विवरण",
+    "amountColumnLabel": "राशि",
+    "participantColumnLabel": "प्रतिभागी",
+    "paidColumnLabel": "भुगतान",
+    "shareColumnLabel": "हिस्सा",
+    "balanceColumnLabel": "शेष राशि",
+    "dateColumnLabel": "तारीख",
+    "fromColumnLabel": "भेजने वाला",
+    "toColumnLabel": "प्राप्तकर्ता",
+    "splitLabel": "विभाजन",
+    "noExpensesLabel": "चुनी गई अवधि में कोई खर्च नहीं है।",
+    "noParticipantsLabel": "चुनी गई अवधि में किसी प्रतिभागी की कोई गतिविधि नहीं है।",
+    "noSettlementsLabel": "अंतिम तारीख तक सभी हिसाब चुकता हो चुके हैं।",
+    "noReimbursementsLabel": "अंतिम तारीख तक कोई प्रतिपूर्ति दर्ज नहीं की गई।",
+    "originalAmountLabel": "मूल राशि",
+    "expenseColumnLabel": "खर्च",
+    "categoryColumnLabel": "श्रेणी"
   }
 }

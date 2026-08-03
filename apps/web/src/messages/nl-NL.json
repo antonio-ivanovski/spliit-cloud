@@ -153,7 +153,26 @@
     "globalFiltersActive": "{count} filters actief",
     "globalEmpty": "Geen uitgaven komen overeen met je filters.",
     "clearSearch": "Zoekopdracht wissen",
-    "loading": "Uitgaven laden…"
+    "loading": "Uitgaven laden…",
+    "exportPdfTitle": "PDF-rapport",
+    "exportCsvTitle": "CSV-spreadsheet",
+    "exportJsonTitle": "JSON-back-up",
+    "exportPdfPurpose": "Op maat gemaakt overzicht met uitgaven, saldi en voorgestelde overschrijvingen.",
+    "exportCsvPurpose": "Volledige geschiedenis in een spreadsheet voor Excel of Sheets.",
+    "exportJsonPurpose": "Machinaal leesbare back-up van elke groepsuitgave.",
+    "exportPdfAction": "PDF maken",
+    "exportCsvAction": "CSV downloaden",
+    "exportJsonAction": "JSON downloaden",
+    "exportPdfDialogTitle": "PDF-rapport genereren",
+    "exportPdfDialogDescription": "Kies de periode die je wilt opnemen. Uitgaven gelden voor de geselecteerde data; saldi en overschrijvingen worden gerapporteerd per de einddatum.",
+    "exportPdfFromLabel": "Van",
+    "exportPdfToLabel": "Tot",
+    "exportPdfGenerate": "PDF genereren",
+    "exportPdfGenerating": "Genereren…",
+    "exportPdfCancel": "Annuleren",
+    "exportPdfInvalidRange": "De einddatum moet op of na de startdatum liggen.",
+    "exportPdfError": "PDF kon niet worden gegenereerd. Probeer het opnieuw.",
+    "exportPdfSuccess": "PDF-rapport gedownload."
   },
   "ExpenseCard": {
     "paidBy": "Betaald door <strong>{paidBy}</strong> · verdeeld over <paidFor></paidFor>",
@@ -492,7 +511,7 @@
       "title": "Uitgaven met een vriend(in) bijhouden"
     },
     "importGroup": "Groep importeren",
-    "exportDescription": "Download de groepsuitgaven als JSON of CSV.",
+    "exportDescription": "Download de groepsuitgaven als PDF-rapport, CSV-spreadsheet of JSON-back-up.",
     "allExpenses": "Alle uitgaven"
   },
   "GroupForm": {
@@ -2575,5 +2594,34 @@
       "copied": "Gekopieerd",
       "copyFailed": "Toegang tot het klembord is mislukt. Selecteer en kopieer de diagnostiek handmatig."
     }
+  },
+  "ExpenseReport": {
+    "title": "Uitgavenrapport",
+    "generatedOnLabel": "Gegenereerd op",
+    "periodLabel": "Geselecteerde periode",
+    "balanceAsOfLabel": "Saldo per",
+    "totalSpentLabel": "Totaal uitgegeven",
+    "expensesCountLabel": "Uitgaven",
+    "participantsCountLabel": "Deelnemers",
+    "participantsSectionLabel": "Samenvatting van deelnemers",
+    "settlementsSectionLabel": "Voorgestelde verrekeningen",
+    "reimbursementsSectionLabel": "Vastgelegde verrekeningen",
+    "expensesSectionLabel": "Uitgavedetails",
+    "amountColumnLabel": "Bedrag",
+    "participantColumnLabel": "Deelnemer",
+    "paidColumnLabel": "Betaald",
+    "shareColumnLabel": "Aandeel",
+    "balanceColumnLabel": "Saldo",
+    "dateColumnLabel": "Datum",
+    "fromColumnLabel": "Van",
+    "toColumnLabel": "Aan",
+    "splitLabel": "Verdeling",
+    "noExpensesLabel": "Geen uitgaven in de geselecteerde periode.",
+    "noParticipantsLabel": "Geen deelnemers met activiteit in de geselecteerde periode.",
+    "noSettlementsLabel": "Alles is verrekend tot de einddatum.",
+    "noReimbursementsLabel": "Tot de einddatum zijn geen verrekeningen vastgelegd.",
+    "originalAmountLabel": "Oorspronkelijk bedrag",
+    "expenseColumnLabel": "Uitgave",
+    "categoryColumnLabel": "Categorie"
   }
 }

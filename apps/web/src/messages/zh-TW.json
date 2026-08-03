@@ -152,7 +152,26 @@
     "globalFiltersActive": "已啟用 {count} 個篩選條件",
     "globalEmpty": "沒有符合篩選條件的支出。",
     "clearSearch": "清除搜尋",
-    "loading": "正在載入支出…"
+    "loading": "正在載入支出…",
+    "exportPdfTitle": "PDF 報告",
+    "exportCsvTitle": "CSV 試算表",
+    "exportJsonTitle": "JSON 備份",
+    "exportPdfPurpose": "包含支出、餘額和建議轉帳的品牌明細。",
+    "exportCsvPurpose": "可在 Excel 或試算表中檢視的完整歷史試算表。",
+    "exportJsonPurpose": "機器可讀的群組消費完整備份。",
+    "exportPdfAction": "建立 PDF",
+    "exportCsvAction": "下載 CSV",
+    "exportJsonAction": "下載 JSON",
+    "exportPdfDialogTitle": "產生 PDF 報告",
+    "exportPdfDialogDescription": "請選擇要包含的期間。支出按所選日期統計，餘額與轉帳按結束日期報告。",
+    "exportPdfFromLabel": "開始日期",
+    "exportPdfToLabel": "結束日期",
+    "exportPdfGenerate": "產生 PDF",
+    "exportPdfGenerating": "產生中…",
+    "exportPdfCancel": "取消",
+    "exportPdfInvalidRange": "結束日期必須晚於或等於開始日期。",
+    "exportPdfError": "無法產生 PDF。請重試。",
+    "exportPdfSuccess": "PDF 報告已下載。"
   },
   "ExpenseCard": {
     "receivedBy": "收款人：<strong>{paidBy}</strong> · 分配給 <paidFor></paidFor>",
@@ -486,7 +505,7 @@
       "title": "記錄與好友的共同支出"
     },
     "importGroup": "匯入群組",
-    "exportDescription": "將群組支出下載為 JSON 或 CSV。",
+    "exportDescription": "將群組支出下載為 PDF 報告、CSV 試算表或 JSON 備份。",
     "allExpenses": "所有支出"
   },
   "GroupForm": {
@@ -2558,5 +2577,34 @@
       "copied": "已複製",
       "copyFailed": "無法存取剪貼簿。請選取並手動複製診斷資訊。"
     }
+  },
+  "ExpenseReport": {
+    "title": "消費報告",
+    "generatedOnLabel": "建立於",
+    "periodLabel": "所選期間",
+    "balanceAsOfLabel": "截至日期餘額",
+    "totalSpentLabel": "總支出",
+    "expensesCountLabel": "消費筆數",
+    "participantsCountLabel": "參與者人數",
+    "participantsSectionLabel": "參與者摘要",
+    "settlementsSectionLabel": "建議的結算",
+    "reimbursementsSectionLabel": "已記錄的報銷",
+    "expensesSectionLabel": "消費明細",
+    "amountColumnLabel": "金額",
+    "participantColumnLabel": "參與者",
+    "paidColumnLabel": "已付",
+    "shareColumnLabel": "份額",
+    "balanceColumnLabel": "餘額",
+    "dateColumnLabel": "日期",
+    "fromColumnLabel": "付款方",
+    "toColumnLabel": "收款方",
+    "splitLabel": "分攤",
+    "noExpensesLabel": "所選期間內沒有消費。",
+    "noParticipantsLabel": "所選期間內沒有參與活動的參與者。",
+    "noSettlementsLabel": "截至結束日期已全部結清。",
+    "noReimbursementsLabel": "截至結束日期沒有報銷紀錄。",
+    "originalAmountLabel": "原始金額",
+    "expenseColumnLabel": "支出",
+    "categoryColumnLabel": "類別"
   }
 }

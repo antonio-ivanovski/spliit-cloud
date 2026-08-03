@@ -168,7 +168,26 @@
     "globalFiltersActive": "{count} bộ lọc đang hoạt động",
     "globalEmpty": "Không có chi phí nào khớp với bộ lọc.",
     "clearSearch": "Xóa tìm kiếm",
-    "loading": "Đang tải chi phí…"
+    "loading": "Đang tải chi phí…",
+    "exportPdfTitle": "Báo cáo PDF",
+    "exportCsvTitle": "Bảng tính CSV",
+    "exportJsonTitle": "Sao lưu JSON",
+    "exportPdfPurpose": "Báo cáo có thương hiệu với chi tiêu, số dư và các khoản chuyển gợi ý.",
+    "exportCsvPurpose": "Toàn bộ lịch sử trong bảng tính cho Excel hoặc Sheets.",
+    "exportJsonPurpose": "Bản sao lưu có thể đọc bằng máy của mọi chi phí trong nhóm.",
+    "exportPdfAction": "Tạo PDF",
+    "exportCsvAction": "Tải CSV",
+    "exportJsonAction": "Tải JSON",
+    "exportPdfDialogTitle": "Tạo báo cáo PDF",
+    "exportPdfDialogDescription": "Chọn kỳ cần đưa vào. Chi tiêu bao gồm các ngày đã chọn; số dư và chuyển khoản được báo cáo tính đến ngày kết thúc.",
+    "exportPdfFromLabel": "Từ",
+    "exportPdfToLabel": "Đến",
+    "exportPdfGenerate": "Tạo PDF",
+    "exportPdfGenerating": "Đang tạo…",
+    "exportPdfCancel": "Hủy",
+    "exportPdfInvalidRange": "Ngày kết thúc phải trùng hoặc sau ngày bắt đầu.",
+    "exportPdfError": "Không thể tạo PDF. Vui lòng thử lại.",
+    "exportPdfSuccess": "Đã tải báo cáo PDF."
   },
   "ExpenseCard": {
     "paidBy": "Được trả bởi <strong>{paidBy}</strong> · chia cho <paidFor></paidFor>",
@@ -581,7 +600,7 @@
       "description": "Chia chi phí nhóm."
     },
     "importGroup": "Nhập dữ liệu",
-    "exportDescription": "Xuất chi phí ra tệp.",
+    "exportDescription": "Tải chi phí của nhóm xuống dưới dạng báo cáo PDF, bảng tính CSV hoặc bản sao lưu JSON.",
     "allExpenses": "Tất cả chi phí"
   },
   "Auth": {
@@ -2647,5 +2666,34 @@
       "copied": "Đã sao chép",
       "copyFailed": "Không thể truy cập bảng nhớ tạm. Hãy chọn và sao chép thông tin chẩn đoán theo cách thủ công."
     }
+  },
+  "ExpenseReport": {
+    "title": "Báo cáo chi phí",
+    "generatedOnLabel": "Được tạo vào",
+    "periodLabel": "Kỳ đã chọn",
+    "balanceAsOfLabel": "Số dư tính đến",
+    "totalSpentLabel": "Tổng chi",
+    "expensesCountLabel": "Chi phí",
+    "participantsCountLabel": "Thành viên",
+    "participantsSectionLabel": "Tóm tắt người tham gia",
+    "settlementsSectionLabel": "Thanh toán gợi ý",
+    "reimbursementsSectionLabel": "Các khoản hoàn trả đã ghi nhận",
+    "expensesSectionLabel": "Chi tiết chi phí",
+    "amountColumnLabel": "Số tiền",
+    "participantColumnLabel": "Thành viên",
+    "paidColumnLabel": "Đã trả",
+    "shareColumnLabel": "Phần",
+    "balanceColumnLabel": "Số dư",
+    "dateColumnLabel": "Ngày",
+    "fromColumnLabel": "Từ",
+    "toColumnLabel": "Đến",
+    "splitLabel": "Phân chia",
+    "noExpensesLabel": "Không có chi phí nào trong kỳ đã chọn.",
+    "noParticipantsLabel": "Không có thành viên nào có hoạt động trong kỳ đã chọn.",
+    "noSettlementsLabel": "Mọi khoản đã được thanh toán tính đến ngày kết thúc.",
+    "noReimbursementsLabel": "Không có khoản hoàn trả nào được ghi nhận đến ngày kết thúc.",
+    "originalAmountLabel": "Số tiền gốc",
+    "expenseColumnLabel": "Chi phí",
+    "categoryColumnLabel": "Danh mục"
   }
 }

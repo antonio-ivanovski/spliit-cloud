@@ -154,7 +154,26 @@
     "globalFiltersActive": "{count} filtres actifs",
     "globalEmpty": "Aucune dépense ne correspond à vos filtres.",
     "clearSearch": "Effacer la recherche",
-    "loading": "Chargement des dépenses…"
+    "loading": "Chargement des dépenses…",
+    "exportPdfTitle": "Rapport PDF",
+    "exportCsvTitle": "Feuille de calcul CSV",
+    "exportJsonTitle": "Sauvegarde JSON",
+    "exportPdfPurpose": "Relevé personnalisé avec dépenses, soldes et transferts suggérés.",
+    "exportCsvPurpose": "Historique complet dans une feuille de calcul pour Excel ou Sheets.",
+    "exportJsonPurpose": "Sauvegarde lisible par machine de toutes les dépenses du groupe.",
+    "exportPdfAction": "Créer un PDF",
+    "exportCsvAction": "Télécharger le CSV",
+    "exportJsonAction": "Télécharger le JSON",
+    "exportPdfDialogTitle": "Générer le rapport PDF",
+    "exportPdfDialogDescription": "Choisissez la période à inclure. Les dépenses couvrent les dates sélectionnées ; les soldes et transferts sont présentés à la date de fin.",
+    "exportPdfFromLabel": "Du",
+    "exportPdfToLabel": "Au",
+    "exportPdfGenerate": "Générer le rapport PDF",
+    "exportPdfGenerating": "Génération…",
+    "exportPdfCancel": "Annuler",
+    "exportPdfInvalidRange": "La date de fin doit être postérieure ou égale à la date de début.",
+    "exportPdfError": "Impossible de générer le PDF. Veuillez réessayer.",
+    "exportPdfSuccess": "Rapport PDF téléchargé."
   },
   "ExpenseCard": {
     "receivedBy": "Reçu par <strong>{paidBy}</strong> pour <paidFor></paidFor>",
@@ -498,7 +517,7 @@
       "title": "Suivre les dépenses avec un proche"
     },
     "importGroup": "Importer un groupe",
-    "exportDescription": "Télécharger les dépenses du groupe au format JSON ou CSV.",
+    "exportDescription": "Téléchargez les dépenses du groupe sous forme de rapport PDF, de feuille de calcul CSV ou de sauvegarde JSON.",
     "allExpenses": "Toutes les dépenses"
   },
   "GroupForm": {
@@ -2593,5 +2612,34 @@
       "copied": "Copié",
       "copyFailed": "Impossible d’accéder au presse-papiers. Sélectionnez et copiez les diagnostics manuellement."
     }
+  },
+  "ExpenseReport": {
+    "title": "Rapport de dépenses",
+    "generatedOnLabel": "Généré le",
+    "periodLabel": "Période sélectionnée",
+    "balanceAsOfLabel": "Solde au",
+    "totalSpentLabel": "Total dépensé",
+    "expensesCountLabel": "Dépenses",
+    "participantsCountLabel": "Personnes participantes",
+    "participantsSectionLabel": "Résumé des participants",
+    "settlementsSectionLabel": "Règlements suggérés",
+    "reimbursementsSectionLabel": "Remboursements enregistrés",
+    "expensesSectionLabel": "Détails des dépenses",
+    "amountColumnLabel": "Montant",
+    "participantColumnLabel": "Personne participante",
+    "paidColumnLabel": "Payé",
+    "shareColumnLabel": "Part",
+    "balanceColumnLabel": "Solde",
+    "dateColumnLabel": "Date du rapport",
+    "fromColumnLabel": "De",
+    "toColumnLabel": "À",
+    "splitLabel": "Répartition",
+    "noExpensesLabel": "Aucune dépense sur la période sélectionnée.",
+    "noParticipantsLabel": "Aucun participant n’a eu d’activité sur la période sélectionnée.",
+    "noSettlementsLabel": "Tout est réglé à la date de fin.",
+    "noReimbursementsLabel": "Aucun remboursement enregistré jusqu’à la date de fin.",
+    "originalAmountLabel": "Montant d’origine",
+    "expenseColumnLabel": "Dépense",
+    "categoryColumnLabel": "Catégorie"
   }
 }

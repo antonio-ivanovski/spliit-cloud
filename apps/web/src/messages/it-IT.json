@@ -154,7 +154,26 @@
     "globalFiltersActive": "{count} filtri attivi",
     "globalEmpty": "Nessuna spesa corrisponde ai filtri.",
     "clearSearch": "Cancella ricerca",
-    "loading": "Caricamento delle spese…"
+    "loading": "Caricamento delle spese…",
+    "exportPdfTitle": "Report PDF",
+    "exportCsvTitle": "Foglio di calcolo CSV",
+    "exportJsonTitle": "Backup JSON",
+    "exportPdfPurpose": "Riepilogo personalizzato con spese, saldi e trasferimenti suggeriti.",
+    "exportCsvPurpose": "Cronologia completa in un foglio di calcolo per Excel o Sheets.",
+    "exportJsonPurpose": "Backup leggibile dalle macchine di tutte le spese del gruppo.",
+    "exportPdfAction": "Crea PDF",
+    "exportCsvAction": "Scarica CSV",
+    "exportJsonAction": "Scarica JSON",
+    "exportPdfDialogTitle": "Genera report PDF",
+    "exportPdfDialogDescription": "Scegli il periodo da includere. Le spese coprono le date selezionate; saldi e trasferimenti sono riportati alla data di fine.",
+    "exportPdfFromLabel": "Da",
+    "exportPdfToLabel": "A",
+    "exportPdfGenerate": "Genera report PDF",
+    "exportPdfGenerating": "Generazione…",
+    "exportPdfCancel": "Annulla",
+    "exportPdfInvalidRange": "La data di fine deve essere uguale o successiva alla data di inizio.",
+    "exportPdfError": "Impossibile generare il PDF. Riprova.",
+    "exportPdfSuccess": "Report PDF scaricato."
   },
   "ExpenseCard": {
     "receivedBy": "Ricevuto da <strong>{paidBy}</strong> per <paidFor></paidFor>",
@@ -498,7 +517,7 @@
       "title": "Tieni traccia delle spese con un amico"
     },
     "importGroup": "Importa gruppo",
-    "exportDescription": "Scarica le spese del gruppo in formato JSON o CSV.",
+    "exportDescription": "Scarica le spese del gruppo come report PDF, foglio di calcolo CSV o backup JSON.",
     "allExpenses": "Tutte le spese"
   },
   "GroupForm": {
@@ -2593,5 +2612,34 @@
       "copied": "Copiato",
       "copyFailed": "Accesso agli appunti non riuscito. Seleziona e copia manualmente la diagnostica."
     }
+  },
+  "ExpenseReport": {
+    "title": "Report delle spese",
+    "generatedOnLabel": "Generato il",
+    "periodLabel": "Periodo selezionato",
+    "balanceAsOfLabel": "Saldo al",
+    "totalSpentLabel": "Totale speso",
+    "expensesCountLabel": "Spese",
+    "participantsCountLabel": "Partecipanti",
+    "participantsSectionLabel": "Riepilogo dei partecipanti",
+    "settlementsSectionLabel": "Regolamenti suggeriti",
+    "reimbursementsSectionLabel": "Rimborsi registrati",
+    "expensesSectionLabel": "Dettagli delle spese",
+    "amountColumnLabel": "Importo",
+    "participantColumnLabel": "Partecipante",
+    "paidColumnLabel": "Pagato",
+    "shareColumnLabel": "Quota",
+    "balanceColumnLabel": "Saldo",
+    "dateColumnLabel": "Data",
+    "fromColumnLabel": "Da",
+    "toColumnLabel": "A",
+    "splitLabel": "Ripartizione",
+    "noExpensesLabel": "Nessuna spesa nel periodo selezionato.",
+    "noParticipantsLabel": "Nessun partecipante con attività nel periodo selezionato.",
+    "noSettlementsLabel": "Tutto saldato alla data di fine.",
+    "noReimbursementsLabel": "Nessun rimborso registrato fino alla data di fine.",
+    "originalAmountLabel": "Importo originale",
+    "expenseColumnLabel": "Spesa",
+    "categoryColumnLabel": "Categoria"
   }
 }

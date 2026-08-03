@@ -154,7 +154,26 @@
     "globalFiltersActive": "{count} iragazki aktibo",
     "globalEmpty": "Ez dago iragazkiekin bat datorren gasturik.",
     "clearSearch": "Bilaketa garbitu",
-    "loading": "Gastuak kargatzen…"
+    "loading": "Gastuak kargatzen…",
+    "exportPdfTitle": "PDF txostena",
+    "exportCsvTitle": "CSV kalkulu-orria",
+    "exportJsonTitle": "JSON babeskopia",
+    "exportPdfPurpose": "Gastuekin, saldoekin eta gomendatutako transferentziekin markadun laburpena.",
+    "exportCsvPurpose": "Historia osoa Excel edo Sheets-erako kalkulu-orri batean.",
+    "exportJsonPurpose": "Taldeko gastu guztien makina bidez irakurtzeko babeskopia.",
+    "exportPdfAction": "Sortu PDF",
+    "exportCsvAction": "Deskargatu CSV",
+    "exportJsonAction": "Deskargatu JSON",
+    "exportPdfDialogTitle": "Sortu PDF txostena",
+    "exportPdfDialogDescription": "Aukeratu sartu beharreko aldia. Gastuak hautatutako datei dagozkie; saldoak eta transferentziak amaiera-datan erakusten dira.",
+    "exportPdfFromLabel": "Noiztik",
+    "exportPdfToLabel": "Noiz arte",
+    "exportPdfGenerate": "Sortu PDF",
+    "exportPdfGenerating": "Sortzen…",
+    "exportPdfCancel": "Utzi",
+    "exportPdfInvalidRange": "Amaiera-datak hasiera-dataren ondorengoa edo berdina izan behar du.",
+    "exportPdfError": "Ezin izan da PDFa sortu. Saiatu berriro.",
+    "exportPdfSuccess": "PDF txostena deskargatu da."
   },
   "ExpenseCard": {
     "paidBy": "<strong>{paidBy}</strong>(e)k ordaindua · <paidFor></paidFor> hauen artean banatuta",
@@ -498,7 +517,7 @@
       "title": "Jarraitu lagun batekin izandako gastuak"
     },
     "importGroup": "Inportatu taldea",
-    "exportDescription": "Deskargatu taldeko gastuak JSON edo CSV formatuan.",
+    "exportDescription": "Deskargatu taldeko gastuak PDF txosten, CSV kalkulu-orri edo JSON babeskopia gisa.",
     "allExpenses": "Gastu guztiak"
   },
   "GroupForm": {
@@ -2592,5 +2611,34 @@
       "copied": "Kopiatuta",
       "copyFailed": "Ezin izan da arbelera sartu. Hautatu eta kopiatu diagnostikoak eskuz."
     }
+  },
+  "ExpenseReport": {
+    "title": "Gastuen txostena",
+    "generatedOnLabel": "Sortze-data",
+    "periodLabel": "Hautatutako aldia",
+    "balanceAsOfLabel": "Saldoa data honetarako",
+    "totalSpentLabel": "Guztira gastatutakoa",
+    "expensesCountLabel": "Gastuak",
+    "participantsCountLabel": "Parte-hartzaileak",
+    "participantsSectionLabel": "Parte-hartzaileen laburpena",
+    "settlementsSectionLabel": "Gomendatutako likidazioak",
+    "reimbursementsSectionLabel": "Erregistratutako itzulketak",
+    "expensesSectionLabel": "Gastuen xehetasunak",
+    "amountColumnLabel": "Zenbatekoa",
+    "participantColumnLabel": "Parte-hartzailea",
+    "paidColumnLabel": "Ordainduta",
+    "shareColumnLabel": "Kuota",
+    "balanceColumnLabel": "Saldoa",
+    "dateColumnLabel": "Data",
+    "fromColumnLabel": "Nork",
+    "toColumnLabel": "Nori",
+    "splitLabel": "Banaketa",
+    "noExpensesLabel": "Ez dago gasturik hautatutako aldian.",
+    "noParticipantsLabel": "Ez dago hautatutako aldian jarduerarik izan duen parte-hartzailerik.",
+    "noSettlementsLabel": "Dena likidatuta dago amaiera-datan.",
+    "noReimbursementsLabel": "Ez da itzulketarik erregistratu amaiera-datara arte.",
+    "originalAmountLabel": "Jatorrizko zenbatekoa",
+    "expenseColumnLabel": "Gastua",
+    "categoryColumnLabel": "Kategoria"
   }
 }

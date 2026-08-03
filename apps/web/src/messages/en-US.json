@@ -168,7 +168,26 @@
     "globalFiltersActive": "{count} filters active",
     "globalEmpty": "No expenses match your filters.",
     "clearSearch": "Clear search",
-    "loading": "Loading expenses…"
+    "loading": "Loading expenses…",
+    "exportPdfTitle": "Print / save PDF",
+    "exportCsvTitle": "CSV spreadsheet",
+    "exportJsonTitle": "JSON backup",
+    "exportPdfPurpose": "Compact branded report. Use your browser to print or save it as a PDF.",
+    "exportCsvPurpose": "Full history in a spreadsheet for Excel or Sheets.",
+    "exportJsonPurpose": "Machine-readable backup of every group expense.",
+    "exportPdfAction": "Print / save PDF",
+    "exportCsvAction": "Download CSV",
+    "exportJsonAction": "Download JSON",
+    "exportPdfDialogTitle": "Print expense report",
+    "exportPdfDialogDescription": "Choose the period to include. Your browser will open the report so you can print it or save it as a PDF.",
+    "exportPdfFromLabel": "From",
+    "exportPdfToLabel": "To",
+    "exportPdfGenerate": "Open print view",
+    "exportPdfGenerating": "Opening…",
+    "exportPdfCancel": "Cancel",
+    "exportPdfInvalidRange": "The end date must be on or after the start date.",
+    "exportPdfError": "Could not open the print report. Please try again.",
+    "exportPdfSuccess": "Print report opened."
   },
   "ExpenseCard": {
     "paidBy": "Paid by <strong>{paidBy}</strong> · split between <paidFor></paidFor>",
@@ -581,7 +600,7 @@
       "description": "Track shared expenses with friends, family, or roommates."
     },
     "importGroup": "Import group",
-    "exportDescription": "Download the group expenses as JSON or CSV.",
+    "exportDescription": "Print the group expenses as a PDF report, or download them as CSV or JSON.",
     "allExpenses": "All expenses"
   },
   "Auth": {
@@ -2647,5 +2666,34 @@
       "copied": "Copied",
       "copyFailed": "Clipboard access failed. Select and copy the diagnostics manually."
     }
+  },
+  "ExpenseReport": {
+    "title": "Expense report",
+    "generatedOnLabel": "Generated on",
+    "periodLabel": "Selected period",
+    "balanceAsOfLabel": "Balance as of",
+    "totalSpentLabel": "Total spent",
+    "expensesCountLabel": "Expenses",
+    "participantsCountLabel": "Participants",
+    "participantsSectionLabel": "Participant summary",
+    "settlementsSectionLabel": "Suggested settlements",
+    "reimbursementsSectionLabel": "Recorded reimbursements",
+    "expensesSectionLabel": "Expense details",
+    "amountColumnLabel": "Amount",
+    "participantColumnLabel": "Participant",
+    "paidColumnLabel": "Paid",
+    "shareColumnLabel": "Share",
+    "balanceColumnLabel": "Balance",
+    "dateColumnLabel": "Date",
+    "fromColumnLabel": "From",
+    "toColumnLabel": "To",
+    "splitLabel": "Split",
+    "noExpensesLabel": "No expenses in the selected period.",
+    "noParticipantsLabel": "No participants with activity in the selected period.",
+    "noSettlementsLabel": "Everything is settled as of the end date.",
+    "noReimbursementsLabel": "No reimbursements recorded through the end date.",
+    "originalAmountLabel": "Original amount",
+    "expenseColumnLabel": "Expense",
+    "categoryColumnLabel": "Category"
   }
 }

@@ -152,7 +152,26 @@
     "globalFiltersActive": "{count}件のフィルターが有効",
     "globalEmpty": "条件に一致する支出はありません。",
     "clearSearch": "検索をクリア",
-    "loading": "支出を読み込み中…"
+    "loading": "支出を読み込み中…",
+    "exportPdfTitle": "PDFレポート",
+    "exportCsvTitle": "CSVスプレッドシート",
+    "exportJsonTitle": "JSONバックアップ",
+    "exportPdfPurpose": "支出、残高、送金の提案を含むブランド仕様の明細書です。",
+    "exportCsvPurpose": "ExcelやSheetsで開ける全履歴のスプレッドシートです。",
+    "exportJsonPurpose": "すべてのグループ支出を機械可読形式でバックアップします。",
+    "exportPdfAction": "PDFを作成",
+    "exportCsvAction": "CSVをダウンロード",
+    "exportJsonAction": "JSONをダウンロード",
+    "exportPdfDialogTitle": "PDFレポートを生成",
+    "exportPdfDialogDescription": "含める期間を選択してください。支出は選択した日付を対象とし、残高と送金は終了日時点で集計されます。",
+    "exportPdfFromLabel": "開始日",
+    "exportPdfToLabel": "終了日",
+    "exportPdfGenerate": "PDFを生成",
+    "exportPdfGenerating": "生成中…",
+    "exportPdfCancel": "キャンセル",
+    "exportPdfInvalidRange": "終了日は開始日以降にしてください。",
+    "exportPdfError": "PDFを生成できませんでした。もう一度お試しください。",
+    "exportPdfSuccess": "PDFレポートをダウンロードしました。"
   },
   "ExpenseCard": {
     "receivedBy": "<strong>{paidBy}</strong>が受取 · <paidFor></paidFor>に配分",
@@ -486,7 +505,7 @@
       "title": "友人との支出を記録"
     },
     "importGroup": "グループをインポート",
-    "exportDescription": "グループの支出を JSON または CSV としてダウンロードします。",
+    "exportDescription": "グループの支出をPDFレポート、CSVスプレッドシート、JSONバックアップとしてダウンロードします。",
     "allExpenses": "すべての支出"
   },
   "GroupForm": {
@@ -2558,5 +2577,34 @@
       "copied": "コピーしました",
       "copyFailed": "クリップボードにアクセスできませんでした。診断情報を選択して手動でコピーしてください。"
     }
+  },
+  "ExpenseReport": {
+    "title": "支出レポート",
+    "generatedOnLabel": "生成日",
+    "periodLabel": "選択期間",
+    "balanceAsOfLabel": "基準日",
+    "totalSpentLabel": "支出合計",
+    "expensesCountLabel": "支出件数",
+    "participantsCountLabel": "参加者数",
+    "participantsSectionLabel": "参加者の概要",
+    "settlementsSectionLabel": "精算の提案",
+    "reimbursementsSectionLabel": "記録された立替",
+    "expensesSectionLabel": "支出一覧",
+    "amountColumnLabel": "金額",
+    "participantColumnLabel": "参加者",
+    "paidColumnLabel": "支払額",
+    "shareColumnLabel": "負担",
+    "balanceColumnLabel": "残高",
+    "dateColumnLabel": "日付",
+    "fromColumnLabel": "支払者",
+    "toColumnLabel": "受取人",
+    "splitLabel": "分担",
+    "noExpensesLabel": "選択期間内に支出はありません。",
+    "noParticipantsLabel": "選択期間内に活動のある参加者はいません。",
+    "noSettlementsLabel": "終了日時点で精算済みです。",
+    "noReimbursementsLabel": "終了日までに記録された立替はありません。",
+    "originalAmountLabel": "元の金額",
+    "expenseColumnLabel": "支出",
+    "categoryColumnLabel": "カテゴリ"
   }
 }

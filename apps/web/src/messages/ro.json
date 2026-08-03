@@ -154,7 +154,26 @@
     "globalFiltersActive": "{count} filtre active",
     "globalEmpty": "Nicio cheltuială nu corespunde filtrelor.",
     "clearSearch": "Șterge căutarea",
-    "loading": "Se încarcă cheltuielile…"
+    "loading": "Se încarcă cheltuielile…",
+    "exportPdfTitle": "Raport PDF",
+    "exportCsvTitle": "Foaie de calcul CSV",
+    "exportJsonTitle": "Copie de rezervă JSON",
+    "exportPdfPurpose": "Extras personalizat cu cheltuieli, solduri și transferuri sugerate.",
+    "exportCsvPurpose": "Istoricul complet într-o foaie de calcul pentru Excel sau Sheets.",
+    "exportJsonPurpose": "Copie de rezervă lizibilă automat a tuturor cheltuielilor grupului.",
+    "exportPdfAction": "Creează PDF",
+    "exportCsvAction": "Descarcă CSV",
+    "exportJsonAction": "Descarcă JSON",
+    "exportPdfDialogTitle": "Generează raportul PDF",
+    "exportPdfDialogDescription": "Alege perioada de inclus. Cheltuielile acoperă datele selectate; soldurile și transferurile sunt raportate la data de sfârșit.",
+    "exportPdfFromLabel": "De la",
+    "exportPdfToLabel": "Până la",
+    "exportPdfGenerate": "Generează raportul PDF",
+    "exportPdfGenerating": "Se generează…",
+    "exportPdfCancel": "Anulează",
+    "exportPdfInvalidRange": "Data de sfârșit trebuie să fie ulterioară sau egală cu data de început.",
+    "exportPdfError": "Raportul PDF nu a putut fi generat. Încearcă din nou.",
+    "exportPdfSuccess": "Raportul PDF a fost descărcat."
   },
   "ExpenseCard": {
     "receivedBy": "Primit de <strong>{paidBy}</strong> pentru <paidFor></paidFor>",
@@ -498,7 +517,7 @@
       "title": "Urmărește cheltuielile cu un prieten"
     },
     "importGroup": "Importă grup",
-    "exportDescription": "Descarcă cheltuielile grupului în format JSON sau CSV.",
+    "exportDescription": "Descarcă cheltuielile grupului ca raport PDF, foaie de calcul CSV sau copie de rezervă JSON.",
     "allExpenses": "Toate cheltuielile"
   },
   "GroupForm": {
@@ -2593,5 +2612,34 @@
       "copied": "Copiat",
       "copyFailed": "Accesul la clipboard a eșuat. Selectează și copiază manual diagnosticul."
     }
+  },
+  "ExpenseReport": {
+    "title": "Raport de cheltuieli",
+    "generatedOnLabel": "Generat la",
+    "periodLabel": "Perioada selectată",
+    "balanceAsOfLabel": "Sold la data de",
+    "totalSpentLabel": "Total cheltuit",
+    "expensesCountLabel": "Cheltuieli",
+    "participantsCountLabel": "Participanți",
+    "participantsSectionLabel": "Rezumatul participanților",
+    "settlementsSectionLabel": "Decontări sugerate",
+    "reimbursementsSectionLabel": "Rambursări înregistrate",
+    "expensesSectionLabel": "Detalii cheltuieli",
+    "amountColumnLabel": "Sumă",
+    "participantColumnLabel": "Persoană participantă",
+    "paidColumnLabel": "Plătit",
+    "shareColumnLabel": "Cotă",
+    "balanceColumnLabel": "Sold",
+    "dateColumnLabel": "Data",
+    "fromColumnLabel": "De la",
+    "toColumnLabel": "Către",
+    "splitLabel": "Împărțire",
+    "noExpensesLabel": "Nu există cheltuieli în perioada selectată.",
+    "noParticipantsLabel": "Nu există participanți cu activitate în perioada selectată.",
+    "noSettlementsLabel": "Totul este achitat la data de sfârșit.",
+    "noReimbursementsLabel": "Nu au fost înregistrate rambursări până la data de sfârșit.",
+    "originalAmountLabel": "Sumă inițială",
+    "expenseColumnLabel": "Cheltuială",
+    "categoryColumnLabel": "Categorie"
   }
 }

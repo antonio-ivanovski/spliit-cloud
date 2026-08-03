@@ -1424,7 +1424,26 @@
     "globalFiltersActive": "{count} filter aktiva",
     "globalEmpty": "Inga utgifter matchar dina filter.",
     "clearSearch": "Rensa sökning",
-    "loading": "Laddar utgifter…"
+    "loading": "Laddar utgifter…",
+    "exportPdfTitle": "PDF-rapport",
+    "exportCsvTitle": "CSV-kalkylblad",
+    "exportJsonTitle": "JSON-säkerhetskopia",
+    "exportPdfPurpose": "Profilerad sammanställning med utgifter, saldon och föreslagna överföringar.",
+    "exportCsvPurpose": "Komplett historik i ett kalkylblad för Excel eller Sheets.",
+    "exportJsonPurpose": "Maskinläsbar säkerhetskopia av varje grupputgift.",
+    "exportPdfAction": "Skapa PDF",
+    "exportCsvAction": "Ladda ner CSV",
+    "exportJsonAction": "Ladda ner JSON",
+    "exportPdfDialogTitle": "Generera PDF-rapport",
+    "exportPdfDialogDescription": "Välj vilken period som ska ingå. Utgifter täcker de valda datumen; saldon och överföringar rapporteras per slutdatumet.",
+    "exportPdfFromLabel": "Från",
+    "exportPdfToLabel": "Till",
+    "exportPdfGenerate": "Generera PDF",
+    "exportPdfGenerating": "Genererar…",
+    "exportPdfCancel": "Avbryt",
+    "exportPdfInvalidRange": "Slutdatumet måste vara samma som eller senare än startdatumet.",
+    "exportPdfError": "PDF:en kunde inte skapas. Försök igen.",
+    "exportPdfSuccess": "PDF-rapport nedladdad."
   },
   "Footer": {
     "madeIn": "Gjord med kärlek av open source-communityn ❤️",
@@ -1831,7 +1850,6 @@
       }
     },
     "importGroup": "Importera grupp",
-    "exportDescription": "Ladda ner gruppens utgifter som JSON eller CSV.",
     "invitations": {
       "title": "Väntande inbjudningar",
       "description": "Du har blivit inbjuden att gå med i följande grupper.",
@@ -1848,6 +1866,7 @@
       "title": "Denna inbjudningslänk är ogiltig",
       "description": "Länken är felaktig eller matchar ingen inbjudan till denna grupp."
     },
+    "exportDescription": "Ladda ner gruppens utgifter som en PDF-rapport, ett CSV-kalkylblad eller en JSON-säkerhetskopia.",
     "allExpenses": "Alla utgifter"
   },
   "Header": {
@@ -2571,5 +2590,34 @@
       "copied": "Kopierat",
       "copyFailed": "Åtkomst till urklipp misslyckades. Markera och kopiera diagnostiken manuellt."
     }
+  },
+  "ExpenseReport": {
+    "title": "Utgiftsrapport",
+    "generatedOnLabel": "Skapad",
+    "periodLabel": "Vald period",
+    "balanceAsOfLabel": "Saldo per",
+    "totalSpentLabel": "Totalt spenderat",
+    "expensesCountLabel": "Utgifter",
+    "participantsCountLabel": "Deltagare",
+    "participantsSectionLabel": "Deltagaröversikt",
+    "settlementsSectionLabel": "Föreslagna avräkningar",
+    "reimbursementsSectionLabel": "Registrerade återbetalningar",
+    "expensesSectionLabel": "Utgiftsdetaljer",
+    "amountColumnLabel": "Belopp",
+    "participantColumnLabel": "Deltagare",
+    "paidColumnLabel": "Betalt",
+    "shareColumnLabel": "Andel",
+    "balanceColumnLabel": "Saldo",
+    "dateColumnLabel": "Datum",
+    "fromColumnLabel": "Från",
+    "toColumnLabel": "Till",
+    "splitLabel": "Fördelning",
+    "noExpensesLabel": "Inga utgifter i den valda perioden.",
+    "noParticipantsLabel": "Inga deltagare med aktivitet i den valda perioden.",
+    "noSettlementsLabel": "Allt är avräknat fram till slutdatumet.",
+    "noReimbursementsLabel": "Inga återbetalningar registrerade fram till slutdatumet.",
+    "originalAmountLabel": "Ursprungligt belopp",
+    "expenseColumnLabel": "Utgift",
+    "categoryColumnLabel": "Kategori"
   }
 }

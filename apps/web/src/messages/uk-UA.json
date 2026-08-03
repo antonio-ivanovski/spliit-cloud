@@ -155,7 +155,26 @@
     "globalFiltersActive": "Активних фільтрів: {count}",
     "globalEmpty": "Немає витрат, що відповідають фільтрам.",
     "clearSearch": "Очистити пошук",
-    "loading": "Завантаження витрат…"
+    "loading": "Завантаження витрат…",
+    "exportPdfTitle": "PDF-звіт",
+    "exportCsvTitle": "Електронна таблиця CSV",
+    "exportJsonTitle": "Резервна копія JSON",
+    "exportPdfPurpose": "Фірмовий звіт із витратами, балансами та запропонованими переказами.",
+    "exportCsvPurpose": "Повна історія в електронній таблиці для Excel або Sheets.",
+    "exportJsonPurpose": "Машиночитна резервна копія всіх витрат групи.",
+    "exportPdfAction": "Створити PDF",
+    "exportCsvAction": "Завантажити CSV",
+    "exportJsonAction": "Завантажити JSON",
+    "exportPdfDialogTitle": "Створити PDF-звіт",
+    "exportPdfDialogDescription": "Виберіть період для включення. Витрати охоплюють вибрані дати, а баланси й перекази наведено станом на кінцеву дату.",
+    "exportPdfFromLabel": "Від",
+    "exportPdfToLabel": "До",
+    "exportPdfGenerate": "Створити PDF",
+    "exportPdfGenerating": "Створення…",
+    "exportPdfCancel": "Скасувати",
+    "exportPdfInvalidRange": "Кінцева дата має бути не раніше початкової.",
+    "exportPdfError": "Не вдалося створити PDF. Спробуйте ще раз.",
+    "exportPdfSuccess": "PDF-звіт завантажено."
   },
   "ExpenseCard": {
     "paidBy": "Сплачено <strong>{paidBy}</strong> за <paidFor></paidFor>",
@@ -504,7 +523,7 @@
       "description": "Відстежуйте спільні витрати з друзями, родиною або сусідами по кімнаті."
     },
     "importGroup": "Імпортувати групу",
-    "exportDescription": "Завантажити витрати групи у форматі JSON або CSV.",
+    "exportDescription": "Завантажте витрати групи як PDF-звіт, електронну таблицю CSV або резервну копію JSON.",
     "allExpenses": "Усі витрати"
   },
   "GroupForm": {
@@ -2609,5 +2628,34 @@
       "copied": "Скопійовано",
       "copyFailed": "Не вдалося отримати доступ до буфера обміну. Виділіть і скопіюйте діагностику вручну."
     }
+  },
+  "ExpenseReport": {
+    "title": "Звіт про витрати",
+    "generatedOnLabel": "Сформовано",
+    "periodLabel": "Вибраний період",
+    "balanceAsOfLabel": "Баланс станом на",
+    "totalSpentLabel": "Усього витрачено",
+    "expensesCountLabel": "Витрати",
+    "participantsCountLabel": "Учасники",
+    "participantsSectionLabel": "Підсумок учасників",
+    "settlementsSectionLabel": "Запропоновані розрахунки",
+    "reimbursementsSectionLabel": "Зареєстровані відшкодування",
+    "expensesSectionLabel": "Деталі витрат",
+    "amountColumnLabel": "Сума",
+    "participantColumnLabel": "Учасник",
+    "paidColumnLabel": "Сплачено",
+    "shareColumnLabel": "Частка",
+    "balanceColumnLabel": "Баланс",
+    "dateColumnLabel": "Дата",
+    "fromColumnLabel": "Від",
+    "toColumnLabel": "Кому",
+    "splitLabel": "Розподіл",
+    "noExpensesLabel": "За вибраний період витрат немає.",
+    "noParticipantsLabel": "За вибраний період немає учасників з активністю.",
+    "noSettlementsLabel": "Станом на кінцеву дату все розраховано.",
+    "noReimbursementsLabel": "До кінцевої дати відшкодувань не зареєстровано.",
+    "originalAmountLabel": "Початкова сума",
+    "expenseColumnLabel": "Витрата",
+    "categoryColumnLabel": "Категорія"
   }
 }

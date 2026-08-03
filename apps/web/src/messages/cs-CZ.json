@@ -155,7 +155,26 @@
     "globalFiltersActive": "{count} aktivních filtrů",
     "globalEmpty": "Žádné výdaje neodpovídají filtrům.",
     "clearSearch": "Vymazat hledání",
-    "loading": "Načítání výdajů…"
+    "loading": "Načítání výdajů…",
+    "exportPdfTitle": "Přehled v PDF",
+    "exportCsvTitle": "Tabulka CSV",
+    "exportJsonTitle": "Záloha JSON",
+    "exportPdfPurpose": "Přehled s brandingem obsahující výdaje, zůstatky a navrhované převody.",
+    "exportCsvPurpose": "Kompletní historie v tabulce pro Excel nebo Tabulky Google.",
+    "exportJsonPurpose": "Strojově čitelná záloha všech výdajů skupiny.",
+    "exportPdfAction": "Vytvořit PDF",
+    "exportCsvAction": "Stáhnout CSV",
+    "exportJsonAction": "Stáhnout JSON",
+    "exportPdfDialogTitle": "Vygenerovat přehled v PDF",
+    "exportPdfDialogDescription": "Vyberte období, které chcete zahrnout. Výdaje pokrývají vybraná data; zůstatky a převody jsou uvedeny ke koncovému datu.",
+    "exportPdfFromLabel": "Od",
+    "exportPdfToLabel": "Do",
+    "exportPdfGenerate": "Vygenerovat PDF",
+    "exportPdfGenerating": "Generování…",
+    "exportPdfCancel": "Zrušit",
+    "exportPdfInvalidRange": "Koncové datum musí být stejné nebo pozdější než počáteční datum.",
+    "exportPdfError": "PDF se nepodařilo vygenerovat. Zkuste to prosím znovu.",
+    "exportPdfSuccess": "Přehled v PDF byl stažen."
   },
   "ExpenseCard": {
     "receivedBy": "Přijal(a) <strong>{paidBy}</strong> · přiděleno účastníkům <paidFor></paidFor>",
@@ -504,7 +523,7 @@
       "title": "Sledovat výdaje s přítelem či přítelkyní"
     },
     "importGroup": "Importovat skupinu",
-    "exportDescription": "Stáhnout výdaje skupiny jako JSON nebo CSV.",
+    "exportDescription": "Stáhněte si výdaje skupiny jako přehled v PDF, tabulku CSV nebo zálohu JSON.",
     "allExpenses": "Všechny výdaje"
   },
   "GroupForm": {
@@ -2609,5 +2628,34 @@
       "copied": "Zkopírováno",
       "copyFailed": "Přístup ke schránce se nezdařil. Vyberte a zkopírujte diagnostiku ručně."
     }
+  },
+  "ExpenseReport": {
+    "title": "Přehled výdajů",
+    "generatedOnLabel": "Vygenerováno",
+    "periodLabel": "Vybrané období",
+    "balanceAsOfLabel": "Zůstatek k datu",
+    "totalSpentLabel": "Celkem utraceno",
+    "expensesCountLabel": "Výdaje",
+    "participantsCountLabel": "Účastníci",
+    "participantsSectionLabel": "Souhrn účastníků",
+    "settlementsSectionLabel": "Navrhovaná vyrovnání",
+    "reimbursementsSectionLabel": "Zaznamenané náhrady",
+    "expensesSectionLabel": "Podrobnosti výdajů",
+    "amountColumnLabel": "Částka",
+    "participantColumnLabel": "Účastník",
+    "paidColumnLabel": "Zaplaceno",
+    "shareColumnLabel": "Podíl",
+    "balanceColumnLabel": "Zůstatek",
+    "dateColumnLabel": "Datum",
+    "fromColumnLabel": "Od",
+    "toColumnLabel": "Komu",
+    "splitLabel": "Rozdělení",
+    "noExpensesLabel": "Ve vybraném období nejsou žádné výdaje.",
+    "noParticipantsLabel": "Ve vybraném období nejsou žádní účastníci s aktivitou.",
+    "noSettlementsLabel": "K datu ukončení je vše vyrovnáno.",
+    "noReimbursementsLabel": "Do koncového data nebyly zaznamenány žádné náhrady.",
+    "originalAmountLabel": "Původní částka",
+    "expenseColumnLabel": "Výdaj",
+    "categoryColumnLabel": "Kategorie"
   }
 }

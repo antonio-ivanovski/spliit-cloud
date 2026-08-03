@@ -29,6 +29,11 @@ vi.mock('@/trpc/client', () => ({
       update: { useMutation: vi.fn(() => ({ mutateAsync: vi.fn() })) },
       archive: { useMutation: vi.fn(() => ({ mutateAsync: vi.fn() })) },
       delete: { useMutation: vi.fn(() => ({ mutateAsync: vi.fn() })) },
+      reports: {
+        bounds: {
+          useQuery: vi.fn(() => ({ data: undefined })),
+        },
+      },
     },
     useUtils: () => ({ groups: { invalidate: vi.fn() } }),
   },
@@ -67,6 +72,10 @@ vi.mock('@/components/link', () => ({
   Link: ({ href, children }: { href: string; children: React.ReactNode }) => (
     <a href={href}>{children}</a>
   ),
+}))
+
+vi.mock('@/lib/api-url', () => ({
+  getApiBaseUrl: () => 'http://localhost:3001',
 }))
 
 vi.mock('@/components/force-archive-dialog', () => ({
@@ -203,6 +212,54 @@ describe('EditGroup', () => {
     render(<EditGroup />)
 
     expect(screen.getByLabelText('Group name')).toBeInTheDocument()
+  })
+
+  // ── Export card visibility ─────────────────────────────────────────
+
+  it('renders the export options card for admins', () => {
+    render(<EditGroup />)
+
+    expect(
+      screen.getByRole('button', { name: 'Print / save PDF' }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Download CSV' })).toHaveAttribute(
+      'href',
+      'http://localhost:3001/groups/group-1/expenses/export/csv',
+    )
+    expect(screen.getByRole('link', { name: 'Download JSON' })).toHaveAttribute(
+      'href',
+      'http://localhost:3001/groups/group-1/expenses/export/json',
+    )
+  })
+
+  it('renders the export options card for members', () => {
+    mocks.mockUseCurrentGroup.mockReturnValue({
+      isLoading: false,
+      groupId: 'group-1',
+      group: {
+        id: 'group-1',
+        name: 'fri-ledger-xyz',
+        archived: false,
+        currency: '€',
+        currencyCode: 'EUR',
+        groupType: 'FRIEND',
+        friendPairKey: 'k1',
+        participants: [],
+      },
+      displayName: 'Alice & Bob',
+      currentLedgerParticipantId: 'lp1',
+      currentMember: { id: 'cm-1', role: 'MEMBER', status: 'ACTIVE' },
+      currentInvitation: null,
+      linkInviteState: null,
+    })
+    render(<EditGroup />)
+
+    expect(
+      screen.getByRole('button', { name: 'Print / save PDF' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('link', { name: 'Download CSV' }),
+    ).toBeInTheDocument()
   })
 
   // GroupTabs Members tab is tested in apps/web/src/tests/components/GroupTabs.test.tsx

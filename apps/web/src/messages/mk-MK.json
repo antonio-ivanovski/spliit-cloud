@@ -153,7 +153,26 @@
     "globalFiltersActive": "{count} активни филтри",
     "globalEmpty": "Ниту еден трошок не одговара на филтрите.",
     "clearSearch": "Исчисти пребарување",
-    "loading": "Се вчитуваат трошоци…"
+    "loading": "Се вчитуваат трошоци…",
+    "exportPdfTitle": "PDF извештај",
+    "exportCsvTitle": "CSV табела",
+    "exportJsonTitle": "JSON резервна копија",
+    "exportPdfPurpose": "Брендиран извештај со трошоци, состојби и предложени трансфери.",
+    "exportCsvPurpose": "Целосна историја во табела за Excel или Sheets.",
+    "exportJsonPurpose": "Машински читлива резервна копија на сите трошоци во групата.",
+    "exportPdfAction": "Креирај PDF",
+    "exportCsvAction": "Преземи CSV",
+    "exportJsonAction": "Преземи JSON",
+    "exportPdfDialogTitle": "Генерирај PDF извештај",
+    "exportPdfDialogDescription": "Изберете го периодот што сакате да го вклучите. Трошоците ги опфаќаат избраните датуми; состојбите и трансферите се прикажани на крајниот датум.",
+    "exportPdfFromLabel": "Од",
+    "exportPdfToLabel": "До",
+    "exportPdfGenerate": "Генерирај PDF",
+    "exportPdfGenerating": "Се генерира…",
+    "exportPdfCancel": "Откажи",
+    "exportPdfInvalidRange": "Крајниот датум мора да биде на или по почетниот датум.",
+    "exportPdfError": "PDF-от не може да се генерира. Обидете се повторно.",
+    "exportPdfSuccess": "PDF извештајот е преземен."
   },
   "ExpenseCard": {
     "paidBy": "Платено од <strong>{paidBy}</strong> · поделено меѓу <paidFor></paidFor>",
@@ -492,7 +511,7 @@
       "title": "Следете трошоци со пријател или пријателка"
     },
     "importGroup": "Увезете група",
-    "exportDescription": "Преземете ги трошоците на групата како JSON или CSV.",
+    "exportDescription": "Преземете ги трошоците на групата како PDF извештај, CSV табела или JSON резервна копија.",
     "allExpenses": "Сите трошоци"
   },
   "Auth": {
@@ -2573,5 +2592,34 @@
       "copied": "Копирано",
       "copyFailed": "Пристапот до таблата со исечоци не успеа. Изберете ја и копирајте ја дијагностиката рачно."
     }
+  },
+  "ExpenseReport": {
+    "title": "Извештај за трошоците",
+    "generatedOnLabel": "Генерирано на",
+    "periodLabel": "Избран период",
+    "balanceAsOfLabel": "Состојба на",
+    "totalSpentLabel": "Вкупно потрошено",
+    "expensesCountLabel": "Трошоци",
+    "participantsCountLabel": "Учесници",
+    "participantsSectionLabel": "Резиме на учесниците",
+    "settlementsSectionLabel": "Предложени порамнувања",
+    "reimbursementsSectionLabel": "Евидентирани надоместоци",
+    "expensesSectionLabel": "Детали за трошоците",
+    "amountColumnLabel": "Износ",
+    "participantColumnLabel": "Учесник",
+    "paidColumnLabel": "Платено",
+    "shareColumnLabel": "Удел",
+    "balanceColumnLabel": "Состојба",
+    "dateColumnLabel": "Датум",
+    "fromColumnLabel": "Од",
+    "toColumnLabel": "До",
+    "splitLabel": "Поделба",
+    "noExpensesLabel": "Нема трошоци во избраниот период.",
+    "noParticipantsLabel": "Нема учесници со активност во избраниот период.",
+    "noSettlementsLabel": "Сè е порамнето на крајниот датум.",
+    "noReimbursementsLabel": "Нема евидентирани надоместоци до крајниот датум.",
+    "originalAmountLabel": "Оригинален износ",
+    "expenseColumnLabel": "Трошок",
+    "categoryColumnLabel": "Категорија"
   }
 }

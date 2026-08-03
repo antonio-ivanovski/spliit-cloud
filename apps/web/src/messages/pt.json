@@ -154,7 +154,26 @@
     "globalFiltersActive": "{count} filtros ativos",
     "globalEmpty": "Nenhuma despesa corresponde aos seus filtros.",
     "clearSearch": "Limpar pesquisa",
-    "loading": "A carregar despesas…"
+    "loading": "A carregar despesas…",
+    "exportPdfTitle": "Relatório PDF",
+    "exportCsvTitle": "Folha de cálculo CSV",
+    "exportJsonTitle": "Cópia de segurança JSON",
+    "exportPdfPurpose": "Extrato personalizado com despesas, saldos e transferências sugeridas.",
+    "exportCsvPurpose": "Histórico completo numa folha de cálculo para Excel ou Sheets.",
+    "exportJsonPurpose": "Cópia de segurança legível por máquina de todas as despesas do grupo.",
+    "exportPdfAction": "Criar PDF",
+    "exportCsvAction": "Descarregar CSV",
+    "exportJsonAction": "Descarregar JSON",
+    "exportPdfDialogTitle": "Gerar relatório PDF",
+    "exportPdfDialogDescription": "Escolhe o período a incluir. As despesas abrangem as datas selecionadas; os saldos e as transferências são apresentados à data final.",
+    "exportPdfFromLabel": "De",
+    "exportPdfToLabel": "Até",
+    "exportPdfGenerate": "Gerar relatório PDF",
+    "exportPdfGenerating": "A gerar…",
+    "exportPdfCancel": "Cancelar",
+    "exportPdfInvalidRange": "A data final deve ser igual ou posterior à data inicial.",
+    "exportPdfError": "Não foi possível gerar o PDF. Tenta novamente.",
+    "exportPdfSuccess": "Relatório PDF descarregado."
   },
   "ExpenseCard": {
     "paidBy": "Pago por <strong>{paidBy}</strong> · dividido entre <paidFor></paidFor>",
@@ -498,7 +517,7 @@
       "title": "Regista despesas com um amigo"
     },
     "importGroup": "Importar grupo",
-    "exportDescription": "Descarrega as despesas do grupo em JSON ou CSV.",
+    "exportDescription": "Descarrega as despesas do grupo como relatório PDF, folha de cálculo CSV ou cópia de segurança JSON.",
     "allExpenses": "Todas as despesas"
   },
   "GroupForm": {
@@ -2593,5 +2612,34 @@
       "copied": "Copiado",
       "copyFailed": "Falha ao aceder à área de transferência. Selecione e copie os diagnósticos manualmente."
     }
+  },
+  "ExpenseReport": {
+    "title": "Relatório de despesas",
+    "generatedOnLabel": "Gerado em",
+    "periodLabel": "Período selecionado",
+    "balanceAsOfLabel": "Saldo em",
+    "totalSpentLabel": "Total gasto",
+    "expensesCountLabel": "Despesas",
+    "participantsCountLabel": "Participantes",
+    "participantsSectionLabel": "Resumo dos participantes",
+    "settlementsSectionLabel": "Liquidações sugeridas",
+    "reimbursementsSectionLabel": "Reembolsos registados",
+    "expensesSectionLabel": "Detalhes das despesas",
+    "amountColumnLabel": "Montante",
+    "participantColumnLabel": "Participante",
+    "paidColumnLabel": "Pago",
+    "shareColumnLabel": "Parte",
+    "balanceColumnLabel": "Saldo",
+    "dateColumnLabel": "Data",
+    "fromColumnLabel": "De",
+    "toColumnLabel": "Para",
+    "splitLabel": "Divisão",
+    "noExpensesLabel": "Não existem despesas no período selecionado.",
+    "noParticipantsLabel": "Não existem participantes com atividade no período selecionado.",
+    "noSettlementsLabel": "Está tudo liquidado à data final.",
+    "noReimbursementsLabel": "Não foram registados reembolsos até à data final.",
+    "originalAmountLabel": "Montante original",
+    "expenseColumnLabel": "Despesa",
+    "categoryColumnLabel": "Categoria"
   }
 }

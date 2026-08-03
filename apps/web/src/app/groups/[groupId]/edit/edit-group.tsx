@@ -16,7 +16,7 @@ import {
 import { trpc } from '@/trpc/client'
 
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
-import ExportButton from '../export-button'
+import { ExportOptionsCard } from '../export-options-card'
 import { useLinkInviteToken } from '../use-link-invite-token'
 import { DeleteGroupDialog } from './delete-group-dialog'
 import {
@@ -86,7 +86,7 @@ export const EditGroup = () => {
             <CardDescription>{tGroups('exportDescription')}</CardDescription>
           </CardHeader>
           <CardContent>
-            <ExportButton groupId={groupId} showLabel />
+            <ExportOptionsCard groupId={groupId} />
           </CardContent>
         </Card>
       </>
@@ -117,7 +117,7 @@ export const EditGroup = () => {
           <CardDescription>{tGroups('exportDescription')}</CardDescription>
         </CardHeader>
         <CardContent>
-          <ExportButton groupId={groupId} showLabel />
+          <ExportOptionsCard groupId={groupId} />
         </CardContent>
       </Card>
 

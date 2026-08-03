@@ -1424,7 +1424,26 @@
     "globalFiltersActive": "{count} فلٹر فعال",
     "globalEmpty": "کوئی خرچ آپ کے فلٹرز سے مطابقت نہیں رکھتا۔",
     "clearSearch": "تلاش صاف کریں",
-    "loading": "اخراجات لوڈ ہو رہے ہیں…"
+    "loading": "اخراجات لوڈ ہو رہے ہیں…",
+    "exportPdfTitle": "PDF رپورٹ",
+    "exportCsvTitle": "CSV اسپریڈ شیٹ",
+    "exportJsonTitle": "JSON بیک اپ",
+    "exportPdfPurpose": "اخراجات، بیلنس اور تجویز کردہ منتقلیوں پر مشتمل برانڈ شدہ گوشوارہ۔",
+    "exportCsvPurpose": "Excel یا Sheets کے لیے اسپریڈ شیٹ میں مکمل ریکارڈ۔",
+    "exportJsonPurpose": "گروپ کے ہر خرچ کا مشین سے پڑھنے کے قابل بیک اپ۔",
+    "exportPdfAction": "PDF بنائیں",
+    "exportCsvAction": "CSV ڈاؤن لوڈ کریں",
+    "exportJsonAction": "JSON ڈاؤن لوڈ کریں",
+    "exportPdfDialogTitle": "PDF رپورٹ تیار کریں",
+    "exportPdfDialogDescription": "شامل کرنے کے لیے مدت منتخب کریں۔ اخراجات میں منتخب تاریخیں شامل ہوں گی؛ بیلنس اور منتقلیاں آخری تاریخ تک کی صورتحال کے مطابق دکھائی جائیں گی۔",
+    "exportPdfFromLabel": "سے",
+    "exportPdfToLabel": "تک",
+    "exportPdfGenerate": "PDF تیار کریں",
+    "exportPdfGenerating": "تیار ہو رہی ہے…",
+    "exportPdfCancel": "منسوخ کریں",
+    "exportPdfInvalidRange": "آخری تاریخ، ابتدائی تاریخ کے برابر یا اس کے بعد کی ہونی چاہیے۔",
+    "exportPdfError": "PDF رپورٹ تیار نہیں ہو سکی۔ براہ کرم دوبارہ کوشش کریں۔",
+    "exportPdfSuccess": "PDF رپورٹ ڈاؤن لوڈ ہو گئی۔"
   },
   "Footer": {
     "madeIn": "اوپن سورس کمیونٹی نے محبت سے بنایا ❤️",
@@ -1831,7 +1850,6 @@
       }
     },
     "importGroup": "گروپ درآمد کریں",
-    "exportDescription": "گروپ کے اخراجات JSON یا CSV میں ڈاؤن لوڈ کریں۔",
     "invitations": {
       "title": "زیر التواء دعوت نامے",
       "description": "آپ کو مندرجہ ذیل گروپس میں شامل ہونے کے لیے مدعو کیا گیا ہے۔",
@@ -1848,6 +1866,7 @@
       "title": "یہ دعوت کا لنک غلط ہے",
       "description": "لنک خراب ہے یا اس گروپ پر کسی دعوت سے مماثل نہیں ہے۔"
     },
+    "exportDescription": "گروپ کے اخراجات PDF رپورٹ، CSV اسپریڈ شیٹ یا JSON بیک اپ کی صورت میں ڈاؤن لوڈ کریں۔",
     "allExpenses": "تمام اخراجات"
   },
   "Header": {
@@ -2572,5 +2591,34 @@
       "copied": "کاپی ہو گیا",
       "copyFailed": "کلپ بورڈ تک رسائی ناکام رہی۔ تشخیصی معلومات منتخب کر کے دستی طور پر کاپی کریں۔"
     }
+  },
+  "ExpenseReport": {
+    "title": "اخراجات کی رپورٹ",
+    "generatedOnLabel": "تیار کرنے کی تاریخ",
+    "periodLabel": "منتخب مدت",
+    "balanceAsOfLabel": "اس تاریخ تک کا بیلنس",
+    "totalSpentLabel": "کل خرچ",
+    "expensesCountLabel": "اخراجات",
+    "participantsCountLabel": "شرکاء",
+    "participantsSectionLabel": "شرکاء کا خلاصہ",
+    "settlementsSectionLabel": "تجویز کردہ تصفیے",
+    "reimbursementsSectionLabel": "درج شدہ باز ادائیگیاں",
+    "expensesSectionLabel": "اخراجات کی تفصیلات",
+    "amountColumnLabel": "رقم",
+    "participantColumnLabel": "شریک",
+    "paidColumnLabel": "ادا شدہ",
+    "shareColumnLabel": "حصہ",
+    "balanceColumnLabel": "بیلنس",
+    "dateColumnLabel": "تاریخ",
+    "fromColumnLabel": "بھیجنے والا",
+    "toColumnLabel": "وصول کنندہ",
+    "splitLabel": "تقسیم",
+    "noExpensesLabel": "منتخب مدت میں کوئی خرچ نہیں ہے۔",
+    "noParticipantsLabel": "منتخب مدت میں کسی شریک کی کوئی سرگرمی نہیں ہے۔",
+    "noSettlementsLabel": "آخری تاریخ تک تمام حسابات طے ہو چکے ہیں۔",
+    "noReimbursementsLabel": "آخری تاریخ تک کوئی باز ادائیگی درج نہیں کی گئی۔",
+    "originalAmountLabel": "اصل رقم",
+    "expenseColumnLabel": "خرچہ",
+    "categoryColumnLabel": "زمرہ"
   }
 }

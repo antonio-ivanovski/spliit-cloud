@@ -153,7 +153,26 @@
     "globalFiltersActive": "{count} suodatinta käytössä",
     "globalEmpty": "Mikään kulu ei vastaa suodattimia.",
     "clearSearch": "Tyhjennä haku",
-    "loading": "Ladataan kuluja…"
+    "loading": "Ladataan kuluja…",
+    "exportPdfTitle": "PDF-raportti",
+    "exportCsvTitle": "CSV-taulukko",
+    "exportJsonTitle": "JSON-varmuuskopio",
+    "exportPdfPurpose": "Brändätty yhteenveto kuluista, saldoista ja ehdotetuista siirroista.",
+    "exportCsvPurpose": "Kaikki tiedot taulukkona Exceliä tai Sheetsiä varten.",
+    "exportJsonPurpose": "Koneellisesti luettava varmuuskopio jokaisesta ryhmän kulusta.",
+    "exportPdfAction": "Luo PDF",
+    "exportCsvAction": "Lataa CSV",
+    "exportJsonAction": "Lataa JSON",
+    "exportPdfDialogTitle": "Luo PDF-raportti",
+    "exportPdfDialogDescription": "Valitse mukaan otettava jakso. Kulut kattavat valitut päivämäärät; saldot ja siirrot raportoidaan päättymispäivän tilanteen mukaan.",
+    "exportPdfFromLabel": "Alkaen",
+    "exportPdfToLabel": "Päättyen",
+    "exportPdfGenerate": "Luo PDF",
+    "exportPdfGenerating": "Luodaan…",
+    "exportPdfCancel": "Peruuta",
+    "exportPdfInvalidRange": "Päättymispäivän on oltava sama tai myöhempi kuin alkamispäivä.",
+    "exportPdfError": "PDF:n luominen epäonnistui. Yritä uudelleen.",
+    "exportPdfSuccess": "PDF-raportti ladattu."
   },
   "ExpenseCard": {
     "receivedBy": "Vastaanottaja <strong>{paidBy}</strong> · kohdistettu osallistujille <paidFor></paidFor>",
@@ -492,7 +511,7 @@
       "title": "Seuraa yhteisiä kuluja ystävän kanssa"
     },
     "importGroup": "Tuo ryhmä",
-    "exportDescription": "Lataa ryhmän kulut JSON- tai CSV-muodossa.",
+    "exportDescription": "Lataa ryhmän kulut PDF-raporttina, CSV-taulukkona tai JSON-varmuuskopiona.",
     "allExpenses": "Kaikki kulut"
   },
   "GroupForm": {
@@ -2575,5 +2594,34 @@
       "copied": "Kopioitu",
       "copyFailed": "Leikepöydän käyttö epäonnistui. Valitse ja kopioi diagnostiikkatiedot käsin."
     }
+  },
+  "ExpenseReport": {
+    "title": "Kuluraportti",
+    "generatedOnLabel": "Luotu",
+    "periodLabel": "Valittu jakso",
+    "balanceAsOfLabel": "Saldo",
+    "totalSpentLabel": "Kulut yhteensä",
+    "expensesCountLabel": "Kulut",
+    "participantsCountLabel": "Osallistujat",
+    "participantsSectionLabel": "Osallistujien yhteenveto",
+    "settlementsSectionLabel": "Ehdotetut selvitykset",
+    "reimbursementsSectionLabel": "Kirjatut hyvitykset",
+    "expensesSectionLabel": "Kulujen tiedot",
+    "amountColumnLabel": "Summa",
+    "participantColumnLabel": "Osallistuja",
+    "paidColumnLabel": "Maksettu",
+    "shareColumnLabel": "Osuus",
+    "balanceColumnLabel": "Saldo",
+    "dateColumnLabel": "Päivämäärä",
+    "fromColumnLabel": "Maksaja",
+    "toColumnLabel": "Vastaanottaja",
+    "splitLabel": "Jako",
+    "noExpensesLabel": "Valitulla jaksolla ei ole kuluja.",
+    "noParticipantsLabel": "Valitulla jaksolla ei ole aktiivisia osallistujia.",
+    "noSettlementsLabel": "Kaikki on selvitetty päättymispäivään mennessä.",
+    "noReimbursementsLabel": "Päättymispäivään mennessä ei ole kirjattu hyvityksiä.",
+    "originalAmountLabel": "Alkuperäinen summa",
+    "expenseColumnLabel": "Kulu",
+    "categoryColumnLabel": "Kategoria"
   }
 }

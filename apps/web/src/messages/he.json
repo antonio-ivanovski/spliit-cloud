@@ -154,7 +154,26 @@
     "globalFiltersActive": "{count} מסננים פעילים",
     "globalEmpty": "אין הוצאות התואמות למסננים.",
     "clearSearch": "נקה חיפוש",
-    "loading": "טוען הוצאות…"
+    "loading": "טוען הוצאות…",
+    "exportPdfTitle": "דוח PDF",
+    "exportCsvTitle": "גיליון אלקטרוני ב-CSV",
+    "exportJsonTitle": "גיבוי JSON",
+    "exportPdfPurpose": "דוח ממותג עם הוצאות, יתרות והעברות מוצעות.",
+    "exportCsvPurpose": "היסטוריה מלאה בגיליון אלקטרוני ל-Excel או ל-Sheets.",
+    "exportJsonPurpose": "גיבוי קריא למכונה של כל הוצאות הקבוצה.",
+    "exportPdfAction": "צור PDF",
+    "exportCsvAction": "הורד CSV",
+    "exportJsonAction": "הורד JSON",
+    "exportPdfDialogTitle": "צור דוח PDF",
+    "exportPdfDialogDescription": "בחר את התקופה לכלול. ההוצאות מכסות את התאריכים שנבחרו; יתרות והעברות מדווחות נכון לתאריך הסיום.",
+    "exportPdfFromLabel": "מ-",
+    "exportPdfToLabel": "עד",
+    "exportPdfGenerate": "צור PDF",
+    "exportPdfGenerating": "יוצר…",
+    "exportPdfCancel": "ביטול",
+    "exportPdfInvalidRange": "תאריך הסיום חייב להיות בתאריך ההתחלה או אחריו.",
+    "exportPdfError": "יצירת ה-PDF נכשלה. אנא נסה שוב.",
+    "exportPdfSuccess": "דוח ה-PDF הורד."
   },
   "ExpenseCard": {
     "paidBy": "שולם על ידי <strong>{paidBy}</strong> · פוצל בין <paidFor></paidFor>",
@@ -498,7 +517,7 @@
       "title": "מעקב אחר הוצאות עם חברים"
     },
     "importGroup": "ייבא קבוצה",
-    "exportDescription": "הורדת הוצאות הקבוצה כקובץ JSON או CSV.",
+    "exportDescription": "הורד את הוצאות הקבוצה כדוח PDF, גיליון אלקטרוני ב-CSV או גיבוי JSON.",
     "allExpenses": "כל ההוצאות"
   },
   "GroupForm": {
@@ -2593,5 +2612,34 @@
       "copied": "הועתק",
       "copyFailed": "הגישה ללוח נכשלה. בחרו והעתיקו את פרטי האבחון ידנית."
     }
+  },
+  "ExpenseReport": {
+    "title": "דוח הוצאות",
+    "generatedOnLabel": "נוצר ב-",
+    "periodLabel": "התקופה שנבחרה",
+    "balanceAsOfLabel": "יתרה נכון ל-",
+    "totalSpentLabel": "סך ההוצאות",
+    "expensesCountLabel": "הוצאות",
+    "participantsCountLabel": "משתתפים",
+    "participantsSectionLabel": "סיכום המשתתפים",
+    "settlementsSectionLabel": "הסדרים מוצעים",
+    "reimbursementsSectionLabel": "החזרים שנרשמו",
+    "expensesSectionLabel": "פירוט ההוצאות",
+    "amountColumnLabel": "סכום",
+    "participantColumnLabel": "משתתף",
+    "paidColumnLabel": "שולם",
+    "shareColumnLabel": "חלק",
+    "balanceColumnLabel": "יתרה",
+    "dateColumnLabel": "תאריך",
+    "fromColumnLabel": "מ-",
+    "toColumnLabel": "עד",
+    "splitLabel": "פיצול",
+    "noExpensesLabel": "אין הוצאות בתקופה שנבחרה.",
+    "noParticipantsLabel": "אין משתתפים עם פעילות בתקופה שנבחרה.",
+    "noSettlementsLabel": "הכל מוסדר נכון לתאריך הסיום.",
+    "noReimbursementsLabel": "לא נרשמו החזרים עד תאריך הסיום.",
+    "originalAmountLabel": "סכום מקורי",
+    "expenseColumnLabel": "הוצאה",
+    "categoryColumnLabel": "קטגוריה"
   }
 }

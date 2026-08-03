@@ -157,7 +157,26 @@
     "globalFiltersActive": "{count} Filter aktiv",
     "globalEmpty": "Keine Ausgaben entsprechen deinen Filtern.",
     "clearSearch": "Suche löschen",
-    "loading": "Ausgaben werden geladen…"
+    "loading": "Ausgaben werden geladen…",
+    "exportPdfTitle": "PDF-Bericht",
+    "exportCsvTitle": "CSV-Tabelle",
+    "exportJsonTitle": "JSON-Sicherung",
+    "exportPdfPurpose": "Markenauftritt mit Ausgaben, Salden und vorgeschlagenen Überweisungen.",
+    "exportCsvPurpose": "Vollständige Historie in einer Tabelle für Excel oder Sheets.",
+    "exportJsonPurpose": "Maschinenlesbare Sicherung jeder Gruppenausgabe.",
+    "exportPdfAction": "PDF erstellen",
+    "exportCsvAction": "CSV herunterladen",
+    "exportJsonAction": "JSON herunterladen",
+    "exportPdfDialogTitle": "PDF-Bericht erstellen",
+    "exportPdfDialogDescription": "Wähle den Zeitraum, der berücksichtigt werden soll. Ausgaben decken die ausgewählten Daten ab; Salden und Überweisungen werden zum Enddatum ausgewiesen.",
+    "exportPdfFromLabel": "Von",
+    "exportPdfToLabel": "Bis",
+    "exportPdfGenerate": "PDF erstellen",
+    "exportPdfGenerating": "Wird erstellt…",
+    "exportPdfCancel": "Abbrechen",
+    "exportPdfInvalidRange": "Das Enddatum muss am oder nach dem Startdatum liegen.",
+    "exportPdfError": "PDF konnte nicht erstellt werden. Bitte erneut versuchen.",
+    "exportPdfSuccess": "PDF-Bericht heruntergeladen."
   },
   "ExpenseCard": {
     "receivedBy": "Erhalten von <strong>{paidBy}</strong> · zugeordnet zu <paidFor></paidFor>",
@@ -516,7 +535,7 @@
       "title": "Ausgaben mit einer befreundeten Person erfassen"
     },
     "importGroup": "Gruppe importieren",
-    "exportDescription": "Lade die Gruppenausgaben als JSON oder CSV herunter.",
+    "exportDescription": "Lade die Gruppenausgaben als PDF-Bericht, CSV-Tabelle oder JSON-Sicherung herunter.",
     "allExpenses": "Alle Ausgaben"
   },
   "GroupForm": {
@@ -2643,5 +2662,34 @@
       "copied": "Kopiert",
       "copyFailed": "Kein Zugriff auf die Zwischenablage. Wähle die Diagnosedaten aus und kopiere sie manuell."
     }
+  },
+  "ExpenseReport": {
+    "title": "Ausgabenbericht",
+    "generatedOnLabel": "Erstellt am",
+    "periodLabel": "Ausgewählter Zeitraum",
+    "balanceAsOfLabel": "Saldo zum",
+    "totalSpentLabel": "Insgesamt ausgegeben",
+    "expensesCountLabel": "Ausgaben",
+    "participantsCountLabel": "Teilnehmende",
+    "participantsSectionLabel": "Zusammenfassung der Teilnehmer",
+    "settlementsSectionLabel": "Vorgeschlagene Ausgleichszahlungen",
+    "reimbursementsSectionLabel": "Erfasste Ausgleichszahlungen",
+    "expensesSectionLabel": "Ausgabendetails",
+    "amountColumnLabel": "Betrag",
+    "participantColumnLabel": "Teilnehmer",
+    "paidColumnLabel": "Bezahlt",
+    "shareColumnLabel": "Anteil",
+    "balanceColumnLabel": "Saldo",
+    "dateColumnLabel": "Datum",
+    "fromColumnLabel": "Von",
+    "toColumnLabel": "An",
+    "splitLabel": "Aufteilung",
+    "noExpensesLabel": "Keine Ausgaben im ausgewählten Zeitraum.",
+    "noParticipantsLabel": "Keine Teilnehmenden mit Aktivität im ausgewählten Zeitraum.",
+    "noSettlementsLabel": "Alles ist bis zum Enddatum ausgeglichen.",
+    "noReimbursementsLabel": "Bis zum Enddatum wurden keine Ausgleichszahlungen erfasst.",
+    "originalAmountLabel": "Originalbetrag",
+    "expenseColumnLabel": "Ausgabe",
+    "categoryColumnLabel": "Kategorie"
   }
 }

@@ -46,8 +46,6 @@ export default defineConfig({
       includeAssets: [
         'logo.svg',
         'logo-with-text.svg',
-        'logo-with-text.webp',
-        'logo.webp',
         'favicon/favicon.ico',
         'favicon/apple-touch-icon.png',
       ],

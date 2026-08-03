@@ -154,7 +154,26 @@
     "globalFiltersActive": "{count} filtros ativos",
     "globalEmpty": "Nenhuma despesa corresponde aos seus filtros.",
     "clearSearch": "Limpar busca",
-    "loading": "Carregando despesas…"
+    "loading": "Carregando despesas…",
+    "exportPdfTitle": "Relatório PDF",
+    "exportCsvTitle": "Planilha CSV",
+    "exportJsonTitle": "Backup JSON",
+    "exportPdfPurpose": "Extrato personalizado com gastos, saldos e transferências sugeridas.",
+    "exportCsvPurpose": "Histórico completo em uma planilha para Excel ou Sheets.",
+    "exportJsonPurpose": "Backup legível por máquina de todas as despesas do grupo.",
+    "exportPdfAction": "Criar PDF",
+    "exportCsvAction": "Baixar CSV",
+    "exportJsonAction": "Baixar JSON",
+    "exportPdfDialogTitle": "Gerar relatório PDF",
+    "exportPdfDialogDescription": "Escolha o período a incluir. As despesas abrangem as datas selecionadas; os saldos e as transferências são informados na data final.",
+    "exportPdfFromLabel": "De",
+    "exportPdfToLabel": "Até",
+    "exportPdfGenerate": "Gerar relatório PDF",
+    "exportPdfGenerating": "Gerando…",
+    "exportPdfCancel": "Cancelar",
+    "exportPdfInvalidRange": "A data final deve ser igual ou posterior à data inicial.",
+    "exportPdfError": "Não foi possível gerar o PDF. Tente novamente.",
+    "exportPdfSuccess": "Relatório PDF baixado."
   },
   "ExpenseCard": {
     "receivedBy": "Recebido por <strong>{paidBy}</strong> para <paidFor></paidFor>",
@@ -498,7 +517,7 @@
       "title": "Registre despesas com um amigo"
     },
     "importGroup": "Importar grupo",
-    "exportDescription": "Baixe as despesas do grupo em JSON ou CSV.",
+    "exportDescription": "Baixe as despesas do grupo como relatório PDF, planilha CSV ou backup JSON.",
     "allExpenses": "Todas as despesas"
   },
   "GroupForm": {
@@ -2593,5 +2612,34 @@
       "copied": "Copiado",
       "copyFailed": "Falha ao acessar a área de transferência. Selecione e copie os diagnósticos manualmente."
     }
+  },
+  "ExpenseReport": {
+    "title": "Relatório de despesas",
+    "generatedOnLabel": "Gerado em",
+    "periodLabel": "Período selecionado",
+    "balanceAsOfLabel": "Saldo em",
+    "totalSpentLabel": "Total gasto",
+    "expensesCountLabel": "Despesas",
+    "participantsCountLabel": "Participantes",
+    "participantsSectionLabel": "Resumo dos participantes",
+    "settlementsSectionLabel": "Acertos sugeridos",
+    "reimbursementsSectionLabel": "Reembolsos registrados",
+    "expensesSectionLabel": "Detalhes das despesas",
+    "amountColumnLabel": "Valor",
+    "participantColumnLabel": "Participante",
+    "paidColumnLabel": "Pago",
+    "shareColumnLabel": "Cota",
+    "balanceColumnLabel": "Saldo",
+    "dateColumnLabel": "Data",
+    "fromColumnLabel": "De",
+    "toColumnLabel": "Para",
+    "splitLabel": "Divisão",
+    "noExpensesLabel": "Nenhuma despesa no período selecionado.",
+    "noParticipantsLabel": "Nenhum participante com atividade no período selecionado.",
+    "noSettlementsLabel": "Tudo está quitado na data final.",
+    "noReimbursementsLabel": "Nenhum reembolso registrado até a data final.",
+    "originalAmountLabel": "Valor original",
+    "expenseColumnLabel": "Despesa",
+    "categoryColumnLabel": "Categoria"
   }
 }

@@ -59,6 +59,7 @@ export function GroupLayoutClient({
   const pathname = useLocation({ select: (location) => location.pathname })
   const focusedMobileRoute = isFocusedMobilePath(pathname)
   const showMobileNav = isMobileGroupNavPath(pathname)
+  const isPrintReportRoute = pathname.endsWith('/expenses/print')
 
   // Friend-ledger link-path creation navigates here with the invite URL
   // in the `friendLinkInvite` search param. Open a one-time dialog so the
@@ -216,14 +217,18 @@ export function GroupLayoutClient({
       <div
         className={`flex min-w-0 flex-col gap-3 ${showMobileNav ? 'pb-[calc(5rem+env(safe-area-inset-bottom))] sm:pb-0' : ''}`}
       >
-        <GroupHeader
-          enableReceiptExtract={effectiveRuntimeFlags.enableReceiptExtract}
-          enableVoiceExpense={effectiveRuntimeFlags.enableVoiceExpense}
-        />
+        {!isPrintReportRoute && (
+          <GroupHeader
+            enableReceiptExtract={effectiveRuntimeFlags.enableReceiptExtract}
+            enableVoiceExpense={effectiveRuntimeFlags.enableVoiceExpense}
+          />
+        )}
         {children ?? <Outlet />}
       </div>
-      {showMobileNav && <MobileGroupNav groupId={groupId} />}
-      <SaveGroupLocally />
+      {!isPrintReportRoute && showMobileNav && (
+        <MobileGroupNav groupId={groupId} />
+      )}
+      {!isPrintReportRoute && <SaveGroupLocally />}
       <ResponsiveDialog
         open={!!friendLinkDialogUrl}
         onOpenChange={(open) => {

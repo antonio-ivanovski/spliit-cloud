@@ -1424,7 +1424,26 @@
     "globalFiltersActive": "{count}টি ফিল্টার সক্রিয়",
     "globalEmpty": "কোনও খরচ আপনার ফিল্টারের সঙ্গে মেলেনি।",
     "clearSearch": "অনুসন্ধান পরিষ্কার করুন",
-    "loading": "খরচ লোড হচ্ছে…"
+    "loading": "খরচ লোড হচ্ছে…",
+    "exportPdfTitle": "PDF প্রতিবেদন",
+    "exportCsvTitle": "CSV স্প্রেডশিট",
+    "exportJsonTitle": "JSON ব্যাকআপ",
+    "exportPdfPurpose": "খরচ, ব্যালেন্স ও প্রস্তাবিত ট্রান্সফারসহ ব্র্যান্ডযুক্ত বিবরণী।",
+    "exportCsvPurpose": "Excel বা Sheets-এর জন্য স্প্রেডশিটে সম্পূর্ণ ইতিহাস।",
+    "exportJsonPurpose": "গ্রুপের প্রতিটি খরচের মেশিন-পঠনযোগ্য ব্যাকআপ।",
+    "exportPdfAction": "PDF তৈরি করুন",
+    "exportCsvAction": "CSV ডাউনলোড করুন",
+    "exportJsonAction": "JSON ডাউনলোড করুন",
+    "exportPdfDialogTitle": "PDF প্রতিবেদন তৈরি করুন",
+    "exportPdfDialogDescription": "অন্তর্ভুক্ত করার সময়কাল বেছে নিন। নির্বাচিত তারিখগুলোর খরচ অন্তর্ভুক্ত হবে; ব্যালেন্স ও ট্রান্সফার শেষ তারিখ পর্যন্ত দেখানো হবে।",
+    "exportPdfFromLabel": "থেকে",
+    "exportPdfToLabel": "পর্যন্ত",
+    "exportPdfGenerate": "PDF তৈরি করুন",
+    "exportPdfGenerating": "তৈরি হচ্ছে…",
+    "exportPdfCancel": "বাতিল করুন",
+    "exportPdfInvalidRange": "শেষ তারিখটি শুরুর তারিখের সমান বা তার পরের হতে হবে।",
+    "exportPdfError": "PDF প্রতিবেদন তৈরি করা যায়নি। আবার চেষ্টা করুন।",
+    "exportPdfSuccess": "PDF প্রতিবেদন ডাউনলোড হয়েছে।"
   },
   "Footer": {
     "madeIn": "ওপেন-সোর্স সম্প্রদায় দ্বারা ভালোবাসা দিয়ে তৈরি ❤️",
@@ -1831,7 +1850,6 @@
       }
     },
     "importGroup": "গ্রুপ আমদানি করুন",
-    "exportDescription": "গ্রুপের খরচ JSON বা CSV হিসাবে ডাউনলোড করুন।",
     "invitations": {
       "title": "মুলতুবি আমন্ত্রণ",
       "description": "আপনাকে নিম্নলিখিত গ্রুপগুলিতে যোগ দিতে আমন্ত্রণ জানানো হয়েছে।",
@@ -1848,6 +1866,7 @@
       "title": "এই আমন্ত্রণ লিংক অবৈধ",
       "description": "লিংকটি বিকৃত বা এই গ্রুপে কোনো আমন্ত্রণের সাথে মেলে না।"
     },
+    "exportDescription": "গ্রুপের খরচ PDF প্রতিবেদন, CSV স্প্রেডশিট বা JSON ব্যাকআপ হিসেবে ডাউনলোড করুন।",
     "allExpenses": "সব খরচ"
   },
   "Header": {
@@ -2571,5 +2590,34 @@
       "copied": "কপি হয়েছে",
       "copyFailed": "ক্লিপবোর্ডে প্রবেশ করা যায়নি। ডায়াগনস্টিক তথ্য নির্বাচন করে নিজে কপি করুন।"
     }
+  },
+  "ExpenseReport": {
+    "title": "খরচের প্রতিবেদন",
+    "generatedOnLabel": "তৈরির তারিখ",
+    "periodLabel": "নির্বাচিত সময়কাল",
+    "balanceAsOfLabel": "এই তারিখ পর্যন্ত ব্যালেন্স",
+    "totalSpentLabel": "মোট খরচ",
+    "expensesCountLabel": "খরচ",
+    "participantsCountLabel": "অংশগ্রহণকারী",
+    "participantsSectionLabel": "অংশগ্রহণকারীদের সারাংশ",
+    "settlementsSectionLabel": "প্রস্তাবিত হিসাব নিষ্পত্তি",
+    "reimbursementsSectionLabel": "রেকর্ড করা ফেরত পরিশোধ",
+    "expensesSectionLabel": "খরচের বিস্তারিত",
+    "amountColumnLabel": "পরিমাণ",
+    "participantColumnLabel": "অংশগ্রহণকারী",
+    "paidColumnLabel": "পরিশোধিত",
+    "shareColumnLabel": "ভাগ",
+    "balanceColumnLabel": "ব্যালেন্স",
+    "dateColumnLabel": "তারিখ",
+    "fromColumnLabel": "প্রেরক",
+    "toColumnLabel": "প্রাপক",
+    "splitLabel": "বিভাজন",
+    "noExpensesLabel": "নির্বাচিত সময়কালে কোনো খরচ নেই।",
+    "noParticipantsLabel": "নির্বাচিত সময়কালে কোনো অংশগ্রহণকারীর কার্যকলাপ নেই।",
+    "noSettlementsLabel": "শেষ তারিখ পর্যন্ত সব হিসাব মিটে গেছে।",
+    "noReimbursementsLabel": "শেষ তারিখ পর্যন্ত কোনো ফেরত পরিশোধ রেকর্ড করা হয়নি।",
+    "originalAmountLabel": "মূল পরিমাণ",
+    "expenseColumnLabel": "খরচ",
+    "categoryColumnLabel": "বিভাগ"
   }
 }

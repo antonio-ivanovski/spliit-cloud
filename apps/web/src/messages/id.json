@@ -152,7 +152,26 @@
     "globalFiltersActive": "{count} filter aktif",
     "globalEmpty": "Tidak ada pengeluaran yang cocok dengan filter.",
     "clearSearch": "Hapus pencarian",
-    "loading": "Memuat pengeluaran…"
+    "loading": "Memuat pengeluaran…",
+    "exportPdfTitle": "Laporan PDF",
+    "exportCsvTitle": "Spreadsheet CSV",
+    "exportJsonTitle": "Cadangan JSON",
+    "exportPdfPurpose": "Laporan bermerek dengan pengeluaran, saldo, dan transfer yang disarankan.",
+    "exportCsvPurpose": "Riwayat lengkap dalam spreadsheet untuk Excel atau Sheets.",
+    "exportJsonPurpose": "Cadangan yang dapat dibaca mesin untuk setiap pengeluaran grup.",
+    "exportPdfAction": "Buat PDF",
+    "exportCsvAction": "Unduh CSV",
+    "exportJsonAction": "Unduh JSON",
+    "exportPdfDialogTitle": "Buat laporan PDF",
+    "exportPdfDialogDescription": "Pilih periode yang akan disertakan. Pengeluaran mencakup tanggal yang dipilih; saldo dan transfer dilaporkan per tanggal akhir.",
+    "exportPdfFromLabel": "Dari",
+    "exportPdfToLabel": "Sampai",
+    "exportPdfGenerate": "Buat PDF",
+    "exportPdfGenerating": "Membuat…",
+    "exportPdfCancel": "Batalkan",
+    "exportPdfInvalidRange": "Tanggal akhir harus sama dengan atau setelah tanggal mulai.",
+    "exportPdfError": "Tidak dapat membuat PDF. Silakan coba lagi.",
+    "exportPdfSuccess": "Laporan PDF diunduh."
   },
   "ExpenseCard": {
     "paidBy": "Dibayar oleh <strong>{paidBy}</strong> · dibagi antara <paidFor></paidFor>",
@@ -486,7 +505,7 @@
       "title": "Catat pengeluaran bersama teman"
     },
     "importGroup": "Impor grup",
-    "exportDescription": "Unduh pengeluaran grup sebagai JSON atau CSV.",
+    "exportDescription": "Unduh pengeluaran grup sebagai laporan PDF, lembar kerja CSV, atau cadangan JSON.",
     "allExpenses": "Semua pengeluaran"
   },
   "GroupForm": {
@@ -2559,5 +2578,34 @@
       "copied": "Disalin",
       "copyFailed": "Akses papan klip gagal. Pilih dan salin diagnostik secara manual."
     }
+  },
+  "ExpenseReport": {
+    "title": "Laporan pengeluaran",
+    "generatedOnLabel": "Dibuat pada",
+    "periodLabel": "Periode yang dipilih",
+    "balanceAsOfLabel": "Saldo per tanggal",
+    "totalSpentLabel": "Total pengeluaran",
+    "expensesCountLabel": "Pengeluaran",
+    "participantsCountLabel": "Peserta",
+    "participantsSectionLabel": "Ringkasan peserta",
+    "settlementsSectionLabel": "Pembayaran yang disarankan",
+    "reimbursementsSectionLabel": "Pembayaran pelunasan yang tercatat",
+    "expensesSectionLabel": "Detail pengeluaran",
+    "amountColumnLabel": "Jumlah",
+    "participantColumnLabel": "Peserta",
+    "paidColumnLabel": "Dibayar",
+    "shareColumnLabel": "Bagian",
+    "balanceColumnLabel": "Saldo",
+    "dateColumnLabel": "Tanggal",
+    "fromColumnLabel": "Dari",
+    "toColumnLabel": "Kepada",
+    "splitLabel": "Pembagian",
+    "noExpensesLabel": "Tidak ada pengeluaran pada periode yang dipilih.",
+    "noParticipantsLabel": "Tidak ada peserta dengan aktivitas pada periode yang dipilih.",
+    "noSettlementsLabel": "Semua sudah dilunasi per tanggal akhir.",
+    "noReimbursementsLabel": "Tidak ada pembayaran pelunasan yang tercatat hingga tanggal akhir.",
+    "originalAmountLabel": "Jumlah asli",
+    "expenseColumnLabel": "Pengeluaran",
+    "categoryColumnLabel": "Kategori"
   }
 }

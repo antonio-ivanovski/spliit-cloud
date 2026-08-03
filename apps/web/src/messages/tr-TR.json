@@ -153,7 +153,26 @@
     "globalFiltersActive": "{count} filtre etkin",
     "globalEmpty": "Filtrelerinizle eşleşen harcama yok.",
     "clearSearch": "Aramayı temizle",
-    "loading": "Harcamalar yükleniyor…"
+    "loading": "Harcamalar yükleniyor…",
+    "exportPdfTitle": "PDF raporu",
+    "exportCsvTitle": "CSV elektronik tablosu",
+    "exportJsonTitle": "JSON yedeği",
+    "exportPdfPurpose": "Harcamaları, bakiyeleri ve önerilen transferleri içeren markalı döküm.",
+    "exportCsvPurpose": "Excel veya Sheets için elektronik tabloda tüm geçmiş.",
+    "exportJsonPurpose": "Tüm grup masraflarının makine tarafından okunabilir yedeği.",
+    "exportPdfAction": "PDF oluştur",
+    "exportCsvAction": "CSV’yi indir",
+    "exportJsonAction": "JSON’ı indir",
+    "exportPdfDialogTitle": "PDF raporu oluştur",
+    "exportPdfDialogDescription": "Dahil edilecek dönemi seçin. Harcamalar seçilen tarihleri kapsar; bakiyeler ve transferler bitiş tarihi itibarıyla raporlanır.",
+    "exportPdfFromLabel": "Başlangıç",
+    "exportPdfToLabel": "Bitiş",
+    "exportPdfGenerate": "PDF oluştur",
+    "exportPdfGenerating": "Oluşturuluyor…",
+    "exportPdfCancel": "İptal",
+    "exportPdfInvalidRange": "Bitiş tarihi, başlangıç tarihiyle aynı veya ondan sonraki bir tarih olmalıdır.",
+    "exportPdfError": "PDF oluşturulamadı. Lütfen tekrar deneyin.",
+    "exportPdfSuccess": "PDF raporu indirildi."
   },
   "ExpenseCard": {
     "receivedBy": "<strong>{paidBy}</strong> aldı · <paidFor></paidFor> için paylaştırıldı",
@@ -492,7 +511,7 @@
       "title": "Arkadaşla ortak harcamaları takip et"
     },
     "importGroup": "Grubu içe aktar",
-    "exportDescription": "Grup harcamalarını JSON veya CSV olarak indirin.",
+    "exportDescription": "Grup masraflarını PDF raporu, CSV elektronik tablosu veya JSON yedeği olarak indirin.",
     "allExpenses": "Tüm harcamalar"
   },
   "GroupForm": {
@@ -2575,5 +2594,34 @@
       "copied": "Kopyalandı",
       "copyFailed": "Panoya erişilemedi. Tanılama bilgilerini seçip elle kopyalayın."
     }
+  },
+  "ExpenseReport": {
+    "title": "Masraf raporu",
+    "generatedOnLabel": "Oluşturulma tarihi",
+    "periodLabel": "Seçilen dönem",
+    "balanceAsOfLabel": "Şu tarih itibarıyla bakiye",
+    "totalSpentLabel": "Toplam harcama",
+    "expensesCountLabel": "Masraflar",
+    "participantsCountLabel": "Katılımcılar",
+    "participantsSectionLabel": "Katılımcı özeti",
+    "settlementsSectionLabel": "Önerilen denkleştirmeler",
+    "reimbursementsSectionLabel": "Kaydedilen geri ödemeler",
+    "expensesSectionLabel": "Masraf ayrıntıları",
+    "amountColumnLabel": "Tutar",
+    "participantColumnLabel": "Katılımcı",
+    "paidColumnLabel": "Ödenen",
+    "shareColumnLabel": "Pay",
+    "balanceColumnLabel": "Bakiye",
+    "dateColumnLabel": "Tarih",
+    "fromColumnLabel": "Kimden",
+    "toColumnLabel": "Kime",
+    "splitLabel": "Pay",
+    "noExpensesLabel": "Seçilen dönemde masraf yok.",
+    "noParticipantsLabel": "Seçilen dönemde etkinliği olan katılımcı yok.",
+    "noSettlementsLabel": "Bitiş tarihi itibarıyla tüm hesaplar denkleştirilmiş.",
+    "noReimbursementsLabel": "Bitiş tarihine kadar kaydedilmiş geri ödeme yok.",
+    "originalAmountLabel": "Orijinal tutar",
+    "expenseColumnLabel": "Harcama",
+    "categoryColumnLabel": "Kategori"
   }
 }

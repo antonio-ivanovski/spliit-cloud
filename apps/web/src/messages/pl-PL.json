@@ -155,7 +155,26 @@
     "globalFiltersActive": "{count} aktywnych filtrów",
     "globalEmpty": "Żadne wydatki nie pasują do filtrów.",
     "clearSearch": "Wyczyść wyszukiwanie",
-    "loading": "Ładowanie wydatków…"
+    "loading": "Ładowanie wydatków…",
+    "exportPdfTitle": "Raport PDF",
+    "exportCsvTitle": "Arkusz CSV",
+    "exportJsonTitle": "Kopia zapasowa JSON",
+    "exportPdfPurpose": "Raport z brandingiem zawierający wydatki, salda i sugerowane przelewy.",
+    "exportCsvPurpose": "Pełna historia w arkuszu kalkulacyjnym dla Excela lub Arkuszy Google.",
+    "exportJsonPurpose": "Czytelna maszynowo kopia zapasowa wszystkich wydatków grupy.",
+    "exportPdfAction": "Utwórz PDF",
+    "exportCsvAction": "Pobierz CSV",
+    "exportJsonAction": "Pobierz JSON",
+    "exportPdfDialogTitle": "Wygeneruj raport PDF",
+    "exportPdfDialogDescription": "Wybierz okres, który chcesz uwzględnić. Wydatki obejmują wybrane daty, a salda i przelewy są podane na dzień końcowy.",
+    "exportPdfFromLabel": "Od",
+    "exportPdfToLabel": "Do",
+    "exportPdfGenerate": "Wygeneruj PDF",
+    "exportPdfGenerating": "Generowanie…",
+    "exportPdfCancel": "Anuluj",
+    "exportPdfInvalidRange": "Data końcowa musi przypadać na dzień początkowy lub późniejszy.",
+    "exportPdfError": "Nie udało się wygenerować PDF. Spróbuj ponownie.",
+    "exportPdfSuccess": "Raport PDF został pobrany."
   },
   "ExpenseCard": {
     "paidBy": "Opłacone przez <strong>{paidBy}</strong> dla <paidFor></paidFor>",
@@ -504,7 +523,7 @@
       "title": "Utwórz rozliczenie z przyjacielem"
     },
     "importGroup": "Importuj grupę",
-    "exportDescription": "Pobierz wydatki grupy jako JSON lub CSV.",
+    "exportDescription": "Pobierz wydatki grupy jako raport PDF, arkusz CSV lub kopię zapasową JSON.",
     "allExpenses": "Wszystkie wydatki"
   },
   "GroupForm": {
@@ -2609,5 +2628,34 @@
       "copied": "Skopiowano",
       "copyFailed": "Nie udało się uzyskać dostępu do schowka. Zaznacz i skopiuj diagnostykę ręcznie."
     }
+  },
+  "ExpenseReport": {
+    "title": "Raport wydatków",
+    "generatedOnLabel": "Wygenerowano",
+    "periodLabel": "Wybrany okres",
+    "balanceAsOfLabel": "Saldo na dzień",
+    "totalSpentLabel": "Łącznie wydano",
+    "expensesCountLabel": "Wydatki",
+    "participantsCountLabel": "Uczestnicy",
+    "participantsSectionLabel": "Podsumowanie uczestników",
+    "settlementsSectionLabel": "Sugerowane rozliczenia",
+    "reimbursementsSectionLabel": "Zarejestrowane zwroty",
+    "expensesSectionLabel": "Szczegóły wydatków",
+    "amountColumnLabel": "Kwota",
+    "participantColumnLabel": "Uczestnik",
+    "paidColumnLabel": "Zapłacono",
+    "shareColumnLabel": "Udział",
+    "balanceColumnLabel": "Saldo",
+    "dateColumnLabel": "Data",
+    "fromColumnLabel": "Od",
+    "toColumnLabel": "Do",
+    "splitLabel": "Podział",
+    "noExpensesLabel": "Brak wydatków w wybranym okresie.",
+    "noParticipantsLabel": "Brak uczestników z aktywnością w wybranym okresie.",
+    "noSettlementsLabel": "Na datę końcową wszystko jest rozliczone.",
+    "noReimbursementsLabel": "Brak zarejestrowanych zwrotów do daty końcowej.",
+    "originalAmountLabel": "Kwota pierwotna",
+    "expenseColumnLabel": "Wydatek",
+    "categoryColumnLabel": "Kategoria"
   }
 }
