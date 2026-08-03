@@ -198,12 +198,7 @@ export function CurrencySelector({
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent
-          className="p-0"
-          align="start"
-          onWheel={(e) => e.stopPropagation()}
-          onTouchMove={(e) => e.stopPropagation()}
-        >
+        <PopoverContent className="p-0" align="start">
           {command}
         </PopoverContent>
       </Popover>
@@ -224,12 +219,7 @@ export function CurrencySelector({
             aria-label={ariaLabel}
           />
         </PopoverTrigger>
-        <PopoverContent
-          className="p-0"
-          align="start"
-          onWheel={(e) => e.stopPropagation()}
-          onTouchMove={(e) => e.stopPropagation()}
-        >
+        <PopoverContent className="p-0" align="start">
           {command}
         </PopoverContent>
       </Popover>

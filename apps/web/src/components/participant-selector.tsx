@@ -141,13 +141,7 @@ export function ParticipantSelector({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>{trigger}</PopoverTrigger>
-      <PopoverContent
-        className="p-0"
-        align="start"
-        onFocusOutside={(event) => event.preventDefault()}
-        onWheel={(event) => event.stopPropagation()}
-        onTouchMove={(event) => event.stopPropagation()}
-      >
+      <PopoverContent className="p-0" align="start">
         <ParticipantCommand
           participants={participants}
           mode={mode}

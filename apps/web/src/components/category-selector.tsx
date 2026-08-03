@@ -172,13 +172,7 @@ export function CategorySelector({
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent
-          className="p-0"
-          align="start"
-          onFocusOutside={(event) => event.preventDefault()}
-          onWheel={(event) => event.stopPropagation()}
-          onTouchMove={(event) => event.stopPropagation()}
-        >
+        <PopoverContent className="p-0" align="start">
           {command}
         </PopoverContent>
       </Popover>
@@ -197,12 +191,7 @@ export function CategorySelector({
             compact={compact}
           />
         </PopoverTrigger>
-        <PopoverContent
-          className="p-0"
-          align="start"
-          onWheel={(event) => event.stopPropagation()}
-          onTouchMove={(event) => event.stopPropagation()}
-        >
+        <PopoverContent className="p-0" align="start">
           <CategoryCommand
             hierarchy={hierarchy}
             mode="single"
