@@ -470,7 +470,7 @@ export function ItemParticipantsModal(props: {
 
   return (
     <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
-      <ResponsiveDialogContent className="sm:max-w-lg">
+      <ResponsiveDialogContent className="sm:max-h-[calc(100dvh-2rem)] sm:max-w-lg sm:grid-rows-[auto_minmax(0,1fr)_auto] sm:overflow-hidden">
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>
             {titleOverride ?? (item.title || '(unnamed item)')}
@@ -486,7 +486,7 @@ export function ItemParticipantsModal(props: {
           )}
         </ResponsiveDialogHeader>
 
-        <ResponsiveDialogBody>
+        <ResponsiveDialogBody className="sm:min-h-0 sm:overflow-y-auto sm:overscroll-contain">
           <div>
             {savedDefault &&
               !isCurrentEqualSaved &&

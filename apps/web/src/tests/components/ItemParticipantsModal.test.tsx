@@ -74,11 +74,13 @@ function ModalHarness({
   savedDefault,
   hideAmountMode,
   onSaveItem,
+  group: groupOverride,
 }: {
   item: ExpenseFormItemValues
   savedDefault?: SavedSplit | null
   hideAmountMode?: boolean
   onSaveItem?: (next: ExpenseFormItemValues) => void
+  group?: GroupShape
 }): ReactElement {
   const form = useForm<ExpenseFormInputValues>({
     resolver: zodResolver(expenseFormInputSchema) as never,
@@ -90,7 +92,7 @@ function ModalHarness({
       onOpenChange={() => {}}
       form={form}
       itemIndex={0}
-      group={group}
+      group={groupOverride ?? group}
       groupCurrency={EUR}
       item={item}
       onSaveItem={onSaveItem}
@@ -99,6 +101,44 @@ function ModalHarness({
     />
   )
 }
+
+describe('ItemParticipantsModal — viewport behavior', () => {
+  it('keeps a large participant list inside a bounded, scrollable modal body', () => {
+    const largeGroup = {
+      ...group,
+      participants: Array.from({ length: 30 }, (_, index) => ({
+        id: `participant-${index}`,
+        name: `Participant ${index + 1}`,
+      })),
+    } as unknown as GroupShape
+
+    const item: ExpenseFormItemValues = {
+      id: 'item-1',
+      title: 'Item',
+      unitPrice: 10,
+      quantity: 1,
+      splitMode: 'EVENLY',
+      paidFor: [],
+    }
+
+    render(<ModalHarness item={item} group={largeGroup} />)
+
+    const dialog = screen.getByRole('dialog')
+    expect(dialog).toHaveClass(
+      'sm:max-h-[calc(100dvh-2rem)]',
+      'sm:grid-rows-[auto_minmax(0,1fr)_auto]',
+      'sm:overflow-hidden',
+    )
+
+    const body = dialog.querySelector('[class*="sm:overflow-y-auto"]')
+    expect(body).toHaveClass(
+      'sm:min-h-0',
+      'sm:overflow-y-auto',
+      'sm:overscroll-contain',
+    )
+    expect(screen.getByText('Participant 30')).toBeInTheDocument()
+  })
+})
 
 describe('ItemParticipantsModal — Load default action', () => {
   it('shows Load default when savedDefault exists and draft diverges', () => {
