@@ -99,13 +99,15 @@ export function DestinationStep({
                 formId={DESTINATION_FORM_ID}
                 hideActions
                 initialValues={{
-                  name: source.name,
+                  name: initialGroupFormValues.name || source.name,
                   information:
                     initialGroupFormValues.information ||
                     appendImportedFromNote(undefined, source.sourceUrl) ||
                     '',
-                  currency: source.currency,
-                  currencyCode: source.currencyCode || undefined,
+                  currency: initialGroupFormValues.currency || source.currency,
+                  // An explicit empty string means "custom currency" and
+                  // prevents GroupForm from applying the account default.
+                  currencyCode: initialGroupFormValues.currencyCode,
                 }}
                 onSubmit={async (values) => {
                   onContinue({

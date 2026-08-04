@@ -3,6 +3,7 @@ import {
   currencyList,
   getCurrency,
   getCurrencyFromGroup,
+  resolveCurrencyCode,
   supportedCurrencyCodes,
 } from './currency'
 import {
@@ -22,6 +23,47 @@ describe('getCurrency', () => {
 
   it('returns undefined for unknown code', () => {
     expect(getCurrency('XXX')).toBeUndefined()
+  })
+})
+
+describe('resolveCurrencyCode', () => {
+  it('resolves an ISO code regardless of case', () => {
+    expect(resolveCurrencyCode('usd')).toBe('USD')
+  })
+
+  it('resolves an unambiguous supported symbol', () => {
+    expect(resolveCurrencyCode('€')).toBe('EUR')
+  })
+
+  it('resolves the catalog symbol for RUB', () => {
+    expect(resolveCurrencyCode('₽')).toBe('RUB')
+  })
+
+  it('resolves aliases stored on the currency record', () => {
+    expect(resolveCurrencyCode('￥')).toBe('JPY')
+    expect(resolveCurrencyCode('МКД')).toBe('MKD')
+    expect(resolveCurrencyCode('₺')).toBe('TRY')
+    expect(resolveCurrencyCode('US$')).toBe('USD')
+  })
+
+  it('does not guess when an alias is shared by multiple currencies', () => {
+    expect(resolveCurrencyCode('leu')).toBeNull()
+    expect(resolveCurrencyCode('Rs')).toBeNull()
+    expect(resolveCurrencyCode('Rs.')).toBeNull()
+    expect(resolveCurrencyCode('元')).toBeNull()
+  })
+
+  it('keeps ISO codes and canonical symbols out of aliases', () => {
+    for (const currency of currencyList) {
+      for (const alias of currency.aliases ?? []) {
+        expect(alias.toLowerCase()).not.toBe(currency.code.toLowerCase())
+        expect(alias.toLowerCase()).not.toBe(currency.symbol.toLowerCase())
+      }
+    }
+  })
+
+  it('returns null for unrecognized custom text', () => {
+    expect(resolveCurrencyCode('gold coins')).toBeNull()
   })
 })
 

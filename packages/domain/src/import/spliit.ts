@@ -23,7 +23,12 @@ export const spliitExportSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
   currency: z.string().min(1).max(5),
-  currencyCode: z.string().length(3).nullable().optional(),
+  // Legacy spliit.app exports use an empty string for custom currencies.
+  // Normalize that representation to null at the parser boundary below.
+  currencyCode: z
+    .union([z.string().length(3), z.literal('')])
+    .nullable()
+    .optional(),
   participants: z
     .array(
       z.object({
@@ -158,7 +163,7 @@ function normalizeSpliitExport(parsed: SpliitExport): NormalizedSource {
       : e.amount
     const expenseCurrency = shouldRecover
       ? e.originalCurrency!
-      : (parsed.currencyCode ?? null)
+      : parsed.currencyCode || null
     const recurrence = legacyRuleToRecurrence(e.recurrenceRule)
 
     return {
@@ -187,7 +192,7 @@ function normalizeSpliitExport(parsed: SpliitExport): NormalizedSource {
     sourceUrl: `https://spliit.app/groups/${parsed.id}`,
     name: parsed.name,
     currency: parsed.currency,
-    currencyCode: parsed.currencyCode ?? null,
+    currencyCode: parsed.currencyCode || null,
     participants,
     expenses,
   }

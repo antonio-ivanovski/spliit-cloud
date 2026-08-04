@@ -1,3 +1,4 @@
+import { resolveCurrencyCode } from '@spliit/domain/currency'
 import type {
   NormalizedSource,
   NormalizedSourceParticipant,
@@ -87,12 +88,18 @@ export type ParticipantMappingState = {
   contactAccountId?: string
 }
 
-export const initialGroupFormValues = (source: NormalizedSource | null) => ({
-  name: source?.name ?? '',
-  information: '',
-  currency: source?.currency ?? '€',
-  currencyCode: source?.currencyCode ?? '',
-})
+export const initialGroupFormValues = (source: NormalizedSource | null) => {
+  const sourceCurrency = source?.currency ?? '€'
+  const currencyCode =
+    source?.currencyCode || resolveCurrencyCode(sourceCurrency) || ''
+
+  return {
+    name: source?.name ?? '',
+    information: '',
+    currency: sourceCurrency,
+    currencyCode,
+  }
+}
 
 /** Map the batched expenses into the shape the import mutation expects. */
 export function buildImportExpenses<

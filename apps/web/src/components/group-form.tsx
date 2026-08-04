@@ -173,7 +173,7 @@ export function GroupForm({
       currencyState.isDirty ||
       currencyState.isTouched
     if (
-      !initialValues?.currencyCode &&
+      initialValues?.currencyCode === undefined &&
       accountPreferences.defaultCurrencyCode &&
       !currencyWasEdited
     ) {

@@ -117,6 +117,42 @@ beforeEach(() => {
 // ── Tests ───────────────────────────────────────────────────────────────
 
 describe('GroupForm', () => {
+  it('preserves an explicitly empty custom currency code over account defaults', async () => {
+    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const { user } = render(
+      <SyncedAccountPreferencesProvider
+        value={{
+          defaultCurrencyCode: 'USD',
+          timeZone: 'UTC',
+          locale: null,
+          theme: null,
+          aiCategoryExtractEnabled: null,
+          aiReceiptScanEnabled: null,
+          aiVoiceExpenseEnabled: null,
+        }}
+      >
+        <GroupForm
+          initialValues={{
+            name: 'Trip',
+            currency: 'gold',
+            currencyCode: '',
+          }}
+          onSubmit={onSubmit}
+        />
+      </SyncedAccountPreferencesProvider>,
+    )
+
+    await user.click(screen.getByRole('button', { name: /create/i }))
+
+    await vi.waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1)
+    })
+    expect(onSubmit.mock.calls[0][0]).toMatchObject({
+      currency: 'gold',
+      currencyCode: '',
+    })
+  })
+
   it('hydrates currency after an unrelated name edit', async () => {
     const onSubmit = vi.fn()
     const view = render(

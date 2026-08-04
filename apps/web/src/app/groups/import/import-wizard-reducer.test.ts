@@ -10,7 +10,10 @@ import {
   initialWizardState,
   type WizardState,
 } from './import-wizard-reducer'
-import type { ParticipantMappingState } from './import-wizard-state'
+import {
+  initialGroupFormValues,
+  type ParticipantMappingState,
+} from './import-wizard-state'
 
 // ── Fixtures ────────────────────────────────────────────────────────────
 
@@ -52,6 +55,40 @@ describe('initialWizardState', () => {
   it('starts on the "destination" step when arriving with a prefill URL', () => {
     const s = initialWizardState('https://example.com/groups/x')
     expect(s.step).toBe('destination')
+  })
+})
+
+describe('initialGroupFormValues', () => {
+  it('maps a custom exported ruble symbol to RUB', () => {
+    const values = initialGroupFormValues({
+      provider: 'SPLIIT',
+      sourceGroupId: 'src-1',
+      sourceUrl: null,
+      name: 'Trip',
+      currency: '₽',
+      currencyCode: null,
+      participants: [],
+      expenses: [],
+    })
+
+    expect(values.currency).toBe('₽')
+    expect(values.currencyCode).toBe('RUB')
+  })
+
+  it('keeps an unrecognized custom currency and explicit empty code', () => {
+    const values = initialGroupFormValues({
+      provider: 'SPLIIT',
+      sourceGroupId: 'src-1',
+      sourceUrl: null,
+      name: 'Trip',
+      currency: 'gold coins',
+      currencyCode: null,
+      participants: [],
+      expenses: [],
+    })
+
+    expect(values.currency).toBe('gold coins')
+    expect(values.currencyCode).toBe('')
   })
 })
 

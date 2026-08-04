@@ -29,8 +29,7 @@ export function formatIsoDate(date: Date): string {
 }
 
 /** UTC midnight of today, used when no browser time zone is available. */
-export function todayUtc(): Date {
-  const now = new Date()
+export function todayUtc(now = new Date()): Date {
   return new Date(
     Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
   )
@@ -42,7 +41,7 @@ export function todayUtc(): Date {
  * report dialog from opening.
  */
 export function todayInTimeZone(timeZone?: string, now = new Date()): Date {
-  if (!timeZone) return todayUtc()
+  if (!timeZone) return todayUtc(now)
 
   try {
     const parts = new Intl.DateTimeFormat('en-CA', {
@@ -58,7 +57,7 @@ export function todayInTimeZone(timeZone?: string, now = new Date()): Date {
     )
     return parseReportDate(`${values.year}-${values.month}-${values.day}`)
   } catch {
-    return todayUtc()
+    return todayUtc(now)
   }
 }
 

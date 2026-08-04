@@ -295,6 +295,18 @@ describe('parseSpliitExport', () => {
     expect(result.sourceUrl).toBe('https://spliit.app/groups/g1')
   })
 
+  it('accepts an empty currency code for custom currencies', () => {
+    const result = parseSpliitExport({
+      ...validExport,
+      currency: '₽',
+      currencyCode: '',
+    })
+
+    expect(result.currency).toBe('₽')
+    expect(result.currencyCode).toBeNull()
+    expect(result.expenses[0]?.amountCurrency).toBeNull()
+  })
+
   it('rejects duplicate upstream participant ids', () => {
     const result = tryParseSpliitExport({
       ...validExport,

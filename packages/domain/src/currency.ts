@@ -7,6 +7,7 @@ import currencies from './currencies.json' with { type: 'json' }
 export type Currency = {
   code: string
   symbol: string
+  aliases?: ReadonlyArray<string>
   rounding: number
   decimal_digits: number
 }
@@ -29,6 +30,23 @@ const byCode = new Map<string, Currency>(currencyList.map((c) => [c.code, c]))
 /** Look up a currency by its ISO code. Returns undefined for unknown codes. */
 export function getCurrency(code: string): Currency | undefined {
   return byCode.get(code)
+}
+
+/** Best-effort resolution of imported currency text to a supported ISO code. */
+export function resolveCurrencyCode(value: string): string | null {
+  const normalized = value.trim()
+  if (!normalized) return null
+
+  const byTextCode = byCode.get(normalized.toUpperCase())
+  if (byTextCode) return byTextCode.code
+
+  const normalizedText = normalized.toLowerCase()
+  const matches = currencyList.filter(
+    (currency) =>
+      currency.symbol.toLowerCase() === normalizedText ||
+      currency.aliases?.some((alias) => alias.toLowerCase() === normalizedText),
+  )
+  return matches.length === 1 ? matches[0]!.code : null
 }
 
 /**
