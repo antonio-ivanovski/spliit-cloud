@@ -10,6 +10,7 @@ import { useFormContext, useWatch, type UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { CategorySelector } from '@/components/category-selector'
+import { CurrencyRateProviderAttribution } from '@/components/currency-rate-provider-attribution'
 import { CurrencySelector } from '@/components/currency-selector'
 import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
@@ -64,6 +65,7 @@ import { AmountCalculatorDialog } from './amount-calculator-dialog'
 import { AmountInput } from './amount-input'
 import {
   enforceCurrencyPattern,
+  amountPlaceholder,
   formatDate,
   parseCurrencyPaste,
 } from './currency-utils'
@@ -103,6 +105,12 @@ export function BasicDetailsCard(props: {
   convertedAmountPreview: number | undefined
   exchangeRate: {
     data: number | undefined
+    via: string[] | undefined
+    sources: Array<{
+      provider: 'frankfurter' | 'coinbase'
+      base: string
+      target: string
+    }>
     error: Error | null
     isLoading: boolean
     refresh: () => void
@@ -470,10 +478,15 @@ export function BasicDetailsCard(props: {
                       className="h-10 w-full rounded-none border-0 text-lg font-semibold shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
                       type="text"
                       inputMode="decimal"
-                      placeholder="0.00"
+                      placeholder={amountPlaceholder(
+                        inputCurrency.decimal_digits,
+                      )}
                       disabled={readOnly}
                       onChange={(event) => {
-                        const v = enforceCurrencyPattern(event.target.value)
+                        const v = enforceCurrencyPattern(
+                          event.target.value,
+                          inputCurrency.decimal_digits,
+                        )
                         setCalculatorExpression(v)
                         onChange(v)
                       }}
@@ -533,7 +546,10 @@ export function BasicDetailsCard(props: {
                 onOpenChange={setCalculatorOpen}
                 onExpressionChange={setCalculatorExpression}
                 onTransferAmount={(value) => {
-                  const sanitizedValue = enforceCurrencyPattern(value)
+                  const sanitizedValue = enforceCurrencyPattern(
+                    value,
+                    inputCurrency.decimal_digits,
+                  )
                   onChange(sanitizedValue)
                 }}
                 onTransferItems={handleCalculatorItems}
@@ -579,9 +595,10 @@ export function BasicDetailsCard(props: {
                     )}
                   </FormDescription>
                   {!props.usingCustomConversionRate && (
-                    <p className="text-xs text-muted-foreground">
-                      {t('conversionRateField.providerNote')}
-                    </p>
+                    <CurrencyRateProviderAttribution
+                      sources={props.exchangeRate.sources}
+                      via={props.exchangeRate.via}
+                    />
                   )}
                   <Collapsible
                     open={props.usingCustomConversionRate}

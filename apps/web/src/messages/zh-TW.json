@@ -452,8 +452,7 @@
         "perDateTitle": "依日期換算",
         "rateDateLabel": "匯率日期",
         "ratesError": "無法取得匯率。請檢查網路連線後重試。",
-        "refresh": "重新整理",
-        "viaFrankfurter": "由 Frankfurter 提供"
+        "refresh": "重新整理"
       }
     },
     "Importable": {
@@ -753,7 +752,6 @@
       "useApi": "使用 Frankfurter 的匯率",
       "useCustom": "使用自訂匯率",
       "label": "匯率",
-      "providerNote": "匯率由 https://frankfurter.dev/ 及其API提供。",
       "futureDateUsesToday": "此支出為未來日期，將使用今日匯率。"
     },
     "conversionRateState": {
@@ -766,7 +764,8 @@
       "noDate": "請輸入支出日期以取得匯率。",
       "dateMismatch": "匯率日期：{date}",
       "refresh": "重新整理",
-      "customRate": "使用自訂匯率中"
+      "customRate": "使用自訂匯率中",
+      "via": "經 {currencies}"
     },
     "participant": {
       "pending": "（已邀請）"
@@ -1572,6 +1571,27 @@
       },
       "ZMW": {
         "name": "尚比亞克瓦查"
+      },
+      "BTC": {
+        "name": "比特幣"
+      },
+      "DOGE": {
+        "name": "狗狗幣"
+      },
+      "ETH": {
+        "name": "以太坊"
+      },
+      "LTC": {
+        "name": "萊特幣"
+      },
+      "SAT": {
+        "name": "聰"
+      },
+      "SOL": {
+        "name": "索拉納"
+      },
+      "XRP": {
+        "name": "瑞波幣"
       }
     }
   },
@@ -2295,12 +2315,12 @@
     "swap": "交換貨幣",
     "rateError": "無法載入匯率。",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "匯率由 Frankfurter 提供",
     "createIn": "建立支出於…",
     "noGroups": "未找到符合條件的群組。",
     "staleRate": "匯率日期:",
     "fromLabel": "From",
-    "toLabel": "To"
+    "toLabel": "To",
+    "via": "經 {currencies}"
   },
   "LanguageSwitcher": {
     "title": "選擇語言",
@@ -2607,5 +2627,16 @@
     "originalAmountLabel": "原始金額",
     "expenseColumnLabel": "支出",
     "categoryColumnLabel": "類別"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "Frankfurter",
+    "coinbase": "Coinbase",
+    "bridged": "透過 {currencies}（<providers></providers>）",
+    "direct": {
+      "frankfurter": "<provider></provider> 匯率",
+      "coinbase": "<provider></provider> 匯率"
+    },
+    "fallbackPrefix": "匯率來源：",
+    "fallbackSeparator": " 和 "
   }
 }

@@ -898,6 +898,27 @@
       },
       "ZMW": {
         "name": "ज़ाम्बियन क्वाचा"
+      },
+      "BTC": {
+        "name": "बिटकॉइन"
+      },
+      "DOGE": {
+        "name": "डॉजकॉइन"
+      },
+      "ETH": {
+        "name": "एथेरियम"
+      },
+      "LTC": {
+        "name": "लाइटकॉइन"
+      },
+      "SAT": {
+        "name": "सैट्स"
+      },
+      "SOL": {
+        "name": "सोलाना"
+      },
+      "XRP": {
+        "name": "एक्सआरपी"
       }
     }
   },
@@ -1149,7 +1170,6 @@
       "useApi": "विनिमय दर का उपयोग करें",
       "useCustom": "कस्टम दर का उपयोग करें",
       "label": "विनिमय दर",
-      "providerNote": "दरें https://frankfurter.dev/ और उनके API द्वारा प्रदान की जाती हैं।",
       "futureDateUsesToday": "यह खर्च भविष्य में है और आज की विनिमय दर का उपयोग किया जाएगा।"
     },
     "conversionRateState": {
@@ -1162,7 +1182,8 @@
       "noDate": "विनिमय दर प्राप्त करने के लिए खर्च तारीख दर्ज करें।",
       "dateMismatch": "तारीख से दरें: {date}",
       "refresh": "रीफ़्रेश करें",
-      "customRate": "कस्टम दर का उपयोग कर रहा है"
+      "customRate": "कस्टम दर का उपयोग कर रहा है",
+      "via": "{currencies} के माध्यम से"
     },
     "splittingOptions": "विभाजन विकल्प",
     "multiplePayers": "एकाधिक भुगतानकर्ता",
@@ -1606,8 +1627,7 @@
         "perDateTitle": "प्रति-तारीख रूपांतरण",
         "rateDateLabel": "Frankfurter दर तारीख",
         "ratesError": "विनिमय दरें प्राप्त करने में असमर्थ। अपना कनेक्शन जांचें और पुनः प्रयास करें।",
-        "refresh": "रीफ़्रेश करें",
-        "viaFrankfurter": "चयनित तारीख के लिए Frankfurter से दर प्राप्त की गई।"
+        "refresh": "रीफ़्रेश करें"
       },
       "Destination": {
         "heading": "आप <strong>{name}</strong> को कहां आयात करना चाहेंगे? ({participantCount} सदस्य · {expenseCount} खर्च)",
@@ -2307,12 +2327,12 @@
     "swap": "मुद्राएं बदलें",
     "rateError": "विनिमय दर लोड नहीं की जा सकी।",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "Frankfurter द्वारा दरें",
     "createIn": "में व्यय बनाएं…",
     "noGroups": "कोई पात्र समूह नहीं मिला।",
     "staleRate": "दर:",
     "fromLabel": "से",
-    "toLabel": "में"
+    "toLabel": "में",
+    "via": "{currencies} के माध्यम से"
   },
   "LanguageSwitcher": {
     "title": "भाषा चुनें",
@@ -2620,5 +2640,16 @@
     "originalAmountLabel": "मूल राशि",
     "expenseColumnLabel": "खर्च",
     "categoryColumnLabel": "श्रेणी"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "Frankfurter",
+    "coinbase": "Coinbase",
+    "bridged": "{currencies} के माध्यम से (<providers></providers>)",
+    "direct": {
+      "frankfurter": "<provider></provider> से दर",
+      "coinbase": "<provider></provider> से दर"
+    },
+    "fallbackPrefix": "दर का स्रोत",
+    "fallbackSeparator": " और "
   }
 }

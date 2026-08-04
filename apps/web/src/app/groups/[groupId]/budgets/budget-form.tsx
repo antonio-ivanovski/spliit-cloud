@@ -3,8 +3,12 @@ import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AmountInput } from '@/app/groups/[groupId]/expenses/expense-form/amount-input'
-import { enforceCurrencyPattern } from '@/app/groups/[groupId]/expenses/expense-form/currency-utils'
+import {
+  amountPlaceholder,
+  enforceCurrencyPattern,
+} from '@/app/groups/[groupId]/expenses/expense-form/currency-utils'
 import { CategorySelector } from '@/components/category-selector'
+import { CurrencyIcon } from '@/components/currency-icon'
 import { FixedActionBar } from '@/components/fixed-action-bar'
 import { ParticipantSelector } from '@/components/participant-selector'
 import { Button } from '@/components/ui/button'
@@ -23,6 +27,8 @@ import { useLocale } from '@/i18n/react'
 import { getCurrencyFromGroup } from '@/lib/currency'
 import { formatDateOnly } from '@/lib/utils'
 import {
+  amountAsDecimal,
+  amountAsMinorUnits,
   DEFAULT_CATEGORIES,
   formatBudgetPeriodRange,
   getBudgetPeriodBounds,
@@ -100,9 +106,14 @@ export function BudgetForm({
     keyPrefix: 'Categories',
   })
   const locale = useLocale()
+  const currency = getCurrencyFromGroup(group)
   const [name, setName] = useState(budget?.name ?? '')
   const [amount, setAmount] = useState(
-    budget ? (budget.amount / 100).toFixed(2) : '',
+    budget
+      ? amountAsDecimal(budget.amount, currency).toFixed(
+          currency.decimal_digits,
+        )
+      : '',
   )
   const [periodType, setPeriodType] = useState<BudgetPeriodType>(
     budget?.periodType ?? 'MONTHLY',
@@ -132,9 +143,14 @@ export function BudgetForm({
   // The edit dialog is intentionally re-seeded when a different budget is selected.
   useEffect(() => {
     if (!budget) return
+    const groupCurrency = getCurrencyFromGroup(group)
     // oxlint-disable-next-line react/react-compiler
     setName(budget.name)
-    setAmount((budget.amount / 100).toFixed(2))
+    setAmount(
+      amountAsDecimal(budget.amount, groupCurrency).toFixed(
+        groupCurrency.decimal_digits,
+      ),
+    )
     setPeriodType(budget.periodType)
     setCustomStart(toDateInput(budget.customStart))
     setCustomEnd(toDateInput(budget.customEnd))
@@ -144,9 +160,8 @@ export function BudgetForm({
     setParticipantIds(budget.participantIds)
     setNotifyTrending(budget.notifyTrending)
     setNotifyOver(budget.notifyOver)
-  }, [budget])
+  }, [budget, group])
 
-  const currency = getCurrencyFromGroup(group)
   const participantOptions = useMemo(
     () =>
       group.participants.map((participant) => ({
@@ -258,7 +273,7 @@ export function BudgetForm({
     setError(null)
     await onSubmit({
       name: name.trim(),
-      amount: Math.round(Number(amount) * 100),
+      amount: amountAsMinorUnits(Number(amount) || 0, currency),
       periodType,
       customStart: periodType === 'CUSTOM' ? customStart : null,
       customEnd: periodType === 'CUSTOM' ? customEnd : null,
@@ -293,12 +308,9 @@ export function BudgetForm({
               className="flex h-10 shrink-0 items-center gap-2 border-r border-input px-3"
               aria-label={currency.code}
             >
-              <img
-                src={`https://flagcdn.com/h24/${(currency.code || 'un')
-                  .slice(0, 2)
-                  .toLowerCase()}.png`}
+              <CurrencyIcon
+                code={currency.code || 'un'}
                 className="w-4 shrink-0"
-                alt=""
               />
               <span className="text-sm font-medium">{currency.code}</span>
             </div>
@@ -308,10 +320,15 @@ export function BudgetForm({
               className="h-10 w-full rounded-none border-0 text-lg font-semibold shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
               type="text"
               inputMode="decimal"
-              placeholder="0.00"
+              placeholder={amountPlaceholder(currency.decimal_digits)}
               value={amount}
               onChange={(event) =>
-                setAmount(enforceCurrencyPattern(event.target.value))
+                setAmount(
+                  enforceCurrencyPattern(
+                    event.target.value,
+                    currency.decimal_digits,
+                  ),
+                )
               }
               onFocus={(event) => {
                 const el = event.currentTarget

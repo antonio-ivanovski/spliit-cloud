@@ -97,7 +97,7 @@ export const prepareExpenseInputSchema = z
     date: z.iso.date().optional(),
     category: categoryIdSchema.optional(),
     notes: z.string().max(10_000).optional(),
-    currencyCode: z.string().length(3).optional(),
+    currencyCode: z.string().min(3).max(4).optional(),
     paidBy: z.array(allocationSchema).min(1).optional(),
     split: splitSchema.optional(),
     items: z.array(itemSchema).min(1).max(100).optional(),

@@ -20,6 +20,8 @@ import { env as jobsEnv } from '@spliit/jobs'
 import {
   CurrencyRateProviderError,
   UnsupportedCurrencyError,
+} from '../currency-errors'
+import {
   getCurrencyRates,
   type BatchRateRequest,
   type CurrencyRate,

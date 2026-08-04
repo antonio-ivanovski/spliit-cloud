@@ -575,8 +575,7 @@
         "perDateTitle": "Per-date conversion",
         "rateDateLabel": "Frankfurter rate date",
         "ratesError": "Unable to fetch exchange rates. Check your connection and try again.",
-        "refresh": "Refresh",
-        "viaFrankfurter": "Rate fetched from Frankfurter for the selected date."
+        "refresh": "Refresh"
       }
     },
     "groups": "Groups",
@@ -1101,7 +1100,6 @@
       "useApi": "Use exchange rate",
       "useCustom": "Use custom rate",
       "label": "Exchange rate",
-      "providerNote": "Rates are provided by https://frankfurter.dev/ and their API.",
       "futureDateUsesToday": "This expense is in the future and todays exchange rate will be used."
     },
     "conversionRateState": {
@@ -1114,7 +1112,8 @@
       "noDate": "Enter the expense date to get a conversion rate.",
       "dateMismatch": "Rates from date: {date}",
       "refresh": "Refresh",
-      "customRate": "Using custom rate"
+      "customRate": "Using custom rate",
+      "via": "via {currencies}"
     },
     "isReimbursementField": {
       "label": "This is a settlement payment"
@@ -1860,6 +1859,27 @@
       },
       "ZMW": {
         "name": "Zambian Kwacha"
+      },
+      "BTC": {
+        "name": "Bitcoin"
+      },
+      "DOGE": {
+        "name": "Dogecoin"
+      },
+      "ETH": {
+        "name": "Ethereum"
+      },
+      "LTC": {
+        "name": "Litecoin"
+      },
+      "SAT": {
+        "name": "Sats"
+      },
+      "SOL": {
+        "name": "Solana"
+      },
+      "XRP": {
+        "name": "XRP"
       }
     }
   },
@@ -2383,12 +2403,12 @@
     "swap": "Swap currencies",
     "rateError": "Could not load exchange rate.",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "Rates by Frankfurter",
     "createIn": "Create expense in…",
     "noGroups": "No eligible groups found.",
     "staleRate": "Using rate from:",
     "fromLabel": "From",
-    "toLabel": "To"
+    "toLabel": "To",
+    "via": "via {currencies}"
   },
   "LanguageSwitcher": {
     "title": "Choose language",
@@ -2696,5 +2716,16 @@
     "originalAmountLabel": "Original amount",
     "expenseColumnLabel": "Expense",
     "categoryColumnLabel": "Category"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "Frankfurter",
+    "coinbase": "Coinbase",
+    "direct": {
+      "frankfurter": "Rate from <provider></provider>",
+      "coinbase": "Rate from <provider></provider>"
+    },
+    "bridged": "via {currencies} (<providers></providers>)",
+    "fallbackPrefix": "Rates from",
+    "fallbackSeparator": " and "
   }
 }

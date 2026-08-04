@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Defines export and import-side recurrence metadata requirements for CSV/JSON exports and legacy recurring import collapse, plus conversion metadata columns for converted expenses.
+
+## Requirements
 
 ### Requirement: Interval recurrence export
 Exports SHALL represent recurrence frequency, interval, and termination for series expenses.
@@ -44,3 +48,19 @@ The Spliit JSON importer SHALL collapse matching historical recurring expense ro
 #### Scenario: Legacy CSV rows are never recurring
 - **WHEN** the user imports a legacy Spliit CSV file
 - **THEN** every expense is committed without a series and recurrence is not inferred from the file
+
+### Requirement: Currency conversion export metadata
+Exports SHALL include server-persisted expense-level original-currency and conversion metadata for converted expenses while keeping accounting amounts in Ledger base currency.
+
+#### Scenario: Export converted expense
+- **WHEN** an export includes a converted expense (fiat or crypto original currency)
+- **THEN** the export includes the Ledger-currency amount, original amount, original currency, `conversionSource` (`EXCHANGE` or `CUSTOM`), and server-used conversion rate
+- **AND** the export does not include a separate conversion as-of column
+
+#### Scenario: Export same-currency expense
+- **WHEN** an export includes an expense with null `conversionSource`
+- **THEN** the export includes the Ledger-currency amount without requiring conversion metadata
+
+#### Scenario: Export does not invent exchange provenance
+- **WHEN** an export includes an expense with `conversionSource` `CUSTOM`
+- **THEN** the export identifies the rate as custom and does not present it as a provider exchange rate

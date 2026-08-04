@@ -462,8 +462,7 @@
         "perDateTitle": "Conversió per data",
         "rateDateLabel": "Data del tipus",
         "ratesError": "No s'han pogut obtenir els tipus de canvi. Comprova la connexió i torna-ho a provar.",
-        "refresh": "Actualitza",
-        "viaFrankfurter": "via Frankfurter"
+        "refresh": "Actualitza"
       }
     },
     "Importable": {
@@ -765,7 +764,6 @@
       "useApi": "Emprar les tases de Frankfurter",
       "useCustom": "Utilitzar tasa personalitzada",
       "label": "Tasa de conversió",
-      "providerNote": "Les taxes les proporciona https://frankfurter.dev/ i la seva API.",
       "futureDateUsesToday": "Aquesta despesa és en el futur i s'utilitzarà la taxa de canvi d'avui."
     },
     "conversionRateState": {
@@ -778,7 +776,8 @@
       "noDate": "Introdueix la data de la despesa per a aconseguir la tasa de conversió.",
       "dateMismatch": "Tases per a la data: {date}",
       "refresh": "Refrescar",
-      "customRate": "Emprant tasa personalitzada"
+      "customRate": "Emprant tasa personalitzada",
+      "via": "a través de {currencies}"
     },
     "participant": {
       "pending": "(convidat)"
@@ -1485,6 +1484,27 @@
       },
       "ZMW": {
         "name": "Kwacha zambià"
+      },
+      "BTC": {
+        "name": "Bitcoin"
+      },
+      "DOGE": {
+        "name": "Dogecoin"
+      },
+      "ETH": {
+        "name": "Ethereum"
+      },
+      "LTC": {
+        "name": "Litecoin"
+      },
+      "SAT": {
+        "name": "Sats"
+      },
+      "SOL": {
+        "name": "Solana"
+      },
+      "XRP": {
+        "name": "XRP"
       }
     }
   },
@@ -2329,12 +2349,12 @@
     "swap": "Intercanviar monedes",
     "rateError": "No s'ha pogut carregar el tipus de canvi.",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "Tipus de Frankfurter",
     "createIn": "Crear despesa a…",
     "noGroups": "No s'han trobat grups elegibles.",
     "staleRate": "Tipus del:",
     "fromLabel": "De",
-    "toLabel": "A"
+    "toLabel": "A",
+    "via": "a través de {currencies}"
   },
   "LanguageSwitcher": {
     "title": "Tria l'idioma",
@@ -2642,5 +2662,16 @@
     "originalAmountLabel": "Import original",
     "expenseColumnLabel": "Despesa",
     "categoryColumnLabel": "Categoria"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "Frankfurter",
+    "coinbase": "Coinbase",
+    "direct": {
+      "frankfurter": "Tipus de canvi de <provider></provider>",
+      "coinbase": "Tipus de canvi de <provider></provider>"
+    },
+    "bridged": "a través de {currencies} (<providers></providers>)",
+    "fallbackPrefix": "Tipus de canvi de",
+    "fallbackSeparator": " i "
   }
 }

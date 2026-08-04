@@ -2,15 +2,17 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { mockFn } from 'vitest-mock-extended'
 
 import {
-  clearCurrencyRateCache,
-  currencyRateCacheSize,
   CurrencyRateNotFoundError,
   CurrencyRateProviderError,
+  UnsupportedCurrencyError,
+} from '../currency-errors'
+import {
+  clearCurrencyRateCache,
+  currencyRateCacheSize,
   getCurrencyRate,
   getCurrencyRates,
-  UnsupportedCurrencyError,
-  type FrankfurterResponse,
 } from '../currency-rates'
+import type { FrankfurterResponse } from '../fiat-rates'
 
 type FetchRatesFn = (
   date: string,
@@ -85,6 +87,7 @@ describe('getCurrencyRate', () => {
       asOfDate: '2026-06-28',
       base: 'EUR',
       target: 'USD',
+      sources: [{ provider: 'frankfurter', base: 'EUR', target: 'USD' }],
     })
     expect(fetchImpl).toHaveBeenCalledTimes(1)
     expect(fetchImpl).toHaveBeenCalledWith('2026-06-28', 'EUR', ['USD'])
@@ -379,6 +382,282 @@ describe('getCurrencyRates', () => {
     expect(results[0]).toMatchObject({
       ok: true,
       rate: { rate: 1.1, target: 'USD' },
+    })
+  })
+})
+
+type CryptoFetchFn = (
+  date: string,
+  base: string,
+  target: string,
+) => Promise<number | null>
+
+describe('crypto rate resolution', () => {
+  beforeEach(() => {
+    clearCurrencyRateCache()
+  })
+
+  afterEach(() => {
+    clearCurrencyRateCache()
+  })
+
+  it('resolves a direct crypto pair through the crypto provider', async () => {
+    const cryptoFetchImpl = vi
+      .fn<CryptoFetchFn>()
+      .mockImplementation(async () => 64_000)
+
+    const result = await getCurrencyRate({
+      date: '2026-06-28',
+      base: 'BTC',
+      target: 'USD',
+      cryptoFetchImpl,
+    })
+
+    expect(result.rate).toBe(64_000)
+    expect(result.via).toBeUndefined()
+    expect(result.sources).toEqual([
+      { provider: 'coinbase', base: 'BTC', target: 'USD' },
+    ])
+    expect(result.asOfDate).toBe('2026-06-28')
+    expect(cryptoFetchImpl).toHaveBeenCalledTimes(1)
+    expect(cryptoFetchImpl).toHaveBeenCalledWith('2026-06-28', 'BTC', 'USD')
+  })
+
+  it('falls back to the inverted pair and inverts the rate', async () => {
+    const cryptoFetchImpl = vi
+      .fn<CryptoFetchFn>()
+      .mockImplementation(async (_date, base, target) =>
+        base === 'BTC' && target === 'USD' ? 64_000 : null,
+      )
+
+    const result = await getCurrencyRate({
+      date: '2026-06-28',
+      base: 'USD',
+      target: 'BTC',
+      cryptoFetchImpl,
+    })
+
+    expect(result.rate).toBeCloseTo(1 / 64_000, 12)
+  })
+
+  it('composes a rate through the fiat side intermediary list', async () => {
+    const cryptoFetchImpl = vi
+      .fn<CryptoFetchFn>()
+      .mockImplementation(async (_date, base, target) => {
+        if (base === 'DOGE' && target === 'EUR') return 0.11
+        if (base === 'DOGE' && target === 'USD') return 0.12
+        return null
+      })
+    const fetchImpl = mockFn<FetchRatesFn>().mockImplementation(
+      async (_date, base, quotes) => ({
+        base,
+        date: '2026-06-28',
+        rates: Object.fromEntries(quotes!.map((q) => [q, 61.5])),
+      }),
+    )
+
+    const result = await getCurrencyRate({
+      date: '2026-06-28',
+      base: 'DOGE',
+      target: 'MKD',
+      cryptoFetchImpl,
+      fetchImpl,
+    })
+
+    // MKD's list is ['EUR', 'USD']: DOGE→EUR (crypto) × EUR→MKD (fiat).
+    // Crypto provider attempts: direct DOGE→MKD, inverted MKD→DOGE, leg
+    // DOGE→EUR.
+    expect(result.via).toEqual(['EUR'])
+    expect(result.rate).toBeCloseTo(0.11 * 61.5, 10)
+    expect(result.sources).toEqual([
+      { provider: 'coinbase', base: 'DOGE', target: 'EUR' },
+      { provider: 'frankfurter', base: 'EUR', target: 'MKD' },
+    ])
+    expect(cryptoFetchImpl).toHaveBeenCalledTimes(3)
+    expect(cryptoFetchImpl).toHaveBeenCalledWith('2026-06-28', 'DOGE', 'EUR')
+    expect(fetchImpl).toHaveBeenCalledWith('2026-06-28', 'EUR', ['MKD'])
+  })
+
+  it('bridges crypto↔crypto through an intermediary when no direct pair exists', async () => {
+    const cryptoFetchImpl = vi
+      .fn<CryptoFetchFn>()
+      .mockImplementation(async (_date, base, target) => {
+        if (base === 'BTC' && target === 'EUR') return 55_000
+        if (base === 'ETH' && target === 'EUR') return 2_500
+        return null
+      })
+
+    const result = await getCurrencyRate({
+      date: '2026-06-28',
+      base: 'BTC',
+      target: 'ETH',
+      cryptoFetchImpl,
+    })
+
+    expect(result.via).toEqual(['EUR'])
+    expect(result.rate).toBeCloseTo(55_000 / 2_500, 10)
+    expect(result.sources).toEqual([
+      { provider: 'coinbase', base: 'BTC', target: 'EUR' },
+      { provider: 'coinbase', base: 'EUR', target: 'ETH' },
+    ])
+  })
+
+  it('scales alias currencies through their parent code', async () => {
+    const cryptoFetchImpl = vi
+      .fn<CryptoFetchFn>()
+      .mockImplementation(async (_date, base, target) =>
+        base === 'BTC' && target === 'USD' ? 64_000 : null,
+      )
+
+    const result = await getCurrencyRate({
+      date: '2026-06-28',
+      base: 'SAT',
+      target: 'USD',
+      cryptoFetchImpl,
+    })
+
+    expect(result.rate).toBe(64_000 * 0.00000001)
+    expect(cryptoFetchImpl).toHaveBeenCalledWith('2026-06-28', 'BTC', 'USD')
+  })
+
+  it('scales alias targets through their parent code', async () => {
+    const cryptoFetchImpl = vi
+      .fn<CryptoFetchFn>()
+      .mockImplementation(async (_date, base, target) =>
+        base === 'BTC' && target === 'USD' ? 64_000 : null,
+      )
+
+    const result = await getCurrencyRate({
+      date: '2026-06-28',
+      base: 'USD',
+      target: 'SAT',
+      cryptoFetchImpl,
+    })
+
+    // rate(USD→SAT) = rate(USD→BTC) ÷ 1e-8 = 1/64000 × 1e8 = 1562.5 sats.
+    expect(result.rate).toBeCloseTo(1562.5, 10)
+  })
+
+  it('returns rate 1 for a same-currency crypto pair without calling providers', async () => {
+    const cryptoFetchImpl = vi.fn<CryptoFetchFn>()
+    const fetchImpl = mockFn<FetchRatesFn>()
+
+    const result = await getCurrencyRate({
+      date: '2026-06-28',
+      base: 'BTC',
+      target: 'BTC',
+      cryptoFetchImpl,
+      fetchImpl,
+    })
+
+    expect(result.rate).toBe(1)
+    expect(cryptoFetchImpl).not.toHaveBeenCalled()
+    expect(fetchImpl).not.toHaveBeenCalled()
+  })
+
+  it('throws CurrencyRateNotFoundError when no direct or intermediary rate exists', async () => {
+    const cryptoFetchImpl = vi.fn<CryptoFetchFn>().mockResolvedValue(null)
+    const fetchImpl = mockFn<FetchRatesFn>().mockResolvedValue(
+      makePayload({ rates: {} }),
+    )
+
+    await expect(
+      getCurrencyRate({
+        date: '2026-06-28',
+        base: 'BTC',
+        target: 'MKD',
+        cryptoFetchImpl,
+        fetchImpl,
+      }),
+    ).rejects.toBeInstanceOf(CurrencyRateNotFoundError)
+  })
+
+  it('caches crypto rates across calls', async () => {
+    const cryptoFetchImpl = vi
+      .fn<CryptoFetchFn>()
+      .mockImplementation(async () => 64_000)
+
+    await getCurrencyRate({
+      date: '2026-06-28',
+      base: 'BTC',
+      target: 'USD',
+      cryptoFetchImpl,
+    })
+    await getCurrencyRate({
+      date: '2026-06-28',
+      base: 'BTC',
+      target: 'USD',
+      cryptoFetchImpl,
+    })
+
+    expect(cryptoFetchImpl).toHaveBeenCalledTimes(1)
+  })
+
+  it('batches crypto and fiat requests, sharing repeated intermediary legs', async () => {
+    const cryptoFetchImpl = vi
+      .fn<CryptoFetchFn>()
+      .mockImplementation(async (_date, base, target) => {
+        if (base === 'BTC' && target === 'USD') return 64_000
+        if (base === 'BTC' && target === 'EUR') return 55_000
+        return null
+      })
+    const fetchImpl = mockFn<FetchRatesFn>().mockImplementation(
+      async (_date, base, quotes) => ({
+        base,
+        date: '2026-06-28',
+        rates: Object.fromEntries(quotes!.map((q) => [q, 61.5])),
+      }),
+    )
+
+    const results = await getCurrencyRates(
+      [
+        { date: '2026-06-28', base: 'BTC', target: 'USD' },
+        { date: '2026-06-28', base: 'BTC', target: 'EUR' },
+        { date: '2026-06-28', base: 'BTC', target: 'MKD' },
+        { date: '2026-06-28', base: 'EUR', target: 'GBP' },
+      ],
+      { cryptoFetchImpl, fetchImpl },
+    )
+
+    expect(results[0]).toMatchObject({ ok: true, rate: { rate: 64_000 } })
+    expect(results[1]).toMatchObject({ ok: true, rate: { rate: 55_000 } })
+    expect(results[2]).toMatchObject({
+      ok: true,
+      rate: { rate: 55_000 * 61.5, via: ['EUR'] },
+    })
+    expect(results[3]).toMatchObject({ ok: true, rate: { target: 'GBP' } })
+
+    // Crypto provider attempts: BTC→USD, BTC→EUR direct (requests 1-2);
+    // BTC→MKD direct + inverted MKD→BTC (request 3); the BTC→EUR
+    // intermediary leg is deduped against request 2's in-flight call.
+    expect(cryptoFetchImpl).toHaveBeenCalledTimes(4)
+    expect(cryptoFetchImpl).toHaveBeenCalledWith('2026-06-28', 'BTC', 'USD')
+    expect(cryptoFetchImpl).toHaveBeenCalledWith('2026-06-28', 'BTC', 'EUR')
+    expect(cryptoFetchImpl).toHaveBeenCalledWith('2026-06-28', 'BTC', 'MKD')
+    expect(cryptoFetchImpl).toHaveBeenCalledWith('2026-06-28', 'MKD', 'BTC')
+  })
+
+  it('classifies crypto pair failures per item', async () => {
+    const cryptoFetchImpl = vi.fn<CryptoFetchFn>().mockResolvedValue(null)
+    const fetchImpl = mockFn<FetchRatesFn>().mockResolvedValue(
+      makePayload({ rates: {} }),
+    )
+
+    const results = await getCurrencyRates(
+      [
+        { date: '2026-06-28', base: 'BTC', target: 'USD' },
+        { date: '2026-06-28', base: 'BTC', target: 'MKD' },
+      ],
+      { cryptoFetchImpl, fetchImpl },
+    )
+
+    expect(results[0]).toMatchObject({
+      ok: false,
+      error: { code: 'RATE_NOT_FOUND', target: 'USD' },
+    })
+    expect(results[1]).toMatchObject({
+      ok: false,
+      error: { code: 'RATE_NOT_FOUND', target: 'MKD' },
     })
   })
 })

@@ -457,8 +457,7 @@
         "perDateTitle": "Tarihe göre dönüşüm",
         "rateDateLabel": "Kur tarihi",
         "ratesError": "Döviz kurları alınamadı. Bağlantınızı kontrol edip tekrar deneyin.",
-        "refresh": "Yenile",
-        "viaFrankfurter": "Frankfurter aracılığıyla"
+        "refresh": "Yenile"
       }
     },
     "Importable": {
@@ -759,7 +758,6 @@
       "useApi": "Frankfurter'dan kurları kullan",
       "useCustom": "Özel kur kullan",
       "label": "Döviz kuru",
-      "providerNote": "Kurlar https://frankfurter.dev/ ve API'leri tarafından sağlanmaktadır.",
       "futureDateUsesToday": "Bu harcama gelecekte olduğundan bugünkü döviz kuru kullanılacak."
     },
     "conversionRateState": {
@@ -772,7 +770,8 @@
       "noDate": "Döviz kuru almak için gider tarihini girin.",
       "dateMismatch": "{date} tarihli kurlar",
       "refresh": "Yenile",
-      "customRate": "Özel kur kullanılıyor"
+      "customRate": "Özel kur kullanılıyor",
+      "via": "{currencies} üzerinden"
     },
     "participant": {
       "pending": "(davet edildi)"
@@ -1579,6 +1578,27 @@
       },
       "ZMW": {
         "name": "Zambiya kwachası"
+      },
+      "BTC": {
+        "name": "Bitcoin"
+      },
+      "DOGE": {
+        "name": "Dogecoin"
+      },
+      "ETH": {
+        "name": "Ethereum"
+      },
+      "LTC": {
+        "name": "Litecoin"
+      },
+      "SAT": {
+        "name": "Sats"
+      },
+      "SOL": {
+        "name": "Solana"
+      },
+      "XRP": {
+        "name": "XRP"
       }
     }
   },
@@ -2311,12 +2331,12 @@
     "swap": "Para birimlerini değiştir",
     "rateError": "Döviz kuru yüklenemedi.",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "Frankfurter kurları",
     "createIn": "Şurada gider oluştur…",
     "noGroups": "Uygun grup bulunamadı.",
     "staleRate": "Kur:",
     "fromLabel": "Kaynak",
-    "toLabel": "Hedef"
+    "toLabel": "Hedef",
+    "via": "{currencies} üzerinden"
   },
   "LanguageSwitcher": {
     "title": "Dil seçin",
@@ -2624,5 +2644,16 @@
     "originalAmountLabel": "Orijinal tutar",
     "expenseColumnLabel": "Harcama",
     "categoryColumnLabel": "Kategori"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "Frankfurter",
+    "coinbase": "Coinbase",
+    "bridged": "{currencies} üzerinden (<providers></providers>)",
+    "direct": {
+      "frankfurter": "<provider></provider> üzerinden kur",
+      "coinbase": "<provider></provider> üzerinden kur"
+    },
+    "fallbackPrefix": "Kurlar:",
+    "fallbackSeparator": " ve "
   }
 }

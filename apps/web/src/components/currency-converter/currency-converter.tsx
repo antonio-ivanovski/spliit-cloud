@@ -3,6 +3,7 @@ import { ArrowDownUp, Loader2, Star } from 'lucide-react'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { CurrencyRateProviderAttribution } from '@/components/currency-rate-provider-attribution'
 import { CurrencySelector } from '@/components/currency-selector'
 import { Button } from '@/components/ui/button'
 import {
@@ -16,7 +17,7 @@ import {
 } from '@/components/ui/responsive-dialog'
 import { useLocale } from '@/i18n/react'
 import { useCurrencies } from '@/lib/currency'
-import { enforceCurrencyPattern } from '@/lib/currency-input'
+import { amountPlaceholder, enforceCurrencyPattern } from '@/lib/currency-input'
 import { useCurrencyRate } from '@/lib/hooks'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
@@ -224,6 +225,8 @@ export function ConverterContent() {
   const sameCurrency = fromCode === toCode
   const {
     data: rate,
+    via,
+    sources,
     isLoading: rateLoading,
     error: rateError,
   } = useCurrencyRate(today, fromCode, toCode)
@@ -231,7 +234,10 @@ export function ConverterContent() {
   const isStaleRate = rateError instanceof RangeError
   const rateFailed = rateError != null && !isStaleRate
 
-  const parsedAmount = Number(enforceCurrencyPattern(amountStr))
+  const fromCurrency = currencies.find((c) => c.code === fromCode)
+  const fromDigits = fromCurrency?.decimal_digits ?? 2
+
+  const parsedAmount = Number(enforceCurrencyPattern(amountStr, fromDigits))
   const amountValid =
     amountStr.trim() !== '' && Number.isFinite(parsedAmount) && parsedAmount > 0
 
@@ -300,10 +306,10 @@ export function ConverterContent() {
               type="text"
               inputMode="decimal"
               size={1}
-              placeholder="0.00"
+              placeholder={amountPlaceholder(fromDigits)}
               value={amountStr}
               onChange={(e) =>
-                setAmountStr(enforceCurrencyPattern(e.target.value))
+                setAmountStr(enforceCurrencyPattern(e.target.value, fromDigits))
               }
               className="h-10 w-full min-w-0 border-0 bg-transparent px-3 text-lg font-medium tabular-nums outline-none focus-visible:ring-0"
             />
@@ -379,15 +385,16 @@ export function ConverterContent() {
               {t('staleRate')} {rateError?.message}
             </p>
           ) : rate != null && previewReady ? (
-            <p className="text-xs text-muted-foreground">
-              {t('rateInfo', {
-                rate: rate.toFixed(4),
-                from: fromCode,
-                to: toCode,
-              })}
-              {' · '}
-              {t('providerNote')}
-            </p>
+            <div className="space-y-0.5 text-xs text-muted-foreground">
+              <p>
+                {t('rateInfo', {
+                  rate: rate.toFixed(4),
+                  from: fromCode,
+                  to: toCode,
+                })}
+              </p>
+              <CurrencyRateProviderAttribution sources={sources} via={via} />
+            </div>
           ) : null}
         </div>
       )}

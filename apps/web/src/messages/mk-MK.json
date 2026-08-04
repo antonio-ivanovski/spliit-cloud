@@ -463,8 +463,7 @@
         "perDateTitle": "Конверзија по датум",
         "rateDateLabel": "Датум на курс",
         "ratesError": "Не може да се земат девизните курсеви. Проверете ја вашата конекција и обидете се повторно.",
-        "refresh": "Освежи",
-        "viaFrankfurter": "преку Frankfurter"
+        "refresh": "Освежи"
       }
     },
     "delete": {
@@ -1012,7 +1011,6 @@
       "useApi": "Користи курсеви од Frankfurter",
       "useCustom": "Користи прилагоден курс",
       "label": "Девизен курс",
-      "providerNote": "Курсевите ги обезбедува https://frankfurter.dev/ и нивното API.",
       "futureDateUsesToday": "Овој трошок е во иднина и ќе се користи денешниот девизен курс."
     },
     "conversionRateState": {
@@ -1025,7 +1023,8 @@
       "noDate": "Внесете го датумот на трошокот за да добиете девизен курс.",
       "dateMismatch": "Курсеви од датум: {date}",
       "refresh": "Освежи",
-      "customRate": "Се користи прилагоден курс"
+      "customRate": "Се користи прилагоден курс",
+      "via": "преку {currencies}"
     },
     "isReimbursementField": {
       "label": "Ова е порамнителна уплата"
@@ -1763,6 +1762,27 @@
       },
       "ZMW": {
         "name": "Замбиска квача"
+      },
+      "BTC": {
+        "name": "Bitcoin"
+      },
+      "DOGE": {
+        "name": "Dogecoin"
+      },
+      "ETH": {
+        "name": "Ethereum"
+      },
+      "LTC": {
+        "name": "Litecoin"
+      },
+      "SAT": {
+        "name": "Сатоши"
+      },
+      "SOL": {
+        "name": "Solana"
+      },
+      "XRP": {
+        "name": "XRP"
       }
     }
   },
@@ -2311,12 +2331,12 @@
     "swap": "Замени валути",
     "rateError": "Не може да се вчита девизниот курс.",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "Курсеви од Frankfurter",
     "createIn": "Креирај трошок во…",
     "noGroups": "Не се пронајдени соодветни групи.",
     "staleRate": "Курс од:",
     "fromLabel": "Од",
-    "toLabel": "Кон"
+    "toLabel": "Кон",
+    "via": "преку {currencies}"
   },
   "LanguageSwitcher": {
     "title": "Изберете јазик",
@@ -2622,5 +2642,16 @@
     "originalAmountLabel": "Оригинален износ",
     "expenseColumnLabel": "Трошок",
     "categoryColumnLabel": "Категорија"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "Frankfurter",
+    "coinbase": "Coinbase",
+    "bridged": "преку {currencies} (<providers></providers>)",
+    "direct": {
+      "frankfurter": "Курс од <provider></provider>",
+      "coinbase": "Курс од <provider></provider>"
+    },
+    "fallbackPrefix": "Курсеви од",
+    "fallbackSeparator": " и "
   }
 }

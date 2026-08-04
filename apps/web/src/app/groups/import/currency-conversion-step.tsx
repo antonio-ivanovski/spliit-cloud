@@ -10,6 +10,7 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { CurrencyRateProviderAttribution } from '@/components/currency-rate-provider-attribution'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -379,9 +380,13 @@ function PairConversionCard({
                     </Button>
                   </div>
                 )}
-                <p className="text-[10px] text-muted-foreground/50">
-                  {t('Groups.Import.CurrencyConversion.viaFrankfurter')}
-                </p>
+                {fixedQuery.data?.[0]?.ok ? (
+                  <CurrencyRateProviderAttribution
+                    className="text-[10px] text-muted-foreground/50"
+                    sources={fixedQuery.data[0].rate.sources}
+                    via={fixedQuery.data[0].rate.via}
+                  />
+                ) : null}
               </>
             ) : (
               <div className="flex items-center gap-3">

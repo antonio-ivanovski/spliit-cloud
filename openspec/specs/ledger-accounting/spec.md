@@ -27,19 +27,42 @@ The system SHALL use LedgerParticipant records as the parties referenced by expe
 - **THEN** the system calculates by LedgerParticipant across the Ledger expenses
 
 ### Requirement: Ledger base currency
-The system SHALL store base currency on the Ledger and SHALL store expense amounts in ledger-currency minor units.
+The system SHALL store base currency on the Ledger and SHALL store expense amounts in ledger-currency minor units (integer minor units of the ledger currency — typically cents for fiat, but the same field holds minor units for crypto ledgers per catalog `decimal_digits`). For converted expenses, the system SHALL compute the ledger-currency total server-side from original/input currency values and the source-resolved conversion rate. Original amount, shares, and items SHALL remain in the expense original/input currency.
 
 #### Scenario: Expense in ledger currency
 - **WHEN** an expense is entered in the Ledger base currency
-- **THEN** the system stores the amount in Ledger base-currency minor units without original-currency conversion fields
+- **THEN** the system stores null `conversionSource`, stores the amount in ledger minor units, and does not require exchange or custom conversion metadata
 
-#### Scenario: Expense in different currency
-- **WHEN** an expense is entered in a currency different from the Ledger base currency
-- **THEN** the system stores the normalized amount in Ledger base-currency minor units and preserves original amount, original currency, and conversion rate
+#### Scenario: Expense in different currency with exchange rate
+- **WHEN** an expense is entered in a different supported catalog currency than the Ledger base and `conversionSource` is `EXCHANGE`
+- **THEN** the system resolves the rate server-side (Frankfurter for fiat legs, Coinbase for crypto legs, with bridging when needed), stores the server-normalized ledger-currency total, and preserves original amount, original currency, `conversionSource`, and conversion rate
+
+#### Scenario: Expense in different currency with custom rate
+- **WHEN** an expense is entered in a currency different from the Ledger base and `conversionSource` is `CUSTOM`
+- **THEN** the system accepts a positive user-supplied rate, computes the ledger-currency total server-side, and preserves original amount, original currency, `conversionSource`, and conversion rate
+
+#### Scenario: Client conversion is preview-only
+- **WHEN** the client submits an expense that requires conversion
+- **THEN** the system does not treat client-provided ledger totals as authoritative and computes persisted ledger values on the server from original/input values and the source-resolved rate
 
 #### Scenario: Direct ledger base currency
 - **WHEN** a user creates a direct Ledger
-- **THEN** the system suggests a base currency from account preference or locale and allows the user to choose a different base currency
+- **THEN** the system suggests a base currency from account preference or locale and allows the user to choose a different base currency (supported catalog fiat or crypto, or custom)
+
+### Requirement: Conversion source
+The system SHALL persist `conversionSource` on each expense: `EXCHANGE` or `CUSTOM` (null when same currency). Users SHALL be able to choose and later change the source when the expense currency differs from the ledger base (subject to currency/provider constraints). The exchange option SHALL show provider attribution (Frankfurter and Coinbase with API links) as defined in the currency-exchange spec.
+
+#### Scenario: Same-currency forces none
+- **WHEN** the selected expense currency equals the Ledger base currency
+- **THEN** the system stores null `conversionSource` and does not store a conversion rate
+
+#### Scenario: Exchange source requires supported pair
+- **WHEN** `conversionSource` is `EXCHANGE`
+- **THEN** both expense currency and Ledger base currency are supported catalog codes the exchange service can price (including crypto via Coinbase and fiat via Frankfurter, with bridging); otherwise the system rejects the save
+
+#### Scenario: Custom currency requires custom rate when converted
+- **WHEN** an expense currency or Ledger base currency is custom/unsupported for exchange and the two differ
+- **THEN** the system requires `conversionSource` `CUSTOM` and a positive custom rate
 
 ### Requirement: Existing split units
 The system SHALL store split units as follows: BY_AMOUNT in ledger-currency minor units, BY_PERCENTAGE in basis points out of 10000, EVENLY as equal participation, and BY_SHARES as positive integer hundredths of a share where `100 = 1 displayed share` (`0.5` displays as stored `50`, `1.1` displays as stored `110`). The fixed share units SHALL apply to expense paidFor rows, expense paidBy rows, item paidFor rows, itemized-remainder paidFor rows, and saved default-split paidFor rows.
@@ -82,7 +105,7 @@ The system SHALL migrate legacy relative share weights to fixed units in a singl
 ### Requirement: Global balance accumulation
 The system SHALL compute balances by accumulating exact `ExactAmount` (native `BigInt` rational) shares across all expenses per direction (paid and paidFor) into per-participant `ExactAmount` maps, applying cross-currency conversion via `convertByRate` per-expense, then truncating + distributing the single global leftover once via `distributeRemainder`. The sum of all participant `paidFor` values SHALL exactly equal the sum of all expense amounts. The sum of all participant `paid` values SHALL exactly equal the sum of all expense amounts.
 
-> **Currency conversion precision**: All money is integer cents. `convertByRate` converts exact rational shares to cents via `Math.round(Number(rational) * Number(rate))`. The `decimal.js` dependency has been removed — native `BigInt` rational arithmetic is used instead, and sub-cent floating-point noise in the rate multiplication is accepted because the result is always rounded to the nearest integer cent.
+> **Currency conversion precision**: All amounts are integer minor units of the ledger or expense currency. `convertByRate` converts exact rational shares using the persisted rate; fractional noise is absorbed by `distributeRemainder` so ledger totals remain exact integers.
 
 #### Scenario: Cross-expense drift eliminated
 - **WHEN** two expenses of $100 and $20 are each split EVENLY among 3 participants

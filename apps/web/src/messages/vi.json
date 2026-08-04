@@ -575,8 +575,7 @@
         "perDateTitle": "Theo ngày",
         "rateDateLabel": "Ngày",
         "ratesError": "Lỗi tỷ giá.",
-        "refresh": "Làm mới",
-        "viaFrankfurter": "Qua Frankfurter"
+        "refresh": "Làm mới"
       }
     },
     "groups": "Nhóm",
@@ -1101,7 +1100,6 @@
       "useApi": "Tự động",
       "useCustom": "Tùy chỉnh",
       "label": "Tỷ giá",
-      "providerNote": "Tỷ giá từ Frankfurter.",
       "futureDateUsesToday": "Ngày tương lai — dùng tỷ giá hôm nay."
     },
     "conversionRateState": {
@@ -1114,7 +1112,8 @@
       "noDate": "Chọn ngày.",
       "dateMismatch": "Ngày không khớp. {date}",
       "refresh": "Làm mới",
-      "customRate": "Tỷ giá tùy chỉnh"
+      "customRate": "Tỷ giá tùy chỉnh",
+      "via": "qua {currencies}"
     },
     "isReimbursementField": {
       "label": "Đây là thanh toán hoàn trả"
@@ -1860,6 +1859,27 @@
       },
       "ZMW": {
         "name": "ZMW - Kwacha Zambia"
+      },
+      "BTC": {
+        "name": "Bitcoin"
+      },
+      "DOGE": {
+        "name": "Dogecoin"
+      },
+      "ETH": {
+        "name": "Ethereum"
+      },
+      "LTC": {
+        "name": "Litecoin"
+      },
+      "SAT": {
+        "name": "Sats"
+      },
+      "SOL": {
+        "name": "Solana"
+      },
+      "XRP": {
+        "name": "XRP"
       }
     }
   },
@@ -2383,12 +2403,12 @@
     "swap": "Hoán đổi tiền tệ",
     "rateError": "Không thể tải tỷ giá.",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "Tỷ giá từ Frankfurter",
     "createIn": "Tạo khoản chi trong…",
     "noGroups": "Không tìm thấy nhóm phù hợp.",
     "staleRate": "Tỷ giá từ:",
     "fromLabel": "Từ",
-    "toLabel": "Sang"
+    "toLabel": "Sang",
+    "via": "qua {currencies}"
   },
   "LanguageSwitcher": {
     "title": "Chọn ngôn ngữ",
@@ -2696,5 +2716,16 @@
     "originalAmountLabel": "Số tiền gốc",
     "expenseColumnLabel": "Chi phí",
     "categoryColumnLabel": "Danh mục"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "Frankfurter",
+    "coinbase": "Coinbase",
+    "bridged": "qua {currencies} (<providers></providers>)",
+    "direct": {
+      "frankfurter": "Tỷ giá từ <provider></provider>",
+      "coinbase": "Tỷ giá từ <provider></provider>"
+    },
+    "fallbackPrefix": "Tỷ giá từ",
+    "fallbackSeparator": " và "
   }
 }

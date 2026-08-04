@@ -4,6 +4,7 @@ import { MAX_DISPLAY_SHARES } from '@spliit/domain'
 
 import {
   enforceCurrencyPattern,
+  amountPlaceholder,
   enforceIntegerPattern,
   enforcePercentagePattern,
   enforceSharePattern,
@@ -90,6 +91,25 @@ describe('enforceCurrencyPattern', () => {
 
   it('returns empty string unchanged', () => {
     expect(enforceCurrencyPattern('')).toBe('')
+  })
+
+  it('truncates to currency decimal digits', () => {
+    expect(enforceCurrencyPattern('1.23456', 2)).toBe('1.23')
+    expect(enforceCurrencyPattern('0.00001', 2)).toBe('0.00')
+    expect(enforceCurrencyPattern('1.5', 0)).toBe('1')
+    expect(enforceCurrencyPattern('0.123456789', 8)).toBe('0.12345678')
+  })
+
+  it('allows trailing decimal while typing within the digit cap', () => {
+    expect(enforceCurrencyPattern('10.', 2)).toBe('10.')
+  })
+})
+
+describe('amountPlaceholder', () => {
+  it('formats placeholders capped at 4 fractional digits', () => {
+    expect(amountPlaceholder(0)).toBe('0')
+    expect(amountPlaceholder(2)).toBe('0.00')
+    expect(amountPlaceholder(8)).toBe('0.0000')
   })
 })
 

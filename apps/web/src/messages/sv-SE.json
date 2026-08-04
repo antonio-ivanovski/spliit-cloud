@@ -898,6 +898,27 @@
       },
       "ZMW": {
         "name": "Zambisk kwacha"
+      },
+      "BTC": {
+        "name": "Bitcoin"
+      },
+      "DOGE": {
+        "name": "Dogecoin"
+      },
+      "ETH": {
+        "name": "Ethereum"
+      },
+      "LTC": {
+        "name": "Litecoin"
+      },
+      "SAT": {
+        "name": "Sats"
+      },
+      "SOL": {
+        "name": "Solana"
+      },
+      "XRP": {
+        "name": "XRP"
       }
     }
   },
@@ -1149,7 +1170,6 @@
       "useApi": "Använd växelkurs",
       "useCustom": "Använd anpassad kurs",
       "label": "Växelkurs",
-      "providerNote": "Kurser tillhandahålls av https://frankfurter.dev/ och deras API.",
       "futureDateUsesToday": "Denna utgift ligger i framtiden och dagens växelkurs används."
     },
     "conversionRateState": {
@@ -1162,7 +1182,8 @@
       "noDate": "Ange utgiftsdatum för att få en växelkurs.",
       "dateMismatch": "Kurser från datum: {date}",
       "refresh": "Uppdatera",
-      "customRate": "Använder anpassad kurs"
+      "customRate": "Använder anpassad kurs",
+      "via": "omräknat via {currencies}"
     },
     "splittingOptions": "Fördelningsalternativ",
     "multiplePayers": "Flera betalare",
@@ -1606,8 +1627,7 @@
         "perDateTitle": "Konvertering per datum",
         "rateDateLabel": "Frankfurter-kursdatum",
         "ratesError": "Kunde inte hämta växelkurser. Kontrollera din anslutning och försök igen.",
-        "refresh": "Uppdatera",
-        "viaFrankfurter": "Kurs hämtad från Frankfurter för valt datum."
+        "refresh": "Uppdatera"
       },
       "Destination": {
         "heading": "Vart vill du importera <strong>{name}</strong>? ({participantCount} deltagare · {expenseCount} utgifter)",
@@ -2307,12 +2327,12 @@
     "swap": "Växla valutor",
     "rateError": "Kunde inte ladda växelkurs.",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "Kurser från Frankfurter",
     "createIn": "Skapa utgift i…",
     "noGroups": "Inga kvalificerade grupper hittades.",
     "staleRate": "Kurs från:",
     "fromLabel": "Från",
-    "toLabel": "Till"
+    "toLabel": "Till",
+    "via": "omräknat via {currencies}"
   },
   "LanguageSwitcher": {
     "title": "Välj språk",
@@ -2620,5 +2640,16 @@
     "originalAmountLabel": "Ursprungligt belopp",
     "expenseColumnLabel": "Utgift",
     "categoryColumnLabel": "Kategori"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "Frankfurter",
+    "coinbase": "Coinbase",
+    "bridged": "genom {currencies} (<providers></providers>)",
+    "direct": {
+      "frankfurter": "Kurs från <provider></provider>",
+      "coinbase": "Kurs från <provider></provider>"
+    },
+    "fallbackPrefix": "Kurser från",
+    "fallbackSeparator": " och "
   }
 }

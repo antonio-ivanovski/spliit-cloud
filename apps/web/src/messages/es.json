@@ -462,8 +462,7 @@
         "perDateTitle": "Conversión por fecha",
         "rateDateLabel": "Fecha de la tasa",
         "ratesError": "No se pudieron obtener las tasas de cambio. Comprueba tu conexión e inténtalo de nuevo.",
-        "refresh": "Actualizar",
-        "viaFrankfurter": "vía Frankfurter"
+        "refresh": "Actualizar"
       }
     },
     "Importable": {
@@ -765,7 +764,6 @@
       "useApi": "Utilizar las tasas del Frankfurter",
       "useCustom": "Utilizar tasa personalizada",
       "label": "Tasa de cambio",
-      "providerNote": "Las tasas son proporcionadas por https://frankfurter.dev/ y su API.",
       "futureDateUsesToday": "Este gasto está en el futuro y se utilizará la tasa de cambio de hoy."
     },
     "conversionRateState": {
@@ -778,7 +776,8 @@
       "noDate": "Ingrese la fecha del gasto para obtener una tasa de cambio.",
       "dateMismatch": "Tasas para la fecha: {date}",
       "refresh": "Actualizar",
-      "customRate": "Utilizando tasa personalizada"
+      "customRate": "Utilizando tasa personalizada",
+      "via": "vía {currencies}"
     },
     "participant": {
       "pending": "(invitado)"
@@ -1485,6 +1484,27 @@
       },
       "ZMW": {
         "name": "Kwacha zambiano"
+      },
+      "BTC": {
+        "name": "Bitcoin"
+      },
+      "DOGE": {
+        "name": "Dogecoin"
+      },
+      "ETH": {
+        "name": "Ethereum"
+      },
+      "LTC": {
+        "name": "Litecoin"
+      },
+      "SAT": {
+        "name": "Sats"
+      },
+      "SOL": {
+        "name": "Solana"
+      },
+      "XRP": {
+        "name": "XRP"
       }
     }
   },
@@ -2329,12 +2349,12 @@
     "swap": "Intercambiar monedas",
     "rateError": "No se pudo cargar el tipo de cambio.",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "Tipos de Frankfurter",
     "createIn": "Crear gasto en…",
     "noGroups": "No se encontraron grupos elegibles.",
     "staleRate": "Tipo del:",
     "fromLabel": "De",
-    "toLabel": "A"
+    "toLabel": "A",
+    "via": "vía {currencies}"
   },
   "LanguageSwitcher": {
     "title": "Elegir idioma",
@@ -2642,5 +2662,16 @@
     "originalAmountLabel": "Importe original",
     "expenseColumnLabel": "Gasto",
     "categoryColumnLabel": "Categoria"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "Frankfurter",
+    "coinbase": "Coinbase",
+    "bridged": "vía {currencies} (<providers></providers>)",
+    "direct": {
+      "frankfurter": "Tipo de cambio de <provider></provider>",
+      "coinbase": "Tipo de cambio de <provider></provider>"
+    },
+    "fallbackPrefix": "Tipos de cambio de",
+    "fallbackSeparator": " y "
   }
 }

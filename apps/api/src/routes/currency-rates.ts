@@ -1,15 +1,13 @@
 import { z } from 'zod'
 
-import {
-  getCurrencyRates,
-  type BatchRateResult,
-  type FrankfurterResponse,
-} from '../lib/currency-rates'
+import { getCurrencyRates, type BatchRateResult } from '../lib/currency-rates'
+import type { FrankfurterResponse } from '../lib/fiat-rates'
 
 // `YYYY-MM-DD` (no time component). Frankfurter's date is the
 // requested date for the rate, not a timestamp.
 const dateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/)
-const currencyCodeSchema = z.string().min(3).max(3)
+// ISO 4217 codes are 3 chars; crypto tickers can be 4 (e.g. DOGE).
+const currencyCodeSchema = z.string().min(3).max(4)
 
 const batchRateItem = z.object({
   date: dateSchema,
@@ -38,6 +36,12 @@ export type CurrencyRatesResponse = Array<
         asOfDate: string
         base: string
         target: string
+        sources: Array<{
+          provider: 'frankfurter' | 'coinbase'
+          base: string
+          target: string
+        }>
+        via?: string[]
       }
     }
   | {
@@ -62,8 +66,8 @@ function toResponse(results: BatchRateResult[]): CurrencyRatesResponse {
  * offending expense without aborting the batch — the same contract the old tRPC
  * `currency.getRates` exposed.
  *
- * `fetchImpl` is test-only and defaults to the live provider; it lets unit
- * tests swap in a stub for the upstream call.
+ * `fetchImpl`/`cryptoFetchImpl` are test-only and default to the live
+ * providers; they let unit tests swap in a stub for the upstream calls.
  */
 export async function postCurrencyRates(
   request: Request,
@@ -73,6 +77,11 @@ export async function postCurrencyRates(
       base: string,
       quotes?: string[],
     ) => Promise<FrankfurterResponse>
+    cryptoFetchImpl?: (
+      date: string,
+      base: string,
+      target: string,
+    ) => Promise<number | null>
   } = {},
 ) {
   let raw: unknown
@@ -96,7 +105,14 @@ export async function postCurrencyRates(
       base: item.base.toUpperCase(),
       target: item.target.toUpperCase(),
     })),
-    options.fetchImpl ? { fetchImpl: options.fetchImpl } : {},
+    options.fetchImpl || options.cryptoFetchImpl
+      ? {
+          ...(options.fetchImpl ? { fetchImpl: options.fetchImpl } : {}),
+          ...(options.cryptoFetchImpl
+            ? { cryptoFetchImpl: options.cryptoFetchImpl }
+            : {}),
+        }
+      : {},
   )
 
   return Response.json({ results: toResponse(results) })

@@ -462,8 +462,7 @@
         "perDateTitle": "Conversion par date",
         "rateDateLabel": "Date du taux",
         "ratesError": "Impossible de récupérer les taux de change. Vérifie ta connexion et réessaie.",
-        "refresh": "Actualiser",
-        "viaFrankfurter": "via Frankfurter"
+        "refresh": "Actualiser"
       }
     },
     "Importable": {
@@ -765,7 +764,6 @@
       "useCustom": "Utiliser un taux personnalisé",
       "label": "Taux de change",
       "useApi": "Utiliser les taux de change de Frankfurter",
-      "providerNote": "Les taux sont fournis par https://frankfurter.dev/ et leur API.",
       "futureDateUsesToday": "Cette dépense est dans le futur et le taux de change d'aujourd'hui sera utilisé."
     },
     "conversionRateState": {
@@ -778,7 +776,8 @@
       "currencyNotFound": "Oups, Frankfurter n'a pas le taux de change pour cette devise à cette date.",
       "noDate": "Saisissez la date de la dépense pour obtenir un taux de change.",
       "dateMismatch": "Taux de change le {date}",
-      "customRate": "Utilisation d'un taux personnalisé"
+      "customRate": "Utilisation d'un taux personnalisé",
+      "via": "par le biais de {currencies}"
     },
     "participant": {
       "pending": "(invité)"
@@ -1485,6 +1484,27 @@
       },
       "ZMW": {
         "name": "Kwacha zambien"
+      },
+      "BTC": {
+        "name": "Bitcoin"
+      },
+      "DOGE": {
+        "name": "Dogecoin"
+      },
+      "ETH": {
+        "name": "Ethereum"
+      },
+      "LTC": {
+        "name": "Litecoin"
+      },
+      "SAT": {
+        "name": "Sats"
+      },
+      "SOL": {
+        "name": "Solana"
+      },
+      "XRP": {
+        "name": "XRP"
       }
     }
   },
@@ -2329,12 +2349,12 @@
     "swap": "Échanger les devises",
     "rateError": "Impossible de charger le taux de change.",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "Taux fournis par Frankfurter",
     "createIn": "Créer une dépense dans…",
     "noGroups": "Aucun groupe éligible trouvé.",
     "staleRate": "Taux du :",
     "fromLabel": "De",
-    "toLabel": "À"
+    "toLabel": "À",
+    "via": "par le biais de {currencies}"
   },
   "LanguageSwitcher": {
     "title": "Choisir la langue",
@@ -2642,5 +2662,16 @@
     "originalAmountLabel": "Montant d’origine",
     "expenseColumnLabel": "Dépense",
     "categoryColumnLabel": "Catégorie"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "Frankfurter",
+    "coinbase": "Coinbase",
+    "direct": {
+      "frankfurter": "Taux de <provider></provider>",
+      "coinbase": "Taux de <provider></provider>"
+    },
+    "bridged": "par {currencies} (<providers></providers>)",
+    "fallbackPrefix": "Taux de",
+    "fallbackSeparator": " et "
   }
 }

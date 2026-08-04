@@ -2,8 +2,9 @@ import { ArrowLeftRight } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { CurrencyIcon } from '@/components/currency-icon'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import type { Currency } from '@/lib/currency'
+import { getCurrency, type Currency } from '@/lib/currency'
 import { cn } from '@/lib/utils'
 
 type CurrencyDisplay = 'group' | 'original'
@@ -127,17 +128,11 @@ function CurrencyOptionLabel({
 }) {
   if (!currency) return fallback
 
-  const flagUrl = currency.code
-    ? `https://flagcdn.com/h24/${currency.code.slice(0, 2).toLowerCase()}.png`
-    : undefined
-
   return (
     <span className="flex min-w-0 items-center gap-1.5">
-      {flagUrl ? (
-        <img
-          src={flagUrl}
-          alt=""
-          aria-hidden="true"
+      {currency.code && getCurrency(currency.code) ? (
+        <CurrencyIcon
+          code={currency.code}
           className="h-3.5 w-5 shrink-0 rounded-sm object-cover"
         />
       ) : (

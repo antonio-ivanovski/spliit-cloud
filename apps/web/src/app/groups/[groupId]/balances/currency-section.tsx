@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 
+import { CurrencyIcon } from '@/components/currency-icon'
 import { getCurrency, type Currency } from '@/lib/currency'
 
 export function CurrencySection({
@@ -10,19 +11,14 @@ export function CurrencySection({
   children: ReactNode
 }) {
   const hasFlag = Boolean(currency.code && getCurrency(currency.code))
-  const flagUrl = hasFlag
-    ? `https://flagcdn.com/h24/${currency.code.slice(0, 2).toLowerCase()}.png`
-    : undefined
 
   return (
     <section className="py-6 first:pt-0 last:pb-0">
       <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-muted-foreground">
-        {flagUrl ? (
-          <img
-            src={flagUrl}
+        {hasFlag ? (
+          <CurrencyIcon
+            code={currency.code}
             className="h-4 w-6 rounded-sm object-cover"
-            alt=""
-            aria-hidden="true"
           />
         ) : (
           <span

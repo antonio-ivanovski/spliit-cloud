@@ -7,7 +7,7 @@ Defines the exact share-calculation core shared by expense previews, balances, a
 ### Requirement: Shape-based exact share calculation
 The system SHALL compute per-participant exact shares via a single `calculateExactShares` function that accepts a shape-based input (`{ amount, splitMode, participants }`) and returns `Record<participantId, ExactAmount>` without truncation, using native `BigInt`-based rational arithmetic (`{ numerator: bigint, denominator: bigint }`). The function SHALL handle all five split modes: EVENLY (`amount / N`), BY_SHARES (`amount * shares / Σshares`), BY_PERCENTAGE (`amount * shares / 10000`), BY_AMOUNT (literal `shares`), and ITEMIZED (literal `shares`). The same function SHALL work for expense paidFor sides, expense paidBy sides, and individual expense items.
 
-> **Note on precision**: All money is stored as integer cents (minor units). Conversion math uses `BigInt` rational arithmetic for exact intermediate values. Currency conversion via `convertByRate` converts to IEEE-754 double for rate multiplication (accepting sub-cent rounding that resolves to the nearest integer cent), which is acceptable because the persisted result is always an exact integer cent value. The `decimal.js` dependency has been removed in favor of this native solution.
+> **Note on precision**: All money is stored as integer minor units of the relevant currency (cents for typical fiat; smaller units for high-decimal crypto per catalog `decimal_digits`). Conversion math uses `BigInt` rational arithmetic for exact intermediate values.
 
 #### Scenario: Expense paidFor side
 - **WHEN** the system computes shares for an expense's paidFor side

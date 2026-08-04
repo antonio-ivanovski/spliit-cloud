@@ -452,8 +452,7 @@
         "perDateTitle": "日付別換算",
         "rateDateLabel": "レート日付",
         "ratesError": "為替レートを取得できませんでした。接続を確認して再試行してください。",
-        "refresh": "再読み込み",
-        "viaFrankfurter": "Frankfurter 経由"
+        "refresh": "再読み込み"
       }
     },
     "Importable": {
@@ -753,7 +752,6 @@
       "useApi": "Frankfurterのレートを使用する",
       "useCustom": "カスタムレートを使用する",
       "label": "為替レート",
-      "providerNote": "レートは https://frankfurter.dev/ とそのAPIによって提供されています。",
       "futureDateUsesToday": "この支出は未来日付のため、本日の為替レートが使用されます。"
     },
     "conversionRateState": {
@@ -766,7 +764,8 @@
       "noDate": "換算レートを取得するには支出日を入力してください。",
       "refresh": "更新",
       "customRate": "カスタムレートを使用中",
-      "dateMismatch": "適用開始日: {date}"
+      "dateMismatch": "適用開始日: {date}",
+      "via": "{currencies}経由"
     },
     "participant": {
       "pending": "(招待済み)"
@@ -1470,6 +1469,27 @@
       },
       "ZMW": {
         "name": "ザンビア・クワチャ"
+      },
+      "BTC": {
+        "name": "ビットコイン"
+      },
+      "DOGE": {
+        "name": "ドージコイン"
+      },
+      "ETH": {
+        "name": "イーサリアム"
+      },
+      "LTC": {
+        "name": "ライトコイン"
+      },
+      "SAT": {
+        "name": "サトシ"
+      },
+      "SOL": {
+        "name": "ソラナ"
+      },
+      "XRP": {
+        "name": "リップル"
       }
     }
   },
@@ -2295,12 +2315,12 @@
     "swap": "通貨を入れ替える",
     "rateError": "為替レートを読み込めませんでした。",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "Frankfurterによるレート",
     "createIn": "支出を作成するグループ…",
     "noGroups": "該当するグループが見つかりません。",
     "staleRate": "レート情報:",
     "fromLabel": "From",
-    "toLabel": "To"
+    "toLabel": "To",
+    "via": "{currencies}経由"
   },
   "LanguageSwitcher": {
     "title": "言語を選択",
@@ -2607,5 +2627,16 @@
     "originalAmountLabel": "元の金額",
     "expenseColumnLabel": "支出",
     "categoryColumnLabel": "カテゴリ"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "Frankfurter",
+    "coinbase": "Coinbase",
+    "bridged": "{currencies} 経由（<providers></providers>）",
+    "direct": {
+      "frankfurter": "<provider></provider> のレート",
+      "coinbase": "<provider></provider> のレート"
+    },
+    "fallbackPrefix": "レート提供元：",
+    "fallbackSeparator": "、"
   }
 }

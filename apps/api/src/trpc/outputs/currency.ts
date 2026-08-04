@@ -1,11 +1,21 @@
 import { z } from 'zod'
 
+export const currencyRateProviderSchema = z.enum(['frankfurter', 'coinbase'])
+
+export const currencyRateSourceSchema = z.object({
+  provider: currencyRateProviderSchema,
+  base: z.string(),
+  target: z.string(),
+})
+
 export const currencyRateSchema = z.object({
   rate: z.number(),
   requestedDate: z.string(),
   asOfDate: z.string(),
   base: z.string(),
   target: z.string(),
+  sources: z.array(currencyRateSourceSchema),
+  via: z.array(z.string()).optional(),
 })
 
 const currencyRateErrorSchema = z.discriminatedUnion('code', [

@@ -368,8 +368,7 @@
         "perDateTitle": "날짜별 변환",
         "rateDateLabel": "환율 날짜",
         "ratesError": "환율을 가져올 수 없습니다. 연결을 확인하고 다시 시도하세요.",
-        "refresh": "새로 고침",
-        "viaFrankfurter": "Frankfurter 제공"
+        "refresh": "새로 고침"
       }
     },
     "Importable": {
@@ -607,7 +606,6 @@
       "useApi": "Frankfurter의 환율을 사용해요",
       "useCustom": "직접 설정한 환율 사용하기",
       "label": "환율",
-      "providerNote": "환율은 https://frankfurter.dev/ 와 해당 API에서 제공됩니다.",
       "futureDateUsesToday": "이 지출은 미래 날짜이므로 오늘의 환율이 사용됩니다."
     },
     "conversionRateState": {
@@ -620,7 +618,8 @@
       "noDate": "환율을 가져오려면 지출한 날짜를 입력해 주세요.",
       "dateMismatch": "기준 환율: {date}",
       "refresh": "다시 불러오기",
-      "customRate": "직접 설정한 환율 사용 중"
+      "customRate": "직접 설정한 환율 사용 중",
+      "via": "{currencies} 경유"
     },
     "isReimbursementField": {
       "label": "정산금이에요"
@@ -1470,6 +1469,27 @@
       },
       "ZMW": {
         "name": "잠비아 콰차"
+      },
+      "BTC": {
+        "name": "비트코인"
+      },
+      "DOGE": {
+        "name": "도지코인"
+      },
+      "ETH": {
+        "name": "이더리움"
+      },
+      "LTC": {
+        "name": "라이트코인"
+      },
+      "SAT": {
+        "name": "사토시"
+      },
+      "SOL": {
+        "name": "솔라나"
+      },
+      "XRP": {
+        "name": "리플"
       }
     }
   },
@@ -2295,12 +2315,12 @@
     "swap": "통화 교환",
     "rateError": "환율을 불러올 수 없습니다.",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "Frankfurter 제공 환율",
     "createIn": "지출 생성 대상…",
     "noGroups": "해당 그룹을 찾을 수 없습니다.",
     "staleRate": "환율 정보:",
     "fromLabel": "From",
-    "toLabel": "To"
+    "toLabel": "To",
+    "via": "{currencies} 경유"
   },
   "LanguageSwitcher": {
     "title": "언어 선택",
@@ -2607,5 +2627,16 @@
     "originalAmountLabel": "원래 금액",
     "expenseColumnLabel": "지출",
     "categoryColumnLabel": "카테고리"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "Frankfurter",
+    "coinbase": "Coinbase",
+    "bridged": "{currencies} 경유 (<providers></providers>)",
+    "direct": {
+      "frankfurter": "<provider></provider> 환율",
+      "coinbase": "<provider></provider> 환율"
+    },
+    "fallbackPrefix": "환율 출처:",
+    "fallbackSeparator": " 및 "
   }
 }

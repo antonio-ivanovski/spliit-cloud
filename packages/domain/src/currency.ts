@@ -10,6 +10,39 @@ export type Currency = {
   aliases?: ReadonlyArray<string>
   rounding: number
   decimal_digits: number
+  /**
+   * Crypto assets (BTC, ETH, ...) vs fiat ISO currencies. Crypto assets trade
+   * 24/7 and are quoted by the crypto rate provider instead of Frankfurter.
+   */
+  crypto?: boolean
+  /**
+   * Optional override for ordered bridge currencies when no direct crypto rate
+   * exists. Absent entries use `DEFAULT_INTERMEDIARY_CURRENCIES` (`EUR`,
+   * `USD`).
+   */
+  intermediaries?: ReadonlyArray<string>
+  /**
+   * Scale alias: one unit of this code equals `aliasScale` units of `aliasOf`
+   * (e.g. 1 SAT = 1e-8 BTC). Rate lookups resolve through the parent code.
+   */
+  aliasOf?: string
+  aliasScale?: number
+}
+
+/** Default bridge order when composing rates through an intermediary. */
+export const DEFAULT_INTERMEDIARY_CURRENCIES = ['EUR', 'USD'] as const
+
+/** True when `code` is a supported crypto asset (e.g. BTC, ETH, SAT). */
+export function isCryptoCurrency(code: string): boolean {
+  return byCode.get(code)?.crypto === true
+}
+
+/**
+ * Ordered bridge currencies for `code`: the entry's explicit list when present,
+ * otherwise `DEFAULT_INTERMEDIARY_CURRENCIES`.
+ */
+export function intermediaryCurrenciesFor(code: string): readonly string[] {
+  return getCurrency(code)?.intermediaries ?? DEFAULT_INTERMEDIARY_CURRENCIES
 }
 
 /** All supported currencies, ordered by ISO code. */

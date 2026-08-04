@@ -476,8 +476,7 @@
         "perDateTitle": "Umrechnung nach Datum",
         "rateDateLabel": "Kursdatum",
         "ratesError": "Wechselkurse konnten nicht abgerufen werden. Überprüfe deine Verbindung und versuche es erneut.",
-        "refresh": "Aktualisieren",
-        "viaFrankfurter": "über Frankfurter"
+        "refresh": "Aktualisieren"
       }
     },
     "Importable": {
@@ -750,7 +749,6 @@
       "useApi": "Benutze Zinssätze von Frankfurter",
       "useCustom": "Benutze individuelle Rate",
       "label": "Wechselkurs",
-      "providerNote": "Kurse werden von https://frankfurter.dev/ und deren API bereitgestellt.",
       "futureDateUsesToday": "Diese Ausgabe liegt in der Zukunft und der heutige Wechselkurs wird verwendet."
     },
     "conversionRateState": {
@@ -763,7 +761,8 @@
       "noDate": "Geben Sie das Ausgabedatum ein, um einen Umrechnungskurs zu erhalten.",
       "dateMismatch": "Zinssätze von Datum: {date}",
       "refresh": "Aktualisiere",
-      "customRate": "Benutzerdefinierte Rate verwenden"
+      "customRate": "Benutzerdefinierte Rate verwenden",
+      "via": "über {currencies}"
     },
     "isReimbursementField": {
       "label": "Dies ist eine Ausgleichszahlung"
@@ -1509,6 +1508,27 @@
       },
       "ZMW": {
         "name": "Sambischer Kwacha"
+      },
+      "BTC": {
+        "name": "Bitcoin"
+      },
+      "DOGE": {
+        "name": "Dogecoin"
+      },
+      "ETH": {
+        "name": "Ethereum"
+      },
+      "LTC": {
+        "name": "Litecoin"
+      },
+      "SAT": {
+        "name": "Sats"
+      },
+      "SOL": {
+        "name": "Solana"
+      },
+      "XRP": {
+        "name": "XRP"
       }
     }
   },
@@ -2379,12 +2399,12 @@
     "swap": "Währungen tauschen",
     "rateError": "Wechselkurs konnte nicht geladen werden.",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "Kurse von Frankfurter",
     "createIn": "Ausgabe erstellen in…",
     "noGroups": "Keine geeigneten Gruppen gefunden.",
     "staleRate": "Kurs vom:",
     "fromLabel": "Von",
-    "toLabel": "Zu"
+    "toLabel": "Zu",
+    "via": "über {currencies}"
   },
   "LanguageSwitcher": {
     "title": "Sprache auswählen",
@@ -2692,5 +2712,16 @@
     "originalAmountLabel": "Originalbetrag",
     "expenseColumnLabel": "Ausgabe",
     "categoryColumnLabel": "Kategorie"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "Frankfurter",
+    "coinbase": "Coinbase",
+    "bridged": "über {currencies} (<providers></providers>)",
+    "direct": {
+      "frankfurter": "Kurs von <provider></provider>",
+      "coinbase": "Kurs von <provider></provider>"
+    },
+    "fallbackPrefix": "Kurse von",
+    "fallbackSeparator": " und "
   }
 }

@@ -898,6 +898,27 @@
       },
       "ZMW": {
         "name": "زیمبیا کواچا"
+      },
+      "BTC": {
+        "name": "بٹ کوئن"
+      },
+      "DOGE": {
+        "name": "ڈوج کوئن"
+      },
+      "ETH": {
+        "name": "ایتھریم"
+      },
+      "LTC": {
+        "name": "لائٹ کوئن"
+      },
+      "SAT": {
+        "name": "سیٹس"
+      },
+      "SOL": {
+        "name": "سولانا"
+      },
+      "XRP": {
+        "name": "ایکس آر پی"
       }
     }
   },
@@ -1149,7 +1170,6 @@
       "useApi": "شرح مبادلہ استعمال کریں",
       "useCustom": "اپنی مرضی کی شرح استعمال کریں",
       "label": "شرح مبادلہ",
-      "providerNote": "شرحیں https://frankfurter.dev/ اور ان کے API فراہم کرتے ہیں۔",
       "futureDateUsesToday": "یہ خرچہ مستقبل میں ہے اور آج کی شرح مبادلہ استعمال ہوگی۔"
     },
     "conversionRateState": {
@@ -1162,7 +1182,8 @@
       "noDate": "شرح مبادلہ حاصل کرنے کے لیے خرچے کی تاریخ درج کریں۔",
       "dateMismatch": ": {date} سے شرحیں",
       "refresh": "ریفریش",
-      "customRate": "اپنی مرضی کی شرح استعمال کر رہا ہے"
+      "customRate": "اپنی مرضی کی شرح استعمال کر رہا ہے",
+      "via": "{currencies} کے ذریعے"
     },
     "splittingOptions": "تقسیم کے اختیارات",
     "multiplePayers": "متعدد ادا کنندگان",
@@ -1606,8 +1627,7 @@
         "perDateTitle": "فی تاریخ تبدیلی",
         "rateDateLabel": "Frankfurter شرح کی تاریخ",
         "ratesError": "شرح مبادلہ حاصل کرنے سے قاصر۔ اپنا کنکشن چیک کریں اور دوبارہ کوشش کریں۔",
-        "refresh": "ریفریش",
-        "viaFrankfurter": "منتخب تاریخ کے لیے Frankfurter سے حاصل کردہ شرح۔"
+        "refresh": "ریفریش"
       },
       "Destination": {
         "heading": "آپ <strong>{name}</strong> کو کہاں درآمد کرنا چاہیں گے؟ ({participantCount} شرکاء · {expenseCount} اخراجات)",
@@ -2308,12 +2328,12 @@
     "swap": "کرنسیاں تبدیل کریں",
     "rateError": "شرح تبادلہ لوڈ نہیں ہو سکی۔",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "Frankfurter کی شرحیں",
     "createIn": "میں خرچ بنائیں…",
     "noGroups": "کوئی اہل گروپ نہیں ملا۔",
     "staleRate": "شرح:",
     "fromLabel": "سے",
-    "toLabel": "میں"
+    "toLabel": "میں",
+    "via": "{currencies} کے ذریعے"
   },
   "LanguageSwitcher": {
     "title": "زبان منتخب کریں",
@@ -2621,5 +2641,16 @@
     "originalAmountLabel": "اصل رقم",
     "expenseColumnLabel": "خرچہ",
     "categoryColumnLabel": "زمرہ"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "Frankfurter",
+    "coinbase": "Coinbase",
+    "bridged": "{currencies} کے ذریعے (<providers></providers>)",
+    "direct": {
+      "frankfurter": "<provider></provider> سے شرح",
+      "coinbase": "<provider></provider> سے شرح"
+    },
+    "fallbackPrefix": "شرح کا ذریعہ",
+    "fallbackSeparator": " اور "
   }
 }

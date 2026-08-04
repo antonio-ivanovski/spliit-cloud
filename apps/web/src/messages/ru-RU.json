@@ -467,8 +467,7 @@
         "perDateTitle": "Конвертация по дате",
         "rateDateLabel": "Дата курса",
         "ratesError": "Не удалось получить курсы обмена. Проверьте подключение и попробуйте снова.",
-        "refresh": "Обновить",
-        "viaFrankfurter": "через Frankfurter"
+        "refresh": "Обновить"
       }
     },
     "Importable": {
@@ -738,7 +737,6 @@
       "useApi": "Использовать курсы Frankfurter",
       "useCustom": "Использовать свой курс",
       "label": "Обменный курс",
-      "providerNote": "Курсы предоставлены https://frankfurter.dev/ и их API.",
       "futureDateUsesToday": "Этот расход в будущем, будет использован сегодняшний обменный курс."
     },
     "conversionRateState": {
@@ -751,7 +749,8 @@
       "noDate": "Введите дату расхода, чтобы получить курс конвертации.",
       "dateMismatch": "Курсы от {date}",
       "refresh": "Обновить",
-      "customRate": "Используется свой курс"
+      "customRate": "Используется свой курс",
+      "via": "через {currencies}"
     },
     "isReimbursementField": {
       "label": "Это платёж для погашения долга"
@@ -1595,6 +1594,27 @@
       },
       "ZMW": {
         "name": "Замбийская квача"
+      },
+      "BTC": {
+        "name": "Bitcoin"
+      },
+      "DOGE": {
+        "name": "Dogecoin"
+      },
+      "ETH": {
+        "name": "Ethereum"
+      },
+      "LTC": {
+        "name": "Litecoin"
+      },
+      "SAT": {
+        "name": "Сатоши"
+      },
+      "SOL": {
+        "name": "Solana"
+      },
+      "XRP": {
+        "name": "XRP"
       }
     }
   },
@@ -2347,12 +2367,12 @@
     "swap": "Поменять валюты",
     "rateError": "Не удалось загрузить обменный курс.",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "Курсы от Frankfurter",
     "createIn": "Создать расход в…",
     "noGroups": "Подходящих групп не найдено.",
     "staleRate": "Курс от:",
     "fromLabel": "Из",
-    "toLabel": "В"
+    "toLabel": "В",
+    "via": "через {currencies}"
   },
   "LanguageSwitcher": {
     "title": "Выберите язык",
@@ -2658,5 +2678,16 @@
     "originalAmountLabel": "Исходная сумма",
     "expenseColumnLabel": "Расход",
     "categoryColumnLabel": "Категория"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "Frankfurter",
+    "coinbase": "Coinbase",
+    "bridged": "через {currencies} (<providers></providers>)",
+    "direct": {
+      "frankfurter": "Курс от <provider></provider>",
+      "coinbase": "Курс от <provider></provider>"
+    },
+    "fallbackPrefix": "Курсы от",
+    "fallbackSeparator": " и "
   }
 }

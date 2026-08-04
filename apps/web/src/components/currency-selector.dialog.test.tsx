@@ -37,6 +37,22 @@ const currencies: DisplayCurrency[] = [
     decimal_digits: 0,
     name: 'Japanese Yen',
   },
+  {
+    code: 'BTC',
+    symbol: '₿',
+    rounding: 0,
+    decimal_digits: 8,
+    crypto: true,
+    name: 'Bitcoin',
+  },
+  {
+    code: 'ETH',
+    symbol: 'ETH',
+    rounding: 0,
+    decimal_digits: 6,
+    crypto: true,
+    name: 'Ethereum',
+  },
 ]
 
 describe('CurrencySelector inside modal dialog (desktop)', () => {
@@ -66,5 +82,46 @@ describe('CurrencySelector inside modal dialog (desktop)', () => {
     await user.click(euro)
 
     expect(onValueChange).toHaveBeenCalledWith('EUR')
+  })
+
+  it('lists crypto assets in their own section below the fiat list', async () => {
+    const user = userEvent.setup({
+      pointerEventsCheck: PointerEventsCheckLevel.Never,
+    })
+
+    render(
+      <ResponsiveDialog open>
+        <ResponsiveDialogContent>
+          <ResponsiveDialogTitle>Convert currency</ResponsiveDialogTitle>
+          <CurrencySelector
+            currencies={currencies}
+            defaultValue="USD"
+            isLoading={false}
+            onValueChange={vi.fn()}
+          />
+        </ResponsiveDialogContent>
+      </ResponsiveDialog>,
+    )
+
+    await user.click(screen.getByRole('combobox'))
+
+    const bitcoin = await screen.findByRole('option', {
+      name: /Bitcoin \(BTC\)/,
+    })
+    expect(bitcoin).toBeTruthy()
+
+    // Crypto options render after every fiat option in the DOM.
+    const options = await screen.findAllByRole('option')
+    const fiatCodes = ['JPY', 'USD', 'EUR']
+    const cryptoIndex = options.findIndex((option) =>
+      option.textContent?.includes('BTC'),
+    )
+    for (const code of fiatCodes) {
+      const fiatIndex = options.findIndex((option) =>
+        option.textContent?.includes(code),
+      )
+      expect(fiatIndex).toBeGreaterThanOrEqual(0)
+      expect(fiatIndex).toBeLessThan(cryptoIndex)
+    }
   })
 })

@@ -452,8 +452,7 @@
         "perDateTitle": "Konversi per tanggal",
         "rateDateLabel": "Tanggal kurs",
         "ratesError": "Tidak dapat mengambil kurs pertukaran. Periksa koneksi Anda dan coba lagi.",
-        "refresh": "Segarkan",
-        "viaFrankfurter": "melalui Frankfurter"
+        "refresh": "Segarkan"
       }
     },
     "Importable": {
@@ -720,7 +719,6 @@
       "useApi": "Gunakan kurs dari Frankfurter",
       "useCustom": "Gunakan kurs kustom",
       "label": "Kurs",
-      "providerNote": "Kurs disediakan oleh https://frankfurter.dev/ dan API mereka.",
       "futureDateUsesToday": "Pengeluaran ini di masa mendatang dan kurs hari ini akan digunakan."
     },
     "conversionRateState": {
@@ -733,7 +731,8 @@
       "noDate": "Masukkan tanggal pengeluaran untuk mendapatkan kurs.",
       "dateMismatch": "Kurs pada tanggal: {date}",
       "refresh": "Muat ulang",
-      "customRate": "Menggunakan kurs kustom"
+      "customRate": "Menggunakan kurs kustom",
+      "via": "melalui {currencies}"
     },
     "isReimbursementField": {
       "label": "Ini adalah pembayaran pelunasan"
@@ -1161,6 +1160,27 @@
       },
       "ZMW": {
         "name": "Kwacha Zambia"
+      },
+      "BTC": {
+        "name": "Bitcoin"
+      },
+      "DOGE": {
+        "name": "Dogecoin"
+      },
+      "ETH": {
+        "name": "Ethereum"
+      },
+      "LTC": {
+        "name": "Litecoin"
+      },
+      "SAT": {
+        "name": "Sats"
+      },
+      "SOL": {
+        "name": "Solana"
+      },
+      "XRP": {
+        "name": "XRP"
       }
     }
   },
@@ -2295,12 +2315,12 @@
     "swap": "Tukar mata uang",
     "rateError": "Gagal memuat kurs.",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "Kurs dari Frankfurter",
     "createIn": "Buat pengeluaran di…",
     "noGroups": "Tidak ada grup yang memenuhi syarat ditemukan.",
     "staleRate": "Kurs dari:",
     "fromLabel": "Dari",
-    "toLabel": "Ke"
+    "toLabel": "Ke",
+    "via": "melalui {currencies}"
   },
   "LanguageSwitcher": {
     "title": "Pilih bahasa",
@@ -2608,5 +2628,16 @@
     "originalAmountLabel": "Jumlah asli",
     "expenseColumnLabel": "Pengeluaran",
     "categoryColumnLabel": "Kategori"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "Frankfurter",
+    "coinbase": "Coinbase",
+    "bridged": "melalui {currencies} (<providers></providers>)",
+    "direct": {
+      "frankfurter": "Kurs dari <provider></provider>",
+      "coinbase": "Kurs dari <provider></provider>"
+    },
+    "fallbackPrefix": "Kurs dari",
+    "fallbackSeparator": " dan "
   }
 }

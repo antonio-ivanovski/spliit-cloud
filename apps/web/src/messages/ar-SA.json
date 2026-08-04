@@ -774,7 +774,6 @@
         "noConversionNeeded": "جميع المصروفات بعملة المجموعة الافتراضية. لا حاجة لتحويل العملات.",
         "fixedRateRow": "1 {source} = {rate} {target}",
         "ratesError": "لا يمكن جلب أسعار الصرف. تحقق من اتصالك وحاول مرة أخرى.",
-        "viaFrankfurter": "السعر مجلوب من Frankfurter للتاريخ المحدد.",
         "fixedDescription": "أقل دقة، لكنه يضمن استخدام جميع المبالغ نفس سعر التحويل، وبالتالي يكون رصيد المجموعة صافي صفر بعد الاستيراد."
       },
       "Done": {
@@ -1055,7 +1054,6 @@
       "futureDateUsesToday": "هذا المصروف في المستقبل وسيُستخدم سعر صرف اليوم.",
       "useApi": "استخدم سعر الصرف",
       "label": "سعر الصرف",
-      "providerNote": "الأسعار مقدمة من https://frankfurter.dev/ و API الخاصة بهم.",
       "useCustom": "استخدم سعر مخصص"
     },
     "paidForOptionItemizedHelper": "احسب لكل مشارك من كل بند في المصروف.",
@@ -1071,7 +1069,8 @@
       "noRate": "أدخل سعر صرف مخصص أدناه.",
       "success": "تم الحصول على الأسعار:",
       "dateMismatch": "سعر الصرف بتاريخ: {date}",
-      "customRate": "استخدام سعر مخصص"
+      "customRate": "استخدام سعر مخصص",
+      "via": "عبر {currencies}"
     },
     "paidByOptionEvenly": "بالتساوي",
     "decreaseShares": "تقليل الحصص لـ {name}",
@@ -1913,6 +1912,27 @@
       },
       "ZMW": {
         "name": "كواشا زامبي"
+      },
+      "BTC": {
+        "name": "بيتكوين"
+      },
+      "DOGE": {
+        "name": "دوجكوين"
+      },
+      "ETH": {
+        "name": "إيثريوم"
+      },
+      "LTC": {
+        "name": "لايتكوين"
+      },
+      "SAT": {
+        "name": "ساتوشي"
+      },
+      "SOL": {
+        "name": "سولانا"
+      },
+      "XRP": {
+        "name": "ريبل"
       }
     },
     "search": "ابحث عن عملة…",
@@ -2383,12 +2403,12 @@
     "swap": "تبديل العملات",
     "rateError": "تعذر تحميل سعر الصرف.",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "أسعار من Frankfurter",
     "createIn": "إنشاء مصروف في…",
     "noGroups": "لم يتم العثور على مجموعات مؤهلة.",
     "staleRate": "سعر من:",
     "fromLabel": "من",
-    "toLabel": "إلى"
+    "toLabel": "إلى",
+    "via": "عبر {currencies}"
   },
   "LanguageSwitcher": {
     "title": "اختر لغة",
@@ -2696,5 +2716,16 @@
     "originalAmountLabel": "المبلغ الأصلي",
     "expenseColumnLabel": "المصروف",
     "categoryColumnLabel": "الفئة"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "فرانكفورتر",
+    "coinbase": "كوينبيس",
+    "bridged": "عبر {currencies} (<providers></providers>)",
+    "direct": {
+      "frankfurter": "سعر الصرف من <provider></provider>",
+      "coinbase": "سعر الصرف من <provider></provider>"
+    },
+    "fallbackPrefix": "أسعار من",
+    "fallbackSeparator": " و "
   }
 }

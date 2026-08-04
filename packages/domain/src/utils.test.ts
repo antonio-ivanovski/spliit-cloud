@@ -63,6 +63,46 @@ describe('formatCurrency', () => {
     expect(formatted).not.toMatch(/[.,]\d{2}\s*$/)
   })
 
+  it('formats crypto with trimmed trailing zeros and the symbol', () => {
+    const btc: Currency = {
+      symbol: '₿',
+      code: 'BTC',
+      rounding: 0,
+      decimal_digits: 8,
+      crypto: true,
+    }
+
+    expect(formatCurrency(btc, 50_000_000, 'en-US')).toBe('0.5 ₿')
+    expect(formatCurrency(btc, 1_000_000, 'en-US')).toBe('0.01 ₿')
+    expect(formatCurrency(btc, 100_000_000, 'en-US')).toBe('1 ₿')
+    // Negative amounts keep the sign.
+    expect(formatCurrency(btc, -50_000_000, 'en-US')).toBe('-0.5 ₿')
+  })
+
+  it('formats 4-letter crypto tickers without throwing (DOGE)', () => {
+    const doge: Currency = {
+      symbol: 'DOGE',
+      code: 'DOGE',
+      rounding: 0,
+      decimal_digits: 2,
+      crypto: true,
+    }
+
+    expect(formatCurrency(doge, 12_345, 'en-US')).toBe('123.45 DOGE')
+  })
+
+  it('formats zero-decimal crypto (SAT) without decimals', () => {
+    const sat: Currency = {
+      symbol: 'sats',
+      code: 'SAT',
+      rounding: 0,
+      decimal_digits: 0,
+      crypto: true,
+    }
+
+    expect(formatCurrency(sat, 5_000, 'en-US')).toBe('5,000 sats')
+  })
+
   const currency: Currency = {
     symbol: 'CUR',
     code: '',

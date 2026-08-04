@@ -1,13 +1,43 @@
-import { supportedCurrencyCodes } from '@spliit/domain/currency'
+import { utcTodayIso } from '@spliit/domain'
+import {
+  getCurrency,
+  intermediaryCurrenciesFor,
+  isCryptoCurrency,
+  supportedCurrencyCodes,
+} from '@spliit/domain/currency'
 
-const FRANKFURTER_BASE_URL = 'https://api.frankfurter.dev/v2'
-const MAX_ENTRIES = 256
+import { fetchCoinbaseSpot, type CryptoFetchImpl } from './crypto-rates'
+import {
+  CurrencyRateNotFoundError,
+  CurrencyRateProviderError,
+  UnsupportedCurrencyError,
+} from './currency-errors'
+import { fetchFrankfurterRates, type FiatFetchImpl } from './fiat-rates'
+import {
+  clearRateCache,
+  rateCacheKey,
+  rateCacheSize,
+  readRateCache,
+  writeRateCache,
+} from './rate-cache'
+
 // Frankfurter historical rates are immutable for past dates, and the
 // future-date fallback (provider's latest available rate) only changes
 // on weekdays. 24h is plenty to dedupe repeated form interactions.
 const DEFAULT_TTL_MS = 24 * 60 * 60 * 1000
-/** Keep provider calls below the pg-boss 300s materialization lease. */
-export const FX_REQUEST_TIMEOUT_MS = 10_000
+// Crypto spot prices for today's date move intraday; a short TTL keeps the
+// rate fresh while past dates keep the standard 24h TTL.
+const CRYPTO_TODAY_TTL_MS = 15 * 60 * 1000
+
+/** Upstream FX provider that supplied a quote leg. */
+export type CurrencyRateProviderId = 'frankfurter' | 'coinbase'
+
+/** One provider quote that contributed to the resolved rate. */
+export type CurrencyRateSource = {
+  provider: CurrencyRateProviderId
+  base: string
+  target: string
+}
 
 export type CurrencyRate = {
   /** Rate of 1 unit of `base` expressed in `target`. */
@@ -21,72 +51,18 @@ export type CurrencyRate = {
   asOfDate: string
   base: string
   target: string
-}
-
-export class UnsupportedCurrencyError extends Error {
-  constructor(readonly code: string) {
-    super(`Unsupported currency code: ${code}`)
-    this.name = 'UnsupportedCurrencyError'
-  }
-}
-
-export class CurrencyRateNotFoundError extends Error {
-  constructor(readonly target: string) {
-    super(`Provider did not return a rate for target ${target}`)
-    this.name = 'CurrencyRateNotFoundError'
-  }
-}
-
-export class CurrencyRateProviderError extends Error {
-  constructor(
-    message: string,
-    readonly cause?: unknown,
-  ) {
-    super(message)
-    this.name = 'CurrencyRateProviderError'
-  }
-}
-
-type CacheEntry = {
-  value: CurrencyRate
-  expiresAt: number
-}
-
-const store: Map<string, CacheEntry> = new Map()
-
-function cacheKey(base: string, target: string, date: string) {
-  return `${date}|${base}|${target}`
-}
-
-function evictExpired(now: number) {
-  for (const [key, entry] of store) {
-    if (entry.expiresAt <= now) store.delete(key)
-  }
-}
-
-function enforceCapacity() {
-  while (store.size > MAX_ENTRIES) {
-    const oldestKey = store.keys().next().value as string | undefined
-    if (!oldestKey) break
-    store.delete(oldestKey)
-  }
-}
-
-function readCache(key: string): CurrencyRate | null {
-  const now = Date.now()
-  evictExpired(now)
-  const entry = store.get(key)
-  if (!entry) return null
-  if (entry.expiresAt <= now) {
-    store.delete(key)
-    return null
-  }
-  return entry.value
-}
-
-function writeCache(key: string, value: CurrencyRate, ttlMs: number) {
-  store.set(key, { value, expiresAt: Date.now() + ttlMs })
-  enforceCapacity()
+  /**
+   * Ordered quote legs that compose this rate. - Direct: one entry (provider
+   * that quoted `base`→`target`). - Bridged: two+ entries (e.g. BTC→EUR via
+   * Coinbase, EUR→MKD via Frankfurter); intermediate codes are also listed in
+   * `via`. - Same-currency / pure alias scale: empty (no external quote).
+   */
+  sources: CurrencyRateSource[]
+  /**
+   * Bridge currencies used to compose the rate when no direct pair exists (e.g.
+   * `['EUR']` for BTC→MKD via BTC→EUR + EUR→MKD).
+   */
+  via?: string[]
 }
 
 const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/
@@ -97,91 +73,263 @@ function assertSupported(code: string) {
   }
 }
 
-type FrankfurterResponse = {
-  base: string
-  date: string
-  rates: Record<string, number>
+function ttlForPair(date: string, involvesCrypto: boolean) {
+  if (!involvesCrypto) return DEFAULT_TTL_MS
+  return date >= utcTodayIso() ? CRYPTO_TODAY_TTL_MS : DEFAULT_TTL_MS
 }
 
-export type { FrankfurterResponse }
-
-// v2 returns a flat array of one row per (date, base, quote) triple instead
-// of v1's `{ base, date, rates: Record<quote, rate> }` object. We translate
-// it back into the v1 shape here so the rest of the module is unchanged.
-type FrankfurterV2Entry = {
-  date: string
-  base: string
-  quote: string
-  rate: number
+function sameCurrencyRate(date: string, base: string, target: string) {
+  return {
+    rate: 1,
+    requestedDate: date,
+    asOfDate: date,
+    base,
+    target,
+    sources: [],
+  } satisfies CurrencyRate
 }
 
-async function fetchFromProvider(
+/** Expand scale aliases (SAT→BTC) so providers never see alias codes. */
+function expandAlias(code: string): { code: string; scale: number } {
+  const currency = getCurrency(code)
+  if (currency?.aliasOf && currency.aliasOf !== code) {
+    return { code: currency.aliasOf, scale: currency.aliasScale ?? 1 }
+  }
+  return { code, scale: 1 }
+}
+
+type ResolveDeps = {
+  date: string
+  fiatFetch: FiatFetchImpl
+  cryptoFetch: CryptoFetchImpl
+  /** In-flight dedupe across a batch, keyed by `rateCacheKey`. */
+  memo: Map<string, Promise<CurrencyRate | null>>
+}
+
+function makeRate(
   date: string,
   base: string,
-  quotes?: string[],
-): Promise<FrankfurterResponse> {
-  let res: Response
-  const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), FX_REQUEST_TIMEOUT_MS)
-  try {
-    const params = new URLSearchParams({ date, base })
-    if (quotes?.length) {
-      params.set('quotes', Array.from(new Set(quotes)).join(','))
-    }
-    res = await fetch(`${FRANKFURTER_BASE_URL}/rates?${params.toString()}`, {
-      signal: controller.signal,
-    })
-  } catch (err) {
-    throw new CurrencyRateProviderError(
-      'Currency rate provider request failed',
-      err,
-    )
-  } finally {
-    clearTimeout(timeout)
-  }
-  if (!res.ok) {
-    throw new CurrencyRateProviderError(
-      `Currency rate provider returned ${res.status}`,
-    )
-  }
-  const entries = (await res.json()) as FrankfurterV2Entry[]
-  const rates: Record<string, number> = {}
-  for (const entry of entries) {
-    rates[entry.quote] = entry.rate
-  }
+  target: string,
+  rate: number,
+  asOfDate: string,
+  options: {
+    sources?: CurrencyRateSource[]
+    via?: string[]
+  } = {},
+): CurrencyRate {
   return {
+    rate,
+    requestedDate: date,
+    asOfDate,
     base,
-    // The provider may fall back to a different (most recent available)
-    // date for currencies that lack data on the requested day; pick the
-    // first row's date so callers can record the actual as-of date.
-    date: entries[0]?.date ?? date,
-    rates,
+    target,
+    sources: options.sources ?? [],
+    ...(options.via?.length ? { via: options.via } : {}),
+  }
+}
+
+/** Fiat↔fiat via Frankfurter only. Crypto codes are never passed here. */
+async function fetchFiatPair(
+  ctx: ResolveDeps,
+  base: string,
+  target: string,
+): Promise<CurrencyRate | null> {
+  const key = rateCacheKey(base, target, ctx.date)
+  const cached = readRateCache<CurrencyRate>(key)
+  if (cached) return cached
+
+  try {
+    const payload = await ctx.fiatFetch(ctx.date, base, [target])
+    const rate = payload.rates[target]
+    if (typeof rate !== 'number') return null
+    const result = makeRate(ctx.date, base, target, rate, payload.date, {
+      sources: [{ provider: 'frankfurter', base, target }],
+    })
+    writeRateCache(key, result, DEFAULT_TTL_MS)
+    return result
+  } catch (err) {
+    if (err instanceof CurrencyRateNotFoundError) return null
+    throw err
   }
 }
 
 /**
- * Resolve the rate of 1 unit of `base` in `target` on `date`. The result is
- * cached in-process keyed by `(date, base, target)`. Past dates are cached
- * because Frankfurter historical rates are immutable; future dates are also
- * cached because the provider's latest-available fallback only moves on
- * weekdays.
+ * Crypto-involving spot via Coinbase: try direct orientation, then reverse.
+ * Returns null when Coinbase has no quote for the pair (caller may bridge).
+ */
+async function fetchCryptoPair(
+  ctx: ResolveDeps,
+  base: string,
+  target: string,
+): Promise<CurrencyRate | null> {
+  if (base === target) return sameCurrencyRate(ctx.date, base, target)
+
+  const key = rateCacheKey(base, target, ctx.date)
+  const cached = readRateCache<CurrencyRate>(key)
+  if (cached) return cached
+  const inFlight = ctx.memo.get(key)
+  if (inFlight) return inFlight
+
+  const pending = (async (): Promise<CurrencyRate | null> => {
+    const direct = await ctx.cryptoFetch(ctx.date, base, target)
+    if (direct !== null) {
+      return makeRate(ctx.date, base, target, direct, ctx.date, {
+        sources: [{ provider: 'coinbase', base, target }],
+      })
+    }
+    const inverted = await ctx.cryptoFetch(ctx.date, target, base)
+    if (inverted !== null) {
+      return makeRate(ctx.date, base, target, 1 / inverted, ctx.date, {
+        // Inversion still uses the Coinbase quote for target→base.
+        sources: [{ provider: 'coinbase', base, target }],
+      })
+    }
+    return null
+  })()
+
+  ctx.memo.set(key, pending)
+  const result = await pending
+  if (result) {
+    writeRateCache(key, result, ttlForPair(ctx.date, true))
+  }
+  return result
+}
+
+/**
+ * One resolved leg after universe classification. Never calls the wrong
+ * provider: fiat↔fiat → Frankfurter; any crypto side → Coinbase.
+ */
+async function fetchClassifiedPair(
+  ctx: ResolveDeps,
+  a: string,
+  b: string,
+): Promise<CurrencyRate | null> {
+  if (a === b) return sameCurrencyRate(ctx.date, a, b)
+  const aCrypto = isCryptoCurrency(a)
+  const bCrypto = isCryptoCurrency(b)
+  if (!aCrypto && !bCrypto) return fetchFiatPair(ctx, a, b)
+  return fetchCryptoPair(ctx, a, b)
+}
+
+async function bridgeViaIntermediaries(
+  ctx: ResolveDeps,
+  base: string,
+  target: string,
+  list: readonly string[],
+): Promise<CurrencyRate | null> {
+  for (const intermediary of list) {
+    if (intermediary === base || intermediary === target) continue
+    const leg1 = await fetchClassifiedPair(ctx, base, intermediary)
+    if (!leg1) continue
+    const leg2 = await fetchClassifiedPair(ctx, intermediary, target)
+    if (!leg2) continue
+    return makeRate(ctx.date, base, target, leg1.rate * leg2.rate, ctx.date, {
+      via: [intermediary],
+      sources: [...leg1.sources, ...leg2.sources],
+    })
+  }
+  return null
+}
+
+/**
+ * Resolve 1 `base` in `target` on `date`.
+ *
+ * Routing uses `crypto` metadata from the catalog: - fiat↔fiat → Frankfurter -
+ * crypto↔fiat / crypto↔crypto → Coinbase (direct, then reverse) - on Coinbase
+ * miss → bridge via EUR then USD (crypto leg Coinbase, fiat leg Frankfurter)
+ * Aliases expand before any provider call.
+ */
+async function resolveRate(
+  ctx: ResolveDeps,
+  base: string,
+  target: string,
+): Promise<CurrencyRate> {
+  const key = rateCacheKey(base, target, ctx.date)
+  const cached = readRateCache<CurrencyRate>(key)
+  if (cached) return cached
+
+  if (base === target) return sameCurrencyRate(ctx.date, base, target)
+
+  const baseAlias = expandAlias(base)
+  const targetAlias = expandAlias(target)
+  const scaledBase = baseAlias.code
+  const scaledTarget = targetAlias.code
+  // rate(aliasBase→aliasTarget) = rate(parentBase→parentTarget) × baseScale / targetScale
+  const aliasScale = baseAlias.scale / targetAlias.scale
+
+  if (scaledBase === scaledTarget) {
+    return makeRate(ctx.date, base, target, aliasScale, ctx.date)
+  }
+
+  const involvesCrypto =
+    isCryptoCurrency(scaledBase) || isCryptoCurrency(scaledTarget)
+
+  const direct = await fetchClassifiedPair(ctx, scaledBase, scaledTarget)
+  if (direct) {
+    const result = makeRate(
+      ctx.date,
+      base,
+      target,
+      direct.rate * aliasScale,
+      direct.asOfDate,
+      { sources: direct.sources, via: direct.via },
+    )
+    writeRateCache(key, result, ttlForPair(ctx.date, involvesCrypto))
+    return result
+  }
+
+  // Coinbase miss (unknown fiat quote, missing crypto-crypto pair, …) → bridge.
+  // Prefer the fiat side's intermediary order for crypto↔fiat; crypto↔crypto
+  // uses the base's list (defaults to EUR, USD).
+  const baseIsCrypto = isCryptoCurrency(scaledBase)
+  const targetIsCrypto = isCryptoCurrency(scaledTarget)
+  const list =
+    baseIsCrypto && targetIsCrypto
+      ? intermediaryCurrenciesFor(scaledBase)
+      : intermediaryCurrenciesFor(baseIsCrypto ? scaledTarget : scaledBase)
+
+  const bridged = await bridgeViaIntermediaries(
+    ctx,
+    scaledBase,
+    scaledTarget,
+    list,
+  )
+  if (bridged) {
+    const result = makeRate(
+      ctx.date,
+      base,
+      target,
+      bridged.rate * aliasScale,
+      bridged.asOfDate,
+      { sources: bridged.sources, via: bridged.via },
+    )
+    writeRateCache(key, result, ttlForPair(ctx.date, involvesCrypto))
+    return result
+  }
+
+  throw new CurrencyRateNotFoundError(target)
+}
+
+/**
+ * Resolve the rate of 1 unit of `base` in `target` on `date`. Cached in-process
+ * keyed by `(date, base, target)`. Future dates use the provider's latest
+ * available rate (same contract as fiat); crypto pairs involving "today" use a
+ * shorter TTL.
  */
 export async function getCurrencyRate({
   date,
   base,
   target,
   ttlMs = DEFAULT_TTL_MS,
-  fetchImpl = fetchFromProvider,
+  fetchImpl = fetchFrankfurterRates,
+  cryptoFetchImpl = fetchCoinbaseSpot,
 }: {
   date: string
   base: string
   target: string
   ttlMs?: number
-  fetchImpl?: (
-    date: string,
-    base: string,
-    quotes?: string[],
-  ) => Promise<FrankfurterResponse>
+  fetchImpl?: FiatFetchImpl
+  cryptoFetchImpl?: CryptoFetchImpl
 }): Promise<CurrencyRate> {
   if (!ISO_DATE_RE.test(date)) {
     throw new CurrencyRateProviderError(`Invalid date: ${date}`)
@@ -189,35 +337,44 @@ export async function getCurrencyRate({
   assertSupported(base)
   assertSupported(target)
 
-  const key = cacheKey(base, target, date)
-  const cached = readCache(key)
+  const key = rateCacheKey(base, target, date)
+  const cached = readRateCache<CurrencyRate>(key)
   if (cached) return cached
 
+  if (isCryptoCurrency(base) || isCryptoCurrency(target)) {
+    return resolveRate(
+      {
+        date,
+        fiatFetch: fetchImpl,
+        cryptoFetch: cryptoFetchImpl,
+        memo: new Map(),
+      },
+      base,
+      target,
+    )
+  }
+
+  // Pure fiat: single Frankfurter call (preserves prior asOfDate / ttlMs behaviour).
   const payload = await fetchImpl(date, base, [target])
   const rate = payload.rates[target]
   if (typeof rate !== 'number') {
     throw new CurrencyRateNotFoundError(target)
   }
-  const result: CurrencyRate = {
-    rate,
-    requestedDate: date,
-    asOfDate: payload.date,
-    base,
-    target,
-  }
-  writeCache(key, result, ttlMs)
+  const result = makeRate(date, base, target, rate, payload.date, {
+    sources: [{ provider: 'frankfurter', base, target }],
+  })
+  writeRateCache(key, result, ttlMs)
   return result
 }
 
 /** Test/utility export. Drops all cached entries. */
 export function clearCurrencyRateCache() {
-  store.clear()
+  clearRateCache()
 }
 
 /** Test/utility export. Entry count after TTL eviction. */
 export function currencyRateCacheSize() {
-  evictExpired(Date.now())
-  return store.size
+  return rateCacheSize()
 }
 
 export type BatchRateRequest = {
@@ -243,37 +400,21 @@ export type BatchRateResult =
     }
 
 /**
- * Resolve multiple rates in parallel. The requests are grouped by (date, base)
- * so a single batch with N targets on the same (date, base) costs one upstream
- * call — Frankfurter's bulk endpoint returns every quote for a base in one
- * response, and we extract the requested targets from there. Per-target
- * failures are returned alongside successes so the caller can block on a
- * specific expense without aborting the batch.
- *
- * The shared in-process cache is checked first; only cache misses reach the
- * provider. Cached entries therefore participate in batch deduplication
- * transparently and protect the caller from provider outages when the rate has
- * already been warmed by `getCurrencyRate` or a previous `getCurrencyRates`
- * call.
- *
- * `fetchImpl` is test-only and defaults to the live provider; it lets unit
- * tests swap in a stub for the upstream call.
+ * Resolve multiple rates in parallel. Fiat-only requests are grouped by (date,
+ * base) for one Frankfurter multi-quote call. Crypto-involving requests resolve
+ * individually with shared in-flight sub-legs so repeated intermediaries
+ * (BTC→EUR for BTC→MKD and BTC→BGN) cost a single provider call.
  */
 export async function getCurrencyRates(
   requests: BatchRateRequest[],
   options: {
-    fetchImpl?: (
-      date: string,
-      base: string,
-      quotes?: string[],
-    ) => Promise<FrankfurterResponse>
+    fetchImpl?: FiatFetchImpl
+    cryptoFetchImpl?: CryptoFetchImpl
   } = {},
 ): Promise<BatchRateResult[]> {
-  const fetchImpl = options.fetchImpl ?? fetchFromProvider
+  const fetchImpl = options.fetchImpl ?? fetchFrankfurterRates
+  const cryptoFetchImpl = options.cryptoFetchImpl ?? fetchCoinbaseSpot
 
-  // Resolve cache hits synchronously so a fully-cached batch never
-  // touches the network. Cache misses fall through to the per-group
-  // provider call below and get written back to the cache on success.
   const output: BatchRateResult[] = Array.from({ length: requests.length })
   type Key = string
   const groupKey = (date: string, base: string): Key =>
@@ -287,16 +428,32 @@ export async function getCurrencyRates(
       indicesByTarget: Map<string, number[]>
     }
   >()
+  const cryptoGroups = new Map<
+    Key,
+    { date: string; base: string; target: string; indices: number[] }
+  >()
   let allCached = true
   requests.forEach((req, idx) => {
     const base = req.base.toUpperCase()
     const target = req.target.toUpperCase()
-    const cached = readCache(cacheKey(base, target, req.date))
+    const cached = readRateCache<CurrencyRate>(
+      rateCacheKey(base, target, req.date),
+    )
     if (cached) {
       output[idx] = { ok: true, rate: cached }
       return
     }
     allCached = false
+    if (isCryptoCurrency(base) || isCryptoCurrency(target)) {
+      const key = rateCacheKey(base, target, req.date)
+      const existing = cryptoGroups.get(key)
+      if (existing) {
+        existing.indices.push(idx)
+      } else {
+        cryptoGroups.set(key, { date: req.date, base, target, indices: [idx] })
+      }
+      return
+    }
     const key = groupKey(req.date, base)
     const existing = groups.get(key)
     if (existing) {
@@ -324,12 +481,10 @@ export async function getCurrencyRates(
   }
   const resolvedByKey = new Map<Key, ResolvedGroup>()
 
-  await Promise.all(
+  const fiatGroupsPromise = Promise.all(
     Array.from(groups.entries()).map(async ([key, group]) => {
       const byTarget = new Map<string, BatchRateResult>()
       try {
-        // Currency and date validation happen up here so the provider
-        // is never called for unsupported codes or malformed dates.
         assertSupported(group.base)
         if (!ISO_DATE_RE.test(group.date)) {
           throw new CurrencyRateProviderError(`Invalid date: ${group.date}`)
@@ -345,15 +500,24 @@ export async function getCurrencyRates(
             })
             continue
           }
-          const result: CurrencyRate = {
-            rate,
-            requestedDate: group.date,
-            asOfDate: payload.date,
-            base: group.base,
+          const result = makeRate(
+            group.date,
+            group.base,
             target,
-          }
-          writeCache(
-            cacheKey(group.base, target, group.date),
+            rate,
+            payload.date,
+            {
+              sources: [
+                {
+                  provider: 'frankfurter',
+                  base: group.base,
+                  target,
+                },
+              ],
+            },
+          )
+          writeRateCache(
+            rateCacheKey(group.base, target, group.date),
             result,
             DEFAULT_TTL_MS,
           )
@@ -370,6 +534,49 @@ export async function getCurrencyRates(
       resolvedByKey.set(key, { byTarget })
     }),
   )
+
+  const cryptoCtx: ResolveDeps = {
+    date: '',
+    fiatFetch: fetchImpl,
+    cryptoFetch: cryptoFetchImpl,
+    memo: new Map(),
+  }
+  const cryptoResultsPromise = Promise.all(
+    Array.from(cryptoGroups.values()).map(
+      async ({ date, base, target, indices }) => {
+        try {
+          assertSupported(base)
+          assertSupported(target)
+          if (!ISO_DATE_RE.test(date)) {
+            throw new CurrencyRateProviderError(`Invalid date: ${date}`)
+          }
+          const ctx: ResolveDeps = { ...cryptoCtx, date }
+          return {
+            ok: true as const,
+            indices,
+            rate: await resolveRate(ctx, base, target),
+          }
+        } catch (err) {
+          return {
+            ok: false as const,
+            indices,
+            error: classifyBatchError(err, date, target),
+          }
+        }
+      },
+    ),
+  )
+
+  await Promise.all([fiatGroupsPromise, cryptoResultsPromise])
+  const cryptoResults = await cryptoResultsPromise
+  for (const result of cryptoResults) {
+    const entry: BatchRateResult = result.ok
+      ? { ok: true, rate: result.rate }
+      : { ok: false, error: result.error }
+    for (const idx of result.indices) {
+      output[idx] = entry
+    }
+  }
 
   for (const [key, group] of groups) {
     const { byTarget } = resolvedByKey.get(key)!

@@ -99,6 +99,8 @@ describe('CurrencyConverter stale rate gating', () => {
     window.localStorage.setItem('spliit:converter:toCurrency', 'USD')
     useCurrencyRateSpy.mockReturnValue({
       data: 1.1,
+      via: undefined,
+      sources: [{ provider: 'frankfurter', base: 'EUR', target: 'USD' }],
       isLoading: false,
       error: staleError,
     })
@@ -120,6 +122,8 @@ describe('CurrencyConverter stale rate gating', () => {
     window.localStorage.setItem('spliit:converter:toCurrency', 'USD')
     useCurrencyRateSpy.mockReturnValue({
       data: undefined,
+      via: undefined,
+      sources: [],
       isLoading: false,
       error: hardError,
     })
@@ -141,6 +145,8 @@ describe('CurrencyConverter stale rate gating', () => {
 
     useCurrencyRateSpy.mockReturnValue({
       data: 1,
+      via: undefined,
+      sources: [],
       isLoading: false,
       error: undefined,
     })
@@ -170,6 +176,8 @@ describe('CurrencyConverter group navigation', () => {
     window.localStorage.setItem('spliit:converter:toCurrency', 'USD')
     useCurrencyRateSpy.mockReturnValue({
       data: 1,
+      via: undefined,
+      sources: [],
       isLoading: false,
       error: undefined,
     })
@@ -209,6 +217,8 @@ describe('CurrencyConverter group navigation', () => {
     window.localStorage.setItem('spliit:converter:toCurrency', 'JPY')
     useCurrencyRateSpy.mockReturnValue({
       data: 1,
+      via: undefined,
+      sources: [],
       isLoading: false,
       error: undefined,
     })
@@ -243,6 +253,8 @@ describe('CurrencyConverter group navigation', () => {
     window.localStorage.setItem('spliit:converter:toCurrency', 'USD')
     useCurrencyRateSpy.mockReturnValue({
       data: 1,
+      via: undefined,
+      sources: [],
       isLoading: false,
       error: undefined,
     })

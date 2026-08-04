@@ -21,6 +21,17 @@ const BRAND_TOKENS = new Set([
   'PDF',
   'URL',
   'OK',
+  // Crypto currency brands — same name across all locales.
+  'Bitcoin',
+  'Dogecoin',
+  'Ethereum',
+  'Litecoin',
+  'Sats',
+  'Solana',
+  'XRP',
+  // FX rate provider brands — proper nouns, same across locales.
+  'Coinbase',
+  'Frankfurter',
 ])
 
 const URL_OR_EMAIL = /^(https?:\/\/\S+|[\w.+-]+@[\w.-]+\.\w+|mailto:\S+)$/i

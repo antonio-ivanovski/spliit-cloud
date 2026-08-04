@@ -452,8 +452,7 @@
         "perDateTitle": "按日期换算",
         "rateDateLabel": "汇率日期",
         "ratesError": "无法获取汇率。请检查网络连接后重试。",
-        "refresh": "刷新",
-        "viaFrankfurter": "由 Frankfurter 提供"
+        "refresh": "刷新"
       }
     },
     "Importable": {
@@ -752,7 +751,6 @@
       "useApi": "使用Frankfurter提供的汇率",
       "useCustom": "使用自定义汇率",
       "label": "汇率",
-      "providerNote": "汇率由 https://frankfurter.dev/ 及其API提供。",
       "futureDateUsesToday": "该支出为未来日期，将使用今日汇率。"
     },
     "conversionRateState": {
@@ -765,7 +763,8 @@
       "loading": "正在获取汇率……",
       "success": "获取的汇率：",
       "staleRate": "使用的汇率：",
-      "dateMismatch": "汇率日期：{date}"
+      "dateMismatch": "汇率日期：{date}",
+      "via": "经 {currencies}"
     },
     "conversionUnavailable": "要为每笔支出设置不同的货币并转换金额，请为群组选择非自定义货币。",
     "participant": {
@@ -1470,6 +1469,27 @@
       },
       "ZMW": {
         "name": "赞比亚克瓦查"
+      },
+      "BTC": {
+        "name": "比特币"
+      },
+      "DOGE": {
+        "name": "狗狗币"
+      },
+      "ETH": {
+        "name": "以太坊"
+      },
+      "LTC": {
+        "name": "莱特币"
+      },
+      "SAT": {
+        "name": "聪"
+      },
+      "SOL": {
+        "name": "索拉纳"
+      },
+      "XRP": {
+        "name": "瑞波币"
       }
     }
   },
@@ -2295,12 +2315,12 @@
     "swap": "交换货币",
     "rateError": "无法加载汇率。",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "汇率由 Frankfurter 提供",
     "createIn": "创建支出于…",
     "noGroups": "未找到符合条件的群组。",
     "staleRate": "汇率日期:",
     "fromLabel": "From",
-    "toLabel": "To"
+    "toLabel": "To",
+    "via": "经 {currencies}"
   },
   "LanguageSwitcher": {
     "title": "选择语言",
@@ -2607,5 +2627,16 @@
     "originalAmountLabel": "原始金额",
     "expenseColumnLabel": "支出",
     "categoryColumnLabel": "类别"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "Frankfurter",
+    "coinbase": "Coinbase",
+    "bridged": "通过 {currencies}（<providers></providers>）",
+    "direct": {
+      "frankfurter": "<provider></provider> 汇率",
+      "coinbase": "<provider></provider> 汇率"
+    },
+    "fallbackPrefix": "汇率来源：",
+    "fallbackSeparator": " 和 "
   }
 }

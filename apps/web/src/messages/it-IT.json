@@ -462,8 +462,7 @@
         "perDateTitle": "Conversione per data",
         "rateDateLabel": "Data del tasso",
         "ratesError": "Impossibile recuperare i tassi di cambio. Controlla la connessione e riprova.",
-        "refresh": "Aggiorna",
-        "viaFrankfurter": "tramite Frankfurter"
+        "refresh": "Aggiorna"
       }
     },
     "Importable": {
@@ -770,14 +769,14 @@
       "currencyNotFound": "Ops, Frankfurter non ha il tasso per questa valuta in questo giorno.",
       "noDate": "Inserisci la data della spesa per ottenere un tasso di cambio.",
       "dateMismatch": "Tassi dalla data: {date}",
-      "customRate": "Utilizzo tasso personalizzato"
+      "customRate": "Utilizzo tasso personalizzato",
+      "via": "tramite {currencies}"
     },
     "conversionUnavailable": "Per impostare una valuta diversa per ogni spesa e convertire gli importi, seleziona una valuta non personalizzata per il gruppo.",
     "conversionRateField": {
       "useApi": "Usa tassi da Frankfurter",
       "useCustom": "Usa tasso personalizzato",
       "label": "Tasso di cambio",
-      "providerNote": "I tassi sono forniti da https://frankfurter.dev/ e dalla loro API.",
       "futureDateUsesToday": "Questa spesa è futura e verrà utilizzato il tasso di cambio di oggi."
     },
     "participant": {
@@ -1485,6 +1484,27 @@
       },
       "ZMW": {
         "name": "kwacha zambiano"
+      },
+      "BTC": {
+        "name": "Bitcoin"
+      },
+      "DOGE": {
+        "name": "Dogecoin"
+      },
+      "ETH": {
+        "name": "Ethereum"
+      },
+      "LTC": {
+        "name": "Litecoin"
+      },
+      "SAT": {
+        "name": "Sats"
+      },
+      "SOL": {
+        "name": "Solana"
+      },
+      "XRP": {
+        "name": "XRP"
       }
     }
   },
@@ -2329,12 +2349,12 @@
     "swap": "Scambia valute",
     "rateError": "Impossibile caricare il tasso di cambio.",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "Tassi di Frankfurter",
     "createIn": "Crea spesa in…",
     "noGroups": "Nessun gruppo idoneo trovato.",
     "staleRate": "Tasso del:",
     "fromLabel": "Da",
-    "toLabel": "A"
+    "toLabel": "A",
+    "via": "tramite {currencies}"
   },
   "LanguageSwitcher": {
     "title": "Scegli la lingua",
@@ -2642,5 +2662,16 @@
     "originalAmountLabel": "Importo originale",
     "expenseColumnLabel": "Spesa",
     "categoryColumnLabel": "Categoria"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "Frankfurter",
+    "coinbase": "Coinbase",
+    "bridged": "tramite {currencies} (<providers></providers>)",
+    "direct": {
+      "frankfurter": "Tasso di cambio da <provider></provider>",
+      "coinbase": "Tasso di cambio da <provider></provider>"
+    },
+    "fallbackPrefix": "Tassi di cambio da",
+    "fallbackSeparator": " e "
   }
 }

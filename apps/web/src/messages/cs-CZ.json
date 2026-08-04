@@ -467,8 +467,7 @@
         "perDateTitle": "Konverze podle data",
         "rateDateLabel": "Datum kurzu",
         "ratesError": "Směnné kurzy se nepodařilo načíst. Zkontrolujte připojení a zkuste to znovu.",
-        "refresh": "Obnovit",
-        "viaFrankfurter": "přes Frankfurter"
+        "refresh": "Obnovit"
       }
     },
     "Importable": {
@@ -738,7 +737,6 @@
       "useApi": "Použít kurzy z Frankfurter",
       "useCustom": "Použít vlastní kurz",
       "label": "Směnný kurz",
-      "providerNote": "Kurzy poskytuje https://frankfurter.dev/ a jejich API.",
       "futureDateUsesToday": "Tento výdaj je v budoucnosti, bude použit dnešní směnný kurz."
     },
     "conversionRateState": {
@@ -751,7 +749,8 @@
       "noDate": "Zadejte datum výdaje pro získání směnného kurzu.",
       "dateMismatch": "Kurzy z data: {date}",
       "refresh": "Obnovit",
-      "customRate": "Použít vlastní kurz"
+      "customRate": "Použít vlastní kurz",
+      "via": "přes {currencies}"
     },
     "isReimbursementField": {
       "label": "Toto je vyrovnávací platba"
@@ -1595,6 +1594,27 @@
       },
       "ZMW": {
         "name": "Zambijská kwacha"
+      },
+      "BTC": {
+        "name": "Bitcoin"
+      },
+      "DOGE": {
+        "name": "Dogecoin"
+      },
+      "ETH": {
+        "name": "Ethereum"
+      },
+      "LTC": {
+        "name": "Litecoin"
+      },
+      "SAT": {
+        "name": "Sats"
+      },
+      "SOL": {
+        "name": "Solana"
+      },
+      "XRP": {
+        "name": "XRP"
       }
     }
   },
@@ -2347,12 +2367,12 @@
     "swap": "Prohodit měny",
     "rateError": "Nelze načíst směnný kurz.",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "Kurzy od Frankfurter",
     "createIn": "Vytvořit výdaj v…",
     "noGroups": "Nebyly nalezeny žádné způsobilé skupiny.",
     "staleRate": "Kurz z:",
     "fromLabel": "Z",
-    "toLabel": "Na"
+    "toLabel": "Na",
+    "via": "přes {currencies}"
   },
   "LanguageSwitcher": {
     "title": "Vyberte jazyk",
@@ -2658,5 +2678,16 @@
     "originalAmountLabel": "Původní částka",
     "expenseColumnLabel": "Výdaj",
     "categoryColumnLabel": "Kategorie"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "Frankfurter",
+    "coinbase": "Coinbase",
+    "bridged": "přes {currencies} (<providers></providers>)",
+    "direct": {
+      "frankfurter": "Kurz z <provider></provider>",
+      "coinbase": "Kurz z <provider></provider>"
+    },
+    "fallbackPrefix": "Kurzy z",
+    "fallbackSeparator": " a "
   }
 }

@@ -218,10 +218,17 @@ export function ItemParticipantsModal(props: {
   const handleShareChange = (participantId: string, rawValue: string) => {
     const mode = draft.splitMode
     const sanitizer = match(mode)
-      .with('BY_AMOUNT', () => enforceCurrencyPattern)
+      .with(
+        'BY_AMOUNT',
+        () => (value: string) =>
+          enforceCurrencyPattern(value, groupCurrency.decimal_digits),
+      )
       .with('BY_PERCENTAGE', () => enforcePercentagePattern)
       .with('BY_SHARES', () => enforceSharePattern)
-      .otherwise(() => enforceCurrencyPattern)
+      .otherwise(
+        () => (value: string) =>
+          enforceCurrencyPattern(value, groupCurrency.decimal_digits),
+      )
     const sanitized = sanitizer(rawValue)
     // BY_AMOUNT and BY_SHARES keep the raw sanitized string so
     // in-progress decimals like "10.", "0.", or "1." survive the
@@ -477,11 +484,11 @@ export function ItemParticipantsModal(props: {
           </ResponsiveDialogTitle>
           {!hideAmountDescription && (
             <ResponsiveDialogDescription>
-              {itemTotal.toFixed(2)}
+              {itemTotal.toFixed(groupCurrency.decimal_digits)}
               {' · '}
               {draft.quantity}
               {' × '}
-              {Number(draft.unitPrice).toFixed(2)}
+              {Number(draft.unitPrice).toFixed(groupCurrency.decimal_digits)}
             </ResponsiveDialogDescription>
           )}
         </ResponsiveDialogHeader>

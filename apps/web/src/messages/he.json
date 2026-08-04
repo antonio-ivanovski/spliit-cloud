@@ -462,8 +462,7 @@
         "perDateTitle": "המרה לפי תאריך",
         "rateDateLabel": "תאריך השער",
         "ratesError": "לא ניתן לשלוף שערי חליפין. בדוק את החיבור שלך ונסה שוב.",
-        "refresh": "רענן",
-        "viaFrankfurter": "דרך Frankfurter"
+        "refresh": "רענן"
       }
     },
     "Importable": {
@@ -732,7 +731,6 @@
       "useApi": "השתמש בשערים מ-Frankfurter",
       "useCustom": "השתמש בשער מותאם אישית",
       "label": "שער חליפין",
-      "providerNote": "שערים מסופקים על ידי https://frankfurter.dev/ וה-API שלהם.",
       "futureDateUsesToday": "הוצאה זו היא בעתיד ושער החליפין של היום ישמש."
     },
     "conversionRateState": {
@@ -745,7 +743,8 @@
       "noRate": "הזן שער מותאם אישית למטה.",
       "currencyNotFound": "אופס, ל-Frankfurter אין את השער עבור מטבע זה ביום הזה.",
       "noDate": "הזן את תאריך ההוצאה כדי לקבל את שער החליפין.",
-      "dateMismatch": "שערים מתאריך: {date}"
+      "dateMismatch": "שערים מתאריך: {date}",
+      "via": "דרך {currencies}"
     },
     "isReimbursementField": {
       "label": "זהו תשלום להסדרת היתרה"
@@ -1485,6 +1484,27 @@
       },
       "ZMW": {
         "name": "קוואצ'ה זמבי"
+      },
+      "BTC": {
+        "name": "ביטקוין"
+      },
+      "DOGE": {
+        "name": "דוגקוין"
+      },
+      "ETH": {
+        "name": "את'ריום"
+      },
+      "LTC": {
+        "name": "לייטקוין"
+      },
+      "SAT": {
+        "name": "סאטושי"
+      },
+      "SOL": {
+        "name": "סולנה"
+      },
+      "XRP": {
+        "name": "ריפל"
       }
     }
   },
@@ -2329,12 +2349,12 @@
     "swap": "החלף מטבעות",
     "rateError": "לא ניתן לטעון את שער החליפין.",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "שערים מ-Frankfurter",
     "createIn": "צור הוצאה ב…",
     "noGroups": "לא נמצאו קבוצות מתאימות.",
     "staleRate": "שער מ:",
     "fromLabel": "מ",
-    "toLabel": "עד"
+    "toLabel": "עד",
+    "via": "דרך {currencies}"
   },
   "LanguageSwitcher": {
     "title": "בחירת שפה",
@@ -2642,5 +2662,16 @@
     "originalAmountLabel": "סכום מקורי",
     "expenseColumnLabel": "הוצאה",
     "categoryColumnLabel": "קטגוריה"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "פרנקפורטר",
+    "coinbase": "קוינבייס",
+    "bridged": "דרך {currencies} (<providers></providers>)",
+    "direct": {
+      "frankfurter": "שער מ-<provider></provider>",
+      "coinbase": "שער מ-<provider></provider>"
+    },
+    "fallbackPrefix": "שערים מ",
+    "fallbackSeparator": " ו"
   }
 }

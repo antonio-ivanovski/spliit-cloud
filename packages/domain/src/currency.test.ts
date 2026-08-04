@@ -3,6 +3,8 @@ import {
   currencyList,
   getCurrency,
   getCurrencyFromGroup,
+  intermediaryCurrenciesFor,
+  isCryptoCurrency,
   resolveCurrencyCode,
   supportedCurrencyCodes,
 } from './currency'
@@ -165,5 +167,44 @@ describe('currencyList', () => {
     for (const code of supportedCurrencyCodes) {
       expect(codes.has(code)).toBe(true)
     }
+  })
+})
+
+describe('crypto currencies', () => {
+  it('marks the supported crypto assets', () => {
+    for (const code of ['BTC', 'DOGE', 'ETH', 'LTC', 'SAT', 'SOL', 'XRP']) {
+      expect(isCryptoCurrency(code)).toBe(true)
+      expect(getCurrency(code)?.decimal_digits).toBeGreaterThanOrEqual(0)
+    }
+  })
+
+  it('does not mark fiat currencies as crypto', () => {
+    for (const code of ['USD', 'EUR', 'MKD', 'JPY']) {
+      expect(isCryptoCurrency(code)).toBe(false)
+    }
+  })
+
+  it('gives SAT an alias scale of 1e-8 BTC', () => {
+    const sat = getCurrency('SAT')
+    expect(sat?.aliasOf).toBe('BTC')
+    expect(sat?.aliasScale).toBe(0.00000001)
+    expect(sat?.decimal_digits).toBe(0)
+  })
+
+  it('uses the default intermediary order when no list is defined', () => {
+    expect(intermediaryCurrenciesFor('BTC')).toEqual(['EUR', 'USD'])
+    expect(intermediaryCurrenciesFor('USD')).toEqual(['EUR', 'USD'])
+  })
+
+  it('uses the same default bridge order for fiat currencies', () => {
+    expect(intermediaryCurrenciesFor('MKD')).toEqual(['EUR', 'USD'])
+    expect(intermediaryCurrenciesFor('BGN')).toEqual(['EUR', 'USD'])
+  })
+
+  it('resolves crypto codes and symbols via the catalog', () => {
+    expect(resolveCurrencyCode('btc')).toBe('BTC')
+    expect(resolveCurrencyCode('₿')).toBe('BTC')
+    expect(resolveCurrencyCode('sats')).toBe('SAT')
+    expect(resolveCurrencyCode('DOGE')).toBe('DOGE')
   })
 })

@@ -21,7 +21,11 @@ import type {
 } from '@spliit/domain'
 
 import { AmountInput } from './amount-input'
-import { enforceCurrencyPattern, enforceIntegerPattern } from './currency-utils'
+import {
+  amountPlaceholder,
+  enforceCurrencyPattern,
+  enforceIntegerPattern,
+} from './currency-utils'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
 type ItemSplitMode = Exclude<SplitMode, 'ITEMIZED'>
@@ -189,10 +193,16 @@ export function ExpenseItemRow({
                           : ''
                       }
                       inputMode="decimal"
+                      placeholder={amountPlaceholder(
+                        groupCurrency.decimal_digits,
+                      )}
                       step={10 ** -groupCurrency.decimal_digits}
                       onChange={(event) =>
                         field.onChange(
-                          enforceCurrencyPattern(event.target.value),
+                          enforceCurrencyPattern(
+                            event.target.value,
+                            groupCurrency.decimal_digits,
+                          ),
                         )
                       }
                       onFocus={(event) => event.target.select()}

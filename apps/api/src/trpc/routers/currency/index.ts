@@ -15,7 +15,8 @@ import {
 // `YYYY-MM-DD` (no time component). Frankfurter's date is the
 // requested date for the rate, not a timestamp.
 const dateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/)
-const currencyCodeSchema = z.string().min(3).max(3)
+// ISO 4217 codes are 3 chars; crypto tickers can be 4 (e.g. DOGE).
+const currencyCodeSchema = z.string().min(3).max(4)
 
 const singleRateInput = z.object({
   date: dateSchema,
@@ -66,7 +67,7 @@ function raiseBatchError(
 }
 
 export const currencyRouter = createTRPCRouter({
-  /** Public: single FX rate for a date from the Frankfurter provider. */
+  /** Public: single FX rate for a date (Frankfurter fiat / Coinbase crypto). */
   getRate: baseProcedure
     .input(singleRateInput)
     .output(currencyRateSchema.optional())

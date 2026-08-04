@@ -457,8 +457,7 @@
         "perDateTitle": "Conversie per datum",
         "rateDateLabel": "Koersdatum",
         "ratesError": "Kan wisselkoersen niet ophalen. Controleer je verbinding en probeer het opnieuw.",
-        "refresh": "Vernieuwen",
-        "viaFrankfurter": "via Frankfurter"
+        "refresh": "Vernieuwen"
       }
     },
     "Importable": {
@@ -726,7 +725,6 @@
       "useApi": "Gebruik koersen van Frankfurter",
       "useCustom": "Gebruik aangepaste koers",
       "label": "Wisselkoers",
-      "providerNote": "Koersen worden verstrekt door https://frankfurter.dev/ en hun API.",
       "futureDateUsesToday": "Deze uitgave ligt in de toekomst en de huidige wisselkoers wordt gebruikt."
     },
     "conversionRateState": {
@@ -739,7 +737,8 @@
       "noDate": "Voer de datum van de uitgave in om een wisselkoers te krijgen.",
       "dateMismatch": "Wisselkoers van: {date}",
       "refresh": "Ververs",
-      "customRate": "Aangepaste wisselkoers wordt gebruikt"
+      "customRate": "Aangepaste wisselkoers wordt gebruikt",
+      "via": "omgerekend via {currencies}"
     },
     "isReimbursementField": {
       "label": "Dit is een vereffeningsbetaling"
@@ -1477,6 +1476,27 @@
       },
       "ZMW": {
         "name": "Zambiaanse kwacha"
+      },
+      "BTC": {
+        "name": "Bitcoin"
+      },
+      "DOGE": {
+        "name": "Dogecoin"
+      },
+      "ETH": {
+        "name": "Ethereum"
+      },
+      "LTC": {
+        "name": "Litecoin"
+      },
+      "SAT": {
+        "name": "Sats"
+      },
+      "SOL": {
+        "name": "Solana"
+      },
+      "XRP": {
+        "name": "XRP"
       }
     }
   },
@@ -2311,12 +2331,12 @@
     "swap": "Valuta wisselen",
     "rateError": "Wisselkoers kon niet worden geladen.",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "Koersen van Frankfurter",
     "createIn": "Uitgave aanmaken in…",
     "noGroups": "Geen geschikte groepen gevonden.",
     "staleRate": "Koers van:",
     "fromLabel": "Van",
-    "toLabel": "Naar"
+    "toLabel": "Naar",
+    "via": "omgerekend via {currencies}"
   },
   "LanguageSwitcher": {
     "title": "Kies taal",
@@ -2624,5 +2644,16 @@
     "originalAmountLabel": "Oorspronkelijk bedrag",
     "expenseColumnLabel": "Uitgave",
     "categoryColumnLabel": "Categorie"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "Frankfurter",
+    "coinbase": "Coinbase",
+    "bridged": "door {currencies} (<providers></providers>)",
+    "direct": {
+      "frankfurter": "Koers van <provider></provider>",
+      "coinbase": "Koers van <provider></provider>"
+    },
+    "fallbackPrefix": "Koersen van",
+    "fallbackSeparator": " en "
   }
 }

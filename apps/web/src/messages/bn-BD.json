@@ -898,6 +898,27 @@
       },
       "ZMW": {
         "name": "জাম্বিয়ান কোয়াচা"
+      },
+      "BTC": {
+        "name": "বিটকয়েন"
+      },
+      "DOGE": {
+        "name": "ডজকয়েন"
+      },
+      "ETH": {
+        "name": "ইথেরিয়াম"
+      },
+      "LTC": {
+        "name": "লাইটকয়েন"
+      },
+      "SAT": {
+        "name": "স্যাটস"
+      },
+      "SOL": {
+        "name": "সোলানা"
+      },
+      "XRP": {
+        "name": "এক্সআরপি"
       }
     }
   },
@@ -1149,7 +1170,6 @@
       "useApi": "বিনিময় হার ব্যবহার করুন",
       "useCustom": "কাস্টম হার ব্যবহার করুন",
       "label": "বিনিময় হার",
-      "providerNote": "হার https://frankfurter.dev/ এবং তাদের API দ্বারা সরবরাহ করা হয়।",
       "futureDateUsesToday": "এই খরচ ভবিষ্যতে এবং আজকের বিনিময় হার ব্যবহার করা হবে।"
     },
     "conversionRateState": {
@@ -1162,7 +1182,8 @@
       "noDate": "বিনিময় হার পেতে খরচের তারিখ লিখুন।",
       "dateMismatch": "{date} তারিখের হার",
       "refresh": "রিফ্রেশ",
-      "customRate": "কাস্টম হার ব্যবহার করা হচ্ছে"
+      "customRate": "কাস্টম হার ব্যবহার করা হচ্ছে",
+      "via": "{currencies} এর মাধ্যমে"
     },
     "splittingOptions": "ভাগ করার বিকল্প",
     "multiplePayers": "একাধিক প্রদানকারী",
@@ -1606,8 +1627,7 @@
         "perDateTitle": "প্রতি তারিখে রূপান্তর",
         "rateDateLabel": "Frankfurter হার তারিখ",
         "ratesError": "বিনিময় হার আনা সম্ভব হচ্ছে না। আপনার সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।",
-        "refresh": "রিফ্রেশ",
-        "viaFrankfurter": "নির্বাচিত তারিখের জন্য Frankfurter থেকে হার আনা হয়েছে।"
+        "refresh": "রিফ্রেশ"
       },
       "Destination": {
         "heading": "আপনি কোথায় <strong>{name}</strong> আমদানি করতে চান? ({participantCount} জন অংশগ্রহণকারী · {expenseCount}টি খরচ)",
@@ -2307,12 +2327,12 @@
     "swap": "মুদ্রা অদলবদল",
     "rateError": "বিনিময় হার লোড করা যায়নি।",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "Frankfurter দ্বারা হার",
     "createIn": "এতে ব্যয় তৈরি করুন…",
     "noGroups": "কোনো যোগ্য গ্রুপ পাওয়া যায়নি।",
     "staleRate": "হার:",
     "fromLabel": "থেকে",
-    "toLabel": "তে"
+    "toLabel": "তে",
+    "via": "{currencies} এর মাধ্যমে"
   },
   "LanguageSwitcher": {
     "title": "ভাষা নির্বাচন করুন",
@@ -2620,5 +2640,16 @@
     "originalAmountLabel": "মূল পরিমাণ",
     "expenseColumnLabel": "খরচ",
     "categoryColumnLabel": "বিভাগ"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "Frankfurter",
+    "coinbase": "Coinbase",
+    "bridged": "{currencies} এর মাধ্যমে (<providers></providers>)",
+    "direct": {
+      "frankfurter": "<provider></provider> থেকে হার",
+      "coinbase": "<provider></provider> থেকে হার"
+    },
+    "fallbackPrefix": "হারের উৎস",
+    "fallbackSeparator": " এবং "
   }
 }

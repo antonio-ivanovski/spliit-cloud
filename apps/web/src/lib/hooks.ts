@@ -59,6 +59,14 @@ export function useActiveUser(groupId?: string) {
 
 type UseCurrencyRateResult = {
   data: number | undefined
+  /** Bridge currencies used to compose the rate (e.g. ['EUR'] for BTC→MKD). */
+  via: string[] | undefined
+  /** Quote legs that compose the rate, including provider per leg. */
+  sources: Array<{
+    provider: 'frankfurter' | 'coinbase'
+    base: string
+    target: string
+  }>
   error: Error | null
   isLoading: boolean
   refresh: () => Promise<unknown>
@@ -104,6 +112,8 @@ export function useCurrencyRate(
   if (!data) {
     return {
       data: undefined,
+      via: undefined,
+      sources: [],
       error: error ? new Error(error.message) : null,
       isLoading,
       refresh: () => refetch(),
@@ -118,6 +128,8 @@ export function useCurrencyRate(
 
   return {
     data: data.rate,
+    via: data.via,
+    sources: data.sources ?? [],
     error: sentError,
     isLoading,
     refresh: () => refetch(),
@@ -143,6 +155,12 @@ export type CurrencyRatesResponse = Array<
         asOfDate: string
         base: string
         target: string
+        sources: Array<{
+          provider: 'frankfurter' | 'coinbase'
+          base: string
+          target: string
+        }>
+        via?: string[]
       }
     }
   | {

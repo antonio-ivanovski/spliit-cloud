@@ -462,8 +462,7 @@
         "perDateTitle": "Conversie per dată",
         "rateDateLabel": "Data cursului",
         "ratesError": "Nu s-au putut prelua cursurile de schimb. Verifică conexiunea și încearcă din nou.",
-        "refresh": "Reîmprospătează",
-        "viaFrankfurter": "prin Frankfurter"
+        "refresh": "Reîmprospătează"
       }
     },
     "Importable": {
@@ -765,7 +764,6 @@
       "useApi": "Folosește rate de la Frankfurter",
       "useCustom": "Folosește rată personalizată",
       "label": "Curs de schimb",
-      "providerNote": "Ratele sunt furnizate de https://frankfurter.dev/ și API-ul lor.",
       "futureDateUsesToday": "Această cheltuială este în viitor și se va folosi cursul de schimb de astăzi."
     },
     "conversionRateState": {
@@ -778,7 +776,8 @@
       "noDate": "Introdu data cheltuielii pentru a obține un curs de schimb.",
       "dateMismatch": "Cursuri de la data: {date}",
       "refresh": "Reîmprospătează",
-      "customRate": "Se folosește o rată personalizată"
+      "customRate": "Se folosește o rată personalizată",
+      "via": "prin {currencies}"
     },
     "participant": {
       "pending": "(invitat)"
@@ -1485,6 +1484,27 @@
       },
       "ZMW": {
         "name": "Kwacha zambiană"
+      },
+      "BTC": {
+        "name": "Bitcoin"
+      },
+      "DOGE": {
+        "name": "Dogecoin"
+      },
+      "ETH": {
+        "name": "Ethereum"
+      },
+      "LTC": {
+        "name": "Litecoin"
+      },
+      "SAT": {
+        "name": "Sats"
+      },
+      "SOL": {
+        "name": "Solana"
+      },
+      "XRP": {
+        "name": "XRP"
       }
     }
   },
@@ -2329,12 +2349,12 @@
     "swap": "Schimbă monedele",
     "rateError": "Nu s-a putut încărca rata de schimb.",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "Rate de la Frankfurter",
     "createIn": "Creează cheltuială în…",
     "noGroups": "Nu s-au găsit grupuri eligibile.",
     "staleRate": "Rată din:",
     "fromLabel": "Din",
-    "toLabel": "În"
+    "toLabel": "În",
+    "via": "prin {currencies}"
   },
   "LanguageSwitcher": {
     "title": "Alege limba",
@@ -2642,5 +2662,16 @@
     "originalAmountLabel": "Sumă inițială",
     "expenseColumnLabel": "Cheltuială",
     "categoryColumnLabel": "Categorie"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "Frankfurter",
+    "coinbase": "Coinbase",
+    "bridged": "prin {currencies} (<providers></providers>)",
+    "direct": {
+      "frankfurter": "Curs de la <provider></provider>",
+      "coinbase": "Curs de la <provider></provider>"
+    },
+    "fallbackPrefix": "Cursuri de la",
+    "fallbackSeparator": " și "
   }
 }

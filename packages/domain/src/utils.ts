@@ -100,6 +100,18 @@ export function formatCurrency(
   locale: string,
   fractions?: boolean,
 ) {
+  // Crypto assets are not ISO 4217 codes: `Intl.NumberFormat` with
+  // `style: 'currency'` throws for 4-character tickers (e.g. DOGE), so they
+  // are formatted as plain numbers with trailing zeros trimmed and the
+  // symbol appended (`0.5 ₿`, `5,000 sats`).
+  if (currency.crypto) {
+    const value = fractions ? amount : amountAsDecimal(amount, currency)
+    const formatted = new Intl.NumberFormat(locale, {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: currency.decimal_digits,
+    }).format(value)
+    return `${formatted} ${currency.symbol}`
+  }
   const format = new Intl.NumberFormat(locale, {
     minimumFractionDigits: currency.decimal_digits,
     maximumFractionDigits: currency.decimal_digits,

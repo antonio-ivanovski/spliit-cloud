@@ -462,8 +462,7 @@
         "perDateTitle": "Conversão por data",
         "rateDateLabel": "Data da taxa",
         "ratesError": "Não foi possível obter as taxas de câmbio. Verifique sua conexão e tente novamente.",
-        "refresh": "Atualizar",
-        "viaFrankfurter": "via Frankfurter"
+        "refresh": "Atualizar"
       }
     },
     "Importable": {
@@ -764,7 +763,6 @@
       "label": "Taxa de câmbio",
       "useApi": "Usar taxas do Frankfurter",
       "useCustom": "Usar taxa personalizada",
-      "providerNote": "As taxas são fornecidas por https://frankfurter.dev/ e pela sua API.",
       "futureDateUsesToday": "Esta despesa está no futuro e será usada a taxa de câmbio de hoje."
     },
     "conversionRateState": {
@@ -777,7 +775,8 @@
       "currencyNotFound": "Ops, o Frankfurter não tem a taxa para esta moeda nesta data.",
       "noDate": "Insira a data da despesa para obter uma taxa de câmbio.",
       "dateMismatch": "Taxas da data: {date}",
-      "customRate": "Usando taxa personalizada"
+      "customRate": "Usando taxa personalizada",
+      "via": "por meio de {currencies}"
     },
     "conversionUnavailable": "Para definir uma moeda diferente por despesa e converter valores, selecione uma moeda não personalizada para o grupo.",
     "participant": {
@@ -1485,6 +1484,27 @@
       },
       "ZMW": {
         "name": "Kwacha zambiano"
+      },
+      "BTC": {
+        "name": "Bitcoin"
+      },
+      "DOGE": {
+        "name": "Dogecoin"
+      },
+      "ETH": {
+        "name": "Ethereum"
+      },
+      "LTC": {
+        "name": "Litecoin"
+      },
+      "SAT": {
+        "name": "Sats"
+      },
+      "SOL": {
+        "name": "Solana"
+      },
+      "XRP": {
+        "name": "XRP"
       }
     }
   },
@@ -2329,12 +2349,12 @@
     "swap": "Trocar moedas",
     "rateError": "Não foi possível carregar a taxa de câmbio.",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "Taxas de Frankfurter",
     "createIn": "Criar despesa em…",
     "noGroups": "Nenhum grupo elegível encontrado.",
     "staleRate": "Taxa de:",
     "fromLabel": "De",
-    "toLabel": "Para"
+    "toLabel": "Para",
+    "via": "por meio de {currencies}"
   },
   "LanguageSwitcher": {
     "title": "Escolher idioma",
@@ -2642,5 +2662,16 @@
     "originalAmountLabel": "Valor original",
     "expenseColumnLabel": "Despesa",
     "categoryColumnLabel": "Categoria"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "Frankfurter",
+    "coinbase": "Coinbase",
+    "direct": {
+      "frankfurter": "Taxa de câmbio de <provider></provider>",
+      "coinbase": "Taxa de câmbio de <provider></provider>"
+    },
+    "bridged": "através de {currencies} (<providers></providers>)",
+    "fallbackPrefix": "Taxas de câmbio de",
+    "fallbackSeparator": " e "
   }
 }

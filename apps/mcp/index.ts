@@ -366,10 +366,11 @@ server.tool(
         .describe('Optional private expense notes supplied by the user'),
       currencyCode: z
         .string()
-        .length(3)
+        .min(3)
+        .max(4)
         .optional()
         .describe(
-          "ISO 4217 expense currency. Omit for the group's currency; a different supported code is converted using Spliit's authoritative rate.",
+          "ISO 4217 or crypto expense currency. Omit for the group's currency; a different supported code is converted using Spliit's authoritative rate.",
         ),
       paidBy: z
         .array(allocation)

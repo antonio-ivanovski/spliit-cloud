@@ -3,6 +3,7 @@ import { Check, ChevronDown, ChevronsUpDown, Loader2 } from 'lucide-react'
 import { forwardRef, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { CurrencyIcon } from '@/components/currency-icon'
 import type { ButtonProps } from '@/components/ui/button'
 import { Button } from '@/components/ui/button'
 import {
@@ -269,13 +270,14 @@ function CurrencyCommand({
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Currencies' })
 
-  const { priority, rest } = useMemo(() => {
+  const { priority, rest, crypto } = useMemo(() => {
     const byCode = new Map(
       currencies.map((currency) => [currency.code, currency]),
     )
     const assigned = new Set<string>()
     const priority: DisplayCurrency[] = []
     const rest: DisplayCurrency[] = []
+    const crypto: DisplayCurrency[] = []
 
     const pin =
       pinnedCurrencyCode && pinnedCurrencyCode.length > 0
@@ -306,10 +308,14 @@ function CurrencyCommand({
 
     for (const currency of currencies) {
       if (assigned.has(currency.code)) continue
-      rest.push(currency)
+      if (currency.crypto) {
+        crypto.push(currency)
+      } else {
+        rest.push(currency)
+      }
     }
 
-    return { priority, rest }
+    return { priority, rest, crypto }
   }, [currencies, pinnedCurrencyCode, recommendedCurrencyCodes])
 
   const renderItems = (items: DisplayCurrency[]) =>
@@ -347,6 +353,10 @@ function CurrencyCommand({
         )}
         {priority.length > 0 && rest.length > 0 && <CommandSeparator />}
         {rest.length > 0 && <CommandGroup>{renderItems(rest)}</CommandGroup>}
+        {rest.length > 0 && crypto.length > 0 && <CommandSeparator />}
+        {crypto.length > 0 && (
+          <CommandGroup>{renderItems(crypto)}</CommandGroup>
+        )}
       </div>
     </Command>
   )
@@ -419,12 +429,12 @@ function CurrencyLabel({
   currency: DisplayCurrency
   compact?: boolean
 }) {
-  const flagUrl = `https://flagcdn.com/h24/${
-    currency?.code.length ? currency.code.slice(0, 2).toLowerCase() : 'un'
-  }.png`
   return (
     <div className="flex min-w-0 items-center gap-3">
-      <img src={flagUrl} className="w-4 shrink-0" alt="" />
+      <CurrencyIcon
+        code={currency?.code.length ? currency.code : 'un'}
+        className="w-4 shrink-0"
+      />
       <span className="truncate">
         {compact
           ? currency.code || currency.symbol || currency.name

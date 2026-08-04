@@ -462,8 +462,7 @@
         "perDateTitle": "Dataren araberako bihurketa",
         "rateDateLabel": "Tasaren data",
         "ratesError": "Ezin izan dira truke-tasak eskuratu. Egiaztatu zure konexioa eta saiatu berriro.",
-        "refresh": "Freskatu",
-        "viaFrankfurter": "Frankfurter bidez"
+        "refresh": "Freskatu"
       }
     },
     "Importable": {
@@ -732,7 +731,6 @@
       "useApi": "Erabili Frankfurter-en tasak",
       "useCustom": "Erabili tasa pertsonalizatua",
       "label": "Kanbio-tasa",
-      "providerNote": "Tasak https://frankfurter.dev/-k eta bere APIak ematen dituzte.",
       "futureDateUsesToday": "Gastu hau etorkizunekoa da eta gaurko kanbio-tasa erabiliko da."
     },
     "conversionRateState": {
@@ -745,7 +743,8 @@
       "noDate": "Sartu gastuaren data bihurketa-tasa lortzeko.",
       "dateMismatch": "Tarifak datarako: {date}",
       "refresh": "Eguneratu",
-      "customRate": "Tasa pertsonalizatua erabiltzen"
+      "customRate": "Tasa pertsonalizatua erabiltzen",
+      "via": "{currencies} bidez"
     },
     "isReimbursementField": {
       "label": "Hau zor-kitapenaren ordainketa bat da"
@@ -1485,6 +1484,27 @@
       },
       "ZMW": {
         "name": "Zambiako kwacha"
+      },
+      "BTC": {
+        "name": "Bitcoin"
+      },
+      "DOGE": {
+        "name": "Dogecoin"
+      },
+      "ETH": {
+        "name": "Ethereum"
+      },
+      "LTC": {
+        "name": "Litecoin"
+      },
+      "SAT": {
+        "name": "Sats"
+      },
+      "SOL": {
+        "name": "Solana"
+      },
+      "XRP": {
+        "name": "XRP"
       }
     }
   },
@@ -2328,12 +2348,12 @@
     "swap": "Trukatu monedak",
     "rateError": "Ezin izan da truke-tasa kargatu.",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "Frankfurterren tasak",
     "createIn": "Sortu gastua hemen…",
     "noGroups": "Ez da talde egokirik aurkitu.",
     "staleRate": "Honako tasa:",
     "fromLabel": "Nondik",
-    "toLabel": "Nora"
+    "toLabel": "Nora",
+    "via": "{currencies} bidez"
   },
   "LanguageSwitcher": {
     "title": "Aukeratu hizkuntza",
@@ -2641,5 +2661,16 @@
     "originalAmountLabel": "Jatorrizko zenbatekoa",
     "expenseColumnLabel": "Gastua",
     "categoryColumnLabel": "Kategoria"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "Frankfurter",
+    "coinbase": "Coinbase",
+    "bridged": "{currencies} bidez (<providers></providers>)",
+    "direct": {
+      "frankfurter": "<provider></provider> erako truke-tasa",
+      "coinbase": "<provider></provider> erako truke-tasa"
+    },
+    "fallbackPrefix": "Truke-tasak hemendik:",
+    "fallbackSeparator": " eta "
   }
 }

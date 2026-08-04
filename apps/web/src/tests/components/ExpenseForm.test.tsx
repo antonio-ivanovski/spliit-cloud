@@ -390,6 +390,8 @@ beforeEach(() => {
     data: undefined,
     error: null,
     isLoading: false,
+    via: undefined,
+    sources: [],
     refresh: vi.fn(),
   })
 })
@@ -832,6 +834,8 @@ describe('ExpenseForm', () => {
       data: 1.1,
       error: null,
       isLoading: false,
+      via: undefined,
+      sources: [],
       refresh: vi.fn(),
     })
     const { user } = render(
@@ -861,6 +865,8 @@ describe('ExpenseForm', () => {
       data: 1.1,
       error: null,
       isLoading: false,
+      via: undefined,
+      sources: [],
       refresh: vi.fn(),
     })
     const { user } = render(
@@ -897,6 +903,8 @@ describe('ExpenseForm', () => {
       data: 1.1,
       error: null,
       isLoading: false,
+      via: undefined,
+      sources: [],
       refresh: vi.fn(),
     })
     const { user } = render(
@@ -958,6 +966,8 @@ describe('ExpenseForm', () => {
       data: 1.1,
       error: null,
       isLoading: false,
+      via: undefined,
+      sources: [],
       refresh: vi.fn(),
     })
     const { user } = render(
@@ -986,6 +996,8 @@ describe('ExpenseForm', () => {
       data: undefined,
       error: new Error('Could not fetch rate'),
       isLoading: false,
+      via: undefined,
+      sources: [],
       refresh,
     })
     const onSubmit = vi.fn().mockResolvedValue(undefined)
@@ -1015,6 +1027,8 @@ describe('ExpenseForm', () => {
       data: 1.1,
       error: null,
       isLoading: false,
+      via: undefined,
+      sources: [],
       refresh: vi.fn(),
     })
     const onSubmit = vi.fn().mockResolvedValue(undefined)
@@ -1500,6 +1514,8 @@ describe('ExpenseForm', () => {
       data: 1.1,
       error: null,
       isLoading: false,
+      via: undefined,
+      sources: [],
       refresh: vi.fn(),
     })
     const onSubmit = vi.fn().mockResolvedValue(undefined)

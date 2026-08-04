@@ -1,8 +1,71 @@
 ## Purpose
 
-Defines expense form and expense behavior requirements: recurring template conversion, recurring copy behavior, occurrence-specific attachments, and the participant distribution editors — including decimal share entry, input canonicalization and focus behavior, share steppers, selection actions, and exact percentage/amount residual handling.
+Defines expense form and expense behavior requirements: cross-currency conversion (fiat and crypto), recurring template conversion, recurring copy behavior, occurrence-specific attachments, and the participant distribution editors — including decimal share entry, input canonicalization and focus behavior, share steppers, selection actions, and exact percentage/amount residual handling.
 
 ## Requirements
+
+### Requirement: Converted expense input preservation
+The system SHALL accept expense monetary inputs in the selected expense currency via a discriminated `conversion` field (`none` | `custom` | `exchange`), persist flat conversion columns, and compute ledger-currency totals server-side. Supported catalog currencies include fiat ISO codes and crypto assets (3–4 character codes).
+
+#### Scenario: Create expense with exchange conversion
+- **WHEN** a user creates an expense with `conversion: { type: 'exchange', currency }` against a different supported ledger currency (including crypto↔fiat or crypto↔crypto)
+- **THEN** the client submits expense-currency `amount` and the conversion discriminant; the server resolves the rate, persists `conversionSource = EXCHANGE`, original amount/currency, rate, and the server-computed ledger total
+
+#### Scenario: Create expense with custom conversion
+- **WHEN** a user creates an expense with `conversion: { type: 'custom', currency, rate }`
+- **THEN** the server applies that rate and persists `conversionSource = CUSTOM` with original amount/currency and ledger total
+
+#### Scenario: Create same-currency expense
+- **WHEN** a user creates an expense without a `conversion` field (group currency)
+- **THEN** the server persists `conversionSource = null`, null rate/original fields, and the amount as ledger minor units
+
+#### Scenario: Update converted expense
+- **WHEN** a user updates amount, currency, conversion type/rate, date, or amount-based splits
+- **THEN** the server recomputes ledger total and conversion columns from the submitted conversion discriminant
+
+### Requirement: Conversion source selection in the UI
+The system SHALL let users choose exchange or custom conversion when currencies differ, map that choice to the conversion discriminant on submit, and restore the correct UI from `conversionSource` on edit. The expense currency selector SHALL list supported fiat and crypto catalog entries.
+
+#### Scenario: Switch to custom rate
+- **WHEN** a user uses the custom-rate action
+- **THEN** the form sets conversion type `CUSTOM` and requires a positive rate
+
+#### Scenario: Switch to exchange rate
+- **WHEN** a user uses the exchange-rate action
+- **THEN** the form sets conversion type `EXCHANGE`, previews a rate from the API, and does not open the custom rate input on reopen after save
+
+#### Scenario: Exchange provider attribution
+- **WHEN** the exchange option is active and a rate is shown
+- **THEN** the UI shows localized provider attribution with links to Frankfurter and Coinbase APIs, including intermediary currency and per-leg providers when the rate was bridged
+
+### Requirement: Expense amount decimal precision
+The main expense amount field, item unit prices, and paid-by/paid-for amount inputs in the expense currency SHALL enforce the selected currency's `decimal_digits` while typing and SHALL use a matching amount placeholder (fractional digits capped at four for display).
+
+#### Scenario: Item unit price respects group currency decimals
+- **WHEN** a group uses JPY (0 decimals) and the user edits an item unit price
+- **THEN** fractional input beyond zero decimal places is truncated
+
+#### Scenario: Crypto expense amount respects catalog decimals
+- **WHEN** a user enters an amount in BTC (8 decimal digits in catalog, 4 in placeholder)
+- **THEN** typing is capped at eight fractional digits and the placeholder shows up to four zeros after the decimal point
+
+### Requirement: Converted expense previews
+The client SHALL treat converted amount previews as illustrative only; the server SHALL remain the persistence authority for ledger totals.
+
+#### Scenario: Future date uses today rate messaging
+- **WHEN** the expense date is in the future and conversion type is `exchange`
+- **THEN** preview and save use today's rate and the UI discloses this
+
+### Requirement: Server-side import conversion
+Import SHALL send expense-currency amounts and a conversion discriminant; the server SHALL resolve conversion with the same rules as create, including crypto currencies.
+
+#### Scenario: Import with exchange rates
+- **WHEN** an import batch uses per-date exchange rates
+- **THEN** each expense is submitted with `conversion.type = 'exchange'` and expense-currency amounts; the server resolves rates and stores ledger totals
+
+#### Scenario: Import with fixed custom rates
+- **WHEN** an import batch uses fixed rates
+- **THEN** each expense is submitted with `conversion.type = 'custom'` including the rate
 
 ### Requirement: Recurring expense conversion template
 The system SHALL preserve CUSTOM conversion rates and SHALL resolve EXCHANGE rates on each generated occurrence date.

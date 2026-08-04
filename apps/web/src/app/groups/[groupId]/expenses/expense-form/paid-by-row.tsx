@@ -193,6 +193,7 @@ export function PaidByRow({
                                 onChange={(event) => {
                                   const sanitized = enforceCurrencyPattern(
                                     event.target.value,
+                                    payerCurrency.decimal_digits,
                                   )
                                   const next = field.value.filter(
                                     (p) => p.participant !== id,
@@ -297,7 +298,11 @@ export function PaidByRow({
                                 onChange={(event) => {
                                   const sanitized = (
                                     modeProps?.sanitizer ??
-                                    enforceCurrencyPattern
+                                    ((v: string) =>
+                                      enforceCurrencyPattern(
+                                        v,
+                                        payerCurrency.decimal_digits,
+                                      ))
                                   )(event.target.value)
                                   const next = field.value.filter(
                                     (p) => p.participant !== id,

@@ -457,8 +457,7 @@
         "perDateTitle": "Muunto päivämäärän mukaan",
         "rateDateLabel": "Kurssipäivä",
         "ratesError": "Valuuttakurssien hakeminen epäonnistui. Tarkista yhteytesi ja yritä uudelleen.",
-        "refresh": "Päivitä",
-        "viaFrankfurter": "Frankfurterin kautta"
+        "refresh": "Päivitä"
       }
     },
     "Importable": {
@@ -726,7 +725,6 @@
       "useApi": "Käytä kursseja Frankfurterista",
       "useCustom": "Käytä mukautettua kurssia",
       "label": "Vaihtokurssi",
-      "providerNote": "Kurssit tarjoaa https://frankfurter.dev/ ja sen API.",
       "futureDateUsesToday": "Tämä kulu on tulevaisuudessa ja tämän päivän vaihtokurssia käytetään."
     },
     "conversionRateState": {
@@ -739,7 +737,8 @@
       "noDate": "Syötä kulun päivämäärä saadaksesi vaihtokurssin.",
       "dateMismatch": "Kurssit päivältä: {date}",
       "refresh": "Päivitä",
-      "customRate": "Käytetään mukautettua kurssia"
+      "customRate": "Käytetään mukautettua kurssia",
+      "via": "{currencies} kautta"
     },
     "isReimbursementField": {
       "label": "Tämä on tasausmaksu"
@@ -1477,6 +1476,27 @@
       },
       "ZMW": {
         "name": "Sambian kwacha"
+      },
+      "BTC": {
+        "name": "Bitcoin"
+      },
+      "DOGE": {
+        "name": "Dogecoin"
+      },
+      "ETH": {
+        "name": "Ethereum"
+      },
+      "LTC": {
+        "name": "Litecoin"
+      },
+      "SAT": {
+        "name": "Sats"
+      },
+      "SOL": {
+        "name": "Solana"
+      },
+      "XRP": {
+        "name": "XRP"
       }
     }
   },
@@ -2311,12 +2331,12 @@
     "swap": "Vaihda valuuttoja",
     "rateError": "Vaihtokurssia ei voitu ladata.",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "Kurssit Frankfurterilta",
     "createIn": "Luo kulu kohteeseen…",
     "noGroups": "Ei kelvollisia ryhmiä löytynyt.",
     "staleRate": "Kurssi:",
     "fromLabel": "Mistä",
-    "toLabel": "Mihin"
+    "toLabel": "Mihin",
+    "via": "{currencies} kautta"
   },
   "LanguageSwitcher": {
     "title": "Valitse kieli",
@@ -2624,5 +2644,16 @@
     "originalAmountLabel": "Alkuperäinen summa",
     "expenseColumnLabel": "Kulu",
     "categoryColumnLabel": "Kategoria"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "Frankfurter",
+    "coinbase": "Coinbase",
+    "bridged": "{currencies} kautta (<providers></providers>)",
+    "direct": {
+      "frankfurter": "Kurssi lähteestä <provider></provider>",
+      "coinbase": "Kurssi lähteestä <provider></provider>"
+    },
+    "fallbackPrefix": "Kurssit lähteestä",
+    "fallbackSeparator": " ja "
   }
 }

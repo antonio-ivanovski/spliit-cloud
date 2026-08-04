@@ -8,11 +8,8 @@ import {
 } from '@spliit/domain'
 import { supportedCurrencyCodes } from '@spliit/domain/currency'
 
-import {
-  UnsupportedCurrencyError,
-  getCurrencyRate,
-  type CurrencyRate,
-} from './currency-rates'
+import { UnsupportedCurrencyError } from './currency-errors'
+import { getCurrencyRate, type CurrencyRate } from './currency-rates'
 
 export class ConversionError extends Error {
   constructor(

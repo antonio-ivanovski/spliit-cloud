@@ -1,9 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import {
-  clearCurrencyRateCache,
-  type FrankfurterResponse,
-} from '../lib/currency-rates'
+import { clearCurrencyRateCache } from '../lib/currency-rates'
+import type { FrankfurterResponse } from '../lib/fiat-rates'
 import { postCurrencyRates } from './currency-rates'
 
 function makeRequest(body: unknown): Request {
@@ -87,14 +85,30 @@ describe('postCurrencyRates', () => {
     expect(response.status).toBe(400)
   })
 
-  it('returns 400 when a currency code is longer than 3 letters', async () => {
+  it('returns 400 when a currency code is longer than 4 letters', async () => {
     const response = await postCurrencyRates(
       makeRequest({
-        items: [{ date: '2026-06-28', base: 'EURO', target: 'USD' }],
+        items: [{ date: '2026-06-28', base: 'EUROX', target: 'USD' }],
       }),
     )
 
     expect(response.status).toBe(400)
+  })
+
+  it('accepts 4-letter crypto tickers', async () => {
+    const response = await postCurrencyRates(
+      makeRequest({
+        items: [{ date: '2026-06-28', base: 'DOGE', target: 'USD' }],
+      }),
+      { cryptoFetchImpl: async () => 0.12 },
+    )
+
+    expect(response.status).toBe(200)
+    const body = (await response.json()) as {
+      results: { ok: true; rate: { rate: number } }[]
+    }
+    expect(body.results[0]!.ok).toBe(true)
+    expect(body.results[0]!.rate.rate).toBe(0.12)
   })
 
   it('returns the parsed result for a valid single-item batch', async () => {
@@ -122,6 +136,7 @@ describe('postCurrencyRates', () => {
           asOfDate: '2026-06-28',
           base: 'EUR',
           target: 'USD',
+          sources: [{ provider: 'frankfurter', base: 'EUR', target: 'USD' }],
         },
       },
     ])

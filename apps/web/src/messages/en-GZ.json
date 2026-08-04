@@ -1065,6 +1065,27 @@
       },
       "ZMW": {
         "name": "Zambian kwacha"
+      },
+      "BTC": {
+        "name": "Bitcoin"
+      },
+      "DOGE": {
+        "name": "Dogecoin"
+      },
+      "ETH": {
+        "name": "Ethereum"
+      },
+      "LTC": {
+        "name": "Litecoin"
+      },
+      "SAT": {
+        "name": "Sats"
+      },
+      "SOL": {
+        "name": "Solana"
+      },
+      "XRP": {
+        "name": "XRP"
       }
     }
   },
@@ -1075,12 +1096,12 @@
     "swap": "swap currencies",
     "rateError": "couldn't load the exchange rate.",
     "rateInfo": "{from} converts to {rate} {to}",
-    "providerNote": "rates by Frankfurter",
     "createIn": "create expense in…",
     "noGroups": "no eligible groups found.",
     "staleRate": "using rate from:",
     "fromLabel": "from currency",
-    "toLabel": "to currency"
+    "toLabel": "to currency",
+    "via": "by way of {currencies}"
   },
   "EmptyState": {
     "actions": {
@@ -1330,7 +1351,6 @@
       "useApi": "use the exchange rate",
       "useCustom": "use a custom rate",
       "label": "exchange rate",
-      "providerNote": "rates are served by https://frankfurter.dev/ and their API, fr.",
       "futureDateUsesToday": "this expense is in the future, so today's exchange rate is getting the aux."
     },
     "conversionRateState": {
@@ -1343,7 +1363,8 @@
       "noDate": "enter the expense date to get a conversion rate.",
       "dateMismatch": "rates from date: {date}",
       "refresh": "refresh the rates",
-      "customRate": "using the custom rate"
+      "customRate": "using the custom rate",
+      "via": "by way of {currencies}"
     },
     "splittingOptions": "split settings",
     "multiplePayers": "multiple people paid",
@@ -1825,8 +1846,7 @@
         "perDateTitle": "per-date conversion",
         "rateDateLabel": "Frankfurter rate date, fr",
         "ratesError": "unable to fetch exchange rates. check connection and try again.",
-        "refresh": "refresh the rates",
-        "viaFrankfurter": "rate fetched from Frankfurter for the selected date."
+        "refresh": "refresh the rates"
       },
       "Destination": {
         "heading": "where should we import <strong>{name}</strong>? ({participantCount} besties · {expenseCount} expenses)",
@@ -2616,5 +2636,16 @@
     "originalAmountLabel": "original amount",
     "expenseColumnLabel": "expense",
     "categoryColumnLabel": "category"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "Frankfurter",
+    "coinbase": "Coinbase",
+    "direct": {
+      "frankfurter": "rate from <provider></provider>",
+      "coinbase": "rate from <provider></provider>"
+    },
+    "bridged": "by way of {currencies} (<providers></providers>)",
+    "fallbackPrefix": "rates from",
+    "fallbackSeparator": " & "
   }
 }

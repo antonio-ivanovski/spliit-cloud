@@ -1,6 +1,6 @@
 import { MAX_DISPLAY_SHARES, sharesAsFixedUnits } from '@spliit/domain'
 
-export { enforceCurrencyPattern } from '@/lib/currency-input'
+export { amountPlaceholder, enforceCurrencyPattern } from '@/lib/currency-input'
 
 type PasteCurrency = { code: string; symbol: string }
 

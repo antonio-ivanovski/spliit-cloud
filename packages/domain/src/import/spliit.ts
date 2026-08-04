@@ -26,7 +26,7 @@ export const spliitExportSchema = z.object({
   // Legacy spliit.app exports use an empty string for custom currencies.
   // Normalize that representation to null at the parser boundary below.
   currencyCode: z
-    .union([z.string().length(3), z.literal('')])
+    .union([z.string().min(3).max(4), z.literal('')])
     .nullable()
     .optional(),
   participants: z
@@ -68,7 +68,7 @@ export const spliitExportSchema = z.object({
         .optional()
         .nullable(),
       originalAmount: z.coerce.number().int().nullable().optional(),
-      originalCurrency: z.string().length(3).nullable().optional(),
+      originalCurrency: z.string().min(3).max(4).nullable().optional(),
       conversionRate: z.coerce.number().nullable().optional(),
       notes: z.string().optional(),
     }),

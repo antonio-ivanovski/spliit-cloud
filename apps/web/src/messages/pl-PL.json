@@ -467,8 +467,7 @@
         "perDateTitle": "Konwersja wg daty",
         "rateDateLabel": "Data kursu",
         "ratesError": "Nie udało się pobrać kursów wymiany. Sprawdź połączenie i spróbuj ponownie.",
-        "refresh": "Odśwież",
-        "viaFrankfurter": "za pośrednictwem Frankfurter"
+        "refresh": "Odśwież"
       }
     },
     "Importable": {
@@ -738,7 +737,6 @@
       "useApi": "Użyj kursów z Frankfurter",
       "useCustom": "Użyj własnego kursu",
       "label": "Kurs wymiany",
-      "providerNote": "Kursy są dostarczane przez https://frankfurter.dev/ i ich API.",
       "futureDateUsesToday": "Ten wydatek jest w przyszłości, zostanie użyty dzisiejszy kurs wymiany."
     },
     "conversionRateState": {
@@ -751,7 +749,8 @@
       "noDate": "Wprowadź datę wydatku, aby uzyskać kurs wymiany.",
       "dateMismatch": "Kursy z daty: {date}",
       "refresh": "Odśwież",
-      "customRate": "Używany kurs niestandardowy"
+      "customRate": "Używany kurs niestandardowy",
+      "via": "przez {currencies}"
     },
     "isReimbursementField": {
       "label": "To płatność rozliczeniowa"
@@ -1595,6 +1594,27 @@
       },
       "ZMW": {
         "name": "Kwacha zambijska"
+      },
+      "BTC": {
+        "name": "Bitcoin"
+      },
+      "DOGE": {
+        "name": "Dogecoin"
+      },
+      "ETH": {
+        "name": "Ethereum"
+      },
+      "LTC": {
+        "name": "Litecoin"
+      },
+      "SAT": {
+        "name": "Sats"
+      },
+      "SOL": {
+        "name": "Solana"
+      },
+      "XRP": {
+        "name": "XRP"
       }
     }
   },
@@ -2347,12 +2367,12 @@
     "swap": "Zamień waluty",
     "rateError": "Nie można załadować kursu wymiany.",
     "rateInfo": "1 {from} = {rate} {to}",
-    "providerNote": "Kursy z Frankfurter",
     "createIn": "Utwórz wydatek w…",
     "noGroups": "Nie znaleziono kwalifikujących się grup.",
     "staleRate": "Kurs z:",
     "fromLabel": "Z",
-    "toLabel": "Na"
+    "toLabel": "Na",
+    "via": "przez {currencies}"
   },
   "LanguageSwitcher": {
     "title": "Wybierz język",
@@ -2658,5 +2678,16 @@
     "originalAmountLabel": "Kwota pierwotna",
     "expenseColumnLabel": "Wydatek",
     "categoryColumnLabel": "Kategoria"
+  },
+  "CurrencyRateProviders": {
+    "frankfurter": "Frankfurter",
+    "coinbase": "Coinbase",
+    "bridged": "przez {currencies} (<providers></providers>)",
+    "direct": {
+      "frankfurter": "Kurs z <provider></provider>",
+      "coinbase": "Kurs z <provider></provider>"
+    },
+    "fallbackPrefix": "Kursy z",
+    "fallbackSeparator": " i "
   }
 }

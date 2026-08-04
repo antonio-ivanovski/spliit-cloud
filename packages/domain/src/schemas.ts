@@ -14,8 +14,10 @@ const groupFormFields = {
   information: z.string().optional(),
   currency: z.string().min(1, { error: 'min1' }).max(5, { error: 'max5' }),
   currencyCode: z
-    .union([z.string().length(3).nullish(), z.literal('')])
-    .describe('ISO-4217 3-letter code, or empty string for custom currencies'),
+    .union([z.string().min(3).max(4).nullish(), z.literal('')])
+    .describe(
+      'ISO-4217 3-letter code or 3–4 char crypto ticker, or empty for custom',
+    ),
   participants: z
     .array(
       z.object({
@@ -630,7 +632,10 @@ export const expenseFormInputSchema = z
       // Major-unit ceiling: $10,000,000 equivalent (matches the prior
       // 10_000_000_00 minor-unit ceiling; same error key for i18n).
       .refine((amount) => amount <= 10_000_000, 'amountTenMillion'),
-    originalCurrency: z.union([z.string().length(3).nullish(), z.literal('')]),
+    originalCurrency: z.union([
+      z.string().min(3).max(4).nullish(),
+      z.literal(''),
+    ]),
     conversionRate: z.coerce
       .number()
       .refine((r) => !Number.isNaN(r), 'invalidNumber')
@@ -874,11 +879,11 @@ export const expenseApiSchema = z
       .number()
       .int()
       .refine((amount) => amount != 0, 'amountNotZero')
-      // 1,000,000,000 minor units = $10,000,000 (decimal_digits=2).
-      // Same error key as the form schema's `amountTenMillion`.
-      .refine((amount) => amount <= 1_000_000_000, 'amountTenMillion')
+      // Prisma Int max (~2.1e9). For decimal_digits=2 this is ~$21M; for BTC
+      // (8 digits) ~21 BTC. Form major-unit ceiling stays 10_000_000.
+      .refine((amount) => amount <= 2_147_483_647, 'amountTenMillion')
       .describe(
-        'Integer minor units of the expense currency (e.g. cents), not decimal. Max 1,000,000,000.',
+        'Integer minor units of the expense currency (e.g. cents), not decimal. Max Int32.',
       ),
     conversion: optionalExpenseConversionSchema.describe(
       'Optional FX conversion to the ledger base currency. Absent means same currency as the group.',
