@@ -66,6 +66,7 @@ vi.mock('@/trpc/client', () => {
       useUtils: () => ({
         invitations: {
           list: { invalidate: vi.fn().mockResolvedValue(undefined) },
+          listForAccount: { invalidate: vi.fn().mockResolvedValue(undefined) },
         },
         groups: {
           get: { invalidate: vi.fn().mockResolvedValue(undefined) },
@@ -100,6 +101,18 @@ vi.mock('@/trpc/client', () => {
             createLinkMutationOnSuccess = opts?.onSuccess ?? null
             return { mutateAsync: mockCreateLinkMutation, isPending: false }
           },
+        },
+        updatePending: {
+          useMutation: () => ({
+            mutateAsync: vi.fn(),
+            isPending: false,
+          }),
+        },
+        regenerateLink: {
+          useMutation: () => ({
+            mutateAsync: vi.fn(),
+            isPending: false,
+          }),
         },
         list: {
           useQuery: () => ({ data: mockInvitationsData, isLoading: false }),

@@ -30,6 +30,7 @@ describe('activityTypeSchema', () => {
       'GROUP_ARCHIVED',
       'GROUP_UNARCHIVED',
       'INVITATION_CREATED',
+      'INVITATION_UPDATED',
       'INVITATION_REVOKED',
       'INVITATION_ACCEPTED',
       'INVITATION_DECLINED',
@@ -184,6 +185,39 @@ describe('invitationActivityDataSchema', () => {
       role: 'MEMBER',
     })
     expect(result.success).toBe(true)
+  })
+
+  it('accepts an update payload with display-safe changes', () => {
+    const result = invitationActivityDataSchema.safeParse({
+      kind: 'invitation',
+      displayLabel: 'Bob',
+      changedFields: ['deliveryType', 'destination', 'displayName', 'role'],
+      changes: [
+        { field: 'deliveryType', before: 'EMAIL', after: 'LINK' },
+        { field: 'destination', before: 'bob@example.com', after: null },
+        { field: 'displayName', before: 'Bob', after: 'Bobby' },
+        { field: 'role', before: 'MEMBER', after: 'ADMIN' },
+      ],
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts a credential-rotation change without any value payload', () => {
+    const result = invitationActivityDataSchema.safeParse({
+      kind: 'invitation',
+      displayLabel: 'Anyone',
+      changedFields: ['credential'],
+      changes: [{ field: 'credential', after: 'rotated' }],
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects unknown invitation change fields', () => {
+    const result = invitationActivityDataSchema.safeParse({
+      kind: 'invitation',
+      changes: [{ field: 'tokenHash', before: 'x', after: 'y' }],
+    })
+    expect(result.success).toBe(false)
   })
 })
 

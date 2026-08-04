@@ -16,9 +16,13 @@ export {
   acceptInvitation,
   assertCanAcceptEmailInvitation,
   assertCanDeclineEmailInvitation,
+  assertNoConflictingEmailInvitation,
+  assertNotExistingMember,
+  assertNotInvitingSelf,
   createEmailInvitation,
   createInvitation,
   declineInvitation,
+  findPendingEmailInvitation,
   getRevokeInvitationPreview,
   listGroupInvitations,
   listPendingEmailInvitationsForAccount,
@@ -41,3 +45,13 @@ export {
 } from './link-invitations'
 
 export { reconcileMemberLedgerParticipant } from './ledger-reconciliation'
+
+export {
+  regenerateLinkInvitation,
+  updatePendingInvitation,
+  type PendingInvitationDelivery,
+  type RegenerateLinkInvitationInput,
+  type RegenerateLinkInvitationResult,
+  type UpdatePendingInvitationInput,
+  type UpdatePendingInvitationResult,
+} from './manage-invitations'

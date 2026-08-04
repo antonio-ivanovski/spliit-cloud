@@ -352,7 +352,9 @@
         "emailInvitesTitle": "Zaproszenia e-mail wysłane",
         "emailInvitesDescription": "Serwer wysłał e-mail do następujących osób. Zobaczą baner Akceptuj/Odrzuć na stronie grupy po zalogowaniu.",
         "shareTitle": "Dołącz do mojej grupy Spliit",
-        "shareText": "Dołącz do naszej grupy wydatków na Spliit Cloud — {name}. Otwórz ten link, aby zaakceptować: {url}"
+        "shareText": "Dołącz do naszej grupy wydatków na Spliit Cloud — {name}. Otwórz ten link, aby zaakceptować: {url}",
+        "copyLink": "Kopiuj link zaproszenia",
+        "copied": "Skopiowano"
       },
       "Mapping": {
         "Errors": {
@@ -1655,7 +1657,8 @@
         "share": "Udostępnij link zaproszenia",
         "shareTitle": "Dołącz do {groupName} w Spliit Cloud",
         "shareText": "Właśnie utworzyłem grupę {groupName} dla naszych wspólnych wydatków w Spliit Cloud. Oto jednorazowy link zaproszenia — otwórz go, aby dołączyć:\n{inviteUrl}",
-        "generateNew": "Wygeneruj nowy link"
+        "generateNew": "Wygeneruj nowy link",
+        "copyLink": "Kopiuj link"
       },
       "emailDescription": "Wyślij zaproszenie e-mailem. Zaproszona osoba dołączy po zaakceptowaniu z pasującego konta.",
       "linkDescription": "Wygeneruj jednorazowy link, za pomocą którego można dołączyć do grupy. Link przestanie działać po pierwszym zaakceptowaniu.",
@@ -1678,11 +1681,15 @@
       "created": "Zaproszenie wysłane na {email}.",
       "link": {
         "type": "Jednorazowy link",
-        "fallbackLabel": "Link zaproszenia"
+        "fallbackLabel": "Link zaproszenia",
+        "anyoneWithLink": "Każdy z linkiem",
+        "expiresOn": "Link wygasa {date}",
+        "expired": "Wygasło"
       },
       "email": {
         "type": "Zaproszenie e-mail"
-      }
+      },
+      "updatedOn": "Zaktualizowano {date}"
     },
     "changeRoleAria": "Zmień rolę",
     "remove": "Usuń",
@@ -1806,6 +1813,34 @@
       "validation": "Dodaj nazwę i co najmniej dwóch uczestników.",
       "loadError": "Nie udało się wczytać podgrup.",
       "disableAria": "Wyłącz podgrupy"
+    },
+    "manage": {
+      "manageButton": "Zarządzaj",
+      "title": "Zarządzaj zaproszeniem",
+      "description": "Zmiany dotyczą oczekującego zaproszenia i zachowują wszystkie wydatki zarejestrowane dla {name}.",
+      "emailLabel": "Adres e-mail",
+      "emailPlaceholder": "konto@przyklad.pl",
+      "emailChangeWarning": "Obecny odbiorca nie będzie już mógł zaakceptować tego zaproszenia.",
+      "nameLabel": "Wyświetlana nazwa",
+      "profileNameNote": "Używa ich nazwy profilu na Spliit",
+      "saveChanges": "Zapisz zmiany",
+      "updateSend": "Zaktualizuj i wyślij",
+      "switchToEmailSend": "Przełącz i wyślij zaproszenie",
+      "switchToLinkGenerate": "Przełącz i wygeneruj link",
+      "saved": "Zmiany zapisane",
+      "cancel": "Anuluj",
+      "done": "Gotowe",
+      "regenerateWarning": "Bieżący link natychmiast przestanie działać.",
+      "regenerateDescription": "Zostanie wygenerowany nowy link z nowym 30-dniowym terminem ważności. Zaproszenie i jego wydatki zostaną zachowane.",
+      "linkReadyTitle": "Nowy link gotowy",
+      "linkReadyDescription": "Udostępnij go osobie, którą chcesz zaprosić.",
+      "linkReadyWarning": "Skopiuj go teraz — nie będziesz mógł go ponownie zobaczyć.",
+      "emailInvalid": "Wprowadź prawidłowy adres e-mail.",
+      "linkNotShown": "Link zaproszenia nie jest tutaj wyświetlany. Jeśli chcesz udostępnić go ponownie, użyj na liście opcji „Wygeneruj nowy link”.",
+      "switchToLinkNote": "Zapisz, aby zamienić to zaproszenie na link. Zaproszenie e-mail przestanie działać."
+    },
+    "regenerate": {
+      "title": "Wygeneruj nowy link"
     }
   },
   "AccountSettings": {
@@ -2039,7 +2074,15 @@
       "created": "{participant} zaprosił {target}",
       "revoked": "{participant} anulował zaproszenie dla {target}",
       "accepted": "{target} przyjął zaproszenie",
-      "declined": "{target} odrzucił zaproszenie"
+      "declined": "{target} odrzucił zaproszenie",
+      "updated": "{participant} zaktualizował zaproszenie dla {target}",
+      "changedFields": {
+        "deliveryType": "Sposób dostarczenia",
+        "destination": "Odbiorca",
+        "displayName": "Imię",
+        "role": "Rola",
+        "credential": "Link zaproszenia"
+      }
     },
     "fallback": "Aktywność została zarejestrowana",
     "unknownActor": "Ktoś",
@@ -2123,7 +2166,9 @@
     "friendsEmpty": "Dodaj znajomego, wpisując jego adres e-mail, lub udostępnij link z zaproszeniem.",
     "infoLabel": "Informacje (opcjonalnie)",
     "infoPlaceholder": "Dodaj kontekst, np. „Wydatki ze współlokatorem“",
-    "createError": "Nie udało się utworzyć wydatków ze znajomą osobą"
+    "createError": "Nie udało się utworzyć wydatków ze znajomą osobą",
+    "copyInviteLink": "Kopiuj link zaproszenia",
+    "copiedInviteLink": "Link zaproszenia skopiowany"
   },
   "BulkCategorize": {
     "title": "Zbiorcza kategoryzacja",

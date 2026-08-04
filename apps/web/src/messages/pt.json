@@ -347,7 +347,9 @@
         "emailInvitesTitle": "Convites por e-mail enviados",
         "emailInvitesDescription": "O servidor enviou e-mail para as seguintes pessoas. Elas verão um banner Aceitar/Recusar na página do grupo quando fizerem login.",
         "shareTitle": "Entre no meu grupo Spliit",
-        "shareText": "Entre no nosso grupo de despesas no Spliit Cloud — {name}. Abra este link para aceitar: {url}"
+        "shareText": "Entre no nosso grupo de despesas no Spliit Cloud — {name}. Abra este link para aceitar: {url}",
+        "copyLink": "Copiar ligação de convite",
+        "copied": "Copiada"
       },
       "Mapping": {
         "Errors": {
@@ -1645,7 +1647,8 @@
         "share": "Partilhar ligação de convite",
         "shareTitle": "Junta-te a {groupName} no Spliit Cloud",
         "shareText": "Acabei de criar {groupName} para as nossas despesas partilhadas no Spliit Cloud. Aqui está uma ligação de convite única — abre-a para te juntares:\n{inviteUrl}",
-        "generateNew": "Gerar nova ligação"
+        "generateNew": "Gerar nova ligação",
+        "copyLink": "Copiar ligação"
       },
       "tab": {
         "email": "E-mail",
@@ -1670,11 +1673,15 @@
       "created": "Convite enviado para {email}.",
       "link": {
         "type": "Ligação de utilização única",
-        "fallbackLabel": "Ligação de convite"
+        "fallbackLabel": "Ligação de convite",
+        "anyoneWithLink": "Qualquer pessoa com a ligação",
+        "expiresOn": "A ligação expira a {date}",
+        "expired": "Expirado"
       },
       "email": {
         "type": "Convite por email"
-      }
+      },
+      "updatedOn": "Atualizado em {date}"
     },
     "changeRoleAria": "Alterar função",
     "remove": "Remover",
@@ -1797,6 +1804,34 @@
       "validation": "Adiciona um nome e pelo menos dois participantes.",
       "loadError": "Não foi possível carregar os subgrupos.",
       "disableAria": "Desativar Subgrupos"
+    },
+    "manage": {
+      "manageButton": "Gerir",
+      "title": "Gerir convite",
+      "description": "As alterações afetam o convite pendente e preservam quaisquer despesas registadas para {name}.",
+      "emailLabel": "Endereço de e-mail",
+      "emailPlaceholder": "account@example.com",
+      "emailChangeWarning": "O destinatário atual deixará de poder aceitar este convite.",
+      "nameLabel": "Nome de apresentação",
+      "profileNameNote": "Utiliza o nome do respetivo perfil Spliit",
+      "saveChanges": "Guardar alterações",
+      "updateSend": "Atualizar e enviar",
+      "switchToEmailSend": "Mudar e enviar convite",
+      "switchToLinkGenerate": "Mudar e gerar ligação",
+      "saved": "Alterações guardadas",
+      "cancel": "Cancelar",
+      "done": "Concluído",
+      "regenerateWarning": "A ligação atual deixará de funcionar imediatamente.",
+      "regenerateDescription": "Será gerada uma nova ligação válida por 30 dias. O convite e as respetivas despesas serão mantidos.",
+      "linkReadyTitle": "Nova ligação pronta",
+      "linkReadyDescription": "Partilhe-a com a pessoa que pretende convidar.",
+      "linkReadyWarning": "Copie-a agora — não poderá voltar a vê-la.",
+      "emailInvalid": "Insere um endereço de e-mail válido.",
+      "linkNotShown": "A ligação de convite não é apresentada aqui. Se precisar de partilhá-la novamente, utilize \"Gerar nova ligação\" na lista.",
+      "switchToLinkNote": "Guarda para converter este convite numa ligação. O convite por email deixará de funcionar."
+    },
+    "regenerate": {
+      "title": "Gerar nova ligação"
     }
   },
   "AccountSettings": {
@@ -2030,7 +2065,15 @@
       "created": "{participant} convidou {target}",
       "revoked": "{participant} revogou o convite a {target}",
       "accepted": "{target} aceitou o convite",
-      "declined": "{target} recusou o convite"
+      "declined": "{target} recusou o convite",
+      "updated": "{participant} atualizou o convite para {target}",
+      "changedFields": {
+        "deliveryType": "Método de envio",
+        "destination": "Destinatário",
+        "displayName": "Nome",
+        "role": "Função",
+        "credential": "Ligação de convite"
+      }
     },
     "fallback": "Uma atividade foi registada",
     "unknownActor": "Alguém",
@@ -2113,7 +2156,9 @@
     "friendsEmpty": "Adiciona um amigo introduzindo o e-mail dele ou partilha uma ligação para o convidar.",
     "infoLabel": "Informação (opcional)",
     "infoPlaceholder": "Adiciona contexto, por exemplo «Despesas de casa»",
-    "createError": "Não foi possível criar as despesas com um amigo"
+    "createError": "Não foi possível criar as despesas com um amigo",
+    "copyInviteLink": "Copiar ligação de convite",
+    "copiedInviteLink": "Ligação de convite copiada"
   },
   "BulkCategorize": {
     "title": "Categorização em lote",

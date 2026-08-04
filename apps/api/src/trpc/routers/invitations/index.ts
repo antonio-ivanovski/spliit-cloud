@@ -3,6 +3,7 @@ import { z } from 'zod'
 
 import {
   GroupInvitationStatus,
+  GroupInvitationType,
   GroupType,
   prisma,
   type GroupRole,
@@ -12,9 +13,13 @@ import {
   canCreateInvitationWithRole,
   canRevokeInvitation,
 } from '../../../lib/api/resource-permissions'
-import { getPlaceholderEmailDisplayName } from '../../../lib/invitations/display'
+import {
+  getPlaceholderEmailDisplayName,
+  isPlaceholderEmail,
+} from '../../../lib/invitations/display'
 import {
   RevokeInvitationPreconditionError,
+  InvitationError,
   acceptInvitation,
   createEmailInvitation,
   declineInvitation,
@@ -32,6 +37,10 @@ import {
   getLinkInvitationPreview,
 } from '../../../lib/invitations/link-invitations'
 import {
+  regenerateLinkInvitation,
+  updatePendingInvitation,
+} from '../../../lib/invitations/manage-invitations'
+import {
   createTRPCRouter,
   loadGroupContext,
   protectedProcedure,
@@ -43,7 +52,9 @@ import {
   createLinkInvitationOutputSchema,
   invitationsListOutputSchema,
   linkInvitationPreviewSchema,
+  regenerateLinkInvitationOutputSchema,
   revokeInvitationPreviewSchema,
+  updatePendingInvitationOutputSchema,
 } from '../../outputs/invitations'
 
 // Only ADMIN and MEMBER roles are exposed in the invitation form. The
@@ -71,26 +82,32 @@ export const invitationsRouter = createTRPCRouter({
     .input(z.object({ groupId: z.string().min(1) }))
     .output(invitationsListOutputSchema)
     .query(async ({ input: { groupId }, ctx }) => {
-      const { group, member } = await loadGroupContext({
-        groupId,
-        accountId: ctx.auth.user.id,
-      })
-      const allInvitations = await listGroupInvitations(groupId)
+      const [{ group, member }, allInvitations] = await Promise.all([
+        loadGroupContext({
+          groupId,
+          accountId: ctx.auth.user.id,
+        }),
+        listGroupInvitations(groupId),
+      ])
       const invitations = allInvitations.filter(
         (invitation) =>
           invitation.status === GroupInvitationStatus.PENDING &&
           (member.role === 'ADMIN' ||
             invitation.invitedById === ctx.auth.user.id),
       )
-      const unusedParticipantIds =
+      const [unusedParticipantIds, recipientProfiles] = await Promise.all([
         member.role === 'ADMIN'
-          ? new Set<string>()
-          : await getUnusedInvitationParticipantIds({
+          ? Promise.resolve(new Set<string>())
+          : getUnusedInvitationParticipantIds({
               groupId,
               ledgerParticipantIds: invitations.map(
                 (invitation) => invitation.ledgerParticipantId,
               ),
-            })
+            }),
+        resolveRecipientProfiles(invitations),
+      ])
+      const canManageGroup =
+        !group.archived && group.groupType !== GroupType.FRIEND
       return {
         invitations: invitations.map((invitation) => ({
           ...invitation,
@@ -106,6 +123,12 @@ export const invitationsRouter = createTRPCRouter({
                   : invitation.ledgerParticipantId === null ||
                     unusedParticipantIds.has(invitation.ledgerParticipantId),
             }),
+          canManage:
+            canManageGroup &&
+            (member.role === 'ADMIN' ||
+              invitation.invitedById === ctx.auth.user.id),
+          recipientProfile:
+            recipientProfiles.get(invitation.email.toLowerCase()) ?? null,
         })),
       }
     }),
@@ -216,7 +239,7 @@ export const invitationsRouter = createTRPCRouter({
     .input(
       z.object({
         groupId: z.string().min(1),
-        email: z.string().email(),
+        email: z.email(),
         role: invitationRoleSchema.default('MEMBER'),
         // Pending-only label that wins over the email wherever a
         // pending invitee is rendered.
@@ -255,24 +278,25 @@ export const invitationsRouter = createTRPCRouter({
           message: 'friendLedgerFull',
         })
       }
-      const invitation = await createEmailInvitation({
-        groupId: input.groupId,
-        email: input.email,
-        role: input.role as GroupRole,
-        inviterAccountId: ctx.auth.user.id,
-        temporaryName: input.temporaryName ?? null,
-      })
-
       // Differentiate the email body by whether the recipient already has an
       // account on this Spliit Cloud instance. The DB row is the source of
       // truth: the in-app UI will surface the invitation to existing users
       // regardless of email delivery, so we never fail the mutation on send.
-      const existingAccount = await prisma.account.findFirst({
-        where: {
-          email: { equals: input.email.toLowerCase(), mode: 'insensitive' },
-        },
-        select: { id: true },
-      })
+      const [invitation, existingAccount] = await Promise.all([
+        createEmailInvitation({
+          groupId: input.groupId,
+          email: input.email,
+          role: input.role as GroupRole,
+          inviterAccountId: ctx.auth.user.id,
+          temporaryName: input.temporaryName ?? null,
+        }),
+        prisma.account.findFirst({
+          where: {
+            email: { equals: input.email.toLowerCase(), mode: 'insensitive' },
+          },
+          select: { id: true },
+        }),
+      ])
       if (!existingAccount) {
         await sendInvitationEmail({
           invitationId: invitation.id,
@@ -467,7 +491,266 @@ export const invitationsRouter = createTRPCRouter({
       )
       return { invitations }
     }),
+
+  /**
+   * Update a pending invitation in place: retarget the email, switch between
+   * email and link delivery, or edit the pending name/role. The invitation row
+   * and its materialized ledger participant are preserved.
+   *
+   * Admins can manage any listed invitation and assign ADMIN|MEMBER; members
+   * can only manage invitations they created and only assign MEMBER. Archived
+   * and FRIEND groups are read-only.
+   */
+  updatePending: protectedProcedure
+    .input(
+      z.object({
+        invitationId: z.string().min(1),
+        role: invitationRoleSchema,
+        temporaryName: z.string().trim().min(1).max(120).optional(),
+        delivery: z.discriminatedUnion('type', [
+          z.object({ type: z.literal('EMAIL'), email: z.email() }),
+          z.object({ type: z.literal('LINK') }),
+        ]),
+      }),
+    )
+    .output(updatePendingInvitationOutputSchema)
+    .mutation(async ({ input, ctx }) => {
+      const invitation = await loadInvitationWithGroup(input.invitationId)
+      const { group, member } = await loadGroupContext({
+        groupId: invitation.groupId,
+        accountId: ctx.auth.user.id,
+      })
+      assertCanManagePendingInvitation({
+        group,
+        memberRole: member.role,
+        accountId: ctx.auth.user.id,
+        invitation,
+        requestedRole: input.role,
+      })
+      try {
+        const result = await updatePendingInvitation({
+          invitationId: input.invitationId,
+          groupId: group.id,
+          role: input.role,
+          temporaryName: input.temporaryName ?? null,
+          delivery: input.delivery,
+          actorAccountId: ctx.auth.user.id,
+          inviterDisplayName:
+            ctx.auth.user.name ||
+            getPlaceholderEmailDisplayName(ctx.auth.user.email) ||
+            ctx.auth.user.email,
+          inviterRole: member.role,
+        })
+        return {
+          invitation: {
+            ...result.invitation,
+            createdAt: invitation.createdAt,
+            canRevoke: await resolveCanRevoke({
+              group,
+              memberRole: member.role,
+              accountId: ctx.auth.user.id,
+              invitedById: invitation.invitedById,
+              groupId: group.id,
+              ledgerParticipantId: result.invitation.ledgerParticipantId,
+            }),
+            canManage: true,
+            recipientProfile: await resolveSingleRecipientProfile(
+              result.invitation,
+            ),
+          },
+          inviteUrl: result.inviteUrl,
+        }
+      } catch (err) {
+        throw mapUpdateError(err)
+      }
+    }),
+
+  /**
+   * Rotate a pending link invitation's credential. The old URL stops working
+   * immediately; the new shareable URL is returned exactly once.
+   */
+  regenerateLink: protectedProcedure
+    .input(z.object({ invitationId: z.string().min(1) }))
+    .output(regenerateLinkInvitationOutputSchema)
+    .mutation(async ({ input, ctx }) => {
+      const invitation = await loadInvitationWithGroup(input.invitationId)
+      const { group, member } = await loadGroupContext({
+        groupId: invitation.groupId,
+        accountId: ctx.auth.user.id,
+      })
+      assertCanManagePendingInvitation({
+        group,
+        memberRole: member.role,
+        accountId: ctx.auth.user.id,
+        invitation,
+        requestedRole: undefined,
+      })
+      try {
+        const result = await regenerateLinkInvitation({
+          invitationId: input.invitationId,
+          groupId: group.id,
+          actorAccountId: ctx.auth.user.id,
+        })
+        return {
+          invitation: {
+            ...result.invitation,
+            createdAt: invitation.createdAt,
+            canRevoke: await resolveCanRevoke({
+              group,
+              memberRole: member.role,
+              accountId: ctx.auth.user.id,
+              invitedById: invitation.invitedById,
+              groupId: group.id,
+              ledgerParticipantId: result.invitation.ledgerParticipantId,
+            }),
+            canManage: true,
+            recipientProfile: await resolveSingleRecipientProfile(
+              result.invitation,
+            ),
+          },
+          inviteUrl: result.inviteUrl,
+        }
+      } catch (err) {
+        throw mapUpdateError(err)
+      }
+    }),
 })
+
+async function loadInvitationWithGroup(invitationId: string) {
+  const invitation = await prisma.groupInvitation.findUnique({
+    where: { id: invitationId },
+    include: { group: { select: { archived: true, groupType: true } } },
+  })
+  if (!invitation) {
+    throw new TRPCError({
+      code: 'NOT_FOUND',
+      message: 'Invitation not found',
+    })
+  }
+  return invitation
+}
+
+function assertCanManagePendingInvitation(args: {
+  group: { archived: boolean; groupType: GroupType }
+  memberRole: GroupRole
+  accountId: string
+  invitation: {
+    groupId: string
+    invitedById: string
+    status: GroupInvitationStatus
+  }
+  requestedRole?: GroupRole | undefined
+}) {
+  if (args.group.archived) {
+    throw new TRPCError({
+      code: 'FORBIDDEN',
+      message: 'Archived groups cannot manage invitations',
+    })
+  }
+  if (args.group.groupType === GroupType.FRIEND) {
+    throw new TRPCError({
+      code: 'FORBIDDEN',
+      message: 'friendLedgerNotEditable',
+    })
+  }
+  if (args.invitation.status !== GroupInvitationStatus.PENDING) {
+    throw new TRPCError({
+      code: 'FORBIDDEN',
+      message: 'Only pending invitations can be managed',
+    })
+  }
+  if (
+    args.memberRole !== 'ADMIN' &&
+    args.invitation.invitedById !== args.accountId
+  ) {
+    throw new TRPCError({
+      code: 'FORBIDDEN',
+      message: 'You can only manage invitations you created',
+    })
+  }
+  if (args.memberRole !== 'ADMIN' && args.requestedRole === 'ADMIN') {
+    throw new TRPCError({
+      code: 'FORBIDDEN',
+      message: 'Members can only assign the member role',
+    })
+  }
+}
+
+async function resolveRecipientProfiles(
+  invitations: Array<{ email: string }>,
+): Promise<
+  Map<string, { id: string; name: string | null; image: string | null }>
+> {
+  const realEmails = new Set<string>()
+  for (const invitation of invitations) {
+    const email = invitation.email.toLowerCase()
+    if (!isPlaceholderEmail(email)) realEmails.add(email)
+  }
+  if (realEmails.size === 0) return new Map()
+  const accounts = await prisma.account.findMany({
+    where: { email: { in: [...realEmails], mode: 'insensitive' } },
+    select: { id: true, name: true, image: true, email: true },
+  })
+  return new Map(
+    accounts.map((account) => [
+      account.email.toLowerCase(),
+      { id: account.id, name: account.name, image: account.image },
+    ]),
+  )
+}
+
+async function resolveSingleRecipientProfile(args: {
+  type: GroupInvitationType
+  email: string
+}): Promise<{ id: string; name: string | null; image: string | null } | null> {
+  if (args.type === GroupInvitationType.LINK) return null
+  if (isPlaceholderEmail(args.email)) return null
+  const account = await prisma.account.findFirst({
+    where: { email: { equals: args.email, mode: 'insensitive' } },
+    select: { id: true, name: true, image: true },
+  })
+  return account
+}
+
+/**
+ * Mirror the `list` procedure's canRevoke computation for mutation outputs so
+ * the response never lies about revoke eligibility while the row is pending.
+ */
+async function resolveCanRevoke(args: {
+  group: { archived: boolean }
+  memberRole: GroupRole
+  accountId: string
+  invitedById: string
+  groupId: string
+  ledgerParticipantId: string | null
+}): Promise<boolean> {
+  if (args.group.archived) return false
+  return canRevokeInvitation({
+    role: args.memberRole,
+    accountId: args.accountId,
+    invitedById: args.invitedById,
+    isUnused:
+      args.memberRole === 'ADMIN'
+        ? true
+        : await isInvitationParticipantUnused({
+            groupId: args.groupId,
+            ledgerParticipantId: args.ledgerParticipantId,
+          }),
+  })
+}
+
+function mapUpdateError(err: unknown): TRPCError {
+  if (err instanceof TRPCError) return err
+  if (err instanceof InvitationError) {
+    return new TRPCError({ code: 'BAD_REQUEST', message: err.message })
+  }
+  const message =
+    err instanceof Error ? err.message : 'Unable to update invitation'
+  if (/not found/i.test(message)) {
+    return new TRPCError({ code: 'NOT_FOUND', message })
+  }
+  return new TRPCError({ code: 'BAD_REQUEST', message })
+}
 
 async function assertInvitationRevocationAllowed(args: {
   groupId: string

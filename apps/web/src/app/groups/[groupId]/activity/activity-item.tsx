@@ -164,6 +164,22 @@ function useMessage(activity: Activity) {
             }),
             changes: null,
           }
+        case 'INVITATION_UPDATED':
+          return {
+            message: t('invitation.updated', {
+              participant: actor,
+              target: displayLabel,
+            }),
+            changes:
+              data.changes?.map((change) => ({
+                field: change.field,
+                label: t(`invitation.changedFields.${change.field}` as never, {
+                  defaultValue: change.field,
+                }),
+                before: change.before ?? null,
+                after: change.after ?? null,
+              })) ?? null,
+          }
         case 'INVITATION_ACCEPTED':
           return {
             message: t('invitation.accepted', {

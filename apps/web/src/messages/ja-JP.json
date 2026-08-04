@@ -337,7 +337,9 @@
         "emailInvitesTitle": "メール招待を送信しました",
         "emailInvitesDescription": "サーバーが以下の人々にメールを送信しました。ログインすると、グループページに承認/拒否バナーが表示されます。",
         "shareTitle": "私の Spliit グループに参加",
-        "shareText": "Spliit Cloud の支出グループに参加 — {name}。このリンクを開いて承認: {url}"
+        "shareText": "Spliit Cloud の支出グループに参加 — {name}。このリンクを開いて承認: {url}",
+        "copyLink": "招待リンクをコピー",
+        "copied": "コピーしました"
       },
       "Mapping": {
         "Errors": {
@@ -1636,7 +1638,8 @@
         "share": "招待リンクを共有",
         "shareTitle": "Spliit Cloudの{groupName}に参加",
         "shareText": "Spliit Cloudで共同の出費のために{groupName}を作成しました。一回限りの招待リンクはこちらです — 開いて参加してください：\n{inviteUrl}",
-        "generateNew": "新しいリンクを生成"
+        "generateNew": "新しいリンクを生成",
+        "copyLink": "リンクをコピー"
       },
       "friendsDescription": "以前に共有したグループから友達を招待します。",
       "selectFriendPlaceholder": "友達を選択…",
@@ -1655,11 +1658,15 @@
       "created": "{email}に招待を送信しました。",
       "link": {
         "type": "一回限りリンク",
-        "fallbackLabel": "招待リンク"
+        "fallbackLabel": "招待リンク",
+        "anyoneWithLink": "リンクを知っている全員",
+        "expiresOn": "リンクの有効期限：{date}",
+        "expired": "期限切れ"
       },
       "email": {
         "type": "メール招待"
-      }
+      },
+      "updatedOn": "更新日：{date}"
     },
     "changeRoleAria": "役割を変更",
     "remove": "削除",
@@ -1781,6 +1788,34 @@
       "validation": "名前を入力し、参加者を2人以上選択してください。",
       "loadError": "サブグループを読み込めませんでした。",
       "disableAria": "サブグループを無効化"
+    },
+    "manage": {
+      "manageButton": "管理",
+      "title": "招待を管理",
+      "description": "変更は保留中の招待に反映され、{name}について記録された支出は保持されます。",
+      "emailLabel": "メールアドレス",
+      "emailPlaceholder": "account@example.com",
+      "emailChangeWarning": "現在の招待先は、この招待を承認できなくなります。",
+      "nameLabel": "表示名",
+      "profileNameNote": "Spliitのプロフィール名を使用",
+      "saveChanges": "変更を保存",
+      "updateSend": "更新して送信",
+      "switchToEmailSend": "切り替えて招待を送信",
+      "switchToLinkGenerate": "切り替えてリンクを生成",
+      "saved": "変更を保存しました",
+      "cancel": "キャンセル",
+      "done": "完了",
+      "regenerateWarning": "現在のリンクはすぐに無効になります。",
+      "regenerateDescription": "新しいリンクが生成され、有効期限が30日間に更新されます。招待とその支出は保持されます。",
+      "linkReadyTitle": "新しいリンクの準備ができました",
+      "linkReadyDescription": "招待したい相手と共有してください。",
+      "linkReadyWarning": "今すぐコピーしてください。後で再表示することはできません。",
+      "emailInvalid": "有効なメールアドレスを入力してください。",
+      "linkNotShown": "招待リンクはここには表示されません。再度共有する必要がある場合は、一覧で「新しいリンクを生成」を使用してください。",
+      "switchToLinkNote": "保存すると、この招待がリンクに変換されます。メール招待は使用できなくなります。"
+    },
+    "regenerate": {
+      "title": "新しいリンクを生成"
     }
   },
   "AccountSettings": {
@@ -2014,7 +2049,15 @@
       "created": "{participant}が{target}を招待しました",
       "revoked": "{participant}が{target}への招待を取り消しました",
       "accepted": "{target}が招待を承諾しました",
-      "declined": "{target}が招待を辞退しました"
+      "declined": "{target}が招待を辞退しました",
+      "updated": "{participant}が{target}への招待を更新しました",
+      "changedFields": {
+        "deliveryType": "送信方法",
+        "destination": "招待先",
+        "displayName": "名前",
+        "role": "役割",
+        "credential": "招待リンク"
+      }
     },
     "fallback": "アクティビティが記録されました",
     "unknownActor": "誰か",
@@ -2095,7 +2138,9 @@
     "friendsEmpty": "メールアドレスを入力するか、リンクを共有して友達を追加しましょう。",
     "infoLabel": "情報（任意）",
     "infoPlaceholder": "「ルームメイトの費用」など、説明を追加",
-    "createError": "友人との支出を作成できませんでした"
+    "createError": "友人との支出を作成できませんでした",
+    "copyInviteLink": "招待リンクをコピー",
+    "copiedInviteLink": "招待リンクをコピーしました"
   },
   "BulkCategorize": {
     "title": "一括カテゴリ分類",

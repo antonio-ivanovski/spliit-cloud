@@ -171,3 +171,130 @@ The system SHALL create both members of a `FRIEND`-typed group with role `ADMIN`
 - **THEN** the caller's `GroupMember` SHALL have role `ADMIN` and status `ACTIVE`
 - **AND** the invitation SHALL have role `ADMIN`
 - **AND** on auto-accept, the peer's `GroupMember` SHALL be created with role `ADMIN` and status `ACTIVE`
+
+## ADDED Requirements
+
+### Requirement: Pending invitation management
+The system SHALL allow admins and invitation creators to manage PENDING invitations in place — retarget the recipient email, convert between EMAIL and LINK delivery, edit the pending display name and role, and rotate link credentials — without losing the invitation row, its materialized ledger participant, expenses, balances, or subgroup links.
+
+#### Scenario: List surfaces manage and revoke eligibility
+- **WHEN** a member loads the group members page
+- **THEN** `invitations.list` SHALL return the pending invitations visible to the caller: all invitations for admins, invitations the caller created for members
+- **AND** each row SHALL include `canManage`, `canRevoke`, `recipientProfile` (the account matching the invitation email, when one exists), `ledgerParticipantId`, and `expiresAt`
+
+#### Scenario: Manage permissions by role
+- **WHEN** an admin updates a pending invitation
+- **THEN** the system SHALL allow managing any listed invitation and assigning `ADMIN` or `MEMBER`
+- **WHEN** a member updates a pending invitation they created
+- **THEN** the system SHALL allow managing it but SHALL reject assigning `ADMIN`
+
+#### Scenario: Manage rejected for archived, friend-ledger, and resolved invitations
+- **WHEN** the group is archived, the group is `FRIEND`-typed, or the invitation is not `PENDING`
+- **THEN** the system SHALL reject `updatePending` and `regenerateLink` with FORBIDDEN
+
+#### Scenario: Update validates like create
+- **WHEN** an update retargets the email or switches delivery to EMAIL
+- **THEN** the system SHALL apply the same validations as invitation creation: no self-invite, no existing active member, and no conflicting pending email invitation (excluding the invitation being edited)
+
+#### Scenario: Concurrent resolution cannot race an update
+- **WHEN** an invitation is accepted or revoked while an update is in flight
+- **THEN** the update SHALL fail because the conditional PENDING write updates zero rows
+- **AND** the system SHALL NOT revive or double-accept the invitation
+
+#### Scenario: EMAIL to LINK conversion
+- **WHEN** a pending EMAIL invitation is converted to LINK delivery
+- **THEN** the system SHALL generate a fresh one-time credential and expiry and return the shareable URL exactly once in the response
+
+#### Scenario: LINK to EMAIL conversion
+- **WHEN** a pending LINK invitation is converted to EMAIL delivery
+- **THEN** the system SHALL clear the link credential so the previous URL stops working immediately
+- **AND** the system SHALL send the invitation email to the new recipient
+
+#### Scenario: Metadata-only saves do not resend or rotate
+- **WHEN** only the display name or role changes (or an unchanged EMAIL destination is re-saved)
+- **THEN** the system SHALL NOT resend the invitation email and SHALL NOT rotate an existing link credential
+
+#### Scenario: Invitation update recorded
+- **WHEN** a pending invitation is updated or a link credential is regenerated
+- **THEN** the system SHALL record one secret-free `INVITATION_UPDATED` activity listing the changed fields (delivery type, destination, display name, role, or credential)
+
+### Requirement: Link invitation credential rotation
+The system SHALL support rotating a pending link invitation's credential, invalidating the old URL immediately while preserving the invitation, ledger participant, and related data.
+
+#### Scenario: Regenerate link invalidates the old URL
+- **WHEN** the credential of a pending LINK invitation is regenerated
+- **THEN** the old URL SHALL become unusable immediately (rejected as no longer valid)
+- **AND** the response SHALL return the new shareable URL exactly once with a fresh expiry
+
+#### Scenario: Regenerate rejected for email invitations
+- **WHEN** a caller attempts to regenerate the credential of an EMAIL invitation
+- **THEN** the system SHALL reject the operation
+
+### Requirement: Personal email invitations take precedence over link tokens
+The system SHALL treat a PENDING email invitation for the account's email as the recipient-specific credential over any URL-borne link token for the same group.
+
+#### Scenario: Link acceptance blocked while an email invitation is pending
+- **WHEN** an account with a PENDING email invitation for the group attempts to redeem a link invitation token
+- **THEN** the system SHALL reject the link acceptance, directing the user to their email invitation
+- **AND** the link invitation SHALL remain untouched and usable by other accounts
+
+#### Scenario: Group view surfaces the email invitation
+- **WHEN** a non-member opens the group with a link token in the URL while a PENDING email invitation matches their account email
+- **THEN** `groups.get` SHALL return the email invitation as `currentInvitation` and `linkInviteState` null
+- **AND** the UI SHALL present the email-invitation Accept/Decline banner and SHALL NOT render link-banner copy (inviter name, single-use note, or the link's temporary name)
+
+#### Scenario: Friend ledger auto-accept skipped for email-invited accounts
+- **WHEN** the account has a PENDING email invitation on a `FRIEND`-typed group and opens it via a link token
+- **THEN** the system SHALL NOT auto-accept the link and SHALL present the email invitation instead
+
+### Requirement: Expired link invitations remain listed and manageable
+The system SHALL keep PENDING link invitations whose expiry has passed in the pending list and SHALL allow managing and regenerating them.
+
+#### Scenario: Expired link invitation stays listed with an Expired badge
+- **WHEN** a pending link invitation's `expiresAt` has passed
+- **THEN** the invitation SHALL remain in the pending list and the members UI SHALL mark it as Expired
+- **AND** the invitation SHALL NOT be redeemable until it is regenerated
+
+#### Scenario: Regeneration restores usability
+- **WHEN** an expired link invitation is regenerated
+- **THEN** the new URL SHALL be usable and the old URL SHALL remain dead
+
+### Requirement: Pending invitation management UI
+The system SHALL render pending invitations with per-row management actions and a manage dialog supporting delivery, name, and role edits.
+
+#### Scenario: Row actions
+- **WHEN** a pending invitation row is rendered
+- **THEN** the row SHALL show a Manage action
+- **AND** LINK invitations with `canManage` SHALL additionally show a Generate new link action
+- **AND** rows with `canRevoke` SHALL show a destructive Revoke action
+
+#### Scenario: Manage dialog delivery tabs
+- **WHEN** a manager opens the manage dialog
+- **THEN** the dialog SHALL offer Friends, Email, and Link delivery tabs
+- **AND** selecting a friend SHALL target EMAIL delivery at the friend's account email and profile name
+- **AND** switching between email and link delivery SHALL relabel the save action accordingly (Update & send / Switch & generate link)
+
+#### Scenario: Role control is admin-only
+- **WHEN** the manager is not an admin
+- **THEN** the dialog SHALL NOT render the role control and the save SHALL keep the existing role
+
+#### Scenario: Matched account profile locks the display name
+- **WHEN** the invitation email matches an existing account
+- **THEN** the dialog SHALL show the account profile name as locked rather than editable
+
+#### Scenario: Email change warning
+- **WHEN** the manager changes the destination email or switches a LINK invitation to EMAIL
+- **THEN** the dialog SHALL warn that the current recipient can no longer accept and the invitation email will be (re)sent
+
+#### Scenario: Friends picker excludes members and other pending invitees
+- **WHEN** the friends picker renders
+- **THEN** friends who are already members or already have another pending invitation in the group SHALL be disabled
+- **AND** the friend whose pending invitation is being managed SHALL remain selectable
+
+#### Scenario: Role and friend pickers show human-readable labels
+- **WHEN** a role select or the friend picker is closed
+- **THEN** the trigger SHALL display the translated role label or friend name rather than a raw value or identifier
+
+#### Scenario: Link result is shown once
+- **WHEN** a save generates a new link (EMAIL to LINK conversion or regeneration)
+- **THEN** the dialog SHALL display the shareable URL in a copyable result view with its expiry and a warning that it cannot be shown again

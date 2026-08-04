@@ -6,6 +6,12 @@ import {
   groupRoleSchema,
 } from './common'
 
+export const recipientProfileSchema = z.object({
+  id: z.string(),
+  name: z.string().nullable(),
+  image: z.string().nullable(),
+})
+
 export const invitationSchema = z.object({
   id: z.string(),
   groupId: z.string(),
@@ -15,9 +21,13 @@ export const invitationSchema = z.object({
   role: groupRoleSchema,
   status: groupInvitationStatusSchema,
   createdAt: z.date(),
+  updatedAt: z.date(),
   expiresAt: z.date().nullable().default(null),
   ledgerParticipantId: z.string().nullable().default(null),
   canRevoke: z.boolean().default(false),
+  canManage: z.boolean().default(false),
+  // Profile of the account matching the invitation email, when one exists.
+  recipientProfile: recipientProfileSchema.nullable().default(null),
 })
 
 export const accountInvitationSchema = invitationSchema.extend({
@@ -65,8 +75,20 @@ export const revokeInvitationPreviewSchema = z.object({
 
 export const createLinkInvitationOutputSchema = z.object({
   invitationId: z.string(),
-  inviteUrl: z.string().url(),
+  inviteUrl: z.url(),
   expiresAt: z.date(),
   temporaryName: z.string().nullable(),
   role: groupRoleSchema,
+})
+
+export const updatePendingInvitationOutputSchema = z.object({
+  invitation: invitationSchema,
+  // One-time shareable URL for `EMAIL -> LINK` conversions. Null for
+  // email/metadata-only saves.
+  inviteUrl: z.url().nullable(),
+})
+
+export const regenerateLinkInvitationOutputSchema = z.object({
+  invitation: invitationSchema,
+  inviteUrl: z.url(),
 })

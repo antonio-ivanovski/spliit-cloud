@@ -3,14 +3,20 @@ import { useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 
-type Props = { text: string }
+type Props = {
+  text: string
+  /** Accessible name for the copy action (required — icon-only button). */
+  ariaLabel: string
+  /** Live-region feedback announced when the copy succeeds. */
+  copiedLabel: string
+}
 
-export function CopyButton({ text }: Props) {
+export function CopyButton({ text, ariaLabel, copiedLabel }: Props) {
   const [copied, setCopied] = useState(false)
 
   useEffect(() => {
     if (copied) {
-      const timeout = setTimeout(() => setCopied(false), 1000)
+      const timeout = setTimeout(() => setCopied(false), 1500)
       return () => {
         setCopied(false)
         clearTimeout(timeout)
@@ -23,12 +29,16 @@ export function CopyButton({ text }: Props) {
       size="icon"
       variant="secondary"
       type="button"
+      aria-label={ariaLabel}
       onClick={() => {
         void navigator.clipboard.writeText(text)
         setCopied(true)
       }}
     >
       {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+      <output aria-live="polite" className="sr-only">
+        {copied ? copiedLabel : ''}
+      </output>
     </Button>
   )
 }

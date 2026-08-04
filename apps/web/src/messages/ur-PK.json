@@ -230,7 +230,15 @@
       "created": "{participant} نے {target} کو دعوت دی",
       "revoked": "{participant} نے {target} کو دعوت منسوخ کر دی",
       "accepted": "{target} نے دعوت قبول کر لی",
-      "declined": "{target} نے دعوت مسترد کر دی"
+      "declined": "{target} نے دعوت مسترد کر دی",
+      "updated": "{participant} نے {target} کی دعوت اپ ڈیٹ کی",
+      "changedFields": {
+        "deliveryType": "ترسیل کا طریقہ",
+        "destination": "وصول کنندہ",
+        "displayName": "نام",
+        "role": "کردار",
+        "credential": "دعوت کا لنک"
+      }
     },
     "member": {
       "left": "{participant} گروپ چھوڑ گیا",
@@ -1509,7 +1517,9 @@
     "friendsEmpty": "ان کے ای میل درج کرکے ایک دوست شامل کریں یا انہیں مدعو کرنے کے لیے لنک شیئر کریں۔",
     "infoLabel": "معلومات (اختیاری)",
     "infoPlaceholder": "'روم میٹ کے اخراجات' جیسا سیاق شامل کریں",
-    "createError": "دوستوں کے اخراجات تخلیق نہیں ہو سکے"
+    "createError": "دوستوں کے اخراجات تخلیق نہیں ہو سکے",
+    "copyInviteLink": "دعوت کا لنک کاپی کریں",
+    "copiedInviteLink": "دعوت کا لنک کاپی ہو گیا"
   },
   "GroupForm": {
     "CurrencyCodeField": {
@@ -1648,7 +1658,9 @@
         "emailInvitesTitle": "ای میل دعوت نامے بھیجے گئے",
         "emailInvitesDescription": "سرور نے درج ذیل لوگوں کو ای میل کیا۔ جب وہ سائن ان کریں گے تو گروپ پیج پر ایک قبول/مسترد بینر دیکھیں گے۔",
         "shareTitle": "Spliit Cloud پر میرے گروپ میں شامل ہوں",
-        "shareText": "Spliit Cloud پر ہمارے اخراجات کے گروپ میں شامل ہوں — {name}۔ قبول کرنے کے لیے یہ لنک کھولیں: {url}"
+        "shareText": "Spliit Cloud پر ہمارے اخراجات کے گروپ میں شامل ہوں — {name}۔ قبول کرنے کے لیے یہ لنک کھولیں: {url}",
+        "copyLink": "دعوت کا لنک کاپی کریں",
+        "copied": "کاپی ہو گیا"
       },
       "Mapping": {
         "Errors": {
@@ -2007,8 +2019,12 @@
       },
       "link": {
         "type": "ایک بار استعمال لنک",
-        "fallbackLabel": "دعوت کا لنک"
-      }
+        "fallbackLabel": "دعوت کا لنک",
+        "anyoneWithLink": "لنک رکھنے والا کوئی بھی",
+        "expiresOn": "لنک {date} کو ختم ہوتا ہے",
+        "expired": "ختم شدہ"
+      },
+      "updatedOn": "{date} کو اپ ڈیٹ ہوا"
     },
     "invite": {
       "title": "رکن کو مدعو کریں",
@@ -2038,7 +2054,8 @@
         "share": "دعوت کا لنک شیئر کریں",
         "shareTitle": "{groupName} میں Spliit Cloud پر شامل ہوں",
         "shareText": "میں نے ابھی {groupName} کو Spliit Cloud پر ہمارے مشترکہ اخراجات کے لیے بنایا ہے۔ یہ ایک بار استعمال ہونے والا دعوت کا لنک ہے — شامل ہونے کے لیے اسے کھولیں:\n{inviteUrl}",
-        "generateNew": ": نیا لنک بنائیں"
+        "generateNew": ": نیا لنک بنائیں",
+        "copyLink": "لنک کاپی کریں"
       },
       "tab": {
         "email": "ای میل",
@@ -2165,6 +2182,34 @@
       "validation": "ایک نام اور کم از کم دو شرکاء شامل کریں۔",
       "loadError": "ذیلی گروپ لوڈ نہیں ہو سکے۔",
       "disableAria": "ذیلی گروپ غیر فعال کریں"
+    },
+    "manage": {
+      "manageButton": "منظم کریں",
+      "title": "دعوت کا انتظام کریں",
+      "description": "تبدیلیاں زیر التواء دعوت پر اثر انداز ہوتی ہیں اور {name} کے لیے درج کردہ اخراجات کو محفوظ رکھتی ہیں۔",
+      "emailLabel": "ای میل ایڈریس",
+      "emailPlaceholder": "account@example.com",
+      "emailChangeWarning": "موجودہ وصول کنندہ اب یہ دعوت قبول نہیں کر سکے گا۔",
+      "nameLabel": "ظاہری نام",
+      "profileNameNote": "اس کے Spliit پروفائل کا نام استعمال کرتا ہے",
+      "saveChanges": "تبدیلیاں محفوظ کریں",
+      "updateSend": "اپ ڈیٹ کریں اور بھیجیں",
+      "switchToEmailSend": "تبدیل کریں اور دعوت بھیجیں",
+      "switchToLinkGenerate": "تبدیل کریں اور لنک بنائیں",
+      "saved": "تبدیلیاں محفوظ ہو گئیں",
+      "cancel": "منسوخ کریں",
+      "done": "مکمل",
+      "regenerateWarning": "موجودہ لنک فوراً کام کرنا بند کر دے گا۔",
+      "regenerateDescription": "نیا لنک 30 دن کی نئی میعاد کے ساتھ بنایا جائے گا۔ دعوت اور اس کے اخراجات محفوظ رہیں گے۔",
+      "linkReadyTitle": "نیا لنک تیار ہے",
+      "linkReadyDescription": "اس شخص کے ساتھ شیئر کریں جسے آپ مدعو کرنا چاہتے ہیں۔",
+      "linkReadyWarning": "ابھی کاپی کریں — آپ دوبارہ اسے نہیں دیکھ سکیں گے۔",
+      "emailInvalid": "ایک درست ای میل ایڈریس درج کریں۔",
+      "linkNotShown": "دعوت کا لنک یہاں نہیں دکھایا گیا ہے۔ اگر آپ کو اسے دوبارہ شیئر کرنا ہو تو فہرست میں \"نیا لنک بنائیں\" استعمال کریں۔",
+      "switchToLinkNote": "اس دعوت کو لنک میں تبدیل کرنے کے لیے محفوظ کریں۔ ای میل دعوت کام کرنا بند کر دے گی۔"
+    },
+    "regenerate": {
+      "title": "نیا لنک بنائیں"
     }
   },
   "Stats": {

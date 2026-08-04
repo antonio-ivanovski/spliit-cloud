@@ -347,7 +347,9 @@
         "emailInvitesTitle": "Invitațiile prin e-mail au fost trimise",
         "emailInvitesDescription": "Serverul a trimis e-mail următoarelor persoane. Acestea vor vedea un banner Acceptați/Refuzați în pagina grupului când se conectează.",
         "shareTitle": "Alăturați-vă grupului meu Spliit",
-        "shareText": "Alăturați-vă grupului nostru de cheltuieli pe Spliit Cloud — {name}. Deschideți acest link pentru a accepta: {url}"
+        "shareText": "Alăturați-vă grupului nostru de cheltuieli pe Spliit Cloud — {name}. Deschideți acest link pentru a accepta: {url}",
+        "copyLink": "Copiază linkul de invitație",
+        "copied": "Copiat"
       },
       "Mapping": {
         "Errors": {
@@ -1642,7 +1644,8 @@
         "share": "Distribuie link-ul de invitație",
         "shareTitle": "Alătură-te grupului {groupName} pe Spliit Cloud",
         "shareText": "Tocmai am creat {groupName} pentru cheltuielile noastre comune pe Spliit Cloud. Acesta este un link de invitație de unică folosință — deschide-l pentru a te alătura:\n{inviteUrl}",
-        "generateNew": "Generează un link nou"
+        "generateNew": "Generează un link nou",
+        "copyLink": "Copiază linkul"
       },
       "tab": {
         "email": "E-mail",
@@ -1670,11 +1673,15 @@
       "created": "Invitație trimisă către {email}.",
       "link": {
         "type": "Link de unică folosință",
-        "fallbackLabel": "Link de invitație"
+        "fallbackLabel": "Link de invitație",
+        "anyoneWithLink": "Oricine are linkul",
+        "expiresOn": "Linkul expiră la {date}",
+        "expired": "Expirat"
       },
       "email": {
         "type": "Invitație prin e-mail"
-      }
+      },
+      "updatedOn": "Actualizat la {date}"
     },
     "changeRoleAria": "Schimbă rolul",
     "remove": "Elimină",
@@ -1797,6 +1804,34 @@
       "validation": "Adaugă un nume și cel puțin doi participanți.",
       "loadError": "Subgrupurile nu au putut fi încărcate.",
       "disableAria": "Dezactivează subgrupurile"
+    },
+    "manage": {
+      "manageButton": "Gestionează",
+      "title": "Gestionează invitația",
+      "description": "Modificările afectează invitația în așteptare și păstrează toate cheltuielile înregistrate pentru {name}.",
+      "emailLabel": "Adresă de e-mail",
+      "emailPlaceholder": "account@example.com",
+      "emailChangeWarning": "Destinatarul actual nu va mai putea accepta această invitație.",
+      "nameLabel": "Nume afișat",
+      "profileNameNote": "Folosește numele din profilul Spliit",
+      "saveChanges": "Salvează modificările",
+      "updateSend": "Actualizează și trimite",
+      "switchToEmailSend": "Schimbă și trimite invitația",
+      "switchToLinkGenerate": "Schimbă și generează linkul",
+      "saved": "Modificări salvate",
+      "cancel": "Anulează",
+      "done": "Gata",
+      "regenerateWarning": "Linkul actual va înceta să funcționeze imediat.",
+      "regenerateDescription": "Va fi generat un link nou, valabil 30 de zile. Invitația și cheltuielile aferente vor fi păstrate.",
+      "linkReadyTitle": "Link nou pregătit",
+      "linkReadyDescription": "Trimite-l persoanei pe care dorești să o inviți.",
+      "linkReadyWarning": "Copiază-l acum — nu îl vei mai putea vedea.",
+      "emailInvalid": "Introduceți o adresă de e-mail validă.",
+      "linkNotShown": "Linkul de invitație nu este afișat aici. Dacă trebuie să-l partajați din nou, utilizați „Generează link nou” din listă.",
+      "switchToLinkNote": "Salvează pentru a transforma această invitație într-un link. Invitația prin e-mail nu va mai funcționa."
+    },
+    "regenerate": {
+      "title": "Generează link nou"
     }
   },
   "AccountSettings": {
@@ -2030,7 +2065,15 @@
       "created": "{participant} a invitat pe {target}",
       "revoked": "{participant} a revocat invitația pentru {target}",
       "accepted": "{target} a acceptat invitația",
-      "declined": "{target} a respins invitația"
+      "declined": "{target} a respins invitația",
+      "updated": "{participant} a actualizat invitația pentru {target}",
+      "changedFields": {
+        "deliveryType": "Metodă de trimitere",
+        "destination": "Destinatar",
+        "displayName": "Nume",
+        "role": "Rol",
+        "credential": "Link de invitație"
+      }
     },
     "fallback": "O activitate a fost înregistrată",
     "unknownActor": "Cineva",
@@ -2113,7 +2156,9 @@
     "friendsEmpty": "Adaugă un prieten introducând e-mailul lui sau partajează un link pentru a-l invita.",
     "infoLabel": "Informații (opțional)",
     "infoPlaceholder": "Adaugă un context, de exemplu «Cheltuieli de colocatar»",
-    "createError": "Nu s-au putut crea cheltuielile cu un prieten"
+    "createError": "Nu s-au putut crea cheltuielile cu un prieten",
+    "copyInviteLink": "Copiază linkul de invitație",
+    "copiedInviteLink": "Link de invitație copiat"
   },
   "BulkCategorize": {
     "title": "Categorizare în lot",

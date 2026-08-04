@@ -342,7 +342,9 @@
         "emailInvitesTitle": "E-mailuitnodigingen verzonden",
         "emailInvitesDescription": "De server heeft een e-mail gestuurd naar de volgende personen. Ze zien een Accepteren/Afwijzen-banner op de groepspagina wanneer ze inloggen.",
         "shareTitle": "Word lid van mijn Spliit-groep",
-        "shareText": "Word lid van onze uitgavengroep op Spliit Cloud — {name}. Open deze link om te accepteren: {url}"
+        "shareText": "Word lid van onze uitgavengroep op Spliit Cloud — {name}. Open deze link om te accepteren: {url}",
+        "copyLink": "Uitnodigingslink kopiëren",
+        "copied": "Gekopieerd"
       },
       "Mapping": {
         "Errors": {
@@ -1642,7 +1644,8 @@
         "share": "Uitnodigingslink delen",
         "shareTitle": "Word lid van {groupName} op Spliit Cloud",
         "shareText": "Ik heb {groupName} aangemaakt voor onze gedeelde uitgaven op Spliit Cloud. Hier is een eenmalige uitnodigingslink — open hem om lid te worden:\n{inviteUrl}",
-        "generateNew": "Nieuwe link genereren"
+        "generateNew": "Nieuwe link genereren",
+        "copyLink": "Link kopiëren"
       },
       "temporaryNamePlaceholder": "bijv. Alex' huisgenoot",
       "friendsDescription": "Nodig iemand uit uit groepen die je hebt gedeeld.",
@@ -1662,11 +1665,15 @@
       "created": "Uitnodiging verzonden naar {email}.",
       "link": {
         "type": "Eenmalige link",
-        "fallbackLabel": "Uitnodigingslink"
+        "fallbackLabel": "Uitnodigingslink",
+        "anyoneWithLink": "Iedereen met de link",
+        "expiresOn": "Link verloopt op {date}",
+        "expired": "Verlopen"
       },
       "email": {
         "type": "E-mailuitnodiging"
-      }
+      },
+      "updatedOn": "Bijgewerkt {date}"
     },
     "changeRoleAria": "Rol wijzigen",
     "remove": "Verwijderen",
@@ -1788,6 +1795,34 @@
       "validation": "Voeg een naam en minimaal twee deelnemers toe.",
       "loadError": "Subgroepen konden niet worden geladen.",
       "disableAria": "Subgroepen uitschakelen"
+    },
+    "manage": {
+      "manageButton": "Beheren",
+      "title": "Uitnodiging beheren",
+      "description": "Wijzigingen zijn van invloed op de openstaande uitnodiging en behouden alle uitgaven die voor {name} zijn vastgelegd.",
+      "emailLabel": "E-mailadres",
+      "emailPlaceholder": "account@voorbeeld.nl",
+      "emailChangeWarning": "De huidige ontvanger kan deze uitnodiging niet meer accepteren.",
+      "nameLabel": "Weergavenaam",
+      "profileNameNote": "Gebruikt hun Spliit-profielnaam",
+      "saveChanges": "Wijzigingen opslaan",
+      "updateSend": "Bijwerken & versturen",
+      "switchToEmailSend": "Wisselen & uitnodiging sturen",
+      "switchToLinkGenerate": "Wisselen & link genereren",
+      "saved": "Wijzigingen opgeslagen",
+      "cancel": "Annuleren",
+      "done": "Klaar",
+      "regenerateWarning": "De huidige link werkt onmiddellijk niet meer.",
+      "regenerateDescription": "Er wordt een nieuwe link gegenereerd met een nieuwe vervaltermijn van 30 dagen. De uitnodiging en de bijbehorende uitgaven blijven behouden.",
+      "linkReadyTitle": "Nieuwe link klaar",
+      "linkReadyDescription": "Deel hem met de persoon die je wilt uitnodigen.",
+      "linkReadyWarning": "Kopieer hem nu — je kunt hem later niet meer bekijken.",
+      "emailInvalid": "Voer een geldig e-mailadres in.",
+      "linkNotShown": "De uitnodigingslink wordt hier niet weergegeven. Gebruik „Nieuwe link genereren“ in de lijst als je hem opnieuw wilt delen.",
+      "switchToLinkNote": "Sla op om deze uitnodiging om te zetten in een link. De e-mailuitnodiging werkt dan niet meer."
+    },
+    "regenerate": {
+      "title": "Nieuwe link genereren"
     }
   },
   "AccountSettings": {
@@ -2021,7 +2056,15 @@
       "created": "{participant} nodigde {target} uit",
       "revoked": "{participant} trok de uitnodiging voor {target} in",
       "accepted": "{target} accepteerde de uitnodiging",
-      "declined": "{target} wees de uitnodiging af"
+      "declined": "{target} wees de uitnodiging af",
+      "updated": "{participant} werkte de uitnodiging voor {target} bij",
+      "changedFields": {
+        "deliveryType": "Verzendmethode",
+        "destination": "Ontvanger",
+        "displayName": "Naam",
+        "role": "Rol",
+        "credential": "Uitnodigingslink"
+      }
     },
     "fallback": "Er is een activiteit geregistreerd",
     "unknownActor": "Iemand",
@@ -2103,7 +2146,9 @@
     "friendsEmpty": "Voeg een vriend toe door zijn of haar e-mail in te vullen, of deel een link om hem of haar uit te nodigen.",
     "infoLabel": "Informatie (optioneel)",
     "infoPlaceholder": "Voeg context toe, bijv. 'Huisgenotenuitgaven'",
-    "createError": "De uitgaven met deze vriend(in) konden niet worden aangemaakt"
+    "createError": "De uitgaven met deze vriend(in) konden niet worden aangemaakt",
+    "copyInviteLink": "Uitnodigingslink kopiëren",
+    "copiedInviteLink": "Uitnodigingslink gekopieerd"
   },
   "BulkCategorize": {
     "title": "Bulkcategoriseren",

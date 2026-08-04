@@ -361,7 +361,9 @@
         "emailInvitesTitle": "E-Mail-Einladungen gesendet",
         "emailInvitesDescription": "Der Server hat den folgenden Personen eine E-Mail gesendet. Sie sehen nach der Anmeldung ein Annehmen/Ablehnen-Banner auf der Gruppenseite.",
         "shareTitle": "Meiner Spliit-Gruppe beitreten",
-        "shareText": "Tritt unserer Ausgabengruppe auf Spliit Cloud bei — {name}. Öffne diesen Link zum Annehmen: {url}"
+        "shareText": "Tritt unserer Ausgabengruppe auf Spliit Cloud bei — {name}. Öffne diesen Link zum Annehmen: {url}",
+        "copyLink": "Einladungslink kopieren",
+        "copied": "Kopiert"
       },
       "Mapping": {
         "Errors": {
@@ -1674,7 +1676,8 @@
         "share": "Einladungslink teilen",
         "shareTitle": "Tritt {groupName} auf Spliit Cloud bei",
         "shareText": "Ich habe gerade {groupName} für unsere gemeinsamen Ausgaben auf Spliit Cloud erstellt. Hier ist ein Einmal-Einladungslink — öffne ihn, um beizutreten:\n{inviteUrl}",
-        "generateNew": "Neuen Link erstellen"
+        "generateNew": "Neuen Link erstellen",
+        "copyLink": "Link kopieren"
       },
       "temporaryNamePlaceholder": "z. B. Alex' Mitbewohner",
       "friendsDescription": "Lade jemanden aus Gruppen ein, die du geteilt hast.",
@@ -1694,11 +1697,15 @@
       "created": "Einladung an {email} gesendet.",
       "link": {
         "type": "Einmal-Link",
-        "fallbackLabel": "Einladungslink"
+        "fallbackLabel": "Einladungslink",
+        "anyoneWithLink": "Jeder mit dem Link",
+        "expiresOn": "Link läuft am {date} ab",
+        "expired": "Abgelaufen"
       },
       "email": {
         "type": "E-Mail-Einladung"
-      }
+      },
+      "updatedOn": "Aktualisiert {date}"
     },
     "removeDialog": {
       "unsettled": {
@@ -1820,6 +1827,34 @@
       "validation": "Füge einen Namen und mindestens zwei Teilnehmer hinzu.",
       "loadError": "Untergruppen konnten nicht geladen werden.",
       "disableAria": "Untergruppen deaktivieren"
+    },
+    "manage": {
+      "manageButton": "Verwalten",
+      "title": "Einladung verwalten",
+      "description": "Änderungen wirken sich auf die ausstehende Einladung aus und erhalten alle für {name} erfassten Ausgaben.",
+      "emailLabel": "E-Mail-Adresse",
+      "emailPlaceholder": "konto@beispiel.de",
+      "emailChangeWarning": "Der aktuelle Empfänger kann diese Einladung nicht mehr annehmen.",
+      "nameLabel": "Anzeigename",
+      "profileNameNote": "Verwendet deren Spliit-Profilnamen",
+      "saveChanges": "Änderungen speichern",
+      "updateSend": "Aktualisieren & senden",
+      "switchToEmailSend": "Wechseln & Einladung senden",
+      "switchToLinkGenerate": "Wechseln & Link erstellen",
+      "saved": "Änderungen gespeichert",
+      "cancel": "Abbrechen",
+      "done": "Fertig",
+      "regenerateWarning": "Der aktuelle Link funktioniert sofort nicht mehr.",
+      "regenerateDescription": "Ein neuer Link wird mit einer frischen 30-Tage-Frist erstellt. Die Einladung und ihre Ausgaben bleiben erhalten.",
+      "linkReadyTitle": "Neuer Link bereit",
+      "linkReadyDescription": "Teile ihn mit der Person, die du einladen möchtest.",
+      "linkReadyWarning": "Kopiere ihn jetzt — du kannst ihn später nicht mehr sehen.",
+      "emailInvalid": "Geben Sie eine gültige E-Mail-Adresse ein.",
+      "linkNotShown": "Der Einladungslink wird hier nicht angezeigt. Verwende „Neuen Link erstellen“ in der Liste, wenn du ihn erneut teilen möchtest.",
+      "switchToLinkNote": "Speichern, um diese Einladung in einen Link umzuwandeln. Die E-Mail-Einladung funktioniert dann nicht mehr."
+    },
+    "regenerate": {
+      "title": "Neuen Link erstellen"
     }
   },
   "AccountSettings": {
@@ -2053,7 +2088,15 @@
       "created": "{participant} lud {target} ein",
       "revoked": "{participant} widerrief die Einladung für {target}",
       "accepted": "{target} nahm die Einladung an",
-      "declined": "{target} lehnte die Einladung ab"
+      "declined": "{target} lehnte die Einladung ab",
+      "updated": "{participant} aktualisierte die Einladung für {target}",
+      "changedFields": {
+        "deliveryType": "Versandart",
+        "destination": "Empfänger",
+        "displayName": "Anzeigename",
+        "role": "Rolle",
+        "credential": "Einladungslink"
+      }
     },
     "fallback": "Eine Aktivität wurde aufgezeichnet",
     "unknownActor": "Jemand",
@@ -2139,7 +2182,9 @@
     "friendsEmpty": "Füge einen Freund hinzu, indem du seine E-Mail eingibst, oder teile einen Link, um ihn einzuladen.",
     "infoLabel": "Informationen (optional)",
     "infoPlaceholder": "Füge einen Kontext hinzu, z. B. „Mitbewohner-Ausgaben\"",
-    "createError": "Die Ausgaben mit der befreundeten Person konnten nicht erstellt werden"
+    "createError": "Die Ausgaben mit der befreundeten Person konnten nicht erstellt werden",
+    "copyInviteLink": "Einladungslink kopieren",
+    "copiedInviteLink": "Einladungslink kopiert"
   },
   "BulkCategorize": {
     "title": "Massenkategorisierung",

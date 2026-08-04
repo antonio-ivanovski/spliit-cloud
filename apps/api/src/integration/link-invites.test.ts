@@ -15,6 +15,8 @@ describe('Link invitation flow — real DB', () => {
   const adminEmail = `admin-link-${runId}@test.example`
   const inviteeId = `acct-invitee-link-${runId}`
   const inviteeEmail = `invitee-link-${runId}@test.example`
+  const secondInviteeId = `acct-second-link-${runId}`
+  const secondInviteeEmail = `second-link-${runId}@test.example`
 
   const ledgerIds: string[] = []
   function trackLedger(id: string) {
@@ -74,6 +76,16 @@ describe('Link invitation flow — real DB', () => {
         name: 'Test Invitee',
       },
     })
+    await prisma.account.upsert({
+      where: { email: secondInviteeEmail },
+      update: {},
+      create: {
+        id: secondInviteeId,
+        email: secondInviteeEmail,
+        emailVerified: true,
+        name: 'Second Invitee',
+      },
+    })
   })
 
   afterAll(async () => {
@@ -82,6 +94,9 @@ describe('Link invitation flow — real DB', () => {
     }
     await prisma.account.delete({ where: { id: adminId } }).catch(() => {})
     await prisma.account.delete({ where: { id: inviteeId } }).catch(() => {})
+    await prisma.account
+      .delete({ where: { id: secondInviteeId } })
+      .catch(() => {})
   })
 
   // ------------------------------------------------------------------
@@ -300,5 +315,324 @@ describe('Link invitation flow — real DB', () => {
       where: { groupId_accountId: { groupId, accountId: inviteeId } },
     })
     expect(member).toBeNull()
+  })
+
+  // ------------------------------------------------------------------
+  // 5. Regenerate (rotate) a link credential
+  // ------------------------------------------------------------------
+  it('regenerates a link: old URL dies, new URL works, identity is preserved', async () => {
+    const { groupId } = await createTestGroup(`Link Rotate ${runId}`)
+
+    const createResult = await invitationsCaller().createLink({
+      groupId,
+      role: 'MEMBER',
+      temporaryName: 'Rotatable Guest',
+    })
+    const invitationId = createResult.invitationId
+    const invitationBefore = await prisma.groupInvitation.findUnique({
+      where: { id: invitationId },
+    })
+    const oldUrl = new URL(createResult.inviteUrl)
+    const oldToken = oldUrl.searchParams.get('invite')
+    expect(oldToken).not.toBeNull()
+
+    // Rotate.
+    const rotated = await invitationsCaller().regenerateLink({ invitationId })
+    expect(rotated.inviteUrl).toMatch(/^http:\/\/localhost:3000\/groups\//)
+
+    // Identity preserved: same row id and ledger participant.
+    const invitationAfter = await prisma.groupInvitation.findUnique({
+      where: { id: invitationId },
+    })
+    expect(invitationAfter!.id).toBe(invitationId)
+    expect(invitationAfter!.ledgerParticipantId).toBe(
+      invitationBefore!.ledgerParticipantId,
+    )
+    expect(invitationAfter!.status).toBe('PENDING')
+    expect(invitationAfter!.temporaryName).toBe('Rotatable Guest')
+    // Expiry resets to the 30-day TTL (strictly later than the original).
+    expect(invitationAfter!.expiresAt).not.toBeNull()
+    expect(invitationAfter!.expiresAt!.getTime()).toBeGreaterThan(
+      invitationBefore!.expiresAt!.getTime(),
+    )
+    expect(invitationAfter!.tokenHash).not.toBe(invitationBefore!.tokenHash)
+
+    // The old token is dead: no row matches the old hash anymore.
+    const stalePreview = await invitationsCaller().previewLink({
+      token: oldToken!,
+    })
+    expect(stalePreview.preview).toBeNull()
+    await expect(
+      invitationsCaller({
+        accountId: inviteeId,
+        email: inviteeEmail,
+      }).acceptLink({ token: oldToken! }),
+    ).rejects.toMatchObject({ code: 'BAD_REQUEST' })
+
+    // The new token works.
+    const newUrl = new URL(rotated.inviteUrl)
+    const newToken = newUrl.searchParams.get('invite')
+    expect(newToken).not.toBeNull()
+    const acceptResult = await invitationsCaller({
+      accountId: inviteeId,
+      email: inviteeEmail,
+    }).acceptLink({ token: newToken! })
+    expect(acceptResult.groupId).toBe(groupId)
+
+    // Exactly one INVITATION_UPDATED activity, credential rotation only.
+    const activities = await prisma.activity.findMany({
+      where: {
+        ledgerId: (await prisma.group.findUnique({ where: { id: groupId } }))!
+          .ledgerId,
+        type: 'INVITATION_UPDATED',
+      },
+    })
+    expect(activities).toHaveLength(1)
+    expect(activities[0].data).toMatchObject({
+      kind: 'invitation',
+      changes: [{ field: 'credential', after: 'rotated' }],
+    })
+  })
+
+  // ------------------------------------------------------------------
+  // 6. LINK -> EMAIL conversion
+  // ------------------------------------------------------------------
+  it('converts a link invitation to email: old link dies, email recipient accepts', async () => {
+    const { groupId } = await createTestGroup(`Link To Email ${runId}`)
+
+    const createResult = await invitationsCaller().createLink({
+      groupId,
+      role: 'MEMBER',
+      temporaryName: 'Converted Guest',
+    })
+    const invitationId = createResult.invitationId
+    const oldToken = new URL(createResult.inviteUrl).searchParams.get('invite')
+
+    const updated = await invitationsCaller().updatePending({
+      invitationId,
+      role: 'ADMIN',
+      temporaryName: 'Converted Guest',
+      delivery: { type: 'EMAIL', email: inviteeEmail },
+    })
+
+    expect(updated.inviteUrl).toBeNull()
+    expect(updated.invitation.type).toBe('EMAIL')
+    expect(updated.invitation.email).toBe(inviteeEmail)
+    expect(updated.invitation.role).toBe('ADMIN')
+    expect(updated.invitation.ledgerParticipantId).toBe(
+      (await prisma.groupInvitation.findUnique({
+        where: { id: invitationId },
+      }))!.ledgerParticipantId,
+    )
+
+    // Old link is dead: no row matches the old token hash anymore.
+    const stalePreview = await invitationsCaller().previewLink({
+      token: oldToken!,
+    })
+    expect(stalePreview.preview).toBeNull()
+
+    // New recipient accepts with the updated role and name.
+    const acceptResult = await invitationsCaller({
+      accountId: inviteeId,
+      email: inviteeEmail,
+    }).accept({ invitationId })
+    expect(acceptResult.groupId).toBe(groupId)
+    const member = await prisma.groupMember.findUnique({
+      where: { groupId_accountId: { groupId, accountId: inviteeId } },
+    })
+    expect(member!.role).toBe('ADMIN')
+
+    // A concurrent stale update now fails: the invitation is ACCEPTED.
+    await expect(
+      invitationsCaller().updatePending({
+        invitationId,
+        role: 'MEMBER',
+        delivery: { type: 'LINK' },
+      }),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+  })
+
+  // ------------------------------------------------------------------
+  // 7. EMAIL -> LINK conversion
+  // ------------------------------------------------------------------
+  it('converts an email invitation to a link: new URL works, email guard rejects old recipient', async () => {
+    const { groupId } = await createTestGroup(`Email To Link ${runId}`)
+
+    const { invitationId } = await invitationsCaller().create({
+      groupId,
+      email: inviteeEmail,
+      role: 'MEMBER',
+    })
+
+    const converted = await invitationsCaller().updatePending({
+      invitationId,
+      role: 'MEMBER',
+      temporaryName: 'Via Link Now',
+      delivery: { type: 'LINK' },
+    })
+
+    expect(converted.inviteUrl).not.toBeNull()
+    expect(converted.invitation.type).toBe('LINK')
+    expect(converted.invitation.temporaryName).toBe('Via Link Now')
+    // The placeholder row carries the token, never the real email.
+    expect(converted.invitation.email).toContain('@link.placeholder.local')
+
+    // The old recipient cannot accept by invitation id anymore.
+    await expect(
+      invitationsCaller({
+        accountId: inviteeId,
+        email: inviteeEmail,
+      }).accept({ invitationId }),
+    ).rejects.toMatchObject({ code: 'BAD_REQUEST' })
+
+    // The new link works for a different account.
+    const token = new URL(converted.inviteUrl).searchParams.get('invite')
+    const acceptResult = await invitationsCaller({
+      accountId: secondInviteeId,
+      email: secondInviteeEmail,
+    }).acceptLink({ token: token! })
+    expect(acceptResult.groupId).toBe(groupId)
+  })
+
+  // ------------------------------------------------------------------
+  // 8. A pending EMAIL invitation blocks LINK redemption for that user
+  // ------------------------------------------------------------------
+  it('blocks link redemption while a personal EMAIL invitation is pending', async () => {
+    const { groupId } = await createTestGroup(`Link Vs Email ${runId}`)
+
+    // Personal EMAIL invitation for the invitee.
+    await invitationsCaller().create({
+      groupId,
+      email: inviteeEmail,
+      role: 'MEMBER',
+    })
+
+    // Valid LINK invitation for the same group.
+    const createResult = await invitationsCaller().createLink({
+      groupId,
+      role: 'MEMBER',
+    })
+    const token = new URL(createResult.inviteUrl).searchParams.get('invite')!
+    expect(token).not.toBeNull()
+
+    // The invitee cannot redeem the link while the EMAIL invite is
+    // pending — accepting would join via the wrong invitation.
+    await expect(
+      invitationsCaller({
+        accountId: inviteeId,
+        email: inviteeEmail,
+      }).acceptLink({ token }),
+    ).rejects.toMatchObject({
+      code: 'BAD_REQUEST',
+      message: expect.stringMatching(/personal email invitation/i),
+    })
+
+    // The invitee is not a member and the link is still untouched.
+    const member = await prisma.groupMember.findUnique({
+      where: { groupId_accountId: { groupId, accountId: inviteeId } },
+    })
+    expect(member).toBeNull()
+
+    // A different account can still redeem the same link.
+    const otherAccept = await invitationsCaller({
+      accountId: secondInviteeId,
+      email: secondInviteeEmail,
+    }).acceptLink({ token })
+    expect(otherAccept.groupId).toBe(groupId)
+  })
+
+  it('allows link redemption once the personal EMAIL invitation is revoked', async () => {
+    const { groupId } = await createTestGroup(`Link After Revoke ${runId}`)
+
+    const { invitationId } = await invitationsCaller().create({
+      groupId,
+      email: inviteeEmail,
+      role: 'MEMBER',
+    })
+
+    const createResult = await invitationsCaller().createLink({
+      groupId,
+      role: 'MEMBER',
+    })
+    const token = new URL(createResult.inviteUrl).searchParams.get('invite')!
+
+    // Blocked while pending.
+    await expect(
+      invitationsCaller({
+        accountId: inviteeId,
+        email: inviteeEmail,
+      }).acceptLink({ token }),
+    ).rejects.toMatchObject({
+      code: 'BAD_REQUEST',
+      message: expect.stringMatching(/personal email invitation/i),
+    })
+
+    // Admin revokes the personal EMAIL invitation.
+    await invitationsCaller().revoke({ invitationId })
+
+    // The invitee can now redeem the link.
+    const acceptResult = await invitationsCaller({
+      accountId: inviteeId,
+      email: inviteeEmail,
+    }).acceptLink({ token })
+    expect(acceptResult.groupId).toBe(groupId)
+  })
+
+  // ------------------------------------------------------------------
+  // 9. Expired links stay listed and regenerable
+  // ------------------------------------------------------------------
+  it('keeps an expired link invitation listed and regenerable, old token stays dead', async () => {
+    const { groupId } = await createTestGroup(`Link Expired Recover ${runId}`)
+
+    const rawToken = 'expired-recover-' + runId
+    const token = rawToken.padEnd(16, 'x')
+    const tokenHash = await hashLinkToken(token)
+    await prisma.groupInvitation.create({
+      data: {
+        id: `inv-expired-recover-${runId}`,
+        type: 'LINK',
+        groupId,
+        email: `${token}@link.placeholder.local`,
+        role: 'MEMBER',
+        invitedById: adminId,
+        tokenHash,
+        expiresAt: new Date(Date.now() - 1000 * 60 * 60),
+      },
+    })
+
+    // Still listed as PENDING (never auto-hidden or revoked).
+    const listed = await invitationsCaller().list({ groupId })
+    const row = listed.invitations.find(
+      (inv) => inv.email === `${token}@link.placeholder.local`,
+    )
+    expect(row).toBeDefined()
+    expect(row!.status).toBe('PENDING')
+    expect(row!.expiresAt).not.toBeNull()
+    expect(new Date(row!.expiresAt!).getTime()).toBeLessThan(Date.now())
+
+    // Regenerate succeeds and resets the expiry into the future.
+    const regenerated = await invitationsCaller().regenerateLink({
+      invitationId: row!.id,
+    })
+    expect(regenerated.invitation.status).toBe('PENDING')
+    expect(regenerated.invitation.expiresAt).not.toBeNull()
+    expect(
+      new Date(regenerated.invitation.expiresAt).getTime(),
+    ).toBeGreaterThan(Date.now())
+
+    // The old token stays rejected; the new token works.
+    await expect(
+      invitationsCaller({
+        accountId: inviteeId,
+        email: inviteeEmail,
+      }).acceptLink({ token }),
+    ).rejects.toMatchObject({ code: 'BAD_REQUEST' })
+    const newToken = new URL(regenerated.inviteUrl).searchParams.get('invite')
+    expect(newToken).not.toBeNull()
+    const acceptResult = await invitationsCaller({
+      accountId: inviteeId,
+      email: inviteeEmail,
+    }).acceptLink({ token: newToken! })
+    expect(acceptResult.groupId).toBe(groupId)
   })
 })

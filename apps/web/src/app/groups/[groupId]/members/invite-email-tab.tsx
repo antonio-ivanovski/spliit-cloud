@@ -20,7 +20,11 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-import type { EmailFormValues, InvitableRole } from './members-hooks'
+import {
+  useRoleSelectItems,
+  type EmailFormValues,
+  type InvitableRole,
+} from './members-hooks'
 
 export function InviteEmailTab({
   form,
@@ -40,6 +44,7 @@ export function InviteEmailTab({
   email: string
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
+  const roleSelectItems = useRoleSelectItems()
 
   return (
     <>
@@ -95,6 +100,7 @@ export function InviteEmailTab({
                 <FormControl>
                   <Select
                     value={roleValue}
+                    items={roleSelectItems}
                     onValueChange={(value) =>
                       onRoleChange(value as InvitableRole)
                     }
@@ -103,8 +109,11 @@ export function InviteEmailTab({
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="MEMBER">{t('role.member')}</SelectItem>
-                      <SelectItem value="ADMIN">{t('role.admin')}</SelectItem>
+                      {roleSelectItems.map((item) => (
+                        <SelectItem key={item.value} value={item.value}>
+                          {item.label}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </FormControl>

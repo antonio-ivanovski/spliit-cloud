@@ -1,4 +1,5 @@
 import { Navigate } from '@tanstack/react-router'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
@@ -16,9 +17,11 @@ import { detectDeviceTimeZone } from '@/lib/account-preferences'
 import { useCurrentGroup } from '../current-group-context'
 import { InviteCard } from './invite-card'
 import { LeaveGroupDialog } from './leave-group-dialog'
+import { ManagePendingInvitationDialog } from './manage-pending-invitation-dialog'
 import { MemberListCard } from './member-list-card'
-import { useMembersDialogs } from './members-hooks'
+import { useMembersDialogs, type PendingInvitation } from './members-hooks'
 import { PendingInvitationsCard } from './pending-invitations-card'
+import { RegenerateLinkDialog } from './regenerate-link-dialog'
 import { RemoveParticipantDialog } from './remove-participant-dialog'
 import { SubgroupsCard } from './subgroups-card'
 import { UnlinkedParticipantsSection } from './unlinked-participants-section'
@@ -55,6 +58,8 @@ function GroupMembersBody() {
     invitationsQuery,
     createMutation,
     createLinkMutation,
+    updatePendingMutation,
+    regenerateLinkMutation,
     updateRoleMutation,
     removeParticipantMutation,
     participantPendingRemove,
@@ -79,6 +84,30 @@ function GroupMembersBody() {
     handleConfirmLeave,
     leaveMutation,
   } = useMembersDialogs()
+
+  const [manageInvitation, setManageInvitation] =
+    useState<PendingInvitation | null>(null)
+  const manageButtonRefs = useRef(new Map<string, HTMLButtonElement | null>())
+  const manageFocusRef = useRef<HTMLButtonElement | null>(null)
+
+  const [regenerateInvitation, setRegenerateInvitation] =
+    useState<PendingInvitation | null>(null)
+  const regenerateButtonRefs = useRef(
+    new Map<string, HTMLButtonElement | null>(),
+  )
+  const regenerateFocusRef = useRef<HTMLButtonElement | null>(null)
+
+  useEffect(() => {
+    manageFocusRef.current = manageInvitation
+      ? (manageButtonRefs.current.get(manageInvitation.id) ?? null)
+      : null
+  }, [manageInvitation])
+
+  useEffect(() => {
+    regenerateFocusRef.current = regenerateInvitation
+      ? (regenerateButtonRefs.current.get(regenerateInvitation.id) ?? null)
+      : null
+  }, [regenerateInvitation])
 
   const roleLabels = {
     ADMIN: t('role.admin'),
@@ -149,17 +178,54 @@ function GroupMembersBody() {
           <PendingInvitationsCard
             invitations={invitations}
             isLoading={invitationsQuery.isLoading}
-            onRevoke={(inv) =>
+            onManage={setManageInvitation}
+            onManageButtonRef={(invitationId, element) => {
+              if (element) {
+                manageButtonRefs.current.set(invitationId, element)
+              } else {
+                manageButtonRefs.current.delete(invitationId)
+              }
+            }}
+            onGenerateLink={setRegenerateInvitation}
+            onGenerateButtonRef={(invitationId, element) => {
+              if (element) {
+                regenerateButtonRefs.current.set(invitationId, element)
+              } else {
+                regenerateButtonRefs.current.delete(invitationId)
+              }
+            }}
+            onRevoke={(inv) => {
               setParticipantPendingRemove({
                 ledgerParticipantId: inv.ledgerParticipantId,
                 name: inv.label,
               })
-            }
+            }}
             locale={locale}
             timeZone={accountTimeZone}
           />
         </>
       )}
+
+      <ManagePendingInvitationDialog
+        invitation={manageInvitation}
+        groupName={group?.name ?? ''}
+        isAdmin={isAdmin}
+        updatePending={updatePendingMutation}
+        finalFocusRef={manageFocusRef}
+        onOpenChange={(open) => {
+          if (!open) setManageInvitation(null)
+        }}
+      />
+
+      <RegenerateLinkDialog
+        invitation={regenerateInvitation}
+        groupName={group?.name ?? ''}
+        regenerateLink={regenerateLinkMutation}
+        finalFocusRef={regenerateFocusRef}
+        onOpenChange={(open) => {
+          if (!open) setRegenerateInvitation(null)
+        }}
+      />
 
       <RemoveParticipantDialog
         participantPendingRemove={participantPendingRemove}

@@ -132,12 +132,41 @@ export type MemberActivityData = z.infer<typeof memberActivityDataSchema>
 export const invitationTypeSchema = z.enum(['EMAIL', 'LINK'])
 export type InvitationType = z.infer<typeof invitationTypeSchema>
 
+export const invitationChangedFields = [
+  'deliveryType',
+  'destination',
+  'displayName',
+  'role',
+  'credential',
+] as const
+export const invitationChangedFieldSchema = z.enum(invitationChangedFields)
+export type InvitationChangedField = z.infer<
+  typeof invitationChangedFieldSchema
+>
+
+/**
+ * A single before/after change row for an invitation update. Only display-safe
+ * values are persisted: real emails and names, never raw link tokens or token
+ * hashes. Link credential rotation is represented as a `credential` change with
+ * no value payload.
+ */
+export const invitationActivityChangeSchema = z.object({
+  field: invitationChangedFieldSchema,
+  before: z.string().nullable().optional(),
+  after: z.string().nullable().optional(),
+})
+export type InvitationActivityChange = z.infer<
+  typeof invitationActivityChangeSchema
+>
+
 export const invitationActivityDataSchema = z.object({
   kind: z.literal('invitation'),
   summary: z.string().optional(),
   displayLabel: z.string().optional(),
   invitationType: invitationTypeSchema.optional(),
   role: groupRoleSchema.optional(),
+  changedFields: z.array(invitationChangedFieldSchema).optional(),
+  changes: z.array(invitationActivityChangeSchema).optional(),
 })
 
 export type InvitationActivityData = z.infer<

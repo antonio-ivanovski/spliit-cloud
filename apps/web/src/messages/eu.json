@@ -347,7 +347,9 @@
         "emailInvitesTitle": "Posta gonbidapenak bidalita",
         "emailInvitesDescription": "Zerbitzariak posta elektronikoa bidali die hurrengo pertsonei. Onartu/Ezeztatu pankarta ikusiko dute taldearen orrian saioa hasten dutenean.",
         "shareTitle": "Batu nire Spliit taldera",
-        "shareText": "Batu gure gastu taldera Spliit Cloud-en — {name}. Ireki esteka hau onartzeko: {url}"
+        "shareText": "Batu gure gastu taldera Spliit Cloud-en — {name}. Ireki esteka hau onartzeko: {url}",
+        "copyLink": "Kopiatu gonbidapen-esteka",
+        "copied": "Kopiatuta"
       },
       "Mapping": {
         "Errors": {
@@ -1650,7 +1652,8 @@
         "share": "Partekatu gonbidapen-esteka",
         "shareTitle": "Batu {groupName} taldera Spliit Cloud-en",
         "shareText": "Berriki sortu dut {groupName} gure gastu partekatuetarako Spliit Cloud-en. Hona hemen behin erabil daitekeen gonbidapen-esteka — ireki batzeko:\n{inviteUrl}",
-        "generateNew": "Sortu esteka berria"
+        "generateNew": "Sortu esteka berria",
+        "copyLink": "Kopiatu esteka"
       },
       "temporaryNamePlaceholder": "adib. Alex-en gelakidea",
       "friendsDescription": "Gonbidatu norbait partekatutako taldeetatik.",
@@ -1670,11 +1673,15 @@
       "created": "Gonbidapena bidali zaio {email}-i.",
       "link": {
         "type": "Behin erabil daitekeen esteka",
-        "fallbackLabel": "Gonbidapen-esteka"
+        "fallbackLabel": "Gonbidapen-esteka",
+        "anyoneWithLink": "Esteka duen edonor",
+        "expiresOn": "Esteka {date}(e)an iraungiko da",
+        "expired": "Iraungita"
       },
       "email": {
         "type": "Posta bidezko gonbidapena"
-      }
+      },
+      "updatedOn": "{date}(e)an eguneratua"
     },
     "changeRoleAria": "Aldatu rola",
     "remove": "Kendu",
@@ -1796,6 +1803,34 @@
       "validation": "Gehitu izen bat eta gutxienez bi partaide.",
       "loadError": "Ezin izan dira azpitaldeak kargatu.",
       "disableAria": "Desaktibatu azpitaldeak"
+    },
+    "manage": {
+      "manageButton": "Kudeatu",
+      "title": "Kudeatu gonbidapena",
+      "description": "Aldaketek zain dagoen gonbidapenari eragingo diote, eta {name}(r)entzat erregistratutako gastuak mantenduko dituzte.",
+      "emailLabel": "Helbide elektronikoa",
+      "emailPlaceholder": "account@example.com",
+      "emailChangeWarning": "Uneko hartzaileak ezingo du gonbidapen hau aurrerantzean onartu.",
+      "nameLabel": "Bistaratzeko izena",
+      "profileNameNote": "Bere Spliit profileko izena erabiltzen du",
+      "saveChanges": "Gorde aldaketak",
+      "updateSend": "Eguneratu eta bidali",
+      "switchToEmailSend": "Aldatu eta bidali gonbidapena",
+      "switchToLinkGenerate": "Aldatu eta sortu esteka",
+      "saved": "Aldaketak gorde dira",
+      "cancel": "Utzi",
+      "done": "Eginda",
+      "regenerateWarning": "Uneko estekak berehala funtzionatzeari utziko dio.",
+      "regenerateDescription": "30 egun barru iraungiko den esteka berri bat sortuko da. Gonbidapena eta haren gastuak mantenduko dira.",
+      "linkReadyTitle": "Esteka berria prest",
+      "linkReadyDescription": "Partekatu gonbidatu nahi duzun pertsonarekin.",
+      "linkReadyWarning": "Kopiatu orain; gero ezin izango duzu berriro ikusi.",
+      "emailInvalid": "Sartu baliozko helbide elektroniko bat.",
+      "linkNotShown": "Gonbidapen-esteka ez da hemen erakusten. Berriro partekatu behar baduzu, erabili \"Sortu esteka berria\" zerrendan.",
+      "switchToLinkNote": "Gorde gonbidapen hau esteka bihurtzeko. Posta elektronikoko gonbidapenak ez du funtzionatuko."
+    },
+    "regenerate": {
+      "title": "Sortu esteka berria"
     }
   },
   "AccountSettings": {
@@ -2029,7 +2064,15 @@
       "created": "{participant}(e)k {target} gonbidatu du",
       "revoked": "{participant}(e)k {target}(r)entzako gonbidapena baliogabetu du",
       "accepted": "{target}(e)k gonbidapena onartu du",
-      "declined": "{target}(e)k gonbidapena baztertu du"
+      "declined": "{target}(e)k gonbidapena baztertu du",
+      "updated": "{participant}(e)k {target}(r)en gonbidapena eguneratu du",
+      "changedFields": {
+        "deliveryType": "Bidalketa-metodoa",
+        "destination": "Hartzailea",
+        "displayName": "Izena",
+        "role": "Rola",
+        "credential": "Gonbidapen-esteka"
+      }
     },
     "fallback": "Jarduera bat erregistratu da",
     "unknownActor": "Norbait",
@@ -2112,7 +2155,9 @@
     "friendsEmpty": "Gehitu lagun bat bere posta elektronikoa idatziz, edo partekatu esteka bat gonbidapena bidaltzeko.",
     "infoLabel": "Informazioa (aukerakoa)",
     "infoPlaceholder": "Gehitu testuingurua, adibidez 'Bizikidearen gastuak'",
-    "createError": "Ezin izan dira lagunarekiko gastuak sortu"
+    "createError": "Ezin izan dira lagunarekiko gastuak sortu",
+    "copyInviteLink": "Kopiatu gonbidapen-esteka",
+    "copiedInviteLink": "Gonbidapen-esteka kopiatu da"
   },
   "BulkCategorize": {
     "title": "Kategorizazio multzokatua",

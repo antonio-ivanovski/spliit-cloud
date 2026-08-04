@@ -199,14 +199,13 @@ export const GroupHeader = ({
                   <span>{tGroups('linkInvitationSingleUse')}</span>
                 </p>
               )}
-              {currentInvitation.type === 'EMAIL' &&
-                previewQuery.data?.preview?.temporaryName && (
-                  <p className="text-xs text-muted-foreground">
-                    {tGroups('linkInvitationTemporaryName', {
-                      name: previewQuery.data.preview.temporaryName,
-                    })}
-                  </p>
-                )}
+              {isLinkBanner && previewQuery.data?.preview?.temporaryName && (
+                <p className="text-xs text-muted-foreground">
+                  {tGroups('linkInvitationTemporaryName', {
+                    name: previewQuery.data.preview.temporaryName,
+                  })}
+                </p>
+              )}
             </div>
             <div className="flex gap-2">
               <Button

@@ -347,7 +347,9 @@
         "emailInvitesTitle": "Invitations par e-mail envoyées",
         "emailInvitesDescription": "Le serveur a envoyé un e-mail aux personnes suivantes. Elles verront une bannière Accepter/Refuser dans la page du groupe lorsqu'elles se connecteront.",
         "shareTitle": "Rejoindre mon groupe Spliit",
-        "shareText": "Rejoignez notre groupe de dépenses sur Spliit Cloud — {name}. Ouvrez ce lien pour accepter: {url}"
+        "shareText": "Rejoignez notre groupe de dépenses sur Spliit Cloud — {name}. Ouvrez ce lien pour accepter: {url}",
+        "copyLink": "Copier le lien d’invitation",
+        "copied": "Copié"
       },
       "Mapping": {
         "Errors": {
@@ -1651,7 +1653,8 @@
         "share": "Partager le lien d'invitation",
         "shareTitle": "Rejoindre {groupName} sur Spliit Cloud",
         "shareText": "Je viens de créer {groupName} pour nos dépenses partagées sur Spliit Cloud. Voici un lien d'invitation à usage unique — ouvrez-le pour nous rejoindre :\n{inviteUrl}",
-        "generateNew": "Générer un nouveau lien"
+        "generateNew": "Générer un nouveau lien",
+        "copyLink": "Copier le lien"
       },
       "friendsDescription": "Invitez quelqu'un à partir des groupes que vous avez partagés.",
       "selectFriendPlaceholder": "Sélectionnez un ami…",
@@ -1670,11 +1673,15 @@
       "created": "Invitation envoyée à {email}.",
       "link": {
         "type": "Lien à usage unique",
-        "fallbackLabel": "Lien d'invitation"
+        "fallbackLabel": "Lien d'invitation",
+        "anyoneWithLink": "Toute personne disposant du lien",
+        "expiresOn": "Le lien expire le {date}",
+        "expired": "Expiré"
       },
       "email": {
         "type": "Invitation par e-mail"
-      }
+      },
+      "updatedOn": "Modifiée le {date}"
     },
     "changeRoleAria": "Changer le rôle",
     "remove": "Supprimer",
@@ -1797,6 +1804,34 @@
       "validation": "Ajoutez un nom et au moins deux participants.",
       "loadError": "Impossible de charger les sous-groupes.",
       "disableAria": "Désactiver les sous-groupes"
+    },
+    "manage": {
+      "manageButton": "Gérer",
+      "title": "Gérer l’invitation",
+      "description": "Les modifications s’appliquent à l’invitation en attente et conservent toutes les dépenses enregistrées pour {name}.",
+      "emailLabel": "Adresse e-mail",
+      "emailPlaceholder": "account@example.com",
+      "emailChangeWarning": "Le destinataire actuel ne pourra plus accepter cette invitation.",
+      "nameLabel": "Nom affiché",
+      "profileNameNote": "Utilise le nom de son profil Spliit",
+      "saveChanges": "Enregistrer les modifications",
+      "updateSend": "Mettre à jour et envoyer",
+      "switchToEmailSend": "Changer et envoyer l’invitation",
+      "switchToLinkGenerate": "Changer et générer le lien",
+      "saved": "Modifications enregistrées",
+      "cancel": "Annuler",
+      "done": "Terminé",
+      "regenerateWarning": "Le lien actuel cessera immédiatement de fonctionner.",
+      "regenerateDescription": "Un nouveau lien, valable 30 jours, sera généré. L’invitation et ses dépenses seront conservées.",
+      "linkReadyTitle": "Nouveau lien prêt",
+      "linkReadyDescription": "Partagez-le avec la personne que vous souhaitez inviter.",
+      "linkReadyWarning": "Copiez-le maintenant : vous ne pourrez plus le consulter ensuite.",
+      "emailInvalid": "Saisissez une adresse e-mail valide.",
+      "linkNotShown": "Le lien d’invitation n’est pas affiché ici. Utilisez « Générer un nouveau lien » dans la liste si vous avez besoin de le partager à nouveau.",
+      "switchToLinkNote": "Enregistrez pour convertir cette invitation en lien. L'invitation par e-mail cessera de fonctionner."
+    },
+    "regenerate": {
+      "title": "Générer un nouveau lien"
     }
   },
   "AccountSettings": {
@@ -2030,7 +2065,15 @@
       "created": "{participant} a invité {target}",
       "revoked": "{participant} a révoqué l'invitation de {target}",
       "accepted": "{target} a accepté l'invitation",
-      "declined": "{target} a refusé l'invitation"
+      "declined": "{target} a refusé l'invitation",
+      "updated": "{participant} a modifié l’invitation de {target}",
+      "changedFields": {
+        "deliveryType": "Mode d’envoi",
+        "destination": "Destinataire",
+        "displayName": "Nom",
+        "role": "Rôle",
+        "credential": "Lien d’invitation"
+      }
     },
     "fallback": "Une activité a été enregistrée",
     "unknownActor": "Quelqu'un",
@@ -2113,7 +2156,9 @@
     "friendsEmpty": "Ajoutez un ami en saisissant son e-mail ou partagez un lien pour l'inviter.",
     "infoLabel": "Informations (facultatif)",
     "infoPlaceholder": "Ajoutez un contexte, par exemple « Dépenses de colocation »",
-    "createError": "Impossible de créer les dépenses avec ce proche"
+    "createError": "Impossible de créer les dépenses avec ce proche",
+    "copyInviteLink": "Copier le lien d’invitation",
+    "copiedInviteLink": "Lien d’invitation copié"
   },
   "BulkCategorize": {
     "title": "Catégorisation en lot",

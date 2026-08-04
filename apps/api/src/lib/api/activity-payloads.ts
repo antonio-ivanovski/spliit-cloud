@@ -8,7 +8,9 @@ import type {
   GroupChangedField,
   GroupRole,
   ImportSummaryActivityData,
+  InvitationActivityChange,
   InvitationActivityData,
+  InvitationChangedField,
   InvitationType,
   MemberActivityData,
   RecurrenceActivityMetadata,
@@ -133,6 +135,8 @@ type BuildInvitationInput = {
   displayLabel?: string
   invitationType?: InvitationType
   role?: GroupRole
+  changedFields?: InvitationChangedField[]
+  changes?: InvitationActivityChange[]
 }
 
 export function buildInvitationActivityData(
@@ -148,6 +152,10 @@ export function buildInvitationActivityData(
       ? { invitationType: input.invitationType }
       : {}),
     ...(input.role !== undefined ? { role: input.role } : {}),
+    ...(input.changedFields !== undefined
+      ? { changedFields: input.changedFields }
+      : {}),
+    ...(input.changes !== undefined ? { changes: input.changes } : {}),
   }
 }
 

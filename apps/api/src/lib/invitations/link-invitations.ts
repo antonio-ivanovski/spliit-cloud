@@ -19,6 +19,7 @@ import { getApiBoss } from '../api/boss'
 import { randomId } from '../api/shared'
 import { getWebBaseUrl } from '../auth/urls'
 import { buildLinkPlaceholderEmail, getInvitationDisplayName } from './display'
+import { findPendingEmailInvitation } from './email-invitations'
 import {
   materializePendingInvitationParticipant,
   reconcileMemberLedgerParticipant,
@@ -243,9 +244,10 @@ export async function acceptLinkInvitation(opts: {
   token: string
   accountId: string
 }) {
-  const tokenHash = await hashLinkToken(opts.token)
-
-  const preview = await getLinkInvitationPreview(opts.token)
+  const [tokenHash, preview] = await Promise.all([
+    hashLinkToken(opts.token),
+    getLinkInvitationPreview(opts.token),
+  ])
   if (!preview) {
     throw new InvitationError('Invitation not found.')
   }
@@ -275,6 +277,27 @@ export async function acceptLinkInvitation(opts: {
     throw new InvitationError(
       'You are already a member of this group. Open the group from your list instead.',
     )
+  }
+
+  // A pending EMAIL invitation for the account's email takes
+  // precedence over the link: redeeming the link would join through
+  // the wrong invitation (and its ledger participant), orphaning the
+  // email invite. The email invitation is the recipient-specific
+  // intent, so surface it instead of accepting via the link.
+  const account = await prisma.account.findUnique({
+    where: { id: opts.accountId },
+    select: { email: true },
+  })
+  if (account?.email) {
+    const pendingEmailInvitation = await findPendingEmailInvitation(
+      preview.group.id,
+      account.email,
+    )
+    if (pendingEmailInvitation) {
+      throw new InvitationError(
+        'You already have a personal email invitation to this group. Open it from your invitations instead of using this link.',
+      )
+    }
   }
 
   const boss = await getApiBoss()

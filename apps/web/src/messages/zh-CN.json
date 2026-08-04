@@ -337,7 +337,9 @@
         "emailInvitesTitle": "电子邮件邀请已发送",
         "emailInvitesDescription": "服务器已向以下人员发送电子邮件。他们登录后将在群组页面上看到接受/拒绝横幅。",
         "shareTitle": "加入我的 Spliit 群组",
-        "shareText": "加入我们在 Spliit Cloud 上的支出群组——{name}。打开此链接以接受：{url}"
+        "shareText": "加入我们在 Spliit Cloud 上的支出群组——{name}。打开此链接以接受：{url}",
+        "copyLink": "复制邀请链接",
+        "copied": "已复制"
       },
       "Mapping": {
         "Errors": {
@@ -1636,7 +1638,8 @@
         "share": "分享邀请链接",
         "shareTitle": "在 Spliit Cloud 上加入 {groupName}",
         "shareText": "我刚在 Spliit Cloud 上为我们的共同支出创建了 {groupName}。这是一个一次性邀请链接——打开即可加入：\n{inviteUrl}",
-        "generateNew": "生成新链接"
+        "generateNew": "生成新链接",
+        "copyLink": "复制链接"
       },
       "friendsDescription": "从您以前共享过的群组中邀请朋友。",
       "selectFriendPlaceholder": "选择一位朋友…",
@@ -1655,11 +1658,15 @@
       "created": "邀请已发送至 {email}。",
       "link": {
         "type": "一次性链接",
-        "fallbackLabel": "邀请链接"
+        "fallbackLabel": "邀请链接",
+        "anyoneWithLink": "任何拥有链接的人",
+        "expiresOn": "链接将于{date}过期",
+        "expired": "已过期"
       },
       "email": {
         "type": "邮件邀请"
-      }
+      },
+      "updatedOn": "更新于{date}"
     },
     "changeRoleAria": "更改角色",
     "remove": "移除",
@@ -1781,6 +1788,34 @@
       "validation": "请输入名称并至少选择两名参与者。",
       "loadError": "无法加载子群组。",
       "disableAria": "停用子群组"
+    },
+    "manage": {
+      "manageButton": "管理",
+      "title": "管理邀请",
+      "description": "更改会影响待处理的邀请，但会保留为{name}记录的所有支出。",
+      "emailLabel": "电子邮件地址",
+      "emailPlaceholder": "account@example.com",
+      "emailChangeWarning": "当前收件人将无法再接受此邀请。",
+      "nameLabel": "显示名称",
+      "profileNameNote": "使用对方的 Spliit 个人资料名称",
+      "saveChanges": "保存更改",
+      "updateSend": "更新并发送",
+      "switchToEmailSend": "切换并发送邀请",
+      "switchToLinkGenerate": "切换并生成链接",
+      "saved": "更改已保存",
+      "cancel": "取消",
+      "done": "完成",
+      "regenerateWarning": "当前链接将立即失效。",
+      "regenerateDescription": "将生成一个新链接，有效期重新计算为30天。邀请及其相关支出会保留。",
+      "linkReadyTitle": "新链接已准备就绪",
+      "linkReadyDescription": "将其分享给你想邀请的人。",
+      "linkReadyWarning": "请立即复制，之后将无法再次查看。",
+      "emailInvalid": "请输入有效的电子邮件地址。",
+      "linkNotShown": "邀请链接不会显示在这里。如需再次分享，请在列表中使用“生成新链接”。",
+      "switchToLinkNote": "保存后，此邀请将转换为链接。邮件邀请将停止使用。"
+    },
+    "regenerate": {
+      "title": "生成新链接"
     }
   },
   "AccountSettings": {
@@ -2014,7 +2049,15 @@
       "created": "{participant} 邀请了 {target}",
       "revoked": "{participant} 撤回了对 {target} 的邀请",
       "accepted": "{target} 接受了邀请",
-      "declined": "{target} 拒绝了邀请"
+      "declined": "{target} 拒绝了邀请",
+      "updated": "{participant}更新了发给{target}的邀请",
+      "changedFields": {
+        "deliveryType": "发送方式",
+        "destination": "收件人",
+        "displayName": "姓名",
+        "role": "角色",
+        "credential": "邀请链接"
+      }
     },
     "fallback": "已记录一条活动",
     "unknownActor": "某人",
@@ -2095,7 +2138,9 @@
     "friendsEmpty": "输入朋友的电子邮件或分享链接以邀请他们。",
     "infoLabel": "信息（可选）",
     "infoPlaceholder": "添加说明，例如「室友费用」",
-    "createError": "无法创建与好友的共同支出"
+    "createError": "无法创建与好友的共同支出",
+    "copyInviteLink": "复制邀请链接",
+    "copiedInviteLink": "已复制邀请链接"
   },
   "BulkCategorize": {
     "title": "批量分类",

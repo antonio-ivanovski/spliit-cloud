@@ -347,7 +347,9 @@
         "emailInvitesTitle": "Convites por e-mail enviados",
         "emailInvitesDescription": "O servidor enviou e-mail para as seguintes pessoas. Elas verão um banner Aceitar/Recusar na página do grupo quando fizerem login.",
         "shareTitle": "Entre no meu grupo Spliit",
-        "shareText": "Entre no nosso grupo de despesas no Spliit Cloud — {name}. Abra este link para aceitar: {url}"
+        "shareText": "Entre no nosso grupo de despesas no Spliit Cloud — {name}. Abra este link para aceitar: {url}",
+        "copyLink": "Copiar link de convite",
+        "copied": "Copiado"
       },
       "Mapping": {
         "Errors": {
@@ -1649,7 +1651,8 @@
         "share": "Compartilhar link de convite",
         "shareTitle": "Entre em {groupName} no Spliit Cloud",
         "shareText": "Acabei de criar {groupName} para nossas despesas compartilhadas no Spliit Cloud. Aqui está um link de convite de uso único — abra-o para entrar:\n{inviteUrl}",
-        "generateNew": "Gerar novo link"
+        "generateNew": "Gerar novo link",
+        "copyLink": "Copiar link"
       },
       "temporaryName": "Nome temporário (opcional)",
       "temporaryNamePlaceholder": "ex.: colega de quarto do Alex",
@@ -1670,11 +1673,15 @@
       "created": "Convite enviado para {email}.",
       "link": {
         "type": "Link de uso único",
-        "fallbackLabel": "Link de convite"
+        "fallbackLabel": "Link de convite",
+        "anyoneWithLink": "Qualquer pessoa com o link",
+        "expiresOn": "O link expira em {date}",
+        "expired": "Expirado"
       },
       "email": {
         "type": "Convite por e-mail"
-      }
+      },
+      "updatedOn": "Atualizado em {date}"
     },
     "changeRoleAria": "Alterar função",
     "remove": "Remover",
@@ -1797,6 +1804,34 @@
       "validation": "Adicione um nome e pelo menos dois participantes.",
       "loadError": "Não foi possível carregar os subgrupos.",
       "disableAria": "Desativar Subgrupos"
+    },
+    "manage": {
+      "manageButton": "Gerenciar",
+      "title": "Gerenciar convite",
+      "description": "As alterações afetam o convite pendente e preservam todas as despesas registradas para {name}.",
+      "emailLabel": "Endereço de e-mail",
+      "emailPlaceholder": "account@example.com",
+      "emailChangeWarning": "O destinatário atual não poderá mais aceitar este convite.",
+      "nameLabel": "Nome de exibição",
+      "profileNameNote": "Usa o nome do perfil do Spliit",
+      "saveChanges": "Salvar alterações",
+      "updateSend": "Atualizar e enviar",
+      "switchToEmailSend": "Alterar e enviar convite",
+      "switchToLinkGenerate": "Alterar e gerar link",
+      "saved": "Alterações salvas",
+      "cancel": "Cancelar",
+      "done": "Concluído",
+      "regenerateWarning": "O link atual deixará de funcionar imediatamente.",
+      "regenerateDescription": "Será gerado um novo link válido por 30 dias. O convite e as despesas associadas a ele serão mantidos.",
+      "linkReadyTitle": "Novo link pronto",
+      "linkReadyDescription": "Compartilhe-o com a pessoa que você quer convidar.",
+      "linkReadyWarning": "Copie agora — você não poderá visualizá-lo novamente.",
+      "emailInvalid": "Insira um endereço de e-mail válido.",
+      "linkNotShown": "O link de convite não é exibido aqui. Se precisar compartilhá-lo novamente, use \"Gerar novo link\" na lista.",
+      "switchToLinkNote": "Salve para converter este convite em um link. O convite por e-mail deixará de funcionar."
+    },
+    "regenerate": {
+      "title": "Gerar novo link"
     }
   },
   "AccountSettings": {
@@ -2030,7 +2065,15 @@
       "created": "{participant} convidou {target}",
       "revoked": "{participant} revogou o convite a {target}",
       "accepted": "{target} aceitou o convite",
-      "declined": "{target} recusou o convite"
+      "declined": "{target} recusou o convite",
+      "updated": "{participant} atualizou o convite para {target}",
+      "changedFields": {
+        "deliveryType": "Método de envio",
+        "destination": "Destinatário",
+        "displayName": "Nome",
+        "role": "Função",
+        "credential": "Link de convite"
+      }
     },
     "fallback": "Uma atividade foi registrada",
     "unknownActor": "Alguém",
@@ -2113,7 +2156,9 @@
     "friendsEmpty": "Adicione um amigo informando o e-mail dele ou compartilhe um link para convidá-lo.",
     "infoLabel": "Informação (opcional)",
     "infoPlaceholder": "Adicione um contexto, por exemplo «Despesas do república»",
-    "createError": "Não foi possível criar as despesas com um amigo"
+    "createError": "Não foi possível criar as despesas com um amigo",
+    "copyInviteLink": "Copiar link de convite",
+    "copiedInviteLink": "Link de convite copiado"
   },
   "BulkCategorize": {
     "title": "Categorização em lote",

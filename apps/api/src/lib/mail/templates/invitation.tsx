@@ -68,7 +68,7 @@ export function InvitationEmail(
       <Text className="m-0 mb-4 text-[15px] leading-[24px] text-[#0f172a]">
         {roleSentence}
       </Text>
-      {props.temporaryName ? (
+      {!props.recipientIsExistingUser && props.temporaryName ? (
         <Text className="m-0 mb-4 text-[15px] leading-[24px] text-[#0f172a]">
           You will appear as <strong>"{props.temporaryName}"</strong> in this
           group.
@@ -125,9 +125,10 @@ export async function renderInvitationEmail(
   const acceptUrl = `${webBase}/groups/${input.groupId}`
   const signInUrl = `${webBase}/?invitation=${input.invitationId}`
 
-  const subject = input.temporaryName
-    ? `${input.inviterDisplayName} invited you to ${input.groupName} on Spliit Cloud as ${input.temporaryName}`
-    : `${input.inviterDisplayName} invited you to ${input.groupName} on Spliit Cloud`
+  const subject =
+    !input.recipientIsExistingUser && input.temporaryName
+      ? `${input.inviterDisplayName} invited you to ${input.groupName} on Spliit Cloud as ${input.temporaryName}`
+      : `${input.inviterDisplayName} invited you to ${input.groupName} on Spliit Cloud`
 
   const text = buildInvitationText(input, { acceptUrl, signInUrl })
 
@@ -149,9 +150,6 @@ function buildInvitationText(
   const lines: string[] = input.recipientIsExistingUser
     ? [
         `${input.inviterDisplayName} (${input.inviterRole.toLowerCase()}) invited you to join "${input.groupName}" on Spliit Cloud.`,
-        ...(input.temporaryName
-          ? [`You will appear as "${input.temporaryName}" in this group.`]
-          : []),
         '',
         `Open Spliit Cloud to accept or decline the invitation:`,
         urls.acceptUrl,

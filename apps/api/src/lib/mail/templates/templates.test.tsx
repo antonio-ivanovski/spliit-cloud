@@ -104,6 +104,26 @@ describe('email templates', () => {
       expect(r.html).toContain('/groups/grp-1')
     })
 
+    it('never renders an appear-as line or subject name for existing users', async () => {
+      const r = await renderInvitationEmail({
+        invitationId: 'inv-new',
+        groupId: 'grp-1',
+        groupName: 'Roadtrip 2026',
+        inviterDisplayName: 'Alice',
+        inviterRole: 'ADMIN',
+        recipientEmail: 'bob@example.com',
+        recipientIsExistingUser: true,
+        temporaryName: 'Bob Profile',
+      })
+      expect(r.subject).toBe(
+        'Alice invited you to Roadtrip 2026 on Spliit Cloud',
+      )
+      expect(r.subject).not.toContain('as Bob Profile')
+      expect(r.text).not.toContain('You will appear as')
+      expect(r.html).not.toContain('You will appear as')
+      expect(r.html).not.toContain('Bob Profile')
+    })
+
     it('produces the new-user body with sign-up CTA', async () => {
       const r = await renderInvitationEmail({
         invitationId: 'inv-new',

@@ -433,7 +433,9 @@
     "alreadyInvited": "(مدعو بالفعل)",
     "alreadyHasLedger": "(تشارك المصروفات معك بالفعل)",
     "createError": "لا يمكن إنشاء مصروفات صديق مشتركة",
-    "emailLabel": "البريد الإلكتروني صديق"
+    "emailLabel": "البريد الإلكتروني صديق",
+    "copyInviteLink": "نسخ رابط الدعوة",
+    "copiedInviteLink": "تم نسخ رابط الدعوة"
   },
   "InstallPromotion": {
     "dismiss": "تجاهل",
@@ -786,7 +788,9 @@
         "openGroup": "فتح مجموعة",
         "emailInvitesTitle": "تم إرسال دعوات البريد الإلكتروني",
         "shareAriaLabel": "مشاركة رابط دعوة",
-        "shareableLinksTitle": "رابط دعوة التي يمكن مشارك"
+        "shareableLinksTitle": "رابط دعوة التي يمكن مشارك",
+        "copyLink": "نسخ رابط الدعوة",
+        "copied": "تم النسخ"
       },
       "Source": {
         "appToCloudDescription": "استبدل .app بـ .cloud في أي رابط مجموعة spliit.app لاستيرادها إلى Spliit Cloud.",
@@ -2054,7 +2058,8 @@
         "generateNew": "إنشاء رابط جديد",
         "copy": "نسخ رابط دعوة",
         "expiresOn": "ينتهي في {date}",
-        "intro": "هذا رابط دعوة لمرة واحدة لـ {groupName}. أرسله إلى الشخص الذي تريد دعوته — سيحصل على وصول كامل بمجرد قبوله."
+        "intro": "هذا رابط دعوة لمرة واحدة لـ {groupName}. أرسله إلى الشخص الذي تريد دعوته — سيحصل على وصول كامل بمجرد قبوله.",
+        "copyLink": "نسخ الرابط"
       },
       "tab": {
         "link": "رابط دعوة",
@@ -2101,7 +2106,10 @@
       "revoked": "تم إلغاء الدعوة.",
       "link": {
         "type": "رابط لمرة واحدة",
-        "fallbackLabel": "رابط دعوة"
+        "fallbackLabel": "رابط دعوة",
+        "anyoneWithLink": "أي شخص لديه الرابط",
+        "expiresOn": "ينتهي الرابط في {date}",
+        "expired": "منتهية الصلاحية"
       },
       "description": "دعوات بانتظار القبول.",
       "empty": "لا توجد دعوات معلقة.",
@@ -2110,7 +2118,8 @@
       "email": {
         "type": "دعوة بريد إلكتروني"
       },
-      "revokeButton": "إلغاء الدعوة"
+      "revokeButton": "إلغاء الدعوة",
+      "updatedOn": "تم التحديث في {date}"
     },
     "subgroups": {
       "title": "المجموعات الفرعية",
@@ -2149,6 +2158,34 @@
       "validation": "أضف اسمًا ومشاركين اثنين على الأقل.",
       "loadError": "تعذّر تحميل المجموعات الفرعية.",
       "disableAria": "تعطيل المجموعات الفرعية"
+    },
+    "manage": {
+      "manageButton": "إدارة",
+      "title": "إدارة الدعوة",
+      "description": "تؤثر التغييرات على الدعوة المعلقة وتحافظ على أي مصروفات مسجلة باسم {name}.",
+      "emailLabel": "عنوان البريد الإلكتروني",
+      "emailPlaceholder": "account@example.com",
+      "emailChangeWarning": "لن يستطيع المستلم الحالي قبول هذه الدعوة بعد الآن.",
+      "nameLabel": "الاسم الظاهر",
+      "profileNameNote": "يستخدم اسم ملفهم الشخصي في Spliit",
+      "saveChanges": "حفظ التغييرات",
+      "updateSend": "تحديث وإرسال",
+      "switchToEmailSend": "تبديل وإرسال الدعوة",
+      "switchToLinkGenerate": "تبديل وإنشاء رابط",
+      "saved": "تم حفظ التغييرات",
+      "cancel": "إلغاء",
+      "done": "تم",
+      "regenerateWarning": "سيتوقف الرابط الحالي عن العمل فوراً.",
+      "regenerateDescription": "سيُنشأ رابط جديد بصلاحية 30 يوماً. الدعوة ومصروفاتها محفوظة.",
+      "linkReadyTitle": "الرابط الجديد جاهز",
+      "linkReadyDescription": "شاركه مع الشخص الذي تريد دعوته.",
+      "linkReadyWarning": "انسخه الآن — لن تتمكن من عرضه مجدداً.",
+      "emailInvalid": "أدخل عنوان بريد إلكتروني صالحاً.",
+      "linkNotShown": "لا يظهر رابط الدعوة هنا. استخدم \"إنشاء رابط جديد\" من القائمة إذا احتجت إلى مشاركته مرة أخرى.",
+      "switchToLinkNote": "احفظ لتحويل هذه الدعوة إلى رابط. ستتوقف دعوة البريد الإلكتروني عن العمل."
+    },
+    "regenerate": {
+      "title": "إنشاء رابط جديد"
     }
   },
   "ExpenseSeries": {
@@ -2361,7 +2398,15 @@
       "accepted": "قبل {target} الدعوة",
       "declined": "رفض {target} الدعوة",
       "created": "دعا {participant} {target}",
-      "revoked": "ألغى {participant} دعوة {target}"
+      "revoked": "ألغى {participant} دعوة {target}",
+      "updated": "حدّث {participant} الدعوة الموجهة إلى {target}",
+      "changedFields": {
+        "deliveryType": "طريقة الإرسال",
+        "destination": "المستلم",
+        "displayName": "الاسم",
+        "role": "الدور",
+        "credential": "رابط الدعوة"
+      }
     },
     "group": {
       "updated": "{participant} حدث إعدادات المجموعة",

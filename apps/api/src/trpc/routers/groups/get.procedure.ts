@@ -8,12 +8,13 @@ import {
   prisma,
 } from '@spliit/db'
 
-import { getGroup } from '../../../lib/api'
+import { getGroup } from '../../../lib/api/groups'
+import { getInvitationDisplayName } from '../../../lib/invitations/display'
+import { findPendingEmailInvitation } from '../../../lib/invitations/email-invitations'
 import {
   acceptLinkInvitation,
-  getInvitationDisplayName,
   hashLinkToken,
-} from '../../../lib/invitations'
+} from '../../../lib/invitations/link-invitations'
 import {
   linkInviteTokenInput,
   loadGroupContext,
@@ -121,6 +122,35 @@ export const getGroupProcedure = protectedProcedure
           code: 'FORBIDDEN',
           message: 'This invite link is not valid for this group.',
         })
+      }
+
+      // A PENDING email invitation for the account's email is the
+      // recipient-specific credential and wins over the URL-borne
+      // link token: redeeming the link would join through the wrong
+      // invitation. Present the email invitation so the UI never
+      // looks link-redeemable (and never auto-accepts the link for
+      // FRIEND groups).
+      const pendingEmailInvitation = account.email
+        ? await findPendingEmailInvitation(groupId, account.email)
+        : null
+      if (pendingEmailInvitation) {
+        const group = await getGroup(groupId)
+        if (!group) {
+          throw new TRPCError({ code: 'NOT_FOUND', message: 'Group not found' })
+        }
+        const displayName = resolveDisplayName(group, account.id)
+        return {
+          group,
+          displayName,
+          currentLedgerParticipantId: null,
+          currentMember: null,
+          currentInvitation: {
+            id: pendingEmailInvitation.id,
+            role: pendingEmailInvitation.role,
+            type: pendingEmailInvitation.type,
+          },
+          linkInviteState: null,
+        }
       }
 
       // For FRIEND groups with a valid PENDING link token, auto-accept

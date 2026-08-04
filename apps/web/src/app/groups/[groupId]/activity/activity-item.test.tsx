@@ -346,6 +346,57 @@ describe('ActivityItem', () => {
     expect(screen.getByText(/Bob declined the invitation/)).toBeInTheDocument()
   })
 
+  it('renders invitation updated with before/after changes', () => {
+    renderItem(
+      makeActivity({
+        type: 'INVITATION_UPDATED',
+        data: {
+          kind: 'invitation',
+          displayLabel: 'bob@example.com',
+          changedFields: ['deliveryType', 'destination', 'role'],
+          changes: [
+            { field: 'deliveryType', before: 'EMAIL', after: 'LINK' },
+            {
+              field: 'destination',
+              before: 'bob@example.com',
+              after: null,
+            },
+            { field: 'role', before: 'MEMBER', after: 'ADMIN' },
+          ],
+        },
+      }),
+    )
+    expect(
+      screen.getByText(/Alice updated the invitation to bob@example.com/),
+    ).toBeInTheDocument()
+    const deliveryChange = screen.getByTestId(
+      'activity-item-act-1-change-deliveryType',
+    )
+    expect(deliveryChange.textContent).toMatch(/EMAIL.*→.*LINK/)
+    const roleChange = screen.getByTestId('activity-item-act-1-change-role')
+    expect(roleChange.textContent).toMatch(/MEMBER.*→.*ADMIN/)
+  })
+
+  it('renders invitation updated with credential rotation', () => {
+    renderItem(
+      makeActivity({
+        type: 'INVITATION_UPDATED',
+        data: {
+          kind: 'invitation',
+          displayLabel: 'Anyone with the link',
+          changedFields: ['credential'],
+          changes: [{ field: 'credential', after: 'rotated' }],
+        },
+      }),
+    )
+    expect(
+      screen.getByText(/Alice updated the invitation to Anyone with the link/),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByTestId('activity-item-act-1-change-credential'),
+    ).toBeInTheDocument()
+  })
+
   it('renders member left', () => {
     renderItem(
       makeActivity({

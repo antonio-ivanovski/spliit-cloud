@@ -252,7 +252,13 @@ export function GroupLayoutClient({
                 className="font-mono text-xs"
                 onFocus={(event) => event.currentTarget.select()}
               />
-              {friendLinkDialogUrl && <CopyButton text={friendLinkDialogUrl} />}
+              {friendLinkDialogUrl && (
+                <CopyButton
+                  text={friendLinkDialogUrl}
+                  ariaLabel={tFriends('copyInviteLink')}
+                  copiedLabel={tFriends('copiedInviteLink')}
+                />
+              )}
               {canShare && friendLinkDialogUrl && (
                 <Button
                   size="icon"

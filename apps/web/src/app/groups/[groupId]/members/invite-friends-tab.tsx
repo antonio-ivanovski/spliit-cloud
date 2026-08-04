@@ -1,4 +1,5 @@
 import { Loader2, UserPlus } from 'lucide-react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AccountAvatar } from '@/components/account-avatar'
@@ -13,7 +14,7 @@ import {
 } from '@/components/ui/select'
 import { isPlaceholderEmail } from '@/lib/account'
 
-import type { InvitableRole } from './members-hooks'
+import { useRoleSelectItems, type InvitableRole } from './members-hooks'
 
 type Friend = {
   accountId: string
@@ -35,18 +36,39 @@ export function InviteFriendsTab({
   onRoleChange,
   isPending,
   onSubmit,
+  submitLabel,
+  excludeFromPendingEmail,
 }: {
   friends: Friend[]
   isLoading: boolean
   selectedFriendAccountId: string
   onSelectFriend: (value: string) => void
-  friendRoleValue: InvitableRole
-  canInviteAdmin: boolean
-  onRoleChange: (value: InvitableRole) => void
-  isPending: boolean
-  onSubmit: () => void
+  friendRoleValue?: InvitableRole
+  canInviteAdmin?: boolean
+  onRoleChange?: (value: InvitableRole) => void
+  isPending?: boolean
+  onSubmit?: () => void
+  submitLabel?: string
+  excludeFromPendingEmail?: string
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
+  const roleSelectItems = useRoleSelectItems()
+
+  // A friend with a pending invite in the group is disabled unless
+  // that pending invite is the one being edited (Manage dialog).
+  const isPendingForOtherInvite = (friend: Friend) =>
+    friend.isPendingInvite &&
+    (!excludeFromPendingEmail ||
+      friend.email.toLowerCase() !== excludeFromPendingEmail.toLowerCase())
+
+  const friendSelectItems = useMemo(
+    () =>
+      friends.map((f) => ({
+        value: f.accountId,
+        label: f.name,
+      })),
+    [friends],
+  )
 
   return (
     <>
@@ -64,11 +86,12 @@ export function InviteFriendsTab({
           <div className="grid gap-1.5">
             <Select
               value={selectedFriendAccountId}
+              items={friendSelectItems}
               onValueChange={(value) => {
                 if (value != null) onSelectFriend(value)
               }}
             >
-              <SelectTrigger>
+              <SelectTrigger aria-label={t('invite.selectFriendPlaceholder')}>
                 <SelectValue
                   placeholder={t('invite.selectFriendPlaceholder')}
                 />
@@ -78,7 +101,7 @@ export function InviteFriendsTab({
                   <SelectItem
                     key={f.accountId}
                     value={f.accountId}
-                    disabled={f.isMember || f.isPendingInvite}
+                    disabled={f.isMember || isPendingForOtherInvite(f)}
                   >
                     <span className="flex items-center gap-2">
                       <AccountAvatar
@@ -100,7 +123,7 @@ export function InviteFriendsTab({
                           ({t('invite.friendAlreadyMember')})
                         </span>
                       )}
-                      {f.isPendingInvite && !f.isMember && (
+                      {isPendingForOtherInvite(f) && !f.isMember && (
                         <span className="text-xs text-muted-foreground">
                           ({t('invite.friendAlreadyInvited')})
                         </span>
@@ -111,35 +134,43 @@ export function InviteFriendsTab({
               </SelectContent>
             </Select>
           </div>
-          <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-end">
-            {canInviteAdmin && (
-              <div className="sm:w-40">
-                <Label className="sm:sr-only">{t('invite.role')}</Label>
-                <Select
-                  value={friendRoleValue}
-                  onValueChange={(value) =>
-                    onRoleChange(value as InvitableRole)
-                  }
+          {(canInviteAdmin || onSubmit) && (
+            <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-end">
+              {canInviteAdmin && friendRoleValue && onRoleChange && (
+                <div className="sm:w-40">
+                  <Label className="sm:sr-only">{t('invite.role')}</Label>
+                  <Select
+                    value={friendRoleValue}
+                    items={roleSelectItems}
+                    onValueChange={(value) =>
+                      onRoleChange(value as InvitableRole)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {roleSelectItems.map((item) => (
+                        <SelectItem key={item.value} value={item.value}>
+                          {item.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+              {onSubmit && (
+                <Button
+                  type="button"
+                  disabled={isPending || !selectedFriendAccountId}
+                  onClick={onSubmit}
                 >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="MEMBER">{t('role.member')}</SelectItem>
-                    <SelectItem value="ADMIN">{t('role.admin')}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-            <Button
-              type="button"
-              disabled={isPending || !selectedFriendAccountId}
-              onClick={onSubmit}
-            >
-              <UserPlus className="mr-2 h-4 w-4" />
-              {t('invite.send')}
-            </Button>
-          </div>
+                  <UserPlus className="mr-2 h-4 w-4" />
+                  {submitLabel ?? t('invite.send')}
+                </Button>
+              )}
+            </div>
+          )}
         </div>
       )}
     </>

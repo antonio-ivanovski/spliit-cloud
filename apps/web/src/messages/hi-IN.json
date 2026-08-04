@@ -230,7 +230,15 @@
       "created": "{participant} ने {target} को आमंत्रित किया",
       "revoked": "{participant} ने {target} का निमंत्रण रद्द किया",
       "accepted": "{target} ने निमंत्रण स्वीकार किया",
-      "declined": "{target} ने निमंत्रण अस्वीकार किया"
+      "declined": "{target} ने निमंत्रण अस्वीकार किया",
+      "updated": "{participant} ने {target} के निमंत्रण को अपडेट किया",
+      "changedFields": {
+        "deliveryType": "वितरण विधि",
+        "destination": "प्राप्तकर्ता",
+        "displayName": "नाम",
+        "role": "भूमिका",
+        "credential": "आमंत्रण लिंक"
+      }
     },
     "member": {
       "left": "{participant} ने समूह छोड़ा",
@@ -1509,7 +1517,9 @@
     "friendsEmpty": "उनका ईमेल दर्ज करके या उन्हें आमंत्रित करने के लिए लिंक साझा करके मित्र जोड़ें।",
     "infoLabel": "जानकारी (वैकल्पिक)",
     "infoPlaceholder": "'रूममेट खर्च' जैसा संदर्भ जोड़ें",
-    "createError": "मित्र खर्च नहीं बनाया जा सका"
+    "createError": "मित्र खर्च नहीं बनाया जा सका",
+    "copyInviteLink": "आमंत्रण लिंक कॉपी करें",
+    "copiedInviteLink": "आमंत्रण लिंक कॉपी किया गया"
   },
   "GroupForm": {
     "CurrencyCodeField": {
@@ -1648,7 +1658,9 @@
         "emailInvitesTitle": "ईमेल आमंत्रण भेजे गए",
         "emailInvitesDescription": "सर्वर ने निम्नलिखित लोगों को ईमेल किया। जब वे साइन इन करेंगे तो उन्हें समूह पृष्ठ पर एक स्वीकार/अस्वीकार बैनर दिखाई देगा।",
         "shareTitle": "Spliit Cloud पर मेरे समूह में शामिल हों",
-        "shareText": "Spliit Cloud पर हमारे खर्च समूह में शामिल हों — {name}। स्वीकार करने के लिए यह लिंक खोलें: {url}"
+        "shareText": "Spliit Cloud पर हमारे खर्च समूह में शामिल हों — {name}। स्वीकार करने के लिए यह लिंक खोलें: {url}",
+        "copyLink": "आमंत्रण लिंक कॉपी करें",
+        "copied": "कॉपी किया गया"
       },
       "Mapping": {
         "Errors": {
@@ -2007,8 +2019,12 @@
       },
       "link": {
         "type": "एकल-उपयोग लिंक",
-        "fallbackLabel": "आमंत्रण लिंक"
-      }
+        "fallbackLabel": "आमंत्रण लिंक",
+        "anyoneWithLink": "लिंक वाला कोई भी",
+        "expiresOn": "लिंक समाप्त होता है {date}",
+        "expired": "समाप्त"
+      },
+      "updatedOn": "{date} को अपडेट किया गया"
     },
     "invite": {
       "title": "सदस्य को आमंत्रित करें",
@@ -2038,7 +2054,8 @@
         "share": "आमंत्रण लिंक साझा करें",
         "shareTitle": "Spliit Cloud पर {groupName} में शामिल हों",
         "shareText": "मैंने अभी Spliit Cloud पर हमारे साझा खर्चों के लिए {groupName} बनाया है। यहां एक एकल-उपयोग आमंत्रण लिंक है — शामिल होने के लिए इसे खोलें:\n{inviteUrl}",
-        "generateNew": "नया लिंक बनाएं"
+        "generateNew": "नया लिंक बनाएं",
+        "copyLink": "लिंक कॉपी करें"
       },
       "tab": {
         "email": "ईमेल",
@@ -2165,6 +2182,34 @@
       "validation": "एक नाम और कम से कम दो प्रतिभागी जोड़ें।",
       "loadError": "उपसमूह लोड नहीं हो सके।",
       "disableAria": "उपसमूह अक्षम करें"
+    },
+    "manage": {
+      "manageButton": "प्रबंधित करें",
+      "title": "निमंत्रण प्रबंधित करें",
+      "description": "परिवर्तन लंबित निमंत्रण को प्रभावित करते हैं और {name} के लिए दर्ज किसी भी खर्च को सुरक्षित रखते हैं।",
+      "emailLabel": "ईमेल पता",
+      "emailPlaceholder": "account@example.com",
+      "emailChangeWarning": "वर्तमान प्राप्तकर्ता अब इस निमंत्रण को स्वीकार नहीं कर पाएगा।",
+      "nameLabel": "प्रदर्शन नाम",
+      "profileNameNote": "उनके Spliit प्रोफ़ाइल नाम का उपयोग करता है",
+      "saveChanges": "परिवर्तन सहेजें",
+      "updateSend": "अपडेट करें और भेजें",
+      "switchToEmailSend": "बदलें और निमंत्रण भेजें",
+      "switchToLinkGenerate": "बदलें और लिंक बनाएं",
+      "saved": "परिवर्तन सहेजे गए",
+      "cancel": "रद्द करें",
+      "done": "पूर्ण",
+      "regenerateWarning": "वर्तमान लिंक तुरंत काम करना बंद कर देगा।",
+      "regenerateDescription": "नया लिंक 30 दिन की नई समाप्ति के साथ बनाया जाएगा। निमंत्रण और उसके खर्च सुरक्षित रहेंगे।",
+      "linkReadyTitle": "नया लिंक तैयार है",
+      "linkReadyDescription": "जिसे आप आमंत्रित करना चाहते हैं उसके साथ इसे साझा करें।",
+      "linkReadyWarning": "अभी कॉपी करें—आप इसे फिर से नहीं देख पाएंगे।",
+      "emailInvalid": "एक मान्य ईमेल पता दर्ज करें।",
+      "linkNotShown": "आमंत्रण लिंक यहाँ नहीं दिखाया गया है। यदि आपको इसे फिर से साझा करना है तो सूची में \"नया लिंक बनाएं\" का उपयोग करें।",
+      "switchToLinkNote": "इस निमंत्रण को लिंक में बदलने के लिए सहेजें। ईमेल निमंत्रण काम करना बंद कर देगा।"
+    },
+    "regenerate": {
+      "title": "नया लिंक बनाएं"
     }
   },
   "Stats": {

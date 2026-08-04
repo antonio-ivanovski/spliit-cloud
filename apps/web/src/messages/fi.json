@@ -342,7 +342,9 @@
         "emailInvitesTitle": "Sähköpostikutsut lähetetty",
         "emailInvitesDescription": "Palvelin lähetti sähköpostia seuraaville henkilöille. He näkevät Hyväksy/Hylkää-palkin ryhmäsivulla kirjauduttuaan sisään.",
         "shareTitle": "Liity Spliit-ryhmääni",
-        "shareText": "Liity kuluryhmäämme Spliit Cloudissa — {name}. Avaa tämä linkki hyväksyäksesi: {url}"
+        "shareText": "Liity kuluryhmäämme Spliit Cloudissa — {name}. Avaa tämä linkki hyväksyäksesi: {url}",
+        "copyLink": "Kopioi kutsulinkki",
+        "copied": "Kopioitu"
       },
       "Mapping": {
         "Errors": {
@@ -1642,7 +1644,8 @@
         "share": "Jaa kutsulinkki",
         "shareTitle": "Liity ryhmään {groupName} Spliit Cloudissa",
         "shareText": "Loin juuri ryhmän {groupName} yhteisiä kuluja varten Spliit Cloudissa. Tässä on kertakäyttöinen kutsulinkki — avaa se liittyäksesi:\n{inviteUrl}",
-        "generateNew": "Luo uusi linkki"
+        "generateNew": "Luo uusi linkki",
+        "copyLink": "Kopioi linkki"
       },
       "temporaryNamePlaceholder": "esim. Alexin kämppäkaveri",
       "friendsDescription": "Kutsu joku jakamiltasi ryhmistä.",
@@ -1662,11 +1665,15 @@
       "created": "Kutsu lähetetty osoitteeseen {email}.",
       "link": {
         "type": "Kertakäyttöinen linkki",
-        "fallbackLabel": "Kutsulinkki"
+        "fallbackLabel": "Kutsulinkki",
+        "anyoneWithLink": "Kuka tahansa linkillä",
+        "expiresOn": "Linkki vanhenee {date}",
+        "expired": "Vanhentunut"
       },
       "email": {
         "type": "Sähköpostikutsu"
-      }
+      },
+      "updatedOn": "Päivitetty {date}"
     },
     "changeRoleAria": "Vaihda roolia",
     "removed": "Jäsen poistettu.",
@@ -1788,6 +1795,34 @@
       "validation": "Lisää nimi ja vähintään kaksi osallistujaa.",
       "loadError": "Alaryhmiä ei voitu ladata.",
       "disableAria": "Poista alaryhmät käytöstä"
+    },
+    "manage": {
+      "manageButton": "Hallitse",
+      "title": "Hallitse kutsua",
+      "description": "Muutokset vaikuttavat odottavaan kutsuun ja säilyttävät kaikki käyttäjän {name} kirjatut kulut.",
+      "emailLabel": "Sähköpostiosoite",
+      "emailPlaceholder": "tili@esimerkki.fi",
+      "emailChangeWarning": "Nykyinen vastaanottaja ei voi enää hyväksyä tätä kutsua.",
+      "nameLabel": "Näyttönimi",
+      "profileNameNote": "Käyttää heidän Spliit-profiilinimeään",
+      "saveChanges": "Tallenna muutokset",
+      "updateSend": "Päivitä ja lähetä",
+      "switchToEmailSend": "Vaihda ja lähetä kutsu",
+      "switchToLinkGenerate": "Vaihda ja luo linkki",
+      "saved": "Muutokset tallennettu",
+      "cancel": "Peruuta",
+      "done": "Valmis",
+      "regenerateWarning": "Nykyinen linkki lakkaa toimimasta välittömästi.",
+      "regenerateDescription": "Uusi linkki luodaan tuoreella 30 päivän voimassaololla. Kutsu ja sen kulut säilytetään.",
+      "linkReadyTitle": "Uusi linkki valmis",
+      "linkReadyDescription": "Jaa se henkilölle, jonka haluat kutsua.",
+      "linkReadyWarning": "Kopioi se nyt — et voi nähdä sitä enää uudelleen.",
+      "emailInvalid": "Syötä kelvollinen sähköpostiosoite.",
+      "linkNotShown": "Kutsulinkkiä ei näytetä täällä. Käytä „Luo uusi linkki“ -painiketta listassa, jos haluat jakaa sen uudelleen.",
+      "switchToLinkNote": "Tallenna muuttaaksesi tämän kutsun linkiksi. Sähköpostikutsu lakkaa toimimasta."
+    },
+    "regenerate": {
+      "title": "Luo uusi linkki"
     }
   },
   "AccountSettings": {
@@ -2021,7 +2056,15 @@
       "created": "{participant} kutsui {target}",
       "revoked": "{participant} perui kutsun {target}",
       "accepted": "{target} hyväksyi kutsun",
-      "declined": "{target} hylkäsi kutsun"
+      "declined": "{target} hylkäsi kutsun",
+      "updated": "{participant} päivitti kutsun kohteelle {target}",
+      "changedFields": {
+        "deliveryType": "Toimitustapa",
+        "destination": "Vastaanottaja",
+        "displayName": "Nimi",
+        "role": "Rooli",
+        "credential": "Kutsulinkki"
+      }
     },
     "fallback": "Toiminto on kirjattu",
     "unknownActor": "Joku",
@@ -2103,7 +2146,9 @@
     "friendsEmpty": "Lisää kaveri syöttämällä hänen sähköpostinsa tai jaa linkki kutsua varten.",
     "infoLabel": "Tiedot (valinnainen)",
     "infoPlaceholder": "Lisää kontekstia, esim. 'Kämppäkaverin kulut'",
-    "createError": "Yhteisiä kuluja ystävän kanssa ei voitu luoda"
+    "createError": "Yhteisiä kuluja ystävän kanssa ei voitu luoda",
+    "copyInviteLink": "Kopioi kutsulinkki",
+    "copiedInviteLink": "Kutsulinkki kopioitu"
   },
   "BulkCategorize": {
     "title": "Joukkokategorisointi",

@@ -347,7 +347,9 @@
         "emailInvitesTitle": "הזמנות בדואר נשלחו",
         "emailInvitesDescription": "השרת שלח דואר לאנשים הבאים. הם יראו באנר קבלה/דחייה בדף הקבוצה כאשר יתחברו.",
         "shareTitle": "הצטרף לקבוצת Spliit שלי",
-        "shareText": "הצטרף לקבוצת ההוצאות שלנו ב-Spliit Cloud — {name}. פתח קישור זה לאישור: {url}"
+        "shareText": "הצטרף לקבוצת ההוצאות שלנו ב-Spliit Cloud — {name}. פתח קישור זה לאישור: {url}",
+        "copyLink": "העתקת קישור ההזמנה",
+        "copied": "הועתק"
       },
       "Mapping": {
         "Errors": {
@@ -1651,7 +1653,8 @@
         "share": "שיתוף קישור ההזמנה",
         "shareTitle": "הצטרפות ל-{groupName} ב-Spliit Cloud",
         "shareText": "יצרתי את {groupName} עבור ההוצאות המשותפות שלנו ב-Spliit Cloud. הנה קישור הזמנה חד-פעמי — פתחו אותו כדי להצטרף:\n{inviteUrl}",
-        "generateNew": "יצירת קישור חדש"
+        "generateNew": "יצירת קישור חדש",
+        "copyLink": "העתקת קישור"
       },
       "friendsDescription": "הזמינו מישהו מקבוצות ששיתפתם.",
       "selectFriendPlaceholder": "בחרו חבר…",
@@ -1670,11 +1673,15 @@
       "created": "ההזמנה נשלחה ל-{email}.",
       "link": {
         "type": "קישור חד-פעמי",
-        "fallbackLabel": "קישור הזמנה"
+        "fallbackLabel": "קישור הזמנה",
+        "anyoneWithLink": "כל מי שיש לו את הקישור",
+        "expiresOn": "הקישור יפוג ב-{date}",
+        "expired": "פג תוקף"
       },
       "email": {
         "type": "הזמנה בדוא״ל"
-      }
+      },
+      "updatedOn": "עודכן {date}"
     },
     "changeRoleAria": "שנה תפקיד",
     "remove": "הסר",
@@ -1797,6 +1804,34 @@
       "validation": "הוסיפו שם ולפחות שני משתתפים.",
       "loadError": "לא ניתן היה לטעון את תת־הקבוצות.",
       "disableAria": "השבת תת־קבוצות"
+    },
+    "manage": {
+      "manageButton": "ניהול",
+      "title": "ניהול ההזמנה",
+      "description": "השינויים חלים על ההזמנה הממתינה ושומרים על ההוצאות שנרשמו עבור {name}.",
+      "emailLabel": "כתובת דוא״ל",
+      "emailPlaceholder": "account@example.com",
+      "emailChangeWarning": "הנמען הנוכחי לא יוכל עוד לאשר הזמנה זו.",
+      "nameLabel": "שם תצוגה",
+      "profileNameNote": "משתמש בשם הפרופיל שלהם ב-Spliit",
+      "saveChanges": "שמור שינויים",
+      "updateSend": "עדכון ושליחה",
+      "switchToEmailSend": "החלפה ושליחת ההזמנה",
+      "switchToLinkGenerate": "החלפה ויצירת קישור",
+      "saved": "השינויים נשמרו",
+      "cancel": "ביטול",
+      "done": "סיום",
+      "regenerateWarning": "הקישור הנוכחי יפסיק לפעול מיד.",
+      "regenerateDescription": "ייווצר קישור חדש עם תוקף של 30 ימים. ההזמנה וההוצאות שלה נשמרות.",
+      "linkReadyTitle": "הקישור החדש מוכן",
+      "linkReadyDescription": "שתפו אותו עם האדם שאתם רוצים להזמין.",
+      "linkReadyWarning": "העתיקו אותו עכשיו — לא תוכלו לראות אותו שוב.",
+      "emailInvalid": "יש להזין כתובת דוא״ל תקינה.",
+      "linkNotShown": "קישור ההזמנה אינו מוצג כאן. אם צריך לשתף אותו שוב, יש להשתמש באפשרות \"יצירת קישור חדש\" ברשימה.",
+      "switchToLinkNote": "שמור כדי להמיר הזמנה זו לקישור. הזמנת הדוא״ל תפסיק לפעול."
+    },
+    "regenerate": {
+      "title": "יצירת קישור חדש"
     }
   },
   "AccountSettings": {
@@ -2030,7 +2065,15 @@
       "created": "{participant} הזמין את {target}",
       "revoked": "{participant} ביטל את ההזמנה ל-{target}",
       "accepted": "{target} קיבל/ה את ההזמנה",
-      "declined": "{target} דחה/ה את ההזמנה"
+      "declined": "{target} דחה/ה את ההזמנה",
+      "updated": "{participant} עדכן את ההזמנה ל-{target}",
+      "changedFields": {
+        "deliveryType": "שיטת שליחה",
+        "destination": "נמען",
+        "displayName": "שם",
+        "role": "תפקיד",
+        "credential": "קישור ההזמנה"
+      }
     },
     "fallback": "נרשמה פעילות",
     "unknownActor": "מישהו",
@@ -2113,7 +2156,9 @@
     "friendsEmpty": "הוסיפו חבר על-ידי הזנת הדוא״ל שלו או שיתוף קישור להזמנתם.",
     "infoLabel": "מידע (לא חובה)",
     "infoPlaceholder": "הוסיפו הקשר כמו 'הוצאות שותף לדירה'",
-    "createError": "לא ניתן ליצור הוצאות משותפות עם חברים"
+    "createError": "לא ניתן ליצור הוצאות משותפות עם חברים",
+    "copyInviteLink": "העתקת קישור ההזמנה",
+    "copiedInviteLink": "קישור ההזמנה הועתק"
   },
   "BulkCategorize": {
     "title": "קטלוג המוני",

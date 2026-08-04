@@ -107,7 +107,7 @@ const SelectContent = React.forwardRef<
           {...props}
         >
           <SelectScrollUpButton />
-          <SelectPrimitive.List className="p-1 h-(--anchor-height) w-full min-w-(--anchor-width)">
+          <SelectPrimitive.List className="max-h-(--available-height) w-full min-w-(--anchor-width) p-1">
             {children}
           </SelectPrimitive.List>
           <SelectScrollDownButton />

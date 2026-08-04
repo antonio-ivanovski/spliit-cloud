@@ -347,7 +347,9 @@
         "emailInvitesTitle": "Invitacions per correu enviades",
         "emailInvitesDescription": "El servidor ha enviat un correu a les persones següents. Veuran un banner d'Acceptar/Rebutjar a la pàgina del grup quan iniciïn sessió.",
         "shareTitle": "Uneix-te al meu grup de Spliit",
-        "shareText": "Uneix-te al nostre grup de despeses a Spliit Cloud — {name}. Obre aquest enllaç per acceptar: {url}"
+        "shareText": "Uneix-te al nostre grup de despeses a Spliit Cloud — {name}. Obre aquest enllaç per acceptar: {url}",
+        "copyLink": "Copia l'enllaç d'invitació",
+        "copied": "Copiat"
       },
       "Mapping": {
         "Errors": {
@@ -1650,7 +1652,8 @@
         "share": "Comparteix l'enllaç d'invitació",
         "shareTitle": "Uneix-te a {groupName} a Spliit Cloud",
         "shareText": "Acabo de crear {groupName} per a les nostres despeses compartides a Spliit Cloud. Aquí tens un enllaç d'invitació d'un sol ús — obre'l per unir-te:\n{inviteUrl}",
-        "generateNew": "Genera un enllaç nou"
+        "generateNew": "Genera un enllaç nou",
+        "copyLink": "Copia l'enllaç"
       },
       "temporaryNamePlaceholder": "p. ex. el company de pis de l'Alex",
       "friendsDescription": "Convida algú dels grups que has compartit.",
@@ -1670,11 +1673,15 @@
       "created": "Invitació enviada a {email}.",
       "link": {
         "type": "Enllaç d'un sol ús",
-        "fallbackLabel": "Enllaç d'invitació"
+        "fallbackLabel": "Enllaç d'invitació",
+        "anyoneWithLink": "Qualsevol persona amb l'enllaç",
+        "expiresOn": "L'enllaç caduca el {date}",
+        "expired": "Caducat"
       },
       "email": {
         "type": "Invitació per correu"
-      }
+      },
+      "updatedOn": "Actualitzada el {date}"
     },
     "changeRoleAria": "Canvia el rol",
     "remove": "Elimina",
@@ -1797,6 +1804,34 @@
       "validation": "Afegeix un nom i almenys dos participants.",
       "loadError": "No s'han pogut carregar els subgrups.",
       "disableAria": "Desactiva els subgrups"
+    },
+    "manage": {
+      "manageButton": "Gestiona",
+      "title": "Gestiona la invitació",
+      "description": "Els canvis afecten la invitació pendent i conserven totes les despeses registrades per a {name}.",
+      "emailLabel": "Adreça electrònica",
+      "emailPlaceholder": "account@example.com",
+      "emailChangeWarning": "El destinatari actual ja no podrà acceptar aquesta invitació.",
+      "nameLabel": "Nom visible",
+      "profileNameNote": "Utilitza el nom del seu perfil de Spliit",
+      "saveChanges": "Desa els canvis",
+      "updateSend": "Actualitza i envia",
+      "switchToEmailSend": "Canvia i envia la invitació",
+      "switchToLinkGenerate": "Canvia i genera l'enllaç",
+      "saved": "S'han desat els canvis",
+      "cancel": "Cancel·la",
+      "done": "Fet",
+      "regenerateWarning": "L'enllaç actual deixarà de funcionar immediatament.",
+      "regenerateDescription": "Es generarà un enllaç nou que caducarà al cap de 30 dies. Es conservaran la invitació i les seves despeses.",
+      "linkReadyTitle": "Enllaç nou a punt",
+      "linkReadyDescription": "Comparteix-lo amb la persona que vols convidar.",
+      "linkReadyWarning": "Copia'l ara: no el podràs tornar a veure.",
+      "emailInvalid": "Introdueix una adreça de correu vàlida.",
+      "linkNotShown": "L'enllaç d'invitació no es mostra aquí. Si necessites compartir-lo de nou, utilitza \"Genera un enllaç nou\" a la llista.",
+      "switchToLinkNote": "Desa per convertir aquesta invitació en un enllaç. La invitació per correu electrònic deixarà de funcionar."
+    },
+    "regenerate": {
+      "title": "Genera un enllaç nou"
     }
   },
   "AccountSettings": {
@@ -2030,7 +2065,15 @@
       "created": "{participant} ha convidat {target}",
       "revoked": "{participant} ha revocat la invitació a {target}",
       "accepted": "{target} ha acceptat la invitació",
-      "declined": "{target} ha rebutjat la invitació"
+      "declined": "{target} ha rebutjat la invitació",
+      "updated": "{participant} ha actualitzat la invitació per a {target}",
+      "changedFields": {
+        "deliveryType": "Mètode d'enviament",
+        "destination": "Destinatari",
+        "displayName": "Nom",
+        "role": "Rol",
+        "credential": "Enllaç d'invitació"
+      }
     },
     "fallback": "S'ha registrat una activitat",
     "unknownActor": "Algú",
@@ -2113,7 +2156,9 @@
     "friendsEmpty": "Afegeix un amic introduint el seu correu o comparteix un enllaç per convidar-lo.",
     "infoLabel": "Informació (opcional)",
     "infoPlaceholder": "Afegeix context com «Despeses de pis»",
-    "createError": "No s’han pogut crear les despeses compartides amb aquesta amistat"
+    "createError": "No s’han pogut crear les despeses compartides amb aquesta amistat",
+    "copyInviteLink": "Copia l'enllaç d'invitació",
+    "copiedInviteLink": "S'ha copiat l'enllaç d'invitació"
   },
   "BulkCategorize": {
     "title": "Categorització en lots",

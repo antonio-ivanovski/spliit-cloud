@@ -337,7 +337,9 @@
         "emailInvitesTitle": "Undangan email terkirim",
         "emailInvitesDescription": "Server mengirim email kepada orang-orang berikut. Mereka akan melihat spanduk Terima/Tolak di halaman grup saat mereka masuk.",
         "shareTitle": "Bergabung dengan grup Spliit saya",
-        "shareText": "Bergabunglah dengan grup pengeluaran kami di Spliit Cloud — {name}. Buka tautan ini untuk menerima: {url}"
+        "shareText": "Bergabunglah dengan grup pengeluaran kami di Spliit Cloud — {name}. Buka tautan ini untuk menerima: {url}",
+        "copyLink": "Salin tautan undangan",
+        "copied": "Disalin"
       },
       "Mapping": {
         "Errors": {
@@ -1636,7 +1638,8 @@
         "share": "Bagikan tautan undangan",
         "shareTitle": "Bergabung ke {groupName} di Spliit Cloud",
         "shareText": "Saya baru saja membuat {groupName} untuk pengeluaran bersama kita di Spliit Cloud. Berikut adalah tautan undangan sekali pakai — buka untuk bergabung:\n{inviteUrl}",
-        "generateNew": "Buat tautan baru"
+        "generateNew": "Buat tautan baru",
+        "copyLink": "Salin tautan"
       },
       "friendsDescription": "Undang seseorang dari grup yang pernah Anda gunakan bersama.",
       "selectFriendPlaceholder": "Pilih teman…",
@@ -1655,11 +1658,15 @@
       "created": "Undangan terkirim ke {email}.",
       "link": {
         "type": "Tautan sekali pakai",
-        "fallbackLabel": "Tautan undangan"
+        "fallbackLabel": "Tautan undangan",
+        "anyoneWithLink": "Siapa pun yang memiliki tautan",
+        "expiresOn": "Tautan kedaluwarsa {date}",
+        "expired": "Kedaluwarsa"
       },
       "email": {
         "type": "Undangan email"
-      }
+      },
+      "updatedOn": "Diperbarui {date}"
     },
     "changeRoleAria": "Ubah peran",
     "remove": "Hapus",
@@ -1781,6 +1788,34 @@
       "validation": "Tambahkan nama dan setidaknya dua peserta.",
       "loadError": "Subgrup tidak dapat dimuat.",
       "disableAria": "Nonaktifkan Subgrup"
+    },
+    "manage": {
+      "manageButton": "Kelola",
+      "title": "Kelola undangan",
+      "description": "Perubahan memengaruhi undangan yang tertunda dan mempertahankan pengeluaran yang dicatat untuk {name}.",
+      "emailLabel": "Alamat email",
+      "emailPlaceholder": "akun@example.com",
+      "emailChangeWarning": "Penerima saat ini tidak akan dapat menerima undangan ini lagi.",
+      "nameLabel": "Nama tampilan",
+      "profileNameNote": "Menggunakan nama profil Spliit mereka",
+      "saveChanges": "Simpan perubahan",
+      "updateSend": "Perbarui & kirim",
+      "switchToEmailSend": "Alihkan & kirim undangan",
+      "switchToLinkGenerate": "Alihkan & buat tautan",
+      "saved": "Perubahan disimpan",
+      "cancel": "Batal",
+      "done": "Selesai",
+      "regenerateWarning": "Tautan saat ini akan berhenti berfungsi segera.",
+      "regenerateDescription": "Tautan baru akan dibuat dengan masa berlaku 30 hari yang baru. Undangan dan pengeluarannya dipertahankan.",
+      "linkReadyTitle": "Tautan baru siap",
+      "linkReadyDescription": "Bagikan kepada orang yang ingin Anda undang.",
+      "linkReadyWarning": "Salin sekarang—Anda tidak akan dapat melihatnya lagi.",
+      "emailInvalid": "Masukkan alamat email yang valid.",
+      "linkNotShown": "Tautan undangan tidak ditampilkan di sini. Gunakan \"Buat tautan baru\" di daftar jika Anda perlu membagikannya lagi.",
+      "switchToLinkNote": "Simpan untuk mengubah undangan ini menjadi tautan. Undangan email akan berhenti berfungsi."
+    },
+    "regenerate": {
+      "title": "Buat tautan baru"
     }
   },
   "AccountSettings": {
@@ -2014,7 +2049,15 @@
       "created": "{participant} mengundang {target}",
       "revoked": "{participant} membatalkan undangan untuk {target}",
       "accepted": "{target} menerima undangan",
-      "declined": "{target} menolak undangan"
+      "declined": "{target} menolak undangan",
+      "updated": "{participant} memperbarui undangan untuk {target}",
+      "changedFields": {
+        "deliveryType": "Metode pengiriman",
+        "destination": "Penerima",
+        "displayName": "Nama",
+        "role": "Peran",
+        "credential": "Tautan undangan"
+      }
     },
     "fallback": "Sebuah aktivitas telah dicatat",
     "unknownActor": "Seseorang",
@@ -2095,7 +2138,9 @@
     "friendsEmpty": "Tambahkan teman dengan memasukkan email mereka atau bagikan tautan untuk mengundang mereka.",
     "infoLabel": "Informasi (opsional)",
     "infoPlaceholder": "Tambahkan konteks seperti 'Pengeluaran teman sekamar'",
-    "createError": "Tidak dapat membuat pengeluaran bersama teman"
+    "createError": "Tidak dapat membuat pengeluaran bersama teman",
+    "copyInviteLink": "Salin tautan undangan",
+    "copiedInviteLink": "Tautan undangan disalin"
   },
   "BulkCategorize": {
     "title": "Kategorisasi massal",

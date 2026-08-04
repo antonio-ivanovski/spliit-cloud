@@ -342,7 +342,9 @@
         "emailInvitesTitle": "E-posta davetleri gönderildi",
         "emailInvitesDescription": "Sunucu aşağıdaki kişilere e-posta gönderdi. Oturum açtıklarında grup sayfasında bir Kabul Et/Reddet bildirimi görecekler.",
         "shareTitle": "Spliit grubuma katıl",
-        "shareText": "Spliit Cloud'daki harcama grubumuza katılın — {name}. Kabul etmek için bu bağlantıyı açın: {url}"
+        "shareText": "Spliit Cloud'daki harcama grubumuza katılın — {name}. Kabul etmek için bu bağlantıyı açın: {url}",
+        "copyLink": "Davet bağlantısını kopyala",
+        "copied": "Kopyalandı"
       },
       "Mapping": {
         "Errors": {
@@ -1643,7 +1645,8 @@
         "share": "Davet bağlantısını paylaş",
         "shareTitle": "Spliit Cloud'da {groupName} grubuna katıl",
         "shareText": "Spliit Cloud'da ortak harcamalarımız için az önce {groupName} grubunu oluşturdum. İşte tek kullanımlık bir davet bağlantısı — katılmak için açın:\n{inviteUrl}",
-        "generateNew": "Yeni bağlantı oluştur"
+        "generateNew": "Yeni bağlantı oluştur",
+        "copyLink": "Bağlantıyı kopyala"
       },
       "friendsDescription": "Paylaştığınız gruplardan birini davet edin.",
       "selectFriendPlaceholder": "Bir arkadaş seçin…",
@@ -1662,11 +1665,15 @@
       "created": "{email} adresine davet gönderildi.",
       "link": {
         "type": "Tek kullanımlık bağlantı",
-        "fallbackLabel": "Davet bağlantısı"
+        "fallbackLabel": "Davet bağlantısı",
+        "anyoneWithLink": "Bağlantıya sahip olan herkes",
+        "expiresOn": "Bağlantının süresi {date} tarihinde doluyor",
+        "expired": "Süresi doldu"
       },
       "email": {
         "type": "E-posta daveti"
-      }
+      },
+      "updatedOn": "{date} tarihinde güncellendi"
     },
     "changeRoleAria": "Rolü değiştir",
     "remove": "Çıkar",
@@ -1788,6 +1795,34 @@
       "validation": "Bir ad ve en az iki katılımcı ekleyin.",
       "loadError": "Alt gruplar yüklenemedi.",
       "disableAria": "Alt grupları devre dışı bırak"
+    },
+    "manage": {
+      "manageButton": "Yönet",
+      "title": "Daveti yönet",
+      "description": "Değişiklikler bekleyen daveti etkiler ve {name} için kaydedilmiş harcamaları korunur.",
+      "emailLabel": "E-posta adresi",
+      "emailPlaceholder": "hesap@ornek.com",
+      "emailChangeWarning": "Mevcut alıcı bu daveti artık kabul edemeyecek.",
+      "nameLabel": "Görünen ad",
+      "profileNameNote": "Spliit profil adlarını kullanır",
+      "saveChanges": "Değişiklikleri kaydet",
+      "updateSend": "Güncelle ve gönder",
+      "switchToEmailSend": "E-postaya geç ve davet gönder",
+      "switchToLinkGenerate": "Bağlantıya geç ve oluştur",
+      "saved": "Değişiklikler kaydedildi",
+      "cancel": "İptal",
+      "done": "Tamam",
+      "regenerateWarning": "Mevcut bağlantı hemen çalışmayı durduracak.",
+      "regenerateDescription": "Yeni 30 günlük süreyle yeni bir bağlantı oluşturulacak. Davet ve harcamaları korunur.",
+      "linkReadyTitle": "Yeni bağlantı hazır",
+      "linkReadyDescription": "Davet etmek istediğiniz kişiyle paylaşın.",
+      "linkReadyWarning": "Şimdi kopyalayın—tekrar görüntüleyemeyeceksiniz.",
+      "emailInvalid": "Geçerli bir e-posta adresi girin.",
+      "linkNotShown": "Davet bağlantısı burada gösterilmiyor. Yeniden paylaşmanız gerekirse listedeki \"Yeni bağlantı oluştur\" seçeneğini kullanın.",
+      "switchToLinkNote": "Bu daveti bağlantıya dönüştürmek için kaydet. E-posta daveti çalışmayı durduracak."
+    },
+    "regenerate": {
+      "title": "Yeni bağlantı oluştur"
     }
   },
   "AccountSettings": {
@@ -2021,7 +2056,15 @@
       "created": "{participant}, {target} kullanıcısını davet etti",
       "revoked": "{participant}, {target} için daveti iptal etti",
       "accepted": "{target} daveti kabul etti",
-      "declined": "{target} daveti reddetti"
+      "declined": "{target} daveti reddetti",
+      "updated": "{participant}, {target} için daveti güncelledi",
+      "changedFields": {
+        "deliveryType": "Gönderim yöntemi",
+        "destination": "Alıcı",
+        "displayName": "Ad",
+        "role": "Rol",
+        "credential": "Davet bağlantısı"
+      }
     },
     "fallback": "Bir aktivite kaydedildi",
     "unknownActor": "Birisi",
@@ -2103,7 +2146,9 @@
     "friendsEmpty": "E-postalarını girerek bir arkadaş ekleyin veya davet etmek için bir bağlantı paylaşın.",
     "infoLabel": "Bilgi (isteğe bağlı)",
     "infoPlaceholder": "'Oda arkadaşı harcamaları' gibi bağlam ekleyin",
-    "createError": "Arkadaşla ortak harcamalar oluşturulamadı"
+    "createError": "Arkadaşla ortak harcamalar oluşturulamadı",
+    "copyInviteLink": "Davet bağlantısını kopyala",
+    "copiedInviteLink": "Davet bağlantısı kopyalandı"
   },
   "BulkCategorize": {
     "title": "Toplu kategorilendirme",

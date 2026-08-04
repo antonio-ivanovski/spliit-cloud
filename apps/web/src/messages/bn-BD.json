@@ -230,7 +230,15 @@
       "created": "{participant} {target}-কে আমন্ত্রণ জানিয়েছেন",
       "revoked": "{participant} {target}-এর জন্য আমন্ত্রণ বাতিল করেছেন",
       "accepted": "{target} আমন্ত্রণ গ্রহণ করেছেন",
-      "declined": "{target} আমন্ত্রণ প্রত্যাখ্যান করেছেন"
+      "declined": "{target} আমন্ত্রণ প্রত্যাখ্যান করেছেন",
+      "updated": "{participant} {target}-এর আমন্ত্রণ আপডেট করেছেন",
+      "changedFields": {
+        "deliveryType": "প্রেরণ পদ্ধতি",
+        "destination": "প্রাপক",
+        "displayName": "নাম",
+        "role": "ভূমিকা",
+        "credential": "আমন্ত্রণ লিংক"
+      }
     },
     "member": {
       "left": "{participant} গ্রুপ ছেড়েছেন",
@@ -1509,7 +1517,9 @@
     "friendsEmpty": "তাদের ইমেল লিখে একটি বন্ধু যোগ করুন বা তাদের আমন্ত্রণ জানাতে একটি লিংক শেয়ার করুন।",
     "infoLabel": "তথ্য (ঐচ্ছিক)",
     "infoPlaceholder": "'রুমমেট খরচ' মত প্রসঙ্গ যোগ করুন",
-    "createError": "বন্ধু খরচ তৈরি করা যায়নি"
+    "createError": "বন্ধু খরচ তৈরি করা যায়নি",
+    "copyInviteLink": "আমন্ত্রণ লিংক কপি করুন",
+    "copiedInviteLink": "আমন্ত্রণ লিংক কপি হয়েছে"
   },
   "GroupForm": {
     "CurrencyCodeField": {
@@ -1648,7 +1658,9 @@
         "emailInvitesTitle": "ইমেল আমন্ত্রণ পাঠানো হয়েছে",
         "emailInvitesDescription": "সার্ভার নিম্নলিখিত ব্যক্তিদের ইমেল করেছে। তারা সাইন ইন করলে গ্রুপ পৃষ্ঠায় একটি গ্রহণ/প্রত্যাখ্যান ব্যানার দেখতে পাবে।",
         "shareTitle": "Spliit Cloud-এ আমার গ্রুপে যোগ দিন",
-        "shareText": "Spliit Cloud-এ আমাদের খরচ গ্রুপে যোগ দিন — {name}। গ্রহণ করতে এই লিংক খুলুন: {url}"
+        "shareText": "Spliit Cloud-এ আমাদের খরচ গ্রুপে যোগ দিন — {name}। গ্রহণ করতে এই লিংক খুলুন: {url}",
+        "copyLink": "আমন্ত্রণ লিংক কপি করুন",
+        "copied": "কপি হয়েছে"
       },
       "Mapping": {
         "Errors": {
@@ -2007,8 +2019,12 @@
       },
       "link": {
         "type": "একক-ব্যবহারের লিংক",
-        "fallbackLabel": "আমন্ত্রণ লিংক"
-      }
+        "fallbackLabel": "আমন্ত্রণ লিংক",
+        "anyoneWithLink": "লিংকের সাথে যে কেউ",
+        "expiresOn": "লিংক মেয়াদোত্তীর্ণ হবে {date}",
+        "expired": "মেয়াদোত্তীর্ণ"
+      },
+      "updatedOn": "{date} আপডেট হয়েছে"
     },
     "invite": {
       "title": "সদস্য আমন্ত্রণ",
@@ -2038,7 +2054,8 @@
         "share": "আমন্ত্রণ লিংক শেয়ার করুন",
         "shareTitle": "Spliit Cloud-এ {groupName} এ যোগ দিন",
         "shareText": "আমি Spliit Cloud-এ আমাদের যৌথ খরচের জন্য {groupName} তৈরি করেছি। এটি একটি এককালীন আমন্ত্রণ লিংক — যোগ দিতে খুলুন:\n{inviteUrl}",
-        "generateNew": "নতুন লিংক তৈরি করুন"
+        "generateNew": "নতুন লিংক তৈরি করুন",
+        "copyLink": "লিংক কপি করুন"
       },
       "tab": {
         "email": "ইমেল",
@@ -2165,6 +2182,34 @@
       "validation": "একটি নাম এবং কমপক্ষে দুইজন অংশগ্রহণকারী যোগ করুন।",
       "loadError": "উপগ্রুপ লোড করা যায়নি।",
       "disableAria": "উপগ্রুপ নিষ্ক্রিয় করুন"
+    },
+    "manage": {
+      "manageButton": "পরিচালনা",
+      "title": "আমন্ত্রণ পরিচালনা করুন",
+      "description": "পরিবর্তনগুলি মুলতুবি আমন্ত্রণকে প্রভাবিত করে এবং {name}-এর জন্য রেকর্ড করা যেকোনো খরচ সংরক্ষণ করে।",
+      "emailLabel": "ইমেল ঠিকানা",
+      "emailPlaceholder": "hishab@example.com",
+      "emailChangeWarning": "বর্তমান প্রাপক আর এই আমন্ত্রণ গ্রহণ করতে পারবেন না।",
+      "nameLabel": "প্রদর্শন নাম",
+      "profileNameNote": "তাদের Spliit প্রোফাইল নাম ব্যবহার করে",
+      "saveChanges": "পরিবর্তন সংরক্ষণ করুন",
+      "updateSend": "আপডেট এবং পাঠান",
+      "switchToEmailSend": "পাল্টান এবং আমন্ত্রণ পাঠান",
+      "switchToLinkGenerate": "পাল্টান এবং লিংক তৈরি করুন",
+      "saved": "পরিবর্তন সংরক্ষিত হয়েছে",
+      "cancel": "বাতিল করুন",
+      "done": "সম্পন্ন",
+      "regenerateWarning": "বর্তমান লিংক অবিলম্বে কাজ করা বন্ধ করবে।",
+      "regenerateDescription": "একটি নতুন লিংক ৩০ দিনের নতুন মেয়াদ সহ তৈরি হবে। আমন্ত্রণ এবং এর খরচগুলি রক্ষিত থাকবে।",
+      "linkReadyTitle": "নতুন লিংক প্রস্তুত",
+      "linkReadyDescription": "যাকে আমন্ত্রণ জানাতে চান তার সাথে এটি শেয়ার করুন।",
+      "linkReadyWarning": "এখনই কপি করুন — আপনি আর এটি দেখতে পারবেন না।",
+      "emailInvalid": "একটি বৈধ ইমেল ঠিকানা দিন।",
+      "linkNotShown": "আমন্ত্রণ লিংক এখানে দেখানো হয়নি। আবার শেয়ার করতে হলে তালিকায় \"নতুন লিংক তৈরি করুন\" ব্যবহার করুন।",
+      "switchToLinkNote": "এই আমন্ত্রণকে একটি লিংকে রূপান্তর করতে সংরক্ষণ করুন। ইমেল আমন্ত্রণ আর কাজ করবে না।"
+    },
+    "regenerate": {
+      "title": "নতুন লিংক তৈরি করুন"
     }
   },
   "OfflineBanner": {

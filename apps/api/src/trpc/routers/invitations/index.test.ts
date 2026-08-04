@@ -47,6 +47,11 @@ async function authAs(userId: string) {
 }
 
 describe('invitationsRouter.list', () => {
+  // `list` resolves recipient profiles with one bulk account lookup.
+  beforeEach(() => {
+    prismaMock.account.findMany.mockResolvedValue([] as never)
+  })
+
   it('returns the invitations list for an ADMIN', async () => {
     await authAs('acct-admin')
     prismaMock.group.findUnique.mockResolvedValue({
@@ -68,6 +73,7 @@ describe('invitationsRouter.list', () => {
         role: 'MEMBER',
         status: 'PENDING',
         createdAt: new Date(),
+        updatedAt: new Date(),
       },
     ])
 
@@ -122,6 +128,7 @@ describe('invitationsRouter.list', () => {
         role: 'MEMBER',
         status: 'PENDING',
         createdAt: new Date(),
+        updatedAt: new Date(),
         expiresAt: null,
         ledgerParticipantId: null,
         invitedById: 'acct-member',
@@ -135,6 +142,7 @@ describe('invitationsRouter.list', () => {
         role: 'MEMBER',
         status: 'PENDING',
         createdAt: new Date(),
+        updatedAt: new Date(),
         expiresAt: null,
         ledgerParticipantId: null,
         invitedById: 'acct-admin',
@@ -172,6 +180,7 @@ describe('invitationsRouter.list', () => {
         role: 'MEMBER',
         status: 'PENDING',
         createdAt: new Date(),
+        updatedAt: new Date(),
         expiresAt: null,
         ledgerParticipantId: 'lp-unused',
         invitedById: 'acct-member',
@@ -185,6 +194,7 @@ describe('invitationsRouter.list', () => {
         role: 'MEMBER',
         status: 'PENDING',
         createdAt: new Date(),
+        updatedAt: new Date(),
         expiresAt: null,
         ledgerParticipantId: 'lp-used',
         invitedById: 'acct-member',
@@ -220,6 +230,48 @@ describe('invitationsRouter.list', () => {
     ])
     expect(prismaMock.ledgerParticipant.findMany).toHaveBeenCalledTimes(1)
     expect(prismaMock.expense.findMany).toHaveBeenCalledTimes(1)
+  })
+
+  it('keeps an expired PENDING link invitation listed and manageable', async () => {
+    await authAs('acct-admin')
+    prismaMock.group.findUnique.mockResolvedValue({
+      id: 'grp-1',
+      ledgerId: 'ledger-1',
+      ledger: { id: 'ledger-1' },
+    } as never)
+    prismaMock.groupMember.findUnique.mockResolvedValue({
+      groupId: 'grp-1',
+      accountId: 'acct-admin',
+      role: 'ADMIN',
+      status: 'ACTIVE',
+    } as never)
+    prismaMock.groupInvitation.findMany.mockResolvedValue([
+      {
+        id: 'inv-expired-link',
+        groupId: 'grp-1',
+        email: 'aGVsbG8@link.placeholder.local',
+        type: 'LINK',
+        temporaryName: 'Old Guest',
+        role: 'MEMBER',
+        status: 'PENDING',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        expiresAt: new Date(Date.now() - 1000 * 60 * 60),
+        ledgerParticipantId: 'lp-old',
+        invitedById: 'acct-admin',
+      },
+    ] as never)
+
+    const result = await makeCaller('acct-admin').list({ groupId: 'grp-1' })
+
+    expect(result.invitations).toHaveLength(1)
+    expect(result.invitations[0]).toMatchObject({
+      id: 'inv-expired-link',
+      status: 'PENDING',
+      canManage: true,
+      canRevoke: true,
+      expiresAt: expect.any(Date) as Date,
+    })
   })
 
   it('rejects a non-member with FORBIDDEN', async () => {
@@ -703,6 +755,7 @@ describe('invitationsRouter.create — guards and email', () => {
     } as never)
     prismaMock.account.findFirst.mockResolvedValue({
       id: 'acct-bob',
+      name: 'Bob Profile',
     } as never)
 
     const caller = makeCaller('acct-admin')
@@ -710,9 +763,24 @@ describe('invitationsRouter.create — guards and email', () => {
       groupId: 'grp-1',
       email: 'bob@example.com',
       role: 'MEMBER',
+      temporaryName: 'Submitted Name',
     })
 
     expect(sendEmailMock).not.toHaveBeenCalled()
+    // Profile name is authoritative on create too, matching the manage path.
+    expect(prismaMock.groupInvitation.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          email: 'bob@example.com',
+          temporaryName: 'Bob Profile',
+        }),
+      }),
+    )
+    expect(prismaMock.ledgerParticipant.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ displayName: 'Bob Profile' }),
+      }),
+    )
   })
 
   it('sends a "sign-up" invitation email when the recipient has no account', async () => {
@@ -1469,11 +1537,13 @@ describe('invitationsRouter.acceptLink', () => {
     })
 
     // First call: pre-check via getLinkInvitationPreview (findFirst).
-    // Second call: the transaction's re-read of the flipped row
-    // (findUnique by tokenHash).
+    // Second call: the pending-EMAIL-vs-link guard (findFirst).
+    // Transaction re-reads the flipped row (findUnique by tokenHash).
     let findFirstCalls = 0
-    prismaMock.groupInvitation.findFirst.mockImplementation(async () => {
+    prismaMock.groupInvitation.findFirst.mockImplementation(async (args) => {
+      const where = (args as { where?: { type?: string } }).where
       findFirstCalls++
+      if (where?.type === 'EMAIL') return null as never
       return {
         id: 'inv-link-1',
         status: 'PENDING',
@@ -1537,10 +1607,10 @@ describe('invitationsRouter.acceptLink', () => {
         }),
       }),
     )
-    // findFirst is hit twice: once for the pre-check, once (via
-    // findUnique) inside the transaction when re-reading the flipped
-    // row.
-    expect(findFirstCalls).toBe(1)
+    // findFirst is hit twice before the transaction: once for the
+    // pre-check (preview), once for the pending-EMAIL-vs-link guard.
+    // The transaction re-reads the flipped row via findUnique.
+    expect(findFirstCalls).toBe(2)
   })
 
   it('rejects an expired token via the pre-check', async () => {
@@ -1655,6 +1725,45 @@ describe('invitationsRouter.acceptLink', () => {
     ).rejects.toThrow(/already a member/i)
   })
 
+  it('rejects a link acceptance when the account has a pending EMAIL invitation for the group', async () => {
+    authState.session = {
+      user: { id: 'acct-bob' },
+      session: { id: 'sess-bob' },
+    }
+    prismaMock.account.findUnique.mockResolvedValue({
+      id: 'acct-bob',
+      email: 'bob@example.com',
+      emailVerified: true,
+      name: 'Bob',
+    })
+    // The preview lookup returns the LINK row; the pending-EMAIL guard
+    // (findFirst with `type: 'EMAIL'`) returns the personal invite.
+    prismaMock.groupInvitation.findFirst.mockImplementation(
+      async (args: unknown) => {
+        const where = (args as { where?: { type?: string } }).where
+        if (where?.type === 'EMAIL') {
+          return { id: 'inv-email-1' } as never
+        }
+        return {
+          id: 'inv-link-1',
+          status: 'PENDING',
+          role: 'MEMBER',
+          temporaryName: null,
+          expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
+          group: { id: 'grp-1', name: 'Trip' },
+          invitedBy: { name: 'Alice' },
+        } as never
+      },
+    )
+
+    const caller = makeCaller('acct-bob')
+    await expect(
+      caller.acceptLink({ token: 'aGVsbG8td29ybGQtdG9rZW4tMTIzNDU2' }),
+    ).rejects.toThrow(/personal email invitation/i)
+    // The link must not be flipped by the guard.
+    expect(prismaMock.groupInvitation.updateMany).not.toHaveBeenCalled()
+  })
+
   it('rejects an unauthenticated caller with UNAUTHORIZED', async () => {
     authState.session = null
     const ctx = await createTRPCContext({
@@ -1687,15 +1796,19 @@ describe('invitationsRouter.acceptLink', () => {
       name: 'Bob',
     })
 
-    prismaMock.groupInvitation.findFirst.mockResolvedValue({
-      id: 'inv-link-2',
-      status: 'PENDING',
-      role: 'MEMBER',
-      temporaryName: null,
-      expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
-      group: { id: 'grp-1', name: 'Trip' },
-      invitedBy: { name: 'Alice' },
-    } as never)
+    prismaMock.groupInvitation.findFirst.mockImplementation(async (args) => {
+      const where = (args as { where?: { type?: string } }).where
+      if (where?.type === 'EMAIL') return null as never
+      return {
+        id: 'inv-link-2',
+        status: 'PENDING',
+        role: 'MEMBER',
+        temporaryName: null,
+        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
+        group: { id: 'grp-1', name: 'Trip' },
+        invitedBy: { name: 'Alice' },
+      } as never
+    })
     prismaMock.groupInvitation.findUnique.mockResolvedValue({
       id: 'inv-link-2',
       groupId: 'grp-1',
@@ -1768,5 +1881,586 @@ describe('invitationsRouter.acceptLink', () => {
     })
     // And the pending placeholder must NOT be updated in place.
     expect(prismaMock.ledgerParticipant.update).not.toHaveBeenCalled()
+  })
+})
+
+describe('invitationsRouter.updatePending', () => {
+  const NOW = new Date()
+
+  function seedUpdateContext(args: {
+    callerRole?: 'ADMIN' | 'MEMBER'
+    invitation?: Partial<{
+      type: 'EMAIL' | 'LINK'
+      email: string
+      temporaryName: string | null
+      role: 'ADMIN' | 'MEMBER'
+      status: 'PENDING' | 'ACCEPTED' | 'REVOKED'
+      invitedById: string
+      ledgerParticipantId: string | null
+      tokenHash: string | null
+      expiresAt: Date | null
+    }>
+    group?: Partial<{ archived: boolean; groupType: 'GROUP' | 'FRIEND' }>
+  }) {
+    const invitation = {
+      id: 'inv-1',
+      groupId: 'grp-1',
+      type: 'EMAIL',
+      email: 'bob@example.com',
+      temporaryName: null,
+      role: 'MEMBER',
+      status: 'PENDING',
+      createdAt: NOW,
+      updatedAt: NOW,
+      expiresAt: null,
+      ledgerParticipantId: 'lp-bob',
+      invitedById: 'acct-admin',
+      tokenHash: null,
+      group: {
+        archived: args.group?.archived ?? false,
+        groupType: args.group?.groupType ?? 'GROUP',
+      },
+      ...args.invitation,
+    }
+    prismaMock.group.findUnique.mockResolvedValue({
+      id: 'grp-1',
+      name: 'Roadtrip 2026',
+      ledgerId: 'ledger-1',
+      ledger: { id: 'ledger-1', currencyCode: null },
+      archived: invitation.group.archived,
+      groupType: invitation.group.groupType,
+    } as never)
+    prismaMock.groupMember.findUnique.mockResolvedValue({
+      groupId: 'grp-1',
+      accountId: 'acct-caller',
+      role: args.callerRole ?? 'ADMIN',
+      status: 'ACTIVE',
+      ledgerParticipant: null,
+    } as never)
+    prismaMock.groupInvitation.findUnique.mockResolvedValue(invitation as never)
+    prismaMock.groupInvitation.updateMany.mockResolvedValue({
+      count: 1,
+    } as never)
+    prismaMock.ledgerParticipant.update.mockResolvedValue({} as never)
+    prismaMock.groupInvitation.findUniqueOrThrow.mockResolvedValue({
+      ...invitation,
+      updatedAt: new Date(NOW.getTime() + 1000),
+    } as never)
+    prismaMock.activity.create.mockResolvedValue({
+      id: 'act-1',
+      time: new Date(),
+    } as never)
+    return { invitation }
+  }
+
+  it('saves metadata-only changes (name/role) without resending or rotating', async () => {
+    await authAs('acct-admin')
+    seedUpdateContext({})
+
+    const caller = makeCaller('acct-admin')
+    const result = await caller.updatePending({
+      invitationId: 'inv-1',
+      role: 'ADMIN',
+      temporaryName: 'Bobby',
+      delivery: { type: 'EMAIL', email: 'bob@example.com' },
+    })
+
+    expect(result.inviteUrl).toBeNull()
+    expect(sendEmailMock).not.toHaveBeenCalled()
+    expect(prismaMock.groupInvitation.updateMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({ status: 'PENDING' }),
+        data: expect.objectContaining({
+          role: 'ADMIN',
+          temporaryName: 'Bobby',
+        }),
+      }),
+    )
+    // Participant display name mirrors the invitation label.
+    expect(prismaMock.ledgerParticipant.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { id: 'lp-bob' },
+        data: { displayName: 'Bobby' },
+      }),
+    )
+    // One INVITATION_UPDATED activity with display-safe changes.
+    const activityCall = prismaMock.activity.create.mock.calls[0]?.[0] as {
+      data: { type: string; data: { changes: unknown[] } }
+    }
+    expect(activityCall.data.type).toBe('INVITATION_UPDATED')
+    expect(activityCall.data.data.changes).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ field: 'displayName' }),
+        expect.objectContaining({ field: 'role' }),
+      ]),
+    )
+    // No raw token material in the activity payload.
+    expect(JSON.stringify(activityCall.data.data)).not.toMatch(/placeholder/)
+    // The mutation output mirrors the list's canRevoke computation.
+    expect(result.invitation.canRevoke).toBe(true)
+  })
+
+  it('retargets the email, sends to the new recipient, and keeps the row/participant', async () => {
+    await authAs('acct-admin')
+    const { invitation } = seedUpdateContext({})
+    // The transaction re-read reflects the retargeted row.
+    prismaMock.groupInvitation.findUniqueOrThrow.mockResolvedValue({
+      ...invitation,
+      email: 'carol@example.com',
+      updatedAt: new Date(NOW.getTime() + 1000),
+    } as never)
+    // No account exists for the new destination.
+    prismaMock.account.findFirst.mockResolvedValue(null as never)
+    prismaMock.groupInvitation.findFirst.mockResolvedValue(null as never)
+    prismaMock.groupMember.findFirst.mockResolvedValue(null as never)
+
+    const caller = makeCaller('acct-admin')
+    const result = await caller.updatePending({
+      invitationId: 'inv-1',
+      role: 'MEMBER',
+      delivery: { type: 'EMAIL', email: 'CAROL@example.com' },
+    })
+
+    expect(result.inviteUrl).toBeNull()
+    expect(sendEmailMock).toHaveBeenCalledTimes(1)
+    expect(sendEmailMock.mock.calls[0]?.[0]?.to).toBe('carol@example.com')
+    expect(prismaMock.groupInvitation.updateMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          email: 'carol@example.com',
+          // tokenHash is untouched for EMAIL -> EMAIL.
+          role: 'MEMBER',
+        }),
+      }),
+    )
+    const activityCall = prismaMock.activity.create.mock.calls[0]?.[0] as {
+      data: { data: { changes: { field: string }[] } }
+    }
+    expect(activityCall.data.data.changes).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          field: 'destination',
+          before: 'bob@example.com',
+          after: 'carol@example.com',
+        }),
+      ]),
+    )
+  })
+
+  it('emails an existing account on retarget using the existing-user template', async () => {
+    await authAs('acct-admin')
+    const { invitation } = seedUpdateContext({})
+    // The transaction re-read reflects the retargeted row.
+    prismaMock.groupInvitation.findUniqueOrThrow.mockResolvedValue({
+      ...invitation,
+      email: 'carol@example.com',
+      updatedAt: new Date(NOW.getTime() + 1000),
+    } as never)
+    prismaMock.account.findFirst.mockResolvedValue({
+      id: 'acct-carol',
+      name: 'Carol Profile',
+      image: null,
+    } as never)
+
+    const caller = makeCaller('acct-admin')
+    const result = await caller.updatePending({
+      invitationId: 'inv-1',
+      role: 'MEMBER',
+      temporaryName: 'Submitted Name',
+      delivery: { type: 'EMAIL', email: 'carol@example.com' },
+    })
+
+    // The retargeted existing account IS emailed (unlike the create path,
+    // where the in-app notification covers it) — with the existing-user
+    // template, which never renders a "you will appear as" line or puts the
+    // temporary name in the subject.
+    expect(sendEmailMock).toHaveBeenCalledTimes(1)
+    const call = sendEmailMock.mock.calls[0][0]
+    expect(call.to).toBe('carol@example.com')
+    expect(call.text).toMatch(/open spliit cloud/i)
+    expect(call.text).not.toContain('You will appear as')
+    expect(call.text).not.toContain('Submitted Name')
+    expect(call.subject).not.toContain('as Submitted Name')
+    // Profile name is authoritative and overwrites the submitted name.
+    expect(prismaMock.groupInvitation.updateMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ temporaryName: 'Carol Profile' }),
+      }),
+    )
+    expect(result.invitation.recipientProfile).toEqual({
+      id: 'acct-carol',
+      name: 'Carol Profile',
+      image: null,
+    })
+    // The mutation output mirrors the list's canRevoke computation.
+    expect(result.invitation.canRevoke).toBe(true)
+  })
+
+  it('converts EMAIL -> LINK, returns a one-time URL, and stores only the hash', async () => {
+    await authAs('acct-admin')
+    const { invitation } = seedUpdateContext({})
+    // The transaction re-read reflects the converted row.
+    prismaMock.groupInvitation.findUniqueOrThrow.mockResolvedValue({
+      ...invitation,
+      type: 'LINK',
+      email: 'aGVsbG8@link.placeholder.local',
+      tokenHash: 'new-hash',
+      expiresAt: new Date(NOW.getTime() + 30 * 24 * 60 * 60 * 1000),
+      updatedAt: new Date(NOW.getTime() + 1000),
+    } as never)
+
+    const caller = makeCaller('acct-admin')
+    const result = await caller.updatePending({
+      invitationId: 'inv-1',
+      role: 'MEMBER',
+      delivery: { type: 'LINK' },
+    })
+
+    expect(result.inviteUrl).toMatch(
+      /^http:\/\/localhost:3000\/groups\/grp-1\?invite=[A-Za-z0-9_-]+$/,
+    )
+    expect(result.invitation.type).toBe('LINK')
+    const updateArgs = prismaMock.groupInvitation.updateMany.mock
+      .calls[0]?.[0] as {
+      data: { type: string; email: string; tokenHash: string; expiresAt: Date }
+    }
+    expect(updateArgs.data.type).toBe('LINK')
+    expect(updateArgs.data.email.endsWith('@link.placeholder.local')).toBe(true)
+    expect(updateArgs.data.tokenHash).not.toBeNull()
+    expect(prismaMock.activity.create).toHaveBeenCalled()
+  })
+
+  it('converts LINK -> EMAIL and clears the credential', async () => {
+    await authAs('acct-admin')
+    seedUpdateContext({
+      invitation: {
+        type: 'LINK',
+        email: 'aGVsbG8@link.placeholder.local',
+        tokenHash: 'old-hash',
+        expiresAt: NOW,
+      },
+    })
+    prismaMock.account.findFirst.mockResolvedValue(null as never)
+    prismaMock.groupInvitation.findFirst.mockResolvedValue(null as never)
+    prismaMock.groupMember.findFirst.mockResolvedValue(null as never)
+
+    const caller = makeCaller('acct-admin')
+    const result = await caller.updatePending({
+      invitationId: 'inv-1',
+      role: 'MEMBER',
+      delivery: { type: 'EMAIL', email: 'carol@example.com' },
+    })
+
+    expect(result.inviteUrl).toBeNull()
+    expect(sendEmailMock).toHaveBeenCalledTimes(1)
+    expect(prismaMock.groupInvitation.updateMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          type: 'EMAIL',
+          email: 'carol@example.com',
+          tokenHash: null,
+          expiresAt: null,
+        }),
+      }),
+    )
+  })
+
+  it('updates an expired PENDING link invitation (metadata only)', async () => {
+    await authAs('acct-admin')
+    seedUpdateContext({
+      invitation: {
+        type: 'LINK',
+        email: 'aGVsbG8@link.placeholder.local',
+        tokenHash: 'old-hash',
+        expiresAt: new Date(Date.now() - 1000),
+      },
+    })
+
+    const result = await makeCaller('acct-admin').updatePending({
+      invitationId: 'inv-1',
+      role: 'ADMIN',
+      temporaryName: 'Renamed Guest',
+      delivery: { type: 'LINK' },
+    })
+
+    expect(result.inviteUrl).toBeNull()
+    expect(result.invitation).toMatchObject({
+      type: 'LINK',
+      status: 'PENDING',
+      canManage: true,
+      canRevoke: true,
+    })
+    expect(prismaMock.groupInvitation.updateMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({ status: 'PENDING' }),
+      }),
+    )
+  })
+
+  it('rejects a member managing an invitation they did not create', async () => {
+    await authAs('acct-member')
+    seedUpdateContext({ callerRole: 'MEMBER' })
+
+    await expect(
+      makeCaller('acct-member').updatePending({
+        invitationId: 'inv-1',
+        role: 'MEMBER',
+        delivery: { type: 'LINK' },
+      }),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+    expect(prismaMock.groupInvitation.updateMany).not.toHaveBeenCalled()
+  })
+
+  it('rejects a member assigning the ADMIN role', async () => {
+    await authAs('acct-member')
+    seedUpdateContext({
+      callerRole: 'MEMBER',
+      invitation: { invitedById: 'acct-member' },
+    })
+
+    await expect(
+      makeCaller('acct-member').updatePending({
+        invitationId: 'inv-1',
+        role: 'ADMIN',
+        delivery: { type: 'LINK' },
+      }),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+  })
+
+  it('rejects managing a non-pending invitation', async () => {
+    await authAs('acct-admin')
+    seedUpdateContext({ invitation: { status: 'ACCEPTED' } })
+
+    await expect(
+      makeCaller('acct-admin').updatePending({
+        invitationId: 'inv-1',
+        role: 'MEMBER',
+        delivery: { type: 'LINK' },
+      }),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+  })
+
+  it('rejects updates in archived groups', async () => {
+    await authAs('acct-admin')
+    seedUpdateContext({ group: { archived: true } })
+
+    await expect(
+      makeCaller('acct-admin').updatePending({
+        invitationId: 'inv-1',
+        role: 'MEMBER',
+        delivery: { type: 'LINK' },
+      }),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+  })
+
+  it('rejects updates in FRIEND groups', async () => {
+    await authAs('acct-admin')
+    seedUpdateContext({ group: { groupType: 'FRIEND' } })
+
+    await expect(
+      makeCaller('acct-admin').updatePending({
+        invitationId: 'inv-1',
+        role: 'MEMBER',
+        delivery: { type: 'LINK' },
+      }),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+  })
+
+  it('rejects a duplicate pending destination email', async () => {
+    await authAs('acct-admin')
+    seedUpdateContext({})
+    prismaMock.groupInvitation.findFirst.mockResolvedValue({
+      id: 'inv-other',
+    } as never)
+
+    await expect(
+      makeCaller('acct-admin').updatePending({
+        invitationId: 'inv-1',
+        role: 'MEMBER',
+        delivery: { type: 'EMAIL', email: 'carol@example.com' },
+      }),
+    ).rejects.toMatchObject({
+      code: 'BAD_REQUEST',
+      message: expect.stringMatching(/already pending/i),
+    })
+  })
+
+  it('rejects retargeting to the inviter’s own email', async () => {
+    await authAs('acct-admin')
+    seedUpdateContext({})
+
+    // authAs binds the caller account to alice@example.com.
+    await expect(
+      makeCaller('acct-admin').updatePending({
+        invitationId: 'inv-1',
+        role: 'MEMBER',
+        delivery: { type: 'EMAIL', email: 'ALICE@example.com' },
+      }),
+    ).rejects.toMatchObject({ code: 'BAD_REQUEST' })
+  })
+
+  it('rejects a concurrent stale update once the invitation is no longer pending', async () => {
+    await authAs('acct-admin')
+    seedUpdateContext({})
+    prismaMock.groupInvitation.updateMany.mockResolvedValue({
+      count: 0,
+    } as never)
+
+    await expect(
+      makeCaller('acct-admin').updatePending({
+        invitationId: 'inv-1',
+        role: 'MEMBER',
+        delivery: { type: 'LINK' },
+      }),
+    ).rejects.toMatchObject({
+      code: 'BAD_REQUEST',
+      message: expect.stringMatching(/no longer pending/i),
+    })
+  })
+
+  it('does not leak the tokenHash in the mutation response', async () => {
+    await authAs('acct-admin')
+    seedUpdateContext({})
+
+    const result = await makeCaller('acct-admin').updatePending({
+      invitationId: 'inv-1',
+      role: 'MEMBER',
+      delivery: { type: 'LINK' },
+    })
+    expect(JSON.stringify(result)).not.toContain('tokenHash')
+  })
+})
+
+describe('invitationsRouter.regenerateLink', () => {
+  const NOW = new Date()
+
+  function seedRegenerateContext(args: {
+    callerRole?: 'ADMIN' | 'MEMBER'
+    invitation?: Partial<{
+      email: string
+      temporaryName: string | null
+      role: 'ADMIN' | 'MEMBER'
+      status: 'PENDING' | 'ACCEPTED'
+      invitedById: string
+      tokenHash: string | null
+      expiresAt: Date | null
+    }>
+  }) {
+    const invitation = {
+      id: 'inv-1',
+      groupId: 'grp-1',
+      type: 'LINK',
+      email: 'aGVsbG8@link.placeholder.local',
+      temporaryName: 'Guest',
+      role: 'MEMBER',
+      status: 'PENDING',
+      createdAt: NOW,
+      updatedAt: NOW,
+      expiresAt: NOW,
+      ledgerParticipantId: 'lp-bob',
+      invitedById: 'acct-admin',
+      tokenHash: 'old-hash',
+      group: { archived: false, groupType: 'GROUP' },
+      ...args.invitation,
+    }
+    prismaMock.group.findUnique.mockResolvedValue({
+      id: 'grp-1',
+      name: 'Roadtrip 2026',
+      ledgerId: 'ledger-1',
+      ledger: { id: 'ledger-1', currencyCode: null },
+    } as never)
+    prismaMock.groupMember.findUnique.mockResolvedValue({
+      groupId: 'grp-1',
+      accountId: 'acct-caller',
+      role: args.callerRole ?? 'ADMIN',
+      status: 'ACTIVE',
+      ledgerParticipant: null,
+    } as never)
+    prismaMock.groupInvitation.findUnique.mockResolvedValue(invitation as never)
+    prismaMock.groupInvitation.updateMany.mockResolvedValue({
+      count: 1,
+    } as never)
+    prismaMock.groupInvitation.findUniqueOrThrow.mockResolvedValue({
+      ...invitation,
+      tokenHash: 'new-hash',
+      expiresAt: new Date(NOW.getTime() + 30 * 24 * 60 * 60 * 1000),
+      updatedAt: new Date(NOW.getTime() + 1000),
+    } as never)
+    prismaMock.activity.create.mockResolvedValue({
+      id: 'act-1',
+      time: new Date(),
+    } as never)
+  }
+
+  it('rotates the credential, returns the new URL, and resets expiry', async () => {
+    await authAs('acct-admin')
+    seedRegenerateContext({})
+
+    const caller = makeCaller('acct-admin')
+    const result = await caller.regenerateLink({ invitationId: 'inv-1' })
+
+    expect(result.inviteUrl).toMatch(
+      /^http:\/\/localhost:3000\/groups\/grp-1\?invite=[A-Za-z0-9_-]+$/,
+    )
+    expect(prismaMock.groupInvitation.updateMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({ status: 'PENDING' }),
+        data: expect.objectContaining({
+          tokenHash: expect.not.stringMatching(/^old-hash$/) as string,
+          expiresAt: expect.any(Date) as Date,
+        }),
+      }),
+    )
+    // Credential rotation is recorded, never the raw token.
+    const activityCall = prismaMock.activity.create.mock.calls[0]?.[0] as {
+      data: { type: string; data: { changes: unknown[] } }
+    }
+    expect(activityCall.data.type).toBe('INVITATION_UPDATED')
+    expect(JSON.stringify(activityCall.data.data)).toContain('credential')
+    expect(JSON.stringify(activityCall.data.data)).not.toContain('placeholder')
+    // The mutation output mirrors the list's canRevoke computation.
+    expect(result.invitation.canRevoke).toBe(true)
+  })
+
+  it('regenerates an expired link invitation (recovery path)', async () => {
+    await authAs('acct-admin')
+    seedRegenerateContext({
+      invitation: { expiresAt: new Date(Date.now() - 1000) },
+    })
+
+    const result = await makeCaller('acct-admin').regenerateLink({
+      invitationId: 'inv-1',
+    })
+
+    expect(result.inviteUrl).toMatch(
+      /^http:\/\/localhost:3000\/groups\/grp-1\?invite=/,
+    )
+    expect(result.invitation).toMatchObject({
+      status: 'PENDING',
+      canManage: true,
+      canRevoke: true,
+    })
+    expect(result.invitation.expiresAt).not.toBeNull()
+  })
+
+  it('rejects regeneration of an email invitation', async () => {
+    await authAs('acct-admin')
+    seedRegenerateContext({ invitation: { type: 'EMAIL', tokenHash: null } })
+
+    await expect(
+      makeCaller('acct-admin').regenerateLink({ invitationId: 'inv-1' }),
+    ).rejects.toMatchObject({
+      code: 'BAD_REQUEST',
+      message: expect.stringMatching(/link/i),
+    })
+  })
+
+  it('rejects a member regenerating an invitation they did not create', async () => {
+    await authAs('acct-member')
+    seedRegenerateContext({ callerRole: 'MEMBER' })
+
+    await expect(
+      makeCaller('acct-member').regenerateLink({ invitationId: 'inv-1' }),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
   })
 })

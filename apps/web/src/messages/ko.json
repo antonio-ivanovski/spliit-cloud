@@ -253,7 +253,9 @@
         "emailInvitesTitle": "이메일 초대 전송 완료",
         "emailInvitesDescription": "서버가 다음 사람들에게 이메일을 보냈습니다. 로그인하면 그룹 페이지에서 수락/거절 배너를 볼 수 있습니다.",
         "shareTitle": "내 Spliit 그룹에 참여",
-        "shareText": "Spliit Cloud의 지출 그룹에 참여 — {name}. 수락하려면 이 링크를 여세요: {url}"
+        "shareText": "Spliit Cloud의 지출 그룹에 참여 — {name}. 수락하려면 이 링크를 여세요: {url}",
+        "copyLink": "초대 링크 복사",
+        "copied": "복사됨"
       },
       "Mapping": {
         "Errors": {
@@ -1627,7 +1629,8 @@
         "share": "초대 링크 공유",
         "shareTitle": "Spliit Cloud에서 {groupName}에 참여하기",
         "shareText": "Spliit Cloud에서 공동 비용 관리를 위해 {groupName} 그룹을 만들었어요. 1회용 초대 링크를 보내드릴게요. 열어서 참여해 주세요:\n{inviteUrl}",
-        "generateNew": "새 링크 생성"
+        "generateNew": "새 링크 생성",
+        "copyLink": "링크 복사"
       },
       "tab": {
         "email": "이메일",
@@ -1655,11 +1658,15 @@
       "created": "{email}에 초대를 보냈습니다.",
       "link": {
         "type": "1회용 링크",
-        "fallbackLabel": "초대 링크"
+        "fallbackLabel": "초대 링크",
+        "anyoneWithLink": "링크가 있는 모든 사람",
+        "expiresOn": "링크 만료일: {date}",
+        "expired": "만료됨"
       },
       "email": {
         "type": "이메일 초대"
-      }
+      },
+      "updatedOn": "업데이트됨 {date}"
     },
     "changeRoleAria": "역할 변경",
     "remove": "삭제",
@@ -1781,6 +1788,34 @@
       "validation": "이름을 입력하고 참가자를 최소 2명 선택하세요.",
       "loadError": "하위 그룹을 불러올 수 없습니다.",
       "disableAria": "하위 그룹 비활성화"
+    },
+    "manage": {
+      "manageButton": "관리",
+      "title": "초대 관리",
+      "description": "변경 사항은 대기 중인 초대에 적용되며 {name}에 대해 기록된 지출은 유지됩니다.",
+      "emailLabel": "이메일 주소",
+      "emailPlaceholder": "account@example.com",
+      "emailChangeWarning": "현재 수신자는 더 이상 이 초대를 수락할 수 없습니다.",
+      "nameLabel": "표시 이름",
+      "profileNameNote": "상대방의 Spliit 프로필 이름 사용",
+      "saveChanges": "변경 사항 저장",
+      "updateSend": "업데이트하고 보내기",
+      "switchToEmailSend": "전환하여 초대 보내기",
+      "switchToLinkGenerate": "전환하여 링크 생성",
+      "saved": "변경 사항을 저장했습니다",
+      "cancel": "취소",
+      "done": "완료",
+      "regenerateWarning": "현재 링크는 즉시 사용할 수 없게 됩니다.",
+      "regenerateDescription": "새 링크가 생성되며 유효 기간은 30일로 새로 설정됩니다. 초대와 관련 지출은 유지됩니다.",
+      "linkReadyTitle": "새 링크가 준비되었습니다",
+      "linkReadyDescription": "초대하려는 사람에게 공유하세요.",
+      "linkReadyWarning": "지금 복사하세요. 다시 볼 수 없습니다.",
+      "emailInvalid": "유효한 이메일 주소를 입력하세요.",
+      "linkNotShown": "초대 링크는 여기에 표시되지 않습니다. 다시 공유해야 한다면 목록에서 ‘새 링크 생성’을 사용하세요.",
+      "switchToLinkNote": "저장하면 이 초대가 링크로 전환됩니다. 이메일 초대는 더 이상 작동하지 않습니다."
+    },
+    "regenerate": {
+      "title": "새 링크 생성"
     }
   },
   "AccountSettings": {
@@ -2014,7 +2049,15 @@
       "created": "{participant}님이 {target}을(를) 초대했습니다",
       "revoked": "{participant}님이 {target}에 대한 초대를 취소했습니다",
       "accepted": "{target}님이 초대를 수락했습니다",
-      "declined": "{target}님이 초대를 거절했습니다"
+      "declined": "{target}님이 초대를 거절했습니다",
+      "updated": "{participant}님이 {target} 초대를 업데이트했습니다",
+      "changedFields": {
+        "deliveryType": "전달 방법",
+        "destination": "수신자",
+        "displayName": "이름",
+        "role": "역할",
+        "credential": "초대 링크"
+      }
     },
     "fallback": "활동이 기록되었습니다",
     "unknownActor": "누군가",
@@ -2095,7 +2138,9 @@
     "friendsEmpty": "이메일을 입력하거나 링크를 공유하여 친구를 추가하세요.",
     "infoLabel": "정보 (선택)",
     "infoPlaceholder": "'룸메이트 비용' 같은 설명 추가",
-    "createError": "친구와의 지출 기록을 만들지 못했어요"
+    "createError": "친구와의 지출 기록을 만들지 못했어요",
+    "copyInviteLink": "초대 링크 복사",
+    "copiedInviteLink": "초대 링크를 복사했습니다"
   },
   "BulkCategorize": {
     "title": "일괄 카테고리 분류",

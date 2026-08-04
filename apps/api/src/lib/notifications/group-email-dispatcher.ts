@@ -69,7 +69,7 @@ export class GroupEmailActivityNotificationDispatcher implements ActivityNotific
         intent.activity.subject?.id
           ? prisma.groupInvitation.findUnique({
               where: { id: intent.activity.subject.id },
-              select: { temporaryName: true },
+              select: { id: true },
             })
           : Promise.resolve(null),
         intent.activity.type === 'INVITATION_CREATED' &&
@@ -121,7 +121,9 @@ export class GroupEmailActivityNotificationDispatcher implements ActivityNotific
               inviterRole: inviterMembership?.role ?? 'ADMIN',
               recipientEmail: account.email,
               recipientIsExistingUser: true,
-              temporaryName: invitation?.temporaryName,
+              // The recipient's own profile name is already what the group
+              // shows; a "you will appear as" line would be wrong for them.
+              temporaryName: undefined,
               unsubscribeUrl: unsubscribe?.url,
             })
           : null

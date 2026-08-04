@@ -14,6 +14,8 @@ describe('Invitation flow — real DB', () => {
   const adminEmail = `admin-${runId}@test.example`
   const inviteeId = `acct-user-${runId}`
   const inviteeEmail = `user-${runId}@test.example`
+  const retargetedId = `acct-retarget-${runId}`
+  const retargetedEmail = `retarget-${runId}@test.example`
 
   const ledgerIds: string[] = []
   function trackLedger(id: string) {
@@ -73,6 +75,16 @@ describe('Invitation flow — real DB', () => {
         name: 'Test User',
       },
     })
+    await prisma.account.upsert({
+      where: { email: retargetedEmail },
+      update: {},
+      create: {
+        id: retargetedId,
+        email: retargetedEmail,
+        emailVerified: true,
+        name: 'Retargeted User',
+      },
+    })
   })
 
   afterAll(async () => {
@@ -81,6 +93,7 @@ describe('Invitation flow — real DB', () => {
     }
     await prisma.account.delete({ where: { id: adminId } }).catch(() => {})
     await prisma.account.delete({ where: { id: inviteeId } }).catch(() => {})
+    await prisma.account.delete({ where: { id: retargetedId } }).catch(() => {})
   })
 
   // ------------------------------------------------------------------
@@ -260,5 +273,138 @@ describe('Invitation flow — real DB', () => {
     })
     expect(inviteeMemberRestored!.status).toBe('ACTIVE')
     expect(inviteeMemberRestored!.leftAt).toBeNull()
+  })
+
+  // ------------------------------------------------------------------
+  // 6. Retarget a pending email invitation
+  // ------------------------------------------------------------------
+  it('retargets a pending invitation: old recipient cannot accept, new recipient can', async () => {
+    const groupCaller = adminCaller()
+
+    const { groupId } = await groupCaller.create({
+      groupFormValues: {
+        name: `Retarget Group ${runId}`,
+        currency: '$',
+        currencyCode: 'USD',
+        participants: [{ name: 'Admin' }],
+      },
+    })
+    const group = await prisma.group.findUnique({
+      where: { id: groupId },
+      select: { ledgerId: true },
+    })
+    trackLedger(group!.ledgerId)
+
+    const { invitationId } = await invitationsCaller().create({
+      groupId,
+      email: inviteeEmail,
+      role: 'MEMBER',
+    })
+    const invitationBefore = await prisma.groupInvitation.findUnique({
+      where: { id: invitationId },
+    })
+
+    // Retarget to a different account (profile name is authoritative).
+    const updated = await invitationsCaller().updatePending({
+      invitationId,
+      role: 'ADMIN',
+      temporaryName: 'Submitted Name',
+      delivery: { type: 'EMAIL', email: retargetedEmail },
+    })
+    expect(updated.invitation.email).toBe(retargetedEmail)
+    expect(updated.invitation.role).toBe('ADMIN')
+    expect(updated.inviteUrl).toBeNull()
+
+    // Identity preserved: same row and ledger participant.
+    const invitationAfter = await prisma.groupInvitation.findUnique({
+      where: { id: invitationId },
+    })
+    expect(invitationAfter!.id).toBe(invitationBefore!.id)
+    expect(invitationAfter!.ledgerParticipantId).toBe(
+      invitationBefore!.ledgerParticipantId,
+    )
+    // The retargeted account exists, so its profile name wins.
+    expect(invitationAfter!.temporaryName).toBe('Retargeted User')
+
+    // The old recipient's email-match acceptance guard rejects.
+    await expect(
+      invitationsCaller({
+        accountId: inviteeId,
+        email: inviteeEmail,
+      }).accept({ invitationId }),
+    ).rejects.toMatchObject({ code: 'BAD_REQUEST' })
+
+    // The new recipient accepts and gets the pending role.
+    const acceptResult = await invitationsCaller({
+      accountId: retargetedId,
+      email: retargetedEmail,
+    }).accept({ invitationId })
+    expect(acceptResult.groupId).toBe(groupId)
+    const member = await prisma.groupMember.findUnique({
+      where: { groupId_accountId: { groupId, accountId: retargetedId } },
+    })
+    expect(member!.status).toBe('ACTIVE')
+    expect(member!.role).toBe('ADMIN')
+    // The old invitee never became a member.
+    const oldMember = await prisma.groupMember.findUnique({
+      where: { groupId_accountId: { groupId, accountId: inviteeId } },
+    })
+    expect(oldMember).toBeNull()
+  })
+
+  it('metadata-only saves do not resend or rotate, and keep the credential', async () => {
+    const groupCaller = adminCaller()
+
+    const { groupId } = await groupCaller.create({
+      groupFormValues: {
+        name: `Metadata Group ${runId}`,
+        currency: '$',
+        currencyCode: 'USD',
+        participants: [{ name: 'Admin' }],
+      },
+    })
+    const group = await prisma.group.findUnique({
+      where: { id: groupId },
+      select: { ledgerId: true },
+    })
+    trackLedger(group!.ledgerId)
+
+    const created = await invitationsCaller().createLink({
+      groupId,
+      role: 'MEMBER',
+      temporaryName: 'Before Edit',
+    })
+    const before = await prisma.groupInvitation.findUnique({
+      where: { id: created.invitationId },
+    })
+
+    const updated = await invitationsCaller().updatePending({
+      invitationId: created.invitationId,
+      role: 'ADMIN',
+      temporaryName: 'After Edit',
+      delivery: { type: 'LINK' },
+    })
+
+    const after = await prisma.groupInvitation.findUnique({
+      where: { id: created.invitationId },
+    })
+    // Existing link credential survives a name/role-only save.
+    expect(after!.tokenHash).toBe(before!.tokenHash)
+    expect(after!.expiresAt).toEqual(before!.expiresAt)
+    expect(after!.temporaryName).toBe('After Edit')
+    expect(after!.role).toBe('ADMIN')
+    expect(updated.inviteUrl).toBeNull()
+
+    // The old link still works.
+    const token = new URL(created.inviteUrl).searchParams.get('invite')
+    const acceptResult = await invitationsCaller({
+      accountId: inviteeId,
+      email: inviteeEmail,
+    }).acceptLink({ token: token! })
+    expect(acceptResult.groupId).toBe(groupId)
+    const member = await prisma.groupMember.findUnique({
+      where: { groupId_accountId: { groupId, accountId: inviteeId } },
+    })
+    expect(member!.role).toBe('ADMIN')
   })
 })

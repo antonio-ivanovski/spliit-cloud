@@ -352,7 +352,9 @@
         "emailInvitesTitle": "E-mailové pozvánky odeslány",
         "emailInvitesDescription": "Server odeslal e-mail následujícím osobám. Po přihlášení uvidí na stránce skupiny banner Přijmout/Odmítnout.",
         "shareTitle": "Připojte se k mé Spliit skupině",
-        "shareText": "Připojte se k naší skupině výdajů na Spliit Cloud — {name}. Otevřete tento odkaz pro přijetí: {url}"
+        "shareText": "Připojte se k naší skupině výdajů na Spliit Cloud — {name}. Otevřete tento odkaz pro přijetí: {url}",
+        "copyLink": "Kopírovat odkaz pozvánky",
+        "copied": "Zkopírováno"
       },
       "Mapping": {
         "Errors": {
@@ -1658,7 +1660,8 @@
         "share": "Sdílet odkaz pozvánky",
         "shareTitle": "Připojte se ke skupině {groupName} na Spliit Cloud",
         "shareText": "Právě jsem vytvořil(a) skupinu {groupName} pro naše sdílené výdaje na Spliit Cloud. Zde je jednorázový odkaz pozvánky — otevřete ho a připojte se:\n{inviteUrl}",
-        "generateNew": "Vygenerovat nový odkaz"
+        "generateNew": "Vygenerovat nový odkaz",
+        "copyLink": "Kopírovat odkaz"
       },
       "temporaryNamePlaceholder": "např. Alexův spolubydlící",
       "friendsDescription": "Pozvěte někoho ze skupin, které jste sdíleli.",
@@ -1678,11 +1681,15 @@
       "created": "Pozvánka odeslána na {email}.",
       "link": {
         "type": "Jednorázový odkaz",
-        "fallbackLabel": "Odkaz pozvánky"
+        "fallbackLabel": "Odkaz pozvánky",
+        "anyoneWithLink": "Kdokoli s odkazem",
+        "expiresOn": "Odkaz vyprší {date}",
+        "expired": "Vypršelo"
       },
       "email": {
         "type": "E-mailová pozvánka"
-      }
+      },
+      "updatedOn": "Aktualizováno {date}"
     },
     "changeRoleAria": "Změnit roli",
     "remove": "Odebrat",
@@ -1806,6 +1813,34 @@
       "validation": "Přidejte název a alespoň dva účastníky.",
       "loadError": "Podskupiny se nepodařilo načíst.",
       "disableAria": "Zakázat podskupiny"
+    },
+    "manage": {
+      "manageButton": "Spravovat",
+      "title": "Spravovat pozvánku",
+      "description": "Změny se projeví u čekající pozvánky a zachovají všechny výdaje zaznamenané pro {name}.",
+      "emailLabel": "E-mailová adresa",
+      "emailPlaceholder": "ucet@example.com",
+      "emailChangeWarning": "Současný příjemce již nebude moci tuto pozvánku přijmout.",
+      "nameLabel": "Zobrazované jméno",
+      "profileNameNote": "Použije se jejich profilový název na Spliitu",
+      "saveChanges": "Uložit změny",
+      "updateSend": "Aktualizovat a odeslat",
+      "switchToEmailSend": "Přepnout a odeslat pozvánku",
+      "switchToLinkGenerate": "Přepnout a vygenerovat odkaz",
+      "saved": "Změny uloženy",
+      "cancel": "Zrušit",
+      "done": "Hotovo",
+      "regenerateWarning": "Aktuální odkaz přestane okamžitě fungovat.",
+      "regenerateDescription": "Bude vygenerován nový odkaz s novou 30denní platností. Pozvánka a její výdaje zůstanou zachovány.",
+      "linkReadyTitle": "Nový odkaz je připraven",
+      "linkReadyDescription": "Sdílejte jej s osobou, kterou chcete pozvat.",
+      "linkReadyWarning": "Zkopírujte jej nyní — již jej nebudete moci zobrazit.",
+      "emailInvalid": "Zadejte platnou e-mailovou adresu.",
+      "linkNotShown": "Odkaz pozvánky zde není zobrazen. Pokud jej potřebujete znovu sdílet, použijte v seznamu možnost „Vygenerovat nový odkaz“.",
+      "switchToLinkNote": "Uložte pro převod této pozvánky na odkaz. E-mailová pozvánka přestane fungovat."
+    },
+    "regenerate": {
+      "title": "Vygenerovat nový odkaz"
     }
   },
   "AccountSettings": {
@@ -2039,7 +2074,15 @@
       "created": "{participant} pozval {target}",
       "revoked": "{participant} zrušil pozvánku pro {target}",
       "accepted": "{target} přijal pozvánku",
-      "declined": "{target} odmítl pozvánku"
+      "declined": "{target} odmítl pozvánku",
+      "updated": "{participant} aktualizoval(a) pozvánku pro {target}",
+      "changedFields": {
+        "deliveryType": "Způsob doručení",
+        "destination": "Příjemce",
+        "displayName": "Jméno",
+        "role": "Úloha",
+        "credential": "Odkaz pozvánky"
+      }
     },
     "fallback": "Byla zaznamenána aktivita",
     "unknownActor": "Někdo",
@@ -2123,7 +2166,9 @@
     "friendsEmpty": "Přidejte přítele zadáním e-mailu nebo sdílejte odkaz a pozvěte ho.",
     "infoLabel": "Informace (volitelné)",
     "infoPlaceholder": "Přidejte kontext, například „Výdaje se spolubydlícím“",
-    "createError": "Nepodařilo se vytvořit výdaje s přítelem či přítelkyní"
+    "createError": "Nepodařilo se vytvořit výdaje s přítelem či přítelkyní",
+    "copyInviteLink": "Kopírovat odkaz pozvánky",
+    "copiedInviteLink": "Odkaz pozvánky zkopírován"
   },
   "BulkCategorize": {
     "title": "Hromadná kategorizace",

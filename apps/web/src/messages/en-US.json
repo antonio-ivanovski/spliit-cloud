@@ -560,7 +560,9 @@
         "emailInvitesTitle": "Email invites sent",
         "emailInvitesDescription": "The server emailed the following people. They'll see an Accept/Decline banner in the group page when they sign in.",
         "shareTitle": "Join my group on Spliit Cloud",
-        "shareText": "Join our expense group on Spliit Cloud — {name}. Open this link to accept: {url}"
+        "shareText": "Join our expense group on Spliit Cloud — {name}. Open this link to accept: {url}",
+        "copyLink": "Copy invite link",
+        "copied": "Copied"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -1950,7 +1952,8 @@
         "share": "Share invite link",
         "shareTitle": "Join {groupName} on Spliit Cloud",
         "shareText": "I just created {groupName} for our shared expenses on Spliit Cloud. Here's a one-time invite link — open it to join:\n{inviteUrl}",
-        "generateNew": "Generate new link"
+        "generateNew": "Generate new link",
+        "copyLink": "Copy link"
       },
       "emailDescription": "Send an invitation by email. The invitee joins once they accept from a matching account.",
       "linkDescription": "Generate a single-use link anyone can use to join. The link stops working after the first accept.",
@@ -1973,11 +1976,15 @@
       "created": "Invitation sent to {email}.",
       "link": {
         "type": "Single-use link",
-        "fallbackLabel": "Invite link"
+        "fallbackLabel": "Invite link",
+        "anyoneWithLink": "Anyone with the link",
+        "expiresOn": "Link expires {date}",
+        "expired": "Expired"
       },
       "email": {
         "type": "Email invite"
-      }
+      },
+      "updatedOn": "Updated {date}"
     },
     "leave": {
       "button": "Leave group",
@@ -2073,6 +2080,34 @@
       "validation": "Add a name and at least two participants.",
       "loadError": "Subgroups could not be loaded.",
       "disableAria": "Disable Subgroups"
+    },
+    "manage": {
+      "manageButton": "Manage",
+      "title": "Manage invitation",
+      "description": "Changes affect the pending invitation and preserve any expenses recorded for {name}.",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "account@example.com",
+      "emailChangeWarning": "The current recipient won't be able to accept this invitation anymore.",
+      "nameLabel": "Display name",
+      "profileNameNote": "Uses their Spliit profile name",
+      "saveChanges": "Save changes",
+      "updateSend": "Update & send",
+      "switchToEmailSend": "Switch & send invitation",
+      "switchToLinkGenerate": "Switch & generate link",
+      "saved": "Changes saved",
+      "cancel": "Cancel",
+      "done": "Done",
+      "regenerateWarning": "The current link will stop working immediately.",
+      "regenerateDescription": "A new link will be generated with a fresh 30-day expiry. The invitation and its expenses are kept.",
+      "linkReadyTitle": "New link ready",
+      "linkReadyDescription": "Share it with the person you want to invite.",
+      "linkReadyWarning": "Copy it now—you won't be able to view it again.",
+      "emailInvalid": "Enter a valid email address.",
+      "linkNotShown": "The invite link is not shown here. Use \"Generate new link\" on the list if you need to share it again.",
+      "switchToLinkNote": "Save to convert this invitation into a link. The email invitation will stop working."
+    },
+    "regenerate": {
+      "title": "Generate new link"
     }
   },
   "Activities": {
@@ -2122,7 +2157,15 @@
       "created": "{participant} invited {target}",
       "revoked": "{participant} revoked invitation to {target}",
       "accepted": "{target} accepted the invitation",
-      "declined": "{target} declined the invitation"
+      "declined": "{target} declined the invitation",
+      "updated": "{participant} updated the invitation to {target}",
+      "changedFields": {
+        "deliveryType": "Delivery method",
+        "destination": "Recipient",
+        "displayName": "Name",
+        "role": "Role",
+        "credential": "Invite link"
+      }
     },
     "participant": {
       "removed": "{participant} removed {target} from the group"
@@ -2204,7 +2247,9 @@
     "friendsEmpty": "Add a friend by entering their email or share a link to invite them.",
     "infoLabel": "Information (optional)",
     "infoPlaceholder": "Add context like 'Roommate expenses'",
-    "createError": "Could not create friend expenses"
+    "createError": "Could not create friend expenses",
+    "copyInviteLink": "Copy invite link",
+    "copiedInviteLink": "Invite link copied"
   },
   "EmptyState": {
     "title": {

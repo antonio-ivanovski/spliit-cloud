@@ -560,7 +560,9 @@
         "emailInvitesTitle": "Mời qua email",
         "emailInvitesDescription": "Mời thành viên qua email.",
         "shareTitle": "Chia sẻ",
-        "shareText": "Tham gia nhóm của tôi trên Spliit! {name} {url}"
+        "shareText": "Tham gia nhóm của tôi trên Spliit! {name} {url}",
+        "copyLink": "Sao chép liên kết mời",
+        "copied": "Đã sao chép"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -1950,7 +1952,8 @@
         "share": "Chia sẻ",
         "shareTitle": "Chia sẻ liên kết {groupName}",
         "shareText": "Tham gia nhóm của tôi trên Spliit! {groupName} {inviteUrl}",
-        "generateNew": "Tạo mới"
+        "generateNew": "Tạo mới",
+        "copyLink": "Sao chép liên kết"
       },
       "emailDescription": "Gửi lời mời qua email.",
       "linkDescription": "Mời qua liên kết.",
@@ -1973,11 +1976,15 @@
       "created": "Đã tạo {email}",
       "link": {
         "type": "Liên kết",
-        "fallbackLabel": "Liên kết"
+        "fallbackLabel": "Liên kết",
+        "anyoneWithLink": "Bất kỳ ai có liên kết",
+        "expiresOn": "Liên kết hết hạn {date}",
+        "expired": "Đã hết hạn"
       },
       "email": {
         "type": "Email"
-      }
+      },
+      "updatedOn": "Đã cập nhật {date}"
     },
     "leave": {
       "button": "Rời nhóm",
@@ -2073,6 +2080,34 @@
       "validation": "Thêm tên và ít nhất hai người tham gia.",
       "loadError": "Không thể tải nhóm con.",
       "disableAria": "Tắt Nhóm con"
+    },
+    "manage": {
+      "manageButton": "Quản lý",
+      "title": "Quản lý lời mời",
+      "description": "Thay đổi ảnh hưởng đến lời mời đang chờ và giữ nguyên các chi phí đã ghi cho {name}.",
+      "emailLabel": "Địa chỉ email",
+      "emailPlaceholder": "taikhoan@example.com",
+      "emailChangeWarning": "Người nhận hiện tại sẽ không thể chấp nhận lời mời này nữa.",
+      "nameLabel": "Tên hiển thị",
+      "profileNameNote": "Sử dụng tên hồ sơ Spliit của họ",
+      "saveChanges": "Lưu thay đổi",
+      "updateSend": "Cập nhật & gửi",
+      "switchToEmailSend": "Chuyển & gửi lời mời",
+      "switchToLinkGenerate": "Chuyển & tạo liên kết",
+      "saved": "Đã lưu thay đổi",
+      "cancel": "Hủy",
+      "done": "Xong",
+      "regenerateWarning": "Liên kết hiện tại sẽ ngừng hoạt động ngay lập tức.",
+      "regenerateDescription": "Một liên kết mới sẽ được tạo với thời hạn 30 ngày mới. Lời mời và các chi phí của nó được giữ nguyên.",
+      "linkReadyTitle": "Liên kết mới đã sẵn sàng",
+      "linkReadyDescription": "Chia sẻ nó với người bạn muốn mời.",
+      "linkReadyWarning": "Sao chép ngay—bạn sẽ không thể xem lại nó nữa.",
+      "emailInvalid": "Nhập địa chỉ email hợp lệ.",
+      "linkNotShown": "Liên kết mời không được hiển thị ở đây. Hãy dùng \"Tạo liên kết mới\" trong danh sách nếu bạn cần chia sẻ lại.",
+      "switchToLinkNote": "Lưu để chuyển lời mời này thành liên kết. Lời mời qua email sẽ ngừng hoạt động."
+    },
+    "regenerate": {
+      "title": "Tạo liên kết mới"
     }
   },
   "Activities": {
@@ -2122,7 +2157,15 @@
       "created": "{participant} đã mời {target}",
       "revoked": "{participant} đã thu hồi lời mời của {target}",
       "accepted": "{target} đã chấp nhận lời mời",
-      "declined": "{target} đã từ chối lời mời"
+      "declined": "{target} đã từ chối lời mời",
+      "updated": "{participant} đã cập nhật lời mời cho {target}",
+      "changedFields": {
+        "deliveryType": "Phương thức gửi",
+        "destination": "Người nhận",
+        "displayName": "Tên",
+        "role": "Vai trò",
+        "credential": "Liên kết mời"
+      }
     },
     "participant": {
       "removed": "{participant} đã xóa {target} khỏi nhóm"
@@ -2204,7 +2247,9 @@
     "friendsEmpty": "Chưa có bạn bè.",
     "infoLabel": "Thông tin",
     "infoPlaceholder": "Thêm ghi chú…",
-    "createError": "Lỗi tạo sổ."
+    "createError": "Lỗi tạo sổ.",
+    "copyInviteLink": "Sao chép liên kết mời",
+    "copiedInviteLink": "Đã sao chép liên kết mời"
   },
   "EmptyState": {
     "title": {

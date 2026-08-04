@@ -14,6 +14,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { trpc } from '@/trpc/client'
 
 import { LinkUnlinkedParticipantDialog } from './link-unlinked-participant-dialog'
+import { SegmentedActions } from './segmented-actions'
 
 export function UnlinkedParticipantsSection({
   groupId,
@@ -66,34 +67,36 @@ export function UnlinkedParticipantsSection({
                   </p>
                 </div>
                 <div className="flex w-full flex-wrap items-center justify-start gap-2 sm:w-auto sm:justify-end">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="h-9 shrink-0 gap-1.5 px-3"
-                    onClick={() =>
-                      setLinkTarget({
-                        id: p.id,
-                        displayName: p.displayName || t('unknownMember'),
-                      })
-                    }
-                  >
-                    <Link2 className="size-4" aria-hidden="true" />
-                    {t('unlinked.linkButton')}
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    className="h-9 shrink-0 gap-1.5 px-3"
-                    onClick={() =>
-                      onRemove({
-                        ledgerParticipantId: p.id,
-                        name: p.displayName || t('unknownMember'),
-                      })
-                    }
-                  >
-                    <Trash2 className="size-4" aria-hidden="true" />
-                    {t('remove')}
-                  </Button>
+                  <SegmentedActions>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-9 gap-1.5 rounded-none px-3"
+                      onClick={() =>
+                        setLinkTarget({
+                          id: p.id,
+                          displayName: p.displayName || t('unknownMember'),
+                        })
+                      }
+                    >
+                      <Link2 className="size-4" aria-hidden="true" />
+                      {t('unlinked.linkButton')}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-9 gap-1.5 rounded-none px-3 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                      onClick={() =>
+                        onRemove({
+                          ledgerParticipantId: p.id,
+                          name: p.displayName || t('unknownMember'),
+                        })
+                      }
+                    >
+                      <Trash2 className="size-4" aria-hidden="true" />
+                      {t('remove')}
+                    </Button>
+                  </SegmentedActions>
                 </div>
               </li>
             ))}

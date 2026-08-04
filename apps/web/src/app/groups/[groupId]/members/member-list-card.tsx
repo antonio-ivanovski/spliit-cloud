@@ -21,7 +21,13 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { isPlaceholderEmail } from '@/lib/account'
 
-import { badgeVariantForRole, formatDate, roleLabel } from './members-hooks'
+import {
+  badgeVariantForRole,
+  formatDate,
+  roleLabel,
+  useRoleSelectItems,
+} from './members-hooks'
+import { SegmentedActions } from './segmented-actions'
 
 type Member = {
   id: string
@@ -62,6 +68,7 @@ export function MemberListCard({
   timeZone: string
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
+  const roleSelectItems = useRoleSelectItems()
 
   return (
     <Card>
@@ -131,6 +138,7 @@ export function MemberListCard({
                     <div className="flex w-full flex-wrap items-center justify-start gap-2 sm:w-auto sm:justify-end">
                       <Select
                         value={member.role}
+                        items={roleSelectItems}
                         disabled={updateRoleMutation.isPending}
                         onValueChange={(value) =>
                           onUpdateRole(member.id, value as 'ADMIN' | 'MEMBER')
@@ -143,28 +151,29 @@ export function MemberListCard({
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="MEMBER">
-                            {t('role.member')}
-                          </SelectItem>
-                          <SelectItem value="ADMIN">
-                            {t('role.admin')}
-                          </SelectItem>
+                          {roleSelectItems.map((item) => (
+                            <SelectItem key={item.value} value={item.value}>
+                              {item.label}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        className="h-9 shrink-0 gap-1.5 px-3"
-                        onClick={() =>
-                          onRemove({
-                            ledgerParticipantId: member.ledgerParticipantId,
-                            name: displayName,
-                          })
-                        }
-                      >
-                        <Trash2 className="size-4" aria-hidden="true" />
-                        {t('remove')}
-                      </Button>
+                      <SegmentedActions>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-9 gap-1.5 rounded-none px-3 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                          onClick={() =>
+                            onRemove({
+                              ledgerParticipantId: member.ledgerParticipantId,
+                              name: displayName,
+                            })
+                          }
+                        >
+                          <Trash2 className="size-4" aria-hidden="true" />
+                          {t('remove')}
+                        </Button>
+                      </SegmentedActions>
                     </div>
                   )}
                 </li>

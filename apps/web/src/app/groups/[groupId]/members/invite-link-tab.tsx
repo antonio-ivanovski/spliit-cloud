@@ -1,9 +1,7 @@
-import { Link2, Share2 } from 'lucide-react'
+import { Link2 } from 'lucide-react'
 import type { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
-import { CopyButton } from '@/components/copy-button'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -20,11 +18,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useLocale } from '@/i18n/react'
-import { detectDeviceTimeZone } from '@/lib/account-preferences'
 
+import { GeneratedInviteLinkPanel } from './generated-invite-link-panel'
 import {
-  formatDate,
+  useRoleSelectItems,
   type GeneratedLink,
   type InvitableRole,
   type LinkFormValues,
@@ -54,10 +51,7 @@ export function InviteLinkTab({
   onShare: () => void
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
-  const locale = useLocale()
-  const accountPreferences = useSyncedAccountPreferences()
-  const accountTimeZone =
-    accountPreferences?.timeZone ?? detectDeviceTimeZone() ?? 'UTC'
+  const roleSelectItems = useRoleSelectItems()
   return (
     <>
       <p className="border-l-2 border-primary/40 pl-3 text-sm text-muted-foreground">
@@ -91,6 +85,7 @@ export function InviteLinkTab({
                 <FormControl>
                   <Select
                     value={linkRoleValue}
+                    items={roleSelectItems}
                     onValueChange={(value) =>
                       onRoleChange(value as InvitableRole)
                     }
@@ -99,8 +94,11 @@ export function InviteLinkTab({
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="MEMBER">{t('role.member')}</SelectItem>
-                      <SelectItem value="ADMIN">{t('role.admin')}</SelectItem>
+                      {roleSelectItems.map((item) => (
+                        <SelectItem key={item.value} value={item.value}>
+                          {item.label}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </FormControl>
@@ -119,45 +117,19 @@ export function InviteLinkTab({
       </Form>
 
       {generatedLink && (
-        <div
-          className="mt-4 flex flex-col gap-3"
-          data-testid="generated-invite-link"
-        >
+        <div className="mt-4 flex flex-col gap-3">
           <p className="text-sm text-muted-foreground">
             {t('invite.link.intro', { groupName })}
           </p>
           <p className="border-l-2 border-amber-500/50 pl-3 text-sm text-amber-900 dark:text-amber-200">
             {t('invite.link.singleUse')}
           </p>
-          <div className="flex items-center gap-2">
-            <Input
-              readOnly
-              value={generatedLink.inviteUrl}
-              className="font-mono text-xs"
-              onFocus={(event) => event.currentTarget.select()}
-            />
-            <CopyButton text={generatedLink.inviteUrl} />
-            {canShare && (
-              <Button
-                size="icon"
-                variant="secondary"
-                type="button"
-                onClick={onShare}
-                aria-label={t('invite.link.share')}
-              >
-                <Share2 className="h-4 w-4" />
-              </Button>
-            )}
-          </div>
-          <p className="text-xs text-muted-foreground">
-            {t('invite.link.expiresOn', {
-              date: formatDate(
-                generatedLink.expiresAt,
-                locale,
-                accountTimeZone,
-              ),
-            })}
-          </p>
+          <GeneratedInviteLinkPanel
+            inviteUrl={generatedLink.inviteUrl}
+            expiresAt={generatedLink.expiresAt}
+            onShare={onShare}
+            canShare={canShare}
+          />
         </div>
       )}
     </>

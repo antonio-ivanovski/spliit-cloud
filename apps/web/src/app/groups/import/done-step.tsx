@@ -95,7 +95,11 @@ export function DoneStep({ groupId: _groupId, invites, onContinue }: Props) {
                         className="font-mono text-xs"
                         onFocus={(event) => event.currentTarget.select()}
                       />
-                      <CopyButton text={invite.inviteUrl} />
+                      <CopyButton
+                        text={invite.inviteUrl}
+                        ariaLabel={t('Groups.Import.Done.copyLink')}
+                        copiedLabel={t('Groups.Import.Done.copied')}
+                      />
                       {canShare && (
                         <Button
                           size="icon"

@@ -3,24 +3,26 @@ import { act, fireEvent, render, screen } from '@/test/test-utils'
 
 describe('CopyButton', () => {
   it('copies the provided text to clipboard on click', async () => {
-    const { user } = render(<CopyButton text="hello" />)
+    const { user } = render(
+      <CopyButton text="hello" ariaLabel="Copy" copiedLabel="Copied" />,
+    )
     // Spy after render because userEvent.setup() replaces navigator.clipboard
     const writeTextSpy = vi
       .spyOn(navigator.clipboard, 'writeText')
       .mockResolvedValue(undefined)
-    await user.click(screen.getByRole('button'))
+    await user.click(screen.getByRole('button', { name: 'Copy' }))
     expect(writeTextSpy).toHaveBeenCalledWith('hello')
   })
 
   it('shows check icon after click and reverts to copy icon after 1 second', () => {
     vi.useFakeTimers()
-    render(<CopyButton text="test" />)
+    render(<CopyButton text="test" ariaLabel="Copy" copiedLabel="Copied" />)
     // Spy after render because userEvent.setup() replaces navigator.clipboard
     const writeTextSpy = vi
       .spyOn(navigator.clipboard, 'writeText')
       .mockResolvedValue(undefined)
 
-    const button = screen.getByRole('button')
+    const button = screen.getByRole('button', { name: 'Copy' })
 
     // Initially shows copy icon
     expect(button.querySelector('.lucide-copy')).toBeInTheDocument()
@@ -35,10 +37,12 @@ describe('CopyButton', () => {
     expect(writeTextSpy).toHaveBeenCalledWith('test')
     expect(button.querySelector('.lucide-copy')).not.toBeInTheDocument()
     expect(button.querySelector('.lucide-check')).toBeInTheDocument()
+    // Live region announces the translated copied label.
+    expect(button.querySelector('output')?.textContent).toBe('Copied')
 
-    // Advance time by 1 second (the timeout duration)
+    // Advance time by 1.5 seconds (the feedback duration)
     act(() => {
-      vi.advanceTimersByTime(1000)
+      vi.advanceTimersByTime(1500)
     })
 
     // After timeout, reverts to copy icon

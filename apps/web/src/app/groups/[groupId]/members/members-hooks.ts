@@ -13,6 +13,36 @@ import { useCurrentGroup } from '../current-group-context'
 export type InvitableRole = 'ADMIN' | 'MEMBER'
 export type MemberRole = 'ADMIN' | 'MEMBER'
 
+export type RecipientProfile = {
+  id: string
+  name: string | null
+  image: string | null
+}
+
+export type PendingInvitation = {
+  id: string
+  groupId: string
+  type: 'EMAIL' | 'LINK'
+  email: string
+  temporaryName: string | null
+  role: InvitableRole
+  status: string
+  createdAt: Date | string
+  updatedAt: Date | string
+  expiresAt: Date | string | null
+  ledgerParticipantId: string | null
+  canRevoke: boolean
+  canManage: boolean
+  recipientProfile: RecipientProfile | null
+}
+
+export type UpdatePendingInput = {
+  invitationId: string
+  role: InvitableRole
+  temporaryName?: string
+  delivery: { type: 'EMAIL'; email: string } | { type: 'LINK' }
+}
+
 export function roleLabel(
   role: MemberRole,
   labels: { ADMIN: string; MEMBER: string },
@@ -32,6 +62,27 @@ export function badgeVariantForRole(role: MemberRole): 'secondary' | 'outline' {
     case 'MEMBER':
       return 'outline'
   }
+}
+
+export type RoleSelectItem = {
+  value: MemberRole
+  label: string
+}
+
+/**
+ * Base UI Select `items` for role pickers. Passing `items` lets `SelectValue`
+ * render the translated label of the selected value in the trigger instead of
+ * the raw `"MEMBER"` / `"ADMIN"` value.
+ */
+export function useRoleSelectItems(): RoleSelectItem[] {
+  const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
+  return useMemo(
+    () => [
+      { value: 'MEMBER', label: t('role.member') },
+      { value: 'ADMIN', label: t('role.admin') },
+    ],
+    [t],
+  )
 }
 
 export const emailFormSchema = z.object({
@@ -107,6 +158,32 @@ export function useMembersDialogs() {
       utils.groups.balances.list.invalidate({ groupId }),
     ])
   }
+
+  const invalidateInvitationState = async () => {
+    await Promise.all([
+      utils.invitations.list.invalidate({ groupId }),
+      utils.invitations.listForAccount.invalidate(),
+      utils.account.members.invalidate({ groupId }),
+      utils.groups.get.invalidate({ groupId }),
+      utils.groups.getDetails.invalidate({ groupId }),
+      utils.groups.importLinks.listUnlinked.invalidate({ groupId }),
+      utils.account.friends.invalidate(),
+      utils.groups.balances.list.invalidate({ groupId }),
+      utils.groups.leavePreview.invalidate({ groupId }),
+    ])
+  }
+
+  const updatePendingMutation = trpc.invitations.updatePending.useMutation({
+    onSuccess: async () => {
+      await invalidateInvitationState()
+    },
+  })
+
+  const regenerateLinkMutation = trpc.invitations.regenerateLink.useMutation({
+    onSuccess: async () => {
+      await invalidateInvitationState()
+    },
+  })
 
   const createMutation = trpc.invitations.create.useMutation({
     onSuccess: async (_data, vars) => {
@@ -270,16 +347,23 @@ export function useMembersDialogs() {
     })
   }
 
-  const listMembers = useMemo(
-    () =>
-      (membersQuery.data?.members ?? [])
-        .filter((member) => member.ledgerParticipant?.id)
-        .map((member) => ({
+  const listMembers = useMemo(() => {
+    const members = membersQuery.data?.members ?? []
+    const result: Array<
+      (typeof members)[number] & {
+        ledgerParticipantId: string
+      }
+    > = []
+    for (const member of members) {
+      if (member.ledgerParticipant?.id) {
+        result.push({
           ...member,
-          ledgerParticipantId: member.ledgerParticipant!.id,
-        })),
-    [membersQuery.data],
-  )
+          ledgerParticipantId: member.ledgerParticipant.id,
+        })
+      }
+    }
+    return result
+  }, [membersQuery.data])
   const invitations = useMemo(
     () => invitationsQuery.data?.invitations ?? [],
     [invitationsQuery.data],
@@ -301,6 +385,8 @@ export function useMembersDialogs() {
     invitations,
     createMutation,
     createLinkMutation,
+    updatePendingMutation,
+    regenerateLinkMutation,
     updateRoleMutation,
     removeParticipantMutation,
     participantPendingRemove,

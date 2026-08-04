@@ -45,7 +45,7 @@ export class InvitationError extends TRPCError {
   }
 }
 
-async function assertNotInvitingSelf(
+export async function assertNotInvitingSelf(
   inviterAccountId: string,
   normalizedEmail: string,
 ) {
@@ -59,7 +59,7 @@ async function assertNotInvitingSelf(
   }
 }
 
-async function assertNotExistingMember(
+export async function assertNotExistingMember(
   groupId: string,
   normalizedEmail: string,
 ) {
@@ -76,9 +76,10 @@ async function assertNotExistingMember(
   }
 }
 
-async function assertNoConflictingEmailInvitation(
+export async function assertNoConflictingEmailInvitation(
   groupId: string,
   normalizedEmail: string,
+  excludeInvitationId?: string,
 ) {
   const existingPending = await prisma.groupInvitation.findFirst({
     where: {
@@ -86,6 +87,7 @@ async function assertNoConflictingEmailInvitation(
       type: GroupInvitationType.EMAIL,
       email: { equals: normalizedEmail, mode: 'insensitive' },
       status: GroupInvitationStatus.PENDING,
+      ...(excludeInvitationId ? { id: { not: excludeInvitationId } } : {}),
     },
     select: { id: true },
   })
@@ -94,6 +96,22 @@ async function assertNoConflictingEmailInvitation(
       'An invitation is already pending for this email. Revoke the existing one below and try again.',
     )
   }
+}
+
+/** Find a pending EMAIL invitation for a group and email, if any. */
+export async function findPendingEmailInvitation(
+  groupId: string,
+  email: string,
+) {
+  return prisma.groupInvitation.findFirst({
+    where: {
+      groupId,
+      type: GroupInvitationType.EMAIL,
+      status: GroupInvitationStatus.PENDING,
+      email: { equals: email, mode: 'insensitive' },
+    },
+    select: { id: true, role: true, type: true },
+  })
 }
 
 /** Create an email-targeted invitation. */
@@ -111,12 +129,24 @@ export async function createEmailInvitation({
   await assertNotExistingMember(groupId, normalizedEmail)
   await assertNoConflictingEmailInvitation(groupId, normalizedEmail)
 
+  // When the destination matches an existing account, the account profile
+  // name is authoritative and overwrites any submitted temporary name —
+  // mirroring the pending-invitation manage path so pending rows and emails
+  // are consistent.
+  const matchedAccount = await prisma.account.findFirst({
+    where: { email: { equals: normalizedEmail, mode: 'insensitive' } },
+    select: { name: true },
+  })
+  const effectiveTemporaryName = matchedAccount
+    ? matchedAccount.name
+    : (temporaryName ?? null)
+
   const boss = await getApiBoss()
   return prisma.$transaction(async (tx) => {
     const participantId = await materializePendingInvitationParticipant(tx, {
       groupId,
       suppliedParticipantId: ledgerParticipantId,
-      displayName: temporaryName,
+      displayName: effectiveTemporaryName,
     })
 
     const invitation = await tx.groupInvitation.create({
@@ -126,7 +156,7 @@ export async function createEmailInvitation({
         groupId,
         email: normalizedEmail,
         role,
-        temporaryName: temporaryName ?? null,
+        temporaryName: effectiveTemporaryName,
         invitedById: inviterAccountId,
         ledgerParticipantId: participantId,
       },
@@ -204,19 +234,19 @@ export async function getUnusedInvitationParticipantIds(args: {
     getGroupBalances(args.groupId),
   ])
 
-  return new Set(
-    participants
-      .filter((participant) => {
-        const counts = participant._count
-        const usedInExpense =
-          counts.expensesPaidByList > 0 ||
-          counts.expensesPaidFor > 0 ||
-          counts.expenseItemPaidFor > 0 ||
-          counts.expenseItemizedRemainderPaidFor > 0
-        return !usedInExpense && (balances[participant.id]?.total ?? 0) === 0
-      })
-      .map((participant) => participant.id),
-  )
+  const unused: string[] = []
+  for (const participant of participants) {
+    const counts = participant._count
+    const usedInExpense =
+      counts.expensesPaidByList > 0 ||
+      counts.expensesPaidFor > 0 ||
+      counts.expenseItemPaidFor > 0 ||
+      counts.expenseItemizedRemainderPaidFor > 0
+    if (!usedInExpense && (balances[participant.id]?.total ?? 0) === 0) {
+      unused.push(participant.id)
+    }
+  }
+  return new Set(unused)
 }
 
 export class RevokeInvitationPreconditionError extends Error {
@@ -274,25 +304,27 @@ export async function revokeInvitation(opts: {
       settlementActivities = r.activities
     }
 
-    const updated = await tx.groupInvitation.update({
-      where: { id: opts.invitationId },
-      data: {
-        status: GroupInvitationStatus.REVOKED,
-        revokedAt: new Date(),
-      },
-    })
-    const activity = await logActivity(
-      opts.groupId,
-      {
-        type: 'INVITATION_REVOKED',
-        actor: { type: 'ACCOUNT', id: opts.actor.accountId },
-        subject: { type: 'INVITATION', id: opts.invitationId },
-        data: buildInvitationActivityData({
-          displayLabel: getInvitationDisplayName(invitation),
-        }),
-      },
-      tx,
-    )
+    const [updated, activity] = await Promise.all([
+      tx.groupInvitation.update({
+        where: { id: opts.invitationId },
+        data: {
+          status: GroupInvitationStatus.REVOKED,
+          revokedAt: new Date(),
+        },
+      }),
+      logActivity(
+        opts.groupId,
+        {
+          type: 'INVITATION_REVOKED',
+          actor: { type: 'ACCOUNT', id: opts.actor.accountId },
+          subject: { type: 'INVITATION', id: opts.invitationId },
+          data: buildInvitationActivityData({
+            displayLabel: getInvitationDisplayName(invitation),
+          }),
+        },
+        tx,
+      ),
+    ])
 
     if (
       invitation.ledgerParticipantId &&
@@ -309,9 +341,11 @@ export async function revokeInvitation(opts: {
 
     await planNotificationForActivity(tx, activity, {}, { boss })
     if (settlementActivities) {
-      for (const meta of settlementActivities) {
-        await planNotificationForActivity(tx, meta.activity, {}, { boss })
-      }
+      await Promise.all(
+        settlementActivities.map((meta) =>
+          planNotificationForActivity(tx, meta.activity, {}, { boss }),
+        ),
+      )
     }
 
     return { updated, settlementActivities, activity }

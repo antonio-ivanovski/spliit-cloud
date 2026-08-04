@@ -230,7 +230,15 @@
       "created": "{participant} bjöd in {target}",
       "revoked": "{participant} återkallade inbjudan till {target}",
       "accepted": "{target} accepterade inbjudan",
-      "declined": "{target} tackade nej till inbjudan"
+      "declined": "{target} tackade nej till inbjudan",
+      "updated": "{participant} uppdaterade inbjudan till {target}",
+      "changedFields": {
+        "deliveryType": "Leveranssätt",
+        "destination": "Mottagare",
+        "displayName": "Namn",
+        "role": "Roll",
+        "credential": "Inbjudningslänk"
+      }
     },
     "member": {
       "left": "{participant} lämnade gruppen",
@@ -1509,7 +1517,9 @@
     "friendsEmpty": "Lägg till en vän genom att ange hens e-post eller dela en länk för att bjuda in hen.",
     "infoLabel": "Information (valfri)",
     "infoPlaceholder": "Lägg till kontext, t.ex. ”Hyresgästutgifter”",
-    "createError": "Kunde inte skapa vänutgifter"
+    "createError": "Kunde inte skapa vänutgifter",
+    "copyInviteLink": "Kopiera inbjudningslänk",
+    "copiedInviteLink": "Inbjudningslänk kopierad"
   },
   "GroupForm": {
     "CurrencyCodeField": {
@@ -1648,7 +1658,9 @@
         "emailInvitesTitle": "E-postinbjudningar skickade",
         "emailInvitesDescription": "Servern e-postade följande personer. De ser en Acceptera/Avböj-banner på gruppsidan när de loggar in.",
         "shareTitle": "Gå med i min grupp på Spliit Cloud",
-        "shareText": "Gå med i vår utgiftsgrupp på Spliit Cloud — {name}. Öppna denna länk för att acceptera: {url}"
+        "shareText": "Gå med i vår utgiftsgrupp på Spliit Cloud — {name}. Öppna denna länk för att acceptera: {url}",
+        "copyLink": "Kopiera inbjudningslänk",
+        "copied": "Kopierad"
       },
       "Mapping": {
         "Errors": {
@@ -2007,8 +2019,12 @@
       },
       "link": {
         "type": "Engångslänk",
-        "fallbackLabel": "Inbjudningslänk"
-      }
+        "fallbackLabel": "Inbjudningslänk",
+        "anyoneWithLink": "Vem som helst med länken",
+        "expiresOn": "Länken förfaller {date}",
+        "expired": "Utgången"
+      },
+      "updatedOn": "Uppdaterad {date}"
     },
     "invite": {
       "title": "Bjud in medlem",
@@ -2038,7 +2054,8 @@
         "share": "Dela inbjudningslänk",
         "shareTitle": "Gå med i {groupName} på Spliit Cloud",
         "shareText": "Jag skapade just {groupName} för våra delade utgifter på Spliit Cloud. Här är en engångs-inbjudningslänk — öppna den för att gå med:\n{inviteUrl}",
-        "generateNew": "Generera ny länk"
+        "generateNew": "Generera ny länk",
+        "copyLink": "Kopiera länk"
       },
       "tab": {
         "email": "E-post",
@@ -2165,6 +2182,34 @@
       "validation": "Lägg till ett namn och minst två deltagare.",
       "loadError": "Subgrupperna kunde inte laddas.",
       "disableAria": "Inaktivera subgrupper"
+    },
+    "manage": {
+      "manageButton": "Hantera",
+      "title": "Hantera inbjudan",
+      "description": "Ändringarna påverkar den väntande inbjudan och bevarar alla utgifter som registrerats för {name}.",
+      "emailLabel": "E-postadress",
+      "emailPlaceholder": "konto@exempel.se",
+      "emailChangeWarning": "Den nuvarande mottagaren kan inte längre acceptera denna inbjudan.",
+      "nameLabel": "Visningsnamn",
+      "profileNameNote": "Använder deras Spliit-profilnamn",
+      "saveChanges": "Spara ändringar",
+      "updateSend": "Uppdatera & skicka",
+      "switchToEmailSend": "Byt & skicka inbjudan",
+      "switchToLinkGenerate": "Byt & generera länk",
+      "saved": "Ändringar sparade",
+      "cancel": "Avbryt",
+      "done": "Klar",
+      "regenerateWarning": "Den nuvarande länken slutar fungera omedelbart.",
+      "regenerateDescription": "En ny länk genereras med en ny 30-dagars giltighetstid. Inbjudan och dess utgifter behålls.",
+      "linkReadyTitle": "Ny länk klar",
+      "linkReadyDescription": "Dela den med personen du vill bjuda in.",
+      "linkReadyWarning": "Kopiera den nu — du kommer inte att kunna se den igen.",
+      "emailInvalid": "Ange en giltig e-postadress.",
+      "linkNotShown": "Inbjudningslänken visas inte här. Använd „Generera ny länk“ i listan om du behöver dela den igen.",
+      "switchToLinkNote": "Spara för att omvandla den här inbjudan till en länk. E-postinbjudan slutar att fungera."
+    },
+    "regenerate": {
+      "title": "Generera ny länk"
     }
   },
   "OfflineBanner": {
