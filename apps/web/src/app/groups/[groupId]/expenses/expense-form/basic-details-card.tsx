@@ -3,7 +3,9 @@ import {
   useEffect,
   useRef,
   useState,
+  type ComponentProps,
   type Dispatch,
+  type Ref,
   type SetStateAction,
 } from 'react'
 import { useFormState, useWatch, type UseFormReturn } from 'react-hook-form'
@@ -66,7 +68,7 @@ import { AmountInput } from './amount-input'
 import {
   enforceCurrencyPattern,
   amountPlaceholder,
-  formatDate,
+  isValidExpenseDate,
   parseCurrencyPaste,
 } from './currency-utils'
 import { applySplitToAll } from './default-item-split'
@@ -75,6 +77,10 @@ import {
   getNeutralDefaultSplit,
   savedDefaultToFormValues,
 } from './default-values'
+import {
+  formatDateInputValue,
+  parseDateInputValue,
+} from './recurrence-schedule'
 import { RecurrenceSection } from './recurrence-section'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
@@ -404,14 +410,13 @@ export function BasicDetailsCard(props: {
                 <FormItem>
                   <FormLabel>{t(`${sExpense}.DateField.label`)}</FormLabel>
                   <FormControl>
-                    <Input
-                      className="date-base"
-                      type="date"
-                      defaultValue={formatDate(field.value)}
+                    <ExpenseDateField
+                      ref={field.ref}
+                      name={field.name}
+                      value={field.value}
                       disabled={readOnly}
-                      onChange={(event) => {
-                        return field.onChange(new Date(event.target.value))
-                      }}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
                     />
                   </FormControl>
                   <FormDescription className="hidden sm:block">
@@ -746,5 +751,63 @@ export function BasicDetailsCard(props: {
         </ResponsiveDialogContent>
       </ResponsiveDialog>
     </Card>
+  )
+}
+
+function ExpenseDateField({
+  ref,
+  value,
+  onChange,
+  onBlur,
+  disabled,
+  ...props
+}: {
+  ref?: Ref<HTMLInputElement>
+  value?: Date
+  onChange: (date: Date) => void
+  disabled?: boolean
+} & Omit<ComponentProps<typeof Input>, 'type' | 'value' | 'onChange'>) {
+  const inputRef = useRef<HTMLInputElement | null>(null)
+  const isFocusedRef = useRef(false)
+  const valueIso = isValidExpenseDate(value) ? formatDateInputValue(value) : ''
+
+  useEffect(() => {
+    const input = inputRef.current
+    if (!input || isFocusedRef.current) return
+    if (input.value !== valueIso) input.value = valueIso
+  }, [valueIso])
+
+  const setInputRef = (node: HTMLInputElement | null) => {
+    inputRef.current = node
+    if (typeof ref === 'function') ref(node)
+    else if (ref) ref.current = node
+  }
+
+  return (
+    <Input
+      {...props}
+      ref={setInputRef}
+      className="date-base w-full"
+      type="date"
+      defaultValue={valueIso}
+      disabled={disabled}
+      onFocus={(event) => {
+        isFocusedRef.current = true
+        props.onFocus?.(event)
+      }}
+      onChange={(event) => {
+        const raw = event.target.value
+        if (!raw) return
+        const selected = parseDateInputValue(raw)
+        if (!Number.isFinite(selected.getTime())) return
+        onChange(selected)
+      }}
+      onBlur={(event) => {
+        isFocusedRef.current = false
+        onBlur?.(event)
+        const input = inputRef.current
+        if (input && !input.value && valueIso) input.value = valueIso
+      }}
+    />
   )
 }

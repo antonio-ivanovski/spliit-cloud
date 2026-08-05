@@ -570,7 +570,7 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
                             })
                           }}
                           onBlur={() => setEndDateDraft(null)}
-                          className="mt-1"
+                          className="date-base mt-1"
                         />
                       </div>
                     )}
