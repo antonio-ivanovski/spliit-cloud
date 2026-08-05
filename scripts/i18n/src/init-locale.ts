@@ -1,9 +1,10 @@
-import { access, copyFile, writeFile } from 'node:fs/promises'
+import { access, copyFile, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 
 import { locales, type Locale } from '../../../packages/domain/src/i18n.ts'
 import { LANGUAGE_FAMILIES } from './families'
 import { localeFileName } from './fs-helpers'
+import { GUIDES_DIR, assertCompletedGuide, resolveGuideInput } from './guides'
 
 const DOMAIN_I18N = 'packages/domain/src/i18n.ts'
 const LOCALE_SWITCHER = 'apps/web/src/components/locale-switcher-data.ts'
@@ -17,6 +18,8 @@ export type InitLocaleOptions = {
   flag: string
   /** Language family id from LANGUAGE_FAMILIES (required for plan dispatch). */
   family: string
+  /** Completed Markdown locale guide to copy into scripts/i18n/guides. */
+  guide: string
   rtl?: boolean
   from?: Locale
   /** Project root (defaults to cwd). */
@@ -211,25 +214,33 @@ export async function initLocale(
 
   const root = opts.root ?? process.cwd()
   const filesTouched: string[] = []
+  const messageRel = `${MESSAGES_DIR}/${opts.code}.json`
+  const messagePath = join(root, messageRel)
+  const guideRel = `${GUIDES_DIR}/${opts.code}.md`
+  const guidePath = join(root, ...guideRel.split('/'))
+  const guideInput = resolveGuideInput(root, opts.guide)
+
+  await assertCompletedGuide(guideInput)
+  if (await pathExists(messagePath)) {
+    throw new Error(`message file already exists: ${messageRel}`)
+  }
+  if (await pathExists(guidePath)) {
+    throw new Error(`translation guide already exists: ${guideRel}`)
+  }
 
   // 1. domain localeLabels
   const domainPath = join(root, DOMAIN_I18N)
-  const domainSrc = await Bun.file(domainPath).text()
+  const domainSrc = await readFile(domainPath, 'utf8')
   const domainNext = insertObjectEntry(
     domainSrc,
     'export const localeLabels',
     opts.code,
     `'${opts.label.replace(/'/g, "\\'")}'`,
   )
-  await Bun.write(domainPath, domainNext)
+  await writeFile(domainPath, domainNext, 'utf8')
   filesTouched.push(DOMAIN_I18N)
 
   // 2. message file
-  const messageRel = `${MESSAGES_DIR}/${opts.code}.json`
-  const messagePath = join(root, messageRel)
-  if (await pathExists(messagePath)) {
-    throw new Error(`message file already exists: ${messageRel}`)
-  }
   if (opts.from) {
     await copyFile(
       join(root, MESSAGES_DIR, localeFileName(opts.from)),
@@ -240,39 +251,44 @@ export async function initLocale(
   }
   filesTouched.push(messageRel)
 
-  // 3. localeFlags
+  // 3. locale-specific translation guide
+  await copyFile(guideInput, guidePath)
+  filesTouched.push(guideRel)
+
+  // 4. localeFlags
   const switcherPath = join(root, LOCALE_SWITCHER)
-  const switcherSrc = await Bun.file(switcherPath).text()
+  const switcherSrc = await readFile(switcherPath, 'utf8')
   const switcherNext = insertObjectEntry(
     switcherSrc,
     'export const localeFlags',
     opts.code,
     `'${opts.flag.replace(/'/g, "\\'")}'`,
   )
-  await Bun.write(switcherPath, switcherNext)
+  await writeFile(switcherPath, switcherNext, 'utf8')
   filesTouched.push(LOCALE_SWITCHER)
 
-  // 4. language family (for plan dispatch + default refs)
+  // 5. language family (for plan dispatch + default refs)
   const familiesPath = join(root, FAMILIES_FILE)
-  const familiesSrc = await Bun.file(familiesPath).text()
+  const familiesSrc = await readFile(familiesPath, 'utf8')
   const familiesNext = addLocaleToFamilySource(
     familiesSrc,
     opts.family,
     opts.code,
   )
-  await Bun.write(familiesPath, familiesNext)
+  await writeFile(familiesPath, familiesNext, 'utf8')
   filesTouched.push(FAMILIES_FILE)
 
-  // 5. optional RTL
+  // 6. optional RTL
   if (opts.rtl) {
     const reactPath = join(root, I18N_REACT)
-    const reactSrc = await Bun.file(reactPath).text()
+    const reactSrc = await readFile(reactPath, 'utf8')
     const reactNext = addRtlLocale(reactSrc, opts.code)
-    await Bun.write(reactPath, reactNext)
+    await writeFile(reactPath, reactNext, 'utf8')
     filesTouched.push(I18N_REACT)
   }
 
   const nextSteps = [
+    `Read ${guideRel} together with ${GUIDES_DIR}/default.md before translating.`,
     `bun i18n next --locale ${opts.code} --size 40 --usages --json`,
     `bun i18n set ${opts.code} --stdin   # fill applyTemplate / translate keys`,
     `# repeat next → set until next.done === true`,

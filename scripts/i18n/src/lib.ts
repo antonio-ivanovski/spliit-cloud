@@ -109,6 +109,14 @@ export { formatNextHuman, nextTranslationBatch } from './next-batch'
 export type { NextBatchOptions, NextBatchResult } from './next-batch'
 
 export {
+  assertCompletedGuide,
+  assertGuideInventory,
+  getGuidePaths,
+  resolveGuideInput,
+} from './guides'
+export type { GuidePaths, GuideValidationOptions } from './guides'
+
+export {
   assertFamiliesCoverAllLocales,
   LANGUAGE_FAMILIES,
   nonEnLocales,
@@ -141,6 +149,7 @@ import {
   readMessagesFile,
   readStagedBlob,
 } from './fs-helpers'
+import { getGuidePaths } from './guides'
 import {
   expectedKeysForLocale,
   getPluralFamilies,
@@ -237,6 +246,13 @@ export async function validateAllMessages(
   targetLocale?: Locale,
 ): Promise<ValidationResult> {
   const errors: string[] = []
+  try {
+    await getGuidePaths(
+      targetLocale ? { locales: [targetLocale] } : { requireInventory: true },
+    )
+  } catch (e) {
+    errors.push(`guides: ${(e as Error).message}`)
+  }
   const sourceData = await readMessagesFile('en-US')
   const sourceKeyList = flattenKeys(sourceData)
   const sourceKeys = new Set(sourceKeyList)

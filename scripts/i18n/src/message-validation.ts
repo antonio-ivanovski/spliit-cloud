@@ -71,6 +71,16 @@ function placeholders(value: string): Set<string> {
   )
 }
 
+function doubledPlaceholders(value: string): string[] {
+  return [
+    ...new Set(
+      [...value.matchAll(/\{\{\s*([A-Za-z][\w.-]*)\s*\}\}/g)].map(
+        (match) => match[1],
+      ),
+    ),
+  ].sort()
+}
+
 function difference(left: ReadonlySet<string>, right: ReadonlySet<string>) {
   return [...left].filter((value) => !right.has(value)).sort()
 }
@@ -195,6 +205,12 @@ export function validateMessageData(
     }
     if (value.trim().length === 0) {
       errors.push(`${key}: value must not be empty`)
+    }
+
+    for (const name of doubledPlaceholders(value)) {
+      errors.push(
+        `${key}: interpolation placeholder {${name}} must use single braces, not {{${name}}}`,
+      )
     }
 
     const tagAnalysis = analyzeTags(value)

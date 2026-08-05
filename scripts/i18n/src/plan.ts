@@ -5,6 +5,7 @@ import {
   nonEnLocales,
 } from './families'
 import { readGitBlob, readMessagesFile } from './fs-helpers'
+import { getGuidePaths, type GuidePaths } from './guides'
 import { expectedKeysForLocale } from './message-validation'
 import { flattenKeys, getAt } from './object-path'
 
@@ -30,6 +31,7 @@ export type PlanFamily = {
 export type PlanBatch = {
   id: string
   locales: Locale[]
+  guidePaths: GuidePaths
   keys: string[]
   refsHint: string
   packCommand: string
@@ -39,6 +41,7 @@ export type PlanBatch = {
 export type PlanResult = {
   ref: string
   mode: PlanMode
+  guidePaths: GuidePaths
   reason: string
   keys: PlanKey[]
   summary: {
@@ -58,6 +61,7 @@ export type PlanOptions = {
   mode?: Exclude<PlanMode, 'noop'>
   readOldEn?: () => Promise<Record<string, unknown> | null>
   includePrompts?: boolean
+  projectRoot?: string
 }
 
 const ONESHOT_MAX_KEYS = 2
@@ -96,9 +100,35 @@ function buildPackCommand(locales: Locale[], keys: string[]): string {
   return `bun i18n pack --locales ${locales.join(',')} --keys ${keys.join(',')} --usages --json`
 }
 
+function selectGuidePaths(
+  guidePaths: GuidePaths,
+  targetLocales: readonly Locale[],
+): GuidePaths {
+  const selected: Record<string, string> = {}
+  for (const locale of targetLocales) {
+    const path = guidePaths.locales[locale]
+    if (path) selected[locale] = path
+  }
+  return { baseline: guidePaths.baseline, locales: selected }
+}
+
+function guideLines(
+  guidePaths: GuidePaths,
+  targetLocales: readonly Locale[],
+): string[] {
+  return [
+    `Read the shared baseline guide before translating: ${guidePaths.baseline}`,
+    ...targetLocales.map(
+      (locale) =>
+        `Read the ${locale} locale guide before translating: ${guidePaths.locales[locale]}`,
+    ),
+  ]
+}
+
 function buildTranslatorPrompt(opts: {
   batchId: string
   locales: Locale[]
+  guidePaths: GuidePaths
   keys: PlanKey[]
   refsHint: string
   packCommand: string
@@ -111,6 +141,7 @@ function buildTranslatorPrompt(opts: {
     `Load the skill at .agents/skills/translate-strings/SKILL.md (translator role).`,
     ``,
     `Own ONLY these locales (do not edit any other locale or en-US): ${opts.locales.join(', ')}`,
+    ...guideLines(opts.guidePaths, opts.locales),
     `Suggested terminology refs within the family: ${opts.refsHint}`,
     ``,
     `Keys to translate (introduced vs ref):`,
@@ -130,6 +161,7 @@ function buildTranslatorPrompt(opts: {
 function buildOneshotPrompt(opts: {
   keys: PlanKey[]
   locales: Locale[]
+  guidePaths: GuidePaths
   packCommand: string
 }): string {
   const keyLines = opts.keys
@@ -143,6 +175,7 @@ function buildOneshotPrompt(opts: {
     keyLines,
     ``,
     `Translate into ALL non-en locales: ${opts.locales.join(', ')}`,
+    ...guideLines(opts.guidePaths, opts.locales),
     `1. ${opts.packCommand}`,
     `2. For ambiguous strings, run \`bun i18n usages <key> --json\` before translating.`,
     `3. \`bun i18n set <locale> --stdin\` per locale — never paste English placeholders.`,
@@ -158,6 +191,12 @@ export async function planTranslations(
   const ref = opts.ref ?? 'HEAD'
   const { added, modified } = await introducedChanges(ref, opts.readOldEn)
   const enData = await readMessagesFile('en-US')
+  const targetLocales = nonEnLocales()
+  const guidePaths = await getGuidePaths({
+    root: opts.projectRoot,
+    locales: targetLocales,
+    requireInventory: true,
+  })
 
   const keys: PlanKey[] = [
     ...added.map((key) => ({
@@ -181,7 +220,6 @@ export async function planTranslations(
 
   const keyList = keys.map((k) => k.key)
   const modifiedSet = new Set(modified)
-  const targetLocales = nonEnLocales()
 
   let missingCells = 0
   let staleCells = 0
@@ -261,12 +299,14 @@ export async function planTranslations(
     keyList,
     familyStats: families,
     allLocales: targetLocales,
+    guidePaths,
     includePrompts: opts.includePrompts !== false,
   })
 
   return {
     ref,
     mode,
+    guidePaths,
     reason,
     keys,
     summary: {
@@ -287,6 +327,7 @@ function buildBatches(opts: {
   keyList: string[]
   familyStats: PlanFamily[]
   allLocales: Locale[]
+  guidePaths: GuidePaths
   includePrompts: boolean
 }): PlanBatch[] {
   if (opts.mode === 'noop' || opts.keyList.length === 0) return []
@@ -297,6 +338,7 @@ function buildBatches(opts: {
       {
         id: 'oneshot',
         locales: opts.allLocales,
+        guidePaths: selectGuidePaths(opts.guidePaths, opts.allLocales),
         keys: opts.keyList,
         refsHint: 'es,fr-FR,de-DE',
         packCommand,
@@ -304,6 +346,7 @@ function buildBatches(opts: {
           ? buildOneshotPrompt({
               keys: opts.keys,
               locales: opts.allLocales,
+              guidePaths: opts.guidePaths,
               packCommand,
             })
           : '',
@@ -325,6 +368,7 @@ function buildBatches(opts: {
           ``,
           `For each family below, pack → translate → set --stdin → check --locale for each locale in that family.`,
           `If a string is ambiguous, run \`bun i18n usages <key> --json\` and read the UI context before translating.`,
+          ...guideLines(opts.guidePaths, opts.allLocales),
           `Never paste English. Never edit en-US.`,
           ``,
           ...opts.familyStats.map(
@@ -339,6 +383,7 @@ function buildBatches(opts: {
       {
         id: 'all-families',
         locales: opts.allLocales,
+        guidePaths: selectGuidePaths(opts.guidePaths, opts.allLocales),
         keys: opts.keyList,
         refsHint: 'per-family (see prompt)',
         packCommand,
@@ -354,6 +399,7 @@ function buildBatches(opts: {
       return {
         id: f.id,
         locales: f.locales,
+        guidePaths: selectGuidePaths(opts.guidePaths, f.locales),
         keys: opts.keyList,
         refsHint: f.refsHint,
         packCommand,
@@ -361,6 +407,7 @@ function buildBatches(opts: {
           ? buildTranslatorPrompt({
               batchId: f.id,
               locales: f.locales,
+              guidePaths: selectGuidePaths(opts.guidePaths, f.locales),
               keys: opts.keys,
               refsHint: f.refsHint,
               packCommand,
@@ -399,6 +446,10 @@ export function formatPlanHuman(plan: PlanResult): string {
     lines.push(`  Batches (${plan.batches.length}):`)
     for (const b of plan.batches) {
       lines.push(`    - ${b.id}: ${b.locales.length} locales`)
+      lines.push(`      baseline guide: ${b.guidePaths.baseline}`)
+      for (const [locale, path] of Object.entries(b.guidePaths.locales)) {
+        lines.push(`      ${locale} guide: ${path}`)
+      }
       lines.push(`      ${b.packCommand}`)
     }
   }

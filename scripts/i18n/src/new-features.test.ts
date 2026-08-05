@@ -8,7 +8,12 @@ import {
   classifyEnglishIdentity,
   isAutoAllowedEnglishIdentity,
 } from './english-identity.ts'
-import { addRtlLocale, insertObjectEntry } from './init-locale.ts'
+import {
+  assertCompletedGuide,
+  assertGuideInventory,
+  getGuidePaths,
+} from './guides.ts'
+import { addRtlLocale, initLocale, insertObjectEntry } from './init-locale.ts'
 import {
   LOCALE_TO_FILE,
   getKeysAcrossLocales,
@@ -18,6 +23,75 @@ import {
   setStrings,
 } from './lib.ts'
 import { findUsages, usageSearchKey } from './usages.ts'
+
+describe('translation guides', () => {
+  it('keeps one completed guide per non-en-US locale', async () => {
+    await expect(assertGuideInventory()).resolves.toBeUndefined()
+    const paths = await getGuidePaths({
+      locales: ['fr-FR', 'en-GZ'],
+    })
+    expect(paths.baseline).toBe('scripts/i18n/guides/default.md')
+    expect(paths.locales).toEqual({
+      'fr-FR': 'scripts/i18n/guides/fr-FR.md',
+      'en-GZ': 'scripts/i18n/guides/en-GZ.md',
+    })
+  })
+
+  it('rejects missing, non-Markdown, and unfinished guide inputs', async () => {
+    await expect(
+      assertCompletedGuide('/tmp/does-not-exist.md'),
+    ).rejects.toThrow('guide file does not exist')
+    await expect(assertCompletedGuide('/tmp/guide.txt')).rejects.toThrow(
+      'must be Markdown',
+    )
+
+    const dir = await mkdtemp(join(tmpdir(), 'i18n-guide-'))
+    const file = join(dir, 'guide.md')
+    await writeFile(file, '# TODO\n')
+    await expect(assertCompletedGuide(file)).rejects.toThrow('unfinished')
+    await rm(dir, { recursive: true, force: true })
+  })
+
+  it('copies a completed guide when initializing a locale', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'i18n-init-guide-'))
+    await mkdir(join(root, 'packages/domain/src'), { recursive: true })
+    await mkdir(join(root, 'apps/web/src/components'), { recursive: true })
+    await mkdir(join(root, 'apps/web/src/messages'), { recursive: true })
+    await mkdir(join(root, 'scripts/i18n/src'), { recursive: true })
+    await mkdir(join(root, 'scripts/i18n/guides'), { recursive: true })
+    await writeFile(
+      join(root, 'packages/domain/src/i18n.ts'),
+      "export const localeLabels = { 'en-US': 'English' } as const\n",
+    )
+    await writeFile(
+      join(root, 'apps/web/src/components/locale-switcher-data.ts'),
+      "export const localeFlags = { 'en-US': '🇺🇸' } as const\n",
+    )
+    await writeFile(
+      join(root, 'scripts/i18n/src/families.ts'),
+      "export const LANGUAGE_FAMILIES = [{ id: 'romance', locales: ['ca'] }]\n",
+    )
+    await writeFile(join(root, 'apps/web/src/messages/en-US.json'), '{}\n')
+    await writeFile(
+      join(root, 'new-guide.md'),
+      '# zz guide\nUse neutral wording.\n',
+    )
+
+    const result = await initLocale({
+      code: 'zz',
+      label: 'Test',
+      flag: '🏳️',
+      family: 'romance',
+      guide: 'new-guide.md',
+      root,
+    })
+    expect(result.filesTouched).toContain('scripts/i18n/guides/zz.md')
+    await expect(
+      readFile(join(root, 'scripts/i18n/guides/zz.md'), 'utf8'),
+    ).resolves.toContain('Use neutral wording')
+    await rm(root, { recursive: true, force: true })
+  })
+})
 
 describe('english-identity', () => {
   it('auto-allows brands, urls, and placeholder-only templates', () => {

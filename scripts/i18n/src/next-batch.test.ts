@@ -67,6 +67,10 @@ describe('nextTranslationBatch', () => {
     expect(first.completed).toBe(0)
     expect(first.batch).toBe(1)
     expect(first.keys.map((k) => k.key)).toEqual(['a', 'b'])
+    expect(first.guidePaths).toEqual({
+      baseline: 'scripts/i18n/guides/default.md',
+      locales: { 'fr-FR': 'scripts/i18n/guides/fr-FR.md' },
+    })
     expect(first.applyTemplate).toEqual({ a: '', b: '' })
     expect(first.setCommand).toContain('set fr-FR --stdin')
     expect(first.nextCommand).toContain('next --locale fr-FR')

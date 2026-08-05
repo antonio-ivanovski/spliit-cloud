@@ -243,8 +243,8 @@ function help() {
     '  next --locale <l> [--size 40] [--refs a,b] [--usages] [--json]',
     '                                  Next unfinished batch for a locale (auto-advances after set).',
     '  usages <key...> [--json]        Best-effort code locations for message keys.',
-    '  init-locale <code> --label "…" --flag "…" --family <id> [--rtl] [--from <locale>]',
-    '                                  Scaffold a new language (domain, JSON, flags, family, optional RTL).',
+    '  init-locale <code> --label "…" --flag "…" --family <id> --guide <path.md> [--rtl] [--from <locale>]',
+    '                                  Register a language and install its completed translation guide.',
     '  missing [--locale <l>] [--all] [--json]',
     '                                  List keys missing in a locale (vs en-US).',
     '  identical [--locale <l>] [--json]',
@@ -254,7 +254,7 @@ function help() {
     '  check [--changes-only] [--locale <l>] [--ref <r>] [--json]',
     '                                  Audit locales. Exits 1 on orphans, missing keys, or',
     '                                  untranslated English on keys introduced vs --ref.',
-    '  validate                        Validate values, placeholders, rich-text tags, plurals, orphans.',
+    '  validate                        Validate values, guides, placeholders, rich-text tags, plurals, orphans.',
     '  help                            Show this help.',
     '',
     'Exit codes:',
@@ -268,7 +268,7 @@ function help() {
     '  - After editing en-US: `bun i18n plan` → oneshot / one subagent / family parallel.',
     '  - New/backfill locale: loop `bun i18n next --locale L` → set --stdin until done.',
     '  - Translators: `pack`/`next` → translate → `set --stdin` → `check`.',
-    '  - Use `init-locale --family …` to register a brand-new language.',
+    '  - Use `init-locale --family … --guide path/to/guide.md` to register a brand-new language.',
   ].join('\n')
 }
 
@@ -515,6 +515,10 @@ async function main() {
           `pack ${label}: ${result.keys.length}/${result.total} keys` +
             (result.limit != null ? ` (limit ${result.limit})` : ''),
         )
+        console.log(`  read baseline guide: ${result.guidePaths.baseline}`)
+        for (const [loc, path] of Object.entries(result.guidePaths.locales)) {
+          console.log(`  read ${loc} guide: ${path}`)
+        }
         for (const entry of result.keys) {
           console.log(`  ${entry.key}`)
           console.log(`    en: ${entry.en}`)
@@ -616,9 +620,10 @@ async function main() {
       const label = kvFlags.label
       const flag = kvFlags.flag
       const family = kvFlags.family
-      if (!code || !label || !flag || !family) {
+      const guide = kvFlags.guide
+      if (!code || !label || !flag || !family || !guide) {
         die(
-          'usage: bun i18n init-locale <code> --label "<Native>" --flag "<emoji>" --family <id> [--rtl] [--from <locale>]',
+          'usage: bun i18n init-locale <code> --label "<Native>" --flag "<emoji>" --family <id> --guide <path.md> [--rtl] [--from <locale>]',
           2,
         )
       }
@@ -631,6 +636,7 @@ async function main() {
           label,
           flag,
           family,
+          guide,
           rtl: flags.has('rtl'),
           from,
         })

@@ -1,6 +1,6 @@
 ---
 name: translate-strings
-description: Translate or add locales via bun i18n (plan / next / set / init-locale). Do not explore the repo or web-search for i18n conventions — this skill and the CLI are enough. Use when adding a language (e.g. Swedish), filling missing keys, or dispatching translators after en-US edits.
+description: Translate or add locales via bun i18n (plan / next / set / init-locale), using the shared and per-locale translation guides supplied by the CLI. Do not explore the repo or web-search for i18n conventions — this skill, the guides, and the CLI are enough. Use when adding a language (e.g. Swedish), filling missing keys, or dispatching translators after en-US edits.
 license: MIT
 ---
 
@@ -20,6 +20,14 @@ license: MIT
 - Translators own only their batch locales.
 - Ambiguous strings → `bun i18n usages <key> --json`, then read the listed UI. No usages → use en + refs; note ambiguity in the report.
 
+## Translation guides (mandatory)
+
+- Before translating, read `scripts/i18n/guides/default.md` and every locale guide listed by `plan`, `pack`, or `next` under `guidePaths`.
+- The baseline contains rules shared by every locale. The locale file contains the language, region, register, grammar, punctuation, script, terminology, and accessibility nuances that override or extend it.
+- Do not rely on general model knowledge when a locale guide gives a project-specific decision. Follow the guide even when a neighboring language uses a tempting cognate.
+- Interpolation is configured with single braces: `{name}` and `{count}`. Always write single-brace placeholders, never `{{name}}`/`{{count}}`; preserve the identifier and required rich-text context.
+- `bun i18n check` validates the guide inventory and reports doubled placeholders. Do not bypass those errors by copying English or changing placeholder names.
+
 ## Locale wiring (do not re-discover)
 
 | Concern            | Where                                 | Updated by             |
@@ -29,9 +37,10 @@ license: MIT
 | i18next load       | glob in `setup.ts`                    | automatic              |
 | flag               | `locale-switcher.tsx`                 | `init-locale --flag`   |
 | family (plan/refs) | `scripts/i18n/src/families.ts`        | `init-locale --family` |
+| guides             | `scripts/i18n/guides/<locale>.md`    | `init-locale --guide`  |
 | RTL                | `react.tsx` `RTL_LOCALES`             | `init-locale --rtl`    |
 
-Families: `romance` | `germanic` | `slavic` | `east-asian` | `other`.
+Families: `romance` | `germanic` | `slavic` | `east-asian` | `indic` | `semitic` | `southeast-asian` | `turkic`.
 
 ---
 
@@ -40,7 +49,7 @@ Families: `romance` | `germanic` | `slavic` | `east-asian` | `other`.
 Example:
 
 ```bash
-bun i18n init-locale sv-SE --label "Svenska" --flag "🇸🇪" --family germanic
+bun i18n init-locale sv-SE --label "Svenska" --flag "🇸🇪" --family germanic --guide path/to/sv-SE-guide.md
 ```
 
 Then **loop** (no explore, no offset math):
@@ -55,7 +64,7 @@ bun i18n check --locale sv-SE   # full parity; must exit 0
 
 `next` auto-advances: it always returns the first N **still-missing** keys. After a successful `set`, the following `next` is the next batch.
 
-Dispatch a translator with a prompt that says exactly that loop — do not ask them to research the repo.
+Dispatch a translator with a prompt that says exactly that loop and names the guide paths — do not ask them to research the repo.
 
 ---
 
@@ -71,16 +80,16 @@ Follow `mode`: `noop` | `oneshot` (you translate) | `single` (one Task) | `paral
 
 ## Translator subagent (plan batch or new-locale backfill)
 
-**Plan batch:** run the batch’s `packCommand` / translate / `set` per locale / `check --locale --changes-only`.
+**Plan batch:** read the batch’s `guidePaths`, run its `packCommand`, translate using the baseline plus each owned locale guide, then `set` per locale and run `check --locale --changes-only`.
 
-**Full locale backfill:** only the `next` → `set` loop above until `done`, then full `check --locale`.
+**Full locale backfill:** read `next.guidePaths`, then use only the `next` → `set` loop above until `done`, then full `check --locale`.
 
 ---
 
 ## CLI cheat sheet
 
 ```bash
-bun i18n init-locale <code> --label "…" --flag "…" --family germanic|romance|…
+bun i18n init-locale <code> --label "…" --flag "…" --family germanic|romance|… --guide path/to/<locale>-guide.md
 bun i18n next --locale L --size 40 --usages --json
 bun i18n set L --stdin
 bun i18n plan --json

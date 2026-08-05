@@ -90,6 +90,11 @@ describe('planTranslations', () => {
     expect(plan.batches).toHaveLength(1)
     expect(plan.batches[0].id).toBe('oneshot')
     expect(plan.batches[0].prompt).toContain('usages')
+    expect(plan.batches[0].prompt).toContain('scripts/i18n/guides/default.md')
+    expect(plan.batches[0].prompt).toContain('scripts/i18n/guides/en-GZ.md')
+    expect(plan.batches[0].guidePaths.locales['en-GZ']).toBe(
+      'scripts/i18n/guides/en-GZ.md',
+    )
     expect(plan.summary.missingCells).toBe(nonEnLocales().length * 2)
   })
 
@@ -184,6 +189,13 @@ describe('packMessages multi-locale', () => {
       keys: ['Members.title', 'Members.remove'],
     })
     expect(result.locales).toEqual(['fr-FR', 'es'])
+    expect(result.guidePaths).toEqual({
+      baseline: 'scripts/i18n/guides/default.md',
+      locales: {
+        'fr-FR': 'scripts/i18n/guides/fr-FR.md',
+        es: 'scripts/i18n/guides/es.md',
+      },
+    })
     const remove = result.keys.find((k) => k.key === 'Members.remove')
     expect(remove).toBeTruthy()
     expect(remove!.byLocale!['fr-FR'].status).toBe('missing')

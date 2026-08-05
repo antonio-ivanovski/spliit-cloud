@@ -1,12 +1,14 @@
 import { type Locale } from '../../../packages/domain/src/i18n.ts'
 import { familyForLocale } from './families'
 import { readMessagesFile } from './fs-helpers'
+import { getGuidePaths, type GuidePaths } from './guides'
 import { expectedKeysForLocale } from './message-validation'
 import { flattenKeys } from './object-path'
 import { packMessages, type PackKey } from './pack'
 
 export type NextBatchResult = {
   locale: Locale
+  guidePaths: GuidePaths
   refs: Locale[]
   size: number
   /** Keys still missing (auto-advances after set — no --offset). */
@@ -82,6 +84,10 @@ export async function nextTranslationBatch(
     opts.refs && opts.refs.length > 0 ? opts.refs : defaultRefs(locale)
 
   const progress = await localeProgress(locale)
+  const guidePaths = await getGuidePaths({
+    root: opts.projectRoot,
+    locales: [locale],
+  })
 
   // First N still-missing keys — after set, the next call advances automatically.
   const pack = await packMessages({
@@ -110,6 +116,7 @@ export async function nextTranslationBatch(
 
   return {
     locale,
+    guidePaths,
     refs,
     size,
     remaining,
@@ -139,6 +146,8 @@ export function formatNextHuman(result: NextBatchResult): string {
   if (result.refs.length > 0) {
     lines.push(`  refs: ${result.refs.join(',')}`)
   }
+  lines.push(`  read baseline guide: ${result.guidePaths.baseline}`)
+  lines.push(`  read locale guide: ${result.guidePaths.locales[result.locale]}`)
   lines.push(`  keys in this batch: ${result.keys.length}`)
   lines.push('')
   lines.push('  Translate the keys below, then:')

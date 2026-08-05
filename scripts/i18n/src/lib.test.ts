@@ -335,6 +335,22 @@ describe('validateAllMessages', () => {
     ).toBe(false)
   })
 
+  it('rejects doubled interpolation braces', async () => {
+    await seedFile('en-US', { greeting: 'Hello {name}' })
+    await seedFile('fr-FR', { greeting: 'Bonjour {{name}}' })
+    const result = await validateAllMessages('fr-FR')
+    expect(result.errors).toContain(
+      'fr-FR.json: greeting: interpolation placeholder {name} must use single braces, not {{name}}',
+    )
+
+    await seedFile('en-US', { greeting: 'Hello {{name}}' })
+    await seedFile('fr-FR', { greeting: 'Bonjour {name}' })
+    const sourceResult = await validateAllMessages('fr-FR')
+    expect(sourceResult.errors).toContain(
+      'en-US.json: greeting: interpolation placeholder {name} must use single braces, not {{name}}',
+    )
+  })
+
   it('can restrict structural validation to one locale', async () => {
     await seedFile('en-US', { greeting: 'Hello' })
     await seedFile('fr-FR', { greeting: 'Bonjour' })

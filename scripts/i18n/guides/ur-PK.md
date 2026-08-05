@@ -1,0 +1,9 @@
+# ur-PK translation guide
+
+Apply `default.md` first, then these Urdu (Pakistan) rules.
+
+- Use standard Urdu suitable for Pakistan in a respectful, neutral register; avoid Hindi Devanagari, Hinglish, and overly literary phrasing.
+- Treat the interface as RTL and keep Urdu punctuation and bidi behavior readable around Latin placeholders, URLs, and numbers.
+- Preserve Urdu script joining and diacritics where used. Keep placeholders as `{name}` and do not alter their identifiers.
+- Match Urdu gender, number, and postposition agreement; prefer neutral rephrasing when the user’s gender is unknown.
+- Use natural Urdu terms for groups, members, expenses, shares, and balances rather than translating word-for-word from English.

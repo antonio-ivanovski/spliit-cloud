@@ -1,5 +1,6 @@
 import { type Locale } from '../../../packages/domain/src/i18n.ts'
 import { readGitBlob, readMessagesFile } from './fs-helpers'
+import { getGuidePaths, type GuidePaths } from './guides'
 import { expectedKeysForLocale } from './message-validation'
 import { flattenKeys, getAt } from './object-path'
 import { findUsagesForKeys, type UsageHit } from './usages'
@@ -85,6 +86,7 @@ export type PackKey = {
 export type PackResult = {
   locale?: Locale
   locales: Locale[]
+  guidePaths: GuidePaths
   ref: string
   refs: Locale[]
   changesOnly: boolean
@@ -140,6 +142,10 @@ function statusFor(
 
 export async function packMessages(opts: PackOptions): Promise<PackResult> {
   const targetLocales = resolveTargetLocales(opts)
+  const guidePaths = await getGuidePaths({
+    root: opts.projectRoot,
+    locales: targetLocales,
+  })
   const multi = targetLocales.length > 1 || opts.locales !== undefined
   const primary = targetLocales[0]
   const ref = opts.ref ?? 'HEAD'
@@ -263,6 +269,7 @@ export async function packMessages(opts: PackOptions): Promise<PackResult> {
   return {
     locale: multi ? undefined : primary,
     locales: targetLocales,
+    guidePaths,
     ref,
     refs: explicitRefs,
     changesOnly: !!opts.changesOnly,
