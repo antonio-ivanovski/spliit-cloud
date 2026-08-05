@@ -2,14 +2,17 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useRef, useState } from 'react'
 import {
   useForm,
+  useFormState,
   useWatch,
   type FieldErrors,
   type FieldPath,
   type Resolver,
+  type UseFormReturn,
 } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
+import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
 import { getCurrency } from '@/lib/currency'
@@ -42,6 +45,7 @@ import { FormActions } from './form-actions'
 import { ItemParticipantsModal } from './item-participants-modal'
 import { PaidByCard } from './paid-by-card'
 import { PaidForCard } from './paid-for-card'
+import type { ShareArrayName, ShareInputKey } from './share-row-input'
 import { buildSubmitValues } from './submit-values'
 import { useExpenseCurrencyConversion } from './use-expense-currency-conversion'
 import { useExpenseFormBalancing } from './use-expense-form-balancing'
@@ -67,8 +71,46 @@ function firstErrorPath(errors: FieldErrors, prefix = ''): string | undefined {
 
 function focusableErrorPath(path: string): string {
   const itemMatch = path.match(/^items(?:\.(\d+))?/)
-  return itemMatch ? `items.${itemMatch[1] ?? 0}.title` : path
+  if (itemMatch) return `items.${itemMatch[1] ?? 0}.title`
+  return path
 }
+
+/**
+ * Resolve a share error path (`paidFor`, `paidFor.root`, `paidFor.2.shares`, …)
+ * to the owning array and participant of the first affected row, or `null` when
+ * the error cannot be mapped to a row (e.g. an empty `paidFor` list). Focus
+ * then targets the section-qualified input registry instead of an array index,
+ * which is unstable while rows are being added/removed — and instead of a bare
+ * participant id, which is ambiguous because the same participant has inputs in
+ * both `paidFor` and `paidByList`.
+ */
+function shareErrorTarget(
+  path: string,
+  form: UseFormReturn<ExpenseFormInputValues>,
+): { arrayName: ShareArrayName; participantId: string } | null {
+  const paidForMatch = path.match(/^paidFor(?:\.(\d+))?/)
+  if (paidForMatch) {
+    const rows = form.getValues('paidFor')
+    const participantId = rows[Number(paidForMatch[1] ?? 0)]?.participant
+    return participantId ? { arrayName: 'paidFor', participantId } : null
+  }
+  const paidByMatch = path.match(/^paidByList(?:\.(\d+))?/)
+  if (paidByMatch) {
+    const rows = form.getValues('paidByList')
+    const participantId = rows[Number(paidByMatch[1] ?? 0)]?.participant
+    return participantId ? { arrayName: 'paidByList', participantId } : null
+  }
+  return null
+}
+
+/**
+ * Outcome of an `ExpenseForm` submit:
+ *
+ * - `'saved'` — the expense was persisted; post-save work (`onSaved`) may run.
+ * - `'deferred'` — the flow suspended the save (e.g. a recurring-edit scope
+ *   dialog will perform it later); no post-save work should run.
+ */
+export type ExpenseSubmitOutcome = 'saved' | 'deferred'
 
 export function ExpenseForm(props: {
   group: NonNullable<AppRouterOutput['groups']['get']['group']>
@@ -78,7 +120,23 @@ export function ExpenseForm(props: {
   heading?: string
   /** Internal path to return to when the form was opened from another feed. */
   cancelHref?: string
-  onSubmit: (value: Expense) => Promise<void>
+  /**
+   * Persistence callback. Resolves `'saved'` once the expense is persisted and
+   * `'deferred'` when the flow only suspends the save (see
+   * {@link ExpenseSubmitOutcome}). A rejection is a persistence failure: nothing
+   * was saved, the mutation hooks already surface it through their error toast,
+   * and a manual retry is safe — the form stays enabled.
+   */
+  onSubmit: (value: Expense) => Promise<ExpenseSubmitOutcome>
+  /**
+   * Optional post-save work (typically navigation), awaited only after a
+   * `'saved'` outcome. A rejection here is NOT a persistence failure — the
+   * expense already exists — so the form surfaces a dedicated notice with a
+   * leave-again action instead of reporting a save failure (which would invite
+   * a duplicate retry). After a `'saved'` outcome the form is terminal: the
+   * submit action is disabled and only this callback may run.
+   */
+  onSaved?: () => Promise<void>
   onDelete?: () => Promise<void>
   runtimeFeatureFlags: RuntimeFeatureFlags
   currentLedgerParticipantId?: string | null
@@ -92,7 +150,16 @@ export function ExpenseForm(props: {
   const accountPreferences = useSyncedAccountPreferences()
   const accountTimeZone =
     accountPreferences?.timeZone ?? detectDeviceTimeZone() ?? 'UTC'
-  const [hasValidationError, setHasValidationError] = useState(false)
+  // Set when `onSubmit` resolved 'saved' but `onSaved` (post-save work such
+  // as navigation) failed: the expense already exists, so this must not be
+  // reported as a save failure (that would invite a duplicate retry).
+  const [postSaveFailure, setPostSaveFailure] = useState(false)
+  // True once persistence succeeded. 'saved' is a terminal outcome: the
+  // expense exists, so the submit action is disabled (a retry would
+  // duplicate it) and the only escape is the leave-again action, which
+  // invokes `onSaved` without re-persisting.
+  const [persisted, setPersisted] = useState(false)
+  const [retryingNav, setRetryingNav] = useState(false)
   // Copy and fresh-create both surface as a Create flow even though
   // props.expense is set in copy mode (for field prefill).
   const isCreate = props.expense === undefined || props.isCopy === true
@@ -113,6 +180,10 @@ export function ExpenseForm(props: {
     resolver: zodResolver(
       expenseFormInputSchema,
     ) as Resolver<ExpenseFormInputValues>,
+    // Focus choreography is handled by `handleInvalidSubmit` below, which
+    // maps array/items roots onto real inputs; the default walker cannot
+    // reach the nested share fields and would fight the explicit setFocus.
+    shouldFocusError: false,
     defaultValues: buildExpenseFormDefaults({
       isCreate,
       expense: props.expense,
@@ -126,6 +197,11 @@ export function ExpenseForm(props: {
       today: dateOnlyInAccountTimeZone(new Date(), accountTimeZone),
     }),
   })
+
+  // Section-qualified registry (`paidFor:lp-1` / `paidByList:lp-1`) of the
+  // paid-for / paid-by share inputs. Focus for share errors goes through it —
+  // the participant id alone would be ambiguous across the two sections.
+  const shareInputRefs = useRef(new Map<ShareInputKey, HTMLInputElement>())
 
   const groupCurrency = getCurrencyFromGroup(props.group)
 
@@ -191,7 +267,16 @@ export function ExpenseForm(props: {
     control: form.control,
     name: 'originalCurrency',
   })
-  const watchedFormValues = useWatch({ control: form.control })
+  // Narrowed watches: only the fields the receipt-scan context consumes
+  // (a whole-form useWatch re-renders the entire form on every keystroke).
+  const watchedTitle = useWatch({ control: form.control, name: 'title' })
+  const watchedAmount = useWatch({ control: form.control, name: 'amount' })
+  const watchedExpenseDate = useWatch({
+    control: form.control,
+    name: 'expenseDate',
+  })
+  const watchedCategory = useWatch({ control: form.control, name: 'category' })
+  const watchedItems = useWatch({ control: form.control, name: 'items' })
   const payerCurrency: Currency = originalCurrencyValue
     ? (getCurrency(originalCurrencyValue) ?? groupCurrency)
     : groupCurrency
@@ -202,12 +287,12 @@ export function ExpenseForm(props: {
   const sExpense = (isIncome ? 'Income' : 'Expense') as 'Expense' | 'Income'
 
   const receiptScanContext: ReceiptScanContext = {
-    title: watchedFormValues.title || undefined,
-    amount: Number(watchedFormValues.amount) || undefined,
-    date: watchedFormValues.expenseDate?.toISOString().slice(0, 10),
-    currencyCode: watchedFormValues.originalCurrency || groupCurrency.code,
-    categoryId: watchedFormValues.category || undefined,
-    items: (watchedFormValues.items ?? []).map((item) => ({
+    title: watchedTitle || undefined,
+    amount: Number(watchedAmount) || undefined,
+    date: watchedExpenseDate?.toISOString().slice(0, 10),
+    currencyCode: originalCurrencyValue || groupCurrency.code,
+    categoryId: watchedCategory || undefined,
+    items: (watchedItems ?? []).map((item) => ({
       title: item.title ?? '',
       unitPrice: Number(item.unitPrice) || 0,
       quantity: Number(item.quantity) || 1,
@@ -279,8 +364,8 @@ export function ExpenseForm(props: {
   }
 
   const submit = async (values: ExpenseFormInputValues) => {
-    if (props.readOnly) return
-    setHasValidationError(false)
+    if (props.readOnly || persisted) return
+    setPostSaveFailure(false)
     const rate = Number(values.conversionRate)
     if (
       conversion.conversionRequired &&
@@ -292,32 +377,74 @@ export function ExpenseForm(props: {
       })
       return
     }
-    return props.onSubmit(
-      buildSubmitValues(values, {
-        groupCurrency,
-        conversionRequired: conversion.conversionRequired,
-      }),
-    )
+    let outcome: ExpenseSubmitOutcome | null = null
+    try {
+      outcome = await props.onSubmit(
+        buildSubmitValues(values, {
+          groupCurrency,
+          conversionRequired: conversion.conversionRequired,
+        }),
+      )
+    } catch {
+      // Persistence failure: nothing was saved, the mutation hooks already
+      // surfaced it through their error toast, and a manual retry is safe —
+      // so the form stays enabled and no inline error is claimed.
+    }
+    if (outcome !== 'saved') return
+    // The expense exists now; persistence is terminal (see `persisted`).
+    setPersisted(true)
+    if (!props.onSaved) return
+    try {
+      await props.onSaved()
+    } catch {
+      // Post-save work failed (e.g. navigation) AFTER the expense was
+      // persisted. Resubmitting would duplicate the expense, so surface a
+      // dedicated notice with a leave-again action instead of a
+      // save-failure message.
+      setPostSaveFailure(true)
+    }
+  }
+
+  // Retries only the post-save work: persistence already happened and must
+  // not run again.
+  const tryLeavingAgain = async () => {
+    if (!props.onSaved || retryingNav) return
+    setRetryingNav(true)
+    try {
+      await props.onSaved()
+      setPostSaveFailure(false)
+    } catch {
+      setPostSaveFailure(true)
+    } finally {
+      setRetryingNav(false)
+    }
   }
 
   const handleInvalidSubmit = (errors: FieldErrors<ExpenseFormInputValues>) => {
-    setHasValidationError(true)
     const path = firstErrorPath(errors)
     if (!path) return
-    form.setFocus(focusableErrorPath(path) as FieldPath<ExpenseFormInputValues>)
-    window.setTimeout(() => {
-      const active = document.activeElement as HTMLElement | null
-      const invalid = document.querySelector<HTMLElement>(
-        '[aria-invalid="true"]',
+    // Share errors focus through the section-qualified input registry;
+    // everything else falls back to RHF's setFocus.
+    const target = shareErrorTarget(path, form)
+    if (target) {
+      const shareInput = shareInputRefs.current.get(
+        `${target.arrayName}:${target.participantId}`,
       )
-      const target = active && active !== document.body ? active : invalid
-      target?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    }, 0)
+      if (shareInput) {
+        shareInput.focus()
+        return
+      }
+    }
+    // Some valid form states (for example single-payer paid-by mode) have a
+    // share error path but intentionally render no share input. Do not stop
+    // after a missing registry entry; retain RHF's normal fallback behavior.
+    form.setFocus(focusableErrorPath(path) as FieldPath<ExpenseFormInputValues>)
   }
 
   return (
     <Form {...form}>
       <form
+        // oxlint-disable-next-line react/react-compiler -- handleInvalidSubmit reads shareInputRefs at submit time (event handler, never during render); the section-qualified registry replaces array-index focus for position-shifting rows.
         onSubmit={form.handleSubmit(submit, handleInvalidSubmit)}
         noValidate
         className="-mx-4 w-[calc(100%+2rem)] min-w-0 overflow-x-hidden pb-24 sm:mx-0 sm:w-auto sm:pb-20"
@@ -395,6 +522,7 @@ export function ExpenseForm(props: {
           setManuallyEditedParticipants={setManuallyEditedParticipants}
           savedDefault={savedDefault}
           isCreate={isCreate}
+          inputRefs={shareInputRefs}
         />
         <PaidByCard
           form={form}
@@ -404,6 +532,7 @@ export function ExpenseForm(props: {
           readOnly={!!props.readOnly}
           sExpense={sExpense}
           setManuallyEditedPayers={setManuallyEditedPayers}
+          inputRefs={shareInputRefs}
         />
         {props.runtimeFeatureFlags.enableExpenseDocuments && (
           <DocumentsCard
@@ -418,13 +547,22 @@ export function ExpenseForm(props: {
             onReceiptAccepted={applyReceiptResult}
           />
         )}
-        {hasValidationError && (
+        <ValidationSummary form={form} />
+        {postSaveFailure && props.onSaved && (
           <div
             role="alert"
-            aria-live="assertive"
             className="mb-3 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive"
           >
-            {t('validationSummary')}
+            <p>{t('savedButNotNavigated')}</p>
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-2"
+              disabled={retryingNav}
+              onClick={() => void tryLeavingAgain()}
+            >
+              {t('tryLeavingAgain')}
+            </Button>
           </div>
         )}
         <FormActions
@@ -432,6 +570,7 @@ export function ExpenseForm(props: {
           readOnly={!!props.readOnly}
           onDelete={props.onDelete}
           cancelHref={props.cancelHref ?? `/groups/${props.group.id}`}
+          submitDisabled={persisted}
         />
       </form>
     </Form>
@@ -442,5 +581,32 @@ function ReadOnlyNotice() {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   return (
     <p className="mb-4 text-sm text-muted-foreground">{t('readOnlyNotice')}</p>
+  )
+}
+
+/**
+ * Inline "correct the highlighted fields" summary, derived from RHF's own state
+ * through an isolated `useFormState` subscription instead of a local flag: a
+ * mirrored `hasValidationError` state could only be cleared by another submit,
+ * so the banner would keep claiming errors after every field was fixed. RHF
+ * revalidates errored fields on change once a submit happened, so this clears
+ * as soon as `errors` empties.
+ */
+function ValidationSummary({
+  form,
+}: {
+  form: UseFormReturn<ExpenseFormInputValues>
+}) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
+  const { isSubmitted, errors } = useFormState({ control: form.control })
+  if (!isSubmitted || Object.keys(errors).length === 0) return null
+  return (
+    <div
+      role="alert"
+      aria-live="assertive"
+      className="mb-3 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive"
+    >
+      <p>{t('validationSummary')}</p>
+    </div>
   )
 }

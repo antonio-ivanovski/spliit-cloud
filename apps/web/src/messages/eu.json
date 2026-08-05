@@ -889,7 +889,9 @@
     "decreaseShares": "{name}(r)en zatiak murriztu",
     "increaseShares": "{name}(r)en zatiak handitu",
     "validationSummary": "Zuzendu nabarmendutako eremuak gorde aurretik.",
-    "resetDistribution": "Berrezarri"
+    "resetDistribution": "Berrezarri",
+    "savedButNotNavigated": "Gastua gorde da, baina ezin izan dugu orri honetatik atera. Itxi dezakezu lasai.",
+    "tryLeavingAgain": "Saiatu berriro irteten"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Ezabatu dokumentua",
@@ -1122,7 +1124,11 @@
     "paidByAmountSum": "Ordaintzaileen zenbatekoen baturak gastuaren zenbatekoa berdindu behar du.",
     "paidByPercentageSum": "Ordaintzaileen ehunekoen baturak 100 izan behar du.",
     "duplicateParticipant": "Beste ordaintzaile bat dago jada hautatuta.",
-    "sharesInvalid": "Partaidetzak 0,01 eta 1.000.000 artekoak izan behar dira, gehienez bi hamartarrekin."
+    "sharesInvalid": "Partaidetzak 0,01 eta 1.000.000 artekoak izan behar dira, gehienez bi hamartarrekin.",
+    "itemTitleRequired": "Elementuaren izena beharrezkoa da.",
+    "itemAmountPositive": "Elementuaren zenbatekoak 0 baino handiagoa izan behar du.",
+    "itemQuantityMin1": "Elementuaren kopuruak gutxienez 1 izan behar du.",
+    "rowErrorsHeading": "Zuzendu parte hauek:"
   },
   "Categories": {
     "search": "Bilatu kategoria...",
@@ -1777,8 +1783,8 @@
       "create": "Sortu azpitaldea",
       "edit": "Editatu azpitaldea",
       "delete": "Ezabatu azpitaldea",
-      "editAria": "Editatu {{name}}",
-      "deleteAria": "Ezabatu {{name}}",
+      "editAria": "Editatu {name}",
+      "deleteAria": "Ezabatu {name}",
       "disableTitle": "Azpitaldeak desaktibatu?",
       "disableDescription": "Azpitaldeak desaktibatzean, azpitalde-definizio guztiak behin betiko ezabatuko dira talde honetan.",
       "disableImpact": "Dauden gastuak eta saldoak ez dira aldatuko, baina azpitaldeka kitatzeko aukera ez da gehiago eskuragarri egongo.",
@@ -1786,7 +1792,7 @@
       "disable": "Desaktibatu azpitaldeak",
       "disabling": "Desaktibatzen…",
       "deleteTitle": "Ezabatu azpitaldea?",
-      "deleteDescription": "Ezabatu «{{name}}» talde honetatik?",
+      "deleteDescription": "Ezabatu «{name}» talde honetatik?",
       "deleteImpact": "Honek azpitaldearen definizioa soilik kentzen du. Dauden gastuak eta saldoak ez dira aldatuko.",
       "cancel": "Utzi",
       "deleting": "Ezabatzen…",
@@ -1796,8 +1802,8 @@
       "namePlaceholder": "Azpitaldearen izena",
       "notInTitle": "Azpitalderik gabe",
       "inTitle": "Azpitalde batean",
-      "assignedTo": "{{name}} azpitaldean",
-      "pickedCount": "{{count}} hautatuta · gutxienez 2 behar dira",
+      "assignedTo": "{name} azpitaldean",
+      "pickedCount": "{count} hautatuta · gutxienez 2 behar dira",
       "saving": "Gordetzen…",
       "save": "Gorde azpitaldea",
       "validation": "Gehitu izen bat eta gutxienez bi partaide.",

@@ -20,7 +20,10 @@ import type { AppRouterOutput } from '@spliit/api/router'
 import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
 import { type SplitMode } from '@spliit/domain'
 
+import { getRowShareErrors } from './get-row-share-errors'
 import { PaidByRow } from './paid-by-row'
+import { RowErrorSummary } from './row-error-summary'
+import type { ShareInputRefs } from './share-row-input'
 import {
   buildEqualParticipantRows,
   convertParticipantShares,
@@ -29,6 +32,7 @@ import {
   PaidBySplitOptionCards,
   type PaidBySplitOption,
 } from './split-option-cards'
+import { useShowRowErrors } from './use-show-row-errors'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
 
@@ -40,6 +44,8 @@ export function PaidByCard(props: {
   readOnly: boolean
   sExpense: 'Expense' | 'Income'
   setManuallyEditedPayers: Dispatch<SetStateAction<Set<string>>>
+  /** Participant-keyed share input registry, owned by the expense form. */
+  inputRefs: ShareInputRefs
 }) {
   const { form, group, groupCurrency, payerCurrency, readOnly, sExpense } =
     props
@@ -60,6 +66,12 @@ export function PaidByCard(props: {
     ],
     [singlePayerTargetAmount],
   )
+
+  // The row summary recomputes errors from live values, so without a gate it
+  // would announce itself on every keystroke. Show it only once the card has
+  // been interacted with (a share row blurred) or the form was submitted.
+  const showRowErrors = useShowRowErrors(form, 'paidByList')
+
   // The single-payer path emits the expense amount directly as a BY_AMOUNT
   // share (the form's single-payer mode forces paidBySplitMode = BY_AMOUNT
   // — see PaidBySplitOptionCards) so the BY_SHARES scaling is only
@@ -218,6 +230,22 @@ export function PaidByCard(props: {
               : t('selectAll')}
           </Button>
         </div>
+        <RowErrorSummary
+          errors={
+            showRowErrors
+              ? getRowShareErrors({
+                  rows: paidByList,
+                  splitMode: option.splitMode,
+                  amount: Number(amount) || 0,
+                  // Paid-by shares may be signed (negative income expenses).
+                  allowNegative: true,
+                })
+              : []
+          }
+          participantName={(id) =>
+            group.participants.find((p) => p.id === id)?.name ?? id
+          }
+        />
         <FormField
           control={form.control}
           name="paidByList"
@@ -231,6 +259,7 @@ export function PaidByCard(props: {
                   payerCurrency={payerCurrency}
                   groupCurrency={groupCurrency}
                   readOnly={readOnly}
+                  inputRefs={props.inputRefs}
                   setManuallyEditedPayers={props.setManuallyEditedPayers}
                 />
               ))}

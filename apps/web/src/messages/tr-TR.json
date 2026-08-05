@@ -882,7 +882,9 @@
     "decreaseShares": "{name} için payları azalt",
     "increaseShares": "{name} için payları artır",
     "validationSummary": "Kaydetmeden önce vurgulanan alanları düzeltin.",
-    "resetDistribution": "Sıfırla"
+    "resetDistribution": "Sıfırla",
+    "savedButNotNavigated": "Harcama kaydedildi ancak bu sayfadan ayrılamadık. Güvenle kapatabilirsiniz.",
+    "tryLeavingAgain": "Tekrar çıkmayı dene"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Belgeyi sil",
@@ -1114,7 +1116,11 @@
     "paidByAmountSum": "Ödeyen tutarlarının toplamı masraf tutarına eşit olmalıdır.",
     "paidByPercentageSum": "Ödeyen yüzdelerinin toplamı 100 olmalıdır.",
     "duplicateParticipant": "Başka bir ödeyen zaten seçili.",
-    "sharesInvalid": "Paylar 0,01 ile 1.000.000 arasında olmalı ve en fazla iki ondalık basamak içermelidir."
+    "sharesInvalid": "Paylar 0,01 ile 1.000.000 arasında olmalı ve en fazla iki ondalık basamak içermelidir.",
+    "itemTitleRequired": "Kalem adı gereklidir.",
+    "itemAmountPositive": "Kalem tutarı 0’dan büyük olmalıdır.",
+    "itemQuantityMin1": "Kalem miktarı en az 1 olmalıdır.",
+    "rowErrorsHeading": "Lütfen bu payları düzeltin:"
   },
   "Categories": {
     "search": "Kategori ara...",
@@ -1769,8 +1775,8 @@
       "create": "Alt grup oluştur",
       "edit": "Alt grubu düzenle",
       "delete": "Alt grubu sil",
-      "editAria": "{{name}} grubunu düzenle",
-      "deleteAria": "{{name}} grubunu sil",
+      "editAria": "{name} grubunu düzenle",
+      "deleteAria": "{name} grubunu sil",
       "disableTitle": "Alt grupları devre dışı bırak?",
       "disableDescription": "Alt grupları kapatmak, bu gruptaki tüm alt grup tanımlarını kalıcı olarak silecek.",
       "disableImpact": "Mevcut masraflar ve bakiyeler değişmeden kalır, ancak alt grup kapatma seçeneği artık kullanılamayacak.",
@@ -1778,7 +1784,7 @@
       "disable": "Alt grupları devre dışı bırak",
       "disabling": "Devre dışı bırakılıyor…",
       "deleteTitle": "Alt grubu sil?",
-      "deleteDescription": "“{{name}}” grubu bu gruptan silinsin mi?",
+      "deleteDescription": "“{name}” grubu bu gruptan silinsin mi?",
       "deleteImpact": "Bu yalnızca alt grup tanımını kaldırır. Mevcut masraflar ve bakiyeler değişmeden kalır.",
       "cancel": "İptal",
       "deleting": "Siliniyor…",
@@ -1788,8 +1794,8 @@
       "namePlaceholder": "Alt grup adı",
       "notInTitle": "Bir alt grupta değil",
       "inTitle": "Bir alt grupta",
-      "assignedTo": "{{name}} grubunda",
-      "pickedCount": "{{count}} seçildi · en az 2 gerekli",
+      "assignedTo": "{name} grubunda",
+      "pickedCount": "{count} seçildi · en az 2 gerekli",
       "saving": "Kaydediliyor…",
       "save": "Alt grubu kaydet",
       "validation": "Bir ad ve en az iki katılımcı ekleyin.",

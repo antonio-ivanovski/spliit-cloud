@@ -896,7 +896,9 @@
     "decreaseShares": "Snížit počet podílů u {name}",
     "increaseShares": "Zvýšit počet podílů u {name}",
     "validationSummary": "Před uložením opravte zvýrazněná pole.",
-    "resetDistribution": "Obnovit"
+    "resetDistribution": "Obnovit",
+    "savedButNotNavigated": "Výdaj byl uložen, ale nepodařilo se nám opustit tuto stránku. Můžete ji bezpečně zavřít.",
+    "tryLeavingAgain": "Zkusit znovu odejít"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Smazat dokument",
@@ -1130,7 +1132,11 @@
     "paidByAmountSum": "Součet částek plátců se musí rovnat částce výdaje.",
     "paidByPercentageSum": "Součet procent plátců musí být 100.",
     "duplicateParticipant": "Jiný plátce je již vybrán.",
-    "sharesInvalid": "Podíly musí být mezi 0,01 a 1 000 000 s maximálně dvěma desetinnými místy."
+    "sharesInvalid": "Podíly musí být mezi 0,01 a 1 000 000 s maximálně dvěma desetinnými místy.",
+    "itemTitleRequired": "Název položky je povinný.",
+    "itemAmountPositive": "Částka položky musí být větší než 0.",
+    "itemQuantityMin1": "Množství položky musí být alespoň 1.",
+    "rowErrorsHeading": "Opravte tyto podíly:"
   },
   "Categories": {
     "search": "Hledat kategorii...",
@@ -1787,8 +1793,8 @@
       "create": "Vytvořit podskupinu",
       "edit": "Upravit podskupinu",
       "delete": "Smazat podskupinu",
-      "editAria": "Upravit {{name}}",
-      "deleteAria": "Smazat {{name}}",
+      "editAria": "Upravit {name}",
+      "deleteAria": "Smazat {name}",
       "disableTitle": "Zakázat podskupiny?",
       "disableDescription": "Vypnutí podskupin trvale odstraní všechny definice podskupin z této skupiny.",
       "disableImpact": "Stávající výdaje a zůstatky zůstanou beze změny, ale možnost vyrovnání podskupin již nebude k dispozici.",
@@ -1796,7 +1802,7 @@
       "disable": "Zakázat podskupiny",
       "disabling": "Vypínání…",
       "deleteTitle": "Smazat podskupinu?",
-      "deleteDescription": "Smazat „{{name}}“ z této skupiny?",
+      "deleteDescription": "Smazat „{name}“ z této skupiny?",
       "deleteImpact": "Tím se odstraní pouze definice podskupiny. Stávající výdaje a zůstatky zůstanou beze změny.",
       "cancel": "Zrušit",
       "deleting": "Mazání…",
@@ -1806,8 +1812,8 @@
       "namePlaceholder": "Název podskupiny",
       "notInTitle": "Není v podskupině",
       "inTitle": "V podskupině",
-      "assignedTo": "v {{name}}",
-      "pickedCount": "Vybráno: {{count}} · nutní alespoň 2",
+      "assignedTo": "v {name}",
+      "pickedCount": "Vybráno: {count} · nutní alespoň 2",
       "saving": "Ukládání…",
       "save": "Uložit podskupinu",
       "validation": "Přidejte název a alespoň dva účastníky.",

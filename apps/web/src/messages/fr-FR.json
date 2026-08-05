@@ -889,7 +889,9 @@
     "decreaseShares": "Diminuer les parts de {name}",
     "increaseShares": "Augmenter les parts de {name}",
     "validationSummary": "Veuillez corriger les champs en surbrillance avant d’enregistrer.",
-    "resetDistribution": "Réinitialiser"
+    "resetDistribution": "Réinitialiser",
+    "savedButNotNavigated": "La dépense a bien été enregistrée, mais nous n’avons pas pu quitter cette page. Vous pouvez la fermer en toute sécurité.",
+    "tryLeavingAgain": "Réessayer de quitter"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Supprimer le document",
@@ -1122,7 +1124,11 @@
     "paidByAmountSum": "La somme des montants des payeurs doit être égale au montant de la dépense.",
     "paidByPercentageSum": "La somme des pourcentages des payeurs doit être égale à 100.",
     "duplicateParticipant": "Un autre payeur est déjà sélectionné.",
-    "sharesInvalid": "Les parts doivent être comprises entre 0,01 et 1 000 000 avec deux décimales au maximum."
+    "sharesInvalid": "Les parts doivent être comprises entre 0,01 et 1 000 000 avec deux décimales au maximum.",
+    "itemTitleRequired": "Le nom de l’élément est obligatoire.",
+    "itemAmountPositive": "Le montant de l’élément doit être supérieur à 0.",
+    "itemQuantityMin1": "La quantité de l’élément doit être d’au moins 1.",
+    "rowErrorsHeading": "Corrigez ces parts :"
   },
   "Categories": {
     "search": "Rechercher une catégorie…",
@@ -1778,8 +1784,8 @@
       "create": "Créer un sous-groupe",
       "edit": "Modifier le sous-groupe",
       "delete": "Supprimer le sous-groupe",
-      "editAria": "Modifier {{name}}",
-      "deleteAria": "Supprimer {{name}}",
+      "editAria": "Modifier {name}",
+      "deleteAria": "Supprimer {name}",
       "disableTitle": "Désactiver les sous-groupes ?",
       "disableDescription": "La désactivation des sous-groupes supprimera définitivement toutes les définitions de sous-groupes de ce groupe.",
       "disableImpact": "Les dépenses et soldes existants resteront inchangés, mais l'option de règlement par sous-groupe ne sera plus disponible.",
@@ -1787,7 +1793,7 @@
       "disable": "Désactiver les sous-groupes",
       "disabling": "Désactivation…",
       "deleteTitle": "Supprimer ce sous-groupe ?",
-      "deleteDescription": "Supprimer «{{name}}» de ce groupe ?",
+      "deleteDescription": "Supprimer «{name}» de ce groupe ?",
       "deleteImpact": "Cela supprime uniquement la définition du sous-groupe. Les dépenses et soldes existants restent inchangés.",
       "cancel": "Annuler",
       "deleting": "Suppression…",
@@ -1797,8 +1803,8 @@
       "namePlaceholder": "Nom du sous-groupe",
       "notInTitle": "Sans sous-groupe",
       "inTitle": "Dans un sous-groupe",
-      "assignedTo": "dans {{name}}",
-      "pickedCount": "{{count}} sélectionnés · 2 minimum requis",
+      "assignedTo": "dans {name}",
+      "pickedCount": "{count} sélectionnés · 2 minimum requis",
       "saving": "Enregistrement…",
       "save": "Enregistrer le sous-groupe",
       "validation": "Ajoutez un nom et au moins deux participants.",

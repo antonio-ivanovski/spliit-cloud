@@ -889,7 +889,9 @@
     "decreaseShares": "Diminuisci le quote di {name}",
     "increaseShares": "Aumenta le quote di {name}",
     "validationSummary": "Correggi i campi evidenziati prima di salvare.",
-    "resetDistribution": "Ripristina"
+    "resetDistribution": "Ripristina",
+    "savedButNotNavigated": "La spesa è stata salvata, ma non è stato possibile uscire da questa pagina. Puoi chiuderla senza problemi.",
+    "tryLeavingAgain": "Prova a uscire di nuovo"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Elimina documento",
@@ -1122,7 +1124,11 @@
     "paidByAmountSum": "La somma degli importi dei pagatori deve essere uguale all'importo della spesa.",
     "paidByPercentageSum": "La somma delle percentuali dei pagatori deve essere 100.",
     "duplicateParticipant": "Un altro pagatore è già selezionato.",
-    "sharesInvalid": "Le quote devono essere comprese tra 0,01 e 1.000.000 con al massimo due decimali."
+    "sharesInvalid": "Le quote devono essere comprese tra 0,01 e 1.000.000 con al massimo due decimali.",
+    "itemTitleRequired": "Il nome della voce è obbligatorio.",
+    "itemAmountPositive": "L’importo della voce deve essere maggiore di 0.",
+    "itemQuantityMin1": "La quantità della voce deve essere almeno 1.",
+    "rowErrorsHeading": "Correggi queste quote:"
   },
   "Categories": {
     "search": "Cerca categoria...",
@@ -1778,8 +1784,8 @@
       "create": "Crea sottogruppo",
       "edit": "Modifica sottogruppo",
       "delete": "Elimina sottogruppo",
-      "editAria": "Modifica {{name}}",
-      "deleteAria": "Elimina {{name}}",
+      "editAria": "Modifica {name}",
+      "deleteAria": "Elimina {name}",
       "disableTitle": "Disattivare i sottogruppi?",
       "disableDescription": "La disattivazione dei sottogruppi eliminerà definitivamente tutte le definizioni di sottogruppo da questo gruppo.",
       "disableImpact": "Spese e saldi esistenti resteranno invariati, ma l'opzione di saldo per sottogruppi non sarà più disponibile.",
@@ -1787,7 +1793,7 @@
       "disable": "Disattiva sottogruppi",
       "disabling": "Disattivazione…",
       "deleteTitle": "Eliminare questo sottogruppo?",
-      "deleteDescription": "Eliminare «{{name}}» da questo gruppo?",
+      "deleteDescription": "Eliminare «{name}» da questo gruppo?",
       "deleteImpact": "Questa operazione rimuove solo la definizione del sottogruppo. Spese e saldi esistenti restano invariati.",
       "cancel": "Annulla",
       "deleting": "Eliminazione…",
@@ -1797,8 +1803,8 @@
       "namePlaceholder": "Nome del sottogruppo",
       "notInTitle": "Senza sottogruppo",
       "inTitle": "In un sottogruppo",
-      "assignedTo": "nel sottogruppo {{name}}",
-      "pickedCount": "{{count}} selezionati · ne servono almeno 2",
+      "assignedTo": "nel sottogruppo {name}",
+      "pickedCount": "{count} selezionati · ne servono almeno 2",
       "saving": "Salvataggio…",
       "save": "Salva sottogruppo",
       "validation": "Aggiungi un nome e almeno due partecipanti.",

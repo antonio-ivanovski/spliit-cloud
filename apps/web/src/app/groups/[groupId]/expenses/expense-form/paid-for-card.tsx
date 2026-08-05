@@ -28,16 +28,20 @@ import { computePaidForFromItems, type SplitMode } from '@spliit/domain'
 import { safeSharesToFixedUnits } from './currency-utils'
 import { DefaultSplitActions } from './default-split/default-split-actions'
 import type { SavedSplit } from './default-split/split-equal'
+import { getRowShareErrors } from './get-row-share-errors'
 import { LeaveItemizedDialog } from './leave-itemized-dialog'
 import { PaidForRow } from './paid-for-row'
 import { ParticipantPendingLabel } from './participant-pending-label'
 import { ParticipantShareRow } from './participant-share-row'
+import { RowErrorSummary } from './row-error-summary'
+import type { ShareInputRefs } from './share-row-input'
 import {
   buildEqualParticipantRows,
   convertParticipantShares,
   roundTo,
 } from './split-mode-conversions'
 import { PaidForSplitOptionCards } from './split-option-cards'
+import { useShowRowErrors } from './use-show-row-errors'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
 
@@ -64,6 +68,8 @@ export function PaidForCard(props: {
   savedDefault: SavedSplit | null
   /** True for fresh-create + copy flows; false for editing an existing expense. */
   isCreate: boolean
+  /** Participant-keyed share input registry, owned by the expense form. */
+  inputRefs: ShareInputRefs
 }) {
   const {
     form,
@@ -109,6 +115,11 @@ export function PaidForCard(props: {
     from: SplitMode
     to: SplitMode
   } | null>(null)
+
+  // The row summary recomputes errors from live values, so without a gate it
+  // would announce itself on every keystroke. Show it only once the card has
+  // been interacted with (a share row blurred) or the form was submitted.
+  const showRowErrors = useShowRowErrors(form, 'paidFor')
 
   const applyPaidForSplitModeChange = (from: SplitMode, to: SplitMode) => {
     const resetItemParticipants = (mode: SplitMode) => {
@@ -433,6 +444,20 @@ export function PaidForCard(props: {
             : t('selectAll')}
         </Button>
       </div>
+      <RowErrorSummary
+        errors={
+          showRowErrors
+            ? getRowShareErrors({
+                rows: paidFor,
+                splitMode: mode,
+                amount: Number(amount) || 0,
+              })
+            : []
+        }
+        participantName={(id) =>
+          group.participants.find((p) => p.id === id)?.name ?? id
+        }
+      />
       <FormField
         control={form.control}
         name="paidFor"
@@ -448,6 +473,7 @@ export function PaidForCard(props: {
                 conversionRequired={conversionRequired}
                 exchangeRate={exchangeRate}
                 readOnly={readOnly}
+                inputRefs={props.inputRefs}
                 setManuallyEditedParticipants={
                   props.setManuallyEditedParticipants
                 }

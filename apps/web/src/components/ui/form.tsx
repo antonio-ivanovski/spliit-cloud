@@ -166,7 +166,20 @@ const FormMessage = React.forwardRef<
   const { error, formMessageId } = useFormField()
   let body: React.ReactNode
   if (error) {
-    const raw = String(error?.message)
+    // Array-level issues land on `errors.<name>.root` (RHF's documented
+    // array-root pattern) when child fields are registered — e.g. the
+    // `items` amountSum while `items.0.title` is mounted. Row-only errors
+    // leave `error` as an array/object with no string message anywhere;
+    // rendering `String(undefined)` would print the literal text
+    // "undefined", so bail out in that case.
+    const rootNested =
+      typeof error === 'object' &&
+      error !== null &&
+      (error as { root?: { message?: unknown } }).root?.message
+    const raw = error?.message ?? rootNested
+    if (raw == null || typeof raw !== 'string') {
+      return null
+    }
     // The Zod schema codes (e.g. "min1", "duplicateParticipantName") map
     // 1:1 to keys under `SchemaErrors`. If the key exists, translate it;
     // otherwise fall back to the raw message text.

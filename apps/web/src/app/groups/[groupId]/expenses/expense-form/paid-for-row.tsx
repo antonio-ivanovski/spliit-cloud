@@ -1,29 +1,24 @@
-import { Minus, Plus } from 'lucide-react'
 import type { Dispatch, SetStateAction } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import { useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { match } from 'ts-pattern'
 
 import { ParticipantRowAmountPreview } from '@/components/participant-row-amount-preview'
-import { Button } from '@/components/ui/button'
-import { FormControl, FormField, FormMessage } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+import { FormField } from '@/components/ui/form'
 import { calculateShare, percentageToBasisPoints } from '@/lib/totals'
-import { amountAsMinorUnits, cn } from '@/lib/utils'
-import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
-import { MAX_DISPLAY_SHARES } from '@spliit/domain'
+import { amountAsMinorUnits } from '@/lib/utils'
+import type {
+  Currency,
+  ExpenseFormInputValues,
+  SplitMode,
+} from '@spliit/domain'
 
-import {
-  enforceCurrencyPattern,
-  enforcePercentagePattern,
-  enforceSharePattern,
-  nextShareRowsFromInput,
-  safeSharesToFixedUnits,
-  stepDisplayShares,
-} from './currency-utils'
+import { safeSharesToFixedUnits } from './currency-utils'
 import { ParticipantPendingLabel } from './participant-pending-label'
 import { ParticipantShareRow } from './participant-share-row'
+import { ShareRowInput, type ShareInputRefs } from './share-row-input'
+
+type ItemSplitMode = Exclude<SplitMode, 'ITEMIZED'>
 
 export function PaidForRow({
   form,
@@ -33,6 +28,7 @@ export function PaidForRow({
   conversionRequired,
   exchangeRate,
   readOnly,
+  inputRefs,
   setManuallyEditedParticipants,
 }: {
   form: UseFormReturn<ExpenseFormInputValues>
@@ -48,6 +44,7 @@ export function PaidForRow({
   conversionRequired: boolean
   exchangeRate: ExpenseFormInputValues['conversionRate']
   readOnly: boolean
+  inputRefs: ShareInputRefs
   setManuallyEditedParticipants: Dispatch<SetStateAction<Set<string>>>
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
@@ -135,7 +132,10 @@ export function PaidForRow({
               ) : (
                 <ParticipantRowAmountPreview
                   amount={calculateShare(id, {
-                    amount: amountAsMinorUnits(Number(amount), inputCurrency),
+                    amount: amountAsMinorUnits(
+                      Number(amount) || 0,
+                      inputCurrency,
+                    ),
                     paidFor: field.value.map(
                       ({ participant: pid, shares }) => ({
                         participant: {
@@ -166,245 +166,21 @@ export function PaidForRow({
             }
             shareInput={
               splitMode !== 'EVENLY' && (
-                <FormField
-                  name={`paidFor[${field.value.findIndex(({ participant }: { participant: string }) => participant === id)}].shares`}
-                  render={() => {
-                    const row = field.value?.find(
-                      ({ participant }: { participant: string }) =>
-                        participant === id,
+                <ShareRowInput
+                  form={form}
+                  arrayName="paidFor"
+                  rows={field.value}
+                  participantId={id}
+                  participantName={participant.name}
+                  splitMode={splitMode as ItemSplitMode}
+                  currency={inputCurrency}
+                  readOnly={readOnly}
+                  inputRefs={inputRefs}
+                  markManuallyEdited={(participantId) =>
+                    setManuallyEditedParticipants((prev) =>
+                      new Set(prev).add(participantId),
                     )
-                    const isSelected = row != null
-
-                    if (splitMode === 'BY_AMOUNT') {
-                      return (
-                        <div>
-                          <div className="flex items-center justify-end gap-0.5">
-                            <span className="text-sm">
-                              {inputCurrency.symbol}
-                            </span>
-                            <FormControl>
-                              <Input
-                                className="-my-2 w-[72px] shrink-0 px-2 text-right text-base tabular-nums"
-                                type="text"
-                                disabled={readOnly}
-                                aria-label={t('participantAmountLabel', {
-                                  name: participant.name,
-                                })}
-                                value={String(row?.shares ?? '')}
-                                onFocus={(event) =>
-                                  event.currentTarget.select()
-                                }
-                                onChange={(event) => {
-                                  const sanitized = enforceCurrencyPattern(
-                                    event.target.value,
-                                    inputCurrency.decimal_digits,
-                                  )
-                                  const next = field.value.filter(
-                                    (p) => p.participant !== id,
-                                  )
-                                  // Keep in-progress decimals like "0." or
-                                  // "10." in the list so the user can finish
-                                  // typing; remove on explicit "" or "0".
-                                  if (sanitized !== '' && sanitized !== '0') {
-                                    next.push({
-                                      participant: id,
-                                      shares: sanitized as unknown as number,
-                                    })
-                                  }
-                                  form.setValue('paidFor', next, {
-                                    shouldDirty: true,
-                                    shouldTouch: true,
-                                    shouldValidate: true,
-                                  })
-                                  if (sanitized !== '' && sanitized !== '0')
-                                    setManuallyEditedParticipants((prev) =>
-                                      new Set(prev).add(id),
-                                    )
-                                }}
-                                inputMode="decimal"
-                                step={10 ** -inputCurrency.decimal_digits}
-                              />
-                            </FormControl>
-                          </div>
-                          <FormMessage className="float-right" />
-                        </div>
-                      )
-                    }
-
-                    const modeProps = match(splitMode)
-                      .with('BY_PERCENTAGE', () => ({
-                        sanitizer: enforcePercentagePattern,
-                        inputMode: 'decimal' as const,
-                        step: 0.01,
-                        labelKey: 'participantPercentageLabel' as const,
-                      }))
-                      .with('BY_SHARES', () => ({
-                        // BY_SHARES accepts up to two decimal places;
-                        // the input stays text so intermediate "1." or
-                        // "0." survives while typing.
-                        sanitizer: enforceSharePattern,
-                        inputMode: 'decimal' as const,
-                        step: 0.01,
-                        labelKey: 'participantSharesLabel' as const,
-                      }))
-                      .otherwise(() => null)
-                    return (
-                      <div>
-                        <div className="flex items-center justify-end gap-0.5">
-                          {splitMode === 'BY_SHARES' && (
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon"
-                              className="size-8 shrink-0"
-                              disabled={readOnly || !isSelected}
-                              aria-label={t('decreaseShares', {
-                                name: participant.name,
-                              })}
-                              onClick={() => {
-                                const nextValue = stepDisplayShares(
-                                  row?.shares,
-                                  -1,
-                                )
-                                const next = field.value.filter(
-                                  (p) => p.participant !== id,
-                                )
-                                if (nextValue > 0)
-                                  next.push({
-                                    participant: id,
-                                    shares: nextValue,
-                                  })
-                                form.setValue('paidFor', next, {
-                                  shouldDirty: true,
-                                  shouldTouch: true,
-                                  shouldValidate: true,
-                                })
-                              }}
-                            >
-                              <Minus className="size-4" aria-hidden="true" />
-                            </Button>
-                          )}
-                          <FormControl>
-                            <div className="relative">
-                              <Input
-                                className={cn(
-                                  '-my-2 w-[72px] shrink-0 px-2 text-right text-base tabular-nums',
-                                  splitMode === 'BY_PERCENTAGE' && 'pr-5',
-                                )}
-                                type="text"
-                                disabled={readOnly}
-                                aria-label={t(
-                                  modeProps?.labelKey ??
-                                    'participantAmountLabel',
-                                  { name: participant.name },
-                                )}
-                                value={String(row?.shares ?? '')}
-                                onFocus={(event) =>
-                                  event.currentTarget.select()
-                                }
-                                onChange={(event) => {
-                                  const sanitized = (
-                                    modeProps?.sanitizer ??
-                                    ((v: string) =>
-                                      enforceCurrencyPattern(
-                                        v,
-                                        inputCurrency.decimal_digits,
-                                      ))
-                                  )(event.target.value)
-                                  const next = field.value.filter(
-                                    (p) => p.participant !== id,
-                                  )
-                                  // BY_SHARES keeps the sanitized string in
-                                  // form state so intermediate states like
-                                  // "0", "0." or "1." survive while typing;
-                                  // the row is only removed on an explicit
-                                  // empty value.
-                                  if (splitMode === 'BY_SHARES') {
-                                    const nextRows = nextShareRowsFromInput(
-                                      field.value,
-                                      id,
-                                      sanitized,
-                                    )
-                                    const keepInList = nextRows.some(
-                                      (p) => p.participant === id,
-                                    )
-                                    form.setValue('paidFor', nextRows, {
-                                      shouldDirty: true,
-                                      shouldTouch: true,
-                                      shouldValidate: true,
-                                    })
-                                    if (keepInList)
-                                      setManuallyEditedParticipants((prev) =>
-                                        new Set(prev).add(id),
-                                      )
-                                    return
-                                  }
-                                  const shares = Number(sanitized)
-                                  if (shares > 0)
-                                    next.push({ participant: id, shares })
-                                  form.setValue('paidFor', next, {
-                                    shouldDirty: true,
-                                    shouldTouch: true,
-                                    shouldValidate: true,
-                                  })
-                                  if (shares > 0)
-                                    setManuallyEditedParticipants((prev) =>
-                                      new Set(prev).add(id),
-                                    )
-                                }}
-                                inputMode={modeProps?.inputMode ?? 'decimal'}
-                                step={
-                                  modeProps?.step ??
-                                  10 ** -groupCurrency.decimal_digits
-                                }
-                              />
-                              {splitMode === 'BY_PERCENTAGE' && (
-                                <span className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-xs text-muted-foreground">
-                                  %
-                                </span>
-                              )}
-                            </div>
-                          </FormControl>
-                          {splitMode === 'BY_SHARES' && (
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon"
-                              className="size-8 shrink-0"
-                              disabled={
-                                readOnly ||
-                                Number(row?.shares ?? 0) >= MAX_DISPLAY_SHARES
-                              }
-                              aria-label={t('increaseShares', {
-                                name: participant.name,
-                              })}
-                              onClick={() => {
-                                const nextValue = stepDisplayShares(
-                                  row?.shares,
-                                  1,
-                                )
-                                const next = field.value.filter(
-                                  (p) => p.participant !== id,
-                                )
-                                next.push({
-                                  participant: id,
-                                  shares: nextValue,
-                                })
-                                form.setValue('paidFor', next, {
-                                  shouldDirty: true,
-                                  shouldTouch: true,
-                                  shouldValidate: true,
-                                })
-                              }}
-                            >
-                              <Plus className="size-4" aria-hidden="true" />
-                            </Button>
-                          )}
-                        </div>
-                        <FormMessage className="float-right" />
-                      </div>
-                    )
-                  }}
+                  }
                 />
               )
             }

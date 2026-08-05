@@ -875,7 +875,9 @@
     "decreaseShares": "{name}のシェアを減らす",
     "increaseShares": "{name}のシェアを増やす",
     "validationSummary": "保存する前に、強調表示されたフィールドを修正してください。",
-    "resetDistribution": "リセット"
+    "resetDistribution": "リセット",
+    "savedButNotNavigated": "支出は保存されましたが、このページから移動できませんでした。安全に閉じることができます。",
+    "tryLeavingAgain": "もう一度離れる"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "書類を削除",
@@ -1107,7 +1109,11 @@
     "paidByAmountSum": "請求者金額の合計が支出額と一致しません。",
     "paidByPercentageSum": "請求者パーセンテージの合計が100になる必要があります。",
     "duplicateParticipant": "その請求者は既に選択されています。",
-    "sharesInvalid": "シェアは0.01以上1,000,000以下で、小数点以下2桁以内で入力してください。"
+    "sharesInvalid": "シェアは0.01以上1,000,000以下で、小数点以下2桁以内で入力してください。",
+    "itemTitleRequired": "項目名は必須です。",
+    "itemAmountPositive": "項目の金額は0より大きい必要があります。",
+    "itemQuantityMin1": "項目の数量は1以上である必要があります。",
+    "rowErrorsHeading": "次のシェアを修正してください："
   },
   "Categories": {
     "search": "カテゴリーを検索...",
@@ -1762,8 +1768,8 @@
       "create": "サブグループを作成",
       "edit": "サブグループを編集",
       "delete": "サブグループを削除",
-      "editAria": "{{name}}を編集",
-      "deleteAria": "{{name}}を削除",
+      "editAria": "{name}を編集",
+      "deleteAria": "{name}を削除",
       "disableTitle": "サブグループを無効化しますか？",
       "disableDescription": "サブグループをオフにすると、このグループのすべてのサブグループ定義が完全に削除されます。",
       "disableImpact": "既存の支出と残高は変更されませんが、サブグループでの精算オプションは利用できなくなります。",
@@ -1771,7 +1777,7 @@
       "disable": "サブグループを無効化",
       "disabling": "無効化中…",
       "deleteTitle": "サブグループを削除しますか？",
-      "deleteDescription": "グループから「{{name}}」を削除しますか？",
+      "deleteDescription": "グループから「{name}」を削除しますか？",
       "deleteImpact": "削除されるのはサブグループの定義のみです。既存の支出と残高は変更されません。",
       "cancel": "キャンセル",
       "deleting": "削除中…",
@@ -1781,8 +1787,8 @@
       "namePlaceholder": "サブグループ名",
       "notInTitle": "サブグループ外",
       "inTitle": "サブグループ内",
-      "assignedTo": "{{name}}に所属",
-      "pickedCount": "{{count}}人を選択中 · 最低2人必要",
+      "assignedTo": "{name}に所属",
+      "pickedCount": "{count}人を選択中 · 最低2人必要",
       "saving": "保存中…",
       "save": "サブグループを保存",
       "validation": "名前を入力し、参加者を2人以上選択してください。",

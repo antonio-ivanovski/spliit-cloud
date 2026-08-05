@@ -889,7 +889,9 @@
     "decreaseShares": "Disminueix les parts de {name}",
     "increaseShares": "Augmenta les parts de {name}",
     "validationSummary": "Corregeix els camps destacats abans de desar.",
-    "resetDistribution": "Restableix"
+    "resetDistribution": "Restableix",
+    "savedButNotNavigated": "La despesa s'ha desat, però no hem pogut sortir d'aquesta pàgina. Pots tancar-la tranquil·lament.",
+    "tryLeavingAgain": "Torna a intentar sortir"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Suprimeix el document",
@@ -1122,7 +1124,11 @@
     "paidByAmountSum": "La suma dels imports dels pagadors ha de ser igual a l'import de la despesa.",
     "paidByPercentageSum": "La suma dels percentatges dels pagadors ha de ser 100.",
     "duplicateParticipant": "Un altre pagador ja està seleccionat.",
-    "sharesInvalid": "Les participacions han d'estar entre 0,01 i 1.000.000 amb com a màxim dos decimals."
+    "sharesInvalid": "Les participacions han d'estar entre 0,01 i 1.000.000 amb com a màxim dos decimals.",
+    "itemTitleRequired": "El nom de l’element és obligatori.",
+    "itemAmountPositive": "L’import de l’element ha de ser superior a 0.",
+    "itemQuantityMin1": "La quantitat de l’element ha de ser com a mínim 1.",
+    "rowErrorsHeading": "Corregeix aquestes participacions:"
   },
   "Categories": {
     "search": "Cercar categoria...",
@@ -1778,8 +1784,8 @@
       "create": "Crear subgrup",
       "edit": "Edita el subgrup",
       "delete": "Suprimeix el subgrup",
-      "editAria": "Edita {{name}}",
-      "deleteAria": "Suprimeix {{name}}",
+      "editAria": "Edita {name}",
+      "deleteAria": "Suprimeix {name}",
       "disableTitle": "Desactivar els subgrups?",
       "disableDescription": "Si desactives els subgrups, se n'eliminaran definitivament totes les definicions d'aquest grup.",
       "disableImpact": "Les despeses i els saldos existents no canviaran, però l'opció de liquidació per subgrups ja no estarà disponible.",
@@ -1787,7 +1793,7 @@
       "disable": "Desactiva els subgrups",
       "disabling": "Desactivant…",
       "deleteTitle": "Suprimir el subgrup?",
-      "deleteDescription": "Suprimir «{{name}}» d'aquest grup?",
+      "deleteDescription": "Suprimir «{name}» d'aquest grup?",
       "deleteImpact": "Això només elimina la definició del subgrup. Les despeses i els saldos existents no canviaran.",
       "cancel": "Cancel·la",
       "deleting": "Suprimint…",
@@ -1797,8 +1803,8 @@
       "namePlaceholder": "Nom del subgrup",
       "notInTitle": "Sense subgrup",
       "inTitle": "En un subgrup",
-      "assignedTo": "al subgrup {{name}}",
-      "pickedCount": "{{count}} seleccionats · calen almenys 2",
+      "assignedTo": "al subgrup {name}",
+      "pickedCount": "{count} seleccionats · calen almenys 2",
       "saving": "Desant…",
       "save": "Desa el subgrup",
       "validation": "Afegeix un nom i almenys dos participants.",

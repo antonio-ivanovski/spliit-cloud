@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { ExpenseForm } from '@/app/groups/[groupId]/expenses/expense-form'
 import type {
   GroupShape,
   LoadedExpense,
 } from '@/app/groups/[groupId]/expenses/expense-form/default-values'
+import { ExpenseForm } from '@/app/groups/[groupId]/expenses/expense-form/index'
 import { ParticipantDistributionFooter } from '@/components/participant-distribution-footer'
 import { getCurrency, useCurrencies } from '@/lib/currency'
 import { useCurrencyRate } from '@/lib/hooks'
@@ -584,7 +584,7 @@ describe('ExpenseForm', () => {
         resolveSuggestion = resolve
       }),
     )
-    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const onSubmit = vi.fn().mockResolvedValue('saved' as const)
     const { user } = render(
       <ExpenseForm
         group={mockGroup as unknown as GroupShape}
@@ -708,8 +708,8 @@ describe('ExpenseForm', () => {
   })
 
   it('submit converts originalAmount to minor units when currency conversion is active', async () => {
-    let resolveSubmit!: () => void
-    const submission = new Promise<void>((resolve) => {
+    let resolveSubmit!: (outcome: 'saved') => void
+    const submission = new Promise<'saved'>((resolve) => {
       resolveSubmit = resolve
     })
     const onSubmit = vi.fn((_values: Expense) => submission)
@@ -759,16 +759,19 @@ describe('ExpenseForm', () => {
     expect(submittedValues.amount).toBe(5000)
 
     await act(async () => {
-      resolveSubmit()
+      resolveSubmit('saved')
       await submission
     })
+    // A 'saved' outcome is terminal: the expense already exists, so the
+    // submit action disables instead of inviting a duplicate save (the
+    // test renders without `onSaved`, which is the caller-free variant).
     await vi.waitFor(() => {
-      expect(saveButton).not.toBeDisabled()
+      expect(saveButton).toBeDisabled()
     })
   })
 
   it('submits conversion none when currencies match', async () => {
-    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const onSubmit = vi.fn().mockResolvedValue('saved' as const)
     const { user } = render(
       <ExpenseForm
         group={
@@ -1000,7 +1003,7 @@ describe('ExpenseForm', () => {
       sources: [],
       refresh,
     })
-    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const onSubmit = vi.fn().mockResolvedValue('saved' as const)
     const { user } = render(
       <ExpenseForm
         group={mockGroup as unknown as GroupShape}
@@ -1031,7 +1034,7 @@ describe('ExpenseForm', () => {
       sources: [],
       refresh: vi.fn(),
     })
-    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const onSubmit = vi.fn().mockResolvedValue('saved' as const)
     const { user } = render(
       <ExpenseForm
         group={
@@ -1200,7 +1203,7 @@ describe('ExpenseForm', () => {
   })
 
   it('submit calls onSubmit with parsed values', async () => {
-    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const onSubmit = vi.fn().mockResolvedValue('saved' as const)
     const { user } = render(
       <ExpenseForm
         group={mockGroup as unknown as GroupShape}
@@ -1518,7 +1521,7 @@ describe('ExpenseForm', () => {
       sources: [],
       refresh: vi.fn(),
     })
-    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const onSubmit = vi.fn().mockResolvedValue('saved' as const)
     const { user } = render(
       <ExpenseForm
         group={mockGroup as unknown as GroupShape}
@@ -1558,7 +1561,7 @@ describe('ExpenseForm', () => {
     const { user } = render(
       <ExpenseForm
         group={mockGroup as unknown as GroupShape}
-        onSubmit={vi.fn().mockResolvedValue(undefined)}
+        onSubmit={vi.fn().mockResolvedValue('saved' as const)}
         runtimeFeatureFlags={runtimeFeatureFlags}
         currentLedgerParticipantId="lp-1"
       />,
@@ -2579,7 +2582,7 @@ function getDefaultSplitSaveButton(): HTMLButtonElement {
 
 describe('ExpenseForm BY_SHARES decimal entry', () => {
   it('keeps intermediate decimal states while typing 0.5 in flat paid-for and submits 50', async () => {
-    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const onSubmit = vi.fn().mockResolvedValue('saved' as const)
     const { user } = render(
       <ExpenseForm
         group={mockGroup as unknown as GroupShape}
@@ -2596,19 +2599,19 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
     await user.type(screen.getByRole('textbox', { name: 'Amount' }), '10')
     await user.click(screen.getByRole('radio', { name: /split: by shares/i }))
 
-    const aliceInput = screen.getByRole('textbox', {
-      name: 'Shares for Alice',
-    })
     // Character-by-character typing must keep "0", "0." and "0.5" visible:
     // every non-empty value keeps the row, so the first digit never makes
-    // the input vanish.
-    await user.clear(aliceInput)
-    await user.type(aliceInput, '0')
-    expect(aliceInput).toHaveValue('0')
-    await user.type(aliceInput, '.')
-    expect(aliceInput).toHaveValue('0.')
-    await user.type(aliceInput, '5')
-    expect(aliceInput).toHaveValue('0.5')
+    // the input vanish. Clearing and re-typing replaces the input element
+    // (plain unregistered input ⇄ registered input), so re-query it.
+    const aliceInput = () =>
+      screen.getByRole('textbox', { name: 'Shares for Alice' })
+    await user.clear(aliceInput())
+    await user.type(aliceInput(), '0')
+    expect(aliceInput()).toHaveValue('0')
+    await user.type(aliceInput(), '.')
+    expect(aliceInput()).toHaveValue('0.')
+    await user.type(aliceInput(), '5')
+    expect(aliceInput()).toHaveValue('0.5')
 
     await user.click(screen.getByRole('button', { name: /create/i }))
     await vi.waitFor(() => {
@@ -2626,7 +2629,7 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
   })
 
   it('removes the participant row when the share input is explicitly cleared', async () => {
-    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const onSubmit = vi.fn().mockResolvedValue('saved' as const)
     const { user } = render(
       <ExpenseForm
         group={mockGroup as unknown as GroupShape}
@@ -2647,7 +2650,11 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
       name: 'Shares for Alice',
     })
     await user.clear(aliceInput)
-    expect(aliceInput).toHaveValue('')
+    // Clearing removes the row: the input is replaced by the plain
+    // unregistered variant, so re-query it.
+    expect(
+      screen.getByRole('textbox', { name: 'Shares for Alice' }),
+    ).toHaveValue('')
 
     await user.click(screen.getByRole('button', { name: /create/i }))
     await vi.waitFor(() => {
@@ -2661,7 +2668,7 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
   })
 
   it('canonicalizes repeated leading zeros while typing', async () => {
-    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const onSubmit = vi.fn().mockResolvedValue('saved' as const)
     const { user } = render(
       <ExpenseForm
         group={mockGroup as unknown as GroupShape}
@@ -2678,24 +2685,25 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
     await user.type(screen.getByRole('textbox', { name: 'Amount' }), '10')
     await user.click(screen.getByRole('radio', { name: /split: by shares/i }))
 
-    const aliceInput = screen.getByRole('textbox', {
-      name: 'Shares for Alice',
-    })
-    await user.clear(aliceInput)
+    // Clearing and re-typing replaces the input element (plain unregistered
+    // input ⇄ registered input), so re-query it.
+    const aliceInput = () =>
+      screen.getByRole('textbox', { name: 'Shares for Alice' })
+    await user.clear(aliceInput())
     // Repeated zero keystrokes keep displaying a single "0"...
-    await user.type(aliceInput, '0')
-    expect(aliceInput).toHaveValue('0')
-    await user.type(aliceInput, '0')
-    expect(aliceInput).toHaveValue('0')
-    await user.type(aliceInput, '0')
-    expect(aliceInput).toHaveValue('0')
+    await user.type(aliceInput(), '0')
+    expect(aliceInput()).toHaveValue('0')
+    await user.type(aliceInput(), '0')
+    expect(aliceInput()).toHaveValue('0')
+    await user.type(aliceInput(), '0')
+    expect(aliceInput()).toHaveValue('0')
     // ...and a non-zero digit immediately canonicalizes "0004" -> "4".
-    await user.type(aliceInput, '4')
-    expect(aliceInput).toHaveValue('4')
+    await user.type(aliceInput(), '4')
+    expect(aliceInput()).toHaveValue('4')
   })
 
   it('keeps "1." while typing .1 after a starting share of 1 and submits 110', async () => {
-    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const onSubmit = vi.fn().mockResolvedValue('saved' as const)
     const { user } = render(
       <ExpenseForm
         group={mockGroup as unknown as GroupShape}
@@ -2754,55 +2762,56 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
     await user.type(screen.getByRole('textbox', { name: 'Amount' }), '10')
     await user.click(screen.getByRole('radio', { name: /split: by shares/i }))
 
-    const aliceInput = screen.getByRole('textbox', {
-      name: 'Shares for Alice',
-    })
-    await user.clear(aliceInput)
-    await user.type(aliceInput, '0.5')
+    // Clearing and re-typing replaces the input element (plain unregistered
+    // input ⇄ registered input), so re-query it each time.
+    const aliceInput = () =>
+      screen.getByRole('textbox', { name: 'Shares for Alice' })
+    await user.clear(aliceInput())
+    await user.type(aliceInput(), '0.5')
     // 0.5 + -> 0.6 (fractional values step by 0.1)
     await user.click(
       screen.getByRole('button', { name: 'Increase shares for Alice' }),
     )
-    expect(aliceInput).toHaveValue('0.6')
+    expect(aliceInput()).toHaveValue('0.6')
     // 0.6 - -> 0.5
     await user.click(
       screen.getByRole('button', { name: 'Decrease shares for Alice' }),
     )
-    expect(aliceInput).toHaveValue('0.5')
+    expect(aliceInput()).toHaveValue('0.5')
     // 0.9 + -> 1, then whole values step by 1 (1 + -> 2)
-    await user.clear(aliceInput)
-    await user.type(aliceInput, '0.9')
+    await user.clear(aliceInput())
+    await user.type(aliceInput(), '0.9')
     await user.click(
       screen.getByRole('button', { name: 'Increase shares for Alice' }),
     )
-    expect(aliceInput).toHaveValue('1')
+    expect(aliceInput()).toHaveValue('1')
     await user.click(
       screen.getByRole('button', { name: 'Increase shares for Alice' }),
     )
-    expect(aliceInput).toHaveValue('2')
+    expect(aliceInput()).toHaveValue('2')
     // 1.5 + -> 1.6 (fractional values above 1 still step by 0.1)
-    await user.clear(aliceInput)
-    await user.type(aliceInput, '1.5')
+    await user.clear(aliceInput())
+    await user.type(aliceInput(), '1.5')
     await user.click(
       screen.getByRole('button', { name: 'Increase shares for Alice' }),
     )
-    expect(aliceInput).toHaveValue('1.6')
+    expect(aliceInput()).toHaveValue('1.6')
     // 1.6 - -> 1.5 (fractional decrease also steps by 0.1)
     await user.click(
       screen.getByRole('button', { name: 'Decrease shares for Alice' }),
     )
-    expect(aliceInput).toHaveValue('1.5')
+    expect(aliceInput()).toHaveValue('1.5')
     // 0.1 - removes the row
-    await user.clear(aliceInput)
-    await user.type(aliceInput, '0.1')
+    await user.clear(aliceInput())
+    await user.type(aliceInput(), '0.1')
     await user.click(
       screen.getByRole('button', { name: 'Decrease shares for Alice' }),
     )
-    expect(aliceInput).toHaveValue('')
+    expect(aliceInput()).toHaveValue('')
   })
 
   it('keeps intermediate decimal states while typing 1.5 in multi-payer paid-by and submits 150', async () => {
-    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const onSubmit = vi.fn().mockResolvedValue('saved' as const)
     const { user } = render(
       <ExpenseForm
         group={mockGroup as unknown as GroupShape}
@@ -2828,7 +2837,10 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
     })
     await user.clear(aliceInput)
     await user.type(aliceInput, '1.5')
-    expect(aliceInput).toHaveValue('1.5')
+    // Clearing replaces the input element; re-query before asserting.
+    expect(
+      screen.getByRole('textbox', { name: 'Shares for Alice' }),
+    ).toHaveValue('1.5')
 
     await user.click(screen.getByRole('button', { name: /create/i }))
     await vi.waitFor(() => {
@@ -2845,7 +2857,7 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
   })
 
   it('edit mode hydrates stored 110 to 1.1 and resubmits 110 (scale-once round trip)', async () => {
-    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    const onSubmit = vi.fn().mockResolvedValue('saved' as const)
     const { user } = render(
       <ExpenseForm
         group={mockGroup as unknown as GroupShape}
@@ -2960,7 +2972,10 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
     await user.click(bobToggle)
     await user.click(screen.getByRole('button', { name: /select all/i }))
 
-    expect(aliceInput).toHaveValue('0.5')
+    // Clearing replaces the input element; re-query before asserting.
+    expect(
+      screen.getByRole('textbox', { name: 'Shares for Alice' }),
+    ).toHaveValue('0.5')
     expect(screen.getByRole('textbox', { name: 'Shares for Bob' })).toHaveValue(
       '1',
     )
@@ -3173,7 +3188,10 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
     await user.click(
       screen.getByRole('button', { name: 'Increase shares for Alice' }),
     )
-    expect(aliceInput).toHaveValue('1.6')
+    // Clearing replaces the input element; re-query before asserting.
+    expect(
+      screen.getByRole('textbox', { name: 'Shares for Alice' }),
+    ).toHaveValue('1.6')
   })
 
   it('selects the full paid-for share value on focus so typing replaces it', async () => {
@@ -3419,5 +3437,511 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
     expect(
       screen.getByTestId('paid-for-distribution-footer'),
     ).not.toHaveTextContent(/missing/i)
+  })
+})
+
+describe('ExpenseForm validation & error reporting', () => {
+  async function fillRequired(title = 'Lunch', amount = '10') {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn().mockResolvedValue('saved' as const)}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+    const titleInput = screen.getByPlaceholderText('Monday evening restaurant')
+    await user.clear(titleInput)
+    await user.type(titleInput, title)
+    const amountInput = screen.getByRole('textbox', { name: 'Amount' })
+    await user.clear(amountInput)
+    await user.type(amountInput, amount)
+    return { user }
+  }
+
+  it('shows the validation summary and translated field errors on invalid submit', async () => {
+    const onSubmit = vi.fn().mockResolvedValue('saved' as const)
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={onSubmit}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    // Empty create form: empty title and zero amount.
+    await user.click(screen.getByRole('button', { name: /create/i }))
+
+    expect(
+      await screen.findByText(
+        'Please correct the highlighted fields before saving.',
+      ),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText('Enter at least two characters.'),
+    ).toBeInTheDocument()
+    expect(screen.getByText('The amount must not be zero.')).toBeInTheDocument()
+    expect(onSubmit).not.toHaveBeenCalled()
+  })
+
+  it('shows the translated percentage-sum error for BY_PERCENTAGE', async () => {
+    const { user } = await fillRequired()
+    await user.click(
+      screen.getByRole('radio', { name: /split: by percentage/i }),
+    )
+
+    const aliceInput = screen.getByRole('textbox', {
+      name: 'Percentage for Alice',
+    })
+    const bobInput = screen.getByRole('textbox', {
+      name: 'Percentage for Bob',
+    })
+    await user.clear(aliceInput)
+    await user.type(aliceInput, '40')
+    await user.clear(bobInput)
+    await user.type(bobInput, '50')
+
+    await user.click(screen.getByRole('button', { name: /create/i }))
+
+    expect(
+      await screen.findByText('Sum of percentages must equal 100.'),
+    ).toBeInTheDocument()
+  })
+
+  it('shows the row error summary alongside the sum error when both exist (BY_AMOUNT)', async () => {
+    const { user } = await fillRequired()
+    await user.click(screen.getByRole('radio', { name: /split: by amount/i }))
+    // Both rows must be manually edited first, otherwise the automatic
+    // balancing re-fills Bob's row and the sum stays at the target.
+    const aliceInput = screen.getByRole('textbox', {
+      name: 'Amount for Alice',
+    })
+    const bobInput = screen.getByRole('textbox', { name: 'Amount for Bob' })
+    await user.clear(bobInput)
+    await user.type(bobInput, '5')
+    // Alice types "0.0": in BY_AMOUNT an explicit "0" would remove the row,
+    // but "0.0" stays in the list and still validates as a zero share.
+    await user.clear(aliceInput)
+    await user.type(aliceInput, '0.0')
+
+    await user.click(screen.getByRole('button', { name: /create/i }))
+
+    expect(
+      await screen.findByText('Sum of amounts must equal the expense amount.'),
+    ).toBeInTheDocument()
+    // The row summary is computed from live values, so it survives even if
+    // the resolver's array-level issue replaces the row error subtree.
+    expect(screen.getByText('Fix these shares:')).toBeInTheDocument()
+    expect(
+      screen.getByText(/Alice — All shares must be higher than 0\./),
+    ).toBeInTheDocument()
+  })
+
+  it('shows a translated item-title error for a blank item and focuses the input', async () => {
+    const { user } = await fillRequired()
+
+    // Enter ITEMIZED mode: add an item, then confirm the switch dialog
+    // (the item participants modal opens after the switch; close it).
+    await user.click(screen.getByRole('button', { name: /show items/i }))
+    await user.click(screen.getByRole('button', { name: /add item/i }))
+    await user.click(
+      screen.getAllByRole('button', { name: 'Item participants' })[0]!,
+    )
+    await user.click(
+      screen.getByRole('button', { name: /switch to itemized/i }),
+    )
+    await user.click(screen.getByRole('button', { name: /^cancel$/i }))
+
+    await user.click(screen.getByRole('button', { name: /create/i }))
+
+    expect(
+      await screen.findByText('Item name is required.'),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('textbox', { name: 'Item' })).toHaveFocus()
+  })
+
+  it('shows the items-level sum error when items exceed the expense amount', async () => {
+    const { user } = await fillRequired()
+
+    // Enter ITEMIZED mode: add an item, then confirm the switch dialog
+    // (the item participants modal opens after the switch; close it).
+    await user.click(screen.getByRole('button', { name: /show items/i }))
+    await user.click(screen.getByRole('button', { name: /add item/i }))
+    await user.click(
+      screen.getAllByRole('button', { name: 'Item participants' })[0]!,
+    )
+    await user.click(
+      screen.getByRole('button', { name: /switch to itemized/i }),
+    )
+    await user.click(screen.getByRole('button', { name: /^cancel$/i }))
+
+    const costInput = screen.getByRole('textbox', { name: 'Cost' })
+    await user.clear(costInput)
+    await user.type(costInput, '15')
+
+    await user.click(screen.getByRole('button', { name: /create/i }))
+
+    expect(
+      await screen.findByText('Sum of amounts must equal the expense amount.'),
+    ).toBeInTheDocument()
+  })
+
+  it('focuses the first affected share input after an invalid submit (participant-keyed)', async () => {
+    const { user } = await fillRequired()
+    await user.click(
+      screen.getByRole('radio', { name: /split: by percentage/i }),
+    )
+
+    const aliceInput = screen.getByRole('textbox', {
+      name: 'Percentage for Alice',
+    })
+    const bobInput = screen.getByRole('textbox', {
+      name: 'Percentage for Bob',
+    })
+    await user.clear(aliceInput)
+    await user.type(aliceInput, '40')
+    await user.clear(bobInput)
+    await user.type(bobInput, '50')
+
+    await user.click(screen.getByRole('button', { name: /create/i }))
+
+    expect(
+      await screen.findByText('Sum of percentages must equal 100.'),
+    ).toBeInTheDocument()
+    // The paidFor array-level error maps to the first affected row (Alice)
+    // and focuses her input through the participant-keyed registry.
+    expect(
+      screen.getByRole('textbox', { name: 'Percentage for Alice' }),
+    ).toHaveFocus()
+  })
+
+  it('marks the errored share input with aria-invalid after an invalid submit', async () => {
+    const { user } = await fillRequired()
+    await user.click(
+      screen.getByRole('radio', { name: /multiple payers.*by amount/i }),
+    )
+    await user.click(screen.getByRole('button', { name: /select all/i }))
+
+    const bobInput = screen.getByRole('textbox', { name: 'Amount for Bob' })
+    await user.clear(bobInput)
+    await user.type(bobInput, '0.0')
+
+    await user.click(screen.getByRole('button', { name: /create/i }))
+
+    // Bob's row is the only error (Alice's automatic share rebalances to the
+    // full amount), so the row error reaches his FormField and the input —
+    // not a wrapper — carries aria-invalid.
+    // Bob's row is the only error (Alice's automatic share rebalances to the
+    // full amount), so the row error reaches his FormField and the input —
+    // not a wrapper — carries aria-invalid.
+    await vi.waitFor(() =>
+      expect(
+        screen.getByRole('textbox', { name: 'Amount for Bob' }),
+      ).toHaveAttribute('aria-invalid', 'true'),
+    )
+  })
+
+  it('does not register share fields for unchecked participants', async () => {
+    const { user } = await fillRequired()
+    await user.click(screen.getByRole('radio', { name: /split: by amount/i }))
+
+    // Uncheck Alice (click the row padding, as the toggle test does): her
+    // row keeps a plain, unregistered input — no fake `paidFor[-1].shares`
+    // field is mounted anywhere.
+    const aliceRow = document.querySelector<HTMLElement>(
+      '[data-id="lp-1/BY_AMOUNT/USD"]',
+    )
+    if (!aliceRow) throw new Error('Alice paid-for row not found')
+    await user.click(aliceRow)
+
+    expect(document.querySelector('[name$="[-1].shares"]')).toBeNull()
+    expect(
+      screen.getByRole('textbox', { name: 'Amount for Alice' }),
+    ).toHaveValue('')
+    expect(
+      screen.getByRole('textbox', { name: 'Amount for Bob' }),
+    ).toHaveAttribute('name', 'paidFor[0].shares')
+  })
+
+  it('does not surface an inline banner when persistence rejects', async () => {
+    const onSubmit = vi.fn().mockRejectedValue(new Error('Backend exploded'))
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={onSubmit}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+    const titleInput = screen.getByPlaceholderText('Monday evening restaurant')
+    await user.clear(titleInput)
+    await user.type(titleInput, 'Lunch')
+    const amountInput = screen.getByRole('textbox', { name: 'Amount' })
+    await user.clear(amountInput)
+    await user.type(amountInput, '10')
+
+    await user.click(screen.getByRole('button', { name: /create/i }))
+    await vi.waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1)
+    })
+
+    // `onSubmit` is the persistence callback: a rejection means nothing was
+    // saved, the mutation hooks already surfaced it through their error
+    // toast, and a manual retry is safe — so no inline banner is claimed.
+    expect(screen.queryByText('Backend exploded')).not.toBeInTheDocument()
+    expect(
+      screen.queryByText('Could not save the expense. Please try again.'),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByText(
+        'Please correct the highlighted fields before saving.',
+      ),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByText(/couldn't leave this page/i),
+    ).not.toBeInTheDocument()
+    // The form stays recoverable for a safe retry.
+    expect(screen.getByRole('button', { name: /create/i })).toBeEnabled()
+  })
+
+  it('surfaces a dedicated notice when post-save work fails after a saved outcome', async () => {
+    const onSubmit = vi.fn().mockResolvedValue('saved' as const)
+    const onSaved = vi.fn().mockRejectedValue(new Error('Navigation exploded'))
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={onSubmit}
+        onSaved={onSaved}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+    const titleInput = screen.getByPlaceholderText('Monday evening restaurant')
+    await user.clear(titleInput)
+    await user.type(titleInput, 'Lunch')
+    const amountInput = screen.getByRole('textbox', { name: 'Amount' })
+    await user.clear(amountInput)
+    await user.type(amountInput, '10')
+
+    await user.click(screen.getByRole('button', { name: /create/i }))
+    await vi.waitFor(() => {
+      expect(onSaved).toHaveBeenCalledTimes(1)
+    })
+
+    // The expense WAS persisted; this is not a save failure (which would
+    // invite a duplicate retry), so a dedicated notice explains the state
+    // instead of blaming the save.
+    expect(
+      await screen.findByText(
+        "The expense was saved, but we couldn't leave this page. You can close it safely.",
+      ),
+    ).toBeInTheDocument()
+    expect(screen.queryByText('Navigation exploded')).not.toBeInTheDocument()
+    expect(
+      screen.queryByText(
+        'Please correct the highlighted fields before saving.',
+      ),
+    ).not.toBeInTheDocument()
+  })
+
+  it('does not run post-save work after a deferred outcome', async () => {
+    const onSubmit = vi.fn().mockResolvedValue('deferred' as const)
+    const onSaved = vi.fn()
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={onSubmit}
+        onSaved={onSaved}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+    const titleInput = screen.getByPlaceholderText('Monday evening restaurant')
+    await user.clear(titleInput)
+    await user.type(titleInput, 'Lunch')
+    const amountInput = screen.getByRole('textbox', { name: 'Amount' })
+    await user.clear(amountInput)
+    await user.type(amountInput, '10')
+
+    await user.click(screen.getByRole('button', { name: /create/i }))
+    await vi.waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1)
+    })
+
+    // A deferred submit (e.g. a recurring-edit scope dialog will save later)
+    // must not trigger navigation or a notice.
+    expect(onSaved).not.toHaveBeenCalled()
+    expect(
+      screen.queryByText(/couldn't leave this page/i),
+    ).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /create/i })).toBeEnabled()
+  })
+
+  it('focuses the paid-for share input — not the paid-by one — for a paid-for error', async () => {
+    const { user } = await fillRequired()
+    // Both cards in editable BY_SHARES with the same participants: the
+    // paid-by input would win a participant-only registry (it renders after
+    // the paid-for card), so the registry must be section-qualified.
+    await user.click(screen.getByRole('radio', { name: /split: by shares/i }))
+    await user.click(
+      screen.getByRole('radio', { name: /multiple payers.*by shares/i }),
+    )
+
+    // Paid-for Alice at 0 (noZeroShares); paid-by Alice stays at 1.
+    const aliceInputs = screen.getAllByRole('textbox', {
+      name: 'Shares for Alice',
+    })
+    // DOM order: paid-for card first, paid-by card second.
+    expect(aliceInputs).toHaveLength(2)
+    const paidForAliceInput = aliceInputs[0]!
+    const paidByAliceInput = aliceInputs[1]!
+    await user.type(paidForAliceInput, '0')
+
+    await user.click(screen.getByRole('button', { name: /create/i }))
+
+    expect(
+      await screen.findByText(
+        'Shares must be between 0.01 and 1,000,000 with up to two decimals.',
+      ),
+    ).toBeInTheDocument()
+    expect(paidForAliceInput).toHaveFocus()
+    expect(paidByAliceInput).not.toHaveFocus()
+  })
+
+  it('treats a saved outcome as terminal: re-submit is blocked and only the leave-again action retries navigation', async () => {
+    const onSubmit = vi.fn().mockResolvedValue('saved' as const)
+    const onSaved = vi
+      .fn()
+      .mockRejectedValueOnce(new Error('Navigation exploded'))
+      .mockResolvedValueOnce(undefined)
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={onSubmit}
+        onSaved={onSaved}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+    const titleInput = screen.getByPlaceholderText('Monday evening restaurant')
+    await user.clear(titleInput)
+    await user.type(titleInput, 'Lunch')
+    const amountInput = screen.getByRole('textbox', { name: 'Amount' })
+    await user.clear(amountInput)
+    await user.type(amountInput, '10')
+
+    await user.click(screen.getByRole('button', { name: /create/i }))
+    await vi.waitFor(() => {
+      expect(onSaved).toHaveBeenCalledTimes(1)
+    })
+    expect(
+      await screen.findByText(
+        "The expense was saved, but we couldn't leave this page. You can close it safely.",
+      ),
+    ).toBeInTheDocument()
+
+    // The expense exists: the submit action is disabled, so clicking it
+    // again cannot re-persist (which would duplicate the expense).
+    expect(screen.getByRole('button', { name: /create/i })).toBeDisabled()
+    await user.click(screen.getByRole('button', { name: /create/i }))
+    expect(onSubmit).toHaveBeenCalledTimes(1)
+
+    // The leave-again action retries only the post-save work.
+    await user.click(screen.getByRole('button', { name: /try leaving again/i }))
+    await vi.waitFor(() => {
+      expect(onSaved).toHaveBeenCalledTimes(2)
+    })
+    expect(onSubmit).toHaveBeenCalledTimes(1)
+    await vi.waitFor(() => {
+      expect(
+        screen.queryByText(/couldn't leave this page/i),
+      ).not.toBeInTheDocument()
+    })
+  })
+
+  it('keeps the row error summary visible when editing an already-blurred share row', async () => {
+    const { user } = await fillRequired()
+    await user.click(screen.getByRole('radio', { name: /split: by shares/i }))
+
+    // Clearing and re-typing replaces the input element (plain unregistered
+    // input ⇄ registered input), so query the rows through a function.
+    const aliceInput = () =>
+      screen.getByRole('textbox', { name: 'Shares for Alice' })
+    const bobInput = () =>
+      screen.getByRole('textbox', { name: 'Shares for Bob' })
+
+    // Zero rows: per-row messages surface while typing, but the all-rows
+    // summary is gated on blur-or-submit — nothing has blurred yet.
+    await user.clear(bobInput())
+    await user.type(bobInput(), '0')
+    expect(screen.queryByText('Fix these shares:')).not.toBeInTheDocument()
+
+    // Focusing Alice's input blurs Bob's, opening the gate. Validation
+    // re-runs asynchronously, so wait for the summary content to update.
+    // BY_SHARES zero rows report as `sharesInvalid`.
+    await user.type(aliceInput(), '0')
+    expect(await screen.findByText('Fix these shares:')).toBeInTheDocument()
+    await screen.findByText(
+      /Alice — Shares must be between 0\.01 and 1,000,000 with up to two decimals\./,
+    )
+
+    // Editing a row after the blur must not close the summary: the
+    // keystroke write used to overwrite the nested touched shape with a
+    // whole-array flag. Fixing Bob leaves Alice's error to keep the
+    // summary content non-empty.
+    await user.click(bobInput())
+    await user.keyboard('1')
+    expect(await screen.findByText('Fix these shares:')).toBeInTheDocument()
+    await screen.findByText(
+      /Alice — Shares must be between 0\.01 and 1,000,000 with up to two decimals\./,
+    )
+    expect(
+      screen.queryByText(
+        /Bob — Shares must be between 0\.01 and 1,000,000 with up to two decimals\./,
+      ),
+    ).not.toBeInTheDocument()
+  })
+
+  it('clears the validation summary as soon as every field is corrected', async () => {
+    const { user } = await fillRequired()
+    await user.click(
+      screen.getByRole('radio', { name: /split: by percentage/i }),
+    )
+
+    const aliceInput = screen.getByRole('textbox', {
+      name: 'Percentage for Alice',
+    })
+    const bobInput = screen.getByRole('textbox', {
+      name: 'Percentage for Bob',
+    })
+    await user.clear(aliceInput)
+    await user.type(aliceInput, '40')
+    await user.clear(bobInput)
+    await user.type(bobInput, '50')
+
+    await user.click(screen.getByRole('button', { name: /create/i }))
+    expect(
+      await screen.findByText(
+        'Please correct the highlighted fields before saving.',
+      ),
+    ).toBeInTheDocument()
+
+    // Fixing the percentage sum must clear the banner without a second
+    // submit — the summary derives from RHF's live errors, not a flag that
+    // only another submit could reset. The failed submit replaces the row
+    // input elements (RHF re-registration), so re-query them.
+    const bobAfterSubmit = screen.getByRole('textbox', {
+      name: 'Percentage for Bob',
+    })
+    await user.clear(bobAfterSubmit)
+    await user.type(bobAfterSubmit, '60')
+    await vi.waitFor(() => {
+      expect(
+        screen.queryByText(
+          'Please correct the highlighted fields before saving.',
+        ),
+      ).not.toBeInTheDocument()
+    })
   })
 })

@@ -14,13 +14,18 @@ export function SubmitButton({
   children,
   loadingContent,
   className,
+  disabled,
   ...props
 }: Props) {
   const { isSubmitting } = useFormState()
   return (
     <Button
       type="submit"
-      disabled={isSubmitting}
+      // An explicit `disabled` (e.g. the terminal persisted state) wins;
+      // otherwise the button disables while a submit is in flight. `disabled`
+      // must be destructured — spreading it back would clobber this default
+      // with `undefined`.
+      disabled={disabled ?? isSubmitting}
       className={cn('min-w-28', className)}
       {...props}
     >

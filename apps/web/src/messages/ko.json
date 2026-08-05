@@ -791,7 +791,9 @@
     "decreaseShares": "{name}의 몫 줄이기",
     "increaseShares": "{name}의 몫 늘리기",
     "validationSummary": "저장하기 전에 강조 표시된 필드를 수정하세요.",
-    "resetDistribution": "초기화"
+    "resetDistribution": "초기화",
+    "savedButNotNavigated": "지출이 저장되었지만 이 페이지에서 나갈 수 없었습니다. 안심하고 닫으셔도 됩니다.",
+    "tryLeavingAgain": "다시 나가기"
   },
   "Balances": {
     "title": "잔액",
@@ -961,7 +963,11 @@
     "paidByAmountSum": "결제자",
     "paidByPercentageSum": "결제자",
     "duplicateParticipant": "다른",
-    "sharesInvalid": "지분은 0.01 이상 1,000,000 이하여야 하며 소수점 둘째 자리까지 입력할 수 있습니다."
+    "sharesInvalid": "지분은 0.01 이상 1,000,000 이하여야 하며 소수점 둘째 자리까지 입력할 수 있습니다.",
+    "itemTitleRequired": "항목 이름을 입력해 주세요.",
+    "itemAmountPositive": "항목 금액은 0보다 커야 합니다.",
+    "itemQuantityMin1": "항목 수량은 1개 이상이어야 합니다.",
+    "rowErrorsHeading": "다음 몫을 수정해 주세요:"
   },
   "Categories": {
     "search": "카테고리 선택...",
@@ -1762,8 +1768,8 @@
       "create": "하위 그룹 만들기",
       "edit": "하위 그룹 편집",
       "delete": "하위 그룹 삭제",
-      "editAria": "{{name}} 편집",
-      "deleteAria": "{{name}} 삭제",
+      "editAria": "{name} 편집",
+      "deleteAria": "{name} 삭제",
       "disableTitle": "하위 그룹을 비활성화할까요?",
       "disableDescription": "하위 그룹을 끄면 이 그룹의 모든 하위 그룹 정의가 영구적으로 삭제됩니다.",
       "disableImpact": "기존 지출과 잔액은 그대로 유지되지만, 하위 그룹 정산 옵션은 더 이상 사용할 수 없습니다.",
@@ -1771,7 +1777,7 @@
       "disable": "하위 그룹 비활성화",
       "disabling": "비활성화 중…",
       "deleteTitle": "하위 그룹을 삭제할까요?",
-      "deleteDescription": "그룹에서 “{{name}}”을(를) 삭제할까요?",
+      "deleteDescription": "그룹에서 “{name}”을(를) 삭제할까요?",
       "deleteImpact": "하위 그룹 정의만 삭제됩니다. 기존 지출과 잔액은 그대로 유지됩니다.",
       "cancel": "취소",
       "deleting": "삭제 중…",
@@ -1781,8 +1787,8 @@
       "namePlaceholder": "하위 그룹 이름",
       "notInTitle": "하위 그룹에 속하지 않음",
       "inTitle": "하위 그룹에 속함",
-      "assignedTo": "{{name}} 소속",
-      "pickedCount": "{{count}}명 선택됨 · 최소 2명 필요",
+      "assignedTo": "{name} 소속",
+      "pickedCount": "{count}명 선택됨 · 최소 2명 필요",
       "saving": "저장 중…",
       "save": "하위 그룹 저장",
       "validation": "이름을 입력하고 참가자를 최소 2명 선택하세요.",

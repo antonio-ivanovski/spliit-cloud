@@ -199,6 +199,24 @@ describe('expenseFormInputSchema', () => {
     expect(result.data.paidFor[0]?.shares).toBe(1.5)
   })
 
+  it('rejects NaN shares as invalidNumber (partial inputs like "-")', () => {
+    const result = expenseFormInputSchema.safeParse({
+      ...baseInput,
+      splitMode: 'BY_AMOUNT',
+      paidFor: [{ participant: 'p0', shares: Number('-') }],
+    })
+
+    expect(result.success).toBe(false)
+    if (result.success) return
+    expect(
+      result.error.issues.some(
+        (issue) =>
+          issue.message === 'invalidNumber' &&
+          issue.path.join('.') === 'paidFor.0.shares',
+      ),
+    ).toBe(true)
+  })
+
   it('preserves display percentages verbatim — no x100 transform', () => {
     const result = expenseFormInputSchema.safeParse({
       ...baseInput,

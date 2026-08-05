@@ -27,6 +27,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible'
+import { FormField, FormItem, FormMessage } from '@/components/ui/form'
 import {
   ResponsiveDialog,
   ResponsiveDialogContent,
@@ -342,155 +343,175 @@ export function ExpenseItemsCard({
           </CardHeader>
           <CollapsibleContent>
             <CardContent>
-              <DefaultSplitAction
-                splitMode={displayedDefaultSplit?.splitMode ?? 'EVENLY'}
-                label={t('items.defaultSplitLabel')}
-                summary={
-                  displayedDefaultSplit ? (
-                    <SummarizeParticipants
-                      item={{
-                        splitMode: displayedDefaultSplit.splitMode,
-                        paidFor: displayedDefaultSplit.paidFor,
-                      }}
-                      group={group}
+              <FormField
+                control={form.control}
+                name="items"
+                render={() => (
+                  <FormItem className="space-y-0">
+                    <DefaultSplitAction
+                      splitMode={displayedDefaultSplit?.splitMode ?? 'EVENLY'}
+                      label={t('items.defaultSplitLabel')}
+                      summary={
+                        displayedDefaultSplit ? (
+                          <SummarizeParticipants
+                            item={{
+                              splitMode: displayedDefaultSplit.splitMode,
+                              paidFor: displayedDefaultSplit.paidFor,
+                            }}
+                            group={group}
+                          />
+                        ) : (
+                          t('items.defaultSplitMixed')
+                        )
+                      }
+                      editLabel={t('items.defaultSplitEdit')}
+                      readOnly={readOnly}
+                      onClick={() => openEditDialog({ kind: 'default' })}
                     />
-                  ) : (
-                    t('items.defaultSplitMixed')
-                  )
-                }
-                editLabel={t('items.defaultSplitEdit')}
-                readOnly={readOnly}
-                onClick={() => openEditDialog({ kind: 'default' })}
-              />
 
-              {items.length === 0 ? (
-                <p className="py-4 text-center text-sm text-muted-foreground">
-                  {t('items.empty')}
-                </p>
-              ) : (
-                <div>
-                  <div
-                    className={cn(
-                      'mt-5 hidden border-t py-2 text-[11px] font-medium text-muted-foreground uppercase md:grid md:gap-x-3',
-                      expenseItemGridClass,
+                    {items.length === 0 ? (
+                      <p className="py-4 text-center text-sm text-muted-foreground">
+                        {t('items.empty')}
+                      </p>
+                    ) : (
+                      <div>
+                        <div
+                          className={cn(
+                            'mt-5 hidden border-t py-2 text-[11px] font-medium text-muted-foreground uppercase md:grid md:gap-x-3',
+                            expenseItemGridClass,
+                          )}
+                        >
+                          <span>{t('items.columnItem')}</span>
+                          <span className="text-right">
+                            {t('items.columnCost')}
+                          </span>
+                          <span className="text-right">
+                            {t('items.columnQuantity')}
+                          </span>
+                          <span className="text-right">
+                            {t('items.columnTotal')}
+                          </span>
+                          <span />
+                        </div>
+                        {items.map((item, displayIndex) => {
+                          return (
+                            <ExpenseItemRow
+                              key={item.id ?? displayIndex}
+                              form={form}
+                              item={item}
+                              itemIndex={displayIndex}
+                              readOnly={readOnly}
+                              group={group}
+                              groupCurrency={groupCurrency}
+                              onEdit={() => {
+                                openEditDialog({
+                                  kind: 'item',
+                                  index: displayIndex,
+                                })
+                              }}
+                              onDelete={() => {
+                                handleDeleteItem(displayIndex)
+                              }}
+                            />
+                          )
+                        })}
+                      </div>
                     )}
-                  >
-                    <span>{t('items.columnItem')}</span>
-                    <span className="text-right">{t('items.columnCost')}</span>
-                    <span className="text-right">
-                      {t('items.columnQuantity')}
-                    </span>
-                    <span className="text-right">{t('items.columnTotal')}</span>
-                    <span />
-                  </div>
-                  {items.map((item, displayIndex) => {
-                    return (
-                      <ExpenseItemRow
-                        key={item.id ?? displayIndex}
-                        form={form}
-                        item={item}
-                        itemIndex={displayIndex}
-                        readOnly={readOnly}
-                        group={group}
-                        groupCurrency={groupCurrency}
-                        onEdit={() => {
-                          openEditDialog({ kind: 'item', index: displayIndex })
-                        }}
-                        onDelete={() => {
-                          handleDeleteItem(displayIndex)
-                        }}
-                      />
-                    )
-                  })}
-                </div>
-              )}
 
-              {!readOnly && (
-                <div className="mt-4 flex justify-center">
-                  <Button
-                    variant="outline"
-                    size="default"
-                    type="button"
-                    onClick={handleAddItem}
-                    className="min-w-48 gap-2 px-8"
-                  >
-                    <Plus className="h-4 w-4" />
-                    {t('items.addItem')}
-                  </Button>
-                </div>
-              )}
+                    {!readOnly && (
+                      <div className="mt-4 flex justify-center">
+                        <Button
+                          variant="outline"
+                          size="default"
+                          type="button"
+                          onClick={handleAddItem}
+                          className="min-w-48 gap-2 px-8"
+                        >
+                          <Plus className="h-4 w-4" />
+                          {t('items.addItem')}
+                        </Button>
+                      </div>
+                    )}
 
-              {fillerItem && (
-                <div className="mt-4 flex flex-col gap-2 border-t pt-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="min-w-0">
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-sm font-medium">
-                        {t('items.other')}
-                      </span>
-                      <span className="text-sm font-medium tabular-nums">
-                        {formatCurrency(
-                          groupCurrency,
-                          Number(fillerItem.unitPrice) *
-                            Number(fillerItem.quantity),
-                          'en-US',
-                          true,
+                    {fillerItem && (
+                      <div className="mt-4 flex flex-col gap-2 border-t pt-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="min-w-0">
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-sm font-medium">
+                              {t('items.other')}
+                            </span>
+                            <span className="text-sm font-medium tabular-nums">
+                              {formatCurrency(
+                                groupCurrency,
+                                Number(fillerItem.unitPrice) *
+                                  Number(fillerItem.quantity),
+                                'en-US',
+                                true,
+                              )}
+                            </span>
+                          </div>
+                          <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                            <SummarizeParticipants
+                              item={fillerItem}
+                              group={group}
+                            />
+                          </p>
+                        </div>
+                        {!readOnly && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            type="button"
+                            onClick={() => openEditDialog({ kind: 'filler' })}
+                            aria-label={t('items.modalTitle')}
+                            title={t('items.modalTitle')}
+                            className="h-8 w-8 shrink-0 text-muted-foreground hover:text-foreground"
+                          >
+                            <UserPen className="h-4 w-4" />
+                          </Button>
                         )}
-                      </span>
-                    </div>
-                    <p className="mt-0.5 truncate text-xs text-muted-foreground">
-                      <SummarizeParticipants item={fillerItem} group={group} />
-                    </p>
-                  </div>
-                  {!readOnly && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      type="button"
-                      onClick={() => openEditDialog({ kind: 'filler' })}
-                      aria-label={t('items.modalTitle')}
-                      title={t('items.modalTitle')}
-                      className="h-8 w-8 shrink-0 text-muted-foreground hover:text-foreground"
-                    >
-                      <UserPen className="h-4 w-4" />
-                    </Button>
-                  )}
-                </div>
-              )}
-
-              {exceedsAmount && (
-                <div className="mt-3 flex flex-col gap-2 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive sm:flex-row sm:items-center sm:justify-between">
-                  <span>{t('items.errorExceedsAmount')}</span>
-                  {!readOnly && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      type="button"
-                      onClick={handleSetExpenseAmount}
-                      className="shrink-0 border-destructive/40 text-destructive hover:text-destructive"
-                    >
-                      {t('items.setExpenseAmount')}
-                    </Button>
-                  )}
-                </div>
-              )}
-
-              <div className="mt-2 border-t pt-3">
-                <div className="flex justify-between text-sm font-medium">
-                  <span>{t('items.total')}</span>
-                  <span>
-                    {formatCurrency(
-                      groupCurrency,
-                      itemsWithFiller.reduce(
-                        (s, item) =>
-                          s + Number(item.unitPrice) * Number(item.quantity),
-                        0,
-                      ),
-                      'en-US',
-                      true,
+                      </div>
                     )}
-                  </span>
-                </div>
-              </div>
+
+                    {exceedsAmount && (
+                      <div className="mt-3 flex flex-col gap-2 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive sm:flex-row sm:items-center sm:justify-between">
+                        <span>{t('items.errorExceedsAmount')}</span>
+                        {!readOnly && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            type="button"
+                            onClick={handleSetExpenseAmount}
+                            className="shrink-0 border-destructive/40 text-destructive hover:text-destructive"
+                          >
+                            {t('items.setExpenseAmount')}
+                          </Button>
+                        )}
+                      </div>
+                    )}
+
+                    <div className="mt-2 border-t pt-3">
+                      <div className="flex justify-between text-sm font-medium">
+                        <span>{t('items.total')}</span>
+                        <span>
+                          {formatCurrency(
+                            groupCurrency,
+                            itemsWithFiller.reduce(
+                              (s, item) =>
+                                s +
+                                Number(item.unitPrice) * Number(item.quantity),
+                              0,
+                            ),
+                            'en-US',
+                            true,
+                          )}
+                        </span>
+                      </div>
+                      <FormMessage className="mt-2" />
+                    </div>
+                  </FormItem>
+                )}
+              />
             </CardContent>
           </CollapsibleContent>
         </Collapsible>

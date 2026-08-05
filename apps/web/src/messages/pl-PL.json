@@ -896,7 +896,9 @@
     "decreaseShares": "Zmniejsz liczbę udziałów dla {name}",
     "increaseShares": "Zwiększ liczbę udziałów dla {name}",
     "validationSummary": "Popraw wyróżnione pola przed zapisaniem.",
-    "resetDistribution": "Resetuj"
+    "resetDistribution": "Resetuj",
+    "savedButNotNavigated": "Wydatek został zapisany, ale nie udało nam się opuścić tej strony. Możesz ją bezpiecznie zamknąć.",
+    "tryLeavingAgain": "Spróbuj wyjść ponownie"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Usuń dokument",
@@ -1130,7 +1132,11 @@
     "paidByAmountSum": "Suma kwot płatników musi być równa kwocie wydatku.",
     "paidByPercentageSum": "Suma procentów płatników musi być równa 100.",
     "duplicateParticipant": "Inny płatnik jest już wybrany.",
-    "sharesInvalid": "Udziały muszą wynosić od 0,01 do 1 000 000 z maksymalnie dwoma miejscami po przecinku."
+    "sharesInvalid": "Udziały muszą wynosić od 0,01 do 1 000 000 z maksymalnie dwoma miejscami po przecinku.",
+    "itemTitleRequired": "Nazwa pozycji jest wymagana.",
+    "itemAmountPositive": "Kwota pozycji musi być większa niż 0.",
+    "itemQuantityMin1": "Liczba pozycji musi wynosić co najmniej 1.",
+    "rowErrorsHeading": "Popraw te udziały:"
   },
   "Categories": {
     "search": "Szukaj kategorii…",
@@ -1787,8 +1793,8 @@
       "create": "Utwórz podgrupę",
       "edit": "Edytuj podgrupę",
       "delete": "Usuń podgrupę",
-      "editAria": "Edytuj {{name}}",
-      "deleteAria": "Usuń {{name}}",
+      "editAria": "Edytuj {name}",
+      "deleteAria": "Usuń {name}",
       "disableTitle": "Wyłączyć podgrupy?",
       "disableDescription": "Wyłączenie podgrup trwale usunie wszystkie definicje podgrup z tej grupy.",
       "disableImpact": "Istniejące wydatki i salda pozostaną bez zmian, ale opcja rozliczania podgrup nie będzie już dostępna.",
@@ -1796,7 +1802,7 @@
       "disable": "Wyłącz podgrupy",
       "disabling": "Wyłączanie…",
       "deleteTitle": "Usunąć podgrupę?",
-      "deleteDescription": "Usunąć „{{name}}” z tej grupy?",
+      "deleteDescription": "Usunąć „{name}” z tej grupy?",
       "deleteImpact": "Spowoduje to usunięcie tylko definicji podgrupy. Istniejące wydatki i salda pozostaną bez zmian.",
       "cancel": "Anuluj",
       "deleting": "Usuwanie…",
@@ -1806,8 +1812,8 @@
       "namePlaceholder": "Nazwa podgrupy",
       "notInTitle": "Nie w podgrupie",
       "inTitle": "W podgrupie",
-      "assignedTo": "w {{name}}",
-      "pickedCount": "Wybrano {{count}} · wymagane co najmniej 2",
+      "assignedTo": "w {name}",
+      "pickedCount": "Wybrano {count} · wymagane co najmniej 2",
       "saving": "Zapisywanie…",
       "save": "Zapisz podgrupę",
       "validation": "Dodaj nazwę i co najmniej dwóch uczestników.",

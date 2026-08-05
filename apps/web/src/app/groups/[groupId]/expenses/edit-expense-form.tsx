@@ -20,7 +20,7 @@ import { trpc } from '@/trpc/client'
 
 import { useIsPendingInvitee } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
-import { ExpenseForm } from './expense-form'
+import { ExpenseForm, type ExpenseSubmitOutcome } from './expense-form/index'
 import {
   useDeleteExpenseMutation,
   useUpdateExpenseMutation,
@@ -81,6 +81,8 @@ export function EditExpenseForm({
   const [scopeDialog, setScopeDialog] = useState<{
     mode: 'update' | 'delete'
     expense?: Parameters<typeof updateExpenseMutateAsync>[0]['expense']
+    resolve?: (outcome: ExpenseSubmitOutcome) => void
+    reject?: (error: unknown) => void
   } | null>(null)
 
   const navigate = useNavigate()
@@ -174,7 +176,6 @@ export function EditExpenseForm({
         editScope={selectedScope}
         heading={tExpenseForm('Expense.editTitle', { title: expense.title })}
         onSubmit={async (expense) => {
-          if (readOnly) return
           if (seriesId) {
             if (selectedScope) {
               await updateExpenseMutateAsync({
@@ -183,15 +184,26 @@ export function EditExpenseForm({
                 expense,
                 scope: selectedScope,
               } as Parameters<typeof updateExpenseMutateAsync>[0])
-              await navigateAfterUpdate()
-              return
+              return 'saved'
             }
-            setScopeDialog({ mode: 'update', expense })
-            return
+            // The scope dialog performs the actual update later
+            // (deferred save — the pending submit stays open until the
+            // dialog either cancels or finishes persistence).
+            return new Promise<ExpenseSubmitOutcome>((resolve, reject) => {
+              setScopeDialog({
+                mode: 'update',
+                expense,
+                resolve,
+                reject,
+              })
+            })
           }
           await updateExpenseMutateAsync({ expenseId, groupId, expense })
-          await navigateAfterUpdate()
+          return 'saved'
         }}
+        // Post-save navigation is separate from persistence so a
+        // navigation failure can never be reported as a save failure.
+        onSaved={navigateAfterUpdate}
         onDelete={async () => {
           if (readOnly) return
           if (seriesId) {
@@ -208,7 +220,13 @@ export function EditExpenseForm({
         mode={scopeDialog?.mode ?? 'update'}
         seriesStatus={seriesStatus}
         onOpenChange={(open) => {
-          if (!open) setScopeDialog(null)
+          if (!open) {
+            const pending = scopeDialog
+            setScopeDialog(null)
+            // Cancelling a deferred submit settles it without persistence or
+            // navigation, so RHF can leave its submitting state.
+            if (pending?.mode === 'update') pending.resolve?.('deferred')
+          }
         }}
         onConfirm={async (scope: SeriesMutationScope, stopRecurrence) => {
           const pending = scopeDialog
@@ -226,13 +244,20 @@ export function EditExpenseForm({
             return
           }
           if (!pending.expense) return
-          await updateExpenseMutateAsync({
-            expenseId,
-            groupId,
-            expense: pending.expense,
-            scope,
-          } as Parameters<typeof updateExpenseMutateAsync>[0])
-          await navigateAfterUpdate()
+          try {
+            await updateExpenseMutateAsync({
+              expenseId,
+              groupId,
+              expense: pending.expense,
+              scope,
+            } as Parameters<typeof updateExpenseMutateAsync>[0])
+            // Let ExpenseForm mark persistence terminal and run onSaved. A
+            // navigation rejection then gets the same safe retry banner as a
+            // direct edit, without re-running this mutation.
+            pending.resolve?.('saved')
+          } catch (error) {
+            pending.reject?.(error)
+          }
         }}
       />
     </>

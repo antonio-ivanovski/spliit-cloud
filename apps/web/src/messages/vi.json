@@ -1261,7 +1261,9 @@
     "decreaseShares": "Giảm phần {name}",
     "increaseShares": "Tăng phần {name}",
     "validationSummary": "Vui lòng sửa các lỗi.",
-    "resetDistribution": "Đặt lại"
+    "resetDistribution": "Đặt lại",
+    "savedButNotNavigated": "Khoản chi đã được lưu, nhưng chúng tôi không thể rời khỏi trang này. Bạn có thể đóng nó một cách an toàn.",
+    "tryLeavingAgain": "Thử rời đi lần nữa"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Xóa tài liệu",
@@ -1497,7 +1499,11 @@
     "paidByAmountSum": "Tổng tiền người trả phải khớp.",
     "paidByPercentageSum": "Tổng % người trả phải là 100%.",
     "duplicateParticipant": "Người tham gia trùng lặp.",
-    "sharesInvalid": "Phần chia phải nằm trong khoảng từ 0,01 đến 1.000.000 với tối đa hai chữ số thập phân."
+    "sharesInvalid": "Phần chia phải nằm trong khoảng từ 0,01 đến 1.000.000 với tối đa hai chữ số thập phân.",
+    "itemTitleRequired": "Tên mục là bắt buộc.",
+    "itemAmountPositive": "Số tiền của mục phải lớn hơn 0.",
+    "itemQuantityMin1": "Số lượng của mục phải ít nhất là 1.",
+    "rowErrorsHeading": "Vui lòng sửa các phần này:"
   },
   "Categories": {
     "search": "Tìm danh mục…",
@@ -2054,8 +2060,8 @@
       "create": "Tạo nhóm con",
       "edit": "Sửa nhóm con",
       "delete": "Xóa nhóm con",
-      "editAria": "Sửa {{name}}",
-      "deleteAria": "Xóa {{name}}",
+      "editAria": "Sửa {name}",
+      "deleteAria": "Xóa {name}",
       "disableTitle": "Tắt Nhóm con?",
       "disableDescription": "Tắt Nhóm con sẽ xóa vĩnh viễn mọi định nghĩa nhóm con khỏi nhóm này.",
       "disableImpact": "Các chi phí và số dư hiện có vẫn không thay đổi, nhưng tùy chọn thanh toán theo nhóm con sẽ không còn khả dụng.",
@@ -2063,7 +2069,7 @@
       "disable": "Tắt Nhóm con",
       "disabling": "Đang tắt…",
       "deleteTitle": "Xóa nhóm con?",
-      "deleteDescription": "Xóa “{{name}}” khỏi nhóm này?",
+      "deleteDescription": "Xóa “{name}” khỏi nhóm này?",
       "deleteImpact": "Thao tác này chỉ xóa định nghĩa nhóm con. Các chi phí và số dư hiện có vẫn không thay đổi.",
       "cancel": "Hủy",
       "deleting": "Đang xóa…",
@@ -2073,8 +2079,8 @@
       "namePlaceholder": "Tên nhóm con",
       "notInTitle": "Không trong nhóm con",
       "inTitle": "Trong nhóm con",
-      "assignedTo": "trong {{name}}",
-      "pickedCount": "Đã chọn {{count}} · cần ít nhất 2",
+      "assignedTo": "trong {name}",
+      "pickedCount": "Đã chọn {count} · cần ít nhất 2",
       "saving": "Đang lưu…",
       "save": "Lưu nhóm con",
       "validation": "Thêm tên và ít nhất hai người tham gia.",

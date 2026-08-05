@@ -882,7 +882,9 @@
     "decreaseShares": "Vähennä henkilön {name} osuuksia",
     "increaseShares": "Lisää henkilön {name} osuuksia",
     "validationSummary": "Korjaa korostetut kentät ennen tallentamista.",
-    "resetDistribution": "Palauta"
+    "resetDistribution": "Palauta",
+    "savedButNotNavigated": "Kulu tallennettiin, mutta emme voineet poistua tältä sivulta. Voit sulkea sen turvallisesti.",
+    "tryLeavingAgain": "Yritä poistua uudelleen"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Poista asiakirja",
@@ -1114,7 +1116,11 @@
     "paidByAmountSum": "Maksajien summan on oltava sama kuin kulun määrä.",
     "paidByPercentageSum": "Maksajien prosenttiosuuksien summan on oltava 100.",
     "duplicateParticipant": "Toinen maksaja on jo valittu.",
-    "sharesInvalid": "Osuuksien on oltava välillä 0,01–1 000 000 ja niissä saa olla enintään kaksi desimaalia."
+    "sharesInvalid": "Osuuksien on oltava välillä 0,01–1 000 000 ja niissä saa olla enintään kaksi desimaalia.",
+    "itemTitleRequired": "Kohteen nimi on pakollinen.",
+    "itemAmountPositive": "Kohteen summan on oltava suurempi kuin 0.",
+    "itemQuantityMin1": "Kohteen määrän on oltava vähintään 1.",
+    "rowErrorsHeading": "Korjaa nämä osuudet:"
   },
   "Categories": {
     "search": "Etsi kategoriaa...",
@@ -1769,8 +1775,8 @@
       "create": "Luo alaryhmä",
       "edit": "Muokkaa alaryhmää",
       "delete": "Poista alaryhmä",
-      "editAria": "Muokkaa {{name}}",
-      "deleteAria": "Poista {{name}}",
+      "editAria": "Muokkaa {name}",
+      "deleteAria": "Poista {name}",
       "disableTitle": "Poistetaanko alaryhmät käytöstä?",
       "disableDescription": "Kun poistat alaryhmät käytöstä, kaikki tämän ryhmän alaryhmämääritelmät poistetaan pysyvästi.",
       "disableImpact": "Nykyiset kulut ja saldot säilyvät ennallaan, mutta alaryhmien tasausvaihtoehto ei ole enää käytettävissä.",
@@ -1778,7 +1784,7 @@
       "disable": "Poista alaryhmät käytöstä",
       "disabling": "Poistetaan käytöstä…",
       "deleteTitle": "Poistetaanko alaryhmä?",
-      "deleteDescription": "Poistetaanko ”{{name}}” tästä ryhmästä?",
+      "deleteDescription": "Poistetaanko ”{name}” tästä ryhmästä?",
       "deleteImpact": "Tämä poistaa vain alaryhmän määritelmän. Nykyiset kulut ja saldot säilyvät ennallaan.",
       "cancel": "Peruuta",
       "deleting": "Poistetaan…",
@@ -1788,8 +1794,8 @@
       "namePlaceholder": "Alaryhmän nimi",
       "notInTitle": "Ei alaryhmässä",
       "inTitle": "Alaryhmässä",
-      "assignedTo": "ryhmässä {{name}}",
-      "pickedCount": "{{count}} valittu · vähintään 2 vaaditaan",
+      "assignedTo": "ryhmässä {name}",
+      "pickedCount": "{count} valittu · vähintään 2 vaaditaan",
       "saving": "Tallennetaan…",
       "save": "Tallenna alaryhmä",
       "validation": "Lisää nimi ja vähintään kaksi osallistujaa.",

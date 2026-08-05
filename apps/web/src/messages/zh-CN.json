@@ -875,7 +875,9 @@
     "decreaseShares": "减少 {name} 的份额",
     "increaseShares": "增加 {name} 的份额",
     "validationSummary": "保存前请修正突出显示的字段。",
-    "resetDistribution": "重置"
+    "resetDistribution": "重置",
+    "savedButNotNavigated": "支出已保存，但我们无法离开此页面。您可以放心地关闭它。",
+    "tryLeavingAgain": "再次离开"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "删除文档",
@@ -1107,7 +1109,11 @@
     "paidByAmountSum": "付款人金额之和必须等于支出金额。",
     "paidByPercentageSum": "付款人百分比之和必须为100。",
     "duplicateParticipant": "另一位付款人已经选择。",
-    "sharesInvalid": "份额必须在 0.01 到 1,000,000 之间，且最多保留两位小数。"
+    "sharesInvalid": "份额必须在 0.01 到 1,000,000 之间，且最多保留两位小数。",
+    "itemTitleRequired": "项目名称为必填项。",
+    "itemAmountPositive": "项目金额必须大于0。",
+    "itemQuantityMin1": "项目数量必须至少为1。",
+    "rowErrorsHeading": "请修正以下份额："
   },
   "Categories": {
     "search": "搜寻类别……",
@@ -1762,8 +1768,8 @@
       "create": "创建子群组",
       "edit": "编辑子群组",
       "delete": "删除子群组",
-      "editAria": "编辑{{name}}",
-      "deleteAria": "删除{{name}}",
+      "editAria": "编辑{name}",
+      "deleteAria": "删除{name}",
       "disableTitle": "停用子群组？",
       "disableDescription": "关闭子群组将永久删除此群组中的所有子群组定义。",
       "disableImpact": "现有支出和余额保持不变，但子群组结算选项将不再可用。",
@@ -1771,7 +1777,7 @@
       "disable": "停用子群组",
       "disabling": "正在停用…",
       "deleteTitle": "删除子群组？",
-      "deleteDescription": "从该群组中删除「{{name}}」？",
+      "deleteDescription": "从该群组中删除「{name}」？",
       "deleteImpact": "只会删除子群组定义。现有支出和余额保持不变。",
       "cancel": "取消",
       "deleting": "正在删除…",
@@ -1781,8 +1787,8 @@
       "namePlaceholder": "子群组名称",
       "notInTitle": "未在子群组中",
       "inTitle": "在子群组中",
-      "assignedTo": "所属 {{name}}",
-      "pickedCount": "已选{{count}}人 · 至少需要2人",
+      "assignedTo": "所属 {name}",
+      "pickedCount": "已选{count}人 · 至少需要2人",
       "saving": "正在保存…",
       "save": "保存子群组",
       "validation": "请输入名称并至少选择两名参与者。",

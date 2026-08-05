@@ -103,6 +103,21 @@ describe('enforceCurrencyPattern', () => {
   it('allows trailing decimal while typing within the digit cap', () => {
     expect(enforceCurrencyPattern('10.', 2)).toBe('10.')
   })
+
+  it('canonicalizes leading zeros', () => {
+    expect(enforceCurrencyPattern('0')).toBe('0')
+    expect(enforceCurrencyPattern('00')).toBe('0')
+    expect(enforceCurrencyPattern('0000')).toBe('0')
+    expect(enforceCurrencyPattern('001')).toBe('1')
+    expect(enforceCurrencyPattern('004')).toBe('4')
+    expect(enforceCurrencyPattern('00010')).toBe('10')
+    expect(enforceCurrencyPattern('00.5')).toBe('0.5')
+    expect(enforceCurrencyPattern('000.123456789', 2)).toBe('0.12')
+    expect(enforceCurrencyPattern('00.', 2)).toBe('0.')
+    expect(enforceCurrencyPattern('-004')).toBe('-4')
+    expect(enforceCurrencyPattern('-000')).toBe('-0')
+    expect(enforceCurrencyPattern('10')).toBe('10')
+  })
 })
 
 describe('amountPlaceholder', () => {
@@ -148,6 +163,16 @@ describe('enforcePercentagePattern', () => {
 
   it('preserves exactly two decimals', () => {
     expect(enforcePercentagePattern('33.34')).toBe('33.34')
+  })
+
+  it('canonicalizes leading zeros', () => {
+    expect(enforcePercentagePattern('0')).toBe('0')
+    expect(enforcePercentagePattern('00')).toBe('0')
+    expect(enforcePercentagePattern('0000')).toBe('0')
+    expect(enforcePercentagePattern('025')).toBe('25')
+    expect(enforcePercentagePattern('004.5')).toBe('4.5')
+    expect(enforcePercentagePattern('00.05')).toBe('0.05')
+    expect(enforcePercentagePattern('-005')).toBe('-5')
   })
 })
 

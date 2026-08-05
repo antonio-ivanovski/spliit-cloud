@@ -889,7 +889,9 @@
     "decreaseShares": "Disminuir las partes de {name}",
     "increaseShares": "Aumentar las partes de {name}",
     "validationSummary": "Corrige los campos resaltados antes de guardar.",
-    "resetDistribution": "Restablecer"
+    "resetDistribution": "Restablecer",
+    "savedButNotNavigated": "El gasto se ha guardado, pero no hemos podido salir de esta página. Puedes cerrarla con seguridad.",
+    "tryLeavingAgain": "Intenta salir de nuevo"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Eliminar documento",
@@ -1122,7 +1124,11 @@
     "paidByAmountSum": "La suma de los importes de los pagadores debe ser igual al importe del gasto.",
     "paidByPercentageSum": "La suma de los porcentajes de los pagadores debe ser 100.",
     "duplicateParticipant": "Ya hay otro pagador seleccionado.",
-    "sharesInvalid": "Las participaciones deben estar entre 0,01 y 1.000.000 con un máximo de dos decimales."
+    "sharesInvalid": "Las participaciones deben estar entre 0,01 y 1.000.000 con un máximo de dos decimales.",
+    "itemTitleRequired": "El nombre del elemento es obligatorio.",
+    "itemAmountPositive": "El importe del elemento debe ser superior a 0.",
+    "itemQuantityMin1": "La cantidad del elemento debe ser al menos 1.",
+    "rowErrorsHeading": "Corrija estas participaciones:"
   },
   "Categories": {
     "search": "Buscar categoría...",
@@ -1778,8 +1784,8 @@
       "create": "Crear subgrupo",
       "edit": "Editar subgrupo",
       "delete": "Eliminar subgrupo",
-      "editAria": "Editar {{name}}",
-      "deleteAria": "Eliminar {{name}}",
+      "editAria": "Editar {name}",
+      "deleteAria": "Eliminar {name}",
       "disableTitle": "¿Desactivar Subgrupos?",
       "disableDescription": "Al desactivar Subgrupos se eliminarán permanentemente todas las definiciones de subgrupos de este grupo.",
       "disableImpact": "Los gastos y saldos existentes no cambiarán, pero la opción de liquidación por subgrupos dejará de estar disponible.",
@@ -1787,7 +1793,7 @@
       "disable": "Desactivar Subgrupos",
       "disabling": "Desactivando…",
       "deleteTitle": "¿Eliminar subgrupo?",
-      "deleteDescription": "¿Eliminar «{{name}}» de este grupo?",
+      "deleteDescription": "¿Eliminar «{name}» de este grupo?",
       "deleteImpact": "Esto solo elimina la definición del subgrupo. Los gastos y saldos existentes no cambiarán.",
       "cancel": "Cancelar",
       "deleting": "Eliminando…",
@@ -1797,8 +1803,8 @@
       "namePlaceholder": "Nombre del subgrupo",
       "notInTitle": "Sin subgrupo",
       "inTitle": "En un subgrupo",
-      "assignedTo": "en el subgrupo {{name}}",
-      "pickedCount": "{{count}} seleccionados · se requieren al menos 2",
+      "assignedTo": "en el subgrupo {name}",
+      "pickedCount": "{count} seleccionados · se requieren al menos 2",
       "saving": "Guardando…",
       "save": "Guardar subgrupo",
       "validation": "Añade un nombre y al menos dos participantes.",

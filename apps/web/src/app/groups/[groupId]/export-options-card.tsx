@@ -58,13 +58,16 @@ function ExportOption({
     <div
       className={cn(
         'grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-2 rounded-md border px-3 py-2 sm:flex sm:min-h-16 sm:items-center',
-        accent && 'border-emerald-200 bg-emerald-50/50',
+        accent &&
+          'border-emerald-200/80 bg-emerald-50/60 dark:border-emerald-900/70 dark:bg-emerald-950/25',
       )}
     >
       <Icon
         className={cn(
           'row-span-2 mt-0.5 h-4 w-4 shrink-0 sm:mt-0',
-          accent ? 'text-emerald-700' : 'text-muted-foreground',
+          accent
+            ? 'text-emerald-700 dark:text-emerald-300'
+            : 'text-muted-foreground',
         )}
         aria-hidden
       />
@@ -74,7 +77,7 @@ function ExportOption({
           <span
             className={cn(
               'text-[10px] font-semibold tracking-wide text-muted-foreground uppercase',
-              accent && 'text-emerald-700',
+              accent && 'text-emerald-700 dark:text-emerald-300',
             )}
           >
             {badge}

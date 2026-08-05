@@ -875,7 +875,9 @@
     "decreaseShares": "減少 {name} 的份額",
     "increaseShares": "增加 {name} 的份額",
     "validationSummary": "儲存前請修正醒目的欄位。",
-    "resetDistribution": "重設"
+    "resetDistribution": "重設",
+    "savedButNotNavigated": "支出已儲存，但我們無法離開此頁面。您可以放心地關閉它。",
+    "tryLeavingAgain": "再次離開"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "刪除文檔",
@@ -1107,7 +1109,11 @@
     "paidByAmountSum": "付款人金額之和必須等於支出金額。",
     "paidByPercentageSum": "付款人百分比之和必須為100。",
     "duplicateParticipant": "另一位付款人已經被選取。",
-    "sharesInvalid": "份額必須介於 0.01 到 1,000,000 之間，且最多保留兩位小數。"
+    "sharesInvalid": "份額必須介於 0.01 到 1,000,000 之間，且最多保留兩位小數。",
+    "itemTitleRequired": "項目名稱為必填。",
+    "itemAmountPositive": "項目金額必須大於 0。",
+    "itemQuantityMin1": "項目數量必須至少為 1。",
+    "rowErrorsHeading": "請修正以下份額："
   },
   "Categories": {
     "search": "搜尋類別……",
@@ -1762,8 +1768,8 @@
       "create": "建立子群組",
       "edit": "編輯子群組",
       "delete": "刪除子群組",
-      "editAria": "編輯{{name}}",
-      "deleteAria": "刪除{{name}}",
+      "editAria": "編輯{name}",
+      "deleteAria": "刪除{name}",
       "disableTitle": "停用子群組？",
       "disableDescription": "關閉子群組將永久刪除此群組中的所有子群組定義。",
       "disableImpact": "現有支出和餘額保持不變，但子群組結算選項將不再可用。",
@@ -1771,7 +1777,7 @@
       "disable": "停用子群組",
       "disabling": "正在停用…",
       "deleteTitle": "刪除子群組？",
-      "deleteDescription": "從此群組中刪除「{{name}}」？",
+      "deleteDescription": "從此群組中刪除「{name}」？",
       "deleteImpact": "只會刪除子群組定義。現有支出和餘額保持不變。",
       "cancel": "取消",
       "deleting": "正在刪除…",
@@ -1781,8 +1787,8 @@
       "namePlaceholder": "子群組名稱",
       "notInTitle": "未在子群組中",
       "inTitle": "在子群組中",
-      "assignedTo": "所屬 {{name}}",
-      "pickedCount": "已選{{count}}人 · 至少需要2人",
+      "assignedTo": "所屬 {name}",
+      "pickedCount": "已選{count}人 · 至少需要2人",
       "saving": "正在儲存…",
       "save": "儲存子群組",
       "validation": "請輸入名稱並至少選擇兩名參與者。",

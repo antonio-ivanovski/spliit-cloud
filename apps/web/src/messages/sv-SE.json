@@ -1286,7 +1286,9 @@
       "pending": "(inbjuden)"
     },
     "validationSummary": "Korrigera de markerade fälten innan du sparar.",
-    "resetDistribution": "Återställ"
+    "resetDistribution": "Återställ",
+    "savedButNotNavigated": "Utgiften har sparats, men vi kunde inte lämna den här sidan. Du kan stänga den utan problem.",
+    "tryLeavingAgain": "Försök lämna igen"
   },
   "ExpensePreview": {
     "title": "Utgiftsförhandsvisning",
@@ -2156,8 +2158,8 @@
       "create": "Skapa subgrupp",
       "edit": "Redigera subgrupp",
       "delete": "Ta bort subgrupp",
-      "editAria": "Redigera {{name}}",
-      "deleteAria": "Ta bort {{name}}",
+      "editAria": "Redigera {name}",
+      "deleteAria": "Ta bort {name}",
       "disableTitle": "Inaktivera subgrupper?",
       "disableDescription": "Om du stänger av Subgrupper raderas alla subgruppsdefinitioner i denna grupp permanent.",
       "disableImpact": "Befintliga utgifter och balanser förblir oförändrade, men alternativet att reglera subgrupper är inte längre tillgängligt.",
@@ -2165,7 +2167,7 @@
       "disable": "Inaktivera subgrupper",
       "disabling": "Inaktiverar…",
       "deleteTitle": "Ta bort subgrupp?",
-      "deleteDescription": "Ta bort ”{{name}}” från denna grupp?",
+      "deleteDescription": "Ta bort ”{name}” från denna grupp?",
       "deleteImpact": "Detta tar bara bort subgruppsdefinitionen. Befintliga utgifter och balanser förblir oförändrade.",
       "cancel": "Avbryt",
       "deleting": "Tar bort…",
@@ -2175,8 +2177,8 @@
       "namePlaceholder": "Subgruppens namn",
       "notInTitle": "Inte i en subgrupp",
       "inTitle": "I en subgrupp",
-      "assignedTo": "i {{name}}",
-      "pickedCount": "{{count}} valda · minst 2 krävs",
+      "assignedTo": "i {name}",
+      "pickedCount": "{count} valda · minst 2 krävs",
       "saving": "Sparar…",
       "save": "Spara subgrupp",
       "validation": "Lägg till ett namn och minst två deltagare.",
@@ -2278,7 +2280,11 @@
     "paidByAmountSum": "Summan av betalarnas belopp måste vara lika med utgiftsbeloppet.",
     "paidByPercentageSum": "Summan av betalarnas procentandelar måste vara 100.",
     "duplicateParticipant": "En annan betalare är redan vald.",
-    "sharesInvalid": "Andelar måste vara mellan 0,01 och 1 000 000 med högst två decimaler."
+    "sharesInvalid": "Andelar måste vara mellan 0,01 och 1 000 000 med högst två decimaler.",
+    "itemTitleRequired": "Postens namn krävs.",
+    "itemAmountPositive": "Postens belopp måste vara större än 0.",
+    "itemQuantityMin1": "Postens antal måste vara minst 1.",
+    "rowErrorsHeading": "Korrigera dessa andelar:"
   },
   "Settings": {
     "title": "Inställningar"

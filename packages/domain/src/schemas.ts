@@ -7,7 +7,7 @@ import {
 } from './conversion'
 import type { RecurrenceRule, SplitMode } from './enums'
 import { recurrenceConfigSchema } from './recurring-expenses'
-import { MAX_STORED_SHARES, isValidDisplayShare } from './shares'
+import { MAX_STORED_SHARES, getDisplayShareErrorKey } from './shares'
 
 const groupFormFields = {
   name: z.string().min(2, { error: 'min2' }).max(50, { error: 'max50' }),
@@ -158,12 +158,15 @@ const documentsSchema = z
 // while typing.
 const formPaidForRowSchema = z.object({
   participant: z.string(),
-  shares: z.coerce.number(),
+  // Zod 4 rejects NaN at the number type with a raw English message; key the
+  // type error so the UI can translate it (a partial input like "-" coerces
+  // to NaN before the mode-aware share refinement runs).
+  shares: z.coerce.number({ error: 'invalidNumber' }),
 })
 
 const formPaidByRowSchema = z.object({
   participant: z.string(),
-  shares: z.coerce.number(),
+  shares: z.coerce.number({ error: 'invalidNumber' }),
 })
 
 // Row shape used by the API/domain schema. Shares are integers:
@@ -200,7 +203,7 @@ const itemSplitModeSchema = z
 
 const itemFormPaidForRowSchema = z.object({
   participant: z.string(),
-  shares: z.coerce.number(),
+  shares: z.coerce.number({ error: 'invalidNumber' }),
 })
 
 const itemApiPaidForRowSchema = z.object({
@@ -577,7 +580,13 @@ const paidByAmountSumOk = (sum: number, target: number): boolean =>
 /**
  * Form-side counterpart of `validateShareRowForMode` — operates on the
  * user-facing display units and reports the existing `noZeroShares` /
- * `sharesInvalid` keys so the UI messages stay consistent.
+ * `sharesInvalid` / `invalidNumber` keys so the UI messages stay consistent.
+ *
+ * The per-row decision is delegated to `getDisplayShareErrorKey` — the same
+ * single source the UI row-error summary consumes — so the schema and the
+ * summary can never drift apart. `NaN` shares (partial inputs like `"-"`) are
+ * rejected as `invalidNumber` instead of silently passing every numeric
+ * comparison.
  *
  * BY_AMOUNT paid-by shares may be negative (signed income expenses, see
  * `paidByList signed and migrated shapes`); pass `allowNegative: true` for that
@@ -590,21 +599,9 @@ function validateDisplayShareForMode(
   ctx: z.RefinementCtx,
   options: { allowNegative?: boolean } = {},
 ) {
-  const { allowNegative = false } = options
-  if (mode === 'BY_SHARES') {
-    // One shared range/precision contract for every BY_SHARES editor:
-    // 0.01–1,000,000 with at most two decimal places.
-    if (!isValidDisplayShare(value)) {
-      ctx.addIssue({ code: 'custom', message: 'sharesInvalid', path })
-    }
-    return
-  }
-  if (value === 0) {
-    ctx.addIssue({ code: 'custom', message: 'noZeroShares', path })
-    return
-  }
-  if (!allowNegative && value <= 0) {
-    ctx.addIssue({ code: 'custom', message: 'noZeroShares', path })
+  const errorKey = getDisplayShareErrorKey(value, mode, options)
+  if (errorKey) {
+    ctx.addIssue({ code: 'custom', message: errorKey, path })
   }
 }
 

@@ -1,5 +1,6 @@
 import {
   formatDisplayShares,
+  getDisplayShareErrorKey,
   isValidDisplayShare,
   MAX_DISPLAY_SHARES,
   MAX_STORED_SHARES,
@@ -117,5 +118,63 @@ describe('constants', () => {
     expect(MAX_STORED_SHARES).toBe(MAX_DISPLAY_SHARES * SHARE_SCALE)
     // Fits comfortably within PostgreSQL INTEGER.
     expect(MAX_STORED_SHARES).toBeLessThan(Number.MAX_SAFE_INTEGER)
+  })
+})
+
+describe('getDisplayShareErrorKey', () => {
+  it('accepts valid positive shares in every non-BY_SHARES mode', () => {
+    expect(getDisplayShareErrorKey(10, 'BY_AMOUNT')).toBeNull()
+    expect(getDisplayShareErrorKey(75.5, 'BY_PERCENTAGE')).toBeNull()
+  })
+
+  it('rejects NaN shares as invalidNumber (partial inputs like "-")', () => {
+    expect(getDisplayShareErrorKey(Number('-'), 'BY_AMOUNT')).toBe(
+      'invalidNumber',
+    )
+    expect(getDisplayShareErrorKey(Number('-'), 'BY_PERCENTAGE')).toBe(
+      'invalidNumber',
+    )
+    expect(getDisplayShareErrorKey(Number('12.5x'), 'BY_SHARES')).toBe(
+      'invalidNumber',
+    )
+  })
+
+  it('rejects positive and negative Infinity as invalidNumber', () => {
+    expect(getDisplayShareErrorKey(Number.POSITIVE_INFINITY, 'BY_AMOUNT')).toBe(
+      'invalidNumber',
+    )
+    expect(
+      getDisplayShareErrorKey(Number.POSITIVE_INFINITY, 'BY_PERCENTAGE'),
+    ).toBe('invalidNumber')
+    expect(getDisplayShareErrorKey(Number.NEGATIVE_INFINITY, 'BY_AMOUNT')).toBe(
+      'invalidNumber',
+    )
+    expect(getDisplayShareErrorKey(Number.NEGATIVE_INFINITY, 'BY_SHARES')).toBe(
+      'invalidNumber',
+    )
+  })
+
+  it('flags zero shares as noZeroShares in every mode', () => {
+    expect(getDisplayShareErrorKey(0, 'BY_AMOUNT')).toBe('noZeroShares')
+    expect(getDisplayShareErrorKey(0, 'BY_PERCENTAGE')).toBe('noZeroShares')
+    expect(getDisplayShareErrorKey(0, 'BY_SHARES')).toBe('sharesInvalid')
+  })
+
+  it('flags negative shares as noZeroShares unless allowNegative', () => {
+    expect(getDisplayShareErrorKey(-5, 'BY_AMOUNT')).toBe('noZeroShares')
+    expect(
+      getDisplayShareErrorKey(-5, 'BY_AMOUNT', { allowNegative: true }),
+    ).toBeNull()
+    expect(getDisplayShareErrorKey(-5, 'BY_PERCENTAGE')).toBe('noZeroShares')
+    expect(
+      getDisplayShareErrorKey(-5, 'BY_PERCENTAGE', { allowNegative: true }),
+    ).toBeNull()
+  })
+
+  it('enforces the BY_SHARES range and precision contract', () => {
+    expect(getDisplayShareErrorKey(0.5, 'BY_SHARES')).toBeNull()
+    expect(getDisplayShareErrorKey(1, 'BY_SHARES')).toBeNull()
+    expect(getDisplayShareErrorKey(1.001, 'BY_SHARES')).toBe('sharesInvalid')
+    expect(getDisplayShareErrorKey(-1, 'BY_SHARES')).toBe('sharesInvalid')
   })
 })

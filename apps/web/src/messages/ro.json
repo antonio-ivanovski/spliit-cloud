@@ -889,7 +889,9 @@
     "decreaseShares": "Micșorează părțile lui {name}",
     "increaseShares": "Mărește părțile lui {name}",
     "validationSummary": "Corectează câmpurile evidențiate înainte de salvare.",
-    "resetDistribution": "Resetează"
+    "resetDistribution": "Resetează",
+    "savedButNotNavigated": "Cheltuiala a fost salvată, dar nu am putut părăsi această pagină. O puteți închide în siguranță.",
+    "tryLeavingAgain": "Încearcă să ieși din nou"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Șterge documentul",
@@ -1122,7 +1124,11 @@
     "paidByAmountSum": "Suma plătitorilor trebuie să fie egală cu suma cheltuielii.",
     "paidByPercentageSum": "Suma procentelor plătitorilor trebuie să fie 100.",
     "duplicateParticipant": "Un alt plătitor este deja selectat.",
-    "sharesInvalid": "Părțile trebuie să fie între 0,01 și 1.000.000, cu maximum două zecimale."
+    "sharesInvalid": "Părțile trebuie să fie între 0,01 și 1.000.000, cu maximum două zecimale.",
+    "itemTitleRequired": "Numele elementului este obligatoriu.",
+    "itemAmountPositive": "Valoarea elementului trebuie să fie mai mare decât 0.",
+    "itemQuantityMin1": "Cantitatea elementului trebuie să fie cel puțin 1.",
+    "rowErrorsHeading": "Corectați aceste părți:"
   },
   "Categories": {
     "search": "Căutați categorie…",
@@ -1778,8 +1784,8 @@
       "create": "Creează subgrup",
       "edit": "Editează subgrupul",
       "delete": "Șterge subgrupul",
-      "editAria": "Editează {{name}}",
-      "deleteAria": "Șterge {{name}}",
+      "editAria": "Editează {name}",
+      "deleteAria": "Șterge {name}",
       "disableTitle": "Dezactivezi subgrupurile?",
       "disableDescription": "Dezactivarea subgrupurilor va șterge definitiv toate definițiile de subgrup din acest grup.",
       "disableImpact": "Cheltuielile și soldurile existente rămân neschimbate, dar opțiunea de decontare pe subgrupuri nu va mai fi disponibilă.",
@@ -1787,7 +1793,7 @@
       "disable": "Dezactivează subgrupurile",
       "disabling": "Se dezactivează…",
       "deleteTitle": "Ștergi acest subgrup?",
-      "deleteDescription": "Ștergi «{{name}}» din acest grup?",
+      "deleteDescription": "Ștergi «{name}» din acest grup?",
       "deleteImpact": "Aceasta elimină doar definiția subgrupului. Cheltuielile și soldurile existente rămân neschimbate.",
       "cancel": "Anulează",
       "deleting": "Se șterge…",
@@ -1797,8 +1803,8 @@
       "namePlaceholder": "Numele subgrupului",
       "notInTitle": "Fără subgrup",
       "inTitle": "Într-un subgrup",
-      "assignedTo": "în {{name}}",
-      "pickedCount": "{{count}} selectate · sunt necesare cel puțin 2",
+      "assignedTo": "în {name}",
+      "pickedCount": "{count} selectate · sunt necesare cel puțin 2",
       "saving": "Se salvează…",
       "save": "Salvează subgrupul",
       "validation": "Adaugă un nume și cel puțin doi participanți.",

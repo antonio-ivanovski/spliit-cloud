@@ -6,7 +6,7 @@ import {
   type Dispatch,
   type SetStateAction,
 } from 'react'
-import { useFormContext, useWatch, type UseFormReturn } from 'react-hook-form'
+import { useFormState, useWatch, type UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { CategorySelector } from '@/components/category-selector'
@@ -171,11 +171,11 @@ export function BasicDetailsCard(props: {
   // Also abort the moment the user submits — even before the form
   // unmounts, any late AI response would try to setValue on a form
   // that's about to navigate away.
-  const formContext = useFormContext()
+  const { isSubmitting } = useFormState()
   useEffect(() => {
-    if (!formContext.formState.isSubmitting) return
+    if (!isSubmitting) return
     categoryAbortRef.current?.abort()
-  }, [formContext.formState.isSubmitting])
+  }, [isSubmitting])
   const [calculatorOpen, setCalculatorOpen] = useState(false)
   const [calculatorExpression, setCalculatorExpression] = useState<
     string | null

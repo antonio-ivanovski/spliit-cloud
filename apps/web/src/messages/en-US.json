@@ -1261,7 +1261,9 @@
     "decreaseShares": "Decrease shares for {name}",
     "increaseShares": "Increase shares for {name}",
     "validationSummary": "Please correct the highlighted fields before saving.",
-    "resetDistribution": "Reset"
+    "resetDistribution": "Reset",
+    "savedButNotNavigated": "The expense was saved, but we couldn't leave this page. You can close it safely.",
+    "tryLeavingAgain": "Try leaving again"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Delete document",
@@ -1497,7 +1499,11 @@
     "paidByAmountSum": "Sum of payer amounts must equal the expense amount.",
     "paidByPercentageSum": "Sum of payer percentages must equal 100.",
     "duplicateParticipant": "Another payer is already selected.",
-    "sharesInvalid": "Shares must be between 0.01 and 1,000,000 with up to two decimals."
+    "sharesInvalid": "Shares must be between 0.01 and 1,000,000 with up to two decimals.",
+    "itemTitleRequired": "Item name is required.",
+    "itemAmountPositive": "Item amount must be greater than 0.",
+    "itemQuantityMin1": "Item quantity must be at least 1.",
+    "rowErrorsHeading": "Fix these shares:"
   },
   "Categories": {
     "search": "Search category...",
@@ -2054,8 +2060,8 @@
       "create": "Create subgroup",
       "edit": "Edit subgroup",
       "delete": "Delete subgroup",
-      "editAria": "Edit {{name}}",
-      "deleteAria": "Delete {{name}}",
+      "editAria": "Edit {name}",
+      "deleteAria": "Delete {name}",
       "disableTitle": "Disable Subgroups?",
       "disableDescription": "Turning off Subgroups will permanently delete all subgroup definitions from this group.",
       "disableImpact": "Existing expenses and balances will remain unchanged, but the subgroup settlement option will no longer be available.",
@@ -2063,7 +2069,7 @@
       "disable": "Disable Subgroups",
       "disabling": "Disabling…",
       "deleteTitle": "Delete subgroup?",
-      "deleteDescription": "Delete “{{name}}” from this group?",
+      "deleteDescription": "Delete “{name}” from this group?",
       "deleteImpact": "This removes only the subgroup definition. Existing expenses and balances will remain unchanged.",
       "cancel": "Cancel",
       "deleting": "Deleting…",
@@ -2073,8 +2079,8 @@
       "namePlaceholder": "Subgroup name",
       "notInTitle": "Not in a subgroup",
       "inTitle": "In a subgroup",
-      "assignedTo": "in {{name}}",
-      "pickedCount": "{{count}} picked · at least 2 required",
+      "assignedTo": "in {name}",
+      "pickedCount": "{count} picked · at least 2 required",
       "saving": "Saving…",
       "save": "Save subgroup",
       "validation": "Add a name and at least two participants.",

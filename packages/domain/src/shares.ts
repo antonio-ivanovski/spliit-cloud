@@ -23,6 +23,8 @@
  * unchanged.
  */
 
+import type { SplitMode } from './enums'
+
 export const SHARE_SCALE = 100
 export const SHARE_DECIMAL_PLACES = 2
 export const MIN_DISPLAY_SHARES = 0.01
@@ -96,4 +98,41 @@ export function formatDisplayShares(value: number, locale?: string): string {
     minimumFractionDigits: 0,
     useGrouping: false,
   }).format(value)
+}
+
+export type ShareErrorKey = 'sharesInvalid' | 'noZeroShares' | 'invalidNumber'
+
+/**
+ * Single source of truth for per-row display-share validation, shared by the
+ * Zod form schema (`validateDisplayShareForMode`) and the UI row-error summary
+ * (`getRowShareErrors`).
+ *
+ * Returns the `SchemaErrors` i18n key describing the problem, or `null` when
+ * the share is acceptable. Non-finite values (`NaN`, e.g. a partial input like
+ * `"-"`, and `±Infinity`, e.g. a long pasted string overflowing `Number`) are
+ * reported as `invalidNumber` so they cannot silently pass both validators —
+ * the schema-level `z.coerce.number()` accepts `NaN` and every numeric
+ * comparison against it is false.
+ *
+ * `mode` must be `BY_SHARES` / `BY_PERCENTAGE` / `BY_AMOUNT`; callers guard
+ * `EVENLY` / `ITEMIZED` before invoking.
+ */
+export function getDisplayShareErrorKey(
+  value: number,
+  mode: SplitMode,
+  options: { allowNegative?: boolean } = {},
+): ShareErrorKey | null {
+  const { allowNegative = false } = options
+  if (!Number.isFinite(value)) return 'invalidNumber'
+  if (mode === 'BY_SHARES') {
+    // One shared range/precision contract for every BY_SHARES editor:
+    // 0.01–1,000,000 with at most two decimal places.
+    return isValidDisplayShare(value) ? null : 'sharesInvalid'
+  }
+  // Zero rows are invalid in every mode (a removed participant is absent
+  // from the list, not present with a zero share); signed rows are only
+  // valid on deliberately signed paths (negative-expense paid-by BY_AMOUNT).
+  if (value === 0) return 'noZeroShares'
+  if (!allowNegative && value <= 0) return 'noZeroShares'
+  return null
 }

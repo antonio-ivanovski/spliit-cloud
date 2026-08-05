@@ -991,7 +991,9 @@
     "decreaseShares": "Diminuir partes de {name}",
     "increaseShares": "Aumentar partes de {name}",
     "validationSummary": "Corrija os campos destacados antes de guardar.",
-    "resetDistribution": "Repor"
+    "resetDistribution": "Repor",
+    "savedButNotNavigated": "A despesa foi guardada, mas não conseguimos sair desta página. Pode fechá-la com segurança.",
+    "tryLeavingAgain": "Tentar sair novamente"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Eliminar documento",
@@ -1224,7 +1226,11 @@
     "paidByAmountSum": "A soma dos valores dos pagadores deve ser igual ao valor da despesa.",
     "paidByPercentageSum": "A soma das percentagens dos pagadores deve ser 100.",
     "duplicateParticipant": "Outro pagador já está selecionado.",
-    "sharesInvalid": "As partes devem estar entre 0,01 e 1.000.000 com no máximo duas casas decimais."
+    "sharesInvalid": "As partes devem estar entre 0,01 e 1.000.000 com no máximo duas casas decimais.",
+    "itemTitleRequired": "O nome do item é obrigatório.",
+    "itemAmountPositive": "O valor do item deve ser superior a 0.",
+    "itemQuantityMin1": "A quantidade do item deve ser pelo menos 1.",
+    "rowErrorsHeading": "Corrige estas partes:"
   },
   "Categories": {
     "search": "Pesquisar categoria...",
@@ -1778,8 +1784,8 @@
       "create": "Criar subgrupo",
       "edit": "Editar subgrupo",
       "delete": "Eliminar subgrupo",
-      "editAria": "Editar {{name}}",
-      "deleteAria": "Eliminar {{name}}",
+      "editAria": "Editar {name}",
+      "deleteAria": "Eliminar {name}",
       "disableTitle": "Desativar Subgrupos?",
       "disableDescription": "Desativar Subgrupos eliminará permanentemente todas as definições de subgrupos deste grupo.",
       "disableImpact": "As despesas e os saldos existentes permanecerão inalterados, mas a opção de liquidação por subgrupos deixará de estar disponível.",
@@ -1787,7 +1793,7 @@
       "disable": "Desativar Subgrupos",
       "disabling": "A desativar…",
       "deleteTitle": "Eliminar este subgrupo?",
-      "deleteDescription": "Eliminar «{{name}}» deste grupo?",
+      "deleteDescription": "Eliminar «{name}» deste grupo?",
       "deleteImpact": "Isto remove apenas a definição do subgrupo. As despesas e os saldos existentes permanecem inalterados.",
       "cancel": "Cancelar",
       "deleting": "A eliminar…",
@@ -1797,8 +1803,8 @@
       "namePlaceholder": "Nome do subgrupo",
       "notInTitle": "Sem subgrupo",
       "inTitle": "Num subgrupo",
-      "assignedTo": "em {{name}}",
-      "pickedCount": "{{count}} selecionados · são necessários pelo menos 2",
+      "assignedTo": "em {name}",
+      "pickedCount": "{count} selecionados · são necessários pelo menos 2",
       "saving": "A guardar…",
       "save": "Guardar subgrupo",
       "validation": "Adiciona um nome e pelo menos dois participantes.",

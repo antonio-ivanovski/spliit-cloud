@@ -882,7 +882,9 @@
     "decreaseShares": "Aantal delen voor {name} verlagen",
     "increaseShares": "Aantal delen voor {name} verhogen",
     "validationSummary": "Corrigeer de gemarkeerde velden voordat je opslaat.",
-    "resetDistribution": "Opnieuw instellen"
+    "resetDistribution": "Opnieuw instellen",
+    "savedButNotNavigated": "De uitgave is opgeslagen, maar we konden deze pagina niet verlaten. Je kunt hem veilig sluiten.",
+    "tryLeavingAgain": "Opnieuw proberen te verlaten"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Document verwijderen",
@@ -1114,7 +1116,11 @@
     "paidByAmountSum": "Het totaal van de betalers moet gelijk zijn aan het uitgavenbedrag.",
     "paidByPercentageSum": "Het totaal van de percentages van de betalers moet 100 zijn.",
     "duplicateParticipant": "Er is al een andere betaler geselecteerd.",
-    "sharesInvalid": "Aandelen moeten tussen 0,01 en 1.000.000 liggen met maximaal twee decimalen."
+    "sharesInvalid": "Aandelen moeten tussen 0,01 en 1.000.000 liggen met maximaal twee decimalen.",
+    "itemTitleRequired": "De naam van het item is verplicht.",
+    "itemAmountPositive": "Het bedrag van het item moet groter zijn dan 0.",
+    "itemQuantityMin1": "Het aantal van het item moet minstens 1 zijn.",
+    "rowErrorsHeading": "Herstel deze aandelen:"
   },
   "Categories": {
     "search": "Categorie zoeken…",
@@ -1769,8 +1775,8 @@
       "create": "Subgroep maken",
       "edit": "Subgroep bewerken",
       "delete": "Subgroep verwijderen",
-      "editAria": "{{name}} bewerken",
-      "deleteAria": "{{name}} verwijderen",
+      "editAria": "{name} bewerken",
+      "deleteAria": "{name} verwijderen",
       "disableTitle": "Subgroepen uitschakelen?",
       "disableDescription": "Als je Subgroepen uitschakelt, worden alle subgroepdefinities in deze groep permanent verwijderd.",
       "disableImpact": "Bestaande uitgaven en saldi blijven ongewijzigd, maar de optie om subgroepen te vereffenen is niet langer beschikbaar.",
@@ -1778,7 +1784,7 @@
       "disable": "Subgroepen uitschakelen",
       "disabling": "Uitschakelen…",
       "deleteTitle": "Subgroep verwijderen?",
-      "deleteDescription": "“{{name}}” uit deze groep verwijderen?",
+      "deleteDescription": "“{name}” uit deze groep verwijderen?",
       "deleteImpact": "Dit verwijdert alleen de subgroepdefinitie. Bestaande uitgaven en saldi blijven ongewijzigd.",
       "cancel": "Annuleren",
       "deleting": "Verwijderen…",
@@ -1788,8 +1794,8 @@
       "namePlaceholder": "Naam van de subgroep",
       "notInTitle": "Niet in een subgroep",
       "inTitle": "In een subgroep",
-      "assignedTo": "al in {{name}}",
-      "pickedCount": "{{count}} geselecteerd · minimaal 2 vereist",
+      "assignedTo": "al in {name}",
+      "pickedCount": "{count} geselecteerd · minimaal 2 vereist",
       "saving": "Opslaan…",
       "save": "Subgroep opslaan",
       "validation": "Voeg een naam en minimaal twee deelnemers toe.",

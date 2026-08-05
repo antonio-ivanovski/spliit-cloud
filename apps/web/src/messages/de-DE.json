@@ -910,7 +910,9 @@
     "decreaseShares": "Anteile für {name} verringern",
     "increaseShares": "Anteile für {name} erhöhen",
     "validationSummary": "Bitte korrigieren Sie die hervorgehobenen Felder, bevor Sie speichern.",
-    "resetDistribution": "Zurücksetzen"
+    "resetDistribution": "Zurücksetzen",
+    "savedButNotNavigated": "Die Ausgabe wurde gespeichert, aber wir konnten diese Seite nicht verlassen. Du kannst sie problemlos schließen.",
+    "tryLeavingAgain": "Erneut versuchen zu verlassen"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Dokument löschen",
@@ -1146,7 +1148,11 @@
     "paidByAmountSum": "Die Summe der Beträge der Zahler muss dem Ausgabenbetrag entsprechen.",
     "paidByPercentageSum": "Die Summe der Prozentsätze der Zahler muss 100 betragen.",
     "duplicateParticipant": "Ein anderer Zahler ist bereits ausgewählt.",
-    "sharesInvalid": "Anteile müssen zwischen 0,01 und 1.000.000 liegen und höchstens zwei Dezimalstellen haben."
+    "sharesInvalid": "Anteile müssen zwischen 0,01 und 1.000.000 liegen und höchstens zwei Dezimalstellen haben.",
+    "itemTitleRequired": "Der Name des Postens ist erforderlich.",
+    "itemAmountPositive": "Der Betrag des Postens muss größer als 0 sein.",
+    "itemQuantityMin1": "Die Menge des Postens muss mindestens 1 sein.",
+    "rowErrorsHeading": "Korrigiere diese Anteile:"
   },
   "Categories": {
     "search": "Nach Kategorie suchen...",
@@ -1801,8 +1807,8 @@
       "create": "Untergruppe erstellen",
       "edit": "Untergruppe bearbeiten",
       "delete": "Untergruppe löschen",
-      "editAria": "{{name}} bearbeiten",
-      "deleteAria": "{{name}} löschen",
+      "editAria": "{name} bearbeiten",
+      "deleteAria": "{name} löschen",
       "disableTitle": "Untergruppen deaktivieren?",
       "disableDescription": "Wenn du Untergruppen deaktivierst, werden alle Untergruppen-Definitionen dieser Gruppe dauerhaft gelöscht.",
       "disableImpact": "Vorhandene Ausgaben und Salden bleiben unverändert, aber die Option zum Ausgleich von Untergruppen ist dann nicht mehr verfügbar.",
@@ -1810,7 +1816,7 @@
       "disable": "Untergruppen deaktivieren",
       "disabling": "Wird deaktiviert…",
       "deleteTitle": "Untergruppe löschen?",
-      "deleteDescription": "„{{name}}“ aus dieser Gruppe löschen?",
+      "deleteDescription": "„{name}“ aus dieser Gruppe löschen?",
       "deleteImpact": "Dadurch wird nur die Untergruppen-Definition entfernt. Vorhandene Ausgaben und Salden bleiben unverändert.",
       "cancel": "Abbrechen",
       "deleting": "Wird gelöscht…",
@@ -1820,8 +1826,8 @@
       "namePlaceholder": "Name der Untergruppe",
       "notInTitle": "In keiner Untergruppe",
       "inTitle": "In einer Untergruppe",
-      "assignedTo": "bereits in {{name}}",
-      "pickedCount": "{{count}} ausgewählt · mindestens 2 erforderlich",
+      "assignedTo": "bereits in {name}",
+      "pickedCount": "{count} ausgewählt · mindestens 2 erforderlich",
       "saving": "Wird gespeichert…",
       "save": "Untergruppe speichern",
       "validation": "Füge einen Namen und mindestens zwei Teilnehmer hinzu.",

@@ -27,6 +27,32 @@ function TestForm({ message }: { message: string }) {
   )
 }
 
+/** Array-shaped error (row-level issues under a parent array name). */
+function ArrayErrorForm() {
+  const form = useForm({ defaultValues: { test: [] } })
+
+  useEffect(() => {
+    form.setError('test', {
+      type: 'custom',
+      message: undefined,
+    })
+  }, [form])
+
+  return (
+    <Form {...form}>
+      <FormField
+        control={form.control}
+        name="test"
+        render={() => (
+          <FormItem>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </Form>
+  )
+}
+
 describe('FormMessage', () => {
   it('translates SchemaErrors keys via the keyPrefix', async () => {
     render(<TestForm message="noZeroShares" />)
@@ -41,5 +67,15 @@ describe('FormMessage', () => {
     render(<TestForm message="someUnknownKey" />)
 
     expect(await screen.findByText('someUnknownKey')).toBeInTheDocument()
+  })
+
+  it('renders nothing when the error has no string message', async () => {
+    render(<ArrayErrorForm />)
+
+    // Row-level array errors must not render the literal "undefined".
+    expect(screen.queryByText('undefined')).not.toBeInTheDocument()
+    expect(
+      screen.queryByText('All shares must be higher than 0.'),
+    ).not.toBeInTheDocument()
   })
 })

@@ -20,7 +20,7 @@ import { trpc } from '@/trpc/client'
 
 import { useIsPendingInvitee } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
-import { ExpenseForm } from './expense-form'
+import { ExpenseForm } from './expense-form/index'
 import { useCreateExpenseMutation } from './expense-mutation-hooks'
 
 const createExpenseRouteApi = getRouteApi('/groups/$groupId/expenses/create')
@@ -146,10 +146,15 @@ export function CreateExpenseForm({
           : undefined
       }
       onSubmit={async (expense) => {
+        // Persistence only — navigation happens in `onSaved` so a
+        // navigation failure is never conflated with a save failure.
         await createExpenseMutateAsync({
           groupId,
           expense,
         })
+        return 'saved'
+      }}
+      onSaved={async () => {
         if (isGlobalExpensesReturnTo(searchParams.returnTo)) {
           await navigate({
             to: '/expenses',

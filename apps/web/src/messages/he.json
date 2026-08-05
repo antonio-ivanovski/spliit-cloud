@@ -889,7 +889,9 @@
     "decreaseShares": "הפחתת חלקי ההשתתפות של {name}",
     "increaseShares": "הגדלת חלקי ההשתתפות של {name}",
     "validationSummary": "יש לתקן את השדות המודגשים לפני השמירה.",
-    "resetDistribution": "איפוס"
+    "resetDistribution": "איפוס",
+    "savedButNotNavigated": "ההוצאה נשמרה, אך לא הצלחנו לעזוב את הדף הזה. ניתן לסגור אותו בבטחה.",
+    "tryLeavingAgain": "נסה לצאת שוב"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "מחיקת מסמך",
@@ -1122,7 +1124,11 @@
     "paidByAmountSum": "סיכום סכומי המשלמים חייב להיות שווה לסכום ההוצאה.",
     "paidByPercentageSum": "סיכום אחוזי המשלמים חייב להיות שווה ל-100.",
     "duplicateParticipant": "משלם אחר כבר נבחר.",
-    "sharesInvalid": "המניות חייבות להיות בין 0.01 ל-1,000,000 עם עד שני מקומות עשרוניים."
+    "sharesInvalid": "המניות חייבות להיות בין 0.01 ל-1,000,000 עם עד שני מקומות עשרוניים.",
+    "itemTitleRequired": "שם הפריט נדרש.",
+    "itemAmountPositive": "סכום הפריט חייב להיות גדול מ־0.",
+    "itemQuantityMin1": "כמות הפריט חייבת להיות לפחות 1.",
+    "rowErrorsHeading": "תקן את חלקי ההשתתפות האלה:"
   },
   "Categories": {
     "search": "חפש קטגוריה...",
@@ -1778,8 +1784,8 @@
       "create": "צור תת־קבוצה",
       "edit": "ערוך תת־קבוצה",
       "delete": "מחק תת־קבוצה",
-      "editAria": "ערוך את {{name}}",
-      "deleteAria": "מחק את {{name}}",
+      "editAria": "ערוך את {name}",
+      "deleteAria": "מחק את {name}",
       "disableTitle": "להשבית תת־קבוצות?",
       "disableDescription": "כיבוי תת־קבוצות ימחק לצמיתות את כל הגדרות תת־הקבוצה מהקבוצה הזו.",
       "disableImpact": "ההוצאות והיתרות הקיימות יישארו ללא שינוי, אך אפשרות ההסדר של תת־קבוצות לא תהיה זמינה יותר.",
@@ -1787,7 +1793,7 @@
       "disable": "השבת תת־קבוצות",
       "disabling": "משבית…",
       "deleteTitle": "למחוק תת־קבוצה?",
-      "deleteDescription": "למחוק את “{{name}}” מהקבוצה הזו?",
+      "deleteDescription": "למחוק את “{name}” מהקבוצה הזו?",
       "deleteImpact": "פעולה זו מסירה רק את הגדרת תת־הקבוצה. ההוצאות והיתרות הקיימות יישארו ללא שינוי.",
       "cancel": "ביטול",
       "deleting": "מוחק…",
@@ -1797,8 +1803,8 @@
       "namePlaceholder": "שם תת־קבוצה",
       "notInTitle": "לא בתת־קבוצה",
       "inTitle": "בתת־קבוצה",
-      "assignedTo": "ב־{{name}}",
-      "pickedCount": "{{count}} נבחרו · נדרשים לפחות 2",
+      "assignedTo": "ב־{name}",
+      "pickedCount": "{count} נבחרו · נדרשים לפחות 2",
       "saving": "שומר…",
       "save": "שמור תת־קבוצה",
       "validation": "הוסיפו שם ולפחות שני משתתפים.",

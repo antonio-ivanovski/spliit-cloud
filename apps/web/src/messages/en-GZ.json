@@ -1467,7 +1467,9 @@
       "pending": "(invited, pending)"
     },
     "validationSummary": "fix the highlighted fields before saving, fr.",
-    "resetDistribution": "reset"
+    "resetDistribution": "reset",
+    "savedButNotNavigated": "the spendy thingy got squirrelled, but we couldn’t bounce from this pageo. close it like it’s hot, fr.",
+    "tryLeavingAgain": "Try leavin' again"
   },
   "ExpensePreview": {
     "title": "expense preview era",
@@ -2386,8 +2388,8 @@
       "create": "make a subgroup",
       "edit": "edit the subgroup",
       "delete": "yeet the subgroup",
-      "editAria": "edit {{name}}",
-      "deleteAria": "yeet {{name}}",
+      "editAria": "edit {name}",
+      "deleteAria": "yeet {name}",
       "disableTitle": "turn off subgroups?",
       "disableDescription": "turning off subgroups permanently deletes all subgroup definitions from this group, no cap.",
       "disableImpact": "existing expenses and balances stay unchanged, but the subgroup settle-up option is gone for good, fr.",
@@ -2395,7 +2397,7 @@
       "disable": "turn off subgroups",
       "disabling": "turning off…",
       "deleteTitle": "yeet this subgroup?",
-      "deleteDescription": "yeet “{{name}}” from this group?",
+      "deleteDescription": "yeet “{name}” from this group?",
       "deleteImpact": "this only removes the subgroup definition. existing expenses and balances stay unchanged, fr.",
       "cancel": "cancel, never mind",
       "deleting": "yeeting…",
@@ -2405,8 +2407,8 @@
       "namePlaceholder": "subgroup name, bestie",
       "notInTitle": "not in a subgroup",
       "inTitle": "in a subgroup",
-      "assignedTo": "already in {{name}}",
-      "pickedCount": "{{count}} picked · need at least 2, bestie",
+      "assignedTo": "already in {name}",
+      "pickedCount": "{count} picked · need at least 2, bestie",
       "saving": "saving…",
       "save": "save the subgroup",
       "validation": "add a name and at least two people, fr.",
@@ -2553,7 +2555,11 @@
     "paidByAmountSum": "payer amounts need to add up to the expense total.",
     "paidByPercentageSum": "payer percentages need to add up to 100.",
     "duplicateParticipant": "another payer is already selected.",
-    "sharesInvalid": "shares must be between 0.01 and 1,000,000 with up to two decimals, fr."
+    "sharesInvalid": "shares must be between 0.01 and 1,000,000 with up to two decimals, fr.",
+    "itemTitleRequired": "thingamajig needs a nameroo.",
+    "itemAmountPositive": "thingamajig sum gotta top zilch.",
+    "itemQuantityMin1": "thingamajig count gotta be one-ish or more.",
+    "rowErrorsHeading": "fix these shares, fr:"
   },
   "Settings": {
     "title": "settings hub"

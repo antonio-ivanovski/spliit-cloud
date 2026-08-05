@@ -1,6 +1,25 @@
+import {
+  amountPlaceholder,
+  enforceCurrencyPattern as baseEnforceCurrencyPattern,
+  stripIntegerLeadingZeros,
+} from '@/lib/currency-input'
 import { MAX_DISPLAY_SHARES, sharesAsFixedUnits } from '@spliit/domain'
 
-export { amountPlaceholder, enforceCurrencyPattern } from '@/lib/currency-input'
+export { amountPlaceholder }
+
+/**
+ * Expense-form currency sanitizer: the shared `enforceCurrencyPattern` plus
+ * leading-zero canonicalization ("00.50" -> "0.50", "0004" -> "4") so expense
+ * inputs never display zero-padded values. The canonicalization is deliberately
+ * local: rewriting a padded value moves the caret mid-edit, and budgets / the
+ * currency converter must not inherit that behavior from an expense-form
+ * concern.
+ */
+export const enforceCurrencyPattern = (
+  value: string,
+  decimalDigits?: number,
+): string =>
+  stripIntegerLeadingZeros(baseEnforceCurrencyPattern(value, decimalDigits))
 
 type PasteCurrency = { code: string; symbol: string }
 
@@ -146,7 +165,9 @@ export const enforcePercentagePattern = (value: string) => {
   if (!match) return ''
   const intPart = match[1] ?? ''
   const decPart = match[2] ?? ''
-  return decPart ? `${intPart}.${decPart}` : intPart
+  return decPart
+    ? `${stripIntegerLeadingZeros(intPart)}.${decPart}`
+    : stripIntegerLeadingZeros(intPart)
 }
 
 export const enforceIntegerPattern = (value: string) =>

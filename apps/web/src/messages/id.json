@@ -875,7 +875,9 @@
     "decreaseShares": "Kurangi porsi untuk {name}",
     "increaseShares": "Tambah porsi untuk {name}",
     "validationSummary": "Perbaiki bidang yang ditandai sebelum menyimpan.",
-    "resetDistribution": "Atur ulang"
+    "resetDistribution": "Atur ulang",
+    "savedButNotNavigated": "Pengeluaran telah disimpan, tetapi kami tidak dapat meninggalkan halaman ini. Anda dapat menutupnya dengan aman.",
+    "tryLeavingAgain": "Coba keluar lagi"
   },
   "Currencies": {
     "search": "Cari mata uang...",
@@ -1416,7 +1418,11 @@
     "paidByAmountSum": "Total jumlah pembayaran harus sama dengan jumlah pengeluaran.",
     "paidByPercentageSum": "Total persentase pembayaran harus sama dengan 100.",
     "duplicateParticipant": "Pembayar lain sudah dipilih.",
-    "sharesInvalid": "Bagian harus antara 0,01 dan 1.000.000 dengan maksimal dua angka desimal."
+    "sharesInvalid": "Bagian harus antara 0,01 dan 1.000.000 dengan maksimal dua angka desimal.",
+    "itemTitleRequired": "Nama item wajib diisi.",
+    "itemAmountPositive": "Jumlah item harus lebih besar dari 0.",
+    "itemQuantityMin1": "Kuantitas item harus setidaknya 1.",
+    "rowErrorsHeading": "Silakan perbaiki porsi berikut:"
   },
   "Categories": {
     "search": "Cari kategori...",
@@ -1762,8 +1768,8 @@
       "create": "Buat subgrup",
       "edit": "Ubah subgrup",
       "delete": "Hapus subgrup",
-      "editAria": "Ubah {{name}}",
-      "deleteAria": "Hapus {{name}}",
+      "editAria": "Ubah {name}",
+      "deleteAria": "Hapus {name}",
       "disableTitle": "Nonaktifkan Subgrup?",
       "disableDescription": "Menonaktifkan Subgrup akan menghapus semua definisi subgrup dari grup ini secara permanen.",
       "disableImpact": "Pengeluaran dan saldo yang ada akan tetap tidak berubah, tetapi opsi penyelesaian subgrup tidak akan tersedia lagi.",
@@ -1771,7 +1777,7 @@
       "disable": "Nonaktifkan Subgrup",
       "disabling": "Menonaktifkan…",
       "deleteTitle": "Hapus subgrup?",
-      "deleteDescription": "Hapus “{{name}}” dari grup ini?",
+      "deleteDescription": "Hapus “{name}” dari grup ini?",
       "deleteImpact": "Ini hanya menghapus definisi subgrup. Pengeluaran dan saldo yang ada akan tetap tidak berubah.",
       "cancel": "Batal",
       "deleting": "Menghapus…",
@@ -1781,8 +1787,8 @@
       "namePlaceholder": "Nama subgrup",
       "notInTitle": "Tidak dalam subgrup",
       "inTitle": "Dalam subgrup",
-      "assignedTo": "di {{name}}",
-      "pickedCount": "{{count}} dipilih · minimal 2",
+      "assignedTo": "di {name}",
+      "pickedCount": "{count} dipilih · minimal 2",
       "saving": "Menyimpan…",
       "save": "Simpan subgrup",
       "validation": "Tambahkan nama dan setidaknya dua peserta.",
