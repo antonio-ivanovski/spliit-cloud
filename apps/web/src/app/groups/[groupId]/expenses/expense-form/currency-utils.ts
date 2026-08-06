@@ -243,8 +243,12 @@ export function stepDisplayShares(value: unknown, direction: 1 | -1): number {
 }
 
 // Convert a Date to an ISO date string suitable for <input type="date" defaultValue>.
+export function isValidExpenseDate(date: unknown): date is Date {
+  return date instanceof Date && !Number.isNaN(date.getTime())
+}
+
 export function formatDate(date?: Date) {
-  const validDate = date && !Number.isNaN(date.getTime()) ? date : new Date()
+  const validDate = isValidExpenseDate(date) ? date : new Date()
   return validDate.toISOString().substring(0, 10)
 }
 

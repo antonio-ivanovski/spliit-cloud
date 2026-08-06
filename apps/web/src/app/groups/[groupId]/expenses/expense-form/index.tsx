@@ -34,6 +34,7 @@ import type {
   ReceiptScanContext,
 } from '../create-from-receipt-button'
 import { BasicDetailsCard } from './basic-details-card'
+import { formatDate, isValidExpenseDate } from './currency-utils'
 import { type SavedSplit } from './default-split/split-equal'
 import {
   buildExpenseFormDefaults,
@@ -289,7 +290,9 @@ export function ExpenseForm(props: {
   const receiptScanContext: ReceiptScanContext = {
     title: watchedTitle || undefined,
     amount: Number(watchedAmount) || undefined,
-    date: watchedExpenseDate?.toISOString().slice(0, 10),
+    date: isValidExpenseDate(watchedExpenseDate)
+      ? formatDate(watchedExpenseDate)
+      : undefined,
     currencyCode: originalCurrencyValue || groupCurrency.code,
     categoryId: watchedCategory || undefined,
     items: (watchedItems ?? []).map((item) => ({

@@ -230,7 +230,8 @@ export function getRecurrencePreviewDates(
     .map(({ date }) => date)
 }
 
-export function formatDateInputValue(date: Date): string {
+export function formatDateInputValue(date: Date | undefined): string {
+  if (!date || Number.isNaN(date.getTime())) return ''
   return date.toISOString().slice(0, 10)
 }
 
