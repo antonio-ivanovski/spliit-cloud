@@ -102,7 +102,8 @@
       "lastMonth": "Tháng trước",
       "earlierThisYear": "Đầu năm nay",
       "lastYear": "Năm ngoái",
-      "older": "Cũ hơn"
+      "older": "Cũ hơn",
+      "previousWeek": "Tuần trước"
     },
     "filters": {
       "mobileTitle": "Bộ lọc",
@@ -2778,5 +2779,12 @@
     },
     "fallbackPrefix": "Tỷ giá từ",
     "fallbackSeparator": " và "
+  },
+  "DatePicker": {
+    "presets": {
+      "yesterday": "Hôm qua",
+      "today": "Hôm nay",
+      "tomorrow": "Ngày mai"
+    }
   }
 }

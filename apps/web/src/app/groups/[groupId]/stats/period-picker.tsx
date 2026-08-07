@@ -2,7 +2,7 @@ import { CalendarRange } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { DateInput } from '@/components/ui/date-input'
 import { cn } from '@/lib/utils'
 
 import type { StatsCustomRange, StatsPeriod } from './dashboard-types'
@@ -56,34 +56,28 @@ export function StatsPeriodPicker({
         <div className="mt-1 grid gap-1 border-t px-1 pt-2 sm:grid-cols-2">
           <label className="grid gap-1 text-[11px] font-medium text-muted-foreground">
             {t('customRange.from')}
-            <Input
+            <DateInput
               className="date-base h-8 bg-background text-xs"
-              type="date"
+              pickerTitle={t('customRange.from')}
               value={customRange.from}
-              onChange={(event) =>
+              onValueChange={(from) =>
                 onCustomRangeChange({
-                  from: event.target.value,
-                  to:
-                    event.target.value > customRange.to
-                      ? event.target.value
-                      : customRange.to,
+                  from,
+                  to: from > customRange.to ? from : customRange.to,
                 })
               }
             />
           </label>
           <label className="grid gap-1 text-[11px] font-medium text-muted-foreground">
             {t('customRange.to')}
-            <Input
+            <DateInput
               className="date-base h-8 bg-background text-xs"
-              type="date"
+              pickerTitle={t('customRange.to')}
               value={customRange.to}
-              onChange={(event) =>
+              onValueChange={(to) =>
                 onCustomRangeChange({
-                  from:
-                    event.target.value < customRange.from
-                      ? event.target.value
-                      : customRange.from,
-                  to: event.target.value,
+                  from: to < customRange.from ? to : customRange.from,
+                  to,
                 })
               }
             />

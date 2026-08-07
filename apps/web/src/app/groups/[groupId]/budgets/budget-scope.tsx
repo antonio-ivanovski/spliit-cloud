@@ -134,8 +134,8 @@ export function ScopeChipList({
           key={item.id}
           className={cn(
             'inline-flex max-w-full items-center rounded-full border border-border/70 bg-muted/40 font-medium text-foreground',
-            sm ? 'gap-1.5 py-0.5 pl-1 text-xs' : 'gap-2 py-1 pl-1.5 text-sm',
-            onRemove ? (sm ? 'pr-1' : 'pr-1.5') : sm ? 'pr-2' : 'pr-3',
+            sm ? 'gap-1.5 py-0.5 ps-1 text-xs' : 'gap-2 py-1 ps-1.5 text-sm',
+            onRemove ? (sm ? 'pe-1' : 'pe-1.5') : sm ? 'pe-2' : 'pe-3',
           )}
         >
           {item.leading}

@@ -26,8 +26,8 @@ export function MagicLinkForm(props: {
         className="w-full"
         disabled={props.isPending || !props.email.trim()}
       >
-        {props.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-        <Mail className="mr-2 h-4 w-4" />
+        {props.isPending && <Loader2 className="me-2 h-4 w-4 animate-spin" />}
+        <Mail className="me-2 h-4 w-4" />
         {t('sendMagicLink')}
       </Button>
     </form>

@@ -3,9 +3,7 @@ import {
   useEffect,
   useRef,
   useState,
-  type ComponentProps,
   type Dispatch,
-  type Ref,
   type SetStateAction,
 } from 'react'
 import { useFormState, useWatch, type UseFormReturn } from 'react-hook-form'
@@ -23,6 +21,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible'
+import { DateInput } from '@/components/ui/date-input'
 import {
   FormControl,
   FormDescription,
@@ -43,8 +42,9 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { useLocale } from '@/i18n/react'
 import type { Locale } from '@/i18n/request'
+import { localizeCurrencyInput } from '@/lib/currency-input'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
-import { formatCurrency } from '@/lib/utils'
+import { formatCurrency, formatNumber } from '@/lib/utils'
 import type { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type {
@@ -68,7 +68,7 @@ import { AmountInput } from './amount-input'
 import {
   enforceCurrencyPattern,
   amountPlaceholder,
-  isValidExpenseDate,
+  formatDate,
   parseCurrencyPaste,
 } from './currency-utils'
 import { applySplitToAll } from './default-item-split'
@@ -77,10 +77,6 @@ import {
   getNeutralDefaultSplit,
   savedDefaultToFormValues,
 } from './default-values'
-import {
-  formatDateInputValue,
-  parseDateInputValue,
-} from './recurrence-schedule'
 import { RecurrenceSection } from './recurrence-section'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
@@ -89,6 +85,7 @@ type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
 export function BasicDetailsCard(props: {
   form: UseFormReturn<ExpenseFormInputValues>
   group: Group
+  accountTimeZone: string
   groupCurrency: Currency
   readOnly: boolean
   sExpense: 'Expense' | 'Income'
@@ -278,7 +275,7 @@ export function BasicDetailsCard(props: {
         <Button
           variant="ghost"
           size="icon"
-          className="-ml-2 hidden shrink-0 sm:inline-flex"
+          className="-ms-2 hidden shrink-0 sm:inline-flex"
           render={
             <Link
               href={props.cancelHref ?? `/groups/${group.id}/expenses`}
@@ -286,7 +283,7 @@ export function BasicDetailsCard(props: {
             />
           }
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft className="h-4 w-4 rtl:rotate-180" />
         </Button>
         <CardTitle className="hidden min-w-0 flex-1 truncate sm:block">
           {heading ?? t(`${sExpense}.${isCreate ? 'create' : 'edit'}`)}
@@ -324,7 +321,7 @@ export function BasicDetailsCard(props: {
                     />
                   )}
                 />
-                <div className="min-w-0 flex-1 border-l border-input">
+                <div className="min-w-0 flex-1 border-s border-input">
                   <FormControl>
                     <Input
                       placeholder={t(`${sExpense}.TitleField.placeholder`)}
@@ -410,13 +407,17 @@ export function BasicDetailsCard(props: {
                 <FormItem>
                   <FormLabel>{t(`${sExpense}.DateField.label`)}</FormLabel>
                   <FormControl>
-                    <ExpenseDateField
-                      ref={field.ref}
-                      name={field.name}
-                      value={field.value}
+                    <DateInput
+                      className="date-base"
+                      pickerTitle={t(`${sExpense}.DateField.label`)}
+                      presets={['yesterday', 'today', 'tomorrow']}
+                      timeZone={props.accountTimeZone}
+                      value={formatDate(field.value)}
                       disabled={readOnly}
-                      onChange={field.onChange}
-                      onBlur={field.onBlur}
+                      required
+                      onValueChange={(value) => {
+                        return field.onChange(new Date(value))
+                      }}
                     />
                   </FormControl>
                   <FormDescription className="hidden sm:block">
@@ -468,7 +469,7 @@ export function BasicDetailsCard(props: {
                     type="button"
                     variant="outline"
                     disabled
-                    className="h-10 shrink-0 gap-2 rounded-none border-0 border-r border-input px-3"
+                    className="h-10 shrink-0 gap-2 rounded-none border-0 border-e border-input px-3"
                     aria-label={group.currency}
                   >
                     <span className="text-sm font-medium">
@@ -476,21 +477,28 @@ export function BasicDetailsCard(props: {
                     </span>
                   </Button>
                 )}
-                <div className="min-w-0 flex-1 border-l border-input">
+                <div className="min-w-0 flex-1 border-s border-input">
                   <FormControl>
                     <AmountInput
+                      {...field}
                       containerClassName="min-w-0 flex-1"
                       className="h-10 w-full rounded-none border-0 text-lg font-semibold shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
                       type="text"
                       inputMode="decimal"
                       placeholder={amountPlaceholder(
                         inputCurrency.decimal_digits,
+                        locale,
                       )}
                       disabled={readOnly}
+                      value={localizeCurrencyInput(
+                        String(field.value ?? ''),
+                        locale,
+                      )}
                       onChange={(event) => {
                         const v = enforceCurrencyPattern(
                           event.target.value,
                           inputCurrency.decimal_digits,
+                          locale,
                         )
                         setCalculatorExpression(v)
                         onChange(v)
@@ -520,7 +528,6 @@ export function BasicDetailsCard(props: {
                         const target = e.currentTarget
                         setTimeout(() => target.select(), 1)
                       }}
-                      {...field}
                     />
                   </FormControl>
                 </div>
@@ -530,7 +537,7 @@ export function BasicDetailsCard(props: {
                     size="icon"
                     type="button"
                     variant="outline"
-                    className="h-10 shrink-0 rounded-none border-0 border-l border-input"
+                    className="h-10 shrink-0 rounded-none border-0 border-s border-input"
                     onClick={() => {
                       setCalculatorExpression(
                         (expression) =>
@@ -554,6 +561,7 @@ export function BasicDetailsCard(props: {
                   const sanitizedValue = enforceCurrencyPattern(
                     value,
                     inputCurrency.decimal_digits,
+                    locale,
                   )
                   onChange(sanitizedValue)
                 }}
@@ -638,18 +646,27 @@ export function BasicDetailsCard(props: {
                               </span>
                               <FormControl>
                                 <Input
+                                  {...field}
                                   className="max-w-[120px] text-base"
                                   type="text"
                                   inputMode="decimal"
-                                  placeholder="0.00"
+                                  placeholder={formatNumber(0, locale, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2,
+                                  })}
                                   disabled={readOnly}
+                                  value={localizeCurrencyInput(
+                                    String(field.value ?? ''),
+                                    locale,
+                                  )}
                                   onChange={(event) => {
                                     const v = enforceCurrencyPattern(
                                       event.target.value,
+                                      undefined,
+                                      locale,
                                     )
                                     onChange(v)
                                   }}
-                                  {...field}
                                   onFocus={(e) => {
                                     const target = e.currentTarget
                                     setTimeout(() => target.select(), 1)
@@ -751,63 +768,5 @@ export function BasicDetailsCard(props: {
         </ResponsiveDialogContent>
       </ResponsiveDialog>
     </Card>
-  )
-}
-
-function ExpenseDateField({
-  ref,
-  value,
-  onChange,
-  onBlur,
-  disabled,
-  ...props
-}: {
-  ref?: Ref<HTMLInputElement>
-  value?: Date
-  onChange: (date: Date) => void
-  disabled?: boolean
-} & Omit<ComponentProps<typeof Input>, 'type' | 'value' | 'onChange'>) {
-  const inputRef = useRef<HTMLInputElement | null>(null)
-  const isFocusedRef = useRef(false)
-  const valueIso = isValidExpenseDate(value) ? formatDateInputValue(value) : ''
-
-  useEffect(() => {
-    const input = inputRef.current
-    if (!input || isFocusedRef.current) return
-    if (input.value !== valueIso) input.value = valueIso
-  }, [valueIso])
-
-  const setInputRef = (node: HTMLInputElement | null) => {
-    inputRef.current = node
-    if (typeof ref === 'function') ref(node)
-    else if (ref) ref.current = node
-  }
-
-  return (
-    <Input
-      {...props}
-      ref={setInputRef}
-      className="date-base w-full"
-      type="date"
-      defaultValue={valueIso}
-      disabled={disabled}
-      onFocus={(event) => {
-        isFocusedRef.current = true
-        props.onFocus?.(event)
-      }}
-      onChange={(event) => {
-        const raw = event.target.value
-        if (!raw) return
-        const selected = parseDateInputValue(raw)
-        if (!Number.isFinite(selected.getTime())) return
-        onChange(selected)
-      }}
-      onBlur={(event) => {
-        isFocusedRef.current = false
-        onBlur?.(event)
-        const input = inputRef.current
-        if (input && !input.value && valueIso) input.value = valueIso
-      }}
-    />
   )
 }

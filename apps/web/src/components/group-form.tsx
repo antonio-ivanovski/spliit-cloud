@@ -339,7 +339,7 @@ export function GroupForm({
                     group ? 'Settings.saving' : 'Settings.creating',
                   )}
                 >
-                  <Save className="mr-2 h-4 w-4" />{' '}
+                  <Save className="me-2 h-4 w-4" />{' '}
                   {t(group ? 'Settings.save' : 'Settings.create')}
                 </SubmitButton>
                 {!group && (

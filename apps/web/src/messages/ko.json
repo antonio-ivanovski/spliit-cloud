@@ -17,7 +17,8 @@
       "lastYear": "작년",
       "earlierThisYear": "올해 초",
       "upcoming": "다가오는",
-      "older": "이전 지출"
+      "older": "이전 지출",
+      "previousWeek": "지난주"
     },
     "title": "지출",
     "description": "그룹에서 만든 지출 항목들을 보여드려요.",
@@ -2689,5 +2690,12 @@
     },
     "fallbackPrefix": "환율 출처:",
     "fallbackSeparator": " 및 "
+  },
+  "DatePicker": {
+    "presets": {
+      "yesterday": "어제",
+      "today": "오늘",
+      "tomorrow": "내일"
+    }
   }
 }

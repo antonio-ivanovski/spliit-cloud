@@ -17,11 +17,20 @@ import {
 } from '@/components/ui/responsive-dialog'
 import { useLocale } from '@/i18n/react'
 import { useCurrencies } from '@/lib/currency'
-import { amountPlaceholder, enforceCurrencyPattern } from '@/lib/currency-input'
+import {
+  amountPlaceholder,
+  enforceCurrencyPattern,
+  localizeCurrencyInput,
+} from '@/lib/currency-input'
 import { useCurrencyRate } from '@/lib/hooks'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
-import { amountAsMinorUnits, getCurrency, utcTodayIso } from '@spliit/domain'
+import {
+  amountAsMinorUnits,
+  getCurrency,
+  resolveFormattingLocale,
+  utcTodayIso,
+} from '@spliit/domain'
 
 import currencyExchangeSvg from './currency-exchange.svg'
 import { rankGroupsForConverter, type ConverterGroup } from './rank-groups'
@@ -174,7 +183,7 @@ export function CurrencyConverterButton() {
             <img
               src={currencyExchangeSvg}
               alt=""
-              className="mr-0 h-6 w-6 shrink-0 sm:mr-2 dark:invert"
+              className="me-0 h-6 w-6 shrink-0 sm:me-2"
             />
             <span className="hidden sm:inline">{t('trigger')}</span>
           </Button>
@@ -183,7 +192,7 @@ export function CurrencyConverterButton() {
       <ResponsiveDialogContent className="sm:max-w-lg">
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>{t('title')}</ResponsiveDialogTitle>
-          <ResponsiveDialogDescription className="text-left">
+          <ResponsiveDialogDescription className="text-start">
             {t('description')}
           </ResponsiveDialogDescription>
         </ResponsiveDialogHeader>
@@ -237,7 +246,9 @@ export function ConverterContent() {
   const fromCurrency = currencies.find((c) => c.code === fromCode)
   const fromDigits = fromCurrency?.decimal_digits ?? 2
 
-  const parsedAmount = Number(enforceCurrencyPattern(amountStr, fromDigits))
+  const parsedAmount = Number(
+    enforceCurrencyPattern(amountStr, fromDigits, locale),
+  )
   const amountValid =
     amountStr.trim() !== '' && Number.isFinite(parsedAmount) && parsedAmount > 0
 
@@ -306,15 +317,17 @@ export function ConverterContent() {
               type="text"
               inputMode="decimal"
               size={1}
-              placeholder={amountPlaceholder(fromDigits)}
-              value={amountStr}
+              placeholder={amountPlaceholder(fromDigits, locale)}
+              value={localizeCurrencyInput(amountStr, locale)}
               onChange={(e) =>
-                setAmountStr(enforceCurrencyPattern(e.target.value, fromDigits))
+                setAmountStr(
+                  enforceCurrencyPattern(e.target.value, fromDigits, locale),
+                )
               }
               className="h-10 w-full min-w-0 border-0 bg-transparent px-3 text-lg font-medium tabular-nums outline-none focus-visible:ring-0"
             />
           </div>
-          <div className="shrink-0 border-l border-input">
+          <div className="shrink-0 border-s border-input">
             <CurrencySelector
               currencies={currencies}
               onValueChange={handleFromChange}
@@ -352,7 +365,7 @@ export function ConverterContent() {
             className="flex min-w-0 flex-1 basis-0 items-center truncate px-3 text-lg font-medium text-muted-foreground tabular-nums"
           >
             {previewAmount != null && toCurrency ? (
-              new Intl.NumberFormat(locale, {
+              new Intl.NumberFormat(resolveFormattingLocale(locale), {
                 style: 'currency',
                 currency: toCurrency.code || undefined,
                 minimumFractionDigits: toCurrency.decimal_digits,
@@ -364,7 +377,7 @@ export function ConverterContent() {
               '—'
             )}
           </div>
-          <div className="shrink-0 border-l border-input">
+          <div className="shrink-0 border-s border-input">
             <CurrencySelector
               currencies={currencies}
               onValueChange={handleToChange}

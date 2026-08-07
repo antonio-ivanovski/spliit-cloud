@@ -91,7 +91,8 @@
       "lastMonth": "W zeszłym miesiącu",
       "earlierThisYear": "Wcześniej w tym roku",
       "lastYear": "Poprzedni rok",
-      "older": "Starsze"
+      "older": "Starsze",
+      "previousWeek": "W zeszłym tygodniu"
     },
     "filters": {
       "mobileTitle": "Filtruj wydatki",
@@ -2740,5 +2741,12 @@
     },
     "fallbackPrefix": "Kursy z",
     "fallbackSeparator": " i "
+  },
+  "DatePicker": {
+    "presets": {
+      "yesterday": "Wczoraj",
+      "today": "Dzisiaj",
+      "tomorrow": "Jutro"
+    }
   }
 }

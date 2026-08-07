@@ -75,7 +75,7 @@ export function SettlementGroupButton({
     <Button
       type="button"
       variant="link"
-      className="-mr-2 min-h-11 shrink-0 px-2 text-xs"
+      className="-me-2 min-h-11 shrink-0 px-2 text-xs"
       onClick={onClick}
       aria-label={t(
         group.direction === 'pay'

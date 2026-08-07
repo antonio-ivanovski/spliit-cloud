@@ -10,6 +10,7 @@ import { ParticipantSelector } from '@/components/participant-selector'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
+import { DateInput } from '@/components/ui/date-input'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -18,7 +19,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useLocale } from '@/i18n/react'
 import { type DisplayCurrency } from '@/lib/currency'
+import {
+  enforceCurrencyPattern,
+  localizeCurrencyInput,
+} from '@/lib/currency-input'
 import { useMediaQuery } from '@/lib/hooks'
 import { cn } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
@@ -104,14 +110,14 @@ function FilterChips({
           <Badge
             key={id}
             variant="secondary"
-            className="gap-1 py-0 pr-1 text-xs"
+            className="gap-1 py-0 pe-1 text-xs"
           >
             {opt.label}
             <button
               type="button"
               onClick={() => onToggle(id)}
               aria-label={t('removeFilter')}
-              className="ml-0.5 rounded-sm hover:bg-muted-foreground/20"
+              className="ms-0.5 rounded-sm hover:bg-muted-foreground/20"
             >
               <X className="h-3 w-3" />
             </button>
@@ -201,6 +207,7 @@ export function ExpenseFiltersContent({
   className,
 }: ExpenseFiltersContentProps) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Expenses.filters' })
+  const locale = useLocale()
   const { t: tExpenses } = useTranslation(undefined, {
     keyPrefix: 'Expenses',
   })
@@ -336,19 +343,19 @@ export function ExpenseFiltersContent({
 
       <FilterRow label={t('dateRange')}>
         <div className="grid flex-1 grid-cols-2 gap-2">
-          <Input
-            type="date"
+          <DateInput
+            pickerTitle={t('dateFrom')}
             value={draft.dateFrom ?? ''}
-            onChange={(e) =>
-              updateDraft({ dateFrom: e.target.value || undefined })
+            onValueChange={(value) =>
+              updateDraft({ dateFrom: value || undefined })
             }
             aria-label={t('dateFrom')}
           />
-          <Input
-            type="date"
+          <DateInput
+            pickerTitle={t('dateTo')}
             value={draft.dateTo ?? ''}
-            onChange={(e) =>
-              updateDraft({ dateTo: e.target.value || undefined })
+            onValueChange={(value) =>
+              updateDraft({ dateTo: value || undefined })
             }
             aria-label={t('dateTo')}
           />
@@ -358,22 +365,30 @@ export function ExpenseFiltersContent({
       <FilterRow label={t('amountRange')}>
         <div className="grid flex-1 grid-cols-2 gap-2">
           <Input
-            type="number"
+            type="text"
             inputMode="decimal"
             placeholder={t('minAmount')}
-            value={draft.minAmount ?? ''}
+            value={localizeCurrencyInput(draft.minAmount ?? '', locale)}
             onChange={(e) =>
-              updateDraft({ minAmount: e.target.value || undefined })
+              updateDraft({
+                minAmount:
+                  enforceCurrencyPattern(e.target.value, undefined, locale) ||
+                  undefined,
+              })
             }
             aria-label={t('minAmount')}
           />
           <Input
-            type="number"
+            type="text"
             inputMode="decimal"
             placeholder={t('maxAmount')}
-            value={draft.maxAmount ?? ''}
+            value={localizeCurrencyInput(draft.maxAmount ?? '', locale)}
             onChange={(e) =>
-              updateDraft({ maxAmount: e.target.value || undefined })
+              updateDraft({
+                maxAmount:
+                  enforceCurrencyPattern(e.target.value, undefined, locale) ||
+                  undefined,
+              })
             }
             aria-label={t('maxAmount')}
           />

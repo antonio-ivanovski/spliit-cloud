@@ -1,6 +1,7 @@
 import {
   amountPlaceholder,
   enforceCurrencyPattern as baseEnforceCurrencyPattern,
+  normalizeDigits,
   stripIntegerLeadingZeros,
 } from '@/lib/currency-input'
 import { MAX_DISPLAY_SHARES, sharesAsFixedUnits } from '@spliit/domain'
@@ -18,8 +19,32 @@ export { amountPlaceholder }
 export const enforceCurrencyPattern = (
   value: string,
   decimalDigits?: number,
+  locale = 'en-US',
 ): string =>
-  stripIntegerLeadingZeros(baseEnforceCurrencyPattern(value, decimalDigits))
+  stripIntegerLeadingZeros(
+    baseEnforceCurrencyPattern(value, decimalDigits, locale),
+  )
+
+function enforceDecimalPattern(value: string, locale = 'en-US'): string {
+  const sanitized = baseEnforceCurrencyPattern(value, 2, locale)
+  if (sanitized === '' || sanitized === '-') return sanitized
+  const negative = sanitized.startsWith('-')
+  const body = negative ? sanitized.slice(1) : sanitized
+  const dot = body.indexOf('.')
+  const integer = stripIntegerLeadingZeros(
+    dot === -1 ? body : body.slice(0, dot),
+  )
+  const fraction = dot === -1 ? '' : body.slice(dot + 1)
+  const prefix = negative ? '-' : ''
+  if (dot === -1) return `${prefix}${integer}`
+  return `${prefix}${integer || '0'}.${fraction}`
+}
+
+export const enforcePercentagePattern = (value: string, locale = 'en-US') =>
+  /[A-Za-z]/u.test(value) ? '' : enforceDecimalPattern(value, locale)
+
+export const enforceSharePattern = (value: string, locale = 'en-US') =>
+  enforceDecimalPattern(value, locale)
 
 type PasteCurrency = { code: string; symbol: string }
 
@@ -154,76 +179,8 @@ export function parseCurrencyPaste(
   return { amount, ...(currencyCode ? { currencyCode } : {}) }
 }
 
-export const enforcePercentagePattern = (value: string) => {
-  const sanitized = value
-    .replace(/^\s*-/, '_')
-    .replace(/[.,]/, '#')
-    .replace(/[-.,]/g, '')
-    .replace(/_/, '-')
-    .replace(/#/, '.')
-  const match = sanitized.match(/^(-?\d*)\.?(\d{0,2})/)
-  if (!match) return ''
-  const intPart = match[1] ?? ''
-  const decPart = match[2] ?? ''
-  return decPart
-    ? `${stripIntegerLeadingZeros(intPart)}.${decPart}`
-    : stripIntegerLeadingZeros(intPart)
-}
-
-export const enforceIntegerPattern = (value: string) =>
-  value.replace(/[^\d]/g, '')
-
-/**
- * Normalize the integer portion of a typed share: strip leading zeros while
- * retaining a single zero when the whole integer portion is zero (`04` -> `4`,
- * `00` -> `0`). Editing states such as `0.` or `0.10` survive because only the
- * integer digits are touched and the value never round-trips through
- * `Number()`. A leading minus sign is preserved (`-004` -> `-4`).
- */
-const normalizeShareIntegerPart = (rawInteger: string): string => {
-  const negative = rawInteger.startsWith('-')
-  const digits = negative ? rawInteger.slice(1) : rawInteger
-  const normalized = digits.replace(/^0+(?=\d)/, '')
-  return negative ? `-${normalized}` : normalized
-}
-
-/**
- * Sanitize a typed share string to the `BY_SHARES` representation: an optional
- * minus sign, digits, and at most two decimal places. Unlike the currency
- * sanitizer, shares are user-facing whole/decimal numbers (e.g. `0.5`, `1.1`,
- * `25.75`) and always have at most two decimal places — there is no currency
- * precision to discover.
- *
- * Trailing-dot input (`"1."`) is preserved so the user can finish typing the
- * fractional part without losing focus.
- */
-export const enforceSharePattern = (value: string) => {
-  // Drop everything that isn't a digit, decimal separator, or leading sign.
-  const stripped = value.replace(/[^0-9.,-]/g, '').replace(/(?!^)-/g, '')
-  if (stripped === '' || stripped === '-') return stripped
-  // Keep only the FIRST decimal separator as the decimal point; any
-  // later separator is treated as extra fraction digits and truncated.
-  const firstDot = stripped.indexOf('.')
-  const firstComma = stripped.indexOf(',')
-  const firstSeparator =
-    firstDot === -1
-      ? firstComma
-      : firstComma === -1
-        ? firstDot
-        : Math.min(firstDot, firstComma)
-  const integerPart =
-    firstSeparator === -1 ? stripped : stripped.slice(0, firstSeparator)
-  const fractionRaw =
-    firstSeparator === -1 ? '' : stripped.slice(firstSeparator + 1)
-  const fractionPart = fractionRaw.replace(/[.,]/g, '').slice(0, 2)
-  const cleanedInt = normalizeShareIntegerPart(integerPart.replace(/[.,]/g, ''))
-  if (fractionPart) {
-    // Normalize a leading separator (`.5`) to `0.5` so the value stays
-    // complete when the user typed it from an empty input.
-    return cleanedInt ? `${cleanedInt}.${fractionPart}` : `0.${fractionPart}`
-  }
-  return firstSeparator === -1 ? cleanedInt : `${cleanedInt}.`
-}
+export const enforceIntegerPattern = (value: string, locale = 'en-US') =>
+  normalizeDigits(value, locale).replace(/[^\d]/g, '')
 
 /**
  * Pure stepper boundary for `BY_SHARES` rows: the next display share for a

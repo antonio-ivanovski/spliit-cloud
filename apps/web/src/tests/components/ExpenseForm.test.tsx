@@ -1116,7 +1116,7 @@ describe('ExpenseForm', () => {
       ).toBeInTheDocument()
       // Copy action lives on the preview modal, not inside the form.
       expect(screen.queryByTestId('expense-make-copy')).not.toBeInTheDocument()
-      expect(screen.getByDisplayValue('2025-07-15')).toBeInTheDocument()
+      expect(screen.getByDisplayValue('07/15/2025')).toBeInTheDocument()
     } finally {
       vi.useRealTimers()
     }

@@ -184,7 +184,7 @@ export function RecentGroupList() {
   if (isGroupsLoading) {
     body = (
       <div className="flex items-center justify-center rounded-lg border bg-card py-10 text-sm text-muted-foreground">
-        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        <Loader2 className="me-2 h-4 w-4 animate-spin" />
         {t('loadingRecent')}
       </div>
     )
@@ -302,7 +302,7 @@ export function RecentGroupList() {
             <ReceiptText className="h-4 w-4 text-muted-foreground" />
             {t('allExpenses')}
           </span>
-          <ArrowRight className="h-4 w-4 text-muted-foreground" />
+          <ArrowRight className="h-4 w-4 text-muted-foreground rtl:rotate-180" />
         </Link>
       </div>
     )
@@ -462,7 +462,7 @@ function PeopleBalanceDirection({
       </div>
       {rows.length > 0 ? (
         <div
-          className="max-h-[min(65vh,32rem)] overflow-y-auto overscroll-contain pr-1"
+          className="max-h-[min(65vh,32rem)] overflow-y-auto overscroll-contain pe-1"
           data-testid={`overview-people-${direction}-rows`}
         >
           <div className="grid gap-1.5">
@@ -567,7 +567,7 @@ function PeopleGroupBreakdown({
       <span>
         {groups.length} {tLabels(groups.length === 1 ? 'group' : 'groupPlural')}
       </span>
-      <ChevronRight className="h-3.5 w-3.5" aria-hidden />
+      <ChevronRight className="h-3.5 w-3.5 rtl:rotate-180" aria-hidden />
     </button>
   )
   const title = (
@@ -676,7 +676,7 @@ function BalanceDirection({
       </div>
       {rows.length > 0 ? (
         <div
-          className="max-h-[min(65vh,32rem)] overflow-y-auto overscroll-contain pr-1"
+          className="max-h-[min(65vh,32rem)] overflow-y-auto overscroll-contain pe-1"
           data-testid={`overview-groups-${direction}-rows`}
         >
           <div className="grid gap-1.5">
@@ -778,7 +778,7 @@ function BalanceGroupBreakdown({
       <span>
         {groupCount} {groupLabel(groupCount)}
       </span>
-      <ChevronRight className="h-3.5 w-3.5" aria-hidden />
+      <ChevronRight className="h-3.5 w-3.5 rtl:rotate-180" aria-hidden />
     </button>
   )
   const title = (

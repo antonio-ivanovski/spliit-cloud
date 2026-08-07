@@ -37,7 +37,7 @@ export default function GroupInformation({ groupId }: { groupId: string }) {
               </Button>
             )}
           </CardTitle>
-          <CardDescription className="mr-12">
+          <CardDescription className="me-12">
             {t('description')}
           </CardDescription>
         </CardHeader>

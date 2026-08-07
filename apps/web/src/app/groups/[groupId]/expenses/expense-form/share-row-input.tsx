@@ -12,6 +12,8 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { useLocale } from '@/i18n/react'
+import { localizeCurrencyInput } from '@/lib/currency-input'
 import { cn } from '@/lib/utils'
 import type {
   Currency,
@@ -112,7 +114,7 @@ function SelectedShareInput({
         </FormControl>
         {percentageSuffix}
       </div>
-      <FormMessage className="float-right" />
+      <FormMessage className="float-end" />
     </>
   )
 }
@@ -167,6 +169,7 @@ export function ShareRowInput(props: {
   inputRefs: ShareInputRefs
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
+  const locale = useLocale()
   const {
     form,
     arrayName,
@@ -233,7 +236,7 @@ export function ShareRowInput(props: {
 
   if (splitMode === 'EVENLY') return null
 
-  const sanitizer = matchSanitizer(splitMode, currency)
+  const sanitizer = matchSanitizer(splitMode, currency, locale)
   const labelKey = matchLabelKey(splitMode)
 
   const writeRows = (next: ShareRow[]) => {
@@ -319,8 +322,8 @@ export function ShareRowInput(props: {
 
   const inputProps = {
     className: cn(
-      '-my-2 w-[72px] shrink-0 px-2 text-right text-base tabular-nums',
-      splitMode === 'BY_PERCENTAGE' && 'pr-5',
+      '-my-2 w-[72px] shrink-0 px-2 text-end text-base tabular-nums',
+      splitMode === 'BY_PERCENTAGE' && 'pe-5',
     ),
     type: 'text' as const,
     disabled: readOnly,
@@ -335,7 +338,7 @@ export function ShareRowInput(props: {
   }
 
   const percentageSuffix = splitMode === 'BY_PERCENTAGE' && (
-    <span className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-xs text-muted-foreground">
+    <span className="pointer-events-none absolute inset-y-0 end-2 flex items-center text-xs text-muted-foreground">
       %
     </span>
   )
@@ -371,7 +374,10 @@ export function ShareRowInput(props: {
                   onBlur={field.onBlur}
                   attachRef={attachRef}
                   inputProps={inputProps}
-                  value={String(row?.shares ?? '')}
+                  value={localizeCurrencyInput(
+                    String(row?.shares ?? ''),
+                    locale,
+                  )}
                   onChange={handleChange}
                   percentageSuffix={percentageSuffix}
                 />
@@ -416,10 +422,16 @@ export function ShareRowInput(props: {
 const matchSanitizer = (
   splitMode: ItemSplitMode,
   currency: Currency,
+  locale: string,
 ): ((value: string) => string) => {
-  if (splitMode === 'BY_PERCENTAGE') return enforcePercentagePattern
-  if (splitMode === 'BY_SHARES') return enforceSharePattern
-  return (value) => enforceCurrencyPattern(value, currency.decimal_digits)
+  if (splitMode === 'BY_PERCENTAGE') {
+    return (value) => enforcePercentagePattern(value, locale)
+  }
+  if (splitMode === 'BY_SHARES') {
+    return (value) => enforceSharePattern(value, locale)
+  }
+  return (value) =>
+    enforceCurrencyPattern(value, currency.decimal_digits, locale)
 }
 
 const matchLabelKey = (

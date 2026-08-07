@@ -91,7 +91,8 @@
       "lastMonth": "Minulý měsíc",
       "earlierThisYear": "Dříve tento rok",
       "lastYear": "Minulý rok",
-      "older": "Starší výdaje"
+      "older": "Starší výdaje",
+      "previousWeek": "Minulý týden"
     },
     "filters": {
       "mobileTitle": "Filtrovat výdaje",
@@ -2740,5 +2741,12 @@
     },
     "fallbackPrefix": "Kurzy z",
     "fallbackSeparator": " a "
+  },
+  "DatePicker": {
+    "presets": {
+      "yesterday": "Včera",
+      "today": "Dnes",
+      "tomorrow": "Zítra"
+    }
   }
 }

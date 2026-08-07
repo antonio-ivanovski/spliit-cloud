@@ -115,7 +115,7 @@ export function GroupCard({
   return (
     <li key={group.id} className="min-w-0">
       <div
-        className={`motion-surface motion-surface-interactive relative h-full w-full ${CARD_MIN_HEIGHT} cursor-pointer overflow-hidden rounded-lg border bg-card py-3 pr-1 pl-3 text-base shadow-xs hover:border-primary/25 hover:bg-muted/20`}
+        className={`motion-surface motion-surface-interactive relative h-full w-full ${CARD_MIN_HEIGHT} cursor-pointer overflow-hidden rounded-lg border bg-card py-3 ps-3 pe-1 text-base shadow-xs hover:border-primary/25 hover:bg-muted/20`}
       >
         <div className="flex w-full flex-col gap-1">
           <div className="flex items-center justify-between gap-2 text-base">
@@ -131,7 +131,7 @@ export function GroupCard({
                 {group.displayName}
               </Link>
               {isPending && (
-                <span className="ml-1 inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground opacity-70">
+                <span className="ms-1 inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground opacity-70">
                   {t('pending')}
                 </span>
               )}
@@ -140,7 +140,7 @@ export function GroupCard({
               <Button
                 size="icon"
                 variant="ghost"
-                className="-my-3 -mr-1.5 -ml-3"
+                className="-my-3 -ms-3 -me-1.5"
                 onClick={(event) => {
                   event.stopPropagation()
                   onToggleStar()
@@ -170,7 +170,7 @@ export function GroupCard({
                     <Button
                       size="icon"
                       variant="ghost"
-                      className="-my-3 -mr-2 -ml-1.5"
+                      className="-my-3 -ms-1.5 -me-2"
                       onClick={(event) => event.stopPropagation()}
                       aria-label={
                         isFriend ? t('friendActions') : t('groupActions')
@@ -189,12 +189,12 @@ export function GroupCard({
                   >
                     {isHidden ? (
                       <>
-                        <Eye className="mr-2 h-4 w-4" />
+                        <Eye className="me-2 h-4 w-4" />
                         {isFriend ? t('unhideFriend') : t('unhide')}
                       </>
                     ) : (
                       <>
-                        <EyeOff className="mr-2 h-4 w-4" />
+                        <EyeOff className="me-2 h-4 w-4" />
                         {isFriend ? t('hideFriend') : t('hide')}
                       </>
                     )}
@@ -208,12 +208,12 @@ export function GroupCard({
                     >
                       {isArchived ? (
                         <>
-                          <ArchiveRestore className="mr-2 h-4 w-4" />
+                          <ArchiveRestore className="me-2 h-4 w-4" />
                           {t('unarchiveGroup')}
                         </>
                       ) : (
                         <>
-                          <Archive className="mr-2 h-4 w-4" />
+                          <Archive className="me-2 h-4 w-4" />
                           {t('archiveGroup')}
                         </>
                       )}

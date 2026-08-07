@@ -74,7 +74,7 @@ describe('enforceCurrencyPattern', () => {
   })
 
   it('handles European thousands separator', () => {
-    expect(enforceCurrencyPattern('1.234,56')).toBe('1.23456')
+    expect(enforceCurrencyPattern('1.234,56')).toBe('1234.56')
   })
 
   it('preserves leading minus', () => {
@@ -203,6 +203,10 @@ describe('enforceIntegerPattern', () => {
 
   it('strips exponent letter', () => {
     expect(enforceIntegerPattern('1e5')).toBe('15')
+  })
+
+  it('accepts native locale digits', () => {
+    expect(enforceIntegerPattern('١٢٣', 'ar-SA')).toBe('123')
   })
 })
 

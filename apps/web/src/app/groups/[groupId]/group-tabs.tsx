@@ -72,7 +72,7 @@ export function GroupTabs({ groupId }: Props) {
                 variant="secondary"
                 onClick={() => void handleUnarchive()}
               >
-                <ArchiveRestore className="mr-2 h-4 w-4" />
+                <ArchiveRestore className="me-2 h-4 w-4" />
                 {tGroups('bannerUnarchive')}
               </Button>
             )}

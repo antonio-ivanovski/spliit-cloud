@@ -91,7 +91,8 @@
       "lastMonth": "Bulan lalu",
       "earlierThisYear": "Awal tahun ini",
       "lastYear": "Tahun lalu",
-      "older": "Pengeluaran sebelumnya"
+      "older": "Pengeluaran sebelumnya",
+      "previousWeek": "Minggu lalu"
     },
     "filters": {
       "mobileTitle": "Filter pengeluaran",
@@ -2690,5 +2691,12 @@
     },
     "fallbackPrefix": "Kurs dari",
     "fallbackSeparator": " dan "
+  },
+  "DatePicker": {
+    "presets": {
+      "yesterday": "Kemarin",
+      "today": "Hari ini",
+      "tomorrow": "Besok"
+    }
   }
 }

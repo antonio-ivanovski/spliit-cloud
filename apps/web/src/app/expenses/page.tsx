@@ -24,6 +24,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
+import { DateInput } from '@/components/ui/date-input'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -32,8 +33,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useLocale } from '@/i18n/react'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
 import { getCurrency, getCurrencyFromGroup } from '@/lib/currency'
+import {
+  enforceCurrencyPattern,
+  localizeCurrencyInput,
+} from '@/lib/currency-input'
 import { cn } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
@@ -171,11 +177,15 @@ function GlobalExpenseFilters({
   options: FilterOptions
 }) {
   const { t } = useTranslation()
+  const locale = useLocale()
   const categories = DEFAULT_CATEGORIES.map((category) => ({
     id: category.id,
     label: categoryLabel(t, category.id),
   }))
   const selectedCurrency = filters.currencies.length === 1
+  const selectedCurrencyDetails = selectedCurrency
+    ? getCurrency(filters.currencies[0]!.split(':')[0]!)
+    : undefined
   const toggle = (
     key: 'groups' | 'categories' | 'currencies',
     value: string,
@@ -322,17 +332,17 @@ function GlobalExpenseFilters({
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <FilterChoice label={t('Expenses.filters.dateFrom')}>
-          <Input
-            type="date"
+          <DateInput
+            pickerTitle={t('Expenses.filters.dateFrom')}
             value={filters.dateFrom}
-            onChange={(e) => onChange({ ...filters, dateFrom: e.target.value })}
+            onValueChange={(dateFrom) => onChange({ ...filters, dateFrom })}
           />
         </FilterChoice>
         <FilterChoice label={t('Expenses.filters.dateTo')}>
-          <Input
-            type="date"
+          <DateInput
+            pickerTitle={t('Expenses.filters.dateTo')}
             value={filters.dateTo}
-            onChange={(e) => onChange({ ...filters, dateTo: e.target.value })}
+            onValueChange={(dateTo) => onChange({ ...filters, dateTo })}
           />
         </FilterChoice>
         <FilterChoice label={t('Expenses.globalCurrency')}>
@@ -370,23 +380,37 @@ function GlobalExpenseFilters({
         <FilterChoice label={t('Expenses.filters.amountRange')}>
           <div className="grid grid-cols-2 gap-2">
             <Input
-              type="number"
+              type="text"
               inputMode="decimal"
               disabled={!selectedCurrency}
               placeholder={t('Expenses.filters.minAmount')}
-              value={filters.minAmount}
+              value={localizeCurrencyInput(filters.minAmount, locale)}
               onChange={(e) =>
-                onChange({ ...filters, minAmount: e.target.value })
+                onChange({
+                  ...filters,
+                  minAmount: enforceCurrencyPattern(
+                    e.target.value,
+                    selectedCurrencyDetails?.decimal_digits,
+                    locale,
+                  ),
+                })
               }
             />
             <Input
-              type="number"
+              type="text"
               inputMode="decimal"
               disabled={!selectedCurrency}
               placeholder={t('Expenses.filters.maxAmount')}
-              value={filters.maxAmount}
+              value={localizeCurrencyInput(filters.maxAmount, locale)}
               onChange={(e) =>
-                onChange({ ...filters, maxAmount: e.target.value })
+                onChange({
+                  ...filters,
+                  maxAmount: enforceCurrencyPattern(
+                    e.target.value,
+                    selectedCurrencyDetails?.decimal_digits,
+                    locale,
+                  ),
+                })
               }
             />
           </div>
@@ -408,7 +432,7 @@ function GlobalExpenseFilters({
           />
           {t('Expenses.showSettlements')}
         </label>
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ms-auto flex items-center gap-2">
           <span className="text-xs text-muted-foreground">
             {t('Expenses.filters.sort.title')}
           </span>
@@ -424,7 +448,7 @@ function GlobalExpenseFilters({
             }}
           >
             <SelectTrigger className="h-9 w-44 text-xs">
-              <ArrowDownWideNarrow className="mr-1 h-3.5 w-3.5" />
+              <ArrowDownWideNarrow className="me-1 h-3.5 w-3.5" />
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -655,9 +679,9 @@ function GlobalExpensesContent() {
           <CardContent className="relative flex flex-col gap-4 p-0 pt-2 pb-4 sm:pb-6">
             <div className="mx-4 flex items-center gap-2 sm:mx-6">
               <div className="relative flex-1">
-                <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Search className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
-                  className="h-9 border-none bg-muted pl-10 text-sm text-muted-foreground"
+                  className="h-9 border-none bg-muted ps-10 text-sm text-muted-foreground"
                   value={filters.q}
                   onChange={(e) => commit({ ...filters, q: e.target.value })}
                   placeholder={t('Expenses.searchPlaceholder')}
@@ -666,7 +690,7 @@ function GlobalExpensesContent() {
                   <button
                     type="button"
                     onClick={() => commit({ ...filters, q: '' })}
-                    className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground"
+                    className="absolute end-3 top-1/2 -translate-y-1/2 text-muted-foreground"
                     aria-label={t('Expenses.clearSearch')}
                   >
                     <X className="h-4 w-4" />
@@ -681,10 +705,10 @@ function GlobalExpensesContent() {
                 onClick={() => setFiltersOpen((open) => !open)}
                 aria-expanded={filtersOpen}
               >
-                <Filter className="mr-1 h-3.5 w-3.5" />
+                <Filter className="me-1 h-3.5 w-3.5" />
                 {t('Expenses.filters.button')}
                 {activeFilterCount > 0 && (
-                  <Badge variant="secondary" className="ml-1">
+                  <Badge variant="secondary" className="ms-1">
                     {activeFilterCount}
                   </Badge>
                 )}

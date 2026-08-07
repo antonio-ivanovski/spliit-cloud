@@ -37,6 +37,7 @@ import { localeLabels, locales } from '@/i18n/request'
 import { detectBrowserLocale, setUserLocale } from '@/i18n/setup'
 import { useMediaQuery } from '@/lib/hooks'
 import { cn } from '@/lib/utils'
+import { resolveFormattingLocale } from '@spliit/domain'
 
 export function LocaleSwitcher() {
   const locale = useLocale() as Locale
@@ -157,6 +158,7 @@ function LocaleCommand({
     () => getLocalizedLocaleLabels(locale),
     [locale],
   )
+  const formattingLocale = resolveFormattingLocale(locale)
   const groups = useMemo(() => {
     const assigned = new Set<Locale>()
     const takeUnassigned = (options: ReadonlyArray<Locale>) =>
@@ -172,7 +174,9 @@ function LocaleCommand({
       ),
     )
     const popular = takeUnassigned(popularLocales)
-    const collator = new Intl.Collator(locale, { sensitivity: 'base' })
+    const collator = new Intl.Collator(formattingLocale, {
+      sensitivity: 'base',
+    })
     const regions = localeRegionOrder.map((region) => ({
       id: region,
       locales: takeUnassigned(
@@ -185,14 +189,14 @@ function LocaleCommand({
     }))
 
     return { suggested, popular, regions }
-  }, [locale, localizedLabels])
+  }, [formattingLocale, locale, localizedLabels])
 
   const renderItems = (options: ReadonlyArray<Locale>) =>
     options.map((option) => {
       const nativeLabel = localeLabels[option]
       const localizedLabel = localizedLabels[option]
       const showLocalizedLabel =
-        nativeLabel.localeCompare(localizedLabel, locale, {
+        nativeLabel.localeCompare(localizedLabel, formattingLocale, {
           sensitivity: 'base',
         }) !== 0
 

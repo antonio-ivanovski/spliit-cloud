@@ -105,7 +105,7 @@ export function RecurringActionsMenu({
         onClick={() => setOpen(true)}
         aria-haspopup="dialog"
       >
-        <MoreHorizontal className="mr-2 h-4 w-4" aria-hidden="true" />
+        <MoreHorizontal className="me-2 h-4 w-4" aria-hidden="true" />
         {t('actions')}
       </Button>
       <ResponsiveDialogContent className="max-w-md">
@@ -196,7 +196,7 @@ export function RecurringActionsMenu({
                 className="w-full justify-start text-destructive hover:text-destructive"
                 onClick={() => choose({ kind: 'stop' })}
               >
-                <Repeat2 className="mr-2 h-4 w-4" aria-hidden="true" />
+                <Repeat2 className="me-2 h-4 w-4" aria-hidden="true" />
                 {t('stopRecurrence')}
               </Button>
             )}
@@ -264,7 +264,7 @@ function ActionButton({
       type="button"
       variant="outline"
       className={cn(
-        'h-auto min-h-12 items-start justify-start gap-3 px-3 py-2.5 text-left whitespace-normal',
+        'h-auto min-h-12 items-start justify-start gap-3 px-3 py-2.5 text-start whitespace-normal',
         destructive &&
           'border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive',
       )}

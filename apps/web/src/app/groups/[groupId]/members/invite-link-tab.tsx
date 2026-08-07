@@ -54,7 +54,7 @@ export function InviteLinkTab({
   const roleSelectItems = useRoleSelectItems()
   return (
     <>
-      <p className="border-l-2 border-primary/40 pl-3 text-sm text-muted-foreground">
+      <p className="border-s-2 border-primary/40 ps-3 text-sm text-muted-foreground">
         {t('invite.linkDescription')}
       </p>
       <Form {...linkForm}>
@@ -105,7 +105,7 @@ export function InviteLinkTab({
               </FormItem>
             )}
             <Button type="submit" disabled={isPending}>
-              <Link2 className="mr-2 h-4 w-4" />
+              <Link2 className="me-2 h-4 w-4" />
               {isPending
                 ? t('invite.link.generating')
                 : generatedLink
@@ -121,7 +121,7 @@ export function InviteLinkTab({
           <p className="text-sm text-muted-foreground">
             {t('invite.link.intro', { groupName })}
           </p>
-          <p className="border-l-2 border-amber-500/50 pl-3 text-sm text-amber-900 dark:text-amber-200">
+          <p className="border-s-2 border-amber-500/50 ps-3 text-sm text-amber-900 dark:text-amber-200">
             {t('invite.link.singleUse')}
           </p>
           <GeneratedInviteLinkPanel

@@ -344,7 +344,7 @@ export function ReportPrintPage({ groupId, from, to }: ReportPrintPageProps) {
       <article className="print-report-sheet">
         <div className="print-report-toolbar no-print">
           <Button type="button" onClick={() => window.print()}>
-            <Printer className="mr-2 h-4 w-4" aria-hidden />
+            <Printer className="me-2 h-4 w-4" aria-hidden />
             {t('exportPdfAction')}
           </Button>
         </div>

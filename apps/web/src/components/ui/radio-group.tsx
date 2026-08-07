@@ -42,7 +42,7 @@ const RadioGroupItem = React.forwardRef<HTMLSpanElement, RadioGroupItemProps>(
             ref={ref}
             disabled={disabled}
             className={cn(
-              'group flex w-full items-start gap-3 p-3 text-left data-[unchecked]:cursor-pointer data-[checked]:cursor-default focus:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card disabled:cursor-not-allowed',
+              'group flex w-full items-start gap-3 p-3 text-start data-[unchecked]:cursor-pointer data-[checked]:cursor-default focus:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card disabled:cursor-not-allowed',
               className,
             )}
             {...props}

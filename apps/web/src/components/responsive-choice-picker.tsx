@@ -142,7 +142,7 @@ export function ResponsiveChoicePicker<T extends string>({
             ref={(element) => {
               optionRefs.current[index] = element
             }}
-            className="flex min-h-10 w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm outline-hidden transition-colors hover:bg-accent focus-visible:bg-accent focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+            className="flex min-h-10 w-full items-center gap-3 rounded-md px-3 py-2 text-start text-sm outline-hidden transition-colors hover:bg-accent focus-visible:bg-accent focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
             onFocus={() => setActiveIndex(index)}
             onKeyDown={(event) => {
               const enabled = options
@@ -234,7 +234,7 @@ export function ResponsiveChoicePicker<T extends string>({
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger render={trigger} />
       <DrawerContent className="p-0">
-        <DrawerHeader className="pb-2 text-left">
+        <DrawerHeader className="pb-2 text-start">
           <DrawerTitle>{mobileTitle ?? ariaLabel}</DrawerTitle>
         </DrawerHeader>
         <div className="max-h-[min(60dvh,28rem)] overflow-y-auto px-3 pb-4">

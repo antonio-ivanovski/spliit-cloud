@@ -18,13 +18,13 @@ export function AmountInput({
       <Input
         {...props}
         className={cn(
-          currency ? 'pr-10' : 'pr-3',
-          'text-right tabular-nums',
+          currency ? 'pe-10' : 'pe-3',
+          'text-end tabular-nums',
           className,
         )}
       />
       {currency && (
-        <span className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-[11px] font-medium text-muted-foreground">
+        <span className="pointer-events-none absolute inset-y-0 end-2 flex items-center text-[11px] font-medium text-muted-foreground">
           {currency.symbol}
         </span>
       )}

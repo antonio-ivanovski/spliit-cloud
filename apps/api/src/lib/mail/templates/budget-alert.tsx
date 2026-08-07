@@ -20,6 +20,8 @@ export type BudgetAlertInput = {
   limitStr: string
   /** 0-100, clamped. */
   percentage: number
+  /** Localized display value for the percentage, including its sign. */
+  percentageLabel?: string
   /** Human-readable period range, e.g. "01.07 – 31.07". */
   periodRange: string
   alertType: 'TRENDING_OVER' | 'OVER'
@@ -108,7 +110,8 @@ export function BudgetAlertEmail(
           </tbody>
         </table>
         <Text className="m-0 mt-3 text-[13px] leading-[20px] text-[#64748b]">
-          {barWidth}% used · Period: {props.periodRange}
+          {props.percentageLabel ?? `${barWidth}%`} used · Period:{' '}
+          {props.periodRange}
         </Text>
       </Section>
 

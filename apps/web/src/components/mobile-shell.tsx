@@ -49,7 +49,7 @@ export function MobileAppBar() {
         className="inline-flex size-10 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden"
         aria-label={t('Header.back')}
       >
-        <ArrowLeft className="size-5" aria-hidden="true" />
+        <ArrowLeft className="size-5 rtl:rotate-180" aria-hidden="true" />
       </Link>
       <h1 className="min-w-0 truncate text-base font-semibold">{meta.title}</h1>
     </header>

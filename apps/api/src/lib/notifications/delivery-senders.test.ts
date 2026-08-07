@@ -64,6 +64,38 @@ function buildExpenseCreatedSnapshot() {
   })
 }
 
+function buildLocalizedExpenseCreatedSnapshot() {
+  return deliverySnapshotV1Schema.parse({
+    ...buildExpenseCreatedSnapshot(),
+    recipient: {
+      accountId: 'acct-bob',
+      displayName: 'Bob',
+      locale: 'de-DE',
+      timeZone: 'Europe/Berlin',
+    },
+  })
+}
+
+function buildLocalizedImportSummarySnapshot() {
+  return deliverySnapshotV1Schema.parse({
+    version: 1,
+    kind: 'import_summary',
+    category: NotificationCategory.EXPENSE_CREATED,
+    occurredAt: '2026-07-02T12:00:00Z',
+    actor: { id: 'acct-alice', name: 'Alice' },
+    recipient: {
+      accountId: 'acct-bob',
+      displayName: 'Bob',
+      locale: 'de-DE',
+    },
+    group: { id: 'grp-1', name: 'Trip', type: 'GROUP' },
+    link: 'http://localhost:3000/groups/grp-1',
+    import: { count: 1234, source: 'CSV' },
+    totalAmount: 12345,
+    currencyCode: 'EUR',
+  })
+}
+
 const emailSender = new EmailDeliverySenderImpl()
 const pushSender = new PushDeliverySenderImpl()
 
@@ -100,6 +132,40 @@ describe('EmailDeliverySenderImpl', () => {
     expect(message.headers?.['Message-ID']).toBe('<delivery-1@spliit.app>')
     expect(buildEmailUnsubscribeMetadataMock).not.toHaveBeenCalled()
     expect(message.headers?.['List-Unsubscribe']).toBeUndefined()
+  })
+
+  it('formats amounts and date-only fields using the recipient locale', async () => {
+    prismaMock.account.findUnique.mockResolvedValue({
+      email: 'bob@example.com',
+      emailVerified: true,
+    } as never)
+
+    await emailSender.send({
+      deliveryId: 'delivery-localized',
+      snapshot: buildLocalizedExpenseCreatedSnapshot(),
+      recipientAccountId: 'acct-bob',
+    })
+
+    const message = sendEmailMock.mock.calls[0][0]
+    expect(message.html).toContain('45,00')
+    expect(message.html).toContain('02.07.2026')
+  })
+
+  it('formats notification counts in the HTML template too', async () => {
+    prismaMock.account.findUnique.mockResolvedValue({
+      email: 'bob@example.com',
+      emailVerified: true,
+    } as never)
+
+    await emailSender.send({
+      deliveryId: 'delivery-localized-count',
+      snapshot: buildLocalizedImportSummarySnapshot(),
+      recipientAccountId: 'acct-bob',
+    })
+
+    const message = sendEmailMock.mock.calls[0][0]
+    expect(message.html).toContain('1.234 expenses')
+    expect(message.html).toContain('123,45')
   })
 
   it('throws PermanentDeliveryError when the account is missing', async () => {

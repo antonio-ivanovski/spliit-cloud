@@ -113,7 +113,7 @@ export function ForceArchiveDialog({ groupId, onClose }: Props) {
             {t('archiveWithBalancesView')}
           </Button>
           <Button type="button" disabled={pending} onClick={handleForceArchive}>
-            {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {pending && <Loader2 className="me-2 h-4 w-4 animate-spin" />}
             {t('archiveWithBalancesForce')}
           </Button>
         </ResponsiveDialogFooter>

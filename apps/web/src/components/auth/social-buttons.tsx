@@ -31,7 +31,7 @@ export function SocialButtons({
           onClick={onGoogle}
           disabled={disabled}
         >
-          <img src={googleSvg} alt="" className="mr-2 h-4 w-4" />
+          <img src={googleSvg} alt="" className="me-2 h-4 w-4" />
           {t('signInWithGoogle')}
         </Button>
       )}
@@ -43,7 +43,7 @@ export function SocialButtons({
           onClick={onGithub}
           disabled={disabled}
         >
-          <img src={githubSvg} alt="" className="mr-2 h-4 w-4" />
+          <img src={githubSvg} alt="" className="me-2 h-4 w-4" />
           {t('signInWithGithub')}
         </Button>
       )}

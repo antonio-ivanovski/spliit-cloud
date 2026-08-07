@@ -35,12 +35,12 @@ export const CreateGroup = () => {
         <Button
           variant="ghost"
           size="icon"
-          className="-ml-2"
+          className="-ms-2"
           onClick={handleBack}
           title={tCommon('back')}
           aria-label={tCommon('back')}
         >
-          <ArrowLeft className="h-5 w-5" />
+          <ArrowLeft className="h-5 w-5 rtl:rotate-180" />
         </Button>
         {t('createGroupCard.title')}
       </h1>

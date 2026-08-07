@@ -387,7 +387,7 @@ export function CreateReimbursementModal({
                 disabled={isPending || selectedLegs.length === 0}
                 data-testid="reimbursement-edit"
               >
-                <Pencil className="mr-2 h-4 w-4" />
+                <Pencil className="me-2 h-4 w-4" />
                 {t('edit')}
               </Button>
               <Button
@@ -397,7 +397,7 @@ export function CreateReimbursementModal({
                 disabled={isPending || selectedLegs.length === 0}
                 data-testid="reimbursement-create"
               >
-                <Check className="mr-2 h-4 w-4" />
+                <Check className="me-2 h-4 w-4" />
                 {isPending
                   ? t('creating')
                   : selectedLegs.length === 1

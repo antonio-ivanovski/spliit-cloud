@@ -152,9 +152,9 @@ export function ReceiptScanTrigger({
               title={title}
               aria-label={title}
             >
-              <span className={cn('relative inline-flex', showText && 'mr-2')}>
+              <span className={cn('relative inline-flex', showText && 'me-2')}>
                 <ScanLine className="h-6 w-6 sm:h-4 sm:w-4" />
-                <Sparkles className="absolute -top-[2px] -right-[1px] h-3.5 w-3.5 animate-[pulse_2.4s_ease-in-out_infinite] text-pink-600 drop-shadow-[0_0_4px_rgba(236,72,153,0.75)] sm:h-2.5 sm:w-2.5" />
+                <Sparkles className="absolute -end-[1px] -top-[2px] h-3.5 w-3.5 animate-[pulse_2.4s_ease-in-out_infinite] text-pink-600 drop-shadow-[0_0_4px_rgba(236,72,153,0.75)] sm:h-2.5 sm:w-2.5" />
               </span>
               {showText && (
                 <span
@@ -476,7 +476,7 @@ function ReceiptDialogContent({
           onClick={openFileDialog}
           disabled={pending}
         >
-          <ScanLine className="mr-2 h-4 w-4" />
+          <ScanLine className="me-2 h-4 w-4" />
           {t('Dialog.uploadAndScan')}
         </Button>
       )}
@@ -495,7 +495,7 @@ function ReceiptDialogContent({
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-background/75 p-3 text-center text-xs font-medium text-foreground backdrop-blur-[1px]">
                   <span className="relative inline-flex h-12 w-12 items-center justify-center rounded-full bg-pink-500/15 text-pink-600 shadow-[0_0_24px_rgba(236,72,153,0.55)]">
                     <ScanLine className="h-7 w-7 animate-pulse" />
-                    <Sparkles className="absolute -top-1 -right-1 h-6 w-6 animate-[pulse_1.2s_ease-in-out_infinite] text-pink-600 drop-shadow-[0_0_9px_rgba(236,72,153,1)]" />
+                    <Sparkles className="absolute -end-1 -top-1 h-6 w-6 animate-[pulse_1.2s_ease-in-out_infinite] text-pink-600 drop-shadow-[0_0_9px_rgba(236,72,153,1)]" />
                   </span>
                   <span>{t('Dialog.scanningHint')}</span>
                 </div>
@@ -581,7 +581,7 @@ function ReceiptDialogContent({
                     })
                   }}
                 >
-                  <Check className="mr-2 h-4 w-4" />
+                  <Check className="me-2 h-4 w-4" />
                   {t('Dialog.continue')}
                 </Button>
               </div>

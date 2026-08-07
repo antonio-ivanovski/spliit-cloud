@@ -102,7 +102,8 @@
       "lastMonth": "Last month",
       "earlierThisYear": "Earlier this year",
       "lastYear": "Last year",
-      "older": "Older expenses"
+      "older": "Older expenses",
+      "previousWeek": "Previous week"
     },
     "filters": {
       "mobileTitle": "Filter expenses",
@@ -2778,5 +2779,12 @@
     "bridged": "via {currencies} (<providers></providers>)",
     "fallbackPrefix": "Rates from",
     "fallbackSeparator": " and "
+  },
+  "DatePicker": {
+    "presets": {
+      "yesterday": "Yesterday",
+      "today": "Today",
+      "tomorrow": "Tomorrow"
+    }
   }
 }

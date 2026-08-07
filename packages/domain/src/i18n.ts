@@ -38,3 +38,61 @@ export const locales = Object.keys(localeLabels) as Array<
 export type Locale = keyof typeof localeLabels
 export type Locales = ReadonlyArray<Locale>
 export const defaultLocale: Locale = 'en-US'
+
+/**
+ * Translation bundle identifiers are not always complete BCP 47 locale tags.
+ * Resolve them to the regional locale whose formatting conventions match the
+ * flag/region presented in the locale picker before using Intl APIs.
+ */
+const formattingLocaleByLocale: Partial<Record<Locale, string>> = {
+  id: 'id-ID',
+  ca: 'ca-ES',
+  es: 'es-ES',
+  eu: 'eu-ES',
+  // The generic Portuguese bundle is the Portugal variant; pt-BR is explicit.
+  pt: 'pt-PT',
+  ro: 'ro-RO',
+  fi: 'fi-FI',
+  he: 'he-IL',
+  ko: 'ko-KR',
+  vi: 'vi-VN',
+  // en-GZ is a synthetic translation bundle, not a real territory.
+  'en-GZ': 'en-US',
+}
+
+export function resolveFormattingLocale(locale: string): string {
+  const mapped = formattingLocaleByLocale[locale as Locale]
+  if (mapped) return mapped
+  try {
+    return new Intl.Locale(locale).toString()
+  } catch {
+    return defaultLocale
+  }
+}
+
+/** Returns ISO weekday numbering (Monday = 1, Sunday = 7). */
+export function firstDayOfWeek(locale: string): number {
+  try {
+    const localeInfo = new Intl.Locale(
+      resolveFormattingLocale(locale),
+    ) as Intl.Locale & {
+      getWeekInfo?: () => { firstDay: number }
+    }
+    if (typeof localeInfo.getWeekInfo === 'function') {
+      return localeInfo.getWeekInfo().firstDay
+    }
+  } catch {
+    // Fall through to the default English-US convention.
+  }
+  return 7
+}
+
+export function isRtlLocale(locale: string): boolean {
+  try {
+    return new Set(['ar', 'he', 'ur']).has(
+      new Intl.Locale(resolveFormattingLocale(locale)).language,
+    )
+  } catch {
+    return false
+  }
+}

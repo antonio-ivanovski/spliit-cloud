@@ -366,7 +366,7 @@ export function AiExpensePreview({
                 <AlertTriangle className="size-4" />
                 {t('checkDetails')}
               </div>
-              <ul className="list-disc space-y-1 pl-5">
+              <ul className="list-disc space-y-1 ps-5">
                 {draft.issues.map((issue) => (
                   <li key={issue}>{t(`issues.${issue}`)}</li>
                 ))}
@@ -381,7 +381,7 @@ export function AiExpensePreview({
             className="flex-1 sm:flex-none"
             onClick={navigateToForm}
           >
-            <Pencil className="mr-2 size-4" />
+            <Pencil className="me-2 size-4" />
             {canCreate ? t('edit') : t('completeDetails')}
           </Button>
           {canCreate && (
@@ -391,7 +391,7 @@ export function AiExpensePreview({
               disabled={createMutation.isPending}
               onClick={() => void handleCreate()}
             >
-              <Check className="mr-2 size-4" />
+              <Check className="me-2 size-4" />
               {createMutation.isPending ? t('creating') : t('create')}
             </Button>
           )}

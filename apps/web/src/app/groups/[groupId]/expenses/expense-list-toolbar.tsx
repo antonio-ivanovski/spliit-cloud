@@ -119,7 +119,7 @@ function SortControl() {
                       setMobileOpen(false)
                     }}
                     className={cn(
-                      'flex cursor-pointer items-center gap-2 rounded-md px-3 py-2.5 text-left text-sm hover:bg-muted/40',
+                      'flex cursor-pointer items-center gap-2 rounded-md px-3 py-2.5 text-start text-sm hover:bg-muted/40',
                       isActive && 'bg-muted/60 font-semibold',
                     )}
                   >
@@ -191,13 +191,13 @@ export function ExpenseListToolbar() {
         aria-controls="expense-filters-panel"
         onClick={() => setFiltersOpen((open) => !open)}
       >
-        <Filter className="mr-1 h-3.5 w-3.5" />
+        <Filter className="me-1 h-3.5 w-3.5" />
         {tFilters('button')}
         {activeCount > 0 ? (
           <Badge
             variant="secondary"
             className={cn(
-              'ml-1.5 h-5 min-w-5 rounded-full px-1.5 text-xs font-semibold',
+              'ms-1.5 h-5 min-w-5 rounded-full px-1.5 text-xs font-semibold',
               filtersOpen && 'bg-primary-foreground text-primary',
             )}
           >
@@ -342,14 +342,14 @@ export function ExpenseListFilterChips({ className }: { className?: string }) {
         <Badge
           key={chip.key}
           variant="secondary"
-          className="gap-1 py-0 pr-1 text-xs"
+          className="gap-1 py-0 pe-1 text-xs"
         >
           <span className="max-w-40 truncate">{chip.label}</span>
           <button
             type="button"
             onClick={chip.onRemove}
             aria-label={tFilters('removeFilter')}
-            className="ml-0.5 rounded-sm hover:bg-muted-foreground/20"
+            className="ms-0.5 rounded-sm hover:bg-muted-foreground/20"
           >
             <X className="h-3 w-3" />
           </button>

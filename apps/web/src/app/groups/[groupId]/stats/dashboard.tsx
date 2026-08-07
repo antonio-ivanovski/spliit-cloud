@@ -18,6 +18,7 @@ import { useLocale } from '@/i18n/react'
 import { getCurrencyFromGroup, type Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
+import { resolveFormattingLocale } from '@spliit/domain'
 
 import { useCurrentGroup } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
@@ -47,12 +48,12 @@ function SummaryCard({
     <Card className="relative overflow-hidden border-primary/10 bg-linear-to-br from-primary/7 via-card to-card shadow-none">
       <CardContent className="p-5">
         <Icon
-          className="absolute top-4 right-4 size-8 text-primary/15"
+          className="absolute end-4 top-4 size-8 text-primary/15"
           aria-hidden
         />
         {isPending && (
           <LoaderCircle
-            className="absolute right-4 bottom-4 size-4 animate-spin text-primary/60"
+            className="absolute end-4 bottom-4 size-4 animate-spin text-primary/60"
             aria-hidden
           />
         )}
@@ -89,7 +90,7 @@ export function StatsDashboard() {
   const locale = useLocale()
   const dateRange = useMemo(
     () =>
-      new Intl.DateTimeFormat(locale, {
+      new Intl.DateTimeFormat(resolveFormattingLocale(locale), {
         day: 'numeric',
         month: 'short',
         year: 'numeric',

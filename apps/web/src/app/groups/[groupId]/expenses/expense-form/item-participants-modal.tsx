@@ -17,6 +17,8 @@ import {
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
+import { useLocale } from '@/i18n/react'
+import { localizeCurrencyInput } from '@/lib/currency-input'
 import { calculateShare, percentageToBasisPoints } from '@/lib/totals'
 import { amountAsMinorUnits, cn } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
@@ -96,6 +98,7 @@ export function ItemParticipantsModal(props: {
     savedDefault,
   } = props
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
+  const locale = useLocale()
 
   const [draft, setDraft] = useState<ExpenseFormItemValues>(() => {
     const shouldPopulate =
@@ -221,13 +224,19 @@ export function ItemParticipantsModal(props: {
       .with(
         'BY_AMOUNT',
         () => (value: string) =>
-          enforceCurrencyPattern(value, groupCurrency.decimal_digits),
+          enforceCurrencyPattern(value, groupCurrency.decimal_digits, locale),
       )
-      .with('BY_PERCENTAGE', () => enforcePercentagePattern)
-      .with('BY_SHARES', () => enforceSharePattern)
+      .with(
+        'BY_PERCENTAGE',
+        () => (value: string) => enforcePercentagePattern(value, locale),
+      )
+      .with(
+        'BY_SHARES',
+        () => (value: string) => enforceSharePattern(value, locale),
+      )
       .otherwise(
         () => (value: string) =>
-          enforceCurrencyPattern(value, groupCurrency.decimal_digits),
+          enforceCurrencyPattern(value, groupCurrency.decimal_digits, locale),
       )
     const sanitized = sanitizer(rawValue)
     // BY_AMOUNT and BY_SHARES keep the raw sanitized string so
@@ -270,7 +279,7 @@ export function ItemParticipantsModal(props: {
             <Button
               variant="link"
               type="button"
-              className="-my-2 -mr-2"
+              className="-my-2 -me-2"
               disabled={readOnly}
               onClick={handleResetDistribution}
             >
@@ -279,7 +288,7 @@ export function ItemParticipantsModal(props: {
             <Button
               variant="link"
               type="button"
-              className="-my-2 -mr-2"
+              className="-my-2 -me-2"
               disabled={readOnly}
               onClick={handleSelectAll}
             >
@@ -386,12 +395,15 @@ export function ItemParticipantsModal(props: {
                     <div className="relative">
                       <Input
                         className={cn(
-                          '-my-2 w-[72px] shrink-0 px-2 text-right text-base tabular-nums',
-                          mode === 'BY_PERCENTAGE' && 'pr-5',
+                          '-my-2 w-[72px] shrink-0 px-2 text-end text-base tabular-nums',
+                          mode === 'BY_PERCENTAGE' && 'pe-5',
                         )}
                         type="text"
                         disabled={readOnly}
-                        value={String(row?.shares ?? '')}
+                        value={localizeCurrencyInput(
+                          String(row?.shares ?? ''),
+                          locale,
+                        )}
                         onFocus={(event) => event.currentTarget.select()}
                         aria-label={t('items.participantValueLabel', {
                           name: participant.name,
@@ -409,7 +421,7 @@ export function ItemParticipantsModal(props: {
                           .otherwise(() => 10 ** -groupCurrency.decimal_digits)}
                       />
                       {mode === 'BY_PERCENTAGE' && (
-                        <span className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-xs text-muted-foreground">
+                        <span className="pointer-events-none absolute inset-y-0 end-2 flex items-center text-xs text-muted-foreground">
                           %
                         </span>
                       )}

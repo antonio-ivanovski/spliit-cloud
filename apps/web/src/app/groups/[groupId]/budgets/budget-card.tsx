@@ -166,7 +166,7 @@ export function BudgetCard({ budget, groupId, group, compact = false }: Props) {
             </div>
             <div className="flex items-end justify-between gap-2 sm:flex-col sm:items-end sm:gap-1">
               {statusBadge('hidden sm:inline-flex')}
-              <div className="sm:text-right">
+              <div className="sm:text-end">
                 <p className="text-2xl font-semibold tabular-nums">
                   {formatCurrency(currency, period.used, locale)}
                 </p>
@@ -176,7 +176,7 @@ export function BudgetCard({ budget, groupId, group, compact = false }: Props) {
                   })}
                 </p>
               </div>
-              <div className="text-right">
+              <div className="text-end">
                 <p
                   className={cn(
                     'text-sm font-medium tabular-nums',

@@ -101,10 +101,10 @@ export function ParticipantSelector({
       )}
     >
       {mode === 'single' && selected && (
-        <ParticipantAvatar participant={selected} size="xs" className="mr-2" />
+        <ParticipantAvatar participant={selected} size="xs" className="me-2" />
       )}
       <span className="truncate">{triggerLabel}</span>
-      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+      <ChevronsUpDown className="ms-2 h-4 w-4 shrink-0 opacity-50" />
     </Button>
   )
 
@@ -197,7 +197,7 @@ function ParticipantCommand({
                 {mode === 'multi' && (
                   <Check
                     className={cn(
-                      'mr-2 h-4 w-4 shrink-0',
+                      'me-2 h-4 w-4 shrink-0',
                       isSelected ? '' : 'invisible',
                     )}
                   />
@@ -205,11 +205,11 @@ function ParticipantCommand({
                 <ParticipantAvatar
                   participant={participant}
                   size="xs"
-                  className="mr-2 shrink-0"
+                  className="me-2 shrink-0"
                 />
                 <span className="truncate">{participant.name}</span>
                 {participant.pending && (
-                  <span className="ml-auto text-xs text-muted-foreground">
+                  <span className="ms-auto text-xs text-muted-foreground">
                     {t('ExpenseForm.participant.pending')}
                   </span>
                 )}

@@ -156,7 +156,7 @@ export function CurrencySelector({
                       })
                     : (multiPlaceholder ?? 'Select')}
                 </span>
-                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                <ChevronsUpDown className="ms-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             }
           />
@@ -199,7 +199,7 @@ export function CurrencySelector({
               ? `${selectedValues.length} selected`
               : (multiPlaceholder ?? 'Select')}
           </span>
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <ChevronsUpDown className="ms-2 h-4 w-4 shrink-0 opacity-50" />
         </PopoverTrigger>
         <PopoverContent className="p-0" align="start">
           {command}
@@ -334,7 +334,7 @@ function CurrencyCommand({
         {mode === 'multi' && (
           <Check
             className={cn(
-              'mr-2 h-4 w-4 shrink-0',
+              'me-2 h-4 w-4 shrink-0',
               selectedValues.includes(currency.code) ? '' : 'invisible',
             )}
           />
@@ -383,7 +383,7 @@ const CurrencyButton = forwardRef<HTMLButtonElement, CurrencyButtonProps>(
     }: ButtonProps & CurrencyButtonProps,
     ref,
   ) => {
-    const iconClassName = 'ml-2 h-4 w-4 shrink-0 opacity-50'
+    const iconClassName = 'ms-2 h-4 w-4 shrink-0 opacity-50'
     return (
       <Button
         variant="outline"
@@ -406,7 +406,7 @@ const CurrencyButton = forwardRef<HTMLButtonElement, CurrencyButtonProps>(
       >
         <span
           className={
-            compact ? 'text-left' : 'min-w-0 flex-1 overflow-hidden text-left'
+            compact ? 'text-start' : 'min-w-0 flex-1 overflow-hidden text-start'
           }
         >
           <CurrencyLabel currency={currency} compact={compact} />

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useLocale } from '@/i18n/react'
 import type { Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
+import { resolveFormattingLocale } from '@spliit/domain'
 
 import { CategoryIcon } from '../expenses/category-icon'
 import {
@@ -21,7 +22,7 @@ type Props = {
 function usePercentFormatter(locale: string) {
   return useMemo(
     () =>
-      new Intl.NumberFormat(locale, {
+      new Intl.NumberFormat(resolveFormattingLocale(locale), {
         style: 'percent',
         maximumFractionDigits: 0,
       }),
@@ -78,7 +79,7 @@ export function CategoryBreakdown({ data, currency }: Props) {
                   }}
                 />
               </div>
-              <span className="w-9 text-right text-xs text-muted-foreground tabular-nums">
+              <span className="w-9 text-end text-xs text-muted-foreground tabular-nums">
                 {percentFormatter.format(category.percentage)}
               </span>
             </div>

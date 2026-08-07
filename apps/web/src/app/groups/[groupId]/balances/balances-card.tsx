@@ -227,7 +227,7 @@ export function SettlementSection({
             {settled.map((participant) => (
               <div
                 key={participant.id}
-                className="flex items-center gap-2 rounded-full border border-border/70 bg-muted/30 py-1 pr-3 pl-1 text-xs text-muted-foreground"
+                className="flex items-center gap-2 rounded-full border border-border/70 bg-muted/30 py-1 ps-1 pe-3 text-xs text-muted-foreground"
               >
                 <SettlementAvatar
                   members={[participant]}

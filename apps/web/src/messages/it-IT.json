@@ -90,7 +90,8 @@
       "lastMonth": "Ultimo mese",
       "earlierThisYear": "All'inizio di quest'anno",
       "lastYear": "Ultimo anno",
-      "older": "Più vecchio"
+      "older": "Più vecchio",
+      "previousWeek": "La settimana scorsa"
     },
     "export": "Esporta",
     "filters": {
@@ -2724,5 +2725,12 @@
     },
     "fallbackPrefix": "Tassi di cambio da",
     "fallbackSeparator": " e "
+  },
+  "DatePicker": {
+    "presets": {
+      "yesterday": "Ieri",
+      "today": "Oggi",
+      "tomorrow": "Domani"
+    }
   }
 }

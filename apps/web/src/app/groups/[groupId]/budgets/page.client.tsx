@@ -28,11 +28,11 @@ function CreateBudgetCard({ onClick }: { onClick: () => void }) {
       type="button"
       onClick={onClick}
       aria-label={t('createCard.title')}
-      className="motion-surface motion-surface-interactive relative min-h-[5.5rem] w-full overflow-hidden rounded-lg border border-primary/25 bg-linear-to-br from-primary/8 via-background to-background text-left text-base shadow-[0_1px_0_0_hsl(var(--primary)/0.08)] outline-hidden transition-colors hover:border-primary/35 hover:bg-primary/5 focus-visible:bg-primary/5 focus-visible:ring-2 focus-visible:ring-ring"
+      className="motion-surface motion-surface-interactive relative min-h-[5.5rem] w-full overflow-hidden rounded-lg border border-primary/25 bg-linear-to-br from-primary/8 via-background to-background text-start text-base shadow-[0_1px_0_0_hsl(var(--primary)/0.08)] outline-hidden transition-colors hover:border-primary/35 hover:bg-primary/5 focus-visible:bg-primary/5 focus-visible:ring-2 focus-visible:ring-ring"
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-12 -right-10 h-28 w-28 rounded-full bg-primary/10 blur-2xl"
+        className="pointer-events-none absolute -end-10 -top-12 h-28 w-28 rounded-full bg-primary/10 blur-2xl"
       />
       <div className="relative flex min-h-[5.5rem] min-w-0 items-center gap-3 px-3 py-3 text-foreground">
         <span
@@ -92,7 +92,7 @@ export default function GroupBudgetsPageClient() {
             size="sm"
             onClick={() => void budgetsQuery.refetch()}
           >
-            <RefreshCw className="mr-2 size-4" aria-hidden="true" />
+            <RefreshCw className="me-2 size-4" aria-hidden="true" />
             {t('retry')}
           </Button>
         </CardContent>

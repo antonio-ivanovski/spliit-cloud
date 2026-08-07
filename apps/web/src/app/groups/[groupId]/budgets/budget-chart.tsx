@@ -17,6 +17,7 @@ import type { BudgetDetail } from '@/app/groups/[groupId]/budgets/budget-types'
 import { useLocale } from '@/i18n/react'
 import type { Currency } from '@/lib/currency'
 import { amountAsDecimal, formatCurrency, formatDateOnly } from '@/lib/utils'
+import { resolveFormattingLocale } from '@spliit/domain'
 
 type Props = {
   budget: BudgetDetail
@@ -53,7 +54,7 @@ function areaColor(trendStatus: 'ON_TRACK' | 'TRENDING_OVER' | 'OVER') {
 }
 
 function getCompactCurrencyFormat(locale: string, code: string) {
-  return new Intl.NumberFormat(locale, {
+  return new Intl.NumberFormat(resolveFormattingLocale(locale), {
     style: 'currency',
     currency: code,
     notation: 'compact',
@@ -64,7 +65,7 @@ function getCompactCurrencyFormat(locale: string, code: string) {
 function compactCurrency(currency: Currency, cents: number, locale: string) {
   const value = amountAsDecimal(cents, currency)
   if (!currency.code) {
-    return `${new Intl.NumberFormat(locale, { notation: 'compact', maximumFractionDigits: 1 }).format(value)} ${currency.symbol}`
+    return `${new Intl.NumberFormat(resolveFormattingLocale(locale), { notation: 'compact', maximumFractionDigits: 1 }).format(value)} ${currency.symbol}`
   }
   return getCompactCurrencyFormat(locale, currency.code).format(value)
 }

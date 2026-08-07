@@ -24,6 +24,7 @@
  */
 
 import type { SplitMode } from './enums'
+import { resolveFormattingLocale } from './i18n'
 
 export const SHARE_SCALE = 100
 export const SHARE_DECIMAL_PLACES = 2
@@ -93,11 +94,14 @@ export function isValidDisplayShare(value: unknown): value is number {
  * integer wire format for serialization.
  */
 export function formatDisplayShares(value: number, locale?: string): string {
-  return new Intl.NumberFormat(locale, {
-    maximumFractionDigits: SHARE_DECIMAL_PLACES,
-    minimumFractionDigits: 0,
-    useGrouping: false,
-  }).format(value)
+  return new Intl.NumberFormat(
+    locale ? resolveFormattingLocale(locale) : undefined,
+    {
+      maximumFractionDigits: SHARE_DECIMAL_PLACES,
+      minimumFractionDigits: 0,
+      useGrouping: false,
+    },
+  ).format(value)
 }
 
 export type ShareErrorKey = 'sharesInvalid' | 'noZeroShares' | 'invalidNumber'

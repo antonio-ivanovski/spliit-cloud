@@ -61,7 +61,7 @@ export function ExpenseSplitBars({
             {rows.map((row, index) => (
               <span
                 key={row.id}
-                className={`@container relative h-2.5 min-w-0 ${COLORS[index % COLORS.length]} first:rounded-l-full last:rounded-r-full`}
+                className={`@container relative h-2.5 min-w-0 ${COLORS[index % COLORS.length]} first:rounded-s-full last:rounded-e-full`}
                 style={{
                   width: `${total > 0 ? (Math.abs(row.amount) / total) * 100 : 0}%`,
                 }}

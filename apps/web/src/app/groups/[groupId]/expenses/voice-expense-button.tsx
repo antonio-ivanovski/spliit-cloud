@@ -301,7 +301,7 @@ export function VoiceExpenseButton({
               title={t('voiceAction')}
               aria-label={t('voiceAction')}
             >
-              <Mic className={showText ? 'mr-2 size-5 sm:size-4' : 'size-6'} />
+              <Mic className={showText ? 'me-2 size-5 sm:size-4' : 'size-6'} />
               {showText && (
                 <span
                   className={
@@ -324,7 +324,7 @@ export function VoiceExpenseButton({
                 setResult(null)
               }}
             >
-              <RotateCcw className="mr-2 size-4" />
+              <RotateCcw className="me-2 size-4" />
               {t('recordAgain')}
             </Button>
           ) : null
@@ -352,7 +352,7 @@ export function VoiceExpenseButton({
                   type="button"
                   onClick={() => recorderRef.current?.recorder.stop()}
                 >
-                  <Square className="mr-2 size-4" />
+                  <Square className="me-2 size-4" />
                   {t('stop')}
                 </Button>
               ) : (
@@ -362,9 +362,9 @@ export function VoiceExpenseButton({
                   disabled={processing}
                 >
                   {processing ? (
-                    <Loader2 className="mr-2 size-4 animate-spin" />
+                    <Loader2 className="me-2 size-4 animate-spin" />
                   ) : (
-                    <Mic className="mr-2 size-4" />
+                    <Mic className="me-2 size-4" />
                   )}
                   {processing ? t('processing') : t('record')}
                 </Button>

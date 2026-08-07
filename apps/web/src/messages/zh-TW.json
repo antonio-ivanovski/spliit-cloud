@@ -90,7 +90,8 @@
       "lastMonth": "上個月",
       "earlierThisYear": "今年稍早",
       "lastYear": "去年",
-      "older": "較早的支出"
+      "older": "較早的支出",
+      "previousWeek": "上週"
     },
     "export": "匯出",
     "filters": {
@@ -2689,5 +2690,12 @@
     },
     "fallbackPrefix": "匯率來源：",
     "fallbackSeparator": " 和 "
+  },
+  "DatePicker": {
+    "presets": {
+      "yesterday": "昨天",
+      "today": "今天",
+      "tomorrow": "明天"
+    }
   }
 }

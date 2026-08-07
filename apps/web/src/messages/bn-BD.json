@@ -1393,7 +1393,8 @@
       "lastMonth": "গত মাসে",
       "earlierThisYear": "এই বছরের শুরুতে",
       "lastYear": "গত বছরে",
-      "older": "পুরনো খরচ"
+      "older": "পুরনো খরচ",
+      "previousWeek": "গত সপ্তাহে"
     },
     "filters": {
       "mobileTitle": "খরচ ফিল্টার",
@@ -2702,5 +2703,12 @@
     },
     "fallbackPrefix": "হারের উৎস",
     "fallbackSeparator": " এবং "
+  },
+  "DatePicker": {
+    "presets": {
+      "yesterday": "গতকাল",
+      "today": "আজ",
+      "tomorrow": "আগামীকাল"
+    }
   }
 }

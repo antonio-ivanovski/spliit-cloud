@@ -1393,7 +1393,8 @@
       "lastMonth": "پچھلے مہینے",
       "earlierThisYear": "اس سال کے شروع میں",
       "lastYear": "پچھلے سال",
-      "older": "پرانے اخراجات"
+      "older": "پرانے اخراجات",
+      "previousWeek": "پچھلے ہفتے"
     },
     "filters": {
       "mobileTitle": "اخراجات فلٹر کریں",
@@ -2703,5 +2704,12 @@
     },
     "fallbackPrefix": "شرح کا ذریعہ",
     "fallbackSeparator": " اور "
+  },
+  "DatePicker": {
+    "presets": {
+      "yesterday": "گزشتہ روز",
+      "today": "آج",
+      "tomorrow": "کل"
+    }
   }
 }

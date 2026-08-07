@@ -50,13 +50,13 @@ export function RecurringBadge({
           'border-emerald-500/50 text-emerald-700 dark:text-emerald-400',
       )}
     >
-      <Repeat2 className="mr-1 h-3 w-3" aria-hidden="true" />
-      {isActive && <Play className="mr-0.5 h-2.5 w-2.5" aria-hidden="true" />}
+      <Repeat2 className="me-1 h-3 w-3" aria-hidden="true" />
+      {isActive && <Play className="me-0.5 h-2.5 w-2.5" aria-hidden="true" />}
       {status === 'CANCELLED' && (
-        <X className="mr-0.5 h-2.5 w-2.5" aria-hidden="true" />
+        <X className="me-0.5 h-2.5 w-2.5" aria-hidden="true" />
       )}
       {status === 'COMPLETED' && (
-        <Check className="mr-0.5 h-2.5 w-2.5" aria-hidden="true" />
+        <Check className="me-0.5 h-2.5 w-2.5" aria-hidden="true" />
       )}
       <span className="sr-only">{t('badge')}: </span>
       {label}
@@ -83,7 +83,7 @@ export function SeriesControls({
   return (
     <div className="flex flex-wrap items-center gap-2 border-t pt-4">
       <RecurringBadge status={series.status} />
-      <span className="mr-auto text-sm text-muted-foreground">
+      <span className="me-auto text-sm text-muted-foreground">
         {t('occurrence', { sequence: series.sequence })}
       </span>
       {series.previousExpenseId ? (
@@ -92,12 +92,18 @@ export function SeriesControls({
           size="sm"
           render={<Link href={expenseHref(series.previousExpenseId)} />}
         >
-          <ChevronLeft className="mr-1 h-4 w-4" aria-hidden="true" />
+          <ChevronLeft
+            className="me-1 h-4 w-4 rtl:rotate-180"
+            aria-hidden="true"
+          />
           {t('previous')}
         </Button>
       ) : (
         <Button variant="outline" size="sm" disabled aria-label={t('previous')}>
-          <ChevronLeft className="mr-1 h-4 w-4" aria-hidden="true" />
+          <ChevronLeft
+            className="me-1 h-4 w-4 rtl:rotate-180"
+            aria-hidden="true"
+          />
           {t('previous')}
         </Button>
       )}
@@ -108,12 +114,18 @@ export function SeriesControls({
           render={<Link href={expenseHref(series.nextExpenseId)} />}
         >
           {t('next')}
-          <ChevronRight className="ml-1 h-4 w-4" aria-hidden="true" />
+          <ChevronRight
+            className="ms-1 h-4 w-4 rtl:rotate-180"
+            aria-hidden="true"
+          />
         </Button>
       ) : (
         <Button variant="outline" size="sm" disabled aria-label={t('next')}>
           {t('next')}
-          <ChevronRight className="ml-1 h-4 w-4" aria-hidden="true" />
+          <ChevronRight
+            className="ms-1 h-4 w-4 rtl:rotate-180"
+            aria-hidden="true"
+          />
         </Button>
       )}
       {onViewSeries ? (

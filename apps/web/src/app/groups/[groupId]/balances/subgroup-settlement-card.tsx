@@ -311,7 +311,7 @@ export function SubgroupSettlementCard({
                               className="h-auto shrink-0 p-0 text-xs"
                               onClick={() => setPendingLeg(leg)}
                             >
-                              <Check className="mr-1 size-3.5" />
+                              <Check className="me-1 size-3.5" />
                               {t('subgroups.settle')}
                             </Button>
                           }

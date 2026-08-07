@@ -171,12 +171,12 @@ function AccountSettingsContent() {
         <Button
           variant="ghost"
           size="icon"
-          className="-ml-2"
+          className="-ms-2"
           onClick={handleBack}
           title={tCommon('back')}
           aria-label={tCommon('back')}
         >
-          <ArrowLeft className="h-5 w-5" />
+          <ArrowLeft className="h-5 w-5 rtl:rotate-180" />
         </Button>
         {t('title')}
       </h1>
@@ -198,7 +198,7 @@ function AccountSettingsContent() {
                 disabled={submitting || updateProfile.isPending || !isDirty}
               >
                 {(submitting || updateProfile.isPending) && (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="me-2 h-4 w-4 animate-spin" />
                 )}
                 {submitting || updateProfile.isPending
                   ? t('saving')

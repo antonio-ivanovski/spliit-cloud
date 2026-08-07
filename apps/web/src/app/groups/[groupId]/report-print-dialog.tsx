@@ -3,7 +3,7 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { DateInput } from '@/components/ui/date-input'
 import { Label } from '@/components/ui/label'
 import {
   ResponsiveDialog,
@@ -113,9 +113,9 @@ export function ReportPrintDialog({
                 <Label htmlFor="report-print-from">
                   {t('exportPdfFromLabel')}
                 </Label>
-                <Input
+                <DateInput
                   id="report-print-from"
-                  type="date"
+                  pickerTitle={t('exportPdfFromLabel')}
                   required
                   value={from}
                   max={to || undefined}
@@ -123,7 +123,7 @@ export function ReportPrintDialog({
                   aria-describedby={
                     rangeInvalid ? 'report-print-range-error' : undefined
                   }
-                  onChange={(event) => setFrom(event.target.value)}
+                  onValueChange={setFrom}
                   className={cn(
                     'date-base',
                     rangeInvalid && 'border-destructive',
@@ -132,9 +132,9 @@ export function ReportPrintDialog({
               </div>
               <div className="flex flex-col gap-2">
                 <Label htmlFor="report-print-to">{t('exportPdfToLabel')}</Label>
-                <Input
+                <DateInput
                   id="report-print-to"
-                  type="date"
+                  pickerTitle={t('exportPdfToLabel')}
                   required
                   value={to}
                   min={from || undefined}
@@ -142,7 +142,7 @@ export function ReportPrintDialog({
                   aria-describedby={
                     rangeInvalid ? 'report-print-range-error' : undefined
                   }
-                  onChange={(event) => setTo(event.target.value)}
+                  onValueChange={setTo}
                   className={cn(
                     'date-base',
                     rangeInvalid && 'border-destructive',
@@ -190,7 +190,7 @@ export function ReportPrintDialog({
             form="report-print-form"
             disabled={submitDisabled}
           >
-            {opening && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {opening && <Loader2 className="me-2 h-4 w-4 animate-spin" />}
             {opening ? t('exportPdfGenerating') : t('exportPdfGenerate')}
           </Button>
         </ResponsiveDialogFooter>

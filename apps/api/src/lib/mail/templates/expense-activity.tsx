@@ -53,6 +53,8 @@ export type ExpenseImportSummaryInput = {
   groupDisplayName: string
   actorName: string
   count: number
+  /** Localized display value for the count; falls back for legacy callers. */
+  countLabel?: string
   sourceProvider: string | null
   totalStr: string | null
   groupUrl: string
@@ -67,7 +69,14 @@ export type ExpenseCategoryBulkSummaryInput = {
   groupDisplayName: string
   actorName: string
   count: number
+  /** Localized display value for the count; falls back for legacy callers. */
+  countLabel?: string
   distinctCategories: number | null
+  /**
+   * Localized display value for the category count; falls back for legacy
+   * callers.
+   */
+  distinctCategoriesLabel?: string | null
   groupUrl: string
   unsubscribeUrl?: string
 }
@@ -81,6 +90,8 @@ export type RecurringExpenseSummaryInput = {
   actorName: string
   title: string | null
   count: number
+  /** Localized display value for the count; falls back for legacy callers. */
+  countLabel?: string
   startDate: string
   endDate: string
   groupUrl: string
@@ -219,9 +230,10 @@ export function ExpenseCommentEmail(
 export function ExpenseImportSummaryEmail(
   props: Omit<ExpenseImportSummaryInput, 'kind' | 'subject' | 'text'>,
 ): ReactElement {
+  const countLabel = props.countLabel ?? String(props.count)
   const noun = props.count === 1 ? 'expense' : 'expenses'
-  const preview = `${props.count} ${noun} imported into ${props.groupDisplayName}`
-  const heading = `${props.count} ${noun[0].toUpperCase()}${noun.slice(1)} imported`
+  const preview = `${countLabel} ${noun} imported into ${props.groupDisplayName}`
+  const heading = `${countLabel} ${noun[0].toUpperCase()}${noun.slice(1)} imported`
   return (
     <EmailLayout
       preview={preview}
@@ -237,7 +249,7 @@ export function ExpenseImportSummaryEmail(
       <Text className="m-0 mb-4 text-[15px] leading-[22px] text-[#0f172a]">
         <strong>{props.actorName}</strong> imported{' '}
         <strong>
-          {props.count} {noun}
+          {countLabel} {noun}
         </strong>
         {props.sourceProvider ? <> from {props.sourceProvider}</> : null} in{' '}
         <strong>{props.groupDisplayName}</strong>
@@ -261,6 +273,10 @@ export function ExpenseImportSummaryEmail(
 export function ExpenseCategoryBulkSummaryEmail(
   props: Omit<ExpenseCategoryBulkSummaryInput, 'kind' | 'subject' | 'text'>,
 ): ReactElement {
+  const countLabel = props.countLabel ?? String(props.count)
+  const distinctCategoriesLabel =
+    props.distinctCategoriesLabel ??
+    (props.distinctCategories == null ? null : String(props.distinctCategories))
   const noun = props.count === 1 ? 'expense' : 'expenses'
   return (
     <EmailLayout
@@ -277,11 +293,11 @@ export function ExpenseCategoryBulkSummaryEmail(
       <Text className="m-0 mb-4 text-[15px] leading-[22px] text-[#0f172a]">
         <strong>{props.actorName}</strong> updated categories for{' '}
         <strong>
-          {props.count} {noun}
+          {countLabel} {noun}
         </strong>{' '}
         in <strong>{props.groupDisplayName}</strong>
         {props.distinctCategories
-          ? ` across ${props.distinctCategories} categories`
+          ? ` across ${distinctCategoriesLabel} categories`
           : null}
         .
       </Text>
@@ -303,6 +319,7 @@ export function ExpenseCategoryBulkSummaryEmail(
 export function RecurringExpenseSummaryEmail(
   props: Omit<RecurringExpenseSummaryInput, 'kind' | 'subject' | 'text'>,
 ): ReactElement {
+  const countLabel = props.countLabel ?? String(props.count)
   const operation = props.operation ?? 'create'
   const noun = props.count === 1 ? 'expense' : 'expenses'
   const title = props.title ? ` "${props.title}"` : ''
@@ -320,10 +337,10 @@ export function RecurringExpenseSummaryEmail(
         : 'Recurring expenses caught up'
   const preview =
     operation === 'update'
-      ? `${props.count} recurring ${noun} updated in ${props.groupDisplayName}`
+      ? `${countLabel} recurring ${noun} updated in ${props.groupDisplayName}`
       : operation === 'delete'
-        ? `${props.count} recurring ${noun} removed from ${props.groupDisplayName}`
-        : `${props.count} recurring ${noun} caught up in ${props.groupDisplayName}`
+        ? `${countLabel} recurring ${noun} removed from ${props.groupDisplayName}`
+        : `${countLabel} recurring ${noun} caught up in ${props.groupDisplayName}`
   const recurrenceDesc = props.recurrence ? ` (${props.recurrence})` : ''
   const stoppedSuffix = props.stopped ? ' and the recurrence was stopped' : ''
   return (
@@ -341,7 +358,7 @@ export function RecurringExpenseSummaryEmail(
       <Text className="m-0 mb-4 text-[15px] leading-[22px] text-[#0f172a]">
         <strong>{props.actorName}</strong> {verb}{' '}
         <strong>
-          {props.count} recurring {noun}
+          {countLabel} recurring {noun}
         </strong>
         {title}
         {recurrenceDesc} in <strong>{props.groupDisplayName}</strong> for{' '}

@@ -237,7 +237,7 @@ export default function BalancesAndReimbursements() {
       </div>
       {currencyDisplay === 'original' && (
         <p
-          className="mb-3 border-l-2 border-primary/40 pl-3 text-sm text-muted-foreground sm:mb-4"
+          className="mb-3 border-s-2 border-primary/40 ps-3 text-sm text-muted-foreground sm:mb-4"
           role="note"
         >
           {t('currencyDisplay.originalNote')}

@@ -1393,7 +1393,8 @@
       "lastMonth": "Förra månaden",
       "earlierThisYear": "Tidigare i år",
       "lastYear": "Förra året",
-      "older": "Äldre utgifter"
+      "older": "Äldre utgifter",
+      "previousWeek": "Förra veckan"
     },
     "filters": {
       "mobileTitle": "Filtrera utgifter",
@@ -2702,5 +2703,12 @@
     },
     "fallbackPrefix": "Kurser från",
     "fallbackSeparator": " och "
+  },
+  "DatePicker": {
+    "presets": {
+      "yesterday": "Igår",
+      "today": "Idag",
+      "tomorrow": "Imorgon"
+    }
   }
 }

@@ -154,7 +154,7 @@ export function ConfirmStep({
                 <span>
                   {t('Groups.Import.Confirm.recurringSchedulesLabel')}
                 </span>
-                <ul className="ml-4 list-disc space-y-1 text-muted-foreground">
+                <ul className="ms-4 list-disc space-y-1 text-muted-foreground">
                   {recurringSchedules.map((schedule, index) => (
                     <li
                       key={`${index}:${schedule.title}:${schedule.recurrenceRule}`}
@@ -202,7 +202,7 @@ export function ConfirmStep({
                           target,
                         })}
                       </span>
-                      <span className="ml-auto rounded-full bg-muted px-2 py-0.5 font-mono text-[10px] tracking-wider text-muted-foreground uppercase">
+                      <span className="ms-auto rounded-full bg-muted px-2 py-0.5 font-mono text-[10px] tracking-wider text-muted-foreground uppercase">
                         {isPerDate
                           ? t('Groups.Import.Confirm.conversionPerDate')
                           : t('Groups.Import.Confirm.conversionFixed')}
@@ -210,7 +210,7 @@ export function ConfirmStep({
                     </div>
                     {isPerDate ? (
                       rows.length > 0 ? (
-                        <ul className="ml-6 flex flex-col gap-1 text-xs">
+                        <ul className="ms-6 flex flex-col gap-1 text-xs">
                           {rows.map((row) => (
                             <li
                               key={row.date}
@@ -233,10 +233,10 @@ export function ConfirmStep({
                           ))}
                         </ul>
                       ) : (
-                        <p className="ml-6 text-xs text-muted-foreground">—</p>
+                        <p className="ms-6 text-xs text-muted-foreground">—</p>
                       )
                     ) : rows.length > 0 ? (
-                      <p className="ml-6 font-mono text-xs text-foreground tabular-nums">
+                      <p className="ms-6 font-mono text-xs text-foreground tabular-nums">
                         {t('Groups.Import.CurrencyConversion.fixedRateRow', {
                           source: base,
                           rate: formatRate(rows[0].rate),
@@ -244,7 +244,7 @@ export function ConfirmStep({
                         })}
                       </p>
                     ) : (
-                      <p className="ml-6 text-xs text-muted-foreground">—</p>
+                      <p className="ms-6 text-xs text-muted-foreground">—</p>
                     )}
                   </li>
                 )

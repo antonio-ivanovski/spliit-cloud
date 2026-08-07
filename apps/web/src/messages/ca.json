@@ -90,7 +90,8 @@
       "lastMonth": "El mes anterior",
       "earlierThisYear": "A inicis d'aquest any",
       "lastYear": "L'any passat",
-      "older": "Despeses anteriors"
+      "older": "Despeses anteriors",
+      "previousWeek": "La setmana passada"
     },
     "export": "Exportar",
     "filters": {
@@ -2724,5 +2725,12 @@
     "bridged": "a través de {currencies} (<providers></providers>)",
     "fallbackPrefix": "Tipus de canvi de",
     "fallbackSeparator": " i "
+  },
+  "DatePicker": {
+    "presets": {
+      "yesterday": "Ahir",
+      "today": "Avui",
+      "tomorrow": "Demà"
+    }
   }
 }

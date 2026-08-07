@@ -41,7 +41,7 @@ export function OAuthShell({
               </p>
             </div>
           </div>
-          <div className="hidden max-w-xs min-w-0 items-center gap-2 border-l border-primary/15 pl-4 text-xs leading-5 text-muted-foreground sm:flex">
+          <div className="hidden max-w-xs min-w-0 items-center gap-2 border-s border-primary/15 ps-4 text-xs leading-5 text-muted-foreground sm:flex">
             <ShieldCheck
               className="size-4 shrink-0 text-primary"
               aria-hidden="true"

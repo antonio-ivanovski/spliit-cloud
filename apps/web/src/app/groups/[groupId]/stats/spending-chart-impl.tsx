@@ -2,7 +2,7 @@ import { MoreHorizontal } from 'lucide-react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { CategoryId } from '@spliit/domain'
+import { resolveFormattingLocale, type CategoryId } from '@spliit/domain'
 // react-doctor-disable-next-line react-doctor/prefer-dynamic-import -- file is lazy-loaded via React.lazy() from spending-chart.tsx
 import {
   Bar,
@@ -69,7 +69,7 @@ const currencyNumberFormatCache = new Map<string, Intl.NumberFormat>()
 function getCompactNumberFormat(locale: string) {
   let fmt = compactNumberFormatCache.get(locale)
   if (!fmt) {
-    fmt = new Intl.NumberFormat(locale, {
+    fmt = new Intl.NumberFormat(resolveFormattingLocale(locale), {
       notation: 'compact',
       maximumFractionDigits: 1,
     })
@@ -82,7 +82,7 @@ function getCurrencyNumberFormat(locale: string, currencyCode: string) {
   const key = `${locale}:${currencyCode}`
   let fmt = currencyNumberFormatCache.get(key)
   if (!fmt) {
-    fmt = new Intl.NumberFormat(locale, {
+    fmt = new Intl.NumberFormat(resolveFormattingLocale(locale), {
       style: 'currency',
       currency: currencyCode,
       notation: 'compact',

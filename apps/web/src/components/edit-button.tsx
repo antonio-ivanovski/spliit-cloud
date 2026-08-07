@@ -30,7 +30,7 @@ export function EditButton({
       onClick={onClick}
       className={cn('flex-1 sm:flex-none', className)}
     >
-      <Pencil className="mr-2 h-4 w-4" aria-hidden="true" />
+      <Pencil className="me-2 h-4 w-4" aria-hidden="true" />
       {label}
     </Button>
   )

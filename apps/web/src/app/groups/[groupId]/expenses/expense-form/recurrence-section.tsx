@@ -17,6 +17,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible'
+import { DateInput } from '@/components/ui/date-input'
 import {
   FormControl,
   FormField,
@@ -424,7 +425,7 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
                             type="button"
                             variant="ghost"
                             size="icon"
-                            className="h-full w-10 shrink-0 rounded-none border-r"
+                            className="h-full w-10 shrink-0 rounded-none border-e"
                             aria-label={t('recurrence.decreaseOccurrences')}
                             disabled={readOnly || end.count <= currentSequence}
                             onClick={() =>
@@ -475,7 +476,7 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
                             type="button"
                             variant="ghost"
                             size="icon"
-                            className="h-full w-10 shrink-0 rounded-none border-l"
+                            className="h-full w-10 shrink-0 rounded-none border-s"
                             aria-label={t('recurrence.increaseOccurrences')}
                             disabled={readOnly || end.count >= 9999}
                             onClick={() =>
@@ -530,9 +531,9 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
                         >
                           {t('recurrence.ends.dateInput')}
                         </FormLabel>
-                        <Input
+                        <DateInput
                           id="recurrence-end-date"
-                          type="date"
+                          pickerTitle={t('recurrence.ends.dateInput')}
                           min={
                             expenseDate
                               ? formatDateInputValue(expenseDate)
@@ -554,8 +555,7 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
                               )
                             }
                           }}
-                          onChange={(event) => {
-                            const raw = event.target.value
+                          onValueChange={(raw) => {
                             setEndDateDraft(raw)
                             if (!raw) return
                             const selected = parseDateInputValue(raw)
@@ -593,7 +593,7 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
                     {showPastDateBackfillNote && (
                       <p
                         className={cn(
-                          'mt-4 border-l-2 border-primary/40 pl-3 text-sm text-muted-foreground',
+                          'mt-4 border-s-2 border-primary/40 ps-3 text-sm text-muted-foreground',
                           scheduleChanged && 'mt-3',
                         )}
                         aria-live="polite"

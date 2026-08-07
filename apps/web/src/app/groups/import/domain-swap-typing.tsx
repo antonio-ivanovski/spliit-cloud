@@ -220,7 +220,7 @@ export function DomainSwapTyping() {
         {renderBeforeCursor(beforeCursor, showStrike)}
         <span
           aria-hidden
-          className="ml-px inline-block h-[1.1em] w-[3px] -translate-y-px animate-cursor-blink bg-current align-middle"
+          className="ms-px inline-block h-[1.1em] w-[3px] -translate-y-px animate-cursor-blink bg-current align-middle"
         />
         {afterCursor}
       </span>
