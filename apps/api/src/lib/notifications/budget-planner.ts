@@ -1,5 +1,5 @@
 import type { Prisma } from '@spliit/db'
-import type { BudgetPeriod } from '@spliit/domain'
+import { defaultLocale, type BudgetPeriod } from '@spliit/domain'
 import {
   NotificationSnapshotVersion,
   emailTargetKey,
@@ -19,6 +19,7 @@ import {
 import { randomId } from '../api/shared'
 import { getWebBaseUrl } from '../auth/urls'
 import { resolveNotificationChannelsForIntents } from './coordinator-policy'
+import { formatNotificationAmount } from './format'
 
 export async function planBudgetAlertDeliveries(args: {
   budget: {
@@ -55,7 +56,13 @@ export async function planBudgetAlertDeliveries(args: {
         select: {
           accountId: true,
           status: true,
-          account: { select: { id: true, name: true } },
+          account: {
+            select: {
+              id: true,
+              name: true,
+              preference: { select: { locale: true, timeZone: true } },
+            },
+          },
         },
       },
     },
@@ -99,16 +106,32 @@ export async function planBudgetAlertDeliveries(args: {
   })
   const ids: string[] = []
   const budgetUrl = `${getWebBaseUrl()}/groups/${budget.groupId}/budgets/${budget.id}`
-  const usedLabel = formatBudgetAmount(budget.used, budget.currencyCode)
-  const limitLabel = formatBudgetAmount(budget.amount, budget.currencyCode)
+  const accountById = new Map(
+    rows.flatMap((row) =>
+      row.groupMember?.account
+        ? [[row.groupMember.account.id, row.groupMember.account]]
+        : [],
+    ),
+  )
   for (let index = 0; index < accountIds.length; index++) {
     const accountId = accountIds[index]!
+    const recipientAccount = accountById.get(accountId)
+    const locale = recipientAccount?.preference?.locale ?? defaultLocale
     for (const channel of plans[index]?.channels ?? []) {
       const targets =
         channel === NotificationChannel.PUSH
           ? (pushMap.get(accountId) ?? [])
           : [{ id: null }]
       for (const target of targets) {
+        const usedLabel =
+          formatNotificationAmount(budget.used, budget.currencyCode, locale) ??
+          String(budget.used)
+        const limitLabel =
+          formatNotificationAmount(
+            budget.amount,
+            budget.currencyCode,
+            locale,
+          ) ?? String(budget.amount)
         const targetKey =
           channel === NotificationChannel.PUSH
             ? pushTargetKey(target.id!)
@@ -121,9 +144,11 @@ export async function planBudgetAlertDeliveries(args: {
           actor: null,
           recipient: {
             accountId,
-            displayName:
-              rows.find((row) => row.groupMember?.accountId === accountId)
-                ?.groupMember?.account.name ?? '',
+            displayName: recipientAccount?.name ?? '',
+            locale,
+            ...(recipientAccount?.preference?.timeZone
+              ? { timeZone: recipientAccount.preference.timeZone }
+              : {}),
           },
           unsubscribeCategory: NotificationCategory.BUDGET_ALERT,
           push:
@@ -189,12 +214,4 @@ export async function planBudgetAlertDeliveries(args: {
       { db: bossTransactionDb(tx) },
     )
   return ids
-}
-
-function formatBudgetAmount(
-  amount: number,
-  currencyCode: string | null,
-): string {
-  const value = (amount / 100).toFixed(2)
-  return currencyCode ? `${currencyCode} ${value}` : value
 }

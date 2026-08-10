@@ -1,13 +1,19 @@
-import dayjs, { type Dayjs } from 'dayjs'
+import type { Dayjs } from 'dayjs'
 import { forwardRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Skeleton } from '@/components/ui/skeleton'
+import {
+  calendarDay,
+  isInCurrentLocaleWeek,
+  isInPreviousLocaleWeek,
+} from '@/lib/calendar'
 import { dateOnlyIso, zonedDateOnlyIso } from '@/lib/utils'
 
 export const EXPENSE_GROUPS = {
   UPCOMING: 'upcoming',
   THIS_WEEK: 'thisWeek',
+  PREVIOUS_WEEK: 'previousWeek',
   EARLIER_THIS_MONTH: 'earlierThisMonth',
   LAST_MONTH: 'lastMonth',
   EARLIER_THIS_YEAR: 'earlierThisYear',
@@ -20,6 +26,7 @@ type ExpenseGroup = (typeof EXPENSE_GROUPS)[keyof typeof EXPENSE_GROUPS]
 const EXPENSE_GROUP_I18N_KEYS = {
   upcoming: 'Groups.upcoming',
   thisWeek: 'Groups.thisWeek',
+  previousWeek: 'Groups.previousWeek',
   earlierThisMonth: 'Groups.earlierThisMonth',
   lastMonth: 'Groups.lastMonth',
   earlierThisYear: 'Groups.earlierThisYear',
@@ -32,11 +39,17 @@ type TimelineExpense = {
   expenseDate: Date | string
 }
 
-function getExpenseGroup(date: Dayjs, today: Dayjs): ExpenseGroup {
+function getExpenseGroup(
+  date: Dayjs,
+  today: Dayjs,
+  locale: string,
+): ExpenseGroup {
   if (today.isBefore(date)) {
     return EXPENSE_GROUPS.UPCOMING
-  } else if (today.isSame(date, 'week')) {
+  } else if (isInCurrentLocaleWeek(date, today, locale)) {
     return EXPENSE_GROUPS.THIS_WEEK
+  } else if (isInPreviousLocaleWeek(date, today, locale)) {
+    return EXPENSE_GROUPS.PREVIOUS_WEEK
   } else if (today.isSame(date, 'month')) {
     return EXPENSE_GROUPS.EARLIER_THIS_MONTH
   } else if (today.subtract(1, 'month').isSame(date, 'month')) {
@@ -50,15 +63,13 @@ function getExpenseGroup(date: Dayjs, today: Dayjs): ExpenseGroup {
   }
 }
 
-function calendarDay(value: string) {
-  return dayjs(`${value}T12:00:00`)
-}
-
 export function getGroupedExpensesByDate<T extends TimelineExpense>(
   expenses: T[],
   timeZone: string,
+  locale = 'en-US',
+  now = new Date(),
 ) {
-  const today = calendarDay(zonedDateOnlyIso(new Date(), timeZone))
+  const today = calendarDay(zonedDateOnlyIso(now, timeZone))
   const expenseGroupValues = Object.values(EXPENSE_GROUPS) as ExpenseGroup[]
   const result = Object.fromEntries(
     expenseGroupValues.map((group) => [group, [] as T[]]),
@@ -68,6 +79,7 @@ export function getGroupedExpensesByDate<T extends TimelineExpense>(
     const expenseGroup = getExpenseGroup(
       calendarDay(dateOnlyIso(new Date(expense.expenseDate))),
       today,
+      locale,
     )
     result[expenseGroup].push(expense)
   }
@@ -90,7 +102,8 @@ export function ExpenseTimeline<T extends TimelineExpense>({
   loadingRef?: React.Ref<HTMLDivElement>
   renderExpense: (expense: T) => React.ReactNode
 }) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'Expenses' })
+  const { t, i18n } = useTranslation(undefined, { keyPrefix: 'Expenses' })
+  const locale = i18n.language || 'en-US'
   const useDateGrouping = sortBy === 'expenseDate'
 
   if (!useDateGrouping) {
@@ -104,7 +117,7 @@ export function ExpenseTimeline<T extends TimelineExpense>({
     )
   }
 
-  const groupedExpenses = getGroupedExpensesByDate(expenses, timeZone)
+  const groupedExpenses = getGroupedExpensesByDate(expenses, timeZone, locale)
 
   return (
     <>
@@ -114,7 +127,7 @@ export function ExpenseTimeline<T extends TimelineExpense>({
 
         return (
           <div key={expenseGroup} className="motion-stagger">
-            <div className="sticky top-(--app-header-height) bg-white py-1 pl-4 text-xs font-semibold text-muted-foreground sm:pl-6 dark:bg-[#1b1917]">
+            <div className="sticky top-(--app-header-height) bg-white py-1 ps-4 text-xs font-semibold text-muted-foreground sm:ps-6 dark:bg-[#1b1917]">
               {t(EXPENSE_GROUP_I18N_KEYS[expenseGroup])}
             </div>
             {groupExpenses.map((expense) => renderExpense(expense))}
@@ -135,14 +148,14 @@ export const ExpensesLoading = forwardRef<HTMLDivElement>((_, ref) => {
           key={i}
           className="flex items-start justify-between gap-2 px-2 py-4 text-sm sm:px-6"
         >
-          <div className="flex-0 pr-1 pl-2">
+          <div className="flex-0 ps-2 pe-1">
             <Skeleton className="h-4 w-4 rounded-full" />
           </div>
           <div className="flex flex-1 flex-col gap-2">
             <Skeleton className="h-4 w-16 rounded-full" />
             <Skeleton className="h-4 w-32 rounded-full" />
           </div>
-          <div className="mr-2 flex flex-0 flex-col items-end gap-2 sm:mr-12">
+          <div className="me-2 flex flex-0 flex-col items-end gap-2 sm:me-12">
             <Skeleton className="h-4 w-16 rounded-full" />
             <Skeleton className="h-4 w-20 rounded-full" />
           </div>

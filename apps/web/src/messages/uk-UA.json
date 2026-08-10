@@ -91,7 +91,8 @@
       "lastMonth": "Минулого місяця",
       "earlierThisYear": "Раніше цього року",
       "lastYear": "Минулого року",
-      "older": "Старіші"
+      "older": "Старіші",
+      "previousWeek": "Минулого тижня"
     },
     "filters": {
       "mobileTitle": "Фільтрувати витрати",
@@ -2740,5 +2741,12 @@
     },
     "fallbackPrefix": "Курси від",
     "fallbackSeparator": " та "
+  },
+  "DatePicker": {
+    "presets": {
+      "yesterday": "Учора",
+      "today": "Сьогодні",
+      "tomorrow": "Завтра"
+    }
   }
 }

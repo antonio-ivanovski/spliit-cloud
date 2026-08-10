@@ -65,11 +65,11 @@ export function AccountMenu() {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem render={<Link to="/account/settings" />}>
-          <SettingsIcon className="mr-2 h-4 w-4" />
+          <SettingsIcon className="me-2 h-4 w-4" />
           {t('accountSettings')}
         </DropdownMenuItem>
         <DropdownMenuItem render={<Link to="/feedback" />}>
-          <MessageSquareText className="mr-2 h-4 w-4" />
+          <MessageSquareText className="me-2 h-4 w-4" />
           {t('feedback')}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
@@ -83,7 +83,7 @@ export function AccountMenu() {
             await navigate({ to: '/', replace: true })
           }}
         >
-          <LogOut className="mr-2 h-4 w-4" />
+          <LogOut className="me-2 h-4 w-4" />
           {t('signOut')}
         </DropdownMenuItem>
       </DropdownMenuContent>

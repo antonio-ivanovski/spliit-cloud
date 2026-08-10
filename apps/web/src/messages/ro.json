@@ -90,7 +90,8 @@
       "lastMonth": "Luna trecută",
       "earlierThisYear": "La începutul anului",
       "lastYear": "Anul trecut",
-      "older": "Mai vechi"
+      "older": "Mai vechi",
+      "previousWeek": "Săptămâna trecută"
     },
     "export": "Export",
     "filters": {
@@ -2724,5 +2725,12 @@
     },
     "fallbackPrefix": "Cursuri de la",
     "fallbackSeparator": " și "
+  },
+  "DatePicker": {
+    "presets": {
+      "yesterday": "Ieri",
+      "today": "Azi",
+      "tomorrow": "Mâine"
+    }
   }
 }

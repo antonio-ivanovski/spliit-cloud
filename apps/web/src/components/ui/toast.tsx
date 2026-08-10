@@ -30,7 +30,7 @@ const ToastViewport = React.forwardRef<
   <ToastPrimitive.Viewport
     ref={ref}
     className={cn(
-      'pointer-events-none fixed top-0 z-100 flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]',
+      'pointer-events-none fixed top-0 z-100 flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:end-0 sm:top-auto sm:flex-col md:max-w-[420px]',
       className,
     )}
     {...props}
@@ -39,7 +39,7 @@ const ToastViewport = React.forwardRef<
 ToastViewport.displayName = 'ToastViewport'
 
 const toastVariants = cva(
-  'motion-toast group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-[transform,opacity] data-[swiping]:transition-none data-[ending-style]:opacity-0 data-[ending-style]:translate-x-[calc(var(--toast-swipe-movement-x)+100%)] data-[starting-style]:translate-y-[-100%] sm:data-[starting-style]:translate-y-[100%] data-[ending-style]:data-[swipe-direction=right]:translate-x-[calc(var(--toast-swipe-movement-x)+100%)] data-[ending-style]:data-[swipe-direction=left]:translate-x-[calc(var(--toast-swipe-movement-x)-100%)] data-[ending-style]:data-[swipe-direction=down]:translate-y-[calc(var(--toast-swipe-movement-y)+100%)] data-[ending-style]:data-[swipe-direction=up]:translate-y-[calc(var(--toast-swipe-movement-y)-100%)] [transform:translateX(var(--toast-swipe-movement-x))_translateY(var(--toast-swipe-movement-y))]',
+  'motion-toast group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pe-8 shadow-lg transition-[transform,opacity] data-[swiping]:transition-none data-[ending-style]:opacity-0 data-[ending-style]:translate-x-[calc(var(--toast-swipe-movement-x)+100%)] data-[starting-style]:translate-y-[-100%] sm:data-[starting-style]:translate-y-[100%] data-[ending-style]:data-[swipe-direction=right]:translate-x-[calc(var(--toast-swipe-movement-x)+100%)] data-[ending-style]:data-[swipe-direction=left]:translate-x-[calc(var(--toast-swipe-movement-x)-100%)] data-[ending-style]:data-[swipe-direction=down]:translate-y-[calc(var(--toast-swipe-movement-y)+100%)] data-[ending-style]:data-[swipe-direction=up]:translate-y-[calc(var(--toast-swipe-movement-y)-100%)] [transform:translateX(var(--toast-swipe-movement-x))_translateY(var(--toast-swipe-movement-y))]',
   {
     variants: {
       variant: {
@@ -102,7 +102,7 @@ const ToastClose = React.forwardRef<
   <ToastPrimitive.Close
     ref={ref}
     className={cn(
-      'absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-hidden focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-red-300 hover:group-[.destructive]:text-red-50 focus:group-[.destructive]:ring-red-400 focus:group-[.destructive]:ring-offset-red-600',
+      'absolute end-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-hidden focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-red-300 hover:group-[.destructive]:text-red-50 focus:group-[.destructive]:ring-red-400 focus:group-[.destructive]:ring-offset-red-600',
       className,
     )}
     {...props}

@@ -61,7 +61,7 @@ export function DeleteGroupDialog({
             <p className="text-sm text-muted-foreground">
               {t('delete.dialog.warningDescription')}
             </p>
-            <ul className="list-disc pl-5 text-sm text-muted-foreground">
+            <ul className="list-disc ps-5 text-sm text-muted-foreground">
               <li>{t('delete.dialog.warningList.expenses')}</li>
               <li>{t('delete.dialog.warningList.activity')}</li>
               <li>{t('delete.dialog.warningList.invitations')}</li>

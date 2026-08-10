@@ -14,6 +14,10 @@ const snapshotActorSchema = z.object({
 const snapshotRecipientSchema = z.object({
   accountId: z.string(),
   displayName: z.string(),
+  // Optional so persisted V1 snapshots created before locale-aware delivery
+  // continue to validate and render with sender fallbacks.
+  locale: z.string().optional(),
+  timeZone: z.string().optional(),
 })
 
 const snapshotPushFieldsSchema = z.object({

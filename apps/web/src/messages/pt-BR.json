@@ -90,7 +90,8 @@
       "lastMonth": "Mês passado",
       "earlierThisYear": "Anteriores neste ano",
       "lastYear": "Ano passado",
-      "older": "Mais antigas"
+      "older": "Mais antigas",
+      "previousWeek": "Semana passada"
     },
     "export": "Exportar",
     "filters": {
@@ -2724,5 +2725,12 @@
     "bridged": "através de {currencies} (<providers></providers>)",
     "fallbackPrefix": "Taxas de câmbio de",
     "fallbackSeparator": " e "
+  },
+  "DatePicker": {
+    "presets": {
+      "yesterday": "Ontem",
+      "today": "Hoje",
+      "tomorrow": "Amanhã"
+    }
   }
 }

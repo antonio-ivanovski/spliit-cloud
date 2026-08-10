@@ -127,7 +127,7 @@ export function PreviewStep(props: {
               ? {
                   label: props.isSaving ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <Loader2 className="me-2 h-4 w-4 animate-spin" />
                       {t('saving')}
                     </>
                   ) : (
@@ -140,7 +140,7 @@ export function PreviewStep(props: {
           }
         />
         {props.rows.length === 0 && !props.isGenerating && (
-          <Button className="ml-auto" type="button" onClick={props.onGenerate}>
+          <Button className="ms-auto" type="button" onClick={props.onGenerate}>
             {t('retryPreview')}
           </Button>
         )}

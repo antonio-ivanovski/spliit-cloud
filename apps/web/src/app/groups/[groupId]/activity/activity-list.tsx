@@ -1,32 +1,21 @@
-import dayjs, { type Dayjs } from 'dayjs'
 import { forwardRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useInView } from 'react-intersection-observer'
 
-import type { Activity } from '@/app/groups/[groupId]/activity/activity-item'
+import {
+  DATE_GROUPS,
+  getGroupedActivitiesByDate,
+} from '@/app/groups/[groupId]/activity/activity-grouping'
 import { ActivityItem } from '@/app/groups/[groupId]/activity/activity-item'
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import { Skeleton } from '@/components/ui/skeleton'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
-import { zonedDateOnlyIso } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 
 import { useCurrentGroup } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
 
 const PAGE_SIZE = 20
-
-const DATE_GROUPS = {
-  TODAY: 'today',
-  YESTERDAY: 'yesterday',
-  EARLIER_THIS_WEEK: 'earlierThisWeek',
-  LAST_WEEK: 'lastWeek',
-  EARLIER_THIS_MONTH: 'earlierThisMonth',
-  LAST_MONTH: 'lastMonth',
-  EARLIER_THIS_YEAR: 'earlierThisYear',
-  LAST_YEAR: 'lastYear',
-  OLDER: 'older',
-} as const
 
 const DATE_GROUP_I18N_KEYS = {
   today: 'Groups.today',
@@ -42,50 +31,6 @@ const DATE_GROUP_I18N_KEYS = {
   (typeof DATE_GROUPS)[keyof typeof DATE_GROUPS],
   string
 >
-
-function getDateGroup(date: Dayjs, today: Dayjs) {
-  if (today.isSame(date, 'day')) {
-    return DATE_GROUPS.TODAY
-  } else if (today.subtract(1, 'day').isSame(date, 'day')) {
-    return DATE_GROUPS.YESTERDAY
-  } else if (today.isSame(date, 'week')) {
-    return DATE_GROUPS.EARLIER_THIS_WEEK
-  } else if (today.subtract(1, 'week').isSame(date, 'week')) {
-    return DATE_GROUPS.LAST_WEEK
-  } else if (today.isSame(date, 'month')) {
-    return DATE_GROUPS.EARLIER_THIS_MONTH
-  } else if (today.subtract(1, 'month').isSame(date, 'month')) {
-    return DATE_GROUPS.LAST_MONTH
-  } else if (today.isSame(date, 'year')) {
-    return DATE_GROUPS.EARLIER_THIS_YEAR
-  } else if (today.subtract(1, 'year').isSame(date, 'year')) {
-    return DATE_GROUPS.LAST_YEAR
-  } else {
-    return DATE_GROUPS.OLDER
-  }
-}
-
-function calendarDay(value: string) {
-  return dayjs(`${value}T12:00:00`)
-}
-
-function getGroupedActivitiesByDate(activities: Activity[], timeZone: string) {
-  const today = calendarDay(zonedDateOnlyIso(new Date(), timeZone))
-  const dateGroupValues = Object.values(DATE_GROUPS) as Array<
-    (typeof DATE_GROUPS)[keyof typeof DATE_GROUPS]
-  >
-  const result = Object.fromEntries(
-    dateGroupValues.map((g) => [g, [] as Activity[]]),
-  ) as Record<(typeof DATE_GROUPS)[keyof typeof DATE_GROUPS], Activity[]>
-  for (const activity of activities) {
-    const activityGroup = getDateGroup(
-      calendarDay(zonedDateOnlyIso(activity.time, timeZone)),
-      today,
-    )
-    result[activityGroup].push(activity)
-  }
-  return result
-}
 
 const ActivitiesLoading = forwardRef<HTMLDivElement>((_, ref) => {
   return (
@@ -109,7 +54,8 @@ const ActivitiesLoading = forwardRef<HTMLDivElement>((_, ref) => {
 ActivitiesLoading.displayName = 'ActivitiesLoading'
 
 export function ActivityList() {
-  const { t } = useTranslation(undefined, { keyPrefix: 'Activity' })
+  const { t, i18n } = useTranslation(undefined, { keyPrefix: 'Activity' })
+  const locale = i18n.language || 'en-US'
   const { group, groupId } = useCurrentGroup()
   const accountPreferences = useSyncedAccountPreferences()
   const accountTimeZone =
@@ -138,6 +84,7 @@ export function ActivityList() {
   const groupedActivitiesByDate = getGroupedActivitiesByDate(
     activities,
     accountTimeZone,
+    locale,
   )
 
   return activities.length > 0 ? (

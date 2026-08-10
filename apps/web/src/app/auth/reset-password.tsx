@@ -188,7 +188,7 @@ export function ResetPasswordPage() {
               disabled={resetPassword.isPending || !canSubmit}
             >
               {resetPassword.isPending && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 className="me-2 h-4 w-4 animate-spin" />
               )}
               {resetPassword.isPending ? t('submitting') : t('submit')}
             </Button>

@@ -1,16 +1,16 @@
-import type { Locale } from '@spliit/domain'
+import {
+  isRtlLocale,
+  resolveFormattingLocale,
+  type Locale,
+} from '@spliit/domain'
 
 import type { ReportLabels } from './labels'
 import type { ExpenseReportModel } from './model'
 
+export { isRtlLocale } from '@spliit/domain'
+
 export type ReportDirection = 'ltr' | 'rtl'
 export type ReportPageSize = 'A4' | 'LETTER'
-
-const RTL_LOCALES: ReadonlySet<string> = new Set(['he', 'ar-SA', 'ur-PK'])
-
-export function isRtlLocale(locale: Locale): boolean {
-  return RTL_LOCALES.has(locale)
-}
 
 /** LETTER for en-US, A4 for every other supported locale. */
 export function pageSizeFor(locale: Locale): ReportPageSize {
@@ -87,15 +87,16 @@ export function formatExpenseReport(
   labels: ReportLabels,
 ): ExpenseReportViewModel {
   const direction = isRtlLocale(locale) ? 'rtl' : 'ltr'
+  const formattingLocale = resolveFormattingLocale(locale)
   const currencyCode = model.currencyCode
-  const currencyFormat = new Intl.NumberFormat(locale, {
+  const currencyFormat = new Intl.NumberFormat(formattingLocale, {
     style: 'currency',
     currency: currencyCode,
   })
   const formatAmount = (amount: number) => currencyFormat.format(amount / 100)
   // Date-only report bounds are UTC midnights; force UTC so a non-UTC API
   // host does not shift `2026-07-01` to the previous local calendar day.
-  const dateOnlyFormat = new Intl.DateTimeFormat(locale, {
+  const dateOnlyFormat = new Intl.DateTimeFormat(formattingLocale, {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
@@ -121,10 +122,10 @@ export function formatExpenseReport(
     asOfDate: formatDate(model.to),
     metrics: {
       total: formatAmount(model.period.total),
-      expenseCount: new Intl.NumberFormat(locale).format(
+      expenseCount: new Intl.NumberFormat(formattingLocale).format(
         model.period.expenseCount,
       ),
-      participantCount: new Intl.NumberFormat(locale).format(
+      participantCount: new Intl.NumberFormat(formattingLocale).format(
         model.participants.length,
       ),
     },
@@ -163,7 +164,7 @@ export function formatExpenseReport(
       }))
       let conversionNote: string | null = null
       if (expense.originalAmount != null && expense.originalCurrency) {
-        const originalFormat = new Intl.NumberFormat(locale, {
+        const originalFormat = new Intl.NumberFormat(formattingLocale, {
           style: 'currency',
           currency: expense.originalCurrency,
         })

@@ -82,7 +82,8 @@
       "upcoming": "Laster",
       "thisWeek": "Aste honetan",
       "earlierThisMonth": "Hilabete hasieran",
-      "lastMonth": "Aurreko hilabetean"
+      "lastMonth": "Aurreko hilabetean",
+      "previousWeek": "Pasa den astean"
     },
     "exportCsv": "Esportatu CSVra",
     "searchPlaceholder": "Bilatu gastu bat…",
@@ -2723,5 +2724,12 @@
     },
     "fallbackPrefix": "Truke-tasak hemendik:",
     "fallbackSeparator": " eta "
+  },
+  "DatePicker": {
+    "presets": {
+      "yesterday": "Atzo",
+      "today": "Gaur",
+      "tomorrow": "Bihar"
+    }
   }
 }

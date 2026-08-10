@@ -38,7 +38,7 @@ export const FormActions = memo(function FormActions(props: {
   return (
     <FixedActionBar>
       {!props.isCreate && props.onDelete && (
-        <DeletePopup onDelete={() => props.onDelete!()} className="mr-auto" />
+        <DeletePopup onDelete={() => props.onDelete!()} className="me-auto" />
       )}
       <Button variant="ghost" render={<Link href={props.cancelHref} />}>
         {t('cancel')}
@@ -47,7 +47,7 @@ export const FormActions = memo(function FormActions(props: {
         disabled={props.submitDisabled}
         loadingContent={t(props.isCreate ? 'creating' : 'saving')}
       >
-        <Save className="mr-2 h-4 w-4" />
+        <Save className="me-2 h-4 w-4" />
         {t(props.isCreate ? 'create' : 'save')}
       </SubmitButton>
     </FixedActionBar>

@@ -27,6 +27,7 @@ import {
 import { getSupportedTimeZones } from '@/lib/account-preferences'
 import { useMediaQuery } from '@/lib/hooks'
 import { cn } from '@/lib/utils'
+import { resolveFormattingLocale } from '@spliit/domain'
 
 type TimeZoneOption = {
   id: string
@@ -51,7 +52,9 @@ function offsetFor(timeZone: string) {
 }
 
 function buildOptions(locale: string): TimeZoneOption[] {
-  const collator = new Intl.Collator(locale, { sensitivity: 'base' })
+  const collator = new Intl.Collator(resolveFormattingLocale(locale), {
+    sensitivity: 'base',
+  })
   return getSupportedTimeZones()
     .map((id) => {
       const parts = id.split('/')

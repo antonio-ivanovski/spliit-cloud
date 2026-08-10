@@ -41,7 +41,7 @@ export function IntroStep(props: {
       {props.totalEligible > 0 && !props.isLoading && (
         <>
           <CardContent>
-            <ol className="list-decimal space-y-2 pl-5 text-sm text-muted-foreground">
+            <ol className="list-decimal space-y-2 ps-5 text-sm text-muted-foreground">
               <li>
                 {t('introStepLook', {
                   count: BULK_CALIBRATION_CANDIDATE_POOL_SIZE,
@@ -55,7 +55,7 @@ export function IntroStep(props: {
           </CardContent>
           <CardFooter className="justify-end">
             <Button type="button" onClick={props.onStart}>
-              <Sparkles className="mr-2 h-4 w-4" />
+              <Sparkles className="me-2 h-4 w-4" />
               {t('startCalibration')}
             </Button>
           </CardFooter>

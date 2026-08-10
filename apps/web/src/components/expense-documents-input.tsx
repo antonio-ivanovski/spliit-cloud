@@ -232,7 +232,7 @@ export function DocumentThumbnail({
                 documents={[document]}
                 currentExpense={receiptContext}
                 onAccept={onReceiptAccepted}
-                className="h-10 min-w-0 flex-1 basis-0 rounded-t-none rounded-br-none rounded-bl-md border-r border-secondary-foreground/20 bg-secondary/70 backdrop-blur-sm hover:bg-pink-200/70"
+                className="h-10 min-w-0 flex-1 basis-0 rounded-t-none rounded-br-none rounded-bl-md border-e border-secondary-foreground/20 bg-secondary/70 backdrop-blur-sm hover:bg-pink-200/70"
               />
             )}
             <Button
@@ -241,7 +241,7 @@ export function DocumentThumbnail({
               className={cn(
                 'h-10 min-w-0 flex-1 basis-0 rounded-t-none bg-secondary/70 text-destructive backdrop-blur-sm hover:bg-destructive/70 hover:text-destructive-foreground',
                 enableReceiptExtract && onReceiptAccepted
-                  ? 'rounded-br-md rounded-bl-none border-l-0'
+                  ? 'rounded-br-md rounded-bl-none border-s-0'
                   : 'rounded-b-md',
               )}
               title={t('deleteDocument')}
@@ -284,13 +284,13 @@ export function DocumentThumbnail({
                     setOpen(false)
                   }}
                 >
-                  <Trash className="mr-2 h-4 w-4" />
+                  <Trash className="me-2 h-4 w-4" />
                   {t('deleteDocument')}
                 </Button>
               </div>
             )}
             <DialogClose render={<Button variant="ghost" />}>
-              <X className="mr-2 h-4 w-4" /> {t('close')}
+              <X className="me-2 h-4 w-4" /> {t('close')}
             </DialogClose>
           </div>
 
@@ -315,8 +315,8 @@ export function DocumentThumbnail({
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="top-auto -bottom-16 left-0" />
-            <CarouselNext className="top-auto right-0 -bottom-16" />
+            <CarouselPrevious className="start-0 top-auto -bottom-16" />
+            <CarouselNext className="end-0 top-auto -bottom-16" />
           </Carousel>
         </div>
       </DialogContent>

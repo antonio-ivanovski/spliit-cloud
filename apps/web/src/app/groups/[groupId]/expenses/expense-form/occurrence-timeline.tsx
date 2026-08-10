@@ -14,7 +14,7 @@ import {
 export const OCCURRENCE_TIMELINE_ROW_HEIGHT = 80
 
 const NODE_COLUMN_CLASS = 'w-10'
-const NODE_CENTER_LEFT = 'left-5'
+const NODE_CENTER_LEFT = 'start-5'
 
 export type OccurrenceTimelineOrientation =
   | 'vertical'
@@ -142,7 +142,7 @@ function TimelineConnectors({
         <span
           aria-hidden="true"
           className={cn(
-            'absolute top-3.5 left-0 h-px w-1/2 -translate-y-1/2 bg-border',
+            'absolute start-0 top-3.5 h-px w-1/2 -translate-y-1/2 bg-border',
             horizontalOnly ? 'block' : 'hidden sm:block',
           )}
         />
@@ -151,7 +151,7 @@ function TimelineConnectors({
         <span
           aria-hidden="true"
           className={cn(
-            'absolute top-3.5 right-0 left-1/2 h-px -translate-y-1/2 bg-border',
+            'absolute start-1/2 end-0 top-3.5 h-px -translate-y-1/2 bg-border',
             horizontalOnly ? 'block' : 'hidden sm:block',
           )}
         />

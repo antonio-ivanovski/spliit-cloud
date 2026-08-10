@@ -11,7 +11,9 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { cn, formatCurrency } from '@/lib/utils'
+import { useLocale } from '@/i18n/react'
+import { localizeCurrencyInput } from '@/lib/currency-input'
+import { cn, formatCurrency, formatNumber } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type {
   Currency,
@@ -68,6 +70,7 @@ export function ExpenseItemRow({
   onDelete: () => void
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
+  const locale = useLocale()
   const { control } = form
   const watchedTitle = useWatch({
     control,
@@ -111,10 +114,10 @@ export function ExpenseItemRow({
   const priceDisplay = formatCurrency(
     groupCurrency,
     Number(unitPrice),
-    'en-US',
+    locale,
     true,
   )
-  const totalDisplay = formatCurrency(groupCurrency, total, 'en-US', true)
+  const totalDisplay = formatCurrency(groupCurrency, total, locale, true)
 
   const displayOther = t('items.other')
   const displayActionEdit = t('items.modalTitle')
@@ -168,7 +171,7 @@ export function ExpenseItemRow({
         <div className="col-start-2 row-start-1 min-w-0 md:col-auto md:row-auto">
           <div className="sr-only">{displayColumnCost}</div>
           {isFiller ? (
-            <div className="flex h-9 items-center justify-end truncate text-right text-sm text-muted-foreground">
+            <div className="flex h-9 items-center justify-end truncate text-end text-sm text-muted-foreground">
               {priceDisplay}
             </div>
           ) : (
@@ -186,15 +189,17 @@ export function ExpenseItemRow({
                       type="text"
                       disabled={readOnly}
                       // Keep raw string (incl. trailing ".") like expense amount
-                      value={
+                      value={localizeCurrencyInput(
                         typeof field.value === 'string' ||
-                        typeof field.value === 'number'
+                          typeof field.value === 'number'
                           ? String(field.value)
-                          : ''
-                      }
+                          : '',
+                        locale,
+                      )}
                       inputMode="decimal"
                       placeholder={amountPlaceholder(
                         groupCurrency.decimal_digits,
+                        locale,
                       )}
                       step={10 ** -groupCurrency.decimal_digits}
                       onChange={(event) =>
@@ -202,6 +207,7 @@ export function ExpenseItemRow({
                           enforceCurrencyPattern(
                             event.target.value,
                             groupCurrency.decimal_digits,
+                            locale,
                           ),
                         )
                       }
@@ -218,8 +224,8 @@ export function ExpenseItemRow({
         <div className="col-start-3 row-start-1 min-w-0 md:col-auto md:row-auto">
           <div className="sr-only">{displayColumnQuantity}</div>
           {isFiller ? (
-            <div className="flex h-9 items-center justify-end text-right text-sm text-muted-foreground">
-              {Number(quantity)}
+            <div className="flex h-9 items-center justify-end text-end text-sm text-muted-foreground">
+              {formatNumber(Number(quantity), locale, { useGrouping: false })}
             </div>
           ) : (
             <FormField
@@ -231,11 +237,11 @@ export function ExpenseItemRow({
                     <div className="relative">
                       <Hash
                         aria-hidden="true"
-                        className="pointer-events-none absolute top-1/2 left-2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground"
+                        className="pointer-events-none absolute start-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground"
                       />
                       <Input
                         aria-label={displayColumnQuantity}
-                        className="h-9 pr-2 pl-7 text-right tabular-nums"
+                        className="h-9 ps-7 pe-2 text-end tabular-nums"
                         type="text"
                         disabled={readOnly}
                         value={(field.value as number) ?? ''}
@@ -243,8 +249,9 @@ export function ExpenseItemRow({
                         step={1}
                         onChange={(event) =>
                           field.onChange(
-                            Number(enforceIntegerPattern(event.target.value)) ||
-                              0,
+                            Number(
+                              enforceIntegerPattern(event.target.value, locale),
+                            ) || 0,
                           )
                         }
                         onFocus={(event) => event.target.select()}
@@ -260,7 +267,7 @@ export function ExpenseItemRow({
 
         <div className="col-span-2 col-start-1 row-start-2 min-w-0 md:col-auto md:row-auto">
           <div className="sr-only">{displayColumnTotal}</div>
-          <div className="flex h-9 items-center justify-end truncate text-right text-sm font-medium tabular-nums">
+          <div className="flex h-9 items-center justify-end truncate text-end text-sm font-medium tabular-nums">
             {totalDisplay}
           </div>
         </div>
@@ -299,7 +306,7 @@ export function ExpenseItemRow({
           control={control}
           name={itemPath(itemIndex, 'paidFor')}
           render={() => (
-            <FormItem className="mt-2 min-w-0 space-y-1 text-xs leading-5 md:pr-16">
+            <FormItem className="mt-2 min-w-0 space-y-1 text-xs leading-5 md:pe-16">
               <span className="block truncate text-muted-foreground">
                 {participantsLabel}
               </span>
@@ -308,7 +315,7 @@ export function ExpenseItemRow({
           )}
         />
       ) : (
-        <div className="mt-2 min-w-0 text-xs leading-5 text-muted-foreground md:pr-16">
+        <div className="mt-2 min-w-0 text-xs leading-5 text-muted-foreground md:pe-16">
           <span className="block truncate">{participantsLabel}</span>
         </div>
       )}

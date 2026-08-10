@@ -140,7 +140,7 @@ export const EditGroup = () => {
               variant="secondary"
               render={<Link href={`/groups/bulk-categorize/${groupId}`} />}
             >
-              <Sparkles className="mr-2 h-4 w-4" />
+              <Sparkles className="me-2 h-4 w-4" />
               {t('bulkCategorizeButton')}
             </Button>
           </CardContent>
@@ -169,12 +169,12 @@ export const EditGroup = () => {
             >
               {isArchived ? (
                 <>
-                  <ArchiveRestore className="mr-2 h-4 w-4" />
+                  <ArchiveRestore className="me-2 h-4 w-4" />
                   {tGroups('unarchiveGroup')}
                 </>
               ) : (
                 <>
-                  <Archive className="mr-2 h-4 w-4" />
+                  <Archive className="me-2 h-4 w-4" />
                   {tGroups('archiveGroup')}
                 </>
               )}
@@ -199,7 +199,7 @@ export const EditGroup = () => {
               variant="destructive"
               onClick={() => setDeleteDialogOpen(true)}
             >
-              <Trash2 className="mr-2 h-4 w-4" />
+              <Trash2 className="me-2 h-4 w-4" />
               {tGroups('delete.button')}
             </Button>
           </CardContent>

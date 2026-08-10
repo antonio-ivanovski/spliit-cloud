@@ -91,7 +91,8 @@
       "lastMonth": "先月",
       "earlierThisYear": "今年初め",
       "lastYear": "昨年",
-      "older": "過去の支出"
+      "older": "過去の支出",
+      "previousWeek": "先週"
     },
     "filters": {
       "mobileTitle": "支出を絞り込む",
@@ -2689,5 +2690,12 @@
     },
     "fallbackPrefix": "レート提供元：",
     "fallbackSeparator": "、"
+  },
+  "DatePicker": {
+    "presets": {
+      "yesterday": "昨日",
+      "today": "今日",
+      "tomorrow": "明日"
+    }
   }
 }

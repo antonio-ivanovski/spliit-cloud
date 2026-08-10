@@ -97,7 +97,7 @@ export function PasswordForm(props: {
         className="w-full"
         disabled={props.isPending || !props.canSubmit}
       >
-        {props.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        {props.isPending && <Loader2 className="me-2 h-4 w-4 animate-spin" />}
         {props.mode === 'sign-in'
           ? t('signInWithPassword')
           : t('signUpWithPassword')}

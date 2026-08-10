@@ -91,7 +91,8 @@
       "lastMonth": "חודש שעבר",
       "earlierThisYear": "מוקדם יותר השנה",
       "lastYear": "שנה שעברה",
-      "older": "הוצאות קודמות"
+      "older": "הוצאות קודמות",
+      "previousWeek": "שבוע שעבר"
     },
     "filters": {
       "mobileTitle": "סנן הוצאות",
@@ -2724,5 +2725,12 @@
     },
     "fallbackPrefix": "שערים מ",
     "fallbackSeparator": " ו"
+  },
+  "DatePicker": {
+    "presets": {
+      "yesterday": "אתמול",
+      "today": "היום",
+      "tomorrow": "מחר"
+    }
   }
 }

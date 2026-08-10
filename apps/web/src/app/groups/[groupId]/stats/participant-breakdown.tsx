@@ -5,6 +5,7 @@ import { ParticipantAvatar } from '@/components/participant-avatar'
 import { useLocale } from '@/i18n/react'
 import type { Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
+import { resolveFormattingLocale } from '@spliit/domain'
 
 import type { StatsDashboardData } from './dashboard-types'
 
@@ -18,7 +19,7 @@ export function ParticipantBreakdown({ data, currency }: Props) {
   const locale = useLocale()
   const percentFormatter = useMemo(
     () =>
-      new Intl.NumberFormat(locale, {
+      new Intl.NumberFormat(resolveFormattingLocale(locale), {
         style: 'percent',
         maximumFractionDigits: 0,
       }),
@@ -65,7 +66,7 @@ export function ParticipantBreakdown({ data, currency }: Props) {
                   }}
                 />
               </div>
-              <span className="w-9 text-right text-xs text-muted-foreground tabular-nums">
+              <span className="w-9 text-end text-xs text-muted-foreground tabular-nums">
                 {percentFormatter.format(participant.percentage)}
               </span>
             </div>

@@ -43,7 +43,15 @@ type DraftDelivery = {
 }
 
 type PreloadedSnapshotContext = {
-  accountsById: Map<string, { id: string; name: string }>
+  accountsById: Map<
+    string,
+    {
+      id: string
+      name: string
+      locale: string | null
+      timeZone: string | null
+    }
+  >
   group: { id: string; name: string; groupType: string } | null
   expense: {
     id: string
@@ -229,17 +237,38 @@ async function preloadSnapshotContext(args: {
     accountIdList.length > 0
       ? await tx.account.findMany({
           where: { id: { in: accountIdList } },
-          select: { id: true, name: true },
+          select: {
+            id: true,
+            name: true,
+            preference: { select: { locale: true, timeZone: true } },
+          },
         })
-      : ([] as Array<{ id: string; name: string }>)
+      : ([] as Array<{
+          id: string
+          name: string
+          preference: { locale: string | null; timeZone: string | null } | null
+        }>)
   const groupRow = await tx.group.findUnique({
     where: { id: event.groupId },
     select: { id: true, name: true, groupType: true },
   })
 
-  const accountsById = new Map<string, { id: string; name: string }>()
+  const accountsById = new Map<
+    string,
+    {
+      id: string
+      name: string
+      locale: string | null
+      timeZone: string | null
+    }
+  >()
   for (const account of accounts) {
-    accountsById.set(account.id, { id: account.id, name: account.name })
+    accountsById.set(account.id, {
+      id: account.id,
+      name: account.name,
+      locale: account.preference?.locale ?? null,
+      timeZone: account.preference?.timeZone ?? null,
+    })
   }
   const group = groupRow
     ? {
@@ -318,6 +347,10 @@ function buildSnapshot(args: {
   const recipientSnapshot = {
     accountId: recipientAccountId,
     displayName: recipientAccount?.name ?? '',
+    ...(recipientAccount?.locale ? { locale: recipientAccount.locale } : {}),
+    ...(recipientAccount?.timeZone
+      ? { timeZone: recipientAccount.timeZone }
+      : {}),
   }
   const actorSnapshot = actor
     ? { id: actor.id, name: actor.name }

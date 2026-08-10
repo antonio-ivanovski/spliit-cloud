@@ -1,4 +1,5 @@
 import type { AppRouterOutput } from '@spliit/api/router'
+import { resolveFormattingLocale } from '@spliit/domain'
 
 export type AccountGroup = AppRouterOutput['overview']['get']['groups'][number]
 
@@ -83,7 +84,7 @@ function getDateFormat(locale: string, timeZone: string) {
   const key = `${locale}:${timeZone}`
   let fmt = dateFormatCache.get(key)
   if (!fmt) {
-    fmt = new Intl.DateTimeFormat(locale, {
+    fmt = new Intl.DateTimeFormat(resolveFormattingLocale(locale), {
       year: 'numeric',
       month: 'short',
       day: 'numeric',

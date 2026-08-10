@@ -264,10 +264,10 @@ function PageShell(props: {
         <Button
           variant="ghost"
           size="sm"
-          className="-ml-2 w-fit"
+          className="-ms-2 w-fit"
           render={<Link href={`/groups/${props.groupId}/edit`} />}
         >
-          <ArrowLeft className="mr-2 h-4 w-4" />
+          <ArrowLeft className="me-2 h-4 w-4 rtl:rotate-180" />
           {t('backToSettings')}
         </Button>
         <WizardStepHeader

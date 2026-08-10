@@ -201,7 +201,7 @@ export default function UnsubscribePage() {
             >
               {unsubscribeMutation.isPending ? (
                 <Loader2
-                  className="mr-2 h-4 w-4 animate-spin"
+                  className="me-2 h-4 w-4 animate-spin"
                   aria-hidden="true"
                 />
               ) : null}
@@ -214,7 +214,10 @@ export default function UnsubscribePage() {
             render={<Link href={homeHref} />}
           >
             {t('manageSettings')}
-            <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
+            <ArrowRight
+              className="ms-1.5 h-4 w-4 rtl:rotate-180"
+              aria-hidden="true"
+            />
           </Button>
         </CardFooter>
       </Card>

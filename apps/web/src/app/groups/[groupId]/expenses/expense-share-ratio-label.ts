@@ -1,5 +1,10 @@
 import type { SplitMode } from '@spliit/domain'
-import { formatDisplayShares, sharesAsDecimal } from '@spliit/domain'
+import {
+  formatDisplayShares,
+  formatNumber,
+  resolveFormattingLocale,
+  sharesAsDecimal,
+} from '@spliit/domain'
 
 export type ShareSourceRow = { ledgerParticipantId: string; shares: number }
 
@@ -24,7 +29,7 @@ export function expenseShareRatioLabel(
 
   switch (mode) {
     case 'EVENLY':
-      return `1/${sourceRows.length}`
+      return `${formatNumber(1, locale ?? 'en-US', { useGrouping: false })}/${formatNumber(sourceRows.length, locale ?? 'en-US', { useGrouping: false })}`
     case 'BY_SHARES': {
       const totalSourceShares = sourceRows.reduce(
         (sum, row) => sum + row.shares,
@@ -37,7 +42,7 @@ export function expenseShareRatioLabel(
       return `${formatDisplayShares(display, locale)}/${formatDisplayShares(totalDisplayShares, locale)}`
     }
     case 'BY_PERCENTAGE':
-      return new Intl.NumberFormat(locale, {
+      return new Intl.NumberFormat(resolveFormattingLocale(locale ?? 'en-US'), {
         style: 'percent',
         maximumFractionDigits: 2,
       }).format(source.shares / 10000)

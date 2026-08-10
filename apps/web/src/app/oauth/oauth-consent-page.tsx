@@ -72,7 +72,7 @@ export function OAuthConsentPage() {
           aria-label={t('connectionDetails')}
           data-testid="oauth-connection-panel"
         >
-          <div className="absolute -top-12 -right-12 size-24 rounded-full bg-primary/10 blur-2xl" />
+          <div className="absolute -end-12 -top-12 size-24 rounded-full bg-primary/10 blur-2xl" />
           <div className="relative grid min-w-0 items-center gap-2 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:gap-3">
             <IdentitySummary label={t('spliitAccount')}>
               {sessionPending ? (
@@ -98,7 +98,7 @@ export function OAuthConsentPage() {
 
             <div className="flex items-center justify-center text-primary sm:px-1">
               <ArrowRight
-                className="size-4 rotate-90 sm:rotate-0"
+                className="size-4 rotate-90 sm:rotate-0 rtl:rotate-180"
                 aria-hidden="true"
               />
             </div>
@@ -197,9 +197,9 @@ export function OAuthConsentPage() {
             onClick={() => void decide(true)}
           >
             {pending === 'accept' ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className="me-2 h-4 w-4 animate-spin" />
             ) : (
-              <LockKeyhole className="mr-2 h-4 w-4" aria-hidden="true" />
+              <LockKeyhole className="me-2 h-4 w-4" aria-hidden="true" />
             )}
             {t('allow')}
           </Button>
@@ -210,7 +210,7 @@ export function OAuthConsentPage() {
             onClick={() => void decide(false)}
           >
             {pending === 'deny' && (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className="me-2 h-4 w-4 animate-spin" />
             )}
             {t('cancel')}
           </Button>

@@ -484,7 +484,7 @@ export function ExpensePreviewModal({
           {series ? (
             canManageRecurrence ? (
               <RecurringActionsMenu
-                className="mr-auto"
+                className="me-auto"
                 seriesStatus={series.status}
                 onEdit={handleEdit}
                 onDelete={(option) => handleDelete(option)}
@@ -496,7 +496,7 @@ export function ExpensePreviewModal({
               />
             ) : null
           ) : canDelete ? (
-            <DeletePopup onDelete={() => handleDelete()} className="mr-auto" />
+            <DeletePopup onDelete={() => handleDelete()} className="me-auto" />
           ) : null}
           {canCopy && (
             <>
@@ -507,7 +507,7 @@ export function ExpensePreviewModal({
                 onClick={handleMakeCopy}
                 data-testid="expense-make-copy"
               >
-                <FileInput className="mr-2 h-4 w-4" />
+                <FileInput className="me-2 h-4 w-4" />
                 {t('makeCopy')}
               </Button>
               {canEdit && !series && (

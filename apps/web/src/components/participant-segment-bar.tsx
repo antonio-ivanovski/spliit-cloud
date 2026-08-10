@@ -59,7 +59,7 @@ export function ParticipantSegmentBar({
                 <span
                   key={row.id}
                   className={cn(
-                    '@container relative h-2.5 min-w-0 first:rounded-l-full last:rounded-r-full',
+                    '@container relative h-2.5 min-w-0 first:rounded-s-full last:rounded-e-full',
                     participantSegmentColor(row, index),
                   )}
                   style={{

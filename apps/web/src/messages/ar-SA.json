@@ -121,7 +121,8 @@
       "thisWeek": "هذا الأسبوع",
       "lastMonth": "الشهر الماضي",
       "earlierThisYear": "في وقت سابق من هذا العام",
-      "upcoming": "القادمة"
+      "upcoming": "القادمة",
+      "previousWeek": "الأسبوع الماضي"
     },
     "globalTitle": "جميع النفقات",
     "globalDescription": "ابحث وتصفح النفقات من جميع مجموعاتك.",
@@ -2778,5 +2779,12 @@
     },
     "fallbackPrefix": "أسعار من",
     "fallbackSeparator": " و "
+  },
+  "DatePicker": {
+    "presets": {
+      "yesterday": "أمس",
+      "today": "اليوم",
+      "tomorrow": "غدًا"
+    }
   }
 }

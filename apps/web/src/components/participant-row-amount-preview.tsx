@@ -12,7 +12,7 @@ export function ParticipantRowAmountPreview({
   const locale = useLocale()
   if (amount == null || Number.isNaN(amount)) return null
   return (
-    <span className="ml-2 text-muted-foreground">
+    <span className="ms-2 text-muted-foreground">
       ({formatCurrency(currency, Math.round(amount), locale)})
     </span>
   )

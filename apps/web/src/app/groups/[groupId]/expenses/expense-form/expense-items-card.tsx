@@ -36,6 +36,7 @@ import {
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
+import { useLocale } from '@/i18n/react'
 import { cn, formatCurrency } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type {
@@ -132,6 +133,7 @@ export function ExpenseItemsCard({
   }) => ReactNode
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
+  const locale = useLocale()
 
   const items = useWatch({ control: form.control, name: 'items' }) ?? []
   const amount = useWatch({ control: form.control, name: 'amount' })
@@ -382,13 +384,13 @@ export function ExpenseItemsCard({
                           )}
                         >
                           <span>{t('items.columnItem')}</span>
-                          <span className="text-right">
+                          <span className="text-end">
                             {t('items.columnCost')}
                           </span>
-                          <span className="text-right">
+                          <span className="text-end">
                             {t('items.columnQuantity')}
                           </span>
-                          <span className="text-right">
+                          <span className="text-end">
                             {t('items.columnTotal')}
                           </span>
                           <span />
@@ -445,7 +447,7 @@ export function ExpenseItemsCard({
                                 groupCurrency,
                                 Number(fillerItem.unitPrice) *
                                   Number(fillerItem.quantity),
-                                'en-US',
+                                locale,
                                 true,
                               )}
                             </span>
@@ -502,7 +504,7 @@ export function ExpenseItemsCard({
                                 Number(item.unitPrice) * Number(item.quantity),
                               0,
                             ),
-                            'en-US',
+                            locale,
                             true,
                           )}
                         </span>
@@ -633,7 +635,7 @@ function DefaultSplitAction({
       {!readOnly && (
         <span className="flex shrink-0 items-center gap-1 text-xs font-medium text-muted-foreground transition-colors group-hover:text-foreground sm:text-sm">
           <span className="hidden sm:inline">{editLabel}</span>
-          <ChevronRight className="size-4" aria-hidden="true" />
+          <ChevronRight className="size-4 rtl:rotate-180" aria-hidden="true" />
         </span>
       )}
     </>
@@ -650,7 +652,7 @@ function DefaultSplitAction({
       type="button"
       onClick={onClick}
       aria-label={editLabel}
-      className="group flex w-full items-center gap-3 border-y py-3 text-left transition-colors hover:bg-muted/30 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-hidden"
+      className="group flex w-full items-center gap-3 border-y py-3 text-start transition-colors hover:bg-muted/30 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-hidden"
     >
       {content}
     </button>

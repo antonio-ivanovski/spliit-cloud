@@ -174,7 +174,7 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
                       type="button"
                       variant="ghost"
                       size="icon"
-                      className="-mt-2 -mr-2 h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
+                      className="-me-2 -mt-2 h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
                       aria-label={t('commentDelete')}
                       disabled={deletingCommentId === comment.id}
                       onClick={() => void handleDelete(comment.id)}

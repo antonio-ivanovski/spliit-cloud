@@ -1,3 +1,5 @@
+import { resolveFormattingLocale } from '@spliit/domain/i18n'
+
 export * from '@spliit/domain/utils'
 
 const dateOnlyFormatters = new Map<string, Intl.DateTimeFormat>()
@@ -11,7 +13,10 @@ export function formatZonedDate(
     timeStyle?: Intl.DateTimeFormatOptions['timeStyle']
   } = {},
 ) {
-  return new Intl.DateTimeFormat(locale, { ...options, timeZone }).format(date)
+  return new Intl.DateTimeFormat(resolveFormattingLocale(locale), {
+    ...options,
+    timeZone,
+  }).format(date)
 }
 
 /** ISO calendar date containing an instant in the requested IANA timezone. */

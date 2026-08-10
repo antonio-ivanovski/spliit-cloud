@@ -1,6 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { ConverterContent } from '@/components/currency-converter/currency-converter'
+import { defaultLocale } from '@/i18n/request'
+import { setUserLocale } from '@/i18n/setup'
 import { fireEvent, render, screen, waitFor } from '@/test/test-utils'
 
 const _rateMock = vi.fn()
@@ -59,6 +61,10 @@ vi.mock(import('@/lib/currency'), async (importActual) => {
     ...actual,
     useCurrencies: () => currencies,
   }
+})
+
+afterEach(async () => {
+  await setUserLocale(defaultLocale, { notify: false, persist: false })
 })
 
 const staleError = new RangeError('stale rate')
@@ -156,6 +162,28 @@ describe('CurrencyConverter stale rate gating', () => {
     const fromSelector = screen.getAllByRole('combobox')[0]
     expect(fromSelector).toHaveTextContent(/USD|EUR|JPY/)
     expect(fromSelector).not.toHaveTextContent('ZZZ')
+  })
+})
+
+describe('CurrencyConverter localized amount editing', () => {
+  it('keeps a German decimal separator visible throughout editing', async () => {
+    await setUserLocale('de-DE', { notify: false, persist: false })
+    useCurrencyRateSpy.mockReturnValue({
+      data: 1,
+      via: undefined,
+      sources: [],
+      isLoading: false,
+      error: undefined,
+    })
+
+    render(<ConverterContent />)
+
+    const amountInput = screen.getByRole('textbox')
+    fireEvent.change(amountInput, { target: { value: '1,' } })
+    expect(amountInput).toHaveValue('1,')
+
+    fireEvent.change(amountInput, { target: { value: '1,50' } })
+    expect(amountInput).toHaveValue('1,50')
   })
 })
 

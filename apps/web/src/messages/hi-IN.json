@@ -1393,7 +1393,8 @@
       "lastMonth": "पिछले महीने",
       "earlierThisYear": "इस वर्ष की शुरुआत में",
       "lastYear": "पिछले वर्ष",
-      "older": "पुराने खर्च"
+      "older": "पुराने खर्च",
+      "previousWeek": "पिछले सप्ताह"
     },
     "filters": {
       "mobileTitle": "खर्च फ़िल्टर करें",
@@ -2702,5 +2703,12 @@
     },
     "fallbackPrefix": "दर का स्रोत",
     "fallbackSeparator": " और "
+  },
+  "DatePicker": {
+    "presets": {
+      "yesterday": "बीता कल",
+      "today": "आज",
+      "tomorrow": "आगामी कल"
+    }
   }
 }

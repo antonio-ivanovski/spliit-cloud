@@ -38,8 +38,8 @@ describe('ReportPrintDialog', () => {
     const from = (await screen.findByLabelText('From')) as HTMLInputElement
     const to = screen.getByLabelText('To') as HTMLInputElement
     await waitFor(() => {
-      expect(from.value).toBe('2026-07-01')
-      expect(to.value).toBe('2026-08-03')
+      expect(from.value).toBe('07/01/2026')
+      expect(to.value).toBe('08/03/2026')
     })
   })
 
@@ -58,9 +58,10 @@ describe('ReportPrintDialog', () => {
     )
 
     const from = (await screen.findByLabelText('From')) as HTMLInputElement
-    await waitFor(() => expect(from.value).toBe('2026-07-01'))
+    await waitFor(() => expect(from.value).toBe('07/01/2026'))
     await user.clear(from)
-    await user.type(from, '2026-08-10')
+    await user.type(from, '08/10/2026')
+    await user.tab()
 
     expect(
       await screen.findByText(
@@ -81,7 +82,7 @@ describe('ReportPrintDialog', () => {
     )
 
     const from = (await screen.findByLabelText('From')) as HTMLInputElement
-    await waitFor(() => expect(from.value).toBe('2026-07-01'))
+    await waitFor(() => expect(from.value).toBe('07/01/2026'))
     await user.click(screen.getByRole('button', { name: 'Open print view' }))
 
     expect(openMock).toHaveBeenCalledWith(
@@ -104,7 +105,7 @@ describe('ReportPrintDialog', () => {
     )
 
     const from = (await screen.findByLabelText('From')) as HTMLInputElement
-    await waitFor(() => expect(from.value).toBe('2026-07-01'))
+    await waitFor(() => expect(from.value).toBe('07/01/2026'))
     await user.click(screen.getByRole('button', { name: 'Open print view' }))
 
     expect(mockToast).toHaveBeenCalledWith({

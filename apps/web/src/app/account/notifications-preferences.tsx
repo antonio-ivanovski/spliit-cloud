@@ -148,7 +148,7 @@ function ChannelSelector({
             >
               <Check
                 className={cn(
-                  'mr-2 h-4 w-4 shrink-0',
+                  'me-2 h-4 w-4 shrink-0',
                   checked ? 'opacity-100' : 'invisible',
                 )}
               />
@@ -173,7 +173,7 @@ function ChannelSelector({
     >
       <span className="truncate">{saving ? savingLabel : summary}</span>
       <ChevronsUpDown
-        className="ml-2 h-4 w-4 shrink-0 opacity-50"
+        className="ms-2 h-4 w-4 shrink-0 opacity-50"
         aria-hidden="true"
       />
     </Button>
@@ -527,7 +527,7 @@ export function NotificationsPreferences() {
                 >
                   {push.isLoading || push.isUpdating ? (
                     <span
-                      className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent"
+                      className="me-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-e-transparent"
                       aria-hidden="true"
                     />
                   ) : null}

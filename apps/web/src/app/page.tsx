@@ -98,7 +98,7 @@ function LandingIntro() {
   const { t } = useTranslation()
 
   return (
-    <section className="mx-auto flex max-w-2xl flex-col gap-6 text-center lg:mx-0 lg:text-left">
+    <section className="mx-auto flex max-w-2xl flex-col gap-6 text-center lg:mx-0 lg:text-start">
       <div className="flex flex-col gap-4">
         <h1 className="landing-header py-2 text-3xl leading-none! font-bold sm:text-4xl lg:text-5xl">
           <Trans i18nKey="Homepage.title" components={{ strong: <strong /> }} />
@@ -110,7 +110,7 @@ function LandingIntro() {
           />
         </p>
       </div>
-      <div className="motion-stagger grid gap-2 text-left sm:grid-cols-2">
+      <div className="motion-stagger grid gap-2 text-start sm:grid-cols-2">
         {signedOutFeatures.map((feature) => (
           <FeatureItem
             key={feature.key}

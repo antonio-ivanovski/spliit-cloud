@@ -91,7 +91,8 @@
       "lastMonth": "Vorige maand",
       "earlierThisYear": "Eerder dit jaar",
       "lastYear": "Vorig jaar",
-      "older": "Oudere uitgaven"
+      "older": "Oudere uitgaven",
+      "previousWeek": "Vorige week"
     },
     "filters": {
       "mobileTitle": "Filter kosten",
@@ -2706,5 +2707,12 @@
     },
     "fallbackPrefix": "Koersen van",
     "fallbackSeparator": " en "
+  },
+  "DatePicker": {
+    "presets": {
+      "yesterday": "Gisteren",
+      "today": "Vandaag",
+      "tomorrow": "Morgen"
+    }
   }
 }

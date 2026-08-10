@@ -88,7 +88,7 @@ export function SplitwiseAnonymizerCard() {
             onClick={() => inputRef.current?.click()}
             className="bg-background"
           >
-            <HatGlasses className="mr-2 h-4 w-4" />
+            <HatGlasses className="me-2 h-4 w-4" />
             {t('Groups.Import.Source.splitwiseAnonymizeButton')}
           </Button>
           <a

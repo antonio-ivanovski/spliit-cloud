@@ -161,10 +161,10 @@ export const GroupHeader = ({
           <Button
             variant="ghost"
             size="icon"
-            className="-ml-2"
+            className="-ms-2"
             render={<Link href="/" title={tGroups('backToHome')} />}
           >
-            <ArrowLeft className="h-5 w-5" />
+            <ArrowLeft className="h-5 w-5 rtl:rotate-180" />
           </Button>
           <Link href={`/groups/${groupId}`} className="truncate">
             {isLoading ? (
@@ -223,7 +223,7 @@ export const GroupHeader = ({
                   acceptLinkMutation.isPending
                 }
               >
-                <Check className="mr-2 h-4 w-4" />
+                <Check className="me-2 h-4 w-4" />
                 {tGroups('invitationAccept')}
               </Button>
               {isLinkBanner ? (
@@ -237,7 +237,7 @@ export const GroupHeader = ({
                   onClick={leaveToGroupsList}
                   disabled={acceptLinkMutation.isPending}
                 >
-                  <X className="mr-2 h-4 w-4" />
+                  <X className="me-2 h-4 w-4" />
                   {tGroups('invitationDecline')}
                 </Button>
               ) : (
@@ -253,7 +253,7 @@ export const GroupHeader = ({
                     acceptMutation.isPending || declineMutation.isPending
                   }
                 >
-                  <X className="mr-2 h-4 w-4" />
+                  <X className="me-2 h-4 w-4" />
                   {tGroups('invitationDecline')}
                 </Button>
               )}

@@ -63,7 +63,7 @@ export function SettlementAvatar({
   const visibleMembers = members.slice(0, 4)
   const hiddenCount = members.length - visibleMembers.length
   const avatarClass = size === 'sm' ? 'size-5' : 'size-4'
-  const overlapClass = '-ml-1'
+  const overlapClass = '-ms-1'
 
   return (
     <div className="isolate flex shrink-0 items-center" aria-label={label}>
@@ -225,7 +225,7 @@ export function SettlementLegList({ children }: { children: ReactNode }) {
     <div className="relative -mx-3 -mt-3 border-t border-border/50 pt-3">
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 -top-1 left-5 border-l border-border/70"
+        className="pointer-events-none absolute inset-y-0 start-5 -top-1 border-s border-border/70"
       />
       <div className="relative divide-y divide-border/50">{children}</div>
     </div>
@@ -252,16 +252,16 @@ export function SettlementLegRow({
   showRail?: boolean
 }) {
   return (
-    <div className="relative flex min-h-11 items-center gap-2 bg-background/40 py-2 pr-3 pl-12 text-xs transition-colors hover:bg-muted/20">
+    <div className="relative flex min-h-11 items-center gap-2 bg-background/40 py-2 ps-12 pe-3 text-xs transition-colors hover:bg-muted/20">
       {showRail ? (
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 left-5 border-l border-border/70"
+          className="pointer-events-none absolute inset-y-0 start-5 border-s border-border/70"
         />
       ) : null}
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute top-1/2 left-5 w-3 border-t border-border/70"
+        className="pointer-events-none absolute start-5 top-1/2 w-3 border-t border-border/70"
       />
       <SettlementAvatar
         members={counterparty.members}

@@ -131,7 +131,7 @@ export function CategorySelector({
                       })
                     : (multiPlaceholder ?? 'Select')}
                 </span>
-                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                <ChevronsUpDown className="ms-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             }
           />
@@ -172,7 +172,7 @@ export function CategorySelector({
               ? t('Expenses.filters.nSelected', { count: multiCount })
               : (multiPlaceholder ?? 'Select')}
           </span>
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <ChevronsUpDown className="ms-2 h-4 w-4 shrink-0 opacity-50" />
         </PopoverTrigger>
         <PopoverContent className="p-0" align="start">
           {command}
@@ -295,12 +295,12 @@ function CategoryCommand({
                 {mode === 'multi' && (
                   <Check
                     className={cn(
-                      'mr-2 h-4 w-4 shrink-0',
+                      'me-2 h-4 w-4 shrink-0',
                       parentSelected ? '' : 'invisible',
                     )}
                   />
                 )}
-                <Layers className="mr-2 h-4 w-4 shrink-0" aria-hidden="true" />
+                <Layers className="me-2 h-4 w-4 shrink-0" aria-hidden="true" />
                 <span className="flex min-w-0 flex-1 items-baseline gap-2">
                   <span className="truncate">{groupLabel}</span>
                   {children.length > 0 && (
@@ -331,12 +331,12 @@ function CategoryCommand({
                     {mode === 'multi' && (
                       <Check
                         className={cn(
-                          'mr-2 h-4 w-4 shrink-0',
+                          'me-2 h-4 w-4 shrink-0',
                           childSelected ? '' : 'invisible',
                         )}
                       />
                     )}
-                    <span className="pl-8">
+                    <span className="ps-8">
                       <CategoryLabel category={category} />
                     </span>
                   </CommandItem>
@@ -417,7 +417,7 @@ const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>(
       >
         <span
           className={
-            compact ? 'flex items-center justify-center' : 'flex-1 text-left'
+            compact ? 'flex items-center justify-center' : 'flex-1 text-start'
           }
         >
           <CategoryLabel category={category} compact={compact} />

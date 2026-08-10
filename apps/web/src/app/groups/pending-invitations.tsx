@@ -142,7 +142,7 @@ export function PendingInvitations() {
                       declineMutation.mutate({ invitationId: invitation.id })
                     }
                   >
-                    <X className="mr-1 h-4 w-4" />
+                    <X className="me-1 h-4 w-4" />
                     {t('invitations.decline')}
                   </Button>
                   <Button
@@ -152,9 +152,9 @@ export function PendingInvitations() {
                       acceptMutation.mutate({ invitationId: invitation.id })
                     }
                   >
-                    <Check className="mr-1 h-4 w-4" />
+                    <Check className="me-1 h-4 w-4" />
                     {t('invitations.accept')}
-                    <ArrowRight className="ml-1 h-4 w-4" />
+                    <ArrowRight className="ms-1 h-4 w-4 rtl:rotate-180" />
                   </Button>
                 </div>
               </li>

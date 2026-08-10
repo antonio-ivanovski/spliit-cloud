@@ -85,7 +85,7 @@ function ExportOption({
         </div>
         <p className="text-xs leading-snug text-muted-foreground">{purpose}</p>
       </div>
-      <div className="col-span-2 sm:ml-auto">{action}</div>
+      <div className="col-span-2 sm:ms-auto">{action}</div>
     </div>
   )
 }

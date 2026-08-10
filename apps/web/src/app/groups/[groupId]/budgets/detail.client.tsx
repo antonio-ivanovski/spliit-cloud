@@ -222,7 +222,7 @@ export function BudgetDetailModal({
                   size="sm"
                   onClick={() => void budgetQuery.refetch()}
                 >
-                  <RefreshCw className="mr-2 size-4" aria-hidden="true" />
+                  <RefreshCw className="me-2 size-4" aria-hidden="true" />
                   {t('retry')}
                 </Button>
               </div>
@@ -529,7 +529,7 @@ export function BudgetDetailModal({
               <>
                 {canDelete && (
                   <DeletePopup
-                    className="mr-auto"
+                    className="me-auto"
                     labels={{
                       label: t('delete'),
                       title: t('delete'),
@@ -558,7 +558,7 @@ export function BudgetDetailModal({
                     disabled={archiveMutation.isPending}
                   >
                     <ArchiveRestore
-                      className="mr-2 size-4"
+                      className="me-2 size-4"
                       aria-hidden="true"
                     />
                     {tCommon('Groups.bannerUnarchive')}
@@ -578,7 +578,7 @@ export function BudgetDetailModal({
                         }
                         disabled={archiveMutation.isPending}
                       >
-                        <Archive className="mr-2 size-4" aria-hidden="true" />
+                        <Archive className="me-2 size-4" aria-hidden="true" />
                         {t('archive')}
                       </Button>
                     )}

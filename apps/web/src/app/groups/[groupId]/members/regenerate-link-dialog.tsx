@@ -129,7 +129,7 @@ export function RegenerateLinkDialog({
                   onShare={handleShare}
                   canShare={canShare}
                 />
-                <p className="border-l-2 border-amber-500/50 pl-3 text-sm text-amber-900 dark:text-amber-200">
+                <p className="border-s-2 border-amber-500/50 ps-3 text-sm text-amber-900 dark:text-amber-200">
                   {t('manage.linkReadyWarning')}
                 </p>
               </ResponsiveDialogBody>
@@ -174,7 +174,7 @@ export function RegenerateLinkDialog({
                 >
                   {regenerateLink.isPending && (
                     <Loader2
-                      className="mr-2 h-4 w-4 animate-spin"
+                      className="me-2 h-4 w-4 animate-spin"
                       aria-hidden="true"
                     />
                   )}

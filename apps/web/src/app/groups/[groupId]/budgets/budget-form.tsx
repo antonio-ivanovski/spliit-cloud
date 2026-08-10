@@ -13,6 +13,7 @@ import { FixedActionBar } from '@/components/fixed-action-bar'
 import { ParticipantSelector } from '@/components/participant-selector'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
+import { DateInput } from '@/components/ui/date-input'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
@@ -25,6 +26,7 @@ import {
 } from '@/components/ui/select'
 import { useLocale } from '@/i18n/react'
 import { getCurrencyFromGroup } from '@/lib/currency'
+import { localizeCurrencyInput } from '@/lib/currency-input'
 import { formatDateOnly } from '@/lib/utils'
 import {
   amountAsDecimal,
@@ -305,7 +307,7 @@ export function BudgetForm({
           <Label htmlFor="budget-amount">{t('form.amount')}</Label>
           <div className="flex min-h-10 w-full overflow-hidden rounded-md border border-input bg-background transition-colors focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
             <div
-              className="flex h-10 shrink-0 items-center gap-2 border-r border-input px-3"
+              className="flex h-10 shrink-0 items-center gap-2 border-e border-input px-3"
               aria-label={currency.code}
             >
               <CurrencyIcon
@@ -320,13 +322,14 @@ export function BudgetForm({
               className="h-10 w-full rounded-none border-0 text-lg font-semibold shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
               type="text"
               inputMode="decimal"
-              placeholder={amountPlaceholder(currency.decimal_digits)}
-              value={amount}
+              placeholder={amountPlaceholder(currency.decimal_digits, locale)}
+              value={localizeCurrencyInput(amount, locale)}
               onChange={(event) =>
                 setAmount(
                   enforceCurrencyPattern(
                     event.target.value,
                     currency.decimal_digits,
+                    locale,
                   ),
                 )
               }
@@ -372,20 +375,20 @@ export function BudgetForm({
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="budget-start">{t('form.startDate')}</Label>
-              <Input
+              <DateInput
                 id="budget-start"
-                type="date"
+                pickerTitle={t('form.startDate')}
                 value={customStart}
-                onChange={(event) => setCustomStart(event.target.value)}
+                onValueChange={setCustomStart}
               />
             </div>
             <div className="space-y-2">
               <Label htmlFor="budget-end">{t('form.endDate')}</Label>
-              <Input
+              <DateInput
                 id="budget-end"
-                type="date"
+                pickerTitle={t('form.endDate')}
                 value={customEnd}
-                onChange={(event) => setCustomEnd(event.target.value)}
+                onValueChange={setCustomEnd}
               />
             </div>
           </div>
@@ -534,12 +537,12 @@ export function BudgetForm({
         <Button type="submit" disabled={pending} className="min-w-28">
           {pending ? (
             <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className="me-2 h-4 w-4 animate-spin" />
               {t('saving')}
             </>
           ) : (
             <>
-              <Save className="mr-2 h-4 w-4" />
+              <Save className="me-2 h-4 w-4" />
               {t('save')}
             </>
           )}

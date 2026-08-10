@@ -3,6 +3,7 @@ import { twMerge } from 'tailwind-merge'
 
 import type { Category } from './categories'
 import { getCurrency, getCurrencyFromGroup, type Currency } from './currency'
+import { resolveFormattingLocale } from './i18n'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -48,7 +49,7 @@ export function formatDate(
   locale: string,
   options: { dateStyle?: DateTimeStyle; timeStyle?: DateTimeStyle } = {},
 ) {
-  return date.toLocaleString(locale, {
+  return date.toLocaleString(resolveFormattingLocale(locale), {
     ...options,
   })
 }
@@ -77,7 +78,7 @@ export function formatDateOnly(
   // Create a new date in the user's local timezone with these components
   const localDate = new Date(year, month, day)
 
-  return localDate.toLocaleString(locale, {
+  return localDate.toLocaleString(resolveFormattingLocale(locale), {
     ...options,
   })
 }
@@ -106,13 +107,13 @@ export function formatCurrency(
   // symbol appended (`0.5 ₿`, `5,000 sats`).
   if (currency.crypto) {
     const value = fractions ? amount : amountAsDecimal(amount, currency)
-    const formatted = new Intl.NumberFormat(locale, {
+    const formatted = new Intl.NumberFormat(resolveFormattingLocale(locale), {
       minimumFractionDigits: 0,
       maximumFractionDigits: currency.decimal_digits,
     }).format(value)
     return `${formatted} ${currency.symbol}`
   }
-  const format = new Intl.NumberFormat(locale, {
+  const format = new Intl.NumberFormat(resolveFormattingLocale(locale), {
     minimumFractionDigits: currency.decimal_digits,
     maximumFractionDigits: currency.decimal_digits,
     style: 'currency',
@@ -230,7 +231,7 @@ export function formatAmountAsDecimal(amount: number, currency: Currency) {
 
 export function formatFileSize(size: number, locale: string) {
   const formatNumber = (num: number) =>
-    num.toLocaleString(locale, {
+    num.toLocaleString(resolveFormattingLocale(locale), {
       minimumFractionDigits: 0,
       maximumFractionDigits: 1,
     })
@@ -239,6 +240,26 @@ export function formatFileSize(size: number, locale: string) {
   if (size > 1024 ** 2) return `${formatNumber(size / 1024 ** 2)} MB`
   if (size > 1024) return `${formatNumber(size / 1024)} kB`
   return `${formatNumber(size)} B`
+}
+
+export function formatNumber(
+  value: number,
+  locale: string,
+  options: Intl.NumberFormatOptions = {},
+) {
+  return new Intl.NumberFormat(resolveFormattingLocale(locale), options).format(
+    value,
+  )
+}
+
+export function formatList(
+  values: readonly string[],
+  locale: string,
+  options: Intl.ListFormatOptions = {},
+) {
+  return new Intl.ListFormat(resolveFormattingLocale(locale), options).format(
+    values,
+  )
 }
 
 export function normalizeString(input: string): string {

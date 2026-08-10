@@ -212,7 +212,7 @@ export function PaidByCard(props: {
           <Button
             variant="link"
             type="button"
-            className="-my-2 -mr-2"
+            className="-my-2 -me-2"
             disabled={readOnly}
             onClick={handleResetPaidByDistribution}
           >
@@ -221,7 +221,7 @@ export function PaidByCard(props: {
           <Button
             variant="link"
             type="button"
-            className="-my-2 -mr-2"
+            className="-my-2 -me-2"
             disabled={readOnly}
             onClick={handleSelectPaidByParticipants}
           >

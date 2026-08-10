@@ -14,6 +14,12 @@ import {
   type EmailDeliverySender,
 } from './delivery-senders'
 import type { DeliverySnapshotV1 } from './delivery-snapshot'
+import {
+  formatNotificationAmount,
+  formatNotificationDate,
+  formatNotificationNumber,
+  formatNotificationPercent,
+} from './format'
 import { buildEmailUnsubscribeMetadata } from './unsubscribe'
 
 const MESSAGE_ID_DOMAIN = 'spliit.app'
@@ -94,15 +100,22 @@ function renderSnapshotEmail(args: {
   const groupDisplayName = snapshot.group.name
   const actor = actorName(snapshot)
   const link = snapshot.link
+  const locale = snapshot.recipient.locale ?? 'en-US'
 
   switch (snapshot.kind) {
     case 'budget_alert': {
       const used =
-        formatAmount(snapshot.budget.used, snapshot.budget.currencyCode) ??
-        String(snapshot.budget.used)
+        formatNotificationAmount(
+          snapshot.budget.used,
+          snapshot.budget.currencyCode,
+          locale,
+        ) ?? String(snapshot.budget.used)
       const limit =
-        formatAmount(snapshot.budget.limit, snapshot.budget.currencyCode) ??
-        String(snapshot.budget.limit)
+        formatNotificationAmount(
+          snapshot.budget.limit,
+          snapshot.budget.currencyCode,
+          locale,
+        ) ?? String(snapshot.budget.limit)
       const percentage =
         snapshot.budget.limit > 0
           ? (snapshot.budget.used / snapshot.budget.limit) * 100
@@ -114,9 +127,9 @@ function renderSnapshotEmail(args: {
             snapshot.budget.period,
             periodStart,
             periodEnd,
-            (date) => date.toLocaleDateString('en-US', { dateStyle: 'medium' }),
+            (date) => formatNotificationDate(date, locale) ?? '',
           )
-        : `${periodStart.toLocaleDateString('en-US', { dateStyle: 'medium' })} – ${periodEnd.toLocaleDateString('en-US', { dateStyle: 'medium' })}`
+        : `${formatNotificationDate(periodStart, locale) ?? ''} – ${formatNotificationDate(periodEnd, locale) ?? ''}`
       return renderBudgetAlertEmail({
         kind: 'budget_alert',
         subject: `[Spliit Cloud] ${snapshot.budget.alertType === 'OVER' ? 'Budget exceeded' : 'Budget trending over'}: ${snapshot.budget.name}`,
@@ -127,6 +140,7 @@ function renderSnapshotEmail(args: {
         usedStr: used,
         limitStr: limit,
         percentage,
+        percentageLabel: formatNotificationPercent(percentage, locale),
         periodRange,
         alertType: snapshot.budget.alertType,
         budgetUrl: link,
@@ -142,11 +156,12 @@ function renderSnapshotEmail(args: {
         groupDisplayName: groupDisplayName,
         actorName: actor,
         title: snapshot.expense.description,
-        amountStr: formatAmount(
+        amountStr: formatNotificationAmount(
           snapshot.expense.amount,
           snapshot.expense.currencyCode,
+          locale,
         ),
-        date: snapshot.date ?? null,
+        date: formatNotificationDate(snapshot.date, locale),
         expenseUrl: link,
         unsubscribeUrl,
         eventType: 'EXPENSE_CREATED',
@@ -160,9 +175,10 @@ function renderSnapshotEmail(args: {
         groupDisplayName: groupDisplayName,
         actorName: actor,
         title: snapshot.expense.description,
-        amountStr: formatAmount(
+        amountStr: formatNotificationAmount(
           snapshot.expense.amount,
           snapshot.expense.currencyCode,
+          locale,
         ),
         date: null,
         changedFields: snapshot.changedFields,
@@ -179,11 +195,12 @@ function renderSnapshotEmail(args: {
         groupDisplayName: groupDisplayName,
         actorName: actor,
         title: snapshot.expense.description,
-        amountStr: formatAmount(
+        amountStr: formatNotificationAmount(
           snapshot.expense.amount,
           snapshot.expense.currencyCode,
+          locale,
         ),
-        date: snapshot.date ?? null,
+        date: formatNotificationDate(snapshot.date, locale),
         stopped: snapshot.stopped,
         expenseUrl: link,
         unsubscribeUrl,
@@ -215,11 +232,12 @@ function renderSnapshotEmail(args: {
         groupDisplayName: groupDisplayName,
         actorName: actor,
         title: snapshot.expense.description,
-        amountStr: formatAmount(
+        amountStr: formatNotificationAmount(
           snapshot.expense.amount,
           snapshot.expense.currencyCode,
+          locale,
         ),
-        date: snapshot.date ?? null,
+        date: formatNotificationDate(snapshot.date, locale),
         recurrence: snapshot.recurrence.rule,
         expenseUrl: link,
         unsubscribeUrl,
@@ -234,9 +252,10 @@ function renderSnapshotEmail(args: {
         groupDisplayName: groupDisplayName,
         actorName: actor,
         title: snapshot.expense.description,
-        amountStr: formatAmount(
+        amountStr: formatNotificationAmount(
           snapshot.expense.amount,
           snapshot.expense.currencyCode,
+          locale,
         ),
         date: null,
         recurrence: snapshot.recurrence.rule,
@@ -246,6 +265,16 @@ function renderSnapshotEmail(args: {
       })
     case 'recurring_summary': {
       const noun = snapshot.occurrenceCount === 1 ? 'expense' : 'expenses'
+      const countLabel = formatNotificationNumber(
+        snapshot.occurrenceCount,
+        locale,
+      )
+      const startDate =
+        formatNotificationDate(snapshot.dateRange.start, locale) ??
+        snapshot.dateRange.start
+      const endDate =
+        formatNotificationDate(snapshot.dateRange.end, locale) ??
+        snapshot.dateRange.end
       const verb =
         snapshot.operation === 'update'
           ? 'updated'
@@ -254,10 +283,10 @@ function renderSnapshotEmail(args: {
             : 'added'
       const heading =
         snapshot.operation === 'update'
-          ? `${snapshot.occurrenceCount} recurring ${noun} updated`
+          ? `${countLabel} recurring ${noun} updated`
           : snapshot.operation === 'delete'
-            ? `${snapshot.occurrenceCount} recurring ${noun} removed`
-            : `${snapshot.occurrenceCount} recurring ${noun} caught up`
+            ? `${countLabel} recurring ${noun} removed`
+            : `${countLabel} recurring ${noun} caught up`
       const titleStr = snapshot.title ? ` "${snapshot.title}"` : ''
       const stoppedSuffix = snapshot.stopped
         ? ' and the recurrence was stopped'
@@ -265,14 +294,15 @@ function renderSnapshotEmail(args: {
       return renderExpenseActivityEmail({
         kind: 'recurring_expense_summary',
         subject: `[Spliit Cloud] ${heading} in ${groupDisplayName}`,
-        text: `${actor} ${verb} ${snapshot.occurrenceCount} recurring ${noun}${titleStr} (${snapshot.recurrence.rule}) in ${groupDisplayName} for ${snapshot.dateRange.start} through ${snapshot.dateRange.end}${stoppedSuffix}.\n\nView it here:\n${link}`,
+        text: `${actor} ${verb} ${countLabel} recurring ${noun}${titleStr} (${snapshot.recurrence.rule}) in ${groupDisplayName} for ${startDate} through ${endDate}${stoppedSuffix}.\n\nView it here:\n${link}`,
         brandBaseUrl,
         groupDisplayName: groupDisplayName,
         actorName: actor,
         title: snapshot.title,
         count: snapshot.occurrenceCount,
-        startDate: snapshot.dateRange.start,
-        endDate: snapshot.dateRange.end,
+        countLabel,
+        startDate,
+        endDate,
         groupUrl: link,
         unsubscribeUrl,
         operation: snapshot.operation,
@@ -300,19 +330,21 @@ function renderSnapshotEmail(args: {
     }
     case 'import_summary': {
       const noun = snapshot.import.count === 1 ? 'expense' : 'expenses'
-      const totalStr = formatAmount(
+      const totalStr = formatNotificationAmount(
         snapshot.totalAmount ?? null,
         snapshot.currencyCode ?? null,
+        locale,
       )
       const source = snapshot.import.source
       return renderExpenseActivityEmail({
         kind: 'import_summary',
-        subject: `[Spliit Cloud] ${snapshot.import.count} ${noun} imported in ${groupDisplayName}`,
-        text: `${actor} imported ${snapshot.import.count} ${noun}${source ? ` from ${source}` : ''} in ${groupDisplayName}${totalStr ? ` (total ${totalStr})` : ''}.\n\nView the group here:\n${link}`,
+        subject: `[Spliit Cloud] ${formatNotificationNumber(snapshot.import.count, locale)} ${noun} imported in ${groupDisplayName}`,
+        text: `${actor} imported ${formatNotificationNumber(snapshot.import.count, locale)} ${noun}${source ? ` from ${source}` : ''} in ${groupDisplayName}${totalStr ? ` (total ${totalStr})` : ''}.\n\nView the group here:\n${link}`,
         brandBaseUrl,
         groupDisplayName: groupDisplayName,
         actorName: actor,
         count: snapshot.import.count,
+        countLabel: formatNotificationNumber(snapshot.import.count, locale),
         sourceProvider: source,
         totalStr,
         groupUrl: link,
@@ -324,12 +356,17 @@ function renderSnapshotEmail(args: {
       return renderExpenseActivityEmail({
         kind: 'expense_categories_bulk_updated',
         subject: `[Spliit Cloud] Expense categories updated in ${groupDisplayName}`,
-        text: `${actor} updated categories for ${snapshot.count} ${noun}${snapshot.distinctCategories != null ? ` across ${snapshot.distinctCategories} categories` : ''} in ${groupDisplayName}.\n\nView the group here:\n${link}`,
+        text: `${actor} updated categories for ${formatNotificationNumber(snapshot.count, locale)} ${noun}${snapshot.distinctCategories != null ? ` across ${formatNotificationNumber(snapshot.distinctCategories, locale)} categories` : ''} in ${groupDisplayName}.\n\nView the group here:\n${link}`,
         brandBaseUrl,
         groupDisplayName: groupDisplayName,
         actorName: actor,
         count: snapshot.count,
+        countLabel: formatNotificationNumber(snapshot.count, locale),
         distinctCategories: snapshot.distinctCategories ?? null,
+        distinctCategoriesLabel:
+          snapshot.distinctCategories != null
+            ? formatNotificationNumber(snapshot.distinctCategories, locale)
+            : null,
         groupUrl: link,
         unsubscribeUrl,
       })
@@ -355,9 +392,10 @@ function renderSnapshotEmail(args: {
         groupDisplayName: groupDisplayName,
         actorName: actor,
         title: snapshot.expense.description,
-        amountStr: formatAmount(
+        amountStr: formatNotificationAmount(
           snapshot.expense.amount,
           snapshot.expense.currencyCode,
+          locale,
         ),
         date: null,
         expenseUrl: link,
@@ -383,16 +421,6 @@ function renderSnapshotEmail(args: {
         unsubscribeUrl,
       })
   }
-}
-
-function formatAmount(
-  cents: number | null | undefined,
-  currencyCode: string | null | undefined,
-): string | null {
-  if (cents == null) return null
-  const code = currencyCode ?? null
-  const formatted = (cents / 100).toFixed(2)
-  return code ? `${code} ${formatted}` : formatted
 }
 
 export class EmailDeliverySenderImpl implements EmailDeliverySender {

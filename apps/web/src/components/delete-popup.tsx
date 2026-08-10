@@ -48,7 +48,7 @@ export function DeletePopup({ onDelete, className, labels }: Props) {
               className,
             )}
           >
-            <Trash2 className="h-4 w-4 min-[420px]:mr-2" />
+            <Trash2 className="h-4 w-4 min-[420px]:me-2" />
             <span className="hidden min-[420px]:inline">
               {labels?.label ?? t('label')}
             </span>

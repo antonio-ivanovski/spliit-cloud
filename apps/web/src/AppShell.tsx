@@ -166,7 +166,7 @@ function Content() {
                 <Link href="https://github.com/antonio-ivanovski/spliit-cloud" />
               }
             >
-              <img src={githubSvg} alt="" className="mr-2 h-4 w-4" />
+              <img src={githubSvg} alt="" className="me-2 h-4 w-4" />
               GitHub
             </Button>
           </footer>

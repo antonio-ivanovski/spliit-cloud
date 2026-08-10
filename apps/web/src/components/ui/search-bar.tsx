@@ -25,11 +25,11 @@ const SearchBar = React.forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <div className={cn('flex relative', containerClassName)}>
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <Search className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <Input
           type={type}
           className={cn(
-            'pl-10 h-9 text-sm focus:text-base bg-muted border-none text-muted-foreground',
+            'ps-10 h-9 text-sm focus:text-base bg-muted border-none text-muted-foreground',
             className,
           )}
           ref={ref}
@@ -41,7 +41,7 @@ const SearchBar = React.forwardRef<HTMLInputElement, InputProps>(
         {!value ? null : (
           <button
             type="button"
-            className="absolute inset-y-0 right-0 flex w-10 touch-manipulation items-center justify-center rounded-r-md"
+            className="absolute inset-y-0 end-0 flex w-10 touch-manipulation items-center justify-center rounded-e-md"
             aria-label={t('clearSearch')}
             onClick={() => setValue('')}
           >

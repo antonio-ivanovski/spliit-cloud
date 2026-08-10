@@ -162,9 +162,9 @@ export default function FeedbackPage() {
                 onClick={copyDiagnostics}
               >
                 {copyState === 'copied' ? (
-                  <Check className="mr-2 size-4" aria-hidden="true" />
+                  <Check className="me-2 size-4" aria-hidden="true" />
                 ) : (
-                  <Copy className="mr-2 size-4" aria-hidden="true" />
+                  <Copy className="me-2 size-4" aria-hidden="true" />
                 )}
                 {copyState === 'copied'
                   ? t('diagnostics.copied')

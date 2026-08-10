@@ -31,7 +31,7 @@ describe('CategorySelector', () => {
       name: /Home \(Includes subcategories\)/,
     })
     expect(parent).toHaveClass('font-semibold')
-    expect(screen.getByText('Rent').parentElement).toHaveClass('pl-8')
+    expect(screen.getByText('Rent').parentElement).toHaveClass('ps-8')
 
     await user.click(parent)
     expect(onValueToggle).toHaveBeenCalledWith('home')

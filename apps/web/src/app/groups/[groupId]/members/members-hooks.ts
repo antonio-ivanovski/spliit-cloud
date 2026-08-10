@@ -7,6 +7,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
+import { resolveFormattingLocale } from '@spliit/domain'
 
 import { useCurrentGroup } from '../current-group-context'
 
@@ -108,7 +109,7 @@ function getDateFormat(locale: string, timeZone: string) {
   const key = `${locale}:${timeZone}`
   let fmt = dateFormatCache.get(key)
   if (!fmt) {
-    fmt = new Intl.DateTimeFormat(locale, {
+    fmt = new Intl.DateTimeFormat(resolveFormattingLocale(locale), {
       year: 'numeric',
       month: 'short',
       day: 'numeric',

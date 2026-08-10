@@ -14,6 +14,7 @@ import { CurrencyRateProviderAttribution } from '@/components/currency-rate-prov
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
+import { DateInput } from '@/components/ui/date-input'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useCurrencyRates } from '@/lib/hooks'
@@ -147,7 +148,7 @@ function OptionCard({
         data-state={selected ? 'checked' : 'unchecked'}
         onClick={onClick}
         className={cn(
-          'flex w-full items-start gap-3 p-3 text-left',
+          'flex w-full items-start gap-3 p-3 text-start',
           'focus-visible:outline-hidden',
         )}
       >
@@ -283,10 +284,10 @@ function PairConversionCard({
                   variant="ghost"
                   size="sm"
                   onClick={onRefreshPerDate}
-                  className="ml-auto h-6 px-1.5 text-xs"
+                  className="ms-auto h-6 px-1.5 text-xs"
                 >
                   <RefreshCw className="h-3 w-3" />
-                  <span className="ml-1">
+                  <span className="ms-1">
                     {t('Groups.Import.CurrencyConversion.refresh')}
                   </span>
                 </Button>
@@ -337,11 +338,13 @@ function PairConversionCard({
                   >
                     {t('Groups.Import.CurrencyConversion.rateDateLabel')}
                   </Label>
-                  <Input
+                  <DateInput
                     id={`rate-date-${pairKey}`}
-                    type="date"
+                    pickerTitle={t(
+                      'Groups.Import.CurrencyConversion.rateDateLabel',
+                    )}
                     value={date}
-                    onChange={(e) => onDateChange(e.target.value)}
+                    onValueChange={onDateChange}
                     className="h-8 max-w-[160px] font-mono text-xs tabular-nums"
                   />
                   {fixedFetching && !fixedRate && (
@@ -371,10 +374,10 @@ function PairConversionCard({
                       variant="ghost"
                       size="sm"
                       onClick={() => fixedQuery.refetch()}
-                      className="ml-auto h-6 px-1.5 text-xs"
+                      className="ms-auto h-6 px-1.5 text-xs"
                     >
                       <RefreshCw className="h-3 w-3" />
-                      <span className="ml-1">
+                      <span className="ms-1">
                         {t('Groups.Import.CurrencyConversion.refresh')}
                       </span>
                     </Button>

@@ -34,13 +34,13 @@ export function AvatarStack({
           account={account}
           variant="stack"
           size={size === 'sm' ? 'md' : 'lg'}
-          className={cn(sizeClass[size], index > 0 && '-ml-2')}
+          className={cn(sizeClass[size], index > 0 && '-ms-2')}
         />
       ))}
       {hiddenCount > 0 && (
         <span
           className={cn(
-            '-ml-2 grid place-items-center rounded-full border-2 border-background bg-muted text-[10px] font-medium text-muted-foreground',
+            '-ms-2 grid place-items-center rounded-full border-2 border-background bg-muted text-[10px] font-medium text-muted-foreground',
             sizeClass[size],
           )}
         >

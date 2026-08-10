@@ -62,6 +62,7 @@ function Participants({
   participantCount: number
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseCard' })
+  const locale = useLocale()
   const paidFor =
     expense.paidFor.length == participantCount && participantCount >= 4 ? (
       <strong>{t('everyone')}</strong>
@@ -83,7 +84,9 @@ function Participants({
   if (isMultiPayer) {
     // Decision #13: sort payers alphabetically by resolved display name.
     const sortedPaidByList = expense.paidByList.toSorted((a, b) =>
-      a.ledgerParticipant.name.localeCompare(b.ledgerParticipant.name),
+      a.ledgerParticipant.name.localeCompare(b.ledgerParticipant.name, locale, {
+        sensitivity: 'base',
+      }),
     )
     const paidByNames = sortedPaidByList.map((pb, index) => (
       <span key={pb.ledgerParticipant.id}>
@@ -180,7 +183,7 @@ export function ExpenseCard({
       key={expense.id}
       data-testid={`expense-item-${expense.id}`}
       className={cn(
-        'motion-surface motion-surface-interactive flex cursor-pointer items-stretch justify-between gap-1 px-4 py-4 text-sm hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-hidden sm:mx-6 sm:rounded-lg sm:pr-2 sm:pl-4',
+        'motion-surface motion-surface-interactive flex cursor-pointer items-stretch justify-between gap-1 px-4 py-4 text-sm hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-hidden sm:mx-6 sm:rounded-lg sm:ps-4 sm:pe-2',
         expense.isReimbursement && 'italic',
       )}
       role="button"
@@ -195,7 +198,7 @@ export function ExpenseCard({
     >
       <CategoryIcon
         category={expense.category}
-        className="mt-0.5 mr-2 h-4 w-4 text-muted-foreground"
+        className="me-2 mt-0.5 h-4 w-4 text-muted-foreground"
       />
       <div className="flex-1">
         {groupLabel && (
@@ -289,7 +292,7 @@ export function ExpenseCard({
           }}
           aria-label={expense.title}
         >
-          <ChevronRight className="h-4 w-4" />
+          <ChevronRight className="h-4 w-4 rtl:rotate-180" />
         </Button>
       ) : (
         <Button
@@ -303,7 +306,7 @@ export function ExpenseCard({
             />
           }
         >
-          <ChevronRight className="h-4 w-4" />
+          <ChevronRight className="h-4 w-4 rtl:rotate-180" />
         </Button>
       )}
     </div>

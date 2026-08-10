@@ -268,7 +268,7 @@ export function AmountCalculatorDialog({
         </ResponsiveDialogHeader>
 
         <ResponsiveDialogBody className="space-y-3">
-          <div className="overflow-hidden rounded-lg border bg-muted/35 px-4 py-3 text-right shadow-inner">
+          <div className="overflow-hidden rounded-lg border bg-muted/35 px-4 py-3 text-end shadow-inner">
             <div
               aria-live="polite"
               className="min-h-8 overflow-x-auto font-mono text-2xl tracking-tight whitespace-nowrap tabular-nums"
@@ -297,7 +297,7 @@ export function AmountCalculatorDialog({
 
           <Button
             aria-label={`${itemTransferCopy.label}: ${itemTransferCopy.note}`}
-            className={`h-14 w-full justify-between gap-3 px-3 text-left ${itemTransferClassName}`}
+            className={`h-14 w-full justify-between gap-3 px-3 text-start ${itemTransferClassName}`}
             disabled={!canTransferItems}
             size="sm"
             type="button"

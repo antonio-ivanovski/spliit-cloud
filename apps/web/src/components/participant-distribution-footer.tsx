@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { useLocale } from '@/i18n/react'
-import { cn, formatCurrency } from '@/lib/utils'
+import { cn, formatCurrency, formatNumber } from '@/lib/utils'
 import type { Currency, SplitMode } from '@spliit/domain'
 import { formatDisplayShares } from '@spliit/domain'
 
@@ -67,11 +67,14 @@ export function ParticipantDistributionFooter({
       message = t('percentageMatches')
       colorClass = 'text-emerald-600'
     } else {
-      const pct = (Math.round(diff * 100) / 100).toString()
+      const pct = formatNumber(Math.abs(diff), locale, {
+        maximumFractionDigits: 2,
+        useGrouping: false,
+      })
       message =
         diff > 0
           ? t('percentageMissing', { pct })
-          : t('percentageSurplus', { pct: (-diff).toString() })
+          : t('percentageSurplus', { pct })
       colorClass = 'text-red-600'
     }
   } else if (splitMode === 'EVENLY' && paidByCount > 0) {

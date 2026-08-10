@@ -50,7 +50,7 @@ export function ParticipantShareRow({
       <button
         type="button"
         className={cn(
-          'group flex min-h-11 min-w-0 flex-1 items-center gap-2 rounded-md text-left focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-hidden',
+          'group flex min-h-11 min-w-0 flex-1 items-center gap-2 rounded-md text-start focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-hidden',
           disabled ? 'cursor-default' : 'cursor-pointer',
         )}
         aria-pressed={checked}
@@ -71,7 +71,7 @@ export function ParticipantShareRow({
             className="size-8"
           />
           {checked && (
-            <span className="absolute -right-0.5 -bottom-0.5 inline-flex size-4 items-center justify-center rounded-full bg-primary text-primary-foreground ring-2 ring-background">
+            <span className="absolute -end-0.5 -bottom-0.5 inline-flex size-4 items-center justify-center rounded-full bg-primary text-primary-foreground ring-2 ring-background">
               <Check className="size-2.5" strokeWidth={3} aria-hidden="true" />
             </span>
           )}

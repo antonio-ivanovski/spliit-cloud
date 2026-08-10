@@ -91,7 +91,8 @@
       "lastMonth": "Минатиот месец",
       "earlierThisYear": "Порано оваа година",
       "lastYear": "Минатата година",
-      "older": "Постари трошоци"
+      "older": "Постари трошоци",
+      "previousWeek": "Минатата недела"
     },
     "filters": {
       "mobileTitle": "Филтрирај трошоци",
@@ -2704,5 +2705,12 @@
     },
     "fallbackPrefix": "Курсеви од",
     "fallbackSeparator": " и "
+  },
+  "DatePicker": {
+    "presets": {
+      "yesterday": "Вчера",
+      "today": "Денес",
+      "tomorrow": "Утре"
+    }
   }
 }

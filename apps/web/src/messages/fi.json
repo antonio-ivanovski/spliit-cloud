@@ -91,7 +91,8 @@
       "lastMonth": "Viime kuussa",
       "earlierThisYear": "Aikaisemmin tänä vuonna",
       "lastYear": "Viime vuonna",
-      "older": "Vanhemmat kulut"
+      "older": "Vanhemmat kulut",
+      "previousWeek": "Viime viikolla"
     },
     "filters": {
       "mobileTitle": "Suodata kulut",
@@ -2706,5 +2707,12 @@
     },
     "fallbackPrefix": "Kurssit lähteestä",
     "fallbackSeparator": " ja "
+  },
+  "DatePicker": {
+    "presets": {
+      "yesterday": "Eilen",
+      "today": "Tänään",
+      "tomorrow": "Huomenna"
+    }
   }
 }

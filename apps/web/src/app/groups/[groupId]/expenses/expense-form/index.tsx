@@ -456,6 +456,7 @@ export function ExpenseForm(props: {
         <BasicDetailsCard
           form={form}
           group={props.group}
+          accountTimeZone={accountTimeZone}
           readOnly={!!props.readOnly}
           sExpense={sExpense}
           isCreate={isCreate}

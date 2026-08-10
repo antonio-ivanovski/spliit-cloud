@@ -90,7 +90,8 @@
       "lastMonth": "Geçen ay",
       "earlierThisYear": "Bu yılın başlarında",
       "lastYear": "Geçen yıl",
-      "older": "Daha eski masraflar"
+      "older": "Daha eski masraflar",
+      "previousWeek": "Geçen hafta"
     },
     "export": "Dışa aktar",
     "filters": {
@@ -2706,5 +2707,12 @@
     },
     "fallbackPrefix": "Kurlar:",
     "fallbackSeparator": " ve "
+  },
+  "DatePicker": {
+    "presets": {
+      "yesterday": "Dün",
+      "today": "Bugün",
+      "tomorrow": "Yarın"
+    }
   }
 }

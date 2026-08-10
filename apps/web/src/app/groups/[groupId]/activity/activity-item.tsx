@@ -286,7 +286,7 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
   return (
     <div
       className={cn(
-        'flex min-w-0 items-stretch justify-between gap-1 px-2 py-2 text-sm hover:bg-accent sm:rounded-lg sm:pr-1 sm:pl-2',
+        'flex min-w-0 items-stretch justify-between gap-1 px-2 py-2 text-sm hover:bg-accent sm:rounded-lg sm:ps-2 sm:pe-1',
         expenseExists && 'cursor-pointer',
       )}
       role={expenseExists ? 'button' : undefined}
@@ -326,7 +326,7 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
       <div className="min-w-0 flex-1">
         <div className="m-1 break-words">{message}</div>
         {changes && changes.length > 0 && (
-          <div className="mx-1 mt-0.5 mb-1 min-w-0 space-y-0.5 border-l-2 border-muted-foreground/20 pl-2">
+          <div className="mx-1 mt-0.5 mb-1 min-w-0 space-y-0.5 border-s-2 border-muted-foreground/20 ps-2">
             {changes.map((change) => (
               <div
                 key={change.field}
@@ -366,7 +366,7 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
             />
           }
         >
-          <ChevronRight className="h-4 w-4" />
+          <ChevronRight className="h-4 w-4 rtl:rotate-180" />
         </Button>
       )}
     </div>

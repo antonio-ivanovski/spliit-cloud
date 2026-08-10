@@ -48,7 +48,7 @@ export function InviteEmailTab({
 
   return (
     <>
-      <p className="border-l-2 border-primary/40 pl-3 text-sm text-muted-foreground">
+      <p className="border-s-2 border-primary/40 ps-3 text-sm text-muted-foreground">
         {t('invite.emailDescription')}
       </p>
       <Form {...form}>
@@ -120,7 +120,7 @@ export function InviteEmailTab({
               </FormItem>
             )}
             <Button type="submit" disabled={isPending || !email}>
-              <UserPlus className="mr-2 h-4 w-4" />
+              <UserPlus className="me-2 h-4 w-4" />
               {t('invite.send')}
             </Button>
           </div>

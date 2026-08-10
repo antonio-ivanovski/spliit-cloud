@@ -357,7 +357,7 @@ export function SubgroupsCard({
               className="w-full sm:w-auto"
               onClick={startCreate}
             >
-              <Plus className="mr-2 size-4" aria-hidden="true" />
+              <Plus className="me-2 size-4" aria-hidden="true" />
               {t('subgroups.create')}
             </Button>
           )}
@@ -620,7 +620,7 @@ function SubgroupEditorDialog({
               t('subgroups.saving')
             ) : (
               <>
-                <Check className="mr-2 size-4" aria-hidden="true" />
+                <Check className="me-2 size-4" aria-hidden="true" />
                 {t('subgroups.save')}
               </>
             )}

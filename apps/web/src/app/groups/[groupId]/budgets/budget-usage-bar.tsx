@@ -1,5 +1,6 @@
 import type { BudgetStatusVisual } from '@/app/groups/[groupId]/budgets/budget-status'
-import { cn } from '@/lib/utils'
+import { useLocale } from '@/i18n/react'
+import { cn, formatNumber } from '@/lib/utils'
 
 import { useBudgetTranslation } from './budget-i18n'
 
@@ -36,6 +37,7 @@ export function BudgetUsageBar({
   className,
 }: Props) {
   const t = useBudgetTranslation()
+  const locale = useLocale()
   const percentRaw = limit > 0 ? (used / limit) * 100 : 0
   const percent = Math.max(0, Math.min(100, percentRaw))
   const pacePercent =
@@ -76,10 +78,21 @@ export function BudgetUsageBar({
         )}
       </div>
       <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-0.5 text-xs text-muted-foreground tabular-nums">
-        <span>{t('progressLabel', { percentage: Math.round(percent) })}</span>
+        <span>
+          {t('progressLabel', {
+            percentage: formatNumber(Math.round(percent), locale, {
+              useGrouping: false,
+            }),
+          })}
+        </span>
         {showTick && (
           <span>
-            {t('paceTooltip', { elapsed: daysElapsed, total: daysTotal })}
+            {t('paceTooltip', {
+              elapsed: formatNumber(daysElapsed, locale, {
+                useGrouping: false,
+              }),
+              total: formatNumber(daysTotal, locale, { useGrouping: false }),
+            })}
           </span>
         )}
       </div>
