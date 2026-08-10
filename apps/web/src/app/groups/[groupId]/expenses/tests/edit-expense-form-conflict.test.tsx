@@ -7,6 +7,8 @@ import { EditExpenseForm } from '../edit-expense-form'
 
 const mocks = vi.hoisted(() => ({
   formMounts: 0,
+  formVersions: [] as number[],
+  expenseVersion: 3,
   onConflict: null as null | (() => void),
   refetch: vi.fn(),
 }))
@@ -34,9 +36,10 @@ vi.mock('../expense-mutation-hooks', () => ({
 vi.mock('../expense-form/index', async () => {
   const { useState } = await import('react')
   return {
-    ExpenseForm: () => {
+    ExpenseForm: ({ expense }: { expense: { version: number } }) => {
       useState(() => {
         mocks.formMounts += 1
+        mocks.formVersions.push(expense.version)
         return true
       })
       return <div data-testid="expense-form-draft">Local draft</div>
@@ -62,7 +65,7 @@ vi.mock('@/trpc/client', () => ({
               expense: {
                 id: 'expense-1',
                 title: 'Dinner',
-                version: 3,
+                version: mocks.expenseVersion,
                 recurringSeries: null,
                 permissions: { canEdit: true },
               },
@@ -89,6 +92,8 @@ describe('EditExpenseForm conflict reload', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mocks.formMounts = 0
+    mocks.formVersions = []
+    mocks.expenseVersion = 3
     mocks.onConflict = null
   })
 
@@ -106,7 +111,10 @@ describe('EditExpenseForm conflict reload', () => {
   })
 
   it('remounts from fresh data only after a successful refetch', async () => {
-    mocks.refetch.mockResolvedValue({ isError: false })
+    mocks.refetch.mockImplementation(async () => {
+      mocks.expenseVersion = 4
+      return { isError: false }
+    })
     const { user } = renderForm()
     act(() => mocks.onConflict?.())
 
@@ -117,5 +125,6 @@ describe('EditExpenseForm conflict reload', () => {
       screen.queryByRole('button', { name: 'Reload latest' }),
     ).not.toBeInTheDocument()
     expect(mocks.formMounts).toBe(2)
+    expect(mocks.formVersions).toEqual([3, 4])
   })
 })

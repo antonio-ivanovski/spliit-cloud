@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import '../../test/mocks'
 import { prismaMock } from '../../test/state'
@@ -108,6 +108,59 @@ describe('create idempotency primitives', () => {
       replayed: false,
     })
     expect(events).toEqual(['prepare', 'marker', 'execute', 'complete'])
+  })
+
+  it('replays completed requests without repeating external preparation', async () => {
+    const requestId = '00000000-0000-4000-8000-000000000003'
+    const input = { amount: 100 }
+    prismaMock.idempotencyRequest.findUnique.mockResolvedValue({
+      requestHash: idempotencyRequestHash(input),
+      result: { expenseId: 'expense-1' },
+      completedAt: new Date(),
+    } as never)
+    const prepare = vi.fn(async () => ({ conversion: 'resolved' }))
+    const execute = vi.fn(async () => ({ expenseId: 'unexpected' }))
+
+    const result = await runIdempotentCreate({
+      accountId: 'account-1',
+      operation: CREATE_OPERATIONS.expense,
+      requestId,
+      input,
+      prepare,
+      execute,
+      decode: (stored) => stored as { expenseId: string },
+    })
+
+    expect(result).toEqual({
+      value: { expenseId: 'expense-1' },
+      replayed: true,
+    })
+    expect(prepare).not.toHaveBeenCalled()
+    expect(execute).not.toHaveBeenCalled()
+    expect(prismaMock.$transaction).not.toHaveBeenCalled()
+  })
+
+  it('rejects a reused request ID before external preparation', async () => {
+    prismaMock.idempotencyRequest.findUnique.mockResolvedValue({
+      requestHash: idempotencyRequestHash({ amount: 100 }),
+      result: { expenseId: 'expense-1' },
+      completedAt: new Date(),
+    } as never)
+    const prepare = vi.fn(async () => ({ conversion: 'resolved' }))
+
+    await expect(
+      runIdempotentCreate({
+        accountId: 'account-1',
+        operation: CREATE_OPERATIONS.expense,
+        requestId: '00000000-0000-4000-8000-000000000004',
+        input: { amount: 101 },
+        prepare,
+        execute: async () => ({ expenseId: 'unexpected' }),
+      }),
+    ).rejects.toMatchObject({ code: 'CONFLICT' })
+
+    expect(prepare).not.toHaveBeenCalled()
+    expect(prismaMock.$transaction).not.toHaveBeenCalled()
   })
 
   it('maintains an explicit operation for every shared create flow', () => {

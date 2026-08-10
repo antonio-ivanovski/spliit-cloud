@@ -120,6 +120,12 @@ type TransactionClient = PrismaTypes.TransactionClient
 
 type EncodedResult = PrismaTypes.InputJsonValue
 
+type ExistingIdempotencyRequest = {
+  requestHash: string
+  result: unknown
+  completedAt: Date | null
+}
+
 function canonicalize(value: unknown): unknown {
   if (value instanceof Date) return { $date: value.toISOString() }
   if (Array.isArray(value)) return value.map(canonicalize)
@@ -181,6 +187,29 @@ function isUniqueConstraintError(error: unknown): boolean {
   )
 }
 
+function replayExisting<T>(
+  existing: ExistingIdempotencyRequest,
+  requestHash: string,
+  decode: (value: PrismaTypes.JsonValue) => T,
+): { value: T; replayed: true } {
+  if (existing.requestHash !== requestHash) {
+    throw new TRPCError({
+      code: 'CONFLICT',
+      message: 'This request ID was already used with different input',
+    })
+  }
+  if (existing.result === null || !existing.completedAt) {
+    throw new TRPCError({
+      code: 'CONFLICT',
+      message: 'This create request is still being processed',
+    })
+  }
+  return {
+    value: decode(existing.result as PrismaTypes.JsonValue),
+    replayed: true,
+  }
+}
+
 export async function runIdempotentCreate<T, Prepared = undefined>(args: {
   accountId: string
   operation: CreateOperation
@@ -195,6 +224,22 @@ export async function runIdempotentCreate<T, Prepared = undefined>(args: {
   const requestHash = idempotencyRequestHash(args.input)
   const encode = args.encode ?? defaultEncode<T>
   const decode = args.decode ?? defaultDecode<T>
+  const requestKey = {
+    accountId_operation_requestId: {
+      accountId: args.accountId,
+      operation: args.operation,
+      requestId: args.requestId,
+    },
+  }
+  const findExisting = () =>
+    prisma.idempotencyRequest.findUnique({
+      where: requestKey,
+      select: { requestHash: true, result: true, completedAt: true },
+    })
+
+  const existing = await findExisting()
+  if (existing) return replayExisting(existing, requestHash, decode)
+
   const prepared = args.prepare ? await args.prepare() : (undefined as Prepared)
 
   try {
@@ -210,13 +255,7 @@ export async function runIdempotentCreate<T, Prepared = undefined>(args: {
 
       const created = await args.execute(tx, prepared)
       await tx.idempotencyRequest.update({
-        where: {
-          accountId_operation_requestId: {
-            accountId: args.accountId,
-            operation: args.operation,
-            requestId: args.requestId,
-          },
-        },
+        where: requestKey,
         data: {
           result: encode(created),
           completedAt: new Date(),
@@ -228,29 +267,8 @@ export async function runIdempotentCreate<T, Prepared = undefined>(args: {
   } catch (error) {
     if (!isUniqueConstraintError(error)) throw error
 
-    const existing = await prisma.idempotencyRequest.findUnique({
-      where: {
-        accountId_operation_requestId: {
-          accountId: args.accountId,
-          operation: args.operation,
-          requestId: args.requestId,
-        },
-      },
-      select: { requestHash: true, result: true, completedAt: true },
-    })
-    if (!existing) throw error
-    if (existing.requestHash !== requestHash) {
-      throw new TRPCError({
-        code: 'CONFLICT',
-        message: 'This request ID was already used with different input',
-      })
-    }
-    if (!existing.result || !existing.completedAt) {
-      throw new TRPCError({
-        code: 'CONFLICT',
-        message: 'This create request is still being processed',
-      })
-    }
-    return { value: decode(existing.result), replayed: true }
+    const racedRequest = await findExisting()
+    if (!racedRequest) throw error
+    return replayExisting(racedRequest, requestHash, decode)
   }
 }
