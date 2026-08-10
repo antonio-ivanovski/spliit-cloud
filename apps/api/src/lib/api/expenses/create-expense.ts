@@ -1,11 +1,11 @@
-import type { Expense as DbExpense } from '@spliit/db'
+import type { Expense as DbExpense, Prisma } from '@spliit/db'
 import { prisma } from '@spliit/db'
 import {
   calculateRecurrenceDate,
   computePaidForFromItems,
   type Expense,
 } from '@spliit/domain'
-import { env as jobsEnv } from '@spliit/jobs'
+import { env as jobsEnv, type SpliitBoss } from '@spliit/jobs'
 
 import {
   resolveConversion,
@@ -27,6 +27,43 @@ import { catchUpDueThrough } from '../recurrence/catch-up-date'
 import { randomId } from '../shared'
 import { promoteExpenseDocuments } from './helpers'
 
+export type PreparedExpenseCreate = {
+  conversion: ConversionResolution
+  documents: Awaited<ReturnType<typeof promoteExpenseDocuments>>
+  notificationBoss: SpliitBoss | null
+  recurrenceBoss?: SpliitBoss
+}
+
+/** Resolve network/object-store dependencies before an interactive transaction. */
+export async function prepareExpenseCreate(
+  expense: Expense,
+  groupId: string,
+): Promise<PreparedExpenseCreate> {
+  const group = await prisma.group.findUnique({
+    where: { id: groupId },
+    include: { ledger: true },
+  })
+  if (!group?.ledgerId) throw new Error(`Invalid group ID: ${groupId}`)
+
+  const recurrence = getExpenseRecurrence(
+    expense as unknown as { recurrence?: unknown; recurrenceRule?: string },
+    expense.expenseDate,
+  )
+  const conversion = await resolveConversion(expense, {
+    ledgerCurrency: group.ledger.currencyCode ?? null,
+    expenseDate: expense.expenseDate,
+  })
+  const [documents, notificationBoss, recurrenceBoss] = await Promise.all([
+    promoteExpenseDocuments(expense.documents),
+    getApiBoss(),
+    recurrence && jobsEnv.JOBS_ENABLED
+      ? getApiBossForWrite()
+      : Promise.resolve(undefined),
+  ])
+
+  return { conversion, documents, notificationBoss, recurrenceBoss }
+}
+
 export async function createExpense(
   expense: Expense,
   groupId: string,
@@ -45,9 +82,12 @@ export async function createExpense(
      * calculation below.
      */
     itemizedPaidForResolution?: Expense['paidFor']
+    prepared?: PreparedExpenseCreate
+    tx?: Prisma.TransactionClient
   },
 ): Promise<DbExpense> {
-  const group = await prisma.group.findUnique({
+  const client = options?.tx ?? prisma
+  const group = await client.group.findUnique({
     where: { id: groupId },
     include: { ledger: true },
   })
@@ -57,6 +97,7 @@ export async function createExpense(
 
   const conversion =
     options?.conversionResolution ??
+    options?.prepared?.conversion ??
     (await resolveConversion(expense, {
       ledgerCurrency: group.ledger.currencyCode ?? null,
       expenseDate: expense.expenseDate,
@@ -64,7 +105,7 @@ export async function createExpense(
 
   const expenseAmount = conversion.ledgerAmountMinor
 
-  const activeParticipants = await prisma.ledgerParticipant.findMany({
+  const activeParticipants = await client.ledgerParticipant.findMany({
     where: {
       ledgerId,
       removedAt: null,
@@ -79,7 +120,7 @@ export async function createExpense(
   // Settlements may involve soft-removed participants who still appear in
   // balances. Keep them off new ordinary expenses, but allow reimbursements.
   const removedParticipants = expense.isReimbursement
-    ? await prisma.ledgerParticipant.findMany({
+    ? await client.ledgerParticipant.findMany({
         where: { ledgerId, removedAt: { not: null } },
         select: { id: true },
       })
@@ -112,9 +153,14 @@ export async function createExpense(
   )
   const isCreateRecurrence = recurrence !== null
   const queueBoss =
-    recurrence && jobsEnv.JOBS_ENABLED ? await getApiBossForWrite() : undefined
+    options?.prepared?.recurrenceBoss ??
+    (recurrence && jobsEnv.JOBS_ENABLED
+      ? await getApiBossForWrite()
+      : undefined)
 
-  const documents = await promoteExpenseDocuments(expense.documents)
+  const documents =
+    options?.prepared?.documents ??
+    (await promoteExpenseDocuments(expense.documents))
   const itemizedPaidFor =
     expense.splitMode === 'ITEMIZED'
       ? (options?.itemizedPaidForResolution ??
@@ -137,7 +183,7 @@ export async function createExpense(
   let creatorTimeZone: string | undefined
   if (recurrence) {
     const persistedTimeZone = (
-      await prisma.accountPreference.findUnique({
+      await client.accountPreference.findUnique({
         where: { accountId: actor.accountId },
         select: { timeZone: true },
       })
@@ -191,8 +237,10 @@ export async function createExpense(
     }
   }
 
-  const boss = await getApiBoss()
-  const createdExpense = await prisma.$transaction(async (tx) => {
+  const boss = options?.prepared
+    ? options.prepared.notificationBoss
+    : await getApiBoss()
+  const run = async (tx: Prisma.TransactionClient) => {
     await tx.$queryRaw`SELECT id FROM "Group" WHERE id = ${groupId} FOR UPDATE`
     const lockedGroup = await tx.group.findUnique({
       where: { id: groupId },
@@ -362,7 +410,11 @@ export async function createExpense(
     }
 
     return createdExpense
-  })
+  }
+
+  const createdExpense = options?.tx
+    ? await run(options.tx)
+    : await prisma.$transaction(run)
 
   return createdExpense
 }

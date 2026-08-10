@@ -165,8 +165,10 @@ function startCatchUpPoll(args: {
 
 export function useUpdateExpenseMutation({
   linkInviteToken,
+  onConflict,
 }: {
   linkInviteToken: string | undefined
+  onConflict?: () => void
 }) {
   const { toast } = useToast()
   const invalidateExpenseDependencies =
@@ -180,6 +182,10 @@ export function useUpdateExpenseMutation({
       })
     },
     onError: (error) => {
+      if (error.data?.code === 'CONFLICT') {
+        onConflict?.()
+        return
+      }
       toast({ description: error.message, variant: 'destructive' })
     },
   })

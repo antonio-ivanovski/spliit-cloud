@@ -692,7 +692,11 @@
         "timeZonePending": "ממתין לאזור הזמן של החשבון לפני שניתן יהיה להפעיל חזרה."
       },
       "recurringEditScopeOccurrence": "עריכת מופע זה בלבד",
-      "recurringEditScopeFuture": "עריכת מופע זה והמופעים הבאים"
+      "recurringEditScopeFuture": "עריכת מופע זה והמופעים הבאים",
+      "conflictTitle": "ההוצאה השתנתה",
+      "conflictDescription": "חבר אחר או מכשיר אחר שינו את ההוצאה הזו. אפשר לטעון את הגרסה העדכנית או לשמור את הטיוטה.",
+      "conflictKeepDraft": "שמירת הטיוטה שלי",
+      "conflictReload": "טעינת הגרסה העדכנית"
     },
     "amountField": {
       "label": "סכום",

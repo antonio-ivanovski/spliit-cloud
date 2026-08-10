@@ -25,6 +25,7 @@ import {
   useDeleteExpenseMutation,
   useUpdateExpenseMutation,
 } from './expense-mutation-hooks'
+import { ExpenseVersionConflictDialog } from './expense-version-conflict-dialog'
 import {
   SeriesScopeDialog,
   type SeriesMutationScope,
@@ -54,12 +55,15 @@ export function EditExpenseForm({
   const isPendingInvitee = useIsPendingInvitee()
   const linkInviteToken = useLinkInviteToken()
 
-  const { data: expenseData } = trpc.groups.expenses.get.useQuery({
+  const expenseQuery = trpc.groups.expenses.get.useQuery({
     groupId,
     expenseId,
     linkInviteToken,
   })
+  const expenseData = expenseQuery.data
   const expense = expenseData?.expense
+  const [conflictOpen, setConflictOpen] = useState(false)
+  const [formRevision, setFormRevision] = useState(0)
   const seriesId = (
     expense as typeof expense & {
       recurringSeriesId?: string | null
@@ -89,6 +93,7 @@ export function EditExpenseForm({
 
   const { mutateAsync: updateExpenseMutateAsync } = useUpdateExpenseMutation({
     linkInviteToken,
+    onConflict: () => setConflictOpen(true),
   })
   const { mutateAsync: deleteExpenseMutateAsync } = useDeleteExpenseMutation({
     linkInviteToken,
@@ -121,6 +126,7 @@ export function EditExpenseForm({
   }
 
   if (!group || !expense) return null
+  const expectedVersion = expense.version
 
   // The expense form is read-only when the group is archived or when the
   // viewer is a PENDING invitee. The server enforces the same rule on
@@ -167,6 +173,7 @@ export function EditExpenseForm({
         </div>
       )}
       <ExpenseForm
+        key={formRevision}
         group={group}
         expense={expense}
         cancelHref={returnTo ?? `/groups/${group.id}`}
@@ -183,6 +190,7 @@ export function EditExpenseForm({
                 groupId,
                 expense,
                 scope: selectedScope,
+                expectedVersion,
               } as Parameters<typeof updateExpenseMutateAsync>[0])
               return 'saved'
             }
@@ -198,7 +206,12 @@ export function EditExpenseForm({
               })
             })
           }
-          await updateExpenseMutateAsync({ expenseId, groupId, expense })
+          await updateExpenseMutateAsync({
+            expenseId,
+            groupId,
+            expense,
+            expectedVersion,
+          })
           return 'saved'
         }}
         // Post-save navigation is separate from persistence so a
@@ -250,6 +263,7 @@ export function EditExpenseForm({
               groupId,
               expense: pending.expense,
               scope,
+              expectedVersion,
             } as Parameters<typeof updateExpenseMutateAsync>[0])
             // Let ExpenseForm mark persistence terminal and run onSaved. A
             // navigation rejection then gets the same safe retry banner as a
@@ -258,6 +272,16 @@ export function EditExpenseForm({
           } catch (error) {
             pending.reject?.(error)
           }
+        }}
+      />
+      <ExpenseVersionConflictDialog
+        open={conflictOpen}
+        onKeepDraft={() => setConflictOpen(false)}
+        onReload={async () => {
+          const result = await expenseQuery.refetch()
+          if (result.isError) return
+          setConflictOpen(false)
+          setFormRevision((revision) => revision + 1)
         }}
       />
     </>

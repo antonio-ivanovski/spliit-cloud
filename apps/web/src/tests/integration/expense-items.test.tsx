@@ -203,6 +203,7 @@ function buildExpensePayload(args: {
   const paidFor = args.paidFor ?? [{ participant: adminId, shares: 1 }]
   return {
     groupId: testGroup.id,
+    requestId: crypto.randomUUID(),
     expense: {
       title: 'Itemized expense',
       amount: args.amount,
@@ -233,6 +234,7 @@ describe('Expense items — ExpenseCard via existing API', () => {
     // the admin ledger participant; the form `participants` array is
     // currently ignored by the create procedure).
     const createResult = await trpcCall<{ groupId: string }>('groups.create', {
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name: 'Items Integration Group',
         currency: 'EUR',
@@ -687,6 +689,7 @@ describe('Expense items — ExpenseCard via existing API', () => {
     await trpcCall('groups.expenses.update', {
       groupId: testGroup.id,
       expenseId,
+      expectedVersion: 1,
       expense: {
         title: 'Itemized expense',
         amount: 4000,

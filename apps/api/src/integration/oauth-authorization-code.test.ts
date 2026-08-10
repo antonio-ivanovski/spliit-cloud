@@ -239,6 +239,7 @@ describe('OAuth authorization code + PKCE + refresh', () => {
       },
     } as never)
     const created = await groupCaller.create({
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name: `OAuth Group ${runId}`,
         currency: '$',

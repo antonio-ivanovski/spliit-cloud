@@ -146,6 +146,7 @@ describe('groupsRouter.budgets authorization', () => {
       ],
     })
     const result = await makeCaller('acct-self').budgets.create({
+      requestId: crypto.randomUUID(),
       groupId: 'grp-1',
       name: 'Groceries',
       amount: 1000,
@@ -159,6 +160,7 @@ describe('groupsRouter.budgets authorization', () => {
   it('falls back to UTC when the account has no timezone', async () => {
     usePrismaMemoryStore(baseData({ role: 'ADMIN' }))
     const result = await makeCaller('acct-self').budgets.create({
+      requestId: crypto.randomUUID(),
       groupId: 'grp-1',
       name: 'Groceries',
       amount: 1000,
@@ -175,6 +177,7 @@ describe('groupsRouter.budgets authorization', () => {
       ],
     })
     const result = await makeCaller('acct-self').budgets.create({
+      requestId: crypto.randomUUID(),
       groupId: 'grp-1',
       name: 'Shared',
       amount: 500,
@@ -186,6 +189,7 @@ describe('groupsRouter.budgets authorization', () => {
   it('allows a MEMBER caller to create a budget', async () => {
     usePrismaMemoryStore(baseData({ role: 'MEMBER' }))
     const result = await makeCaller('acct-self').budgets.create({
+      requestId: crypto.randomUUID(),
       groupId: 'grp-1',
       name: 'Groceries',
       amount: 1000,
@@ -201,6 +205,7 @@ describe('groupsRouter.budgets authorization', () => {
     })
     await expect(
       makeCaller('acct-self').budgets.create({
+        requestId: crypto.randomUUID(),
         groupId: 'grp-1',
         name: 'Groceries',
         amount: 1000,
@@ -227,6 +232,7 @@ describe('groupsRouter.budgets validation', () => {
     usePrismaMemoryStore(baseData({ role: 'ADMIN' }))
     await expect(
       makeCaller('acct-self').budgets.create({
+        requestId: crypto.randomUUID(),
         groupId: 'grp-1',
         name: 'Trip',
         amount: 1000,
@@ -239,6 +245,7 @@ describe('groupsRouter.budgets validation', () => {
     usePrismaMemoryStore(baseData({ role: 'ADMIN' }))
     await expect(
       makeCaller('acct-self').budgets.create({
+        requestId: crypto.randomUUID(),
         groupId: 'grp-1',
         name: 'Trip',
         amount: 1000,
@@ -253,6 +260,7 @@ describe('groupsRouter.budgets validation', () => {
     usePrismaMemoryStore(baseData({ role: 'ADMIN' }))
     await expect(
       makeCaller('acct-self').budgets.create({
+        requestId: crypto.randomUUID(),
         groupId: 'grp-1',
         name: 'Groceries',
         amount: 1000,
@@ -267,6 +275,7 @@ describe('groupsRouter.budgets validation', () => {
     usePrismaMemoryStore(baseData({ role: 'ADMIN' }))
     await expect(
       makeCaller('acct-self').budgets.create({
+        requestId: crypto.randomUUID(),
         groupId: 'grp-1',
         name: 'Groceries',
         amount: 1000,
@@ -280,6 +289,7 @@ describe('groupsRouter.budgets validation', () => {
   it('stores canonical, deduplicated category ids', async () => {
     usePrismaMemoryStore(baseData({ role: 'ADMIN' }))
     const result = await makeCaller('acct-self').budgets.create({
+      requestId: crypto.randomUUID(),
       groupId: 'grp-1',
       name: 'Home',
       amount: 1000,
@@ -294,6 +304,7 @@ describe('groupsRouter.budgets validation', () => {
     usePrismaMemoryStore(baseData({ role: 'ADMIN' }))
     await expect(
       makeCaller('acct-self').budgets.create({
+        requestId: crypto.randomUUID(),
         groupId: 'grp-1',
         name: 'Groceries',
         amount: 1000,
@@ -308,6 +319,7 @@ describe('groupsRouter.budgets validation', () => {
     usePrismaMemoryStore({ ...baseData({ role: 'ADMIN' }), ...participants })
     await expect(
       makeCaller('acct-self').budgets.create({
+        requestId: crypto.randomUUID(),
         groupId: 'grp-1',
         name: 'Groceries',
         amount: 1000,

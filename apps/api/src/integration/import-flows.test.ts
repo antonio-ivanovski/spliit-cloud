@@ -106,6 +106,7 @@ describe.skipIf(!maildevReachable)(
       const destLpNew = randomId()
 
       const result = await makeCaller().import({
+        requestId: crypto.randomUUID(),
         targetGroupId: groupId,
         participants: [
           {
@@ -253,6 +254,7 @@ describe('import summary notification', () => {
 
     const caller = makeCaller2()
     const result = await caller.create({
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name,
         currency: '$',
@@ -310,6 +312,7 @@ describe('import summary notification', () => {
     capture.events.length = 0
 
     const result = await makeCaller2().import({
+      requestId: crypto.randomUUID(),
       targetGroupId: groupId,
       participants: [
         {
@@ -488,6 +491,7 @@ describe('Import participant deduplication', () => {
   async function createGroupWithAdmin() {
     const caller = makeCaller3()
     const result = await caller.create({
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name: `Imp-Dedup-${runId3}`,
         currency: '$',
@@ -513,6 +517,7 @@ describe('Import participant deduplication', () => {
     const inviteDestLpId = randomId()
 
     await makeCaller3().import({
+      requestId: crypto.randomUUID(),
       targetGroupId: groupId,
       participants: [
         {
@@ -565,6 +570,7 @@ describe('Import participant deduplication', () => {
     const invitePlaceholderLpId = randomId()
 
     await makeCaller3().import({
+      requestId: crypto.randomUUID(),
       targetGroupId: groupId,
       participants: [
         {
@@ -678,6 +684,7 @@ describe('Import summary — totalAmount excludes reimbursements', () => {
   async function createGroupWithAdmin(currencyCode = 'EUR') {
     const caller = makeCaller4()
     const result = await caller.create({
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name: `Imp-Total-${runId4}`,
         currency: currencyCode === 'EUR' ? '€' : '$',
@@ -722,6 +729,7 @@ describe('Import summary — totalAmount excludes reimbursements', () => {
     const { groupId, ledgerId, adminLp } = await createGroupWithAdmin('EUR')
 
     await makeCaller4().import({
+      requestId: crypto.randomUUID(),
       targetGroupId: groupId,
       participants: [
         {
@@ -769,6 +777,7 @@ describe('Import summary — totalAmount excludes reimbursements', () => {
     const { groupId, ledgerId, adminLp } = await createGroupWithAdmin('EUR')
 
     await makeCaller4().import({
+      requestId: crypto.randomUUID(),
       targetGroupId: groupId,
       participants: [
         {
@@ -804,6 +813,7 @@ describe('Import summary — totalAmount excludes reimbursements', () => {
     const { groupId, ledgerId, adminLp } = await createGroupWithAdmin('EUR')
 
     await makeCaller4().import({
+      requestId: crypto.randomUUID(),
       targetGroupId: groupId,
       participants: [
         {

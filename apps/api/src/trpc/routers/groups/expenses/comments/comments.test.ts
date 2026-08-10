@@ -103,6 +103,7 @@ describe('groups.expenses.comments', () => {
     } as never)
 
     const result = await caller().expenses.comments.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expenseId,
       body: '  Hello  ',
@@ -137,6 +138,7 @@ describe('groups.expenses.comments', () => {
 
     await expect(
       caller().expenses.comments.create({
+        requestId: crypto.randomUUID(),
         groupId,
         expenseId,
         body: 'Hello',
@@ -148,6 +150,7 @@ describe('groups.expenses.comments', () => {
   it('rejects comments longer than 500 characters', async () => {
     await expect(
       caller().expenses.comments.create({
+        requestId: crypto.randomUUID(),
         groupId,
         expenseId,
         body: 'x'.repeat(501),

@@ -457,6 +457,7 @@ describe('GroupMembers', () => {
         email: 'charlie@example.com',
         role: 'MEMBER',
         temporaryName: undefined,
+        requestId: expect.any(String),
       })
     })
   })

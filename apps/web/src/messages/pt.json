@@ -794,7 +794,11 @@
         "timeZonePending": "A aguardar o fuso horário da conta antes de poder ativar a recorrência."
       },
       "recurringEditScopeOccurrence": "Editar apenas esta ocorrência",
-      "recurringEditScopeFuture": "Editar esta ocorrência e as futuras"
+      "recurringEditScopeFuture": "Editar esta ocorrência e as futuras",
+      "conflictTitle": "Despesa alterada",
+      "conflictDescription": "Outro membro ou dispositivo alterou esta despesa. Recarrega a versão mais recente ou mantém o teu rascunho.",
+      "conflictKeepDraft": "Manter o meu rascunho",
+      "conflictReload": "Recarregar a versão mais recente"
     },
     "amountField": {
       "label": "Montante",

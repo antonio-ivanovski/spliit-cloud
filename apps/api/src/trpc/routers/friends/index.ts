@@ -9,6 +9,13 @@ import {
   createFriendLedger,
   type CreateFriendLedgerPeer,
 } from '../../../lib/api/friends'
+import {
+  CREATE_OPERATIONS,
+  createRequestIdSchema,
+  deriveCreateToken,
+  runIdempotentCreate,
+} from '../../../lib/api/idempotency'
+import { getWebBaseUrl } from '../../../lib/auth/urls'
 import { getPlaceholderEmailDisplayName } from '../../../lib/invitations/display'
 import { sendEmail } from '../../../lib/mail/send'
 import { renderFriendLedgerEmail } from '../../../lib/mail/templates/friend-ledger'
@@ -45,7 +52,12 @@ export const friendsRouter = createTRPCRouter({
    * shareable link). Exactly one mode must be set on `friendFormValues`.
    */
   create: protectedProcedure
-    .input(z.object({ friendFormValues: friendFormSchema }))
+    .input(
+      z.object({
+        requestId: createRequestIdSchema,
+        friendFormValues: friendFormSchema,
+      }),
+    )
     .output(
       z.object({
         groupId: z.string(),
@@ -55,7 +67,7 @@ export const friendsRouter = createTRPCRouter({
         token: z.string().optional(),
       }),
     )
-    .mutation(async ({ input: { friendFormValues }, ctx }) => {
+    .mutation(async ({ input: { requestId, friendFormValues }, ctx }) => {
       const callerId = ctx.auth.user.id
 
       // Normalize the peer exactly once, before resolving pg-boss. If the
@@ -92,51 +104,96 @@ export const friendsRouter = createTRPCRouter({
       // receive a durable notification. Email and link paths never call
       // the planner, so they must not depend on queue availability.
       const boss = 'accountId' in peer ? await getApiBoss() : null
-      const result = await prisma.$transaction(async (tx) => {
-        const ledgerResult = await createFriendLedger(
-          {
-            callerAccountId: callerId,
-            peer,
-            currency: friendFormValues.currency,
-            currencyCode: friendFormValues.currencyCode,
-            information: friendFormValues.information,
-          },
-          tx,
-        )
-
-        if (!ledgerResult.existed && 'accountId' in peer) {
-          const inviterName =
-            ctx.auth.user.name ||
-            getPlaceholderEmailDisplayName(ctx.auth.user.email) ||
-            ctx.auth.user.email
-          await planActivityNotificationDeliveries({
-            event: {
-              activityId: null,
-              type: 'INVITATION_CREATED',
-              groupId: ledgerResult.groupId,
-              actor: { type: 'ACCOUNT', id: callerId },
-              subject: null,
-              data: {
-                kind: 'invitation',
-                summary: `${inviterName} created a friend ledger with you`,
-              },
-              occurredAt: new Date(),
-              notificationCategory: NotificationCategory.FRIEND_ADDED,
-              recipientAccountId: peer.accountId,
-              customEventKey: `friend:${ledgerResult.groupId}:${peer.accountId}`,
+      const { value: result, replayed } = await runIdempotentCreate({
+        accountId: callerId,
+        operation: CREATE_OPERATIONS.friendLedger,
+        requestId,
+        input: { friendFormValues },
+        execute: async (tx) => {
+          const ledgerResult = await createFriendLedger(
+            {
+              callerAccountId: callerId,
+              peer,
+              currency: friendFormValues.currency,
+              currencyCode: friendFormValues.currencyCode,
+              information: friendFormValues.information,
+              ...('link' in peer
+                ? {
+                    linkToken: deriveCreateToken({
+                      accountId: callerId,
+                      operation: CREATE_OPERATIONS.friendLedger,
+                      requestId,
+                      discriminator: 'friend-link',
+                    }),
+                  }
+                : {}),
             },
             tx,
-            boss,
-          })
-        }
+          )
 
-        return ledgerResult
+          if (!ledgerResult.existed && 'accountId' in peer) {
+            const inviterName =
+              ctx.auth.user.name ||
+              getPlaceholderEmailDisplayName(ctx.auth.user.email) ||
+              ctx.auth.user.email
+            await planActivityNotificationDeliveries({
+              event: {
+                activityId: null,
+                type: 'INVITATION_CREATED',
+                groupId: ledgerResult.groupId,
+                actor: { type: 'ACCOUNT', id: callerId },
+                subject: null,
+                data: {
+                  kind: 'invitation',
+                  summary: `${inviterName} created a friend ledger with you`,
+                },
+                occurredAt: new Date(),
+                notificationCategory: NotificationCategory.FRIEND_ADDED,
+                recipientAccountId: peer.accountId,
+                customEventKey: `friend:${ledgerResult.groupId}:${peer.accountId}`,
+              },
+              tx,
+              boss,
+            })
+          }
+
+          return ledgerResult
+        },
+        encode: (created) => ({
+          groupId: created.groupId,
+          existed: created.existed,
+          ...('invitationId' in created
+            ? { invitationId: created.invitationId }
+            : {}),
+        }),
+        decode: (stored) => {
+          const created = stored as {
+            groupId: string
+            existed: boolean
+            invitationId?: string
+          }
+          if (!created.existed && 'link' in peer) {
+            const token = deriveCreateToken({
+              accountId: callerId,
+              operation: CREATE_OPERATIONS.friendLedger,
+              requestId,
+              discriminator: 'friend-link',
+            })
+            return {
+              ...created,
+              existed: false as const,
+              token,
+              inviteUrl: `${getWebBaseUrl()}/groups/${created.groupId}?invite=${token}`,
+            }
+          }
+          return created as Awaited<ReturnType<typeof createFriendLedger>>
+        },
       })
 
       // Send a notification email (not an invitation with an accept
       // link) when a friend ledger is created. The peer will see it
       // automatically on next login — the email is purely informational.
-      if (!result.existed && 'email' in peer) {
+      if (!replayed && !result.existed && 'email' in peer) {
         const inviterName =
           ctx.auth.user.name ||
           getPlaceholderEmailDisplayName(ctx.auth.user.email) ||

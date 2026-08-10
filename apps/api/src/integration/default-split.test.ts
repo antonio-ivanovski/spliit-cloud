@@ -94,6 +94,7 @@ describe('defaultSplit — real DB', () => {
     })
     try {
       const { groupId } = await makeGroupsCaller().create({
+        requestId: crypto.randomUUID(),
         groupFormValues: {
           name: `DS Authz ${runId}`,
           currency: '$',
@@ -127,6 +128,7 @@ describe('defaultSplit — real DB', () => {
 
   it('overwrites an existing default on a second call', async () => {
     const { groupId } = await makeGroupsCaller().create({
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name: `DS Upsert ${runId}`,
         currency: '$',
@@ -169,6 +171,7 @@ describe('defaultSplit — real DB', () => {
 
   it('replaces paidFor children on upsert (no orphan rows)', async () => {
     const { groupId } = await makeGroupsCaller().create({
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name: `DS Children ${runId}`,
         currency: '$',

@@ -16,6 +16,7 @@ import {
   isGlobalExpensesReturnTo,
 } from '@/lib/expense-navigation'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
+import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 import { trpc } from '@/trpc/client'
 
 import { useIsPendingInvitee } from '../current-group-context'
@@ -49,6 +50,7 @@ export function CreateExpenseForm({
     linkInviteToken,
   })
   const navigate = useNavigate()
+  const createAttempt = useIdempotentCreate()
   // `ExpenseForm` is shared with the edit route, where calling
   // `useSearch` against the create route would throw.
   const searchParams = createExpenseRouteApi.useSearch()
@@ -148,10 +150,10 @@ export function CreateExpenseForm({
       onSubmit={async (expense) => {
         // Persistence only — navigation happens in `onSaved` so a
         // navigation failure is never conflated with a save failure.
-        await createExpenseMutateAsync({
-          groupId,
-          expense,
-        })
+        const result = await createAttempt.run((requestId) =>
+          createExpenseMutateAsync({ groupId, requestId, expense }),
+        )
+        if (!result) return 'deferred'
         return 'saved'
       }}
       onSaved={async () => {

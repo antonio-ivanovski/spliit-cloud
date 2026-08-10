@@ -104,6 +104,7 @@ describe('Invitation flow — real DB', () => {
 
     // Create group
     const { groupId } = await groupCaller.create({
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name: `Remove-Reinvite Group ${runId}`,
         currency: '$',
@@ -119,6 +120,7 @@ describe('Invitation flow — real DB', () => {
 
     // Invite the invitee
     const { invitationId } = await invitationsCaller().create({
+      requestId: crypto.randomUUID(),
       groupId,
       email: inviteeEmail,
       role: 'MEMBER',
@@ -158,6 +160,7 @@ describe('Invitation flow — real DB', () => {
 
     // Admin re-invites the same email — should succeed after the fix
     const reInvite = await invitationsCaller().create({
+      requestId: crypto.randomUUID(),
       groupId,
       email: inviteeEmail,
       role: 'MEMBER',
@@ -199,6 +202,7 @@ describe('Invitation flow — real DB', () => {
 
     // Create group
     const { groupId } = await groupCaller.create({
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name: `Leave-Reinvite Group ${runId}`,
         currency: '$',
@@ -214,6 +218,7 @@ describe('Invitation flow — real DB', () => {
 
     // Invite the invitee
     const { invitationId } = await invitationsCaller().create({
+      requestId: crypto.randomUUID(),
       groupId,
       email: inviteeEmail,
       role: 'MEMBER',
@@ -254,6 +259,7 @@ describe('Invitation flow — real DB', () => {
 
     // Admin re-invites the same email — should succeed
     const reInvite = await invitationsCaller().create({
+      requestId: crypto.randomUUID(),
       groupId,
       email: inviteeEmail,
       role: 'MEMBER',
@@ -282,6 +288,7 @@ describe('Invitation flow — real DB', () => {
     const groupCaller = adminCaller()
 
     const { groupId } = await groupCaller.create({
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name: `Retarget Group ${runId}`,
         currency: '$',
@@ -296,6 +303,7 @@ describe('Invitation flow — real DB', () => {
     trackLedger(group!.ledgerId)
 
     const { invitationId } = await invitationsCaller().create({
+      requestId: crypto.randomUUID(),
       groupId,
       email: inviteeEmail,
       role: 'MEMBER',
@@ -356,6 +364,7 @@ describe('Invitation flow — real DB', () => {
     const groupCaller = adminCaller()
 
     const { groupId } = await groupCaller.create({
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name: `Metadata Group ${runId}`,
         currency: '$',
@@ -370,6 +379,7 @@ describe('Invitation flow — real DB', () => {
     trackLedger(group!.ledgerId)
 
     const created = await invitationsCaller().createLink({
+      requestId: crypto.randomUUID(),
       groupId,
       role: 'MEMBER',
       temporaryName: 'Before Edit',

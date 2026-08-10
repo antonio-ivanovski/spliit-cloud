@@ -63,6 +63,21 @@ model Account {
   recurringExpenseSeriesCreated RecurringExpenseSeries[]        @relation("RecurringExpenseSeriesCreator")
   expensesCreated               Expense[]                       @relation("ExpenseCreator")
   expenseComments               ExpenseComment[]
+  idempotencyRequests           IdempotencyRequest[]
+}
+
+model IdempotencyRequest {
+  account     Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId   String
+  operation   String
+  requestId   String   @db.Uuid
+  requestHash String
+  result      Json?
+  createdAt   DateTime @default(now())
+  completedAt DateTime?
+
+  @@id([accountId, operation, requestId])
+  @@index([createdAt])
 }
 
 model PushSubscription {
@@ -696,6 +711,7 @@ model Expense {
   paidFor            ExpensePaidFor[]
   isReimbursement    Boolean           @default(false)
   splitMode          SplitMode         @default(EVENLY)
+  version            Int               @default(1)
   createdAt          DateTime          @default(now())
   documents          ExpenseDocument[]
   notes              String?

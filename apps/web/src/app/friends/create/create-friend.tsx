@@ -44,6 +44,7 @@ import type { AccountPreferences } from '@/lib/account-preferences'
 import { getCurrency, useCurrencies } from '@/lib/currency'
 import { useDeploymentConfig } from '@/lib/deployment-config'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
+import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 import { trpc } from '@/trpc/client'
 import { friendFormSchema, type FriendFormValues } from '@spliit/domain/schemas'
 
@@ -87,6 +88,7 @@ export function CreateFriend() {
   const { toast } = useToast()
   const [peerTab, setPeerTab] = useState<PeerTab>('friends')
   const deployment = useDeploymentConfig()
+  const createAttempt = useIdempotentCreate()
 
   const friendsQuery = trpc.account.friends.useQuery()
   const accountPreferences =
@@ -163,9 +165,11 @@ export function CreateFriend() {
 
     let result: CreateFriendResponse
     try {
-      result = (await createFriend({
-        friendFormValues: payload,
-      })) as CreateFriendResponse
+      const created = await createAttempt.run((requestId) =>
+        createFriend({ friendFormValues: payload, requestId }),
+      )
+      if (created === null) return
+      result = created as CreateFriendResponse
     } catch (error) {
       toast({
         description: error instanceof Error ? error.message : t('createError'),

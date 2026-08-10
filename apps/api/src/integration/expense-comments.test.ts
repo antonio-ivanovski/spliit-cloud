@@ -45,6 +45,7 @@ describe('Expense comments — real DB', () => {
 
   it('preserves author snapshots and cascades comment activities with the expense', async () => {
     const { groupId } = await caller.create({
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name: `Comments ${runId}`,
         currency: '$',
@@ -63,6 +64,7 @@ describe('Expense comments — real DB', () => {
     expect(participantId).toBeTruthy()
 
     const { expenseId } = await caller.expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Dinner',
@@ -80,6 +82,7 @@ describe('Expense comments — real DB', () => {
       },
     })
     const { comment } = await caller.expenses.comments.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expenseId,
       body: '  Keep the receipt.  ',

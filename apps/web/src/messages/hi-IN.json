@@ -1081,7 +1081,11 @@
         "monthly": "मासिक"
       },
       "recurringEditScopeOccurrence": "केवल इस घटना को संपादित करना",
-      "recurringEditScopeFuture": "इस और भविष्य की घटनाओं को संपादित करना"
+      "recurringEditScopeFuture": "इस और भविष्य की घटनाओं को संपादित करना",
+      "conflictTitle": "खर्च बदल गया",
+      "conflictDescription": "किसी अन्य सदस्य या डिवाइस ने इस खर्च को बदल दिया है। नवीनतम संस्करण फिर से लोड करें या अपना ड्राफ़्ट बनाए रखें।",
+      "conflictKeepDraft": "मेरा ड्राफ़्ट रखें",
+      "conflictReload": "नवीनतम फिर से लोड करें"
     },
     "Income": {
       "DateField": {

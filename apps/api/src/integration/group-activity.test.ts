@@ -70,6 +70,7 @@ async function createGroupActivityFixture(
   } as never)
 
   const result = await adminCaller.create({
+    requestId: crypto.randomUUID(),
     groupFormValues: {
       name: `Group Activity ${runId}`,
       currency: '$',
@@ -313,6 +314,7 @@ describe('Group activity — real DB', () => {
 
     // Create an expense where admin paid for both → member owes admin $20
     await caller.expenses.create({
+      requestId: crypto.randomUUID(),
       groupId: fixture.groupId,
       expense: {
         title: 'Dinner',
@@ -492,6 +494,7 @@ describe('Group activity — real DB', () => {
 
     const invCaller = makeInvitationCaller(fixture)
     const { invitationId } = await invCaller.create({
+      requestId: crypto.randomUUID(),
       groupId: fixture.groupId,
       email: `new-invitee-${fixture.groupId}@test.example`,
       role: 'MEMBER',
@@ -546,6 +549,7 @@ describe('Group activity — real DB', () => {
 
     const invCaller = makeInvitationCaller(fixture)
     const { invitationId } = await invCaller.create({
+      requestId: crypto.randomUUID(),
       groupId: fixture.groupId,
       email: fixture.inviteeEmail!,
       role: 'MEMBER',

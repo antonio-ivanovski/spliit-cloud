@@ -25,7 +25,7 @@ export function AddUnlinkedParticipantTab({
   onSubmit,
 }: {
   isPending: boolean
-  onSubmit: (values: UnlinkedParticipantFormValues) => Promise<void>
+  onSubmit: (values: UnlinkedParticipantFormValues) => Promise<boolean>
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
   const form = useForm<UnlinkedParticipantFormValues>({
@@ -34,8 +34,11 @@ export function AddUnlinkedParticipantTab({
   })
 
   const handleSubmit = form.handleSubmit(async (values) => {
-    await onSubmit(values)
-    form.reset({ displayName: '' })
+    try {
+      if (await onSubmit(values)) form.reset({ displayName: '' })
+    } catch {
+      // Mutation callbacks already surface the failure; keep the form draft.
+    }
   })
 
   return (

@@ -24,6 +24,7 @@ import { useLocale } from '@/i18n/react'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
 import type { Reimbursement } from '@/lib/balances'
 import type { Currency } from '@/lib/currency'
+import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 import {
   dateOnlyInAccountTimeZone,
   formatCurrency,
@@ -133,6 +134,7 @@ export function CreateReimbursementModal({
 
   const { mutateAsync: createExpenseMutateAsync, isPending } =
     useCreateExpenseMutation({ linkInviteToken })
+  const createAttempt = useIdempotentCreate()
 
   useEffect(() => {
     if (open) {
@@ -209,31 +211,35 @@ export function CreateReimbursementModal({
           }))
         : [{ participant: centralParticipantId, shares: selectedTotal }]
 
-    await createExpenseMutateAsync({
-      groupId,
-      expense: {
-        expenseDate: today,
-        title: tForm('reimbursement'),
-        category: PAYMENT_CATEGORY_ID,
-        amount: selectedTotal,
-        paidBySplitMode: 'BY_AMOUNT',
-        paidByList,
-        splitMode: isLegacySingle ? 'EVENLY' : 'BY_AMOUNT',
-        paidFor,
-        isMultiPayer: direction === 'receive' && paidByList.length > 1,
-        isReimbursement: true,
-        documents: [],
-        recurrence: null,
-        ...(needsConversion && originalCurrencyCode
-          ? {
-              conversion: {
-                type: 'exchange',
-                currency: originalCurrencyCode,
-              },
-            }
-          : {}),
-      },
-    })
+    const result = await createAttempt.run((requestId) =>
+      createExpenseMutateAsync({
+        groupId,
+        requestId,
+        expense: {
+          expenseDate: today,
+          title: tForm('reimbursement'),
+          category: PAYMENT_CATEGORY_ID,
+          amount: selectedTotal,
+          paidBySplitMode: 'BY_AMOUNT',
+          paidByList,
+          splitMode: isLegacySingle ? 'EVENLY' : 'BY_AMOUNT',
+          paidFor,
+          isMultiPayer: direction === 'receive' && paidByList.length > 1,
+          isReimbursement: true,
+          documents: [],
+          recurrence: null,
+          ...(needsConversion && originalCurrencyCode
+            ? {
+                conversion: {
+                  type: 'exchange',
+                  currency: originalCurrencyCode,
+                },
+              }
+            : {}),
+        },
+      }),
+    )
+    if (!result) return
     toast({
       description:
         selectedLegs.length > 1

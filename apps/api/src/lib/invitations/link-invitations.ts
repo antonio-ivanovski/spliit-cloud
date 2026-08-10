@@ -8,7 +8,9 @@ import {
   Prisma,
   prisma,
   type GroupRole,
+  type Prisma as PrismaTypes,
 } from '@spliit/db'
+import type { SpliitBoss } from '@spliit/jobs'
 
 import {
   buildInvitationActivityData,
@@ -103,6 +105,9 @@ export type CreateLinkInvitationInput = {
   temporaryName?: string | null
   expiresAt?: Date | null
   ledgerParticipantId?: string | null
+  notificationBoss?: SpliitBoss | null
+  token?: string
+  tx?: PrismaTypes.TransactionClient
 }
 
 export type CreateLinkInvitationResult = {
@@ -121,13 +126,16 @@ export type CreateLinkInvitationResult = {
 export async function createLinkInvitation(
   input: CreateLinkInvitationInput,
 ): Promise<CreateLinkInvitationResult> {
-  const token = generateLinkToken()
+  const token = input.token ?? generateLinkToken()
   const tokenHash = await hashLinkToken(token)
   const expiresAt = resolveLinkExpiresAt(input.expiresAt)
   const webBase = getWebBaseUrl()
-  const boss = await getApiBoss()
+  const boss =
+    input.notificationBoss !== undefined
+      ? input.notificationBoss
+      : await getApiBoss()
 
-  const invitation = await prisma.$transaction(async (tx) => {
+  const run = async (tx: PrismaTypes.TransactionClient) => {
     const participantId = await materializePendingInvitationParticipant(tx, {
       groupId: input.groupId,
       suppliedParticipantId: input.ledgerParticipantId,
@@ -166,7 +174,10 @@ export async function createLinkInvitation(
 
     await planNotificationForActivity(tx, activity, {}, { boss })
     return inv
-  })
+  }
+  const invitation = input.tx
+    ? await run(input.tx)
+    : await prisma.$transaction(run)
   return {
     invitation: {
       id: invitation.id,

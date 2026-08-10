@@ -680,7 +680,11 @@
         "timeZonePending": "正在等待账户时区，之后才能启用重复。"
       },
       "recurringEditScopeOccurrence": "仅编辑本次重复项",
-      "recurringEditScopeFuture": "编辑本次及后续重复项"
+      "recurringEditScopeFuture": "编辑本次及后续重复项",
+      "conflictTitle": "支出已更改",
+      "conflictDescription": "其他成员或设备已更改此支出。请重新加载最新版本，或保留您的草稿。",
+      "conflictKeepDraft": "保留我的草稿",
+      "conflictReload": "重新加载最新版本"
     },
     "amountField": {
       "label": "金额",

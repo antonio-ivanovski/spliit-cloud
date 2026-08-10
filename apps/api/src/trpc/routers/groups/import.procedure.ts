@@ -4,9 +4,17 @@ import { z } from 'zod'
 import { GroupRole, GroupType } from '@spliit/db'
 import { expenseApiSchema, groupFormSchema } from '@spliit/domain'
 
-import { importGroup } from '../../../lib/api/import'
+import {
+  CREATE_OPERATIONS,
+  createRequestIdSchema,
+  deriveCreateToken,
+  runIdempotentCreate,
+} from '../../../lib/api/idempotency'
+import { importGroup, prepareImportGroup } from '../../../lib/api/import'
+import { getWebBaseUrl } from '../../../lib/auth/urls'
 import { enqueueBudgetEvaluation } from '../../../lib/budgets/enqueue'
 import { ConversionError } from '../../../lib/expense-conversion'
+import { sendInvitationEmail } from '../../../lib/invitations'
 import { loadGroupContext, protectedProcedure } from '../../init'
 import { importGroupOutputSchema } from '../../outputs/imports'
 
@@ -74,6 +82,7 @@ export const importGroupProcedure = protectedProcedure
   .input(
     z
       .object({
+        requestId: createRequestIdSchema,
         targetGroupId: z
           .string()
           .min(1)
@@ -130,13 +139,69 @@ export const importGroupProcedure = protectedProcedure
     }
 
     try {
-      const result = await importGroup(input as never, {
+      const { value: result, replayed } = await runIdempotentCreate({
         accountId: ctx.auth.user.id,
+        operation: CREATE_OPERATIONS.import,
+        requestId: input.requestId,
+        input: { ...input, requestId: undefined },
+        prepare: () =>
+          prepareImportGroup(input as never, {
+            accountId: ctx.auth.user.id,
+            idempotencyRequestId: input.requestId,
+          }),
+        execute: (tx, prepared) =>
+          importGroup(
+            input as never,
+            {
+              accountId: ctx.auth.user.id,
+              idempotencyRequestId: input.requestId,
+            },
+            { prepared, tx },
+          ),
+        encode: (created) => {
+          const { emailDispatches: _emailDispatches, ...replayResult } = created
+          return {
+            ...replayResult,
+            invites: created.invites.map(
+              ({ inviteUrl: _inviteUrl, ...invite }) => invite,
+            ),
+          }
+        },
+        decode: (stored) => {
+          const created = stored as Awaited<ReturnType<typeof importGroup>>
+          return {
+            ...created,
+            invites: created.invites.map((invite) =>
+              invite.kind === 'LINK'
+                ? {
+                    ...invite,
+                    inviteUrl: `${getWebBaseUrl()}/groups/${created.groupId}?invite=${deriveCreateToken(
+                      {
+                        accountId: ctx.auth.user.id,
+                        operation: CREATE_OPERATIONS.import,
+                        requestId: input.requestId,
+                        discriminator: `import-link:${invite.sourceName}`,
+                      },
+                    )}`,
+                  }
+                : invite,
+            ),
+          }
+        },
       })
-      if (result.importedExpenses > 0)
+      if (!replayed && result.importedExpenses > 0)
         await enqueueBudgetEvaluation(result.groupId)
-      return result
+      if (!replayed) {
+        await Promise.all(
+          (result.emailDispatches ?? []).map((email) =>
+            sendInvitationEmail(email),
+          ),
+        )
+      }
+      const { emailDispatches: _emailDispatches, ...response } = result
+      return response
     } catch (err) {
+      if (err instanceof TRPCError) throw err
       if (err instanceof ConversionError) {
         throw new TRPCError({
           code:

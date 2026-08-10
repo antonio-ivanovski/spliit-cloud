@@ -1012,6 +1012,7 @@ describe('importGroup (tRPC caller)', () => {
 
     await expect(
       caller.import({
+        requestId: crypto.randomUUID(),
         targetGroupId: 'grp-1',
         participants: [...baseParticipants],
         expenses: [],
@@ -1053,6 +1054,7 @@ describe('importGroup (tRPC caller)', () => {
 
     await expect(
       caller.import({
+        requestId: crypto.randomUUID(),
         targetGroupId: 'friend-group',
         participants: [...baseParticipants],
         expenses: [],
@@ -1075,6 +1077,7 @@ describe('importGroup (tRPC caller)', () => {
 
     await expect(
       caller.import({
+        requestId: crypto.randomUUID(),
         groupFormValues: {
           name: 'Imported',
           information: '',

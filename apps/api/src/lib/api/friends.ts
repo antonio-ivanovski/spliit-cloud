@@ -34,6 +34,7 @@ export type CreateFriendLedgerArgs = {
   currency: string
   currencyCode?: string | null
   information?: string | null
+  linkToken?: string
 }
 
 export type CreateFriendLedgerResult =
@@ -320,7 +321,7 @@ export async function createFriendLedger(
       }
     }
 
-    const token = generateLinkToken()
+    const token = args.linkToken ?? generateLinkToken()
     const tokenHash = await hashLinkToken(token)
     const invitation = await tx.groupInvitation.create({
       data: {

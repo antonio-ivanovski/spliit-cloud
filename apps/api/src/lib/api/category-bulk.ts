@@ -106,7 +106,7 @@ export async function bulkUpdateExpenseCategories(args: {
         isReimbursement: false,
         categoryId: fromCategoryId,
       },
-      select: { id: true, title: true, categoryId: true },
+      select: { id: true, title: true, categoryId: true, version: true },
     })
 
     if (candidates.length === 0) {
@@ -136,11 +136,20 @@ export async function bulkUpdateExpenseCategories(args: {
         ? (candidate.categoryId as CategoryId)
         : DEFAULT_CATEGORY_ID
       if (from === toCategoryId) continue
-      await tx.expense.update({
-        where: { id: candidate.id },
-        data: { categoryId: toCategoryId },
-        select: { id: true },
+      const claimed = await tx.expense.updateMany({
+        where: {
+          id: candidate.id,
+          ledgerId: group.ledgerId,
+          isReimbursement: false,
+          categoryId: candidate.categoryId,
+          version: candidate.version,
+        },
+        data: {
+          categoryId: toCategoryId,
+          version: { increment: 1 },
+        },
       })
+      if (claimed.count === 0) continue
       rows.push({
         expenseId: candidate.id,
         title: candidate.title,

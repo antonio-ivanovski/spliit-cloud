@@ -52,7 +52,10 @@ export async function updateExpense(
   expenseId: string,
   expense: Expense,
   actor: { accountId: string },
-  options?: { scope?: 'OCCURRENCE' | 'THIS_AND_FUTURE' },
+  options: {
+    expectedVersion: number
+    scope?: 'OCCURRENCE' | 'THIS_AND_FUTURE'
+  },
 ) {
   const group = await prisma.group.findUnique({
     where: { id: groupId },
@@ -334,6 +337,18 @@ export async function updateExpense(
   // Transaction: activity log + all DB writes are atomic
   const boss = await getApiBoss()
   const { updatedExpense } = await prisma.$transaction(async (tx) => {
+    const claimed = await tx.expense.updateMany({
+      where: {
+        id: expenseId,
+        ledgerId: group.ledgerId,
+        version: options.expectedVersion,
+      },
+      data: { version: { increment: 1 } },
+    })
+    if (claimed.count === 0) {
+      throw new ExpenseVersionConflictError()
+    }
+
     if (existingExpense.recurringSeriesId) {
       await tx.$queryRaw`SELECT id FROM "RecurringExpenseSeries" WHERE id = ${existingExpense.recurringSeriesId} FOR UPDATE`
       if (options?.scope === 'THIS_AND_FUTURE' && existingSeries !== null) {
@@ -954,6 +969,13 @@ export async function updateExpense(
 
   return updatedExpense
 }
+
+export class ExpenseVersionConflictError extends Error {
+  constructor() {
+    super('This expense changed while you were editing it')
+    this.name = 'ExpenseVersionConflictError'
+  }
+}
 /**
  * Replace the mutable template fields on a materialized occurrence. Recurrence
  * identity and documents intentionally remain untouched. Pass `expenseDate`
@@ -976,6 +998,7 @@ async function updateMaterializedOccurrence(
   await tx.expense.update({
     where: { id: row.id },
     data: {
+      version: { increment: 1 },
       ...(expenseDate ? { expenseDate } : {}),
       amount: conversion.ledgerAmountMinor,
       originalAmount: conversion.originalAmount,

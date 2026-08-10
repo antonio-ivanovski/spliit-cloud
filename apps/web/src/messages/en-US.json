@@ -1061,7 +1061,11 @@
       "createCopy": "Create copy: {title}",
       "editTitle": "Edit: {title}",
       "recurringEditScopeOccurrence": "Editing this occurrence only",
-      "recurringEditScopeFuture": "Editing this and future occurrences"
+      "recurringEditScopeFuture": "Editing this and future occurrences",
+      "conflictTitle": "Expense changed",
+      "conflictDescription": "Another member or device changed this expense. Reload the latest version or keep your draft.",
+      "conflictKeepDraft": "Keep my draft",
+      "conflictReload": "Reload latest"
     },
     "amountField": {
       "label": "Amount",

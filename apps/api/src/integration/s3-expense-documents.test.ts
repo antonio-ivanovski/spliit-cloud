@@ -135,6 +135,7 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
   ): Promise<{ groupId: string; ledgerId: string; participantId: string }> {
     const caller = makeCaller(adminId, adminEmail)
     const { groupId } = await caller.create({
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name,
         currency: '$',
@@ -222,6 +223,7 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
     // 1b — Create expense with the document & verify S3 state
     const docId = randomId()
     const { expenseId } = await caller.expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Receipt',
@@ -305,6 +307,7 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
       promotedKeys.push(key.replace(/^tmp\//, 'documents/'))
 
       await caller.expenses.create({
+        requestId: crypto.randomUUID(),
         groupId,
         expense: {
           title: `Expense ${i}`,
@@ -395,6 +398,7 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
     const docIdA = randomId()
     const docIdB = randomId()
     const { expenseId } = await caller.expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Swap Test',
@@ -443,6 +447,12 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
     // Update expense — keep only A' (new id, new url), dropping A and B
     const docIdAprime = randomId()
     await caller.expenses.update({
+      expectedVersion: (
+        await prisma.expense.findUniqueOrThrow({
+          where: { id: expenseId },
+          select: { version: true },
+        })
+      ).version,
       groupId,
       expenseId,
       expense: {

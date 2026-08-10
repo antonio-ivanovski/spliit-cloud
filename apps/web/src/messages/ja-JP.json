@@ -680,7 +680,11 @@
         "timeZonePending": "繰り返しを有効にする前に、アカウントのタイムゾーンを待っています。"
       },
       "recurringEditScopeOccurrence": "この発生分のみ編集",
-      "recurringEditScopeFuture": "この発生分と今後の発生分を編集"
+      "recurringEditScopeFuture": "この発生分と今後の発生分を編集",
+      "conflictTitle": "支出が変更されました",
+      "conflictDescription": "別のメンバーまたは端末がこの支出を変更しました。最新のバージョンを再読み込みするか、下書きを保持してください。",
+      "conflictKeepDraft": "下書きを保持",
+      "conflictReload": "最新版を再読み込み"
     },
     "amountField": {
       "label": "金額",

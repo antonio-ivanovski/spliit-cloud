@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
+import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 import { trpc } from '@/trpc/client'
 
 import { useBudgetTranslation } from './budget-i18n'
@@ -56,6 +57,7 @@ export function BudgetFormPage({ groupId, budgetId }: Props) {
     onError: (error) =>
       toast({ description: error.message, variant: 'destructive' }),
   })
+  const createAttempt = useIdempotentCreate()
   const updateMutation = trpc.groups.budgets.update.useMutation({
     onSuccess: async () => {
       await utils.groups.budgets.get.invalidate({ groupId, budgetId })
@@ -182,7 +184,10 @@ export function BudgetFormPage({ groupId, budgetId }: Props) {
                 replace: true,
               })
             } else {
-              await createMutation.mutateAsync({ groupId, ...input })
+              const created = await createAttempt.run((requestId) =>
+                createMutation.mutateAsync({ groupId, requestId, ...input }),
+              )
+              if (created === null) return
               await goBack()
             }
           }}

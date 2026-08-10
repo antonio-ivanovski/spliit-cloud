@@ -686,7 +686,11 @@
         "timeZonePending": "Tekrarlama etkinleştirilmeden önce hesap saat diliminiz bekleniyor."
       },
       "recurringEditScopeOccurrence": "Yalnızca bu yineleme düzenleniyor",
-      "recurringEditScopeFuture": "Bu ve gelecekteki yinelemeler düzenleniyor"
+      "recurringEditScopeFuture": "Bu ve gelecekteki yinelemeler düzenleniyor",
+      "conflictTitle": "Harcama değiştirildi",
+      "conflictDescription": "Başka bir üye veya cihaz bu harcamayı değiştirdi. En son sürümü yeniden yükleyin veya taslağınızı koruyun.",
+      "conflictKeepDraft": "Taslağımı koru",
+      "conflictReload": "En son sürümü yükle"
     },
     "amountField": {
       "label": "Tutar",

@@ -135,6 +135,7 @@ export const expenseListItemResponseSchema = z.object({
 
 export const expenseGetResponseSchema = z.object({
   ...expenseCommonFieldsSchema,
+  version: z.number().int().positive(),
   createdAt: z.date(),
   notes: z.string().nullable(),
   documents: z.array(expenseDocumentResponseSchema),
@@ -166,6 +167,7 @@ export const createExpenseOutputSchema = z.object({
 
 export const updateExpenseOutputSchema = z.object({
   expenseId: z.string(),
+  version: z.number().int().positive(),
 })
 
 export const deleteExpenseOutputSchema = z.object({})

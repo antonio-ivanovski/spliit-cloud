@@ -325,6 +325,7 @@ describe('invitationsRouter.create', () => {
 
     const caller = makeCaller('acct-admin')
     const result = await caller.create({
+      requestId: crypto.randomUUID(),
       groupId: 'grp-1',
       email: 'bob@example.com',
       role: 'MEMBER',
@@ -362,6 +363,7 @@ describe('invitationsRouter.create', () => {
 
     const caller = makeCaller('acct-member')
     const result = await caller.create({
+      requestId: crypto.randomUUID(),
       groupId: 'grp-1',
       email: 'bob@example.com',
       role: 'MEMBER',
@@ -385,6 +387,7 @@ describe('invitationsRouter.create', () => {
 
     await expect(
       makeCaller('acct-member').create({
+        requestId: crypto.randomUUID(),
         groupId: 'grp-1',
         email: 'bob@example.com',
         role: 'ADMIN',
@@ -595,6 +598,7 @@ describe('invitationsRouter.create — guards and email', () => {
     const caller = makeCaller('acct-admin')
     await expect(
       caller.create({
+        requestId: crypto.randomUUID(),
         groupId: 'grp-1',
         email: 'bob@example.com',
         // Cast to bypass TS for testing the runtime schema validation.
@@ -620,6 +624,7 @@ describe('invitationsRouter.create — guards and email', () => {
     const caller = makeCaller('acct-admin')
     await expect(
       caller.create({
+        requestId: crypto.randomUUID(),
         groupId: 'grp-1',
         // The inviter's email per `authAs` is 'alice@example.com'.
         email: 'ALICE@example.com',
@@ -652,6 +657,7 @@ describe('invitationsRouter.create — guards and email', () => {
     const caller = makeCaller('acct-admin')
     await expect(
       caller.create({
+        requestId: crypto.randomUUID(),
         groupId: 'grp-1',
         email: 'bob@example.com',
         role: 'MEMBER',
@@ -694,6 +700,7 @@ describe('invitationsRouter.create — guards and email', () => {
     const caller = makeCaller('acct-admin')
     await expect(
       caller.create({
+        requestId: crypto.randomUUID(),
         groupId: 'grp-1',
         email: 'bob@example.com',
         role: 'MEMBER',
@@ -726,6 +733,7 @@ describe('invitationsRouter.create — guards and email', () => {
 
     const caller = makeCaller('acct-admin')
     const result = await caller.create({
+      requestId: crypto.randomUUID(),
       groupId: 'grp-1',
       email: 'bob@example.com',
       role: 'MEMBER',
@@ -760,6 +768,7 @@ describe('invitationsRouter.create — guards and email', () => {
 
     const caller = makeCaller('acct-admin')
     await caller.create({
+      requestId: crypto.randomUUID(),
       groupId: 'grp-1',
       email: 'bob@example.com',
       role: 'MEMBER',
@@ -806,6 +815,7 @@ describe('invitationsRouter.create — guards and email', () => {
 
     const caller = makeCaller('acct-admin')
     await caller.create({
+      requestId: crypto.randomUUID(),
       groupId: 'grp-1',
       email: 'newuser@example.com',
       role: 'MEMBER',
@@ -1366,6 +1376,7 @@ describe('invitationsRouter.createLink', () => {
 
     const caller = makeCaller('acct-admin')
     const result = await caller.createLink({
+      requestId: crypto.randomUUID(),
       groupId: 'grp-1',
       role: 'MEMBER',
     })
@@ -1417,7 +1428,10 @@ describe('invitationsRouter.createLink', () => {
     } as never)
 
     const caller = makeCaller('acct-member')
-    const result = await caller.createLink({ groupId: 'grp-1' })
+    const result = await caller.createLink({
+      groupId: 'grp-1',
+      requestId: crypto.randomUUID(),
+    })
     expect(result.invitationId).toBe('inv-link-member')
   })
 })

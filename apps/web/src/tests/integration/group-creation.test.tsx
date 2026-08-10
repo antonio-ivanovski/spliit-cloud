@@ -162,6 +162,7 @@ describe('Group CRUD via existing API', () => {
 
     // ── Create a test group via the real API ───────────────────────
     const createResult = await trpcCall<{ groupId: string }>('groups.create', {
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name: 'Integration Test Group',
         currency: 'EUR',
@@ -186,6 +187,7 @@ describe('Group CRUD via existing API', () => {
         'groups.expenses.create',
         {
           groupId: testGroup.id,
+          requestId: crypto.randomUUID(),
           expense: {
             title: 'Integration Dinner',
             amount: 2500,

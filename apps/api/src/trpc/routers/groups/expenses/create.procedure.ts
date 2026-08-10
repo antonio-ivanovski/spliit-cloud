@@ -3,7 +3,15 @@ import { z } from 'zod'
 
 import { expenseApiSchema } from '@spliit/domain'
 
-import { createExpense } from '../../../../lib/api/expenses/create-expense'
+import {
+  createExpense,
+  prepareExpenseCreate,
+} from '../../../../lib/api/expenses/create-expense'
+import {
+  CREATE_OPERATIONS,
+  createRequestIdSchema,
+  runIdempotentCreate,
+} from '../../../../lib/api/idempotency'
 import { enqueueBudgetEvaluation } from '../../../../lib/budgets/enqueue'
 import { ConversionError } from '../../../../lib/expense-conversion'
 import { loadGroupContext, protectedProcedure } from '../../../init'
@@ -13,11 +21,12 @@ export const createGroupExpenseProcedure = protectedProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
+      requestId: createRequestIdSchema,
       expense: expenseApiSchema,
     }),
   )
   .output(createExpenseOutputSchema)
-  .mutation(async ({ input: { groupId, expense }, ctx }) => {
+  .mutation(async ({ input: { groupId, requestId, expense }, ctx }) => {
     const { group } = await loadGroupContext({
       groupId,
       accountId: ctx.auth.user.id,
@@ -30,17 +39,27 @@ export const createGroupExpenseProcedure = protectedProcedure
     }
     const account = ctx.auth.user
     try {
-      const created = await createExpense(expense, groupId, {
+      const { value, replayed } = await runIdempotentCreate({
         accountId: account.id,
+        operation: CREATE_OPERATIONS.expense,
+        requestId,
+        input: { groupId, expense },
+        prepare: () => prepareExpenseCreate(expense, groupId),
+        execute: async (tx, prepared) => {
+          const created = await createExpense(
+            expense,
+            groupId,
+            { accountId: account.id },
+            { prepared, tx },
+          )
+          return {
+            expenseId: created.id,
+            recurringSeriesId: created.recurringSeriesId ?? null,
+          }
+        },
       })
-      await enqueueBudgetEvaluation(groupId)
-      return {
-        expenseId: created.id,
-        // Surface the series id so the web client can poll progress when
-        // the series was created past-dated and the worker still has
-        // occurrences to materialize.
-        recurringSeriesId: created.recurringSeriesId ?? null,
-      }
+      if (!replayed) await enqueueBudgetEvaluation(groupId)
+      return value
     } catch (err) {
       if (err instanceof ConversionError) {
         throw new TRPCError({

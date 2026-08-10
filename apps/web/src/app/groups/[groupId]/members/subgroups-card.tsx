@@ -33,6 +33,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { Switch } from '@/components/ui/switch'
 import { useToast } from '@/components/ui/use-toast'
+import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 import { trpc } from '@/trpc/client'
 
 import { useLinkInviteToken } from '../use-link-invite-token'
@@ -102,6 +103,7 @@ export function SubgroupsCard({
     onError: (error) =>
       toast({ description: error.message, variant: 'destructive' }),
   })
+  const createAttempt = useIdempotentCreate()
   const updateMutation = trpc.groups.subgroups.update.useMutation({
     onSuccess: async () => {
       setEditor(null)
@@ -185,7 +187,13 @@ export function SubgroupsCard({
     if (editor.subgroupId) {
       updateMutation.mutate({ ...payload, subgroupId: editor.subgroupId })
     } else {
-      createMutation.mutate(payload)
+      void createAttempt
+        .run((requestId) =>
+          createMutation.mutateAsync({ ...payload, requestId }),
+        )
+        .catch(() => {
+          // The mutation's onError callback owns the user-facing failure toast.
+        })
     }
   }
   const isSaving = createMutation.isPending || updateMutation.isPending

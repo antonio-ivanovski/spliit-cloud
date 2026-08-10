@@ -46,6 +46,7 @@ describe('assistant expense confirmation concurrency', () => {
       },
     } as never)
     const created = await groupCaller.create({
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name: `Commit Group ${runId}`,
         currency: '$',

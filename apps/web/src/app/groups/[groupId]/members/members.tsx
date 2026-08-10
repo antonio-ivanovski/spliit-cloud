@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/card'
 import { useLocale } from '@/i18n/react'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
+import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 
 import { useCurrentGroup } from '../current-group-context'
 import { InviteCard } from './invite-card'
@@ -44,6 +45,9 @@ function GroupMembersBody() {
   const accountTimeZone =
     accountPreferences?.timeZone ?? detectDeviceTimeZone() ?? 'UTC'
   const { groupId, group, currentMember } = useCurrentGroup()
+  const emailInviteAttempt = useIdempotentCreate()
+  const linkInviteAttempt = useIdempotentCreate()
+  const participantAttempt = useIdempotentCreate()
 
   const {
     account,
@@ -155,25 +159,37 @@ function GroupMembersBody() {
             createLinkMutation={createLinkMutation}
             createParticipantMutation={createParticipantMutation}
             onInvite={async (values) => {
-              await createMutation.mutateAsync({
-                groupId,
-                email: values.email,
-                role: values.role,
-                temporaryName: values.temporaryName,
-              })
+              const result = await emailInviteAttempt.run((requestId) =>
+                createMutation.mutateAsync({
+                  groupId,
+                  email: values.email,
+                  role: values.role,
+                  temporaryName: values.temporaryName,
+                  requestId,
+                }),
+              )
+              return result !== null
             }}
             onGenerateLink={async (values) => {
-              return createLinkMutation.mutateAsync({
-                groupId,
-                role: values.role,
-                temporaryName: values.temporaryName,
-              })
+              const result = await linkInviteAttempt.run((requestId) =>
+                createLinkMutation.mutateAsync({
+                  groupId,
+                  role: values.role,
+                  temporaryName: values.temporaryName,
+                  requestId,
+                }),
+              )
+              return result ?? undefined
             }}
             onAddParticipant={async (values) => {
-              await createParticipantMutation.mutateAsync({
-                groupId,
-                displayName: values.displayName,
-              })
+              const result = await participantAttempt.run((requestId) =>
+                createParticipantMutation.mutateAsync({
+                  groupId,
+                  displayName: values.displayName,
+                  requestId,
+                }),
+              )
+              return result !== null
             }}
           />
 

@@ -95,6 +95,7 @@ describe('Silent expense creation — activity + notification', () => {
 
     const caller = makeCaller()
     const result = await caller.create({
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name,
         currency: '$',
@@ -162,6 +163,7 @@ describe('Silent expense creation — activity + notification', () => {
     anchorDate: Date,
   ) {
     await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title,
@@ -193,6 +195,7 @@ describe('Silent expense creation — activity + notification', () => {
 
     // Admin paid $40 for both → Alice owes Admin $20
     await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Dinner',
@@ -255,6 +258,7 @@ describe('Silent expense creation — activity + notification', () => {
 
     // Admin paid $40, split evenly → Alice owes Admin $20
     await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Lunch',
@@ -329,6 +333,7 @@ describe('Silent expense creation — activity + notification', () => {
     pastDate.setUTCDate(pastDate.getUTCDate() - 14)
 
     await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Weekly sub',
@@ -385,6 +390,12 @@ describe('Silent expense creation — activity + notification', () => {
 
     expect(installments.length).toBeGreaterThanOrEqual(2)
     await makeCaller().expenses.update({
+      expectedVersion: (
+        await prisma.expense.findUniqueOrThrow({
+          where: { id: installments[0]!.id },
+          select: { version: true },
+        })
+      ).version,
       groupId,
       expenseId: installments[0]!.id,
       scope: 'THIS_AND_FUTURE',

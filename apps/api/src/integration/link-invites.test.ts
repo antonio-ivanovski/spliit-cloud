@@ -107,6 +107,7 @@ describe('Link invitation flow — real DB', () => {
   ): Promise<{ groupId: string; ledgerId: string }> {
     const caller = adminCaller()
     const { groupId } = await caller.create({
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name,
         currency: '$',
@@ -130,6 +131,7 @@ describe('Link invitation flow — real DB', () => {
 
     // Admin creates a link invitation
     const createResult = await invitationsCaller().createLink({
+      requestId: crypto.randomUUID(),
       groupId,
       role: 'MEMBER',
       temporaryName: 'Guest User',
@@ -196,6 +198,7 @@ describe('Link invitation flow — real DB', () => {
 
     // Admin creates a link invitation (no temporary name)
     const createResult = await invitationsCaller().createLink({
+      requestId: crypto.randomUUID(),
       groupId,
       role: 'MEMBER',
     })
@@ -275,6 +278,7 @@ describe('Link invitation flow — real DB', () => {
 
     // Admin creates a link invitation
     const createResult = await invitationsCaller().createLink({
+      requestId: crypto.randomUUID(),
       groupId,
       role: 'MEMBER',
       temporaryName: 'Revocable Guest',
@@ -324,6 +328,7 @@ describe('Link invitation flow — real DB', () => {
     const { groupId } = await createTestGroup(`Link Rotate ${runId}`)
 
     const createResult = await invitationsCaller().createLink({
+      requestId: crypto.randomUUID(),
       groupId,
       role: 'MEMBER',
       temporaryName: 'Rotatable Guest',
@@ -401,6 +406,7 @@ describe('Link invitation flow — real DB', () => {
     const { groupId } = await createTestGroup(`Link To Email ${runId}`)
 
     const createResult = await invitationsCaller().createLink({
+      requestId: crypto.randomUUID(),
       groupId,
       role: 'MEMBER',
       temporaryName: 'Converted Guest',
@@ -459,6 +465,7 @@ describe('Link invitation flow — real DB', () => {
     const { groupId } = await createTestGroup(`Email To Link ${runId}`)
 
     const { invitationId } = await invitationsCaller().create({
+      requestId: crypto.randomUUID(),
       groupId,
       email: inviteeEmail,
       role: 'MEMBER',
@@ -502,6 +509,7 @@ describe('Link invitation flow — real DB', () => {
 
     // Personal EMAIL invitation for the invitee.
     await invitationsCaller().create({
+      requestId: crypto.randomUUID(),
       groupId,
       email: inviteeEmail,
       role: 'MEMBER',
@@ -509,6 +517,7 @@ describe('Link invitation flow — real DB', () => {
 
     // Valid LINK invitation for the same group.
     const createResult = await invitationsCaller().createLink({
+      requestId: crypto.randomUUID(),
       groupId,
       role: 'MEMBER',
     })
@@ -545,12 +554,14 @@ describe('Link invitation flow — real DB', () => {
     const { groupId } = await createTestGroup(`Link After Revoke ${runId}`)
 
     const { invitationId } = await invitationsCaller().create({
+      requestId: crypto.randomUUID(),
       groupId,
       email: inviteeEmail,
       role: 'MEMBER',
     })
 
     const createResult = await invitationsCaller().createLink({
+      requestId: crypto.randomUUID(),
       groupId,
       role: 'MEMBER',
     })

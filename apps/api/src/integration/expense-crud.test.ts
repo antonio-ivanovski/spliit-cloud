@@ -78,6 +78,7 @@ describe('Expense CRUD — real DB', () => {
   ): Promise<{ groupId: string; participantId: string }> {
     const caller = makeCaller()
     const { groupId } = await caller.create({
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name,
         currency: currency.symbol,
@@ -144,16 +145,19 @@ describe('Expense CRUD — real DB', () => {
     })
 
     const memberExpense = await memberCaller.expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: expenseInput('Member owned', memberParticipantId),
     })
     await memberCaller.expenses.update({
+      expectedVersion: 1,
       groupId,
       expenseId: memberExpense.expenseId,
       expense: expenseInput('Member updated', memberParticipantId),
     })
 
     const adminExpense = await adminCaller.expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: expenseInput('Admin owned', adminParticipantId),
     })
@@ -170,6 +174,7 @@ describe('Expense CRUD — real DB', () => {
     })
     await expect(
       memberCaller.expenses.update({
+        expectedVersion: 1,
         groupId,
         expenseId: adminExpense.expenseId,
         expense: expenseInput('Legacy edit', memberParticipantId),
@@ -191,6 +196,7 @@ describe('Expense CRUD — real DB', () => {
 
     // Create expense
     const { expenseId } = await caller.expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Original Title',
@@ -210,6 +216,7 @@ describe('Expense CRUD — real DB', () => {
 
     // Update title
     await caller.expenses.update({
+      expectedVersion: 1,
       groupId,
       expenseId,
       expense: {
@@ -234,6 +241,93 @@ describe('Expense CRUD — real DB', () => {
     expect(expense!.title).toBe('Updated Title')
   })
 
+  it('allows exactly one update to claim an expense version', async () => {
+    const caller = makeCaller()
+    const { groupId, participantId } = await createGroup(
+      `Concurrent update ${runId}`,
+    )
+    const expense = (title: string) => ({
+      title,
+      amount: 1000,
+      paidByList: [{ participant: participantId, shares: 1000 }],
+      paidBySplitMode: 'BY_AMOUNT' as const,
+      isMultiPayer: false,
+      paidFor: [{ participant: participantId, shares: 1 }],
+      category: 'general' as const,
+      splitMode: 'EVENLY' as const,
+      expenseDate: new Date().toISOString(),
+      isReimbursement: false,
+      documents: [],
+      recurrenceRule: 'NONE' as const,
+    })
+    const { expenseId } = await caller.expenses.create({
+      requestId: crypto.randomUUID(),
+      groupId,
+      expense: expense('Original'),
+    })
+
+    const attempts = await Promise.allSettled([
+      caller.expenses.update({
+        groupId,
+        expenseId,
+        expectedVersion: 1,
+        expense: expense('First draft'),
+      }),
+      caller.expenses.update({
+        groupId,
+        expenseId,
+        expectedVersion: 1,
+        expense: expense('Second draft'),
+      }),
+    ])
+
+    expect(
+      attempts.filter((result) => result.status === 'fulfilled'),
+    ).toHaveLength(1)
+    const rejected = attempts.find((result) => result.status === 'rejected')
+    expect(rejected).toMatchObject({ reason: { code: 'CONFLICT' } })
+    const stored = await prisma.expense.findUniqueOrThrow({
+      where: { id: expenseId },
+      select: { version: true },
+    })
+    expect(stored.version).toBe(2)
+    expect(
+      await prisma.activity.count({
+        where: { type: 'EXPENSE_UPDATED', subjectId: expenseId },
+      }),
+    ).toBe(1)
+  })
+
+  it('replays concurrent group creates and rejects request-id reuse', async () => {
+    const caller = makeCaller()
+    const requestId = crypto.randomUUID()
+    const groupFormValues = {
+      name: `Idempotent group ${runId}`,
+      currency: '$',
+      currencyCode: 'USD',
+      participants: [{ name: 'Admin' }],
+    }
+    const [first, second] = await Promise.all([
+      caller.create({ requestId, groupFormValues }),
+      caller.create({ requestId, groupFormValues }),
+    ])
+    expect(second.groupId).toBe(first.groupId)
+    const group = await prisma.group.findUniqueOrThrow({
+      where: { id: first.groupId },
+      select: { ledgerId: true },
+    })
+    trackLedger(group.ledgerId)
+    expect(
+      await prisma.group.count({ where: { name: groupFormValues.name } }),
+    ).toBe(1)
+    await expect(
+      caller.create({
+        requestId,
+        groupFormValues: { ...groupFormValues, name: 'Different payload' },
+      }),
+    ).rejects.toMatchObject({ code: 'CONFLICT' })
+  })
+
   it('clears original currency metadata when updating back to group currency', async () => {
     const caller = makeCaller()
     const { groupId, participantId } = await createGroup(`Currency ${runId}`, {
@@ -242,6 +336,7 @@ describe('Expense CRUD — real DB', () => {
     })
 
     const { expenseId } = await caller.expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Dinner',
@@ -260,6 +355,7 @@ describe('Expense CRUD — real DB', () => {
     })
 
     await caller.expenses.update({
+      expectedVersion: 1,
       groupId,
       expenseId,
       expense: {
@@ -280,6 +376,7 @@ describe('Expense CRUD — real DB', () => {
     })
 
     await caller.expenses.update({
+      expectedVersion: 2,
       groupId,
       expenseId,
       expense: {
@@ -324,6 +421,7 @@ describe('Expense CRUD — real DB', () => {
     const { groupId, participantId } = await createGroup(`Delete ${runId}`)
 
     const { expenseId } = await caller.expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'To Delete',
@@ -361,6 +459,7 @@ describe('Expense CRUD — real DB', () => {
     const { groupId, participantId } = await createGroup(`NoDocs ${runId}`)
 
     const result = await caller.expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'No Documents',

@@ -692,7 +692,11 @@
         "timeZonePending": "Se așteaptă fusul orar al contului înainte ca recurența să poată fi activată."
       },
       "recurringEditScopeOccurrence": "Editarea doar a acestei apariții",
-      "recurringEditScopeFuture": "Editarea acestei apariții și a celor viitoare"
+      "recurringEditScopeFuture": "Editarea acestei apariții și a celor viitoare",
+      "conflictTitle": "Cheltuială modificată",
+      "conflictDescription": "Un alt membru sau dispozitiv a modificat această cheltuială. Reîncarcă cea mai recentă versiune sau păstrează ciorna.",
+      "conflictKeepDraft": "Păstrează ciorna mea",
+      "conflictReload": "Reîncarcă ultima versiune"
     },
     "amountField": {
       "label": "Sumă",

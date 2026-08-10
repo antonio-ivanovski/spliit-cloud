@@ -698,7 +698,11 @@
         "timeZonePending": "Před povolením opakování se čeká na časové pásmo vašeho účtu."
       },
       "recurringEditScopeOccurrence": "Upravit pouze tento výskyt",
-      "recurringEditScopeFuture": "Upravit tento a budoucí výskyty"
+      "recurringEditScopeFuture": "Upravit tento a budoucí výskyty",
+      "conflictTitle": "Výdaj byl změněn",
+      "conflictDescription": "Tento výdaj změnil jiný člen nebo zařízení. Načtěte nejnovější verzi, nebo si ponechte svůj koncept.",
+      "conflictKeepDraft": "Ponechat můj koncept",
+      "conflictReload": "Načíst nejnovější"
     },
     "amountField": {
       "label": "Částka",

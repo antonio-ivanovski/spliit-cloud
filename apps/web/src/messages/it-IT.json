@@ -692,7 +692,11 @@
         "timeZonePending": "In attesa del fuso orario del tuo account prima di poter attivare la ricorrenza."
       },
       "recurringEditScopeOccurrence": "Modifica solo questa occorrenza",
-      "recurringEditScopeFuture": "Modifica questa e le occorrenze future"
+      "recurringEditScopeFuture": "Modifica questa e le occorrenze future",
+      "conflictTitle": "Spesa modificata",
+      "conflictDescription": "Un altro membro o dispositivo ha modificato questa spesa. Ricarica la versione più recente o conserva la bozza.",
+      "conflictKeepDraft": "Conserva la mia bozza",
+      "conflictReload": "Ricarica l’ultima versione"
     },
     "amountField": {
       "label": "Importo",

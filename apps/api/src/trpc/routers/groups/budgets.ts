@@ -8,6 +8,7 @@ import {
   type BudgetAlertType,
   type GroupBudget,
   type GroupRole,
+  type Prisma,
 } from '@spliit/db'
 import {
   budgetPeriodSchema,
@@ -32,6 +33,11 @@ import {
   mapExpenseListRow,
   type ExpenseListDbRow,
 } from '../../../lib/api/expenses/queries'
+import {
+  CREATE_OPERATIONS,
+  createRequestIdSchema,
+  runIdempotentCreate,
+} from '../../../lib/api/idempotency'
 import {
   assertCanManageOwnedResource,
   canManageOwnedResource,
@@ -120,6 +126,7 @@ async function summary(
   budget: GroupBudget,
   includeHistory = true,
   sharedCurrentRows?: ExpenseListDbRow[],
+  client: Prisma.TransactionClient | typeof prisma = prisma,
 ) {
   const rule = toRule(budget)
   const referenceAt = budget.archivedAt ?? new Date()
@@ -130,7 +137,7 @@ async function summary(
         expense.expenseDate >= bounds.start &&
         expense.expenseDate <= bounds.end,
     ) ??
-    (await prisma.expense.findMany({
+    (await client.expense.findMany({
       where: {
         ledgerId: budget.ledgerId,
         expenseDate: { gte: bounds.start, lte: bounds.end },
@@ -241,7 +248,7 @@ async function summary(
     : null
   const historyRows =
     includeHistory && previous
-      ? await prisma.expense.findMany({
+      ? await client.expense.findMany({
           where: {
             ledgerId: budget.ledgerId,
             expenseDate: {
@@ -384,8 +391,9 @@ async function establishAlertBaseline(
   budget: GroupBudget,
   currentSummary: Awaited<ReturnType<typeof summary>>,
   resetCurrentPeriod = false,
+  tx?: Prisma.TransactionClient,
 ) {
-  await prisma.$transaction(async (tx) => {
+  const run = async (tx: Prisma.TransactionClient) => {
     if (resetCurrentPeriod) {
       await tx.groupBudgetAlert.deleteMany({
         where: {
@@ -407,7 +415,9 @@ async function establishAlertBaseline(
       ],
       skipDuplicates: true,
     })
-  })
+  }
+  if (tx) await run(tx)
+  else await prisma.$transaction(run)
 }
 
 const list = protectedProcedure
@@ -467,7 +477,7 @@ const get = protectedProcedure
   })
 
 const create = protectedProcedure
-  .input(budgetInput)
+  .input(budgetInput.extend({ requestId: createRequestIdSchema }))
   .output(createBudgetOutputSchema)
   .mutation(async ({ input, ctx }) => {
     const { group, member } = await loadGroupContext({
@@ -509,36 +519,47 @@ const create = protectedProcedure
     // boundaries. Fall back to UTC (the stored column default) when the account
     // has not initialized a timezone yet, rather than blocking budget creation.
     const timeZone = preference?.timeZone ?? 'UTC'
-    const budget = await prisma.groupBudget.create({
-      data: {
-        id: randomUUID(),
-        groupId: group.id,
-        ledgerId: group.ledgerId,
-        name: input.name,
-        amount: input.amount,
-        period: input.periodType,
-        timeZone,
-        customStartDate:
-          input.periodType === 'CUSTOM' ? input.customStart : null,
-        customEndDate: input.periodType === 'CUSTOM' ? input.customEnd : null,
-        categoryScope: input.categoryScope,
-        categoryNodeIds,
-        participantScope: input.participantScope,
-        participantIds: input.participantIds,
-        notifyTrending: input.notifyTrending,
-        notifyOver: input.notifyOver,
-        createdByAccountId: ctx.auth.user.id,
+    const { requestId, ...hashedInput } = input
+    const { value } = await runIdempotentCreate({
+      accountId: ctx.auth.user.id,
+      operation: CREATE_OPERATIONS.budget,
+      requestId,
+      input: hashedInput,
+      execute: async (tx) => {
+        const budget = await tx.groupBudget.create({
+          data: {
+            id: randomUUID(),
+            groupId: group.id,
+            ledgerId: group.ledgerId,
+            name: input.name,
+            amount: input.amount,
+            period: input.periodType,
+            timeZone,
+            customStartDate:
+              input.periodType === 'CUSTOM' ? input.customStart : null,
+            customEndDate:
+              input.periodType === 'CUSTOM' ? input.customEnd : null,
+            categoryScope: input.categoryScope,
+            categoryNodeIds,
+            participantScope: input.participantScope,
+            participantIds: input.participantIds,
+            notifyTrending: input.notifyTrending,
+            notifyOver: input.notifyOver,
+            createdByAccountId: ctx.auth.user.id,
+          },
+        })
+        const currentSummary = await summary(budget, true, undefined, tx)
+        await establishAlertBaseline(budget, currentSummary, false, tx)
+        return {
+          budget: output(budget, currentSummary, {
+            role: member.role,
+            accountId: ctx.auth.user.id,
+            groupArchived: group.archived,
+          }),
+        }
       },
     })
-    const currentSummary = await summary(budget)
-    await establishAlertBaseline(budget, currentSummary)
-    return {
-      budget: output(budget, currentSummary, {
-        role: member.role,
-        accountId: ctx.auth.user.id,
-        groupArchived: group.archived,
-      }),
-    }
+    return value
   })
 
 const update = protectedProcedure

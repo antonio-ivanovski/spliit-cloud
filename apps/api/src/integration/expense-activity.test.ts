@@ -76,6 +76,7 @@ describe('Expense activity — real DB', () => {
     // Create group
     const caller = makeCaller()
     const result = await caller.create({
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name: `Expense Activity ${runId}`,
         currency: '$',
@@ -147,6 +148,7 @@ describe('Expense activity — real DB', () => {
 
     const caller = makeCaller()
     const result = await caller.expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Test Dinner',
@@ -205,6 +207,12 @@ describe('Expense activity — real DB', () => {
 
     const caller = makeCaller()
     await caller.expenses.update({
+      expectedVersion: (
+        await prisma.expense.findUniqueOrThrow({
+          where: { id: expenseId },
+          select: { version: true },
+        })
+      ).version,
       groupId,
       expenseId,
       expense: {
@@ -266,6 +274,12 @@ describe('Expense activity — real DB', () => {
     })
 
     await caller.expenses.update({
+      expectedVersion: (
+        await prisma.expense.findUniqueOrThrow({
+          where: { id: expenseId },
+          select: { version: true },
+        })
+      ).version,
       groupId,
       expenseId,
       expense: {

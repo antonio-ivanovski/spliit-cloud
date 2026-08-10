@@ -686,7 +686,11 @@
         "timeZonePending": "Wachten op de tijdzone van je account voordat herhaling kan worden ingeschakeld."
       },
       "recurringEditScopeOccurrence": "Alleen dit voorkomen bewerken",
-      "recurringEditScopeFuture": "Deze en toekomstige voorkomens bewerken"
+      "recurringEditScopeFuture": "Deze en toekomstige voorkomens bewerken",
+      "conflictTitle": "Uitgave gewijzigd",
+      "conflictDescription": "Een ander lid of apparaat heeft deze uitgave gewijzigd. Laad de nieuwste versie of bewaar je concept.",
+      "conflictKeepDraft": "Mijn concept bewaren",
+      "conflictReload": "Nieuwste versie laden"
     },
     "amountField": {
       "label": "Bedrag",

@@ -698,7 +698,11 @@
         "timeZonePending": "Oczekiwanie na strefę czasową konta przed włączeniem cykliczności."
       },
       "recurringEditScopeOccurrence": "Edytowanie tylko tego wystąpienia",
-      "recurringEditScopeFuture": "Edytowanie tego i przyszłych wystąpień"
+      "recurringEditScopeFuture": "Edytowanie tego i przyszłych wystąpień",
+      "conflictTitle": "Wydatek został zmieniony",
+      "conflictDescription": "Inny członek lub urządzenie zmieniło ten wydatek. Wczytaj najnowszą wersję albo zachowaj swoją wersję roboczą.",
+      "conflictKeepDraft": "Zachowaj moją wersję roboczą",
+      "conflictReload": "Wczytaj najnowszą wersję"
     },
     "amountField": {
       "label": "Suma",

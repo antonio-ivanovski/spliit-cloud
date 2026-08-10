@@ -115,6 +115,7 @@ describe('Recurring bulk updates — real DB', () => {
   }> {
     const caller = makeCaller()
     const { groupId } = await caller.create({
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name,
         currency: '$',
@@ -196,6 +197,7 @@ describe('Recurring bulk updates — real DB', () => {
     const pastDate = new Date()
     pastDate.setUTCDate(pastDate.getUTCDate() - 14)
     const result = await caller.expenses.create({
+      requestId: crypto.randomUUID(),
       groupId: args.groupId,
       expense: {
         title: args.title,
@@ -265,6 +267,12 @@ describe('Recurring bulk updates — real DB', () => {
     const futureIds = expenseIds.slice(1)
 
     await makeCaller().expenses.update({
+      expectedVersion: (
+        await prisma.expense.findUniqueOrThrow({
+          where: { id: targetId },
+          select: { version: true },
+        })
+      ).version,
       groupId,
       expenseId: targetId,
       scope: 'THIS_AND_FUTURE',
@@ -351,6 +359,12 @@ describe('Recurring bulk updates — real DB', () => {
     })
 
     await makeCaller().expenses.update({
+      expectedVersion: (
+        await prisma.expense.findUniqueOrThrow({
+          where: { id: targetId },
+          select: { version: true },
+        })
+      ).version,
       groupId,
       expenseId: targetId,
       scope: 'THIS_AND_FUTURE',
@@ -427,6 +441,12 @@ describe('Recurring bulk updates — real DB', () => {
     const futureIds = expenseIds.slice(1)
 
     await makeCaller().expenses.update({
+      expectedVersion: (
+        await prisma.expense.findUniqueOrThrow({
+          where: { id: targetId },
+          select: { version: true },
+        })
+      ).version,
       groupId,
       expenseId: targetId,
       scope: 'THIS_AND_FUTURE',
@@ -489,6 +509,12 @@ describe('Recurring bulk updates — real DB', () => {
     const futureIds = expenseIds.slice(1)
 
     await makeCaller().expenses.update({
+      expectedVersion: (
+        await prisma.expense.findUniqueOrThrow({
+          where: { id: targetId },
+          select: { version: true },
+        })
+      ).version,
       groupId,
       expenseId: targetId,
       scope: 'THIS_AND_FUTURE',
@@ -610,6 +636,12 @@ describe('Recurring bulk updates — real DB', () => {
     })
 
     await makeCaller().expenses.update({
+      expectedVersion: (
+        await prisma.expense.findUniqueOrThrow({
+          where: { id: targetId },
+          select: { version: true },
+        })
+      ).version,
       groupId,
       expenseId: targetId,
       scope: 'THIS_AND_FUTURE',
@@ -681,6 +713,7 @@ describe('Recurring bulk updates — real DB', () => {
     const pastDate = new Date()
     pastDate.setUTCDate(pastDate.getUTCDate() - 5)
     const created = await caller.expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Daily to weekly',
@@ -735,6 +768,12 @@ describe('Recurring bulk updates — real DB', () => {
     const beforeCount = rows.length
 
     await caller.expenses.update({
+      expectedVersion: (
+        await prisma.expense.findUniqueOrThrow({
+          where: { id: target.id },
+          select: { version: true },
+        })
+      ).version,
       groupId,
       expenseId: target.id,
       scope: 'THIS_AND_FUTURE',
@@ -799,6 +838,12 @@ describe('Recurring bulk updates — real DB', () => {
     const keepThrough = target.recurrenceSequence! + 1
 
     await makeCaller().expenses.update({
+      expectedVersion: (
+        await prisma.expense.findUniqueOrThrow({
+          where: { id: target.id },
+          select: { version: true },
+        })
+      ).version,
       groupId,
       expenseId: target.id,
       scope: 'THIS_AND_FUTURE',
@@ -869,6 +914,12 @@ describe('Recurring bulk updates — real DB', () => {
     })
 
     await makeCaller().expenses.update({
+      expectedVersion: (
+        await prisma.expense.findUniqueOrThrow({
+          where: { id: target.id },
+          select: { version: true },
+        })
+      ).version,
       groupId,
       expenseId: target.id,
       scope: 'OCCURRENCE',
@@ -938,6 +989,12 @@ describe('Recurring bulk updates — real DB', () => {
     })
 
     await makeCaller().expenses.update({
+      expectedVersion: (
+        await prisma.expense.findUniqueOrThrow({
+          where: { id: editTargetId },
+          select: { version: true },
+        })
+      ).version,
       groupId,
       expenseId: editTargetId,
       scope: 'THIS_AND_FUTURE',
@@ -1197,6 +1254,7 @@ describe('Recurring bulk updates — real DB', () => {
     const pastDate = new Date()
     pastDate.setUTCDate(pastDate.getUTCDate() - 14)
     const created = await caller.expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Count complete',
@@ -1267,6 +1325,7 @@ describe('Recurring bulk updates — real DB', () => {
     const endDate = new Date()
     endDate.setUTCDate(endDate.getUTCDate() - 7)
     const created = await caller.expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Date complete',
