@@ -586,7 +586,11 @@
       "fillNext": "Granska de föreslagna detaljerna och tillämpa dem på utgiften.",
       "scanningHint": "Skanningen kan ta en stund — ha tålamod.",
       "fillBody": "Välj ett bifogat kvitto eller ladda upp ett nytt — vi skannar det och föreslår detaljer för utgiften.",
-      "translateToLocale": "Översätt titel och artiklar till {language}"
+      "translateToLocale": "Översätt titel och artiklar till {language}",
+      "dropTitle": "Släpp en kvittobild",
+      "dropDescription": "Släpp en bild här för att skanna den med AI",
+      "takePhoto": "Ta foto",
+      "scanReceipt": "Skanna kvitto"
     },
     "ErrorToast": {
       "title": "Fel vid uppladdning av dokument",
@@ -597,6 +601,10 @@
     "TooBigToast": {
       "title": "Filen är för stor",
       "description": "Den maximala filstorleken är {maxSize}. Din fil är {size}."
+    },
+    "UnsupportedToast": {
+      "title": "Bild krävs",
+      "aiDescription": "AI-kvittoskanning stöder endast bildfiler."
     }
   },
   "CreateReimbursement": {
@@ -979,6 +987,18 @@
     "TooBigToast": {
       "title": "Filen är för stor",
       "description": "Den maximala filstorleken är {maxSize}. Din fil är {size}."
+    },
+    "dropTitle": "Släpp filer här för att bifoga",
+    "dropDescription": "Bilder, PDF-filer och vanliga kvittodokument upp till 2 MB",
+    "chooseFiles": "Välj filer",
+    "takePhoto": "Ta foto",
+    "openDocument": "Öppna dokument",
+    "FileErrorToast": {
+      "description": "{fileName}: Något gick fel vid uppladdningen. Försök igen senare eller välj en annan fil."
+    },
+    "UnsupportedToast": {
+      "title": "Filtypen stöds inte",
+      "description": "{fileName} är en bilagetyp som inte stöds."
     }
   },
   "ExpenseForm": {
@@ -1317,7 +1337,8 @@
     "commentTooLong": "Kommentarer får innehålla högst 500 tecken.",
     "commentSubmitting": "Publicerar…",
     "commentDelete": "Ta bort kommentar",
-    "commentSend": "Skicka kommentar"
+    "commentSend": "Skicka kommentar",
+    "openDocument": "Öppna dokument"
   },
   "ExpenseSeries": {
     "badge": "Återkommande",

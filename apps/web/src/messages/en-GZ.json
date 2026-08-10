@@ -753,7 +753,11 @@
       "fillNext": "review the suggested details, then apply them to this expense.",
       "scanningHint": "scanning can take a bit — patience, bestie.",
       "fillBody": "choose an attached receipt or upload a new one — we’ll scan it and suggest details for this expense.",
-      "translateToLocale": "translate title and items to {language}"
+      "translateToLocale": "translate title and items to {language}",
+      "dropTitle": "drop a receipt pic",
+      "dropDescription": "drop one image here for an AI scan",
+      "takePhoto": "snap a photo",
+      "scanReceipt": "scan receipt"
     },
     "ErrorToast": {
       "title": "document upload flopped",
@@ -764,6 +768,10 @@
     "TooBigToast": {
       "title": "file is too big",
       "description": "the max upload size is {maxSize}. yours is {size}, whoops."
+    },
+    "UnsupportedToast": {
+      "title": "image needed",
+      "aiDescription": "AI receipt scanning is image-only."
     }
   },
   "CreateReimbursement": {
@@ -1160,6 +1168,18 @@
     "TooBigToast": {
       "title": "file is too big",
       "description": "the max upload size is {maxSize}. yours is {size}, whoops."
+    },
+    "dropTitle": "drop files here to attach",
+    "dropDescription": "images, PDFs, and common receipt docs up to 2 MB",
+    "chooseFiles": "pick files",
+    "takePhoto": "snap a photo",
+    "openDocument": "open this document",
+    "FileErrorToast": {
+      "description": "{fileName}: upload hit a snag. retry later or pick a different file."
+    },
+    "UnsupportedToast": {
+      "title": "unsupported file",
+      "description": "{fileName} isn’t a supported attachment type."
     }
   },
   "ExpenseForm": {
@@ -1498,7 +1518,8 @@
     "commentTooLong": "comments must be 500 characters or fewer, no essay arc.",
     "commentSubmitting": "posting…",
     "commentDelete": "delete the comment",
-    "commentSend": "send the comment"
+    "commentSend": "send the comment",
+    "openDocument": "open this document"
   },
   "ExpenseSeries": {
     "badge": "recurring vibes",

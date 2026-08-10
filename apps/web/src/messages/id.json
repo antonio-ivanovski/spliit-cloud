@@ -1231,6 +1231,18 @@
       "title": "Error saat mengunggah dokumen",
       "description": "Terjadi kesalahan saat mengunggah dokumen. Silakan coba lagi nanti atau pilih file lain.",
       "retry": "Ulangi"
+    },
+    "dropTitle": "Jatuhkan file untuk dilampirkan",
+    "dropDescription": "Gambar, PDF, dan dokumen tanda terima umum hingga 2 MB",
+    "chooseFiles": "Pilih file",
+    "takePhoto": "Ambil foto",
+    "openDocument": "Buka dokumen",
+    "FileErrorToast": {
+      "description": "{fileName}: terjadi kesalahan saat mengunggah. Silakan coba lagi nanti atau pilih file lain."
+    },
+    "UnsupportedToast": {
+      "title": "File tidak didukung",
+      "description": "{fileName} bukan jenis lampiran yang didukung."
     }
   },
   "CreateFromReceipt": {
@@ -1254,7 +1266,11 @@
       "fillNext": "Tinjau detail yang disarankan, lalu terapkan ke pengeluaran ini.",
       "scanningHint": "Pemindaian mungkin memerlukan waktu — harap bersabar.",
       "fillBody": "Pilih struk terlampir atau unggah yang baru — kami akan memindainya untuk menyarankan detail pengeluaran ini.",
-      "translateToLocale": "Terjemahkan judul dan item ke {language}"
+      "translateToLocale": "Terjemahkan judul dan item ke {language}",
+      "dropTitle": "Jatuhkan gambar tanda terima",
+      "dropDescription": "Seret satu gambar ke sini untuk dipindai dengan AI",
+      "takePhoto": "Ambil foto",
+      "scanReceipt": "Pindai struk"
     },
     "unknown": "Tidak diketahui",
     "TooBigToast": {
@@ -1265,6 +1281,10 @@
       "title": "Error saat mengunggah dokumen",
       "description": "Terjadi kesalahan saat mengunggah dokumen. Silakan coba lagi nanti atau pilih file lain.",
       "retry": "Ulangi"
+    },
+    "UnsupportedToast": {
+      "title": "Gambar diperlukan",
+      "aiDescription": "Pemindaian tanda terima dengan AI hanya mendukung file gambar."
     }
   },
   "Balances": {
@@ -2267,7 +2287,8 @@
     "commentTooLong": "Komentar harus terdiri dari 500 karakter atau kurang.",
     "commentSubmitting": "Memposting…",
     "commentDelete": "Hapus komentar",
-    "commentSend": "Kirim komentar"
+    "commentSend": "Kirim komentar",
+    "openDocument": "Buka dokumen"
   },
   "CreateReimbursement": {
     "description": "Tinjau pembayaran sebelum mencatatnya.",

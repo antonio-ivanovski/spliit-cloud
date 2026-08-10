@@ -936,6 +936,18 @@
       "title": "Errore durante il caricamento del documento",
       "description": "Si è verificato un errore durante il caricamento del documento. Riprova più tardi o seleziona un file diverso.",
       "retry": "Riprova"
+    },
+    "dropTitle": "Trascina i file da allegare",
+    "dropDescription": "Immagini, PDF e documenti di ricevute comuni fino a 2 MB",
+    "chooseFiles": "Scegli file",
+    "takePhoto": "Scatta una foto",
+    "openDocument": "Apri documento",
+    "FileErrorToast": {
+      "description": "{fileName}: si è verificato un errore durante il caricamento. Riprova più tardi o scegli un altro file."
+    },
+    "UnsupportedToast": {
+      "title": "File non supportato",
+      "description": "{fileName} non è un tipo di allegato supportato."
     }
   },
   "CreateFromReceipt": {
@@ -959,7 +971,11 @@
       "fillNext": "Controlla i dettagli suggeriti e applicali a questa spesa.",
       "scanningHint": "La scansione potrebbe richiedere un po’ di tempo — attendi.",
       "fillBody": "Scegli una ricevuta allegata o caricane una nuova — la scansioneremo per suggerire i dettagli di questa spesa.",
-      "translateToLocale": "Traduci titolo e articoli in {language}"
+      "translateToLocale": "Traduci titolo e articoli in {language}",
+      "dropTitle": "Trascina un’immagine della ricevuta",
+      "dropDescription": "Trascina qui un’immagine per scansionarla con l’IA",
+      "takePhoto": "Scatta una foto",
+      "scanReceipt": "Scansiona la ricevuta"
     },
     "unknown": "Sconosciuto",
     "TooBigToast": {
@@ -970,6 +986,10 @@
       "title": "Errore durante il caricamento del documento",
       "description": "Si è verificato un errore durante il caricamento del documento. Riprova più tardi o seleziona un file diverso.",
       "retry": "Riprova"
+    },
+    "UnsupportedToast": {
+      "title": "Immagine necessaria",
+      "aiDescription": "La scansione delle ricevute con l’IA supporta solo i file immagine."
     }
   },
   "Balances": {
@@ -2301,7 +2321,8 @@
     "commentTooLong": "I commenti devono contenere al massimo 500 caratteri.",
     "commentSubmitting": "Pubblicazione…",
     "commentDelete": "Elimina commento",
-    "commentSend": "Invia il commento"
+    "commentSend": "Invia il commento",
+    "openDocument": "Apri documento"
   },
   "CreateReimbursement": {
     "description": "Rivedi il pagamento prima di registrarlo.",

@@ -1,4 +1,4 @@
-import { Paperclip } from 'lucide-react'
+import { FileText, Paperclip } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import Image from '@/components/app-image'
@@ -11,12 +11,22 @@ import {
   ResponsiveDialogTitle,
   ResponsiveDialogTrigger,
 } from '@/components/ui/responsive-dialog'
+import { isExpenseDocumentImage } from '@spliit/domain'
 
 type Attachment = {
   id: string
   url: string
-  width: number
-  height: number
+  fileName?: string | null
+  contentType?: string | null
+  width?: number | null
+  height?: number | null
+}
+
+function isImageAttachment(document: Attachment): boolean {
+  return (
+    isExpenseDocumentImage(document.contentType) ||
+    (!document.contentType && document.width != null && document.height != null)
+  )
 }
 
 export function ExpenseAttachmentsPreview({
@@ -43,13 +53,17 @@ export function ExpenseAttachmentsPreview({
                   className="h-16 w-16 shrink-0 overflow-hidden rounded-md border p-0 shadow-inner"
                   aria-label={t('attachments', { count: 1 })}
                 >
-                  <Image
-                    src={document.url}
-                    width={document.width}
-                    height={document.height}
-                    className="h-full w-full object-cover"
-                    alt=""
-                  />
+                  {isImageAttachment(document) ? (
+                    <Image
+                      src={document.url}
+                      width={document.width ?? 300}
+                      height={document.height ?? 300}
+                      className="h-full w-full object-cover"
+                      alt=""
+                    />
+                  ) : (
+                    <FileText className="h-7 w-7 text-muted-foreground" />
+                  )}
                 </Button>
               }
             />
@@ -61,13 +75,36 @@ export function ExpenseAttachmentsPreview({
                 {t('attachments', { count: 1 })}
               </ResponsiveDialogDescription>
               <ResponsiveDialogBody className="flex h-full items-center justify-center p-0">
-                <Image
-                  src={document.url}
-                  width={document.width}
-                  height={document.height}
-                  className="max-h-full max-w-full object-contain"
-                  alt=""
-                />
+                {isImageAttachment(document) ? (
+                  <Image
+                    src={document.url}
+                    width={document.width ?? 300}
+                    height={document.height ?? 300}
+                    className="max-h-full max-w-full object-contain"
+                    alt=""
+                  />
+                ) : (
+                  <div className="flex flex-col items-center gap-4 text-center">
+                    <FileText className="h-20 w-20 text-muted-foreground" />
+                    <p className="max-w-md font-medium break-words">
+                      {document.fileName ?? t('attachments', { count: 1 })}
+                    </p>
+                    <Button
+                      render={
+                        <a
+                          href={document.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label={t('openDocument')}
+                        >
+                          <span className="sr-only">{t('openDocument')}</span>
+                        </a>
+                      }
+                    >
+                      {t('openDocument')}
+                    </Button>
+                  </div>
+                )}
               </ResponsiveDialogBody>
             </ResponsiveDialogContent>
           </ResponsiveDialog>

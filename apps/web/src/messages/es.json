@@ -936,6 +936,18 @@
       "title": "Error al cargar el documento",
       "description": "Ha ocurrido un error al cargar el documento. Vuelva a intentarlo más tarde o seleccione otro archivo.",
       "retry": "Reintentar"
+    },
+    "dropTitle": "Suelta archivos para adjuntarlos",
+    "dropDescription": "Imágenes, PDF y documentos de recibos habituales de hasta 2 MB",
+    "chooseFiles": "Elegir archivos",
+    "takePhoto": "Hacer una foto",
+    "openDocument": "Abrir documento",
+    "FileErrorToast": {
+      "description": "{fileName}: se ha producido un error al subirlo. Vuelve a intentarlo más tarde o elige otro archivo."
+    },
+    "UnsupportedToast": {
+      "title": "Archivo no compatible",
+      "description": "{fileName} no es un tipo de archivo adjunto compatible."
     }
   },
   "CreateFromReceipt": {
@@ -959,7 +971,11 @@
       "fillNext": "Revisa los datos sugeridos y aplícalos a este gasto.",
       "scanningHint": "El escaneo puede tardar un poco — ten paciencia.",
       "fillBody": "Elige un recibo adjunto o sube uno nuevo — lo escanearemos para sugerir datos para este gasto.",
-      "translateToLocale": "Traducir título y artículos a {language}"
+      "translateToLocale": "Traducir título y artículos a {language}",
+      "dropTitle": "Suelta una imagen del recibo",
+      "dropDescription": "Suelta aquí una imagen para escanearla con IA",
+      "takePhoto": "Hacer una foto",
+      "scanReceipt": "Escanear recibo"
     },
     "unknown": "Desconocido",
     "TooBigToast": {
@@ -970,6 +986,10 @@
       "title": "Error al cargar el documento",
       "description": "Ha ocurrido un error al cargar el documento. Vuelva a intentarlo más tarde o seleccione otro archivo.",
       "retry": "Reintentar"
+    },
+    "UnsupportedToast": {
+      "title": "Se necesita una imagen",
+      "aiDescription": "El escaneo de recibos con IA solo admite archivos de imagen."
     }
   },
   "Balances": {
@@ -2301,7 +2321,8 @@
     "commentTooLong": "Los comentarios deben tener 500 caracteres o menos.",
     "commentSubmitting": "Publicando…",
     "commentDelete": "Eliminar comentario",
-    "commentSend": "Enviar comentario"
+    "commentSend": "Enviar comentario",
+    "openDocument": "Abrir documento"
   },
   "CreateReimbursement": {
     "description": "Revisa el pago antes de registrarlo.",

@@ -929,6 +929,18 @@
       "title": "Virhe tiedostoa ladattaessa",
       "description": "Jokin meni vikaan dokumentin lataamisessa. Yritä myöhemmin uudelleen tai valitse toinen tiedosto.",
       "retry": "Yritä uudelleen"
+    },
+    "dropTitle": "Pudota liitettävät tiedostot tähän",
+    "dropDescription": "Kuvat, PDF-tiedostot ja yleiset kuittiasiakirjat, enintään 2 Mt",
+    "chooseFiles": "Valitse tiedostot",
+    "takePhoto": "Ota kuva",
+    "openDocument": "Avaa asiakirja",
+    "FileErrorToast": {
+      "description": "{fileName}: Latauksessa tapahtui jotain odottamatonta. Yritä myöhemmin uudelleen tai valitse toinen tiedosto."
+    },
+    "UnsupportedToast": {
+      "title": "Tiedostotyyppiä ei tueta",
+      "description": "{fileName} ei ole tuettu liitetyyppi."
     }
   },
   "CreateFromReceipt": {
@@ -952,7 +964,11 @@
       "fillNext": "Tarkista ehdotetut tiedot ja käytä niitä tähän kululaskuun.",
       "scanningHint": "Skannaus voi kestää hetken — ole kärsivällinen.",
       "fillBody": "Valitse liitetty kuitti tai lataa uusi — skannaamme sen ja ehdotamme tämän kulun tietoja.",
-      "translateToLocale": "Käännä otsikko ja kohteet kielelle {language}"
+      "translateToLocale": "Käännä otsikko ja kohteet kielelle {language}",
+      "dropTitle": "Pudota kuittikuva tähän",
+      "dropDescription": "Pudota yksi kuva tähän skannattavaksi tekoälyllä",
+      "takePhoto": "Ota kuva",
+      "scanReceipt": "Skannaa kuitti"
     },
     "unknown": "Tuntematon",
     "TooBigToast": {
@@ -963,6 +979,10 @@
       "title": "Virhe tiedostoa ladattaessa",
       "description": "Jokin meni vikaan dokumentin lataamisessa. Yritä myöhemmin uudelleen tai valitse toinen tiedosto.",
       "retry": "Yritä uudelleen"
+    },
+    "UnsupportedToast": {
+      "title": "Kuva vaaditaan",
+      "aiDescription": "Tekoälykuittiskannaus tukee vain kuvatiedostoja."
     }
   },
   "Balances": {
@@ -2283,7 +2303,8 @@
     "commentTooLong": "Kommentit voivat sisältää enintään 500 merkkiä.",
     "commentSubmitting": "Julkaistaan…",
     "commentDelete": "Poista kommentti",
-    "commentSend": "Lähetä kommentti"
+    "commentSend": "Lähetä kommentti",
+    "openDocument": "Avaa asiakirja"
   },
   "CreateReimbursement": {
     "description": "Tarkista maksu ennen sen tallentamista.",

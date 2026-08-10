@@ -396,6 +396,18 @@
     "TooBigToast": {
       "description": "أقصى حجم ملف يمكنك رفعه هو {maxSize}. ملفك حجمه {size}.",
       "title": "الملف كبير جداً"
+    },
+    "dropTitle": "أفلت الملفات لإرفاقها",
+    "dropDescription": "الصور وملفات PDF ومستندات الإيصالات الشائعة حتى 2 ميجابايت",
+    "chooseFiles": "اختيار الملفات",
+    "takePhoto": "التقاط صورة",
+    "openDocument": "فتح المستند",
+    "FileErrorToast": {
+      "description": "{fileName}: حدث خطأ ما أثناء الرفع. يُرجى إعادة المحاولة لاحقًا أو اختيار ملف آخر."
+    },
+    "UnsupportedToast": {
+      "title": "ملف غير مدعوم",
+      "description": "{fileName} ليس نوعًا مدعومًا من المرفقات."
     }
   },
   "CompleteProfile": {
@@ -561,7 +573,8 @@
     "commentDelete": "حذف التعليق",
     "title": "معاينة المصروف",
     "commentPlaceholder": "مشاركة ملاحظة مع مجموعة…",
-    "commentsTitle": "تعليقات"
+    "commentsTitle": "تعليقات",
+    "openDocument": "فتح المستند"
   },
   "Information": {
     "description": "معلومات عن هذه الصفحة.",
@@ -2368,7 +2381,11 @@
       "continue": "متابعة",
       "description": "استخراج معلومات المصروفات من صورة إيصال.",
       "existingDocuments": "اختيار إيصال مرفق",
-      "translateToLocale": "ترجمة العنوان والعناصر إلى {language}"
+      "translateToLocale": "ترجمة العنوان والعناصر إلى {language}",
+      "dropTitle": "أفلت صورة الإيصال",
+      "dropDescription": "أفلت صورة واحدة هنا لمسحها ضوئيًا باستخدام الذكاء الاصطناعي",
+      "takePhoto": "التقاط صورة",
+      "scanReceipt": "مسح الإيصال"
     },
     "ErrorToast": {
       "description": "حدث خطأ ما أثناء رفع المستند. يرجى إعادة المحاولة لاحقاً أو اختيار ملف آخر.",
@@ -2379,6 +2396,10 @@
     "TooBigToast": {
       "description": "أقصى حجم ملف يمكنك رفعه هو {maxSize}. ملفك حجمه {size}.",
       "title": "الملف كبير جداً"
+    },
+    "UnsupportedToast": {
+      "title": "الصورة مطلوبة",
+      "aiDescription": "يدعم مسح الإيصالات بالذكاء الاصطناعي ملفات الصور فقط."
     }
   },
   "Settings": {

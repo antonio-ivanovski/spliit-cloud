@@ -929,6 +929,18 @@
       "title": "Belge yüklenirken hata oluştu",
       "description": "Belge yüklenirken bir sorun oluştu. Lütfen daha sonra tekrar deneyin veya farklı bir dosya seçin.",
       "retry": "Tekrar dene"
+    },
+    "dropTitle": "Eklemek için dosyaları bırakın",
+    "dropDescription": "2 MB’a kadar resimler, PDF’ler ve yaygın makbuz belgeleri",
+    "chooseFiles": "Dosyaları seç",
+    "FileErrorToast": {
+      "description": "{fileName}: yükleme sırasında bir sorun oluştu. Lütfen daha sonra tekrar deneyin veya farklı bir dosya seçin."
+    },
+    "takePhoto": "Fotoğraf çek",
+    "openDocument": "Belgeyi aç",
+    "UnsupportedToast": {
+      "title": "Desteklenmeyen dosya",
+      "description": "{fileName} desteklenen bir ek türü değil."
     }
   },
   "CreateFromReceipt": {
@@ -952,7 +964,11 @@
       "fillNext": "Önerilen ayrıntıları inceleyip bu harcamaya uygulayın.",
       "scanningHint": "Tarama biraz sürebilir — lütfen bekleyin.",
       "fillBody": "Ekli bir fiş seçin veya yeni bir fiş yükleyin — bu harcamanın ayrıntılarını önermek için tarayacağız.",
-      "translateToLocale": "Başlığı ve öğeleri {language} diline çevir"
+      "translateToLocale": "Başlığı ve öğeleri {language} diline çevir",
+      "dropTitle": "Makbuz resmini bırakın",
+      "dropDescription": "Yapay zekâ ile taramak için bir resmi buraya bırakın",
+      "takePhoto": "Fotoğraf çek",
+      "scanReceipt": "Makbuzu tara"
     },
     "unknown": "Bilinmiyor",
     "TooBigToast": {
@@ -963,6 +979,10 @@
       "title": "Belge yüklenirken hata oluştu",
       "description": "Belge yüklenirken bir sorun oluştu. Lütfen daha sonra tekrar deneyin veya farklı bir dosya seçin.",
       "retry": "Tekrar dene"
+    },
+    "UnsupportedToast": {
+      "title": "Resim gerekli",
+      "aiDescription": "Yapay zekâ ile makbuz taraması yalnızca resim dosyalarını destekler."
     }
   },
   "Balances": {
@@ -2283,7 +2303,8 @@
     "commentTooLong": "Yorumlar 500 karakter veya daha kısa olmalıdır.",
     "commentSubmitting": "Gönderiliyor…",
     "commentDelete": "Yorumu sil",
-    "commentSend": "Yorum gönder"
+    "commentSend": "Yorum gönder",
+    "openDocument": "Belgeyi aç"
   },
   "CreateReimbursement": {
     "description": "Ödemeyi kaydetmeden önce gözden geçirin.",

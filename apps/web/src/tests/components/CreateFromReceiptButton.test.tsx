@@ -5,10 +5,11 @@ import {
   useCurrentGroupOrNull,
 } from '@/app/groups/[groupId]/current-group-context'
 import { ReceiptScanTrigger } from '@/app/groups/[groupId]/expenses/create-from-receipt-button'
-import { act, render, screen, waitFor } from '@/test/test-utils'
+import { act, fireEvent, render, screen, waitFor } from '@/test/test-utils'
 
 const mockMutateAsync = vi.fn()
 const mockToast = vi.fn()
+const mockOpenFileDialog = vi.fn()
 
 vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useCurrentGroup: vi.fn(),
@@ -30,8 +31,24 @@ vi.mock('@/lib/upload', () => ({
   resizeImage: vi.fn(),
   usePresignedUpload: () => ({
     uploadToS3: vi.fn(),
-    FileInput: () => null,
-    openFileDialog: vi.fn(),
+    FileInput: ({
+      inputId = 'file',
+      onFilesChange,
+      ...props
+    }: {
+      inputId?: string
+      onFilesChange?: (files: File[]) => void
+    } & Record<string, unknown>) => (
+      <input
+        {...props}
+        data-testid={`receipt-file-input-${inputId}`}
+        type="file"
+        onChange={(event) =>
+          onFilesChange?.(Array.from(event.currentTarget.files ?? []))
+        }
+      />
+    ),
+    openFileDialog: mockOpenFileDialog,
   }),
 }))
 
@@ -89,6 +106,7 @@ beforeEach(() => {
     isLoading: false,
   } as never)
   mockMutateAsync.mockReset()
+  mockOpenFileDialog.mockReset()
   mockMutateAsync.mockResolvedValue(scanResult)
   mockToast.mockReset()
   localStorage.clear()
@@ -110,6 +128,48 @@ async function waitForSettledCheckbox() {
 }
 
 describe('ReceiptScanTrigger translate checkbox', () => {
+  it('uses one full-width scan control with a mobile-only camera segment', async () => {
+    const { user } = renderTrigger({ documents: [], autoScan: false })
+    await user.click(screen.getByRole('button', { name: /ai receipt scan/i }))
+
+    const scanButton = screen.getByRole('button', { name: 'Scan receipt' })
+    const cameraButton = screen.getByRole('button', { name: 'Take photo' })
+    expect(scanButton).toHaveClass('flex-1')
+    expect(cameraButton).toHaveClass('sm:hidden')
+    expect(
+      screen
+        .getAllByRole('button')
+        .filter((button) => button.textContent?.includes('Scan receipt')),
+    ).toHaveLength(1)
+
+    await user.click(scanButton)
+    expect(mockOpenFileDialog).toHaveBeenLastCalledWith()
+    await user.click(cameraButton)
+    expect(mockOpenFileDialog).toHaveBeenLastCalledWith('camera')
+
+    const cameraInput = screen.getByTestId('receipt-file-input-camera')
+    expect(cameraInput).toHaveAttribute('accept', 'image/*')
+    expect(cameraInput).toHaveAttribute('capture', 'environment')
+  })
+
+  it('rejects a multi-image drop instead of silently choosing one', async () => {
+    const { user } = renderTrigger({ documents: [], autoScan: false })
+    await user.click(screen.getByRole('button', { name: /ai receipt scan/i }))
+
+    const input = screen.getByTestId('receipt-file-input-file')
+    fireEvent.change(input, {
+      target: {
+        files: [
+          new File(['one'], 'one.jpg', { type: 'image/jpeg' }),
+          new File(['two'], 'two.jpg', { type: 'image/jpeg' }),
+        ],
+      },
+    })
+
+    await waitFor(() => expect(mockToast).toHaveBeenCalled())
+    expect(mockMutateAsync).not.toHaveBeenCalled()
+  })
+
   it('is unchecked by default and sends translateToLocale: false', async () => {
     await openDialog()
 

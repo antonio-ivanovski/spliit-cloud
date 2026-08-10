@@ -389,6 +389,8 @@ export async function createExpense(
             data: documents.map((doc) => ({
               id: randomId(),
               url: doc.url,
+              fileName: doc.fileName,
+              contentType: doc.contentType,
               width: doc.width,
               height: doc.height,
               ledgerId,

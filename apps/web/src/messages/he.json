@@ -936,6 +936,18 @@
       "title": "שגיאה בעת העלאת מסמך",
       "description": "משהו השתבש בעת העלאת המסמך. נסה שוב מאוחר יותר או בחר קובץ אחר.",
       "retry": "נסה שוב"
+    },
+    "dropTitle": "גררו קבצים לצירוף",
+    "dropDescription": "תמונות, קובצי PDF ומסמכי קבלה נפוצים עד 2 MB",
+    "chooseFiles": "בחירת קבצים",
+    "takePhoto": "צילום תמונה",
+    "openDocument": "פתיחת מסמך",
+    "FileErrorToast": {
+      "description": "{fileName}: משהו השתבש במהלך ההעלאה. נסו שוב מאוחר יותר או בחרו קובץ אחר."
+    },
+    "UnsupportedToast": {
+      "title": "קובץ לא נתמך",
+      "description": "{fileName} אינו סוג קובץ נתמך לצירוף."
     }
   },
   "CreateFromReceipt": {
@@ -959,7 +971,11 @@
       "fillNext": "בדקו את הפרטים שהוצעו והחילו אותם על הוצאה זו.",
       "scanningHint": "הסריקה עשויה להימשך מעט — נא להמתין בסבלנות.",
       "fillBody": "בחרו קבלה מצורפת או העלו חדשה — נסרוק אותה כדי להציע פרטים להוצאה הזו.",
-      "translateToLocale": "תרגם כותרת ופריטים ל{language}"
+      "translateToLocale": "תרגם כותרת ופריטים ל{language}",
+      "dropTitle": "גררו לכאן תמונת קבלה",
+      "dropDescription": "גררו לכאן תמונה אחת כדי לסרוק אותה באמצעות AI",
+      "takePhoto": "צילום תמונה",
+      "scanReceipt": "סריקת קבלה"
     },
     "unknown": "לא ידוע",
     "TooBigToast": {
@@ -970,6 +986,10 @@
       "title": "שגיאה בעת העלאת מסמך",
       "description": "משהו השתבש בעת העלאת המסמך. נסה שוב מאוחר יותר או בחר קובץ אחר.",
       "retry": "נסה שוב"
+    },
+    "UnsupportedToast": {
+      "title": "נדרשת תמונה",
+      "aiDescription": "סריקת קבלות ב‑AI תומכת בקובצי תמונה בלבד."
     }
   },
   "Balances": {
@@ -2301,7 +2321,8 @@
     "commentTooLong": "תגובות חייבות להכיל 500 תווים או פחות.",
     "commentSubmitting": "מפרסם…",
     "commentDelete": "מחיקת תגובה",
-    "commentSend": "שליחת תגובה"
+    "commentSend": "שליחת תגובה",
+    "openDocument": "פתיחת מסמך"
   },
   "CreateReimbursement": {
     "description": "סקור את התשלום לפני רישומו.",

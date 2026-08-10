@@ -139,6 +139,64 @@ describe('createUploadUrl', () => {
     expect(body.error).toBe('File exceeds the maximum upload size')
   })
 
+  it.each([
+    ['receipt.exe', 'application/octet-stream'],
+    ['receipt.svg', 'image/svg+xml'],
+    ['receipt.pdf', 'application/x-msdownload'],
+  ])(
+    'rejects unsupported attachment types before presigning (%s)',
+    async (fileName, contentType) => {
+      authState.session = {
+        user: { id: 'acct-1' },
+        session: { id: 'sess-1' },
+      }
+      prismaMock.account.findUnique.mockResolvedValue({
+        id: 'acct-1',
+        email: 'alice@example.com',
+      })
+
+      const response = await createUploadUrl(
+        makeRequest(),
+        'ledger-1',
+        fileName,
+        contentType,
+      )
+
+      expect(response.status).toBe(400)
+      await expect(response.json()).resolves.toMatchObject({
+        error: 'Unsupported expense document type',
+      })
+      expect(prismaMock.ledger.findUnique).not.toHaveBeenCalled()
+    },
+  )
+
+  it('allows a supported attachment at exactly the 2 MB boundary', async () => {
+    authState.session = {
+      user: { id: 'acct-1' },
+      session: { id: 'sess-1' },
+    }
+    prismaMock.account.findUnique.mockResolvedValue({
+      id: 'acct-1',
+      email: 'alice@example.com',
+    })
+    prismaMock.ledger.findUnique.mockResolvedValue({
+      id: 'ledger-1',
+      group: {
+        members: [{ accountId: 'acct-1', status: 'ACTIVE' }],
+      },
+    } as never)
+
+    const response = await createUploadUrl(
+      makeRequest(),
+      'ledger-1',
+      'receipt.pdf',
+      'application/pdf',
+      2 * 1024 ** 2,
+    )
+
+    expect(response.status).toBe(200)
+  })
+
   it('returns 404 when the ledger does not exist', async () => {
     authState.session = {
       user: { id: 'acct-1' },

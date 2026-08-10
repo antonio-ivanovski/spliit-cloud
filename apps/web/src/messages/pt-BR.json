@@ -936,6 +936,18 @@
       "title": "Erro ao enviar documento",
       "description": "Algo deu errado ao enviar o documento. Por favor, tente novamente mais tarde ou selecione um arquivo diferente.",
       "retry": "Tentar novamente"
+    },
+    "dropTitle": "Solte os arquivos para anexar",
+    "dropDescription": "Imagens, PDFs e documentos comuns de recibos de até 2 MB",
+    "chooseFiles": "Escolher arquivos",
+    "takePhoto": "Tirar foto",
+    "openDocument": "Abrir documento",
+    "FileErrorToast": {
+      "description": "{fileName}: ocorreu um erro ao fazer upload. Tente novamente mais tarde ou escolha outro arquivo."
+    },
+    "UnsupportedToast": {
+      "title": "Arquivo incompatível",
+      "description": "{fileName} não é um tipo de anexo compatível."
     }
   },
   "CreateFromReceipt": {
@@ -959,7 +971,11 @@
       "fillNext": "Revise os detalhes sugeridos e aplique-os a esta despesa.",
       "scanningHint": "A digitalização pode demorar um pouco — aguarde.",
       "fillBody": "Escolha um recibo anexado ou envie um novo — vamos digitalizá-lo para sugerir os detalhes desta despesa.",
-      "translateToLocale": "Traduzir título e itens para {language}"
+      "translateToLocale": "Traduzir título e itens para {language}",
+      "dropTitle": "Solte uma imagem do recibo",
+      "dropDescription": "Solte uma imagem aqui para escanear com IA",
+      "takePhoto": "Tirar foto",
+      "scanReceipt": "Escanear recibo"
     },
     "unknown": "Desconhecido",
     "TooBigToast": {
@@ -970,6 +986,10 @@
       "title": "Erro ao enviar documento",
       "description": "Algo deu errado ao enviar o documento. Por favor, tente novamente mais tarde ou selecione um arquivo diferente.",
       "retry": "Tentar novamente"
+    },
+    "UnsupportedToast": {
+      "title": "Imagem obrigatória",
+      "aiDescription": "O escaneamento de recibos com IA aceita apenas arquivos de imagem."
     }
   },
   "Balances": {
@@ -2301,7 +2321,8 @@
     "commentTooLong": "Os comentários devem ter no máximo 500 caracteres.",
     "commentSubmitting": "Publicando…",
     "commentDelete": "Excluir comentário",
-    "commentSend": "Enviar comentário"
+    "commentSend": "Enviar comentário",
+    "openDocument": "Abrir documento"
   },
   "CreateReimbursement": {
     "description": "Revise o pagamento antes de registrá-lo.",

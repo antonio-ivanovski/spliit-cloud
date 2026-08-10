@@ -140,8 +140,10 @@ const documentsSchema = z
     z.object({
       id: z.string(),
       url: z.string().url(),
-      width: z.number().int().min(1),
-      height: z.number().int().min(1),
+      fileName: z.string().min(1).nullable().optional(),
+      contentType: z.string().min(1).nullable().optional(),
+      width: z.number().int().min(1).nullable().optional(),
+      height: z.number().int().min(1).nullable().optional(),
     }),
   )
   .default([])

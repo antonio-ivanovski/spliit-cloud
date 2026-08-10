@@ -922,6 +922,18 @@
       "title": "上传文档时发生错误",
       "description": "上传文档时发生了一些错误。请稍后重试或更换文件。",
       "retry": "重试"
+    },
+    "dropTitle": "将文件拖放到此处以添加附件",
+    "dropDescription": "图片、PDF 以及常见收据文档（最大 2 MB）",
+    "chooseFiles": "选择文件",
+    "FileErrorToast": {
+      "description": "{fileName}：上传时出现问题。请稍后重试，或选择其他文件。"
+    },
+    "takePhoto": "拍照",
+    "openDocument": "打开文档",
+    "UnsupportedToast": {
+      "title": "不支持的文件",
+      "description": "{fileName} 不是受支持的附件类型。"
     }
   },
   "CreateFromReceipt": {
@@ -945,7 +957,11 @@
       "fillNext": "查看建议的详细信息，然后将其应用到这笔支出。",
       "scanningHint": "扫描可能需要一点时间 — 请耐心等待。",
       "fillBody": "选择已附加的收据或上传新的收据 — 我们会扫描它，为这笔支出建议详细信息。",
-      "translateToLocale": "将标题和项目翻译为{language}"
+      "translateToLocale": "将标题和项目翻译为{language}",
+      "dropTitle": "拖放收据图片",
+      "dropDescription": "将一张图片拖放到此处，用 AI 扫描",
+      "takePhoto": "拍照",
+      "scanReceipt": "扫描收据"
     },
     "unknown": "未知",
     "TooBigToast": {
@@ -956,6 +972,10 @@
       "title": "上传文档时发生错误",
       "description": "上传文档时发生了一些错误。请稍后重试或更换文件。",
       "retry": "重试"
+    },
+    "UnsupportedToast": {
+      "title": "需要图片",
+      "aiDescription": "AI 收据扫描仅支持图片文件。"
     }
   },
   "Balances": {
@@ -2267,7 +2287,8 @@
     "commentTooLong": "评论不能超过500个字符。",
     "commentSubmitting": "发布中…",
     "commentDelete": "删除评论",
-    "commentSend": "发送评论"
+    "commentSend": "发送评论",
+    "openDocument": "打开文档"
   },
   "CreateReimbursement": {
     "description": "请核对付款信息后再记录。",

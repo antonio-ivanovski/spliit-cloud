@@ -922,6 +922,18 @@
       "title": "書類のアップロード中にエラーが発生しました",
       "description": "書類のアップロード中に何か問題が発生しました。後で再試行するか、別のファイルを選択してください。",
       "retry": "再試行"
+    },
+    "dropTitle": "添付するファイルをドロップ",
+    "dropDescription": "画像、PDF、一般的な領収書書類（2 MBまで）",
+    "chooseFiles": "ファイルを選択",
+    "FileErrorToast": {
+      "description": "{fileName}: アップロード中に問題が発生しました。後でもう一度お試しいただくか、別のファイルを選択してください。"
+    },
+    "takePhoto": "写真を撮る",
+    "openDocument": "書類を開く",
+    "UnsupportedToast": {
+      "title": "対応していないファイル",
+      "description": "{fileName} は対応している添付ファイル形式ではありません。"
     }
   },
   "CreateFromReceipt": {
@@ -945,7 +957,11 @@
       "fillNext": "提案された内容を確認して、この支出に適用してください。",
       "scanningHint": "スキャンには少し時間がかかる場合があります — しばらくお待ちください。",
       "fillBody": "添付済みのレシートを選ぶか新しくアップロードしてください — スキャンしてこの支出の詳細を提案します。",
-      "translateToLocale": "タイトルと項目を{language}に翻訳する"
+      "translateToLocale": "タイトルと項目を{language}に翻訳する",
+      "dropTitle": "領収書の画像をドロップ",
+      "dropDescription": "AIでスキャンする画像を1枚ここにドロップ",
+      "takePhoto": "写真を撮る",
+      "scanReceipt": "領収書をスキャン"
     },
     "unknown": "不明",
     "TooBigToast": {
@@ -956,6 +972,10 @@
       "title": "書類のアップロード中にエラーが発生しました",
       "description": "書類のアップロード中に何か問題が発生しました。後で再試行するか、別のファイルを選択してください。",
       "retry": "再試行"
+    },
+    "UnsupportedToast": {
+      "title": "画像が必要です",
+      "aiDescription": "AIレシートスキャンは画像ファイルのみ対応しています。"
     }
   },
   "Balances": {
@@ -2267,7 +2287,8 @@
     "commentTooLong": "コメントは500文字以内で入力してください。",
     "commentSubmitting": "投稿中…",
     "commentDelete": "コメントを削除",
-    "commentSend": "コメントを送信"
+    "commentSend": "コメントを送信",
+    "openDocument": "書類を開く"
   },
   "CreateReimbursement": {
     "description": "支払いを記録する前に確認してください。",

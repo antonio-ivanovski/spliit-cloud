@@ -30,7 +30,16 @@ export const futureRowSnapshotSelect = {
   paidFor: { select: expenseParticipantSharesSelect },
   items: { select: expenseItemWithSharesSelect },
   itemizedRemainder: { select: expenseItemizedRemainderSelect },
-  documents: { select: { id: true, url: true, width: true, height: true } },
+  documents: {
+    select: {
+      id: true,
+      url: true,
+      fileName: true,
+      contentType: true,
+      width: true,
+      height: true,
+    },
+  },
 } satisfies Prisma.ExpenseSelect
 
 export type FutureRowSnapshot = Prisma.ExpenseGetPayload<{
@@ -118,6 +127,8 @@ export function futureRowBeforeShape(
     documents: row.documents.map((d) => ({
       id: d.id,
       url: d.url,
+      fileName: d.fileName,
+      contentType: d.contentType,
       width: d.width,
       height: d.height,
     })),
@@ -206,6 +217,8 @@ export function futureRowAfterShape(args: {
     documents: row.documents.map((d) => ({
       id: d.id,
       url: d.url,
+      fileName: d.fileName,
+      contentType: d.contentType,
       width: d.width,
       height: d.height,
     })),

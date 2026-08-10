@@ -936,6 +936,18 @@
       "title": "Eroare la adăugarea documentului.",
       "description": "Ceva a mers greșit la adăugarea fișierului. Încearcă mai târziu sau alege un alt fișier.",
       "retry": "Reîncearcă"
+    },
+    "dropTitle": "Trage fișierele pentru a le atașa",
+    "dropDescription": "Imagini, PDF-uri și documente obișnuite pentru bonuri de până la 2 MB",
+    "chooseFiles": "Alege fișiere",
+    "takePhoto": "Fă o fotografie",
+    "openDocument": "Deschide documentul",
+    "FileErrorToast": {
+      "description": "{fileName}: ceva nu a funcționat la încărcare. Încearcă din nou mai târziu sau alege alt fișier."
+    },
+    "UnsupportedToast": {
+      "title": "Fișier neacceptat",
+      "description": "{fileName} nu este un tip de atașament acceptat."
     }
   },
   "CreateFromReceipt": {
@@ -959,7 +971,11 @@
       "fillNext": "Verifică detaliile sugerate și aplică-le acestei cheltuieli.",
       "scanningHint": "Scanarea poate dura puțin — te rugăm să ai răbdare.",
       "fillBody": "Alege o chitanță atașată sau încarcă una nouă — o vom scana pentru a sugera detaliile acestei cheltuieli.",
-      "translateToLocale": "Traduceți titlul și articolele în {language}"
+      "translateToLocale": "Traduceți titlul și articolele în {language}",
+      "dropTitle": "Trage o imagine a bonului",
+      "dropDescription": "Trage o imagine aici pentru a o scana cu IA",
+      "takePhoto": "Fă o fotografie",
+      "scanReceipt": "Scanează bonul"
     },
     "unknown": "Necunoscut",
     "TooBigToast": {
@@ -970,6 +986,10 @@
       "title": "Eroare la adăugarea documentului.",
       "description": "Ceva a mers greșit la adăugarea fișierului. Încearcă mai târziu sau alege un alt fișier.",
       "retry": "Reîncearcă"
+    },
+    "UnsupportedToast": {
+      "title": "Imagine necesară",
+      "aiDescription": "Scanarea bonurilor cu IA acceptă doar fișiere imagine."
     }
   },
   "Balances": {
@@ -2301,7 +2321,8 @@
     "commentTooLong": "Comentariile trebuie să aibă cel mult 500 de caractere.",
     "commentSubmitting": "Se postează…",
     "commentDelete": "Șterge comentariul",
-    "commentSend": "Trimite comentariul"
+    "commentSend": "Trimite comentariul",
+    "openDocument": "Deschide documentul"
   },
   "CreateReimbursement": {
     "description": "Revizuiește plata înainte de a o înregistra.",

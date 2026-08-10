@@ -1308,6 +1308,18 @@
       "title": "Error while uploading document",
       "description": "Something wrong happened when uploading the document. Please retry later or select a different file.",
       "retry": "Retry"
+    },
+    "dropTitle": "Drop files to attach",
+    "dropDescription": "Images, PDFs, and common receipt documents up to 2 MB",
+    "chooseFiles": "Choose files",
+    "takePhoto": "Take photo",
+    "openDocument": "Open document",
+    "UnsupportedToast": {
+      "title": "Unsupported file",
+      "description": "{fileName} is not a supported attachment type."
+    },
+    "FileErrorToast": {
+      "description": "{fileName}: something went wrong while uploading. Please retry later or choose a different file."
     }
   },
   "CreateFromReceipt": {
@@ -1331,7 +1343,11 @@
       "fillNext": "Review the suggested details, then apply them to this expense.",
       "scanningHint": "Scanning can take a little while — please be patient.",
       "fillBody": "Choose an attached receipt or upload a new one — we’ll scan it to suggest details for this expense.",
-      "translateToLocale": "Translate title and items to {language}"
+      "translateToLocale": "Translate title and items to {language}",
+      "dropTitle": "Drop a receipt image",
+      "dropDescription": "Drop one image here to scan it with AI",
+      "takePhoto": "Take photo",
+      "scanReceipt": "Scan receipt"
     },
     "unknown": "Unknown",
     "TooBigToast": {
@@ -1342,6 +1358,10 @@
       "title": "Error while uploading document",
       "description": "Something wrong happened when uploading the document. Please retry later or select a different file.",
       "retry": "Retry"
+    },
+    "UnsupportedToast": {
+      "title": "Image required",
+      "aiDescription": "AI receipt scan supports image files only."
     }
   },
   "Balances": {
@@ -2436,7 +2456,8 @@
     "commentTooLong": "Comments must be 500 characters or fewer.",
     "commentSubmitting": "Posting…",
     "commentDelete": "Delete comment",
-    "commentSend": "Send comment"
+    "commentSend": "Send comment",
+    "openDocument": "Open document"
   },
   "CreateReimbursement": {
     "description": "Review the payment before recording it.",

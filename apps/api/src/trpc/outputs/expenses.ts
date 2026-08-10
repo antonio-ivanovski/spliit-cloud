@@ -40,8 +40,10 @@ const categoryResponseSchema = z.object({
 const expenseDocumentResponseSchema = z.object({
   id: z.string(),
   url: z.string(),
-  width: z.number().int(),
-  height: z.number().int(),
+  fileName: z.string().nullable(),
+  contentType: z.string().nullable(),
+  width: z.number().int().nullable(),
+  height: z.number().int().nullable(),
 })
 
 const participantShareResponseSchema = z.object({

@@ -586,7 +586,11 @@
       "fillNext": "প্রস্তাবিত বিবরণ পর্যালোচনা করুন, তারপর এই খরচে প্রয়োগ করুন।",
       "scanningHint": "স্ক্যান করতে কিছু সময় লাগতে পারে — অনুগ্রহ করে ধৈর্য ধরুন।",
       "fillBody": "একটি সংযুক্ত রসিদ বেছে নিন বা একটি নতুন আপলোড করুন — আমরা এই খরচের বিবরণ প্রস্তাব করতে এটি স্ক্যান করব।",
-      "translateToLocale": "শিরোনাম এবং আইটেম {language} এ অনুবাদ করুন"
+      "translateToLocale": "শিরোনাম এবং আইটেম {language} এ অনুবাদ করুন",
+      "dropTitle": "রসিদের একটি ছবি এখানে ছেড়ে দিন",
+      "dropDescription": "AI দিয়ে স্ক্যান করতে এখানে একটি ছবি ছেড়ে দিন",
+      "takePhoto": "ছবি তুলুন",
+      "scanReceipt": "রসিদ স্ক্যান করুন"
     },
     "ErrorToast": {
       "title": "ডকুমেন্ট আপলোড করার সময় ত্রুটি",
@@ -597,6 +601,10 @@
     "TooBigToast": {
       "title": "ফাইলটি খুব বড়",
       "description": "আপনি সর্বাধিক {maxSize} আপলোড করতে পারেন। আপনার ফাইলের আকার {size}।"
+    },
+    "UnsupportedToast": {
+      "title": "ছবি প্রয়োজন",
+      "aiDescription": "AI দিয়ে রসিদ স্ক্যান করতে শুধু ছবির ফাইল সমর্থিত।"
     }
   },
   "CreateReimbursement": {
@@ -979,6 +987,18 @@
     "TooBigToast": {
       "title": "ফাইলটি খুব বড়",
       "description": "আপনি সর্বাধিক {maxSize} আপলোড করতে পারেন। আপনার ফাইলের আকার {size}।"
+    },
+    "dropTitle": "সংযুক্ত করতে ফাইল ছেড়ে দিন",
+    "dropDescription": "২ MB পর্যন্ত ছবি, PDF এবং সাধারণ রসিদ ডকুমেন্ট",
+    "chooseFiles": "ফাইল বেছে নিন",
+    "takePhoto": "ছবি তুলুন",
+    "openDocument": "ডকুমেন্ট খুলুন",
+    "FileErrorToast": {
+      "description": "{fileName}: আপলোড করার সময় কিছু ভুল হয়েছে। অনুগ্রহ করে পরে আবার চেষ্টা করুন অথবা অন্য ফাইল বেছে নিন।"
+    },
+    "UnsupportedToast": {
+      "title": "অসমর্থিত ফাইল",
+      "description": "{fileName} সমর্থিত সংযুক্তি ফাইল নয়।"
     }
   },
   "ExpenseForm": {
@@ -1317,7 +1337,8 @@
     "commentTooLong": "মন্তব্য ৫০০ অক্ষর বা তার কম হতে হবে।",
     "commentSubmitting": "পোস্ট করা হচ্ছে…",
     "commentDelete": "মন্তব্য মুছুন",
-    "commentSend": "মন্তব্য পাঠান"
+    "commentSend": "মন্তব্য পাঠান",
+    "openDocument": "ডকুমেন্ট খুলুন"
   },
   "ExpenseSeries": {
     "badge": "পুনরাবৃত্তিমূলক",

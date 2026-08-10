@@ -1,5 +1,18 @@
-import { Check, FileQuestion, ScanLine, Sparkles } from 'lucide-react'
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import {
+  Camera,
+  Check,
+  FileQuestion,
+  ScanLine,
+  Sparkles,
+  Upload,
+} from 'lucide-react'
+import {
+  useEffect,
+  useRef,
+  useState,
+  type DragEvent,
+  type ReactNode,
+} from 'react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -26,8 +39,13 @@ import {
 import { trpc } from '@/trpc/client'
 import {
   categoryIdSchema,
+  EXPENSE_DOCUMENT_IMAGE_ACCEPT,
+  isExpenseDocumentImage,
+  isSupportedExpenseDocumentUpload,
   getCategoryById,
   localeLabels,
+  MAX_EXPENSE_DOCUMENT_SIZE,
+  isExpenseDocumentSizeWithinLimit,
   type CategoryId,
   type Locale,
 } from '@spliit/domain'
@@ -39,8 +57,15 @@ import {
 import { AiCaptureDialog } from './ai-capture-dialog'
 import type { GroupShape } from './expense-form/default-values'
 
-const MAX_FILE_SIZE = 2 * 1024 ** 2
+const MAX_FILE_SIZE = MAX_EXPENSE_DOCUMENT_SIZE
 const TRANSLATE_STORAGE_KEY = 'spliit-receipt-translate-to-locale'
+
+function isReceiptImageFile(file: File): boolean {
+  return (
+    file.type.startsWith('image/') ||
+    /\.(jpe?g|png|webp|heic|heif)$/i.test(file.name)
+  )
+}
 
 function readTranslatePreference(): boolean {
   try {
@@ -72,6 +97,8 @@ export type ReceiptDocument = {
   url: string
   width: number
   height: number
+  fileName?: string | null
+  contentType?: string | null
 }
 
 export type ReceiptScanContext = {
@@ -305,6 +332,8 @@ function ReceiptDialogContent({
   const [translateToLocale, setTranslateToLocale] = useState(
     readTranslatePreference,
   )
+  const [dragActive, setDragActive] = useState(false)
+  const dragDepth = useRef(0)
   const translateRef = useRef(translateToLocale)
   useEffect(() => {
     translateRef.current = translateToLocale
@@ -373,9 +402,23 @@ function ReceiptDialogContent({
   }, [autoScan, documents, open, selectedDocument])
 
   const handleFileChange = async (file: File) => {
+    if (
+      !isSupportedExpenseDocumentUpload({
+        fileName: file.name,
+        contentType: file.type,
+      }) ||
+      !isReceiptImageFile(file)
+    ) {
+      toast({
+        title: t('UnsupportedToast.title'),
+        description: t('UnsupportedToast.aiDescription'),
+        variant: 'destructive',
+      })
+      return
+    }
     try {
       const { file: resizedFile, width, height } = await resizeImage(file)
-      if (resizedFile.size > MAX_FILE_SIZE) {
+      if (!isExpenseDocumentSizeWithinLimit(resizedFile.size)) {
         toast({
           title: t('TooBigToast.title'),
           description: t('TooBigToast.description', {
@@ -388,7 +431,14 @@ function ReceiptDialogContent({
       }
       setPending(true)
       const { url } = await uploadToS3(resizedFile)
-      const document = { id: crypto.randomUUID(), url, width, height }
+      const document = {
+        id: crypto.randomUUID(),
+        url,
+        width,
+        height,
+        fileName: resizedFile.name,
+        contentType: resizedFile.type,
+      }
       setSelectedDocument(document)
       setReceiptInfo(null)
       await scan(document)
@@ -402,6 +452,51 @@ function ReceiptDialogContent({
     } finally {
       setPending(false)
     }
+  }
+
+  const handleFiles = (files: File[]) => {
+    if (files.length !== 1) {
+      toast({
+        title: t('UnsupportedToast.title'),
+        description: t('Dialog.dropDescription'),
+        variant: 'destructive',
+      })
+      return
+    }
+    const [file] = files
+    if (!isReceiptImageFile(file)) {
+      toast({
+        title: t('UnsupportedToast.title'),
+        description: t('UnsupportedToast.aiDescription'),
+        variant: 'destructive',
+      })
+      return
+    }
+    void handleFileChange(file)
+  }
+
+  const handleDragEnter = (event: DragEvent) => {
+    if (!event.dataTransfer.types.includes('Files')) return
+    event.preventDefault()
+    dragDepth.current += 1
+    setDragActive(true)
+  }
+
+  const handleDragLeave = (event: DragEvent) => {
+    event.preventDefault()
+    dragDepth.current -= 1
+    if (dragDepth.current <= 0) {
+      dragDepth.current = 0
+      setDragActive(false)
+    }
+  }
+
+  const handleDrop = (event: DragEvent) => {
+    event.preventDefault()
+    event.stopPropagation()
+    dragDepth.current = 0
+    setDragActive(false)
+    handleFiles(Array.from(event.dataTransfer.files))
   }
 
   const languageLabel = localeLabels[locale as Locale] ?? localeLabels['en-US']
@@ -422,8 +517,33 @@ function ReceiptDialogContent({
     ? getCategoryById(parsedCategory.data)
     : null
 
+  const imageDocuments = documents.filter(
+    (document) =>
+      isExpenseDocumentImage(document.contentType) ||
+      (!document.contentType &&
+        document.width != null &&
+        document.height != null),
+  )
+
   return (
-    <div className="prose prose-sm dark:prose-invert">
+    <div
+      className="relative prose prose-sm dark:prose-invert"
+      onDragEnter={handleDragEnter}
+      onDragOver={(event) => event.preventDefault()}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+    >
+      {dragActive && (
+        <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center rounded-lg border-2 border-dashed border-primary bg-background/95 p-6 text-center shadow-lg">
+          <div>
+            <Upload className="mx-auto mb-2 h-8 w-8 text-primary" />
+            <p className="font-medium">{t('Dialog.dropTitle')}</p>
+            <p className="text-sm text-muted-foreground">
+              {t('Dialog.dropDescription')}
+            </p>
+          </div>
+        </div>
+      )}
       <p>{t(mode === 'fill' ? 'Dialog.fillBody' : 'Dialog.body')}</p>
       <div className="not-prose mb-4 flex items-center gap-2">
         <Checkbox
@@ -440,14 +560,20 @@ function ReceiptDialogContent({
         </Label>
       </div>
       <FileInput
-        onChange={handleFileChange}
-        accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
+        onFilesChange={handleFiles}
+        accept={EXPENSE_DOCUMENT_IMAGE_ACCEPT}
       />
-      {!selectedDocument && documents.length > 0 && (
+      <FileInput
+        inputId="camera"
+        onFilesChange={handleFiles}
+        accept="image/*"
+        capture="environment"
+      />
+      {!selectedDocument && imageDocuments.length > 0 && (
         <div className="not-prose mb-4 space-y-2">
           <p className="text-sm font-medium">{t('Dialog.existingDocuments')}</p>
           <div className="grid grid-cols-4 gap-2">
-            {documents.map((document) => (
+            {imageDocuments.map((document) => (
               <Button
                 key={document.id}
                 type="button"
@@ -469,16 +595,28 @@ function ReceiptDialogContent({
         </div>
       )}
       {!selectedDocument && (
-        <Button
-          type="button"
-          variant="outline"
-          className="not-prose w-full"
-          onClick={openFileDialog}
-          disabled={pending}
-        >
-          <ScanLine className="me-2 h-4 w-4" />
-          {t('Dialog.uploadAndScan')}
-        </Button>
+        <div className="not-prose inline-flex w-full overflow-hidden rounded-md border">
+          <Button
+            type="button"
+            variant="outline"
+            className="min-w-0 flex-1 rounded-none border-0"
+            onClick={() => openFileDialog()}
+            disabled={pending}
+          >
+            <ScanLine className="me-2 h-4 w-4" />
+            {t('Dialog.scanReceipt')}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            className="rounded-none border-0 border-s sm:hidden"
+            onClick={() => openFileDialog('camera')}
+            disabled={pending}
+            aria-label={t('Dialog.takePhoto')}
+          >
+            <Camera className="h-4 w-4" />
+          </Button>
+        </div>
       )}
       {selectedDocument && (
         <>

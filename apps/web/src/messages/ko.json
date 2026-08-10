@@ -1181,6 +1181,18 @@
       "title": "문서 업로드 중 오류가 발생했어요",
       "description": "문서 업로드 중 오류가 발생했습니다. 나중에 다시 시도하거나 다른 파일을 선택해 주세요.",
       "retry": "다시 시도"
+    },
+    "dropTitle": "첨부할 파일을 여기에 놓으세요",
+    "dropDescription": "이미지, PDF 및 일반적인 영수증 문서(최대 2MB)",
+    "chooseFiles": "파일 선택",
+    "FileErrorToast": {
+      "description": "{fileName}: 업로드 중 문제가 발생했어요. 나중에 다시 시도하거나 다른 파일을 선택해 주세요."
+    },
+    "takePhoto": "사진 촬영",
+    "openDocument": "문서 열기",
+    "UnsupportedToast": {
+      "title": "지원되지 않는 파일",
+      "description": "{fileName}은(는) 지원되지 않는 첨부 파일 형식이에요."
     }
   },
   "CreateFromReceipt": {
@@ -1204,7 +1216,11 @@
       "fillNext": "제안된 세부 정보를 검토한 후 이 지출에 적용하세요.",
       "scanningHint": "스캔에 시간이 조금 걸릴 수 있습니다 — 잠시만 기다려 주세요.",
       "fillBody": "첨부된 영수증을 선택하거나 새 영수증을 업로드하세요 — 스캔하여 이 지출의 세부 정보를 제안합니다.",
-      "translateToLocale": "제목과 항목을 {language}(으)로 번역"
+      "translateToLocale": "제목과 항목을 {language}(으)로 번역",
+      "dropTitle": "영수증 이미지를 여기에 놓으세요",
+      "dropDescription": "AI로 스캔할 이미지 한 장을 여기에 놓으세요",
+      "takePhoto": "사진 촬영",
+      "scanReceipt": "영수증 스캔"
     },
     "TooBigToast": {
       "title": "파일이 너무 커요",
@@ -1215,7 +1231,11 @@
       "description": "문서 업로드 중 오류가 발생했습니다. 나중에 다시 시도하거나 다른 파일을 선택해 주세요.",
       "retry": "Retry"
     },
-    "unknown": "알 수 없음"
+    "unknown": "알 수 없음",
+    "UnsupportedToast": {
+      "title": "이미지가 필요해요",
+      "aiDescription": "AI 영수증 스캔은 이미지 파일만 지원해요."
+    }
   },
   "Information": {
     "title": "정보",
@@ -2267,7 +2287,8 @@
     "commentTooLong": "댓글은 500자 이하로 입력해야 합니다.",
     "commentSubmitting": "게시 중…",
     "commentDelete": "댓글 삭제",
-    "commentSend": "댓글 보내기"
+    "commentSend": "댓글 보내기",
+    "openDocument": "문서 열기"
   },
   "CreateReimbursement": {
     "description": "지불을 기록하기 전에 확인하세요.",

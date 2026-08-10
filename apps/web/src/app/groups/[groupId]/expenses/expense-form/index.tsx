@@ -26,7 +26,11 @@ import { dateOnlyInAccountTimeZone, getCurrencyFromGroup } from '@/lib/utils'
 import type { CreateExpenseSearch } from '@/router/schemas'
 import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
-import { amountAsDecimal, type Currency } from '@spliit/domain'
+import {
+  amountAsDecimal,
+  isExpenseDocumentImage,
+  type Currency,
+} from '@spliit/domain'
 
 import type {
   ReceiptDocument,
@@ -451,6 +455,7 @@ export function ExpenseForm(props: {
     <Form {...form}>
       <form
         ref={formElementRef}
+        data-expense-form
         // oxlint-disable-next-line react/react-compiler -- handleInvalidSubmit reads shareInputRefs at submit time (event handler, never during render); the section-qualified registry replaces array-index focus for position-shifting rows.
         onSubmit={form.handleSubmit(submit, handleInvalidSubmit)}
         onFocusCapture={tabNavigation.onFocusCapture}
@@ -480,7 +485,25 @@ export function ExpenseForm(props: {
           linkInviteToken={props.linkInviteToken}
           extractCategoryMutation={trpc.ai.extractCategoryFromTitle.useMutation()}
           runtimeFeatureFlags={props.runtimeFeatureFlags}
-          receiptDocuments={form.getValues('documents')}
+          receiptDocuments={form.getValues('documents').flatMap((document) => {
+            if (
+              !isExpenseDocumentImage(document.contentType) &&
+              document.contentType
+            ) {
+              return []
+            }
+            if (document.width == null || document.height == null) return []
+            return [
+              {
+                id: document.id,
+                url: document.url,
+                width: document.width,
+                height: document.height,
+                fileName: document.fileName,
+                contentType: document.contentType,
+              },
+            ]
+          })}
           receiptScanContext={receiptScanContext}
           onReceiptAccepted={applyReceiptResult}
           heading={props.heading}

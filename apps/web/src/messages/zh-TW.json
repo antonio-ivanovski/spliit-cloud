@@ -922,6 +922,18 @@
       "title": "上傳文件時發生錯誤",
       "description": "上傳文件時發生錯誤，請再試一次或更換文件。",
       "retry": "重試"
+    },
+    "dropTitle": "將檔案拖曳到這裡以附加",
+    "dropDescription": "圖片、PDF 及常見收據文件（最大 2 MB）",
+    "chooseFiles": "選擇檔案",
+    "FileErrorToast": {
+      "description": "{fileName}：上傳時發生問題。請稍後再試，或選擇其他檔案。"
+    },
+    "takePhoto": "拍照",
+    "openDocument": "開啟文件",
+    "UnsupportedToast": {
+      "title": "不支援的檔案",
+      "description": "{fileName} 不是支援的附件類型。"
     }
   },
   "CreateFromReceipt": {
@@ -945,7 +957,11 @@
       "fillNext": "查看建議的詳細資料，然後套用至這筆支出。",
       "scanningHint": "掃描可能需要一點時間 — 請耐心等候。",
       "fillBody": "選擇已附加的收據或上傳新的收據 — 我們會掃描它，為這筆支出建議詳細資料。",
-      "translateToLocale": "將標題和項目翻譯為{language}"
+      "translateToLocale": "將標題和項目翻譯為{language}",
+      "dropTitle": "拖曳收據圖片",
+      "dropDescription": "將一張圖片拖曳到這裡，使用 AI 掃描",
+      "takePhoto": "拍照",
+      "scanReceipt": "掃描收據"
     },
     "unknown": "未知",
     "TooBigToast": {
@@ -956,6 +972,10 @@
       "title": "上傳文件時發生錯誤",
       "description": "上傳文件時發生錯誤，請再試一次或更換文件。",
       "retry": "重試"
+    },
+    "UnsupportedToast": {
+      "title": "需要圖片",
+      "aiDescription": "AI 收據掃描僅支援圖片檔案。"
     }
   },
   "Balances": {
@@ -2267,7 +2287,8 @@
     "commentTooLong": "留言不得超過 500 個字。",
     "commentSubmitting": "發佈中…",
     "commentDelete": "刪除留言",
-    "commentSend": "傳送留言"
+    "commentSend": "傳送留言",
+    "openDocument": "開啟文件"
   },
   "CreateReimbursement": {
     "description": "請確認付款資訊後再記錄。",

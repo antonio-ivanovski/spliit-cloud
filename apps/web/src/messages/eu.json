@@ -936,6 +936,18 @@
       "title": "Errorea dokumentua igotzean",
       "description": "Errore bat gertatu da dokumentua igotzean. Saiatu geroago edo hautatu beste fitxategi bat.",
       "retry": "Saiatu berriro"
+    },
+    "dropTitle": "Utzi fitxategiak eransteko",
+    "dropDescription": "Irudiak, PDFak eta gehienez 2 MB-ko ohiko ordainagiri-dokumentuak",
+    "chooseFiles": "Aukeratu fitxategiak",
+    "takePhoto": "Atera argazkia",
+    "openDocument": "Ireki dokumentua",
+    "FileErrorToast": {
+      "description": "{fileName}: zerbait gaizki joan da igotzean. Saiatu berriro geroago edo aukeratu beste fitxategi bat."
+    },
+    "UnsupportedToast": {
+      "title": "Onartu gabeko fitxategia",
+      "description": "{fileName} ez da eranskin mota onartua."
     }
   },
   "CreateFromReceipt": {
@@ -959,7 +971,11 @@
       "fillNext": "Berrikusi iradokitako xehetasunak eta aplikatu gastu honetan.",
       "scanningHint": "Eskaneatzeak pixka bat iraun dezake — izan pazientzia.",
       "fillBody": "Aukeratu erantsitako ordainagiri bat edo igo berri bat — eskaneatu eta gastu honetarako xehetasunak proposatuko ditugu.",
-      "translateToLocale": "Itzuldu izenburua eta elementuak {language}(e)ra"
+      "translateToLocale": "Itzuldu izenburua eta elementuak {language}(e)ra",
+      "dropTitle": "Utzi ordainagiriaren irudi bat",
+      "dropDescription": "Utzi irudi bat hemen IA bidez eskaneatzeko",
+      "takePhoto": "Atera argazkia",
+      "scanReceipt": "Eskaneatu ordainagiria"
     },
     "unknown": "Ezezaguna",
     "TooBigToast": {
@@ -970,6 +986,10 @@
       "title": "Errorea dokumentua igotzean",
       "description": "Dokumentua igotzean errore bat gertatu da. Saiatu berriro beranduago edo hautatu beste fitxategi bat.",
       "retry": "Saiatu berriro"
+    },
+    "UnsupportedToast": {
+      "title": "Irudia behar da",
+      "aiDescription": "IA bidezko ordainagiri-eskaneatzeak irudi-fitxategiak soilik onartzen ditu."
     }
   },
   "Balances": {
@@ -2300,7 +2320,8 @@
     "commentTooLong": "Iruzkinak 500 karaktere edo gutxiago izan behar dituzte.",
     "commentSubmitting": "Argitaratzen…",
     "commentDelete": "Ezabatu iruzkina",
-    "commentSend": "Iruzkina bidali"
+    "commentSend": "Iruzkina bidali",
+    "openDocument": "Ireki dokumentua"
   },
   "CreateReimbursement": {
     "description": "Berrikusi ordainketa erregistratu aurretik.",

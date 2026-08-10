@@ -100,6 +100,8 @@ export function toExpenseDomainShape(
     documents: existing.documents.map((d) => ({
       id: d.id,
       url: d.url,
+      fileName: d.fileName,
+      contentType: d.contentType,
       width: d.width,
       height: d.height,
     })),
@@ -121,8 +123,15 @@ export function toExpenseDomainShape(
   }
 }
 export async function promoteExpenseDocuments(
-  documents: Array<{ id: string; url: string; width: number; height: number }>,
-): Promise<Array<{ id: string; url: string; width: number; height: number }>> {
+  documents: Array<{
+    id: string
+    url: string
+    fileName?: string | null
+    contentType?: string | null
+    width?: number | null
+    height?: number | null
+  }>,
+): Promise<typeof documents> {
   return Promise.all(
     documents.map(async (doc) => ({
       ...doc,

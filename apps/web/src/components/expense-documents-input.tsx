@@ -1,5 +1,5 @@
-import { Loader2, Plus, Trash, X } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { Camera, FileText, Loader2, Plus, Trash, Upload, X } from 'lucide-react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -36,6 +36,14 @@ import { randomId } from '@/lib/api'
 import type { ExpenseFormInputValues } from '@/lib/schemas'
 import { resizeImage, usePresignedUpload } from '@/lib/upload'
 import { cn, formatFileSize } from '@/lib/utils'
+import {
+  EXPENSE_DOCUMENT_ACCEPT,
+  MAX_EXPENSE_DOCUMENT_SIZE,
+  isExpenseDocumentSizeWithinLimit,
+  isExpenseDocumentImage,
+  isSupportedExpenseDocumentUpload,
+  mimeTypeForExpenseDocumentFileName,
+} from '@spliit/domain'
 
 type Props = {
   documents: ExpenseFormInputValues['documents']
@@ -50,7 +58,16 @@ type Props = {
   }) => void
 }
 
-const MAX_FILE_SIZE = 2 * 1024 ** 2
+const MAX_FILE_SIZE = MAX_EXPENSE_DOCUMENT_SIZE
+
+function isImageAttachment(
+  document: ExpenseFormInputValues['documents'][number],
+): boolean {
+  return (
+    isExpenseDocumentImage(document.contentType) ||
+    (!document.contentType && document.width != null && document.height != null)
+  )
+}
 
 export function ExpenseDocumentsInput({
   documents,
@@ -66,55 +83,201 @@ export function ExpenseDocumentsInput({
     keyPrefix: 'ExpenseDocumentsInput',
   })
   const [pending, setPending] = useState(false)
-  const { FileInput, openFileDialog, uploadToS3 } = usePresignedUpload(ledgerId) // use presigned uploads to addtionally support providers other than AWS
+  const [dragActive, setDragActive] = useState(false)
+  const dragDepth = useRef(0)
+  const rootRef = useRef<HTMLDivElement>(null)
+  const { FileInput, openFileDialog, uploadToS3 } = usePresignedUpload(ledgerId) // use presigned uploads to additionally support providers other than AWS
   const { toast } = useToast()
+  const toastRef = useRef(toast)
+  const tRef = useRef(t)
+  const updateDocumentsRef = useRef(updateDocuments)
+  const documentsRef = useRef(documents)
+  const pendingRef = useRef(pending)
+  useEffect(() => {
+    toastRef.current = toast
+  }, [toast])
+  useEffect(() => {
+    tRef.current = t
+  }, [t])
+  useEffect(() => {
+    updateDocumentsRef.current = updateDocuments
+  }, [updateDocuments])
+  useEffect(() => {
+    documentsRef.current = documents
+    pendingRef.current = pending
+  }, [documents, pending])
 
-  const handleFileChange = async (file: File) => {
-    const upload = async () => {
-      try {
-        setPending(true)
-        const { file: resizedFile, width, height } = await resizeImage(file)
-        if (resizedFile.size > MAX_FILE_SIZE) {
-          toast({
-            title: t('TooBigToast.title'),
-            description: t('TooBigToast.description', {
-              maxSize: formatFileSize(MAX_FILE_SIZE, locale),
-              size: formatFileSize(resizedFile.size, locale),
+  const uploadFile = useCallback(
+    async (file: File) => {
+      if (
+        !isSupportedExpenseDocumentUpload({
+          fileName: file.name,
+          contentType: file.type,
+        })
+      ) {
+        toast({
+          title: t('UnsupportedToast.title'),
+          description: t('UnsupportedToast.description', {
+            fileName: file.name,
+          }),
+          variant: 'destructive',
+        })
+        return null
+      }
+
+      const image =
+        isExpenseDocumentImage(file.type) ||
+        mimeTypeForExpenseDocumentFileName(file.name)?.startsWith('image/')
+      const prepared = image
+        ? await resizeImage(file)
+        : { file, width: null, height: null }
+      if (!isExpenseDocumentSizeWithinLimit(prepared.file.size)) {
+        toast({
+          title: t('TooBigToast.title'),
+          description: t('TooBigToast.description', {
+            maxSize: formatFileSize(MAX_FILE_SIZE, locale),
+            size: formatFileSize(prepared.file.size, locale),
+          }),
+          variant: 'destructive',
+        })
+        return null
+      }
+      const { url } = await uploadToS3(prepared.file)
+      return {
+        id: randomId(),
+        url,
+        fileName: prepared.file.name,
+        contentType: image
+          ? prepared.file.type || 'image/jpeg'
+          : (mimeTypeForExpenseDocumentFileName(file.name) ??
+            prepared.file.type),
+        width: prepared.width,
+        height: prepared.height,
+      }
+    },
+    [locale, t, toast, uploadToS3],
+  )
+
+  const uploadFileRef = useRef(uploadFile)
+  useEffect(() => {
+    uploadFileRef.current = uploadFile
+  }, [uploadFile])
+
+  // Keep one stable callback for the native form drag listeners; the latest
+  // mutable values are read through refs updated by effects above.
+  // oxlint-disable-next-line react/react-compiler
+  const handleFiles = useCallback(async (files: File[]) => {
+    if (!files.length || pendingRef.current) return
+    pendingRef.current = true
+    setPending(true)
+    const added: NonNullable<Awaited<ReturnType<typeof uploadFile>>>[] = []
+    try {
+      // Keep dropped files in their original order so the attachment grid is
+      // predictable after a multi-file drop.
+      for (const file of files) {
+        try {
+          const document = await uploadFileRef.current?.(file)
+          if (document) added.push(document)
+        } catch (err) {
+          console.error(err)
+          toastRef.current({
+            title: tRef.current('ErrorToast.title'),
+            description: tRef.current('FileErrorToast.description', {
+              fileName: file.name,
             }),
             variant: 'destructive',
+            action: (
+              <ToastAction
+                altText={tRef.current('ErrorToast.retry')}
+                onClick={() => void handleFiles([file])}
+              >
+                {tRef.current('ErrorToast.retry')}
+              </ToastAction>
+            ),
           })
-          return
         }
-        const { url } = await uploadToS3(resizedFile)
-        updateDocuments([...documents, { id: randomId(), url, width, height }])
-      } catch (err) {
-        console.error(err)
-        toast({
-          title: t('ErrorToast.title'),
-          description: t('ErrorToast.description'),
-          variant: 'destructive',
-          action: (
-            <ToastAction
-              altText={t('ErrorToast.retry')}
-              onClick={() => upload()}
-            >
-              {t('ErrorToast.retry')}
-            </ToastAction>
-          ),
-        })
-      } finally {
-        setPending(false)
+      }
+      if (added.length) {
+        updateDocumentsRef.current([...documentsRef.current, ...added])
+      }
+    } finally {
+      pendingRef.current = false
+      setPending(false)
+    }
+  }, [])
+
+  const handleFilesRef = useRef(handleFiles)
+  useEffect(() => {
+    handleFilesRef.current = handleFiles
+  }, [handleFiles])
+
+  useEffect(() => {
+    const form = rootRef.current?.closest('form[data-expense-form]')
+    if (!form || readOnly) return
+
+    const handleDragEnter = (event: Event) => {
+      const dragEvent = event as DragEvent
+      if (!dragEvent.dataTransfer?.types.includes('Files')) return
+      dragEvent.preventDefault()
+      dragDepth.current += 1
+      setDragActive(true)
+    }
+    const handleDragLeave = (event: Event) => {
+      event.preventDefault()
+      dragDepth.current -= 1
+      if (dragDepth.current <= 0) {
+        dragDepth.current = 0
+        setDragActive(false)
       }
     }
-    void upload()
-  }
+    const handleDragOver = (event: Event) => event.preventDefault()
+    const handleDrop = (event: Event) => {
+      const dragEvent = event as DragEvent
+      dragEvent.preventDefault()
+      dragDepth.current = 0
+      setDragActive(false)
+      void handleFilesRef.current(
+        Array.from(dragEvent.dataTransfer?.files ?? []),
+      )
+    }
+
+    form.addEventListener('dragenter', handleDragEnter, true)
+    form.addEventListener('dragleave', handleDragLeave, true)
+    form.addEventListener('dragover', handleDragOver, true)
+    form.addEventListener('drop', handleDrop, true)
+    return () => {
+      form.removeEventListener('dragenter', handleDragEnter, true)
+      form.removeEventListener('dragleave', handleDragLeave, true)
+      form.removeEventListener('dragover', handleDragOver, true)
+      form.removeEventListener('drop', handleDrop, true)
+    }
+  }, [readOnly])
 
   return (
-    <div>
+    <div ref={rootRef} className="relative">
       <FileInput
-        onChange={handleFileChange}
-        accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
+        onFilesChange={handleFiles}
+        accept={EXPENSE_DOCUMENT_ACCEPT}
+        multiple
       />
+      <FileInput
+        inputId="camera"
+        onFilesChange={handleFiles}
+        accept="image/*"
+        capture="environment"
+      />
+
+      {dragActive && !readOnly && (
+        <div className="pointer-events-none fixed inset-4 z-50 flex items-center justify-center rounded-lg border-2 border-dashed border-primary bg-background/95 p-6 text-center shadow-lg">
+          <div>
+            <Upload className="mx-auto mb-2 h-8 w-8 text-primary" />
+            <p className="font-medium">{t('dropTitle')}</p>
+            <p className="text-sm text-muted-foreground">
+              {t('dropDescription')}
+            </p>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
         {documents.map((doc) => (
@@ -137,19 +300,33 @@ export function ExpenseDocumentsInput({
             <Button
               variant="secondary"
               type="button"
-              onClick={openFileDialog}
-              className="h-full w-full"
+              onClick={() => openFileDialog()}
+              className="h-full min-h-0 w-full"
               disabled={pending}
+              aria-label={t('chooseFiles')}
             >
               {pending ? (
                 <Loader2 className="h-8 w-8 animate-spin" />
               ) : (
                 <Plus className="h-8 w-8" />
               )}
+              <span className="sr-only">{t('chooseFiles')}</span>
             </Button>
           </div>
         )}
       </div>
+      {!readOnly && (
+        <Button
+          variant="outline"
+          type="button"
+          onClick={() => openFileDialog('camera')}
+          className="mt-2 w-full sm:hidden"
+          disabled={pending}
+        >
+          <Camera className="me-2 h-4 w-4" />
+          {t('takePhoto')}
+        </Button>
+      )}
     </div>
   )
 }
@@ -201,6 +378,16 @@ export function DocumentThumbnail({
   const { t } = useTranslation(undefined, {
     keyPrefix: 'ExpenseDocumentsInput',
   })
+  const imageAttachment = isImageAttachment(document)
+  const receiptDocument =
+    imageAttachment && document.width != null && document.height != null
+      ? {
+          id: document.id,
+          url: document.url,
+          width: document.width,
+          height: document.height,
+        }
+      : null
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -213,23 +400,32 @@ export function DocumentThumbnail({
             />
           }
         >
-          <Image
-            width={300}
-            height={300}
-            className="object-contain"
-            src={document.url}
-            alt=""
-          />
+          {imageAttachment ? (
+            <Image
+              width={document.width ?? 300}
+              height={document.height ?? 300}
+              className="object-contain"
+              src={document.url}
+              alt=""
+            />
+          ) : (
+            <div className="flex h-full flex-col items-center justify-center gap-2 p-3 text-center">
+              <FileText className="h-10 w-10 text-muted-foreground" />
+              <span className="line-clamp-3 text-xs font-medium">
+                {document.fileName ?? t('document')}
+              </span>
+            </div>
+          )}
         </DialogTrigger>
         {!readOnly && (
           <div className="absolute inset-x-0 bottom-0 z-10 flex">
-            {enableReceiptExtract && onReceiptAccepted && (
+            {enableReceiptExtract && onReceiptAccepted && receiptDocument && (
               <ReceiptScanTrigger
                 iconOnly
                 autoScan
                 title={tExpenseForm('ExpenseForm.scanReceipt')}
                 mode="fill"
-                documents={[document]}
+                documents={[receiptDocument]}
                 currentExpense={receiptContext}
                 onAccept={onReceiptAccepted}
                 className="h-10 min-w-0 flex-1 basis-0 rounded-t-none rounded-br-none rounded-bl-md border-e border-secondary-foreground/20 bg-secondary/70 backdrop-blur-sm hover:bg-pink-200/70"
@@ -240,7 +436,7 @@ export function DocumentThumbnail({
               variant="secondary"
               className={cn(
                 'h-10 min-w-0 flex-1 basis-0 rounded-t-none bg-secondary/70 text-destructive backdrop-blur-sm hover:bg-destructive/70 hover:text-destructive-foreground',
-                enableReceiptExtract && onReceiptAccepted
+                enableReceiptExtract && onReceiptAccepted && receiptDocument
                   ? 'rounded-br-md rounded-bl-none border-s-0'
                   : 'rounded-b-md',
               )}
@@ -260,18 +456,20 @@ export function DocumentThumbnail({
           <div className="flex justify-end">
             {!readOnly && (
               <div className="flex gap-2">
-                {enableReceiptExtract && onReceiptAccepted && (
-                  <ReceiptScanTrigger
-                    title={tExpenseForm('ExpenseForm.scanReceipt')}
-                    autoScan
-                    mode="fill"
-                    documents={[document]}
-                    currentExpense={receiptContext}
-                    onAccept={onReceiptAccepted}
-                  >
-                    {tExpenseForm('ExpenseForm.scanReceipt')}
-                  </ReceiptScanTrigger>
-                )}
+                {enableReceiptExtract &&
+                  onReceiptAccepted &&
+                  receiptDocument && (
+                    <ReceiptScanTrigger
+                      title={tExpenseForm('ExpenseForm.scanReceipt')}
+                      autoScan
+                      mode="fill"
+                      documents={[receiptDocument]}
+                      currentExpense={receiptContext}
+                      onAccept={onReceiptAccepted}
+                    >
+                      {tExpenseForm('ExpenseForm.scanReceipt')}
+                    </ReceiptScanTrigger>
+                  )}
                 <Button
                   variant="ghost"
                   className="text-destructive"
@@ -305,13 +503,36 @@ export function DocumentThumbnail({
             <CarouselContent>
               {documents.map((document) => (
                 <CarouselItem key={document.url}>
-                  <Image
-                    className="h-[calc(100dvh-32px-40px-16px-48px)] w-[calc(100vw-32px)] object-contain sm:h-[calc(100dvh-32px-40px-16px-32px-48px)] sm:w-[calc(100vw-32px-32px)]"
-                    src={document.url}
-                    width={document.width}
-                    height={document.height}
-                    alt=""
-                  />
+                  {isImageAttachment(document) ? (
+                    <Image
+                      className="h-[calc(100dvh-32px-40px-16px-48px)] w-[calc(100vw-32px)] object-contain sm:h-[calc(100dvh-32px-40px-16px-32px-48px)] sm:w-[calc(100vw-32px-32px)]"
+                      src={document.url}
+                      width={document.width ?? 300}
+                      height={document.height ?? 300}
+                      alt=""
+                    />
+                  ) : (
+                    <div className="flex h-[calc(100dvh-32px-40px-16px-48px)] flex-col items-center justify-center gap-4 text-center sm:h-[calc(100dvh-32px-40px-16px-32px-48px)]">
+                      <FileText className="h-20 w-20 text-muted-foreground" />
+                      <p className="max-w-md font-medium break-words">
+                        {document.fileName ?? t('document')}
+                      </p>
+                      <Button
+                        render={
+                          <a
+                            href={document.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            aria-label={t('openDocument')}
+                          >
+                            <span className="sr-only">{t('openDocument')}</span>
+                          </a>
+                        }
+                      >
+                        {t('openDocument')}
+                      </Button>
+                    </div>
+                  )}
                 </CarouselItem>
               ))}
             </CarouselContent>

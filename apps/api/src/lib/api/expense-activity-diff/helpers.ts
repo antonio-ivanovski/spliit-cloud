@@ -73,12 +73,15 @@ export function itemsKey(
 export function documentsKey(
   documents: ReadonlyArray<Expense['documents'][number]>,
 ): string {
-  return [...documents]
-    .sort((a, b) => {
+  return documents
+    .toSorted((a, b) => {
       const aKey = a.id || a.url
       const bKey = b.id || b.url
       return aKey.localeCompare(bKey)
     })
-    .map((d) => `${d.id || d.url}|${d.url}|${d.width}x${d.height}`)
+    .map(
+      (d) =>
+        `${d.id || d.url}|${d.url}|${d.fileName ?? ''}|${d.contentType ?? ''}|${d.width ?? ''}x${d.height ?? ''}`,
+    )
     .join('|')
 }

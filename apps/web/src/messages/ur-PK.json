@@ -586,7 +586,11 @@
       "fillNext": "تجویز کردہ تفصیلات کا جائزہ لیں، پھر انہیں اس خرچے پر لاگو کریں۔",
       "scanningHint": "اسکیننگ میں تھوڑا وقت لگ سکتا ہے — براہ کرم صبر کریں۔",
       "fillBody": "منسلک رسید منتخب کریں یا نیا اپ لوڈ کریں — ہم اس خرچے کے لیے تفصیلات تجویز کرنے کے لیے اسے اسکین کریں گے۔",
-      "translateToLocale": "عنوان اور آئٹمز کا {language} میں ترجمہ کریں"
+      "translateToLocale": "عنوان اور آئٹمز کا {language} میں ترجمہ کریں",
+      "dropTitle": "رسید کی تصویر چھوڑیں",
+      "dropDescription": "اسے AI سے اسکین کرنے کے لیے یہاں ایک تصویر چھوڑیں",
+      "takePhoto": "تصویر لیں",
+      "scanReceipt": "رسید اسکین کریں"
     },
     "ErrorToast": {
       "title": "دستاویز اپ لوڈ کرتے وقت خرابی",
@@ -597,6 +601,10 @@
     "TooBigToast": {
       "title": "فائل بہت بڑی ہے",
       "description": "زیادہ سے زیادہ فائل سائز {maxSize} ہے۔ آپ کی فائل {size} ہے۔"
+    },
+    "UnsupportedToast": {
+      "title": "تصویر درکار ہے",
+      "aiDescription": "AI سے رسید اسکین کرنے کے لیے صرف تصویری فائلیں معاون ہیں۔"
     }
   },
   "CreateReimbursement": {
@@ -979,6 +987,18 @@
     "TooBigToast": {
       "title": "فائل بہت بڑی ہے",
       "description": "زیادہ سے زیادہ فائل سائز {maxSize} ہے۔ آپ کی فائل {size} ہے۔"
+    },
+    "dropTitle": "منسلک کرنے کے لیے فائلیں یہاں چھوڑیں",
+    "dropDescription": "2 MB تک کی تصاویر، PDF اور عام رسیدی دستاویزات",
+    "chooseFiles": "فائلیں منتخب کریں",
+    "takePhoto": "تصویر لیں",
+    "openDocument": "دستاویز کھولیں",
+    "FileErrorToast": {
+      "description": "{fileName}: اپ لوڈ کرتے وقت کچھ غلط ہو گیا۔ براہ کرم بعد میں دوبارہ کوشش کریں یا کوئی مختلف فائل منتخب کریں۔"
+    },
+    "UnsupportedToast": {
+      "title": "غیر معاون فائل",
+      "description": "{fileName} کو بطور منسلکہ استعمال نہیں کیا جا سکتا۔"
     }
   },
   "ExpenseForm": {
@@ -1317,7 +1337,8 @@
     "commentTooLong": "تبصرے 500 حروف یا اس سے کم ہونے چاہئیں۔",
     "commentSubmitting": "پوسٹ ہو رہا ہے…",
     "commentDelete": "تبصرہ حذف کریں",
-    "commentSend": "تبصرہ بھیجیں"
+    "commentSend": "تبصرہ بھیجیں",
+    "openDocument": "دستاویز کھولیں"
   },
   "ExpenseSeries": {
     "badge": "متواتر",

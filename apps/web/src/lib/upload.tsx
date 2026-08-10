@@ -130,7 +130,7 @@ export async function prepareProfileImage(file: File): Promise<File> {
 }
 
 export function usePresignedUpload(ledgerId?: string | null) {
-  const inputRef = useRef<HTMLInputElement | null>(null)
+  const inputRefs = useRef(new Map<string, HTMLInputElement>())
   const presignMutation = trpc.uploads.presign.useMutation()
 
   // react-doctor-disable-next-line react-doctor/query-mutation-missing-invalidation -- S3 upload, caller invalidates with returned URL
@@ -155,19 +155,27 @@ export function usePresignedUpload(ledgerId?: string | null) {
 
   function FileInput({
     onChange,
+    onFilesChange,
+    inputId = 'file',
     ...props
   }: Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'onChange'> & {
-    onChange: (file: File) => void
+    inputId?: string
+    onChange?: (file: File) => void
+    onFilesChange?: (files: File[]) => void
   }) {
     return (
       <input
         {...props}
-        ref={inputRef}
+        ref={(node) => {
+          if (node) inputRefs.current.set(inputId, node)
+          else inputRefs.current.delete(inputId)
+        }}
         type="file"
         className="hidden"
         onChange={(event: ChangeEvent<HTMLInputElement>) => {
-          const file = event.target.files?.[0]
-          if (file) onChange(file)
+          const files = Array.from(event.target.files ?? [])
+          if (onFilesChange) onFilesChange(files)
+          else if (files[0]) onChange?.(files[0])
           event.target.value = ''
         }}
       />
@@ -176,7 +184,8 @@ export function usePresignedUpload(ledgerId?: string | null) {
 
   return {
     FileInput,
-    openFileDialog: () => inputRef.current?.click(),
+    openFileDialog: (inputId = 'file') =>
+      inputRefs.current.get(inputId)?.click(),
     uploadToS3: uploadMutation.mutateAsync,
     isUploading: uploadMutation.isPending,
   }

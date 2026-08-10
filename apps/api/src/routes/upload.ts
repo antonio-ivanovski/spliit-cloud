@@ -8,6 +8,10 @@ import {
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
 import { prisma } from '@spliit/db'
+import {
+  isExpenseDocumentSizeWithinLimit,
+  isSupportedExpenseDocumentUpload,
+} from '@spliit/domain'
 
 import { randomId } from '../lib/api/shared'
 import { getAuthFromRequest } from '../lib/auth/session'
@@ -244,8 +248,6 @@ export async function promoteUploadedDocument(
   return publicUrlForKey(permanentKey)
 }
 
-const MAX_UPLOAD_SIZE = 2 * 1024 ** 2
-
 export async function mintImportDocumentPresign(input: {
   accountId: string
   sessionId: string
@@ -254,7 +256,7 @@ export async function mintImportDocumentPresign(input: {
   width: number
   height: number
 }) {
-  if (input.fileSize > MAX_UPLOAD_SIZE) {
+  if (!isExpenseDocumentSizeWithinLimit(input.fileSize)) {
     return Response.json(
       { error: 'File exceeds the maximum upload size' },
       { status: 400 },
@@ -345,7 +347,7 @@ export async function verifyAndPromoteImportDocument(input: {
     metadata.ContentType !== 'image/jpeg' ||
     metadata.ContentLength !== claims.fileSize ||
     !metadata.ContentLength ||
-    metadata.ContentLength > MAX_UPLOAD_SIZE
+    !isExpenseDocumentSizeWithinLimit(metadata.ContentLength ?? -1)
   ) {
     throw new Error('Staged import document failed validation')
   }
@@ -389,7 +391,13 @@ async function mintUploadPresign({
   fileSize?: number
   accountId: string
 }): Promise<Response> {
-  if (fileSize !== undefined && fileSize > MAX_UPLOAD_SIZE) {
+  if (!isSupportedExpenseDocumentUpload({ fileName, contentType })) {
+    return Response.json(
+      { error: 'Unsupported expense document type' },
+      { status: 400 },
+    )
+  }
+  if (fileSize !== undefined && !isExpenseDocumentSizeWithinLimit(fileSize)) {
     return Response.json(
       { error: 'File exceeds the maximum upload size' },
       { status: 400 },

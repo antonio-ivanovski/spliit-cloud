@@ -586,7 +586,11 @@
       "fillNext": "सुझाए गए विवरणों की समीक्षा करें, फिर उन्हें इस खर्च पर लागू करें।",
       "scanningHint": "स्कैनिंग में थोड़ा समय लग सकता है — कृपया धैर्य रखें।",
       "fillBody": "एक संलग्न रसीद चुनें या नई अपलोड करें — हम इसे स्कैन करके इस खर्च के लिए विवरण सुझाएंगे।",
-      "translateToLocale": "शीर्षक और आइटम {language} में अनुवाद करें"
+      "translateToLocale": "शीर्षक और आइटम {language} में अनुवाद करें",
+      "dropTitle": "रसीद की फ़ोटो छोड़ें",
+      "dropDescription": "AI से स्कैन करने के लिए यहाँ एक फ़ोटो छोड़ें",
+      "takePhoto": "फ़ोटो लें",
+      "scanReceipt": "रसीद स्कैन करें"
     },
     "ErrorToast": {
       "title": "दस्तावेज़ अपलोड करने में त्रुटि",
@@ -597,6 +601,10 @@
     "TooBigToast": {
       "title": "फ़ाइल बहुत बड़ी है",
       "description": "अधिकतम फ़ाइल आकार जो आप अपलोड कर सकते हैं वह {maxSize} है। आपकी फ़ाइल {size} है।"
+    },
+    "UnsupportedToast": {
+      "title": "फ़ोटो आवश्यक है",
+      "aiDescription": "AI से रसीद स्कैन करने के लिए केवल इमेज फ़ाइलें समर्थित हैं।"
     }
   },
   "CreateReimbursement": {
@@ -979,6 +987,18 @@
     "TooBigToast": {
       "title": "फ़ाइल बहुत बड़ी है",
       "description": "अधिकतम फ़ाइल आकार जो आप अपलोड कर सकते हैं वह {maxSize} है। आपकी फ़ाइल {size} है।"
+    },
+    "dropTitle": "संलग्न करने के लिए फ़ाइलें छोड़ें",
+    "dropDescription": "2 MB तक की इमेज, PDF और सामान्य रसीद दस्तावेज़",
+    "chooseFiles": "फ़ाइलें चुनें",
+    "takePhoto": "फ़ोटो लें",
+    "openDocument": "दस्तावेज़ खोलें",
+    "FileErrorToast": {
+      "description": "{fileName}: अपलोड करते समय कुछ गलत हुआ। कृपया बाद में फिर से कोशिश करें या कोई दूसरी फ़ाइल चुनें।"
+    },
+    "UnsupportedToast": {
+      "title": "असमर्थित फ़ाइल",
+      "description": "{fileName} समर्थित फ़ाइल प्रकार नहीं है।"
     }
   },
   "ExpenseForm": {
@@ -1317,7 +1337,8 @@
     "commentTooLong": "टिप्पणियां 500 वर्ण या उससे कम होनी चाहिए।",
     "commentSubmitting": "पोस्ट किया जा रहा है…",
     "commentDelete": "टिप्पणी हटाएं",
-    "commentSend": "टिप्पणी भेजें"
+    "commentSend": "टिप्पणी भेजें",
+    "openDocument": "दस्तावेज़ खोलें"
   },
   "ExpenseSeries": {
     "badge": "आवर्ती",

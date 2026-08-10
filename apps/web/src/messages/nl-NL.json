@@ -929,6 +929,18 @@
       "title": "Fout bij het uploaden van document",
       "description": "Er is iets mis gegaan bij het uploaden van het document. Probeer het later opnieuw of kies een ander bestand.",
       "retry": "Probeer opnieuw"
+    },
+    "dropTitle": "Sleep bestanden hierheen om ze bij te voegen",
+    "dropDescription": "Afbeeldingen, pdf-bestanden en gangbare bonbestanden tot 2 MB",
+    "chooseFiles": "Bestanden kiezen",
+    "takePhoto": "Foto maken",
+    "openDocument": "Document openen",
+    "FileErrorToast": {
+      "description": "{fileName}: er ging iets mis tijdens het uploaden. Probeer het later opnieuw of kies een ander bestand."
+    },
+    "UnsupportedToast": {
+      "title": "Niet-ondersteund bestand",
+      "description": "{fileName} is geen ondersteund bijlagetype."
     }
   },
   "CreateFromReceipt": {
@@ -952,7 +964,11 @@
       "fillNext": "Controleer de voorgestelde gegevens en pas ze toe op deze uitgave.",
       "scanningHint": "Het scannen kan even duren — heb geduld.",
       "fillBody": "Kies een bijgevoegde bon of upload een nieuwe — we scannen die en stellen gegevens voor deze uitgave voor.",
-      "translateToLocale": "Vertaal titel en artikelen naar {language}"
+      "translateToLocale": "Vertaal titel en artikelen naar {language}",
+      "dropTitle": "Sleep een bonafbeelding hierheen",
+      "dropDescription": "Sleep één afbeelding hierheen om die met AI te scannen",
+      "takePhoto": "Foto maken",
+      "scanReceipt": "Bon scannen"
     },
     "unknown": "Onbekend",
     "TooBigToast": {
@@ -963,6 +979,10 @@
       "title": "Fout bij het uploaden van document",
       "description": "Er is iets mis gegaan bij het uploaden van het document. Probeer het later opnieuw of kies een ander bestand.",
       "retry": "Probeer opnieuw"
+    },
+    "UnsupportedToast": {
+      "title": "Afbeelding vereist",
+      "aiDescription": "AI-bonscan ondersteunt alleen afbeeldingsbestanden."
     }
   },
   "Balances": {
@@ -2283,7 +2303,8 @@
     "commentTooLong": "Opmerkingen mogen maximaal 500 tekens bevatten.",
     "commentSubmitting": "Plaatsen…",
     "commentDelete": "Opmerking verwijderen",
-    "commentSend": "Opmerking verzenden"
+    "commentSend": "Opmerking verzenden",
+    "openDocument": "Document openen"
   },
   "CreateReimbursement": {
     "description": "Controleer de betaling voordat je deze vastlegt.",

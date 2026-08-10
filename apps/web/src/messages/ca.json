@@ -936,6 +936,18 @@
       "title": "Error al carregar el document",
       "description": "Hi ha hagut un error al carregar el document. Torna a intentar-ho més tard o selecciona un altre arxiu.",
       "retry": "Tornar-ho a intentar"
+    },
+    "dropTitle": "Deixa els fitxers per adjuntar-los",
+    "dropDescription": "Imatges, PDF i documents de tiquet habituals de fins a 2 MB",
+    "chooseFiles": "Tria fitxers",
+    "takePhoto": "Fes una foto",
+    "openDocument": "Obre el document",
+    "FileErrorToast": {
+      "description": "{fileName}: s’ha produït un error en pujar-lo. Torna-ho a provar més tard o tria un fitxer diferent."
+    },
+    "UnsupportedToast": {
+      "title": "Fitxer no compatible",
+      "description": "{fileName} no és un tipus de fitxer adjunt compatible."
     }
   },
   "CreateFromReceipt": {
@@ -959,7 +971,11 @@
       "fillNext": "Revisa els detalls suggerits i aplica’ls a aquesta despesa.",
       "scanningHint": "L’escaneig pot trigar una mica — tingues paciència.",
       "fillBody": "Tria un rebut adjunt o puja’n un de nou — l’escanejarem per suggerir detalls per a aquesta despesa.",
-      "translateToLocale": "Traduir títol i articles a {language}"
+      "translateToLocale": "Traduir títol i articles a {language}",
+      "dropTitle": "Deixa una imatge del tiquet",
+      "dropDescription": "Deixa aquí una imatge per escanejar-la amb IA",
+      "takePhoto": "Fes una foto",
+      "scanReceipt": "Escaneja el tiquet"
     },
     "unknown": "Desconegut",
     "TooBigToast": {
@@ -970,6 +986,10 @@
       "title": "Error al carregar el document",
       "description": "Hi ha hagut un error al carregar el document. Torna a intentar-ho més tard o selecciona un altre arxiu.",
       "retry": "Tornar-ho a intentar"
+    },
+    "UnsupportedToast": {
+      "title": "Cal una imatge",
+      "aiDescription": "L’escaneig de tiquets amb IA només admet fitxers d’imatge."
     }
   },
   "Balances": {
@@ -2301,7 +2321,8 @@
     "commentTooLong": "Els comentaris han de tenir 500 caràcters o menys.",
     "commentSubmitting": "Publicant…",
     "commentDelete": "Suprimeix el comentari",
-    "commentSend": "Envia el comentari"
+    "commentSend": "Envia el comentari",
+    "openDocument": "Obre el document"
   },
   "CreateReimbursement": {
     "description": "Revisa el pagament abans de registrar-lo.",

@@ -936,6 +936,18 @@
       "title": "Erreur lors du téléchargement du document",
       "description": "Un problème est survenu lors du téléchargement du document. Veuillez réessayer plus tard ou sélectionner un fichier différent.",
       "retry": "Réessayer"
+    },
+    "dropTitle": "Déposez les fichiers à joindre",
+    "dropDescription": "Images, PDF et documents de reçu courants jusqu’à 2 Mo",
+    "chooseFiles": "Choisir des fichiers",
+    "takePhoto": "Prendre une photo",
+    "openDocument": "Ouvrir le document",
+    "FileErrorToast": {
+      "description": "{fileName} : une erreur s’est produite lors de l’importation. Réessayez plus tard ou choisissez un autre fichier."
+    },
+    "UnsupportedToast": {
+      "title": "Fichier non pris en charge",
+      "description": "{fileName} n’est pas un type de pièce jointe pris en charge."
     }
   },
   "CreateFromReceipt": {
@@ -959,7 +971,11 @@
       "fillNext": "Vérifiez les détails suggérés, puis appliquez-les à cette dépense.",
       "scanningHint": "L’analyse peut prendre un moment — merci de patienter.",
       "fillBody": "Choisissez un reçu joint ou importez-en un nouveau — nous l’analyserons pour suggérer les détails de cette dépense.",
-      "translateToLocale": "Traduire le titre et les articles en {language}"
+      "translateToLocale": "Traduire le titre et les articles en {language}",
+      "dropTitle": "Déposez une image du reçu",
+      "dropDescription": "Déposez une image ici pour l’analyser avec l’IA",
+      "takePhoto": "Prendre une photo",
+      "scanReceipt": "Scanner le reçu"
     },
     "unknown": "Inconnu",
     "TooBigToast": {
@@ -970,6 +986,10 @@
       "title": "Erreur lors du téléchargement du document",
       "description": "Un problème est survenu lors du téléchargement du document. Veuillez réessayer plus tard ou sélectionner un fichier différent.",
       "retry": "Réessayer"
+    },
+    "UnsupportedToast": {
+      "title": "Image requise",
+      "aiDescription": "L’analyse des reçus par IA accepte uniquement les fichiers image."
     }
   },
   "Balances": {
@@ -2301,7 +2321,8 @@
     "commentTooLong": "Les commentaires doivent comporter au maximum 500 caractères.",
     "commentSubmitting": "Publication…",
     "commentDelete": "Supprimer le commentaire",
-    "commentSend": "Envoyer le commentaire"
+    "commentSend": "Envoyer le commentaire",
+    "openDocument": "Ouvrir le document"
   },
   "CreateReimbursement": {
     "description": "Vérifiez le paiement avant de l'enregistrer.",

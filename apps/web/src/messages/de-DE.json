@@ -957,6 +957,18 @@
       "title": "Fehler beim Hochladen der Datei",
       "description": "Beim Hochladen der Datei ist etwas schiefgelaufen. Versuche es später nochmal oder wähle eine andere Datei.",
       "retry": "Wiederholen"
+    },
+    "dropTitle": "Dateien zum Anhängen ablegen",
+    "dropDescription": "Bilder, PDFs und gängige Belegdokumente bis zu 2 MB",
+    "chooseFiles": "Dateien auswählen",
+    "takePhoto": "Foto aufnehmen",
+    "openDocument": "Dokument öffnen",
+    "FileErrorToast": {
+      "description": "{fileName}: Beim Hochladen ist ein Fehler aufgetreten. Bitte später erneut versuchen oder eine andere Datei auswählen."
+    },
+    "UnsupportedToast": {
+      "title": "Nicht unterstützte Datei",
+      "description": "{fileName} ist kein unterstützter Anhangstyp."
     }
   },
   "CreateFromReceipt": {
@@ -980,7 +992,11 @@
       "fillNext": "Prüfe die vorgeschlagenen Angaben und übernimm sie für diese Ausgabe.",
       "scanningHint": "Das Scannen kann etwas dauern — bitte hab Geduld.",
       "fillBody": "Wähle einen angehängten Beleg oder lade einen neuen hoch — wir scannen ihn und schlagen Details für diese Ausgabe vor.",
-      "translateToLocale": "Titel und Artikel in {language} übersetzen"
+      "translateToLocale": "Titel und Artikel in {language} übersetzen",
+      "dropTitle": "Belegbild ablegen",
+      "dropDescription": "Hier ein Bild ablegen, um es mit KI zu scannen",
+      "takePhoto": "Foto aufnehmen",
+      "scanReceipt": "Beleg scannen"
     },
     "unknown": "Unbekannt",
     "TooBigToast": {
@@ -991,6 +1007,10 @@
       "title": "Fehler beim Hochladen der Datei",
       "description": "Beim Hochladen der Datei ist etwas schiefgelaufen. Versuche es später nochmal oder wähle eine andere Datei.",
       "retry": "Wiederholen"
+    },
+    "UnsupportedToast": {
+      "title": "Bild erforderlich",
+      "aiDescription": "Der KI-Belegscan unterstützt nur Bilddateien."
     }
   },
   "Balances": {
@@ -2351,7 +2371,8 @@
     "commentTooLong": "Kommentare dürfen höchstens 500 Zeichen lang sein.",
     "commentSubmitting": "Wird veröffentlicht …",
     "commentDelete": "Kommentar löschen",
-    "commentSend": "Kommentar senden"
+    "commentSend": "Kommentar senden",
+    "openDocument": "Dokument öffnen"
   },
   "CreateReimbursement": {
     "description": "Überprüfe die Zahlung, bevor du sie aufzeichnest.",

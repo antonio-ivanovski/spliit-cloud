@@ -943,6 +943,18 @@
       "title": "Chyba při nahrávání dokumentu",
       "description": "Při nahrávání dokumentu došlo k chybě. Zkuste to prosím později nebo vyberte jiný soubor.",
       "retry": "Zkusit znovu"
+    },
+    "dropTitle": "Přetáhněte soubory k připojení",
+    "dropDescription": "Obrázky, PDF a běžné dokumenty účtenek do 2 MB",
+    "chooseFiles": "Vybrat soubory",
+    "takePhoto": "Pořídit fotografii",
+    "openDocument": "Otevřít dokument",
+    "FileErrorToast": {
+      "description": "{fileName}: při nahrávání se něco pokazilo. Zkuste to později nebo vyberte jiný soubor."
+    },
+    "UnsupportedToast": {
+      "title": "Nepodporovaný soubor",
+      "description": "{fileName} není podporovaný typ přílohy."
     }
   },
   "CreateFromReceipt": {
@@ -966,7 +978,11 @@
       "fillNext": "Zkontrolujte navržené údaje a použijte je pro tento výdaj.",
       "scanningHint": "Skenování může chvíli trvat — buďte prosím trpěliví.",
       "fillBody": "Vyberte přiloženou účtenku nebo nahrajte novou — naskenujeme ji a navrhneme údaje pro tento výdaj.",
-      "translateToLocale": "Přeložit název a položky do {language}"
+      "translateToLocale": "Přeložit název a položky do {language}",
+      "dropTitle": "Přetáhněte obrázek účtenky",
+      "dropDescription": "Přetáhněte sem jeden obrázek a naskenujte ho pomocí AI",
+      "takePhoto": "Pořídit fotografii",
+      "scanReceipt": "Naskenovat účtenku"
     },
     "unknown": "Neznámé",
     "TooBigToast": {
@@ -977,6 +993,10 @@
       "title": "Chyba při nahrávání dokumentu",
       "description": "Při nahrávání dokumentu došlo k chybě. Zkuste to prosím později nebo vyberte jiný soubor.",
       "retry": "Zkusit znovu"
+    },
+    "UnsupportedToast": {
+      "title": "Je vyžadován obrázek",
+      "aiDescription": "Sken účtenky pomocí AI podporuje pouze obrázkové soubory."
     }
   },
   "Balances": {
@@ -2319,7 +2339,8 @@
     "commentTooLong": "Komentáře mohou mít nejvýše 500 znaků.",
     "commentSubmitting": "Odesílání…",
     "commentDelete": "Smazat komentář",
-    "commentSend": "Odeslat komentář"
+    "commentSend": "Odeslat komentář",
+    "openDocument": "Otevřít dokument"
   },
   "CreateReimbursement": {
     "description": "Zkontrolujte platbu před jejím zaznamenáním.",

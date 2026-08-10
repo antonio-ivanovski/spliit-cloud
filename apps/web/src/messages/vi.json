@@ -1308,6 +1308,18 @@
       "title": "Lỗi tải lên",
       "description": "Không thể tải lên.",
       "retry": "Thử lại"
+    },
+    "dropTitle": "Thả tệp để đính kèm",
+    "dropDescription": "Hình ảnh, PDF và các tài liệu biên lai thông dụng tối đa 2 MB",
+    "chooseFiles": "Chọn tệp",
+    "takePhoto": "Chụp ảnh",
+    "openDocument": "Mở tài liệu",
+    "FileErrorToast": {
+      "description": "{fileName}: đã xảy ra lỗi khi tải lên. Vui lòng thử lại sau hoặc chọn tệp khác."
+    },
+    "UnsupportedToast": {
+      "title": "Tệp không được hỗ trợ",
+      "description": "{fileName} không phải là loại tệp đính kèm được hỗ trợ."
     }
   },
   "CreateFromReceipt": {
@@ -1331,7 +1343,11 @@
       "fillNext": "Điền tiếp",
       "scanningHint": "Đang quét…",
       "fillBody": "Chọn một biên lai đính kèm hoặc tải lên ảnh mới — chúng tôi sẽ quét để gợi ý thông tin cho chi phí này.",
-      "translateToLocale": "Dịch tiêu đề và mục sang {language}"
+      "translateToLocale": "Dịch tiêu đề và mục sang {language}",
+      "dropTitle": "Thả ảnh biên lai vào đây",
+      "dropDescription": "Thả một hình ảnh vào đây để quét bằng AI",
+      "takePhoto": "Chụp ảnh",
+      "scanReceipt": "Quét biên lai"
     },
     "unknown": "Không xác định",
     "TooBigToast": {
@@ -1342,6 +1358,10 @@
       "title": "Lỗi quét",
       "description": "Không thể quét.",
       "retry": "Thử lại"
+    },
+    "UnsupportedToast": {
+      "title": "Cần có hình ảnh",
+      "aiDescription": "Tính năng quét biên lai bằng AI chỉ hỗ trợ tệp hình ảnh."
     }
   },
   "Balances": {
@@ -2436,7 +2456,8 @@
     "commentTooLong": "Bình luận tối đa 500 ký tự.",
     "commentSubmitting": "Đang gửi…",
     "commentDelete": "Xóa",
-    "commentSend": "Gửi"
+    "commentSend": "Gửi",
+    "openDocument": "Mở tài liệu"
   },
   "CreateReimbursement": {
     "description": "Xem lại khoản thanh toán trước khi ghi nhận.",

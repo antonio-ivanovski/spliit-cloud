@@ -943,6 +943,18 @@
       "title": "Błąd podczas wysyłania dokumentu",
       "description": "Coś poszło nie tak podczas wysyłania dokumentu. Proszę spróbuj ponownie później, albo wybierz inny plik.",
       "retry": "Ponów"
+    },
+    "dropTitle": "Upuść pliki, aby je dołączyć",
+    "dropDescription": "Obrazy, pliki PDF i typowe dokumenty paragonów do 2 MB",
+    "chooseFiles": "Wybierz pliki",
+    "takePhoto": "Zrób zdjęcie",
+    "openDocument": "Otwórz dokument",
+    "FileErrorToast": {
+      "description": "{fileName}: coś poszło nie tak podczas przesyłania. Spróbuj ponownie później lub wybierz inny plik."
+    },
+    "UnsupportedToast": {
+      "title": "Nieobsługiwany plik",
+      "description": "{fileName} to nieobsługiwany typ załącznika."
     }
   },
   "CreateFromReceipt": {
@@ -966,7 +978,11 @@
       "fillNext": "Sprawdź sugerowane dane i zastosuj je do tego wydatku.",
       "scanningHint": "Skanowanie może chwilę potrwać — prosimy o cierpliwość.",
       "fillBody": "Wybierz dołączony paragon lub prześlij nowy — zeskanujemy go, aby zasugerować dane tego wydatku.",
-      "translateToLocale": "Przetłumacz tytuł i elementy na {language}"
+      "translateToLocale": "Przetłumacz tytuł i elementy na {language}",
+      "dropTitle": "Upuść obraz paragonu",
+      "dropDescription": "Upuść tutaj jeden obraz, aby zeskanować go za pomocą AI",
+      "takePhoto": "Zrób zdjęcie",
+      "scanReceipt": "Skanuj paragon"
     },
     "unknown": "Nieznany",
     "TooBigToast": {
@@ -977,6 +993,10 @@
       "title": "Błąd podczas wysyłania dokumentu",
       "description": "Coś poszło nie tak podczas wysyłania dokumentu. Proszę spróbuj ponownie później, albo wybierz inny plik.",
       "retry": "Ponów"
+    },
+    "UnsupportedToast": {
+      "title": "Wymagany obraz",
+      "aiDescription": "Skanowanie paragonów za pomocą AI obsługuje tylko pliki graficzne."
     }
   },
   "Balances": {
@@ -2319,7 +2339,8 @@
     "commentTooLong": "Komentarze mogą mieć najwyżej 500 znaków.",
     "commentSubmitting": "Publikowanie…",
     "commentDelete": "Usuń komentarz",
-    "commentSend": "Wyślij komentarz"
+    "commentSend": "Wyślij komentarz",
+    "openDocument": "Otwórz dokument"
   },
   "CreateReimbursement": {
     "description": "Sprawdź płatność przed jej zapisaniem.",
