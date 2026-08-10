@@ -1127,7 +1127,6 @@
     "duplicateParticipant": "Beste ordaintzaile bat dago jada hautatuta.",
     "sharesInvalid": "Partaidetzak 0,01 eta 1.000.000 artekoak izan behar dira, gehienez bi hamartarrekin.",
     "itemTitleRequired": "Elementuaren izena beharrezkoa da.",
-    "itemAmountPositive": "Elementuaren zenbatekoak 0 baino handiagoa izan behar du.",
     "itemQuantityMin1": "Elementuaren kopuruak gutxienez 1 izan behar du.",
     "rowErrorsHeading": "Zuzendu parte hauek:"
   },

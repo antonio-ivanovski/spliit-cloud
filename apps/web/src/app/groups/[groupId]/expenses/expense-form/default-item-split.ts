@@ -73,7 +73,10 @@ export function scaleRowsToAmount(
     ]
   }
 
-  const sourceAmount = rows.reduce((sum, r) => sum + Number(r.shares || 0), 0)
+  const sourceAmount = rows.reduce(
+    (sum, r) => sum + Math.abs(Number(r.shares || 0)),
+    0,
+  )
   // Source sum is also zero (e.g. all-zero shares): same fallback.
   if (sourceAmount === 0) {
     return [
@@ -145,7 +148,7 @@ export function applySplitToAll({
     (sum, item) => sum + Number(item.unitPrice) * Number(item.quantity),
     0,
   )
-  const remainderAmount = Math.max(0, expenseAmount - itemsTotal)
+  const remainderAmount = expenseAmount - itemsTotal
   return {
     items: nextItems,
     itemizedRemainder: {

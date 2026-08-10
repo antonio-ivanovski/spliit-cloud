@@ -777,6 +777,78 @@ describe('expenseFormInputSchema nested BY_SHARES rows', () => {
   })
 })
 
+describe('signed item amounts', () => {
+  it('accepts a negative item and a discount within a positive expense', () => {
+    const result = expenseFormInputSchema.safeParse({
+      ...baseInput,
+      splitMode: 'ITEMIZED',
+      items: [
+        {
+          title: 'Subtotal',
+          unitPrice: 12,
+          quantity: 1,
+          splitMode: 'EVENLY',
+          paidFor: [{ participant: 'p0', shares: 1 }],
+        },
+        {
+          title: 'Discount',
+          unitPrice: -2,
+          quantity: 1,
+          splitMode: 'EVENLY',
+          paidFor: [{ participant: 'p0', shares: 1 }],
+        },
+      ],
+    })
+
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts signed BY_AMOUNT rows for a negative item', () => {
+    const result = expenseFormInputSchema.safeParse({
+      ...baseInput,
+      amount: -5,
+      splitMode: 'ITEMIZED',
+      items: [
+        {
+          title: 'Refund',
+          unitPrice: -5,
+          quantity: 1,
+          splitMode: 'BY_AMOUNT',
+          paidFor: [{ participant: 'p0', shares: -5 }],
+        },
+      ],
+    })
+
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects zero item amounts with the shared zero-amount error', () => {
+    const result = expenseFormInputSchema.safeParse({
+      ...baseInput,
+      splitMode: 'ITEMIZED',
+      items: [
+        {
+          title: 'Empty',
+          unitPrice: 0,
+          quantity: 1,
+          splitMode: 'EVENLY',
+          paidFor: [{ participant: 'p0', shares: 1 }],
+        },
+      ],
+    })
+
+    expect(result.success).toBe(false)
+    if (result.success) return
+    expect(
+      result.error.issues.some(
+        (issue) =>
+          issue.path.join('.') === 'items.0.unitPrice' &&
+          issue.message === 'amountNotZero',
+      ),
+    ).toBe(true)
+  })
+})
+
 describe('defaultSplitSchema', () => {
   const baseDefault = {
     splitMode: 'BY_SHARES' as const,
@@ -889,6 +961,56 @@ describe('paidByList signed and migrated shapes', () => {
     expect(
       result.error.issues.some((i) => i.message === 'paidByAmountSum'),
     ).toBe(true)
+  })
+})
+
+describe('signed API item amounts', () => {
+  it('accepts a positive expense with a negative discount item', () => {
+    const result = expenseApiSchema.safeParse({
+      ...baseApi,
+      splitMode: 'ITEMIZED',
+      items: [
+        {
+          title: 'Subtotal',
+          unitPrice: 1200,
+          quantity: 1,
+          amount: 1200,
+          splitMode: 'EVENLY',
+          paidFor: [{ participant: 'p0', shares: 1 }],
+        },
+        {
+          title: 'Discount',
+          unitPrice: -200,
+          quantity: 1,
+          amount: -200,
+          splitMode: 'EVENLY',
+          paidFor: [{ participant: 'p0', shares: 1 }],
+        },
+      ],
+    })
+
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts a negative item with signed BY_AMOUNT allocations', () => {
+    const result = expenseApiSchema.safeParse({
+      ...baseApi,
+      amount: -500,
+      splitMode: 'ITEMIZED',
+      paidFor: [{ participant: 'p0', shares: 500 }],
+      items: [
+        {
+          title: 'Refund',
+          unitPrice: -500,
+          quantity: 1,
+          amount: -500,
+          splitMode: 'BY_AMOUNT',
+          paidFor: [{ participant: 'p0', shares: -500 }],
+        },
+      ],
+    })
+
+    expect(result.success).toBe(true)
   })
 })
 

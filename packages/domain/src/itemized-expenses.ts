@@ -19,6 +19,22 @@ type ItemizedRemainderLike = {
 }
 
 /**
+ * Whether item subtotals overshoot an expense in the expense's direction.
+ *
+ * Positive expenses retain the original `items > amount` rule. Negative
+ * expenses use the mirrored comparison so a signed "Other" remainder can
+ * account for the still-unitemized part of a negative expense.
+ */
+export function itemsExceedExpenseAmount(
+  itemsAmount: number,
+  expenseAmount: number,
+): boolean {
+  return expenseAmount < 0
+    ? itemsAmount < expenseAmount
+    : itemsAmount > expenseAmount
+}
+
+/**
  * Exact (non-truncated) paidFor shares from items + filler. Used by getBalances
  * so multi-expense totals don't inherit per-expense remainder tie-breaks sealed
  * into stored paidFor cents.
@@ -31,7 +47,7 @@ export function computeExactSharesFromItems(
 ): Record<string, ExactAmount> {
   const itemsSum = items.reduce((s, i) => s + i.amount, 0)
 
-  if (itemsSum > expenseAmount) {
+  if (itemsExceedExpenseAmount(itemsSum, expenseAmount)) {
     throw new Error('ITEMS_EXCEED_AMOUNT')
   }
 
@@ -66,7 +82,7 @@ export function computeExactSharesFromItems(
   }
 
   const filler = expenseAmount - distributedItemsSum
-  if (filler > 0) {
+  if (filler !== 0) {
     const fillerPaidFor = itemizedRemainder?.paidFor.length
       ? itemizedRemainder.paidFor
       : groupMemberIds.map((participant) => ({ participant, shares: 1 }))
@@ -83,9 +99,10 @@ export function computeExactSharesFromItems(
  * Accumulates exact rational shares across all items (and optional filler),
  * then truncates once via distributeRemainder so cross-item drift is zero.
  *
- * If sum(item.amount) < expenseAmount, a synthetic "Other (unaccounted)" filler
- * is distributed using itemizedRemainder (or EVENLY across members). If
- * sum(item.amount) > expenseAmount, throws Error('ITEMS_EXCEED_AMOUNT').
+ * If the item total does not cover the expense total in its sign direction, a
+ * signed synthetic "Other (unaccounted)" filler is distributed using
+ * itemizedRemainder (or EVENLY across members). If item subtotals overshoot the
+ * expense in that direction, throws Error('ITEMS_EXCEED_AMOUNT').
  */
 export function computePaidForFromItems(
   items: ExpenseApiItem[],

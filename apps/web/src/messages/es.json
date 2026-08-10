@@ -1127,7 +1127,6 @@
     "duplicateParticipant": "Ya hay otro pagador seleccionado.",
     "sharesInvalid": "Las participaciones deben estar entre 0,01 y 1.000.000 con un máximo de dos decimales.",
     "itemTitleRequired": "El nombre del elemento es obligatorio.",
-    "itemAmountPositive": "El importe del elemento debe ser superior a 0.",
     "itemQuantityMin1": "La cantidad del elemento debe ser al menos 1.",
     "rowErrorsHeading": "Corrija estas participaciones:"
   },

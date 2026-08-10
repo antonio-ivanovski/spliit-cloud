@@ -1135,7 +1135,6 @@
     "duplicateParticipant": "Jiný plátce je již vybrán.",
     "sharesInvalid": "Podíly musí být mezi 0,01 a 1 000 000 s maximálně dvěma desetinnými místy.",
     "itemTitleRequired": "Název položky je povinný.",
-    "itemAmountPositive": "Částka položky musí být větší než 0.",
     "itemQuantityMin1": "Množství položky musí být alespoň 1.",
     "rowErrorsHeading": "Opravte tyto podíly:"
   },

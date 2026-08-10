@@ -1502,7 +1502,6 @@
     "duplicateParticipant": "Người tham gia trùng lặp.",
     "sharesInvalid": "Phần chia phải nằm trong khoảng từ 0,01 đến 1.000.000 với tối đa hai chữ số thập phân.",
     "itemTitleRequired": "Tên mục là bắt buộc.",
-    "itemAmountPositive": "Số tiền của mục phải lớn hơn 0.",
     "itemQuantityMin1": "Số lượng của mục phải ít nhất là 1.",
     "rowErrorsHeading": "Vui lòng sửa các phần này:"
   },

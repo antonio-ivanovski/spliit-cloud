@@ -1112,7 +1112,6 @@
     "duplicateParticipant": "その請求者は既に選択されています。",
     "sharesInvalid": "シェアは0.01以上1,000,000以下で、小数点以下2桁以内で入力してください。",
     "itemTitleRequired": "項目名は必須です。",
-    "itemAmountPositive": "項目の金額は0より大きい必要があります。",
     "itemQuantityMin1": "項目の数量は1以上である必要があります。",
     "rowErrorsHeading": "次のシェアを修正してください："
   },

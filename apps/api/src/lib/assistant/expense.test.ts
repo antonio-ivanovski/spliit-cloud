@@ -178,6 +178,18 @@ describe('assistant expense normalization', () => {
     ).toBe(false)
   })
 
+  it('accepts a signed discount item while keeping general amounts positive-only', () => {
+    expect(decimalToMinorUnits('-1', 2, { allowNegative: true })).toBe(-100)
+    expect(
+      prepareExpenseInputSchema.safeParse({
+        groupId: 'group-a',
+        amount: '10',
+        title: 'Discounted receipt',
+        items: [{ title: 'Discount', unitPrice: '-1', quantity: 1 }],
+      }).success,
+    ).toBe(true)
+  })
+
   it('normalizes all four per-item split modes and quantities', async () => {
     mockAssistantGroup()
 
@@ -425,6 +437,44 @@ describe('assistant expense normalization', () => {
       prepared.expense.itemizedRemainder,
     )
     expect(opened.expense.paidFor).toEqual(prepared.expense.paidFor)
+  })
+
+  it('uses an even remainder when signed item subtotals cancel out', async () => {
+    mockAssistantGroup()
+
+    const prepared = await prepareAssistantExpense(
+      {
+        groupId: 'group-a',
+        amount: '5',
+        title: 'Discounted receipt',
+        items: [
+          { title: 'Item', unitPrice: '10', quantity: 1 },
+          { title: 'Full discount', unitPrice: '-10', quantity: 1 },
+        ],
+      },
+      'account-a',
+      {
+        resolveConversion: vi.fn().mockResolvedValue({
+          conversionSource: null,
+          conversionRate: null,
+          originalAmount: null,
+          originalCurrency: null,
+          ledgerAmountMinor: 500,
+          inputAmountMinor: 500,
+        }),
+      },
+    )
+
+    expect(prepared.expense.itemizedRemainder?.splitMode).toBe('BY_AMOUNT')
+    expect(
+      prepared.expense.itemizedRemainder?.paidFor.reduce(
+        (sum, row) => sum + row.shares,
+        0,
+      ),
+    ).toBe(500)
+    expect(
+      prepared.expense.paidFor.reduce((sum, row) => sum + row.shares, 0),
+    ).toBe(500)
   })
 
   it('uses the saved group split for item defaults and rejects invalid items', async () => {

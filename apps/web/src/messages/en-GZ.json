@@ -2558,7 +2558,6 @@
     "duplicateParticipant": "another payer is already selected.",
     "sharesInvalid": "shares must be between 0.01 and 1,000,000 with up to two decimals, fr.",
     "itemTitleRequired": "thingamajig needs a nameroo.",
-    "itemAmountPositive": "thingamajig sum gotta top zilch.",
     "itemQuantityMin1": "thingamajig count gotta be one-ish or more.",
     "rowErrorsHeading": "fix these shares, fr:"
   },

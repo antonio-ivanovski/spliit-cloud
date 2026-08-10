@@ -1127,7 +1127,6 @@
     "duplicateParticipant": "משלם אחר כבר נבחר.",
     "sharesInvalid": "המניות חייבות להיות בין 0.01 ל-1,000,000 עם עד שני מקומות עשרוניים.",
     "itemTitleRequired": "שם הפריט נדרש.",
-    "itemAmountPositive": "סכום הפריט חייב להיות גדול מ־0.",
     "itemQuantityMin1": "כמות הפריט חייבת להיות לפחות 1.",
     "rowErrorsHeading": "תקן את חלקי ההשתתפות האלה:"
   },

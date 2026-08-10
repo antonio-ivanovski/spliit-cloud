@@ -1112,7 +1112,6 @@
     "duplicateParticipant": "另一位付款人已經被選取。",
     "sharesInvalid": "份額必須介於 0.01 到 1,000,000 之間，且最多保留兩位小數。",
     "itemTitleRequired": "項目名稱為必填。",
-    "itemAmountPositive": "項目金額必須大於 0。",
     "itemQuantityMin1": "項目數量必須至少為 1。",
     "rowErrorsHeading": "請修正以下份額："
   },

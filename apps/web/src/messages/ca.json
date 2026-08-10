@@ -1127,7 +1127,6 @@
     "duplicateParticipant": "Un altre pagador ja està seleccionat.",
     "sharesInvalid": "Les participacions han d'estar entre 0,01 i 1.000.000 amb com a màxim dos decimals.",
     "itemTitleRequired": "El nom de l’element és obligatori.",
-    "itemAmountPositive": "L’import de l’element ha de ser superior a 0.",
     "itemQuantityMin1": "La quantitat de l’element ha de ser com a mínim 1.",
     "rowErrorsHeading": "Corregeix aquestes participacions:"
   },

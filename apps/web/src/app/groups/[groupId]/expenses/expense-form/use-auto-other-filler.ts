@@ -3,7 +3,7 @@ import type {
   ExpenseFormInputValues,
   ExpenseFormItemValues,
 } from '@spliit/domain'
-import { amountAsMinorUnits } from '@spliit/domain'
+import { amountAsMinorUnits, itemsExceedExpenseAmount } from '@spliit/domain'
 
 export type ExpenseFormDisplayItem = ExpenseFormItemValues & {
   isFiller?: boolean
@@ -28,7 +28,10 @@ export function withAutoOtherFiller(
   const itemsSumMinor = amountAsMinorUnits(itemsSumMajor, groupCurrency)
   const amountMinor = amountAsMinorUnits(expenseAmountMajor, groupCurrency)
 
-  if (itemsSumMinor >= amountMinor) {
+  if (
+    itemsSumMinor === amountMinor ||
+    itemsExceedExpenseAmount(itemsSumMinor, amountMinor)
+  ) {
     return items
   }
 

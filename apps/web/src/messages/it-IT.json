@@ -1127,7 +1127,6 @@
     "duplicateParticipant": "Un altro pagatore è già selezionato.",
     "sharesInvalid": "Le quote devono essere comprese tra 0,01 e 1.000.000 con al massimo due decimali.",
     "itemTitleRequired": "Il nome della voce è obbligatorio.",
-    "itemAmountPositive": "L’importo della voce deve essere maggiore di 0.",
     "itemQuantityMin1": "La quantità della voce deve essere almeno 1.",
     "rowErrorsHeading": "Correggi queste quote:"
   },

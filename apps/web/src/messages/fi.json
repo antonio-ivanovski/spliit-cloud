@@ -1119,7 +1119,6 @@
     "duplicateParticipant": "Toinen maksaja on jo valittu.",
     "sharesInvalid": "Osuuksien on oltava välillä 0,01–1 000 000 ja niissä saa olla enintään kaksi desimaalia.",
     "itemTitleRequired": "Kohteen nimi on pakollinen.",
-    "itemAmountPositive": "Kohteen summan on oltava suurempi kuin 0.",
     "itemQuantityMin1": "Kohteen määrän on oltava vähintään 1.",
     "rowErrorsHeading": "Korjaa nämä osuudet:"
   },

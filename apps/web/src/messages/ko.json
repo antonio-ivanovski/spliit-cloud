@@ -966,7 +966,6 @@
     "duplicateParticipant": "다른",
     "sharesInvalid": "지분은 0.01 이상 1,000,000 이하여야 하며 소수점 둘째 자리까지 입력할 수 있습니다.",
     "itemTitleRequired": "항목 이름을 입력해 주세요.",
-    "itemAmountPositive": "항목 금액은 0보다 커야 합니다.",
     "itemQuantityMin1": "항목 수량은 1개 이상이어야 합니다.",
     "rowErrorsHeading": "다음 몫을 수정해 주세요:"
   },

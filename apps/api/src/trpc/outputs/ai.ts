@@ -35,7 +35,10 @@ export const extractExpenseInformationOutputSchema = z.object({
   items: z.array(
     z.object({
       title: z.string(),
-      unitPrice: z.number().positive(),
+      unitPrice: z
+        .number()
+        .finite()
+        .refine((value) => value !== 0),
       quantity: z.number().int().positive(),
     }),
   ),

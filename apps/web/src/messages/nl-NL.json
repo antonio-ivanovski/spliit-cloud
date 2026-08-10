@@ -1119,7 +1119,6 @@
     "duplicateParticipant": "Er is al een andere betaler geselecteerd.",
     "sharesInvalid": "Aandelen moeten tussen 0,01 en 1.000.000 liggen met maximaal twee decimalen.",
     "itemTitleRequired": "De naam van het item is verplicht.",
-    "itemAmountPositive": "Het bedrag van het item moet groter zijn dan 0.",
     "itemQuantityMin1": "Het aantal van het item moet minstens 1 zijn.",
     "rowErrorsHeading": "Herstel deze aandelen:"
   },

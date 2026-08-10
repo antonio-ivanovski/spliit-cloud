@@ -1112,7 +1112,6 @@
     "duplicateParticipant": "另一位付款人已经选择。",
     "sharesInvalid": "份额必须在 0.01 到 1,000,000 之间，且最多保留两位小数。",
     "itemTitleRequired": "项目名称为必填项。",
-    "itemAmountPositive": "项目金额必须大于0。",
     "itemQuantityMin1": "项目数量必须至少为1。",
     "rowErrorsHeading": "请修正以下份额："
   },

@@ -45,7 +45,7 @@ const prefilledExpenseItemsSchema = z.array(
   z.object({
     id: z.string().optional(),
     title: z.string().optional().catch(''),
-    unitPrice: z.coerce.number().finite().nonnegative().optional().catch(0),
+    unitPrice: z.coerce.number().finite().optional().catch(0),
     quantity: z.coerce.number().int().positive().optional().catch(1),
     splitMode: itemSplitModeSchema.optional().catch('EVENLY'),
     paidFor: z

@@ -1502,7 +1502,6 @@
     "duplicateParticipant": "Another payer is already selected.",
     "sharesInvalid": "Shares must be between 0.01 and 1,000,000 with up to two decimals.",
     "itemTitleRequired": "Item name is required.",
-    "itemAmountPositive": "Item amount must be greater than 0.",
     "itemQuantityMin1": "Item quantity must be at least 1.",
     "rowErrorsHeading": "Fix these shares:"
   },

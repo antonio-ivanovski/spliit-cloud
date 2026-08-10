@@ -44,6 +44,7 @@ import type {
   ExpenseFormInputValues,
   ExpenseFormItemValues,
 } from '@spliit/domain'
+import { amountAsMinorUnits, itemsExceedExpenseAmount } from '@spliit/domain'
 
 import { applySplitToAll, getCommonItemSplit } from './default-item-split'
 import type { SavedSplit } from './default-split/split-equal'
@@ -154,7 +155,10 @@ export function ExpenseItemsCard({
     (sum, item) => sum + Number(item.unitPrice) * Number(item.quantity),
     0,
   )
-  const exceedsAmount = itemsSumMajor > amountMajor + 0.01
+  const exceedsAmount = itemsExceedExpenseAmount(
+    amountAsMinorUnits(itemsSumMajor, groupCurrency),
+    amountAsMinorUnits(amountMajor, groupCurrency),
+  )
   const fillerItem = itemsWithFiller.find(isFillerItem)
 
   const commonSplit = getCommonItemSplit(items)

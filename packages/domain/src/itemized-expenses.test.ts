@@ -4,6 +4,7 @@ import {
   buildDefaultPaidForForSplitMode,
   computeExactSharesFromItems,
   computePaidForFromItems,
+  itemsExceedExpenseAmount,
 } from './itemized-expenses'
 import type { ExpenseApiItem } from './schemas'
 
@@ -18,6 +19,63 @@ const makeItem = (overrides: Partial<ExpenseApiItem> = {}): ExpenseApiItem => ({
 })
 
 describe('computePaidForFromItems', () => {
+  it('allocates a negative item and preserves the negative expense total', () => {
+    const items = [
+      makeItem({
+        unitPrice: -800,
+        amount: -800,
+        paidFor: [
+          { participant: 'p1', shares: 1 },
+          { participant: 'p2', shares: 1 },
+        ],
+        splitMode: 'EVENLY',
+      }),
+    ]
+
+    const result = computePaidForFromItems(items, ['p1', 'p2'], -800)
+
+    expect(result.paidFor).toEqual([
+      { participant: 'p1', shares: -400 },
+      { participant: 'p2', shares: -400 },
+    ])
+  })
+
+  it('uses a signed filler for an incomplete negative expense', () => {
+    const items = [
+      makeItem({
+        unitPrice: -800,
+        amount: -800,
+        paidFor: [{ participant: 'p1', shares: 1 }],
+        splitMode: 'EVENLY',
+      }),
+    ]
+
+    const result = computePaidForFromItems(items, ['p1', 'p2'], -1000)
+    const byId = Object.fromEntries(
+      result.paidFor.map((row) => [row.participant, row.shares]),
+    )
+
+    expect(byId).toEqual({ p1: -900, p2: -100 })
+    expect(Object.values(byId).reduce((sum, value) => sum + value, 0)).toBe(
+      -1000,
+    )
+  })
+
+  it('rejects negative items that overshoot a negative expense', () => {
+    const items = [makeItem({ unitPrice: -1200, amount: -1200 })]
+
+    expect(() => computePaidForFromItems(items, ['p1'], -1000)).toThrow(
+      'ITEMS_EXCEED_AMOUNT',
+    )
+  })
+
+  it('mirrors the item overshoot rule for negative totals', () => {
+    expect(itemsExceedExpenseAmount(-1200, -1000)).toBe(true)
+    expect(itemsExceedExpenseAmount(-800, -1000)).toBe(false)
+    expect(itemsExceedExpenseAmount(1200, 1000)).toBe(true)
+    expect(itemsExceedExpenseAmount(800, 1000)).toBe(false)
+  })
+
   it('single item, single participant, EVENLY', () => {
     const items = [
       makeItem({

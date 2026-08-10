@@ -248,9 +248,8 @@ describe('applySplitToAll', () => {
   })
 
   it('keeps the remainder split in PERCENTAGE mode regardless of amount', () => {
-    // Items total = 50, expense = 30 → remainder is negative, clamped to 0.
-    // For non-BY_AMOUNT modes the remainder config is still seeded verbatim;
-    // the per-item computed preview already handles zero/uncovered cases.
+    // Items total = 50, expense = 30 → the signed remainder config remains
+    // percentage-based; the per-item preview handles the uncovered amount.
     const split = {
       splitMode: 'BY_PERCENTAGE' as const,
       paidFor: [row('a', 50), row('b', 50)],
@@ -265,6 +264,23 @@ describe('applySplitToAll', () => {
     expect(result.itemizedRemainder.paidFor).toEqual([
       row('a', 50),
       row('b', 50),
+    ])
+  })
+
+  it('seeds a signed BY_AMOUNT remainder when items overshoot a positive expense', () => {
+    const split = {
+      splitMode: 'BY_AMOUNT' as const,
+      paidFor: [row('a', 1), row('b', 1)],
+    }
+    const result = applySplitToAll({
+      items,
+      split,
+      expenseAmount: 30,
+      groupCurrency: USD,
+    })
+
+    expect(result.itemizedRemainder.paidFor.map((r) => r.shares)).toEqual([
+      -10, -10,
     ])
   })
 

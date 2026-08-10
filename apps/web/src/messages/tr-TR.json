@@ -1119,7 +1119,6 @@
     "duplicateParticipant": "Başka bir ödeyen zaten seçili.",
     "sharesInvalid": "Paylar 0,01 ile 1.000.000 arasında olmalı ve en fazla iki ondalık basamak içermelidir.",
     "itemTitleRequired": "Kalem adı gereklidir.",
-    "itemAmountPositive": "Kalem tutarı 0’dan büyük olmalıdır.",
     "itemQuantityMin1": "Kalem miktarı en az 1 olmalıdır.",
     "rowErrorsHeading": "Lütfen bu payları düzeltin:"
   },

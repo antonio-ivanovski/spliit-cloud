@@ -1127,7 +1127,6 @@
     "duplicateParticipant": "Un alt plătitor este deja selectat.",
     "sharesInvalid": "Părțile trebuie să fie între 0,01 și 1.000.000, cu maximum două zecimale.",
     "itemTitleRequired": "Numele elementului este obligatoriu.",
-    "itemAmountPositive": "Valoarea elementului trebuie să fie mai mare decât 0.",
     "itemQuantityMin1": "Cantitatea elementului trebuie să fie cel puțin 1.",
     "rowErrorsHeading": "Corectați aceste părți:"
   },

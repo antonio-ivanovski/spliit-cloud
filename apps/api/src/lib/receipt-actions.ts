@@ -73,7 +73,7 @@ function parseReceiptItems(value: unknown): ParsedReceiptItem[] {
     )
     const quantity = parseAIQuantity(item.quantity ?? item.qty ?? 1)
 
-    if (!title || !Number.isFinite(unitPrice) || unitPrice <= 0 || !quantity) {
+    if (!title || !Number.isFinite(unitPrice) || unitPrice === 0 || !quantity) {
       return []
     }
     return [{ title, unitPrice, quantity }]
@@ -202,7 +202,7 @@ export async function extractExpenseInformationFromImage(
               ${recentSection}
               ${currentExpenseSection}
               Use the group context and past-expense examples only as soft hints for currency, merchant/title, and category; the receipt image is the source of truth. Do not copy an example's amount, date, or items.
-              Make a best-effort attempt to extract the purchased receipt line items. For each clearly readable item, return its display title, unit price as a plain positive number in the receipt currency, and positive integer quantity. Exclude taxes, service charges, discounts, subtotals, totals, payment details, and unreadable or uncertain lines. Return an empty items array when no line items can be identified.
+              Make a best-effort attempt to extract the purchased receipt line items. For each clearly readable item, return its display title, signed non-zero unit price in the receipt currency, and positive integer quantity. Preserve explicit discounts or credits as negative line items; exclude taxes, service charges, subtotals, totals, payment details, and unreadable or uncertain lines. Return an empty items array when no line items can be identified.
               The group's currency is ${groupCurrency.code || groupCurrency.symbol}; use the receipt total as written and do not convert currencies.
               Return exactly one JSON object with these fields: amount (number), categoryId (string), currencyCode (string), date (string), title (string), and items (array of objects with title (string), unitPrice (number), and quantity (integer)). Do not explain.`,
           },

@@ -82,6 +82,29 @@ describe('extractExpenseInformationFromImage', () => {
     ])
   })
 
+  it('keeps signed discount items from the receipt response', async () => {
+    generateTextMock.mockResolvedValue({
+      text: JSON.stringify({
+        amount: 9,
+        currencyCode: 'USD',
+        items: [
+          { title: 'Subtotal', unitPrice: 10, quantity: 1 },
+          { title: 'Discount', unitPrice: -1, quantity: 1 },
+        ],
+      }),
+    })
+
+    const result = await extractExpenseInformationFromImage(
+      'https://example.com/receipt.jpg',
+      groupCurrency,
+    )
+
+    expect(result.items).toEqual([
+      { title: 'Subtotal', unitPrice: 10, quantity: 1 },
+      { title: 'Discount', unitPrice: -1, quantity: 1 },
+    ])
+  })
+
   it('returns no items for the legacy comma-separated response format', async () => {
     generateTextMock.mockResolvedValue({
       text: '12.34,groceries,2025-01-02,USD,Corner Market',

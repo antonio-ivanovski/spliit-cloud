@@ -192,7 +192,7 @@ export function BasicDetailsCard(props: {
   const hasExistingItems = watchedItems.some(
     (item) =>
       item.title.trim().length > 0 ||
-      Number(item.unitPrice) > 0 ||
+      Number(item.unitPrice) !== 0 ||
       Number(item.quantity) > 1,
   )
   const previewFormatted =

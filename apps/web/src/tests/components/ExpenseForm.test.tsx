@@ -3587,6 +3587,48 @@ describe('ExpenseForm validation & error reporting', () => {
     ).toBeInTheDocument()
   })
 
+  it('submits a negative item amount and preserves the signed payload', async () => {
+    const onSubmit = vi.fn().mockResolvedValue('saved' as const)
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={onSubmit}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+        currentLedgerParticipantId="lp-1"
+      />,
+    )
+
+    await user.type(
+      screen.getByPlaceholderText('Monday evening restaurant'),
+      'Lunch',
+    )
+    await user.type(screen.getByRole('textbox', { name: 'Amount' }), '10')
+    await user.click(screen.getByRole('button', { name: /show items/i }))
+    await user.click(screen.getByRole('button', { name: /add item/i }))
+    await user.click(
+      screen.getAllByRole('button', { name: 'Item participants' })[0]!,
+    )
+    await user.click(
+      screen.getByRole('button', { name: /switch to itemized/i }),
+    )
+    await user.click(screen.getByRole('button', { name: /^cancel$/i }))
+
+    await user.type(screen.getByRole('textbox', { name: 'Item' }), 'Discount')
+    const costInput = screen.getByRole('textbox', { name: 'Cost' })
+    await user.clear(costInput)
+    await user.type(costInput, '-2')
+    await user.click(screen.getByRole('button', { name: /create/i }))
+
+    await vi.waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
+    const submitted = onSubmit.mock.calls[0]?.[0] as {
+      items?: Array<{ unitPrice: number; amount: number }>
+    }
+    expect(submitted.items?.[0]).toMatchObject({
+      unitPrice: -200,
+      amount: -200,
+    })
+  })
+
   it('focuses the first affected share input after an invalid submit (participant-keyed)', async () => {
     const { user } = await fillRequired()
     await user.click(

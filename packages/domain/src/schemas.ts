@@ -6,6 +6,7 @@ import {
   optionalExpenseConversionSchema,
 } from './conversion'
 import type { RecurrenceRule, SplitMode } from './enums'
+import { itemsExceedExpenseAmount } from './itemized-expenses'
 import { recurrenceConfigSchema } from './recurring-expenses'
 import { MAX_STORED_SHARES, getDisplayShareErrorKey } from './shares'
 
@@ -241,7 +242,8 @@ type ItemShareRow = { shares: number }
  * is polymorphic; the parent schema knows the owning split mode and passes it
  * through. `BY_SHARES` rows are stored as positive fixed units (`1 ≤ shares ≤
  * MAX_STORED_SHARES`); negative values are never valid for paid-for/default
- * shares.
+ * shares. `BY_AMOUNT` rows may be signed so discounts and negative items can be
+ * allocated without changing the meaning of the other split modes.
  */
 export function validateItemShareRow(
   row: ItemShareRow,
@@ -373,9 +375,9 @@ export const expenseItemFormInputSchema = z
     title: z.string().min(1, { error: 'itemTitleRequired' }),
     unitPrice: z.coerce
       .number()
-      .refine((v) => !Number.isNaN(v), 'invalidNumber')
-      .refine((v) => v > 0, 'itemAmountPositive')
-      .refine((v) => v <= 10_000_000, 'amountTenMillion'),
+      .refine((v) => Number.isFinite(v), 'invalidNumber')
+      .refine((v) => v !== 0, 'amountNotZero')
+      .refine((v) => Math.abs(v) <= 10_000_000, 'amountTenMillion'),
     quantity: z.coerce.number().int().min(1, { error: 'itemQuantityMin1' }),
     paidFor: z
       .array(itemFormPaidForRowSchema)
@@ -394,6 +396,7 @@ export const expenseItemFormInputSchema = z
         item.splitMode,
         ['paidFor', i, 'shares'],
         ctx,
+        { allowNegative: item.splitMode === 'BY_AMOUNT' },
       )
     })
     validateDisplayItemShareTotal(
@@ -414,13 +417,13 @@ export const expenseItemApiSchema = z
     unitPrice: z
       .number()
       .int()
-      .positive('itemAmountPositive')
+      .refine((value) => value !== 0, 'amountNotZero')
       .describe('Integer minor units of the expense currency.'),
     quantity: z.number().int().min(1, { error: 'itemQuantityMin1' }),
     amount: z
       .number()
       .int()
-      .positive('itemAmountPositive')
+      .refine((value) => value !== 0, 'amountNotZero')
       .describe('Integer minor units. Must equal unitPrice * quantity.'),
     paidFor: z
       .array(itemApiPaidForRowSchema)
@@ -434,7 +437,9 @@ export const expenseItemApiSchema = z
     item.paidFor.forEach((row, i) => {
       if (item.splitMode === 'BY_SHARES') {
         validateItemShareRow(row, item.splitMode, ctx, ['paidFor', i, 'shares'])
-      } else if (row.shares <= 0) {
+      } else if (
+        item.splitMode === 'BY_AMOUNT' ? row.shares === 0 : row.shares <= 0
+      ) {
         ctx.addIssue({
           code: 'custom',
           message: 'noZeroShares',
@@ -485,6 +490,7 @@ const itemizedRemainderFormRows = (
       remainder.splitMode,
       ['itemizedRemainder', 'paidFor', i, 'shares'],
       ctx,
+      { allowNegative: remainder.splitMode === 'BY_AMOUNT' },
     )
   })
 }
@@ -513,12 +519,13 @@ function validateItemizedRemainderShareRows(
   ctx: z.RefinementCtx,
 ) {
   remainder.paidFor.forEach((row, i) => {
-    validateItemShareRow(row, remainder.splitMode, ctx, [
-      'itemizedRemainder',
-      'paidFor',
-      i,
-      'shares',
-    ])
+    validateShareRowForMode(
+      row.shares,
+      remainder.splitMode,
+      ['itemizedRemainder', 'paidFor', i, 'shares'],
+      ctx,
+      { allowNegative: remainder.splitMode === 'BY_AMOUNT' },
+    )
   })
 }
 
@@ -538,8 +545,8 @@ function validateShareRowForMode(
   const { allowNegative = false } = options
   if (mode === 'BY_SHARES') {
     // Stored fixed units are positive: `1 ≤ shares ≤ MAX_STORED_SHARES`.
-    // Signed values are only valid on deliberately signed paths (the
-    // negative-expense paid-by BY_AMOUNT path), never for BY_SHARES.
+    // Signed values are only valid on deliberately signed BY_AMOUNT paths,
+    // never for BY_SHARES.
     if (shares < 1 || shares > MAX_STORED_SHARES) {
       ctx.addIssue({
         code: 'custom',
@@ -588,9 +595,8 @@ const paidByAmountSumOk = (sum: number, target: number): boolean =>
  * rejected as `invalidNumber` instead of silently passing every numeric
  * comparison.
  *
- * BY_AMOUNT paid-by shares may be negative (signed income expenses, see
- * `paidByList signed and migrated shapes`); pass `allowNegative: true` for that
- * path so the magnitude / precision check is what changes.
+ * Signed BY_AMOUNT rows (paid-by, item, and itemized-remainder) pass
+ * `allowNegative: true`; the other modes retain positive weights.
  */
 function validateDisplayShareForMode(
   value: number,
@@ -777,7 +783,7 @@ export const expenseFormInputSchema = z
       (sum, item) => sum + item.unitPrice * item.quantity,
       0,
     )
-    if (itemsSum > expense.amount) {
+    if (itemsExceedExpenseAmount(itemsSum, expense.amount)) {
       ctx.addIssue({
         code: 'custom',
         message: 'amountSum',
@@ -786,7 +792,7 @@ export const expenseFormInputSchema = z
     }
 
     const remainderAmount = expense.amount - itemsSum
-    if (remainderAmount > 0 && expense.itemizedRemainder) {
+    if (remainderAmount !== 0 && expense.itemizedRemainder) {
       itemizedRemainderFormRows(expense.itemizedRemainder, ctx)
       validateDisplayItemShareTotal(
         expense.itemizedRemainder.paidFor,
@@ -832,7 +838,7 @@ export function validateExpenseItems(
   })
 
   const itemsSum = items.reduce((sum, item) => sum + item.amount, 0)
-  if (itemsSum > amount) {
+  if (itemsExceedExpenseAmount(itemsSum, amount)) {
     ctx.addIssue({
       code: 'custom',
       message: 'amountSum',
@@ -841,7 +847,7 @@ export function validateExpenseItems(
   }
 
   const remainderAmount = amount - itemsSum
-  if (splitMode === 'ITEMIZED' && itemizedRemainder && remainderAmount > 0) {
+  if (splitMode === 'ITEMIZED' && itemizedRemainder && remainderAmount !== 0) {
     validateItemShareTotal(
       itemizedRemainder.paidFor,
       itemizedRemainder.splitMode,

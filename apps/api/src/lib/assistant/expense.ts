@@ -14,6 +14,7 @@ import {
   expenseApiSchema,
   getCategoryById,
   getCurrency,
+  itemsExceedExpenseAmount,
   isValidDisplayShare,
   sharesAsFixedUnits,
   type ExactAmount,
@@ -31,6 +32,11 @@ const decimalString = z
   .string()
   .trim()
   .regex(/^(?:0|[1-9]\d*)(?:\.\d+)?$/, 'Use a positive decimal string')
+
+const signedDecimalString = z
+  .string()
+  .trim()
+  .regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?$/, 'Use a signed decimal string')
 
 const allocationSchema = z.object({
   participantId: z.string().min(1),
@@ -84,7 +90,7 @@ const splitSchema = z.discriminatedUnion('mode', [
 
 const itemSchema = z.object({
   title: z.string().trim().min(1).max(120),
-  unitPrice: decimalString,
+  unitPrice: signedDecimalString,
   quantity: z.number().int().positive().default(1),
   split: splitSchema.optional(),
 })
@@ -133,8 +139,20 @@ function inputError(message: string): never {
   throw new AssistantExpenseInputError(message)
 }
 
-export function decimalToMinorUnits(value: string, decimalDigits: number) {
-  const match = /^(0|[1-9]\d*)(?:\.(\d+))?$/.exec(value.trim())
+export function decimalToMinorUnits(
+  value: string,
+  decimalDigits: number,
+  options: { allowNegative?: boolean } = {},
+) {
+  const source = value.trim()
+  const hasNegativeSign = source.startsWith('-')
+  if (hasNegativeSign && options.allowNegative !== true) {
+    inputError('Invalid decimal amount')
+  }
+  const negative = hasNegativeSign
+  const match = /^(0|[1-9]\d*)(?:\.(\d+))?$/.exec(
+    source.startsWith('-') ? source.slice(1) : source,
+  )
   if (!match) inputError('Invalid decimal amount')
   const fraction = match[2] ?? ''
   if (fraction.length > decimalDigits) {
@@ -143,9 +161,10 @@ export function decimalToMinorUnits(value: string, decimalDigits: number) {
     )
   }
   const scale = 10 ** decimalDigits
-  const result =
+  const magnitude =
     Number(match[1]) * scale +
     Number(fraction.padEnd(decimalDigits, '0') || '0')
+  const result = negative ? -magnitude : magnitude
   if (!Number.isSafeInteger(result)) inputError('Amount is too large')
   return result
 }
@@ -387,7 +406,7 @@ function normalizeSavedDefault(
       return {
         splitMode: 'BY_AMOUNT',
         paidFor: Object.entries(scaled)
-          .filter(([, shares]) => shares > 0)
+          .filter(([, shares]) => shares !== 0)
           .map(([participant, shares]) => ({ participant, shares })),
       }
     }
@@ -407,6 +426,26 @@ function proportionalRemainder(
   itemsTotal: number,
   remainderAmount: number,
 ): NonNullable<Expense['itemizedRemainder']> {
+  // Signed items can cancel out (for example, a full discount), leaving no
+  // meaningful subtotal ratio. In that case use the same deterministic even
+  // fallback as the domain itemized calculation instead of dividing by zero.
+  if (itemsTotal === 0) {
+    const exact = calculateExactShares({
+      amount: remainderAmount,
+      splitMode: 'EVENLY',
+      participants: participantIds.map((id) => ({ id, shares: 1 })),
+    })
+    const amounts = distributeRemainder(exact, remainderAmount, {
+      strategy: 'PARTICIPANT_ID_DESC',
+    })
+    return {
+      splitMode: 'BY_AMOUNT',
+      paidFor: Object.entries(amounts)
+        .filter(([, shares]) => shares !== 0)
+        .map(([participant, shares]) => ({ participant, shares })),
+    }
+  }
+
   const itemShares = computeExactSharesFromItems(
     items,
     participantIds,
@@ -425,7 +464,7 @@ function proportionalRemainder(
   return {
     splitMode: 'BY_AMOUNT',
     paidFor: Object.entries(amounts)
-      .filter(([, shares]) => shares > 0)
+      .filter(([, shares]) => shares !== 0)
       .map(([participant, shares]) => ({ participant, shares })),
   }
 }
@@ -524,9 +563,11 @@ export async function prepareAssistantExpense(
   if (input.items) {
     splitMode = 'ITEMIZED'
     items = input.items.map((item) => {
-      const unitPrice = decimalToMinorUnits(item.unitPrice, decimalDigits)
-      if (unitPrice <= 0) {
-        inputError(`Item unit price must be greater than zero: ${item.title}`)
+      const unitPrice = decimalToMinorUnits(item.unitPrice, decimalDigits, {
+        allowNegative: true,
+      })
+      if (unitPrice === 0) {
+        inputError(`Item unit price must not be zero: ${item.title}`)
       }
       const itemAmount = unitPrice * item.quantity
       if (!Number.isSafeInteger(itemAmount)) {
@@ -563,14 +604,14 @@ export async function prepareAssistantExpense(
       }
     })
     const itemsTotal = items.reduce((sum, item) => sum + item.amount, 0)
-    if (itemsTotal > amount) {
+    if (itemsExceedExpenseAmount(itemsTotal, amount)) {
       inputError('Item totals cannot exceed the expense total')
     }
     remainderAmount = amount - itemsTotal
     if (input.remainderSplit && remainderAmount === 0) {
       inputError('A remainder split was supplied, but there is no remainder')
     }
-    if (remainderAmount > 0) {
+    if (remainderAmount !== 0) {
       if (input.remainderSplit) {
         const normalized = normalizeSplit(
           input.remainderSplit,
@@ -734,7 +775,7 @@ export async function prepareAssistantExpense(
       },
     })),
     remainder:
-      remainderAmount > 0 && expense.itemizedRemainder
+      remainderAmount !== 0 && expense.itemizedRemainder
         ? {
             amountMinor: remainderAmount,
             split: {

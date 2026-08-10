@@ -183,7 +183,7 @@ export function PaidForCard(props: {
         (sum, item) => sum + Number(item.unitPrice) * Number(item.quantity),
         0,
       )
-      const remainderAmount = Math.max(0, (Number(amount) || 0) - itemTotal)
+      const remainderAmount = (Number(amount) || 0) - itemTotal
       form.setValue(
         'itemizedRemainder',
         {

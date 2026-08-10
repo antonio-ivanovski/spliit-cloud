@@ -1229,7 +1229,6 @@
     "duplicateParticipant": "Outro pagador já está selecionado.",
     "sharesInvalid": "As partes devem estar entre 0,01 e 1.000.000 com no máximo duas casas decimais.",
     "itemTitleRequired": "O nome do item é obrigatório.",
-    "itemAmountPositive": "O valor do item deve ser superior a 0.",
     "itemQuantityMin1": "A quantidade do item deve ser pelo menos 1.",
     "rowErrorsHeading": "Corrige estas partes:"
   },

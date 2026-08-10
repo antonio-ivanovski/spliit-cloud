@@ -1135,7 +1135,6 @@
     "duplicateParticipant": "Inny płatnik jest już wybrany.",
     "sharesInvalid": "Udziały muszą wynosić od 0,01 do 1 000 000 z maksymalnie dwoma miejscami po przecinku.",
     "itemTitleRequired": "Nazwa pozycji jest wymagana.",
-    "itemAmountPositive": "Kwota pozycji musi być większa niż 0.",
     "itemQuantityMin1": "Liczba pozycji musi wynosić co najmniej 1.",
     "rowErrorsHeading": "Popraw te udziały:"
   },

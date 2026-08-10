@@ -1151,7 +1151,6 @@
     "duplicateParticipant": "Ein anderer Zahler ist bereits ausgewählt.",
     "sharesInvalid": "Anteile müssen zwischen 0,01 und 1.000.000 liegen und höchstens zwei Dezimalstellen haben.",
     "itemTitleRequired": "Der Name des Postens ist erforderlich.",
-    "itemAmountPositive": "Der Betrag des Postens muss größer als 0 sein.",
     "itemQuantityMin1": "Die Menge des Postens muss mindestens 1 sein.",
     "rowErrorsHeading": "Korrigiere diese Anteile:"
   },

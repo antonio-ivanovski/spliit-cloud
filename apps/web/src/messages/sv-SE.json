@@ -2283,7 +2283,6 @@
     "duplicateParticipant": "En annan betalare är redan vald.",
     "sharesInvalid": "Andelar måste vara mellan 0,01 och 1 000 000 med högst två decimaler.",
     "itemTitleRequired": "Postens namn krävs.",
-    "itemAmountPositive": "Postens belopp måste vara större än 0.",
     "itemQuantityMin1": "Postens antal måste vara minst 1.",
     "rowErrorsHeading": "Korrigera dessa andelar:"
   },

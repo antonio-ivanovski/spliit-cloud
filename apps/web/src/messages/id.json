@@ -1421,7 +1421,6 @@
     "duplicateParticipant": "Pembayar lain sudah dipilih.",
     "sharesInvalid": "Bagian harus antara 0,01 dan 1.000.000 dengan maksimal dua angka desimal.",
     "itemTitleRequired": "Nama item wajib diisi.",
-    "itemAmountPositive": "Jumlah item harus lebih besar dari 0.",
     "itemQuantityMin1": "Kuantitas item harus setidaknya 1.",
     "rowErrorsHeading": "Silakan perbaiki porsi berikut:"
   },
