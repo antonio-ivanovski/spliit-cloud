@@ -278,7 +278,8 @@ export function EditExpenseForm({
         open={conflictOpen}
         onKeepDraft={() => setConflictOpen(false)}
         onReload={async () => {
-          await expenseQuery.refetch()
+          const result = await expenseQuery.refetch()
+          if (result.isError) return
           setConflictOpen(false)
           setFormRevision((revision) => revision + 1)
         }}

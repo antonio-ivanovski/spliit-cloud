@@ -139,15 +139,14 @@ export type ImportEmailDispatch = {
   currencyCode?: string | null
 }
 
-export async function importGroup(
+/** Resolve FX and queue clients before opening the import transaction. */
+export async function prepareImportGroup(
   input: ImportInput,
   actor: {
     accountId: string
     idempotencyRequestId?: string
   },
-  options?: { tx?: Prisma.TransactionClient },
-): Promise<ImportResult> {
-  const client = options?.tx ?? prisma
+) {
   // Legacy spliit.app export only carries recurrenceRule. Matching historical
   // rows collapse into one destination series; Cloud series metadata is never
   // accepted on this transport.
@@ -170,7 +169,7 @@ export async function importGroup(
   } | null = null
 
   if (input.targetGroupId) {
-    const existing = await client.group.findUnique({
+    const existing = await prisma.group.findUnique({
       where: { id: input.targetGroupId },
       select: {
         id: true,
@@ -341,6 +340,43 @@ export async function importGroup(
   )
 
   const boss = await getApiBoss()
+  return {
+    boss,
+    membershipByExpenseIndex,
+    preflightLedgerCurrency,
+    preflightSnapshot,
+    preparedExpenses,
+    queueBoss,
+    recurringPlan,
+    resolvedConversions,
+    seriesIdByKey,
+  }
+}
+
+export async function importGroup(
+  input: ImportInput,
+  actor: {
+    accountId: string
+    idempotencyRequestId?: string
+  },
+  options?: {
+    prepared?: Awaited<ReturnType<typeof prepareImportGroup>>
+    tx?: Prisma.TransactionClient
+  },
+): Promise<ImportResult> {
+  const client = options?.tx ?? prisma
+  const prepared = options?.prepared ?? (await prepareImportGroup(input, actor))
+  const {
+    boss,
+    membershipByExpenseIndex,
+    preflightLedgerCurrency,
+    preflightSnapshot,
+    preparedExpenses,
+    queueBoss,
+    recurringPlan,
+    resolvedConversions,
+    seriesIdByKey,
+  } = prepared
   const run = async (tx: Prisma.TransactionClient) => {
     let groupId: string
     let ledgerId: string
@@ -840,6 +876,7 @@ export async function importGroup(
         inviterAccountId: actor.accountId,
         temporaryName: invite.sourceName,
         ledgerParticipantId: invite.destLedgerParticipantId,
+        notificationBoss: boss,
         tx: options?.tx,
       })
       const existingAccount = await client.account.findFirst({
@@ -875,6 +912,7 @@ export async function importGroup(
         inviterAccountId: actor.accountId,
         temporaryName: invite.sourceName,
         ledgerParticipantId: invite.destLedgerParticipantId,
+        notificationBoss: boss,
         tx: options?.tx,
         ...(actor.idempotencyRequestId
           ? {

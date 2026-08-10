@@ -1,6 +1,7 @@
 import { TRPCError } from '@trpc/server'
 
 import { prisma, type Prisma } from '@spliit/db'
+import type { SpliitBoss } from '@spliit/jobs'
 
 import {
   buildExpenseCommentActivityData,
@@ -67,9 +68,13 @@ export async function createExpenseComment(args: {
   authorAccountId: string
   authorName: string
   text: string
+  notificationBoss?: SpliitBoss | null
   tx?: Prisma.TransactionClient
 }) {
-  const boss = await getApiBoss()
+  const boss =
+    args.notificationBoss !== undefined
+      ? args.notificationBoss
+      : await getApiBoss()
   const run = async (tx: Prisma.TransactionClient) => {
     const group = await tx.group.findUnique({
       where: { id: args.groupId },

@@ -159,7 +159,7 @@ function GroupMembersBody() {
             createLinkMutation={createLinkMutation}
             createParticipantMutation={createParticipantMutation}
             onInvite={async (values) => {
-              await emailInviteAttempt.run((requestId) =>
+              const result = await emailInviteAttempt.run((requestId) =>
                 createMutation.mutateAsync({
                   groupId,
                   email: values.email,
@@ -168,6 +168,7 @@ function GroupMembersBody() {
                   requestId,
                 }),
               )
+              return result !== null
             }}
             onGenerateLink={async (values) => {
               const result = await linkInviteAttempt.run((requestId) =>
@@ -178,17 +179,17 @@ function GroupMembersBody() {
                   requestId,
                 }),
               )
-              if (result === null) throw new Error('Submission already pending')
-              return result
+              return result ?? undefined
             }}
             onAddParticipant={async (values) => {
-              await participantAttempt.run((requestId) =>
+              const result = await participantAttempt.run((requestId) =>
                 createParticipantMutation.mutateAsync({
                   groupId,
                   displayName: values.displayName,
                   requestId,
                 }),
               )
+              return result !== null
             }}
           />
 

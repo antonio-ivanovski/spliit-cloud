@@ -2,6 +2,7 @@ import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
 import { createExpenseComment } from '../../../../../lib/api'
+import { getApiBoss } from '../../../../../lib/api/boss'
 import {
   CREATE_OPERATIONS,
   createRequestIdSchema,
@@ -40,13 +41,15 @@ export const createExpenseCommentProcedure = protectedProcedure
         expenseId: input.expenseId,
         body: input.body,
       },
-      execute: async (tx) => {
+      prepare: getApiBoss,
+      execute: async (tx, notificationBoss) => {
         const result = await createExpenseComment({
           groupId: input.groupId,
           expenseId: input.expenseId,
           authorAccountId: ctx.auth.user.id,
           authorName: ctx.auth.user.name,
           text: input.body,
+          notificationBoss,
           tx,
         })
         return {

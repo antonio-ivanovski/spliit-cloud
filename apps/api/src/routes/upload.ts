@@ -174,27 +174,48 @@ export async function promoteUploadedDocument(
 
   const permanentKey = key.replace(/^tmp\//, 'documents/')
 
+  const permanentObjectExists = async () => {
+    try {
+      await getS3Client().send(
+        new HeadObjectCommand({
+          Bucket: env.S3_UPLOAD_BUCKET,
+          Key: permanentKey,
+        }),
+      )
+      return true
+    } catch (error) {
+      const status =
+        typeof error === 'object' && error !== null && '$metadata' in error
+          ? (error as { $metadata?: { httpStatusCode?: number } }).$metadata
+              ?.httpStatusCode
+          : undefined
+      if (status === 404) return false
+      throw error
+    }
+  }
+
   // A create retry may arrive after the first request copied and deleted the
   // temporary object but before its response reached the browser.
+  if (await permanentObjectExists()) {
+    return publicUrlForKey(permanentKey)
+  }
+
   try {
     await getS3Client().send(
-      new HeadObjectCommand({
+      new CopyObjectCommand({
         Bucket: env.S3_UPLOAD_BUCKET,
+        CopySource: `${env.S3_UPLOAD_BUCKET}/${encodeURIComponent(key)}`,
         Key: permanentKey,
       }),
     )
-    return publicUrlForKey(permanentKey)
-  } catch {
-    // Destination is absent; continue with the normal promotion.
+  } catch (error) {
+    // Two same-request attempts may both observe a missing destination before
+    // one wins the copy/delete race. If the permanent object now exists, the
+    // losing promotion converges on the same URL; otherwise preserve the real
+    // copy failure.
+    if (await permanentObjectExists()) return publicUrlForKey(permanentKey)
+    throw error
   }
-
-  await getS3Client().send(
-    new CopyObjectCommand({
-      Bucket: env.S3_UPLOAD_BUCKET,
-      CopySource: `${env.S3_UPLOAD_BUCKET}/${encodeURIComponent(key)}`,
-      Key: permanentKey,
-    }),
-  )
 
   await getS3Client().send(
     new DeleteObjectCommand({

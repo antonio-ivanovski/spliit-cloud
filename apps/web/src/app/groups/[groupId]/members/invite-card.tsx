@@ -48,7 +48,7 @@ export function InviteCard({
     email: string
     role: InvitableRole
     temporaryName?: string
-  }) => void
+  }) => Promise<boolean>
   onGenerateLink: (values: {
     role: InvitableRole
     temporaryName?: string
@@ -58,7 +58,7 @@ export function InviteCard({
     role: InvitableRole
     expiresAt: Date | string
   } | void>
-  onAddParticipant: (values: UnlinkedParticipantFormValues) => Promise<void>
+  onAddParticipant: (values: UnlinkedParticipantFormValues) => Promise<boolean>
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
   const [roleValue, setRoleValue] = useState<InvitableRole>('MEMBER')
@@ -116,39 +116,51 @@ export function InviteCard({
 
   const handleEmailSubmit = form.handleSubmit(async (values) => {
     const temporaryName = values.temporaryName?.trim()
-    onInvite({
-      email: values.email,
-      role: effectiveRoleValue,
-      temporaryName: temporaryName ? temporaryName : undefined,
-    })
-    form.reset({ email: '', temporaryName: '' })
+    try {
+      const created = await onInvite({
+        email: values.email,
+        role: effectiveRoleValue,
+        temporaryName: temporaryName ? temporaryName : undefined,
+      })
+      if (created) form.reset({ email: '', temporaryName: '' })
+    } catch {
+      // Mutation callbacks already surface the failure; keep the form draft.
+    }
   })
 
   const handleLinkSubmit = linkForm.handleSubmit(async (values) => {
     const temporaryName = values.temporaryName?.trim()
-    const data = await onGenerateLink({
-      role: effectiveLinkRoleValue,
-      temporaryName: temporaryName ? temporaryName : undefined,
-    })
-    if (data) {
-      setGeneratedLink({
-        inviteUrl: data.inviteUrl,
-        temporaryName: data.temporaryName,
-        role: data.role,
-        expiresAt: data.expiresAt,
+    try {
+      const data = await onGenerateLink({
+        role: effectiveLinkRoleValue,
+        temporaryName: temporaryName ? temporaryName : undefined,
       })
+      if (data) {
+        setGeneratedLink({
+          inviteUrl: data.inviteUrl,
+          temporaryName: data.temporaryName,
+          role: data.role,
+          expiresAt: data.expiresAt,
+        })
+        linkForm.reset({ temporaryName: '' })
+      }
+    } catch {
+      // Mutation callbacks already surface the failure; keep the form draft.
     }
-    linkForm.reset({ temporaryName: '' })
   })
 
-  const handleFriendSubmit = () => {
+  const handleFriendSubmit = async () => {
     if (!selectedFriend) return
-    onInvite({
-      email: selectedFriend.email,
-      role: effectiveFriendRoleValue,
-      temporaryName: selectedFriend.name,
-    })
-    setSelectedFriendAccountId('')
+    try {
+      const created = await onInvite({
+        email: selectedFriend.email,
+        role: effectiveFriendRoleValue,
+        temporaryName: selectedFriend.name,
+      })
+      if (created) setSelectedFriendAccountId('')
+    } catch {
+      // Mutation callbacks already surface the failure; keep the selection.
+    }
   }
 
   async function handleShareLink() {
@@ -221,7 +233,7 @@ export function InviteCard({
               canInviteAdmin={canInviteAdmin}
               onRoleChange={setFriendRoleValue}
               isPending={createMutation.isPending}
-              onSubmit={handleFriendSubmit}
+              onSubmit={() => void handleFriendSubmit()}
             />
           </TabsContent>
 

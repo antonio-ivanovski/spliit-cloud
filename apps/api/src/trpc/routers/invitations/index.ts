@@ -9,6 +9,7 @@ import {
   type GroupRole,
 } from '@spliit/db'
 
+import { getApiBoss } from '../../../lib/api/boss'
 import {
   CREATE_OPERATIONS,
   createRequestIdSchema,
@@ -197,12 +198,14 @@ export const invitationsRouter = createTRPCRouter({
         operation: CREATE_OPERATIONS.linkInvitation,
         requestId: input.requestId,
         input: { ...input, requestId: undefined },
-        execute: async (tx) => {
+        prepare: getApiBoss,
+        execute: async (tx, notificationBoss) => {
           const result = await createLinkInvitation({
             groupId: input.groupId,
             role: input.role as GroupRole,
             inviterAccountId: ctx.auth.user.id,
             temporaryName: input.temporaryName ?? null,
+            notificationBoss,
             token,
             tx,
           })
@@ -337,13 +340,15 @@ export const invitationsRouter = createTRPCRouter({
         operation: CREATE_OPERATIONS.emailInvitation,
         requestId: input.requestId,
         input: { ...input, requestId: undefined },
-        execute: async (tx) => {
+        prepare: getApiBoss,
+        execute: async (tx, notificationBoss) => {
           const invitation = await createEmailInvitation({
             groupId: input.groupId,
             email: input.email,
             role: input.role as GroupRole,
             inviterAccountId: ctx.auth.user.id,
             temporaryName: input.temporaryName ?? null,
+            notificationBoss,
             tx,
           })
           return {

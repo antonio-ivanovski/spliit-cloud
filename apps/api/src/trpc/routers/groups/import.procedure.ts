@@ -10,7 +10,7 @@ import {
   deriveCreateToken,
   runIdempotentCreate,
 } from '../../../lib/api/idempotency'
-import { importGroup } from '../../../lib/api/import'
+import { importGroup, prepareImportGroup } from '../../../lib/api/import'
 import { getWebBaseUrl } from '../../../lib/auth/urls'
 import { enqueueBudgetEvaluation } from '../../../lib/budgets/enqueue'
 import { ConversionError } from '../../../lib/expense-conversion'
@@ -144,14 +144,19 @@ export const importGroupProcedure = protectedProcedure
         operation: CREATE_OPERATIONS.import,
         requestId: input.requestId,
         input: { ...input, requestId: undefined },
-        execute: (tx) =>
+        prepare: () =>
+          prepareImportGroup(input as never, {
+            accountId: ctx.auth.user.id,
+            idempotencyRequestId: input.requestId,
+          }),
+        execute: (tx, prepared) =>
           importGroup(
             input as never,
             {
               accountId: ctx.auth.user.id,
               idempotencyRequestId: input.requestId,
             },
-            { tx },
+            { prepared, tx },
           ),
         encode: (created) => {
           const { emailDispatches: _emailDispatches, ...replayResult } = created

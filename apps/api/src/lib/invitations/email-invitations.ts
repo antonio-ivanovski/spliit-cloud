@@ -9,6 +9,7 @@ import {
   type GroupRole,
   type Prisma,
 } from '@spliit/db'
+import type { SpliitBoss } from '@spliit/jobs'
 
 import {
   buildInvitationActivityData,
@@ -38,8 +39,11 @@ export type CreateInvitationInput = {
   /** Pending-only label. Ignored after acceptance. */
   temporaryName?: string | null
   ledgerParticipantId?: string | null
+  notificationBoss?: SpliitBoss | null
   tx?: Prisma.TransactionClient
 }
+
+type InvitationClient = Prisma.TransactionClient | typeof prisma
 
 export class InvitationError extends TRPCError {
   constructor(message: string) {
@@ -50,8 +54,9 @@ export class InvitationError extends TRPCError {
 export async function assertNotInvitingSelf(
   inviterAccountId: string,
   normalizedEmail: string,
+  client: InvitationClient = prisma,
 ) {
-  const inviter = await prisma.account.findUnique({
+  const inviter = await client.account.findUnique({
     where: { id: inviterAccountId },
   })
   if (inviter && inviter.email.toLowerCase() === normalizedEmail) {
@@ -64,8 +69,9 @@ export async function assertNotInvitingSelf(
 export async function assertNotExistingMember(
   groupId: string,
   normalizedEmail: string,
+  client: InvitationClient = prisma,
 ) {
-  const existingMember = await prisma.groupMember.findFirst({
+  const existingMember = await client.groupMember.findFirst({
     where: {
       groupId,
       account: { email: { equals: normalizedEmail, mode: 'insensitive' } },
@@ -82,8 +88,9 @@ export async function assertNoConflictingEmailInvitation(
   groupId: string,
   normalizedEmail: string,
   excludeInvitationId?: string,
+  client: InvitationClient = prisma,
 ) {
-  const existingPending = await prisma.groupInvitation.findFirst({
+  const existingPending = await client.groupInvitation.findFirst({
     where: {
       groupId,
       type: GroupInvitationType.EMAIL,
@@ -124,19 +131,26 @@ export async function createEmailInvitation({
   inviterAccountId,
   temporaryName,
   ledgerParticipantId,
+  notificationBoss,
   tx: suppliedTx,
 }: CreateInvitationInput) {
   const normalizedEmail = email.toLowerCase()
+  const client = suppliedTx ?? prisma
 
-  await assertNotInvitingSelf(inviterAccountId, normalizedEmail)
-  await assertNotExistingMember(groupId, normalizedEmail)
-  await assertNoConflictingEmailInvitation(groupId, normalizedEmail)
+  await assertNotInvitingSelf(inviterAccountId, normalizedEmail, client)
+  await assertNotExistingMember(groupId, normalizedEmail, client)
+  await assertNoConflictingEmailInvitation(
+    groupId,
+    normalizedEmail,
+    undefined,
+    client,
+  )
 
   // When the destination matches an existing account, the account profile
   // name is authoritative and overwrites any submitted temporary name —
   // mirroring the pending-invitation manage path so pending rows and emails
   // are consistent.
-  const matchedAccount = await prisma.account.findFirst({
+  const matchedAccount = await client.account.findFirst({
     where: { email: { equals: normalizedEmail, mode: 'insensitive' } },
     select: { name: true },
   })
@@ -144,7 +158,8 @@ export async function createEmailInvitation({
     ? matchedAccount.name
     : (temporaryName ?? null)
 
-  const boss = await getApiBoss()
+  const boss =
+    notificationBoss !== undefined ? notificationBoss : await getApiBoss()
   const run = async (tx: Prisma.TransactionClient) => {
     const participantId = await materializePendingInvitationParticipant(tx, {
       groupId,

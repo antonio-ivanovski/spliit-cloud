@@ -1,3 +1,4 @@
+import type { ComponentProps } from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { render, screen } from '@/test/test-utils'
@@ -26,7 +27,9 @@ beforeEach(() => {
   })
 })
 
-function renderCard() {
+function renderCard(
+  overrides: Partial<ComponentProps<typeof InviteCard>> = {},
+) {
   return render(
     <InviteCard
       groupId="grp-1"
@@ -35,9 +38,10 @@ function renderCard() {
       createMutation={{ isPending: false }}
       createLinkMutation={{ isPending: false }}
       createParticipantMutation={{ isPending: false }}
-      onInvite={vi.fn()}
+      onInvite={vi.fn().mockResolvedValue(true)}
       onGenerateLink={vi.fn().mockResolvedValue(undefined)}
-      onAddParticipant={vi.fn().mockResolvedValue(undefined)}
+      onAddParticipant={vi.fn().mockResolvedValue(true)}
+      {...overrides}
     />,
   )
 }
@@ -59,5 +63,35 @@ describe('InviteCard responsive navigation', () => {
     expect(
       screen.getByRole('textbox', { name: 'Temporary name' }),
     ).toBeInTheDocument()
+  })
+
+  it('keeps an unlinked-participant draft when a guarded submit is ignored', async () => {
+    const onAddParticipant = vi.fn().mockResolvedValue(false)
+    const { user } = renderCard({ onAddParticipant })
+
+    await user.click(screen.getByRole('tab', { name: 'No account' }))
+    const name = screen.getByRole('textbox', { name: 'Temporary name' })
+    await user.type(name, 'Charlie')
+    await user.click(screen.getByRole('button', { name: 'Add participant' }))
+
+    await vi.waitFor(() => expect(onAddParticipant).toHaveBeenCalledOnce())
+    expect(name).toHaveValue('Charlie')
+  })
+
+  it('keeps a link draft when a guarded submit is ignored', async () => {
+    const onGenerateLink = vi.fn().mockResolvedValue(undefined)
+    const { user } = renderCard({ onGenerateLink })
+
+    await user.click(screen.getByRole('tab', { name: 'Invite link' }))
+    const name = screen.getByRole('textbox', {
+      name: 'Temporary name (optional)',
+    })
+    await user.type(name, 'Charlie')
+    await user.click(
+      screen.getByRole('button', { name: 'Generate invite link' }),
+    )
+
+    await vi.waitFor(() => expect(onGenerateLink).toHaveBeenCalledOnce())
+    expect(name).toHaveValue('Charlie')
   })
 })

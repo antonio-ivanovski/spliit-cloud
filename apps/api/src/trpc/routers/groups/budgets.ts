@@ -126,6 +126,7 @@ async function summary(
   budget: GroupBudget,
   includeHistory = true,
   sharedCurrentRows?: ExpenseListDbRow[],
+  client: Prisma.TransactionClient | typeof prisma = prisma,
 ) {
   const rule = toRule(budget)
   const referenceAt = budget.archivedAt ?? new Date()
@@ -136,7 +137,7 @@ async function summary(
         expense.expenseDate >= bounds.start &&
         expense.expenseDate <= bounds.end,
     ) ??
-    (await prisma.expense.findMany({
+    (await client.expense.findMany({
       where: {
         ledgerId: budget.ledgerId,
         expenseDate: { gte: bounds.start, lte: bounds.end },
@@ -247,7 +248,7 @@ async function summary(
     : null
   const historyRows =
     includeHistory && previous
-      ? await prisma.expense.findMany({
+      ? await client.expense.findMany({
           where: {
             ledgerId: budget.ledgerId,
             expenseDate: {
@@ -390,7 +391,7 @@ async function establishAlertBaseline(
   budget: GroupBudget,
   currentSummary: Awaited<ReturnType<typeof summary>>,
   resetCurrentPeriod = false,
-  client: Prisma.TransactionClient | typeof prisma = prisma,
+  tx?: Prisma.TransactionClient,
 ) {
   const run = async (tx: Prisma.TransactionClient) => {
     if (resetCurrentPeriod) {
@@ -415,8 +416,8 @@ async function establishAlertBaseline(
       skipDuplicates: true,
     })
   }
-  if (client === prisma) await prisma.$transaction(run)
-  else await run(client)
+  if (tx) await run(tx)
+  else await prisma.$transaction(run)
 }
 
 const list = protectedProcedure
@@ -518,11 +519,12 @@ const create = protectedProcedure
     // boundaries. Fall back to UTC (the stored column default) when the account
     // has not initialized a timezone yet, rather than blocking budget creation.
     const timeZone = preference?.timeZone ?? 'UTC'
+    const { requestId, ...hashedInput } = input
     const { value } = await runIdempotentCreate({
       accountId: ctx.auth.user.id,
       operation: CREATE_OPERATIONS.budget,
-      requestId: input.requestId,
-      input: { ...input, requestId: undefined },
+      requestId,
+      input: hashedInput,
       execute: async (tx) => {
         const budget = await tx.groupBudget.create({
           data: {
@@ -546,7 +548,7 @@ const create = protectedProcedure
             createdByAccountId: ctx.auth.user.id,
           },
         })
-        const currentSummary = await summary(budget)
+        const currentSummary = await summary(budget, true, undefined, tx)
         await establishAlertBaseline(budget, currentSummary, false, tx)
         return {
           budget: output(budget, currentSummary, {

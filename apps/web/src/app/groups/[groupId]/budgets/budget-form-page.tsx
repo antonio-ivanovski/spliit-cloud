@@ -184,9 +184,10 @@ export function BudgetFormPage({ groupId, budgetId }: Props) {
                 replace: true,
               })
             } else {
-              await createAttempt.run((requestId) =>
+              const created = await createAttempt.run((requestId) =>
                 createMutation.mutateAsync({ groupId, requestId, ...input }),
               )
+              if (created === null) return
               await goBack()
             }
           }}

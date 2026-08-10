@@ -26,6 +26,96 @@ export const CREATE_OPERATIONS = {
 export type CreateOperation =
   (typeof CREATE_OPERATIONS)[keyof typeof CREATE_OPERATIONS]
 
+type SharedCreateMutation = {
+  mechanism: 'shared'
+  operation: CreateOperation
+  source: string
+  symbol: string
+}
+
+type NaturalCreateMutation = {
+  mechanism: 'natural'
+  reason: string
+  source: string
+  symbol: string
+}
+
+/**
+ * Architecture inventory for resource-creating tRPC mutations. The companion
+ * test discovers create-named mutations from router source and requires every
+ * one to be listed here with either the shared request-id mechanism or a
+ * reviewed natural-idempotency mechanism.
+ */
+export const CREATE_MUTATION_CATALOG = [
+  {
+    mechanism: 'shared',
+    operation: CREATE_OPERATIONS.group,
+    source: 'groups/create.procedure.ts',
+    symbol: 'createGroupProcedure',
+  },
+  {
+    mechanism: 'shared',
+    operation: CREATE_OPERATIONS.expense,
+    source: 'groups/expenses/create.procedure.ts',
+    symbol: 'createGroupExpenseProcedure',
+  },
+  {
+    mechanism: 'shared',
+    operation: CREATE_OPERATIONS.import,
+    source: 'groups/import.procedure.ts',
+    symbol: 'importGroupProcedure',
+  },
+  {
+    mechanism: 'shared',
+    operation: CREATE_OPERATIONS.budget,
+    source: 'groups/budgets.ts',
+    symbol: 'create',
+  },
+  {
+    mechanism: 'shared',
+    operation: CREATE_OPERATIONS.subgroup,
+    source: 'groups/subgroups/index.ts',
+    symbol: 'createSubgroupProcedure',
+  },
+  {
+    mechanism: 'shared',
+    operation: CREATE_OPERATIONS.participant,
+    source: 'groups/participants/create.procedure.ts',
+    symbol: 'createParticipantProcedure',
+  },
+  {
+    mechanism: 'shared',
+    operation: CREATE_OPERATIONS.expenseComment,
+    source: 'groups/expenses/comments/create.procedure.ts',
+    symbol: 'createExpenseCommentProcedure',
+  },
+  {
+    mechanism: 'shared',
+    operation: CREATE_OPERATIONS.emailInvitation,
+    source: 'invitations/index.ts',
+    symbol: 'create',
+  },
+  {
+    mechanism: 'shared',
+    operation: CREATE_OPERATIONS.linkInvitation,
+    source: 'invitations/index.ts',
+    symbol: 'createLink',
+  },
+  {
+    mechanism: 'shared',
+    operation: CREATE_OPERATIONS.friendLedger,
+    source: 'friends/index.ts',
+    symbol: 'create',
+  },
+  {
+    mechanism: 'natural',
+    reason:
+      'Assistant confirmations are uniquely keyed by assistantRequestId and retain their specialized confirmation deduplication.',
+    source: 'assistant.ts',
+    symbol: 'createExpense',
+  },
+] as const satisfies readonly (SharedCreateMutation | NaturalCreateMutation)[]
+
 type TransactionClient = PrismaTypes.TransactionClient
 
 type EncodedResult = PrismaTypes.InputJsonValue
@@ -37,7 +127,7 @@ function canonicalize(value: unknown): unknown {
     return Object.fromEntries(
       Object.entries(value as Record<string, unknown>)
         .filter(([, nested]) => nested !== undefined)
-        .sort(([left], [right]) => left.localeCompare(right))
+        .sort(([left], [right]) => (left < right ? -1 : left > right ? 1 : 0))
         .map(([key, nested]) => [key, canonicalize(nested)]),
     )
   }
@@ -91,18 +181,21 @@ function isUniqueConstraintError(error: unknown): boolean {
   )
 }
 
-export async function runIdempotentCreate<T>(args: {
+export async function runIdempotentCreate<T, Prepared = undefined>(args: {
   accountId: string
   operation: CreateOperation
   requestId: string
   input: unknown
-  execute: (tx: TransactionClient) => Promise<T>
+  /** Complete external I/O before opening the interactive transaction. */
+  prepare?: () => Promise<Prepared>
+  execute: (tx: TransactionClient, prepared: Prepared) => Promise<T>
   encode?: (value: T) => EncodedResult
   decode?: (value: PrismaTypes.JsonValue) => T
 }): Promise<{ value: T; replayed: boolean }> {
   const requestHash = idempotencyRequestHash(args.input)
   const encode = args.encode ?? defaultEncode<T>
   const decode = args.decode ?? defaultDecode<T>
+  const prepared = args.prepare ? await args.prepare() : (undefined as Prepared)
 
   try {
     const value = await prisma.$transaction(async (tx) => {
@@ -115,7 +208,7 @@ export async function runIdempotentCreate<T>(args: {
         },
       })
 
-      const created = await args.execute(tx)
+      const created = await args.execute(tx, prepared)
       await tx.idempotencyRequest.update({
         where: {
           accountId_operation_requestId: {

@@ -346,7 +346,9 @@ describe('promoteUploadedDocument', () => {
     mockS3Client.send.mockImplementation(
       async (input: { Key?: string; CopySource?: string }) => {
         if (input.Key?.startsWith('documents/') && !input.CopySource)
-          throw new Error('NotFound')
+          throw Object.assign(new Error('NotFound'), {
+            $metadata: { httpStatusCode: 404 },
+          })
         return {}
       },
     )
@@ -415,6 +417,35 @@ describe('promoteUploadedDocument', () => {
 
     expect(result).toContain('documents/document-test.jpg')
     expect(mockS3Client.send).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not promote when the permanent-object check fails', async () => {
+    const failure = Object.assign(new Error('AccessDenied'), {
+      $metadata: { httpStatusCode: 403 },
+    })
+    mockS3Client.send.mockRejectedValueOnce(failure)
+    const url =
+      'https://spliit-test-bucket.s3.us-east-1.amazonaws.com/tmp/document-test.jpg'
+
+    await expect(promoteUploadedDocument(url)).rejects.toBe(failure)
+    expect(mockS3Client.send).toHaveBeenCalledTimes(1)
+  })
+
+  it('converges when another attempt wins the promotion race', async () => {
+    const missing = Object.assign(new Error('NotFound'), {
+      $metadata: { httpStatusCode: 404 },
+    })
+    mockS3Client.send
+      .mockRejectedValueOnce(missing)
+      .mockRejectedValueOnce(new Error('Temporary source no longer exists'))
+      .mockResolvedValueOnce({ ContentLength: 123 })
+    const url =
+      'https://spliit-test-bucket.s3.us-east-1.amazonaws.com/tmp/document-test.jpg'
+
+    await expect(promoteUploadedDocument(url)).resolves.toContain(
+      'documents/document-test.jpg',
+    )
+    expect(mockS3Client.send).toHaveBeenCalledTimes(3)
   })
 
   it('uses S3_UPLOAD_PUBLIC_URL for the permanent URL when configured', async () => {

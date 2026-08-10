@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { BudgetFormPage } from '@/app/groups/[groupId]/budgets/budget-form-page'
 import { render, screen } from '@/test/test-utils'
@@ -8,6 +8,7 @@ const mockNavigate = vi.fn()
 const mockCreateMutateAsync = vi.fn()
 const mockUpdateMutateAsync = vi.fn()
 const mockInvalidate = vi.fn()
+const mockCreateAttemptRun = vi.fn()
 
 vi.mock(import('@/lib/hooks'), async (importActual) => {
   const actual = await importActual()
@@ -16,6 +17,10 @@ vi.mock(import('@/lib/hooks'), async (importActual) => {
 
 vi.mock('@/components/ui/use-toast', () => ({
   useToast: () => ({ toast: mockToast }),
+}))
+
+vi.mock('@/lib/use-idempotent-create', () => ({
+  useIdempotentCreate: () => ({ run: mockCreateAttemptRun }),
 }))
 
 vi.mock('@tanstack/react-router', () => ({
@@ -129,6 +134,14 @@ vi.mock('@/trpc/client', () => ({
 }))
 
 describe('BudgetFormPage', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockCreateAttemptRun.mockImplementation(
+      (create: (requestId: string) => Promise<unknown>) =>
+        create('00000000-0000-4000-8000-000000000001'),
+    )
+  })
+
   it('renders an empty create form when no budgetId is given', () => {
     render(<BudgetFormPage groupId="group-1" />)
     expect(screen.getByLabelText('Budget name')).toHaveValue('')
@@ -155,5 +168,18 @@ describe('BudgetFormPage', () => {
       screen.getByRole('heading', { name: 'Create budget' }),
     ).toBeInTheDocument()
     mockMemberRole = 'ADMIN'
+  })
+
+  it('does not navigate when the single-flight guard ignores a submit', async () => {
+    mockCreateAttemptRun.mockResolvedValue(null)
+    const { user } = render(<BudgetFormPage groupId="group-1" />)
+
+    await user.type(screen.getByLabelText('Budget name'), 'Groceries')
+    await user.type(screen.getByLabelText('Amount'), '500')
+    await user.click(screen.getByRole('button', { name: 'Save budget' }))
+
+    await vi.waitFor(() => expect(mockCreateAttemptRun).toHaveBeenCalledOnce())
+    expect(mockCreateMutateAsync).not.toHaveBeenCalled()
+    expect(mockNavigate).not.toHaveBeenCalled()
   })
 })

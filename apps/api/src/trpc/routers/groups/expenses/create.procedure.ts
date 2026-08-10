@@ -3,7 +3,10 @@ import { z } from 'zod'
 
 import { expenseApiSchema } from '@spliit/domain'
 
-import { createExpense } from '../../../../lib/api/expenses/create-expense'
+import {
+  createExpense,
+  prepareExpenseCreate,
+} from '../../../../lib/api/expenses/create-expense'
 import {
   CREATE_OPERATIONS,
   createRequestIdSchema,
@@ -41,12 +44,13 @@ export const createGroupExpenseProcedure = protectedProcedure
         operation: CREATE_OPERATIONS.expense,
         requestId,
         input: { groupId, expense },
-        execute: async (tx) => {
+        prepare: () => prepareExpenseCreate(expense, groupId),
+        execute: async (tx, prepared) => {
           const created = await createExpense(
             expense,
             groupId,
             { accountId: account.id },
-            { tx },
+            { prepared, tx },
           )
           return {
             expenseId: created.id,

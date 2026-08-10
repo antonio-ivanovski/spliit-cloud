@@ -187,9 +187,13 @@ export function SubgroupsCard({
     if (editor.subgroupId) {
       updateMutation.mutate({ ...payload, subgroupId: editor.subgroupId })
     } else {
-      void createAttempt.run((requestId) =>
-        createMutation.mutateAsync({ ...payload, requestId }),
-      )
+      void createAttempt
+        .run((requestId) =>
+          createMutation.mutateAsync({ ...payload, requestId }),
+        )
+        .catch(() => {
+          // The mutation's onError callback owns the user-facing failure toast.
+        })
     }
   }
   const isSaving = createMutation.isPending || updateMutation.isPending

@@ -225,9 +225,10 @@ export function AiExpensePreview({
           formValues.originalCurrency !== group.currencyCode,
         ),
       })
-      await createAttempt.run((requestId) =>
+      const created = await createAttempt.run((requestId) =>
         createMutation.mutateAsync({ groupId: group.id, requestId, expense }),
       )
+      if (created === null) return
       toast({ description: t('created'), variant: 'success' })
       onOpenChange(false)
     } catch (error) {
