@@ -73,7 +73,6 @@
     "create": "Crea spesa",
     "createFirst": "Crea la prima",
     "noExpenses": "Il tuo gruppo non contiene ancora spese.",
-    "exportJson": "Esporta file JSON",
     "exportCsv": "Esporta file CSV",
     "searchPlaceholder": "Cerca una spesa…",
     "ActiveUserModal": {
@@ -158,13 +157,10 @@
     "loading": "Caricamento delle spese…",
     "exportPdfTitle": "Report PDF",
     "exportCsvTitle": "Foglio di calcolo CSV",
-    "exportJsonTitle": "Backup JSON",
     "exportPdfPurpose": "Riepilogo personalizzato con spese, saldi e trasferimenti suggeriti.",
     "exportCsvPurpose": "Cronologia completa in un foglio di calcolo per Excel o Sheets.",
-    "exportJsonPurpose": "Backup leggibile dalle macchine di tutte le spese del gruppo.",
     "exportPdfAction": "Crea PDF",
     "exportCsvAction": "Scarica CSV",
-    "exportJsonAction": "Scarica JSON",
     "exportPdfDialogTitle": "Genera report PDF",
     "exportPdfDialogDescription": "Scegli il periodo da includere. Le spese coprono le date selezionate; saldi e trasferimenti sono riportati alla data di fine.",
     "exportPdfFromLabel": "Da",
@@ -175,7 +171,10 @@
     "exportPdfInvalidRange": "La data di fine deve essere uguale o successiva alla data di inizio.",
     "exportPdfError": "Impossibile generare il PDF. Riprova.",
     "exportPdfSuccess": "Report PDF scaricato.",
-    "exportPdfRetryBounds": "Riprova"
+    "exportPdfRetryBounds": "Riprova",
+    "exportBundleTitle": "Pacchetto di backup Spliit",
+    "exportBundlePurpose": "Dati portabili del gruppo con spese, impostazioni e documenti allegati.",
+    "exportBundleAction": "Scarica il pacchetto"
   },
   "ExpenseCard": {
     "receivedBy": "Ricevuto da <strong>{paidBy}</strong> per <paidFor></paidFor>",

@@ -74,7 +74,6 @@
     "createFirst": "Vytvořit první",
     "noExpenses": "Vaše skupina zatím neobsahuje žádné výdaje.",
     "export": "Exportovat",
-    "exportJson": "Exportovat do JSON",
     "exportCsv": "Exportovat do CSV",
     "searchPlaceholder": "Hledat výdaj…",
     "ActiveUserModal": {
@@ -159,13 +158,10 @@
     "loading": "Načítání výdajů…",
     "exportPdfTitle": "Přehled v PDF",
     "exportCsvTitle": "Tabulka CSV",
-    "exportJsonTitle": "Záloha JSON",
     "exportPdfPurpose": "Přehled s brandingem obsahující výdaje, zůstatky a navrhované převody.",
     "exportCsvPurpose": "Kompletní historie v tabulce pro Excel nebo Tabulky Google.",
-    "exportJsonPurpose": "Strojově čitelná záloha všech výdajů skupiny.",
     "exportPdfAction": "Vytvořit PDF",
     "exportCsvAction": "Stáhnout CSV",
-    "exportJsonAction": "Stáhnout JSON",
     "exportPdfDialogTitle": "Vygenerovat přehled v PDF",
     "exportPdfDialogDescription": "Vyberte období, které chcete zahrnout. Výdaje pokrývají vybraná data; zůstatky a převody jsou uvedeny ke koncovému datu.",
     "exportPdfFromLabel": "Od",
@@ -176,7 +172,10 @@
     "exportPdfInvalidRange": "Koncové datum musí být stejné nebo pozdější než počáteční datum.",
     "exportPdfError": "PDF se nepodařilo vygenerovat. Zkuste to prosím znovu.",
     "exportPdfSuccess": "Přehled v PDF byl stažen.",
-    "exportPdfRetryBounds": "Zkusit znovu"
+    "exportPdfRetryBounds": "Zkusit znovu",
+    "exportBundleTitle": "Záložní balíček Spliit",
+    "exportBundlePurpose": "Přenositelná data skupiny s výdaji, nastavením a přiloženými dokumenty.",
+    "exportBundleAction": "Stáhnout balíček"
   },
   "ExpenseCard": {
     "receivedBy": "Přijal(a) <strong>{paidBy}</strong> · přiděleno účastníkům <paidFor></paidFor>",

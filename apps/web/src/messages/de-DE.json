@@ -73,7 +73,6 @@
     "create": "Ausgabe hinzufügen",
     "createFirst": "Erstelle die Erste",
     "noExpenses": "Deine Gruppe hat noch keine Ausgaben.",
-    "exportJson": "Als JSON exportieren",
     "exportCsv": "Als CSV exportieren",
     "searchPlaceholder": "Suche nach einer Ausgabe…",
     "ActiveUserModal": {
@@ -161,13 +160,10 @@
     "loading": "Ausgaben werden geladen…",
     "exportPdfTitle": "PDF-Bericht",
     "exportCsvTitle": "CSV-Tabelle",
-    "exportJsonTitle": "JSON-Sicherung",
     "exportPdfPurpose": "Markenauftritt mit Ausgaben, Salden und vorgeschlagenen Überweisungen.",
     "exportCsvPurpose": "Vollständige Historie in einer Tabelle für Excel oder Sheets.",
-    "exportJsonPurpose": "Maschinenlesbare Sicherung jeder Gruppenausgabe.",
     "exportPdfAction": "PDF erstellen",
     "exportCsvAction": "CSV herunterladen",
-    "exportJsonAction": "JSON herunterladen",
     "exportPdfDialogTitle": "PDF-Bericht erstellen",
     "exportPdfDialogDescription": "Wähle den Zeitraum, der berücksichtigt werden soll. Ausgaben decken die ausgewählten Daten ab; Salden und Überweisungen werden zum Enddatum ausgewiesen.",
     "exportPdfFromLabel": "Von",
@@ -178,7 +174,10 @@
     "exportPdfInvalidRange": "Das Enddatum muss am oder nach dem Startdatum liegen.",
     "exportPdfError": "PDF konnte nicht erstellt werden. Bitte erneut versuchen.",
     "exportPdfSuccess": "PDF-Bericht heruntergeladen.",
-    "exportPdfRetryBounds": "Erneut versuchen"
+    "exportPdfRetryBounds": "Erneut versuchen",
+    "exportBundleTitle": "Spliit-Backup-Paket",
+    "exportBundlePurpose": "Übertragbare Gruppendaten mit Ausgaben, Einstellungen und angehängten Dokumenten.",
+    "exportBundleAction": "Paket herunterladen"
   },
   "ExpenseCard": {
     "receivedBy": "Erhalten von <strong>{paidBy}</strong> · zugeordnet zu <paidFor></paidFor>",

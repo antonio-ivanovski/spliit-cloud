@@ -74,7 +74,6 @@
     "create": "צור הוצאה",
     "noExpenses": "הקבוצה שלך עדיין לא מכילה הוצאות.",
     "export": "ייצא",
-    "exportJson": "ייצא ל-JSON",
     "exportCsv": "ייצא ל-CSV",
     "searchPlaceholder": "חפש הוצאה…",
     "ActiveUserModal": {
@@ -158,13 +157,10 @@
     "loading": "טוען הוצאות…",
     "exportPdfTitle": "דוח PDF",
     "exportCsvTitle": "גיליון אלקטרוני ב-CSV",
-    "exportJsonTitle": "גיבוי JSON",
     "exportPdfPurpose": "דוח ממותג עם הוצאות, יתרות והעברות מוצעות.",
     "exportCsvPurpose": "היסטוריה מלאה בגיליון אלקטרוני ל-Excel או ל-Sheets.",
-    "exportJsonPurpose": "גיבוי קריא למכונה של כל הוצאות הקבוצה.",
     "exportPdfAction": "צור PDF",
     "exportCsvAction": "הורד CSV",
-    "exportJsonAction": "הורד JSON",
     "exportPdfDialogTitle": "צור דוח PDF",
     "exportPdfDialogDescription": "בחר את התקופה לכלול. ההוצאות מכסות את התאריכים שנבחרו; יתרות והעברות מדווחות נכון לתאריך הסיום.",
     "exportPdfFromLabel": "מ-",
@@ -175,7 +171,10 @@
     "exportPdfInvalidRange": "תאריך הסיום חייב להיות בתאריך ההתחלה או אחריו.",
     "exportPdfError": "יצירת ה-PDF נכשלה. אנא נסה שוב.",
     "exportPdfSuccess": "דוח ה-PDF הורד.",
-    "exportPdfRetryBounds": "נסה שוב"
+    "exportPdfRetryBounds": "נסה שוב",
+    "exportBundleTitle": "חבילת גיבוי של Spliit",
+    "exportBundlePurpose": "נתוני קבוצה ניידים עם הוצאות, הגדרות ומסמכים מצורפים.",
+    "exportBundleAction": "הורדת חבילה"
   },
   "ExpenseCard": {
     "paidBy": "שולם על ידי <strong>{paidBy}</strong> · פוצל בין <paidFor></paidFor>",

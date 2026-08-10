@@ -2,7 +2,7 @@ import type { Prisma } from '@spliit/db'
 
 import { expenseParticipantSharesSelect } from './expense-participant-shares'
 
-/** Expense line item scalars + paidFor share rows (list / JSON export / diffs). */
+/** Expense line item scalars + paidFor share rows (list / diffs). */
 export const expenseItemWithSharesSelect = {
   id: true,
   title: true,

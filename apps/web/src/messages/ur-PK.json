@@ -1401,7 +1401,6 @@
     "createFirst": "پہلا بنائیں",
     "noExpenses": "آپ کے گروپ میں ابھی تک کوئی خرچہ نہیں ہے۔",
     "export": "برآمد کریں",
-    "exportJson": "JSON میں برآمد کریں",
     "exportCsv": "CSV میں برآمد کریں",
     "searchPlaceholder": "خرچہ تلاش کریں…",
     "ActiveUserModal": {
@@ -1484,13 +1483,10 @@
     "loading": "اخراجات لوڈ ہو رہے ہیں…",
     "exportPdfTitle": "PDF رپورٹ",
     "exportCsvTitle": "CSV اسپریڈ شیٹ",
-    "exportJsonTitle": "JSON بیک اپ",
     "exportPdfPurpose": "اخراجات، بیلنس اور تجویز کردہ منتقلیوں پر مشتمل برانڈ شدہ گوشوارہ۔",
     "exportCsvPurpose": "Excel یا Sheets کے لیے اسپریڈ شیٹ میں مکمل ریکارڈ۔",
-    "exportJsonPurpose": "گروپ کے ہر خرچ کا مشین سے پڑھنے کے قابل بیک اپ۔",
     "exportPdfAction": "PDF بنائیں",
     "exportCsvAction": "CSV ڈاؤن لوڈ کریں",
-    "exportJsonAction": "JSON ڈاؤن لوڈ کریں",
     "exportPdfDialogTitle": "PDF رپورٹ تیار کریں",
     "exportPdfDialogDescription": "شامل کرنے کے لیے مدت منتخب کریں۔ اخراجات میں منتخب تاریخیں شامل ہوں گی؛ بیلنس اور منتقلیاں آخری تاریخ تک کی صورتحال کے مطابق دکھائی جائیں گی۔",
     "exportPdfFromLabel": "سے",
@@ -1501,7 +1497,10 @@
     "exportPdfInvalidRange": "آخری تاریخ، ابتدائی تاریخ کے برابر یا اس کے بعد کی ہونی چاہیے۔",
     "exportPdfError": "PDF رپورٹ تیار نہیں ہو سکی۔ براہ کرم دوبارہ کوشش کریں۔",
     "exportPdfSuccess": "PDF رپورٹ ڈاؤن لوڈ ہو گئی۔",
-    "exportPdfRetryBounds": "دوبارہ کوشش کریں"
+    "exportPdfRetryBounds": "دوبارہ کوشش کریں",
+    "exportBundleTitle": "Spliit بیک اپ بنڈل",
+    "exportBundlePurpose": "اخراجات، ترتیبات اور منسلک دستاویزات سمیت قابلِ منتقلی گروپ ڈیٹا۔",
+    "exportBundleAction": "بنڈل ڈاؤن لوڈ کریں"
   },
   "Footer": {
     "madeIn": "اوپن سورس کمیونٹی نے محبت سے بنایا ❤️",

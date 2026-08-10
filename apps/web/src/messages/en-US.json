@@ -85,7 +85,6 @@
     "createFirst": "Create the first one",
     "noExpenses": "Your group doesn’t contain any expense yet.",
     "export": "Export",
-    "exportJson": "Export to JSON",
     "exportCsv": "Export to CSV",
     "searchPlaceholder": "Search for an expense…",
     "ActiveUserModal": {
@@ -172,13 +171,10 @@
     "loading": "Loading expenses…",
     "exportPdfTitle": "Print / save PDF",
     "exportCsvTitle": "CSV spreadsheet",
-    "exportJsonTitle": "JSON backup",
     "exportPdfPurpose": "Compact branded report. Use your browser to print or save it as a PDF.",
     "exportCsvPurpose": "Full history in a spreadsheet for Excel or Sheets.",
-    "exportJsonPurpose": "Machine-readable backup of every group expense.",
     "exportPdfAction": "Print / save PDF",
     "exportCsvAction": "Download CSV",
-    "exportJsonAction": "Download JSON",
     "exportPdfDialogTitle": "Print expense report",
     "exportPdfDialogDescription": "Choose the period to include. Your browser will open the report so you can print it or save it as a PDF.",
     "exportPdfFromLabel": "From",
@@ -189,7 +185,10 @@
     "exportPdfInvalidRange": "The end date must be on or after the start date.",
     "exportPdfError": "Could not open the print report. Please try again.",
     "exportPdfSuccess": "Print report opened.",
-    "exportPdfRetryBounds": "Retry"
+    "exportPdfRetryBounds": "Retry",
+    "exportBundleTitle": "Spliit backup bundle",
+    "exportBundlePurpose": "Portable group data with expenses, settings, and attached documents.",
+    "exportBundleAction": "Download bundle"
   },
   "ExpenseCard": {
     "paidBy": "Paid by <strong>{paidBy}</strong> · split between <paidFor></paidFor>",

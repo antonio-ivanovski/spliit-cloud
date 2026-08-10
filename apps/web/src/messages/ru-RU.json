@@ -74,7 +74,6 @@
     "createFirst": "Создать первый расход",
     "noExpenses": "У вашей группы пока что нет расходов.",
     "export": "Экспортировать",
-    "exportJson": "Экспортировать в JSON",
     "exportCsv": "Экспортировать в CSV",
     "searchPlaceholder": "Поиск расходов…",
     "ActiveUserModal": {
@@ -159,13 +158,10 @@
     "loading": "Загрузка расходов…",
     "exportPdfTitle": "PDF-отчёт",
     "exportCsvTitle": "Таблица CSV",
-    "exportJsonTitle": "Резервная копия JSON",
     "exportPdfPurpose": "Фирменный отчёт с расходами, балансами и предлагаемыми переводами.",
     "exportCsvPurpose": "Полная история в электронной таблице для Excel или Sheets.",
-    "exportJsonPurpose": "Машиночитаемая резервная копия всех расходов группы.",
     "exportPdfAction": "Создать PDF",
     "exportCsvAction": "Скачать CSV",
-    "exportJsonAction": "Скачать JSON",
     "exportPdfDialogTitle": "Создать PDF-отчёт",
     "exportPdfDialogDescription": "Выберите период для включения. Расходы охватывают выбранные даты, а балансы и переводы указаны на конечную дату.",
     "exportPdfFromLabel": "От",
@@ -176,7 +172,10 @@
     "exportPdfInvalidRange": "Конечная дата должна быть не раньше начальной.",
     "exportPdfError": "Не удалось создать PDF. Попробуйте ещё раз.",
     "exportPdfSuccess": "PDF-отчёт скачан.",
-    "exportPdfRetryBounds": "Повторить"
+    "exportPdfRetryBounds": "Повторить",
+    "exportBundleTitle": "Резервный пакет Spliit",
+    "exportBundlePurpose": "Переносимые данные группы с расходами, настройками и прикреплёнными документами.",
+    "exportBundleAction": "Скачать пакет"
   },
   "ExpenseCard": {
     "paidBy": "Потратил <strong>{paidBy}</strong> за <paidFor></paidFor>",

@@ -1582,7 +1582,6 @@
     "createFirst": "create the first one",
     "noExpenses": "your group has no expenses yet. peaceful.",
     "export": "export it",
-    "exportJson": "export to JSON",
     "exportCsv": "export to CSV",
     "searchPlaceholder": "search for an expense…",
     "ActiveUserModal": {
@@ -1665,13 +1664,10 @@
     "loading": "loading expenses…",
     "exportPdfTitle": "print the pdf",
     "exportCsvTitle": "csv spreadsheet, bestie",
-    "exportJsonTitle": "json backup",
     "exportPdfPurpose": "branded statement of the damage, balances, and suggested transfers. your browser prints it or saves it as a PDF.",
     "exportCsvPurpose": "full history in a spreadsheet for Excel or Sheets, bestie.",
-    "exportJsonPurpose": "machine-readable backup of every group expense, fr.",
     "exportPdfAction": "print / save PDF",
     "exportCsvAction": "download CSV",
-    "exportJsonAction": "download JSON",
     "exportPdfDialogTitle": "print expense report",
     "exportPdfDialogDescription": "pick the era to include. your browser pops the report open so you can print it or save it as a PDF.",
     "exportPdfFromLabel": "from",
@@ -1682,7 +1678,10 @@
     "exportPdfInvalidRange": "the end date must be on or after the start date, bestie.",
     "exportPdfError": "could not open the print report. try again, bestie.",
     "exportPdfSuccess": "print report opened. we ate.",
-    "exportPdfRetryBounds": "hit retry"
+    "exportPdfRetryBounds": "hit retry",
+    "exportBundleTitle": "Spliit backup stash",
+    "exportBundlePurpose": "Portable group data with expenses, settings, and attached docs.",
+    "exportBundleAction": "Grab the bundle"
   },
   "Feedback": {
     "navigationLabel": "feedback zone",

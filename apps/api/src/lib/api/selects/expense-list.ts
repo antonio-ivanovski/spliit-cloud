@@ -1,9 +1,5 @@
 import type { Prisma } from '@spliit/db'
 
-import {
-  expenseItemWithSharesSelect,
-  expenseItemizedRemainderSelect,
-} from './expense-item-with-shares'
 import { expenseParticipantSharesSelect } from './expense-participant-shares'
 import { expenseParticipantWithDisplayNameSelect } from './expense-participant-with-display-name'
 
@@ -40,29 +36,6 @@ export const groupExpenseListCardSelect = {
     },
   },
   _count: { select: { documents: true } },
-} satisfies Prisma.ExpenseSelect
-
-/** JSON export expense projection (legacy spliit.app wire shape fields). */
-export const expenseJsonExportSelect = {
-  createdAt: true,
-  expenseDate: true,
-  title: true,
-  categoryId: true,
-  amount: true,
-  originalAmount: true,
-  originalCurrency: true,
-  conversionRate: true,
-  conversionSource: true,
-  paidBySplitMode: true,
-  isReimbursement: true,
-  splitMode: true,
-  paidByList: { select: expenseParticipantWithDisplayNameSelect },
-  paidFor: { select: expenseParticipantSharesSelect },
-  recurringSeries: {
-    select: { frequency: true, interval: true, endType: true },
-  },
-  items: { select: expenseItemWithSharesSelect },
-  itemizedRemainder: { select: expenseItemizedRemainderSelect },
 } satisfies Prisma.ExpenseSelect
 
 /** CSV export expense projection (net-share columns only need share rows). */

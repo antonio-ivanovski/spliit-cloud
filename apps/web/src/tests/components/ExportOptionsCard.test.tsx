@@ -35,7 +35,7 @@ describe('ExportOptionsCard', () => {
       screen.getByRole('heading', { name: 'Print / save PDF' }),
     ).toBeInTheDocument()
     expect(screen.getByText('CSV spreadsheet')).toBeInTheDocument()
-    expect(screen.getByText('JSON backup')).toBeInTheDocument()
+    expect(screen.getByText('Spliit backup bundle')).toBeInTheDocument()
 
     expect(
       screen.getByRole('button', { name: 'Print / save PDF' }),
@@ -44,11 +44,11 @@ describe('ExportOptionsCard', () => {
       screen.getByRole('link', { name: 'Download CSV' }),
     ).toBeInTheDocument()
     expect(
-      screen.getByRole('link', { name: 'Download JSON' }),
+      screen.getByRole('link', { name: 'Download bundle' }),
     ).toBeInTheDocument()
   })
 
-  it('keeps the CSV/JSON download URLs and target', () => {
+  it('keeps the CSV/bundle download URLs and target', () => {
     render(<ExportOptionsCard groupId="grp-1" />)
 
     const csv = screen.getByRole('link', { name: 'Download CSV' })
@@ -58,12 +58,12 @@ describe('ExportOptionsCard', () => {
     )
     expect(csv).toHaveAttribute('target', '_blank')
 
-    const json = screen.getByRole('link', { name: 'Download JSON' })
-    expect(json).toHaveAttribute(
+    const bundle = screen.getByRole('link', { name: 'Download bundle' })
+    expect(bundle).toHaveAttribute(
       'href',
-      'http://localhost:3001/groups/grp-1/expenses/export/json',
+      'http://localhost:3001/groups/grp-1/export/bundle',
     )
-    expect(json).toHaveAttribute('target', '_blank')
+    expect(bundle).toHaveAttribute('target', '_blank')
   })
 
   it('keeps export actions in a compact single-column layout', () => {
@@ -97,17 +97,17 @@ describe('ExportOptionsCard', () => {
     ).toBeInTheDocument()
   })
 
-  it('keeps actions in keyboard tab order: PDF, CSV, JSON', () => {
+  it('keeps actions in keyboard tab order: PDF, CSV, bundle', () => {
     render(<ExportOptionsCard groupId="grp-1" />)
 
     const pdf = screen.getByRole('button', { name: 'Print / save PDF' })
     const csv = screen.getByRole('link', { name: 'Download CSV' })
-    const json = screen.getByRole('link', { name: 'Download JSON' })
+    const bundle = screen.getByRole('link', { name: 'Download bundle' })
     expect(
       pdf.compareDocumentPosition(csv) & Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy()
     expect(
-      csv.compareDocumentPosition(json) & Node.DOCUMENT_POSITION_FOLLOWING,
+      csv.compareDocumentPosition(bundle) & Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy()
   })
 })

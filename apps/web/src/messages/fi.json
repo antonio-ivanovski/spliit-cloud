@@ -74,7 +74,6 @@
     "createFirst": "Lisää ensimmäinen kulu",
     "noExpenses": "Ryhmälläsi ei ole vielä yhtään kulua.",
     "export": "Vie",
-    "exportJson": "Vie JSON-tiedostoon",
     "exportCsv": "Vie CSV-tiedostoon",
     "searchPlaceholder": "Etsi kulua…",
     "ActiveUserModal": {
@@ -157,13 +156,10 @@
     "loading": "Ladataan kuluja…",
     "exportPdfTitle": "PDF-raportti",
     "exportCsvTitle": "CSV-taulukko",
-    "exportJsonTitle": "JSON-varmuuskopio",
     "exportPdfPurpose": "Brändätty yhteenveto kuluista, saldoista ja ehdotetuista siirroista.",
     "exportCsvPurpose": "Kaikki tiedot taulukkona Exceliä tai Sheetsiä varten.",
-    "exportJsonPurpose": "Koneellisesti luettava varmuuskopio jokaisesta ryhmän kulusta.",
     "exportPdfAction": "Luo PDF",
     "exportCsvAction": "Lataa CSV",
-    "exportJsonAction": "Lataa JSON",
     "exportPdfDialogTitle": "Luo PDF-raportti",
     "exportPdfDialogDescription": "Valitse mukaan otettava jakso. Kulut kattavat valitut päivämäärät; saldot ja siirrot raportoidaan päättymispäivän tilanteen mukaan.",
     "exportPdfFromLabel": "Alkaen",
@@ -174,7 +170,10 @@
     "exportPdfInvalidRange": "Päättymispäivän on oltava sama tai myöhempi kuin alkamispäivä.",
     "exportPdfError": "PDF:n luominen epäonnistui. Yritä uudelleen.",
     "exportPdfSuccess": "PDF-raportti ladattu.",
-    "exportPdfRetryBounds": "Yritä uudelleen"
+    "exportPdfRetryBounds": "Yritä uudelleen",
+    "exportBundleTitle": "Spliitin varmuuskopio",
+    "exportBundlePurpose": "Siirrettävät ryhmätiedot, kulut, asetukset ja liitetyt asiakirjat.",
+    "exportBundleAction": "Lataa paketti"
   },
   "ExpenseCard": {
     "receivedBy": "Vastaanottaja <strong>{paidBy}</strong> · kohdistettu osallistujille <paidFor></paidFor>",

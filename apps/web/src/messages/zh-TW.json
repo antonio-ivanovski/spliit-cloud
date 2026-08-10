@@ -73,7 +73,6 @@
     "create": "新增消費紀錄",
     "createFirst": "新增第一筆消費紀錄",
     "noExpenses": "你的群組內目前沒有任何消費紀錄。",
-    "exportJson": "匯出為 JSON",
     "exportCsv": "匯出為 CSV",
     "searchPlaceholder": "搜尋消費紀錄……",
     "ActiveUserModal": {
@@ -156,13 +155,10 @@
     "loading": "正在載入支出…",
     "exportPdfTitle": "PDF 報告",
     "exportCsvTitle": "CSV 試算表",
-    "exportJsonTitle": "JSON 備份",
     "exportPdfPurpose": "包含支出、餘額和建議轉帳的品牌明細。",
     "exportCsvPurpose": "可在 Excel 或試算表中檢視的完整歷史試算表。",
-    "exportJsonPurpose": "機器可讀的群組消費完整備份。",
     "exportPdfAction": "建立 PDF",
     "exportCsvAction": "下載 CSV",
-    "exportJsonAction": "下載 JSON",
     "exportPdfDialogTitle": "產生 PDF 報告",
     "exportPdfDialogDescription": "請選擇要包含的期間。支出按所選日期統計，餘額與轉帳按結束日期報告。",
     "exportPdfFromLabel": "開始日期",
@@ -173,7 +169,10 @@
     "exportPdfInvalidRange": "結束日期必須晚於或等於開始日期。",
     "exportPdfError": "無法產生 PDF。請重試。",
     "exportPdfSuccess": "PDF 報告已下載。",
-    "exportPdfRetryBounds": "重試"
+    "exportPdfRetryBounds": "重試",
+    "exportBundleTitle": "Spliit 備份包",
+    "exportBundlePurpose": "包含支出、設定和附件的可攜式群組資料。",
+    "exportBundleAction": "下載資料包"
   },
   "ExpenseCard": {
     "receivedBy": "收款人：<strong>{paidBy}</strong> · 分配給 <paidFor></paidFor>",

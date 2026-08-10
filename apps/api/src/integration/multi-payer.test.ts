@@ -756,17 +756,17 @@ describe('Multi-payer expenses — real DB', () => {
   })
 
   // ────────────────────────────────────────────────────────────────────────
-  // 13. JSON export shape
+  // 13. Native group export persistence shape
   // ────────────────────────────────────────────────────────────────────────
 
-  it('JSON export shape includes paidByList + paidBySplitMode and omits paidById', async () => {
-    const { groupId, participants } = await createUsdGroup(`MP-JSON-${runId}`)
+  it('native export shape includes paidByList + paidBySplitMode and omits paidById', async () => {
+    const { groupId, participants } = await createUsdGroup(`MP-BUNDLE-${runId}`)
 
     await makeCaller().expenses.create({
       requestId: crypto.randomUUID(),
       groupId,
       expense: {
-        title: 'JSON row',
+        title: 'Bundle row',
         amount: 4000,
         expenseDate: new Date().toISOString(),
         category: 'general',
@@ -786,15 +786,14 @@ describe('Multi-payer expenses — real DB', () => {
       },
     })
 
-    // Verify the persistent shape that `export-json.ts` selects into the
-    // payload: `paidByList` present, `paidBySplitMode` present, no
-    // `paidById`.
+    // Verify the persistent shape consumed by the native group export:
+    // `paidByList` present, `paidBySplitMode` present, no `paidById`.
     const ledger = await prisma.group.findUnique({
       where: { id: groupId },
       select: { ledgerId: true },
     })
     const persisted = await prisma.expense.findMany({
-      where: { ledgerId: ledger!.ledgerId, title: 'JSON row' },
+      where: { ledgerId: ledger!.ledgerId, title: 'Bundle row' },
       include: { paidByList: true },
     })
     expect(persisted).toHaveLength(1)

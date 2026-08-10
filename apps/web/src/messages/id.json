@@ -74,7 +74,6 @@
     "createFirst": "Buat yang pertama",
     "noExpenses": "Grup Anda belum memiliki pengeluaran apa pun.",
     "export": "Ekspor",
-    "exportJson": "Ekspor ke JSON",
     "exportCsv": "Ekspor ke CSV",
     "searchPlaceholder": "Cari pengeluaran…",
     "ActiveUserModal": {
@@ -156,13 +155,10 @@
     "loading": "Memuat pengeluaran…",
     "exportPdfTitle": "Laporan PDF",
     "exportCsvTitle": "Spreadsheet CSV",
-    "exportJsonTitle": "Cadangan JSON",
     "exportPdfPurpose": "Laporan bermerek dengan pengeluaran, saldo, dan transfer yang disarankan.",
     "exportCsvPurpose": "Riwayat lengkap dalam spreadsheet untuk Excel atau Sheets.",
-    "exportJsonPurpose": "Cadangan yang dapat dibaca mesin untuk setiap pengeluaran grup.",
     "exportPdfAction": "Buat PDF",
     "exportCsvAction": "Unduh CSV",
-    "exportJsonAction": "Unduh JSON",
     "exportPdfDialogTitle": "Buat laporan PDF",
     "exportPdfDialogDescription": "Pilih periode yang akan disertakan. Pengeluaran mencakup tanggal yang dipilih; saldo dan transfer dilaporkan per tanggal akhir.",
     "exportPdfFromLabel": "Dari",
@@ -173,7 +169,10 @@
     "exportPdfInvalidRange": "Tanggal akhir harus sama dengan atau setelah tanggal mulai.",
     "exportPdfError": "Tidak dapat membuat PDF. Silakan coba lagi.",
     "exportPdfSuccess": "Laporan PDF diunduh.",
-    "exportPdfRetryBounds": "Coba lagi"
+    "exportPdfRetryBounds": "Coba lagi",
+    "exportBundleTitle": "Bundel cadangan Spliit",
+    "exportBundlePurpose": "Data grup portabel dengan pengeluaran, pengaturan, dan dokumen terlampir.",
+    "exportBundleAction": "Unduh bundel"
   },
   "ExpenseCard": {
     "paidBy": "Dibayar oleh <strong>{paidBy}</strong> · dibagi antara <paidFor></paidFor>",

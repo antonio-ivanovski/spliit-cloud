@@ -22,8 +22,8 @@ import {
   emailUnsubscribeGet,
   emailUnsubscribePost,
 } from './routes/email-unsubscribe'
+import { exportGroupBundle } from './routes/export-bundle'
 import { exportGroupCsv } from './routes/export-csv'
-import { exportGroupJson } from './routes/export-json'
 import { proxyImportDocument } from './routes/import-document'
 import { reportGroupData } from './routes/report-data'
 import { createTRPCContext } from './trpc/init'
@@ -146,8 +146,8 @@ app.get('/.well-known/openid-configuration/auth', (c) =>
     : c.notFound(),
 )
 
-app.get('/groups/:groupId/expenses/export/json', (c) =>
-  exportGroupJson(c.req.raw, c.req.param('groupId')),
+app.get('/groups/:groupId/export/bundle', (c) =>
+  exportGroupBundle(c.req.raw, c.req.param('groupId')),
 )
 app.get('/groups/:groupId/expenses/export/csv', (c) =>
   exportGroupCsv(c.req.raw, c.req.param('groupId')),

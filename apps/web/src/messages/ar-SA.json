@@ -47,7 +47,6 @@
     "showSettlements": "إظهار التسويات",
     "exportCsv": "تصدير بصيغة CSV",
     "title": "المصروفات",
-    "exportJson": "تصدير بصيغة JSON",
     "ActiveUserModal": {
       "nobody": "لا أريد اختيار أي شخص",
       "title": "من أنت؟",
@@ -137,13 +136,10 @@
     "loading": "جارٍ تحميل النفقات…",
     "exportPdfTitle": "تقرير PDF",
     "exportCsvTitle": "جدول بيانات CSV",
-    "exportJsonTitle": "نسخة احتياطية بصيغة JSON",
     "exportPdfPurpose": "كشف مفصّل يحمل العلامة التجارية يتضمن الإنفاق والأرصدة والتحويلات المقترحة.",
     "exportCsvPurpose": "السجل الكامل في جدول بيانات لبرنامج Excel أو Sheets.",
-    "exportJsonPurpose": "نسخة احتياطية قابلة للقراءة آلياً لكل مصاريف المجموعة.",
     "exportPdfAction": "إنشاء ملف PDF",
     "exportCsvAction": "تنزيل CSV",
-    "exportJsonAction": "تنزيل JSON",
     "exportPdfDialogTitle": "إنشاء تقرير PDF",
     "exportPdfDialogDescription": "اختر الفترة المراد تضمينها. يغطي الإنفاق التواريخ المحددة؛ يتم الإبلاغ عن الأرصدة والتحويلات حتى تاريخ الانتهاء.",
     "exportPdfFromLabel": "من",
@@ -154,7 +150,10 @@
     "exportPdfInvalidRange": "يجب أن يكون تاريخ الانتهاء في نفس يوم تاريخ البدء أو بعده.",
     "exportPdfError": "تعذَّر إنشاء ملف PDF. يرجى المحاولة مرة أخرى.",
     "exportPdfSuccess": "تم تنزيل تقرير PDF.",
-    "exportPdfRetryBounds": "إعادة المحاولة"
+    "exportPdfRetryBounds": "إعادة المحاولة",
+    "exportBundleTitle": "حزمة النسخ الاحتياطي من Spliit",
+    "exportBundlePurpose": "بيانات المجموعة المحمولة مع المصروفات والإعدادات والمستندات المرفقة.",
+    "exportBundleAction": "تنزيل الحزمة"
   },
   "GroupForm": {
     "CurrencyField": {

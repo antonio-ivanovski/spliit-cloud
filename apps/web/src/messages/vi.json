@@ -85,7 +85,6 @@
     "createFirst": "Tạo chi phí đầu tiên",
     "noExpenses": "Chưa có chi phí nào.",
     "export": "Xuất",
-    "exportJson": "Xuất JSON",
     "exportCsv": "Xuất CSV",
     "searchPlaceholder": "Tìm kiếm…",
     "ActiveUserModal": {
@@ -172,13 +171,10 @@
     "loading": "Đang tải chi phí…",
     "exportPdfTitle": "Báo cáo PDF",
     "exportCsvTitle": "Bảng tính CSV",
-    "exportJsonTitle": "Sao lưu JSON",
     "exportPdfPurpose": "Báo cáo có thương hiệu với chi tiêu, số dư và các khoản chuyển gợi ý.",
     "exportCsvPurpose": "Toàn bộ lịch sử trong bảng tính cho Excel hoặc Sheets.",
-    "exportJsonPurpose": "Bản sao lưu có thể đọc bằng máy của mọi chi phí trong nhóm.",
     "exportPdfAction": "Tạo PDF",
     "exportCsvAction": "Tải CSV",
-    "exportJsonAction": "Tải JSON",
     "exportPdfDialogTitle": "Tạo báo cáo PDF",
     "exportPdfDialogDescription": "Chọn kỳ cần đưa vào. Chi tiêu bao gồm các ngày đã chọn; số dư và chuyển khoản được báo cáo tính đến ngày kết thúc.",
     "exportPdfFromLabel": "Từ",
@@ -189,7 +185,10 @@
     "exportPdfInvalidRange": "Ngày kết thúc phải trùng hoặc sau ngày bắt đầu.",
     "exportPdfError": "Không thể tạo PDF. Vui lòng thử lại.",
     "exportPdfSuccess": "Đã tải báo cáo PDF.",
-    "exportPdfRetryBounds": "Thử lại"
+    "exportPdfRetryBounds": "Thử lại",
+    "exportBundleTitle": "Gói sao lưu Spliit",
+    "exportBundlePurpose": "Dữ liệu nhóm có thể chuyển đổi, gồm chi phí, cài đặt và tài liệu đính kèm.",
+    "exportBundleAction": "Tải gói dữ liệu"
   },
   "ExpenseCard": {
     "paidBy": "Được trả bởi <strong>{paidBy}</strong> · chia cho <paidFor></paidFor>",

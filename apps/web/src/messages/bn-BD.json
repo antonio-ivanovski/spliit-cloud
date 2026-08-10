@@ -1401,7 +1401,6 @@
     "createFirst": "প্রথমটি তৈরি করুন",
     "noExpenses": "আপনার গ্রুপে এখনও কোনো খরচ নেই।",
     "export": "এক্সপোর্ট",
-    "exportJson": "JSON এ এক্সপোর্ট",
     "exportCsv": "CSV তে এক্সপোর্ট",
     "searchPlaceholder": "একটি খরচ খুঁজুন…",
     "ActiveUserModal": {
@@ -1484,13 +1483,10 @@
     "loading": "খরচ লোড হচ্ছে…",
     "exportPdfTitle": "PDF প্রতিবেদন",
     "exportCsvTitle": "CSV স্প্রেডশিট",
-    "exportJsonTitle": "JSON ব্যাকআপ",
     "exportPdfPurpose": "খরচ, ব্যালেন্স ও প্রস্তাবিত ট্রান্সফারসহ ব্র্যান্ডযুক্ত বিবরণী।",
     "exportCsvPurpose": "Excel বা Sheets-এর জন্য স্প্রেডশিটে সম্পূর্ণ ইতিহাস।",
-    "exportJsonPurpose": "গ্রুপের প্রতিটি খরচের মেশিন-পঠনযোগ্য ব্যাকআপ।",
     "exportPdfAction": "PDF তৈরি করুন",
     "exportCsvAction": "CSV ডাউনলোড করুন",
-    "exportJsonAction": "JSON ডাউনলোড করুন",
     "exportPdfDialogTitle": "PDF প্রতিবেদন তৈরি করুন",
     "exportPdfDialogDescription": "অন্তর্ভুক্ত করার সময়কাল বেছে নিন। নির্বাচিত তারিখগুলোর খরচ অন্তর্ভুক্ত হবে; ব্যালেন্স ও ট্রান্সফার শেষ তারিখ পর্যন্ত দেখানো হবে।",
     "exportPdfFromLabel": "থেকে",
@@ -1501,7 +1497,10 @@
     "exportPdfInvalidRange": "শেষ তারিখটি শুরুর তারিখের সমান বা তার পরের হতে হবে।",
     "exportPdfError": "PDF প্রতিবেদন তৈরি করা যায়নি। আবার চেষ্টা করুন।",
     "exportPdfSuccess": "PDF প্রতিবেদন ডাউনলোড হয়েছে।",
-    "exportPdfRetryBounds": "আবার চেষ্টা করুন"
+    "exportPdfRetryBounds": "আবার চেষ্টা করুন",
+    "exportBundleTitle": "Spliit ব্যাকআপ বান্ডেল",
+    "exportBundlePurpose": "খরচ, সেটিংস ও সংযুক্ত নথিসহ বহনযোগ্য গ্রুপ ডেটা।",
+    "exportBundleAction": "বান্ডেল ডাউনলোড করুন"
   },
   "Footer": {
     "madeIn": "ওপেন-সোর্স সম্প্রদায় দ্বারা ভালোবাসা দিয়ে তৈরি ❤️",

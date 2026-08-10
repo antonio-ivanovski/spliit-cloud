@@ -73,7 +73,6 @@
     "create": "Adaugă o cheltuială",
     "createFirst": "Adaug-o pe prima",
     "noExpenses": "Grupul tău nu conține nicio cheltuială încă.",
-    "exportJson": "Salvează în JSON",
     "exportCsv": "Salvează în CSV",
     "searchPlaceholder": "Caută o cheltuială…",
     "ActiveUserModal": {
@@ -158,13 +157,10 @@
     "loading": "Se încarcă cheltuielile…",
     "exportPdfTitle": "Raport PDF",
     "exportCsvTitle": "Foaie de calcul CSV",
-    "exportJsonTitle": "Copie de rezervă JSON",
     "exportPdfPurpose": "Extras personalizat cu cheltuieli, solduri și transferuri sugerate.",
     "exportCsvPurpose": "Istoricul complet într-o foaie de calcul pentru Excel sau Sheets.",
-    "exportJsonPurpose": "Copie de rezervă lizibilă automat a tuturor cheltuielilor grupului.",
     "exportPdfAction": "Creează PDF",
     "exportCsvAction": "Descarcă CSV",
-    "exportJsonAction": "Descarcă JSON",
     "exportPdfDialogTitle": "Generează raportul PDF",
     "exportPdfDialogDescription": "Alege perioada de inclus. Cheltuielile acoperă datele selectate; soldurile și transferurile sunt raportate la data de sfârșit.",
     "exportPdfFromLabel": "De la",
@@ -175,7 +171,10 @@
     "exportPdfInvalidRange": "Data de sfârșit trebuie să fie ulterioară sau egală cu data de început.",
     "exportPdfError": "Raportul PDF nu a putut fi generat. Încearcă din nou.",
     "exportPdfSuccess": "Raportul PDF a fost descărcat.",
-    "exportPdfRetryBounds": "Reîncearcă"
+    "exportPdfRetryBounds": "Reîncearcă",
+    "exportBundleTitle": "Pachet de backup Spliit",
+    "exportBundlePurpose": "Date portabile ale grupului cu cheltuieli, setări și documente atașate.",
+    "exportBundleAction": "Descarcă pachetul"
   },
   "ExpenseCard": {
     "receivedBy": "Primit de <strong>{paidBy}</strong> pentru <paidFor></paidFor>",

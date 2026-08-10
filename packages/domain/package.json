@@ -19,6 +19,7 @@
     "./timezones": "./src/timezones.ts",
     "./utils": "./src/utils.ts",
     "./calculator": "./src/calculator.ts",
+    "./export-manifest": "./src/export-manifest.ts",
     "./import": "./src/import/index.ts",
     "./notification-delivery": "./src/notification-delivery.ts"
   },

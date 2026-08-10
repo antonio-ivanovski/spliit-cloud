@@ -1401,7 +1401,6 @@
     "createFirst": "पहला बनाएं",
     "noExpenses": "आपके समूह में अभी तक कोई खर्च नहीं है।",
     "export": "निर्यात",
-    "exportJson": "JSON में निर्यात करें",
     "exportCsv": "CSV में निर्यात करें",
     "searchPlaceholder": "खर्च खोजें…",
     "ActiveUserModal": {
@@ -1484,13 +1483,10 @@
     "loading": "खर्च लोड हो रहे हैं…",
     "exportPdfTitle": "PDF रिपोर्ट",
     "exportCsvTitle": "CSV स्प्रेडशीट",
-    "exportJsonTitle": "JSON बैकअप",
     "exportPdfPurpose": "खर्च, शेष राशियों और सुझाए गए हस्तांतरणों वाला ब्रांडेड विवरण।",
     "exportCsvPurpose": "Excel या Sheets के लिए स्प्रेडशीट में पूरा इतिहास।",
-    "exportJsonPurpose": "समूह के हर खर्च का मशीन-पठनीय बैकअप।",
     "exportPdfAction": "PDF बनाएं",
     "exportCsvAction": "CSV डाउनलोड करें",
-    "exportJsonAction": "JSON डाउनलोड करें",
     "exportPdfDialogTitle": "PDF रिपोर्ट बनाएं",
     "exportPdfDialogDescription": "शामिल करने के लिए अवधि चुनें। खर्च में चुनी गई तारीखें शामिल होंगी; शेष राशियां और हस्तांतरण अंतिम तारीख तक की स्थिति के अनुसार दिखाए जाएंगे।",
     "exportPdfFromLabel": "से",
@@ -1501,7 +1497,10 @@
     "exportPdfInvalidRange": "अंतिम तारीख, शुरुआती तारीख के समान या उसके बाद की होनी चाहिए।",
     "exportPdfError": "PDF रिपोर्ट नहीं बनाई जा सकी। कृपया फिर से कोशिश करें।",
     "exportPdfSuccess": "PDF रिपोर्ट डाउनलोड हो गई।",
-    "exportPdfRetryBounds": "फिर से कोशिश करें"
+    "exportPdfRetryBounds": "फिर से कोशिश करें",
+    "exportBundleTitle": "Spliit बैकअप बंडल",
+    "exportBundlePurpose": "खर्चों, सेटिंग और संलग्न दस्तावेज़ों वाला पोर्टेबल समूह डेटा।",
+    "exportBundleAction": "बंडल डाउनलोड करें"
   },
   "Footer": {
     "madeIn": "ओपन-सोर्स समुदाय द्वारा प्यार से बनाया गया ❤️",

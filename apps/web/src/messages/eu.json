@@ -74,7 +74,6 @@
     "createFirst": "Sortu lehenengoa",
     "noExpenses": "Talde honek oraindik ez du gasturik.",
     "export": "Esportatu",
-    "exportJson": "Esportatu JSONera",
     "Groups": {
       "earlierThisYear": "Urte hasieran",
       "lastYear": "Iaz",
@@ -158,13 +157,10 @@
     "loading": "Gastuak kargatzen…",
     "exportPdfTitle": "PDF txostena",
     "exportCsvTitle": "CSV kalkulu-orria",
-    "exportJsonTitle": "JSON babeskopia",
     "exportPdfPurpose": "Gastuekin, saldoekin eta gomendatutako transferentziekin markadun laburpena.",
     "exportCsvPurpose": "Historia osoa Excel edo Sheets-erako kalkulu-orri batean.",
-    "exportJsonPurpose": "Taldeko gastu guztien makina bidez irakurtzeko babeskopia.",
     "exportPdfAction": "Sortu PDF",
     "exportCsvAction": "Deskargatu CSV",
-    "exportJsonAction": "Deskargatu JSON",
     "exportPdfDialogTitle": "Sortu PDF txostena",
     "exportPdfDialogDescription": "Aukeratu sartu beharreko aldia. Gastuak hautatutako datei dagozkie; saldoak eta transferentziak amaiera-datan erakusten dira.",
     "exportPdfFromLabel": "Noiztik",
@@ -175,7 +171,10 @@
     "exportPdfInvalidRange": "Amaiera-datak hasiera-dataren ondorengoa edo berdina izan behar du.",
     "exportPdfError": "Ezin izan da PDFa sortu. Saiatu berriro.",
     "exportPdfSuccess": "PDF txostena deskargatu da.",
-    "exportPdfRetryBounds": "Saiatu berriro"
+    "exportPdfRetryBounds": "Saiatu berriro",
+    "exportBundleTitle": "Spliit babes-paketea",
+    "exportBundlePurpose": "Taldearen datu eramangarriak gastu, ezarpen eta erantsitako dokumentuekin.",
+    "exportBundleAction": "Sorta deskargatu"
   },
   "ExpenseCard": {
     "paidBy": "<strong>{paidBy}</strong>(e)k ordaindua · <paidFor></paidFor> hauen artean banatuta",

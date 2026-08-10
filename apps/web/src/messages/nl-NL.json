@@ -74,7 +74,6 @@
     "createFirst": "Maak de eerste",
     "noExpenses": "Je groep heeft nog geen uitgaven.",
     "export": "Exporteren",
-    "exportJson": "Exporteren naar JSON",
     "exportCsv": "Exporteren naar CSV",
     "searchPlaceholder": "Zoek naar een uitgave…",
     "ActiveUserModal": {
@@ -157,13 +156,10 @@
     "loading": "Uitgaven laden…",
     "exportPdfTitle": "PDF-rapport",
     "exportCsvTitle": "CSV-spreadsheet",
-    "exportJsonTitle": "JSON-back-up",
     "exportPdfPurpose": "Op maat gemaakt overzicht met uitgaven, saldi en voorgestelde overschrijvingen.",
     "exportCsvPurpose": "Volledige geschiedenis in een spreadsheet voor Excel of Sheets.",
-    "exportJsonPurpose": "Machinaal leesbare back-up van elke groepsuitgave.",
     "exportPdfAction": "PDF maken",
     "exportCsvAction": "CSV downloaden",
-    "exportJsonAction": "JSON downloaden",
     "exportPdfDialogTitle": "PDF-rapport genereren",
     "exportPdfDialogDescription": "Kies de periode die je wilt opnemen. Uitgaven gelden voor de geselecteerde data; saldi en overschrijvingen worden gerapporteerd per de einddatum.",
     "exportPdfFromLabel": "Van",
@@ -174,7 +170,10 @@
     "exportPdfInvalidRange": "De einddatum moet op of na de startdatum liggen.",
     "exportPdfError": "PDF kon niet worden gegenereerd. Probeer het opnieuw.",
     "exportPdfSuccess": "PDF-rapport gedownload.",
-    "exportPdfRetryBounds": "Opnieuw proberen"
+    "exportPdfRetryBounds": "Opnieuw proberen",
+    "exportBundleTitle": "Spliit-back-uppakket",
+    "exportBundlePurpose": "Draagbare groepsgegevens met uitgaven, instellingen en bijgevoegde documenten.",
+    "exportBundleAction": "Pakket downloaden"
   },
   "ExpenseCard": {
     "paidBy": "Betaald door <strong>{paidBy}</strong> · verdeeld over <paidFor></paidFor>",

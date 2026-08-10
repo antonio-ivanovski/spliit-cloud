@@ -73,7 +73,6 @@
     "create": "Afegir despesa",
     "createFirst": "Crea la primera",
     "noExpenses": "El teu grup encara no té despeses.",
-    "exportJson": "Exportar a JSON",
     "exportCsv": "Exportar a CSV",
     "searchPlaceholder": "Cerca una despesa.",
     "ActiveUserModal": {
@@ -158,13 +157,10 @@
     "loading": "Carregant despeses…",
     "exportPdfTitle": "Informe PDF",
     "exportCsvTitle": "Full de càlcul CSV",
-    "exportJsonTitle": "Còpia de seguretat JSON",
     "exportPdfPurpose": "Informe amb marca amb despeses, saldos i transferències suggerides.",
     "exportCsvPurpose": "Historial complet en un full de càlcul per a Excel o Sheets.",
-    "exportJsonPurpose": "Còpia de seguretat llegible per màquina de totes les despeses del grup.",
     "exportPdfAction": "Crear PDF",
     "exportCsvAction": "Baixar CSV",
-    "exportJsonAction": "Baixar JSON",
     "exportPdfDialogTitle": "Generar informe PDF",
     "exportPdfDialogDescription": "Tria el període que vols incloure. La despesa cobreix les dates seleccionades; els saldos i les transferències es mostren a la data final.",
     "exportPdfFromLabel": "De",
@@ -175,7 +171,10 @@
     "exportPdfInvalidRange": "La data final ha de ser posterior o igual a la data inicial.",
     "exportPdfError": "No s'ha pogut generar el PDF. Torna-ho a provar.",
     "exportPdfSuccess": "Informe PDF baixat.",
-    "exportPdfRetryBounds": "Torna-ho a provar"
+    "exportPdfRetryBounds": "Torna-ho a provar",
+    "exportBundleTitle": "Paquet de còpia de seguretat de Spliit",
+    "exportBundlePurpose": "Dades del grup portables amb despeses, configuració i documents adjunts.",
+    "exportBundleAction": "Baixa el paquet"
   },
   "ExpenseCard": {
     "receivedBy": "Rebut per <strong>{paidBy}</strong> · assignat a <paidFor></paidFor>",

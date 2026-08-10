@@ -3,7 +3,6 @@ import {
   DeleteObjectCommand,
   HeadObjectCommand,
   PutObjectCommand,
-  S3Client,
 } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
@@ -21,53 +20,12 @@ import {
   openStagedDocumentClaims,
   sealStagedDocumentClaims,
 } from '../lib/import-documents'
-
-let s3Client: S3Client | undefined
-
-function getS3Client() {
-  s3Client ??= new S3Client({
-    region: env.S3_UPLOAD_REGION,
-    endpoint: env.S3_UPLOAD_ENDPOINT,
-    forcePathStyle: !!env.S3_UPLOAD_ENDPOINT,
-    credentials: {
-      accessKeyId: env.S3_UPLOAD_KEY ?? '',
-      secretAccessKey: env.S3_UPLOAD_SECRET ?? '',
-    },
-  })
-  return s3Client
-}
-
-function uploadsConfigured() {
-  return !!(
-    env.S3_UPLOAD_BUCKET &&
-    env.S3_UPLOAD_KEY &&
-    env.S3_UPLOAD_REGION &&
-    env.S3_UPLOAD_SECRET
-  )
-}
-
-function keyFromFileUrl(fileUrl: string): string {
-  let path = new URL(fileUrl).pathname.replace(/^\//, '')
-  // S3_UPLOAD_PUBLIC_URL may embed a path prefix (e.g. `<endpoint>/<bucket>`
-  // for local MinIO/MaxIO). Strip it so the remaining string is a real object
-  // key, not a URL path. CDN-style public URLs without a path prefix are
-  // unaffected because their parsed pathname is empty.
-  if (env.S3_UPLOAD_PUBLIC_URL) {
-    const prefix = new URL(env.S3_UPLOAD_PUBLIC_URL).pathname
-      .replace(/^\//, '')
-      .replace(/\/$/, '')
-    if (prefix && path.startsWith(`${prefix}/`)) {
-      path = path.slice(prefix.length + 1)
-    }
-  }
-  return path
-}
-
-function publicUrlForKey(key: string): string {
-  return env.S3_UPLOAD_PUBLIC_URL
-    ? `${env.S3_UPLOAD_PUBLIC_URL.replace(/\/$/, '')}/${key}`
-    : `https://${env.S3_UPLOAD_BUCKET}.s3.${env.S3_UPLOAD_REGION}.amazonaws.com/${key}`
-}
+import {
+  getS3Client,
+  keyFromFileUrl,
+  publicUrlForKey,
+  uploadsConfigured,
+} from '../lib/storage'
 
 export function permanentDocumentUrl(fileUrl: string): string {
   const key = keyFromFileUrl(fileUrl)

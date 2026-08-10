@@ -1,5 +1,5 @@
 import {
-  FileJson,
+  Archive,
   FileSpreadsheet,
   FileText,
   type LucideIcon,
@@ -92,9 +92,9 @@ function ExportOption({
 
 /**
  * Settings export card content: three equal-format actions (PDF report, CSV
- * spreadsheet, JSON backup) with explicit buttons instead of the legacy
- * dropdown. CSV/JSON keep their direct download URLs; the print report opens
- * the date dialog.
+ * spreadsheet, native Spliit bundle) with explicit buttons instead of the
+ * legacy dropdown. CSV and bundle keep their direct download URLs; the print
+ * report opens the date dialog.
  */
 export function ExportOptionsCard({ groupId }: { groupId: string }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Expenses' })
@@ -122,12 +122,12 @@ export function ExportOptionsCard({ groupId }: { groupId: string }) {
           href={`${apiUrl}/groups/${groupId}/expenses/export/csv`}
         />
         <ExportOption
-          icon={FileJson}
-          title={t('exportJsonTitle')}
-          purpose={t('exportJsonPurpose')}
-          badge="JSON"
-          actionLabel={t('exportJsonAction')}
-          href={`${apiUrl}/groups/${groupId}/expenses/export/json`}
+          icon={Archive}
+          title={t('exportBundleTitle')}
+          purpose={t('exportBundlePurpose')}
+          badge="ZIP"
+          actionLabel={t('exportBundleAction')}
+          href={`${apiUrl}/groups/${groupId}/export/bundle`}
         />
       </div>
       <ReportPrintDialog

@@ -21,6 +21,7 @@
     "./lib/notifications/push-delivery-sender": "./src/lib/notifications/push-delivery-sender.ts",
     "./lib/notifications/dispatcher": "./src/lib/notifications/dispatcher.ts",
     "./lib/budgets/evaluate": "./src/lib/budgets/evaluate.ts",
+    "./lib/exports": "./src/lib/exports/index.ts",
     "./lib/notifications/budget-planner": "./src/lib/notifications/budget-planner.ts"
   },
   "scripts": {
@@ -57,6 +58,7 @@
     "ai": "^7.0.20",
     "better-auth": "^1.6.25",
     "content-disposition": "^2.0.1",
+    "fflate": "^0.8.2",
     "hono": "^4.12.27",
     "jose": "^6.2.4",
     "nanoid": "^5.1.16",

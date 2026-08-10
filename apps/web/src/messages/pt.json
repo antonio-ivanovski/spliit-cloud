@@ -74,7 +74,6 @@
     "createFirst": "Criar a primeira",
     "noExpenses": "O teu grupo ainda não tem nenhuma despesa.",
     "export": "Exportar",
-    "exportJson": "Exportar para JSON",
     "exportCsv": "Exportar para CSV",
     "searchPlaceholder": "Pesquisar uma despesa…",
     "ActiveUserModal": {
@@ -158,13 +157,10 @@
     "loading": "A carregar despesas…",
     "exportPdfTitle": "Relatório PDF",
     "exportCsvTitle": "Folha de cálculo CSV",
-    "exportJsonTitle": "Cópia de segurança JSON",
     "exportPdfPurpose": "Extrato personalizado com despesas, saldos e transferências sugeridas.",
     "exportCsvPurpose": "Histórico completo numa folha de cálculo para Excel ou Sheets.",
-    "exportJsonPurpose": "Cópia de segurança legível por máquina de todas as despesas do grupo.",
     "exportPdfAction": "Criar PDF",
     "exportCsvAction": "Descarregar CSV",
-    "exportJsonAction": "Descarregar JSON",
     "exportPdfDialogTitle": "Gerar relatório PDF",
     "exportPdfDialogDescription": "Escolhe o período a incluir. As despesas abrangem as datas selecionadas; os saldos e as transferências são apresentados à data final.",
     "exportPdfFromLabel": "De",
@@ -175,7 +171,10 @@
     "exportPdfInvalidRange": "A data final deve ser igual ou posterior à data inicial.",
     "exportPdfError": "Não foi possível gerar o PDF. Tenta novamente.",
     "exportPdfSuccess": "Relatório PDF descarregado.",
-    "exportPdfRetryBounds": "Tentar novamente"
+    "exportPdfRetryBounds": "Tentar novamente",
+    "exportBundleTitle": "Pacote de cópia de segurança Spliit",
+    "exportBundlePurpose": "Dados portáteis do grupo com despesas, definições e documentos anexados.",
+    "exportBundleAction": "Descarregar pacote"
   },
   "ExpenseCard": {
     "paidBy": "Pago por <strong>{paidBy}</strong> · dividido entre <paidFor></paidFor>",

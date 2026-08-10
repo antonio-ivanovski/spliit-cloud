@@ -1401,7 +1401,6 @@
     "createFirst": "Skapa den första",
     "noExpenses": "Din grupp har inga utgifter ännu.",
     "export": "Exportera",
-    "exportJson": "Exportera till JSON",
     "exportCsv": "Exportera till CSV",
     "searchPlaceholder": "Sök efter en utgift…",
     "ActiveUserModal": {
@@ -1484,13 +1483,10 @@
     "loading": "Laddar utgifter…",
     "exportPdfTitle": "PDF-rapport",
     "exportCsvTitle": "CSV-kalkylblad",
-    "exportJsonTitle": "JSON-säkerhetskopia",
     "exportPdfPurpose": "Profilerad sammanställning med utgifter, saldon och föreslagna överföringar.",
     "exportCsvPurpose": "Komplett historik i ett kalkylblad för Excel eller Sheets.",
-    "exportJsonPurpose": "Maskinläsbar säkerhetskopia av varje grupputgift.",
     "exportPdfAction": "Skapa PDF",
     "exportCsvAction": "Ladda ner CSV",
-    "exportJsonAction": "Ladda ner JSON",
     "exportPdfDialogTitle": "Generera PDF-rapport",
     "exportPdfDialogDescription": "Välj vilken period som ska ingå. Utgifter täcker de valda datumen; saldon och överföringar rapporteras per slutdatumet.",
     "exportPdfFromLabel": "Från",
@@ -1501,7 +1497,10 @@
     "exportPdfInvalidRange": "Slutdatumet måste vara samma som eller senare än startdatumet.",
     "exportPdfError": "PDF:en kunde inte skapas. Försök igen.",
     "exportPdfSuccess": "PDF-rapport nedladdad.",
-    "exportPdfRetryBounds": "Försök igen"
+    "exportPdfRetryBounds": "Försök igen",
+    "exportBundleTitle": "Spliit-säkerhetspaket",
+    "exportBundlePurpose": "Flyttbara gruppdata med utgifter, inställningar och bifogade dokument.",
+    "exportBundleAction": "Ladda ner paketet"
   },
   "Footer": {
     "madeIn": "Gjord med kärlek av open source-communityn ❤️",

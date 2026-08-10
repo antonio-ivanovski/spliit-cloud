@@ -1,6 +1,5 @@
 {
   "Expenses": {
-    "exportJson": "JSON으로 내보내기",
     "exportCsv": "CSV로 내보내기",
     "export": "내보내기",
     "ActiveUserModal": {
@@ -88,13 +87,10 @@
     "loading": "지출을 불러오는 중…",
     "exportPdfTitle": "PDF 보고서",
     "exportCsvTitle": "CSV 스프레드시트",
-    "exportJsonTitle": "JSON 백업",
     "exportPdfPurpose": "지출, 잔액, 송금 제안을 담은 브랜드 명세서입니다.",
     "exportCsvPurpose": "Excel 또는 시트에서 열어 볼 수 있는 전체 기록 스프레드시트입니다.",
-    "exportJsonPurpose": "모든 그룹 지출의 기계 판독 가능 백업입니다.",
     "exportPdfAction": "PDF 만들기",
     "exportCsvAction": "CSV 다운로드",
-    "exportJsonAction": "JSON 다운로드",
     "exportPdfDialogTitle": "PDF 보고서 생성",
     "exportPdfDialogDescription": "포함할 기간을 선택하세요. 지출은 선택한 날짜를 기준으로 집계되며, 잔액과 송금은 종료일 시점을 기준으로 보고됩니다.",
     "exportPdfFromLabel": "시작일",
@@ -105,7 +101,10 @@
     "exportPdfInvalidRange": "종료일은 시작일과 같거나 이후여야 합니다.",
     "exportPdfError": "PDF를 생성할 수 없습니다. 다시 시도해 주세요.",
     "exportPdfSuccess": "PDF 보고서가 다운로드되었습니다.",
-    "exportPdfRetryBounds": "다시 시도"
+    "exportPdfRetryBounds": "다시 시도",
+    "exportBundleTitle": "Spliit 백업 번들",
+    "exportBundlePurpose": "지출, 설정 및 첨부 문서가 포함된 휴대용 그룹 데이터입니다.",
+    "exportBundleAction": "번들 다운로드"
   },
   "Groups": {
     "myGroups": "내 그룹",

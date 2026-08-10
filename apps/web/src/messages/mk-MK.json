@@ -74,7 +74,6 @@
     "createFirst": "Креирај го првиот",
     "noExpenses": "Вашата група сè уште нема ниту еден трошок.",
     "export": "Извези",
-    "exportJson": "Извези во JSON",
     "exportCsv": "Извези во CSV",
     "searchPlaceholder": "Пребарајте трошок…",
     "ActiveUserModal": {
@@ -157,13 +156,10 @@
     "loading": "Се вчитуваат трошоци…",
     "exportPdfTitle": "PDF извештај",
     "exportCsvTitle": "CSV табела",
-    "exportJsonTitle": "JSON резервна копија",
     "exportPdfPurpose": "Брендиран извештај со трошоци, состојби и предложени трансфери.",
     "exportCsvPurpose": "Целосна историја во табела за Excel или Sheets.",
-    "exportJsonPurpose": "Машински читлива резервна копија на сите трошоци во групата.",
     "exportPdfAction": "Креирај PDF",
     "exportCsvAction": "Преземи CSV",
-    "exportJsonAction": "Преземи JSON",
     "exportPdfDialogTitle": "Генерирај PDF извештај",
     "exportPdfDialogDescription": "Изберете го периодот што сакате да го вклучите. Трошоците ги опфаќаат избраните датуми; состојбите и трансферите се прикажани на крајниот датум.",
     "exportPdfFromLabel": "Од",
@@ -174,7 +170,10 @@
     "exportPdfInvalidRange": "Крајниот датум мора да биде на или по почетниот датум.",
     "exportPdfError": "PDF-от не може да се генерира. Обидете се повторно.",
     "exportPdfSuccess": "PDF извештајот е преземен.",
-    "exportPdfRetryBounds": "Обиди се повторно"
+    "exportPdfRetryBounds": "Обиди се повторно",
+    "exportBundleTitle": "Резервен пакет од Spliit",
+    "exportBundlePurpose": "Преносливи податоци за групата со трошоци, поставки и прикачени документи.",
+    "exportBundleAction": "Преземи пакет"
   },
   "ExpenseCard": {
     "paidBy": "Платено од <strong>{paidBy}</strong> · поделено меѓу <paidFor></paidFor>",

@@ -226,9 +226,11 @@ describe('EditGroup', () => {
       'href',
       'http://localhost:3001/groups/group-1/expenses/export/csv',
     )
-    expect(screen.getByRole('link', { name: 'Download JSON' })).toHaveAttribute(
+    expect(
+      screen.getByRole('link', { name: 'Download bundle' }),
+    ).toHaveAttribute(
       'href',
-      'http://localhost:3001/groups/group-1/expenses/export/json',
+      'http://localhost:3001/groups/group-1/export/bundle',
     )
   })
 
