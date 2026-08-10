@@ -4,6 +4,7 @@ import {
   GroupType,
   LedgerParticipantKind,
   prisma,
+  type Prisma,
 } from '@spliit/db'
 import type { Expense, GroupFormValues } from '@spliit/domain'
 import {
@@ -44,6 +45,17 @@ import {
   getApiBossForWrite,
 } from './recurrence-series'
 import { randomId } from './shared'
+
+const IMPORT_BATCH_SIZE = 1000
+
+async function createManyInBatches<T>(
+  rows: readonly T[],
+  createMany: (batch: T[]) => Promise<unknown>,
+): Promise<void> {
+  for (let offset = 0; offset < rows.length; offset += IMPORT_BATCH_SIZE) {
+    await createMany(rows.slice(offset, offset + IMPORT_BATCH_SIZE))
+  }
+}
 
 export type ImportParticipantMapping =
   | {
@@ -264,6 +276,48 @@ export async function importGroup(
     )
   }
 
+  const preparedExpenses = input.expenses.map((expense, expenseIndex) => {
+    const conversion = resolvedConversions[expenseIndex]!
+    const expenseId = randomId()
+    return {
+      expense,
+      expenseId,
+      conversion,
+      activity: {
+        id: randomId(),
+        type: 'EXPENSE_CREATED' as const,
+        actorType: 'ACCOUNT' as const,
+        actorId: actor.accountId,
+        subjectType: 'EXPENSE' as const,
+        subjectId: expenseId,
+        data: buildExpenseActivityData({
+          summary: expense.title,
+          title: expense.title,
+          amount: conversion.ledgerAmountMinor,
+          // Expense currency when converted; ledger currency for same-currency
+          // (originalCurrency is null and amount is already ledger minor units).
+          currencyCode:
+            conversion.originalCurrency ?? preflightLedgerCurrency ?? null,
+          date: expense.expenseDate.toISOString().slice(0, 10),
+          originalAmount: conversion.originalAmount ?? undefined,
+          conversionRate: conversion.conversionRate ?? undefined,
+          conversionSource: conversion.conversionSource,
+          ledgerCurrencyCode: preflightLedgerCurrency ?? null,
+        }),
+      },
+      documents: expense.documents.map((document) => ({
+        id: randomId(),
+        document,
+      })),
+    }
+  })
+  const seriesIdByKey = new Map(
+    recurringPlan.series.map((plan) => [plan.seriesKey, randomId()] as const),
+  )
+  const membershipByExpenseIndex = new Map(
+    recurringPlan.membership.map((row) => [row.expenseIndex, row] as const),
+  )
+
   const boss = await getApiBoss()
   const baseResult = await prisma.$transaction(async (tx) => {
     let groupId: string
@@ -475,13 +529,6 @@ export async function importGroup(
     const affectedParticipantIds = new Set<string>()
     let totalAmount = 0
 
-    const seriesIdByKey = new Map(
-      recurringPlan.series.map((plan) => [plan.seriesKey, randomId()] as const),
-    )
-    const membershipByExpenseIndex = new Map(
-      recurringPlan.membership.map((row) => [row.expenseIndex, row] as const),
-    )
-
     const resolvePaidParticipants = (expense: Expense) => {
       const resolvedPaidByList = expense.paidByList
         .map((paidBy) => {
@@ -537,19 +584,79 @@ export async function importGroup(
       return { resolvedPaidByList, resolvedPaidFor }
     }
 
+    const expenseRows: Prisma.ExpenseCreateManyInput[] = []
+    const paidByRows: Prisma.ExpensePaidByCreateManyInput[] = []
+    const paidForRows: Prisma.ExpensePaidForCreateManyInput[] = []
+    const documentRows: Prisma.ExpenseDocumentCreateManyInput[] = []
+    const activityRows: Prisma.ActivityCreateManyInput[] = []
+    const resolvedParticipantsByExpenseIndex: Array<
+      ReturnType<typeof resolvePaidParticipants>
+    > = []
+
+    for (const [expenseIndex, prepared] of preparedExpenses.entries()) {
+      const { expense, expenseId, conversion } = prepared
+      const resolvedParticipants = resolvePaidParticipants(expense)
+      resolvedParticipantsByExpenseIndex.push(resolvedParticipants)
+
+      if (!expense.isReimbursement) {
+        totalAmount += conversion.ledgerAmountMinor
+      }
+      for (const row of resolvedParticipants.resolvedPaidByList) {
+        affectedParticipantIds.add(row.ledgerParticipantId)
+        paidByRows.push({ expenseId, ...row })
+      }
+      for (const row of resolvedParticipants.resolvedPaidFor) {
+        affectedParticipantIds.add(row.ledgerParticipantId)
+        paidForRows.push({ expenseId, ...row })
+      }
+
+      const membership = membershipByExpenseIndex.get(expenseIndex)
+      const recurringSeriesId = membership
+        ? seriesIdByKey.get(membership.seriesKey)
+        : undefined
+      expenseRows.push({
+        id: expenseId,
+        ledgerId,
+        createdByAccountId: actor.accountId,
+        expenseDate: expense.expenseDate,
+        title: expense.title,
+        categoryId: expense.category,
+        amount: conversion.ledgerAmountMinor,
+        originalAmount: conversion.originalAmount,
+        originalCurrency: conversion.originalCurrency,
+        conversionRate: conversion.conversionRate,
+        conversionSource: conversion.conversionSource,
+        paidBySplitMode: expense.paidBySplitMode,
+        splitMode: expense.splitMode,
+        recurringSeriesId,
+        recurrenceSequence: membership?.sequence,
+        isReimbursement: expense.isReimbursement,
+        notes: expense.notes,
+      })
+      for (const { id, document } of prepared.documents) {
+        documentRows.push({
+          id,
+          expenseId,
+          ledgerId,
+          url: document.url,
+          width: document.width,
+          height: document.height,
+        })
+      }
+      activityRows.push({
+        ...prepared.activity,
+        ledgerId,
+        data: prepared.activity.data,
+      })
+    }
+
     for (const plan of recurringPlan.series) {
       const seriesId = seriesIdByKey.get(plan.seriesKey)
       if (!seriesId) continue
       const anchorExpense = input.expenses[plan.anchorIndex]!
       const conversion = resolvedConversions[plan.anchorIndex]!
       const { resolvedPaidByList, resolvedPaidFor } =
-        resolvePaidParticipants(anchorExpense)
-      for (const row of resolvedPaidByList) {
-        affectedParticipantIds.add(row.ledgerParticipantId)
-      }
-      for (const row of resolvedPaidFor) {
-        affectedParticipantIds.add(row.ledgerParticipantId)
-      }
+        resolvedParticipantsByExpenseIndex[plan.anchorIndex]!
       const template = buildRecurringTemplate({
         expense: {
           ...anchorExpense,
@@ -609,100 +716,21 @@ export async function importGroup(
       })
     }
 
-    for (
-      let expenseIndex = 0;
-      expenseIndex < input.expenses.length;
-      expenseIndex++
-    ) {
-      const expense = input.expenses[expenseIndex]!
-      const expenseId = randomId()
-      const conversion = resolvedConversions[expenseIndex]!
-      const ledgerAmount = conversion.ledgerAmountMinor
-      const dateStr = expense.expenseDate.toISOString().slice(0, 10)
-      await logActivity(
-        groupId,
-        {
-          type: 'EXPENSE_CREATED',
-          actor: { type: 'ACCOUNT', id: actor.accountId },
-          subject: { type: 'EXPENSE', id: expenseId },
-          data: buildExpenseActivityData({
-            summary: expense.title,
-            title: expense.title,
-            amount: ledgerAmount,
-            // Expense currency when converted; ledger currency for same-currency
-            // (originalCurrency is null and amount is already ledger minor units).
-            currencyCode: conversion.originalCurrency ?? ledgerCurrency ?? null,
-            date: dateStr,
-            originalAmount: conversion.originalAmount ?? undefined,
-            conversionRate: conversion.conversionRate ?? undefined,
-            conversionSource: conversion.conversionSource,
-            ledgerCurrencyCode: ledgerCurrency ?? null,
-          }),
-        },
-        tx,
-      )
-      if (!expense.isReimbursement) {
-        totalAmount += ledgerAmount
-      }
-      const { resolvedPaidByList, resolvedPaidFor } =
-        resolvePaidParticipants(expense)
-      for (const row of resolvedPaidByList) {
-        affectedParticipantIds.add(row.ledgerParticipantId)
-      }
-      for (const row of resolvedPaidFor) {
-        affectedParticipantIds.add(row.ledgerParticipantId)
-      }
-      const membership = membershipByExpenseIndex.get(expenseIndex)
-      const destinationSeriesId = membership
-        ? seriesIdByKey.get(membership.seriesKey)
-        : undefined
-      await tx.expense.create({
-        data: {
-          id: expenseId,
-          ledgerId,
-          createdByAccountId: actor.accountId,
-          expenseDate: expense.expenseDate,
-          title: expense.title,
-          categoryId: expense.category,
-          amount: ledgerAmount,
-          originalAmount: conversion.originalAmount,
-          originalCurrency: conversion.originalCurrency,
-          conversionRate: conversion.conversionRate,
-          conversionSource: conversion.conversionSource,
-          paidBySplitMode: expense.paidBySplitMode,
-          paidByList: {
-            createMany: {
-              data: resolvedPaidByList,
-            },
-          },
-          splitMode: expense.splitMode,
-          ...(destinationSeriesId && membership
-            ? {
-                recurringSeriesId: destinationSeriesId,
-                recurrenceSequence: membership.sequence,
-              }
-            : {}),
-          isReimbursement: expense.isReimbursement,
-          notes: expense.notes,
-          paidFor: {
-            createMany: {
-              data: resolvedPaidFor,
-            },
-          },
-          documents: {
-            createMany: {
-              data: expense.documents.map((doc) => ({
-                id: randomId(),
-                url: doc.url,
-                width: doc.width,
-                height: doc.height,
-                ledgerId,
-              })),
-            },
-          },
-        },
-      })
-    }
+    await createManyInBatches(expenseRows, (data) =>
+      tx.expense.createMany({ data }),
+    )
+    await createManyInBatches(paidByRows, (data) =>
+      tx.expensePaidBy.createMany({ data }),
+    )
+    await createManyInBatches(paidForRows, (data) =>
+      tx.expensePaidFor.createMany({ data }),
+    )
+    await createManyInBatches(documentRows, (data) =>
+      tx.expenseDocument.createMany({ data }),
+    )
+    await createManyInBatches(activityRows, (data) =>
+      tx.activity.createMany({ data }),
+    )
 
     // Single summary activity for the whole import so the feed shows
     // "Alice imported N expenses from <provider>" once. Per-expense
@@ -725,10 +753,16 @@ export async function importGroup(
         }),
       },
       tx,
+      ledgerId,
     )
 
     if (affectedParticipantIds.size > 0) {
-      await planNotificationForActivity(tx, summaryActivity, {}, { boss })
+      await planNotificationForActivity(
+        tx,
+        summaryActivity,
+        { groupId },
+        { boss },
+      )
     }
 
     return {

@@ -225,11 +225,6 @@ describe('importGroup', () => {
       status: 'ACTIVE',
     } as never)
     prismaMock.ledgerParticipant.create.mockResolvedValue({} as never)
-    const expenseCreates: Array<{ data: unknown }> = []
-    prismaMock.expense.create.mockImplementation(async (args: unknown) => {
-      expenseCreates.push(args as { data: unknown })
-      return {} as never
-    })
     await importGroup(
       {
         groupFormValues: {
@@ -244,27 +239,144 @@ describe('importGroup', () => {
       },
       { accountId: 'acct-importer' },
     )
-    expect(expenseCreates).toHaveLength(1)
-    const data = expenseCreates[0].data as {
-      paidBySplitMode: string
-      paidByList: {
-        createMany: { data: Array<{ ledgerParticipantId: string }> }
-      }
-      paidFor: { createMany: { data: Array<{ ledgerParticipantId: string }> } }
-    }
+    const expenseRows = prismaMock.expense.createMany.mock.calls[0]?.[0]
+      .data as Array<{ id: string; paidBySplitMode: string }>
+    const paidByRows = prismaMock.expensePaidBy.createMany.mock.calls[0]?.[0]
+      .data as Array<{ expenseId: string; ledgerParticipantId: string }>
+    const paidForRows = prismaMock.expensePaidFor.createMany.mock.calls[0]?.[0]
+      .data as Array<{ expenseId: string; ledgerParticipantId: string }>
+    expect(expenseRows).toHaveLength(1)
+    const expenseId = expenseRows[0]!.id
     // The paidByList on the expense must point at one of the
     // destLedgerParticipantId values we sent in. The pre-fix bug
     // surfaced here as a 500 (foreign-key violation) because the
     // web-supplied id was being passed straight to the database
     // without any resolve step.
-    expect(data.paidBySplitMode).toBe('BY_AMOUNT')
-    expect(
-      data.paidByList.createMany.data.map((d) => d.ledgerParticipantId),
-    ).toEqual(['dest-lp-1'])
-    const paidForIds = data.paidFor.createMany.data.map(
-      (d) => d.ledgerParticipantId,
-    )
+    expect(expenseRows[0]!.paidBySplitMode).toBe('BY_AMOUNT')
+    expect(paidByRows).toEqual([
+      expect.objectContaining({ expenseId, ledgerParticipantId: 'dest-lp-1' }),
+    ])
+    const paidForIds = paidForRows.map((d) => d.ledgerParticipantId)
     expect(paidForIds).toEqual(['dest-lp-1', 'dest-lp-2'])
+  })
+
+  it('imports 1,113 expenses with bounded, dependency-ordered bulk writes', async () => {
+    await authAs('acct-importer')
+    stubGroupWithLedger('dest-grp', 'dest-ledger')
+    prismaMock.ledger.create.mockResolvedValue({
+      id: 'dest-ledger',
+      currency: '€',
+      currencyCode: 'EUR',
+      createdAt: new Date(),
+    } as never)
+    prismaMock.group.create.mockResolvedValue({
+      id: 'dest-grp',
+      name: 'Imported',
+      information: null,
+      archived: false,
+      createdAt: new Date(),
+      ledgerId: 'dest-ledger',
+    } as never)
+    prismaMock.groupMember.create.mockResolvedValue({
+      id: 'dest-gm',
+      groupId: 'dest-grp',
+      accountId: 'acct-importer',
+      role: 'ADMIN',
+      status: 'ACTIVE',
+    } as never)
+    prismaMock.ledgerParticipant.create.mockResolvedValue({} as never)
+
+    const writeOrder: string[] = []
+    const captureBatch =
+      (model: string) => async (args: { data: unknown[] }) => {
+        writeOrder.push(model)
+        return { count: args.data.length }
+      }
+    prismaMock.expense.createMany.mockImplementation(
+      captureBatch('expense') as never,
+    )
+    prismaMock.expensePaidBy.createMany.mockImplementation(
+      captureBatch('paidBy') as never,
+    )
+    prismaMock.expensePaidFor.createMany.mockImplementation(
+      captureBatch('paidFor') as never,
+    )
+    prismaMock.expenseDocument.createMany.mockImplementation(
+      captureBatch('document') as never,
+    )
+    prismaMock.activity.createMany.mockImplementation(
+      captureBatch('activity') as never,
+    )
+
+    const expenses = Array.from({ length: 1113 }, (_, index) => ({
+      ...baseExpense,
+      title: `Expense ${index}`,
+      documents: [
+        {
+          url: `https://example.test/receipt-${index}.jpg`,
+          width: 640,
+          height: 480,
+        },
+      ],
+    }))
+
+    const result = await importGroup(
+      {
+        groupFormValues: {
+          name: 'Imported',
+          information: '',
+          currency: '€',
+          currencyCode: 'EUR',
+          participants: [{ name: 'Owner' }],
+        },
+        participants: [...baseParticipants],
+        expenses: expenses as never,
+      },
+      { accountId: 'acct-importer' },
+    )
+
+    expect(result.importedExpenses).toBe(1113)
+    expect(
+      prismaMock.expense.createMany.mock.calls.map(
+        ([args]) => (args.data as unknown[]).length,
+      ),
+    ).toEqual([1000, 113])
+    expect(
+      prismaMock.expensePaidBy.createMany.mock.calls.map(
+        ([args]) => (args.data as unknown[]).length,
+      ),
+    ).toEqual([1000, 113])
+    expect(
+      prismaMock.expensePaidFor.createMany.mock.calls.map(
+        ([args]) => (args.data as unknown[]).length,
+      ),
+    ).toEqual([1000, 1000, 226])
+    expect(
+      prismaMock.expenseDocument.createMany.mock.calls.map(
+        ([args]) => (args.data as unknown[]).length,
+      ),
+    ).toEqual([1000, 113])
+    expect(
+      prismaMock.activity.createMany.mock.calls.map(
+        ([args]) => (args.data as unknown[]).length,
+      ),
+    ).toEqual([1000, 113])
+    expect(writeOrder).toEqual([
+      'expense',
+      'expense',
+      'paidBy',
+      'paidBy',
+      'paidFor',
+      'paidFor',
+      'paidFor',
+      'document',
+      'document',
+      'activity',
+      'activity',
+    ])
+    expect(prismaMock.expense.create).not.toHaveBeenCalled()
+    expect(prismaMock.activity.create).toHaveBeenCalledTimes(1)
+    expect(prisma$Transaction.mock.calls[0]?.[1]).toBeUndefined()
   })
 
   it('creates a fresh LedgerParticipant for the LINK_ACCOUNT target (admin has no LP yet)', async () => {
@@ -310,11 +422,6 @@ describe('importGroup', () => {
       ledgerParticipant: null,
     } as never)
     prismaMock.ledgerParticipant.create.mockResolvedValue({} as never)
-    const expenseCreates: Array<{ data: unknown }> = []
-    prismaMock.expense.create.mockImplementation(async (args: unknown) => {
-      expenseCreates.push(args as { data: unknown })
-      return {} as never
-    })
     await importGroup(
       {
         groupFormValues: {
@@ -355,21 +462,16 @@ describe('importGroup', () => {
       },
       { accountId: 'acct-importer' },
     )
-    expect(expenseCreates).toHaveLength(1)
-    const data = expenseCreates[0].data as {
-      paidByList: {
-        createMany: { data: Array<{ ledgerParticipantId: string }> }
-      }
-      paidFor: { createMany: { data: Array<{ ledgerParticipantId: string }> } }
-    }
+    const paidByRows = prismaMock.expensePaidBy.createMany.mock.calls[0]?.[0]
+      .data as Array<{ ledgerParticipantId: string }>
     // The LINK_ACCOUNT branch created a fresh LP with the
     // web-supplied `destLedgerParticipantId` for John, linked to
     // the existing admin GroupMember. The expense's paidByList
     // points at this fresh id (not at a server-generated LP for
     // the admin).
-    expect(
-      data.paidByList.createMany.data.map((d) => d.ledgerParticipantId),
-    ).toEqual(['web-supplied-lp'])
+    expect(paidByRows.map((d) => d.ledgerParticipantId)).toEqual([
+      'web-supplied-lp',
+    ])
   })
 
   it('does not create a LedgerParticipant for the admin when no source row maps to it', async () => {

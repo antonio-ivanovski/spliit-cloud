@@ -96,7 +96,7 @@ describe('importGroup recurring collapse', () => {
     prismaMock.recurringExpenseSeries.create.mockResolvedValue({
       id: 'series-1',
     } as never)
-    prismaMock.expense.create.mockResolvedValue({} as never)
+    prismaMock.expense.createMany.mockResolvedValue({ count: 0 } as never)
   })
 
   it('collapses matching monthly rows into one series with sequences', async () => {
@@ -107,10 +107,12 @@ describe('importGroup recurring collapse', () => {
         return { id: (args as { data: { id: string } }).data.id } as never
       },
     )
-    const expenseCreates: Array<{ data: Record<string, unknown> }> = []
-    prismaMock.expense.create.mockImplementation(async (args: unknown) => {
-      expenseCreates.push(args as { data: Record<string, unknown> })
-      return {} as never
+    const expenseRows: Array<Record<string, unknown>> = []
+    prismaMock.expense.createMany.mockImplementation(async (args: unknown) => {
+      expenseRows.push(
+        ...(args as { data: Array<Record<string, unknown>> }).data,
+      )
+      return { count: expenseRows.length } as never
     })
 
     const input: ImportInput = {
@@ -140,13 +142,9 @@ describe('importGroup recurring collapse', () => {
         .slice(0, 10),
     ).toBe('2026-08-19')
 
-    const sequences = expenseCreates.map(
-      (row) => row.data.recurrenceSequence as number,
-    )
+    const sequences = expenseRows.map((row) => row.recurrenceSequence as number)
     expect(sequences.sort((a, b) => a - b)).toEqual([1, 2, 3])
-    const seriesIds = new Set(
-      expenseCreates.map((row) => row.data.recurringSeriesId),
-    )
+    const seriesIds = new Set(expenseRows.map((row) => row.recurringSeriesId))
     expect(seriesIds.size).toBe(1)
   })
 })
