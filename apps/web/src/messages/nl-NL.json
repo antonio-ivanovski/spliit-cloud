@@ -1624,7 +1624,7 @@
     "noManagePermission": "Alleen eigenaren en beheerders kunnen leden uitnodigen of verwijderen.",
     "archivedNotice": "Uitnodigingen zijn uitgeschakeld zolang de groep is gearchiveerd. Haal de groep uit het archief om nieuwe leden uit te nodigen.",
     "invite": {
-      "title": "Lid uitnodigen",
+      "title": "Mensen toevoegen",
       "email": "E-mail",
       "emailPlaceholder": "vriend@voorbeeld.com",
       "role": "Rol",
@@ -1633,7 +1633,8 @@
       "tab": {
         "email": "E-mail",
         "link": "Uitnodigingslink",
-        "friends": "Vrienden"
+        "friends": "Vrienden",
+        "unlinked": "Geen account"
       },
       "emailDescription": "Stuur een uitnodiging via e-mail. De genodigde wordt lid zodra hij vanuit een overeenkomend account accepteert.",
       "linkDescription": "Genereer een link die één keer gebruikt kan worden om lid te worden. De link werkt niet meer zodra iemand hem accepteert.",
@@ -1658,7 +1659,11 @@
       "selectFriendPlaceholder": "Selecteer een vriend…",
       "friendAlreadyMember": "Al lid",
       "noFriends": "Nog geen vrienden. Nodig iemand uit via het tabblad E-mail.",
-      "friendAlreadyInvited": "Al uitgenodigd"
+      "friendAlreadyInvited": "Al uitgenodigd",
+      "noAccountDescription": "Voeg iemand aan de uitgaven toe zonder die persoon voor Spliit uit te nodigen. Je kunt die persoon later aan een account koppelen.",
+      "temporaryNameRequired": "Tijdelijke naam",
+      "noAccountNameDescription": "Wordt in uitgaven en saldi weergegeven totdat deze deelnemer aan een account is gekoppeld.",
+      "addParticipant": "Deelnemer toevoegen"
     },
     "invitations": {
       "title": "Openstaande uitnodigingen",
@@ -1738,8 +1743,8 @@
       }
     },
     "unlinked": {
-      "title": "Niet-gekoppelde deelnemers",
-      "description": "Deze personen hebben een naam in de groep maar nog geen app-account. Koppel ze aan een bestaand account om hun uitgaven aan die gebruiker te koppelen.",
+      "title": "Deelnemers zonder account",
+      "description": "Deze deelnemers kunnen aan uitgaven worden toegevoegd, maar hebben geen toegang tot de groep. Een beheerder kan ze later aan een account koppelen.",
       "emailPlaceholder": "account@voorbeeld.nl",
       "linkButton": "Koppelen",
       "link": "Koppelen aan account",
@@ -1757,7 +1762,8 @@
         "membersGroupWithPending": "Leden en openstaande uitnodigingen",
         "pendingGroup": "Openstaande uitnodigingen",
         "pendingSuffix": "(openstaand)"
-      }
+      },
+      "created": "{name} is aan de groep toegevoegd."
     },
     "dropdown": {
       "remove": "Verwijderen",
@@ -1829,7 +1835,8 @@
     },
     "regenerate": {
       "title": "Nieuwe link genereren"
-    }
+    },
+    "actionsFor": "Acties voor {name}"
   },
   "AccountSettings": {
     "title": "Accountinstellingen",

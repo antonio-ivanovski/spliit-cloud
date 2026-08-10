@@ -1632,7 +1632,7 @@
     "noManagePermission": "Doar proprietarii și administratorii pot invita sau revoca membri ai grupului.",
     "archivedNotice": "Invitațiile sunt dezactivate în timp ce grupul este arhivat. Dezarhivează grupul pentru a invita membri noi.",
     "invite": {
-      "title": "Invită membru",
+      "title": "Adaugă persoane",
       "email": "Email",
       "emailPlaceholder": "prieten@example.com",
       "role": "Rol",
@@ -1656,7 +1656,8 @@
       "tab": {
         "email": "E-mail",
         "link": "Link de invitație",
-        "friends": "Prieteni"
+        "friends": "Prieteni",
+        "unlinked": "Fără cont"
       },
       "emailDescription": "Trimite o invitație prin e-mail. Persoana invitată se alătură după ce acceptă de pe un cont corespunzător.",
       "linkDescription": "Generează un link de unică folosință pe care oricine îl poate folosi pentru a se alătura. Link-ul nu mai funcționează după prima acceptare.",
@@ -1666,7 +1667,11 @@
       "selectFriendPlaceholder": "Selectează un prieten…",
       "friendAlreadyMember": "Deja membru",
       "noFriends": "Nu ai încă prieteni. Invită din fila E-mail.",
-      "friendAlreadyInvited": "Deja invitat"
+      "friendAlreadyInvited": "Deja invitat",
+      "noAccountDescription": "Adaugă o persoană la cheltuieli fără să o inviți în Spliit. O poți asocia ulterior unui cont.",
+      "temporaryNameRequired": "Nume temporar",
+      "noAccountNameDescription": "Va apărea în cheltuieli și solduri până când acest participant este asociat unui cont.",
+      "addParticipant": "Adaugă participant"
     },
     "invitations": {
       "title": "Invitații în așteptare",
@@ -1747,8 +1752,8 @@
       }
     },
     "unlinked": {
-      "title": "Participanți nelegați",
-      "description": "Aceste persoane au un nume în grup dar încă nu au un cont în aplicație. Leagă fiecare de un cont existent pentru a asocia cheltuielile lor cu acel utilizator.",
+      "title": "Participanți fără cont",
+      "description": "Acești participanți pot fi incluși în cheltuieli, dar nu pot accesa grupul. Un administrator îi poate asocia ulterior unui cont.",
       "emailPlaceholder": "cont@exemplu.com",
       "link": "Leagă de cont",
       "linkSuccess": "Participant legat de cont",
@@ -1766,7 +1771,8 @@
         "membersGroupWithPending": "Membri și invitații în așteptare",
         "pendingGroup": "Invitații în așteptare",
         "pendingSuffix": "(în așteptare)"
-      }
+      },
+      "created": "Participantul {name} a fost adăugat în grup."
     },
     "dropdown": {
       "remove": "Elimină",
@@ -1838,7 +1844,8 @@
     },
     "regenerate": {
       "title": "Generează link nou"
-    }
+    },
+    "actionsFor": "Acțiuni pentru {name}"
   },
   "AccountSettings": {
     "title": "Setările contului",

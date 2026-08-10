@@ -19,6 +19,7 @@ import {
   roleLabel,
   type PendingInvitation,
 } from './members-hooks'
+import { ResponsiveParticipantActions } from './responsive-participant-actions'
 import { SegmentedActions } from './segmented-actions'
 
 export function PendingInvitationsCard({
@@ -108,10 +109,28 @@ export function PendingInvitationsCard({
               // twice on the same row is noise.
               const nameIsEmail = effectiveName === invitation.email
               const DeliveryIcon = isLink ? Link2 : Mail
+              const detail = isLink
+                ? [
+                    subtitle,
+                    invitation.expiresAt
+                      ? t('invitations.link.expiresOn', {
+                          date: formatDate(
+                            invitation.expiresAt,
+                            locale,
+                            timeZone,
+                          ),
+                        })
+                      : null,
+                  ]
+                    .filter(Boolean)
+                    .join(' · ')
+                : !nameIsEmail
+                  ? subtitle
+                  : null
               return (
                 <li
                   key={invitation.id}
-                  className="flex min-h-[52px] flex-col gap-3 py-3 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between"
+                  className="grid min-h-[52px] grid-cols-[minmax(0,1fr)_auto] items-start gap-x-2 py-3 first:pt-0 last:pb-0 sm:items-center"
                 >
                   <div className="flex min-w-0 items-start gap-3">
                     <AccountAvatar
@@ -126,112 +145,152 @@ export function PendingInvitationsCard({
                       className="mt-0.5 shrink-0"
                     />
                     <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-2">
+                      <div className="flex min-w-0 flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
                         <span className="truncate font-medium text-foreground">
                           {effectiveName}
                         </span>
-                        <Badge variant="outline" className="shrink-0 gap-1">
-                          <DeliveryIcon className="size-3" aria-hidden="true" />
-                          {isLink
-                            ? t('invitations.link.type')
-                            : t('invitations.email.type')}
-                        </Badge>
-                        {isExpired && (
-                          <Badge
-                            variant="outline"
-                            className="shrink-0 border-destructive/40 text-destructive"
-                          >
-                            {t('invitations.link.expired')}
+                        <span className="flex flex-wrap items-center gap-2">
+                          <Badge variant="outline" className="shrink-0 gap-1">
+                            <DeliveryIcon
+                              className="size-3"
+                              aria-hidden="true"
+                            />
+                            {isLink
+                              ? t('invitations.link.type')
+                              : t('invitations.email.type')}
                           </Badge>
-                        )}
-                        <Badge
-                          variant={badgeVariantForRole(invitation.role)}
-                          className="shrink-0"
-                        >
-                          {roleLabel(invitation.role, roleLabels)}
-                        </Badge>
+                          {isExpired && (
+                            <Badge
+                              variant="outline"
+                              className="shrink-0 border-destructive/40 text-destructive"
+                            >
+                              {t('invitations.link.expired')}
+                            </Badge>
+                          )}
+                          <Badge
+                            variant={badgeVariantForRole(invitation.role)}
+                            className="shrink-0"
+                          >
+                            {roleLabel(invitation.role, roleLabels)}
+                          </Badge>
+                        </span>
                       </div>
-                      {subtitle && !nameIsEmail && (
-                        <p className="mt-0.5 truncate text-xs text-muted-foreground">
-                          {subtitle}
+                      {detail && (
+                        <p
+                          className="mt-0.5 truncate text-xs text-muted-foreground"
+                          title={detail}
+                        >
+                          {detail}
                         </p>
                       )}
-                      <p className="mt-0.5 text-xs text-muted-foreground">
-                        {t('invitations.updatedOn', {
-                          date: formatDate(
-                            invitation.updatedAt,
-                            locale,
-                            timeZone,
-                          ),
-                        })}
-                        {isLink && invitation.expiresAt
-                          ? ` · ${t('invitations.link.expiresOn', {
-                              date: formatDate(
-                                invitation.expiresAt,
-                                locale,
-                                timeZone,
-                              ),
-                            })}`
-                          : ''}
-                      </p>
                     </div>
                   </div>
-                  <div className="flex w-full flex-wrap items-center justify-start gap-2 sm:w-auto sm:justify-end">
-                    {invitation.canManage ||
-                    (invitation.canRevoke && invitation.ledgerParticipantId) ? (
-                      <SegmentedActions>
-                        {invitation.canManage && (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="rounded-none"
-                            aria-label={t('manage.manageButton')}
-                            title={t('manage.manageButton')}
-                            ref={(element) =>
-                              onManageButtonRef(invitation.id, element)
-                            }
-                            onClick={() => onManage(invitation)}
-                          >
-                            <Pencil className="size-4" aria-hidden="true" />
-                          </Button>
-                        )}
-                        {invitation.canManage && isLink && (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="rounded-none"
-                            aria-label={t('invite.link.generateNew')}
-                            title={t('invite.link.generateNew')}
-                            ref={(element) =>
-                              onGenerateButtonRef(invitation.id, element)
-                            }
-                            onClick={() => onGenerateLink(invitation)}
-                          >
-                            <RefreshCw className="size-4" aria-hidden="true" />
-                          </Button>
-                        )}
-                        {invitation.canRevoke &&
-                          invitation.ledgerParticipantId && (
+                  {invitation.canManage ||
+                  (invitation.canRevoke && invitation.ledgerParticipantId) ? (
+                    <ResponsiveParticipantActions
+                      label={t('actionsFor', { name: effectiveName })}
+                      mobileTriggerRef={(element) => {
+                        if (invitation.canManage) {
+                          onManageButtonRef(invitation.id, element)
+                        }
+                        if (invitation.canManage && isLink) {
+                          onGenerateButtonRef(invitation.id, element)
+                        }
+                      }}
+                      desktopActions={
+                        <SegmentedActions>
+                          {invitation.canManage && (
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="rounded-none text-destructive hover:bg-destructive/10 hover:text-destructive"
-                              aria-label={t('invitations.revokeButton')}
-                              title={t('invitations.revokeButton')}
-                              onClick={() =>
-                                onRevoke({
-                                  ledgerParticipantId:
-                                    invitation.ledgerParticipantId!,
-                                  label: effectiveName,
-                                })
+                              className="rounded-none"
+                              aria-label={t('manage.manageButton')}
+                              title={t('manage.manageButton')}
+                              ref={(element) =>
+                                onManageButtonRef(invitation.id, element)
                               }
+                              onClick={() => onManage(invitation)}
                             >
-                              <Ban className="size-4" aria-hidden="true" />
+                              <Pencil size={16} aria-hidden="true" />
                             </Button>
                           )}
-                      </SegmentedActions>
-                    ) : null}
-                  </div>
+                          {invitation.canManage && isLink && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="rounded-none"
+                              aria-label={t('invite.link.generateNew')}
+                              title={t('invite.link.generateNew')}
+                              ref={(element) =>
+                                onGenerateButtonRef(invitation.id, element)
+                              }
+                              onClick={() => onGenerateLink(invitation)}
+                            >
+                              <RefreshCw size={16} aria-hidden="true" />
+                            </Button>
+                          )}
+                          {invitation.canRevoke &&
+                            invitation.ledgerParticipantId && (
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="rounded-none text-destructive hover:bg-destructive/10 hover:text-destructive"
+                                aria-label={t('invitations.revokeButton')}
+                                title={t('invitations.revokeButton')}
+                                onClick={() =>
+                                  onRevoke({
+                                    ledgerParticipantId:
+                                      invitation.ledgerParticipantId!,
+                                    label: effectiveName,
+                                  })
+                                }
+                              >
+                                <Ban size={16} aria-hidden="true" />
+                              </Button>
+                            )}
+                        </SegmentedActions>
+                      }
+                      mobileActions={[
+                        ...(invitation.canManage
+                          ? [
+                              {
+                                key: 'manage',
+                                label: t('manage.manageButton'),
+                                icon: Pencil,
+                                onSelect: () => onManage(invitation),
+                              },
+                            ]
+                          : []),
+                        ...(invitation.canManage && isLink
+                          ? [
+                              {
+                                key: 'regenerate',
+                                label: t('invite.link.generateNew'),
+                                icon: RefreshCw,
+                                onSelect: () => onGenerateLink(invitation),
+                              },
+                            ]
+                          : []),
+                        ...(invitation.canRevoke &&
+                        invitation.ledgerParticipantId
+                          ? [
+                              {
+                                key: 'revoke',
+                                label: t('invitations.revokeButton'),
+                                icon: Ban,
+                                destructive: true,
+                                onSelect: () =>
+                                  onRevoke({
+                                    ledgerParticipantId:
+                                      invitation.ledgerParticipantId!,
+                                    label: effectiveName,
+                                  }),
+                              },
+                            ]
+                          : []),
+                      ]}
+                    />
+                  ) : null}
                 </li>
               )
             })}

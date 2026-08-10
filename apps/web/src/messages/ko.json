@@ -1617,7 +1617,7 @@
     "noManagePermission": "소유자와 관리자만 멤버를 초대하거나 권한을 취소할 수 있습니다.",
     "archivedNotice": "그룹이 보관된 동안에는 초대가 비활성화됩니다. 새 멤버를 초대하려면 그룹 보관을 해제하세요.",
     "invite": {
-      "title": "멤버 초대",
+      "title": "멤버 추가",
       "email": "이메일",
       "emailPlaceholder": "friend@example.com",
       "role": "역할",
@@ -1641,7 +1641,8 @@
       "tab": {
         "email": "이메일",
         "link": "초대 링크",
-        "friends": "친구"
+        "friends": "친구",
+        "unlinked": "계정 없음"
       },
       "emailDescription": "이메일로 초대를 보냅니다. 초대받은 사람이 일치하는 계정에서 수락하면 참여됩니다.",
       "linkDescription": "누구나 참여할 수 있는 1회용 링크를 생성합니다. 첫 번째 사람이 수락하면 링크는 더 이상 작동하지 않습니다.",
@@ -1651,7 +1652,11 @@
       "selectFriendPlaceholder": "친구 선택…",
       "friendAlreadyMember": "이미 멤버입니다",
       "noFriends": "아직 친구가 없습니다. 이메일 탭에서 초대하세요.",
-      "friendAlreadyInvited": "이미 초대됨"
+      "friendAlreadyInvited": "이미 초대됨",
+      "noAccountDescription": "Spliit에 초대하지 않고도 지출에 누군가를 추가할 수 있습니다. 나중에 계정에 연결할 수 있습니다.",
+      "temporaryNameRequired": "임시 이름",
+      "noAccountNameDescription": "이 참가자를 계정에 연결할 때까지 지출 및 잔액에 표시됩니다.",
+      "addParticipant": "참가자 추가"
     },
     "invitations": {
       "title": "대기 중인 초대",
@@ -1731,8 +1736,8 @@
       }
     },
     "unlinked": {
-      "title": "연결되지 않은 참가자",
-      "description": "이 사람들은 그룹에 이름이 있지만 아직 앱 계정이 없습니다. 각 항목을 기존 계정에 연결하여 지출을 해당 사용자와 연결하세요.",
+      "title": "계정이 없는 참가자",
+      "description": "이 참가자들은 지출에 포함할 수 있지만 그룹에 접근할 수 없습니다. 관리자가 나중에 계정에 연결할 수 있습니다.",
       "emailPlaceholder": "account@example.com",
       "link": "계정에 연결",
       "linkSuccess": "참가자가 계정에 연결되었습니다.",
@@ -1750,7 +1755,8 @@
         "pendingGroup": "대기 중인 초대",
         "pendingSuffix": "(대기 중)"
       },
-      "linkButton": "연결"
+      "linkButton": "연결",
+      "created": "그룹에 {name}이(가) 추가되었습니다."
     },
     "dropdown": {
       "remove": "제거",
@@ -1822,7 +1828,8 @@
     },
     "regenerate": {
       "title": "새 링크 생성"
-    }
+    },
+    "actionsFor": "{name}에 대한 작업"
   },
   "AccountSettings": {
     "title": "계정 설정",

@@ -2260,7 +2260,7 @@
       "updatedOn": "updated {date}"
     },
     "invite": {
-      "title": "invite a member",
+      "title": "add people",
       "email": "email drop",
       "emailPlaceholder": "friend@example.com, bestie",
       "role": "role",
@@ -2293,8 +2293,13 @@
       "tab": {
         "email": "email mode",
         "link": "invite link mode",
-        "friends": "besties"
-      }
+        "friends": "besties",
+        "unlinked": "no account"
+      },
+      "noAccountDescription": "add someone to expenses without inviting them to Spliit. you can link them to an account later.",
+      "temporaryNameRequired": "temporary name",
+      "noAccountNameDescription": "shown in expenses and balances until this participant is linked to an account.",
+      "addParticipant": "add participant"
     },
     "leave": {
       "button": "leave the group",
@@ -2357,8 +2362,8 @@
       "member": "member mode"
     },
     "unlinked": {
-      "title": "unlinked participants",
-      "description": "these people have a group name but no app account yet. link each to an account to associate expenses.",
+      "title": "participants without accounts",
+      "description": "these participants can be included in expenses but cannot access the group. an admin can link them to an account later.",
       "emailPlaceholder": "account@example.com, bestie",
       "link": "link to an account",
       "linkSuccess": "participant linked to account",
@@ -2376,7 +2381,8 @@
         "membersGroupWithPending": "members and pending invites",
         "pendingGroup": "pending invites",
         "pendingSuffix": "(pending, bestie)"
-      }
+      },
+      "created": "{name} is now in the group."
     },
     "subgroups": {
       "title": "subgroups",
@@ -2443,7 +2449,8 @@
     },
     "regenerate": {
       "title": "generate a fresh link"
-    }
+    },
+    "actionsFor": "actions for {name}"
   },
   "OAuth": {
     "consent": {

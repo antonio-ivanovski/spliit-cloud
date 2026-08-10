@@ -1632,7 +1632,7 @@
     "noManagePermission": "Seuls les propriétaires et les administrateurs peuvent inviter ou révoquer des membres du groupe.",
     "archivedNotice": "Les invitations sont désactivées pendant que le groupe est archivé. Désarchivez le groupe pour inviter de nouveaux membres.",
     "invite": {
-      "title": "Inviter un membre",
+      "title": "Ajouter des personnes",
       "email": "E-mail",
       "emailPlaceholder": "ami@example.com",
       "role": "Rôle",
@@ -1641,7 +1641,8 @@
       "tab": {
         "email": "E-mail",
         "link": "Lien d'invitation",
-        "friends": "Amis"
+        "friends": "Amis",
+        "unlinked": "Sans compte"
       },
       "emailDescription": "Envoyez une invitation par e-mail. L'invité rejoint le groupe dès qu'il l'accepte depuis un compte correspondant.",
       "linkDescription": "Générez un lien à usage unique que n'importe qui peut utiliser pour rejoindre le groupe. Le lien cesse de fonctionner après la première acceptation.",
@@ -1666,7 +1667,11 @@
       "selectFriendPlaceholder": "Sélectionnez un ami…",
       "friendAlreadyMember": "Déjà membre",
       "noFriends": "Aucun ami pour le moment. Invitez-en depuis l'onglet E-mail.",
-      "friendAlreadyInvited": "Déjà invité"
+      "friendAlreadyInvited": "Déjà invité",
+      "noAccountDescription": "Ajouter une personne aux dépenses sans l’inviter sur Spliit. Vous pourrez la lier à un compte plus tard.",
+      "temporaryNameRequired": "Nom temporaire",
+      "noAccountNameDescription": "S’affiche dans les dépenses et les soldes jusqu’à ce que ce participant soit lié à un compte.",
+      "addParticipant": "Ajouter un participant"
     },
     "invitations": {
       "title": "Invitations en attente",
@@ -1747,8 +1752,8 @@
       }
     },
     "unlinked": {
-      "title": "Participants non liés",
-      "description": "Ces personnes ont un nom dans le groupe mais n'ont pas encore de compte dans l'application. Liez chacun à un compte existant pour associer ses dépenses à cet utilisateur.",
+      "title": "Participants sans compte",
+      "description": "Ces participants peuvent être inclus dans les dépenses, mais ne peuvent pas accéder au groupe. Un administrateur pourra les lier à un compte plus tard.",
       "emailPlaceholder": "compte@exemple.com",
       "link": "Lier au compte",
       "linkSuccess": "Participant lié au compte",
@@ -1766,7 +1771,8 @@
         "membersGroupWithPending": "Membres et invitations en attente",
         "pendingGroup": "Invitations en attente",
         "pendingSuffix": "(en attente)"
-      }
+      },
+      "created": "{name} a été ajouté au groupe."
     },
     "dropdown": {
       "remove": "Supprimer",
@@ -1838,7 +1844,8 @@
     },
     "regenerate": {
       "title": "Générer un nouveau lien"
-    }
+    },
+    "actionsFor": "Actions pour {name}"
   },
   "AccountSettings": {
     "title": "Paramètres du compte",

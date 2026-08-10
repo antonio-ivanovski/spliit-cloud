@@ -1632,7 +1632,7 @@
     "noManagePermission": "Solo i proprietari e gli amministratori possono invitare o revocare membri del gruppo.",
     "archivedNotice": "Gli inviti sono disattivati mentre il gruppo è archiviato. Ripristina il gruppo per invitare nuovi membri.",
     "invite": {
-      "title": "Invita membro",
+      "title": "Aggiungi persone",
       "email": "Email",
       "emailPlaceholder": "amico@example.com",
       "role": "Ruolo",
@@ -1641,7 +1641,8 @@
       "tab": {
         "email": "Email",
         "link": "Link di invito",
-        "friends": "Amici"
+        "friends": "Amici",
+        "unlinked": "Senza account"
       },
       "emailDescription": "Invia un invito tramite email. L'invitato si unisce dopo averlo accettato da un account corrispondente.",
       "linkDescription": "Genera un link monouso che chiunque può usare per unirsi. Il link smette di funzionare dopo la prima accettazione.",
@@ -1666,7 +1667,11 @@
       "selectFriendPlaceholder": "Seleziona un amico…",
       "friendAlreadyMember": "Già membro",
       "noFriends": "Nessun amico per ora. Invita dalla scheda Email.",
-      "friendAlreadyInvited": "Già invitato"
+      "friendAlreadyInvited": "Già invitato",
+      "noAccountDescription": "Aggiungi qualcuno alle spese senza invitarlo su Spliit. Potrai collegarlo a un account in seguito.",
+      "temporaryNameRequired": "Nome temporaneo",
+      "noAccountNameDescription": "Verrà mostrato nelle spese e nei saldi finché questo partecipante non sarà collegato a un account.",
+      "addParticipant": "Aggiungi partecipante"
     },
     "invitations": {
       "title": "Inviti in sospeso",
@@ -1747,8 +1752,8 @@
       }
     },
     "unlinked": {
-      "title": "Partecipanti non collegati",
-      "description": "Queste persone hanno un nome nel gruppo ma non hanno ancora un account nell'app. Collega ciascuno a un account esistente per associare le sue spese a quell'utente.",
+      "title": "Partecipanti senza account",
+      "description": "Questi partecipanti possono essere inclusi nelle spese, ma non possono accedere al gruppo. Un amministratore potrà collegarli a un account in seguito.",
       "emailPlaceholder": "account@esempio.com",
       "link": "Collega all'account",
       "linkSuccess": "Partecipante collegato all'account",
@@ -1766,7 +1771,8 @@
         "membersGroupWithPending": "Membri e inviti in sospeso",
         "pendingGroup": "Inviti in sospeso",
         "pendingSuffix": "(in sospeso)"
-      }
+      },
+      "created": "{name} è stato aggiunto al gruppo."
     },
     "dropdown": {
       "remove": "Rimuovi",
@@ -1838,7 +1844,8 @@
     },
     "regenerate": {
       "title": "Genera nuovo link"
-    }
+    },
+    "actionsFor": "Azioni per {name}"
   },
   "AccountSettings": {
     "title": "Impostazioni account",

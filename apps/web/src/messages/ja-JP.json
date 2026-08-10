@@ -1617,7 +1617,7 @@
     "noManagePermission": "オーナーと管理者のみがメンバーの招待や権限剥奪ができます。",
     "archivedNotice": "グループがアーカイブされている間は招待が無効になっています。新しいメンバーを招待するにはグループのアーカイブを解除してください。",
     "invite": {
-      "title": "メンバーを招待",
+      "title": "メンバーを追加",
       "email": "メールアドレス",
       "emailPlaceholder": "friend@example.com",
       "role": "役割",
@@ -1626,7 +1626,8 @@
       "tab": {
         "email": "メールアドレス",
         "link": "招待リンク",
-        "friends": "友達"
+        "friends": "友達",
+        "unlinked": "アカウントなし"
       },
       "emailDescription": "メールで招待を送信します。招待を受けた人が対応するアカウントから承認すると参加できます。",
       "linkDescription": "誰でも参加できる一回限りのリンクを生成します。最初の承認後、リンクは無効になります。",
@@ -1651,7 +1652,11 @@
       "selectFriendPlaceholder": "友達を選択…",
       "friendAlreadyMember": "すでにメンバーです",
       "noFriends": "まだ友達がいません。メールタブから招待してください。",
-      "friendAlreadyInvited": "すでに招待済み"
+      "friendAlreadyInvited": "すでに招待済み",
+      "noAccountDescription": "Spliitに招待せずに、支出に誰かを追加できます。後からアカウントにリンクできます。",
+      "temporaryNameRequired": "仮の名前",
+      "noAccountNameDescription": "この参加者をアカウントにリンクするまで、支出と残高に表示されます。",
+      "addParticipant": "参加者を追加"
     },
     "invitations": {
       "title": "保留中の招待",
@@ -1731,8 +1736,8 @@
       }
     },
     "unlinked": {
-      "title": "未リンクの参加者",
-      "description": "これらの人はグループ内で名前は登録されていますが、まだアプリアカウントに紐づいていません。各参加者を既存のアカウントにリンクして、そのユーザーに支出を関連付けてください。",
+      "title": "アカウントのない参加者",
+      "description": "これらの参加者は支出に含められますが、グループにはアクセスできません。管理者が後からアカウントにリンクできます。",
       "emailPlaceholder": "account@example.com",
       "link": "アカウントにリンク",
       "linkSuccess": "参加者をアカウントにリンクしました",
@@ -1750,7 +1755,8 @@
         "membersGroupWithPending": "メンバーと保留中の招待",
         "pendingGroup": "保留中の招待",
         "pendingSuffix": "（保留中）"
-      }
+      },
+      "created": "{name}をグループに追加しました。"
     },
     "dropdown": {
       "remove": "削除",
@@ -1822,7 +1828,8 @@
     },
     "regenerate": {
       "title": "新しいリンクを生成"
-    }
+    },
+    "actionsFor": "{name}の操作"
   },
   "AccountSettings": {
     "title": "アカウント設定",

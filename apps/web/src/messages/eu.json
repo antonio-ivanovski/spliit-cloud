@@ -1632,7 +1632,7 @@
     "noManagePermission": "Jabeek eta administratzaileek bakarrik gonbida ditzakete kideak edo kendu kideak.",
     "archivedNotice": "Gonbidapenak desgaituta daude taldea artxibatuta dagoen bitartean. Desartxibatu taldea kide berriak gonbidatzeko.",
     "invite": {
-      "title": "Gonbidatu kidea",
+      "title": "Gehitu pertsonak",
       "email": "Helbide elektronikoa",
       "emailPlaceholder": "friend@example.com",
       "role": "Rola",
@@ -1641,7 +1641,8 @@
       "tab": {
         "email": "E-maila",
         "link": "Gonbidapen-esteka",
-        "friends": "Lagunak"
+        "friends": "Lagunak",
+        "unlinked": "Konturik ez"
       },
       "emailDescription": "Bidali gonbidapen bat e-mail bidez. Gonbidatua batuko da bat datorren kontu batetik onartzen duenean.",
       "linkDescription": "Sortu behin erabil daitekeen esteka edonork batzeko erabil dezakeena. Lehen onarpenaren ondoren estekak ez du funtzionatuko.",
@@ -1666,7 +1667,11 @@
       "selectFriendPlaceholder": "Aukeratu lagun bat…",
       "friendAlreadyMember": "Dagoeneko kidea da",
       "noFriends": "Ez dago oraindik lagunik. Gonbidatu Posta elektronikoko fitxatik.",
-      "friendAlreadyInvited": "Dagoeneko gonbidatua"
+      "friendAlreadyInvited": "Dagoeneko gonbidatua",
+      "noAccountDescription": "Gehitu norbait gastuetara Spliit-era gonbidatu gabe. Geroago kontu batera lotu ahal izango duzu.",
+      "temporaryNameRequired": "Aldi baterako izena",
+      "noAccountNameDescription": "Parte-hartzaile hau kontu batera lotu arte, gastuetan eta saldoetan agertuko da.",
+      "addParticipant": "Gehitu parte-hartzailea"
     },
     "invitations": {
       "title": "Gonbidapen zain",
@@ -1746,8 +1751,8 @@
       }
     },
     "unlinked": {
-      "title": "Lotu gabeko parte-hartzaileak",
-      "description": "Pertsona hauek taldean izen bat dute baina oraindik ez dute aplikazioko konturik. Lotu bakoitza lehendik dagoen kontu batera bere gastuak erabiltzaile horrekin lotzeko.",
+      "title": "Konturik gabeko parte-hartzaileak",
+      "description": "Parte-hartzaile hauek gastuetan sar daitezke, baina ezin dute taldera sartu. Administratzaile batek kontu batera lotu ahal izango ditu geroago.",
       "emailPlaceholder": "kontua@adibidea.eus",
       "link": "Lotu kontuarekin",
       "linkSuccess": "Parte-hartzailea kontuarekin lotu da",
@@ -1765,7 +1770,8 @@
         "membersGroupWithPending": "Kideak eta gonbidapen zainak",
         "pendingGroup": "Gonbidapen zainak",
         "pendingSuffix": "(zain)"
-      }
+      },
+      "created": "{name} taldera gehitu da."
     },
     "dropdown": {
       "remove": "Kendu",
@@ -1837,7 +1843,8 @@
     },
     "regenerate": {
       "title": "Sortu esteka berria"
-    }
+    },
+    "actionsFor": "Ekintzak: {name}"
   },
   "AccountSettings": {
     "title": "Kontuaren ezarpenak",

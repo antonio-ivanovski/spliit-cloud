@@ -1617,7 +1617,7 @@
     "noManagePermission": "Hanya pemilik dan admin yang dapat mengundang atau mencabut anggota grup.",
     "archivedNotice": "Undangan dinonaktifkan saat grup diarsipkan. Batalkan pengarsipan grup untuk mengundang anggota baru.",
     "invite": {
-      "title": "Undang anggota",
+      "title": "Tambah orang",
       "email": "Email",
       "emailPlaceholder": "friend@example.com",
       "role": "Peran",
@@ -1626,7 +1626,8 @@
       "tab": {
         "email": "Email",
         "link": "Tautan undangan",
-        "friends": "Teman"
+        "friends": "Teman",
+        "unlinked": "Tanpa akun"
       },
       "emailDescription": "Kirim undangan melalui email. Yang diundang akan bergabung setelah menerimanya dari akun yang cocok.",
       "linkDescription": "Buat tautan sekali pakai yang dapat digunakan siapa saja untuk bergabung. Tautan akan berhenti berfungsi setelah penerimaan pertama.",
@@ -1651,7 +1652,11 @@
       "selectFriendPlaceholder": "Pilih teman…",
       "friendAlreadyMember": "Sudah menjadi anggota",
       "noFriends": "Belum ada teman. Undang dari tab Email.",
-      "friendAlreadyInvited": "Sudah diundang"
+      "friendAlreadyInvited": "Sudah diundang",
+      "noAccountDescription": "Tambahkan seseorang ke pengeluaran tanpa mengundangnya ke Spliit. Anda dapat menautkannya ke akun nanti.",
+      "temporaryNameRequired": "Nama sementara",
+      "noAccountNameDescription": "Akan ditampilkan dalam pengeluaran dan saldo sampai peserta ini ditautkan ke akun.",
+      "addParticipant": "Tambah peserta"
     },
     "invitations": {
       "title": "Undangan tertunda",
@@ -1731,8 +1736,8 @@
       }
     },
     "unlinked": {
-      "title": "Peserta yang belum ditautkan",
-      "description": "Orang-orang ini memiliki nama di grup tetapi belum memiliki akun aplikasi. Tautkan masing-masing ke akun yang ada untuk mengaitkan pengeluaran mereka dengan pengguna tersebut.",
+      "title": "Peserta tanpa akun",
+      "description": "Peserta-peserta ini dapat disertakan dalam pengeluaran, tetapi tidak dapat mengakses grup. Admin dapat menautkan mereka ke akun nanti.",
       "emailPlaceholder": "akun@contoh.com",
       "linkButton": "Tautkan",
       "link": "Tautkan ke akun",
@@ -1750,7 +1755,8 @@
         "membersGroupWithPending": "Anggota dan undangan tertunda",
         "pendingGroup": "Undangan tertunda",
         "pendingSuffix": "(tertunda)"
-      }
+      },
+      "created": "{name} ditambahkan ke grup."
     },
     "dropdown": {
       "remove": "Hapus",
@@ -1822,7 +1828,8 @@
     },
     "regenerate": {
       "title": "Buat tautan baru"
-    }
+    },
+    "actionsFor": "Tindakan untuk {name}"
   },
   "AccountSettings": {
     "title": "Pengaturan akun",

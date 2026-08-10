@@ -1640,7 +1640,7 @@
     "noManagePermission": "Tylko właściciele i administratorzy mogą zapraszać lub usuwać członków grupy.",
     "archivedNotice": "Zaproszenia są wyłączone, gdy grupa jest zarchiwizowana. Przywróć grupę, aby zaprosić nowych członków.",
     "invite": {
-      "title": "Zaproś członka",
+      "title": "Dodaj osoby",
       "email": "E-mail",
       "emailPlaceholder": "znajomy@przyklad.pl",
       "role": "Rola",
@@ -1649,7 +1649,8 @@
       "tab": {
         "email": "E-mail",
         "link": "Link zaproszenia",
-        "friends": "Znajomi"
+        "friends": "Znajomi",
+        "unlinked": "Bez konta"
       },
       "link": {
         "generate": "Wygeneruj link zaproszenia",
@@ -1674,7 +1675,11 @@
       "selectFriendPlaceholder": "Wybierz znajomego…",
       "friendAlreadyMember": "Już jest członkiem",
       "noFriends": "Nie masz jeszcze znajomych. Zaproś ich z karty E-mail.",
-      "friendAlreadyInvited": "Już zaproszony"
+      "friendAlreadyInvited": "Już zaproszony",
+      "noAccountDescription": "Dodaj osobę do wydatków bez zapraszania jej do Spliit. Później możesz powiązać ją z kontem.",
+      "temporaryNameRequired": "Tymczasowa nazwa",
+      "noAccountNameDescription": "Nazwa jest wyświetlana w wydatkach i saldach do czasu powiązania uczestnika z kontem.",
+      "addParticipant": "Dodaj uczestnika"
     },
     "invitations": {
       "title": "Oczekujące zaproszenia",
@@ -1756,8 +1761,8 @@
       }
     },
     "unlinked": {
-      "title": "Niepowiązani uczestnicy",
-      "description": "Te osoby mają nazwę w grupie, ale nie mają jeszcze konta w aplikacji. Powiąż każdą z istniejącym kontem, aby przypisać ich wydatki do tego użytkownika.",
+      "title": "Uczestnicy bez kont",
+      "description": "Tych uczestników można uwzględniać w wydatkach, ale nie mają dostępu do grupy. Administrator może później powiązać ich z kontem.",
       "emailPlaceholder": "konto@przyklad.pl",
       "link": "Powiąż z kontem",
       "linkSuccess": "Uczestnik powiązany z kontem",
@@ -1775,7 +1780,8 @@
         "membersGroupWithPending": "Członkowie i oczekujące zaproszenia",
         "pendingGroup": "Oczekujące zaproszenia",
         "pendingSuffix": "(oczekujące)"
-      }
+      },
+      "created": "Dodano {name} do grupy."
     },
     "dropdown": {
       "remove": "Usuń",
@@ -1847,7 +1853,8 @@
     },
     "regenerate": {
       "title": "Wygeneruj nowy link"
-    }
+    },
+    "actionsFor": "Akcje dla {name}"
   },
   "AccountSettings": {
     "title": "Ustawienia konta",

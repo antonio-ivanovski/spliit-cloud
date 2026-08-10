@@ -1,4 +1,4 @@
-import { Trash2 } from 'lucide-react'
+import { Settings2, ShieldCheck, Trash2, UserRound } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { AccountAvatar } from '@/components/account-avatar'
@@ -14,6 +14,7 @@ import {
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -27,7 +28,9 @@ import {
   roleLabel,
   useRoleSelectItems,
 } from './members-hooks'
+import { ResponsiveParticipantActions } from './responsive-participant-actions'
 import { SegmentedActions } from './segmented-actions'
+import { UnlinkedParticipantsSection } from './unlinked-participants-section'
 
 type Member = {
   id: string
@@ -43,6 +46,7 @@ type Member = {
 }
 
 export function MemberListCard({
+  groupId,
   members,
   isLoading,
   accountId,
@@ -55,6 +59,7 @@ export function MemberListCard({
   locale,
   timeZone,
 }: {
+  groupId: string
   members: Member[]
   isLoading: boolean
   accountId: string | undefined
@@ -94,93 +99,154 @@ export function MemberListCard({
               return (
                 <li
                   key={member.id}
-                  className="flex flex-col gap-3 py-3 first:pt-0 last:pb-0 sm:flex-row sm:items-start sm:justify-between"
+                  className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-2 py-3 first:pt-0 last:pb-0 sm:items-center"
                 >
-                  {member.account && (
-                    <AccountAvatar
-                      account={member.account}
-                      size="lg"
-                      className="mt-0.5"
-                    />
-                  )}
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="truncate font-medium text-foreground">
-                        {displayName}
-                      </span>
-                      {isMe && (
-                        <Badge variant="outline" className="shrink-0">
-                          {t('youBadge')}
-                        </Badge>
-                      )}
-                      <Badge
-                        variant={badgeVariantForRole(member.role)}
-                        className="shrink-0"
-                      >
-                        {roleLabel(member.role, roleLabels)}
-                      </Badge>
-                    </div>
-                    {member.account?.email &&
-                      !isPlaceholderEmail(member.account.email) && (
-                        <p className="mt-0.5 truncate text-xs text-muted-foreground">
-                          {member.account.email}
+                  <div className="flex min-w-0 flex-1 items-start gap-3">
+                    {member.account && (
+                      <AccountAvatar
+                        account={member.account}
+                        size="lg"
+                        className="mt-0.5 shrink-0"
+                      />
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex min-w-0 flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
+                        <span className="truncate font-medium text-foreground">
+                          {displayName}
+                        </span>
+                        <span className="flex flex-wrap items-center gap-2">
+                          {isMe && (
+                            <Badge variant="outline" className="shrink-0">
+                              {t('youBadge')}
+                            </Badge>
+                          )}
+                          <Badge
+                            variant={badgeVariantForRole(member.role)}
+                            className="shrink-0"
+                          >
+                            {roleLabel(member.role, roleLabels)}
+                          </Badge>
+                        </span>
+                      </div>
+                      {member.account?.email &&
+                        !isPlaceholderEmail(member.account.email) && (
+                          <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                            {member.account.email}
+                          </p>
+                        )}
+                      {member.joinedAt && (
+                        <p className="mt-0.5 text-xs text-muted-foreground">
+                          {t('joinedOn', {
+                            date: formatDate(member.joinedAt, locale, timeZone),
+                          })}
                         </p>
                       )}
-                    {member.joinedAt && (
-                      <p className="mt-0.5 text-xs text-muted-foreground">
-                        {t('joinedOn', {
-                          date: formatDate(member.joinedAt, locale, timeZone),
-                        })}
-                      </p>
-                    )}
+                    </div>
                   </div>
                   {showAdminControls && (
-                    <div className="flex w-full flex-wrap items-center justify-start gap-2 sm:w-auto sm:justify-end">
-                      <Select
-                        value={member.role}
-                        items={roleSelectItems}
-                        disabled={updateRoleMutation.isPending}
-                        onValueChange={(value) =>
-                          onUpdateRole(member.id, value as 'ADMIN' | 'MEMBER')
-                        }
-                      >
-                        <SelectTrigger
-                          className="w-32 shrink-0"
-                          aria-label={t('changeRoleAria')}
-                        >
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {roleSelectItems.map((item) => (
-                            <SelectItem key={item.value} value={item.value}>
-                              {item.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <SegmentedActions>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-9 gap-1.5 rounded-none px-3 text-destructive hover:bg-destructive/10 hover:text-destructive"
-                          onClick={() =>
+                    <ResponsiveParticipantActions
+                      label={t('actionsFor', { name: displayName })}
+                      desktopActions={
+                        <SegmentedActions>
+                          <Select
+                            value={member.role}
+                            items={roleSelectItems}
+                            disabled={updateRoleMutation.isPending}
+                            onValueChange={(value) =>
+                              onUpdateRole(
+                                member.id,
+                                value as 'ADMIN' | 'MEMBER',
+                              )
+                            }
+                          >
+                            <SelectTrigger
+                              className="size-10 w-10 justify-center rounded-none border-0 p-0 shadow-none [&>svg:last-child]:hidden"
+                              aria-label={t('changeRoleAria')}
+                              title={t('changeRoleAria')}
+                            >
+                              <Settings2 size={16} aria-hidden="true" />
+                              <SelectValue className="sr-only" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectGroup>
+                                {roleSelectItems.map((item) => (
+                                  <SelectItem
+                                    key={item.value}
+                                    value={item.value}
+                                  >
+                                    {item.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="rounded-none text-destructive hover:bg-destructive/10 hover:text-destructive"
+                            aria-label={t('remove')}
+                            title={t('remove')}
+                            onClick={() =>
+                              onRemove({
+                                ledgerParticipantId: member.ledgerParticipantId,
+                                name: displayName,
+                              })
+                            }
+                          >
+                            <Trash2 size={16} aria-hidden="true" />
+                          </Button>
+                        </SegmentedActions>
+                      }
+                      mobileActions={[
+                        {
+                          key: 'role-admin',
+                          label: roleLabels.ADMIN,
+                          icon: ShieldCheck,
+                          selected: member.role === 'ADMIN',
+                          disabled: updateRoleMutation.isPending,
+                          onSelect: () => {
+                            if (member.role !== 'ADMIN') {
+                              onUpdateRole(member.id, 'ADMIN')
+                            }
+                          },
+                        },
+                        {
+                          key: 'role-member',
+                          label: roleLabels.MEMBER,
+                          icon: UserRound,
+                          selected: member.role === 'MEMBER',
+                          disabled: updateRoleMutation.isPending,
+                          onSelect: () => {
+                            if (member.role !== 'MEMBER') {
+                              onUpdateRole(member.id, 'MEMBER')
+                            }
+                          },
+                        },
+                        {
+                          key: 'remove',
+                          label: t('remove'),
+                          icon: Trash2,
+                          destructive: true,
+                          onSelect: () =>
                             onRemove({
                               ledgerParticipantId: member.ledgerParticipantId,
                               name: displayName,
-                            })
-                          }
-                        >
-                          <Trash2 className="size-4" aria-hidden="true" />
-                          {t('remove')}
-                        </Button>
-                      </SegmentedActions>
-                    </div>
+                            }),
+                        },
+                      ]}
+                    />
                   )}
                 </li>
               )
             })}
           </ul>
         )}
+
+        <UnlinkedParticipantsSection
+          groupId={groupId}
+          canManage={canManage}
+          onRemove={onRemove}
+        />
       </CardContent>
     </Card>
   )

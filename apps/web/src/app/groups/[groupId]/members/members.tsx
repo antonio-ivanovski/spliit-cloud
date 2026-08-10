@@ -24,7 +24,6 @@ import { PendingInvitationsCard } from './pending-invitations-card'
 import { RegenerateLinkDialog } from './regenerate-link-dialog'
 import { RemoveParticipantDialog } from './remove-participant-dialog'
 import { SubgroupsCard } from './subgroups-card'
-import { UnlinkedParticipantsSection } from './unlinked-participants-section'
 
 export default function GroupMembers() {
   const { groupId, group } = useCurrentGroup()
@@ -58,6 +57,7 @@ function GroupMembersBody() {
     invitationsQuery,
     createMutation,
     createLinkMutation,
+    createParticipantMutation,
     updatePendingMutation,
     regenerateLinkMutation,
     updateRoleMutation,
@@ -119,6 +119,7 @@ function GroupMembersBody() {
   return (
     <div className="flex flex-col gap-6">
       <MemberListCard
+        groupId={groupId}
         members={listMembers}
         isLoading={membersQuery.isLoading}
         accountId={account?.id}
@@ -140,12 +141,6 @@ function GroupMembersBody() {
         canManage={canManage}
       />
 
-      <UnlinkedParticipantsSection
-        groupId={groupId}
-        canManage={canManage}
-        onRemove={(participant) => setParticipantPendingRemove(participant)}
-      />
-
       {!canManage && isArchived && (
         <p className="text-sm text-muted-foreground">{t('archivedNotice')}</p>
       )}
@@ -158,6 +153,7 @@ function GroupMembersBody() {
             canInviteAdmin={isAdmin}
             createMutation={createMutation}
             createLinkMutation={createLinkMutation}
+            createParticipantMutation={createParticipantMutation}
             onInvite={async (values) => {
               await createMutation.mutateAsync({
                 groupId,
@@ -171,6 +167,12 @@ function GroupMembersBody() {
                 groupId,
                 role: values.role,
                 temporaryName: values.temporaryName,
+              })
+            }}
+            onAddParticipant={async (values) => {
+              await createParticipantMutation.mutateAsync({
+                groupId,
+                displayName: values.displayName,
               })
             }}
           />

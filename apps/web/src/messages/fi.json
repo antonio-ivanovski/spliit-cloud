@@ -1624,7 +1624,7 @@
     "noManagePermission": "Vain omistajat ja ylläpitäjät voivat kutsua tai poistaa ryhmän jäseniä.",
     "archivedNotice": "Kutsut on poistettu käytöstä, kun ryhmä on arkistoitu. Palauta ryhmä arkistosta kutsuaksesi uusia jäseniä.",
     "invite": {
-      "title": "Kutsu jäsen",
+      "title": "Lisää henkilöitä",
       "email": "Sähköposti",
       "emailPlaceholder": "kaveri@esimerkki.com",
       "role": "Rooli",
@@ -1633,7 +1633,8 @@
       "tab": {
         "email": "Sähköposti",
         "link": "Kutsulinkki",
-        "friends": "Kaverit"
+        "friends": "Kaverit",
+        "unlinked": "Ei tiliä"
       },
       "emailDescription": "Lähetä kutsu sähköpostilla. Kutsuttu liittyy, kun hän hyväksyy sen vastaavalta tililtä.",
       "linkDescription": "Luo kertakäyttöinen linkki, jota kuka tahansa voi käyttää liittyäkseen. Linkki lakkaa toimimasta ensimmäisen hyväksymisen jälkeen.",
@@ -1658,7 +1659,11 @@
       "selectFriendPlaceholder": "Valitse kaveri…",
       "friendAlreadyMember": "Jo jäsen",
       "noFriends": "Ei vielä kavereita. Kutsu Sähköposti-välilehdeltä.",
-      "friendAlreadyInvited": "Jo kutsuttu"
+      "friendAlreadyInvited": "Jo kutsuttu",
+      "noAccountDescription": "Lisää henkilö kuluihin kutsumatta häntä Spliitiin. Voit yhdistää hänet tiliin myöhemmin.",
+      "temporaryNameRequired": "Väliaikainen nimi",
+      "noAccountNameDescription": "Näkyy kuluissa ja saldoissa, kunnes tämä osallistuja yhdistetään tiliin.",
+      "addParticipant": "Lisää osallistuja"
     },
     "invitations": {
       "title": "Odottavat kutsut",
@@ -1736,7 +1741,6 @@
       "confirmWithForce": "Tasaa ja poistu"
     },
     "unlinked": {
-      "description": "Näillä henkilöillä on nimi ryhmässä, mutta ei vielä sovellustiliä. Linkitä kukin olemassa olevaan tiliin yhdistääksesi heidän kulunsa kyseiseen käyttäjään.",
       "linkSuccess": "Osallistuja linkitetty tiliin",
       "linkDialog": {
         "description": "Valitse nykyinen jäsen, johon {displayName} yhdistetään. Jäsenellä ei saa jo olla kulusaldoa tämän osallistujan kanssa.",
@@ -1752,10 +1756,12 @@
         "pendingSuffix": "(odottaa)"
       },
       "linkButton": "Linkitä",
-      "title": "Linkittämättömät osallistujat",
       "idHint": "Kirjanpidon osallistujan tunnus: {id}",
+      "title": "Osallistujat ilman tiliä",
+      "description": "Nämä osallistujat voidaan lisätä kuluihin, mutta he eivät pääse ryhmään. Ylläpitäjä voi yhdistää heidät tiliin myöhemmin.",
       "emailPlaceholder": "tili@esimerkki.com",
-      "link": "Linkitä tiliin"
+      "link": "Linkitä tiliin",
+      "created": "{name} lisättiin ryhmään."
     },
     "remove": "Poista",
     "roleUpdated": "Rooli päivitetty rooliin {role}.",
@@ -1829,7 +1835,8 @@
     },
     "regenerate": {
       "title": "Luo uusi linkki"
-    }
+    },
+    "actionsFor": "Toiminnot: {name}"
   },
   "AccountSettings": {
     "title": "Tilin asetukset",

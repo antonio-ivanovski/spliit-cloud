@@ -1632,7 +1632,7 @@
     "noManagePermission": "Apenas proprietários e administradores podem convidar ou remover membros do grupo.",
     "archivedNotice": "Os convites estão desativados enquanto o grupo estiver arquivado. Desarquive o grupo para convidar novos membros.",
     "invite": {
-      "title": "Convidar membro",
+      "title": "Adicionar pessoas",
       "email": "E-mail",
       "emailPlaceholder": "amigo@example.com",
       "role": "Função",
@@ -1641,7 +1641,8 @@
       "tab": {
         "email": "E-mail",
         "link": "Link de convite",
-        "friends": "Amigos"
+        "friends": "Amigos",
+        "unlinked": "Sem conta"
       },
       "emailDescription": "Envie um convite por e-mail. O convidado entra assim que aceitar a partir de uma conta compatível.",
       "linkDescription": "Gere um link de uso único para que qualquer pessoa possa entrar. O link deixa de funcionar após o primeiro aceite.",
@@ -1666,7 +1667,11 @@
       "selectFriendPlaceholder": "Selecione um amigo…",
       "friendAlreadyMember": "Já é membro",
       "noFriends": "Você ainda não tem amigos. Convide pela aba E-mail.",
-      "friendAlreadyInvited": "Já convidado"
+      "friendAlreadyInvited": "Já convidado",
+      "noAccountDescription": "Adicione alguém às despesas sem convidar essa pessoa para o Spliit. Depois, você pode vincular essa pessoa a uma conta.",
+      "temporaryNameRequired": "Nome temporário",
+      "noAccountNameDescription": "Será exibido nas despesas e nos saldos até que essa pessoa seja vinculada a uma conta.",
+      "addParticipant": "Adicionar participante"
     },
     "invitations": {
       "title": "Convites pendentes",
@@ -1747,8 +1752,8 @@
       }
     },
     "unlinked": {
-      "title": "Participantes não vinculados",
-      "description": "Estas pessoas têm um nome no grupo, mas ainda não têm uma conta no aplicativo. Vincule cada uma a uma conta existente para associar suas despesas a esse usuário.",
+      "title": "Participantes sem conta",
+      "description": "Esses participantes podem ser incluídos nas despesas, mas não podem acessar o grupo. Um administrador pode vinculá-los a uma conta mais tarde.",
       "emailPlaceholder": "conta@exemplo.com",
       "link": "Vincular à conta",
       "linkSuccess": "Participante vinculado à conta",
@@ -1766,7 +1771,8 @@
         "membersGroupWithPending": "Membros e convites pendentes",
         "pendingGroup": "Convites pendentes",
         "pendingSuffix": "(pendente)"
-      }
+      },
+      "created": "{name} foi adicionado ao grupo."
     },
     "dropdown": {
       "remove": "Remover",
@@ -1838,7 +1844,8 @@
     },
     "regenerate": {
       "title": "Gerar novo link"
-    }
+    },
+    "actionsFor": "Ações para {name}"
   },
   "AccountSettings": {
     "title": "Configurações da conta",

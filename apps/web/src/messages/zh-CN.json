@@ -1617,7 +1617,7 @@
     "noManagePermission": "只有所有者和管理员可以邀请或撤销群组成员。",
     "archivedNotice": "群组归档期间邀请功能已禁用。取消归档群组以邀请新成员。",
     "invite": {
-      "title": "邀请成员",
+      "title": "添加成员",
       "email": "邮箱",
       "emailPlaceholder": "friend@example.com",
       "role": "角色",
@@ -1626,7 +1626,8 @@
       "tab": {
         "email": "电子邮件",
         "link": "邀请链接",
-        "friends": "朋友"
+        "friends": "朋友",
+        "unlinked": "无账号"
       },
       "emailDescription": "通过电子邮件发送邀请。受邀者在匹配的账号上接受后即可加入。",
       "linkDescription": "生成一个一次性链接，任何人都可使用该链接加入。在首次接受后，链接将失效。",
@@ -1651,7 +1652,11 @@
       "selectFriendPlaceholder": "选择一位朋友…",
       "friendAlreadyMember": "已是成员",
       "noFriends": "还没有朋友。请从「电子邮件」标签页邀请。",
-      "friendAlreadyInvited": "已邀请"
+      "friendAlreadyInvited": "已邀请",
+      "noAccountDescription": "无需邀请对方加入 Spliit，即可将其添加到支出中。之后可以将其关联到账号。",
+      "temporaryNameRequired": "临时姓名",
+      "noAccountNameDescription": "在将该参与者关联到账号之前，其姓名会显示在支出和余额中。",
+      "addParticipant": "添加参与者"
     },
     "invitations": {
       "title": "待处理的邀请",
@@ -1731,8 +1736,8 @@
       }
     },
     "unlinked": {
-      "title": "未关联的参与者",
-      "description": "这些人在群组中有名称，但还没有应用账号。请将每个人关联到现有账号，以将其支出与对应用户关联。",
+      "title": "无账号的参与者",
+      "description": "这些参与者可以计入支出，但无法访问群组。管理员稍后可以将他们关联到账号。",
       "emailPlaceholder": "account@example.com",
       "link": "关联到账号",
       "linkSuccess": "参与者已关联到账号",
@@ -1750,7 +1755,8 @@
         "pendingGroup": "待处理的邀请",
         "pendingSuffix": "(待处理)"
       },
-      "linkButton": "关联"
+      "linkButton": "关联",
+      "created": "{name}已添加到群组。"
     },
     "dropdown": {
       "remove": "移除",
@@ -1822,7 +1828,8 @@
     },
     "regenerate": {
       "title": "生成新链接"
-    }
+    },
+    "actionsFor": "{name}的操作"
   },
   "AccountSettings": {
     "title": "账户设置",

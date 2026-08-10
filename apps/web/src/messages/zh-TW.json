@@ -1617,7 +1617,7 @@
     "noManagePermission": "只有擁有者和管理員可以邀請或撤銷群組成員。",
     "archivedNotice": "群組封存期間邀請功能已停用。取消封存群組以邀請新成員。",
     "invite": {
-      "title": "邀請成員",
+      "title": "新增成員",
       "email": "電子郵件",
       "emailPlaceholder": "friend@example.com",
       "role": "角色",
@@ -1626,7 +1626,8 @@
       "tab": {
         "email": "電子郵件",
         "link": "邀請連結",
-        "friends": "朋友"
+        "friends": "朋友",
+        "unlinked": "無帳戶"
       },
       "emailDescription": "透過電子郵件發送邀請。受邀者在相符的帳號上接受後即可加入。",
       "linkDescription": "產生一個一次性連結，任何人都可使用該連結加入。在首次接受後，連結將失效。",
@@ -1651,7 +1652,11 @@
       "selectFriendPlaceholder": "選擇一位朋友…",
       "friendAlreadyMember": "已是成員",
       "noFriends": "還沒有朋友。請從「電子郵件」分頁邀請。",
-      "friendAlreadyInvited": "已邀請"
+      "friendAlreadyInvited": "已邀請",
+      "noAccountDescription": "無需邀請對方加入 Spliit，即可將其新增到支出中。之後可以將其連結到帳戶。",
+      "temporaryNameRequired": "暫用姓名",
+      "noAccountNameDescription": "在將此參與者連結到帳戶之前，其姓名會顯示在支出和餘額中。",
+      "addParticipant": "新增參與者"
     },
     "invitations": {
       "title": "待處理的邀請",
@@ -1728,6 +1733,8 @@
       }
     },
     "unlinked": {
+      "title": "無帳戶的參與者",
+      "description": "這些參與者可以納入支出，但無法存取群組。管理員之後可以將他們連結到帳戶。",
       "emailPlaceholder": "account@example.com",
       "linkDialog": {
         "description": "選擇要與 {displayName} 關聯的現有成員。該成員不能已與此參與者存在支出餘額。",
@@ -1742,12 +1749,11 @@
         "pendingSuffix": "（待處理）",
         "pendingHint": "連結到待處理的邀請會將此僅有名稱的項目合併到受邀者中。受邀者保留其自己的列；合併後的參照將在受邀者接受後透過該列解析。"
       },
-      "title": "未連結的參與者",
-      "description": "這些人在群組中有名稱，但尚未關聯應用程式帳戶。將每個人連結到現有帳戶，以將其支出關聯到該使用者。",
       "idHint": "帳本參與者編號：{id}",
       "linkButton": "連結",
       "linkSuccess": "參與者已連結到帳戶",
-      "link": "連結到帳戶"
+      "link": "連結到帳戶",
+      "created": "{name}已新增至群組。"
     },
     "changeRoleAria": "變更角色",
     "removed": "成員已移除。",
@@ -1822,7 +1828,8 @@
     },
     "regenerate": {
       "title": "產生新連結"
-    }
+    },
+    "actionsFor": "{name}的操作"
   },
   "AccountSettings": {
     "title": "帳戶設定",

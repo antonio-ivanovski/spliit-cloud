@@ -1632,7 +1632,7 @@
     "noManagePermission": "Només els propietaris i administradors poden convidar o revocar membres del grup.",
     "archivedNotice": "Les invitacions estan desactivades mentre el grup estigui arxivat. Desarxivar el grup per invitar nous membres.",
     "invite": {
-      "title": "Convidar membre",
+      "title": "Afegir persones",
       "email": "Correu electrònic",
       "emailPlaceholder": "amic@example.com",
       "role": "Rol",
@@ -1641,7 +1641,8 @@
       "tab": {
         "email": "Correu electrònic",
         "link": "Enllaç d'invitació",
-        "friends": "Amics"
+        "friends": "Amics",
+        "unlinked": "Sense compte"
       },
       "emailDescription": "Envia una invitació per correu electrònic. La persona convidada s'hi unirà quan l'accepti des d'un compte que coincideixi.",
       "linkDescription": "Genera un enllaç d'un sol ús que qualsevol pot fer servir per unir-se. L'enllaç deixa de funcionar després de la primera acceptació.",
@@ -1666,7 +1667,11 @@
       "selectFriendPlaceholder": "Selecciona un amic…",
       "friendAlreadyMember": "Ja és membre",
       "noFriends": "Encara no tens amics. Convida'ls des de la pestanya Correu.",
-      "friendAlreadyInvited": "Ja convidat"
+      "friendAlreadyInvited": "Ja convidat",
+      "noAccountDescription": "Afegeix algú a les despeses sense convidar-lo a Spliit. Més endavant, pots enllaçar aquesta persona amb un compte.",
+      "temporaryNameRequired": "Nom temporal",
+      "noAccountNameDescription": "Es mostrarà a les despeses i als saldos fins que aquest participant s’enllaci amb un compte.",
+      "addParticipant": "Afegir participant"
     },
     "invitations": {
       "title": "Invitacions pendents",
@@ -1747,8 +1752,8 @@
       }
     },
     "unlinked": {
-      "title": "Participants no vinculats",
-      "description": "Aquestes persones tenen un nom al grup però encara no tenen un compte a l'aplicació. Vincula cadascuna a un compte existent per associar les seves despeses amb aquest usuari.",
+      "title": "Participants sense compte",
+      "description": "Aquests participants es poden incloure en les despeses, però no poden accedir al grup. Un administrador els pot enllaçar amb un compte més endavant.",
       "emailPlaceholder": "compte@exemple.com",
       "link": "Vincula al compte",
       "linkSuccess": "Participant vinculat al compte",
@@ -1766,7 +1771,8 @@
         "membersGroupWithPending": "Membres i invitacions pendents",
         "pendingGroup": "Invitacions pendents",
         "pendingSuffix": "(pendent)"
-      }
+      },
+      "created": "{name} s’ha afegit al grup."
     },
     "dropdown": {
       "remove": "Eliminar",
@@ -1838,7 +1844,8 @@
     },
     "regenerate": {
       "title": "Genera un enllaç nou"
-    }
+    },
+    "actionsFor": "Accions per a {name}"
   },
   "AccountSettings": {
     "title": "Configuració del compte",

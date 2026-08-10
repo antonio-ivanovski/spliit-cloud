@@ -92,6 +92,13 @@ export const emailFormSchema = z.object({
 })
 export type EmailFormValues = z.infer<typeof emailFormSchema>
 
+export const unlinkedParticipantFormSchema = z.object({
+  displayName: z.string().trim().min(1).max(120),
+})
+export type UnlinkedParticipantFormValues = z.infer<
+  typeof unlinkedParticipantFormSchema
+>
+
 export type LinkFormValues = {
   temporaryName?: string | undefined
 }
@@ -219,6 +226,25 @@ export function useMembersDialogs() {
       toast({ description: error.message, variant: 'destructive' })
     },
   })
+
+  const createParticipantMutation = trpc.groups.participants.create.useMutation(
+    {
+      onSuccess: async (data) => {
+        toast({
+          description: t('unlinked.created', { name: data.displayName }),
+        })
+        await Promise.all([
+          utils.groups.importLinks.listUnlinked.invalidate({ groupId }),
+          utils.groups.get.invalidate({ groupId }),
+          utils.groups.getDetails.invalidate({ groupId }),
+          utils.groups.balances.list.invalidate({ groupId }),
+        ])
+      },
+      onError: (error) => {
+        toast({ description: error.message, variant: 'destructive' })
+      },
+    },
+  )
 
   const updateRoleMutation = trpc.groups.members.updateRole.useMutation({
     onSuccess: async (_data, vars) => {
@@ -386,6 +412,7 @@ export function useMembersDialogs() {
     invitations,
     createMutation,
     createLinkMutation,
+    createParticipantMutation,
     updatePendingMutation,
     regenerateLinkMutation,
     updateRoleMutation,

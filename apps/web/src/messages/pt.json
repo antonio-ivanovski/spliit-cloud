@@ -1632,7 +1632,7 @@
     "noManagePermission": "Apenas proprietários e administradores podem convidar ou revogar membros do grupo.",
     "archivedNotice": "Os convites estão desativados enquanto o grupo estiver arquivado. Desarquiva o grupo para convidar novos membros.",
     "invite": {
-      "title": "Convidar membro",
+      "title": "Adicionar pessoas",
       "email": "Email",
       "emailPlaceholder": "amigo@example.com",
       "role": "Função",
@@ -1659,14 +1659,19 @@
       "tab": {
         "email": "E-mail",
         "link": "Ligação de convite",
-        "friends": "Amigos"
+        "friends": "Amigos",
+        "unlinked": "Sem conta"
       },
       "temporaryNamePlaceholder": "ex.: colega de quarto do Alex",
       "friendsDescription": "Convida alguém dos grupos que já partilhaste.",
       "selectFriendPlaceholder": "Seleciona um amigo…",
       "friendAlreadyMember": "Já é membro",
       "noFriends": "Ainda não tens amigos. Convida a partir do separador E-mail.",
-      "friendAlreadyInvited": "Já convidado"
+      "friendAlreadyInvited": "Já convidado",
+      "noAccountDescription": "Adicione alguém às despesas sem o convidar para o Spliit. Mais tarde, pode associá-lo a uma conta.",
+      "temporaryNameRequired": "Nome temporário",
+      "noAccountNameDescription": "Será apresentado nas despesas e nos saldos até este participante ser associado a uma conta.",
+      "addParticipant": "Adicionar participante"
     },
     "invitations": {
       "title": "Convites pendentes",
@@ -1747,8 +1752,8 @@
       }
     },
     "unlinked": {
-      "title": "Participantes não vinculados",
-      "description": "Estas pessoas têm um nome no grupo, mas ainda não têm uma conta na aplicação. Vincule cada uma a uma conta existente para associar as suas despesas a esse utilizador.",
+      "title": "Participantes sem conta",
+      "description": "Estes participantes podem ser incluídos nas despesas, mas não podem aceder ao grupo. Um administrador pode associá-los a uma conta mais tarde.",
       "emailPlaceholder": "conta@exemplo.com",
       "link": "Vincular à conta",
       "linkSuccess": "Participante vinculado à conta",
@@ -1766,7 +1771,8 @@
         "membersGroupWithPending": "Membros e convites pendentes",
         "pendingGroup": "Convites pendentes",
         "pendingSuffix": "(pendente)"
-      }
+      },
+      "created": "{name} foi adicionado ao grupo."
     },
     "dropdown": {
       "remove": "Remover",
@@ -1838,7 +1844,8 @@
     },
     "regenerate": {
       "title": "Gerar nova ligação"
-    }
+    },
+    "actionsFor": "Ações para {name}"
   },
   "AccountSettings": {
     "title": "Configurações da conta",

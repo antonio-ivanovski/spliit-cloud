@@ -368,11 +368,12 @@ model LedgerParticipant {
   groupMember   GroupMember?          @relation(fields: [groupMemberId], references: [id])
   groupMemberId String?               @unique
   // Discriminator between account-backed and name-only participants.
-  // Default is ACCOUNT_MEMBER; UNLINKED_PARTICIPANT is only ever created
-  // by the import path.
+  // Default is ACCOUNT_MEMBER. UNLINKED_PARTICIPANT rows are created by
+  // imports or by the name-only participant flow.
   kind          LedgerParticipantKind @default(ACCOUNT_MEMBER)
-  // Display label for UNLINKED_PARTICIPANT rows. Null for account-backed
-  // rows (the display name is resolved through `groupMember.account.name`).
+  // Display label for UNLINKED_PARTICIPANT rows. Required by a database check
+  // for that kind; null for account-backed rows (the display name is resolved
+  // through `groupMember.account.name`).
   displayName   String?
   // Soft-hide timestamp. When set, the participant is excluded from Members
   // lists and expense pickers but expense history is preserved.

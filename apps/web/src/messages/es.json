@@ -1632,7 +1632,7 @@
     "noManagePermission": "Solo los propietarios y administradores pueden invitar o revocar miembros del grupo.",
     "archivedNotice": "Las invitaciones están desactivadas mientras el grupo esté archivado. Desarchiva el grupo para invitar nuevos miembros.",
     "invite": {
-      "title": "Invitar miembro",
+      "title": "Añadir personas",
       "email": "Correo electrónico",
       "emailPlaceholder": "amigo@example.com",
       "role": "Rol",
@@ -1641,7 +1641,8 @@
       "tab": {
         "email": "Correo electrónico",
         "link": "Enlace de invitación",
-        "friends": "Amigos"
+        "friends": "Amigos",
+        "unlinked": "Sin cuenta"
       },
       "emailDescription": "Envía una invitación por correo electrónico. La persona invitada se unirá cuando la acepte desde una cuenta que coincida.",
       "linkDescription": "Genera un enlace de un solo uso que cualquiera puede usar para unirse. El enlace deja de funcionar tras la primera aceptación.",
@@ -1666,7 +1667,11 @@
       "selectFriendPlaceholder": "Selecciona un amigo…",
       "friendAlreadyMember": "Ya es miembro",
       "noFriends": "Aún no tienes amigos. Invítalos desde la pestaña Correo.",
-      "friendAlreadyInvited": "Ya invitado"
+      "friendAlreadyInvited": "Ya invitado",
+      "noAccountDescription": "Añade a alguien a los gastos sin invitarlo a Spliit. Más adelante, puedes vincularlo a una cuenta.",
+      "temporaryNameRequired": "Nombre temporal",
+      "noAccountNameDescription": "Se mostrará en los gastos y saldos hasta que este participante se vincule a una cuenta.",
+      "addParticipant": "Añadir participante"
     },
     "invitations": {
       "title": "Invitaciones pendientes",
@@ -1747,8 +1752,8 @@
       }
     },
     "unlinked": {
-      "title": "Participantes no vinculados",
-      "description": "Estas personas tienen un nombre en el grupo pero aún no tienen cuenta en la app. Vincula cada una a una cuenta existente para asociar sus gastos con ese usuario.",
+      "title": "Participantes sin cuenta",
+      "description": "Estos participantes se pueden incluir en los gastos, pero no pueden acceder al grupo. Un administrador puede vincularlos a una cuenta más adelante.",
       "emailPlaceholder": "cuenta@ejemplo.com",
       "link": "Vincular a cuenta",
       "linkSuccess": "Participante vinculado a la cuenta",
@@ -1766,7 +1771,8 @@
         "membersGroupWithPending": "Miembros e invitaciones pendientes",
         "pendingGroup": "Invitaciones pendientes",
         "pendingSuffix": "(pendiente)"
-      }
+      },
+      "created": "{name} se añadió al grupo."
     },
     "dropdown": {
       "remove": "Eliminar",
@@ -1838,7 +1844,8 @@
     },
     "regenerate": {
       "title": "Generar nuevo enlace"
-    }
+    },
+    "actionsFor": "Acciones para {name}"
   },
   "AccountSettings": {
     "title": "Configuración de la cuenta",

@@ -1640,7 +1640,7 @@
     "noManagePermission": "Pouze vlastníci a správci mohou zvát nebo odebírat členy skupiny.",
     "archivedNotice": "Pozvánky jsou během archivace skupiny zakázány. Obnovte skupinu, abyste mohli pozvat nové členy.",
     "invite": {
-      "title": "Pozvat člena",
+      "title": "Přidat lidi",
       "email": "E-mail",
       "emailPlaceholder": "kamarad@priklad.cz",
       "role": "Role",
@@ -1649,7 +1649,8 @@
       "tab": {
         "email": "E-mail",
         "link": "Odkaz pozvánky",
-        "friends": "Přátelé"
+        "friends": "Přátelé",
+        "unlinked": "Bez účtu"
       },
       "emailDescription": "Pošlete pozvánku e-mailem. Pozvaný se připojí, jakmile ji přijme z odpovídajícího účtu.",
       "linkDescription": "Vygenerujte jednorázový odkaz, pomocí kterého se může kdokoli připojit. Po prvním přijetí přestane fungovat.",
@@ -1674,7 +1675,11 @@
       "selectFriendPlaceholder": "Vyberte přítele…",
       "friendAlreadyMember": "Již je členem",
       "noFriends": "Zatím žádní přátelé. Pozvěte je na kartě E-mail.",
-      "friendAlreadyInvited": "Již pozván"
+      "friendAlreadyInvited": "Již pozván",
+      "noAccountDescription": "Přidejte někoho k výdajům, aniž byste ho pozvali do Spliitu. Později ho můžete propojit s účtem.",
+      "temporaryNameRequired": "Dočasné jméno",
+      "noAccountNameDescription": "Zobrazuje se ve výdajích a zůstatcích, dokud tohoto účastníka nepropojíte s účtem.",
+      "addParticipant": "Přidat účastníka"
     },
     "invitations": {
       "title": "Čekající pozvánky",
@@ -1756,8 +1761,8 @@
       }
     },
     "unlinked": {
-      "title": "Nepropojení účastníci",
-      "description": "Tito lidé mají ve skupině jméno, ale zatím žádný účet v aplikaci. Každého propojte s existujícím účtem, aby se jejich výdaje přiřadily danému uživateli.",
+      "title": "Účastníci bez účtů",
+      "description": "Tyto účastníky lze zahrnout do výdajů, ale nemají přístup ke skupině. Správce je později může propojit s účtem.",
       "emailPlaceholder": "ucet@priklad.cz",
       "link": "Propojit s účtem",
       "linkSuccess": "Účastník propojen s účtem",
@@ -1775,7 +1780,8 @@
         "pendingGroup": "Čekající pozvánky",
         "pendingSuffix": "(čeká)"
       },
-      "linkButton": "Propojit"
+      "linkButton": "Propojit",
+      "created": "Účastník {name} byl přidán do skupiny."
     },
     "dropdown": {
       "remove": "Odebrat",
@@ -1847,7 +1853,8 @@
     },
     "regenerate": {
       "title": "Vygenerovat nový odkaz"
-    }
+    },
+    "actionsFor": "Akce pro {name}"
   },
   "AccountSettings": {
     "title": "Nastavení účtu",

@@ -46,6 +46,7 @@ vi.mock('@/components/link', () => ({
 // Mock tRPC - the members page uses many mutations and queries
 const mockCreateMutation = vi.fn()
 const mockCreateLinkMutation = vi.fn()
+const mockCreateParticipantMutation = vi.fn()
 const mockUpdateRoleMutation = vi.fn()
 const mockLeaveMutation = vi.fn()
 
@@ -75,7 +76,10 @@ vi.mock('@/trpc/client', () => {
             listUnlinked: { invalidate: vi.fn().mockResolvedValue(undefined) },
           },
           leavePreview: { invalidate: vi.fn().mockResolvedValue(undefined) },
-          balances: { invalidate: vi.fn().mockResolvedValue(undefined) },
+          balances: {
+            invalidate: vi.fn().mockResolvedValue(undefined),
+            list: { invalidate: vi.fn().mockResolvedValue(undefined) },
+          },
           subgroups: {
             list: { invalidate: vi.fn().mockResolvedValue(undefined) },
           },
@@ -161,6 +165,12 @@ vi.mock('@/trpc/client', () => {
           },
         },
         participants: {
+          create: {
+            useMutation: () => ({
+              mutateAsync: mockCreateParticipantMutation,
+              isPending: false,
+            }),
+          },
           removePreview: {
             useQuery: () => ({ data: undefined, isLoading: false }),
           },
@@ -235,6 +245,12 @@ const mockAccountData = {
 
 beforeEach(() => {
   vi.clearAllMocks()
+  mockMembersData.members = []
+  mockInvitationsData.invitations = []
+  mockSubgroupsData.enabled = false
+  mockSubgroupsData.subgroups = []
+  _createMutationOnSuccess = null
+  createLinkMutationOnSuccess = null
 
   vi.mocked(useCurrentGroup).mockReturnValue({
     isLoading: false,
@@ -268,12 +284,13 @@ describe('GroupMembers', () => {
   it('renders invite by email form when user is admin', () => {
     render(<GroupMembers />)
 
-    // Should render the invite tabs (Friends, Email, Invite link)
+    // Should render all invite methods.
     const tabs = screen.getAllByRole('tab')
-    expect(tabs.length).toBe(3)
+    expect(tabs.length).toBe(4)
     expect(tabs[0]).toHaveTextContent('Friends')
     expect(tabs[1]).toHaveTextContent('Email')
     expect(tabs[2]).toHaveTextContent('Invite link')
+    expect(tabs[3]).toHaveTextContent('No account')
 
     // Email field should be visible (default tab when no friends exist)
     const emailInput = screen.getByRole('textbox', { name: 'Email' })
@@ -399,7 +416,7 @@ describe('GroupMembers', () => {
     render(<GroupMembers />)
 
     // Invite form should be present
-    expect(screen.getByText('Invite member')).toBeInTheDocument()
+    expect(screen.getByText('Add people')).toBeInTheDocument()
   })
 
   it('member can see the invite form without management controls', () => {
@@ -416,7 +433,7 @@ describe('GroupMembers', () => {
 
     render(<GroupMembers />)
 
-    expect(screen.getByText('Invite member')).toBeInTheDocument()
+    expect(screen.getByText('Add people')).toBeInTheDocument()
     expect(
       screen.queryByText(/only admins can invite/i),
     ).not.toBeInTheDocument()
@@ -439,6 +456,7 @@ describe('GroupMembers', () => {
         groupId: 'group-1',
         email: 'charlie@example.com',
         role: 'MEMBER',
+        temporaryName: undefined,
       })
     })
   })

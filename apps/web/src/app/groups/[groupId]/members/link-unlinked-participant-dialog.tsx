@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type RefObject } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
@@ -28,12 +28,14 @@ export function LinkUnlinkedParticipantDialog({
   displayName,
   open,
   onOpenChange,
+  finalFocusRef,
 }: {
   groupId: string
   unlinkedParticipantId: string
   displayName: string
   open: boolean
   onOpenChange: (open: boolean) => void
+  finalFocusRef?: RefObject<HTMLButtonElement | null>
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
   const { toast } = useToast()
@@ -91,7 +93,7 @@ export function LinkUnlinkedParticipantDialog({
 
   return (
     <ResponsiveDialog open={open} onOpenChange={handleOpenChange}>
-      <ResponsiveDialogContent className="max-w-lg">
+      <ResponsiveDialogContent className="max-w-lg" finalFocus={finalFocusRef}>
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>
             {t('unlinked.linkDialog.title')}

@@ -1935,7 +1935,7 @@
     "noManagePermission": "Bạn không có quyền.",
     "archivedNotice": "Nhóm đã lưu trữ.",
     "invite": {
-      "title": "Mời thành viên",
+      "title": "Thêm người",
       "email": "Mời qua email",
       "emailPlaceholder": "friend@example.com",
       "role": "Vai trò",
@@ -1944,7 +1944,8 @@
       "tab": {
         "email": "Email",
         "link": "Liên kết",
-        "friends": "Bạn bè"
+        "friends": "Bạn bè",
+        "unlinked": "Không có tài khoản"
       },
       "link": {
         "generate": "Tạo liên kết",
@@ -1969,7 +1970,11 @@
       "selectFriendPlaceholder": "Chọn bạn…",
       "friendAlreadyMember": "Đã là thành viên.",
       "noFriends": "Không có bạn bè.",
-      "friendAlreadyInvited": "Đã mời."
+      "friendAlreadyInvited": "Đã mời.",
+      "noAccountDescription": "Thêm một người vào các khoản chi mà không cần mời họ dùng Spliit. Có thể liên kết họ với một tài khoản sau.",
+      "temporaryNameRequired": "Tên tạm thời",
+      "noAccountNameDescription": "Hiển thị trong các khoản chi và số dư cho đến khi người tham gia này được liên kết với một tài khoản.",
+      "addParticipant": "Thêm người tham gia"
     },
     "invitations": {
       "title": "Lời mời",
@@ -2023,8 +2028,8 @@
       }
     },
     "unlinked": {
-      "title": "Chưa liên kết",
-      "description": "Chưa liên kết tài khoản.",
+      "title": "Người tham gia chưa có tài khoản",
+      "description": "Những người tham gia này có thể được đưa vào các khoản chi nhưng không thể truy cập nhóm. Quản trị viên có thể liên kết họ với tài khoản sau.",
       "emailPlaceholder": "account@example.com",
       "link": "Liên kết",
       "linkSuccess": "Đã liên kết.",
@@ -2042,7 +2047,8 @@
         "pendingGroup": "Đang chờ",
         "pendingSuffix": "(đang chờ)"
       },
-      "linkButton": "Liên kết"
+      "linkButton": "Liên kết",
+      "created": "Đã thêm {name} vào nhóm."
     },
     "dropdown": {
       "remove": "Xóa",
@@ -2114,7 +2120,8 @@
     },
     "regenerate": {
       "title": "Tạo liên kết mới"
-    }
+    },
+    "actionsFor": "Thao tác cho {name}"
   },
   "Activities": {
     "expense": {

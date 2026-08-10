@@ -34,3 +34,8 @@ export const participantRemovalOutputSchema = z.object({
   ledgerParticipantId: z.string(),
   kind: z.enum(['member', 'invitation', 'unlinked']),
 })
+
+export const createParticipantOutputSchema = z.object({
+  ledgerParticipantId: z.string(),
+  displayName: z.string(),
+})

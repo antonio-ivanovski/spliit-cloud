@@ -1624,7 +1624,7 @@
     "noManagePermission": "Yalnızca sahipler ve yöneticiler üye davet edebilir veya üyeliği iptal edebilir.",
     "archivedNotice": "Grup arşivliyken davetler devre dışıdır. Yeni üyeler davet etmek için grubu arşivden çıkarın.",
     "invite": {
-      "title": "Üye davet et",
+      "title": "Kişi ekle",
       "email": "E-posta",
       "emailPlaceholder": "friend@example.com",
       "role": "Rol",
@@ -1633,7 +1633,8 @@
       "tab": {
         "email": "E-posta",
         "link": "Davet bağlantısı",
-        "friends": "Arkadaşlar"
+        "friends": "Arkadaşlar",
+        "unlinked": "Hesap yok"
       },
       "emailDescription": "E-postayla davet gönderin. Davetli, eşleşen bir hesaptan kabul ettiğinde katılır.",
       "linkDescription": "Katılmak için herkesin kullanabileceği tek kullanımlık bir bağlantı oluşturun. İlk kabulden sonra bağlantı çalışmayı durdurur.",
@@ -1658,7 +1659,11 @@
       "selectFriendPlaceholder": "Bir arkadaş seçin…",
       "friendAlreadyMember": "Zaten üye",
       "noFriends": "Henüz arkadaş yok. E-posta sekmesinden davet edin.",
-      "friendAlreadyInvited": "Zaten davet edildi"
+      "friendAlreadyInvited": "Zaten davet edildi",
+      "noAccountDescription": "Birini Spliit uygulamasına davet etmeden masraflara ekle. Daha sonra bir hesaba bağlayabilirsin.",
+      "temporaryNameRequired": "Geçici ad",
+      "noAccountNameDescription": "Bu katılımcı bir hesaba bağlanana kadar masraflarda ve bakiyelerde gösterilir.",
+      "addParticipant": "Katılımcı ekle"
     },
     "invitations": {
       "title": "Bekleyen davetler",
@@ -1738,8 +1743,8 @@
       }
     },
     "unlinked": {
-      "title": "Bağlanmamış katılımcılar",
-      "description": "Bu kişilerin grupta bir adı var ancak henüz bir uygulama hesabı yok. Her birini mevcut bir hesaba bağlayarak masraflarını o kullanıcıyla ilişkilendirin.",
+      "title": "Hesabı olmayan katılımcılar",
+      "description": "Bu katılımcılar masraflara dahil edilebilir ancak gruba erişemez. Bir yönetici onları daha sonra bir hesaba bağlayabilir.",
       "emailPlaceholder": "hesap@ornek.com",
       "link": "Hesaba bağla",
       "linkSuccess": "Katılımcı hesaba bağlandı",
@@ -1757,7 +1762,8 @@
         "pendingGroup": "Bekleyen davetler",
         "pendingSuffix": "(bekliyor)"
       },
-      "linkButton": "Bağla"
+      "linkButton": "Bağla",
+      "created": "{name} gruba eklendi."
     },
     "dropdown": {
       "remove": "Kaldır",
@@ -1829,7 +1835,8 @@
     },
     "regenerate": {
       "title": "Yeni bağlantı oluştur"
-    }
+    },
+    "actionsFor": "{name} için işlemler"
   },
   "AccountSettings": {
     "title": "Hesap ayarları",

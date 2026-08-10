@@ -2030,7 +2030,7 @@
       "updatedOn": "Uppdaterad {date}"
     },
     "invite": {
-      "title": "Bjud in medlem",
+      "title": "Lägg till personer",
       "email": "E-post",
       "emailPlaceholder": "van@example.com",
       "role": "Roll",
@@ -2063,8 +2063,13 @@
       "tab": {
         "email": "E-post",
         "link": "Inbjudningslänk",
-        "friends": "Vänner"
-      }
+        "friends": "Vänner",
+        "unlinked": "Inget konto"
+      },
+      "noAccountDescription": "Lägg till någon i utgifterna utan att bjuda in personen till Spliit. Du kan länka personen till ett konto senare.",
+      "temporaryNameRequired": "Tillfälligt namn",
+      "noAccountNameDescription": "Visas i utgifter och saldon tills deltagaren länkas till ett konto.",
+      "addParticipant": "Lägg till deltagare"
     },
     "leave": {
       "button": "Lämna grupp",
@@ -2127,8 +2132,8 @@
       "member": "Medlem"
     },
     "unlinked": {
-      "title": "Olänkade deltagare",
-      "description": "Dessa personer har ett namn i gruppen men inget app-konto ännu. Länka varje till ett befintligt konto för att koppla deras utgifter till den användaren.",
+      "title": "Deltagare utan konto",
+      "description": "Dessa deltagare kan tas med i utgifter men har inte åtkomst till gruppen. En administratör kan länka dem till ett konto senare.",
       "emailPlaceholder": "konto@example.com",
       "link": "Länka till konto",
       "linkSuccess": "Deltagare länkad till konto",
@@ -2146,7 +2151,8 @@
         "membersGroupWithPending": "Medlemmar och väntande inbjudningar",
         "pendingGroup": "Väntande inbjudningar",
         "pendingSuffix": "(väntande)"
-      }
+      },
+      "created": "{name} lades till i gruppen."
     },
     "subgroups": {
       "title": "Subgrupper",
@@ -2213,7 +2219,8 @@
     },
     "regenerate": {
       "title": "Generera ny länk"
-    }
+    },
+    "actionsFor": "Åtgärder för {name}"
   },
   "OfflineBanner": {
     "message": "Du är offline. Ändringar du gör nu sparas inte förrän du återansluter."

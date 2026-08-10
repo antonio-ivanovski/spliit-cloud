@@ -1656,7 +1656,7 @@
     "noManagePermission": "Nur Besitzer und Administratoren können Mitglieder einladen oder entfernen.",
     "archivedNotice": "Einladungen sind deaktiviert, während die Gruppe archiviert ist. Stellen Sie die Gruppe wieder her, um neue Mitglieder einzuladen.",
     "invite": {
-      "title": "Mitglied einladen",
+      "title": "Personen hinzufügen",
       "email": "E-Mail",
       "emailPlaceholder": "freund@example.com",
       "role": "Rolle",
@@ -1665,7 +1665,8 @@
       "tab": {
         "email": "E-Mail",
         "link": "Einladungslink",
-        "friends": "Freunde"
+        "friends": "Freunde",
+        "unlinked": "Kein Konto"
       },
       "emailDescription": "Sende eine Einladung per E-Mail. Die eingeladene Person tritt bei, sobald sie von einem passenden Konto aus annimmt.",
       "linkDescription": "Erstelle einen Einmal-Link, mit dem jeder beitreten kann. Nach der ersten Annahme funktioniert der Link nicht mehr.",
@@ -1690,7 +1691,11 @@
       "selectFriendPlaceholder": "Wähle einen Freund…",
       "friendAlreadyMember": "Bereits Mitglied",
       "noFriends": "Noch keine Freunde. Lade über den E-Mail-Tab ein.",
-      "friendAlreadyInvited": "Bereits eingeladen"
+      "friendAlreadyInvited": "Bereits eingeladen",
+      "noAccountDescription": "Füge eine Person zu den Ausgaben hinzu, ohne sie zu Spliit einzuladen. Du kannst sie später mit einem Konto verknüpfen.",
+      "temporaryNameRequired": "Temporärer Name",
+      "noAccountNameDescription": "Wird in Ausgaben und Salden angezeigt, bis diese Person mit einem Konto verknüpft ist.",
+      "addParticipant": "Teilnehmer hinzufügen"
     },
     "invitations": {
       "title": "Ausstehende Einladungen",
@@ -1770,11 +1775,11 @@
     "removed": "Mitglied entfernt.",
     "roleUpdated": "Rolle auf {role} aktualisiert.",
     "unlinked": {
-      "title": "Nicht verknüpfte Teilnehmer",
-      "description": "Diese Personen haben einen Namen in der Gruppe, aber noch kein App-Konto. Verknüpfen Sie jede mit einem vorhandenen Konto, um ihre Ausgaben diesem Benutzer zuzuordnen.",
       "idHint": "Hauptbuch-Teilnehmer-ID: {id}",
       "linkButton": "Verknüpfen",
       "linkSuccess": "Teilnehmer mit Konto verknüpft",
+      "title": "Teilnehmer ohne Konto",
+      "description": "Diese Teilnehmer können in Ausgaben berücksichtigt werden, haben aber keinen Zugriff auf die Gruppe. Ein Admin kann sie später mit einem Konto verknüpfen.",
       "emailPlaceholder": "konto@example.com",
       "link": "Mit Konto verknüpfen",
       "linkDialog": {
@@ -1789,7 +1794,8 @@
         "pendingLabel": "ausstehend",
         "pendingSuffix": "(ausstehend)",
         "pendingHint": "Die Verknüpfung mit einer ausstehenden Einladung führt dazu, dass dieser namensbasierte Eintrag mit dem Eingeladenen zusammengeführt wird. Der Eingeladene behält seine eigene Zeile; die zusammengeführten Verweise werden nach der Annahme über ihn aufgelöst."
-      }
+      },
+      "created": "{name} wurde zur Gruppe hinzugefügt."
     },
     "dropdown": {
       "remove": "Entfernen",
@@ -1861,7 +1867,8 @@
     },
     "regenerate": {
       "title": "Neuen Link erstellen"
-    }
+    },
+    "actionsFor": "Aktionen für {name}"
   },
   "AccountSettings": {
     "title": "Kontoeinstellungen",

@@ -1935,7 +1935,7 @@
     "noManagePermission": "Only admins can invite, revoke, or manage group members.",
     "archivedNotice": "Invitations and member management are disabled while the group is archived. Unarchive the group to invite new members.",
     "invite": {
-      "title": "Invite member",
+      "title": "Add people",
       "email": "Email",
       "emailPlaceholder": "friend@example.com",
       "role": "Role",
@@ -1944,7 +1944,8 @@
       "tab": {
         "email": "Email",
         "link": "Invite link",
-        "friends": "Friends"
+        "friends": "Friends",
+        "unlinked": "No account"
       },
       "link": {
         "generate": "Generate invite link",
@@ -1969,7 +1970,11 @@
       "selectFriendPlaceholder": "Select a friend…",
       "friendAlreadyMember": "Already a member",
       "noFriends": "No friends yet. Invite from the Email tab.",
-      "friendAlreadyInvited": "Already invited"
+      "friendAlreadyInvited": "Already invited",
+      "noAccountDescription": "Add someone to expenses without inviting them to Spliit. You can link them to an account later.",
+      "temporaryNameRequired": "Temporary name",
+      "noAccountNameDescription": "Shown in expenses and balances until this participant is linked to an account.",
+      "addParticipant": "Add participant"
     },
     "invitations": {
       "title": "Pending invitations",
@@ -2023,8 +2028,8 @@
       }
     },
     "unlinked": {
-      "title": "Unlinked participants",
-      "description": "These people have a name in the group but no app account yet. Link each to an existing account to associate their expenses with that user.",
+      "title": "Participants without accounts",
+      "description": "These participants can be included in expenses but cannot access the group. An admin can link them to an account later.",
       "emailPlaceholder": "account@example.com",
       "link": "Link to account",
       "linkSuccess": "Participant linked to account",
@@ -2042,7 +2047,8 @@
         "pendingGroup": "Pending invites",
         "pendingSuffix": "(pending)"
       },
-      "linkButton": "Link"
+      "linkButton": "Link",
+      "created": "{name} was added to the group."
     },
     "dropdown": {
       "remove": "Remove",
@@ -2114,7 +2120,8 @@
     },
     "regenerate": {
       "title": "Generate new link"
-    }
+    },
+    "actionsFor": "Actions for {name}"
   },
   "Activities": {
     "expense": {

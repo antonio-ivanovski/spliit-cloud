@@ -1632,7 +1632,7 @@
     "noManagePermission": "רק בעלים ומנהלים יכולים להזמין או להסיר חברי קבוצה.",
     "archivedNotice": "הזמנות מבוטלות בזמן שהקבוצה בארכיון. בטל את הארכוב כדי להזמין חברים חדשים.",
     "invite": {
-      "title": "הזמן חבר",
+      "title": "הוסף אנשים",
       "email": "אימייל",
       "emailPlaceholder": "friend@example.com",
       "role": "תפקיד",
@@ -1641,7 +1641,8 @@
       "tab": {
         "email": "דוא״ל",
         "link": "קישור הזמנה",
-        "friends": "חברים"
+        "friends": "חברים",
+        "unlinked": "ללא חשבון"
       },
       "emailDescription": "שלחו הזמנה בדוא״ל. המוזמן יצטרף לאחר שיאשר אותה מחשבון תואם.",
       "linkDescription": "צרו קישור חד-פעמי שכל אחד יכול להשתמש בו כדי להצטרף. הקישור יפסיק לפעול לאחר האישור הראשון.",
@@ -1666,7 +1667,11 @@
       "selectFriendPlaceholder": "בחרו חבר…",
       "friendAlreadyMember": "כבר חבר",
       "noFriends": "אין עדיין חברים. הזמינו מהכרטיסייה 'דוא״ל'.",
-      "friendAlreadyInvited": "כבר הוזמן"
+      "friendAlreadyInvited": "כבר הוזמן",
+      "noAccountDescription": "הוסף אדם להוצאות בלי להזמין אותו ל-Spliit. ניתן לקשר אותו לחשבון בהמשך.",
+      "temporaryNameRequired": "שם זמני",
+      "noAccountNameDescription": "יוצג בהוצאות וביתרות עד לקישור המשתתף לחשבון.",
+      "addParticipant": "הוסף משתתף"
     },
     "invitations": {
       "title": "הזמנות ממתינות",
@@ -1747,8 +1752,8 @@
       }
     },
     "unlinked": {
-      "title": "משתתפים לא מקושרים",
-      "description": "לאנשים אלה יש שם בקבוצה אך עדיין אין להם חשבון אפליקציה. קשר כל אחד לחשבון קיים כדי לשייך את ההוצאות שלו למשתמש זה.",
+      "title": "משתתפים ללא חשבון",
+      "description": "אפשר לכלול את המשתתפים האלה בהוצאות, אך הם אינם יכולים לגשת לקבוצה. מנהל יכול לקשר אותם לחשבון בהמשך.",
       "emailPlaceholder": "account@example.com",
       "link": "קשר לחשבון",
       "linkSuccess": "המשתתף קושר לחשבון",
@@ -1766,7 +1771,8 @@
         "membersGroupWithPending": "חברים והזמנות ממתינות",
         "pendingGroup": "הזמנות ממתינות",
         "pendingSuffix": "(ממתין)"
-      }
+      },
+      "created": "הוספת את {name} לקבוצה."
     },
     "dropdown": {
       "remove": "הסר",
@@ -1838,7 +1844,8 @@
     },
     "regenerate": {
       "title": "יצירת קישור חדש"
-    }
+    },
+    "actionsFor": "פעולות עבור {name}"
   },
   "AccountSettings": {
     "title": "הגדרות חשבון",
