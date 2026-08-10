@@ -22,13 +22,18 @@ import {
   type ConversionResult,
 } from './currency-conversion-step'
 import { DestinationStep } from './destination-step'
+import { DocumentsStep } from './documents-step'
 import { DoneStep } from './done-step'
 import {
   importWizardReducer,
   initialWizardState,
 } from './import-wizard-reducer'
 import type { ImportStep } from './import-wizard-state'
-import { buildImportExpenses } from './import-wizard-state'
+import {
+  buildImportExpenses,
+  isDocumentImportFailure,
+  shouldDiscardStagedDocumentTokens,
+} from './import-wizard-state'
 import { MappingStep } from './mapping-step'
 import { SourceStep } from './source-step'
 import { useImportSource } from './use-import-source'
@@ -117,7 +122,12 @@ export function ImportGroupWizard() {
       })
     },
     onError: (err) => {
-      toast({ description: err.message, variant: 'destructive' })
+      if (isDocumentImportFailure(err.message)) {
+        dispatch({
+          type: 'DOCUMENTS_FAILED',
+          discardTokens: shouldDiscardStagedDocumentTokens(err.message),
+        })
+      }
     },
   })
 
@@ -132,6 +142,7 @@ export function ImportGroupWizard() {
   } = importMutation
   const importResultGroupId = importResult?.groupId ?? null
   const importResultInvites = importResult?.invites ?? []
+  const importedDocumentCount = importResult?.importedDocuments ?? 0
 
   // Prefill error message for the source step's inline error display.
   // Derived (not stored) because the wizard's `useImportSource`
@@ -254,6 +265,18 @@ export function ImportGroupWizard() {
     [],
   )
 
+  const handleDocumentsContinue = useCallback(
+    (result: {
+      stagedTokens: string[]
+      recoveredCount: number
+      skippedCount: number
+      skippedEntirely: boolean
+    }) => {
+      dispatch({ type: 'DOCUMENTS_CONFIRMED', ...result })
+    },
+    [],
+  )
+
   const destinationCurrencyCode =
     state.mode === 'EXISTING_GROUP'
       ? (destinationGroupData?.group?.currencyCode ?? '')
@@ -283,6 +306,13 @@ export function ImportGroupWizard() {
             'groupFormValues' in batch ? batch.groupFormValues : undefined,
           expenses,
           sourceMeta,
+          documentImport:
+            state.stagedDocumentTokens.length > 0
+              ? {
+                  sessionId: state.documentSessionId,
+                  stagedTokens: state.stagedDocumentTokens,
+                }
+              : undefined,
           requestId,
         }),
       )
@@ -383,6 +413,20 @@ export function ImportGroupWizard() {
         />
       )}
 
+      {state.step === 'documents' && state.source && (
+        <DocumentsStep
+          source={state.source}
+          sessionId={state.documentSessionId}
+          initialTokens={state.stagedDocumentTokens}
+          initialRecoveredCount={state.recoveredDocumentCount}
+          initialSkippedCount={state.skippedDocumentCount}
+          initialSkippedEntirely={state.documentRecoverySkipped}
+          initialCompleted={state.documentFlowVisited}
+          onBack={handleBack}
+          onContinue={handleDocumentsContinue}
+        />
+      )}
+
       {state.step === 'confirm' && state.source && state.mode && (
         <ConfirmStep
           source={state.source}
@@ -395,6 +439,10 @@ export function ImportGroupWizard() {
           invites={importResultInvites}
           isSubmitting={isImportPending}
           conversionModes={state.conversionModes}
+          recoveredDocumentCount={state.recoveredDocumentCount}
+          skippedDocumentCount={state.skippedDocumentCount}
+          documentRecoverySkipped={state.documentRecoverySkipped}
+          showDocumentSummary={state.documentFlowVisited}
           onBack={handleBack}
           onSubmit={handleSubmit}
         />
@@ -404,6 +452,7 @@ export function ImportGroupWizard() {
         <DoneStep
           groupId={importResultGroupId}
           invites={importResultInvites}
+          importedDocumentCount={importedDocumentCount}
           onContinue={handleDoneNavigate}
         />
       )}

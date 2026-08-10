@@ -330,7 +330,8 @@
           "daily": "Codziennie",
           "weekly": "Co tydzień",
           "monthly": "Co miesiąc"
-        }
+        },
+        "documentCount": "Dokumenty: odzyskano {imported}, pominięto {skipped}"
       },
       "Destination": {
         "heading": "Gdzie chcesz zaimportować <strong>{name}</strong>? ({participantCount} uczestników · {expenseCount} wydatków)",
@@ -455,7 +456,8 @@
         "backAriaLabel": "Wstecz",
         "currencyConversion": "Konwersja walut",
         "backTo": "Powrót do {step}",
-        "continueTo": "Przejdź do {step}"
+        "continueTo": "Przejdź do {step}",
+        "documents": "Dokumenty"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -471,6 +473,30 @@
         "rateDateLabel": "Data kursu",
         "ratesError": "Nie udało się pobrać kursów wymiany. Sprawdź połączenie i spróbuj ponownie.",
         "refresh": "Odśwież"
+      },
+      "Documents": {
+        "title": "Zabierz paragony ze sobą",
+        "description": "Spliit Cloud może bezpiecznie skopiować obrazy paragonów z oryginalnej grupy na spliit.app i zapisać znormalizowane wersje JPEG w Twojej chmurze.",
+        "fetchFailed": "Nie udało się pobrać obrazu źródłowego.",
+        "tooLarge": "Znormalizowany obraz nadal jest większy niż 2 MiB.",
+        "uploadFailed": "Nie udało się przesłać znormalizowanego obrazu.",
+        "unknownFailure": "Nieznany błąd dokumentu.",
+        "discoveryFailed": "Nie udało się znaleźć dokumentów na spliit.app.",
+        "progress": "Przygotowywanie dokumentu {processed} z {total}…",
+        "recovered": "Odzyskano {count} dokument",
+        "recovered_plural": "Odzyskano {count} dokumentów",
+        "unavailableTitle": "Nie można bezpiecznie dopasować tego źródła",
+        "unavailableDescription": "Ten eksport nie zawiera stabilnych znaczników czasu wydatków potrzebnych do odzyskania dokumentów. Możesz kontynuować bez nich.",
+        "failedTitle": "Nie udało się odzyskać {count} dokumentu",
+        "failedTitle_plural": "Nie udało się odzyskać {count} dokumentów",
+        "skipTitle": "Kontynuować bez obrazów paragonów?",
+        "skipDescription": "Wydatki zostaną zaimportowane, ale zabraknie ich dokumentów. Po imporcie nie można tego automatycznie naprawić.",
+        "acceptMissing": "Rozumiem, że wymienionych dokumentów zabraknie w importowanych wydatkach.",
+        "retry": "Ponów odzyskiwanie dokumentów",
+        "start": "Znajdź i skopiuj dokumenty",
+        "confirmSkip": "Tak, kontynuuj bez dokumentów",
+        "skip": "Kontynuuj bez dokumentów",
+        "continueWithMissing": "Kontynuuj bez brakujących dokumentów"
       }
     },
     "Importable": {

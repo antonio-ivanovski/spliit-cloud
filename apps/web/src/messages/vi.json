@@ -405,7 +405,8 @@
         "backAriaLabel": "Quay lại",
         "currencyConversion": "Chuyển đổi",
         "backTo": "Quay lại {step}",
-        "continueTo": "Tiếp đến {step}"
+        "continueTo": "Tiếp đến {step}",
+        "documents": "Tài liệu"
       },
       "fetchingGroup": "Đang tải…",
       "fetchSourceError": "Lỗi tải nguồn.",
@@ -549,7 +550,8 @@
           "daily": "Hàng ngày",
           "weekly": "Hàng tuần",
           "monthly": "Hàng tháng"
-        }
+        },
+        "documentCount": "Tài liệu: đã khôi phục {imported}, đã bỏ qua {skipped}"
       },
       "Done": {
         "importComplete": "Nhập hoàn tất!",
@@ -579,6 +581,30 @@
         "rateDateLabel": "Ngày",
         "ratesError": "Lỗi tỷ giá.",
         "refresh": "Làm mới"
+      },
+      "Documents": {
+        "title": "Mang theo biên lai của bạn",
+        "description": "Spliit Cloud có thể sao chép an toàn ảnh biên lai từ nhóm spliit.app ban đầu và lưu các phiên bản JPEG đã chuẩn hóa vào bộ nhớ Cloud của bạn.",
+        "fetchFailed": "Không thể tải ảnh nguồn xuống.",
+        "tooLarge": "Ảnh đã chuẩn hóa vẫn lớn hơn 2 MiB.",
+        "uploadFailed": "Không thể tải ảnh đã chuẩn hóa lên.",
+        "unknownFailure": "Lỗi tài liệu không xác định.",
+        "discoveryFailed": "Không thể tìm thấy tài liệu trên spliit.app.",
+        "progress": "Đang chuẩn bị tài liệu {processed}/{total}…",
+        "recovered": "Đã khôi phục {count} tài liệu",
+        "recovered_plural": "Đã khôi phục {count} tài liệu",
+        "unavailableTitle": "Không thể ghép nguồn này một cách an toàn",
+        "unavailableDescription": "Bản xuất này không có các mốc thời gian chi phí ổn định cần thiết để khôi phục tài liệu. Bạn có thể tiếp tục mà không có chúng.",
+        "failedTitle": "Không thể khôi phục {count} tài liệu",
+        "failedTitle_plural": "Không thể khôi phục {count} tài liệu",
+        "skipTitle": "Tiếp tục mà không có ảnh biên lai?",
+        "skipDescription": "Các khoản chi phí vẫn được nhập, nhưng tài liệu của chúng sẽ bị thiếu. Không thể tự động sửa lại sau khi nhập.",
+        "acceptMissing": "Tôi hiểu rằng các tài liệu được liệt kê sẽ bị thiếu trong các khoản chi phí đã nhập.",
+        "retry": "Thử khôi phục tài liệu lại",
+        "start": "Tìm và sao chép tài liệu",
+        "confirmSkip": "Có, tiếp tục mà không có tài liệu",
+        "skip": "Tiếp tục mà không có tài liệu",
+        "continueWithMissing": "Tiếp tục dù thiếu tài liệu"
       }
     },
     "groups": "Nhóm",

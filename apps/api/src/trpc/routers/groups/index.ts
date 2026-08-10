@@ -9,6 +9,7 @@ import { groupExpensesRouter } from './expenses'
 import { getGroupProcedure } from './get.procedure'
 import { getGroupDetailsProcedure } from './getDetails.procedure'
 import { importGroupProcedure } from './import.procedure'
+import { discoverImportDocumentsProcedure } from './importDocuments.procedure'
 import { importLinksRouter } from './importLinks'
 import { previewFromUrlProcedure } from './importPreview.procedure'
 import {
@@ -90,6 +91,9 @@ export const groupsRouter = createTRPCRouter({
    * `groupFormValues`.
    */
   import: importGroupProcedure,
+
+  /** Discover receipt images from the original public spliit.app group. */
+  discoverImportDocuments: discoverImportDocumentsProcedure,
 
   /**
    * Fetch and parse a group from an external URL, returning a preview without

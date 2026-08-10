@@ -10,6 +10,7 @@ export const STEP_HEADER_LABEL_KEYS = {
   destination: 'Groups.Import.StepHeader.destination',
   mapping: 'Groups.Import.StepHeader.mapping',
   currencyConversion: 'Groups.Import.StepHeader.currencyConversion',
+  documents: 'Groups.Import.StepHeader.documents',
   confirm: 'Groups.Import.StepHeader.confirm',
   done: 'Groups.Import.StepHeader.done',
 } as const satisfies Record<ImportStep, string>

@@ -337,7 +337,8 @@
           "daily": "TTäglich",
           "weekly": "WWöchentlich",
           "monthly": "Monatlich"
-        }
+        },
+        "documentCount": "Dokumente: {imported} wiederhergestellt, {skipped} übersprungen"
       },
       "Destination": {
         "heading": "Wohin möchtest du <strong>{name}</strong> importieren? ({participantCount} Teilnehmer · {expenseCount} Ausgaben)",
@@ -464,7 +465,8 @@
         "backAriaLabel": "Zurück",
         "currencyConversion": "Währungsumrechnung",
         "backTo": "Zurück zu {step}",
-        "continueTo": "Weiter zu {step}"
+        "continueTo": "Weiter zu {step}",
+        "documents": "Dokumente"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -480,6 +482,30 @@
         "rateDateLabel": "Kursdatum",
         "ratesError": "Wechselkurse konnten nicht abgerufen werden. Überprüfe deine Verbindung und versuche es erneut.",
         "refresh": "Aktualisieren"
+      },
+      "Documents": {
+        "title": "Belege mitnehmen",
+        "description": "Spliit Cloud kann Belegbilder sicher aus der ursprünglichen spliit.app-Gruppe kopieren und normalisierte JPEG-Versionen in deinem Cloud-Speicher ablegen.",
+        "fetchFailed": "Das Quelldokument konnte nicht heruntergeladen werden.",
+        "tooLarge": "Das normalisierte Bild ist weiterhin größer als 2 MiB.",
+        "uploadFailed": "Das normalisierte Bild konnte nicht hochgeladen werden.",
+        "unknownFailure": "Unbekannter Dokumentfehler.",
+        "discoveryFailed": "Dokumente auf spliit.app konnten nicht gefunden werden.",
+        "progress": "Dokument {processed} von {total} wird vorbereitet …",
+        "recovered": "{count} Dokument wiederhergestellt",
+        "recovered_plural": "{count} Dokumente wiederhergestellt",
+        "unavailableTitle": "Diese Quelle kann nicht sicher zugeordnet werden",
+        "unavailableDescription": "Dieser Export enthält nicht die stabilen Zeitstempel der Ausgaben, die zum Wiederherstellen der Dokumente erforderlich sind. Du kannst ohne sie fortfahren.",
+        "failedTitle": "{count} Dokument konnte nicht wiederhergestellt werden",
+        "failedTitle_plural": "{count} Dokumente konnten nicht wiederhergestellt werden",
+        "skipTitle": "Ohne Belegbilder fortfahren?",
+        "skipDescription": "Die Ausgaben werden trotzdem importiert, aber ihre Dokumente fehlen. Dies kann nach dem Import nicht automatisch behoben werden.",
+        "acceptMissing": "Ich verstehe, dass die aufgeführten Dokumente in den importierten Ausgaben fehlen werden.",
+        "retry": "Dokumentwiederherstellung wiederholen",
+        "start": "Dokumente suchen und kopieren",
+        "confirmSkip": "Ja, ohne Dokumente fortfahren",
+        "skip": "Ohne Dokumente fortfahren",
+        "continueWithMissing": "Mit fehlenden Dokumenten fortfahren"
       }
     },
     "Importable": {

@@ -318,7 +318,8 @@
           "daily": "每天",
           "weekly": "每周",
           "monthly": "每月"
-        }
+        },
+        "documentCount": "文档：恢复 {imported} 份，跳过 {skipped} 份"
       },
       "Destination": {
         "heading": "您想将 <strong>{name}</strong> 导入到哪里？（{participantCount} 名参与者 · {expenseCount} 笔支出）",
@@ -440,7 +441,8 @@
         "backAriaLabel": "返回",
         "currencyConversion": "货币转换",
         "backTo": "返回{step}",
-        "continueTo": "继续到{step}"
+        "continueTo": "继续到{step}",
+        "documents": "文档"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -456,6 +458,30 @@
         "rateDateLabel": "汇率日期",
         "ratesError": "无法获取汇率。请检查网络连接后重试。",
         "refresh": "刷新"
+      },
+      "Documents": {
+        "title": "带上你的收据",
+        "description": "Spliit Cloud 可以安全地从原始 spliit.app 群组复制收据图片，并将规范化的 JPEG 版本存储到你的 Cloud 存储中。",
+        "fetchFailed": "无法下载源图片。",
+        "tooLarge": "规范化后的图片仍大于 2 MiB。",
+        "uploadFailed": "无法上传规范化后的图片。",
+        "unknownFailure": "未知的文档错误。",
+        "discoveryFailed": "无法在 spliit.app 上发现文档。",
+        "progress": "正在准备第 {processed}/{total} 份文档…",
+        "recovered": "已恢复 {count} 份文档",
+        "recovered_plural": "已恢复 {count} 份文档",
+        "unavailableTitle": "无法安全匹配此来源",
+        "unavailableDescription": "此导出文件不包含恢复文档所需的稳定支出时间戳。你可以不恢复文档并继续。",
+        "failedTitle": "无法恢复 {count} 份文档",
+        "failedTitle_plural": "无法恢复 {count} 份文档",
+        "skipTitle": "部分文档无法恢复",
+        "skipDescription": "我们无法复制所有文档。你可以重试失败的项目，或明确接受这些文档将会缺失后继续。",
+        "acceptMissing": "我了解列出的文档将不会出现在导入的支出中。",
+        "retry": "重试失败的文档",
+        "start": "查找并复制文档",
+        "confirmSkip": "不恢复文档并继续",
+        "skip": "跳过文档恢复",
+        "continueWithMissing": "即使缺少文档也继续"
       }
     },
     "Importable": {

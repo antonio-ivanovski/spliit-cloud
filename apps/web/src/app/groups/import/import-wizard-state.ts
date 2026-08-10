@@ -9,6 +9,7 @@ export type ImportStep =
   | 'destination'
   | 'mapping'
   | 'currencyConversion'
+  | 'documents'
   | 'confirm'
   | 'done'
 
@@ -17,6 +18,7 @@ const STEP_ORDER: ImportStep[] = [
   'destination',
   'mapping',
   'currencyConversion',
+  'documents',
   'confirm',
   'done',
 ]
@@ -46,11 +48,17 @@ export type StepNavigation = {
   customContinueLabel?: string
 }
 
-export function getStepNavigation(step: ImportStep): StepNavigation {
-  const idx = STEP_ORDER.indexOf(step)
+export function getStepNavigation(
+  step: ImportStep,
+  { includeDocuments = true }: { includeDocuments?: boolean } = {},
+): StepNavigation {
+  const stepOrder = includeDocuments
+    ? STEP_ORDER
+    : STEP_ORDER.filter((candidate) => candidate !== 'documents')
+  const idx = stepOrder.indexOf(step)
   if (idx <= 0) return {}
-  const previousStepKey = STEP_ORDER[idx - 1]
-  const nextStepKey = STEP_ORDER[idx + 1]
+  const previousStepKey = stepOrder[idx - 1]
+  const nextStepKey = stepOrder[idx + 1]
   return {
     previousStepKey,
     nextStepKey,
@@ -69,6 +77,18 @@ export type CustomContinueLabelKey =
 export type ConversionMode = 'perDate' | 'fixed'
 
 export type ImportMode = 'NEW_GROUP' | 'EXISTING_GROUP'
+
+export function supportsDocumentRecovery(source: NormalizedSource | null) {
+  return source?.provider === 'SPLIIT' && source.sourceGroupId !== 'csv-import'
+}
+
+export function isDocumentImportFailure(message: string) {
+  return /staged import document/i.test(message)
+}
+
+export function shouldDiscardStagedDocumentTokens(message: string) {
+  return /invalid or expired|is unavailable/i.test(message)
+}
 
 export type ParticipantMappingMode =
   | 'LINK_ACCOUNT'

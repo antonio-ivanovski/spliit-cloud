@@ -326,7 +326,8 @@
           "daily": "Zilnic",
           "weekly": "Săptămânal",
           "monthly": "Lunar"
-        }
+        },
+        "documentCount": "Documente: {imported} recuperate, {skipped} omise"
       },
       "Destination": {
         "heading": "Unde doriți să importați <strong>{name}</strong>? ({participantCount} participanți · {expenseCount} cheltuieli)",
@@ -450,7 +451,8 @@
         "backAriaLabel": "Înapoi",
         "currencyConversion": "Conversie valutară",
         "backTo": "Înapoi la {step}",
-        "continueTo": "Continuă la {step}"
+        "continueTo": "Continuă la {step}",
+        "documents": "Documente"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -466,6 +468,30 @@
         "rateDateLabel": "Data cursului",
         "ratesError": "Nu s-au putut prelua cursurile de schimb. Verifică conexiunea și încearcă din nou.",
         "refresh": "Reîmprospătează"
+      },
+      "Documents": {
+        "title": "Adu-ți chitanțele cu tine",
+        "description": "Spliit Cloud poate copia în siguranță imaginile chitanțelor din grupul original de pe spliit.app și poate salva versiuni JPEG normalizate în spațiul tău de stocare în cloud.",
+        "fetchFailed": "Imaginea sursă nu a putut fi descărcată.",
+        "tooLarge": "Imaginea normalizată depășește în continuare 2 MiB.",
+        "uploadFailed": "Imaginea normalizată nu a putut fi încărcată.",
+        "unknownFailure": "Eroare necunoscută a documentului.",
+        "discoveryFailed": "Documentele nu au putut fi descoperite pe spliit.app.",
+        "progress": "Se pregătește documentul {processed} din {total}…",
+        "recovered": "S-a recuperat {count} document",
+        "recovered_plural": "S-au recuperat {count} documente",
+        "unavailableTitle": "Această sursă nu poate fi asociată în siguranță",
+        "unavailableDescription": "Acest export nu include marcajele temporale stabile ale cheltuielilor necesare pentru recuperarea documentelor. Poți continua fără ele.",
+        "failedTitle": "Nu s-a putut recupera {count} document",
+        "failedTitle_plural": "Nu s-au putut recupera {count} documente",
+        "skipTitle": "Continui fără imaginile chitanțelor?",
+        "skipDescription": "Cheltuielile vor fi importate în continuare, dar documentele lor vor lipsi. Acest lucru nu poate fi reparat automat după import.",
+        "acceptMissing": "Înțeleg că documentele listate vor lipsi din cheltuielile importate.",
+        "retry": "Reîncearcă recuperarea documentelor",
+        "start": "Găsește și copiază documentele",
+        "confirmSkip": "Da, continuă fără documente",
+        "skip": "Continuă fără documente",
+        "continueWithMissing": "Continuă cu documentele lipsă"
       }
     },
     "Importable": {

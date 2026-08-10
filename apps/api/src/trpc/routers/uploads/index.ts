@@ -3,11 +3,13 @@ import { z } from 'zod'
 
 import {
   createUploadPresignForAccount,
+  mintImportDocumentPresign,
   mintProfileImagePresign,
 } from '../../../routes/upload'
 import { createTRPCRouter, protectedProcedure } from '../../init'
 import {
   profileImagePresignOutputSchema,
+  importDocumentPresignOutputSchema,
   uploadPresignOutputSchema,
 } from '../../outputs/uploads'
 
@@ -46,6 +48,28 @@ const profileImageInput = z.object({
  * caller's account, so we skip the redundant cookie round-trip.
  */
 export const uploadsRouter = createTRPCRouter({
+  importDocumentPresign: protectedProcedure
+    .input(
+      z.object({
+        sessionId: z.uuid(),
+        sourceToken: z.string().min(1),
+        fileSize: z.number().int().positive(),
+        width: z.number().int().positive(),
+        height: z.number().int().positive(),
+      }),
+    )
+    .output(importDocumentPresignOutputSchema)
+    .mutation(async ({ ctx, input }) => {
+      const response = await mintImportDocumentPresign({
+        ...input,
+        accountId: ctx.auth.user.id,
+      })
+      return (await readPresignResponse(
+        response,
+        'Import document presign failed',
+      )) as { uploadUrl: string; stagedToken: string }
+    }),
+
   /**
    * Get a presigned PUT URL for an expense document upload. The client uploads
    * directly to S3/R2, then passes the returned `fileUrl` in the expense's
@@ -94,6 +118,7 @@ type PresignResponseBody = {
   uploadUrl?: string
   fileUrl?: string
   key?: string
+  stagedToken?: string
 }
 
 async function readPresignResponse(

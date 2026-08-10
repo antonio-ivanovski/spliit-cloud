@@ -322,7 +322,8 @@
           "daily": "GGünlük",
           "weekly": "Haftalık",
           "monthly": "Aylık"
-        }
+        },
+        "documentCount": "Belgeler: {imported} geri yüklendi, {skipped} atlandı"
       },
       "Destination": {
         "heading": "<strong>{name}</strong> grubunu nereye içe aktarmak istersiniz? ({participantCount} katılımcı · {expenseCount} harcama)",
@@ -445,7 +446,8 @@
         "backAriaLabel": "Geri",
         "currencyConversion": "Döviz dönüşümü",
         "backTo": "{step} adımına dön",
-        "continueTo": "{step} adımına devam et"
+        "continueTo": "{step} adımına devam et",
+        "documents": "Belgeler"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -461,6 +463,30 @@
         "rateDateLabel": "Kur tarihi",
         "ratesError": "Döviz kurları alınamadı. Bağlantınızı kontrol edip tekrar deneyin.",
         "refresh": "Yenile"
+      },
+      "Documents": {
+        "title": "Makbuzlarınızı yanınızda getirin",
+        "description": "Spliit Cloud, orijinal spliit.app grubundaki makbuz görsellerini güvenli bir şekilde kopyalayıp normalize edilmiş JPEG sürümlerini Cloud depolama alanında saklayabilir.",
+        "fetchFailed": "Kaynak görsel indirilemedi.",
+        "tooLarge": "Normalize edilmiş görsel hâlâ 2 MiB boyutundan büyük.",
+        "uploadFailed": "Normalize edilmiş görsel yüklenemedi.",
+        "unknownFailure": "Bilinmeyen belge hatası.",
+        "discoveryFailed": "spliit.app üzerinde belgeler bulunamadı.",
+        "progress": "Belge {processed}/{total} hazırlanıyor…",
+        "recovered": "{count} belge geri yüklendi",
+        "recovered_plural": "{count} belge geri yüklendi",
+        "unavailableTitle": "Bu kaynak güvenli şekilde eşleştirilemiyor",
+        "unavailableDescription": "Bu dışa aktarma, belgeleri geri yüklemek için gereken sabit harcama zaman damgalarını içermiyor. Belgeler olmadan devam edebilirsiniz.",
+        "failedTitle": "{count} belge geri yüklenemedi",
+        "failedTitle_plural": "{count} belge geri yüklenemedi",
+        "skipTitle": "Makbuz görselleri olmadan devam edilsin mi?",
+        "skipDescription": "Harcamalar yine de içe aktarılacak, ancak belgeleri eksik kalacak. İçe aktarma sonrasında bu durum otomatik olarak düzeltilemez.",
+        "acceptMissing": "Listelenen belgelerin içe aktarılan harcamalarda eksik olacağını anlıyorum.",
+        "retry": "Belge kurtarmayı yeniden dene",
+        "start": "Belgeleri bul ve kopyala",
+        "confirmSkip": "Evet, belgeler olmadan devam et",
+        "skip": "Belgeler olmadan devam et",
+        "continueWithMissing": "Eksik belgeleri atlayarak devam et"
       }
     },
     "Importable": {

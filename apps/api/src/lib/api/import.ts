@@ -19,6 +19,11 @@ import {
 import { env as jobsEnv } from '@spliit/jobs'
 
 import {
+  deleteS3Object,
+  permanentDocumentUrl,
+  verifyAndPromoteImportDocument,
+} from '../../routes/upload'
+import {
   CurrencyRateProviderError,
   UnsupportedCurrencyError,
 } from '../currency-errors'
@@ -31,6 +36,7 @@ import {
   resolveConversion,
   type ConversionResolution,
 } from '../expense-conversion'
+import { openStagedDocumentClaims } from '../import-documents'
 import { getPlaceholderEmailDisplayName } from '../invitations/display'
 import {
   buildExpenseActivityData,
@@ -105,6 +111,10 @@ export type ImportInput = {
   participants: ImportParticipantMapping[]
   expenses: Expense[]
   sourceMeta?: ImportSourceMeta
+  documentImport?: {
+    sessionId: string
+    stagedTokens: string[]
+  }
 }
 
 export type ImportInviteResult = {
@@ -119,6 +129,7 @@ export type ImportResult = {
   groupId: string
   ledgerId: string
   importedExpenses: number
+  importedDocuments: number
   sourceGroupId: string | null
   invites: ImportInviteResult[]
   emailDispatches?: ImportEmailDispatch[]
@@ -147,6 +158,48 @@ export async function prepareImportGroup(
     idempotencyRequestId?: string
   },
 ) {
+  let stagedClaims: Awaited<ReturnType<typeof openStagedDocumentClaims>>[] = []
+  try {
+    stagedClaims = input.documentImport
+      ? await Promise.all(
+          input.documentImport.stagedTokens.map((token) =>
+            openStagedDocumentClaims(token),
+          ),
+        )
+      : []
+  } catch (cause) {
+    throw new Error('Staged import document token is invalid or expired', {
+      cause,
+    })
+  }
+  const seenSourceDocuments = new Set<string>()
+  for (const claims of stagedClaims) {
+    if (
+      claims.accountId !== actor.accountId ||
+      claims.sessionId !== input.documentImport?.sessionId ||
+      claims.expenseIndex >= input.expenses.length
+    ) {
+      throw new Error('Invalid staged import document')
+    }
+    const sourceKey = `${claims.expenseIndex}:${claims.sourceDocumentId}`
+    if (seenSourceDocuments.has(sourceKey)) {
+      throw new Error('Duplicate staged import document')
+    }
+    seenSourceDocuments.add(sourceKey)
+  }
+  const importedDocumentsByExpense = new Map<
+    number,
+    Array<{ url: string; width: number; height: number }>
+  >()
+  for (const claims of stagedClaims) {
+    const rows = importedDocumentsByExpense.get(claims.expenseIndex) ?? []
+    rows.push({
+      url: permanentDocumentUrl(claims.fileUrl),
+      width: claims.width,
+      height: claims.height,
+    })
+    importedDocumentsByExpense.set(claims.expenseIndex, rows)
+  }
   // Legacy spliit.app export only carries recurrenceRule. Matching historical
   // rows collapse into one destination series; Cloud series metadata is never
   // accepted on this transport.
@@ -270,7 +323,12 @@ export async function prepareImportGroup(
     if (!entry || !entry.ok) {
       const err = (entry as { ok: false; error: unknown } | undefined)
         ?.error as
-        | { code: string; currency?: string; message?: string; target?: string }
+        | {
+            code: string
+            currency?: string
+            message?: string
+            target?: string
+          }
         | undefined
       if (err?.code === 'UNSUPPORTED_CURRENCY') {
         throw new UnsupportedCurrencyError(err.currency ?? args.base)
@@ -326,7 +384,10 @@ export async function prepareImportGroup(
           ledgerCurrencyCode: preflightLedgerCurrency ?? null,
         }),
       },
-      documents: expense.documents.map((document) => ({
+      documents: [
+        ...expense.documents,
+        ...(importedDocumentsByExpense.get(expenseIndex) ?? []),
+      ].map((document) => ({
         id: randomId(),
         document,
       })),
@@ -340,6 +401,30 @@ export async function prepareImportGroup(
   )
 
   const boss = await getApiBoss()
+  const promotionResults = input.documentImport
+    ? await Promise.allSettled(
+        input.documentImport.stagedTokens.map((token) =>
+          verifyAndPromoteImportDocument({
+            token,
+            accountId: actor.accountId,
+            sessionId: input.documentImport!.sessionId,
+          }),
+        ),
+      )
+    : []
+  const importedDocuments = promotionResults.flatMap((result) =>
+    result.status === 'fulfilled' ? [result.value] : [],
+  )
+  const promotionFailure = promotionResults.find(
+    (result) => result.status === 'rejected',
+  )
+  if (promotionFailure?.status === 'rejected') {
+    await Promise.allSettled(
+      importedDocuments.map((document) => deleteS3Object(document.url)),
+    )
+    throw promotionFailure.reason
+  }
+
   return {
     boss,
     membershipByExpenseIndex,
@@ -349,6 +434,11 @@ export async function prepareImportGroup(
     queueBoss,
     recurringPlan,
     resolvedConversions,
+    importedDocuments: importedDocuments.length,
+    promotedDocumentUrls: importedDocuments.map((document) => document.url),
+    stagedDocumentUrls: importedDocuments.map(
+      (document) => document.temporaryUrl,
+    ),
     seriesIdByKey,
   }
 }
@@ -375,6 +465,7 @@ export async function importGroup(
     queueBoss,
     recurringPlan,
     resolvedConversions,
+    importedDocuments,
     seriesIdByKey,
   } = prepared
   const run = async (tx: Prisma.TransactionClient) => {
@@ -827,6 +918,7 @@ export async function importGroup(
       groupId,
       ledgerId,
       importedExpenses: input.expenses.length,
+      importedDocuments,
       sourceGroupId: input.sourceMeta?.sourceGroupId ?? null,
       inviteMappings,
       summaryActivity: {
@@ -938,6 +1030,7 @@ export async function importGroup(
     groupId: baseResult.groupId,
     ledgerId: baseResult.ledgerId,
     importedExpenses: baseResult.importedExpenses,
+    importedDocuments: baseResult.importedDocuments,
     sourceGroupId: baseResult.sourceGroupId,
     invites: inviteResults,
     emailDispatches,

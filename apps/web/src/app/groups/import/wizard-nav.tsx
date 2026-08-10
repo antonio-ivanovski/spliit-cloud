@@ -46,6 +46,7 @@ export type WizardNavProps = {
   continueAsFormId?: string
   continueDisabled?: boolean
   customContinueLabel?: CustomContinueLabelKey
+  includeDocuments?: boolean
 }
 
 /**
@@ -60,9 +61,10 @@ export function WizardNav({
   continueAsFormId,
   continueDisabled,
   customContinueLabel,
+  includeDocuments = true,
 }: WizardNavProps) {
   const { t } = useTranslation()
-  const nav = getStepNavigation(step)
+  const nav = getStepNavigation(step, { includeDocuments })
 
   // No nav for the first (source) or last (done) terminal steps.
   // Done renders its own Open Group button; source transitions via

@@ -92,6 +92,10 @@ may remain empty.
   GitHub are configured.
 - Expense documents require
   `PUBLIC_ENABLE_EXPENSE_DOCUMENTS=true` and the required `S3_UPLOAD_*` values.
+  Configure the bucket with a lifecycle rule that expires objects under
+  `tmp/imports/` after 24 hours. Import retries intentionally retain these
+  temporary objects until the database transaction commits; the lifecycle rule
+  removes abandoned browser sessions and interrupted uploads.
 - AI features require their corresponding `PUBLIC_ENABLE_*` flag and
   `AI_API_KEY`. `AI_PROVIDER`, model names, and `AI_BASE_URL` are optional.
 - Web Push requires the public key, private key, and subject together.

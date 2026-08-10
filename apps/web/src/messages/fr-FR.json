@@ -326,7 +326,8 @@
           "daily": "Quotidienne",
           "weekly": "Hebdomadaire",
           "monthly": "Mensuelle"
-        }
+        },
+        "documentCount": "Documents : {imported} récupérés, {skipped} ignorés"
       },
       "Destination": {
         "heading": "Où souhaitez-vous importer <strong>{name}</strong>? ({participantCount} participants · {expenseCount} dépenses)",
@@ -450,7 +451,8 @@
         "backAriaLabel": "Retour",
         "currencyConversion": "Conversion de devise",
         "backTo": "Retour à {step}",
-        "continueTo": "Continuer vers {step}"
+        "continueTo": "Continuer vers {step}",
+        "documents": "Justificatifs"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -466,6 +468,30 @@
         "rateDateLabel": "Date du taux",
         "ratesError": "Impossible de récupérer les taux de change. Vérifie ta connexion et réessaie.",
         "refresh": "Actualiser"
+      },
+      "Documents": {
+        "title": "Importez vos reçus",
+        "description": "Spliit Cloud peut copier en toute sécurité les images des reçus du groupe spliit.app d’origine et enregistrer des versions JPEG normalisées dans votre stockage Cloud.",
+        "fetchFailed": "Impossible de télécharger l’image source.",
+        "tooLarge": "L’image normalisée dépasse toujours 2 Mio.",
+        "uploadFailed": "Impossible d’envoyer l’image normalisée.",
+        "unknownFailure": "Erreur de document inconnue.",
+        "discoveryFailed": "Impossible de trouver les documents sur spliit.app.",
+        "progress": "Préparation du document {processed} sur {total}…",
+        "recovered": "{count} document récupéré",
+        "recovered_plural": "{count} documents récupérés",
+        "unavailableTitle": "Cette source ne peut pas être associée en toute sécurité",
+        "unavailableDescription": "Cette exportation n’inclut pas les horodatages stables des dépenses nécessaires pour récupérer les documents. Vous pouvez continuer sans eux.",
+        "failedTitle": "{count} document n’a pas pu être récupéré",
+        "failedTitle_plural": "{count} documents n’ont pas pu être récupérés",
+        "skipTitle": "Continuer sans images des reçus ?",
+        "skipDescription": "Les dépenses seront tout de même importées, mais leurs documents manqueront. Cela ne peut pas être réparé automatiquement après l’importation.",
+        "acceptMissing": "Je comprends que les documents listés manqueront dans les dépenses importées.",
+        "retry": "Réessayer de récupérer les documents",
+        "start": "Rechercher et copier les documents",
+        "confirmSkip": "Oui, continuer sans documents",
+        "skip": "Continuer sans documents",
+        "continueWithMissing": "Continuer avec les documents manquants"
       }
     },
     "Importable": {

@@ -322,7 +322,8 @@
           "daily": "Dagelijks",
           "weekly": "Wekelijks",
           "monthly": "Maandelijks"
-        }
+        },
+        "documentCount": "Documenten: {imported} hersteld, {skipped} overgeslagen"
       },
       "Destination": {
         "heading": "Waar wil je <strong>{name}</strong> importeren? ({participantCount} deelnemers · {expenseCount} uitgaven)",
@@ -445,7 +446,8 @@
         "backAriaLabel": "Terug",
         "currencyConversion": "Valutaconversie",
         "backTo": "Terug naar {step}",
-        "continueTo": "Doorgaan naar {step}"
+        "continueTo": "Doorgaan naar {step}",
+        "documents": "Documenten"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -461,6 +463,30 @@
         "rateDateLabel": "Koersdatum",
         "ratesError": "Kan wisselkoersen niet ophalen. Controleer je verbinding en probeer het opnieuw.",
         "refresh": "Vernieuwen"
+      },
+      "Documents": {
+        "title": "Neem je bonnetjes mee",
+        "description": "Spliit Cloud kan afbeeldingen van bonnetjes veilig kopiëren uit de oorspronkelijke spliit.app-groep en genormaliseerde JPEG-versies opslaan in je Cloud-opslag.",
+        "fetchFailed": "De bronafbeelding kon niet worden gedownload.",
+        "tooLarge": "De genormaliseerde afbeelding is nog steeds groter dan 2 MiB.",
+        "uploadFailed": "De genormaliseerde afbeelding kon niet worden geüpload.",
+        "unknownFailure": "Onbekende documentfout.",
+        "discoveryFailed": "Documenten op spliit.app konden niet worden gevonden.",
+        "progress": "Document {processed} van {total} wordt voorbereid…",
+        "recovered": "{count} document hersteld",
+        "recovered_plural": "{count} documenten hersteld",
+        "unavailableTitle": "Deze bron kan niet veilig worden gekoppeld",
+        "unavailableDescription": "Deze export bevat niet de stabiele tijdstempels van uitgaven die nodig zijn om documenten te herstellen. Je kunt zonder documenten doorgaan.",
+        "failedTitle": "{count} document kon niet worden hersteld",
+        "failedTitle_plural": "{count} documenten konden niet worden hersteld",
+        "skipTitle": "Doorgaan zonder bonafbeeldingen?",
+        "skipDescription": "De uitgaven worden wel geïmporteerd, maar hun documenten ontbreken. Dit kan na het importeren niet automatisch worden hersteld.",
+        "acceptMissing": "Ik begrijp dat de genoemde documenten ontbreken in de geïmporteerde uitgaven.",
+        "retry": "Documentherstel opnieuw proberen",
+        "start": "Documenten zoeken en kopiëren",
+        "confirmSkip": "Ja, doorgaan zonder documenten",
+        "skip": "Doorgaan zonder documenten",
+        "continueWithMissing": "Doorgaan met ontbrekende documenten"
       }
     },
     "Importable": {

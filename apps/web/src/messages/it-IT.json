@@ -326,7 +326,8 @@
           "daily": "Giornaliera",
           "weekly": "Settimanale",
           "monthly": "Mensile"
-        }
+        },
+        "documentCount": "Documenti: {imported} recuperati, {skipped} ignorati"
       },
       "Destination": {
         "heading": "Dove desideri importare <strong>{name}</strong>? ({participantCount} partecipanti · {expenseCount} spese)",
@@ -450,7 +451,8 @@
         "backAriaLabel": "Indietro",
         "currencyConversion": "Conversione valuta",
         "backTo": "Torna a {step}",
-        "continueTo": "Continua a {step}"
+        "continueTo": "Continua a {step}",
+        "documents": "Documenti"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -466,6 +468,30 @@
         "rateDateLabel": "Data del tasso",
         "ratesError": "Impossibile recuperare i tassi di cambio. Controlla la connessione e riprova.",
         "refresh": "Aggiorna"
+      },
+      "Documents": {
+        "title": "Porta con te le tue ricevute",
+        "description": "Spliit Cloud può copiare in modo sicuro le immagini delle ricevute dal gruppo originale di spliit.app e salvare versioni JPEG normalizzate nel tuo spazio di archiviazione cloud.",
+        "fetchFailed": "Non è stato possibile scaricare l’immagine originale.",
+        "tooLarge": "L’immagine normalizzata supera ancora i 2 MiB.",
+        "uploadFailed": "Non è stato possibile caricare l’immagine normalizzata.",
+        "unknownFailure": "Errore del documento sconosciuto.",
+        "discoveryFailed": "Non è stato possibile trovare i documenti su spliit.app.",
+        "progress": "Preparazione del documento {processed} di {total}…",
+        "recovered": "Recuperato {count} documento",
+        "recovered_plural": "Recuperati {count} documenti",
+        "unavailableTitle": "Questa fonte non può essere associata in modo sicuro",
+        "unavailableDescription": "Questa esportazione non include i timestamp stabili delle spese necessari per recuperare i documenti. Puoi continuare senza di essi.",
+        "failedTitle": "Non è stato possibile recuperare {count} documento",
+        "failedTitle_plural": "Non è stato possibile recuperare {count} documenti",
+        "skipTitle": "Continuare senza immagini delle ricevute?",
+        "skipDescription": "Le spese verranno importate comunque, ma i documenti mancheranno. Non sarà possibile ripristinarli automaticamente dopo l’importazione.",
+        "acceptMissing": "Capisco che i documenti elencati mancheranno dalle spese importate.",
+        "retry": "Riprova a recuperare i documenti",
+        "start": "Trova e copia i documenti",
+        "confirmSkip": "Sì, continua senza documenti",
+        "skip": "Continua senza documenti",
+        "continueWithMissing": "Continua con i documenti mancanti"
       }
     },
     "Importable": {

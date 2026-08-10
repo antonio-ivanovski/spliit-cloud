@@ -39,6 +39,7 @@ export const spliitExportSchema = z.object({
     .min(1),
   expenses: z.array(
     z.object({
+      createdAt: z.iso.datetime().optional(),
       title: z.string().min(1),
       amount: z.number().int().nonnegative(),
       paidById: z.string().min(1),
@@ -167,6 +168,7 @@ function normalizeSpliitExport(parsed: SpliitExport): NormalizedSource {
     const recurrence = legacyRuleToRecurrence(e.recurrenceRule)
 
     return {
+      sourceCreatedAt: e.createdAt ?? null,
       title: e.title,
       expenseDate: e.expenseDate.slice(0, 10),
       category: resolveCategoryId(e.category ?? null),

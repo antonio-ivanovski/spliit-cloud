@@ -25,7 +25,10 @@ import type {
 } from '@spliit/domain/import'
 import { computeImportRateKeys } from '@spliit/domain/import'
 
-import type { ConversionMode } from './import-wizard-state'
+import {
+  supportsDocumentRecovery,
+  type ConversionMode,
+} from './import-wizard-state'
 import { WizardNav } from './wizard-nav'
 
 // ----- types -----
@@ -430,7 +433,7 @@ function PairConversionCard({
 // ----- main component -----
 
 export function CurrencyConversionStep({
-  source: _source,
+  source,
   resolvedExpenses,
   sourceCurrencyCode,
   destinationCurrencyCode,
@@ -701,6 +704,7 @@ export function CurrencyConversionStep({
 
       <WizardNav
         step="currencyConversion"
+        includeDocuments={supportsDocumentRecovery(source)}
         onBack={onBack}
         onContinue={handleContinue}
         continueDisabled={!canContinue}

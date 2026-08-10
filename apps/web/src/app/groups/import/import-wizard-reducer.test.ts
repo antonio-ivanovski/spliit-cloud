@@ -12,6 +12,9 @@ import {
 } from './import-wizard-reducer'
 import {
   initialGroupFormValues,
+  getStepNavigation,
+  isDocumentImportFailure,
+  shouldDiscardStagedDocumentTokens,
   type ParticipantMappingState,
 } from './import-wizard-state'
 
@@ -89,6 +92,53 @@ describe('initialGroupFormValues', () => {
 
     expect(values.currency).toBe('gold coins')
     expect(values.currencyCode).toBe('')
+  })
+})
+
+describe('isDocumentImportFailure', () => {
+  it('recognizes server staging errors without catching unrelated imports', () => {
+    expect(
+      isDocumentImportFailure('Staged import document token is invalid'),
+    ).toBe(true)
+    expect(isDocumentImportFailure('Target group not found')).toBe(false)
+  })
+})
+
+describe('document-aware wizard navigation', () => {
+  it('links currency conversion directly to confirm when Documents is skipped', () => {
+    expect(
+      getStepNavigation('currencyConversion', { includeDocuments: false }),
+    ).toMatchObject({ nextStepKey: 'confirm' })
+    expect(
+      getStepNavigation('confirm', { includeDocuments: false }),
+    ).toMatchObject({ previousStepKey: 'currencyConversion' })
+  })
+
+  it('keeps Documents in navigation for supported imports', () => {
+    expect(getStepNavigation('currencyConversion')).toMatchObject({
+      nextStepKey: 'documents',
+    })
+    expect(getStepNavigation('confirm')).toMatchObject({
+      previousStepKey: 'documents',
+    })
+  })
+})
+
+describe('shouldDiscardStagedDocumentTokens', () => {
+  it('only discards tokens the server reports as expired or unavailable', () => {
+    expect(
+      shouldDiscardStagedDocumentTokens(
+        'Staged import document token is invalid or expired',
+      ),
+    ).toBe(true)
+    expect(
+      shouldDiscardStagedDocumentTokens(
+        'Staged import document is unavailable',
+      ),
+    ).toBe(true)
+    expect(
+      shouldDiscardStagedDocumentTokens('Duplicate staged import document'),
+    ).toBe(false)
   })
 })
 
@@ -187,10 +237,11 @@ describe('importWizardReducer', () => {
     expect(next.rates).toBeUndefined()
   })
 
-  it('handles CONVERSION_CONFIRMED: stores rates and advances to confirm', () => {
+  it('handles CONVERSION_CONFIRMED: stores rates and advances Spliit imports to documents', () => {
     const start = {
       ...initialWizardState(null),
       step: 'currencyConversion' as const,
+      source: makeSource(['Alice']),
     }
     const next = importWizardReducer(start, {
       type: 'CONVERSION_CONFIRMED',
@@ -199,9 +250,88 @@ describe('importWizardReducer', () => {
       fixedRateOverrides: {},
       rates: { '2024-01-01|EUR|USD': 1.1 },
     })
-    expect(next.step).toBe('confirm')
+    expect(next.step).toBe('documents')
     expect(next.conversionModes).toEqual({ 'EUR|USD': 'perDate' })
     expect(next.rates).toEqual({ '2024-01-01|EUR|USD': 1.1 })
+  })
+
+  it('handles DOCUMENTS_CONFIRMED: stores staged results and advances to confirm', () => {
+    const start = {
+      ...initialWizardState(null),
+      step: 'documents' as const,
+    }
+    const next = importWizardReducer(start, {
+      type: 'DOCUMENTS_CONFIRMED',
+      stagedTokens: ['token-1'],
+      recoveredCount: 1,
+      skippedCount: 2,
+      skippedEntirely: false,
+    })
+    expect(next.step).toBe('confirm')
+    expect(next.stagedDocumentTokens).toEqual(['token-1'])
+    expect(next.recoveredDocumentCount).toBe(1)
+    expect(next.skippedDocumentCount).toBe(2)
+    expect(next.documentRecoverySkipped).toBe(false)
+    expect(next.documentFlowVisited).toBe(true)
+  })
+
+  it('skips the documents step for a Spliit CSV source', () => {
+    const start = {
+      ...initialWizardState(null),
+      step: 'currencyConversion' as const,
+      source: {
+        ...makeSource(['Alice']),
+        sourceGroupId: 'csv-import',
+      },
+    }
+    const next = importWizardReducer(start, {
+      type: 'CONVERSION_CONFIRMED',
+      modes: {},
+      fixedRateDates: {},
+      fixedRateOverrides: {},
+      rates: {},
+    })
+
+    expect(next.step).toBe('confirm')
+    expect(next.documentFlowVisited).toBe(false)
+  })
+
+  it('returns reusable document failures to Documents with staging retained', () => {
+    const start = {
+      ...initialWizardState(null),
+      step: 'confirm' as const,
+      stagedDocumentTokens: ['dead-token'],
+      recoveredDocumentCount: 1,
+      documentFlowVisited: true,
+    }
+    const next = importWizardReducer(start, {
+      type: 'DOCUMENTS_FAILED',
+      discardTokens: false,
+    })
+
+    expect(next.step).toBe('documents')
+    expect(next.stagedDocumentTokens).toEqual(['dead-token'])
+    expect(next.recoveredDocumentCount).toBe(1)
+    expect(next.documentFlowVisited).toBe(true)
+  })
+
+  it('clears expired or unavailable document staging before retry', () => {
+    const start = {
+      ...initialWizardState(null),
+      step: 'confirm' as const,
+      stagedDocumentTokens: ['expired-token'],
+      recoveredDocumentCount: 1,
+      documentFlowVisited: true,
+    }
+    const next = importWizardReducer(start, {
+      type: 'DOCUMENTS_FAILED',
+      discardTokens: true,
+    })
+
+    expect(next.step).toBe('documents')
+    expect(next.stagedDocumentTokens).toEqual([])
+    expect(next.recoveredDocumentCount).toBe(0)
+    expect(next.documentFlowVisited).toBe(false)
   })
 
   it('handles IMPORT_SUCCEEDED: advances to done', () => {
@@ -285,6 +415,12 @@ describe('importWizardReducer', () => {
         step: 'currencyConversion' as const,
       }
       expect(importWizardReducer(start, { type: 'BACK' }).step).toBe('mapping')
+    })
+    it('documents → currencyConversion', () => {
+      const start = { ...initialWizardState(null), step: 'documents' as const }
+      expect(importWizardReducer(start, { type: 'BACK' }).step).toBe(
+        'currencyConversion',
+      )
     })
     it('confirm → currencyConversion', () => {
       const start = { ...initialWizardState(null), step: 'confirm' as const }

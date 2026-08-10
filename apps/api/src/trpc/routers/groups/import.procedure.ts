@@ -15,6 +15,7 @@ import { getWebBaseUrl } from '../../../lib/auth/urls'
 import { enqueueBudgetEvaluation } from '../../../lib/budgets/enqueue'
 import { ConversionError } from '../../../lib/expense-conversion'
 import { sendInvitationEmail } from '../../../lib/invitations'
+import { deleteS3Object } from '../../../routes/upload'
 import { loadGroupContext, protectedProcedure } from '../../init'
 import { importGroupOutputSchema } from '../../outputs/imports'
 
@@ -94,6 +95,12 @@ export const importGroupProcedure = protectedProcedure
         participants: z.array(importParticipantMappingSchema).min(1),
         expenses: z.array(importExpenseSchema).min(0).default([]),
         sourceMeta: importSourceMetaSchema.optional(),
+        documentImport: z
+          .object({
+            sessionId: z.uuid(),
+            stagedTokens: z.array(z.string().min(1)),
+          })
+          .optional(),
       })
       .superRefine((value, ctx) => {
         if (!value.targetGroupId && !value.groupFormValues) {
@@ -138,17 +145,23 @@ export const importGroupProcedure = protectedProcedure
       }
     }
 
+    let preparedImport:
+      | Awaited<ReturnType<typeof prepareImportGroup>>
+      | undefined
+    let importCommitted = false
     try {
       const { value: result, replayed } = await runIdempotentCreate({
         accountId: ctx.auth.user.id,
         operation: CREATE_OPERATIONS.import,
         requestId: input.requestId,
         input: { ...input, requestId: undefined },
-        prepare: () =>
-          prepareImportGroup(input as never, {
+        prepare: async () => {
+          preparedImport = await prepareImportGroup(input as never, {
             accountId: ctx.auth.user.id,
             idempotencyRequestId: input.requestId,
-          }),
+          })
+          return preparedImport
+        },
         execute: (tx, prepared) =>
           importGroup(
             input as never,
@@ -189,6 +202,12 @@ export const importGroupProcedure = protectedProcedure
           }
         },
       })
+      importCommitted = true
+      if (!replayed && preparedImport) {
+        await Promise.allSettled(
+          preparedImport.stagedDocumentUrls.map((url) => deleteS3Object(url)),
+        )
+      }
       if (!replayed && result.importedExpenses > 0)
         await enqueueBudgetEvaluation(result.groupId)
       if (!replayed) {
@@ -201,6 +220,11 @@ export const importGroupProcedure = protectedProcedure
       const { emailDispatches: _emailDispatches, ...response } = result
       return response
     } catch (err) {
+      if (!importCommitted && preparedImport) {
+        await Promise.allSettled(
+          preparedImport.promotedDocumentUrls.map((url) => deleteS3Object(url)),
+        )
+      }
       if (err instanceof TRPCError) throw err
       if (err instanceof ConversionError) {
         throw new TRPCError({

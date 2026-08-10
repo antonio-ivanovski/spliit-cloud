@@ -24,6 +24,7 @@ import {
 } from './routes/email-unsubscribe'
 import { exportGroupCsv } from './routes/export-csv'
 import { exportGroupJson } from './routes/export-json'
+import { proxyImportDocument } from './routes/import-document'
 import { reportGroupData } from './routes/report-data'
 import { createTRPCContext } from './trpc/init'
 import { appRouter } from './trpc/routers/_app'
@@ -73,7 +74,12 @@ app.use(
       if (isPublicOAuthProtocolPath(c.req.path)) return origin
       return webOrigins.includes(origin) ? origin : ''
     },
-    allowHeaders: ['Content-Type', 'Authorization', 'trpc-accept'],
+    allowHeaders: [
+      'Content-Type',
+      'Authorization',
+      'trpc-accept',
+      'x-import-document-token',
+    ],
     allowMethods: ['GET', 'POST', 'OPTIONS'],
     credentials: true,
   }),
@@ -146,6 +152,7 @@ app.get('/groups/:groupId/expenses/export/json', (c) =>
 app.get('/groups/:groupId/expenses/export/csv', (c) =>
   exportGroupCsv(c.req.raw, c.req.param('groupId')),
 )
+app.post('/imports/documents/file', (c) => proxyImportDocument(c.req.raw))
 app.post('/groups/:groupId/expenses/report-data', (c) =>
   reportGroupData(c.req.raw, c.req.param('groupId')),
 )

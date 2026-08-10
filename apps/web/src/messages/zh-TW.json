@@ -318,7 +318,8 @@
           "daily": "每天",
           "weekly": "每週",
           "monthly": "每月"
-        }
+        },
+        "documentCount": "文件：已還原 {imported} 份，已略過 {skipped} 份"
       },
       "Destination": {
         "heading": "您想要將 <strong>{name}</strong> 匯入到哪裡？（{participantCount} 位參與者 · {expenseCount} 筆支出）",
@@ -440,7 +441,8 @@
         "backAriaLabel": "返回",
         "currencyConversion": "貨幣轉換",
         "backTo": "返回{step}",
-        "continueTo": "繼續到{step}"
+        "continueTo": "繼續到{step}",
+        "documents": "文件"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -456,6 +458,30 @@
         "rateDateLabel": "匯率日期",
         "ratesError": "無法取得匯率。請檢查網路連線後重試。",
         "refresh": "重新整理"
+      },
+      "Documents": {
+        "title": "帶著收據一起來",
+        "description": "Spliit Cloud 可以安全地從原始 spliit.app 群組複製收據圖片，並將標準化的 JPEG 版本儲存到你的 Cloud 儲存空間。",
+        "fetchFailed": "無法下載來源圖片。",
+        "tooLarge": "標準化後的圖片仍大於 2 MiB。",
+        "uploadFailed": "無法上傳標準化後的圖片。",
+        "unknownFailure": "未知的文件錯誤。",
+        "discoveryFailed": "無法在 spliit.app 找到文件。",
+        "progress": "正在準備第 {processed}/{total} 份文件…",
+        "recovered": "已還原 {count} 份文件",
+        "recovered_plural": "已還原 {count} 份文件",
+        "unavailableTitle": "無法安全比對此來源",
+        "unavailableDescription": "此匯出檔不包含還原文件所需的穩定支出時間戳記。你可以不還原文件並繼續。",
+        "failedTitle": "無法還原 {count} 份文件",
+        "failedTitle_plural": "無法還原 {count} 份文件",
+        "skipTitle": "部分文件無法還原",
+        "skipDescription": "我們無法複製所有文件。你可以重試失敗的項目，或明確接受這些文件會遺失後繼續。",
+        "acceptMissing": "我了解列出的文件將不會出現在匯入的支出中。",
+        "retry": "重試失敗的文件",
+        "start": "尋找並複製文件",
+        "confirmSkip": "不還原文件並繼續",
+        "skip": "略過文件還原",
+        "continueWithMissing": "即使缺少文件也繼續"
       }
     },
     "Importable": {

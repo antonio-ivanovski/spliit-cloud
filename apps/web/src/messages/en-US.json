@@ -405,7 +405,8 @@
         "backAriaLabel": "Back",
         "currencyConversion": "Currency conversion",
         "backTo": "Back to {step}",
-        "continueTo": "Continue to {step}"
+        "continueTo": "Continue to {step}",
+        "documents": "Documents"
       },
       "fetchingGroup": "Fetching the group from spliit.app…",
       "fetchSourceError": "Failed to fetch the source",
@@ -549,7 +550,8 @@
           "daily": "Daily",
           "weekly": "Weekly",
           "monthly": "Monthly"
-        }
+        },
+        "documentCount": "Documents: {imported} recovered, {skipped} skipped"
       },
       "Done": {
         "importComplete": "Import complete",
@@ -579,6 +581,30 @@
         "rateDateLabel": "Frankfurter rate date",
         "ratesError": "Unable to fetch exchange rates. Check your connection and try again.",
         "refresh": "Refresh"
+      },
+      "Documents": {
+        "title": "Bring your receipts with you",
+        "description": "Spliit Cloud can securely copy receipt images from the original spliit.app group and store normalized JPEG versions in your Cloud storage.",
+        "fetchFailed": "Could not download the source image.",
+        "tooLarge": "The normalized image is still larger than 2 MiB.",
+        "uploadFailed": "Could not upload the normalized image.",
+        "unknownFailure": "Unknown document error.",
+        "discoveryFailed": "Could not discover documents on spliit.app.",
+        "progress": "Preparing document {processed} of {total}…",
+        "recovered": "Recovered {count} document",
+        "recovered_plural": "Recovered {count} documents",
+        "unavailableTitle": "This source cannot be matched safely",
+        "unavailableDescription": "This export does not include the stable expense timestamps needed to recover documents. You can continue without them.",
+        "failedTitle": "{count} document could not be recovered",
+        "failedTitle_plural": "{count} documents could not be recovered",
+        "skipTitle": "Continue without receipt images?",
+        "skipDescription": "The expenses will still be imported, but their documents will be missing. This cannot be repaired automatically after the import.",
+        "acceptMissing": "I understand that the listed documents will be missing from the imported expenses.",
+        "retry": "Retry document recovery",
+        "start": "Find and copy documents",
+        "confirmSkip": "Yes, continue without documents",
+        "skip": "Continue without documents",
+        "continueWithMissing": "Continue with missing documents"
       }
     },
     "groups": "Groups",

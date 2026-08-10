@@ -326,7 +326,8 @@
           "daily": "יומי",
           "weekly": "שבועי",
           "monthly": "חודשי"
-        }
+        },
+        "documentCount": "מסמכים: {imported} שוחזרו, {skipped} דולגו"
       },
       "Destination": {
         "heading": "לאן תרצה לייבא את <strong>{name}</strong>? ({participantCount} משתתפים · {expenseCount} הוצאות)",
@@ -450,7 +451,8 @@
         "backAriaLabel": "חזרה",
         "currencyConversion": "המרת מטבע",
         "backTo": "חזרה אל {step}",
-        "continueTo": "המשך אל {step}"
+        "continueTo": "המשך אל {step}",
+        "documents": "מסמכים"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -466,6 +468,30 @@
         "rateDateLabel": "תאריך השער",
         "ratesError": "לא ניתן לשלוף שערי חליפין. בדוק את החיבור שלך ונסה שוב.",
         "refresh": "רענן"
+      },
+      "Documents": {
+        "title": "הביאו את הקבלות שלכם",
+        "description": "Spliit Cloud יכול להעתיק באופן מאובטח תמונות קבלה מהקבוצה המקורית ב‑spliit.app ולשמור גרסאות JPEG אחידות באחסון ה‑Cloud שלכם.",
+        "fetchFailed": "לא ניתן להוריד את תמונת המקור.",
+        "tooLarge": "התמונה המנורמלת עדיין גדולה מ‑2 MiB.",
+        "uploadFailed": "לא ניתן להעלות את התמונה המנורמלת.",
+        "unknownFailure": "שגיאה לא ידועה במסמך.",
+        "discoveryFailed": "לא ניתן לאתר מסמכים ב‑spliit.app.",
+        "progress": "מכין את המסמך {processed} מתוך {total}…",
+        "recovered": "שוחזר מסמך אחד מתוך {count}",
+        "recovered_plural": "שוחזרו {count} מסמכים",
+        "unavailableTitle": "לא ניתן להתאים את המקור הזה בבטחה",
+        "unavailableDescription": "הייצוא הזה לא כולל חותמות זמן יציבות של ההוצאות, שנדרשות לשחזור מסמכים. אפשר להמשיך בלעדיהם.",
+        "failedTitle": "{count} מסמך לא שוחזר",
+        "failedTitle_plural": "לא ניתן היה לשחזר {count} מסמכים",
+        "skipTitle": "להמשיך בלי תמונות הקבלות?",
+        "skipDescription": "ההוצאות עדיין ייובאו, אך המסמכים שלהן יהיו חסרים. אי אפשר לתקן זאת אוטומטית לאחר הייבוא.",
+        "acceptMissing": "ברור לי שהמסמכים המפורטים יהיו חסרים בהוצאות שיובאו.",
+        "retry": "לנסות שוב",
+        "start": "לאתר ולהעתיק מסמכים",
+        "confirmSkip": "כן, להמשיך בלי מסמכים",
+        "skip": "לדלג על מסמכים",
+        "continueWithMissing": "המשך למרות המסמכים החסרים"
       }
     },
     "Importable": {

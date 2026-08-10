@@ -322,7 +322,8 @@
           "daily": "PPäivittäin",
           "weekly": "Viikoittain",
           "monthly": "Kuukausittain"
-        }
+        },
+        "documentCount": "Asiakirjat: {imported} palautettu, {skipped} ohitettu"
       },
       "Destination": {
         "heading": "Mihin haluat tuoda <strong>{name}</strong>? ({participantCount} osallistujaa · {expenseCount} kulua)",
@@ -445,7 +446,8 @@
         "backAriaLabel": "Takaisin",
         "currencyConversion": "Valuuttamuunnos",
         "backTo": "Takaisin kohtaan {step}",
-        "continueTo": "Jatka kohtaan {step}"
+        "continueTo": "Jatka kohtaan {step}",
+        "documents": "Asiakirjat"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -461,6 +463,30 @@
         "rateDateLabel": "Kurssipäivä",
         "ratesError": "Valuuttakurssien hakeminen epäonnistui. Tarkista yhteytesi ja yritä uudelleen.",
         "refresh": "Päivitä"
+      },
+      "Documents": {
+        "title": "Ota kuitit mukaasi",
+        "description": "Spliit Cloud voi kopioida kuittikuvat turvallisesti alkuperäisestä spliit.app-ryhmästä ja tallentaa muunnetut JPEG-versiot Cloud-tallennustilaasi.",
+        "fetchFailed": "Lähdekuvaa ei voitu ladata.",
+        "tooLarge": "Muunnettu kuva on edelleen suurempi kuin 2 MiB.",
+        "uploadFailed": "Muunnettua kuvaa ei voitu ladata palveluun.",
+        "unknownFailure": "Tuntematon asiakirjavirhe.",
+        "discoveryFailed": "Asiakirjoja ei voitu löytää spliit.app-palvelusta.",
+        "progress": "Valmistellaan asiakirjaa {processed}/{total}…",
+        "recovered": "{count} asiakirja palautettu",
+        "recovered_plural": "{count} asiakirjaa palautettu",
+        "unavailableTitle": "Lähdettä ei voida yhdistää turvallisesti",
+        "unavailableDescription": "Tämä vienti ei sisällä asiakirjojen palauttamiseen tarvittavia vakaita kulujen aikaleimoja. Voit jatkaa ilman niitä.",
+        "failedTitle": "{count} asiakirjaa ei voitu palauttaa",
+        "failedTitle_plural": "{count} asiakirjaa ei voitu palauttaa",
+        "skipTitle": "Jatketaanko ilman kuitteja?",
+        "skipDescription": "Kulut tuodaan silti, mutta niiden asiakirjat puuttuvat. Tätä ei voi korjata automaattisesti tuonnin jälkeen.",
+        "acceptMissing": "Ymmärrän, että luetellut asiakirjat puuttuvat tuoduista kuluista.",
+        "retry": "Yritä asiakirjojen palautusta uudelleen",
+        "start": "Etsi ja kopioi asiakirjat",
+        "confirmSkip": "Kyllä, jatka ilman asiakirjoja",
+        "skip": "Jatka ilman asiakirjoja",
+        "continueWithMissing": "Jatka puuttuvista asiakirjoista huolimatta"
       }
     },
     "Importable": {

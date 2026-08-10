@@ -218,10 +218,6 @@ export function SourceStep({
         <TabsContent value="spliit">
           <ProviderDescription
             description={t('Groups.Import.Source.spliitDescription')}
-            receiptTitle={t('Groups.Import.Source.receiptWarningTitle')}
-            receiptDescription={t(
-              'Groups.Import.Source.receiptWarningDescription',
-            )}
           />
         </TabsContent>
         <TabsContent value="splitwise">
@@ -322,18 +318,20 @@ function ProviderDescription({
   receiptDescription,
 }: {
   description: string
-  receiptTitle: string
-  receiptDescription: string
+  receiptTitle?: string
+  receiptDescription?: string
 }) {
   return (
     <div className="flex flex-col gap-4">
       <p className="text-sm text-muted-foreground">{description}</p>
-      <div className="flex items-start gap-2 rounded-md border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
-        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
-        <p>
-          <strong>{receiptTitle}</strong> {receiptDescription}
-        </p>
-      </div>
+      {receiptTitle && receiptDescription && (
+        <div className="flex items-start gap-2 rounded-md border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
+          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
+          <p>
+            <strong>{receiptTitle}</strong> {receiptDescription}
+          </p>
+        </div>
+      )}
     </div>
   )
 }

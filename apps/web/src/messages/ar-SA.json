@@ -860,7 +860,8 @@
         "continueTo": "متابعة إلى {step}",
         "confirm": "تأكيد",
         "mapping": "الربط",
-        "done": "تم"
+        "done": "تم",
+        "documents": "المستندات"
       },
       "Mapping": {
         "Errors": {
@@ -950,7 +951,32 @@
         "executeImport": "استيراد مجموعة",
         "importButton": "استيراد مجموعة",
         "existingGroupFormat": "مجموعة موجودة · مدمجة",
-        "currencyConversionTitle": "تحويل العملة"
+        "currencyConversionTitle": "تحويل العملة",
+        "documentCount": "المستندات: تم استرداد {imported}، وتخطّي {skipped}"
+      },
+      "Documents": {
+        "title": "اصطحب إيصالاتك معك",
+        "description": "يمكن لـ Spliit Cloud نسخ صور الإيصالات بأمان من مجموعة spliit.app الأصلية وتخزين نسخ JPEG موحّدة في مساحة تخزين Cloud الخاصة بك.",
+        "fetchFailed": "تعذّر تنزيل صورة المصدر.",
+        "tooLarge": "لا تزال الصورة الموحّدة أكبر من 2 MiB.",
+        "uploadFailed": "تعذّر تحميل الصورة الموحّدة.",
+        "unknownFailure": "حدث خطأ غير معروف في المستند.",
+        "discoveryFailed": "تعذّر اكتشاف المستندات على spliit.app.",
+        "progress": "جارٍ تجهيز المستند {processed} من {total}…",
+        "recovered": "تم استرداد مستند واحد من أصل {count}",
+        "recovered_plural": "تم استرداد {count} مستندات",
+        "unavailableTitle": "لا يمكن مطابقة هذا المصدر بأمان",
+        "unavailableDescription": "لا يتضمن هذا التصدير الطوابع الزمنية الثابتة للمصروفات اللازمة لاسترداد المستندات. يمكنك المتابعة من دونها.",
+        "failedTitle": "{count} مستند تعذّر استرداده",
+        "failedTitle_plural": "تعذّر استرداد {count} مستندات",
+        "skipTitle": "المتابعة من دون صور الإيصالات؟",
+        "skipDescription": "ستظل المصروفات مستوردة، لكن مستنداتها ستكون مفقودة. لا يمكن إصلاح ذلك تلقائيًا بعد الاستيراد.",
+        "acceptMissing": "أفهم أن المستندات المدرجة ستكون مفقودة من المصروفات المستوردة.",
+        "retry": "إعادة المحاولة",
+        "start": "العثور على المستندات ونسخها",
+        "confirmSkip": "نعم، المتابعة من دون مستندات",
+        "skip": "تخطّي المستندات",
+        "continueWithMissing": "المتابعة رغم فقدان المستندات"
       }
     },
     "pendingInviteeSettingsTitle": "الإعدادات مجموعة مقفل",

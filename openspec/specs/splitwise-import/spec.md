@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Defines how users import a group from a Splitwise CSV export into Spliit Cloud. Covers the CSV parser, category mapping rules, reimbursement detection, multi-currency handling, and the source-step UI that wires the Splitwise tab to the existing import wizard without modifying the wizard, the tRPC commit path, or the database.
+Defines how users import a group from a Splitwise CSV export into Spliit Cloud. Covers the CSV parser, category mapping rules, reimbursement detection, multi-currency handling, and the source-step UI that wires the Splitwise tab to the shared import wizard and commit path without provider-specific document recovery.
 
 ## Requirements
 ### Requirement: Splitwise CSV source format
@@ -237,16 +237,19 @@ The Splitwise tab SHALL display provider-specific copy in its `FileUploadCard` (
 - **WHEN** the user selects the Spliit tab
 - **THEN** the drop card shows the existing `dropFile` / `dropFileDescription` keys (the Spliit JSON/CSV copy)
 
-### Requirement: No server-side changes for Splitwise
+### Requirement: No provider-specific server changes for Splitwise
 
-The Splitwise parser SHALL output the existing `NormalizedSource` shape so the existing `groups.import` tRPC procedure, `importGroup()` business logic, `buildImportBatch()`, currency conversion, and wizard steps work without modification. No new tRPC procedures, no new Prisma models, no new database migrations.
+The Splitwise parser SHALL output the existing `NormalizedSource` shape so the shared `groups.import` tRPC procedure, `importGroup()` business logic, `buildImportBatch()`, currency conversion, and wizard steps can be reused without Splitwise-specific server procedures, Prisma models, or database migrations. Splitwise imports SHALL use the shared wizard path that skips Spliit document recovery.
 
 #### Scenario: Splitwise import reuses the commit path
 
 - **WHEN** the user confirms a Splitwise import at the confirm step
 - **THEN** the web app calls the existing `groups.import` mutation with the same payload shape used for Spliit imports
 
-## ADDED / MODIFIED Requirements
+#### Scenario: Splitwise import skips document recovery
+
+- **WHEN** the user advances past currency conversion for a Splitwise CSV import
+- **THEN** the wizard goes directly to Confirm, with no Documents step and no document summary counts
 
 ### Requirement: Splitwise paidBy and paidFor reconstruction (modified)
 For each parsed row the parser SHALL reconstruct `paidBy` and `paidFor` so the per-participant balances reconcile with the `Total balance` footer in the export, as follows:
@@ -300,4 +303,3 @@ The Splitwise CSV parser always produces expenses in the row currency with `orig
 
 - **WHEN** `buildImportBatch` converts shares for a cross-currency Splitwise expense
 - **THEN** it does not contain largest-magnitude-absorbs-drift loops; drift is handled by `distributeRemainder` in the unified core
-

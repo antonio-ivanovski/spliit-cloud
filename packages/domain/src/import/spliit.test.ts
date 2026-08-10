@@ -136,6 +136,7 @@ describe('parseSpliitExport', () => {
     expect(result.expenses).toHaveLength(2)
     const [first, second] = result.expenses
     expect(first.title).toBe('Dures Bari')
+    expect(first.sourceCreatedAt).toBe('2025-11-15T00:00:00.000Z')
     expect(first.category).toBe('transportation')
     expect(first.amount).toBe(23000)
     expect(first.paidBySourceId).toBe('spliit-participant-0')

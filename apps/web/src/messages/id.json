@@ -318,7 +318,8 @@
           "daily": "Harian",
           "weekly": "Mingguan",
           "monthly": "Bulanan"
-        }
+        },
+        "documentCount": "Dokumen: {imported} dipulihkan, {skipped} dilewati"
       },
       "Destination": {
         "heading": "Di mana Anda ingin mengimpor <strong>{name}</strong>? ({participantCount} peserta · {expenseCount} pengeluaran)",
@@ -440,7 +441,8 @@
         "backAriaLabel": "Kembali",
         "currencyConversion": "Konversi mata uang",
         "backTo": "Kembali ke {step}",
-        "continueTo": "Lanjut ke {step}"
+        "continueTo": "Lanjut ke {step}",
+        "documents": "Dokumen"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -456,6 +458,30 @@
         "rateDateLabel": "Tanggal kurs",
         "ratesError": "Tidak dapat mengambil kurs pertukaran. Periksa koneksi Anda dan coba lagi.",
         "refresh": "Segarkan"
+      },
+      "Documents": {
+        "title": "Bawa serta struk Anda",
+        "description": "Spliit Cloud dapat menyalin gambar struk dengan aman dari grup spliit.app asli dan menyimpan versi JPEG yang dinormalisasi di penyimpanan Cloud Anda.",
+        "fetchFailed": "Gambar sumber tidak dapat diunduh.",
+        "tooLarge": "Gambar yang dinormalisasi masih lebih besar dari 2 MiB.",
+        "uploadFailed": "Gambar yang dinormalisasi tidak dapat diunggah.",
+        "unknownFailure": "Kesalahan dokumen tidak diketahui.",
+        "discoveryFailed": "Dokumen di spliit.app tidak dapat ditemukan.",
+        "progress": "Menyiapkan dokumen {processed} dari {total}…",
+        "recovered": "{count} dokumen dipulihkan",
+        "recovered_plural": "{count} dokumen dipulihkan",
+        "unavailableTitle": "Sumber ini tidak dapat dicocokkan dengan aman",
+        "unavailableDescription": "Ekspor ini tidak menyertakan stempel waktu pengeluaran yang stabil untuk memulihkan dokumen. Anda dapat melanjutkan tanpa dokumen tersebut.",
+        "failedTitle": "{count} dokumen tidak dapat dipulihkan",
+        "failedTitle_plural": "{count} dokumen tidak dapat dipulihkan",
+        "skipTitle": "Lanjutkan tanpa gambar struk?",
+        "skipDescription": "Pengeluaran tetap akan diimpor, tetapi dokumennya akan hilang. Hal ini tidak dapat diperbaiki secara otomatis setelah impor.",
+        "acceptMissing": "Saya memahami bahwa dokumen yang tercantum akan hilang dari pengeluaran yang diimpor.",
+        "retry": "Coba pulihkan dokumen lagi",
+        "start": "Cari dan salin dokumen",
+        "confirmSkip": "Ya, lanjutkan tanpa dokumen",
+        "skip": "Lanjutkan tanpa dokumen",
+        "continueWithMissing": "Lanjutkan dengan dokumen yang hilang"
       }
     },
     "Importable": {

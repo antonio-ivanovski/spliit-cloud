@@ -1629,7 +1629,8 @@
           "daily": "Dagligen",
           "weekly": "Veckovis",
           "monthly": "Månadsvis"
-        }
+        },
+        "documentCount": "Dokument: {imported} återställda, {skipped} överhoppade"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -1767,7 +1768,32 @@
         "backAriaLabel": "Tillbaka",
         "currencyConversion": "Valutakonvertering",
         "backTo": "Tillbaka till {step}",
-        "continueTo": "Fortsätt till {step}"
+        "continueTo": "Fortsätt till {step}",
+        "documents": "Dokument"
+      },
+      "Documents": {
+        "title": "Ta med dina kvitton",
+        "description": "Spliit Cloud kan säkert kopiera kvittobilder från den ursprungliga spliit.app-gruppen och spara normaliserade JPEG-versioner i din Cloud-lagring.",
+        "fetchFailed": "Det gick inte att hämta källbilden.",
+        "tooLarge": "Den normaliserade bilden är fortfarande större än 2 MiB.",
+        "uploadFailed": "Det gick inte att ladda upp den normaliserade bilden.",
+        "unknownFailure": "Okänt dokumentfel.",
+        "discoveryFailed": "Det gick inte att hitta dokument på spliit.app.",
+        "progress": "Förbereder dokument {processed} av {total}…",
+        "recovered": "{count} dokument återställt",
+        "recovered_plural": "{count} dokument återställda",
+        "unavailableTitle": "Källan kan inte matchas säkert",
+        "unavailableDescription": "Den här exporten saknar stabila tidsstämplar för utgifterna som behövs för att återställa dokument. Du kan fortsätta utan dem.",
+        "failedTitle": "Det gick inte att återställa {count} dokument",
+        "failedTitle_plural": "Det gick inte att återställa {count} dokument",
+        "skipTitle": "Fortsätta utan kvittobilder?",
+        "skipDescription": "Utgifterna importeras ändå, men deras dokument saknas. Det kan inte åtgärdas automatiskt efter importen.",
+        "acceptMissing": "Jag förstår att de angivna dokumenten kommer att saknas i de importerade utgifterna.",
+        "retry": "Försök återställa dokument igen",
+        "start": "Hitta och kopiera dokument",
+        "confirmSkip": "Ja, fortsätt utan dokument",
+        "skip": "Fortsätt utan dokument",
+        "continueWithMissing": "Fortsätt med saknade dokument"
       }
     },
     "Importable": {

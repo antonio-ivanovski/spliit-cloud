@@ -326,7 +326,8 @@
           "daily": "DiDiária",
           "weekly": "Semanal",
           "monthly": "Mensal"
-        }
+        },
+        "documentCount": "Documentos: {imported} recuperados, {skipped} ignorados"
       },
       "Destination": {
         "heading": "Onde gostaria de importar o <strong>{name}</strong>? ({participantCount} participantes · {expenseCount} despesas)",
@@ -450,7 +451,8 @@
         "backAriaLabel": "Voltar",
         "currencyConversion": "Conversão de moeda",
         "backTo": "Voltar para {step}",
-        "continueTo": "Continuar para {step}"
+        "continueTo": "Continuar para {step}",
+        "documents": "Documentos"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -466,6 +468,30 @@
         "rateDateLabel": "Data da taxa",
         "ratesError": "Não foi possível obter as taxas de câmbio. Verifica a ligação e tenta novamente.",
         "refresh": "Atualizar"
+      },
+      "Documents": {
+        "title": "Traga os seus recibos consigo",
+        "description": "O Spliit Cloud pode copiar de forma segura as imagens dos recibos do grupo original do spliit.app e guardar versões JPEG normalizadas no seu armazenamento na nuvem.",
+        "fetchFailed": "Não foi possível transferir a imagem de origem.",
+        "tooLarge": "A imagem normalizada continua a exceder 2 MiB.",
+        "uploadFailed": "Não foi possível carregar a imagem normalizada.",
+        "unknownFailure": "Erro de documento desconhecido.",
+        "discoveryFailed": "Não foi possível descobrir documentos em spliit.app.",
+        "progress": "A preparar o documento {processed} de {total}…",
+        "recovered": "{count} documento recuperado",
+        "recovered_plural": "{count} documentos recuperados",
+        "unavailableTitle": "Não é possível associar esta origem com segurança",
+        "unavailableDescription": "Esta exportação não inclui os carimbos de data/hora estáveis das despesas necessários para recuperar os documentos. Pode continuar sem eles.",
+        "failedTitle": "Não foi possível recuperar {count} documento",
+        "failedTitle_plural": "Não foi possível recuperar {count} documentos",
+        "skipTitle": "Continuar sem imagens dos recibos?",
+        "skipDescription": "As despesas serão importadas na mesma, mas os respetivos documentos ficarão em falta. Isto não pode ser reparado automaticamente depois da importação.",
+        "acceptMissing": "Compreendo que os documentos indicados ficarão em falta nas despesas importadas.",
+        "retry": "Tentar novamente recuperar os documentos",
+        "start": "Encontrar e copiar documentos",
+        "confirmSkip": "Sim, continuar sem documentos",
+        "skip": "Continuar sem documentos",
+        "continueWithMissing": "Continuar com os documentos em falta"
       }
     },
     "Importable": {

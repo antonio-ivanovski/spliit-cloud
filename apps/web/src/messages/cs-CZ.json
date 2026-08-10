@@ -330,7 +330,8 @@
           "daily": "Denně",
           "weekly": "Týdně",
           "monthly": "Měsíčně"
-        }
+        },
+        "documentCount": "Dokumenty: obnoveno {imported}, přeskočeno {skipped}"
       },
       "Destination": {
         "heading": "Kam chcete importovat <strong>{name}</strong>? ({participantCount} účastníků · {expenseCount} výdajů)",
@@ -455,7 +456,8 @@
         "backAriaLabel": "Zpět",
         "currencyConversion": "Konverze měn",
         "backTo": "Zpět na {step}",
-        "continueTo": "Pokračovat na {step}"
+        "continueTo": "Pokračovat na {step}",
+        "documents": "Dokumenty"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -471,6 +473,30 @@
         "rateDateLabel": "Datum kurzu",
         "ratesError": "Směnné kurzy se nepodařilo načíst. Zkontrolujte připojení a zkuste to znovu.",
         "refresh": "Obnovit"
+      },
+      "Documents": {
+        "title": "Vezměte účtenky s sebou",
+        "description": "Spliit Cloud může bezpečně zkopírovat obrázky účtenek z původní skupiny na spliit.app a uložit normalizované verze JPEG do vašeho cloudového úložiště.",
+        "fetchFailed": "Zdrojový obrázek se nepodařilo stáhnout.",
+        "tooLarge": "Normalizovaný obrázek je stále větší než 2 MiB.",
+        "uploadFailed": "Normalizovaný obrázek se nepodařilo nahrát.",
+        "unknownFailure": "Neznámá chyba dokumentu.",
+        "discoveryFailed": "Dokumenty na spliit.app se nepodařilo vyhledat.",
+        "progress": "Připravuji dokument {processed} z {total}…",
+        "recovered": "Obnoven {count} dokument",
+        "recovered_plural": "Obnoveno {count} dokumentů",
+        "unavailableTitle": "Tento zdroj nelze bezpečně spárovat",
+        "unavailableDescription": "Tento export neobsahuje stabilní časová razítka výdajů potřebná k obnovení dokumentů. Můžete pokračovat bez nich.",
+        "failedTitle": "{count} dokument se nepodařilo obnovit",
+        "failedTitle_plural": "{count} dokumentů se nepodařilo obnovit",
+        "skipTitle": "Pokračovat bez obrázků účtenek?",
+        "skipDescription": "Výdaje se přesto naimportují, ale jejich dokumenty budou chybět. Po importu to nelze automaticky opravit.",
+        "acceptMissing": "Beru na vědomí, že uvedené dokumenty budou v importovaných výdajích chybět.",
+        "retry": "Zkusit obnovu dokumentů znovu",
+        "start": "Najít a zkopírovat dokumenty",
+        "confirmSkip": "Ano, pokračovat bez dokumentů",
+        "skip": "Pokračovat bez dokumentů",
+        "continueWithMissing": "Pokračovat bez chybějících dokumentů"
       }
     },
     "Importable": {

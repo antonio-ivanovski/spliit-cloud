@@ -318,7 +318,8 @@
           "daily": "毎日",
           "weekly": "毎週",
           "monthly": "毎月"
-        }
+        },
+        "documentCount": "書類：{imported}件を復元済み、{skipped}件をスキップ"
       },
       "Destination": {
         "heading": "<strong>{name}</strong> をどこにインポートしますか？（{participantCount} 名の参加者 · {expenseCount} 件の支出）",
@@ -440,7 +441,8 @@
         "backAriaLabel": "戻る",
         "currencyConversion": "Currency conversion",
         "backTo": "{step}に戻る",
-        "continueTo": "{step}に進む"
+        "continueTo": "{step}に進む",
+        "documents": "書類"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -456,6 +458,30 @@
         "rateDateLabel": "レート日付",
         "ratesError": "為替レートを取得できませんでした。接続を確認して再試行してください。",
         "refresh": "再読み込み"
+      },
+      "Documents": {
+        "title": "レシートを持っていきましょう",
+        "description": "Spliit Cloud は元の spliit.app グループからレシート画像を安全にコピーし、Cloud ストレージに正規化した JPEG 形式で保存できます。",
+        "fetchFailed": "元の画像をダウンロードできませんでした。",
+        "tooLarge": "正規化した画像がまだ 2 MiB を超えています。",
+        "uploadFailed": "正規化した画像をアップロードできませんでした。",
+        "unknownFailure": "不明な書類エラーです。",
+        "discoveryFailed": "spliit.app で書類を見つけられませんでした。",
+        "progress": "書類 {processed}/{total} を準備中…",
+        "recovered": "書類を {count}件復元しました",
+        "recovered_plural": "書類を {count}件復元しました",
+        "unavailableTitle": "このソースは安全に照合できません",
+        "unavailableDescription": "このエクスポートには、書類の復元に必要な安定した支出日時が含まれていません。書類なしで続行できます。",
+        "failedTitle": "{count}件の書類を復元できませんでした",
+        "failedTitle_plural": "{count}件の書類を復元できませんでした",
+        "skipTitle": "一部の書類を復元できませんでした",
+        "skipDescription": "すべての書類をコピーできませんでした。失敗した項目を再試行するか、書類が不足した状態で続行することを明示的に承認してください。",
+        "acceptMissing": "一覧の書類がインポートした支出に含まれないことを理解しました。",
+        "retry": "失敗した書類を再試行",
+        "start": "書類を見つけてコピー",
+        "confirmSkip": "書類なしで続行",
+        "skip": "書類の復元をスキップ",
+        "continueWithMissing": "不足しているドキュメントがあっても続行"
       }
     },
     "Importable": {

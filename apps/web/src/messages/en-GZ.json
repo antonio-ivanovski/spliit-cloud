@@ -1848,7 +1848,8 @@
           "daily": "daily vibes",
           "weekly": "weekly vibes",
           "monthly": "monthly vibes"
-        }
+        },
+        "documentCount": "Docs: {imported} recovered, {skipped} skipped"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}, obviously",
@@ -1986,7 +1987,32 @@
         "backAriaLabel": "go back",
         "currencyConversion": "currency conversion",
         "backTo": "back to {step}",
-        "continueTo": "continue to {step}"
+        "continueTo": "continue to {step}",
+        "documents": "docs"
+      },
+      "Documents": {
+        "title": "bring your receipts along",
+        "description": "Spliit Cloud can securely copy receipt pics from your original spliit.app group and save normalized JPEGs in your Cloud storage.",
+        "fetchFailed": "couldn't download the source image.",
+        "tooLarge": "the normalized image is still over 2 MiB.",
+        "uploadFailed": "couldn't upload the normalized image.",
+        "unknownFailure": "unknown document issue.",
+        "discoveryFailed": "couldn't find docs on spliit.app.",
+        "progress": "getting doc {processed} of {total} ready…",
+        "recovered": "recovered {count} doc",
+        "recovered_plural": "recovered {count} docs",
+        "unavailableTitle": "this source can't be matched safely",
+        "unavailableDescription": "this export is missing the stable expense timestamps needed to recover docs. you can keep going without them.",
+        "failedTitle": "{count} doc couldn't be recovered",
+        "failedTitle_plural": "{count} docs couldn't be recovered",
+        "skipTitle": "keep going without receipt pics?",
+        "skipDescription": "the expenses still get imported, but their docs will be missing. this can't be auto-fixed after import.",
+        "acceptMissing": "i get that the listed docs will be missing from the imported expenses.",
+        "retry": "retry doc recovery",
+        "start": "find and copy docs",
+        "confirmSkip": "yep, continue without docs",
+        "skip": "continue without docs",
+        "continueWithMissing": "continue with missing docs"
       }
     },
     "Importable": {

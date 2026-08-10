@@ -326,7 +326,8 @@
           "daily": "Egunero",
           "weekly": "Astero",
           "monthly": "Hilero"
-        }
+        },
+        "documentCount": "Dokumentuak: {imported} berreskuratuta, {skipped} saltatuta"
       },
       "Destination": {
         "heading": "Nora inportatu nahi duzu <strong>{name}</strong>? ({participantCount} parte-hartzaile · {expenseCount} gastu)",
@@ -450,7 +451,8 @@
         "backAriaLabel": "Atzera",
         "currencyConversion": "Moneta bihurketa",
         "backTo": "Itzuli {step}-era",
-        "continueTo": "Jarraitu {step}-era"
+        "continueTo": "Jarraitu {step}-era",
+        "documents": "Dokumentuak"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -466,6 +468,30 @@
         "rateDateLabel": "Tasaren data",
         "ratesError": "Ezin izan dira truke-tasak eskuratu. Egiaztatu zure konexioa eta saiatu berriro.",
         "refresh": "Freskatu"
+      },
+      "Documents": {
+        "title": "Ekarri zure ordainagiriak",
+        "description": "Spliit Cloud-ek spliit.app-eko jatorrizko taldeko ordainagirien irudiak modu seguruan kopiatu eta JPEG bertsio normalizatuak zure hodeiko biltegian gorde ditzake.",
+        "fetchFailed": "Ezin izan da iturburuko irudia deskargatu.",
+        "tooLarge": "Irudi normalizatuak 2 MiB baino gehiago ditu oraindik.",
+        "uploadFailed": "Ezin izan da irudi normalizatua igo.",
+        "unknownFailure": "Dokumentuaren errore ezezaguna.",
+        "discoveryFailed": "Ezin izan dira dokumentuak aurkitu spliit.app-en.",
+        "progress": "{processed}/{total} dokumentua prestatzen…",
+        "recovered": "{count} dokumentu berreskuratu da",
+        "recovered_plural": "{count} dokumentu berreskuratu dira",
+        "unavailableTitle": "Iturburu hau ezin da modu seguruan parekatu",
+        "unavailableDescription": "Esportazio honek ez ditu dokumentuak berreskuratzeko behar diren gastuen denbora-marka egonkorrak. Dokumenturik gabe jarrai dezakezu.",
+        "failedTitle": "{count} dokumentu ezin izan da berreskuratu",
+        "failedTitle_plural": "{count} dokumentu ezin izan dira berreskuratu",
+        "skipTitle": "Ordainagirien irudirik gabe jarraitu?",
+        "skipDescription": "Gastuak hala ere inportatuko dira, baina dokumentuak falta izango dira. Inportatu ondoren ezin da hori automatikoki konpondu.",
+        "acceptMissing": "Ulertzen dut zerrendatutako dokumentuak falta izango direla inportatutako gastuetan.",
+        "retry": "Dokumentuak berreskuratzen berriro saiatu",
+        "start": "Aurkitu eta kopiatu dokumentuak",
+        "confirmSkip": "Bai, jarraitu dokumenturik gabe",
+        "skip": "Jarraitu dokumenturik gabe",
+        "continueWithMissing": "Jarraitu falta diren dokumentuekin"
       }
     },
     "Importable": {

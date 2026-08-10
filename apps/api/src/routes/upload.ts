@@ -9,9 +9,14 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
 import { prisma } from '@spliit/db'
 
-import { randomId } from '../lib/api'
+import { randomId } from '../lib/api/shared'
 import { getAuthFromRequest } from '../lib/auth/session'
 import { env } from '../lib/env'
+import {
+  openSourceDocumentClaims,
+  openStagedDocumentClaims,
+  sealStagedDocumentClaims,
+} from '../lib/import-documents'
 
 let s3Client: S3Client | undefined
 
@@ -58,6 +63,13 @@ function publicUrlForKey(key: string): string {
   return env.S3_UPLOAD_PUBLIC_URL
     ? `${env.S3_UPLOAD_PUBLIC_URL.replace(/\/$/, '')}/${key}`
     : `https://${env.S3_UPLOAD_BUCKET}.s3.${env.S3_UPLOAD_REGION}.amazonaws.com/${key}`
+}
+
+export function permanentDocumentUrl(fileUrl: string): string {
+  const key = keyFromFileUrl(fileUrl)
+  return key.startsWith('tmp/')
+    ? publicUrlForKey(key.replace(/^tmp\//, 'documents/'))
+    : fileUrl
 }
 
 export async function deleteS3Object(fileUrl: string) {
@@ -162,10 +174,13 @@ export async function validateProfileImageUpload(
 
 /**
  * Promote an uploaded document from the temporary `tmp/` prefix to a permanent
- * `documents/` prefix by copying and deleting the temp object.
+ * `documents/` prefix. Ordinary uploads delete the source; import preparation
+ * retains it until the database transaction commits so a failed import can be
+ * retried with the same staged token.
  */
 export async function promoteUploadedDocument(
   fileUrl: string,
+  options: { deleteSource?: boolean } = {},
 ): Promise<string> {
   if (!uploadsConfigured()) return fileUrl
 
@@ -217,17 +232,141 @@ export async function promoteUploadedDocument(
     throw error
   }
 
-  await getS3Client().send(
-    new DeleteObjectCommand({
-      Bucket: env.S3_UPLOAD_BUCKET,
-      Key: key,
-    }),
-  )
+  if (options.deleteSource !== false) {
+    await getS3Client().send(
+      new DeleteObjectCommand({
+        Bucket: env.S3_UPLOAD_BUCKET,
+        Key: key,
+      }),
+    )
+  }
 
   return publicUrlForKey(permanentKey)
 }
 
 const MAX_UPLOAD_SIZE = 2 * 1024 ** 2
+
+export async function mintImportDocumentPresign(input: {
+  accountId: string
+  sessionId: string
+  sourceToken: string
+  fileSize: number
+  width: number
+  height: number
+}) {
+  if (input.fileSize > MAX_UPLOAD_SIZE) {
+    return Response.json(
+      { error: 'File exceeds the maximum upload size' },
+      { status: 400 },
+    )
+  }
+  if (!uploadsConfigured()) {
+    return Response.json(
+      { error: 'Uploads are not configured' },
+      { status: 503 },
+    )
+  }
+  try {
+    const source = await openSourceDocumentClaims(input.sourceToken)
+    if (
+      source.accountId !== input.accountId ||
+      source.sessionId !== input.sessionId
+    ) {
+      return Response.json({ error: 'Invalid import session' }, { status: 403 })
+    }
+    const key = `tmp/imports/${input.accountId}/${input.sessionId}/${randomId()}.jpg`
+    const fileUrl = publicUrlForKey(key)
+    const uploadUrl = await getSignedUrl(
+      getS3Client(),
+      new PutObjectCommand({
+        Bucket: env.S3_UPLOAD_BUCKET,
+        Key: key,
+        ContentType: 'image/jpeg',
+      }),
+      { expiresIn: 60 },
+    )
+    const stagedToken = await sealStagedDocumentClaims({
+      aud: 'spliit:import-staged-document',
+      accountId: input.accountId,
+      sessionId: input.sessionId,
+      expenseIndex: source.expenseIndex,
+      sourceDocumentId: source.sourceDocumentId,
+      key,
+      fileUrl,
+      fileSize: input.fileSize,
+      width: input.width,
+      height: input.height,
+    })
+    return Response.json({ uploadUrl, stagedToken })
+  } catch {
+    return Response.json(
+      { error: 'Invalid or expired source document' },
+      { status: 400 },
+    )
+  }
+}
+
+export async function verifyAndPromoteImportDocument(input: {
+  token: string
+  accountId: string
+  sessionId: string
+}) {
+  const claims = await openStagedDocumentClaims(input.token)
+  if (
+    claims.accountId !== input.accountId ||
+    claims.sessionId !== input.sessionId ||
+    !claims.key.startsWith(`tmp/imports/${input.accountId}/${input.sessionId}/`)
+  ) {
+    throw new Error('Invalid staged import document')
+  }
+  const permanentUrl = permanentDocumentUrl(claims.fileUrl)
+  let metadata
+  let url: string | undefined
+  try {
+    metadata = await getS3Client().send(
+      new HeadObjectCommand({ Bucket: env.S3_UPLOAD_BUCKET, Key: claims.key }),
+    )
+  } catch (temporaryCause) {
+    try {
+      metadata = await getS3Client().send(
+        new HeadObjectCommand({
+          Bucket: env.S3_UPLOAD_BUCKET,
+          Key: keyFromFileUrl(permanentUrl),
+        }),
+      )
+      url = permanentUrl
+    } catch (permanentCause) {
+      throw new Error('Staged import document is unavailable', {
+        cause: new AggregateError([temporaryCause, permanentCause]),
+      })
+    }
+  }
+  if (
+    metadata.ContentType !== 'image/jpeg' ||
+    metadata.ContentLength !== claims.fileSize ||
+    !metadata.ContentLength ||
+    metadata.ContentLength > MAX_UPLOAD_SIZE
+  ) {
+    throw new Error('Staged import document failed validation')
+  }
+  if (!url) {
+    try {
+      url = await promoteUploadedDocument(claims.fileUrl, {
+        deleteSource: false,
+      })
+    } catch (cause) {
+      throw new Error('Staged import document could not be promoted', { cause })
+    }
+  }
+  return {
+    expenseIndex: claims.expenseIndex,
+    sourceDocumentId: claims.sourceDocumentId,
+    url,
+    temporaryUrl: claims.fileUrl,
+    width: claims.width,
+    height: claims.height,
+  }
+}
 
 /**
  * Internal helper used by both the legacy HTTP `/uploads/presign` route (via

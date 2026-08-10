@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { env } from '../lib/env'
 import '../test/mocks'
+import { sealStagedDocumentClaims } from '../lib/import-documents'
 import { authState, prismaMock } from '../test/state'
 import {
   createProfileImageUploadUrl,
@@ -9,6 +10,7 @@ import {
   deleteS3Object,
   isProfileImageUrlForAccount,
   promoteUploadedDocument,
+  verifyAndPromoteImportDocument,
   validateProfileImageUpload,
 } from './upload'
 
@@ -397,6 +399,20 @@ describe('promoteUploadedDocument', () => {
     })
   })
 
+  it('can retain the temp object for a retry-safe import prepare', async () => {
+    const url =
+      'https://spliit-test-bucket.s3.us-east-1.amazonaws.com/tmp/imports/acct/session/document-test.jpg'
+
+    await promoteUploadedDocument(url, { deleteSource: false })
+
+    expect(mockS3Client.send).toHaveBeenCalledTimes(2)
+    expect(
+      mockS3Client.send.mock.calls.some(([input]) => {
+        return (input as { Key?: string }).Key?.startsWith('tmp/')
+      }),
+    ).toBe(false)
+  })
+
   it('returns permanent public URL after promotion', async () => {
     const url =
       'https://spliit-test-bucket.s3.us-east-1.amazonaws.com/tmp/document-test.jpg'
@@ -508,6 +524,109 @@ describe('promoteUploadedDocument', () => {
     } finally {
       env.S3_UPLOAD_PUBLIC_URL = undefined
     }
+  })
+})
+
+describe('verifyAndPromoteImportDocument', () => {
+  it('can verify and replay the same staged token while tmp is retained', async () => {
+    const sessionId = '00000000-0000-4000-8000-000000000001'
+    const key = `tmp/imports/acct-1/${sessionId}/document-test.jpg`
+    const fileUrl = `https://spliit-test-bucket.s3.us-east-1.amazonaws.com/${key}`
+    const token = await sealStagedDocumentClaims({
+      aud: 'spliit:import-staged-document',
+      accountId: 'acct-1',
+      sessionId,
+      expenseIndex: 0,
+      sourceDocumentId: 'source-doc-1',
+      key,
+      fileUrl,
+      fileSize: 100,
+      width: 640,
+      height: 480,
+    })
+    let permanentExists = false
+    mockS3Client.send.mockReset()
+    mockS3Client.send.mockImplementation(
+      async (input: { Key?: string; CopySource?: string }) => {
+        if (input.Key === key) {
+          return { ContentType: 'image/jpeg', ContentLength: 100 }
+        }
+        if (input.Key?.startsWith('documents/') && !input.CopySource) {
+          if (permanentExists) return { ContentLength: 100 }
+          throw Object.assign(new Error('NotFound'), {
+            $metadata: { httpStatusCode: 404 },
+          })
+        }
+        if (input.CopySource) permanentExists = true
+        return {}
+      },
+    )
+
+    const first = await verifyAndPromoteImportDocument({
+      token,
+      accountId: 'acct-1',
+      sessionId,
+    })
+    const retry = await verifyAndPromoteImportDocument({
+      token,
+      accountId: 'acct-1',
+      sessionId,
+    })
+
+    expect(first.url).toContain('documents/imports/acct-1/')
+    expect(retry).toEqual(first)
+    expect(mockS3Client.send).toHaveBeenCalledTimes(5)
+    expect(
+      mockS3Client.send.mock.calls.filter(
+        ([input]) => !!(input as { CopySource?: string }).CopySource,
+      ),
+    ).toHaveLength(1)
+  })
+
+  it('replays a staged token after tmp cleanup when the permanent copy exists', async () => {
+    const sessionId = '00000000-0000-4000-8000-000000000001'
+    const key = `tmp/imports/acct-1/${sessionId}/document-test.jpg`
+    const fileUrl = `https://spliit-test-bucket.s3.us-east-1.amazonaws.com/${key}`
+    const token = await sealStagedDocumentClaims({
+      aud: 'spliit:import-staged-document',
+      accountId: 'acct-1',
+      sessionId,
+      expenseIndex: 0,
+      sourceDocumentId: 'source-doc-1',
+      key,
+      fileUrl,
+      fileSize: 100,
+      width: 640,
+      height: 480,
+    })
+    mockS3Client.send.mockReset()
+    mockS3Client.send.mockImplementation(
+      async (input: { Key?: string; CopySource?: string }) => {
+        if (input.Key === key) {
+          throw Object.assign(new Error('NotFound'), {
+            $metadata: { httpStatusCode: 404 },
+          })
+        }
+        if (input.Key?.startsWith('documents/') && !input.CopySource) {
+          return { ContentType: 'image/jpeg', ContentLength: 100 }
+        }
+        throw new Error('Unexpected S3 request')
+      },
+    )
+
+    const replay = await verifyAndPromoteImportDocument({
+      token,
+      accountId: 'acct-1',
+      sessionId,
+    })
+
+    expect(replay.url).toContain('documents/imports/acct-1/')
+    expect(mockS3Client.send).toHaveBeenCalledTimes(2)
+    expect(
+      mockS3Client.send.mock.calls.some(
+        ([input]) => !!(input as { CopySource?: string }).CopySource,
+      ),
+    ).toBe(false)
   })
 })
 

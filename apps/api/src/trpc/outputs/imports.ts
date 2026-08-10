@@ -8,6 +8,7 @@ const normalizedSourceParticipantSchema = z.object({
 })
 
 const normalizedSourceExpenseSchema = z.object({
+  sourceCreatedAt: z.string().nullable().optional(),
   title: z.string(),
   expenseDate: z.string(),
   category: z.string(),
@@ -51,6 +52,7 @@ export const importGroupOutputSchema = z.object({
   groupId: z.string(),
   ledgerId: z.string(),
   importedExpenses: z.number().int().nonnegative(),
+  importedDocuments: z.number().int().nonnegative(),
   sourceGroupId: z.string().nullable(),
   invites: z.array(
     z.object({

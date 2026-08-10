@@ -326,7 +326,8 @@
           "daily": "DiDiària",
           "weekly": "Setmanal",
           "monthly": "Mensual"
-        }
+        },
+        "documentCount": "Documents: {imported} recuperats, {skipped} omesos"
       },
       "Destination": {
         "heading": "On voleu importar <strong>{name}</strong>? ({participantCount} participants · {expenseCount} despeses)",
@@ -450,7 +451,8 @@
         "backAriaLabel": "Enrere",
         "currencyConversion": "Conversió de moneda",
         "backTo": "Torna a {step}",
-        "continueTo": "Continua a {step}"
+        "continueTo": "Continua a {step}",
+        "documents": "Fitxers"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -466,6 +468,30 @@
         "rateDateLabel": "Data del tipus",
         "ratesError": "No s'han pogut obtenir els tipus de canvi. Comprova la connexió i torna-ho a provar.",
         "refresh": "Actualitza"
+      },
+      "Documents": {
+        "title": "Porta els teus rebuts amb tu",
+        "description": "Spliit Cloud pot copiar de manera segura les imatges dels rebuts del grup original de spliit.app i desar versions JPEG normalitzades al teu emmagatzematge del núvol.",
+        "fetchFailed": "No s'ha pogut baixar la imatge d'origen.",
+        "tooLarge": "La imatge normalitzada encara supera els 2 MiB.",
+        "uploadFailed": "No s'ha pogut pujar la imatge normalitzada.",
+        "unknownFailure": "Error de document desconegut.",
+        "discoveryFailed": "No s'han pogut descobrir els documents a spliit.app.",
+        "progress": "Preparant el document {processed} de {total}…",
+        "recovered": "S'ha recuperat {count} document",
+        "recovered_plural": "S'han recuperat {count} documents",
+        "unavailableTitle": "Aquesta font no es pot associar amb seguretat",
+        "unavailableDescription": "Aquesta exportació no inclou les marques de temps estables de les despeses necessàries per recuperar els documents. Pots continuar sense documents.",
+        "failedTitle": "{count} document no s'ha pogut recuperar",
+        "failedTitle_plural": "{count} documents no s'han pogut recuperar",
+        "skipTitle": "Continua sense imatges dels rebuts?",
+        "skipDescription": "Les despeses s'importaran igualment, però faltaran els seus documents. Això no es pot reparar automàticament després de la importació.",
+        "acceptMissing": "Entenc que faltaran els documents indicats a les despeses importades.",
+        "retry": "Torna a provar de recuperar els documents",
+        "start": "Cerca i copia els documents",
+        "confirmSkip": "Sí, continua sense documents",
+        "skip": "Continua sense documents",
+        "continueWithMissing": "Continua amb els documents que falten"
       }
     },
     "Importable": {

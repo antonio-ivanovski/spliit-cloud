@@ -9,6 +9,11 @@ import type { RecurrenceConfig, RecurrenceEnd } from '../recurring-expenses'
 export type { RecurrenceConfig, RecurrenceEnd, RecurrenceFrequency }
 
 export type NormalizedSourceExpense = {
+  /**
+   * Stable upstream creation timestamp used only to recover spliit.app
+   * documents.
+   */
+  sourceCreatedAt?: string | null
   title: string
   expenseDate: string
   category: string

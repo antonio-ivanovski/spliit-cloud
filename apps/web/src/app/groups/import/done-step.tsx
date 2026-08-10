@@ -15,6 +15,7 @@ type ImportInvite = NonNullable<
 type Props = {
   groupId: string | null
   invites: ImportInvite[]
+  importedDocumentCount?: number
   onContinue: () => void
 }
 
@@ -31,7 +32,12 @@ type Props = {
  * `navigator.share` is available). Reusing the same affordances keeps the
  * import path consistent with the rest of the app.
  */
-export function DoneStep({ groupId: _groupId, invites, onContinue }: Props) {
+export function DoneStep({
+  groupId: _groupId,
+  invites,
+  importedDocumentCount = 0,
+  onContinue,
+}: Props) {
   const { t } = useTranslation()
   const linkInvites = invites.filter((i) => i.kind === 'LINK' && i.inviteUrl)
   const emailInvites = invites.filter((i) => i.kind === 'EMAIL')
@@ -66,6 +72,13 @@ export function DoneStep({ groupId: _groupId, invites, onContinue }: Props) {
           <h2 className="text-lg font-medium">
             {t('Groups.Import.Done.importComplete')}
           </h2>
+          {importedDocumentCount > 0 && (
+            <p className="text-sm text-muted-foreground">
+              {t('Groups.Import.Documents.recovered', {
+                count: importedDocumentCount,
+              })}
+            </p>
+          )}
           <Button onClick={onContinue}>
             {t('Groups.Import.Done.openGroup')}
           </Button>

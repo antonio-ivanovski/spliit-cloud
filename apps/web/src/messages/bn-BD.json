@@ -1629,7 +1629,8 @@
           "daily": "দৈনিক",
           "weekly": "সাপ্তাহিক",
           "monthly": "মাসিক"
-        }
+        },
+        "documentCount": "নথি: {imported}টি উদ্ধার হয়েছে, {skipped}টি বাদ গেছে"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -1767,7 +1768,32 @@
         "backAriaLabel": "পিছনে",
         "currencyConversion": "মুদ্রা রূপান্তর",
         "backTo": "{step} এ ফিরে যান",
-        "continueTo": "{step} এ চালিয়ে যান"
+        "continueTo": "{step} এ চালিয়ে যান",
+        "documents": "নথি"
+      },
+      "Documents": {
+        "title": "রসিদ সঙ্গে নিয়ে আসুন",
+        "description": "Spliit Cloud নিরাপদে মূল spliit.app গ্রুপ থেকে রসিদের ছবি কপি করে আপনার Cloud স্টোরেজে মানসম্মত JPEG সংস্করণ সংরক্ষণ করতে পারে।",
+        "fetchFailed": "উৎস ছবিটি ডাউনলোড করা যায়নি।",
+        "tooLarge": "মানসম্মত ছবিটি এখনও 2 MiB-এর চেয়ে বড়।",
+        "uploadFailed": "মানসম্মত ছবিটি আপলোড করা যায়নি।",
+        "unknownFailure": "অজানা নথি-সংক্রান্ত ত্রুটি।",
+        "discoveryFailed": "spliit.app-এ নথি খুঁজে পাওয়া যায়নি।",
+        "progress": "নথি {processed}/{total} প্রস্তুত করা হচ্ছে…",
+        "recovered": "{count}টি নথি উদ্ধার হয়েছে",
+        "recovered_plural": "{count}টি নথি উদ্ধার হয়েছে",
+        "unavailableTitle": "এই উৎসের সঙ্গে নিরাপদে মিল করা যাচ্ছে না",
+        "unavailableDescription": "এই এক্সপোর্টে নথি উদ্ধারের জন্য প্রয়োজনীয় নির্ভরযোগ্য খরচের সময়ছাপ নেই। আপনি এগুলো ছাড়াই চালিয়ে যেতে পারেন।",
+        "failedTitle": "{count}টি নথি উদ্ধার করা যায়নি",
+        "failedTitle_plural": "{count}টি নথি উদ্ধার করা যায়নি",
+        "skipTitle": "রসিদের ছবি ছাড়াই চালিয়ে যাবেন?",
+        "skipDescription": "খরচগুলো আমদানি হবে, তবে তাদের নথি থাকবে না। আমদানির পরে এটি স্বয়ংক্রিয়ভাবে ঠিক করা যাবে না।",
+        "acceptMissing": "তালিকাভুক্ত নথিগুলো আমদানি করা খরচে থাকবে না—আমি তা বুঝতে পারছি।",
+        "retry": "নথি উদ্ধার আবার চেষ্টা করুন",
+        "start": "নথি খুঁজে কপি করুন",
+        "confirmSkip": "হ্যাঁ, নথি ছাড়াই চালিয়ে যান",
+        "skip": "নথি ছাড়াই চালিয়ে যান",
+        "continueWithMissing": "অনুপস্থিত নথি সহ চালিয়ে যান"
       }
     },
     "Importable": {

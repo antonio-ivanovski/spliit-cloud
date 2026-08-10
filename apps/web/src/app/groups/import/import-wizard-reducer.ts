@@ -9,6 +9,7 @@ import {
 
 import {
   initialGroupFormValues,
+  supportsDocumentRecovery,
   type ConversionMode,
   type ImportMode,
   type ImportStep,
@@ -39,6 +40,12 @@ export type WizardState = {
   conversionModes: Record<string, ConversionMode>
   fixedRateDates: Record<string, string>
   fixedRateOverrides: Record<string, number>
+  documentSessionId: string
+  stagedDocumentTokens: string[]
+  recoveredDocumentCount: number
+  skippedDocumentCount: number
+  documentRecoverySkipped: boolean
+  documentFlowVisited: boolean
 }
 
 export type WizardAction =
@@ -69,6 +76,14 @@ export type WizardAction =
       rates: Record<string, number>
     }
   | {
+      type: 'DOCUMENTS_CONFIRMED'
+      stagedTokens: string[]
+      recoveredCount: number
+      skippedCount: number
+      skippedEntirely: boolean
+    }
+  | { type: 'DOCUMENTS_FAILED'; discardTokens: boolean }
+  | {
       type: 'IMPORT_SUCCEEDED'
       groupId: string
       invites: ImportInvite[]
@@ -94,6 +109,12 @@ export function initialWizardState(
     conversionModes: {},
     fixedRateDates: {},
     fixedRateOverrides: {},
+    documentSessionId: crypto.randomUUID(),
+    stagedDocumentTokens: [],
+    recoveredDocumentCount: 0,
+    skippedDocumentCount: 0,
+    documentRecoverySkipped: false,
+    documentFlowVisited: false,
   }
 }
 
@@ -163,7 +184,32 @@ export function importWizardReducer(
         fixedRateDates: action.fixedRateDates,
         fixedRateOverrides: action.fixedRateOverrides,
         rates: action.rates,
+        step: supportsDocumentRecovery(state.source) ? 'documents' : 'confirm',
+      }
+
+    case 'DOCUMENTS_CONFIRMED':
+      return {
+        ...state,
+        stagedDocumentTokens: action.stagedTokens,
+        recoveredDocumentCount: action.recoveredCount,
+        skippedDocumentCount: action.skippedCount,
+        documentRecoverySkipped: action.skippedEntirely,
+        documentFlowVisited: true,
         step: 'confirm',
+      }
+
+    case 'DOCUMENTS_FAILED':
+      if (!action.discardTokens) {
+        return { ...state, step: 'documents' }
+      }
+      return {
+        ...state,
+        step: 'documents',
+        stagedDocumentTokens: [],
+        recoveredDocumentCount: 0,
+        skippedDocumentCount: 0,
+        documentRecoverySkipped: false,
+        documentFlowVisited: false,
       }
 
     case 'IMPORT_SUCCEEDED':
@@ -192,8 +238,15 @@ export function importWizardReducer(
           return { ...state, step: 'destination' }
         case 'currencyConversion':
           return { ...state, step: 'mapping' }
-        case 'confirm':
+        case 'documents':
           return { ...state, step: 'currencyConversion' }
+        case 'confirm':
+          return {
+            ...state,
+            step: state.documentFlowVisited
+              ? 'documents'
+              : 'currencyConversion',
+          }
         case 'done':
           return state
       }

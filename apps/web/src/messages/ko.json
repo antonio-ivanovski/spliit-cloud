@@ -234,7 +234,8 @@
           "daily": "매일",
           "weekly": "매주",
           "monthly": "매월"
-        }
+        },
+        "documentCount": "문서: {imported}개 복구됨, {skipped}개 건너뜀"
       },
       "Destination": {
         "heading": "<strong>{name}</strong>을(를) 어디로 가져오시겠습니까? ({participantCount}명의 참가자 · {expenseCount}개의 지출)",
@@ -356,7 +357,8 @@
         "backAriaLabel": "뒤로",
         "currencyConversion": "Currency conversion",
         "backTo": "{step}(으)로 돌아가기",
-        "continueTo": "{step} 계속하기"
+        "continueTo": "{step} 계속하기",
+        "documents": "문서"
       },
       "CurrencyConversion": {
         "pairSection": "{source} → {target}",
@@ -372,6 +374,30 @@
         "rateDateLabel": "환율 날짜",
         "ratesError": "환율을 가져올 수 없습니다. 연결을 확인하고 다시 시도하세요.",
         "refresh": "새로 고침"
+      },
+      "Documents": {
+        "title": "영수증도 가져오기",
+        "description": "Spliit Cloud는 기존 spliit.app 그룹의 영수증 이미지를 안전하게 복사하고, 정규화된 JPEG 버전을 Cloud 저장소에 저장할 수 있습니다.",
+        "fetchFailed": "원본 이미지를 다운로드할 수 없습니다.",
+        "tooLarge": "정규화된 이미지가 여전히 2 MiB보다 큽니다.",
+        "uploadFailed": "정규화된 이미지를 업로드할 수 없습니다.",
+        "unknownFailure": "알 수 없는 문서 오류입니다.",
+        "discoveryFailed": "spliit.app에서 문서를 찾을 수 없습니다.",
+        "progress": "문서 {processed}/{total} 준비 중…",
+        "recovered": "{count}개 문서 복구됨",
+        "recovered_plural": "{count}개 문서 복구됨",
+        "unavailableTitle": "이 소스는 안전하게 일치시킬 수 없습니다",
+        "unavailableDescription": "이 내보내기 파일에는 문서 복구에 필요한 안정적인 지출 시간이 포함되어 있지 않습니다. 문서 없이 계속할 수 있습니다.",
+        "failedTitle": "{count}개 문서를 복구하지 못했습니다",
+        "failedTitle_plural": "{count}개 문서를 복구하지 못했습니다",
+        "skipTitle": "일부 문서를 복구하지 못했습니다",
+        "skipDescription": "모든 문서를 복사할 수 없습니다. 실패한 항목을 다시 시도하거나 해당 문서가 누락된다는 점을 명시적으로 확인한 후 계속할 수 있습니다.",
+        "acceptMissing": "목록에 표시된 문서가 가져온 지출에서 누락된다는 점을 이해했습니다.",
+        "retry": "실패한 문서 다시 시도",
+        "start": "문서 찾기 및 복사",
+        "confirmSkip": "문서 없이 계속",
+        "skip": "문서 복구 건너뛰기",
+        "continueWithMissing": "누락된 문서가 있어도 계속"
       }
     },
     "Importable": {

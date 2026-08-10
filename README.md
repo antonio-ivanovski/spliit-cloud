@@ -256,6 +256,11 @@ optional browser-readable base URL stored on expense documents and must serve
 objects by key, for example `https://uploads.example.com/document-...jpg`. If it
 is not configured, documents use the default AWS S3 public URL format.
 
+Configure an object lifecycle rule for the `tmp/imports/` prefix with a
+one-day expiration. The import flow deletes its temporary copies after a
+successful database commit, while the lifecycle rule cleans up abandoned or
+interrupted imports.
+
 ### Create expense from receipt
 
 You can offer users to create expense by uploading a receipt. This feature relies on an AI provider and a public S3 storage endpoint.

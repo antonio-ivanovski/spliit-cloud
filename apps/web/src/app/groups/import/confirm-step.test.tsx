@@ -54,6 +54,28 @@ const REQUIRED_PROPS = {
 // ── Tests ───────────────────────────────────────────────────────────────
 
 describe('ConfirmStep', () => {
+  it('hides document counts when the document flow was not visited', () => {
+    render(<ConfirmStep {...REQUIRED_PROPS} isSubmitting={false} />)
+
+    expect(screen.queryByText(/documents:/i)).not.toBeInTheDocument()
+  })
+
+  it('shows document counts after the document flow was visited', () => {
+    render(
+      <ConfirmStep
+        {...REQUIRED_PROPS}
+        isSubmitting={false}
+        showDocumentSummary
+        recoveredDocumentCount={2}
+        skippedDocumentCount={1}
+      />,
+    )
+
+    expect(
+      screen.getByText(/documents: 2 recovered, 1 skipped/i),
+    ).toBeInTheDocument()
+  })
+
   it('renders the import action button labelled "Import group" by default', () => {
     render(<ConfirmStep {...REQUIRED_PROPS} isSubmitting={false} />)
     expect(

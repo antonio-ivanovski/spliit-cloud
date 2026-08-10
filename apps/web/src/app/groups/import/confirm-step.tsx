@@ -34,6 +34,10 @@ type Props = {
   invites?: ImportInvite[]
   isSubmitting: boolean
   conversionModes: Record<string, ConversionMode>
+  recoveredDocumentCount?: number
+  skippedDocumentCount?: number
+  documentRecoverySkipped?: boolean
+  showDocumentSummary?: boolean
   rates: Record<string, number> | null | undefined
   onBack: () => void
   onSubmit: () => void
@@ -51,6 +55,10 @@ export function ConfirmStep({
   resolvedExpenses,
   isSubmitting,
   conversionModes,
+  recoveredDocumentCount = 0,
+  skippedDocumentCount = 0,
+  documentRecoverySkipped = false,
+  showDocumentSummary = false,
   rates,
   onBack,
   onSubmit,
@@ -149,6 +157,16 @@ export function ConfirmStep({
                 count: resolvedExpenses.length,
               })}
             </li>
+            {showDocumentSummary && (
+              <li>
+                {documentRecoverySkipped
+                  ? t('Groups.Import.Documents.skipTitle')
+                  : t('Groups.Import.Confirm.documentCount', {
+                      imported: recoveredDocumentCount,
+                      skipped: skippedDocumentCount,
+                    })}
+              </li>
+            )}
             {recurringSchedules.length > 0 && (
               <li className="flex flex-col gap-1.5">
                 <span>
@@ -260,6 +278,7 @@ export function ConfirmStep({
 
       <WizardNav
         step="confirm"
+        includeDocuments={showDocumentSummary}
         onBack={onBack}
         onContinue={onSubmit}
         continueDisabled={isSubmitting}
