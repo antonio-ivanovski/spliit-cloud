@@ -185,6 +185,7 @@ describe('ExpenseDocumentsInput — real API + real MaxIO', () => {
     sessionCookie = await createTestSession(API_URL, testEmail, testPassword)
 
     const createResult = await trpcCall<{ groupId: string }>('groups.create', {
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name: 'Doc Upload Test',
         currency: 'EUR',
