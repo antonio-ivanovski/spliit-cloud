@@ -14,6 +14,7 @@ import type {
 } from '@spliit/domain'
 
 import { safeSharesToFixedUnits } from './currency-utils'
+import { expenseTabPriority } from './focus-navigation'
 import { ParticipantPendingLabel } from './participant-pending-label'
 import { ParticipantShareRow } from './participant-share-row'
 import { ShareRowInput, type ShareInputRefs } from './share-row-input'
@@ -72,6 +73,7 @@ export function PaidForRow({
         )
         return (
           <ParticipantShareRow
+            focusPriority={expenseTabPriority.paidFor}
             key={id}
             dataId={`${id}/${splitMode}/${groupCurrency.code}`}
             participant={participant}

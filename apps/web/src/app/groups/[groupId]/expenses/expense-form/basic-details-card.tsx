@@ -77,6 +77,7 @@ import {
   getNeutralDefaultSplit,
   savedDefaultToFormValues,
 } from './default-values'
+import { expenseTabPriority } from './focus-navigation'
 import { RecurrenceSection } from './recurrence-section'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
@@ -278,6 +279,7 @@ export function BasicDetailsCard(props: {
           className="-ms-2 hidden shrink-0 sm:inline-flex"
           render={
             <Link
+              data-expense-tab-after-secondary
               href={props.cancelHref ?? `/groups/${group.id}/expenses`}
               title={tGroups('backToExpenses')}
             />
@@ -324,6 +326,7 @@ export function BasicDetailsCard(props: {
                 <div className="min-w-0 flex-1 border-s border-input">
                   <FormControl>
                     <Input
+                      data-expense-tab-priority={expenseTabPriority.title}
                       placeholder={t(`${sExpense}.TitleField.placeholder`)}
                       className="h-10 w-full rounded-none border-0 text-base shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
                       disabled={readOnly}
@@ -398,48 +401,6 @@ export function BasicDetailsCard(props: {
           )}
         />
 
-        <section className="order-3 col-span-full grid min-w-0 gap-6">
-          <div className="min-w-0">
-            <FormField
-              control={form.control}
-              name="expenseDate"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t(`${sExpense}.DateField.label`)}</FormLabel>
-                  <FormControl>
-                    <DateInput
-                      className="date-base"
-                      pickerTitle={t(`${sExpense}.DateField.label`)}
-                      presets={['yesterday', 'today', 'tomorrow']}
-                      timeZone={props.accountTimeZone}
-                      value={formatDate(field.value)}
-                      disabled={readOnly}
-                      required
-                      onValueChange={(value) => {
-                        return field.onChange(new Date(value))
-                      }}
-                    />
-                  </FormControl>
-                  <FormDescription className="hidden sm:block">
-                    {t(`${sExpense}.DateField.description`)}
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <div className="min-w-0">
-            <RecurrenceSection
-              form={form}
-              readOnly={readOnly}
-              isCopy={props.isCopy}
-              currentSequence={props.recurrenceSequence}
-              editScope={props.editScope}
-              initialRecurrence={props.initialRecurrence}
-            />
-          </div>
-        </section>
-
         <FormField
           control={form.control}
           name="amount"
@@ -481,6 +442,7 @@ export function BasicDetailsCard(props: {
                   <FormControl>
                     <AmountInput
                       {...field}
+                      data-expense-tab-priority={expenseTabPriority.amount}
                       containerClassName="min-w-0 flex-1"
                       className="h-10 w-full rounded-none border-0 text-lg font-semibold shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
                       type="text"
@@ -685,6 +647,49 @@ export function BasicDetailsCard(props: {
             </FormItem>
           )}
         />
+
+        <section className="order-3 col-span-full grid min-w-0 gap-6">
+          <div className="min-w-0">
+            <FormField
+              control={form.control}
+              name="expenseDate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t(`${sExpense}.DateField.label`)}</FormLabel>
+                  <FormControl>
+                    <DateInput
+                      data-expense-tab-priority={expenseTabPriority.date}
+                      className="date-base"
+                      pickerTitle={t(`${sExpense}.DateField.label`)}
+                      presets={['yesterday', 'today', 'tomorrow']}
+                      timeZone={props.accountTimeZone}
+                      value={formatDate(field.value)}
+                      disabled={readOnly}
+                      required
+                      onValueChange={(value) => {
+                        return field.onChange(new Date(value))
+                      }}
+                    />
+                  </FormControl>
+                  <FormDescription className="hidden sm:block">
+                    {t(`${sExpense}.DateField.description`)}
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="min-w-0">
+            <RecurrenceSection
+              form={form}
+              readOnly={readOnly}
+              isCopy={props.isCopy}
+              currentSequence={props.recurrenceSequence}
+              editScope={props.editScope}
+              initialRecurrence={props.initialRecurrence}
+            />
+          </div>
+        </section>
 
         <section className="order-5 col-span-full grid min-w-0 gap-4">
           <FormField

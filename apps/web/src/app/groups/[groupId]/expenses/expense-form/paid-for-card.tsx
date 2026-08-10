@@ -28,6 +28,7 @@ import { computePaidForFromItems, type SplitMode } from '@spliit/domain'
 import { safeSharesToFixedUnits } from './currency-utils'
 import { DefaultSplitActions } from './default-split/default-split-actions'
 import type { SavedSplit } from './default-split/split-equal'
+import { expenseTabPriority } from './focus-navigation'
 import { getRowShareErrors } from './get-row-share-errors'
 import { LeaveItemizedDialog } from './leave-itemized-dialog'
 import { PaidForRow } from './paid-for-row'
@@ -544,6 +545,7 @@ export function PaidForCard(props: {
       <CardContent>
         <div className="mb-4">
           <PaidForSplitOptionCards
+            focusPriority={expenseTabPriority.paidFor}
             value={splitMode}
             onChange={handlePaidForSplitModeChange}
             renderContent={renderPaidForContent}

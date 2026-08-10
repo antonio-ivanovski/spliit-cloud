@@ -42,6 +42,7 @@ import {
 } from './default-values'
 import { DocumentsCard } from './documents-card'
 import { ExpenseItemsCard } from './expense-items-card'
+import { useExpenseFormTabNavigation } from './focus-navigation'
 import { FormActions } from './form-actions'
 import { ItemParticipantsModal } from './item-participants-modal'
 import { PaidByCard } from './paid-by-card'
@@ -203,6 +204,8 @@ export function ExpenseForm(props: {
   // paid-for / paid-by share inputs. Focus for share errors goes through it —
   // the participant id alone would be ambiguous across the two sections.
   const shareInputRefs = useRef(new Map<ShareInputKey, HTMLInputElement>())
+  const formElementRef = useRef<HTMLFormElement>(null)
+  const tabNavigation = useExpenseFormTabNavigation(formElementRef)
 
   const groupCurrency = getCurrencyFromGroup(props.group)
 
@@ -447,8 +450,11 @@ export function ExpenseForm(props: {
   return (
     <Form {...form}>
       <form
+        ref={formElementRef}
         // oxlint-disable-next-line react/react-compiler -- handleInvalidSubmit reads shareInputRefs at submit time (event handler, never during render); the section-qualified registry replaces array-index focus for position-shifting rows.
         onSubmit={form.handleSubmit(submit, handleInvalidSubmit)}
+        onFocusCapture={tabNavigation.onFocusCapture}
+        onKeyDownCapture={tabNavigation.onKeyDownCapture}
         noValidate
         className="-mx-4 w-[calc(100%+2rem)] min-w-0 overflow-x-hidden pb-24 sm:mx-0 sm:w-auto sm:pb-20"
       >

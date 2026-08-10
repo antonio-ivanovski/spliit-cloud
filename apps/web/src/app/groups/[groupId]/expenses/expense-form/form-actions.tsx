@@ -8,6 +8,8 @@ import Link from '@/components/link'
 import { SubmitButton } from '@/components/submit-button'
 import { Button } from '@/components/ui/button'
 
+import { expenseTabPriority } from './focus-navigation'
+
 /**
  * Memoized: the action bar must not re-render on every form value change; only
  * `SubmitButton` subscribes to the submitting state (via useFormState).
@@ -44,6 +46,7 @@ export const FormActions = memo(function FormActions(props: {
         {t('cancel')}
       </Button>
       <SubmitButton
+        data-expense-tab-priority={expenseTabPriority.submit}
         disabled={props.submitDisabled}
         loadingContent={t(props.isCreate ? 'creating' : 'saving')}
       >

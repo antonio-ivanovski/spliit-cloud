@@ -28,6 +28,7 @@ import {
   enforceSharePattern,
   stepDisplayShares,
 } from './currency-utils'
+import { expenseTabPriority } from './focus-navigation'
 
 type ItemSplitMode = Exclude<SplitMode, 'ITEMIZED'>
 type ShareRow = { participant: string; shares: number | string }
@@ -321,6 +322,10 @@ export function ShareRowInput(props: {
   }
 
   const inputProps = {
+    'data-expense-tab-priority':
+      arrayName === 'paidFor'
+        ? expenseTabPriority.paidFor
+        : expenseTabPriority.paidBy,
     className: cn(
       '-my-2 w-[72px] shrink-0 px-2 text-end text-base tabular-nums',
       splitMode === 'BY_PERCENTAGE' && 'pe-5',

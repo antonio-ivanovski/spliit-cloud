@@ -16,6 +16,7 @@ export function ParticipantShareRow({
   className,
   disabled,
   dataId,
+  focusPriority,
 }: {
   participant: {
     id: string
@@ -32,6 +33,7 @@ export function ParticipantShareRow({
   className?: string
   disabled?: boolean
   dataId?: string
+  focusPriority?: number
 }) {
   return (
     <div
@@ -48,6 +50,7 @@ export function ParticipantShareRow({
       }}
     >
       <button
+        data-expense-tab-priority={focusPriority}
         type="button"
         className={cn(
           'group flex min-h-11 min-w-0 flex-1 items-center gap-2 rounded-md text-start focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-hidden',

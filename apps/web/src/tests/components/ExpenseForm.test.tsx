@@ -7,7 +7,7 @@ import type {
 import { ExpenseForm } from '@/app/groups/[groupId]/expenses/expense-form/index'
 import { ParticipantDistributionFooter } from '@/components/participant-distribution-footer'
 import { getCurrency, useCurrencies } from '@/lib/currency'
-import { useCurrencyRate } from '@/lib/hooks'
+import { useCurrencyRate, useMediaQuery } from '@/lib/hooks'
 import type { Expense } from '@/lib/schemas'
 import { act, fireEvent, render, screen, within } from '@/test/test-utils'
 
@@ -394,6 +394,7 @@ beforeEach(() => {
     sources: [],
     refresh: vi.fn(),
   })
+  vi.mocked(useMediaQuery).mockReturnValue(true)
 })
 
 // ── Tests ───────────────────────────────────────────────────────────────
@@ -462,6 +463,142 @@ describe('ExpenseForm', () => {
       />,
     )
     assertFixedSubmitBar()
+  })
+
+  it('tabs through the primary expense path before secondary controls', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const title = screen.getByRole('textbox', { name: /expense title/i })
+    const amount = screen.getByRole('textbox', { name: /^amount$/i })
+    const date = screen.getByRole('textbox', { name: /expense date/i })
+    const paidForMode = screen.getByRole('radio', {
+      name: /split.*evenly/i,
+    })
+    const paidByMode = screen.getByRole('radio', { name: /single payer/i })
+    const payer = screen.getAllByRole('combobox').at(-1)
+    if (!payer) throw new Error('Payer selector not found')
+    const submit = screen.getByRole('button', { name: /^create$/i })
+
+    await user.tab()
+    expect(title).toHaveFocus()
+    await user.tab()
+    expect(amount).toHaveFocus()
+    await user.tab()
+    expect(date).toHaveFocus()
+    await user.tab()
+    expect(paidForMode).toHaveFocus()
+    const participantButtons = Array.from(
+      document.querySelectorAll<HTMLButtonElement>('button[aria-pressed]'),
+    )
+    await user.tab()
+    expect(participantButtons[0]).toHaveFocus()
+    await user.tab()
+    expect(participantButtons[1]).toHaveFocus()
+    await user.tab()
+    expect(paidByMode).toHaveFocus()
+    await user.tab()
+    expect(payer).toHaveFocus()
+    await user.tab()
+    expect(submit).toHaveFocus()
+
+    await user.tab()
+    expect(submit).not.toHaveFocus()
+    expect(screen.getByRole('combobox', { name: 'General' })).toHaveFocus()
+  })
+
+  it('uses the same primary path on mobile and reverses it with Shift+Tab', async () => {
+    vi.mocked(useMediaQuery).mockReturnValue(false)
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        expense={mockExpense as unknown as LoadedExpense}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const title = screen.getByRole('textbox', { name: /expense title/i })
+    const amount = screen.getByRole('textbox', { name: /^amount$/i })
+    const date = screen.getByRole('textbox', { name: /expense date/i })
+    const submit = screen
+      .getAllByRole('button', { name: /^save$/i })
+      .find((button) => (button as HTMLButtonElement).type === 'submit')
+    if (!submit) throw new Error('Submit button not found')
+    const payer = screen.getAllByRole('combobox').at(-1)
+    if (!payer) throw new Error('Payer selector not found')
+
+    await user.tab()
+    expect(title).toHaveFocus()
+    await user.tab()
+    expect(amount).toHaveFocus()
+    await user.tab()
+    expect(date).toHaveFocus()
+
+    fireEvent.pointerDown(submit)
+    act(() => submit.focus())
+    await user.tab({ shift: true })
+    expect(payer).toHaveFocus()
+  })
+
+  it('inserts visible item and share inputs into the primary path', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    await user.click(screen.getByRole('button', { name: /show items/i }))
+    await user.click(screen.getByRole('button', { name: /add item/i }))
+    const date = screen.getByRole('textbox', { name: /expense date/i })
+    const itemTitle = screen.getByRole('textbox', { name: 'Item' })
+    const itemCost = screen.getByRole('textbox', { name: 'Cost' })
+    const itemQuantity = screen.getByRole('textbox', { name: 'Qty' })
+
+    act(() => date.focus())
+    await user.tab()
+    expect(itemTitle).toHaveFocus()
+    await user.tab()
+    expect(itemCost).toHaveFocus()
+    await user.tab()
+    expect(itemQuantity).toHaveFocus()
+
+    const paidForAmount = screen.getByRole('radio', {
+      name: /split.*by amount/i,
+    })
+    await user.click(paidForAmount)
+    act(() => paidForAmount.focus())
+    await user.tab()
+    expect(
+      document.querySelectorAll<HTMLButtonElement>('button[aria-pressed]')[0],
+    ).toHaveFocus()
+    await user.tab()
+    expect(
+      screen.getByRole('textbox', { name: 'Amount for Alice' }),
+    ).toHaveFocus()
+
+    const paidByAmount = screen.getByRole('radio', {
+      name: /multiple payers.*by amount/i,
+    })
+    await user.click(paidByAmount)
+    act(() => paidByAmount.focus())
+    await user.tab()
+    expect(
+      Array.from(
+        document.querySelectorAll<HTMLButtonElement>('button[aria-pressed]'),
+      ).at(-2),
+    ).toHaveFocus()
+    await user.tab()
+    expect(
+      screen.getAllByRole('textbox', { name: 'Amount for Alice' }).at(-1),
+    ).toHaveFocus()
   })
 
   it('collapses an empty expense items section until requested', async () => {

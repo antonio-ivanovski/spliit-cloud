@@ -28,6 +28,7 @@ import {
   enforceCurrencyPattern,
   enforceIntegerPattern,
 } from './currency-utils'
+import { expenseTabPriority } from './focus-navigation'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
 type ItemSplitMode = Exclude<SplitMode, 'ITEMIZED'>
@@ -152,6 +153,7 @@ export function ExpenseItemRow({
                   <FormControl>
                     <Input
                       {...field}
+                      data-expense-tab-priority={expenseTabPriority.item}
                       id={`expense-item-title-${itemIndex}`}
                       aria-label={displayColumnItem}
                       className="h-9"
@@ -182,6 +184,7 @@ export function ExpenseItemRow({
                 <FormItem>
                   <FormControl>
                     <AmountInput
+                      data-expense-tab-priority={expenseTabPriority.item}
                       currency={groupCurrency}
                       aria-label={displayColumnCost}
                       containerClassName="w-full min-w-0"
@@ -240,6 +243,7 @@ export function ExpenseItemRow({
                         className="pointer-events-none absolute start-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground"
                       />
                       <Input
+                        data-expense-tab-priority={expenseTabPriority.item}
                         aria-label={displayColumnQuantity}
                         className="h-9 ps-7 pe-2 text-end tabular-nums"
                         type="text"

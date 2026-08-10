@@ -20,6 +20,7 @@ import type { AppRouterOutput } from '@spliit/api/router'
 import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
 import { type SplitMode } from '@spliit/domain'
 
+import { expenseTabPriority } from './focus-navigation'
 import { getRowShareErrors } from './get-row-share-errors'
 import { PaidByRow } from './paid-by-row'
 import { RowErrorSummary } from './row-error-summary'
@@ -170,7 +171,7 @@ export function PaidByCard(props: {
           render={() => {
             const selectedPayer = paidByList[0]?.participant ?? ''
             return (
-              <FormItem>
+              <FormItem data-expense-tab-priority={expenseTabPriority.paidBy}>
                 <ParticipantSelector
                   participants={group.participants}
                   mode="single"
@@ -292,6 +293,7 @@ export function PaidByCard(props: {
       <CardContent>
         <div className="mb-4">
           <PaidBySplitOptionCards
+            focusPriority={expenseTabPriority.paidBy}
             value={{
               isMultiPayer: isMultiPayer ?? false,
               splitMode: paidBySplitMode,

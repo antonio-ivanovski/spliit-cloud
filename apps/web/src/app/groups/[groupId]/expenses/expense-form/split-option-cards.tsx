@@ -152,6 +152,7 @@ export function PaidBySplitOptionCards(props: {
   onChange: (next: { isMultiPayer: boolean; splitMode: SplitMode }) => void
   readOnly?: boolean
   renderContent?: (option: PaidBySplitOption) => ReactNode
+  focusPriority?: number
 }) {
   const { value, onChange, readOnly, renderContent } = props
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
@@ -192,6 +193,7 @@ export function PaidBySplitOptionCards(props: {
                 value={opt.id}
                 card
                 disabled={readOnly}
+                data-expense-tab-priority={props.focusPriority}
                 content={selected ? renderContent?.(opt) : undefined}
               >
                 <OptionHeader
@@ -217,6 +219,7 @@ export function PaidBySplitOptionCards(props: {
                 value={opt.id}
                 card
                 disabled={readOnly}
+                data-expense-tab-priority={props.focusPriority}
                 content={selected ? renderContent?.(opt) : undefined}
                 aria-label={`${multiSectionLabel} \u2014 ${title}`}
               >
@@ -246,6 +249,7 @@ export function PaidForSplitOptionCards(props: {
    * card will appear as selected.
    */
   hiddenModes?: Exclude<SplitMode, 'ITEMIZED'>[]
+  focusPriority?: number
 }) {
   const { value, onChange, readOnly, renderContent, hiddenModes } = props
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
@@ -277,6 +281,7 @@ export function PaidForSplitOptionCards(props: {
               value={opt.id}
               card
               disabled={disabled}
+              data-expense-tab-priority={props.focusPriority}
               content={selected ? renderContent?.(opt.id) : undefined}
               aria-label={t('splitOptionAria', { title })}
             >
