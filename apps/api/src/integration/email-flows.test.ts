@@ -135,6 +135,7 @@ describe.skipIf(!maildevReachable)('Email invitation flow — real DB', () => {
     const caller = makeAdminCaller()
 
     const result = await caller.create({
+      requestId: crypto.randomUUID(),
       groupId,
       email: inviteeEmail,
       role: 'MEMBER',

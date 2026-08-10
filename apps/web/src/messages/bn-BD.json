@@ -1081,7 +1081,11 @@
         "monthly": "মাসিক"
       },
       "recurringEditScopeOccurrence": "শুধুমাত্র এই ঘটনা সম্পাদনা করা হচ্ছে",
-      "recurringEditScopeFuture": "এই এবং ভবিষ্যতের ঘটনা সম্পাদনা করা হচ্ছে"
+      "recurringEditScopeFuture": "এই এবং ভবিষ্যতের ঘটনা সম্পাদনা করা হচ্ছে",
+      "conflictTitle": "খরচ পরিবর্তিত হয়েছে",
+      "conflictDescription": "অন্য কোনো সদস্য বা ডিভাইস এই খরচটি পরিবর্তন করেছে। সর্বশেষ সংস্করণটি আবার লোড করুন অথবা আপনার খসড়াটি রেখে দিন।",
+      "conflictKeepDraft": "আমার খসড়া রাখুন",
+      "conflictReload": "সর্বশেষটি আবার লোড করুন"
     },
     "Income": {
       "DateField": {

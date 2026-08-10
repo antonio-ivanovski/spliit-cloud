@@ -1262,7 +1262,11 @@
         "monthly": "monthly vibes"
       },
       "recurringEditScopeOccurrence": "editing only this repeat",
-      "recurringEditScopeFuture": "editing this and future repeats"
+      "recurringEditScopeFuture": "editing this and future repeats",
+      "conflictTitle": "expense updated",
+      "conflictDescription": "Someone else or another device updated this expense. Reload the newest version or keep your draft.",
+      "conflictKeepDraft": "keep my draft",
+      "conflictReload": "reload newest"
     },
     "Income": {
       "DateField": {

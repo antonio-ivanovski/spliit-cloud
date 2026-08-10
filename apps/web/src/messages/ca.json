@@ -692,7 +692,11 @@
         "timeZonePending": "S’està esperant la zona horària del compte abans de poder activar la recurrència."
       },
       "recurringEditScopeOccurrence": "Editant només aquesta ocurrència",
-      "recurringEditScopeFuture": "Editant aquesta ocurrència i les futures"
+      "recurringEditScopeFuture": "Editant aquesta ocurrència i les futures",
+      "conflictTitle": "La despesa ha canviat",
+      "conflictDescription": "Un altre membre o dispositiu ha modificat aquesta despesa. Torna a carregar la versió més recent o conserva l’esborrany.",
+      "conflictKeepDraft": "Conserva el meu esborrany",
+      "conflictReload": "Carrega l’última versió"
     },
     "amountField": {
       "label": "Quantitat",

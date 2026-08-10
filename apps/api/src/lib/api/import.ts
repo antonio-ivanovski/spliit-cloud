@@ -39,6 +39,7 @@ import {
   planNotificationForActivity,
 } from './activities'
 import { getApiBoss } from './boss'
+import { CREATE_OPERATIONS, deriveCreateToken } from './idempotency'
 import {
   buildRecurringTemplate,
   createSeriesForExpense,
@@ -120,12 +121,33 @@ export type ImportResult = {
   importedExpenses: number
   sourceGroupId: string | null
   invites: ImportInviteResult[]
+  emailDispatches?: ImportEmailDispatch[]
+}
+
+export type ImportEmailDispatch = {
+  invitationId: string
+  groupId: string
+  groupName: string
+  inviterDisplayName: string
+  inviterRole: GroupRole
+  recipientEmail: string
+  recipientIsExistingUser: boolean
+  temporaryName?: string | null
+  sourceProvider?: string
+  expenseCount?: number
+  totalAmount?: number
+  currencyCode?: string | null
 }
 
 export async function importGroup(
   input: ImportInput,
-  actor: { accountId: string },
+  actor: {
+    accountId: string
+    idempotencyRequestId?: string
+  },
+  options?: { tx?: Prisma.TransactionClient },
 ): Promise<ImportResult> {
+  const client = options?.tx ?? prisma
   // Legacy spliit.app export only carries recurrenceRule. Matching historical
   // rows collapse into one destination series; Cloud series metadata is never
   // accepted on this transport.
@@ -148,7 +170,7 @@ export async function importGroup(
   } | null = null
 
   if (input.targetGroupId) {
-    const existing = await prisma.group.findUnique({
+    const existing = await client.group.findUnique({
       where: { id: input.targetGroupId },
       select: {
         id: true,
@@ -319,7 +341,7 @@ export async function importGroup(
   )
 
   const boss = await getApiBoss()
-  const baseResult = await prisma.$transaction(async (tx) => {
+  const run = async (tx: Prisma.TransactionClient) => {
     let groupId: string
     let ledgerId: string
 
@@ -782,18 +804,21 @@ export async function importGroup(
         affectedParticipants: [...affectedParticipantIds],
       },
     }
-  })
+  }
+  const baseResult = options?.tx
+    ? await run(options.tx)
+    : await prisma.$transaction(run)
 
-  const { createEmailInvitation, createLinkInvitation, sendInvitationEmail } =
+  const { createEmailInvitation, createLinkInvitation } =
     await import('../invitations')
-  const group = await prisma.group.findUnique({
+  const group = await client.group.findUnique({
     where: { id: baseResult.groupId },
     select: { name: true },
   })
   if (!group) {
     throw new Error('Group not found after import commit')
   }
-  const inviter = await prisma.account.findUnique({
+  const inviter = await client.account.findUnique({
     where: { id: actor.accountId },
     select: { name: true, email: true },
   })
@@ -804,6 +829,7 @@ export async function importGroup(
     'Someone'
 
   const inviteResults: ImportInviteResult[] = []
+  const emailDispatches: ImportEmailDispatch[] = []
   for (const invite of baseResult.inviteMappings) {
     if (invite.mode === 'INVITE_BY_EMAIL') {
       const email = invite.email!
@@ -814,13 +840,14 @@ export async function importGroup(
         inviterAccountId: actor.accountId,
         temporaryName: invite.sourceName,
         ledgerParticipantId: invite.destLedgerParticipantId,
+        tx: options?.tx,
       })
-      const existingAccount = await prisma.account.findFirst({
+      const existingAccount = await client.account.findFirst({
         where: { email: { equals: email.toLowerCase(), mode: 'insensitive' } },
         select: { id: true },
       })
       if (!existingAccount) {
-        await sendInvitationEmail({
+        emailDispatches.push({
           invitationId: invitation.id,
           groupId: baseResult.groupId,
           groupName: group.name,
@@ -848,6 +875,17 @@ export async function importGroup(
         inviterAccountId: actor.accountId,
         temporaryName: invite.sourceName,
         ledgerParticipantId: invite.destLedgerParticipantId,
+        tx: options?.tx,
+        ...(actor.idempotencyRequestId
+          ? {
+              token: deriveCreateToken({
+                accountId: actor.accountId,
+                operation: CREATE_OPERATIONS.import,
+                requestId: actor.idempotencyRequestId,
+                discriminator: `import-link:${invite.sourceName}`,
+              }),
+            }
+          : {}),
       })
       inviteResults.push({
         sourceName: invite.sourceName,
@@ -864,5 +902,6 @@ export async function importGroup(
     importedExpenses: baseResult.importedExpenses,
     sourceGroupId: baseResult.sourceGroupId,
     invites: inviteResults,
+    emailDispatches,
   }
 }

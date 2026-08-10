@@ -692,7 +692,11 @@
         "timeZonePending": "Esperando la zona horaria de tu cuenta antes de poder activar la recurrencia."
       },
       "recurringEditScopeOccurrence": "Editar solo esta ocurrencia",
-      "recurringEditScopeFuture": "Editar esta y las futuras ocurrencias"
+      "recurringEditScopeFuture": "Editar esta y las futuras ocurrencias",
+      "conflictTitle": "Gasto modificado",
+      "conflictDescription": "Otro miembro o dispositivo ha modificado este gasto. Vuelve a cargar la versión más reciente o conserva tu borrador.",
+      "conflictKeepDraft": "Conservar mi borrador",
+      "conflictReload": "Cargar la última versión"
     },
     "amountField": {
       "label": "Cantidad",

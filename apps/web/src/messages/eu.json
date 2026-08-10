@@ -692,7 +692,11 @@
         "timeZonePending": "Kontuaren ordu-zonaren zain, errepikapena gaitu ahal izateko."
       },
       "recurringEditScopeOccurrence": "Editatu agerraldi hau soilik",
-      "recurringEditScopeFuture": "Editatu agerraldi hau eta etorkizunekoak"
+      "recurringEditScopeFuture": "Editatu agerraldi hau eta etorkizunekoak",
+      "conflictTitle": "Gastua aldatu da",
+      "conflictDescription": "Beste kide edo gailu batek gastu hau aldatu du. Kargatu berriro azken bertsioa edo gorde zirriborroa.",
+      "conflictKeepDraft": "Gorde nire zirriborroa",
+      "conflictReload": "Kargatu azken bertsioa"
     },
     "amountField": {
       "label": "Zenbatekoa",

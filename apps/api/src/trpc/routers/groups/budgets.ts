@@ -8,6 +8,7 @@ import {
   type BudgetAlertType,
   type GroupBudget,
   type GroupRole,
+  type Prisma,
 } from '@spliit/db'
 import {
   budgetPeriodSchema,
@@ -32,6 +33,11 @@ import {
   mapExpenseListRow,
   type ExpenseListDbRow,
 } from '../../../lib/api/expenses/queries'
+import {
+  CREATE_OPERATIONS,
+  createRequestIdSchema,
+  runIdempotentCreate,
+} from '../../../lib/api/idempotency'
 import {
   assertCanManageOwnedResource,
   canManageOwnedResource,
@@ -384,8 +390,9 @@ async function establishAlertBaseline(
   budget: GroupBudget,
   currentSummary: Awaited<ReturnType<typeof summary>>,
   resetCurrentPeriod = false,
+  client: Prisma.TransactionClient | typeof prisma = prisma,
 ) {
-  await prisma.$transaction(async (tx) => {
+  const run = async (tx: Prisma.TransactionClient) => {
     if (resetCurrentPeriod) {
       await tx.groupBudgetAlert.deleteMany({
         where: {
@@ -407,7 +414,9 @@ async function establishAlertBaseline(
       ],
       skipDuplicates: true,
     })
-  })
+  }
+  if (client === prisma) await prisma.$transaction(run)
+  else await run(client)
 }
 
 const list = protectedProcedure
@@ -467,7 +476,7 @@ const get = protectedProcedure
   })
 
 const create = protectedProcedure
-  .input(budgetInput)
+  .input(budgetInput.extend({ requestId: createRequestIdSchema }))
   .output(createBudgetOutputSchema)
   .mutation(async ({ input, ctx }) => {
     const { group, member } = await loadGroupContext({
@@ -509,36 +518,46 @@ const create = protectedProcedure
     // boundaries. Fall back to UTC (the stored column default) when the account
     // has not initialized a timezone yet, rather than blocking budget creation.
     const timeZone = preference?.timeZone ?? 'UTC'
-    const budget = await prisma.groupBudget.create({
-      data: {
-        id: randomUUID(),
-        groupId: group.id,
-        ledgerId: group.ledgerId,
-        name: input.name,
-        amount: input.amount,
-        period: input.periodType,
-        timeZone,
-        customStartDate:
-          input.periodType === 'CUSTOM' ? input.customStart : null,
-        customEndDate: input.periodType === 'CUSTOM' ? input.customEnd : null,
-        categoryScope: input.categoryScope,
-        categoryNodeIds,
-        participantScope: input.participantScope,
-        participantIds: input.participantIds,
-        notifyTrending: input.notifyTrending,
-        notifyOver: input.notifyOver,
-        createdByAccountId: ctx.auth.user.id,
+    const { value } = await runIdempotentCreate({
+      accountId: ctx.auth.user.id,
+      operation: CREATE_OPERATIONS.budget,
+      requestId: input.requestId,
+      input: { ...input, requestId: undefined },
+      execute: async (tx) => {
+        const budget = await tx.groupBudget.create({
+          data: {
+            id: randomUUID(),
+            groupId: group.id,
+            ledgerId: group.ledgerId,
+            name: input.name,
+            amount: input.amount,
+            period: input.periodType,
+            timeZone,
+            customStartDate:
+              input.periodType === 'CUSTOM' ? input.customStart : null,
+            customEndDate:
+              input.periodType === 'CUSTOM' ? input.customEnd : null,
+            categoryScope: input.categoryScope,
+            categoryNodeIds,
+            participantScope: input.participantScope,
+            participantIds: input.participantIds,
+            notifyTrending: input.notifyTrending,
+            notifyOver: input.notifyOver,
+            createdByAccountId: ctx.auth.user.id,
+          },
+        })
+        const currentSummary = await summary(budget)
+        await establishAlertBaseline(budget, currentSummary, false, tx)
+        return {
+          budget: output(budget, currentSummary, {
+            role: member.role,
+            accountId: ctx.auth.user.id,
+            groupArchived: group.archived,
+          }),
+        }
       },
     })
-    const currentSummary = await summary(budget)
-    await establishAlertBaseline(budget, currentSummary)
-    return {
-      budget: output(budget, currentSummary, {
-        role: member.role,
-        accountId: ctx.auth.user.id,
-        groupArchived: group.archived,
-      }),
-    }
+    return value
   })
 
 const update = protectedProcedure

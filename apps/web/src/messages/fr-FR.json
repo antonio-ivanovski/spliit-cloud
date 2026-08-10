@@ -692,7 +692,11 @@
         "timeZonePending": "En attente du fuseau horaire de votre compte avant de pouvoir activer la récurrence."
       },
       "recurringEditScopeOccurrence": "Modifier uniquement cette occurrence",
-      "recurringEditScopeFuture": "Modifier cette occurrence et les suivantes"
+      "recurringEditScopeFuture": "Modifier cette occurrence et les suivantes",
+      "conflictTitle": "Dépense modifiée",
+      "conflictDescription": "Un autre membre ou appareil a modifié cette dépense. Rechargez la dernière version ou conservez votre brouillon.",
+      "conflictKeepDraft": "Conserver mon brouillon",
+      "conflictReload": "Recharger la dernière version"
     },
     "amountField": {
       "label": "Montant",

@@ -95,6 +95,7 @@ describe('Multi-payer expenses — real DB', () => {
   }> {
     const caller = makeCaller()
     const { groupId } = await caller.create({
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name,
         currency: '$',
@@ -161,6 +162,7 @@ describe('Multi-payer expenses — real DB', () => {
     )
 
     const result = await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Trip',
@@ -224,6 +226,7 @@ describe('Multi-payer expenses — real DB', () => {
     const { groupId, participants } = await createUsdGroup(`MP-ByPct-${runId}`)
 
     const result = await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Split 50/50',
@@ -259,6 +262,7 @@ describe('Multi-payer expenses — real DB', () => {
     const { groupId, participants } = await createUsdGroup(`MP-Evenly-${runId}`)
 
     const result = await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Even Pay',
@@ -300,6 +304,7 @@ describe('Multi-payer expenses — real DB', () => {
     })
 
     const result = await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'NYC trip',
@@ -382,6 +387,7 @@ describe('Multi-payer expenses — real DB', () => {
     })
 
     const result = await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'XC BY_AMOUNT',
@@ -415,6 +421,7 @@ describe('Multi-payer expenses — real DB', () => {
     })
 
     const create = await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'XC Update',
@@ -433,6 +440,12 @@ describe('Multi-payer expenses — real DB', () => {
     })
 
     await makeCaller().expenses.update({
+      expectedVersion: (
+        await prisma.expense.findUniqueOrThrow({
+          where: { id: create.expenseId },
+          select: { version: true },
+        })
+      ).version,
       groupId,
       expenseId: create.expenseId,
       expense: {
@@ -466,6 +479,7 @@ describe('Multi-payer expenses — real DB', () => {
     })
 
     const result = await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'XC Get',
@@ -498,6 +512,7 @@ describe('Multi-payer expenses — real DB', () => {
     const { groupId, participants } = await createUsdGroup(`MP-Down-${runId}`)
 
     const create = await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Multi',
@@ -518,6 +533,12 @@ describe('Multi-payer expenses — real DB', () => {
     })
 
     await makeCaller().expenses.update({
+      expectedVersion: (
+        await prisma.expense.findUniqueOrThrow({
+          where: { id: create.expenseId },
+          select: { version: true },
+        })
+      ).version,
       groupId,
       expenseId: create.expenseId,
       expense: {
@@ -547,6 +568,7 @@ describe('Multi-payer expenses — real DB', () => {
     const { groupId, participants } = await createUsdGroup(`MP-Up-${runId}`)
 
     const create = await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Single',
@@ -564,6 +586,12 @@ describe('Multi-payer expenses — real DB', () => {
     })
 
     await makeCaller().expenses.update({
+      expectedVersion: (
+        await prisma.expense.findUniqueOrThrow({
+          where: { id: create.expenseId },
+          select: { version: true },
+        })
+      ).version,
       groupId,
       expenseId: create.expenseId,
       expense: {
@@ -603,6 +631,7 @@ describe('Multi-payer expenses — real DB', () => {
     past.setUTCDate(past.getUTCDate() - 14)
 
     const result = await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Weekly groceries',
@@ -684,6 +713,7 @@ describe('Multi-payer expenses — real DB', () => {
     // Multi-payer 2-row expense: Alice paid 70% of $100, Bob paid 30%.
     // Both share the cost evenly (50% each).
     await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'CSV row',
@@ -733,6 +763,7 @@ describe('Multi-payer expenses — real DB', () => {
     const { groupId, participants } = await createUsdGroup(`MP-JSON-${runId}`)
 
     await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'JSON row',
@@ -862,6 +893,7 @@ describe('Multi-payer expenses — real DB', () => {
     })) as unknown as Expense[]
 
     const result = await makeCaller().import({
+      requestId: crypto.randomUUID(),
       targetGroupId: groupId,
       participants: parsed.participants.map((p) => ({
         mode: 'LINK_EXISTING_PARTICIPANT' as const,

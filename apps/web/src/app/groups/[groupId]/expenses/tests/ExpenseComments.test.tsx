@@ -106,6 +106,7 @@ describe('ExpenseComments', () => {
         groupId: 'group-1',
         expenseId: 'expense-1',
         body: 'Dinner was great',
+        requestId: expect.any(String),
       }),
     )
     expect(mocks.invalidateComments).toHaveBeenCalledWith({
@@ -137,6 +138,7 @@ describe('ExpenseComments', () => {
         groupId: 'group-1',
         expenseId: 'expense-1',
         body: 'Sent with Enter',
+        requestId: expect.any(String),
       }),
     )
   })

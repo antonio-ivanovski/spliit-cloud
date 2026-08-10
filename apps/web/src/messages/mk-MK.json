@@ -972,7 +972,11 @@
         "timeZonePending": "Се чека временската зона на сметката пред да може да се овозможи повторувањето."
       },
       "recurringEditScopeOccurrence": "Уредување само на ова појавување",
-      "recurringEditScopeFuture": "Уредување на ова и идните појавувања"
+      "recurringEditScopeFuture": "Уредување на ова и идните појавувања",
+      "conflictTitle": "Трошокот е изменет",
+      "conflictDescription": "Друг член или уред го изменил овој трошок. Вчитајте ја најновата верзија или зачувајте го нацртот.",
+      "conflictKeepDraft": "Зачувај го мојот нацрт",
+      "conflictReload": "Вчитај ја најновата верзија"
     },
     "amountField": {
       "label": "Износ",

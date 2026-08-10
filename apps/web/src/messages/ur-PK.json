@@ -1081,7 +1081,11 @@
         "monthly": "ماہانہ"
       },
       "recurringEditScopeOccurrence": "صرف اس واقعہ میں ترمیم",
-      "recurringEditScopeFuture": "اس اور مستقبل کے واقعات میں ترمیم"
+      "recurringEditScopeFuture": "اس اور مستقبل کے واقعات میں ترمیم",
+      "conflictTitle": "خرچ تبدیل ہو گیا",
+      "conflictDescription": "کسی دوسرے رکن یا ڈیوائس نے اس خرچ کو تبدیل کر دیا ہے۔ تازہ ترین ورژن دوبارہ لوڈ کریں یا اپنا مسودہ محفوظ رکھیں۔",
+      "conflictKeepDraft": "میرا مسودہ محفوظ رکھیں",
+      "conflictReload": "تازہ ترین ورژن لوڈ کریں"
     },
     "Income": {
       "DateField": {

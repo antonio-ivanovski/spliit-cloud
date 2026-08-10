@@ -62,6 +62,7 @@ describe('Expense items — real DB', () => {
   }> {
     const caller = makeCaller()
     const { groupId } = await caller.create({
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name,
         currency: '$',
@@ -121,6 +122,7 @@ describe('Expense items — real DB', () => {
     )
 
     const expense = await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Itemized groceries',
@@ -232,10 +234,12 @@ describe('Expense items — real DB', () => {
     }
 
     const first = await caller.expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: { ...baseExpense, title: 'First copy' },
     })
     const second = await caller.expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: { ...baseExpense, title: 'Second copy' },
     })
@@ -260,6 +264,7 @@ describe('Expense items — real DB', () => {
     )
 
     const expense = await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Under-sum items',
@@ -314,6 +319,7 @@ describe('Expense items — real DB', () => {
     )
 
     const expense = await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Evenly with doc items',
@@ -372,6 +378,7 @@ describe('Expense items — real DB', () => {
 
     // Create in ITEMIZED with items having participants
     const { expenseId } = await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Itemized to even',
@@ -408,6 +415,12 @@ describe('Expense items — real DB', () => {
 
     // Update to EVENLY (leaving ITEMIZED)
     await makeCaller().expenses.update({
+      expectedVersion: (
+        await prisma.expense.findUniqueOrThrow({
+          where: { id: expenseId },
+          select: { version: true },
+        })
+      ).version,
       groupId,
       expenseId,
       expense: {
@@ -462,6 +475,7 @@ describe('Expense items — real DB', () => {
 
     // Create in ITEMIZED with 1 item
     const { expenseId } = await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Itemized stay',
@@ -494,6 +508,12 @@ describe('Expense items — real DB', () => {
 
     // Update with different items (replace first, add second)
     await makeCaller().expenses.update({
+      expectedVersion: (
+        await prisma.expense.findUniqueOrThrow({
+          where: { id: expenseId },
+          select: { version: true },
+        })
+      ).version,
       groupId,
       expenseId,
       expense: {
@@ -555,6 +575,7 @@ describe('Expense items — real DB', () => {
 
     await expect(
       makeCaller().expenses.create({
+        requestId: crypto.randomUUID(),
         groupId,
         expense: {
           title: 'Over budget',
@@ -595,6 +616,7 @@ describe('Expense items — real DB', () => {
 
     await expect(
       makeCaller().expenses.create({
+        requestId: crypto.randomUUID(),
         groupId,
         expense: {
           title: 'No items',
@@ -625,6 +647,7 @@ describe('Expense items — real DB', () => {
     )
 
     const { expenseId } = await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Get/List test',
@@ -690,6 +713,7 @@ describe('Expense items — real DB', () => {
     )
 
     const { expenseId } = await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Multi-quantity item',
@@ -739,6 +763,7 @@ describe('Expense items — real DB', () => {
     )
 
     const { expenseId } = await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Itemized with remainder',
@@ -807,6 +832,7 @@ describe('Expense items — real DB', () => {
     )
 
     const { expenseId } = await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Itemized by percent',
@@ -868,6 +894,7 @@ describe('Expense items — real DB', () => {
     )
 
     const { expenseId } = await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'To delete with items',
@@ -938,6 +965,7 @@ describe('Expense items — real DB', () => {
 
     await expect(
       makeCaller().expenses.create({
+        requestId: crypto.randomUUID(),
         groupId,
         expense: {
           title: 'Bad shares',
@@ -981,6 +1009,7 @@ describe('Expense items — real DB', () => {
 
     await expect(
       makeCaller().expenses.create({
+        requestId: crypto.randomUUID(),
         groupId,
         expense: {
           title: 'Duplicate participant',

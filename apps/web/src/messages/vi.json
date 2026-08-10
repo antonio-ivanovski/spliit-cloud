@@ -1061,7 +1061,11 @@
       "createCopy": "Tạo bản sao {title}",
       "editTitle": "Chỉnh sửa chi phí {title}",
       "recurringEditScopeOccurrence": "Chỉ lần này",
-      "recurringEditScopeFuture": "Lần này và các lần sau"
+      "recurringEditScopeFuture": "Lần này và các lần sau",
+      "conflictTitle": "Khoản chi đã thay đổi",
+      "conflictDescription": "Một thành viên hoặc thiết bị khác đã thay đổi khoản chi này. Tải lại phiên bản mới nhất hoặc giữ bản nháp của bạn.",
+      "conflictKeepDraft": "Giữ bản nháp của tôi",
+      "conflictReload": "Tải lại bản mới nhất"
     },
     "amountField": {
       "label": "Số tiền",

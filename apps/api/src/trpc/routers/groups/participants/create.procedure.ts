@@ -1,8 +1,13 @@
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
-import { GroupType, LedgerParticipantKind, prisma } from '@spliit/db'
+import { GroupType, LedgerParticipantKind } from '@spliit/db'
 
+import {
+  CREATE_OPERATIONS,
+  createRequestIdSchema,
+  runIdempotentCreate,
+} from '../../../../lib/api/idempotency'
 import { randomId } from '../../../../lib/api/shared'
 import { loadGroupContext, protectedProcedure } from '../../../init'
 import { createParticipantOutputSchema } from '../../../outputs/members'
@@ -15,6 +20,7 @@ export const createParticipantProcedure = protectedProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
+      requestId: createRequestIdSchema,
       displayName: z.string().trim().min(1).max(120),
     }),
   )
@@ -44,18 +50,26 @@ export const createParticipantProcedure = protectedProcedure
       })
     }
 
-    const participant = await prisma.ledgerParticipant.create({
-      data: {
-        id: randomId(),
-        ledgerId: group.ledgerId,
-        kind: LedgerParticipantKind.UNLINKED_PARTICIPANT,
-        displayName: input.displayName,
-      },
-      select: { id: true, displayName: true },
+    const { value } = await runIdempotentCreate({
+      accountId: ctx.auth.user.id,
+      operation: CREATE_OPERATIONS.participant,
+      requestId: input.requestId,
+      input: { groupId: input.groupId, displayName: input.displayName },
+      execute: (tx) =>
+        tx.ledgerParticipant
+          .create({
+            data: {
+              id: randomId(),
+              ledgerId: group.ledgerId,
+              kind: LedgerParticipantKind.UNLINKED_PARTICIPANT,
+              displayName: input.displayName,
+            },
+            select: { id: true, displayName: true },
+          })
+          .then((participant) => ({
+            ledgerParticipantId: participant.id,
+            displayName: participant.displayName!,
+          })),
     })
-
-    return {
-      ledgerParticipantId: participant.id,
-      displayName: participant.displayName!,
-    }
+    return value
   })

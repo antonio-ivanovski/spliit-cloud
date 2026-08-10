@@ -174,6 +174,20 @@ export async function promoteUploadedDocument(
 
   const permanentKey = key.replace(/^tmp\//, 'documents/')
 
+  // A create retry may arrive after the first request copied and deleted the
+  // temporary object but before its response reached the browser.
+  try {
+    await getS3Client().send(
+      new HeadObjectCommand({
+        Bucket: env.S3_UPLOAD_BUCKET,
+        Key: permanentKey,
+      }),
+    )
+    return publicUrlForKey(permanentKey)
+  } catch {
+    // Destination is absent; continue with the normal promotion.
+  }
+
   await getS3Client().send(
     new CopyObjectCommand({
       Bucket: env.S3_UPLOAD_BUCKET,

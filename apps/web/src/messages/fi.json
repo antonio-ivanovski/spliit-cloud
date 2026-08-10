@@ -686,7 +686,11 @@
         "timeZonePending": "Odotetaan tilisi aikavyöhykettä, ennen kuin toistuvuus voidaan ottaa käyttöön."
       },
       "recurringEditScopeOccurrence": "Muokataan vain tätä esiintymää",
-      "recurringEditScopeFuture": "Muokataan tätä ja tulevia esiintymiä"
+      "recurringEditScopeFuture": "Muokataan tätä ja tulevia esiintymiä",
+      "conflictTitle": "Kulua muutettiin",
+      "conflictDescription": "Toinen jäsen tai laite muutti tätä kulua. Lataa uusin versio tai säilytä luonnoksesi.",
+      "conflictKeepDraft": "Säilytä luonnokseni",
+      "conflictReload": "Lataa uusin versio"
     },
     "amountField": {
       "label": "Summa",

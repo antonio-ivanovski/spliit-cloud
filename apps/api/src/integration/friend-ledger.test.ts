@@ -170,6 +170,7 @@ describe('Friend ledger — real DB', () => {
   // ───────────────────────────────────────────────────────────────────
   it('direct-accept: creates friend ledger with two ADMIN/ACTIVE members and friendPairKey', async () => {
     const result = await makeCaller().create({
+      requestId: crypto.randomUUID(),
       friendFormValues: {
         peerAccountId: peerId,
         currency: '€',
@@ -224,6 +225,7 @@ describe('Friend ledger — real DB', () => {
   // ───────────────────────────────────────────────────────────────────
   it('direct-accept via email: resolves existing accountId, no invitation row', async () => {
     const result = await makeCaller().create({
+      requestId: crypto.randomUUID(),
       friendFormValues: {
         peerEmail: thirdEmail,
         currency: '$',
@@ -263,6 +265,7 @@ describe('Friend ledger — real DB', () => {
     const pendingEmail = `pending-${runId}@unknown.example`
 
     const result = await makeCaller().create({
+      requestId: crypto.randomUUID(),
       friendFormValues: {
         peerEmail: pendingEmail,
         temporaryName: 'Pending Friend',
@@ -307,6 +310,7 @@ describe('Friend ledger — real DB', () => {
   // ───────────────────────────────────────────────────────────────────
   it('pending link: creates group with caller only, PENDING LINK invitation, returns inviteUrl', async () => {
     const result = await makeCaller().create({
+      requestId: crypto.randomUUID(),
       friendFormValues: {
         useLink: true,
         temporaryName: 'Link Friend',
@@ -364,6 +368,7 @@ describe('Friend ledger — real DB', () => {
         email: aEmail,
         name: 'A',
       }).create({
+        requestId: crypto.randomUUID(),
         friendFormValues: {
           peerAccountId: bId,
           currency: '$',
@@ -378,6 +383,7 @@ describe('Friend ledger — real DB', () => {
         email: aEmail,
         name: 'A',
       }).create({
+        requestId: crypto.randomUUID(),
         friendFormValues: {
           peerAccountId: bId,
           currency: '$',
@@ -400,6 +406,7 @@ describe('Friend ledger — real DB', () => {
 
     // Create a pending FRIEND email invitation
     const created = await makeCaller().create({
+      requestId: crypto.randomUUID(),
       friendFormValues: {
         peerEmail: newEmail,
         temporaryName: 'Auto-Accept Friend',
@@ -486,6 +493,7 @@ describe('Friend ledger — real DB', () => {
     try {
       // Caller creates a friend ledger with a link path
       const created = await makeCaller().create({
+        requestId: crypto.randomUUID(),
         friendFormValues: {
           useLink: true,
           temporaryName: 'Link Open Friend',
@@ -576,6 +584,7 @@ describe('Friend ledger — real DB', () => {
     beforeAll(async () => {
       // Create a fresh FRIEND group owned by the caller with peerId as the other member
       const result = await makeCaller().create({
+        requestId: crypto.randomUUID(),
         friendFormValues: {
           peerAccountId: peerId,
           currency: '$',
@@ -657,6 +666,7 @@ describe('Friend ledger — real DB', () => {
     it('invitations.create is rejected (FORBIDDEN)', async () => {
       await expect(
         makeInvitationsCaller().create({
+          requestId: crypto.randomUUID(),
           groupId,
           email: `invitee-${runId}@example.test`,
           role: 'MEMBER',
@@ -666,7 +676,10 @@ describe('Friend ledger — real DB', () => {
 
     it('invitations.createLink is rejected (FORBIDDEN)', async () => {
       await expect(
-        makeInvitationsCaller().createLink({ groupId }),
+        makeInvitationsCaller().createLink({
+          groupId,
+          requestId: crypto.randomUUID(),
+        }),
       ).rejects.toMatchObject({ code: 'FORBIDDEN' })
     })
 
@@ -674,6 +687,7 @@ describe('Friend ledger — real DB', () => {
       // Create a friend ledger with a link path so it has a real
       // PENDING LINK invitation we can target.
       const linkResult = await makeCaller().create({
+        requestId: crypto.randomUUID(),
         friendFormValues: {
           useLink: true,
           temporaryName: 'Revoke Friend',
@@ -737,6 +751,7 @@ describe('Friend ledger — real DB', () => {
   it('account.groups: returns groupType and displayName for both GROUP and FRIEND', async () => {
     // Create a normal GROUP for the caller
     const { groupId: regularGroupId } = await makeGroupsCaller().create({
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name: `Regular ${runId}`,
         currency: '$',
@@ -802,6 +817,7 @@ describe('Friend ledger — real DB', () => {
   // ───────────────────────────────────────────────────────────────────
   it('previewLink: FRIEND group returns "Friend ledger with {inviter}" instead of empty string', async () => {
     const linkResult = await makeCaller().create({
+      requestId: crypto.randomUUID(),
       friendFormValues: {
         useLink: true,
         temporaryName: 'Preview Friend',
@@ -837,6 +853,7 @@ describe('Friend ledger — real DB', () => {
   it('self-ledger rejection: peerAccountId === callerAccountId throws BAD_REQUEST', async () => {
     await expect(
       makeCaller().create({
+        requestId: crypto.randomUUID(),
         friendFormValues: {
           peerAccountId: callerId,
           currency: '$',
@@ -849,6 +866,7 @@ describe('Friend ledger — real DB', () => {
   it('self-ledger rejection: peerEmail resolves to caller own account throws BAD_REQUEST', async () => {
     await expect(
       makeCaller().create({
+        requestId: crypto.randomUUID(),
         friendFormValues: {
           peerEmail: callerEmail,
           currency: '$',
@@ -879,6 +897,7 @@ describe('Friend ledger — real DB', () => {
         email: aEmail,
         name: 'CRUD A',
       }).create({
+        requestId: crypto.randomUUID(),
         friendFormValues: {
           peerAccountId: bId,
           currency: '$',
@@ -919,6 +938,7 @@ describe('Friend ledger — real DB', () => {
 
       // Create
       const { expenseId } = await gc.expenses.create({
+        requestId: crypto.randomUUID(),
         groupId: result.groupId,
         expense: { ...baseExpense, title: 'Dinner', amount: 5000 },
       })
@@ -939,6 +959,12 @@ describe('Friend ledger — real DB', () => {
 
       // Update
       await gc.expenses.update({
+        expectedVersion: (
+          await prisma.expense.findUniqueOrThrow({
+            where: { id: expenseId },
+            select: { version: true },
+          })
+        ).version,
         groupId: result.groupId,
         expenseId,
         expense: { ...baseExpense, title: 'Dinner Updated', amount: 5000 },
@@ -981,6 +1007,7 @@ describe('Friend ledger — real DB', () => {
         email: aEmail,
         name: 'Bal A',
       }).create({
+        requestId: crypto.randomUUID(),
         friendFormValues: {
           peerAccountId: bId,
           currency: '$',
@@ -1002,6 +1029,7 @@ describe('Friend ledger — real DB', () => {
         name: 'Bal A',
       })
       await gc.expenses.create({
+        requestId: crypto.randomUUID(),
         groupId: result.groupId,
         expense: {
           title: 'Dinner',
@@ -1059,6 +1087,7 @@ describe('Friend ledger — real DB', () => {
         email: aEmail,
         name: 'Cross A',
       }).create({
+        requestId: crypto.randomUUID(),
         friendFormValues: {
           peerEmail: newEmail,
           currency: '$',
@@ -1084,6 +1113,7 @@ describe('Friend ledger — real DB', () => {
           email: newEmail,
           name: 'Cross B',
         }).create({
+          requestId: crypto.randomUUID(),
           friendFormValues: {
             peerAccountId: aId,
             currency: '$',
@@ -1107,6 +1137,7 @@ describe('Friend ledger — real DB', () => {
     const newEmail = `race-${runId}@test.example`
 
     const created = await makeCaller().create({
+      requestId: crypto.randomUUID(),
       friendFormValues: {
         peerEmail: newEmail,
         currency: '$',
@@ -1169,6 +1200,7 @@ describe('Friend ledger — real DB', () => {
         email: aEmail,
         name: 'Dup A',
       }).create({
+        requestId: crypto.randomUUID(),
         friendFormValues: {
           peerAccountId: bId,
           currency: '$',
@@ -1267,6 +1299,7 @@ describe('Friend ledger — real DB', () => {
     // Level 1: Direct-accept — displayName equals the peer's Account.name
     // Uses the existing direct-accept group from test 13.1 (caller + peer)
     const result13_1 = await makeCaller().create({
+      requestId: crypto.randomUUID(),
       friendFormValues: {
         peerAccountId: peerId,
         currency: '$',
@@ -1278,6 +1311,7 @@ describe('Friend ledger — real DB', () => {
     // Level 2: Pending email with temporaryName
     const pendingNameEmail = `pending-dn-${runId}@test.example`
     const pendingNameResult = await makeCaller().create({
+      requestId: crypto.randomUUID(),
       friendFormValues: {
         peerEmail: pendingNameEmail,
         temporaryName: 'Temp Named Friend',
@@ -1290,6 +1324,7 @@ describe('Friend ledger — real DB', () => {
     // Level 3: Pending email without temporaryName
     const pendingNoNameEmail = `pending-dn2-${runId}@test.example`
     const pendingNoNameResult = await makeCaller().create({
+      requestId: crypto.randomUUID(),
       friendFormValues: {
         peerEmail: pendingNoNameEmail,
         currency: '$',

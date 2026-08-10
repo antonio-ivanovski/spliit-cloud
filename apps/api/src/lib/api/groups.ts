@@ -1,4 +1,4 @@
-import { GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
+import { GroupMemberStatus, GroupRole, prisma, type Prisma } from '@spliit/db'
 import {
   type GroupFormValues,
   type GroupUpdateFormValues,
@@ -23,9 +23,12 @@ import { randomId } from './shared'
  */
 export async function createGroup(
   groupFormValues: GroupFormValues,
-  options: { adminAccountId: string },
+  options: {
+    adminAccountId: string
+    tx?: Prisma.TransactionClient
+  },
 ) {
-  return prisma.$transaction(async (tx) => {
+  const run = async (tx: Prisma.TransactionClient) => {
     const ledger = await tx.ledger.create({
       data: {
         id: randomId(),
@@ -63,7 +66,8 @@ export async function createGroup(
     })
 
     return { group, ledger, adminMember }
-  })
+  }
+  return options.tx ? run(options.tx) : prisma.$transaction(run)
 }
 
 export async function updateGroup(

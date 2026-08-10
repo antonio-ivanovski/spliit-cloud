@@ -141,6 +141,7 @@ describe('large group imports', () => {
   it('imports 1,113 expenses and all dependent rows within the default transaction timeout', async () => {
     const target = await createTargetGroup()
     const result = await makeCaller().import({
+      requestId: crypto.randomUUID(),
       targetGroupId: target.groupId,
       participants: buildParticipants(
         target.firstParticipantId,
@@ -197,6 +198,7 @@ describe('large group imports', () => {
 
     await expect(
       makeCaller().import({
+        requestId: crypto.randomUUID(),
         targetGroupId: target.groupId,
         participants,
         expenses: buildExpenses(
@@ -216,6 +218,7 @@ describe('large group imports', () => {
     ).resolves.toBe(0)
 
     const retry = await makeCaller().import({
+      requestId: crypto.randomUUID(),
       targetGroupId: target.groupId,
       participants,
       expenses: buildExpenses(

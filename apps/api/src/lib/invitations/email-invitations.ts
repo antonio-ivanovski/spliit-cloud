@@ -7,6 +7,7 @@ import {
   GroupType,
   prisma,
   type GroupRole,
+  type Prisma,
 } from '@spliit/db'
 
 import {
@@ -37,6 +38,7 @@ export type CreateInvitationInput = {
   /** Pending-only label. Ignored after acceptance. */
   temporaryName?: string | null
   ledgerParticipantId?: string | null
+  tx?: Prisma.TransactionClient
 }
 
 export class InvitationError extends TRPCError {
@@ -122,6 +124,7 @@ export async function createEmailInvitation({
   inviterAccountId,
   temporaryName,
   ledgerParticipantId,
+  tx: suppliedTx,
 }: CreateInvitationInput) {
   const normalizedEmail = email.toLowerCase()
 
@@ -142,7 +145,7 @@ export async function createEmailInvitation({
     : (temporaryName ?? null)
 
   const boss = await getApiBoss()
-  return prisma.$transaction(async (tx) => {
+  const run = async (tx: Prisma.TransactionClient) => {
     const participantId = await materializePendingInvitationParticipant(tx, {
       groupId,
       suppliedParticipantId: ledgerParticipantId,
@@ -179,7 +182,8 @@ export async function createEmailInvitation({
 
     await planNotificationForActivity(tx, activity, {}, { boss })
     return invitation
-  })
+  }
+  return suppliedTx ? run(suppliedTx) : prisma.$transaction(run)
 }
 
 export const createInvitation = createEmailInvitation

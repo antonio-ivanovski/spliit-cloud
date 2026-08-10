@@ -1,4 +1,4 @@
-import type { Expense as DbExpense } from '@spliit/db'
+import type { Expense as DbExpense, Prisma } from '@spliit/db'
 import { prisma } from '@spliit/db'
 import {
   calculateRecurrenceDate,
@@ -45,9 +45,11 @@ export async function createExpense(
      * calculation below.
      */
     itemizedPaidForResolution?: Expense['paidFor']
+    tx?: Prisma.TransactionClient
   },
 ): Promise<DbExpense> {
-  const group = await prisma.group.findUnique({
+  const client = options?.tx ?? prisma
+  const group = await client.group.findUnique({
     where: { id: groupId },
     include: { ledger: true },
   })
@@ -64,7 +66,7 @@ export async function createExpense(
 
   const expenseAmount = conversion.ledgerAmountMinor
 
-  const activeParticipants = await prisma.ledgerParticipant.findMany({
+  const activeParticipants = await client.ledgerParticipant.findMany({
     where: {
       ledgerId,
       removedAt: null,
@@ -79,7 +81,7 @@ export async function createExpense(
   // Settlements may involve soft-removed participants who still appear in
   // balances. Keep them off new ordinary expenses, but allow reimbursements.
   const removedParticipants = expense.isReimbursement
-    ? await prisma.ledgerParticipant.findMany({
+    ? await client.ledgerParticipant.findMany({
         where: { ledgerId, removedAt: { not: null } },
         select: { id: true },
       })
@@ -137,7 +139,7 @@ export async function createExpense(
   let creatorTimeZone: string | undefined
   if (recurrence) {
     const persistedTimeZone = (
-      await prisma.accountPreference.findUnique({
+      await client.accountPreference.findUnique({
         where: { accountId: actor.accountId },
         select: { timeZone: true },
       })
@@ -192,7 +194,7 @@ export async function createExpense(
   }
 
   const boss = await getApiBoss()
-  const createdExpense = await prisma.$transaction(async (tx) => {
+  const run = async (tx: Prisma.TransactionClient) => {
     await tx.$queryRaw`SELECT id FROM "Group" WHERE id = ${groupId} FOR UPDATE`
     const lockedGroup = await tx.group.findUnique({
       where: { id: groupId },
@@ -362,7 +364,11 @@ export async function createExpense(
     }
 
     return createdExpense
-  })
+  }
+
+  const createdExpense = options?.tx
+    ? await run(options.tx)
+    : await prisma.$transaction(run)
 
   return createdExpense
 }

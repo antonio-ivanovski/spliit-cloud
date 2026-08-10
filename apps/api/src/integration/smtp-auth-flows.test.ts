@@ -307,6 +307,7 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
       const destLp2 = randomId()
 
       const result = await makeCaller().import({
+        requestId: crypto.randomUUID(),
         targetGroupId: groupId,
         participants: [
           {
@@ -455,6 +456,7 @@ describe.skipIf(!maildevReachable)('SMTP graceful degradation', () => {
 
   it('invitation creation succeeds gracefully when SMTP is unreachable', async () => {
     const result = await makeCaller().create({
+      requestId: crypto.randomUUID(),
       groupId,
       email: inviteeEmail,
       role: 'MEMBER',

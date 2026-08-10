@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useLocale } from '@/i18n/react'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
+import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 import { formatZonedDate } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 
@@ -35,6 +36,7 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
     accountPreferences?.timeZone ?? detectDeviceTimeZone() ?? 'UTC'
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpensePreview' })
   const utils = trpc.useUtils()
+  const createAttempt = useIdempotentCreate()
 
   const commentsQuery = trpc.groups.expenses.comments.list.useQuery(
     { groupId, expenseId, linkInviteToken },
@@ -79,11 +81,10 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
 
     setValidationError(null)
     try {
-      await createMutation.mutateAsync({
-        groupId,
-        expenseId,
-        body,
-      })
+      const result = await createAttempt.run((requestId) =>
+        createMutation.mutateAsync({ groupId, expenseId, body, requestId }),
+      )
+      if (result === null) return
       setDraft('')
       await invalidateComments()
     } catch {

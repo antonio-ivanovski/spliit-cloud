@@ -10,6 +10,11 @@ import {
   logActivity,
 } from '../../../../lib/api/activities'
 import {
+  CREATE_OPERATIONS,
+  createRequestIdSchema,
+  runIdempotentCreate,
+} from '../../../../lib/api/idempotency'
+import {
   listSubgroups,
   mapSubgroup,
   subgroupWithMembersSelect,
@@ -186,7 +191,11 @@ export const setSubgroupsEnabledProcedure = protectedProcedure
   })
 
 export const createSubgroupProcedure = protectedProcedure
-  .input(groupIdInput.merge(subgroupFields))
+  .input(
+    groupIdInput
+      .extend({ requestId: createRequestIdSchema })
+      .merge(subgroupFields),
+  )
   .output(subgroupMutationOutputSchema)
   .mutation(async ({ input, ctx }) => {
     const { group } = await requireAdmin(input.groupId, ctx.auth.user.id)
@@ -197,28 +206,39 @@ export const createSubgroupProcedure = protectedProcedure
       })
     }
     try {
-      const subgroup = await prisma.$transaction(async (tx) => {
-        const ids = await assertParticipants(
-          group.ledgerId,
-          input.participantIds,
-          undefined,
-          tx,
-        )
-        return tx.subgroup.create({
-          data: {
-            id: randomUUID(),
-            groupId: input.groupId,
-            name: input.name,
-            members: {
-              create: ids.map((ledgerParticipantId) => ({
-                ledgerParticipantId,
-              })),
+      const { value } = await runIdempotentCreate({
+        accountId: ctx.auth.user.id,
+        operation: CREATE_OPERATIONS.subgroup,
+        requestId: input.requestId,
+        input: {
+          groupId: input.groupId,
+          name: input.name,
+          participantIds: input.participantIds,
+        },
+        execute: async (tx) => {
+          const ids = await assertParticipants(
+            group.ledgerId,
+            input.participantIds,
+            undefined,
+            tx,
+          )
+          const subgroup = await tx.subgroup.create({
+            data: {
+              id: randomUUID(),
+              groupId: input.groupId,
+              name: input.name,
+              members: {
+                create: ids.map((ledgerParticipantId) => ({
+                  ledgerParticipantId,
+                })),
+              },
             },
-          },
-          select: subgroupWithMembersSelect,
-        })
+            select: subgroupWithMembersSelect,
+          })
+          return { subgroup: mapSubgroup(subgroup) }
+        },
       })
-      return { subgroup: mapSubgroup(subgroup) }
+      return value
     } catch (error) {
       mapWriteError(error)
     }

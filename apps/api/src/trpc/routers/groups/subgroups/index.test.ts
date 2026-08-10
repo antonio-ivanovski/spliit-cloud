@@ -84,6 +84,7 @@ describe('groupsRouter.subgroups', () => {
     const caller = makeCaller()
 
     const created = await caller.subgroups.create({
+      requestId: crypto.randomUUID(),
       groupId: 'grp-1',
       name: 'Couple',
       participantIds: ['lp-a', 'lp-b'],
@@ -104,6 +105,7 @@ describe('groupsRouter.subgroups', () => {
     usePrismaMemoryStore(baseData({ role: 'MEMBER' }))
     await expect(
       makeCaller().subgroups.create({
+        requestId: crypto.randomUUID(),
         groupId: 'grp-1',
         name: 'Couple',
         participantIds: ['lp-a', 'lp-b'],
@@ -120,6 +122,7 @@ describe('groupsRouter.subgroups', () => {
     usePrismaMemoryStore(baseData())
     const caller = makeCaller()
     await caller.subgroups.create({
+      requestId: crypto.randomUUID(),
       groupId: 'grp-1',
       name: 'Couple',
       participantIds: ['lp-a', 'lp-b'],
@@ -127,6 +130,7 @@ describe('groupsRouter.subgroups', () => {
 
     await expect(
       caller.subgroups.create({
+        requestId: crypto.randomUUID(),
         groupId: 'grp-1',
         name: 'Another',
         participantIds: ['lp-a', 'lp-c'],
@@ -134,6 +138,7 @@ describe('groupsRouter.subgroups', () => {
     ).rejects.toMatchObject({ code: 'CONFLICT' })
     await expect(
       caller.subgroups.create({
+        requestId: crypto.randomUUID(),
         groupId: 'grp-1',
         name: 'One person',
         participantIds: ['lp-c'],
@@ -145,6 +150,7 @@ describe('groupsRouter.subgroups', () => {
     usePrismaMemoryStore(baseData())
     const caller = makeCaller()
     await caller.subgroups.create({
+      requestId: crypto.randomUUID(),
       groupId: 'grp-1',
       name: 'Couple',
       participantIds: ['lp-a', 'lp-b'],

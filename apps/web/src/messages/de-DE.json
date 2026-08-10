@@ -710,7 +710,11 @@
         "timeZonePending": "Die Zeitzone deines Kontos wird abgewartet, bevor die Wiederholung aktiviert werden kann."
       },
       "recurringEditScopeOccurrence": "Nur dieses Vorkommen bearbeiten",
-      "recurringEditScopeFuture": "Dieses und zukünftige Vorkommen bearbeiten"
+      "recurringEditScopeFuture": "Dieses und zukünftige Vorkommen bearbeiten",
+      "conflictTitle": "Ausgabe geändert",
+      "conflictDescription": "Ein anderes Mitglied oder Gerät hat diese Ausgabe geändert. Lade die neueste Version oder behalte deinen Entwurf.",
+      "conflictKeepDraft": "Meinen Entwurf behalten",
+      "conflictReload": "Neueste Version laden"
     },
     "amountField": {
       "label": "Betrag",

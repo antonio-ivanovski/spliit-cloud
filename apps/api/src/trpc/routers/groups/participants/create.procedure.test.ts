@@ -52,6 +52,7 @@ describe('groupsRouter.participants.create', () => {
     } as never)
 
     const result = await makeCaller().participants.create({
+      requestId: crypto.randomUUID(),
       groupId: 'grp-1',
       displayName: '  Alex roommate  ',
     })
@@ -79,6 +80,7 @@ describe('groupsRouter.participants.create', () => {
 
     await expect(
       makeCaller().participants.create({
+        requestId: crypto.randomUUID(),
         groupId: 'grp-1',
         displayName: '   ',
       }),
@@ -94,6 +96,7 @@ describe('groupsRouter.participants.create', () => {
     seedGroup({ archived: true })
     await expect(
       makeCaller().participants.create({
+        requestId: crypto.randomUUID(),
         groupId: 'grp-1',
         displayName: 'Alex',
       }),
@@ -102,6 +105,7 @@ describe('groupsRouter.participants.create', () => {
     seedGroup({ groupType: 'FRIEND' })
     await expect(
       makeCaller().participants.create({
+        requestId: crypto.randomUUID(),
         groupId: 'grp-1',
         displayName: 'Alex',
       }),

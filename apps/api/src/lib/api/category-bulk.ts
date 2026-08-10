@@ -138,7 +138,10 @@ export async function bulkUpdateExpenseCategories(args: {
       if (from === toCategoryId) continue
       await tx.expense.update({
         where: { id: candidate.id },
-        data: { categoryId: toCategoryId },
+        data: {
+          categoryId: toCategoryId,
+          version: { increment: 1 },
+        },
         select: { id: true },
       })
       rows.push({

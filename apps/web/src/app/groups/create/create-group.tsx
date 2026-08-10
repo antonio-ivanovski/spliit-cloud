@@ -6,6 +6,7 @@ import { GroupForm } from '@/components/group-form'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
+import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 import { trpc } from '@/trpc/client'
 
 export const CreateGroup = () => {
@@ -20,6 +21,7 @@ export const CreateGroup = () => {
   })
   const navigate = useNavigate()
   const { toast } = useToast()
+  const createAttempt = useIdempotentCreate()
 
   function handleBack() {
     if (typeof window !== 'undefined' && window.history.length > 1) {
@@ -46,7 +48,11 @@ export const CreateGroup = () => {
       </h1>
       <GroupForm
         onSubmit={async (groupFormValues) => {
-          const { groupId } = await createGroup({ groupFormValues })
+          const result = await createAttempt.run((requestId) =>
+            createGroup({ requestId, groupFormValues }),
+          )
+          if (!result) return
+          const { groupId } = result
           // Invite happens in the Members tab once the group exists. Surface
           // a hint so the user knows to head there next.
           toast({ description: t('createdInviteHint'), variant: 'success' })

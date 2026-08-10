@@ -568,7 +568,11 @@
         "timeZonePending": "반복을 활성화하기 전에 계정 시간대를 기다리는 중입니다."
       },
       "recurringEditScopeOccurrence": "이 항목만 수정",
-      "recurringEditScopeFuture": "이 항목 및 이후 항목 수정"
+      "recurringEditScopeFuture": "이 항목 및 이후 항목 수정",
+      "conflictTitle": "지출이 변경됨",
+      "conflictDescription": "다른 멤버나 기기에서 이 지출을 변경했습니다. 최신 버전을 다시 불러오거나 작성 중인 내용을 유지하세요.",
+      "conflictKeepDraft": "작성 중인 내용 유지",
+      "conflictReload": "최신 버전 다시 불러오기"
     },
     "amountField": {
       "label": "금액",

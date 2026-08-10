@@ -66,6 +66,7 @@ describe('Activity list authorization — real DB', () => {
 
     const caller = makeCaller()
     const result = await caller.create({
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name: `Activity Auth Test ${runId}`,
         currency: '$',
@@ -157,10 +158,16 @@ describe('Activity list authorization — real DB', () => {
         },
       },
     } as never)
-    await invCaller.create({ groupId, email: inviteeEmail, role: 'MEMBER' })
+    await invCaller.create({
+      groupId,
+      email: inviteeEmail,
+      role: 'MEMBER',
+      requestId: crypto.randomUUID(),
+    })
 
     // Create and then revoke an invitation for the revoked invitee
     const { invitationId: revocableId } = await invCaller.create({
+      requestId: crypto.randomUUID(),
       groupId,
       email: revokedEmail,
       role: 'MEMBER',

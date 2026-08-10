@@ -1081,7 +1081,11 @@
         "monthly": "Månadsvis"
       },
       "recurringEditScopeOccurrence": "Redigerar endast denna förekomst",
-      "recurringEditScopeFuture": "Redigerar detta och framtida förekomster"
+      "recurringEditScopeFuture": "Redigerar detta och framtida förekomster",
+      "conflictTitle": "Utgiften har ändrats",
+      "conflictDescription": "En annan medlem eller enhet har ändrat den här utgiften. Läs in den senaste versionen eller behåll ditt utkast.",
+      "conflictKeepDraft": "Behåll mitt utkast",
+      "conflictReload": "Läs in senaste versionen"
     },
     "Income": {
       "DateField": {

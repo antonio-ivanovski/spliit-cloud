@@ -1222,7 +1222,11 @@
         "description": "تسجيل الدخول وصف لـ مصروفات.",
         "label": "عنوان المصروف",
         "placeholder": "مطعم مساء الإثنين"
-      }
+      },
+      "conflictTitle": "تم تغيير النفقة",
+      "conflictDescription": "غيّر عضو آخر أو جهاز آخر هذه النفقة. أعد تحميل أحدث إصدار أو احتفظ بمسودتك.",
+      "conflictKeepDraft": "الاحتفاظ بمسودتي",
+      "conflictReload": "إعادة تحميل الأحدث"
     },
     "paidForItemizedActiveHint": "المقسم حسب البند نشط. عدل مشاركي البنود من بطاقة البند لتغيير هذا التقسيم.",
     "participantPercentageLabel": "النسبة المئوية لـ {name}",

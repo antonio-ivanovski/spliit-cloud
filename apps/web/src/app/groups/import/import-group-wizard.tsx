@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 import { trpc } from '@/trpc/client'
 import type {
   NormalizedSource,
@@ -44,6 +45,7 @@ export function ImportGroupWizard() {
   const utils = trpc.useUtils()
   const prefillSourceUrl = search.prefill ?? null
   const { t } = useTranslation()
+  const importAttempt = useIdempotentCreate()
 
   const [state, dispatch] = useReducer(
     importWizardReducer,
@@ -274,13 +276,16 @@ export function ImportGroupWizard() {
         state.rates ?? undefined,
       )
       const expenses = buildImportExpenses(batch.expenses)
-      await importGroup({
-        ...batch,
-        groupFormValues:
-          'groupFormValues' in batch ? batch.groupFormValues : undefined,
-        expenses,
-        sourceMeta,
-      })
+      await importAttempt.run((requestId) =>
+        importGroup({
+          ...batch,
+          groupFormValues:
+            'groupFormValues' in batch ? batch.groupFormValues : undefined,
+          expenses,
+          sourceMeta,
+          requestId,
+        }),
+      )
     } catch (err) {
       toast({
         title: t('Groups.Import.Confirm.importErrorTitle'),

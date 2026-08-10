@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/responsive-dialog'
 import { useToast } from '@/components/ui/use-toast'
 import { getCurrency } from '@/lib/currency'
+import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 import {
   formatCurrency,
   formatDateOnly,
@@ -108,6 +109,7 @@ export function AiExpensePreview({
   const { toast } = useToast()
   const linkInviteToken = useLinkInviteToken()
   const createMutation = useCreateExpenseMutation({ linkInviteToken })
+  const createAttempt = useIdempotentCreate()
   const savedDefaultQuery = trpc.account.defaultSplit.useQuery(
     { groupId: group.id },
     { enabled: open },
@@ -223,7 +225,9 @@ export function AiExpensePreview({
           formValues.originalCurrency !== group.currencyCode,
         ),
       })
-      await createMutation.mutateAsync({ groupId: group.id, expense })
+      await createAttempt.run((requestId) =>
+        createMutation.mutateAsync({ groupId: group.id, requestId, expense }),
+      )
       toast({ description: t('created'), variant: 'success' })
       onOpenChange(false)
     } catch (error) {

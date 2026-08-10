@@ -680,7 +680,11 @@
         "timeZonePending": "Menunggu zona waktu akun Anda sebelum pengulangan dapat diaktifkan."
       },
       "recurringEditScopeOccurrence": "Edit hanya kejadian ini",
-      "recurringEditScopeFuture": "Edit kejadian ini dan yang akan datang"
+      "recurringEditScopeFuture": "Edit kejadian ini dan yang akan datang",
+      "conflictTitle": "Pengeluaran berubah",
+      "conflictDescription": "Anggota atau perangkat lain telah mengubah pengeluaran ini. Muat ulang versi terbaru atau pertahankan draf Anda.",
+      "conflictKeepDraft": "Pertahankan draf saya",
+      "conflictReload": "Muat ulang versi terbaru"
     },
     "amountField": {
       "label": "Jumlah",

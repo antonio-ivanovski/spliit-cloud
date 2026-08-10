@@ -10,9 +10,16 @@ import {
 } from '@spliit/db'
 
 import {
+  CREATE_OPERATIONS,
+  createRequestIdSchema,
+  deriveCreateToken,
+  runIdempotentCreate,
+} from '../../../lib/api/idempotency'
+import {
   canCreateInvitationWithRole,
   canRevokeInvitation,
 } from '../../../lib/api/resource-permissions'
+import { getWebBaseUrl } from '../../../lib/auth/urls'
 import {
   getPlaceholderEmailDisplayName,
   isPlaceholderEmail,
@@ -142,6 +149,7 @@ export const invitationsRouter = createTRPCRouter({
     .input(
       z.object({
         groupId: z.string().min(1),
+        requestId: createRequestIdSchema,
         role: invitationRoleSchema.default('MEMBER'),
         temporaryName: z
           .string()
@@ -178,20 +186,55 @@ export const invitationsRouter = createTRPCRouter({
           message: 'friendLedgerFull',
         })
       }
-      const result = await createLinkInvitation({
-        groupId: input.groupId,
-        role: input.role as GroupRole,
-        inviterAccountId: ctx.auth.user.id,
-        temporaryName: input.temporaryName ?? null,
+      const token = deriveCreateToken({
+        accountId: ctx.auth.user.id,
+        operation: CREATE_OPERATIONS.linkInvitation,
+        requestId: input.requestId,
+        discriminator: 'direct-link',
       })
-
-      return {
-        invitationId: result.invitation.id,
-        inviteUrl: result.inviteUrl,
-        expiresAt: result.invitation.expiresAt,
-        temporaryName: result.invitation.temporaryName,
-        role: result.invitation.role,
-      }
+      const { value } = await runIdempotentCreate({
+        accountId: ctx.auth.user.id,
+        operation: CREATE_OPERATIONS.linkInvitation,
+        requestId: input.requestId,
+        input: { ...input, requestId: undefined },
+        execute: async (tx) => {
+          const result = await createLinkInvitation({
+            groupId: input.groupId,
+            role: input.role as GroupRole,
+            inviterAccountId: ctx.auth.user.id,
+            temporaryName: input.temporaryName ?? null,
+            token,
+            tx,
+          })
+          return {
+            invitationId: result.invitation.id,
+            inviteUrl: result.inviteUrl,
+            expiresAt: result.invitation.expiresAt,
+            temporaryName: result.invitation.temporaryName,
+            role: result.invitation.role,
+          }
+        },
+        encode: (result) => ({
+          invitationId: result.invitationId,
+          expiresAt: result.expiresAt.toISOString(),
+          temporaryName: result.temporaryName,
+          role: result.role,
+        }),
+        decode: (stored) => {
+          const result = stored as {
+            invitationId: string
+            expiresAt: string
+            temporaryName: string | null
+            role: GroupRole
+          }
+          return {
+            ...result,
+            inviteUrl: `${getWebBaseUrl()}/groups/${input.groupId}?invite=${token}`,
+            expiresAt: new Date(result.expiresAt),
+          }
+        },
+      })
+      return value
     }),
 
   /**
@@ -239,6 +282,7 @@ export const invitationsRouter = createTRPCRouter({
     .input(
       z.object({
         groupId: z.string().min(1),
+        requestId: createRequestIdSchema,
         email: z.email(),
         role: invitationRoleSchema.default('MEMBER'),
         // Pending-only label that wins over the email wherever a
@@ -282,24 +326,36 @@ export const invitationsRouter = createTRPCRouter({
       // account on this Spliit Cloud instance. The DB row is the source of
       // truth: the in-app UI will surface the invitation to existing users
       // regardless of email delivery, so we never fail the mutation on send.
-      const [invitation, existingAccount] = await Promise.all([
-        createEmailInvitation({
-          groupId: input.groupId,
-          email: input.email,
-          role: input.role as GroupRole,
-          inviterAccountId: ctx.auth.user.id,
-          temporaryName: input.temporaryName ?? null,
-        }),
-        prisma.account.findFirst({
-          where: {
-            email: { equals: input.email.toLowerCase(), mode: 'insensitive' },
-          },
-          select: { id: true },
-        }),
-      ])
-      if (!existingAccount) {
+      const existingAccount = await prisma.account.findFirst({
+        where: {
+          email: { equals: input.email.toLowerCase(), mode: 'insensitive' },
+        },
+        select: { id: true },
+      })
+      const { value, replayed } = await runIdempotentCreate({
+        accountId: ctx.auth.user.id,
+        operation: CREATE_OPERATIONS.emailInvitation,
+        requestId: input.requestId,
+        input: { ...input, requestId: undefined },
+        execute: async (tx) => {
+          const invitation = await createEmailInvitation({
+            groupId: input.groupId,
+            email: input.email,
+            role: input.role as GroupRole,
+            inviterAccountId: ctx.auth.user.id,
+            temporaryName: input.temporaryName ?? null,
+            tx,
+          })
+          return {
+            invitationId: invitation.id,
+            email: invitation.email,
+            temporaryName: invitation.temporaryName,
+          }
+        },
+      })
+      if (!replayed && !existingAccount) {
         await sendInvitationEmail({
-          invitationId: invitation.id,
+          invitationId: value.invitationId,
           groupId: group.id,
           groupName: group.name,
           inviterDisplayName:
@@ -307,13 +363,12 @@ export const invitationsRouter = createTRPCRouter({
             getPlaceholderEmailDisplayName(ctx.auth.user.email) ||
             ctx.auth.user.email,
           inviterRole: member.role,
-          recipientEmail: invitation.email,
+          recipientEmail: value.email,
           recipientIsExistingUser: false,
-          temporaryName: invitation.temporaryName,
+          temporaryName: value.temporaryName,
         })
       }
-
-      return { invitationId: invitation.id }
+      return { invitationId: value.invitationId }
     }),
 
   /** Preview the balance impact of revoking a pending invitation. */

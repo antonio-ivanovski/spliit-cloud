@@ -43,6 +43,7 @@ describe('bulkUpdateExpenseCategories — real DB', () => {
   }): Promise<{ id: string }> {
     const caller = makeCaller()
     const result = await caller.expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: args.title,
@@ -76,6 +77,7 @@ describe('bulkUpdateExpenseCategories — real DB', () => {
     })
     const caller = makeCaller()
     const createGroup = await caller.create({
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name: `Bulk ${runId}`,
         currency: '$',
@@ -285,6 +287,7 @@ describe('bulkUpdateExpenseCategories — real DB', () => {
     const e = await makeExpense({ title: 'Cake' })
     const caller = makeCaller()
     const other = await caller.create({
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name: `Bulk Other ${runId}`,
         currency: '$',

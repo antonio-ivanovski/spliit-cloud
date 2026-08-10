@@ -64,6 +64,7 @@ describe('Group flow — real DB', () => {
   it('creates a group with the admin as an ADMIN / ACTIVE member', async () => {
     const caller = makeCaller()
     const result = await caller.create({
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name: `Test Group ${runId}`,
         currency: '$',
@@ -109,6 +110,7 @@ describe('Group flow — real DB', () => {
 
     // Create group
     const { groupId } = await caller.create({
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name: `Balances ${runId}`,
         currency: '$',
@@ -187,6 +189,7 @@ describe('Group flow — real DB', () => {
 
     // Expense 1: admin paid $30, split EVENLY among 3 → $10 each
     await caller.expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Dinner',
@@ -210,6 +213,7 @@ describe('Group flow — real DB', () => {
 
     // Expense 2: member1 paid $15, split EVENLY among 3 → $5 each
     await caller.expenses.create({
+      requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Lunch',
@@ -257,6 +261,7 @@ describe('Group flow — real DB', () => {
     const caller = makeCaller()
 
     const { groupId } = await caller.create({
+      requestId: crypto.randomUUID(),
       groupFormValues: {
         name: `Archive ${runId}`,
         currency: '$',
