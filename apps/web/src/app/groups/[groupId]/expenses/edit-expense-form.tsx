@@ -232,6 +232,7 @@ export function EditExpenseForm({
         open={scopeDialog != null}
         mode={scopeDialog?.mode ?? 'update'}
         seriesStatus={seriesStatus}
+        confirmationTarget={expense.title}
         onOpenChange={(open) => {
           if (!open) {
             const pending = scopeDialog

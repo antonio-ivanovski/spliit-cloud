@@ -589,7 +589,20 @@
   "Common": {
     "close": "Stäng",
     "previousSlide": "Föregående bild",
-    "nextSlide": "Nästa bild"
+    "nextSlide": "Nästa bild",
+    "destructiveConfirmation": {
+      "inputLabel": "Ange namnet för att bekräfta",
+      "copyName": "Kopiera namn",
+      "copied": "Kopierat",
+      "prompt": {
+        "deleteGroup": "För att ta bort gruppen <target>{name}</target> permanent skriver du dess namn exakt som det visas nedan.",
+        "deleteExpense": "För att ta bort utgiften <target>{name}</target> permanent skriver du dess titel exakt som den visas nedan.",
+        "deleteRecurringExpense": "För att bekräfta borttagningen av <target>{name}</target> skriver du utgiftens titel exakt som den visas nedan.",
+        "removeParticipant": "För att ta bort <target>{name}</target> från gruppen skriver du namnet exakt som det visas nedan."
+      },
+      "placeholder": "Skriv ”{name}” här",
+      "mismatch": "Stämmer inte. Skriv {name} exakt."
+    }
   },
   "CompleteProfile": {
     "title": "Slutför din profil",
@@ -1053,10 +1066,11 @@
     "DeletePopup": {
       "label": "Ta bort",
       "title": "Ta bort utgiften?",
-      "description": "Vill du verkligen ta bort denna utgift? Åtgärden går inte att ångra.",
+      "description": "Den här utgiften tas bort permanent. Åtgärden går inte att ångra.",
       "yes": "Ja",
       "deleting": "Tar bort…",
-      "cancel": "Avbryt"
+      "cancel": "Avbryt",
+      "delete": "Ta bort"
     },
     "Expense": {
       "DateField": {
@@ -1426,7 +1440,6 @@
     "stopConfirmDescription": "Befintliga utgifter finns kvar. Inga nya förekomster skapas.",
     "stopConfirmHint": "Att stoppa är permanent. Skapa en ny återkommande utgift för att börja om.",
     "deleteConfirmTitle": "Bekräfta borttagning",
-    "deleteConfirmHint": "Denna åtgärd går inte att ångra för de valda förekomsterna.",
     "deleteConfirm": {
       "OCCURRENCE": "Endast denna förekomst tas bort.",
       "THIS_AND_FUTURE": "Denna och följande förekomster tas bort. Upprepningen fortsätter med nästa schemalagda förekomst.",
@@ -1999,10 +2012,9 @@
       "button": "Ta bort grupp",
       "dialog": {
         "title": "Ta bort denna grupp?",
-        "description": "Du är på väg att permanent ta bort ”{name}”. Varje utgift, kvitto, inbjudan och aktivitetspost tas bort och kan inte återställas.",
+        "description": "Alla utgifter, kvitton, inbjudningar och aktivitetsposter i gruppen tas bort och kan inte återställas.",
         "warningTitle": "Denna åtgärd går inte att ångra",
         "warningDescription": "Följande data tas bort omedelbart:",
-        "checkbox": "Jag förstår att detta permanent tar bort gruppen och all dess data.",
         "cancel": "Avbryt",
         "confirm": "Ta bort grupp",
         "deleting": "Tar bort…",
@@ -2240,7 +2252,7 @@
     "roleUpdated": "Roll uppdaterad till {role}.",
     "removeDialog": {
       "title": "Ta bort deltagare?",
-      "description": "Ta bort {name} från denna grupp? Tidigare utgifter finns kvar i reskontran men hen kommer inte längre att visas i medlemslistan eller i nya utgifter.",
+      "description": "Tidigare utgifter finns kvar i reskontran, men deltagaren visas inte längre i medlemslistan eller i nya utgifter.",
       "cancel": "Avbryt",
       "confirm": "Ta bort",
       "unsettled": {

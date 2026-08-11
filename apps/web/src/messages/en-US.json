@@ -62,7 +62,20 @@
   "Common": {
     "close": "Close",
     "previousSlide": "Previous slide",
-    "nextSlide": "Next slide"
+    "nextSlide": "Next slide",
+    "destructiveConfirmation": {
+      "inputLabel": "Enter the name to confirm",
+      "copyName": "Copy name",
+      "copied": "Copied",
+      "prompt": {
+        "deleteGroup": "To permanently delete the group <target>{name}</target>, type its name exactly as shown below.",
+        "deleteExpense": "To permanently delete the expense <target>{name}</target>, type its title exactly as shown below.",
+        "deleteRecurringExpense": "To confirm this deletion for <target>{name}</target>, type the expense title exactly as shown below.",
+        "removeParticipant": "To remove <target>{name}</target> from this group, type their name exactly as shown below."
+      },
+      "placeholder": "Type “{name}” here",
+      "mismatch": "Doesn’t match. Type {name} exactly."
+    }
   },
   "Theme": {
     "toggle": "Change theme",
@@ -245,7 +258,6 @@
     "stopConfirmDescription": "Existing expenses will stay. No new occurrences will be created.",
     "stopConfirmHint": "Stopping is permanent. To start again, create a new recurring expense.",
     "deleteConfirmTitle": "Confirm deletion",
-    "deleteConfirmHint": "This action is irreversible for the selected occurrences.",
     "deleteConfirm": {
       "OCCURRENCE": "Only this occurrence will be deleted.",
       "THIS_AND_FUTURE": "This and following occurrences will be deleted. The recurrence will continue with the next scheduled occurrence.",
@@ -309,7 +321,7 @@
       },
       "dialog": {
         "title": "Delete this group?",
-        "description": "You are about to permanently delete \"{name}\". Every expense, receipt, invitation, and activity entry will be removed and cannot be recovered.",
+        "description": "Every expense, receipt, invitation, and activity entry in this group will be removed and cannot be recovered.",
         "warningTitle": "This action is irreversible",
         "warningDescription": "The following data will be deleted immediately:",
         "warningList": {
@@ -318,7 +330,6 @@
           "invitations": "Pending invitations",
           "receipts": "Uploaded receipt files"
         },
-        "checkbox": "I understand that this will permanently delete the group and all its data.",
         "cancel": "Cancel",
         "confirm": "Delete group",
         "deleting": "Deleting…"
@@ -1258,10 +1269,11 @@
     "DeletePopup": {
       "label": "Delete",
       "title": "Delete this expense?",
-      "description": "Do you really want to delete this expense? This action is irreversible.",
+      "description": "This expense will be permanently removed. This action cannot be undone.",
       "yes": "Yes",
       "deleting": "Deleting…",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "delete": "Delete"
     },
     "attachDocuments": "Attach documents",
     "create": "Create",
@@ -2042,7 +2054,7 @@
     "roleUpdated": "Role updated to {role}.",
     "removeDialog": {
       "title": "Remove participant?",
-      "description": "Remove {name} from this group? Their past expenses stay in the ledger but they will no longer appear in the members list or new expenses.",
+      "description": "Past expenses will stay in the ledger, but this participant will no longer appear in the members list or new expenses.",
       "cancel": "Cancel",
       "confirm": "Remove",
       "unsettled": {

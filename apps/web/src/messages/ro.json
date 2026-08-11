@@ -550,10 +550,9 @@
       "button": "Șterge grupul",
       "dialog": {
         "title": "Ștergi acest grup?",
-        "description": "Urmează să ștergi definitiv „{name}”. Fiecare cheltuială, bon, invitație și intrare de activitate va fi eliminată și nu poate fi recuperată.",
+        "description": "Toate cheltuielile, bonurile, invitațiile și intrările de activitate din acest grup vor fi șterse și nu vor putea fi recuperate.",
         "warningTitle": "Această acțiune este ireversibilă",
         "warningDescription": "Următoarele date vor fi șterse imediat:",
-        "checkbox": "Înțeleg că aceasta va șterge definitiv grupul și toate datele sale.",
         "cancel": "Anulează",
         "confirm": "Șterge grupul",
         "deleting": "Se șterge…",
@@ -825,10 +824,11 @@
     "DeletePopup": {
       "label": "Șterge",
       "title": "Ștergi această cheltuială?",
-      "description": "Ești sigur că vrei să ștergi această cheltuială? Această acțiune este ireversibilă.",
+      "description": "Această cheltuială va fi ștearsă definitiv. Această acțiune nu poate fi anulată.",
       "yes": "Da",
       "deleting": "Se șterge…",
-      "cancel": "Anulează"
+      "cancel": "Anulează",
+      "delete": "Șterge"
     },
     "attachDocuments": "Atașează documente",
     "create": "Adaugă",
@@ -1796,7 +1796,7 @@
     "roleUpdated": "Rol actualizat la {role}.",
     "removeDialog": {
       "title": "Elimini membru?",
-      "description": "Elimini pe {name} din acest grup? Cheltuielile sale anterioare rămân în registru, dar nu va mai avea acces.",
+      "description": "Cheltuielile anterioare vor rămâne în registru, dar acest participant nu va mai apărea în lista membrilor sau în cheltuielile noi.",
       "cancel": "Anulează",
       "confirm": "Elimină",
       "unsettled": {
@@ -2437,7 +2437,20 @@
   "Common": {
     "close": "Închide",
     "previousSlide": "Diapozitivul anterior",
-    "nextSlide": "Diapozitivul următor"
+    "nextSlide": "Diapozitivul următor",
+    "destructiveConfirmation": {
+      "inputLabel": "Introdu numele pentru confirmare",
+      "copyName": "Copiază numele",
+      "copied": "Copiat",
+      "prompt": {
+        "deleteGroup": "Pentru a șterge definitiv grupul <target>{name}</target>, introdu numele acestuia exact așa cum apare mai jos.",
+        "deleteExpense": "Pentru a șterge definitiv cheltuiala <target>{name}</target>, introdu titlul acesteia exact așa cum apare mai jos.",
+        "deleteRecurringExpense": "Pentru a confirma ștergerea <target>{name}</target>, introdu titlul cheltuielii exact așa cum apare mai jos.",
+        "removeParticipant": "Pentru a elimina <target>{name}</target> din acest grup, introdu numele exact așa cum apare mai jos."
+      },
+      "placeholder": "Introdu „{name}” aici",
+      "mismatch": "Nu se potrivește. Introdu exact {name}."
+    }
   },
   "Theme": {
     "toggle": "Schimbă tema",
@@ -2524,7 +2537,6 @@
     "stopConfirmDescription": "Cheltuielile existente vor rămâne. Nu vor fi create apariții noi.",
     "stopConfirmHint": "Oprirea este permanentă. Pentru a începe din nou, creează o cheltuială recurentă nouă.",
     "deleteConfirmTitle": "Confirmă ștergerea",
-    "deleteConfirmHint": "Această acțiune este ireversibilă pentru aparițiile selectate.",
     "deleteConfirm": {
       "OCCURRENCE": "Doar această apariție va fi ștearsă.",
       "THIS_AND_FUTURE": "Această apariție și cele viitoare vor fi șterse. Recurența va continua cu următoarea apariție programată.",

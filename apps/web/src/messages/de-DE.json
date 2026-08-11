@@ -565,7 +565,7 @@
       "button": "Gruppe löschen",
       "dialog": {
         "title": "Diese Gruppe löschen?",
-        "description": "Sie sind im Begriff, \"{name}\" dauerhaft zu löschen. Jede Ausgabe, jeder Beleg, jede Einladung und jeder Aktivitätseintrag wird entfernt und kann nicht wiederhergestellt werden.",
+        "description": "Alle Ausgaben, Belege, Einladungen und Aktivitätseinträge in dieser Gruppe werden entfernt und können nicht wiederhergestellt werden.",
         "warningTitle": "Diese Aktion ist nicht umkehrbar",
         "warningDescription": "Die folgenden Daten werden sofort gelöscht:",
         "warningList": {
@@ -574,7 +574,6 @@
           "invitations": "Ausstehende Einladungen",
           "receipts": "Hochgeladene Belegdateien"
         },
-        "checkbox": "Mir ist bewusst, dass die Gruppe und alle ihre Daten dauerhaft gelöscht werden.",
         "cancel": "Abbrechen",
         "confirm": "Gruppe löschen",
         "deleting": "Wird gelöscht …"
@@ -866,10 +865,11 @@
     "DeletePopup": {
       "label": "Löschen",
       "title": "Diese Ausgabe löschen?",
-      "description": "Willst du diese Ausgabe wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+      "description": "Diese Ausgabe wird dauerhaft entfernt. Diese Aktion kann nicht rückgängig gemacht werden.",
       "yes": "Ja",
       "deleting": "Wird gelöscht…",
-      "cancel": "Abbrechen"
+      "cancel": "Abbrechen",
+      "delete": "Löschen"
     },
     "attachDocuments": "Dokument hinzufügen",
     "create": "Erstellen",
@@ -1832,7 +1832,7 @@
         "previewWillCreate_other": "Es werden {count} Ausgleichszahlungen erstellt"
       },
       "title": "Mitglied entfernen?",
-      "description": "{name} aus dieser Gruppe entfernen? Die bisherigen Ausgaben bleiben im Hauptbuch erhalten, aber {name} hat dann keinen Zugriff mehr.",
+      "description": "Bisherige Ausgaben bleiben im Hauptbuch, aber die Person erscheint nicht mehr in der Mitgliederliste oder bei neuen Ausgaben.",
       "cancel": "Abbrechen",
       "confirm": "Entfernen"
     },
@@ -2487,7 +2487,20 @@
   "Common": {
     "close": "Schließen",
     "previousSlide": "Vorherige Folie",
-    "nextSlide": "Nächste Folie"
+    "nextSlide": "Nächste Folie",
+    "destructiveConfirmation": {
+      "inputLabel": "Namen zur Bestätigung eingeben",
+      "copyName": "Namen kopieren",
+      "copied": "Kopiert",
+      "prompt": {
+        "deleteGroup": "Um die Gruppe <target>{name}</target> dauerhaft zu löschen, gib ihren Namen genau wie unten angezeigt ein.",
+        "deleteExpense": "Um die Ausgabe <target>{name}</target> dauerhaft zu löschen, gib ihren Titel genau wie unten angezeigt ein.",
+        "deleteRecurringExpense": "Um das Löschen von <target>{name}</target> zu bestätigen, gib den Titel der Ausgabe genau wie unten angezeigt ein.",
+        "removeParticipant": "Um <target>{name}</target> aus dieser Gruppe zu entfernen, gib den Namen genau wie unten angezeigt ein."
+      },
+      "placeholder": "Gib „{name}“ hier ein",
+      "mismatch": "Stimmt nicht überein. Gib {name} genau ein."
+    }
   },
   "Theme": {
     "toggle": "Design ändern",
@@ -2574,7 +2587,6 @@
     "stopConfirmDescription": "Bestehende Ausgaben bleiben erhalten. Es werden keine neuen Vorkommen erstellt.",
     "stopConfirmHint": "Das Stoppen ist dauerhaft. Erstellen Sie eine neue wiederkehrende Ausgabe, um erneut zu beginnen.",
     "deleteConfirmTitle": "Löschen bestätigen",
-    "deleteConfirmHint": "Diese Aktion kann für die ausgewählten Vorkommen nicht rückgängig gemacht werden.",
     "deleteConfirm": {
       "OCCURRENCE": "Nur dieses Vorkommen wird gelöscht.",
       "THIS_AND_FUTURE": "Dieses und alle folgenden Vorkommen werden gelöscht. Die Wiederholung wird mit dem nächsten geplanten Vorkommen fortgesetzt.",

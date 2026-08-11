@@ -555,10 +555,9 @@
       "button": "Usuń grupę",
       "dialog": {
         "title": "Usunąć tę grupę?",
-        "description": "Zamierzasz trwale usunąć „{name}“. Każdy wydatek, paragon, zaproszenie i wpis aktywności zostaną usunięte i nie będzie można ich odzyskać.",
+        "description": "Wszystkie wydatki, paragony, zaproszenia i wpisy aktywności w tej grupie zostaną usunięte bez możliwości odzyskania.",
         "warningTitle": "Tej operacji nie można cofnąć",
         "warningDescription": "Następujące dane zostaną natychmiast usunięte:",
-        "checkbox": "Rozumiem, że trwale usunie to grupę i wszystkie jej dane.",
         "cancel": "Anuluj",
         "confirm": "Usuń grupę",
         "deleting": "Usuwanie…",
@@ -854,10 +853,11 @@
     "DeletePopup": {
       "label": "Usuń",
       "title": "Usunąć ten wydatek?",
-      "description": "Czy na pewno chcesz usunąć ten wydatek? Ta akcja jest nieodwracalna.",
+      "description": "Ten wydatek zostanie trwale usunięty. Tej czynności nie można cofnąć.",
       "yes": "Tak",
       "deleting": "Usuwanie…",
-      "cancel": "Anuluj"
+      "cancel": "Anuluj",
+      "delete": "Usuń"
     },
     "attachDocuments": "Załącz dokumenty",
     "create": "Stwórz",
@@ -1804,7 +1804,7 @@
     "roleUpdated": "Rola zaktualizowana na {role}.",
     "removeDialog": {
       "title": "Usunąć członka?",
-      "description": "Usunąć {name} z tej grupy? Jego/jej wcześniejsze wydatki pozostaną w księdze, ale {name} utraci dostęp.",
+      "description": "Wcześniejsze wydatki pozostaną w księdze, ale ta osoba nie będzie już wyświetlana na liście członków ani w nowych wydatkach.",
       "cancel": "Anuluj",
       "confirm": "Usuń",
       "unsettled": {
@@ -2455,7 +2455,20 @@
   "Common": {
     "close": "Zamknij",
     "previousSlide": "Poprzedni slajd",
-    "nextSlide": "Następny slajd"
+    "nextSlide": "Następny slajd",
+    "destructiveConfirmation": {
+      "inputLabel": "Wpisz nazwę, aby potwierdzić",
+      "copyName": "Kopiuj nazwę",
+      "copied": "Skopiowano",
+      "prompt": {
+        "deleteGroup": "Aby trwale usunąć grupę <target>{name}</target>, wpisz jej nazwę dokładnie tak, jak pokazano poniżej.",
+        "deleteExpense": "Aby trwale usunąć wydatek <target>{name}</target>, wpisz jego tytuł dokładnie tak, jak pokazano poniżej.",
+        "deleteRecurringExpense": "Aby potwierdzić usunięcie <target>{name}</target>, wpisz tytuł wydatku dokładnie tak, jak pokazano poniżej.",
+        "removeParticipant": "Aby usunąć z tej grupy osobę <target>{name}</target>, wpisz jej imię dokładnie tak, jak pokazano poniżej."
+      },
+      "placeholder": "Wpisz tutaj „{name}”",
+      "mismatch": "Wartość się nie zgadza. Wpisz dokładnie {name}."
+    }
   },
   "Theme": {
     "toggle": "Zmień motyw",
@@ -2542,7 +2555,6 @@
     "stopConfirmDescription": "Istniejące wydatki pozostaną. Nie zostaną utworzone nowe wystąpienia.",
     "stopConfirmHint": "Zatrzymanie jest trwałe. Aby rozpocząć ponownie, utwórz nowy cykliczny wydatek.",
     "deleteConfirmTitle": "Potwierdź usunięcie",
-    "deleteConfirmHint": "Tej czynności nie można cofnąć dla wybranych wystąpień.",
     "deleteConfirm": {
       "OCCURRENCE": "Usunięte zostanie tylko to wystąpienie.",
       "THIS_AND_FUTURE": "To i przyszłe wystąpienia zostaną usunięte. Cykl będzie kontynuowany od następnego zaplanowanego wystąpienia.",

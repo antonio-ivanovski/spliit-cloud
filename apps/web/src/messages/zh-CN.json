@@ -540,10 +540,9 @@
       "button": "删除群组",
       "dialog": {
         "title": "删除此群组？",
-        "description": "你即将永久删除 \"{name}\"。所有消费、收据、邀请和活动记录都将被删除，且无法恢复。",
+        "description": "此群组中的所有支出、收据、邀请和活动记录都将被删除，且无法恢复。",
         "warningTitle": "此操作不可撤销",
         "warningDescription": "以下数据将立即被删除：",
-        "checkbox": "我了解此操作将永久删除该群组及其所有数据。",
         "cancel": "取消",
         "confirm": "删除群组",
         "deleting": "删除中…",
@@ -813,10 +812,11 @@
     "DeletePopup": {
       "label": "删除",
       "title": "要删除这项消费吗？",
-      "description": "你真的确定要删除这项消费吗？此行动不可撤销。",
+      "description": "此项支出将被永久删除。此操作无法撤销。",
       "yes": "确定",
       "deleting": "正在删除…",
-      "cancel": "取消"
+      "cancel": "取消",
+      "delete": "删除"
     },
     "attachDocuments": "附加文档",
     "create": "创建",
@@ -1781,7 +1781,7 @@
     "roleUpdated": "角色已更新为 {role}。",
     "removeDialog": {
       "title": "移除成员？",
-      "description": "将 {name} 从此群组中移除？他们过往的支出将保留在账本中，但将不再有访问权限。",
+      "description": "过往支出将保留在账本中，但这位参与者将不再出现在成员列表或新的支出中。",
       "cancel": "取消",
       "confirm": "移除",
       "unsettled": {
@@ -2403,7 +2403,20 @@
   "Common": {
     "close": "关闭",
     "previousSlide": "上一张幻灯片",
-    "nextSlide": "下一张幻灯片"
+    "nextSlide": "下一张幻灯片",
+    "destructiveConfirmation": {
+      "inputLabel": "输入名称以确认",
+      "copyName": "复制名称",
+      "copied": "已复制",
+      "prompt": {
+        "deleteGroup": "要永久删除群组<target>{name}</target>，请输入与下方显示完全一致的名称。",
+        "deleteExpense": "要永久删除支出<target>{name}</target>，请输入与下方显示完全一致的标题。",
+        "deleteRecurringExpense": "要确认删除<target>{name}</target>，请输入与下方显示完全一致的支出标题。",
+        "removeParticipant": "要从此群组中移除<target>{name}</target>，请输入与下方显示完全一致的姓名。"
+      },
+      "placeholder": "请在此输入 “{name}”",
+      "mismatch": "不匹配。请准确输入 {name}。"
+    }
   },
   "Theme": {
     "toggle": "更改主题",
@@ -2490,7 +2503,6 @@
     "stopConfirmDescription": "现有支出将保留。不会创建新的重复项。",
     "stopConfirmHint": "停止操作是永久性的。要重新开始，请创建新的定期支出。",
     "deleteConfirmTitle": "确认删除",
-    "deleteConfirmHint": "此操作对所选重复项不可撤销。",
     "deleteConfirm": {
       "OCCURRENCE": "仅删除本次重复项。",
       "THIS_AND_FUTURE": "删除本次及后续重复项。重复将从下一个计划的重复项继续。",

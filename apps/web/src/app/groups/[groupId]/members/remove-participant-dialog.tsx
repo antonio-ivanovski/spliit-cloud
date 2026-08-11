@@ -1,6 +1,11 @@
 import { useTranslation } from 'react-i18next'
 
 import { ParticipantAvatar } from '@/components/participant-avatar'
+import {
+  isTypedConfirmationMatch,
+  TypedDestructiveConfirmation,
+  useTypedConfirmationValue,
+} from '@/components/typed-destructive-confirmation'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -67,10 +72,19 @@ export function RemoveParticipantDialog({
   const currency = group ? getCurrencyFromGroup(group) : undefined
   const preview = removePreviewQuery.data
   const isPending = removeParticipantMutation.isPending
+  const confirmationTarget = participantPendingRemove?.name ?? ''
+  const [confirmationValue, setConfirmationValue] = useTypedConfirmationValue(
+    `${participantPendingRemove?.ledgerParticipantId ?? ''}:${confirmationTarget}`,
+  )
+  const nameConfirmed = isTypedConfirmationMatch(
+    confirmationValue,
+    confirmationTarget,
+  )
   const canConfirm =
     !!preview &&
     !removePreviewQuery.isLoading &&
     !isPending &&
+    nameConfirmed &&
     (!preview.hasUnsettledBalance || participantRemoveSettleChecked)
 
   const leavingParticipantId =
@@ -98,8 +112,16 @@ export function RemoveParticipantDialog({
   function handleOpenChange(open: boolean) {
     if (!open) {
       onSettleCheckedChange(false)
+      setConfirmationValue('')
     }
     onOpenChange(open)
+  }
+
+  function confirmRemove() {
+    if (!canConfirm) return
+    onConfirmRemove(
+      preview?.hasUnsettledBalance ? participantRemoveSettleChecked : undefined,
+    )
   }
 
   return (
@@ -133,78 +155,90 @@ export function RemoveParticipantDialog({
               <Skeleton className="h-4 w-3/4" />
               <Skeleton className="h-4 w-2/3" />
             </div>
-          ) : preview.hasUnsettledBalance ? (
-            <>
-              <label className="flex cursor-pointer items-start gap-2 text-sm text-amber-700 dark:text-amber-400">
-                <Checkbox
-                  checked={participantRemoveSettleChecked}
-                  onCheckedChange={(checked) =>
-                    onSettleCheckedChange(checked === true)
-                  }
-                  disabled={isPending}
-                  className="mt-0.5"
-                />
-                <span>{t('removeDialog.unsettled.checkbox')}</span>
-              </label>
+          ) : (
+            <div className="space-y-4">
+              {preview.hasUnsettledBalance ? (
+                <div className="space-y-4">
+                  <label className="flex cursor-pointer items-start gap-2 text-sm text-amber-700 dark:text-amber-400">
+                    <Checkbox
+                      checked={participantRemoveSettleChecked}
+                      onCheckedChange={(checked) =>
+                        onSettleCheckedChange(checked === true)
+                      }
+                      disabled={isPending}
+                      className="mt-0.5"
+                    />
+                    <span>{t('removeDialog.unsettled.checkbox')}</span>
+                  </label>
 
-              {showSettlementPreview && currency ? (
-                <div className="space-y-3 rounded-md border border-border/70 p-3">
-                  <div className="text-sm text-muted-foreground">
-                    {t('removeDialog.unsettled.previewWillCreate', {
-                      count: settlementLegs.length,
-                    })}
-                  </div>
-                  <div className="text-2xl font-bold tracking-tight tabular-nums">
-                    {formatCurrency(currency, settlementTotal, locale)}
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    {settlementDirection === 'pay'
-                      ? t('removeDialog.unsettled.previewPays', {
-                          name: leavingName,
-                        })
-                      : t('removeDialog.unsettled.previewReceives', {
-                          name: leavingName,
+                  {showSettlementPreview && currency ? (
+                    <div className="space-y-3 rounded-md border border-border/70 p-3">
+                      <div className="text-sm text-muted-foreground">
+                        {t('removeDialog.unsettled.previewWillCreate', {
+                          count: settlementLegs.length,
                         })}
-                  </div>
-                  <div className="space-y-2">
-                    {settlementLegs.map((leg) => {
-                      const counterpartyId =
-                        settlementDirection === 'pay' ? leg.to : leg.from
-                      const counterparty = preview.participants.find(
-                        (participant) => participant.id === counterpartyId,
-                      )
-                      return (
-                        <div
-                          key={settlementLegKey(leg)}
-                          className="flex min-h-11 items-center gap-3 rounded-md border border-border/70 px-3 py-2"
-                        >
-                          {counterparty ? (
-                            <ParticipantAvatar
-                              participant={counterparty}
-                              size="sm"
-                              className="shrink-0"
-                            />
-                          ) : null}
-                          <span className="min-w-0 flex-1 truncate text-sm font-medium">
-                            {settlementDirection === 'pay'
-                              ? t('removeDialog.unsettled.previewTo', {
-                                  name: counterparty?.name ?? '',
-                                })
-                              : t('removeDialog.unsettled.previewFrom', {
-                                  name: counterparty?.name ?? '',
-                                })}
-                          </span>
-                          <span className="shrink-0 text-sm tabular-nums">
-                            {formatCurrency(currency, leg.amount, locale)}
-                          </span>
-                        </div>
-                      )
-                    })}
-                  </div>
+                      </div>
+                      <div className="text-2xl font-bold tracking-tight tabular-nums">
+                        {formatCurrency(currency, settlementTotal, locale)}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        {settlementDirection === 'pay'
+                          ? t('removeDialog.unsettled.previewPays', {
+                              name: leavingName,
+                            })
+                          : t('removeDialog.unsettled.previewReceives', {
+                              name: leavingName,
+                            })}
+                      </div>
+                      <div className="space-y-2">
+                        {settlementLegs.map((leg) => {
+                          const counterpartyId =
+                            settlementDirection === 'pay' ? leg.to : leg.from
+                          const counterparty = preview.participants.find(
+                            (participant) => participant.id === counterpartyId,
+                          )
+                          return (
+                            <div
+                              key={settlementLegKey(leg)}
+                              className="flex min-h-11 items-center gap-3 rounded-md border border-border/70 px-3 py-2"
+                            >
+                              {counterparty ? (
+                                <ParticipantAvatar
+                                  participant={counterparty}
+                                  size="sm"
+                                  className="shrink-0"
+                                />
+                              ) : null}
+                              <span className="min-w-0 flex-1 truncate text-sm font-medium">
+                                {settlementDirection === 'pay'
+                                  ? t('removeDialog.unsettled.previewTo', {
+                                      name: counterparty?.name ?? '',
+                                    })
+                                  : t('removeDialog.unsettled.previewFrom', {
+                                      name: counterparty?.name ?? '',
+                                    })}
+                              </span>
+                              <span className="shrink-0 text-sm tabular-nums">
+                                {formatCurrency(currency, leg.amount, locale)}
+                              </span>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  ) : null}
                 </div>
               ) : null}
-            </>
-          ) : null}
+              <TypedDestructiveConfirmation
+                kind="removeParticipant"
+                targetName={confirmationTarget}
+                value={confirmationValue}
+                onValueChange={setConfirmationValue}
+                disabled={isPending}
+                onConfirm={confirmRemove}
+              />
+            </div>
+          )}
         </ResponsiveDialogBody>
 
         <ResponsiveDialogFooter>
@@ -217,13 +251,7 @@ export function RemoveParticipantDialog({
           </Button>
           <Button
             variant="destructive"
-            onClick={() =>
-              onConfirmRemove(
-                preview?.hasUnsettledBalance
-                  ? participantRemoveSettleChecked
-                  : undefined,
-              )
-            }
+            onClick={confirmRemove}
             disabled={!canConfirm}
           >
             {t('removeDialog.confirm')}

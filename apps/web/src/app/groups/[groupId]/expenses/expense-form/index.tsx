@@ -602,6 +602,7 @@ export function ExpenseForm(props: {
           isCreate={isCreate}
           readOnly={!!props.readOnly}
           onDelete={props.onDelete}
+          expenseTitle={props.expense?.title}
           cancelHref={props.cancelHref ?? `/groups/${props.group.id}`}
           submitDisabled={persisted}
         />

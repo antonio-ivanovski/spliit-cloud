@@ -41,10 +41,15 @@ const DialogContent = React.forwardRef<
       <DialogOverlay />
       <DialogPrimitive.Popup
         ref={ref}
-        className={cn(
-          'motion-dialog fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg transition-[opacity,scale] duration-[var(--motion-duration-slow)] ease-[var(--motion-ease-out)] data-[starting-style]:scale-95 data-[starting-style]:opacity-0 data-[ending-style]:scale-95 data-[ending-style]:opacity-0 sm:rounded-lg',
-          className,
-        )}
+        className={(state) =>
+          cn(
+            'motion-dialog fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 transition-[opacity,scale,filter,box-shadow] duration-[var(--motion-duration-slow)] ease-[var(--motion-ease-out)] data-[nested-dialog-open]:scale-[0.96] data-[nested-dialog-open]:brightness-75 data-[starting-style]:scale-95 data-[starting-style]:opacity-0 data-[ending-style]:scale-95 data-[ending-style]:opacity-0 sm:rounded-lg',
+            state.nested
+              ? 'shadow-[0_24px_80px_-20px_rgb(0_0_0/0.65)] ring-1 ring-foreground/20'
+              : 'shadow-lg',
+            typeof className === 'function' ? className(state) : className,
+          )
+        }
         {...props}
       >
         {children}

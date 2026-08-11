@@ -456,10 +456,9 @@
       "button": "그룹 삭제",
       "dialog": {
         "title": "이 그룹을 삭제하시겠습니까?",
-        "description": "\"{name}\" 그룹을 영구적으로 삭제하려고 합니다. 모든 지출, 영수증, 초대, 활동 내역이 삭제되며 복구할 수 없습니다.",
+        "description": "이 그룹의 모든 지출, 영수증, 초대, 활동 내역이 삭제되며 복구할 수 없습니다.",
         "warningTitle": "이 작업은 되돌릴 수 없습니다",
         "warningDescription": "다음 데이터가 즉시 삭제됩니다:",
-        "checkbox": "이 그룹과 모든 데이터가 영구적으로 삭제됨을 이해합니다.",
         "cancel": "취소",
         "confirm": "그룹 삭제",
         "deleting": "삭제 중…",
@@ -715,12 +714,13 @@
       "byAmount": "균등하지 않게 – 금액별로 나누기"
     },
     "DeletePopup": {
-      "description": "정말 이 지출을 삭제할까요? 한 번 삭제하면 되돌릴 수 없어요.",
+      "description": "이 지출은 영구적으로 삭제됩니다. 이 작업은 되돌릴 수 없습니다.",
       "yes": "네",
       "deleting": "삭제 중…",
       "cancel": "취소",
       "label": "삭제",
-      "title": "이 지출을 삭제하시겠습니까?"
+      "title": "이 지출을 삭제하시겠습니까?",
+      "delete": "삭제"
     },
     "Income": {
       "TitleField": {
@@ -1781,7 +1781,7 @@
     "roleUpdated": "역할이 {role}(으)로 업데이트되었습니다.",
     "removeDialog": {
       "title": "멤버를 삭제하시겠습니까?",
-      "description": "{name}을(를) 이 그룹에서 삭제하시겠습니까? 과거 지출은 장부에 남지만 더 이상 접근할 수 없습니다.",
+      "description": "이전 지출은 장부에 남지만, 이 참여자는 더 이상 멤버 목록이나 새 지출에 표시되지 않습니다.",
       "cancel": "취소",
       "confirm": "삭제",
       "unsettled": {
@@ -2403,7 +2403,20 @@
   "Common": {
     "close": "닫기",
     "previousSlide": "이전 슬라이드",
-    "nextSlide": "다음 슬라이드"
+    "nextSlide": "다음 슬라이드",
+    "destructiveConfirmation": {
+      "inputLabel": "확인하려면 이름 입력",
+      "copyName": "이름 복사",
+      "copied": "복사됨",
+      "prompt": {
+        "deleteGroup": "<target>{name}</target> 그룹을 영구적으로 삭제하려면 아래에 표시된 이름을 정확히 입력하세요.",
+        "deleteExpense": "<target>{name}</target> 지출을 영구적으로 삭제하려면 아래에 표시된 제목을 정확히 입력하세요.",
+        "deleteRecurringExpense": "<target>{name}</target> 삭제를 확인하려면 아래에 표시된 지출 제목을 정확히 입력하세요.",
+        "removeParticipant": "이 그룹에서 <target>{name}</target> 참여자를 삭제하려면 아래에 표시된 이름을 정확히 입력하세요."
+      },
+      "placeholder": "여기에 “{name}”을(를) 입력하세요",
+      "mismatch": "일치하지 않습니다. {name}을(를) 정확히 입력하세요."
+    }
   },
   "Theme": {
     "toggle": "테마 변경",
@@ -2490,7 +2503,6 @@
     "stopConfirmDescription": "기존 지출은 유지됩니다. 새 항목은 생성되지 않습니다.",
     "stopConfirmHint": "중지는 영구적입니다. 다시 시작하려면 새 반복 지출을 만드세요.",
     "deleteConfirmTitle": "삭제 확인",
-    "deleteConfirmHint": "선택한 항목에 대해 이 작업은 되돌릴 수 없습니다.",
     "deleteConfirm": {
       "OCCURRENCE": "이 항목만 삭제됩니다.",
       "THIS_AND_FUTURE": "이 항목과 이후 항목이 삭제됩니다. 반복은 다음 예정 항목부터 계속됩니다.",

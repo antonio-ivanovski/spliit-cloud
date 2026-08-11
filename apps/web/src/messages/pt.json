@@ -550,10 +550,9 @@
       "button": "Eliminar grupo",
       "dialog": {
         "title": "Eliminar este grupo?",
-        "description": "Está prestes a eliminar permanentemente \"{name}\". Cada despesa, recibo, convite e entrada de atividade será removido e não poderá ser recuperado.",
+        "description": "Todas as despesas, recibos, convites e entradas de atividade deste grupo serão eliminados e não poderão ser recuperados.",
         "warningTitle": "Esta ação é irreversível",
         "warningDescription": "Os seguintes dados serão eliminados de imediato:",
-        "checkbox": "Compreendo que isto eliminará permanentemente o grupo e todos os seus dados.",
         "cancel": "Cancelar",
         "confirm": "Eliminar grupo",
         "deleting": "A eliminar…",
@@ -950,10 +949,11 @@
     "DeletePopup": {
       "label": "Eliminar",
       "title": "Eliminar esta despesa?",
-      "description": "Tens a certeza que queres eliminar esta despesa? Esta ação é irreversível.",
+      "description": "Esta despesa será eliminada permanentemente. Esta ação não pode ser anulada.",
       "yes": "Sim",
       "deleting": "A eliminar…",
-      "cancel": "Cancelar"
+      "cancel": "Cancelar",
+      "delete": "Eliminar"
     },
     "attachDocuments": "Anexar documentos",
     "create": "Criar",
@@ -1796,7 +1796,7 @@
     "roleUpdated": "Função atualizada para {role}.",
     "removeDialog": {
       "title": "Remover membro?",
-      "description": "Remover {name} deste grupo? As despesas passadas dele permanecem no livro-razão, mas ele não terá mais acesso.",
+      "description": "As despesas anteriores permanecerão no registo, mas este participante deixará de aparecer na lista de membros e nas novas despesas.",
       "cancel": "Cancelar",
       "confirm": "Remover",
       "unsettled": {
@@ -2437,7 +2437,20 @@
   "Common": {
     "close": "Fechar",
     "previousSlide": "Diapositivo anterior",
-    "nextSlide": "Diapositivo seguinte"
+    "nextSlide": "Diapositivo seguinte",
+    "destructiveConfirmation": {
+      "inputLabel": "Introduza o nome para confirmar",
+      "copyName": "Copiar nome",
+      "copied": "Copiado",
+      "prompt": {
+        "deleteGroup": "Para eliminar permanentemente o grupo <target>{name}</target>, escreve o nome exatamente como apresentado abaixo.",
+        "deleteExpense": "Para eliminar permanentemente a despesa <target>{name}</target>, escreve o título exatamente como apresentado abaixo.",
+        "deleteRecurringExpense": "Para confirmar a eliminação de <target>{name}</target>, escreve o título da despesa exatamente como apresentado abaixo.",
+        "removeParticipant": "Para remover <target>{name}</target> deste grupo, escreve o nome exatamente como apresentado abaixo."
+      },
+      "placeholder": "Escreve «{name}» aqui",
+      "mismatch": "Não corresponde. Escreve exatamente {name}."
+    }
   },
   "Theme": {
     "toggle": "Alterar tema",
@@ -2524,7 +2537,6 @@
     "stopConfirmDescription": "As despesas existentes permanecem. Não serão criadas novas ocorrências.",
     "stopConfirmHint": "Parar é permanente. Para começar novamente, crie uma nova despesa recorrente.",
     "deleteConfirmTitle": "Confirmar eliminação",
-    "deleteConfirmHint": "Esta ação não pode ser desfeita para as ocorrências selecionadas.",
     "deleteConfirm": {
       "OCCURRENCE": "Apenas esta ocorrência será eliminada.",
       "THIS_AND_FUTURE": "Esta e as ocorrências futuras serão eliminadas. A recorrência continuará com a próxima ocorrência agendada.",

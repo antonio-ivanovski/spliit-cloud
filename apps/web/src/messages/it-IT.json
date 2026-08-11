@@ -550,10 +550,9 @@
       "button": "Elimina il gruppo",
       "dialog": {
         "title": "Eliminare questo gruppo?",
-        "description": "Stai per eliminare definitivamente \"{name}\". Ogni spesa, ricevuta, invito e voce di attività verrà rimosso e non potrà essere recuperato.",
+        "description": "Tutte le spese, le ricevute, gli inviti e le voci di attività di questo gruppo verranno eliminati e non potranno essere recuperati.",
         "warningTitle": "Questa azione è irreversibile",
         "warningDescription": "I seguenti dati verranno eliminati immediatamente:",
-        "checkbox": "Capisco che questa operazione eliminerà definitivamente il gruppo e tutti i suoi dati.",
         "cancel": "Annulla",
         "confirm": "Elimina il gruppo",
         "deleting": "Eliminazione…",
@@ -825,10 +824,11 @@
     "DeletePopup": {
       "label": "Rimuovi",
       "title": "Rimuovere questa spesa?",
-      "description": "Vuoi davvero eliminare questa spesa? Questa azione è irreversibile.",
+      "description": "Questa spesa verrà eliminata definitivamente. Questa azione non può essere annullata.",
       "yes": "Si",
       "deleting": "Eliminazione…",
-      "cancel": "Annulla"
+      "cancel": "Annulla",
+      "delete": "Elimina"
     },
     "attachDocuments": "Documenti allegati",
     "create": "Crea",
@@ -1796,7 +1796,7 @@
     "roleUpdated": "Ruolo aggiornato a {role}.",
     "removeDialog": {
       "title": "Rimuovere il membro?",
-      "description": "Rimuovere {name} da questo gruppo? Le sue spese passate rimangono nella contabilità, ma non avrà più accesso.",
+      "description": "Le spese passate rimarranno nel registro contabile, ma questa persona non comparirà più nell’elenco dei membri né nelle nuove spese.",
       "cancel": "Annulla",
       "confirm": "Rimuovi",
       "unsettled": {
@@ -2437,7 +2437,20 @@
   "Common": {
     "close": "Chiudi",
     "previousSlide": "Diapositiva precedente",
-    "nextSlide": "Diapositiva successiva"
+    "nextSlide": "Diapositiva successiva",
+    "destructiveConfirmation": {
+      "inputLabel": "Inserisci il nome per confermare",
+      "copyName": "Copia nome",
+      "copied": "Copiato",
+      "prompt": {
+        "deleteGroup": "Per eliminare definitivamente il gruppo <target>{name}</target>, digita il nome esattamente come mostrato di seguito.",
+        "deleteExpense": "Per eliminare definitivamente la spesa <target>{name}</target>, digita il titolo esattamente come mostrato di seguito.",
+        "deleteRecurringExpense": "Per confermare l’eliminazione di <target>{name}</target>, digita il titolo della spesa esattamente come mostrato di seguito.",
+        "removeParticipant": "Per rimuovere <target>{name}</target> da questo gruppo, digita il nome esattamente come mostrato di seguito."
+      },
+      "placeholder": "Digita «{name}» qui",
+      "mismatch": "Non corrisponde. Digita esattamente {name}."
+    }
   },
   "Theme": {
     "toggle": "Cambia tema",
@@ -2524,7 +2537,6 @@
     "stopConfirmDescription": "Le spese esistenti resteranno. Non verranno create nuove occorrenze.",
     "stopConfirmHint": "L’interruzione è permanente. Per ricominciare, crea una nuova spesa ricorrente.",
     "deleteConfirmTitle": "Conferma eliminazione",
-    "deleteConfirmHint": "Questa azione è irreversibile per le occorrenze selezionate.",
     "deleteConfirm": {
       "OCCURRENCE": "Verrà eliminata solo questa occorrenza.",
       "THIS_AND_FUTURE": "Questa e le occorrenze successive verranno eliminate. La ricorrenza continuerà con la prossima occorrenza programmata.",

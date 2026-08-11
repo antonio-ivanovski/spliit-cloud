@@ -101,13 +101,13 @@ describe('ExportOptionsCard', () => {
     render(<ExportOptionsCard groupId="grp-1" />)
 
     const pdf = screen.getByRole('button', { name: 'Print / save PDF' })
-    const csv = screen.getByRole('link', { name: 'Download CSV' })
     const bundle = screen.getByRole('link', { name: 'Download bundle' })
+    const csv = screen.getByRole('link', { name: 'Download CSV' })
     expect(
       pdf.compareDocumentPosition(csv) & Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy()
     expect(
-      csv.compareDocumentPosition(bundle) & Node.DOCUMENT_POSITION_FOLLOWING,
+      bundle.compareDocumentPosition(csv) & Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy()
   })
 })

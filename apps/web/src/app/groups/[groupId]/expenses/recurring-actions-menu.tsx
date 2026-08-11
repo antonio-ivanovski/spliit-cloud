@@ -2,6 +2,11 @@ import { MoreHorizontal, Pencil, Repeat2, Trash2 } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import {
+  isTypedConfirmationMatch,
+  TypedDestructiveConfirmation,
+  useTypedConfirmationValue,
+} from '@/components/typed-destructive-confirmation'
 import { Button } from '@/components/ui/button'
 import {
   ResponsiveDialog,
@@ -32,6 +37,7 @@ export function RecurringActionsMenu({
   onDelete,
   onStop,
   seriesStatus,
+  confirmationTarget,
   className,
 }: {
   onEdit: (scope: SeriesMutationScope) => void
@@ -39,17 +45,22 @@ export function RecurringActionsMenu({
   onStop?: () => Promise<void>
   /** Series status; CANCELLED/COMPLETED hide stop-related actions. */
   seriesStatus?: 'ACTIVE' | 'PAUSED' | 'COMPLETED' | 'CANCELLED'
+  confirmationTarget: string
   className?: string
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseSeries' })
   const [open, setOpen] = useState(false)
   const [pending, setPending] = useState<Action | null>(null)
   const [confirming, setConfirming] = useState(false)
+  const [confirmationValue, setConfirmationValue] = useTypedConfirmationValue(
+    `${open}:${pending?.kind ?? ''}:${pending?.kind === 'delete' ? pending.option : ''}:${confirmationTarget}`,
+  )
 
   const close = () => {
     setOpen(false)
     setPending(null)
     setConfirming(false)
+    setConfirmationValue('')
   }
 
   const choose = (action: Action) => {
@@ -58,11 +69,18 @@ export function RecurringActionsMenu({
       onEdit(action.scope)
       return
     }
+    setConfirmationValue('')
     setPending(action)
   }
 
   const confirm = async () => {
     if (!pending || confirming) return
+    if (
+      pending.kind === 'delete' &&
+      !isTypedConfirmationMatch(confirmationValue, confirmationTarget)
+    ) {
+      return
+    }
     setConfirming(true)
     try {
       if (pending.kind === 'delete') {
@@ -94,8 +112,8 @@ export function RecurringActionsMenu({
     <ResponsiveDialog
       open={open}
       onOpenChange={(nextOpen) => {
-        setOpen(nextOpen)
-        if (!nextOpen) setPending(null)
+        if (nextOpen) setOpen(true)
+        else close()
       }}
     >
       <Button
@@ -202,8 +220,21 @@ export function RecurringActionsMenu({
             )}
           </ResponsiveDialogBody>
         ) : (
-          <ResponsiveDialogBody className="rounded-md bg-muted/40 px-4 py-3 text-sm">
-            {isDelete ? t('deleteConfirmHint') : t('stopConfirmHint')}
+          <ResponsiveDialogBody>
+            {isDelete ? (
+              <TypedDestructiveConfirmation
+                kind="deleteRecurringExpense"
+                targetName={confirmationTarget}
+                value={confirmationValue}
+                onValueChange={setConfirmationValue}
+                disabled={confirming}
+                onConfirm={confirm}
+              />
+            ) : (
+              <div className="rounded-md bg-muted/40 px-4 py-3 text-sm">
+                {t('stopConfirmHint')}
+              </div>
+            )}
           </ResponsiveDialogBody>
         )}
 
@@ -223,7 +254,14 @@ export function RecurringActionsMenu({
                 variant="destructive"
                 className="flex-1 sm:flex-none"
                 onClick={() => void confirm()}
-                disabled={confirming}
+                disabled={
+                  confirming ||
+                  (isDelete &&
+                    !isTypedConfirmationMatch(
+                      confirmationValue,
+                      confirmationTarget,
+                    ))
+                }
                 aria-busy={confirming}
               >
                 {confirming

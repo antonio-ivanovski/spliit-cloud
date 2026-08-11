@@ -550,10 +550,9 @@
       "button": "Ezabatu taldea",
       "dialog": {
         "title": "Ezabatu talde hau?",
-        "description": "\"{name}\" taldea betiko ezabatuko duzu. Gastu, ordainagiri, gonbidapen eta jarduera-sarrera guztiak ezabatuko dira eta ezin izango dira berreskuratu.",
+        "description": "Talde honetako gastu, ordainagiri, gonbidapen eta jarduera-sarrera guztiak ezabatuko dira, eta ezin izango dira berreskuratu.",
         "warningTitle": "Ekintza hau atzeraezina da",
         "warningDescription": "Datu hauek berehala ezabatuko dira:",
-        "checkbox": "Ulertzen dut honek taldea eta bere datu guztiak betiko ezabatuko dituela.",
         "cancel": "Ezeztatu",
         "confirm": "Ezabatu taldea",
         "deleting": "Ezabatzen…",
@@ -845,10 +844,11 @@
     "DeletePopup": {
       "label": "Ezabatu",
       "title": "Ezabatu gastu hau?",
-      "description": "Benetan gastu hau ezabatu nahi duzu? Ekintzak ez dauka atzera bueltarik.",
+      "description": "Gastu hau behin betiko ezabatuko da. Ekintza hau ezin da desegin.",
       "yes": "Bai",
       "deleting": "Ezabatzen…",
-      "cancel": "Utzi"
+      "cancel": "Utzi",
+      "delete": "Ezabatu"
     },
     "attachDocuments": "Erantsi dokumentuak",
     "create": "Sortu",
@@ -1796,7 +1796,7 @@
     "roleUpdated": "Rola eguneratu da: {role}.",
     "removeDialog": {
       "title": "Kidea kendu?",
-      "description": "Kendu {name} talde honetatik? Bere aurreko gastuak kontabilitatean geratzen dira, baina jada ez du sarbiderik izango.",
+      "description": "Aurreko gastuak kontabilitate-liburuan mantenduko dira, baina parte-hartzaile hau ez da hemendik aurrera kideen zerrendan edo gastu berrietan agertuko.",
       "cancel": "Utzi",
       "confirm": "Kendu",
       "unsettled": {
@@ -2436,7 +2436,20 @@
   "Common": {
     "close": "Itxi",
     "previousSlide": "Aurreko diapositiba",
-    "nextSlide": "Hurrengo diapositiba"
+    "nextSlide": "Hurrengo diapositiba",
+    "destructiveConfirmation": {
+      "inputLabel": "Idatzi izena berresteko",
+      "copyName": "Kopiatu izena",
+      "copied": "Kopiatu da",
+      "prompt": {
+        "deleteGroup": "<target>{name}</target> taldea behin betiko ezabatzeko, idatzi haren izena behean agertzen den bezala, zehatz-mehatz.",
+        "deleteExpense": "<target>{name}</target> gastua behin betiko ezabatzeko, idatzi haren izenburua behean agertzen den bezala, zehatz-mehatz.",
+        "deleteRecurringExpense": "<target>{name}</target> ezabatzea berresteko, idatzi gastuaren izenburua behean agertzen den bezala, zehatz-mehatz.",
+        "removeParticipant": "<target>{name}</target> talde honetatik kentzeko, idatzi haren izena behean agertzen den bezala, zehatz-mehatz."
+      },
+      "placeholder": "Idatzi «{name}» hemen",
+      "mismatch": "Ez dator bat. Idatzi {name} zehatz-mehatz."
+    }
   },
   "Theme": {
     "toggle": "Aldatu gaia",
@@ -2523,7 +2536,6 @@
     "stopConfirmDescription": "Dauden gastuak mantenduko dira. Ez da agerraldi berririk sortuko.",
     "stopConfirmHint": "Gelditzea behin betikoa da. Berriro hasteko, sortu gastu errepikakor berri bat.",
     "deleteConfirmTitle": "Berretsi ezabatzea",
-    "deleteConfirmHint": "Ekintza hau ezin da desegin hautatutako agerraldietan.",
     "deleteConfirm": {
       "OCCURRENCE": "Agerraldi hau bakarrik ezabatuko da.",
       "THIS_AND_FUTURE": "Agerraldi hau eta hurrengoak ezabatuko dira. Errepikapenak programatutako hurrengo agerraldiarekin jarraituko du.",

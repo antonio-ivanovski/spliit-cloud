@@ -65,6 +65,40 @@ function SampleDialog() {
   )
 }
 
+function NestedDialogs({ threeLevels = false }: { threeLevels?: boolean }) {
+  return (
+    <ResponsiveDialog defaultOpen>
+      <ResponsiveDialogContent data-testid="parent-dialog">
+        <ResponsiveDialogTitle>Parent dialog</ResponsiveDialogTitle>
+        <ResponsiveDialogDescription>
+          Parent description
+        </ResponsiveDialogDescription>
+        <ResponsiveDialog defaultOpen>
+          <ResponsiveDialogContent
+            className="nested-custom-class max-w-xl"
+            data-testid="nested-dialog"
+          >
+            <ResponsiveDialogTitle>Nested dialog</ResponsiveDialogTitle>
+            <ResponsiveDialogDescription>
+              Nested description
+            </ResponsiveDialogDescription>
+            {threeLevels ? (
+              <ResponsiveDialog defaultOpen>
+                <ResponsiveDialogContent data-testid="third-dialog">
+                  <ResponsiveDialogTitle>Third dialog</ResponsiveDialogTitle>
+                  <ResponsiveDialogDescription>
+                    Third description
+                  </ResponsiveDialogDescription>
+                </ResponsiveDialogContent>
+              </ResponsiveDialog>
+            ) : null}
+          </ResponsiveDialogContent>
+        </ResponsiveDialog>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
+  )
+}
+
 // ── Tests ───────────────────────────────────────────────────────────────
 
 describe('ResponsiveDialog', () => {
@@ -120,6 +154,93 @@ describe('ResponsiveDialog', () => {
       'min-h-0',
       'flex-1',
       'overflow-y-auto',
+    )
+  })
+
+  it('dims the parent and elevates a nested desktop dialog', () => {
+    mockDesktopMediaQuery()
+    render(<NestedDialogs />)
+
+    expect(screen.getByTestId('parent-dialog')).toHaveAttribute(
+      'data-nested-dialog-open',
+    )
+    expect(screen.getByTestId('parent-dialog')).toHaveClass(
+      'data-[nested-dialog-open]:scale-[0.96]',
+      'data-[nested-dialog-open]:brightness-75',
+    )
+    expect(screen.getByTestId('nested-dialog')).toHaveClass(
+      'shadow-[0_24px_80px_-20px_rgb(0_0_0/0.65)]',
+      'ring-1',
+      'ring-foreground/20',
+      'nested-custom-class',
+      'max-w-xl',
+    )
+  })
+
+  it('dims the parent and elevates a nested mobile drawer', () => {
+    mockMobileMediaQuery()
+    render(<NestedDialogs />)
+
+    expect(screen.getByTestId('parent-dialog')).toHaveAttribute(
+      'data-nested-drawer-open',
+    )
+    expect(screen.getByTestId('parent-dialog')).toHaveClass(
+      'data-[nested-drawer-open]:-translate-y-2',
+      'data-[nested-drawer-open]:scale-[0.96]',
+      'data-[nested-drawer-open]:brightness-75',
+    )
+    expect(screen.getByTestId('nested-dialog')).toHaveClass(
+      'shadow-[0_24px_80px_-20px_rgb(0_0_0/0.65)]',
+      'ring-1',
+      'ring-foreground/20',
+      'nested-custom-class',
+      'max-w-xl',
+    )
+  })
+
+  it('does not apply nested elevation to a standalone dialog or drawer', () => {
+    mockDesktopMediaQuery()
+    const { unmount } = render(<SampleDialog />)
+
+    expect(screen.getByRole('dialog')).toHaveClass('shadow-lg')
+    expect(screen.getByRole('dialog')).not.toHaveClass(
+      'shadow-[0_24px_80px_-20px_rgb(0_0_0/0.65)]',
+      'ring-foreground/20',
+    )
+    expect(screen.getByRole('dialog')).not.toHaveAttribute(
+      'data-nested-dialog-open',
+    )
+
+    unmount()
+    mockMobileMediaQuery()
+    render(<SampleDialog />)
+
+    expect(screen.getByRole('dialog')).toHaveClass('shadow-xl')
+    expect(screen.getByRole('dialog')).not.toHaveClass(
+      'shadow-[0_24px_80px_-20px_rgb(0_0_0/0.65)]',
+      'ring-foreground/20',
+    )
+    expect(screen.getByRole('dialog')).not.toHaveAttribute(
+      'data-nested-drawer-open',
+    )
+  })
+
+  it('recedes every inactive layer in a three-dialog stack', () => {
+    mockDesktopMediaQuery()
+    render(<NestedDialogs threeLevels />)
+
+    expect(screen.getByTestId('parent-dialog')).toHaveAttribute(
+      'data-nested-dialog-open',
+    )
+    expect(screen.getByTestId('nested-dialog')).toHaveAttribute(
+      'data-nested-dialog-open',
+    )
+    expect(screen.getByTestId('third-dialog')).not.toHaveAttribute(
+      'data-nested-dialog-open',
+    )
+    expect(screen.getByTestId('third-dialog')).toHaveClass(
+      'shadow-[0_24px_80px_-20px_rgb(0_0_0/0.65)]',
+      'ring-foreground/20',
     )
   })
 

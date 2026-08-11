@@ -1,12 +1,19 @@
 import { Trash2 } from 'lucide-react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import {
+  isTypedConfirmationMatch,
+  TypedDestructiveConfirmation,
+  useTypedConfirmationValue,
+} from '@/components/typed-destructive-confirmation'
 import { cn } from '@/lib/utils'
 
 import { AsyncButton } from './async-button'
 import { Button } from './ui/button'
 import {
   ResponsiveDialog,
+  ResponsiveDialogBody,
   ResponsiveDialogClose,
   ResponsiveDialogContent,
   ResponsiveDialogDescription,
@@ -31,14 +38,48 @@ type Props = {
     deleting?: string
     cancel?: string
   }
+  /** When provided, the destructive action requires typing this exact name. */
+  confirmationTarget?: string
 }
 
-export function DeletePopup({ onDelete, className, labels }: Props) {
+export function DeletePopup({
+  onDelete,
+  className,
+  labels,
+  confirmationTarget,
+}: Props) {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'ExpenseForm.DeletePopup',
   })
+  const [open, setOpen] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [confirmationValue, setConfirmationValue] = useTypedConfirmationValue(
+    `${open}:${confirmationTarget ?? ''}`,
+  )
+  const requiresConfirmation = confirmationTarget != null
+  const canDelete =
+    !requiresConfirmation ||
+    isTypedConfirmationMatch(confirmationValue, confirmationTarget)
+
+  async function confirmDelete() {
+    if (!canDelete || submitting) return
+    setSubmitting(true)
+    try {
+      await onDelete()
+      setOpen(false)
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
   return (
-    <ResponsiveDialog>
+    <ResponsiveDialog
+      open={open}
+      onOpenChange={(nextOpen) => {
+        if (!nextOpen && submitting) return
+        setOpen(nextOpen)
+      }}
+    >
       <ResponsiveDialogTrigger
         render={
           <Button
@@ -64,14 +105,27 @@ export function DeletePopup({ onDelete, className, labels }: Props) {
             {labels?.description ?? t('description')}
           </ResponsiveDialogDescription>
         </ResponsiveDialogHeader>
+        {requiresConfirmation && confirmationTarget ? (
+          <ResponsiveDialogBody>
+            <TypedDestructiveConfirmation
+              kind="deleteExpense"
+              targetName={confirmationTarget}
+              value={confirmationValue}
+              onValueChange={setConfirmationValue}
+              disabled={submitting}
+              onConfirm={confirmDelete}
+            />
+          </ResponsiveDialogBody>
+        ) : null}
         <ResponsiveDialogFooter className="flex flex-col gap-2">
           <AsyncButton
             type="button"
             variant="destructive"
             loadingContent={labels?.deleting ?? t('deleting')}
-            action={onDelete}
+            action={confirmDelete}
+            disabled={!canDelete || submitting}
           >
-            {labels?.yes ?? t('yes')}
+            {labels?.yes ?? t(requiresConfirmation ? 'delete' : 'yes')}
           </AsyncButton>
           <ResponsiveDialogClose
             render={

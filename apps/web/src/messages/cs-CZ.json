@@ -555,10 +555,9 @@
       "button": "Smazat skupinu",
       "dialog": {
         "title": "Smazat tuto skupinu?",
-        "description": "Chystáte se trvale smazat „{name}“. Každý výdaj, účtenka, pozvánka i záznam aktivity budou odstraněny a nelze je obnovit.",
+        "description": "Všechny výdaje, účtenky, pozvánky a záznamy aktivit v této skupině budou odstraněny a nebude možné je obnovit.",
         "warningTitle": "Tato akce je nevratná",
         "warningDescription": "Následující data budou okamžitě smazána:",
-        "checkbox": "Rozumím, že tím trvale smažu skupinu a všechna její data.",
         "cancel": "Zrušit",
         "confirm": "Smazat skupinu",
         "deleting": "Mazání…",
@@ -854,10 +853,11 @@
     "DeletePopup": {
       "label": "Smazat",
       "title": "Smazat tento výdaj?",
-      "description": "Opravdu chcete tento výdaj smazat? Tato akce je nevratná.",
+      "description": "Tento výdaj bude trvale odstraněn. Tuto akci nelze vrátit zpět.",
       "yes": "Ano",
       "deleting": "Mazání…",
-      "cancel": "Zrušit"
+      "cancel": "Zrušit",
+      "delete": "Smazat"
     },
     "attachDocuments": "Připojit dokumenty",
     "create": "Vytvořit",
@@ -1804,7 +1804,7 @@
     "roleUpdated": "Role změněna na {role}.",
     "removeDialog": {
       "title": "Odebrat člena?",
-      "description": "Odebrat {name} z této skupiny? Jejich minulé výdaje zůstávají v účetním deníku, ale již k nim nebudou mít přístup.",
+      "description": "Předchozí výdaje zůstanou v účetním deníku, ale tento účastník se už nebude zobrazovat v seznamu členů ani u nových výdajů.",
       "cancel": "Zrušit",
       "confirm": "Odebrat",
       "unsettled": {
@@ -2455,7 +2455,20 @@
   "Common": {
     "close": "Zavřít",
     "previousSlide": "Předchozí snímek",
-    "nextSlide": "Následující snímek"
+    "nextSlide": "Následující snímek",
+    "destructiveConfirmation": {
+      "inputLabel": "Zadejte název pro potvrzení",
+      "copyName": "Kopírovat název",
+      "copied": "Zkopírováno",
+      "prompt": {
+        "deleteGroup": "Chcete-li skupinu <target>{name}</target> trvale smazat, zadejte její název přesně tak, jak je uveden níže.",
+        "deleteExpense": "Chcete-li výdaj <target>{name}</target> trvale smazat, zadejte jeho název přesně tak, jak je uveden níže.",
+        "deleteRecurringExpense": "Chcete-li potvrdit smazání položky <target>{name}</target>, zadejte název výdaje přesně tak, jak je uveden níže.",
+        "removeParticipant": "Chcete-li ze skupiny odebrat účastníka <target>{name}</target>, zadejte jeho jméno přesně tak, jak je uvedeno níže."
+      },
+      "placeholder": "Sem zadejte „{name}“",
+      "mismatch": "Neshoduje se. Zadejte přesně {name}."
+    }
   },
   "Theme": {
     "toggle": "Změnit motiv",
@@ -2542,7 +2555,6 @@
     "stopConfirmDescription": "Stávající výdaje zůstanou. Nebudou vytvořeny žádné nové výskyty.",
     "stopConfirmHint": "Zastavení je trvalé. Chcete-li začít znovu, vytvořte nový opakovaný výdaj.",
     "deleteConfirmTitle": "Potvrdit smazání",
-    "deleteConfirmHint": "Tuto akci pro vybrané výskyty nelze vrátit zpět.",
     "deleteConfirm": {
       "OCCURRENCE": "Bude smazán pouze tento výskyt.",
       "THIS_AND_FUTURE": "Tento a následující výskyty budou smazány. Opakování bude pokračovat dalším naplánovaným výskytem.",

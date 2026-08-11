@@ -486,6 +486,7 @@ export function ExpensePreviewModal({
               <RecurringActionsMenu
                 className="me-auto"
                 seriesStatus={series.status}
+                confirmationTarget={expense?.title ?? ''}
                 onEdit={handleEdit}
                 onDelete={(option) => handleDelete(option)}
                 onStop={
@@ -496,7 +497,11 @@ export function ExpensePreviewModal({
               />
             ) : null
           ) : canDelete ? (
-            <DeletePopup onDelete={() => handleDelete()} className="me-auto" />
+            <DeletePopup
+              onDelete={() => handleDelete()}
+              confirmationTarget={expense?.title ?? ''}
+              className="me-auto"
+            />
           ) : null}
           {canCopy && (
             <>

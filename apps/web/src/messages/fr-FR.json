@@ -550,10 +550,9 @@
       "button": "Supprimer le groupe",
       "dialog": {
         "title": "Supprimer ce groupe ?",
-        "description": "Vous allez supprimer définitivement «{name} ». Chaque dépense, reçu, invitation et entrée d'activité sera supprimé et ne pourra pas être récupéré.",
+        "description": "Toutes les dépenses, tous les reçus, toutes les invitations et toutes les entrées d’activité de ce groupe seront supprimés et ne pourront pas être récupérés.",
         "warningTitle": "Cette action est irréversible",
         "warningDescription": "Les données suivantes seront supprimées immédiatement :",
-        "checkbox": "Je comprends que cela supprimera définitivement le groupe et toutes ses données.",
         "cancel": "Annuler",
         "confirm": "Supprimer le groupe",
         "deleting": "Suppression…",
@@ -825,10 +824,11 @@
     "DeletePopup": {
       "label": "Supprimer",
       "title": "Supprimer cette dépense ?",
-      "description": "Voulez-vous vraiment supprimer cette dépense ? Cette action est irréversible.",
+      "description": "Cette dépense sera supprimée définitivement. Cette action est irréversible.",
       "yes": "Oui",
       "deleting": "Suppression…",
-      "cancel": "Annuler"
+      "cancel": "Annuler",
+      "delete": "Supprimer"
     },
     "attachDocuments": "Joindre des documents",
     "create": "Créer",
@@ -1796,7 +1796,7 @@
     "roleUpdated": "Rôle mis à jour en {role}.",
     "removeDialog": {
       "title": "Supprimer le membre ?",
-      "description": "Supprimer {name} de ce groupe ? Ses dépenses passées restent dans le journal, mais il n'y aura plus accès.",
+      "description": "Les dépenses passées resteront dans le registre, mais cette personne n’apparaîtra plus dans la liste des membres ni dans les nouvelles dépenses.",
       "cancel": "Annuler",
       "confirm": "Supprimer",
       "unsettled": {
@@ -2437,7 +2437,20 @@
   "Common": {
     "close": "Fermer",
     "previousSlide": "Diapositive précédente",
-    "nextSlide": "Diapositive suivante"
+    "nextSlide": "Diapositive suivante",
+    "destructiveConfirmation": {
+      "inputLabel": "Saisissez le nom pour confirmer",
+      "copyName": "Copier le nom",
+      "copied": "Copié",
+      "prompt": {
+        "deleteGroup": "Pour supprimer définitivement le groupe <target>{name}</target>, saisissez son nom exactement comme indiqué ci-dessous.",
+        "deleteExpense": "Pour supprimer définitivement la dépense <target>{name}</target>, saisissez son titre exactement comme indiqué ci-dessous.",
+        "deleteRecurringExpense": "Pour confirmer la suppression de <target>{name}</target>, saisissez le titre de la dépense exactement comme indiqué ci-dessous.",
+        "removeParticipant": "Pour retirer <target>{name}</target> de ce groupe, saisissez son nom exactement comme indiqué ci-dessous."
+      },
+      "placeholder": "Saisissez « {name} » ici",
+      "mismatch": "Cela ne correspond pas. Saisissez exactement {name}."
+    }
   },
   "Theme": {
     "toggle": "Changer de thème",
@@ -2524,7 +2537,6 @@
     "stopConfirmDescription": "Les dépenses existantes seront conservées. Aucune nouvelle occurrence ne sera créée.",
     "stopConfirmHint": "L’arrêt est définitif. Pour recommencer, créez une nouvelle dépense récurrente.",
     "deleteConfirmTitle": "Confirmer la suppression",
-    "deleteConfirmHint": "Cette action est irréversible pour les occurrences sélectionnées.",
     "deleteConfirm": {
       "OCCURRENCE": "Seule cette occurrence sera supprimée.",
       "THIS_AND_FUTURE": "Cette occurrence et les suivantes seront supprimées. La récurrence continuera avec la prochaine occurrence programmée.",

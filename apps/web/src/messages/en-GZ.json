@@ -756,7 +756,20 @@
   "Common": {
     "close": "close it",
     "previousSlide": "previous slide, bestie",
-    "nextSlide": "next slide, bestie"
+    "nextSlide": "next slide, bestie",
+    "destructiveConfirmation": {
+      "inputLabel": "type the name to confirm",
+      "copyName": "copy that name",
+      "copied": "copied, nice",
+      "prompt": {
+        "deleteGroup": "To delete the group <target>{name}</target> for good, type its name exactly as shown below.",
+        "deleteExpense": "To delete the expense <target>{name}</target> for good, type its title exactly as shown below.",
+        "deleteRecurringExpense": "To confirm deleting <target>{name}</target>, type the expense title exactly as shown below.",
+        "removeParticipant": "To take <target>{name}</target> out of this group, type their name exactly as shown below."
+      },
+      "placeholder": "Enter “{name}” here",
+      "mismatch": "No match. Enter {name} exactly."
+    }
   },
   "CompleteProfile": {
     "title": "finish your profile arc",
@@ -1234,10 +1247,11 @@
     "DeletePopup": {
       "label": "delete it",
       "title": "delete this expense?",
-      "description": "do you really want to delete this expense? this cannot be undone, fr.",
+      "description": "this expense will be gone for good. you can't undo this.",
       "yes": "yes, yeet it",
       "deleting": "deleting…",
-      "cancel": "cancel, never mind"
+      "cancel": "cancel, never mind",
+      "delete": "delete"
     },
     "Expense": {
       "DateField": {
@@ -1607,7 +1621,6 @@
     "stopConfirmDescription": "existing expenses stay. no new repeats will be created.",
     "stopConfirmHint": "stopping is permanent. to start again, create a new recurring expense.",
     "deleteConfirmTitle": "confirm the yeet",
-    "deleteConfirmHint": "this cannot be undone for the selected repeats.",
     "deleteConfirm": {
       "OCCURRENCE": "only this repeat gets deleted.",
       "THIS_AND_FUTURE": "this and following repeats get deleted. recurrence continues with the next scheduled one.",
@@ -2221,10 +2234,9 @@
       "button": "delete the group",
       "dialog": {
         "title": "delete this group?",
-        "description": "you are about to permanently delete \"{name}\". every expense, receipt, invite, and activity entry vanishes and cannot be recovered.",
+        "description": "every expense, receipt, invite, and activity entry in this group will be gone for good and can't be recovered.",
         "warningTitle": "this action is irreversible, no cap",
         "warningDescription": "the following data gets deleted immediately:",
-        "checkbox": "I understand this permanently deletes the group and all its data.",
         "cancel": "cancel, never mind",
         "confirm": "delete the group",
         "deleting": "deleting…",
@@ -2470,7 +2482,7 @@
     "roleUpdated": "role updated to {role}.",
     "removeDialog": {
       "title": "remove participant?",
-      "description": "remove {name} from this group? past expenses stay in the ledger, but they disappear from members and new expenses.",
+      "description": "past expenses stay in the ledger, but this participant won't show up in the member list or new expenses anymore.",
       "cancel": "cancel, never mind",
       "confirm": "remove them",
       "unsettled": {

@@ -1,7 +1,7 @@
 import { Check, Copy } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
-import { Button } from '@/components/ui/button'
+import { Button, type ButtonProps } from '@/components/ui/button'
 
 type Props = {
   text: string
@@ -9,9 +9,19 @@ type Props = {
   ariaLabel: string
   /** Live-region feedback announced when the copy succeeds. */
   copiedLabel: string
+  className?: string
+  size?: ButtonProps['size']
+  variant?: ButtonProps['variant']
 }
 
-export function CopyButton({ text, ariaLabel, copiedLabel }: Props) {
+export function CopyButton({
+  text,
+  ariaLabel,
+  copiedLabel,
+  className,
+  size = 'icon',
+  variant = 'secondary',
+}: Props) {
   const [copied, setCopied] = useState(false)
 
   useEffect(() => {
@@ -26,8 +36,9 @@ export function CopyButton({ text, ariaLabel, copiedLabel }: Props) {
 
   return (
     <Button
-      size="icon"
-      variant="secondary"
+      size={size}
+      variant={variant}
+      className={className}
       type="button"
       aria-label={ariaLabel}
       onClick={() => {

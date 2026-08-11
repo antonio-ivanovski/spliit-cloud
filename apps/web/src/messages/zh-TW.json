@@ -540,10 +540,9 @@
       "button": "刪除群組",
       "dialog": {
         "title": "刪除此群組？",
-        "description": "您即將永久刪除「{name}」。所有消費、收據、邀請與活動紀錄都會被刪除，且無法復原。",
+        "description": "此群組中的所有支出、收據、邀請與活動紀錄都將被刪除，且無法復原。",
         "warningTitle": "此操作無法復原",
         "warningDescription": "以下資料將立即刪除：",
-        "checkbox": "我了解這將永久刪除此群組及其所有資料。",
         "cancel": "取消",
         "confirm": "刪除群組",
         "deleting": "刪除中…",
@@ -813,10 +812,11 @@
     "DeletePopup": {
       "label": "刪除",
       "title": "要刪除這筆消費嗎？",
-      "description": "確定要刪除這筆消費嗎？刪除後無法回復哦。",
+      "description": "此筆支出將被永久刪除。此操作無法復原。",
       "yes": "確定",
       "deleting": "正在刪除…",
-      "cancel": "取消"
+      "cancel": "取消",
+      "delete": "刪除"
     },
     "attachDocuments": "附件",
     "create": "新增",
@@ -1777,7 +1777,6 @@
     },
     "remove": "移除",
     "removeDialog": {
-      "description": "將 {name} 從此群組移除？其過往支出將保留在帳本中，但他們將不再有存取權限。",
       "unsettled": {
         "title": "刪除有未結算餘額的成員？",
         "toast": "成員已移除，餘額已結算。",
@@ -1795,6 +1794,7 @@
         "previewWillCreate_other": "將建立 {count} 筆結算付款"
       },
       "title": "移除成員？",
+      "description": "過往支出將保留在帳本中，但這位參與者將不再出現在成員清單或新的支出中。",
       "cancel": "取消",
       "confirm": "移除"
     },
@@ -2403,7 +2403,20 @@
   "Common": {
     "close": "關閉",
     "previousSlide": "上一張投影片",
-    "nextSlide": "下一張投影片"
+    "nextSlide": "下一張投影片",
+    "destructiveConfirmation": {
+      "inputLabel": "輸入名稱以確認",
+      "copyName": "複製名稱",
+      "copied": "已複製",
+      "prompt": {
+        "deleteGroup": "若要永久刪除群組<target>{name}</target>，請輸入與下方顯示完全一致的名稱。",
+        "deleteExpense": "若要永久刪除支出<target>{name}</target>，請輸入與下方顯示完全一致的標題。",
+        "deleteRecurringExpense": "若要確認刪除<target>{name}</target>，請輸入與下方顯示完全一致的支出標題。",
+        "removeParticipant": "若要從此群組移除<target>{name}</target>，請輸入與下方顯示完全一致的姓名。"
+      },
+      "placeholder": "請在此輸入 「{name}」",
+      "mismatch": "不相符。請正確輸入 {name}。"
+    }
   },
   "Theme": {
     "toggle": "更改主題",
@@ -2490,7 +2503,6 @@
     "stopConfirmDescription": "現有支出會保留。不會建立新的重複項目。",
     "stopConfirmHint": "停止後無法恢復。若要重新開始，請建立新的定期支出。",
     "deleteConfirmTitle": "確認刪除",
-    "deleteConfirmHint": "此操作對所選重複項目無法復原。",
     "deleteConfirm": {
       "OCCURRENCE": "僅刪除此重複項目。",
       "THIS_AND_FUTURE": "刪除此及未來的重複項目。重複將從下一個排定的項目繼續。",

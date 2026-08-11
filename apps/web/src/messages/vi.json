@@ -62,7 +62,20 @@
   "Common": {
     "close": "Đóng",
     "previousSlide": "Trước",
-    "nextSlide": "Tiếp theo"
+    "nextSlide": "Tiếp theo",
+    "destructiveConfirmation": {
+      "inputLabel": "Nhập tên để xác nhận",
+      "copyName": "Sao chép tên",
+      "copied": "Đã sao chép",
+      "prompt": {
+        "deleteGroup": "Để xóa vĩnh viễn nhóm <target>{name}</target>, hãy nhập chính xác tên nhóm như hiển thị bên dưới.",
+        "deleteExpense": "Để xóa vĩnh viễn khoản chi <target>{name}</target>, hãy nhập chính xác tiêu đề như hiển thị bên dưới.",
+        "deleteRecurringExpense": "Để xác nhận xóa <target>{name}</target>, hãy nhập chính xác tiêu đề khoản chi như hiển thị bên dưới.",
+        "removeParticipant": "Để xóa <target>{name}</target> khỏi nhóm này, hãy nhập chính xác tên như hiển thị bên dưới."
+      },
+      "placeholder": "Nhập “{name}” vào đây",
+      "mismatch": "Không khớp. Nhập chính xác {name}."
+    }
   },
   "Theme": {
     "toggle": "Đổi giao diện",
@@ -245,7 +258,6 @@
     "stopConfirmDescription": "Các chi phí hiện có vẫn giữ. Không tạo lần mới.",
     "stopConfirmHint": "Việc dừng là vĩnh viễn. Để bắt đầu lại, hãy tạo một chi phí định kỳ mới.",
     "deleteConfirmTitle": "Xác nhận",
-    "deleteConfirmHint": "Không thể hoàn tác.",
     "deleteConfirm": {
       "OCCURRENCE": "Chỉ lần xuất hiện này sẽ bị xóa.",
       "THIS_AND_FUTURE": "Lần này và các lần sau sẽ bị xóa. Chuỗi định kỳ sẽ tiếp tục với lần được lên lịch tiếp theo.",
@@ -309,7 +321,7 @@
       },
       "dialog": {
         "title": "Xóa nhóm này?",
-        "description": "Bạn sắp xóa vĩnh viễn \"{name}\". Mọi chi phí, biên lai, lời mời và mục hoạt động sẽ bị xóa và không thể khôi phục.",
+        "description": "Mọi khoản chi, biên lai, lời mời và mục hoạt động trong nhóm này sẽ bị xóa và không thể khôi phục.",
         "warningTitle": "Hành động này không thể hoàn tác",
         "warningDescription": "Hành động này sẽ xóa vĩnh viễn:",
         "warningList": {
@@ -318,7 +330,6 @@
           "invitations": "Tất cả lời mời",
           "receipts": "Tất cả biên lai"
         },
-        "checkbox": "Tôi hiểu hành động này sẽ xóa vĩnh viễn nhóm và toàn bộ dữ liệu của nó.",
         "cancel": "Hủy",
         "confirm": "Xóa",
         "deleting": "Đang xóa…"
@@ -1258,10 +1269,11 @@
     "DeletePopup": {
       "label": "Xóa chi phí",
       "title": "Xóa chi phí",
-      "description": "Bạn có chắc muốn xóa chi phí này? Hành động này không thể hoàn tác.",
+      "description": "Khoản chi này sẽ bị xóa vĩnh viễn. Hành động này không thể hoàn tác.",
       "yes": "Xóa",
       "deleting": "Đang xóa…",
-      "cancel": "Hủy"
+      "cancel": "Hủy",
+      "delete": "Xóa"
     },
     "attachDocuments": "Đính kèm",
     "create": "Tạo",
@@ -2042,7 +2054,7 @@
     "roleUpdated": "Đã cập nhật vai trò. {role}",
     "removeDialog": {
       "title": "Xóa thành viên",
-      "description": "Xóa thành viên khỏi nhóm. {name}",
+      "description": "Các khoản chi trước đây sẽ vẫn được lưu trong sổ, nhưng người tham gia này sẽ không còn xuất hiện trong danh sách thành viên hoặc các khoản chi mới.",
       "cancel": "Hủy",
       "confirm": "Xóa",
       "unsettled": {

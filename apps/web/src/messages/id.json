@@ -540,10 +540,9 @@
       "button": "Hapus grup",
       "dialog": {
         "title": "Hapus grup ini?",
-        "description": "Anda akan menghapus secara permanen \"{name}\". Setiap pengeluaran, tanda terima, undangan, dan catatan aktivitas akan dihapus dan tidak dapat dipulihkan.",
+        "description": "Setiap pengeluaran, tanda terima, undangan, dan catatan aktivitas dalam grup ini akan dihapus dan tidak dapat dipulihkan.",
         "warningTitle": "Tindakan ini tidak dapat dibatalkan",
         "warningDescription": "Data berikut akan dihapus segera:",
-        "checkbox": "Saya memahami bahwa tindakan ini akan menghapus grup secara permanen beserta seluruh datanya.",
         "cancel": "Batal",
         "confirm": "Hapus grup",
         "deleting": "Menghapus…",
@@ -833,10 +832,11 @@
     "DeletePopup": {
       "label": "Hapus",
       "title": "Hapus pengeluaran?",
-      "description": "Apakah Anda yakin ingin menghapus pengeluaran ini? Tindakan ini tidak dapat dibatalkan.",
+      "description": "Pengeluaran ini akan dihapus secara permanen. Tindakan ini tidak dapat dibatalkan.",
       "yes": "Iya",
       "deleting": "Menghapus…",
-      "cancel": "Batalkan"
+      "cancel": "Batalkan",
+      "delete": "Hapus"
     },
     "attachDocuments": "Lampirkan dokumen",
     "create": "Buat",
@@ -1781,7 +1781,7 @@
     "roleUpdated": "Peran diperbarui menjadi {role}.",
     "removeDialog": {
       "title": "Hapus anggota?",
-      "description": "Hapus {name} dari grup ini? Pengeluaran masa lalu mereka tetap di buku besar tetapi mereka tidak akan lagi memiliki akses.",
+      "description": "Pengeluaran sebelumnya akan tetap tercatat, tetapi peserta ini tidak akan lagi muncul dalam daftar anggota atau pengeluaran baru.",
       "cancel": "Batal",
       "confirm": "Hapus",
       "unsettled": {
@@ -2403,7 +2403,20 @@
   "Common": {
     "close": "Tutup",
     "previousSlide": "Slide sebelumnya",
-    "nextSlide": "Slide berikutnya"
+    "nextSlide": "Slide berikutnya",
+    "destructiveConfirmation": {
+      "inputLabel": "Masukkan nama untuk mengonfirmasi",
+      "copyName": "Salin nama",
+      "copied": "Disalin",
+      "prompt": {
+        "deleteGroup": "Untuk menghapus grup <target>{name}</target> secara permanen, ketik namanya persis seperti yang ditampilkan di bawah.",
+        "deleteExpense": "Untuk menghapus pengeluaran <target>{name}</target> secara permanen, ketik judulnya persis seperti yang ditampilkan di bawah.",
+        "deleteRecurringExpense": "Untuk mengonfirmasi penghapusan <target>{name}</target>, ketik judul pengeluaran persis seperti yang ditampilkan di bawah.",
+        "removeParticipant": "Untuk menghapus <target>{name}</target> dari grup ini, ketik namanya persis seperti yang ditampilkan di bawah."
+      },
+      "placeholder": "Ketik “{name}” di sini",
+      "mismatch": "Tidak cocok. Ketik {name} dengan tepat."
+    }
   },
   "Theme": {
     "toggle": "Ubah tema",
@@ -2490,7 +2503,6 @@
     "stopConfirmDescription": "Pengeluaran yang ada akan tetap. Tidak ada kejadian baru yang dibuat.",
     "stopConfirmHint": "Penghentian bersifat permanen. Untuk memulai lagi, buat pengeluaran berulang baru.",
     "deleteConfirmTitle": "Konfirmasi penghapusan",
-    "deleteConfirmHint": "Tindakan ini tidak dapat dibatalkan untuk kejadian yang dipilih.",
     "deleteConfirm": {
       "OCCURRENCE": "Hanya kejadian ini yang akan dihapus.",
       "THIS_AND_FUTURE": "Kejadian ini dan berikutnya akan dihapus. Pengulangan akan berlanjut pada kejadian terjadwal berikutnya.",

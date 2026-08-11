@@ -545,7 +545,7 @@
       "button": "Poista ryhmä",
       "dialog": {
         "title": "Poistetaanko tämä ryhmä?",
-        "description": "Olet poistamassa pysyvästi ryhmää \"{name}\". Kaikki kulut, kuitit, kutsut ja aktiviteettimerkinnät poistetaan, eikä niitä voi palauttaa.",
+        "description": "Kaikki tämän ryhmän kulut, kuitit, kutsut ja aktiviteettimerkinnät poistetaan, eikä niitä voi palauttaa.",
         "warningTitle": "Tätä toimintoa ei voi peruuttaa",
         "warningDescription": "Seuraavat tiedot poistetaan välittömästi:",
         "warningList": {
@@ -554,7 +554,6 @@
           "invitations": "Odottavat kutsut",
           "receipts": "Ladatut kuittitiedostot"
         },
-        "checkbox": "Ymmärrän, että tämä poistaa pysyvästi ryhmän ja kaikki sen tiedot.",
         "cancel": "Peruuta",
         "confirm": "Poista ryhmä",
         "deleting": "Poistetaan …"
@@ -842,10 +841,11 @@
     "DeletePopup": {
       "label": "Poista",
       "title": "Poistetaanko tämä kulu?",
-      "description": "Haluatko varmasti poistaa tämän kulun? Poistoa ei voi peruuttaa.",
+      "description": "Tämä kulu poistetaan pysyvästi. Toimintoa ei voi peruuttaa.",
       "yes": "Kyllä",
       "deleting": "Poistetaan…",
-      "cancel": "Peruuta"
+      "cancel": "Peruuta",
+      "delete": "Poista"
     },
     "attachDocuments": "Liitä dokumenttejä",
     "create": "Lisää kulu",
@@ -1785,7 +1785,6 @@
     "changeRoleAria": "Vaihda roolia",
     "removed": "Jäsen poistettu.",
     "removeDialog": {
-      "description": "Poistetaanko {name} tästä ryhmästä? Hänen menneet kulunsa säilyvät kirjanpidossa, mutta hän ei enää pääse niihin käsiksi.",
       "confirm": "Poista",
       "unsettled": {
         "title": "Poistetaanko jäsen, jolla on tasaussaatavia?",
@@ -1804,6 +1803,7 @@
         "previewWillCreate_other": "Luodaan {count} tilitysmaksua"
       },
       "title": "Poistetaanko jäsen?",
+      "description": "Aiemmat kulut säilyvät kirjanpidossa, mutta tämä osallistuja ei enää näy jäsenluettelossa eikä uusissa kuluissa.",
       "cancel": "Peruuta"
     },
     "leave": {
@@ -2419,7 +2419,20 @@
   "Common": {
     "close": "Sulje",
     "previousSlide": "Edellinen dia",
-    "nextSlide": "Seuraava dia"
+    "nextSlide": "Seuraava dia",
+    "destructiveConfirmation": {
+      "inputLabel": "Vahvista kirjoittamalla nimi",
+      "copyName": "Kopioi nimi",
+      "copied": "Kopioitu",
+      "prompt": {
+        "deleteGroup": "Poista ryhmä <target>{name}</target> pysyvästi kirjoittamalla sen nimi täsmälleen alla näytetyssä muodossa.",
+        "deleteExpense": "Poista kulu <target>{name}</target> pysyvästi kirjoittamalla sen otsikko täsmälleen alla näytetyssä muodossa.",
+        "deleteRecurringExpense": "Vahvista kohteen <target>{name}</target> poistaminen kirjoittamalla kulun otsikko täsmälleen alla näytetyssä muodossa.",
+        "removeParticipant": "Poista <target>{name}</target> tästä ryhmästä kirjoittamalla nimi täsmälleen alla näytetyssä muodossa."
+      },
+      "placeholder": "Kirjoita ”{name}” tähän",
+      "mismatch": "Ei täsmää. Kirjoita {name} täsmälleen."
+    }
   },
   "Theme": {
     "toggle": "Vaihda teemaa",
@@ -2506,7 +2519,6 @@
     "stopConfirmDescription": "Olemassa olevat kulut säilyvät. Uusia esiintymiä ei luoda.",
     "stopConfirmHint": "Pysäyttäminen on pysyvää. Aloita uudelleen luomalla uusi toistuva kulu.",
     "deleteConfirmTitle": "Vahvista poisto",
-    "deleteConfirmHint": "Tätä toimintoa ei voi kumota valittujen esiintymien osalta.",
     "deleteConfirm": {
       "OCCURRENCE": "Vain tämä esiintymä poistetaan.",
       "THIS_AND_FUTURE": "Tämä ja seuraavat esiintymät poistetaan. Toisto jatkuu seuraavasta ajoitetusta esiintymästä.",

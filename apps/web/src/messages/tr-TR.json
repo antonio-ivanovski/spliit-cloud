@@ -545,10 +545,9 @@
       "button": "Grubu sil",
       "dialog": {
         "title": "Bu grup silinsin mi?",
-        "description": "\"{name}\" grubunu kalıcı olarak silmek üzeresiniz. Tüm harcama, fiş, davet ve etkinlik kayıtları silinecek ve kurtarılamayacak.",
+        "description": "Bu gruptaki tüm masraf, fiş, davet ve etkinlik kayıtları silinecek ve kurtarılamayacak.",
         "warningTitle": "Bu işlem geri alınamaz",
         "warningDescription": "Aşağıdaki veriler hemen silinecek:",
-        "checkbox": "Bu işlemin grubu ve tüm verilerini kalıcı olarak sileceğini anlıyorum.",
         "cancel": "İptal",
         "confirm": "Grubu sil",
         "deleting": "Siliniyor…",
@@ -819,10 +818,11 @@
     "DeletePopup": {
       "label": "Sil",
       "title": "Bu masraf silinsin mi?",
-      "description": "Bu masrafı gerçekten silmek istiyor musunuz? Bu işlem geri alınamaz.",
+      "description": "Bu masraf kalıcı olarak kaldırılacak. Bu işlem geri alınamaz.",
       "yes": "Evet",
       "deleting": "Siliniyor…",
-      "cancel": "İptal"
+      "cancel": "İptal",
+      "delete": "Sil"
     },
     "attachDocuments": "Belge ekle",
     "create": "Oluştur",
@@ -1788,7 +1788,7 @@
     "roleUpdated": "Rol {role} olarak güncellendi.",
     "removeDialog": {
       "title": "Üye çıkarılsın mı?",
-      "description": "{name} bu gruptan çıkarılsın mı? Geçmiş masrafları defterde kalır ancak artık erişemezler.",
+      "description": "Geçmiş masraflar hesap dökümünde kalacak ancak bu katılımcı artık üye listesinde veya yeni masraflarda görünmeyecek.",
       "cancel": "İptal",
       "confirm": "Çıkar",
       "unsettled": {
@@ -2419,7 +2419,20 @@
   "Common": {
     "close": "Kapat",
     "previousSlide": "Önceki slayt",
-    "nextSlide": "Sonraki slayt"
+    "nextSlide": "Sonraki slayt",
+    "destructiveConfirmation": {
+      "inputLabel": "Onaylamak için adı girin",
+      "copyName": "Adı kopyala",
+      "copied": "Kopyalandı",
+      "prompt": {
+        "deleteGroup": "<target>{name}</target> adlı grubu kalıcı olarak silmek için aşağıda gösterilen adı birebir yazın.",
+        "deleteExpense": "<target>{name}</target> adlı masrafı kalıcı olarak silmek için aşağıda gösterilen başlığı birebir yazın.",
+        "deleteRecurringExpense": "<target>{name}</target> adlı masrafın silinmesini onaylamak için aşağıda gösterilen masraf başlığını birebir yazın.",
+        "removeParticipant": "<target>{name}</target> adlı katılımcıyı bu gruptan çıkarmak için aşağıda gösterilen adı birebir yazın."
+      },
+      "placeholder": "Buraya şunu yazın: “{name}”",
+      "mismatch": "Eşleşmiyor. Tam olarak şunu yazın: {name}."
+    }
   },
   "Theme": {
     "toggle": "Temayı değiştir",
@@ -2506,7 +2519,6 @@
     "stopConfirmDescription": "Mevcut giderler korunur. Yeni yinelemeler oluşturulmaz.",
     "stopConfirmHint": "Durdurma kalıcıdır. Yeniden başlatmak için yeni bir yinelenen gider oluşturun.",
     "deleteConfirmTitle": "Silmeyi onayla",
-    "deleteConfirmHint": "Seçilen yinelemeler için bu işlem geri alınamaz.",
     "deleteConfirm": {
       "OCCURRENCE": "Yalnızca bu yineleme silinecek.",
       "THIS_AND_FUTURE": "Bu ve gelecekteki yinelemeler silinecek. Yineleme bir sonraki planlanan yinelemeyle devam edecek.",

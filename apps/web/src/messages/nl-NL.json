@@ -545,7 +545,7 @@
       "button": "Groep verwijderen",
       "dialog": {
         "title": "Deze groep verwijderen?",
-        "description": "Je staat op het punt om \"{name}\" permanent te verwijderen. Elke uitgave, bon, uitnodiging en activiteitsvermelding wordt verwijderd en kan niet worden hersteld.",
+        "description": "Alle uitgaven, bonnen, uitnodigingen en activiteitsvermeldingen in deze groep worden verwijderd en kunnen niet worden hersteld.",
         "warningTitle": "Deze actie is onomkeerbaar",
         "warningDescription": "De volgende gegevens worden onmiddellijk verwijderd:",
         "warningList": {
@@ -554,7 +554,6 @@
           "invitations": "Openstaande uitnodigingen",
           "receipts": "Geüploade bonbestanden"
         },
-        "checkbox": "Ik begrijp dat dit de groep en alle bijbehorende gegevens permanent verwijdert.",
         "cancel": "Annuleren",
         "confirm": "Groep verwijderen",
         "deleting": "Verwijderen …"
@@ -842,10 +841,11 @@
     "DeletePopup": {
       "label": "Verwijderen",
       "title": "Deze uitgave verwijderen?",
-      "description": "Wil je deze uitgave echt verwijderen? Dit kan niet ongedaan worden.",
+      "description": "Deze uitgave wordt permanent verwijderd. Deze actie kan niet ongedaan worden gemaakt.",
       "yes": "Ja",
       "deleting": "Verwijderen…",
-      "cancel": "Annuleer"
+      "cancel": "Annuleer",
+      "delete": "Verwijderen"
     },
     "attachDocuments": "Voeg documenten toe",
     "create": "Maken",
@@ -1788,7 +1788,7 @@
     "roleUpdated": "Rol bijgewerkt naar {role}.",
     "removeDialog": {
       "title": "Lid verwijderen?",
-      "description": "{name} uit deze groep verwijderen? Hun eerdere uitgaven blijven in het grootboek staan, maar ze hebben geen toegang meer.",
+      "description": "Eerdere uitgaven blijven in het grootboek staan, maar deze deelnemer verschijnt niet meer in de ledenlijst of bij nieuwe uitgaven.",
       "cancel": "Annuleren",
       "confirm": "Verwijderen",
       "unsettled": {
@@ -2419,7 +2419,20 @@
   "Common": {
     "close": "Sluiten",
     "previousSlide": "Vorige dia",
-    "nextSlide": "Volgende dia"
+    "nextSlide": "Volgende dia",
+    "destructiveConfirmation": {
+      "inputLabel": "Voer de naam in om te bevestigen",
+      "copyName": "Naam kopiëren",
+      "copied": "Gekopieerd",
+      "prompt": {
+        "deleteGroup": "Typ de naam precies zoals hieronder weergegeven om de groep <target>{name}</target> permanent te verwijderen.",
+        "deleteExpense": "Typ de titel precies zoals hieronder weergegeven om de uitgave <target>{name}</target> permanent te verwijderen.",
+        "deleteRecurringExpense": "Typ de titel van de uitgave precies zoals hieronder weergegeven om het verwijderen van <target>{name}</target> te bevestigen.",
+        "removeParticipant": "Typ de naam precies zoals hieronder weergegeven om <target>{name}</target> uit deze groep te verwijderen."
+      },
+      "placeholder": "Typ ‘{name}’ hier",
+      "mismatch": "Komt niet overeen. Typ {name} exact."
+    }
   },
   "Theme": {
     "toggle": "Thema wijzigen",
@@ -2506,7 +2519,6 @@
     "stopConfirmDescription": "Bestaande uitgaven blijven behouden. Er worden geen nieuwe voorkomens aangemaakt.",
     "stopConfirmHint": "Stoppen is permanent. Maak een nieuwe terugkerende uitgave om opnieuw te beginnen.",
     "deleteConfirmTitle": "Verwijdering bevestigen",
-    "deleteConfirmHint": "Deze actie kan niet ongedaan worden gemaakt voor de geselecteerde voorkomens.",
     "deleteConfirm": {
       "OCCURRENCE": "Alleen dit voorkomen wordt verwijderd.",
       "THIS_AND_FUTURE": "Dit en toekomstige voorkomens worden verwijderd. De reeks gaat door met het volgende geplande voorkomen.",

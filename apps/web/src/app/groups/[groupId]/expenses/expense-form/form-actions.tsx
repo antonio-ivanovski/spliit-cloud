@@ -18,6 +18,7 @@ export const FormActions = memo(function FormActions(props: {
   isCreate: boolean
   readOnly: boolean
   onDelete?: () => Promise<void>
+  expenseTitle?: string
   cancelHref: string
   /**
    * Persisted terminal state: the expense already exists, so the submit action
@@ -40,7 +41,11 @@ export const FormActions = memo(function FormActions(props: {
   return (
     <FixedActionBar>
       {!props.isCreate && props.onDelete && (
-        <DeletePopup onDelete={() => props.onDelete!()} className="me-auto" />
+        <DeletePopup
+          onDelete={() => props.onDelete!()}
+          confirmationTarget={props.expenseTitle}
+          className="me-auto"
+        />
       )}
       <Button variant="ghost" render={<Link href={props.cancelHref} />}>
         {t('cancel')}

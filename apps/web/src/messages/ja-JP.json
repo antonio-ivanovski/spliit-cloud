@@ -540,10 +540,9 @@
       "button": "グループを削除",
       "dialog": {
         "title": "このグループを削除しますか？",
-        "description": "\"{name}\" を完全に削除しようとしています。すべての支出、レシート、招待状、アクティビティの記録が削除され、復元することはできません。",
+        "description": "このグループ内のすべての支出、レシート、招待、アクティビティ履歴が削除され、復元できません。",
         "warningTitle": "この操作は元に戻せません",
         "warningDescription": "以下のデータはすぐに削除されます:",
-        "checkbox": "このグループとそのすべてのデータが完全に削除されることを理解しました。",
         "cancel": "キャンセル",
         "confirm": "グループを削除",
         "deleting": "削除中…",
@@ -813,10 +812,11 @@
     "DeletePopup": {
       "label": "削除",
       "title": "この支出を削除しますか？",
-      "description": "本当にこの支出を削除しますか？この操作は元に戻せません。",
+      "description": "この支出は完全に削除されます。この操作は元に戻せません。",
       "yes": "はい",
       "deleting": "削除中…",
-      "cancel": "キャンセル"
+      "cancel": "キャンセル",
+      "delete": "削除"
     },
     "attachDocuments": "書類を添付",
     "create": "作成",
@@ -1781,7 +1781,7 @@
     "roleUpdated": "役割を{role}に更新しました。",
     "removeDialog": {
       "title": "メンバーを削除しますか？",
-      "description": "{name}をこのグループから削除しますか？過去の支出は台帳に残りますが、その人はアクセスできなくなります。",
+      "description": "過去の支出は台帳に残りますが、この参加者はメンバー一覧や新しい支出に表示されなくなります。",
       "cancel": "キャンセル",
       "confirm": "削除する",
       "unsettled": {
@@ -2403,7 +2403,20 @@
   "Common": {
     "close": "閉じる",
     "previousSlide": "前のスライド",
-    "nextSlide": "次のスライド"
+    "nextSlide": "次のスライド",
+    "destructiveConfirmation": {
+      "inputLabel": "確認する名前を入力",
+      "copyName": "名前をコピー",
+      "copied": "コピーしました",
+      "prompt": {
+        "deleteGroup": "グループ<target>{name}</target>を完全に削除するには、以下に表示されている名前を正確に入力してください。",
+        "deleteExpense": "支出<target>{name}</target>を完全に削除するには、以下に表示されているタイトルを正確に入力してください。",
+        "deleteRecurringExpense": "<target>{name}</target>の削除を確定するには、以下に表示されている支出タイトルを正確に入力してください。",
+        "removeParticipant": "<target>{name}</target>をこのグループから削除するには、以下に表示されている名前を正確に入力してください。"
+      },
+      "placeholder": "ここに「{name}」を入力してください",
+      "mismatch": "一致しません。{name}を正確に入力してください。"
+    }
   },
   "Theme": {
     "toggle": "テーマを変更",
@@ -2490,7 +2503,6 @@
     "stopConfirmDescription": "既存の支出は残ります。新しい発生分は作成されません。",
     "stopConfirmHint": "停止すると再開できません。もう一度開始するには、新しい繰り返し支出を作成してください。",
     "deleteConfirmTitle": "削除を確認",
-    "deleteConfirmHint": "選択した発生分に対してこの操作を元に戻すことはできません。",
     "deleteConfirm": {
       "OCCURRENCE": "この発生分のみ削除されます。",
       "THIS_AND_FUTURE": "この発生分と今後の発生分が削除されます。繰り返しは次に予定された発生分から続行されます。",

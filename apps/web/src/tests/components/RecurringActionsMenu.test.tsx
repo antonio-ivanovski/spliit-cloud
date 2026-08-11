@@ -26,6 +26,7 @@ describe('RecurringActionsMenu', () => {
     mockDesktopMediaQuery()
     const { user } = render(
       <RecurringActionsMenu
+        confirmationTarget="Dinner"
         onEdit={vi.fn()}
         onDelete={vi.fn().mockResolvedValue(undefined)}
         onStop={vi.fn().mockResolvedValue(undefined)}
@@ -59,6 +60,7 @@ describe('RecurringActionsMenu', () => {
       .mockResolvedValue(undefined)
     const { user } = render(
       <RecurringActionsMenu
+        confirmationTarget="Dinner"
         onEdit={vi.fn()}
         onDelete={onDelete}
         onStop={vi.fn().mockResolvedValue(undefined)}
@@ -78,7 +80,14 @@ describe('RecurringActionsMenu', () => {
     expect(
       screen.getByText(/will be deleted and the recurrence will stop/i),
     ).toBeInTheDocument()
+    expect(screen.getByText(/to confirm this deletion for/i)).toHaveTextContent(
+      'To confirm this deletion for Dinner, type the expense title exactly as shown below.',
+    )
 
+    await user.type(
+      screen.getByLabelText(/enter the name to confirm/i),
+      'Dinner',
+    )
     await user.click(screen.getByRole('button', { name: /^delete$/i }))
     await waitFor(() =>
       expect(onDelete).toHaveBeenCalledWith('THIS_AND_FUTURE_STOP'),
@@ -90,6 +99,7 @@ describe('RecurringActionsMenu', () => {
     const onStop = vi.fn().mockResolvedValue(undefined)
     const { user } = render(
       <RecurringActionsMenu
+        confirmationTarget="Dinner"
         onEdit={vi.fn()}
         onDelete={vi.fn().mockResolvedValue(undefined)}
         onStop={onStop}
@@ -109,6 +119,7 @@ describe('RecurringActionsMenu', () => {
     mockDesktopMediaQuery()
     const { user } = render(
       <RecurringActionsMenu
+        confirmationTarget="Dinner"
         onEdit={vi.fn()}
         onDelete={vi.fn().mockResolvedValue(undefined)}
         onStop={vi.fn().mockResolvedValue(undefined)}
@@ -147,6 +158,7 @@ describe('RecurringActionsMenu', () => {
     mockDesktopMediaQuery()
     const { user } = render(
       <RecurringActionsMenu
+        confirmationTarget="Dinner"
         onEdit={vi.fn()}
         onDelete={vi.fn().mockResolvedValue(undefined)}
         onStop={vi.fn().mockResolvedValue(undefined)}

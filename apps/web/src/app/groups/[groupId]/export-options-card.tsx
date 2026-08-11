@@ -114,20 +114,20 @@ export function ExportOptionsCard({ groupId }: { groupId: string }) {
           onAction={() => setPdfDialogOpen(true)}
         />
         <ExportOption
-          icon={FileSpreadsheet}
-          title={t('exportCsvTitle')}
-          purpose={t('exportCsvPurpose')}
-          badge="CSV"
-          actionLabel={t('exportCsvAction')}
-          href={`${apiUrl}/groups/${groupId}/expenses/export/csv`}
-        />
-        <ExportOption
           icon={Archive}
           title={t('exportBundleTitle')}
           purpose={t('exportBundlePurpose')}
           badge="ZIP"
           actionLabel={t('exportBundleAction')}
           href={`${apiUrl}/groups/${groupId}/export/bundle`}
+        />
+        <ExportOption
+          icon={FileSpreadsheet}
+          title={t('exportCsvTitle')}
+          purpose={t('exportCsvPurpose')}
+          badge="CSV"
+          actionLabel={t('exportCsvAction')}
+          href={`${apiUrl}/groups/${groupId}/expenses/export/csv`}
         />
       </div>
       <ReportPrintDialog

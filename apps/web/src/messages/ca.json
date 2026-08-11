@@ -550,10 +550,9 @@
       "button": "Suprimeix el grup",
       "dialog": {
         "title": "Suprimir aquest grup?",
-        "description": "Estàs a punt de suprimir permanentment \"{name}\". Totes les despeses, rebuts, invitacions i entrades d'activitat s'eliminaran i no es podran recuperar.",
+        "description": "Se suprimiran totes les despeses, els rebuts, les invitacions i les entrades d’activitat d’aquest grup i no es podran recuperar.",
         "warningTitle": "Aquesta acció és irreversible",
         "warningDescription": "Les dades següents se suprimiran immediatament:",
-        "checkbox": "Entenc que això suprimirà permanentment el grup i totes les seves dades.",
         "cancel": "Cancel·la",
         "confirm": "Suprimeix el grup",
         "deleting": "Suprimint…",
@@ -825,10 +824,11 @@
     "DeletePopup": {
       "label": "Esborrar",
       "title": "Esborrar la despesa?",
-      "description": "Segur que vols suprimir aquesta despesa? Aquesta acció és irreversible.",
+      "description": "Aquesta despesa se suprimirà permanentment. Aquesta acció no es pot desfer.",
       "yes": "Sí",
       "deleting": "S’està suprimint…",
-      "cancel": "Cancel·lar"
+      "cancel": "Cancel·lar",
+      "delete": "Suprimeix"
     },
     "attachDocuments": "Adjuntar documents",
     "create": "Crear",
@@ -1796,7 +1796,7 @@
     "roleUpdated": "Rol actualitzat a {role}.",
     "removeDialog": {
       "title": "Eliminar membre?",
-      "description": "Eliminar {name} d'aquest grup? Les seves despeses anteriors es queden al llibre de comptes, però ja no hi tindrà accés.",
+      "description": "Les despeses anteriors es conservaran al llibre de comptes, però aquest participant ja no apareixerà a la llista de membres ni a les despeses noves.",
       "cancel": "Cancel·la",
       "confirm": "Elimina",
       "unsettled": {
@@ -2437,7 +2437,20 @@
   "Common": {
     "close": "Tanca",
     "previousSlide": "Diapositiva anterior",
-    "nextSlide": "Diapositiva següent"
+    "nextSlide": "Diapositiva següent",
+    "destructiveConfirmation": {
+      "inputLabel": "Introdueix el nom per confirmar",
+      "copyName": "Copia el nom",
+      "copied": "Copiat",
+      "prompt": {
+        "deleteGroup": "Per suprimir permanentment el grup <target>{name}</target>, escriu-ne el nom exactament com es mostra a continuació.",
+        "deleteExpense": "Per suprimir permanentment la despesa <target>{name}</target>, escriu-ne el títol exactament com es mostra a continuació.",
+        "deleteRecurringExpense": "Per confirmar la supressió de <target>{name}</target>, escriu el títol de la despesa exactament com es mostra a continuació.",
+        "removeParticipant": "Per eliminar <target>{name}</target> d’aquest grup, escriu-ne el nom exactament com es mostra a continuació."
+      },
+      "placeholder": "Escriu «{name}» aquí",
+      "mismatch": "No coincideix. Escriu exactament {name}."
+    }
   },
   "Theme": {
     "toggle": "Canvia el tema",
@@ -2524,7 +2537,6 @@
     "stopConfirmDescription": "Les despeses existents es conservaran. No es crearan ocurrències noves.",
     "stopConfirmHint": "Aturar és permanent. Per tornar a començar, crea una nova despesa recurrent.",
     "deleteConfirmTitle": "Confirma l'eliminació",
-    "deleteConfirmHint": "Aquesta acció no es pot desfer per a les ocurrències seleccionades.",
     "deleteConfirm": {
       "OCCURRENCE": "Només s'eliminarà aquesta ocurrència.",
       "THIS_AND_FUTURE": "S'eliminaran aquesta ocurrència i les següents. La recurrència continuarà amb la propera ocurrència programada.",

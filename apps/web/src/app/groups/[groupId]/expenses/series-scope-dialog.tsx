@@ -1,6 +1,11 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import {
+  isTypedConfirmationMatch,
+  TypedDestructiveConfirmation,
+  useTypedConfirmationValue,
+} from '@/components/typed-destructive-confirmation'
 import { Button } from '@/components/ui/button'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import {
@@ -24,6 +29,7 @@ export function SeriesScopeDialog({
   onOpenChange,
   onConfirm,
   seriesStatus,
+  confirmationTarget,
 }: {
   open: boolean
   mode: 'update' | 'delete'
@@ -31,12 +37,26 @@ export function SeriesScopeDialog({
   onConfirm: (scope: SeriesMutationScope, stopRecurrence?: boolean) => void
   /** Series status; CANCELLED/COMPLETED hide the stop-recurrence radio. */
   seriesStatus?: 'ACTIVE' | 'PAUSED' | 'COMPLETED' | 'CANCELLED'
+  confirmationTarget: string
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseSeries' })
   const [scope, setScope] = useState<SeriesDeleteOption>('OCCURRENCE')
+  const [confirmationValue, setConfirmationValue] = useTypedConfirmationValue(
+    `${open}:${mode}:${confirmationTarget}`,
+  )
   const isDelete = mode === 'delete'
   const isTerminal =
     seriesStatus === 'CANCELLED' || seriesStatus === 'COMPLETED'
+  const canConfirm =
+    !isDelete || isTypedConfirmationMatch(confirmationValue, confirmationTarget)
+
+  function confirmScope() {
+    if (!canConfirm) return
+    onConfirm(
+      scope === 'THIS_AND_FUTURE_STOP' ? 'THIS_AND_FUTURE' : scope,
+      scope === 'THIS_AND_FUTURE_STOP',
+    )
+  }
 
   return (
     <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
@@ -78,6 +98,15 @@ export function SeriesScopeDialog({
             </RadioGroupItem>
           )}
         </RadioGroup>
+        {isDelete ? (
+          <TypedDestructiveConfirmation
+            kind="deleteRecurringExpense"
+            targetName={confirmationTarget}
+            value={confirmationValue}
+            onValueChange={setConfirmationValue}
+            onConfirm={confirmScope}
+          />
+        ) : null}
         <ResponsiveDialogFooter>
           <Button
             type="button"
@@ -89,12 +118,8 @@ export function SeriesScopeDialog({
           <Button
             type="button"
             variant={isDelete ? 'destructive' : 'default'}
-            onClick={() =>
-              onConfirm(
-                scope === 'THIS_AND_FUTURE_STOP' ? 'THIS_AND_FUTURE' : scope,
-                scope === 'THIS_AND_FUTURE_STOP',
-              )
-            }
+            onClick={confirmScope}
+            disabled={!canConfirm}
           >
             {t('confirm')}
           </Button>

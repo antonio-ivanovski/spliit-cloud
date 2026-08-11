@@ -46,7 +46,7 @@ describe('DeletePopup', () => {
       screen.getByRole('heading', { name: /delete this expense/i }),
     ).toBeInTheDocument()
     expect(
-      screen.getByText(/do you really want to delete this expense/i),
+      screen.getByText(/this expense will be permanently removed/i),
     ).toBeInTheDocument()
   })
 
@@ -65,6 +65,30 @@ describe('DeletePopup', () => {
     expect(onDelete).toHaveBeenCalledTimes(1)
   })
 
+  it('requires the expense title before deleting a protected expense', async () => {
+    mockDesktopMediaQuery()
+    const onDelete = vi.fn().mockResolvedValue(undefined)
+    const { user } = render(
+      <DeletePopup onDelete={onDelete} confirmationTarget="Dinner" />,
+    )
+
+    await user.click(screen.getByRole('button', { name: /delete/i }))
+    const deleteButton = screen.getByRole('button', { name: /^delete$/i })
+    expect(deleteButton).toBeDisabled()
+    expect(
+      screen.getByText(/to permanently delete the expense/i),
+    ).toHaveTextContent(
+      'To permanently delete the expense Dinner, type its title exactly as shown below.',
+    )
+
+    const input = screen.getByRole('textbox', { name: /enter the name/i })
+    await user.type(input, 'Dinner')
+    expect(deleteButton).toBeEnabled()
+    await user.keyboard('{Enter}')
+
+    await waitFor(() => expect(onDelete).toHaveBeenCalledTimes(1))
+  })
+
   it('clicking "cancel" closes the dialog', async () => {
     mockDesktopMediaQuery()
     const { user } = render(<DeletePopup onDelete={vi.fn()} />)
@@ -81,5 +105,26 @@ describe('DeletePopup', () => {
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     })
+  })
+
+  it('prevents duplicate protected submissions while deletion is pending', async () => {
+    mockDesktopMediaQuery()
+    let resolveDelete: (() => void) | undefined
+    const onDelete = vi.fn(
+      () =>
+        new Promise<void>((resolve) => {
+          resolveDelete = resolve
+        }),
+    )
+    const { user } = render(
+      <DeletePopup onDelete={onDelete} confirmationTarget="Dinner" />,
+    )
+
+    await user.click(screen.getByRole('button', { name: /delete/i }))
+    await user.type(screen.getByRole('textbox'), 'Dinner')
+    await user.keyboard('{Enter}{Enter}')
+
+    expect(onDelete).toHaveBeenCalledTimes(1)
+    resolveDelete?.()
   })
 })

@@ -550,10 +550,9 @@
       "button": "Eliminar grupo",
       "dialog": {
         "title": "¿Eliminar este grupo?",
-        "description": "Vas a eliminar permanentemente \"{name}\". Todos los gastos, recibos, invitaciones y entradas de actividad se eliminarán y no se podrán recuperar.",
+        "description": "Todos los gastos, recibos, invitaciones y registros de actividad de este grupo se eliminarán y no se podrán recuperar.",
         "warningTitle": "Esta acción es irreversible",
         "warningDescription": "Los siguientes datos se eliminarán de inmediato:",
-        "checkbox": "Entiendo que esto eliminará permanentemente el grupo y todos sus datos.",
         "cancel": "Cancelar",
         "confirm": "Eliminar grupo",
         "deleting": "Eliminando…",
@@ -825,10 +824,11 @@
     "DeletePopup": {
       "label": "Borrar",
       "title": "Borrar gasto?",
-      "description": "Seguro que quieres borrar este gasto? Esta acción es irreversible.",
+      "description": "Este gasto se eliminará permanentemente. Esta acción no se puede deshacer.",
       "yes": "Si",
       "deleting": "Eliminando…",
-      "cancel": "Cancelar"
+      "cancel": "Cancelar",
+      "delete": "Eliminar"
     },
     "attachDocuments": "Adjuntar documentos",
     "create": "Crear",
@@ -1796,7 +1796,7 @@
     "roleUpdated": "Rol actualizado a {role}.",
     "removeDialog": {
       "title": "¿Eliminar miembro?",
-      "description": "¿Eliminar a {name} de este grupo? Sus gastos anteriores se quedan en el libro de cuentas, pero ya no tendrán acceso.",
+      "description": "Los gastos anteriores permanecerán en el libro de cuentas, pero esta persona ya no aparecerá en la lista de miembros ni en los gastos nuevos.",
       "cancel": "Cancelar",
       "confirm": "Eliminar",
       "unsettled": {
@@ -2437,7 +2437,20 @@
   "Common": {
     "close": "Cerrar",
     "previousSlide": "Diapositiva anterior",
-    "nextSlide": "Diapositiva siguiente"
+    "nextSlide": "Diapositiva siguiente",
+    "destructiveConfirmation": {
+      "inputLabel": "Escribe el nombre para confirmar",
+      "copyName": "Copiar nombre",
+      "copied": "Copiado",
+      "prompt": {
+        "deleteGroup": "Para eliminar permanentemente el grupo <target>{name}</target>, escribe su nombre exactamente como se muestra a continuación.",
+        "deleteExpense": "Para eliminar permanentemente el gasto <target>{name}</target>, escribe su título exactamente como se muestra a continuación.",
+        "deleteRecurringExpense": "Para confirmar la eliminación de <target>{name}</target>, escribe el título del gasto exactamente como se muestra a continuación.",
+        "removeParticipant": "Para eliminar a <target>{name}</target> de este grupo, escribe su nombre exactamente como se muestra a continuación."
+      },
+      "placeholder": "Escribe «{name}» aquí",
+      "mismatch": "No coincide. Escribe exactamente {name}."
+    }
   },
   "Theme": {
     "toggle": "Cambiar tema",
@@ -2524,7 +2537,6 @@
     "stopConfirmDescription": "Los gastos existentes se conservarán. No se crearán nuevas ocurrencias.",
     "stopConfirmHint": "Detenerla es permanente. Para empezar de nuevo, crea un nuevo gasto recurrente.",
     "deleteConfirmTitle": "Confirmar eliminación",
-    "deleteConfirmHint": "Esta acción no se puede deshacer para las ocurrencias seleccionadas.",
     "deleteConfirm": {
       "OCCURRENCE": "Solo se eliminará esta ocurrencia.",
       "THIS_AND_FUTURE": "Se eliminarán esta y las siguientes ocurrencias. La recurrencia continuará con la próxima ocurrencia programada.",
