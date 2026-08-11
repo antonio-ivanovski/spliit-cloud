@@ -248,14 +248,18 @@ export async function getGroupExpenses(
     ),
   }
 
-  const sortField = options?.sortBy ?? 'expenseDate'
+  const sortField =
+    options?.sortBy === 'expenseDate'
+      ? 'expenseAt'
+      : (options?.sortBy ?? 'expenseDate')
+  const effectiveField = sortField === 'expenseAt' ? 'expenseAt' : sortField
   const sortDir = options?.sortDir ?? 'desc'
   const primaryOrder: Prisma.ExpenseOrderByWithRelationInput = {
-    [sortField]: sortDir,
+    [effectiveField]: sortDir,
   }
   const orderBy: Prisma.ExpenseOrderByWithRelationInput[] =
-    sortField === 'expenseDate'
-      ? [primaryOrder, { createdAt: 'desc' }]
+    effectiveField === 'expenseAt'
+      ? [primaryOrder, { createdAt: 'desc' }, { id: 'desc' }]
       : [primaryOrder, { id: 'desc' }]
 
   const rows = await prisma.expense.findMany({
@@ -423,6 +427,8 @@ export async function getRecurringExpenseSeries(
             select: {
               id: true,
               expenseDate: true,
+              expenseAt: true,
+              expenseTimeZone: true,
               recurrenceSequence: true,
               title: true,
               amount: true,

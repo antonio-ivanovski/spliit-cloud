@@ -72,11 +72,33 @@ const importSourceMetaSchema = z.object({
  */
 export const importExpenseSchema = z.preprocess((value) => {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return value
-  const { recurrence: _recurrence, ...legacyExpense } = value as Record<
-    string,
-    unknown
-  >
-  return legacyExpense
+  const {
+    recurrence: _recurrence,
+    expenseAt: _expenseAt,
+    expenseTimeZone: _expenseTimeZone,
+    ...legacyExpense
+  } = value as Record<string, unknown>
+  const rawExpenseDate = legacyExpense.expenseDate
+  const expenseDate =
+    rawExpenseDate instanceof Date
+      ? rawExpenseDate
+      : typeof rawExpenseDate === 'string' || typeof rawExpenseDate === 'number'
+        ? new Date(rawExpenseDate)
+        : null
+  if (!expenseDate || Number.isNaN(expenseDate.getTime())) return legacyExpense
+
+  return {
+    ...legacyExpense,
+    expenseAt: new Date(
+      Date.UTC(
+        expenseDate.getUTCFullYear(),
+        expenseDate.getUTCMonth(),
+        expenseDate.getUTCDate(),
+        12,
+      ),
+    ),
+    expenseTimeZone: 'UTC',
+  }
 }, expenseApiSchema)
 
 export const importGroupProcedure = protectedProcedure

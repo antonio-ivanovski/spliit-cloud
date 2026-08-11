@@ -9,7 +9,7 @@ vi.mock('@/lib/hooks', () => ({
 }))
 
 describe('TimeZoneField', () => {
-  it('shows UTC and the selected city with its canonical identifier', () => {
+  it('shows the selected city and offset on the trigger', () => {
     render(
       <>
         <Label htmlFor="zone">Timezone</Label>
@@ -23,9 +23,31 @@ describe('TimeZoneField', () => {
 
     const trigger = screen.getByRole('combobox', { name: 'Timezone' })
     expect(trigger).toHaveTextContent('Skopje')
-    expect(trigger).toHaveTextContent('Europe/Skopje')
-    expect(trigger).toHaveClass('min-w-0', 'overflow-hidden')
+    expect(trigger).toHaveTextContent(/GMT|UTC/)
+    expect(trigger).not.toHaveTextContent('Europe/Skopje')
+    expect(trigger).toHaveClass('min-w-0', 'overflow-hidden', 'h-10')
     expect(trigger.querySelectorAll('svg')).toHaveLength(1)
+  })
+
+  it('scrolls the open list so the current timezone is in view', async () => {
+    const { user } = render(
+      <>
+        <Label htmlFor="zone">Timezone</Label>
+        <TimeZoneField
+          id="zone"
+          value="Pacific/Auckland"
+          onChange={() => undefined}
+        />
+      </>,
+    )
+
+    await user.click(screen.getByRole('combobox', { name: 'Timezone' }))
+    expect(screen.getAllByRole('option').length).toBeLessThan(20)
+    const current = document.querySelector(
+      '[data-current-timezone="true"]',
+    ) as HTMLElement | null
+    expect(current).not.toBeNull()
+    expect(current).toHaveTextContent('Auckland')
   })
 
   it('searches by city and selects the IANA timezone', async () => {

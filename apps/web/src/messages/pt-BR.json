@@ -679,6 +679,9 @@
       "currencyField": {
         "label": "Moeda da receita",
         "description": "A moeda na qual a receita foi recebida."
+      },
+      "recurrence": {
+        "scheduleHint": "Será criado às {time} ({timeZone}) e poderá disparar uma notificação. Escolha um horário que não atrapalhe o sono. Edite o horário acima para alterá-lo."
       }
     },
     "Expense": {
@@ -761,7 +764,8 @@
         "completedOccurrence": "Criada",
         "upcomingOccurrence": "Próxima",
         "timeZoneDescription": "As novas despesas recorrentes são executadas às 15:00 em {timeZone}. Os agendamentos existentes mantêm o fuso horário original.",
-        "timeZonePending": "Aguardando o fuso horário da sua conta antes de ativar a recorrência."
+        "timeZonePending": "Aguardando o fuso horário da sua conta antes de ativar a recorrência.",
+        "scheduleHint": "Será criado às {time} ({timeZone}) e poderá disparar uma notificação. Escolha um horário que não atrapalhe o sono. Edite o horário acima para alterá-lo."
       },
       "recurringEditScopeOccurrence": "Editar apenas esta ocorrência",
       "recurringEditScopeFuture": "Editar esta ocorrência e as futuras",
@@ -969,7 +973,17 @@
     "validationSummary": "Corrija os campos destacados antes de salvar.",
     "resetDistribution": "Redefinir",
     "savedButNotNavigated": "A despesa foi salva, mas não conseguimos sair desta página. Você pode fechá-la com segurança.",
-    "tryLeavingAgain": "Tentar sair novamente"
+    "tryLeavingAgain": "Tentar sair novamente",
+    "dateTimePicker": {
+      "changesDate": "Altera a data",
+      "timezone": "Fuso horário",
+      "dateTab": "Data",
+      "timeTab": "Hora",
+      "back": "Voltar",
+      "chooseTimezone": "Escolher fuso horário",
+      "done": "Concluído",
+      "yourTime": "seu horário"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Excluir documento",
@@ -1225,7 +1239,8 @@
     "sharesInvalid": "As participações devem estar entre 0,01 e 1.000.000 com no máximo duas casas decimais.",
     "itemTitleRequired": "O nome do item é obrigatório.",
     "itemQuantityMin1": "A quantidade do item deve ser pelo menos 1.",
-    "rowErrorsHeading": "Corrija estas participações:"
+    "rowErrorsHeading": "Corrija estas participações:",
+    "invalidWallTime": "Este horário não existe na data selecionada neste fuso horário."
   },
   "Categories": {
     "search": "Pesquisar categoria...",
@@ -2106,7 +2121,7 @@
       "saveError": "Não foi possível salvar as preferências",
       "defaultCurrency": "Moeda padrão",
       "timeZone": "Fuso horário da conta",
-      "timeZoneHelp": "Usado para horários, datas relativas e novas despesas recorrentes.",
+      "timeZoneHelp": "Define o fuso horário padrão para os horários de novas despesas e os agendamentos recorrentes e é usado para exibir registros de data e hora e datas relativas.",
       "language": "Idioma",
       "theme": "Tema",
       "chooseTheme": "Escolher",

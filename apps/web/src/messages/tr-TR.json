@@ -673,6 +673,9 @@
       "currencyField": {
         "label": "Gelirin para birimi",
         "description": "Gelirin hangi para biriminde alındığı."
+      },
+      "recurrence": {
+        "scheduleHint": "{time} ({timeZone}) saatinde oluşturulur ve bir bildirimi tetikleyebilir. Uykuyu bölmeyecek bir saat seçin. Değiştirmek için yukarıdaki saati düzenleyin."
       }
     },
     "Expense": {
@@ -755,7 +758,8 @@
         "completedOccurrence": "Oluşturuldu",
         "upcomingOccurrence": "Yaklaşan",
         "timeZoneDescription": "Yeni yinelenen giderler {timeZone} saat diliminde 15:00'te çalışır. Mevcut planlar özgün saat dilimlerini korur.",
-        "timeZonePending": "Tekrarlama etkinleştirilmeden önce hesap saat diliminiz bekleniyor."
+        "timeZonePending": "Tekrarlama etkinleştirilmeden önce hesap saat diliminiz bekleniyor.",
+        "scheduleHint": "{time} ({timeZone}) saatinde oluşturulur ve bir bildirimi tetikleyebilir. Uykuyu bölmeyecek bir saat seçin. Değiştirmek için yukarıdaki saati düzenleyin."
       },
       "recurringEditScopeOccurrence": "Yalnızca bu yineleme düzenleniyor",
       "recurringEditScopeFuture": "Bu ve gelecekteki yinelemeler düzenleniyor",
@@ -962,7 +966,17 @@
     "validationSummary": "Kaydetmeden önce vurgulanan alanları düzeltin.",
     "resetDistribution": "Sıfırla",
     "savedButNotNavigated": "Harcama kaydedildi ancak bu sayfadan ayrılamadık. Güvenle kapatabilirsiniz.",
-    "tryLeavingAgain": "Tekrar çıkmayı dene"
+    "tryLeavingAgain": "Tekrar çıkmayı dene",
+    "dateTimePicker": {
+      "changesDate": "Tarihi değiştirir",
+      "timezone": "Saat dilimi",
+      "dateTab": "Tarih",
+      "timeTab": "Saat",
+      "back": "Geri",
+      "chooseTimezone": "Saat dilimi seç",
+      "done": "Bitti",
+      "yourTime": "yerel saatiniz"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Belgeyi sil",
@@ -1217,7 +1231,8 @@
     "sharesInvalid": "Paylar 0,01 ile 1.000.000 arasında olmalı ve en fazla iki ondalık basamak içermelidir.",
     "itemTitleRequired": "Kalem adı gereklidir.",
     "itemQuantityMin1": "Kalem miktarı en az 1 olmalıdır.",
-    "rowErrorsHeading": "Lütfen bu payları düzeltin:"
+    "rowErrorsHeading": "Lütfen bu payları düzeltin:",
+    "invalidWallTime": "Bu saat, seçilen tarihte bu saat diliminde mevcut değil."
   },
   "Categories": {
     "search": "Kategori ara...",
@@ -2097,7 +2112,7 @@
       "saveError": "Tercihler kaydedilemedi",
       "defaultCurrency": "Varsayılan para birimi",
       "timeZone": "Hesap saat dilimi",
-      "timeZoneHelp": "Zaman damgaları, göreli tarihler ve yeni yinelenen giderler için kullanılır.",
+      "timeZoneHelp": "Yeni gider saatleri ve yinelenen giderlerin zamanlaması için varsayılan saat dilimini belirler; zaman damgaları ve göreli tarihler de bu saat diliminde gösterilir.",
       "language": "Dil",
       "theme": "Tema",
       "chooseTheme": "Seçin",

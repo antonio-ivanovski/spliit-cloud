@@ -239,6 +239,8 @@ export function createGroupExportSnapshot(
     sourceId: expense.id,
     createdAt: expense.createdAt.toISOString(),
     expenseDate: dateOnly(expense.expenseDate),
+    expenseAt: expense.expenseAt.toISOString(),
+    expenseTimeZone: expense.expenseTimeZone,
     title: expense.title,
     categoryId: expense.categoryId,
     amount: expense.amount,
@@ -373,6 +375,7 @@ export function createGroupExportSnapshot(
         ? (participantByAccountId.get(series.creatorAccountId) ?? null)
         : null,
       timeZone: series.timeZone,
+      anchorTimeMinutes: series.anchorTimeMinutes,
       frequency: series.frequency,
       interval: series.interval,
       anchorDate: dateOnly(series.anchorDate),

@@ -904,7 +904,7 @@
       "saveError": "Could not save preferences",
       "defaultCurrency": "Default currency",
       "timeZone": "Account timezone",
-      "timeZoneHelp": "Used for displayed timestamps, relative dates, and new recurring expenses.",
+      "timeZoneHelp": "Sets the default timezone for new expense times and recurring schedules, and is used to display timestamps and relative dates.",
       "language": "Language",
       "theme": "Theme",
       "chooseTheme": "Choose",
@@ -1100,7 +1100,10 @@
         "description": "Select the participants who share this income."
       },
       "splitModeDescription": "Select how to split the income.",
-      "attachDescription": "See and attach receipts to the income."
+      "attachDescription": "See and attach receipts to the income.",
+      "recurrence": {
+        "scheduleHint": "Will be created at {time} {timeZone} and may trigger a notification — pick a sleep-safe time. Edit the time above to change this."
+      }
     },
     "Expense": {
       "create": "Create expense",
@@ -1174,7 +1177,8 @@
         "completedOccurrence": "Created",
         "upcomingOccurrence": "Upcoming",
         "timeZoneDescription": "New recurring expenses run at 3:00 PM in {timeZone}. Existing schedules keep their original timezone.",
-        "timeZonePending": "Waiting for your account timezone before recurrence can be enabled."
+        "timeZonePending": "Waiting for your account timezone before recurrence can be enabled.",
+        "scheduleHint": "Will be created at {time} {timeZone} and may trigger a notification — pick a sleep-safe time. Edit the time above to change this."
       },
       "paidFor": {
         "title": "Split between",
@@ -1393,7 +1397,17 @@
     "validationSummary": "Please correct the highlighted fields before saving.",
     "resetDistribution": "Reset",
     "savedButNotNavigated": "The expense was saved, but we couldn't leave this page. You can close it safely.",
-    "tryLeavingAgain": "Try leaving again"
+    "tryLeavingAgain": "Try leaving again",
+    "dateTimePicker": {
+      "changesDate": "Changes date",
+      "timezone": "Timezone",
+      "dateTab": "Date",
+      "timeTab": "Time",
+      "back": "Back",
+      "chooseTimezone": "Choose timezone",
+      "done": "Done",
+      "yourTime": "your time"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Delete document",
@@ -1652,7 +1666,8 @@
     "sharesInvalid": "Shares must be between 0.01 and 1,000,000 with up to two decimals.",
     "itemTitleRequired": "Item name is required.",
     "itemQuantityMin1": "Item quantity must be at least 1.",
-    "rowErrorsHeading": "Fix these shares:"
+    "rowErrorsHeading": "Fix these shares:",
+    "invalidWallTime": "This time does not exist on the selected date in this timezone."
   },
   "Categories": {
     "search": "Search category...",

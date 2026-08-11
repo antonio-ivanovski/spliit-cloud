@@ -159,7 +159,7 @@
       "saveError": "Det gick inte att spara inställningarna",
       "defaultCurrency": "Standardvaluta",
       "timeZone": "Kontots tidszon",
-      "timeZoneHelp": "Används för tidsstämplar, relativa datum och nya återkommande utgifter.",
+      "timeZoneHelp": "Anger standardtidszonen för tidpunkter för nya utgifter och återkommande scheman. Den används också för att visa tidsstämplar och relativa datum.",
       "language": "Språk",
       "theme": "Tema",
       "chooseTheme": "Välj",
@@ -1146,7 +1146,8 @@
         },
         "upcomingOccurrence": "Kommande",
         "timeZoneDescription": "Nya återkommande utgifter körs kl. 15.00 i {timeZone}. Befintliga scheman behåller sin ursprungliga tidszon.",
-        "timeZonePending": "Väntar på kontots tidszon innan upprepning kan aktiveras."
+        "timeZonePending": "Väntar på kontots tidszon innan upprepning kan aktiveras.",
+        "scheduleHint": "Skapas kl. {time} ({timeZone}) och kan utlösa en avisering. Välj en tid som inte stör sömnen. Redigera tiden ovan för att ändra den."
       },
       "recurrenceRule": {
         "label": "Utgiftens upprepning",
@@ -1189,6 +1190,9 @@
       "paidFor": {
         "title": "Tilldelad till",
         "description": "Välj vilka deltagare som delar på denna inkomst."
+      },
+      "recurrence": {
+        "scheduleHint": "Skapas kl. {time} ({timeZone}) och kan utlösa en avisering. Välj en tid som inte stör sömnen. Redigera tiden ovan för att ändra den."
       }
     },
     "PaidBySplitModeField": {
@@ -1368,7 +1372,17 @@
     "validationSummary": "Korrigera de markerade fälten innan du sparar.",
     "resetDistribution": "Återställ",
     "savedButNotNavigated": "Utgiften har sparats, men vi kunde inte lämna den här sidan. Du kan stänga den utan problem.",
-    "tryLeavingAgain": "Försök lämna igen"
+    "tryLeavingAgain": "Försök lämna igen",
+    "dateTimePicker": {
+      "changesDate": "Ändrar datumet",
+      "timezone": "Tidszon",
+      "dateTab": "Datum",
+      "timeTab": "Tid",
+      "back": "Tillbaka",
+      "chooseTimezone": "Välj tidszon",
+      "done": "Klar",
+      "yourTime": "din tid"
+    }
   },
   "ExpensePreview": {
     "title": "Utgiftsförhandsvisning",
@@ -2443,7 +2457,8 @@
     "sharesInvalid": "Andelar måste vara mellan 0,01 och 1 000 000 med högst två decimaler.",
     "itemTitleRequired": "Postens namn krävs.",
     "itemQuantityMin1": "Postens antal måste vara minst 1.",
-    "rowErrorsHeading": "Korrigera dessa andelar:"
+    "rowErrorsHeading": "Korrigera dessa andelar:",
+    "invalidWallTime": "Den här tiden finns inte på det valda datumet i den här tidszonen."
   },
   "Settings": {
     "title": "Inställningar"

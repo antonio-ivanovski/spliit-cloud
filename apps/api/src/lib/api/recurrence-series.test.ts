@@ -70,18 +70,16 @@ describe('recurrence-series API helpers', () => {
   it('schedules 15:00 local time across daylight-saving changes', () => {
     const now = new Date('2026-03-01T00:00:00.000Z')
     expect(
-      recurrenceJobStartAfter(
-        new Date('2026-03-07T00:00:00.000Z'),
-        'America/New_York',
+      recurrenceJobStartAfter(new Date('2026-03-07T00:00:00.000Z'), {
+        timeZone: 'America/New_York',
         now,
-      ),
+      }),
     ).toEqual(new Date('2026-03-07T20:00:00.000Z'))
     expect(
-      recurrenceJobStartAfter(
-        new Date('2026-03-09T00:00:00.000Z'),
-        'America/New_York',
+      recurrenceJobStartAfter(new Date('2026-03-09T00:00:00.000Z'), {
+        timeZone: 'America/New_York',
         now,
-      ),
+      }),
     ).toEqual(new Date('2026-03-09T19:00:00.000Z'))
   })
 

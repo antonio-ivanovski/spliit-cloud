@@ -679,6 +679,9 @@
       "currencyField": {
         "label": "Moneda del ingreso",
         "description": "La moneda en la que se recibieron los ingresos."
+      },
+      "recurrence": {
+        "scheduleHint": "Se creará a las {time} ({timeZone}) y puede activar una notificación. Elige una hora que no interrumpa el descanso. Para cambiarla, edita la hora de arriba."
       }
     },
     "Expense": {
@@ -761,7 +764,8 @@
         "completedOccurrence": "Creada",
         "upcomingOccurrence": "Próxima",
         "timeZoneDescription": "Los nuevos gastos recurrentes se ejecutan a las 15:00 en {timeZone}. Las programaciones existentes conservan su zona horaria original.",
-        "timeZonePending": "Esperando la zona horaria de tu cuenta antes de poder activar la recurrencia."
+        "timeZonePending": "Esperando la zona horaria de tu cuenta antes de poder activar la recurrencia.",
+        "scheduleHint": "Se creará a las {time} ({timeZone}) y puede activar una notificación. Elige una hora que no interrumpa el descanso. Para cambiarla, edita la hora de arriba."
       },
       "recurringEditScopeOccurrence": "Editar solo esta ocurrencia",
       "recurringEditScopeFuture": "Editar esta y las futuras ocurrencias",
@@ -969,7 +973,17 @@
     "validationSummary": "Corrige los campos resaltados antes de guardar.",
     "resetDistribution": "Restablecer",
     "savedButNotNavigated": "El gasto se ha guardado, pero no hemos podido salir de esta página. Puedes cerrarla con seguridad.",
-    "tryLeavingAgain": "Intenta salir de nuevo"
+    "tryLeavingAgain": "Intenta salir de nuevo",
+    "dateTimePicker": {
+      "changesDate": "Cambia la fecha",
+      "timezone": "Zona horaria",
+      "dateTab": "Fecha",
+      "timeTab": "Hora",
+      "back": "Atrás",
+      "chooseTimezone": "Elegir zona horaria",
+      "done": "Listo",
+      "yourTime": "tu hora"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Eliminar documento",
@@ -1225,7 +1239,8 @@
     "sharesInvalid": "Las participaciones deben estar entre 0,01 y 1.000.000 con un máximo de dos decimales.",
     "itemTitleRequired": "El nombre del elemento es obligatorio.",
     "itemQuantityMin1": "La cantidad del elemento debe ser al menos 1.",
-    "rowErrorsHeading": "Corrija estas participaciones:"
+    "rowErrorsHeading": "Corrija estas participaciones:",
+    "invalidWallTime": "Esta hora no existe en la fecha seleccionada en esta zona horaria."
   },
   "Categories": {
     "search": "Buscar categoría...",
@@ -2106,7 +2121,7 @@
       "saveError": "No se han podido guardar las preferencias",
       "defaultCurrency": "Moneda predeterminada",
       "timeZone": "Zona horaria de la cuenta",
-      "timeZoneHelp": "Se usa para las marcas de tiempo, las fechas relativas y los nuevos gastos recurrentes.",
+      "timeZoneHelp": "Establece la zona horaria predeterminada para las horas de los nuevos gastos y las programaciones recurrentes, y se usa para mostrar marcas de tiempo y fechas relativas.",
       "language": "Idioma",
       "theme": "Tema",
       "chooseTheme": "Elegir",

@@ -301,6 +301,8 @@ describe('Ledger currency conversion rules', () => {
     const raw = {
       title: 'Test expense',
       expenseDate: new Date('2026-06-24'),
+      expenseTime: '12:00',
+      expenseTimeZone: 'UTC',
       category: 'general',
       amount: 50,
       isMultiPayer: false,

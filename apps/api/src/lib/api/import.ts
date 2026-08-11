@@ -9,6 +9,7 @@ import {
 import type { Expense, GroupFormValues } from '@spliit/domain'
 import {
   exchangeRateLookupDate,
+  utcToWallTime,
   type Expense as DomainExpense,
 } from '@spliit/domain'
 import { supportedCurrencyCodes } from '@spliit/domain/currency'
@@ -768,6 +769,8 @@ export async function importGroup(
         ledgerId,
         createdByAccountId: actor.accountId,
         expenseDate: expense.expenseDate,
+        expenseAt: expense.expenseAt,
+        expenseTimeZone: expense.expenseTimeZone,
         title: expense.title,
         categoryId: expense.category,
         amount: conversion.ledgerAmountMinor,
@@ -856,6 +859,11 @@ export async function importGroup(
         ledgerId,
         creatorAccountId: actor.accountId,
         anchorDate: anchorExpense.expenseDate,
+        timeZone: anchorExpense.expenseTimeZone,
+        anchorTimeMinutes: utcToWallTime(
+          anchorExpense.expenseAt,
+          anchorExpense.expenseTimeZone,
+        ).timeMinutes,
         config: plan.config,
         template,
         boss: queueBoss,

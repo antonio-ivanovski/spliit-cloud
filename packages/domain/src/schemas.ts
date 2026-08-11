@@ -9,6 +9,12 @@ import type { RecurrenceRule, SplitMode } from './enums'
 import { itemsExceedExpenseAmount } from './itemized-expenses'
 import { recurrenceConfigSchema } from './recurring-expenses'
 import { MAX_STORED_SHARES, getDisplayShareErrorKey } from './shares'
+import {
+  isValidWallTime,
+  normalizeDateOnly,
+  parseTimeMinutes,
+  timeZoneSchema,
+} from './timezones'
 
 const groupFormFields = {
   name: z.string().min(2, { error: 'min2' }).max(50, { error: 'max50' }),
@@ -620,6 +626,15 @@ function validateDisplayShareForMode(
 export const expenseFormInputSchema = z
   .object({
     expenseDate: z.coerce.date(),
+    expenseTime: z.string().refine((value) => {
+      try {
+        parseTimeMinutes(value)
+        return true
+      } catch {
+        return false
+      }
+    }, 'invalidTime'),
+    expenseTimeZone: timeZoneSchema,
     title: z
       .string({
         error: (issue) =>
@@ -670,6 +685,28 @@ export const expenseFormInputSchema = z
     itemizedRemainder: itemizedRemainderFormSchema.optional(),
   })
   .superRefine((expense, ctx) => {
+    let minutes: number | null = null
+    try {
+      minutes = parseTimeMinutes(expense.expenseTime)
+    } catch {
+      // The field-level refinement reports malformed times.
+    }
+    if (
+      minutes !== null &&
+      timeZoneSchema.safeParse(expense.expenseTimeZone).success &&
+      !isValidWallTime(
+        normalizeDateOnly(expense.expenseDate),
+        minutes,
+        expense.expenseTimeZone,
+      )
+    ) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'invalidWallTime',
+        path: ['expenseDate'],
+      })
+    }
+
     // A zero amount is already invalid at the amount field. Avoid reporting
     // the same state as a share-input problem while the user fixes it.
     if (expense.amount !== 0) {
@@ -876,6 +913,8 @@ export type ExpenseFormInputValues = z.infer<typeof expenseFormInputSchema>
 export const expenseApiSchema = z
   .object({
     expenseDate: z.coerce.date(),
+    expenseAt: z.coerce.date(),
+    expenseTimeZone: timeZoneSchema,
     title: z.string().min(2, 'min2'),
     category: categoryIdSchema,
     // Expense-currency minor units (what the user typed). Server computes

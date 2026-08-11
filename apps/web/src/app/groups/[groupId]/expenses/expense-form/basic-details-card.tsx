@@ -21,7 +21,6 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible'
-import { DateInput } from '@/components/ui/date-input'
 import {
   FormControl,
   FormDescription,
@@ -68,7 +67,6 @@ import { AmountInput } from './amount-input'
 import {
   enforceCurrencyPattern,
   amountPlaceholder,
-  formatDate,
   parseCurrencyPaste,
 } from './currency-utils'
 import { applySplitToAll } from './default-item-split'
@@ -77,6 +75,7 @@ import {
   getNeutralDefaultSplit,
   savedDefaultToFormValues,
 } from './default-values'
+import { ExpenseDateTimeField } from './expense-date-time-field'
 import { expenseTabPriority } from './focus-navigation'
 import { RecurrenceSection } from './recurrence-section'
 
@@ -650,33 +649,10 @@ export function BasicDetailsCard(props: {
 
         <section className="order-3 col-span-full grid min-w-0 gap-6">
           <div className="min-w-0">
-            <FormField
-              control={form.control}
-              name="expenseDate"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t(`${sExpense}.DateField.label`)}</FormLabel>
-                  <FormControl>
-                    <DateInput
-                      data-expense-tab-priority={expenseTabPriority.date}
-                      className="date-base"
-                      pickerTitle={t(`${sExpense}.DateField.label`)}
-                      presets={['yesterday', 'today', 'tomorrow']}
-                      timeZone={props.accountTimeZone}
-                      value={formatDate(field.value)}
-                      disabled={readOnly}
-                      required
-                      onValueChange={(value) => {
-                        return field.onChange(new Date(value))
-                      }}
-                    />
-                  </FormControl>
-                  <FormDescription className="hidden sm:block">
-                    {t(`${sExpense}.DateField.description`)}
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
+            <ExpenseDateTimeField
+              form={form}
+              readOnly={readOnly}
+              sExpense={sExpense}
             />
           </div>
           <div className="min-w-0">

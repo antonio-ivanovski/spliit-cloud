@@ -1,6 +1,14 @@
 import type { Prisma } from '@spliit/db'
 import { prisma } from '@spliit/db'
-import { computePaidForFromItems, type Expense } from '@spliit/domain'
+import {
+  computePaidForFromItems,
+  dateOnlyInTimeZone,
+  normalizeDateOnly,
+  recurringWallTimeToUtc,
+  utcToWallTime,
+  wallTimeToUtc,
+  type Expense,
+} from '@spliit/domain'
 import { env as jobsEnv } from '@spliit/jobs'
 
 import { deleteS3Object } from '../../../routes/upload'
@@ -23,6 +31,7 @@ import {
   enqueueMaterialization,
   getApiBossForWrite,
   getExpenseRecurrence,
+  rescheduleMaterialization,
   toRecurrenceConfig,
 } from '../recurrence-series'
 import {
@@ -66,16 +75,37 @@ export async function updateExpense(
   const existingExpense = await getExpense(groupId, expenseId)
   if (!existingExpense) throw new Error(`Invalid expense ID: ${expenseId}`)
 
-  const preserveRecurringDates =
+  const preserveRecurringCalendarDates =
     options?.scope === 'THIS_AND_FUTURE' &&
     existingExpense.recurringSeriesId !== null &&
     existingExpense.recurrenceSequence !== null
 
+  const incomingExpenseAt = new Date(expense.expenseAt)
+  const incomingTimeZone = expense.expenseTimeZone
+  const incomingWall = utcToWallTime(incomingExpenseAt, incomingTimeZone)
+  const existingExpenseAt = new Date(existingExpense.expenseAt)
+  const existingExpenseTimeZone = existingExpense.expenseTimeZone
+  const existingWall = utcToWallTime(existingExpenseAt, existingExpenseTimeZone)
+  const resolvedExpenseTimeZone = incomingTimeZone
+  const resolvedWallDate = preserveRecurringCalendarDates
+    ? existingExpense.expenseDate
+    : dateOnlyInTimeZone(incomingExpenseAt, incomingTimeZone)
+  const resolvedWallIso = resolvedWallDate.toISOString().slice(0, 10)
+  const resolvedExpenseAt = preserveRecurringCalendarDates
+    ? wallTimeToUtc(
+        resolvedWallIso,
+        incomingWall.timeMinutes,
+        resolvedExpenseTimeZone,
+      )
+    : incomingExpenseAt
+  const timingChanged =
+    incomingWall.timeMinutes !== existingWall.timeMinutes ||
+    incomingTimeZone !== existingExpenseTimeZone
+  const conversionDateForFx = resolvedWallIso
+
   const conversion = await resolveConversion(expense, {
     ledgerCurrency: group.ledger.currencyCode ?? null,
-    expenseDate: preserveRecurringDates
-      ? existingExpense.expenseDate
-      : expense.expenseDate,
+    expenseDate: new Date(`${conversionDateForFx}T00:00:00.000Z`),
   })
 
   const expenseAmount = conversion.ledgerAmountMinor
@@ -126,12 +156,12 @@ export async function updateExpense(
     ledgerCurrencyCode: group.ledger.currencyCode ?? group.ledger.currency,
   }
 
-  const expenseDateStr = expense.expenseDate.toISOString().slice(0, 10)
+  const expenseDateStr = resolvedWallIso
 
   const documents = await promoteExpenseDocuments(expense.documents)
   const recurrence = getExpenseRecurrence(
     expense as unknown as { recurrence?: unknown; recurrenceRule?: string },
-    expense.expenseDate,
+    resolvedWallDate,
   )
   const legacyRecurrenceRule = (
     recurrence?.frequency === 'DAILY' ||
@@ -240,7 +270,7 @@ export async function updateExpense(
     existingSeries !== null &&
     !isScheduleConfigEqual(toRecurrenceConfig(existingSeries), recurrence)
   const reflowAnchorDate =
-    preserveRecurringDates && existingExpense.expenseDate
+    preserveRecurringCalendarDates && existingExpense.expenseDate
       ? existingExpense.expenseDate
       : expense.expenseDate
   const reflowAnchorSequence = existingExpense.recurrenceSequence ?? 1
@@ -502,9 +532,9 @@ export async function updateExpense(
     const updated = await tx.expense.update({
       where: { id: expenseId },
       data: {
-        expenseDate: preserveRecurringDates
-          ? existingExpense.expenseDate
-          : expense.expenseDate,
+        expenseDate: resolvedWallDate,
+        expenseAt: resolvedExpenseAt,
+        expenseTimeZone: resolvedExpenseTimeZone,
         amount: expenseAmount,
         originalAmount: conversion.originalAmount,
         originalCurrency: conversion.originalCurrency,
@@ -621,6 +651,10 @@ export async function updateExpense(
       const seriesId = existingSeries?.id ?? randomId()
       const template = recurrenceTemplate!
       if (!existingSeries) {
+        const wallForAnchor = utcToWallTime(
+          resolvedExpenseAt,
+          resolvedExpenseTimeZone,
+        )
         await createSeriesForExpense({
           tx,
           seriesId,
@@ -629,7 +663,9 @@ export async function updateExpense(
           // ownership when an admin edits a member-created expense.
           creatorAccountId:
             existingExpense.createdByAccountId ?? actor.accountId,
-          anchorDate: expense.expenseDate,
+          timeZone: resolvedExpenseTimeZone,
+          anchorTimeMinutes: wallForAnchor.timeMinutes,
+          anchorDate: resolvedWallDate,
           config: recurrence,
           template,
           boss: queueBoss,
@@ -685,9 +721,12 @@ export async function updateExpense(
                 completed,
                 config: recurrence,
                 maxSequence,
-                timeZone: existingSeries.timeZone,
+                timeZone: timingChanged
+                  ? resolvedExpenseTimeZone
+                  : existingSeries.timeZone,
               })
             : null
+        const reanchorMinutes = incomingWall.timeMinutes
         await tx.recurringExpenseSeries.update({
           where: { id: existingSeries.id },
           data: {
@@ -706,6 +745,8 @@ export async function updateExpense(
                       : null,
                   anchorDate,
                   anchorSequence,
+                  anchorTimeMinutes: reanchorMinutes,
+                  timeZone: resolvedExpenseTimeZone,
                   occurrencesCreated: maxSequence,
                   nextOccurrenceDate,
                   nextOccurrenceOrdinal: nextOrdinal,
@@ -813,12 +854,26 @@ export async function updateExpense(
         for (const row of survivingFutureRows) {
           const rowConv = materializedConversions.get(row.id) ?? conversion
           const nextDate = expectedDatesByRowId.get(row.id)
+          const occurrenceDate =
+            scheduleChanged && !terminal && nextDate
+              ? nextDate
+              : row.expenseDate
+          const nextExpenseAt =
+            (scheduleChanged && !terminal) || timingChanged
+              ? recurringWallTimeToUtc(
+                  normalizeDateOnly(occurrenceDate),
+                  reanchorMinutes,
+                  resolvedExpenseTimeZone,
+                )
+              : undefined
           await updateMaterializedOccurrence(
             tx,
             row,
             template,
             rowConv,
             scheduleChanged && !terminal ? nextDate : undefined,
+            nextExpenseAt,
+            timingChanged ? resolvedExpenseTimeZone : undefined,
           )
           const before = futureRowSnapshotMap.get(row.id)
           if (!before) continue
@@ -879,15 +934,16 @@ export async function updateExpense(
           })
         }
         if (!completed && !terminalStatus) {
-          await enqueueMaterialization(
-            tx,
-            {
-              seriesId: existingSeries.id,
-              sequence: maxSequence + 1,
-              occurrenceDate: nextOccurrenceDate,
-            },
-            queueBoss,
-          )
+          const nextPayload = {
+            seriesId: existingSeries.id,
+            sequence: maxSequence + 1,
+            occurrenceDate: nextOccurrenceDate,
+          }
+          if (timingChanged && !scheduleChanged) {
+            await rescheduleMaterialization(tx, nextPayload, queueBoss)
+          } else {
+            await enqueueMaterialization(tx, nextPayload, queueBoss)
+          }
         }
       }
     }
@@ -978,12 +1034,12 @@ export class ExpenseVersionConflictError extends Error {
 }
 /**
  * Replace the mutable template fields on a materialized occurrence. Recurrence
- * identity and documents intentionally remain untouched. Pass `expenseDate`
- * when a schedule reflow moves the occurrence.
+ * identity and documents intentionally remain untouched. Pass `expenseDate` /
+ * `expenseAt` when a schedule reflow moves the occurrence.
  */
 async function updateMaterializedOccurrence(
   tx: Prisma.TransactionClient,
-  row: { id: string },
+  row: { id: string; expenseTimeZone?: string | null },
   template: ReturnType<typeof buildRecurringTemplate>,
   conversion: {
     ledgerAmountMinor: number
@@ -993,6 +1049,8 @@ async function updateMaterializedOccurrence(
     conversionSource: 'EXCHANGE' | 'CUSTOM' | null
   },
   expenseDate?: Date,
+  expenseAt?: Date,
+  expenseTimeZone?: string,
 ) {
   await tx.expenseItemizedRemainder.deleteMany({ where: { expenseId: row.id } })
   await tx.expense.update({
@@ -1000,6 +1058,8 @@ async function updateMaterializedOccurrence(
     data: {
       version: { increment: 1 },
       ...(expenseDate ? { expenseDate } : {}),
+      ...(expenseAt ? { expenseAt } : {}),
+      ...(expenseTimeZone ? { expenseTimeZone } : {}),
       amount: conversion.ledgerAmountMinor,
       originalAmount: conversion.originalAmount,
       originalCurrency: conversion.originalCurrency,

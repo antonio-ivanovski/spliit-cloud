@@ -1,7 +1,7 @@
 import { prisma, RecurringExpenseSeriesStatus, type Prisma } from '@spliit/db'
 import {
   calculateRecurrenceDate,
-  dateOnlyInTimeZone,
+  recurringWallTimeToUtc,
   type RecurrenceConfig,
   type RecurringExpenseTemplate,
 } from '@spliit/domain'
@@ -32,7 +32,7 @@ export async function enqueueMaterialization(
   if (!jobsEnv.JOBS_ENABLED) return null
   const scheduling = await tx.recurringExpenseSeries.findUnique({
     where: { id: payload.seriesId },
-    select: { timeZone: true },
+    select: { timeZone: true, anchorTimeMinutes: true },
   })
   if (!scheduling) return null
   const boss = existingBoss ?? (await getApiBossForWrite())
@@ -46,10 +46,50 @@ export async function enqueueMaterialization(
     startAfter: recurrenceJobStartAfter(
       payload.occurrenceDate,
       scheduling.timeZone,
+      (scheduling as { anchorTimeMinutes?: number | null }).anchorTimeMinutes ??
+        900,
     ),
     singletonKey: materializationSingletonKey(jobPayload),
     db: bossTransactionDb(tx),
   })
+}
+
+/** Move the one pending occurrence when its wall-clock schedule changes. */
+export async function rescheduleMaterialization(
+  tx: Prisma.TransactionClient,
+  payload: { seriesId: string; sequence: number; occurrenceDate: Date },
+  existingBoss?: SpliitBoss,
+) {
+  if (!jobsEnv.JOBS_ENABLED) return null
+  const scheduling = await tx.recurringExpenseSeries.findUnique({
+    where: { id: payload.seriesId },
+    select: { timeZone: true, anchorTimeMinutes: true },
+  })
+  if (!scheduling) return null
+  const boss = existingBoss ?? (await getApiBossForWrite())
+  const jobPayload = {
+    seriesId: payload.seriesId,
+    sequence: payload.sequence,
+    occurrenceDate: payload.occurrenceDate.toISOString().slice(0, 10),
+  }
+  const singletonKey = materializationSingletonKey(jobPayload)
+  const startAfter =
+    recurrenceJobStartAfter(
+      payload.occurrenceDate,
+      scheduling.timeZone,
+      scheduling.anchorTimeMinutes,
+    ) ?? new Date()
+  const result = await boss.upsert(
+    JOB_NAMES.MATERIALIZE_RECURRING_EXPENSE,
+    jobPayload,
+    {
+      singletonKey,
+      startAfter,
+      deadLetter: `${JOB_NAMES.MATERIALIZE_RECURRING_EXPENSE}.dead-letter`,
+      db: bossTransactionDb(tx),
+    },
+  )
+  return result.jobs[0] ?? null
 }
 
 export async function createSeriesForExpense(args: {
@@ -58,6 +98,7 @@ export async function createSeriesForExpense(args: {
   ledgerId: string
   creatorAccountId: string
   timeZone?: string
+  anchorTimeMinutes?: number | null
   anchorDate: Date
   config: RecurrenceConfig
   template: RecurringExpenseTemplate
@@ -87,12 +128,8 @@ export async function createSeriesForExpense(args: {
         where: { accountId: args.creatorAccountId },
         select: { timeZone: true },
       })
-    )?.timeZone
-  if (!timeZone) {
-    throw new Error(
-      'Account timezone must be initialized before creating a recurring expense',
-    )
-  }
+    )?.timeZone ??
+    'UTC'
   const nextOrdinal = args.nextOccurrenceOrdinal ?? 2
   const nextDate =
     args.nextOccurrenceDate ??
@@ -105,12 +142,14 @@ export async function createSeriesForExpense(args: {
   const occurrencesCreated = args.occurrencesCreated ?? 1
   const fields = toSeriesFields(args.config)
   const completed = initialSeriesCompleted(fields, args.anchorDate, nextDate)
+  const anchorTimeMinutes = args.anchorTimeMinutes ?? 900
   const series = await args.tx.recurringExpenseSeries.create({
     data: {
       id: args.seriesId,
       ledgerId: args.ledgerId,
       creatorAccountId: args.creatorAccountId,
       timeZone,
+      anchorTimeMinutes,
       frequency: fields.frequency,
       interval: fields.interval,
       anchorDate: args.anchorDate,
@@ -201,6 +240,7 @@ export async function reconcileDueRecurringExpenses(
       occurrencesCreated: true,
       nextOccurrenceDate: true,
       timeZone: true,
+      anchorTimeMinutes: true,
     },
   })
   for (let index = 0; index < due.length; index += enqueueBatchSize) {
@@ -211,6 +251,8 @@ export async function reconcileDueRecurringExpenses(
           recurrenceJobStartAfter(
             series.nextOccurrenceDate,
             series.timeZone,
+            (series as { anchorTimeMinutes?: number | null })
+              .anchorTimeMinutes ?? 900,
             now,
           )
         )
@@ -234,6 +276,8 @@ export async function reconcileDueRecurringExpenses(
               startAfter: recurrenceJobStartAfter(
                 series.nextOccurrenceDate,
                 series.timeZone,
+                (series as { anchorTimeMinutes?: number | null })
+                  .anchorTimeMinutes ?? 900,
               ),
             },
           )
@@ -346,7 +390,7 @@ export async function resumeRecurringExpenseSeries(
       })
       if (!series || series.status !== RecurringExpenseSeriesStatus.PAUSED)
         continue
-      const today = dateOnlyInTimeZone(new Date(), series.timeZone)
+      const now = new Date()
 
       let ordinal = Math.max(1, series.nextOccurrenceOrdinal)
       let next = calculateRecurrenceDate(
@@ -355,7 +399,13 @@ export async function resumeRecurringExpenseSeries(
         series.interval,
         ordinal,
       )
-      while (next <= today) {
+      while (
+        recurringWallTimeToUtc(
+          next.toISOString().slice(0, 10),
+          series.anchorTimeMinutes ?? 900,
+          series.timeZone,
+        ) <= now
+      ) {
         ordinal += 1
         next = calculateRecurrenceDate(
           series.anchorDate,
@@ -392,7 +442,13 @@ export async function resumeRecurringExpenseSeries(
         })
         continue
       }
-      if (next > today) {
+      if (
+        recurringWallTimeToUtc(
+          next.toISOString().slice(0, 10),
+          series.anchorTimeMinutes ?? 900,
+          series.timeZone,
+        ) > now
+      ) {
         const sequence = series.occurrencesCreated + 1
         await tx.recurringExpenseSeries.update({
           where: { id: series.id },

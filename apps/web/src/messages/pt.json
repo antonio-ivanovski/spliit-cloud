@@ -781,7 +781,10 @@
         "description": "Seleciona para quem a receita foi recebida."
       },
       "splitModeDescription": "Seleciona como dividir a receita.",
-      "attachDescription": "Ver e anexar recibos à receita."
+      "attachDescription": "Ver e anexar recibos à receita.",
+      "recurrence": {
+        "scheduleHint": "Será criado às {time} ({timeZone}) e poderá acionar uma notificação. Escolhe uma hora que não perturbe o sono. Edita a hora acima para a alterar."
+      }
     },
     "Expense": {
       "create": "Criar despesa",
@@ -863,7 +866,8 @@
         "completedOccurrence": "Criada",
         "upcomingOccurrence": "Próxima",
         "timeZoneDescription": "As novas despesas recorrentes são executadas às 15:00 em {timeZone}. Os agendamentos existentes mantêm o fuso horário original.",
-        "timeZonePending": "A aguardar o fuso horário da conta antes de poder ativar a recorrência."
+        "timeZonePending": "A aguardar o fuso horário da conta antes de poder ativar a recorrência.",
+        "scheduleHint": "Será criado às {time} ({timeZone}) e poderá acionar uma notificação. Escolhe uma hora que não perturbe o sono. Edita a hora acima para a alterar."
       },
       "recurringEditScopeOccurrence": "Editar apenas esta ocorrência",
       "recurringEditScopeFuture": "Editar esta ocorrência e as futuras",
@@ -1071,7 +1075,17 @@
     "validationSummary": "Corrija os campos destacados antes de guardar.",
     "resetDistribution": "Repor",
     "savedButNotNavigated": "A despesa foi guardada, mas não conseguimos sair desta página. Pode fechá-la com segurança.",
-    "tryLeavingAgain": "Tentar sair novamente"
+    "tryLeavingAgain": "Tentar sair novamente",
+    "dateTimePicker": {
+      "changesDate": "Altera a data",
+      "timezone": "Fuso horário",
+      "dateTab": "Data",
+      "timeTab": "Hora",
+      "back": "Voltar",
+      "chooseTimezone": "Escolher fuso horário",
+      "done": "Concluído",
+      "yourTime": "a tua hora"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Eliminar documento",
@@ -1327,7 +1341,8 @@
     "sharesInvalid": "As partes devem estar entre 0,01 e 1.000.000 com no máximo duas casas decimais.",
     "itemTitleRequired": "O nome do item é obrigatório.",
     "itemQuantityMin1": "A quantidade do item deve ser pelo menos 1.",
-    "rowErrorsHeading": "Corrige estas partes:"
+    "rowErrorsHeading": "Corrige estas partes:",
+    "invalidWallTime": "Esta hora não existe na data selecionada neste fuso horário."
   },
   "Categories": {
     "search": "Pesquisar categoria...",
@@ -2106,7 +2121,7 @@
       "saveError": "Não foi possível guardar as preferências",
       "defaultCurrency": "Moeda predefinida",
       "timeZone": "Fuso horário da conta",
-      "timeZoneHelp": "Utilizado para horas, datas relativas e novas despesas recorrentes.",
+      "timeZoneHelp": "Define o fuso horário predefinido para as horas das novas despesas e os agendamentos recorrentes, e é utilizado para apresentar registos de data/hora e datas relativas.",
       "language": "Idioma",
       "theme": "Tema",
       "chooseTheme": "Escolher",

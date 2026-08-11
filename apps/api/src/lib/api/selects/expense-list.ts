@@ -10,6 +10,8 @@ export const groupExpenseListCardSelect = {
   amount: true,
   createdAt: true,
   expenseDate: true,
+  expenseAt: true,
+  expenseTimeZone: true,
   categoryId: true,
   isReimbursement: true,
   splitMode: true,

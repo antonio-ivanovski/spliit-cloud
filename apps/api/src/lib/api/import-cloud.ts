@@ -6,6 +6,7 @@ import {
   type Prisma,
 } from '@spliit/db'
 import {
+  recurringWallTimeToUtc,
   spliitGroupExportManifestSchema,
   type SpliitGroupExportManifest,
 } from '@spliit/domain'
@@ -660,6 +661,9 @@ export async function importCloudGroup(
     }
 
     const seriesIds = new Map<string, string>()
+    const sourceSeriesById = new Map(
+      manifest.recurrenceSeries.map((series) => [series.sourceId, series]),
+    )
     for (const series of manifest.recurrenceSeries) {
       const destinationSeriesId = randomId()
       seriesIds.set(series.sourceId, destinationSeriesId)
@@ -679,6 +683,7 @@ export async function importCloudGroup(
           ledgerId: ledger.id,
           creatorAccountId: creator,
           timeZone: series.timeZone,
+          anchorTimeMinutes: series.anchorTimeMinutes ?? 900,
           frequency: series.frequency,
           interval: series.interval,
           anchorDate: dateOnly(series.anchorDate),
@@ -732,12 +737,28 @@ export async function importCloudGroup(
           },
         ]
       })
+      const sourceSeries = expense.recurringSeriesId
+        ? sourceSeriesById.get(expense.recurringSeriesId)
+        : undefined
+      const expenseTimeZone =
+        expense.expenseTimeZone ?? sourceSeries?.timeZone ?? 'UTC'
+      const expenseAt = expense.expenseAt
+        ? asDate(expense.expenseAt)
+        : sourceSeries
+          ? recurringWallTimeToUtc(
+              expense.expenseDate,
+              sourceSeries.anchorTimeMinutes ?? 900,
+              expenseTimeZone,
+            )
+          : new Date(`${expense.expenseDate}T12:00:00.000Z`)
       await tx.expense.create({
         data: {
           id: expenseId,
           ledgerId: ledger.id,
           createdByAccountId: createdBy,
           expenseDate: dateOnly(expense.expenseDate),
+          expenseAt,
+          expenseTimeZone,
           title: expense.title,
           categoryId: expense.categoryId,
           amount: expense.amount,

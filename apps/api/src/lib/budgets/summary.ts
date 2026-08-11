@@ -2,6 +2,7 @@ import { prisma, type GroupBudget } from '@spliit/db'
 import {
   calculateBudgetUsage,
   budgetSpentCutoff,
+  expenseDateInBudgetZone,
   getBudgetPeriodBounds,
   type BudgetRule,
 } from '@spliit/domain'
@@ -24,31 +25,43 @@ export async function calculateBudgetSummary(budget: GroupBudget) {
   const expenses = await prisma.expense.findMany({
     where: {
       ledgerId: budget.ledgerId,
-      expenseDate: { gte: bounds.start, lte: bounds.end },
+      expenseDate: {
+        gte: new Date(bounds.start.getTime() - 86400000),
+        lte: new Date(bounds.end.getTime() + 86400000),
+      },
     },
     include: {
       paidFor: { include: { ledgerParticipant: true } },
       paidByList: { include: { ledgerParticipant: true } },
     },
   })
-  const mapped = expenses.map((expense) => ({
-    ...expense,
-    paidFor: expense.paidFor.map((row) => ({
-      shares: row.shares,
-      participant: { id: row.ledgerParticipantId },
-    })),
-    paidByList: expense.paidByList.map((row) => ({
-      shares: row.shares,
-      participant: { id: row.ledgerParticipantId },
-    })),
-  }))
+  const mapped = expenses
+    .map((expense) => ({
+      ...expense,
+      paidFor: expense.paidFor.map((row) => ({
+        shares: row.shares,
+        participant: { id: row.ledgerParticipantId },
+      })),
+      paidByList: expense.paidByList.map((row) => ({
+        shares: row.shares,
+        participant: { id: row.ledgerParticipantId },
+      })),
+    }))
+    .filter((expense) => {
+      const budgetDate = expenseDateInBudgetZone(expense, rule.timeZone)
+      return (
+        budgetDate != null &&
+        budgetDate >= bounds.start &&
+        budgetDate <= bounds.end
+      )
+    })
   const cutoff = budgetSpentCutoff(bounds)
   const used = calculateBudgetUsage(
     rule,
     mapped.filter(
       (expense) =>
-        expense.expenseDate &&
-        new Date(expense.expenseDate).getTime() <= cutoff.getTime(),
+        (expenseDateInBudgetZone(expense, rule.timeZone)?.getTime() ??
+          Number.POSITIVE_INFINITY) <= cutoff.getTime(),
     ),
     bounds,
     {

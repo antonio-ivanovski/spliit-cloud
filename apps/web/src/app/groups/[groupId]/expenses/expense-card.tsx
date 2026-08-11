@@ -12,7 +12,8 @@ import { Button } from '@/components/ui/button'
 import { useLocale } from '@/i18n/react'
 import type { getGroupExpenses } from '@/lib/api'
 import { getCurrency, type Currency } from '@/lib/currency'
-import { cn, formatCurrency, formatDateOnly } from '@/lib/utils'
+import { formatExpenseClosed } from '@/lib/expense-display'
+import { cn, formatCurrency } from '@/lib/utils'
 
 import { RecurringBadge } from './series-controls'
 
@@ -155,6 +156,7 @@ export function ExpenseCard({
     typeof contributionAmount === 'number' &&
     contributionAmount !== expense.amount
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseCard' })
+  const { t: tForm } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const navigate = useNavigate()
   const locale = useLocale()
   const originalCurrency =
@@ -268,18 +270,23 @@ export function ExpenseCard({
         <div className="text-xs text-muted-foreground">
           <DocumentsCount count={expense.documentCount} />
         </div>
-        <div
-          className="text-xs text-muted-foreground"
-          data-testid="expense-date"
-        >
-          {formatDateOnly(
-            expense.expenseDate instanceof Date
-              ? expense.expenseDate
-              : new Date(expense.expenseDate),
+        {(() => {
+          const d = formatExpenseClosed(
+            expense as never,
             locale,
-            { dateStyle: 'medium' },
-          )}
-        </div>
+            undefined,
+            tForm('dateTimePicker.yourTime' as never),
+          )
+          return (
+            <div
+              className="text-xs text-muted-foreground"
+              data-testid="expense-date"
+              title={d.tooltip}
+            >
+              {d.text}
+            </div>
+          )
+        })()}
       </div>
       {onOpen ? (
         <Button

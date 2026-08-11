@@ -679,6 +679,9 @@
       "currencyField": {
         "label": "Valuta dell'entrata",
         "description": "La valuta in cui è stata ricevuta l'entrata."
+      },
+      "recurrence": {
+        "scheduleHint": "Verrà creato alle {time} ({timeZone}) e potrebbe attivare una notifica. Scegli un orario che non disturbi il sonno. Modifica l’ora qui sopra per cambiarlo."
       }
     },
     "Expense": {
@@ -761,7 +764,8 @@
         "completedOccurrence": "Creata",
         "upcomingOccurrence": "Prossima",
         "timeZoneDescription": "Le nuove spese ricorrenti vengono eseguite alle 15:00 in {timeZone}. Le pianificazioni esistenti mantengono il fuso orario originale.",
-        "timeZonePending": "In attesa del fuso orario del tuo account prima di poter attivare la ricorrenza."
+        "timeZonePending": "In attesa del fuso orario del tuo account prima di poter attivare la ricorrenza.",
+        "scheduleHint": "Verrà creato alle {time} ({timeZone}) e potrebbe attivare una notifica. Scegli un orario che non disturbi il sonno. Modifica l’ora qui sopra per cambiarlo."
       },
       "recurringEditScopeOccurrence": "Modifica solo questa occorrenza",
       "recurringEditScopeFuture": "Modifica questa e le occorrenze future",
@@ -969,7 +973,17 @@
     "validationSummary": "Correggi i campi evidenziati prima di salvare.",
     "resetDistribution": "Ripristina",
     "savedButNotNavigated": "La spesa è stata salvata, ma non è stato possibile uscire da questa pagina. Puoi chiuderla senza problemi.",
-    "tryLeavingAgain": "Prova a uscire di nuovo"
+    "tryLeavingAgain": "Prova a uscire di nuovo",
+    "dateTimePicker": {
+      "changesDate": "Cambia la data",
+      "timezone": "Fuso orario",
+      "dateTab": "Data",
+      "timeTab": "Ora",
+      "back": "Indietro",
+      "chooseTimezone": "Scegli il fuso orario",
+      "done": "Fatto",
+      "yourTime": "la tua ora"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Elimina documento",
@@ -1225,7 +1239,8 @@
     "sharesInvalid": "Le quote devono essere comprese tra 0,01 e 1.000.000 con al massimo due decimali.",
     "itemTitleRequired": "Il nome della voce è obbligatorio.",
     "itemQuantityMin1": "La quantità della voce deve essere almeno 1.",
-    "rowErrorsHeading": "Correggi queste quote:"
+    "rowErrorsHeading": "Correggi queste quote:",
+    "invalidWallTime": "Questo orario non esiste nella data selezionata per questo fuso orario."
   },
   "Categories": {
     "search": "Cerca categoria...",
@@ -2106,7 +2121,7 @@
       "saveError": "Impossibile salvare le preferenze",
       "defaultCurrency": "Valuta predefinita",
       "timeZone": "Fuso orario dell'account",
-      "timeZoneHelp": "Usato per orari, date relative e nuove spese ricorrenti.",
+      "timeZoneHelp": "Imposta il fuso orario predefinito per gli orari delle nuove spese e le pianificazioni ricorrenti e viene usato per mostrare date, orari e date relative.",
       "language": "Lingua",
       "theme": "Tema",
       "chooseTheme": "Scegli",

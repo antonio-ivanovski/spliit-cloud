@@ -1,8 +1,11 @@
 import {
   dateOnlyInTimeZone,
+  hasWallTimeGap,
   isValidTimeZone,
   occurrenceDateToUtcRunAt,
+  recurringWallTimeToUtc,
   timeZoneSchema,
+  wallTimeToUtc,
 } from './timezones'
 
 describe('timeZoneSchema', () => {
@@ -15,6 +18,43 @@ describe('timeZoneSchema', () => {
   it('rejects unknown timezones', () => {
     expect(timeZoneSchema.safeParse('').success).toBe(false)
     expect(timeZoneSchema.safeParse('Europe/Not_A_City').success).toBe(false)
+  })
+})
+
+describe('wall-time conversion', () => {
+  it('detects only spring-forward calendar days', () => {
+    expect(hasWallTimeGap('2026-03-29', 'Europe/Skopje')).toBe(true)
+    expect(hasWallTimeGap('2026-03-28', 'Europe/Skopje')).toBe(false)
+    expect(hasWallTimeGap('2026-10-25', 'Europe/Skopje')).toBe(false)
+  })
+
+  it('rejects one-off times in a DST gap', () => {
+    expect(() =>
+      wallTimeToUtc('2026-03-29', 2 * 60 + 30, 'Europe/Skopje'),
+    ).toThrow(RangeError)
+  })
+
+  it('shifts only a recurring gap occurrence forward compatibly', () => {
+    expect(
+      recurringWallTimeToUtc(
+        '2026-03-29',
+        2 * 60 + 30,
+        'Europe/Skopje',
+      ).toISOString(),
+    ).toBe('2026-03-29T01:30:00.000Z')
+    expect(
+      recurringWallTimeToUtc(
+        '2026-03-30',
+        2 * 60 + 30,
+        'Europe/Skopje',
+      ).toISOString(),
+    ).toBe('2026-03-30T00:30:00.000Z')
+  })
+
+  it('resolves fall-back ambiguity deterministically', () => {
+    expect(
+      wallTimeToUtc('2026-10-25', 2 * 60 + 30, 'Europe/Skopje').toISOString(),
+    ).toBe('2026-10-25T00:30:00.000Z')
   })
 })
 
@@ -47,6 +87,16 @@ describe('occurrenceDateToUtcRunAt', () => {
     expect(
       occurrenceDateToUtcRunAt('2026-07-29', 'Pacific/Chatham').toISOString(),
     ).toBe('2026-07-29T02:15:00.000Z')
+  })
+
+  it('shifts a job in a DST gap to the next compatible wall time', () => {
+    expect(
+      occurrenceDateToUtcRunAt(
+        '2026-03-29',
+        'Europe/Skopje',
+        2 * 60 + 30,
+      ).toISOString(),
+    ).toBe('2026-03-29T01:30:00.000Z')
   })
 
   it('rejects invalid dates and timezones', () => {

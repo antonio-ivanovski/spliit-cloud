@@ -697,7 +697,10 @@
         "description": "Wähle die Teilnehmenden aus, denen diese Einnahme zugeordnet wird."
       },
       "splitModeDescription": "Wähle, wie die Einnahme aufgeteilt werden soll.",
-      "attachDescription": "Füge der Einnahme einen Beleg hinzu."
+      "attachDescription": "Füge der Einnahme einen Beleg hinzu.",
+      "recurrence": {
+        "scheduleHint": "Wird um {time} Uhr ({timeZone}) erstellt und kann eine Benachrichtigung auslösen. Wähle eine Uhrzeit, die niemanden beim Schlafen stört. Ändere dazu die Uhrzeit oben."
+      }
     },
     "Expense": {
       "create": "Ausgabe erstellen",
@@ -779,7 +782,8 @@
         "completedOccurrence": "Erstellt",
         "upcomingOccurrence": "Bevorstehend",
         "timeZoneDescription": "Neue wiederkehrende Ausgaben werden um 15:00 Uhr in {timeZone} ausgeführt. Bestehende Zeitpläne behalten ihre ursprüngliche Zeitzone.",
-        "timeZonePending": "Die Zeitzone deines Kontos wird abgewartet, bevor die Wiederholung aktiviert werden kann."
+        "timeZonePending": "Die Zeitzone deines Kontos wird abgewartet, bevor die Wiederholung aktiviert werden kann.",
+        "scheduleHint": "Wird um {time} Uhr ({timeZone}) erstellt und kann eine Benachrichtigung auslösen. Wähle eine Uhrzeit, die niemanden beim Schlafen stört. Ändere dazu die Uhrzeit oben."
       },
       "recurringEditScopeOccurrence": "Nur dieses Vorkommen bearbeiten",
       "recurringEditScopeFuture": "Dieses und zukünftige Vorkommen bearbeiten",
@@ -990,7 +994,17 @@
     "validationSummary": "Bitte korrigieren Sie die hervorgehobenen Felder, bevor Sie speichern.",
     "resetDistribution": "Zurücksetzen",
     "savedButNotNavigated": "Die Ausgabe wurde gespeichert, aber wir konnten diese Seite nicht verlassen. Du kannst sie problemlos schließen.",
-    "tryLeavingAgain": "Erneut versuchen zu verlassen"
+    "tryLeavingAgain": "Erneut versuchen zu verlassen",
+    "dateTimePicker": {
+      "changesDate": "Ändert das Datum",
+      "timezone": "Zeitzone",
+      "dateTab": "Datum",
+      "timeTab": "Uhrzeit",
+      "back": "Zurück",
+      "chooseTimezone": "Zeitzone auswählen",
+      "done": "Fertig",
+      "yourTime": "deine Zeit"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Dokument löschen",
@@ -1249,7 +1263,8 @@
     "sharesInvalid": "Anteile müssen zwischen 0,01 und 1.000.000 liegen und höchstens zwei Dezimalstellen haben.",
     "itemTitleRequired": "Der Name des Postens ist erforderlich.",
     "itemQuantityMin1": "Die Menge des Postens muss mindestens 1 sein.",
-    "rowErrorsHeading": "Korrigiere diese Anteile:"
+    "rowErrorsHeading": "Korrigiere diese Anteile:",
+    "invalidWallTime": "Diese Uhrzeit existiert am ausgewählten Datum in dieser Zeitzone nicht."
   },
   "Categories": {
     "search": "Nach Kategorie suchen...",
@@ -2129,7 +2144,7 @@
       "saveError": "Einstellungen konnten nicht gespeichert werden",
       "defaultCurrency": "Standardwährung",
       "timeZone": "Zeitzone des Kontos",
-      "timeZoneHelp": "Wird für Zeitstempel, relative Daten und neue wiederkehrende Ausgaben verwendet.",
+      "timeZoneHelp": "Legt die Standardzeitzone für Uhrzeiten neuer Ausgaben und wiederkehrende Zeitpläne fest. Sie wird auch zur Anzeige von Zeitstempeln und relativen Datumsangaben verwendet.",
       "language": "Sprache",
       "theme": "Design",
       "chooseTheme": "Auswählen",

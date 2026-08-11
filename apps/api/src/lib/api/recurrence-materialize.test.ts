@@ -134,6 +134,43 @@ describe('recurring expense materialization', () => {
     expect(result).toEqual({ created: false })
     expect(prismaMock.expense.create).not.toHaveBeenCalled()
   })
+  it('reschedules an already-active job that fires before its updated wall time', async () => {
+    vi.setSystemTime(new Date('2030-07-20T10:00:00.000Z'))
+    const snapshot = series({
+      anchorTimeMinutes: 15 * 60,
+      nextOccurrenceDate: date('2030-07-20'),
+    })
+    setup(snapshot, snapshot)
+    const upsert = vi.fn().mockResolvedValue({
+      jobs: ['job-1'],
+      updated: 1,
+      inserted: 0,
+    })
+
+    await expect(
+      materializeRecurringExpense(
+        {
+          seriesId: 'series-1',
+          sequence: 1,
+          occurrenceDate: '2030-07-20',
+        },
+        { upsert } as never,
+      ),
+    ).resolves.toEqual({ created: false })
+
+    expect(upsert).toHaveBeenCalledWith(
+      'recurring-expense.materialize',
+      expect.objectContaining({
+        seriesId: 'series-1',
+        occurrenceDate: '2030-07-20',
+      }),
+      expect.objectContaining({
+        startAfter: new Date('2030-07-20T15:00:00.000Z'),
+      }),
+    )
+    expect(conversionMock.resolveConversion).not.toHaveBeenCalled()
+    expect(prismaMock.expense.create).not.toHaveBeenCalled()
+  })
   it('returns the existing expense on an idempotent retry', async () => {
     const snapshot = series()
     setup(snapshot, snapshot)

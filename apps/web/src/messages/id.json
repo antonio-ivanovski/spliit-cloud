@@ -667,7 +667,10 @@
         "description": "Pilih peserta yang berbagi pendapatan ini."
       },
       "splitModeDescription": "Pilih cara membagi pemasukan.",
-      "attachDescription": "Lihat dan lampirkan tanda terima pada pemasukan."
+      "attachDescription": "Lihat dan lampirkan tanda terima pada pemasukan.",
+      "recurrence": {
+        "scheduleHint": "Akan dibuat pada {time} ({timeZone}) dan dapat memicu notifikasi. Pilih waktu yang tidak mengganggu tidur. Edit waktu di atas untuk mengubahnya."
+      }
     },
     "Expense": {
       "create": "Buat pengeluaran",
@@ -749,7 +752,8 @@
         "completedOccurrence": "Dibuat",
         "upcomingOccurrence": "Mendatang",
         "timeZoneDescription": "Pengeluaran berulang baru dijalankan pukul 15.00 di {timeZone}. Jadwal yang ada mempertahankan zona waktu aslinya.",
-        "timeZonePending": "Menunggu zona waktu akun Anda sebelum pengulangan dapat diaktifkan."
+        "timeZonePending": "Menunggu zona waktu akun Anda sebelum pengulangan dapat diaktifkan.",
+        "scheduleHint": "Akan dibuat pada {time} ({timeZone}) dan dapat memicu notifikasi. Pilih waktu yang tidak mengganggu tidur. Edit waktu di atas untuk mengubahnya."
       },
       "recurringEditScopeOccurrence": "Edit hanya kejadian ini",
       "recurringEditScopeFuture": "Edit kejadian ini dan yang akan datang",
@@ -955,7 +959,17 @@
     "validationSummary": "Perbaiki bidang yang ditandai sebelum menyimpan.",
     "resetDistribution": "Atur ulang",
     "savedButNotNavigated": "Pengeluaran telah disimpan, tetapi kami tidak dapat meninggalkan halaman ini. Anda dapat menutupnya dengan aman.",
-    "tryLeavingAgain": "Coba keluar lagi"
+    "tryLeavingAgain": "Coba keluar lagi",
+    "dateTimePicker": {
+      "changesDate": "Mengubah tanggal",
+      "timezone": "Zona waktu",
+      "dateTab": "Tanggal",
+      "timeTab": "Waktu",
+      "back": "Kembali",
+      "chooseTimezone": "Pilih zona waktu",
+      "done": "Selesai",
+      "yourTime": "waktu Anda"
+    }
   },
   "Currencies": {
     "search": "Cari mata uang...",
@@ -1519,7 +1533,8 @@
     "sharesInvalid": "Bagian harus antara 0,01 dan 1.000.000 dengan maksimal dua angka desimal.",
     "itemTitleRequired": "Nama item wajib diisi.",
     "itemQuantityMin1": "Kuantitas item harus setidaknya 1.",
-    "rowErrorsHeading": "Silakan perbaiki porsi berikut:"
+    "rowErrorsHeading": "Silakan perbaiki porsi berikut:",
+    "invalidWallTime": "Waktu ini tidak tersedia pada tanggal yang dipilih di zona waktu ini."
   },
   "Categories": {
     "search": "Cari kategori...",
@@ -2090,7 +2105,7 @@
       "saveError": "Preferensi tidak dapat disimpan",
       "defaultCurrency": "Mata uang bawaan",
       "timeZone": "Zona waktu akun",
-      "timeZoneHelp": "Digunakan untuk stempel waktu, tanggal relatif, dan pengeluaran berulang baru.",
+      "timeZoneHelp": "Menetapkan zona waktu default untuk waktu pengeluaran baru dan jadwal berulang, serta digunakan untuk menampilkan stempel waktu dan tanggal relatif.",
       "language": "Bahasa",
       "theme": "Tema",
       "chooseTheme": "Pilih",

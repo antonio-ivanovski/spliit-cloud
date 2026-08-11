@@ -667,6 +667,9 @@
       "currencyField": {
         "label": "收入币种",
         "description": "接收该收入所用的货币。"
+      },
+      "recurrence": {
+        "scheduleHint": "将在 {time}（{timeZone}）创建，并可能触发通知。请选择不会影响休息的时间。如需更改，请编辑上方的时间。"
       }
     },
     "Expense": {
@@ -749,7 +752,8 @@
         "completedOccurrence": "已创建",
         "upcomingOccurrence": "即将",
         "timeZoneDescription": "新的定期支出将在 {timeZone} 下午 3:00 执行。现有计划会保留原时区。",
-        "timeZonePending": "正在等待账户时区，之后才能启用重复。"
+        "timeZonePending": "正在等待账户时区，之后才能启用重复。",
+        "scheduleHint": "将在 {time}（{timeZone}）创建，并可能触发通知。请选择不会影响休息的时间。如需更改，请编辑上方的时间。"
       },
       "recurringEditScopeOccurrence": "仅编辑本次重复项",
       "recurringEditScopeFuture": "编辑本次及后续重复项",
@@ -955,7 +959,17 @@
     "validationSummary": "保存前请修正突出显示的字段。",
     "resetDistribution": "重置",
     "savedButNotNavigated": "支出已保存，但我们无法离开此页面。您可以放心地关闭它。",
-    "tryLeavingAgain": "再次离开"
+    "tryLeavingAgain": "再次离开",
+    "dateTimePicker": {
+      "changesDate": "日期将更改",
+      "timezone": "时区",
+      "dateTab": "日期",
+      "timeTab": "时间",
+      "back": "返回",
+      "chooseTimezone": "选择时区",
+      "done": "完成",
+      "yourTime": "你的本地时间"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "删除文档",
@@ -1210,7 +1224,8 @@
     "sharesInvalid": "份额必须在 0.01 到 1,000,000 之间，且最多保留两位小数。",
     "itemTitleRequired": "项目名称为必填项。",
     "itemQuantityMin1": "项目数量必须至少为1。",
-    "rowErrorsHeading": "请修正以下份额："
+    "rowErrorsHeading": "请修正以下份额：",
+    "invalidWallTime": "所选日期在此时区中不存在这个时间。"
   },
   "Categories": {
     "search": "搜寻类别……",
@@ -2090,7 +2105,7 @@
       "saveError": "无法保存偏好设置",
       "defaultCurrency": "默认货币",
       "timeZone": "账户时区",
-      "timeZoneHelp": "用于显示时间戳、相对日期和新的定期支出。",
+      "timeZoneHelp": "设置新支出时间和定期计划的默认时区，也用于显示时间戳和相对日期。",
       "language": "语言",
       "theme": "主题",
       "chooseTheme": "选择",

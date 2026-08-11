@@ -59,7 +59,12 @@ export function toExpenseDomainShape(
   return {
     title: existing.title,
     amount: existing.amount,
-    expenseDate: existing.expenseDate,
+    expenseDate:
+      (existing as { expenseAt?: Date }).expenseAt ?? existing.expenseDate,
+    expenseAt:
+      (existing as { expenseAt?: Date }).expenseAt ?? existing.expenseDate,
+    expenseTimeZone:
+      (existing as { expenseTimeZone?: string }).expenseTimeZone ?? 'UTC',
     category: existing.categoryId as Expense['category'],
     notes: existing.notes ?? undefined,
     recurrenceRule: existing.recurringSeries?.frequency ?? 'NONE',

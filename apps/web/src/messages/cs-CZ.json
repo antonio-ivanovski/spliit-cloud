@@ -685,7 +685,10 @@
         "description": "Vyberte účastníky, kterým se tento příjem přidělí."
       },
       "splitModeDescription": "Vyberte, jak rozdělit příjem.",
-      "attachDescription": "Zobrazit a připojit účtenky k příjmu."
+      "attachDescription": "Zobrazit a připojit účtenky k příjmu.",
+      "recurrence": {
+        "scheduleHint": "Vytvoří se v {time} ({timeZone}) a může spustit oznámení. Zvolte čas, který nebude rušit spánek. Změníte ho úpravou času výše."
+      }
     },
     "Expense": {
       "create": "Vytvořit výdaj",
@@ -767,7 +770,8 @@
         "completedOccurrence": "Vytvořeno",
         "upcomingOccurrence": "Nadcházející",
         "timeZoneDescription": "Nové opakované výdaje se spouštějí v 15:00 v pásmu {timeZone}. Stávající plány si zachovají původní časové pásmo.",
-        "timeZonePending": "Před povolením opakování se čeká na časové pásmo vašeho účtu."
+        "timeZonePending": "Před povolením opakování se čeká na časové pásmo vašeho účtu.",
+        "scheduleHint": "Vytvoří se v {time} ({timeZone}) a může spustit oznámení. Zvolte čas, který nebude rušit spánek. Změníte ho úpravou času výše."
       },
       "recurringEditScopeOccurrence": "Upravit pouze tento výskyt",
       "recurringEditScopeFuture": "Upravit tento a budoucí výskyty",
@@ -976,7 +980,17 @@
     "validationSummary": "Před uložením opravte zvýrazněná pole.",
     "resetDistribution": "Obnovit",
     "savedButNotNavigated": "Výdaj byl uložen, ale nepodařilo se nám opustit tuto stránku. Můžete ji bezpečně zavřít.",
-    "tryLeavingAgain": "Zkusit znovu odejít"
+    "tryLeavingAgain": "Zkusit znovu odejít",
+    "dateTimePicker": {
+      "changesDate": "Změní datum",
+      "timezone": "Časové pásmo",
+      "dateTab": "Datum",
+      "timeTab": "Čas",
+      "back": "Zpět",
+      "chooseTimezone": "Vybrat časové pásmo",
+      "done": "Hotovo",
+      "yourTime": "váš čas"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Smazat dokument",
@@ -1233,7 +1247,8 @@
     "sharesInvalid": "Podíly musí být mezi 0,01 a 1 000 000 s maximálně dvěma desetinnými místy.",
     "itemTitleRequired": "Název položky je povinný.",
     "itemQuantityMin1": "Množství položky musí být alespoň 1.",
-    "rowErrorsHeading": "Opravte tyto podíly:"
+    "rowErrorsHeading": "Opravte tyto podíly:",
+    "invalidWallTime": "Tento čas ve vybraném datu v tomto časovém pásmu neexistuje."
   },
   "Categories": {
     "search": "Hledat kategorii...",
@@ -2115,7 +2130,7 @@
       "saveError": "Předvolby se nepodařilo uložit",
       "defaultCurrency": "Výchozí měna",
       "timeZone": "Časové pásmo účtu",
-      "timeZoneHelp": "Používá se pro časové údaje, relativní data a nové opakované výdaje.",
+      "timeZoneHelp": "Určuje výchozí časové pásmo pro čas nových výdajů a opakované plány a používá se k zobrazení časových údajů a relativních dat.",
       "language": "Jazyk",
       "theme": "Motiv",
       "chooseTheme": "Vybrat",

@@ -76,11 +76,22 @@ export function getGroupedExpensesByDate<T extends TimelineExpense>(
   ) as Record<ExpenseGroup, T[]>
 
   for (const expense of expenses) {
-    const expenseGroup = getExpenseGroup(
-      calendarDay(dateOnlyIso(new Date(expense.expenseDate))),
-      today,
-      locale,
-    )
+    const raw = expense as T & {
+      expenseAt?: Date | string
+      expenseTimeZone?: string | null
+    }
+    let iso: string
+    if (raw.expenseAt) {
+      const tz = raw.expenseTimeZone ?? timeZone
+      try {
+        iso = zonedDateOnlyIso(new Date(raw.expenseAt as Date | string), tz)
+      } catch {
+        iso = dateOnlyIso(new Date(expense.expenseDate))
+      }
+    } else {
+      iso = dateOnlyIso(new Date(expense.expenseDate))
+    }
+    const expenseGroup = getExpenseGroup(calendarDay(iso), today, locale)
     result[expenseGroup].push(expense)
   }
 

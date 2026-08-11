@@ -675,13 +675,16 @@ export async function prepareAssistantExpense(
   ensureUniqueParticipantIds(paidFor)
   assertParticipants(paidFor.map((row) => row.participant))
 
+  const expenseDate = input.date
+    ? new Date(`${input.date}T00:00:00.000Z`)
+    : localDateFromOffset(
+        options.now ?? new Date(),
+        input.timezoneOffsetMinutes,
+      )
   const expense = expenseApiSchema.parse({
-    expenseDate: input.date
-      ? new Date(`${input.date}T00:00:00.000Z`)
-      : localDateFromOffset(
-          options.now ?? new Date(),
-          input.timezoneOffsetMinutes,
-        ),
+    expenseDate,
+    expenseAt: new Date(expenseDate.getTime() + 12 * 60 * 60 * 1000),
+    expenseTimeZone: 'UTC',
     title: input.title,
     category: input.category ?? DEFAULT_CATEGORY_ID,
     amount,

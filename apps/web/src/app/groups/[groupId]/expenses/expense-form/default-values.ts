@@ -16,6 +16,8 @@ import {
   getCurrency,
   randomId,
   sharesAsDecimal,
+  utcToWallTime,
+  formatTimeMinutes,
 } from '@spliit/domain'
 
 // Storage-units shape returned by `trpc.account.defaultSplit`. Matches
@@ -244,6 +246,8 @@ export function buildExpenseFormDefaults(args: {
   currentLedgerParticipantId: string | null | undefined
   reimbursementTitle: string
   today?: Date
+  now?: Date
+  timeZone?: string
   /** Persisted default for this user+group, if any. */
   savedDefault?: unknown
 }): ExpenseFormInputValues {
@@ -258,6 +262,8 @@ export function buildExpenseFormDefaults(args: {
     reimbursementTitle,
     savedDefault,
     today = new Date(),
+    now = new Date(),
+    timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone ?? 'UTC',
   } = args
 
   // Copy: prefill like edit, but force today's date.
@@ -272,6 +278,8 @@ export function buildExpenseFormDefaults(args: {
       currentLedgerParticipantId,
       reimbursementTitle,
       today,
+      now,
+      timeZone,
     })
     return {
       ...defaults,
@@ -433,9 +441,21 @@ export function buildExpenseFormDefaults(args: {
           })),
         }
 
+    const rawExpense = expense as typeof expense & {
+      expenseAt: Date
+      expenseTimeZone: string
+    }
+    const editAt = new Date(rawExpense.expenseAt)
+    const editTz = rawExpense.expenseTimeZone
+    const editWall = utcToWallTime(editAt, editTz)
+    const editTime = formatTimeMinutes(editWall.timeMinutes)
+    const editWallDate = new Date(`${editWall.dateIso}T00:00:00.000Z`)
+
     return {
       title: expense.title,
-      expenseDate: expense.expenseDate ?? today,
+      expenseDate: editWallDate,
+      expenseTime: editTime,
+      expenseTimeZone: editTz,
       amount: conversionRequired
         ? expense.originalAmount != null
           ? amountAsDecimal(expense.originalAmount, originalCurrency)
@@ -550,6 +570,10 @@ export function buildExpenseFormDefaults(args: {
       return {
         title: reimbursementTitle,
         expenseDate: today,
+        expenseTime: formatTimeMinutes(
+          utcToWallTime(now, timeZone).timeMinutes,
+        ),
+        expenseTimeZone: timeZone,
         amount: totalDisplay,
         originalCurrency: searchOriginalCurrency,
         conversionRate: undefined,
@@ -578,6 +602,8 @@ export function buildExpenseFormDefaults(args: {
     return {
       title: reimbursementTitle,
       expenseDate: today,
+      expenseTime: formatTimeMinutes(utcToWallTime(now, timeZone).timeMinutes),
+      expenseTimeZone: timeZone,
       amount:
         searchParams.amount != null
           ? amountAsDecimal(Number(searchParams.amount) || 0, searchCurrency)
@@ -623,9 +649,12 @@ export function buildExpenseFormDefaults(args: {
     }
   }
 
+  const nowTime = formatTimeMinutes(utcToWallTime(now, timeZone).timeMinutes)
   return {
     title: searchParams.title ?? '',
     expenseDate: searchParams.date ? new Date(searchParams.date) : today,
+    expenseTime: nowTime,
+    expenseTimeZone: timeZone,
     amount:
       searchParams.amount != null
         ? amountAsDecimal(Number(searchParams.amount) || 0, searchCurrency)

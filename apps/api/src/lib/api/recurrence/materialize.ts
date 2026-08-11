@@ -2,6 +2,7 @@ import { prisma, RecurringExpenseSeriesStatus } from '@spliit/db'
 import {
   calculateRecurrenceDate,
   dateOnlyInTimeZone,
+  recurringWallTimeToUtc,
   type RecurringExpenseTemplate,
 } from '@spliit/domain'
 import type { SpliitBoss } from '@spliit/jobs'
@@ -10,7 +11,7 @@ import { resolveConversion } from '../../expense-conversion'
 import { planActivityNotificationDeliveries } from '../../notifications/delivery-planner'
 import { buildExpenseActivityData, logActivity } from '../activities'
 import { randomId } from '../shared'
-import { enqueueMaterialization } from './series-ops'
+import { enqueueMaterialization, rescheduleMaterialization } from './series-ops'
 import { endReached, occurrenceExpenseData } from './template'
 
 export type MaterializationPayload = {
@@ -149,6 +150,25 @@ export async function materializeRecurringExpense(
     occurrenceDate > snapshot.endDate
   )
     return { created: false }
+  const scheduledAt = recurringWallTimeToUtc(
+    payload.occurrenceDate,
+    snapshot.anchorTimeMinutes ?? 900,
+    snapshot.timeZone,
+  )
+  if (existingBoss && scheduledAt.getTime() > Date.now()) {
+    await prisma.$transaction((tx) =>
+      rescheduleMaterialization(
+        tx,
+        {
+          seriesId: payload.seriesId,
+          sequence: payload.sequence,
+          occurrenceDate,
+        },
+        existingBoss,
+      ),
+    )
+    return { created: false }
+  }
   const snapshotTemplate =
     snapshot.template as unknown as RecurringExpenseTemplate
   const conversion = await resolveConversion(
@@ -310,16 +330,31 @@ export async function materializeRecurringExpense(
 
     const template = snapshotTemplate
     const expenseId = randomId()
+    const occurrenceWallDate = occurrenceDate.toISOString().slice(0, 10)
+    const occurrenceTimeZone = series.timeZone
+    const occurrenceAnchorMinutes =
+      (series as unknown as { anchorTimeMinutes?: number }).anchorTimeMinutes ??
+      900
+    const occurrenceAt = recurringWallTimeToUtc(
+      occurrenceWallDate,
+      occurrenceAnchorMinutes,
+      occurrenceTimeZone,
+    )
+    const occurrenceWallDay = dateOnlyInTimeZone(
+      occurrenceAt,
+      occurrenceTimeZone,
+    )
     const expense = await tx.expense.create({
       data: {
         ...occurrenceExpenseData(
           template,
-          occurrenceDate,
+          occurrenceWallDay,
           expenseId,
           series.id,
           payload.sequence,
           conversion.ledgerAmountMinor,
           conversion,
+          { expenseAt: occurrenceAt, expenseTimeZone: occurrenceTimeZone },
         ),
         ledgerId: series.ledgerId,
         createdByAccountId: series.creatorAccountId,

@@ -126,6 +126,8 @@ describe('importGroup', () => {
     })
 
     expect(parsed.recurrenceRule).toBe('NONE')
+    expect(parsed.expenseAt).toEqual(new Date('2025-11-15T12:00:00.000Z'))
+    expect(parsed.expenseTimeZone).toBe('UTC')
     expect('recurrence' in parsed).toBe(false)
     expect('recurrenceSeriesId' in parsed).toBe(false)
     expect('recurrenceSequence' in parsed).toBe(false)

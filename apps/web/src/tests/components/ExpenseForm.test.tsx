@@ -290,6 +290,8 @@ const mockExpense = {
   id: 'expense-1',
   title: 'Dinner',
   expenseDate: new Date('2025-06-15'),
+  expenseAt: new Date('2025-06-15T15:00:00.000Z'),
+  expenseTimeZone: 'UTC',
   amount: 5000, // $50.00 in cents
   originalCurrency: null,
   originalAmount: null,
@@ -476,7 +478,7 @@ describe('ExpenseForm', () => {
 
     const title = screen.getByRole('textbox', { name: /expense title/i })
     const amount = screen.getByRole('textbox', { name: /^amount$/i })
-    const date = screen.getByRole('textbox', { name: /expense date/i })
+    const date = screen.getByRole('combobox', { name: /expense date/i })
     const paidForMode = screen.getByRole('radio', {
       name: /split.*evenly/i,
     })
@@ -525,7 +527,7 @@ describe('ExpenseForm', () => {
 
     const title = screen.getByRole('textbox', { name: /expense title/i })
     const amount = screen.getByRole('textbox', { name: /^amount$/i })
-    const date = screen.getByRole('textbox', { name: /expense date/i })
+    const date = screen.getByRole('combobox', { name: /expense date/i })
     const submit = screen
       .getAllByRole('button', { name: /^save$/i })
       .find((button) => (button as HTMLButtonElement).type === 'submit')
@@ -557,7 +559,7 @@ describe('ExpenseForm', () => {
 
     await user.click(screen.getByRole('button', { name: /show items/i }))
     await user.click(screen.getByRole('button', { name: /add item/i }))
-    const date = screen.getByRole('textbox', { name: /expense date/i })
+    const date = screen.getByRole('combobox', { name: /expense date/i })
     const itemTitle = screen.getByRole('textbox', { name: 'Item' })
     const itemCost = screen.getByRole('textbox', { name: 'Cost' })
     const itemQuantity = screen.getByRole('textbox', { name: 'Qty' })
@@ -1253,13 +1255,17 @@ describe('ExpenseForm', () => {
       ).toBeInTheDocument()
       // Copy action lives on the preview modal, not inside the form.
       expect(screen.queryByTestId('expense-make-copy')).not.toBeInTheDocument()
-      expect(screen.getByDisplayValue('07/15/2025')).toBeInTheDocument()
+      expect(
+        screen.getByRole<HTMLButtonElement>('combobox', {
+          name: /expense date/i,
+        }).textContent,
+      ).toContain('Jul 15, 2025')
     } finally {
       vi.useRealTimers()
     }
   })
 
-  it('clears copied recurrence while account timezone sync is pending', async () => {
+  it('keeps copied recurrence under the expense timezone while account sync is pending', async () => {
     accountPreferenceMocks.preferences = {
       ...accountPreferenceMocks.preferences,
       timeZone: null,
@@ -1288,13 +1294,13 @@ describe('ExpenseForm', () => {
     )
 
     const recurrence = screen.getByRole('checkbox', { name: 'Recurring' })
-    await vi.waitFor(() => expect(recurrence).not.toBeChecked())
-    expect(recurrence).toHaveAttribute('aria-disabled', 'true')
+    await vi.waitFor(() => expect(recurrence).toBeChecked())
+    expect(recurrence).not.toHaveAttribute('aria-disabled', 'true')
     expect(
-      screen.getByText(
+      screen.queryByText(
         'Waiting for your account timezone before recurrence can be enabled.',
       ),
-    ).toBeInTheDocument()
+    ).not.toBeInTheDocument()
   })
 
   it('edit mode renders the resolved "{title}" heading when supplied', () => {

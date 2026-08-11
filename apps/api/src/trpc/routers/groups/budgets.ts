@@ -18,6 +18,7 @@ import {
   budgetTrend,
   calculateExpenseContribution,
   calculateBudgetUsage,
+  expenseDateInBudgetZone,
   budgetDaysUntilStart,
   getBudgetLifecycle,
   getBudgetPeriodBounds,
@@ -131,19 +132,26 @@ async function summary(
   const rule = toRule(budget)
   const referenceAt = budget.archivedAt ?? new Date()
   const bounds = getBudgetPeriodBounds(rule, referenceAt)
-  const rawRows =
-    sharedCurrentRows?.filter(
-      (expense) =>
-        expense.expenseDate >= bounds.start &&
-        expense.expenseDate <= bounds.end,
-    ) ??
+  const padDays = 1
+  const paddedStart = new Date(bounds.start.getTime() - padDays * 86400000)
+  const paddedEnd = new Date(bounds.end.getTime() + padDays * 86400000)
+  const rawRowsAll =
+    sharedCurrentRows ??
     (await client.expense.findMany({
       where: {
         ledgerId: budget.ledgerId,
-        expenseDate: { gte: bounds.start, lte: bounds.end },
+        expenseDate: { gte: paddedStart, lte: paddedEnd },
       },
       select: groupExpenseListCardSelect,
     }))
+  const rawRows = rawRowsAll.filter((row) => {
+    const budgetDate = expenseDateInBudgetZone(row, rule.timeZone)
+    return (
+      budgetDate != null &&
+      budgetDate >= bounds.start &&
+      budgetDate <= bounds.end
+    )
+  })
   const mappedRows = rawRows.map(mapExpenseListRow)
   /**
    * `mappedRows` follow the public expense-list shape but
@@ -174,31 +182,46 @@ async function summary(
       if (!totalsRow) return null
       return {
         row,
+        budgetDate: expenseDateInBudgetZone(row, rule.timeZone),
         contribution: calculateExpenseContribution(rule, totalsRow, bounds, {
           categoryMatches: budgetCategoryMatches,
         }),
       }
     })
     .filter((entry): entry is NonNullable<typeof entry> => entry != null)
+    .filter(
+      (entry): entry is typeof entry & { budgetDate: Date } =>
+        entry.budgetDate != null,
+    )
     .filter((entry) => entry.contribution > 0)
   const matchingExpensesAll = matchingExpensesRaw
-    .filter(({ row }) => row.expenseDate <= spentCutoff)
+    .filter(({ budgetDate }) => budgetDate <= spentCutoff)
     .sort(
       (a, b) =>
-        new Date(b.row.expenseDate).getTime() -
-        new Date(a.row.expenseDate).getTime(),
+        b.budgetDate.getTime() - a.budgetDate.getTime() ||
+        new Date(b.row.expenseAt).getTime() -
+          new Date(a.row.expenseAt).getTime(),
     )
-    .map(({ row, contribution }) => ({ ...row, contribution }))
+    .map(({ row, contribution, budgetDate }) => ({
+      ...row,
+      expenseDate: budgetDate,
+      contribution,
+    }))
   const upcomingExpensesAll = budget.archivedAt
     ? []
     : matchingExpensesRaw
-        .filter(({ row }) => row.expenseDate > spentCutoff)
+        .filter(({ budgetDate }) => budgetDate > spentCutoff)
         .sort(
           (a, b) =>
-            new Date(a.row.expenseDate).getTime() -
-            new Date(b.row.expenseDate).getTime(),
+            a.budgetDate.getTime() - b.budgetDate.getTime() ||
+            new Date(a.row.expenseAt).getTime() -
+              new Date(b.row.expenseAt).getTime(),
         )
-        .map(({ row, contribution }) => ({ ...row, contribution }))
+        .map(({ row, contribution, budgetDate }) => ({
+          ...row,
+          expenseDate: budgetDate,
+          contribution,
+        }))
   const matchingExpensesTotal = matchingExpensesAll.length
   const upcomingExpensesTotal = upcomingExpensesAll.length
   const matchingExpenses = matchingExpensesAll.slice(0, MAX_BUDGET_EXPENSES)
@@ -265,11 +288,14 @@ async function summary(
   for (let index = 0; index < 12 && previous; index++) {
     const period = previous
     if (period.end < budget.createdAt) break
-    const priorExpenses = historyRows.filter(
-      (expense) =>
-        expense.expenseDate >= period.start &&
-        expense.expenseDate <= period.end,
-    )
+    const priorExpenses = historyRows.filter((expense) => {
+      const budgetDate = expenseDateInBudgetZone(expense, rule.timeZone)
+      return (
+        budgetDate != null &&
+        budgetDate >= period.start &&
+        budgetDate <= period.end
+      )
+    })
     const priorMapped = priorExpenses.map(mapExpenseListRow)
     const priorTotals = priorMapped.map((row) => ({
       ...row,
@@ -329,10 +355,13 @@ async function loadSharedCurrentRows(budgets: GroupBudget[]) {
   const bounds = budgets.map((budget) =>
     getBudgetPeriodBounds(toRule(budget), budget.archivedAt ?? new Date()),
   )
+  const padMs = 86400000
   const from = new Date(
-    Math.min(...bounds.map((period) => period.start.getTime())),
+    Math.min(...bounds.map((period) => period.start.getTime())) - padMs,
   )
-  const to = new Date(Math.max(...bounds.map((period) => period.end.getTime())))
+  const to = new Date(
+    Math.max(...bounds.map((period) => period.end.getTime())) + padMs,
+  )
   return prisma.expense.findMany({
     where: {
       ledgerId: budgets[0]!.ledgerId,

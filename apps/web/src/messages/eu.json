@@ -679,7 +679,10 @@
         "description": "Hautatu norentzat jaso den diru-sarrera."
       },
       "splitModeDescription": "Hautatu nola zatitu diru-sarrera.",
-      "attachDescription": "Ordainagiriak ikusi eta diru-sarrerei erantsi."
+      "attachDescription": "Ordainagiriak ikusi eta diru-sarrerei erantsi.",
+      "recurrence": {
+        "scheduleHint": "{time}etan ({timeZone}) sortuko da, eta baliteke jakinarazpen bat eragitea. Aukeratu loaldia eragozten ez duen ordu bat. Aldatzeko, editatu goiko ordua."
+      }
     },
     "Expense": {
       "create": "Sortu gastua",
@@ -761,7 +764,8 @@
         "completedOccurrence": "Sortua",
         "upcomingOccurrence": "Hurrengoa",
         "timeZoneDescription": "Gastu errepikari berriak 15:00etan exekutatzen dira {timeZone} ordu-eremuan. Lehendik dauden programazioek jatorrizko ordu-eremua mantentzen dute.",
-        "timeZonePending": "Kontuaren ordu-zonaren zain, errepikapena gaitu ahal izateko."
+        "timeZonePending": "Kontuaren ordu-zonaren zain, errepikapena gaitu ahal izateko.",
+        "scheduleHint": "{time}etan ({timeZone}) sortuko da, eta baliteke jakinarazpen bat eragitea. Aukeratu loaldia eragozten ez duen ordu bat. Aldatzeko, editatu goiko ordua."
       },
       "recurringEditScopeOccurrence": "Editatu agerraldi hau soilik",
       "recurringEditScopeFuture": "Editatu agerraldi hau eta etorkizunekoak",
@@ -969,7 +973,17 @@
     "validationSummary": "Zuzendu nabarmendutako eremuak gorde aurretik.",
     "resetDistribution": "Berrezarri",
     "savedButNotNavigated": "Gastua gorde da, baina ezin izan dugu orri honetatik atera. Itxi dezakezu lasai.",
-    "tryLeavingAgain": "Saiatu berriro irteten"
+    "tryLeavingAgain": "Saiatu berriro irteten",
+    "dateTimePicker": {
+      "changesDate": "Data aldatzen du",
+      "timezone": "Ordu-zona",
+      "dateTab": "Data",
+      "timeTab": "Ordua",
+      "back": "Atzera",
+      "chooseTimezone": "Aukeratu ordu-zona",
+      "done": "Eginda",
+      "yourTime": "zure ordua"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Ezabatu dokumentua",
@@ -1225,7 +1239,8 @@
     "sharesInvalid": "Partaidetzak 0,01 eta 1.000.000 artekoak izan behar dira, gehienez bi hamartarrekin.",
     "itemTitleRequired": "Elementuaren izena beharrezkoa da.",
     "itemQuantityMin1": "Elementuaren kopuruak gutxienez 1 izan behar du.",
-    "rowErrorsHeading": "Zuzendu parte hauek:"
+    "rowErrorsHeading": "Zuzendu parte hauek:",
+    "invalidWallTime": "Ordu hau ez dago hautatutako datan ordu-eremu honetan."
   },
   "Categories": {
     "search": "Bilatu kategoria...",
@@ -2105,7 +2120,7 @@
       "saveError": "Ezin izan dira hobespenak gorde",
       "defaultCurrency": "Moneta lehenetsia",
       "timeZone": "Kontuaren ordu-zona",
-      "timeZoneHelp": "Denbora-zigiluetarako, data erlatiboetarako eta gastu errepikari berrietarako erabiltzen da.",
+      "timeZoneHelp": "Gastu berrien orduetarako eta programazio errepikarietarako ordu-zona lehenetsia ezartzen du, eta denbora-zigiluak eta data erlatiboak bistaratzeko erabiltzen da.",
       "language": "Hizkuntza",
       "theme": "Gaia",
       "chooseTheme": "Aukeratu",

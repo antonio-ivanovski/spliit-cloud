@@ -181,4 +181,14 @@ describe('AccountPreferences', () => {
       ).not.toBeNull()
     }
   })
+
+  it('explains how the account timezone is used', () => {
+    render(<AccountPreferences />)
+
+    expect(
+      screen.getByText(
+        'Sets the default timezone for new expense times and recurring schedules, and is used to display timestamps and relative dates.',
+      ),
+    ).toBeVisible()
+  })
 })

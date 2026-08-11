@@ -7,6 +7,8 @@ import { buildSubmitValues } from './submit-values'
 
 const baseValues: ExpenseFormInputValues = {
   expenseDate: new Date('2026-06-30T10:45:49.956Z'),
+  expenseTime: '10:45',
+  expenseTimeZone: 'UTC',
   title: 'Receipt',
   category: 'general',
   amount: 150,

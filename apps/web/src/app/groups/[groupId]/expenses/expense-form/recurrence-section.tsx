@@ -8,10 +8,6 @@ import {
 } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import {
-  useStartupTimeZoneCheck,
-  useSyncedAccountPreferences,
-} from '@/components/account-preferences-sync'
 import { ResponsiveChoicePicker } from '@/components/responsive-choice-picker'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
@@ -35,7 +31,9 @@ import {
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
 import { useLocale } from '@/i18n/react'
+import { getDeviceTimeZone } from '@/lib/expense-display'
 import { cn } from '@/lib/utils'
+import { timeZoneCityOffsetLabel } from '@spliit/domain'
 
 import {
   OccurrenceTimeline,
@@ -89,7 +87,7 @@ const parseIntegerDraft = (value: string) => {
 export function RecurrenceSection<T extends RecurrenceFormValues>({
   form,
   readOnly,
-  isCopy = false,
+  isCopy: _isCopy = false,
   currentSequence = 1,
   editScope,
   initialRecurrence,
@@ -105,10 +103,22 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm.Expense' })
   const locale = useLocale()
-  const accountPreferences = useSyncedAccountPreferences()
-  const timeZoneCheck = useStartupTimeZoneCheck()
-  const accountTimeZone = accountPreferences?.timeZone ?? null
-  const recurrenceAvailable = accountTimeZone !== null && timeZoneCheck.checked
+  const expenseTimeZone =
+    (useWatch({
+      control: form.control,
+      name: 'expenseTimeZone' as Path<T>,
+    }) as unknown as string | undefined) ?? null
+  const expenseTime =
+    (useWatch({
+      control: form.control,
+      name: 'expenseTime' as Path<T>,
+    }) as unknown as string | undefined) ?? null
+  const deviceTimeZone = useMemo(() => getDeviceTimeZone(), [])
+  const effectiveExpenseTimeZone = expenseTimeZone ?? deviceTimeZone
+  const expenseTimeZoneLabel = useMemo(
+    () => timeZoneCityOffsetLabel(effectiveExpenseTimeZone),
+    [effectiveExpenseTimeZone],
+  )
   const [scheduleOpen, setScheduleOpen] = useState(false)
   // Keep the raw text while a numeric field is being edited. The form value
   // stays valid, so an empty draft never reaches the API/schema validation.
@@ -194,11 +204,6 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
     [form],
   )
 
-  useEffect(() => {
-    if (!isCopy || recurrenceAvailable || !recurrence) return
-    updateRecurrence(null)
-  }, [isCopy, recurrence, recurrenceAvailable, updateRecurrence])
-
   const updateEnd = (next: RecurrenceEnd) => {
     if (!recurrence) return
     updateRecurrence({ ...recurrence, end: next })
@@ -272,7 +277,7 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
                     onCheckedChange={(checked) =>
                       toggleRecurrence(checked === true)
                     }
-                    disabled={readOnly || (!recurrenceAvailable && !isEnabled)}
+                    disabled={readOnly}
                     aria-controls="recurrence-settings"
                   />
                 </FormControl>
@@ -286,19 +291,12 @@ export function RecurrenceSection<T extends RecurrenceFormValues>({
                   <p className="mt-0.5 text-sm leading-snug text-muted-foreground">
                     {t('recurrence.checkboxDescription')}
                   </p>
-                  {accountTimeZone && (
+                  {isEnabled && (
                     <p className="mt-1 text-xs leading-snug text-muted-foreground">
-                      {t('recurrence.timeZoneDescription', {
-                        timeZone: accountTimeZone,
+                      {t('recurrence.scheduleHint', {
+                        time: expenseTime ?? '—',
+                        timeZone: expenseTimeZoneLabel,
                       })}
-                    </p>
-                  )}
-                  {!recurrenceAvailable && (
-                    <p
-                      className="mt-1 text-xs leading-snug text-muted-foreground"
-                      aria-live="polite"
-                    >
-                      {t('recurrence.timeZonePending')}
                     </p>
                   )}
                 </div>

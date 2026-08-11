@@ -637,7 +637,8 @@
         "completedOccurrence": "생성됨",
         "upcomingOccurrence": "예정",
         "timeZoneDescription": "새 반복 지출은 {timeZone} 기준 오후 3시에 실행됩니다. 기존 일정은 원래 시간대를 유지합니다.",
-        "timeZonePending": "반복을 활성화하기 전에 계정 시간대를 기다리는 중입니다."
+        "timeZonePending": "반복을 활성화하기 전에 계정 시간대를 기다리는 중입니다.",
+        "scheduleHint": "{time}({timeZone})에 생성되며 알림이 전송될 수 있습니다. 수면을 방해하지 않는 시간을 선택하세요. 변경하려면 위의 시간을 수정하세요."
       },
       "recurringEditScopeOccurrence": "이 항목만 수정",
       "recurringEditScopeFuture": "이 항목 및 이후 항목 수정",
@@ -751,7 +752,10 @@
         "description": "이 수입을 나눌 참여자를 선택하세요."
       },
       "splitModeDescription": "수입 분할 방식을 선택하세요.",
-      "attachDescription": "영수증을 확인하고 수입에 첨부합니다."
+      "attachDescription": "영수증을 확인하고 수입에 첨부합니다.",
+      "recurrence": {
+        "scheduleHint": "{time}({timeZone})에 생성되며 알림이 전송될 수 있습니다. 수면을 방해하지 않는 시간을 선택하세요. 변경하려면 위의 시간을 수정하세요."
+      }
     },
     "cancel": "취소",
     "conversionUnavailable": "지출별로 다른 통화를 설정하고 금액을 변환하려면 그룹에 사용자 지정이 아닌 통화를 선택하세요.",
@@ -871,7 +875,17 @@
     "validationSummary": "저장하기 전에 강조 표시된 필드를 수정하세요.",
     "resetDistribution": "초기화",
     "savedButNotNavigated": "지출이 저장되었지만 이 페이지에서 나갈 수 없었습니다. 안심하고 닫으셔도 됩니다.",
-    "tryLeavingAgain": "다시 나가기"
+    "tryLeavingAgain": "다시 나가기",
+    "dateTimePicker": {
+      "changesDate": "날짜가 변경됩니다",
+      "timezone": "시간대",
+      "dateTab": "날짜",
+      "timeTab": "시간",
+      "back": "뒤로",
+      "chooseTimezone": "시간대 선택",
+      "done": "완료",
+      "yourTime": "현지 시간"
+    }
   },
   "Balances": {
     "title": "잔액",
@@ -1044,7 +1058,8 @@
     "sharesInvalid": "지분은 0.01 이상 1,000,000 이하여야 하며 소수점 둘째 자리까지 입력할 수 있습니다.",
     "itemTitleRequired": "항목 이름을 입력해 주세요.",
     "itemQuantityMin1": "항목 수량은 1개 이상이어야 합니다.",
-    "rowErrorsHeading": "다음 몫을 수정해 주세요:"
+    "rowErrorsHeading": "다음 몫을 수정해 주세요:",
+    "invalidWallTime": "선택한 날짜에는 이 시간대에 해당 시간이 존재하지 않습니다."
   },
   "Categories": {
     "search": "카테고리 선택...",
@@ -2090,7 +2105,7 @@
       "saveError": "환경설정을 저장할 수 없습니다",
       "defaultCurrency": "기본 통화",
       "timeZone": "계정 시간대",
-      "timeZoneHelp": "타임스탬프, 상대 날짜 및 새 반복 지출에 사용됩니다.",
+      "timeZoneHelp": "새 지출 시간과 반복 일정의 기본 시간대를 설정합니다. 타임스탬프와 상대 날짜를 표시할 때도 사용됩니다.",
       "language": "언어",
       "theme": "테마",
       "chooseTheme": "선택",

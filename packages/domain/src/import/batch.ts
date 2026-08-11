@@ -151,6 +151,8 @@ export type ImportBatchParticipant =
 
 export type ImportBatchExpense = {
   expenseDate: Date
+  expenseAt: Date
+  expenseTimeZone: string
   title: string
   category: never
   amount: number
@@ -449,6 +451,8 @@ export function buildImportBatch(
 
       return {
         expenseDate: new Date(e.expenseDate),
+        expenseAt: new Date(`${e.expenseDate.slice(0, 10)}T12:00:00.000Z`),
+        expenseTimeZone: 'UTC',
         title: e.title,
         category: e.category as never,
         amount: expenseAmount,
@@ -472,6 +476,8 @@ export function buildImportBatch(
 
     return {
       expenseDate: new Date(e.expenseDate),
+      expenseAt: new Date(`${e.expenseDate.slice(0, 10)}T12:00:00.000Z`),
+      expenseTimeZone: 'UTC',
       title: e.title,
       category: e.category as never,
       amount: expenseAmount,

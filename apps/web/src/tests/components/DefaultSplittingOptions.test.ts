@@ -589,6 +589,8 @@ describe('buildExpenseFormDefaults (copy branch)', () => {
     id: 'expense-1',
     title: 'Groceries',
     expenseDate: new Date('2024-12-01T00:00:00.000Z'),
+    expenseAt: new Date('2024-12-01T15:00:00.000Z'),
+    expenseTimeZone: 'UTC',
     amount: 5000, // $50.00 in cents
     originalCurrency: null,
     originalAmount: null,

@@ -4,6 +4,7 @@ import {
   categoryIdSchema,
   recurrenceFrequencySchema,
   RecurringExpenseSeriesStatus,
+  timeZoneSchema,
 } from '@spliit/domain'
 
 const splitModeSchema = z.enum([
@@ -195,6 +196,8 @@ export const bulkUpdateCategoriesOutputSchema = z.object({
 const recurringOccurrenceResponseSchema = z.object({
   id: z.string(),
   expenseDate: z.date(),
+  expenseAt: z.date(),
+  expenseTimeZone: timeZoneSchema,
   recurrenceSequence: z.number().int().nullable(),
   title: z.string(),
   amount: z.number().int(),

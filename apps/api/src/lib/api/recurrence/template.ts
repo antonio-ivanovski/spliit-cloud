@@ -162,13 +162,40 @@ export function initialSeriesCompleted(
   )
 }
 
-/** Return the earliest execution time for a date-only occurrence. */
 export function recurrenceJobStartAfter(
   date: Date,
-  timeZone = 'UTC',
-  now = new Date(),
-) {
-  const executionDate = occurrenceDateToUtcRunAt(date, timeZone)
+  timeZone: string,
+  timeMinutes: number,
+  now?: Date,
+): Date | undefined
+export function recurrenceJobStartAfter(
+  date: Date,
+  opts: { timeZone?: string; timeMinutes?: number; now?: Date },
+): Date | undefined
+export function recurrenceJobStartAfter(
+  ...args:
+    | [Date, string, number, Date?]
+    | [Date, { timeZone?: string; timeMinutes?: number; now?: Date }?]
+): Date | undefined {
+  const date = args[0] as Date
+  let timeZone = 'UTC'
+  let timeMinutes = 15 * 60
+  let now = new Date()
+  if (typeof args[1] === 'string') {
+    timeZone = args[1] as string
+    timeMinutes = (args[2] as number | undefined) ?? 15 * 60
+    now = (args[3] as Date | undefined) ?? new Date()
+  } else if (args[1] && typeof args[1] === 'object') {
+    const opts = args[1] as {
+      timeZone?: string
+      timeMinutes?: number
+      now?: Date
+    }
+    timeZone = opts.timeZone ?? 'UTC'
+    timeMinutes = opts.timeMinutes ?? 15 * 60
+    now = opts.now ?? new Date()
+  }
+  const executionDate = occurrenceDateToUtcRunAt(date, timeZone, timeMinutes)
   return executionDate.getTime() <= now.getTime() ? undefined : executionDate
 }
 
@@ -179,16 +206,21 @@ export function occurrenceExpenseData(
   seriesId: string,
   sequence: number,
   amount: number,
-  conversion?: {
-    conversionRate: number | null
-    originalAmount: number | null
-    originalCurrency: string | null
-    conversionSource: 'EXCHANGE' | 'CUSTOM' | null
-  },
+  conversion:
+    | {
+        conversionRate: number | null
+        originalAmount: number | null
+        originalCurrency: string | null
+        conversionSource: 'EXCHANGE' | 'CUSTOM' | null
+      }
+    | undefined,
+  opts: { expenseAt: Date; expenseTimeZone: string },
 ) {
   return {
     id,
     expenseDate: date,
+    expenseAt: opts.expenseAt,
+    expenseTimeZone: opts.expenseTimeZone,
     recurringSeriesId: seriesId,
     recurrenceSequence: sequence,
     categoryId: template.categoryId,

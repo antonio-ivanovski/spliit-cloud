@@ -904,7 +904,7 @@
       "saveError": "Không thể lưu tùy chọn",
       "defaultCurrency": "Tiền tệ mặc định",
       "timeZone": "Múi giờ tài khoản",
-      "timeZoneHelp": "Dùng cho dấu thời gian, ngày tương đối và các khoản chi định kỳ mới.",
+      "timeZoneHelp": "Đặt múi giờ mặc định cho thời gian của khoản chi mới và lịch định kỳ, đồng thời dùng để hiển thị dấu thời gian và ngày tương đối.",
       "language": "Ngôn ngữ",
       "theme": "Giao diện",
       "chooseTheme": "Chọn",
@@ -1100,7 +1100,10 @@
         "description": "Cách chia khoản thu."
       },
       "splitModeDescription": "Cách chia khoản thu.",
-      "attachDescription": "Đính kèm tài liệu."
+      "attachDescription": "Đính kèm tài liệu.",
+      "recurrence": {
+        "scheduleHint": "Sẽ được tạo lúc {time} ({timeZone}) và có thể kích hoạt thông báo. Hãy chọn thời gian không làm gián đoạn giấc ngủ. Chỉnh sửa thời gian ở trên để thay đổi."
+      }
     },
     "Expense": {
       "create": "Tạo chi phí",
@@ -1174,7 +1177,8 @@
         "completedOccurrence": "Đã hoàn thành",
         "upcomingOccurrence": "Sắp tới",
         "timeZoneDescription": "Các khoản chi định kỳ mới chạy lúc 15:00 theo {timeZone}. Lịch hiện có giữ nguyên múi giờ ban đầu.",
-        "timeZonePending": "Đang chờ múi giờ của tài khoản trước khi có thể bật tính năng lặp lại."
+        "timeZonePending": "Đang chờ múi giờ của tài khoản trước khi có thể bật tính năng lặp lại.",
+        "scheduleHint": "Sẽ được tạo lúc {time} ({timeZone}) và có thể kích hoạt thông báo. Hãy chọn thời gian không làm gián đoạn giấc ngủ. Chỉnh sửa thời gian ở trên để thay đổi."
       },
       "paidFor": {
         "title": "Chia cho",
@@ -1393,7 +1397,17 @@
     "validationSummary": "Vui lòng sửa các lỗi.",
     "resetDistribution": "Đặt lại",
     "savedButNotNavigated": "Khoản chi đã được lưu, nhưng chúng tôi không thể rời khỏi trang này. Bạn có thể đóng nó một cách an toàn.",
-    "tryLeavingAgain": "Thử rời đi lần nữa"
+    "tryLeavingAgain": "Thử rời đi lần nữa",
+    "dateTimePicker": {
+      "changesDate": "Thay đổi ngày",
+      "timezone": "Múi giờ",
+      "dateTab": "Ngày",
+      "timeTab": "Giờ",
+      "back": "Quay lại",
+      "chooseTimezone": "Chọn múi giờ",
+      "done": "Xong",
+      "yourTime": "giờ của bạn"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Xóa tài liệu",
@@ -1652,7 +1666,8 @@
     "sharesInvalid": "Phần chia phải nằm trong khoảng từ 0,01 đến 1.000.000 với tối đa hai chữ số thập phân.",
     "itemTitleRequired": "Tên mục là bắt buộc.",
     "itemQuantityMin1": "Số lượng của mục phải ít nhất là 1.",
-    "rowErrorsHeading": "Vui lòng sửa các phần này:"
+    "rowErrorsHeading": "Vui lòng sửa các phần này:",
+    "invalidWallTime": "Thời gian này không tồn tại vào ngày đã chọn trong múi giờ này."
   },
   "Categories": {
     "search": "Tìm danh mục…",

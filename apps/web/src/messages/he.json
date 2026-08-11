@@ -679,7 +679,10 @@
         "description": "בחירת המשתתפים והמשתתפות שמתחלקים בהכנסה הזאת."
       },
       "splitModeDescription": "בחר כיצד לפצל את ההכנסה.",
-      "attachDescription": "ראה וצרף קבלות להכנסה."
+      "attachDescription": "ראה וצרף קבלות להכנסה.",
+      "recurrence": {
+        "scheduleHint": "הפריט ייווצר בשעה {time} ({timeZone}) ועשוי להפעיל התראה. כדאי לבחור שעה שלא תפריע לשינה. כדי לשנות אותה, יש לערוך את השעה למעלה."
+      }
     },
     "Expense": {
       "create": "צור הוצאה",
@@ -761,7 +764,8 @@
         "completedOccurrence": "נוצר",
         "upcomingOccurrence": "עתידי",
         "timeZoneDescription": "הוצאות מחזוריות חדשות מופעלות בשעה 15:00 באזור {timeZone}. תזמונים קיימים שומרים על אזור הזמן המקורי שלהם.",
-        "timeZonePending": "ממתין לאזור הזמן של החשבון לפני שניתן יהיה להפעיל חזרה."
+        "timeZonePending": "ממתין לאזור הזמן של החשבון לפני שניתן יהיה להפעיל חזרה.",
+        "scheduleHint": "הפריט ייווצר בשעה {time} ({timeZone}) ועשוי להפעיל התראה. כדאי לבחור שעה שלא תפריע לשינה. כדי לשנות אותה, יש לערוך את השעה למעלה."
       },
       "recurringEditScopeOccurrence": "עריכת מופע זה בלבד",
       "recurringEditScopeFuture": "עריכת מופע זה והמופעים הבאים",
@@ -969,7 +973,17 @@
     "validationSummary": "יש לתקן את השדות המודגשים לפני השמירה.",
     "resetDistribution": "איפוס",
     "savedButNotNavigated": "ההוצאה נשמרה, אך לא הצלחנו לעזוב את הדף הזה. ניתן לסגור אותו בבטחה.",
-    "tryLeavingAgain": "נסה לצאת שוב"
+    "tryLeavingAgain": "נסה לצאת שוב",
+    "dateTimePicker": {
+      "changesDate": "משנה את התאריך",
+      "timezone": "אזור זמן",
+      "dateTab": "תאריך",
+      "timeTab": "שעה",
+      "back": "חזרה",
+      "chooseTimezone": "בחירת אזור זמן",
+      "done": "סיום",
+      "yourTime": "השעה שלך"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "מחיקת מסמך",
@@ -1225,7 +1239,8 @@
     "sharesInvalid": "המניות חייבות להיות בין 0.01 ל-1,000,000 עם עד שני מקומות עשרוניים.",
     "itemTitleRequired": "שם הפריט נדרש.",
     "itemQuantityMin1": "כמות הפריט חייבת להיות לפחות 1.",
-    "rowErrorsHeading": "תקן את חלקי ההשתתפות האלה:"
+    "rowErrorsHeading": "תקן את חלקי ההשתתפות האלה:",
+    "invalidWallTime": "שעה זו אינה קיימת בתאריך שנבחר באזור הזמן הזה."
   },
   "Categories": {
     "search": "חפש קטגוריה...",
@@ -2106,7 +2121,7 @@
       "saveError": "לא ניתן לשמור את ההעדפות",
       "defaultCurrency": "מטבע ברירת המחדל",
       "timeZone": "אזור הזמן של החשבון",
-      "timeZoneHelp": "משמש לחותמות זמן, לתאריכים יחסיים ולהוצאות מחזוריות חדשות.",
+      "timeZoneHelp": "מגדיר את אזור הזמן כברירת מחדל לשעות של הוצאות חדשות ולתזמונים חוזרים, ומשמש להצגת חותמות זמן ותאריכים יחסיים.",
       "language": "שפה",
       "theme": "ערכת נושא",
       "chooseTheme": "בחירה",

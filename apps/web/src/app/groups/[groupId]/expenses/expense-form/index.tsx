@@ -156,6 +156,7 @@ export function ExpenseForm(props: {
   const accountPreferences = useSyncedAccountPreferences()
   const accountTimeZone =
     accountPreferences?.timeZone ?? detectDeviceTimeZone() ?? 'UTC'
+  const [formNow] = useState(() => new Date())
   // Set when `onSubmit` resolved 'saved' but `onSaved` (post-save work such
   // as navigation) failed: the expense already exists, so this must not be
   // reported as a save failure (that would invite a duplicate retry).
@@ -200,7 +201,9 @@ export function ExpenseForm(props: {
       currentLedgerParticipantId: props.currentLedgerParticipantId,
       reimbursementTitle: t('reimbursement'),
       savedDefault,
-      today: dateOnlyInAccountTimeZone(new Date(), accountTimeZone),
+      today: dateOnlyInAccountTimeZone(formNow, accountTimeZone),
+      now: formNow,
+      timeZone: accountTimeZone,
     }),
   })
 

@@ -679,6 +679,9 @@
       "currencyField": {
         "label": "Moneda venitului",
         "description": "Moneda în care a fost primit venitul."
+      },
+      "recurrence": {
+        "scheduleHint": "Va fi creat la {time} ({timeZone}) și poate declanșa o notificare. Alege o oră care să nu deranjeze somnul. Editează ora de mai sus pentru a o schimba."
       }
     },
     "Expense": {
@@ -761,7 +764,8 @@
         "completedOccurrence": "Creată",
         "upcomingOccurrence": "Viitoare",
         "timeZoneDescription": "Cheltuielile recurente noi rulează la ora 15:00 în {timeZone}. Programările existente își păstrează fusul orar inițial.",
-        "timeZonePending": "Se așteaptă fusul orar al contului înainte ca recurența să poată fi activată."
+        "timeZonePending": "Se așteaptă fusul orar al contului înainte ca recurența să poată fi activată.",
+        "scheduleHint": "Va fi creat la {time} ({timeZone}) și poate declanșa o notificare. Alege o oră care să nu deranjeze somnul. Editează ora de mai sus pentru a o schimba."
       },
       "recurringEditScopeOccurrence": "Editarea doar a acestei apariții",
       "recurringEditScopeFuture": "Editarea acestei apariții și a celor viitoare",
@@ -969,7 +973,17 @@
     "validationSummary": "Corectează câmpurile evidențiate înainte de salvare.",
     "resetDistribution": "Resetează",
     "savedButNotNavigated": "Cheltuiala a fost salvată, dar nu am putut părăsi această pagină. O puteți închide în siguranță.",
-    "tryLeavingAgain": "Încearcă să ieși din nou"
+    "tryLeavingAgain": "Încearcă să ieși din nou",
+    "dateTimePicker": {
+      "changesDate": "Schimbă data",
+      "timezone": "Fus orar",
+      "dateTab": "Dată",
+      "timeTab": "Oră",
+      "back": "Înapoi",
+      "chooseTimezone": "Alege fusul orar",
+      "done": "Gata",
+      "yourTime": "ora ta"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Șterge documentul",
@@ -1225,7 +1239,8 @@
     "sharesInvalid": "Părțile trebuie să fie între 0,01 și 1.000.000, cu maximum două zecimale.",
     "itemTitleRequired": "Numele elementului este obligatoriu.",
     "itemQuantityMin1": "Cantitatea elementului trebuie să fie cel puțin 1.",
-    "rowErrorsHeading": "Corectați aceste părți:"
+    "rowErrorsHeading": "Corectați aceste părți:",
+    "invalidWallTime": "Această oră nu există la data selectată în acest fus orar."
   },
   "Categories": {
     "search": "Căutați categorie…",
@@ -2106,7 +2121,7 @@
       "saveError": "Preferințele nu au putut fi salvate",
       "defaultCurrency": "Moneda implicită",
       "timeZone": "Fusul orar al contului",
-      "timeZoneHelp": "Folosit pentru marcajele temporale, datele relative și cheltuielile recurente noi.",
+      "timeZoneHelp": "Setează fusul orar implicit pentru orele cheltuielilor noi și programările recurente și este utilizat pentru afișarea marcajelor temporale și a datelor relative.",
       "language": "Limbă",
       "theme": "Temă",
       "chooseTheme": "Alege",

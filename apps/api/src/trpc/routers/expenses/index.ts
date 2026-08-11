@@ -120,13 +120,13 @@ function cursorWhere(
     const createdAt = new Date(cursor.createdAt ?? String(cursor.value))
     return {
       OR: [
-        { expenseDate: { [direction]: value } },
+        { expenseAt: { [direction]: value } },
         {
-          expenseDate: value,
+          expenseAt: value,
           createdAt: { [direction]: createdAt },
         },
         {
-          expenseDate: value,
+          expenseAt: value,
           createdAt,
           id: { [direction]: cursor.id },
         },
@@ -366,7 +366,7 @@ async function listGlobalExpenses(
   const orderBy: Prisma.ExpenseOrderByWithRelationInput[] =
     input.sortBy === 'expenseDate'
       ? [
-          { expenseDate: input.sortDir },
+          { expenseAt: input.sortDir },
           { createdAt: input.sortDir },
           { id: input.sortDir },
         ]
@@ -411,7 +411,9 @@ async function listGlobalExpenses(
           value:
             input.sortBy === 'amount'
               ? last.amount
-              : last[input.sortBy].toISOString(),
+              : input.sortBy === 'expenseDate'
+                ? last.expenseAt.toISOString()
+                : last[input.sortBy].toISOString(),
           id: last.id,
           ...(input.sortBy === 'expenseDate'
             ? { createdAt: last.createdAt.toISOString() }

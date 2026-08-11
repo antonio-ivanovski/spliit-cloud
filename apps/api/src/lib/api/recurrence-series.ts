@@ -9,6 +9,7 @@ export {
   enqueueMaterialization,
   pauseRecurringExpenseSeries,
   reconcileDueRecurringExpenses,
+  rescheduleMaterialization,
   resumeRecurringExpenseSeries,
 } from './recurrence/series-ops'
 export {
