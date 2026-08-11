@@ -430,9 +430,7 @@
         "splitwiseAnonymizeError": "無法對此檔案進行匿名處理。請確認它是 Splitwise CSV 匯出檔案。",
         "csvRecurrenceLimitation": "CSV 匯出不包含週期性資訊。請使用 spliit.app 的 JSON 匯出來匯入週期性支出。",
         "fromSpliitCloud": "Spliit Cloud 匯入",
-        "spliitCloudDescription": "將從 Spliit Cloud 匯出的群組備份以 .spliit.zip 檔案匯入。",
         "cloudZipRequired": "請選擇 Spliit Cloud 的 .spliit.zip 備份。",
-        "accountBundleComingSoon": "帳戶層級的 Cloud 備份匯入尚未提供。",
         "wrongImporterCloudTitle": "此檔案應使用 Spliit Cloud 匯入器",
         "wrongImporterCloudDescription": "選取的檔案是 Spliit Cloud 備份或資訊清單。請開啟 Spliit Cloud 分頁繼續。",
         "wrongImporterSpliitTitle": "此檔案應使用 Spliit 匯入器",
@@ -441,7 +439,8 @@
         "openSpliitImporter": "開啟 Spliit 匯入器",
         "cloudBundleReadyTitle": "Spliit Cloud 備份包已準備就緒",
         "cloudBundleReadyDescription": "此備份包已檢查完畢，可以匯入。無需重新選取檔案即可繼續。",
-        "resumeCloudBundle": "使用此備份包繼續"
+        "resumeCloudBundle": "使用此備份包繼續",
+        "spliitCloudScopeDescription": "從 .spliit.zip 檔案匯入包含多個群組的 Spliit Cloud 帳戶備份，或匯入單一群組的匯出檔。"
       },
       "StepHeader": {
         "title": "匯入群組",
@@ -505,7 +504,6 @@
         "doneTitle": "群組已恢復",
         "doneDescription": "Spliit Cloud 群組備份已作為新群組恢復。",
         "importAnother": "匯入其他備份",
-        "title": "匯入 Spliit Cloud 備份",
         "summary": "將 {participants} 位參與者和 {expenses} 筆支出恢復為新群組。",
         "incompleteTitle": "此備份不完整",
         "incompleteDescription": "匯出包含 {count} 則警告。繼續前請檢查。",
@@ -525,7 +523,12 @@
         "confirmArchived": "群組將被封存",
         "executeImport": "恢復群組",
         "stagingDocuments": "正在準備要恢復的文件檔案…",
-        "friendSourceWarning": "這份備份來自好友帳本。它會還原為一般群組；好友關係不會重新建立。"
+        "friendSourceWarning": "這份備份來自好友帳本。它會還原為一般群組；好友關係不會重新建立。",
+        "accountTitle": "匯入 Spliit Cloud 帳戶備份",
+        "accountProgress": "第 {current}/{total} 個群組：{name}",
+        "continueToGroups": "繼續匯入群組",
+        "continueToNextGroup": "繼續下一個群組",
+        "skipGroup": "略過此群組"
       }
     },
     "Importable": {

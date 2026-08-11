@@ -227,9 +227,8 @@ export function importWizardReducer(
         fixedRateOverrides: action.fixedRateOverrides,
         rates: action.rates,
         step:
-          state.sourceKind === 'CLOUD' ||
-          (state.source?.provider === 'SPLIIT' &&
-            state.source.sourceGroupId !== 'csv-import')
+          state.source?.provider === 'SPLIIT' &&
+          state.source.sourceGroupId !== 'csv-import'
             ? 'documents'
             : 'confirm',
       }

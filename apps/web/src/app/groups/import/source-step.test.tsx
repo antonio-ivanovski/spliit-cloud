@@ -75,6 +75,17 @@ describe('SourceStep — initialError (prefill) handling', () => {
     ])
   })
 
+  it('explains that Cloud accepts account backups and single-group exports', () => {
+    routerMocks.source = 'spliit-cloud'
+    renderSourceStep()
+
+    expect(
+      screen.getAllByText(
+        /Spliit Cloud account backup containing multiple groups.*single group export/i,
+      ),
+    ).toHaveLength(2)
+  })
+
   it('offers a retained Cloud bundle without requiring another file selection', async () => {
     const onResume = vi.fn()
     renderSourceStep({ retainedCloudBundle: { onResume } })
@@ -106,7 +117,7 @@ describe('SourceStep — initialError (prefill) handling', () => {
     ).toBeInTheDocument()
   })
 
-  it('explains that account-wide Cloud bundles are not supported yet', async () => {
+  it('requires a ZIP when a Cloud account manifest is not inside a bundle', async () => {
     routerMocks.source = 'spliit-cloud'
     const onError = vi.fn()
     const view = renderSourceStep({ onError })
@@ -133,7 +144,7 @@ describe('SourceStep — initialError (prefill) handling', () => {
 
     await new Promise((resolve) => setTimeout(resolve, 0))
     expect(onError).toHaveBeenCalledWith(
-      'Account-wide Cloud bundle import is not available yet.',
+      'Choose a Spliit Cloud .spliit.zip bundle.',
     )
   })
 

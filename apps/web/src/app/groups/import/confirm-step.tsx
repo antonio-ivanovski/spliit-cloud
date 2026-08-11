@@ -1,6 +1,8 @@
 import { Calendar, Globe } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type { NormalizedSource } from '@spliit/domain/import'
@@ -41,6 +43,8 @@ type Props = {
   rates: Record<string, number> | null | undefined
   onBack: () => void
   onSubmit: () => void
+  importError?: string | null
+  onSkip?: () => void
   cloudSummary?: {
     archived: boolean
     activeRecurrenceCount: number
@@ -68,6 +72,8 @@ export function ConfirmStep({
   onBack,
   onSubmit,
   cloudSummary,
+  importError = null,
+  onSkip,
 }: Props) {
   const { t } = useTranslation()
   const linkedCount = participants.filter(
@@ -299,6 +305,24 @@ export function ConfirmStep({
       <p className="text-xs text-muted-foreground">
         {t('Groups.Import.Confirm.footer')}
       </p>
+
+      {importError ? (
+        <Alert variant="destructive">
+          <AlertDescription className="flex flex-wrap items-center justify-between gap-3">
+            <span>{importError}</span>
+            {onSkip ? (
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={onSkip}
+              >
+                {t('Groups.Import.Cloud.skipGroup')}
+              </Button>
+            ) : null}
+          </AlertDescription>
+        </Alert>
+      ) : null}
 
       <WizardNav
         step="confirm"

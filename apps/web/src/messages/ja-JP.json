@@ -430,9 +430,7 @@
         "splitwiseAnonymizeError": "このファイルを匿名化できませんでした。Splitwise の CSV エクスポートであることを確認してください。",
         "csvRecurrenceLimitation": "CSVエクスポートには繰り返し情報が含まれません。定期的な支出をインポートするには、spliit.appのJSONエクスポートを使用してください。",
         "fromSpliitCloud": "Spliit Cloudインポート",
-        "spliitCloudDescription": "Spliit Cloudからエクスポートしたグループバックアップを.spliit.zipとしてインポートします。",
         "cloudZipRequired": "Spliit Cloudの.spliit.zipバックアップを選択してください。",
-        "accountBundleComingSoon": "アカウント全体のCloudインポートはまだ利用できません。",
         "wrongImporterCloudTitle": "このファイルはSpliit Cloudインポーターで扱います",
         "wrongImporterCloudDescription": "選択したファイルはSpliit Cloudのバックアップまたはマニフェストです。続行するにはSpliit Cloudタブを開いてください。",
         "wrongImporterSpliitTitle": "このファイルはSpliitインポーターで扱います",
@@ -441,7 +439,8 @@
         "openSpliitImporter": "Spliitインポーターを開く",
         "cloudBundleReadyTitle": "Spliit Cloud バンドルの準備完了",
         "cloudBundleReadyDescription": "検査済みのこのバンドルはインポートできます。ファイルを再選択せずに続行できます。",
-        "resumeCloudBundle": "このバンドルで続行"
+        "resumeCloudBundle": "このバンドルで続行",
+        "spliitCloudScopeDescription": ".spliit.zipファイルから、複数のグループを含むSpliit Cloudアカウントのバックアップ、または1つのグループのエクスポートをインポートします。"
       },
       "StepHeader": {
         "title": "グループをインポート",
@@ -505,7 +504,6 @@
         "doneTitle": "グループを復元しました",
         "doneDescription": "Spliit Cloudのグループバックアップを新しいグループとして復元しました。",
         "importAnother": "別のバックアップをインポート",
-        "title": "Spliit Cloudバックアップをインポート",
         "summary": "{participants}人の参加者と{expenses}件の支出を新しいグループとして復元します。",
         "incompleteTitle": "このバックアップは不完全です",
         "incompleteDescription": "エクスポートに{count}件の警告があります。続行する前に確認してください。",
@@ -525,7 +523,12 @@
         "confirmArchived": "グループをアーカイブします",
         "executeImport": "グループを復元",
         "stagingDocuments": "復元用の書類ファイルを準備しています…",
-        "friendSourceWarning": "このバックアップは友だち用の台帳から作成されています。通常のグループとして復元され、友だち関係は再作成されません。"
+        "friendSourceWarning": "このバックアップは友だち用の台帳から作成されています。通常のグループとして復元され、友だち関係は再作成されません。",
+        "accountTitle": "Spliit Cloudアカウントのバックアップをインポート",
+        "accountProgress": "グループ {current}/{total}: {name}",
+        "continueToGroups": "グループのインポートへ進む",
+        "continueToNextGroup": "次のグループへ進む",
+        "skipGroup": "このグループをスキップ"
       }
     },
     "Importable": {

@@ -861,9 +861,7 @@
         "splitwiseAnonymizeButton": "إخفاء بيانات CSV",
         "settleUpComingDescription": "دعم تصدير CSV من Settle Up قيد التخطيط.",
         "fromSpliitCloud": "استيراد Spliit Cloud",
-        "spliitCloudDescription": "استورد نسخة احتياطية لمجموعة من Spliit Cloud كملف .spliit.zip.",
         "cloudZipRequired": "اختر نسخة Spliit Cloud احتياطية بصيغة .spliit.zip.",
-        "accountBundleComingSoon": "استيراد نسخة Cloud الاحتياطية للحساب بالكامل غير متاح بعد.",
         "wrongImporterCloudTitle": "هذا الملف مخصص لمستورد Spliit Cloud",
         "wrongImporterCloudDescription": "الملف المحدد نسخة احتياطية أو بيان من Spliit Cloud. افتح علامة تبويب Spliit Cloud للمتابعة.",
         "wrongImporterSpliitTitle": "هذا الملف مخصص لمستورد Spliit",
@@ -872,7 +870,8 @@
         "openSpliitImporter": "فتح مستورد Spliit",
         "cloudBundleReadyTitle": "حزمة Spliit Cloud جاهزة",
         "cloudBundleReadyDescription": "هذه الحزمة التي فُحصت جاهزة للاستيراد. يمكنك المتابعة دون اختيار الملف مرة أخرى.",
-        "resumeCloudBundle": "المتابعة بهذه الحزمة"
+        "resumeCloudBundle": "المتابعة بهذه الحزمة",
+        "spliitCloudScopeDescription": "استورد من ملف ‎.spliit.zip نسخة احتياطية لحساب Spliit Cloud تحتوي على مجموعات متعددة، أو تصدير مجموعة واحدة."
       },
       "Destination": {
         "noAdminGroups": "أنت لا تدير أي مجموعة.",
@@ -1025,7 +1024,6 @@
         "doneTitle": "تمت استعادة المجموعة",
         "doneDescription": "تمت استعادة النسخة الاحتياطية لمجموعة Spliit Cloud كمجموعة جديدة.",
         "importAnother": "استيراد نسخة احتياطية أخرى",
-        "title": "استيراد نسخة Spliit Cloud الاحتياطية",
         "summary": "استعادة {participants} مشاركين و{expenses} نفقات كمجموعة جديدة.",
         "incompleteTitle": "هذه النسخة الاحتياطية غير مكتملة",
         "incompleteDescription": "يحتوي التصدير على {count} تحذيرات. راجعها قبل المتابعة.",
@@ -1045,7 +1043,12 @@
         "confirmArchived": "ستتم أرشفة المجموعة",
         "executeImport": "استعادة المجموعة",
         "stagingDocuments": "جارٍ تجهيز ملفات المستندات للاستعادة…",
-        "friendSourceWarning": "جاءت هذه النسخة الاحتياطية من دفتر صديق. ستتم استعادتها كمجموعة عادية؛ ولن تُعاد علاقة الصداقة."
+        "friendSourceWarning": "جاءت هذه النسخة الاحتياطية من دفتر صديق. ستتم استعادتها كمجموعة عادية؛ ولن تُعاد علاقة الصداقة.",
+        "accountTitle": "استيراد نسخة احتياطية لحساب Spliit Cloud",
+        "accountProgress": "المجموعة {current} من {total}: {name}",
+        "continueToGroups": "المتابعة إلى استيراد المجموعات",
+        "continueToNextGroup": "المتابعة إلى المجموعة التالية",
+        "skipGroup": "تخطي هذه المجموعة"
       }
     },
     "pendingInviteeSettingsTitle": "الإعدادات مجموعة مقفل",

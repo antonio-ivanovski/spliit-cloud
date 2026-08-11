@@ -440,9 +440,7 @@
         "splitwiseAnonymizeError": "Nu s-a putut anonimiza acest fișier. Asigurați-vă că este un export CSV Splitwise.",
         "csvRecurrenceLimitation": "Exporturile CSV nu includ recurența. Folosiți un export JSON de pe spliit.app pentru a importa cheltuieli recurente.",
         "fromSpliitCloud": "Import Spliit Cloud",
-        "spliitCloudDescription": "Importă un backup de grup exportat din Spliit Cloud ca fișier .spliit.zip.",
         "cloudZipRequired": "Alege un backup Spliit Cloud în format .spliit.zip.",
-        "accountBundleComingSoon": "Importul Cloud la nivel de cont nu este disponibil încă.",
         "wrongImporterCloudTitle": "Acest fișier aparține importului Spliit Cloud",
         "wrongImporterCloudDescription": "Fișierul selectat este un backup sau manifest Spliit Cloud. Deschide fila Spliit Cloud pentru a continua.",
         "wrongImporterSpliitTitle": "Acest fișier aparține importului Spliit",
@@ -451,7 +449,8 @@
         "openSpliitImporter": "Deschide importul Spliit",
         "cloudBundleReadyTitle": "Pachetul Spliit Cloud este gata",
         "cloudBundleReadyDescription": "Acest pachet verificat este pregătit pentru import. Poți continua fără să selectezi din nou fișierul.",
-        "resumeCloudBundle": "Continuă cu acest pachet"
+        "resumeCloudBundle": "Continuă cu acest pachet",
+        "spliitCloudScopeDescription": "Importă dintr-un fișier .spliit.zip o copie de siguranță a unui cont Spliit Cloud care conține mai multe grupuri sau exportul unui singur grup."
       },
       "StepHeader": {
         "title": "Importați un grup",
@@ -515,7 +514,6 @@
         "doneTitle": "Grup restaurat",
         "doneDescription": "Backupul grupului Spliit Cloud a fost restaurat ca grup nou.",
         "importAnother": "Importă alt backup",
-        "title": "Importă backup Spliit Cloud",
         "summary": "Restaurează {participants} participanți și {expenses} cheltuieli ca grup nou.",
         "incompleteTitle": "Acest backup este incomplet",
         "incompleteDescription": "Exportul conține {count} avertismente. Verifică-le înainte de a continua.",
@@ -535,7 +533,12 @@
         "confirmArchived": "Grupul va fi arhivat",
         "executeImport": "Restaurează grupul",
         "stagingDocuments": "Se pregătesc fișierele pentru restaurare…",
-        "friendSourceWarning": "Această copie de siguranță provine dintr-un grup de prieteni. Va fi restaurată ca un grup obișnuit; relația de prietenie nu va fi recreată."
+        "friendSourceWarning": "Această copie de siguranță provine dintr-un grup de prieteni. Va fi restaurată ca un grup obișnuit; relația de prietenie nu va fi recreată.",
+        "accountTitle": "Importă copia de siguranță a contului Spliit Cloud",
+        "accountProgress": "Grupul {current} din {total}: {name}",
+        "continueToGroups": "Continuă către importurile de grupuri",
+        "continueToNextGroup": "Continuă către următorul grup",
+        "skipGroup": "Omite acest grup"
       }
     },
     "Importable": {

@@ -80,7 +80,11 @@ vi.mock('@/trpc/client', () => {
           balances: { list: { invalidate } },
           getDetails: { invalidate },
         },
-        account: { friends: { invalidate } },
+        account: {
+          friends: { invalidate },
+          getPreferences: { invalidate },
+        },
+        notifications: { preferences: { get: { invalidate } } },
       }),
       groups: {
         get: { useQuery: () => ({ data: undefined }) },
@@ -89,6 +93,10 @@ vi.mock('@/trpc/client', () => {
       },
       account: {
         friends: { useQuery: () => ({ data: { friends: [] } }) },
+        updatePreferences: { useMutation: () => mutation },
+      },
+      notifications: {
+        preferences: { save: { useMutation: () => mutation } },
       },
     },
   }

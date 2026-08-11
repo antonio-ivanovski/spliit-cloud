@@ -169,6 +169,19 @@ describe('AccountSettingsPage', () => {
     expect(screen.getByText(/groups selected/i)).toBeInTheDocument()
   })
 
+  it('opens the Spliit Cloud importer from the backup section', async () => {
+    const { user } = render(<AccountSettingsPage />)
+
+    await user.click(
+      screen.getByRole('button', { name: /open spliit cloud importer/i }),
+    )
+
+    expect(mocks.useRouterNavigate).toHaveBeenCalledWith({
+      to: '/groups/import',
+      search: { source: 'spliit-cloud' },
+    })
+  })
+
   it('shows a mixed section checkbox when a group override makes selection partial', async () => {
     mocks.accountGroups.mockReturnValue([
       {

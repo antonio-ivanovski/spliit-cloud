@@ -346,9 +346,7 @@
         "splitwiseAnonymizeError": "이 파일을 익명 처리할 수 없습니다. Splitwise CSV 내보내기인지 확인해 주세요.",
         "csvRecurrenceLimitation": "CSV보내기에는 반복 정보가 포함되지 않습니다. 반복 지출을 가져오려면 spliit.app의 JSON보내기를 사용하세요.",
         "fromSpliitCloud": "Spliit Cloud 가져오기",
-        "spliitCloudDescription": "Spliit Cloud에서 내보낸 그룹 백업을 .spliit.zip 파일로 가져옵니다.",
         "cloudZipRequired": "Spliit Cloud .spliit.zip 백업을 선택하세요.",
-        "accountBundleComingSoon": "계정 전체 Cloud 가져오기는 아직 지원되지 않습니다.",
         "wrongImporterCloudTitle": "이 파일은 Spliit Cloud 가져오기에서 사용하세요",
         "wrongImporterCloudDescription": "선택한 파일은 Spliit Cloud 백업 또는 매니페스트입니다. 계속하려면 Spliit Cloud 탭을 여세요.",
         "wrongImporterSpliitTitle": "이 파일은 Spliit 가져오기에서 사용하세요",
@@ -357,7 +355,8 @@
         "openSpliitImporter": "Spliit 가져오기 열기",
         "cloudBundleReadyTitle": "Spliit Cloud 번들 준비 완료",
         "cloudBundleReadyDescription": "검사한 번들을 가져올 준비가 되었습니다. 파일을 다시 선택하지 않고 계속할 수 있습니다.",
-        "resumeCloudBundle": "이 번들로 계속"
+        "resumeCloudBundle": "이 번들로 계속",
+        "spliitCloudScopeDescription": "여러 그룹이 포함된 Spliit Cloud 계정 백업 또는 단일 그룹 내보내기를 .spliit.zip 파일에서 가져옵니다."
       },
       "StepHeader": {
         "title": "그룹 가져오기",
@@ -421,7 +420,6 @@
         "doneTitle": "그룹 복원됨",
         "doneDescription": "Spliit Cloud 그룹 백업을 새 그룹으로 복원했습니다.",
         "importAnother": "다른 백업 가져오기",
-        "title": "Spliit Cloud 백업 가져오기",
         "summary": "참여자 {participants}명과 지출 {expenses}개를 새 그룹으로 복원합니다.",
         "incompleteTitle": "이 백업은 불완전합니다",
         "incompleteDescription": "내보내기에 경고 {count}개가 있습니다. 계속하기 전에 확인하세요.",
@@ -441,7 +439,12 @@
         "confirmArchived": "그룹이 보관 처리됩니다",
         "executeImport": "그룹 복원",
         "stagingDocuments": "복원할 문서 파일을 준비하는 중…",
-        "friendSourceWarning": "이 백업은 친구 원장에서 가져온 것입니다. 일반 그룹으로 복원되며 친구 관계는 다시 만들어지지 않습니다."
+        "friendSourceWarning": "이 백업은 친구 원장에서 가져온 것입니다. 일반 그룹으로 복원되며 친구 관계는 다시 만들어지지 않습니다.",
+        "accountTitle": "Spliit Cloud 계정 백업 가져오기",
+        "accountProgress": "그룹 {current}/{total}: {name}",
+        "continueToGroups": "그룹 가져오기로 계속",
+        "continueToNextGroup": "다음 그룹으로 계속",
+        "skipGroup": "이 그룹 건너뛰기"
       }
     },
     "Importable": {

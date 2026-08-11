@@ -1833,9 +1833,7 @@
         "splitwiseAnonymizeError": "Kunde inte anonymisera denna fil. Se till att det är en Splitwise CSV-export.",
         "csvRecurrenceLimitation": "CSV-exporter innehåller inte upprepning. Använd en JSON-export från spliit.app för att importera återkommande utgifter.",
         "fromSpliitCloud": "Spliit Cloud-import",
-        "spliitCloudDescription": "Importera en gruppsäkerhetskopia från Spliit Cloud som en .spliit.zip-fil.",
         "cloudZipRequired": "Välj en Spliit Cloud-säkerhetskopia i formatet .spliit.zip.",
-        "accountBundleComingSoon": "Import av Cloud-säkerhetskopior för hela kontot är inte tillgänglig än.",
         "wrongImporterCloudTitle": "Den här filen hör till Spliit Cloud-importen",
         "wrongImporterCloudDescription": "Den valda filen är en Spliit Cloud-säkerhetskopia eller ett manifest. Öppna fliken Spliit Cloud för att fortsätta.",
         "wrongImporterSpliitTitle": "Den här filen hör till Spliit-importen",
@@ -1844,7 +1842,8 @@
         "openSpliitImporter": "Öppna Spliit-importen",
         "cloudBundleReadyTitle": "Spliit Cloud-paketet är klart",
         "cloudBundleReadyDescription": "Det här granskade paketet är klart att importeras. Du kan fortsätta utan att välja filen igen.",
-        "resumeCloudBundle": "Fortsätt med det här paketet"
+        "resumeCloudBundle": "Fortsätt med det här paketet",
+        "spliitCloudScopeDescription": "Importera en säkerhetskopia av ett Spliit Cloud-konto med flera grupper, eller en export av en enda grupp, från en .spliit.zip-fil."
       },
       "StepHeader": {
         "title": "Importera en grupp",
@@ -1893,7 +1892,6 @@
         "doneTitle": "Gruppen återställdes",
         "doneDescription": "Spliit Clouds gruppsäkerhetskopia återställdes som en ny grupp.",
         "importAnother": "Importera en annan säkerhetskopia",
-        "title": "Importera Spliit Cloud-säkerhetskopia",
         "summary": "Återställ {participants} deltagare och {expenses} utgifter som en ny grupp.",
         "incompleteTitle": "Den här säkerhetskopian är ofullständig",
         "incompleteDescription": "Exporten innehåller {count} varningar. Granska dem innan du fortsätter.",
@@ -1913,7 +1911,12 @@
         "confirmArchived": "Gruppen arkiveras",
         "executeImport": "Återställ grupp",
         "stagingDocuments": "Förbereder dokumentfiler för återställning…",
-        "friendSourceWarning": "Den här säkerhetskopian kommer från ett vänsaldo. Den återställs som en vanlig grupp; vänskapsrelationen återskapas inte."
+        "friendSourceWarning": "Den här säkerhetskopian kommer från ett vänsaldo. Den återställs som en vanlig grupp; vänskapsrelationen återskapas inte.",
+        "accountTitle": "Importera säkerhetskopia av Spliit Cloud-konto",
+        "accountProgress": "Grupp {current} av {total}: {name}",
+        "continueToGroups": "Fortsätt till gruppimporter",
+        "continueToNextGroup": "Fortsätt till nästa grupp",
+        "skipGroup": "Hoppa över den här gruppen"
       }
     },
     "Importable": {

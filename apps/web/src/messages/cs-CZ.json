@@ -445,9 +445,7 @@
         "splitwiseAnonymizeError": "Tento soubor se nepodařilo anonymizovat. Ujistěte se, že jde o CSV export ze Splitwise.",
         "csvRecurrenceLimitation": "Exporty CSV neobsahují opakování. Pro import opakujících se výdajů použijte JSON export ze spliit.app.",
         "fromSpliitCloud": "Import Spliit Cloud",
-        "spliitCloudDescription": "Importujte skupinovou zálohu ze Spliit Cloud jako soubor .spliit.zip.",
         "cloudZipRequired": "Vyberte zálohu Spliit Cloud ve formátu .spliit.zip.",
-        "accountBundleComingSoon": "Import Cloud zálohy celého účtu zatím není dostupný.",
         "wrongImporterCloudTitle": "Tento soubor patří do importu Spliit Cloud",
         "wrongImporterCloudDescription": "Vybraný soubor je záloha nebo manifest Spliit Cloud. Pokračujte otevřením karty Spliit Cloud.",
         "wrongImporterSpliitTitle": "Tento soubor patří do importu Spliit",
@@ -456,7 +454,8 @@
         "openSpliitImporter": "Otevřít import Spliit",
         "cloudBundleReadyTitle": "Balíček Spliit Cloud je připraven",
         "cloudBundleReadyDescription": "Tento zkontrolovaný balíček je připraven k importu. Můžete pokračovat, aniž byste soubor znovu vybírali.",
-        "resumeCloudBundle": "Pokračovat s tímto balíčkem"
+        "resumeCloudBundle": "Pokračovat s tímto balíčkem",
+        "spliitCloudScopeDescription": "Importujte ze souboru .spliit.zip zálohu účtu Spliit Cloud obsahující více skupin nebo export jedné skupiny."
       },
       "StepHeader": {
         "title": "Importovat skupinu",
@@ -520,7 +519,6 @@
         "doneTitle": "Skupina obnovena",
         "doneDescription": "Záloha skupiny Spliit Cloud byla obnovena jako nová skupina.",
         "importAnother": "Importovat další zálohu",
-        "title": "Importovat zálohu Spliit Cloud",
         "summary": "Obnovit {participants} účastníků a {expenses} výdajů jako novou skupinu.",
         "incompleteTitle": "Tato záloha není úplná",
         "incompleteDescription": "Export obsahuje {count} upozornění. Před pokračováním je zkontrolujte.",
@@ -540,7 +538,12 @@
         "confirmArchived": "Skupina bude archivována",
         "executeImport": "Obnovit skupinu",
         "stagingDocuments": "Příprava souborů dokumentů k obnovení…",
-        "friendSourceWarning": "Tato záloha pochází z účtu s přítelem. Obnoví se jako běžná skupina; vztah přátelství se neobnoví."
+        "friendSourceWarning": "Tato záloha pochází z účtu s přítelem. Obnoví se jako běžná skupina; vztah přátelství se neobnoví.",
+        "accountTitle": "Importovat zálohu účtu Spliit Cloud",
+        "accountProgress": "Skupina {current} z {total}: {name}",
+        "continueToGroups": "Pokračovat k importům skupin",
+        "continueToNextGroup": "Pokračovat k další skupině",
+        "skipGroup": "Přeskočit tuto skupinu"
       }
     },
     "Importable": {

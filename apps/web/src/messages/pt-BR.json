@@ -440,9 +440,7 @@
         "splitwiseAnonymizeError": "Não foi possível anonimizar este arquivo. Verifique se é uma exportação CSV do Splitwise.",
         "csvRecurrenceLimitation": "Exportações CSV não incluem recorrência. Use uma exportação JSON do spliit.app para importar despesas recorrentes.",
         "fromSpliitCloud": "Importação do Spliit Cloud",
-        "spliitCloudDescription": "Importe um backup de grupo exportado do Spliit Cloud como arquivo .spliit.zip.",
         "cloudZipRequired": "Escolha um backup do Spliit Cloud no formato .spliit.zip.",
-        "accountBundleComingSoon": "A importação Cloud de toda a conta ainda não está disponível.",
         "wrongImporterCloudTitle": "Este arquivo pertence ao importador do Spliit Cloud",
         "wrongImporterCloudDescription": "O arquivo selecionado é um backup ou manifesto do Spliit Cloud. Abra a aba Spliit Cloud para continuar.",
         "wrongImporterSpliitTitle": "Este arquivo pertence ao importador do Spliit",
@@ -451,7 +449,8 @@
         "openSpliitImporter": "Abrir importador do Spliit",
         "cloudBundleReadyTitle": "Pacote do Spliit Cloud pronto",
         "cloudBundleReadyDescription": "Este pacote inspecionado está pronto para importação. Você pode continuar sem selecionar o arquivo novamente.",
-        "resumeCloudBundle": "Continuar com este pacote"
+        "resumeCloudBundle": "Continuar com este pacote",
+        "spliitCloudScopeDescription": "Importe de um arquivo .spliit.zip um backup de uma conta Spliit Cloud contendo vários grupos ou a exportação de um único grupo."
       },
       "StepHeader": {
         "title": "Importar um grupo",
@@ -515,7 +514,6 @@
         "doneTitle": "Grupo restaurado",
         "doneDescription": "O backup do grupo Spliit Cloud foi restaurado como um novo grupo.",
         "importAnother": "Importar outro backup",
-        "title": "Importar backup do Spliit Cloud",
         "summary": "Restaure {participants} participantes e {expenses} despesas como um novo grupo.",
         "incompleteTitle": "Este backup está incompleto",
         "incompleteDescription": "A exportação contém {count} avisos. Revise-os antes de continuar.",
@@ -535,7 +533,12 @@
         "confirmArchived": "O grupo será arquivado",
         "executeImport": "Restaurar grupo",
         "stagingDocuments": "Preparando arquivos para restauração…",
-        "friendSourceWarning": "Este backup veio de uma conta entre amigos. Ele será restaurado como um grupo comum; a relação de amizade não será recriada."
+        "friendSourceWarning": "Este backup veio de uma conta entre amigos. Ele será restaurado como um grupo comum; a relação de amizade não será recriada.",
+        "accountTitle": "Importar backup da conta Spliit Cloud",
+        "accountProgress": "Grupo {current} de {total}: {name}",
+        "continueToGroups": "Continuar para as importações de grupos",
+        "continueToNextGroup": "Continuar para o próximo grupo",
+        "skipGroup": "Pular este grupo"
       }
     },
     "Importable": {

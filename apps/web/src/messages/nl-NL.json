@@ -435,9 +435,7 @@
         "splitwiseAnonymizeError": "Dit bestand kon niet worden geanonimiseerd. Zorg dat het een Splitwise-CSV-export is.",
         "csvRecurrenceLimitation": "CSV-exports bevatten geen herhaling. Gebruik een JSON-export van spliit.app om terugkerende uitgaven te importeren.",
         "fromSpliitCloud": "Import Spliit Cloud",
-        "spliitCloudDescription": "Importeer een groepsback-up uit Spliit Cloud als .spliit.zip-bestand.",
         "cloudZipRequired": "Kies een Spliit Cloud-back-up als .spliit.zip-bestand.",
-        "accountBundleComingSoon": "Importeren van Cloud-back-ups voor het hele account is nog niet beschikbaar.",
         "wrongImporterCloudTitle": "Dit hoort bij de Spliit Cloud-importer",
         "wrongImporterCloudDescription": "Het geselecteerde bestand is een Spliit Cloud-back-up of manifest. Open het tabblad Spliit Cloud om door te gaan.",
         "wrongImporterSpliitTitle": "Dit hoort bij de Spliit-importer",
@@ -446,7 +444,8 @@
         "openSpliitImporter": "Spliit-importer openen",
         "cloudBundleReadyTitle": "Spliit Cloud-bundel klaar",
         "cloudBundleReadyDescription": "Deze gecontroleerde bundel is klaar om te importeren. Je kunt doorgaan zonder het bestand opnieuw te selecteren.",
-        "resumeCloudBundle": "Doorgaan met deze bundel"
+        "resumeCloudBundle": "Doorgaan met deze bundel",
+        "spliitCloudScopeDescription": "Importeer vanuit een .spliit.zip-bestand een back-up van een Spliit Cloud-account met meerdere groepen of een export van één groep."
       },
       "StepHeader": {
         "title": "Importeer een groep",
@@ -510,7 +509,6 @@
         "doneTitle": "Groep hersteld",
         "doneDescription": "De Spliit Cloud-groepsback-up is als nieuwe groep hersteld.",
         "importAnother": "Nog een back-up importeren",
-        "title": "Spliit Cloud-back-up importeren",
         "summary": "{participants} deelnemers en {expenses} uitgaven worden als nieuwe groep hersteld.",
         "incompleteTitle": "Deze back-up is onvolledig",
         "incompleteDescription": "De export bevat {count} waarschuwingen. Controleer ze voordat je doorgaat.",
@@ -530,7 +528,12 @@
         "confirmArchived": "De groep wordt gearchiveerd",
         "executeImport": "Groep herstellen",
         "stagingDocuments": "Documentbestanden voorbereiden voor herstel…",
-        "friendSourceWarning": "Deze back-up komt uit een vriendenrekening. Hij wordt als een gewone groep hersteld; de vriendschapsrelatie wordt niet opnieuw aangemaakt."
+        "friendSourceWarning": "Deze back-up komt uit een vriendenrekening. Hij wordt als een gewone groep hersteld; de vriendschapsrelatie wordt niet opnieuw aangemaakt.",
+        "accountTitle": "Back-up van Spliit Cloud-account importeren",
+        "accountProgress": "Groep {current} van {total}: {name}",
+        "continueToGroups": "Doorgaan naar groepsimports",
+        "continueToNextGroup": "Doorgaan naar de volgende groep",
+        "skipGroup": "Deze groep overslaan"
       }
     },
     "Importable": {

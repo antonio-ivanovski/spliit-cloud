@@ -23,10 +23,19 @@ import type {
   ParticipantMappingState,
 } from '@spliit/domain/import'
 import { buildImportBatch } from '@spliit/domain/import'
+import { notificationCategoryValues } from '@spliit/domain/notifications'
 
-import type { CloudGroupBundleInspection } from './cloud-bundle'
+import { AccountImportProgress } from './account-import-progress'
+import { AccountImportSetup } from './account-import-setup'
+import type {
+  CloudAccountBundleInspection,
+  CloudBundleInspection,
+  CloudGroupBundleInspection,
+} from './cloud-bundle'
 import {
   cloudInspectionToSource,
+  cloudIdentityKey,
+  type CloudMappingHint,
   initialCloudMappings,
   toCloudApiMapping,
 } from './cloud-import-flow'
@@ -55,6 +64,17 @@ import { StepHeader } from './wizard-nav'
 
 const importRoute = getRouteApi('/groups/import')
 
+type AccountImportQueue = {
+  bundle: CloudAccountBundleInspection
+  selectedGroupIds: string[]
+  currentIndex: number
+  completed: Array<{ sourceId: string; groupId: string }>
+  skipped: string[]
+  finished: boolean
+  mappingHints: Record<string, CloudMappingHint>
+  includeGroupPreferences: boolean
+}
+
 // react-doctor-disable-next-line react-doctor/no-giant-component -- wizard orchestrator, delegates to step components
 export function ImportGroupWizard() {
   const search = importRoute.useSearch()
@@ -65,8 +85,33 @@ export function ImportGroupWizard() {
   const prefillSourceUrl = search.prefill ?? null
   const { t } = useTranslation()
   const importAttempt = useIdempotentCreate()
+  const {
+    mutateAsync: updateAccountPreferences,
+    isPending: isUpdatingAccountPreferences,
+  } = trpc.account.updatePreferences.useMutation()
+  const {
+    mutateAsync: saveNotificationPreferences,
+    isPending: isSavingNotificationPreferences,
+  } = trpc.notifications.preferences.save.useMutation()
   const [pendingCloudInspection, setPendingCloudInspection] =
     useState<CloudGroupBundleInspection | null>(null)
+  const [accountBundle, setAccountBundle] =
+    useState<CloudAccountBundleInspection | null>(null)
+  const [accountQueue, setAccountQueue] = useState<AccountImportQueue | null>(
+    null,
+  )
+  const [accountSetupError, setAccountSetupError] = useState<string | null>(
+    null,
+  )
+  const [accountPreferencesToApply, setAccountPreferencesToApply] =
+    useState(true)
+  const [groupPreferencesToApply, setGroupPreferencesToApply] = useState(true)
+  const [accountSelectedGroupIds, setAccountSelectedGroupIds] = useState<
+    string[]
+  >([])
+  const [accountImportError, setAccountImportError] = useState<string | null>(
+    null,
+  )
 
   const [state, dispatch] = useReducer(
     importWizardReducer,
@@ -149,6 +194,7 @@ export function ImportGroupWizard() {
 
   const cloudImportMutation = trpc.groups.importCloudBundle.useMutation({
     onSuccess: async (data) => {
+      setAccountImportError(null)
       await Promise.all([
         invalidateAccountGroupLists(utils),
         utils.invitations.listForAccount.invalidate(),
@@ -172,6 +218,8 @@ export function ImportGroupWizard() {
           type: 'DOCUMENTS_FAILED',
           discardTokens: shouldDiscardStagedDocumentTokens(err.message),
         })
+      } else if (accountQueue) {
+        setAccountImportError(err.message)
       }
     },
   })
@@ -189,6 +237,7 @@ export function ImportGroupWizard() {
     mutateAsync: importCloudBundle,
     isPending: isCloudImportPending,
     data: cloudImportResult,
+    reset: resetCloudImport,
   } = cloudImportMutation
   const activeImportResult = cloudImportResult ?? importResult
   const activeImportPending = isCloudImportPending || isImportPending
@@ -256,12 +305,22 @@ export function ImportGroupWizard() {
     [toast],
   )
 
-  const handleCloudLoaded = useCallback(
-    (inspection: CloudGroupBundleInspection) => {
+  const handleCloudLoaded = useCallback((inspection: CloudBundleInspection) => {
+    setAccountSetupError(null)
+    if (inspection.kind === 'ACCOUNT') {
+      setPendingCloudInspection(null)
+      setAccountQueue(null)
+      setAccountBundle(inspection)
+      setAccountSelectedGroupIds(
+        inspection.groups.map(({ index }) => index.sourceId),
+      )
+      dispatch({ type: 'RESET' })
+    } else {
+      setAccountBundle(null)
+      setAccountQueue(null)
       setPendingCloudInspection(inspection)
-    },
-    [],
-  )
+    }
+  }, [])
 
   // Cloud participant identity matching must not run against the temporary
   // null account value returned while the authenticated session is loading.
@@ -280,6 +339,7 @@ export function ImportGroupWizard() {
         cloudSource,
         pendingCloudInspection,
         account,
+        accountQueue?.mappingHints,
       ),
       groupFormValues: {
         name: pendingCloudInspection.manifest.group.name,
@@ -294,7 +354,13 @@ export function ImportGroupWizard() {
     // pending would cause this effect to immediately reload the bundle after
     // returning to the source step, bypassing the retained-bundle resume UI.
     queueMicrotask(() => setPendingCloudInspection(null))
-  }, [account, isAccountPending, pendingCloudInspection, state.source])
+  }, [
+    account,
+    accountQueue?.mappingHints,
+    isAccountPending,
+    pendingCloudInspection,
+    state.source,
+  ])
 
   // File uploads are parsed client-side and hand the parsed source
   // directly up via this callback. URL pastes / prefill go through the
@@ -376,6 +442,92 @@ export function ImportGroupWizard() {
     [],
   )
 
+  const startAccountImport = useCallback(async () => {
+    if (!accountBundle || !account?.id) return
+    setAccountSetupError(null)
+    try {
+      if (
+        accountPreferencesToApply &&
+        accountBundle.manifest.contents.accountPreferences
+      ) {
+        const preferences = accountBundle.manifest.account.preferences
+        if (preferences) {
+          await updateAccountPreferences({
+            defaultCurrencyCode: preferences.defaultCurrencyCode,
+            timeZone: preferences.timeZone,
+            locale: preferences.locale,
+            theme: preferences.theme,
+            notificationsEnabled: preferences.notificationsEnabled ?? true,
+            aiFeaturesEnabled: preferences.aiFeaturesEnabled ?? true,
+            aiCategoryExtractEnabled:
+              preferences.aiCategoryExtractEnabled ?? true,
+            aiReceiptScanEnabled: preferences.aiReceiptScanEnabled ?? true,
+            aiVoiceExpenseEnabled: preferences.aiVoiceExpenseEnabled ?? true,
+          })
+        }
+        const exported = accountBundle.manifest.account.notificationPreferences
+        if (exported) {
+          const byCategory = new Map(
+            exported.map((preference) => [
+              preference.category,
+              preference.channels,
+            ]),
+          )
+          await saveNotificationPreferences({
+            preferences: notificationCategoryValues.map((category) => ({
+              category,
+              channels: byCategory.get(category) ?? null,
+            })),
+          })
+        }
+        await Promise.all([
+          utils.account.getPreferences.invalidate(),
+          utils.notifications.preferences.get.invalidate({
+            accountId: account.id,
+          }),
+        ])
+      }
+
+      const selectedIds = new Set(accountSelectedGroupIds)
+      const selectedGroups = accountBundle.groups.filter(({ index }) =>
+        selectedIds.has(index.sourceId),
+      )
+      const queue: AccountImportQueue = {
+        bundle: accountBundle,
+        selectedGroupIds: selectedGroups.map(({ index }) => index.sourceId),
+        currentIndex: 0,
+        completed: [],
+        skipped: [],
+        finished: selectedGroups.length === 0,
+        mappingHints: {},
+        includeGroupPreferences:
+          groupPreferencesToApply &&
+          accountBundle.manifest.contents.groupPreferences,
+      }
+      setAccountQueue(queue)
+      setAccountBundle(null)
+      dispatch({ type: 'RESET' })
+      const first = selectedGroups[0]
+      if (first) setPendingCloudInspection(first.inspection)
+    } catch (error) {
+      setAccountSetupError(
+        error instanceof Error
+          ? error.message
+          : t('Groups.Import.Confirm.importErrorFallback'),
+      )
+    }
+  }, [
+    account,
+    accountBundle,
+    accountPreferencesToApply,
+    accountSelectedGroupIds,
+    groupPreferencesToApply,
+    saveNotificationPreferences,
+    t,
+    updateAccountPreferences,
+    utils,
+  ])
+
   const destinationCurrencyCode =
     state.mode === 'EXISTING_GROUP'
       ? (destinationGroupData?.group?.currencyCode ?? '')
@@ -386,6 +538,7 @@ export function ImportGroupWizard() {
     if (!state.source) return
     if (!state.mode) return
     if (!account?.id) return
+    setAccountImportError(null)
     try {
       if (state.sourceKind === 'CLOUD' && state.cloudInspection) {
         await importAttempt.run((requestId) =>
@@ -401,6 +554,14 @@ export function ImportGroupWizard() {
               sessionId: state.documentSessionId,
               documents: state.cloudStagedDocuments,
             },
+            groupPreference:
+              accountQueue?.includeGroupPreferences && state.cloudInspection
+                ? (accountQueue.bundle.manifest.groupPreferences?.find(
+                    (preference) =>
+                      preference.groupSourceId ===
+                      state.cloudInspection?.manifest.group.sourceId,
+                  ) ?? undefined)
+                : undefined,
           }),
         )
         return
@@ -442,6 +603,7 @@ export function ImportGroupWizard() {
       // from the mutation onError handler. Avoid showing a duplicate toast
       // for that expected, actionable flow.
       if (!isDocumentImportFailure(description)) {
+        if (accountQueue) setAccountImportError(description)
         toast({
           title: t('Groups.Import.Confirm.importErrorTitle'),
           description,
@@ -449,11 +611,96 @@ export function ImportGroupWizard() {
         })
       }
     }
-    // Destructure fields used so the callback deps don't include the
-    // mutable tRPC result object.
   }
 
+  const rememberCurrentMappings = useCallback(() => {
+    if (!accountQueue || !state.cloudInspection) return
+    setAccountQueue((current) => {
+      if (!current) return current
+      const mappingHints = { ...current.mappingHints }
+      for (const participant of state.participants) {
+        const key = cloudIdentityKey(
+          state.cloudInspection!,
+          participant.source.sourceId,
+        )
+        if (!key) continue
+        mappingHints[key] = {
+          mode: participant.mode,
+          linkedAccountId: participant.linkedAccountId,
+          inviteEmail: participant.inviteEmail,
+          contactAccountId: participant.contactAccountId,
+        }
+      }
+      return { ...current, mappingHints }
+    })
+  }, [accountQueue, state.cloudInspection, state.participants])
+
+  const skipCurrentAccountGroup = useCallback(() => {
+    if (!accountQueue || !state.cloudInspection) return
+    const sourceId = state.cloudInspection.manifest.group.sourceId
+    const nextIndex = accountQueue.currentIndex + 1
+    setAccountQueue((current) =>
+      current
+        ? {
+            ...current,
+            skipped: [...new Set([...current.skipped, sourceId])],
+            currentIndex: nextIndex,
+            finished: nextIndex >= current.selectedGroupIds.length,
+          }
+        : current,
+    )
+    setAccountImportError(null)
+    resetCloudImport()
+    dispatch({ type: 'RESET' })
+    if (nextIndex < accountQueue.selectedGroupIds.length) {
+      const next = accountQueue.bundle.groups.find(
+        ({ index }) =>
+          index.sourceId === accountQueue.selectedGroupIds[nextIndex],
+      )
+      if (next) setPendingCloudInspection(next.inspection)
+    }
+  }, [accountQueue, resetCloudImport, state.cloudInspection])
+
   const handleDoneNavigate = useCallback(() => {
+    if (accountQueue?.finished) {
+      void navigate({ to: '/' })
+      return
+    }
+    if (accountQueue && state.cloudInspection) {
+      rememberCurrentMappings()
+      const sourceId = state.cloudInspection.manifest.group.sourceId
+      const nextIndex = accountQueue.currentIndex + 1
+      setAccountQueue((current) => {
+        if (!current) return current
+        const completed = activeImportGroupId
+          ? [
+              ...current.completed.filter((item) => item.sourceId !== sourceId),
+              { sourceId, groupId: activeImportGroupId },
+            ]
+          : current.completed
+        return {
+          ...current,
+          completed,
+          currentIndex: nextIndex,
+          finished: nextIndex >= current.selectedGroupIds.length,
+        }
+      })
+      if (nextIndex < accountQueue.selectedGroupIds.length) {
+        const next = accountQueue.bundle.groups.find(
+          ({ index }) =>
+            index.sourceId === accountQueue.selectedGroupIds[nextIndex],
+        )
+        if (next) {
+          resetCloudImport()
+          dispatch({ type: 'RESET' })
+          setPendingCloudInspection(next.inspection)
+        }
+      } else {
+        resetCloudImport()
+        void navigate({ to: '/' })
+      }
+      return
+    }
     if (activeImportGroupId) {
       void navigate({
         to: '/groups/$groupId',
@@ -462,7 +709,14 @@ export function ImportGroupWizard() {
     } else {
       void navigate({ to: '/' })
     }
-  }, [activeImportGroupId, navigate])
+  }, [
+    accountQueue,
+    activeImportGroupId,
+    navigate,
+    rememberCurrentMappings,
+    resetCloudImport,
+    state.cloudInspection,
+  ])
 
   const handleBack = useCallback(() => {
     if (state.step === 'destination' && state.sourceKind === 'CLOUD') {
@@ -472,12 +726,181 @@ export function ImportGroupWizard() {
     dispatch({ type: 'BACK' })
   }, [state.sourceKind, state.step])
 
+  const setupBundle =
+    accountBundle ??
+    (accountQueue && state.step === 'source' && !pendingCloudInspection
+      ? accountQueue.bundle
+      : null)
+  const setupSelectedGroupIds = new Set(
+    accountQueue?.selectedGroupIds ?? accountSelectedGroupIds,
+  )
+  const setupDisabledGroupIds = new Set([
+    ...(accountQueue?.completed.map((item) => item.sourceId) ?? []),
+    ...(accountQueue?.skipped ?? []),
+  ])
+  const accountGroupIndex = accountQueue
+    ? accountQueue.finished
+      ? Math.max(accountQueue.currentIndex - 1, 0)
+      : accountQueue.currentIndex
+    : 0
+  const currentAccountGroup = accountQueue
+    ? accountQueue.bundle.groups.find(
+        ({ index }) =>
+          index.sourceId === accountQueue.selectedGroupIds[accountGroupIndex],
+      )
+    : undefined
+  const accountProgress =
+    accountQueue && currentAccountGroup ? (
+      <AccountImportProgress
+        phase="active"
+        current={
+          accountQueue.finished
+            ? accountQueue.selectedGroupIds.length
+            : accountGroupIndex + 1
+        }
+        total={accountQueue.selectedGroupIds.length}
+        groupName={currentAccountGroup.index.displayName}
+      />
+    ) : accountBundle ? (
+      <AccountImportProgress
+        phase="setup"
+        selected={accountSelectedGroupIds.length}
+        total={accountBundle.groups.length}
+      />
+    ) : undefined
+  const finalAccountGroup =
+    accountQueue && state.cloudInspection
+      ? accountQueue.currentIndex >= accountQueue.selectedGroupIds.length - 1
+        ? state.cloudInspection.manifest.group.sourceId
+        : null
+      : null
+  const accountBatchSummary =
+    accountQueue && (accountQueue.finished || finalAccountGroup)
+      ? (() => {
+          const completed = accountQueue.completed.filter(
+            (item) => item.sourceId !== finalAccountGroup,
+          )
+          if (finalAccountGroup && activeImportGroupId) {
+            completed.push({
+              sourceId: finalAccountGroup,
+              groupId: activeImportGroupId,
+            })
+          }
+          return {
+            completed: completed.map((item) => ({
+              sourceId: item.sourceId,
+              name:
+                accountQueue.bundle.groups.find(
+                  ({ index }) => index.sourceId === item.sourceId,
+                )?.index.displayName ?? item.sourceId,
+            })),
+            skipped: accountQueue.skipped.map((sourceId) => ({
+              sourceId,
+              name:
+                accountQueue.bundle.groups.find(
+                  ({ index }) => index.sourceId === sourceId,
+                )?.index.displayName ?? sourceId,
+            })),
+          }
+        })()
+      : undefined
+  const handleSetupGroupToggle = useCallback(
+    (groupId: string, checked: boolean) => {
+      if (accountQueue) {
+        setAccountQueue((current) => {
+          if (!current) return current
+          if (
+            current.completed.some((item) => item.sourceId === groupId) ||
+            current.skipped.includes(groupId)
+          ) {
+            return current
+          }
+          const selectedGroupIds = checked
+            ? [...new Set([...current.selectedGroupIds, groupId])]
+            : current.selectedGroupIds.filter((id) => id !== groupId)
+          return { ...current, selectedGroupIds }
+        })
+      } else {
+        setAccountSelectedGroupIds((current) =>
+          checked
+            ? [...new Set([...current, groupId])]
+            : current.filter((id) => id !== groupId),
+        )
+      }
+    },
+    [accountQueue],
+  )
+  const handleGroupPreferencesToggle = useCallback((checked: boolean) => {
+    setGroupPreferencesToApply(checked)
+    setAccountQueue((current) =>
+      current ? { ...current, includeGroupPreferences: checked } : current,
+    )
+  }, [])
+  const continueAccountQueue = useCallback(() => {
+    if (!accountQueue) return
+    const nextId = accountQueue.selectedGroupIds[accountQueue.currentIndex]
+    const next = nextId
+      ? accountQueue.bundle.groups.find(
+          ({ index }) => index.sourceId === nextId,
+        )
+      : undefined
+    if (!next) {
+      setAccountQueue((current) =>
+        current ? { ...current, finished: true } : current,
+      )
+      return
+    }
+    dispatch({ type: 'RESET' })
+    setPendingCloudInspection(next.inspection)
+  }, [accountQueue])
+  const chooseAnotherAccountBundle = useCallback(() => {
+    setAccountBundle(null)
+    setAccountQueue(null)
+    setPendingCloudInspection(null)
+    setAccountSetupError(null)
+    setAccountImportError(null)
+    resetCloudImport()
+    dispatch({ type: 'RESET' })
+  }, [resetCloudImport])
+
   return (
     <div className="flex flex-col gap-6">
-      <StepHeader step={state.step} />
+      <StepHeader step={state.step} accountProgress={accountProgress} />
 
-      {state.step === 'source' &&
-        (pendingCloudInspection && isAccountPending ? (
+      {state.step === 'source' && setupBundle ? (
+        <AccountImportSetup
+          bundle={setupBundle}
+          selectedGroupIds={setupSelectedGroupIds}
+          disabledGroupIds={setupDisabledGroupIds}
+          includeAccountPreferences={accountPreferencesToApply}
+          allowAccountPreferencesToggle={!accountQueue}
+          includeGroupPreferences={groupPreferencesToApply}
+          isApplying={
+            isAccountPending ||
+            isUpdatingAccountPreferences ||
+            isSavingNotificationPreferences
+          }
+          error={accountSetupError}
+          onToggleGroup={handleSetupGroupToggle}
+          onToggleAccountPreferences={setAccountPreferencesToApply}
+          onToggleGroupPreferences={handleGroupPreferencesToggle}
+          finished={accountQueue?.finished ?? false}
+          completedGroupIds={accountQueue?.completed.map(
+            (item) => item.sourceId,
+          )}
+          skippedGroupIds={accountQueue?.skipped}
+          onContinue={
+            accountQueue?.finished
+              ? () => void navigate({ to: '/' })
+              : accountBundle
+                ? startAccountImport
+                : continueAccountQueue
+          }
+          onChooseAnother={chooseAnotherAccountBundle}
+        />
+      ) : (
+        state.step === 'source' &&
+        (pendingCloudInspection && (isAccountPending || accountQueue) ? (
           <Card>
             <CardContent className="flex flex-col items-center gap-3 p-8 text-center text-sm text-muted-foreground">
               <Loader2 className="h-5 w-5 animate-spin" />
@@ -504,7 +927,8 @@ export function ImportGroupWizard() {
                 : undefined
             }
           />
-        ))}
+        ))
+      )}
 
       {state.step === 'destination' && !state.source && prefillSourceUrl && (
         <Card>
@@ -643,6 +1067,8 @@ export function ImportGroupWizard() {
           showDocumentSummary={state.documentFlowVisited}
           onBack={handleBack}
           onSubmit={handleSubmit}
+          importError={accountQueue ? accountImportError : null}
+          onSkip={accountQueue ? skipCurrentAccountGroup : undefined}
           cloudSummary={
             state.sourceKind === 'CLOUD'
               ? {
@@ -665,6 +1091,14 @@ export function ImportGroupWizard() {
           invites={activeImportInvites}
           importedDocumentCount={activeImportedDocumentCount}
           onContinue={handleDoneNavigate}
+          continueLabel={
+            accountQueue
+              ? accountQueue.finished || finalAccountGroup
+                ? t('Groups.backToHome')
+                : t('Groups.Import.Cloud.continueToNextGroup')
+              : undefined
+          }
+          batchSummary={accountBatchSummary}
         />
       )}
     </div>

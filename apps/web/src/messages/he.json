@@ -440,9 +440,7 @@
         "splitwiseAnonymizeError": "לא ניתן היה לבצע אנונימיזציה לקובץ זה. ודא שמדובר בייצוא CSV של Splitwise.",
         "csvRecurrenceLimitation": "ייצואי CSV אינם כוללים חזרתיות. השתמשו בייצוא JSON מ-spliit.app כדי לייבא הוצאות חוזרות.",
         "fromSpliitCloud": "ייבוא Spliit Cloud",
-        "spliitCloudDescription": "ייבא גיבוי קבוצה שיוצא מ־Spliit Cloud כקובץ .spliit.zip.",
         "cloudZipRequired": "בחר גיבוי Spliit Cloud מסוג .spliit.zip.",
-        "accountBundleComingSoon": "ייבוא גיבוי Cloud לכל החשבון עדיין לא זמין.",
         "wrongImporterCloudTitle": "הקובץ הזה שייך למייבא Spliit Cloud",
         "wrongImporterCloudDescription": "הקובץ שנבחר הוא גיבוי או מניפסט של Spliit Cloud. פתח את לשונית Spliit Cloud כדי להמשיך.",
         "wrongImporterSpliitTitle": "הקובץ הזה שייך למייבא Spliit",
@@ -451,7 +449,8 @@
         "openSpliitImporter": "פתיחת מייבא Spliit",
         "cloudBundleReadyTitle": "חבילת Spliit Cloud מוכנה",
         "cloudBundleReadyDescription": "החבילה שנבדקה מוכנה לייבוא. אפשר להמשיך בלי לבחור את הקובץ שוב.",
-        "resumeCloudBundle": "המשך עם חבילה זו"
+        "resumeCloudBundle": "המשך עם חבילה זו",
+        "spliitCloudScopeDescription": "ייבא מקובץ ‎.spliit.zip גיבוי של חשבון Spliit Cloud שמכיל כמה קבוצות, או ייצוא של קבוצה יחידה."
       },
       "StepHeader": {
         "title": "ייבא קבוצה",
@@ -515,7 +514,6 @@
         "doneTitle": "הקבוצה שוחזרה",
         "doneDescription": "גיבוי הקבוצה מ־Spliit Cloud שוחזר כקבוצה חדשה.",
         "importAnother": "ייבוא גיבוי נוסף",
-        "title": "ייבוא גיבוי Spliit Cloud",
         "summary": "שחזור {participants} משתתפים ו־{expenses} הוצאות כקבוצה חדשה.",
         "incompleteTitle": "הגיבוי הזה חלקי",
         "incompleteDescription": "הייצוא כולל {count} אזהרות. בדוק אותן לפני ההמשך.",
@@ -535,7 +533,12 @@
         "confirmArchived": "הקבוצה תועבר לארכיון",
         "executeImport": "שחזור קבוצה",
         "stagingDocuments": "מכין את קובצי המסמכים לשחזור…",
-        "friendSourceWarning": "הגיבוי הזה הגיע מחשבון הוצאות עם חבר. הוא ישוחזר כקבוצה רגילה; קשר החברות לא ייווצר מחדש."
+        "friendSourceWarning": "הגיבוי הזה הגיע מחשבון הוצאות עם חבר. הוא ישוחזר כקבוצה רגילה; קשר החברות לא ייווצר מחדש.",
+        "accountTitle": "ייבוא גיבוי של חשבון Spliit Cloud",
+        "accountProgress": "קבוצה {current} מתוך {total}: {name}",
+        "continueToGroups": "המשך לייבוא קבוצות",
+        "continueToNextGroup": "המשך לקבוצה הבאה",
+        "skipGroup": "דלג על קבוצה זו"
       }
     },
     "Importable": {

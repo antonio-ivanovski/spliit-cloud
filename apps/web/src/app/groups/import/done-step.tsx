@@ -1,4 +1,4 @@
-import { CheckCircle2, Share2 } from 'lucide-react'
+import { AlertCircle, CheckCircle2, Share2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { CopyButton } from '@/components/copy-button'
@@ -17,6 +17,11 @@ type Props = {
   invites: ImportInvite[]
   importedDocumentCount?: number
   onContinue: () => void
+  continueLabel?: string
+  batchSummary?: {
+    completed: Array<{ sourceId: string; name: string }>
+    skipped: Array<{ sourceId: string; name: string }>
+  }
 }
 
 /**
@@ -37,10 +42,13 @@ export function DoneStep({
   invites,
   importedDocumentCount = 0,
   onContinue,
+  continueLabel,
+  batchSummary,
 }: Props) {
   const { t } = useTranslation()
   const linkInvites = invites.filter((i) => i.kind === 'LINK' && i.inviteUrl)
   const emailInvites = invites.filter((i) => i.kind === 'EMAIL')
+  const isBatchComplete = batchSummary !== undefined
 
   // Mobile share via the Web Share API. Same probing pattern as
   // the Members invite-link UI — iOS Safari, Android Chrome, and a
@@ -67,11 +75,18 @@ export function DoneStep({
   return (
     <div className="flex flex-col gap-4">
       <Card>
-        <CardContent className="flex flex-col items-center gap-3 p-6 text-center">
-          <CheckCircle2 className="h-10 w-10 text-green-500" />
-          <h2 className="text-lg font-medium">
-            {t('Groups.Import.Done.importComplete')}
-          </h2>
+        <CardContent className="flex flex-col items-center gap-4 p-6 text-center">
+          <CheckCircle2 className="h-12 w-12 text-green-500" />
+          <div className="flex flex-col gap-1">
+            <p className="text-xs tracking-wide text-muted-foreground uppercase">
+              {isBatchComplete
+                ? t('Groups.Import.Cloud.accountTitle')
+                : t('Groups.Import.StepHeader.done')}
+            </p>
+            <h2 className="text-xl font-semibold">
+              {t('Groups.Import.Done.importComplete')}
+            </h2>
+          </div>
           {importedDocumentCount > 0 && (
             <p className="text-sm text-muted-foreground">
               {t('Groups.Import.Documents.recovered', {
@@ -79,8 +94,36 @@ export function DoneStep({
               })}
             </p>
           )}
+          {batchSummary ? (
+            <ul className="w-full max-w-md divide-y rounded-lg border text-start text-sm">
+              {batchSummary.completed.map((group) => (
+                <li
+                  key={group.sourceId}
+                  className="flex items-center gap-2 px-3 py-2"
+                >
+                  <CheckCircle2
+                    className="h-4 w-4 shrink-0 text-green-500"
+                    aria-hidden="true"
+                  />
+                  <span className="truncate">{group.name}</span>
+                </li>
+              ))}
+              {batchSummary.skipped.map((group) => (
+                <li
+                  key={group.sourceId}
+                  className="flex items-center gap-2 px-3 py-2 text-muted-foreground"
+                >
+                  <AlertCircle
+                    className="h-4 w-4 shrink-0"
+                    aria-hidden="true"
+                  />
+                  <span className="truncate line-through">{group.name}</span>
+                </li>
+              ))}
+            </ul>
+          ) : null}
           <Button onClick={onContinue}>
-            {t('Groups.Import.Done.openGroup')}
+            {continueLabel ?? t('Groups.Import.Done.openGroup')}
           </Button>
         </CardContent>
       </Card>

@@ -9,6 +9,22 @@ export type CloudStagedDocument = {
   stagedToken: string
 }
 
+export type CloudMappingHint = Pick<
+  ParticipantMappingState,
+  'mode' | 'linkedAccountId' | 'inviteEmail' | 'contactAccountId'
+>
+
+export function cloudIdentityKey(
+  inspection: CloudGroupBundleInspection,
+  sourceParticipantId: string,
+): string | null {
+  const participant = inspection.manifest.participants.find(
+    (candidate) => candidate.sourceId === sourceParticipantId,
+  )
+  const identity = participant?.identity
+  return identity?.kind === 'ACCOUNT' ? `account:${identity.accountId}` : null
+}
+
 export function cloudInspectionToSource(
   inspection: CloudGroupBundleInspection,
 ): NormalizedSource {
@@ -76,7 +92,7 @@ function mappingRank(mode: ParticipantMappingState['mode']): number {
 export function sortParticipantMappings(
   participants: ParticipantMappingState[],
 ): ParticipantMappingState[] {
-  return [...participants].sort((a, b) => {
+  return participants.toSorted((a, b) => {
     const rank = mappingRank(a.mode) - mappingRank(b.mode)
     if (rank !== 0) return rank
     const name = a.source.sourceName.localeCompare(
@@ -95,6 +111,7 @@ export function initialCloudMappings(
   source: NormalizedSource,
   inspection: CloudGroupBundleInspection,
   account: Pick<AuthAccount, 'id' | 'email' | 'name'>,
+  hints: Readonly<Record<string, CloudMappingHint>> = {},
 ): ParticipantMappingState[] {
   const normalizedEmail = account.email?.trim().toLowerCase() ?? null
   const normalizedName = account.name?.trim().toLowerCase() ?? null
@@ -134,7 +151,7 @@ export function initialCloudMappings(
         ? identityEmail
         : undefined
 
-    return {
+    const initial: ParticipantMappingState = {
       key: `${participant.sourceId}-cloud`,
       source: participant,
       mode: linkToSelf
@@ -145,6 +162,16 @@ export function initialCloudMappings(
       linkedAccountId: linkToSelf ? account.id : undefined,
       inviteEmail: email,
     }
+    const hint = hints[cloudIdentityKey(inspection, participant.sourceId) ?? '']
+    return hint
+      ? {
+          ...initial,
+          mode: hint.mode,
+          linkedAccountId: hint.linkedAccountId,
+          inviteEmail: hint.inviteEmail,
+          contactAccountId: hint.contactAccountId,
+        }
+      : initial
   })
   return sortParticipantMappings(mappings)
 }

@@ -1833,9 +1833,7 @@
         "splitwiseAnonymizeError": "এই ফাইলটি বেনামী করা যায়নি। নিশ্চিত করুন এটি একটি Splitwise CSV এক্সপোর্ট।",
         "csvRecurrenceLimitation": "CSV এক্সপোর্টে পুনরাবৃত্তি অন্তর্ভুক্ত নয়। পুনরাবৃত্তিমূলক খরচ আমদানি করতে spliit.app থেকে JSON এক্সপোর্ট ব্যবহার করুন।",
         "fromSpliitCloud": "Spliit Cloud আমদানি",
-        "spliitCloudDescription": "Spliit Cloud থেকে রপ্তানি করা গ্রুপ ব্যাকআপ .spliit.zip ফাইল হিসেবে আমদানি করুন।",
         "cloudZipRequired": "Spliit Cloud-এর .spliit.zip ব্যাকআপ বেছে নিন।",
-        "accountBundleComingSoon": "সম্পূর্ণ অ্যাকাউন্টের Cloud ব্যাকআপ আমদানি এখনও উপলভ্য নয়।",
         "wrongImporterCloudTitle": "এই ফাইলটি Spliit Cloud আমদানিকারকের জন্য",
         "wrongImporterCloudDescription": "নির্বাচিত ফাইলটি Spliit Cloud ব্যাকআপ বা ম্যানিফেস্ট। চালিয়ে যেতে Spliit Cloud ট্যাব খুলুন।",
         "wrongImporterSpliitTitle": "এই ফাইলটি Spliit আমদানিকারকের জন্য",
@@ -1844,7 +1842,8 @@
         "openSpliitImporter": "Spliit আমদানিকারক খুলুন",
         "cloudBundleReadyTitle": "Spliit Cloud বান্ডেল প্রস্তুত",
         "cloudBundleReadyDescription": "এই পরিদর্শিত বান্ডেলটি ইমপোর্টের জন্য প্রস্তুত। ফাইলটি আবার নির্বাচন না করেই এগিয়ে যেতে পারেন।",
-        "resumeCloudBundle": "এই বান্ডেল দিয়ে এগিয়ে যান"
+        "resumeCloudBundle": "এই বান্ডেল দিয়ে এগিয়ে যান",
+        "spliitCloudScopeDescription": "একাধিক গ্রুপ থাকা Spliit Cloud অ্যাকাউন্টের ব্যাকআপ, অথবা একটি গ্রুপের একক এক্সপোর্ট, .spliit.zip ফাইল থেকে ইম্পোর্ট করুন।"
       },
       "StepHeader": {
         "title": "একটি গ্রুপ আমদানি করুন",
@@ -1893,7 +1892,6 @@
         "doneTitle": "গ্রুপ পুনরুদ্ধার হয়েছে",
         "doneDescription": "Spliit Cloud গ্রুপের ব্যাকআপ নতুন গ্রুপ হিসেবে পুনরুদ্ধার করা হয়েছে।",
         "importAnother": "অন্য ব্যাকআপ আমদানি করুন",
-        "title": "Spliit Cloud ব্যাকআপ আমদানি করুন",
         "summary": "{participants}জন অংশগ্রহণকারী এবং {expenses}টি খরচ নতুন গ্রুপ হিসেবে পুনরুদ্ধার করুন।",
         "incompleteTitle": "এই ব্যাকআপটি অসম্পূর্ণ",
         "incompleteDescription": "রপ্তানিতে {count}টি সতর্কতা আছে। এগিয়ে যাওয়ার আগে পর্যালোচনা করুন।",
@@ -1913,7 +1911,12 @@
         "confirmArchived": "গ্রুপটি আর্কাইভ করা হবে",
         "executeImport": "গ্রুপ পুনরুদ্ধার করুন",
         "stagingDocuments": "পুনরুদ্ধারের জন্য নথির ফাইল প্রস্তুত করা হচ্ছে…",
-        "friendSourceWarning": "এই ব্যাকআপটি একটি বন্ধুর লেজার থেকে এসেছে। এটি একটি সাধারণ গ্রুপ হিসেবে পুনরুদ্ধার হবে; বন্ধুত্বের সম্পর্ক পুনরায় তৈরি হবে না।"
+        "friendSourceWarning": "এই ব্যাকআপটি একটি বন্ধুর লেজার থেকে এসেছে। এটি একটি সাধারণ গ্রুপ হিসেবে পুনরুদ্ধার হবে; বন্ধুত্বের সম্পর্ক পুনরায় তৈরি হবে না।",
+        "accountTitle": "Spliit Cloud অ্যাকাউন্টের ব্যাকআপ ইম্পোর্ট করুন",
+        "accountProgress": "গ্রুপ {current}/{total}: {name}",
+        "continueToGroups": "গ্রুপ ইম্পোর্টে এগিয়ে যান",
+        "continueToNextGroup": "পরের গ্রুপে এগিয়ে যান",
+        "skipGroup": "এই গ্রুপটি এড়িয়ে যান"
       }
     },
     "Importable": {

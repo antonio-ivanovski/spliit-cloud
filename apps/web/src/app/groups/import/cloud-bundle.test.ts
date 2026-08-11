@@ -6,7 +6,6 @@ import {
   MAX_CLOUD_BUNDLE_ENTRIES,
   MAX_CLOUD_BUNDLE_MANIFEST_BYTES,
   inspectSpliitCloudBundle,
-  type CloudGroupBundleInspection,
 } from './cloud-bundle'
 
 const participant = {
@@ -46,6 +45,60 @@ function manifest(overrides: Record<string, unknown> = {}) {
     recurrenceSeries: [],
     expenses: [],
     orphanDocuments: [],
+    ...overrides,
+  }
+}
+
+function accountManifest(overrides: Record<string, unknown> = {}) {
+  return {
+    format: 'spliit.cloud/export',
+    version: 1,
+    scope: { type: 'ACCOUNT', sourceId: 'account-1' },
+    exportedAt: '2026-08-10T12:00:00.000Z',
+    complete: true,
+    warnings: [],
+    contents: {
+      documents: true,
+      accountPreferences: true,
+      groupPreferences: true,
+    },
+    account: {
+      sourceId: 'account-1',
+      name: 'Alice',
+      email: 'alice@example.com',
+      preferences: {
+        defaultCurrencyCode: 'USD',
+        timeZone: null,
+        locale: null,
+        theme: null,
+        aiFeaturesEnabled: null,
+        aiCategoryExtractEnabled: null,
+        aiReceiptScanEnabled: null,
+        aiVoiceExpenseEnabled: null,
+      },
+      notificationPreferences: [],
+    },
+    identities: [
+      { sourceId: 'account-1', name: 'Alice', email: 'alice@example.com' },
+    ],
+    groups: [
+      {
+        sourceId: 'group-1',
+        displayName: 'Trip',
+        groupType: 'GROUP',
+        archived: false,
+        manifestPath: 'groups/group-1/manifest.json',
+        complete: true,
+      },
+    ],
+    groupPreferences: [
+      {
+        groupSourceId: 'group-1',
+        starred: true,
+        hidden: false,
+        defaultSplit: null,
+      },
+    ],
     ...overrides,
   }
 }
@@ -152,12 +205,51 @@ describe('inspectSpliitCloudBundle', () => {
       sizeBytes: bytes.byteLength,
       sha256: await checksum(bytes),
     }
-    const result: CloudGroupBundleInspection = await inspectSpliitCloudBundle(
+    const result = await inspectSpliitCloudBundle(
       await bundleWithDocument(document, bytes),
     )
+    expect(result.kind).toBe('GROUP')
+    if (result.kind !== 'GROUP') throw new Error('Expected a group bundle')
     expect(result.manifest.group.sourceId).toBe('group-1')
     expect(result.documents.get('document-1')).toEqual(bytes)
     expect(result.documentIssues).toEqual([])
+  })
+
+  it('inspects an account bundle and returns its nested group inspections', async () => {
+    const bytes = new TextEncoder().encode('account receipt')
+    const document = {
+      sourceId: 'document-1',
+      fileName: 'receipt.txt',
+      contentType: 'text/plain',
+      width: null,
+      height: null,
+      path: 'groups/group-1/documents/document-1__receipt.txt',
+      status: 'INCLUDED',
+      sizeBytes: bytes.byteLength,
+      sha256: await checksum(bytes),
+    }
+    const group = manifest({ orphanDocuments: [document] })
+    const archive = zipSync({
+      'manifest.json': new TextEncoder().encode(
+        JSON.stringify(accountManifest()),
+      ),
+      'groups/group-1/manifest.json': new TextEncoder().encode(
+        JSON.stringify(group),
+      ),
+      [document.path]: bytes,
+      'viewer/index.html': new TextEncoder().encode('optional viewer'),
+    })
+
+    const result = await inspectSpliitCloudBundle(new Blob([archive]))
+
+    expect(result.kind).toBe('ACCOUNT')
+    if (result.kind !== 'ACCOUNT') throw new Error('Expected an account bundle')
+    expect(result.manifest.scope.type).toBe('ACCOUNT')
+    expect(result.groups).toHaveLength(1)
+    expect(result.groups[0]?.inspection.documents.get('document-1')).toEqual(
+      bytes,
+    )
+    expect(result.groups[0]?.inspection.documentIssues).toEqual([])
   })
 
   it('reports missing ZIP entries and checksum mismatches individually', async () => {
@@ -175,6 +267,8 @@ describe('inspectSpliitCloudBundle', () => {
     const result = await inspectSpliitCloudBundle(
       await bundleWithDocument(missing, new TextEncoder().encode('other')),
     )
+    expect(result.kind).toBe('GROUP')
+    if (result.kind !== 'GROUP') throw new Error('Expected a group bundle')
     expect(result.documents.size).toBe(0)
     expect(result.documentIssues[0]?.sourceId).toBe('document-missing')
   })
@@ -194,6 +288,9 @@ describe('inspectSpliitCloudBundle', () => {
     const unsafeResult = await inspectSpliitCloudBundle(
       await bundleWithDocument(unsafe, new Uint8Array()),
     )
+    expect(unsafeResult.kind).toBe('GROUP')
+    if (unsafeResult.kind !== 'GROUP')
+      throw new Error('Expected a group bundle')
     expect(unsafeResult.documentIssues[0]?.message).toMatch(/invalid/i)
 
     const missingResult = await inspectSpliitCloudBundle(
@@ -221,6 +318,9 @@ describe('inspectSpliitCloudBundle', () => {
         }),
       ]),
     )
+    expect(missingResult.kind).toBe('GROUP')
+    if (missingResult.kind !== 'GROUP')
+      throw new Error('Expected a group bundle')
     expect(missingResult.documentIssues[0]?.sourceId).toBe('document-missing')
   })
 })

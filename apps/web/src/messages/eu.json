@@ -440,9 +440,7 @@
         "splitwiseAnonymizeError": "Ezin izan da fitxategi hau anonimatu. Ziurtatu Splitwise-ren CSV-esportazio bat dela.",
         "csvRecurrenceLimitation": "CSV esportazioek ez dute errepikapena. Erabili spliit.app-eko JSON esportazioa gastu errepikariak inportatzeko.",
         "fromSpliitCloud": "Spliit Cloud inportazioa",
-        "spliitCloudDescription": "Inportatu Spliit Cloud-etik esportatutako talde-babeskopia .spliit.zip fitxategi gisa.",
         "cloudZipRequired": "Aukeratu Spliit Cloud babeskopia .spliit.zip formatuan.",
-        "accountBundleComingSoon": "Kontu osoko Cloud inportazioa ez dago oraindik erabilgarri.",
         "wrongImporterCloudTitle": "Fitxategi hau Spliit Cloud inportatzaileari dagokio",
         "wrongImporterCloudDescription": "Hautatutako fitxategia Spliit Cloud babeskopia edo manifestua da. Jarraitzeko, ireki Spliit Cloud fitxa.",
         "wrongImporterSpliitTitle": "Fitxategi hau Spliit inportatzaileari dagokio",
@@ -451,7 +449,8 @@
         "openSpliitImporter": "Ireki Spliit inportatzailea",
         "cloudBundleReadyTitle": "Spliit Cloud sorta prest",
         "cloudBundleReadyDescription": "Ikuskatutako sorta hau inportatzeko prest dago. Aurrera egin dezakezu fitxategia berriro hautatu gabe.",
-        "resumeCloudBundle": "Jarraitu sorta honekin"
+        "resumeCloudBundle": "Jarraitu sorta honekin",
+        "spliitCloudScopeDescription": "Inportatu hainbat talde dituen Spliit Cloud kontu baten segurtasun-kopia, edo talde bakar baten esportazioa, .spliit.zip fitxategi batetik."
       },
       "StepHeader": {
         "title": "Talde bat inportatu",
@@ -515,7 +514,6 @@
         "doneTitle": "Taldea leheneratu da",
         "doneDescription": "Spliit Cloud taldearen babeskopia talde berri gisa leheneratu da.",
         "importAnother": "Inportatu beste babeskopia bat",
-        "title": "Inportatu Spliit Cloud babeskopia",
         "summary": "Leheneratu {participants} parte-hartzaile eta {expenses} gastu talde berri gisa.",
         "incompleteTitle": "Babeskopia hau osatu gabe dago",
         "incompleteDescription": "Esportazioak {count} abisu ditu. Berrikusi jarraitu aurretik.",
@@ -535,7 +533,12 @@
         "confirmArchived": "Taldea artxibatu egingo da",
         "executeImport": "Leheneratu taldea",
         "stagingDocuments": "Dokumentu-fitxategiak leheneratzeko prestatzen…",
-        "friendSourceWarning": "Babeskopia hau lagun baten kontutik dator. Talde arrunt gisa leheneratuko da; adiskidetasun-harremana ez da berriro sortuko."
+        "friendSourceWarning": "Babeskopia hau lagun baten kontutik dator. Talde arrunt gisa leheneratuko da; adiskidetasun-harremana ez da berriro sortuko.",
+        "accountTitle": "Inportatu Spliit Cloud kontuaren segurtasun-kopia",
+        "accountProgress": "Taldea {current} / {total}: {name}",
+        "continueToGroups": "Jarraitu taldeen inportazioekin",
+        "continueToNextGroup": "Jarraitu hurrengo taldearekin",
+        "skipGroup": "Saltatu talde hau"
       }
     },
     "Importable": {

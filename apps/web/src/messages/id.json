@@ -430,9 +430,7 @@
         "splitwiseAnonymizeError": "Tidak dapat menganonimkan file ini. Pastikan itu adalah ekspor CSV Splitwise.",
         "csvRecurrenceLimitation": "Ekspor CSV tidak menyertakan pengulangan. Gunakan ekspor JSON dari spliit.app untuk mengimpor pengeluaran berulang.",
         "fromSpliitCloud": "Impor Spliit Cloud",
-        "spliitCloudDescription": "Impor cadangan grup dari Spliit Cloud sebagai file .spliit.zip.",
         "cloudZipRequired": "Pilih cadangan Spliit Cloud berformat .spliit.zip.",
-        "accountBundleComingSoon": "Impor cadangan Cloud seluruh akun belum tersedia.",
         "wrongImporterCloudTitle": "File ini untuk pengimpor Spliit Cloud",
         "wrongImporterCloudDescription": "File yang dipilih adalah cadangan atau manifes Spliit Cloud. Buka tab Spliit Cloud untuk melanjutkan.",
         "wrongImporterSpliitTitle": "File ini untuk pengimpor Spliit",
@@ -441,7 +439,8 @@
         "openSpliitImporter": "Buka pengimpor Spliit",
         "cloudBundleReadyTitle": "Bundel Spliit Cloud siap",
         "cloudBundleReadyDescription": "Bundel yang telah diperiksa ini siap diimpor. Anda dapat melanjutkan tanpa memilih file lagi.",
-        "resumeCloudBundle": "Lanjutkan dengan bundel ini"
+        "resumeCloudBundle": "Lanjutkan dengan bundel ini",
+        "spliitCloudScopeDescription": "Impor cadangan akun Spliit Cloud yang berisi beberapa grup, atau ekspor satu grup, dari file .spliit.zip."
       },
       "StepHeader": {
         "title": "Impor grup",
@@ -505,7 +504,6 @@
         "doneTitle": "Grup dipulihkan",
         "doneDescription": "Cadangan grup Spliit Cloud dipulihkan sebagai grup baru.",
         "importAnother": "Impor cadangan lain",
-        "title": "Impor cadangan Spliit Cloud",
         "summary": "Pulihkan {participants} peserta dan {expenses} pengeluaran sebagai grup baru.",
         "incompleteTitle": "Cadangan ini tidak lengkap",
         "incompleteDescription": "Ekspor berisi {count} peringatan. Tinjau sebelum melanjutkan.",
@@ -525,7 +523,12 @@
         "confirmArchived": "Grup akan diarsipkan",
         "executeImport": "Pulihkan grup",
         "stagingDocuments": "Menyiapkan file dokumen untuk pemulihan…",
-        "friendSourceWarning": "Cadangan ini berasal dari catatan bersama teman. Cadangan akan dipulihkan sebagai grup biasa; hubungan pertemanan tidak akan dibuat ulang."
+        "friendSourceWarning": "Cadangan ini berasal dari catatan bersama teman. Cadangan akan dipulihkan sebagai grup biasa; hubungan pertemanan tidak akan dibuat ulang.",
+        "accountTitle": "Impor cadangan akun Spliit Cloud",
+        "accountProgress": "Grup {current} dari {total}: {name}",
+        "continueToGroups": "Lanjutkan ke impor grup",
+        "continueToNextGroup": "Lanjutkan ke grup berikutnya",
+        "skipGroup": "Lewati grup ini"
       }
     },
     "Importable": {

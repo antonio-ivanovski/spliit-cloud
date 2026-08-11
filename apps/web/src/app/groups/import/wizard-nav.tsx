@@ -1,3 +1,4 @@
+import { type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -12,14 +13,23 @@ import {
 } from './import-wizard-state'
 import { STEP_HEADER_LABEL_KEYS } from './step-header-label-keys'
 
-export function StepHeader({ step }: { step: ImportStep }) {
+export function StepHeader({
+  step,
+  accountProgress,
+}: {
+  step: ImportStep
+  accountProgress?: ReactNode
+}) {
   const { t } = useTranslation()
   const stepLabel = t(STEP_HEADER_LABEL_KEYS[step])
   return (
-    <WizardStepHeader
-      eyebrow={t('Groups.Import.StepHeader.title')}
-      title={stepLabel}
-    />
+    <div className="flex flex-col gap-3">
+      <WizardStepHeader
+        eyebrow={t('Groups.Import.StepHeader.title')}
+        title={stepLabel}
+      />
+      {accountProgress}
+    </div>
   )
 }
 

@@ -454,9 +454,7 @@
         "splitwiseAnonymizeError": "Diese Datei konnte nicht anonymisiert werden. Stelle sicher, dass es ein Splitwise-CSV-Export ist.",
         "csvRecurrenceLimitation": "CSV-Exporte enthalten keine Wiederholung. Verwenden Sie einen JSON-Export von spliit.app, um wiederkehrende Ausgaben zu importieren.",
         "fromSpliitCloud": "Spliit-Cloud-Import",
-        "spliitCloudDescription": "Importiere eine aus Spliit Cloud exportierte Gruppensicherung als .spliit.zip-Datei.",
         "cloudZipRequired": "Wähle eine Spliit-Cloud-Sicherung im Format .spliit.zip.",
-        "accountBundleComingSoon": "Der kontoweite Cloud-Import ist noch nicht verfügbar.",
         "wrongImporterCloudTitle": "Diese Datei gehört zum Spliit-Cloud-Import",
         "wrongImporterCloudDescription": "Die ausgewählte Datei ist eine Spliit-Cloud-Sicherung oder ein Manifest. Öffne den Tab Spliit Cloud, um fortzufahren.",
         "wrongImporterSpliitTitle": "Diese Datei gehört zum Spliit-Import",
@@ -465,7 +463,8 @@
         "openSpliitImporter": "Spliit-Import öffnen",
         "cloudBundleReadyTitle": "Spliit-Cloud-Paket bereit",
         "cloudBundleReadyDescription": "Dieses geprüfte Paket kann importiert werden. Du kannst fortfahren, ohne die Datei erneut auszuwählen.",
-        "resumeCloudBundle": "Mit diesem Paket fortfahren"
+        "resumeCloudBundle": "Mit diesem Paket fortfahren",
+        "spliitCloudScopeDescription": "Importiere aus einer .spliit.zip-Datei ein Spliit-Cloud-Konto-Backup mit mehreren Gruppen oder den Export einer einzelnen Gruppe."
       },
       "StepHeader": {
         "title": "Gruppe importieren",
@@ -529,7 +528,6 @@
         "doneTitle": "Gruppe wiederhergestellt",
         "doneDescription": "Die Spliit-Cloud-Gruppensicherung wurde als neue Gruppe wiederhergestellt.",
         "importAnother": "Weitere Sicherung importieren",
-        "title": "Spliit-Cloud-Sicherung importieren",
         "summary": "{participants} Teilnehmende und {expenses} Ausgaben werden als neue Gruppe wiederhergestellt.",
         "incompleteTitle": "Diese Sicherung ist unvollständig",
         "incompleteDescription": "Der Export enthält {count} Warnungen. Prüfe sie, bevor du fortfährst.",
@@ -549,7 +547,12 @@
         "confirmArchived": "Die Gruppe wird archiviert",
         "executeImport": "Gruppe wiederherstellen",
         "stagingDocuments": "Dokumentdateien werden für die Wiederherstellung vorbereitet …",
-        "friendSourceWarning": "Dieses Backup stammt aus einer Freundesabrechnung. Es wird als normale Gruppe wiederhergestellt; die Freundschaftsbeziehung wird nicht erneut angelegt."
+        "friendSourceWarning": "Dieses Backup stammt aus einer Freundesabrechnung. Es wird als normale Gruppe wiederhergestellt; die Freundschaftsbeziehung wird nicht erneut angelegt.",
+        "accountTitle": "Backup des Spliit-Cloud-Kontos importieren",
+        "accountProgress": "Gruppe {current} von {total}: {name}",
+        "continueToGroups": "Mit Gruppenimporten fortfahren",
+        "continueToNextGroup": "Mit der nächsten Gruppe fortfahren",
+        "skipGroup": "Diese Gruppe überspringen"
       }
     },
     "Importable": {

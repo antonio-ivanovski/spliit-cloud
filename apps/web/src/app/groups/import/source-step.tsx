@@ -18,9 +18,8 @@ import {
 } from '@spliit/domain/import'
 
 import {
-  CloudAccountBundleError,
   inspectSpliitCloudBundle,
-  type CloudGroupBundleInspection,
+  type CloudBundleInspection,
 } from './cloud-bundle'
 import { DomainSwapCard } from './domain-swap-card'
 import { FileUploadCard } from './file-upload-card'
@@ -32,7 +31,7 @@ import type { ImportSourceState } from './use-import-source'
 type Props = {
   /** Client-parsed file uploads hand the result directly up. */
   onLoaded: (source: NormalizedSource) => void
-  onCloudLoaded?: (source: CloudGroupBundleInspection) => void
+  onCloudLoaded?: (source: CloudBundleInspection) => void
   onError: (message: string) => void
   /**
    * Shared import-source state owned by the wizard so manual paste and the
@@ -167,20 +166,9 @@ export function SourceStep({
               })
               return
             }
-            if (
-              classification.kind === 'SPLIIT_CLOUD_MANIFEST' &&
-              classification.scope === 'ACCOUNT'
-            ) {
-              throw new CloudAccountBundleError()
-            }
             throw new Error(t('Groups.Import.Source.cloudZipRequired'))
           }
-          try {
-            onCloudLoaded?.(await inspectSpliitCloudBundle(file))
-          } catch (error) {
-            if (error instanceof CloudAccountBundleError) throw error
-            throw error
-          }
+          onCloudLoaded?.(await inspectSpliitCloudBundle(file))
           return
         }
 
@@ -235,11 +223,9 @@ export function SourceStep({
         onLoaded(parsed.source)
       } catch (err) {
         const message =
-          err instanceof CloudAccountBundleError
-            ? t('Groups.Import.Source.accountBundleComingSoon')
-            : err instanceof Error
-              ? err.message
-              : t('Groups.Import.Source.fileReadError')
+          err instanceof Error
+            ? err.message
+            : t('Groups.Import.Source.fileReadError')
         onError(message)
       }
     },
@@ -423,7 +409,7 @@ export function SourceStep({
         </TabsContent>
         <TabsContent value="spliit-cloud">
           <ProviderDescription
-            description={t('Groups.Import.Source.spliitCloudDescription')}
+            description={t('Groups.Import.Source.spliitCloudScopeDescription')}
           />
         </TabsContent>
         <TabsContent value="splitwise">
@@ -504,7 +490,7 @@ export function SourceStep({
             ),
             dropFileDescription: t(
               isCloud
-                ? 'Groups.Import.Source.spliitCloudDescription'
+                ? 'Groups.Import.Source.spliitCloudScopeDescription'
                 : isSplitwise
                   ? 'Groups.Import.Source.dropFileDescriptionSplitwise'
                   : 'Groups.Import.Source.dropFileDescription',

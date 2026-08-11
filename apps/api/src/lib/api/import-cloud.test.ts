@@ -162,6 +162,16 @@ describe('prepareCloudImport', () => {
           return { id: data.id ?? 'actor-participant' }
         }),
       },
+      accountGroupPreference: {
+        upsert: vi.fn(async () => ({ id: 'group-pref-1' })),
+      },
+      accountGroupDefaultSplit: {
+        upsert: vi.fn(async () => ({ id: 'default-split-1' })),
+      },
+      accountGroupDefaultSplitPaidFor: {
+        deleteMany: vi.fn(async () => ({ count: 0 })),
+        createMany: vi.fn(async () => ({ count: 1 })),
+      },
       activity: {
         create: vi.fn(async () => {
           calls.push('activity.create')
@@ -185,5 +195,72 @@ describe('prepareCloudImport', () => {
       calls.indexOf('ledgerParticipant.create'),
     )
     expect(calls.at(-1)).toBe('activity.create')
+  })
+
+  it('restores account group preferences with remapped participant ids', async () => {
+    const tx = {
+      ledger: {
+        create: vi.fn(async ({ data }: { data: { id: string } }) => ({
+          id: data.id,
+          currencyCode: 'USD',
+        })),
+      },
+      group: {
+        create: vi.fn(async ({ data }: { data: { id: string } }) => ({
+          id: data.id,
+        })),
+        update: vi.fn(async () => ({})),
+      },
+      groupMember: { create: vi.fn(async () => ({ id: 'member-1' })) },
+      ledgerParticipant: {
+        create: vi.fn(async ({ data }: { data: { id?: string } }) => ({
+          id: data.id ?? 'actor-participant',
+        })),
+      },
+      accountGroupPreference: {
+        upsert: vi.fn(async () => ({ id: 'group-pref-1' })),
+      },
+      accountGroupDefaultSplit: {
+        upsert: vi.fn(async () => ({ id: 'default-split-1' })),
+      },
+      accountGroupDefaultSplitPaidFor: {
+        deleteMany: vi.fn(async () => ({ count: 0 })),
+        createMany: vi.fn(async () => ({ count: 1 })),
+      },
+      activity: { create: vi.fn(async () => ({ id: 'activity-1' })) },
+    }
+
+    await importCloudGroup(
+      input({
+        groupPreference: {
+          starred: true,
+          hidden: false,
+          defaultSplit: {
+            splitMode: 'EVENLY',
+            paidFor: [{ participantId: 'participant-1', shares: 100 }],
+          },
+        },
+      }),
+      { accountId: 'account-1' },
+      {
+        tx: tx as never,
+        prepared: { documents: new Map(), promotedDocumentUrls: [] },
+      },
+    )
+
+    expect(tx.accountGroupPreference.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        create: expect.objectContaining({ starred: true, hidden: false }),
+      }),
+    )
+    expect(tx.accountGroupDefaultSplitPaidFor.createMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: [expect.objectContaining({ participantId: expect.any(String) })],
+      }),
+    )
+    expect(
+      tx.accountGroupDefaultSplitPaidFor.createMany.mock.calls[0]?.[0].data[0]
+        .participantId,
+    ).not.toBe('participant-1')
   })
 })

@@ -2052,9 +2052,7 @@
         "splitwiseAnonymizeError": "could not anonymize this file. make sure it is a Splitwise CSV export.",
         "csvRecurrenceLimitation": "CSV exports do not include recurrence. use JSON from spliit.app to import recurring expenses.",
         "fromSpliitCloud": "Spliit Cloud import",
-        "spliitCloudDescription": "Import a group backup from Spliit Cloud as a .spliit.zip file.",
         "cloudZipRequired": "Pick a Spliit Cloud .spliit.zip backup.",
-        "accountBundleComingSoon": "Account-wide Cloud importing isn’t available yet.",
         "wrongImporterCloudTitle": "this file belongs in the Spliit Cloud importer",
         "wrongImporterCloudDescription": "That file is a Spliit Cloud backup or manifest. Open the Spliit Cloud tab to keep going.",
         "wrongImporterSpliitTitle": "this file belongs in the Spliit importer",
@@ -2063,7 +2061,8 @@
         "openSpliitImporter": "open the Spliit importer",
         "cloudBundleReadyTitle": "Spliit Cloud backup is ready",
         "cloudBundleReadyDescription": "This checked backup is ready to import. You can continue without selecting the file again.",
-        "resumeCloudBundle": "Continue using this backup"
+        "resumeCloudBundle": "Continue using this backup",
+        "spliitCloudScopeDescription": "import a Spliit Cloud account backup with multiple groups, or a single group export, from a .spliit.zip file."
       },
       "StepHeader": {
         "title": "import a group",
@@ -2112,7 +2111,6 @@
         "doneTitle": "group restored",
         "doneDescription": "your Spliit Cloud group backup is restored as a new group.",
         "importAnother": "import another backup",
-        "title": "import a Spliit Cloud backup",
         "summary": "restore {participants} participants and {expenses} expenses as a new group.",
         "incompleteTitle": "this backup is incomplete",
         "incompleteDescription": "This export has {count} warnings. Check them before continuing.",
@@ -2132,7 +2130,12 @@
         "confirmArchived": "the group will be archived",
         "executeImport": "restore group",
         "stagingDocuments": "getting document files ready to restore…",
-        "friendSourceWarning": "This backup is from a friend ledger. It will be restored as a regular group; the friend relationship will not be recreated."
+        "friendSourceWarning": "This backup is from a friend ledger. It will be restored as a regular group; the friend relationship will not be recreated.",
+        "accountTitle": "import Spliit Cloud account backup",
+        "accountProgress": "group {current} of {total}: {name}",
+        "continueToGroups": "continue to group imports",
+        "continueToNextGroup": "continue to next group",
+        "skipGroup": "skip this group"
       }
     },
     "Importable": {

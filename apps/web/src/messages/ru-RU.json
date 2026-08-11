@@ -445,9 +445,7 @@
         "splitwiseAnonymizeError": "Не удалось анонимизировать этот файл. Убедитесь, что это CSV-экспорт из Splitwise.",
         "csvRecurrenceLimitation": "CSV-экспорт не включает повторение. Используйте JSON-экспорт из spliit.app, чтобы импортировать повторяющиеся расходы.",
         "fromSpliitCloud": "Импорт Spliit Cloud",
-        "spliitCloudDescription": "Импортируйте резервную копию группы из Spliit Cloud как файл .spliit.zip.",
         "cloudZipRequired": "Выберите резервную копию Spliit Cloud в формате .spliit.zip.",
-        "accountBundleComingSoon": "Импорт Cloud для всего аккаунта пока недоступен.",
         "wrongImporterCloudTitle": "Этот файл нужно импортировать через Spliit Cloud",
         "wrongImporterCloudDescription": "Выбранный файл — резервная копия или манифест Spliit Cloud. Откройте вкладку Spliit Cloud, чтобы продолжить.",
         "wrongImporterSpliitTitle": "Этот файл нужно импортировать через Spliit",
@@ -456,7 +454,8 @@
         "openSpliitImporter": "Открыть импорт Spliit",
         "cloudBundleReadyTitle": "Пакет Spliit Cloud готов",
         "cloudBundleReadyDescription": "Этот проверенный пакет готов к импорту. Можно продолжить, не выбирая файл снова.",
-        "resumeCloudBundle": "Продолжить с этим пакетом"
+        "resumeCloudBundle": "Продолжить с этим пакетом",
+        "spliitCloudScopeDescription": "Импортируйте из файла .spliit.zip резервную копию аккаунта Spliit Cloud с несколькими группами или экспорт одной группы."
       },
       "StepHeader": {
         "title": "Импортировать группу",
@@ -520,7 +519,6 @@
         "doneTitle": "Группа восстановлена",
         "doneDescription": "Резервная копия группы Spliit Cloud восстановлена как новая группа.",
         "importAnother": "Импортировать другую копию",
-        "title": "Импортировать резервную копию Spliit Cloud",
         "summary": "Восстановить {participants} участников и {expenses} расходов как новую группу.",
         "incompleteTitle": "Эта резервная копия неполна",
         "incompleteDescription": "Экспорт содержит предупреждений: {count}. Проверьте их перед продолжением.",
@@ -540,7 +538,12 @@
         "confirmArchived": "Группа будет архивирована",
         "executeImport": "Восстановить группу",
         "stagingDocuments": "Подготовка файлов документов к восстановлению…",
-        "friendSourceWarning": "Эта резервная копия создана из счёта с другом. Она будет восстановлена как обычная группа; связь дружбы создана не будет."
+        "friendSourceWarning": "Эта резервная копия создана из счёта с другом. Она будет восстановлена как обычная группа; связь дружбы создана не будет.",
+        "accountTitle": "Импортировать резервную копию аккаунта Spliit Cloud",
+        "accountProgress": "Группа {current} из {total}: {name}",
+        "continueToGroups": "Перейти к импорту групп",
+        "continueToNextGroup": "Перейти к следующей группе",
+        "skipGroup": "Пропустить эту группу"
       }
     },
     "Importable": {

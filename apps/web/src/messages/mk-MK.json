@@ -350,9 +350,7 @@
         "splitwiseAnonymizeError": "Оваа датотека не може да се анонимизира. Проверете дали е CSV извоз од Splitwise.",
         "csvRecurrenceLimitation": "CSV извозите не вклучуваат повторливост. Користете JSON извоз од spliit.app за да увезете повторувачки трошоци.",
         "fromSpliitCloud": "Spliit Cloud увоз",
-        "spliitCloudDescription": "Увези групна копија извезена од Spliit Cloud како .spliit.zip датотека.",
         "cloudZipRequired": "Избери Spliit Cloud копија во формат .spliit.zip.",
-        "accountBundleComingSoon": "Увоз на Cloud копија за целата сметка сè уште не е достапен.",
         "wrongImporterCloudTitle": "Оваа датотека припаѓа во Spliit Cloud увозот",
         "wrongImporterCloudDescription": "Избраната датотека е Spliit Cloud копија или манифест. Отвори ја картичката Spliit Cloud за да продолжиш.",
         "wrongImporterSpliitTitle": "Оваа датотека припаѓа во Spliit увозот",
@@ -361,7 +359,8 @@
         "openSpliitImporter": "Отвори Spliit увоз",
         "cloudBundleReadyTitle": "Пакетот Spliit Cloud е подготвен",
         "cloudBundleReadyDescription": "Овој проверен пакет е подготвен за увоз. Може да продолжите без повторно да ја избирате датотеката.",
-        "resumeCloudBundle": "Продолжи со овој пакет"
+        "resumeCloudBundle": "Продолжи со овој пакет",
+        "spliitCloudScopeDescription": "Увези резервна копија од сметка на Spliit Cloud со повеќе групи или извоз на една група од датотека .spliit.zip."
       },
       "Destination": {
         "heading": "Каде сакате да го увезете <strong>{name}</strong>? ({participantCount} учесници · {expenseCount} трошоци)",
@@ -516,7 +515,6 @@
         "doneTitle": "Групата е обновена",
         "doneDescription": "Резервната копија на групата од Spliit Cloud е обновена како нова група.",
         "importAnother": "Увези друга резервна копија",
-        "title": "Увези резервна копија од Spliit Cloud",
         "summary": "Обнови {participants} учесници и {expenses} трошоци како нова група.",
         "incompleteTitle": "Оваа резервна копија е нецелосна",
         "incompleteDescription": "Извозот содржи {count} предупредувања. Провери ги пред да продолжиш.",
@@ -536,7 +534,12 @@
         "confirmArchived": "Групата ќе биде архивирана",
         "executeImport": "Обнови група",
         "stagingDocuments": "Датотеките се подготвуваат за обновување…",
-        "friendSourceWarning": "Оваа резервна копија потекнува од пријателска сметка. Ќе се обнови како обична група; пријателскиот однос нема да се создаде повторно."
+        "friendSourceWarning": "Оваа резервна копија потекнува од пријателска сметка. Ќе се обнови како обична група; пријателскиот однос нема да се создаде повторно.",
+        "accountTitle": "Увези резервна копија од сметката на Spliit Cloud",
+        "accountProgress": "Група {current} од {total}: {name}",
+        "continueToGroups": "Продолжи кон увозот на групи",
+        "continueToNextGroup": "Продолжи кон следната група",
+        "skipGroup": "Прескокни ја оваа група"
       }
     },
     "delete": {

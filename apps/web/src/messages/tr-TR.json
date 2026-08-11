@@ -435,9 +435,7 @@
         "splitwiseAnonymizeError": "Bu dosya anonimleştirilemedi. Bunun bir Splitwise CSV dışa aktarımı olduğundan emin olun.",
         "csvRecurrenceLimitation": "CSV dışa aktarımları yinelenmeyi içermez. Yinelenen giderleri içe aktarmak için spliit.app’ten bir JSON dışa aktarımı kullanın.",
         "fromSpliitCloud": "Spliit Cloud içe aktarma",
-        "spliitCloudDescription": "Spliit Cloud’dan dışa aktarılan bir grup yedeğini .spliit.zip dosyası olarak içe aktarın.",
         "cloudZipRequired": ".spliit.zip biçiminde bir Spliit Cloud yedeği seçin.",
-        "accountBundleComingSoon": "Hesap genelindeki Cloud yedek içe aktarma henüz kullanılamıyor.",
         "wrongImporterCloudTitle": "Bu dosya Spliit Cloud içe aktarıcısına aittir",
         "wrongImporterCloudDescription": "Seçilen dosya bir Spliit Cloud yedeği veya manifestidir. Devam etmek için Spliit Cloud sekmesini açın.",
         "wrongImporterSpliitTitle": "Bu dosya Spliit içe aktarıcısına aittir",
@@ -446,7 +444,8 @@
         "openSpliitImporter": "Spliit içe aktarıcısını aç",
         "cloudBundleReadyTitle": "Spliit Cloud paketi hazır",
         "cloudBundleReadyDescription": "İncelenen bu paket içe aktarmaya hazır. Dosyayı yeniden seçmeden devam edebilirsiniz.",
-        "resumeCloudBundle": "Bu paketle devam et"
+        "resumeCloudBundle": "Bu paketle devam et",
+        "spliitCloudScopeDescription": ".spliit.zip dosyasından birden fazla grup içeren Spliit Cloud hesabı yedeğini veya tek bir grup dışa aktarımını içe aktarın."
       },
       "StepHeader": {
         "title": "Bir grubu içe aktar",
@@ -510,7 +509,6 @@
         "doneTitle": "Grup geri yüklendi",
         "doneDescription": "Spliit Cloud grup yedeği yeni bir grup olarak geri yüklendi.",
         "importAnother": "Başka bir yedek içe aktar",
-        "title": "Spliit Cloud yedeğini içe aktar",
         "summary": "{participants} katılımcıyı ve {expenses} harcamayı yeni bir grup olarak geri yükle.",
         "incompleteTitle": "Bu yedek eksik",
         "incompleteDescription": "Dışa aktarma {count} uyarı içeriyor. Devam etmeden önce inceleyin.",
@@ -530,7 +528,12 @@
         "confirmArchived": "Grup arşivlenecek",
         "executeImport": "Grubu geri yükle",
         "stagingDocuments": "Belge dosyaları geri yükleme için hazırlanıyor…",
-        "friendSourceWarning": "Bu yedek bir arkadaş hesabından geldi. Normal bir grup olarak geri yüklenecek; arkadaşlık ilişkisi yeniden oluşturulmayacak."
+        "friendSourceWarning": "Bu yedek bir arkadaş hesabından geldi. Normal bir grup olarak geri yüklenecek; arkadaşlık ilişkisi yeniden oluşturulmayacak.",
+        "accountTitle": "Spliit Cloud hesabı yedeğini içe aktar",
+        "accountProgress": "Grup {current}/{total}: {name}",
+        "continueToGroups": "Grup içe aktarmalarına devam et",
+        "continueToNextGroup": "Sonraki gruba devam et",
+        "skipGroup": "Bu grubu atla"
       }
     },
     "Importable": {

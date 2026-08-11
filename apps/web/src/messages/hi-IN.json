@@ -1833,9 +1833,7 @@
         "splitwiseAnonymizeError": "इस फ़ाइल को अनामीकृत नहीं किया जा सका। सुनिश्चित करें कि यह Splitwise CSV निर्यात है।",
         "csvRecurrenceLimitation": "CSV निर्यात में आवृत्ति शामिल नहीं होती। आवर्ती खर्च आयात करने के लिए spliit.app से JSON निर्यात का उपयोग करें।",
         "fromSpliitCloud": "Spliit Cloud आयात",
-        "spliitCloudDescription": "Spliit Cloud से निर्यात किए गए समूह बैकअप को .spliit.zip फ़ाइल के रूप में आयात करें।",
         "cloudZipRequired": "Spliit Cloud की .spliit.zip बैकअप फ़ाइल चुनें।",
-        "accountBundleComingSoon": "पूरे खाते का Cloud बैकअप आयात अभी उपलब्ध नहीं है।",
         "wrongImporterCloudTitle": "यह फ़ाइल Spliit Cloud आयातक में खोलें",
         "wrongImporterCloudDescription": "चुनी गई फ़ाइल Spliit Cloud बैकअप या मैनिफ़ेस्ट है। जारी रखने के लिए Spliit Cloud टैब खोलें।",
         "wrongImporterSpliitTitle": "यह फ़ाइल Spliit आयातक में खोलें",
@@ -1844,7 +1842,8 @@
         "openSpliitImporter": "Spliit आयातक खोलें",
         "cloudBundleReadyTitle": "Spliit Cloud बंडल तैयार है",
         "cloudBundleReadyDescription": "यह जाँचा गया बंडल आयात के लिए तैयार है। फ़ाइल फिर से चुने बिना आगे बढ़ सकते हैं।",
-        "resumeCloudBundle": "इस बंडल के साथ आगे बढ़ें"
+        "resumeCloudBundle": "इस बंडल के साथ आगे बढ़ें",
+        "spliitCloudScopeDescription": "एकाधिक समूहों वाले Spliit Cloud खाते का बैकअप या किसी एक समूह का एक्सपोर्ट, .spliit.zip फ़ाइल से आयात करें।"
       },
       "StepHeader": {
         "title": "एक समूह आयात करें",
@@ -1893,7 +1892,6 @@
         "doneTitle": "समूह पुनर्स्थापित",
         "doneDescription": "Spliit Cloud समूह बैकअप को नए समूह के रूप में पुनर्स्थापित किया गया।",
         "importAnother": "दूसरा बैकअप आयात करें",
-        "title": "Spliit Cloud बैकअप आयात करें",
         "summary": "{participants} प्रतिभागियों और {expenses} खर्चों को नए समूह के रूप में पुनर्स्थापित करें।",
         "incompleteTitle": "यह बैकअप अधूरा है",
         "incompleteDescription": "निर्यात में {count} चेतावनियाँ हैं। आगे बढ़ने से पहले उनकी समीक्षा करें।",
@@ -1913,7 +1911,12 @@
         "confirmArchived": "समूह को संग्रहीत किया जाएगा",
         "executeImport": "समूह पुनर्स्थापित करें",
         "stagingDocuments": "पुनर्स्थापना के लिए दस्तावेज़ फ़ाइलें तैयार हो रही हैं…",
-        "friendSourceWarning": "यह बैकअप मित्र खाते से आया है। इसे एक सामान्य समूह के रूप में पुनर्स्थापित किया जाएगा; मित्र संबंध दोबारा नहीं बनाया जाएगा।"
+        "friendSourceWarning": "यह बैकअप मित्र खाते से आया है। इसे एक सामान्य समूह के रूप में पुनर्स्थापित किया जाएगा; मित्र संबंध दोबारा नहीं बनाया जाएगा।",
+        "accountTitle": "Spliit Cloud खाते का बैकअप आयात करें",
+        "accountProgress": "समूह {current}/{total}: {name}",
+        "continueToGroups": "समूह आयात पर जाएँ",
+        "continueToNextGroup": "अगले समूह पर जाएँ",
+        "skipGroup": "इस समूह को छोड़ें"
       }
     },
     "Importable": {

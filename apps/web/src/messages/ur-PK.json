@@ -1833,9 +1833,7 @@
         "splitwiseAnonymizeError": "اس فائل کو گمنام نہیں کیا جا سکا۔ یقینی بنائیں کہ یہ Splitwise CSV برآمد ہے۔",
         "csvRecurrenceLimitation": "CSV برآمدات میں تکرار شامل نہیں ہوتی۔ متواتر اخراجات درآمد کرنے کے لیے spliit.app سے JSON برآمد استعمال کریں۔",
         "fromSpliitCloud": "Spliit Cloud درآمد",
-        "spliitCloudDescription": "Spliit Cloud سے برآمد کردہ گروپ بیک اپ کو .spliit.zip فائل کے طور پر درآمد کریں۔",
         "cloudZipRequired": "Spliit Cloud کا .spliit.zip بیک اپ منتخب کریں۔",
-        "accountBundleComingSoon": "پورے اکاؤنٹ کا Cloud بیک اپ درآمد ابھی دستیاب نہیں۔",
         "wrongImporterCloudTitle": "یہ فائل Spliit Cloud درآمد کنندہ کے لیے ہے",
         "wrongImporterCloudDescription": "منتخب فائل Spliit Cloud بیک اپ یا مینی فیسٹ ہے۔ جاری رکھنے کے لیے Spliit Cloud ٹیب کھولیں۔",
         "wrongImporterSpliitTitle": "یہ فائل Spliit درآمد کنندہ کے لیے ہے",
@@ -1844,7 +1842,8 @@
         "openSpliitImporter": "Spliit درآمد کنندہ کھولیں",
         "cloudBundleReadyTitle": "Spliit Cloud بنڈل تیار ہے",
         "cloudBundleReadyDescription": "یہ جانچا ہوا بنڈل درآمد کے لیے تیار ہے۔ فائل دوبارہ منتخب کیے بغیر جاری رکھ سکتے ہیں۔",
-        "resumeCloudBundle": "اس بنڈل کے ساتھ جاری رکھیں"
+        "resumeCloudBundle": "اس بنڈل کے ساتھ جاری رکھیں",
+        "spliitCloudScopeDescription": ".spliit.zip فائل سے متعدد گروپس پر مشتمل Spliit Cloud اکاؤنٹ کا بیک اپ یا ایک گروپ کا ایکسپورٹ درآمد کریں۔"
       },
       "StepHeader": {
         "title": "گروپ درآمد کریں",
@@ -1893,7 +1892,6 @@
         "doneTitle": "گروپ بحال ہو گیا",
         "doneDescription": "Spliit Cloud گروپ کا بیک اپ نئے گروپ کے طور پر بحال کر دیا گیا ہے۔",
         "importAnother": "ایک اور بیک اپ درآمد کریں",
-        "title": "Spliit Cloud بیک اپ درآمد کریں",
         "summary": "{participants} شرکاء اور {expenses} اخراجات کو نئے گروپ کے طور پر بحال کریں۔",
         "incompleteTitle": "یہ بیک اپ نامکمل ہے",
         "incompleteDescription": "ایکسپورٹ میں {count} انتباہات ہیں۔ آگے بڑھنے سے پہلے انہیں دیکھیں۔",
@@ -1913,7 +1911,12 @@
         "confirmArchived": "گروپ کو محفوظ کیا جائے گا",
         "executeImport": "گروپ بحال کریں",
         "stagingDocuments": "بحالی کے لیے دستاویزات کی فائلیں تیار ہو رہی ہیں…",
-        "friendSourceWarning": "یہ بیک اپ دوست کے لیجر سے آیا ہے۔ اسے عام گروپ کے طور پر بحال کیا جائے گا؛ دوستی کا تعلق دوبارہ نہیں بنایا جائے گا۔"
+        "friendSourceWarning": "یہ بیک اپ دوست کے لیجر سے آیا ہے۔ اسے عام گروپ کے طور پر بحال کیا جائے گا؛ دوستی کا تعلق دوبارہ نہیں بنایا جائے گا۔",
+        "accountTitle": "Spliit Cloud اکاؤنٹ کا بیک اپ درآمد کریں",
+        "accountProgress": "گروپ {current} از {total}: {name}",
+        "continueToGroups": "گروپس کی درآمد جاری رکھیں",
+        "continueToNextGroup": "اگلے گروپ پر جائیں",
+        "skipGroup": "اس گروپ کو چھوڑ دیں"
       }
     },
     "Importable": {

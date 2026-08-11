@@ -75,6 +75,28 @@ const cloudImportInputSchema = z.object({
   }),
   skippedDocumentIds: z.array(z.string().min(1)),
   acknowledgedIssues: z.boolean(),
+  groupPreference: z
+    .object({
+      starred: z.boolean(),
+      hidden: z.boolean(),
+      defaultSplit: z
+        .object({
+          splitMode: z.enum([
+            'EVENLY',
+            'BY_SHARES',
+            'BY_PERCENTAGE',
+            'BY_AMOUNT',
+          ]),
+          paidFor: z.array(
+            z.object({
+              participantId: z.string().min(1),
+              shares: z.number().int(),
+            }),
+          ),
+        })
+        .nullable(),
+    })
+    .optional(),
 })
 
 export const importCloudBundleProcedure = protectedProcedure

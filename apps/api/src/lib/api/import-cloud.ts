@@ -54,6 +54,14 @@ export type CloudImportInput = {
   }
   skippedDocumentIds: string[]
   acknowledgedIssues: boolean
+  groupPreference?: {
+    starred: boolean
+    hidden: boolean
+    defaultSplit: {
+      splitMode: 'EVENLY' | 'BY_SHARES' | 'BY_PERCENTAGE' | 'BY_AMOUNT'
+      paidFor: Array<{ participantId: string; shares: number }>
+    } | null
+  }
 }
 
 export type CloudImportResult = {
@@ -176,6 +184,7 @@ function ensureUniqueShareRows(
 function validateReferences(
   manifest: SpliitGroupExportManifest,
   mappings: CloudImportParticipantMapping[],
+  inputGroupPreference?: CloudImportInput['groupPreference'],
 ) {
   if (manifest.scope.sourceId !== manifest.group.sourceId) {
     throw new Error('Cloud bundle scope does not match its group')
@@ -402,6 +411,16 @@ function validateReferences(
         ensureParticipant(comment.authorParticipantId)
     }
   }
+  const defaultSplit = inputGroupPreference?.defaultSplit
+  if (defaultSplit) {
+    const defaultParticipantIds = defaultSplit.paidFor.map(
+      (row) => row.participantId,
+    )
+    if (new Set(defaultParticipantIds).size !== defaultParticipantIds.length) {
+      throw new Error('Cloud group preference contains duplicate participants')
+    }
+    for (const row of defaultSplit.paidFor) ensureParticipant(row.participantId)
+  }
 }
 
 export async function prepareCloudImport(
@@ -409,7 +428,7 @@ export async function prepareCloudImport(
   actorAccountId: string,
 ): Promise<PreparedCloudImport> {
   const manifest = spliitGroupExportManifestSchema.parse(input.manifest)
-  validateReferences(manifest, input.participants)
+  validateReferences(manifest, input.participants, input.groupPreference)
   if (
     input.groupFormValues.currency !== manifest.group.ledger.currency ||
     (input.groupFormValues.currencyCode || null) !==
@@ -521,7 +540,7 @@ export async function importCloudGroup(
   options: { tx?: Prisma.TransactionClient; prepared: PreparedCloudImport },
 ): Promise<CloudImportResult> {
   const manifest = spliitGroupExportManifestSchema.parse(input.manifest)
-  validateReferences(manifest, input.participants)
+  validateReferences(manifest, input.participants, input.groupPreference)
   const run = async (tx: Prisma.TransactionClient) => {
     for (const mapping of input.participants) {
       if (
@@ -920,6 +939,57 @@ export async function importCloudGroup(
           kind: 'LINK',
           invitationId: invitation.id,
           inviteUrl: `${getWebBaseUrl()}/groups/${group.id}?invite=${token}`,
+        })
+      }
+    }
+    if (input.groupPreference) {
+      await tx.accountGroupPreference.upsert({
+        where: {
+          accountId_groupId: {
+            accountId: actor.accountId,
+            groupId: group.id,
+          },
+        },
+        create: {
+          id: randomId(),
+          accountId: actor.accountId,
+          groupId: group.id,
+          starred: input.groupPreference.starred,
+          hidden: input.groupPreference.hidden,
+        },
+        update: {
+          starred: input.groupPreference.starred,
+          hidden: input.groupPreference.hidden,
+        },
+      })
+      if (input.groupPreference.defaultSplit) {
+        const header = await tx.accountGroupDefaultSplit.upsert({
+          where: {
+            accountId_groupId: {
+              accountId: actor.accountId,
+              groupId: group.id,
+            },
+          },
+          create: {
+            id: randomId(),
+            accountId: actor.accountId,
+            groupId: group.id,
+            splitMode: input.groupPreference.defaultSplit.splitMode,
+          },
+          update: {
+            splitMode: input.groupPreference.defaultSplit.splitMode,
+            updatedAt: new Date(),
+          },
+        })
+        await tx.accountGroupDefaultSplitPaidFor.deleteMany({
+          where: { defaultSplitId: header.id },
+        })
+        await tx.accountGroupDefaultSplitPaidFor.createMany({
+          data: input.groupPreference.defaultSplit.paidFor.map((row) => ({
+            defaultSplitId: header.id,
+            participantId: destinationIds.get(row.participantId)!,
+            shares: row.shares,
+          })),
         })
       }
     }

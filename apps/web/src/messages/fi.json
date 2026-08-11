@@ -435,9 +435,7 @@
         "splitwiseAnonymizeError": "Tätä tiedostoa ei voitu anonymisoida. Varmista, että se on Splitwise-CSV-vienti.",
         "csvRecurrenceLimitation": "CSV-viennit eivät sisällä toistoa. Käytä JSON-vientiä spliit.appista toistuvien kulujen tuomiseen.",
         "fromSpliitCloud": "Spliit Cloud -tuonti",
-        "spliitCloudDescription": "Tuo Spliit Cloudista viety ryhmävarmuuskopio .spliit.zip-tiedostona.",
         "cloudZipRequired": "Valitse Spliit Cloud -varmuuskopio muodossa .spliit.zip.",
-        "accountBundleComingSoon": "Tilikohtainen Cloud-tuonti ei ole vielä käytettävissä.",
         "wrongImporterCloudTitle": "Tämä kuuluu Spliit Cloud -tuontiin",
         "wrongImporterCloudDescription": "Valittu tiedosto on Spliit Cloud -varmuuskopio tai manifesti. Jatka avaamalla Spliit Cloud -välilehti.",
         "wrongImporterSpliitTitle": "Tämä kuuluu Spliit-tuontiin",
@@ -446,7 +444,8 @@
         "openSpliitImporter": "Avaa Spliit-tuonti",
         "cloudBundleReadyTitle": "Spliit Cloud -paketti valmis",
         "cloudBundleReadyDescription": "Tämä tarkistettu paketti on valmis tuotavaksi. Voit jatkaa valitsematta tiedostoa uudelleen.",
-        "resumeCloudBundle": "Jatka tällä paketilla"
+        "resumeCloudBundle": "Jatka tällä paketilla",
+        "spliitCloudScopeDescription": "Tuo .spliit.zip-tiedostosta Spliit Cloud -tilin varmuuskopio, joka sisältää useita ryhmiä, tai yhden ryhmän vienti."
       },
       "StepHeader": {
         "title": "Tuo ryhmä",
@@ -510,7 +509,6 @@
         "doneTitle": "Ryhmä palautettu",
         "doneDescription": "Spliit Cloud -ryhmävarmuuskopio palautettiin uutena ryhmänä.",
         "importAnother": "Tuo toinen varmuuskopio",
-        "title": "Tuo Spliit Cloud -varmuuskopio",
         "summary": "Palauta {participants} osallistujaa ja {expenses} kulua uutena ryhmänä.",
         "incompleteTitle": "Varmuuskopio on puutteellinen",
         "incompleteDescription": "Vienti sisältää {count} varoitusta. Tarkista ne ennen jatkamista.",
@@ -530,7 +528,12 @@
         "confirmArchived": "Ryhmä arkistoidaan",
         "executeImport": "Palauta ryhmä",
         "stagingDocuments": "Valmistellaan asiakirjatiedostoja palautusta varten…",
-        "friendSourceWarning": "Tämä varmuuskopio on peräisin ystävälaskusta. Se palautetaan tavallisena ryhmänä; ystävyyssuhdetta ei luoda uudelleen."
+        "friendSourceWarning": "Tämä varmuuskopio on peräisin ystävälaskusta. Se palautetaan tavallisena ryhmänä; ystävyyssuhdetta ei luoda uudelleen.",
+        "accountTitle": "Tuo Spliit Cloud -tilin varmuuskopio",
+        "accountProgress": "Ryhmä {current}/{total}: {name}",
+        "continueToGroups": "Jatka ryhmien tuontiin",
+        "continueToNextGroup": "Jatka seuraavaan ryhmään",
+        "skipGroup": "Ohita tämä ryhmä"
       }
     },
     "Importable": {

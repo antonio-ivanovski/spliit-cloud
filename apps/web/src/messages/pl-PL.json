@@ -445,9 +445,7 @@
         "splitwiseAnonymizeError": "Nie udało się zanonimizować tego pliku. Upewnij się, że to eksport CSV ze Splitwise.",
         "csvRecurrenceLimitation": "Eksporty CSV nie zawierają cykliczności. Użyj eksportu JSON ze spliit.app, aby zaimportować cykliczne wydatki.",
         "fromSpliitCloud": "Import Spliit Cloud",
-        "spliitCloudDescription": "Importuj kopię grupy wyeksportowaną ze Spliit Cloud jako plik .spliit.zip.",
         "cloudZipRequired": "Wybierz kopię Spliit Cloud w formacie .spliit.zip.",
-        "accountBundleComingSoon": "Import Cloud całego konta nie jest jeszcze dostępny.",
         "wrongImporterCloudTitle": "Ten plik należy importować przez Spliit Cloud",
         "wrongImporterCloudDescription": "Wybrany plik to kopia lub manifest Spliit Cloud. Otwórz kartę Spliit Cloud, aby kontynuować.",
         "wrongImporterSpliitTitle": "Ten plik należy importować przez Spliit",
@@ -456,7 +454,8 @@
         "openSpliitImporter": "Otwórz import Spliit",
         "cloudBundleReadyTitle": "Pakiet Spliit Cloud jest gotowy",
         "cloudBundleReadyDescription": "Ten sprawdzony pakiet jest gotowy do importu. Możesz kontynuować bez ponownego wybierania pliku.",
-        "resumeCloudBundle": "Kontynuuj z tym pakietem"
+        "resumeCloudBundle": "Kontynuuj z tym pakietem",
+        "spliitCloudScopeDescription": "Importuj z pliku .spliit.zip kopię zapasową konta Spliit Cloud zawierającą wiele grup lub eksport pojedynczej grupy."
       },
       "StepHeader": {
         "title": "Importuj grupę",
@@ -520,7 +519,6 @@
         "doneTitle": "Grupa przywrócona",
         "doneDescription": "Kopia zapasowa grupy Spliit Cloud została przywrócona jako nowa grupa.",
         "importAnother": "Importuj inną kopię zapasową",
-        "title": "Importuj kopię Spliit Cloud",
         "summary": "Przywróć {participants} uczestników i {expenses} wydatków jako nową grupę.",
         "incompleteTitle": "Ta kopia zapasowa jest niekompletna",
         "incompleteDescription": "Eksport zawiera {count} ostrzeżeń. Sprawdź je przed kontynuowaniem.",
@@ -540,7 +538,12 @@
         "confirmArchived": "Grupa zostanie zarchiwizowana",
         "executeImport": "Przywróć grupę",
         "stagingDocuments": "Przygotowywanie plików dokumentów do przywrócenia…",
-        "friendSourceWarning": "Ta kopia zapasowa pochodzi z rozliczenia ze znajomym. Zostanie przywrócona jako zwykła grupa; relacja znajomości nie zostanie odtworzona."
+        "friendSourceWarning": "Ta kopia zapasowa pochodzi z rozliczenia ze znajomym. Zostanie przywrócona jako zwykła grupa; relacja znajomości nie zostanie odtworzona.",
+        "accountTitle": "Importuj kopię zapasową konta Spliit Cloud",
+        "accountProgress": "Grupa {current} z {total}: {name}",
+        "continueToGroups": "Przejdź do importowania grup",
+        "continueToNextGroup": "Przejdź do następnej grupy",
+        "skipGroup": "Pomiń tę grupę"
       }
     },
     "Importable": {

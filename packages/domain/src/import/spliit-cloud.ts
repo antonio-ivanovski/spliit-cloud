@@ -1,5 +1,7 @@
 import {
+  spliitAccountExportManifestSchema,
   spliitGroupExportManifestSchema,
+  type SpliitAccountExportManifest,
   type SpliitGroupExportManifest,
 } from '../export-manifest'
 import { spliitExportSchema } from './spliit'
@@ -96,4 +98,10 @@ export function parseCloudGroupManifest(
   input: unknown,
 ): SpliitGroupExportManifest {
   return spliitGroupExportManifestSchema.parse(input)
+}
+
+export function parseCloudAccountManifest(
+  input: unknown,
+): SpliitAccountExportManifest {
+  return spliitAccountExportManifestSchema.parse(input)
 }
