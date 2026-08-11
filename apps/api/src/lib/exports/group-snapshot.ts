@@ -4,6 +4,7 @@ import type {
   SpliitGroupExportSnapshot,
 } from '@spliit/domain/export-manifest'
 
+import { isPlaceholderEmail } from '../invitations/display'
 import type { ExportDocumentRecord, ExportSnapshotDocument } from './types'
 
 function iso(value: Date | null): string | null {
@@ -110,10 +111,12 @@ export async function loadGroupExportSource(
             orderBy: { id: 'asc' },
             include: {
               groupMember: {
-                include: { account: { select: { name: true } } },
+                include: {
+                  account: { select: { id: true, name: true, email: true } },
+                },
               },
               invitations: {
-                select: { temporaryName: true },
+                select: { temporaryName: true, type: true, email: true },
                 take: 1,
                 orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
               },
@@ -135,6 +138,7 @@ export async function loadGroupExportSource(
               documents: { orderBy: { id: 'asc' } },
               comments: {
                 orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+                include: { authorAccount: { select: { id: true } } },
               },
               items: {
                 orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
@@ -175,6 +179,22 @@ function participantDisplayName(participant: GroupExportParticipant): string {
     participant.displayName ??
     'Pending invite'
   )
+}
+
+function participantIdentity(participant: GroupExportParticipant) {
+  if (participant.groupMember?.account) {
+    return {
+      kind: 'ACCOUNT' as const,
+      accountId: participant.groupMember.account.id,
+      name: participant.groupMember.account.name,
+      email: participant.groupMember.account.email || null,
+    }
+  }
+  const invitation = participant.invitations[0]
+  if (invitation?.type === 'EMAIL' && !isPlaceholderEmail(invitation.email)) {
+    return { kind: 'EMAIL' as const, email: invitation.email }
+  }
+  return undefined
 }
 
 export function createGroupExportSnapshot(
@@ -256,6 +276,9 @@ export function createGroupExportSnapshot(
     comments: sorted(expense.comments, byCreatedAtThenId).map((comment) => ({
       sourceId: comment.id,
       authorName: comment.authorName,
+      authorParticipantId: comment.authorAccount
+        ? (participantByAccountId.get(comment.authorAccount.id) ?? null)
+        : null,
       text: comment.text,
       createdAt: comment.createdAt.toISOString(),
     })),
@@ -290,6 +313,7 @@ export function createGroupExportSnapshot(
         sourceId: participant.id,
         kind: participant.kind,
         displayName: participantDisplayName(participant),
+        identity: participantIdentity(participant),
         removedAt: iso(participant.removedAt),
         membership: participant.groupMember
           ? {
@@ -297,6 +321,8 @@ export function createGroupExportSnapshot(
               status: participant.groupMember.status,
               joinedAt: iso(participant.groupMember.joinedAt),
               leftAt: iso(participant.groupMember.leftAt),
+              createdAt: participant.groupMember.createdAt.toISOString(),
+              updatedAt: participant.groupMember.updatedAt.toISOString(),
             }
           : null,
       }),
@@ -353,7 +379,7 @@ export function createGroupExportSnapshot(
       endDate: series.endDate ? dateOnly(series.endDate) : null,
       occurrencesCreated: series.occurrencesCreated,
       status: series.status,
-      template: series.template,
+      template: series.template as never,
       version: series.version,
       createdAt: series.createdAt.toISOString(),
       updatedAt: series.updatedAt.toISOString(),

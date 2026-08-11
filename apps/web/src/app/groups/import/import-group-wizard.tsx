@@ -1,8 +1,16 @@
 import { getRouteApi, useNavigate } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
-import { useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Card, CardContent } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
@@ -16,6 +24,12 @@ import type {
 } from '@spliit/domain/import'
 import { buildImportBatch } from '@spliit/domain/import'
 
+import type { CloudGroupBundleInspection } from './cloud-bundle'
+import {
+  cloudInspectionToSource,
+  initialCloudMappings,
+  toCloudApiMapping,
+} from './cloud-import-flow'
 import { ConfirmStep } from './confirm-step'
 import {
   CurrencyConversionStep,
@@ -45,12 +59,14 @@ const importRoute = getRouteApi('/groups/import')
 export function ImportGroupWizard() {
   const search = importRoute.useSearch()
   const navigate = useNavigate()
-  const { data: account } = useCurrentAccount()
+  const { data: account, isPending: isAccountPending } = useCurrentAccount()
   const { toast } = useToast()
   const utils = trpc.useUtils()
   const prefillSourceUrl = search.prefill ?? null
   const { t } = useTranslation()
   const importAttempt = useIdempotentCreate()
+  const [pendingCloudInspection, setPendingCloudInspection] =
+    useState<CloudGroupBundleInspection | null>(null)
 
   const [state, dispatch] = useReducer(
     importWizardReducer,
@@ -131,6 +147,35 @@ export function ImportGroupWizard() {
     },
   })
 
+  const cloudImportMutation = trpc.groups.importCloudBundle.useMutation({
+    onSuccess: async (data) => {
+      await Promise.all([
+        invalidateAccountGroupLists(utils),
+        utils.invitations.listForAccount.invalidate(),
+        utils.groups.get.invalidate({ groupId: data.groupId }),
+        utils.groups.importLinks.listUnlinked.invalidate({
+          groupId: data.groupId,
+        }),
+        utils.groups.balances.list.invalidate({ groupId: data.groupId }),
+        utils.groups.getDetails.invalidate({ groupId: data.groupId }),
+        utils.account.friends.invalidate(),
+      ])
+      dispatch({
+        type: 'IMPORT_SUCCEEDED',
+        groupId: data.groupId,
+        invites: data.invites ?? [],
+      })
+    },
+    onError: (err) => {
+      if (isDocumentImportFailure(err.message)) {
+        dispatch({
+          type: 'DOCUMENTS_FAILED',
+          discardTokens: shouldDiscardStagedDocumentTokens(err.message),
+        })
+      }
+    },
+  })
+
   // Treat the mutation result as a render result: destructure into
   // primitives so callback deps stay stable. Depending on the full
   // mutation object would yield a fresh ref each render and re-fire
@@ -140,9 +185,16 @@ export function ImportGroupWizard() {
     isPending: isImportPending,
     data: importResult,
   } = importMutation
-  const importResultGroupId = importResult?.groupId ?? null
-  const importResultInvites = importResult?.invites ?? []
-  const importedDocumentCount = importResult?.importedDocuments ?? 0
+  const {
+    mutateAsync: importCloudBundle,
+    isPending: isCloudImportPending,
+    data: cloudImportResult,
+  } = cloudImportMutation
+  const activeImportResult = cloudImportResult ?? importResult
+  const activeImportPending = isCloudImportPending || isImportPending
+  const activeImportGroupId = activeImportResult?.groupId ?? null
+  const activeImportInvites = activeImportResult?.invites ?? []
+  const activeImportedDocumentCount = activeImportResult?.importedDocuments ?? 0
 
   // Prefill error message for the source step's inline error display.
   // Derived (not stored) because the wizard's `useImportSource`
@@ -204,11 +256,52 @@ export function ImportGroupWizard() {
     [toast],
   )
 
+  const handleCloudLoaded = useCallback(
+    (inspection: CloudGroupBundleInspection) => {
+      setPendingCloudInspection(inspection)
+    },
+    [],
+  )
+
+  // Cloud participant identity matching must not run against the temporary
+  // null account value returned while the authenticated session is loading.
+  // Keep the inspected bundle pending until the signed-in identity is ready.
+  useEffect(() => {
+    if (state.source || !pendingCloudInspection || isAccountPending || !account)
+      return
+    const cloudSource = cloudInspectionToSource(pendingCloudInspection)
+    dispatch({
+      type: 'SOURCE_LOADED',
+      source: cloudSource,
+      accountId: account.id,
+      sourceKind: 'CLOUD',
+      cloudInspection: pendingCloudInspection,
+      participants: initialCloudMappings(
+        cloudSource,
+        pendingCloudInspection,
+        account,
+      ),
+      groupFormValues: {
+        name: pendingCloudInspection.manifest.group.name,
+        information: pendingCloudInspection.manifest.group.information ?? '',
+        currency: pendingCloudInspection.manifest.group.ledger.currency,
+        currencyCode:
+          pendingCloudInspection.manifest.group.ledger.currencyCode ?? '',
+      },
+      archived: pendingCloudInspection.manifest.group.archived,
+    })
+    // Consume the pending inspection after it has been loaded. Keeping it
+    // pending would cause this effect to immediately reload the bundle after
+    // returning to the source step, bypassing the retained-bundle resume UI.
+    queueMicrotask(() => setPendingCloudInspection(null))
+  }, [account, isAccountPending, pendingCloudInspection, state.source])
+
   // File uploads are parsed client-side and hand the parsed source
   // directly up via this callback. URL pastes / prefill go through the
   // shared `useImportSource` instance and the wizard's effect above.
   const handleFileLoaded = useCallback(
     (source: NormalizedSource) => {
+      setPendingCloudInspection(null)
       autoMatchKeyRef.current = null
       dispatch({
         type: 'SOURCE_LOADED',
@@ -271,6 +364,12 @@ export function ImportGroupWizard() {
       recoveredCount: number
       skippedCount: number
       skippedEntirely: boolean
+      cloudDocuments?: Array<{
+        sourceDocumentId: string
+        stagedToken: string
+      }>
+      cloudSkippedDocumentIds?: string[]
+      cloudIssuesAcknowledged?: boolean
     }) => {
       dispatch({ type: 'DOCUMENTS_CONFIRMED', ...result })
     },
@@ -288,6 +387,24 @@ export function ImportGroupWizard() {
     if (!state.mode) return
     if (!account?.id) return
     try {
+      if (state.sourceKind === 'CLOUD' && state.cloudInspection) {
+        await importAttempt.run((requestId) =>
+          importCloudBundle({
+            requestId,
+            manifest: state.cloudInspection!.manifest,
+            groupFormValues: state.groupFormValues,
+            archived: state.archived,
+            participants: state.participants.map(toCloudApiMapping),
+            skippedDocumentIds: state.cloudSkippedDocumentIds,
+            acknowledgedIssues: state.cloudDocumentIssuesAcknowledged,
+            stagedDocuments: {
+              sessionId: state.documentSessionId,
+              documents: state.cloudStagedDocuments,
+            },
+          }),
+        )
+        return
+      }
       const sourceMeta = {
         provider: state.source.provider,
         sourceGroupId: state.source.sourceGroupId,
@@ -317,50 +434,77 @@ export function ImportGroupWizard() {
         }),
       )
     } catch (err) {
-      toast({
-        title: t('Groups.Import.Confirm.importErrorTitle'),
-        description:
-          err instanceof Error
-            ? err.message
-            : t('Groups.Import.Confirm.importErrorFallback'),
-        variant: 'destructive',
-      })
+      const description =
+        err instanceof Error
+          ? err.message
+          : t('Groups.Import.Confirm.importErrorFallback')
+      // Cloud document failures already route the wizard back to Documents
+      // from the mutation onError handler. Avoid showing a duplicate toast
+      // for that expected, actionable flow.
+      if (!isDocumentImportFailure(description)) {
+        toast({
+          title: t('Groups.Import.Confirm.importErrorTitle'),
+          description,
+          variant: 'destructive',
+        })
+      }
     }
     // Destructure fields used so the callback deps don't include the
     // mutable tRPC result object.
   }
 
   const handleDoneNavigate = useCallback(() => {
-    if (importResultGroupId) {
+    if (activeImportGroupId) {
       void navigate({
         to: '/groups/$groupId',
-        params: { groupId: importResultGroupId },
+        params: { groupId: activeImportGroupId },
       })
     } else {
       void navigate({ to: '/' })
     }
-  }, [importResultGroupId, navigate])
+  }, [activeImportGroupId, navigate])
 
   const handleBack = useCallback(() => {
+    if (state.step === 'destination' && state.sourceKind === 'CLOUD') {
+      dispatch({ type: 'RETURN_TO_SOURCE' })
+      return
+    }
     dispatch({ type: 'BACK' })
-  }, [])
+  }, [state.sourceKind, state.step])
 
   return (
     <div className="flex flex-col gap-6">
       <StepHeader step={state.step} />
 
-      {state.step === 'source' && (
-        <SourceStep
-          onLoaded={handleFileLoaded}
-          sourcePreview={sourcePreview}
-          isSourcePreviewLoading={isSourcePreviewLoading}
-          sourcePreviewError={sourcePreviewError}
-          submitPreview={submit}
-          resetPreview={resetSourcePreview}
-          onError={handleSourceError}
-          initialError={prefillErrorMessage}
-        />
-      )}
+      {state.step === 'source' &&
+        (pendingCloudInspection && isAccountPending ? (
+          <Card>
+            <CardContent className="flex flex-col items-center gap-3 p-8 text-center text-sm text-muted-foreground">
+              <Loader2 className="h-5 w-5 animate-spin" />
+              <p>{t('Groups.Import.fetchingGroup')}</p>
+            </CardContent>
+          </Card>
+        ) : (
+          <SourceStep
+            onLoaded={handleFileLoaded}
+            onCloudLoaded={handleCloudLoaded}
+            sourcePreview={sourcePreview}
+            isSourcePreviewLoading={isSourcePreviewLoading}
+            sourcePreviewError={sourcePreviewError}
+            submitPreview={submit}
+            resetPreview={resetSourcePreview}
+            onError={handleSourceError}
+            initialError={prefillErrorMessage}
+            retainedCloudBundle={
+              state.sourceKind === 'CLOUD' && state.cloudInspection
+                ? {
+                    onResume: () =>
+                      setPendingCloudInspection(state.cloudInspection),
+                  }
+                : undefined
+            }
+          />
+        ))}
 
       {state.step === 'destination' && !state.source && prefillSourceUrl && (
         <Card>
@@ -372,13 +516,44 @@ export function ImportGroupWizard() {
       )}
 
       {state.step === 'destination' && state.source && (
-        <DestinationStep
-          source={state.source}
-          initialGroupFormValues={state.groupFormValues}
-          mode={state.mode}
-          onBack={handleBack}
-          onContinue={handleDestinationChosen}
-        />
+        <>
+          {state.sourceKind === 'CLOUD' &&
+            state.cloudInspection?.manifest.complete === false && (
+              <Alert>
+                <AlertTitle>
+                  {t('Groups.Import.Cloud.incompleteTitle')}
+                </AlertTitle>
+                <AlertDescription>
+                  {t('Groups.Import.Cloud.incompleteDescription', {
+                    count: state.cloudInspection.manifest.warnings.length,
+                  })}
+                </AlertDescription>
+              </Alert>
+            )}
+          {state.sourceKind === 'CLOUD' &&
+            state.cloudInspection?.manifest.group.groupType === 'FRIEND' && (
+              <Alert>
+                <AlertDescription>
+                  {t('Groups.Import.Cloud.friendSourceWarning')}
+                </AlertDescription>
+              </Alert>
+            )}
+          <DestinationStep
+            source={state.source}
+            initialGroupFormValues={state.groupFormValues}
+            mode={state.mode}
+            allowExisting={state.sourceKind !== 'CLOUD'}
+            currencyLocked={state.sourceKind === 'CLOUD'}
+            initialArchived={state.archived}
+            onArchivedChange={
+              state.sourceKind === 'CLOUD'
+                ? (archived) => dispatch({ type: 'ARCHIVE_CHANGED', archived })
+                : undefined
+            }
+            onBack={handleBack}
+            onContinue={handleDestinationChosen}
+          />
+        </>
       )}
 
       {state.step === 'mapping' && state.source && (
@@ -408,6 +583,7 @@ export function ImportGroupWizard() {
           fixedRateDates={state.fixedRateDates}
           fixedRateOverrides={state.fixedRateOverrides}
           initialRates={state.rates ?? {}}
+          currencyLocked={state.sourceKind === 'CLOUD'}
           onBack={handleBack}
           onContinue={handleCurrencyConversionContinue}
         />
@@ -422,6 +598,28 @@ export function ImportGroupWizard() {
           initialSkippedCount={state.skippedDocumentCount}
           initialSkippedEntirely={state.documentRecoverySkipped}
           initialCompleted={state.documentFlowVisited}
+          cloud={
+            state.sourceKind === 'CLOUD' && state.cloudInspection
+              ? {
+                  inspection: state.cloudInspection,
+                  initialDocuments: state.cloudStagedDocuments,
+                  initialIssues: state.cloudInspection.documentIssues,
+                  initialSkippedDocumentIds: state.cloudSkippedDocumentIds,
+                  onContinue: (result) =>
+                    handleDocumentsContinue({
+                      stagedTokens: result.stagedDocuments.map(
+                        (document) => document.stagedToken,
+                      ),
+                      recoveredCount: result.stagedDocuments.length,
+                      skippedCount: result.skippedDocumentIds.length,
+                      skippedEntirely: false,
+                      cloudDocuments: result.stagedDocuments,
+                      cloudSkippedDocumentIds: result.skippedDocumentIds,
+                      cloudIssuesAcknowledged: result.acknowledgedIssues,
+                    }),
+                }
+              : undefined
+          }
           onBack={handleBack}
           onContinue={handleDocumentsContinue}
         />
@@ -436,8 +634,8 @@ export function ImportGroupWizard() {
           participants={state.participants}
           rates={state.rates}
           resolvedExpenses={state.resolvedExpenses}
-          invites={importResultInvites}
-          isSubmitting={isImportPending}
+          invites={activeImportInvites}
+          isSubmitting={activeImportPending}
           conversionModes={state.conversionModes}
           recoveredDocumentCount={state.recoveredDocumentCount}
           skippedDocumentCount={state.skippedDocumentCount}
@@ -445,14 +643,27 @@ export function ImportGroupWizard() {
           showDocumentSummary={state.documentFlowVisited}
           onBack={handleBack}
           onSubmit={handleSubmit}
+          cloudSummary={
+            state.sourceKind === 'CLOUD'
+              ? {
+                  archived: state.archived,
+                  expenseCount:
+                    state.cloudInspection?.manifest.expenses.length ?? 0,
+                  activeRecurrenceCount:
+                    state.cloudInspection?.manifest.recurrenceSeries.filter(
+                      (series) => series.status === 'ACTIVE',
+                    ).length ?? 0,
+                }
+              : undefined
+          }
         />
       )}
 
       {state.step === 'done' && (
         <DoneStep
-          groupId={importResultGroupId}
-          invites={importResultInvites}
-          importedDocumentCount={importedDocumentCount}
+          groupId={activeImportGroupId}
+          invites={activeImportInvites}
+          importedDocumentCount={activeImportedDocumentCount}
           onContinue={handleDoneNavigate}
         />
       )}

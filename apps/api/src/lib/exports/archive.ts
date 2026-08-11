@@ -26,6 +26,17 @@ function assertArchivePath(path: string): void {
   }
 }
 
+function normalizeArchivePrefix(prefix: string): string {
+  const normalized = prefix.replace(/^\/+|\/+$/g, '')
+  if (normalized) assertArchivePath(normalized)
+  return normalized
+}
+
+function withArchivePrefix(path: string, prefix: string): string {
+  if (!prefix || path === prefix || path.startsWith(`${prefix}/`)) return path
+  return `${prefix}/${path}`
+}
+
 function compareArchivePath(
   left: ExportArchiveEntry,
   right: ExportArchiveEntry,
@@ -45,6 +56,10 @@ export function createExportBundleStream<Manifest>(options: {
   documentReader: ExportDocumentReader
   validateManifest(manifest: Manifest): Manifest
   additionalEntries?: ReadonlyArray<ExportArchiveEntry>
+  /** Namespace all entries for a reusable group slice in an account archive. */
+  archivePrefix?: string
+  /** Override the manifest location; defaults to `<prefix>/manifest.json`. */
+  manifestPath?: string
   signal?: AbortSignal
 }): ReadableStream<Uint8Array> {
   let cancelled = false
@@ -123,9 +138,20 @@ export function createExportBundleStream<Manifest>(options: {
       })
 
       void (async () => {
-        const usedPaths = new Set(['manifest.json'])
+        const archivePrefix = normalizeArchivePrefix(
+          options.archivePrefix ?? '',
+        )
+        const manifestPath =
+          options.manifestPath ??
+          withArchivePrefix('manifest.json', archivePrefix)
+        assertArchivePath(manifestPath)
+        const usedPaths = new Set([manifestPath])
         for (const document of options.documents) {
           if (!document.entry.path) continue
+          document.entry.path = withArchivePrefix(
+            document.entry.path,
+            archivePrefix,
+          )
           assertArchivePath(document.entry.path)
           if (usedPaths.has(document.entry.path)) {
             throw new Error(
@@ -135,9 +161,12 @@ export function createExportBundleStream<Manifest>(options: {
           usedPaths.add(document.entry.path)
         }
 
-        const additionalEntries = [...(options.additionalEntries ?? [])].sort(
-          compareArchivePath,
-        )
+        const additionalEntries = [...(options.additionalEntries ?? [])]
+          .map((entry) => ({
+            ...entry,
+            path: withArchivePrefix(entry.path, archivePrefix),
+          }))
+          .sort(compareArchivePath)
         for (const entry of additionalEntries) {
           assertArchivePath(entry.path)
           if (usedPaths.has(entry.path)) {
@@ -182,7 +211,7 @@ export function createExportBundleStream<Manifest>(options: {
         const manifest = options.validateManifest(options.manifest)
         addZipEntry(
           zip!,
-          'manifest.json',
+          manifestPath,
           strToU8(JSON.stringify(manifest, null, 2)),
         )
         endZip()

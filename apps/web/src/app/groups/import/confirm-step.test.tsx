@@ -193,6 +193,33 @@ describe('ConfirmStep', () => {
     ).not.toBeInTheDocument()
   })
 
+  it('uses Cloud manifest counts and hides normalized FX/recurrence summaries', () => {
+    render(
+      <ConfirmStep
+        {...REQUIRED_PROPS}
+        isSubmitting={false}
+        conversionModes={{ 'JPY|EUR': 'perDate' }}
+        rates={{ '2026-01-01|JPY|EUR': 0.01 }}
+        cloudSummary={{
+          archived: false,
+          activeRecurrenceCount: 2,
+          expenseCount: 7,
+        }}
+      />,
+    )
+
+    expect(screen.getByText(/7 expenses will be created/i)).toBeInTheDocument()
+    expect(
+      screen.getByText(/2 active recurrence schedule\(s\) will resume/i),
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByText(/applied exchange rates/i),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByText(/recurring schedules to import/i),
+    ).not.toBeInTheDocument()
+  })
+
   it('does not crash when re-rendered with new props (no infinite loop)', () => {
     const onSubmit = vi.fn()
     const onBack = vi.fn()

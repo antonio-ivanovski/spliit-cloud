@@ -1,6 +1,7 @@
 import { unzipSync } from 'fflate'
 import { describe, expect, it, vi } from 'vitest'
 
+import { createExportBundleStream } from './archive'
 import { createGroupExportArtifact } from './group-export'
 import {
   createGroupExportSnapshot,
@@ -138,6 +139,42 @@ async function readArtifact(
 }
 
 describe('createGroupExportArtifact', () => {
+  it('namespaces reusable descriptors and the manifest for a group slice', async () => {
+    const entry = {
+      sourceId: 'doc-1',
+      fileName: 'receipt.txt',
+      contentType: 'text/plain',
+      width: null,
+      height: null,
+      path: 'documents/exp-1/doc-1__receipt.txt',
+      status: 'MISSING' as const,
+      sizeBytes: null,
+      sha256: null,
+    }
+    const body = createExportBundleStream({
+      manifest: { documents: [entry] },
+      documents: [
+        {
+          record: makeDocument(),
+          entry,
+          markMissing: vi.fn(),
+        },
+      ],
+      documentReader: documentReader('TXT'),
+      archivePrefix: 'groups/grp-1',
+      validateManifest: (value) => value,
+    })
+    const archive = unzipSync(
+      new Uint8Array(await new Response(body).arrayBuffer()),
+    )
+    expect(
+      archive['groups/grp-1/documents/exp-1/doc-1__receipt.txt'],
+    ).toBeDefined()
+    expect(archive['groups/grp-1/manifest.json']).toBeDefined()
+    expect(archive['manifest.json']).toBeUndefined()
+    expect(entry.path).toBe('groups/grp-1/documents/exp-1/doc-1__receipt.txt')
+  })
+
   it('creates the existing v1 bundle without depending on HTTP transport', async () => {
     const document = makeDocument()
     const reader = documentReader()

@@ -4,12 +4,16 @@ import {
   type DestinationParticipant,
   type NormalizedSource,
   type NormalizedSourceExpense,
-  type NormalizedSourceParticipant,
 } from '@spliit/domain/import'
 
+import type { CloudGroupBundleInspection } from './cloud-bundle'
+import {
+  initialLegacyMappings,
+  type CloudStagedDocument,
+} from './cloud-import-flow'
 import {
   initialGroupFormValues,
-  supportsDocumentRecovery,
+  type ImportSourceKind,
   type ConversionMode,
   type ImportMode,
   type ImportStep,
@@ -22,7 +26,9 @@ type ImportInvite = NonNullable<
 
 export type WizardState = {
   step: ImportStep
+  sourceKind: ImportSourceKind
   source: NormalizedSource | null
+  cloudInspection: CloudGroupBundleInspection | null
   prefillSourceUrl: string | null
   mode: ImportMode | null
   targetGroupId: string | null
@@ -46,6 +52,10 @@ export type WizardState = {
   skippedDocumentCount: number
   documentRecoverySkipped: boolean
   documentFlowVisited: boolean
+  cloudStagedDocuments: CloudStagedDocument[]
+  cloudSkippedDocumentIds: string[]
+  cloudDocumentIssuesAcknowledged: boolean
+  archived: boolean
 }
 
 export type WizardAction =
@@ -53,8 +63,16 @@ export type WizardAction =
       type: 'SOURCE_LOADED'
       source: NormalizedSource
       accountId: string | undefined
+      sourceKind?: ImportSourceKind
+      cloudInspection?: CloudGroupBundleInspection | null
+      participants?: ParticipantMappingState[]
+      groupFormValues?: WizardState['groupFormValues']
+      archived?: boolean
     }
   | { type: 'SOURCE_FAILED' }
+  | { type: 'RESET' }
+  | { type: 'RETURN_TO_SOURCE' }
+  | { type: 'ARCHIVE_CHANGED'; archived: boolean }
   | {
       type: 'DESTINATION_CHOSEN'
       mode: ImportMode
@@ -81,6 +99,9 @@ export type WizardAction =
       recoveredCount: number
       skippedCount: number
       skippedEntirely: boolean
+      cloudDocuments?: CloudStagedDocument[]
+      cloudSkippedDocumentIds?: string[]
+      cloudIssuesAcknowledged?: boolean
     }
   | { type: 'DOCUMENTS_FAILED'; discardTokens: boolean }
   | {
@@ -96,7 +117,9 @@ export function initialWizardState(
 ): WizardState {
   return {
     step: prefillSourceUrl ? 'destination' : 'source',
+    sourceKind: 'LEGACY',
     source: null,
+    cloudInspection: null,
     prefillSourceUrl,
     mode: null,
     targetGroupId: null,
@@ -115,6 +138,10 @@ export function initialWizardState(
     skippedDocumentCount: 0,
     documentRecoverySkipped: false,
     documentFlowVisited: false,
+    cloudStagedDocuments: [],
+    cloudSkippedDocumentIds: [],
+    cloudDocumentIssuesAcknowledged: false,
+    archived: false,
   }
 }
 
@@ -122,15 +149,7 @@ function buildInitialParticipants(
   source: NormalizedSource,
   accountId: string | undefined,
 ): ParticipantMappingState[] {
-  return source.participants.map(
-    (p: NormalizedSourceParticipant, i: number) => ({
-      key: `${p.sourceId}-${i}`,
-      source: p,
-      mode: i === 0 ? 'LINK_ACCOUNT' : 'INVITE_BY_EMAIL',
-      linkedAccountId: i === 0 ? accountId : undefined,
-      inviteEmail: i === 0 ? undefined : '',
-    }),
-  )
+  return initialLegacyMappings(source, accountId)
 }
 
 export function importWizardReducer(
@@ -138,14 +157,34 @@ export function importWizardReducer(
   action: WizardAction,
 ): WizardState {
   switch (action.type) {
+    case 'RESET':
+      return initialWizardState(null)
+
+    case 'RETURN_TO_SOURCE': {
+      const reset = initialWizardState(null)
+      return state.cloudInspection
+        ? {
+            ...reset,
+            sourceKind: 'CLOUD',
+            cloudInspection: state.cloudInspection,
+          }
+        : reset
+    }
+
     case 'SOURCE_LOADED':
       // Idempotent: ignore subsequent loads once we already have a source.
       if (state.source) return state
       return {
         ...state,
+        sourceKind: action.sourceKind ?? 'LEGACY',
         source: action.source,
-        participants: buildInitialParticipants(action.source, action.accountId),
-        groupFormValues: initialGroupFormValues(action.source),
+        cloudInspection: action.cloudInspection ?? null,
+        participants:
+          action.participants ??
+          buildInitialParticipants(action.source, action.accountId),
+        groupFormValues:
+          action.groupFormValues ?? initialGroupFormValues(action.source),
+        archived: action.archived ?? false,
         step: 'destination',
       }
 
@@ -154,6 +193,9 @@ export function importWizardReducer(
       // keep the loaded data and surface the error via prefill.
       if (state.source) return state
       return { ...state, step: 'source', prefillSourceUrl: null }
+
+    case 'ARCHIVE_CHANGED':
+      return { ...state, archived: action.archived }
 
     case 'DESTINATION_CHOSEN':
       return {
@@ -184,7 +226,12 @@ export function importWizardReducer(
         fixedRateDates: action.fixedRateDates,
         fixedRateOverrides: action.fixedRateOverrides,
         rates: action.rates,
-        step: supportsDocumentRecovery(state.source) ? 'documents' : 'confirm',
+        step:
+          state.sourceKind === 'CLOUD' ||
+          (state.source?.provider === 'SPLIIT' &&
+            state.source.sourceGroupId !== 'csv-import')
+            ? 'documents'
+            : 'confirm',
       }
 
     case 'DOCUMENTS_CONFIRMED':
@@ -195,6 +242,10 @@ export function importWizardReducer(
         skippedDocumentCount: action.skippedCount,
         documentRecoverySkipped: action.skippedEntirely,
         documentFlowVisited: true,
+        cloudStagedDocuments: action.cloudDocuments ?? [],
+        cloudSkippedDocumentIds: action.cloudSkippedDocumentIds ?? [],
+        cloudDocumentIssuesAcknowledged:
+          action.cloudIssuesAcknowledged ?? false,
         step: 'confirm',
       }
 
@@ -210,6 +261,9 @@ export function importWizardReducer(
         skippedDocumentCount: 0,
         documentRecoverySkipped: false,
         documentFlowVisited: false,
+        cloudStagedDocuments: [],
+        cloudSkippedDocumentIds: [],
+        cloudDocumentIssuesAcknowledged: false,
       }
 
     case 'IMPORT_SUCCEEDED':

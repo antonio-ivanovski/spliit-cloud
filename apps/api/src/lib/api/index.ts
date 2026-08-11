@@ -52,6 +52,12 @@ export {
   type ImportSourceMeta,
 } from './import'
 export {
+  importCloudGroup,
+  prepareCloudImport,
+  type CloudImportInput,
+  type CloudImportResult,
+} from './import-cloud'
+export {
   linkUnlinkedParticipantToAccount,
   linkUnlinkedParticipantToPendingInvite,
   listUnlinkedParticipants,

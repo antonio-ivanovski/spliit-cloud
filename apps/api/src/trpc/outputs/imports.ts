@@ -65,6 +65,10 @@ export const importGroupOutputSchema = z.object({
   ),
 })
 
+export const importCloudBundleOutputSchema = importGroupOutputSchema.extend({
+  sourceGroupId: z.string(),
+})
+
 export const importPreviewOutputSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('OK'), source: normalizedSourceSchema }),
   z.object({ kind: z.literal('NOT_FOUND') }),

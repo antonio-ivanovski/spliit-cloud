@@ -52,9 +52,9 @@ export function getStepNavigation(
   step: ImportStep,
   { includeDocuments = true }: { includeDocuments?: boolean } = {},
 ): StepNavigation {
-  const stepOrder = includeDocuments
-    ? STEP_ORDER
-    : STEP_ORDER.filter((candidate) => candidate !== 'documents')
+  const stepOrder = STEP_ORDER.filter(
+    (candidate) => includeDocuments || candidate !== 'documents',
+  )
   const idx = stepOrder.indexOf(step)
   if (idx <= 0) return {}
   const previousStepKey = stepOrder[idx - 1]
@@ -82,12 +82,18 @@ export function supportsDocumentRecovery(source: NormalizedSource | null) {
   return source?.provider === 'SPLIIT' && source.sourceGroupId !== 'csv-import'
 }
 
+export type ImportSourceKind = 'LEGACY' | 'CLOUD'
+
 export function isDocumentImportFailure(message: string) {
-  return /staged import document/i.test(message)
+  return /staged (?:cloud )?import document|included document must be staged|missing cloud documents|skipped cloud documents|cloud document metadata/i.test(
+    message,
+  )
 }
 
 export function shouldDiscardStagedDocumentTokens(message: string) {
-  return /invalid or expired|is unavailable/i.test(message)
+  return /invalid|expired|is unavailable|failed validation|could not be promoted/i.test(
+    message,
+  )
 }
 
 export type ParticipantMappingMode =

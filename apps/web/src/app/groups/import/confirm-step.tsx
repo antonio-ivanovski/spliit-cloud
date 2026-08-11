@@ -41,6 +41,11 @@ type Props = {
   rates: Record<string, number> | null | undefined
   onBack: () => void
   onSubmit: () => void
+  cloudSummary?: {
+    archived: boolean
+    activeRecurrenceCount: number
+    expenseCount: number
+  }
 }
 
 function formatRate(n: number): string {
@@ -62,6 +67,7 @@ export function ConfirmStep({
   rates,
   onBack,
   onSubmit,
+  cloudSummary,
 }: Props) {
   const { t } = useTranslation()
   const linkedCount = participants.filter(
@@ -96,10 +102,18 @@ export function ConfirmStep({
   for (const key of Object.keys(ratesByPair)) {
     ratesByPair[key].sort((a, b) => a.date.localeCompare(b.date))
   }
-  const conversionPairs = Object.keys(conversionModes)
-  const recurringSchedules = summarizeLegacyRecurringImport(
-    resolvedExpenses.map((expense) => collapseExpenseFromNormalized(expense)),
-  )
+  const conversionPairs = cloudSummary ? [] : Object.keys(conversionModes)
+  // Cloud restore is lossless and uses the inspected manifest at submit
+  // time. Its display source intentionally omits recurrence/itemization
+  // details, so only render recurrence information from the raw Cloud
+  // summary rather than implying the normalized preview is authoritative.
+  const recurringSchedules = cloudSummary
+    ? []
+    : summarizeLegacyRecurringImport(
+        resolvedExpenses.map((expense) =>
+          collapseExpenseFromNormalized(expense),
+        ),
+      )
 
   const recurrenceRuleLabel = (rule: 'DAILY' | 'WEEKLY' | 'MONTHLY') => {
     switch (rule) {
@@ -154,7 +168,7 @@ export function ConfirmStep({
             </li>
             <li>
               {t('Groups.Import.Confirm.expenseCount', {
-                count: resolvedExpenses.length,
+                count: cloudSummary?.expenseCount ?? resolvedExpenses.length,
               })}
             </li>
             {showDocumentSummary && (
@@ -185,6 +199,16 @@ export function ConfirmStep({
                   ))}
                 </ul>
               </li>
+            )}
+            {cloudSummary?.activeRecurrenceCount ? (
+              <li>
+                {t('Groups.Import.Cloud.confirmActiveRecurrence', {
+                  count: cloudSummary.activeRecurrenceCount,
+                })}
+              </li>
+            ) : null}
+            {cloudSummary?.archived && (
+              <li>{t('Groups.Import.Cloud.confirmArchived')}</li>
             )}
             <li>
               {t('Groups.Import.Confirm.sourceName', { name: source.name })}

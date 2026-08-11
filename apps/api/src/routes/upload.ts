@@ -1,6 +1,9 @@
+import { createHash } from 'node:crypto'
+
 import {
   CopyObjectCommand,
   DeleteObjectCommand,
+  GetObjectCommand,
   HeadObjectCommand,
   PutObjectCommand,
 } from '@aws-sdk/client-s3'
@@ -17,7 +20,9 @@ import { getAuthFromRequest } from '../lib/auth/session'
 import { env } from '../lib/env'
 import {
   openSourceDocumentClaims,
+  openCloudStagedDocumentClaims,
   openStagedDocumentClaims,
+  sealCloudStagedDocumentClaims,
   sealStagedDocumentClaims,
 } from '../lib/import-documents'
 import {
@@ -323,6 +328,144 @@ export async function verifyAndPromoteImportDocument(input: {
     sourceDocumentId: claims.sourceDocumentId,
     url,
     temporaryUrl: claims.fileUrl,
+    width: claims.width,
+    height: claims.height,
+  }
+}
+
+export async function mintCloudImportDocumentPresign(input: {
+  accountId: string
+  sessionId: string
+  sourceDocumentId: string
+  fileName: string | null
+  contentType: string | null
+  fileSize: number
+  width: number | null
+  height: number | null
+  sha256: string
+}) {
+  if (!isExpenseDocumentSizeWithinLimit(input.fileSize)) {
+    return Response.json(
+      { error: 'File exceeds the maximum upload size' },
+      { status: 400 },
+    )
+  }
+  const hasDocumentTypeMetadata =
+    input.fileName !== null || input.contentType !== null
+  if (
+    hasDocumentTypeMetadata &&
+    !isSupportedExpenseDocumentUpload({
+      fileName: input.fileName ?? 'document',
+      contentType: input.contentType ?? 'application/octet-stream',
+    })
+  ) {
+    return Response.json(
+      { error: 'Unsupported expense document type' },
+      { status: 400 },
+    )
+  }
+  if (!/^[a-f0-9]{64}$/.test(input.sha256)) {
+    return Response.json(
+      { error: 'Invalid document checksum' },
+      { status: 400 },
+    )
+  }
+  if (!uploadsConfigured()) {
+    return Response.json(
+      { error: 'Uploads are not configured' },
+      { status: 503 },
+    )
+  }
+
+  const extension =
+    input.fileName?.match(/(\.[^.\s]+)$/)?.[1]?.toLowerCase() ?? ''
+  const key = `tmp/cloud-imports/${input.accountId}/${input.sessionId}/${randomId()}${extension}`
+  const fileUrl = publicUrlForKey(key)
+  const uploadUrl = await getSignedUrl(
+    getS3Client(),
+    new PutObjectCommand({
+      Bucket: env.S3_UPLOAD_BUCKET,
+      Key: key,
+      ContentType: input.contentType ?? 'application/octet-stream',
+    }),
+    { expiresIn: 60 },
+  )
+  const stagedToken = await sealCloudStagedDocumentClaims({
+    aud: 'spliit:cloud-staged-document',
+    accountId: input.accountId,
+    sessionId: input.sessionId,
+    sourceDocumentId: input.sourceDocumentId,
+    key,
+    fileUrl,
+    fileName: input.fileName,
+    contentType: input.contentType,
+    fileSize: input.fileSize,
+    width: input.width,
+    height: input.height,
+    sha256: input.sha256,
+  })
+  return Response.json({ uploadUrl, stagedToken })
+}
+
+export async function verifyAndPromoteCloudImportDocument(input: {
+  token: string
+  accountId: string
+  sessionId: string
+}) {
+  const claims = await openCloudStagedDocumentClaims(input.token)
+  if (
+    claims.accountId !== input.accountId ||
+    claims.sessionId !== input.sessionId ||
+    !claims.key.startsWith(
+      `tmp/cloud-imports/${input.accountId}/${input.sessionId}/`,
+    )
+  ) {
+    throw new Error('Invalid staged Cloud import document')
+  }
+  if (!uploadsConfigured()) throw new Error('Uploads are not configured')
+
+  let body: Uint8Array
+  try {
+    const response = await getS3Client().send(
+      new GetObjectCommand({
+        Bucket: env.S3_UPLOAD_BUCKET,
+        Key: claims.key,
+      }),
+    )
+    if (!response.Body || !('transformToByteArray' in response.Body)) {
+      throw new Error('Staged Cloud import document has no body')
+    }
+    body = await response.Body.transformToByteArray()
+  } catch (cause) {
+    throw new Error('Staged Cloud import document is unavailable', { cause })
+  }
+
+  const checksum = createHash('sha256').update(body).digest('hex')
+  if (
+    body.byteLength !== claims.fileSize ||
+    checksum !== claims.sha256 ||
+    !isExpenseDocumentSizeWithinLimit(body.byteLength)
+  ) {
+    throw new Error('Staged Cloud import document failed validation')
+  }
+  let url: string
+  try {
+    url = await promoteUploadedDocument(claims.fileUrl, {
+      deleteSource: false,
+    })
+  } catch (cause) {
+    throw new Error('Staged Cloud import document could not be promoted', {
+      cause,
+    })
+  }
+  return {
+    sourceDocumentId: claims.sourceDocumentId,
+    url,
+    temporaryUrl: claims.fileUrl,
+    fileName: claims.fileName,
+    contentType: claims.contentType,
+    fileSize: claims.fileSize,
+    sha256: claims.sha256,
     width: claims.width,
     height: claims.height,
   }

@@ -35,7 +35,7 @@ function discoverCreateMutations() {
     const relativePath = path.slice(routerRoot.length).replace(/^\//, '')
     let hasExportedCreateProcedure = false
     for (const match of source.matchAll(
-      /^export const (create[A-Z]\w*Procedure|importGroupProcedure)\s*=/gm,
+      /^export const (create[A-Z]\w*Procedure|importGroupProcedure|importCloudBundleProcedure)\s*=/gm,
     )) {
       hasExportedCreateProcedure ||= match[1]!.startsWith('create')
       discovered.add(`${relativePath}#${match[1]}`)
@@ -167,6 +167,7 @@ describe('create idempotency primitives', () => {
     expect(Object.keys(CREATE_OPERATIONS).sort()).toEqual(
       [
         'budget',
+        'cloudImport',
         'emailInvitation',
         'expense',
         'expenseComment',

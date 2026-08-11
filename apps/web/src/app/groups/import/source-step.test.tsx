@@ -1,7 +1,7 @@
 import userEvent from '@testing-library/user-event'
-import { beforeAll, describe, expect, it, vi } from 'vitest'
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { render, screen } from '@/test/test-utils'
+import { fireEvent, render, screen } from '@/test/test-utils'
 
 import { SourceStep } from './source-step'
 
@@ -15,10 +15,15 @@ beforeAll(() => {
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
+const routerMocks = vi.hoisted(() => ({
+  source: 'spliit' as 'spliit' | 'spliit-cloud',
+  navigate: vi.fn(),
+}))
+
 // Mock @tanstack/react-router so we don't need to spin up a router.
 vi.mock('@tanstack/react-router', () => ({
   getRouteApi: () => ({
-    useSearch: () => ({ source: 'spliit' as const }),
+    useSearch: () => ({ source: routerMocks.source }),
   }),
   Link: ({
     to,
@@ -28,7 +33,7 @@ vi.mock('@tanstack/react-router', () => ({
     children: React.ReactNode
     [key: string]: unknown
   }) => <a href={to}>{children}</a>,
-  useNavigate: () => vi.fn(),
+  useNavigate: () => routerMocks.navigate,
 }))
 
 // SourceStep no longer owns its own useImportSource; the wizard passes
@@ -54,6 +59,84 @@ function renderSourceStep(
 // ── Tests ───────────────────────────────────────────────────────────────
 
 describe('SourceStep — initialError (prefill) handling', () => {
+  beforeEach(() => {
+    routerMocks.source = 'spliit'
+    routerMocks.navigate.mockReset()
+  })
+
+  it('keeps the provider tabs in Spliit, Cloud, then the other providers order', () => {
+    renderSourceStep()
+    expect(screen.getAllByRole('tab').map((tab) => tab.textContent)).toEqual([
+      'Spliit',
+      'Spliit Cloud',
+      'Splitwise',
+      'Tricount (coming soon)',
+      'Settle Up (coming soon)',
+    ])
+  })
+
+  it('offers a retained Cloud bundle without requiring another file selection', async () => {
+    const onResume = vi.fn()
+    renderSourceStep({ retainedCloudBundle: { onResume } })
+    expect(screen.getByText(/Spliit Cloud bundle ready/i)).toBeInTheDocument()
+    await userEvent
+      .setup()
+      .click(screen.getByRole('button', { name: /continue with this bundle/i }))
+    expect(onResume).toHaveBeenCalledOnce()
+  })
+
+  it('identifies a ZIP selected in the legacy tab as a Cloud bundle', async () => {
+    const view = renderSourceStep()
+    const input = view.container.querySelector('input[type="file"]')
+    if (!(input instanceof HTMLInputElement))
+      throw new Error('file input missing')
+
+    fireEvent.change(input, {
+      target: {
+        files: [
+          new File([new Uint8Array([0x50, 0x4b, 0x03, 0x04])], 'backup.zip', {
+            type: 'application/zip',
+          }),
+        ],
+      },
+    })
+
+    expect(
+      await screen.findByText(/belongs in the Spliit Cloud importer/i),
+    ).toBeInTheDocument()
+  })
+
+  it('explains that account-wide Cloud bundles are not supported yet', async () => {
+    routerMocks.source = 'spliit-cloud'
+    const onError = vi.fn()
+    const view = renderSourceStep({ onError })
+    const input = view.container.querySelector('input[type="file"]')
+    if (!(input instanceof HTMLInputElement))
+      throw new Error('file input missing')
+
+    fireEvent.change(input, {
+      target: {
+        files: [
+          new File(
+            [
+              JSON.stringify({
+                format: 'spliit.cloud/export',
+                scope: { type: 'ACCOUNT' },
+              }),
+            ],
+            'account.zip',
+            { type: 'application/zip' },
+          ),
+        ],
+      },
+    })
+
+    await new Promise((resolve) => setTimeout(resolve, 0))
+    expect(onError).toHaveBeenCalledWith(
+      'Account-wide Cloud bundle import is not available yet.',
+    )
+  })
+
   it('renders the prefill error inline when no own serverUrlError is set', () => {
     renderSourceStep({
       initialError: 'Spliit Cloud did not find this group',

@@ -15,3 +15,8 @@ export const importDocumentPresignOutputSchema = z.object({
   uploadUrl: z.url(),
   stagedToken: z.string(),
 })
+
+export const cloudImportDocumentPresignOutputSchema = z.object({
+  uploadUrl: z.url(),
+  stagedToken: z.string(),
+})

@@ -1,16 +1,27 @@
 import { getRouteApi, useNavigate } from '@tanstack/react-router'
-import { AlertTriangle, Clock } from 'lucide-react'
+import { AlertTriangle, Clock, ExternalLink } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
+  classifyImportPayload,
+  classifyImportBytes,
+  classifyImportText,
   extractSpliitGroupIdFromUrl,
   guessGroupNameFromFilename,
+  tryParseSpliitCsv,
   type NormalizedSource,
 } from '@spliit/domain/import'
 
+import {
+  CloudAccountBundleError,
+  inspectSpliitCloudBundle,
+  type CloudGroupBundleInspection,
+} from './cloud-bundle'
 import { DomainSwapCard } from './domain-swap-card'
 import { FileUploadCard } from './file-upload-card'
 import { PasteUrlCard } from './paste-url-card'
@@ -21,6 +32,7 @@ import type { ImportSourceState } from './use-import-source'
 type Props = {
   /** Client-parsed file uploads hand the result directly up. */
   onLoaded: (source: NormalizedSource) => void
+  onCloudLoaded?: (source: CloudGroupBundleInspection) => void
   onError: (message: string) => void
   /**
    * Shared import-source state owned by the wizard so manual paste and the
@@ -39,12 +51,20 @@ type Props = {
    * starts interacting.
    */
   initialError?: string | null
+  retainedCloudBundle?: { onResume: () => void }
+}
+
+type WrongImporter = {
+  target: 'spliit' | 'spliit-cloud'
+  file: File
+  messageKey: 'cloud' | 'spliit'
 }
 
 const importRoute = getRouteApi('/groups/import')
 
 export function SourceStep({
   onLoaded,
+  onCloudLoaded,
   onError,
   sourcePreview,
   isSourcePreviewLoading,
@@ -52,6 +72,7 @@ export function SourceStep({
   submitPreview,
   resetPreview,
   initialError = null,
+  retainedCloudBundle,
 }: Props) {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -63,6 +84,8 @@ export function SourceStep({
   // longer applies — the URL they're now typing is unrelated to it.
   const [hasInteracted, setHasInteracted] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
+  const [wrongImporter, setWrongImporter] = useState<WrongImporter | null>(null)
+  const [pendingHandoff, setPendingHandoff] = useState<File | null>(null)
 
   const cfg = PROVIDERS[provider]
 
@@ -86,17 +109,124 @@ export function SourceStep({
     async (file: File) => {
       setHasInteracted(true)
       try {
+        const firstBytes = new Uint8Array(await file.slice(0, 4).arrayBuffer())
+        const isZip =
+          classifyImportBytes(firstBytes).kind === 'SPLIIT_CLOUD_BUNDLE'
+
+        let text: string | null = null
+        const readText = async () => {
+          text ??= await file.text()
+          return text
+        }
+
+        if (provider === 'spliit' && isZip) {
+          setWrongImporter({
+            target: 'spliit-cloud',
+            file,
+            messageKey: 'cloud',
+          })
+          return
+        }
+
+        // Inspect the payload before extension-based parsing so a Cloud
+        // manifest renamed to .csv/.txt is still routed to the right tab.
+        if (provider === 'spliit' && !isZip) {
+          const classification = classifyImportText(
+            file.name,
+            await readText(),
+            (value) => ({ ok: tryParseSpliitCsv(value).ok }),
+          )
+          if (classification.kind === 'SPLIIT_CLOUD_MANIFEST') {
+            setWrongImporter({
+              target: 'spliit-cloud',
+              file,
+              messageKey: 'cloud',
+            })
+            return
+          }
+        }
+
+        if (provider === 'spliit-cloud') {
+          if (!isZip) {
+            const classification = classifyImportText(
+              file.name,
+              await readText(),
+              (value) => {
+                const parsed = tryParseSpliitCsv(value)
+                return { ok: parsed.ok }
+              },
+            )
+            if (
+              classification.kind === 'SPLIIT_APP_JSON' ||
+              classification.kind === 'SPLIIT_APP_CSV'
+            ) {
+              setWrongImporter({
+                target: 'spliit',
+                file,
+                messageKey: 'spliit',
+              })
+              return
+            }
+            if (
+              classification.kind === 'SPLIIT_CLOUD_MANIFEST' &&
+              classification.scope === 'ACCOUNT'
+            ) {
+              throw new CloudAccountBundleError()
+            }
+            throw new Error(t('Groups.Import.Source.cloudZipRequired'))
+          }
+          try {
+            onCloudLoaded?.(await inspectSpliitCloudBundle(file))
+          } catch (error) {
+            if (error instanceof CloudAccountBundleError) throw error
+            throw error
+          }
+          return
+        }
+
         const picked = pickParser(provider, file.name)
         if (!picked.format) {
+          const classification = classifyImportText(
+            file.name,
+            await readText(),
+            (value) => ({ ok: tryParseSpliitCsv(value).ok }),
+          )
+          if (classification.kind === 'SPLIIT_CLOUD_MANIFEST') {
+            setWrongImporter({
+              target: 'spliit-cloud',
+              file,
+              messageKey: 'cloud',
+            })
+            return
+          }
           onError(t('Groups.Import.Source.unsupportedFileType'))
           return
         }
-        const text = await file.text()
+        if (picked.format === 'cloud') {
+          onCloudLoaded?.(await inspectSpliitCloudBundle(file))
+          return
+        }
+        const fileText = await readText()
         const parsed =
           picked.format === 'json'
-            ? picked.parser(JSON.parse(text))
-            : picked.parser(text)
+            ? picked.parser(JSON.parse(fileText))
+            : picked.parser(fileText)
         if (!parsed.ok) {
+          if (picked.format === 'json') {
+            try {
+              const classification = classifyImportPayload(JSON.parse(fileText))
+              if (classification.kind === 'SPLIIT_CLOUD_MANIFEST') {
+                setWrongImporter({
+                  target: 'spliit-cloud',
+                  file,
+                  messageKey: 'cloud',
+                })
+                return
+              }
+            } catch {
+              // Keep the parser's normal malformed-file message below.
+            }
+          }
           onError(parsed.error)
           return
         }
@@ -105,14 +235,31 @@ export function SourceStep({
         onLoaded(parsed.source)
       } catch (err) {
         const message =
-          err instanceof Error
-            ? err.message
-            : t('Groups.Import.Source.fileReadError')
+          err instanceof CloudAccountBundleError
+            ? t('Groups.Import.Source.accountBundleComingSoon')
+            : err instanceof Error
+              ? err.message
+              : t('Groups.Import.Source.fileReadError')
         onError(message)
       }
     },
-    [provider, onError, onLoaded, t],
+    [provider, onError, onCloudLoaded, onLoaded, t],
   )
+
+  useEffect(() => {
+    if (!pendingHandoff || provider !== wrongImporter?.target) return
+    const file = pendingHandoff
+    let cancelled = false
+    queueMicrotask(() => {
+      if (cancelled) return
+      setPendingHandoff(null)
+      setWrongImporter(null)
+      void handleFile(file)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [handleFile, pendingHandoff, provider, wrongImporter?.target])
 
   const handleFileChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -185,9 +332,60 @@ export function SourceStep({
   const showDomainSwap = cfg.hasDomainSwap
   const showUrlPaste = cfg.hasUrlPaste
   const isSplitwise = provider === 'splitwise'
+  const isCloud = provider === 'spliit-cloud'
 
   return (
     <div className="flex flex-col gap-4">
+      {retainedCloudBundle && (
+        <Alert>
+          <ExternalLink className="h-4 w-4" />
+          <AlertTitle>
+            {t('Groups.Import.Source.cloudBundleReadyTitle')}
+          </AlertTitle>
+          <AlertDescription className="flex flex-col gap-3">
+            <span>{t('Groups.Import.Source.cloudBundleReadyDescription')}</span>
+            <Button
+              className="w-fit"
+              type="button"
+              onClick={retainedCloudBundle.onResume}
+            >
+              {t('Groups.Import.Source.resumeCloudBundle')}
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
+      {wrongImporter && (
+        <Alert>
+          <ExternalLink className="h-4 w-4" />
+          <AlertTitle>
+            {wrongImporter.messageKey === 'cloud'
+              ? t('Groups.Import.Source.wrongImporterCloudTitle')
+              : t('Groups.Import.Source.wrongImporterSpliitTitle')}
+          </AlertTitle>
+          <AlertDescription className="flex flex-col gap-3">
+            <span>
+              {wrongImporter.messageKey === 'cloud'
+                ? t('Groups.Import.Source.wrongImporterCloudDescription')
+                : t('Groups.Import.Source.wrongImporterSpliitDescription')}
+            </span>
+            <Button
+              className="w-fit"
+              type="button"
+              onClick={() => {
+                setPendingHandoff(wrongImporter.file)
+                void navigate({
+                  to: '/groups/import',
+                  search: { source: wrongImporter.target },
+                })
+              }}
+            >
+              {wrongImporter.messageKey === 'cloud'
+                ? t('Groups.Import.Source.openCloudImporter')
+                : t('Groups.Import.Source.openSpliitImporter')}
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
       <Tabs
         value={provider}
         onValueChange={(v) =>
@@ -204,6 +402,9 @@ export function SourceStep({
           <TabsTrigger value="spliit">
             {t('Groups.Import.Source.fromSpliit')}
           </TabsTrigger>
+          <TabsTrigger value="spliit-cloud">
+            {t('Groups.Import.Source.fromSpliitCloud')}
+          </TabsTrigger>
           <TabsTrigger value="splitwise">
             {t('Groups.Import.Source.splitwise')}
           </TabsTrigger>
@@ -218,6 +419,11 @@ export function SourceStep({
         <TabsContent value="spliit">
           <ProviderDescription
             description={t('Groups.Import.Source.spliitDescription')}
+          />
+        </TabsContent>
+        <TabsContent value="spliit-cloud">
+          <ProviderDescription
+            description={t('Groups.Import.Source.spliitCloudDescription')}
           />
         </TabsContent>
         <TabsContent value="splitwise">
@@ -290,14 +496,18 @@ export function SourceStep({
           accept={cfg.accept}
           labels={{
             dropFile: t(
-              isSplitwise
-                ? 'Groups.Import.Source.dropFileSplitwise'
-                : 'Groups.Import.Source.dropFile',
+              isCloud
+                ? 'Groups.Import.Source.cloudZipRequired'
+                : isSplitwise
+                  ? 'Groups.Import.Source.dropFileSplitwise'
+                  : 'Groups.Import.Source.dropFile',
             ),
             dropFileDescription: t(
-              isSplitwise
-                ? 'Groups.Import.Source.dropFileDescriptionSplitwise'
-                : 'Groups.Import.Source.dropFileDescription',
+              isCloud
+                ? 'Groups.Import.Source.spliitCloudDescription'
+                : isSplitwise
+                  ? 'Groups.Import.Source.dropFileDescriptionSplitwise'
+                  : 'Groups.Import.Source.dropFileDescription',
             ),
           }}
         />

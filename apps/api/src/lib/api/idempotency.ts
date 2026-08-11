@@ -14,6 +14,7 @@ export const CREATE_OPERATIONS = {
   group: 'groups.create',
   expense: 'groups.expenses.create',
   import: 'groups.import',
+  cloudImport: 'groups.importCloudBundle',
   budget: 'groups.budgets.create',
   subgroup: 'groups.subgroups.create',
   participant: 'groups.participants.create',
@@ -64,6 +65,12 @@ export const CREATE_MUTATION_CATALOG = [
     operation: CREATE_OPERATIONS.import,
     source: 'groups/import.procedure.ts',
     symbol: 'importGroupProcedure',
+  },
+  {
+    mechanism: 'shared',
+    operation: CREATE_OPERATIONS.cloudImport,
+    source: 'groups/import-cloud.procedure.ts',
+    symbol: 'importCloudBundleProcedure',
   },
   {
     mechanism: 'shared',

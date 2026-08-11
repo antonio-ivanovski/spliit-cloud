@@ -9,6 +9,7 @@ import { env } from './env'
 
 const SOURCE_DOCUMENT_AUDIENCE = 'spliit:import-source-document'
 const STAGED_DOCUMENT_AUDIENCE = 'spliit:import-staged-document'
+const CLOUD_STAGED_DOCUMENT_AUDIENCE = 'spliit:cloud-staged-document'
 const SOURCE_FETCH_TIMEOUT_MS = 8_000
 const MAX_SOURCE_BYTES = 5 * 1024 * 1024
 const MAX_REDIRECTS = 3
@@ -57,6 +58,29 @@ const stagedDocumentClaimsSchema = z.object({
 
 export type StagedDocumentClaims = z.infer<typeof stagedDocumentClaimsSchema>
 
+const cloudStagedDocumentClaimsSchema = z.object({
+  aud: z.literal(CLOUD_STAGED_DOCUMENT_AUDIENCE),
+  accountId: z.string().min(1),
+  sessionId: z.uuid(),
+  sourceDocumentId: z.string().min(1),
+  key: z.string().min(1),
+  fileUrl: z.url(),
+  fileName: z.string().nullable(),
+  contentType: z.string().nullable(),
+  fileSize: z
+    .number()
+    .int()
+    .nonnegative()
+    .max(2 * 1024 * 1024),
+  width: z.number().int().positive().nullable(),
+  height: z.number().int().positive().nullable(),
+  sha256: z.string().regex(/^[a-f0-9]{64}$/),
+})
+
+export type CloudStagedDocumentClaims = z.infer<
+  typeof cloudStagedDocumentClaimsSchema
+>
+
 function tokenKey() {
   const secret =
     env.BETTER_AUTH_SECRET ??
@@ -101,6 +125,18 @@ export function sealStagedDocumentClaims(claims: StagedDocumentClaims) {
 export async function openStagedDocumentClaims(token: string) {
   return stagedDocumentClaimsSchema.parse(
     await openClaims(token, STAGED_DOCUMENT_AUDIENCE),
+  )
+}
+
+export function sealCloudStagedDocumentClaims(
+  claims: CloudStagedDocumentClaims,
+) {
+  return sealClaims(CLOUD_STAGED_DOCUMENT_AUDIENCE, claims, '24h')
+}
+
+export async function openCloudStagedDocumentClaims(token: string) {
+  return cloudStagedDocumentClaimsSchema.parse(
+    await openClaims(token, CLOUD_STAGED_DOCUMENT_AUDIENCE),
   )
 }
 

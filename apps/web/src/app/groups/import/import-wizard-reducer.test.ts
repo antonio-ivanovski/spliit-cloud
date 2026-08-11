@@ -100,6 +100,14 @@ describe('isDocumentImportFailure', () => {
     expect(
       isDocumentImportFailure('Staged import document token is invalid'),
     ).toBe(true)
+    expect(
+      isDocumentImportFailure('Staged Cloud import document is unavailable'),
+    ).toBe(true)
+    expect(
+      isDocumentImportFailure(
+        'Every included document must be staged or explicitly skipped',
+      ),
+    ).toBe(true)
     expect(isDocumentImportFailure('Target group not found')).toBe(false)
   })
 })
@@ -122,6 +130,15 @@ describe('document-aware wizard navigation', () => {
       previousStepKey: 'documents',
     })
   })
+
+  it('keeps Cloud mapping and Documents connected through currency conversion', () => {
+    expect(getStepNavigation('mapping')).toMatchObject({
+      nextStepKey: 'currencyConversion',
+    })
+    expect(getStepNavigation('documents')).toMatchObject({
+      previousStepKey: 'currencyConversion',
+    })
+  })
 })
 
 describe('shouldDiscardStagedDocumentTokens', () => {
@@ -134,6 +151,11 @@ describe('shouldDiscardStagedDocumentTokens', () => {
     expect(
       shouldDiscardStagedDocumentTokens(
         'Staged import document is unavailable',
+      ),
+    ).toBe(true)
+    expect(
+      shouldDiscardStagedDocumentTokens(
+        'Staged Cloud import document failed validation',
       ),
     ).toBe(true)
     expect(
@@ -235,6 +257,84 @@ describe('importWizardReducer', () => {
     // Rates must reset when entering conversion so the user can pick
     // a fresh rate without being locked to a stale one.
     expect(next.rates).toBeUndefined()
+  })
+
+  it('uses the shared wizard with currency conversion for Cloud sources', () => {
+    const source = makeSource(['Alice'])
+    const start = initialWizardState(null)
+    const loaded = importWizardReducer(start, {
+      type: 'SOURCE_LOADED',
+      source,
+      accountId: 'user-1',
+      sourceKind: 'CLOUD',
+      cloudInspection: null,
+    })
+    const mapped = importWizardReducer(loaded, {
+      type: 'MAPPING_CONFIRMED',
+      sourceIdToDestId: { 's-0': 'd-0' },
+      destIds: { 's-0': 'd-0' },
+      resolvedExpenses: [],
+    })
+
+    expect(mapped.step).toBe('currencyConversion')
+    const converted = importWizardReducer(mapped, {
+      type: 'CONVERSION_CONFIRMED',
+      modes: {},
+      fixedRateDates: {},
+      fixedRateOverrides: {},
+      rates: {},
+    })
+    expect(converted.step).toBe('documents')
+    expect(importWizardReducer(converted, { type: 'BACK' }).step).toBe(
+      'currencyConversion',
+    )
+  })
+
+  it('stores Cloud archive and document claims in the shared state', () => {
+    const start = {
+      ...initialWizardState(null),
+      sourceKind: 'CLOUD' as const,
+      step: 'documents' as const,
+    }
+    const archived = importWizardReducer(start, {
+      type: 'ARCHIVE_CHANGED',
+      archived: true,
+    })
+    const next = importWizardReducer(archived, {
+      type: 'DOCUMENTS_CONFIRMED',
+      stagedTokens: ['token-1'],
+      recoveredCount: 1,
+      skippedCount: 1,
+      skippedEntirely: false,
+      cloudDocuments: [{ sourceDocumentId: 'doc-1', stagedToken: 'token-1' }],
+      cloudSkippedDocumentIds: ['doc-2'],
+      cloudIssuesAcknowledged: true,
+    })
+
+    expect(next.archived).toBe(true)
+    expect(next.cloudStagedDocuments).toEqual([
+      { sourceDocumentId: 'doc-1', stagedToken: 'token-1' },
+    ])
+    expect(next.cloudSkippedDocumentIds).toEqual(['doc-2'])
+    expect(next.cloudDocumentIssuesAcknowledged).toBe(true)
+  })
+
+  it('returns to source while retaining the inspected Cloud bundle', () => {
+    const inspection = { kind: 'GROUP' as const } as NonNullable<
+      WizardState['cloudInspection']
+    >
+    const start = {
+      ...initialWizardState(null),
+      sourceKind: 'CLOUD' as const,
+      source: makeSource(['Alice']),
+      cloudInspection: inspection,
+      step: 'destination' as const,
+    }
+    const next = importWizardReducer(start, { type: 'RETURN_TO_SOURCE' })
+    expect(next.step).toBe('source')
+    expect(next.source).toBeNull()
+    expect(next.sourceKind).toBe('CLOUD')
+    expect(next.cloudInspection).toBe(inspection)
   })
 
   it('handles CONVERSION_CONFIRMED: stores rates and advances Spliit imports to documents', () => {

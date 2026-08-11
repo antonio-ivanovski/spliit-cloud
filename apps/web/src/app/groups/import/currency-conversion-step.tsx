@@ -53,6 +53,8 @@ type Props = {
    * fixed-rate values when the user navigates back.
    */
   initialRates: Record<string, number>
+  /** Cloud restores use the source ledger currency and never apply FX here. */
+  currencyLocked?: boolean
   onBack: () => void
   onContinue: (result: ConversionResult) => void
 }
@@ -441,6 +443,7 @@ export function CurrencyConversionStep({
   fixedRateDates: initialDates,
   fixedRateOverrides: initialOverrides,
   initialRates,
+  currencyLocked = false,
   onBack,
   onContinue,
 }: Props) {
@@ -448,12 +451,19 @@ export function CurrencyConversionStep({
 
   const rateKeyItems = useMemo(
     () =>
-      computeImportRateKeys(
-        resolvedExpenses,
-        sourceCurrencyCode,
-        destinationCurrencyCode,
-      ),
-    [resolvedExpenses, sourceCurrencyCode, destinationCurrencyCode],
+      currencyLocked
+        ? []
+        : computeImportRateKeys(
+            resolvedExpenses,
+            sourceCurrencyCode,
+            destinationCurrencyCode,
+          ),
+    [
+      currencyLocked,
+      resolvedExpenses,
+      sourceCurrencyCode,
+      destinationCurrencyCode,
+    ],
   )
 
   const pairs = useMemo(() => uniquePairs(rateKeyItems), [rateKeyItems])
@@ -704,7 +714,7 @@ export function CurrencyConversionStep({
 
       <WizardNav
         step="currencyConversion"
-        includeDocuments={supportsDocumentRecovery(source)}
+        includeDocuments={currencyLocked || supportsDocumentRecovery(source)}
         onBack={onBack}
         onContinue={handleContinue}
         continueDisabled={!canContinue}

@@ -9,6 +9,11 @@ const shareRow = z.object({
   shares: z.number().int().nonnegative(),
 })
 
+const recurringShareRow = z.object({
+  ledgerParticipantId: sourceId,
+  shares: z.number().int().nonnegative(),
+})
+
 const splitMode = z.enum([
   'EVENLY',
   'BY_SHARES',
@@ -31,6 +36,38 @@ const item = z.object({
 
 const itemizedRemainder = z.object({ splitMode, paidFor: z.array(shareRow) })
 
+// Keep recurrence templates explicitly allow-listed. They are stored as JSON
+// in the database; passing unknown keys through could export future operational
+// values (tokens, hashes, or credentials) by accident.
+const recurringTemplate = z.object({
+  title: z.string(),
+  categoryId: z.string(),
+  amount: z.number().int(),
+  originalAmount: z.number().int().nullable(),
+  originalCurrency: z.string().nullable(),
+  conversionRate: z.number().nullable(),
+  conversionSource: z.enum(['EXCHANGE', 'CUSTOM']).nullable(),
+  paidBySplitMode: splitMode,
+  paidByList: z.array(recurringShareRow),
+  paidFor: z.array(recurringShareRow),
+  splitMode,
+  isReimbursement: z.boolean(),
+  notes: z.string().nullable(),
+  items: z.array(
+    z.object({
+      title: z.string(),
+      unitPrice: z.number().int(),
+      quantity: z.number().int(),
+      amount: z.number().int(),
+      splitMode,
+      paidFor: z.array(recurringShareRow),
+    }),
+  ),
+  itemizedRemainder: z
+    .object({ splitMode, paidFor: z.array(recurringShareRow) })
+    .nullable(),
+})
+
 export const exportDocumentSchema = z.object({
   sourceId,
   fileName: z.string().nullable(),
@@ -49,6 +86,7 @@ export const exportDocumentSchema = z.object({
 const comment = z.object({
   sourceId,
   authorName: z.string(),
+  authorParticipantId: sourceId.nullable().optional(),
   text: z.string(),
   createdAt: isoDateTime,
 })
@@ -95,7 +133,7 @@ const recurrenceSeries = z.object({
   endDate: dateOnly.nullable(),
   occurrencesCreated: z.number().int().nonnegative(),
   status: z.enum(['ACTIVE', 'PAUSED', 'COMPLETED', 'CANCELLED']),
-  template: z.unknown(),
+  template: recurringTemplate,
   version: z.number().int().positive(),
   createdAt: isoDateTime,
   updatedAt: isoDateTime,
@@ -106,12 +144,29 @@ const membership = z.object({
   status: z.enum(['PENDING', 'ACTIVE', 'LEFT', 'REMOVED', 'SUSPENDED']),
   joinedAt: isoDateTime.nullable(),
   leftAt: isoDateTime.nullable(),
+  createdAt: isoDateTime.nullable().optional(),
+  updatedAt: isoDateTime.nullable().optional(),
 })
 
 const participant = z.object({
   sourceId,
   kind: z.enum(['ACCOUNT_MEMBER', 'UNLINKED_PARTICIPANT']),
   displayName: z.string(),
+  identity: z
+    .discriminatedUnion('kind', [
+      z.object({
+        kind: z.literal('ACCOUNT'),
+        accountId: sourceId,
+        name: z.string(),
+        email: z.string().nullable(),
+      }),
+      z.object({
+        kind: z.literal('EMAIL'),
+        email: z.string().email(),
+      }),
+    ])
+    .nullable()
+    .optional(),
   removedAt: isoDateTime.nullable(),
   membership: membership.nullable(),
 })

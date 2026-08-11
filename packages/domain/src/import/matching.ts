@@ -63,8 +63,11 @@ export function applyAutoMatch(
   destinationParticipants: DestinationParticipant[],
 ): ParticipantMappingState[] {
   let changed = false
-  const next = participants.map((p, i) => {
-    if (i === 0 || p.mode !== 'INVITE_BY_EMAIL') return p
+  const next = participants.map((p) => {
+    // The importer account is identified by its explicit mapping mode. Do not
+    // rely on row position: Cloud bundles are sorted for readability and a
+    // user may reorder or edit mappings before auto-match runs.
+    if (p.mode === 'LINK_ACCOUNT' || p.mode !== 'INVITE_BY_EMAIL') return p
     const match = findBestNameMatch(
       p.source.sourceName,
       destinationParticipants,

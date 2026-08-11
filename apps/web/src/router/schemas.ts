@@ -54,7 +54,9 @@ const globalExpensesReturnTo = z
  */
 export const importGroupSearchSchema = z.object({
   prefill: z.string().optional(),
-  source: z.enum(['spliit', 'splitwise', 'tricount', 'settleup']).optional(),
+  source: z
+    .enum(['spliit', 'spliit-cloud', 'splitwise', 'tricount', 'settleup'])
+    .optional(),
 })
 
 /**

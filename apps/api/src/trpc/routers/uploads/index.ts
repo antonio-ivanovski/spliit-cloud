@@ -3,6 +3,7 @@ import { z } from 'zod'
 
 import {
   createUploadPresignForAccount,
+  mintCloudImportDocumentPresign,
   mintImportDocumentPresign,
   mintProfileImagePresign,
 } from '../../../routes/upload'
@@ -10,6 +11,7 @@ import { createTRPCRouter, protectedProcedure } from '../../init'
 import {
   profileImagePresignOutputSchema,
   importDocumentPresignOutputSchema,
+  cloudImportDocumentPresignOutputSchema,
   uploadPresignOutputSchema,
 } from '../../outputs/uploads'
 
@@ -67,6 +69,31 @@ export const uploadsRouter = createTRPCRouter({
       return (await readPresignResponse(
         response,
         'Import document presign failed',
+      )) as { uploadUrl: string; stagedToken: string }
+    }),
+
+  cloudImportDocumentPresign: protectedProcedure
+    .input(
+      z.object({
+        sessionId: z.uuid(),
+        sourceDocumentId: z.string().min(1),
+        fileName: z.string().nullable(),
+        contentType: z.string().nullable(),
+        fileSize: z.number().int().nonnegative(),
+        width: z.number().int().positive().nullable(),
+        height: z.number().int().positive().nullable(),
+        sha256: z.string().regex(/^[a-f0-9]{64}$/),
+      }),
+    )
+    .output(cloudImportDocumentPresignOutputSchema)
+    .mutation(async ({ ctx, input }) => {
+      const response = await mintCloudImportDocumentPresign({
+        ...input,
+        accountId: ctx.auth.user.id,
+      })
+      return (await readPresignResponse(
+        response,
+        'Cloud import document presign failed',
       )) as { uploadUrl: string; stagedToken: string }
     }),
 

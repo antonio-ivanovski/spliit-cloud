@@ -8,6 +8,7 @@ import { deleteGroupProcedure } from './delete.procedure'
 import { groupExpensesRouter } from './expenses'
 import { getGroupProcedure } from './get.procedure'
 import { getGroupDetailsProcedure } from './getDetails.procedure'
+import { importCloudBundleProcedure } from './import-cloud.procedure'
 import { importGroupProcedure } from './import.procedure'
 import { discoverImportDocumentsProcedure } from './importDocuments.procedure'
 import { importLinksRouter } from './importLinks'
@@ -91,6 +92,9 @@ export const groupsRouter = createTRPCRouter({
    * `groupFormValues`.
    */
   import: importGroupProcedure,
+
+  /** Restore a validated spliit.cloud group bundle into a new group. */
+  importCloudBundle: importCloudBundleProcedure,
 
   /** Discover receipt images from the original public spliit.app group. */
   discoverImportDocuments: discoverImportDocumentsProcedure,

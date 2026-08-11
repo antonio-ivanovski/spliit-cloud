@@ -1,9 +1,10 @@
-import { FolderPlus, Layers } from 'lucide-react'
+import { Archive, FolderPlus, Layers } from 'lucide-react'
 import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { GroupForm } from '@/components/group-form'
 import { Card, CardContent } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { trpc } from '@/trpc/client'
 import {
@@ -24,6 +25,10 @@ type Props = {
     currencyCode: string
   }
   mode: 'NEW_GROUP' | 'EXISTING_GROUP' | null
+  allowExisting?: boolean
+  currencyLocked?: boolean
+  initialArchived?: boolean
+  onArchivedChange?: (archived: boolean) => void
   onBack: () => void
   onContinue: (choice: {
     mode: 'NEW_GROUP' | 'EXISTING_GROUP'
@@ -41,12 +46,16 @@ export function DestinationStep({
   source,
   initialGroupFormValues,
   mode,
+  allowExisting = true,
+  currencyLocked = false,
+  initialArchived = false,
+  onArchivedChange,
   onBack,
   onContinue,
 }: Props) {
   const [currentMode, setCurrentMode] = useState<
     'NEW_GROUP' | 'EXISTING_GROUP'
-  >(mode ?? 'NEW_GROUP')
+  >(allowExisting ? (mode ?? 'NEW_GROUP') : 'NEW_GROUP')
   const { t } = useTranslation()
   const { data, isLoading } = trpc.account.groups.useQuery({
     includeArchived: false,
@@ -86,10 +95,12 @@ export function DestinationStep({
             <FolderPlus className="h-4 w-4" />
             {t('Groups.Import.Destination.newGroup')}
           </TabsTrigger>
-          <TabsTrigger value="EXISTING_GROUP" className="gap-2">
-            <Layers className="h-4 w-4" />
-            {t('Groups.Import.Destination.existingGroup')}
-          </TabsTrigger>
+          {allowExisting && (
+            <TabsTrigger value="EXISTING_GROUP" className="gap-2">
+              <Layers className="h-4 w-4" />
+              {t('Groups.Import.Destination.existingGroup')}
+            </TabsTrigger>
+          )}
         </TabsList>
 
         <TabsContent value="NEW_GROUP">
@@ -109,6 +120,7 @@ export function DestinationStep({
                   // prevents GroupForm from applying the account default.
                   currencyCode: initialGroupFormValues.currencyCode,
                 }}
+                currencyLocked={currencyLocked}
                 onSubmit={async (values) => {
                   onContinue({
                     mode: 'NEW_GROUP',
@@ -125,42 +137,58 @@ export function DestinationStep({
               />
             </CardContent>
           </Card>
-        </TabsContent>
-
-        <TabsContent value="EXISTING_GROUP">
-          {isLoading ? (
-            <p>{t('Groups.Import.Destination.loading')}</p>
-          ) : groups.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              {t('Groups.Import.Destination.noAdminGroups')}
-            </p>
-          ) : (
-            <div className="grid gap-2">
-              {groups.map((g) => (
-                <Card
-                  key={g.id}
-                  className="cursor-pointer transition hover:border-primary"
-                  onClick={() =>
-                    onContinue({
-                      mode: 'EXISTING_GROUP',
-                      targetGroupId: g.id,
-                      groupFormValues: initialGroupFormValues,
-                    })
-                  }
-                >
-                  <CardContent className="px-4 py-3">
-                    <p className="font-medium">{g.name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {t('Groups.Import.Destination.memberCount', {
-                        count: g.memberCount,
-                      })}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+          {onArchivedChange && (
+            <label className="mt-3 flex items-center gap-2 text-sm">
+              <Checkbox
+                checked={initialArchived}
+                onCheckedChange={(checked) =>
+                  onArchivedChange(checked === true)
+                }
+              />
+              <span className="flex items-center gap-2">
+                <Archive className="h-4 w-4" />
+                {t('Groups.Import.Cloud.restoreArchived')}
+              </span>
+            </label>
           )}
         </TabsContent>
+
+        {allowExisting && (
+          <TabsContent value="EXISTING_GROUP">
+            {isLoading ? (
+              <p>{t('Groups.Import.Destination.loading')}</p>
+            ) : groups.length === 0 ? (
+              <p className="text-sm text-muted-foreground">
+                {t('Groups.Import.Destination.noAdminGroups')}
+              </p>
+            ) : (
+              <div className="grid gap-2">
+                {groups.map((g) => (
+                  <Card
+                    key={g.id}
+                    className="cursor-pointer transition hover:border-primary"
+                    onClick={() =>
+                      onContinue({
+                        mode: 'EXISTING_GROUP',
+                        targetGroupId: g.id,
+                        groupFormValues: initialGroupFormValues,
+                      })
+                    }
+                  >
+                    <CardContent className="px-4 py-3">
+                      <p className="font-medium">{g.name}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {t('Groups.Import.Destination.memberCount', {
+                          count: g.memberCount,
+                        })}
+                      </p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+        )}
       </Tabs>
 
       <WizardNav

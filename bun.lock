@@ -116,6 +116,7 @@
         "date-fns": "^4.4.0",
         "dayjs": "^1.11.21",
         "embla-carousel-react": "^8.6.0",
+        "fflate": "^0.8.2",
         "heic-to": "^1.5.2",
         "i18next": "^26.3.4",
         "lucide-react": "^1.22.0",

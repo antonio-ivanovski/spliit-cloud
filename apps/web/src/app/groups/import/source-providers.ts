@@ -5,7 +5,12 @@ import {
   type ImportParseResult,
 } from '@spliit/domain/import'
 
-export type SourceMode = 'spliit' | 'splitwise' | 'tricount' | 'settleup'
+export type SourceMode =
+  | 'spliit'
+  | 'spliit-cloud'
+  | 'splitwise'
+  | 'tricount'
+  | 'settleup'
 
 type FileParser =
   | ((text: string) => ImportParseResult)
@@ -14,7 +19,11 @@ type FileParser =
 type ProviderConfig = {
   hasUrlPaste: boolean
   hasDomainSwap: boolean
-  fileImport: { csv: FileParser; json: FileParser | null } | null
+  fileImport: {
+    csv?: FileParser
+    json?: FileParser
+    cloud?: true
+  } | null
   accept: string
 }
 
@@ -25,10 +34,16 @@ export const PROVIDERS: Record<SourceMode, ProviderConfig> = {
     fileImport: { csv: tryParseSpliitCsv, json: tryParseSpliitExport },
     accept: '.json,.csv,application/json,text/csv',
   },
+  'spliit-cloud': {
+    hasUrlPaste: false,
+    hasDomainSwap: false,
+    fileImport: { cloud: true },
+    accept: '.spliit.zip,.zip,application/zip,application/x-zip-compressed',
+  },
   splitwise: {
     hasUrlPaste: false,
     hasDomainSwap: false,
-    fileImport: { csv: tryParseSplitwiseCsv, json: null },
+    fileImport: { csv: tryParseSplitwiseCsv },
     accept: '.csv,text/csv',
   },
   tricount: {
@@ -51,16 +66,23 @@ export function pickParser(
 ):
   | { format: 'csv'; parser: FileParser }
   | { format: 'json'; parser: FileParser }
+  | { format: 'cloud' }
   | { format: null } {
   const cfg = PROVIDERS[provider]
   if (!cfg.fileImport) return { format: null }
   const lower = fileName.toLowerCase()
+  if (cfg.fileImport.cloud && lower.endsWith('.zip')) {
+    return { format: 'cloud' }
+  }
   if (lower.endsWith('.csv')) {
-    return { format: 'csv', parser: cfg.fileImport.csv }
+    return cfg.fileImport.csv
+      ? { format: 'csv', parser: cfg.fileImport.csv }
+      : { format: null }
   }
   if (lower.endsWith('.json')) {
-    if (!cfg.fileImport.json) return { format: null }
-    return { format: 'json', parser: cfg.fileImport.json }
+    return cfg.fileImport.json
+      ? { format: 'json', parser: cfg.fileImport.json }
+      : { format: null }
   }
   return { format: null }
 }

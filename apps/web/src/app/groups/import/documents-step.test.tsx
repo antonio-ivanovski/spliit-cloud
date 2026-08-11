@@ -4,6 +4,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@/test/test-utils'
 import type { NormalizedSource } from '@spliit/domain/import'
 
+import type { CloudGroupBundleInspection } from './cloud-bundle'
+
 const mocks = vi.hoisted(() => ({
   discover: vi.fn(),
   presign: vi.fn(),
@@ -19,6 +21,9 @@ vi.mock('@/trpc/client', () => ({
     },
     uploads: {
       importDocumentPresign: {
+        useMutation: () => ({ mutateAsync: mocks.presign }),
+      },
+      cloudImportDocumentPresign: {
         useMutation: () => ({ mutateAsync: mocks.presign }),
       },
     },
@@ -112,6 +117,15 @@ describe('DocumentsStep', () => {
       skippedCount: 0,
       skippedEntirely: true,
     })
+  })
+
+  it('keeps the legacy description for spliit.app imports', () => {
+    renderStep()
+    expect(
+      screen.getByText(
+        /Spliit Cloud can securely copy receipt images from the original spliit\.app group/i,
+      ),
+    ).toBeInTheDocument()
   })
 
   it('shows partial loss in a dialog and can continue with recovered documents', async () => {
@@ -210,5 +224,327 @@ describe('DocumentsStep', () => {
       skippedCount: 0,
       skippedEntirely: true,
     })
+  })
+
+  it('stages Cloud bytes through the shared document UI without resizing', async () => {
+    const user = userEvent.setup()
+    const onContinue = vi.fn()
+    const cloudOnContinue = vi.fn()
+    const bytes = new Uint8Array([1, 2, 3, 4])
+    const document = {
+      sourceId: 'doc-1',
+      fileName: 'receipt.bin',
+      contentType: 'application/octet-stream',
+      width: null,
+      height: null,
+      path: 'documents/expense-1/doc-1__receipt.bin',
+      status: 'INCLUDED' as const,
+      sizeBytes: bytes.byteLength,
+      sha256: 'a'.repeat(64),
+    }
+    const inspection = {
+      kind: 'GROUP' as const,
+      manifest: {
+        expenses: [{ documents: [document] }],
+        orphanDocuments: [],
+      },
+      documents: new Map([['doc-1', bytes]]),
+      documentIssues: [],
+    } as unknown as CloudGroupBundleInspection
+    mocks.presign.mockResolvedValue({
+      uploadUrl: 'https://uploads.example.com/doc-1',
+      stagedToken: 'staged-doc-1',
+    })
+    const fetchMock = vi.fn(
+      async (_input: RequestInfo | URL, _init?: RequestInit) =>
+        new Response(null, { status: 200 }),
+    )
+    vi.stubGlobal('fetch', fetchMock)
+
+    render(
+      <DocumentsStep
+        source={source}
+        sessionId="00000000-0000-4000-8000-000000000001"
+        initialTokens={[]}
+        initialRecoveredCount={0}
+        initialSkippedCount={0}
+        initialSkippedEntirely={false}
+        initialCompleted={false}
+        onBack={vi.fn()}
+        onContinue={onContinue}
+        cloud={{
+          inspection,
+          initialDocuments: [],
+          initialIssues: [],
+          initialSkippedDocumentIds: [],
+          onContinue: cloudOnContinue,
+        }}
+      />,
+    )
+
+    expect(
+      screen.getByText(
+        /Restore the original document files embedded in this Spliit Cloud backup/i,
+      ),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('checkbox', {
+        name: /restore 1 document\(s\) from this backup/i,
+      }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText(/1 of 1 document\(s\) are ready to restore/i),
+    ).toBeInTheDocument()
+
+    await user.click(
+      screen.getByRole('button', { name: /continue to confirm/i }),
+    )
+
+    expect(await screen.findByText(/recovered 1 document/i)).toBeInTheDocument()
+    expect(onContinue).not.toHaveBeenCalled()
+    expect(cloudOnContinue).toHaveBeenCalledWith({
+      stagedDocuments: [
+        { sourceDocumentId: 'doc-1', stagedToken: 'staged-doc-1' },
+      ],
+      skippedDocumentIds: [],
+      acknowledgedIssues: false,
+    })
+    const uploadInit = fetchMock.mock.calls[0]?.[1]
+    expect(uploadInit).toMatchObject({
+      method: 'PUT',
+      body: expect.any(Blob),
+    })
+    const uploadBody = uploadInit?.body
+    if (!(uploadBody instanceof Blob)) throw new Error('Expected upload body')
+    expect([...new Uint8Array(await uploadBody.arrayBuffer())]).toEqual([
+      ...bytes,
+    ])
+  })
+
+  it('shows unavailable Cloud documents eagerly and requires an explicit skip', async () => {
+    const user = userEvent.setup()
+    const cloudOnContinue = vi.fn()
+    const inspection = {
+      kind: 'GROUP' as const,
+      manifest: {
+        expenses: [
+          {
+            documents: [{ sourceId: 'doc-missing', status: 'MISSING' }],
+          },
+        ],
+        orphanDocuments: [],
+      },
+      documents: new Map(),
+      documentIssues: [],
+    } as unknown as CloudGroupBundleInspection
+
+    render(
+      <DocumentsStep
+        source={source}
+        sessionId="00000000-0000-4000-8000-000000000001"
+        initialTokens={[]}
+        initialRecoveredCount={0}
+        initialSkippedCount={0}
+        initialSkippedEntirely={false}
+        initialCompleted={false}
+        onBack={vi.fn()}
+        onContinue={vi.fn()}
+        cloud={{
+          inspection,
+          initialDocuments: [],
+          initialIssues: [
+            { sourceId: 'doc-missing', path: null, message: 'Missing bytes' },
+          ],
+          initialSkippedDocumentIds: [],
+          onContinue: cloudOnContinue,
+        }}
+      />,
+    )
+
+    expect(
+      screen.getByText(/none of the documents in this backup are available/i),
+    ).toBeInTheDocument()
+    await user.click(
+      screen.getByRole('checkbox', {
+        name: /i understand these documents will be skipped/i,
+      }),
+    )
+    await user.click(
+      screen.getByRole('button', { name: /continue to confirm/i }),
+    )
+    expect(cloudOnContinue).toHaveBeenCalledWith({
+      stagedDocuments: [],
+      skippedDocumentIds: ['doc-missing'],
+      acknowledgedIssues: true,
+    })
+  })
+
+  it('turns an included document with missing bytes into an explicit skip', async () => {
+    const user = userEvent.setup()
+    const cloudOnContinue = vi.fn()
+    const document = {
+      sourceId: 'doc-missing-bytes',
+      fileName: 'receipt.bin',
+      contentType: 'application/octet-stream',
+      width: null,
+      height: null,
+      path: 'documents/expense-1/doc-missing-bytes__receipt.bin',
+      status: 'INCLUDED' as const,
+      sizeBytes: 1,
+      sha256: 'a'.repeat(64),
+    }
+    const inspection = {
+      kind: 'GROUP' as const,
+      manifest: { expenses: [{ documents: [document] }], orphanDocuments: [] },
+      documents: new Map(),
+      documentIssues: [],
+    } as unknown as CloudGroupBundleInspection
+
+    render(
+      <DocumentsStep
+        source={source}
+        sessionId="00000000-0000-4000-8000-000000000001"
+        initialTokens={[]}
+        initialRecoveredCount={0}
+        initialSkippedCount={0}
+        initialSkippedEntirely={false}
+        initialCompleted={false}
+        onBack={vi.fn()}
+        onContinue={vi.fn()}
+        cloud={{
+          inspection,
+          initialDocuments: [],
+          initialIssues: [],
+          initialSkippedDocumentIds: [],
+          onContinue: cloudOnContinue,
+        }}
+      />,
+    )
+
+    await user.click(
+      screen.getByRole('button', { name: /continue to confirm/i }),
+    )
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      /included document bytes are missing/i,
+    )
+    await user.click(
+      screen.getByRole('checkbox', {
+        name: /i understand these documents will be skipped/i,
+      }),
+    )
+    await user.click(
+      screen.getByRole('button', { name: /continue to confirm/i }),
+    )
+
+    expect(cloudOnContinue).toHaveBeenCalledWith({
+      stagedDocuments: [],
+      skippedDocumentIds: ['doc-missing-bytes'],
+      acknowledgedIssues: true,
+    })
+  })
+
+  it('explains when a Cloud bundle has no documents and continues without staging', async () => {
+    const user = userEvent.setup()
+    const cloudOnContinue = vi.fn()
+    const inspection = {
+      kind: 'GROUP' as const,
+      manifest: { expenses: [], orphanDocuments: [] },
+      documents: new Map(),
+      documentIssues: [],
+    } as unknown as CloudGroupBundleInspection
+
+    render(
+      <DocumentsStep
+        source={source}
+        sessionId="00000000-0000-4000-8000-000000000001"
+        initialTokens={[]}
+        initialRecoveredCount={0}
+        initialSkippedCount={0}
+        initialSkippedEntirely={false}
+        initialCompleted={false}
+        onBack={vi.fn()}
+        onContinue={vi.fn()}
+        cloud={{
+          inspection,
+          initialDocuments: [],
+          initialIssues: [],
+          initialSkippedDocumentIds: [],
+          onContinue: cloudOnContinue,
+        }}
+      />,
+    )
+
+    expect(
+      screen.getByText(/this backup contains no documents to restore/i),
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByRole('checkbox', {
+        name: /restore .* document/i,
+      }),
+    ).not.toBeInTheDocument()
+
+    await user.click(
+      screen.getByRole('button', { name: /continue to confirm/i }),
+    )
+    expect(cloudOnContinue).toHaveBeenCalledWith({
+      stagedDocuments: [],
+      skippedDocumentIds: [],
+      acknowledgedIssues: true,
+    })
+  })
+
+  it('aborts an in-flight Cloud staging run when navigating back', async () => {
+    const user = userEvent.setup()
+    const onBack = vi.fn()
+    const cloudOnContinue = vi.fn()
+    const document = {
+      sourceId: 'doc-1',
+      fileName: 'receipt.bin',
+      contentType: 'application/octet-stream',
+      width: null,
+      height: null,
+      path: 'documents/expense-1/doc-1__receipt.bin',
+      status: 'INCLUDED' as const,
+      sizeBytes: 1,
+      sha256: 'a'.repeat(64),
+    }
+    const inspection = {
+      kind: 'GROUP' as const,
+      manifest: { expenses: [{ documents: [document] }], orphanDocuments: [] },
+      documents: new Map([['doc-1', new Uint8Array([1])]]),
+      documentIssues: [],
+    } as unknown as CloudGroupBundleInspection
+    mocks.presign.mockReturnValue(new Promise(() => undefined))
+
+    render(
+      <DocumentsStep
+        source={source}
+        sessionId="00000000-0000-4000-8000-000000000001"
+        initialTokens={[]}
+        initialRecoveredCount={0}
+        initialSkippedCount={0}
+        initialSkippedEntirely={false}
+        initialCompleted={false}
+        onBack={onBack}
+        onContinue={vi.fn()}
+        cloud={{
+          inspection,
+          initialDocuments: [],
+          initialIssues: [],
+          initialSkippedDocumentIds: [],
+          onContinue: cloudOnContinue,
+        }}
+      />,
+    )
+
+    await user.click(
+      screen.getByRole('button', { name: /continue to confirm/i }),
+    )
+    await user.click(
+      screen.getByRole('button', { name: /back to currency conversion/i }),
+    )
+
+    expect(onBack).toHaveBeenCalledOnce()
+    expect(cloudOnContinue).not.toHaveBeenCalled()
   })
 })

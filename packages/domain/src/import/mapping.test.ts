@@ -165,7 +165,7 @@ describe('applyAutoMatch', () => {
     expect(next[1].linkedAccountId).toBeUndefined()
   })
 
-  it('preserves the first row even when its name matches a candidate', () => {
+  it('matches rows by explicit mode instead of preserving array index zero', () => {
     const participants: ParticipantMappingState[] = [
       mappingRow('p-0', 'John', 'INVITE_BY_EMAIL'),
       mappingRow('p-1', 'Jane', 'INVITE_BY_EMAIL'),
@@ -174,7 +174,8 @@ describe('applyAutoMatch', () => {
       dest('d-1', 'John'),
       dest('d-2', 'Jane'),
     ])
-    expect(next[0]).toBe(participants[0])
+    expect(next[0].mode).toBe('LINK_EXISTING_PARTICIPANT')
+    expect(next[0].existingLedgerParticipantId).toBe('d-1')
     expect(next[1].mode).toBe('LINK_EXISTING_PARTICIPANT')
   })
 
