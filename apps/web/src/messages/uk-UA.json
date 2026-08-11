@@ -1217,7 +1217,9 @@
       "Mortgage": "Іпотека",
       "Pets": "Домашні тварини",
       "Rent": "Оренда",
-      "Services": "Послуги"
+      "Services": "Послуги",
+      "Gardening": "Садівництво",
+      "Plants": "Рослини"
     },
     "Life": {
       "heading": "Життя",
@@ -1239,7 +1241,8 @@
       "Hotel": "Готель",
       "Parking": "Паркінг",
       "Plane": "Літак",
-      "Taxi": "Таксі"
+      "Taxi": "Таксі",
+      "Tolls": "Дорожні збори"
     },
     "Utilities": {
       "heading": "Комунальні послуги",
@@ -1261,8 +1264,7 @@
       "heading": "Підписки та членство",
       "Digital Subscriptions": "Цифрові підписки",
       "Memberships": "Членство"
-    },
-    "groupIncludes": "Містить підкатегорії"
+    }
   },
   "Auth": {
     "title": "Увійти до Spliit Cloud",

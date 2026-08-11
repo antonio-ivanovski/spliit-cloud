@@ -1209,7 +1209,9 @@
       "Mortgage": "משכנתא",
       "Pets": "חיות מחמד",
       "Rent": "שכירות",
-      "Services": "שירות(ים)"
+      "Services": "שירות(ים)",
+      "Gardening": "גינון",
+      "Plants": "צמחים"
     },
     "Life": {
       "heading": "חיים",
@@ -1231,7 +1233,8 @@
       "Hotel": "מלון",
       "Parking": "חניה",
       "Plane": "מטוס",
-      "Taxi": "מונית"
+      "Taxi": "מונית",
+      "Tolls": "אגרות כביש"
     },
     "Utilities": {
       "heading": "שירותים",
@@ -1253,8 +1256,7 @@
       "heading": "מינויים וחברויות",
       "Digital Subscriptions": "מינויים דיגיטליים",
       "Memberships": "חברויות"
-    },
-    "groupIncludes": "כולל קטגוריות משנה"
+    }
   },
   "Currencies": {
     "search": "חפש מטבע...",

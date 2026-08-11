@@ -1201,7 +1201,9 @@
       "Mortgage": "Mortgage",
       "Pets": "Evcil Hayvanlar",
       "Rent": "Kira",
-      "Services": "Hizmetler"
+      "Services": "Hizmetler",
+      "Gardening": "Bahçe işleri",
+      "Plants": "Bitkiler"
     },
     "Life": {
       "heading": "Yaşam",
@@ -1223,7 +1225,8 @@
       "Hotel": "Otel",
       "Parking": "Otopark",
       "Plane": "Uçak",
-      "Taxi": "Taksi"
+      "Taxi": "Taksi",
+      "Tolls": "Köprü ve otoyol ücretleri"
     },
     "Utilities": {
       "heading": "Faturalar",
@@ -1245,8 +1248,7 @@
       "heading": "Abonelikler ve Üyelikler",
       "Digital Subscriptions": "Dijital Abonelikler",
       "Memberships": "Üyelikler"
-    },
-    "groupIncludes": "Alt kategorileri içerir"
+    }
   },
   "Auth": {
     "title": "Spliit Cloud'da oturum açın",

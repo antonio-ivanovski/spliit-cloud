@@ -1209,7 +1209,9 @@
       "Mortgage": "Hipoteca",
       "Pets": "Mascotes",
       "Rent": "Lloguer",
-      "Services": "Serveis"
+      "Services": "Serveis",
+      "Gardening": "Jardineria",
+      "Plants": "Plantes"
     },
     "Life": {
       "heading": "Vida",
@@ -1231,7 +1233,8 @@
       "Hotel": "Hotel",
       "Parking": "Aparcament",
       "Plane": "Avió",
-      "Taxi": "Taxi"
+      "Taxi": "Taxi",
+      "Tolls": "Peatges"
     },
     "Utilities": {
       "heading": "Utilitats",
@@ -1253,8 +1256,7 @@
       "heading": "Subscripcions i membresies",
       "Digital Subscriptions": "Subscripcions digitals",
       "Memberships": "Membresies"
-    },
-    "groupIncludes": "Inclou subcategories"
+    }
   },
   "Currencies": {
     "search": "Cercar moneda...",

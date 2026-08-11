@@ -1217,7 +1217,9 @@
       "Mortgage": "Hypotéka",
       "Pets": "Domácí mazlíčci",
       "Rent": "Nájem",
-      "Services": "Služby"
+      "Services": "Služby",
+      "Gardening": "Zahradničení",
+      "Plants": "Rostliny"
     },
     "Life": {
       "heading": "Život",
@@ -1239,7 +1241,8 @@
       "Hotel": "Hotel",
       "Parking": "Parkování",
       "Plane": "Letadlo",
-      "Taxi": "Taxi"
+      "Taxi": "Taxi",
+      "Tolls": "Mýtné"
     },
     "Utilities": {
       "heading": "Služby",
@@ -1261,8 +1264,7 @@
       "heading": "Předplatné a členství",
       "Digital Subscriptions": "Digitální předplatné",
       "Memberships": "Členství"
-    },
-    "groupIncludes": "Zahrnuje podkategorie"
+    }
   },
   "Auth": {
     "title": "Přihlásit se do Spliit Cloud",

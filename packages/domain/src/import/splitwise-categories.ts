@@ -27,6 +27,8 @@ const CATEGORY_MAP: Record<string, CategoryId> = {
   'household supplies': 'household-supplies',
   maintenance: 'maintenance',
   mortgage: 'mortgage',
+  plants: 'plants',
+  gardening: 'gardening',
   pets: 'pets',
   rent: 'rent',
   services: 'services',
@@ -48,6 +50,8 @@ const CATEGORY_MAP: Record<string, CategoryId> = {
   parking: 'parking',
   plane: 'plane',
   taxi: 'taxi',
+  tolls: 'tolls',
+  toll: 'tolls',
   // Utilities
   utilities: 'utilities',
   cleaning: 'cleaning',

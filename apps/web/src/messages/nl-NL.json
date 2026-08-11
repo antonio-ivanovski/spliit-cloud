@@ -1201,7 +1201,9 @@
       "Mortgage": "Hypotheek",
       "Pets": "Huisdieren",
       "Rent": "Huur",
-      "Services": "Diensten"
+      "Services": "Diensten",
+      "Gardening": "Tuinieren",
+      "Plants": "Planten"
     },
     "Life": {
       "heading": "Leven",
@@ -1223,7 +1225,8 @@
       "Hotel": "Hotel",
       "Parking": "Parkeren",
       "Plane": "Vliegtuig",
-      "Taxi": "Taxi"
+      "Taxi": "Taxi",
+      "Tolls": "Tol"
     },
     "Utilities": {
       "heading": "Nutsvoorzieningen",
@@ -1245,8 +1248,7 @@
       "heading": "Abonnementen en lidmaatschappen",
       "Digital Subscriptions": "Digitale abonnementen",
       "Memberships": "Lidmaatschappen"
-    },
-    "groupIncludes": "Inclusief subcategorieën"
+    }
   },
   "Currencies": {
     "search": "Valuta zoeken...",

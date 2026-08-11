@@ -14,6 +14,7 @@ import {
   Dumbbell,
   Eraser,
   FerrisWheel,
+  Flower2,
   Fuel,
   Gift,
   HandHelping,
@@ -26,12 +27,14 @@ import {
   Music,
   ParkingMeter,
   Phone,
+  Receipt,
   PiggyBank,
   Plane,
   Plug,
   PlugZap,
   Shirt,
   ShoppingCart,
+  Sprout,
   Stethoscope,
   ThermometerSun,
   Train,
@@ -91,8 +94,12 @@ function getCategoryIcon(category: string): LucideIcon {
       return Lamp
     case 'Home/Maintenance':
       return Wrench
+    case 'Home/Gardening':
+      return Sprout
     case 'Home/Mortgage':
       return Landmark
+    case 'Home/Plants':
+      return Flower2
     case 'Home/Pets':
       return Cat
     case 'Home/Rent':
@@ -131,6 +138,8 @@ function getCategoryIcon(category: string): LucideIcon {
       return Hotel
     case 'Transportation/Parking':
       return ParkingMeter
+    case 'Transportation/Tolls':
+      return Receipt
     case 'Transportation/Plane':
       return Plane
     case 'Transportation/Taxi':

@@ -659,7 +659,9 @@
       "Mortgage": "mortgage",
       "Pets": "pet besties",
       "Rent": "rent",
-      "Services": "home services"
+      "Services": "home services",
+      "Gardening": "gardening",
+      "Plants": "plant babies"
     },
     "Life": {
       "heading": "life stuff",
@@ -693,7 +695,8 @@
       "Hotel": "hotel stay",
       "Parking": "parking",
       "Plane": "plane ticket",
-      "Taxi": "taxi ride"
+      "Taxi": "taxi ride",
+      "Tolls": "tolls"
     },
     "search": "search category…",
     "noCategory": "no category found, rip.",
@@ -710,8 +713,7 @@
       "Trash": "trash day",
       "TV/Phone/Internet": "TV, phone, or internet",
       "Water": "water bill"
-    },
-    "groupIncludes": "includes subcategories too"
+    }
   },
   "Common": {
     "close": "close it",

@@ -1209,7 +1209,9 @@
       "Mortgage": "Mutuo",
       "Pets": "Animali",
       "Rent": "Affitti",
-      "Services": "Servizi"
+      "Services": "Servizi",
+      "Gardening": "Giardinaggio",
+      "Plants": "Piante"
     },
     "Life": {
       "heading": "Vita",
@@ -1231,7 +1233,8 @@
       "Hotel": "Hotel",
       "Parking": "Parcheggio",
       "Plane": "Aereo",
-      "Taxi": "Taxi"
+      "Taxi": "Taxi",
+      "Tolls": "Pedaggi"
     },
     "Utilities": {
       "heading": "Utenze",
@@ -1253,8 +1256,7 @@
       "heading": "Abbonamenti e iscrizioni",
       "Digital Subscriptions": "Abbonamenti digitali",
       "Memberships": "Iscrizioni"
-    },
-    "groupIncludes": "Include sottocategorie"
+    }
   },
   "Currencies": {
     "search": "Cerca valuta...",

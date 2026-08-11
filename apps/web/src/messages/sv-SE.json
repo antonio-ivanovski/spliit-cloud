@@ -492,7 +492,9 @@
       "Mortgage": "Bolån",
       "Pets": "Husdjur",
       "Rent": "Hyra",
-      "Services": "Tjänster"
+      "Services": "Tjänster",
+      "Gardening": "Trädgårdsarbete",
+      "Plants": "Växter"
     },
     "Life": {
       "heading": "Liv",
@@ -526,7 +528,8 @@
       "Hotel": "Hotell",
       "Parking": "Parkering",
       "Plane": "Flyg",
-      "Taxi": "Taxi"
+      "Taxi": "Taxi",
+      "Tolls": "Vägtullar"
     },
     "search": "Sök kategori...",
     "noCategory": "Inga kategorier hittades.",
@@ -543,8 +546,7 @@
       "Trash": "Sophämtning",
       "TV/Phone/Internet": "TV/Telefon/Internet",
       "Water": "Vatten"
-    },
-    "groupIncludes": "Inkluderar underkategorier"
+    }
   },
   "Common": {
     "close": "Stäng",

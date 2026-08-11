@@ -1217,7 +1217,9 @@
       "Mortgage": "Kredyt",
       "Pets": "Zwierzaki",
       "Rent": "Czynsz",
-      "Services": "Usługi"
+      "Services": "Usługi",
+      "Gardening": "Ogrodnictwo",
+      "Plants": "Rośliny"
     },
     "Life": {
       "heading": "Życie",
@@ -1239,7 +1241,8 @@
       "Hotel": "Hotel",
       "Parking": "Parking",
       "Plane": "Samolot",
-      "Taxi": "Taksówka"
+      "Taxi": "Taksówka",
+      "Tolls": "Opłaty drogowe"
     },
     "Utilities": {
       "heading": "Media",
@@ -1261,8 +1264,7 @@
       "heading": "Subskrypcje i członkostwa",
       "Digital Subscriptions": "Subskrypcje cyfrowe",
       "Memberships": "Członkostwa"
-    },
-    "groupIncludes": "Obejmuje podkategorie"
+    }
   },
   "Auth": {
     "title": "Zaloguj się do Spliit Cloud",

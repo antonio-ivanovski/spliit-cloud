@@ -1487,7 +1487,9 @@
       "Mortgage": "Хипотека",
       "Pets": "Миленици",
       "Rent": "Кирија",
-      "Services": "Услуги"
+      "Services": "Услуги",
+      "Gardening": "Градинарство",
+      "Plants": "Растенија"
     },
     "Life": {
       "heading": "Живот",
@@ -1509,7 +1511,8 @@
       "Hotel": "Хотел",
       "Parking": "Паркинг",
       "Plane": "Авион",
-      "Taxi": "Такси"
+      "Taxi": "Такси",
+      "Tolls": "Патарина"
     },
     "Utilities": {
       "heading": "Комуналии",
@@ -1531,8 +1534,7 @@
       "heading": "Претплати и членарини",
       "Digital Subscriptions": "Дигитални претплати",
       "Memberships": "Членарини"
-    },
-    "groupIncludes": "Вклучува поткатегории"
+    }
   },
   "Currencies": {
     "search": "Пребарај валута...",

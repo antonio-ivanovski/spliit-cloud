@@ -492,7 +492,9 @@
       "Mortgage": "رہن",
       "Pets": "پالتو جانور",
       "Rent": "کرایہ",
-      "Services": "خدمات"
+      "Services": "خدمات",
+      "Gardening": "باغبانی",
+      "Plants": "پودے"
     },
     "Life": {
       "heading": "زندگی",
@@ -526,7 +528,8 @@
       "Hotel": "ہوٹل",
       "Parking": "پارکنگ",
       "Plane": "ہوائی جہاز",
-      "Taxi": "ٹیکسی"
+      "Taxi": "ٹیکسی",
+      "Tolls": "ٹول"
     },
     "search": "زمرہ تلاش کریں...",
     "noCategory": "کوئی زمرہ نہیں ملا۔",
@@ -543,8 +546,7 @@
       "Trash": "کوڑا کرکٹ",
       "TV/Phone/Internet": "TV/فون/انٹرنیٹ",
       "Water": "پانی"
-    },
-    "groupIncludes": "ذیلی زمرے شامل ہیں"
+    }
   },
   "Common": {
     "close": "بند کریں",

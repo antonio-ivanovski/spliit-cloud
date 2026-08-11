@@ -1209,7 +1209,9 @@
       "Mortgage": "Ipotecă",
       "Pets": "Animale de companie",
       "Rent": "Chirie",
-      "Services": "Servicii"
+      "Services": "Servicii",
+      "Gardening": "Grădinărit",
+      "Plants": "Plante"
     },
     "Life": {
       "heading": "Viață",
@@ -1231,7 +1233,8 @@
       "Hotel": "Hotel",
       "Parking": "Parcare",
       "Plane": "Avion",
-      "Taxi": "Taxi"
+      "Taxi": "Taxi",
+      "Tolls": "Taxe de drum"
     },
     "Utilities": {
       "heading": "Utilități",
@@ -1253,8 +1256,7 @@
       "heading": "Abonamente și membri",
       "Digital Subscriptions": "Abonamente digitale",
       "Memberships": "Membri"
-    },
-    "groupIncludes": "Include subcategorii"
+    }
   },
   "Currencies": {
     "search": "Caută monedă…",

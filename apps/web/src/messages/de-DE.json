@@ -1233,7 +1233,9 @@
       "Mortgage": "Hypothek",
       "Pets": "Haustiere",
       "Rent": "Miete",
-      "Services": "Dienstleistungen"
+      "Services": "Dienstleistungen",
+      "Gardening": "Gartenarbeit",
+      "Plants": "Pflanzen"
     },
     "Life": {
       "heading": "Leben",
@@ -1255,7 +1257,8 @@
       "Hotel": "Hotel",
       "Parking": "Parken",
       "Plane": "Flugzeug",
-      "Taxi": "Taxi"
+      "Taxi": "Taxi",
+      "Tolls": "Maut"
     },
     "Utilities": {
       "heading": "Versorgung",
@@ -1277,8 +1280,7 @@
       "heading": "Abonnements und Mitgliedschaften",
       "Digital Subscriptions": "Digitale Abonnements",
       "Memberships": "Mitgliedschaften"
-    },
-    "groupIncludes": "Enthält Unterkategorien"
+    }
   },
   "Currencies": {
     "search": "Währung suchen...",

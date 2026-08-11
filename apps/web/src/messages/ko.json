@@ -1028,7 +1028,9 @@
       "Mortgage": "주택 담보 대출",
       "Pets": "반려동물",
       "Rent": "임대료 / 월세",
-      "Services": "서비스"
+      "Services": "서비스",
+      "Gardening": "원예",
+      "Plants": "식물"
     },
     "Life": {
       "Childcare": "육아 / 보육",
@@ -1050,7 +1052,8 @@
       "Hotel": "호텔/숙박",
       "Parking": "주차비",
       "Plane": "비행기/항공",
-      "Taxi": "택시"
+      "Taxi": "택시",
+      "Tolls": "통행료"
     },
     "Utilities": {
       "heading": "공과금",
@@ -1072,8 +1075,7 @@
       "heading": "구독 및 멤버십",
       "Digital Subscriptions": "디지털 구독",
       "Memberships": "멤버십"
-    },
-    "groupIncludes": "하위 카테고리 포함"
+    }
   },
   "Homepage": {
     "button": {

@@ -1194,7 +1194,9 @@
       "Mortgage": "貸款",
       "Pets": "寵物",
       "Rent": "租金",
-      "Services": "服務"
+      "Services": "服務",
+      "Gardening": "園藝",
+      "Plants": "植物"
     },
     "Life": {
       "heading": "生活",
@@ -1216,7 +1218,8 @@
       "Hotel": "旅館/住宿",
       "Parking": "停車",
       "Plane": "飛機",
-      "Taxi": "計程車"
+      "Taxi": "計程車",
+      "Tolls": "過路費"
     },
     "Utilities": {
       "heading": "日常帳單",
@@ -1238,8 +1241,7 @@
       "heading": "訂閱與會員",
       "Digital Subscriptions": "數位訂閱",
       "Memberships": "會員"
-    },
-    "groupIncludes": "包括子類別"
+    }
   },
   "Auth": {
     "title": "登入 Spliit Cloud",

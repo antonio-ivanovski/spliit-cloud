@@ -1201,7 +1201,9 @@
       "Mortgage": "Laina",
       "Pets": "Lemmikit",
       "Rent": "Vuokra",
-      "Services": "Palvelut"
+      "Services": "Palvelut",
+      "Gardening": "Puutarhanhoito",
+      "Plants": "Kasvit"
     },
     "Life": {
       "heading": "Elämä",
@@ -1223,7 +1225,8 @@
       "Hotel": "Hotelli",
       "Parking": "Pysäköinti",
       "Plane": "Lentäminen",
-      "Taxi": "Taksi"
+      "Taxi": "Taksi",
+      "Tolls": "Tietullit"
     },
     "Utilities": {
       "heading": "Sekalaiset",
@@ -1245,8 +1248,7 @@
       "heading": "Tilaukset ja jäsenyydet",
       "Digital Subscriptions": "Digitaaliset tilaukset",
       "Memberships": "Jäsenyydet"
-    },
-    "groupIncludes": "Sisältää alakategoriat"
+    }
   },
   "Currencies": {
     "search": "Etsi valuuttaa...",

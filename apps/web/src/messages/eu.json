@@ -1209,7 +1209,9 @@
       "Mortgage": "Hipoteka",
       "Pets": "Maskotak",
       "Rent": "Etxeko errenta",
-      "Services": "Zerbitzuak"
+      "Services": "Zerbitzuak",
+      "Gardening": "Baratzea",
+      "Plants": "Landareak"
     },
     "Life": {
       "heading": "Bizitza",
@@ -1231,7 +1233,8 @@
       "Hotel": "Hotela",
       "Parking": "Aparkalekua",
       "Plane": "Hegazkina",
-      "Taxi": "Taxia"
+      "Taxi": "Taxia",
+      "Tolls": "Ordainlekuak"
     },
     "Utilities": {
       "heading": "Erabilgarritasunak",
@@ -1253,8 +1256,7 @@
       "heading": "Harpidetzak eta kidetzak",
       "Digital Subscriptions": "Harpidetza digitalak",
       "Memberships": "Kidetzak"
-    },
-    "groupIncludes": "Azpikategoriak barne"
+    }
   },
   "Currencies": {
     "search": "Bilatu moneta...",

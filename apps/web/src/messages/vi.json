@@ -1584,7 +1584,9 @@
       "Mortgage": "Thế chấp",
       "Pets": "Thú cưng",
       "Rent": "Tiền thuê nhà",
-      "Services": "Dịch vụ"
+      "Services": "Dịch vụ",
+      "Gardening": "Làm vườn",
+      "Plants": "Cây trồng"
     },
     "Life": {
       "heading": "Đời sống",
@@ -1606,7 +1608,8 @@
       "Hotel": "Khách sạn",
       "Parking": "Đỗ xe",
       "Plane": "Máy bay",
-      "Taxi": "Taxi"
+      "Taxi": "Taxi",
+      "Tolls": "Phí cầu đường"
     },
     "Utilities": {
       "heading": "Tiện ích",
@@ -1628,8 +1631,7 @@
     },
     "Personal Care and Wellness": {
       "heading": "Chăm sóc cá nhân"
-    },
-    "groupIncludes": "Bao gồm các danh mục con"
+    }
   },
   "Currencies": {
     "search": "Tìm loại tiền…",

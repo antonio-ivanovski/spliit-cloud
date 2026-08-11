@@ -28,7 +28,7 @@ describe('CategorySelector', () => {
 
     await user.click(screen.getByRole('combobox'))
     const parent = await screen.findByRole('option', {
-      name: /Home \(Includes subcategories\)/,
+      name: /^Home$/,
     })
     expect(parent).toHaveClass('font-semibold')
     expect(screen.getByText('Rent').parentElement).toHaveClass('ps-8')
@@ -54,7 +54,7 @@ describe('CategorySelector', () => {
 
     await user.click(screen.getByRole('combobox'))
     const parent = await screen.findByRole('option', {
-      name: /Home \(Includes subcategories\)/,
+      name: /^Home$/,
     })
     // Parent row and child rows all show a visible check icon.
     expect(parent.querySelector('svg.lucide-check')).toBeTruthy()
@@ -76,42 +76,28 @@ describe('CategorySelector', () => {
     )
 
     await user.click(screen.getByRole('combobox'))
-    expect(
-      screen.getByRole('option', { name: /Home \(Includes subcategories\)/ }),
-    ).toBeInTheDocument()
+    expect(screen.getByRole('option', { name: /^Home$/ })).toBeInTheDocument()
 
     await user.click(await screen.findByText('Rent'))
     expect(onValueChange).toHaveBeenCalledWith('rent')
   })
 
   it('collapses all children to the parent via toggleCategorySelection', () => {
+    const homeChildren = DEFAULT_CATEGORIES.filter(
+      (category) => category.parentId === 'home',
+    ).map((category) => category.id)
+    // Toggling a child that is already selected (while all are selected except
+    // one) expands to the other children.
     expect(
       toggleCategorySelection(
-        [
-          'rent',
-          'pets',
-          'electronics',
-          'furniture',
-          'household-supplies',
-          'maintenance',
-          'mortgage',
-          'services',
-        ],
+        homeChildren.filter((id) => id !== 'rent'),
         'rent',
       ),
-    ).not.toEqual(['home'])
+    ).toEqual(['home'])
     // Selecting the missing sibling collapses.
     expect(
       toggleCategorySelection(
-        [
-          'electronics',
-          'furniture',
-          'household-supplies',
-          'maintenance',
-          'mortgage',
-          'pets',
-          'services',
-        ],
+        homeChildren.filter((id) => id !== 'rent'),
         'rent',
       ),
     ).toEqual(['home'])

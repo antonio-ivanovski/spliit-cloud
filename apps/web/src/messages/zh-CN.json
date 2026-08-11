@@ -1194,7 +1194,9 @@
       "Mortgage": "贷款",
       "Pets": "宠物",
       "Rent": "租金",
-      "Services": "服务"
+      "Services": "服务",
+      "Gardening": "园艺",
+      "Plants": "植物"
     },
     "Life": {
       "heading": "生活",
@@ -1216,7 +1218,8 @@
       "Hotel": "旅馆",
       "Parking": "停车",
       "Plane": "飞机",
-      "Taxi": "出租车"
+      "Taxi": "出租车",
+      "Tolls": "过路费"
     },
     "Utilities": {
       "heading": "日常账单",
@@ -1238,8 +1241,7 @@
       "heading": "订阅与会员",
       "Digital Subscriptions": "数字订阅",
       "Memberships": "会员"
-    },
-    "groupIncludes": "包括子类别"
+    }
   },
   "Currencies": {
     "search": "搜索币种...",

@@ -1584,7 +1584,9 @@
       "Mortgage": "Mortgage",
       "Pets": "Pets",
       "Rent": "Rent",
-      "Services": "Services"
+      "Services": "Services",
+      "Gardening": "Gardening",
+      "Plants": "Plants"
     },
     "Life": {
       "heading": "Life",
@@ -1606,7 +1608,8 @@
       "Hotel": "Hotel",
       "Parking": "Parking",
       "Plane": "Plane",
-      "Taxi": "Taxi"
+      "Taxi": "Taxi",
+      "Tolls": "Tolls"
     },
     "Utilities": {
       "heading": "Utilities",
@@ -1628,8 +1631,7 @@
     },
     "Personal Care and Wellness": {
       "heading": "Personal Care and Wellness"
-    },
-    "groupIncludes": "Includes subcategories"
+    }
   },
   "Currencies": {
     "search": "Search currency...",

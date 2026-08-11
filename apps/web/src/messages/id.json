@@ -1503,7 +1503,9 @@
       "Mortgage": "Cicilan",
       "Pets": "Binatang peliharaan",
       "Rent": "Sewa",
-      "Services": "Servis"
+      "Services": "Servis",
+      "Gardening": "Berkebun",
+      "Plants": "Tanaman"
     },
     "Life": {
       "heading": "Kehidupan",
@@ -1525,7 +1527,8 @@
       "Hotel": "Hotel",
       "Parking": "Parkir",
       "Plane": "Pesawat",
-      "Taxi": "Taksi"
+      "Taxi": "Taksi",
+      "Tolls": "Tarif jalan"
     },
     "Utilities": {
       "heading": "Utilitas",
@@ -1547,8 +1550,7 @@
       "heading": "Langganan dan Keanggotaan",
       "Digital Subscriptions": "Langganan digital",
       "Memberships": "Keanggotaan"
-    },
-    "groupIncludes": "Termasuk subkategori"
+    }
   },
   "Auth": {
     "title": "Masuk ke Spliit Cloud",

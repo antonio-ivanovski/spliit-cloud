@@ -1194,7 +1194,9 @@
       "Mortgage": "住宅ローン",
       "Pets": "ペット",
       "Rent": "家賃",
-      "Services": "サービス"
+      "Services": "サービス",
+      "Gardening": "ガーデニング",
+      "Plants": "植物"
     },
     "Life": {
       "heading": "生活",
@@ -1216,7 +1218,8 @@
       "Hotel": "ホテル",
       "Parking": "駐車場",
       "Plane": "飛行機",
-      "Taxi": "タクシー"
+      "Taxi": "タクシー",
+      "Tolls": "通行料"
     },
     "Utilities": {
       "heading": "公共料金",
@@ -1238,8 +1241,7 @@
       "heading": "サブスクリプションと会員費",
       "Digital Subscriptions": "デジタルサブスクリプション",
       "Memberships": "会員費"
-    },
-    "groupIncludes": "サブカテゴリーを含む"
+    }
   },
   "Currencies": {
     "search": "通貨を検索…",

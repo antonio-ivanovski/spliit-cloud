@@ -1411,7 +1411,9 @@
       "Maintenance": "صيانة",
       "Services": "خدمات",
       "Rent": "إيجار",
-      "heading": "منزل"
+      "heading": "منزل",
+      "Gardening": "بستنة",
+      "Plants": "نباتات"
     },
     "Personal Care and Wellness": {
       "heading": "عناية شخصية وصحة"
@@ -1434,7 +1436,8 @@
       "Gas/Fuel": "وقود",
       "Bicycle": "دراجة",
       "heading": "مواصلات",
-      "Car": "سيارة"
+      "Car": "سيارة",
+      "Tolls": "رسوم مرور"
     },
     "Life": {
       "Taxes": "ضريبة",
@@ -1473,8 +1476,7 @@
       "Water": "ماء",
       "Electricity": "كهرباء",
       "Cleaning": "تنظيف"
-    },
-    "groupIncludes": "تشمل الفئات الفرعية"
+    }
   },
   "AccountSettings": {
     "emailHelp": "بريدك الإلكتروني مرتبط بحسابك ولا يمكن تغييره هنا.",

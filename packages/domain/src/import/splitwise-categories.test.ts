@@ -31,6 +31,14 @@ describe('splitwiseCategoryToId for the compact category taxonomy', () => {
     },
   )
 
+  it.each(['Tolls', 'Toll'])('maps %s to Tolls', (category) => {
+    expect(splitwiseCategoryToId(category)).toBe('tolls')
+  })
+
+  it.each(['Plants', 'Gardening'])('maps %s to its Home child', (category) => {
+    expect(splitwiseCategoryToId(category)).toBe(category.toLowerCase())
+  })
+
   it('preserves existing categories instead of broadening them', () => {
     expect(splitwiseCategoryToId('Entertainment - Movies')).toBe('movies')
     expect(splitwiseCategoryToId('Utilities - TV/Phone/Internet')).toBe(

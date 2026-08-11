@@ -268,7 +268,6 @@ function CategoryCommand({
               parent.grouping as keyof typeof CATEGORY_GROUPING_HEADINGS
             ],
           )
-          const includesLabel = t('groupIncludes')
           const parentSelected =
             mode === 'multi'
               ? isEffectivelySelected(parent)
@@ -277,7 +276,7 @@ function CategoryCommand({
           return (
             <CommandGroup key={parent.id}>
               <CommandItem
-                value={`${parent.id} ${String(groupLabel)} ${String(includesLabel)}`}
+                value={`${parent.id} ${String(groupLabel)}`}
                 onSelect={() => {
                   if (mode === 'multi') {
                     onValueToggle?.(parent.id)
@@ -285,11 +284,7 @@ function CategoryCommand({
                     onValueChange?.(parent.id)
                   }
                 }}
-                aria-label={
-                  children.length > 0
-                    ? `${String(groupLabel)} (${String(includesLabel)})`
-                    : String(groupLabel)
-                }
+                aria-label={String(groupLabel)}
                 className="w-full bg-muted/40 font-semibold"
               >
                 {mode === 'multi' && (
@@ -301,14 +296,7 @@ function CategoryCommand({
                   />
                 )}
                 <Layers className="me-2 h-4 w-4 shrink-0" aria-hidden="true" />
-                <span className="flex min-w-0 flex-1 items-baseline gap-2">
-                  <span className="truncate">{groupLabel}</span>
-                  {children.length > 0 && (
-                    <span className="truncate text-xs font-normal text-muted-foreground">
-                      {includesLabel}
-                    </span>
-                  )}
-                </span>
+                <span className="min-w-0 flex-1 truncate">{groupLabel}</span>
               </CommandItem>
               {children.map((category) => {
                 const childSelected =

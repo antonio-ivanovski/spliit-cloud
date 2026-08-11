@@ -149,7 +149,19 @@ export const DEFAULT_CATEGORIES = defineCategories([
     parentId: 'home',
   },
   { id: 'mortgage', grouping: 'Home', name: 'Mortgage', parentId: 'home' },
+  {
+    id: 'gardening',
+    grouping: 'Home',
+    name: 'Gardening',
+    parentId: 'home',
+  },
   { id: 'pets', grouping: 'Home', name: 'Pets', parentId: 'home' },
+  {
+    id: 'plants',
+    grouping: 'Home',
+    name: 'Plants',
+    parentId: 'home',
+  },
   { id: 'rent', grouping: 'Home', name: 'Rent', parentId: 'home' },
   { id: 'services', grouping: 'Home', name: 'Services', parentId: 'home' },
   // Life
@@ -220,6 +232,12 @@ export const DEFAULT_CATEGORIES = defineCategories([
     id: 'taxi',
     grouping: 'Transportation',
     name: 'Taxi',
+    parentId: 'transportation',
+  },
+  {
+    id: 'tolls',
+    grouping: 'Transportation',
+    name: 'Tolls',
     parentId: 'transportation',
   },
   // Utilities

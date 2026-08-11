@@ -42,16 +42,14 @@ describe('CategorySelector inside modal dialog (desktop)', () => {
     await user.click(screen.getByRole('combobox'))
 
     const parent = await screen.findByRole('option', {
-      name: /Home \(Includes subcategories\)/,
+      name: /^Home$/,
     })
 
     await user.click(parent)
 
     expect(onValueToggle).toHaveBeenCalledWith('home')
     expect(
-      await screen.findByRole('option', {
-        name: /Home \(Includes subcategories\)/,
-      }),
+      await screen.findByRole('option', { name: /^Home$/ }),
     ).toBeInTheDocument()
   })
 })
