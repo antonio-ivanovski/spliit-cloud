@@ -181,6 +181,44 @@
       "voicePromptsDescription": "आपकी आवाज़ से खर्च बनाते समय AI के व्यवहार को अनुकूलित करें (विभाजन, भुगतानकर्ता डिफ़ॉल्ट आदि)।",
       "saving": "प्राथमिकताएँ सहेजी जा रही हैं…",
       "masterLabel": "AI सुविधाएँ सक्षम करें"
+    },
+    "export": {
+      "groupsTitle": "समूह",
+      "selectedCount": "{total} में से {selected} समूह चुने गए",
+      "loadingGroups": "समूह लोड हो रहे हैं…",
+      "groupsError": "समूह लोड नहीं किए जा सके।",
+      "retry": "पुनः प्रयास करें",
+      "emptySection": "इस सेक्शन में कोई समूह नहीं है।",
+      "cancel": "रद्द करें",
+      "download": "बैकअप डाउनलोड करें",
+      "badges": {
+        "archived": "संग्रहीत समूह",
+        "hidden": "छिपा हुआ समूह"
+      },
+      "sectionTitle": "बैकअप और निर्यात",
+      "sectionDescription": "अपने Spliit Cloud डेटा का पोर्टेबल बैकअप बनाएं।",
+      "sectionRowLabel": "खाता बैकअप",
+      "sectionRowDescription": "एक बार के डाउनलोड के लिए समूह और वैकल्पिक प्राथमिकताएँ चुनें।",
+      "open": "निर्यात कॉन्फ़िगर करें",
+      "title": "खाता बैकअप निर्यात करें",
+      "description": "इस Spliit Cloud बैकअप में क्या शामिल करना है, चुनें। आपका चयन केवल इसी डाउनलोड के लिए उपयोग किया जाएगा।",
+      "contentTitle": "शामिल करें",
+      "content": {
+        "documents": "दस्तावेज़ फ़ाइलें",
+        "documentsDescription": "रसीद फ़ाइलों को बैकअप में कॉपी करें।",
+        "accountPreferences": "खाता प्राथमिकताएँ",
+        "accountPreferencesDescription": "रूप-रंग, डिफ़ॉल्ट सेटिंग, AI और सूचना प्राथमिकताएँ शामिल करें।",
+        "groupPreferences": "समूह प्राथमिकताएँ",
+        "groupPreferencesDescription": "तारांकित, छिपे हुए और डिफ़ॉल्ट विभाजन की सेटिंग्स शामिल करें।"
+      },
+      "sectionOverrides": "{count} अपवाद",
+      "sections": {
+        "GROUPS": "समूह",
+        "FRIENDS": "मित्र",
+        "STARRED": "तारांकित",
+        "ARCHIVED": "संग्रहीत",
+        "HIDDEN": "छिपे हुए"
+      }
     }
   },
   "Activities": {

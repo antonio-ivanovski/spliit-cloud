@@ -2125,6 +2125,44 @@
       "voicePromptsDescription": "Personalizza il comportamento dell'IA durante la creazione di spese con la tua voce (ripartizione, pagatore predefinito, ecc.).",
       "saving": "Salvataggio delle preferenze…",
       "masterLabel": "Abilita le funzioni IA"
+    },
+    "export": {
+      "groupsTitle": "Gruppi",
+      "selectedCount": "{selected} gruppi selezionati su {total}",
+      "loadingGroups": "Caricamento dei gruppi…",
+      "groupsError": "Impossibile caricare i gruppi.",
+      "retry": "Riprova",
+      "emptySection": "Nessun gruppo in questa sezione.",
+      "cancel": "Annulla",
+      "download": "Scarica il backup",
+      "badges": {
+        "archived": "Gruppo archiviato",
+        "hidden": "Gruppo nascosto"
+      },
+      "sectionTitle": "Backup ed esportazione",
+      "sectionDescription": "Crea un backup portatile dei tuoi dati Spliit Cloud.",
+      "sectionRowLabel": "Backup dell’account",
+      "sectionRowDescription": "Scegli i gruppi e le preferenze opzionali per un unico download.",
+      "open": "Configura l’esportazione",
+      "title": "Esporta il backup dell’account",
+      "description": "Scegli cosa includere in questo backup Spliit Cloud. La selezione verrà usata solo per questo download.",
+      "contentTitle": "Includi",
+      "content": {
+        "documents": "File dei documenti",
+        "documentsDescription": "Copia i file delle ricevute nel backup.",
+        "accountPreferences": "Preferenze dell’account",
+        "accountPreferencesDescription": "Includi l’aspetto, le impostazioni predefinite, le preferenze IA e le notifiche.",
+        "groupPreferences": "Preferenze dei gruppi",
+        "groupPreferencesDescription": "Includi le impostazioni dei gruppi speciali e nascosti e della divisione predefinita."
+      },
+      "sectionOverrides": "{count} eccezioni",
+      "sections": {
+        "GROUPS": "Gruppi",
+        "FRIENDS": "Registri con un amico",
+        "STARRED": "Speciali",
+        "ARCHIVED": "Archiviati",
+        "HIDDEN": "Nascosti"
+      }
     }
   },
   "Activities": {

@@ -13,6 +13,7 @@ import { useCurrentAccount } from '@/lib/use-current-account'
 import { cn } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 
+import { AccountExportModal } from './account-export-modal'
 import { AccountPreferences } from './account-preferences'
 import { AccountAiPreferences } from './ai-preferences'
 import { NotificationsPreferences } from './notifications-preferences'
@@ -296,6 +297,7 @@ function AccountSettingsContent() {
         </SettingsSection>
       </form>
       <AccountPreferences />
+      <AccountExportModal />
       <NotificationsPreferences />
       <AccountAiPreferences />
     </main>

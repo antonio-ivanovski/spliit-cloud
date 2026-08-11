@@ -2116,6 +2116,44 @@
       "voicePromptsDescription": "Muokkaa tekoälyn toimintaa, kun se luo kuluja äänestäsi (jakaminen, oletusmaksaja jne.).",
       "saving": "Tallennetaan…",
       "masterLabel": "Ota tekoälyominaisuudet käyttöön"
+    },
+    "export": {
+      "groupsTitle": "Ryhmät",
+      "selectedCount": "{selected}/{total} ryhmää valittu",
+      "loadingGroups": "Ladataan ryhmiä…",
+      "groupsError": "Ryhmien lataaminen epäonnistui.",
+      "retry": "Yritä uudelleen",
+      "emptySection": "Tässä osiossa ei ole ryhmiä.",
+      "cancel": "Peruuta",
+      "download": "Lataa varmuuskopio",
+      "badges": {
+        "archived": "Arkistoitu ryhmä",
+        "hidden": "Piilotettu ryhmä"
+      },
+      "sectionTitle": "Varmuuskopiot ja vienti",
+      "sectionDescription": "Luo siirrettävä varmuuskopio Spliit Cloud -tiedoistasi.",
+      "sectionRowLabel": "Tilin varmuuskopio",
+      "sectionRowDescription": "Valitse ryhmät ja valinnaiset asetukset kertalatausta varten.",
+      "open": "Määritä vienti",
+      "title": "Vie tilin varmuuskopio",
+      "description": "Valitse, mitä tähän Spliit Cloud -varmuuskopioon sisällytetään. Valinta koskee vain tätä latausta.",
+      "contentTitle": "Sisällytä",
+      "content": {
+        "documents": "Dokumenttitiedostot",
+        "documentsDescription": "Kopioi kuittitiedostot varmuuskopioon.",
+        "accountPreferences": "Tilin asetukset",
+        "accountPreferencesDescription": "Sisällytä ulkoasu-, oletus-, tekoäly- ja ilmoitusasetukset.",
+        "groupPreferences": "Ryhmäasetukset",
+        "groupPreferencesDescription": "Sisällytä suosikkiryhmät, piilotetut ryhmät sekä oletusjaon asetukset."
+      },
+      "sectionOverrides": "{count} poikkeusta",
+      "sections": {
+        "GROUPS": "Ryhmät",
+        "FRIENDS": "Ystävät",
+        "STARRED": "Suosikit",
+        "ARCHIVED": "Arkistoidut",
+        "HIDDEN": "Piilotettu"
+      }
     }
   },
   "Activities": {

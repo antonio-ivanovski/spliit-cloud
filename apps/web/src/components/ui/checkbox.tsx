@@ -1,5 +1,5 @@
 import { Checkbox as CheckboxPrimitive } from '@base-ui/react/checkbox'
-import { Check } from 'lucide-react'
+import { Check, Minus } from 'lucide-react'
 import * as React from 'react'
 
 import { cn } from '@/lib/utils'
@@ -17,9 +17,18 @@ const Checkbox = React.forwardRef<
     {...props}
   >
     <CheckboxPrimitive.Indicator
-      className={cn('flex items-center justify-center text-current')}
+      className={cn(
+        'group flex items-center justify-center text-current',
+      )}
     >
-      <Check className="h-4 w-4" />
+      <Check
+        className="h-4 w-4 group-data-[indeterminate]:hidden"
+        aria-hidden="true"
+      />
+      <Minus
+        className="hidden h-4 w-4 group-data-[indeterminate]:block"
+        aria-hidden="true"
+      />
     </CheckboxPrimitive.Indicator>
   </CheckboxPrimitive.Root>
 ))

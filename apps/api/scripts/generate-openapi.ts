@@ -359,6 +359,86 @@ function buildExportPaths(): Record<string, OpenAPIV3_1.PathItemObject> {
     }) satisfies OpenAPIV3_1.ResponseObject
 
   return {
+    '/account/export/bundle': {
+      post: {
+        tags: ['account'],
+        summary: 'Download a selective account export bundle',
+        description:
+          'Stream a ZIP containing the selected account preferences and group snapshots. Requires an authenticated account.',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: [
+                  'sections',
+                  'groupOverrides',
+                  'includeDocuments',
+                  'includeAccountPreferences',
+                  'includeGroupPreferences',
+                ],
+                properties: {
+                  sections: {
+                    type: 'object',
+                    required: [
+                      'GROUPS',
+                      'FRIENDS',
+                      'STARRED',
+                      'ARCHIVED',
+                      'HIDDEN',
+                    ],
+                    properties: {
+                      GROUPS: { type: 'boolean' },
+                      FRIENDS: { type: 'boolean' },
+                      STARRED: { type: 'boolean' },
+                      ARCHIVED: { type: 'boolean' },
+                      HIDDEN: { type: 'boolean' },
+                    },
+                  },
+                  groupOverrides: {
+                    type: 'array',
+                    items: {
+                      type: 'object',
+                      required: ['groupSourceId', 'included'],
+                      properties: {
+                        groupSourceId: { type: 'string' },
+                        included: { type: 'boolean' },
+                      },
+                    },
+                  },
+                  includeDocuments: { type: 'boolean' },
+                  includeAccountPreferences: { type: 'boolean' },
+                  includeGroupPreferences: { type: 'boolean' },
+                },
+              },
+            },
+            'application/x-www-form-urlencoded': {
+              schema: {
+                type: 'object',
+                required: ['selection'],
+                properties: { selection: { type: 'string' } },
+              },
+            },
+          },
+        },
+        responses: {
+          '200': {
+            description: 'ZIP file (Content-Disposition: attachment).',
+            content: {
+              'application/zip': {
+                schema: { type: 'string', format: 'binary' },
+              },
+            },
+          },
+          '400': errorResponse('Invalid export selection', '{"error":"..."}'),
+          '401': errorResponse(
+            'Unauthenticated',
+            '{"error":"Unauthenticated"}',
+          ),
+        },
+      },
+    },
     '/groups/{groupId}/export/bundle': {
       parameters: [groupIdParam],
       get: {

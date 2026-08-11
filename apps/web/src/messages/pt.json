@@ -2125,6 +2125,44 @@
       "voicePromptsDescription": "Personaliza o comportamento da IA ao criar despesas com a tua voz (divisão, pagador predefinido, etc.).",
       "saving": "A guardar preferências…",
       "masterLabel": "Ativar recursos de IA"
+    },
+    "export": {
+      "groupsTitle": "Grupos",
+      "selectedCount": "{selected} de {total} grupos selecionados",
+      "loadingGroups": "A carregar grupos…",
+      "groupsError": "Não foi possível carregar os grupos.",
+      "retry": "Tentar novamente",
+      "emptySection": "Não há grupos nesta secção.",
+      "cancel": "Cancelar",
+      "download": "Descarregar a cópia de segurança",
+      "badges": {
+        "archived": "Grupo arquivado",
+        "hidden": "Grupo oculto"
+      },
+      "sectionTitle": "Cópias de segurança e exportação",
+      "sectionDescription": "Cria uma cópia de segurança portátil dos teus dados do Spliit Cloud.",
+      "sectionRowLabel": "Cópia de segurança da conta",
+      "sectionRowDescription": "Escolhe os grupos e as preferências opcionais para um único descarregamento.",
+      "open": "Configurar exportação",
+      "title": "Exportar a cópia de segurança da conta",
+      "description": "Escolhe o que incluir nesta cópia de segurança do Spliit Cloud. A tua seleção só será utilizada para este descarregamento.",
+      "contentTitle": "Incluir",
+      "content": {
+        "documents": "Ficheiros de documentos",
+        "documentsDescription": "Copia os ficheiros dos recibos para a cópia de segurança.",
+        "accountPreferences": "Preferências da conta",
+        "accountPreferencesDescription": "Inclui o aspeto, as predefinições, as preferências de IA e as notificações.",
+        "groupPreferences": "Preferências dos grupos",
+        "groupPreferencesDescription": "Inclui as definições dos grupos favoritos e ocultos e da divisão predefinida."
+      },
+      "sectionOverrides": "{count} exceções",
+      "sections": {
+        "GROUPS": "Grupos",
+        "FRIENDS": "Registos com um amigo",
+        "STARRED": "Favoritos",
+        "ARCHIVED": "Arquivados",
+        "HIDDEN": "Ocultos"
+      }
     }
   },
   "Activities": {

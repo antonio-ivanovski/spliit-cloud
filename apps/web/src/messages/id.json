@@ -2109,6 +2109,44 @@
       "voicePromptsDescription": "Sesuaikan perilaku AI saat membuat pengeluaran dari suara Anda (pembagian, pembayar bawaan, dll.).",
       "saving": "Menyimpan preferensi…",
       "masterLabel": "Aktifkan fitur AI"
+    },
+    "export": {
+      "groupsTitle": "Grup",
+      "selectedCount": "{selected} dari {total} grup dipilih",
+      "loadingGroups": "Memuat grup…",
+      "groupsError": "Grup tidak dapat dimuat.",
+      "retry": "Coba lagi",
+      "emptySection": "Tidak ada grup di bagian ini.",
+      "cancel": "Batalkan",
+      "download": "Unduh cadangan",
+      "badges": {
+        "archived": "Grup terarsipkan",
+        "hidden": "Grup tersembunyi"
+      },
+      "sectionTitle": "Cadangan & ekspor",
+      "sectionDescription": "Buat cadangan portabel data Spliit Cloud Anda.",
+      "sectionRowLabel": "Cadangan akun",
+      "sectionRowDescription": "Pilih grup dan preferensi opsional untuk unduhan satu kali.",
+      "open": "Atur ekspor",
+      "title": "Ekspor cadangan akun",
+      "description": "Pilih yang ingin disertakan dalam cadangan Spliit Cloud ini. Pilihan Anda hanya digunakan untuk unduhan ini.",
+      "contentTitle": "Sertakan",
+      "content": {
+        "documents": "Berkas dokumen",
+        "documentsDescription": "Salin berkas tanda terima ke cadangan.",
+        "accountPreferences": "Preferensi akun",
+        "accountPreferencesDescription": "Sertakan tampilan, pengaturan bawaan, AI, dan preferensi notifikasi.",
+        "groupPreferences": "Preferensi grup",
+        "groupPreferencesDescription": "Sertakan pengaturan berbintang, tersembunyi, dan pembagian bawaan."
+      },
+      "sectionOverrides": "{count} pengecualian",
+      "sections": {
+        "GROUPS": "Grup",
+        "FRIENDS": "Teman",
+        "STARRED": "Berbintang",
+        "ARCHIVED": "Diarsipkan",
+        "HIDDEN": "Tersembunyi"
+      }
     }
   },
   "Activities": {

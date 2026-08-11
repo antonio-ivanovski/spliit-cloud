@@ -912,6 +912,44 @@
       "voicePromptsDescription": "Điều chỉnh hành vi AI khi tạo khoản chi từ giọng nói của bạn (chia khoản, người thanh toán mặc định, v.v.).",
       "saving": "Đang lưu tùy chọn…",
       "masterLabel": "Bật tính năng AI"
+    },
+    "export": {
+      "groupsTitle": "Nhóm",
+      "selectedCount": "Đã chọn {selected}/{total} nhóm",
+      "loadingGroups": "Đang tải nhóm…",
+      "groupsError": "Không thể tải nhóm.",
+      "retry": "Thử lại",
+      "emptySection": "Không có nhóm nào trong phần này.",
+      "cancel": "Hủy",
+      "download": "Tải bản sao lưu",
+      "badges": {
+        "archived": "Nhóm đã lưu trữ",
+        "hidden": "Nhóm đã ẩn"
+      },
+      "sectionTitle": "Sao lưu & xuất",
+      "sectionDescription": "Tạo bản sao lưu có thể chuyển đổi cho dữ liệu Spliit Cloud.",
+      "sectionRowLabel": "Bản sao lưu tài khoản",
+      "sectionRowDescription": "Chọn nhóm và tùy chọn bổ sung cho một lần tải xuống.",
+      "open": "Thiết lập xuất",
+      "title": "Xuất bản sao lưu tài khoản",
+      "description": "Chọn nội dung đưa vào bản sao lưu Spliit Cloud này. Lựa chọn chỉ được dùng cho lần tải xuống này.",
+      "contentTitle": "Bao gồm",
+      "content": {
+        "documents": "Tệp tài liệu",
+        "documentsDescription": "Sao chép các tệp biên lai vào bản sao lưu.",
+        "accountPreferences": "Tùy chọn tài khoản",
+        "accountPreferencesDescription": "Bao gồm giao diện, cài đặt mặc định, AI và tùy chọn thông báo.",
+        "groupPreferences": "Tùy chọn nhóm",
+        "groupPreferencesDescription": "Bao gồm tùy chọn gắn sao, ẩn và cách chia mặc định."
+      },
+      "sectionOverrides": "{count} ngoại lệ",
+      "sections": {
+        "GROUPS": "Nhóm",
+        "FRIENDS": "Bạn bè",
+        "STARRED": "Đã gắn sao",
+        "ARCHIVED": "Đã lưu trữ",
+        "HIDDEN": "Đã ẩn"
+      }
     }
   },
   "CompleteProfile": {

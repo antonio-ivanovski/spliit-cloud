@@ -181,6 +181,44 @@
       "voicePromptsDescription": "آپ کی آواز سے خرچ بناتے وقت AI کے رویے کو ترتیب دیں (تقسیم، ادا کنندہ کی ڈیفالٹس وغیرہ)۔",
       "saving": "ترجیحات محفوظ کی جا رہی ہیں…",
       "masterLabel": "اے آئی خصوصیات فعال کریں"
+    },
+    "export": {
+      "groupsTitle": "گروپس",
+      "selectedCount": "کل {total} میں سے {selected} گروپس منتخب ہیں",
+      "loadingGroups": "گروپس لوڈ ہو رہے ہیں…",
+      "groupsError": "گروپس لوڈ نہیں ہو سکے۔",
+      "retry": "دوبارہ کوشش کریں",
+      "emptySection": "اس حصے میں کوئی گروپ نہیں ہے۔",
+      "cancel": "منسوخ کریں",
+      "download": "بیک اپ ڈاؤن لوڈ کریں",
+      "badges": {
+        "archived": "آرکائیو شدہ گروپ",
+        "hidden": "چھپے ہوئے گروپ"
+      },
+      "sectionTitle": "بیک اپ اور برآمد",
+      "sectionDescription": "اپنے Spliit Cloud ڈیٹا کا قابلِ منتقلی بیک اپ بنائیں۔",
+      "sectionRowLabel": "اکاؤنٹ بیک اپ",
+      "sectionRowDescription": "ایک بار کے ڈاؤن لوڈ کے لیے گروپس اور اختیاری ترجیحات منتخب کریں۔",
+      "open": "برآمد ترتیب دیں",
+      "title": "اکاؤنٹ بیک اپ برآمد کریں",
+      "description": "اس Spliit Cloud بیک اپ میں کیا شامل کرنا ہے، منتخب کریں۔ آپ کا انتخاب صرف اس ڈاؤن لوڈ کے لیے استعمال ہوگا۔",
+      "contentTitle": "شامل کریں",
+      "content": {
+        "documents": "دستاویزات کی فائلیں",
+        "documentsDescription": "رسید کی فائلیں بیک اپ میں کاپی کریں۔",
+        "accountPreferences": "اکاؤنٹ کی ترجیحات",
+        "accountPreferencesDescription": "ظاہری شکل، طے شدہ ترتیبات، AI اور اطلاع کی ترجیحات شامل کریں۔",
+        "groupPreferences": "گروپ کی ترجیحات",
+        "groupPreferencesDescription": "ستارہ شدہ، چھپے ہوئے اور ڈیفالٹ تقسیم کی ترتیبات شامل کریں۔"
+      },
+      "sectionOverrides": "{count} استثنا",
+      "sections": {
+        "GROUPS": "گروپس",
+        "FRIENDS": "دوست",
+        "STARRED": "ستارہ شدہ",
+        "ARCHIVED": "آرکائیو شدہ",
+        "HIDDEN": "چھپے ہوئے"
+      }
     }
   },
   "Activities": {

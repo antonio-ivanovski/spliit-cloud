@@ -912,6 +912,44 @@
       "voicePromptsDescription": "Tailor the AI behavior when creating expenses from your voice (splitting, payer defaults, etc.).",
       "saving": "Saving preferences…",
       "masterLabel": "Enable AI features"
+    },
+    "export": {
+      "sectionTitle": "Backups & export",
+      "sectionDescription": "Create a portable backup of your Spliit Cloud data.",
+      "sectionRowLabel": "Account backup",
+      "sectionRowDescription": "Choose groups and optional preferences for a one-time download.",
+      "open": "Configure export",
+      "title": "Export account backup",
+      "description": "Choose what to include in this Spliit Cloud backup. Your selection is used for this download only.",
+      "contentTitle": "Include",
+      "content": {
+        "documents": "Document files",
+        "documentsDescription": "Copy receipt files into the backup.",
+        "accountPreferences": "Account preferences",
+        "accountPreferencesDescription": "Include appearance, defaults, AI, and notification preferences.",
+        "groupPreferences": "Group preferences",
+        "groupPreferencesDescription": "Include starred, hidden, and default split settings."
+      },
+      "groupsTitle": "Groups",
+      "selectedCount": "{selected} of {total} groups selected",
+      "loadingGroups": "Loading groups…",
+      "groupsError": "Groups could not be loaded.",
+      "retry": "Retry",
+      "emptySection": "No groups in this section.",
+      "cancel": "Cancel",
+      "download": "Download backup",
+      "sections": {
+        "GROUPS": "Groups",
+        "FRIENDS": "Friends",
+        "STARRED": "Starred",
+        "ARCHIVED": "Archived",
+        "HIDDEN": "Hidden"
+      },
+      "badges": {
+        "archived": "Archived group",
+        "hidden": "Hidden group"
+      },
+      "sectionOverrides": "{count} exceptions"
     }
   },
   "CompleteProfile": {

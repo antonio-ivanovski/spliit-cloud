@@ -408,6 +408,15 @@ export async function inspectSpliitCloudBundle(
       }
       continue
     }
+    if (document.status === 'OMITTED') {
+      documentIssues.push({
+        sourceId: document.sourceId,
+        path: null,
+        message:
+          'This document was intentionally left out of the export and will be skipped.',
+      })
+      continue
+    }
     if (!document.path || !isSafeArchivePath(document.path)) {
       documentIssues.push({
         sourceId: document.sourceId,

@@ -1705,6 +1705,44 @@
       "voicePromptsDescription": "خصّص سلوك الذكاء الاصطناعي عند إنشاء النفقات من صوتك (تقسيم المصاريف، الافتراضات للدافع، وما إلى ذلك).",
       "saving": "جارٍ حفظ التفضيلات…",
       "masterLabel": "تمكين ميزات الذكاء الاصطناعي"
+    },
+    "export": {
+      "groupsTitle": "المجموعات",
+      "selectedCount": "تم اختيار {selected} من أصل {total} مجموعة",
+      "loadingGroups": "جارٍ تحميل المجموعات…",
+      "groupsError": "تعذّر تحميل المجموعات.",
+      "retry": "حاول مرة أخرى",
+      "emptySection": "لا توجد مجموعات في هذا القسم.",
+      "cancel": "إلغاء",
+      "download": "تنزيل النسخة الاحتياطية",
+      "badges": {
+        "archived": "مجموعة مؤرشفة",
+        "hidden": "مجموعة مخفية"
+      },
+      "sectionTitle": "النسخ الاحتياطية والتصدير",
+      "sectionDescription": "أنشئ نسخة احتياطية محمولة من بيانات Spliit Cloud.",
+      "sectionRowLabel": "نسخة احتياطية للحساب",
+      "sectionRowDescription": "اختر المجموعات والتفضيلات الاختيارية لتنزيل لمرة واحدة.",
+      "open": "إعداد التصدير",
+      "title": "تصدير نسخة احتياطية للحساب",
+      "description": "اختر ما تريد تضمينه في هذه النسخة الاحتياطية من Spliit Cloud. سيُستخدم اختيارك لهذا التنزيل فقط.",
+      "contentTitle": "تضمين",
+      "content": {
+        "documents": "ملفات المستندات",
+        "documentsDescription": "نسخ ملفات الإيصالات إلى النسخة الاحتياطية.",
+        "accountPreferences": "تفضيلات الحساب",
+        "accountPreferencesDescription": "تضمين السمة والإعدادات الافتراضية وميزات الذكاء الاصطناعي وتفضيلات الإشعارات.",
+        "groupPreferences": "تفضيلات المجموعات",
+        "groupPreferencesDescription": "تضمين إعدادات المجموعات المثبتة والمخفية والتقسيم الافتراضي."
+      },
+      "sectionOverrides": "الاستثناءات: {count}",
+      "sections": {
+        "GROUPS": "المجموعات",
+        "FRIENDS": "الأصدقاء",
+        "STARRED": "المثبتة",
+        "ARCHIVED": "المؤرشفة",
+        "HIDDEN": "المخفية"
+      }
     }
   },
   "Header": {

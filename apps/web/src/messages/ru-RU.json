@@ -2134,6 +2134,44 @@
       "voicePromptsDescription": "Настройте поведение ИИ при создании расходов из вашего голоса (разделение, плательщик по умолчанию и т. д.).",
       "saving": "Сохранение настроек…",
       "masterLabel": "Включить функции ИИ"
+    },
+    "export": {
+      "groupsTitle": "Группы",
+      "selectedCount": "{selected} из {total} выбранных групп",
+      "loadingGroups": "Загрузка групп…",
+      "groupsError": "Не удалось загрузить группы.",
+      "retry": "Повторить",
+      "emptySection": "В этом разделе нет групп.",
+      "cancel": "Отмена",
+      "download": "Скачать резервную копию",
+      "badges": {
+        "archived": "Архивная группа",
+        "hidden": "Скрытая группа"
+      },
+      "sectionTitle": "Резервные копии и экспорт",
+      "sectionDescription": "Создайте переносимую резервную копию данных Spliit Cloud.",
+      "sectionRowLabel": "Резервная копия аккаунта",
+      "sectionRowDescription": "Выберите группы и дополнительные настройки для однократной загрузки.",
+      "open": "Настроить экспорт",
+      "title": "Экспорт резервной копии аккаунта",
+      "description": "Выберите, что включить в эту резервную копию Spliit Cloud. Выбор используется только для этой загрузки.",
+      "contentTitle": "Включить",
+      "content": {
+        "documents": "Файлы документов",
+        "documentsDescription": "Скопировать файлы чеков в резервную копию.",
+        "accountPreferences": "Настройки аккаунта",
+        "accountPreferencesDescription": "Включить оформление, настройки по умолчанию, ИИ и настройки уведомлений.",
+        "groupPreferences": "Настройки группы",
+        "groupPreferencesDescription": "Включить настройки избранных и скрытых групп, а также разделения по умолчанию."
+      },
+      "sectionOverrides": "{count} исключений",
+      "sections": {
+        "GROUPS": "Группы",
+        "FRIENDS": "Друзья",
+        "STARRED": "Избранные",
+        "ARCHIVED": "Архивные",
+        "HIDDEN": "Скрытые"
+      }
     }
   },
   "Activities": {

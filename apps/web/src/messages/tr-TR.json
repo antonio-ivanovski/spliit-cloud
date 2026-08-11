@@ -2116,6 +2116,44 @@
       "voicePromptsDescription": "Sesinizden gider oluştururken yapay zeka davranışını uyarlayın (bölüştürme, varsayılan ödeyen vb.).",
       "saving": "Tercihler kaydediliyor…",
       "masterLabel": "Yapay zekâ özelliklerini etkinleştir"
+    },
+    "export": {
+      "groupsTitle": "Gruplar",
+      "selectedCount": "{selected}/{total} grup seçildi",
+      "loadingGroups": "Gruplar yükleniyor…",
+      "groupsError": "Gruplar yüklenemedi.",
+      "retry": "Yeniden dene",
+      "emptySection": "Bu bölümde grup yok.",
+      "cancel": "İptal",
+      "download": "Yedeği indir",
+      "badges": {
+        "archived": "Arşivlenmiş grup",
+        "hidden": "Gizli grup"
+      },
+      "sectionTitle": "Yedekler ve dışa aktarma",
+      "sectionDescription": "Spliit Cloud verilerinizin taşınabilir bir yedeğini oluşturun.",
+      "sectionRowLabel": "Hesap yedeği",
+      "sectionRowDescription": "Tek seferlik bir indirme için grupları ve isteğe bağlı tercihleri seçin.",
+      "open": "Dışa aktarmayı yapılandır",
+      "title": "Hesap yedeğini dışa aktar",
+      "description": "Bu Spliit Cloud yedeğine nelerin dahil edileceğini seçin. Seçiminiz yalnızca bu indirme için kullanılır.",
+      "contentTitle": "Dahil edilecekler",
+      "content": {
+        "documents": "Belge dosyaları",
+        "documentsDescription": "Makbuz dosyalarını yedeğe kopyalayın.",
+        "accountPreferences": "Hesap ayarları",
+        "accountPreferencesDescription": "Görünüm, varsayılanlar, yapay zekâ ve bildirim tercihlerini dahil edin.",
+        "groupPreferences": "Grup ayarları",
+        "groupPreferencesDescription": "Yıldızlı, gizli ve varsayılan bölünme ayarlarını dahil edin."
+      },
+      "sectionOverrides": "{count} istisna",
+      "sections": {
+        "GROUPS": "Gruplar",
+        "FRIENDS": "Arkadaşlar",
+        "STARRED": "Yıldızlı",
+        "ARCHIVED": "Arşivlenmiş gruplar",
+        "HIDDEN": "Gizli"
+      }
     }
   },
   "Activities": {

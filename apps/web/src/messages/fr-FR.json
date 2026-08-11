@@ -2125,6 +2125,44 @@
       "voicePromptsDescription": "Personnalisez le comportement de l'IA lors de la création de dépenses avec votre voix (répartition, payeur par défaut, etc.).",
       "saving": "Enregistrement des préférences…",
       "masterLabel": "Activer les fonctionnalités d’IA"
+    },
+    "export": {
+      "groupsTitle": "Groupes",
+      "selectedCount": "{selected} sur {total} groupes sélectionnés",
+      "loadingGroups": "Chargement des groupes…",
+      "groupsError": "Impossible de charger les groupes.",
+      "retry": "Réessayer",
+      "emptySection": "Aucun groupe dans cette section.",
+      "cancel": "Annuler",
+      "download": "Télécharger la sauvegarde",
+      "badges": {
+        "archived": "Groupe archivé",
+        "hidden": "Groupe masqué"
+      },
+      "sectionTitle": "Sauvegardes et exportation",
+      "sectionDescription": "Créez une sauvegarde portable de vos données Spliit Cloud.",
+      "sectionRowLabel": "Sauvegarde du compte",
+      "sectionRowDescription": "Choisissez les groupes et les préférences facultatives pour un téléchargement unique.",
+      "open": "Configurer l’exportation",
+      "title": "Exporter la sauvegarde du compte",
+      "description": "Choisissez ce qui doit être inclus dans cette sauvegarde Spliit Cloud. Votre sélection ne servira que pour ce téléchargement.",
+      "contentTitle": "Inclure",
+      "content": {
+        "documents": "Fichiers de documents",
+        "documentsDescription": "Copiez les fichiers de reçus dans la sauvegarde.",
+        "accountPreferences": "Préférences du compte",
+        "accountPreferencesDescription": "Incluez l’apparence, les paramètres par défaut, les préférences d’IA et de notifications.",
+        "groupPreferences": "Préférences des groupes",
+        "groupPreferencesDescription": "Incluez les paramètres des groupes favoris et masqués ainsi que de la répartition par défaut."
+      },
+      "sectionOverrides": "{count} cas particuliers",
+      "sections": {
+        "GROUPS": "Groupes",
+        "FRIENDS": "Comptes entre amis",
+        "STARRED": "Favoris",
+        "ARCHIVED": "Archivés",
+        "HIDDEN": "Masqués"
+      }
     }
   },
   "Activities": {

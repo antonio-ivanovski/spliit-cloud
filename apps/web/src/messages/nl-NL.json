@@ -2116,6 +2116,44 @@
       "voicePromptsDescription": "Pas het AI-gedrag aan bij het maken van uitgaven met je stem (verdelen, standaardbetaler enz.).",
       "saving": "Opslaan…",
       "masterLabel": "AI-functies inschakelen"
+    },
+    "export": {
+      "groupsTitle": "Groepen",
+      "selectedCount": "{selected} van {total} groepen geselecteerd",
+      "loadingGroups": "Groepen laden…",
+      "groupsError": "Groepen konden niet worden geladen.",
+      "retry": "Opnieuw proberen",
+      "emptySection": "Geen groepen in dit onderdeel.",
+      "cancel": "Annuleren",
+      "download": "Back-up downloaden",
+      "badges": {
+        "archived": "Gearchiveerde groep",
+        "hidden": "Verborgen groep"
+      },
+      "sectionTitle": "Back-ups en export",
+      "sectionDescription": "Maak een draagbare back-up van je Spliit Cloud-gegevens.",
+      "sectionRowLabel": "Accountback-up",
+      "sectionRowDescription": "Kies groepen en optionele voorkeuren voor een eenmalige download.",
+      "open": "Export instellen",
+      "title": "Accountback-up exporteren",
+      "description": "Kies wat je in deze Spliit Cloud-back-up wilt opnemen. Je keuze geldt alleen voor deze download.",
+      "contentTitle": "Opnemen",
+      "content": {
+        "documents": "Documentbestanden",
+        "documentsDescription": "Kopieer bonbestanden naar de back-up.",
+        "accountPreferences": "Accountvoorkeuren",
+        "accountPreferencesDescription": "Neem instellingen voor weergave, standaardwaarden, AI en meldingen op.",
+        "groupPreferences": "Groepsvoorkeuren",
+        "groupPreferencesDescription": "Neem instellingen voor favoriete groepen, verborgen groepen en standaardverdelingen op."
+      },
+      "sectionOverrides": "{count} uitzonderingen",
+      "sections": {
+        "GROUPS": "Groepen",
+        "FRIENDS": "Vrienden",
+        "STARRED": "Favoriete",
+        "ARCHIVED": "Gearchiveerde groepen",
+        "HIDDEN": "Verborgen"
+      }
     }
   },
   "Activities": {

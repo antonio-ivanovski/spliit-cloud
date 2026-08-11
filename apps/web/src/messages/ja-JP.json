@@ -2109,6 +2109,44 @@
       "voicePromptsDescription": "音声から支出を作成するときのAIの動作を調整します（分割、支払い者のデフォルトなど）。",
       "saving": "保存中…",
       "masterLabel": "AI機能を有効にする"
+    },
+    "export": {
+      "groupsTitle": "グループ",
+      "selectedCount": "{total} グループ中 {selected} グループを選択中",
+      "loadingGroups": "グループを読み込み中…",
+      "groupsError": "グループを読み込めませんでした。",
+      "retry": "再試行",
+      "emptySection": "このセクションにグループはありません。",
+      "cancel": "キャンセル",
+      "download": "バックアップをダウンロード",
+      "badges": {
+        "archived": "アーカイブ済みグループ",
+        "hidden": "非表示のグループ"
+      },
+      "sectionTitle": "バックアップとエクスポート",
+      "sectionDescription": "Spliit Cloudのデータを持ち運べるバックアップを作成します。",
+      "sectionRowLabel": "アカウントのバックアップ",
+      "sectionRowDescription": "一度限りのダウンロードに含めるグループと、任意の設定を選択します。",
+      "open": "エクスポートを設定",
+      "title": "アカウントのバックアップをエクスポート",
+      "description": "このSpliit Cloudバックアップに含める項目を選択します。選択内容は今回のダウンロードにのみ使用されます。",
+      "contentTitle": "含める項目",
+      "content": {
+        "documents": "ドキュメントファイル",
+        "documentsDescription": "領収書ファイルをバックアップにコピーします。",
+        "accountPreferences": "アカウント設定",
+        "accountPreferencesDescription": "外観、デフォルト、AI、通知の設定を含めます。",
+        "groupPreferences": "グループ設定",
+        "groupPreferencesDescription": "スター付き、非表示、デフォルトの分割設定を含めます。"
+      },
+      "sectionOverrides": "{count} 件の例外",
+      "sections": {
+        "GROUPS": "グループ",
+        "FRIENDS": "友人",
+        "STARRED": "スター付き",
+        "ARCHIVED": "アーカイブ済み",
+        "HIDDEN": "非表示"
+      }
     }
   },
   "Activities": {

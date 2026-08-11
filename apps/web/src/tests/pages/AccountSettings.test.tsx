@@ -12,6 +12,7 @@ const mocks = vi.hoisted(() => ({
   refetchAccount: vi.fn(),
   toast: vi.fn(),
   useRouterNavigate: vi.fn(),
+  accountGroups: vi.fn(),
 }))
 
 vi.mock('@/lib/use-current-account', () => ({
@@ -58,6 +59,14 @@ vi.mock('@/trpc/client', () => ({
       invitations: { invalidate: mocks.invalidateInvitations },
     }),
     account: {
+      groups: {
+        useQuery: () => ({
+          data: { groups: mocks.accountGroups() },
+          isPending: false,
+          isError: false,
+          refetch: vi.fn(),
+        }),
+      },
       updateProfile: {
         useMutation: () => ({ mutateAsync: mocks.updateProfile }),
       },
@@ -110,10 +119,11 @@ beforeEach(() => {
     error: null,
     refetch: mocks.refetchAccount,
   })
+  mocks.accountGroups.mockReturnValue([])
 })
 
 describe('AccountSettingsPage', () => {
-  it('renders a single h1 and four h2 sections in the documented order', () => {
+  it('renders a single h1 and five h2 sections in the documented order', () => {
     render(<AccountSettingsPage />)
 
     const headings = screen.getAllByRole('heading')
@@ -128,6 +138,7 @@ describe('AccountSettingsPage', () => {
     expect(h2Names).toEqual([
       'Profile',
       'App preferences',
+      'Backups & export',
       'Notifications',
       'AI features',
     ])
@@ -145,5 +156,44 @@ describe('AccountSettingsPage', () => {
     await waitFor(() => {
       expect(saveButton).not.toBeDisabled()
     })
+  })
+
+  it('opens the lightweight account export configuration modal', async () => {
+    const { user } = render(<AccountSettingsPage />)
+
+    await user.click(screen.getByRole('button', { name: /configure export/i }))
+
+    expect(
+      screen.getByRole('dialog', { name: /export account backup/i }),
+    ).toBeInTheDocument()
+    expect(screen.getByText(/groups selected/i)).toBeInTheDocument()
+  })
+
+  it('shows a mixed section checkbox when a group override makes selection partial', async () => {
+    mocks.accountGroups.mockReturnValue([
+      {
+        id: 'group-1',
+        displayName: 'Alpha',
+        groupType: 'GROUP',
+        archived: false,
+        preference: { starred: false, hidden: false },
+      },
+      {
+        id: 'group-2',
+        displayName: 'Beta',
+        groupType: 'GROUP',
+        archived: false,
+        preference: { starred: false, hidden: false },
+      },
+    ])
+    const { user } = render(<AccountSettingsPage />)
+
+    await user.click(screen.getByRole('button', { name: /configure export/i }))
+    await user.click(screen.getByRole('checkbox', { name: /^Alpha/ }))
+
+    expect(screen.getByRole('checkbox', { name: /^Groups/ })).toHaveAttribute(
+      'aria-checked',
+      'mixed',
+    )
   })
 })

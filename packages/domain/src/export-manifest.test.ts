@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+  spliitAccountExportManifestSchema,
   spliitGroupExportManifestSchema,
   spliitGroupExportSnapshotSchema,
 } from './export-manifest'
@@ -80,5 +81,65 @@ describe('spliitGroupExportManifestSchema', () => {
         ],
       }),
     ).toThrow()
+  })
+
+  it('accepts an account envelope with optional content sections', () => {
+    expect(
+      spliitAccountExportManifestSchema.parse({
+        format: 'spliit.cloud/export',
+        version: 1,
+        scope: { type: 'ACCOUNT', sourceId: 'account-1' },
+        exportedAt: '2026-08-10T12:00:00.000Z',
+        complete: true,
+        warnings: [],
+        contents: {
+          documents: false,
+          accountPreferences: true,
+          groupPreferences: false,
+        },
+        account: {
+          sourceId: 'account-1',
+          name: 'Alice',
+          email: 'alice@example.com',
+          preferences: {
+            defaultCurrencyCode: 'EUR',
+            timeZone: null,
+            locale: null,
+            theme: null,
+            aiFeaturesEnabled: null,
+            aiCategoryExtractEnabled: null,
+            aiReceiptScanEnabled: null,
+            aiVoiceExpenseEnabled: null,
+          },
+          notificationPreferences: [],
+        },
+        identities: [
+          { sourceId: 'account-1', name: 'Alice', email: 'alice@example.com' },
+        ],
+        groups: [],
+        groupPreferences: null,
+      }),
+    ).toMatchObject({ scope: { type: 'ACCOUNT' }, groups: [] })
+  })
+
+  it('allows an intentionally omitted document without a storage reference', () => {
+    expect(
+      spliitGroupExportManifestSchema.parse({
+        ...minimalManifest,
+        orphanDocuments: [
+          {
+            sourceId: 'doc-1',
+            fileName: 'receipt.pdf',
+            contentType: 'application/pdf',
+            width: null,
+            height: null,
+            path: null,
+            status: 'OMITTED',
+            sizeBytes: null,
+            sha256: null,
+          },
+        ],
+      }),
+    ).toMatchObject({ orphanDocuments: [{ status: 'OMITTED', path: null }] })
   })
 })

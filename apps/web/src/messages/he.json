@@ -2125,6 +2125,44 @@
       "voicePromptsDescription": "התאם אישית את התנהגות הבינה המלאכותית ביצירת הוצאות מהקול שלך (פיצול, ברירות מחדל של משלם וכו').",
       "saving": "שומר העדפות…",
       "masterLabel": "הפעלת תכונות בינה מלאכותית"
+    },
+    "export": {
+      "groupsTitle": "קבוצות",
+      "selectedCount": "נבחרו {selected} מתוך {total} קבוצות",
+      "loadingGroups": "טוען קבוצות…",
+      "groupsError": "לא ניתן לטעון את הקבוצות.",
+      "retry": "נסו שוב",
+      "emptySection": "אין קבוצות בקטע הזה.",
+      "cancel": "ביטול",
+      "download": "הורדת גיבוי",
+      "badges": {
+        "archived": "קבוצה בארכיון",
+        "hidden": "קבוצה מוסתרת"
+      },
+      "sectionTitle": "גיבויים וייצוא",
+      "sectionDescription": "צרו גיבוי נייד של נתוני Spliit Cloud.",
+      "sectionRowLabel": "גיבוי חשבון",
+      "sectionRowDescription": "בחרו קבוצות והעדפות אופציונליות להורדה חד־פעמית.",
+      "open": "הגדרת ייצוא",
+      "title": "ייצוא גיבוי חשבון",
+      "description": "בחרו מה לכלול בגיבוי Spliit Cloud הזה. הבחירה שלכם תשמש להורדה הזו בלבד.",
+      "contentTitle": "לכלול",
+      "content": {
+        "documents": "קובצי מסמכים",
+        "documentsDescription": "העתיקו קובצי קבלות לגיבוי.",
+        "accountPreferences": "העדפות החשבון",
+        "accountPreferencesDescription": "כולל ערכת נושא, הגדרות ברירת מחדל, תכונות בינה מלאכותית והעדפות התראות.",
+        "groupPreferences": "העדפות קבוצות",
+        "groupPreferencesDescription": "כולל הגדרות לקבוצות מסומנות בכוכב, לקבוצות מוסתרות ולחלוקה כברירת מחדל."
+      },
+      "sectionOverrides": "{count} חריגים",
+      "sections": {
+        "GROUPS": "קבוצות",
+        "FRIENDS": "חברים",
+        "STARRED": "מסומנות בכוכב",
+        "ARCHIVED": "בארכיון",
+        "HIDDEN": "מוסתרות"
+      }
     }
   },
   "Activities": {

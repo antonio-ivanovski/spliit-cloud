@@ -2148,6 +2148,44 @@
       "voicePromptsDescription": "Passen Sie das KI-Verhalten beim Erstellen sprachgesteuerter Ausgaben an (Aufteilung, Standardzahler usw.).",
       "saving": "Speichern…",
       "masterLabel": "KI-Funktionen aktivieren"
+    },
+    "export": {
+      "groupsTitle": "Gruppen",
+      "selectedCount": "{selected} von {total} Gruppen ausgewählt",
+      "loadingGroups": "Gruppen werden geladen…",
+      "groupsError": "Gruppen konnten nicht geladen werden.",
+      "retry": "Erneut versuchen",
+      "emptySection": "Keine Gruppen in diesem Abschnitt.",
+      "cancel": "Abbrechen",
+      "download": "Sicherung herunterladen",
+      "badges": {
+        "archived": "Archivierte Gruppe",
+        "hidden": "Ausgeblendete Gruppe"
+      },
+      "sectionTitle": "Sicherungen & Export",
+      "sectionDescription": "Erstellen Sie eine portable Sicherung Ihrer Spliit-Cloud-Daten.",
+      "sectionRowLabel": "Kontosicherung",
+      "sectionRowDescription": "Wählen Sie Gruppen und optionale Einstellungen für einen einmaligen Download aus.",
+      "open": "Export konfigurieren",
+      "title": "Kontosicherung exportieren",
+      "description": "Wählen Sie aus, was in diese Spliit-Cloud-Sicherung aufgenommen wird. Ihre Auswahl gilt nur für diesen Download.",
+      "contentTitle": "Einbeziehen",
+      "content": {
+        "documents": "Dokumentdateien",
+        "documentsDescription": "Belegdateien in die Sicherung kopieren.",
+        "accountPreferences": "Kontoeinstellungen",
+        "accountPreferencesDescription": "Darstellungs-, Standard-, KI- und Benachrichtigungseinstellungen einbeziehen.",
+        "groupPreferences": "Gruppeneinstellungen",
+        "groupPreferencesDescription": "Einstellungen für favorisierte und ausgeblendete Gruppen sowie Standardaufteilungen einbeziehen."
+      },
+      "sectionOverrides": "{count} Ausnahmen",
+      "sections": {
+        "GROUPS": "Gruppen",
+        "FRIENDS": "Freunde",
+        "STARRED": "Favorisierte",
+        "ARCHIVED": "Archivierte Gruppen",
+        "HIDDEN": "Ausgeblendet"
+      }
     }
   },
   "Activities": {

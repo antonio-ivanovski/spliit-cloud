@@ -22,6 +22,7 @@ import {
   emailUnsubscribeGet,
   emailUnsubscribePost,
 } from './routes/email-unsubscribe'
+import { exportAccountBundle } from './routes/export-account-bundle'
 import { exportGroupBundle } from './routes/export-bundle'
 import { exportGroupCsv } from './routes/export-csv'
 import { proxyImportDocument } from './routes/import-document'
@@ -149,6 +150,7 @@ app.get('/.well-known/openid-configuration/auth', (c) =>
 app.get('/groups/:groupId/export/bundle', (c) =>
   exportGroupBundle(c.req.raw, c.req.param('groupId')),
 )
+app.post('/account/export/bundle', (c) => exportAccountBundle(c.req.raw))
 app.get('/groups/:groupId/expenses/export/csv', (c) =>
   exportGroupCsv(c.req.raw, c.req.param('groupId')),
 )

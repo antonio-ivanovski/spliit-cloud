@@ -2134,6 +2134,44 @@
       "voicePromptsDescription": "Dostosuj działanie AI przy tworzeniu wydatków z głosu (podział, domyślny płatnik itp.).",
       "saving": "Zapisywanie preferencji…",
       "masterLabel": "Włącz funkcje AI"
+    },
+    "export": {
+      "groupsTitle": "Grupy",
+      "selectedCount": "{selected} z {total} wybranych grup",
+      "loadingGroups": "Wczytywanie grup…",
+      "groupsError": "Nie udało się wczytać grup.",
+      "retry": "Spróbuj ponownie",
+      "emptySection": "W tej sekcji nie ma żadnych grup.",
+      "cancel": "Anuluj",
+      "download": "Pobierz kopię zapasową",
+      "badges": {
+        "archived": "Zarchiwizowana grupa",
+        "hidden": "Ukryta grupa"
+      },
+      "sectionTitle": "Kopie zapasowe i eksport",
+      "sectionDescription": "Utwórz przenośną kopię zapasową swoich danych Spliit Cloud.",
+      "sectionRowLabel": "Kopia zapasowa konta",
+      "sectionRowDescription": "Wybierz grupy i opcjonalne preferencje do jednorazowego pobrania.",
+      "open": "Skonfiguruj eksport",
+      "title": "Eksport kopii zapasowej konta",
+      "description": "Wybierz, co uwzględnić w tej kopii zapasowej Spliit Cloud. Twój wybór zostanie użyty tylko przy tym pobieraniu.",
+      "contentTitle": "Uwzględnij",
+      "content": {
+        "documents": "Pliki dokumentów",
+        "documentsDescription": "Skopiuj pliki paragonów do kopii zapasowej.",
+        "accountPreferences": "Preferencje konta",
+        "accountPreferencesDescription": "Uwzględnij ustawienia wyglądu, ustawienia domyślne, AI oraz ustawienia powiadomień.",
+        "groupPreferences": "Preferencje grup",
+        "groupPreferencesDescription": "Uwzględnij ustawienia grup oznaczonych gwiazdką i ukrytych oraz domyślnego podziału."
+      },
+      "sectionOverrides": "{count} wyjątków",
+      "sections": {
+        "GROUPS": "Grupy",
+        "FRIENDS": "Znajomi",
+        "STARRED": "Oznaczone gwiazdką",
+        "ARCHIVED": "Zarchiwizowane",
+        "HIDDEN": "Ukryte"
+      }
     }
   },
   "Activities": {

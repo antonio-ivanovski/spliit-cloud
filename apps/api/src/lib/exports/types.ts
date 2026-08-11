@@ -27,7 +27,7 @@ export type ExportArchiveEntry = {
 }
 
 export type ExportScope = {
-  type: 'GROUP'
+  type: 'GROUP' | 'ACCOUNT'
   sourceId: string
 }
 

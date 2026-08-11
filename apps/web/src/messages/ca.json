@@ -2125,6 +2125,44 @@
       "voicePromptsDescription": "Personalitza el comportament de la IA en crear despeses amb la teva veu (divisió, pagador per defecte, etc.).",
       "saving": "S'estan desant les preferències…",
       "masterLabel": "Activa les funcions d'IA"
+    },
+    "export": {
+      "groupsTitle": "Grups",
+      "selectedCount": "{selected} de {total} grups seleccionats",
+      "loadingGroups": "Carregant grups…",
+      "groupsError": "No s’han pogut carregar els grups.",
+      "retry": "Torna-ho a provar",
+      "emptySection": "No hi ha grups en aquesta secció.",
+      "cancel": "Cancel·lar",
+      "download": "Baixa la còpia de seguretat",
+      "badges": {
+        "archived": "Grup arxivat",
+        "hidden": "Grup amagat"
+      },
+      "sectionTitle": "Còpies de seguretat i exportació",
+      "sectionDescription": "Crea una còpia de seguretat portàtil de les teves dades de Spliit Cloud.",
+      "sectionRowLabel": "Còpia de seguretat del compte",
+      "sectionRowDescription": "Tria els grups i les preferències opcionals per a una baixada única.",
+      "open": "Configura l’exportació",
+      "title": "Exporta la còpia de seguretat del compte",
+      "description": "Tria què vols incloure en aquesta còpia de seguretat de Spliit Cloud. La teva selecció només s’utilitza per a aquesta baixada.",
+      "contentTitle": "Inclou",
+      "content": {
+        "documents": "Fitxers de documents",
+        "documentsDescription": "Copia els fitxers dels rebuts a la còpia de seguretat.",
+        "accountPreferences": "Preferències del compte",
+        "accountPreferencesDescription": "Inclou l’aparença, els valors predeterminats, la IA i les notificacions.",
+        "groupPreferences": "Preferències dels grups",
+        "groupPreferencesDescription": "Inclou la configuració dels grups preferits i amagats i de la divisió per defecte."
+      },
+      "sectionOverrides": "{count} excepcions",
+      "sections": {
+        "GROUPS": "Grups",
+        "FRIENDS": "Amistats",
+        "STARRED": "Preferits",
+        "ARCHIVED": "Arxivats",
+        "HIDDEN": "Amagats"
+      }
     }
   },
   "Activities": {

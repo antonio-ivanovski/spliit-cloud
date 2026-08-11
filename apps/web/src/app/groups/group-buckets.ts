@@ -1,5 +1,9 @@
 import type { AppRouterOutput } from '@spliit/api/router'
-import { resolveFormattingLocale } from '@spliit/domain'
+import {
+  accountExportGroupSectionFor,
+  resolveFormattingLocale,
+  type AccountExportGroupSection,
+} from '@spliit/domain'
 
 export type AccountGroup = AppRouterOutput['overview']['get']['groups'][number]
 
@@ -11,6 +15,14 @@ export type GroupBucket =
   | 'friends'
   | 'archived'
   | 'hidden'
+
+const bucketBySection = {
+  GROUPS: 'groups',
+  FRIENDS: 'friends',
+  STARRED: 'starred',
+  ARCHIVED: 'archived',
+  HIDDEN: 'hidden',
+} as const satisfies Record<AccountExportGroupSection, GroupBucket>
 
 /**
  * Decide which visual bucket a group belongs to on the homepage. The
@@ -29,39 +41,26 @@ export type GroupBucket =
  * rather hide it from the archived section.
  */
 export function bucketFor(group: AccountGroup): GroupBucket {
-  if (group.preference.hidden) return 'hidden'
-  if (group.groupType === 'FRIEND') {
-    return group.preference.starred ? 'starred' : 'friends'
-  }
-  if (group.archived) return 'archived'
-  return group.preference.starred ? 'starred' : 'groups'
+  return bucketBySection[
+    accountExportGroupSectionFor({
+      groupType: group.groupType,
+      archived: group.archived,
+      starred: group.preference.starred,
+      hidden: group.preference.hidden,
+    })
+  ]
 }
 
 export function partitionGroups(groups: AccountGroup[]) {
-  const grouped: AccountGroup[] = []
-  const friends: AccountGroup[] = []
-  const starred: AccountGroup[] = []
-  const archived: AccountGroup[] = []
-  const hidden: AccountGroup[] = []
+  const grouped: Record<GroupBucket, AccountGroup[]> = {
+    groups: [],
+    friends: [],
+    starred: [],
+    archived: [],
+    hidden: [],
+  }
   for (const group of groups) {
-    if (group.preference.hidden) {
-      hidden.push(group)
-      continue
-    }
-    if (group.groupType === 'FRIEND') {
-      // FRIEND ledgers are never archived (server-rejected). Starred
-      // friends show under the shared starred section; the rest under
-      // the Friends section.
-      if (group.preference.starred) starred.push(group)
-      else friends.push(group)
-      continue
-    }
-    if (group.archived) {
-      archived.push(group)
-      continue
-    }
-    if (group.preference.starred) starred.push(group)
-    else grouped.push(group)
+    grouped[bucketFor(group)].push(group)
   }
   const sortByRecentExpense = (a: AccountGroup, b: AccountGroup) => {
     const aTime = a.financialSummary?.latestExpenseCreatedAt ?? a.createdAt
@@ -69,13 +68,9 @@ export function partitionGroups(groups: AccountGroup[]) {
     return bTime.localeCompare(aTime) || a.id.localeCompare(b.id)
   }
 
-  grouped.sort(sortByRecentExpense)
-  friends.sort(sortByRecentExpense)
-  starred.sort(sortByRecentExpense)
-  archived.sort(sortByRecentExpense)
-  hidden.sort(sortByRecentExpense)
+  for (const bucket of Object.values(grouped)) bucket.sort(sortByRecentExpense)
 
-  return { groups: grouped, friends, starred, archived, hidden }
+  return grouped
 }
 
 const dateFormatCache = new Map<string, Intl.DateTimeFormat>()

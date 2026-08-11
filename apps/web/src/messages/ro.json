@@ -2125,6 +2125,44 @@
       "voicePromptsDescription": "Personalizează comportamentul AI la crearea cheltuielilor din vocea ta (împărțire, plătitor implicit, etc.).",
       "saving": "Se salvează preferințele…",
       "masterLabel": "Activează funcțiile AI"
+    },
+    "export": {
+      "groupsTitle": "Grupuri",
+      "selectedCount": "{selected} din {total} grupuri selectate",
+      "loadingGroups": "Se încarcă grupurile…",
+      "groupsError": "Nu s-au putut încărca grupurile.",
+      "retry": "Reîncearcă",
+      "emptySection": "Nu există grupuri în această secțiune.",
+      "cancel": "Anulează",
+      "download": "Descarcă backupul",
+      "badges": {
+        "archived": "Grup arhivat",
+        "hidden": "Grup ascuns"
+      },
+      "sectionTitle": "Backupuri și export",
+      "sectionDescription": "Creează un backup portabil al datelor tale Spliit Cloud.",
+      "sectionRowLabel": "Backupul contului",
+      "sectionRowDescription": "Alege grupurile și preferințele opționale pentru o singură descărcare.",
+      "open": "Configurează exportul",
+      "title": "Exportă backupul contului",
+      "description": "Alege ce să incluzi în acest backup Spliit Cloud. Selecția ta va fi folosită doar pentru această descărcare.",
+      "contentTitle": "Conținut inclus",
+      "content": {
+        "documents": "Fișiere de documente",
+        "documentsDescription": "Copiază fișierele chitanțelor în backup.",
+        "accountPreferences": "Preferințele contului",
+        "accountPreferencesDescription": "Include aspectul, valorile implicite, preferințele AI și notificările.",
+        "groupPreferences": "Preferințele grupurilor",
+        "groupPreferencesDescription": "Include setările pentru grupurile favorite și ascunse și pentru împărțirea implicită."
+      },
+      "sectionOverrides": "{count} excepții",
+      "sections": {
+        "GROUPS": "Grupuri",
+        "FRIENDS": "Registre de prieten",
+        "STARRED": "Favorite",
+        "ARCHIVED": "Arhivate",
+        "HIDDEN": "Ascunse"
+      }
     }
   },
   "Activities": {

@@ -181,6 +181,44 @@
       "voicePromptsDescription": "আপনার ভয়েস থেকে খরচ তৈরি করার সময় AI-এর আচরণ নির্ধারণ করুন (বিভাজন, প্রদানকারী ডিফল্ট ইত্যাদি)।",
       "saving": "পছন্দসমূহ সংরক্ষণ করা হচ্ছে…",
       "masterLabel": "AI ফিচার সক্রিয় করুন"
+    },
+    "export": {
+      "groupsTitle": "গ্রুপ",
+      "selectedCount": "{total}টি গ্রুপের মধ্যে {selected}টি নির্বাচিত",
+      "loadingGroups": "গ্রুপ লোড হচ্ছে…",
+      "groupsError": "গ্রুপ লোড করা যায়নি।",
+      "retry": "আবার চেষ্টা করুন",
+      "emptySection": "এই বিভাগে কোনো গ্রুপ নেই।",
+      "cancel": "বাতিল করুন",
+      "download": "ব্যাকআপ ডাউনলোড করুন",
+      "badges": {
+        "archived": "আর্কাইভ করা গ্রুপ",
+        "hidden": "লুকানো গ্রুপ"
+      },
+      "sectionTitle": "ব্যাকআপ ও এক্সপোর্ট",
+      "sectionDescription": "আপনার Spliit Cloud ডেটার একটি বহনযোগ্য ব্যাকআপ তৈরি করুন।",
+      "sectionRowLabel": "অ্যাকাউন্ট ব্যাকআপ",
+      "sectionRowDescription": "একবারের ডাউনলোডের জন্য গ্রুপ ও ঐচ্ছিক পছন্দসমূহ বেছে নিন।",
+      "open": "এক্সপোর্ট কনফিগার করুন",
+      "title": "অ্যাকাউন্ট ব্যাকআপ এক্সপোর্ট করুন",
+      "description": "এই Spliit Cloud ব্যাকআপে কী অন্তর্ভুক্ত করবেন তা বেছে নিন। আপনার নির্বাচন শুধু এই ডাউনলোডের জন্য ব্যবহার করা হবে।",
+      "contentTitle": "অন্তর্ভুক্ত করুন",
+      "content": {
+        "documents": "ডকুমেন্ট ফাইল",
+        "documentsDescription": "রসিদের ফাইলগুলো ব্যাকআপে কপি করুন।",
+        "accountPreferences": "অ্যাকাউন্টের পছন্দসমূহ",
+        "accountPreferencesDescription": "চেহারা, পূর্বনির্ধারিত সেটিংস, AI এবং বিজ্ঞপ্তির পছন্দসমূহ অন্তর্ভুক্ত করুন।",
+        "groupPreferences": "গ্রুপের পছন্দসমূহ",
+        "groupPreferencesDescription": "তারকা চিহ্নিত, লুকানো ও ডিফল্ট ভাগের সেটিংস অন্তর্ভুক্ত করুন।"
+      },
+      "sectionOverrides": "{count}টি ব্যতিক্রম",
+      "sections": {
+        "GROUPS": "গ্রুপ",
+        "FRIENDS": "বন্ধু",
+        "STARRED": "তারকা চিহ্নিত",
+        "ARCHIVED": "আর্কাইভ করা",
+        "HIDDEN": "লুকানো"
+      }
     }
   },
   "Activities": {

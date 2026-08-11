@@ -2109,6 +2109,44 @@
       "voicePromptsDescription": "透過語音建立支出時量身調整 AI 行為（分攤、預設付款人等）。",
       "saving": "儲存中…",
       "masterLabel": "啟用 AI 功能"
+    },
+    "export": {
+      "groupsTitle": "群組",
+      "selectedCount": "已選擇 {selected}/{total} 個群組",
+      "loadingGroups": "正在載入群組…",
+      "groupsError": "無法載入群組。",
+      "retry": "重試",
+      "emptySection": "此區段沒有群組。",
+      "cancel": "取消",
+      "download": "下載備份",
+      "badges": {
+        "archived": "已封存的群組",
+        "hidden": "已隱藏的群組"
+      },
+      "sectionTitle": "備份與匯出",
+      "sectionDescription": "建立可攜式的 Spliit Cloud 資料備份。",
+      "sectionRowLabel": "帳戶備份",
+      "sectionRowDescription": "選擇要在這次下載中包含的群組與可選偏好設定。",
+      "open": "設定匯出",
+      "title": "匯出帳戶備份",
+      "description": "選擇要包含在此 Spliit Cloud 備份中的內容。您的選擇僅用於這次下載。",
+      "contentTitle": "包含內容",
+      "content": {
+        "documents": "文件檔案",
+        "documentsDescription": "將收據檔案複製到備份中。",
+        "accountPreferences": "帳戶偏好設定",
+        "accountPreferencesDescription": "包含外觀、預設值、AI 與通知偏好設定。",
+        "groupPreferences": "群組偏好設定",
+        "groupPreferencesDescription": "包含已加星標、已隱藏及預設分攤設定。"
+      },
+      "sectionOverrides": "{count} 個例外",
+      "sections": {
+        "GROUPS": "群組",
+        "FRIENDS": "好友",
+        "STARRED": "已加星標",
+        "ARCHIVED": "已封存",
+        "HIDDEN": "已隱藏"
+      }
     }
   },
   "Activities": {

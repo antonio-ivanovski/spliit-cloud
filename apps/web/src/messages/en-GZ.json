@@ -226,6 +226,44 @@
     "profile": {
       "title": "profile lore",
       "description": "update how you show up in your groups."
+    },
+    "export": {
+      "groupsTitle": "groups",
+      "selectedCount": "selected: {selected}/{total} groups",
+      "loadingGroups": "loading groups…",
+      "groupsError": "couldn't load groups.",
+      "retry": "retry",
+      "emptySection": "no groups in this section.",
+      "cancel": "cancel",
+      "download": "download backup",
+      "badges": {
+        "archived": "archived group",
+        "hidden": "hidden group"
+      },
+      "sectionTitle": "backups + export",
+      "sectionDescription": "make a portable backup of your Spliit Cloud data.",
+      "sectionRowLabel": "account backup",
+      "sectionRowDescription": "pick groups + optional prefs for a one-time download.",
+      "open": "configure export",
+      "title": "export your account backup",
+      "description": "pick what goes into this Spliit Cloud backup. this choice is only for this download.",
+      "contentTitle": "include",
+      "content": {
+        "documents": "document files",
+        "documentsDescription": "copy receipt files into the backup.",
+        "accountPreferences": "account prefs",
+        "accountPreferencesDescription": "include looks, defaults, AI, and notification prefs.",
+        "groupPreferences": "group prefs",
+        "groupPreferencesDescription": "include starred, hidden, plus default split settings."
+      },
+      "sectionOverrides": "exceptions: {count}",
+      "sections": {
+        "GROUPS": "groups",
+        "FRIENDS": "friends",
+        "STARRED": "starred",
+        "ARCHIVED": "archived",
+        "HIDDEN": "hidden"
+      }
     }
   },
   "Activities": {

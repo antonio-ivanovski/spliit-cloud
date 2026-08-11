@@ -2124,6 +2124,44 @@
       "voicePromptsDescription": "Pertsonalizatu IAren portaera zure ahotsetik gastuak sortzean (banaketa, ordaintzaile lehenetsiak, etab.).",
       "saving": "Hobespenak gordetzen…",
       "masterLabel": "AI funtzioak gaitu"
+    },
+    "export": {
+      "groupsTitle": "Taldeak",
+      "selectedCount": "{total} taldetatik {selected} hautatuta",
+      "loadingGroups": "Taldeak kargatzen…",
+      "groupsError": "Ezin izan dira taldeak kargatu.",
+      "retry": "Saiatu berriro",
+      "emptySection": "Atal honetan ez dago talderik.",
+      "cancel": "Utzi",
+      "download": "Deskargatu babeskopia",
+      "badges": {
+        "archived": "Artxibatutako taldea",
+        "hidden": "Ezkutuko taldea"
+      },
+      "sectionTitle": "Babeskopiak eta esportazioa",
+      "sectionDescription": "Sortu zure Spliit Cloud-eko datuen babeskopia eramangarri bat.",
+      "sectionRowLabel": "Kontuaren babeskopia",
+      "sectionRowDescription": "Aukeratu taldeak eta aukerako hobespenak behin bakarrik egingo den deskarga baterako.",
+      "open": "Konfiguratu esportazioa",
+      "title": "Kontuaren babeskopia esportatu",
+      "description": "Aukeratu zer sartu Spliit Cloud-en babeskopia honetan. Zure hautaketa deskarga honetarako bakarrik erabiliko da.",
+      "contentTitle": "Sartu",
+      "content": {
+        "documents": "Dokumentu-fitxategiak",
+        "documentsDescription": "Kopiatu ordainagirien fitxategiak babeskopian.",
+        "accountPreferences": "Kontuaren hobespenak",
+        "accountPreferencesDescription": "Sartu itxura, lehenetsitako ezarpenak, IA eta jakinarazpenen hobespenak.",
+        "groupPreferences": "Taldeen hobespenak",
+        "groupPreferencesDescription": "Sartu talde gogokoen eta ezkutuen eta lehenetsitako banaketaren ezarpenak."
+      },
+      "sectionOverrides": "{count} salbuespen",
+      "sections": {
+        "GROUPS": "Taldeak",
+        "FRIENDS": "Lagun-liburuak",
+        "STARRED": "Gogoko",
+        "ARCHIVED": "Artxibatutakoak",
+        "HIDDEN": "Ezkutukoak"
+      }
     }
   },
   "Activities": {

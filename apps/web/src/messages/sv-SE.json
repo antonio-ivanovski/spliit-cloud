@@ -181,6 +181,44 @@
       "voicePromptsDescription": "Anpassa AI-beteendet när du skapar utgifter med din röst (fördelning, standardbetalare osv.).",
       "saving": "Sparar…",
       "masterLabel": "Aktivera AI-funktioner"
+    },
+    "export": {
+      "groupsTitle": "Grupper",
+      "selectedCount": "{selected} av {total} grupper valda",
+      "loadingGroups": "Läser in grupper…",
+      "groupsError": "Det gick inte att läsa in grupper.",
+      "retry": "Försök igen",
+      "emptySection": "Inga grupper i det här avsnittet.",
+      "cancel": "Avbryt",
+      "download": "Ladda ner säkerhetskopia",
+      "badges": {
+        "archived": "Arkiverad grupp",
+        "hidden": "Dold grupp"
+      },
+      "sectionTitle": "Säkerhetskopior och export",
+      "sectionDescription": "Skapa en flyttbar säkerhetskopia av dina Spliit Cloud-data.",
+      "sectionRowLabel": "Kontosäkerhetskopia",
+      "sectionRowDescription": "Välj grupper och valfria inställningar för en engångsnedladdning.",
+      "open": "Konfigurera export",
+      "title": "Exportera kontosäkerhetskopia",
+      "description": "Välj vad som ska ingå i denna säkerhetskopia av Spliit Cloud. Ditt val används bara för denna nedladdning.",
+      "contentTitle": "Inkludera",
+      "content": {
+        "documents": "Dokumentfiler",
+        "documentsDescription": "Kopiera kvittofiler till säkerhetskopian.",
+        "accountPreferences": "Kontoinställningar",
+        "accountPreferencesDescription": "Inkludera inställningar för utseende, standardvärden, AI och aviseringar.",
+        "groupPreferences": "Gruppinställningar",
+        "groupPreferencesDescription": "Inkludera inställningar för stjärnmarkerade och dolda grupper samt standardfördelning."
+      },
+      "sectionOverrides": "{count} undantag",
+      "sections": {
+        "GROUPS": "Grupper",
+        "FRIENDS": "Vänner",
+        "STARRED": "Stjärnmarkerade",
+        "ARCHIVED": "Arkiverade grupper",
+        "HIDDEN": "Dolda"
+      }
     }
   },
   "Activities": {

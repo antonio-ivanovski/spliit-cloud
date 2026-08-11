@@ -2109,6 +2109,44 @@
       "voicePromptsDescription": "음성으로 지출을 생성할 때 AI 동작을 조정합니다(분할, 지불자 기본값 등).",
       "saving": "저장 중…",
       "masterLabel": "AI 기능 사용"
+    },
+    "export": {
+      "groupsTitle": "그룹",
+      "selectedCount": "{total}개 그룹 중 {selected}개 선택됨",
+      "loadingGroups": "그룹 불러오는 중…",
+      "groupsError": "그룹을 불러올 수 없습니다.",
+      "retry": "다시 시도",
+      "emptySection": "이 섹션에 그룹이 없습니다.",
+      "cancel": "취소",
+      "download": "백업 다운로드",
+      "badges": {
+        "archived": "보관된 그룹",
+        "hidden": "숨긴 그룹"
+      },
+      "sectionTitle": "백업 및 내보내기",
+      "sectionDescription": "Spliit Cloud 데이터의 휴대용 백업을 만드세요.",
+      "sectionRowLabel": "계정 백업",
+      "sectionRowDescription": "한 번만 다운로드할 그룹과 선택적 설정을 선택하세요.",
+      "open": "내보내기 설정",
+      "title": "계정 백업 내보내기",
+      "description": "이 Spliit Cloud 백업에 포함할 항목을 선택하세요. 선택한 항목은 이번 다운로드에만 사용됩니다.",
+      "contentTitle": "포함할 항목",
+      "content": {
+        "documents": "문서 파일",
+        "documentsDescription": "영수증 파일을 백업에 복사합니다.",
+        "accountPreferences": "계정 설정",
+        "accountPreferencesDescription": "화면 표시, 기본값, AI 및 알림 설정을 포함합니다.",
+        "groupPreferences": "그룹 설정",
+        "groupPreferencesDescription": "즐겨찾기, 숨김 및 기본 분할 설정을 포함합니다."
+      },
+      "sectionOverrides": "{count}개 예외",
+      "sections": {
+        "GROUPS": "그룹",
+        "FRIENDS": "친구",
+        "STARRED": "즐겨찾기",
+        "ARCHIVED": "보관됨",
+        "HIDDEN": "숨김"
+      }
     }
   },
   "Activities": {

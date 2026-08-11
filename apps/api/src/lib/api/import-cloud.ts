@@ -265,6 +265,14 @@ function validateReferences(
       if (document.path !== null) {
         throw new Error('Missing Cloud documents must have a null path')
       }
+    } else if (document.status === 'OMITTED') {
+      if (
+        document.path !== null ||
+        document.sizeBytes !== null ||
+        document.sha256 !== null
+      ) {
+        throw new Error('Omitted Cloud documents must not contain archive data')
+      }
     } else {
       if (!document.path || !isSafeArchivePath(document.path)) {
         throw new Error('Cloud document path is unsafe')

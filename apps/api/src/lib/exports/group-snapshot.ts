@@ -5,7 +5,64 @@ import type {
 } from '@spliit/domain/export-manifest'
 
 import { isPlaceholderEmail } from '../invitations/display'
+import { safeArchivePrefix, safeArchiveSegment } from './archive-path'
 import type { ExportDocumentRecord, ExportSnapshotDocument } from './types'
+
+const groupExportInclude = {
+  ledger: {
+    include: {
+      participants: {
+        orderBy: { id: 'asc' },
+        include: {
+          groupMember: {
+            include: {
+              account: { select: { id: true, name: true, email: true } },
+            },
+          },
+          invitations: {
+            select: { temporaryName: true, type: true, email: true },
+            take: 1,
+            orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+          },
+        },
+      },
+      recurringExpenseSeries: {
+        orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+      },
+      documents: { orderBy: { id: 'asc' } },
+      expenses: {
+        orderBy: [{ expenseDate: 'asc' }, { createdAt: 'asc' }, { id: 'asc' }],
+        include: {
+          paidByList: { orderBy: { ledgerParticipantId: 'asc' } },
+          paidFor: { orderBy: { ledgerParticipantId: 'asc' } },
+          documents: { orderBy: { id: 'asc' } },
+          comments: {
+            orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+            include: { authorAccount: { select: { id: true } } },
+          },
+          items: {
+            orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+            include: {
+              paidFor: { orderBy: { ledgerParticipantId: 'asc' } },
+            },
+          },
+          itemizedRemainder: {
+            include: {
+              paidFor: { orderBy: { ledgerParticipantId: 'asc' } },
+            },
+          },
+        },
+      },
+    },
+  },
+  subgroups: {
+    orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+    include: {
+      members: { orderBy: { ledgerParticipantId: 'asc' } },
+    },
+  },
+  budgets: { orderBy: [{ createdAt: 'asc' }, { id: 'asc' }] },
+} satisfies Prisma.GroupInclude
 
 function iso(value: Date | null): string | null {
   return value?.toISOString() ?? null
@@ -50,21 +107,13 @@ function safeFileName(fileName: string | null): string {
   return cleaned || 'document'
 }
 
-function safePathSegment(value: string): string {
-  return value.replace(/[^A-Za-z0-9_-]/g, '_') || 'document'
-}
-
-function safeArchivePrefix(prefix: string): string {
-  return prefix.split('/').filter(Boolean).map(safePathSegment).join('/')
-}
-
 export function groupDocumentPath(
   document: ExportDocumentRecord,
   expenseId: string | null,
   archivePrefix = '',
 ): string {
-  const owner = expenseId ? safePathSegment(expenseId) : '_orphans'
-  const path = `documents/${owner}/${safePathSegment(document.id)}__${safeFileName(document.fileName)}`
+  const owner = expenseId ? safeArchiveSegment(expenseId) : '_orphans'
+  const path = `documents/${owner}/${safeArchiveSegment(document.id, 'document')}__${safeFileName(document.fileName)}`
   const prefix = safeArchivePrefix(archivePrefix)
   return prefix ? `${prefix}/${path}` : path
 }
@@ -104,65 +153,19 @@ export async function loadGroupExportSource(
 ) {
   return client.group.findUnique({
     where: { id: groupId },
-    include: {
-      ledger: {
-        include: {
-          participants: {
-            orderBy: { id: 'asc' },
-            include: {
-              groupMember: {
-                include: {
-                  account: { select: { id: true, name: true, email: true } },
-                },
-              },
-              invitations: {
-                select: { temporaryName: true, type: true, email: true },
-                take: 1,
-                orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
-              },
-            },
-          },
-          recurringExpenseSeries: {
-            orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
-          },
-          documents: { orderBy: { id: 'asc' } },
-          expenses: {
-            orderBy: [
-              { expenseDate: 'asc' },
-              { createdAt: 'asc' },
-              { id: 'asc' },
-            ],
-            include: {
-              paidByList: { orderBy: { ledgerParticipantId: 'asc' } },
-              paidFor: { orderBy: { ledgerParticipantId: 'asc' } },
-              documents: { orderBy: { id: 'asc' } },
-              comments: {
-                orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
-                include: { authorAccount: { select: { id: true } } },
-              },
-              items: {
-                orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
-                include: {
-                  paidFor: { orderBy: { ledgerParticipantId: 'asc' } },
-                },
-              },
-              itemizedRemainder: {
-                include: {
-                  paidFor: { orderBy: { ledgerParticipantId: 'asc' } },
-                },
-              },
-            },
-          },
-        },
-      },
-      subgroups: {
-        orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
-        include: {
-          members: { orderBy: { ledgerParticipantId: 'asc' } },
-        },
-      },
-      budgets: { orderBy: [{ createdAt: 'asc' }, { id: 'asc' }] },
-    },
+    include: groupExportInclude,
+  })
+}
+
+export async function loadGroupExportSources(
+  groupIds: ReadonlyArray<string>,
+  client: Prisma.TransactionClient | typeof prisma = prisma,
+) {
+  if (groupIds.length === 0) return []
+  return client.group.findMany({
+    where: { id: { in: [...groupIds] } },
+    orderBy: { id: 'asc' },
+    include: groupExportInclude,
   })
 }
 
@@ -187,7 +190,9 @@ function participantIdentity(participant: GroupExportParticipant) {
       kind: 'ACCOUNT' as const,
       accountId: participant.groupMember.account.id,
       name: participant.groupMember.account.name,
-      email: participant.groupMember.account.email || null,
+      email: isPlaceholderEmail(participant.groupMember.account.email)
+        ? null
+        : participant.groupMember.account.email || null,
     }
   }
   const invitation = participant.invitations[0]

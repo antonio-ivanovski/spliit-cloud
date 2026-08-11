@@ -1,5 +1,11 @@
 import { z } from 'zod'
 
+import { accountPreferenceSchema } from './account-preferences'
+import {
+  notificationCategorySchema,
+  notificationChannelsSchema,
+} from './notifications'
+
 const sourceId = z.string().min(1)
 const isoDateTime = z.iso.datetime()
 const dateOnly = z.string().regex(/^\d{4}-\d{2}-\d{2}$/)
@@ -75,7 +81,7 @@ export const exportDocumentSchema = z.object({
   width: z.number().int().nullable(),
   height: z.number().int().nullable(),
   path: z.string().nullable(),
-  status: z.enum(['INCLUDED', 'MISSING']),
+  status: z.enum(['INCLUDED', 'MISSING', 'OMITTED']),
   sizeBytes: z.number().int().nonnegative().nullable(),
   sha256: z
     .string()
@@ -244,6 +250,133 @@ export const spliitGroupExportManifestSchema = z.object({
   ...spliitGroupExportSnapshotSchema.shape,
 })
 
+export const accountExportGroupSectionValues = [
+  'GROUPS',
+  'FRIENDS',
+  'STARRED',
+  'ARCHIVED',
+  'HIDDEN',
+] as const
+
+export const accountExportGroupSectionSchema = z.enum(
+  accountExportGroupSectionValues,
+)
+
+export const accountExportSelectionSchema = z.object({
+  sections: z.object({
+    GROUPS: z.boolean(),
+    FRIENDS: z.boolean(),
+    STARRED: z.boolean(),
+    ARCHIVED: z.boolean(),
+    HIDDEN: z.boolean(),
+  }),
+  groupOverrides: z
+    .array(
+      z.object({
+        groupSourceId: sourceId,
+        included: z.boolean(),
+      }),
+    )
+    .max(10_000)
+    .superRefine((overrides, ctx) => {
+      const ids = new Set<string>()
+      overrides.forEach((override, index) => {
+        if (ids.has(override.groupSourceId)) {
+          ctx.addIssue({
+            code: 'custom',
+            message: 'Duplicate group override.',
+            path: [index, 'groupSourceId'],
+          })
+        }
+        ids.add(override.groupSourceId)
+      })
+    }),
+  includeDocuments: z.boolean(),
+  includeAccountPreferences: z.boolean(),
+  includeGroupPreferences: z.boolean(),
+})
+
+export const defaultAccountExportSelection = {
+  sections: {
+    GROUPS: true,
+    FRIENDS: true,
+    STARRED: true,
+    ARCHIVED: false,
+    HIDDEN: false,
+  },
+  groupOverrides: [],
+  includeDocuments: true,
+  includeAccountPreferences: true,
+  includeGroupPreferences: true,
+} as const satisfies z.input<typeof accountExportSelectionSchema>
+
+export const accountExportIdentitySchema = z.object({
+  sourceId,
+  name: z.string(),
+  email: z.string().email().nullable(),
+})
+
+const accountExportNotificationPreferenceSchema = z.object({
+  category: notificationCategorySchema,
+  channels: notificationChannelsSchema,
+})
+
+const accountExportDefaultSplitSchema = z.object({
+  splitMode: z.enum(['EVENLY', 'BY_SHARES', 'BY_PERCENTAGE', 'BY_AMOUNT']),
+  paidFor: z.array(
+    z.object({
+      participantId: sourceId,
+      shares: z.number().int(),
+    }),
+  ),
+})
+
+export const accountExportGroupPreferenceSchema = z.object({
+  groupSourceId: sourceId,
+  starred: z.boolean(),
+  hidden: z.boolean(),
+  defaultSplit: accountExportDefaultSplitSchema.nullable(),
+})
+
+const accountExportGroupIndexSchema = z.object({
+  sourceId,
+  displayName: z.string(),
+  groupType: z.enum(['GROUP', 'FRIEND']),
+  archived: z.boolean(),
+  manifestPath: z.string(),
+  complete: z.boolean(),
+})
+
+export const accountExportWarningSchema = exportWarningSchema.extend({
+  groupSourceId: sourceId,
+})
+
+export const spliitAccountExportManifestSchema = z.object({
+  format: z.literal('spliit.cloud/export'),
+  version: z.literal(1),
+  scope: z.object({ type: z.literal('ACCOUNT'), sourceId }),
+  exportedAt: isoDateTime,
+  complete: z.boolean(),
+  warnings: z.array(accountExportWarningSchema),
+  contents: z.object({
+    documents: z.boolean(),
+    accountPreferences: z.boolean(),
+    groupPreferences: z.boolean(),
+  }),
+  account: z.object({
+    sourceId,
+    name: z.string(),
+    email: z.string().email().nullable(),
+    preferences: accountPreferenceSchema.nullable(),
+    notificationPreferences: z
+      .array(accountExportNotificationPreferenceSchema)
+      .nullable(),
+  }),
+  identities: z.array(accountExportIdentitySchema),
+  groups: z.array(accountExportGroupIndexSchema),
+  groupPreferences: z.array(accountExportGroupPreferenceSchema).nullable(),
+})
+
 export type SpliitExportDocument = z.infer<typeof exportDocumentSchema>
 export type SpliitGroupExportSnapshot = z.infer<
   typeof spliitGroupExportSnapshotSchema
@@ -251,4 +384,16 @@ export type SpliitGroupExportSnapshot = z.infer<
 
 export type SpliitGroupExportManifest = z.infer<
   typeof spliitGroupExportManifestSchema
+>
+
+export type AccountExportSelection = z.infer<
+  typeof accountExportSelectionSchema
+>
+
+export type AccountExportGroupSection = z.infer<
+  typeof accountExportGroupSectionSchema
+>
+
+export type SpliitAccountExportManifest = z.infer<
+  typeof spliitAccountExportManifestSchema
 >

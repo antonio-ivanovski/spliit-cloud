@@ -2134,6 +2134,44 @@
       "voicePromptsDescription": "Přizpůsobte chování AI při vytváření výdajů z vašeho hlasu (rozdělení, výchozí plátce atd.).",
       "saving": "Ukládání předvoleb…",
       "masterLabel": "Povolit funkce AI"
+    },
+    "export": {
+      "groupsTitle": "Skupiny",
+      "selectedCount": "{selected} z {total} vybraných skupin",
+      "loadingGroups": "Načítání skupin…",
+      "groupsError": "Skupiny se nepodařilo načíst.",
+      "retry": "Opakovat",
+      "emptySection": "V této sekci nejsou žádné skupiny.",
+      "cancel": "Zrušit",
+      "download": "Stáhnout zálohu",
+      "badges": {
+        "archived": "Archivovaná skupina",
+        "hidden": "Skrytá skupina"
+      },
+      "sectionTitle": "Zálohy a export",
+      "sectionDescription": "Vytvořte přenosnou zálohu svých dat ve Spliit Cloud.",
+      "sectionRowLabel": "Záloha účtu",
+      "sectionRowDescription": "Vyberte skupiny a volitelné předvolby pro jednorázové stažení.",
+      "open": "Nastavit export",
+      "title": "Export zálohy účtu",
+      "description": "Vyberte, co chcete zahrnout do této zálohy Spliit Cloud. Váš výběr se použije pouze pro toto stažení.",
+      "contentTitle": "Zahrnout",
+      "content": {
+        "documents": "Soubory dokumentů",
+        "documentsDescription": "Zkopírovat soubory účtenek do zálohy.",
+        "accountPreferences": "Předvolby účtu",
+        "accountPreferencesDescription": "Zahrnout vzhled, výchozí nastavení, AI a předvolby oznámení.",
+        "groupPreferences": "Předvolby skupin",
+        "groupPreferencesDescription": "Zahrnout nastavení oblíbených a skrytých skupin a výchozího rozdělení."
+      },
+      "sectionOverrides": "{count} výjimek",
+      "sections": {
+        "GROUPS": "Skupiny",
+        "FRIENDS": "Přátelé",
+        "STARRED": "Oblíbené",
+        "ARCHIVED": "Archivované",
+        "HIDDEN": "Skryté"
+      }
     }
   },
   "Activities": {

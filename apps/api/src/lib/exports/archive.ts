@@ -37,6 +37,12 @@ function withArchivePrefix(path: string, prefix: string): string {
   return `${prefix}/${path}`
 }
 
+export type ExportManifestEntry<Manifest> = {
+  path: string
+  manifest: Manifest
+  validateManifest(manifest: Manifest): Manifest
+}
+
 function compareArchivePath(
   left: ExportArchiveEntry,
   right: ExportArchiveEntry,
@@ -60,6 +66,39 @@ export function createExportBundleStream<Manifest>(options: {
   archivePrefix?: string
   /** Override the manifest location; defaults to `<prefix>/manifest.json`. */
   manifestPath?: string
+  signal?: AbortSignal
+}): ReadableStream<Uint8Array> {
+  const manifestPath =
+    options.manifestPath ??
+    withArchivePrefix('manifest.json', options.archivePrefix ?? '')
+  return createExportArchiveStream({
+    manifests: [
+      {
+        path: manifestPath,
+        manifest: options.manifest,
+        validateManifest: (value) => options.validateManifest(value),
+      },
+    ],
+    documents: options.documents,
+    documentReader: options.documentReader,
+    additionalEntries: options.additionalEntries,
+    archivePrefix: options.archivePrefix,
+    signal: options.signal,
+  })
+}
+
+/**
+ * Assemble one or more deferred manifests and document descriptors into a
+ * transport-neutral ZIP stream. Manifests are written after document reads so
+ * their included/missing status and checksums are authoritative.
+ */
+export function createExportArchiveStream<Manifest>(options: {
+  manifests: ReadonlyArray<ExportManifestEntry<Manifest>>
+  documents: ReadonlyArray<ExportBundleDocument>
+  documentReader: ExportDocumentReader
+  additionalEntries?: ReadonlyArray<ExportArchiveEntry>
+  /** Namespace all entries for a reusable group slice in an account archive. */
+  archivePrefix?: string
   signal?: AbortSignal
 }): ReadableStream<Uint8Array> {
   let cancelled = false
@@ -141,11 +180,29 @@ export function createExportBundleStream<Manifest>(options: {
         const archivePrefix = normalizeArchivePrefix(
           options.archivePrefix ?? '',
         )
-        const manifestPath =
-          options.manifestPath ??
-          withArchivePrefix('manifest.json', archivePrefix)
-        assertArchivePath(manifestPath)
-        const usedPaths = new Set([manifestPath])
+        const manifestEntries = options.manifests
+          .map((entry) => ({
+            ...entry,
+            path: withArchivePrefix(entry.path, archivePrefix),
+          }))
+          .sort((left, right) => {
+            // Keep the account manifest authoritative and last, while making
+            // nested group manifests deterministic.
+            if (left.path === 'manifest.json') return 1
+            if (right.path === 'manifest.json') return -1
+            return left.path < right.path ? -1 : left.path > right.path ? 1 : 0
+          })
+        if (manifestEntries.length === 0) {
+          throw new Error('An export archive requires a manifest.')
+        }
+        const usedPaths = new Set<string>()
+        for (const entry of manifestEntries) {
+          assertArchivePath(entry.path)
+          if (usedPaths.has(entry.path)) {
+            throw new Error(`Duplicate export archive path: ${entry.path}`)
+          }
+          usedPaths.add(entry.path)
+        }
         for (const document of options.documents) {
           if (!document.entry.path) continue
           document.entry.path = withArchivePrefix(
@@ -175,7 +232,20 @@ export function createExportBundleStream<Manifest>(options: {
           usedPaths.add(entry.path)
         }
 
-        for (const document of options.documents) {
+        const documents = [...options.documents].sort((left, right) =>
+          left.entry.path && right.entry.path
+            ? left.entry.path < right.entry.path
+              ? -1
+              : left.entry.path > right.entry.path
+                ? 1
+                : 0
+            : left.entry.path
+              ? -1
+              : right.entry.path
+                ? 1
+                : 0,
+        )
+        for (const document of documents) {
           if (cancelled) return
           const intendedPath = document.entry.path
           if (!intendedPath) continue
@@ -208,12 +278,17 @@ export function createExportBundleStream<Manifest>(options: {
         }
 
         if (cancelled) return
-        const manifest = options.validateManifest(options.manifest)
-        addZipEntry(
-          zip!,
-          manifestPath,
-          strToU8(JSON.stringify(manifest, null, 2)),
-        )
+        for (const entry of manifestEntries) {
+          if (cancelled) return
+          const manifest = entry.validateManifest(entry.manifest)
+          addZipEntry(
+            zip!,
+            entry.path,
+            strToU8(JSON.stringify(manifest, null, 2)),
+          )
+          await Promise.resolve()
+          await waitForDemand()
+        }
         endZip()
       })().catch((error) => {
         if (cancelled || settled) return
