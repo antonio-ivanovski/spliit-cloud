@@ -2077,7 +2077,9 @@
         "groups": "群組與好友",
         "expenses": "消費",
         "summaries": "摘要"
-      }
+      },
+      "masterLabel": "啟用通知",
+      "masterDescription": "關閉後，所有電子郵件和推播通知都會靜默。您的分類選擇會保留。"
     },
     "preferences": {
       "title": "應用程式偏好設定",

@@ -2077,7 +2077,9 @@
         "groups": "グループと友人",
         "expenses": "支出",
         "summaries": "サマリー"
-      }
+      },
+      "masterLabel": "通知を有効にする",
+      "masterDescription": "オフにすると、すべてのメール通知とプッシュ通知が停止します。カテゴリごとの設定は保持されます。"
     },
     "preferences": {
       "title": "アプリ設定",

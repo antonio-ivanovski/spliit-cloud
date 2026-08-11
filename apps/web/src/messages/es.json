@@ -2093,7 +2093,9 @@
         "groups": "Grupos y amigos",
         "expenses": "Gastos",
         "summaries": "Resúmenes"
-      }
+      },
+      "masterLabel": "Activar las notificaciones",
+      "masterDescription": "Desactívalas para silenciar todos los correos y las notificaciones push. Tus preferencias por categoría se conservan."
     },
     "preferences": {
       "title": "Preferencias de la aplicación",

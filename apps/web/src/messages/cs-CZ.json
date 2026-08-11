@@ -2102,7 +2102,9 @@
         "groups": "Skupiny a přátelé",
         "expenses": "Výdaje",
         "summaries": "Souhrny"
-      }
+      },
+      "masterLabel": "Povolit oznámení",
+      "masterDescription": "Vypnutím ztlumíte e-mailová i push oznámení. Vaše volby podle kategorií zůstanou zachovány."
     },
     "preferences": {
       "title": "Předvolby aplikace",

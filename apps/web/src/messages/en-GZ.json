@@ -208,7 +208,9 @@
         "groups": "groups and besties",
         "expenses": "expense tea",
         "summaries": "recap zone"
-      }
+      },
+      "masterLabel": "turn on notifications",
+      "masterDescription": "Switch off to mute all email and push notifications. Your per-category picks are kept."
     },
     "preferences": {
       "title": "app vibes",

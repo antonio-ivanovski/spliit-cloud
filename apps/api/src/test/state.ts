@@ -25,6 +25,8 @@ export const sendEmailMock = vi.fn(async (_message: EmailMessage) => undefined)
 export function resetPrisma() {
   mockReset(prismaMock)
 
+  prismaMock.accountPreference.findMany.mockResolvedValue([] as never)
+  prismaMock.accountPreference.findUnique.mockResolvedValue(null as never)
   prismaMock.expensePaidBy.findMany.mockResolvedValue([] as never)
   prismaMock.expensePaidFor.findMany.mockResolvedValue([] as never)
   prismaMock.expenseItemPaidFor.findMany.mockResolvedValue([] as never)

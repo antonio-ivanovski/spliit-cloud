@@ -2093,7 +2093,9 @@
         "groups": "Gruppi e amici",
         "expenses": "Spese",
         "summaries": "Riepiloghi"
-      }
+      },
+      "masterLabel": "Abilita le notifiche",
+      "masterDescription": "Disattivale per silenziare tutte le notifiche via e-mail e push. Le tue scelte per categoria vengono conservate."
     },
     "preferences": {
       "title": "Preferenze dell'app",

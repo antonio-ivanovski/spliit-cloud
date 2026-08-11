@@ -9,6 +9,11 @@ export type AccountPreferences = {
   timeZone: string | null
   locale: Locale | null
   theme: AccountTheme | null
+  /**
+   * Account-level notifications master gate. Missing cached values default to
+   * true.
+   */
+  notificationsEnabled?: boolean
   /** Account-level AI opt-out gate. Missing cached values default to true. */
   aiFeaturesEnabled?: boolean
   /**
@@ -49,6 +54,7 @@ function parseAccountPreferences(value: unknown): AccountPreferences | null {
   const timeZone = candidate.timeZone
   const locale = candidate.locale
   const theme = candidate.theme
+  const notificationsEnabled = candidate.notificationsEnabled
   const aiFeaturesEnabled = candidate.aiFeaturesEnabled
   const aiCategoryExtractEnabled = candidate.aiCategoryExtractEnabled
   const aiReceiptScanEnabled = candidate.aiReceiptScanEnabled
@@ -70,6 +76,12 @@ function parseAccountPreferences(value: unknown): AccountPreferences | null {
   if (
     theme !== null &&
     (typeof theme !== 'string' || !supportedThemes.has(theme as AccountTheme))
+  )
+    return null
+  if (
+    notificationsEnabled !== undefined &&
+    notificationsEnabled !== null &&
+    typeof notificationsEnabled !== 'boolean'
   )
     return null
   if (
@@ -104,8 +116,9 @@ function parseAccountPreferences(value: unknown): AccountPreferences | null {
     timeZone: timeZone as string | null,
     locale: locale as Locale | null,
     theme: theme as AccountTheme | null,
-    // The master switch is default-on for accounts created before this field
+    // Master switches are default-on for accounts created before these fields
     // existed, including cached snapshots from older app versions.
+    notificationsEnabled: notificationsEnabled !== false,
     aiFeaturesEnabled: aiFeaturesEnabled !== false,
     aiCategoryExtractEnabled:
       aiCategoryExtractEnabled === undefined

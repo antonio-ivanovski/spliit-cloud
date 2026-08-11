@@ -2102,7 +2102,9 @@
         "groups": "Grupy i znajomi",
         "expenses": "Wydatki",
         "summaries": "Podsumowania"
-      }
+      },
+      "masterLabel": "Włącz powiadomienia",
+      "masterDescription": "Wyłącz, aby wyciszyć wszystkie powiadomienia e-mail i push. Twoje wybory według kategorii zostaną zachowane."
     },
     "preferences": {
       "title": "Preferencje aplikacji",

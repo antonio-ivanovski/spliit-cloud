@@ -2093,7 +2093,9 @@
         "groups": "Grupuri și prieteni",
         "expenses": "Cheltuieli",
         "summaries": "Rezumate"
-      }
+      },
+      "masterLabel": "Activează notificările",
+      "masterDescription": "Dezactivează-le pentru a reduce la tăcere toate e-mailurile și notificările push. Alegerile tale pe categorii sunt păstrate."
     },
     "preferences": {
       "title": "Preferințele aplicației",

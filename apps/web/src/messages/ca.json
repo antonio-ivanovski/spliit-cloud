@@ -2093,7 +2093,9 @@
         "groups": "Grups i amics",
         "expenses": "Despeses",
         "summaries": "Resums"
-      }
+      },
+      "masterLabel": "Activa les notificacions",
+      "masterDescription": "Desactiva-les per silenciar tots els correus electrònics i les notificacions push. Les teves preferències per categoria es conserven."
     },
     "preferences": {
       "title": "Preferències de l'aplicació",

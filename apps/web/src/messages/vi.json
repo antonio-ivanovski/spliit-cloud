@@ -891,7 +891,9 @@
       "loading": "Đang tải…",
       "loadError": "Không thể tải tùy chọn.",
       "retry": "Thử lại",
-      "pushChannel": "Push"
+      "pushChannel": "Push",
+      "masterLabel": "Bật thông báo",
+      "masterDescription": "Tắt để im lặng mọi thông báo qua email và push. Các lựa chọn theo danh mục của bạn vẫn được giữ nguyên."
     },
     "preferences": {
       "title": "Tùy chọn ứng dụng",

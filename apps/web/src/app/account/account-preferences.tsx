@@ -39,22 +39,25 @@ import {
 const themes: AccountTheme[] = ['light', 'dark', 'system']
 
 export function AccountPreferences() {
-  const { t } = useTranslation()
+  const { t } = useTranslation(undefined, {
+    keyPrefix: 'AccountSettings.preferences',
+  })
+  const { t: tBase } = useTranslation()
   const { setTheme } = useTheme()
   const query = trpc.account.getPreferences.useQuery()
   const syncedPreferences = useSyncedAccountPreferences()
   const updater = useAccountPreferenceUpdater()
   const deployment = useDeploymentConfig()
   const allCurrencies = useCurrencies(
-    t('GroupForm.CurrencyCodeField.customOption'),
+    tBase('GroupForm.CurrencyCodeField.customOption'),
   )
   const themeItems = useMemo(
     () =>
       themes.map((theme) => ({
         value: theme,
-        label: t(`Theme.${theme}` as never) as string,
+        label: tBase(`Theme.${theme}` as `Theme.${AccountTheme}`),
       })),
-    [t],
+    [tBase],
   )
   const currencies = useMemo(
     () => allCurrencies.filter((currency) => currency.code.length === 3),
@@ -65,20 +68,12 @@ export function AccountPreferences() {
     (query.data?.preferences as AccountPreferencesValue | undefined)
   const deploymentCurrency = deployment.defaultCurrencyCode
 
-  const text = (key: string, fallback: string) =>
-    t(`AccountSettings.preferences.${key}` as never, {
-      defaultValue: fallback,
-    })
-
   if (!sourcePreferences) {
     return (
       <SettingsSectionSkeleton
         id="app-preferences"
-        title={text('title', 'App preferences')}
-        description={text(
-          'description',
-          'Use the same defaults and appearance on every signed-in device.',
-        )}
+        title={t('title')}
+        description={t('description')}
         icon={SlidersHorizontal as LucideIcon}
         rows={4}
       />
@@ -88,22 +83,17 @@ export function AccountPreferences() {
   return (
     <SettingsSection
       id="app-preferences"
-      title={text('title', 'App preferences')}
-      description={text(
-        'description',
-        'Use the same defaults and appearance on every signed-in device.',
-      )}
+      title={t('title')}
+      description={t('description')}
       icon={SlidersHorizontal as LucideIcon}
       status={
-        updater?.isUpdating ? (
-          <SettingsSaving label={text('saving', 'Saving preferences…')} />
-        ) : undefined
+        updater?.isUpdating ? <SettingsSaving label={t('saving')} /> : undefined
       }
     >
       <SettingsList className="border-t border-border/70">
         <SettingsFieldRow
           id="account-preference-language"
-          label={text('language', 'Language')}
+          label={t('language')}
           control={
             <LocaleSelector
               id="account-preference-language"
@@ -120,7 +110,7 @@ export function AccountPreferences() {
         />
         <SettingsFieldRow
           id="account-preference-default-currency"
-          label={text('defaultCurrency', 'Default currency')}
+          label={t('defaultCurrency')}
           control={
             <CurrencySelector
               id="account-preference-default-currency"
@@ -137,11 +127,8 @@ export function AccountPreferences() {
         />
         <SettingsFieldRow
           id="account-preference-time-zone"
-          label={text('timeZone', 'Account timezone')}
-          description={text(
-            'timeZoneHelp',
-            'Used for account timestamps and captured by new recurring expenses.',
-          )}
+          label={t('timeZone')}
+          description={t('timeZoneHelp')}
           control={
             <TimeZoneField
               id="account-preference-time-zone"
@@ -154,7 +141,7 @@ export function AccountPreferences() {
         />
         <SettingsFieldRow
           id="account-preference-theme"
-          label={text('theme', 'Theme')}
+          label={t('theme')}
           control={
             <Select
               value={sourcePreferences.theme ?? 'system'}
@@ -170,7 +157,7 @@ export function AccountPreferences() {
                 id="account-preference-theme"
                 className="w-full sm:max-w-xs"
               >
-                <SelectValue placeholder={text('chooseTheme', 'Choose')} />
+                <SelectValue placeholder={t('chooseTheme')} />
               </SelectTrigger>
               <SelectContent>
                 {themeItems.map((theme) => (

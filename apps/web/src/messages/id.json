@@ -2077,7 +2077,9 @@
         "groups": "Grup dan teman",
         "expenses": "Pengeluaran",
         "summaries": "Ringkasan"
-      }
+      },
+      "masterLabel": "Aktifkan notifikasi",
+      "masterDescription": "Matikan untuk membungkam semua notifikasi email dan push. Pilihan per kategori Anda tetap dipertahankan."
     },
     "preferences": {
       "title": "Preferensi aplikasi",

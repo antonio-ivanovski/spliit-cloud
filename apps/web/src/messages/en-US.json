@@ -891,7 +891,9 @@
       "loading": "Loading notification preferences…",
       "loadError": "Could not load notification preferences.",
       "retry": "Try again",
-      "pushChannel": "Push"
+      "pushChannel": "Push",
+      "masterLabel": "Enable notifications",
+      "masterDescription": "Turn off to silence all email and push notifications. Your per-category choices are preserved."
     },
     "preferences": {
       "title": "App preferences",

@@ -53,12 +53,33 @@ export async function resolveNotificationChannelsForIntents(
     ...new Set(intents.map((intent) => intent.recipientAccountId)),
   ]
   const db = client ?? prisma
-  const rows = await db.accountNotificationPreference.findMany({
-    where: { accountId: { in: accountIds } },
-    select: { accountId: true, category: true, channels: true },
-  })
-  const pushTargetsByAccountId = await fetchPushTargets(accountIds, db)
+  const [rows, pushTargetsByAccountId, rawPrefRows] = await Promise.all([
+    db.accountNotificationPreference.findMany({
+      where: { accountId: { in: accountIds } },
+      select: { accountId: true, category: true, channels: true },
+    }),
+    fetchPushTargets(accountIds, db),
+    db.accountPreference.findMany({
+      where: { accountId: { in: accountIds } },
+      select: { accountId: true, notificationsEnabled: true },
+    }),
+  ])
+  const prefRows = (rawPrefRows ?? []) as Array<{
+    accountId: string
+    notificationsEnabled: boolean | null
+  }>
+  const disabledAccountIds = new Set(
+    prefRows
+      .filter((row) => row.notificationsEnabled === false)
+      .map((row) => row.accountId),
+  )
   return intents.map((intent) => {
+    if (disabledAccountIds.has(intent.recipientAccountId)) {
+      return {
+        channels: [] as NotificationChannel[],
+        pushSubscriptionsByAccountId: pushTargetsByAccountId,
+      }
+    }
     const accountRows = rows.filter(
       (row) => row.accountId === intent.recipientAccountId,
     )

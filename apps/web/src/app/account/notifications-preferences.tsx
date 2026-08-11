@@ -3,6 +3,10 @@ import { Bell, Check, ChevronsUpDown } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import {
+  useAccountPreferenceUpdater,
+  useSyncedAccountPreferences,
+} from '@/components/account-preferences-sync'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Command, CommandGroup, CommandItem } from '@/components/ui/command'
@@ -19,6 +23,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { Switch } from '@/components/ui/switch'
 import { useToast } from '@/components/ui/use-toast'
 import { isPlaceholderEmail } from '@/lib/account'
 import { useMediaQuery } from '@/lib/hooks'
@@ -42,6 +47,7 @@ import {
   SettingsFieldRow,
   SettingsGroup,
   SettingsRow,
+  SettingsSaving,
   SettingsSection,
   SettingsSectionSkeleton,
 } from './settings-ui'
@@ -216,6 +222,10 @@ export function NotificationsPreferences() {
   const { toast } = useToast()
   const push = usePushNotifications()
   const { data: account } = useCurrentAccount()
+  const accountPrefs = useSyncedAccountPreferences()
+  const updater = useAccountPreferenceUpdater()
+  const patchesDisabled = updater !== null && !updater.ready
+  const notificationsEnabled = accountPrefs?.notificationsEnabled !== false
   const utils = trpc.useUtils()
   const preferences = trpc.notifications.preferences.get.useQuery(
     { accountId: account?.id ?? '' },
@@ -266,9 +276,6 @@ export function NotificationsPreferences() {
   async function updateCategory(category: Category, channels: Channel[]) {
     if (!draft || pendingCategory) return
     const previous = draft[category]
-    // Keep explicit selections explicit. In particular, Email-only is an
-    // intentional onboarding choice and must not look like an unconfigured
-    // account on another device.
     const savedChannels = channels
     setDraft((current) =>
       current ? { ...current, [category]: channels } : current,
@@ -383,90 +390,108 @@ export function NotificationsPreferences() {
       description={sectionDescription}
       icon={Bell}
       className="scroll-mt-6"
+      status={
+        <div className="flex items-center gap-3">
+          {updater?.isUpdating ? <SettingsSaving label={t('saving')} /> : null}
+          <Switch
+            id="notifications-master-enabled"
+            aria-label={t('masterLabel')}
+            checked={notificationsEnabled}
+            disabled={patchesDisabled}
+            onCheckedChange={(value) =>
+              void updater?.patchPreferences({ notificationsEnabled: value })
+            }
+          />
+        </div>
+      }
     >
       <div className="flex flex-col gap-6">
-        {rows.map((section) => (
-          <SettingsGroup
-            key={section.id}
-            id={`notification-group-${section.id}`}
-            title={section.title}
-          >
-            <>
-              {section.items.map((row) => {
-                const channels = row.category ? draft[row.category] : []
-                const pushWarning =
-                  row.category &&
-                  channels.includes(NotificationChannel.PUSH) &&
-                  !preferences.data.hasPushTargets
-                const description = (
-                  <>
-                    {t(row.descriptionKey)}
-                    {pushWarning ? (
-                      <span
-                        className="mt-1 block text-xs text-amber-700 dark:text-amber-400"
-                        aria-live="polite"
-                      >
-                        {t('pushMissingTarget')}
-                      </span>
-                    ) : null}
-                  </>
-                )
-                const control =
-                  row.category && !row.comingSoon ? (
-                    <ChannelSelector
-                      id={`notification-${row.id}`}
-                      channels={channels}
-                      labels={channelLabels}
-                      title={t(row.titleKey)}
-                      emailDisabled={emailDisabled}
-                      pushDisabled={pushDisabled}
-                      offLabel={t('off')}
-                      savingLabel={t('saving')}
-                      doneLabel={tCommon('Groups.Import.StepHeader.done')}
-                      disabled={
-                        pendingCategory !== null &&
-                        pendingCategory !== row.category
-                      }
-                      saving={pendingCategory === row.category}
-                      onToggle={(channel) =>
-                        void toggleChannel(row.category!, channel)
-                      }
-                    />
-                  ) : (
-                    comingSoonBadge
-                  )
-                if (row.category && !row.comingSoon) {
-                  return (
-                    <SettingsFieldRow
-                      key={row.id}
-                      id={`notification-${row.id}`}
-                      label={t(row.titleKey)}
-                      description={description}
-                      control={control}
-                    />
-                  )
-                }
-                return (
-                  <SettingsRow
-                    key={row.id}
-                    id={`notification-${row.id}`}
-                    label={t(row.titleKey)}
-                    description={description}
-                    badges={control}
-                    className="opacity-65"
-                  />
-                )
-              })}
-            </>
-          </SettingsGroup>
-        ))}
+        {notificationsEnabled ? (
+          <>
+            {rows.map((section) => (
+              <SettingsGroup
+                key={section.id}
+                id={`notification-group-${section.id}`}
+                title={section.title}
+              >
+                <>
+                  {section.items.map((row) => {
+                    const channels = row.category ? draft[row.category] : []
+                    const pushWarning =
+                      row.category &&
+                      channels.includes(NotificationChannel.PUSH) &&
+                      !preferences.data.hasPushTargets
+                    const description = (
+                      <>
+                        {t(row.descriptionKey)}
+                        {pushWarning ? (
+                          <span
+                            className="mt-1 block text-xs text-amber-700 dark:text-amber-400"
+                            aria-live="polite"
+                          >
+                            {t('pushMissingTarget')}
+                          </span>
+                        ) : null}
+                      </>
+                    )
+                    const control =
+                      row.category && !row.comingSoon ? (
+                        <ChannelSelector
+                          id={`notification-${row.id}`}
+                          channels={channels}
+                          labels={channelLabels}
+                          title={t(row.titleKey)}
+                          emailDisabled={emailDisabled}
+                          pushDisabled={pushDisabled}
+                          offLabel={t('off')}
+                          savingLabel={t('saving')}
+                          doneLabel={tCommon('Groups.Import.StepHeader.done')}
+                          disabled={
+                            pendingCategory !== null &&
+                            pendingCategory !== row.category
+                          }
+                          saving={pendingCategory === row.category}
+                          onToggle={(channel) =>
+                            void toggleChannel(row.category!, channel)
+                          }
+                        />
+                      ) : (
+                        comingSoonBadge
+                      )
+                    if (row.category && !row.comingSoon) {
+                      return (
+                        <SettingsFieldRow
+                          key={row.id}
+                          id={`notification-${row.id}`}
+                          label={t(row.titleKey)}
+                          description={description}
+                          control={control}
+                        />
+                      )
+                    }
+                    return (
+                      <SettingsRow
+                        key={row.id}
+                        id={`notification-${row.id}`}
+                        label={t(row.titleKey)}
+                        description={description}
+                        badges={control}
+                        className="opacity-65"
+                      />
+                    )
+                  })}
+                </>
+              </SettingsGroup>
+            ))}
 
-        {emailDisabled ? (
-          <Alert variant="default" className="py-3">
-            <AlertDescription className="text-sm">
-              {t('emailComingSoon')}
-            </AlertDescription>
-          </Alert>
+            {emailDisabled ? (
+              <Alert variant="default" className="py-3">
+                <AlertDescription className="text-sm">
+                  {t('emailComingSoon')}
+                </AlertDescription>
+              </Alert>
+            ) : null}
+          </>
         ) : null}
 
         <SettingsGroup

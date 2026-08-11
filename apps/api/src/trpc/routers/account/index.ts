@@ -47,6 +47,7 @@ const accountPreferenceSelect = {
   timeZone: true,
   locale: true,
   theme: true,
+  notificationsEnabled: true,
   aiFeaturesEnabled: true,
   aiCategoryExtractEnabled: true,
   aiReceiptScanEnabled: true,
@@ -58,6 +59,7 @@ const emptyAccountPreference = {
   timeZone: null,
   locale: null,
   theme: null,
+  notificationsEnabled: null,
   aiFeaturesEnabled: null,
   aiCategoryExtractEnabled: null,
   aiReceiptScanEnabled: null,
@@ -68,10 +70,11 @@ function parseAccountPreference(preferences: unknown) {
   const parsed = accountPreferenceSchema.parse(
     preferences ?? emptyAccountPreference,
   )
-  // Normalize nullable AI toggles to real booleans: `null` ≡ enabled so the
+  // Normalize nullable toggles to real booleans: `null` ≡ enabled so the
   // web sees a consistent shape and the gating hooks can compare directly.
   return {
     ...parsed,
+    notificationsEnabled: parsed.notificationsEnabled ?? true,
     aiFeaturesEnabled: parsed.aiFeaturesEnabled ?? true,
     aiCategoryExtractEnabled: parsed.aiCategoryExtractEnabled ?? true,
     aiReceiptScanEnabled: parsed.aiReceiptScanEnabled ?? true,
@@ -90,6 +93,7 @@ const updatePreferencesInputSchema = z.object({
   timeZone: timeZoneSchema.nullable().optional(),
   locale: accountLocaleSchema.nullable().optional(),
   theme: accountThemeSchema.nullable().optional(),
+  notificationsEnabled: z.boolean().optional(),
   aiFeaturesEnabled: z.boolean().optional(),
   aiCategoryExtractEnabled: z.boolean().nullable().optional(),
   aiReceiptScanEnabled: z.boolean().nullable().optional(),

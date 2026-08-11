@@ -144,7 +144,9 @@
         "groups": "Grupper och vänner",
         "expenses": "Utgifter",
         "summaries": "Sammanfattningar"
-      }
+      },
+      "masterLabel": "Aktivera aviseringar",
+      "masterDescription": "Stäng av för att tysta alla e-post- och push-aviseringar. Dina val per kategori behålls."
     },
     "title": "Kontoinställningar",
     "profile": {

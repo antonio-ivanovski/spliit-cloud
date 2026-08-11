@@ -2077,7 +2077,9 @@
         "groups": "群组和好友",
         "expenses": "消费",
         "summaries": "摘要"
-      }
+      },
+      "masterLabel": "启用通知",
+      "masterDescription": "关闭后，所有电子邮件和推送通知都将静默。您的分类选择会保留。"
     },
     "preferences": {
       "title": "应用偏好设置",

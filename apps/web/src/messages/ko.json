@@ -2077,7 +2077,9 @@
         "groups": "그룹 및 친구",
         "expenses": "지출",
         "summaries": "요약"
-      }
+      },
+      "masterLabel": "알림 사용",
+      "masterDescription": "끄면 모든 이메일 및 푸시 알림이 전송되지 않습니다. 카테고리별 선택은 유지됩니다."
     },
     "preferences": {
       "title": "앱 환경설정",

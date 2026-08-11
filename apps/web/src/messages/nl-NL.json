@@ -2084,7 +2084,9 @@
         "groups": "Groepen en vrienden",
         "expenses": "Uitgaven",
         "summaries": "Samenvattingen"
-      }
+      },
+      "masterLabel": "Meldingen inschakelen",
+      "masterDescription": "Zet dit uit om alle e-mail- en pushmeldingen te dempen. Je keuzes per categorie blijven bewaard."
     },
     "preferences": {
       "title": "Appvoorkeuren",

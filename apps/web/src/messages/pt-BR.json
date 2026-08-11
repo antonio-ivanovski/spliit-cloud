@@ -2093,7 +2093,9 @@
         "groups": "Grupos e amigos",
         "expenses": "Despesas",
         "summaries": "Resumos"
-      }
+      },
+      "masterLabel": "Ativar notificações",
+      "masterDescription": "Desative para silenciar todos os e-mails e notificações push. Suas escolhas por categoria são preservadas."
     },
     "preferences": {
       "title": "Preferências do aplicativo",

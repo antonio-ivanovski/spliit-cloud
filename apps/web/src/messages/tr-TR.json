@@ -2084,7 +2084,9 @@
         "groups": "Gruplar ve arkadaşlar",
         "expenses": "Harcamalar",
         "summaries": "Özetler"
-      }
+      },
+      "masterLabel": "Bildirimleri etkinleştir",
+      "masterDescription": "Kapatarak tüm e-posta ve anlık bildirimleri susturun. Kategori bazlı seçimleriniz korunur."
     },
     "preferences": {
       "title": "Uygulama tercihleri",

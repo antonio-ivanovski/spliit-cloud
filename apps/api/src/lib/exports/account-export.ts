@@ -25,6 +25,7 @@ function emptyAccountPreference() {
     timeZone: null,
     locale: null,
     theme: null,
+    notificationsEnabled: null,
     aiFeaturesEnabled: null,
     aiCategoryExtractEnabled: null,
     aiReceiptScanEnabled: null,

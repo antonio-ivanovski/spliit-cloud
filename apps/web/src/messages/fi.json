@@ -2084,7 +2084,9 @@
         "groups": "Ryhmät ja ystävät",
         "expenses": "Kulut",
         "summaries": "Yhteenvedot"
-      }
+      },
+      "masterLabel": "Ota ilmoitukset käyttöön",
+      "masterDescription": "Poista käytöstä mykistääksesi kaikki sähköposti- ja push-ilmoitukset. Luokkakohtaiset valintasi säilyvät ennallaan."
     },
     "preferences": {
       "title": "Sovellusasetukset",

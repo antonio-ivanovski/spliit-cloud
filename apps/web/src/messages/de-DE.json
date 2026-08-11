@@ -2116,7 +2116,9 @@
         "groups": "Gruppen und Freunde",
         "expenses": "Ausgaben",
         "summaries": "Zusammenfassungen"
-      }
+      },
+      "masterLabel": "Benachrichtigungen aktivieren",
+      "masterDescription": "Deaktivieren, um alle E-Mail- und Push-Benachrichtigungen stummzuschalten. Deine Auswahl pro Kategorie bleibt erhalten."
     },
     "preferences": {
       "title": "App-Einstellungen",

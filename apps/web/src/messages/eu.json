@@ -2092,7 +2092,9 @@
         "groups": "Taldeak eta lagunak",
         "expenses": "Gastuak",
         "summaries": "Laburpenak"
-      }
+      },
+      "masterLabel": "Gaitu jakinarazpenak",
+      "masterDescription": "Desaktibatu posta- eta push-jakinarazpen guztiak isiltzeko. Kategorien araberako aukerak gordeta mantentzen dira."
     },
     "preferences": {
       "title": "Aplikazioaren hobespenak",

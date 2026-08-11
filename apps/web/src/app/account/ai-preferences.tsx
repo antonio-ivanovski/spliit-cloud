@@ -46,16 +46,13 @@ type AccountPreferences = {
  * "AI features" card for users whose environment never had AI.
  */
 export function AccountAiPreferences() {
-  const { t } = useTranslation()
+  const { t } = useTranslation(undefined, {
+    keyPrefix: 'AccountSettings.aiPreferences',
+  })
   const query = trpc.features.get.useQuery()
   const preferences = useSyncedAccountPreferences()
   const updater = useAccountPreferenceUpdater()
   const patchesDisabled = updater !== null && !updater.ready
-
-  const text = (key: string, fallback: string) =>
-    t(`AccountSettings.aiPreferences.${key}` as never, {
-      defaultValue: fallback,
-    })
 
   const deploymentFeatures = query.data as DeploymentFeatures | undefined
 
@@ -63,11 +60,8 @@ export function AccountAiPreferences() {
     return (
       <SettingsSectionSkeleton
         id="ai-preferences"
-        title={text('title', 'AI features')}
-        description={text(
-          'description',
-          'Configure AI features and customize how they behave.',
-        )}
+        title={t('title')}
+        description={t('description')}
         icon={Sparkles as LucideIcon}
         rows={3}
       />
@@ -86,27 +80,20 @@ export function AccountAiPreferences() {
 
   const pref = preferences as AccountPreferences | null
 
-  const comingSoonBadge = (
-    <SettingsBadge>{text('comingSoon', 'Coming soon')}</SettingsBadge>
-  )
+  const comingSoonBadge = <SettingsBadge>{t('comingSoon')}</SettingsBadge>
 
   return (
     <SettingsSection
       id="ai-preferences"
-      title={text('title', 'AI features')}
-      description={text(
-        'description',
-        'Configure AI features and customize how they behave.',
-      )}
+      title={t('title')}
+      description={t('description')}
       icon={Sparkles as LucideIcon}
       status={
         <div className="flex items-center gap-3">
-          {updater?.isUpdating ? (
-            <SettingsSaving label={text('saving', 'Saving preferences…')} />
-          ) : null}
+          {updater?.isUpdating ? <SettingsSaving label={t('saving')} /> : null}
           <Switch
             id="account-ai-preferences-enabled"
-            aria-label={text('masterLabel', 'Enable AI features')}
+            aria-label={t('masterLabel')}
             checked={pref?.aiFeaturesEnabled !== false}
             disabled={patchesDisabled}
             onCheckedChange={(value) =>
@@ -122,11 +109,8 @@ export function AccountAiPreferences() {
             {deploymentFeatures.enableCategoryExtract ? (
               <SettingsFieldRow
                 id="account-ai-preferences-category-extract"
-                label={text('categoryExtractLabel', 'Expense categorizer')}
-                description={text(
-                  'categoryExtractDescription',
-                  'Suggest a category automatically when you fill in an expense title.',
-                )}
+                label={t('categoryExtractLabel')}
+                description={t('categoryExtractDescription')}
                 control={
                   <Switch
                     id="account-ai-preferences-category-extract"
@@ -144,11 +128,8 @@ export function AccountAiPreferences() {
             {deploymentFeatures.enableReceiptExtract ? (
               <SettingsFieldRow
                 id="account-ai-preferences-receipt-scan"
-                label={text('receiptScanLabel', 'Receipt scan')}
-                description={text(
-                  'receiptScanDescription',
-                  'Extract expense details from a receipt photo.',
-                )}
+                label={t('receiptScanLabel')}
+                description={t('receiptScanDescription')}
                 control={
                   <Switch
                     id="account-ai-preferences-receipt-scan"
@@ -166,25 +147,16 @@ export function AccountAiPreferences() {
             {deploymentFeatures.enableReceiptExtract ? (
               <SettingsRow
                 id="account-ai-preferences-receipt-prompts"
-                label={text(
-                  'receiptPromptsLabel',
-                  'Custom instructions for receipt scan',
-                )}
-                description={text(
-                  'receiptPromptsDescription',
-                  'Tailor the AI behavior when scanning receipts (currency hints, line-item grouping, etc.).',
-                )}
+                label={t('receiptPromptsLabel')}
+                description={t('receiptPromptsDescription')}
                 badges={comingSoonBadge}
               />
             ) : null}
             {deploymentFeatures.enableVoiceExpense ? (
               <SettingsFieldRow
                 id="account-ai-preferences-voice-expense"
-                label={text('voiceExpenseLabel', 'Voice expense')}
-                description={text(
-                  'voiceExpenseDescription',
-                  'Create an expense from a short voice recording.',
-                )}
+                label={t('voiceExpenseLabel')}
+                description={t('voiceExpenseDescription')}
                 control={
                   <Switch
                     id="account-ai-preferences-voice-expense"
@@ -202,25 +174,16 @@ export function AccountAiPreferences() {
             {deploymentFeatures.enableVoiceExpense ? (
               <SettingsRow
                 id="account-ai-preferences-voice-language"
-                label={text('voiceLanguageLabel', 'Preferred voice language')}
-                description={text(
-                  'voiceLanguageDescription',
-                  'Choose the language the voice expense AI listens for.',
-                )}
+                label={t('voiceLanguageLabel')}
+                description={t('voiceLanguageDescription')}
                 badges={comingSoonBadge}
               />
             ) : null}
             {deploymentFeatures.enableVoiceExpense ? (
               <SettingsRow
                 id="account-ai-preferences-voice-prompts"
-                label={text(
-                  'voicePromptsLabel',
-                  'Custom instructions for voice expense',
-                )}
-                description={text(
-                  'voicePromptsDescription',
-                  'Tailor the AI behavior when creating expenses from your voice (splitting, payer defaults, etc.).',
-                )}
+                label={t('voicePromptsLabel')}
+                description={t('voicePromptsDescription')}
                 badges={comingSoonBadge}
               />
             ) : null}
