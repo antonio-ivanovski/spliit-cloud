@@ -1676,7 +1676,8 @@
       "earlierThisYear": "earlier this year",
       "lastYear": "last year",
       "older": "ancient expenses",
-      "previousWeek": "last week"
+      "previousWeek": "last week",
+      "today": "today, obviously"
     },
     "showSettlements": "show settlements",
     "globalTitle": "all the expenses",

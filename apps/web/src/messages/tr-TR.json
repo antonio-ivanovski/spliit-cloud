@@ -90,7 +90,8 @@
       "earlierThisYear": "Bu yılın başlarında",
       "lastYear": "Geçen yıl",
       "older": "Daha eski masraflar",
-      "previousWeek": "Geçen hafta"
+      "previousWeek": "Geçen hafta",
+      "today": "Bugün"
     },
     "export": "Dışa aktar",
     "filters": {

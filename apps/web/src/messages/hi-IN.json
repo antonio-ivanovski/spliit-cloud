@@ -1495,7 +1495,8 @@
       "earlierThisYear": "इस वर्ष की शुरुआत में",
       "lastYear": "पिछले वर्ष",
       "older": "पुराने खर्च",
-      "previousWeek": "पिछले सप्ताह"
+      "previousWeek": "पिछले सप्ताह",
+      "today": "आज"
     },
     "filters": {
       "mobileTitle": "खर्च फ़िल्टर करें",

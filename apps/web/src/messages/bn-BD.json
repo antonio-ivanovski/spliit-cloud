@@ -1495,7 +1495,8 @@
       "earlierThisYear": "এই বছরের শুরুতে",
       "lastYear": "গত বছরে",
       "older": "পুরনো খরচ",
-      "previousWeek": "গত সপ্তাহে"
+      "previousWeek": "গত সপ্তাহে",
+      "today": "আজ"
     },
     "filters": {
       "mobileTitle": "খরচ ফিল্টার",

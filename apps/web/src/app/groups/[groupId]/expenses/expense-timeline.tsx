@@ -12,6 +12,7 @@ import { dateOnlyIso, zonedDateOnlyIso } from '@/lib/utils'
 
 export const EXPENSE_GROUPS = {
   UPCOMING: 'upcoming',
+  TODAY: 'today',
   THIS_WEEK: 'thisWeek',
   PREVIOUS_WEEK: 'previousWeek',
   EARLIER_THIS_MONTH: 'earlierThisMonth',
@@ -25,6 +26,7 @@ type ExpenseGroup = (typeof EXPENSE_GROUPS)[keyof typeof EXPENSE_GROUPS]
 
 const EXPENSE_GROUP_I18N_KEYS = {
   upcoming: 'Groups.upcoming',
+  today: 'Groups.today',
   thisWeek: 'Groups.thisWeek',
   previousWeek: 'Groups.previousWeek',
   earlierThisMonth: 'Groups.earlierThisMonth',
@@ -47,6 +49,8 @@ function getExpenseGroup(
 ): ExpenseGroup {
   if (today.isBefore(date)) {
     return EXPENSE_GROUPS.UPCOMING
+  } else if (today.isSame(date, 'day')) {
+    return EXPENSE_GROUPS.TODAY
   } else if (isInCurrentLocaleWeek(date, today, locale)) {
     return EXPENSE_GROUPS.THIS_WEEK
   } else if (isInPreviousLocaleWeek(date, today, locale)) {

@@ -90,7 +90,8 @@
       "earlierThisYear": "All'inizio di quest'anno",
       "lastYear": "Ultimo anno",
       "older": "Più vecchio",
-      "previousWeek": "La settimana scorsa"
+      "previousWeek": "La settimana scorsa",
+      "today": "Oggi"
     },
     "export": "Esporta",
     "filters": {

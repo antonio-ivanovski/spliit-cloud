@@ -115,7 +115,8 @@
       "earlierThisYear": "Đầu năm nay",
       "lastYear": "Năm ngoái",
       "older": "Cũ hơn",
-      "previousWeek": "Tuần trước"
+      "previousWeek": "Tuần trước",
+      "today": "Hôm nay"
     },
     "filters": {
       "mobileTitle": "Bộ lọc",

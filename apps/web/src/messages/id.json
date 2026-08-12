@@ -91,7 +91,8 @@
       "earlierThisYear": "Awal tahun ini",
       "lastYear": "Tahun lalu",
       "older": "Pengeluaran sebelumnya",
-      "previousWeek": "Minggu lalu"
+      "previousWeek": "Minggu lalu",
+      "today": "Hari ini"
     },
     "filters": {
       "mobileTitle": "Filter pengeluaran",

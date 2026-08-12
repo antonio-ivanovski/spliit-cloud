@@ -1495,7 +1495,8 @@
       "earlierThisYear": "Tidigare i år",
       "lastYear": "Förra året",
       "older": "Äldre utgifter",
-      "previousWeek": "Förra veckan"
+      "previousWeek": "Förra veckan",
+      "today": "Idag"
     },
     "filters": {
       "mobileTitle": "Filtrera utgifter",

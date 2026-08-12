@@ -91,7 +91,8 @@
       "earlierThisYear": "今年初め",
       "lastYear": "昨年",
       "older": "過去の支出",
-      "previousWeek": "先週"
+      "previousWeek": "先週",
+      "today": "今日"
     },
     "filters": {
       "mobileTitle": "支出を絞り込む",

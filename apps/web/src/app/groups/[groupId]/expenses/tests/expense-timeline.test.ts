@@ -70,4 +70,22 @@ describe('expense timeline grouping', () => {
     ])
     expect(grouped.earlierThisMonth).toHaveLength(0)
   })
+
+  it('places same-day expenses in today, not this week', () => {
+    const now = new Date('2026-08-06T12:00:00.000Z')
+    const grouped = getGroupedExpensesByDate(
+      [
+        { id: 'today', expenseDate: '2026-08-06', expenseTimeZone: 'UTC' },
+        { id: 'this-week', expenseDate: '2026-08-03', expenseTimeZone: 'UTC' },
+        { id: 'upcoming', expenseDate: '2026-08-07', expenseTimeZone: 'UTC' },
+      ],
+      'UTC',
+      'en-US',
+      now,
+    )
+
+    expect(grouped.today.map((expense) => expense.id)).toEqual(['today'])
+    expect(grouped.thisWeek.map((expense) => expense.id)).toEqual(['this-week'])
+    expect(grouped.upcoming.map((expense) => expense.id)).toEqual(['upcoming'])
+  })
 })

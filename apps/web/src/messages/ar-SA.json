@@ -134,7 +134,8 @@
       "lastMonth": "الشهر الماضي",
       "earlierThisYear": "في وقت سابق من هذا العام",
       "upcoming": "القادمة",
-      "previousWeek": "الأسبوع الماضي"
+      "previousWeek": "الأسبوع الماضي",
+      "today": "اليوم"
     },
     "globalTitle": "جميع النفقات",
     "globalDescription": "ابحث وتصفح النفقات من جميع مجموعاتك.",

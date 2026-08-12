@@ -90,7 +90,8 @@
       "earlierThisYear": "今年稍早",
       "lastYear": "去年",
       "older": "較早的支出",
-      "previousWeek": "上週"
+      "previousWeek": "上週",
+      "today": "今天"
     },
     "export": "匯出",
     "filters": {

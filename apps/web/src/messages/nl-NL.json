@@ -91,7 +91,8 @@
       "earlierThisYear": "Eerder dit jaar",
       "lastYear": "Vorig jaar",
       "older": "Oudere uitgaven",
-      "previousWeek": "Vorige week"
+      "previousWeek": "Vorige week",
+      "today": "Vandaag"
     },
     "filters": {
       "mobileTitle": "Filter kosten",

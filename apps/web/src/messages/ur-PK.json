@@ -1495,7 +1495,8 @@
       "earlierThisYear": "اس سال کے شروع میں",
       "lastYear": "پچھلے سال",
       "older": "پرانے اخراجات",
-      "previousWeek": "پچھلے ہفتے"
+      "previousWeek": "پچھلے ہفتے",
+      "today": "آج"
     },
     "filters": {
       "mobileTitle": "اخراجات فلٹر کریں",

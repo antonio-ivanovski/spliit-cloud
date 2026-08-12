@@ -91,7 +91,8 @@
       "earlierThisYear": "Dříve tento rok",
       "lastYear": "Minulý rok",
       "older": "Starší výdaje",
-      "previousWeek": "Minulý týden"
+      "previousWeek": "Minulý týden",
+      "today": "Dnes"
     },
     "filters": {
       "mobileTitle": "Filtrovat výdaje",

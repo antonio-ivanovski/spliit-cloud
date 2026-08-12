@@ -91,7 +91,8 @@
       "earlierThisYear": "No início deste ano",
       "lastYear": "Ano passado",
       "older": "Mais antigos",
-      "previousWeek": "Semana passada"
+      "previousWeek": "Semana passada",
+      "today": "Hoje"
     },
     "filters": {
       "mobileTitle": "Filtrar despesas",

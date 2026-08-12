@@ -91,7 +91,8 @@
       "earlierThisYear": "Ранее в этом году",
       "lastYear": "В прошлом году",
       "older": "Очень давно",
-      "previousWeek": "На прошлой неделе"
+      "previousWeek": "На прошлой неделе",
+      "today": "Сегодня"
     },
     "filters": {
       "mobileTitle": "Фильтровать расходы",

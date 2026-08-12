@@ -91,7 +91,8 @@
       "earlierThisYear": "Aikaisemmin tänä vuonna",
       "lastYear": "Viime vuonna",
       "older": "Vanhemmat kulut",
-      "previousWeek": "Viime viikolla"
+      "previousWeek": "Viime viikolla",
+      "today": "Tänään"
     },
     "filters": {
       "mobileTitle": "Suodata kulut",

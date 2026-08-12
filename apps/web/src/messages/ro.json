@@ -90,7 +90,8 @@
       "earlierThisYear": "La începutul anului",
       "lastYear": "Anul trecut",
       "older": "Mai vechi",
-      "previousWeek": "Săptămâna trecută"
+      "previousWeek": "Săptămâna trecută",
+      "today": "Azi"
     },
     "export": "Export",
     "filters": {

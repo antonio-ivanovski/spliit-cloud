@@ -90,7 +90,8 @@
       "earlierThisYear": "A inicis d'aquest any",
       "lastYear": "L'any passat",
       "older": "Despeses anteriors",
-      "previousWeek": "La setmana passada"
+      "previousWeek": "La setmana passada",
+      "today": "Avui"
     },
     "export": "Exportar",
     "filters": {

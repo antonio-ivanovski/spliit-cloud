@@ -82,7 +82,8 @@
       "thisWeek": "Aste honetan",
       "earlierThisMonth": "Hilabete hasieran",
       "lastMonth": "Aurreko hilabetean",
-      "previousWeek": "Pasa den astean"
+      "previousWeek": "Pasa den astean",
+      "today": "Gaur"
     },
     "exportCsv": "Esportatu CSVra",
     "searchPlaceholder": "Bilatu gastu bat…",

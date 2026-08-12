@@ -91,7 +91,8 @@
       "earlierThisYear": "מוקדם יותר השנה",
       "lastYear": "שנה שעברה",
       "older": "הוצאות קודמות",
-      "previousWeek": "שבוע שעבר"
+      "previousWeek": "שבוע שעבר",
+      "today": "היום"
     },
     "filters": {
       "mobileTitle": "סנן הוצאות",

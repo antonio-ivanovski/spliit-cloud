@@ -115,7 +115,8 @@
       "earlierThisYear": "Earlier this year",
       "lastYear": "Last year",
       "older": "Older expenses",
-      "previousWeek": "Previous week"
+      "previousWeek": "Previous week",
+      "today": "Today"
     },
     "filters": {
       "mobileTitle": "Filter expenses",
