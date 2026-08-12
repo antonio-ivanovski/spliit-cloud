@@ -11,6 +11,7 @@ import {
 } from '@spliit/db'
 import {
   accountLocaleSchema,
+  accountMascotSchema,
   accountPreferenceSchema,
   accountThemeSchema,
   defaultSplitSchema,
@@ -47,6 +48,7 @@ const accountPreferenceSelect = {
   timeZone: true,
   locale: true,
   theme: true,
+  mascot: true,
   notificationsEnabled: true,
   aiFeaturesEnabled: true,
   aiCategoryExtractEnabled: true,
@@ -59,6 +61,7 @@ const emptyAccountPreference = {
   timeZone: null,
   locale: null,
   theme: null,
+  mascot: 'off',
   notificationsEnabled: null,
   aiFeaturesEnabled: null,
   aiCategoryExtractEnabled: null,
@@ -74,6 +77,7 @@ function parseAccountPreference(preferences: unknown) {
   // web sees a consistent shape and the gating hooks can compare directly.
   return {
     ...parsed,
+    mascot: parsed.mascot ?? 'off',
     notificationsEnabled: parsed.notificationsEnabled ?? true,
     aiFeaturesEnabled: parsed.aiFeaturesEnabled ?? true,
     aiCategoryExtractEnabled: parsed.aiCategoryExtractEnabled ?? true,
@@ -93,6 +97,7 @@ const updatePreferencesInputSchema = z.object({
   timeZone: timeZoneSchema.nullable().optional(),
   locale: accountLocaleSchema.nullable().optional(),
   theme: accountThemeSchema.nullable().optional(),
+  mascot: accountMascotSchema.optional(),
   notificationsEnabled: z.boolean().optional(),
   aiFeaturesEnabled: z.boolean().optional(),
   aiCategoryExtractEnabled: z.boolean().nullable().optional(),

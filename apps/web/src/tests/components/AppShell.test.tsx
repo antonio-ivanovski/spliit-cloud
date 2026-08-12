@@ -9,6 +9,7 @@ vi.mock('@tanstack/react-router', () => ({
   Outlet: () => <div data-testid="outlet" />,
   useLocation: ({ select }: { select: (value: unknown) => unknown }) =>
     select({ pathname: route.pathname }),
+  useNavigate: () => vi.fn(),
 }))
 
 vi.mock('@/components/account-menu', () => ({
@@ -23,6 +24,10 @@ vi.mock('@/components/currency-converter/currency-converter', () => ({
 }))
 vi.mock('@/components/account-preferences-sync', () => ({
   AccountPreferencesSync: ({ children }: React.PropsWithChildren) => children,
+  useSyncedAccountPreferences: () => null,
+}))
+vi.mock('@/lib/use-current-account', () => ({
+  useCurrentAccount: () => ({ data: null, isPending: false }),
 }))
 vi.mock('@/components/app-image', () => ({
   default: ({ alt }: { alt: string }) => <img alt={alt} />,

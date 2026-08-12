@@ -2125,7 +2125,14 @@
       "language": "Idioma",
       "theme": "Tema",
       "chooseTheme": "Elegir",
-      "saving": "Guardando preferencias…"
+      "saving": "Guardando preferencias…",
+      "mascot": "Mascota",
+      "mascotHelp": "Elige un acompañante opcional que ofrece atajos contextuales y reacciona a tus flujos de gastos.",
+      "chooseMascot": "Elige una mascota",
+      "mascotOptions": {
+        "off": "Desactivada",
+        "bill": "Bill, el recibo"
+      }
     },
     "aiPreferences": {
       "title": "Funciones de IA",
@@ -2906,5 +2913,10 @@
       "today": "Hoy",
       "tomorrow": "Mañana"
     }
+  },
+  "Mascot": {
+    "openActions": "Abrir acciones con Bill",
+    "closeActions": "Cerrar las acciones de Bill",
+    "greetBill": "Saludar a Bill"
   }
 }

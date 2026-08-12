@@ -60,8 +60,14 @@ describe('account preference bootstrap inputs', () => {
     cacheAccountPreferences('account-a', first)
     cacheAccountPreferences('account-b', second)
 
-    expect(readCachedAccountPreferences('account-a')).toEqual(first)
-    expect(readCachedAccountPreferences('account-b')).toEqual(second)
+    expect(readCachedAccountPreferences('account-a')).toEqual({
+      ...first,
+      mascot: 'off',
+    })
+    expect(readCachedAccountPreferences('account-b')).toEqual({
+      ...second,
+      mascot: 'off',
+    })
     expect(readCachedAccountPreferences('account-c')).toBeNull()
   })
 
@@ -82,6 +88,7 @@ describe('account preference bootstrap inputs', () => {
     expect(readCachedAccountPreferences('legacy-ai')?.aiFeaturesEnabled).toBe(
       true,
     )
+    expect(readCachedAccountPreferences('legacy-ai')?.mascot).toBe('off')
   })
 
   it('rejects corrupt or unsupported cached snapshots', () => {

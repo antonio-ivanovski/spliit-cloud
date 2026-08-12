@@ -8,6 +8,10 @@ export const accountThemeValues = ['light', 'dark', 'system'] as const
 export const accountThemeSchema = z.enum(accountThemeValues)
 export type AccountTheme = z.infer<typeof accountThemeSchema>
 
+export const accountMascotValues = ['off', 'bill'] as const
+export const accountMascotSchema = z.enum(accountMascotValues)
+export type AccountMascot = z.infer<typeof accountMascotSchema>
+
 const supportedCurrencyCodeSet = new Set<string>(supportedCurrencyCodes)
 const localeSet = new Set<string>(locales)
 
@@ -41,6 +45,9 @@ export const accountPreferenceSchema = z.object({
   timeZone: timeZoneSchema.nullable(),
   locale: accountLocaleSchema.nullable(),
   theme: accountThemeSchema.nullable(),
+  // Mascots are deliberately opt-in. Older exports do not contain this field;
+  // API and client boundaries normalize a missing value to off.
+  mascot: accountMascotSchema.optional(),
   notificationsEnabled: z.boolean().nullish(),
   aiFeaturesEnabled: z.boolean().nullish(),
   aiCategoryExtractEnabled: z.boolean().nullish(),

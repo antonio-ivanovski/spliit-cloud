@@ -2,6 +2,11 @@ import * as React from 'react'
 import { describe, expect, it, vi } from 'vitest'
 
 import { CreateExpenseFab } from '@/app/groups/create-expense-fab'
+import { SyncedAccountPreferencesProvider } from '@/components/account-preferences-sync'
+import {
+  MascotProvider,
+  useMascotState,
+} from '@/components/mascot/mascot-context'
 import { render, screen, within } from '@/test/test-utils'
 
 const state = vi.hoisted(() => ({
@@ -129,6 +134,19 @@ vi.mock('@/app/groups/[groupId]/expenses/voice-expense-button', () => ({
 }))
 
 describe('CreateExpenseFab', () => {
+  function MascotActionProbe() {
+    const mascot = useMascotState()
+    return (
+      <div data-testid="mascot-actions">
+        {mascot?.actions.map((action) => (
+          <button key={action.id} type="button" onClick={action.onSelect}>
+            {action.label}
+          </button>
+        ))}
+      </div>
+    )
+  }
+
   it('does not render outside a group context', () => {
     render(<CreateExpenseFab enableReceiptExtract enableVoiceExpense />)
 
@@ -162,6 +180,60 @@ describe('CreateExpenseFab', () => {
     expect(
       screen.getByRole('button', { name: 'Open expense actions' }),
     ).toBeInTheDocument()
+
+    state.currentGroup = null
+  })
+
+  it('registers expense actions with Bill instead of rendering duplicate controls', async () => {
+    state.currentGroup = {
+      groupId: 'group-1',
+      group: { id: 'group-1', archived: false },
+      currentInvitation: null,
+    }
+
+    const { user } = render(
+      <SyncedAccountPreferencesProvider
+        value={{
+          defaultCurrencyCode: 'USD',
+          timeZone: 'UTC',
+          locale: 'en-US',
+          theme: 'system',
+          mascot: 'bill',
+          aiCategoryExtractEnabled: true,
+          aiReceiptScanEnabled: true,
+          aiVoiceExpenseEnabled: true,
+        }}
+      >
+        <MascotProvider>
+          <CreateExpenseFab enableReceiptExtract enableVoiceExpense />
+          <MascotActionProbe />
+        </MascotProvider>
+      </SyncedAccountPreferencesProvider>,
+    )
+
+    expect(screen.queryByTestId('expense-action-control')).toBeNull()
+    expect(
+      screen.queryByRole('button', { name: 'Open expense actions' }),
+    ).toBeNull()
+
+    const actions = await screen.findByTestId('mascot-actions')
+    expect(
+      within(actions).getByRole('button', { name: 'Add expense' }),
+    ).toBeInTheDocument()
+    expect(
+      within(actions).getByRole('button', { name: 'Voice expense' }),
+    ).toBeInTheDocument()
+    expect(
+      within(actions).getByRole('button', { name: 'Scan receipt' }),
+    ).toBeInTheDocument()
+
+    await user.click(
+      within(actions).getByRole('button', { name: 'Add expense' }),
+    )
+    expect(state.navigate).toHaveBeenCalledWith({
+      to: '/groups/$groupId/expenses/create',
+      params: { groupId: 'group-1' },
+    })
 
     state.currentGroup = null
   })

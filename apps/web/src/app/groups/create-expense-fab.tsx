@@ -1,11 +1,17 @@
 import { useLocation, useNavigate } from '@tanstack/react-router'
 import { Camera, Mic, Plus, X } from 'lucide-react'
-import { useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useCurrentGroupOrNull } from '@/app/groups/[groupId]/current-group-context'
 import { CreateFromReceiptButton } from '@/app/groups/[groupId]/expenses/create-from-receipt-button'
 import { VoiceExpenseButton } from '@/app/groups/[groupId]/expenses/voice-expense-button'
+import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
+import {
+  useMascotActions,
+  useMascotBusy,
+  type MascotAction,
+} from '@/components/mascot/mascot-context'
 import { Button } from '@/components/ui/button'
 import {
   SpeedDial,
@@ -38,6 +44,7 @@ export function CreateExpenseFab({
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'AIExpense' })
   const currentGroup = useCurrentGroupOrNull()
+  const accountPreferences = useSyncedAccountPreferences()
   const pathname = useLocation({ select: (location) => location.pathname })
   const navigate = useNavigate()
   const [speedDialOpen, setSpeedDialOpen] = useState(false)
@@ -45,6 +52,7 @@ export function CreateExpenseFab({
   const [receiptOpen, setReceiptOpen] = useState(false)
   const [voiceFlowActive, setVoiceFlowActive] = useState(false)
   const [receiptFlowActive, setReceiptFlowActive] = useState(false)
+  const currentGroupId = currentGroup?.group?.id
   const isExpenseFormRoute =
     pathname.endsWith('/expenses/create') ||
     /\/expenses\/[^/]+\/edit$/.test(pathname)
@@ -57,29 +65,101 @@ export function CreateExpenseFab({
   const actionFlowActive =
     voiceOpen || receiptOpen || voiceFlowActive || receiptFlowActive
 
-  if (isExpenseFormRoute || isBudgetsRoute || !canEditCurrentGroup) {
-    return null
-  }
-
-  const closeSpeedDial = () => setSpeedDialOpen(false)
-  const goToManualExpense = () => {
+  const closeSpeedDial = useCallback(() => setSpeedDialOpen(false), [])
+  const goToManualExpense = useCallback(() => {
     closeSpeedDial()
-    if (currentGroup?.group) {
+    if (currentGroupId) {
       void navigate({
         to: '/groups/$groupId/expenses/create',
-        params: { groupId: currentGroup.group.id },
+        params: { groupId: currentGroupId },
       })
     }
-  }
-  const openReceipt = () => {
+  }, [closeSpeedDial, currentGroupId, navigate])
+  const openReceipt = useCallback(() => {
     closeSpeedDial()
     setReceiptOpen(true)
-  }
-  const openVoice = () => {
+  }, [closeSpeedDial])
+  const openVoice = useCallback(() => {
     closeSpeedDial()
     setVoiceOpen(true)
-  }
+  }, [closeSpeedDial])
   const hasAiActions = enableVoiceExpense || enableReceiptExtract
+  const mascotEnabled = accountPreferences?.mascot === 'bill'
+  const mascotActions = useMemo<MascotAction[]>(
+    () => [
+      ...(enableVoiceExpense
+        ? [
+            {
+              id: 'voice-expense',
+              label: t('voiceAction'),
+              icon: Mic,
+              onSelect: openVoice,
+            } satisfies MascotAction,
+          ]
+        : []),
+      ...(enableReceiptExtract
+        ? [
+            {
+              id: 'receipt-expense',
+              label: t('receiptAction'),
+              icon: Camera,
+              onSelect: openReceipt,
+            } satisfies MascotAction,
+          ]
+        : []),
+        {
+        id: 'add-expense',
+        label: t('addExpenseAction'),
+        icon: Plus,
+        primary: true,
+        onSelect: goToManualExpense,
+      },
+    ],
+    [
+      enableReceiptExtract,
+      enableVoiceExpense,
+      goToManualExpense,
+      openReceipt,
+      openVoice,
+      t,
+    ],
+  )
+  useMascotActions(
+    'group-expense-actions',
+    mascotActions,
+    mascotEnabled &&
+      canEditCurrentGroup &&
+      !isExpenseFormRoute &&
+      !isBudgetsRoute,
+  )
+  useMascotBusy('group-expense-action-flow', mascotEnabled && actionFlowActive)
+
+  if (!canEditCurrentGroup) return null
+
+  const expenseFlows = (
+    <>
+      {enableVoiceExpense && (
+        <VoiceExpenseButton
+          hideTrigger
+          open={voiceOpen}
+          onOpenChange={setVoiceOpen}
+          onFlowActiveChange={setVoiceFlowActive}
+        />
+      )}
+      {enableReceiptExtract && (
+        <CreateFromReceiptButton
+          hideTrigger
+          open={receiptOpen}
+          onOpenChange={setReceiptOpen}
+          onFlowActiveChange={setReceiptFlowActive}
+        />
+      )}
+    </>
+  )
+
+  if (mascotEnabled) return expenseFlows
+
+  if (isExpenseFormRoute || isBudgetsRoute) return null
 
   return (
     <>
@@ -226,22 +306,7 @@ export function CreateExpenseFab({
           </Button>
         ))}
 
-      {enableVoiceExpense && (
-        <VoiceExpenseButton
-          hideTrigger
-          open={voiceOpen}
-          onOpenChange={setVoiceOpen}
-          onFlowActiveChange={setVoiceFlowActive}
-        />
-      )}
-      {enableReceiptExtract && (
-        <CreateFromReceiptButton
-          hideTrigger
-          open={receiptOpen}
-          onOpenChange={setReceiptOpen}
-          onFlowActiveChange={setReceiptFlowActive}
-        />
-      )}
+      {expenseFlows}
     </>
   )
 }

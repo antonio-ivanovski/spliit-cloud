@@ -12,6 +12,7 @@ const mocks = vi.hoisted(() => ({
     timeZone: 'Europe/Skopje',
     locale: 'en-US',
     theme: 'system',
+    mascot: 'off',
   },
 }))
 
@@ -161,6 +162,15 @@ describe('AccountPreferences', () => {
     expect(mocks.patchPreferences).toHaveBeenCalledWith({ theme: 'dark' })
   })
 
+  it('enables Bill as an account-synced mascot preference', async () => {
+    const { user } = render(<AccountPreferences />)
+
+    await user.click(screen.getByText('Off').closest('button')!)
+    await user.click(screen.getByRole('option', { name: 'Bill the receipt' }))
+
+    expect(mocks.patchPreferences).toHaveBeenCalledWith({ mascot: 'bill' })
+  })
+
   it('associates every row label with its control via htmlFor', () => {
     render(<AccountPreferences />)
 
@@ -169,6 +179,7 @@ describe('AccountPreferences', () => {
       'Account timezone',
       'Language',
       'Theme',
+      'Mascot',
     ]) {
       const label = screen.getByText(labelText).closest('label')
       expect(label, `${labelText} should be a <label>`).not.toBeNull()

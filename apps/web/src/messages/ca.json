@@ -2125,7 +2125,14 @@
       "language": "Idioma",
       "theme": "Tema",
       "chooseTheme": "Tria",
-      "saving": "S'estan desant les preferències…"
+      "saving": "S'estan desant les preferències…",
+      "mascot": "Mascota",
+      "mascotHelp": "Tria un acompanyant opcional que ofereix dreceres contextuals i reacciona als fluxos de despeses.",
+      "chooseMascot": "Tria una mascota",
+      "mascotOptions": {
+        "off": "Desactivada",
+        "bill": "Bill, el rebut"
+      }
     },
     "aiPreferences": {
       "title": "Funcions d'IA",
@@ -2906,5 +2913,10 @@
       "today": "Avui",
       "tomorrow": "Demà"
     }
+  },
+  "Mascot": {
+    "openActions": "Obre les accions amb en Bill",
+    "closeActions": "Tanca les accions d’en Bill",
+    "greetBill": "Saluda en Bill"
   }
 }

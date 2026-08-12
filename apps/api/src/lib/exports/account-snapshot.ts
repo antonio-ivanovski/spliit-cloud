@@ -19,6 +19,7 @@ const accountPreferenceSelect = {
   timeZone: true,
   locale: true,
   theme: true,
+  mascot: true,
   notificationsEnabled: true,
   aiFeaturesEnabled: true,
   aiCategoryExtractEnabled: true,

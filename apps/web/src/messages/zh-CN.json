@@ -2109,7 +2109,14 @@
       "language": "语言",
       "theme": "主题",
       "chooseTheme": "选择",
-      "saving": "保存中…"
+      "saving": "保存中…",
+      "mascot": "吉祥物",
+      "mascotHelp": "选择一个可选伙伴，为你提供情境快捷操作，并对费用流程作出反应。",
+      "chooseMascot": "选择一个吉祥物",
+      "mascotOptions": {
+        "off": "关闭",
+        "bill": "收据角色 Bill"
+      }
     },
     "aiPreferences": {
       "title": "AI 功能",
@@ -2871,5 +2878,10 @@
       "today": "今天",
       "tomorrow": "明天"
     }
+  },
+  "Mascot": {
+    "openActions": "打开 Bill 的操作",
+    "closeActions": "关闭 Bill 的操作",
+    "greetBill": "向 Bill 打招呼"
   }
 }

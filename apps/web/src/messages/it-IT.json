@@ -2125,7 +2125,14 @@
       "language": "Lingua",
       "theme": "Tema",
       "chooseTheme": "Scegli",
-      "saving": "Salvataggio delle preferenze…"
+      "saving": "Salvataggio delle preferenze…",
+      "mascot": "Mascotte",
+      "mascotHelp": "Scegli un compagno opzionale che offre scorciatoie contestuali e reagisce ai flussi delle tue spese.",
+      "chooseMascot": "Scegli una mascotte",
+      "mascotOptions": {
+        "off": "Disattivata",
+        "bill": "Bill, lo scontrino"
+      }
     },
     "aiPreferences": {
       "title": "Funzioni IA",
@@ -2906,5 +2913,10 @@
       "today": "Oggi",
       "tomorrow": "Domani"
     }
+  },
+  "Mascot": {
+    "openActions": "Apri le azioni con Bill",
+    "closeActions": "Chiudi le azioni di Bill",
+    "greetBill": "Saluta Bill"
   }
 }

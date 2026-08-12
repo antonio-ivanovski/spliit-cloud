@@ -21,6 +21,7 @@ import {
 } from '@/app/groups/[groupId]/expenses/ai-expense-preview'
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
 import Image from '@/components/app-image'
+import { useMascotController } from '@/components/mascot/mascot-context'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
@@ -342,6 +343,7 @@ function ReceiptDialogContent({
     group?.ledgerId,
   )
   const { toast } = useToast()
+  const mascot = useMascotController()
   const extractReceiptMutation =
     trpc.ai.extractExpenseInformationFromImage.useMutation()
 
@@ -352,6 +354,7 @@ function ReceiptDialogContent({
     if (!group) return
     setSelectedDocument(document)
     setReceiptInfo(null)
+    mascot.react('thinking')
     try {
       setPending(true)
       const result = await extractReceiptMutation.mutateAsync({
@@ -364,11 +367,13 @@ function ReceiptDialogContent({
         currentExpense,
       })
       setReceiptInfo(result)
+      mascot.react('idle')
       if (mode === 'create' && directAccept) {
         onAccept?.({ info: result, document })
       }
     } catch (err) {
       console.error(err)
+      mascot.react('failure')
       toast({
         title: t('ErrorToast.title'),
         description: t('ErrorToast.description'),
@@ -409,6 +414,7 @@ function ReceiptDialogContent({
       }) ||
       !isReceiptImageFile(file)
     ) {
+      mascot.react('failure')
       toast({
         title: t('UnsupportedToast.title'),
         description: t('UnsupportedToast.aiDescription'),
@@ -417,8 +423,10 @@ function ReceiptDialogContent({
       return
     }
     try {
+      mascot.react('thinking')
       const { file: resizedFile, width, height } = await resizeImage(file)
       if (!isExpenseDocumentSizeWithinLimit(resizedFile.size)) {
+        mascot.react('failure')
         toast({
           title: t('TooBigToast.title'),
           description: t('TooBigToast.description', {
@@ -444,6 +452,7 @@ function ReceiptDialogContent({
       await scan(document)
     } catch (err) {
       console.error(err)
+      mascot.react('failure')
       toast({
         title: t('ErrorToast.title'),
         description: t('ErrorToast.description'),
@@ -456,6 +465,7 @@ function ReceiptDialogContent({
 
   const handleFiles = (files: File[]) => {
     if (files.length !== 1) {
+      mascot.react('failure')
       toast({
         title: t('UnsupportedToast.title'),
         description: t('Dialog.dropDescription'),
@@ -465,6 +475,7 @@ function ReceiptDialogContent({
     }
     const [file] = files
     if (!isReceiptImageFile(file)) {
+      mascot.react('failure')
       toast({
         title: t('UnsupportedToast.title'),
         description: t('UnsupportedToast.aiDescription'),

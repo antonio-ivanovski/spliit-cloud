@@ -908,7 +908,14 @@
       "language": "Ngôn ngữ",
       "theme": "Giao diện",
       "chooseTheme": "Chọn",
-      "saving": "Đang lưu tùy chọn…"
+      "saving": "Đang lưu tùy chọn…",
+      "mascot": "Linh vật",
+      "mascotHelp": "Chọn một người bạn đồng hành tùy chọn, cung cấp lối tắt theo ngữ cảnh và phản ứng với quy trình chi tiêu.",
+      "chooseMascot": "Chọn linh vật",
+      "mascotOptions": {
+        "off": "Tắt",
+        "bill": "Bill hóa đơn"
+      }
     },
     "aiPreferences": {
       "title": "Tính năng AI",
@@ -2960,5 +2967,10 @@
       "today": "Hôm nay",
       "tomorrow": "Ngày mai"
     }
+  },
+  "Mascot": {
+    "openActions": "Mở thao tác cùng Bill",
+    "closeActions": "Đóng các thao tác của Bill",
+    "greetBill": "Chào Bill"
   }
 }

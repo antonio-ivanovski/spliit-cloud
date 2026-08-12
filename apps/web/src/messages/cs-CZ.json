@@ -2134,7 +2134,14 @@
       "language": "Jazyk",
       "theme": "Motiv",
       "chooseTheme": "Vybrat",
-      "saving": "Ukládání předvoleb…"
+      "saving": "Ukládání předvoleb…",
+      "mascot": "Maskot",
+      "mascotHelp": "Vyberte si volitelného společníka, který nabízí kontextové zkratky a reaguje na vaše postupy s výdaji.",
+      "chooseMascot": "Vybrat maskota",
+      "mascotOptions": {
+        "off": "Vypnuto",
+        "bill": "Bill, účtenkový maskot"
+      }
     },
     "aiPreferences": {
       "title": "Funkce AI",
@@ -2922,5 +2929,10 @@
       "today": "Dnes",
       "tomorrow": "Zítra"
     }
+  },
+  "Mascot": {
+    "openActions": "Otevřít akce s Billem",
+    "closeActions": "Zavřít Billovy akce",
+    "greetBill": "Pozdravit Billa"
   }
 }

@@ -2109,7 +2109,14 @@
       "language": "Bahasa",
       "theme": "Tema",
       "chooseTheme": "Pilih",
-      "saving": "Menyimpan preferensi…"
+      "saving": "Menyimpan preferensi…",
+      "mascot": "Maskot",
+      "mascotHelp": "Pilih pendamping opsional yang menawarkan pintasan sesuai konteks dan bereaksi terhadap alur pengeluaran Anda.",
+      "chooseMascot": "Pilih maskot",
+      "mascotOptions": {
+        "off": "Nonaktif",
+        "bill": "Bill si struk"
+      }
     },
     "aiPreferences": {
       "title": "Fitur AI",
@@ -2872,5 +2879,10 @@
       "today": "Hari ini",
       "tomorrow": "Besok"
     }
+  },
+  "Mascot": {
+    "openActions": "Buka tindakan bersama Bill",
+    "closeActions": "Tutup tindakan Bill",
+    "greetBill": "Sapa Bill"
   }
 }

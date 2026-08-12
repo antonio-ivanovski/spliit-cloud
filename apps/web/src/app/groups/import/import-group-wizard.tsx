@@ -460,6 +460,7 @@ export function ImportGroupWizard() {
             timeZone: preferences.timeZone,
             locale: preferences.locale,
             theme: preferences.theme,
+            mascot: preferences.mascot ?? 'off',
             notificationsEnabled: preferences.notificationsEnabled ?? true,
             aiFeaturesEnabled: preferences.aiFeaturesEnabled ?? true,
             aiCategoryExtractEnabled:

@@ -2125,7 +2125,14 @@
       "language": "Limbă",
       "theme": "Temă",
       "chooseTheme": "Alege",
-      "saving": "Se salvează preferințele…"
+      "saving": "Se salvează preferințele…",
+      "mascot": "Mascotă",
+      "mascotHelp": "Alege un însoțitor opțional care oferă scurtături contextuale și reacționează la fluxurile tale de cheltuieli.",
+      "chooseMascot": "Alege o mascotă",
+      "mascotOptions": {
+        "off": "Dezactivată",
+        "bill": "Bill, bonul"
+      }
     },
     "aiPreferences": {
       "title": "Funcții AI",
@@ -2906,5 +2913,10 @@
       "today": "Azi",
       "tomorrow": "Mâine"
     }
+  },
+  "Mascot": {
+    "openActions": "Deschide acțiunile cu Bill",
+    "closeActions": "Închide acțiunile lui Bill",
+    "greetBill": "Salută-l pe Bill"
   }
 }

@@ -1,5 +1,6 @@
 import { useNavigate } from '@tanstack/react-router'
 
+import { useMascotController } from '@/components/mascot/mascot-context'
 import { useToast } from '@/components/ui/use-toast'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { trpc } from '@/trpc/client'
@@ -197,12 +198,14 @@ export function useCreateExpenseMutation({
   linkInviteToken: string | undefined
 }) {
   const { toast } = useToast()
+  const mascot = useMascotController()
   const utils = trpc.useUtils()
   const invalidateExpenseDependencies =
     useInvalidateExpenseDependencies(linkInviteToken)
 
   return trpc.groups.expenses.create.useMutation({
     onSuccess: (data, variables) => {
+      mascot.react('success')
       // Fire-and-forget catch-up poll for past-dated series. The worker
       // materializes the remaining occurrences asynchronously; without
       // polling, expenses/activities/balances stay stale until an
@@ -229,6 +232,7 @@ export function useCreateExpenseMutation({
       })
     },
     onError: (error) => {
+      mascot.react('failure')
       toast({ description: error.message, variant: 'destructive' })
     },
   })

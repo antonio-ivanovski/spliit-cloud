@@ -2,6 +2,7 @@ import { Loader2, Mic, RotateCcw, Square } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { useMascotController } from '@/components/mascot/mascot-context'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
@@ -103,6 +104,7 @@ export function VoiceExpenseButton({
   const locale = useLocale()
   const currentGroup = useCurrentGroupOrNull()
   const { toast } = useToast()
+  const mascot = useMascotController()
   const [internalOpen, setInternalOpen] = useState(false)
   const [recording, setRecording] = useState(false)
   const [processing, setProcessing] = useState(false)
@@ -159,6 +161,7 @@ export function VoiceExpenseButton({
     if (!currentGroup) return
     const requestId = ++requestIdRef.current
     setProcessing(true)
+    mascot.react('thinking')
     try {
       const response = await extractMutation.mutateAsync({
         audioDataUrl: dataUrl,
@@ -168,10 +171,12 @@ export function VoiceExpenseButton({
       })
       if (requestId !== requestIdRef.current) return
       setResult(response)
+      mascot.react('idle')
     } catch (error) {
       if (requestId !== requestIdRef.current) return
       console.error(error)
       setResult(null)
+      mascot.react('failure')
       toast({ description: t('processingError'), variant: 'destructive' })
     } finally {
       if (requestId === requestIdRef.current) setProcessing(false)
@@ -192,6 +197,7 @@ export function VoiceExpenseButton({
       await processAudio(dataUrl)
     } catch (error) {
       console.error(error)
+      mascot.react('failure')
       toast({ description: t('audioError'), variant: 'destructive' })
     }
   }
@@ -232,6 +238,7 @@ export function VoiceExpenseButton({
     } catch (error) {
       stream?.getTracks().forEach((track) => track.stop())
       console.error(error)
+      mascot.react('failure')
       toast({ description: t('microphoneError'), variant: 'destructive' })
     }
   }
@@ -247,6 +254,7 @@ export function VoiceExpenseButton({
     setProcessing(false)
     setResult(null)
     setPreview(null)
+    mascot.react('idle')
     setOpen(false)
     setFlowActive(false)
   }

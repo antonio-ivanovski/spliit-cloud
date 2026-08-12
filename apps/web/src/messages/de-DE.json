@@ -2148,7 +2148,14 @@
       "language": "Sprache",
       "theme": "Design",
       "chooseTheme": "Auswählen",
-      "saving": "Speichern…"
+      "saving": "Speichern…",
+      "mascot": "Maskottchen",
+      "mascotHelp": "Wähle einen optionalen Begleiter, der kontextbezogene Schnellaktionen anbietet und auf deine Ausgabenabläufe reagiert.",
+      "chooseMascot": "Maskottchen auswählen",
+      "mascotOptions": {
+        "off": "Aus",
+        "bill": "Bill, der Beleg"
+      }
     },
     "aiPreferences": {
       "title": "KI-Funktionen",
@@ -2956,5 +2963,10 @@
       "today": "Heute",
       "tomorrow": "Morgen"
     }
+  },
+  "Mascot": {
+    "openActions": "Aktionen mit Bill öffnen",
+    "closeActions": "Bills Aktionen schließen",
+    "greetBill": "Bill begrüßen"
   }
 }
