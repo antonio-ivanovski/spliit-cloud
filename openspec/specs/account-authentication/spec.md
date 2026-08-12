@@ -51,6 +51,16 @@ The system SHALL support a `SIGNUP_MODE` of `open` or `invite_only`. `open` SHAL
 #### Scenario: Live share-link invite unlocks sign-up
 - **WHEN** `SIGNUP_MODE` is `invite_only` and the request includes a usable link-invite token
 - **THEN** a visitor can create an account
+- **AND** validating that token for signup does not consume it
+
+#### Scenario: Share-link remains usable after signup
+- **WHEN** a visitor created an account with a live share-link invite token
+- **THEN** the same token can still be used to accept the group or friend invitation
+
+#### Scenario: Unknown-user magic-link and OAuth follow the same gate
+- **WHEN** `SIGNUP_MODE` is `invite_only` and an unknown email requests a magic link or signs in with OAuth
+- **THEN** the system allows account creation only with the same first-account, pending email invitation, or live share-link proof
+- **AND** existing accounts can still request a magic link or complete OAuth sign-in
 
 #### Scenario: Uninvited sign-up is rejected
 - **WHEN** `SIGNUP_MODE` is `invite_only`, at least one account exists, and the visitor has no pending email invitation and no usable link-invite token

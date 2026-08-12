@@ -332,4 +332,21 @@ describe('AuthPanel', () => {
     await user.click(screen.getByText('Sign in'))
     expect(screen.getByText('Create an account')).toBeInTheDocument()
   })
+
+  it('shows sign-up and the invited-email hint for an email invitation', () => {
+    mockDeploymentConfig.signupMode = 'invite_only'
+    mockDeploymentConfig.allowUninvitedSignup = false
+    mockSearch.invitation = 'inv-1'
+    mockSearch.email = 'invited@example.com'
+
+    render(<AuthPanel />)
+
+    expect(
+      screen.getByText('Create your Spliit Cloud account'),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText('Use the email address you were invited with.'),
+    ).toBeInTheDocument()
+    expect(screen.getByLabelText('Email')).toHaveValue('invited@example.com')
+  })
 })
