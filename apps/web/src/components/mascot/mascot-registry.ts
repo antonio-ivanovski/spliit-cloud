@@ -10,12 +10,13 @@ export type ActiveMascotId = Exclude<AccountMascot, 'off'>
 export type MascotDefinition = {
   id: ActiveMascotId
   Character: ComponentType<MascotCharacterProps>
+  nameKey: `Mascot.${ActiveMascotId}Name`
 }
 
 export const DEFAULT_MASCOT_ID: ActiveMascotId = 'bill'
 
 const MASCOTS: Record<ActiveMascotId, MascotDefinition> = {
-  bill: { id: 'bill', Character: BillCharacter },
+  bill: { id: 'bill', Character: BillCharacter, nameKey: 'Mascot.billName' },
 }
 
 export function getMascotDefinition(

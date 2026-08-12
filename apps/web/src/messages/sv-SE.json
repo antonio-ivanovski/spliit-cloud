@@ -2909,7 +2909,8 @@
     "landingHintSplit": "Dela en middag, en resa eller hyran — jag sköter räkningen.",
     "landingHintSettle": "När du är redo att reglera hejar jag på dig.",
     "landingHintTap": "Tryck på mig när som helst. Jag biter inte — jag är ett kvitto.",
-    "hintTapToAddExpense": "Tryck på mig för att lägga till en utgift.",
-    "hintTapToCreateGroup": "Tryck på mig för att skapa en grupp."
+    "hintTapToAddExpense": "Jag är {name} — tryck på mig för att lägga till en utgift.",
+    "hintTapToCreateGroup": "Jag är {name} — tryck på mig för att skapa en grupp.",
+    "billName": "Bill"
   }
 }

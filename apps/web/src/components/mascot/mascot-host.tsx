@@ -54,6 +54,7 @@ import {
   markMascotSettingsDiscovered,
   subscribeMascotSettingsDiscovered,
 } from './mascot-settings-discovery'
+import { MascotSpeechBubble } from './mascot-speech-bubble'
 import {
   buildMascotSpeechCycle,
   coachSpeechForActions,
@@ -390,33 +391,6 @@ export function MascotHost() {
       data-mascot-pinned={pinned ? 'true' : 'false'}
       data-mascot-placement={placement}
     >
-      {speechLine &&
-        !blockedByOverlay &&
-        (!hasActions || isCoachSpeechLine(speechLine)) && (
-          <div
-            data-testid="bill-mascot-speech"
-            className={cn(
-              'pointer-events-auto max-w-[13.5rem] rounded-2xl border border-border/80 px-3 py-2 text-start text-xs leading-snug text-foreground dark:border-white/18',
-              mascotActionFill,
-              mascotActionElevation,
-              placement.startsWith('top') ? 'mt-2' : 'mb-2',
-              !reducedMotion && 'animate-in fade-in-0 zoom-in-95',
-            )}
-          >
-            <output className="block" aria-live="polite">
-              {t(speechLine.messageKey)}
-            </output>
-            {speechLine.showSettings && (
-              <button
-                type="button"
-                className="mt-1.5 text-xs font-medium text-primary underline-offset-2 hover:underline"
-                onClick={openMascotSettings}
-              >
-                {t('Mascot.noActionSettings')}
-              </button>
-            )}
-          </div>
-        )}
       <SpeedDialContent
         className={cn(
           'gap-2 pe-1',
@@ -491,75 +465,105 @@ export function MascotHost() {
           </SpeedDialItem>
         )}
       </SpeedDialContent>
-      <SpeedDialTrigger
-        aria-label={
-          hasActions
-            ? open
-              ? t('Mascot.closeActions')
-              : t('Mascot.openActions')
-            : t('Mascot.greetBill')
-        }
-        aria-hidden={blockedByOverlay ? true : undefined}
-        data-testid="bill-mascot-trigger"
-        data-reaction={mascot.reaction}
-        className={cn(
-          'group relative rounded-[2rem] outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
-          docked ? 'h-16 w-16' : 'h-[118px] w-[108px]',
-          blockedByOverlay && 'pointer-events-none',
-        )}
-        onPointerDown={onTriggerPointerDown}
-        onPointerMove={onTriggerPointerMove}
-        onPointerUp={onTriggerPointerUp}
-        onPointerCancel={onTriggerPointerUp}
-        onClick={(event) => {
-          if (blockedByOverlay) {
-            event.preventDefault()
-            return
-          }
-          if (didDragRef.current) {
-            event.preventDefault()
-            didDragRef.current = false
-            return
-          }
-          if (hasActions) return
-          event.preventDefault()
-          handlePersonalityTap()
-        }}
-      >
-        <span
-          className={cn(
-            'absolute inset-x-1 bottom-0 h-12 rounded-full bg-[hsl(var(--mascot-stroke)/0.12)] blur-xl transition-opacity duration-300',
-            open ? 'opacity-100' : 'opacity-0 group-hover:opacity-100',
-            docked && 'opacity-0',
+      <div className="relative">
+        {speechLine &&
+          !blockedByOverlay &&
+          (!hasActions || isCoachSpeechLine(speechLine)) && (
+            <MascotSpeechBubble
+              data-testid="bill-mascot-speech"
+              side={placement.startsWith('top') ? 'bottom' : 'top'}
+              align={placement.endsWith('start') ? 'start' : 'end'}
+              className={
+                !reducedMotion ? 'animate-in fade-in-0 zoom-in-95' : undefined
+              }
+            >
+              <output className="block" aria-live="polite">
+                {t(speechLine.messageKey, { name: t(definition.nameKey) })}
+              </output>
+              {speechLine.showSettings && (
+                <button
+                  type="button"
+                  className="mt-1.5 text-xs font-medium text-primary underline-offset-2 hover:underline"
+                  onClick={openMascotSettings}
+                >
+                  {t('Mascot.noActionSettings')}
+                </button>
+              )}
+            </MascotSpeechBubble>
           )}
-        />
-        <Character
+        <SpeedDialTrigger
+          aria-label={
+            hasActions
+              ? open
+                ? t('Mascot.closeActions')
+                : t('Mascot.openActions')
+              : t('Mascot.greetBill')
+          }
+          aria-hidden={blockedByOverlay ? true : undefined}
+          data-testid="bill-mascot-trigger"
+          data-reaction={mascot.reaction}
           className={cn(
-            'relative h-full w-full drop-shadow-[0_14px_14px_hsl(var(--mascot-ink)/0.22)] dark:drop-shadow-[0_18px_22px_hsl(0_0%_0%/0.55)]',
-            !docked &&
-              !dragPx &&
-              'transition-transform duration-300 ease-out group-hover:-translate-y-1 group-hover:scale-[1.035] group-active:translate-y-0 group-active:scale-95',
+            'group relative rounded-[2rem] outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+            docked ? 'h-16 w-16' : 'h-[118px] w-[108px]',
+            blockedByOverlay && 'pointer-events-none',
           )}
-          docked={docked}
-          open={open}
-          reaction={mascot.reaction}
-          reactionKey={mascot.reactionKey}
-        />
-        {showActionBadge && (
+          onPointerDown={onTriggerPointerDown}
+          onPointerMove={onTriggerPointerMove}
+          onPointerUp={onTriggerPointerUp}
+          onPointerCancel={onTriggerPointerUp}
+          onClick={(event) => {
+            if (blockedByOverlay) {
+              event.preventDefault()
+              return
+            }
+            if (didDragRef.current) {
+              event.preventDefault()
+              didDragRef.current = false
+              return
+            }
+            if (hasActions) return
+            event.preventDefault()
+            handlePersonalityTap()
+          }}
+        >
           <span
-            data-testid="bill-mascot-action-badge"
-            data-mascot-nudge={nudgeActions ? 'true' : 'false'}
-            aria-hidden="true"
             className={cn(
-              'pointer-events-none absolute z-10 flex items-center justify-center rounded-full bg-primary text-primary-foreground ring-2 ring-background',
-              'shadow-[0_4px_10px_rgba(15,23,42,0.28)] dark:shadow-[0_0_12px_hsl(var(--primary)/0.55)]',
-              docked ? 'start-0 top-0 size-5' : 'start-0.5 top-0.5 size-6',
+              'absolute inset-x-1 bottom-0 h-12 rounded-full bg-[hsl(var(--mascot-stroke)/0.12)] blur-xl transition-opacity duration-300',
+              open ? 'opacity-100' : 'opacity-0 group-hover:opacity-100',
+              docked && 'opacity-0',
             )}
-          >
-            <Plus className={docked ? 'size-3' : 'size-3.5'} strokeWidth={3} />
-          </span>
-        )}
-      </SpeedDialTrigger>
+          />
+          <Character
+            className={cn(
+              'relative h-full w-full drop-shadow-[0_14px_14px_hsl(var(--mascot-ink)/0.22)] dark:drop-shadow-[0_18px_22px_hsl(0_0%_0%/0.55)]',
+              !docked &&
+                !dragPx &&
+                'transition-transform duration-300 ease-out group-hover:-translate-y-1 group-hover:scale-[1.035] group-active:translate-y-0 group-active:scale-95',
+            )}
+            docked={docked}
+            open={open}
+            reaction={mascot.reaction}
+            reactionKey={mascot.reactionKey}
+          />
+          {showActionBadge && (
+            <span
+              data-testid="bill-mascot-action-badge"
+              data-mascot-nudge={nudgeActions ? 'true' : 'false'}
+              aria-hidden="true"
+              className={cn(
+                'pointer-events-none absolute z-10 flex items-center justify-center rounded-full bg-primary text-primary-foreground ring-2 ring-background',
+                'shadow-[0_4px_10px_rgba(15,23,42,0.28)] dark:shadow-[0_0_12px_hsl(var(--primary)/0.55)]',
+                docked ? 'start-0 top-0 size-5' : 'start-0.5 top-0.5 size-6',
+              )}
+            >
+              <Plus
+                className={docked ? 'size-3' : 'size-3.5'}
+                strokeWidth={3}
+              />
+            </span>
+          )}
+        </SpeedDialTrigger>
+      </div>
     </SpeedDial>
   )
 }

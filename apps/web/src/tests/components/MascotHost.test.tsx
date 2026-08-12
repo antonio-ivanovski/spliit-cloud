@@ -410,9 +410,13 @@ describe('MascotHost', () => {
       await vi.advanceTimersByTimeAsync(2_300)
     })
 
-    expect(screen.getByTestId('bill-mascot-speech')).toHaveTextContent(
-      'Tap me to add an expense.',
+    const speech = screen.getByTestId('bill-mascot-speech')
+    expect(speech).toHaveTextContent("I'm Bill — tap me to add an expense.")
+    expect(speech.className).toContain('absolute')
+    expect(speech.parentElement).toContainElement(
+      screen.getByTestId('bill-mascot-trigger'),
     )
+    expect(speech.querySelector('[data-mascot-speech-tail]')).not.toBeNull()
     const badge = screen.getByTestId('bill-mascot-action-badge')
     expect(badge).toHaveAttribute('data-mascot-nudge', 'true')
     vi.useRealTimers()
@@ -472,7 +476,7 @@ describe('MascotHost', () => {
     })
 
     expect(screen.getByTestId('bill-mascot-speech')).toHaveTextContent(
-      'Tap me to create a group.',
+      "I'm Bill — tap me to create a group.",
     )
     vi.useRealTimers()
   })

@@ -2913,7 +2913,8 @@
     "landingHintSplit": "Jaa illallinen, matka tai vuokra — minä hoidan laskutoimitukset.",
     "landingHintSettle": "Kun olet valmis selvittämään tilit, kannustan sinua.",
     "landingHintTap": "Napauta minua milloin tahansa. En pure — olen kuitti.",
-    "hintTapToAddExpense": "Napauta minua lisätäksesi kulun.",
-    "hintTapToCreateGroup": "Napauta minua luodaksesi ryhmän."
+    "hintTapToAddExpense": "Olen {name} — napauta minua lisätäksesi kulun.",
+    "hintTapToCreateGroup": "Olen {name} — napauta minua luodaksesi ryhmän.",
+    "billName": "Bill"
   }
 }

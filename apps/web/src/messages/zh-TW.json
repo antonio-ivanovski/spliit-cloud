@@ -2896,7 +2896,8 @@
     "landingHintSplit": "晚餐、旅行或租金都可以分攤——計算交給我。",
     "landingHintSettle": "準備結算時，我會為你加油。",
     "landingHintTap": "隨時點我。我不咬人——我是一張收據。",
-    "hintTapToAddExpense": "點我即可新增一筆支出。",
-    "hintTapToCreateGroup": "點我即可建立群組。"
+    "hintTapToAddExpense": "我是 {name}，點我即可新增一筆支出。",
+    "hintTapToCreateGroup": "我是 {name}，點我即可建立群組。",
+    "billName": "Bill"
   }
 }

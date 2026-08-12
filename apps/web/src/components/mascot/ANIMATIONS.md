@@ -6,7 +6,7 @@ Reactions are semantic. Host, mutations, and speech never know which character i
 
 Signed-in Bill does not chatter. Poses are visual only unless the user taps Bill on a no-action surface. Two exceptions:
 
-- **First-run coach** (until they open the speed dial): after the welcome wave, Bill may say a one-line “tap me to add…” hint. A `+` badge on the host trigger pulses until that first open. The badge stays afterwards; the speech and pulse do not. See [`mascot-actions-discovery.ts`](./mascot-actions-discovery.ts).
+- **First-run coach** (until they open the speed dial): after the welcome wave, Bill may say a one-line “I’m {name} — tap me to add…” hint. A `+` badge on the host trigger pulses until that first open. The badge stays afterwards; the speech and pulse do not. See [`mascot-actions-discovery.ts`](./mascot-actions-discovery.ts). Speech is a comic bubble with a tail, absolutely anchored to the trigger — never a flex sibling of the closed speed-dial menu, which would park it in the middle of the screen.
 - **Unsigned homepage**: after a long idle delay it may cycle a short landing line and a sparse ambient pose. See [`use-landing-mascot.ts`](./use-landing-mascot.ts).
 
 The `+` badge is host chrome, not character artwork — every mascot gets it when the host has actions.
@@ -68,8 +68,8 @@ Halves split on a spring; twin faces appear. Paper, outline, and print stay the 
 ## Adding a character
 
 1. New folder `characters/<id>/` with a component that implements [`MascotCharacterProps`](./mascot-character.ts) for every reaction above.
-2. Register it in [`mascot-registry.ts`](./mascot-registry.ts).
-3. Add the id to `accountMascotValues` (domain) and the web `AccountMascot` union, plus i18n via `bun i18n`.
+2. Register it in [`mascot-registry.ts`](./mascot-registry.ts) with a `nameKey` (short given name for speech).
+3. Add the id to `accountMascotValues` (domain) and the web `AccountMascot` union, plus i18n via `bun i18n` (including the name key and any coach lines that interpolate `{name}`).
 4. Host, landing, settings preview, and the expense FAB already go through the registry — no `=== 'bill'` checks.
 
 Swapping the active mascot is changing the preference value. Do not teach mutations a character name.

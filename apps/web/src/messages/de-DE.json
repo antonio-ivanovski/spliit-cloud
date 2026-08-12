@@ -2981,7 +2981,8 @@
     "landingHintSplit": "Teile ein Abendessen, eine Reise oder die Miete — ich kümmere mich um die Zahlen.",
     "landingHintSettle": "Wenn du ausgleichen willst, feuere ich dich an.",
     "landingHintTap": "Tippe mich jederzeit an. Ich beiße nicht — ich bin ein Beleg.",
-    "hintTapToAddExpense": "Tippe mich an, um eine Ausgabe hinzuzufügen.",
-    "hintTapToCreateGroup": "Tippe mich an, um eine Gruppe zu erstellen."
+    "hintTapToAddExpense": "Ich bin {name} — tippe mich an, um eine Ausgabe hinzuzufügen.",
+    "hintTapToCreateGroup": "Ich bin {name} — tippe mich an, um eine Gruppe zu erstellen.",
+    "billName": "Bill"
   }
 }

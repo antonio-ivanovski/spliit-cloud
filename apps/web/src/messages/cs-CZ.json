@@ -2947,7 +2947,8 @@
     "landingHintSplit": "Rozděl večeři, výlet nebo nájem — o počty se postarám já.",
     "landingHintSettle": "Až budeš chtít vyrovnat účty, budu ti fandit.",
     "landingHintTap": "Klepni na mě kdykoli. Nekousu — jsem účtenka.",
-    "hintTapToAddExpense": "Klepni na mě a přidej výdaj.",
-    "hintTapToCreateGroup": "Klepni na mě a vytvoř skupinu."
+    "hintTapToAddExpense": "Jsem {name} — klepni na mě a přidej výdaj.",
+    "hintTapToCreateGroup": "Jsem {name} — klepni na mě a vytvoř skupinu.",
+    "billName": "Bill"
   }
 }

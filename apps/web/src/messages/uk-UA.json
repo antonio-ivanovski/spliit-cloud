@@ -2947,7 +2947,8 @@
     "landingHintSplit": "Розділіть вечерю, поїздку чи оренду — я порахую.",
     "landingHintSettle": "Коли захочете розрахуватися, я вболіватиму за вас.",
     "landingHintTap": "Натисніть на мене будь-коли. Я не кусаюся — я чек.",
-    "hintTapToAddExpense": "Натисни мене, щоб додати витрату.",
-    "hintTapToCreateGroup": "Натисни мене, щоб створити групу."
+    "hintTapToAddExpense": "Я {name} — натисни мене, щоб додати витрату.",
+    "hintTapToCreateGroup": "Я {name} — натисни мене, щоб створити групу.",
+    "billName": "Білл"
   }
 }

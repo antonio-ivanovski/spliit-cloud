@@ -6,6 +6,8 @@
  */
 
 const BRAND_TOKENS = new Set([
+  // Mascot character given name — same across locales.
+  'Bill',
   'GitHub',
   'Spliit',
   'Splitwise',

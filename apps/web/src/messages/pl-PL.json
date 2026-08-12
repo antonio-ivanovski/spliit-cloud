@@ -2947,7 +2947,8 @@
     "landingHintSplit": "Podziel kolację, wyjazd albo czynsz — ja dopilnuję obliczeń.",
     "landingHintSettle": "Gdy zechcesz się rozliczyć, będę Ci kibicować.",
     "landingHintTap": "Stuknij mnie kiedy chcesz. Nie gryzę — jestem paragonem.",
-    "hintTapToAddExpense": "Kliknij mnie, żeby dodać wydatek.",
-    "hintTapToCreateGroup": "Kliknij mnie, żeby utworzyć grupę."
+    "hintTapToAddExpense": "Jestem {name} — kliknij mnie, żeby dodać wydatek.",
+    "hintTapToCreateGroup": "Jestem {name} — kliknij mnie, żeby utworzyć grupę.",
+    "billName": "Bill"
   }
 }

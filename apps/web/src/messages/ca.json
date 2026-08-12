@@ -2931,7 +2931,8 @@
     "landingHintSplit": "Reparteix un sopar, un viatge o el lloguer — jo em cuido dels números.",
     "landingHintSettle": "Quan vulguis liquidar els comptes, t’animaré.",
     "landingHintTap": "Toca’m quan vulguis. No et mordo — sóc un rebut.",
-    "hintTapToAddExpense": "Toca'm per afegir una despesa.",
-    "hintTapToCreateGroup": "Toca'm per crear un grup."
+    "hintTapToAddExpense": "Sóc {name} — toca'm per afegir una despesa.",
+    "hintTapToCreateGroup": "Sóc {name} — toca'm per crear un grup.",
+    "billName": "Bill"
   }
 }

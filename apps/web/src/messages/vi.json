@@ -2985,7 +2985,8 @@
     "landingHintSplit": "Chia bữa tối, chuyến đi hoặc tiền thuê nhà — tôi lo phần tính toán.",
     "landingHintSettle": "Khi sẵn sàng thanh toán, tôi sẽ cổ vũ.",
     "landingHintTap": "Nhấn vào tôi bất cứ lúc nào. Tôi không cắn — tôi là biên lai.",
-    "hintTapToAddExpense": "Chạm vào tôi để thêm khoản chi.",
-    "hintTapToCreateGroup": "Chạm vào tôi để tạo nhóm."
+    "hintTapToAddExpense": "Tôi là {name} — chạm vào tôi để thêm khoản chi.",
+    "hintTapToCreateGroup": "Tôi là {name} — chạm vào tôi để tạo nhóm.",
+    "billName": "Bill"
   }
 }

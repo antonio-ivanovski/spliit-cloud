@@ -2931,7 +2931,8 @@
     "landingHintSplit": "Dividi una cena, un viaggio o l’affitto — ai calcoli ci penso io.",
     "landingHintSettle": "Quando vorrai saldare i conti, ti farò il tifo.",
     "landingHintTap": "Toccami quando vuoi. Non mordo — sono una ricevuta.",
-    "hintTapToAddExpense": "Toccami per aggiungere una spesa.",
-    "hintTapToCreateGroup": "Toccami per creare un gruppo."
+    "hintTapToAddExpense": "Sono {name} — toccami per aggiungere una spesa.",
+    "hintTapToCreateGroup": "Sono {name} — toccami per creare un gruppo.",
+    "billName": "Bill"
   }
 }

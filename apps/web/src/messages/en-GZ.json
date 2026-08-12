@@ -2905,7 +2905,8 @@
     "landingHintSplit": "split dinner, a trip, or rent — i’ll hold the math.",
     "landingHintSettle": "when you’re ready to settle up, i’ll hype you up.",
     "landingHintTap": "tap me whenever. i don’t bite — i’m literally a receipt.",
-    "hintTapToAddExpense": "tap me to add an expense.",
-    "hintTapToCreateGroup": "tap me to start a group."
+    "hintTapToAddExpense": "i'm {name} — tap me to add an expense.",
+    "hintTapToCreateGroup": "i'm {name} — tap me to start a group.",
+    "billName": "Bill"
   }
 }

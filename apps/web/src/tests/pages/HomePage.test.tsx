@@ -126,6 +126,7 @@ describe('HomePage (signed-out)', () => {
     )
     expect(speech.className).toContain('absolute')
     expect(speech.className).not.toContain('-translate-y-full')
+    expect(speech.querySelector('[data-mascot-speech-tail]')).not.toBeNull()
   })
 
   it('speaks unsolicited after a long idle delay without shifting Bill', () => {

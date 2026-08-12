@@ -2930,7 +2930,8 @@
     "landingHintSplit": "Zatitu afari bat, bidaia bat edo alokairua — nik egingo ditut kalkuluak.",
     "landingHintSettle": "Kontuak kitatzen hasteko prest zaudenean, animatuko zaitut.",
     "landingHintTap": "Sakatu niri nahi duzunean. Ez dut hozka egiten — ordainagiri bat naiz.",
-    "hintTapToAddExpense": "Sakatu niri gastu bat gehitzeko.",
-    "hintTapToCreateGroup": "Sakatu niri talde bat sortzeko."
+    "hintTapToAddExpense": "{name} naiz — sakatu niri gastu bat gehitzeko.",
+    "hintTapToCreateGroup": "{name} naiz — sakatu niri talde bat sortzeko.",
+    "billName": "Bill"
   }
 }

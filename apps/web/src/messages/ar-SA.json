@@ -2985,7 +2985,8 @@
     "landingHintSplit": "قسّم عشاءً أو رحلة أو الإيجار. سأتولى الحساب.",
     "landingHintSettle": "عندما تريد تسوية الحسابات، سأشجعك.",
     "landingHintTap": "انقر عليّ في أي وقت. لا أعضّ، فأنا إيصال.",
-    "hintTapToAddExpense": "انقر عليّ لإضافة نفقة.",
-    "hintTapToCreateGroup": "انقر عليّ لإنشاء مجموعة."
+    "hintTapToAddExpense": "أنا {name} — انقر عليّ لإضافة نفقة.",
+    "hintTapToCreateGroup": "أنا {name} — انقر عليّ لإنشاء مجموعة.",
+    "billName": "بيل"
   }
 }

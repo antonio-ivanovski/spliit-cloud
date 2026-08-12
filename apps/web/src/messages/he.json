@@ -2931,7 +2931,8 @@
     "landingHintSplit": "חלקו ארוחת ערב, טיול או שכר דירה — אני אשמור על החישוב.",
     "landingHintSettle": "כשתרצו להתחשבן, אעודד אתכם.",
     "landingHintTap": "הקישו עליי מתי שתרצו. אני לא נושך — אני קבלה.",
-    "hintTapToAddExpense": "גע בי כדי להוסיף הוצאה.",
-    "hintTapToCreateGroup": "גע בי כדי ליצור קבוצה."
+    "hintTapToAddExpense": "אני {name} — גע בי כדי להוסיף הוצאה.",
+    "hintTapToCreateGroup": "אני {name} — גע בי כדי ליצור קבוצה.",
+    "billName": "ביל"
   }
 }

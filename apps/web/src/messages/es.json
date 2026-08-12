@@ -2931,7 +2931,8 @@
     "landingHintSplit": "Divide una cena, un viaje o el alquiler — yo me encargo de las cuentas.",
     "landingHintSettle": "Cuando quieras liquidar las cuentas, te animaré.",
     "landingHintTap": "Tócame cuando quieras. No muerdo — soy un recibo.",
-    "hintTapToAddExpense": "Tócame para añadir un gasto.",
-    "hintTapToCreateGroup": "Tócame para crear un grupo."
+    "hintTapToAddExpense": "Soy {name} — tócame para añadir un gasto.",
+    "hintTapToCreateGroup": "Soy {name} — tócame para crear un grupo.",
+    "billName": "Bill"
   }
 }

@@ -6,9 +6,9 @@ import {
   DEFAULT_MASCOT_ID,
   getMascotDefinition,
 } from '@/components/mascot/mascot-registry'
+import { MascotSpeechBubble } from '@/components/mascot/mascot-speech-bubble'
 import { useLandingMascot } from '@/components/mascot/use-landing-mascot'
 import { useCurrentAccount } from '@/lib/use-current-account'
-import { cn } from '@/lib/utils'
 
 import { RecentGroupList } from './groups/recent-group-list'
 
@@ -68,15 +68,18 @@ function LandingIntro() {
           />
         </button>
         {speechKey ? (
-          <div
+          <MascotSpeechBubble
             data-testid="landing-bill-speech"
-            className={cn(
-              'absolute top-full z-10 mt-2 max-w-[13.5rem] rounded-2xl border border-border/80 bg-card px-3 py-2 text-start text-xs leading-snug text-foreground shadow-2xl ring-1 ring-border/80 backdrop-blur-md dark:shadow-black/40',
-              !reducedMotion && 'animate-in fade-in-0 slide-in-from-top-1',
-            )}
+            side="bottom"
+            align="center"
+            className={
+              !reducedMotion
+                ? 'animate-in fade-in-0 slide-in-from-top-1'
+                : undefined
+            }
           >
             <output className="block">{t(speechKey)}</output>
-          </div>
+          </MascotSpeechBubble>
         ) : null}
       </div>
       <div className="flex flex-col gap-4">

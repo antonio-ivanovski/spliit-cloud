@@ -13,6 +13,7 @@ describe('mascot registry', () => {
     expect(isActiveMascot(DEFAULT_MASCOT_ID)).toBe(true)
     expect(getMascotDefinition('bill')?.id).toBe('bill')
     expect(getMascotDefinition('bill')?.Character).toBeTypeOf('function')
+    expect(getMascotDefinition('bill')?.nameKey).toBe('Mascot.billName')
   })
 
   it('treats off and unknown ids as inactive', () => {
