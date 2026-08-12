@@ -523,7 +523,7 @@
         "confirmArchived": "Grup akan diarsipkan",
         "executeImport": "Pulihkan grup",
         "stagingDocuments": "Menyiapkan file dokumen untuk pemulihan…",
-        "friendSourceWarning": "Cadangan ini berasal dari catatan bersama teman. Cadangan akan dipulihkan sebagai grup biasa; hubungan pertemanan tidak akan dibuat ulang.",
+        "friendSourceWarning": "Cadangan ini berasal dari catatan bersama teman. Cadangan akan dipulihkan sebagai catatan bersama teman dengan orang yang dipetakan.",
         "accountTitle": "Impor cadangan akun Spliit Cloud",
         "accountProgress": "Grup {current} dari {total}: {name}",
         "continueToGroups": "Lanjutkan ke impor grup",
@@ -2131,8 +2131,8 @@
       "masterLabel": "Aktifkan fitur AI"
     },
     "export": {
-      "groupsTitle": "Grup",
-      "selectedCount": "{selected} dari {total} grup dipilih",
+      "groupsTitle": "Grup dan teman",
+      "selectedCount": "{selected} dari {total} catatan dipilih",
       "loadingGroups": "Memuat grup…",
       "groupsError": "Grup tidak dapat dimuat.",
       "retry": "Coba lagi",
@@ -2144,10 +2144,10 @@
         "hidden": "Grup tersembunyi"
       },
       "sectionTitle": "Cadangan & ekspor",
-      "sectionDescription": "Buat cadangan portabel data Spliit Cloud Anda.",
+      "sectionDescription": "Ekspor atau pulihkan cadangan portabel data Spliit Cloud Anda.",
       "sectionRowLabel": "Cadangan akun",
-      "sectionRowDescription": "Pilih grup dan preferensi opsional untuk unduhan satu kali.",
-      "open": "Atur ekspor",
+      "sectionRowDescription": "Unduh grup dan preferensi yang dipilih, atau pulihkan bundel Spliit Cloud.",
+      "open": "Ekspor",
       "title": "Ekspor cadangan akun",
       "description": "Pilih yang ingin disertakan dalam cadangan Spliit Cloud ini. Pilihan Anda hanya digunakan untuk unduhan ini.",
       "contentTitle": "Sertakan",
@@ -2166,7 +2166,8 @@
         "STARRED": "Berbintang",
         "ARCHIVED": "Diarsipkan",
         "HIDDEN": "Tersembunyi"
-      }
+      },
+      "import": "Impor"
     }
   },
   "Activities": {

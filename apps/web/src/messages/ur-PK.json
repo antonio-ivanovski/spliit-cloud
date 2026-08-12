@@ -185,8 +185,8 @@
       "masterLabel": "اے آئی خصوصیات فعال کریں"
     },
     "export": {
-      "groupsTitle": "گروپس",
-      "selectedCount": "کل {total} میں سے {selected} گروپس منتخب ہیں",
+      "groupsTitle": "گروپس اور دوست",
+      "selectedCount": "کل {total} کھاتوں میں سے {selected} منتخب ہیں",
       "loadingGroups": "گروپس لوڈ ہو رہے ہیں…",
       "groupsError": "گروپس لوڈ نہیں ہو سکے۔",
       "retry": "دوبارہ کوشش کریں",
@@ -198,10 +198,10 @@
         "hidden": "چھپے ہوئے گروپ"
       },
       "sectionTitle": "بیک اپ اور برآمد",
-      "sectionDescription": "اپنے Spliit Cloud ڈیٹا کا قابلِ منتقلی بیک اپ بنائیں۔",
+      "sectionDescription": "اپنے Spliit Cloud ڈیٹا کا قابلِ منتقلی بیک اپ برآمد یا بحال کریں۔",
       "sectionRowLabel": "اکاؤنٹ بیک اپ",
-      "sectionRowDescription": "ایک بار کے ڈاؤن لوڈ کے لیے گروپس اور اختیاری ترجیحات منتخب کریں۔",
-      "open": "برآمد ترتیب دیں",
+      "sectionRowDescription": "منتخب گروپس اور ترجیحات ڈاؤن لوڈ کریں، یا Spliit Cloud بنڈل بحال کریں۔",
+      "open": "برآمد کریں",
       "title": "اکاؤنٹ بیک اپ برآمد کریں",
       "description": "اس Spliit Cloud بیک اپ میں کیا شامل کرنا ہے، منتخب کریں۔ آپ کا انتخاب صرف اس ڈاؤن لوڈ کے لیے استعمال ہوگا۔",
       "contentTitle": "شامل کریں",
@@ -220,7 +220,8 @@
         "STARRED": "ستارہ شدہ",
         "ARCHIVED": "آرکائیو شدہ",
         "HIDDEN": "چھپے ہوئے"
-      }
+      },
+      "import": "درآمد کریں"
     }
   },
   "Activities": {
@@ -1925,7 +1926,7 @@
         "confirmArchived": "گروپ کو محفوظ کیا جائے گا",
         "executeImport": "گروپ بحال کریں",
         "stagingDocuments": "بحالی کے لیے دستاویزات کی فائلیں تیار ہو رہی ہیں…",
-        "friendSourceWarning": "یہ بیک اپ دوست کے لیجر سے آیا ہے۔ اسے عام گروپ کے طور پر بحال کیا جائے گا؛ دوستی کا تعلق دوبارہ نہیں بنایا جائے گا۔",
+        "friendSourceWarning": "یہ بیک اپ دوست کے کھاتے سے آیا ہے۔ اسے ملائے گئے شخص کے ساتھ دوست کے کھاتے کے طور پر ہی بحال کیا جائے گا۔",
         "accountTitle": "Spliit Cloud اکاؤنٹ کا بیک اپ درآمد کریں",
         "accountProgress": "گروپ {current} از {total}: {name}",
         "continueToGroups": "گروپس کی درآمد جاری رکھیں",

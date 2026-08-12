@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import type { CloudGroupBundleInspection } from './cloud-bundle'
 import {
+  cloudInspectionToSource,
   initialCloudMappings,
   initialLegacyMappings,
 } from './cloud-import-flow'
@@ -147,5 +148,43 @@ describe('Cloud import mapping initialization', () => {
     })
     expect(mapping.mode).toBe('INVITE_BY_EMAIL')
     expect(mapping.inviteEmail).toBe('bob@example.com')
+  })
+
+  it('uses the peer display name for a FRIEND source', () => {
+    const inspected = {
+      ...inspection([
+        {
+          sourceId: 'alice',
+          displayName: 'Alice',
+          identity: {
+            kind: 'ACCOUNT' as const,
+            accountId: 'account-1',
+            email: 'alice@example.com',
+          },
+        },
+        { sourceId: 'bob', displayName: 'Bob' },
+      ]),
+      manifest: {
+        ...inspection([
+          {
+            sourceId: 'alice',
+            displayName: 'Alice',
+            identity: {
+              kind: 'ACCOUNT' as const,
+              accountId: 'account-1',
+              email: 'alice@example.com',
+            },
+          },
+          { sourceId: 'bob', displayName: 'Bob' },
+        ]).manifest,
+        group: {
+          groupType: 'FRIEND' as const,
+          name: 'internal-ledger-id',
+          ledger: { currency: '€', currencyCode: 'EUR' },
+        },
+        expenses: [],
+      },
+    } as unknown as CloudGroupBundleInspection
+    expect(cloudInspectionToSource(inspected, 'account-1').name).toBe('Bob')
   })
 })

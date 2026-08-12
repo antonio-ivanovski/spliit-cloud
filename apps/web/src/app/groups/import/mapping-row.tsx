@@ -43,6 +43,7 @@ export function MappingRow({
   name,
   destinationParticipants,
   friends,
+  friendLedger = false,
 }: {
   mode: ParticipantMappingState['mode']
   account: AuthAccount | null | undefined
@@ -60,6 +61,7 @@ export function MappingRow({
     unlinked: boolean
   }>
   friends: Friend[]
+  friendLedger?: boolean
 }) {
   const { t } = useTranslation()
   const normalizedImporterEmail = account?.email?.toLowerCase().trim() ?? null
@@ -129,12 +131,18 @@ export function MappingRow({
           },
         ]
       : []),
-    {
-      value: UNLINKED_VALUE,
-      label: t('Groups.Import.Mapping.Row.leaveUnlinked'),
-      description: t('Groups.Import.Mapping.Row.leaveUnlinkedDescription'),
-      followUp: () => <UnlinkedFollowUp name={name} />,
-    },
+    ...(!friendLedger
+      ? [
+          {
+            value: UNLINKED_VALUE,
+            label: t('Groups.Import.Mapping.Row.leaveUnlinked'),
+            description: t(
+              'Groups.Import.Mapping.Row.leaveUnlinkedDescription',
+            ),
+            followUp: () => <UnlinkedFollowUp name={name} />,
+          },
+        ]
+      : []),
   ]
 
   return (

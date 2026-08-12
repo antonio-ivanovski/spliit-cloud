@@ -36,6 +36,7 @@ const participantMappingSchema = z.discriminatedUnion('mode', [
     sourceName: z.string().trim().min(1).max(120),
     mode: z.literal('INVITE_CONTACT'),
     email: z.email(),
+    linkedAccountId: z.string().min(1).optional(),
   }),
   z.object({
     sourceParticipantId: z.string().min(1),

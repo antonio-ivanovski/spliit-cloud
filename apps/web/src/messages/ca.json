@@ -533,7 +533,7 @@
         "confirmArchived": "El grup s’arxivarà",
         "executeImport": "Restaura el grup",
         "stagingDocuments": "S’estan preparant els fitxers per restaurar-los…",
-        "friendSourceWarning": "Aquesta còpia de seguretat prové d’un compte de despeses amb un amic. Es restaurarà com un grup normal; la relació d’amistat no es recrearà.",
+        "friendSourceWarning": "Aquesta còpia de seguretat prové d’un compte de despeses amb una amistat. Es restaurarà com a compte entre amistats amb la persona assignada.",
         "accountTitle": "Importa la còpia de seguretat del compte de Spliit Cloud",
         "accountProgress": "Grup {current} de {total}: {name}",
         "continueToGroups": "Continua amb les importacions de grups",
@@ -2147,8 +2147,8 @@
       "masterLabel": "Activa les funcions d'IA"
     },
     "export": {
-      "groupsTitle": "Grups",
-      "selectedCount": "{selected} de {total} grups seleccionats",
+      "groupsTitle": "Grups i amistats",
+      "selectedCount": "S’han seleccionat {selected} de {total} registres",
       "loadingGroups": "Carregant grups…",
       "groupsError": "No s’han pogut carregar els grups.",
       "retry": "Torna-ho a provar",
@@ -2160,10 +2160,10 @@
         "hidden": "Grup amagat"
       },
       "sectionTitle": "Còpies de seguretat i exportació",
-      "sectionDescription": "Crea una còpia de seguretat portàtil de les teves dades de Spliit Cloud.",
+      "sectionDescription": "Exporteu o restaureu una còpia de seguretat portable de les vostres dades de Spliit Cloud.",
       "sectionRowLabel": "Còpia de seguretat del compte",
-      "sectionRowDescription": "Tria els grups i les preferències opcionals per a una baixada única.",
-      "open": "Configura l’exportació",
+      "sectionRowDescription": "Baixeu els grups i les preferències seleccionats o restaureu un paquet de Spliit Cloud.",
+      "open": "Exporta",
       "title": "Exporta la còpia de seguretat del compte",
       "description": "Tria què vols incloure en aquesta còpia de seguretat de Spliit Cloud. La teva selecció només s’utilitza per a aquesta baixada.",
       "contentTitle": "Inclou",
@@ -2182,7 +2182,8 @@
         "STARRED": "Preferits",
         "ARCHIVED": "Arxivats",
         "HIDDEN": "Amagats"
-      }
+      },
+      "import": "Importa"
     }
   },
   "Activities": {

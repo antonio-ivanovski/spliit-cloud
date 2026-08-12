@@ -30,7 +30,7 @@ describe('AccountImportProgress', () => {
   it('shows the selected queue while the setup screen is active', () => {
     render(<AccountImportProgress phase="setup" selected={3} total={4} />)
 
-    expect(screen.getByText('3 of 4 groups selected')).toBeInTheDocument()
+    expect(screen.getByText('3 of 4 ledgers selected')).toBeInTheDocument()
     expect(
       screen.getByText(/This inspected bundle is ready to import/i),
     ).toBeInTheDocument()

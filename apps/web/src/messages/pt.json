@@ -533,7 +533,7 @@
         "confirmArchived": "O grupo será arquivado",
         "executeImport": "Restaurar grupo",
         "stagingDocuments": "A preparar ficheiros para restauro…",
-        "friendSourceWarning": "Este backup veio de uma conta entre amigos. Será restaurado como um grupo normal; a relação de amizade não será recriada.",
+        "friendSourceWarning": "Esta cópia de segurança veio de uma conta entre amigos. Será restaurada como conta entre amigos com a pessoa associada.",
         "accountTitle": "Importar cópia de segurança da conta Spliit Cloud",
         "accountProgress": "Grupo {current} de {total}: {name}",
         "continueToGroups": "Continuar para as importações de grupos",
@@ -2147,8 +2147,8 @@
       "masterLabel": "Ativar recursos de IA"
     },
     "export": {
-      "groupsTitle": "Grupos",
-      "selectedCount": "{selected} de {total} grupos selecionados",
+      "groupsTitle": "Grupos e amigos",
+      "selectedCount": "{selected} de {total} contas selecionadas",
       "loadingGroups": "A carregar grupos…",
       "groupsError": "Não foi possível carregar os grupos.",
       "retry": "Tentar novamente",
@@ -2160,10 +2160,10 @@
         "hidden": "Grupo oculto"
       },
       "sectionTitle": "Cópias de segurança e exportação",
-      "sectionDescription": "Cria uma cópia de segurança portátil dos teus dados do Spliit Cloud.",
+      "sectionDescription": "Exporte ou restaure uma cópia de segurança portátil dos seus dados do Spliit Cloud.",
       "sectionRowLabel": "Cópia de segurança da conta",
-      "sectionRowDescription": "Escolhe os grupos e as preferências opcionais para um único descarregamento.",
-      "open": "Configurar exportação",
+      "sectionRowDescription": "Transfira os grupos e as preferências selecionados ou restaure um pacote do Spliit Cloud.",
+      "open": "Exportar",
       "title": "Exportar a cópia de segurança da conta",
       "description": "Escolhe o que incluir nesta cópia de segurança do Spliit Cloud. A tua seleção só será utilizada para este descarregamento.",
       "contentTitle": "Incluir",
@@ -2182,7 +2182,8 @@
         "STARRED": "Favoritos",
         "ARCHIVED": "Arquivados",
         "HIDDEN": "Ocultos"
-      }
+      },
+      "import": "Importar"
     }
   },
   "Activities": {

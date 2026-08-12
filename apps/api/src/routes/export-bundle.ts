@@ -33,6 +33,7 @@ export async function exportGroupBundle(request: Request, groupId: string) {
     exportedAt: new Date(),
     documentReader: s3ExportDocumentReader,
     signal: request.signal,
+    viewerAccountId: auth.user.id,
   })
   return new Response(artifact.body, {
     headers: {

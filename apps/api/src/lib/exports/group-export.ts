@@ -3,6 +3,7 @@ import { spliitGroupExportManifestSchema } from '@spliit/domain/export-manifest'
 import { createExportBundleStream } from './archive'
 import {
   createGroupExportSnapshot,
+  groupDisplayNameForViewer,
   type GroupExportSource,
 } from './group-snapshot'
 import type {
@@ -18,6 +19,7 @@ export function createGroupExportArtifact(
     documentReader: ExportDocumentReader
     additionalEntries?: ReadonlyArray<ExportArchiveEntry>
     signal?: AbortSignal
+    viewerAccountId?: string
   },
 ): ExportArtifact {
   const exportedAt = options.exportedAt.toISOString()
@@ -43,8 +45,9 @@ export function createGroupExportArtifact(
   }))
 
   const date = exportedAt.slice(0, 10)
+  const displayName = groupDisplayNameForViewer(group, options.viewerAccountId)
   return {
-    fileName: `Spliit Cloud Export - ${group.name} - ${date}.spliit.zip`,
+    fileName: `Spliit Cloud Export - ${displayName} - ${date}.spliit.zip`,
     mediaType: 'application/zip',
     scope: manifest.scope,
     exportedAt,

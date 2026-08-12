@@ -98,6 +98,169 @@ describe('prepareCloudImport', () => {
     ).rejects.toThrow(/participant/i)
   })
 
+  it('validates FRIEND ledgers as two-person restores with a connected peer', async () => {
+    const friendManifest = {
+      ...manifest,
+      group: { ...manifest.group, groupType: 'FRIEND' as const },
+      participants: [
+        {
+          sourceId: 'participant-1',
+          kind: 'ACCOUNT_MEMBER' as const,
+          displayName: 'Alice',
+          identity: {
+            kind: 'ACCOUNT' as const,
+            accountId: 'account-1',
+            name: 'Alice',
+            email: 'alice@example.com',
+          },
+          removedAt: null,
+          membership: null,
+        },
+        {
+          sourceId: 'participant-2',
+          kind: 'UNLINKED_PARTICIPANT' as const,
+          displayName: 'Bob',
+          removedAt: null,
+          membership: null,
+        },
+      ],
+    }
+    const valid = input({
+      manifest: friendManifest,
+      participants: [
+        {
+          sourceParticipantId: 'participant-1',
+          sourceName: 'Alice',
+          mode: 'LINK_ACCOUNT',
+          linkedAccountId: 'account-1',
+        },
+        {
+          sourceParticipantId: 'participant-2',
+          sourceName: 'Bob',
+          mode: 'INVITE_BY_LINK',
+        },
+      ],
+    })
+
+    await expect(prepareCloudImport(valid, 'account-1')).resolves.toMatchObject(
+      {
+        documents: expect.any(Map),
+      },
+    )
+    await expect(
+      prepareCloudImport(
+        input({
+          manifest: friendManifest,
+          participants: valid.participants.map((participant) =>
+            participant.sourceParticipantId === 'participant-2'
+              ? { ...participant, mode: 'UNLINKED_PARTICIPANT' as const }
+              : participant,
+          ),
+        }),
+        'account-1',
+      ),
+    ).rejects.toThrow(/contact, email, or link/i)
+  })
+
+  it('creates a FRIEND destination through the friend-ledger service', async () => {
+    const friendManifest = {
+      ...manifest,
+      group: { ...manifest.group, groupType: 'FRIEND' as const },
+      participants: [
+        {
+          sourceId: 'participant-1',
+          kind: 'ACCOUNT_MEMBER' as const,
+          displayName: 'Alice',
+          removedAt: null,
+          membership: null,
+        },
+        {
+          sourceId: 'participant-2',
+          kind: 'UNLINKED_PARTICIPANT' as const,
+          displayName: 'Bob',
+          removedAt: null,
+          membership: null,
+        },
+      ],
+    }
+    const calls: Array<{ model: string; data?: Record<string, unknown> }> = []
+    const tx = {
+      account: { findUnique: vi.fn(async () => null) },
+      ledger: {
+        create: vi.fn(async ({ data }: { data: { id: string } }) => {
+          calls.push({ model: 'ledger', data })
+          return { id: data.id }
+        }),
+      },
+      group: {
+        findFirst: vi.fn(async () => null),
+        create: vi.fn(async ({ data }: { data: Record<string, unknown> }) => {
+          calls.push({ model: 'group', data })
+          return { id: data.id }
+        }),
+        update: vi.fn(async () => ({})),
+        findUnique: vi.fn(async () => ({ ledgerId: 'ledger-friend' })),
+      },
+      groupMember: {
+        create: vi.fn(async ({ data }: { data: { id: string } }) => ({
+          id: data.id,
+        })),
+      },
+      ledgerParticipant: {
+        create: vi.fn(async ({ data }: { data: { id: string } }) => ({
+          id: data.id,
+        })),
+        findMany: vi.fn(async () => [
+          {
+            id: 'dest-alice',
+            groupMember: { accountId: 'account-1' },
+            invitations: [],
+          },
+          {
+            id: 'dest-bob',
+            groupMember: null,
+            invitations: [{ type: 'LINK', email: 'link@placeholder.local' }],
+          },
+        ]),
+      },
+      groupInvitation: {
+        create: vi.fn(async ({ data }: { data: { id: string } }) => ({
+          id: data.id,
+        })),
+      },
+      activity: { create: vi.fn(async () => ({ id: 'activity-1' })) },
+    }
+    const result = await importCloudGroup(
+      input({
+        manifest: friendManifest,
+        participants: [
+          {
+            sourceParticipantId: 'participant-1',
+            sourceName: 'Alice',
+            mode: 'LINK_ACCOUNT',
+            linkedAccountId: 'account-1',
+          },
+          {
+            sourceParticipantId: 'participant-2',
+            sourceName: 'Bob',
+            mode: 'INVITE_BY_LINK',
+          },
+        ],
+      }),
+      { accountId: 'account-1' },
+      {
+        tx: tx as never,
+        prepared: { documents: new Map(), promotedDocumentUrls: [] },
+      },
+    )
+
+    expect(result.groupId).not.toBe('group-1')
+    expect(calls.find((call) => call.model === 'group')?.data).toMatchObject({
+      groupType: 'FRIEND',
+    })
+    expect(result.invites[0]?.kind).toBe('LINK')
+  })
+
   it('accepts a document-free restore after every included document is acknowledged as skipped', async () => {
     const document = {
       sourceId: 'document-1',

@@ -533,7 +533,7 @@
         "confirmArchived": "Grupul va fi arhivat",
         "executeImport": "Restaurează grupul",
         "stagingDocuments": "Se pregătesc fișierele pentru restaurare…",
-        "friendSourceWarning": "Această copie de siguranță provine dintr-un grup de prieteni. Va fi restaurată ca un grup obișnuit; relația de prietenie nu va fi recreată.",
+        "friendSourceWarning": "Această copie de siguranță provine dintr-un cont între prieteni. Va fi restaurată ca un cont între prieteni cu persoana asociată.",
         "accountTitle": "Importă copia de siguranță a contului Spliit Cloud",
         "accountProgress": "Grupul {current} din {total}: {name}",
         "continueToGroups": "Continuă către importurile de grupuri",
@@ -2147,8 +2147,8 @@
       "masterLabel": "Activează funcțiile AI"
     },
     "export": {
-      "groupsTitle": "Grupuri",
-      "selectedCount": "{selected} din {total} grupuri selectate",
+      "groupsTitle": "Grupuri și prieteni",
+      "selectedCount": "{selected} din {total} conturi selectate",
       "loadingGroups": "Se încarcă grupurile…",
       "groupsError": "Nu s-au putut încărca grupurile.",
       "retry": "Reîncearcă",
@@ -2160,10 +2160,10 @@
         "hidden": "Grup ascuns"
       },
       "sectionTitle": "Backupuri și export",
-      "sectionDescription": "Creează un backup portabil al datelor tale Spliit Cloud.",
+      "sectionDescription": "Exportă sau restaurează o copie de siguranță portabilă a datelor tale Spliit Cloud.",
       "sectionRowLabel": "Backupul contului",
-      "sectionRowDescription": "Alege grupurile și preferințele opționale pentru o singură descărcare.",
-      "open": "Configurează exportul",
+      "sectionRowDescription": "Descarcă grupurile și preferințele selectate sau restaurează un pachet Spliit Cloud.",
+      "open": "Exportă",
       "title": "Exportă backupul contului",
       "description": "Alege ce să incluzi în acest backup Spliit Cloud. Selecția ta va fi folosită doar pentru această descărcare.",
       "contentTitle": "Conținut inclus",
@@ -2182,7 +2182,8 @@
         "STARRED": "Favorite",
         "ARCHIVED": "Arhivate",
         "HIDDEN": "Ascunse"
-      }
+      },
+      "import": "Importă"
     }
   },
   "Activities": {

@@ -11,6 +11,7 @@ import { createExportArchiveStream, type ExportManifestEntry } from './archive'
 import { safeArchiveSegment } from './archive-path'
 import {
   createGroupExportSnapshot,
+  groupDisplayNameForViewer,
   type GroupExportSource,
 } from './group-snapshot'
 import type {
@@ -31,17 +32,6 @@ function emptyAccountPreference() {
     aiReceiptScanEnabled: null,
     aiVoiceExpenseEnabled: null,
   }
-}
-
-function displayNameForGroup(group: GroupExportSource, accountId: string) {
-  if (group.name) return group.name
-  return (
-    group.ledger.participants.find(
-      (participant) =>
-        participant.groupMember?.account?.id !== accountId &&
-        participant.groupMember?.account?.name,
-    )?.groupMember?.account?.name ?? 'Friend ledger'
-  )
 }
 
 function uniqueIdentities(
@@ -125,7 +115,10 @@ export function createAccountExportArtifact(
       },
       documents,
       manifestPath: `${groupPrefix}/manifest.json`,
-      displayName: displayNameForGroup(selected.source, source.account.id),
+      displayName: groupDisplayNameForViewer(
+        selected.source,
+        source.account.id,
+      ),
     })
   }
 

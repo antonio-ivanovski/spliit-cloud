@@ -533,7 +533,7 @@
         "confirmArchived": "O grupo será arquivado",
         "executeImport": "Restaurar grupo",
         "stagingDocuments": "Preparando arquivos para restauração…",
-        "friendSourceWarning": "Este backup veio de uma conta entre amigos. Ele será restaurado como um grupo comum; a relação de amizade não será recriada.",
+        "friendSourceWarning": "Este backup veio de uma conta entre amigos. Ele será restaurado como uma conta entre amigos com a pessoa associada.",
         "accountTitle": "Importar backup da conta Spliit Cloud",
         "accountProgress": "Grupo {current} de {total}: {name}",
         "continueToGroups": "Continuar para as importações de grupos",
@@ -2147,8 +2147,8 @@
       "masterLabel": "Ativar recursos de IA"
     },
     "export": {
-      "groupsTitle": "Grupos",
-      "selectedCount": "{selected} de {total} grupos selecionados",
+      "groupsTitle": "Grupos e amigos",
+      "selectedCount": "{selected} de {total} contas selecionadas",
       "loadingGroups": "Carregando grupos…",
       "groupsError": "Não foi possível carregar os grupos.",
       "retry": "Tentar novamente",
@@ -2160,10 +2160,10 @@
         "hidden": "Grupo oculto"
       },
       "sectionTitle": "Backups e exportação",
-      "sectionDescription": "Crie um backup portátil dos seus dados do Spliit Cloud.",
+      "sectionDescription": "Exporte ou restaure um backup portátil dos seus dados do Spliit Cloud.",
       "sectionRowLabel": "Backup da conta",
-      "sectionRowDescription": "Escolha os grupos e as preferências opcionais para um único download.",
-      "open": "Configurar exportação",
+      "sectionRowDescription": "Baixe os grupos e as preferências selecionados ou restaure um pacote do Spliit Cloud.",
+      "open": "Exportar",
       "title": "Exportar o backup da conta",
       "description": "Escolha o que incluir neste backup do Spliit Cloud. Sua seleção será usada apenas para este download.",
       "contentTitle": "Incluir",
@@ -2182,7 +2182,8 @@
         "STARRED": "Favoritos",
         "ARCHIVED": "Arquivados",
         "HIDDEN": "Ocultos"
-      }
+      },
+      "import": "Importar"
     }
   },
   "Activities": {

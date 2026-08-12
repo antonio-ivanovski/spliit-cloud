@@ -328,7 +328,10 @@ export function ImportGroupWizard() {
   useEffect(() => {
     if (state.source || !pendingCloudInspection || isAccountPending || !account)
       return
-    const cloudSource = cloudInspectionToSource(pendingCloudInspection)
+    const cloudSource = cloudInspectionToSource(
+      pendingCloudInspection,
+      account.id,
+    )
     dispatch({
       type: 'SOURCE_LOADED',
       source: cloudSource,
@@ -342,7 +345,7 @@ export function ImportGroupWizard() {
         accountQueue?.mappingHints,
       ),
       groupFormValues: {
-        name: pendingCloudInspection.manifest.group.name,
+        name: cloudSource.name,
         information: pendingCloudInspection.manifest.group.information ?? '',
         currency: pendingCloudInspection.manifest.group.ledger.currency,
         currencyCode:
@@ -969,8 +972,13 @@ export function ImportGroupWizard() {
             allowExisting={state.sourceKind !== 'CLOUD'}
             currencyLocked={state.sourceKind === 'CLOUD'}
             initialArchived={state.archived}
+            hideNameField={
+              state.sourceKind === 'CLOUD' &&
+              state.cloudInspection?.manifest.group.groupType === 'FRIEND'
+            }
             onArchivedChange={
-              state.sourceKind === 'CLOUD'
+              state.sourceKind === 'CLOUD' &&
+              state.cloudInspection?.manifest.group.groupType !== 'FRIEND'
                 ? (archived) => dispatch({ type: 'ARCHIVE_CHANGED', archived })
                 : undefined
             }
@@ -991,6 +999,10 @@ export function ImportGroupWizard() {
               : undefined
           }
           friends={friends}
+          friendLedger={
+            state.sourceKind === 'CLOUD' &&
+            state.cloudInspection?.manifest.group.groupType === 'FRIEND'
+          }
           onBack={handleBack}
           onChange={handleMappingChange}
           onContinue={handleMappingContinue}

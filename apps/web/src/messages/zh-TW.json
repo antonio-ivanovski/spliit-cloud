@@ -523,7 +523,7 @@
         "confirmArchived": "群組將被封存",
         "executeImport": "恢復群組",
         "stagingDocuments": "正在準備要恢復的文件檔案…",
-        "friendSourceWarning": "這份備份來自好友帳本。它會還原為一般群組；好友關係不會重新建立。",
+        "friendSourceWarning": "這份備份來自好友帳本。它會還原為與配對對象的好友帳本。",
         "accountTitle": "匯入 Spliit Cloud 帳戶備份",
         "accountProgress": "第 {current}/{total} 個群組：{name}",
         "continueToGroups": "繼續匯入群組",
@@ -2131,8 +2131,8 @@
       "masterLabel": "啟用 AI 功能"
     },
     "export": {
-      "groupsTitle": "群組",
-      "selectedCount": "已選擇 {selected}/{total} 個群組",
+      "groupsTitle": "群組和好友",
+      "selectedCount": "已選取 {total} 個帳本中的 {selected} 個",
       "loadingGroups": "正在載入群組…",
       "groupsError": "無法載入群組。",
       "retry": "重試",
@@ -2144,10 +2144,10 @@
         "hidden": "已隱藏的群組"
       },
       "sectionTitle": "備份與匯出",
-      "sectionDescription": "建立可攜式的 Spliit Cloud 資料備份。",
+      "sectionDescription": "匯出或還原 Spliit Cloud 資料的可攜式備份。",
       "sectionRowLabel": "帳戶備份",
-      "sectionRowDescription": "選擇要在這次下載中包含的群組與可選偏好設定。",
-      "open": "設定匯出",
+      "sectionRowDescription": "下載所選群組和偏好設定，或還原 Spliit Cloud 備份套件。",
+      "open": "匯出",
       "title": "匯出帳戶備份",
       "description": "選擇要包含在此 Spliit Cloud 備份中的內容。您的選擇僅用於這次下載。",
       "contentTitle": "包含內容",
@@ -2166,7 +2166,8 @@
         "STARRED": "已加星標",
         "ARCHIVED": "已封存",
         "HIDDEN": "已隱藏"
-      }
+      },
+      "import": "匯入"
     }
   },
   "Activities": {

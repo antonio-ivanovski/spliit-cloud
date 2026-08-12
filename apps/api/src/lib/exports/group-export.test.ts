@@ -228,6 +228,57 @@ describe('createGroupExportArtifact', () => {
     expect(reader.read).toHaveBeenCalledWith(document, expect.any(AbortSignal))
   })
 
+  it('uses the friend peer name for FRIEND ledger downloads', async () => {
+    const group = makeGroup()
+    const createdAt = new Date('2026-08-01T12:00:00.000Z')
+    group.name = 'internal-friend-ledger-id'
+    group.groupType = 'FRIEND'
+    group.ledger.participants = [
+      {
+        id: 'lp-me',
+        kind: 'ACCOUNT_MEMBER' as const,
+        displayName: null,
+        removedAt: null,
+        groupMemberId: 'member-me',
+        ledgerId: 'ledger-1',
+        groupMember: {
+          accountId: 'acct-me',
+          account: { id: 'acct-me', name: 'Alice', email: 'alice@example.com' },
+          joinedAt: createdAt,
+          leftAt: null,
+          createdAt,
+          updatedAt: createdAt,
+        },
+        invitations: [],
+      },
+      {
+        id: 'lp-peer',
+        kind: 'ACCOUNT_MEMBER' as const,
+        displayName: null,
+        removedAt: null,
+        groupMemberId: 'member-peer',
+        ledgerId: 'ledger-1',
+        groupMember: {
+          accountId: 'acct-peer',
+          account: { id: 'acct-peer', name: 'Bob', email: 'bob@example.com' },
+          joinedAt: createdAt,
+          leftAt: null,
+          createdAt,
+          updatedAt: createdAt,
+        },
+        invitations: [],
+      },
+    ]
+
+    const artifact = createGroupExportArtifact(group, {
+      exportedAt: EXPORTED_AT,
+      documentReader: documentReader(),
+      viewerAccountId: 'acct-me',
+    })
+
+    expect(artifact.fileName).toContain('Bob')
+  })
+
   it('lets an account assembler namespace snapshot document descriptors', () => {
     const { snapshot, documents } = createGroupExportSnapshot(
       makeGroup(makeDocument()),

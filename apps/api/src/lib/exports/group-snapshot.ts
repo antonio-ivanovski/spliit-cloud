@@ -184,6 +184,24 @@ function participantDisplayName(participant: GroupExportParticipant): string {
   )
 }
 
+/**
+ * Friend ledgers use an internal placeholder for `Group.name`; exports should
+ * present the peer-facing name instead. Regular groups keep their explicit name
+ * unchanged.
+ */
+export function groupDisplayNameForViewer(
+  group: GroupExportSource,
+  viewerAccountId?: string,
+): string {
+  if (group.groupType !== 'FRIEND' && group.name) return group.name
+
+  const peer = group.ledger.participants.find((participant) => {
+    const accountId = participant.groupMember?.account?.id
+    return accountId ? accountId !== viewerAccountId : true
+  })
+  return peer ? participantDisplayName(peer) : group.name || 'Friend ledger'
+}
+
 function participantIdentity(participant: GroupExportParticipant) {
   if (participant.groupMember?.account) {
     return {

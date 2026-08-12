@@ -528,7 +528,7 @@
         "confirmArchived": "Grup arşivlenecek",
         "executeImport": "Grubu geri yükle",
         "stagingDocuments": "Belge dosyaları geri yükleme için hazırlanıyor…",
-        "friendSourceWarning": "Bu yedek bir arkadaş hesabından geldi. Normal bir grup olarak geri yüklenecek; arkadaşlık ilişkisi yeniden oluşturulmayacak.",
+        "friendSourceWarning": "Bu yedek bir arkadaş hesabından geldi. Eşlenen kişiyle birlikte arkadaş hesabı olarak geri yüklenecek.",
         "accountTitle": "Spliit Cloud hesabı yedeğini içe aktar",
         "accountProgress": "Grup {current}/{total}: {name}",
         "continueToGroups": "Grup içe aktarmalarına devam et",
@@ -2138,8 +2138,8 @@
       "masterLabel": "Yapay zekâ özelliklerini etkinleştir"
     },
     "export": {
-      "groupsTitle": "Gruplar",
-      "selectedCount": "{selected}/{total} grup seçildi",
+      "groupsTitle": "Gruplar ve arkadaşlar",
+      "selectedCount": "{total} hesaptan {selected} tanesi seçildi",
       "loadingGroups": "Gruplar yükleniyor…",
       "groupsError": "Gruplar yüklenemedi.",
       "retry": "Yeniden dene",
@@ -2151,10 +2151,10 @@
         "hidden": "Gizli grup"
       },
       "sectionTitle": "Yedekler ve dışa aktarma",
-      "sectionDescription": "Spliit Cloud verilerinizin taşınabilir bir yedeğini oluşturun.",
+      "sectionDescription": "Spliit Cloud verilerinizin taşınabilir bir yedeğini dışa aktarın veya geri yükleyin.",
       "sectionRowLabel": "Hesap yedeği",
-      "sectionRowDescription": "Tek seferlik bir indirme için grupları ve isteğe bağlı tercihleri seçin.",
-      "open": "Dışa aktarmayı yapılandır",
+      "sectionRowDescription": "Seçili grupları ve tercihleri indirin veya bir Spliit Cloud paketini geri yükleyin.",
+      "open": "Dışa aktar",
       "title": "Hesap yedeğini dışa aktar",
       "description": "Bu Spliit Cloud yedeğine nelerin dahil edileceğini seçin. Seçiminiz yalnızca bu indirme için kullanılır.",
       "contentTitle": "Dahil edilecekler",
@@ -2173,7 +2173,8 @@
         "STARRED": "Yıldızlı",
         "ARCHIVED": "Arşivlenmiş gruplar",
         "HIDDEN": "Gizli"
-      }
+      },
+      "import": "İçe aktar"
     }
   },
   "Activities": {

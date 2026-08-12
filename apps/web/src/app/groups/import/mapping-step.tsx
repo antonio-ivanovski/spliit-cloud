@@ -28,6 +28,7 @@ type Props = {
     isMember: boolean
     isPendingInvite: boolean
   }>
+  friendLedger?: boolean
   onBack: () => void
   onChange: (participants: ParticipantMappingState[]) => void
   onContinue: (resolved: {
@@ -43,6 +44,7 @@ export function MappingStep({
   account,
   destinationParticipants,
   friends,
+  friendLedger = false,
   onBack,
   onChange,
   onContinue,
@@ -67,6 +69,20 @@ export function MappingStep({
 
   const handleContinue = useCallback(() => {
     if (conflictMap.size > 0) return
+    if (
+      friendLedger &&
+      (participants.length !== 2 ||
+        participants.filter((p) => p.mode === 'LINK_ACCOUNT').length !== 1 ||
+        participants.some(
+          (p) =>
+            p.mode !== 'LINK_ACCOUNT' &&
+            p.mode !== 'INVITE_BY_EMAIL' &&
+            p.mode !== 'INVITE_CONTACT' &&
+            p.mode !== 'INVITE_BY_LINK',
+        ))
+    ) {
+      return
+    }
     for (const p of participants) {
       if (p.mode === 'INVITE_BY_EMAIL' && !p.inviteEmail?.trim()) {
         return
@@ -96,7 +112,7 @@ export function MappingStep({
       paidFor: e.paidFor,
     }))
     onContinue({ sourceIdToDestId, destIds, resolvedExpenses })
-  }, [conflictMap, participants, source.expenses, onContinue])
+  }, [conflictMap, friendLedger, participants, source.expenses, onContinue])
 
   const linkAccountKey =
     participants.find((p) => p.mode === 'LINK_ACCOUNT')?.key ?? null
@@ -120,10 +136,22 @@ export function MappingStep({
     )
     const hasDuplicateDestId =
       existingLpIds.length !== new Set(existingLpIds).size
+    const friendMappingReady =
+      !friendLedger ||
+      (participants.length === 2 &&
+        participants.filter((p) => p.mode === 'LINK_ACCOUNT').length === 1 &&
+        participants.every(
+          (p) =>
+            p.mode === 'LINK_ACCOUNT' ||
+            p.mode === 'INVITE_BY_EMAIL' ||
+            p.mode === 'INVITE_CONTACT' ||
+            p.mode === 'INVITE_BY_LINK',
+        ))
     return (
       !hasConflict &&
       !hasDuplicateDestId &&
       conflictMap.size === 0 &&
+      friendMappingReady &&
       participants.every(
         (p) =>
           (p.mode !== 'INVITE_BY_EMAIL' && p.mode !== 'INVITE_CONTACT') ||
@@ -136,6 +164,7 @@ export function MappingStep({
     linkAccountKey,
     normalizedImporterEmail,
     disabledReasonForCurrentMode,
+    friendLedger,
   ])
 
   return (
@@ -172,6 +201,7 @@ export function MappingStep({
             name={p.source.sourceName}
             destinationParticipants={destinationParticipants}
             friends={friends}
+            friendLedger={friendLedger}
           />
         ))}
       </div>

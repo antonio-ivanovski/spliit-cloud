@@ -528,7 +528,7 @@
         "confirmArchived": "Ryhmä arkistoidaan",
         "executeImport": "Palauta ryhmä",
         "stagingDocuments": "Valmistellaan asiakirjatiedostoja palautusta varten…",
-        "friendSourceWarning": "Tämä varmuuskopio on peräisin ystävälaskusta. Se palautetaan tavallisena ryhmänä; ystävyyssuhdetta ei luoda uudelleen.",
+        "friendSourceWarning": "Tämä varmuuskopio on peräisin ystävälaskusta. Se palautetaan ystävälaskuna yhdistetyn henkilön kanssa.",
         "accountTitle": "Tuo Spliit Cloud -tilin varmuuskopio",
         "accountProgress": "Ryhmä {current}/{total}: {name}",
         "continueToGroups": "Jatka ryhmien tuontiin",
@@ -2138,8 +2138,8 @@
       "masterLabel": "Ota tekoälyominaisuudet käyttöön"
     },
     "export": {
-      "groupsTitle": "Ryhmät",
-      "selectedCount": "{selected}/{total} ryhmää valittu",
+      "groupsTitle": "Ryhmät ja ystävät",
+      "selectedCount": "{selected}/{total} tiliä valittu",
       "loadingGroups": "Ladataan ryhmiä…",
       "groupsError": "Ryhmien lataaminen epäonnistui.",
       "retry": "Yritä uudelleen",
@@ -2151,10 +2151,10 @@
         "hidden": "Piilotettu ryhmä"
       },
       "sectionTitle": "Varmuuskopiot ja vienti",
-      "sectionDescription": "Luo siirrettävä varmuuskopio Spliit Cloud -tiedoistasi.",
+      "sectionDescription": "Vie tai palauta siirrettävä varmuuskopio Spliit Cloud -tiedoistasi.",
       "sectionRowLabel": "Tilin varmuuskopio",
-      "sectionRowDescription": "Valitse ryhmät ja valinnaiset asetukset kertalatausta varten.",
-      "open": "Määritä vienti",
+      "sectionRowDescription": "Lataa valitut ryhmät ja asetukset tai palauta Spliit Cloud -paketti.",
+      "open": "Vie",
       "title": "Vie tilin varmuuskopio",
       "description": "Valitse, mitä tähän Spliit Cloud -varmuuskopioon sisällytetään. Valinta koskee vain tätä latausta.",
       "contentTitle": "Sisällytä",
@@ -2173,7 +2173,8 @@
         "STARRED": "Suosikit",
         "ARCHIVED": "Arkistoidut",
         "HIDDEN": "Piilotettu"
-      }
+      },
+      "import": "Tuo"
     }
   },
   "Activities": {

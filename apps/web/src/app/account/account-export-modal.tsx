@@ -68,7 +68,6 @@ export function AccountExportModal() {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'AccountSettings.export',
   })
-  const { t: translate } = useTranslation()
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const [selection, setSelection] = useState(initialSelection)
@@ -170,277 +169,272 @@ export function AccountExportModal() {
         label={t('sectionRowLabel')}
         description={t('sectionRowDescription')}
         control={
-          <ResponsiveDialog open={open} onOpenChange={setOpen}>
-            <ResponsiveDialogTrigger
-              render={
-                <Button type="button" variant="outline">
-                  <FileArchive className="me-2 h-4 w-4" aria-hidden="true" />
-                  {t('open')}
-                </Button>
-              }
-            />
-            <ResponsiveDialogContent className="max-w-2xl p-0">
-              <ResponsiveDialogHeader className="border-b px-4 py-4 text-start sm:px-6">
-                <ResponsiveDialogTitle className="flex items-center gap-2">
-                  <CloudDownload
-                    className="h-5 w-5 text-primary"
-                    aria-hidden="true"
-                  />
-                  {t('title')}
-                </ResponsiveDialogTitle>
-                <ResponsiveDialogDescription>
-                  {t('description')}
-                </ResponsiveDialogDescription>
-              </ResponsiveDialogHeader>
-
-              <ResponsiveDialogBody className="space-y-5 px-4 py-4 sm:px-6">
-                <section aria-labelledby="account-export-content-heading">
-                  <div className="mb-2 flex items-center gap-2">
-                    <FileText
-                      className="h-4 w-4 text-muted-foreground"
+          <div className="flex w-full gap-2 sm:w-auto">
+            <ResponsiveDialog open={open} onOpenChange={setOpen}>
+              <ResponsiveDialogTrigger
+                render={
+                  <Button type="button" variant="outline" className="flex-1">
+                    <FileArchive className="me-2 h-4 w-4" aria-hidden="true" />
+                    {t('open')}
+                  </Button>
+                }
+              />
+              <ResponsiveDialogContent className="max-w-2xl p-0">
+                <ResponsiveDialogHeader className="border-b px-4 py-4 text-start sm:px-6">
+                  <ResponsiveDialogTitle className="flex items-center gap-2">
+                    <CloudDownload
+                      className="h-5 w-5 text-primary"
                       aria-hidden="true"
                     />
-                    <h3
-                      id="account-export-content-heading"
-                      className="text-sm font-semibold"
-                    >
-                      {t('contentTitle')}
-                    </h3>
-                  </div>
-                  <div className="divide-y rounded-lg border">
-                    <ExportToggle
-                      icon={FileText}
-                      label={t('content.documents')}
-                      description={t('content.documentsDescription')}
-                      checked={selection.includeDocuments}
-                      onCheckedChange={(checked) =>
-                        updateContent('includeDocuments', checked)
-                      }
-                    />
-                    <ExportToggle
-                      icon={CloudDownload}
-                      label={t('content.accountPreferences')}
-                      description={t('content.accountPreferencesDescription')}
-                      checked={selection.includeAccountPreferences}
-                      onCheckedChange={(checked) =>
-                        updateContent('includeAccountPreferences', checked)
-                      }
-                    />
-                    <ExportToggle
-                      icon={Users}
-                      label={t('content.groupPreferences')}
-                      description={t('content.groupPreferencesDescription')}
-                      checked={selection.includeGroupPreferences}
-                      onCheckedChange={(checked) =>
-                        updateContent('includeGroupPreferences', checked)
-                      }
-                    />
-                  </div>
-                </section>
+                    {t('title')}
+                  </ResponsiveDialogTitle>
+                  <ResponsiveDialogDescription>
+                    {t('description')}
+                  </ResponsiveDialogDescription>
+                </ResponsiveDialogHeader>
 
-                <section aria-labelledby="account-export-groups-heading">
-                  <div className="mb-2 flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2">
-                      <FolderOpen
+                <ResponsiveDialogBody className="space-y-5 px-4 py-4 sm:px-6">
+                  <section aria-labelledby="account-export-content-heading">
+                    <div className="mb-2 flex items-center gap-2">
+                      <FileText
                         className="h-4 w-4 text-muted-foreground"
                         aria-hidden="true"
                       />
                       <h3
-                        id="account-export-groups-heading"
+                        id="account-export-content-heading"
                         className="text-sm font-semibold"
                       >
-                        {t('groupsTitle')}
+                        {t('contentTitle')}
                       </h3>
                     </div>
-                    <span className="text-xs text-muted-foreground">
-                      {t('selectedCount', {
-                        selected: selectedGroups.length,
-                        total: groups.length,
-                      })}
-                    </span>
-                  </div>
-
-                  {isPending ? (
-                    <div className="flex items-center justify-center rounded-lg border py-8 text-sm text-muted-foreground">
-                      <Loader2
-                        className="me-2 h-4 w-4 animate-spin"
-                        aria-hidden="true"
+                    <div className="divide-y rounded-lg border">
+                      <ExportToggle
+                        icon={FileText}
+                        label={t('content.documents')}
+                        description={t('content.documentsDescription')}
+                        checked={selection.includeDocuments}
+                        onCheckedChange={(checked) =>
+                          updateContent('includeDocuments', checked)
+                        }
                       />
-                      {t('loadingGroups')}
+                      <ExportToggle
+                        icon={CloudDownload}
+                        label={t('content.accountPreferences')}
+                        description={t('content.accountPreferencesDescription')}
+                        checked={selection.includeAccountPreferences}
+                        onCheckedChange={(checked) =>
+                          updateContent('includeAccountPreferences', checked)
+                        }
+                      />
+                      <ExportToggle
+                        icon={Users}
+                        label={t('content.groupPreferences')}
+                        description={t('content.groupPreferencesDescription')}
+                        checked={selection.includeGroupPreferences}
+                        onCheckedChange={(checked) =>
+                          updateContent('includeGroupPreferences', checked)
+                        }
+                      />
                     </div>
-                  ) : isError ? (
-                    <Alert variant="destructive">
-                      <AlertDescription className="flex items-center justify-between gap-3">
-                        <span>{t('groupsError')}</span>
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant="outline"
-                          onClick={() => void refetch()}
-                        >
-                          {t('retry')}
-                        </Button>
-                      </AlertDescription>
-                    </Alert>
-                  ) : (
-                    <div className="space-y-2">
-                      {sectionOrder.map((section) => {
-                        const sectionGroups = grouped.get(section) ?? []
-                        const includedCount = sectionGroups.filter((group) =>
-                          accountExportSelectionIncludesGroup(
-                            {
-                              id: group.id,
-                              groupType: group.groupType,
-                              archived: group.archived,
-                              starred: group.preference.starred,
-                              hidden: group.preference.hidden,
-                            },
-                            selection,
-                          ),
-                        ).length
-                        const overrideCount = selection.groupOverrides.filter(
-                          (override) =>
-                            sectionGroups.some(
-                              (group) => group.id === override.groupSourceId,
-                            ),
-                        ).length
-                        const sectionChecked =
-                          sectionGroups.length === 0
-                            ? selection.sections[section]
-                            : includedCount === sectionGroups.length
-                        const sectionIndeterminate =
-                          includedCount > 0 &&
-                          includedCount < sectionGroups.length
-                        return (
-                          <div
-                            key={section}
-                            className="overflow-hidden rounded-lg border"
-                          >
-                            <label className="flex cursor-pointer items-center gap-3 bg-muted/30 px-3 py-2.5">
-                              <Checkbox
-                                checked={sectionChecked}
-                                indeterminate={sectionIndeterminate}
-                                onCheckedChange={(checked) =>
-                                  updateSection(section, checked === true)
-                                }
-                                aria-label={t(`sections.${section}`)}
-                              />
-                              <span className="flex-1 text-sm font-medium">
-                                {t(`sections.${section}`)}
-                              </span>
-                              <span className="text-xs text-muted-foreground">
-                                {overrideCount > 0
-                                  ? t('sectionOverrides', {
-                                      count: overrideCount,
-                                    })
-                                  : sectionGroups.length}
-                              </span>
-                            </label>
-                            {sectionGroups.length > 0 ? (
-                              <div className="divide-y">
-                                {sectionGroups.map((group) => (
-                                  <label
-                                    key={group.id}
-                                    className="flex cursor-pointer items-center gap-3 px-3 py-2.5 ps-10"
-                                  >
-                                    <Checkbox
-                                      checked={accountExportSelectionIncludesGroup(
-                                        {
-                                          id: group.id,
-                                          groupType: group.groupType,
-                                          archived: group.archived,
-                                          starred: group.preference.starred,
-                                          hidden: group.preference.hidden,
-                                        },
-                                        selection,
-                                      )}
-                                      onCheckedChange={(checked) =>
-                                        updateGroup(group, checked === true)
-                                      }
-                                      aria-label={group.displayName}
-                                    />
-                                    <span className="min-w-0 flex-1 truncate text-sm">
-                                      {group.displayName}
-                                    </span>
-                                    {group.archived ? (
-                                      <Archive
-                                        className="h-3.5 w-3.5 text-muted-foreground"
-                                        aria-label={t('badges.archived')}
-                                      />
-                                    ) : null}
-                                    {group.preference.hidden ? (
-                                      <ArchiveRestore
-                                        className="h-3.5 w-3.5 text-muted-foreground"
-                                        aria-label={t('badges.hidden')}
-                                      />
-                                    ) : null}
-                                  </label>
-                                ))}
-                              </div>
-                            ) : (
-                              <p className="px-3 py-2 text-xs text-muted-foreground">
-                                {t('emptySection')}
-                              </p>
-                            )}
-                          </div>
-                        )
-                      })}
-                    </div>
-                  )}
-                </section>
-              </ResponsiveDialogBody>
+                  </section>
 
-              <ResponsiveDialogFooter className="border-t bg-muted/20 px-4 py-3 sm:px-6">
-                <ResponsiveDialogClose
-                  render={
-                    <Button type="button" variant="ghost">
-                      {t('cancel')}
-                    </Button>
-                  }
-                />
-                <form
-                  action={`${apiUrl}/account/export/bundle`}
-                  method="post"
-                  target="_blank"
-                  onSubmit={() => setOpen(false)}
-                >
-                  <input
-                    type="hidden"
-                    name="selection"
-                    value={JSON.stringify(selection)}
+                  <section aria-labelledby="account-export-groups-heading">
+                    <div className="mb-2 flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-2">
+                        <FolderOpen
+                          className="h-4 w-4 text-muted-foreground"
+                          aria-hidden="true"
+                        />
+                        <h3
+                          id="account-export-groups-heading"
+                          className="text-sm font-semibold"
+                        >
+                          {t('groupsTitle')}
+                        </h3>
+                      </div>
+                      <span className="text-xs text-muted-foreground">
+                        {t('selectedCount', {
+                          selected: selectedGroups.length,
+                          total: groups.length,
+                        })}
+                      </span>
+                    </div>
+
+                    {isPending ? (
+                      <div className="flex items-center justify-center rounded-lg border py-8 text-sm text-muted-foreground">
+                        <Loader2
+                          className="me-2 h-4 w-4 animate-spin"
+                          aria-hidden="true"
+                        />
+                        {t('loadingGroups')}
+                      </div>
+                    ) : isError ? (
+                      <Alert variant="destructive">
+                        <AlertDescription className="flex items-center justify-between gap-3">
+                          <span>{t('groupsError')}</span>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            onClick={() => void refetch()}
+                          >
+                            {t('retry')}
+                          </Button>
+                        </AlertDescription>
+                      </Alert>
+                    ) : (
+                      <div className="space-y-2">
+                        {sectionOrder.map((section) => {
+                          const sectionGroups = grouped.get(section) ?? []
+                          const includedCount = sectionGroups.filter((group) =>
+                            accountExportSelectionIncludesGroup(
+                              {
+                                id: group.id,
+                                groupType: group.groupType,
+                                archived: group.archived,
+                                starred: group.preference.starred,
+                                hidden: group.preference.hidden,
+                              },
+                              selection,
+                            ),
+                          ).length
+                          const overrideCount = selection.groupOverrides.filter(
+                            (override) =>
+                              sectionGroups.some(
+                                (group) => group.id === override.groupSourceId,
+                              ),
+                          ).length
+                          const sectionChecked =
+                            sectionGroups.length === 0
+                              ? selection.sections[section]
+                              : includedCount === sectionGroups.length
+                          const sectionIndeterminate =
+                            includedCount > 0 &&
+                            includedCount < sectionGroups.length
+                          return (
+                            <div
+                              key={section}
+                              className="overflow-hidden rounded-lg border"
+                            >
+                              <label className="flex cursor-pointer items-center gap-3 bg-muted/30 px-3 py-2.5">
+                                <Checkbox
+                                  checked={sectionChecked}
+                                  indeterminate={sectionIndeterminate}
+                                  onCheckedChange={(checked) =>
+                                    updateSection(section, checked === true)
+                                  }
+                                  aria-label={t(`sections.${section}`)}
+                                />
+                                <span className="flex-1 text-sm font-medium">
+                                  {t(`sections.${section}`)}
+                                </span>
+                                <span className="text-xs text-muted-foreground">
+                                  {overrideCount > 0
+                                    ? t('sectionOverrides', {
+                                        count: overrideCount,
+                                      })
+                                    : sectionGroups.length}
+                                </span>
+                              </label>
+                              {sectionGroups.length > 0 ? (
+                                <div className="divide-y">
+                                  {sectionGroups.map((group) => (
+                                    <label
+                                      key={group.id}
+                                      className="flex cursor-pointer items-center gap-3 px-3 py-2.5 ps-10"
+                                    >
+                                      <Checkbox
+                                        checked={accountExportSelectionIncludesGroup(
+                                          {
+                                            id: group.id,
+                                            groupType: group.groupType,
+                                            archived: group.archived,
+                                            starred: group.preference.starred,
+                                            hidden: group.preference.hidden,
+                                          },
+                                          selection,
+                                        )}
+                                        onCheckedChange={(checked) =>
+                                          updateGroup(group, checked === true)
+                                        }
+                                        aria-label={group.displayName}
+                                      />
+                                      <span className="min-w-0 flex-1 truncate text-sm">
+                                        {group.displayName}
+                                      </span>
+                                      {group.archived ? (
+                                        <Archive
+                                          className="h-3.5 w-3.5 text-muted-foreground"
+                                          aria-label={t('badges.archived')}
+                                        />
+                                      ) : null}
+                                      {group.preference.hidden ? (
+                                        <ArchiveRestore
+                                          className="h-3.5 w-3.5 text-muted-foreground"
+                                          aria-label={t('badges.hidden')}
+                                        />
+                                      ) : null}
+                                    </label>
+                                  ))}
+                                </div>
+                              ) : (
+                                <p className="px-3 py-2 text-xs text-muted-foreground">
+                                  {t('emptySection')}
+                                </p>
+                              )}
+                            </div>
+                          )
+                        })}
+                      </div>
+                    )}
+                  </section>
+                </ResponsiveDialogBody>
+
+                <ResponsiveDialogFooter className="border-t bg-muted/20 px-4 py-3 sm:px-6">
+                  <ResponsiveDialogClose
+                    render={
+                      <Button type="button" variant="ghost">
+                        {t('cancel')}
+                      </Button>
+                    }
                   />
-                  <Button
-                    type="submit"
-                    disabled={!canExport || isPending || isError}
+                  <form
+                    action={`${apiUrl}/account/export/bundle`}
+                    method="post"
+                    target="_blank"
+                    onSubmit={() => setOpen(false)}
                   >
-                    <Download className="me-2 h-4 w-4" aria-hidden="true" />
-                    {t('download')}
-                  </Button>
-                </form>
-              </ResponsiveDialogFooter>
-            </ResponsiveDialogContent>
-          </ResponsiveDialog>
-        }
-      />
-      <SettingsRow
-        label={translate('Groups.Import.Cloud.accountTitle')}
-        description={translate(
-          'Groups.Import.Source.spliitCloudScopeDescription',
-        )}
-        control={
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() =>
-              void navigate({
-                to: '/groups/import',
-                search: { source: 'spliit-cloud' },
-              })
-            }
-          >
-            <ArchiveRestore className="me-2 h-4 w-4" aria-hidden="true" />
-            {translate('Groups.Import.Source.openCloudImporter')}
-          </Button>
+                    <input
+                      type="hidden"
+                      name="selection"
+                      value={JSON.stringify(selection)}
+                    />
+                    <Button
+                      type="submit"
+                      disabled={!canExport || isPending || isError}
+                    >
+                      <Download className="me-2 h-4 w-4" aria-hidden="true" />
+                      {t('download')}
+                    </Button>
+                  </form>
+                </ResponsiveDialogFooter>
+              </ResponsiveDialogContent>
+            </ResponsiveDialog>
+            <Button
+              type="button"
+              variant="outline"
+              className="flex-1"
+              onClick={() =>
+                void navigate({
+                  to: '/groups/import',
+                  search: { source: 'spliit-cloud' },
+                })
+              }
+            >
+              <ArchiveRestore className="me-2 h-4 w-4" aria-hidden="true" />
+              {t('import')}
+            </Button>
+          </div>
         }
       />
     </SettingsSection>

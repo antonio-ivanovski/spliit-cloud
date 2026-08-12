@@ -27,13 +27,22 @@ export function cloudIdentityKey(
 
 export function cloudInspectionToSource(
   inspection: CloudGroupBundleInspection,
+  viewerAccountId?: string,
 ): NormalizedSource {
   const { manifest } = inspection
+  const friendPeer =
+    manifest.group.groupType === 'FRIEND'
+      ? manifest.participants.find(
+          (participant) =>
+            participant.identity?.kind !== 'ACCOUNT' ||
+            participant.identity.accountId !== viewerAccountId,
+        )
+      : undefined
   return {
     provider: 'SPLIIT',
     sourceGroupId: manifest.group.sourceId,
     sourceUrl: null,
-    name: manifest.group.name,
+    name: friendPeer?.displayName ?? manifest.group.name,
     currency: manifest.group.ledger.currency,
     currencyCode: manifest.group.ledger.currencyCode,
     participants: manifest.participants.map((participant) => ({
@@ -214,6 +223,7 @@ export function toCloudApiMapping(participant: ParticipantMappingState) {
         ...base,
         mode: 'INVITE_CONTACT' as const,
         email: participant.inviteEmail ?? '',
+        linkedAccountId: participant.contactAccountId,
       }
     case 'INVITE_BY_LINK':
       return { ...base, mode: 'INVITE_BY_LINK' as const }

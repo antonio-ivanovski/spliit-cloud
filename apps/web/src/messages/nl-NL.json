@@ -528,7 +528,7 @@
         "confirmArchived": "De groep wordt gearchiveerd",
         "executeImport": "Groep herstellen",
         "stagingDocuments": "Documentbestanden voorbereiden voor herstel…",
-        "friendSourceWarning": "Deze back-up komt uit een vriendenrekening. Hij wordt als een gewone groep hersteld; de vriendschapsrelatie wordt niet opnieuw aangemaakt.",
+        "friendSourceWarning": "Deze back-up komt uit een vriendenrekening. Hij wordt als vriendenrekening met de gekoppelde persoon hersteld.",
         "accountTitle": "Back-up van Spliit Cloud-account importeren",
         "accountProgress": "Groep {current} van {total}: {name}",
         "continueToGroups": "Doorgaan naar groepsimports",
@@ -2138,8 +2138,8 @@
       "masterLabel": "AI-functies inschakelen"
     },
     "export": {
-      "groupsTitle": "Groepen",
-      "selectedCount": "{selected} van {total} groepen geselecteerd",
+      "groupsTitle": "Groepen en vrienden",
+      "selectedCount": "{selected} van {total} rekeningen geselecteerd",
       "loadingGroups": "Groepen laden…",
       "groupsError": "Groepen konden niet worden geladen.",
       "retry": "Opnieuw proberen",
@@ -2151,10 +2151,10 @@
         "hidden": "Verborgen groep"
       },
       "sectionTitle": "Back-ups en export",
-      "sectionDescription": "Maak een draagbare back-up van je Spliit Cloud-gegevens.",
+      "sectionDescription": "Exporteer of herstel een overdraagbare back-up van je Spliit Cloud-gegevens.",
       "sectionRowLabel": "Accountback-up",
-      "sectionRowDescription": "Kies groepen en optionele voorkeuren voor een eenmalige download.",
-      "open": "Export instellen",
+      "sectionRowDescription": "Download geselecteerde groepen en voorkeuren of herstel een Spliit Cloud-bundel.",
+      "open": "Exporteren",
       "title": "Accountback-up exporteren",
       "description": "Kies wat je in deze Spliit Cloud-back-up wilt opnemen. Je keuze geldt alleen voor deze download.",
       "contentTitle": "Opnemen",
@@ -2173,7 +2173,8 @@
         "STARRED": "Favoriete",
         "ARCHIVED": "Gearchiveerde groepen",
         "HIDDEN": "Verborgen"
-      }
+      },
+      "import": "Importeren"
     }
   },
   "Activities": {

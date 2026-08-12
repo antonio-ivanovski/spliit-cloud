@@ -657,7 +657,7 @@
         "confirmArchived": "The group will be archived",
         "executeImport": "Restore group",
         "stagingDocuments": "Preparing document files for restore…",
-        "friendSourceWarning": "This backup came from a friend ledger. It will be restored as a regular group; the friend relationship will not be recreated.",
+        "friendSourceWarning": "This backup came from a friend ledger. It will be restored as a friend ledger with the mapped peer.",
         "accountTitle": "Import Spliit Cloud account backup",
         "accountProgress": "Group {current} of {total}: {name}",
         "continueToGroups": "Continue to group imports",
@@ -931,10 +931,10 @@
     },
     "export": {
       "sectionTitle": "Backups & export",
-      "sectionDescription": "Create a portable backup of your Spliit Cloud data.",
+      "sectionDescription": "Export or restore a portable backup of your Spliit Cloud data.",
       "sectionRowLabel": "Account backup",
-      "sectionRowDescription": "Choose groups and optional preferences for a one-time download.",
-      "open": "Configure export",
+      "sectionRowDescription": "Download selected groups and preferences, or restore a Spliit Cloud bundle.",
+      "open": "Export",
       "title": "Export account backup",
       "description": "Choose what to include in this Spliit Cloud backup. Your selection is used for this download only.",
       "contentTitle": "Include",
@@ -946,8 +946,8 @@
         "groupPreferences": "Group preferences",
         "groupPreferencesDescription": "Include starred, hidden, and default split settings."
       },
-      "groupsTitle": "Groups",
-      "selectedCount": "{selected} of {total} groups selected",
+      "groupsTitle": "Groups and friends",
+      "selectedCount": "{selected} of {total} ledgers selected",
       "loadingGroups": "Loading groups…",
       "groupsError": "Groups could not be loaded.",
       "retry": "Retry",
@@ -965,7 +965,8 @@
         "archived": "Archived group",
         "hidden": "Hidden group"
       },
-      "sectionOverrides": "{count} exceptions"
+      "sectionOverrides": "{count} exceptions",
+      "import": "Import"
     }
   },
   "CompleteProfile": {

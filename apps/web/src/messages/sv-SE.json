@@ -185,8 +185,8 @@
       "masterLabel": "Aktivera AI-funktioner"
     },
     "export": {
-      "groupsTitle": "Grupper",
-      "selectedCount": "{selected} av {total} grupper valda",
+      "groupsTitle": "Grupper och vänner",
+      "selectedCount": "{selected} av {total} konton valda",
       "loadingGroups": "Läser in grupper…",
       "groupsError": "Det gick inte att läsa in grupper.",
       "retry": "Försök igen",
@@ -198,10 +198,10 @@
         "hidden": "Dold grupp"
       },
       "sectionTitle": "Säkerhetskopior och export",
-      "sectionDescription": "Skapa en flyttbar säkerhetskopia av dina Spliit Cloud-data.",
+      "sectionDescription": "Exportera eller återställ en flyttbar säkerhetskopia av dina Spliit Cloud-data.",
       "sectionRowLabel": "Kontosäkerhetskopia",
-      "sectionRowDescription": "Välj grupper och valfria inställningar för en engångsnedladdning.",
-      "open": "Konfigurera export",
+      "sectionRowDescription": "Hämta valda grupper och inställningar eller återställ ett Spliit Cloud-paket.",
+      "open": "Exportera",
       "title": "Exportera kontosäkerhetskopia",
       "description": "Välj vad som ska ingå i denna säkerhetskopia av Spliit Cloud. Ditt val används bara för denna nedladdning.",
       "contentTitle": "Inkludera",
@@ -220,7 +220,8 @@
         "STARRED": "Stjärnmarkerade",
         "ARCHIVED": "Arkiverade grupper",
         "HIDDEN": "Dolda"
-      }
+      },
+      "import": "Importera"
     }
   },
   "Activities": {
@@ -1925,7 +1926,7 @@
         "confirmArchived": "Gruppen arkiveras",
         "executeImport": "Återställ grupp",
         "stagingDocuments": "Förbereder dokumentfiler för återställning…",
-        "friendSourceWarning": "Den här säkerhetskopian kommer från ett vänsaldo. Den återställs som en vanlig grupp; vänskapsrelationen återskapas inte.",
+        "friendSourceWarning": "Den här säkerhetskopian kommer från ett vänskonto. Det återställs som ett vänskonto med den matchade personen.",
         "accountTitle": "Importera säkerhetskopia av Spliit Cloud-konto",
         "accountProgress": "Grupp {current} av {total}: {name}",
         "continueToGroups": "Fortsätt till gruppimporter",

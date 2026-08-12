@@ -439,7 +439,7 @@
         "confirmArchived": "그룹이 보관 처리됩니다",
         "executeImport": "그룹 복원",
         "stagingDocuments": "복원할 문서 파일을 준비하는 중…",
-        "friendSourceWarning": "이 백업은 친구 원장에서 가져온 것입니다. 일반 그룹으로 복원되며 친구 관계는 다시 만들어지지 않습니다.",
+        "friendSourceWarning": "이 백업은 친구 원장에서 가져온 것입니다. 연결한 상대와의 친구 원장으로 복원됩니다.",
         "accountTitle": "Spliit Cloud 계정 백업 가져오기",
         "accountProgress": "그룹 {current}/{total}: {name}",
         "continueToGroups": "그룹 가져오기로 계속",
@@ -2131,8 +2131,8 @@
       "masterLabel": "AI 기능 사용"
     },
     "export": {
-      "groupsTitle": "그룹",
-      "selectedCount": "{total}개 그룹 중 {selected}개 선택됨",
+      "groupsTitle": "그룹 및 친구",
+      "selectedCount": "원장 {total}개 중 {selected}개 선택됨",
       "loadingGroups": "그룹 불러오는 중…",
       "groupsError": "그룹을 불러올 수 없습니다.",
       "retry": "다시 시도",
@@ -2144,10 +2144,10 @@
         "hidden": "숨긴 그룹"
       },
       "sectionTitle": "백업 및 내보내기",
-      "sectionDescription": "Spliit Cloud 데이터의 휴대용 백업을 만드세요.",
+      "sectionDescription": "Spliit Cloud 데이터의 이동식 백업을 내보내거나 복원하세요.",
       "sectionRowLabel": "계정 백업",
-      "sectionRowDescription": "한 번만 다운로드할 그룹과 선택적 설정을 선택하세요.",
-      "open": "내보내기 설정",
+      "sectionRowDescription": "선택한 그룹과 환경설정을 다운로드하거나 Spliit Cloud 번들을 복원하세요.",
+      "open": "내보내기",
       "title": "계정 백업 내보내기",
       "description": "이 Spliit Cloud 백업에 포함할 항목을 선택하세요. 선택한 항목은 이번 다운로드에만 사용됩니다.",
       "contentTitle": "포함할 항목",
@@ -2166,7 +2166,8 @@
         "STARRED": "즐겨찾기",
         "ARCHIVED": "보관됨",
         "HIDDEN": "숨김"
-      }
+      },
+      "import": "가져오기"
     }
   },
   "Activities": {

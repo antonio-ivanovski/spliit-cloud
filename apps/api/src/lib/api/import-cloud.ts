@@ -24,6 +24,7 @@ import {
 } from '../invitations'
 import { isPlaceholderEmail } from '../invitations/display'
 import { buildImportSummaryActivityData, logActivity } from './activities'
+import { createFriendLedger, type CreateFriendLedgerPeer } from './friends'
 import { enqueueMaterialization } from './recurrence/series-ops'
 import { randomId } from './shared'
 
@@ -212,6 +213,38 @@ function validateReferences(
       if (!mapping.email || isPlaceholderEmail(mapping.email)) {
         throw new Error('Email invitation mapping is invalid')
       }
+    }
+  }
+
+  if (manifest.group.groupType === 'FRIEND') {
+    if (manifest.group.archived) {
+      throw new Error('Friend ledgers cannot be restored as archived')
+    }
+    if (manifest.group.subgroupsEnabled || manifest.subgroups.length > 0) {
+      throw new Error('Friend ledgers cannot contain subgroups')
+    }
+    if (manifest.participants.length !== 2) {
+      throw new Error('Friend ledgers must contain exactly two participants')
+    }
+    const linkedRows = mappings.filter(
+      (mapping) => mapping.mode === 'LINK_ACCOUNT',
+    )
+    if (linkedRows.length !== 1) {
+      throw new Error('Friend ledgers must map exactly one participant to you')
+    }
+    const peer = mappings.find(
+      (mapping) =>
+        mapping.sourceParticipantId !== linkedRows[0]!.sourceParticipantId,
+    )
+    if (
+      !peer ||
+      (peer.mode !== 'INVITE_BY_EMAIL' &&
+        peer.mode !== 'INVITE_CONTACT' &&
+        peer.mode !== 'INVITE_BY_LINK')
+    ) {
+      throw new Error(
+        'Friend ledgers must map the other participant to a contact, email, or link',
+      )
     }
   }
   const invitationEmails = new Set<string>()
@@ -425,6 +458,156 @@ function validateReferences(
   }
 }
 
+type FriendImportLedger = {
+  groupId: string
+  ledgerId: string
+  destinationIds: Map<string, string>
+  invites: CloudImportResult['invites']
+}
+
+/**
+ * Create the destination through the same friend-ledger service used by the
+ * Friends UI, then map the two source participants onto its fresh ledger
+ * participants. This keeps pair uniqueness and pending invite semantics in one
+ * place.
+ */
+async function createFriendImportLedger(
+  manifest: SpliitGroupExportManifest,
+  input: CloudImportInput,
+  actor: { accountId: string },
+  tx: Prisma.TransactionClient,
+  mappingBySource: Map<string, CloudImportParticipantMapping>,
+): Promise<FriendImportLedger> {
+  const self = manifest.participants.find(
+    (participant) =>
+      mappingBySource.get(participant.sourceId)?.mode === 'LINK_ACCOUNT',
+  )
+  const peer = manifest.participants.find(
+    (participant) => participant.sourceId !== self?.sourceId,
+  )
+  if (!self || !peer) {
+    throw new Error('Friend ledger participant mappings are incomplete')
+  }
+  if (mappingBySource.get(self.sourceId)?.linkedAccountId !== actor.accountId) {
+    throw new Error('Friend imports may only link the signed-in account')
+  }
+  const peerMapping = mappingBySource.get(peer.sourceId)!
+  let peerTarget: CreateFriendLedgerPeer
+  if (peerMapping.mode === 'INVITE_CONTACT' && peerMapping.linkedAccountId) {
+    peerTarget = { accountId: peerMapping.linkedAccountId }
+  } else if (
+    peerMapping.mode === 'INVITE_BY_EMAIL' ||
+    peerMapping.mode === 'INVITE_CONTACT'
+  ) {
+    const email = peerMapping.email!.trim().toLowerCase()
+    const account = await tx.account.findUnique({
+      where: { email },
+      select: { id: true },
+    })
+    peerTarget = account
+      ? { accountId: account.id }
+      : { email, temporaryName: peer.displayName }
+  } else if (peerMapping.mode === 'INVITE_BY_LINK') {
+    peerTarget = { link: true, temporaryName: peer.displayName }
+  } else {
+    throw new Error('Friend ledger peer mapping is invalid')
+  }
+  if ('accountId' in peerTarget && peerTarget.accountId === actor.accountId) {
+    throw new Error('You cannot restore a friend ledger with yourself')
+  }
+  if ('accountId' in peerTarget) {
+    const peerAccount = await tx.account.findUnique({
+      where: { id: peerTarget.accountId },
+      select: { id: true },
+    })
+    if (!peerAccount)
+      throw new Error('The selected friend account was not found')
+  }
+
+  const created = await createFriendLedger(
+    {
+      callerAccountId: actor.accountId,
+      peer: peerTarget,
+      currency: input.groupFormValues.currency,
+      currencyCode: input.groupFormValues.currencyCode,
+      information: input.groupFormValues.information,
+    },
+    tx,
+  )
+  if (created.existed) {
+    throw new Error('A friend ledger with this participant already exists')
+  }
+
+  const group = await tx.group.findUnique({
+    where: { id: created.groupId },
+    select: { ledgerId: true },
+  })
+  if (!group) throw new Error('The restored friend ledger could not be found')
+
+  const participants = await tx.ledgerParticipant.findMany({
+    where: { ledgerId: group.ledgerId },
+    select: {
+      id: true,
+      groupMember: { select: { accountId: true } },
+      invitations: {
+        where: { status: 'PENDING' },
+        select: { type: true, email: true },
+      },
+    },
+  })
+  const actorParticipant = participants.find(
+    (participant) => participant.groupMember?.accountId === actor.accountId,
+  )
+  const peerEmail = 'email' in peerTarget ? peerTarget.email : null
+  const peerParticipant =
+    'accountId' in peerTarget
+      ? participants.find(
+          (participant) =>
+            participant.groupMember?.accountId === peerTarget.accountId,
+        )
+      : peerEmail
+        ? participants.find((participant) =>
+            participant.invitations.some(
+              (invitation) =>
+                invitation.type === 'EMAIL' &&
+                invitation.email.toLowerCase() === peerEmail.toLowerCase(),
+            ),
+          )
+        : participants.find((participant) =>
+            participant.invitations.some(
+              (invitation) => invitation.type === 'LINK',
+            ),
+          )
+  if (!actorParticipant || !peerParticipant) {
+    throw new Error(
+      'The restored friend ledger participants could not be mapped',
+    )
+  }
+
+  return {
+    groupId: created.groupId,
+    ledgerId: group.ledgerId,
+    destinationIds: new Map([
+      [self.sourceId, actorParticipant.id],
+      [peer.sourceId, peerParticipant.id],
+    ]),
+    invites:
+      !created.existed && 'invitationId' in created && created.invitationId
+        ? [
+            {
+              sourceName: peer.displayName,
+              kind: peerEmail ? ('EMAIL' as const) : ('LINK' as const),
+              invitationId: created.invitationId,
+              ...('inviteUrl' in created && created.inviteUrl
+                ? { inviteUrl: created.inviteUrl }
+                : {}),
+              ...(peerEmail ? { email: peerEmail } : {}),
+            },
+          ]
+        : [],
+  }
+}
+
 export async function prepareCloudImport(
   input: CloudImportInput,
   actorAccountId: string,
@@ -554,53 +737,119 @@ export async function importCloudGroup(
         throw new Error('You cannot invite yourself to the imported group')
       }
     }
-    const ledger = await tx.ledger.create({
-      data: {
-        id: randomId(),
-        currency: input.groupFormValues.currency,
-        currencyCode: input.groupFormValues.currencyCode || null,
-        createdAt: asDate(manifest.group.ledger.createdAt),
-      },
-    })
-    const group = await tx.group.create({
-      data: {
-        id: randomId(),
-        name: input.groupFormValues.name,
-        information: input.groupFormValues.information ?? null,
-        archived: false,
-        groupType: 'GROUP',
-        ledgerId: ledger.id,
-        subgroupsEnabled: manifest.group.subgroupsEnabled,
-        createdAt: asDate(manifest.group.createdAt),
-      },
-    })
-
     const mappingBySource = new Map(
       input.participants.map((mapping) => [
         mapping.sourceParticipantId,
         mapping,
       ]),
     )
-    const destinationIds = new Map<string, string>()
-    const actorSourceIds: string[] = []
-    for (const participant of manifest.participants) {
-      const mapping = mappingBySource.get(participant.sourceId)!
-      const destinationId = randomId()
-      destinationIds.set(participant.sourceId, destinationId)
-      if (mapping.mode === 'LINK_ACCOUNT') {
-        if (mapping.linkedAccountId !== actor.accountId) {
-          throw new Error('Cloud imports may only link the signed-in account')
+    const isFriendLedger = manifest.group.groupType === 'FRIEND'
+    let ledger: { id: string; currencyCode: string | null }
+    let group: { id: string }
+    let destinationIds: Map<string, string>
+    let friendInvites: CloudImportResult['invites'] = []
+
+    if (isFriendLedger) {
+      const friend = await createFriendImportLedger(
+        manifest,
+        input,
+        actor,
+        tx,
+        mappingBySource,
+      )
+      ledger = {
+        id: friend.ledgerId,
+        currencyCode: input.groupFormValues.currencyCode || null,
+      }
+      group = { id: friend.groupId }
+      destinationIds = friend.destinationIds
+      friendInvites = friend.invites
+    } else {
+      const createdLedger = await tx.ledger.create({
+        data: {
+          id: randomId(),
+          currency: input.groupFormValues.currency,
+          currencyCode: input.groupFormValues.currencyCode || null,
+          createdAt: asDate(manifest.group.ledger.createdAt),
+        },
+      })
+      const createdGroup = await tx.group.create({
+        data: {
+          id: randomId(),
+          name: input.groupFormValues.name,
+          information: input.groupFormValues.information ?? null,
+          archived: false,
+          groupType: 'GROUP',
+          ledgerId: createdLedger.id,
+          subgroupsEnabled: manifest.group.subgroupsEnabled,
+          createdAt: asDate(manifest.group.createdAt),
+        },
+      })
+      ledger = createdLedger
+      group = createdGroup
+      destinationIds = new Map<string, string>()
+      const actorSourceIds: string[] = []
+      for (const participant of manifest.participants) {
+        const mapping = mappingBySource.get(participant.sourceId)!
+        const destinationId = randomId()
+        destinationIds.set(participant.sourceId, destinationId)
+        if (mapping.mode === 'LINK_ACCOUNT') {
+          if (mapping.linkedAccountId !== actor.accountId) {
+            throw new Error('Cloud imports may only link the signed-in account')
+          }
+          actorSourceIds.push(participant.sourceId)
+          const sourceJoinedAt = participant.membership?.joinedAt
+            ? asDate(participant.membership.joinedAt)
+            : new Date()
+          const sourceCreatedAt = participant.membership?.createdAt
+            ? asDate(participant.membership.createdAt)
+            : sourceJoinedAt
+          const sourceUpdatedAt = participant.membership?.updatedAt
+            ? asDate(participant.membership.updatedAt)
+            : sourceJoinedAt
+          const member = await tx.groupMember.create({
+            data: {
+              id: randomId(),
+              groupId: group.id,
+              accountId: actor.accountId,
+              role: GroupRole.ADMIN,
+              status: GroupMemberStatus.ACTIVE,
+              joinedAt: sourceJoinedAt,
+              createdAt: sourceCreatedAt,
+              updatedAt: sourceUpdatedAt,
+            },
+          })
+          await tx.ledgerParticipant.create({
+            data: {
+              id: destinationId,
+              ledgerId: ledger.id,
+              groupMemberId: member.id,
+              kind: LedgerParticipantKind.ACCOUNT_MEMBER,
+              // Linking a source row to the signed-in account explicitly makes
+              // that participant active in the new group, even when the source
+              // row had previously been removed.
+              removedAt: null,
+            },
+          })
+        } else {
+          await tx.ledgerParticipant.create({
+            data: {
+              id: destinationId,
+              ledgerId: ledger.id,
+              kind: LedgerParticipantKind.UNLINKED_PARTICIPANT,
+              displayName: participant.displayName,
+              removedAt: participant.removedAt
+                ? asDate(participant.removedAt)
+                : null,
+            },
+          })
         }
-        actorSourceIds.push(participant.sourceId)
-        const sourceJoinedAt = participant.membership?.joinedAt
-          ? asDate(participant.membership.joinedAt)
-          : new Date()
-        const sourceCreatedAt = participant.membership?.createdAt
-          ? asDate(participant.membership.createdAt)
-          : sourceJoinedAt
-        const sourceUpdatedAt = participant.membership?.updatedAt
-          ? asDate(participant.membership.updatedAt)
-          : sourceJoinedAt
+      }
+      if (actorSourceIds.length > 1)
+        throw new Error(
+          'Cloud bundle maps the signed-in account more than once',
+        )
+      if (actorSourceIds.length === 0) {
         const member = await tx.groupMember.create({
           data: {
             id: randomId(),
@@ -608,57 +857,17 @@ export async function importCloudGroup(
             accountId: actor.accountId,
             role: GroupRole.ADMIN,
             status: GroupMemberStatus.ACTIVE,
-            joinedAt: sourceJoinedAt,
-            createdAt: sourceCreatedAt,
-            updatedAt: sourceUpdatedAt,
+            joinedAt: new Date(),
           },
         })
         await tx.ledgerParticipant.create({
           data: {
-            id: destinationId,
+            id: randomId(),
             ledgerId: ledger.id,
             groupMemberId: member.id,
-            kind: LedgerParticipantKind.ACCOUNT_MEMBER,
-            // Linking a source row to the signed-in account explicitly makes
-            // that participant active in the new group, even when the source
-            // row had previously been removed.
-            removedAt: null,
-          },
-        })
-      } else {
-        await tx.ledgerParticipant.create({
-          data: {
-            id: destinationId,
-            ledgerId: ledger.id,
-            kind: LedgerParticipantKind.UNLINKED_PARTICIPANT,
-            displayName: participant.displayName,
-            removedAt: participant.removedAt
-              ? asDate(participant.removedAt)
-              : null,
           },
         })
       }
-    }
-    if (actorSourceIds.length > 1)
-      throw new Error('Cloud bundle maps the signed-in account more than once')
-    if (actorSourceIds.length === 0) {
-      const member = await tx.groupMember.create({
-        data: {
-          id: randomId(),
-          groupId: group.id,
-          accountId: actor.accountId,
-          role: GroupRole.ADMIN,
-          status: GroupMemberStatus.ACTIVE,
-          joinedAt: new Date(),
-        },
-      })
-      await tx.ledgerParticipant.create({
-        data: {
-          id: randomId(),
-          ledgerId: ledger.id,
-          groupMemberId: member.id,
-        },
-      })
     }
 
     const seriesIds = new Map<string, string>()
@@ -906,8 +1115,9 @@ export async function importCloudGroup(
         },
       })
     }
-    const invites: CloudImportResult['invites'] = []
+    const invites: CloudImportResult['invites'] = [...friendInvites]
     for (const participant of manifest.participants) {
+      if (isFriendLedger) break
       const mapping = mappingBySource.get(participant.sourceId)!
       if (
         mapping.mode !== 'INVITE_BY_EMAIL' &&

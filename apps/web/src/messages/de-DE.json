@@ -547,7 +547,7 @@
         "confirmArchived": "Die Gruppe wird archiviert",
         "executeImport": "Gruppe wiederherstellen",
         "stagingDocuments": "Dokumentdateien werden für die Wiederherstellung vorbereitet …",
-        "friendSourceWarning": "Dieses Backup stammt aus einer Freundesabrechnung. Es wird als normale Gruppe wiederhergestellt; die Freundschaftsbeziehung wird nicht erneut angelegt.",
+        "friendSourceWarning": "Dieses Backup stammt aus einer Freundesabrechnung. Es wird als Freundesabrechnung mit der zugeordneten Person wiederhergestellt.",
         "accountTitle": "Backup des Spliit-Cloud-Kontos importieren",
         "accountProgress": "Gruppe {current} von {total}: {name}",
         "continueToGroups": "Mit Gruppenimporten fortfahren",
@@ -2170,8 +2170,8 @@
       "masterLabel": "KI-Funktionen aktivieren"
     },
     "export": {
-      "groupsTitle": "Gruppen",
-      "selectedCount": "{selected} von {total} Gruppen ausgewählt",
+      "groupsTitle": "Gruppen und Freunde",
+      "selectedCount": "{selected} von {total} Abrechnungen ausgewählt",
       "loadingGroups": "Gruppen werden geladen…",
       "groupsError": "Gruppen konnten nicht geladen werden.",
       "retry": "Erneut versuchen",
@@ -2183,10 +2183,10 @@
         "hidden": "Ausgeblendete Gruppe"
       },
       "sectionTitle": "Sicherungen & Export",
-      "sectionDescription": "Erstellen Sie eine portable Sicherung Ihrer Spliit-Cloud-Daten.",
+      "sectionDescription": "Exportiere eine portable Sicherung deiner Spliit-Cloud-Daten oder stelle sie wieder her.",
       "sectionRowLabel": "Kontosicherung",
-      "sectionRowDescription": "Wählen Sie Gruppen und optionale Einstellungen für einen einmaligen Download aus.",
-      "open": "Export konfigurieren",
+      "sectionRowDescription": "Lade ausgewählte Gruppen und Einstellungen herunter oder stelle ein Spliit-Cloud-Paket wieder her.",
+      "open": "Exportieren",
       "title": "Kontosicherung exportieren",
       "description": "Wählen Sie aus, was in diese Spliit-Cloud-Sicherung aufgenommen wird. Ihre Auswahl gilt nur für diesen Download.",
       "contentTitle": "Einbeziehen",
@@ -2205,7 +2205,8 @@
         "STARRED": "Favorisierte",
         "ARCHIVED": "Archivierte Gruppen",
         "HIDDEN": "Ausgeblendet"
-      }
+      },
+      "import": "Importieren"
     }
   },
   "Activities": {

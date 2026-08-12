@@ -533,7 +533,7 @@
         "confirmArchived": "Le groupe sera archivé",
         "executeImport": "Restaurer le groupe",
         "stagingDocuments": "Préparation des fichiers pour la restauration…",
-        "friendSourceWarning": "Cette sauvegarde provient d’un compte entre amis. Elle sera restaurée comme un groupe classique ; la relation d’amitié ne sera pas recréée.",
+        "friendSourceWarning": "Cette sauvegarde provient d’un compte entre amis. Elle sera restaurée comme un compte entre amis avec la personne associée.",
         "accountTitle": "Importer la sauvegarde du compte Spliit Cloud",
         "accountProgress": "Groupe {current} sur {total} : {name}",
         "continueToGroups": "Continuer vers les importations de groupes",
@@ -2147,8 +2147,8 @@
       "masterLabel": "Activer les fonctionnalités d’IA"
     },
     "export": {
-      "groupsTitle": "Groupes",
-      "selectedCount": "{selected} sur {total} groupes sélectionnés",
+      "groupsTitle": "Groupes et amis",
+      "selectedCount": "{selected} comptes sélectionnés sur {total}",
       "loadingGroups": "Chargement des groupes…",
       "groupsError": "Impossible de charger les groupes.",
       "retry": "Réessayer",
@@ -2160,10 +2160,10 @@
         "hidden": "Groupe masqué"
       },
       "sectionTitle": "Sauvegardes et exportation",
-      "sectionDescription": "Créez une sauvegarde portable de vos données Spliit Cloud.",
+      "sectionDescription": "Exportez ou restaurez une sauvegarde portable de vos données Spliit Cloud.",
       "sectionRowLabel": "Sauvegarde du compte",
-      "sectionRowDescription": "Choisissez les groupes et les préférences facultatives pour un téléchargement unique.",
-      "open": "Configurer l’exportation",
+      "sectionRowDescription": "Téléchargez les groupes et préférences sélectionnés, ou restaurez un paquet Spliit Cloud.",
+      "open": "Exporter",
       "title": "Exporter la sauvegarde du compte",
       "description": "Choisissez ce qui doit être inclus dans cette sauvegarde Spliit Cloud. Votre sélection ne servira que pour ce téléchargement.",
       "contentTitle": "Inclure",
@@ -2182,7 +2182,8 @@
         "STARRED": "Favoris",
         "ARCHIVED": "Archivés",
         "HIDDEN": "Masqués"
-      }
+      },
+      "import": "Importer"
     }
   },
   "Activities": {

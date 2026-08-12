@@ -185,8 +185,8 @@
       "masterLabel": "AI सुविधाएँ सक्षम करें"
     },
     "export": {
-      "groupsTitle": "समूह",
-      "selectedCount": "{total} में से {selected} समूह चुने गए",
+      "groupsTitle": "समूह और मित्र",
+      "selectedCount": "कुल {total} खातों में से {selected} चुने गए",
       "loadingGroups": "समूह लोड हो रहे हैं…",
       "groupsError": "समूह लोड नहीं किए जा सके।",
       "retry": "पुनः प्रयास करें",
@@ -198,10 +198,10 @@
         "hidden": "छिपा हुआ समूह"
       },
       "sectionTitle": "बैकअप और निर्यात",
-      "sectionDescription": "अपने Spliit Cloud डेटा का पोर्टेबल बैकअप बनाएं।",
+      "sectionDescription": "अपने Spliit Cloud डेटा का पोर्टेबल बैकअप एक्सपोर्ट या पुनर्स्थापित करें।",
       "sectionRowLabel": "खाता बैकअप",
-      "sectionRowDescription": "एक बार के डाउनलोड के लिए समूह और वैकल्पिक प्राथमिकताएँ चुनें।",
-      "open": "निर्यात कॉन्फ़िगर करें",
+      "sectionRowDescription": "चुने गए समूह और प्राथमिकताएँ डाउनलोड करें या Spliit Cloud बंडल पुनर्स्थापित करें।",
+      "open": "एक्सपोर्ट करें",
       "title": "खाता बैकअप निर्यात करें",
       "description": "इस Spliit Cloud बैकअप में क्या शामिल करना है, चुनें। आपका चयन केवल इसी डाउनलोड के लिए उपयोग किया जाएगा।",
       "contentTitle": "शामिल करें",
@@ -220,7 +220,8 @@
         "STARRED": "तारांकित",
         "ARCHIVED": "संग्रहीत",
         "HIDDEN": "छिपे हुए"
-      }
+      },
+      "import": "इम्पोर्ट करें"
     }
   },
   "Activities": {
@@ -1925,7 +1926,7 @@
         "confirmArchived": "समूह को संग्रहीत किया जाएगा",
         "executeImport": "समूह पुनर्स्थापित करें",
         "stagingDocuments": "पुनर्स्थापना के लिए दस्तावेज़ फ़ाइलें तैयार हो रही हैं…",
-        "friendSourceWarning": "यह बैकअप मित्र खाते से आया है। इसे एक सामान्य समूह के रूप में पुनर्स्थापित किया जाएगा; मित्र संबंध दोबारा नहीं बनाया जाएगा।",
+        "friendSourceWarning": "यह बैकअप मित्र खाते से आया है। इसे मिलान किए गए व्यक्ति के साथ मित्र खाते के रूप में ही पुनर्स्थापित किया जाएगा।",
         "accountTitle": "Spliit Cloud खाते का बैकअप आयात करें",
         "accountProgress": "समूह {current}/{total}: {name}",
         "continueToGroups": "समूह आयात पर जाएँ",

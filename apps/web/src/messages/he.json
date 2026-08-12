@@ -533,7 +533,7 @@
         "confirmArchived": "הקבוצה תועבר לארכיון",
         "executeImport": "שחזור קבוצה",
         "stagingDocuments": "מכין את קובצי המסמכים לשחזור…",
-        "friendSourceWarning": "הגיבוי הזה הגיע מחשבון הוצאות עם חבר. הוא ישוחזר כקבוצה רגילה; קשר החברות לא ייווצר מחדש.",
+        "friendSourceWarning": "הגיבוי הזה הגיע מחשבון הוצאות עם חבר. הוא ישוחזר כחשבון חברים עם האדם ששויך אליו.",
         "accountTitle": "ייבוא גיבוי של חשבון Spliit Cloud",
         "accountProgress": "קבוצה {current} מתוך {total}: {name}",
         "continueToGroups": "המשך לייבוא קבוצות",
@@ -2147,8 +2147,8 @@
       "masterLabel": "הפעלת תכונות בינה מלאכותית"
     },
     "export": {
-      "groupsTitle": "קבוצות",
-      "selectedCount": "נבחרו {selected} מתוך {total} קבוצות",
+      "groupsTitle": "קבוצות וחברים",
+      "selectedCount": "נבחרו {selected} מתוך {total} חשבונות",
       "loadingGroups": "טוען קבוצות…",
       "groupsError": "לא ניתן לטעון את הקבוצות.",
       "retry": "נסו שוב",
@@ -2160,10 +2160,10 @@
         "hidden": "קבוצה מוסתרת"
       },
       "sectionTitle": "גיבויים וייצוא",
-      "sectionDescription": "צרו גיבוי נייד של נתוני Spliit Cloud.",
+      "sectionDescription": "ייצוא או שחזור של גיבוי נייד לנתוני Spliit Cloud.",
       "sectionRowLabel": "גיבוי חשבון",
-      "sectionRowDescription": "בחרו קבוצות והעדפות אופציונליות להורדה חד־פעמית.",
-      "open": "הגדרת ייצוא",
+      "sectionRowDescription": "הורדת הקבוצות וההעדפות שנבחרו או שחזור חבילת Spliit Cloud.",
+      "open": "ייצוא",
       "title": "ייצוא גיבוי חשבון",
       "description": "בחרו מה לכלול בגיבוי Spliit Cloud הזה. הבחירה שלכם תשמש להורדה הזו בלבד.",
       "contentTitle": "לכלול",
@@ -2182,7 +2182,8 @@
         "STARRED": "מסומנות בכוכב",
         "ARCHIVED": "בארכיון",
         "HIDDEN": "מוסתרות"
-      }
+      },
+      "import": "ייבוא"
     }
   },
   "Activities": {

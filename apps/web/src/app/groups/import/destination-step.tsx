@@ -27,6 +27,7 @@ type Props = {
   mode: 'NEW_GROUP' | 'EXISTING_GROUP' | null
   allowExisting?: boolean
   currencyLocked?: boolean
+  hideNameField?: boolean
   initialArchived?: boolean
   onArchivedChange?: (archived: boolean) => void
   onBack: () => void
@@ -48,6 +49,7 @@ export function DestinationStep({
   mode,
   allowExisting = true,
   currencyLocked = false,
+  hideNameField = false,
   initialArchived = false,
   onArchivedChange,
   onBack,
@@ -121,6 +123,7 @@ export function DestinationStep({
                   currencyCode: initialGroupFormValues.currencyCode,
                 }}
                 currencyLocked={currencyLocked}
+                hideNameField={hideNameField}
                 onSubmit={async (values) => {
                   onContinue({
                     mode: 'NEW_GROUP',

@@ -538,7 +538,7 @@
         "confirmArchived": "Skupina bude archivována",
         "executeImport": "Obnovit skupinu",
         "stagingDocuments": "Příprava souborů dokumentů k obnovení…",
-        "friendSourceWarning": "Tato záloha pochází z účtu s přítelem. Obnoví se jako běžná skupina; vztah přátelství se neobnoví.",
+        "friendSourceWarning": "Tato záloha pochází z účtu s přítelem. Obnoví se jako účet s přítelem s přiřazenou osobou.",
         "accountTitle": "Importovat zálohu účtu Spliit Cloud",
         "accountProgress": "Skupina {current} z {total}: {name}",
         "continueToGroups": "Pokračovat k importům skupin",
@@ -2156,8 +2156,8 @@
       "masterLabel": "Povolit funkce AI"
     },
     "export": {
-      "groupsTitle": "Skupiny",
-      "selectedCount": "{selected} z {total} vybraných skupin",
+      "groupsTitle": "Skupiny a přátelé",
+      "selectedCount": "Vybráno {selected} z {total} účtů",
       "loadingGroups": "Načítání skupin…",
       "groupsError": "Skupiny se nepodařilo načíst.",
       "retry": "Opakovat",
@@ -2169,10 +2169,10 @@
         "hidden": "Skrytá skupina"
       },
       "sectionTitle": "Zálohy a export",
-      "sectionDescription": "Vytvořte přenosnou zálohu svých dat ve Spliit Cloud.",
+      "sectionDescription": "Exportujte nebo obnovte přenositelnou zálohu svých dat ze Spliit Cloud.",
       "sectionRowLabel": "Záloha účtu",
-      "sectionRowDescription": "Vyberte skupiny a volitelné předvolby pro jednorázové stažení.",
-      "open": "Nastavit export",
+      "sectionRowDescription": "Stáhněte vybrané skupiny a předvolby nebo obnovte balíček Spliit Cloud.",
+      "open": "Exportovat",
       "title": "Export zálohy účtu",
       "description": "Vyberte, co chcete zahrnout do této zálohy Spliit Cloud. Váš výběr se použije pouze pro toto stažení.",
       "contentTitle": "Zahrnout",
@@ -2191,7 +2191,8 @@
         "STARRED": "Oblíbené",
         "ARCHIVED": "Archivované",
         "HIDDEN": "Skryté"
-      }
+      },
+      "import": "Importovat"
     }
   },
   "Activities": {

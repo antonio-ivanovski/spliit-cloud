@@ -230,8 +230,8 @@
       "description": "update how you show up in your groups."
     },
     "export": {
-      "groupsTitle": "groups",
-      "selectedCount": "selected: {selected}/{total} groups",
+      "groupsTitle": "groups & besties",
+      "selectedCount": "{selected} of {total} ledgers picked",
       "loadingGroups": "loading groups…",
       "groupsError": "couldn't load groups.",
       "retry": "retry",
@@ -243,10 +243,10 @@
         "hidden": "hidden group"
       },
       "sectionTitle": "backups + export",
-      "sectionDescription": "make a portable backup of your Spliit Cloud data.",
+      "sectionDescription": "export or restore a portable backup of your Spliit Cloud data, easy.",
       "sectionRowLabel": "account backup",
-      "sectionRowDescription": "pick groups + optional prefs for a one-time download.",
-      "open": "configure export",
+      "sectionRowDescription": "download selected groups and preferences, or restore a Spliit Cloud bundle.",
+      "open": "export",
       "title": "export your account backup",
       "description": "pick what goes into this Spliit Cloud backup. this choice is only for this download.",
       "contentTitle": "include",
@@ -265,7 +265,8 @@
         "STARRED": "starred",
         "ARCHIVED": "archived",
         "HIDDEN": "hidden"
-      }
+      },
+      "import": "bring it in"
     }
   },
   "Activities": {
@@ -2144,7 +2145,7 @@
         "confirmArchived": "the group will be archived",
         "executeImport": "restore group",
         "stagingDocuments": "getting document files ready to restore…",
-        "friendSourceWarning": "This backup is from a friend ledger. It will be restored as a regular group; the friend relationship will not be recreated.",
+        "friendSourceWarning": "this backup is from a friend ledger. it’ll stay a friend ledger with the matched friend.",
         "accountTitle": "import Spliit Cloud account backup",
         "accountProgress": "group {current} of {total}: {name}",
         "continueToGroups": "continue to group imports",

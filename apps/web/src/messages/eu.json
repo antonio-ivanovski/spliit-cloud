@@ -533,7 +533,7 @@
         "confirmArchived": "Taldea artxibatu egingo da",
         "executeImport": "Leheneratu taldea",
         "stagingDocuments": "Dokumentu-fitxategiak leheneratzeko prestatzen…",
-        "friendSourceWarning": "Babeskopia hau lagun baten kontutik dator. Talde arrunt gisa leheneratuko da; adiskidetasun-harremana ez da berriro sortuko.",
+        "friendSourceWarning": "Babeskopia hau lagun baten kontutik dator. Lagun-kontu gisa leheneratuko da esleitutako pertsonarekin.",
         "accountTitle": "Inportatu Spliit Cloud kontuaren segurtasun-kopia",
         "accountProgress": "Taldea {current} / {total}: {name}",
         "continueToGroups": "Jarraitu taldeen inportazioekin",
@@ -2146,8 +2146,8 @@
       "masterLabel": "AI funtzioak gaitu"
     },
     "export": {
-      "groupsTitle": "Taldeak",
-      "selectedCount": "{total} taldetatik {selected} hautatuta",
+      "groupsTitle": "Taldeak eta lagunak",
+      "selectedCount": "{total} kontutatik {selected} hautatuta",
       "loadingGroups": "Taldeak kargatzen…",
       "groupsError": "Ezin izan dira taldeak kargatu.",
       "retry": "Saiatu berriro",
@@ -2159,10 +2159,10 @@
         "hidden": "Ezkutuko taldea"
       },
       "sectionTitle": "Babeskopiak eta esportazioa",
-      "sectionDescription": "Sortu zure Spliit Cloud-eko datuen babeskopia eramangarri bat.",
+      "sectionDescription": "Esportatu edo leheneratu Spliit Cloud-eko datuen babeskopia eramangarri bat.",
       "sectionRowLabel": "Kontuaren babeskopia",
-      "sectionRowDescription": "Aukeratu taldeak eta aukerako hobespenak behin bakarrik egingo den deskarga baterako.",
-      "open": "Konfiguratu esportazioa",
+      "sectionRowDescription": "Deskargatu hautatutako taldeak eta hobespenak, edo leheneratu Spliit Cloud pakete bat.",
+      "open": "Esportatu",
       "title": "Kontuaren babeskopia esportatu",
       "description": "Aukeratu zer sartu Spliit Cloud-en babeskopia honetan. Zure hautaketa deskarga honetarako bakarrik erabiliko da.",
       "contentTitle": "Sartu",
@@ -2181,7 +2181,8 @@
         "STARRED": "Gogoko",
         "ARCHIVED": "Artxibatutakoak",
         "HIDDEN": "Ezkutukoak"
-      }
+      },
+      "import": "Inportatu"
     }
   },
   "Activities": {

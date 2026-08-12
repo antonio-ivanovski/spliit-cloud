@@ -523,7 +523,7 @@
         "confirmArchived": "グループをアーカイブします",
         "executeImport": "グループを復元",
         "stagingDocuments": "復元用の書類ファイルを準備しています…",
-        "friendSourceWarning": "このバックアップは友だち用の台帳から作成されています。通常のグループとして復元され、友だち関係は再作成されません。",
+        "friendSourceWarning": "このバックアップは友だち用の台帳から作成されています。紐付けた相手との友だち用台帳として復元されます。",
         "accountTitle": "Spliit Cloudアカウントのバックアップをインポート",
         "accountProgress": "グループ {current}/{total}: {name}",
         "continueToGroups": "グループのインポートへ進む",
@@ -2131,8 +2131,8 @@
       "masterLabel": "AI機能を有効にする"
     },
     "export": {
-      "groupsTitle": "グループ",
-      "selectedCount": "{total} グループ中 {selected} グループを選択中",
+      "groupsTitle": "グループと友だち",
+      "selectedCount": "{total}件の台帳のうち{selected}件を選択済み",
       "loadingGroups": "グループを読み込み中…",
       "groupsError": "グループを読み込めませんでした。",
       "retry": "再試行",
@@ -2144,10 +2144,10 @@
         "hidden": "非表示のグループ"
       },
       "sectionTitle": "バックアップとエクスポート",
-      "sectionDescription": "Spliit Cloudのデータを持ち運べるバックアップを作成します。",
+      "sectionDescription": "Spliit Cloudデータの持ち運び可能なバックアップをエクスポートまたは復元します。",
       "sectionRowLabel": "アカウントのバックアップ",
-      "sectionRowDescription": "一度限りのダウンロードに含めるグループと、任意の設定を選択します。",
-      "open": "エクスポートを設定",
+      "sectionRowDescription": "選択したグループと設定をダウンロードするか、Spliit Cloudバンドルを復元します。",
+      "open": "エクスポート",
       "title": "アカウントのバックアップをエクスポート",
       "description": "このSpliit Cloudバックアップに含める項目を選択します。選択内容は今回のダウンロードにのみ使用されます。",
       "contentTitle": "含める項目",
@@ -2166,7 +2166,8 @@
         "STARRED": "スター付き",
         "ARCHIVED": "アーカイブ済み",
         "HIDDEN": "非表示"
-      }
+      },
+      "import": "インポート"
     }
   },
   "Activities": {

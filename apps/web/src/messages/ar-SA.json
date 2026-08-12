@@ -1044,7 +1044,7 @@
         "confirmArchived": "ستتم أرشفة المجموعة",
         "executeImport": "استعادة المجموعة",
         "stagingDocuments": "جارٍ تجهيز ملفات المستندات للاستعادة…",
-        "friendSourceWarning": "جاءت هذه النسخة الاحتياطية من دفتر صديق. ستتم استعادتها كمجموعة عادية؛ ولن تُعاد علاقة الصداقة.",
+        "friendSourceWarning": "جاءت هذه النسخة الاحتياطية من دفتر حسابات مع صديق. ستُستعاد كدفتر حسابات مع صديق مع الطرف الذي تمت مطابقته.",
         "accountTitle": "استيراد نسخة احتياطية لحساب Spliit Cloud",
         "accountProgress": "المجموعة {current} من {total}: {name}",
         "continueToGroups": "المتابعة إلى استيراد المجموعات",
@@ -1740,8 +1740,8 @@
       "masterLabel": "تمكين ميزات الذكاء الاصطناعي"
     },
     "export": {
-      "groupsTitle": "المجموعات",
-      "selectedCount": "تم اختيار {selected} من أصل {total} مجموعة",
+      "groupsTitle": "المجموعات والأصدقاء",
+      "selectedCount": "تم تحديد {selected} من أصل {total} من دفاتر الحسابات",
       "loadingGroups": "جارٍ تحميل المجموعات…",
       "groupsError": "تعذّر تحميل المجموعات.",
       "retry": "حاول مرة أخرى",
@@ -1753,10 +1753,10 @@
         "hidden": "مجموعة مخفية"
       },
       "sectionTitle": "النسخ الاحتياطية والتصدير",
-      "sectionDescription": "أنشئ نسخة احتياطية محمولة من بيانات Spliit Cloud.",
+      "sectionDescription": "صدّر نسخة احتياطية قابلة للنقل من بيانات Spliit Cloud أو استعدها.",
       "sectionRowLabel": "نسخة احتياطية للحساب",
-      "sectionRowDescription": "اختر المجموعات والتفضيلات الاختيارية لتنزيل لمرة واحدة.",
-      "open": "إعداد التصدير",
+      "sectionRowDescription": "نزّل المجموعات والتفضيلات المحددة، أو استعد حزمة Spliit Cloud.",
+      "open": "تصدير",
       "title": "تصدير نسخة احتياطية للحساب",
       "description": "اختر ما تريد تضمينه في هذه النسخة الاحتياطية من Spliit Cloud. سيُستخدم اختيارك لهذا التنزيل فقط.",
       "contentTitle": "تضمين",
@@ -1775,7 +1775,8 @@
         "STARRED": "المثبتة",
         "ARCHIVED": "المؤرشفة",
         "HIDDEN": "المخفية"
-      }
+      },
+      "import": "استيراد"
     }
   },
   "Header": {

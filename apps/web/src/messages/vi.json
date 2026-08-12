@@ -657,7 +657,7 @@
         "confirmArchived": "Nhóm sẽ được lưu trữ",
         "executeImport": "Khôi phục nhóm",
         "stagingDocuments": "Đang chuẩn bị tệp tài liệu để khôi phục…",
-        "friendSourceWarning": "Bản sao lưu này đến từ sổ chi tiêu với một người bạn. Nó sẽ được khôi phục thành một nhóm thông thường; mối quan hệ bạn bè sẽ không được tạo lại.",
+        "friendSourceWarning": "Bản sao lưu này đến từ sổ chi tiêu với một người bạn. Sổ sẽ được khôi phục cùng người bạn đã được ghép.",
         "accountTitle": "Nhập bản sao lưu tài khoản Spliit Cloud",
         "accountProgress": "Nhóm {current}/{total}: {name}",
         "continueToGroups": "Tiếp tục đến phần nhập nhóm",
@@ -930,8 +930,8 @@
       "masterLabel": "Bật tính năng AI"
     },
     "export": {
-      "groupsTitle": "Nhóm",
-      "selectedCount": "Đã chọn {selected}/{total} nhóm",
+      "groupsTitle": "Nhóm và bạn bè",
+      "selectedCount": "Đã chọn {selected} trong tổng số {total} sổ chi tiêu",
       "loadingGroups": "Đang tải nhóm…",
       "groupsError": "Không thể tải nhóm.",
       "retry": "Thử lại",
@@ -943,10 +943,10 @@
         "hidden": "Nhóm đã ẩn"
       },
       "sectionTitle": "Sao lưu & xuất",
-      "sectionDescription": "Tạo bản sao lưu có thể chuyển đổi cho dữ liệu Spliit Cloud.",
+      "sectionDescription": "Xuất hoặc khôi phục bản sao lưu di động của dữ liệu Spliit Cloud.",
       "sectionRowLabel": "Bản sao lưu tài khoản",
-      "sectionRowDescription": "Chọn nhóm và tùy chọn bổ sung cho một lần tải xuống.",
-      "open": "Thiết lập xuất",
+      "sectionRowDescription": "Tải các nhóm và tùy chọn đã chọn xuống hoặc khôi phục một gói Spliit Cloud.",
+      "open": "Xuất",
       "title": "Xuất bản sao lưu tài khoản",
       "description": "Chọn nội dung đưa vào bản sao lưu Spliit Cloud này. Lựa chọn chỉ được dùng cho lần tải xuống này.",
       "contentTitle": "Bao gồm",
@@ -965,7 +965,8 @@
         "STARRED": "Đã gắn sao",
         "ARCHIVED": "Đã lưu trữ",
         "HIDDEN": "Đã ẩn"
-      }
+      },
+      "import": "Nhập"
     }
   },
   "CompleteProfile": {

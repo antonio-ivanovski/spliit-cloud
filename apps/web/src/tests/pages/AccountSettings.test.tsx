@@ -161,20 +161,18 @@ describe('AccountSettingsPage', () => {
   it('opens the lightweight account export configuration modal', async () => {
     const { user } = render(<AccountSettingsPage />)
 
-    await user.click(screen.getByRole('button', { name: /configure export/i }))
+    await user.click(screen.getByRole('button', { name: /^export$/i }))
 
     expect(
       screen.getByRole('dialog', { name: /export account backup/i }),
     ).toBeInTheDocument()
-    expect(screen.getByText(/groups selected/i)).toBeInTheDocument()
+    expect(screen.getByText(/ledgers selected/i)).toBeInTheDocument()
   })
 
   it('opens the Spliit Cloud importer from the backup section', async () => {
     const { user } = render(<AccountSettingsPage />)
 
-    await user.click(
-      screen.getByRole('button', { name: /open spliit cloud importer/i }),
-    )
+    await user.click(screen.getByRole('button', { name: /^import$/i }))
 
     expect(mocks.useRouterNavigate).toHaveBeenCalledWith({
       to: '/groups/import',
@@ -201,7 +199,7 @@ describe('AccountSettingsPage', () => {
     ])
     const { user } = render(<AccountSettingsPage />)
 
-    await user.click(screen.getByRole('button', { name: /configure export/i }))
+    await user.click(screen.getByRole('button', { name: /^export$/i }))
     await user.click(screen.getByRole('checkbox', { name: /^Alpha/ }))
 
     expect(screen.getByRole('checkbox', { name: /^Groups/ })).toHaveAttribute(

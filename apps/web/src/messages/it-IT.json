@@ -533,7 +533,7 @@
         "confirmArchived": "Il gruppo verrà archiviato",
         "executeImport": "Ripristina gruppo",
         "stagingDocuments": "Preparazione dei file per il ripristino…",
-        "friendSourceWarning": "Questo backup proviene da un gruppo tra amici. Verrà ripristinato come un gruppo normale; il rapporto di amicizia non verrà ricreato.",
+        "friendSourceWarning": "Questo backup proviene da un conto tra amici. Verrà ripristinato come conto tra amici con la persona associata.",
         "accountTitle": "Importa il backup dell’account Spliit Cloud",
         "accountProgress": "Gruppo {current} di {total}: {name}",
         "continueToGroups": "Continua con le importazioni dei gruppi",
@@ -2147,8 +2147,8 @@
       "masterLabel": "Abilita le funzioni IA"
     },
     "export": {
-      "groupsTitle": "Gruppi",
-      "selectedCount": "{selected} gruppi selezionati su {total}",
+      "groupsTitle": "Gruppi e amici",
+      "selectedCount": "Selezionati {selected} conti su {total}",
       "loadingGroups": "Caricamento dei gruppi…",
       "groupsError": "Impossibile caricare i gruppi.",
       "retry": "Riprova",
@@ -2160,10 +2160,10 @@
         "hidden": "Gruppo nascosto"
       },
       "sectionTitle": "Backup ed esportazione",
-      "sectionDescription": "Crea un backup portatile dei tuoi dati Spliit Cloud.",
+      "sectionDescription": "Esporta o ripristina un backup portatile dei tuoi dati Spliit Cloud.",
       "sectionRowLabel": "Backup dell’account",
-      "sectionRowDescription": "Scegli i gruppi e le preferenze opzionali per un unico download.",
-      "open": "Configura l’esportazione",
+      "sectionRowDescription": "Scarica i gruppi e le preferenze selezionati oppure ripristina un pacchetto Spliit Cloud.",
+      "open": "Esporta",
       "title": "Esporta il backup dell’account",
       "description": "Scegli cosa includere in questo backup Spliit Cloud. La selezione verrà usata solo per questo download.",
       "contentTitle": "Includi",
@@ -2182,7 +2182,8 @@
         "STARRED": "Speciali",
         "ARCHIVED": "Archiviati",
         "HIDDEN": "Nascosti"
-      }
+      },
+      "import": "Importa"
     }
   },
   "Activities": {
