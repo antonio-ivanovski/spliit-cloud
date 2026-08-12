@@ -34,16 +34,18 @@ type MascotContextValue = {
   registerActions: (owner: string, actions: MascotAction[]) => () => void
   setBusy: (owner: string, busy: boolean) => void
   react: (reaction: MascotReaction, duration?: number) => void
+  clearThinking: () => void
 }
 
 const MascotContext = createContext<MascotContextValue | null>(null)
 
 const DEFAULT_REACTION_DURATION: Record<
-  Exclude<MascotReaction, 'idle' | 'thinking'>,
+  Exclude<MascotReaction, 'idle'>,
   number
 > = {
   success: 2_300,
   failure: 2_600,
+  thinking: 20_000,
 }
 
 export function MascotProvider({ children }: PropsWithChildren) {
@@ -51,6 +53,7 @@ export function MascotProvider({ children }: PropsWithChildren) {
   const busyOwners = useRef(new Set<string>())
   const registrationOrder = useRef(0)
   const reactionTimer = useRef<number | null>(null)
+  const reactionRef = useRef<MascotReaction>('idle')
   const [actions, setActions] = useState<MascotAction[]>([])
   const [busy, setBusyState] = useState(false)
   const [reaction, setReaction] = useState<MascotReaction>('idle')
@@ -90,15 +93,32 @@ export function MascotProvider({ children }: PropsWithChildren) {
 
   const react = useCallback(
     (nextReaction: MascotReaction, duration?: number) => {
+      if (
+        nextReaction === 'idle' &&
+        reactionRef.current === 'idle' &&
+        reactionTimer.current === null
+      ) {
+        return
+      }
+      if (
+        nextReaction === 'idle' &&
+        (reactionRef.current === 'success' ||
+          reactionRef.current === 'failure') &&
+        reactionTimer.current !== null
+      ) {
+        return
+      }
       if (reactionTimer.current !== null) {
         window.clearTimeout(reactionTimer.current)
         reactionTimer.current = null
       }
+      reactionRef.current = nextReaction
       setReaction(nextReaction)
       setReactionKey((key) => key + 1)
 
-      if (nextReaction === 'success' || nextReaction === 'failure') {
+      if (nextReaction !== 'idle') {
         reactionTimer.current = window.setTimeout(() => {
+          reactionRef.current = 'idle'
           setReaction('idle')
           setReactionKey((key) => key + 1)
           reactionTimer.current = null
@@ -107,6 +127,16 @@ export function MascotProvider({ children }: PropsWithChildren) {
     },
     [],
   )
+
+  const clearThinking = useCallback(() => {
+    if (reactionRef.current !== 'thinking') return
+    react('idle')
+  }, [react])
+
+  useEffect(() => {
+    if (busy || reaction !== 'thinking') return
+    react('idle')
+  }, [busy, react, reaction])
 
   useEffect(
     () => () => {
@@ -126,8 +156,18 @@ export function MascotProvider({ children }: PropsWithChildren) {
       registerActions,
       setBusy,
       react,
+      clearThinking,
     }),
-    [actions, busy, react, reaction, reactionKey, registerActions, setBusy],
+    [
+      actions,
+      busy,
+      clearThinking,
+      react,
+      reaction,
+      reactionKey,
+      registerActions,
+      setBusy,
+    ],
   )
 
   return (
@@ -165,8 +205,9 @@ export function useMascotController() {
   return useMemo(
     () => ({
       react: mascot?.react ?? (() => undefined),
+      clearThinking: mascot?.clearThinking ?? (() => undefined),
     }),
-    [mascot?.react],
+    [mascot?.clearThinking, mascot?.react],
   )
 }
 

@@ -2118,7 +2118,7 @@
       "chooseTheme": "Valitse",
       "saving": "Tallennetaan…",
       "mascot": "Maskotti",
-      "mascotHelp": "Valitse halutessasi kumppani, joka tarjoaa tilanteeseen sopivia pikatoimintoja ja reagoi kulujen käsittelyyn.",
+      "mascotHelp": "Valitse kumppani, joka tarjoaa tilanteeseen sopivia pikatoimintoja ja reagoi kulujen käsittelyyn.",
       "chooseMascot": "Valitse maskotti",
       "mascotOptions": {
         "off": "Pois käytöstä",
@@ -2899,6 +2899,10 @@
   "Mascot": {
     "openActions": "Avaa toiminnot Billin kanssa",
     "closeActions": "Sulje Billin toiminnot",
-    "greetBill": "Tervehdi Billiä"
+    "greetBill": "Tervehdi Billiä",
+    "settingsAction": "Maskotin asetukset",
+    "noActionMessage": "En voi juuri nyt auttaa tässä.",
+    "noActionSettings": "Maskotin asetukset",
+    "landingGreeting": "Hei — autan jakamaan kuluja, kun kirjaudut sisään."
   }
 }

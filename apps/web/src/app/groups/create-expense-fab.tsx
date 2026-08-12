@@ -107,7 +107,7 @@ export function CreateExpenseFab({
             } satisfies MascotAction,
           ]
         : []),
-        {
+      {
         id: 'add-expense',
         label: t('addExpenseAction'),
         icon: Plus,
@@ -157,155 +157,159 @@ export function CreateExpenseFab({
     </>
   )
 
-  if (mascotEnabled) return expenseFlows
+  if (isExpenseFormRoute || isBudgetsRoute) {
+    return mascotEnabled ? expenseFlows : null
+  }
 
-  if (isExpenseFormRoute || isBudgetsRoute) return null
-
-  return (
-    <>
-      {!actionFlowActive && (
-        <div className="hidden items-center sm:flex">
-          <TooltipProvider delay={300} closeDelay={100}>
-            <div
-              data-testid="expense-action-control"
-              className="isolate inline-flex h-11 items-stretch rounded-lg border border-border/70 bg-background/90 shadow-xs"
-            >
-              <Button
-                type="button"
-                variant="default"
-                className="h-10 gap-2 self-center rounded-s-md rounded-e-none px-3.5 shadow-none"
-                onClick={goToManualExpense}
-              >
-                <Plus className="size-4" />
-                {t('addExpenseAction')}
-              </Button>
-              {hasAiActions && (
-                <div className="flex items-stretch border-s border-border/70">
-                  {enableVoiceExpense && (
-                    <Tooltip>
-                      <TooltipTrigger
-                        render={
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            className={cn(
-                              'size-10 rounded-none text-muted-foreground hover:bg-muted hover:text-foreground',
-                              !enableReceiptExtract && 'rounded-e-md',
-                            )}
-                            onClick={openVoice}
-                            aria-label={t('voiceAction')}
-                          />
-                        }
-                      >
-                        <Mic className="size-[18px]" />
-                      </TooltipTrigger>
-                      <TooltipContent>{t('voiceAction')}</TooltipContent>
-                    </Tooltip>
-                  )}
-                  {enableReceiptExtract && (
-                    <Tooltip>
-                      <TooltipTrigger
-                        render={
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            className="size-10 rounded-s-none rounded-e-md text-muted-foreground hover:bg-muted hover:text-foreground"
-                            onClick={openReceipt}
-                            aria-label={t('receiptAction')}
-                          />
-                        }
-                      >
-                        <Camera className="size-[18px]" />
-                      </TooltipTrigger>
-                      <TooltipContent>{t('receiptAction')}</TooltipContent>
-                    </Tooltip>
-                  )}
-                </div>
-              )}
-            </div>
-          </TooltipProvider>
-        </div>
-      )}
-
-      {!actionFlowActive &&
-        (hasAiActions ? (
-          <SpeedDial
-            open={speedDialOpen}
-            onOpenChange={setSpeedDialOpen}
-            className={cn(
-              'fixed end-6 z-40 sm:hidden',
-              'bottom-[calc(5.5rem+env(safe-area-inset-bottom))]',
-            )}
-          >
-            <SpeedDialContent>
-              {enableReceiptExtract && (
-                <SpeedDialItem>
-                  <SpeedDialLabel>{t('receiptAction')}</SpeedDialLabel>
-                  <SpeedDialAction
-                    aria-label={t('receiptAction')}
-                    onClick={openReceipt}
-                    className="flex size-11 items-center justify-center rounded-full border bg-background text-foreground shadow-lg transition-transform hover:scale-105 hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
-                  >
-                    <Camera className="size-5" />
-                  </SpeedDialAction>
-                </SpeedDialItem>
-              )}
-              {enableVoiceExpense && (
-                <SpeedDialItem>
-                  <SpeedDialLabel>{t('voiceAction')}</SpeedDialLabel>
-                  <SpeedDialAction
-                    aria-label={t('voiceAction')}
-                    onClick={openVoice}
-                    className="flex size-11 items-center justify-center rounded-full border bg-background text-foreground shadow-lg transition-transform hover:scale-105 hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
-                  >
-                    <Mic className="size-5" />
-                  </SpeedDialAction>
-                </SpeedDialItem>
-              )}
-              <SpeedDialItem>
-                <SpeedDialLabel>{t('addExpenseAction')}</SpeedDialLabel>
-                <SpeedDialAction
-                  aria-label={t('addExpenseAction')}
-                  onClick={goToManualExpense}
-                  className="flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform hover:scale-105 hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  <Plus className="size-5" />
-                </SpeedDialAction>
-              </SpeedDialItem>
-            </SpeedDialContent>
-            <SpeedDialTrigger
-              aria-label={speedDialOpen ? t('closeActions') : t('openActions')}
-              className={cn(
-                'flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-xl transition-transform duration-200 hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring',
-                speedDialOpen && 'rotate-90',
-              )}
-            >
-              {speedDialOpen ? (
-                <X className="size-6" />
-              ) : (
-                <Plus className="size-6" />
-              )}
-            </SpeedDialTrigger>
-          </SpeedDial>
-        ) : (
-          // No AI features available for the current user: collapse the mobile
-          // FAB into a single primary button so taps don't go through a
-          // one-action speed dial.
+  const desktopControl = !actionFlowActive && (
+    <div className="hidden items-center sm:flex">
+      <TooltipProvider delay={300} closeDelay={100}>
+        <div
+          data-testid="expense-action-control"
+          className="isolate inline-flex h-11 items-stretch rounded-lg border border-border/70 bg-background/90 shadow-xs"
+        >
           <Button
             type="button"
             variant="default"
-            aria-label={t('addExpenseAction')}
+            className="h-10 gap-2 self-center rounded-s-md rounded-e-none px-3.5 shadow-none"
             onClick={goToManualExpense}
-            data-testid="create-expense-fab-mobile"
-            className="fixed end-6 z-40 size-14 rounded-full bg-primary p-0 text-primary-foreground shadow-xl hover:bg-primary/90 sm:hidden"
-            style={{ bottom: 'calc(5.5rem + env(safe-area-inset-bottom))' }}
           >
-            <Plus className="size-6" />
+            <Plus className="size-4" />
+            {t('addExpenseAction')}
           </Button>
-        ))}
+          {hasAiActions && (
+            <div className="flex items-stretch border-s border-border/70">
+              {enableVoiceExpense && (
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className={cn(
+                          'size-10 rounded-none text-muted-foreground hover:bg-muted hover:text-foreground',
+                          !enableReceiptExtract && 'rounded-e-md',
+                        )}
+                        onClick={openVoice}
+                        aria-label={t('voiceAction')}
+                      />
+                    }
+                  >
+                    <Mic className="size-[18px]" />
+                  </TooltipTrigger>
+                  <TooltipContent>{t('voiceAction')}</TooltipContent>
+                </Tooltip>
+              )}
+              {enableReceiptExtract && (
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="size-10 rounded-s-none rounded-e-md text-muted-foreground hover:bg-muted hover:text-foreground"
+                        onClick={openReceipt}
+                        aria-label={t('receiptAction')}
+                      />
+                    }
+                  >
+                    <Camera className="size-[18px]" />
+                  </TooltipTrigger>
+                  <TooltipContent>{t('receiptAction')}</TooltipContent>
+                </Tooltip>
+              )}
+            </div>
+          )}
+        </div>
+      </TooltipProvider>
+    </div>
+  )
 
+  const mobileFab =
+    !mascotEnabled &&
+    !actionFlowActive &&
+    (hasAiActions ? (
+      <SpeedDial
+        open={speedDialOpen}
+        onOpenChange={setSpeedDialOpen}
+        className={cn(
+          'fixed end-6 z-40 sm:hidden',
+          'bottom-[calc(5.5rem+env(safe-area-inset-bottom))]',
+        )}
+      >
+        <SpeedDialContent>
+          {enableReceiptExtract && (
+            <SpeedDialItem>
+              <SpeedDialLabel>{t('receiptAction')}</SpeedDialLabel>
+              <SpeedDialAction
+                aria-label={t('receiptAction')}
+                onClick={openReceipt}
+                className="flex size-11 items-center justify-center rounded-full border bg-background text-foreground shadow-lg transition-transform hover:scale-105 hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <Camera className="size-5" />
+              </SpeedDialAction>
+            </SpeedDialItem>
+          )}
+          {enableVoiceExpense && (
+            <SpeedDialItem>
+              <SpeedDialLabel>{t('voiceAction')}</SpeedDialLabel>
+              <SpeedDialAction
+                aria-label={t('voiceAction')}
+                onClick={openVoice}
+                className="flex size-11 items-center justify-center rounded-full border bg-background text-foreground shadow-lg transition-transform hover:scale-105 hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <Mic className="size-5" />
+              </SpeedDialAction>
+            </SpeedDialItem>
+          )}
+          <SpeedDialItem>
+            <SpeedDialLabel>{t('addExpenseAction')}</SpeedDialLabel>
+            <SpeedDialAction
+              aria-label={t('addExpenseAction')}
+              onClick={goToManualExpense}
+              className="flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform hover:scale-105 hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <Plus className="size-5" />
+            </SpeedDialAction>
+          </SpeedDialItem>
+        </SpeedDialContent>
+        <SpeedDialTrigger
+          aria-label={speedDialOpen ? t('closeActions') : t('openActions')}
+          className={cn(
+            'flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-xl transition-transform duration-200 hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring',
+            speedDialOpen && 'rotate-90',
+          )}
+        >
+          {speedDialOpen ? (
+            <X className="size-6" />
+          ) : (
+            <Plus className="size-6" />
+          )}
+        </SpeedDialTrigger>
+      </SpeedDial>
+    ) : (
+      // No AI features available for the current user: collapse the mobile
+      // FAB into a single primary button so taps don't go through a
+      // one-action speed dial.
+      <Button
+        type="button"
+        variant="default"
+        aria-label={t('addExpenseAction')}
+        onClick={goToManualExpense}
+        data-testid="create-expense-fab-mobile"
+        className="fixed end-6 z-40 size-14 rounded-full bg-primary p-0 text-primary-foreground shadow-xl hover:bg-primary/90 sm:hidden"
+        style={{ bottom: 'calc(5.5rem + env(safe-area-inset-bottom))' }}
+      >
+        <Plus className="size-6" />
+      </Button>
+    ))
+
+  return (
+    <>
+      {desktopControl}
+      {mobileFab}
       {expenseFlows}
     </>
   )

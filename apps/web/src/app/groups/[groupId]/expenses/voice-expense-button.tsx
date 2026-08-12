@@ -154,8 +154,9 @@ export function VoiceExpenseButton({
       requestIdRef.current += 1
       clearTimer()
       cleanupRecorder()
+      mascot.clearThinking()
     }
-  }, [])
+  }, [mascot])
 
   const processAudio = async (dataUrl: string) => {
     if (!currentGroup) return
@@ -254,7 +255,7 @@ export function VoiceExpenseButton({
     setProcessing(false)
     setResult(null)
     setPreview(null)
-    mascot.react('idle')
+    mascot.clearThinking()
     setOpen(false)
     setFlowActive(false)
   }

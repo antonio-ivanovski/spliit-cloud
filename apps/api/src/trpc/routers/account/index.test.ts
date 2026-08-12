@@ -108,7 +108,7 @@ describe('accountRouter account preferences', () => {
         timeZone: null,
         locale: null,
         theme: null,
-        mascot: 'off',
+        mascot: 'bill',
         notificationsEnabled: true,
         aiFeaturesEnabled: true,
         aiCategoryExtractEnabled: true,

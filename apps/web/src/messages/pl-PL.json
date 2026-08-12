@@ -2136,7 +2136,7 @@
       "chooseTheme": "Wybierz",
       "saving": "Zapisywanie preferencji…",
       "mascot": "Maskotka",
-      "mascotHelp": "Wybierz opcjonalnego towarzysza, który oferuje skróty zależne od kontekstu i reaguje na procesy związane z wydatkami.",
+      "mascotHelp": "Wybierz towarzysza, który oferuje skróty zależne od kontekstu i reaguje na procesy związane z wydatkami.",
       "chooseMascot": "Wybierz maskotkę",
       "mascotOptions": {
         "off": "Wyłączona",
@@ -2933,6 +2933,10 @@
   "Mascot": {
     "openActions": "Otwórz akcje z Billem",
     "closeActions": "Zamknij akcje Billa",
-    "greetBill": "Przywitaj się z Billem"
+    "greetBill": "Przywitaj się z Billem",
+    "settingsAction": "Ustawienia maskotki",
+    "noActionMessage": "Na razie nie mogę tu w niczym pomóc.",
+    "noActionSettings": "Ustawienia maskotki",
+    "landingGreeting": "Cześć — pomogę Ci podzielić wydatki po zalogowaniu."
   }
 }

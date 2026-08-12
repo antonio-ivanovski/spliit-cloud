@@ -2127,7 +2127,7 @@
       "chooseTheme": "Elegir",
       "saving": "Guardando preferencias…",
       "mascot": "Mascota",
-      "mascotHelp": "Elige un acompañante opcional que ofrece atajos contextuales y reacciona a tus flujos de gastos.",
+      "mascotHelp": "Elige un acompañante que ofrece atajos contextuales y reacciona a tus flujos de gastos.",
       "chooseMascot": "Elige una mascota",
       "mascotOptions": {
         "off": "Desactivada",
@@ -2917,6 +2917,10 @@
   "Mascot": {
     "openActions": "Abrir acciones con Bill",
     "closeActions": "Cerrar las acciones de Bill",
-    "greetBill": "Saludar a Bill"
+    "greetBill": "Saludar a Bill",
+    "settingsAction": "Configuración de la mascota",
+    "noActionMessage": "Ahora mismo no puedo ayudarte con nada aquí.",
+    "noActionSettings": "Configuración de la mascota",
+    "landingGreeting": "Hola — te ayudo a dividir los gastos cuando inicies sesión."
   }
 }

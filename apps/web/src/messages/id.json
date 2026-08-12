@@ -2111,7 +2111,7 @@
       "chooseTheme": "Pilih",
       "saving": "Menyimpan preferensi…",
       "mascot": "Maskot",
-      "mascotHelp": "Pilih pendamping opsional yang menawarkan pintasan sesuai konteks dan bereaksi terhadap alur pengeluaran Anda.",
+      "mascotHelp": "Pilih pendamping yang menawarkan pintasan sesuai konteks dan bereaksi terhadap alur pengeluaran Anda.",
       "chooseMascot": "Pilih maskot",
       "mascotOptions": {
         "off": "Nonaktif",
@@ -2883,6 +2883,10 @@
   "Mascot": {
     "openActions": "Buka tindakan bersama Bill",
     "closeActions": "Tutup tindakan Bill",
-    "greetBill": "Sapa Bill"
+    "greetBill": "Sapa Bill",
+    "settingsAction": "Pengaturan maskot",
+    "noActionMessage": "Tidak ada yang bisa saya bantu di sini saat ini.",
+    "noActionSettings": "Pengaturan maskot",
+    "landingGreeting": "Hai — saya membantu membagi pengeluaran setelah Anda masuk."
   }
 }

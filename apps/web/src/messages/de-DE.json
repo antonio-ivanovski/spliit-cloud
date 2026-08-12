@@ -2150,7 +2150,7 @@
       "chooseTheme": "Auswählen",
       "saving": "Speichern…",
       "mascot": "Maskottchen",
-      "mascotHelp": "Wähle einen optionalen Begleiter, der kontextbezogene Schnellaktionen anbietet und auf deine Ausgabenabläufe reagiert.",
+      "mascotHelp": "Wähle einen Begleiter, der kontextbezogene Schnellaktionen anbietet und auf deine Ausgabenabläufe reagiert.",
       "chooseMascot": "Maskottchen auswählen",
       "mascotOptions": {
         "off": "Aus",
@@ -2967,6 +2967,10 @@
   "Mascot": {
     "openActions": "Aktionen mit Bill öffnen",
     "closeActions": "Bills Aktionen schließen",
-    "greetBill": "Bill begrüßen"
+    "greetBill": "Bill begrüßen",
+    "settingsAction": "Maskottchen-Einstellungen",
+    "noActionMessage": "Hier kann ich dir gerade nicht helfen.",
+    "noActionSettings": "Maskottchen-Einstellungen",
+    "landingGreeting": "Hallo — ich helfe dir, Ausgaben aufzuteilen, sobald du dich anmeldest."
   }
 }

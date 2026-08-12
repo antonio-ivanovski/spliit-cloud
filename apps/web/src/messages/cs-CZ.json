@@ -2136,7 +2136,7 @@
       "chooseTheme": "Vybrat",
       "saving": "Ukládání předvoleb…",
       "mascot": "Maskot",
-      "mascotHelp": "Vyberte si volitelného společníka, který nabízí kontextové zkratky a reaguje na vaše postupy s výdaji.",
+      "mascotHelp": "Vyberte si společníka, který nabízí kontextové zkratky a reaguje na vaše postupy s výdaji.",
       "chooseMascot": "Vybrat maskota",
       "mascotOptions": {
         "off": "Vypnuto",
@@ -2933,6 +2933,10 @@
   "Mascot": {
     "openActions": "Otevřít akce s Billem",
     "closeActions": "Zavřít Billovy akce",
-    "greetBill": "Pozdravit Billa"
+    "greetBill": "Pozdravit Billa",
+    "settingsAction": "Nastavení maskota",
+    "noActionMessage": "Teď tady s ničím nepomůžu.",
+    "noActionSettings": "Nastavení maskota",
+    "landingGreeting": "Ahoj — pomohu vám rozdělit výdaje, jakmile se přihlásíte."
   }
 }

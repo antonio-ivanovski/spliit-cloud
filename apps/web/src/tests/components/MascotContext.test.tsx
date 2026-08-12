@@ -1,9 +1,11 @@
 import { Plus } from 'lucide-react'
+import { useState } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import {
   MascotProvider,
   useMascotActions,
+  useMascotBusy,
   useMascotController,
   useMascotState,
   type MascotAction,
@@ -28,6 +30,15 @@ function StateProbe() {
       <button type="button" onClick={() => controller.react('success', 500)}>
         Celebrate
       </button>
+      <button type="button" onClick={() => controller.react('failure', 500)}>
+        Fail
+      </button>
+      <button type="button" onClick={() => controller.react('thinking')}>
+        Think
+      </button>
+      <button type="button" onClick={() => controller.react('idle')}>
+        Idle
+      </button>
     </>
   )
 }
@@ -35,6 +46,41 @@ function StateProbe() {
 function Registration() {
   useMascotActions('test', actions)
   return null
+}
+
+function ThinkingProbe({ busy }: { busy: boolean }) {
+  const mascot = useMascotState()
+  const controller = useMascotController()
+  useMascotBusy('flow', busy)
+  return (
+    <>
+      <output data-testid="reaction">{mascot?.reaction}</output>
+      <button type="button" onClick={() => controller.react('thinking')}>
+        Think
+      </button>
+      <button type="button" onClick={() => controller.react('idle')}>
+        Idle
+      </button>
+    </>
+  )
+}
+
+function BusyToggle() {
+  const [busy, setBusy] = useState(true)
+  const mascot = useMascotState()
+  const controller = useMascotController()
+  useMascotBusy('flow', busy)
+  return (
+    <>
+      <output data-testid="reaction">{mascot?.reaction}</output>
+      <button type="button" onClick={() => controller.react('thinking')}>
+        Think
+      </button>
+      <button type="button" onClick={() => setBusy(false)}>
+        Clear busy
+      </button>
+    </>
+  )
 }
 
 describe('MascotProvider', () => {
@@ -72,5 +118,86 @@ describe('MascotProvider', () => {
       </MascotProvider>,
     )
     expect(screen.getByTestId('actions')).toHaveTextContent('0')
+  })
+
+  it('returns thinking to idle after the safety timeout', () => {
+    vi.useFakeTimers()
+    render(
+      <MascotProvider>
+        <ThinkingProbe busy />
+      </MascotProvider>,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Think' }))
+    expect(screen.getByTestId('reaction')).toHaveTextContent('thinking')
+
+    act(() => {
+      vi.advanceTimersByTime(20_000)
+    })
+    expect(screen.getByTestId('reaction')).toHaveTextContent('idle')
+  })
+
+  it('clears thinking when the last busy owner drops', () => {
+    render(
+      <MascotProvider>
+        <BusyToggle />
+      </MascotProvider>,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Think' }))
+    expect(screen.getByTestId('reaction')).toHaveTextContent('thinking')
+
+    fireEvent.click(screen.getByRole('button', { name: 'Clear busy' }))
+    expect(screen.getByTestId('reaction')).toHaveTextContent('idle')
+  })
+
+  it('does not let idle cancel an in-flight success reaction', () => {
+    vi.useFakeTimers()
+    render(
+      <MascotProvider>
+        <StateProbe />
+      </MascotProvider>,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Celebrate' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Idle' }))
+    expect(screen.getByTestId('reaction')).toHaveTextContent('success')
+
+    act(() => {
+      vi.advanceTimersByTime(500)
+    })
+    expect(screen.getByTestId('reaction')).toHaveTextContent('idle')
+  })
+
+  it('does not let idle cancel an in-flight failure reaction', () => {
+    vi.useFakeTimers()
+    render(
+      <MascotProvider>
+        <StateProbe />
+      </MascotProvider>,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Fail' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Idle' }))
+    expect(screen.getByTestId('reaction')).toHaveTextContent('failure')
+
+    act(() => {
+      vi.advanceTimersByTime(500)
+    })
+    expect(screen.getByTestId('reaction')).toHaveTextContent('idle')
+  })
+
+  it('still lets idle clear thinking', () => {
+    render(
+      <MascotProvider>
+        <ThinkingProbe busy />
+      </MascotProvider>,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Think' }))
+    expect(screen.getByTestId('reaction')).toHaveTextContent('thinking')
+
+    fireEvent.click(screen.getByRole('button', { name: 'Idle' }))
+    expect(screen.getByTestId('reaction')).toHaveTextContent('idle')
   })
 })

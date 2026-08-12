@@ -2127,7 +2127,7 @@
       "chooseTheme": "Scegli",
       "saving": "Salvataggio delle preferenze…",
       "mascot": "Mascotte",
-      "mascotHelp": "Scegli un compagno opzionale che offre scorciatoie contestuali e reagisce ai flussi delle tue spese.",
+      "mascotHelp": "Scegli un compagno che offre scorciatoie contestuali e reagisce ai flussi delle tue spese.",
       "chooseMascot": "Scegli una mascotte",
       "mascotOptions": {
         "off": "Disattivata",
@@ -2917,6 +2917,10 @@
   "Mascot": {
     "openActions": "Apri le azioni con Bill",
     "closeActions": "Chiudi le azioni di Bill",
-    "greetBill": "Saluta Bill"
+    "greetBill": "Saluta Bill",
+    "settingsAction": "Impostazioni mascotte",
+    "noActionMessage": "Al momento non c'è niente in cui possa aiutarti qui.",
+    "noActionSettings": "Impostazioni mascotte",
+    "landingGreeting": "Ciao — ti aiuto a dividere le spese dopo l'accesso."
   }
 }

@@ -3,6 +3,7 @@ import { ArrowLeft } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { GroupForm } from '@/components/group-form'
+import { useMascotController } from '@/components/mascot/mascot-context'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
@@ -13,10 +14,15 @@ export const CreateGroup = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const { t: tCommon } = useTranslation(undefined, { keyPrefix: 'Header' })
   const utils = trpc.useUtils()
+  const mascot = useMascotController()
   const { mutateAsync: createGroup } = trpc.groups.create.useMutation({
     onSuccess: () => {
+      mascot.react('success')
       void invalidateAccountGroupLists(utils)
       void utils.invitations.listForAccount.invalidate()
+    },
+    onError: () => {
+      mascot.react('failure')
     },
   })
   const navigate = useNavigate()

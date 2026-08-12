@@ -61,7 +61,7 @@ const emptyAccountPreference = {
   timeZone: null,
   locale: null,
   theme: null,
-  mascot: 'off',
+  mascot: 'bill',
   notificationsEnabled: null,
   aiFeaturesEnabled: null,
   aiCategoryExtractEnabled: null,
@@ -77,7 +77,7 @@ function parseAccountPreference(preferences: unknown) {
   // web sees a consistent shape and the gating hooks can compare directly.
   return {
     ...parsed,
-    mascot: parsed.mascot ?? 'off',
+    mascot: parsed.mascot ?? 'bill',
     notificationsEnabled: parsed.notificationsEnabled ?? true,
     aiFeaturesEnabled: parsed.aiFeaturesEnabled ?? true,
     aiCategoryExtractEnabled: parsed.aiCategoryExtractEnabled ?? true,

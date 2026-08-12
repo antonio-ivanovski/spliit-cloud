@@ -45,8 +45,8 @@ export const accountPreferenceSchema = z.object({
   timeZone: timeZoneSchema.nullable(),
   locale: accountLocaleSchema.nullable(),
   theme: accountThemeSchema.nullable(),
-  // Mascots are deliberately opt-in. Older exports do not contain this field;
-  // API and client boundaries normalize a missing value to off.
+  // Bill is on by default. Older exports do not contain this field; API and
+  // client boundaries normalize a missing value to bill.
   mascot: accountMascotSchema.optional(),
   notificationsEnabled: z.boolean().nullish(),
   aiFeaturesEnabled: z.boolean().nullish(),

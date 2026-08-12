@@ -26,7 +26,7 @@ function emptyAccountPreference() {
     timeZone: null,
     locale: null,
     theme: null,
-    mascot: 'off' as const,
+    mascot: 'bill' as const,
     notificationsEnabled: null,
     aiFeaturesEnabled: null,
     aiCategoryExtractEnabled: null,

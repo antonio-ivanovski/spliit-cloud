@@ -224,7 +224,7 @@
       "chooseTheme": "choose your vibe",
       "saving": "saving preference vibes…",
       "mascot": "mascot vibes",
-      "mascotHelp": "pick an optional sidekick for contextual shortcuts and expense-flow reactions.",
+      "mascotHelp": "pick a sidekick for contextual shortcuts and expense-flow reactions.",
       "chooseMascot": "pick your mascot",
       "mascotOptions": {
         "off": "no mascot",
@@ -2891,6 +2891,10 @@
   "Mascot": {
     "openActions": "open Bill's action menu",
     "closeActions": "close Bill's action menu",
-    "greetBill": "give Bill a lil hello"
+    "greetBill": "give Bill a lil hello",
+    "settingsAction": "mascot prefs",
+    "noActionMessage": "can't help with anything here rn.",
+    "noActionSettings": "mascot prefs",
+    "landingGreeting": "hey — i help split expenses once you're signed in."
   }
 }

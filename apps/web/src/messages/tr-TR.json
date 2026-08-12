@@ -2118,7 +2118,7 @@
       "chooseTheme": "Seçin",
       "saving": "Tercihler kaydediliyor…",
       "mascot": "Maskot",
-      "mascotHelp": "Bağlama uygun kısayollar sunan ve harcama akışlarınıza tepki veren isteğe bağlı bir yol arkadaşı seçin.",
+      "mascotHelp": "Bağlama uygun kısayollar sunan ve harcama akışlarınıza tepki veren bir yol arkadaşı seçin.",
       "chooseMascot": "Bir maskot seç",
       "mascotOptions": {
         "off": "Kapalı",
@@ -2899,6 +2899,10 @@
   "Mascot": {
     "openActions": "Bill ile eylemleri aç",
     "closeActions": "Bill'in eylemlerini kapat",
-    "greetBill": "Bill'e merhaba de"
+    "greetBill": "Bill'e merhaba de",
+    "settingsAction": "Maskot ayarları",
+    "noActionMessage": "Şu anda burada yardımcı olabileceğim bir şey yok.",
+    "noActionSettings": "Maskot ayarları",
+    "landingGreeting": "Merhaba — oturum açtıktan sonra harcamaları bölmene yardımcı olurum."
   }
 }

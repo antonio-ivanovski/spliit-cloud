@@ -211,7 +211,7 @@ describe('CreateExpenseFab', () => {
       </SyncedAccountPreferencesProvider>,
     )
 
-    expect(screen.queryByTestId('expense-action-control')).toBeNull()
+    expect(screen.queryByTestId('expense-action-control')).toBeInTheDocument()
     expect(
       screen.queryByRole('button', { name: 'Open expense actions' }),
     ).toBeNull()

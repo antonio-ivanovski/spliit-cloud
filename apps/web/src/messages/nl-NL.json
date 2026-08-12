@@ -2118,7 +2118,7 @@
       "chooseTheme": "Kiezen",
       "saving": "Opslaan…",
       "mascot": "Mascotte",
-      "mascotHelp": "Kies een optioneel maatje dat contextuele snelacties biedt en op je uitgavenstromen reageert.",
+      "mascotHelp": "Kies een maatje dat contextuele snelacties biedt en op je uitgavenstromen reageert.",
       "chooseMascot": "Kies een mascotte",
       "mascotOptions": {
         "off": "Uit",
@@ -2899,6 +2899,10 @@
   "Mascot": {
     "openActions": "Acties met Bill openen",
     "closeActions": "Bills acties sluiten",
-    "greetBill": "Bill begroeten"
+    "greetBill": "Bill begroeten",
+    "settingsAction": "Mascotte-instellingen",
+    "noActionMessage": "Hier kan ik je nu even niet mee helpen.",
+    "noActionSettings": "Mascotte-instellingen",
+    "landingGreeting": "Hoi — ik help je uitgaven te splitsen zodra je inlogt."
   }
 }

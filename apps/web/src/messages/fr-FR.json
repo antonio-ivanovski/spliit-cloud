@@ -2127,7 +2127,7 @@
       "chooseTheme": "Choisir",
       "saving": "Enregistrement des préférences…",
       "mascot": "Mascotte",
-      "mascotHelp": "Choisissez un compagnon facultatif qui propose des raccourcis contextuels et réagit à vos parcours de dépenses.",
+      "mascotHelp": "Choisissez un compagnon qui propose des raccourcis contextuels et réagit à vos flux de dépenses.",
       "chooseMascot": "Choisir une mascotte",
       "mascotOptions": {
         "off": "Désactivée",
@@ -2917,6 +2917,10 @@
   "Mascot": {
     "openActions": "Ouvrir les actions avec Bill",
     "closeActions": "Fermer les actions de Bill",
-    "greetBill": "Dire bonjour à Bill"
+    "greetBill": "Dire bonjour à Bill",
+    "settingsAction": "Paramètres de la mascotte",
+    "noActionMessage": "Je ne peux rien faire pour vous ici pour le moment.",
+    "noActionSettings": "Paramètres de la mascotte",
+    "landingGreeting": "Bonjour — je vous aide à partager les dépenses une fois connecté."
   }
 }

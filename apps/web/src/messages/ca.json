@@ -2127,7 +2127,7 @@
       "chooseTheme": "Tria",
       "saving": "S'estan desant les preferències…",
       "mascot": "Mascota",
-      "mascotHelp": "Tria un acompanyant opcional que ofereix dreceres contextuals i reacciona als fluxos de despeses.",
+      "mascotHelp": "Tria un acompanyant que ofereix dreceres contextuals i reacciona als teus fluxos de despeses.",
       "chooseMascot": "Tria una mascota",
       "mascotOptions": {
         "off": "Desactivada",
@@ -2917,6 +2917,10 @@
   "Mascot": {
     "openActions": "Obre les accions amb en Bill",
     "closeActions": "Tanca les accions d’en Bill",
-    "greetBill": "Saluda en Bill"
+    "greetBill": "Saluda en Bill",
+    "settingsAction": "Configuració de la mascota",
+    "noActionMessage": "Ara mateix no puc ajudar-te amb res aquí.",
+    "noActionSettings": "Configuració de la mascota",
+    "landingGreeting": "Hola — t’ajudo a repartir les despeses un cop iniciïs la sessió."
   }
 }

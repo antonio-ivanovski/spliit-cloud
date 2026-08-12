@@ -910,7 +910,7 @@
       "chooseTheme": "Chọn",
       "saving": "Đang lưu tùy chọn…",
       "mascot": "Linh vật",
-      "mascotHelp": "Chọn một người bạn đồng hành tùy chọn, cung cấp lối tắt theo ngữ cảnh và phản ứng với quy trình chi tiêu.",
+      "mascotHelp": "Chọn một người bạn đồng hành cung cấp lối tắt theo ngữ cảnh và phản ứng với quy trình chi tiêu.",
       "chooseMascot": "Chọn linh vật",
       "mascotOptions": {
         "off": "Tắt",
@@ -2971,6 +2971,10 @@
   "Mascot": {
     "openActions": "Mở thao tác cùng Bill",
     "closeActions": "Đóng các thao tác của Bill",
-    "greetBill": "Chào Bill"
+    "greetBill": "Chào Bill",
+    "settingsAction": "Cài đặt linh vật",
+    "noActionMessage": "Hiện tại không có gì để giúp ở đây.",
+    "noActionSettings": "Cài đặt linh vật",
+    "landingGreeting": "Xin chào — tôi sẽ giúp chia chi tiêu sau khi đăng nhập."
   }
 }

@@ -2127,7 +2127,7 @@
       "chooseTheme": "Alege",
       "saving": "Se salvează preferințele…",
       "mascot": "Mascotă",
-      "mascotHelp": "Alege un însoțitor opțional care oferă scurtături contextuale și reacționează la fluxurile tale de cheltuieli.",
+      "mascotHelp": "Alege un însoțitor care oferă scurtături contextuale și reacționează la fluxurile tale de cheltuieli.",
       "chooseMascot": "Alege o mascotă",
       "mascotOptions": {
         "off": "Dezactivată",
@@ -2917,6 +2917,10 @@
   "Mascot": {
     "openActions": "Deschide acțiunile cu Bill",
     "closeActions": "Închide acțiunile lui Bill",
-    "greetBill": "Salută-l pe Bill"
+    "greetBill": "Salută-l pe Bill",
+    "settingsAction": "Setările mascotei",
+    "noActionMessage": "Deocamdată nu te pot ajuta cu nimic aici.",
+    "noActionSettings": "Setările mascotei",
+    "landingGreeting": "Salut — te ajut să împarți cheltuielile după ce te autentifici."
   }
 }

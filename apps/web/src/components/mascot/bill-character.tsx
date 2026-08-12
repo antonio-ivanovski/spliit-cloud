@@ -98,8 +98,8 @@ function BillArtwork({
             }
           : {
               x: 0,
-              y: ambient ? [0, -2.5, 0] : 0,
-              rotate: 0,
+              y: ambient ? [0, -5, 0] : 0,
+              rotate: ambient ? [-1.2, 1.4, -0.8, 1.2] : 0,
               scale: docked ? 0.78 : 1,
             }
 
@@ -111,7 +111,7 @@ function BillArtwork({
       className={className}
       aria-hidden="true"
       focusable="false"
-      initial={{ opacity: 0, y: 8, scale: 0.82 }}
+      initial={false}
       animate={{ opacity: 1, ...wholeAnimation }}
       transition={
         reaction === 'idle'
@@ -119,7 +119,10 @@ function BillArtwork({
               opacity: { duration: 0.24 },
               scale: spring,
               y: ambient
-                ? { duration: 4.8, ease: 'easeInOut', repeat: Infinity }
+                ? { duration: 3.6, ease: 'easeInOut', repeat: Infinity }
+                : spring,
+              rotate: ambient
+                ? { duration: 5.4, ease: 'easeInOut', repeat: Infinity }
                 : spring,
             }
           : reaction === 'thinking'
@@ -479,47 +482,67 @@ function FullFace({
       <m.g
         animate={
           ambient
-            ? { scaleY: [1, 1, 0.08, 1, 1, 1, 0.08, 1, 1] }
-            : { scaleY: 1 }
+            ? { x: [0, 0, 0, 2.4, 2.4, 0, 0, 0, -2.2, -2.2, 0] }
+            : { x: 0 }
         }
         transition={
           ambient
             ? {
-                duration: 8.2,
-                times: [0, 0.42, 0.44, 0.47, 0.82, 0.86, 0.88, 0.91, 1],
+                duration: 11,
+                times: [
+                  0, 0.18, 0.28, 0.34, 0.46, 0.52, 0.64, 0.72, 0.78, 0.9, 1,
+                ],
                 repeat: Infinity,
                 ease: 'easeInOut',
               }
-            : { duration: 0.1 }
+            : { duration: 0.2 }
         }
-        style={{ transformOrigin: '70px 62px' }}
       >
-        <ellipse
-          cx="57"
-          cy="62"
-          rx="5.2"
-          ry="7"
-          fill="hsl(var(--foreground))"
-        />
-        <ellipse
-          cx="83"
-          cy="62"
-          rx="5.2"
-          ry="7"
-          fill="hsl(var(--foreground))"
-        />
-        <circle
-          cx={thinking ? 59 : 58.5}
-          cy={thinking ? 59.5 : 60}
-          r="1.45"
-          fill="hsl(var(--background))"
-        />
-        <circle
-          cx={thinking ? 85 : 84.5}
-          cy={thinking ? 59.5 : 60}
-          r="1.45"
-          fill="hsl(var(--background))"
-        />
+        <m.g
+          animate={
+            ambient
+              ? { scaleY: [1, 1, 0.08, 1, 1, 1, 0.08, 1, 1] }
+              : { scaleY: 1 }
+          }
+          transition={
+            ambient
+              ? {
+                  duration: 8.2,
+                  times: [0, 0.42, 0.44, 0.47, 0.82, 0.86, 0.88, 0.91, 1],
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }
+              : { duration: 0.1 }
+          }
+          style={{ transformOrigin: '70px 62px' }}
+        >
+          <ellipse
+            cx="57"
+            cy="62"
+            rx="5.2"
+            ry="7"
+            fill="hsl(var(--foreground))"
+          />
+          <ellipse
+            cx="83"
+            cy="62"
+            rx="5.2"
+            ry="7"
+            fill="hsl(var(--foreground))"
+          />
+          <circle
+            cx={thinking ? 59 : 58.5}
+            cy={thinking ? 59.5 : 60}
+            r="1.45"
+            fill="hsl(var(--background))"
+          />
+          <circle
+            cx={thinking ? 85 : 84.5}
+            cy={thinking ? 59.5 : 60}
+            r="1.45"
+            fill="hsl(var(--background))"
+          />
+        </m.g>
       </m.g>
       {thinking && (
         <path

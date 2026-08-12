@@ -2111,7 +2111,7 @@
       "chooseTheme": "선택",
       "saving": "저장 중…",
       "mascot": "마스코트",
-      "mascotHelp": "상황에 맞는 바로가기를 제공하고 지출 작업에 반응하는 선택형 동반자를 고르세요.",
+      "mascotHelp": "상황에 맞는 바로가기를 제공하고 지출 작업에 반응하는 동반자를 고르세요.",
       "chooseMascot": "마스코트 선택",
       "mascotOptions": {
         "off": "사용 안 함",
@@ -2882,6 +2882,10 @@
   "Mascot": {
     "openActions": "빌과 함께 작업 열기",
     "closeActions": "빌의 작업 닫기",
-    "greetBill": "빌에게 인사하기"
+    "greetBill": "빌에게 인사하기",
+    "settingsAction": "마스코트 설정",
+    "noActionMessage": "지금은 여기서 도와드릴 일이 없어요.",
+    "noActionSettings": "마스코트 설정",
+    "landingGreeting": "안녕하세요. 로그인하시면 지출 나누기를 도와드릴게요."
   }
 }

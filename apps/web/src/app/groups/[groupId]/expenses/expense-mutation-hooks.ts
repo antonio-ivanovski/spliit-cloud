@@ -172,11 +172,13 @@ export function useUpdateExpenseMutation({
   onConflict?: () => void
 }) {
   const { toast } = useToast()
+  const mascot = useMascotController()
   const invalidateExpenseDependencies =
     useInvalidateExpenseDependencies(linkInviteToken)
 
   return trpc.groups.expenses.update.useMutation({
     onSuccess: (_data, variables) => {
+      mascot.react('success')
       return invalidateExpenseDependencies({
         groupId: variables.groupId,
         expenseId: variables.expenseId,
@@ -187,6 +189,7 @@ export function useUpdateExpenseMutation({
         onConflict?.()
         return
       }
+      mascot.react('failure')
       toast({ description: error.message, variant: 'destructive' })
     },
   })
@@ -247,11 +250,13 @@ export function useDeleteExpenseMutation({
 }) {
   const navigate = useNavigate()
   const { toast } = useToast()
+  const mascot = useMascotController()
   const invalidateExpenseDependencies =
     useInvalidateExpenseDependencies(linkInviteToken)
 
   return trpc.groups.expenses.delete.useMutation({
     onSuccess: async (_data, variables) => {
+      mascot.react('success')
       // Invalidate first so the next render already shows the latest
       // state; stale cached list is not flashed.
       await invalidateExpenseDependencies({
@@ -268,6 +273,7 @@ export function useDeleteExpenseMutation({
       }
     },
     onError: (error) => {
+      mascot.react('failure')
       toast({ description: error.message, variant: 'destructive' })
     },
   })

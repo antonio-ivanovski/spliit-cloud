@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { render, screen } from '@/test/test-utils'
@@ -101,7 +101,7 @@ describe('HomePage (signed-out)', () => {
     expect(screen.getByTestId('auth-panel')).toBeInTheDocument()
   })
 
-  it('shows 6 features (accounts, groupsSync, expenses, splitting, settlement, organization)', () => {
+  it('shows Bill in the landing content instead of feature cards', async () => {
     vi.mocked(useCurrentAccount).mockReturnValue({
       data: null,
       isPending: false,
@@ -110,14 +110,21 @@ describe('HomePage (signed-out)', () => {
       refetch: vi.fn(),
     })
 
-    render(<HomePage />)
+    const { user } = render(<HomePage />)
 
-    expect(screen.getByText('Accounts')).toBeInTheDocument()
-    expect(screen.getByText('Groups + sync')).toBeInTheDocument()
-    expect(screen.getByText('Expenses + receipts')).toBeInTheDocument()
-    expect(screen.getByText('Advanced split')).toBeInTheDocument()
-    expect(screen.getByText('Balances')).toBeInTheDocument()
-    expect(screen.getByText('Categories')).toBeInTheDocument()
+    expect(screen.getByTestId('landing-bill')).toBeInTheDocument()
+    expect(screen.queryByTestId('bill-mascot-trigger')).toBeNull()
+    expect(screen.queryByText('Accounts')).not.toBeInTheDocument()
+    expect(screen.queryByText('Groups + sync')).not.toBeInTheDocument()
+
+    await user.click(screen.getByTestId('landing-bill'))
+    const speech = screen.getByTestId('landing-bill-speech')
+    expect(speech).toHaveTextContent(
+      'Hi — I help split expenses once you sign in.',
+    )
+    expect(speech.className).not.toContain('absolute')
+    expect(speech.className).not.toContain('-translate-y-full')
+    expect(speech.className).not.toContain('-top-2')
   })
 
   it('does not render the authenticated marketing hero', () => {

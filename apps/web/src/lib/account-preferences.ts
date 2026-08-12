@@ -10,7 +10,7 @@ export type AccountPreferences = {
   timeZone: string | null
   locale: Locale | null
   theme: AccountTheme | null
-  /** Missing legacy cache values resolve to off when parsed. */
+  /** Missing legacy cache values resolve to bill when parsed. */
   mascot?: AccountMascot
   /**
    * Account-level notifications master gate. Missing cached values default to
@@ -58,7 +58,7 @@ function parseAccountPreferences(value: unknown): AccountPreferences | null {
   const timeZone = candidate.timeZone
   const locale = candidate.locale
   const theme = candidate.theme
-  const mascot = candidate.mascot ?? 'off'
+  const mascot = candidate.mascot ?? 'bill'
   const notificationsEnabled = candidate.notificationsEnabled
   const aiFeaturesEnabled = candidate.aiFeaturesEnabled
   const aiCategoryExtractEnabled = candidate.aiCategoryExtractEnabled
