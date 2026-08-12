@@ -7,6 +7,11 @@ import { useMascotController } from '@/components/mascot/mascot-context'
 import { needsDisplayName } from '@/lib/account'
 import { authClient } from '@/lib/auth'
 import { useDeploymentConfig } from '@/lib/deployment-config'
+import {
+  extractLinkInviteTokenFromRedirect,
+  hasSignupInviteProof,
+  signupInviteFetchOptions,
+} from '@/lib/signup-invite'
 import type { HomeSearch } from '@/router/schemas'
 import { isStrongPassword } from '@spliit/domain/password'
 
@@ -19,6 +24,15 @@ export function getErrorMessage(error: unknown): string {
   return String(error)
 }
 
+function isSignupInviteRequired(
+  error: { code?: string; message?: string } | null,
+) {
+  return (
+    error?.code === 'SIGNUP_INVITE_REQUIRED' ||
+    error?.message?.includes('invite-only') === true
+  )
+}
+
 export function useAuthPanel(options?: { redirectTo?: string }) {
   const mascot = useMascotController()
   const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
@@ -27,10 +41,21 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
     redirect,
     mode: initialSearchMode,
     email: initialEmail,
+    invitation,
   } = useSearch({ strict: false }) as HomeSearch
   const redirectTo = options?.redirectTo ?? redirect ?? '/'
-  const initialMode = initialSearchMode === 'sign-up' ? 'sign-up' : 'sign-in'
   const deployment = useDeploymentConfig()
+  const linkInviteToken = extractLinkInviteTokenFromRedirect(redirect)
+  const hasInviteProof = hasSignupInviteProof({ redirect, invitation })
+  const hasEmailInvitation = Boolean(invitation?.trim())
+  const canSignUp =
+    deployment.signupMode === 'open' ||
+    deployment.allowUninvitedSignup ||
+    hasInviteProof
+  const initialMode =
+    canSignUp && (hasInviteProof || initialSearchMode === 'sign-up')
+      ? 'sign-up'
+      : 'sign-in'
 
   const webOrigin =
     typeof window !== 'undefined'
@@ -40,7 +65,7 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
   const completeProfilePath = `/auth/complete-profile?redirect=${encodeURIComponent(redirectTo)}`
   const completeProfileCallbackURL = `${webOrigin}${completeProfilePath}`
 
-  const [mode, setMode] = useState<Mode>(initialMode)
+  const [requestedMode, setRequestedMode] = useState<Mode>(initialMode)
   const [emailVariant, setEmailVariant] = useState<EmailVariant>('magic-link')
   const [email, setEmail] = useState<string>(initialEmail ?? '')
   const [password, setPassword] = useState('')
@@ -74,17 +99,23 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
         throw new Error(t('passwordMismatch'))
       }
 
-      const result = await authClient.signUp.email({
-        email: vars.email.trim(),
-        password: vars.password,
-        name: '',
-        callbackURL: completeProfileCallbackURL,
-      })
+      const inviteHeaders = signupInviteFetchOptions(linkInviteToken)
+      const result = await authClient.signUp.email(
+        {
+          email: vars.email.trim(),
+          password: vars.password,
+          name: '',
+          callbackURL: completeProfileCallbackURL,
+        },
+        inviteHeaders,
+      )
       if (result.error) {
         throw new Error(
-          result.error.message?.includes('already')
-            ? t('errors.invalidCredentials')
-            : t('errors.generic'),
+          isSignupInviteRequired(result.error)
+            ? t('errors.signupInviteRequired')
+            : result.error.message?.includes('already')
+              ? t('errors.invalidCredentials')
+              : t('errors.generic'),
         )
       }
       return { mode: 'sign-up' as const }
@@ -119,13 +150,20 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
       if (!vars.email.trim()) {
         throw new Error(t('errors.emailRequired'))
       }
-      const result = await authClient.signIn.magicLink({
-        email: vars.email.trim(),
-        callbackURL: vars.callbackURL,
-        newUserCallbackURL: completeProfileCallbackURL,
-      })
+      const result = await authClient.signIn.magicLink(
+        {
+          email: vars.email.trim(),
+          callbackURL: vars.callbackURL,
+          newUserCallbackURL: completeProfileCallbackURL,
+        },
+        signupInviteFetchOptions(linkInviteToken),
+      )
       if (result.error) {
-        throw new Error(t('errors.magicLinkFailed'))
+        throw new Error(
+          isSignupInviteRequired(result.error)
+            ? t('errors.signupInviteRequired')
+            : t('errors.magicLinkFailed'),
+        )
       }
     },
     onSuccess() {
@@ -137,6 +175,11 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
     },
   })
 
+  const googleEnabled = deployment.enableGoogleOAuth
+  const githubEnabled = deployment.enableGitHubOAuth
+  const socialEnabled = googleEnabled || githubEnabled
+  const mode = canSignUp ? requestedMode : 'sign-in'
+
   const canSubmitPassword = (() => {
     if (!email.trim()) return false
     if (mode === 'sign-in') return password.length > 0
@@ -144,7 +187,8 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
   })()
 
   function switchMode(next: Mode) {
-    setMode(next)
+    if (next === 'sign-up' && !canSignUp) return
+    setRequestedMode(next)
     emailAuth.reset()
     magicLink.reset()
     setPassword('')
@@ -172,22 +216,24 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
   }
 
   function handleGoogle() {
-    void authClient.signIn.social({
-      provider: 'google',
-      callbackURL,
-    })
+    void authClient.signIn.social(
+      {
+        provider: 'google',
+        callbackURL,
+      },
+      signupInviteFetchOptions(linkInviteToken),
+    )
   }
 
   function handleGithub() {
-    void authClient.signIn.social({
-      provider: 'github',
-      callbackURL,
-    })
+    void authClient.signIn.social(
+      {
+        provider: 'github',
+        callbackURL,
+      },
+      signupInviteFetchOptions(linkInviteToken),
+    )
   }
-
-  const googleEnabled = deployment.enableGoogleOAuth
-  const githubEnabled = deployment.enableGitHubOAuth
-  const socialEnabled = googleEnabled || githubEnabled
 
   return {
     mode,
@@ -199,6 +245,8 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
     redirectTo,
     completeProfilePath,
     canSubmitPassword,
+    canSignUp,
+    hasEmailInvitation,
     googleEnabled,
     githubEnabled,
     socialEnabled,

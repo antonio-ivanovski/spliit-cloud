@@ -1376,14 +1376,19 @@
       "nameRequired": "Zadejte zobrazované jméno.",
       "generic": "Něco se pokazilo. Zkuste to prosím znovu.",
       "passwordPolicy": "Použijte alespoň 8 znaků s velkým písmenem, malým písmenem, číslicí a symbolem.",
-      "magicLinkFailed": "Odeslání přihlašovacího odkazu se nezdařilo."
+      "magicLinkFailed": "Odeslání přihlašovacího odkazu se nezdařilo.",
+      "signupInviteRequired": "Tato instance je pouze na pozvánku. Použijte odkaz pozvánky nebo požádejte někoho, aby vás pozval do skupiny."
     },
     "loading": "Načítání…",
     "signedInAs": "Přihlášen jako {name}",
     "required": "Pro přístup ke svým skupinám se musíte přihlásit.",
     "back": "Zpět na domovskou stránku",
     "signInWithGithub": "Pokračovat přes GitHub",
-    "legalNotice": "Pokračováním souhlasíte s <terms>Obchodními podmínkami</terms> a berete na vědomí <privacy>Zásady ochrany soukromí</privacy>."
+    "legalNotice": "Pokračováním souhlasíte s <terms>Obchodními podmínkami</terms> a berete na vědomí <privacy>Zásady ochrany soukromí</privacy>.",
+    "inviteOnly": {
+      "message": "Tato instance je pouze na pozvánku. Použijte odkaz pozvánky nebo požádejte někoho, aby vás pozval do skupiny.",
+      "useInvitedEmail": "Použijte e-mailovou adresu, na kterou vám přišla pozvánka."
+    }
   },
   "CompleteProfile": {
     "title": "Dokončete svůj profil",

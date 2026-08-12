@@ -13,6 +13,7 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 
 import { auth } from './lib/auth'
+import { SIGNUP_INVITE_HEADER } from './lib/auth/signup-gate'
 import { env, webOrigins } from './lib/env'
 import { checkLiveness, checkReadiness } from './lib/health'
 import { logServerError, logServerWarn } from './lib/logging'
@@ -80,6 +81,7 @@ app.use(
       'Authorization',
       'trpc-accept',
       'x-import-document-token',
+      SIGNUP_INVITE_HEADER,
     ],
     allowMethods: ['GET', 'POST', 'OPTIONS'],
     credentials: true,

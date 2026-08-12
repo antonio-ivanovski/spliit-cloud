@@ -361,7 +361,8 @@
       "nameRequired": "Ange ett visningsnamn.",
       "generic": "Något gick fel. Försök igen.",
       "magicLinkFailed": "Kunde inte skicka inloggningslänken.",
-      "passwordPolicy": "Använd minst 8 tecken med versal, gemen, en siffra och en symbol."
+      "passwordPolicy": "Använd minst 8 tecken med versal, gemen, en siffra och en symbol.",
+      "signupInviteRequired": "Den här instansen är endast för inbjudna. Använd en inbjudningslänk eller be någon att bjuda in dig till en grupp."
     },
     "signInWithGithub": "Fortsätt med GitHub",
     "legalNotice": "Genom att fortsätta godkänner du <terms>användarvillkoren</terms> och bekräftar <privacy>integritetspolicyn</privacy>.",
@@ -372,6 +373,10 @@
       "lowercase": "Gemen",
       "number": "Siffra",
       "symbol": "Symbol"
+    },
+    "inviteOnly": {
+      "message": "Den här instansen är endast för inbjudna. Använd en inbjudningslänk eller be någon att bjuda in dig till en grupp.",
+      "useInvitedEmail": "Använd den e-postadress du blev inbjuden med."
     }
   },
   "Balances": {

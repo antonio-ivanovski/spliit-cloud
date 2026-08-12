@@ -1662,14 +1662,19 @@
       "nameRequired": "Masukkan nama tampilan.",
       "generic": "Terjadi kesalahan. Silakan coba lagi.",
       "passwordPolicy": "Gunakan setidaknya 8 karakter dengan huruf besar, huruf kecil, angka, dan simbol.",
-      "magicLinkFailed": "Tidak dapat mengirim tautan masuk."
+      "magicLinkFailed": "Tidak dapat mengirim tautan masuk.",
+      "signupInviteRequired": "Instans ini hanya bisa diakses dengan undangan. Gunakan tautan undangan atau minta seseorang mengundang Anda ke sebuah grup."
     },
     "loading": "Memuat…",
     "signedInAs": "Masuk sebagai {name}",
     "required": "Anda perlu masuk untuk mengakses grup Anda.",
     "back": "Kembali ke beranda",
     "signInWithGithub": "Lanjutkan dengan GitHub",
-    "legalNotice": "Dengan melanjutkan, Anda menyetujui <terms>Ketentuan penggunaan</terms> dan mengakui <privacy>Pemberitahuan privasi</privacy>."
+    "legalNotice": "Dengan melanjutkan, Anda menyetujui <terms>Ketentuan penggunaan</terms> dan mengakui <privacy>Pemberitahuan privasi</privacy>.",
+    "inviteOnly": {
+      "message": "Instans ini hanya bisa diakses dengan undangan. Gunakan tautan undangan atau minta seseorang mengundang Anda ke sebuah grup.",
+      "useInvitedEmail": "Gunakan alamat email yang digunakan untuk mengundang Anda."
+    }
   },
   "CompleteProfile": {
     "title": "Lengkapi profil Anda",

@@ -32,3 +32,36 @@ The system SHALL issue server-recognized sessions to authenticated users and SHA
 #### Scenario: Protected procedure without valid session
 - **WHEN** a request has no valid session
 - **THEN** protected procedures reject the request as unauthenticated
+
+### Requirement: Invite-only account registration
+The system SHALL support a `SIGNUP_MODE` of `open` or `invite_only`. `open` SHALL remain the default. When `invite_only` is set, the system SHALL allow account creation only for the first account on the instance, an email that matches a pending group or friend email invitation, or a request that presents a live share-link invite token. Existing accounts SHALL still be able to sign in.
+
+#### Scenario: Open registration remains the default
+- **WHEN** `SIGNUP_MODE` is unset or `open`
+- **THEN** a visitor can create an account without an invitation
+
+#### Scenario: First user bootstraps an invite-only instance
+- **WHEN** `SIGNUP_MODE` is `invite_only` and the instance has no accounts
+- **THEN** the visitor can create the first account
+
+#### Scenario: Pending email invitation unlocks sign-up
+- **WHEN** `SIGNUP_MODE` is `invite_only` and a pending EMAIL group or friend invitation exists for an address
+- **THEN** a visitor can create an account with that email
+
+#### Scenario: Live share-link invite unlocks sign-up
+- **WHEN** `SIGNUP_MODE` is `invite_only` and the request includes a usable link-invite token
+- **THEN** a visitor can create an account
+- **AND** validating that token for signup does not consume it
+
+#### Scenario: Share-link remains usable after signup
+- **WHEN** a visitor created an account with a live share-link invite token
+- **THEN** the same token can still be used to accept the group or friend invitation
+
+#### Scenario: Unknown-user magic-link and OAuth follow the same gate
+- **WHEN** `SIGNUP_MODE` is `invite_only` and an unknown email requests a magic link or signs in with OAuth
+- **THEN** the system allows account creation only with the same first-account, pending email invitation, or live share-link proof
+- **AND** existing accounts can still request a magic link or complete OAuth sign-in
+
+#### Scenario: Uninvited sign-up is rejected
+- **WHEN** `SIGNUP_MODE` is `invite_only`, at least one account exists, and the visitor has no pending email invitation and no usable link-invite token
+- **THEN** the system rejects account creation with `SIGNUP_INVITE_REQUIRED`

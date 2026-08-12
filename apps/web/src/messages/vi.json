@@ -737,14 +737,19 @@
       "nameRequired": "Nhập tên hiển thị.",
       "generic": "Đã xảy ra lỗi. Vui lòng thử lại.",
       "magicLinkFailed": "Không thể gửi liên kết.",
-      "passwordPolicy": "Sử dụng ít nhất 8 ký tự bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt."
+      "passwordPolicy": "Sử dụng ít nhất 8 ký tự bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.",
+      "signupInviteRequired": "Phiên bản này chỉ dành cho người được mời. Hãy dùng liên kết mời hoặc nhờ ai đó mời bạn vào một nhóm."
     },
     "loading": "Đang tải…",
     "signedInAs": "Đã đăng nhập với tư cách {name}",
     "required": "Bạn cần đăng nhập để truy cập các nhóm của mình.",
     "back": "Về trang chủ",
     "signInWithGithub": "Đăng nhập bằng GitHub",
-    "legalNotice": "Bằng cách tiếp tục, bạn đồng ý với <terms>Điều khoản sử dụng</terms> và <privacy>Chính sách quyền riêng tư</privacy>."
+    "legalNotice": "Bằng cách tiếp tục, bạn đồng ý với <terms>Điều khoản sử dụng</terms> và <privacy>Chính sách quyền riêng tư</privacy>.",
+    "inviteOnly": {
+      "message": "Phiên bản này chỉ dành cho người được mời. Hãy dùng liên kết mời hoặc nhờ ai đó mời bạn vào một nhóm.",
+      "useInvitedEmail": "Hãy dùng địa chỉ email bạn đã được mời."
+    }
   },
   "AccountSettings": {
     "title": "Cài đặt tài khoản",

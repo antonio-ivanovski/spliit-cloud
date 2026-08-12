@@ -27,6 +27,8 @@ export function AuthPanel({
     confirmPassword,
     successState,
     canSubmitPassword,
+    canSignUp,
+    hasEmailInvitation,
     googleEnabled,
     githubEnabled,
     socialEnabled,
@@ -124,17 +126,31 @@ export function AuthPanel({
         )}
       </section>
 
-      <div className="w-full text-center text-sm text-muted-foreground">
-        {mode === 'sign-in' ? t('noAccount') : t('haveAccount')}{' '}
-        <Button
-          type="button"
-          variant="link"
-          className="h-auto px-0 py-0"
-          onClick={() => switchMode(mode === 'sign-in' ? 'sign-up' : 'sign-in')}
-        >
-          {mode === 'sign-in' ? t('createAccount') : t('signIn')}
-        </Button>
-      </div>
+      {canSignUp ? (
+        <div className="w-full text-center text-sm text-muted-foreground">
+          {mode === 'sign-in' ? t('noAccount') : t('haveAccount')}{' '}
+          <Button
+            type="button"
+            variant="link"
+            className="h-auto px-0 py-0"
+            onClick={() =>
+              switchMode(mode === 'sign-in' ? 'sign-up' : 'sign-in')
+            }
+          >
+            {mode === 'sign-in' ? t('createAccount') : t('signIn')}
+          </Button>
+        </div>
+      ) : (
+        <p className="text-center text-sm text-muted-foreground">
+          {t('inviteOnly.message')}
+        </p>
+      )}
+
+      {hasEmailInvitation && mode === 'sign-up' && (
+        <p className="text-center text-sm text-muted-foreground">
+          {t('inviteOnly.useInvitedEmail')}
+        </p>
+      )}
 
       <p className="text-center text-xs leading-5 text-muted-foreground">
         <Trans

@@ -90,6 +90,13 @@ may remain empty.
 
 - OAuth buttons are enabled automatically when both credentials for Google or
   GitHub are configured.
+- Account registration defaults to `SIGNUP_MODE=open` (anyone who can reach the
+  instance can create an account). Set `SIGNUP_MODE=invite_only` for a private
+  instance. In that mode the first account on a fresh database can still
+  register; after that, a visitor can create an account only with a pending
+  group or friend email invitation, or by opening a live share-link invite.
+  Existing users can always sign in. Inviting someone to a group or friend
+  ledger is how they get an account.
 - Expense documents require
   `PUBLIC_ENABLE_EXPENSE_DOCUMENTS=true` and the required `S3_UPLOAD_*` values.
   Configure the bucket with a lifecycle rule that expires objects under

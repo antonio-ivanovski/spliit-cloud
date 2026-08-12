@@ -1677,14 +1677,19 @@
       "nameRequired": "Sartu erakusteko izen bat.",
       "generic": "Zerbaitek huts egin du. Saiatu berriro mesedez.",
       "passwordPolicy": "Erabili gutxienez 8 karaktere, letra larri eta xehez, zenbaki batez eta ikur batez.",
-      "magicLinkFailed": "Ezin izan da saioa hasteko esteka bidali."
+      "magicLinkFailed": "Ezin izan da saioa hasteko esteka bidali.",
+      "signupInviteRequired": "Instantzia hau gonbidapen bidezkoa da soilik. Erabili gonbidapen-esteka bat edo eskatu norbaiti talde batera gonbidatzeko."
     },
     "loading": "Kargatzen…",
     "signedInAs": "{name} gisa saioa hasita",
     "required": "Saioa hasi behar duzu zure taldeetara sartzeko.",
     "back": "Itzuli hasierara",
     "signInWithGithub": "Jarraitu GitHub-ekin",
-    "legalNotice": "Jarraituz gero, <terms>erabilera-baldintzak</terms> onartzen dituzu eta <privacy>pribatutasun-oharra</privacy> aitortzen duzu."
+    "legalNotice": "Jarraituz gero, <terms>erabilera-baldintzak</terms> onartzen dituzu eta <privacy>pribatutasun-oharra</privacy> aitortzen duzu.",
+    "inviteOnly": {
+      "message": "Instantzia hau gonbidapen bidezkoa da soilik. Erabili gonbidapen-esteka bat edo eskatu norbaiti talde batera gonbidatzeko.",
+      "useInvitedEmail": "Erabili gonbidapena jaso zenuen helbide elektronikoa."
+    }
   },
   "CompleteProfile": {
     "title": "Osatu zure profila",

@@ -32,6 +32,8 @@ describe('features.get', () => {
       enableGoogleOAuth: true,
       enableGitHubOAuth: false,
       enableVoiceExpense: false,
+      signupMode: 'open',
+      allowUninvitedSignup: true,
     })
   })
 })

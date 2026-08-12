@@ -54,13 +54,13 @@ import {
   markMascotSettingsDiscovered,
   subscribeMascotSettingsDiscovered,
 } from './mascot-settings-discovery'
-import { MascotSpeechBubble } from './mascot-speech-bubble'
 import {
   buildMascotSpeechCycle,
   coachSpeechForActions,
   isCoachSpeechLine,
   type MascotSpeechLine,
 } from './mascot-speech'
+import { MascotSpeechBubble } from './mascot-speech-bubble'
 
 const SPEECH_DISMISS_MS = 3_000
 const DRAG_THRESHOLD_PX = 8

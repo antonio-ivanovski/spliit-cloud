@@ -109,6 +109,12 @@ const envSchema = z
 
     // Dedicated secret for stateless optional-email unsubscribe links.
     EMAIL_UNSUBSCRIBE_SECRET: optionalString,
+
+    // Account registration. `open` is the historical default (anyone can
+    // create an account). `invite_only` restricts sign-up to the first
+    // account on a fresh instance, emails with a pending group/friend
+    // invitation, or visitors carrying a live share-link invite token.
+    SIGNUP_MODE: z.enum(['open', 'invite_only']).default('open'),
   })
   .superRefine((env, ctx) => {
     if (env.NODE_ENV === 'production' && !env.BETTER_AUTH_SECRET) {

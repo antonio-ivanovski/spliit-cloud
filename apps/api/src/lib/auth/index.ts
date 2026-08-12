@@ -25,6 +25,11 @@ import {
   renderVerificationEmail,
 } from '../mail/templates'
 import { invalidateAccountCache } from './account-cache'
+import {
+  assertCanCreateAccount,
+  enforceSignupGate,
+  persistSignupInviteCookie,
+} from './signup-gate'
 import { getApiBaseUrl } from './urls'
 
 const authMethodLabels: Record<string, string> = {
@@ -58,7 +63,7 @@ function buildPasswordRecoveryEmail(opts: {
   return renderPasswordRecoveryEmail(opts)
 }
 
-const passwordPolicyMiddleware = createAuthMiddleware(async (ctx) => {
+const beforeAuthMiddleware = createAuthMiddleware(async (ctx) => {
   const password =
     ctx.path === '/sign-up/email'
       ? ctx.body?.password
@@ -73,6 +78,9 @@ const passwordPolicyMiddleware = createAuthMiddleware(async (ctx) => {
       code: 'PASSWORD_POLICY_NOT_MET',
     })
   }
+
+  await persistSignupInviteCookie(ctx)
+  await enforceSignupGate(ctx)
 })
 
 // Integration and unit tests share the local PostgreSQL database with the
@@ -259,7 +267,7 @@ export const auth = betterAuth({
   },
 
   hooks: {
-    before: passwordPolicyMiddleware,
+    before: beforeAuthMiddleware,
   },
 
   // Reconcile pending friend-ledger invitations that target this
@@ -271,6 +279,12 @@ export const auth = betterAuth({
   databaseHooks: {
     user: {
       create: {
+        before: async (user, context) => {
+          await assertCanCreateAccount({
+            email: user.email,
+            context,
+          })
+        },
         after: async (user) => {
           if (user.email) {
             await autoAcceptPendingFriendInvitationsForAccount({

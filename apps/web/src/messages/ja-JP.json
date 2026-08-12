@@ -1662,14 +1662,19 @@
       "nameRequired": "表示名を入力してください。",
       "generic": "問題が発生しました。もう一度お試しください。",
       "passwordPolicy": "大文字、小文字、数字、記号を含む8文字以上を使用してください。",
-      "magicLinkFailed": "サインインリンクを送信できませんでした。"
+      "magicLinkFailed": "サインインリンクを送信できませんでした。",
+      "signupInviteRequired": "このインスタンスは招待制です。招待リンクを使用するか、誰かにグループへ招待してもらってください。"
     },
     "loading": "読み込み中…",
     "signedInAs": "{name}としてサインイン中",
     "required": "グループにアクセスするにはサインインが必要です。",
     "back": "ホームに戻る",
     "signInWithGithub": "GitHubで続ける",
-    "legalNotice": "続行すると、<terms>利用規約</terms>に同意し、<privacy>プライバシーに関する通知</privacy>を確認したことになります。"
+    "legalNotice": "続行すると、<terms>利用規約</terms>に同意し、<privacy>プライバシーに関する通知</privacy>を確認したことになります。",
+    "inviteOnly": {
+      "message": "このインスタンスは招待制です。招待リンクを使用するか、誰かにグループへ招待してもらってください。",
+      "useInvitedEmail": "招待されたメールアドレスを使用してください。"
+    }
   },
   "CompleteProfile": {
     "title": "プロフィールを完成",

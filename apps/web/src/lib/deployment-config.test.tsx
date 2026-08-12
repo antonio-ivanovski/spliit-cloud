@@ -49,6 +49,8 @@ describe('useDeploymentConfig', () => {
       defaultCurrencyCode: 'EUR',
       enableGoogleOAuth: true,
       enableGitHubOAuth: false,
+      signupMode: 'invite_only',
+      allowUninvitedSignup: false,
     })
 
     const { result } = renderHook(() => useDeploymentConfig(), {
@@ -60,6 +62,8 @@ describe('useDeploymentConfig', () => {
         defaultCurrencyCode: 'EUR',
         enableGoogleOAuth: true,
         enableGitHubOAuth: false,
+        signupMode: 'invite_only',
+        allowUninvitedSignup: false,
       })
     })
     expect(mockGetFeatures).toHaveBeenCalledOnce()

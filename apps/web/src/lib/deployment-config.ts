@@ -5,7 +5,11 @@ import type { AppRouterOutput } from '@spliit/api/router'
 
 export type DeploymentConfig = Pick<
   AppRouterOutput['features']['get'],
-  'defaultCurrencyCode' | 'enableGoogleOAuth' | 'enableGitHubOAuth'
+  | 'defaultCurrencyCode'
+  | 'enableGoogleOAuth'
+  | 'enableGitHubOAuth'
+  | 'signupMode'
+  | 'allowUninvitedSignup'
 >
 
 function getBuildTimeFallback(): DeploymentConfig {
@@ -17,6 +21,8 @@ function getBuildTimeFallback(): DeploymentConfig {
     enableGitHubOAuth:
       import.meta.env.VITE_ENABLE_GITHUB_OAUTH === 'true' ||
       import.meta.env.VITE_ENABLE_GITHUB_OAUTH === '1',
+    signupMode: 'open',
+    allowUninvitedSignup: true,
   }
 }
 
@@ -28,10 +34,14 @@ export function useDeploymentConfig(): DeploymentConfig {
       defaultCurrencyCode,
       enableGoogleOAuth,
       enableGitHubOAuth,
+      signupMode,
+      allowUninvitedSignup,
     }): DeploymentConfig => ({
       defaultCurrencyCode,
       enableGoogleOAuth,
       enableGitHubOAuth,
+      signupMode,
+      allowUninvitedSignup,
     }),
     staleTime: Infinity,
     enabled: import.meta.env.MODE !== 'test',

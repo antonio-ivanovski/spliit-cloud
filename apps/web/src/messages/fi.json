@@ -1669,14 +1669,19 @@
       "nameRequired": "Syötä näyttönimi.",
       "generic": "Jokin meni vikaan. Yritä uudelleen.",
       "passwordPolicy": "Käytä vähintään 8 merkkiä, joissa on iso kirjain, pieni kirjain, numero ja erikoismerkki.",
-      "magicLinkFailed": "Kirjautumislinkkiä ei voitu lähettää."
+      "magicLinkFailed": "Kirjautumislinkkiä ei voitu lähettää.",
+      "signupInviteRequired": "Tämä instanssi on vain kutsutuille. Käytä kutsulinkkiä tai pyydä jotakuta kutsumaan sinut ryhmään."
     },
     "loading": "Ladataan…",
     "signedInAs": "Kirjautuneena käyttäjänä {name}",
     "required": "Sinun täytyy kirjautua sisään päästäksesi ryhmiisi.",
     "back": "Takaisin etusivulle",
     "signInWithGithub": "Jatka GitHubilla",
-    "legalNotice": "Jatkamalla hyväksyt <terms>käyttöehdot</terms> ja vahvistat, että olet lukenut <privacy>tietosuojailmoituksen</privacy>."
+    "legalNotice": "Jatkamalla hyväksyt <terms>käyttöehdot</terms> ja vahvistat, että olet lukenut <privacy>tietosuojailmoituksen</privacy>.",
+    "inviteOnly": {
+      "message": "Tämä instanssi on vain kutsutuille. Käytä kutsulinkkiä tai pyydä jotakuta kutsumaan sinut ryhmään.",
+      "useInvitedEmail": "Käytä sähköpostiosoitetta, jolla sinut kutsuttiin."
+    }
   },
   "CompleteProfile": {
     "title": "Täydennä profiilisi",

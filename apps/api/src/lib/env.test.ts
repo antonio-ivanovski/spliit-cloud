@@ -149,11 +149,26 @@ describe('envSchema — development', () => {
     expect(env.MCP_PUBLIC_URL).toBe('https://mcp.example.com')
   })
 
-  it('defaults the instance currency to USD', async () => {
+  it('defaults SIGNUP_MODE to open', async () => {
     vi.stubEnv('NODE_ENV', 'development')
     vi.resetModules()
     const { env } = await import('./env')
-    expect(env.PUBLIC_DEFAULT_CURRENCY_CODE).toBe('USD')
+    expect(env.SIGNUP_MODE).toBe('open')
+  })
+
+  it('parses invite_only SIGNUP_MODE', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('SIGNUP_MODE', 'invite_only')
+    vi.resetModules()
+    const { env } = await import('./env')
+    expect(env.SIGNUP_MODE).toBe('invite_only')
+  })
+
+  it('rejects an invalid SIGNUP_MODE', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('SIGNUP_MODE', 'secret')
+    vi.resetModules()
+    await expect(import('./env')).rejects.toThrow()
   })
 
   it('rejects an unsupported instance currency', async () => {

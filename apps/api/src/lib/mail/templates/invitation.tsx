@@ -123,7 +123,7 @@ export async function renderInvitationEmail(
 ): Promise<RenderedEmail> {
   const webBase = getWebBaseUrl()
   const acceptUrl = `${webBase}/groups/${input.groupId}`
-  const signInUrl = `${webBase}/?invitation=${input.invitationId}`
+  const signInUrl = `${webBase}/?invitation=${input.invitationId}&mode=sign-up`
 
   const subject =
     !input.recipientIsExistingUser && input.temporaryName
