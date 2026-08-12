@@ -1669,14 +1669,19 @@
       "nameRequired": "Voer een weergavenaam in.",
       "generic": "Er is iets misgegaan. Probeer het opnieuw.",
       "passwordPolicy": "Gebruik minstens 8 tekens met een hoofdletter, een kleine letter, een cijfer en een symbool.",
-      "magicLinkFailed": "Kon de inloglink niet verzenden."
+      "magicLinkFailed": "Kon de inloglink niet verzenden.",
+      "signupInviteRequired": "Deze instantie is alleen op uitnodiging. Gebruik een uitnodigingslink of vraag iemand om je uit te nodigen voor een groep."
     },
     "loading": "Laden…",
     "signedInAs": "Ingelogd als {name}",
     "required": "Je moet inloggen om toegang te krijgen tot je groepen.",
     "back": "Terug naar startpagina",
     "signInWithGithub": "Doorgaan met GitHub",
-    "legalNotice": "Door verder te gaan ga je akkoord met de <terms>algemene voorwaarden</terms> en erken je de <privacy>privacyverklaring</privacy>."
+    "legalNotice": "Door verder te gaan ga je akkoord met de <terms>algemene voorwaarden</terms> en erken je de <privacy>privacyverklaring</privacy>.",
+    "inviteOnly": {
+      "message": "Deze instantie is alleen op uitnodiging. Gebruik een uitnodigingslink of vraag iemand om je uit te nodigen voor een groep.",
+      "useInvitedEmail": "Gebruik het e-mailadres waarmee je bent uitgenodigd."
+    }
   },
   "CompleteProfile": {
     "title": "Voltooi je profiel",

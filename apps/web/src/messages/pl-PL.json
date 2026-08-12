@@ -1376,14 +1376,19 @@
       "nameRequired": "Wprowadź nazwę wyświetlaną.",
       "generic": "Coś poszło nie tak. Spróbuj ponownie.",
       "passwordPolicy": "Użyj co najmniej 8 znaków zawierających wielką literę, małą literę, cyfrę i symbol.",
-      "magicLinkFailed": "Nie udało się wysłać linku logowania."
+      "magicLinkFailed": "Nie udało się wysłać linku logowania.",
+      "signupInviteRequired": "Ta instancja jest dostępna tylko na zaproszenie. Użyj linku zaproszenia lub poproś kogoś o zaproszenie do grupy."
     },
     "loading": "Ładowanie…",
     "signedInAs": "Zalogowany jako {name}",
     "required": "Musisz się zalogować, aby uzyskać dostęp do swoich grup.",
     "back": "Powrót do strony głównej",
     "signInWithGithub": "Kontynuuj przez GitHub",
-    "legalNotice": "Kontynuując, zgadzasz się na <terms>Warunki korzystania</terms> i potwierdzasz <privacy>Informacje o prywatności</privacy>."
+    "legalNotice": "Kontynuując, zgadzasz się na <terms>Warunki korzystania</terms> i potwierdzasz <privacy>Informacje o prywatności</privacy>.",
+    "inviteOnly": {
+      "message": "Ta instancja jest dostępna tylko na zaproszenie. Użyj linku zaproszenia lub poproś kogoś o zaproszenie do grupy.",
+      "useInvitedEmail": "Użyj adresu e-mail, na który wysłano zaproszenie."
+    }
   },
   "CompleteProfile": {
     "title": "Uzupełnij swój profil",

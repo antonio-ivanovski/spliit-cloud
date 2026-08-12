@@ -83,6 +83,7 @@ services:
       ENABLE_MCP: ${ENABLE_MCP:-false}
       MCP_PUBLIC_URL: ${MCP_PUBLIC_URL:-}
       ASSISTANT_CONFIRMATION_SECRET: ${ASSISTANT_CONFIRMATION_SECRET:-}
+      SIGNUP_MODE: ${SIGNUP_MODE:-open}
       JOBS_ENABLED: ${JOBS_ENABLED:-true}
     depends_on:
       migrate:

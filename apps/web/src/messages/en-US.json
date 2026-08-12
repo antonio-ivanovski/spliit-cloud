@@ -737,14 +737,19 @@
       "nameRequired": "Enter a display name.",
       "generic": "Something went wrong. Please try again.",
       "magicLinkFailed": "Could not send the sign-in link.",
-      "passwordPolicy": "Use at least 8 characters with uppercase, lowercase, a number, and a symbol."
+      "passwordPolicy": "Use at least 8 characters with uppercase, lowercase, a number, and a symbol.",
+      "signupInviteRequired": "This instance is invite-only. Use an invitation link or ask someone to invite you to a group."
     },
     "loading": "Loading…",
     "signedInAs": "Signed in as {name}",
     "required": "You need to sign in to access your groups.",
     "back": "Back to home",
     "signInWithGithub": "Continue with GitHub",
-    "legalNotice": "By continuing, you agree to the <terms>Terms of use</terms> and acknowledge the <privacy>Privacy notice</privacy>."
+    "legalNotice": "By continuing, you agree to the <terms>Terms of use</terms> and acknowledge the <privacy>Privacy notice</privacy>.",
+    "inviteOnly": {
+      "message": "This instance is invite-only. Use an invitation link or ask someone to invite you to a group.",
+      "useInvitedEmail": "Use the email address you were invited with."
+    }
   },
   "AccountSettings": {
     "title": "Account settings",

@@ -1,5 +1,6 @@
 import { z } from 'zod'
 
+import { allowUninvitedSignup } from '../../../lib/auth/signup-gate'
 import { env } from '../../../lib/env'
 import { baseProcedure, createTRPCRouter } from '../../init'
 
@@ -15,9 +16,11 @@ export const featuresRouter = createTRPCRouter({
         defaultCurrencyCode: z.string(),
         enableGoogleOAuth: z.boolean(),
         enableGitHubOAuth: z.boolean(),
+        signupMode: z.enum(['open', 'invite_only']),
+        allowUninvitedSignup: z.boolean(),
       }),
     )
-    .query(() => ({
+    .query(async () => ({
       enableExpenseDocuments: env.PUBLIC_ENABLE_EXPENSE_DOCUMENTS,
       enableReceiptExtract: env.PUBLIC_ENABLE_RECEIPT_EXTRACT,
       enableVoiceExpense: env.PUBLIC_ENABLE_VOICE_EXPENSE,
@@ -26,5 +29,7 @@ export const featuresRouter = createTRPCRouter({
       defaultCurrencyCode: env.PUBLIC_DEFAULT_CURRENCY_CODE,
       enableGoogleOAuth: !!(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET),
       enableGitHubOAuth: !!(env.GITHUB_CLIENT_ID && env.GITHUB_CLIENT_SECRET),
+      signupMode: env.SIGNUP_MODE,
+      allowUninvitedSignup: await allowUninvitedSignup(),
     })),
 })

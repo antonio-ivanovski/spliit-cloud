@@ -406,7 +406,8 @@
       "nameRequired": "enter a display name, bestie.",
       "generic": "something went sideways  try again.",
       "magicLinkFailed": "couldn't send the sign-in link. the magic flopped.",
-      "passwordPolicy": "use at least 8 characters with uppercase, lowercase, a number, and a symbol. security era."
+      "passwordPolicy": "use at least 8 characters with uppercase, lowercase, a number, and a symbol. security era.",
+      "signupInviteRequired": "this instance is invite-only. grab an invite link or ask someone to pull you into a group."
     },
     "signInWithGithub": "continue with GitHub",
     "legalNotice": "by continuing, you agree to the <terms>terms of use</terms> and acknowledge the <privacy>privacy notice</privacy>.",
@@ -417,6 +418,10 @@
       "lowercase": "lowercase",
       "number": "a number",
       "symbol": "a symbol"
+    },
+    "inviteOnly": {
+      "message": "this instance is invite-only. grab an invite link or ask someone to pull you into a group.",
+      "useInvitedEmail": "use the email you got invited with."
     }
   },
   "Balances": {

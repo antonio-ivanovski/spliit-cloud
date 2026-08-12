@@ -1677,14 +1677,19 @@
       "nameRequired": "Introdu un nume de afișare.",
       "generic": "Ceva a mers greșit. Te rugăm să încerci din nou.",
       "passwordPolicy": "Folosește cel puțin 8 caractere cu majuscule, minuscule, un număr și un simbol.",
-      "magicLinkFailed": "Nu s-a putut trimite linkul de autentificare."
+      "magicLinkFailed": "Nu s-a putut trimite linkul de autentificare.",
+      "signupInviteRequired": "Această instanță este doar pe bază de invitație. Folosește un link de invitație sau cere cuiva să te invite într-un grup."
     },
     "loading": "Se încarcă…",
     "signedInAs": "Autentificat ca {name}",
     "required": "Trebuie să te autentifici pentru a accesa grupurile tale.",
     "back": "Înapoi la pagina principală",
     "signInWithGithub": "Continuă cu GitHub",
-    "legalNotice": "Prin continuare, acceptați <terms>Termenii de utilizare</terms> și recunoașteți <privacy>nota de confidențialitate</privacy>."
+    "legalNotice": "Prin continuare, acceptați <terms>Termenii de utilizare</terms> și recunoașteți <privacy>nota de confidențialitate</privacy>.",
+    "inviteOnly": {
+      "message": "Această instanță este doar pe bază de invitație. Folosește un link de invitație sau cere cuiva să te invite într-un grup.",
+      "useInvitedEmail": "Folosește adresa de email cu care ai primit invitația."
+    }
   },
   "CompleteProfile": {
     "title": "Completează-ți profilul",

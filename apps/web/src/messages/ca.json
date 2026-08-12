@@ -1677,14 +1677,19 @@
       "nameRequired": "Introdueix un nom de visualització.",
       "generic": "Alguna cosa ha anat malament. Si us plau, torna-ho a intentar.",
       "passwordPolicy": "Utilitza almenys 8 caràcters amb majúscules, minúscules, un número i un símbol.",
-      "magicLinkFailed": "No s'ha pogut enviar l'enllaç d'inici de sessió."
+      "magicLinkFailed": "No s'ha pogut enviar l'enllaç d'inici de sessió.",
+      "signupInviteRequired": "Aquesta instància és només per invitació. Utilitza un enllaç d'invitació o demana a algú que t'inviti a un grup."
     },
     "loading": "Carregant…",
     "signedInAs": "Sessió iniciada com a {name}",
     "required": "Has d'iniciar sessió per accedir als teus grups.",
     "back": "Tornar a l'inici",
     "signInWithGithub": "Continua amb GitHub",
-    "legalNotice": "En continuar, acceptes els <terms>Termes d'ús</terms> i reconeixes l'<privacy>avís de privadesa</privacy>."
+    "legalNotice": "En continuar, acceptes els <terms>Termes d'ús</terms> i reconeixes l'<privacy>avís de privadesa</privacy>.",
+    "inviteOnly": {
+      "message": "Aquesta instància és només per invitació. Utilitza un enllaç d'invitació o demana a algú que t'inviti a un grup.",
+      "useInvitedEmail": "Utilitza l'adreça de correu electrònic amb què t'han convidat."
+    }
   },
   "CompleteProfile": {
     "title": "Completa el teu perfil",

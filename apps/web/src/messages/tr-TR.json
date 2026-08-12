@@ -1360,14 +1360,19 @@
       "nameRequired": "Bir görünen ad girin.",
       "generic": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin.",
       "passwordPolicy": "En az 8 karakter kullanın ve büyük harf, küçük harf, rakam ve sembol içersin.",
-      "magicLinkFailed": "Oturum açma bağlantısı gönderilemedi."
+      "magicLinkFailed": "Oturum açma bağlantısı gönderilemedi.",
+      "signupInviteRequired": "Bu kurulum yalnızca davetle erişilebilir. Bir davet bağlantısı kullanın veya birinden sizi bir gruba davet etmesini isteyin."
     },
     "loading": "Yükleniyor…",
     "signedInAs": "{name} olarak oturum açıldı",
     "required": "Gruplarınıza erişmek için oturum açmalısınız.",
     "back": "Ana sayfaya dön",
     "signInWithGithub": "GitHub ile devam et",
-    "legalNotice": "Devam ederek <terms>Kullanım Şartları</terms>'nı kabul eder ve <privacy>Gizlilik Bildirimi</privacy>'ni onaylarsınız."
+    "legalNotice": "Devam ederek <terms>Kullanım Şartları</terms>'nı kabul eder ve <privacy>Gizlilik Bildirimi</privacy>'ni onaylarsınız.",
+    "inviteOnly": {
+      "message": "Bu kurulum yalnızca davetle erişilebilir. Bir davet bağlantısı kullanın veya birinden sizi bir gruba davet etmesini isteyin.",
+      "useInvitedEmail": "Davet edildiğiniz e-posta adresini kullanın."
+    }
   },
   "CompleteProfile": {
     "title": "Profilinizi tamamlayın",

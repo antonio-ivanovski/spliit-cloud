@@ -206,7 +206,9 @@ Developers can build the same stack from source with
 `-f compose.yaml -f compose.build.yaml`.
 
 See [docs/deployment.md](./docs/deployment.md) for configuration, reverse-proxy,
-upgrade, backup, and optional-feature guidance.
+upgrade, backup, and optional-feature guidance. For a private instance, set
+`SIGNUP_MODE=invite_only` in `container.env` so only invited people can create
+accounts.
 
 ## Production deployment
 
@@ -219,6 +221,7 @@ Key requirements for a public instance:
 - working SMTP and correctly configured SPF/DKIM/DMARC
 - only the web gateway reachable publicly
 - tested database restore procedure
+- for a private instance, `SIGNUP_MODE=invite_only` so only invited people can create accounts (the first user on a fresh instance can always register)
 
 ## Health check
 

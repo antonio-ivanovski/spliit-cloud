@@ -117,6 +117,7 @@ export const homeSearchSchema = z.object({
   redirect: optionalString,
   mode: z.enum(['sign-in', 'sign-up']).optional().catch(undefined),
   email: optionalString,
+  invitation: optionalString,
 })
 
 export const globalExpensesSearchSchema = z.object({

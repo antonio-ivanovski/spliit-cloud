@@ -699,14 +699,19 @@
       "nameRequired": "Introduz um nome de exibição.",
       "generic": "Algo correu mal. Por favor, tenta novamente.",
       "passwordPolicy": "Utiliza pelo menos 8 caracteres com maiúsculas, minúsculas, um número e um símbolo.",
-      "magicLinkFailed": "Não foi possível enviar o link de acesso."
+      "magicLinkFailed": "Não foi possível enviar o link de acesso.",
+      "signupInviteRequired": "Esta instância é apenas por convite. Usa uma ligação de convite ou pede a alguém que te convide para um grupo."
     },
     "loading": "A carregar…",
     "signedInAs": "Sessão iniciada como {name}",
     "required": "Precisas de iniciar sessão para aceder aos teus grupos.",
     "back": "Voltar ao início",
     "signInWithGithub": "Continuar com GitHub",
-    "legalNotice": "Ao continuar, aceita os <terms>Termos de utilização</terms> e reconhece o <privacy>aviso de privacidade</privacy>."
+    "legalNotice": "Ao continuar, aceita os <terms>Termos de utilização</terms> e reconhece o <privacy>aviso de privacidade</privacy>.",
+    "inviteOnly": {
+      "message": "Esta instância é apenas por convite. Usa uma ligação de convite ou pede a alguém que te convide para um grupo.",
+      "useInvitedEmail": "Usa o endereço de email com que recebeste o convite."
+    }
   },
   "CompleteProfile": {
     "title": "Completa o teu perfil",

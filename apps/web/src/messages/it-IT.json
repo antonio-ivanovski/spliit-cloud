@@ -1677,14 +1677,19 @@
       "nameRequired": "Inserisci un nome visualizzato.",
       "generic": "Qualcosa è andato storto. Per favore riprova.",
       "passwordPolicy": "Usa almeno 8 caratteri con una maiuscola, una minuscola, un numero e un simbolo.",
-      "magicLinkFailed": "Impossibile inviare il link di accesso."
+      "magicLinkFailed": "Impossibile inviare il link di accesso.",
+      "signupInviteRequired": "Questa istanza è accessibile solo su invito. Usa un link di invito o chiedi a qualcuno di invitarti in un gruppo."
     },
     "loading": "Caricamento…",
     "signedInAs": "Connesso come {name}",
     "required": "Devi accedere per accedere ai tuoi gruppi.",
     "back": "Torna alla home",
     "signInWithGithub": "Continua con GitHub",
-    "legalNotice": "Continuando, accetti i <terms>Termini di utilizzo</terms> e riconosci l'<privacy>informativa sulla privacy</privacy>."
+    "legalNotice": "Continuando, accetti i <terms>Termini di utilizzo</terms> e riconosci l'<privacy>informativa sulla privacy</privacy>.",
+    "inviteOnly": {
+      "message": "Questa istanza è accessibile solo su invito. Usa un link di invito o chiedi a qualcuno di invitarti in un gruppo.",
+      "useInvitedEmail": "Usa l'indirizzo email con cui hai ricevuto l'invito."
+    }
   },
   "CompleteProfile": {
     "title": "Completa il tuo profilo",

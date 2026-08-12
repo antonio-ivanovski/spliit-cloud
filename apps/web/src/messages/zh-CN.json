@@ -1662,14 +1662,19 @@
       "nameRequired": "请输入显示名称。",
       "generic": "出了点问题。请重试。",
       "passwordPolicy": "请使用至少8个字符，包含大写字母、小写字母、数字和符号。",
-      "magicLinkFailed": "无法发送登录链接。"
+      "magicLinkFailed": "无法发送登录链接。",
+      "signupInviteRequired": "此实例仅限邀请加入。请使用邀请链接，或请他人邀请您加入群组。"
     },
     "loading": "加载中……",
     "signedInAs": "以 {name} 身份登录",
     "required": "您需要登录才能访问您的群组。",
     "back": "返回首页",
     "signInWithGithub": "使用 GitHub 继续",
-    "legalNotice": "继续即表示您同意<terms>使用条款</terms>并确认已阅读<privacy>隐私声明</privacy>。"
+    "legalNotice": "继续即表示您同意<terms>使用条款</terms>并确认已阅读<privacy>隐私声明</privacy>。",
+    "inviteOnly": {
+      "message": "此实例仅限邀请加入。请使用邀请链接，或请他人邀请您加入群组。",
+      "useInvitedEmail": "请使用收到邀请的邮箱地址。"
+    }
   },
   "CompleteProfile": {
     "title": "完善您的个人资料",

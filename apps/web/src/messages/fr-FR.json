@@ -1677,14 +1677,19 @@
       "nameRequired": "Saisissez un nom d'affichage.",
       "generic": "Une erreur s'est produite. Veuillez réessayer.",
       "passwordPolicy": "Utilisez au moins 8 caractères avec une majuscule, une minuscule, un chiffre et un symbole.",
-      "magicLinkFailed": "Impossible d'envoyer le lien de connexion."
+      "magicLinkFailed": "Impossible d'envoyer le lien de connexion.",
+      "signupInviteRequired": "Cette instance est réservée aux invitations. Utilisez un lien d'invitation ou demandez à quelqu'un de vous inviter dans un groupe."
     },
     "loading": "Chargement…",
     "signedInAs": "Connecté en tant que {name}",
     "required": "Vous devez vous connecter pour accéder à vos groupes.",
     "back": "Retour à l'accueil",
     "signInWithGithub": "Continuer avec GitHub",
-    "legalNotice": "En continuant, vous acceptez les <terms>Conditions d'utilisation</terms> et reconnaissez l'<privacy>avis de confidentialité</privacy>."
+    "legalNotice": "En continuant, vous acceptez les <terms>Conditions d'utilisation</terms> et reconnaissez l'<privacy>avis de confidentialité</privacy>.",
+    "inviteOnly": {
+      "message": "Cette instance est réservée aux invitations. Utilisez un lien d'invitation ou demandez à quelqu'un de vous inviter dans un groupe.",
+      "useInvitedEmail": "Utilisez l'adresse e-mail avec laquelle vous avez reçu l'invitation."
+    }
   },
   "CompleteProfile": {
     "title": "Complétez votre profil",

@@ -14,6 +14,7 @@ const {
   mockNavigate,
   mockDeploymentConfig,
   mockMascotReact,
+  mockSearch,
 } = vi.hoisted(() => ({
   mockSignInEmail: vi.fn(),
   mockSignUpEmail: vi.fn(),
@@ -25,8 +26,16 @@ const {
     defaultCurrencyCode: 'USD',
     enableGoogleOAuth: false,
     enableGitHubOAuth: false,
+    signupMode: 'open' as 'open' | 'invite_only',
+    allowUninvitedSignup: true,
   },
   mockMascotReact: vi.fn(),
+  mockSearch: {
+    redirect: undefined as string | undefined,
+    mode: undefined as 'sign-in' | 'sign-up' | undefined,
+    email: undefined as string | undefined,
+    invitation: undefined as string | undefined,
+  },
 }))
 
 vi.mock('@/lib/auth', () => ({
@@ -48,11 +57,7 @@ vi.mock('@/lib/deployment-config', () => ({
 }))
 
 vi.mock('@tanstack/react-router', () => ({
-  useSearch: () => ({
-    redirect: undefined,
-    mode: undefined,
-    email: undefined,
-  }),
+  useSearch: () => mockSearch,
   useNavigate: () => mockNavigate,
   Link: ({ to, children, ...props }: Record<string, unknown>) => (
     <a href={to as string} {...props}>
@@ -97,6 +102,12 @@ describe('AuthPanel', () => {
     vi.clearAllMocks()
     mockDeploymentConfig.enableGoogleOAuth = false
     mockDeploymentConfig.enableGitHubOAuth = false
+    mockDeploymentConfig.signupMode = 'open'
+    mockDeploymentConfig.allowUninvitedSignup = true
+    mockSearch.redirect = undefined
+    mockSearch.mode = undefined
+    mockSearch.email = undefined
+    mockSearch.invitation = undefined
   })
 
   // ── Mode switching ──────────────────────────────────────────────────
@@ -272,10 +283,13 @@ describe('AuthPanel', () => {
 
     await user.click(screen.getByText('Continue with Google'))
 
-    expect(mockSignInSocial).toHaveBeenCalledWith({
-      provider: 'google',
-      callbackURL: `${window.location.origin}${redirectTo}`,
-    })
+    expect(mockSignInSocial).toHaveBeenCalledWith(
+      {
+        provider: 'google',
+        callbackURL: `${window.location.origin}${redirectTo}`,
+      },
+      {},
+    )
     expect(
       screen.queryByText('Sign in to Spliit Cloud'),
     ).not.toBeInTheDocument()
@@ -289,5 +303,33 @@ describe('AuthPanel', () => {
 
     // The "Forgot password?" link is only rendered in sign-in mode (default)
     expect(screen.getByText('Forgot password?')).toBeInTheDocument()
+  })
+
+  it('hides sign-up when the instance is invite-only', () => {
+    mockDeploymentConfig.signupMode = 'invite_only'
+    mockDeploymentConfig.allowUninvitedSignup = false
+
+    render(<AuthPanel />)
+
+    expect(screen.queryByText('Create an account')).not.toBeInTheDocument()
+    expect(
+      screen.getByText(
+        'This instance is invite-only. Use an invitation link or ask someone to invite you to a group.',
+      ),
+    ).toBeInTheDocument()
+  })
+
+  it('shows sign-up when invite-only but the visitor has a link invite', async () => {
+    mockDeploymentConfig.signupMode = 'invite_only'
+    mockDeploymentConfig.allowUninvitedSignup = false
+    mockSearch.redirect = '/groups/grp-1?invite=abcDEF-_0123456789'
+
+    const { user } = render(<AuthPanel />)
+
+    expect(
+      screen.getByText('Create your Spliit Cloud account'),
+    ).toBeInTheDocument()
+    await user.click(screen.getByText('Sign in'))
+    expect(screen.getByText('Create an account')).toBeInTheDocument()
   })
 })

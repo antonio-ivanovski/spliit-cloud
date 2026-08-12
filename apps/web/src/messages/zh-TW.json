@@ -1353,14 +1353,19 @@
       "nameRequired": "請輸入顯示名稱。",
       "generic": "出了點問題。請再試一次。",
       "passwordPolicy": "請使用至少8個字元，包含大寫字母、小寫字母、數字和符號。",
-      "magicLinkFailed": "無法傳送登入連結。"
+      "magicLinkFailed": "無法傳送登入連結。",
+      "signupInviteRequired": "此執行個體僅限邀請加入。請使用邀請連結，或請他人邀請您加入群組。"
     },
     "loading": "載入中……",
     "signedInAs": "以 {name} 身分登入",
     "required": "您需要登入才能存取您的群組。",
     "back": "返回首頁",
     "signInWithGithub": "使用 GitHub 繼續",
-    "legalNotice": "繼續即表示您同意<terms>使用條款</terms>並確認已閱讀<privacy>隱私聲明</privacy>。"
+    "legalNotice": "繼續即表示您同意<terms>使用條款</terms>並確認已閱讀<privacy>隱私聲明</privacy>。",
+    "inviteOnly": {
+      "message": "此執行個體僅限邀請加入。請使用邀請連結，或請他人邀請您加入群組。",
+      "useInvitedEmail": "請使用收到邀請的電子郵件地址。"
+    }
   },
   "CompleteProfile": {
     "title": "完善您的個人資料",
