@@ -97,6 +97,11 @@ function evenExpense(
         id,
         ledgerId: 'ledger-1',
         expenseDate,
+        // `expenseAt` / `expenseTimeZone` are NOT NULL in the schema, so mocked
+        // rows must supply them or output validation rejects the response.
+        // Mirrors the production backfill: noon on the expense date, UTC.
+        expenseAt: new Date(expenseDate.getTime() + 12 * 60 * 60 * 1000),
+        expenseTimeZone: 'UTC',
         title: 'Market',
         categoryId,
         amount,

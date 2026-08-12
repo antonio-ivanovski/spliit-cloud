@@ -441,12 +441,8 @@ export function buildExpenseFormDefaults(args: {
           })),
         }
 
-    const rawExpense = expense as typeof expense & {
-      expenseAt: Date
-      expenseTimeZone: string
-    }
-    const editAt = new Date(rawExpense.expenseAt)
-    const editTz = rawExpense.expenseTimeZone
+    const editAt = new Date(expense.expenseAt)
+    const editTz = expense.expenseTimeZone
     const editWall = utcToWallTime(editAt, editTz)
     const editTime = formatTimeMinutes(editWall.timeMinutes)
     const editWallDate = new Date(`${editWall.dateIso}T00:00:00.000Z`)

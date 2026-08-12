@@ -108,6 +108,13 @@ const expenseCommonFieldsSchema = {
   title: z.string(),
   amount: z.number().int(),
   expenseDate: z.date(),
+  // The absolute instant plus the timezone it was recorded in. Both are
+  // required by the expense form to reconstruct the original wall-clock time.
+  // Keep them here rather than on a single response schema: zod strips
+  // undeclared keys, so omitting them silently drops the columns from every
+  // response that shares these fields.
+  expenseAt: z.date(),
+  expenseTimeZone: timeZoneSchema,
   categoryId: categoryIdSchema,
   category: categoryResponseSchema,
   isReimbursement: z.boolean(),
