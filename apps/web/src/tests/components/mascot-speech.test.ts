@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
 
-import { buildMascotSpeechCycle } from '@/components/mascot/mascot-speech'
+import {
+  buildMascotSpeechCycle,
+  coachSpeechForActions,
+} from '@/components/mascot/mascot-speech'
 
 describe('mascot speech cycle', () => {
   it('always starts with the empty-route fallback', () => {
@@ -51,5 +54,15 @@ describe('mascot speech cycle', () => {
       settingsDiscovered: true,
     })
     expect(lines.map((line) => line.id)).toEqual(['empty'])
+  })
+
+  it('picks a tap-to-add coach line from the active actions', () => {
+    expect(coachSpeechForActions(['add-expense'])?.messageKey).toBe(
+      'Mascot.hintTapToAddExpense',
+    )
+    expect(coachSpeechForActions(['create-group'])?.messageKey).toBe(
+      'Mascot.hintTapToCreateGroup',
+    )
+    expect(coachSpeechForActions(['import-group'])).toBeNull()
   })
 })

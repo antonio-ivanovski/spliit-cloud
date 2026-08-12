@@ -4,7 +4,12 @@ Shared reaction vocabulary, Bill’s recipes, and how to add another character. 
 
 Reactions are semantic. Host, mutations, and speech never know which character is on screen. Artwork is a lookup: `preferences.mascot` → [`getMascotDefinition`](./mascot-registry.ts) → `definition.Character`.
 
-Signed-in Bill does not speak unsolicited. Poses are visual only unless the user taps Bill on a no-action surface. The unsigned homepage is the exception: after a long idle delay it may cycle a short landing line and a sparse ambient pose. See [`use-landing-mascot.ts`](./use-landing-mascot.ts).
+Signed-in Bill does not chatter. Poses are visual only unless the user taps Bill on a no-action surface. Two exceptions:
+
+- **First-run coach** (until they open the speed dial): after the welcome wave, Bill may say a one-line “tap me to add…” hint. A `+` badge on the host trigger pulses until that first open. The badge stays afterwards; the speech and pulse do not. See [`mascot-actions-discovery.ts`](./mascot-actions-discovery.ts).
+- **Unsigned homepage**: after a long idle delay it may cycle a short landing line and a sparse ambient pose. See [`use-landing-mascot.ts`](./use-landing-mascot.ts).
+
+The `+` badge is host chrome, not character artwork — every mascot gets it when the host has actions.
 
 ## Vocabulary
 
@@ -58,7 +63,7 @@ Horizontal shake, worried brows, frown, one falling tear.
 
 ### Open (speed-dial)
 
-Halves split on a spring; twin faces appear. Paper, outline, and print stay the same as idle — no tint wash and no halo in the gap. Independent of reaction poses. Action chips use `bg-card`, a ring, and `shadow-2xl` so they lift off the page.
+Halves split on a spring; twin faces appear. Paper, outline, and print stay the same as idle — no tint wash and no halo in the gap. Independent of reaction poses. Action chips and labels use an opaque lifted fill (no backdrop blur), a modest drop shadow, and a thin rim. Dark mode adds a faint primary edge — not a neon bloom. The primary create action keeps `bg-primary` so the plus stays high-contrast. The `+` badge sits on the host trigger’s start/top corner.
 
 ## Adding a character
 

@@ -2930,6 +2930,8 @@
     "resetPosition": "Repor posição",
     "landingHintSplit": "Divide um jantar, uma viagem ou a renda — eu trato das contas.",
     "landingHintSettle": "Quando quiseres liquidar as contas, animo-te.",
-    "landingHintTap": "Toca-me quando quiseres. Não mordo — sou um recibo."
+    "landingHintTap": "Toca-me quando quiseres. Não mordo — sou um recibo.",
+    "hintTapToAddExpense": "Toca-me para adicionar uma despesa.",
+    "hintTapToCreateGroup": "Toca-me para criar um grupo."
   }
 }

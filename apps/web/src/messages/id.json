@@ -2896,6 +2896,8 @@
     "resetPosition": "Atur ulang posisi",
     "landingHintSplit": "Bagi makan malam, perjalanan, atau sewa — saya yang hitung.",
     "landingHintSettle": "Kalau sudah siap lunasi, saya akan menyemangati Anda.",
-    "landingHintTap": "Ketuk saya kapan saja. Saya tidak menggigit — saya struk."
+    "landingHintTap": "Ketuk saya kapan saja. Saya tidak menggigit — saya struk.",
+    "hintTapToAddExpense": "Ketuk saya untuk menambah pengeluaran.",
+    "hintTapToCreateGroup": "Ketuk saya untuk membuat grup."
   }
 }

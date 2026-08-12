@@ -2912,6 +2912,8 @@
     "resetPosition": "Konumu sıfırla",
     "landingHintSplit": "Akşam yemeğini, geziyi ya da kirayı böl — hesaplamayı ben yaparım.",
     "landingHintSettle": "Hesapları kapatmaya hazır olunca seni desteklerim.",
-    "landingHintTap": "İstediğin zaman bana dokun. Isırmam — ben bir fişim."
+    "landingHintTap": "İstediğin zaman bana dokun. Isırmam — ben bir fişim.",
+    "hintTapToAddExpense": "Gider eklemek için bana dokun.",
+    "hintTapToCreateGroup": "Grup oluşturmak için bana dokun."
   }
 }

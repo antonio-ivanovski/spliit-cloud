@@ -2895,6 +2895,8 @@
     "resetPosition": "位置をリセット",
     "landingHintSplit": "ディナーや旅行、家賃を割り勘に。計算は私が引き受けます。",
     "landingHintSettle": "精算したくなったら、応援します。",
-    "landingHintTap": "いつでもタップしてください。かみません。私はレシートです。"
+    "landingHintTap": "いつでもタップしてください。かみません。私はレシートです。",
+    "hintTapToAddExpense": "タップして支出を追加できます。",
+    "hintTapToCreateGroup": "タップしてグループを作成できます。"
   }
 }

@@ -2930,6 +2930,8 @@
     "resetPosition": "Resetează poziția",
     "landingHintSplit": "Împarte o cină, o călătorie sau chiria — eu mă ocup de calcule.",
     "landingHintSettle": "Când vrei să decontezi, te încurajez.",
-    "landingHintTap": "Atinge-mă oricând. Nu mușc — sunt o chitanță."
+    "landingHintTap": "Atinge-mă oricând. Nu mușc — sunt o chitanță.",
+    "hintTapToAddExpense": "Atinge-mă ca să adaugi o cheltuială.",
+    "hintTapToCreateGroup": "Atinge-mă ca să creezi un grup."
   }
 }

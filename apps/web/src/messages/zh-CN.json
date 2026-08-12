@@ -2895,6 +2895,8 @@
     "resetPosition": "重置位置",
     "landingHintSplit": "晚餐、旅行或房租都可以分摊——计算交给我。",
     "landingHintSettle": "准备结算时，我会为你加油。",
-    "landingHintTap": "随时点我。我不咬人——我是一张收据。"
+    "landingHintTap": "随时点我。我不咬人——我是一张收据。",
+    "hintTapToAddExpense": "点我即可添加一笔支出。",
+    "hintTapToCreateGroup": "点我即可创建群组。"
   }
 }

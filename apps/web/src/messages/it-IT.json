@@ -2930,6 +2930,8 @@
     "resetPosition": "Reimposta posizione",
     "landingHintSplit": "Dividi una cena, un viaggio o l’affitto — ai calcoli ci penso io.",
     "landingHintSettle": "Quando vorrai saldare i conti, ti farò il tifo.",
-    "landingHintTap": "Toccami quando vuoi. Non mordo — sono una ricevuta."
+    "landingHintTap": "Toccami quando vuoi. Non mordo — sono una ricevuta.",
+    "hintTapToAddExpense": "Toccami per aggiungere una spesa.",
+    "hintTapToCreateGroup": "Toccami per creare un gruppo."
   }
 }

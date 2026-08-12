@@ -2912,6 +2912,8 @@
     "resetPosition": "Positie resetten",
     "landingHintSplit": "Splits een diner, een trip of de huur — ik houd de berekening bij.",
     "landingHintSettle": "Als je klaar bent om te vereffenen, moedig ik je aan.",
-    "landingHintTap": "Tik me wanneer je wilt. Ik bijt niet — ik ben een bon."
+    "landingHintTap": "Tik me wanneer je wilt. Ik bijt niet — ik ben een bon.",
+    "hintTapToAddExpense": "Tik op me om een uitgave toe te voegen.",
+    "hintTapToCreateGroup": "Tik op me om een groep aan te maken."
   }
 }

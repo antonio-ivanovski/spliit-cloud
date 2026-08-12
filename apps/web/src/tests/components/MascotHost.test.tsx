@@ -1,6 +1,7 @@
 import { Plus } from 'lucide-react'
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest'
 
+import { markMascotActionsDiscovered } from '@/components/mascot/mascot-actions-discovery'
 import {
   MascotProvider,
   useMascotActions,
@@ -399,5 +400,80 @@ describe('MascotHost', () => {
       'bottom-[calc(0.65rem+env(safe-area-inset-bottom))]',
     )
     media.mockRestore()
+  })
+
+  it('coaches tap-to-add after welcome when expense actions are available', async () => {
+    vi.useFakeTimers()
+    state.pathname = '/groups/group-1/expenses'
+    renderHost(<GroupActionRegistration />)
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(2_300)
+    })
+
+    expect(screen.getByTestId('bill-mascot-speech')).toHaveTextContent(
+      'Tap me to add an expense.',
+    )
+    const badge = screen.getByTestId('bill-mascot-action-badge')
+    expect(badge).toHaveAttribute('data-mascot-nudge', 'true')
+    vi.useRealTimers()
+  })
+
+  it('marks actions discovered when the speed dial opens and keeps the badge', async () => {
+    vi.useFakeTimers()
+    state.pathname = '/groups/group-1/expenses'
+    const { user } = renderHost(<GroupActionRegistration />)
+    await finishWelcome()
+
+    const trigger = screen.getByRole('button', {
+      name: 'Open actions with Bill',
+    })
+    await user.click(trigger)
+
+    expect(localStorage.getItem('mascotActionsDiscovered:account-1')).toBe('1')
+    expect(screen.queryByTestId('bill-mascot-speech')).toBeNull()
+    expect(screen.queryByTestId('bill-mascot-action-badge')).toBeNull()
+
+    await user.click(
+      screen.getByRole('button', { name: "Close Bill's actions" }),
+    )
+    const badge = screen.getByTestId('bill-mascot-action-badge')
+    expect(badge).toHaveAttribute('data-mascot-nudge', 'false')
+  })
+
+  it('does not coach again after actions have been discovered', async () => {
+    markMascotActionsDiscovered('account-1')
+    vi.useFakeTimers()
+    state.pathname = '/groups/group-1/expenses'
+    renderHost(<GroupActionRegistration />)
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(2_300)
+    })
+
+    expect(screen.queryByTestId('bill-mascot-speech')).toBeNull()
+    expect(screen.getByTestId('bill-mascot-action-badge')).toHaveAttribute(
+      'data-mascot-nudge',
+      'false',
+    )
+    vi.useRealTimers()
+  })
+
+  it('hides the action badge on personality-only routes', () => {
+    state.pathname = '/feedback'
+    renderHost()
+
+    expect(screen.queryByTestId('bill-mascot-action-badge')).toBeNull()
+  })
+
+  it('coaches tap-to-create on home after welcome', async () => {
+    vi.useFakeTimers()
+    renderHost()
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(2_300)
+    })
+
+    expect(screen.getByTestId('bill-mascot-speech')).toHaveTextContent(
+      'Tap me to create a group.',
+    )
+    vi.useRealTimers()
   })
 })

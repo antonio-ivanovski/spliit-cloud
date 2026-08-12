@@ -2984,6 +2984,8 @@
     "resetPosition": "Reset position",
     "landingHintSplit": "Split a dinner, a trip, or the rent — I’ll keep the math.",
     "landingHintSettle": "When you’re ready to settle up, I’ll cheer you on.",
-    "landingHintTap": "Tap me anytime. I don’t bite — I’m a receipt."
+    "landingHintTap": "Tap me anytime. I don’t bite — I’m a receipt.",
+    "hintTapToAddExpense": "Tap me to add an expense.",
+    "hintTapToCreateGroup": "Tap me to create a group."
   }
 }

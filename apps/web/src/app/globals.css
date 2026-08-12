@@ -533,3 +533,23 @@ input[type='date']::-moz-calendar-picker-indicator {
 [data-hash-focus] {
   animation: hash-focus-pulse 1.8s ease-out;
 }
+
+@keyframes mascot-badge-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.14);
+  }
+}
+
+[data-mascot-nudge='true'] {
+  animation: mascot-badge-pulse 1.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-mascot-nudge='true'] {
+    animation: none;
+  }
+}

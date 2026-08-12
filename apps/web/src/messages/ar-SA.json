@@ -2984,6 +2984,8 @@
     "resetPosition": "إعادة تعيين الموضع",
     "landingHintSplit": "قسّم عشاءً أو رحلة أو الإيجار. سأتولى الحساب.",
     "landingHintSettle": "عندما تريد تسوية الحسابات، سأشجعك.",
-    "landingHintTap": "انقر عليّ في أي وقت. لا أعضّ، فأنا إيصال."
+    "landingHintTap": "انقر عليّ في أي وقت. لا أعضّ، فأنا إيصال.",
+    "hintTapToAddExpense": "انقر عليّ لإضافة نفقة.",
+    "hintTapToCreateGroup": "انقر عليّ لإنشاء مجموعة."
   }
 }

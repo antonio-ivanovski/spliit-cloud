@@ -2895,6 +2895,8 @@
     "resetPosition": "위치 초기화",
     "landingHintSplit": "저녁, 여행, 월세도 나눠 보세요. 계산은 제가 할게요.",
     "landingHintSettle": "정산할 준비가 되면 응원할게요.",
-    "landingHintTap": "언제든 탭하세요. 물지 않아요. 영수증이거든요."
+    "landingHintTap": "언제든 탭하세요. 물지 않아요. 영수증이거든요.",
+    "hintTapToAddExpense": "나를 눌러 지출을 추가하세요.",
+    "hintTapToCreateGroup": "나를 눌러 그룹을 만드세요."
   }
 }

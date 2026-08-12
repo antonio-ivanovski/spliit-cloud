@@ -3,6 +3,8 @@ export type MascotSpeechMessageKey =
   | 'Mascot.hintReceiptVoice'
   | 'Mascot.hintSettle'
   | 'Mascot.hintSettings'
+  | 'Mascot.hintTapToAddExpense'
+  | 'Mascot.hintTapToCreateGroup'
 
 export type MascotSpeechLine = {
   id: string
@@ -66,4 +68,28 @@ export function buildMascotSpeechCycle({
   }
 
   return lines
+}
+
+export function isCoachSpeechLine(line: MascotSpeechLine | null) {
+  return Boolean(line?.id.startsWith('coach-'))
+}
+
+export function coachSpeechForActions(
+  actionIds: readonly string[],
+): MascotSpeechLine | null {
+  if (actionIds.includes('add-expense')) {
+    return {
+      id: 'coach-expense',
+      messageKey: 'Mascot.hintTapToAddExpense',
+      showSettings: false,
+    }
+  }
+  if (actionIds.includes('create-group')) {
+    return {
+      id: 'coach-group',
+      messageKey: 'Mascot.hintTapToCreateGroup',
+      showSettings: false,
+    }
+  }
+  return null
 }

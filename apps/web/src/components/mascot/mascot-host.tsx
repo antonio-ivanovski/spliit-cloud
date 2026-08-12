@@ -27,6 +27,11 @@ import { useCurrentAccount } from '@/lib/use-current-account'
 import { cn } from '@/lib/utils'
 
 import {
+  hasDiscoveredMascotActions,
+  markMascotActionsDiscovered,
+  subscribeMascotActionsDiscovered,
+} from './mascot-actions-discovery'
+import {
   isExpressiveMascotReaction,
   useMascotController,
   useMascotState,
@@ -49,10 +54,20 @@ import {
   markMascotSettingsDiscovered,
   subscribeMascotSettingsDiscovered,
 } from './mascot-settings-discovery'
-import { buildMascotSpeechCycle, type MascotSpeechLine } from './mascot-speech'
+import {
+  buildMascotSpeechCycle,
+  coachSpeechForActions,
+  isCoachSpeechLine,
+  type MascotSpeechLine,
+} from './mascot-speech'
 
 const SPEECH_DISMISS_MS = 3_000
 const DRAG_THRESHOLD_PX = 8
+
+const mascotActionElevation =
+  'shadow-[0_1px_3px_rgba(15,23,42,0.08),0_8px_20px_-6px_rgba(15,23,42,0.18),0_18px_36px_-10px_rgba(15,23,42,0.12)] ring-1 ring-black/10 dark:shadow-[0_6px_14px_rgba(0,0,0,0.55),0_18px_36px_-6px_rgba(0,0,0,0.62),0_0_16px_hsl(var(--primary)/0.14),0_0_0_1px_hsl(var(--primary)/0.32)] dark:ring-1 dark:ring-primary/30'
+
+const mascotActionFill = 'bg-card dark:bg-[hsl(24_9%_20%)]'
 
 function subscribeToBodyMutations(callback: () => void) {
   if (
@@ -92,6 +107,8 @@ export function MascotHost() {
     path: string
     line: MascotSpeechLine
   } | null>(null)
+  const [welcomeFor, setWelcomeFor] = useState<string | null>(null)
+  const [coachedAccountId, setCoachedAccountId] = useState<string | null>(null)
   const [dragPx, setDragPx] = useState<{ x: number; y: number } | null>(null)
   const cycleRef = useRef({ path: '', index: 0 })
   const speechLine = speech?.path === pathname ? speech.line : null
@@ -120,6 +137,11 @@ export function MascotHost() {
   const settingsDiscovered = useSyncExternalStore(
     subscribeMascotSettingsDiscovered,
     () => hasDiscoveredMascotSettings(account?.id),
+    () => false,
+  )
+  const actionsDiscovered = useSyncExternalStore(
+    subscribeMascotActionsDiscovered,
+    () => hasDiscoveredMascotActions(account?.id),
     () => false,
   )
   const pin = useSyncExternalStore(
@@ -175,6 +197,8 @@ export function MascotHost() {
   const interactive = hasActions && !blockedByOverlay
   const open = interactive && openScope === interactionScope
   const showSettings = interactive && !settingsDiscovered
+  const showActionBadge = hasActions && !open && !blockedByOverlay
+  const nudgeActions = showActionBadge && !actionsDiscovered
   const pinned = Boolean(pin) && finePointer
   const placement = dialPlacementFromPin(pinned ? pin : null)
   const aiReceiptOrVoice = Boolean(
@@ -221,6 +245,31 @@ export function MascotHost() {
   }, [speechLine])
 
   const definition = getMascotDefinition(preferences?.mascot)
+  const accountId = account?.id ?? null
+
+  if (mascot?.reaction === 'welcome' && accountId && welcomeFor !== accountId) {
+    setWelcomeFor(accountId)
+  } else if (!accountId && welcomeFor) {
+    setWelcomeFor(null)
+    setCoachedAccountId(null)
+  }
+
+  if (
+    accountId &&
+    welcomeFor === accountId &&
+    coachedAccountId !== accountId &&
+    !actionsDiscovered &&
+    hasActions &&
+    !blockedByOverlay &&
+    !docked &&
+    mascot?.reaction === 'idle'
+  ) {
+    const line = coachSpeechForActions(actions.map((action) => action.id))
+    if (line) {
+      setCoachedAccountId(accountId)
+      setSpeech({ path: pathname, line })
+    }
+  }
 
   useEffect(() => {
     if (!account?.id) {
@@ -326,6 +375,10 @@ export function MascotHost() {
       open={open}
       onOpenChange={(nextOpen) => {
         if (!interactive) return
+        if (nextOpen) {
+          markMascotActionsDiscovered(account?.id)
+          setSpeech(null)
+        }
         setOpenScope(nextOpen ? interactionScope : null)
       }}
       className={positionClassName}
@@ -337,29 +390,33 @@ export function MascotHost() {
       data-mascot-pinned={pinned ? 'true' : 'false'}
       data-mascot-placement={placement}
     >
-      {speechLine && !blockedByOverlay && !hasActions && (
-        <div
-          data-testid="bill-mascot-speech"
-          className={cn(
-            'pointer-events-auto max-w-[13.5rem] rounded-2xl border border-border/80 bg-card px-3 py-2 text-start text-xs leading-snug text-foreground shadow-2xl ring-1 ring-border/80 backdrop-blur-md dark:shadow-black/40',
-            placement.startsWith('top') ? 'mt-2' : 'mb-2',
-            !reducedMotion && 'animate-in fade-in-0 zoom-in-95',
-          )}
-        >
-          <output className="block" aria-live="polite">
-            {t(speechLine.messageKey)}
-          </output>
-          {speechLine.showSettings && (
-            <button
-              type="button"
-              className="mt-1.5 text-xs font-medium text-primary underline-offset-2 hover:underline"
-              onClick={openMascotSettings}
-            >
-              {t('Mascot.noActionSettings')}
-            </button>
-          )}
-        </div>
-      )}
+      {speechLine &&
+        !blockedByOverlay &&
+        (!hasActions || isCoachSpeechLine(speechLine)) && (
+          <div
+            data-testid="bill-mascot-speech"
+            className={cn(
+              'pointer-events-auto max-w-[13.5rem] rounded-2xl border border-border/80 px-3 py-2 text-start text-xs leading-snug text-foreground dark:border-white/18',
+              mascotActionFill,
+              mascotActionElevation,
+              placement.startsWith('top') ? 'mt-2' : 'mb-2',
+              !reducedMotion && 'animate-in fade-in-0 zoom-in-95',
+            )}
+          >
+            <output className="block" aria-live="polite">
+              {t(speechLine.messageKey)}
+            </output>
+            {speechLine.showSettings && (
+              <button
+                type="button"
+                className="mt-1.5 text-xs font-medium text-primary underline-offset-2 hover:underline"
+                onClick={openMascotSettings}
+              >
+                {t('Mascot.noActionSettings')}
+              </button>
+            )}
+          </div>
+        )}
       <SpeedDialContent
         className={cn(
           'gap-2 pe-1',
@@ -376,17 +433,27 @@ export function MascotHost() {
               placement.endsWith('start') && 'flex-row-reverse',
             )}
           >
-            <SpeedDialLabel className="border-border/80 bg-card px-3 py-2 text-sm shadow-2xl ring-1 ring-border/80 backdrop-blur-md dark:shadow-black/40">
+            <SpeedDialLabel
+              className={cn(
+                'border-border/80 px-3 py-2 text-sm backdrop-blur-none dark:border-white/18',
+                mascotActionFill,
+                mascotActionElevation,
+              )}
+            >
               {label}
             </SpeedDialLabel>
             <SpeedDialAction
               aria-label={label}
               onClick={onSelect}
               className={cn(
-                'flex size-12 items-center justify-center rounded-2xl border shadow-2xl ring-1 transition-[transform,background-color] duration-200 hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring dark:shadow-black/40',
+                'flex size-12 items-center justify-center rounded-2xl border transition-[transform,background-color] duration-200 hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring',
+                mascotActionElevation,
                 primary
-                  ? 'border-primary/70 bg-primary text-primary-foreground ring-primary/30 hover:bg-primary/90'
-                  : 'border-border/80 bg-card text-foreground ring-border/80 backdrop-blur-md hover:bg-accent',
+                  ? 'border-primary bg-primary text-primary-foreground hover:bg-primary/90 dark:border-primary dark:bg-primary dark:text-primary-foreground'
+                  : cn(
+                      'border-border/80 text-foreground hover:bg-accent dark:border-white/18',
+                      mascotActionFill,
+                    ),
               )}
             >
               <Icon className="size-5" aria-hidden="true" />
@@ -400,14 +467,24 @@ export function MascotHost() {
               placement.endsWith('start') && 'flex-row-reverse',
             )}
           >
-            <SpeedDialLabel className="border-border/70 bg-card px-2.5 py-1.5 text-xs text-muted-foreground shadow-xl ring-1 ring-border/70 backdrop-blur-md dark:shadow-black/40">
+            <SpeedDialLabel
+              className={cn(
+                'border-border/80 px-2.5 py-1.5 text-xs text-muted-foreground backdrop-blur-none dark:border-white/18',
+                mascotActionFill,
+                mascotActionElevation,
+              )}
+            >
               {t('Mascot.settingsAction')}
             </SpeedDialLabel>
             <SpeedDialAction
               aria-label={t('Mascot.settingsAction')}
               data-testid="bill-mascot-settings"
               onClick={openMascotSettings}
-              className="flex size-9 items-center justify-center rounded-xl border border-border/70 bg-card text-muted-foreground shadow-xl ring-1 ring-border/70 backdrop-blur-md hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring dark:shadow-black/40"
+              className={cn(
+                'flex size-9 items-center justify-center rounded-xl border border-border/80 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring dark:border-white/18',
+                mascotActionFill,
+                mascotActionElevation,
+              )}
             >
               <Settings className="size-4" aria-hidden="true" />
             </SpeedDialAction>
@@ -468,6 +545,20 @@ export function MascotHost() {
           reaction={mascot.reaction}
           reactionKey={mascot.reactionKey}
         />
+        {showActionBadge && (
+          <span
+            data-testid="bill-mascot-action-badge"
+            data-mascot-nudge={nudgeActions ? 'true' : 'false'}
+            aria-hidden="true"
+            className={cn(
+              'pointer-events-none absolute z-10 flex items-center justify-center rounded-full bg-primary text-primary-foreground ring-2 ring-background',
+              'shadow-[0_4px_10px_rgba(15,23,42,0.28)] dark:shadow-[0_0_12px_hsl(var(--primary)/0.55)]',
+              docked ? 'start-0 top-0 size-5' : 'start-0.5 top-0.5 size-6',
+            )}
+          >
+            <Plus className={docked ? 'size-3' : 'size-3.5'} strokeWidth={3} />
+          </span>
+        )}
       </SpeedDialTrigger>
     </SpeedDial>
   )
