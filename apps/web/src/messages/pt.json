@@ -191,7 +191,8 @@
       "more_many": "+{count} a mais",
       "more_other": "+{count} a mais",
       "title": "Itens",
-      "participants": "{names}"
+      "participants": "{names}",
+      "showLess": "Mostrar menos"
     },
     "copyToast": "Iniciada a cópia da despesa. Os detalhes da despesa existente serão usados para criar uma nova."
   },

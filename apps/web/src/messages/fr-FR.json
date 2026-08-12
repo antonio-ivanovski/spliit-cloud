@@ -191,7 +191,8 @@
       "more_many": "+{count} autres",
       "more_other": "+{count} autres",
       "title": "Articles",
-      "participants": "{names}"
+      "participants": "{names}",
+      "showLess": "Afficher moins"
     },
     "copyToast": "Copie de la dépense initiée. Les détails de la dépense existante seront utilisés pour en créer une nouvelle."
   },

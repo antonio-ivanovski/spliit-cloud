@@ -191,7 +191,8 @@
       "more_many": "+{count} más",
       "more_other": "+{count} más",
       "title": "Artículos",
-      "participants": "{names}"
+      "participants": "{names}",
+      "showLess": "Mostrar menos"
     },
     "copyToast": "Se ha iniciado la copia del gasto. Los datos del gasto existente se utilizarán para crear uno nuevo."
   },

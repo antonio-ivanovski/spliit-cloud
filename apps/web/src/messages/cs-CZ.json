@@ -193,7 +193,8 @@
       "more_many": "+{count} dalších",
       "more_other": "+{count} dalších",
       "title": "Položky",
-      "participants": "{names}"
+      "participants": "{names}",
+      "showLess": "Zobrazit méně"
     },
     "copyToast": "Vytvoření kopie výdaje zahájeno. Stávající údaje výdaje budou použity k vytvoření nového."
   },

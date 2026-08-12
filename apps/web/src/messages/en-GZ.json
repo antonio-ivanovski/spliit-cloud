@@ -1216,7 +1216,8 @@
       "more_one": "+{count} more, bestie",
       "more_other": "+{count} more, besties",
       "title": "expense items",
-      "participants": "{names}, obviously"
+      "participants": "{names}, obviously",
+      "showLess": "fold these up"
     }
   },
   "ExpenseDocumentsInput": {

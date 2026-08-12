@@ -191,7 +191,8 @@
       "more_two": "+עוד {count}",
       "more_other": "+עוד {count}",
       "title": "Items",
-      "participants": "{names}"
+      "participants": "{names}",
+      "showLess": "הצג פחות"
     },
     "copyToast": "העתקת ההוצאה הותחלה. פרטי ההוצאה הקיימים ישמשו ליצירת הוצאה חדשה."
   },

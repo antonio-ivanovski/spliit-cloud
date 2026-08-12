@@ -1035,7 +1035,8 @@
       "more_one": "+{count} till",
       "more_other": "+{count} till",
       "title": "Rader",
-      "participants": "{names}"
+      "participants": "{names}",
+      "showLess": "Visa mindre"
     }
   },
   "ExpenseDocumentsInput": {

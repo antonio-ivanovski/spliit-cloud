@@ -191,7 +191,8 @@
       "more_many": "+{count} gehiago",
       "more_other": "+{count} gehiago",
       "title": "Artikuluak",
-      "participants": "{names}"
+      "participants": "{names}",
+      "showLess": "Erakutsi gutxiago"
     },
     "copyToast": "Gastuaren kopia hasi da. Lehendik dagoen gastuaren datuak erabiliko dira berri bat sortzeko."
   },

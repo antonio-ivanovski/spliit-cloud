@@ -187,7 +187,8 @@
     "items": {
       "more_other": "另有 {count} 项",
       "title": "Items",
-      "participants": "{names}"
+      "participants": "{names}",
+      "showLess": "收起"
     },
     "copyToast": "已启动复制支出。将使用现有支出详情创建新的支出。"
   },

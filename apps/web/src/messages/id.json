@@ -187,7 +187,8 @@
     "items": {
       "more_other": "+{count} lainnya",
       "title": "Items",
-      "participants": "{names}"
+      "participants": "{names}",
+      "showLess": "Tampilkan lebih sedikit"
     },
     "copyToast": "Penyalinan pengeluaran dimulai. Detail pengeluaran yang ada akan digunakan untuk membuat pengeluaran baru."
   },

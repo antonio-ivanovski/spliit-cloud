@@ -193,7 +193,8 @@
       "more_many": "+ ще {count}",
       "more_other": "+ ще {count}",
       "title": "Позиції",
-      "participants": "{names}"
+      "participants": "{names}",
+      "showLess": "Показати менше"
     },
     "copyToast": "Копіювання витрати розпочато. Наявні дані витрати будуть використані для створення нової."
   },

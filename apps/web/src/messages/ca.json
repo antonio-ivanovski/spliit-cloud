@@ -191,7 +191,8 @@
       "more_many": "+{count} més",
       "more_other": "+{count} més",
       "title": "Articles",
-      "participants": "{names}"
+      "participants": "{names}",
+      "showLess": "Mostra menys"
     },
     "copyToast": "S'ha iniciat la còpia de la despesa. Les dades de la despesa existent s'utilitzaran per crear-ne una de nova."
   },

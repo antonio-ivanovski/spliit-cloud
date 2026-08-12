@@ -191,7 +191,8 @@
       "more_many": "+{count} altri",
       "more_other": "+{count} altri",
       "title": "Voci",
-      "participants": "{names}"
+      "participants": "{names}",
+      "showLess": "Mostra meno"
     },
     "copyToast": "Copia della spesa avviata. I dettagli della spesa esistente verranno usati per crearne una nuova."
   },

@@ -193,7 +193,8 @@
       "more_many": "+ jeszcze {count}",
       "more_other": "+ jeszcze {count}",
       "title": "Pozycje",
-      "participants": "{names}"
+      "participants": "{names}",
+      "showLess": "Pokaż mniej"
     },
     "copyToast": "Kopiowanie wydatku rozpoczęte. Istniejące szczegóły wydatku zostaną użyte do utworzenia nowego."
   },

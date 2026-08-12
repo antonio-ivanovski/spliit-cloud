@@ -187,7 +187,8 @@
     "items": {
       "more_other": "+{count}件",
       "title": "Items",
-      "participants": "{names}"
+      "participants": "{names}",
+      "showLess": "表示を減らす"
     },
     "copyToast": "支出のコピーを開始しました。既存の支出の詳細を使用して新しい支出を作成します。"
   },

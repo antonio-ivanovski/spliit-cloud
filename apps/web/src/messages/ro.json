@@ -191,7 +191,8 @@
       "more_few": "+încă {count}",
       "more_other": "+încă {count}",
       "title": "Articole",
-      "participants": "{names}"
+      "participants": "{names}",
+      "showLess": "Arată mai puțin"
     },
     "copyToast": "Copierea cheltuielii a fost inițiată. Detaliile cheltuielii existente vor fi folosite pentru a crea una nouă."
   },

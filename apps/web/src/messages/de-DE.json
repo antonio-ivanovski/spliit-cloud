@@ -197,7 +197,8 @@
       "more_many": "+{count} weitere",
       "more_other": "+{count} weitere",
       "title": "Artikel",
-      "participants": "{names}"
+      "participants": "{names}",
+      "showLess": "Weniger anzeigen"
     },
     "copyToast": "Ausgabe wird kopiert. Die bestehenden Ausgabedetails werden zum Erstellen einer neuen Ausgabe verwendet."
   },

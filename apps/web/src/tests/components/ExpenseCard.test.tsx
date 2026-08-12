@@ -459,4 +459,85 @@ describe('ExpenseCard', () => {
       expect(strongTexts).toEqual(['Alice', 'Bob', 'Carol', 'Dave'])
     })
   })
+
+  describe('items preview', () => {
+    const threeItems = [
+      { id: 'item-1', title: 'Apples', amount: 1000 },
+      { id: 'item-2', title: 'Bananas', amount: 1500 },
+      { id: 'item-3', title: 'Cherries', amount: 2000 },
+    ]
+
+    it('hides overflow items until the more control is pressed', async () => {
+      vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+      vi.mocked(useActiveUser).mockReturnValue(null)
+      const onOpen = vi.fn()
+
+      const { user } = render(
+        <ExpenseCard
+          expense={makeExpense({ items: threeItems })}
+          currency={EUR}
+          groupId="group-1"
+          participantCount={2}
+          onOpen={onOpen}
+        />,
+      )
+
+      expect(screen.getByText(/Apples/)).toBeInTheDocument()
+      expect(screen.getByText(/Bananas/)).toBeInTheDocument()
+      expect(screen.queryByText(/Cherries/)).not.toBeInTheDocument()
+
+      await user.click(screen.getByRole('button', { name: /^\+1 more$/i }))
+
+      expect(onOpen).not.toHaveBeenCalled()
+      expect(screen.getByText(/Cherries/)).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /^show less$/i }),
+      ).toHaveAttribute('aria-expanded', 'true')
+    })
+
+    it('collapses overflow items when Show less is pressed', async () => {
+      vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+      vi.mocked(useActiveUser).mockReturnValue(null)
+
+      const { user } = render(
+        <ExpenseCard
+          expense={makeExpense({ items: threeItems })}
+          currency={EUR}
+          groupId="group-1"
+          participantCount={2}
+        />,
+      )
+
+      await user.click(screen.getByRole('button', { name: /^\+1 more$/i }))
+      await user.click(screen.getByRole('button', { name: /^show less$/i }))
+
+      expect(screen.queryByText(/Cherries/)).not.toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /^\+1 more$/i }),
+      ).toHaveAttribute('aria-expanded', 'false')
+    })
+
+    it('does not render an overflow control when there are at most two items', () => {
+      vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+      vi.mocked(useActiveUser).mockReturnValue(null)
+
+      render(
+        <ExpenseCard
+          expense={makeExpense({
+            items: [
+              { id: 'item-1', title: 'Apples', amount: 1000 },
+              { id: 'item-2', title: 'Bananas', amount: 1500 },
+            ],
+          })}
+          currency={EUR}
+          groupId="group-1"
+          participantCount={2}
+        />,
+      )
+
+      expect(
+        screen.queryByRole('button', { name: /more/i }),
+      ).not.toBeInTheDocument()
+    })
+  })
 })

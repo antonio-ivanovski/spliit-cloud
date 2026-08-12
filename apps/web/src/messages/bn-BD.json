@@ -1035,7 +1035,8 @@
       "more_one": "+{count} আরও",
       "more_other": "+{count} আরও",
       "title": "আইটেম",
-      "participants": "{names}"
+      "participants": "{names}",
+      "showLess": "কম দেখান"
     }
   },
   "ExpenseDocumentsInput": {

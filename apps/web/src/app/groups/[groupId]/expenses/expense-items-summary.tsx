@@ -1,7 +1,10 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
+
+import { ExpenseItemsOverflowToggle } from './expense-items-overflow-toggle'
 
 type Item = {
   id: string
@@ -19,9 +22,13 @@ export function ExpenseItemsSummary({
   locale: string
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseCard' })
+  const [expanded, setExpanded] = useState(false)
   if (items.length === 0) return null
-  const visibleItems = items.slice(0, 3)
-  const remaining = items.length - visibleItems.length
+
+  const maxPreview = 3
+  const remaining = items.length - maxPreview
+  const visibleItems =
+    expanded || remaining <= 0 ? items : items.slice(0, maxPreview)
 
   return (
     <section className="space-y-2">
@@ -38,9 +45,11 @@ export function ExpenseItemsSummary({
           </div>
         ))}
         {remaining > 0 && (
-          <div className="text-xs text-muted-foreground">
-            {t('items.more', { count: remaining })}
-          </div>
+          <ExpenseItemsOverflowToggle
+            expanded={expanded}
+            remaining={remaining}
+            onToggle={() => setExpanded((open) => !open)}
+          />
         )}
       </div>
     </section>

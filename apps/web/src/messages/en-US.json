@@ -221,7 +221,8 @@
       "more_many": "+{count} more",
       "more_other": "+{count} more",
       "title": "Items",
-      "participants": "{names}"
+      "participants": "{names}",
+      "showLess": "Show less"
     },
     "copyToast": "Copy expense initiated. The existing expense details will be used to create a new one."
   },

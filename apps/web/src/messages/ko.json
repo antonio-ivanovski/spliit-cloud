@@ -1230,7 +1230,8 @@
     "items": {
       "more_other": "+{count}개 더 보기",
       "title": "Items",
-      "participants": "{names}"
+      "participants": "{names}",
+      "showLess": "간략히 보기"
     },
     "copyToast": "지출 복사가 시작되었습니다. 기존 지출 정보를 사용해 새 지출이 생성됩니다."
   },

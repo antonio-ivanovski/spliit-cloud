@@ -496,7 +496,8 @@
       "title": "البنود",
       "participants": "{names}",
       "more_two": "+{count} أكثر",
-      "more_one": "+{count} أكثر"
+      "more_one": "+{count} أكثر",
+      "showLess": "عرض أقل"
     },
     "receivedByMultiple": "استلم بواسطة <paidByNames></paidByNames> · مخصص لـ <paidFor></paidFor>",
     "paidByMultiple": "دفع بواسطة <paidByNames></paidByNames> · مقسم بين <paidFor></paidFor>",

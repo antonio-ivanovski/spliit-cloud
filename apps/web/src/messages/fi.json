@@ -189,7 +189,8 @@
       "more_one": "+{count} muu",
       "more_other": "+{count} muuta",
       "title": "Kohteet",
-      "participants": "{names}"
+      "participants": "{names}",
+      "showLess": "Näytä vähemmän"
     },
     "copyToast": "Kulun kopiointi aloitettu. Olemassa olevia kulun tietoja käytetään uuden kulun luomiseen."
   },

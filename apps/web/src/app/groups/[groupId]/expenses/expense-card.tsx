@@ -1,6 +1,7 @@
 /* oxlint-disable jsx-a11y/prefer-tag-over-role -- card is an interactive container with a nested link button. */
 import { useNavigate } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
+import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { ActiveUserBalance } from '@/app/groups/[groupId]/expenses/active-user-balance'
@@ -15,6 +16,7 @@ import { getCurrency, type Currency } from '@/lib/currency'
 import { formatExpenseClosed } from '@/lib/expense-display'
 import { cn, formatCurrency } from '@/lib/utils'
 
+import { ExpenseItemsOverflowToggle } from './expense-items-overflow-toggle'
 import { RecurringBadge } from './series-controls'
 
 type Expense = Awaited<ReturnType<typeof getGroupExpenses>>[number]
@@ -35,22 +37,29 @@ function ItemsPreview({
   currency: Currency
   locale: string
 }) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseCard' })
+  const [expanded, setExpanded] = useState(false)
   if (items.length === 0) return null
 
   const maxPreview = 2
-  const previewItems = items.slice(0, maxPreview)
   const remaining = items.length - maxPreview
+  const visibleItems =
+    expanded || remaining <= 0 ? items : items.slice(0, maxPreview)
 
   return (
     <div className="text-xs text-muted-foreground">
-      {previewItems.map((item) => (
+      {visibleItems.map((item) => (
         <div key={item.id}>
           {item.title} <span className="text-muted-foreground/50">·</span>{' '}
           {formatCurrency(currency, item.amount, locale)}
         </div>
       ))}
-      {remaining > 0 && <div>{t('items.more', { count: remaining })}</div>}
+      {remaining > 0 && (
+        <ExpenseItemsOverflowToggle
+          expanded={expanded}
+          remaining={remaining}
+          onToggle={() => setExpanded((open) => !open)}
+        />
+      )}
     </div>
   )
 }

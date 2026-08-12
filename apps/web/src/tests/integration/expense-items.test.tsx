@@ -562,7 +562,7 @@ describe('Expense items — ExpenseCard via existing API', () => {
     const { ExpenseCard } =
       await import('@/app/groups/[groupId]/expenses/expense-card')
 
-    render(
+    const { user } = render(
       <ExpenseCard
         expense={renderable as unknown as GroupExpense}
         currency={{ symbol: '€', code: 'EUR', rounding: 0, decimal_digits: 2 }}
@@ -577,8 +577,11 @@ describe('Expense items — ExpenseCard via existing API', () => {
     expect(within(card).getByText(/Bananas/)).toBeInTheDocument()
     // The third item is hidden behind the "+1 more" indicator
     expect(within(card).queryByText(/Cherries/)).not.toBeInTheDocument()
-    // Overflow indicator is rendered
-    expect(within(card).getByText(/more/i)).toBeInTheDocument()
+    const more = within(card).getByRole('button', { name: /^\+1 more$/i })
+    expect(more).toBeInTheDocument()
+
+    await user.click(more)
+    expect(within(card).getByText(/Cherries/)).toBeInTheDocument()
   })
 
   // ── Test 5: items survive a list round-trip via the API ──────────────

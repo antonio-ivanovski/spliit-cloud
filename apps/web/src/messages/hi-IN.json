@@ -1035,7 +1035,8 @@
       "more_one": "+{count} और",
       "more_other": "+{count} और",
       "title": "आइटम",
-      "participants": "{names}"
+      "participants": "{names}",
+      "showLess": "कम दिखाएँ"
     }
   },
   "ExpenseDocumentsInput": {

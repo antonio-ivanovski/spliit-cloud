@@ -193,7 +193,8 @@
       "more_many": "+ ещё {count}",
       "more_other": "+ ещё {count}",
       "title": "Позиции",
-      "participants": "{names}"
+      "participants": "{names}",
+      "showLess": "Показать меньше"
     },
     "copyToast": "Копирование расхода запущено. Существующие данные расхода будут использованы для создания нового."
   },

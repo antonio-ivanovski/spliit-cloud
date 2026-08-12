@@ -221,7 +221,8 @@
       "more_many": "+{count} nữa",
       "more_other": "+{count} nữa",
       "title": "Mục",
-      "participants": "{names}"
+      "participants": "{names}",
+      "showLess": "Thu gọn"
     },
     "copyToast": "Đã bắt đầu sao chép chi phí. Chi tiết chi phí hiện tại sẽ được dùng để tạo chi phí mới."
   },

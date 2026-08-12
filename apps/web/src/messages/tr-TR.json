@@ -189,7 +189,8 @@
       "more_one": "+{count} tane daha",
       "more_other": "+{count} tane daha",
       "title": "Items",
-      "participants": "{names}"
+      "participants": "{names}",
+      "showLess": "Daha az göster"
     },
     "copyToast": "Masraf kopyalama başlatıldı. Mevcut masraf ayrıntıları yeni bir tane oluşturmak için kullanılacak."
   },

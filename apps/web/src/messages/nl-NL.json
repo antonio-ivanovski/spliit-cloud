@@ -189,7 +189,8 @@
       "more_one": "+{count} meer",
       "more_other": "+{count} meer",
       "title": "Items",
-      "participants": "{names}"
+      "participants": "{names}",
+      "showLess": "Minder tonen"
     },
     "copyToast": "Kopiëren gestart. De bestaande uitgavedetails worden gebruikt om een nieuwe aan te maken."
   },

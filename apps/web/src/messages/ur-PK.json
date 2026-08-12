@@ -1035,7 +1035,8 @@
       "more_one": "+{count} مزید",
       "more_other": "+{count} مزید",
       "title": "آئٹمز",
-      "participants": "{names}"
+      "participants": "{names}",
+      "showLess": "کم دکھائیں"
     }
   },
   "ExpenseDocumentsInput": {
