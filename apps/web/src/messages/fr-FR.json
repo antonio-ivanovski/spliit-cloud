@@ -2923,6 +2923,13 @@
     "settingsAction": "Paramètres de la mascotte",
     "noActionMessage": "Je ne peux rien faire pour vous ici pour le moment.",
     "noActionSettings": "Paramètres de la mascotte",
-    "landingGreeting": "Bonjour — je vous aide à partager les dépenses une fois connecté."
+    "landingGreeting": "Bonjour — je vous aide à partager les dépenses une fois connecté.",
+    "hintReceiptVoice": "Je peux remplir une dépense à partir d’un reçu ou d’un enregistrement vocal.",
+    "hintSettle": "C’est dans Équilibres que nous réglons les comptes.",
+    "hintSettings": "Vous pouvez me changer ou me désactiver dans les paramètres de la mascotte.",
+    "resetPosition": "Réinitialiser la position",
+    "landingHintSplit": "Partagez un dîner, un voyage ou le loyer — je m’occupe des calculs.",
+    "landingHintSettle": "Quand vous voudrez régler les comptes, je vous encouragerai.",
+    "landingHintTap": "Touchez-moi quand vous voulez. Je ne mords pas — je suis un reçu."
   }
 }

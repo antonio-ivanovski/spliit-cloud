@@ -3,6 +3,7 @@ import { useNavigate, useSearch } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { useMascotController } from '@/components/mascot/mascot-context'
 import { needsDisplayName } from '@/lib/account'
 import { authClient } from '@/lib/auth'
 import { useDeploymentConfig } from '@/lib/deployment-config'
@@ -19,6 +20,7 @@ export function getErrorMessage(error: unknown): string {
 }
 
 export function useAuthPanel(options?: { redirectTo?: string }) {
+  const mascot = useMascotController()
   const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
   const navigate = useNavigate()
   const {
@@ -87,8 +89,12 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
       }
       return { mode: 'sign-up' as const }
     },
+    onError() {
+      mascot.react('failure')
+    },
     async onSuccess(data) {
       if (data.mode === 'sign-up') {
+        mascot.react('success')
         setSuccessState('verification')
       } else {
         const session = await authClient.getSession({
@@ -123,7 +129,11 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
       }
     },
     onSuccess() {
+      mascot.react('success')
       setSuccessState('magic-link')
+    },
+    onError() {
+      mascot.react('failure')
     },
   })
 

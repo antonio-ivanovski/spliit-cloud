@@ -2923,6 +2923,13 @@
     "settingsAction": "Configuració de la mascota",
     "noActionMessage": "Ara mateix no puc ajudar-te amb res aquí.",
     "noActionSettings": "Configuració de la mascota",
-    "landingGreeting": "Hola — t’ajudo a repartir les despeses un cop iniciïs la sessió."
+    "landingGreeting": "Hola — t’ajudo a repartir les despeses un cop iniciïs la sessió.",
+    "hintReceiptVoice": "Puc omplir una despesa a partir d’un rebut o d’una gravació de veu.",
+    "hintSettle": "Al Balanç és on liquidem els comptes.",
+    "hintSettings": "Pots canviar-me o desactivar-me a la configuració de la mascota.",
+    "resetPosition": "Restableix la posició",
+    "landingHintSplit": "Reparteix un sopar, un viatge o el lloguer — jo em cuido dels números.",
+    "landingHintSettle": "Quan vulguis liquidar els comptes, t’animaré.",
+    "landingHintTap": "Toca’m quan vulguis. No et mordo — sóc un rebut."
   }
 }

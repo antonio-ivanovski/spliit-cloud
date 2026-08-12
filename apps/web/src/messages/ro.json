@@ -2923,6 +2923,13 @@
     "settingsAction": "Setările mascotei",
     "noActionMessage": "Deocamdată nu te pot ajuta cu nimic aici.",
     "noActionSettings": "Setările mascotei",
-    "landingGreeting": "Salut — te ajut să împarți cheltuielile după ce te autentifici."
+    "landingGreeting": "Salut — te ajut să împarți cheltuielile după ce te autentifici.",
+    "hintReceiptVoice": "Pot completa o cheltuială dintr-o chitanță sau dintr-o înregistrare vocală.",
+    "hintSettle": "În Solduri este locul unde decontăm.",
+    "hintSettings": "Mă poți schimba sau dezactiva din setările mascotei.",
+    "resetPosition": "Resetează poziția",
+    "landingHintSplit": "Împarte o cină, o călătorie sau chiria — eu mă ocup de calcule.",
+    "landingHintSettle": "Când vrei să decontezi, te încurajez.",
+    "landingHintTap": "Atinge-mă oricând. Nu mușc — sunt o chitanță."
   }
 }

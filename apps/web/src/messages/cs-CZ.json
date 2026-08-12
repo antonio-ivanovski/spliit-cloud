@@ -2939,6 +2939,13 @@
     "settingsAction": "Nastavení maskota",
     "noActionMessage": "Teď tady s ničím nepomůžu.",
     "noActionSettings": "Nastavení maskota",
-    "landingGreeting": "Ahoj — pomohu vám rozdělit výdaje, jakmile se přihlásíte."
+    "landingGreeting": "Ahoj — pomohu vám rozdělit výdaje, jakmile se přihlásíte.",
+    "hintReceiptVoice": "Umím vyplnit výdaj z účtenky nebo z hlasového záznamu.",
+    "hintSettle": "Ve Zůstatcích se vyrovnáváme.",
+    "hintSettings": "Můžeš mě změnit nebo vypnout v nastavení maskota.",
+    "resetPosition": "Obnovit pozici",
+    "landingHintSplit": "Rozděl večeři, výlet nebo nájem — o počty se postarám já.",
+    "landingHintSettle": "Až budeš chtít vyrovnat účty, budu ti fandit.",
+    "landingHintTap": "Klepni na mě kdykoli. Nekousu — jsem účtenka."
   }
 }

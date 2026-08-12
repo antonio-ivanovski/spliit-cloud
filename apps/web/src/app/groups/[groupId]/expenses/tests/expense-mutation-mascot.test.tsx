@@ -4,6 +4,12 @@ import { render } from '@/test/test-utils'
 
 const react = vi.hoisted(() => vi.fn())
 const captured = vi.hoisted(() => ({
+  create: undefined as
+    | {
+        onSuccess?: (...args: never[]) => unknown
+        onError?: (error: { message: string }) => void
+      }
+    | undefined,
   update: undefined as
     | {
         onSuccess?: (...args: never[]) => unknown
@@ -55,7 +61,10 @@ vi.mock('@/trpc/client', () => {
       groups: {
         expenses: {
           create: {
-            useMutation: () => ({ mutateAsync: vi.fn() }),
+            useMutation: (options: (typeof captured)['create']) => {
+              captured.create = options
+              return { mutateAsync: vi.fn() }
+            },
           },
           update: {
             useMutation: (options: (typeof captured)['update']) => {
@@ -79,20 +88,42 @@ vi.mock('@/trpc/client', () => {
 })
 
 import {
+  useCreateExpenseMutation,
   useDeleteExpenseMutation,
   useUpdateExpenseMutation,
 } from '../expense-mutation-hooks'
 
 function HookProbe() {
+  useCreateExpenseMutation({ linkInviteToken: undefined })
   useUpdateExpenseMutation({ linkInviteToken: undefined })
   useDeleteExpenseMutation({ linkInviteToken: undefined })
   return null
 }
 
 describe('expense mutation mascot reactions', () => {
-  it('celebrates successful updates and deletes, and fails visibly', async () => {
+  it('celebrates reimbursements, keeps create as success, and acknowledges deletes', async () => {
     render(<HookProbe />)
 
+    await captured.create?.onSuccess?.(
+      { expenseId: 'expense-1' } as never,
+      {
+        groupId: 'group-1',
+        expense: { isReimbursement: false },
+      } as never,
+    )
+    expect(react).toHaveBeenCalledWith('success')
+
+    react.mockClear()
+    await captured.create?.onSuccess?.(
+      { expenseId: 'expense-2' } as never,
+      {
+        groupId: 'group-1',
+        expense: { isReimbursement: true },
+      } as never,
+    )
+    expect(react).toHaveBeenCalledWith('celebrate')
+
+    react.mockClear()
     await captured.update?.onSuccess?.(
       undefined as never,
       {
@@ -113,7 +144,7 @@ describe('expense mutation mascot reactions', () => {
         groupId: 'group-1',
       } as never,
     )
-    expect(react).toHaveBeenCalledWith('success')
+    expect(react).toHaveBeenCalledWith('acknowledge')
 
     react.mockClear()
     captured.remove?.onError?.({ message: 'nope' })

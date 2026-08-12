@@ -94,6 +94,7 @@ vi.mock('@tanstack/react-router', async () => {
   return {
     ...actual,
     useNavigate: () => mocks.useRouterNavigate,
+    useLocation: () => ({ hash: window.location.hash }),
   }
 })
 

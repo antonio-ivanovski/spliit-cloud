@@ -1,6 +1,7 @@
 import { useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 
+import { useMascotController } from '@/components/mascot/mascot-context'
 import { useToast } from '@/components/ui/use-toast'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { trpc } from '@/trpc/client'
@@ -35,9 +36,11 @@ export function useArchiveGroupMutation({
   const utils = trpc.useUtils()
   const { toast } = useToast()
   const labels = useArchiveTranslations()
+  const mascot = useMascotController()
 
   return trpc.groups.archive.useMutation({
     onSuccess: async (_data, variables) => {
+      if (variables.archived) mascot.react('acknowledge')
       await Promise.all([
         invalidateAccountGroupLists(utils),
         utils.groups.get.invalidate({ groupId: variables.groupId }),
@@ -64,9 +67,11 @@ export function useDeleteGroupMutation() {
   const navigate = useNavigate()
   const { toast } = useToast()
   const labels = useDeleteTranslations()
+  const mascot = useMascotController()
 
   return trpc.groups.delete.useMutation({
     onSuccess: async () => {
+      mascot.react('acknowledge')
       toast({ description: labels.deletedToast })
       await invalidateAccountGroupLists(utils)
       await navigate({ to: '/', replace: true })

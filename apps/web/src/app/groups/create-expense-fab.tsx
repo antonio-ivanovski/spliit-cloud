@@ -12,6 +12,7 @@ import {
   useMascotBusy,
   type MascotAction,
 } from '@/components/mascot/mascot-context'
+import { isActiveMascot } from '@/components/mascot/mascot-registry'
 import { Button } from '@/components/ui/button'
 import {
   SpeedDial,
@@ -84,7 +85,7 @@ export function CreateExpenseFab({
     setVoiceOpen(true)
   }, [closeSpeedDial])
   const hasAiActions = enableVoiceExpense || enableReceiptExtract
-  const mascotEnabled = accountPreferences?.mascot === 'bill'
+  const mascotEnabled = isActiveMascot(accountPreferences?.mascot)
   const mascotActions = useMemo<MascotAction[]>(
     () => [
       ...(enableVoiceExpense
@@ -166,6 +167,7 @@ export function CreateExpenseFab({
       <TooltipProvider delay={300} closeDelay={100}>
         <div
           data-testid="expense-action-control"
+          data-create-expense-fab
           className="isolate inline-flex h-11 items-stretch rounded-lg border border-border/70 bg-background/90 shadow-xs"
         >
           <Button
@@ -238,6 +240,7 @@ export function CreateExpenseFab({
           'fixed end-6 z-40 sm:hidden',
           'bottom-[calc(5.5rem+env(safe-area-inset-bottom))]',
         )}
+        data-create-expense-fab
       >
         <SpeedDialContent>
           {enableReceiptExtract && (
@@ -299,6 +302,7 @@ export function CreateExpenseFab({
         aria-label={t('addExpenseAction')}
         onClick={goToManualExpense}
         data-testid="create-expense-fab-mobile"
+        data-create-expense-fab
         className="fixed end-6 z-40 size-14 rounded-full bg-primary p-0 text-primary-foreground shadow-xl hover:bg-primary/90 sm:hidden"
         style={{ bottom: 'calc(5.5rem + env(safe-area-inset-bottom))' }}
       >

@@ -10,6 +10,7 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AvatarStack } from '@/components/avatar-stack'
+import { useMascotController } from '@/components/mascot/mascot-context'
 import { ParticipantAvatar } from '@/components/participant-avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -63,6 +64,7 @@ export function SubgroupsCard({
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
   const { toast } = useToast()
+  const mascot = useMascotController()
   const utils = trpc.useUtils()
   const linkInviteToken = useLinkInviteToken()
   const subgroupsQuery = trpc.groups.subgroups.list.useQuery({
@@ -114,6 +116,7 @@ export function SubgroupsCard({
   })
   const deleteMutation = trpc.groups.subgroups.delete.useMutation({
     onSuccess: async () => {
+      mascot.react('acknowledge')
       setDeleteTarget(null)
       await refresh()
     },

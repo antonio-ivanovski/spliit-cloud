@@ -208,7 +208,7 @@ export function useCreateExpenseMutation({
 
   return trpc.groups.expenses.create.useMutation({
     onSuccess: (data, variables) => {
-      mascot.react('success')
+      mascot.react(variables.expense.isReimbursement ? 'celebrate' : 'success')
       // Fire-and-forget catch-up poll for past-dated series. The worker
       // materializes the remaining occurrences asynchronously; without
       // polling, expenses/activities/balances stay stale until an
@@ -256,7 +256,7 @@ export function useDeleteExpenseMutation({
 
   return trpc.groups.expenses.delete.useMutation({
     onSuccess: async (_data, variables) => {
-      mascot.react('success')
+      mascot.react('acknowledge')
       // Invalidate first so the next render already shows the latest
       // state; stale cached list is not flashed.
       await invalidateExpenseDependencies({

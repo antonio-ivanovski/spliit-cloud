@@ -15,6 +15,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Link from '@/components/link'
+import { useMascotController } from '@/components/mascot/mascot-context'
 import { Money } from '@/components/money'
 import { ParticipantAvatar } from '@/components/participant-avatar'
 import {
@@ -95,6 +96,7 @@ export function RecentGroupList() {
     trpc.account.setPreference.useMutation()
   const { mutateAsync: archiveGroup } = trpc.groups.archive.useMutation()
   const { toast } = useToast()
+  const mascot = useMascotController()
 
   async function updatePreference(
     groupId: string,
@@ -110,6 +112,7 @@ export function RecentGroupList() {
   ) {
     try {
       await archiveGroup({ groupId: group.id, archived: nextArchived })
+      if (nextArchived) mascot.react('acknowledge')
       await Promise.all([
         invalidateAccountGroupLists(utils),
         utils.groups.get.invalidate({ groupId: group.id }),

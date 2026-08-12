@@ -2923,6 +2923,13 @@
     "settingsAction": "Configuración de la mascota",
     "noActionMessage": "Ahora mismo no puedo ayudarte con nada aquí.",
     "noActionSettings": "Configuración de la mascota",
-    "landingGreeting": "Hola — te ayudo a dividir los gastos cuando inicies sesión."
+    "landingGreeting": "Hola — te ayudo a dividir los gastos cuando inicies sesión.",
+    "hintReceiptVoice": "Puedo completar un gasto a partir de un recibo o una grabación de voz.",
+    "hintSettle": "Balances es donde liquidamos las cuentas.",
+    "hintSettings": "Puedes cambiarme o desactivarme en la configuración de la mascota.",
+    "resetPosition": "Restablecer posición",
+    "landingHintSplit": "Divide una cena, un viaje o el alquiler — yo me encargo de las cuentas.",
+    "landingHintSettle": "Cuando quieras liquidar las cuentas, te animaré.",
+    "landingHintTap": "Tócame cuando quieras. No muerdo — soy un recibo."
   }
 }

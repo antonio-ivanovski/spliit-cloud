@@ -2888,6 +2888,13 @@
     "settingsAction": "마스코트 설정",
     "noActionMessage": "지금은 여기서 도와드릴 일이 없어요.",
     "noActionSettings": "마스코트 설정",
-    "landingGreeting": "안녕하세요. 로그인하시면 지출 나누기를 도와드릴게요."
+    "landingGreeting": "안녕하세요. 로그인하시면 지출 나누기를 도와드릴게요.",
+    "hintReceiptVoice": "영수증이나 음성 녹음으로 지출을 채울 수 있어요.",
+    "hintSettle": "정산은 잔액에서 해요.",
+    "hintSettings": "마스코트 설정에서 바꾸거나 끌 수 있어요.",
+    "resetPosition": "위치 초기화",
+    "landingHintSplit": "저녁, 여행, 월세도 나눠 보세요. 계산은 제가 할게요.",
+    "landingHintSettle": "정산할 준비가 되면 응원할게요.",
+    "landingHintTap": "언제든 탭하세요. 물지 않아요. 영수증이거든요."
   }
 }

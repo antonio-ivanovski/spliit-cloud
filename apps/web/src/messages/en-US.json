@@ -2977,6 +2977,13 @@
     "settingsAction": "Mascot settings",
     "noActionMessage": "Nothing I can help with here right now.",
     "noActionSettings": "Mascot settings",
-    "landingGreeting": "Hi — I help split expenses once you sign in."
+    "landingGreeting": "Hi — I help split expenses once you sign in.",
+    "hintReceiptVoice": "I can fill an expense from a receipt or a voice note.",
+    "hintSettle": "Balances is where we settle up.",
+    "hintSettings": "You can change or turn me off in mascot settings.",
+    "resetPosition": "Reset position",
+    "landingHintSplit": "Split a dinner, a trip, or the rent — I’ll keep the math.",
+    "landingHintSettle": "When you’re ready to settle up, I’ll cheer you on.",
+    "landingHintTap": "Tap me anytime. I don’t bite — I’m a receipt."
   }
 }

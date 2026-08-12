@@ -1,5 +1,5 @@
 import { CircleOff, SlidersHorizontal, type LucideIcon } from 'lucide-react'
-import { useMemo } from 'react'
+import { useMemo, useSyncExternalStore } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -8,10 +8,19 @@ import {
 } from '@/components/account-preferences-sync'
 import { CurrencySelector } from '@/components/currency-selector'
 import { LocaleSelector } from '@/components/locale-switcher'
-import { BillCharacter } from '@/components/mascot/bill-character'
+import {
+  readMascotPin,
+  subscribeMascotPin,
+  writeMascotPin,
+} from '@/components/mascot/mascot-pin'
+import {
+  getMascotDefinition,
+  isActiveMascot,
+} from '@/components/mascot/mascot-registry'
 import { markMascotSettingsDiscovered } from '@/components/mascot/mascot-settings-discovery'
 import { useTheme } from '@/components/theme-provider'
 import { TimeZoneField } from '@/components/time-zone-field'
+import { Button } from '@/components/ui/button'
 import {
   Select,
   SelectContent,
@@ -38,6 +47,7 @@ import {
   SettingsSaving,
   SettingsSection,
   SettingsSectionSkeleton,
+  settingsControlId,
 } from './settings-ui'
 
 const themes: AccountTheme[] = ['light', 'dark', 'system']
@@ -53,6 +63,11 @@ export function AccountPreferences() {
   const syncedPreferences = useSyncedAccountPreferences()
   const updater = useAccountPreferenceUpdater()
   const { data: account } = useCurrentAccount()
+  const pin = useSyncExternalStore(
+    subscribeMascotPin,
+    () => readMascotPin(account?.id),
+    () => null,
+  )
   const deployment = useDeploymentConfig()
   const allCurrencies = useCurrencies(
     tBase('GroupForm.CurrencyCodeField.customOption'),
@@ -94,6 +109,8 @@ export function AccountPreferences() {
     )
   }
 
+  const MascotPreview = getMascotDefinition(sourcePreferences.mascot)?.Character
+
   return (
     <SettingsSection
       id="app-preferences"
@@ -110,7 +127,7 @@ export function AccountPreferences() {
           label={t('language')}
           control={
             <LocaleSelector
-              id="account-preference-language"
+              id={settingsControlId('account-preference-language')}
               value={sourcePreferences.locale ?? defaultLocale}
               onValueChange={(locale) => {
                 void setUserLocale(locale, { notify: false, persist: false })
@@ -127,7 +144,7 @@ export function AccountPreferences() {
           label={t('defaultCurrency')}
           control={
             <CurrencySelector
-              id="account-preference-default-currency"
+              id={settingsControlId('account-preference-default-currency')}
               currencies={currencies}
               defaultValue={
                 sourcePreferences.defaultCurrencyCode ?? deploymentCurrency
@@ -145,7 +162,7 @@ export function AccountPreferences() {
           description={t('timeZoneHelp')}
           control={
             <TimeZoneField
-              id="account-preference-time-zone"
+              id={settingsControlId('account-preference-time-zone')}
               className="sm:max-w-xs"
               value={sourcePreferences.timeZone ?? detectDeviceTimeZone()}
               onChange={(timeZone) =>
@@ -169,7 +186,7 @@ export function AccountPreferences() {
               }}
             >
               <SelectTrigger
-                id="account-preference-theme"
+                id={settingsControlId('account-preference-theme')}
                 className="w-full sm:max-w-xs"
               >
                 <SelectValue placeholder={t('chooseTheme')} />
@@ -189,45 +206,61 @@ export function AccountPreferences() {
           label={t('mascot')}
           description={t('mascotHelp')}
           control={
-            <div className="flex items-center gap-3">
-              <Select
-                value={sourcePreferences.mascot ?? 'bill'}
-                disabled={updater !== null && !updater.ready}
-                items={mascotItems}
-                onValueChange={(mascot) => {
-                  markMascotSettingsDiscovered(account?.id)
-                  void updater?.patchPreferences({
-                    mascot: mascot as AccountMascot,
-                  })
-                }}
-              >
-                <SelectTrigger
-                  id="account-preference-mascot"
-                  className="w-[11rem]"
+            <div className="flex w-full min-w-0 flex-col items-stretch">
+              <div className="flex w-full items-center gap-3">
+                <div className="min-w-0 flex-1 sm:w-[11rem] sm:flex-none">
+                  <Select
+                    value={sourcePreferences.mascot ?? 'bill'}
+                    disabled={updater !== null && !updater.ready}
+                    items={mascotItems}
+                    onValueChange={(mascot) => {
+                      markMascotSettingsDiscovered(account?.id)
+                      void updater?.patchPreferences({
+                        mascot: mascot as AccountMascot,
+                      })
+                    }}
+                  >
+                    <SelectTrigger
+                      id={settingsControlId('account-preference-mascot')}
+                      className="w-full"
+                    >
+                      <SelectValue placeholder={t('chooseMascot')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {mascotItems.map((mascot) => (
+                        <SelectItem key={mascot.value} value={mascot.value}>
+                          {mascot.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div
+                  className="flex size-14 shrink-0 items-center justify-center"
+                  data-testid="account-preference-mascot-preview"
                 >
-                  <SelectValue placeholder={t('chooseMascot')} />
-                </SelectTrigger>
-                <SelectContent>
-                  {mascotItems.map((mascot) => (
-                    <SelectItem key={mascot.value} value={mascot.value}>
-                      {mascot.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <div
-                className="flex size-14 shrink-0 items-center justify-center"
-                data-testid="account-preference-mascot-preview"
-              >
-                {sourcePreferences.mascot === 'bill' ? (
-                  <BillCharacter className="h-[66px] w-[58px]" />
-                ) : (
-                  <CircleOff
-                    className="size-5 text-muted-foreground"
-                    aria-hidden="true"
-                  />
-                )}
+                  {MascotPreview ? (
+                    <MascotPreview className="h-[66px] w-[58px]" />
+                  ) : (
+                    <CircleOff
+                      className="size-5 text-muted-foreground"
+                      aria-hidden="true"
+                    />
+                  )}
+                </div>
               </div>
+              {isActiveMascot(sourcePreferences.mascot) && pin ? (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="mt-2 self-start text-muted-foreground"
+                  data-testid="account-preference-mascot-reset-position"
+                  onClick={() => writeMascotPin(account?.id, null)}
+                >
+                  {tBase('Mascot.resetPosition')}
+                </Button>
+              ) : null}
             </div>
           }
         />

@@ -2888,6 +2888,13 @@
     "settingsAction": "吉祥物設定",
     "noActionMessage": "現在這裡沒什麼我能幫忙的。",
     "noActionSettings": "吉祥物設定",
-    "landingGreeting": "你好——登入後我就能幫你分攤費用。"
+    "landingGreeting": "你好——登入後我就能幫你分攤費用。",
+    "hintReceiptVoice": "我可以根據收據或語音錄音填寫支出。",
+    "hintSettle": "總覽是結算的地方。",
+    "hintSettings": "你可以在吉祥物設定中更換或關閉我。",
+    "resetPosition": "重設位置",
+    "landingHintSplit": "晚餐、旅行或租金都可以分攤——計算交給我。",
+    "landingHintSettle": "準備結算時，我會為你加油。",
+    "landingHintTap": "隨時點我。我不咬人——我是一張收據。"
   }
 }

@@ -10,7 +10,22 @@ import {
   useState,
 } from 'react'
 
-export type MascotReaction = 'idle' | 'thinking' | 'success' | 'failure'
+export type MascotReaction =
+  | 'idle'
+  | 'thinking'
+  | 'success'
+  | 'failure'
+  | 'welcome'
+  | 'celebrate'
+  | 'acknowledge'
+
+const PROTECTED_REACTIONS = new Set<MascotReaction>([
+  'success',
+  'failure',
+  'welcome',
+  'celebrate',
+  'acknowledge',
+])
 
 export type MascotAction = {
   id: string
@@ -37,15 +52,22 @@ type MascotContextValue = {
   clearThinking: () => void
 }
 
+export function isExpressiveMascotReaction(reaction: MascotReaction) {
+  return PROTECTED_REACTIONS.has(reaction)
+}
+
 const MascotContext = createContext<MascotContextValue | null>(null)
 
-const DEFAULT_REACTION_DURATION: Record<
+export const DEFAULT_REACTION_DURATION: Record<
   Exclude<MascotReaction, 'idle'>,
   number
 > = {
-  success: 2_300,
+  success: 2_500,
   failure: 2_600,
   thinking: 20_000,
+  welcome: 2_200,
+  celebrate: 2_800,
+  acknowledge: 1_200,
 }
 
 export function MascotProvider({ children }: PropsWithChildren) {
@@ -102,8 +124,7 @@ export function MascotProvider({ children }: PropsWithChildren) {
       }
       if (
         nextReaction === 'idle' &&
-        (reactionRef.current === 'success' ||
-          reactionRef.current === 'failure') &&
+        PROTECTED_REACTIONS.has(reactionRef.current) &&
         reactionTimer.current !== null
       ) {
         return

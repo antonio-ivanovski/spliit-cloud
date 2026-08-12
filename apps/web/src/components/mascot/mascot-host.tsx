@@ -8,6 +8,8 @@ import {
   useRef,
   useState,
   useSyncExternalStore,
+  type CSSProperties,
+  type PointerEvent as ReactPointerEvent,
 } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -24,16 +26,33 @@ import { isFocusedMobilePath, isMobileGroupNavPath } from '@/lib/mobile-nav'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { cn } from '@/lib/utils'
 
-import { BillCharacter } from './bill-character'
-import { useMascotState, type MascotAction } from './mascot-context'
+import {
+  isExpressiveMascotReaction,
+  useMascotController,
+  useMascotState,
+  type MascotAction,
+} from './mascot-context'
+import {
+  canDragMascot,
+  dialPlacementFromPin,
+  dropHitsReject,
+  pinFromClient,
+  readMascotPin,
+  subscribeFinePointer,
+  subscribeMascotPin,
+  writeMascotPin,
+  type MascotPin,
+} from './mascot-pin'
+import { getMascotDefinition } from './mascot-registry'
 import {
   hasDiscoveredMascotSettings,
   markMascotSettingsDiscovered,
   subscribeMascotSettingsDiscovered,
 } from './mascot-settings-discovery'
+import { buildMascotSpeechCycle, type MascotSpeechLine } from './mascot-speech'
 
-const PERSONALITY_TAP_WINDOW_MS = 4_000
 const SPEECH_DISMISS_MS = 3_000
+const DRAG_THRESHOLD_PX = 8
 
 function subscribeToBodyMutations(callback: () => void) {
   if (
@@ -61,15 +80,33 @@ function hasFixedActionBar() {
 export function MascotHost() {
   const preferences = useSyncedAccountPreferences()
   const mascot = useMascotState()
+  const { react } = useMascotController()
   const { data: account, isPending } = useCurrentAccount()
+  const welcomedAccountRef = useRef<string | null>(null)
   const pathname = useLocation({ select: (location) => location.pathname })
   const navigate = useNavigate()
   const { t } = useTranslation()
   const reducedMotion = useReducedMotion()
   const [openScope, setOpenScope] = useState<string | null>(null)
-  const [speechOpen, setSpeechOpen] = useState(false)
-  const [speechSuppressed, setSpeechSuppressed] = useState(false)
-  const lastPersonalityTap = useRef(0)
+  const [speech, setSpeech] = useState<{
+    path: string
+    line: MascotSpeechLine
+  } | null>(null)
+  const [dragPx, setDragPx] = useState<{ x: number; y: number } | null>(null)
+  const cycleRef = useRef({ path: '', index: 0 })
+  const speechLine = speech?.path === pathname ? speech.line : null
+  const hostRef = useRef<HTMLDivElement>(null)
+  const didDragRef = useRef(false)
+  const dragSession = useRef<{
+    pointerId: number
+    startX: number
+    startY: number
+    centerX: number
+    centerY: number
+    width: number
+    height: number
+    moved: boolean
+  } | null>(null)
   const dialogOpen = useSyncExternalStore(
     subscribeToBodyMutations,
     hasOpenDialog,
@@ -83,6 +120,16 @@ export function MascotHost() {
   const settingsDiscovered = useSyncExternalStore(
     subscribeMascotSettingsDiscovered,
     () => hasDiscoveredMascotSettings(account?.id),
+    () => false,
+  )
+  const pin = useSyncExternalStore(
+    subscribeMascotPin,
+    () => readMascotPin(account?.id),
+    () => null,
+  )
+  const finePointer = useSyncExternalStore(
+    subscribeFinePointer,
+    canDragMascot,
     () => false,
   )
 
@@ -116,10 +163,11 @@ export function MascotHost() {
 
   const actions = mascot?.actions.length ? mascot.actions : homeActions
   const focusedRoute = isFocusedMobilePath(pathname)
-  const celebrating =
-    mascot?.reaction === 'success' || mascot?.reaction === 'failure'
-  const docked = Boolean((mascot?.busy || focusedRoute) && !celebrating)
-  const blockedByOverlay = dialogOpen && !celebrating
+  const expressive = Boolean(
+    mascot && isExpressiveMascotReaction(mascot.reaction),
+  )
+  const docked = Boolean((mascot?.busy || focusedRoute) && !expressive)
+  const blockedByOverlay = dialogOpen && !expressive
   const aboveMobileNav = isMobileGroupNavPath(pathname)
   const hiddenSurface = pathname.endsWith('/expenses/print')
   const interactionScope = `${pathname}:${blockedByOverlay ? 'blocked' : 'active'}`
@@ -127,11 +175,26 @@ export function MascotHost() {
   const interactive = hasActions && !blockedByOverlay
   const open = interactive && openScope === interactionScope
   const showSettings = interactive && !settingsDiscovered
+  const pinned = Boolean(pin) && finePointer
+  const placement = dialPlacementFromPin(pinned ? pin : null)
+  const aiReceiptOrVoice = Boolean(
+    preferences?.aiFeaturesEnabled !== false &&
+    (preferences?.aiReceiptScanEnabled !== false ||
+      preferences?.aiVoiceExpenseEnabled !== false),
+  )
+  const speechLines = useMemo(
+    () =>
+      buildMascotSpeechCycle({
+        pathname,
+        aiReceiptOrVoice,
+        settingsDiscovered,
+      }),
+    [aiReceiptOrVoice, pathname, settingsDiscovered],
+  )
 
   const openMascotSettings = useCallback(() => {
     markMascotSettingsDiscovered(account?.id)
-    setSpeechOpen(false)
-    setSpeechSuppressed(true)
+    setSpeech(null)
     setOpenScope(null)
     void navigate({
       to: '/account/settings',
@@ -140,93 +203,190 @@ export function MascotHost() {
   }, [account?.id, navigate])
 
   const handlePersonalityTap = useCallback(() => {
-    if (speechSuppressed) {
-      mascot?.react('success', 900)
-      return
+    if (cycleRef.current.path !== pathname) {
+      cycleRef.current = { path: pathname, index: 0 }
     }
-    const now = Date.now()
-    if (now - lastPersonalityTap.current < PERSONALITY_TAP_WINDOW_MS) {
-      lastPersonalityTap.current = 0
-      setSpeechOpen(true)
-      return
-    }
-    lastPersonalityTap.current = now
-    mascot?.react('success', 900)
-  }, [mascot, speechSuppressed])
+    const line = speechLines[cycleRef.current.index % speechLines.length]
+    cycleRef.current.index += 1
+    setSpeech({ path: pathname, line })
+    mascot?.react('welcome', 900)
+  }, [mascot, pathname, speechLines])
 
   useEffect(() => {
-    if (!speechOpen) return
+    if (!speechLine) return
     const timer = window.setTimeout(() => {
-      setSpeechOpen(false)
-      setSpeechSuppressed(true)
+      setSpeech(null)
     }, SPEECH_DISMISS_MS)
     return () => window.clearTimeout(timer)
-  }, [speechOpen])
+  }, [speechLine])
 
-  if (
-    hiddenSurface ||
-    preferences?.mascot !== 'bill' ||
-    !mascot ||
-    (!isPending && !account)
-  ) {
+  const definition = getMascotDefinition(preferences?.mascot)
+
+  useEffect(() => {
+    if (!account?.id) {
+      welcomedAccountRef.current = null
+      return
+    }
+    if (hiddenSurface || !definition) return
+    if (welcomedAccountRef.current === account.id) return
+    welcomedAccountRef.current = account.id
+    react('welcome')
+  }, [account?.id, definition, hiddenSurface, react])
+
+  function onTriggerPointerDown(event: ReactPointerEvent<HTMLButtonElement>) {
+    if (!finePointer || blockedByOverlay || event.button !== 0) return
+    const host = hostRef.current
+    if (!host) return
+    const rect = host.getBoundingClientRect()
+    dragSession.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      centerX: rect.left + rect.width / 2,
+      centerY: rect.top + rect.height / 2,
+      width: rect.width,
+      height: rect.height,
+      moved: false,
+    }
+    event.currentTarget.setPointerCapture(event.pointerId)
+  }
+
+  function onTriggerPointerMove(event: ReactPointerEvent<HTMLButtonElement>) {
+    const session = dragSession.current
+    if (!session || session.pointerId !== event.pointerId) return
+    const dx = event.clientX - session.startX
+    const dy = event.clientY - session.startY
+    if (!session.moved) {
+      if (Math.hypot(dx, dy) < DRAG_THRESHOLD_PX) return
+      session.moved = true
+      didDragRef.current = true
+      setOpenScope(null)
+      setSpeech(null)
+    }
+    setDragPx({
+      x: session.centerX + dx,
+      y: session.centerY + dy,
+    })
+  }
+
+  function onTriggerPointerUp(event: ReactPointerEvent<HTMLButtonElement>) {
+    const session = dragSession.current
+    if (!session || session.pointerId !== event.pointerId) return
+    dragSession.current = null
+    if (!session.moved) return
+    const clientX = session.centerX + (event.clientX - session.startX)
+    const clientY = session.centerY + (event.clientY - session.startY)
+    setDragPx(null)
+    if (!account?.id) return
+    if (dropHitsReject(clientX, clientY, session.width, session.height)) {
+      return
+    }
+    writeMascotPin(account.id, pinFromClient(clientX, clientY))
+  }
+
+  if (hiddenSurface || !definition || !mascot || (!isPending && !account)) {
     return null
   }
 
+  const Character = definition.Character
+
   const positionClassName = cn(
-    'fixed end-3 sm:end-5',
-    blockedByOverlay ? 'z-40' : celebrating ? 'z-70' : 'z-60',
-    actionBarOpen
-      ? 'bottom-[calc(4.65rem+env(safe-area-inset-bottom))]'
-      : aboveMobileNav
-        ? 'bottom-[calc(4.65rem+env(safe-area-inset-bottom))] sm:bottom-5'
-        : 'bottom-[calc(0.65rem+env(safe-area-inset-bottom))] sm:bottom-5',
+    'fixed',
+    !pinned && !dragPx && 'end-3 sm:end-5',
+    blockedByOverlay ? 'z-40' : expressive ? 'z-70' : 'z-60',
+    !pinned &&
+      !dragPx &&
+      (actionBarOpen
+        ? 'bottom-[calc(4.65rem+env(safe-area-inset-bottom))]'
+        : aboveMobileNav
+          ? 'bottom-[calc(4.65rem+env(safe-area-inset-bottom))] sm:bottom-5'
+          : 'bottom-[calc(0.65rem+env(safe-area-inset-bottom))] sm:bottom-5'),
+    placement === 'top-start' && 'flex-col-reverse items-start',
+    placement === 'top-end' && 'flex-col-reverse items-end',
+    placement === 'bottom-start' && 'items-start',
+    finePointer && !blockedByOverlay && 'cursor-grab',
+    dragPx && 'cursor-grabbing',
   )
+
+  const positionStyle = dragPx
+    ? {
+        left: dragPx.x,
+        top: dragPx.y,
+        right: 'auto',
+        bottom: 'auto',
+        transform: 'translate(-50%, -50%)',
+      }
+    : pinned && pin
+      ? pinStyle(pin)
+      : undefined
 
   return (
     <SpeedDial
+      ref={hostRef}
       open={open}
       onOpenChange={(nextOpen) => {
         if (!interactive) return
         setOpenScope(nextOpen ? interactionScope : null)
       }}
       className={positionClassName}
+      style={positionStyle}
       data-testid={docked ? 'bill-mascot-docked' : 'bill-mascot'}
       data-reaction={mascot.reaction}
       data-mascot-docked={docked ? 'true' : 'false'}
       data-mascot-blocked={blockedByOverlay ? 'true' : 'false'}
+      data-mascot-pinned={pinned ? 'true' : 'false'}
+      data-mascot-placement={placement}
     >
-      {speechOpen && !blockedByOverlay && !hasActions && (
+      {speechLine && !blockedByOverlay && !hasActions && (
         <div
           data-testid="bill-mascot-speech"
           className={cn(
-            'pointer-events-auto mb-2 max-w-[13.5rem] rounded-2xl border border-border/70 bg-background/95 px-3 py-2 text-start text-xs leading-snug text-foreground shadow-lg backdrop-blur-md',
+            'pointer-events-auto max-w-[13.5rem] rounded-2xl border border-border/80 bg-card px-3 py-2 text-start text-xs leading-snug text-foreground shadow-2xl ring-1 ring-border/80 backdrop-blur-md dark:shadow-black/40',
+            placement.startsWith('top') ? 'mt-2' : 'mb-2',
             !reducedMotion && 'animate-in fade-in-0 zoom-in-95',
           )}
         >
-          <output className="block">{t('Mascot.noActionMessage')}</output>
-          <button
-            type="button"
-            className="mt-1.5 text-xs font-medium text-primary underline-offset-2 hover:underline"
-            onClick={openMascotSettings}
-          >
-            {t('Mascot.noActionSettings')}
-          </button>
+          <output className="block" aria-live="polite">
+            {t(speechLine.messageKey)}
+          </output>
+          {speechLine.showSettings && (
+            <button
+              type="button"
+              className="mt-1.5 text-xs font-medium text-primary underline-offset-2 hover:underline"
+              onClick={openMascotSettings}
+            >
+              {t('Mascot.noActionSettings')}
+            </button>
+          )}
         </div>
       )}
-      <SpeedDialContent className="gap-2 pe-1 pb-1.5">
+      <SpeedDialContent
+        className={cn(
+          'gap-2 pe-1',
+          placement.startsWith('top') ? 'pt-1.5' : 'pb-1.5',
+          placement.startsWith('top') && 'flex-col',
+          placement.endsWith('start') && 'items-start',
+        )}
+      >
         {actions.map(({ id, label, icon: Icon, onSelect, primary }) => (
-          <SpeedDialItem key={id} className="gap-2.5">
-            <SpeedDialLabel className="border-border/70 bg-background/92 px-3 py-2 text-sm shadow-lg backdrop-blur-md">
+          <SpeedDialItem
+            key={id}
+            className={cn(
+              'gap-2.5',
+              placement.endsWith('start') && 'flex-row-reverse',
+            )}
+          >
+            <SpeedDialLabel className="border-border/80 bg-card px-3 py-2 text-sm shadow-2xl ring-1 ring-border/80 backdrop-blur-md dark:shadow-black/40">
               {label}
             </SpeedDialLabel>
             <SpeedDialAction
               aria-label={label}
               onClick={onSelect}
               className={cn(
-                'flex size-12 items-center justify-center rounded-2xl border shadow-xl transition-[transform,background-color] duration-200 hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring',
+                'flex size-12 items-center justify-center rounded-2xl border shadow-2xl ring-1 transition-[transform,background-color] duration-200 hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring dark:shadow-black/40',
                 primary
-                  ? 'border-primary/70 bg-primary text-primary-foreground hover:bg-primary/90'
-                  : 'border-border/70 bg-background/95 text-foreground backdrop-blur-md hover:bg-accent',
+                  ? 'border-primary/70 bg-primary text-primary-foreground ring-primary/30 hover:bg-primary/90'
+                  : 'border-border/80 bg-card text-foreground ring-border/80 backdrop-blur-md hover:bg-accent',
               )}
             >
               <Icon className="size-5" aria-hidden="true" />
@@ -234,15 +394,20 @@ export function MascotHost() {
           </SpeedDialItem>
         ))}
         {showSettings && (
-          <SpeedDialItem className="gap-2.5">
-            <SpeedDialLabel className="border-border/60 bg-background/80 px-2.5 py-1.5 text-xs text-muted-foreground shadow-md backdrop-blur-md">
+          <SpeedDialItem
+            className={cn(
+              'gap-2.5',
+              placement.endsWith('start') && 'flex-row-reverse',
+            )}
+          >
+            <SpeedDialLabel className="border-border/70 bg-card px-2.5 py-1.5 text-xs text-muted-foreground shadow-xl ring-1 ring-border/70 backdrop-blur-md dark:shadow-black/40">
               {t('Mascot.settingsAction')}
             </SpeedDialLabel>
             <SpeedDialAction
               aria-label={t('Mascot.settingsAction')}
               data-testid="bill-mascot-settings"
               onClick={openMascotSettings}
-              className="flex size-9 items-center justify-center rounded-xl border border-border/60 bg-background/80 text-muted-foreground shadow-md backdrop-blur-md hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+              className="flex size-9 items-center justify-center rounded-xl border border-border/70 bg-card text-muted-foreground shadow-xl ring-1 ring-border/70 backdrop-blur-md hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring dark:shadow-black/40"
             >
               <Settings className="size-4" aria-hidden="true" />
             </SpeedDialAction>
@@ -262,12 +427,21 @@ export function MascotHost() {
         data-reaction={mascot.reaction}
         className={cn(
           'group relative rounded-[2rem] outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
-          docked ? 'h-16 w-16 opacity-85' : 'h-[118px] w-[108px]',
+          docked ? 'h-16 w-16' : 'h-[118px] w-[108px]',
           blockedByOverlay && 'pointer-events-none',
         )}
+        onPointerDown={onTriggerPointerDown}
+        onPointerMove={onTriggerPointerMove}
+        onPointerUp={onTriggerPointerUp}
+        onPointerCancel={onTriggerPointerUp}
         onClick={(event) => {
           if (blockedByOverlay) {
             event.preventDefault()
+            return
+          }
+          if (didDragRef.current) {
+            event.preventDefault()
+            didDragRef.current = false
             return
           }
           if (hasActions) return
@@ -277,15 +451,16 @@ export function MascotHost() {
       >
         <span
           className={cn(
-            'absolute inset-x-1 bottom-0 h-12 rounded-full bg-primary/12 blur-xl transition-opacity duration-300',
+            'absolute inset-x-1 bottom-0 h-12 rounded-full bg-[hsl(var(--mascot-stroke)/0.12)] blur-xl transition-opacity duration-300',
             open ? 'opacity-100' : 'opacity-0 group-hover:opacity-100',
             docked && 'opacity-0',
           )}
         />
-        <BillCharacter
+        <Character
           className={cn(
-            'relative h-full w-full drop-shadow-[0_14px_14px_hsl(var(--foreground)/0.22)]',
+            'relative h-full w-full drop-shadow-[0_14px_14px_hsl(var(--mascot-ink)/0.22)] dark:drop-shadow-[0_18px_22px_hsl(0_0%_0%/0.55)]',
             !docked &&
+              !dragPx &&
               'transition-transform duration-300 ease-out group-hover:-translate-y-1 group-hover:scale-[1.035] group-active:translate-y-0 group-active:scale-95',
           )}
           docked={docked}
@@ -296,4 +471,14 @@ export function MascotHost() {
       </SpeedDialTrigger>
     </SpeedDial>
   )
+}
+
+function pinStyle(pin: MascotPin): CSSProperties {
+  return {
+    left: `${pin.x}vw`,
+    top: `${pin.y}vh`,
+    right: 'auto',
+    bottom: 'auto',
+    transform: 'translate(-50%, -50%)',
+  }
 }

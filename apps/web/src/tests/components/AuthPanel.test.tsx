@@ -13,6 +13,7 @@ const {
   mockGetSession,
   mockNavigate,
   mockDeploymentConfig,
+  mockMascotReact,
 } = vi.hoisted(() => ({
   mockSignInEmail: vi.fn(),
   mockSignUpEmail: vi.fn(),
@@ -25,6 +26,7 @@ const {
     enableGoogleOAuth: false,
     enableGitHubOAuth: false,
   },
+  mockMascotReact: vi.fn(),
 }))
 
 vi.mock('@/lib/auth', () => ({
@@ -58,6 +60,17 @@ vi.mock('@tanstack/react-router', () => ({
     </a>
   ),
 }))
+
+vi.mock('@/components/mascot/mascot-context', async () => {
+  const actual = await vi.importActual('@/components/mascot/mascot-context')
+  return {
+    ...actual,
+    useMascotController: () => ({
+      react: mockMascotReact,
+      clearThinking: vi.fn(),
+    }),
+  }
+})
 
 // ── Helpers ─────────────────────────────────────────────────────────────
 
@@ -216,6 +229,7 @@ describe('AuthPanel', () => {
 
     const alert = await screen.findByRole('alert')
     expect(alert).toBeInTheDocument()
+    expect(mockMascotReact).toHaveBeenCalledWith('failure')
   })
 
   // ── Magic link success ──────────────────────────────────────────────
@@ -235,6 +249,7 @@ describe('AuthPanel', () => {
     expect(screen.getByText('alice@example.com')).toBeInTheDocument()
     // "Use a different email" button should appear in success state
     expect(screen.getByText('Use a different email')).toBeInTheDocument()
+    expect(mockMascotReact).toHaveBeenCalledWith('success')
   })
 
   // ── Social buttons ──────────────────────────────────────────────────

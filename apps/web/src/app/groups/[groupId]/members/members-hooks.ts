@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
+import { useMascotController } from '@/components/mascot/mascot-context'
 import { useToast } from '@/components/ui/use-toast'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { useCurrentAccount } from '@/lib/use-current-account'
@@ -141,6 +142,7 @@ export function useMembersDialogs() {
   const { data: account } = useCurrentAccount()
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
   const { toast } = useToast()
+  const mascot = useMascotController()
   const navigate = useNavigate()
 
   const membersQuery = trpc.account.members.useQuery({ groupId })
@@ -266,6 +268,7 @@ export function useMembersDialogs() {
   const removeParticipantMutation = trpc.groups.participants.remove.useMutation(
     {
       onSuccess: async (_data, vars) => {
+        mascot.react('acknowledge')
         toast({
           description: vars.settleBalances
             ? t('removeDialog.unsettled.toast')
@@ -329,6 +332,7 @@ export function useMembersDialogs() {
 
   const leaveMutation = trpc.groups.leave.useMutation({
     onSuccess: async () => {
+      mascot.react('acknowledge')
       toast({ description: t('leave.toast.left') })
       setLeaveDialogOpen(false)
       await navigate({ to: '/' })

@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { useCurrentAccount } from '@/lib/use-current-account'
-import { render, screen } from '@/test/test-utils'
+import { act, render, screen } from '@/test/test-utils'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
@@ -58,12 +58,14 @@ vi.mock('@/app/groups/recent-group-list', () => ({
 // ── SUT ─────────────────────────────────────────────────────────────────
 
 import HomePage from '@/app/page'
+import { LANDING_FIRST_SPEECH_MS } from '@/components/mascot/use-landing-mascot'
 
 // ── Tests ───────────────────────────────────────────────────────────────
 
 describe('HomePage (signed-out)', () => {
   afterEach(() => {
     vi.clearAllMocks()
+    vi.useRealTimers()
   })
 
   it('renders home page with title and description', () => {
@@ -122,9 +124,33 @@ describe('HomePage (signed-out)', () => {
     expect(speech).toHaveTextContent(
       'Hi — I help split expenses once you sign in.',
     )
-    expect(speech.className).not.toContain('absolute')
+    expect(speech.className).toContain('absolute')
     expect(speech.className).not.toContain('-translate-y-full')
-    expect(speech.className).not.toContain('-top-2')
+  })
+
+  it('speaks unsolicited after a long idle delay without shifting Bill', () => {
+    vi.useFakeTimers()
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: null,
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+
+    render(<HomePage />)
+    const bill = screen.getByTestId('landing-bill')
+    const before = bill.getBoundingClientRect()
+    expect(screen.queryByTestId('landing-bill-speech')).toBeNull()
+
+    act(() => {
+      vi.advanceTimersByTime(LANDING_FIRST_SPEECH_MS)
+    })
+
+    const speech = screen.getByTestId('landing-bill-speech')
+    expect(speech).toBeInTheDocument()
+    expect(speech.className).toContain('absolute')
+    expect(bill.getBoundingClientRect().top).toBe(before.top)
   })
 
   it('does not render the authenticated marketing hero', () => {

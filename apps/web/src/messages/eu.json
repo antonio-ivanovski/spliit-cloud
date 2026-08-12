@@ -2922,6 +2922,13 @@
     "settingsAction": "Maskotaren ezarpenak",
     "noActionMessage": "Une honetan ezin dizut ezer lagundu hemen.",
     "noActionSettings": "Maskotaren ezarpenak",
-    "landingGreeting": "Kaixo — saioa hasi ondoren gastuak zatitzen laguntzen dizut."
+    "landingGreeting": "Kaixo — saioa hasi ondoren gastuak zatitzen laguntzen dizut.",
+    "hintReceiptVoice": "Ordainagiri edo ahots-grabazio batetik gastu bat bete dezaket.",
+    "hintSettle": "Saldoak atalean kitatzen dugu.",
+    "hintSettings": "Maskotaren ezarpenetan alda edo desaktiba nazakezu.",
+    "resetPosition": "Berrezarri posizioa",
+    "landingHintSplit": "Zatitu afari bat, bidaia bat edo alokairua — nik egingo ditut kalkuluak.",
+    "landingHintSettle": "Kontuak kitatzen hasteko prest zaudenean, animatuko zaitut.",
+    "landingHintTap": "Sakatu niri nahi duzunean. Ez dut hozka egiten — ordainagiri bat naiz."
   }
 }

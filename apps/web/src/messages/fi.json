@@ -2905,6 +2905,13 @@
     "settingsAction": "Maskotin asetukset",
     "noActionMessage": "En voi juuri nyt auttaa tässä.",
     "noActionSettings": "Maskotin asetukset",
-    "landingGreeting": "Hei — autan jakamaan kuluja, kun kirjaudut sisään."
+    "landingGreeting": "Hei — autan jakamaan kuluja, kun kirjaudut sisään.",
+    "hintReceiptVoice": "Voin täyttää kulun kuitin tai äänitallenteen perusteella.",
+    "hintSettle": "Saldossa selvitämme tilit.",
+    "hintSettings": "Voit vaihtaa tai poistaa minut käytöstä maskotin asetuksista.",
+    "resetPosition": "Palauta sijainti",
+    "landingHintSplit": "Jaa illallinen, matka tai vuokra — minä hoidan laskutoimitukset.",
+    "landingHintSettle": "Kun olet valmis selvittämään tilit, kannustan sinua.",
+    "landingHintTap": "Napauta minua milloin tahansa. En pure — olen kuitti."
   }
 }

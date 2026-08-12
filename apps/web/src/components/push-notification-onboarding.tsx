@@ -1,3 +1,4 @@
+import { useNavigate } from '@tanstack/react-router'
 import { BellRing, Mail, Smartphone } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -146,6 +147,7 @@ type PreferenceData = {
 /** Presents account-level delivery setup once per signed-in account/browser. */
 export function PushNotificationOnboarding() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const { data: account, isPending: accountPending } = useCurrentAccount()
   const timeZoneCheck = useStartupTimeZoneCheck()
   const push = usePushNotifications()
@@ -356,8 +358,7 @@ export function PushNotificationOnboarding() {
       }
       finishAndClose()
       if (mode === 'email-only-device') {
-        window.history.pushState({}, '', '/account/settings#notifications')
-        window.dispatchEvent(new PopStateEvent('popstate'))
+        void navigate({ to: '/account/settings', hash: 'notifications' })
       }
     } finally {
       setIsEnabling(false)

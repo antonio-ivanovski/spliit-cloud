@@ -23,6 +23,7 @@ type SpeedDialProps = React.HTMLAttributes<HTMLDivElement> & {
   open?: boolean
   defaultOpen?: boolean
   onOpenChange?: (open: boolean) => void
+  ref?: React.Ref<HTMLDivElement>
 }
 
 function SpeedDial({
@@ -31,6 +32,7 @@ function SpeedDial({
   onOpenChange,
   className,
   children,
+  ref,
   ...props
 }: SpeedDialProps) {
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen)
@@ -76,6 +78,7 @@ function SpeedDial({
       value={{ open, setOpen, triggerRef, contentRef }}
     >
       <div
+        ref={ref}
         data-state={open ? 'open' : 'closed'}
         className={cn('pointer-events-none flex flex-col items-end', className)}
         {...props}

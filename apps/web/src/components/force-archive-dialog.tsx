@@ -3,6 +3,7 @@ import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { useMascotController } from '@/components/mascot/mascot-context'
 import { Button } from '@/components/ui/button'
 import {
   ResponsiveDialog,
@@ -30,6 +31,7 @@ type Props = {
 export function ForceArchiveDialog({ groupId, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const { mutateAsync: archiveGroup } = trpc.groups.archive.useMutation()
+  const mascot = useMascotController()
   const utils = trpc.useUtils()
   const { toast } = useToast()
   const navigate = useNavigate()
@@ -51,6 +53,7 @@ export function ForceArchiveDialog({ groupId, onClose }: Props) {
         archived: true,
         force: true,
       })
+      mascot.react('acknowledge')
       await Promise.all([
         invalidateAccountGroupLists(utils),
         utils.groups.get.invalidate({ groupId: openGroupId }),

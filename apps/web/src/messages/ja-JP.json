@@ -2888,6 +2888,13 @@
     "settingsAction": "マスコット設定",
     "noActionMessage": "今はここでお手伝いできることがありません。",
     "noActionSettings": "マスコット設定",
-    "landingGreeting": "こんにちは。サインインすると、経費の割り勘をお手伝いします。"
+    "landingGreeting": "こんにちは。サインインすると、経費の割り勘をお手伝いします。",
+    "hintReceiptVoice": "レシートや音声録音から支出を入力できます。",
+    "hintSettle": "精算は残高で行います。",
+    "hintSettings": "マスコット設定で変更したり、オフにしたりできます。",
+    "resetPosition": "位置をリセット",
+    "landingHintSplit": "ディナーや旅行、家賃を割り勘に。計算は私が引き受けます。",
+    "landingHintSettle": "精算したくなったら、応援します。",
+    "landingHintTap": "いつでもタップしてください。かみません。私はレシートです。"
   }
 }

@@ -50,6 +50,7 @@ import {
   SettingsSaving,
   SettingsSection,
   SettingsSectionSkeleton,
+  settingsControlId,
 } from './settings-ui'
 
 type Channel = NotificationChannel
@@ -437,7 +438,7 @@ export function NotificationsPreferences() {
                     const control =
                       row.category && !row.comingSoon ? (
                         <ChannelSelector
-                          id={`notification-${row.id}`}
+                          id={settingsControlId(`notification-${row.id}`)}
                           channels={channels}
                           labels={channelLabels}
                           title={t(row.titleKey)}

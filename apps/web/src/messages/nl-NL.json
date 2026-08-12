@@ -2905,6 +2905,13 @@
     "settingsAction": "Mascotte-instellingen",
     "noActionMessage": "Hier kan ik je nu even niet mee helpen.",
     "noActionSettings": "Mascotte-instellingen",
-    "landingGreeting": "Hoi — ik help je uitgaven te splitsen zodra je inlogt."
+    "landingGreeting": "Hoi — ik help je uitgaven te splitsen zodra je inlogt.",
+    "hintReceiptVoice": "Ik kan een uitgave invullen vanaf een bon of een spraakopname.",
+    "hintSettle": "Bij Balans vereffenen we de saldi.",
+    "hintSettings": "Je kunt me wijzigen of uitzetten in de mascotte-instellingen.",
+    "resetPosition": "Positie resetten",
+    "landingHintSplit": "Splits een diner, een trip of de huur — ik houd de berekening bij.",
+    "landingHintSettle": "Als je klaar bent om te vereffenen, moedig ik je aan.",
+    "landingHintTap": "Tik me wanneer je wilt. Ik bijt niet — ik ben een bon."
   }
 }

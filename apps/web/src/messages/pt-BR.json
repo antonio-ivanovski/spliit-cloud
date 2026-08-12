@@ -2923,6 +2923,13 @@
     "settingsAction": "Configurações do mascote",
     "noActionMessage": "Por agora não tem nada em que eu possa te ajudar aqui.",
     "noActionSettings": "Configurações do mascote",
-    "landingGreeting": "Oi — eu te ajudo a dividir despesas assim que você entrar."
+    "landingGreeting": "Oi — eu te ajudo a dividir despesas assim que você entrar.",
+    "hintReceiptVoice": "Posso preencher uma despesa a partir de um recibo ou de uma gravação de voz.",
+    "hintSettle": "Em Saldos é onde acertamos as contas.",
+    "hintSettings": "Você pode me alterar ou me desativar nas configurações do mascote.",
+    "resetPosition": "Redefinir posição",
+    "landingHintSplit": "Divida um jantar, uma viagem ou o aluguel — eu cuido das contas.",
+    "landingHintSettle": "Quando você quiser acertar as contas, eu te animo.",
+    "landingHintTap": "Toque em mim quando quiser. Eu não mordo — sou um recibo."
   }
 }

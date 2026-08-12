@@ -2889,6 +2889,13 @@
     "settingsAction": "Pengaturan maskot",
     "noActionMessage": "Tidak ada yang bisa saya bantu di sini saat ini.",
     "noActionSettings": "Pengaturan maskot",
-    "landingGreeting": "Hai — saya membantu membagi pengeluaran setelah Anda masuk."
+    "landingGreeting": "Hai — saya membantu membagi pengeluaran setelah Anda masuk.",
+    "hintReceiptVoice": "Saya bisa mengisi pengeluaran dari struk atau rekaman suara.",
+    "hintSettle": "Di Saldo kita lunasi saldonya.",
+    "hintSettings": "Anda bisa mengubah atau menonaktifkan saya di pengaturan maskot.",
+    "resetPosition": "Atur ulang posisi",
+    "landingHintSplit": "Bagi makan malam, perjalanan, atau sewa — saya yang hitung.",
+    "landingHintSettle": "Kalau sudah siap lunasi, saya akan menyemangati Anda.",
+    "landingHintTap": "Ketuk saya kapan saja. Saya tidak menggigit — saya struk."
   }
 }

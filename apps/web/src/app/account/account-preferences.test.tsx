@@ -200,15 +200,22 @@ describe('AccountPreferences', () => {
     }
   })
 
-  it('keeps a stable mascot preview beside a fixed-width select', () => {
+  it('fills the mascot row on mobile with the preview at the trailing edge', () => {
     render(<AccountPreferences />)
 
-    const trigger = document.getElementById('account-preference-mascot')
-    expect(trigger).toHaveClass('w-[11rem]')
+    const trigger = document.getElementById('account-preference-mascot-control')
+    expect(trigger).toHaveClass('w-full')
+    expect(trigger).not.toHaveClass('w-[11rem]')
+    expect(document.getElementById('account-preference-mascot')).toBeTruthy()
 
     const preview = screen.getByTestId('account-preference-mascot-preview')
-    expect(preview).toHaveClass('size-14')
+    expect(preview).toHaveClass('size-14', 'shrink-0')
     expect(preview.className).not.toMatch(/border|bg-primary/)
+
+    const row = preview.parentElement
+    expect(row).toHaveClass('w-full')
+    expect(row?.parentElement).toHaveClass('w-full', 'min-w-0')
+    expect(preview.previousElementSibling).toHaveClass('min-w-0', 'flex-1')
   })
 
   it('explains how the account timezone is used', () => {

@@ -2973,6 +2973,13 @@
     "settingsAction": "Maskottchen-Einstellungen",
     "noActionMessage": "Hier kann ich dir gerade nicht helfen.",
     "noActionSettings": "Maskottchen-Einstellungen",
-    "landingGreeting": "Hallo — ich helfe dir, Ausgaben aufzuteilen, sobald du dich anmeldest."
+    "landingGreeting": "Hallo — ich helfe dir, Ausgaben aufzuteilen, sobald du dich anmeldest.",
+    "hintReceiptVoice": "Ich kann eine Ausgabe aus einem Beleg oder einer Sprachaufnahme ausfüllen.",
+    "hintSettle": "Unter Salden gleichen wir aus.",
+    "hintSettings": "Du kannst mich in den Maskottchen-Einstellungen ändern oder ausschalten.",
+    "resetPosition": "Position zurücksetzen",
+    "landingHintSplit": "Teile ein Abendessen, eine Reise oder die Miete — ich kümmere mich um die Zahlen.",
+    "landingHintSettle": "Wenn du ausgleichen willst, feuere ich dich an.",
+    "landingHintTap": "Tippe mich jederzeit an. Ich beiße nicht — ich bin ein Beleg."
   }
 }

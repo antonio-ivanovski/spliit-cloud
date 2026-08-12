@@ -2905,6 +2905,13 @@
     "settingsAction": "Maskot ayarları",
     "noActionMessage": "Şu anda burada yardımcı olabileceğim bir şey yok.",
     "noActionSettings": "Maskot ayarları",
-    "landingGreeting": "Merhaba — oturum açtıktan sonra harcamaları bölmene yardımcı olurum."
+    "landingGreeting": "Merhaba — oturum açtıktan sonra harcamaları bölmene yardımcı olurum.",
+    "hintReceiptVoice": "Fişten veya ses kaydından bir harcama doldurabilirim.",
+    "hintSettle": "Bakiyeler’de hesapları kapatırız.",
+    "hintSettings": "Maskot ayarlarından beni değiştirebilir veya kapatabilirsin.",
+    "resetPosition": "Konumu sıfırla",
+    "landingHintSplit": "Akşam yemeğini, geziyi ya da kirayı böl — hesaplamayı ben yaparım.",
+    "landingHintSettle": "Hesapları kapatmaya hazır olunca seni desteklerim.",
+    "landingHintTap": "İstediğin zaman bana dokun. Isırmam — ben bir fişim."
   }
 }

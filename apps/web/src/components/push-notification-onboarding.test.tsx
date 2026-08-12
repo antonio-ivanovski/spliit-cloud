@@ -10,6 +10,9 @@ const mocks = vi.hoisted(() => ({
   enable: vi.fn(),
   savePreferences: vi.fn(),
   invalidatePreferences: vi.fn(),
+  navigate: vi.fn(async ({ to, hash }: { to: string; hash?: string }) => {
+    window.history.pushState({}, '', `${to}${hash ? `#${hash}` : ''}`)
+  }),
 }))
 
 vi.mock('@/lib/use-current-account', () => ({
@@ -19,6 +22,14 @@ vi.mock('@/lib/use-current-account', () => ({
 vi.mock('@/lib/use-push-notifications', () => ({
   usePushNotifications: mocks.usePushNotifications,
 }))
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router')
+  return {
+    ...actual,
+    useNavigate: () => mocks.navigate,
+  }
+})
 
 vi.mock('@/trpc/client', () => ({
   trpc: {
@@ -331,8 +342,10 @@ describe('PushNotificationOnboarding', () => {
     )
 
     await waitFor(() => {
-      expect(window.location.pathname).toBe('/account/settings')
-      expect(window.location.hash).toBe('#notifications')
+      expect(mocks.navigate).toHaveBeenCalledWith({
+        to: '/account/settings',
+        hash: 'notifications',
+      })
     })
     expect(mocks.savePreferences).not.toHaveBeenCalled()
   })

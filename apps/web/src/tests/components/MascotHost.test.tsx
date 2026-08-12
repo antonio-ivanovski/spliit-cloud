@@ -8,8 +8,9 @@ import {
   type MascotAction,
 } from '@/components/mascot/mascot-context'
 import { MascotHost } from '@/components/mascot/mascot-host'
+import { writeMascotPin } from '@/components/mascot/mascot-pin'
 import { markMascotSettingsDiscovered } from '@/components/mascot/mascot-settings-discovery'
-import { act, fireEvent, render, screen, waitFor } from '@/test/test-utils'
+import { act, render, screen, waitFor } from '@/test/test-utils'
 
 const state = vi.hoisted(() => ({
   pathname: '/',
@@ -73,6 +74,13 @@ function renderHost(extra?: React.ReactNode) {
   )
 }
 
+async function finishWelcome() {
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(2_300)
+  })
+  vi.useRealTimers()
+}
+
 describe('MascotHost', () => {
   beforeEach(() => {
     state.pathname = '/'
@@ -80,10 +88,18 @@ describe('MascotHost', () => {
     state.isPending = false
     state.account = { id: 'account-1', name: 'Ada' }
     localStorage.clear()
+    sessionStorage.clear()
     vi.clearAllMocks()
   })
 
-  afterEach(() => vi.useRealTimers())
+  afterEach(() => {
+    vi.useRealTimers()
+    for (const node of document.querySelectorAll(
+      '[role="dialog"], [role="alertdialog"], [data-fixed-action-bar]',
+    )) {
+      node.remove()
+    }
+  })
 
   it('stays absent until Bill is selected', () => {
     state.mascot = 'off'
@@ -147,42 +163,41 @@ describe('MascotHost', () => {
     const trigger = screen.getByRole('button', { name: 'Say hello to Bill' })
     await user.click(trigger)
 
-    expect(trigger).toHaveAttribute('data-reaction', 'success')
+    expect(trigger).toHaveAttribute('data-reaction', 'welcome')
     expect(screen.queryByRole('menu')).toBeNull()
-  })
-
-  it('explains the missing action after a second tap', async () => {
-    state.pathname = '/feedback'
-    const { user } = renderHost()
-
-    const trigger = screen.getByRole('button', { name: 'Say hello to Bill' })
-    await user.click(trigger)
-    await user.click(trigger)
-
     expect(screen.getByTestId('bill-mascot-speech')).toHaveTextContent(
       'Nothing I can help with here right now.',
     )
   })
 
-  it('does not nag with the speech bubble again this session', () => {
-    vi.useFakeTimers()
+  it('cycles speech lines on each tap and wraps around', async () => {
     state.pathname = '/feedback'
-    renderHost()
+    const { user } = renderHost()
 
     const trigger = screen.getByRole('button', { name: 'Say hello to Bill' })
-    fireEvent.click(trigger)
-    fireEvent.click(trigger)
-    expect(screen.getByTestId('bill-mascot-speech')).toBeInTheDocument()
+    await user.click(trigger)
+    expect(screen.getByTestId('bill-mascot-speech')).toHaveTextContent(
+      'Nothing I can help with here right now.',
+    )
 
-    act(() => {
-      vi.advanceTimersByTime(3_000)
-    })
-    expect(screen.queryByTestId('bill-mascot-speech')).toBeNull()
+    await user.click(trigger)
+    expect(screen.getByTestId('bill-mascot-speech')).toHaveTextContent(
+      'I can fill an expense from a receipt or a voice note.',
+    )
 
-    fireEvent.click(trigger)
-    fireEvent.click(trigger)
-    expect(screen.queryByTestId('bill-mascot-speech')).toBeNull()
-    vi.useRealTimers()
+    await user.click(trigger)
+    const speech = screen.getByTestId('bill-mascot-speech')
+    expect(speech).toHaveTextContent(
+      'You can change or turn me off in mascot settings.',
+    )
+    expect(
+      screen.getByRole('button', { name: 'Mascot settings' }),
+    ).toBeInTheDocument()
+
+    await user.click(trigger)
+    expect(screen.getByTestId('bill-mascot-speech')).toHaveTextContent(
+      'Nothing I can help with here right now.',
+    )
   })
 
   it('offers a settings action until it is used', async () => {
@@ -215,7 +230,9 @@ describe('MascotHost', () => {
   })
 
   it('sits behind an open modal without docking', async () => {
+    vi.useFakeTimers()
     renderHost()
+    await finishWelcome()
 
     const dialog = document.createElement('div')
     dialog.setAttribute('role', 'dialog')
@@ -234,24 +251,24 @@ describe('MascotHost', () => {
   })
 
   it('docks on focused form routes but stays clickable', async () => {
+    vi.useFakeTimers()
     state.pathname = '/groups/create'
     const { user } = renderHost()
+    await finishWelcome()
 
     expect(screen.getByTestId('bill-mascot-docked')).toBeInTheDocument()
     const trigger = screen.getByTestId('bill-mascot-trigger')
     expect(trigger).toHaveAttribute('aria-label', 'Say hello to Bill')
 
     await user.click(trigger)
-    await user.click(trigger)
     expect(screen.getByTestId('bill-mascot-speech')).toBeInTheDocument()
   })
 
-  it('explains the missing action on settings after two taps', async () => {
+  it('explains the missing action on settings after a tap', async () => {
     state.pathname = '/account/settings'
     const { user } = renderHost()
 
     const trigger = screen.getByRole('button', { name: 'Say hello to Bill' })
-    await user.click(trigger)
     await user.click(trigger)
 
     expect(screen.getByTestId('bill-mascot-speech')).toHaveTextContent(
@@ -260,8 +277,10 @@ describe('MascotHost', () => {
   })
 
   it('undocks and rises above an overlay while celebrating', async () => {
+    vi.useFakeTimers()
     state.pathname = '/groups/create'
     const { user } = renderHost(<CelebrateButton />)
+    await finishWelcome()
 
     expect(screen.getByTestId('bill-mascot-docked')).toBeInTheDocument()
 
@@ -303,5 +322,82 @@ describe('MascotHost', () => {
     })
 
     bar.remove()
+  })
+
+  it('waves welcome whenever a signed-in account appears', async () => {
+    const { unmount } = renderHost()
+    await waitFor(() => {
+      expect(screen.getByTestId('bill-mascot')).toHaveAttribute(
+        'data-reaction',
+        'welcome',
+      )
+    })
+
+    unmount()
+    renderHost()
+    await waitFor(() => {
+      expect(screen.getByTestId('bill-mascot')).toHaveAttribute(
+        'data-reaction',
+        'welcome',
+      )
+    })
+  })
+
+  it('waves again after logout and login', async () => {
+    const { rerender } = renderHost()
+    await waitFor(() => {
+      expect(screen.getByTestId('bill-mascot')).toHaveAttribute(
+        'data-reaction',
+        'welcome',
+      )
+    })
+
+    state.account = null
+    rerender(
+      <MascotProvider>
+        <MascotHost />
+      </MascotProvider>,
+    )
+    expect(screen.queryByTestId('bill-mascot')).toBeNull()
+
+    state.account = { id: 'account-1', name: 'Ada' }
+    rerender(
+      <MascotProvider>
+        <MascotHost />
+      </MascotProvider>,
+    )
+    await waitFor(() => {
+      expect(screen.getByTestId('bill-mascot')).toHaveAttribute(
+        'data-reaction',
+        'welcome',
+      )
+    })
+  })
+
+  it('uses a stored pin on fine-pointer desktops and skips the default bottom dock', () => {
+    const media = vi
+      .spyOn(window, 'matchMedia')
+      .mockImplementation((query: string) => ({
+        matches: query.includes('pointer: fine'),
+        media: query,
+        onchange: null,
+        addListener: () => {},
+        removeListener: () => {},
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        dispatchEvent: () => false,
+      }))
+    writeMascotPin('account-1', { x: 30, y: 40 })
+
+    renderHost()
+
+    const host = screen.getByTestId('bill-mascot')
+    expect(host).toHaveAttribute('data-mascot-pinned', 'true')
+    expect(host.style.left).toContain('vw')
+    expect(host.style.top).toContain('vh')
+    expect(host.className).not.toContain(
+      'bottom-[calc(0.65rem+env(safe-area-inset-bottom))]',
+    )
+    media.mockRestore()
   })
 })

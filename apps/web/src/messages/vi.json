@@ -2977,6 +2977,13 @@
     "settingsAction": "Cài đặt linh vật",
     "noActionMessage": "Hiện tại không có gì để giúp ở đây.",
     "noActionSettings": "Cài đặt linh vật",
-    "landingGreeting": "Xin chào — tôi sẽ giúp chia chi tiêu sau khi đăng nhập."
+    "landingGreeting": "Xin chào — tôi sẽ giúp chia chi tiêu sau khi đăng nhập.",
+    "hintReceiptVoice": "Tôi có thể điền khoản chi từ biên lai hoặc đoạn ghi âm giọng nói.",
+    "hintSettle": "Số dư là nơi chúng ta thanh toán.",
+    "hintSettings": "Bạn có thể đổi hoặc tắt tôi trong cài đặt linh vật.",
+    "resetPosition": "Đặt lại vị trí",
+    "landingHintSplit": "Chia bữa tối, chuyến đi hoặc tiền thuê nhà — tôi lo phần tính toán.",
+    "landingHintSettle": "Khi sẵn sàng thanh toán, tôi sẽ cổ vũ.",
+    "landingHintTap": "Nhấn vào tôi bất cứ lúc nào. Tôi không cắn — tôi là biên lai."
   }
 }

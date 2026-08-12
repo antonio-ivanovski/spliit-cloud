@@ -16,6 +16,7 @@ import {
   SettingsSaving,
   SettingsSection,
   SettingsSectionSkeleton,
+  settingsControlId,
 } from './settings-ui'
 
 type DeploymentFeatures = {
@@ -113,7 +114,9 @@ export function AccountAiPreferences() {
                 description={t('categoryExtractDescription')}
                 control={
                   <Switch
-                    id="account-ai-preferences-category-extract"
+                    id={settingsControlId(
+                      'account-ai-preferences-category-extract',
+                    )}
                     checked={pref?.aiCategoryExtractEnabled !== false}
                     disabled={patchesDisabled}
                     onCheckedChange={(value) =>
@@ -132,7 +135,9 @@ export function AccountAiPreferences() {
                 description={t('receiptScanDescription')}
                 control={
                   <Switch
-                    id="account-ai-preferences-receipt-scan"
+                    id={settingsControlId(
+                      'account-ai-preferences-receipt-scan',
+                    )}
                     checked={pref?.aiReceiptScanEnabled !== false}
                     disabled={patchesDisabled}
                     onCheckedChange={(value) =>
@@ -159,7 +164,9 @@ export function AccountAiPreferences() {
                 description={t('voiceExpenseDescription')}
                 control={
                   <Switch
-                    id="account-ai-preferences-voice-expense"
+                    id={settingsControlId(
+                      'account-ai-preferences-voice-expense',
+                    )}
                     checked={pref?.aiVoiceExpenseEnabled !== false}
                     disabled={patchesDisabled}
                     onCheckedChange={(value) =>

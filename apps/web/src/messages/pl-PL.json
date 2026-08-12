@@ -2939,6 +2939,13 @@
     "settingsAction": "Ustawienia maskotki",
     "noActionMessage": "Na razie nie mogę tu w niczym pomóc.",
     "noActionSettings": "Ustawienia maskotki",
-    "landingGreeting": "Cześć — pomogę Ci podzielić wydatki po zalogowaniu."
+    "landingGreeting": "Cześć — pomogę Ci podzielić wydatki po zalogowaniu.",
+    "hintReceiptVoice": "Mogę wypełnić wydatek z paragonu lub nagrania głosowego.",
+    "hintSettle": "W Saldach się rozliczamy.",
+    "hintSettings": "Możesz mnie zmienić lub wyłączyć w ustawieniach maskotki.",
+    "resetPosition": "Resetuj pozycję",
+    "landingHintSplit": "Podziel kolację, wyjazd albo czynsz — ja dopilnuję obliczeń.",
+    "landingHintSettle": "Gdy zechcesz się rozliczyć, będę Ci kibicować.",
+    "landingHintTap": "Stuknij mnie kiedy chcesz. Nie gryzę — jestem paragonem."
   }
 }

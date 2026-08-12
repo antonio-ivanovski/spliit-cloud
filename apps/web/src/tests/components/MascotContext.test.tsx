@@ -33,6 +33,18 @@ function StateProbe() {
       <button type="button" onClick={() => controller.react('failure', 500)}>
         Fail
       </button>
+      <button type="button" onClick={() => controller.react('welcome', 500)}>
+        Welcome
+      </button>
+      <button type="button" onClick={() => controller.react('celebrate', 500)}>
+        Win
+      </button>
+      <button
+        type="button"
+        onClick={() => controller.react('acknowledge', 500)}
+      >
+        Acknowledge
+      </button>
       <button type="button" onClick={() => controller.react('thinking')}>
         Think
       </button>
@@ -185,6 +197,29 @@ describe('MascotProvider', () => {
       vi.advanceTimersByTime(500)
     })
     expect(screen.getByTestId('reaction')).toHaveTextContent('idle')
+  })
+
+  it('does not let idle cancel an in-flight welcome, celebrate, or acknowledge reaction', () => {
+    vi.useFakeTimers()
+    render(
+      <MascotProvider>
+        <StateProbe />
+      </MascotProvider>,
+    )
+
+    for (const [name, reaction] of [
+      ['Welcome', 'welcome'],
+      ['Win', 'celebrate'],
+      ['Acknowledge', 'acknowledge'],
+    ] as const) {
+      fireEvent.click(screen.getByRole('button', { name }))
+      fireEvent.click(screen.getByRole('button', { name: 'Idle' }))
+      expect(screen.getByTestId('reaction')).toHaveTextContent(reaction)
+      act(() => {
+        vi.advanceTimersByTime(500)
+      })
+      expect(screen.getByTestId('reaction')).toHaveTextContent('idle')
+    }
   })
 
   it('still lets idle clear thinking', () => {

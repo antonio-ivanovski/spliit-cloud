@@ -49,7 +49,10 @@ function Content() {
                 <span className="ambient-backdrop__orb ambient-backdrop__orb--coral" />
               </div>
             )}
-            <header className="fixed inset-x-0 top-0 z-50 hidden h-16 justify-between border-b bg-white/50 p-2 backdrop-blur-xs sm:flex dark:bg-gray-950/50">
+            <header
+              data-app-header
+              className="fixed inset-x-0 top-0 z-50 hidden h-16 justify-between border-b bg-white/50 p-2 backdrop-blur-xs sm:flex dark:bg-gray-950/50"
+            >
               <Link
                 className="flex items-center gap-2 transition-transform hover:scale-105"
                 href="/"
@@ -91,7 +94,10 @@ function Content() {
                 </div>
               </div>
             ) : (
-              <div className="fixed inset-x-0 top-0 z-50 flex h-(--app-header-height) items-center justify-between border-b bg-white/90 px-3 backdrop-blur sm:hidden dark:bg-gray-950/90">
+              <div
+                data-app-header
+                className="fixed inset-x-0 top-0 z-50 flex h-(--app-header-height) items-center justify-between border-b bg-white/90 px-3 backdrop-blur sm:hidden dark:bg-gray-950/90"
+              >
                 <Link
                   href="/"
                   aria-label="Spliit"

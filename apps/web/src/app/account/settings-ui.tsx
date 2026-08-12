@@ -5,7 +5,10 @@ import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 
-/** Shared visual language for the account settings page. */
+/** Native control id paired with a settings row / section hash target. */
+export function settingsControlId(id: string) {
+  return `${id}-control`
+}
 export function SettingsSection({
   id,
   title,
@@ -183,6 +186,7 @@ export function SettingsRow({
   const titleId = id ? `${id}-label` : undefined
   return (
     <div
+      id={id}
       aria-labelledby={titleId}
       className={cn(
         'flex min-w-0 flex-col gap-3 px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:px-6',
@@ -235,6 +239,7 @@ export function SettingsFieldRow({
 }) {
   return (
     <div
+      id={id}
       className={cn(
         'flex min-w-0 flex-col gap-3 px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:px-6',
         layout === 'inline' && 'flex-row items-start sm:items-center',
@@ -242,7 +247,10 @@ export function SettingsFieldRow({
       )}
     >
       <div className="min-w-0">
-        <label htmlFor={id} className="block min-w-0 font-medium break-words">
+        <label
+          htmlFor={settingsControlId(id)}
+          className="block min-w-0 font-medium break-words"
+        >
           {label}
         </label>
         {description ? (

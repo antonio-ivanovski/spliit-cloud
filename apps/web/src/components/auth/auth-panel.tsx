@@ -56,7 +56,11 @@ export function AuthPanel({
         onReset={resetEmailFlow}
       />
     )
-    return embedded ? success : <AuthCard mode={mode}>{success}</AuthCard>
+    return embedded ? (
+      <div data-auth-panel="">{success}</div>
+    ) : (
+      <AuthCard mode={mode}>{success}</AuthCard>
+    )
   }
 
   const content = (
@@ -144,5 +148,9 @@ export function AuthPanel({
     </div>
   )
 
-  return embedded ? content : <AuthCard mode={mode}>{content}</AuthCard>
+  return embedded ? (
+    <div data-auth-panel="">{content}</div>
+  ) : (
+    <AuthCard mode={mode}>{content}</AuthCard>
+  )
 }

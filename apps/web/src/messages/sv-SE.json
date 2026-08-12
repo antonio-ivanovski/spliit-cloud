@@ -2901,6 +2901,13 @@
     "settingsAction": "Maskotinställningar",
     "noActionMessage": "Jag kan inte hjälpa till med något här just nu.",
     "noActionSettings": "Maskotinställningar",
-    "landingGreeting": "Hej — jag hjälper dig att dela utgifter när du loggar in."
+    "landingGreeting": "Hej — jag hjälper dig att dela utgifter när du loggar in.",
+    "hintReceiptVoice": "Jag kan fylla i en utgift från ett kvitto eller en röstinspelning.",
+    "hintSettle": "På Balanser reglerar vi.",
+    "hintSettings": "Du kan byta eller stänga av mig i maskotinställningarna.",
+    "resetPosition": "Återställ position",
+    "landingHintSplit": "Dela en middag, en resa eller hyran — jag sköter räkningen.",
+    "landingHintSettle": "När du är redo att reglera hejar jag på dig.",
+    "landingHintTap": "Tryck på mig när som helst. Jag biter inte — jag är ett kvitto."
   }
 }

@@ -2923,6 +2923,13 @@
     "settingsAction": "Impostazioni mascotte",
     "noActionMessage": "Al momento non c'è niente in cui possa aiutarti qui.",
     "noActionSettings": "Impostazioni mascotte",
-    "landingGreeting": "Ciao — ti aiuto a dividere le spese dopo l'accesso."
+    "landingGreeting": "Ciao — ti aiuto a dividere le spese dopo l'accesso.",
+    "hintReceiptVoice": "Posso compilare una spesa da una ricevuta o da una registrazione vocale.",
+    "hintSettle": "Bilanci è dove saldiamo i conti.",
+    "hintSettings": "Puoi modificarmi o disattivarmi nelle impostazioni mascotte.",
+    "resetPosition": "Reimposta posizione",
+    "landingHintSplit": "Dividi una cena, un viaggio o l’affitto — ai calcoli ci penso io.",
+    "landingHintSettle": "Quando vorrai saldare i conti, ti farò il tifo.",
+    "landingHintTap": "Toccami quando vuoi. Non mordo — sono una ricevuta."
   }
 }

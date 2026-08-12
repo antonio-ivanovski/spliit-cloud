@@ -1,4 +1,4 @@
-import { useNavigate } from '@tanstack/react-router'
+import { useNavigate, useLocation } from '@tanstack/react-router'
 import { ArrowLeft, Loader2, UserRound, type LucideIcon } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
 import { prepareProfileImage } from '@/lib/upload'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { useHashTargetFocus } from '@/lib/use-hash-target-focus'
 import { cn } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 
@@ -22,6 +23,7 @@ import {
   SettingsList,
   SettingsRow,
   SettingsSection,
+  settingsControlId,
 } from './settings-ui'
 
 /**
@@ -43,6 +45,8 @@ function AccountSettingsContent() {
   const { t: tCommon } = useTranslation(undefined, { keyPrefix: 'Header' })
   const { data: account, isPending, refetch } = useCurrentAccount()
   const navigate = useNavigate()
+  const { hash } = useLocation()
+  useHashTargetFocus(hash)
   const utils = trpc.useUtils()
   const { toast } = useToast()
 
@@ -267,7 +271,7 @@ function AccountSettingsContent() {
               label={t('nameLabel')}
               control={
                 <Input
-                  id="account-settings-name"
+                  id={settingsControlId('account-settings-name')}
                   type="text"
                   autoComplete="name"
                   value={name}
@@ -284,7 +288,7 @@ function AccountSettingsContent() {
               description={t('emailHelp')}
               control={
                 <Input
-                  id="account-settings-email"
+                  id={settingsControlId('account-settings-email')}
                   type="email"
                   value={account.email ?? ''}
                   readOnly
