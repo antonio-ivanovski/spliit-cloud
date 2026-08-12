@@ -694,7 +694,10 @@ model Expense {
   // deleted remain preserved. Null-owned expenses are admin-managed.
   createdByAccount   Account?          @relation("ExpenseCreator", fields: [createdByAccountId], references: [id], onDelete: SetNull)
   createdByAccountId String?
-  expenseDate        DateTime          @default(dbgenerated("CURRENT_DATE")) @db.Date
+  // Canonical expense instant. Its wall-clock representation is interpreted
+  // using expenseTimeZone; the name is retained for API compatibility.
+  expenseDate        DateTime          @db.Timestamptz(0)
+  expenseTimeZone    String
   title              String
   // Descriptive id from the in-code category list, e.g. "general",
   // "payment", "movies". See `packages/domain/src/categories.ts`.
@@ -727,7 +730,7 @@ model Expense {
 
   @@unique([recurringSeriesId, recurrenceSequence])
   // ledgerId prefix covers group-scoped scans; expenseDate supports
-  // recency-bounded currency recommendation queries.
+  // recency-bounded currency recommendation queries and intraday sorting.
   @@index([ledgerId, expenseDate])
   @@index([ledgerId, createdAt])
   @@index([createdByAccountId])
@@ -784,8 +787,9 @@ model RecurringExpenseSeries {
   ledgerId              String
   creatorAccount        Account?                     @relation("RecurringExpenseSeriesCreator", fields: [creatorAccountId], references: [id], onDelete: SetNull)
   creatorAccountId      String?
-  // Immutable scheduling timezone captured from the creator's account.
-  timeZone              String                       @default("UTC")
+  // Immutable scheduling timezone captured from the expense's timezone at creation.
+  timeZone              String
+  anchorTimeMinutes     Int
   frequency             RecurrenceFrequency
   interval              Int
   anchorDate            DateTime                     @db.Date

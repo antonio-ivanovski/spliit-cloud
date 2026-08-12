@@ -201,6 +201,7 @@ function buildExpensePayload(args: {
 }) {
   const adminId = testGroup.participants[0]?.id ?? ''
   const paidFor = args.paidFor ?? [{ participant: adminId, shares: 1 }]
+  const expenseDate = new Date()
   return {
     groupId: testGroup.id,
     requestId: crypto.randomUUID(),
@@ -212,7 +213,8 @@ function buildExpensePayload(args: {
       isMultiPayer: false,
       paidFor,
       splitMode: args.splitMode,
-      expenseDate: new Date().toISOString(),
+      expenseDate: expenseDate.toISOString(),
+      expenseTimeZone: 'UTC',
       category: 'general',
       isReimbursement: false,
       recurrenceRule: 'NONE' as const,
@@ -323,6 +325,7 @@ describe('Expense items — ExpenseCard via existing API', () => {
             isReimbursement: false,
             paidBySplitMode: 'BY_AMOUNT',
             splitMode: 'EVENLY',
+            expenseTimeZone: 'UTC',
             recurrenceRule: 'NONE',
             documentCount: 0,
             items: [],
@@ -375,6 +378,7 @@ describe('Expense items — ExpenseCard via existing API', () => {
         paidByList: unknown
         paidFor: unknown
         expenseDate: string
+        expenseTimeZone: string
         createdAt: string
       }>
     }>('groups.expenses.list', {
@@ -456,6 +460,7 @@ describe('Expense items — ExpenseCard via existing API', () => {
         paidByList: unknown
         paidFor: unknown
         expenseDate: string
+        expenseTimeZone: string
         createdAt: string
       }>
     }>('groups.expenses.list', {
@@ -537,6 +542,7 @@ describe('Expense items — ExpenseCard via existing API', () => {
         paidByList: unknown
         paidFor: unknown
         expenseDate: string
+        expenseTimeZone: string
         createdAt: string
       }>
     }>('groups.expenses.list', {
@@ -686,6 +692,7 @@ describe('Expense items — ExpenseCard via existing API', () => {
     )
 
     // Step 2: update with a single new item (the two old ones should be gone)
+    const updateExpenseAt = new Date()
     await trpcCall('groups.expenses.update', {
       groupId: testGroup.id,
       expenseId,
@@ -698,7 +705,8 @@ describe('Expense items — ExpenseCard via existing API', () => {
         isMultiPayer: false,
         paidFor: [{ participant: adminId, shares: 1 }],
         splitMode: 'ITEMIZED',
-        expenseDate: new Date().toISOString(),
+        expenseDate: updateExpenseAt.toISOString(),
+        expenseTimeZone: 'UTC',
         category: 'general',
         isReimbursement: false,
         recurrenceRule: 'NONE',

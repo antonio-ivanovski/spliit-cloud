@@ -8,7 +8,10 @@ import {
 } from '@spliit/db'
 import type { Expense, GroupFormValues } from '@spliit/domain'
 import {
+  dateOnlyInTimeZone,
   exchangeRateLookupDate,
+  toSecondPrecision,
+  utcToWallTime,
   type Expense as DomainExpense,
 } from '@spliit/domain'
 import { supportedCurrencyCodes } from '@spliit/domain/currency'
@@ -377,7 +380,8 @@ export async function prepareImportGroup(
           // (originalCurrency is null and amount is already ledger minor units).
           currencyCode:
             conversion.originalCurrency ?? preflightLedgerCurrency ?? null,
-          date: expense.expenseDate.toISOString().slice(0, 10),
+          date: utcToWallTime(expense.expenseDate, expense.expenseTimeZone)
+            .dateIso,
           originalAmount: conversion.originalAmount ?? undefined,
           conversionRate: conversion.conversionRate ?? undefined,
           conversionSource: conversion.conversionSource,
@@ -767,7 +771,8 @@ export async function importGroup(
         id: expenseId,
         ledgerId,
         createdByAccountId: actor.accountId,
-        expenseDate: expense.expenseDate,
+        expenseDate: toSecondPrecision(expense.expenseDate),
+        expenseTimeZone: expense.expenseTimeZone,
         title: expense.title,
         categoryId: expense.category,
         amount: conversion.ledgerAmountMinor,
@@ -855,7 +860,15 @@ export async function importGroup(
         seriesId,
         ledgerId,
         creatorAccountId: actor.accountId,
-        anchorDate: anchorExpense.expenseDate,
+        anchorDate: dateOnlyInTimeZone(
+          anchorExpense.expenseDate,
+          anchorExpense.expenseTimeZone,
+        ),
+        timeZone: anchorExpense.expenseTimeZone,
+        anchorTimeMinutes: utcToWallTime(
+          anchorExpense.expenseDate,
+          anchorExpense.expenseTimeZone,
+        ).timeMinutes,
         config: plan.config,
         template,
         boss: queueBoss,

@@ -9,6 +9,7 @@ import {
   getCategoryById,
   getCurrency,
   getCurrencyFromGroup,
+  utcToWallTime,
 } from '@spliit/domain'
 
 import { expenseCsvExportSelect } from '../lib/api/selects/expense-list'
@@ -24,12 +25,8 @@ const splitModeLabel = {
   ITEMIZED: 'Itemized',
 } as const
 
-function formatDate(dateValue: Date): string {
-  const date = new Date(dateValue)
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  return `${year}-${month}-${day}`
+function formatDate(dateValue: Date, timeZone: string): string {
+  return utcToWallTime(new Date(dateValue), timeZone).dateIso
 }
 
 async function ensureMemberOr404(request: Request, groupId: string) {
@@ -148,7 +145,7 @@ export async function exportGroupCsv(request: Request, groupId: string) {
     const paidByShares = calculatePaidByShares(shareExpense)
 
     return {
-      date: formatDate(expense.expenseDate),
+      date: formatDate(expense.expenseDate, expense.expenseTimeZone),
       title: expense.title,
       categoryName: getCategoryById(expense.categoryId as never)?.name ?? '',
       currency: group.ledger?.currencyCode ?? group.ledger?.currency ?? '',

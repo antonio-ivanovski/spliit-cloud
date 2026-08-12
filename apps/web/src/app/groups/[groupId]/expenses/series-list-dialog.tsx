@@ -13,11 +13,8 @@ import {
 } from '@/components/ui/responsive-dialog'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useLocale } from '@/i18n/react'
-import {
-  formatCurrency,
-  formatDateOnly,
-  getCurrencyFromGroup,
-} from '@/lib/utils'
+import { formatExpenseClosed } from '@/lib/expense-display'
+import { formatCurrency, getCurrencyFromGroup } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 
 import { useLinkInviteToken } from '../use-link-invite-token'
@@ -35,6 +32,7 @@ export function SeriesListDialog({
   onOpenChange: (open: boolean) => void
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseSeries' })
+  const { t: tForm } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const locale = useLocale()
   const linkInviteToken = useLinkInviteToken()
   const [occurrenceCursor, setOccurrenceCursor] = useState<number | undefined>()
@@ -42,6 +40,7 @@ export function SeriesListDialog({
     Array<{
       id: string
       expenseDate: Date
+      expenseTimeZone: string
       recurrenceSequence: number | null
       title: string
       amount: number
@@ -134,11 +133,22 @@ export function SeriesListDialog({
                       <span className="block truncate text-sm font-medium">
                         {expense.title}
                       </span>
-                      <span className="block text-xs text-muted-foreground">
-                        {formatDateOnly(expense.expenseDate, locale, {
-                          dateStyle: 'medium',
-                        })}
-                      </span>
+                      {(() => {
+                        const d = formatExpenseClosed(
+                          expense as never,
+                          locale,
+                          undefined,
+                          tForm('dateTimePicker.yourTime' as never),
+                        )
+                        return (
+                          <span
+                            className="block text-xs text-muted-foreground"
+                            title={d.tooltip}
+                          >
+                            {d.text}
+                          </span>
+                        )
+                      })()}
                     </span>
                     <span className="text-sm font-semibold tabular-nums">
                       {formatCurrency(currency, expense.amount, locale)}

@@ -235,6 +235,7 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
         category: 'general',
         splitMode: 'EVENLY',
         expenseDate: new Date().toISOString(),
+        expenseTimeZone: 'UTC',
         isReimbursement: false,
         documents: [
           { id: docId, url: presignData.fileUrl, width: 100, height: 100 },
@@ -319,6 +320,7 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
           category: 'general',
           splitMode: 'EVENLY',
           expenseDate: new Date().toISOString(),
+          expenseTimeZone: 'UTC',
           isReimbursement: false,
           documents: [
             { id: randomId(), url: fileUrl, width: 200, height: 200 },
@@ -410,6 +412,7 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
         category: 'general',
         splitMode: 'EVENLY',
         expenseDate: new Date().toISOString(),
+        expenseTimeZone: 'UTC',
         isReimbursement: false,
         documents: [
           { id: docIdA, url: fileUrlA, width: 100, height: 100 },
@@ -465,6 +468,7 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
         category: 'general',
         splitMode: 'EVENLY',
         expenseDate: new Date().toISOString(),
+        expenseTimeZone: 'UTC',
         isReimbursement: false,
         documents: [
           { id: docIdAprime, url: fileUrlAprime, width: 150, height: 150 },

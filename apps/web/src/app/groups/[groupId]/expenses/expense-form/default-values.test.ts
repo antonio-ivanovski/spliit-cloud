@@ -101,7 +101,8 @@ describe('buildExpenseFormDefaults edit-mode item hydration', () => {
   const itemizedExpense = {
     id: 'expense-1',
     title: 'Dinner',
-    expenseDate: new Date('2025-06-15'),
+    expenseDate: new Date('2025-06-15T15:00:00.000Z'),
+    expenseTimeZone: 'UTC',
     amount: 10000,
     originalCurrency: null,
     originalAmount: null,

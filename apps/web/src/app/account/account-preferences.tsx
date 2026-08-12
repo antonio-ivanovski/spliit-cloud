@@ -132,6 +132,7 @@ export function AccountPreferences() {
           control={
             <TimeZoneField
               id="account-preference-time-zone"
+              className="sm:max-w-xs"
               value={sourcePreferences.timeZone ?? detectDeviceTimeZone()}
               onChange={(timeZone) =>
                 void updater?.patchPreferences({ timeZone })

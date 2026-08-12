@@ -21,7 +21,12 @@ type PopoverContentProps = React.ComponentPropsWithoutRef<
 > &
   Pick<
     React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Positioner>,
-    'align' | 'alignOffset' | 'side' | 'sideOffset'
+    | 'align'
+    | 'alignOffset'
+    | 'side'
+    | 'sideOffset'
+    | 'collisionPadding'
+    | 'collisionAvoidance'
   >
 
 const PopoverContent = React.forwardRef<
@@ -35,6 +40,8 @@ const PopoverContent = React.forwardRef<
       alignOffset,
       side,
       sideOffset = 4,
+      collisionPadding = 8,
+      collisionAvoidance = { side: 'flip', align: 'shift' },
       ...props
     },
     ref,
@@ -45,6 +52,8 @@ const PopoverContent = React.forwardRef<
         alignOffset={alignOffset}
         side={side}
         sideOffset={sideOffset}
+        collisionPadding={collisionPadding}
+        collisionAvoidance={collisionAvoidance}
         className="z-50"
       >
         <PopoverPrimitive.Popup

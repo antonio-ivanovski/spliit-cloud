@@ -27,6 +27,7 @@ const temporaryUrl =
 
 const expense = {
   expenseDate: new Date('2025-11-15T00:00:00.000Z'),
+  expenseTimeZone: 'UTC',
   title: 'Dinner',
   category: 'food',
   amount: 1000,

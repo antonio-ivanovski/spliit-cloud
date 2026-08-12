@@ -100,7 +100,10 @@ const comment = z.object({
 const expense = z.object({
   sourceId,
   createdAt: isoDateTime,
-  expenseDate: dateOnly,
+  // v1 archives used a date-only value. New archives always emit an instant;
+  // the importer deterministically upgrades old values to noon UTC.
+  expenseDate: z.union([dateOnly, isoDateTime]),
+  expenseTimeZone: z.string().optional(),
   title: z.string(),
   categoryId: z.string(),
   amount: z.number().int().nonnegative(),
@@ -128,6 +131,7 @@ const recurrenceSeries = z.object({
   sourceId,
   creatorParticipantId: sourceId.nullable(),
   timeZone: z.string(),
+  anchorTimeMinutes: z.number().int().min(0).max(1439).optional(),
   frequency: z.enum(['DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY']),
   interval: z.number().int().positive(),
   anchorDate: dateOnly,

@@ -37,6 +37,7 @@ const EXPENSE_GROUP_I18N_KEYS = {
 type TimelineExpense = {
   id: string
   expenseDate: Date | string
+  expenseTimeZone: string
 }
 
 function getExpenseGroup(
@@ -76,11 +77,16 @@ export function getGroupedExpensesByDate<T extends TimelineExpense>(
   ) as Record<ExpenseGroup, T[]>
 
   for (const expense of expenses) {
-    const expenseGroup = getExpenseGroup(
-      calendarDay(dateOnlyIso(new Date(expense.expenseDate))),
-      today,
-      locale,
-    )
+    let iso: string
+    try {
+      iso = zonedDateOnlyIso(
+        new Date(expense.expenseDate),
+        expense.expenseTimeZone,
+      )
+    } catch {
+      iso = dateOnlyIso(new Date(expense.expenseDate))
+    }
+    const expenseGroup = getExpenseGroup(calendarDay(iso), today, locale)
     result[expenseGroup].push(expense)
   }
 

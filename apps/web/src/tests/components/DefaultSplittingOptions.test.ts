@@ -588,7 +588,8 @@ describe('buildExpenseFormDefaults (copy branch)', () => {
   const loadedExpense: LoadedExpense = {
     id: 'expense-1',
     title: 'Groceries',
-    expenseDate: new Date('2024-12-01T00:00:00.000Z'),
+    expenseDate: new Date('2024-12-01T15:00:00.000Z'),
+    expenseTimeZone: 'UTC',
     amount: 5000, // $50.00 in cents
     originalCurrency: null,
     originalAmount: null,
@@ -647,7 +648,7 @@ describe('buildExpenseFormDefaults (copy branch)', () => {
     expect(result.splitMode).toBe('EVENLY')
   })
 
-  it('overrides expenseDate to today even when the source was older', () => {
+  it('overrides expenseDay to today even when the source was older', () => {
     const result = buildExpenseFormDefaults({
       isCreate: true,
       expense: loadedExpense,
@@ -660,8 +661,7 @@ describe('buildExpenseFormDefaults (copy branch)', () => {
       savedDefault: null,
     })
 
-    expect(result.expenseDate).toEqual(new Date('2025-07-15T12:00:00.000Z'))
-    expect(result.expenseDate).not.toEqual(loadedExpense.expenseDate)
+    expect(result.expenseDay).toBe('2025-07-15')
   })
 
   it('copies recurrence and shifts a date termination by the anchor offset', () => {
@@ -711,7 +711,7 @@ describe('buildExpenseFormDefaults (copy branch)', () => {
       savedDefault: null,
     })
 
-    expect(result.expenseDate).toEqual(loadedExpense.expenseDate)
+    expect(result.expenseDay).toBe('2024-12-01')
     expect(result.title).toBe('Groceries')
   })
 

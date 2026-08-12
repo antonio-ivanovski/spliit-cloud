@@ -30,7 +30,8 @@ function makeExpense(document: ExportDocumentRecord) {
   return {
     id: 'exp-1',
     createdAt: earlier,
-    expenseDate: earlier,
+    expenseDate: new Date('2026-08-08T12:00:00.000Z'),
+    expenseTimeZone: 'UTC',
     title: 'Dinner',
     categoryId: 'dining-out',
     amount: 4200,
@@ -199,6 +200,10 @@ describe('createGroupExportArtifact', () => {
       scope: { type: 'GROUP', sourceId: 'grp-1' },
       exportedAt: EXPORTED_AT.toISOString(),
       complete: true,
+    })
+    expect(manifest.expenses[0]).toMatchObject({
+      expenseDate: '2026-08-08T12:00:00.000Z',
+      expenseTimeZone: 'UTC',
     })
     expect(manifest.expenses[0].documents[0]).toMatchObject({
       status: 'INCLUDED',

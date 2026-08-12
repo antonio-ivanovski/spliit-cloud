@@ -17,6 +17,7 @@ export const futureRowSnapshotSelect = {
   title: true,
   amount: true,
   expenseDate: true,
+  expenseTimeZone: true,
   categoryId: true,
   notes: true,
   isReimbursement: true,
@@ -90,6 +91,7 @@ export function futureRowBeforeShape(
     title: row.title,
     amount: row.amount,
     expenseDate: row.expenseDate,
+    expenseTimeZone: row.expenseTimeZone,
     category: row.categoryId as Expense['category'],
     notes: row.notes ?? undefined,
     recurrenceRule: shared.recurrenceRule,
@@ -154,7 +156,8 @@ export function futureRowBeforeShape(
  * Build the AFTER shape from the new template + this row's resolved conversion.
  * The row's `documents` and the shared series recurrence identity are passed
  * through unchanged (no per-row document or recurrence diff). Pass
- * `expenseDate` when a schedule reflow moves the row.
+ * `expenseDate` and `expenseTimeZone` when a schedule reflow or timing edit
+ * moves the row.
  */
 export function futureRowAfterShape(args: {
   row: FutureRowSnapshot
@@ -168,6 +171,7 @@ export function futureRowAfterShape(args: {
   }
   shared: RecurrenceShape
   expenseDate?: Date
+  expenseTimeZone?: string
 }): Expense & {
   originalAmount?: number
   originalCurrency?: string
@@ -179,6 +183,7 @@ export function futureRowAfterShape(args: {
     title: template.title,
     amount: rowConv.ledgerAmountMinor,
     expenseDate: args.expenseDate ?? row.expenseDate,
+    expenseTimeZone: args.expenseTimeZone ?? row.expenseTimeZone,
     category: template.categoryId as Expense['category'],
     notes: template.notes ?? undefined,
     recurrenceRule: shared.recurrenceRule,

@@ -7,7 +7,9 @@ import {
 } from './schemas'
 
 const baseInput = {
-  expenseDate: new Date('2025-01-01T00:00:00.000Z'),
+  expenseDay: '2025-01-01',
+  expenseTime: '12:00',
+  expenseTimeZone: 'UTC',
   title: 'Dinner',
   category: 'general',
   amount: 10,
@@ -27,6 +29,7 @@ const baseInput = {
 
 const baseApi = {
   expenseDate: new Date('2025-01-01T00:00:00.000Z'),
+  expenseTimeZone: 'UTC',
   title: 'Dinner',
   category: 'general',
   amount: 1000,
@@ -45,6 +48,21 @@ describe('expenseFormInputSchema', () => {
   it('validates required fields', () => {
     const result = expenseFormInputSchema.safeParse(baseInput)
     expect(result.success).toBe(true)
+  })
+
+  it('rejects malformed times but accepts DST-normalized wall times', () => {
+    expect(
+      expenseFormInputSchema.safeParse({ ...baseInput, expenseTime: '24:00' })
+        .success,
+    ).toBe(false)
+    expect(
+      expenseFormInputSchema.safeParse({
+        ...baseInput,
+        expenseDay: '2026-03-29',
+        expenseTime: '02:30',
+        expenseTimeZone: 'Europe/Skopje',
+      }).success,
+    ).toBe(true)
   })
 
   it('does not report zero shares while the amount itself is zero', () => {
@@ -307,6 +325,27 @@ describe('expenseApiSchema', () => {
   it('validates required fields', () => {
     const result = expenseApiSchema.safeParse(baseApi)
     expect(result.success).toBe(true)
+  })
+
+  it('requires an expense instant and timezone', () => {
+    expect(
+      expenseApiSchema.safeParse({ ...baseApi, expenseDate: undefined })
+        .success,
+    ).toBe(false)
+    expect(
+      expenseApiSchema.safeParse({
+        ...baseApi,
+        expenseTimeZone: undefined,
+      }).success,
+    ).toBe(false)
+  })
+
+  it('normalizes expense instants to whole seconds', () => {
+    const result = expenseApiSchema.parse({
+      ...baseApi,
+      expenseDate: new Date('2025-01-01T00:00:00.987Z'),
+    })
+    expect(result.expenseDate.toISOString()).toBe('2025-01-01T00:00:00.000Z')
   })
 
   it('allows valid recurring rules', () => {

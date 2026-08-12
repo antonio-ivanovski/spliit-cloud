@@ -38,7 +38,7 @@ import type {
   ReceiptScanContext,
 } from '../create-from-receipt-button'
 import { BasicDetailsCard } from './basic-details-card'
-import { formatDate, isValidExpenseDate } from './currency-utils'
+import { isValidExpenseDate } from './currency-utils'
 import { type SavedSplit } from './default-split/split-equal'
 import {
   buildExpenseFormDefaults,
@@ -156,6 +156,7 @@ export function ExpenseForm(props: {
   const accountPreferences = useSyncedAccountPreferences()
   const accountTimeZone =
     accountPreferences?.timeZone ?? detectDeviceTimeZone() ?? 'UTC'
+  const [formNow] = useState(() => new Date())
   // Set when `onSubmit` resolved 'saved' but `onSaved` (post-save work such
   // as navigation) failed: the expense already exists, so this must not be
   // reported as a save failure (that would invite a duplicate retry).
@@ -200,7 +201,9 @@ export function ExpenseForm(props: {
       currentLedgerParticipantId: props.currentLedgerParticipantId,
       reimbursementTitle: t('reimbursement'),
       savedDefault,
-      today: dateOnlyInAccountTimeZone(new Date(), accountTimeZone),
+      today: dateOnlyInAccountTimeZone(formNow, accountTimeZone),
+      now: formNow,
+      timeZone: accountTimeZone,
     }),
   })
 
@@ -279,9 +282,9 @@ export function ExpenseForm(props: {
   // (a whole-form useWatch re-renders the entire form on every keystroke).
   const watchedTitle = useWatch({ control: form.control, name: 'title' })
   const watchedAmount = useWatch({ control: form.control, name: 'amount' })
-  const watchedExpenseDate = useWatch({
+  const watchedExpenseDay = useWatch({
     control: form.control,
-    name: 'expenseDate',
+    name: 'expenseDay',
   })
   const watchedCategory = useWatch({ control: form.control, name: 'category' })
   const watchedItems = useWatch({ control: form.control, name: 'items' })
@@ -297,8 +300,8 @@ export function ExpenseForm(props: {
   const receiptScanContext: ReceiptScanContext = {
     title: watchedTitle || undefined,
     amount: Number(watchedAmount) || undefined,
-    date: isValidExpenseDate(watchedExpenseDate)
-      ? formatDate(watchedExpenseDate)
+    date: isValidExpenseDate(new Date(`${watchedExpenseDay}T00:00:00.000Z`))
+      ? watchedExpenseDay
       : undefined,
     currencyCode: originalCurrencyValue || groupCurrency.code,
     categoryId: watchedCategory || undefined,
@@ -329,7 +332,7 @@ export function ExpenseForm(props: {
       })
     }
     if (info.date) {
-      form.setValue('expenseDate', new Date(`${info.date}T12:00:00`), {
+      form.setValue('expenseDay', info.date, {
         shouldDirty: true,
       })
     }

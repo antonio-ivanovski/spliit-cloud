@@ -13,6 +13,7 @@ import {
 
 const baseExpense = {
   expenseDate: new Date('2026-07-28T00:00:00.000Z'),
+  expenseTimeZone: 'UTC',
   title: 'Dinner',
   category: 'general' as const,
   amount: 10_00,

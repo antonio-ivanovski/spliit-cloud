@@ -50,7 +50,9 @@ const group = {
 
 const EMPTY_DEFAULTS: ExpenseFormInputValues = {
   title: '',
-  expenseDate: new Date(),
+  expenseDay: '2026-01-01',
+  expenseTime: '12:00',
+  expenseTimeZone: 'UTC',
   amount: 0,
   originalCurrency: 'EUR',
   conversionRate: undefined,

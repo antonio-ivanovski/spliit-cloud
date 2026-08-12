@@ -97,6 +97,7 @@ function evenExpense(
         id,
         ledgerId: 'ledger-1',
         expenseDate,
+        expenseTimeZone: 'UTC',
         title: 'Market',
         categoryId,
         amount,

@@ -57,7 +57,8 @@ export function formatDate(
 /**
  * Formats a date-only field (without time) for display. Extracts UTC date
  * components to avoid timezone shifts that can cause off-by-one day errors. Use
- * this for dates stored as DATE type in the database (e.g., expenseDate).
+ * this for calendar-only dates stored as UTC-midnight values (e.g., budget
+ * period boundaries), not for canonical expense instants.
  *
  * @param date - The date to format (typically from a database DATE field, e.g.,
  *   2025-10-17T00:00:00.000Z)

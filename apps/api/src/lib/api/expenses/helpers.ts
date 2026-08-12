@@ -60,6 +60,7 @@ export function toExpenseDomainShape(
     title: existing.title,
     amount: existing.amount,
     expenseDate: existing.expenseDate,
+    expenseTimeZone: existing.expenseTimeZone,
     category: existing.categoryId as Expense['category'],
     notes: existing.notes ?? undefined,
     recurrenceRule: existing.recurringSeries?.frequency ?? 'NONE',

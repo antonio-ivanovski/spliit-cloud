@@ -685,7 +685,10 @@
         "description": "Podaj dla kogo wpływ był przeznaczony."
       },
       "splitModeDescription": "Wybierz jak podzielić wpływ.",
-      "attachDescription": "Zobacz i załącz rachunki do wpływu."
+      "attachDescription": "Zobacz i załącz rachunki do wpływu.",
+      "recurrence": {
+        "scheduleHint": "Zostanie utworzone o {time} ({timeZone}) i może wywołać powiadomienie. Wybierz godzinę, która nie zakłóci snu. Aby ją zmienić, edytuj godzinę powyżej."
+      }
     },
     "Expense": {
       "create": "Stwórz wydatek",
@@ -767,7 +770,8 @@
         "completedOccurrence": "Utworzono",
         "upcomingOccurrence": "Nadchodzące",
         "timeZoneDescription": "Nowe wydatki cykliczne są uruchamiane o 15:00 w strefie {timeZone}. Istniejące harmonogramy zachowują pierwotną strefę czasową.",
-        "timeZonePending": "Oczekiwanie na strefę czasową konta przed włączeniem cykliczności."
+        "timeZonePending": "Oczekiwanie na strefę czasową konta przed włączeniem cykliczności.",
+        "scheduleHint": "Zostanie utworzone o {time} ({timeZone}) i może wywołać powiadomienie. Wybierz godzinę, która nie zakłóci snu. Aby ją zmienić, edytuj godzinę powyżej."
       },
       "recurringEditScopeOccurrence": "Edytowanie tylko tego wystąpienia",
       "recurringEditScopeFuture": "Edytowanie tego i przyszłych wystąpień",
@@ -976,7 +980,17 @@
     "validationSummary": "Popraw wyróżnione pola przed zapisaniem.",
     "resetDistribution": "Resetuj",
     "savedButNotNavigated": "Wydatek został zapisany, ale nie udało nam się opuścić tej strony. Możesz ją bezpiecznie zamknąć.",
-    "tryLeavingAgain": "Spróbuj wyjść ponownie"
+    "tryLeavingAgain": "Spróbuj wyjść ponownie",
+    "dateTimePicker": {
+      "changesDate": "Zmienia datę",
+      "timezone": "Strefa czasowa",
+      "dateTab": "Data",
+      "timeTab": "Godzina",
+      "back": "Wstecz",
+      "chooseTimezone": "Wybierz strefę czasową",
+      "done": "Gotowe",
+      "yourTime": "Twój czas"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Usuń dokument",
@@ -1233,7 +1247,8 @@
     "sharesInvalid": "Udziały muszą wynosić od 0,01 do 1 000 000 z maksymalnie dwoma miejscami po przecinku.",
     "itemTitleRequired": "Nazwa pozycji jest wymagana.",
     "itemQuantityMin1": "Liczba pozycji musi wynosić co najmniej 1.",
-    "rowErrorsHeading": "Popraw te udziały:"
+    "rowErrorsHeading": "Popraw te udziały:",
+    "invalidWallTime": "Ta godzina nie istnieje w wybranym dniu w tej strefie czasowej."
   },
   "Categories": {
     "search": "Szukaj kategorii…",
@@ -2115,7 +2130,7 @@
       "saveError": "Nie udało się zapisać preferencji",
       "defaultCurrency": "Domyślna waluta",
       "timeZone": "Strefa czasowa konta",
-      "timeZoneHelp": "Używana do znaczników czasu, dat względnych i nowych wydatków cyklicznych.",
+      "timeZoneHelp": "Ustawia domyślną strefę czasową dla godzin nowych wydatków i harmonogramów cyklicznych oraz służy do wyświetlania znaczników czasu i dat względnych.",
       "language": "Język",
       "theme": "Motyw",
       "chooseTheme": "Wybierz",

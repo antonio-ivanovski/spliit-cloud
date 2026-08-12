@@ -673,7 +673,10 @@
         "description": "Valitse osallistujat, joille tulo kohdistetaan."
       },
       "splitModeDescription": "Valitse miten tulo jaetaan osallistujien kesken.",
-      "attachDescription": "Katso ja liitä tuloon liittyviä kuitteja."
+      "attachDescription": "Katso ja liitä tuloon liittyviä kuitteja.",
+      "recurrence": {
+        "scheduleHint": "Luodaan klo {time} ({timeZone}), mikä voi käynnistää ilmoituksen. Valitse aika, joka ei häiritse unta. Voit vaihtaa ajan muokkaamalla sitä yllä."
+      }
     },
     "Expense": {
       "create": "Lisää kulu",
@@ -755,7 +758,8 @@
         "completedOccurrence": "Luotu",
         "upcomingOccurrence": "Tulossa",
         "timeZoneDescription": "Uudet toistuvat kulut suoritetaan klo 15.00 aikavyöhykkeellä {timeZone}. Nykyiset ajoitukset säilyttävät alkuperäisen aikavyöhykkeensä.",
-        "timeZonePending": "Odotetaan tilisi aikavyöhykettä, ennen kuin toistuvuus voidaan ottaa käyttöön."
+        "timeZonePending": "Odotetaan tilisi aikavyöhykettä, ennen kuin toistuvuus voidaan ottaa käyttöön.",
+        "scheduleHint": "Luodaan klo {time} ({timeZone}), mikä voi käynnistää ilmoituksen. Valitse aika, joka ei häiritse unta. Voit vaihtaa ajan muokkaamalla sitä yllä."
       },
       "recurringEditScopeOccurrence": "Muokataan vain tätä esiintymää",
       "recurringEditScopeFuture": "Muokataan tätä ja tulevia esiintymiä",
@@ -962,7 +966,17 @@
     "validationSummary": "Korjaa korostetut kentät ennen tallentamista.",
     "resetDistribution": "Palauta",
     "savedButNotNavigated": "Kulu tallennettiin, mutta emme voineet poistua tältä sivulta. Voit sulkea sen turvallisesti.",
-    "tryLeavingAgain": "Yritä poistua uudelleen"
+    "tryLeavingAgain": "Yritä poistua uudelleen",
+    "dateTimePicker": {
+      "changesDate": "Vaihtaa päivämäärän",
+      "timezone": "Aikavyöhyke",
+      "dateTab": "Päivämäärä",
+      "timeTab": "Aika",
+      "back": "Takaisin",
+      "chooseTimezone": "Valitse aikavyöhyke",
+      "done": "Valmis",
+      "yourTime": "paikallinen aikasi"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Poista asiakirja",
@@ -1217,7 +1231,8 @@
     "sharesInvalid": "Osuuksien on oltava välillä 0,01–1 000 000 ja niissä saa olla enintään kaksi desimaalia.",
     "itemTitleRequired": "Kohteen nimi on pakollinen.",
     "itemQuantityMin1": "Kohteen määrän on oltava vähintään 1.",
-    "rowErrorsHeading": "Korjaa nämä osuudet:"
+    "rowErrorsHeading": "Korjaa nämä osuudet:",
+    "invalidWallTime": "Tätä kellonaikaa ei ole valittuna päivänä tällä aikavyöhykkeellä."
   },
   "Categories": {
     "search": "Etsi kategoriaa...",
@@ -2097,7 +2112,7 @@
       "saveError": "Asetusten tallentaminen epäonnistui",
       "defaultCurrency": "Oletusvaluutta",
       "timeZone": "Tilin aikavyöhyke",
-      "timeZoneHelp": "Käytetään aikaleimoihin, suhteellisiin päivämääriin ja uusiin toistuviin kuluihin.",
+      "timeZoneHelp": "Määrittää uusien kulujen kellonaikojen ja toistuvien aikataulujen oletusaikavyöhykkeen. Sitä käytetään myös aikaleimojen ja suhteellisten päivämäärien näyttämiseen.",
       "language": "Kieli",
       "theme": "Teema",
       "chooseTheme": "Valitse",

@@ -9,6 +9,11 @@ import type { RecurrenceRule, SplitMode } from './enums'
 import { itemsExceedExpenseAmount } from './itemized-expenses'
 import { recurrenceConfigSchema } from './recurring-expenses'
 import { MAX_STORED_SHARES, getDisplayShareErrorKey } from './shares'
+import {
+  parseTimeMinutes,
+  timeZoneSchema,
+  toSecondPrecision,
+} from './timezones'
 
 const groupFormFields = {
   name: z.string().min(2, { error: 'min2' }).max(50, { error: 'max50' }),
@@ -619,7 +624,16 @@ function validateDisplayShareForMode(
 // happens in `submit-values.ts` before the values reach the API.
 export const expenseFormInputSchema = z
   .object({
-    expenseDate: z.coerce.date(),
+    expenseDay: z.iso.date(),
+    expenseTime: z.string().refine((value) => {
+      try {
+        parseTimeMinutes(value)
+        return true
+      } catch {
+        return false
+      }
+    }, 'invalidTime'),
+    expenseTimeZone: timeZoneSchema,
     title: z
       .string({
         error: (issue) =>
@@ -875,7 +889,8 @@ export type ExpenseFormInputValues = z.infer<typeof expenseFormInputSchema>
 // Used by create/update/import tRPC procedures and the API helpers.
 export const expenseApiSchema = z
   .object({
-    expenseDate: z.coerce.date(),
+    expenseDate: z.coerce.date().transform(toSecondPrecision),
+    expenseTimeZone: timeZoneSchema,
     title: z.string().min(2, 'min2'),
     category: categoryIdSchema,
     // Expense-currency minor units (what the user typed). Server computes

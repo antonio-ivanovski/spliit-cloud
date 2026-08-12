@@ -96,6 +96,7 @@ function makeExpense(overrides: Record<string, unknown> = {}) {
     categoryId: 'food',
     category: 'food',
     expenseDate: today,
+    expenseTimeZone: 'UTC',
     createdAt: today,
     paidBySplitMode: 'BY_AMOUNT',
     paidByList: [

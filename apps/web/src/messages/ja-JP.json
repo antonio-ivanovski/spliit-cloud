@@ -667,6 +667,9 @@
       "currencyField": {
         "label": "収入の通貨",
         "description": "収入が受け取られた通貨。"
+      },
+      "recurrence": {
+        "scheduleHint": "{time}（{timeZone}）に作成され、通知が届く場合があります。睡眠を妨げない時刻を選んでください。変更するには上の時刻を編集してください。"
       }
     },
     "Expense": {
@@ -749,7 +752,8 @@
         "completedOccurrence": "作成済み",
         "upcomingOccurrence": "予定",
         "timeZoneDescription": "新しい定期支出は、{timeZone}の午後3時に実行されます。既存のスケジュールは元のタイムゾーンを維持します。",
-        "timeZonePending": "繰り返しを有効にする前に、アカウントのタイムゾーンを待っています。"
+        "timeZonePending": "繰り返しを有効にする前に、アカウントのタイムゾーンを待っています。",
+        "scheduleHint": "{time}（{timeZone}）に作成され、通知が届く場合があります。睡眠を妨げない時刻を選んでください。変更するには上の時刻を編集してください。"
       },
       "recurringEditScopeOccurrence": "この発生分のみ編集",
       "recurringEditScopeFuture": "この発生分と今後の発生分を編集",
@@ -955,7 +959,17 @@
     "validationSummary": "保存する前に、強調表示されたフィールドを修正してください。",
     "resetDistribution": "リセット",
     "savedButNotNavigated": "支出は保存されましたが、このページから移動できませんでした。安全に閉じることができます。",
-    "tryLeavingAgain": "もう一度離れる"
+    "tryLeavingAgain": "もう一度離れる",
+    "dateTimePicker": {
+      "changesDate": "日付が変わります",
+      "timezone": "タイムゾーン",
+      "dateTab": "日付",
+      "timeTab": "時刻",
+      "back": "戻る",
+      "chooseTimezone": "タイムゾーンを選択",
+      "done": "完了",
+      "yourTime": "お使いの地域の時刻"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "書類を削除",
@@ -1210,7 +1224,8 @@
     "sharesInvalid": "シェアは0.01以上1,000,000以下で、小数点以下2桁以内で入力してください。",
     "itemTitleRequired": "項目名は必須です。",
     "itemQuantityMin1": "項目の数量は1以上である必要があります。",
-    "rowErrorsHeading": "次のシェアを修正してください："
+    "rowErrorsHeading": "次のシェアを修正してください：",
+    "invalidWallTime": "選択した日付のこのタイムゾーンには、この時刻は存在しません。"
   },
   "Categories": {
     "search": "カテゴリーを検索...",
@@ -2090,7 +2105,7 @@
       "saveError": "設定を保存できませんでした",
       "defaultCurrency": "デフォルト通貨",
       "timeZone": "アカウントのタイムゾーン",
-      "timeZoneHelp": "時刻、相対日付、新しい定期支出に使用されます。",
+      "timeZoneHelp": "新しい支出の時刻と定期スケジュールのデフォルトタイムゾーンを設定します。時刻や相対日付の表示にも使用されます。",
       "language": "言語",
       "theme": "テーマ",
       "chooseTheme": "選択",

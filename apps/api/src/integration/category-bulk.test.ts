@@ -55,6 +55,7 @@ describe('bulkUpdateExpenseCategories — real DB', () => {
         category: args.categoryId ?? DEFAULT_CATEGORY_ID,
         splitMode: 'EVENLY',
         expenseDate: new Date().toISOString(),
+        expenseTimeZone: 'UTC',
         isReimbursement: args.isReimbursement ?? false,
         documents: [],
         recurrenceRule: 'NONE',

@@ -48,6 +48,7 @@ function makeExpense(overrides: Record<string, unknown> = {}): GroupExpense {
     title: 'Dinner',
     amount: 3000,
     expenseDate: new Date('2025-06-15T00:00:00.000Z'),
+    expenseTimeZone: 'UTC',
     createdAt: new Date('2025-06-15T00:00:00.000Z'),
     categoryId: 'general',
     isReimbursement: false,

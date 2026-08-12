@@ -673,7 +673,10 @@
         "description": "Selecteer de deelnemers over wie deze inkomsten worden verdeeld."
       },
       "splitModeDescription": "Selecteer hoe het inkomen verdeeld moet worden.",
-      "attachDescription": "Bekijk en voeg bijlagen toe aan het inkomen."
+      "attachDescription": "Bekijk en voeg bijlagen toe aan het inkomen.",
+      "recurrence": {
+        "scheduleHint": "Wordt om {time} ({timeZone}) aangemaakt en kan een melding activeren. Kies een tijd die de nachtrust niet verstoort. Bewerk de tijd hierboven om deze te wijzigen."
+      }
     },
     "Expense": {
       "create": "Maak uitgave",
@@ -755,7 +758,8 @@
         "completedOccurrence": "Aangemaakt",
         "upcomingOccurrence": "Aankomend",
         "timeZoneDescription": "Nieuwe terugkerende uitgaven worden om 15:00 uitgevoerd in {timeZone}. Bestaande schema's behouden hun oorspronkelijke tijdzone.",
-        "timeZonePending": "Wachten op de tijdzone van je account voordat herhaling kan worden ingeschakeld."
+        "timeZonePending": "Wachten op de tijdzone van je account voordat herhaling kan worden ingeschakeld.",
+        "scheduleHint": "Wordt om {time} ({timeZone}) aangemaakt en kan een melding activeren. Kies een tijd die de nachtrust niet verstoort. Bewerk de tijd hierboven om deze te wijzigen."
       },
       "recurringEditScopeOccurrence": "Alleen dit voorkomen bewerken",
       "recurringEditScopeFuture": "Deze en toekomstige voorkomens bewerken",
@@ -962,7 +966,17 @@
     "validationSummary": "Corrigeer de gemarkeerde velden voordat je opslaat.",
     "resetDistribution": "Opnieuw instellen",
     "savedButNotNavigated": "De uitgave is opgeslagen, maar we konden deze pagina niet verlaten. Je kunt hem veilig sluiten.",
-    "tryLeavingAgain": "Opnieuw proberen te verlaten"
+    "tryLeavingAgain": "Opnieuw proberen te verlaten",
+    "dateTimePicker": {
+      "changesDate": "Wijzigt de datum",
+      "timezone": "Tijdzone",
+      "dateTab": "Datum",
+      "timeTab": "Tijd",
+      "back": "Terug",
+      "chooseTimezone": "Tijdzone kiezen",
+      "done": "Klaar",
+      "yourTime": "jouw tijd"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Document verwijderen",
@@ -1217,7 +1231,8 @@
     "sharesInvalid": "Aandelen moeten tussen 0,01 en 1.000.000 liggen met maximaal twee decimalen.",
     "itemTitleRequired": "De naam van het item is verplicht.",
     "itemQuantityMin1": "Het aantal van het item moet minstens 1 zijn.",
-    "rowErrorsHeading": "Herstel deze aandelen:"
+    "rowErrorsHeading": "Herstel deze aandelen:",
+    "invalidWallTime": "Dit tijdstip bestaat niet op de geselecteerde datum in deze tijdzone."
   },
   "Categories": {
     "search": "Categorie zoeken…",
@@ -2097,7 +2112,7 @@
       "saveError": "Voorkeuren konden niet worden opgeslagen",
       "defaultCurrency": "Standaardvaluta",
       "timeZone": "Tijdzone van account",
-      "timeZoneHelp": "Wordt gebruikt voor tijdstempels, relatieve datums en nieuwe terugkerende uitgaven.",
+      "timeZoneHelp": "Stelt de standaardtijdzone in voor tijdstippen van nieuwe uitgaven en terugkerende schema's. Deze wordt ook gebruikt om tijdstempels en relatieve datums weer te geven.",
       "language": "Taal",
       "theme": "Thema",
       "chooseTheme": "Kiezen",

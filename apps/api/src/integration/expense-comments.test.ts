@@ -76,6 +76,7 @@ describe('Expense comments — real DB', () => {
         category: 'general',
         splitMode: 'EVENLY',
         expenseDate: new Date().toISOString(),
+        expenseTimeZone: 'UTC',
         isReimbursement: false,
         documents: [],
         recurrenceRule: 'NONE',

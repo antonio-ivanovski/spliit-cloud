@@ -7,6 +7,7 @@ export const balanceExpenseSelect = {
   amount: true,
   createdAt: true,
   expenseDate: true,
+  expenseTimeZone: true,
   categoryId: true,
   isReimbursement: true,
   splitMode: true,

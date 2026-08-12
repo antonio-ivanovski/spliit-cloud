@@ -47,6 +47,7 @@ function series(overrides: Record<string, unknown> = {}) {
     ledgerId: 'ledger-1',
     creatorAccountId: null,
     timeZone: 'UTC',
+    anchorTimeMinutes: 900,
     status: 'ACTIVE',
     occurrencesCreated: 0,
     nextOccurrenceDate: date('2026-07-20'),
@@ -132,6 +133,43 @@ describe('recurring expense materialization', () => {
   it('rejects a DATE occurrence beyond the end date pre-transaction', async () => {
     const result = await run({ endType: 'DATE', endDate: date('2026-07-19') })
     expect(result).toEqual({ created: false })
+    expect(prismaMock.expense.create).not.toHaveBeenCalled()
+  })
+  it('reschedules an already-active job that fires before its updated wall time', async () => {
+    vi.setSystemTime(new Date('2030-07-20T10:00:00.000Z'))
+    const snapshot = series({
+      anchorTimeMinutes: 15 * 60,
+      nextOccurrenceDate: date('2030-07-20'),
+    })
+    setup(snapshot, snapshot)
+    const upsert = vi.fn().mockResolvedValue({
+      jobs: ['job-1'],
+      updated: 1,
+      inserted: 0,
+    })
+
+    await expect(
+      materializeRecurringExpense(
+        {
+          seriesId: 'series-1',
+          sequence: 1,
+          occurrenceDate: '2030-07-20',
+        },
+        { upsert } as never,
+      ),
+    ).resolves.toEqual({ created: false })
+
+    expect(upsert).toHaveBeenCalledWith(
+      'recurring-expense.materialize',
+      expect.objectContaining({
+        seriesId: 'series-1',
+        occurrenceDate: '2030-07-20',
+      }),
+      expect.objectContaining({
+        startAfter: new Date('2030-07-20T15:00:00.000Z'),
+      }),
+    )
+    expect(conversionMock.resolveConversion).not.toHaveBeenCalled()
     expect(prismaMock.expense.create).not.toHaveBeenCalled()
   })
   it('returns the existing expense on an idempotent retry', async () => {
@@ -294,6 +332,46 @@ describe('recurring expense materialization', () => {
     expect(jobMocks.sendJob).toHaveBeenCalled()
     expect(result).toEqual(
       expect.objectContaining({ created: true, expenseId: 'expense-1' }),
+    )
+  })
+  it('creates a DST-gap occurrence once and keeps the next wall-time anchor', async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-03-29T02:00:00.000Z'))
+    const occurrenceDate = date('2026-03-29')
+    const result = await run(
+      {
+        timeZone: 'Europe/Skopje',
+        anchorTimeMinutes: 2 * 60 + 30,
+        anchorDate: occurrenceDate,
+        nextOccurrenceDate: occurrenceDate,
+      },
+      {
+        seriesId: 'series-1',
+        sequence: 1,
+        occurrenceDate: '2026-03-29',
+      },
+    )
+
+    expect(result).toEqual(
+      expect.objectContaining({ created: true, expenseId: 'expense-1' }),
+    )
+    expect(prismaMock.expense.create).toHaveBeenCalledTimes(1)
+    expect(prismaMock.expense.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          expenseDate: new Date('2026-03-29T01:30:00.000Z'),
+          expenseTimeZone: 'Europe/Skopje',
+          recurrenceSequence: 1,
+        }),
+      }),
+    )
+    expect(jobMocks.sendJob).toHaveBeenCalledWith(
+      expect.anything(),
+      'recurring-expense.materialize',
+      expect.objectContaining({ occurrenceDate: '2026-03-30', sequence: 2 }),
+      expect.objectContaining({
+        startAfter: new Date('2026-03-30T00:30:00.000Z'),
+      }),
     )
   })
   it('does not enqueue after COUNT completion', async () => {

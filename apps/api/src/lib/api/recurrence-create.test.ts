@@ -17,7 +17,10 @@ vi.mock(import('@spliit/jobs'), async (importOriginal) => ({
   hasDeadLetteredMaterialization: jobMocks.hasDeadLetteredMaterialization,
 }))
 
-import { createSeriesForExpense } from './recurrence-series'
+import {
+  createSeriesForExpense,
+  rescheduleMaterialization,
+} from './recurrence-series'
 
 const monthlyIndefinite: RecurrenceConfig = {
   frequency: 'MONTHLY',
@@ -66,6 +69,7 @@ describe('createSeriesForExpense', () => {
     } as never)
     prismaMock.recurringExpenseSeries.findUnique.mockResolvedValue({
       timeZone: 'UTC',
+      anchorTimeMinutes: 900,
     } as never)
   })
 
@@ -80,6 +84,8 @@ describe('createSeriesForExpense', () => {
       seriesId: 'series-completed',
       ledgerId: 'ledger-1',
       creatorAccountId: 'acct-1',
+      timeZone: 'UTC',
+      anchorTimeMinutes: 900,
       anchorDate: anchor,
       config: monthlyDate,
       template,
@@ -112,6 +118,8 @@ describe('createSeriesForExpense', () => {
       seriesId: 'series-active',
       ledgerId: 'ledger-1',
       creatorAccountId: 'acct-1',
+      timeZone: 'UTC',
+      anchorTimeMinutes: 900,
       anchorDate: anchor,
       config: monthlyIndefinite,
       template,
@@ -144,10 +152,7 @@ describe('createSeriesForExpense', () => {
     )
   })
 
-  it('snapshots the creator account timezone when creating the series', async () => {
-    prismaMock.accountPreference.findUnique.mockResolvedValue({
-      timeZone: 'Europe/Paris',
-    } as never)
+  it('uses the expense timezone as the series authority', async () => {
     prismaMock.recurringExpenseSeries.create.mockResolvedValue({
       id: 'series-account-zone',
     } as never)
@@ -160,41 +165,51 @@ describe('createSeriesForExpense', () => {
       seriesId: 'series-account-zone',
       ledgerId: 'ledger-1',
       creatorAccountId: 'acct-1',
+      timeZone: 'Europe/Paris',
+      anchorTimeMinutes: 8 * 60 + 45,
       anchorDate: new Date('2030-01-01T00:00:00.000Z'),
       config: monthlyIndefinite,
       template,
       boss,
     })
 
-    expect(prismaMock.accountPreference.findUnique).toHaveBeenCalledWith({
-      where: { accountId: 'acct-1' },
-      select: { timeZone: true },
-    })
+    expect(prismaMock.accountPreference.findUnique).not.toHaveBeenCalled()
     expect(prismaMock.recurringExpenseSeries.create).toHaveBeenCalledWith(
       expect.objectContaining({
-        data: expect.objectContaining({ timeZone: 'Europe/Paris' }),
+        data: expect.objectContaining({
+          timeZone: 'Europe/Paris',
+          anchorTimeMinutes: 8 * 60 + 45,
+        }),
       }),
     )
   })
 
-  it('refuses to create a series before the account timezone is initialized', async () => {
-    prismaMock.accountPreference.findUnique.mockResolvedValue({
-      timeZone: null,
+  it('persists the explicit UTC schedule without consulting account preferences', async () => {
+    prismaMock.recurringExpenseSeries.create.mockResolvedValue({
+      id: 'series-default-tz',
+    } as never)
+    prismaMock.recurringExpenseSeries.findUnique.mockResolvedValue({
+      timeZone: 'UTC',
     } as never)
 
-    await expect(
-      createSeriesForExpense({
-        tx: prismaMock,
-        seriesId: 'series-without-zone',
-        ledgerId: 'ledger-1',
-        creatorAccountId: 'acct-1',
-        anchorDate: new Date('2030-01-01T00:00:00.000Z'),
-        config: monthlyDate,
-        template,
-        boss,
+    await createSeriesForExpense({
+      tx: prismaMock,
+      seriesId: 'series-default-tz',
+      ledgerId: 'ledger-1',
+      creatorAccountId: 'acct-1',
+      timeZone: 'UTC',
+      anchorTimeMinutes: 900,
+      anchorDate: new Date('2030-01-01T00:00:00.000Z'),
+      config: monthlyDate,
+      template,
+      boss,
+    })
+    expect(prismaMock.recurringExpenseSeries.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ timeZone: 'UTC' }),
       }),
-    ).rejects.toThrow('Account timezone must be initialized')
-    expect(prismaMock.recurringExpenseSeries.create).not.toHaveBeenCalled()
+    )
+    expect(prismaMock.accountPreference.findUnique).not.toHaveBeenCalled()
   })
 
   it('uses the captured series timezone for the queued occurrence', async () => {
@@ -212,6 +227,7 @@ describe('createSeriesForExpense', () => {
       ledgerId: 'ledger-1',
       creatorAccountId: 'acct-1',
       timeZone: 'America/New_York',
+      anchorTimeMinutes: 900,
       anchorDate: anchor,
       config: monthlyIndefinite,
       template,
@@ -245,6 +261,8 @@ describe('createSeriesForExpense', () => {
       seriesId: 'series-import',
       ledgerId: 'ledger-1',
       creatorAccountId: 'acct-1',
+      timeZone: 'UTC',
+      anchorTimeMinutes: 900,
       anchorDate: anchor,
       config: monthlyIndefinite,
       template,
@@ -296,6 +314,8 @@ describe('createSeriesForExpense', () => {
       seriesId: 'series-catchup',
       ledgerId: 'ledger-1',
       creatorAccountId: 'acct-1',
+      timeZone: 'UTC',
+      anchorTimeMinutes: 900,
       anchorDate: anchor,
       config: monthlyCount,
       template,
@@ -324,6 +344,8 @@ describe('createSeriesForExpense', () => {
       seriesId: 'series-defaults',
       ledgerId: 'ledger-1',
       creatorAccountId: 'acct-1',
+      timeZone: 'UTC',
+      anchorTimeMinutes: 900,
       anchorDate: anchor,
       config: monthlyIndefinite,
       template,
@@ -338,6 +360,44 @@ describe('createSeriesForExpense', () => {
     expect(call.data.occurrencesCreated).toBe(1)
     expect((call.data.nextOccurrenceDate as Date).toISOString()).toBe(
       new Date('2026-02-01T00:00:00.000Z').toISOString(),
+    )
+  })
+})
+
+describe('rescheduleMaterialization', () => {
+  it('atomically upserts the singleton job at the series wall time', async () => {
+    prismaMock.recurringExpenseSeries.findUnique.mockResolvedValue({
+      timeZone: 'America/New_York',
+      anchorTimeMinutes: 8 * 60 + 45,
+    } as never)
+    const upsert = vi.fn().mockResolvedValue({
+      jobs: ['job-1'],
+      updated: 1,
+      inserted: 0,
+    })
+
+    await rescheduleMaterialization(
+      prismaMock,
+      {
+        seriesId: 'series-1',
+        sequence: 3,
+        occurrenceDate: new Date('2030-07-01T00:00:00.000Z'),
+      },
+      { upsert } as never,
+    )
+
+    expect(upsert).toHaveBeenCalledWith(
+      'recurring-expense.materialize',
+      {
+        seriesId: 'series-1',
+        sequence: 3,
+        occurrenceDate: '2030-07-01',
+      },
+      expect.objectContaining({
+        singletonKey: 'series-1:3:2030-07-01',
+        startAfter: new Date('2030-07-01T12:45:00.000Z'),
+        db: expect.anything(),
+      }),
     )
   })
 })

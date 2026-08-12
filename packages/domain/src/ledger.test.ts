@@ -300,7 +300,9 @@ describe('Ledger currency conversion rules', () => {
     // the audit/display pair (`originalCurrency` + `conversionRate`).
     const raw = {
       title: 'Test expense',
-      expenseDate: new Date('2026-06-24'),
+      expenseDay: '2026-06-24',
+      expenseTime: '12:00',
+      expenseTimeZone: 'UTC',
       category: 'general',
       amount: 50,
       isMultiPayer: false,
@@ -364,7 +366,7 @@ describe('Split unit preservation edge cases', () => {
   it('expenseFormInputSchema rejects BY_AMOUNT when shares do not sum to amount', () => {
     const raw = {
       title: 'Test',
-      expenseDate: new Date('2026-06-24'),
+      expenseDay: '2026-06-24',
       category: 'general',
       amount: 100,
       isMultiPayer: false,

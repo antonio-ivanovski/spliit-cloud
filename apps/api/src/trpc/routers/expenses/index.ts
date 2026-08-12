@@ -411,7 +411,9 @@ async function listGlobalExpenses(
           value:
             input.sortBy === 'amount'
               ? last.amount
-              : last[input.sortBy].toISOString(),
+              : input.sortBy === 'expenseDate'
+                ? last.expenseDate.toISOString()
+                : last[input.sortBy].toISOString(),
           id: last.id,
           ...(input.sortBy === 'expenseDate'
             ? { createdAt: last.createdAt.toISOString() }

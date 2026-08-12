@@ -84,6 +84,7 @@ describe('exportGroupCsv', () => {
       {
         id: 'exp-1',
         expenseDate: new Date('2024-06-01T00:00:00Z'),
+        expenseTimeZone: 'UTC',
         title: 'Dinner',
         categoryId: 'groceries',
         amount: 3000,
@@ -211,6 +212,7 @@ describe('exportGroupCsv', () => {
       {
         id: 'exp-1',
         expenseDate: new Date('2024-06-01T00:00:00Z'),
+        expenseTimeZone: 'UTC',
         title: 'Dinner',
         categoryId: 'groceries',
         amount: 3000,
@@ -324,6 +326,7 @@ describe('exportGroupCsv', () => {
       {
         id: 'exp-1',
         expenseDate: new Date('2024-06-01T00:00:00Z'),
+        expenseTimeZone: 'UTC',
         title: 'USD Dinner',
         categoryId: 'dining-out',
         amount: 9200, // EUR ledger

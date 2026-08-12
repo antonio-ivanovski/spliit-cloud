@@ -1,4 +1,5 @@
 import { prisma } from '@spliit/db'
+import { utcToWallTime } from '@spliit/domain'
 
 import { deleteS3Object } from '../../../routes/upload'
 import {
@@ -35,7 +36,10 @@ export async function deleteExpense(
     }),
   ]
 
-  const expenseDateStr = existingExpense.expenseDate.toISOString().slice(0, 10)
+  const expenseDateStr = utcToWallTime(
+    existingExpense.expenseDate,
+    existingExpense.expenseTimeZone,
+  ).dateIso
 
   if (
     options?.stopRecurrence !== undefined &&
@@ -76,6 +80,7 @@ export async function deleteExpense(
       title: string
       amount: number
       expenseDate: Date
+      expenseTimeZone: string
       originalCurrency: string | null
       originalAmount: number | null
       conversionRate: number | null
@@ -88,6 +93,7 @@ export async function deleteExpense(
         title: existingExpense.title,
         amount: existingExpense.amount,
         expenseDate: existingExpense.expenseDate,
+        expenseTimeZone: existingExpense.expenseTimeZone,
         originalCurrency: existingExpense.originalCurrency ?? null,
         originalAmount: existingExpense.originalAmount ?? null,
         conversionRate: existingExpense.conversionRate
@@ -113,6 +119,7 @@ export async function deleteExpense(
         select: {
           id: true,
           expenseDate: true,
+          expenseTimeZone: true,
           title: true,
           amount: true,
           originalAmount: true,
@@ -170,7 +177,10 @@ export async function deleteExpense(
     const loggedActivities: Awaited<ReturnType<typeof logActivity>>[] = []
     const unionParticipantIds: string[] = affectedParticipantIds.slice()
     for (const row of snapshotRows) {
-      const rowDateStr = row.expenseDate.toISOString().slice(0, 10)
+      const rowDateStr = utcToWallTime(
+        row.expenseDate,
+        row.expenseTimeZone,
+      ).dateIso
       // Compute affected participants per row from the snapshot.
       const rowParticipants = row.participantIds ?? []
       // Add to union for the summary.
@@ -207,12 +217,22 @@ export async function deleteExpense(
     }
 
     // Build date range for summary.
-    const sortedDates = snapshotRows
-      .map((r) => r.expenseDate)
-      .sort((a, b) => a.getTime() - b.getTime())
+    const sortedRows = [...snapshotRows].sort(
+      (a, b) => a.expenseDate.getTime() - b.expenseDate.getTime(),
+    )
     const summaryDateRange = {
-      startDate: sortedDates[0]?.toISOString().slice(0, 10) ?? expenseDateStr,
-      endDate: sortedDates.at(-1)?.toISOString().slice(0, 10) ?? expenseDateStr,
+      startDate: sortedRows[0]
+        ? utcToWallTime(
+            sortedRows[0].expenseDate,
+            sortedRows[0].expenseTimeZone,
+          ).dateIso
+        : expenseDateStr,
+      endDate: sortedRows.at(-1)
+        ? utcToWallTime(
+            sortedRows.at(-1)!.expenseDate,
+            sortedRows.at(-1)!.expenseTimeZone,
+          ).dateIso
+        : expenseDateStr,
     }
 
     if (

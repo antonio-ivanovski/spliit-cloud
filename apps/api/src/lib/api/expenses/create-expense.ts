@@ -3,6 +3,9 @@ import { prisma } from '@spliit/db'
 import {
   calculateRecurrenceDate,
   computePaidForFromItems,
+  dateOnlyInTimeZone,
+  toSecondPrecision,
+  utcToWallTime,
   type Expense,
 } from '@spliit/domain'
 import { env as jobsEnv, type SpliitBoss } from '@spliit/jobs'
@@ -45,13 +48,18 @@ export async function prepareExpenseCreate(
   })
   if (!group?.ledgerId) throw new Error(`Invalid group ID: ${groupId}`)
 
+  const rawExpenseDate = new Date(expense.expenseDate)
+  const wallForFx0 = utcToWallTime(
+    rawExpenseDate,
+    expense.expenseTimeZone,
+  ).dateIso
   const recurrence = getExpenseRecurrence(
     expense as unknown as { recurrence?: unknown; recurrenceRule?: string },
-    expense.expenseDate,
+    new Date(`${wallForFx0}T00:00:00.000Z`),
   )
   const conversion = await resolveConversion(expense, {
     ledgerCurrency: group.ledger.currencyCode ?? null,
-    expenseDate: expense.expenseDate,
+    expenseDate: wallForFx0,
   })
   const [documents, notificationBoss, recurrenceBoss] = await Promise.all([
     promoteExpenseDocuments(expense.documents),
@@ -95,12 +103,17 @@ export async function createExpense(
 
   const ledgerId = group.ledgerId
 
+  const resolvedExpenseDate = new Date(expense.expenseDate)
+  const wallForFx2 = utcToWallTime(
+    resolvedExpenseDate,
+    expense.expenseTimeZone,
+  ).dateIso
   const conversion =
     options?.conversionResolution ??
     options?.prepared?.conversion ??
     (await resolveConversion(expense, {
       ledgerCurrency: group.ledger.currencyCode ?? null,
-      expenseDate: expense.expenseDate,
+      expenseDate: wallForFx2,
     }))
 
   const expenseAmount = conversion.ledgerAmountMinor
@@ -145,11 +158,14 @@ export async function createExpense(
 
   const expenseId = randomId()
 
-  const expenseDateStr = expense.expenseDate.toISOString().slice(0, 10)
+  const expenseDate = toSecondPrecision(new Date(expense.expenseDate))
+  const expenseTimeZone = expense.expenseTimeZone
+  const wallDate = dateOnlyInTimeZone(expenseDate, expenseTimeZone)
+  const expenseDateStr = wallDate.toISOString().slice(0, 10)
 
   const recurrence = getExpenseRecurrence(
     expense as unknown as { recurrence?: unknown; recurrenceRule?: string },
-    expense.expenseDate,
+    wallDate,
   )
   const isCreateRecurrence = recurrence !== null
   const queueBoss =
@@ -180,21 +196,11 @@ export async function createExpense(
     : ('EXPENSE_CREATED' as const)
 
   const recurringSeriesId = isCreateRecurrence ? randomId() : undefined
-  let creatorTimeZone: string | undefined
-  if (recurrence) {
-    const persistedTimeZone = (
-      await client.accountPreference.findUnique({
-        where: { accountId: actor.accountId },
-        select: { timeZone: true },
-      })
-    )?.timeZone
-    if (!persistedTimeZone) {
-      throw new Error(
-        'Account timezone must be initialized before creating a recurring expense',
-      )
-    }
-    creatorTimeZone = persistedTimeZone
-  }
+  const creatorTimeZone = expenseTimeZone
+  const anchorTimeMinutes = utcToWallTime(
+    expenseDate,
+    expenseTimeZone,
+  ).timeMinutes
 
   // When the anchor date is in the past and more than one occurrence is
   // immediately due, seed a catch-up batch so the worker produces one
@@ -210,10 +216,10 @@ export async function createExpense(
       }
     | undefined
   if (recurrence && recurringSeriesId) {
-    const todayIso = catchUpDueThrough(new Date(), creatorTimeZone!)
+    const todayIso = catchUpDueThrough(new Date(), creatorTimeZone)
     const today = new Date(`${todayIso}T00:00:00.000Z`)
     const occ2Date = calculateRecurrenceDate(
-      expense.expenseDate,
+      wallDate,
       recurrence.frequency,
       recurrence.interval,
       2,
@@ -295,7 +301,8 @@ export async function createExpense(
         ledgerId,
         creatorAccountId: actor.accountId,
         timeZone: creatorTimeZone,
-        anchorDate: expense.expenseDate,
+        anchorTimeMinutes,
+        anchorDate: wallDate,
         config: recurrence,
         template: buildRecurringTemplate({
           expense: { ...expense, paidForOverride: recurringPaidFor },
@@ -311,7 +318,8 @@ export async function createExpense(
         id: expenseId,
         ledgerId,
         createdByAccountId: actor.accountId,
-        expenseDate: expense.expenseDate,
+        expenseDate,
+        expenseTimeZone,
         categoryId: expense.category,
         amount: expenseAmount,
         originalAmount: conversion.originalAmount,

@@ -183,6 +183,7 @@ describe('Group CRUD via existing API', () => {
     // ── Add a test expense (self-pay) ──────────────────────────────
     const participantId = testGroup.participants[0]?.id
     if (participantId) {
+      const expenseDate = new Date()
       const expenseResult = await trpcCall<{ expenseId: string }>(
         'groups.expenses.create',
         {
@@ -196,7 +197,8 @@ describe('Group CRUD via existing API', () => {
             isMultiPayer: false,
             paidFor: [{ participant: participantId, shares: 1 }],
             splitMode: 'EVENLY',
-            expenseDate: new Date().toISOString(),
+            expenseDate: expenseDate.toISOString(),
+            expenseTimeZone: 'UTC',
             category: 'dining-out',
             isReimbursement: false,
             recurrenceRule: 'NONE',
@@ -322,6 +324,7 @@ describe('Group CRUD via existing API', () => {
         name: 'Dining Out',
       },
       expenseDate: new Date(),
+      expenseTimeZone: 'UTC',
       createdAt: new Date(),
       paidByList: [
         {

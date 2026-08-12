@@ -19,6 +19,7 @@ import {
   sharesAsFixedUnits,
   type ExactAmount,
   type Expense,
+  utcToWallTime,
 } from '@spliit/domain'
 
 import { env } from '../env'
@@ -675,13 +676,15 @@ export async function prepareAssistantExpense(
   ensureUniqueParticipantIds(paidFor)
   assertParticipants(paidFor.map((row) => row.participant))
 
+  const expenseDate = input.date
+    ? new Date(`${input.date}T00:00:00.000Z`)
+    : localDateFromOffset(
+        options.now ?? new Date(),
+        input.timezoneOffsetMinutes,
+      )
   const expense = expenseApiSchema.parse({
-    expenseDate: input.date
-      ? new Date(`${input.date}T00:00:00.000Z`)
-      : localDateFromOffset(
-          options.now ?? new Date(),
-          input.timezoneOffsetMinutes,
-        ),
+    expenseDate,
+    expenseTimeZone: 'UTC',
     title: input.title,
     category: input.category ?? DEFAULT_CATEGORY_ID,
     amount,
@@ -743,7 +746,7 @@ export async function prepareAssistantExpense(
     title: expense.title,
     amountMinor: expense.amount,
     amount: input.amount,
-    date: expense.expenseDate.toISOString().slice(0, 10),
+    date: utcToWallTime(expense.expenseDate, expense.expenseTimeZone).dateIso,
     category: getCategoryById(expense.category)?.name ?? 'General',
     notes: expense.notes ?? null,
     paidBy: expense.paidByList.map((row) => ({

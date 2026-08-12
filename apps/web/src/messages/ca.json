@@ -679,6 +679,9 @@
       "currencyField": {
         "label": "Moneda del ingrés",
         "description": "La moneda en la que l'ingrés va ser rebut."
+      },
+      "recurrence": {
+        "scheduleHint": "Es crearà a les {time} ({timeZone}) i pot activar una notificació. Tria una hora que no interrompi el descans. Per canviar-la, edita l’hora de dalt."
       }
     },
     "Expense": {
@@ -761,7 +764,8 @@
         "completedOccurrence": "Creada",
         "upcomingOccurrence": "Propera",
         "timeZoneDescription": "Les noves despeses recurrents s'executen a les 15:00 a {timeZone}. Les programacions existents mantenen la seva zona horària original.",
-        "timeZonePending": "S’està esperant la zona horària del compte abans de poder activar la recurrència."
+        "timeZonePending": "S’està esperant la zona horària del compte abans de poder activar la recurrència.",
+        "scheduleHint": "Es crearà a les {time} ({timeZone}) i pot activar una notificació. Tria una hora que no interrompi el descans. Per canviar-la, edita l’hora de dalt."
       },
       "recurringEditScopeOccurrence": "Editant només aquesta ocurrència",
       "recurringEditScopeFuture": "Editant aquesta ocurrència i les futures",
@@ -969,7 +973,17 @@
     "validationSummary": "Corregeix els camps destacats abans de desar.",
     "resetDistribution": "Restableix",
     "savedButNotNavigated": "La despesa s'ha desat, però no hem pogut sortir d'aquesta pàgina. Pots tancar-la tranquil·lament.",
-    "tryLeavingAgain": "Torna a intentar sortir"
+    "tryLeavingAgain": "Torna a intentar sortir",
+    "dateTimePicker": {
+      "changesDate": "Canvia la data",
+      "timezone": "Zona horària",
+      "dateTab": "Data",
+      "timeTab": "Hora",
+      "back": "Enrere",
+      "chooseTimezone": "Tria la zona horària",
+      "done": "Fet",
+      "yourTime": "la teva hora"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Suprimeix el document",
@@ -1225,7 +1239,8 @@
     "sharesInvalid": "Les participacions han d'estar entre 0,01 i 1.000.000 amb com a màxim dos decimals.",
     "itemTitleRequired": "El nom de l’element és obligatori.",
     "itemQuantityMin1": "La quantitat de l’element ha de ser com a mínim 1.",
-    "rowErrorsHeading": "Corregeix aquestes participacions:"
+    "rowErrorsHeading": "Corregeix aquestes participacions:",
+    "invalidWallTime": "Aquesta hora no existeix a la data seleccionada en aquesta zona horària."
   },
   "Categories": {
     "search": "Cercar categoria...",
@@ -2106,7 +2121,7 @@
       "saveError": "No s'han pogut desar les preferències",
       "defaultCurrency": "Moneda predeterminada",
       "timeZone": "Zona horària del compte",
-      "timeZoneHelp": "S'utilitza per a les marques de temps, les dates relatives i les noves despeses recurrents.",
+      "timeZoneHelp": "Estableix la zona horària predeterminada per a les hores de les despeses noves i les programacions recurrents, i s’utilitza per mostrar marques de temps i dates relatives.",
       "language": "Idioma",
       "theme": "Tema",
       "chooseTheme": "Tria",

@@ -16,6 +16,7 @@ import type { ChangeContext } from './types'
 function makeExpense(overrides: Partial<Expense> = {}): Expense {
   return {
     expenseDate: new Date('2026-01-01T00:00:00.000Z'),
+    expenseTimeZone: 'UTC',
     title: 'Dinner',
     category: 'general',
     amount: 4500,
@@ -438,7 +439,11 @@ describe('getExpenseChangeSummary (backward-compat)', () => {
     expect(result!.changes).toEqual(
       expect.arrayContaining([
         { field: 'title', before: 'Lunch', after: 'Dinner' },
-        { field: 'date', before: '2026-01-15', after: '2026-01-16' },
+        {
+          field: 'date',
+          before: '2026-01-15 00:00 · UTC',
+          after: '2026-01-16 00:00 · UTC',
+        },
       ]),
     )
   })

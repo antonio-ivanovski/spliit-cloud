@@ -162,14 +162,16 @@ export function initialSeriesCompleted(
   )
 }
 
-/** Return the earliest execution time for a date-only occurrence. */
 export function recurrenceJobStartAfter(
   date: Date,
-  timeZone = 'UTC',
-  now = new Date(),
-) {
-  const executionDate = occurrenceDateToUtcRunAt(date, timeZone)
-  return executionDate.getTime() <= now.getTime() ? undefined : executionDate
+  timeZone: string,
+  timeMinutes: number,
+  now?: Date,
+): Date | undefined {
+  const executionDate = occurrenceDateToUtcRunAt(date, timeZone, timeMinutes)
+  return executionDate.getTime() <= (now ?? new Date()).getTime()
+    ? undefined
+    : executionDate
 }
 
 export function occurrenceExpenseData(
@@ -179,16 +181,20 @@ export function occurrenceExpenseData(
   seriesId: string,
   sequence: number,
   amount: number,
-  conversion?: {
-    conversionRate: number | null
-    originalAmount: number | null
-    originalCurrency: string | null
-    conversionSource: 'EXCHANGE' | 'CUSTOM' | null
-  },
+  conversion:
+    | {
+        conversionRate: number | null
+        originalAmount: number | null
+        originalCurrency: string | null
+        conversionSource: 'EXCHANGE' | 'CUSTOM' | null
+      }
+    | undefined,
+  opts: { expenseDate: Date; expenseTimeZone: string },
 ) {
   return {
     id,
-    expenseDate: date,
+    expenseDate: opts.expenseDate,
+    expenseTimeZone: opts.expenseTimeZone,
     recurringSeriesId: seriesId,
     recurrenceSequence: sequence,
     categoryId: template.categoryId,

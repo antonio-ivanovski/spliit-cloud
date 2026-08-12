@@ -113,6 +113,7 @@ describe('reflow-series-from-anchor', () => {
       completed: false,
       config: daily,
       maxSequence: 1,
+      timeZone: 'UTC',
     })
     expect(seed).not.toBeNull()
     expect(seed?.mode).toBe('INITIAL_CREATION')
@@ -133,6 +134,7 @@ describe('reflow-series-from-anchor', () => {
         completed: false,
         config: daily,
         maxSequence: 1,
+        timeZone: 'UTC',
       }),
     ).toBeNull()
   })
@@ -278,6 +280,7 @@ describe('reflow-series-from-anchor', () => {
         completed: true,
         config: daily,
         maxSequence: 3,
+        timeZone: 'UTC',
       }),
     ).toBeNull()
   })
@@ -295,6 +298,7 @@ describe('reflow-series-from-anchor', () => {
         completed: false,
         config: countConfig,
         maxSequence: 5,
+        timeZone: 'UTC',
       }),
     ).toBeNull()
   })
@@ -310,6 +314,7 @@ describe('reflow-series-from-anchor', () => {
       completed: false,
       config: daily,
       maxSequence: 1,
+      timeZone: 'UTC',
     })
     expect(seed).not.toBeNull()
     expect(seed?.mode).toBe('INITIAL_CREATION')

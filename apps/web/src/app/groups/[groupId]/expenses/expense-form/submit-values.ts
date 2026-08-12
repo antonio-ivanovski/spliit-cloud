@@ -2,8 +2,10 @@ import type { Currency, Expense, ExpenseFormInputValues } from '@spliit/domain'
 import {
   amountAsMinorUnits,
   getCurrency,
+  parseTimeMinutes,
   serializePaidBy,
   serializePaidFor,
+  wallTimeToUtc,
 } from '@spliit/domain'
 
 // Convert user-facing form values (decimal major units in the selected
@@ -74,8 +76,17 @@ export function buildSubmitValues(
     paidByList: values.paidByList,
   })
 
+  const expenseTimeZone = values.expenseTimeZone
+  const rawTime = values.expenseTime.trim()
+  const expenseDate = wallTimeToUtc(
+    values.expenseDay,
+    parseTimeMinutes(rawTime),
+    expenseTimeZone,
+  )
+
   const base = {
-    expenseDate: values.expenseDate,
+    expenseDate,
+    expenseTimeZone,
     title: values.title,
     category: values.category,
     amount: amountInExpenseCurrency,

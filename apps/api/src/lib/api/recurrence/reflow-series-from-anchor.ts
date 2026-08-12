@@ -83,7 +83,7 @@ export function buildCatchUpSeedAfterReflow(args: {
   completed: boolean
   config: RecurrenceConfig
   maxSequence: number
-  timeZone?: string
+  timeZone: string
 }): {
   id: string
   startDate: string
@@ -98,7 +98,7 @@ export function buildCatchUpSeedAfterReflow(args: {
     completed,
     config,
     maxSequence,
-    timeZone = 'UTC',
+    timeZone,
   } = args
   if (completed) return null
   const dueThrough = catchUpDueThrough(new Date(), timeZone)

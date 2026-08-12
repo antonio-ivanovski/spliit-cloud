@@ -2,7 +2,11 @@ import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
 import { prisma } from '@spliit/db'
-import { DEFAULT_CATEGORIES, sharesAsDecimal } from '@spliit/domain'
+import {
+  DEFAULT_CATEGORIES,
+  sharesAsDecimal,
+  utcToWallTime,
+} from '@spliit/domain'
 
 import { getGroupBalances } from '../../lib/api/balances'
 import { createExpense } from '../../lib/api/expenses/create-expense'
@@ -268,7 +272,8 @@ export const assistantRouter = createTRPCRouter({
           id: expense.id,
           title: expense.title,
           amount: expense.amount,
-          date: expense.expenseDate.toISOString().slice(0, 10),
+          date: utcToWallTime(expense.expenseDate, expense.expenseTimeZone)
+            .dateIso,
           category: expense.categoryId,
           paidBy: expense.paidByList.map((row) => ({
             ...row,

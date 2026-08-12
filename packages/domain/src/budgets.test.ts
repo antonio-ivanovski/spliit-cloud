@@ -179,6 +179,28 @@ describe('calculateExpenseContribution exclusions', () => {
     ).toBe(0)
   })
 
+  it('buckets the instant by the budget timezone near midnight', () => {
+    const instant = new Date('2026-07-01T00:30:00.000Z')
+    expect(
+      calculateExpenseContribution(
+        { ...rule, timeZone: 'America/Los_Angeles' },
+        expense({
+          expenseDate: instant,
+        }),
+        julBounds,
+      ),
+    ).toBe(0)
+    expect(
+      calculateExpenseContribution(
+        { ...rule, timeZone: 'Asia/Tokyo' },
+        expense({
+          expenseDate: instant,
+        }),
+        julBounds,
+      ),
+    ).toBeGreaterThan(0)
+  })
+
   it('ignores categories outside a SELECTED scope', () => {
     const selected: BudgetRule = {
       ...rule,

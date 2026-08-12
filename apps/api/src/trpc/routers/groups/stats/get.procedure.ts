@@ -139,6 +139,7 @@ export const getGroupStatsProcedure = protectedProcedure
       const dashboardExpenses: StatsExpense[] = rows.map((row) => ({
         ...toBalanceExpense(row),
         expenseDate: new Date(row.expenseDate),
+        expenseTimeZone: row.expenseTimeZone,
         categoryId: narrowCategoryId(row.categoryId),
         isReimbursement: row.isReimbursement,
         paidByList: row.paidByList.map((share) => ({

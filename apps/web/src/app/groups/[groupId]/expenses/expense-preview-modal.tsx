@@ -32,11 +32,8 @@ import { useLocale } from '@/i18n/react'
 import type { BalanceExpense } from '@/lib/balances'
 import { getBalances } from '@/lib/balances'
 import { getCurrency } from '@/lib/currency'
-import {
-  formatCurrency,
-  formatDateOnly,
-  getCurrencyFromGroup,
-} from '@/lib/utils'
+import { formatExpenseClosed } from '@/lib/expense-display'
+import { formatCurrency, getCurrencyFromGroup } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type { SplitMode } from '@spliit/domain'
@@ -398,14 +395,23 @@ export function ExpensePreviewModal({
                 )}
               </div>
 
-              <div className="text-sm text-muted-foreground">
-                {t('date')}:{' '}
-                <span className="text-foreground">
-                  {formatDateOnly(expense.expenseDate, locale, {
-                    dateStyle: 'medium',
-                  })}
-                </span>
-              </div>
+              {(() => {
+                const d = formatExpenseClosed(
+                  expense as never,
+                  locale,
+                  undefined,
+                  tForm('dateTimePicker.yourTime' as never),
+                )
+                return (
+                  <div
+                    className="text-sm text-muted-foreground"
+                    title={d.tooltip}
+                  >
+                    {t('date')}:{' '}
+                    <span className="text-foreground">{d.text}</span>
+                  </div>
+                )
+              })()}
 
               <div className="space-y-4 border-t pt-4">
                 <ExpenseSplitBars

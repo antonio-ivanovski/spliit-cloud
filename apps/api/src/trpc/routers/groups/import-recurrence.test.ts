@@ -30,6 +30,7 @@ const baseParticipants = [
 function monthlyExpense(date: string) {
   return {
     expenseDate: new Date(`${date}T00:00:00.000Z`),
+    expenseTimeZone: 'UTC',
     title: 'Spotify Monthly',
     category: 'general',
     amount: 1000,

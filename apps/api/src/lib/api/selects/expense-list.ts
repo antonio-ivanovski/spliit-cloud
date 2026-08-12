@@ -10,6 +10,7 @@ export const groupExpenseListCardSelect = {
   amount: true,
   createdAt: true,
   expenseDate: true,
+  expenseTimeZone: true,
   categoryId: true,
   isReimbursement: true,
   splitMode: true,
@@ -42,6 +43,7 @@ export const groupExpenseListCardSelect = {
 export const expenseCsvExportSelect = {
   id: true,
   expenseDate: true,
+  expenseTimeZone: true,
   title: true,
   categoryId: true,
   amount: true,

@@ -59,10 +59,18 @@ describe('recurrence-series API helpers', () => {
   it('holds today jobs until 15:00 UTC but runs past dates immediately', () => {
     vi.setSystemTime(new Date('2026-07-22T00:02:00.000Z'))
     expect(
-      recurrenceJobStartAfter(new Date('2026-07-22T00:00:00.000Z')),
+      recurrenceJobStartAfter(
+        new Date('2026-07-22T00:00:00.000Z'),
+        'UTC',
+        15 * 60,
+      ),
     ).toEqual(new Date('2026-07-22T15:00:00.000Z'))
     expect(
-      recurrenceJobStartAfter(new Date('2026-07-21T00:00:00.000Z')),
+      recurrenceJobStartAfter(
+        new Date('2026-07-21T00:00:00.000Z'),
+        'UTC',
+        15 * 60,
+      ),
     ).toBeUndefined()
     vi.useRealTimers()
   })
@@ -73,6 +81,7 @@ describe('recurrence-series API helpers', () => {
       recurrenceJobStartAfter(
         new Date('2026-03-07T00:00:00.000Z'),
         'America/New_York',
+        15 * 60,
         now,
       ),
     ).toEqual(new Date('2026-03-07T20:00:00.000Z'))
@@ -80,6 +89,7 @@ describe('recurrence-series API helpers', () => {
       recurrenceJobStartAfter(
         new Date('2026-03-09T00:00:00.000Z'),
         'America/New_York',
+        15 * 60,
         now,
       ),
     ).toEqual(new Date('2026-03-09T19:00:00.000Z'))

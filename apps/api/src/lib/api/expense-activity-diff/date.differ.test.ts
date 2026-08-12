@@ -8,6 +8,7 @@ import type { ChangeContext } from './types'
 function makeExpense(overrides: Partial<Expense> = {}): Expense {
   return {
     expenseDate: new Date('2026-01-01T00:00:00.000Z'),
+    expenseTimeZone: 'UTC',
     title: 'Dinner',
     category: 'general',
     amount: 4500,
@@ -76,7 +77,7 @@ describe('dateDiffer', () => {
     expect(dateDiffer.diff(makeExpense(), makeExpense(), ctx)).toBeNull()
   })
 
-  it('diff formats before/after as ISO date strings', () => {
+  it('diff formats before/after as wall-clock timestamps', () => {
     const result = dateDiffer.diff(
       makeExpense({ expenseDate: new Date('2026-01-15T00:00:00Z') }),
       makeExpense({ expenseDate: new Date('2026-01-16T00:00:00Z') }),
@@ -84,8 +85,40 @@ describe('dateDiffer', () => {
     )
     expect(result).toEqual({
       field: 'date',
-      before: '2026-01-15',
-      after: '2026-01-16',
+      before: '2026-01-15 00:00 · UTC',
+      after: '2026-01-16 00:00 · UTC',
+    })
+  })
+
+  it('includes wall time when a timezone-aware timestamp changes', () => {
+    const result = dateDiffer.diff(
+      makeExpense({
+        expenseDate: new Date('2026-01-15T11:00:00Z'),
+        expenseTimeZone: 'Europe/Skopje',
+      }),
+      makeExpense({
+        expenseDate: new Date('2026-01-15T12:00:00Z'),
+        expenseTimeZone: 'Europe/Skopje',
+      }),
+      ctx,
+    )
+    expect(result).toEqual({
+      field: 'date',
+      before: '2026-01-15 12:00 · Europe/Skopje',
+      after: '2026-01-15 13:00 · Europe/Skopje',
+    })
+  })
+
+  it('records a timezone-only change as a temporal change', () => {
+    const result = dateDiffer.diff(
+      makeExpense({ expenseTimeZone: 'UTC' }),
+      makeExpense({ expenseTimeZone: 'America/Los_Angeles' }),
+      ctx,
+    )
+    expect(result).toEqual({
+      field: 'date',
+      before: '2026-01-01 00:00 · UTC',
+      after: '2025-12-31 16:00 · America/Los_Angeles',
     })
   })
 

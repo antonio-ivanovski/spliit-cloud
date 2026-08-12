@@ -194,6 +194,7 @@ export function CreateReimbursementModal({
 
   const handleCreate = async () => {
     if (selectedLegs.length === 0 || !centralParticipantId) return
+    const expenseDate = new Date()
 
     const paidByList =
       direction === 'pay'
@@ -216,7 +217,8 @@ export function CreateReimbursementModal({
         groupId,
         requestId,
         expense: {
-          expenseDate: today,
+          expenseDate,
+          expenseTimeZone: accountTimeZone,
           title: tForm('reimbursement'),
           category: PAYMENT_CATEGORY_ID,
           amount: selectedTotal,

@@ -48,6 +48,7 @@ function makeGroup(document: ExportDocumentRecord | null = null) {
               id: 'exp-1',
               createdAt,
               expenseDate: createdAt,
+              expenseTimeZone: 'UTC',
               title: 'Dinner',
               categoryId: 'dining-out',
               amount: 4200,

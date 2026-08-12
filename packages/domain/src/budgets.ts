@@ -135,6 +135,30 @@ export type BudgetUsageOptions = {
  * split calculation (even, shares, basis-point percentages, explicit amounts,
  * cross-currency, and itemized expenses).
  */
+export function dateOnlyInBudgetZone(instant: Date, timeZone: string): Date {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(instant)
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? ''
+  const y = Number(get('year'))
+  const m = Number(get('month'))
+  const d = Number(get('day'))
+  return new Date(Date.UTC(y, m - 1, d))
+}
+
+export function expenseDateInBudgetZone(
+  expense: Pick<BudgetExpense, 'expenseDate'>,
+  timeZone: string,
+): Date | null {
+  const rawDate = expense.expenseDate
+  const instant = rawDate ? new Date(rawDate as Date | string | number) : null
+  if (!instant || Number.isNaN(instant.getTime())) return null
+  return dateOnlyInBudgetZone(instant, timeZone)
+}
+
 export function calculateExpenseContribution(
   rule: BudgetRule,
   expense: BudgetExpense,
@@ -142,8 +166,9 @@ export function calculateExpenseContribution(
   options: BudgetUsageOptions = {},
 ): number {
   if (expense.isReimbursement || expense.amount <= 0) return 0
-  const date = expense.expenseDate ? new Date(expense.expenseDate) : null
-  if (!date || date < bounds.start || date > bounds.end) return 0
+  const date = expenseDateInBudgetZone(expense, rule.timeZone)
+  if (!date || Number.isNaN(date.getTime())) return 0
+  if (date < bounds.start || date > bounds.end) return 0
   const categoryId = expense.categoryId ?? null
   if (
     rule.categoryScope === 'SELECTED' &&

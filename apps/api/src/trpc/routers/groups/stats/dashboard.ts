@@ -2,6 +2,7 @@ import {
   getBalances,
   type BalanceExpense,
   type CategoryId,
+  dateOnlyInTimeZone,
 } from '@spliit/domain'
 
 export const statsPeriods = [
@@ -23,6 +24,7 @@ type StatsParticipant = {
 
 export type StatsExpense = BalanceExpense & {
   expenseDate: Date
+  expenseTimeZone: string
   categoryId: CategoryId
   isReimbursement: boolean
   paidByList: Array<{ shares: number; participant: StatsParticipant }>
@@ -53,6 +55,12 @@ function startOfDay(date: Date): Date {
   return new Date(
     Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()),
   )
+}
+
+function expenseCalendarDate(
+  expense: Pick<StatsExpense, 'expenseDate' | 'expenseTimeZone'>,
+): Date {
+  return dateOnlyInTimeZone(expense.expenseDate, expense.expenseTimeZone)
 }
 
 function addDays(date: Date, days: number): Date {
@@ -111,7 +119,7 @@ function nextBucket(date: Date, granularity: Granularity): Date {
 
 function getLatestActivityStart(expenses: StatsExpense[]): Date {
   const dates = expenses
-    .map((expense) => startOfDay(expense.expenseDate))
+    .map(expenseCalendarDate)
     .sort((a, b) => b.getTime() - a.getTime())
   let start = dates[0]
 
@@ -135,8 +143,10 @@ function rangeFor(
 ): { from: Date; to: Date; granularity: Granularity } {
   const latest = expenses.reduce(
     (max, expense) =>
-      expense.expenseDate.getTime() > max.getTime() ? expense.expenseDate : max,
-    expenses[0].expenseDate,
+      expenseCalendarDate(expense).getTime() > max.getTime()
+        ? expenseCalendarDate(expense)
+        : max,
+    expenseCalendarDate(expenses[0]),
   )
   const to = startOfDay(latest)
 
@@ -229,7 +239,7 @@ export function buildGroupStatsDashboard(
 
   const range = rangeFor(expenses, period, customRange)
   const selectedExpenses = expenses.filter((expense) => {
-    const date = startOfDay(expense.expenseDate)
+    const date = expenseCalendarDate(expense)
     return date >= range.from && date <= range.to
   })
   const categoryTotals = new Map<CategoryId, number>()
@@ -271,7 +281,7 @@ export function buildGroupStatsDashboard(
   }
 
   for (const expense of selectedExpenses) {
-    const start = bucketStart(expense.expenseDate, range.granularity)
+    const start = bucketStart(expenseCalendarDate(expense), range.granularity)
     const bucket = buckets.get(start.toISOString())
     if (!bucket) continue
     bucket.total += expense.amount

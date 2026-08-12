@@ -169,6 +169,7 @@ describe('Silent expense creation — activity + notification', () => {
         title,
         amount: 1000,
         expenseDate: anchorDate.toISOString(),
+        expenseTimeZone: 'UTC',
         category: 'general',
         splitMode: 'EVENLY',
         paidBySplitMode: 'BY_AMOUNT',
@@ -194,13 +195,15 @@ describe('Silent expense creation — activity + notification', () => {
     )
 
     // Admin paid $40 for both → Alice owes Admin $20
+    const expenseDate = new Date()
     await makeCaller().expenses.create({
       requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Dinner',
         amount: 4000,
-        expenseDate: new Date().toISOString(),
+        expenseDate: expenseDate.toISOString(),
+        expenseTimeZone: 'UTC',
         category: 'general',
         splitMode: 'EVENLY',
         paidBySplitMode: 'BY_AMOUNT',
@@ -257,13 +260,15 @@ describe('Silent expense creation — activity + notification', () => {
     })
 
     // Admin paid $40, split evenly → Alice owes Admin $20
+    const expenseDate = new Date()
     await makeCaller().expenses.create({
       requestId: crypto.randomUUID(),
       groupId,
       expense: {
         title: 'Lunch',
         amount: 4000,
-        expenseDate: new Date().toISOString(),
+        expenseDate: expenseDate.toISOString(),
+        expenseTimeZone: 'UTC',
         category: 'general',
         splitMode: 'EVENLY',
         paidBySplitMode: 'BY_AMOUNT',
@@ -339,6 +344,7 @@ describe('Silent expense creation — activity + notification', () => {
         title: 'Weekly sub',
         amount: 1000,
         expenseDate: pastDate.toISOString(),
+        expenseTimeZone: 'UTC',
         category: 'general',
         splitMode: 'EVENLY',
         paidBySplitMode: 'BY_AMOUNT',
@@ -403,6 +409,7 @@ describe('Silent expense creation — activity + notification', () => {
         title: 'Updated weekly sub',
         amount: 1200,
         expenseDate: installments[0]!.expenseDate.toISOString(),
+        expenseTimeZone: installments[0]!.expenseTimeZone,
         category: 'general',
         splitMode: 'EVENLY',
         paidBySplitMode: 'BY_AMOUNT',

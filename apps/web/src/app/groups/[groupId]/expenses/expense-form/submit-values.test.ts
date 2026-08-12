@@ -6,7 +6,9 @@ import { getCurrency } from '@spliit/domain'
 import { buildSubmitValues } from './submit-values'
 
 const baseValues: ExpenseFormInputValues = {
-  expenseDate: new Date('2026-06-30T10:45:49.956Z'),
+  expenseDay: '2026-06-30',
+  expenseTime: '10:45',
+  expenseTimeZone: 'UTC',
   title: 'Receipt',
   category: 'general',
   amount: 150,
@@ -115,6 +117,24 @@ describe('buildSubmitValues', () => {
     })
 
     expect(result.conversion).toBeUndefined()
+  })
+
+  it('compatibly normalizes a wall time inside a DST gap', () => {
+    const result = buildSubmitValues(
+      {
+        ...baseValues,
+        expenseDay: '2026-03-29',
+        expenseTime: '02:30',
+        expenseTimeZone: 'Europe/Skopje',
+      },
+      {
+        groupCurrency: getCurrency('ARS')!,
+        conversionRequired: false,
+      },
+    )
+
+    expect(result.expenseDate.toISOString()).toBe('2026-03-29T01:30:00.000Z')
+    expect(result.expenseTimeZone).toBe('Europe/Skopje')
   })
 
   it('rejects converted expenses without a positive conversion rate', () => {

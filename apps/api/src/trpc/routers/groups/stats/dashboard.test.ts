@@ -13,6 +13,7 @@ function expense(
     amount,
     categoryId,
     expenseDate: new Date(`${date}T00:00:00.000Z`),
+    expenseTimeZone: 'UTC',
     isReimbursement: false,
     splitMode: 'EVENLY',
     paidBySplitMode: 'BY_AMOUNT',
@@ -120,5 +121,26 @@ describe('buildGroupStatsDashboard', () => {
     })
     expect(dashboard.period?.from).toEqual(new Date('2024-01-01T00:00:00.000Z'))
     expect(dashboard.period?.to).toEqual(new Date('2024-03-31T00:00:00.000Z'))
+  })
+
+  it('groups an expense by its stored wall-calendar date', () => {
+    const dashboard = buildGroupStatsDashboard(
+      [
+        {
+          ...expense('late', '2024-06-01', 1800, 'dining-out'),
+          expenseDate: new Date('2024-06-01T00:30:00.000Z'),
+          expenseTimeZone: 'America/Los_Angeles',
+        },
+      ],
+      'LATEST_ACTIVITY',
+    )
+
+    expect(dashboard.period?.from).toEqual(new Date('2024-05-31T00:00:00.000Z'))
+    expect(dashboard.period?.to).toEqual(new Date('2024-05-31T00:00:00.000Z'))
+    expect(dashboard.timeline[0]).toMatchObject({
+      type: 'bucket',
+      start: new Date('2024-05-31T00:00:00.000Z'),
+      total: 1800,
+    })
   })
 })

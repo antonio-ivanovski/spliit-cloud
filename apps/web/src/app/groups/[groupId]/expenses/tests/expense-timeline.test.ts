@@ -6,8 +6,16 @@ describe('expense timeline grouping', () => {
   it('keeps future and older expenses in the shared timeline buckets', () => {
     const grouped = getGroupedExpensesByDate(
       [
-        { id: 'future', expenseDate: '2099-01-01T00:00:00.000Z' },
-        { id: 'older', expenseDate: '2020-01-01T00:00:00.000Z' },
+        {
+          id: 'future',
+          expenseDate: '2099-01-01T00:00:00.000Z',
+          expenseTimeZone: 'UTC',
+        },
+        {
+          id: 'older',
+          expenseDate: '2020-01-01T00:00:00.000Z',
+          expenseTimeZone: 'UTC',
+        },
       ],
       'UTC',
     )
@@ -17,7 +25,9 @@ describe('expense timeline grouping', () => {
   })
 
   it('uses the active locale when deciding whether a Sunday is this week', () => {
-    const expenses = [{ id: 'sunday', expenseDate: '2026-08-02' }]
+    const expenses = [
+      { id: 'sunday', expenseDate: '2026-08-02', expenseTimeZone: 'UTC' },
+    ]
     const now = new Date('2026-08-06T12:00:00.000Z')
 
     expect(
@@ -31,7 +41,7 @@ describe('expense timeline grouping', () => {
   it('keeps the locale week start inclusive', () => {
     const now = new Date('2026-08-06T12:00:00.000Z')
     const grouped = getGroupedExpensesByDate(
-      [{ id: 'monday', expenseDate: '2026-08-03' }],
+      [{ id: 'monday', expenseDate: '2026-08-03', expenseTimeZone: 'UTC' }],
       'UTC',
       'de-DE',
       now,
@@ -43,7 +53,13 @@ describe('expense timeline grouping', () => {
   it('places the preceding locale week between this week and this month', () => {
     const now = new Date('2026-08-06T12:00:00.000Z')
     const grouped = getGroupedExpensesByDate(
-      [{ id: 'previous-week', expenseDate: '2026-07-30' }],
+      [
+        {
+          id: 'previous-week',
+          expenseDate: '2026-07-30',
+          expenseTimeZone: 'UTC',
+        },
+      ],
       'UTC',
       'en-US',
       now,

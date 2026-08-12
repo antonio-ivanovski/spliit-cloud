@@ -218,7 +218,7 @@
       "saveError": "couldn't save preferences ",
       "defaultCurrency": "main currency",
       "timeZone": "account time zone",
-      "timeZoneHelp": "used for timestamps, relative dates, and new recurring expenses.",
+      "timeZoneHelp": "sets the default timezone for new expense times and recurring schedules, plus timestamp and relative-date displays.",
       "language": "app language",
       "theme": "visual vibe",
       "chooseTheme": "choose your vibe",
@@ -1327,7 +1327,8 @@
         },
         "upcomingOccurrence": "upcoming one",
         "timeZoneDescription": "new recurring expenses run at 3:00 PM in {timeZone}. existing schedules keep their original time zone.",
-        "timeZonePending": "waiting for your account time zone before recurrence can turn on."
+        "timeZonePending": "waiting for your account time zone before recurrence can turn on.",
+        "scheduleHint": "Drops at {time} ({timeZone}) and might send a notification, so pick a sleep-friendly time. Change the time above to update it."
       },
       "recurrenceRule": {
         "label": "expense recurrence",
@@ -1370,6 +1371,9 @@
       "paidFor": {
         "title": "split with",
         "description": "choose who shares this income."
+      },
+      "recurrence": {
+        "scheduleHint": "Drops at {time} ({timeZone}) and might send a notification, so pick a sleep-friendly time. Change the time above to update it."
       }
     },
     "PaidBySplitModeField": {
@@ -1549,7 +1553,17 @@
     "validationSummary": "fix the highlighted fields before saving, fr.",
     "resetDistribution": "reset",
     "savedButNotNavigated": "the spendy thingy got squirrelled, but we couldn’t bounce from this pageo. close it like it’s hot, fr.",
-    "tryLeavingAgain": "Try leavin' again"
+    "tryLeavingAgain": "Try leavin' again",
+    "dateTimePicker": {
+      "changesDate": "switches the date",
+      "timezone": "timezone",
+      "dateTab": "date",
+      "timeTab": "time",
+      "back": "go back",
+      "chooseTimezone": "pick a timezone",
+      "done": "all set",
+      "yourTime": "your local time"
+    }
   },
   "ExpensePreview": {
     "title": "expense preview era",
@@ -2718,7 +2732,8 @@
     "sharesInvalid": "shares must be between 0.01 and 1,000,000 with up to two decimals, fr.",
     "itemTitleRequired": "thingamajig needs a nameroo.",
     "itemQuantityMin1": "thingamajig count gotta be one-ish or more.",
-    "rowErrorsHeading": "fix these shares, fr:"
+    "rowErrorsHeading": "fix these shares, fr:",
+    "invalidWallTime": "That time doesn't exist on the selected date in this timezone."
   },
   "Settings": {
     "title": "settings hub"

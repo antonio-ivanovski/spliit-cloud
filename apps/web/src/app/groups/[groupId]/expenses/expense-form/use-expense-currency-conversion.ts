@@ -47,9 +47,9 @@ export function useExpenseCurrencyConversion(args: {
   recommendedCurrencyCodes: string[] | undefined
 } {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
-  const watchedExpenseDate = useWatch({
+  const watchedExpenseDay = useWatch({
     control: args.form.control,
-    name: 'expenseDate',
+    name: 'expenseDay',
   })
   const watchedOriginalCurrency = useWatch({
     control: args.form.control,
@@ -76,7 +76,7 @@ export function useExpenseCurrencyConversion(args: {
     : { code: '', symbol: 'Custom', rounding: 0, decimal_digits: 2 }
   const originalCurrencies = useCurrencies('')
   const exchangeRate = useCurrencyRate(
-    watchedExpenseDate,
+    new Date(`${watchedExpenseDay}T00:00:00.000Z`),
     watchedOriginalCurrency ?? '',
     args.groupCurrency.code,
   )
@@ -154,13 +154,8 @@ export function useExpenseCurrencyConversion(args: {
     return Number.isNaN(converted) ? undefined : converted
   })()
 
-  const expenseDate = watchedExpenseDate
-  const expenseDateIso =
-    expenseDate instanceof Date && !Number.isNaN(expenseDate.getTime())
-      ? `${expenseDate.getUTCFullYear()}-${String(expenseDate.getUTCMonth() + 1).padStart(2, '0')}-${String(expenseDate.getUTCDate()).padStart(2, '0')}`
-      : ''
   const isFutureExpenseDate =
-    expenseDateIso.length > 0 && expenseDateIso > utcTodayIso()
+    watchedExpenseDay.length > 0 && watchedExpenseDay > utcTodayIso()
 
   let conversionRateMessage: string
   if (exchangeRate.isLoading) {

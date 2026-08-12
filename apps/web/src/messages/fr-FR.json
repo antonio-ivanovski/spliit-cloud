@@ -679,6 +679,9 @@
       "currencyField": {
         "label": "Devise de la recette",
         "description": "La devise dans laquelle le revenu a été reçu."
+      },
+      "recurrence": {
+        "scheduleHint": "La création aura lieu à {time} ({timeZone}) et pourra déclencher une notification. Choisissez une heure qui ne perturbe pas le sommeil. Modifiez l’heure ci-dessus pour la changer."
       }
     },
     "Expense": {
@@ -761,7 +764,8 @@
         "completedOccurrence": "Créée",
         "upcomingOccurrence": "À venir",
         "timeZoneDescription": "Les nouvelles dépenses récurrentes s'exécutent à 15 h dans le fuseau {timeZone}. Les planifications existantes conservent leur fuseau horaire d'origine.",
-        "timeZonePending": "En attente du fuseau horaire de votre compte avant de pouvoir activer la récurrence."
+        "timeZonePending": "En attente du fuseau horaire de votre compte avant de pouvoir activer la récurrence.",
+        "scheduleHint": "La création aura lieu à {time} ({timeZone}) et pourra déclencher une notification. Choisissez une heure qui ne perturbe pas le sommeil. Modifiez l’heure ci-dessus pour la changer."
       },
       "recurringEditScopeOccurrence": "Modifier uniquement cette occurrence",
       "recurringEditScopeFuture": "Modifier cette occurrence et les suivantes",
@@ -969,7 +973,17 @@
     "validationSummary": "Veuillez corriger les champs en surbrillance avant d’enregistrer.",
     "resetDistribution": "Réinitialiser",
     "savedButNotNavigated": "La dépense a bien été enregistrée, mais nous n’avons pas pu quitter cette page. Vous pouvez la fermer en toute sécurité.",
-    "tryLeavingAgain": "Réessayer de quitter"
+    "tryLeavingAgain": "Réessayer de quitter",
+    "dateTimePicker": {
+      "changesDate": "Change la date",
+      "timezone": "Fuseau horaire",
+      "dateTab": "Calendrier",
+      "timeTab": "Heure",
+      "back": "Retour",
+      "chooseTimezone": "Choisir le fuseau horaire",
+      "done": "Terminé",
+      "yourTime": "votre heure"
+    }
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Supprimer le document",
@@ -1225,7 +1239,8 @@
     "sharesInvalid": "Les parts doivent être comprises entre 0,01 et 1 000 000 avec deux décimales au maximum.",
     "itemTitleRequired": "Le nom de l’élément est obligatoire.",
     "itemQuantityMin1": "La quantité de l’élément doit être d’au moins 1.",
-    "rowErrorsHeading": "Corrigez ces parts :"
+    "rowErrorsHeading": "Corrigez ces parts :",
+    "invalidWallTime": "Cette heure n’existe pas à la date sélectionnée dans ce fuseau horaire."
   },
   "Categories": {
     "search": "Rechercher une catégorie…",
@@ -2106,7 +2121,7 @@
       "saveError": "Impossible d’enregistrer les préférences",
       "defaultCurrency": "Devise par défaut",
       "timeZone": "Fuseau horaire du compte",
-      "timeZoneHelp": "Utilisé pour les horodatages, les dates relatives et les nouvelles dépenses récurrentes.",
+      "timeZoneHelp": "Définit le fuseau horaire par défaut pour les heures des nouvelles dépenses et les planifications récurrentes, et sert à afficher les horodatages et les dates relatives.",
       "language": "Langue",
       "theme": "Thème",
       "chooseTheme": "Choisir",

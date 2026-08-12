@@ -46,6 +46,7 @@ describe('resumeRecurringExpenseSeries', () => {
     prismaMock.recurringExpenseSeries.findUnique.mockResolvedValue({
       id: 'series-1',
       timeZone: 'UTC',
+      anchorTimeMinutes: 900,
       status: 'PAUSED',
       anchorDate: new Date('2030-01-01T00:00:00Z'),
       frequency: 'MONTHLY',
@@ -89,6 +90,7 @@ describe('resumeRecurringExpenseSeries', () => {
     prismaMock.recurringExpenseSeries.findUnique.mockResolvedValue({
       id: 'series-1',
       timeZone: 'UTC',
+      anchorTimeMinutes: 900,
       status: 'PAUSED',
       anchorDate: new Date('2026-01-01T00:00:00.000Z'),
       frequency: 'MONTHLY',
@@ -141,6 +143,7 @@ describe('resumeRecurringExpenseSeries', () => {
     prismaMock.recurringExpenseSeries.findUnique.mockResolvedValue({
       id: 'series-local-date',
       timeZone: 'America/Los_Angeles',
+      anchorTimeMinutes: 900,
       status: 'PAUSED',
       anchorDate: new Date('2026-07-14T00:00:00.000Z'),
       frequency: 'DAILY',
@@ -178,6 +181,7 @@ describe('resumeRecurringExpenseSeries', () => {
     prismaMock.recurringExpenseSeries.findUnique.mockResolvedValue({
       id: 'series-date',
       timeZone: 'UTC',
+      anchorTimeMinutes: 900,
       status: 'PAUSED',
       anchorDate: new Date('2026-01-01T00:00:00.000Z'),
       frequency: 'MONTHLY',
@@ -215,6 +219,7 @@ describe('resumeRecurringExpenseSeries', () => {
     prismaMock.recurringExpenseSeries.findUnique.mockResolvedValue({
       id: 'series-count',
       timeZone: 'UTC',
+      anchorTimeMinutes: 900,
       status: 'PAUSED',
       anchorDate: new Date('2026-01-01T00:00:00.000Z'),
       frequency: 'MONTHLY',

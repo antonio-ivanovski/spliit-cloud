@@ -85,6 +85,7 @@ function buildExpense(overrides: Record<string, unknown>) {
     amount: 20000,
     createdAt: '2026-07-10T00:00:00Z',
     expenseDate: '2026-07-10',
+    expenseTimeZone: 'UTC',
     categoryId: 'groceries',
     category: {
       id: 'groceries',

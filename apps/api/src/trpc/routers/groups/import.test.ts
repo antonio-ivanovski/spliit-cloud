@@ -79,6 +79,7 @@ function stubGroupWithLedger(groupId = 'grp-1', ledgerId = 'ledger-1'): void {
 
 const baseExpense = {
   expenseDate: new Date('2025-11-15T00:00:00.000Z'),
+  expenseTimeZone: 'UTC',
   title: 'Dures Bari',
   category: 'transportation',
   amount: 23000,
@@ -126,6 +127,8 @@ describe('importGroup', () => {
     })
 
     expect(parsed.recurrenceRule).toBe('NONE')
+    expect(parsed.expenseDate).toEqual(new Date('2025-11-15T12:00:00.000Z'))
+    expect(parsed.expenseTimeZone).toBe('UTC')
     expect('recurrence' in parsed).toBe(false)
     expect('recurrenceSeriesId' in parsed).toBe(false)
     expect('recurrenceSequence' in parsed).toBe(false)
@@ -447,6 +450,7 @@ describe('importGroup', () => {
         expenses: [
           {
             expenseDate: new Date('2025-11-15'),
+            expenseTimeZone: 'UTC',
             title: 'Dinner',
             category: 'general',
             amount: 10000,
@@ -608,6 +612,7 @@ describe('importGroup', () => {
           expenses: [
             {
               expenseDate: new Date('2025-11-15'),
+              expenseTimeZone: 'UTC',
               title: 'Dinner',
               category: 'general',
               amount: 6000,
