@@ -2125,7 +2125,14 @@
       "language": "Idioma",
       "theme": "Tema",
       "chooseTheme": "Escolher",
-      "saving": "Salvando preferências…"
+      "saving": "Salvando preferências…",
+      "mascot": "Mascote",
+      "mascotHelp": "Escolha um companheiro que oferece atalhos contextuais e reage aos seus fluxos de despesas.",
+      "chooseMascot": "Escolha um mascote",
+      "mascotOptions": {
+        "off": "Desativado",
+        "bill": "Bill, o recibo"
+      }
     },
     "aiPreferences": {
       "title": "Recursos de IA",
@@ -2906,5 +2913,14 @@
       "today": "Hoje",
       "tomorrow": "Amanhã"
     }
+  },
+  "Mascot": {
+    "openActions": "Abrir ações com o Bill",
+    "closeActions": "Fechar as ações do Bill",
+    "greetBill": "Dar um oi para o Bill",
+    "settingsAction": "Configurações do mascote",
+    "noActionMessage": "Por agora não tem nada em que eu possa te ajudar aqui.",
+    "noActionSettings": "Configurações do mascote",
+    "landingGreeting": "Oi — eu te ajudo a dividir despesas assim que você entrar."
   }
 }

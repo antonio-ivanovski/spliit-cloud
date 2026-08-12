@@ -614,6 +614,7 @@ model AccountPreference {
   timeZone              String?
   locale                String?
   theme                 String?
+  mascot                String   @default("bill")
 
   notificationsEnabled      Boolean  @default(true)
   aiFeaturesEnabled         Boolean  @default(true)

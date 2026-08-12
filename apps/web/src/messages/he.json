@@ -2125,7 +2125,14 @@
       "language": "שפה",
       "theme": "ערכת נושא",
       "chooseTheme": "בחירה",
-      "saving": "שומר העדפות…"
+      "saving": "שומר העדפות…",
+      "mascot": "דמות מלווה",
+      "mascotHelp": "בחרו דמות מלווה שמציעה קיצורי דרך לפי ההקשר ומגיבה לתהליכי ההוצאות.",
+      "chooseMascot": "בחירת דמות מלווה",
+      "mascotOptions": {
+        "off": "כבוי",
+        "bill": "ביל הקבלה"
+      }
     },
     "aiPreferences": {
       "title": "תכונות בינה מלאכותית",
@@ -2906,5 +2913,14 @@
       "today": "היום",
       "tomorrow": "מחר"
     }
+  },
+  "Mascot": {
+    "openActions": "פתיחת פעולות עם ביל",
+    "closeActions": "סגירת הפעולות של ביל",
+    "greetBill": "אמרו שלום לביל",
+    "settingsAction": "הגדרות דמות מלווה",
+    "noActionMessage": "אין לי במה לעזור כאן כרגע.",
+    "noActionSettings": "הגדרות דמות מלווה",
+    "landingGreeting": "היי — אעזור לחלק הוצאות אחרי ההתחברות."
   }
 }

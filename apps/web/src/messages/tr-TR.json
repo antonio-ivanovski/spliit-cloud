@@ -2116,7 +2116,14 @@
       "language": "Dil",
       "theme": "Tema",
       "chooseTheme": "Seçin",
-      "saving": "Tercihler kaydediliyor…"
+      "saving": "Tercihler kaydediliyor…",
+      "mascot": "Maskot",
+      "mascotHelp": "Bağlama uygun kısayollar sunan ve harcama akışlarınıza tepki veren bir yol arkadaşı seçin.",
+      "chooseMascot": "Bir maskot seç",
+      "mascotOptions": {
+        "off": "Kapalı",
+        "bill": "Fiş Bill"
+      }
     },
     "aiPreferences": {
       "title": "Yapay zeka özellikleri",
@@ -2888,5 +2895,14 @@
       "today": "Bugün",
       "tomorrow": "Yarın"
     }
+  },
+  "Mascot": {
+    "openActions": "Bill ile eylemleri aç",
+    "closeActions": "Bill'in eylemlerini kapat",
+    "greetBill": "Bill'e merhaba de",
+    "settingsAction": "Maskot ayarları",
+    "noActionMessage": "Şu anda burada yardımcı olabileceğim bir şey yok.",
+    "noActionSettings": "Maskot ayarları",
+    "landingGreeting": "Merhaba — oturum açtıktan sonra harcamaları bölmene yardımcı olurum."
   }
 }

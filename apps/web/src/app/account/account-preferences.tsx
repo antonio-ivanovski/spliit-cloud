@@ -1,4 +1,4 @@
-import { SlidersHorizontal, type LucideIcon } from 'lucide-react'
+import { CircleOff, SlidersHorizontal, type LucideIcon } from 'lucide-react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -8,6 +8,8 @@ import {
 } from '@/components/account-preferences-sync'
 import { CurrencySelector } from '@/components/currency-selector'
 import { LocaleSelector } from '@/components/locale-switcher'
+import { BillCharacter } from '@/components/mascot/bill-character'
+import { markMascotSettingsDiscovered } from '@/components/mascot/mascot-settings-discovery'
 import { useTheme } from '@/components/theme-provider'
 import { TimeZoneField } from '@/components/time-zone-field'
 import {
@@ -21,11 +23,13 @@ import { defaultLocale } from '@/i18n/request'
 import { setUserLocale } from '@/i18n/setup'
 import {
   detectDeviceTimeZone,
+  type AccountMascot,
   type AccountPreferences as AccountPreferencesValue,
   type AccountTheme,
 } from '@/lib/account-preferences'
 import { useCurrencies } from '@/lib/currency'
 import { useDeploymentConfig } from '@/lib/deployment-config'
+import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 
 import {
@@ -37,6 +41,7 @@ import {
 } from './settings-ui'
 
 const themes: AccountTheme[] = ['light', 'dark', 'system']
+const mascots: AccountMascot[] = ['off', 'bill']
 
 export function AccountPreferences() {
   const { t } = useTranslation(undefined, {
@@ -47,6 +52,7 @@ export function AccountPreferences() {
   const query = trpc.account.getPreferences.useQuery()
   const syncedPreferences = useSyncedAccountPreferences()
   const updater = useAccountPreferenceUpdater()
+  const { data: account } = useCurrentAccount()
   const deployment = useDeploymentConfig()
   const allCurrencies = useCurrencies(
     tBase('GroupForm.CurrencyCodeField.customOption'),
@@ -58,6 +64,14 @@ export function AccountPreferences() {
         label: tBase(`Theme.${theme}` as `Theme.${AccountTheme}`),
       })),
     [tBase],
+  )
+  const mascotItems = useMemo(
+    () =>
+      mascots.map((mascot) => ({
+        value: mascot,
+        label: t(`mascotOptions.${mascot}`),
+      })),
+    [t],
   )
   const currencies = useMemo(
     () => allCurrencies.filter((currency) => currency.code.length === 3),
@@ -75,7 +89,7 @@ export function AccountPreferences() {
         title={t('title')}
         description={t('description')}
         icon={SlidersHorizontal as LucideIcon}
-        rows={4}
+        rows={5}
       />
     )
   }
@@ -168,6 +182,53 @@ export function AccountPreferences() {
                 ))}
               </SelectContent>
             </Select>
+          }
+        />
+        <SettingsFieldRow
+          id="account-preference-mascot"
+          label={t('mascot')}
+          description={t('mascotHelp')}
+          control={
+            <div className="flex items-center gap-3">
+              <Select
+                value={sourcePreferences.mascot ?? 'bill'}
+                disabled={updater !== null && !updater.ready}
+                items={mascotItems}
+                onValueChange={(mascot) => {
+                  markMascotSettingsDiscovered(account?.id)
+                  void updater?.patchPreferences({
+                    mascot: mascot as AccountMascot,
+                  })
+                }}
+              >
+                <SelectTrigger
+                  id="account-preference-mascot"
+                  className="w-[11rem]"
+                >
+                  <SelectValue placeholder={t('chooseMascot')} />
+                </SelectTrigger>
+                <SelectContent>
+                  {mascotItems.map((mascot) => (
+                    <SelectItem key={mascot.value} value={mascot.value}>
+                      {mascot.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <div
+                className="flex size-14 shrink-0 items-center justify-center"
+                data-testid="account-preference-mascot-preview"
+              >
+                {sourcePreferences.mascot === 'bill' ? (
+                  <BillCharacter className="h-[66px] w-[58px]" />
+                ) : (
+                  <CircleOff
+                    className="size-5 text-muted-foreground"
+                    aria-hidden="true"
+                  />
+                )}
+              </div>
+            </div>
           }
         />
       </SettingsList>

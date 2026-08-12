@@ -2124,7 +2124,14 @@
       "language": "Hizkuntza",
       "theme": "Gaia",
       "chooseTheme": "Aukeratu",
-      "saving": "Hobespenak gordetzen…"
+      "saving": "Hobespenak gordetzen…",
+      "mascot": "Maskota",
+      "mascotHelp": "Aukeratu testuinguruko lasterbideak eskaintzen dituen eta gastuen prozesuei erantzuten dien lagun bat.",
+      "chooseMascot": "Aukeratu maskota bat",
+      "mascotOptions": {
+        "off": "Desaktibatuta",
+        "bill": "Bill ordainagiria"
+      }
     },
     "aiPreferences": {
       "title": "IAren ezaugarriak",
@@ -2905,5 +2912,14 @@
       "today": "Gaur",
       "tomorrow": "Bihar"
     }
+  },
+  "Mascot": {
+    "openActions": "Ireki ekintzak Billekin",
+    "closeActions": "Itxi Billen ekintzak",
+    "greetBill": "Agurtu Bill",
+    "settingsAction": "Maskotaren ezarpenak",
+    "noActionMessage": "Une honetan ezin dizut ezer lagundu hemen.",
+    "noActionSettings": "Maskotaren ezarpenak",
+    "landingGreeting": "Kaixo — saioa hasi ondoren gastuak zatitzen laguntzen dizut."
   }
 }

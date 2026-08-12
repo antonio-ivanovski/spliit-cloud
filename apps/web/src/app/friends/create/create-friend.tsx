@@ -9,6 +9,7 @@ import type { z } from 'zod'
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import { CurrencySelector } from '@/components/currency-selector'
 import Link from '@/components/link'
+import { useMascotController } from '@/components/mascot/mascot-context'
 import { SubmitButton } from '@/components/submit-button'
 import { Button } from '@/components/ui/button'
 import {
@@ -86,6 +87,7 @@ export function CreateFriend() {
   const navigate = useNavigate()
   const utils = trpc.useUtils()
   const { toast } = useToast()
+  const mascot = useMascotController()
   const [peerTab, setPeerTab] = useState<PeerTab>('friends')
   const deployment = useDeploymentConfig()
   const createAttempt = useIdempotentCreate()
@@ -98,8 +100,12 @@ export function CreateFriend() {
 
   const { mutateAsync: createFriend } = trpc.friends.create.useMutation({
     onSuccess: () => {
+      mascot.react('success')
       void invalidateAccountGroupLists(utils)
       void utils.account.friends.invalidate()
+    },
+    onError: () => {
+      mascot.react('failure')
     },
   })
 

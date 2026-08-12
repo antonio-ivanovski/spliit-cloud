@@ -2116,7 +2116,14 @@
       "language": "Kieli",
       "theme": "Teema",
       "chooseTheme": "Valitse",
-      "saving": "Tallennetaan…"
+      "saving": "Tallennetaan…",
+      "mascot": "Maskotti",
+      "mascotHelp": "Valitse kumppani, joka tarjoaa tilanteeseen sopivia pikatoimintoja ja reagoi kulujen käsittelyyn.",
+      "chooseMascot": "Valitse maskotti",
+      "mascotOptions": {
+        "off": "Pois käytöstä",
+        "bill": "Bill-kuitti"
+      }
     },
     "aiPreferences": {
       "title": "Tekoälyominaisuudet",
@@ -2888,5 +2895,14 @@
       "today": "Tänään",
       "tomorrow": "Huomenna"
     }
+  },
+  "Mascot": {
+    "openActions": "Avaa toiminnot Billin kanssa",
+    "closeActions": "Sulje Billin toiminnot",
+    "greetBill": "Tervehdi Billiä",
+    "settingsAction": "Maskotin asetukset",
+    "noActionMessage": "En voi juuri nyt auttaa tässä.",
+    "noActionSettings": "Maskotin asetukset",
+    "landingGreeting": "Hei — autan jakamaan kuluja, kun kirjaudut sisään."
   }
 }

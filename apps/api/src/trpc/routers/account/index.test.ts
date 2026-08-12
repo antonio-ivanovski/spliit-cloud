@@ -108,6 +108,7 @@ describe('accountRouter account preferences', () => {
         timeZone: null,
         locale: null,
         theme: null,
+        mascot: 'bill',
         notificationsEnabled: true,
         aiFeaturesEnabled: true,
         aiCategoryExtractEnabled: true,
@@ -123,6 +124,7 @@ describe('accountRouter account preferences', () => {
       timeZone: 'Europe/Skopje',
       locale: 'mk-MK',
       theme: 'dark',
+      mascot: 'off',
     } as never)
 
     const result = await makeCaller('acct-1').initializePreferences({
@@ -160,6 +162,7 @@ describe('accountRouter account preferences', () => {
       timeZone: 'Europe/Skopje',
       locale: 'mk-MK',
       theme: 'dark',
+      mascot: 'off',
       notificationsEnabled: true,
       aiFeaturesEnabled: true,
       aiCategoryExtractEnabled: true,
@@ -434,6 +437,27 @@ describe('accountRouter account preferences', () => {
     expect(result.preferences.aiCategoryExtractEnabled).toBe(true)
   })
 
+  it('persists a supported mascot independently', async () => {
+    prismaMock.accountPreference.upsert.mockResolvedValue({
+      defaultCurrencyCode: 'EUR',
+      timeZone: 'Europe/Skopje',
+      locale: 'en-US',
+      theme: 'system',
+      mascot: 'bill',
+    } as never)
+
+    const result = await makeCaller('acct-1').updatePreferences({
+      mascot: 'bill',
+    })
+
+    expect(prismaMock.accountPreference.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        update: { mascot: 'bill' },
+      }),
+    )
+    expect(result.preferences.mascot).toBe('bill')
+  })
+
   it('patches the master AI preference without changing child preferences', async () => {
     prismaMock.accountPreference.upsert.mockResolvedValue({
       defaultCurrencyCode: 'EUR',
@@ -471,6 +495,7 @@ describe('accountRouter account preferences', () => {
     [{ timeZone: 'Mars/Olympus' }, 'invalid timezone'],
     [{ locale: 'xx-XX' }, 'unsupported locale'],
     [{ theme: 'sepia' }, 'unsupported theme'],
+    [{ mascot: 'ghost' }, 'unsupported mascot'],
   ])('rejects %s (%s)', async (input) => {
     await expect(
       makeCaller('acct-1').updatePreferences(input as never),

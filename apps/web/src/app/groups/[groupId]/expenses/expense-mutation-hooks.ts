@@ -1,5 +1,6 @@
 import { useNavigate } from '@tanstack/react-router'
 
+import { useMascotController } from '@/components/mascot/mascot-context'
 import { useToast } from '@/components/ui/use-toast'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { trpc } from '@/trpc/client'
@@ -171,11 +172,13 @@ export function useUpdateExpenseMutation({
   onConflict?: () => void
 }) {
   const { toast } = useToast()
+  const mascot = useMascotController()
   const invalidateExpenseDependencies =
     useInvalidateExpenseDependencies(linkInviteToken)
 
   return trpc.groups.expenses.update.useMutation({
     onSuccess: (_data, variables) => {
+      mascot.react('success')
       return invalidateExpenseDependencies({
         groupId: variables.groupId,
         expenseId: variables.expenseId,
@@ -186,6 +189,7 @@ export function useUpdateExpenseMutation({
         onConflict?.()
         return
       }
+      mascot.react('failure')
       toast({ description: error.message, variant: 'destructive' })
     },
   })
@@ -197,12 +201,14 @@ export function useCreateExpenseMutation({
   linkInviteToken: string | undefined
 }) {
   const { toast } = useToast()
+  const mascot = useMascotController()
   const utils = trpc.useUtils()
   const invalidateExpenseDependencies =
     useInvalidateExpenseDependencies(linkInviteToken)
 
   return trpc.groups.expenses.create.useMutation({
     onSuccess: (data, variables) => {
+      mascot.react('success')
       // Fire-and-forget catch-up poll for past-dated series. The worker
       // materializes the remaining occurrences asynchronously; without
       // polling, expenses/activities/balances stay stale until an
@@ -229,6 +235,7 @@ export function useCreateExpenseMutation({
       })
     },
     onError: (error) => {
+      mascot.react('failure')
       toast({ description: error.message, variant: 'destructive' })
     },
   })
@@ -243,11 +250,13 @@ export function useDeleteExpenseMutation({
 }) {
   const navigate = useNavigate()
   const { toast } = useToast()
+  const mascot = useMascotController()
   const invalidateExpenseDependencies =
     useInvalidateExpenseDependencies(linkInviteToken)
 
   return trpc.groups.expenses.delete.useMutation({
     onSuccess: async (_data, variables) => {
+      mascot.react('success')
       // Invalidate first so the next render already shows the latest
       // state; stale cached list is not flashed.
       await invalidateExpenseDependencies({
@@ -264,6 +273,7 @@ export function useDeleteExpenseMutation({
       }
     },
     onError: (error) => {
+      mascot.react('failure')
       toast({ description: error.message, variant: 'destructive' })
     },
   })

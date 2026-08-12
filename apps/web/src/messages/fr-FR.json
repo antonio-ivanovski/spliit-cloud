@@ -2125,7 +2125,14 @@
       "language": "Langue",
       "theme": "Thème",
       "chooseTheme": "Choisir",
-      "saving": "Enregistrement des préférences…"
+      "saving": "Enregistrement des préférences…",
+      "mascot": "Mascotte",
+      "mascotHelp": "Choisissez un compagnon qui propose des raccourcis contextuels et réagit à vos flux de dépenses.",
+      "chooseMascot": "Choisir une mascotte",
+      "mascotOptions": {
+        "off": "Désactivée",
+        "bill": "Bill, le reçu"
+      }
     },
     "aiPreferences": {
       "title": "Fonctionnalités d'IA",
@@ -2906,5 +2913,14 @@
       "today": "Aujourd’hui",
       "tomorrow": "Demain"
     }
+  },
+  "Mascot": {
+    "openActions": "Ouvrir les actions avec Bill",
+    "closeActions": "Fermer les actions de Bill",
+    "greetBill": "Dire bonjour à Bill",
+    "settingsAction": "Paramètres de la mascotte",
+    "noActionMessage": "Je ne peux rien faire pour vous ici pour le moment.",
+    "noActionSettings": "Paramètres de la mascotte",
+    "landingGreeting": "Bonjour — je vous aide à partager les dépenses une fois connecté."
   }
 }

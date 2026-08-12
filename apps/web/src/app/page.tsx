@@ -1,67 +1,20 @@
-import type { Image } from 'lucide-react'
-import {
-  Cloud,
-  Loader2,
-  Receipt,
-  Scale,
-  ShieldCheck,
-  Split,
-  Tags,
-} from 'lucide-react'
+import { Loader2 } from 'lucide-react'
+import { useReducedMotion } from 'motion/react'
+import { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { AuthPanel } from '@/components/auth/auth-panel'
+import { BillCharacter } from '@/components/mascot/bill-character'
+import {
+  useMascotController,
+  useMascotState,
+} from '@/components/mascot/mascot-context'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { cn } from '@/lib/utils'
 
 import { RecentGroupList } from './groups/recent-group-list'
 
-const signedOutFeatures = [
-  { key: 'accounts', icon: ShieldCheck },
-  { key: 'groupsSync', icon: Cloud },
-  { key: 'expenses', icon: Receipt },
-  { key: 'splitting', icon: Split },
-  { key: 'settlement', icon: Scale },
-  { key: 'organization', icon: Tags },
-] as const satisfies ReadonlyArray<{
-  key:
-    | 'accounts'
-    | 'groupsSync'
-    | 'expenses'
-    | 'splitting'
-    | 'settlement'
-    | 'organization'
-  icon: typeof ShieldCheck
-}>
-
-const featureI18nKeys = {
-  accounts: {
-    title: 'Homepage.features.accounts.title',
-    description: 'Homepage.features.accounts.description',
-  },
-  groupsSync: {
-    title: 'Homepage.features.groupsSync.title',
-    description: 'Homepage.features.groupsSync.description',
-  },
-  expenses: {
-    title: 'Homepage.features.expenses.title',
-    description: 'Homepage.features.expenses.description',
-  },
-  splitting: {
-    title: 'Homepage.features.splitting.title',
-    description: 'Homepage.features.splitting.description',
-  },
-  settlement: {
-    title: 'Homepage.features.settlement.title',
-    description: 'Homepage.features.settlement.description',
-  },
-  organization: {
-    title: 'Homepage.features.organization.title',
-    description: 'Homepage.features.organization.description',
-  },
-} as const satisfies Record<
-  (typeof signedOutFeatures)[number]['key'],
-  { title: string; description: string }
->
+const LANDING_GREETING_MS = 3_000
 
 export default function HomePage() {
   const { data: account, isPending } = useCurrentAccount()
@@ -96,9 +49,51 @@ export default function HomePage() {
 
 function LandingIntro() {
   const { t } = useTranslation()
+  const mascot = useMascotController()
+  const mascotState = useMascotState()
+  const reducedMotion = useReducedMotion()
+  const [speechOpen, setSpeechOpen] = useState(false)
+
+  useEffect(() => {
+    if (!speechOpen) return
+    const timer = window.setTimeout(
+      () => setSpeechOpen(false),
+      LANDING_GREETING_MS,
+    )
+    return () => window.clearTimeout(timer)
+  }, [speechOpen])
 
   return (
-    <section className="mx-auto flex max-w-2xl flex-col gap-6 text-center lg:mx-0 lg:text-start">
+    <section className="mx-auto flex max-w-2xl flex-col items-center gap-6 text-center lg:mx-0 lg:max-w-none lg:flex-row lg:items-center lg:gap-8 lg:text-start">
+      <div className="flex flex-col items-center">
+        <button
+          type="button"
+          data-testid="landing-bill"
+          aria-label={t('Mascot.greetBill')}
+          className="group relative shrink-0 rounded-[2rem] outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          onClick={() => {
+            mascot.react('success', 900)
+            setSpeechOpen(true)
+          }}
+        >
+          <BillCharacter
+            className="relative h-[168px] w-[154px] drop-shadow-[0_14px_14px_hsl(var(--foreground)/0.22)] transition-transform duration-300 ease-out group-hover:-translate-y-1 group-hover:scale-[1.035] group-active:translate-y-0 group-active:scale-95 sm:h-[196px] sm:w-[180px]"
+            reaction={mascotState?.reaction}
+            reactionKey={mascotState?.reactionKey}
+          />
+        </button>
+        {speechOpen && (
+          <div
+            data-testid="landing-bill-speech"
+            className={cn(
+              'mt-2 max-w-[13.5rem] rounded-2xl border border-border/70 bg-background/95 px-3 py-2 text-start text-xs leading-snug text-foreground shadow-lg backdrop-blur-md',
+              !reducedMotion && 'animate-in fade-in-0 zoom-in-95',
+            )}
+          >
+            <output className="block">{t('Mascot.landingGreeting')}</output>
+          </div>
+        )}
+      </div>
       <div className="flex flex-col gap-4">
         <h1 className="landing-header py-2 text-3xl leading-none! font-bold sm:text-4xl lg:text-5xl">
           <Trans i18nKey="Homepage.title" components={{ strong: <strong /> }} />
@@ -110,38 +105,6 @@ function LandingIntro() {
           />
         </p>
       </div>
-      <div className="motion-stagger grid gap-2 text-start sm:grid-cols-2">
-        {signedOutFeatures.map((feature) => (
-          <FeatureItem
-            key={feature.key}
-            icon={feature.icon}
-            title={t(featureI18nKeys[feature.key].title)}
-            description={t(featureI18nKeys[feature.key].description)}
-          />
-        ))}
-      </div>
     </section>
-  )
-}
-
-function FeatureItem({
-  icon: Icon,
-  title,
-  description,
-}: {
-  icon: typeof Image
-  title: string
-  description: string
-}) {
-  return (
-    <div className="grid grid-cols-[auto_1fr] gap-3 rounded-lg bg-muted/35 px-3 py-3">
-      <Icon className="mt-0.5 h-4 w-4 text-primary" />
-      <div className="min-w-0">
-        <h2 className="text-sm leading-5 font-medium">{title}</h2>
-        <p className="mt-0.5 text-xs leading-5 text-muted-foreground">
-          {description}
-        </p>
-      </div>
-    </div>
   )
 }

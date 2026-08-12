@@ -10,6 +10,7 @@ import {
 } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { useMascotController } from '@/components/mascot/mascot-context'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Card, CardContent } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
@@ -81,6 +82,7 @@ export function ImportGroupWizard() {
   const navigate = useNavigate()
   const { data: account, isPending: isAccountPending } = useCurrentAccount()
   const { toast } = useToast()
+  const mascot = useMascotController()
   const utils = trpc.useUtils()
   const prefillSourceUrl = search.prefill ?? null
   const { t } = useTranslation()
@@ -165,6 +167,7 @@ export function ImportGroupWizard() {
 
   const importMutation = trpc.groups.import.useMutation({
     onSuccess: async (data) => {
+      mascot.react('success')
       await Promise.all([
         invalidateAccountGroupLists(utils),
         utils.invitations.listForAccount.invalidate(),
@@ -183,6 +186,7 @@ export function ImportGroupWizard() {
       })
     },
     onError: (err) => {
+      mascot.react('failure')
       if (isDocumentImportFailure(err.message)) {
         dispatch({
           type: 'DOCUMENTS_FAILED',
@@ -194,6 +198,7 @@ export function ImportGroupWizard() {
 
   const cloudImportMutation = trpc.groups.importCloudBundle.useMutation({
     onSuccess: async (data) => {
+      mascot.react('success')
       setAccountImportError(null)
       await Promise.all([
         invalidateAccountGroupLists(utils),
@@ -213,6 +218,7 @@ export function ImportGroupWizard() {
       })
     },
     onError: (err) => {
+      mascot.react('failure')
       if (isDocumentImportFailure(err.message)) {
         dispatch({
           type: 'DOCUMENTS_FAILED',
@@ -460,6 +466,7 @@ export function ImportGroupWizard() {
             timeZone: preferences.timeZone,
             locale: preferences.locale,
             theme: preferences.theme,
+            mascot: preferences.mascot ?? 'bill',
             notificationsEnabled: preferences.notificationsEnabled ?? true,
             aiFeaturesEnabled: preferences.aiFeaturesEnabled ?? true,
             aiCategoryExtractEnabled:

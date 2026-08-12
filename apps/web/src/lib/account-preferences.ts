@@ -3,12 +3,15 @@ import { locales } from '@/i18n/request'
 import { currencyList } from '@spliit/domain/currency'
 
 export type AccountTheme = 'light' | 'dark' | 'system'
+export type AccountMascot = 'off' | 'bill'
 
 export type AccountPreferences = {
   defaultCurrencyCode: string | null
   timeZone: string | null
   locale: Locale | null
   theme: AccountTheme | null
+  /** Missing legacy cache values resolve to bill when parsed. */
+  mascot?: AccountMascot
   /**
    * Account-level notifications master gate. Missing cached values default to
    * true.
@@ -36,6 +39,7 @@ const supportedCurrencyCodes = new Set(
   currencyList.map((currency) => currency.code),
 )
 const supportedThemes = new Set<AccountTheme>(['light', 'dark', 'system'])
+const supportedMascots = new Set<AccountMascot>(['off', 'bill'])
 
 function isTimeZone(value: unknown): value is string {
   if (typeof value !== 'string' || value.length === 0) return false
@@ -54,6 +58,7 @@ function parseAccountPreferences(value: unknown): AccountPreferences | null {
   const timeZone = candidate.timeZone
   const locale = candidate.locale
   const theme = candidate.theme
+  const mascot = candidate.mascot ?? 'bill'
   const notificationsEnabled = candidate.notificationsEnabled
   const aiFeaturesEnabled = candidate.aiFeaturesEnabled
   const aiCategoryExtractEnabled = candidate.aiCategoryExtractEnabled
@@ -76,6 +81,11 @@ function parseAccountPreferences(value: unknown): AccountPreferences | null {
   if (
     theme !== null &&
     (typeof theme !== 'string' || !supportedThemes.has(theme as AccountTheme))
+  )
+    return null
+  if (
+    typeof mascot !== 'string' ||
+    !supportedMascots.has(mascot as AccountMascot)
   )
     return null
   if (
@@ -116,6 +126,7 @@ function parseAccountPreferences(value: unknown): AccountPreferences | null {
     timeZone: timeZone as string | null,
     locale: locale as Locale | null,
     theme: theme as AccountTheme | null,
+    mascot: mascot as AccountMascot,
     // Master switches are default-on for accounts created before these fields
     // existed, including cached snapshots from older app versions.
     notificationsEnabled: notificationsEnabled !== false,

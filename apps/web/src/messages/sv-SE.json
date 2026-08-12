@@ -163,7 +163,14 @@
       "language": "Språk",
       "theme": "Tema",
       "chooseTheme": "Välj",
-      "saving": "Sparar…"
+      "saving": "Sparar…",
+      "mascot": "Maskot",
+      "mascotHelp": "Välj en följeslagare som erbjuder sammanhangsberoende genvägar och reagerar på dina utgiftsflöden.",
+      "chooseMascot": "Välj en maskot",
+      "mascotOptions": {
+        "off": "Av",
+        "bill": "Bill, kvittot"
+      }
     },
     "aiPreferences": {
       "title": "AI-funktioner",
@@ -2884,5 +2891,14 @@
       "today": "Idag",
       "tomorrow": "Imorgon"
     }
+  },
+  "Mascot": {
+    "openActions": "Öppna åtgärder med Bill",
+    "closeActions": "Stäng Bills åtgärder",
+    "greetBill": "Hälsa på Bill",
+    "settingsAction": "Maskotinställningar",
+    "noActionMessage": "Jag kan inte hjälpa till med något här just nu.",
+    "noActionSettings": "Maskotinställningar",
+    "landingGreeting": "Hej — jag hjälper dig att dela utgifter när du loggar in."
   }
 }

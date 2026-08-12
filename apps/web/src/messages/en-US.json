@@ -908,7 +908,14 @@
       "language": "Language",
       "theme": "Theme",
       "chooseTheme": "Choose",
-      "saving": "Saving preferences…"
+      "saving": "Saving preferences…",
+      "mascot": "Mascot",
+      "mascotHelp": "Choose a companion that offers contextual shortcuts and reacts to your expense flows.",
+      "chooseMascot": "Choose a mascot",
+      "mascotOptions": {
+        "off": "Off",
+        "bill": "Bill the receipt"
+      }
     },
     "aiPreferences": {
       "title": "AI features",
@@ -2960,5 +2967,14 @@
       "today": "Today",
       "tomorrow": "Tomorrow"
     }
+  },
+  "Mascot": {
+    "openActions": "Open actions with Bill",
+    "closeActions": "Close Bill's actions",
+    "greetBill": "Say hello to Bill",
+    "settingsAction": "Mascot settings",
+    "noActionMessage": "Nothing I can help with here right now.",
+    "noActionSettings": "Mascot settings",
+    "landingGreeting": "Hi — I help split expenses once you sign in."
   }
 }

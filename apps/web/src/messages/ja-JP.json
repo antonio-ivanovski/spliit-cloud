@@ -2109,7 +2109,14 @@
       "language": "言語",
       "theme": "テーマ",
       "chooseTheme": "選択",
-      "saving": "保存中…"
+      "saving": "保存中…",
+      "mascot": "マスコット",
+      "mascotHelp": "状況に合ったショートカットを表示し、経費の操作に反応する相棒を選べます。",
+      "chooseMascot": "マスコットを選択",
+      "mascotOptions": {
+        "off": "オフ",
+        "bill": "レシートのビル"
+      }
     },
     "aiPreferences": {
       "title": "AI機能",
@@ -2871,5 +2878,14 @@
       "today": "今日",
       "tomorrow": "明日"
     }
+  },
+  "Mascot": {
+    "openActions": "ビルとアクションを開く",
+    "closeActions": "ビルのアクションを閉じる",
+    "greetBill": "ビルにあいさつする",
+    "settingsAction": "マスコット設定",
+    "noActionMessage": "今はここでお手伝いできることがありません。",
+    "noActionSettings": "マスコット設定",
+    "landingGreeting": "こんにちは。サインインすると、経費の割り勘をお手伝いします。"
   }
 }

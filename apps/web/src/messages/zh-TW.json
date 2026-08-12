@@ -2109,7 +2109,14 @@
       "language": "語言",
       "theme": "主題",
       "chooseTheme": "選擇",
-      "saving": "儲存中…"
+      "saving": "儲存中…",
+      "mascot": "吉祥物",
+      "mascotHelp": "選擇一位夥伴，提供情境捷徑，並對費用流程做出反應。",
+      "chooseMascot": "選擇吉祥物",
+      "mascotOptions": {
+        "off": "關閉",
+        "bill": "收據角色 Bill"
+      }
     },
     "aiPreferences": {
       "title": "AI 功能",
@@ -2871,5 +2878,14 @@
       "today": "今天",
       "tomorrow": "明天"
     }
+  },
+  "Mascot": {
+    "openActions": "開啟 Bill 的操作",
+    "closeActions": "關閉 Bill 的操作",
+    "greetBill": "向 Bill 打招呼",
+    "settingsAction": "吉祥物設定",
+    "noActionMessage": "現在這裡沒什麼我能幫忙的。",
+    "noActionSettings": "吉祥物設定",
+    "landingGreeting": "你好——登入後我就能幫你分攤費用。"
   }
 }
