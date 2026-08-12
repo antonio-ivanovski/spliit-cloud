@@ -213,59 +213,7 @@ describe('Group CRUD via existing API', () => {
     await cleanupTestAccount(testEmail)
   }, 10000)
 
-  // ── Test 1: GroupInformation renders with context ────────────────
-
-  it('renders GroupInformation with the mocked group context', async () => {
-    contextMocks.mockUseCurrentGroup.mockReturnValue({
-      isLoading: false,
-      groupId: testGroup.id,
-      group: {
-        id: testGroup.id,
-        name: testGroup.name,
-        information: null,
-        archived: false,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        ledgerId: testGroup.ledger?.id ?? 'ledger-dummy',
-        currency: testGroup.currency,
-        currencyCode: testGroup.currencyCode,
-        ledger: testGroup.ledger ?? {
-          id: 'ledger-dummy',
-          currency: 'EUR',
-          currencyCode: 'EUR',
-          groupId: testGroup.id,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        participants: [],
-        members: [],
-        invitations: [],
-      },
-      currentLedgerParticipantId: 'lp-dummy',
-      currentMember: { id: 'cm-dummy', role: 'ADMIN', status: 'ACTIVE' },
-      currentInvitation: null,
-      linkInviteState: null,
-    })
-    contextMocks.mockUseIsPendingInvitee.mockReturnValue(false)
-
-    const GroupInformation = (
-      await import('@/app/groups/[groupId]/information/group-information')
-    ).default
-
-    render(<GroupInformation groupId={testGroup.id} />)
-
-    // The component renders a heading "Information" (i18n key).
-    expect(
-      screen.getByRole('heading', { name: /information/i }),
-    ).toBeInTheDocument()
-    // Edit button links to the group edit page.
-    expect(screen.getByRole('link')).toHaveAttribute(
-      'href',
-      `/groups/${testGroup.id}/edit`,
-    )
-  })
-
-  // ── Test 2: ExpenseCard renders title and amount ─────────────────
+  // ── Test 1: ExpenseCard renders title and amount ─────────────────
 
   it('renders expense title and formatted amount via ExpenseCard', async () => {
     const participantId = testGroup.participants[0]?.id
@@ -368,7 +316,7 @@ describe('Group CRUD via existing API', () => {
     expect(screen.getAllByText('€25.00').length).toBeGreaterThan(0)
   })
 
-  // ── Test 3: BalancesList renders from API data ───────────────────
+  // ── Test 2: BalancesList renders from API data ───────────────────
 
   it('renders BalancesList with participants from the API', async () => {
     // Fetch real balances from the API.

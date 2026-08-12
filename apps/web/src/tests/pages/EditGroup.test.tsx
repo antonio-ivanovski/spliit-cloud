@@ -128,6 +128,7 @@ function setFriendGroup() {
 describe('EditGroup', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mocks.mockUseIsPendingInvitee.mockReturnValue(false)
     setFriendGroup()
   })
 
@@ -256,12 +257,46 @@ describe('EditGroup', () => {
     })
     render(<EditGroup />)
 
+    expect(screen.getByTestId('group-form')).toBeInTheDocument()
+    expect(
+      screen.queryByRole('heading', { name: 'Group settings' }),
+    ).not.toBeInTheDocument()
     expect(
       screen.getByRole('button', { name: 'Print / save PDF' }),
     ).toBeInTheDocument()
     expect(
       screen.getByRole('link', { name: 'Download CSV' }),
     ).toBeInTheDocument()
+  })
+
+  it('keeps pending invitees on the locked settings explanation', () => {
+    mocks.mockUseIsPendingInvitee.mockReturnValue(true)
+    mocks.mockUseCurrentGroup.mockReturnValue({
+      isLoading: false,
+      groupId: 'group-1',
+      group: {
+        id: 'group-1',
+        name: 'Regular Group',
+        information: 'Checkout is at 11am',
+        archived: false,
+        currency: '$',
+        currencyCode: 'USD',
+        groupType: 'GROUP',
+        friendPairKey: null,
+        participants: [],
+      },
+      displayName: 'Regular Group',
+      currentLedgerParticipantId: null,
+      currentMember: null,
+      currentInvitation: { id: 'inv-1', role: 'MEMBER', type: 'EMAIL' },
+      linkInviteState: null,
+    })
+    render(<EditGroup />)
+
+    expect(
+      screen.getByRole('heading', { name: 'Group settings are locked' }),
+    ).toBeInTheDocument()
+    expect(screen.queryByTestId('group-form')).not.toBeInTheDocument()
   })
 
   // GroupTabs Members tab is tested in apps/web/src/tests/components/GroupTabs.test.tsx

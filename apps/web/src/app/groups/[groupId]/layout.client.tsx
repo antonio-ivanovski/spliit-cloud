@@ -103,17 +103,15 @@ export function GroupLayoutClient({
     if (!data?.group || focusedMobileRoute) return
     const titleKey = pathname.endsWith('/balances')
       ? 'Balances.title'
-      : pathname.endsWith('/information')
-        ? 'Information.title'
-        : pathname.endsWith('/stats')
-          ? 'Stats.title'
-          : pathname.endsWith('/activity')
-            ? 'Activity.title'
-            : pathname.includes('/budgets')
-              ? 'Budgets.title'
-              : pathname.endsWith('/members')
-                ? 'Members.title'
-                : 'Expenses.title'
+      : pathname.endsWith('/stats')
+        ? 'Stats.title'
+        : pathname.endsWith('/activity')
+          ? 'Activity.title'
+          : pathname.includes('/budgets')
+            ? 'Budgets.title'
+            : pathname.endsWith('/members')
+              ? 'Members.title'
+              : 'Expenses.title'
     const groupName = data.displayName ?? data.group.name
     document.title = `${groupName} · ${tTitles(titleKey)}`
   }, [data, focusedMobileRoute, pathname, tTitles])

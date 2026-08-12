@@ -63,6 +63,9 @@ describe('GroupTabs', () => {
   it('renders Members tab when groupType is GROUP', () => {
     render(<GroupTabs groupId="group-1" />)
     expect(screen.getByRole('tab', { name: /Members/i })).toBeInTheDocument()
+    expect(
+      screen.queryByRole('tab', { name: /Information/i }),
+    ).not.toBeInTheDocument()
   })
 
   it('hides Members tab when groupType is FRIEND', () => {

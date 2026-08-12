@@ -69,36 +69,6 @@ export const EditGroup = () => {
     )
   }
 
-  if (currentMember?.role === 'MEMBER') {
-    return (
-      <>
-        <Card className="mobile-surface mb-4">
-          <CardHeader>
-            <CardTitle>{t('readOnlyTitle')}</CardTitle>
-            <CardDescription>{t('readOnlyNote')}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button
-              variant="secondary"
-              render={<Link href={`/groups/${groupId}`} />}
-            >
-              {t('readOnlyBack')}
-            </Button>
-          </CardContent>
-        </Card>
-        <Card className="mobile-surface mb-4">
-          <CardHeader>
-            <CardTitle>{tExpenses('export')}</CardTitle>
-            <CardDescription>{tGroups('exportDescription')}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ExportOptionsCard groupId={groupId} />
-          </CardContent>
-        </Card>
-      </>
-    )
-  }
-
   const isFriendLedger = group?.groupType === 'FRIEND'
   const canArchive = currentMember?.role === 'ADMIN' && !isFriendLedger
   const canDelete = canArchive && !group?.archived && !isFriendLedger

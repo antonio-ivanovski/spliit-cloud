@@ -3,7 +3,6 @@ import {
   Activity,
   ArrowLeft,
   BarChart3,
-  Info,
   MoreHorizontal,
   MessageSquareText,
   ReceiptText,
@@ -93,11 +92,6 @@ export function MobileGroupNav({ groupId }: GroupNavProps) {
       href: `/groups/${groupId}/activity`,
       label: t('Activity.title'),
       icon: Activity,
-    },
-    {
-      href: `/groups/${groupId}/information`,
-      label: t('Information.title'),
-      icon: Info,
     },
     ...(group?.groupType === 'FRIEND'
       ? []

@@ -1,14 +1,24 @@
-import { createLazyFileRoute, getRouteApi } from '@tanstack/react-router'
-
-import GroupInformation from '@/app/groups/[groupId]/information/group-information'
+import {
+  createLazyFileRoute,
+  getRouteApi,
+  Navigate,
+} from '@tanstack/react-router'
 
 const groupRouteApi = getRouteApi('/groups/$groupId/information')
 
-function InformationRoute() {
+function InformationRedirect() {
   const { groupId } = groupRouteApi.useParams()
-  return <GroupInformation groupId={groupId} />
+  const search = groupRouteApi.useSearch()
+  return (
+    <Navigate
+      to="/groups/$groupId/edit"
+      params={{ groupId }}
+      search={search}
+      replace
+    />
+  )
 }
 
 export const Route = createLazyFileRoute('/groups/$groupId/information')({
-  component: InformationRoute,
+  component: InformationRedirect,
 })

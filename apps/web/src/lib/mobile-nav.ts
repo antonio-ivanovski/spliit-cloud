@@ -25,7 +25,7 @@ export function isFocusedMobilePath(pathname: string) {
 }
 
 export function isMobileGroupNavPath(pathname: string) {
-  return /^\/groups\/[^/]+\/(expenses|balances|budgets|activity|stats|information|members|edit)\/?$/.test(
+  return /^\/groups\/[^/]+\/(expenses|balances|budgets|activity|stats|members|edit)\/?$/.test(
     pathname,
   )
 }

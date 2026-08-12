@@ -51,7 +51,7 @@ const dynamicRoutes: ReadonlyArray<[RegExp, string]> = [
     '/groups/:groupId/budgets/:budgetId',
   ],
   [
-    /^\/groups\/[^/]+\/(expenses|balances|budgets|activity|stats|information|members|edit)\/?$/,
+    /^\/groups\/[^/]+\/(expenses|balances|budgets|activity|stats|members|edit)\/?$/,
     '/groups/:groupId/:section',
   ],
   [/^\/groups\/[^/]+\/?$/, '/groups/:groupId'],
