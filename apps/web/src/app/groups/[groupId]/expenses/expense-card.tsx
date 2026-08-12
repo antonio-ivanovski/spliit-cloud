@@ -7,6 +7,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { ActiveUserBalance } from '@/app/groups/[groupId]/expenses/active-user-balance'
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
 import { DocumentsCount } from '@/app/groups/[groupId]/expenses/documents-count'
+import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import Link from '@/components/link'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -168,6 +169,16 @@ export function ExpenseCard({
   const { t: tForm } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const navigate = useNavigate()
   const locale = useLocale()
+  const accountPreferences = useSyncedAccountPreferences()
+  const closed = formatExpenseClosed(
+    expense as never,
+    locale,
+    accountPreferences?.timeZone ?? undefined,
+    tForm('dateTimePicker.yourTime' as never),
+  )
+  const whenLabel = [closed.shortDate, closed.time, closed.tzHint]
+    .filter(Boolean)
+    .join(' · ')
   const originalCurrency =
     expense.originalCurrency && expense.originalCurrency !== currency.code
       ? getCurrency(expense.originalCurrency)
@@ -211,7 +222,7 @@ export function ExpenseCard({
         category={expense.category}
         className="me-2 mt-0.5 h-4 w-4 text-muted-foreground"
       />
-      <div className="flex-1">
+      <div className="min-w-0 flex-1">
         {groupLabel && (
           <div className="mb-1 text-[0.68rem] font-medium tracking-wide text-muted-foreground uppercase">
             {groupLabel}
@@ -219,21 +230,33 @@ export function ExpenseCard({
         )}
         <div
           className={cn(
-            'mb-1 flex items-center gap-2',
+            'mb-1 flex min-w-0 items-center gap-2',
             expense.isReimbursement && 'italic',
           )}
           data-testid="expense-title"
         >
-          <span>{expense.title}</span>
+          <span className="min-w-0 break-words">{expense.title}</span>
           {expense.isReimbursement && (
-            <Badge variant="secondary" className="text-xs">
+            <Badge variant="secondary" className="shrink-0 text-xs">
               {t('settlementBadge')}
             </Badge>
           )}
           {seriesId && (
-            <RecurringBadge className="text-[0.68rem]" status={seriesStatus} />
+            <RecurringBadge
+              className="shrink-0 text-[0.68rem]"
+              status={seriesStatus}
+            />
           )}
         </div>
+        {whenLabel ? (
+          <div
+            className="mb-1 text-xs text-muted-foreground"
+            data-testid="expense-date"
+            title={closed.tooltip}
+          >
+            {whenLabel}
+          </div>
+        ) : null}
         <div className="text-xs text-muted-foreground">
           <Participants expense={expense} participantCount={participantCount} />
         </div>
@@ -246,7 +269,7 @@ export function ExpenseCard({
           <ActiveUserBalance {...{ groupId, currency, expense }} />
         </div>
       </div>
-      <div className="flex flex-col items-end justify-between">
+      <div className="flex shrink-0 flex-col items-end">
         <div
           className={cn(
             'whitespace-nowrap tabular-nums',
@@ -279,23 +302,6 @@ export function ExpenseCard({
         <div className="text-xs text-muted-foreground">
           <DocumentsCount count={expense.documentCount} />
         </div>
-        {(() => {
-          const d = formatExpenseClosed(
-            expense as never,
-            locale,
-            undefined,
-            tForm('dateTimePicker.yourTime' as never),
-          )
-          return (
-            <div
-              className="text-xs text-muted-foreground"
-              data-testid="expense-date"
-              title={d.tooltip}
-            >
-              {d.text}
-            </div>
-          )
-        })()}
       </div>
       {onOpen ? (
         <Button

@@ -32,10 +32,15 @@ vi.mock('@/lib/hooks', () => ({
   useActiveUser: vi.fn(),
 }))
 
+vi.mock('@/components/account-preferences-sync', () => ({
+  useSyncedAccountPreferences: vi.fn().mockReturnValue({ timeZone: 'UTC' }),
+}))
+
 // ── SUT ─────────────────────────────────────────────────────────────────
 
 import { useIsPendingInvitee } from '@/app/groups/[groupId]/current-group-context'
 import { ExpenseCard } from '@/app/groups/[groupId]/expenses/expense-card'
+import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import { useActiveUser } from '@/lib/hooks'
 
 // ── Helpers ──────────────────────────────────────────────────────────────
@@ -82,9 +87,12 @@ function makeExpense(overrides: Record<string, unknown> = {}): GroupExpense {
 describe('ExpenseCard', () => {
   afterEach(() => {
     vi.clearAllMocks()
+    vi.useRealTimers()
   })
 
   it('renders expense title, amount, date', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-08-12T12:00:00.000Z'))
     vi.mocked(useIsPendingInvitee).mockReturnValue(false)
     vi.mocked(useActiveUser).mockReturnValue(null)
 
@@ -102,8 +110,42 @@ describe('ExpenseCard', () => {
     expect(screen.getByTestId('expense-title')).toHaveTextContent('Dinner')
     // amount is 3000 cents = €30.00
     expect(screen.getByTestId('expense-amount')).toHaveTextContent('€30.00')
-    // expenseDate is 2025-06-15 → formatted medium date
-    expect(screen.getByTestId('expense-date')).toBeInTheDocument()
+    const date = screen.getByTestId('expense-date')
+    expect(date).toHaveTextContent('Jun 15, 2025 · 00:00')
+    expect(date).not.toHaveTextContent('GMT')
+    expect(
+      screen.getByTestId('expense-amount').parentElement,
+    ).not.toContainElement(date)
+  })
+
+  it('shows a city-only timezone hint under the title for a foreign zone', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-08-12T12:00:00.000Z'))
+    vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+    vi.mocked(useActiveUser).mockReturnValue(null)
+    vi.mocked(useSyncedAccountPreferences).mockReturnValue({
+      timeZone: 'UTC',
+    } as never)
+
+    render(
+      <ExpenseCard
+        expense={makeExpense({
+          expenseDate: new Date('2026-08-12T19:30:00.000Z'),
+          expenseTimeZone: 'America/Los_Angeles',
+        })}
+        currency={EUR}
+        groupId="group-1"
+        participantCount={2}
+      />,
+    )
+
+    const date = screen.getByTestId('expense-date')
+    expect(date).toHaveTextContent('Aug 12 · 12:30 · Los Angeles')
+    expect(date).not.toHaveTextContent('GMT')
+    expect(date).toHaveAttribute(
+      'title',
+      expect.stringContaining('Los Angeles · GMT-07:00'),
+    )
   })
 
   it('shows converted amount first and original amount second for cross-currency expenses', () => {
