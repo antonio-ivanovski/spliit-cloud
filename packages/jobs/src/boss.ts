@@ -8,6 +8,8 @@ import { fromPrisma, PgBoss } from 'pg-boss'
 
 import { env } from './env'
 import {
+  ANONYMOUS_ACCOUNT_CLEANUP_DLQ,
+  ANONYMOUS_ACCOUNT_CLEANUP_QUEUE,
   jobPayloadSchema,
   NOTIFICATION_CLEANUP_DLQ,
   NOTIFICATION_CLEANUP_QUEUE,
@@ -64,6 +66,12 @@ export const JOB_SEND_OPTIONS = {
     retentionSeconds: env.JOBS_RETENTION_SECONDS,
     deadLetter: NOTIFICATION_CLEANUP_DLQ,
   },
+  [ANONYMOUS_ACCOUNT_CLEANUP_QUEUE]: {
+    retryLimit: 0,
+    expireInSeconds: NOTIFICATION_MAINTENANCE_EXPIRE_SECONDS,
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+    deadLetter: ANONYMOUS_ACCOUNT_CLEANUP_DLQ,
+  },
   [BUDGET_EVALUATE_QUEUE]: {
     retryLimit: 0,
     expireInSeconds: NOTIFICATION_MAINTENANCE_EXPIRE_SECONDS,
@@ -94,6 +102,10 @@ export const JOB_QUEUE_OPTIONS = {
   },
   [NOTIFICATION_CLEANUP_QUEUE]: {
     ...JOB_SEND_OPTIONS[NOTIFICATION_CLEANUP_QUEUE],
+    notify: true,
+  },
+  [ANONYMOUS_ACCOUNT_CLEANUP_QUEUE]: {
+    ...JOB_SEND_OPTIONS[ANONYMOUS_ACCOUNT_CLEANUP_QUEUE],
     notify: true,
   },
   [BUDGET_EVALUATE_QUEUE]: {
@@ -130,6 +142,10 @@ export const JOB_WORK_OPTIONS = {
     pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
   },
   [NOTIFICATION_CLEANUP_QUEUE]: {
+    localConcurrency: 1,
+    pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
+  },
+  [ANONYMOUS_ACCOUNT_CLEANUP_QUEUE]: {
     localConcurrency: 1,
     pollingIntervalSeconds: env.JOBS_MAINTENANCE_POLLING_INTERVAL_SECONDS,
   },
@@ -251,6 +267,9 @@ export async function ensureQueues(boss: SpliitBoss): Promise<void> {
   await createOrConvergeQueue(boss, NOTIFICATION_CLEANUP_DLQ, {
     retentionSeconds: env.JOBS_RETENTION_SECONDS,
   })
+  await createOrConvergeQueue(boss, ANONYMOUS_ACCOUNT_CLEANUP_DLQ, {
+    retentionSeconds: env.JOBS_RETENTION_SECONDS,
+  })
   await createOrConvergeQueue(boss, BUDGET_EVALUATE_DLQ, {
     retentionSeconds: env.JOBS_RETENTION_SECONDS,
   })
@@ -283,6 +302,11 @@ export async function ensureQueues(boss: SpliitBoss): Promise<void> {
     boss,
     NOTIFICATION_CLEANUP_QUEUE,
     JOB_QUEUE_OPTIONS[NOTIFICATION_CLEANUP_QUEUE],
+  )
+  await createOrConvergeQueue(
+    boss,
+    ANONYMOUS_ACCOUNT_CLEANUP_QUEUE,
+    JOB_QUEUE_OPTIONS[ANONYMOUS_ACCOUNT_CLEANUP_QUEUE],
   )
 }
 

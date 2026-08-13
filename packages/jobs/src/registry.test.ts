@@ -2,6 +2,8 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { sendJob, type SpliitBoss } from './boss'
 import {
+  ANONYMOUS_ACCOUNT_CLEANUP_DLQ,
+  ANONYMOUS_ACCOUNT_CLEANUP_QUEUE,
   DEAD_LETTER_QUEUE_BY_SOURCE,
   deadLetterQueueFor,
   JOB_NAMES,
@@ -44,10 +46,14 @@ describe('notification job registry', () => {
     expect(JOB_NAMES.NOTIFICATION_DELIVER).toBe('notification.deliver')
     expect(JOB_NAMES.NOTIFICATION_RECONCILE).toBe('notification.reconcile')
     expect(JOB_NAMES.NOTIFICATION_CLEANUP).toBe('notification.cleanup')
+    expect(JOB_NAMES.ANONYMOUS_ACCOUNT_CLEANUP).toBe(
+      'anonymous-account.cleanup',
+    )
 
     expect(jobPayloadSchema('notification.deliver').shape).toBeDefined()
     expect(jobPayloadSchema('notification.reconcile').shape).toBeDefined()
     expect(jobPayloadSchema('notification.cleanup').shape).toBeDefined()
+    expect(jobPayloadSchema('anonymous-account.cleanup').shape).toBeDefined()
   })
 
   it('exposes dedicated dead-letter queue constants for every notification source', () => {
@@ -56,6 +62,9 @@ describe('notification job registry', () => {
       'notification.reconcile.dead-letter',
     )
     expect(NOTIFICATION_CLEANUP_DLQ).toBe('notification.cleanup.dead-letter')
+    expect(ANONYMOUS_ACCOUNT_CLEANUP_DLQ).toBe(
+      'anonymous-account.cleanup.dead-letter',
+    )
   })
 
   it('maps every source queue to its dead-letter queue', () => {
@@ -67,6 +76,9 @@ describe('notification job registry', () => {
     )
     expect(DEAD_LETTER_QUEUE_BY_SOURCE[NOTIFICATION_CLEANUP_QUEUE]).toBe(
       NOTIFICATION_CLEANUP_DLQ,
+    )
+    expect(DEAD_LETTER_QUEUE_BY_SOURCE[ANONYMOUS_ACCOUNT_CLEANUP_QUEUE]).toBe(
+      ANONYMOUS_ACCOUNT_CLEANUP_DLQ,
     )
     expect(DEAD_LETTER_QUEUE_BY_SOURCE[RECURRING_MATERIALIZATION_QUEUE]).toBe(
       RECURRING_MATERIALIZATION_DLQ,
@@ -86,6 +98,9 @@ describe('notification job registry', () => {
     expect(deadLetterQueueFor(NOTIFICATION_CLEANUP_QUEUE)).toBe(
       NOTIFICATION_CLEANUP_DLQ,
     )
+    expect(deadLetterQueueFor(ANONYMOUS_ACCOUNT_CLEANUP_QUEUE)).toBe(
+      ANONYMOUS_ACCOUNT_CLEANUP_DLQ,
+    )
     expect(deadLetterQueueFor('unknown.queue')).toBeNull()
 
     expect(sourceQueueForDeadLetter(NOTIFICATION_DELIVER_DLQ)).toBe(
@@ -96,6 +111,9 @@ describe('notification job registry', () => {
     )
     expect(sourceQueueForDeadLetter(NOTIFICATION_CLEANUP_DLQ)).toBe(
       NOTIFICATION_CLEANUP_QUEUE,
+    )
+    expect(sourceQueueForDeadLetter(ANONYMOUS_ACCOUNT_CLEANUP_DLQ)).toBe(
+      ANONYMOUS_ACCOUNT_CLEANUP_QUEUE,
     )
     expect(sourceQueueForDeadLetter('unknown.dead-letter')).toBeNull()
   })

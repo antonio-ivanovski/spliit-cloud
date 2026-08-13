@@ -59,6 +59,12 @@ async function main() {
     { retryLimit: 0, key: 'notification-cleanup' },
   )
   await boss.schedule(
+    JOB_NAMES.ANONYMOUS_ACCOUNT_CLEANUP,
+    '30 3 * * *',
+    {},
+    { retryLimit: 0, key: 'anonymous-account-cleanup' },
+  )
+  await boss.schedule(
     JOB_NAMES.EVALUATE_BUDGETS,
     '15 0 * * *',
     {},

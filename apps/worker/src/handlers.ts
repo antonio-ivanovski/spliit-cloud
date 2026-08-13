@@ -2,6 +2,7 @@ import {
   materializeRecurringExpense,
   reconcileDueRecurringExpenses,
 } from '@spliit/api/lib/api/recurrence-series'
+import { runAnonymousAccountCleanup } from '@spliit/api/lib/auth/anonymous-account-cleanup'
 import { evaluateBudgets } from '@spliit/api/lib/budgets/evaluate'
 import { runNotificationCleanup } from '@spliit/api/lib/notifications/delivery-cleanup'
 import { reconcileMissingDeliveryJobs } from '@spliit/api/lib/notifications/delivery-reconciliation'
@@ -43,6 +44,15 @@ export const handlers: JobHandlers = {
         component: 'notification-cleanup',
         sentDeleted: result.sentDeleted,
         failedDeleted: result.failedDeleted,
+      }),
+    )
+  },
+  [JOB_NAMES.ANONYMOUS_ACCOUNT_CLEANUP]: async (_payload, _context) => {
+    const result = await runAnonymousAccountCleanup()
+    console.log(
+      JSON.stringify({
+        component: 'anonymous-account-cleanup',
+        deleted: result.deleted,
       }),
     )
   },

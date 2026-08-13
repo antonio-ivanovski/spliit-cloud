@@ -4,10 +4,17 @@ const recurrenceMocks = vi.hoisted(() => ({
   materialize: vi.fn(),
   reconcile: vi.fn(),
 }))
+const cleanupMocks = vi.hoisted(() => ({
+  anonymousAccounts: vi.fn(),
+}))
 
 vi.mock('@spliit/api/lib/api/recurrence-series', () => ({
   materializeRecurringExpense: recurrenceMocks.materialize,
   reconcileDueRecurringExpenses: recurrenceMocks.reconcile,
+}))
+
+vi.mock('@spliit/api/lib/auth/anonymous-account-cleanup', () => ({
+  runAnonymousAccountCleanup: cleanupMocks.anonymousAccounts,
 }))
 
 import { JOB_NAMES } from '@spliit/jobs'
@@ -37,5 +44,32 @@ describe('recurring materialization worker handler', () => {
     })
 
     expect(recurrenceMocks.materialize).toHaveBeenCalledWith(payload, boss)
+  })
+})
+
+describe('anonymous account cleanup worker handler', () => {
+  it('delegates to the cleanup and reports the deleted count', async () => {
+    cleanupMocks.anonymousAccounts.mockResolvedValueOnce({ deleted: 3 })
+    const log = vi.spyOn(console, 'log').mockImplementation(() => undefined)
+
+    await handlers[JOB_NAMES.ANONYMOUS_ACCOUNT_CLEANUP]!(
+      {},
+      {
+        boss: {} as never,
+        name: JOB_NAMES.ANONYMOUS_ACCOUNT_CLEANUP,
+        jobId: 'job-cleanup',
+        signal: new AbortController().signal,
+        retryCount: 0,
+        retryLimit: 0,
+      },
+    )
+
+    expect(cleanupMocks.anonymousAccounts).toHaveBeenCalledOnce()
+    expect(log).toHaveBeenCalledWith(
+      JSON.stringify({
+        component: 'anonymous-account-cleanup',
+        deleted: 3,
+      }),
+    )
   })
 })
