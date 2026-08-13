@@ -146,7 +146,7 @@ describe('period bounds', () => {
 })
 
 describe('calculateExpenseContribution exclusions', () => {
-  it('ignores reimbursements and non-positive amounts', () => {
+  it('ignores reimbursements and zero amounts', () => {
     expect(
       calculateExpenseContribution(
         rule,
@@ -157,9 +157,68 @@ describe('calculateExpenseContribution exclusions', () => {
     expect(
       calculateExpenseContribution(rule, expense({ amount: 0 }), julBounds),
     ).toBe(0)
+  })
+
+  it('counts negative matching amounts toward usage', () => {
+    const allParticipants: BudgetRule = { ...rule, participantScope: 'ALL' }
     expect(
-      calculateExpenseContribution(rule, expense({ amount: -500 }), julBounds),
+      calculateExpenseContribution(
+        allParticipants,
+        expense({ amount: -500, categoryId: 'groceries' }),
+        julBounds,
+      ),
+    ).toBe(-500)
+  })
+
+  it('nets a groceries refund against groceries spend', () => {
+    const groceries: BudgetRule = {
+      ...rule,
+      participantScope: 'ALL',
+      categoryScope: 'SELECTED',
+      categoryNodeIds: ['groceries'],
+    }
+    expect(
+      calculateBudgetUsage(
+        groceries,
+        [
+          expense({ amount: 5000, categoryId: 'groceries' }),
+          expense({ id: 'e2', amount: -500, categoryId: 'groceries' }),
+        ],
+        julBounds,
+        { categoryMatches: taxonomyMatches },
+      ),
+    ).toBe(4500)
+  })
+
+  it('ignores Income-categorized amounts on a groceries budget', () => {
+    const groceries: BudgetRule = {
+      ...rule,
+      participantScope: 'ALL',
+      categoryScope: 'SELECTED',
+      categoryNodeIds: ['groceries'],
+    }
+    expect(
+      calculateExpenseContribution(
+        groceries,
+        expense({ amount: -2000, categoryId: 'income' }),
+        julBounds,
+        { categoryMatches: taxonomyMatches },
+      ),
     ).toBe(0)
+  })
+
+  it('nets income on an all-categories budget', () => {
+    const allCategories: BudgetRule = { ...rule, participantScope: 'ALL' }
+    expect(
+      calculateBudgetUsage(
+        allCategories,
+        [
+          expense({ amount: 5000, categoryId: 'groceries' }),
+          expense({ id: 'e2', amount: -2000, categoryId: 'income' }),
+        ],
+        julBounds,
+      ),
+    ).toBe(3000)
   })
 
   it('ignores expenses outside the period bounds', () => {

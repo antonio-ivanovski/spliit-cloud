@@ -40,6 +40,7 @@ import {
   Train,
   Trash,
   Utensils,
+  Wallet,
   Wine,
   Wrench,
 } from 'lucide-react'
@@ -66,6 +67,8 @@ function getCategoryIcon(category: string): LucideIcon {
       return Banknote
     case 'Uncategorized/Payment':
       return Banknote
+    case 'Income/Income':
+      return Wallet
     case 'Entertainment/Entertainment':
       return FerrisWheel
     case 'Entertainment/Games':

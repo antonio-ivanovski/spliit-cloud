@@ -599,6 +599,9 @@
       "Trash": "Sophämtning",
       "TV/Phone/Internet": "TV/Telefon/Internet",
       "Water": "Vatten"
+    },
+    "Income": {
+      "heading": "Inkomst"
     }
   },
   "Common": {

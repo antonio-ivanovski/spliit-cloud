@@ -185,19 +185,35 @@ function rangeFor(
   }
 }
 
+function bucketHasActivity(bucket: Bucket | undefined): boolean {
+  return (bucket?.categories.length ?? 0) > 0
+}
+
+function signedPercentage(
+  amount: number,
+  grossPositive: number,
+  absFallback: number,
+): number {
+  if (grossPositive !== 0) return amount / grossPositive
+  if (absFallback === 0) return 0
+  return amount / absFallback
+}
+
 function collapseInactiveBuckets(buckets: Bucket[]): Array<Bucket | Gap> {
   const timeline: Array<Bucket | Gap> = []
 
   for (let index = 0; index < buckets.length;) {
     const bucket = buckets[index]
-    if (bucket.total !== 0) {
+    if (bucketHasActivity(bucket)) {
       timeline.push(bucket)
       index += 1
       continue
     }
 
     const emptyStart = index
-    while (index < buckets.length && buckets[index].total === 0) index += 1
+    while (index < buckets.length && !bucketHasActivity(buckets[index])) {
+      index += 1
+    }
     const emptyCount = index - emptyStart
     if (emptyCount === 1) {
       timeline.push(bucket)
@@ -219,9 +235,7 @@ export function buildGroupStatsDashboard(
   period: StatsPeriod,
   customRange?: StatsCustomRange,
 ) {
-  const expenses = rows.filter(
-    (expense) => !expense.isReimbursement && expense.amount > 0,
-  )
+  const expenses = rows.filter((expense) => !expense.isReimbursement)
   const lifetimeTotal = expenses.reduce(
     (total, expense) => total + expense.amount,
     0,
@@ -296,9 +310,7 @@ export function buildGroupStatsDashboard(
       })
   }
 
-  const nonEmptyBuckets = Array.from(buckets.values()).filter(
-    (bucket) => bucket.total > 0,
-  )
+  const nonEmptyBuckets = Array.from(buckets.values()).filter(bucketHasActivity)
   const firstBucket = nonEmptyBuckets[0]?.start
   const lastBucket = nonEmptyBuckets.at(-1)?.start
   const visibleBuckets = Array.from(buckets.values()).filter((bucket) =>
@@ -310,7 +322,31 @@ export function buildGroupStatsDashboard(
     (total, expense) => total + expense.amount,
     0,
   )
+  const grossPositive = selectedExpenses.reduce(
+    (total, expense) => total + (expense.amount > 0 ? expense.amount : 0),
+    0,
+  )
   const balances = getBalances(selectedExpenses)
+  const categories = Array.from(categoryTotals, ([categoryId, amount]) => ({
+    categoryId,
+    amount,
+  }))
+  const categoryAbsTotal = categories.reduce(
+    (total, category) => total + Math.abs(category.amount),
+    0,
+  )
+  const participants = Object.entries(balances)
+    .map(([participantId, balance]) => ({
+      participantId,
+      name: participantNames.get(participantId) ?? '',
+      account: participantAccounts.get(participantId) ?? null,
+      amount: balance.paidFor,
+    }))
+    .filter((participant) => participant.amount !== 0)
+  const participantAbsTotal = participants.reduce(
+    (total, participant) => total + Math.abs(participant.amount),
+    0,
+  )
 
   return {
     lifetimeTotal,
@@ -322,20 +358,25 @@ export function buildGroupStatsDashboard(
       expenseCount: selectedExpenses.length,
     },
     timeline: collapseInactiveBuckets(visibleBuckets),
-    categories: Array.from(categoryTotals, ([categoryId, amount]) => ({
-      categoryId,
-      amount,
-      percentage: selectedTotal === 0 ? 0 : amount / selectedTotal,
-    })).sort((a, b) => b.amount - a.amount),
-    participants: Object.entries(balances)
-      .map(([participantId, balance]) => ({
-        participantId,
-        name: participantNames.get(participantId) ?? '',
-        account: participantAccounts.get(participantId) ?? null,
-        amount: balance.paidFor,
-        percentage: selectedTotal === 0 ? 0 : balance.paidFor / selectedTotal,
+    categories: categories
+      .map((category) => ({
+        ...category,
+        percentage: signedPercentage(
+          category.amount,
+          grossPositive,
+          categoryAbsTotal,
+        ),
       }))
-      .filter((participant) => participant.amount > 0)
+      .sort((a, b) => b.amount - a.amount),
+    participants: participants
+      .map((participant) => ({
+        ...participant,
+        percentage: signedPercentage(
+          participant.amount,
+          grossPositive,
+          participantAbsTotal,
+        ),
+      }))
       .sort((a, b) => b.amount - a.amount),
   }
 }

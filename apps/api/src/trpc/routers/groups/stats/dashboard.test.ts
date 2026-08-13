@@ -80,7 +80,7 @@ describe('buildGroupStatsDashboard', () => {
     ])
   })
 
-  it('excludes reimbursements and non-positive expenses from spending visuals', () => {
+  it('excludes reimbursements and nets non-positive expenses in spending visuals', () => {
     const reimbursement = expense('reimbursement', '2024-06-05', 900, 'payment')
     reimbursement.isReimbursement = true
     const refund = expense('refund', '2024-06-06', -200, 'groceries')
@@ -94,10 +94,80 @@ describe('buildGroupStatsDashboard', () => {
       'WEEK',
     )
 
-    expect(dashboard.lifetimeTotal).toBe(1500)
-    expect(dashboard.period?.expenseCount).toBe(1)
+    expect(dashboard.lifetimeTotal).toBe(1300)
+    expect(dashboard.period?.expenseCount).toBe(2)
+    expect(dashboard.period?.total).toBe(1300)
     expect(dashboard.categories).toEqual([
-      expect.objectContaining({ categoryId: 'groceries', amount: 1500 }),
+      expect.objectContaining({
+        categoryId: 'groceries',
+        amount: 1300,
+        percentage: 1300 / 1500,
+      }),
+    ])
+  })
+
+  it('keeps a refund-only period and percentages against gross positive spend', () => {
+    const dashboard = buildGroupStatsDashboard(
+      [
+        expense('groceries', '2024-06-07', 1500, 'groceries'),
+        expense('income', '2024-06-07', -200, 'income'),
+      ],
+      'WEEK',
+    )
+
+    expect(dashboard.lifetimeTotal).toBe(1300)
+    expect(dashboard.period?.expenseCount).toBe(2)
+    expect(dashboard.categories).toEqual([
+      expect.objectContaining({
+        categoryId: 'groceries',
+        amount: 1500,
+        percentage: 1,
+      }),
+      expect.objectContaining({
+        categoryId: 'income',
+        amount: -200,
+        percentage: -200 / 1500,
+      }),
+    ])
+  })
+
+  it('keeps a net-zero bucket when spend and refund offset', () => {
+    const dashboard = buildGroupStatsDashboard(
+      [
+        expense('spend', '2024-06-07', 1500, 'groceries'),
+        expense('refund', '2024-06-07', -1500, 'groceries'),
+      ],
+      'LATEST_ACTIVITY',
+    )
+
+    expect(dashboard.period?.total).toBe(0)
+    expect(dashboard.period?.expenseCount).toBe(2)
+    expect(dashboard.timeline).toEqual([
+      expect.objectContaining({
+        type: 'bucket',
+        total: 0,
+        categories: [
+          expect.objectContaining({ categoryId: 'groceries', amount: 0 }),
+        ],
+      }),
+    ])
+  })
+
+  it('reports a refund-only period instead of empty stats', () => {
+    const dashboard = buildGroupStatsDashboard(
+      [expense('refund', '2024-06-07', -200, 'groceries')],
+      'WEEK',
+    )
+
+    expect(dashboard.lifetimeTotal).toBe(-200)
+    expect(dashboard.period?.expenseCount).toBe(1)
+    expect(dashboard.period?.total).toBe(-200)
+    expect(dashboard.categories).toEqual([
+      expect.objectContaining({
+        categoryId: 'groceries',
+        amount: -200,
+        percentage: -1,
+      }),
     ])
   })
 
