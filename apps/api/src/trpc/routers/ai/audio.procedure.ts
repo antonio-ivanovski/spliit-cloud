@@ -6,7 +6,7 @@ import { prisma } from '@spliit/db'
 import { extractExpenseInformationFromAudio } from '../../../lib/audio-expense'
 import { env } from '../../../lib/env'
 import { resolveParticipantDisplayName } from '../../../lib/invitations/display'
-import { loadGroupContext, protectedProcedure } from '../../init'
+import { aiProcedure, loadGroupContext } from '../../init'
 import { extractExpenseInformationFromAudioOutputSchema } from '../../outputs/ai'
 
 const audioInputSchema = z.object({
@@ -19,7 +19,7 @@ const audioInputSchema = z.object({
   timezoneOffsetMinutes: z.number().int().min(-840).max(840).optional(),
 })
 
-export const extractExpenseInformationFromAudioProcedure = protectedProcedure
+export const extractExpenseInformationFromAudioProcedure = aiProcedure
   .input(audioInputSchema)
   .output(extractExpenseInformationFromAudioOutputSchema)
   .mutation(async ({ input, ctx }) => {

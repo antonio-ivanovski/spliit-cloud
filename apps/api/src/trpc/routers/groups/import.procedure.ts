@@ -16,7 +16,7 @@ import { enqueueBudgetEvaluation } from '../../../lib/budgets/enqueue'
 import { ConversionError } from '../../../lib/expense-conversion'
 import { sendInvitationEmail } from '../../../lib/invitations'
 import { deleteS3Object } from '../../../routes/upload'
-import { loadGroupContext, protectedProcedure } from '../../init'
+import { importProcedure, loadGroupContext } from '../../init'
 import { importGroupOutputSchema } from '../../outputs/imports'
 
 // `sourceName` is the imported participant's display label. It is required for
@@ -100,7 +100,7 @@ export const importExpenseSchema = z.preprocess((value) => {
   }
 }, expenseApiSchema)
 
-export const importGroupProcedure = protectedProcedure
+export const importGroupProcedure = importProcedure
   .input(
     z
       .object({
@@ -234,7 +234,10 @@ export const importGroupProcedure = protectedProcedure
       if (!replayed) {
         await Promise.all(
           (result.emailDispatches ?? []).map((email) =>
-            sendInvitationEmail(email),
+            sendInvitationEmail({
+              ...email,
+              senderAccountId: ctx.auth.user.id,
+            }),
           ),
         )
       }

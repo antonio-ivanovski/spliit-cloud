@@ -18,7 +18,7 @@ import {
   type BulkCategorizeCandidateRow,
 } from '../../../../lib/api/category-bulk'
 import { env } from '../../../../lib/env'
-import { loadGroupContext, protectedProcedure } from '../../../init'
+import { bulkAiProcedure, loadGroupContext } from '../../../init'
 import { calibrateBulkCategorizeOutputSchema } from '../../../outputs/ai'
 
 const calibrateInputSchema = z.object({
@@ -59,10 +59,16 @@ const calibrateInputSchema = z.object({
     ),
 })
 
-export const aiBulkCategorizeCalibrateProcedure = protectedProcedure
+export const aiBulkCategorizeCalibrateProcedure = bulkAiProcedure
   .input(calibrateInputSchema)
   .output(calibrateBulkCategorizeOutputSchema)
   .mutation(async ({ ctx, input }) => {
+    if (!env.PUBLIC_ENABLE_BULK_CATEGORIZE) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'Bulk categorization is disabled',
+      })
+    }
     const { member, group } = await loadGroupContext({
       groupId: input.groupId,
       accountId: ctx.auth.user.id,

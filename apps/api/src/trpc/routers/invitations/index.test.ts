@@ -321,6 +321,8 @@ describe('invitationsRouter.create', () => {
     } as never)
     prismaMock.groupInvitation.create.mockResolvedValue({
       id: 'inv-new',
+      email: 'bob@example.com',
+      temporaryName: null,
     } as never)
 
     const caller = makeCaller('acct-admin')
@@ -359,6 +361,8 @@ describe('invitationsRouter.create', () => {
     } as never)
     prismaMock.groupInvitation.create.mockResolvedValue({
       id: 'inv-member',
+      email: 'bob@example.com',
+      temporaryName: null,
     } as never)
 
     const caller = makeCaller('acct-member')

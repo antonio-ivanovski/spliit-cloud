@@ -25,6 +25,11 @@ import {
   renderPasswordRecoveryEmail,
   renderVerificationEmail,
 } from '../mail/templates'
+import {
+  FixedWindowLimiter,
+  hashRateLimitIdentity,
+  logRateLimitExceeded,
+} from '../rate-limit'
 import { invalidateAccountCache } from './account-cache'
 import {
   assertCanCreateAccount,
@@ -34,6 +39,19 @@ import {
 import { getApiBaseUrl } from './urls'
 
 const oidcProvider = getConfiguredOidcProvider()
+
+const authEmailRecipientLimiter = new FixedWindowLimiter({
+  limit: 10,
+  windowMs: 60 * 60 * 1000,
+})
+
+const authEmailPaths = new Map<string, 'email' | 'newEmail'>([
+  ['/sign-up/email', 'email'],
+  ['/sign-in/magic-link', 'email'],
+  ['/request-password-reset', 'email'],
+  ['/send-verification-email', 'email'],
+  ['/change-email', 'newEmail'],
+])
 
 const authMethodLabels: Record<string, string> = {
   credential: 'email and password',
@@ -82,6 +100,30 @@ const beforeAuthMiddleware = createAuthMiddleware(async (ctx) => {
         'Password must be at least 8 characters and include uppercase, lowercase, number, and symbol.',
       code: 'PASSWORD_POLICY_NOT_MET',
     })
+  }
+
+  const emailField = authEmailPaths.get(ctx.path)
+  const rawEmail = emailField ? ctx.body?.[emailField] : undefined
+  if (typeof rawEmail === 'string') {
+    const normalizedEmail = rawEmail.trim().toLowerCase()
+    const key = hashRateLimitIdentity(normalizedEmail)
+    const decision = authEmailRecipientLimiter.hit(key)
+    if (!decision.allowed) {
+      logRateLimitExceeded({
+        policy: 'auth-email-recipient',
+        identity: normalizedEmail,
+        retryAfterSeconds: decision.retryAfterSeconds,
+        path: ctx.path,
+      })
+      throw new APIError(
+        'TOO_MANY_REQUESTS',
+        {
+          message: 'Too many email requests. Please try again later.',
+          code: 'EMAIL_RATE_LIMIT_EXCEEDED',
+        },
+        { 'Retry-After': String(decision.retryAfterSeconds) },
+      )
+    }
   }
 
   await persistSignupInviteCookie(ctx)
@@ -620,6 +662,13 @@ export const auth = betterAuth({
       httpOnly: true,
       sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production',
+    },
+    ipAddress: {
+      // The public deployment is origin-locked behind Cloudflare. Prefer its
+      // single-value client header, with conventional proxy headers retained
+      // for supported self-hosted gateways. The Hono adapter strips all three
+      // before calling Better Auth when TRUST_PROXY is disabled.
+      ipAddressHeaders: ['cf-connecting-ip', 'x-real-ip', 'x-forwarded-for'],
     },
   },
 })

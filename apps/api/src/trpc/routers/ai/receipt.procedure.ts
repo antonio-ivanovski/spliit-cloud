@@ -1,13 +1,15 @@
+import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
 import { categoryIdSchema } from '@spliit/domain'
 
 import { getRecentExpenseContext } from '../../../lib/ai/context'
+import { env } from '../../../lib/env'
 import { extractExpenseInformationFromImage } from '../../../lib/receipt-actions'
-import { baseProcedure, loadGroupViewer } from '../../init'
+import { aiProcedure, loadGroupViewer } from '../../init'
 import { extractExpenseInformationOutputSchema } from '../../outputs/ai'
 
-export const extractExpenseInformationFromImageProcedure = baseProcedure
+export const extractExpenseInformationFromImageProcedure = aiProcedure
   .input(
     z.object({
       imageUrl: z.url(),
@@ -41,24 +43,19 @@ export const extractExpenseInformationFromImageProcedure = baseProcedure
   )
   .output(extractExpenseInformationOutputSchema)
   .mutation(async ({ input, ctx }) => {
-    let recentExpenses: Awaited<
-      ReturnType<typeof getRecentExpenseContext>
-    >['expenses'] = []
-    let groupContext:
-      | Awaited<ReturnType<typeof getRecentExpenseContext>>['group']
-      | undefined
-
-    if (ctx.auth) {
-      await loadGroupViewer({
-        groupId: input.groupId,
-        accountId: ctx.auth.user.id,
-        accountEmail: ctx.auth.user.email,
-        linkTokenHash: null,
+    if (!env.PUBLIC_ENABLE_RECEIPT_EXTRACT) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'Receipt extraction is disabled',
       })
-      const context = await getRecentExpenseContext(input.groupId)
-      recentExpenses = context.expenses
-      groupContext = context.group
     }
+    await loadGroupViewer({
+      groupId: input.groupId,
+      accountId: ctx.auth.user.id,
+      accountEmail: ctx.auth.user.email,
+      linkTokenHash: null,
+    })
+    const context = await getRecentExpenseContext(input.groupId)
 
     const result = await extractExpenseInformationFromImage(
       input.imageUrl,
@@ -67,8 +64,8 @@ export const extractExpenseInformationFromImageProcedure = baseProcedure
         currencyCode: input.currencyCode,
       },
       {
-        recentExpenses,
-        groupContext,
+        recentExpenses: context.expenses,
+        groupContext: context.group,
         locale: input.locale,
         translateToLocale: input.translateToLocale,
         currentExpense: input.currentExpense,

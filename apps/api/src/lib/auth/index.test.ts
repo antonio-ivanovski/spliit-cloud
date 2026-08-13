@@ -59,6 +59,9 @@ const realAuthModule = (await vi.importActual('./index')) as {
           trustedProviders?: string[]
         }
       }
+      advanced?: {
+        ipAddress?: { ipAddressHeaders?: string[] }
+      }
       socialProviders?: Record<
         string,
         {
@@ -109,6 +112,12 @@ describe('better-auth session config', () => {
     )
 
     expect(jwtPlugin?.options?.disableSettingJwtHeader).toBe(true)
+  })
+
+  it('checks Cloudflare and conventional proxy IP headers in order', () => {
+    expect(
+      realAuthModule.auth.options.advanced?.ipAddress?.ipAddressHeaders,
+    ).toEqual(['cf-connecting-ip', 'x-real-ip', 'x-forwarded-for'])
   })
 
   it('uses an isolated JWKS adapter in the test environment', () => {

@@ -9,7 +9,7 @@ import {
 import { Scalar } from '@scalar/hono-api-reference'
 import { TRPCError } from '@trpc/server'
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch'
-import { Hono } from 'hono'
+import { Hono, type MiddlewareHandler } from 'hono'
 import { cors } from 'hono/cors'
 
 import { auth } from './lib/auth'
@@ -17,7 +17,11 @@ import { SIGNUP_INVITE_HEADER } from './lib/auth/signup-gate'
 import { env, webOrigins } from './lib/env'
 import { checkLiveness, checkReadiness } from './lib/health'
 import { logServerError, logServerWarn } from './lib/logging'
-import { FixedWindowLimiter, resolveClientIp } from './lib/rate-limit'
+import {
+  FixedWindowLimiter,
+  logRateLimitExceeded,
+  resolveClientIp,
+} from './lib/rate-limit'
 import { buildScalarConfig } from './lib/scalar-theme'
 import {
   emailUnsubscribeGet,
@@ -45,6 +49,15 @@ function isPublicOAuthProtocolPath(path: string) {
     path === '/auth/jwks' ||
     path.startsWith('/auth/oauth2/')
   )
+}
+
+export function requestWithTrustedProxyHeaders(request: Request): Request {
+  if (env.TRUST_PROXY) return request
+  const headers = new Headers(request.headers)
+  headers.delete('cf-connecting-ip')
+  headers.delete('x-forwarded-for')
+  headers.delete('x-real-ip')
+  return new Request(request, { headers })
 }
 
 // Centralised handler for any uncaught error outside `/trpc/*`. tRPC has its
@@ -96,6 +109,50 @@ const oauthRegistrationLimiter = new FixedWindowLimiter({
   limit: 20,
   windowMs: 60 * 60 * 1000,
 })
+
+function clientRateLimitMiddleware(options: {
+  policy: string
+  limit: number
+  windowMs: number
+}): MiddlewareHandler {
+  const limiter = new FixedWindowLimiter({
+    limit: options.limit,
+    windowMs: options.windowMs,
+  })
+  return async (c, next) => {
+    const ip = resolveClientIp(c.req.raw.headers, {
+      trustProxy: env.TRUST_PROXY,
+    })
+    const decision = limiter.hit(ip)
+    if (!decision.allowed) {
+      logRateLimitExceeded({
+        policy: options.policy,
+        identity: ip,
+        retryAfterSeconds: decision.retryAfterSeconds,
+        path: c.req.path,
+      })
+      return c.json(
+        { error: 'rate_limit_exceeded' },
+        {
+          status: 429,
+          headers: { 'Retry-After': String(decision.retryAfterSeconds) },
+        },
+      )
+    }
+    await next()
+  }
+}
+
+const exportRateLimit = clientRateLimitMiddleware({
+  policy: 'export',
+  limit: 60,
+  windowMs: 60 * 60 * 1000,
+})
+const reportRateLimit = clientRateLimitMiddleware({
+  policy: 'report-data',
+  limit: 120,
+  windowMs: 60 * 60 * 1000,
+})
 app.use('/auth/oauth2/register', async (c, next) => {
   const ip = resolveClientIp(c.req.raw.headers, {
     trustProxy: env.TRUST_PROXY,
@@ -119,7 +176,9 @@ app.get('/email/unsubscribe', emailUnsubscribeGet)
 app.post('/email/unsubscribe', emailUnsubscribePost)
 
 // better-auth handler — exposes /auth/sign-in, /auth/sign-up, etc.
-app.on(['GET', 'POST'], '/auth/*', (c) => auth.handler(c.req.raw))
+app.on(['GET', 'POST'], '/auth/*', (c) =>
+  auth.handler(requestWithTrustedProxyHeaders(c.req.raw)),
+)
 app.get('/.well-known/oauth-authorization-server', (c) =>
   env.ENABLE_MCP
     ? oauthProviderAuthServerMetadata(auth, {
@@ -149,15 +208,17 @@ app.get('/.well-known/openid-configuration/auth', (c) =>
     : c.notFound(),
 )
 
-app.get('/groups/:groupId/export/bundle', (c) =>
+app.get('/groups/:groupId/export/bundle', exportRateLimit, (c) =>
   exportGroupBundle(c.req.raw, c.req.param('groupId')),
 )
-app.post('/account/export/bundle', (c) => exportAccountBundle(c.req.raw))
-app.get('/groups/:groupId/expenses/export/csv', (c) =>
+app.post('/account/export/bundle', exportRateLimit, (c) =>
+  exportAccountBundle(c.req.raw),
+)
+app.get('/groups/:groupId/expenses/export/csv', exportRateLimit, (c) =>
   exportGroupCsv(c.req.raw, c.req.param('groupId')),
 )
 app.post('/imports/documents/file', (c) => proxyImportDocument(c.req.raw))
-app.post('/groups/:groupId/expenses/report-data', (c) =>
+app.post('/groups/:groupId/expenses/report-data', reportRateLimit, (c) =>
   reportGroupData(c.req.raw, c.req.param('groupId')),
 )
 
@@ -197,7 +258,8 @@ app.all('/trpc/*', (c) =>
     endpoint: '/trpc',
     req: c.req.raw,
     router: appRouter,
-    createContext: () => createTRPCContext({ req: c.req.raw }),
+    createContext: ({ resHeaders }) =>
+      createTRPCContext({ req: c.req.raw, resHeaders }),
     onError({ error, path, type, ctx }) {
       // Expected client errors are normal product behavior — logging them
       // would flood the console. Only log infrastructure failures (uncaught

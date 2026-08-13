@@ -20,6 +20,7 @@ import { getPlaceholderEmailDisplayName } from '../../../lib/invitations/display
 import { sendEmail } from '../../../lib/mail/send'
 import { renderFriendLedgerEmail } from '../../../lib/mail/templates/friend-ledger'
 import { planActivityNotificationDeliveries } from '../../../lib/notifications/delivery-planner'
+import { allowUserGeneratedEmail } from '../../../lib/outbound-email-rate-limit'
 import { createTRPCRouter, protectedProcedure } from '../../init'
 
 /**
@@ -29,9 +30,19 @@ import { createTRPCRouter, protectedProcedure } from '../../init'
  */
 async function sendFriendLedgerNotification(opts: {
   recipientEmail: string
+  senderAccountId: string
   inviterName: string
   isNewUser: boolean
 }): Promise<void> {
+  if (
+    !allowUserGeneratedEmail({
+      senderAccountId: opts.senderAccountId,
+      recipientEmail: opts.recipientEmail,
+      policy: 'friend-ledger-email',
+    })
+  )
+    return
+
   try {
     const rendered = await renderFriendLedgerEmail({
       inviterName: opts.inviterName,
@@ -201,6 +212,7 @@ export const friendsRouter = createTRPCRouter({
         const isNewUser = !!result.invitationId
         await sendFriendLedgerNotification({
           recipientEmail: peer.email,
+          senderAccountId: callerId,
           inviterName,
           isNewUser,
         })

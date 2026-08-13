@@ -25,6 +25,8 @@ export type SuggestExpenseCategoryArgs = {
    * PUBLIC_ENABLE_CATEGORY_EXTRACT.
    */
   allowAi?: boolean
+  /** Invoked immediately before the provider fallback, after local misses. */
+  beforeAi?: () => void
 }
 
 /**
@@ -73,6 +75,8 @@ export async function suggestExpenseCategory(
   if (!args.allowAi || !env.PUBLIC_ENABLE_CATEGORY_EXTRACT) {
     return { categoryId: null }
   }
+
+  args.beforeAi?.()
 
   let recentExpenses = similar.map((row) => ({
     title: row.title,

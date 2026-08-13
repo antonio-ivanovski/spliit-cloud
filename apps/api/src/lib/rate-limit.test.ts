@@ -35,6 +35,21 @@ describe('FixedWindowLimiter', () => {
     expect(limiter.hit('b', now).allowed).toBe(false)
   })
 
+  it('supports weighted consumption', () => {
+    const limiter = new FixedWindowLimiter({ limit: 5, windowMs: 60_000 })
+    const now = 1_000_000
+
+    expect(limiter.hit('sender', now, 4).allowed).toBe(true)
+    expect(limiter.hit('sender', now).allowed).toBe(true)
+    expect(limiter.hit('sender', now).allowed).toBe(false)
+  })
+
+  it('rejects invalid consumption costs', () => {
+    const limiter = new FixedWindowLimiter({ limit: 5, windowMs: 60_000 })
+
+    expect(() => limiter.hit('sender', Date.now(), 0)).toThrow(RangeError)
+  })
+
   it('resets the window once it expires', () => {
     const limiter = new FixedWindowLimiter({ limit: 1, windowMs: 60_000 })
     const now = 1_000_000
@@ -72,19 +87,40 @@ describe('resolveClientIp', () => {
     expect(resolveClientIp(new Headers(), { trustProxy: false })).toBe('direct')
   })
 
-  it('uses the right-most forwarded hop when trusting the proxy', () => {
+  it('prefers Cloudflare client IP over generic proxy headers', () => {
     const headers = new Headers({
+      'cf-connecting-ip': '203.0.113.7',
       'x-forwarded-for': 'spoofed-by-client, 10.0.0.1',
+      'x-real-ip': '10.0.0.2',
     })
-    expect(resolveClientIp(headers, { trustProxy: true })).toBe('10.0.0.1')
+    expect(resolveClientIp(headers, { trustProxy: true })).toBe('203.0.113.7')
   })
 
-  it('falls back to x-real-ip then unknown when trusting the proxy', () => {
+  it('falls back to x-real-ip and then the right-most forwarded hop', () => {
     expect(
       resolveClientIp(new Headers({ 'x-real-ip': '9.9.9.9' }), {
         trustProxy: true,
       }),
     ).toBe('9.9.9.9')
+    expect(
+      resolveClientIp(
+        new Headers({ 'x-forwarded-for': '192.0.2.1, 10.0.0.1' }),
+        { trustProxy: true },
+      ),
+    ).toBe('10.0.0.1')
+  })
+
+  it('rejects malformed proxy headers', () => {
+    expect(
+      resolveClientIp(
+        new Headers({
+          'cf-connecting-ip': 'not-an-ip',
+          'x-real-ip': 'also-invalid',
+          'x-forwarded-for': 'spoofed-by-client',
+        }),
+        { trustProxy: true },
+      ),
+    ).toBe('unknown')
     expect(resolveClientIp(new Headers(), { trustProxy: true })).toBe('unknown')
   })
 })

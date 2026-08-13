@@ -11,13 +11,15 @@ import {
 } from '../lib/auth/session'
 import { env } from '../lib/env'
 import { hashLinkToken } from '../lib/invitations'
-import { FixedWindowLimiter } from '../lib/rate-limit'
+import { FixedWindowLimiter, logRateLimitExceeded } from '../lib/rate-limit'
 
 export type AuthContext = {
   /** Authenticated account + better-auth session, or null. */
   auth: ResolvedAuth | OAuthResolvedAuth | null
   /** Outgoing fetch Request, when available (tRPC context only sees headers). */
   req?: Request
+  /** Mutable response headers supplied by the fetch adapter. */
+  resHeaders?: Headers
 }
 
 export async function createTRPCContext(opts: {
@@ -29,7 +31,7 @@ export async function createTRPCContext(opts: {
   const auth =
     (await getAuthFromRequest(request).catch(() => null)) ??
     (await getOAuthAuthFromRequest(request).catch(() => null))
-  return { auth, req: opts.req }
+  return { auth, req: opts.req, resHeaders: opts.resHeaders }
 }
 
 // Avoid exporting the entire t-object
@@ -79,6 +81,70 @@ export const protectedProcedure = baseProcedure.use(async ({ ctx, next }) => {
     },
   })
 })
+
+function accountRateLimitedProcedure(options: {
+  policy: string
+  limit: number
+  windowMs: number
+}) {
+  const limiter = new FixedWindowLimiter({
+    limit: options.limit,
+    windowMs: options.windowMs,
+  })
+
+  const enforce = (accountId: string, path?: string, resHeaders?: Headers) => {
+    const decision = limiter.hit(accountId)
+    if (decision.allowed) return
+    logRateLimitExceeded({
+      policy: options.policy,
+      identity: accountId,
+      retryAfterSeconds: decision.retryAfterSeconds,
+      path,
+    })
+    resHeaders?.set('Retry-After', String(decision.retryAfterSeconds))
+    throw new TRPCError({
+      code: 'TOO_MANY_REQUESTS',
+      message: 'Request limit exceeded; try again later',
+    })
+  }
+
+  return {
+    procedure: protectedProcedure.use(({ ctx, next, path }) => {
+      enforce(ctx.auth.user.id, path, ctx.resHeaders)
+      return next()
+    }),
+    enforce,
+  }
+}
+
+const aiRequests = accountRateLimitedProcedure({
+  policy: 'ai',
+  limit: 60,
+  windowMs: 60 * 60 * 1000,
+})
+const bulkAiRequests = accountRateLimitedProcedure({
+  policy: 'ai-bulk',
+  limit: 20,
+  windowMs: 60 * 60 * 1000,
+})
+const uploadPresignRequests = accountRateLimitedProcedure({
+  policy: 'upload-presign',
+  limit: 120,
+  windowMs: 60 * 60 * 1000,
+})
+const importRequests = accountRateLimitedProcedure({
+  policy: 'group-import',
+  limit: 20,
+  windowMs: 60 * 60 * 1000,
+})
+
+export const aiProcedure = aiRequests.procedure
+export const bulkAiProcedure = bulkAiRequests.procedure
+export const uploadPresignProcedure = uploadPresignRequests.procedure
+export const importProcedure = importRequests.procedure
+
+/** Charge only the provider fallback, leaving local category suggestions free. */
+export const enforceAiRequestLimit = aiRequests.enforce
 
 export function assistantProcedure(requiredScope: string) {
   return baseProcedure.use(async ({ ctx, next }) => {
