@@ -1,4 +1,4 @@
-import { getRouteApi, useNavigate } from '@tanstack/react-router'
+import { getRouteApi, Link, useNavigate } from '@tanstack/react-router'
 import { AlertTriangle, Clock, ExternalLink } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -385,19 +385,42 @@ export function SourceStep({
           ref={tabsListRef}
           className="w-full justify-start overflow-x-auto sm:w-auto"
         >
-          <TabsTrigger value="spliit">
+          <TabsTrigger
+            value="spliit"
+            render={<Link to="/groups/import" search={{ source: 'spliit' }} />}
+          >
             {t('Groups.Import.Source.fromSpliit')}
           </TabsTrigger>
-          <TabsTrigger value="spliit-cloud">
+          <TabsTrigger
+            value="spliit-cloud"
+            render={
+              <Link to="/groups/import" search={{ source: 'spliit-cloud' }} />
+            }
+          >
             {t('Groups.Import.Source.fromSpliitCloud')}
           </TabsTrigger>
-          <TabsTrigger value="splitwise">
+          <TabsTrigger
+            value="splitwise"
+            render={
+              <Link to="/groups/import" search={{ source: 'splitwise' }} />
+            }
+          >
             {t('Groups.Import.Source.splitwise')}
           </TabsTrigger>
-          <TabsTrigger value="tricount">
+          <TabsTrigger
+            value="tricount"
+            render={
+              <Link to="/groups/import" search={{ source: 'tricount' }} />
+            }
+          >
             {t('Groups.Import.Source.tricount')}
           </TabsTrigger>
-          <TabsTrigger value="settleup">
+          <TabsTrigger
+            value="settleup"
+            render={
+              <Link to="/groups/import" search={{ source: 'settleup' }} />
+            }
+          >
             {t('Groups.Import.Source.settleUp')}
           </TabsTrigger>
         </TabsList>

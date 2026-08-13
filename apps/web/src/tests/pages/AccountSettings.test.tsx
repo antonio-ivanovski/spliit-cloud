@@ -95,6 +95,21 @@ vi.mock('@tanstack/react-router', async () => {
     ...actual,
     useNavigate: () => mocks.useRouterNavigate,
     useLocation: () => ({ hash: window.location.hash }),
+    Link: ({
+      to,
+      search,
+      children,
+      ...props
+    }: {
+      to: string
+      search?: unknown
+      children?: React.ReactNode
+      [key: string]: unknown
+    }) => (
+      <a href={to} data-search={JSON.stringify(search)} {...props}>
+        {children}
+      </a>
+    ),
   }
 })
 
@@ -170,15 +185,15 @@ describe('AccountSettingsPage', () => {
     expect(screen.getByText(/ledgers selected/i)).toBeInTheDocument()
   })
 
-  it('opens the Spliit Cloud importer from the backup section', async () => {
-    const { user } = render(<AccountSettingsPage />)
+  it('opens the Spliit Cloud importer from the backup section', () => {
+    render(<AccountSettingsPage />)
 
-    await user.click(screen.getByRole('button', { name: /^import$/i }))
-
-    expect(mocks.useRouterNavigate).toHaveBeenCalledWith({
-      to: '/groups/import',
-      search: { source: 'spliit-cloud' },
-    })
+    const importLink = screen.getByRole('link', { name: /^import$/i })
+    expect(importLink).toHaveAttribute('href', '/groups/import')
+    expect(importLink).toHaveAttribute(
+      'data-search',
+      JSON.stringify({ source: 'spliit-cloud' }),
+    )
   })
 
   it('shows a mixed section checkbox when a group override makes selection partial', async () => {

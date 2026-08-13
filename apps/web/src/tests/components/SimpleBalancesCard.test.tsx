@@ -39,6 +39,21 @@ vi.mock('@/components/ui/use-toast', () => ({
 vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => vi.fn(),
   useRouter: () => ({}),
+  Link: ({
+    to,
+    search,
+    children,
+    ...props
+  }: {
+    to: string
+    search?: unknown
+    children?: React.ReactNode
+    [key: string]: unknown
+  }) => (
+    <a href={to} data-search={JSON.stringify(search)} {...props}>
+      {children}
+    </a>
+  ),
 }))
 
 const EUR = { code: 'EUR', symbol: '€', decimal_digits: 2, rounding: 0 }

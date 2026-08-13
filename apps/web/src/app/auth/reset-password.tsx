@@ -1,10 +1,9 @@
 import { useMutation } from '@tanstack/react-query'
-import { getRouteApi, useNavigate } from '@tanstack/react-router'
+import { getRouteApi, Link } from '@tanstack/react-router'
 import { Check, Circle, Loader2 } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -39,7 +38,6 @@ const resetPasswordRouteApi = getRouteApi('/auth/reset-password')
  */
 export function ResetPasswordPage() {
   const { t } = useTranslation(undefined, { keyPrefix: 'ResetPassword' })
-  const navigate = useNavigate()
   const { token, error } = resetPasswordRouteApi.useSearch()
   const hasInvalidToken = !token || error === 'INVALID_TOKEN'
 
@@ -102,7 +100,7 @@ export function ResetPasswordPage() {
           <CardContent className="flex flex-col gap-4">
             <Button
               className="w-full"
-              render={<Link href="/auth/forgot-password" />}
+              render={<Link to="/auth/forgot-password" />}
             >
               {t('requestNewLink')}
             </Button>
@@ -110,7 +108,7 @@ export function ResetPasswordPage() {
               variant="ghost"
               size="sm"
               className="w-full"
-              render={<Link href="/" />}
+              render={<Link to="/" />}
             >
               {t('backToSignIn')}
             </Button>
@@ -129,10 +127,7 @@ export function ResetPasswordPage() {
             <CardDescription>{t('successDescription')}</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button
-              className="w-full"
-              onClick={() => navigate({ href: '/', replace: true })}
-            >
+            <Button className="w-full" render={<Link to="/" replace />}>
               {t('goToSignIn')}
             </Button>
           </CardContent>
@@ -199,7 +194,7 @@ export function ResetPasswordPage() {
             variant="ghost"
             size="sm"
             className="w-full"
-            render={<Link href="/" />}
+            render={<Link to="/" />}
           >
             {t('backToSignIn')}
           </Button>

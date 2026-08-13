@@ -1,4 +1,4 @@
-import { useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { FileInput } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -288,11 +288,6 @@ export function ExpensePreviewModal({
       return
     }
     toast({ description: tCard('copyToast') })
-    void navigate({
-      to: '/groups/$groupId/expenses/create',
-      params: { groupId },
-      search: { fromExpenseId: expenseId, ...(returnTo ? { returnTo } : {}) },
-    })
   }
 
   const { mutateAsync: deleteExpenseMutateAsync } = useDeleteExpenseMutation({
@@ -512,9 +507,20 @@ export function ExpensePreviewModal({
           {canCopy && (
             <>
               <Button
-                type="button"
                 variant="outline"
                 className="flex-1 sm:flex-none"
+                render={
+                  onMakeCopy ? undefined : (
+                    <Link
+                      to="/groups/$groupId/expenses/create"
+                      params={{ groupId }}
+                      search={{
+                        fromExpenseId: expenseId,
+                        ...(returnTo ? { returnTo } : {}),
+                      }}
+                    />
+                  )
+                }
                 onClick={handleMakeCopy}
                 data-testid="expense-make-copy"
               >
@@ -522,7 +528,19 @@ export function ExpensePreviewModal({
                 {t('makeCopy')}
               </Button>
               {canEdit && !series && (
-                <EditButton label={t('edit')} onClick={() => handleEdit()} />
+                <EditButton
+                  label={t('edit')}
+                  render={
+                    onEdit ? undefined : (
+                      <Link
+                        to="/groups/$groupId/expenses/$expenseId/edit"
+                        params={{ groupId, expenseId }}
+                        search={returnTo ? { returnTo } : undefined}
+                      />
+                    )
+                  }
+                  onClick={onEdit ? () => void handleEdit() : undefined}
+                />
               )}
             </>
           )}

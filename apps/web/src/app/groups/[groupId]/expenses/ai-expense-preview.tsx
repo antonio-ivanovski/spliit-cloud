@@ -1,4 +1,4 @@
-import { useNavigate } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { AlertTriangle, Check, FileAudio, Pencil, Receipt } from 'lucide-react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -105,7 +105,6 @@ export function AiExpensePreview({
     keyPrefix: 'ExpensePreview',
   })
   const locale = useTranslation().i18n.language
-  const navigate = useNavigate()
   const { toast } = useToast()
   const linkInviteToken = useLinkInviteToken()
   const createMutation = useCreateExpenseMutation({ linkInviteToken })
@@ -207,11 +206,6 @@ export function AiExpensePreview({
   )
 
   const navigateToForm = () => {
-    void navigate({
-      to: '/groups/$groupId/expenses/create',
-      params: { groupId: group.id },
-      search: searchParams,
-    })
     onOpenChange(false)
   }
 
@@ -381,9 +375,15 @@ export function AiExpensePreview({
         </ResponsiveDialogBody>
         <ResponsiveDialogFooter className="flex-row gap-2 sm:justify-end">
           <Button
-            type="button"
             variant={canCreate ? 'outline' : 'default'}
             className="flex-1 sm:flex-none"
+            render={
+              <Link
+                to="/groups/$groupId/expenses/create"
+                params={{ groupId: group.id }}
+                search={searchParams}
+              />
+            }
             onClick={navigateToForm}
           >
             <Pencil className="me-2 size-4" />

@@ -176,7 +176,7 @@ describe('GroupCard — friend-ledger behavior', () => {
     // The displayName "Alice" is rendered
     expect(screen.getByText('Alice')).toBeInTheDocument()
     // The link points to the group page
-    expect(screen.getByRole('link')).toHaveAttribute('href', '/groups/friend-1')
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/groups/$groupId')
   })
 
   it('shows a friend avatar for FRIEND cards', () => {

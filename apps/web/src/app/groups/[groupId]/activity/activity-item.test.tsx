@@ -6,7 +6,19 @@ import type { Activity } from './activity-item'
 import { ActivityItem } from './activity-item'
 
 vi.mock('@tanstack/react-router', () => ({
-  useNavigate: () => vi.fn(),
+  Link: ({
+    to,
+    children,
+    ...props
+  }: {
+    to: string
+    children?: React.ReactNode
+    [key: string]: unknown
+  }) => (
+    <a href={to} {...props}>
+      {children}
+    </a>
+  ),
 }))
 
 function makeActivity(
@@ -57,6 +69,21 @@ describe('ActivityItem', () => {
     )
     expect(screen.getByTestId('activity-item-act-1')).toBeInTheDocument()
     expect(screen.getByText(/Alice created expense Dinner/)).toBeInTheDocument()
+  })
+
+  it('links to the expense when the activity still has one', () => {
+    renderItem(
+      makeActivity({
+        type: 'EXPENSE_CREATED',
+        data: { kind: 'expense', title: 'Dinner' },
+        expense: { id: 'exp-1', title: 'Dinner' } as Activity['expense'],
+      }),
+    )
+
+    expect(screen.getByRole('link', { name: 'Open expense' })).toHaveAttribute(
+      'href',
+      '/groups/$groupId/expenses/$expenseId',
+    )
   })
 
   it('renders expense updated with changed fields', () => {

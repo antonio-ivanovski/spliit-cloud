@@ -1,7 +1,7 @@
+import { Link } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -48,7 +48,7 @@ export function PasswordForm(props: {
           className="h-auto self-start px-0 py-0"
           render={
             <Link
-              href="/auth/forgot-password"
+              to="/auth/forgot-password"
               search={
                 props.email.trim()
                   ? { email: props.email.trim() }

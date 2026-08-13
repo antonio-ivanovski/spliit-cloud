@@ -7,7 +7,6 @@ import { fireEvent, render, screen, waitFor } from '@/test/test-utils'
 
 const _rateMock = vi.fn()
 const useCurrencyRateSpy = vi.fn()
-const navigateMock = vi.fn()
 const accountGroupsQuerySpy = vi.fn()
 
 vi.mock('@/lib/hooks', () => ({
@@ -16,7 +15,21 @@ vi.mock('@/lib/hooks', () => ({
 }))
 
 vi.mock('@tanstack/react-router', () => ({
-  useNavigate: () => navigateMock,
+  Link: ({
+    to,
+    search,
+    children,
+    ...props
+  }: {
+    to: string
+    search?: unknown
+    children?: React.ReactNode
+    [key: string]: unknown
+  }) => (
+    <a href={to} data-search={JSON.stringify(search)} {...props}>
+      {children}
+    </a>
+  ),
 }))
 
 vi.mock('@/trpc/client', () => ({
@@ -92,7 +105,6 @@ describe('CurrencyConverter stale rate gating', () => {
   beforeEach(() => {
     window.localStorage.clear()
     useCurrencyRateSpy.mockReset()
-    navigateMock.mockReset()
     accountGroupsQuerySpy.mockReset()
     accountGroupsQuerySpy.mockReturnValue({
       data: { groups: [] },
@@ -191,7 +203,6 @@ describe('CurrencyConverter group navigation', () => {
   beforeEach(() => {
     window.localStorage.clear()
     useCurrencyRateSpy.mockReset()
-    navigateMock.mockReset()
     accountGroupsQuerySpy.mockReset()
   })
 
@@ -220,20 +231,18 @@ describe('CurrencyConverter group navigation', () => {
     const amountInput = screen.getByLabelText(/from/i)
     fireEvent.change(amountInput, { target: { value: '100.50' } })
 
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /Trip/i })).toBeInTheDocument()
-    })
-
-    fireEvent.click(screen.getByRole('button', { name: /Trip/i }))
-
-    expect(navigateMock).toHaveBeenCalledWith({
-      to: '/groups/$groupId/expenses/create',
-      params: { groupId: 'group-1' },
-      search: {
+    const groupLink = await screen.findByRole('link', { name: /Trip/i })
+    expect(groupLink).toHaveAttribute(
+      'href',
+      '/groups/$groupId/expenses/create',
+    )
+    expect(groupLink).toHaveAttribute(
+      'data-search',
+      JSON.stringify({
         amount: '10050',
         originalCurrency: 'USD',
-      },
-    })
+      }),
+    )
   })
 
   it('navigates with integer minor units for 0-decimal currencies (JPY)', async () => {
@@ -256,23 +265,21 @@ describe('CurrencyConverter group navigation', () => {
     const amountInput = screen.getByLabelText(/from/i)
     fireEvent.change(amountInput, { target: { value: '5000' } })
 
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /Tokyo/i })).toBeInTheDocument()
-    })
-
-    fireEvent.click(screen.getByRole('button', { name: /Tokyo/i }))
-
-    expect(navigateMock).toHaveBeenCalledWith({
-      to: '/groups/$groupId/expenses/create',
-      params: { groupId: 'group-1' },
-      search: {
+    const groupLink = await screen.findByRole('link', { name: /Tokyo/i })
+    expect(groupLink).toHaveAttribute(
+      'href',
+      '/groups/$groupId/expenses/create',
+    )
+    expect(groupLink).toHaveAttribute(
+      'data-search',
+      JSON.stringify({
         amount: '5000',
         originalCurrency: 'JPY',
-      },
-    })
+      }),
+    )
   })
 
-  it('shows groups disabled when amount is empty and does not navigate', async () => {
+  it('shows groups disabled when amount is empty', async () => {
     accountGroupsQuerySpy.mockReturnValue({
       data: { groups: [makeGroup('group-1', 'Trip', 'USD')] },
       isLoading: false,
@@ -291,7 +298,8 @@ describe('CurrencyConverter group navigation', () => {
 
     const groupButton = await screen.findByRole('button', { name: /Trip/i })
     expect(groupButton).toBeDisabled()
-    fireEvent.click(groupButton)
-    expect(navigateMock).not.toHaveBeenCalled()
+    expect(
+      screen.queryByRole('link', { name: /Trip/i }),
+    ).not.toBeInTheDocument()
   })
 })

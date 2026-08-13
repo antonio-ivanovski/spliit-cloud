@@ -1,4 +1,4 @@
-import { useLocation } from '@tanstack/react-router'
+import { Link, useLocation } from '@tanstack/react-router'
 import {
   Activity,
   ArrowLeft,
@@ -15,7 +15,6 @@ import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useCurrentGroup } from '@/app/groups/[groupId]/current-group-context'
-import Link from '@/components/link'
 import {
   ResponsiveDialog,
   ResponsiveDialogBody,
@@ -47,7 +46,8 @@ export function MobileAppBar() {
       className="fixed inset-x-0 top-0 z-50 flex h-(--app-header-height) items-center gap-2 border-b bg-background/95 px-2 backdrop-blur supports-backdrop-filter:bg-background/80 sm:hidden"
     >
       <Link
-        href={meta.backHref}
+        to={meta.to}
+        params={meta.params}
         className="inline-flex size-10 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden"
         aria-label={t('Header.back')}
       >
@@ -60,6 +60,16 @@ export function MobileAppBar() {
 
 type GroupNavProps = { groupId: string }
 
+const GROUP_NAV_TO = {
+  expenses: '/groups/$groupId/expenses',
+  balances: '/groups/$groupId/balances',
+  stats: '/groups/$groupId/stats',
+  budgets: '/groups/$groupId/budgets',
+  activity: '/groups/$groupId/activity',
+  members: '/groups/$groupId/members',
+  edit: '/groups/$groupId/edit',
+} as const
+
 export function MobileGroupNav({ groupId }: GroupNavProps) {
   const pathname = useLocation({ select: (location) => location.pathname })
   const { t } = useTranslation()
@@ -67,29 +77,29 @@ export function MobileGroupNav({ groupId }: GroupNavProps) {
   const [moreOpen, setMoreOpen] = useState(false)
   const tabs = [
     {
-      href: `/groups/${groupId}/expenses`,
+      to: GROUP_NAV_TO.expenses,
       label: t('Expenses.title'),
       icon: ReceiptText,
     },
     {
-      href: `/groups/${groupId}/balances`,
+      to: GROUP_NAV_TO.balances,
       label: t('Balances.title'),
       icon: Scale,
     },
     {
-      href: `/groups/${groupId}/stats`,
+      to: GROUP_NAV_TO.stats,
       label: t('Stats.title'),
       icon: BarChart3,
     },
     {
-      href: `/groups/${groupId}/budgets`,
+      to: GROUP_NAV_TO.budgets,
       label: t('Budgets.title'),
       icon: WalletCards,
     },
   ] as const
   const moreTabs = [
     {
-      href: `/groups/${groupId}/activity`,
+      to: GROUP_NAV_TO.activity,
       label: t('Activity.title'),
       icon: Activity,
     },
@@ -97,23 +107,20 @@ export function MobileGroupNav({ groupId }: GroupNavProps) {
       ? []
       : [
           {
-            href: `/groups/${groupId}/members`,
+            to: GROUP_NAV_TO.members,
             label: t('Members.title'),
             icon: Users,
           },
         ]),
     {
-      href: `/groups/${groupId}/edit`,
+      to: GROUP_NAV_TO.edit,
       label: t('Settings.title'),
       icon: Settings2,
     },
-    {
-      href: '/feedback',
-      label: t('Feedback.navigationLabel'),
-      icon: MessageSquareText,
-    },
   ] as const
-  const activeMore = moreTabs.some((tab) => pathname === tab.href)
+  const activeMore =
+    moreTabs.some((tab) => pathname === tab.to.replace('$groupId', groupId)) ||
+    pathname === '/feedback'
 
   return (
     <>
@@ -122,12 +129,13 @@ export function MobileGroupNav({ groupId }: GroupNavProps) {
         className="fixed inset-x-0 bottom-0 z-40 border-t bg-background/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_20px_rgb(0_0_0/0.06)] backdrop-blur supports-backdrop-filter:bg-background/80 sm:hidden"
       >
         <div className="mx-auto grid h-16 max-w-lg grid-cols-5 items-stretch px-1">
-          {tabs.map(({ href, label, icon: Icon }) => {
-            const active = pathname === href
+          {tabs.map(({ to, label, icon: Icon }) => {
+            const active = pathname === to.replace('$groupId', groupId)
             return (
               <Link
-                key={href}
-                href={href}
+                key={to}
+                to={to}
+                params={{ groupId }}
                 aria-current={active ? 'page' : undefined}
                 className={`flex min-w-0 flex-col items-center justify-center gap-1 rounded-lg px-1 text-[10px] font-medium transition-colors ${active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
               >
@@ -164,12 +172,13 @@ export function MobileGroupNav({ groupId }: GroupNavProps) {
             </ResponsiveDialogTitle>
           </ResponsiveDialogHeader>
           <ResponsiveDialogBody className="flex flex-col gap-2 pb-[env(safe-area-inset-bottom)]">
-            {moreTabs.map(({ href, label, icon: Icon }) => (
+            {moreTabs.map(({ to, label, icon: Icon }) => (
               <ResponsiveDialogClose
-                key={href}
+                key={to}
                 render={
                   <Link
-                    href={href}
+                    to={to}
+                    params={{ groupId }}
                     className="flex min-h-12 items-center gap-3 rounded-lg border px-3 text-sm font-medium hover:bg-muted"
                   >
                     <Icon
@@ -181,6 +190,20 @@ export function MobileGroupNav({ groupId }: GroupNavProps) {
                 }
               />
             ))}
+            <ResponsiveDialogClose
+              render={
+                <Link
+                  to="/feedback"
+                  className="flex min-h-12 items-center gap-3 rounded-lg border px-3 text-sm font-medium hover:bg-muted"
+                >
+                  <MessageSquareText
+                    className="size-5 text-muted-foreground"
+                    aria-hidden="true"
+                  />
+                  {t('Feedback.navigationLabel')}
+                </Link>
+              }
+            />
           </ResponsiveDialogBody>
         </ResponsiveDialogContent>
       </ResponsiveDialog>

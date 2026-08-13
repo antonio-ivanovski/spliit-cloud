@@ -1,5 +1,4 @@
-/* oxlint-disable jsx-a11y/prefer-tag-over-role -- card is an interactive container with a nested link button. */
-import { useNavigate } from '@tanstack/react-router'
+import { Link, type LinkProps } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
 import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -8,9 +7,7 @@ import { ActiveUserBalance } from '@/app/groups/[groupId]/expenses/active-user-b
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
 import { DocumentsCount } from '@/app/groups/[groupId]/expenses/documents-count'
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
-import Link from '@/components/link'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { useLocale } from '@/i18n/react'
 import type { getGroupExpenses } from '@/lib/api'
 import { getCurrency, type Currency } from '@/lib/currency'
@@ -146,8 +143,8 @@ type Props = {
   contributionAmount?: number
   /** Optional internal return path when opened from another expense feed. */
   returnTo?: string
-  /** Optional same-page opener used by cross-group feeds. */
-  onOpen?: () => void
+  /** Link to the global `/expenses` overlay instead of the group expense route. */
+  expensesSearch?: LinkProps['search']
   /** Optional group label shown when the card is rendered across groups. */
   groupLabel?: string
 }
@@ -159,7 +156,7 @@ export function ExpenseCard({
   participantCount,
   contributionAmount,
   returnTo,
-  onOpen,
+  expensesSearch,
   groupLabel,
 }: Props) {
   const showContribution =
@@ -167,7 +164,6 @@ export function ExpenseCard({
     contributionAmount !== expense.amount
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseCard' })
   const { t: tForm } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
-  const navigate = useNavigate()
   const locale = useLocale()
   const accountPreferences = useSyncedAccountPreferences()
   const closed = formatExpenseClosed(
@@ -188,36 +184,34 @@ export function ExpenseCard({
     originalCurrency !== undefined && originalAmount !== undefined
   const seriesId = expense.recurringSeriesId
   const seriesStatus = expense.recurringSeriesStatus ?? undefined
-  const openExpense = () => {
-    if (onOpen) {
-      onOpen()
-      return
-    }
-    void navigate({
-      to: '/groups/$groupId/expenses/$expenseId',
-      params: { groupId, expenseId: expense.id },
-      search: returnTo ? { returnTo } : undefined,
-    })
-  }
+  const overlayClassName =
+    'absolute inset-0 z-0 rounded-[inherit] outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
 
   return (
     <div
       key={expense.id}
       data-testid={`expense-item-${expense.id}`}
       className={cn(
-        'motion-surface motion-surface-interactive flex cursor-pointer items-stretch justify-between gap-1 px-4 py-4 text-sm hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-hidden sm:mx-6 sm:rounded-lg sm:ps-4 sm:pe-2',
+        'motion-surface motion-surface-interactive relative flex items-stretch justify-between gap-1 px-4 py-4 text-sm hover:bg-accent sm:mx-6 sm:rounded-lg sm:ps-4 sm:pe-2',
         expense.isReimbursement && 'italic',
       )}
-      role="button"
-      tabIndex={0}
-      onClick={openExpense}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault()
-          openExpense()
-        }
-      }}
     >
+      {expensesSearch ? (
+        <Link
+          to="/expenses"
+          search={expensesSearch}
+          className={overlayClassName}
+          aria-label={expense.title}
+        />
+      ) : (
+        <Link
+          to="/groups/$groupId/expenses/$expenseId"
+          params={{ groupId, expenseId: expense.id }}
+          search={returnTo ? { returnTo } : undefined}
+          className={overlayClassName}
+          aria-label={expense.title}
+        />
+      )}
       <CategoryIcon
         category={expense.category}
         className="me-2 mt-0.5 h-4 w-4 text-muted-foreground"
@@ -303,34 +297,10 @@ export function ExpenseCard({
           <DocumentsCount count={expense.documentCount} />
         </div>
       </div>
-      {onOpen ? (
-        <Button
-          size="icon"
-          variant="link"
-          className="hidden self-center sm:flex"
-          onClick={(event) => {
-            event.stopPropagation()
-            onOpen()
-          }}
-          aria-label={expense.title}
-        >
-          <ChevronRight className="h-4 w-4 rtl:rotate-180" />
-        </Button>
-      ) : (
-        <Button
-          size="icon"
-          variant="link"
-          className="hidden self-center sm:flex"
-          render={
-            <Link
-              href={`/groups/${groupId}/expenses/${expense.id}`}
-              search={returnTo ? { returnTo } : undefined}
-            />
-          }
-        >
-          <ChevronRight className="h-4 w-4 rtl:rotate-180" />
-        </Button>
-      )}
+      <ChevronRight
+        className="pointer-events-none hidden h-4 w-4 self-center sm:flex rtl:rotate-180"
+        aria-hidden="true"
+      />
     </div>
   )
 }

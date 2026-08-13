@@ -150,7 +150,7 @@ describe('BudgetFormPage', () => {
     ).toBeInTheDocument()
     expect(screen.getByTitle('Back to budgets')).toHaveAttribute(
       'href',
-      '/groups/group-1/budgets',
+      '/groups/$groupId/budgets',
     )
   })
 

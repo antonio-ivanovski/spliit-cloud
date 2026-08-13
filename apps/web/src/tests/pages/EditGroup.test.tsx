@@ -61,16 +61,9 @@ vi.mock('@/app/groups/[groupId]/use-link-invite-token', () => ({
   useLinkInviteToken: vi.fn(() => undefined),
 }))
 
-vi.mock('@/components/link', () => ({
-  default: ({
-    href,
-    children,
-  }: {
-    href: string
-    children: React.ReactNode
-  }) => <a href={href}>{children}</a>,
-  Link: ({ href, children }: { href: string; children: React.ReactNode }) => (
-    <a href={href}>{children}</a>
+vi.mock('@tanstack/react-router', () => ({
+  Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
+    <a href={to}>{children}</a>
   ),
 }))
 

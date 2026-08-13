@@ -11,27 +11,37 @@ const { currentAccount, routeLoaderData } = vi.hoisted(() => ({
   },
 }))
 
-vi.mock('@/components/link', () => ({
-  default: ({
-    href,
-    children,
-    ...props
-  }: {
-    href: string
-    children: React.ReactNode
-  }) => (
-    <a href={href} {...props}>
-      {children}
-    </a>
-  ),
-}))
-vi.mock('@/lib/use-current-account', () => ({
-  useCurrentAccount: currentAccount,
-}))
 vi.mock('@tanstack/react-router', () => ({
   getRouteApi: () => ({
     useLoaderData: () => routeLoaderData,
   }),
+  Link: ({
+    to,
+    hash,
+    search,
+    children,
+    ...props
+  }: {
+    to: string
+    hash?: string
+    search?: { redirect?: string }
+    children?: React.ReactNode
+    [key: string]: unknown
+  }) => {
+    const params = new URLSearchParams()
+    if (search?.redirect) params.set('redirect', search.redirect)
+    const query = params.toString()
+    const href = `${to}${query ? `?${query}` : ''}${hash ? `#${hash}` : ''}`
+    return (
+      <a href={href} {...props}>
+        {children}
+      </a>
+    )
+  },
+}))
+
+vi.mock('@/lib/use-current-account', () => ({
+  useCurrentAccount: currentAccount,
 }))
 
 import UnsubscribePage from '@/app/unsubscribe'

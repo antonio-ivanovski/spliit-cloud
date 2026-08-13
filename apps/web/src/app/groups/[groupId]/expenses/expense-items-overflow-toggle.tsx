@@ -23,7 +23,7 @@ export function ExpenseItemsOverflowToggle({
       aria-expanded={expanded}
       data-testid="expense-items-overflow-toggle"
       className={cn(
-        'inline-flex cursor-pointer items-center gap-0.5 text-xs text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden',
+        'relative z-10 inline-flex cursor-pointer items-center gap-0.5 text-xs text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden',
         className,
       )}
       onClick={(event) => {

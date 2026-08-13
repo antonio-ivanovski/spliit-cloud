@@ -1,6 +1,6 @@
+import { Link } from '@tanstack/react-router'
 import { Trans, useTranslation } from 'react-i18next'
 
-import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
@@ -156,8 +156,8 @@ export function AuthPanel({
         <Trans
           i18nKey="Auth.legalNotice"
           components={{
-            terms: <Link href="/terms" className="underline" />,
-            privacy: <Link href="/privacy" className="underline" />,
+            terms: <Link to="/terms" className="underline" />,
+            privacy: <Link to="/privacy" className="underline" />,
           }}
         />
       </p>

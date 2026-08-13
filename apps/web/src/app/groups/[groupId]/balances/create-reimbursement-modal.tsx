@@ -1,5 +1,5 @@
 /* oxlint-disable jsx-a11y/prefer-tag-over-role -- labeled checkbox groups use explicit ARIA semantics. */
-import { useNavigate } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { Check, Pencil } from 'lucide-react'
 import { useEffect, useState, type Dispatch, type SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -86,7 +86,6 @@ export function CreateReimbursementModal({
   const accountTimeZone =
     accountPreferences?.timeZone ?? detectDeviceTimeZone() ?? 'UTC'
   const today = dateOnlyInAccountTimeZone(new Date(), accountTimeZone)
-  const navigate = useNavigate()
   const utils = trpc.useUtils()
   const { toast } = useToast()
   const { t } = useTranslation(undefined, { keyPrefix: 'CreateReimbursement' })
@@ -152,45 +151,31 @@ export function CreateReimbursementModal({
     onOpenChange(nextOpen)
   }
 
-  const handleEdit = () => {
-    if (selectedLegs.length === 0) return
-    onOpenChange(false)
-
-    if (selectedLegs.length > 1 && settlementGroup) {
-      void navigate({
-        to: '/groups/$groupId/expenses/create',
-        params: { groupId },
-        search: {
-          reimbursement: 'yes',
-          amount: selectedTotal.toString(),
-          settlements: JSON.stringify({
-            direction,
-            participantId: centralParticipantId,
-            legs: selectedLegs,
-          }),
-          ...(originalCurrencyCode
-            ? { originalCurrency: originalCurrencyCode }
-            : {}),
-        },
-      })
-      return
-    }
-
-    const selected = selectedLegs[0]
-    void navigate({
-      to: '/groups/$groupId/expenses/create',
-      params: { groupId },
-      search: {
-        reimbursement: 'yes',
-        from: selected.from,
-        to: selected.to,
-        amount: selected.amount.toString(),
-        ...(originalCurrencyCode
-          ? { originalCurrency: originalCurrencyCode }
-          : {}),
-      },
-    })
-  }
+  const editSearch =
+    selectedLegs.length === 0
+      ? undefined
+      : selectedLegs.length > 1 && settlementGroup
+        ? {
+            reimbursement: 'yes' as const,
+            amount: selectedTotal.toString(),
+            settlements: JSON.stringify({
+              direction,
+              participantId: centralParticipantId,
+              legs: selectedLegs,
+            }),
+            ...(originalCurrencyCode
+              ? { originalCurrency: originalCurrencyCode }
+              : {}),
+          }
+        : {
+            reimbursement: 'yes' as const,
+            from: selectedLegs[0]!.from,
+            to: selectedLegs[0]!.to,
+            amount: selectedLegs[0]!.amount.toString(),
+            ...(originalCurrencyCode
+              ? { originalCurrency: originalCurrencyCode }
+              : {}),
+          }
 
   const handleCreate = async () => {
     if (selectedLegs.length === 0 || !centralParticipantId) return
@@ -388,11 +373,19 @@ export function CreateReimbursementModal({
           {canCreate && (
             <>
               <Button
-                type="button"
                 variant="outline"
                 className="flex-1 sm:flex-none"
-                onClick={handleEdit}
                 disabled={isPending || selectedLegs.length === 0}
+                render={
+                  editSearch ? (
+                    <Link
+                      to="/groups/$groupId/expenses/create"
+                      params={{ groupId }}
+                      search={editSearch}
+                    />
+                  ) : undefined
+                }
+                onClick={() => onOpenChange(false)}
                 data-testid="reimbursement-edit"
               >
                 <Pencil className="me-2 h-4 w-4" />

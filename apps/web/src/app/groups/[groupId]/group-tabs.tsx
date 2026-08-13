@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from '@tanstack/react-router'
+import { Link, useLocation, useNavigate } from '@tanstack/react-router'
 import { Archive as ArchiveIcon, ArchiveRestore } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -12,6 +12,22 @@ import { shouldHideMobileGroupTabs } from '@/lib/mobile-nav'
 import { trpc } from '@/trpc/client'
 
 import { useCurrentGroup } from './current-group-context'
+
+const GROUP_TAB_TO = {
+  expenses: '/groups/$groupId/expenses',
+  balances: '/groups/$groupId/balances',
+  stats: '/groups/$groupId/stats',
+  budgets: '/groups/$groupId/budgets',
+  activity: '/groups/$groupId/activity',
+  members: '/groups/$groupId/members',
+  edit: '/groups/$groupId/edit',
+} as const
+
+type GroupTab = keyof typeof GROUP_TAB_TO
+
+function isGroupTab(value: string): value is GroupTab {
+  return Object.hasOwn(GROUP_TAB_TO, value)
+}
 
 type Props = {
   groupId: string
@@ -83,18 +99,51 @@ export function GroupTabs({ groupId }: Props) {
         <Tabs
           value={value}
           className="overflow-x-auto *:border"
-          onValueChange={(value) => {
-            void navigate({ href: `/groups/${groupId}/${value}` })
+          onValueChange={(next) => {
+            if (!isGroupTab(next)) return
+            void navigate({
+              to: GROUP_TAB_TO[next],
+              params: { groupId },
+            })
           }}
         >
           <TabsList>
-            <TabsTrigger value="expenses">{t('Expenses.title')}</TabsTrigger>
-            <TabsTrigger value="balances">{t('Balances.title')}</TabsTrigger>
-            <TabsTrigger value="stats">{t('Stats.title')}</TabsTrigger>
-            <TabsTrigger value="budgets">{t('Budgets.title')}</TabsTrigger>
-            <TabsTrigger value="activity">{t('Activity.title')}</TabsTrigger>
+            <TabsTrigger
+              value="expenses"
+              render={<Link to={GROUP_TAB_TO.expenses} params={{ groupId }} />}
+            >
+              {t('Expenses.title')}
+            </TabsTrigger>
+            <TabsTrigger
+              value="balances"
+              render={<Link to={GROUP_TAB_TO.balances} params={{ groupId }} />}
+            >
+              {t('Balances.title')}
+            </TabsTrigger>
+            <TabsTrigger
+              value="stats"
+              render={<Link to={GROUP_TAB_TO.stats} params={{ groupId }} />}
+            >
+              {t('Stats.title')}
+            </TabsTrigger>
+            <TabsTrigger
+              value="budgets"
+              render={<Link to={GROUP_TAB_TO.budgets} params={{ groupId }} />}
+            >
+              {t('Budgets.title')}
+            </TabsTrigger>
+            <TabsTrigger
+              value="activity"
+              render={<Link to={GROUP_TAB_TO.activity} params={{ groupId }} />}
+            >
+              {t('Activity.title')}
+            </TabsTrigger>
             {!isFriendLedger && (
-              <TabsTrigger value="members" className="flex items-center gap-2">
+              <TabsTrigger
+                value="members"
+                className="flex items-center gap-2"
+                render={<Link to={GROUP_TAB_TO.members} params={{ groupId }} />}
+              >
                 <span>{t('Members.title')}</span>
                 {memberCount > 0 && (
                   <Badge
@@ -107,7 +156,12 @@ export function GroupTabs({ groupId }: Props) {
               </TabsTrigger>
             )}
             {canViewSettings && (
-              <TabsTrigger value="edit">{t('Settings.title')}</TabsTrigger>
+              <TabsTrigger
+                value="edit"
+                render={<Link to={GROUP_TAB_TO.edit} params={{ groupId }} />}
+              >
+                {t('Settings.title')}
+              </TabsTrigger>
             )}
           </TabsList>
         </Tabs>

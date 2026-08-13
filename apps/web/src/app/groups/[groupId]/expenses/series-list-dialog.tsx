@@ -1,7 +1,7 @@
+import { Link } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import {
   ResponsiveDialog,
@@ -118,11 +118,11 @@ export function SeriesListDialog({
               {loadedExpenses.map((expense) => (
                 <li key={expense.id}>
                   <Link
-                    href={`/groups/${groupId}/expenses/${expense.id}${
-                      linkInviteToken
-                        ? `?invite=${encodeURIComponent(linkInviteToken)}`
-                        : ''
-                    }`}
+                    to="/groups/$groupId/expenses/$expenseId"
+                    params={{ groupId, expenseId: expense.id }}
+                    search={
+                      linkInviteToken ? { invite: linkInviteToken } : undefined
+                    }
                     className="flex items-center gap-3 px-3 py-3 transition-colors hover:bg-accent focus-visible:bg-accent"
                     onClick={() => onOpenChange(false)}
                   >

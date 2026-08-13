@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { ArrowLeft } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -8,7 +8,6 @@ import type { z } from 'zod'
 
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import { CurrencySelector } from '@/components/currency-selector'
-import Link from '@/components/link'
 import { useMascotController } from '@/components/mascot/mascot-context'
 import { SubmitButton } from '@/components/submit-button'
 import { Button } from '@/components/ui/button'
@@ -519,7 +518,7 @@ export function CreateFriend() {
               />
 
               <div className="flex justify-end gap-2">
-                <Button variant="ghost" render={<Link href="/" />}>
+                <Button variant="ghost" render={<Link to="/" />}>
                   {tCommon('back')}
                 </Button>
                 <SubmitButton loadingContent={t('title')}>

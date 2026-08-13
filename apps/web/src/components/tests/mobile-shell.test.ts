@@ -38,19 +38,21 @@ describe('mobile shell route policy', () => {
   it('keeps deterministic back destinations for focused routes', () => {
     expect(getFocusedRouteMeta('/groups/create', translate)).toEqual({
       title: 'Groups.createGroupCard.title',
-      backHref: '/',
+      to: '/',
     })
     expect(
       getFocusedRouteMeta('/groups/demo/expenses/123/edit', translate),
     ).toEqual({
       title: 'ExpensePreview.edit',
-      backHref: '/groups/demo/expenses',
+      to: '/groups/$groupId/expenses',
+      params: { groupId: 'demo' },
     })
     expect(
       getFocusedRouteMeta('/groups/bulk-categorize/demo', translate),
     ).toEqual({
       title: 'BulkCategorize.title',
-      backHref: '/groups/demo/expenses',
+      to: '/groups/$groupId/expenses',
+      params: { groupId: 'demo' },
     })
   })
 })

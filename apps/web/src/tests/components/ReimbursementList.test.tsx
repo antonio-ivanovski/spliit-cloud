@@ -51,6 +51,21 @@ vi.mock('@/components/ui/use-toast', () => ({
 
 vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => mockNavigate,
+  Link: ({
+    to,
+    search,
+    children,
+    ...props
+  }: {
+    to: string
+    search?: unknown
+    children?: React.ReactNode
+    [key: string]: unknown
+  }) => (
+    <a href={to} data-search={JSON.stringify(search)} {...props}>
+      {children}
+    </a>
+  ),
 }))
 
 import { PAYMENT_CATEGORY_ID } from '@spliit/domain'
@@ -350,7 +365,7 @@ describe('ReimbursementList', () => {
     expect(mockMutateAsync.mock.calls[0][0].expense.conversion).toBeUndefined()
   })
 
-  it('navigates to the full create expense form when clicking Edit', async () => {
+  it('links to the full create expense form when clicking Edit', async () => {
     const participants = [
       makeParticipant('alice-id', 'Alice'),
       makeParticipant('bob-id', 'Bob'),
@@ -368,21 +383,22 @@ describe('ReimbursementList', () => {
     )
 
     await user.click(screen.getByText('Mark as paid'))
-    await user.click(screen.getByTestId('reimbursement-edit'))
-
-    expect(mockNavigate).toHaveBeenCalledWith({
-      to: '/groups/$groupId/expenses/create',
-      params: { groupId: 'group-1' },
-      search: {
+    const edit = screen.getByTestId('reimbursement-edit')
+    expect(edit).toHaveAttribute('href', '/groups/$groupId/expenses/create')
+    expect(edit).toHaveAttribute(
+      'data-search',
+      JSON.stringify({
         reimbursement: 'yes',
         from: 'alice-id',
         to: 'bob-id',
         amount: '2000',
-      },
-    })
+      }),
+    )
+    await user.click(edit)
+    expect(mockNavigate).not.toHaveBeenCalled()
   })
 
-  it('passes originalCurrency to edit navigation when reimbursementCurrencyCode is set', async () => {
+  it('passes originalCurrency to the edit link when reimbursementCurrencyCode is set', async () => {
     const USD = {
       code: 'USD',
       symbol: '$',
@@ -407,18 +423,19 @@ describe('ReimbursementList', () => {
     )
 
     await user.click(screen.getByText('Mark as paid'))
-    await user.click(screen.getByTestId('reimbursement-edit'))
-
-    expect(mockNavigate).toHaveBeenCalledWith({
-      to: '/groups/$groupId/expenses/create',
-      params: { groupId: 'group-1' },
-      search: {
+    const edit = screen.getByTestId('reimbursement-edit')
+    expect(edit).toHaveAttribute('href', '/groups/$groupId/expenses/create')
+    expect(edit).toHaveAttribute(
+      'data-search',
+      JSON.stringify({
         reimbursement: 'yes',
         from: 'alice-id',
         to: 'bob-id',
         amount: '2000',
         originalCurrency: 'USD',
-      },
-    })
+      }),
+    )
+    await user.click(edit)
+    expect(mockNavigate).not.toHaveBeenCalled()
   })
 })

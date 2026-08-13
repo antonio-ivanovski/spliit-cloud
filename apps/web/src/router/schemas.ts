@@ -79,6 +79,7 @@ export const importGroupSearchSchema = z.object({
  */
 export const groupSearchSchema = z.object({
   invite: z.string().optional(),
+  seriesId: optionalString,
   friendLinkInvite: optionalString,
   returnTo: globalExpensesReturnTo,
   expCategories: z.string().optional().catch(undefined),

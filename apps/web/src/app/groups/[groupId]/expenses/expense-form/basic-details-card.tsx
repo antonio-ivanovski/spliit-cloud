@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import { ArrowLeft, Calculator } from 'lucide-react'
 import {
   useEffect,
@@ -12,7 +13,6 @@ import { useTranslation } from 'react-i18next'
 import { CategorySelector } from '@/components/category-selector'
 import { CurrencyRateProviderAttribution } from '@/components/currency-rate-provider-attribution'
 import { CurrencySelector } from '@/components/currency-selector'
-import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -42,6 +42,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { useLocale } from '@/i18n/react'
 import type { Locale } from '@/i18n/request'
 import { localizeCurrencyInput } from '@/lib/currency-input'
+import type { ExpenseCancelLink } from '@/lib/expense-navigation'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { formatCurrency, formatNumber } from '@/lib/utils'
 import type { trpc } from '@/trpc/client'
@@ -96,7 +97,7 @@ export function BasicDetailsCard(props: {
   editScope?: 'OCCURRENCE' | 'THIS_AND_FUTURE' | null
   initialRecurrence?: ExpenseFormInputValues['recurrence']
   heading?: string
-  cancelHref?: string
+  cancelLink?: ExpenseCancelLink
   /** Link-invite token carried in the URL for pending invitees. */
   linkInviteToken?: string
   extractCategoryMutation: ReturnType<
@@ -279,7 +280,10 @@ export function BasicDetailsCard(props: {
           render={
             <Link
               data-expense-tab-after-secondary
-              href={props.cancelHref ?? `/groups/${group.id}/expenses`}
+              {...(props.cancelLink ?? {
+                to: '/groups/$groupId/expenses' as const,
+                params: { groupId: group.id },
+              })}
               title={tGroups('backToExpenses')}
             />
           }

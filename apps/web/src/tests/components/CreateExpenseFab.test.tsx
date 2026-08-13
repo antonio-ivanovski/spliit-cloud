@@ -23,6 +23,19 @@ vi.mock('@tanstack/react-router', () => ({
   useLocation: ({ select }: { select: (value: unknown) => unknown }) =>
     select({ pathname: state.pathname }),
   useNavigate: () => state.navigate,
+  Link: ({
+    to,
+    children,
+    ...props
+  }: {
+    to: string
+    children?: React.ReactNode
+    [key: string]: unknown
+  }) => (
+    <a href={to} {...props}>
+      {children}
+    </a>
+  ),
 }))
 
 vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
@@ -169,8 +182,8 @@ describe('CreateExpenseFab', () => {
 
     const control = screen.getByTestId('expense-action-control')
     expect(
-      within(control).getByRole('button', { name: 'Add expense' }),
-    ).toBeInTheDocument()
+      within(control).getByRole('link', { name: 'Add expense' }),
+    ).toHaveAttribute('href', '/groups/$groupId/expenses/create')
     expect(
       within(control).getByRole('button', { name: 'Voice expense' }),
     ).toBeInTheDocument()
@@ -245,7 +258,7 @@ describe('CreateExpenseFab', () => {
       currentInvitation: null,
     }
 
-    const { user } = render(
+    render(
       <CreateExpenseFab
         enableReceiptExtract={false}
         enableVoiceExpense={false}
@@ -256,14 +269,13 @@ describe('CreateExpenseFab', () => {
     // button; the desktop toolbar still exposes the same action. Scope the
     // query to the desktop wrapper so both surfaces stay valid.
     const control = screen.getByTestId('expense-action-control')
-    await user.click(
-      within(control).getByRole('button', { name: 'Add expense' }),
-    )
-
-    expect(state.navigate).toHaveBeenCalledWith({
-      to: '/groups/$groupId/expenses/create',
-      params: { groupId: 'group-1' },
+    const addExpense = within(control).getByRole('link', {
+      name: 'Add expense',
     })
+    expect(addExpense).toHaveAttribute(
+      'href',
+      '/groups/$groupId/expenses/create',
+    )
     state.currentGroup = null
   })
 
@@ -324,7 +336,7 @@ describe('CreateExpenseFab', () => {
       currentInvitation: null,
     }
 
-    const { user } = render(
+    render(
       <CreateExpenseFab
         enableReceiptExtract={false}
         enableVoiceExpense={false}
@@ -332,21 +344,18 @@ describe('CreateExpenseFab', () => {
     )
 
     // SpeedDial trigger is gone; the single-action mobile FAB takes its
-    // place, and clicking it routes directly to the expense form.
+    // place as a link to the expense form.
     expect(
       screen.queryByRole('button', { name: 'Open expense actions' }),
     ).not.toBeInTheDocument()
     const control = screen.getByTestId('expense-action-control')
     expect(
-      within(control).getByRole('button', { name: 'Add expense' }),
-    ).toBeInTheDocument()
-    expect(screen.getByTestId('create-expense-fab-mobile')).toBeInTheDocument()
-
-    await user.click(screen.getByTestId('create-expense-fab-mobile'))
-    expect(state.navigate).toHaveBeenCalledWith({
-      to: '/groups/$groupId/expenses/create',
-      params: { groupId: 'group-1' },
-    })
+      within(control).getByRole('link', { name: 'Add expense' }),
+    ).toHaveAttribute('href', '/groups/$groupId/expenses/create')
+    expect(screen.getByTestId('create-expense-fab-mobile')).toHaveAttribute(
+      'href',
+      '/groups/$groupId/expenses/create',
+    )
     state.currentGroup = null
   })
 

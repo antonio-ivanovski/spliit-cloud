@@ -1,7 +1,6 @@
-import { getRouteApi, useNavigate } from '@tanstack/react-router'
+import { getRouteApi, Link, useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 
-import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -12,6 +11,7 @@ import {
 } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
+  expenseFormCancelLink,
   getGlobalExpensesSearch,
   isGlobalExpensesReturnTo,
 } from '@/lib/expense-navigation'
@@ -84,7 +84,9 @@ export function CreateExpenseForm({
           <div>
             <Button
               variant="secondary"
-              render={<Link href={`/groups/${groupId}/expenses`} />}
+              render={
+                <Link to="/groups/$groupId/expenses" params={{ groupId }} />
+              }
             >
               {tGroups('backToExpenses')}
             </Button>
@@ -108,7 +110,9 @@ export function CreateExpenseForm({
           <div>
             <Button
               variant="secondary"
-              render={<Link href={`/groups/${groupId}/expenses`} />}
+              render={
+                <Link to="/groups/$groupId/expenses" params={{ groupId }} />
+              }
             >
               {tGroups('backToExpenses')}
             </Button>
@@ -139,7 +143,7 @@ export function CreateExpenseForm({
       group={group}
       {...(sourceExpense ? { expense: sourceExpense, isCopy: true } : {})}
       searchParams={searchParams}
-      cancelHref={searchParams.returnTo ?? `/groups/${group.id}`}
+      cancelLink={expenseFormCancelLink(group.id, searchParams.returnTo)}
       currentLedgerParticipantId={currentLedgerParticipantId}
       linkInviteToken={linkInviteToken}
       heading={

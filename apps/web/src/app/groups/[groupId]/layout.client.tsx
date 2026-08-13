@@ -1,4 +1,5 @@
 import {
+  Link,
   Navigate,
   Outlet,
   useLocation,
@@ -11,7 +12,6 @@ import { useEffect, useState, useSyncExternalStore } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { CopyButton } from '@/components/copy-button'
-import Link from '@/components/link'
 import { MobileGroupNav } from '@/components/mobile-shell'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -149,7 +149,7 @@ export function GroupLayoutClient({
           <p className="text-sm text-muted-foreground">
             {tInvalid('description')}
           </p>
-          <Button variant="outline" render={<Link href="/" />}>
+          <Button variant="outline" render={<Link to="/" />}>
             {tForbidden('backToHome')}
           </Button>
         </div>
@@ -167,7 +167,7 @@ export function GroupLayoutClient({
           <p className="text-sm text-muted-foreground">
             {tForbidden('Unauthorized.description')}
           </p>
-          <Button variant="outline" render={<Link href="/" />}>
+          <Button variant="outline" render={<Link to="/" />}>
             {tForbidden('backToHome')}
           </Button>
         </div>
@@ -318,14 +318,12 @@ function NotFoundGroup({ groupId }: { groupId: string }) {
           <div className="flex gap-2">
             <Button
               render={
-                <Link
-                  href={`/groups/import?prefill=${encodeURIComponent(sourceUrl)}`}
-                />
+                <Link to="/groups/import" search={{ prefill: sourceUrl }} />
               }
             >
               {tImportable('cta')}
             </Button>
-            <Button variant="outline" render={<Link href="/" />}>
+            <Button variant="outline" render={<Link to="/" />}>
               {tImportable('backToHome')}
             </Button>
           </div>
@@ -337,7 +335,7 @@ function NotFoundGroup({ groupId }: { groupId: string }) {
     <main className="flex flex-1 items-center justify-center px-4 py-10">
       <div className="flex max-w-md flex-col items-center gap-3 text-center">
         <h1 className="text-2xl font-semibold">{tNotFound('text')}</h1>
-        <Button variant="outline" render={<Link href="/" />}>
+        <Button variant="outline" render={<Link to="/" />}>
           {tNotFound('link')}
         </Button>
       </div>

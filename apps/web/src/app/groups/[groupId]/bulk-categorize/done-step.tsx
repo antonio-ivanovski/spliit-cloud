@@ -1,7 +1,7 @@
+import { Link } from '@tanstack/react-router'
 import { Check } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -27,7 +27,14 @@ export function DoneStep(props: { groupId: string; applied: number }) {
         </p>
       </CardContent>
       <CardFooter className="justify-end">
-        <Button render={<Link href={`/groups/${props.groupId}/edit`} />}>
+        <Button
+          render={
+            <Link
+              to="/groups/$groupId/edit"
+              params={{ groupId: props.groupId }}
+            />
+          }
+        >
           {t('backToSettings')}
         </Button>
       </CardFooter>

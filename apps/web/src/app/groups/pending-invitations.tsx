@@ -1,9 +1,8 @@
-import { useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { ArrowRight, Check, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
-import Link from '@/components/link'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -105,7 +104,8 @@ export function PendingInvitations() {
                 <div className="min-w-0 flex-1">
                   {groupId ? (
                     <Link
-                      href={`/groups/${groupId}`}
+                      to="/groups/$groupId"
+                      params={{ groupId }}
                       className="font-medium text-foreground no-underline outline-hidden before:absolute before:inset-0 before:rounded-md before:content-[''] focus-visible:underline"
                       title={
                         invitation.group?.name ?? t('invitations.unknownGroup')

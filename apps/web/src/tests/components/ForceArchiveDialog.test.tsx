@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { ForceArchiveDialog } from '@/components/force-archive-dialog'
 import { render, screen, waitFor } from '@/test/test-utils'
@@ -10,7 +10,6 @@ const mockInvalidateAccountGroups = vi.fn()
 const mockInvalidateOverview = vi.fn()
 const mockInvalidateGroupsGet = vi.fn()
 const mockToast = vi.fn()
-const mockNavigate = vi.fn()
 
 vi.mock('@/trpc/client', () => ({
   trpc: {
@@ -48,7 +47,19 @@ vi.mock('@/components/ui/use-toast', () => ({
 }))
 
 vi.mock('@tanstack/react-router', () => ({
-  useNavigate: () => mockNavigate,
+  Link: ({
+    to,
+    children,
+    ...props
+  }: {
+    to: string
+    children?: React.ReactNode
+    [key: string]: unknown
+  }) => (
+    <a href={to} {...props}>
+      {children}
+    </a>
+  ),
 }))
 
 // ── Tests ───────────────────────────────────────────────────────────────
@@ -82,7 +93,7 @@ describe('ForceArchiveDialog', () => {
     render(<ForceArchiveDialog groupId="group-1" onClose={vi.fn()} />)
 
     expect(
-      screen.getByRole('button', { name: /view balances/i }),
+      screen.getByRole('link', { name: /view balances/i }),
     ).toBeInTheDocument()
     expect(
       screen.getByRole('button', { name: /force archive/i }),
@@ -155,18 +166,16 @@ describe('ForceArchiveDialog', () => {
     expect(onClose).not.toHaveBeenCalled()
   })
 
-  it('navigates to balances page on view balances click', async () => {
+  it('links to the balances page on view balances', async () => {
     const onClose = vi.fn()
     const { user } = render(
       <ForceArchiveDialog groupId="group-1" onClose={onClose} />,
     )
 
-    await user.click(screen.getByRole('button', { name: /view balances/i }))
+    const viewBalances = screen.getByRole('link', { name: /view balances/i })
+    expect(viewBalances).toHaveAttribute('href', '/groups/$groupId/balances')
+    await user.click(viewBalances)
 
     expect(onClose).toHaveBeenCalledTimes(1)
-    expect(mockNavigate).toHaveBeenCalledWith({
-      to: '/groups/$groupId/balances',
-      params: { groupId: 'group-1' },
-    })
   })
 })

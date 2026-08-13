@@ -1,11 +1,11 @@
+import { Link, type LinkProps } from '@tanstack/react-router'
 import { Plus } from 'lucide-react'
 import type { ReactNode } from 'react'
 
-import Link from '@/components/link'
 import { cn } from '@/lib/utils'
 
 type SecondaryAction = {
-  href: string
+  to: LinkProps['to']
   icon: ReactNode
   label: string
   'data-testid'?: string
@@ -20,7 +20,7 @@ type SecondaryAction = {
  * zones, e.g. create on the left and import on the right.
  */
 export function CreateCard({
-  href,
+  to,
   icon,
   title,
   description,
@@ -28,7 +28,7 @@ export function CreateCard({
   className,
   'data-testid': dataTestId,
 }: {
-  href: string
+  to: LinkProps['to']
   icon?: ReactNode
   title: string
   description: string
@@ -58,7 +58,7 @@ export function CreateCard({
           )}
         >
           <Link
-            href={href}
+            to={to}
             data-testid={dataTestId}
             className="flex min-w-0 items-center gap-3 px-3 py-3 text-foreground no-underline outline-hidden transition-colors hover:bg-primary/5 focus-visible:bg-primary/5 focus-visible:underline"
           >
@@ -74,7 +74,7 @@ export function CreateCard({
           </Link>
           {secondaryAction ? (
             <Link
-              href={secondaryAction.href}
+              to={secondaryAction.to}
               data-testid={secondaryAction['data-testid']}
               className="flex min-w-0 flex-col items-center justify-center gap-1 border-s border-primary/15 px-2 py-2 text-center text-xs leading-tight font-medium text-primary no-underline outline-hidden transition-colors hover:bg-primary/8 focus-visible:bg-primary/8 focus-visible:underline"
             >

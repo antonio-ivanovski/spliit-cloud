@@ -63,7 +63,7 @@ describe('BudgetCard', () => {
     )
 
     const link = container.querySelector('a')
-    expect(link).toHaveAttribute('href', '/groups/g1/budgets/b1')
+    expect(link).toHaveAttribute('href', '/groups/$groupId/budgets/$budgetId')
     expect(link).toHaveTextContent('Groceries')
     expect(container.querySelectorAll('a')).toHaveLength(1)
     expect(container.querySelector('button')).toBeNull()

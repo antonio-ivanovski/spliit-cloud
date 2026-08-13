@@ -37,6 +37,19 @@ vi.mock('@/trpc/client', () => ({
 
 vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => vi.fn(),
+  Link: ({
+    to,
+    children,
+    ...props
+  }: {
+    to: string
+    children?: React.ReactNode
+    [key: string]: unknown
+  }) => (
+    <a href={to} {...props}>
+      {children}
+    </a>
+  ),
   useLocation: (opts?: {
     select?: (location: { pathname: string }) => unknown
   }) => {

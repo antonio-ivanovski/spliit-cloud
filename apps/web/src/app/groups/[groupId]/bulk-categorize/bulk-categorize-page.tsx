@@ -1,8 +1,8 @@
+import { Link } from '@tanstack/react-router'
 import { ArrowLeft } from 'lucide-react'
 import { useEffect, useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -265,7 +265,12 @@ function PageShell(props: {
           variant="ghost"
           size="sm"
           className="-ms-2 w-fit"
-          render={<Link href={`/groups/${props.groupId}/edit`} />}
+          render={
+            <Link
+              to="/groups/$groupId/edit"
+              params={{ groupId: props.groupId }}
+            />
+          }
         >
           <ArrowLeft className="me-2 h-4 w-4 rtl:rotate-180" />
           {t('backToSettings')}

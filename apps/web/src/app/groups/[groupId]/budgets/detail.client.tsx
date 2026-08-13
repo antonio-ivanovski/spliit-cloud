@@ -1,4 +1,4 @@
-import { useNavigate } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import {
   Archive,
   ArchiveRestore,
@@ -67,7 +67,6 @@ export function BudgetDetailModal({
   })
   const locale = useLocale()
   const { groupId, group } = useCurrentGroup()
-  const navigate = useNavigate()
   const [detailOpen, setDetailOpen] = useState(true)
   const { toast } = useToast()
   const utils = trpc.useUtils()
@@ -585,11 +584,11 @@ export function BudgetDetailModal({
                     {canEdit && (
                       <EditButton
                         label={t('edit')}
-                        onClick={() =>
-                          navigate({
-                            to: '/groups/$groupId/budgets/$budgetId/edit',
-                            params: { groupId, budgetId },
-                          })
+                        render={
+                          <Link
+                            to="/groups/$groupId/budgets/$budgetId/edit"
+                            params={{ groupId, budgetId }}
+                          />
                         }
                       />
                     )}

@@ -1,6 +1,6 @@
+import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 
-import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 
 export default function NotFound() {
@@ -9,7 +9,7 @@ export default function NotFound() {
     <div className="flex flex-col gap-2">
       <p>{t('text')}</p>
       <p>
-        <Button variant="secondary" render={<Link href="/" />}>
+        <Button variant="secondary" render={<Link to="/" />}>
           {t('link')}
         </Button>
       </p>

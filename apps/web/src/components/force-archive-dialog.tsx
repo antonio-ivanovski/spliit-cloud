@@ -1,4 +1,4 @@
-import { useNavigate } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -34,7 +34,6 @@ export function ForceArchiveDialog({ groupId, onClose }: Props) {
   const mascot = useMascotController()
   const utils = trpc.useUtils()
   const { toast } = useToast()
-  const navigate = useNavigate()
   const [pending, setPending] = useState(false)
 
   if (!groupId) return null
@@ -73,15 +72,6 @@ export function ForceArchiveDialog({ groupId, onClose }: Props) {
     }
   }
 
-  function handleViewBalances() {
-    if (!openGroupId) return
-    onClose()
-    void navigate({
-      to: '/groups/$groupId/balances',
-      params: { groupId: openGroupId },
-    })
-  }
-
   return (
     <ResponsiveDialog
       open={!!groupId}
@@ -108,10 +98,15 @@ export function ForceArchiveDialog({ groupId, onClose }: Props) {
             {t('archiveWithBalancesCancel')}
           </Button>
           <Button
-            type="button"
             variant="outline"
             disabled={pending}
-            onClick={handleViewBalances}
+            render={
+              <Link
+                to="/groups/$groupId/balances"
+                params={{ groupId: openGroupId }}
+              />
+            }
+            onClick={onClose}
           >
             {t('archiveWithBalancesView')}
           </Button>

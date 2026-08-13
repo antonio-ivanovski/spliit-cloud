@@ -16,6 +16,10 @@ import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
 import { getCurrency } from '@/lib/currency'
+import {
+  expenseFormCancelLink,
+  type ExpenseCancelLink,
+} from '@/lib/expense-navigation'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import {
   expenseFormInputSchema,
@@ -125,7 +129,7 @@ export function ExpenseForm(props: {
   searchParams?: CreateExpenseSearch
   heading?: string
   /** Internal path to return to when the form was opened from another feed. */
-  cancelHref?: string
+  cancelLink?: ExpenseCancelLink
   /**
    * Persistence callback. Resolves `'saved'` once the expense is persisted and
    * `'deferred'` when the flow only suspends the save (see
@@ -481,7 +485,7 @@ export function ExpenseForm(props: {
               : undefined
           }
           editScope={props.editScope}
-          cancelHref={props.cancelHref}
+          cancelLink={props.cancelLink}
           initialRecurrence={
             !isCreate ? (props.expense?.recurrence ?? null) : undefined
           }
@@ -606,7 +610,7 @@ export function ExpenseForm(props: {
           readOnly={!!props.readOnly}
           onDelete={props.onDelete}
           expenseTitle={props.expense?.title}
-          cancelHref={props.cancelHref ?? `/groups/${props.group.id}`}
+          cancelLink={props.cancelLink ?? expenseFormCancelLink(props.group.id)}
           submitDisabled={persisted}
         />
       </form>

@@ -25,7 +25,7 @@ describe('CreateCard', () => {
   it('renders a link to the create page with the title and description', () => {
     render(
       <CreateCard
-        href="/groups/create"
+        to="/groups/create"
         icon={<Plus data-testid="icon" />}
         title="Create a group"
         description="Add friends and split expenses"
@@ -44,7 +44,7 @@ describe('CreateCard', () => {
   it('renders a custom data-testid when provided', () => {
     render(
       <CreateCard
-        href="/friends/create"
+        to="/friends/create"
         icon={<Users data-testid="icon" />}
         title="Create a friend ledger"
         description="Track 1-on-1 expenses with someone"
@@ -60,12 +60,12 @@ describe('CreateCard', () => {
   it('renders a secondary action zone when provided', () => {
     render(
       <CreateCard
-        href="/groups/create"
+        to="/groups/create"
         icon={<Plus data-testid="icon" />}
         title="Create a group"
         description="Add friends and split expenses"
         secondaryAction={{
-          href: '/groups/import',
+          to: '/groups/import',
           icon: <Cloud data-testid="import-icon" />,
           label: 'Import',
           'data-testid': 'import-group-action',
@@ -87,7 +87,7 @@ describe('CreateCard', () => {
   it('does not render a secondary action zone when not provided', () => {
     render(
       <CreateCard
-        href="/friends/create"
+        to="/friends/create"
         icon={<Users data-testid="icon" />}
         title="Create a friend ledger"
         description="Track 1-on-1 expenses with someone"
@@ -99,7 +99,7 @@ describe('CreateCard', () => {
   it('matches the GroupCard minimum height (min-h-[5.5rem])', () => {
     const { container } = render(
       <CreateCard
-        href="/groups/create"
+        to="/groups/create"
         icon={<Plus data-testid="icon" />}
         title="Create a group"
         description="Add friends and split expenses"

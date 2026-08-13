@@ -22,27 +22,6 @@ vi.mock('@tanstack/react-router', () => ({
   useSearch: () => ({}),
 }))
 
-vi.mock('@/components/link', () => ({
-  default: ({
-    href,
-    children,
-    ..._props
-  }: {
-    href: string
-    children: React.ReactNode
-    [key: string]: unknown
-  }) => <a href={href}>{children}</a>,
-  Link: ({
-    href,
-    children,
-    ..._props
-  }: {
-    href: string
-    children: React.ReactNode
-    [key: string]: unknown
-  }) => <a href={href}>{children}</a>,
-}))
-
 // Mock tRPC - the members page uses many mutations and queries
 const mockCreateMutation = vi.fn()
 const mockCreateLinkMutation = vi.fn()

@@ -10,6 +10,19 @@ vi.mock('@tanstack/react-router', () => ({
   useLocation: ({ select }: { select: (value: unknown) => unknown }) =>
     select({ pathname: route.pathname }),
   useNavigate: () => vi.fn(),
+  Link: ({
+    to,
+    children,
+    ...props
+  }: {
+    to: string
+    children?: React.ReactNode
+    [key: string]: unknown
+  }) => (
+    <a href={to} {...props}>
+      {children}
+    </a>
+  ),
 }))
 
 vi.mock('@/components/account-menu', () => ({
@@ -37,13 +50,6 @@ vi.mock('@/components/install-promotion-dialog', () => ({
 }))
 vi.mock('@/components/push-notification-onboarding', () => ({
   PushNotificationOnboarding: () => null,
-}))
-vi.mock('@/components/link', () => ({
-  default: ({ children, href, ...props }: React.ComponentProps<'a'>) => (
-    <a href={href} {...props}>
-      {children}
-    </a>
-  ),
 }))
 vi.mock('@/components/locale-switcher', () => ({
   LocaleSwitcher: () => <button data-testid="locale-switcher">Locale</button>,

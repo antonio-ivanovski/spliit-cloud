@@ -1,4 +1,4 @@
-import { useNavigate } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { ArrowDownUp, Loader2, Star } from 'lucide-react'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -33,7 +33,7 @@ import {
 } from '@spliit/domain'
 
 import currencyExchangeSvg from './currency-exchange.svg'
-import { rankGroupsForConverter, type ConverterGroup } from './rank-groups'
+import { rankGroupsForConverter } from './rank-groups'
 
 const FROM_KEY = 'spliit:converter:fromCurrency'
 const TO_KEY = 'spliit:converter:toCurrency'
@@ -207,7 +207,6 @@ export function CurrencyConverterButton() {
 export function ConverterContent() {
   const { t } = useTranslation(undefined, { keyPrefix: 'CurrencyConverter' })
   const locale = useLocale()
-  const navigate = useNavigate()
   const currencies = useCurrencies('')
 
   const resolveInitialCode = useCallback(
@@ -283,21 +282,6 @@ export function ConverterContent() {
     writeStored(FROM_KEY, toCode)
     writeStored(TO_KEY, fromCode)
   }, [fromCode, toCode])
-
-  const handleGroupClick = (group: ConverterGroup) => {
-    if (!amountValid || !fromCode) return
-    const currency = getCurrency(fromCode)
-    if (!currency) return
-    const minor = amountAsMinorUnits(parsedAmount, currency)
-    void navigate({
-      to: '/groups/$groupId/expenses/create',
-      params: { groupId: group.id },
-      search: {
-        amount: String(minor),
-        originalCurrency: fromCode,
-      },
-    })
-  }
 
   const toCurrency = currencies.find((c) => c.code === toCode)
 
@@ -416,25 +400,54 @@ export function ConverterContent() {
         <div className="flex flex-col gap-2">
           <p className="text-sm font-medium">{t('createIn')}</p>
           <div className="flex gap-2 overflow-x-auto pb-1">
-            {rankedGroups.map((group) => (
-              <button
-                key={group.id}
-                type="button"
-                disabled={!amountValid}
-                onClick={() => handleGroupClick(group)}
-                className="flex shrink-0 items-center gap-1.5 rounded-full border bg-card px-3 py-1.5 text-sm font-medium shadow-xs hover:bg-accent disabled:pointer-events-none disabled:opacity-50"
-              >
-                {group.preference.starred && (
-                  <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                )}
-                {group.displayName || group.name}
-                {group.ledger.currencyCode && (
-                  <span className="text-xs text-muted-foreground">
-                    {group.ledger.currencyCode}
-                  </span>
-                )}
-              </button>
-            ))}
+            {rankedGroups.map((group) => {
+              const chipClassName =
+                'flex shrink-0 items-center gap-1.5 rounded-full border bg-card px-3 py-1.5 text-sm font-medium shadow-xs hover:bg-accent disabled:pointer-events-none disabled:opacity-50'
+              const from = fromCode ? getCurrency(fromCode) : undefined
+              const minor =
+                amountValid && from
+                  ? amountAsMinorUnits(parsedAmount, from)
+                  : undefined
+              const content = (
+                <>
+                  {group.preference.starred && (
+                    <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                  )}
+                  {group.displayName || group.name}
+                  {group.ledger.currencyCode && (
+                    <span className="text-xs text-muted-foreground">
+                      {group.ledger.currencyCode}
+                    </span>
+                  )}
+                </>
+              )
+              if (minor == null || !fromCode) {
+                return (
+                  <button
+                    key={group.id}
+                    type="button"
+                    disabled
+                    className={chipClassName}
+                  >
+                    {content}
+                  </button>
+                )
+              }
+              return (
+                <Link
+                  key={group.id}
+                  to="/groups/$groupId/expenses/create"
+                  params={{ groupId: group.id }}
+                  search={{
+                    amount: String(minor),
+                    originalCurrency: fromCode,
+                  }}
+                  className={chipClassName}
+                >
+                  {content}
+                </Link>
+              )
+            })}
           </div>
         </div>
       )}

@@ -1,6 +1,6 @@
 /* oxlint-disable jsx-a11y/prefer-tag-over-role -- status role is retained for live-region compatibility with consumers. */
 import { useMutation } from '@tanstack/react-query'
-import { getRouteApi } from '@tanstack/react-router'
+import { getRouteApi, Link } from '@tanstack/react-router'
 import {
   ArrowRight,
   Loader2,
@@ -12,7 +12,6 @@ import {
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -62,10 +61,11 @@ export default function UnsubscribePage() {
     ? NOTIFICATION_CATEGORY_METADATA[category]
     : undefined
 
-  const settingsHref = '/account/settings#notifications'
-  const homeHref = account
-    ? settingsHref
-    : `/?redirect=${encodeURIComponent(settingsHref)}`
+  const settingsLink = account ? (
+    <Link to="/account/settings" hash="notifications" />
+  ) : (
+    <Link to="/" search={{ redirect: '/account/settings#notifications' }} />
+  )
 
   if (!token || !metadata) {
     return (
@@ -88,7 +88,7 @@ export default function UnsubscribePage() {
           <CardFooter className="border-t bg-muted/20 p-6 sm:px-8">
             <Button
               className="h-auto min-h-10 min-w-0 py-2.5 text-center leading-5 whitespace-normal"
-              render={<Link href={homeHref} />}
+              render={settingsLink}
             >
               {t('manageSettings')}
             </Button>
@@ -124,13 +124,13 @@ export default function UnsubscribePage() {
             <Button
               variant="outline"
               className="h-auto min-h-10 min-w-0 py-2.5 text-center leading-5 whitespace-normal"
-              render={<Link href="/" />}
+              render={<Link to="/" />}
             >
               {t('backHome')}
             </Button>
             <Button
               className="h-auto min-h-10 min-w-0 py-2.5 text-center leading-5 whitespace-normal"
-              render={<Link href={homeHref} />}
+              render={settingsLink}
             >
               {t('manageSettings')}
             </Button>
@@ -187,7 +187,7 @@ export default function UnsubscribePage() {
             <Button
               size="lg"
               className="h-auto min-h-11 min-w-0 py-2.5 text-center leading-5 whitespace-normal"
-              render={<Link href="/" />}
+              render={<Link to="/" />}
             >
               {t('cancel')}
             </Button>
@@ -211,7 +211,7 @@ export default function UnsubscribePage() {
           <Button
             variant="link"
             className="h-auto min-w-0 self-center p-0 text-center leading-5 whitespace-normal"
-            render={<Link href={homeHref} />}
+            render={settingsLink}
           >
             {t('manageSettings')}
             <ArrowRight

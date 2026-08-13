@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import {
   ArrowUpRight,
   CalendarDays,
@@ -17,7 +18,6 @@ import {
 } from '@/app/groups/[groupId]/budgets/budget-scope'
 import { resolveBudgetStatus } from '@/app/groups/[groupId]/budgets/budget-status'
 import { BudgetUsageBar } from '@/app/groups/[groupId]/budgets/budget-usage-bar'
-import Link from '@/components/link'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { useLocale } from '@/i18n/react'
@@ -119,7 +119,8 @@ export function BudgetCard({ budget, groupId, group, compact = false }: Props) {
 
   return (
     <Link
-      href={`/groups/${groupId}/budgets/${budget.id}`}
+      to="/groups/$groupId/budgets/$budgetId"
+      params={{ groupId, budgetId: budget.id }}
       className="block rounded-lg outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
     >
       <Card className="mobile-surface transition-shadow hover:shadow-md">

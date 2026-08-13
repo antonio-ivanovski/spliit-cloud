@@ -9,6 +9,22 @@ vi.mock(import('@/lib/hooks'), async (importActual) => {
   return { ...actual, useMediaQuery: () => true }
 })
 
+vi.mock('@tanstack/react-router', () => ({
+  Link: ({
+    to,
+    children,
+    ...props
+  }: {
+    to: string
+    children?: React.ReactNode
+    [key: string]: unknown
+  }) => (
+    <a href={to} {...props}>
+      {children}
+    </a>
+  ),
+}))
+
 const fakeGroup = {
   currency: '$',
   currencyCode: 'USD',
@@ -35,7 +51,7 @@ const selectedBudget = {
 describe('BudgetForm', () => {
   it('shows the currency code prefix from the group and a non-numeric amount input', () => {
     const { container } = render(
-      <BudgetForm group={fakeGroup} onSubmit={vi.fn()} onCancel={vi.fn()} />,
+      <BudgetForm groupId="group-1" group={fakeGroup} onSubmit={vi.fn()} />,
     )
 
     expect(screen.getByText('USD')).toBeInTheDocument()
@@ -50,7 +66,7 @@ describe('BudgetForm', () => {
 
   it('renders scope radio cards for both categories and participants', () => {
     render(
-      <BudgetForm group={fakeGroup} onSubmit={vi.fn()} onCancel={vi.fn()} />,
+      <BudgetForm groupId="group-1" group={fakeGroup} onSubmit={vi.fn()} />,
     )
 
     expect(
@@ -69,7 +85,7 @@ describe('BudgetForm', () => {
 
   it('shows All badges when scopes are ALL', () => {
     render(
-      <BudgetForm group={fakeGroup} onSubmit={vi.fn()} onCancel={vi.fn()} />,
+      <BudgetForm groupId="group-1" group={fakeGroup} onSubmit={vi.fn()} />,
     )
 
     // Radio label + scope badge each render the "All" text.
@@ -80,10 +96,10 @@ describe('BudgetForm', () => {
   it('shows removable badges for selected categories and participants', () => {
     render(
       <BudgetForm
+        groupId="group-1"
         group={fakeGroup}
         budget={selectedBudget}
         onSubmit={vi.fn()}
-        onCancel={vi.fn()}
       />,
     )
 
@@ -94,7 +110,7 @@ describe('BudgetForm', () => {
 
   it('reveals the category picker combobox only after selecting the SELECTED card', async () => {
     const { user } = render(
-      <BudgetForm group={fakeGroup} onSubmit={vi.fn()} onCancel={vi.fn()} />,
+      <BudgetForm groupId="group-1" group={fakeGroup} onSubmit={vi.fn()} />,
     )
 
     expect(screen.queryByText('Choose categories')).toBeNull()
@@ -109,7 +125,7 @@ describe('BudgetForm', () => {
 
   it('renders the period hint with the current MONTHLY range', () => {
     render(
-      <BudgetForm group={fakeGroup} onSubmit={vi.fn()} onCancel={vi.fn()} />,
+      <BudgetForm groupId="group-1" group={fakeGroup} onSubmit={vi.fn()} />,
     )
 
     const hint = screen.getByText(/Current period:/)
@@ -124,7 +140,7 @@ describe('BudgetForm', () => {
 
   it('keeps the form actions fixed to the bottom of the viewport', () => {
     const { container } = render(
-      <BudgetForm group={fakeGroup} onSubmit={vi.fn()} onCancel={vi.fn()} />,
+      <BudgetForm groupId="group-1" group={fakeGroup} onSubmit={vi.fn()} />,
     )
 
     const actionBar = container.querySelector('form > div.fixed')

@@ -1,11 +1,9 @@
-/* oxlint-disable jsx-a11y/no-static-element-interactions -- expense activity rows expose button semantics conditionally. */
-import { useNavigate } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
-import { Button } from '@/components/ui/button'
 import { useLocale } from '@/i18n/react'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
 import type { DateTimeStyle } from '@/lib/utils'
@@ -272,7 +270,6 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
   const accountPreferences = useSyncedAccountPreferences()
   const accountTimeZone =
     accountPreferences?.timeZone ?? detectDeviceTimeZone() ?? 'UTC'
-  const navigate = useNavigate()
   const locale = useLocale()
   const { t } = useTranslation(undefined, { keyPrefix: 'Activities' })
   const expenseExists = activity.expense != null
@@ -286,29 +283,19 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
   return (
     <div
       className={cn(
-        'flex min-w-0 items-stretch justify-between gap-1 px-2 py-2 text-sm hover:bg-accent sm:rounded-lg sm:ps-2 sm:pe-1',
+        'relative flex min-w-0 items-stretch justify-between gap-1 px-2 py-2 text-sm hover:bg-accent sm:rounded-lg sm:ps-2 sm:pe-1',
         expenseExists && 'cursor-pointer',
       )}
-      role={expenseExists ? 'button' : undefined}
-      tabIndex={expenseExists ? 0 : undefined}
-      onClick={() => {
-        if (expenseExists) {
-          void navigate({
-            href: `/groups/${groupId}/expenses/${activity.expense!.id}`,
-          })
-        }
-      }}
-      onKeyDown={(e) => {
-        if (!expenseExists) return
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault()
-          void navigate({
-            href: `/groups/${groupId}/expenses/${activity.expense!.id}`,
-          })
-        }
-      }}
       data-testid={`activity-item-${activity.id}`}
     >
+      {expenseExists && activity.expense && (
+        <Link
+          to="/groups/$groupId/expenses/$expenseId"
+          params={{ groupId, expenseId: activity.expense.id }}
+          className="absolute inset-0 z-0 rounded-[inherit] outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
+          aria-label={t('openExpense')}
+        />
+      )}
       <div className="flex shrink-0 flex-col items-start justify-between">
         {dateStyle !== undefined && (
           <div className="mt-1 text-xs/5 text-muted-foreground">
@@ -355,19 +342,10 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
         )}
       </div>
       {expenseExists && (
-        <Button
-          size="icon"
-          variant="link"
-          className="hidden h-5 w-5 self-center sm:flex"
-          render={
-            <a
-              href={`/groups/${groupId}/expenses/${activity.expense!.id}`}
-              aria-label={t('openExpense')}
-            />
-          }
-        >
-          <ChevronRight className="h-4 w-4 rtl:rotate-180" />
-        </Button>
+        <ChevronRight
+          className="pointer-events-none hidden h-4 w-4 self-center sm:flex rtl:rotate-180"
+          aria-hidden="true"
+        />
       )}
     </div>
   )

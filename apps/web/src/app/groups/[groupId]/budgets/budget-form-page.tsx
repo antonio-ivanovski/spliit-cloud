@@ -1,4 +1,4 @@
-import { useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { ArrowLeft } from 'lucide-react'
 
 import { BudgetForm } from '@/app/groups/[groupId]/budgets/budget-form'
@@ -7,7 +7,6 @@ import {
   useCurrentGroup,
   useIsPendingInvitee,
 } from '@/app/groups/[groupId]/current-group-context'
-import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -96,7 +95,9 @@ export function BudgetFormPage({ groupId, budgetId }: Props) {
           <div>
             <Button
               variant="secondary"
-              render={<Link href={`/groups/${groupId}/budgets`} />}
+              render={
+                <Link to="/groups/$groupId/budgets" params={{ groupId }} />
+              }
             >
               {t('backToBudgets')}
             </Button>
@@ -116,7 +117,9 @@ export function BudgetFormPage({ groupId, budgetId }: Props) {
           <div>
             <Button
               variant="secondary"
-              render={<Link href={`/groups/${groupId}/budgets`} />}
+              render={
+                <Link to="/groups/$groupId/budgets" params={{ groupId }} />
+              }
             >
               {t('backToBudgets')}
             </Button>
@@ -152,7 +155,8 @@ export function BudgetFormPage({ groupId, budgetId }: Props) {
             className="-ms-2 hidden shrink-0 sm:inline-flex"
             render={
               <Link
-                href={`/groups/${groupId}/budgets`}
+                to="/groups/$groupId/budgets"
+                params={{ groupId }}
                 title={t('backToBudgets')}
               />
             }
@@ -167,10 +171,10 @@ export function BudgetFormPage({ groupId, budgetId }: Props) {
       </CardHeader>
       <CardContent>
         <BudgetForm
+          groupId={groupId}
           group={group}
           budget={budget ?? undefined}
           pending={isEdit ? updateMutation.isPending : createMutation.isPending}
-          onCancel={goBack}
           onSubmit={async (input) => {
             if (isEdit && budgetId) {
               await updateMutation.mutateAsync({

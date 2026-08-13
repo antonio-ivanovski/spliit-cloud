@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import {
   Check,
   ChevronLeft,
@@ -8,7 +9,6 @@ import {
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import Link from '@/components/link'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -75,10 +75,7 @@ export function SeriesControls({
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseSeries' })
   const linkInviteToken = useLinkInviteToken()
-  const expenseHref = (expenseId: string) =>
-    `/groups/${groupId}/expenses/${expenseId}${
-      linkInviteToken ? `?invite=${encodeURIComponent(linkInviteToken)}` : ''
-    }`
+  const inviteSearch = linkInviteToken ? { invite: linkInviteToken } : undefined
 
   return (
     <div className="flex flex-wrap items-center gap-2 border-t pt-4">
@@ -90,7 +87,13 @@ export function SeriesControls({
         <Button
           variant="outline"
           size="sm"
-          render={<Link href={expenseHref(series.previousExpenseId)} />}
+          render={
+            <Link
+              to="/groups/$groupId/expenses/$expenseId"
+              params={{ groupId, expenseId: series.previousExpenseId }}
+              search={inviteSearch}
+            />
+          }
         >
           <ChevronLeft
             className="me-1 h-4 w-4 rtl:rotate-180"
@@ -111,7 +114,13 @@ export function SeriesControls({
         <Button
           variant="outline"
           size="sm"
-          render={<Link href={expenseHref(series.nextExpenseId)} />}
+          render={
+            <Link
+              to="/groups/$groupId/expenses/$expenseId"
+              params={{ groupId, expenseId: series.nextExpenseId }}
+              search={inviteSearch}
+            />
+          }
         >
           {t('next')}
           <ChevronRight
@@ -138,11 +147,12 @@ export function SeriesControls({
           size="sm"
           render={
             <Link
-              href={`/groups/${groupId}/expenses?seriesId=${series.id}${
-                linkInviteToken
-                  ? `&invite=${encodeURIComponent(linkInviteToken)}`
-                  : ''
-              }`}
+              to="/groups/$groupId/expenses"
+              params={{ groupId }}
+              search={{
+                seriesId: series.id,
+                ...(linkInviteToken ? { invite: linkInviteToken } : {}),
+              }}
             />
           }
         >

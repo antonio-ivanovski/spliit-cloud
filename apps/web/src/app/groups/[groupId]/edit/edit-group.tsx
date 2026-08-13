@@ -1,10 +1,10 @@
+import { Link } from '@tanstack/react-router'
 import { Archive, ArchiveRestore, Sparkles, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ForceArchiveDialog } from '@/components/force-archive-dialog'
 import { GroupForm } from '@/components/group-form'
-import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -60,7 +60,7 @@ export const EditGroup = () => {
         <CardContent>
           <Button
             variant="secondary"
-            render={<Link href={`/groups/${groupId}`} />}
+            render={<Link to="/groups/$groupId" params={{ groupId }} />}
           >
             {t('readOnlyBack')}
           </Button>
@@ -108,7 +108,12 @@ export const EditGroup = () => {
           <CardContent>
             <Button
               variant="secondary"
-              render={<Link href={`/groups/bulk-categorize/${groupId}`} />}
+              render={
+                <Link
+                  to="/groups/bulk-categorize/$groupId"
+                  params={{ groupId }}
+                />
+              }
             >
               <Sparkles className="me-2 h-4 w-4" />
               {t('bulkCategorizeButton')}

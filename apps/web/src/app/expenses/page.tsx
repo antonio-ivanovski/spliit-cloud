@@ -1,4 +1,8 @@
-import { getRouteApi, useNavigate } from '@tanstack/react-router'
+import {
+  getRouteApi,
+  type LinkProps,
+  useNavigate,
+} from '@tanstack/react-router'
 import { ArrowDownWideNarrow, Filter, Search, X } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -497,10 +501,10 @@ function FilterChoice({
 
 function GlobalExpenseItem({
   expense,
-  onOpen,
+  expensesSearch,
 }: {
   expense: GlobalExpense
-  onOpen: () => void
+  expensesSearch: LinkProps['search']
 }) {
   return (
     <ExpenseCard
@@ -509,7 +513,7 @@ function GlobalExpenseItem({
       groupId={expense.group.id}
       participantCount={expense.group.participantCount}
       groupLabel={expense.group.displayName}
-      onOpen={onOpen}
+      expensesSearch={expensesSearch}
     />
   )
 }
@@ -596,17 +600,6 @@ function GlobalExpensesContent() {
       to: '/expenses',
       search: filtersToSearch(next) as never,
       replace: true,
-    })
-  }
-
-  const openExpense = (expense: GlobalExpense) => {
-    void navigate({
-      to: '/expenses',
-      search: {
-        ...filtersToSearch(filters),
-        expenseId: expense.id,
-        expenseGroupId: expense.group.id,
-      } as never,
     })
   }
 
@@ -794,7 +787,13 @@ function GlobalExpensesContent() {
                     <GlobalExpenseItem
                       key={`${expense.group.id}:${expense.id}`}
                       expense={expense}
-                      onOpen={() => openExpense(expense)}
+                      expensesSearch={
+                        {
+                          ...filtersToSearch(filters),
+                          expenseId: expense.id,
+                          expenseGroupId: expense.group.id,
+                        } as LinkProps['search']
+                      }
                     />
                   )}
                 />

@@ -47,6 +47,21 @@ vi.mock('@/components/ui/use-toast', () => ({
 vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => mockNavigate,
   useRouter: () => ({}),
+  Link: ({
+    to,
+    search,
+    children,
+    ...props
+  }: {
+    to: string
+    search?: unknown
+    children?: React.ReactNode
+    [key: string]: unknown
+  }) => (
+    <a href={to} data-search={JSON.stringify(search)} {...props}>
+      {children}
+    </a>
+  ),
 }))
 
 // ── Fixtures ────────────────────────────────────────────────────────────
@@ -373,7 +388,7 @@ describe('CreateReimbursementModal', () => {
     })
   })
 
-  it('navigates to the full create form with search params when clicking Edit', async () => {
+  it('links to the full create form with search params when clicking Edit', async () => {
     const onOpenChange = vi.fn()
     const { user } = render(
       <CreateReimbursementModal
@@ -386,19 +401,19 @@ describe('CreateReimbursementModal', () => {
       />,
     )
 
-    await user.click(screen.getByTestId('reimbursement-edit'))
-
-    expect(mockNavigate).toHaveBeenCalledWith({
-      to: '/groups/$groupId/expenses/create',
-      params: { groupId: 'group-1' },
-      search: {
+    const edit = screen.getByTestId('reimbursement-edit')
+    expect(edit).toHaveAttribute('href', '/groups/$groupId/expenses/create')
+    expect(edit).toHaveAttribute(
+      'data-search',
+      JSON.stringify({
         reimbursement: 'yes',
         from: 'alice-id',
         to: 'bob-id',
         amount: '2500',
         originalCurrency: 'USD',
-      },
-    })
+      }),
+    )
+    await user.click(edit)
     expect(onOpenChange).toHaveBeenCalledWith(false)
   })
 

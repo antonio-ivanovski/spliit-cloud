@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from '@tanstack/react-router'
+import { Link, useLocation, useNavigate } from '@tanstack/react-router'
 import { Camera, Mic, Plus, X } from 'lucide-react'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -171,10 +171,16 @@ export function CreateExpenseFab({
           className="isolate inline-flex h-11 items-stretch rounded-lg border border-border/70 bg-background/90 shadow-xs"
         >
           <Button
-            type="button"
             variant="default"
             className="h-10 gap-2 self-center rounded-s-md rounded-e-none px-3.5 shadow-none"
-            onClick={goToManualExpense}
+            render={
+              currentGroupId ? (
+                <Link
+                  to="/groups/$groupId/expenses/create"
+                  params={{ groupId: currentGroupId }}
+                />
+              ) : undefined
+            }
           >
             <Plus className="size-4" />
             {t('addExpenseAction')}
@@ -297,10 +303,16 @@ export function CreateExpenseFab({
       // FAB into a single primary button so taps don't go through a
       // one-action speed dial.
       <Button
-        type="button"
         variant="default"
         aria-label={t('addExpenseAction')}
-        onClick={goToManualExpense}
+        render={
+          currentGroupId ? (
+            <Link
+              to="/groups/$groupId/expenses/create"
+              params={{ groupId: currentGroupId }}
+            />
+          ) : undefined
+        }
         data-testid="create-expense-fab-mobile"
         data-create-expense-fab
         className="fixed end-6 z-40 size-14 rounded-full bg-primary p-0 text-primary-foreground shadow-xl hover:bg-primary/90 sm:hidden"

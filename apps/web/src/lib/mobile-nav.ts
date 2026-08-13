@@ -1,6 +1,9 @@
+import type { LinkProps } from '@tanstack/react-router'
+
 type FocusedRouteMeta = {
   title: string
-  backHref: string
+  to: LinkProps['to']
+  params?: LinkProps['params']
 }
 
 const groupIdFromPath = (pathname: string) =>
@@ -44,60 +47,67 @@ export function getFocusedRouteMeta(
 ): FocusedRouteMeta | null {
   const groupId = groupIdFromPath(pathname)
   if (pathname === '/groups/create') {
-    return { title: t('Groups.createGroupCard.title'), backHref: '/' }
+    return { title: t('Groups.createGroupCard.title'), to: '/' }
   }
   if (pathname === '/groups/import') {
-    return { title: t('Groups.Import.StepHeader.title'), backHref: '/' }
+    return { title: t('Groups.Import.StepHeader.title'), to: '/' }
   }
   if (pathname === '/friends/create') {
-    return { title: t('Groups.createFriendLedgerCard.title'), backHref: '/' }
+    return { title: t('Groups.createFriendLedgerCard.title'), to: '/' }
   }
   if (pathname === '/expenses') {
-    return { title: t('Expenses.globalTitle'), backHref: '/' }
+    return { title: t('Expenses.globalTitle'), to: '/' }
   }
   if (pathname === '/account/settings') {
-    return { title: t('AccountSettings.title'), backHref: '/' }
+    return { title: t('AccountSettings.title'), to: '/' }
   }
   if (pathname.startsWith('/groups/bulk-categorize/') && groupId) {
     return {
       title: t('BulkCategorize.title'),
-      backHref: `/groups/${groupId}/expenses`,
+      to: '/groups/$groupId/expenses',
+      params: { groupId },
     }
   }
   if (groupId && /^\/groups\/[^/]+\/edit$/.test(pathname)) {
     return {
       title: t('Settings.title'),
-      backHref: `/groups/${groupId}/expenses`,
+      to: '/groups/$groupId/expenses',
+      params: { groupId },
     }
   }
   if (groupId && pathname === `/groups/${groupId}/budgets/create`) {
     return {
       title: t('Budgets.create'),
-      backHref: `/groups/${groupId}/budgets`,
+      to: '/groups/$groupId/budgets',
+      params: { groupId },
     }
   }
   if (groupId && /^\/groups\/[^/]+\/budgets\/[^/]+\/edit$/.test(pathname)) {
     return {
       title: t('Budgets.edit'),
-      backHref: `/groups/${groupId}/budgets`,
+      to: '/groups/$groupId/budgets',
+      params: { groupId },
     }
   }
   if (groupId && /^\/groups\/[^/]+\/budgets\/[^/]+$/.test(pathname)) {
     return {
       title: t('Budgets.detailTitle'),
-      backHref: `/groups/${groupId}/budgets`,
+      to: '/groups/$groupId/budgets',
+      params: { groupId },
     }
   }
   if (groupId && /^\/groups\/[^/]+\/expenses\/create$/.test(pathname)) {
     return {
       title: t('Expenses.create'),
-      backHref: `/groups/${groupId}/expenses`,
+      to: '/groups/$groupId/expenses',
+      params: { groupId },
     }
   }
   if (groupId && /^\/groups\/[^/]+\/expenses\/[^/]+\/edit$/.test(pathname)) {
     return {
       title: t('ExpensePreview.edit'),
-      backHref: `/groups/${groupId}/expenses`,
+      to: '/groups/$groupId/expenses',
+      params: { groupId },
     }
   }
   return null

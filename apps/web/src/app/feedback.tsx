@@ -12,7 +12,6 @@ import {
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import { getBrowserFeedbackDiagnostics } from '@/lib/feedback-diagnostics'
 
@@ -100,7 +99,7 @@ export default function FeedbackPage() {
               <p className="mt-2 flex-1 text-sm leading-6 text-muted-foreground">
                 {t(`categories.${key}.description`)}
               </p>
-              <Link
+              <a
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -108,7 +107,7 @@ export default function FeedbackPage() {
               >
                 {t(`categories.${key}.action`)}
                 <ExternalLink className="size-4" aria-hidden="true" />
-              </Link>
+              </a>
             </article>
           ))}
         </section>

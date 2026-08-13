@@ -6,18 +6,23 @@ import { render, screen } from '@/test/test-utils'
 vi.mock('@tanstack/react-router', () => ({
   useLocation: ({ select }: { select: (value: unknown) => unknown }) =>
     select({ pathname: '/groups/group-1/expenses' }),
+  Link: ({
+    to,
+    children,
+    ...props
+  }: {
+    to: string
+    children?: React.ReactNode
+    [key: string]: unknown
+  }) => (
+    <a href={to} {...props}>
+      {children}
+    </a>
+  ),
 }))
 
 vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useCurrentGroup: () => ({ group: { groupType: 'GROUP' } }),
-}))
-
-vi.mock('@/components/link', () => ({
-  default: ({ href, children, ...props }: React.ComponentProps<'a'>) => (
-    <a href={href} {...props}>
-      {children}
-    </a>
-  ),
 }))
 
 vi.mock('@/components/ui/responsive-dialog', () => ({

@@ -1,4 +1,4 @@
-import { useNavigate } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import {
   Archive,
   ArchiveRestore,
@@ -68,7 +68,6 @@ export function AccountExportModal() {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'AccountSettings.export',
   })
-  const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const [selection, setSelection] = useState(initialSelection)
   const { data, isPending, isError, refetch } = trpc.account.groups.useQuery(
@@ -421,14 +420,10 @@ export function AccountExportModal() {
               </ResponsiveDialogContent>
             </ResponsiveDialog>
             <Button
-              type="button"
               variant="outline"
               className="flex-1"
-              onClick={() =>
-                void navigate({
-                  to: '/groups/import',
-                  search: { source: 'spliit-cloud' },
-                })
+              render={
+                <Link to="/groups/import" search={{ source: 'spliit-cloud' }} />
               }
             >
               <ArchiveRestore className="me-2 h-4 w-4" aria-hidden="true" />

@@ -11,30 +11,17 @@ vi.mock('@/lib/hooks', () => ({
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
-vi.mock('@/components/link', () => ({
-  default: ({
-    href,
-    children,
-    ...props
-  }: {
-    href: string
-    children: React.ReactNode
-    [key: string]: unknown
-  }) => (
-    <a href={href} {...props}>
-      {children}
-    </a>
-  ),
+vi.mock('@tanstack/react-router', () => ({
   Link: ({
-    href,
+    to,
     children,
     ...props
   }: {
-    href: string
+    to: string
     children: React.ReactNode
     [key: string]: unknown
   }) => (
-    <a href={href} {...props}>
+    <a href={to} {...props}>
       {children}
     </a>
   ),

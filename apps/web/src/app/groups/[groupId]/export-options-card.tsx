@@ -7,7 +7,6 @@ import {
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import { getApiBaseUrl } from '@/lib/api-url'
 import { cn } from '@/lib/utils'
@@ -39,7 +38,8 @@ function ExportOption({
     <Button
       variant={accent ? 'default' : 'secondary'}
       className="h-10 w-full shrink-0 px-3 sm:w-auto"
-      render={<Link href={href} target="_blank" rel="noopener noreferrer" />}
+      // oxlint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- Button render merges actionLabel into the download link.
+      render={<a href={href} target="_blank" rel="noopener noreferrer" />}
     >
       {actionLabel}
     </Button>

@@ -1,7 +1,7 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import type { GroupExpense } from '@/lib/api'
-import { fireEvent, render, screen } from '@/test/test-utils'
+import { render, screen } from '@/test/test-utils'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
@@ -236,11 +236,11 @@ describe('ExpenseCard', () => {
     // Pending invitees can view the expense preview even though they cannot
     // edit it.
     const card = screen.getByTestId('expense-item-exp-1')
-    expect(card.className).toContain('cursor-pointer')
+    expect(screen.getByRole('link', { name: 'Dinner' })).toBeInTheDocument()
     expect(card.querySelector('.lucide-chevron-right')).toBeInTheDocument()
   })
 
-  it('shows preview affordance (cursor-pointer, onClick)', () => {
+  it('shows preview affordance as a link to the expense', () => {
     vi.mocked(useIsPendingInvitee).mockReturnValue(false)
     vi.mocked(useActiveUser).mockReturnValue(null)
 
@@ -254,16 +254,17 @@ describe('ExpenseCard', () => {
       />,
     )
 
-    // Every viewer can open the read-only preview.
     const card = screen.getByTestId('expense-item-exp-1')
-    expect(card.className).toContain('cursor-pointer')
     expect(card.className).toContain('hover:bg-accent')
+    expect(screen.getByRole('link', { name: 'Dinner' })).toHaveAttribute(
+      'href',
+      '/groups/$groupId/expenses/$expenseId',
+    )
   })
 
-  it('uses a same-page opener when provided', () => {
+  it('links to the global expenses overlay when expensesSearch is provided', () => {
     vi.mocked(useIsPendingInvitee).mockReturnValue(false)
     vi.mocked(useActiveUser).mockReturnValue(null)
-    const onOpen = vi.fn()
 
     render(
       <ExpenseCard
@@ -271,12 +272,14 @@ describe('ExpenseCard', () => {
         currency={EUR}
         groupId="group-1"
         participantCount={2}
-        onOpen={onOpen}
+        expensesSearch={{ expenseId: 'exp-1', expenseGroupId: 'group-1' }}
       />,
     )
 
-    fireEvent.click(screen.getByTestId('expense-item-exp-1'))
-    expect(onOpen).toHaveBeenCalledTimes(1)
+    expect(screen.getByRole('link', { name: 'Dinner' })).toHaveAttribute(
+      'href',
+      '/expenses',
+    )
   })
 
   it('renders the RecurringBadge for expenses that belong to a recurring series', () => {
@@ -512,15 +515,12 @@ describe('ExpenseCard', () => {
     it('hides overflow items until the more control is pressed', async () => {
       vi.mocked(useIsPendingInvitee).mockReturnValue(false)
       vi.mocked(useActiveUser).mockReturnValue(null)
-      const onOpen = vi.fn()
-
       const { user } = render(
         <ExpenseCard
           expense={makeExpense({ items: threeItems })}
           currency={EUR}
           groupId="group-1"
           participantCount={2}
-          onOpen={onOpen}
         />,
       )
 
@@ -530,7 +530,6 @@ describe('ExpenseCard', () => {
 
       await user.click(screen.getByRole('button', { name: /^\+1 more$/i }))
 
-      expect(onOpen).not.toHaveBeenCalled()
       expect(screen.getByText(/Cherries/)).toBeInTheDocument()
       expect(
         screen.getByRole('button', { name: /^show less$/i }),

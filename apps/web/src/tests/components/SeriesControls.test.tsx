@@ -10,25 +10,28 @@ vi.mock('@/app/groups/[groupId]/use-link-invite-token', () => ({
   useLinkInviteToken: vi.fn(() => undefined),
 }))
 
-vi.mock('@/components/link', () => ({
-  default: ({
-    href,
-    children,
-    ..._props
-  }: {
-    href: string
-    children: React.ReactNode
-    [key: string]: unknown
-  }) => <a href={href}>{children}</a>,
+vi.mock('@tanstack/react-router', () => ({
   Link: ({
-    href,
+    to,
+    search,
     children,
-    ..._props
+    ...props
   }: {
-    href: string
-    children: React.ReactNode
+    to: string
+    search?: { seriesId?: string; invite?: string }
+    children?: React.ReactNode
     [key: string]: unknown
-  }) => <a href={href}>{children}</a>,
+  }) => {
+    const params = new URLSearchParams()
+    if (search?.seriesId) params.set('seriesId', search.seriesId)
+    if (search?.invite) params.set('invite', search.invite)
+    const query = params.toString()
+    return (
+      <a href={query ? `${to}?${query}` : to} {...props}>
+        {children}
+      </a>
+    )
+  },
 }))
 
 function makeSeries(
@@ -49,10 +52,16 @@ describe('SeriesControls', () => {
     render(<SeriesControls groupId="g1" series={makeSeries()} />)
 
     const previousLink = screen.getByRole('link', { name: /previous/i })
-    expect(previousLink).toHaveAttribute('href', '/groups/g1/expenses/exp-prev')
+    expect(previousLink).toHaveAttribute(
+      'href',
+      '/groups/$groupId/expenses/$expenseId',
+    )
 
     const nextLink = screen.getByRole('link', { name: /next/i })
-    expect(nextLink).toHaveAttribute('href', '/groups/g1/expenses/exp-next')
+    expect(nextLink).toHaveAttribute(
+      'href',
+      '/groups/$groupId/expenses/$expenseId',
+    )
   })
 
   it('renders the Previous and Next controls as disabled buttons when ids are null', () => {
@@ -102,7 +111,7 @@ describe('SeriesControls', () => {
     const link = screen.getByRole('link', { name: /view series/i })
     expect(link).toHaveAttribute(
       'href',
-      '/groups/g1/expenses?seriesId=series-1',
+      '/groups/$groupId/expenses?seriesId=series-1',
     )
   })
 

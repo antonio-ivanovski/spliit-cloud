@@ -1,10 +1,9 @@
 import { useMutation } from '@tanstack/react-query'
-import { getRouteApi } from '@tanstack/react-router'
+import { getRouteApi, Link } from '@tanstack/react-router'
 import { Loader2, Mail } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -132,7 +131,7 @@ export function ForgotPasswordPage() {
             className="w-full"
             render={
               <Link
-                href="/"
+                to="/"
                 search={
                   email.trim() ? { email: email.trim() } : { email: undefined }
                 }

@@ -1,5 +1,5 @@
 /* oxlint-disable jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- Trans injects the contributor link's accessible text at runtime. */
-import { Outlet, useLocation } from '@tanstack/react-router'
+import { Outlet, Link, useLocation } from '@tanstack/react-router'
 import { Suspense } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
@@ -8,7 +8,6 @@ import { AccountPreferencesSync } from '@/components/account-preferences-sync'
 import Image from '@/components/app-image'
 import { CurrencyConverterButton } from '@/components/currency-converter/currency-converter'
 import { InstallPromotionDialog } from '@/components/install-promotion-dialog'
-import Link from '@/components/link'
 import { LocaleSwitcher } from '@/components/locale-switcher'
 import { MascotProvider } from '@/components/mascot/mascot-context'
 import { MascotHost } from '@/components/mascot/mascot-host'
@@ -55,7 +54,7 @@ function Content() {
             >
               <Link
                 className="flex items-center gap-2 transition-transform hover:scale-105"
-                href="/"
+                to="/"
               >
                 <div className="flex items-center gap-2" aria-label="Spliit">
                   <Image
@@ -98,11 +97,7 @@ function Content() {
                 data-app-header
                 className="fixed inset-x-0 top-0 z-50 flex h-(--app-header-height) items-center justify-between border-b bg-white/90 px-3 backdrop-blur sm:hidden dark:bg-gray-950/90"
               >
-                <Link
-                  href="/"
-                  aria-label="Spliit"
-                  className="flex items-center"
-                >
+                <Link to="/" aria-label="Spliit" className="flex items-center">
                   <Image
                     src="/logo-with-text.svg"
                     className="h-9 w-auto"
@@ -135,7 +130,7 @@ function Content() {
             >
               <div className="flex flex-col space-y-2">
                 <div className="flex items-center space-x-2 text-base font-semibold sm:text-lg">
-                  <Link className="flex items-center gap-2" href="/">
+                  <Link className="flex items-center gap-2" to="/">
                     <Image
                       src="/logo-with-text.svg"
                       className="m-1 h-[45px] w-auto"
@@ -165,12 +160,10 @@ function Content() {
                     aria-label={t('Footer.legalNavigation')}
                     className="flex flex-wrap gap-x-3 gap-y-1"
                   >
-                    <Link href="/privacy">{t('Footer.privacy')}</Link>
-                    <Link href="/terms">{t('Footer.terms')}</Link>
-                    <Link href="/imprint">{t('Footer.imprint')}</Link>
-                    <Link href="/feedback">
-                      {t('Feedback.navigationLabel')}
-                    </Link>
+                    <Link to="/privacy">{t('Footer.privacy')}</Link>
+                    <Link to="/terms">{t('Footer.terms')}</Link>
+                    <Link to="/imprint">{t('Footer.imprint')}</Link>
+                    <Link to="/feedback">{t('Feedback.navigationLabel')}</Link>
                   </nav>
                 </div>
               </div>
@@ -178,7 +171,7 @@ function Content() {
                 variant="secondary"
                 size="sm"
                 render={
-                  <Link href="https://github.com/antonio-ivanovski/spliit-cloud" />
+                  <a href="https://github.com/antonio-ivanovski/spliit-cloud" />
                 }
               >
                 <img src={githubSvg} alt="" className="me-2 h-4 w-4" />

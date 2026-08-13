@@ -1,8 +1,7 @@
-import { useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -12,6 +11,8 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import {
+  expenseFormCancelLink,
+  expenseListLink,
   getGlobalExpensesSearch,
   isGlobalExpensesReturnTo,
 } from '@/lib/expense-navigation'
@@ -148,7 +149,7 @@ export function EditExpenseForm({
           <div>
             <Button
               variant="secondary"
-              render={<Link href={returnTo ?? `/groups/${groupId}/expenses`} />}
+              render={<Link {...expenseListLink(groupId, returnTo)} />}
             >
               {t('backToExpenses')}
             </Button>
@@ -176,7 +177,7 @@ export function EditExpenseForm({
         key={formRevision}
         group={group}
         expense={expense}
-        cancelHref={returnTo ?? `/groups/${group.id}`}
+        cancelLink={expenseFormCancelLink(group.id, returnTo)}
         currentLedgerParticipantId={currentLedgerParticipantId}
         linkInviteToken={linkInviteToken}
         readOnly={readOnly}

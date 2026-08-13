@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useInView } from 'react-intersection-observer'
@@ -19,7 +20,6 @@ import {
   useExpenseFilters,
 } from '@/app/groups/[groupId]/expenses/use-expense-filters'
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
-import Link from '@/components/link'
 import { Button } from '@/components/ui/button'
 import { SearchBar } from '@/components/ui/search-bar'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
@@ -135,7 +135,12 @@ const ExpenseListForSearch = ({
               <Button
                 variant="link"
                 className="-m-4 hidden sm:inline-flex"
-                render={<Link href={`/groups/${groupId}/expenses/create`} />}
+                render={
+                  <Link
+                    to="/groups/$groupId/expenses/create"
+                    params={{ groupId }}
+                  />
+                }
               >
                 {t('createFirst')}
               </Button>

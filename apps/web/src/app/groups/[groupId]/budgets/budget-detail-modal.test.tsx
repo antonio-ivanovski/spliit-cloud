@@ -24,19 +24,6 @@ vi.mock('@/components/ui/use-toast', () => ({
   useToast: () => ({ toast: mockToast }),
 }))
 
-vi.mock('@/components/link', () => {
-  const MockLink = ({
-    href,
-    children,
-    ...props
-  }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) => (
-    <a href={href} {...props}>
-      {children}
-    </a>
-  )
-  return { default: MockLink, Link: MockLink }
-})
-
 vi.mock('@tanstack/react-router', () => ({
   Link: ({
     to,
@@ -260,22 +247,21 @@ describe('BudgetDetailModal', () => {
   it('shows edit, archive, and delete actions for admins', () => {
     render(<BudgetDetailModal budgetId="budget-1" onClose={vi.fn()} />)
 
-    expect(screen.getByRole('button', { name: 'Edit' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Edit' })).toHaveAttribute(
+      'href',
+      '/groups/$groupId/budgets/$budgetId/edit',
+    )
     expect(screen.getByRole('button', { name: 'Archive' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Delete' })).toBeInTheDocument()
   })
 
-  it('navigates to the edit page when clicking edit', async () => {
-    const { user } = render(
-      <BudgetDetailModal budgetId="budget-1" onClose={vi.fn()} />,
+  it('links to the edit page', () => {
+    render(<BudgetDetailModal budgetId="budget-1" onClose={vi.fn()} />)
+
+    expect(screen.getByRole('link', { name: 'Edit' })).toHaveAttribute(
+      'href',
+      '/groups/$groupId/budgets/$budgetId/edit',
     )
-
-    await user.click(screen.getByRole('button', { name: 'Edit' }))
-
-    expect(mockNavigate).toHaveBeenCalledWith({
-      to: '/groups/$groupId/budgets/$budgetId/edit',
-      params: { groupId: 'group-1', budgetId: 'budget-1' },
-    })
   })
 
   it('archives via the archive mutation', async () => {

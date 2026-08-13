@@ -1,12 +1,13 @@
+import { Link } from '@tanstack/react-router'
 import { Save } from 'lucide-react'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { DeletePopup } from '@/components/delete-popup'
 import { FixedActionBar } from '@/components/fixed-action-bar'
-import Link from '@/components/link'
 import { SubmitButton } from '@/components/submit-button'
 import { Button } from '@/components/ui/button'
+import type { ExpenseCancelLink } from '@/lib/expense-navigation'
 
 import { expenseTabPriority } from './focus-navigation'
 
@@ -19,7 +20,7 @@ export const FormActions = memo(function FormActions(props: {
   readOnly: boolean
   onDelete?: () => Promise<void>
   expenseTitle?: string
-  cancelHref: string
+  cancelLink: ExpenseCancelLink
   /**
    * Persisted terminal state: the expense already exists, so the submit action
    * must be disabled to prevent a duplicate save.
@@ -31,7 +32,7 @@ export const FormActions = memo(function FormActions(props: {
   if (props.readOnly) {
     return (
       <FixedActionBar>
-        <Button variant="ghost" render={<Link href={props.cancelHref} />}>
+        <Button variant="ghost" render={<Link {...props.cancelLink} />}>
           {t('cancel')}
         </Button>
       </FixedActionBar>
@@ -47,7 +48,7 @@ export const FormActions = memo(function FormActions(props: {
           className="me-auto"
         />
       )}
-      <Button variant="ghost" render={<Link href={props.cancelHref} />}>
+      <Button variant="ghost" render={<Link {...props.cancelLink} />}>
         {t('cancel')}
       </Button>
       <SubmitButton

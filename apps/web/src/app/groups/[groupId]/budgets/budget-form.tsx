@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import { Layers, Loader2, Save, Users } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -68,13 +69,13 @@ type Group = {
 }
 
 type Props = {
+  groupId: string
   group: Group
   budget?: BudgetDetail
   pending?: boolean
   onSubmit: (
     input: Omit<BudgetMutationInput, 'groupId' | 'budgetId'>,
   ) => void | Promise<void>
-  onCancel: () => void
 }
 
 const periodValues: BudgetPeriodType[] = [
@@ -97,11 +98,11 @@ function toDateInput(value: Date | string | null | undefined) {
 }
 
 export function BudgetForm({
+  groupId,
   group,
   budget,
   pending = false,
   onSubmit,
-  onCancel,
 }: Props) {
   const t = useBudgetTranslation()
   const { t: tCategories } = useTranslation(undefined, {
@@ -531,7 +532,10 @@ export function BudgetForm({
         </p>
       )}
       <FixedActionBar>
-        <Button type="button" variant="ghost" onClick={onCancel}>
+        <Button
+          variant="ghost"
+          render={<Link to="/groups/$groupId/budgets" params={{ groupId }} />}
+        >
           {t('cancel')}
         </Button>
         <Button type="submit" disabled={pending} className="min-w-28">

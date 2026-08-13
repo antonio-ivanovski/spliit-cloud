@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import {
   Archive,
   ArchiveRestore,
@@ -14,7 +15,6 @@ import { useTranslation } from 'react-i18next'
 
 import { AccountAvatar } from '@/components/account-avatar'
 import { AvatarStack } from '@/components/avatar-stack'
-import Link from '@/components/link'
 import { Money } from '@/components/money'
 import { Button } from '@/components/ui/button'
 import {
@@ -124,7 +124,8 @@ export function GroupCard({
                 <AccountAvatar account={group.friendAccount} size="md" />
               ) : null}
               <Link
-                href={`/groups/${group.id}`}
+                to="/groups/$groupId"
+                params={{ groupId: group.id }}
                 className="min-w-0 truncate text-foreground no-underline outline-hidden before:absolute before:inset-0 before:rounded-lg before:content-[''] focus-visible:underline"
                 title={group.displayName}
               >

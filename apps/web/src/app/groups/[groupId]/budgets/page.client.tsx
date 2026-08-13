@@ -1,4 +1,4 @@
-import { useNavigate } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { Plus, RefreshCw, WalletCards } from 'lucide-react'
 
 import {
@@ -20,15 +20,15 @@ import { trpc } from '@/trpc/client'
 
 import { useBudgetTranslation } from './budget-i18n'
 
-function CreateBudgetCard({ onClick }: { onClick: () => void }) {
+function CreateBudgetCard({ groupId }: { groupId: string }) {
   const t = useBudgetTranslation()
 
   return (
-    <button
-      type="button"
-      onClick={onClick}
+    <Link
+      to="/groups/$groupId/budgets/create"
+      params={{ groupId }}
       aria-label={t('createCard.title')}
-      className="motion-surface motion-surface-interactive relative min-h-[5.5rem] w-full overflow-hidden rounded-lg border border-primary/25 bg-linear-to-br from-primary/8 via-background to-background text-start text-base shadow-[0_1px_0_0_hsl(var(--primary)/0.08)] outline-hidden transition-colors hover:border-primary/35 hover:bg-primary/5 focus-visible:bg-primary/5 focus-visible:ring-2 focus-visible:ring-ring"
+      className="motion-surface motion-surface-interactive relative min-h-[5.5rem] w-full overflow-hidden rounded-lg border border-primary/25 bg-linear-to-br from-primary/8 via-background to-background text-start text-base text-foreground no-underline shadow-[0_1px_0_0_hsl(var(--primary)/0.08)] outline-hidden transition-colors hover:border-primary/35 hover:bg-primary/5 focus-visible:bg-primary/5 focus-visible:ring-2 focus-visible:ring-ring"
     >
       <div
         aria-hidden
@@ -48,7 +48,7 @@ function CreateBudgetCard({ onClick }: { onClick: () => void }) {
           </span>
         </span>
       </div>
-    </button>
+    </Link>
   )
 }
 
@@ -56,18 +56,11 @@ export default function GroupBudgetsPageClient() {
   const t = useBudgetTranslation()
   const { groupId, group, currentMember } = useCurrentGroup()
   const isPendingInvitee = useIsPendingInvitee()
-  const navigate = useNavigate()
   const canCreate = !!currentMember && !group?.archived && !isPendingInvitee
   const budgetsQuery = trpc.groups.budgets.list.useQuery({
     groupId,
     includeArchived: true,
   })
-
-  const goToCreate = () =>
-    navigate({
-      to: '/groups/$groupId/budgets/create',
-      params: { groupId },
-    })
 
   if (budgetsQuery.isLoading) {
     return (
@@ -126,7 +119,15 @@ export default function GroupBudgetsPageClient() {
               </p>
             </div>
             {canCreate && (
-              <Button variant="outline" onClick={goToCreate}>
+              <Button
+                variant="outline"
+                render={
+                  <Link
+                    to="/groups/$groupId/budgets/create"
+                    params={{ groupId }}
+                  />
+                }
+              >
                 {t('create')}
               </Button>
             )}
@@ -134,7 +135,7 @@ export default function GroupBudgetsPageClient() {
         </Card>
       ) : (
         <div className="flex flex-col gap-4">
-          {canCreate && <CreateBudgetCard onClick={goToCreate} />}
+          {canCreate && <CreateBudgetCard groupId={groupId} />}
           {current.length > 0 && (
             <div className="mobile-divide-y flex flex-col gap-0 sm:gap-4">
               {current.map((budget) => (

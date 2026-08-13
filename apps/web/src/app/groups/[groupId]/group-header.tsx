@@ -1,10 +1,14 @@
-import { useLocation, useNavigate, useSearch } from '@tanstack/react-router'
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearch,
+} from '@tanstack/react-router'
 import { ArrowLeft, Check, Info, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { GroupTabs } from '@/app/groups/[groupId]/group-tabs'
 import { CreateExpenseFab } from '@/app/groups/create-expense-fab'
-import Link from '@/components/link'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -138,17 +142,6 @@ export const GroupHeader = ({
 
   // Strip the `?invite=<token>` from the URL. Used by the "already a
   // member" banner, where the viewer can stay on the group page.
-  const stripInviteFromUrl = () =>
-    navigate({
-      to: '/groups/$groupId',
-      params: { groupId },
-      search: { invite: undefined },
-    })
-
-  // Leave the group page entirely. Used by the "no longer valid"
-  // banner, where the viewer is not a member and the bare group URL
-  // would surface the "you don't have access" page.
-  const leaveToGroupsList = () => navigate({ to: '/' })
 
   const isLinkBanner = currentInvitation?.type === 'LINK'
 
@@ -162,11 +155,11 @@ export const GroupHeader = ({
             variant="ghost"
             size="icon"
             className="-ms-2"
-            render={<Link href="/" title={tGroups('backToHome')} />}
+            render={<Link to="/" title={tGroups('backToHome')} />}
           >
             <ArrowLeft className="h-5 w-5 rtl:rotate-180" />
           </Button>
-          <Link href={`/groups/${groupId}`} className="truncate">
+          <Link to="/groups/$groupId" params={{ groupId }} className="truncate">
             {isLoading ? (
               <Skeleton className="mt-1.5 mb-1.5 h-5 w-32" />
             ) : (
@@ -234,7 +227,7 @@ export const GroupHeader = ({
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={leaveToGroupsList}
+                  render={<Link to="/" />}
                   disabled={acceptLinkMutation.isPending}
                 >
                   <X className="me-2 h-4 w-4" />
@@ -275,7 +268,17 @@ export const GroupHeader = ({
                 groupName: group.name,
               })}
             </span>
-            <Button size="sm" variant="outline" onClick={stripInviteFromUrl}>
+            <Button
+              size="sm"
+              variant="outline"
+              render={
+                <Link
+                  to="/groups/$groupId"
+                  params={{ groupId }}
+                  search={{ invite: undefined }}
+                />
+              }
+            >
               {tGroups('linkInvitationDismiss')}
             </Button>
           </AlertDescription>
@@ -287,7 +290,7 @@ export const GroupHeader = ({
           <AlertTitle>{tGroups('linkInvitationExpiredTitle')}</AlertTitle>
           <AlertDescription className="flex flex-col items-start gap-3">
             <span>{tGroups('linkInvitationExpiredDescription')}</span>
-            <Button size="sm" variant="outline" onClick={leaveToGroupsList}>
+            <Button size="sm" variant="outline" render={<Link to="/" />}>
               {tGroups('linkInvitationDismiss')}
             </Button>
           </AlertDescription>

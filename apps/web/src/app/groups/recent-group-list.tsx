@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import {
   AlertCircle,
   BanknoteArrowDown,
@@ -14,7 +15,6 @@ import {
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import Link from '@/components/link'
 import { useMascotController } from '@/components/mascot/mascot-context'
 import { Money } from '@/components/money'
 import { ParticipantAvatar } from '@/components/participant-avatar'
@@ -237,13 +237,13 @@ export function RecentGroupList() {
         >
           <ul className="motion-stagger grid items-stretch gap-3 sm:grid-cols-2">
             <CreateCard
-              href="/groups/create"
+              to="/groups/create"
               icon={<Plus className="h-4 w-4" />}
               title={t('createGroupCard.title')}
               description={t('createGroupCard.description')}
               data-testid="create-group-card"
               secondaryAction={{
-                href: '/groups/import',
+                to: '/groups/import',
                 icon: <Cloud className="h-4 w-4" />,
                 label: t('importGroup'),
                 'data-testid': 'import-group-action',
@@ -260,7 +260,7 @@ export function RecentGroupList() {
         >
           <ul className="motion-stagger grid items-stretch gap-3 sm:grid-cols-2">
             <CreateCard
-              href="/friends/create"
+              to="/friends/create"
               icon={<Users className="h-4 w-4" />}
               title={t('createFriendLedgerCard.title')}
               description={t('createFriendLedgerCard.description')}
@@ -297,7 +297,7 @@ export function RecentGroupList() {
         )}
 
         <Link
-          href="/expenses"
+          to="/expenses"
           data-testid="all-expenses-link"
           className="flex items-center justify-between rounded-lg border bg-card px-4 py-3 text-sm transition-colors hover:bg-accent"
         >
@@ -586,7 +586,8 @@ function PeopleGroupBreakdown({
         return (
           <li key={group.groupId}>
             <Link
-              href={`/groups/${group.groupId}`}
+              to="/groups/$groupId"
+              params={{ groupId: group.groupId }}
               className="flex items-center justify-between gap-3 rounded-md px-2.5 py-2 text-sm no-underline transition-colors hover:bg-muted focus-visible:bg-muted focus-visible:outline-hidden"
             >
               <span className="flex min-w-0 flex-col truncate">
@@ -797,7 +798,8 @@ function BalanceGroupBreakdown({
         return (
           <li key={group.id}>
             <Link
-              href={`/groups/${group.id}`}
+              to="/groups/$groupId"
+              params={{ groupId: group.id }}
               className="flex items-center justify-between gap-3 rounded-md px-2.5 py-2 text-sm no-underline transition-colors hover:bg-muted focus-visible:bg-muted focus-visible:outline-hidden"
             >
               <span className="min-w-0 truncate">

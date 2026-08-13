@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Link } from '@tanstack/react-router'
 import { Save, UserPlus } from 'lucide-react'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
@@ -6,7 +7,6 @@ import { useTranslation } from 'react-i18next'
 import type { z } from 'zod'
 
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
-import Link from '@/components/link'
 import { SubmitButton } from '@/components/submit-button'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -343,7 +343,7 @@ export function GroupForm({
                   {t(group ? 'Settings.save' : 'Settings.create')}
                 </SubmitButton>
                 {!group && (
-                  <Button variant="ghost" render={<Link href="/" />}>
+                  <Button variant="ghost" render={<Link to="/" />}>
                     {t('Settings.cancel')}
                   </Button>
                 )}
