@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { beforeAll, describe, expect, it } from 'vitest'
 
 import { DEFAULT_CATEGORIES } from '../categories'
 import {
@@ -7,15 +7,28 @@ import {
   dictionaryLocaleFor,
   expandExpenseQuery,
   knownTokensForCategory,
+  loadLocaleDictionary,
+  meetsCategorySuggestMinQueryLength,
   mineAliasCandidates,
   parseLocaleDictionary,
   parseSharedDictionary,
+  peekLocaleDictionary,
   rankCategories,
   resolveCategorySearchFields,
   suggestCategoryFromTitle,
   type CategorySearchDocument,
   type CategoryTitleMemory,
 } from './index'
+
+function documentsFor(locale: string): CategorySearchDocument[] {
+  return DEFAULT_CATEGORIES.map((category) =>
+    createCategorySearchDocument(category, {
+      label: category.parentId === null ? category.grouping : category.name,
+      grouping: category.grouping,
+      locale,
+    }),
+  )
+}
 
 function documentsFor(locale: string): CategorySearchDocument[] {
   return DEFAULT_CATEGORIES.map((category) =>
@@ -36,7 +49,8 @@ describe('parse dictionaries', () => {
     expect(() => parseLocaleDictionary({ nope: { aliases: ['x'] } })).toThrow()
   })
 
-  it('accepts the shipped dictionaries', () => {
+  it('accepts the shipped dictionaries', async () => {
+    await loadLocaleDictionary('fr-FR')
     expect(resolveCategorySearchFields('taxi', 'en-US').aliases).toContain(
       'uber',
     )
@@ -46,15 +60,51 @@ describe('parse dictionaries', () => {
   })
 })
 
+describe('lazy locale dictionaries', () => {
+  it('does not preload non-English dictionaries', () => {
+    expect(peekLocaleDictionary('en-US')).toBeDefined()
+    expect(peekLocaleDictionary('mk-MK')).toBeUndefined()
+  })
+
+  it('loads a locale dictionary on demand', async () => {
+    await loadLocaleDictionary('de-DE')
+    expect(peekLocaleDictionary('de-DE')).toBeDefined()
+    expect(resolveCategorySearchFields('taxi', 'de-DE').aliases).toContain(
+      'fahrdienst',
+    )
+    expect(peekLocaleDictionary('mk-MK')).toBeUndefined()
+  })
+})
+
 describe('dictionaryLocaleFor', () => {
-  it('maps English variants onto en-US', () => {
+  it('maps language variants onto a shipped dictionary', () => {
     expect(dictionaryLocaleFor('en-US')).toBe('en-US')
+    expect(dictionaryLocaleFor('en')).toBe('en-US')
     expect(dictionaryLocaleFor('en-GZ')).toBe('en-US')
     expect(dictionaryLocaleFor('fr-FR')).toBe('fr-FR')
+    expect(dictionaryLocaleFor('fr')).toBe('fr-FR')
+    expect(dictionaryLocaleFor('fr-CA')).toBe('fr-FR')
+    expect(dictionaryLocaleFor('de-DE')).toBe('de-DE')
+    expect(dictionaryLocaleFor('de')).toBe('de-DE')
+    expect(dictionaryLocaleFor('es')).toBe('es')
+    expect(dictionaryLocaleFor('pt-BR')).toBe('pt-BR')
+    expect(dictionaryLocaleFor('zh-CN')).toBe('zh-CN')
+    expect(dictionaryLocaleFor('mk-MK')).toBe('mk-MK')
   })
 })
 
 describe('resolveCategorySearchFields', () => {
+  beforeAll(async () => {
+    await loadLocaleDictionary('fr-FR')
+  })
+
+  it('uses French aliases for fr and fr-CA', () => {
+    expect(resolveCategorySearchFields('taxi', 'fr').aliases).toContain('vtc')
+    expect(resolveCategorySearchFields('taxi', 'fr-CA').aliases).toContain(
+      'vtc',
+    )
+  })
+
   it('puts shared brands in aliases for every locale', () => {
     expect(resolveCategorySearchFields('taxi', 'de-DE').aliases).toContain(
       'uber',
@@ -73,6 +123,15 @@ describe('resolveCategorySearchFields', () => {
     expect(
       resolveCategorySearchFields('taxi', 'en-US').fallbackAliases,
     ).toEqual([])
+  })
+
+  it('promotes English aliases for non-Latin locales', async () => {
+    await loadLocaleDictionary('zh-CN')
+    const fields = resolveCategorySearchFields('plane', 'zh-CN')
+    expect(fields.aliases).toContain('机票')
+    expect(fields.aliases).toContain('flight')
+    expect(fields.aliases).toContain('Plane')
+    expect(fields.fallbackAliases).toEqual([])
   })
 })
 
@@ -127,7 +186,8 @@ describe('rankCategories', () => {
     expect(rankCategories('   ', english)).toEqual([])
   })
 
-  it('ranks a French locale alias above the English fallback', () => {
+  it('ranks a French locale alias above the English fallback', async () => {
+    await loadLocaleDictionary('fr-FR')
     const french = documentsFor('fr-FR')
     expect(rankCategories('vtc', french)[0]?.id).toBe('taxi')
     expect(rankCategories('cab', french)[0]?.id).toBe('taxi')
@@ -155,8 +215,15 @@ describe('suggestCategoryFromTitle', () => {
   })
 
   it('does not auto-apply very short keystrokes', () => {
+    expect(suggestCategoryFromTitle('a', english)).toBeNull()
+    expect(suggestCategoryFromTitle('ai', english)).toBeNull()
     expect(suggestCategoryFromTitle('di', english)).toBeNull()
     expect(suggestCategoryFromTitle('ub', english)).toBeNull()
+  })
+
+  it('does not auto-apply an ambiguous brand alias', () => {
+    expect(suggestCategoryFromTitle('nike', english)).toBeNull()
+    expect(suggestCategoryFromTitle('adidas', english)).toBeNull()
   })
 
   it('lets repeated exact history beat a missing dictionary', () => {
@@ -187,6 +254,13 @@ describe('suggestCategoryFromTitle', () => {
       suggestCategoryFromTitle('Luigi mysterious trattoria', english, memory),
     ).toMatchObject({ id: 'dining-out', source: 'history' })
   })
+
+  it('auto-applies a CJK title and a Latin title for zh-CN', async () => {
+    await loadLocaleDictionary('zh-CN')
+    const chinese = documentsFor('zh-CN')
+    expect(suggestCategoryFromTitle('滴滴', chinese)?.id).toBe('taxi')
+    expect(suggestCategoryFromTitle('flight', chinese)?.id).toBe('plane')
+  })
 })
 
 describe('expandExpenseQuery', () => {
@@ -207,7 +281,21 @@ describe('expandExpenseQuery', () => {
   })
 
   it('does not expand very short queries', () => {
+    expect(expandExpenseQuery('a', english).categoryIds).toEqual([])
     expect(expandExpenseQuery('ub', english).categoryIds).toEqual([])
+  })
+})
+
+describe('meetsCategorySuggestMinQueryLength', () => {
+  it('rejects 1–2 letter alphabetic queries', () => {
+    expect(meetsCategorySuggestMinQueryLength('a')).toBe(false)
+    expect(meetsCategorySuggestMinQueryLength('ai')).toBe(false)
+    expect(meetsCategorySuggestMinQueryLength('а')).toBe(false)
+  })
+
+  it('accepts 3+ letter queries and CJK titles', () => {
+    expect(meetsCategorySuggestMinQueryLength('uber')).toBe(true)
+    expect(meetsCategorySuggestMinQueryLength('滴滴')).toBe(true)
   })
 })
 

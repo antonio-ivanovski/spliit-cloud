@@ -61,6 +61,7 @@ export function mineAliasCandidates(
   const minTokenLength = options.minTokenLength ?? DEFAULT_MIN_TOKEN_LENGTH
   const exclude = options.exclude ?? DEFAULT_MINE_EXCLUDE
   const counts = new Map<CategoryId, Map<string, number>>()
+  const knownByCategory = new Map<CategoryId, Set<string>>()
 
   for (const row of rows) {
     const parsed = categoryIdSchema.safeParse(row.categoryId)
@@ -68,7 +69,11 @@ export function mineAliasCandidates(
     const categoryId = parsed.data
     if (exclude.has(categoryId)) continue
 
-    const known = knownTokensForCategory(categoryId, options.locale)
+    let known = knownByCategory.get(categoryId)
+    if (!known) {
+      known = knownTokensForCategory(categoryId, options.locale)
+      knownByCategory.set(categoryId, known)
+    }
     let categoryCounts = counts.get(categoryId)
     if (!categoryCounts) {
       categoryCounts = new Map()

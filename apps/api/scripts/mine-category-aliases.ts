@@ -13,6 +13,7 @@ import {
   DEFAULT_MINE_EXCLUDE,
   aliasCandidatesToPatch,
   defaultLocale,
+  loadLocaleDictionary,
   mineAliasCandidates,
 } from '@spliit/domain'
 
@@ -32,37 +33,57 @@ function requiredPositiveInt(name: string, fallback: number): number {
   return value
 }
 
+const BATCH_SIZE = 500
+
 const locale = flag('locale') ?? defaultLocale
 const minCount = requiredPositiveInt('min-count', 5)
 const minTokenLength = requiredPositiveInt('min-token-length', 3)
 
-const rows = await prisma.expense.findMany({
-  where: {
-    categoryId: { notIn: [...DEFAULT_MINE_EXCLUDE] },
-    title: { not: '' },
-  },
-  select: { categoryId: true, title: true },
-})
+const rows: { categoryId: string; title: string }[] = []
 
-const groups = mineAliasCandidates(rows, {
-  locale,
-  minCount,
-  minTokenLength,
-})
+try {
+  await loadLocaleDictionary(locale)
 
-console.log(
-  JSON.stringify(
-    {
-      locale,
-      minCount,
-      minTokenLength,
-      scanned: rows.length,
-      candidates: groups,
-      patch: aliasCandidatesToPatch(groups),
-    },
-    null,
-    2,
-  ),
-)
+  let cursor: string | undefined
+  for (;;) {
+    const batch = await prisma.expense.findMany({
+      where: {
+        categoryId: { notIn: [...DEFAULT_MINE_EXCLUDE] },
+        title: { not: '' },
+      },
+      select: { id: true, categoryId: true, title: true },
+      orderBy: { id: 'asc' },
+      take: BATCH_SIZE,
+      ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}),
+    })
+    if (batch.length === 0) break
+    for (const row of batch) {
+      rows.push({ categoryId: row.categoryId, title: row.title })
+    }
+    cursor = batch.at(-1)?.id
+    if (batch.length < BATCH_SIZE) break
+  }
 
-await prisma.$disconnect()
+  const groups = mineAliasCandidates(rows, {
+    locale,
+    minCount,
+    minTokenLength,
+  })
+
+  console.log(
+    JSON.stringify(
+      {
+        locale,
+        minCount,
+        minTokenLength,
+        scanned: rows.length,
+        candidates: groups,
+        patch: aliasCandidatesToPatch(groups),
+      },
+      null,
+      2,
+    ),
+  )
+} finally {
+  await prisma.$disconnect()
+}

@@ -2,6 +2,8 @@ import { prisma } from '@spliit/db'
 import {
   DEFAULT_CATEGORY_ID,
   createCategorySearchDocumentsForLocale,
+  loadLocaleDictionary,
+  meetsCategorySuggestMinQueryLength,
   suggestCategoryFromTitle,
   type CategoryId,
 } from '@spliit/domain'
@@ -33,6 +35,11 @@ export type SuggestExpenseCategoryArgs = {
 export async function suggestExpenseCategory(
   args: SuggestExpenseCategoryArgs,
 ): Promise<{ categoryId: CategoryId | null }> {
+  if (!meetsCategorySuggestMinQueryLength(args.title)) {
+    return { categoryId: null }
+  }
+
+  await loadLocaleDictionary(args.locale ?? 'en-US')
   const documents = createCategorySearchDocumentsForLocale(
     args.locale ?? 'en-US',
   )

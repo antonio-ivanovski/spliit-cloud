@@ -1,11 +1,15 @@
 export {
   SHARED_DICTIONARY,
+  SHIPPED_DICTIONARY_LOCALES,
   dictionaryLocaleFor,
+  isNonLatinDictionaryLocale,
   knownTokensForCategory,
+  loadLocaleDictionary,
   localeDictionaryEntrySchema,
   localeDictionarySchema,
   parseLocaleDictionary,
   parseSharedDictionary,
+  peekLocaleDictionary,
   resolveCategorySearchFields,
   sharedDictionarySchema,
   tokenizeSearchText,
@@ -13,6 +17,7 @@ export {
   type LocaleDictionary,
   type LocaleDictionaryEntry,
   type SharedDictionary,
+  type ShippedDictionaryLocale,
 } from './dictionaries'
 export {
   DEFAULT_MINE_EXCLUDE,
@@ -34,9 +39,11 @@ export {
 } from './rank'
 export {
   CATEGORY_CONFIDENT_MIN_SCORE,
+  CATEGORY_CONFIDENT_SCORE_MARGIN,
   CATEGORY_SUGGEST_MIN_QUERY_LENGTH,
   expandExpenseQuery,
   expandExpenseQueryForLocale,
+  meetsCategorySuggestMinQueryLength,
   suggestCategoryFromTitle,
   type CategorySuggestion,
   type CategorySuggestionSource,

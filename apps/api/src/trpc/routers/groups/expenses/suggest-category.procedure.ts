@@ -18,7 +18,7 @@ export const suggestCategoryProcedure = protectedProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
-      title: z.string(),
+      title: z.string().trim().min(1),
       locale: z.string().optional(),
       allowAi: z.boolean().optional(),
       linkInviteToken: linkInviteTokenInput.describe(

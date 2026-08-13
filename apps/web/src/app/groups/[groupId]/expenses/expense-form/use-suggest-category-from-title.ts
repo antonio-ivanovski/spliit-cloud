@@ -4,17 +4,18 @@ import { useTranslation } from 'react-i18next'
 import { useDebounce } from 'use-debounce'
 
 import { categoryLabel } from '@/app/groups/[groupId]/stats/category-utils'
+import { useLocaleCategoryDictionary } from '@/lib/use-locale-category-dictionary'
 import { trpc } from '@/trpc/client'
 import {
   DEFAULT_CATEGORIES,
   DEFAULT_CATEGORY_ID,
   createCategorySearchDocument,
+  meetsCategorySuggestMinQueryLength,
   suggestCategoryFromTitle,
   type ExpenseFormInputValues,
 } from '@spliit/domain'
 
 const TITLE_SUGGEST_DEBOUNCE_MS = 250
-const TITLE_SUGGEST_MAX_WAIT_MS = 1000
 
 export function useSuggestCategoryFromTitle(args: {
   form: UseFormReturn<ExpenseFormInputValues>
@@ -40,7 +41,7 @@ export function useSuggestCategoryFromTitle(args: {
   const [isCategoryLoading, setCategoryLoading] = useState(false)
   const categoryRequestRef = useRef(0)
   const categoryAbortRef = useRef<AbortController | null>(null)
-  const categorySourceRef = useRef<'default' | 'manual' | 'ai'>(
+  const categorySourceRef = useRef<'default' | 'manual' | 'suggested'>(
     form.getValues('category') === DEFAULT_CATEGORY_ID ? 'default' : 'manual',
   )
   const lastCategorizedTitleRef = useRef<string | null>(null)
@@ -50,10 +51,9 @@ export function useSuggestCategoryFromTitle(args: {
   const [debouncedTitle] = useDebounce(
     titleValue.trim(),
     TITLE_SUGGEST_DEBOUNCE_MS,
-    {
-      maxWait: TITLE_SUGGEST_MAX_WAIT_MS,
-    },
   )
+
+  const localeDictionary = useLocaleCategoryDictionary(locale)
 
   const documents = useMemo(
     () =>
@@ -64,9 +64,10 @@ export function useSuggestCategoryFromTitle(args: {
             ? categoryLabel(t, category.parentId)
             : categoryLabel(t, category.id),
           locale,
+          localeDictionary,
         }),
       ),
-    [locale, t],
+    [locale, localeDictionary, t],
   )
 
   const memoryQuery = trpc.groups.expenses.categoryMemory.useQuery(
@@ -74,6 +75,7 @@ export function useSuggestCategoryFromTitle(args: {
     { enabled: !readOnly },
   )
   const memory = memoryQuery.data?.expenses
+  const memoryReady = readOnly || memoryQuery.isSuccess || memoryQuery.isError
 
   const { isSubmitting } = useFormState({ control: form.control })
 
@@ -92,9 +94,10 @@ export function useSuggestCategoryFromTitle(args: {
     const title = debouncedTitle
     const canSuggest =
       !readOnly &&
-      title.length > 0 &&
+      memoryReady &&
+      meetsCategorySuggestMinQueryLength(title) &&
       (categorySourceRef.current === 'default' ||
-        categorySourceRef.current === 'ai') &&
+        categorySourceRef.current === 'suggested') &&
       lastCategorizedTitleRef.current !== title
 
     if (!canSuggest) return
@@ -104,7 +107,7 @@ export function useSuggestCategoryFromTitle(args: {
       categoryRequestRef.current += 1
       categoryAbortRef.current?.abort()
       lastCategorizedTitleRef.current = title
-      categorySourceRef.current = 'ai'
+      categorySourceRef.current = 'suggested'
       // oxlint-disable-next-line react/react-compiler -- apply the local ranker result after the title debounce.
       setCategoryLoading(false)
       form.setValue('category', local.id, {
@@ -135,22 +138,23 @@ export function useSuggestCategoryFromTitle(args: {
           abortController.signal.aborted ||
           form.getValues('title').trim() !== title ||
           (categorySourceRef.current !== 'default' &&
-            categorySourceRef.current !== 'ai')
+            categorySourceRef.current !== 'suggested')
         ) {
           return
         }
 
         if (!categoryId) return
 
-        categorySourceRef.current = 'ai'
+        categorySourceRef.current = 'suggested'
         form.setValue('category', categoryId, {
           shouldDirty: true,
           shouldTouch: true,
           shouldValidate: true,
         })
       })
-      .catch(() => {
+      .catch((error: unknown) => {
         if (abortController.signal.aborted) return
+        if (error instanceof Error && error.name === 'AbortError') return
       })
       .finally(() => {
         if (requestId === categoryRequestRef.current) {
@@ -166,6 +170,7 @@ export function useSuggestCategoryFromTitle(args: {
     linkInviteToken,
     locale,
     memory,
+    memoryReady,
     mutateAsync,
     readOnly,
   ])

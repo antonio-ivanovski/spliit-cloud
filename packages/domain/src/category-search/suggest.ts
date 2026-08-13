@@ -1,5 +1,6 @@
 import { categoryIdSchema, type CategoryId } from '../categories'
 import { defaultLocale } from '../i18n'
+import { dictionaryLocaleFor, onLocaleDictionaryLoaded } from './dictionaries'
 import {
   createCategorySearchDocumentsForLocale,
   damerauLevenshtein,
@@ -15,8 +16,29 @@ import {
  */
 export const CATEGORY_CONFIDENT_MIN_SCORE = 0.7
 
-/** Ignore 1–2 character keystrokes while the user is still typing. */
+/**
+ * Treat scores this close as a tie (auto-apply rejects; list search keeps
+ * both).
+ */
+export const CATEGORY_CONFIDENT_SCORE_MARGIN = 0.04
+
+/** Ignore 1–2 character alphabetic keystrokes while the user is still typing. */
 export const CATEGORY_SUGGEST_MIN_QUERY_LENGTH = 3
+
+const CJK_SCRIPT =
+  /[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\u3400-\u9fff\uf900-\ufaff\uff66-\uff9f\uac00-\ud7af]/u
+
+/**
+ * Auto-apply / query-expand gate. Alphabetic scripts need 3 characters so `"a"`
+ * does not match `airport` → plane. Han/Kana/Hangul titles can be a complete
+ * word in one character (`滴滴`).
+ */
+export function meetsCategorySuggestMinQueryLength(query: string): boolean {
+  const needle = normalizeSearchText(query)
+  if (!needle) return false
+  if (CJK_SCRIPT.test(query) || CJK_SCRIPT.test(needle)) return true
+  return needle.replaceAll(' ', '').length >= CATEGORY_SUGGEST_MIN_QUERY_LENGTH
+}
 
 export type CategoryTitleMemory = {
   title: string
@@ -78,7 +100,7 @@ function matchHistory(
       continue
     }
     if (
-      needle.length >= CATEGORY_SUGGEST_MIN_QUERY_LENGTH &&
+      meetsCategorySuggestMinQueryLength(title) &&
       damerauLevenshtein(needle, haystack, 1) <= 1
     ) {
       fuzzyCounts.set(
@@ -99,10 +121,17 @@ function dictionarySuggestion(
   title: string,
   documents: readonly CategorySearchDocument[],
 ): CategorySuggestion | null {
-  const needle = normalizeSearchText(title)
-  if (needle.length < CATEGORY_SUGGEST_MIN_QUERY_LENGTH) return null
-  const top = rankCategories(title, documents)[0]
+  if (!meetsCategorySuggestMinQueryLength(title)) return null
+  const ranked = rankCategories(title, documents)
+  const top = ranked[0]
   if (!top || top.score < CATEGORY_CONFIDENT_MIN_SCORE) return null
+  const runnerUp = ranked[1]
+  if (
+    runnerUp &&
+    top.score - runnerUp.score <= CATEGORY_CONFIDENT_SCORE_MARGIN
+  ) {
+    return null
+  }
   return { id: top.id, score: top.score, source: 'dictionary' }
 }
 
@@ -144,8 +173,7 @@ export function expandExpenseQuery(
   query: string,
   documents: readonly CategorySearchDocument[],
 ): ExpandedExpenseQuery {
-  const needle = normalizeSearchText(query)
-  if (needle.length < CATEGORY_SUGGEST_MIN_QUERY_LENGTH) {
+  if (!meetsCategorySuggestMinQueryLength(query)) {
     return { categoryIds: [] }
   }
   const ranked = rankCategories(query, documents).filter(
@@ -154,17 +182,29 @@ export function expandExpenseQuery(
   const topScore = ranked[0]?.score
   if (topScore === undefined) return { categoryIds: [] }
   const categoryIds = ranked
-    .filter((hit) => topScore - hit.score <= 0.04)
+    .filter((hit) => topScore - hit.score <= CATEGORY_CONFIDENT_SCORE_MARGIN)
     .map((hit) => hit.id)
   return { categoryIds }
+}
+
+const documentsByLocale = new Map<string, CategorySearchDocument[]>()
+
+onLocaleDictionaryLoaded(() => {
+  documentsByLocale.clear()
+})
+
+function documentsForLocale(locale: string): CategorySearchDocument[] {
+  const key = dictionaryLocaleFor(locale)
+  const cached = documentsByLocale.get(key)
+  if (cached) return cached
+  const documents = createCategorySearchDocumentsForLocale(key)
+  documentsByLocale.set(key, documents)
+  return documents
 }
 
 export function expandExpenseQueryForLocale(
   query: string,
   locale: string = defaultLocale,
 ): ExpandedExpenseQuery {
-  return expandExpenseQuery(
-    query,
-    createCategorySearchDocumentsForLocale(locale),
-  )
+  return expandExpenseQuery(query, documentsForLocale(locale))
 }

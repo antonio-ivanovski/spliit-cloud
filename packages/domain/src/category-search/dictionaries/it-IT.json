@@ -1,0 +1,178 @@
+{
+  "taxi": {
+    "aliases": ["taxi", "ncc", "corsa"],
+    "samples": ["taxi per aeroporto"]
+  },
+  "dining-out": {
+    "aliases": [
+      "ristorante",
+      "cena",
+      "pranzo",
+      "brunch",
+      "bar",
+      "trattoria",
+      "pizzeria"
+    ],
+    "samples": ["cena fuori", "pranzo al ristorante"]
+  },
+  "groceries": {
+    "aliases": ["spesa", "supermercato", "esselunga", "coop", "conad"],
+    "samples": ["spesa settimanale"]
+  },
+  "liquor": {
+    "aliases": ["alcol", "birra", "vino", "enoteca"],
+    "samples": []
+  },
+  "rent": {
+    "aliases": ["affitto", "canone", "appartamento"],
+    "samples": ["affitto mensile"]
+  },
+  "mortgage": {
+    "aliases": ["mutuo"],
+    "samples": []
+  },
+  "gas-fuel": {
+    "aliases": ["benzina", "carburante", "distributore", "diesel"],
+    "samples": ["pieno di benzina"]
+  },
+  "hotel": {
+    "aliases": ["alloggio", "pensione", "b&b"],
+    "samples": ["notte in hotel"]
+  },
+  "plane": {
+    "aliases": ["volo", "biglietto aereo", "compagnia", "aeroporto"],
+    "samples": ["biglietti aerei"]
+  },
+  "bus-train": {
+    "aliases": ["mezzi", "metro", "treno", "trenitalia", "autobus", "atm"],
+    "samples": ["biglietto del treno"]
+  },
+  "car": {
+    "aliases": ["auto", "macchina", "noleggio"],
+    "samples": []
+  },
+  "parking": {
+    "aliases": ["parcheggio", "garage"],
+    "samples": []
+  },
+  "bicycle": {
+    "aliases": ["bici", "bicicletta", "bike sharing"],
+    "samples": []
+  },
+  "digital-subscriptions": {
+    "aliases": ["abbonamento", "streaming"],
+    "samples": []
+  },
+  "memberships": {
+    "aliases": ["palestra", "abbonamento palestra", "quota"],
+    "samples": []
+  },
+  "movies": {
+    "aliases": ["cinema", "film"],
+    "samples": ["biglietti cinema"]
+  },
+  "games": {
+    "aliases": ["videogioco", "gaming"],
+    "samples": []
+  },
+  "music": {
+    "aliases": ["concerto", "festival"],
+    "samples": []
+  },
+  "sports": {
+    "aliases": ["biglietti", "stadio", "partita"],
+    "samples": []
+  },
+  "medical-expenses": {
+    "aliases": ["medico", "farmacia", "ospedale", "dentista"],
+    "samples": ["visita medica"]
+  },
+  "insurance": {
+    "aliases": ["assicurazione", "premio"],
+    "samples": []
+  },
+  "taxes": {
+    "aliases": ["tasse", "agenzia entrate"],
+    "samples": []
+  },
+  "childcare": {
+    "aliases": ["asilo", "baby sitter"],
+    "samples": []
+  },
+  "education": {
+    "aliases": ["scuola", "tasse universitarie", "corso", "universita"],
+    "samples": []
+  },
+  "clothing": {
+    "aliases": ["vestiti", "abbigliamento", "scarpe"],
+    "samples": []
+  },
+  "gifts": {
+    "aliases": ["regalo", "compleanno"],
+    "samples": []
+  },
+  "donation": {
+    "aliases": ["donazione", "beneficenza"],
+    "samples": []
+  },
+  "pets": {
+    "aliases": ["veterinario", "crocchette", "cane", "gatto"],
+    "samples": []
+  },
+  "electronics": {
+    "aliases": ["elettronica", "telefono", "portatile"],
+    "samples": []
+  },
+  "furniture": {
+    "aliases": ["mobili", "divano"],
+    "samples": []
+  },
+  "household-supplies": {
+    "aliases": ["casalinghi", "detergenti"],
+    "samples": []
+  },
+  "maintenance": {
+    "aliases": ["riparazione", "idraulico"],
+    "samples": []
+  },
+  "electricity": {
+    "aliases": ["luce", "bolletta luce", "enel"],
+    "samples": ["bolletta della luce"]
+  },
+  "heat-gas": {
+    "aliases": ["riscaldamento", "bolletta gas"],
+    "samples": []
+  },
+  "trash": {
+    "aliases": ["rifiuti", "tari", "riciclo"],
+    "samples": []
+  },
+  "tv-phone-internet": {
+    "aliases": ["internet", "wifi", "tim", "vodafone", "telefono"],
+    "samples": ["bolletta internet"]
+  },
+  "water": {
+    "aliases": ["acqua", "bolletta acqua"],
+    "samples": []
+  },
+  "events-and-activities": {
+    "aliases": ["biglietti", "uscita", "festa"],
+    "samples": []
+  },
+  "personal-care-and-wellness": {
+    "aliases": ["parrucchiere", "spa", "taglio"],
+    "samples": []
+  },
+  "income": {
+    "aliases": ["stipendio", "paga"],
+    "samples": []
+  },
+  "payment": {
+    "aliases": ["rimborso", "saldo", "restituzione"],
+    "samples": []
+  },
+  "general": {
+    "aliases": ["altro", "varie"],
+    "samples": []
+  }
+}

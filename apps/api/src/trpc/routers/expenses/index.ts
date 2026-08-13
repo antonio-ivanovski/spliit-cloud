@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
 import { GroupMemberStatus, prisma, type Prisma } from '@spliit/db'
-import { expandCategorySelection } from '@spliit/domain'
+import { expandCategorySelection, loadLocaleDictionary } from '@spliit/domain'
 
 import {
   mapExpenseListRow,
@@ -330,6 +330,7 @@ async function listGlobalExpenses(
 
   const query = input.query?.trim()
   if (query) {
+    await loadLocaleDictionary(input.locale)
     const similarTitleIds = await findSimilarExpenseTitleIds({
       ledgerIds: groups.map((group) => group.ledgerId),
       query,

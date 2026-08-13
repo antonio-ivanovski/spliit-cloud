@@ -1,0 +1,78 @@
+{
+  "taxi": {
+    "aliases": ["taxi", "liftago", "bolt"],
+    "samples": ["taxi na letiste"]
+  },
+  "dining-out": {
+    "aliases": ["restaurace", "vecere", "obed", "kavarna"],
+    "samples": ["vecere v restauraci"]
+  },
+  "groceries": {
+    "aliases": ["nakup", "supermarket", "albert", "lidl", "tesco"],
+    "samples": ["tydenni nakup"]
+  },
+  "liquor": {
+    "aliases": ["alkohol", "pivo", "vino"],
+    "samples": []
+  },
+  "rent": {
+    "aliases": ["najem", "byt"],
+    "samples": ["mesicni najem"]
+  },
+  "gas-fuel": {
+    "aliases": ["benzin", "nafta", "pumpa"],
+    "samples": []
+  },
+  "hotel": {
+    "aliases": ["ubytovani", "penzion"],
+    "samples": []
+  },
+  "plane": {
+    "aliases": ["let", "letenka", "letiste", "csa"],
+    "samples": ["letenky"]
+  },
+  "bus-train": {
+    "aliases": ["mhd", "metro", "vlak", "autobus", "pid", "cd"],
+    "samples": ["jizdenka na vlak"]
+  },
+  "car": {
+    "aliases": ["auto", "pujcovna"],
+    "samples": []
+  },
+  "parking": {
+    "aliases": ["parkovani", "parkoviste"],
+    "samples": []
+  },
+  "memberships": {
+    "aliases": ["posilovna", "clenstvi"],
+    "samples": []
+  },
+  "movies": {
+    "aliases": ["kino", "film"],
+    "samples": []
+  },
+  "medical-expenses": {
+    "aliases": ["lekar", "lekarna", "nemocnice", "zubar"],
+    "samples": []
+  },
+  "electricity": {
+    "aliases": ["elektrina", "cez"],
+    "samples": []
+  },
+  "tv-phone-internet": {
+    "aliases": ["internet", "wifi", "o2", "vodafone", "t-mobile"],
+    "samples": []
+  },
+  "clothing": {
+    "aliases": ["obleceni", "boty"],
+    "samples": []
+  },
+  "payment": {
+    "aliases": ["refundace", "vyrovnani"],
+    "samples": []
+  },
+  "general": {
+    "aliases": ["ostatni", "ruzne"],
+    "samples": []
+  }
+}

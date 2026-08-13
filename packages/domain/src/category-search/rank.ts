@@ -3,7 +3,11 @@ import {
   type Category,
   type CategoryId,
 } from '../categories'
-import { resolveCategorySearchFields, tokenizeSearchText } from './dictionaries'
+import {
+  resolveCategorySearchFields,
+  tokenizeSearchText,
+  type LocaleDictionary,
+} from './dictionaries'
 
 const LABEL_WEIGHT = 1
 const ALIAS_WEIGHT = 0.92
@@ -15,6 +19,15 @@ const FALLBACK_ALIAS_WEIGHT = 0.42
 /** Drop hits weaker than this so subsequence noise stays out of the picker. */
 const MIN_SCORE = 0.32
 
+export type NormalizedCategorySearchFields = {
+  label: string
+  grouping: string
+  id: string
+  aliases: readonly string[]
+  samples: readonly string[]
+  fallbackAliases: readonly string[]
+}
+
 export type CategorySearchDocument = {
   id: CategoryId
   label: string
@@ -23,6 +36,8 @@ export type CategorySearchDocument = {
   aliases: readonly string[]
   samples: readonly string[]
   fallbackAliases: readonly string[]
+  /** Precomputed by `createCategorySearchDocument`; optional for test literals. */
+  normalized?: NormalizedCategorySearchFields
 }
 
 export type RankedCategory = {
@@ -41,10 +56,15 @@ export function createCategorySearchDocument(
     label: string
     grouping: string
     locale: string
+    localeDictionary?: LocaleDictionary
   },
 ): CategorySearchDocument {
-  const fields = resolveCategorySearchFields(category.id, options.locale)
-  return {
+  const fields = resolveCategorySearchFields(
+    category.id,
+    options.locale,
+    options.localeDictionary,
+  )
+  const document = {
     id: category.id,
     label: options.label,
     grouping: options.grouping,
@@ -53,6 +73,7 @@ export function createCategorySearchDocument(
     samples: fields.samples,
     fallbackAliases: fields.fallbackAliases,
   }
+  return { ...document, normalized: computeNormalizedFields(document) }
 }
 
 /**
@@ -110,40 +131,45 @@ function scoreDocument(
   return Math.max(phrase, tokenTotal / tokens.length)
 }
 
+function computeNormalizedFields(
+  document: Omit<CategorySearchDocument, 'normalized'>,
+): NormalizedCategorySearchFields {
+  return {
+    label: normalizeSearchText(document.label),
+    grouping: normalizeSearchText(document.grouping),
+    id: normalizeSearchText(document.id),
+    aliases: document.aliases.map(normalizeSearchText),
+    samples: document.samples.map(normalizeSearchText),
+    fallbackAliases: document.fallbackAliases.map(normalizeSearchText),
+  }
+}
+
+function normalizedFields(
+  document: CategorySearchDocument,
+): NormalizedCategorySearchFields {
+  return document.normalized ?? computeNormalizedFields(document)
+}
+
 function bestFieldScore(
   needle: string,
   document: CategorySearchDocument,
 ): number {
+  const normalized = normalizedFields(document)
   let best = 0
+  best = Math.max(best, scoreText(needle, normalized.label) * LABEL_WEIGHT)
   best = Math.max(
     best,
-    scoreText(needle, normalizeSearchText(document.label)) * LABEL_WEIGHT,
+    scoreText(needle, normalized.grouping) * GROUPING_WEIGHT,
   )
-  best = Math.max(
-    best,
-    scoreText(needle, normalizeSearchText(document.grouping)) * GROUPING_WEIGHT,
-  )
-  best = Math.max(
-    best,
-    scoreText(needle, normalizeSearchText(document.id)) * SLUG_WEIGHT,
-  )
-  for (const alias of document.aliases) {
-    best = Math.max(
-      best,
-      scoreText(needle, normalizeSearchText(alias)) * ALIAS_WEIGHT,
-    )
+  best = Math.max(best, scoreText(needle, normalized.id) * SLUG_WEIGHT)
+  for (const alias of normalized.aliases) {
+    best = Math.max(best, scoreText(needle, alias) * ALIAS_WEIGHT)
   }
-  for (const sample of document.samples) {
-    best = Math.max(
-      best,
-      scoreText(needle, normalizeSearchText(sample)) * SAMPLE_WEIGHT,
-    )
+  for (const sample of normalized.samples) {
+    best = Math.max(best, scoreText(needle, sample) * SAMPLE_WEIGHT)
   }
-  for (const alias of document.fallbackAliases) {
-    best = Math.max(
-      best,
-      scoreText(needle, normalizeSearchText(alias)) * FALLBACK_ALIAS_WEIGHT,
-    )
+  for (const alias of normalized.fallbackAliases) {
+    best = Math.max(best, scoreText(needle, alias) * FALLBACK_ALIAS_WEIGHT)
   }
   return best
 }

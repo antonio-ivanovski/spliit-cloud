@@ -193,8 +193,12 @@ describe('CategorySelector', () => {
 
     const trigger = screen.getByRole('combobox')
     expect(trigger).toHaveAttribute('aria-busy', 'true')
-    expect(trigger.querySelector('.lucide-sparkles')).toBeInTheDocument()
-    expect(trigger.querySelector('.lucide-loader-circle')).toBeNull()
+    expect(
+      trigger.querySelector('[data-icon="category-loading-ai"]'),
+    ).toBeInTheDocument()
+    expect(
+      trigger.querySelector('[data-icon="category-loading-spinner"]'),
+    ).toBeNull()
   })
 
   it('shows a generic spinner while loading by default', () => {
@@ -209,7 +213,11 @@ describe('CategorySelector', () => {
 
     const trigger = screen.getByRole('combobox')
     expect(trigger).toHaveAttribute('aria-busy', 'true')
-    expect(trigger.querySelector('.lucide-loader-circle')).toBeInTheDocument()
-    expect(trigger.querySelector('.lucide-sparkles')).toBeNull()
+    expect(
+      trigger.querySelector('[data-icon="category-loading-spinner"]'),
+    ).toBeInTheDocument()
+    expect(
+      trigger.querySelector('[data-icon="category-loading-ai"]'),
+    ).toBeNull()
   })
 })

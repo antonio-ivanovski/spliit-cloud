@@ -5,6 +5,7 @@ import {
   expandCategorySelection,
   commonCurrencyLookbackDate,
   isSupportedCurrencyCode,
+  loadLocaleDictionary,
   rankCommonCurrencies,
 } from '@spliit/domain'
 
@@ -253,6 +254,7 @@ export async function getGroupExpenses(
 
   const filter = options?.filter?.trim()
   if (filter) {
+    await loadLocaleDictionary(options?.locale)
     const similarTitleIds = await findSimilarExpenseTitleIds({
       ledgerIds: [ledgerId],
       query: filter,

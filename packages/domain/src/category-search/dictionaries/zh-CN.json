@@ -1,0 +1,87 @@
+{
+  "taxi": {
+    "aliases": ["出租车", "打车", "滴滴", "didi", "taxi"],
+    "samples": ["滴滴去机场", "uber to airport"]
+  },
+  "dining-out": {
+    "aliases": [
+      "餐厅",
+      "吃饭",
+      "晚餐",
+      "午餐",
+      "外卖",
+      "美团",
+      "饿了么",
+      "meituan"
+    ],
+    "samples": ["外面吃饭", "lunch out"]
+  },
+  "groceries": {
+    "aliases": ["买菜", "超市", "盒马", "永辉", "沃尔玛", "hema"],
+    "samples": ["超市购物", "weekly shop"]
+  },
+  "liquor": {
+    "aliases": ["酒", "啤酒", "白酒"],
+    "samples": []
+  },
+  "rent": {
+    "aliases": ["房租", "租金", "rent"],
+    "samples": ["这个月房租"]
+  },
+  "gas-fuel": {
+    "aliases": ["加油", "汽油", "中石化", "中石油"],
+    "samples": ["去加油"]
+  },
+  "hotel": {
+    "aliases": ["酒店", "住宿", "民宿", "hotel"],
+    "samples": []
+  },
+  "plane": {
+    "aliases": ["机票", "飞机", "航班", "机场", "flight", "airport"],
+    "samples": ["买机票"]
+  },
+  "bus-train": {
+    "aliases": ["地铁", "公交", "高铁", "火车", "metro", "train"],
+    "samples": ["地铁卡"]
+  },
+  "car": {
+    "aliases": ["租车", "汽车"],
+    "samples": []
+  },
+  "parking": {
+    "aliases": ["停车", "停车费"],
+    "samples": []
+  },
+  "memberships": {
+    "aliases": ["健身", "会员", "gym"],
+    "samples": []
+  },
+  "movies": {
+    "aliases": ["电影", "电影院", "cinema"],
+    "samples": []
+  },
+  "medical-expenses": {
+    "aliases": ["看病", "医院", "药店", "诊所"],
+    "samples": []
+  },
+  "electricity": {
+    "aliases": ["电费", "电"],
+    "samples": []
+  },
+  "tv-phone-internet": {
+    "aliases": ["网费", "宽带", "话费", "移动", "联通", "电信"],
+    "samples": []
+  },
+  "clothing": {
+    "aliases": ["衣服", "鞋子"],
+    "samples": []
+  },
+  "payment": {
+    "aliases": ["报销", "还款", "转账"],
+    "samples": []
+  },
+  "general": {
+    "aliases": ["其他", "杂项"],
+    "samples": []
+  }
+}

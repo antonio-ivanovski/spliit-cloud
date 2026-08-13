@@ -44,6 +44,20 @@ describe('suggestExpenseCategory', () => {
     expect(generateText).not.toHaveBeenCalled()
   })
 
+  it('returns null for 1–2 letter titles without querying or calling the model', async () => {
+    envState.PUBLIC_ENABLE_CATEGORY_EXTRACT = true
+    await expect(
+      suggestExpenseCategory({
+        groupId: 'group-1',
+        title: 'a',
+        allowAi: true,
+      }),
+    ).resolves.toEqual({ categoryId: null })
+    expect(prismaMock.group.findUnique).not.toHaveBeenCalled()
+    expect(prisma$QueryRaw).not.toHaveBeenCalled()
+    expect(generateText).not.toHaveBeenCalled()
+  })
+
   it('returns a similar-title history hit without calling the model', async () => {
     prisma$QueryRaw.mockResolvedValue([
       {

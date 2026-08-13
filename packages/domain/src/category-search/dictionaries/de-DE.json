@@ -1,0 +1,194 @@
+{
+  "taxi": {
+    "aliases": ["taxi", "cab", "fahrdienst", "mietwagen"],
+    "samples": ["taxi zum flughafen", "uber zum bahnhof"]
+  },
+  "dining-out": {
+    "aliases": [
+      "restaurant",
+      "essen gehen",
+      "abendessen",
+      "mittagessen",
+      "brunch",
+      "cafe",
+      "kaffee",
+      "imbiss"
+    ],
+    "samples": ["abendessen mit freunden", "mittagessen im restaurant"]
+  },
+  "groceries": {
+    "aliases": [
+      "einkauf",
+      "supermarkt",
+      "lebensmittel",
+      "rewe",
+      "edeka",
+      "aldi"
+    ],
+    "samples": ["woechentlicher einkauf", "einkauf rewe"]
+  },
+  "liquor": {
+    "aliases": ["alkohol", "bier", "wein", "spirituosen", "kneipe"],
+    "samples": ["bier holen"]
+  },
+  "rent": {
+    "aliases": ["miete", "wohnung", "kaltmiete"],
+    "samples": ["monatsmiete"]
+  },
+  "mortgage": {
+    "aliases": ["hypothek", "hauskredit"],
+    "samples": []
+  },
+  "gas-fuel": {
+    "aliases": ["benzin", "kraftstoff", "tankstelle", "diesel", "tanken"],
+    "samples": ["tanken", "tankstelle"]
+  },
+  "hotel": {
+    "aliases": ["unterkunft", "uebernachtung", "pension"],
+    "samples": ["hoteluebernachtung"]
+  },
+  "plane": {
+    "aliases": ["flug", "flugticket", "airline", "flughafen"],
+    "samples": ["flugtickets"]
+  },
+  "bus-train": {
+    "aliases": [
+      "oeffis",
+      "oepnv",
+      "bahn",
+      "s-bahn",
+      "u-bahn",
+      "bus",
+      "pendeln"
+    ],
+    "samples": ["zugtickets", "deutschlandticket"]
+  },
+  "car": {
+    "aliases": ["auto", "fahrzeug", "mietwagen"],
+    "samples": ["autovermietung"]
+  },
+  "parking": {
+    "aliases": ["parken", "parkhaus", "parkplatz"],
+    "samples": ["flughafen parken"]
+  },
+  "bicycle": {
+    "aliases": ["fahrrad", "rad", "nextbike"],
+    "samples": []
+  },
+  "digital-subscriptions": {
+    "aliases": ["streaming", "abo", "software"],
+    "samples": ["monatsabo"]
+  },
+  "memberships": {
+    "aliases": ["fitnessstudio", "gym", "mitgliedschaft", "beitrag"],
+    "samples": ["fitnessstudio beitrag"]
+  },
+  "movies": {
+    "aliases": ["kino", "film", "theater"],
+    "samples": ["kinokarten"]
+  },
+  "games": {
+    "aliases": ["gaming", "videospiel"],
+    "samples": []
+  },
+  "music": {
+    "aliases": ["konzert", "festival"],
+    "samples": ["konzertkarten"]
+  },
+  "sports": {
+    "aliases": ["spielkarten", "stadion", "bundesliga"],
+    "samples": []
+  },
+  "medical-expenses": {
+    "aliases": ["arzt", "apotheke", "krankenhaus", "zahnarzt"],
+    "samples": ["arztbesuch", "apotheke"]
+  },
+  "insurance": {
+    "aliases": ["versicherung", "praemie"],
+    "samples": ["kfz versicherung"]
+  },
+  "taxes": {
+    "aliases": ["steuern", "finanzamt"],
+    "samples": []
+  },
+  "childcare": {
+    "aliases": ["kita", "kindergarten", "tagesmutter"],
+    "samples": []
+  },
+  "education": {
+    "aliases": ["schule", "studiengebuehren", "kurs", "universitaet"],
+    "samples": []
+  },
+  "clothing": {
+    "aliases": ["kleidung", "kleider", "schuhe"],
+    "samples": []
+  },
+  "gifts": {
+    "aliases": ["geschenk", "geburtstag"],
+    "samples": []
+  },
+  "donation": {
+    "aliases": ["spende", "wohltaetigkeit"],
+    "samples": []
+  },
+  "pets": {
+    "aliases": ["tierarzt", "hundefutter", "katze", "hund"],
+    "samples": ["tierarzt"]
+  },
+  "electronics": {
+    "aliases": ["elektronik", "handy", "laptop"],
+    "samples": []
+  },
+  "furniture": {
+    "aliases": ["moebel", "sofa", "schrank"],
+    "samples": []
+  },
+  "household-supplies": {
+    "aliases": ["haushalt", "drogerie", "dm", "rossmann"],
+    "samples": []
+  },
+  "maintenance": {
+    "aliases": ["reparatur", "klempner", "handwerker"],
+    "samples": []
+  },
+  "electricity": {
+    "aliases": ["strom", "stromrechnung"],
+    "samples": ["stromrechnung"]
+  },
+  "heat-gas": {
+    "aliases": ["heizung", "gasrechnung"],
+    "samples": []
+  },
+  "trash": {
+    "aliases": ["muell", "abfall", "recycling"],
+    "samples": []
+  },
+  "tv-phone-internet": {
+    "aliases": ["internet", "wlan", "handyvertrag", "telefon"],
+    "samples": ["internetrechnung"]
+  },
+  "water": {
+    "aliases": ["wasser", "wasserrechnung"],
+    "samples": []
+  },
+  "events-and-activities": {
+    "aliases": ["karten", "ausflug", "party", "veranstaltung"],
+    "samples": []
+  },
+  "personal-care-and-wellness": {
+    "aliases": ["friseur", "spa", "massage"],
+    "samples": ["haarschnitt"]
+  },
+  "income": {
+    "aliases": ["gehalt", "lohn", "einkommen"],
+    "samples": []
+  },
+  "payment": {
+    "aliases": ["rueckzahlung", "ausgleich", "erstatten"],
+    "samples": []
+  },
+  "general": {
+    "aliases": ["sonstiges", "diverses"],
+    "samples": []
+  }
+}

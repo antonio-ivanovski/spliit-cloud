@@ -1,0 +1,178 @@
+{
+  "taxi": {
+    "aliases": ["taxi", "cabify", "viaje"],
+    "samples": ["taxi al aeropuerto"]
+  },
+  "dining-out": {
+    "aliases": [
+      "restaurante",
+      "cena",
+      "comida",
+      "almuerzo",
+      "brunch",
+      "cafe",
+      "bar"
+    ],
+    "samples": ["cena con amigos", "comida en restaurante"]
+  },
+  "groceries": {
+    "aliases": ["compra", "supermercado", "mercadona", "carrefour", "dia"],
+    "samples": ["compra semanal"]
+  },
+  "liquor": {
+    "aliases": ["alcohol", "cerveza", "vino", "licor"],
+    "samples": []
+  },
+  "rent": {
+    "aliases": ["alquiler", "renta", "piso"],
+    "samples": ["alquiler mensual"]
+  },
+  "mortgage": {
+    "aliases": ["hipoteca"],
+    "samples": []
+  },
+  "gas-fuel": {
+    "aliases": ["gasolina", "combustible", "gasolinera", "diesel"],
+    "samples": ["llenar el deposito"]
+  },
+  "hotel": {
+    "aliases": ["alojamiento", "hostal", "pension"],
+    "samples": ["noche de hotel"]
+  },
+  "plane": {
+    "aliases": ["vuelo", "billete", "aerolinea", "aeropuerto"],
+    "samples": ["billetes de avion"]
+  },
+  "bus-train": {
+    "aliases": ["transporte", "metro", "cercanias", "renfe", "autobus", "ave"],
+    "samples": ["billete de tren"]
+  },
+  "car": {
+    "aliases": ["coche", "vehiculo", "alquiler de coche"],
+    "samples": []
+  },
+  "parking": {
+    "aliases": ["aparcamiento", "parking", "garaje"],
+    "samples": []
+  },
+  "bicycle": {
+    "aliases": ["bici", "bicicleta", "bicimad"],
+    "samples": []
+  },
+  "digital-subscriptions": {
+    "aliases": ["suscripcion", "streaming"],
+    "samples": []
+  },
+  "memberships": {
+    "aliases": ["gimnasio", "cuota", "socio"],
+    "samples": ["cuota del gym"]
+  },
+  "movies": {
+    "aliases": ["cine", "pelicula"],
+    "samples": ["entradas de cine"]
+  },
+  "games": {
+    "aliases": ["videojuego", "gaming"],
+    "samples": []
+  },
+  "music": {
+    "aliases": ["concierto", "festival"],
+    "samples": []
+  },
+  "sports": {
+    "aliases": ["entradas", "estadio", "partido"],
+    "samples": []
+  },
+  "medical-expenses": {
+    "aliases": ["medico", "farmacia", "hospital", "dentista"],
+    "samples": ["visita al medico"]
+  },
+  "insurance": {
+    "aliases": ["seguro", "prima"],
+    "samples": []
+  },
+  "taxes": {
+    "aliases": ["impuestos", "hacienda"],
+    "samples": []
+  },
+  "childcare": {
+    "aliases": ["guarderia", "canguros"],
+    "samples": []
+  },
+  "education": {
+    "aliases": ["colegio", "matricula", "curso", "universidad"],
+    "samples": []
+  },
+  "clothing": {
+    "aliases": ["ropa", "zapatos"],
+    "samples": []
+  },
+  "gifts": {
+    "aliases": ["regalo", "cumpleanos"],
+    "samples": []
+  },
+  "donation": {
+    "aliases": ["donacion", "ong"],
+    "samples": []
+  },
+  "pets": {
+    "aliases": ["veterinario", "pienso", "perro", "gato"],
+    "samples": []
+  },
+  "electronics": {
+    "aliases": ["electronica", "movil", "portatil"],
+    "samples": []
+  },
+  "furniture": {
+    "aliases": ["muebles", "sofa"],
+    "samples": []
+  },
+  "household-supplies": {
+    "aliases": ["drogueria", "limpieza"],
+    "samples": []
+  },
+  "maintenance": {
+    "aliases": ["reparacion", "fontanero"],
+    "samples": []
+  },
+  "electricity": {
+    "aliases": ["luz", "factura de luz", "iberdrola"],
+    "samples": ["factura de la luz"]
+  },
+  "heat-gas": {
+    "aliases": ["calefaccion", "gas"],
+    "samples": []
+  },
+  "trash": {
+    "aliases": ["basura", "reciclaje"],
+    "samples": []
+  },
+  "tv-phone-internet": {
+    "aliases": ["internet", "wifi", "movistar", "telefono"],
+    "samples": ["factura de internet"]
+  },
+  "water": {
+    "aliases": ["agua", "factura del agua"],
+    "samples": []
+  },
+  "events-and-activities": {
+    "aliases": ["entradas", "salida", "fiesta"],
+    "samples": []
+  },
+  "personal-care-and-wellness": {
+    "aliases": ["peluqueria", "spa", "corte"],
+    "samples": []
+  },
+  "income": {
+    "aliases": ["nomina", "sueldo", "salario"],
+    "samples": []
+  },
+  "payment": {
+    "aliases": ["reembolso", "ajuste", "devolver"],
+    "samples": []
+  },
+  "general": {
+    "aliases": ["otros", "varios"],
+    "samples": []
+  }
+}

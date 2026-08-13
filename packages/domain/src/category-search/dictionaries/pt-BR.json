@@ -1,0 +1,84 @@
+{
+  "taxi": {
+    "aliases": ["taxi", "99", "corrida"],
+    "samples": ["taxi para o aeroporto"]
+  },
+  "dining-out": {
+    "aliases": ["restaurante", "jantar", "almoco", "padaria", "ifood"],
+    "samples": ["jantar fora"]
+  },
+  "groceries": {
+    "aliases": [
+      "compras",
+      "supermercado",
+      "mercado",
+      "pao de acucar",
+      "carrefour"
+    ],
+    "samples": ["compras da semana"]
+  },
+  "liquor": {
+    "aliases": ["alcool", "cerveja", "vinho", "barzinho"],
+    "samples": []
+  },
+  "rent": {
+    "aliases": ["aluguel", "apartamento", "condominio"],
+    "samples": ["aluguel do mes"]
+  },
+  "gas-fuel": {
+    "aliases": ["gasolina", "combustivel", "posto"],
+    "samples": ["abastecer"]
+  },
+  "hotel": {
+    "aliases": ["hospedagem", "pousada"],
+    "samples": []
+  },
+  "plane": {
+    "aliases": ["voo", "passagem", "aeroporto", "gol", "latam", "azul"],
+    "samples": ["passagem aerea"]
+  },
+  "bus-train": {
+    "aliases": ["transporte", "metro", "onibus", "cptm", "bilhete unico"],
+    "samples": []
+  },
+  "car": {
+    "aliases": ["carro", "aluguel de carro"],
+    "samples": []
+  },
+  "parking": {
+    "aliases": ["estacionamento", "zona azul"],
+    "samples": []
+  },
+  "memberships": {
+    "aliases": ["academia", "mensalidade"],
+    "samples": []
+  },
+  "movies": {
+    "aliases": ["cinema", "filme"],
+    "samples": []
+  },
+  "medical-expenses": {
+    "aliases": ["medico", "farmacia", "hospital", "dentista", "convenio"],
+    "samples": []
+  },
+  "electricity": {
+    "aliases": ["luz", "conta de luz", "enel", "cemig"],
+    "samples": []
+  },
+  "tv-phone-internet": {
+    "aliases": ["internet", "wifi", "vivo", "claro", "tim"],
+    "samples": ["conta de internet"]
+  },
+  "clothing": {
+    "aliases": ["roupa", "sapatos"],
+    "samples": []
+  },
+  "payment": {
+    "aliases": ["reembolso", "acerto", "pix de volta"],
+    "samples": []
+  },
+  "general": {
+    "aliases": ["outros", "diversos"],
+    "samples": []
+  }
+}

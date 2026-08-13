@@ -36,6 +36,7 @@ import {
 } from '@/components/ui/popover'
 import { useLocale } from '@/i18n/react'
 import { useMediaQuery } from '@/lib/hooks'
+import { useLocaleCategoryDictionary } from '@/lib/use-locale-category-dictionary'
 import { cn } from '@/lib/utils'
 import {
   type DEFAULT_CATEGORIES,
@@ -107,7 +108,7 @@ export function CategorySelector({
     categories.find((category) => category.id === DEFAULT_CATEGORY_ID) ??
     getCategoryById(DEFAULT_CATEGORY_ID)!
 
-  const hierarchy = buildHierarchy(categories)
+  const hierarchy = useMemo(() => buildHierarchy(categories), [categories])
   const multiCount = categorySelectionDisplayCount(selectedValues, categories)
 
   if (mode === 'multi') {
@@ -265,6 +266,7 @@ function CategoryCommand({
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Categories' })
   const locale = useLocale()
+  const localeDictionary = useLocaleCategoryDictionary(locale)
   const [search, setSearch] = useState('')
   const [keyboardValue, setKeyboardValue] = useState<string | null>(null)
   const selectedSet = new Set(selectedValues)
@@ -290,10 +292,11 @@ function CategoryCommand({
                 : categoryLabel(t, category.id),
             grouping,
             locale,
+            localeDictionary,
           }),
         )
       }),
-    [hierarchy, locale, t],
+    [hierarchy, locale, localeDictionary, t],
   )
 
   const categoryById = useMemo(() => {
@@ -557,11 +560,13 @@ const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>(
         {isLoading ? (
           loadingAppearance === 'ai' ? (
             <Sparkles
+              data-icon="category-loading-ai"
               aria-hidden="true"
               className="h-4 w-4 shrink-0 animate-sparkle-pulse text-primary motion-reduce:animate-none"
             />
           ) : (
             <Loader2
+              data-icon="category-loading-spinner"
               aria-hidden="true"
               className="h-4 w-4 shrink-0 animate-spin text-muted-foreground motion-reduce:animate-none"
             />

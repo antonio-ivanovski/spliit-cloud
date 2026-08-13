@@ -63,6 +63,7 @@ const {
     error: null
     isLoading: boolean
     isSuccess?: boolean
+    isError?: boolean
     refetch: ReturnType<typeof vi.fn>
   }
 
@@ -129,6 +130,7 @@ const {
     error: null,
     isLoading: false,
     isSuccess: true,
+    isError: false,
     refetch: vi.fn(),
   }
 
@@ -330,6 +332,7 @@ type MockQueryResult = {
   error: null
   isLoading: boolean
   isSuccess?: boolean
+  isError?: boolean
   refetch: ReturnType<typeof vi.fn>
 }
 
@@ -649,6 +652,30 @@ describe('ExpenseForm', () => {
     expect(mockCategoryMutateAsync).not.toHaveBeenCalled()
   })
 
+  it('does not guess a category for 1–2 letter titles', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={{
+          ...runtimeFeatureFlags,
+          enableCategoryExtract: true,
+        }}
+      />,
+    )
+
+    const title = screen.getByRole('textbox', { name: /expense title/i })
+    await user.type(title, 'ai')
+
+    await vi.waitFor(() => {
+      expect(title).toHaveValue('ai')
+    })
+    expect(mockCategoryMutateAsync).not.toHaveBeenCalled()
+    expect(
+      screen.getByRole('combobox', { name: 'General' }),
+    ).toBeInTheDocument()
+  })
+
   it('applies an AI category suggestion when local ranking is not confident', async () => {
     const { user } = render(
       <ExpenseForm
@@ -709,9 +736,11 @@ describe('ExpenseForm', () => {
     )
     const categoryButton = screen.getByRole('combobox', { name: 'General' })
     expect(
-      categoryButton.querySelector('.lucide-loader-circle'),
+      categoryButton.querySelector('[data-icon="category-loading-spinner"]'),
     ).toBeInTheDocument()
-    expect(categoryButton.querySelector('.lucide-sparkles')).toBeNull()
+    expect(
+      categoryButton.querySelector('[data-icon="category-loading-ai"]'),
+    ).toBeNull()
   })
 
   it('leaves the default category when the API returns no suggestion', async () => {
@@ -784,7 +813,9 @@ describe('ExpenseForm', () => {
       )
     })
     const categoryButton = screen.getByRole('combobox', { name: 'General' })
-    expect(categoryButton.querySelector('.lucide-sparkles')).toBeInTheDocument()
+    expect(
+      categoryButton.querySelector('[data-icon="category-loading-ai"]'),
+    ).toBeInTheDocument()
 
     await user.click(categoryButton)
     await user.click(screen.getByText('Groceries'))

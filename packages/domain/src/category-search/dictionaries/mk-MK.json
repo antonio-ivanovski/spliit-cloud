@@ -1,0 +1,78 @@
+{
+  "taxi": {
+    "aliases": ["такси", "таксивози", "taksi", "taxi", "bolt"],
+    "samples": ["такси до аеродром", "taxi to airport"]
+  },
+  "dining-out": {
+    "aliases": ["ресторан", "вечера", "ручек", "кафе", "restoran", "dinner"],
+    "samples": ["вечера надвор"]
+  },
+  "groceries": {
+    "aliases": ["намирници", "супермаркет", "тинекс", "веро", "namirnici"],
+    "samples": ["неделно купување"]
+  },
+  "liquor": {
+    "aliases": ["алкохол", "пиво", "вино", "pivo"],
+    "samples": []
+  },
+  "rent": {
+    "aliases": ["кирија", "стан", "kirija", "rent"],
+    "samples": ["месечна кирија"]
+  },
+  "gas-fuel": {
+    "aliases": ["бензин", "гориво", "пумпа", "benzin"],
+    "samples": []
+  },
+  "hotel": {
+    "aliases": ["хотел", "сместување", "hotel"],
+    "samples": []
+  },
+  "plane": {
+    "aliases": ["авион", "билет", "аеродром", "avion", "flight"],
+    "samples": ["авионски билети"]
+  },
+  "bus-train": {
+    "aliases": ["автобус", "воз", "јавен превоз", "avtobus", "metro"],
+    "samples": []
+  },
+  "car": {
+    "aliases": ["кола", "автомобил", "kola"],
+    "samples": []
+  },
+  "parking": {
+    "aliases": ["паркинг", "parking"],
+    "samples": []
+  },
+  "memberships": {
+    "aliases": ["тертана", "фитнес", "gym"],
+    "samples": []
+  },
+  "movies": {
+    "aliases": ["кино", "филм", "kino"],
+    "samples": []
+  },
+  "medical-expenses": {
+    "aliases": ["лекар", "аптека", "болница", "apteka"],
+    "samples": []
+  },
+  "electricity": {
+    "aliases": ["струја", "евн", "struja"],
+    "samples": []
+  },
+  "tv-phone-internet": {
+    "aliases": ["интернет", "а1", "македонски телеком", "internet"],
+    "samples": []
+  },
+  "clothing": {
+    "aliases": ["облека", "чевли", "obleka"],
+    "samples": []
+  },
+  "payment": {
+    "aliases": ["враќање", "порамнување"],
+    "samples": []
+  },
+  "general": {
+    "aliases": ["друго", "разно"],
+    "samples": []
+  }
+}

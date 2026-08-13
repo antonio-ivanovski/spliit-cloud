@@ -1,0 +1,78 @@
+{
+  "taxi": {
+    "aliases": ["taksi", "kyyti"],
+    "samples": ["taksi lentokentalle"]
+  },
+  "dining-out": {
+    "aliases": ["ravintola", "illallinen", "lounas", "kahvila"],
+    "samples": ["illallinen ravintolassa"]
+  },
+  "groceries": {
+    "aliases": ["ruokaostokset", "kauppa", "k-market", "s-market", "prisma"],
+    "samples": ["viikon ostokset"]
+  },
+  "liquor": {
+    "aliases": ["alkoholi", "olut", "viini", "alko"],
+    "samples": []
+  },
+  "rent": {
+    "aliases": ["vuokra", "asunto"],
+    "samples": ["kuukauden vuokra"]
+  },
+  "gas-fuel": {
+    "aliases": ["bensa", "polttoaine", "huoltoasema"],
+    "samples": ["tankkaus"]
+  },
+  "hotel": {
+    "aliases": ["majoitus", "hotelli"],
+    "samples": []
+  },
+  "plane": {
+    "aliases": ["lento", "lentolippu", "lentokentta", "finnair"],
+    "samples": ["lentoliput"]
+  },
+  "bus-train": {
+    "aliases": ["julkinen", "metro", "juna", "bussi", "hsl", "vr"],
+    "samples": ["junalippu"]
+  },
+  "car": {
+    "aliases": ["auto", "vuokra-auto"],
+    "samples": []
+  },
+  "parking": {
+    "aliases": ["pysakointi", "parkki"],
+    "samples": []
+  },
+  "memberships": {
+    "aliases": ["kuntosali", "jasenyys"],
+    "samples": []
+  },
+  "movies": {
+    "aliases": ["elokuva", "kinopalatsi"],
+    "samples": []
+  },
+  "medical-expenses": {
+    "aliases": ["laakari", "apteekki", "hammaslaakari"],
+    "samples": []
+  },
+  "electricity": {
+    "aliases": ["sahko", "sahkolasku"],
+    "samples": []
+  },
+  "tv-phone-internet": {
+    "aliases": ["netti", "wifi", "elisa", "dna"],
+    "samples": []
+  },
+  "clothing": {
+    "aliases": ["vaatteet", "kengat"],
+    "samples": []
+  },
+  "payment": {
+    "aliases": ["hyvitys", "tasaus"],
+    "samples": []
+  },
+  "general": {
+    "aliases": ["muu", "sekalaiset"],
+    "samples": []
+  }
+}
