@@ -117,12 +117,13 @@
   }
 }
 
-.app-shell {
+:root {
   --app-header-height: 3.5rem;
+  scroll-padding-top: var(--app-header-height);
 }
 
 @media (width >= 640px) {
-  .app-shell {
+  :root {
     --app-header-height: 4rem;
   }
 }

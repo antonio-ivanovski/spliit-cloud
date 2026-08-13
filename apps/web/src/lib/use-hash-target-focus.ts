@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 
 export const HASH_FOCUS_MS = 1_800
 const HASH_FOCUS_WAIT_MS = 8_000
+const HASH_SCROLL_RETRY_MS = 0
 
 function readHashId(hash?: string) {
   const raw =
@@ -12,6 +13,37 @@ function readHashId(hash?: string) {
 
 function prefersReducedScroll(reducedMotion: boolean | null) {
   return Boolean(reducedMotion)
+}
+
+function readVisibleHeaderHeight() {
+  let height = 0
+  for (const node of document.querySelectorAll('[data-app-header]')) {
+    if (!(node instanceof HTMLElement)) continue
+    height = Math.max(height, node.getBoundingClientRect().height)
+  }
+  return height
+}
+
+/**
+ * Centers `element` in the viewport below the fixed app header. Uses
+ * `window.scrollTo` so overflow clipping on settings cards cannot swallow
+ * `scrollIntoView`.
+ */
+export function scrollElementToVisibleCenter(
+  element: HTMLElement,
+  behavior: ScrollBehavior,
+) {
+  const headerHeight = readVisibleHeaderHeight()
+  const rect = element.getBoundingClientRect()
+  const visibleHeight = Math.max(window.innerHeight - headerHeight, 0)
+  const top = Math.max(
+    0,
+    window.scrollY +
+      rect.top -
+      headerHeight -
+      (visibleHeight - rect.height) / 2,
+  )
+  window.scrollTo({ top, behavior })
 }
 
 /**
@@ -26,6 +58,7 @@ export function useHashTargetFocus(hash?: string) {
     let observer: MutationObserver | null = null
     let focusTimer: number | null = null
     let pollTimer: number | null = null
+    let scrollTimer: number | null = null
     let focused: HTMLElement | null = null
     const startedAt = Date.now()
 
@@ -35,6 +68,13 @@ export function useHashTargetFocus(hash?: string) {
       if (pollTimer !== null) {
         window.clearInterval(pollTimer)
         pollTimer = null
+      }
+    }
+
+    function cancelScroll() {
+      if (scrollTimer !== null) {
+        window.clearTimeout(scrollTimer)
+        scrollTimer = null
       }
     }
 
@@ -50,12 +90,17 @@ export function useHashTargetFocus(hash?: string) {
     function apply(element: HTMLElement) {
       if (focused === element) return
       clearHighlight()
+      cancelScroll()
       focused = element
-      element.scrollIntoView({
-        block: 'center',
-        inline: 'nearest',
-        behavior: prefersReducedScroll(reducedMotion) ? 'auto' : 'smooth',
-      })
+      const behavior = prefersReducedScroll(reducedMotion) ? 'auto' : 'smooth'
+      const scroll = () => scrollElementToVisibleCenter(element, behavior)
+      scroll()
+      // Native hash navigation aligns to the top after paint and would hide
+      // the row behind the navbar; re-assert once the browser is done.
+      scrollTimer = window.setTimeout(() => {
+        scrollTimer = null
+        if (focused === element) scroll()
+      }, HASH_SCROLL_RETRY_MS)
       element.setAttribute('data-hash-focus', '')
       focusTimer = window.setTimeout(() => {
         if (focused === element) {
@@ -71,6 +116,7 @@ export function useHashTargetFocus(hash?: string) {
       if (!id) {
         stopWaiting()
         clearHighlight()
+        cancelScroll()
         return
       }
 
@@ -99,6 +145,7 @@ export function useHashTargetFocus(hash?: string) {
     return () => {
       window.removeEventListener('hashchange', tryFocus)
       stopWaiting()
+      cancelScroll()
       clearHighlight()
     }
   }, [hash, reducedMotion])
