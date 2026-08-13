@@ -65,7 +65,7 @@
     "samples": []
   },
   "electricity": {
-    "aliases": ["电费", "电"],
+    "aliases": ["电费"],
     "samples": []
   },
   "tv-phone-internet": {

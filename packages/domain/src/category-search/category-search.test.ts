@@ -258,6 +258,19 @@ describe('suggestCategoryFromTitle', () => {
       'parking',
     )
   })
+
+  it('does not auto-apply non-specific aliases', async () => {
+    await loadLocaleDictionary('it-IT')
+    await loadLocaleDictionary('zh-CN')
+    expect(suggestCategoryFromTitle('target', english)).toBeNull()
+    expect(
+      suggestCategoryFromTitle('compagnia', documentsFor('it-IT')),
+    ).toBeNull()
+    expect(suggestCategoryFromTitle('电', documentsFor('zh-CN'))).toBeNull()
+    expect(suggestCategoryFromTitle('电费', documentsFor('zh-CN'))?.id).toBe(
+      'electricity',
+    )
+  })
 })
 
 describe('prod dump patterns', () => {

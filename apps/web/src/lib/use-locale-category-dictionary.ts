@@ -6,6 +6,11 @@ import {
   type LocaleDictionary,
 } from '@spliit/domain'
 
+type LocaleDictionaryState = {
+  locale: string
+  dictionary: LocaleDictionary | undefined
+}
+
 /**
  * Load the locale category-search dictionary for `locale` only. English is
  * already in the main bundle; other locales (e.g. mk-MK) arrive as a separate
@@ -14,20 +19,21 @@ import {
 export function useLocaleCategoryDictionary(
   locale: string,
 ): LocaleDictionary | undefined {
-  const [dictionary, setDictionary] = useState<LocaleDictionary | undefined>(
-    () => peekLocaleDictionary(locale),
-  )
+  const [state, setState] = useState<LocaleDictionaryState>(() => ({
+    locale,
+    dictionary: peekLocaleDictionary(locale),
+  }))
 
   useEffect(() => {
     let cancelled = false
     void loadLocaleDictionary(locale).then((loaded) => {
       if (cancelled) return
-      setDictionary(loaded)
+      setState({ locale, dictionary: loaded })
     })
     return () => {
       cancelled = true
     }
   }, [locale])
 
-  return dictionary
+  return state.locale === locale ? state.dictionary : undefined
 }

@@ -41,7 +41,7 @@
     "samples": ["notte in hotel"]
   },
   "plane": {
-    "aliases": ["volo", "biglietto aereo", "compagnia"],
+    "aliases": ["volo", "biglietto aereo"],
     "samples": ["biglietti aerei"]
   },
   "bus-train": {
