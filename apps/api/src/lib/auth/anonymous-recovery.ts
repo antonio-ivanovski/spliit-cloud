@@ -28,6 +28,7 @@ const RECOVERY_KEY_PREFIX = 'spliit_anonymous_v1_'
 const RECOVERY_KEY_PATTERN = /^spliit_anonymous_v1_[A-Za-z0-9_-]{43}$/
 const ENCRYPTION_VERSION = 'v1'
 const HASH_PATTERN = /^[a-f0-9]{64}$/
+const ROTATION_TICKET_MAX_AGE_MS = 10 * 60 * 1000
 
 const recoveryLimiter = new FixedWindowLimiter({
   limit: 10,
@@ -44,6 +45,7 @@ const recoveryBody = z.object({
 })
 const acknowledgeBody = z.object({
   confirmedCopied: z.literal(true),
+  code: z.string().max(128),
 })
 const rotateBody = z.object({ confirmed: z.literal(true) })
 const activateRotationBody = z.object({
@@ -55,13 +57,17 @@ const rotationTicketPayload = z.object({
   accountId: z.string().min(1),
   currentKeyHash: z.string().regex(HASH_PATTERN),
   replacementKeyHash: z.string().regex(HASH_PATTERN),
+  issuedAt: z.number().int().nonnegative(),
 })
 
 function encryptionKey(purpose = 'anonymous-recovery-key') {
-  return createHash('sha256')
-    .update(env.BETTER_AUTH_SECRET ?? 'spliit-dev-secret-change-me')
-    .update(`\0${purpose}`)
-    .digest()
+  const secret = env.BETTER_AUTH_SECRET
+  if (!secret) {
+    throw new Error(
+      'BETTER_AUTH_SECRET is required when ENABLE_ANONYMOUS_AUTH is true',
+    )
+  }
+  return createHash('sha256').update(secret).update(`\0${purpose}`).digest()
 }
 
 export function generateAnonymousRecoveryKey() {
@@ -122,7 +128,7 @@ export function createRotationActivationTicket(input: {
   )
   cipher.setAAD(Buffer.from(input.accountId))
   const ciphertext = Buffer.concat([
-    cipher.update(JSON.stringify(input), 'utf8'),
+    cipher.update(JSON.stringify({ ...input, issuedAt: Date.now() }), 'utf8'),
     cipher.final(),
   ])
   return [
@@ -160,6 +166,12 @@ export function readRotationActivationTicket(
   const payload = rotationTicketPayload.parse(JSON.parse(plaintext))
   if (payload.accountId !== accountId) {
     throw new Error('Rotation activation ticket belongs to another account')
+  }
+  if (
+    payload.issuedAt > Date.now() ||
+    Date.now() - payload.issuedAt > ROTATION_TICKET_MAX_AGE_MS
+  ) {
+    throw new Error('Rotation activation ticket has expired')
   }
   return payload
 }
@@ -303,6 +315,14 @@ export function anonymousRecovery() {
                 code: 'PENDING_RECOVERY_KEY_REQUIRED',
               })
             }
+            if (
+              hashAnonymousRecoveryKey(ctx.body.code) !== credential.keyHash
+            ) {
+              throw new APIError('CONFLICT', {
+                message: 'The pending recovery key has changed.',
+                code: 'PENDING_RECOVERY_KEY_CHANGED',
+              })
+            }
             await tx.anonymousRecoveryCredential.update({
               where: { accountId: user.id },
               data: {
@@ -364,6 +384,11 @@ export function anonymousRecovery() {
         },
         async (ctx) => {
           noStore(ctx)
+          enforceRateLimit(
+            ctx,
+            rotationLimiter,
+            'anonymous-recovery-rotate-activate',
+          )
           const user = requireAnonymousSession(ctx)
           let ticket: z.infer<typeof rotationTicketPayload>
           try {
@@ -444,7 +469,23 @@ export function anonymousRecovery() {
           const credential =
             await prisma.anonymousRecoveryCredential.findUnique({
               where: { keyHash: hashAnonymousRecoveryKey(code) },
-              include: { account: true },
+              select: {
+                accountId: true,
+                acknowledgedAt: true,
+                onboardingCompletedAt: true,
+                account: {
+                  select: {
+                    id: true,
+                    email: true,
+                    emailVerified: true,
+                    isAnonymous: true,
+                    name: true,
+                    image: true,
+                    createdAt: true,
+                    updatedAt: true,
+                  },
+                },
+              },
             })
           if (
             !hasValidFormat ||

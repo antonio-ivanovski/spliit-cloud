@@ -2988,7 +2988,8 @@
       "copyLink": "Copiar enlace",
       "copied": "copiado",
       "howItWorks": "Abra el enlace de inicio de sesión en cualquier navegador para iniciar sesión. En la PWA instalada, elija Anónimo y pegue el enlace de inicio de sesión completo.",
-      "confirmation": "Copié y almacené de forma segura mi enlace de inicio de sesión."
+      "confirmation": "Copié y almacené de forma segura mi enlace de inicio de sesión.",
+      "copyFailed": "No se pudo copiar. Seleccione el enlace de inicio de sesión y cópielo manualmente."
     },
     "recover": {
       "title": "Recuperar cuenta anónima",
@@ -3018,7 +3019,8 @@
       "activateConfirm": "Activar reemplazo",
       "linkAccountTitle": "Vincular a una cuenta",
       "linkAccountDescription": "Conecta esta cuenta anónima a un correo electrónico o inicio de sesión social.",
-      "comingSoon": "Próximamente"
+      "comingSoon": "Próximamente",
+      "replacementActivated": "El enlace de inicio de sesión de reemplazo ya está activo."
     }
   }
 }

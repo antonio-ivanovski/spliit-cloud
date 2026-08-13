@@ -83,7 +83,9 @@ export class FixedWindowLimiter {
  * only honored when the API is known to sit behind a trusted proxy; otherwise
  * they are client-controlled and spoofable, so every caller shares a single
  * conservative bucket. Cloudflare's single-value client header is preferred;
- * generic proxy headers are compatibility fallbacks for self-hosted installs.
+ * generic proxy headers are compatibility fallbacks for self-hosted installs. A
+ * trusted proxy must sanitize X-Forwarded-For before forwarding it; the
+ * left-most value is then the original client address.
  */
 export function resolveClientIp(
   headers: Headers,
@@ -103,7 +105,7 @@ export function resolveClientIp(
       .split(',')
       .map((hop) => hop.trim())
       .filter(Boolean)
-    const ip = normalizeIpHeader(hops[hops.length - 1] ?? null)
+    const ip = normalizeIpHeader(hops[0] ?? null)
     if (ip) return ip
   }
   return 'unknown'

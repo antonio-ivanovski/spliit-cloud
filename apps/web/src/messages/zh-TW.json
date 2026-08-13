@@ -2953,7 +2953,8 @@
       "copyLink": "複製連結",
       "copied": "已複製",
       "howItWorks": "在任何瀏覽器中開啟登入連結進行登入。在已安裝的 PWA 中，選擇「匿名」並貼上完整的登入連結。",
-      "confirmation": "我複製並安全地儲存了我的登入連結。"
+      "confirmation": "我複製並安全地儲存了我的登入連結。",
+      "copyFailed": "複製失敗。請選取登入連結並手動複製。"
     },
     "recover": {
       "title": "恢復匿名帳戶",
@@ -2983,7 +2984,8 @@
       "activateConfirm": "啟動替換",
       "linkAccountTitle": "連結帳戶",
       "linkAccountDescription": "將此匿名帳戶連結至電子郵件或社群登入方式。",
-      "comingSoon": "即將推出"
+      "comingSoon": "即將推出",
+      "replacementActivated": "您的替代登入連結現已生效。"
     }
   }
 }

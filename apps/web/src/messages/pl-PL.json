@@ -2974,7 +2974,7 @@
     "signup": {
       "title": "Konto anonimowe",
       "description": "Utwórz anonimowe konto bez adresu e-mail, hasła i logowania społecznościowego.",
-      "warning": "Twoje dane są przechowywane w Split Cloud, ale na tym koncie nie ma poczty e-mail ani innej metody odzyskiwania. Musisz zapisać link logowania pokazany obok.",
+      "warning": "Twoje dane są przechowywane w Spliit Cloud, ale na tym koncie nie ma poczty e-mail ani innej metody odzyskiwania. Musisz zapisać link logowania pokazany obok.",
       "cancel": "Anuluj",
       "recoverDescription": "Wklej zapisany link logowania, aby powrócić do istniejącego konta anonimowego.",
       "recoveryOnlyHelp": "Nowe anonimowe konta nie są tutaj dostępne. Aby kontynuować, wklej pełny link logowania zapisanych danych.",
@@ -3004,7 +3004,8 @@
       "copyLink": "Skopiuj link",
       "copied": "Skopiowano",
       "howItWorks": "Otwórz link logowania w dowolnej przeglądarce, aby się zalogować. W zainstalowanym programie PWA wybierz opcję Anonimowy i wklej pełny link logowania.",
-      "confirmation": "Skopiowałem i bezpiecznie zapisałem link logowania."
+      "confirmation": "Skopiowałem i bezpiecznie zapisałem link logowania.",
+      "copyFailed": "Kopiowanie nie powiodło się. Zaznacz link logowania i skopiuj go ręcznie."
     },
     "recover": {
       "title": "Odzyskaj anonimowe konto",
@@ -3034,7 +3035,8 @@
       "activateConfirm": "Aktywuj wymianę",
       "linkAccountTitle": "Połącz z kontem",
       "linkAccountDescription": "Połącz to anonimowe konto z adresem e-mail lub logowaniem społecznościowym.",
-      "comingSoon": "Już wkrótce"
+      "comingSoon": "Już wkrótce",
+      "replacementActivated": "Zastępczy link logowania jest teraz aktywny."
     }
   }
 }

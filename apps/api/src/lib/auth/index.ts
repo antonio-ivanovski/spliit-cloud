@@ -3,7 +3,11 @@ import { randomUUID } from 'node:crypto'
 import { oauthProvider } from '@better-auth/oauth-provider'
 import { betterAuth } from 'better-auth'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
-import { APIError, createAuthMiddleware } from 'better-auth/api'
+import {
+  APIError,
+  createAuthMiddleware,
+  getSessionFromCtx,
+} from 'better-auth/api'
 import {
   jwt,
   magicLink,
@@ -92,6 +96,13 @@ const beforeAuthMiddleware = createAuthMiddleware(async (ctx) => {
       throw new APIError('FORBIDDEN', {
         message: 'Anonymous account creation is disabled.',
         code: 'ANONYMOUS_SIGNUP_DISABLED',
+      })
+    }
+    const current = await getSessionFromCtx(ctx, { disableRefresh: true })
+    if (current) {
+      throw new APIError('CONFLICT', {
+        message: 'Sign out before creating an anonymous account.',
+        code: 'ANONYMOUS_SIGNUP_ACCOUNT_CONFLICT',
       })
     }
     const ip = resolveClientIp(ctx.headers ?? new Headers(), {

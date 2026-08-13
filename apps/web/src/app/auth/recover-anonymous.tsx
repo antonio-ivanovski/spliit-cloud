@@ -1,6 +1,12 @@
 import { Link } from '@tanstack/react-router'
 import { KeyRound, Loader2, ShieldCheck } from 'lucide-react'
-import { useCallback, useEffect, useLayoutEffect, useState } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
@@ -35,6 +41,7 @@ export function RecoverAnonymousAccountPage() {
   const [pending, setPending] = useState(false)
   const [error, setError] = useState(false)
   const [conflictName, setConflictName] = useState<string | null>(null)
+  const attemptedInitialRecovery = useRef(false)
 
   const attemptRecovery = useCallback(
     async (recoveryCode: string, replaceCurrentSession = false) => {
@@ -86,7 +93,8 @@ export function RecoverAnonymousAccountPage() {
   }, [])
 
   useEffect(() => {
-    if (!initialCode) return
+    if (!initialCode || attemptedInitialRecovery.current) return
+    attemptedInitialRecovery.current = true
     queueMicrotask(() => void attemptRecovery(initialCode))
   }, [attemptRecovery, initialCode])
 

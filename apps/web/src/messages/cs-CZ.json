@@ -3004,7 +3004,8 @@
       "copyLink": "Zkopírujte odkaz",
       "copied": "Zkopírováno",
       "howItWorks": "Otevřete přihlašovací odkaz v libovolném prohlížeči a přihlaste se. V nainstalovaném PWA vyberte možnost Anonymní a vložte úplný přihlašovací odkaz.",
-      "confirmation": "Zkopíroval jsem a bezpečně uložil svůj přihlašovací odkaz."
+      "confirmation": "Zkopíroval jsem a bezpečně uložil svůj přihlašovací odkaz.",
+      "copyFailed": "Kopírování se nezdařilo. Vyberte přihlašovací odkaz a zkopírujte ho ručně."
     },
     "recover": {
       "title": "Obnovit anonymní účet",
@@ -3034,7 +3035,8 @@
       "activateConfirm": "Aktivujte náhradu",
       "linkAccountTitle": "Propojit s účtem",
       "linkAccountDescription": "Propojte tento anonymní účet s e-mailem nebo přihlášením přes sociální síť.",
-      "comingSoon": "Již brzy"
+      "comingSoon": "Již brzy",
+      "replacementActivated": "Náhradní přihlašovací odkaz je nyní aktivní."
     }
   }
 }

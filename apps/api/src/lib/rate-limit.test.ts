@@ -96,7 +96,7 @@ describe('resolveClientIp', () => {
     expect(resolveClientIp(headers, { trustProxy: true })).toBe('203.0.113.7')
   })
 
-  it('falls back to x-real-ip and then the right-most forwarded hop', () => {
+  it('falls back to x-real-ip and then the original forwarded client', () => {
     expect(
       resolveClientIp(new Headers({ 'x-real-ip': '9.9.9.9' }), {
         trustProxy: true,
@@ -107,7 +107,7 @@ describe('resolveClientIp', () => {
         new Headers({ 'x-forwarded-for': '192.0.2.1, 10.0.0.1' }),
         { trustProxy: true },
       ),
-    ).toBe('10.0.0.1')
+    ).toBe('192.0.2.1')
   })
 
   it('rejects malformed proxy headers', () => {

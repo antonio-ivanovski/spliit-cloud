@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { AccountMenu } from '@/components/account-menu'
 import { useCurrentAccount } from '@/lib/use-current-account'
-import { render, screen } from '@/test/test-utils'
+import { render, screen, waitFor } from '@/test/test-utils'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
@@ -196,8 +196,8 @@ describe('AccountMenu', () => {
     const signOutItem = screen.getByText('Sign out')
     await user.click(signOutItem)
 
-    expect(mockSignOut).toHaveBeenCalledOnce()
-    expect(mockReplaceLocation).toHaveBeenCalledWith('/')
+    await waitFor(() => expect(mockSignOut).toHaveBeenCalledOnce())
+    await waitFor(() => expect(mockReplaceLocation).toHaveBeenCalledWith('/'))
   })
 
   it('clears push onboarding completion when logout disconnects a device', async () => {
@@ -347,10 +347,12 @@ describe('AccountMenu', () => {
     await user.click(screen.getByRole('button', { name: /account/i }))
     await user.click(screen.getByText('Sign out'))
 
+    await waitFor(() =>
+      expect(mockToast).toHaveBeenCalledWith({
+        description: 'Could not sign out. Please try again.',
+        variant: 'destructive',
+      }),
+    )
     expect(mockReplaceLocation).not.toHaveBeenCalled()
-    expect(mockToast).toHaveBeenCalledWith({
-      description: 'Could not sign out. Please try again.',
-      variant: 'destructive',
-    })
   })
 })

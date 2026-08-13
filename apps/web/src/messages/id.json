@@ -2954,7 +2954,8 @@
       "copyLink": "Salin tautan",
       "copied": "Disalin",
       "howItWorks": "Buka tautan masuk di browser apa pun untuk masuk. Di PWA yang terinstal, pilih Anonim dan tempelkan tautan masuk lengkap.",
-      "confirmation": "Saya menyalin dan menyimpan tautan masuk saya dengan aman."
+      "confirmation": "Saya menyalin dan menyimpan tautan masuk saya dengan aman.",
+      "copyFailed": "Gagal menyalin. Pilih tautan masuk lalu salin secara manual."
     },
     "recover": {
       "title": "Pulihkan akun anonim",
@@ -2984,7 +2985,8 @@
       "activateConfirm": "Aktifkan penggantian",
       "linkAccountTitle": "Tautkan ke akun",
       "linkAccountDescription": "Hubungkan akun anonim ini ke email atau login sosial.",
-      "comingSoon": "Segera hadir"
+      "comingSoon": "Segera hadir",
+      "replacementActivated": "Tautan masuk pengganti Anda kini aktif."
     }
   }
 }

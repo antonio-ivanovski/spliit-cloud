@@ -2988,7 +2988,8 @@
       "copyLink": "Copiați linkul",
       "copied": "Copiat",
       "howItWorks": "Deschideți linkul de recuperare în orice browser pentru a vă conecta. În PWA instalat, alegeți Anonim și inserați linkul complet de recuperare.",
-      "confirmation": "Mi-am copiat și stocat în siguranță linkul de recuperare."
+      "confirmation": "Mi-am copiat și stocat în siguranță linkul de recuperare.",
+      "copyFailed": "Copierea a eșuat. Selectați linkul de conectare și copiați-l manual."
     },
     "recover": {
       "title": "Recuperează contul anonim",
@@ -3018,7 +3019,8 @@
       "activateConfirm": "Activați înlocuirea",
       "linkAccountTitle": "Conectați la un cont",
       "linkAccountDescription": "Conectați acest cont anonim la un e-mail sau la o autentificare socială.",
-      "comingSoon": "În curând"
+      "comingSoon": "În curând",
+      "replacementActivated": "Linkul de conectare înlocuitor este acum activ."
     }
   }
 }

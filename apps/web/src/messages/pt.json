@@ -2958,7 +2958,7 @@
     "signup": {
       "title": "Conta anónima",
       "description": "Crie uma conta anónima sem endereço de e-mail, palavra-passe ou login social.",
-      "warning": "Os seus dados são armazenados no Split Cloud, mas esta conta não tem e-mail ou outro método de recuperação. Deve guardar o ligação de início de sessão mostrado a seguir.",
+      "warning": "Os seus dados são armazenados no Spliit Cloud, mas esta conta não tem e-mail ou outro método de recuperação. Deve guardar o ligação de início de sessão mostrado a seguir.",
       "cancel": "Cancelar",
       "recoverDescription": "Cole o ligação de início de sessão guardado para voltar a uma conta anónima existente.",
       "recoveryOnlyHelp": "As novas contas anónimas não estão disponíveis aqui. Cole o ligação de início de sessão completo guardado para continuar.",
@@ -2983,12 +2983,13 @@
     "recovery": {
       "warningTitle": "Guarde isso em algum lugar seguro",
       "warning": "Este link nunca expira ou muda, a menos que o substitua. Qualquer pessoa que o possua pode aceder à sua conta anónima.",
-      "storedDataNote": "Anónimo significa que a conta não está ligada a uma identidade de login. Os dados da sua conta ainda estão armazenados no Split Cloud.",
+      "storedDataNote": "Anónimo significa que a conta não está ligada a uma identidade de login. Os dados da sua conta ainda estão armazenados no Spliit Cloud.",
       "linkLabel": "Ligação de início de sessão",
       "copyLink": "Copiar link",
       "copied": "Copiado",
       "howItWorks": "Abra o ligação de início de sessão em qualquer browser para iniciar sessão. No PWA instalado, escolha Anónimo e cole o ligação de início de sessão completo.",
-      "confirmation": "Copiei e armazenei em segurança o meu ligação de início de sessão."
+      "confirmation": "Copiei e armazenei em segurança o meu ligação de início de sessão.",
+      "copyFailed": "A cópia falhou. Selecione a ligação de início de sessão e copie-a manualmente."
     },
     "recover": {
       "title": "Recuperar conta anónima",
@@ -3018,7 +3019,8 @@
       "activateConfirm": "Ativar substituição",
       "linkAccountTitle": "Associar a uma conta",
       "linkAccountDescription": "Associe esta conta anónima a um e-mail ou início de sessão social.",
-      "comingSoon": "Em breve"
+      "comingSoon": "Em breve",
+      "replacementActivated": "A ligação de início de sessão de substituição está agora ativa."
     }
   }
 }

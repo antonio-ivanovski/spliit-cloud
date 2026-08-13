@@ -38,7 +38,6 @@ export type SignupGateRequest = {
 }
 
 export function isInviteOnlySignup(): boolean {
-  console.log('env.SIGNUP_MODE', env.SIGNUP_MODE)
   return env.SIGNUP_MODE === 'invite_only'
 }
 

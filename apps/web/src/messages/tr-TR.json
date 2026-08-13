@@ -2970,7 +2970,8 @@
       "copyLink": "Bağlantıyı kopyala",
       "copied": "Kopyalandı",
       "howItWorks": "Oturum açmak için herhangi bir tarayıcıda oturum açma bağlantısını açın. Yüklü PWA'da Anonim'i seçin ve oturum açma bağlantısının tamamını yapıştırın.",
-      "confirmation": "Kurtarma bağlantımı kopyalayıp güvenli bir şekilde sakladım."
+      "confirmation": "Kurtarma bağlantımı kopyalayıp güvenli bir şekilde sakladım.",
+      "copyFailed": "Kopyalama başarısız oldu. Oturum açma bağlantısını seçip elle kopyalayın."
     },
     "recover": {
       "title": "Anonim hesabı kurtar",
@@ -3000,7 +3001,8 @@
       "activateConfirm": "Değiştirmeyi etkinleştir",
       "linkAccountTitle": "Bir hesaba bağla",
       "linkAccountDescription": "Bu anonim hesabı e-posta veya sosyal oturum açma yöntemiyle bağlayın.",
-      "comingSoon": "Yakında"
+      "comingSoon": "Yakında",
+      "replacementActivated": "Yeni oturum açma bağlantınız artık etkin."
     }
   }
 }

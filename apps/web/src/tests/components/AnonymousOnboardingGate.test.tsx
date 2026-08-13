@@ -136,6 +136,7 @@ describe('AnonymousOnboardingGate', () => {
     await waitFor(() =>
       expect(acknowledgeMock).toHaveBeenCalledWith({
         confirmedCopied: true,
+        code: 'spliit_anonymous_v1_test-key',
       }),
     )
     expect(replaceLocationMock).toHaveBeenCalledWith(
@@ -143,5 +144,28 @@ describe('AnonymousOnboardingGate', () => {
     )
     expect(acknowledgeMock).toHaveBeenCalledTimes(1)
     expect(screen.queryByText('Protected app content')).not.toBeInTheDocument()
+  })
+
+  it('reports a clipboard failure without confirming the link was copied', async () => {
+    const { user } = render(
+      <AnonymousOnboardingGate>
+        <div>Protected app content</div>
+      </AnonymousOnboardingGate>,
+    )
+    await screen.findByText('Save your sign in link')
+    vi.spyOn(navigator.clipboard, 'writeText').mockRejectedValueOnce(
+      new Error('clipboard unavailable'),
+    )
+
+    await user.click(screen.getByRole('button', { name: 'Copy link' }))
+
+    expect(
+      await screen.findByText(
+        'Copy failed. Select the sign in link and copy it manually.',
+      ),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Copy link' }),
+    ).toBeInTheDocument()
   })
 })

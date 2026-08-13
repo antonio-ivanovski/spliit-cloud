@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import '../../test/mocks'
 import { prismaMock } from '../../test/state'
@@ -54,6 +54,7 @@ describe('anonymous recovery keys', () => {
       accountId: 'account-1',
       currentKeyHash,
       replacementKeyHash,
+      issuedAt: expect.any(Number),
     })
     expect(() => readRotationActivationTicket(ticket, 'account-2')).toThrow()
   })
@@ -71,11 +72,33 @@ describe('anonymous recovery keys', () => {
     expect(() => readRotationActivationTicket(tampered, 'account-1')).toThrow()
   })
 
+  it('rejects expired staged rotation tickets', () => {
+    vi.useFakeTimers()
+    const now = new Date('2026-01-01T00:00:00.000Z')
+    vi.setSystemTime(now)
+    const ticket = createRotationActivationTicket({
+      accountId: 'account-1',
+      currentKeyHash: hashAnonymousRecoveryKey(generateAnonymousRecoveryKey()),
+      replacementKeyHash: hashAnonymousRecoveryKey(
+        generateAnonymousRecoveryKey(),
+      ),
+    })
+    vi.setSystemTime(new Date(now.getTime() + 11 * 60 * 1000))
+
+    expect(() => readRotationActivationTicket(ticket, 'account-1')).toThrow(
+      /expired/,
+    )
+    vi.useRealTimers()
+  })
+
   it('acknowledges a pending key and accepts an idempotent retry', async () => {
     const endpoint = anonymousRecovery().endpoints.acknowledgeAnonymousRecovery
+    const code = generateAnonymousRecoveryKey()
+    const pendingKeyCiphertext = encryptPendingRecoveryKey(code, 'account-1')
     prismaMock.anonymousRecoveryCredential.findUnique
       .mockResolvedValueOnce({
-        pendingKeyCiphertext: 'encrypted-key',
+        keyHash: hashAnonymousRecoveryKey(code),
+        pendingKeyCiphertext,
         acknowledgedAt: null,
         onboardingCompletedAt: null,
       } as never)
@@ -85,7 +108,7 @@ describe('anonymous recovery keys', () => {
         onboardingCompletedAt: new Date(),
       } as never)
     const request = {
-      body: { confirmedCopied: true },
+      body: { confirmedCopied: true, code },
       context: {
         session: {
           session: { id: 'session-1' },
@@ -119,7 +142,7 @@ describe('anonymous recovery keys', () => {
 
     await expect(
       anonymousRecovery().endpoints.acknowledgeAnonymousRecovery({
-        body: { confirmedCopied: true },
+        body: { confirmedCopied: true, code: generateAnonymousRecoveryKey() },
         context: {
           session: {
             session: { id: 'session-1' },
@@ -130,6 +153,46 @@ describe('anonymous recovery keys', () => {
     ).rejects.toMatchObject({
       body: { code: 'PENDING_RECOVERY_KEY_REQUIRED' },
     })
+  })
+
+  it('rejects acknowledgment when another tab replaced the pending key', async () => {
+    const displayedCode = generateAnonymousRecoveryKey()
+    const currentCode = generateAnonymousRecoveryKey()
+    prismaMock.anonymousRecoveryCredential.findUnique.mockResolvedValue({
+      keyHash: hashAnonymousRecoveryKey(currentCode),
+      pendingKeyCiphertext: encryptPendingRecoveryKey(currentCode, 'account-1'),
+      acknowledgedAt: null,
+      onboardingCompletedAt: null,
+    } as never)
+
+    await expect(
+      anonymousRecovery().endpoints.acknowledgeAnonymousRecovery({
+        body: { confirmedCopied: true, code: displayedCode },
+        context: {
+          session: {
+            session: { id: 'session-1' },
+            user: { id: 'account-1', isAnonymous: true },
+          },
+        },
+      } as never),
+    ).rejects.toMatchObject({
+      body: { code: 'PENDING_RECOVERY_KEY_CHANGED' },
+    })
+    expect(prismaMock.anonymousRecoveryCredential.update).not.toHaveBeenCalled()
+  })
+
+  it('returns a generic error for an invalid recovery key', async () => {
+    prismaMock.anonymousRecoveryCredential.findUnique.mockResolvedValue(null)
+
+    await expect(
+      anonymousRecovery().endpoints.signInAnonymousRecovery({
+        body: { code: 'not-a-recovery-key' },
+        request: new Request(
+          'https://api.example/auth/sign-in/anonymous-recovery',
+        ),
+        setHeader() {},
+      } as never),
+    ).resolves.toEqual({ code: 'INVALID_RECOVERY_KEY' })
   })
 
   it('stages a replacement without changing the active recovery hash', async () => {

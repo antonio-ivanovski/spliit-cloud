@@ -58,6 +58,16 @@ const realAuthModule = (await vi.importActual('./index')) as {
       hooks?: { before?: unknown }
       databaseHooks?: {
         user?: {
+          create?: {
+            before?: (
+              user: Record<string, unknown>,
+              context: { path?: string },
+            ) =>
+              | Promise<{ data: Record<string, unknown> } | false | void>
+              | { data: Record<string, unknown> }
+              | false
+              | void
+          }
           update?: { after?: (user: { id: string }) => void | Promise<void> }
           delete?: { after?: (user: { id: string }) => void | Promise<void> }
         }

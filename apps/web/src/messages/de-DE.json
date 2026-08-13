@@ -3038,12 +3038,13 @@
       "copyLink": "Link kopieren",
       "copied": "Kopiert",
       "howItWorks": "Öffnen Sie den Anmeldelink in einem beliebigen Browser, um sich anzumelden. Wählen Sie in der installierten PWA „Anonym“ und fügen Sie den vollständigen Anmeldelink ein.",
-      "confirmation": "Ich habe meinen Anmeldelink kopiert und sicher gespeichert."
+      "confirmation": "Ich habe meinen Anmeldelink kopiert und sicher gespeichert.",
+      "copyFailed": "Kopieren fehlgeschlagen. Wähle den Anmeldelink aus und kopiere ihn manuell."
     },
     "recover": {
       "title": "Anonymes Konto wiederherstellen",
       "description": "Öffnen Sie Ihren gespeicherten Anmeldelink oder fügen Sie den vollständigen Link unten ein.",
-      "howItWorks": "Ein Anmeldelink meldet Sie an, wenn Sie ihn in einem Browser öffnen. Wählen Sie in der installierten PWA „Anonymous“ und fügen Sie den vollständigen gespeicherten Link ein.",
+      "howItWorks": "Ein Anmeldelink meldet Sie an, wenn Sie ihn in einem Browser öffnen. Wählen Sie in der installierten PWA „Anonym“ und fügen Sie den vollständigen gespeicherten Link ein.",
       "recovering": "Ihr Konto wird wiederhergestellt…",
       "invalid": "Dieser Anmeldelink ist ungültig. Überprüfen Sie den vollständigen Link und versuchen Sie es erneut.",
       "anonymousAccount": "anonymes Konto",
@@ -3068,7 +3069,8 @@
       "activateConfirm": "Ersetzung aktivieren",
       "linkAccountTitle": "Mit Konto verknüpfen",
       "linkAccountDescription": "Verknüpfe dieses anonyme Konto mit einer E-Mail-Adresse oder einem Social-Login.",
-      "comingSoon": "Demnächst verfügbar"
+      "comingSoon": "Demnächst verfügbar",
+      "replacementActivated": "Dein neuer Anmeldelink ist jetzt aktiv."
     }
   }
 }

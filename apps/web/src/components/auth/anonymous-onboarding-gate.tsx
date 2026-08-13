@@ -1,6 +1,6 @@
 import { useLocation } from '@tanstack/react-router'
 import { AlertTriangle, Loader2, RefreshCw } from 'lucide-react'
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
@@ -42,27 +42,35 @@ export function AnonymousOnboardingGate({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null)
   const acknowledgingRef = useRef(false)
 
-  const load = useCallback(async () => {
+  useEffect(() => {
     if (isRecoveryRoute || !account?.isAnonymous) return
-    setLoading(true)
-    setError(null)
-    try {
-      const nextStatus = await getAnonymousRecoveryStatus()
-      setStatus(nextStatus)
-      if (!nextStatus.acknowledged) {
-        setRecovery(await setupAnonymousRecovery())
-      }
-    } catch (cause) {
-      const code = cause instanceof Error ? cause.message : String(cause)
-      setError(code)
-    } finally {
-      setLoading(false)
+    let active = true
+    queueMicrotask(() => {
+      if (!active) return
+      void (async () => {
+        setLoading(true)
+        setError(null)
+        try {
+          const nextStatus = await getAnonymousRecoveryStatus()
+          if (!active) return
+          setStatus(nextStatus)
+          if (!nextStatus.acknowledged) {
+            const nextRecovery = await setupAnonymousRecovery()
+            if (active) setRecovery(nextRecovery)
+          }
+        } catch (cause) {
+          if (!active) return
+          const code = cause instanceof Error ? cause.message : String(cause)
+          setError(code)
+        } finally {
+          if (active) setLoading(false)
+        }
+      })()
+    })
+    return () => {
+      active = false
     }
   }, [account?.isAnonymous, isRecoveryRoute])
-
-  useEffect(() => {
-    queueMicrotask(() => void load())
-  }, [load])
 
   if (isRecoveryRoute) return <>{children}</>
   if (accountPending) {
@@ -83,12 +91,15 @@ export function AnonymousOnboardingGate({ children }: { children: ReactNode }) {
   }
 
   async function acknowledge() {
-    if (!confirmed || acknowledgingRef.current) return
+    if (!confirmed || !recovery || acknowledgingRef.current) return
     acknowledgingRef.current = true
     setLoading(true)
     setError(null)
     try {
-      await acknowledgeAnonymousRecovery({ confirmedCopied: true })
+      await acknowledgeAnonymousRecovery({
+        confirmedCopied: true,
+        code: recovery.code,
+      })
       const redirect =
         sessionStorage.getItem(ANONYMOUS_REDIRECT_STORAGE_KEY) ?? '/'
       sessionStorage.removeItem(ANONYMOUS_REDIRECT_STORAGE_KEY)

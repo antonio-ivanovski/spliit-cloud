@@ -13,6 +13,7 @@ import {
   ResponsiveDialogHeader as DialogHeader,
   ResponsiveDialogTitle as DialogTitle,
 } from '@/components/ui/responsive-dialog'
+import { useToast } from '@/components/ui/use-toast'
 import {
   activateAnonymousRecoveryRotation,
   startAnonymousRecoveryRotation,
@@ -25,6 +26,7 @@ export function AnonymousAccountSettings() {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'AnonymousAccount.settings',
   })
+  const { toast } = useToast()
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [rotation, setRotation] = useState<AnonymousRecoveryRotation | null>(
     null,
@@ -65,6 +67,7 @@ export function AnonymousAccountSettings() {
         activationTicket: rotation.activationTicket,
         confirmedCopied: true,
       })
+      toast({ description: t('replacementActivated') })
       setConfirmOpen(false)
       setRotation(null)
       setConfirmedCopied(false)

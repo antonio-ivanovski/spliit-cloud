@@ -2988,7 +2988,8 @@
       "copyLink": "Copier le lien",
       "copied": "Copié",
       "howItWorks": "Ouvrez le lien de connexion dans n'importe quel navigateur pour vous connecter. Dans la PWA installée, choisissez Anonyme et collez le lien de connexion complet.",
-      "confirmation": "J'ai copié et stocké en toute sécurité mon lien de connexion."
+      "confirmation": "J'ai copié et stocké en toute sécurité mon lien de connexion.",
+      "copyFailed": "Échec de la copie. Sélectionnez le lien de connexion et copiez-le manuellement."
     },
     "recover": {
       "title": "Récupérer un compte anonyme",
@@ -3018,7 +3019,8 @@
       "activateConfirm": "Activer le remplacement",
       "linkAccountTitle": "Associer à un compte",
       "linkAccountDescription": "Associez ce compte anonyme à une adresse e-mail ou à une connexion sociale.",
-      "comingSoon": "Bientôt disponible"
+      "comingSoon": "Bientôt disponible",
+      "replacementActivated": "Votre lien de connexion de remplacement est maintenant actif."
     }
   }
 }

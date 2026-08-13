@@ -2969,13 +2969,14 @@
       "linkLabel": "Kirjautumislinkki",
       "copyLink": "Kopioi linkki",
       "copied": "Kopioitu",
-      "howItWorks": "Avaa kirjautumislinkki missä tahansa selaimessa kirjautuaksesi sisään. Valitse asennetussa PWA:ssa Anonymous ja liitä täydellinen kirjautumislinkki.",
-      "confirmation": "Kopioin ja tallensin palautuslinkin turvallisesti."
+      "howItWorks": "Avaa kirjautumislinkki missä tahansa selaimessa kirjautuaksesi sisään. Valitse asennetussa PWA:ssa Nimetön ja liitä täydellinen kirjautumislinkki.",
+      "confirmation": "Kopioin ja tallensin palautuslinkin turvallisesti.",
+      "copyFailed": "Kopiointi epäonnistui. Valitse kirjautumislinkki ja kopioi se manuaalisesti."
     },
     "recover": {
       "title": "Palauta anonyymi tili",
       "description": "Avaa tallennettu kirjautumislinkki tai liitä koko linkki alle.",
-      "howItWorks": "Kirjautumislinkki kirjaa sinut sisään, kun se avataan selaimessa. Valitse asennetussa PWA:ssa Anonymous ja liitä täydellinen tallennettu linkki.",
+      "howItWorks": "Kirjautumislinkki kirjaa sinut sisään, kun se avataan selaimessa. Valitse asennetussa PWA:ssa Nimetön ja liitä täydellinen tallennettu linkki.",
       "recovering": "Palautetaan tiliäsi…",
       "invalid": "Tämä kirjautumislinkki on virheellinen. Tarkista täydellinen linkki ja yritä uudelleen.",
       "anonymousAccount": "anonyymi tili",
@@ -2988,7 +2989,7 @@
     },
     "settings": {
       "recoveryTitle": "Kirjautumislinkki",
-      "recoveryDescription": "Tämä anonyymi tili voidaan palauttaa vain tallennetulla linkilläsi. Avaa se selaimessa tai valitse Anonymous ja liitä täydellinen linkki asennettuun PWA:han. Nykyistä linkkiä ei voi näyttää uudelleen.",
+      "recoveryDescription": "Tämä anonyymi tili voidaan palauttaa vain tallennetulla linkilläsi. Avaa se selaimessa tai valitse Nimetön ja liitä täydellinen linkki asennettuun PWA:han. Nykyistä linkkiä ei voi näyttää uudelleen.",
       "replace": "Korvaa kirjautumislinkki",
       "replaceTitle": "Korvataanko kirjautumislinkki?",
       "replaceDescription": "Luo korvaava linkki tarkistaaksesi ja tallentaaksesi. Nykyinen kirjautumislinkkisi toimii, kunnes aktivoit korvaavan vaihtoehdon.",
@@ -3000,7 +3001,8 @@
       "activateConfirm": "Aktivoi vaihto",
       "linkAccountTitle": "Yhdistä tiliin",
       "linkAccountDescription": "Yhdistä tämä anonyymi tili sähköpostiin tai sosiaaliseen kirjautumiseen.",
-      "comingSoon": "Tulossa pian"
+      "comingSoon": "Tulossa pian",
+      "replacementActivated": "Korvaava kirjautumislinkkisi on nyt käytössä."
     }
   }
 }

@@ -2962,7 +2962,8 @@
       "copyLink": "Copy the link",
       "copied": "Copied, nice",
       "howItWorks": "Open the sign in link in any browser to sign in. In the installed PWA, pick “Recover an anon account” and paste the full sign in link.",
-      "confirmation": "I copied my sign in link and put it somewhere safe."
+      "confirmation": "I copied my sign in link and put it somewhere safe.",
+      "copyFailed": "copy failed. select the sign-in link and copy it manually."
     },
     "recover": {
       "title": "Recover an anon account",
@@ -2992,7 +2993,8 @@
       "activateConfirm": "Activate new link",
       "linkAccountTitle": "Link to an account",
       "linkAccountDescription": "Connect this anon account to email or social sign-in.",
-      "comingSoon": "coming soon, fr"
+      "comingSoon": "coming soon, fr",
+      "replacementActivated": "your replacement sign-in link is active now."
     }
   }
 }

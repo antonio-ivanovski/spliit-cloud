@@ -22,11 +22,18 @@ export function AnonymousRecoveryKeyPanel({
     keyPrefix: 'AnonymousAccount.recovery',
   })
   const [copied, setCopied] = useState(false)
+  const [copyFailed, setCopyFailed] = useState(false)
 
   async function copy(value: string) {
-    await navigator.clipboard.writeText(value)
-    setCopied(true)
-    window.setTimeout(() => setCopied(false), 2000)
+    try {
+      await navigator.clipboard.writeText(value)
+      setCopyFailed(false)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 2000)
+    } catch {
+      setCopied(false)
+      setCopyFailed(true)
+    }
   }
 
   return (
@@ -49,6 +56,11 @@ export function AnonymousRecoveryKeyPanel({
         copiedLabel={t('copied')}
         onCopy={() => void copy(recovery.recoveryUrl)}
       />
+      {copyFailed ? (
+        <p className="text-sm text-destructive" role="alert">
+          {t('copyFailed')}
+        </p>
+      ) : null}
 
       <div className="rounded-lg border border-border/70 bg-muted/30 p-4 text-sm leading-6 text-muted-foreground">
         <p>{t('howItWorks')}</p>

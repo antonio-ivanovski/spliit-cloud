@@ -2987,7 +2987,8 @@
       "copyLink": "Kopiatu esteka",
       "copied": "Kopiatua",
       "howItWorks": "Ireki saioa hasteko esteka edozein arakatzailetan saioa hasteko. Instalatutako PWA-n, aukeratu Anonimoa eta itsatsi saioa hasteko esteka osoa.",
-      "confirmation": "Nire saioa hasteko esteka kopiatu eta segurtasunez gorde nuen."
+      "confirmation": "Nire saioa hasteko esteka kopiatu eta segurtasunez gorde nuen.",
+      "copyFailed": "Ezin izan da kopiatu. Hautatu saioa hasteko esteka eta kopiatu eskuz."
     },
     "recover": {
       "title": "Berreskuratu kontu anonimoa",
@@ -3017,7 +3018,8 @@
       "activateConfirm": "Aktibatu ordezkoa",
       "linkAccountTitle": "Lotu kontu batera",
       "linkAccountDescription": "Lotu kontu anonimo hau posta elektroniko edo sare sozial bidezko saio-hasiera batekin.",
-      "comingSoon": "Laster"
+      "comingSoon": "Laster",
+      "replacementActivated": "Ordezko saioa hasteko esteka aktibo dago orain."
     }
   }
 }

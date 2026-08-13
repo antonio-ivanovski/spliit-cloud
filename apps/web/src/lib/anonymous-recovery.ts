@@ -64,7 +64,10 @@ export function setupAnonymousRecovery() {
   })
 }
 
-export function acknowledgeAnonymousRecovery(input: { confirmedCopied: true }) {
+export function acknowledgeAnonymousRecovery(input: {
+  confirmedCopied: true
+  code: string
+}) {
   return request<{ success: true }>('/anonymous-recovery/acknowledge', {
     method: 'POST',
     body: JSON.stringify(input),

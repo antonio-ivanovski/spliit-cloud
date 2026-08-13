@@ -2983,12 +2983,13 @@
     "recovery": {
       "warningTitle": "Salve isso em algum lugar seguro",
       "warning": "Este link nunca expira ou muda, a menos que você o substitua. Qualquer pessoa que o possua pode acessar sua conta anônima.",
-      "storedDataNote": "Anônimo significa que a conta não está conectada a uma identidade de login. Os dados da sua conta ainda estão armazenados no Split Cloud.",
+      "storedDataNote": "Anônimo significa que a conta não está conectada a uma identidade de login. Os dados da sua conta ainda estão armazenados no Spliit Cloud.",
       "linkLabel": "Link de login",
       "copyLink": "Copiar link",
       "copied": "Copiado",
       "howItWorks": "Abra o link de login em qualquer navegador para fazer login. No PWA instalado, escolha Anônimo e cole o link de login completo.",
-      "confirmation": "Copiei e armazenei com segurança meu link de login."
+      "confirmation": "Copiei e armazenei com segurança meu link de login.",
+      "copyFailed": "Falha ao copiar. Selecione o link de login e copie-o manualmente."
     },
     "recover": {
       "title": "Recuperar conta anônima",
@@ -3018,7 +3019,8 @@
       "activateConfirm": "Ativar substituição",
       "linkAccountTitle": "Vincular a uma conta",
       "linkAccountDescription": "Conecte esta conta anônima a um e-mail ou login social.",
-      "comingSoon": "Em breve"
+      "comingSoon": "Em breve",
+      "replacementActivated": "Seu link de login substituto agora está ativo."
     }
   }
 }

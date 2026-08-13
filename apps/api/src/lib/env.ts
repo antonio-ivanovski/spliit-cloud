@@ -151,6 +151,21 @@ const envSchema = z
         message: 'BETTER_AUTH_SECRET is required in production',
       })
     }
+    if (env.ENABLE_ANONYMOUS_AUTH && !env.BETTER_AUTH_SECRET) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['BETTER_AUTH_SECRET'],
+        message:
+          'BETTER_AUTH_SECRET is required when ENABLE_ANONYMOUS_AUTH is true',
+      })
+    }
+    if (env.ENABLE_ANONYMOUS_AUTH && !env.TRUST_PROXY) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['TRUST_PROXY'],
+        message: 'TRUST_PROXY is required when ENABLE_ANONYMOUS_AUTH is true',
+      })
+    }
     if (env.ENABLE_MCP && !env.MCP_PUBLIC_URL) {
       ctx.addIssue({
         code: 'custom',

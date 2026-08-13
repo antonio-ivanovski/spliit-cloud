@@ -2988,7 +2988,8 @@
       "copyLink": "Copia l'enllaç",
       "copied": "Copiat",
       "howItWorks": "Obriu l'enllaç d'inici de sessió a qualsevol navegador per iniciar la sessió. A la PWA instal·lada, seleccioneu Anònim i enganxeu l'enllaç d'inici de sessió complet.",
-      "confirmation": "Vaig copiar i emmagatzemar de manera segura el meu enllaç d'inici de sessió."
+      "confirmation": "Vaig copiar i emmagatzemar de manera segura el meu enllaç d'inici de sessió.",
+      "copyFailed": "No s'ha pogut copiar. Seleccioneu l'enllaç d'inici de sessió i copieu-lo manualment."
     },
     "recover": {
       "title": "Recuperar un compte anònim",
@@ -3018,7 +3019,8 @@
       "activateConfirm": "Activa la substitució",
       "linkAccountTitle": "Enllaça amb un compte",
       "linkAccountDescription": "Connecteu aquest compte anònim a un correu electrònic o a un inici de sessió social.",
-      "comingSoon": "Pròximament"
+      "comingSoon": "Pròximament",
+      "replacementActivated": "L'enllaç d'inici de sessió de substitució ja està actiu."
     }
   }
 }

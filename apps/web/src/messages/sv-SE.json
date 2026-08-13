@@ -2966,7 +2966,8 @@
       "copyLink": "Kopiera länk",
       "copied": "Kopierade",
       "howItWorks": "Öppna inloggningslänken i valfri webbläsare för att logga in. Välj Anonym i den installerade PWA:n och klistra in hela inloggningslänken.",
-      "confirmation": "Jag kopierade och lagrade min inloggningslänk på ett säkert sätt."
+      "confirmation": "Jag kopierade och lagrade min inloggningslänk på ett säkert sätt.",
+      "copyFailed": "Kopieringen misslyckades. Markera inloggningslänken och kopiera den manuellt."
     },
     "recover": {
       "title": "Återställ anonymt konto",
@@ -2996,7 +2997,8 @@
       "activateConfirm": "Aktivera ersättning",
       "linkAccountTitle": "Länka till ett konto",
       "linkAccountDescription": "Anslut det här anonyma kontot till e-post eller social inloggning.",
-      "comingSoon": "Kommer snart"
+      "comingSoon": "Kommer snart",
+      "replacementActivated": "Din ersättande inloggningslänk är nu aktiv."
     }
   }
 }

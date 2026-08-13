@@ -2940,7 +2940,7 @@
     "signup": {
       "title": "Anoniem account",
       "description": "Maak een anoniem account zonder e-mailadres, wachtwoord of sociale login.",
-      "warning": "Uw gegevens worden opgeslagen in Split Cloud, maar dit account heeft geen e-mail of andere herstelmethode. U moet de hieronder weergegeven inloglink opslaan.",
+      "warning": "Uw gegevens worden opgeslagen in Spliit Cloud, maar dit account heeft geen e-mail of andere herstelmethode. U moet de hieronder weergegeven inloglink opslaan.",
       "cancel": "Annuleer",
       "recoverDescription": "Plak uw opgeslagen inloglink om terug te keren naar een bestaand anoniem account.",
       "recoveryOnlyHelp": "Nieuwe anonieme accounts zijn hier niet beschikbaar. Plak uw volledige opgeslagen inloglink om door te gaan.",
@@ -2965,12 +2965,13 @@
     "recovery": {
       "warningTitle": "Bewaar dit ergens veilig",
       "warning": "Deze link verloopt nooit en verandert nooit tenzij u hem vervangt. Iedereen die het heeft, heeft toegang tot uw anonieme account.",
-      "storedDataNote": "Anoniem betekent dat het account niet is gekoppeld aan een aanmeldingsidentiteit. Uw accountgegevens worden nog steeds opgeslagen in Split Cloud.",
+      "storedDataNote": "Anoniem betekent dat het account niet is gekoppeld aan een aanmeldingsidentiteit. Uw accountgegevens worden nog steeds opgeslagen in Spliit Cloud.",
       "linkLabel": "Inloglink",
       "copyLink": "Kopieer link",
       "copied": "Gekopieerd",
       "howItWorks": "Open de inloglink in een willekeurige browser om in te loggen. Kies in de geïnstalleerde PWA Anoniem en plak de volledige inloglink.",
-      "confirmation": "Ik heb mijn inloglink gekopieerd en veilig opgeslagen."
+      "confirmation": "Ik heb mijn inloglink gekopieerd en veilig opgeslagen.",
+      "copyFailed": "Kopiëren mislukt. Selecteer de inloglink en kopieer deze handmatig."
     },
     "recover": {
       "title": "Anoniem account herstellen",
@@ -3000,7 +3001,8 @@
       "activateConfirm": "Activeer vervanging",
       "linkAccountTitle": "Aan account koppelen",
       "linkAccountDescription": "Koppel dit anonieme account aan e-mail of een sociale login.",
-      "comingSoon": "Binnenkort beschikbaar"
+      "comingSoon": "Binnenkort beschikbaar",
+      "replacementActivated": "Je vervangende inloglink is nu actief."
     }
   }
 }

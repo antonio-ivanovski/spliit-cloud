@@ -2953,7 +2953,8 @@
       "copyLink": "复制链接",
       "copied": "已复制",
       "howItWorks": "在任何浏览器中打开登录链接进行登录。在已安装的 PWA 中，选择“匿名”并粘贴完整的登录链接。",
-      "confirmation": "我复制并安全存储了我的登录链接。"
+      "confirmation": "我复制并安全存储了我的登录链接。",
+      "copyFailed": "复制失败。请选择登录链接并手动复制。"
     },
     "recover": {
       "title": "恢复匿名帐户",
@@ -2983,7 +2984,8 @@
       "activateConfirm": "激活替换",
       "linkAccountTitle": "关联帐户",
       "linkAccountDescription": "将此匿名帐户与电子邮件或社交登录方式关联。",
-      "comingSoon": "即将推出"
+      "comingSoon": "即将推出",
+      "replacementActivated": "您的替代登录链接现已生效。"
     }
   }
 }

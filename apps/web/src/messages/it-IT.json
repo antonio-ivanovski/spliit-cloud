@@ -2988,7 +2988,8 @@
       "copyLink": "Copia collegamento",
       "copied": "Copiato",
       "howItWorks": "Apri il link di accesso in qualsiasi browser per accedere. Nella PWA installata, scegli Anonimo e incolla il link di accesso completo.",
-      "confirmation": "Ho copiato e archiviato in modo sicuro il mio link di accesso."
+      "confirmation": "Ho copiato e archiviato in modo sicuro il mio link di accesso.",
+      "copyFailed": "Copia non riuscita. Seleziona il link di accesso e copialo manualmente."
     },
     "recover": {
       "title": "Recupera account anonimo",
@@ -3018,7 +3019,8 @@
       "activateConfirm": "Attiva la sostituzione",
       "linkAccountTitle": "Collega a un account",
       "linkAccountDescription": "Collega questo account anonimo a un indirizzo email o a un accesso social.",
-      "comingSoon": "Prossimamente"
+      "comingSoon": "Prossimamente",
+      "replacementActivated": "Il link di accesso sostitutivo è ora attivo."
     }
   }
 }

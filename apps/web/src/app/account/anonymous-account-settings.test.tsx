@@ -4,14 +4,19 @@ import { render, screen, waitFor } from '@/test/test-utils'
 
 import { AnonymousAccountSettings } from './anonymous-account-settings'
 
-const { activateMock, startMock } = vi.hoisted(() => ({
+const { activateMock, startMock, toastMock } = vi.hoisted(() => ({
   activateMock: vi.fn(),
   startMock: vi.fn(),
+  toastMock: vi.fn(),
 }))
 
 vi.mock('@/lib/anonymous-recovery', () => ({
   activateAnonymousRecoveryRotation: activateMock,
   startAnonymousRecoveryRotation: startMock,
+}))
+
+vi.mock('@/components/ui/use-toast', () => ({
+  useToast: () => ({ toast: toastMock }),
 }))
 
 describe('AnonymousAccountSettings', () => {
@@ -63,7 +68,12 @@ describe('AnonymousAccountSettings', () => {
         confirmedCopied: true,
       }),
     )
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    await waitFor(() =>
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument(),
+    )
+    expect(toastMock).toHaveBeenCalledWith({
+      description: 'Your replacement sign in link is now active.',
+    })
   })
 
   it('discards the staged replacement when the dialog closes', async () => {
@@ -86,5 +96,51 @@ describe('AnonymousAccountSettings', () => {
     expect(
       screen.getByRole('button', { name: 'Generate replacement link' }),
     ).toBeInTheDocument()
+  })
+
+  it('shows an error when replacement generation fails', async () => {
+    startMock.mockRejectedValueOnce(new Error('failed'))
+    const { user } = render(<AnonymousAccountSettings />)
+
+    await user.click(
+      screen.getByRole('button', { name: 'Replace sign in link' }),
+    )
+    await user.click(
+      screen.getByRole('button', { name: 'Generate replacement link' }),
+    )
+
+    expect(
+      await screen.findByText(
+        'The sign in link could not be replaced. Please try again.',
+      ),
+    ).toBeInTheDocument()
+  })
+
+  it('keeps the replacement open when activation fails', async () => {
+    activateMock.mockRejectedValueOnce(new Error('failed'))
+    const { user } = render(<AnonymousAccountSettings />)
+
+    await user.click(
+      screen.getByRole('button', { name: 'Replace sign in link' }),
+    )
+    await user.click(
+      screen.getByRole('button', { name: 'Generate replacement link' }),
+    )
+    await user.click(
+      screen.getByRole('checkbox', {
+        name: 'I copied and safely stored my sign in link.',
+      }),
+    )
+    await user.click(
+      screen.getByRole('button', { name: 'Activate replacement' }),
+    )
+
+    expect(
+      await screen.findByText(
+        'The sign in link could not be replaced. Please try again.',
+      ),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+    expect(toastMock).not.toHaveBeenCalled()
   })
 })
