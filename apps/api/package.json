@@ -9,6 +9,7 @@
     "./server": "./src/server.ts",
     "./lib/api/activities": "./src/lib/api/activities.ts",
     "./lib/api/recurrence-series": "./src/lib/api/recurrence-series.ts",
+    "./lib/auth/anonymous-account-cleanup": "./src/lib/auth/anonymous-account-cleanup.ts",
     "./lib/report/format": "./src/lib/report/format.ts",
     "./lib/report/labels": "./src/lib/report/labels.ts",
     "./lib/notifications/delivery-repository": "./src/lib/notifications/delivery-repository.ts",

@@ -57,7 +57,11 @@
     "accountSettings": "Setările contului",
     "back": "Înapoi",
     "menu": "Meniu",
-    "feedback": "Opinii"
+    "feedback": "Opinii",
+    "anonymousSignOutWarning": "Acest cont anonim poate fi recuperat numai cu linkul de recuperare salvat. Deconectați-vă acum?",
+    "signOutTitle": "Deconectați-vă?",
+    "signOutError": "Nu s-a putut deconecta. Vă rugăm să încercați din nou.",
+    "cancel": "Anulează"
   },
   "Footer": {
     "madeIn": "Realizat de comunitatea open-source cu dragoste ❤️",
@@ -1697,7 +1701,8 @@
       "useInvitedEmail": "Folosește adresa de email cu care ai primit invitația."
     },
     "signInWithX": "Continuă cu X",
-    "signInWithOidc": "Continuă cu {name}"
+    "signInWithOidc": "Continuă cu {name}",
+    "signInAnonymously": "Anonim"
   },
   "CompleteProfile": {
     "title": "Completează-ți profilul",
@@ -2948,5 +2953,74 @@
     "fromParticipant": "de la {name}",
     "createSingle": "Înregistrează plata",
     "createMultiple": "Înregistrează {count} plăți"
+  },
+  "AnonymousAccount": {
+    "signup": {
+      "title": "Cont anonim",
+      "description": "Creați un cont anonim fără adresă de e-mail, parolă sau conectare la rețele sociale.",
+      "warning": "Datele dvs. sunt stocate în Split Cloud, dar acest cont nu are e-mail sau altă metodă de recuperare. Trebuie să salvați linkul de recuperare afișat în continuare.",
+      "cancel": "Anulează",
+      "recoverDescription": "Inserați linkul de recuperare salvat pentru a reveni la un cont anonim existent.",
+      "recoveryOnlyHelp": "Noile conturi anonime nu sunt disponibile aici. Lipiți linkul complet de recuperare salvat pentru a continua.",
+      "recover": "Recuperați contul anonim",
+      "create": "Creați un cont anonim",
+      "createError": "Contul anonim nu a putut fi creat. Vă rugăm să încercați din nou.",
+      "recoverError": "Acest link de conectare este nevalid. Verificați linkul complet și încercați din nou.",
+      "recoveryLinkRequiredLabel": "Link de conectare",
+      "createTitle": "Creați un cont nou",
+      "or": "SAU",
+      "recoverTitle": "Aveți deja un cont anonim?"
+    },
+    "onboarding": {
+      "title": "Salvați linkul de recuperare",
+      "description": "Acesta este singurul mod de a reveni în contul dvs. anonim după ce vă deconectați, ștergeți datele browserului sau mutați pe alt dispozitiv.",
+      "unavailableTitle": "Linkul dvs. de recuperare nu poate fi afișat",
+      "unavailableDescription": "Generați un link de înlocuire în mod explicit, apoi salvați-l înainte de a continua.",
+      "generateReplacement": "Generați linkul de înlocuire",
+      "error": "Ceva a mers prost. Vă rugăm să încercați din nou.",
+      "start": "Începeți să utilizați Split"
+    },
+    "recovery": {
+      "warningTitle": "Păstrează asta undeva în siguranță",
+      "warning": "Acest link nu expiră și nu se modifică niciodată decât dacă îl înlocuiți. Oricine îl are poate accesa contul dvs. anonim.",
+      "storedDataNote": "Anonim înseamnă că contul nu este conectat la o identitate de conectare. Datele contului dvs. sunt încă stocate în Split Cloud.",
+      "linkLabel": "Link de conectare",
+      "copyLink": "Copiați linkul",
+      "copied": "Copiat",
+      "howItWorks": "Deschideți linkul de recuperare în orice browser pentru a vă conecta. În PWA instalat, alegeți Anonim și inserați linkul complet de recuperare.",
+      "confirmation": "Mi-am copiat și stocat în siguranță linkul de recuperare.",
+      "copyFailed": "Copierea a eșuat. Selectați linkul de conectare și copiați-l manual."
+    },
+    "recover": {
+      "title": "Recuperează contul anonim",
+      "description": "Deschideți linkul de recuperare salvat sau inserați linkul complet de mai jos.",
+      "howItWorks": "Un link de conectare vă conectează când este deschis într-un browser. În PWA instalat, alegeți Anonim și inserați linkul salvat complet.",
+      "recovering": "Se recuperează contul...",
+      "invalid": "Acest link de conectare este nevalid. Verificați linkul complet și încercați din nou.",
+      "anonymousAccount": "cont anonim",
+      "switchTitle": "Schimbați conturile?",
+      "switchDescription": "Sunteți deja conectat. Continuați să comutați acest browser la {name}.",
+      "switchConfirm": "Comutați și recuperați",
+      "submit": "Recuperează contul",
+      "back": "Înapoi pentru a vă conecta",
+      "linkLabel": "Link de conectare"
+    },
+    "settings": {
+      "recoveryTitle": "Link de conectare",
+      "recoveryDescription": "Acest cont anonim poate fi recuperat numai cu linkul salvat. Deschideți-l într-un browser sau alegeți Anonim și inserați linkul complet în PWA instalat. Linkul curent nu poate fi afișat din nou.",
+      "replace": "Înlocuiți linkul de recuperare",
+      "replaceTitle": "Înlocuiți linkul de recuperare?",
+      "replaceDescription": "Generați un link de înlocuire pentru a examina și salva. Linkul dvs. actual de recuperare continuă să funcționeze până când activați înlocuirea.",
+      "cancel": "Anulează",
+      "replaceConfirm": "Generați linkul de înlocuire",
+      "error": "Linkul de recuperare nu a putut fi înlocuit. Vă rugăm să încercați din nou.",
+      "activateDescription": "Salvați linkul de înlocuire înainte de a-l activa.",
+      "stagedDescription": "Linkul dvs. actual de recuperare continuă să funcționeze până când activați această înlocuire. Închiderea sau reîmprospătarea elimină înlocuitorul.",
+      "activateConfirm": "Activați înlocuirea",
+      "linkAccountTitle": "Conectați la un cont",
+      "linkAccountDescription": "Conectați acest cont anonim la un e-mail sau la o autentificare socială.",
+      "comingSoon": "În curând",
+      "replacementActivated": "Linkul de conectare înlocuitor este acum activ."
+    }
   }
 }

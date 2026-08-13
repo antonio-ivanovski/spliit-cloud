@@ -3,20 +3,24 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { AccountMenu } from '@/components/account-menu'
 import { useCurrentAccount } from '@/lib/use-current-account'
-import { render, screen } from '@/test/test-utils'
+import { render, screen, waitFor } from '@/test/test-utils'
 
 // ── Module mocks ────────────────────────────────────────────────────────
 
 const {
   mockClearPushOnboardingCompletion,
   mockDisconnectPushSubscription,
-  mockNavigate,
+  mockReplaceLocation,
   mockSignOut,
+  mockToast,
 } = vi.hoisted(() => ({
   mockClearPushOnboardingCompletion: vi.fn(),
   mockDisconnectPushSubscription: vi.fn(),
-  mockNavigate: vi.fn(),
-  mockSignOut: vi.fn().mockResolvedValue(undefined),
+  mockReplaceLocation: vi.fn(),
+  mockSignOut: vi
+    .fn()
+    .mockResolvedValue({ data: { success: true }, error: null }),
+  mockToast: vi.fn(),
 }))
 
 vi.mock('@tanstack/react-router', () => ({
@@ -28,7 +32,14 @@ vi.mock('@tanstack/react-router', () => ({
     children: React.ReactNode
     [key: string]: unknown
   }) => <a href={to}>{children}</a>,
-  useNavigate: () => mockNavigate,
+}))
+
+vi.mock('@/lib/browser-navigation', () => ({
+  replaceBrowserLocation: mockReplaceLocation,
+}))
+
+vi.mock('@/components/ui/use-toast', () => ({
+  useToast: () => ({ toast: mockToast }),
 }))
 
 vi.mock('@/lib/auth', () => ({
@@ -55,7 +66,7 @@ describe('AccountMenu', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockDisconnectPushSubscription.mockResolvedValue(false)
-    mockSignOut.mockResolvedValue(undefined)
+    mockSignOut.mockResolvedValue({ data: { success: true }, error: null })
   })
 
   it('shows skeleton pulse when isPending', () => {
@@ -156,7 +167,7 @@ describe('AccountMenu', () => {
     expect(screen.getByText('Sign out')).toBeInTheDocument()
   })
 
-  it('clicking sign out calls authClient.signOut and router.replace', async () => {
+  it('clicking sign out calls authClient.signOut and hard-replaces the page', async () => {
     const user = userEvent.setup()
 
     vi.mocked(useCurrentAccount).mockReturnValue({
@@ -185,8 +196,8 @@ describe('AccountMenu', () => {
     const signOutItem = screen.getByText('Sign out')
     await user.click(signOutItem)
 
-    expect(mockSignOut).toHaveBeenCalledOnce()
-    expect(mockNavigate).toHaveBeenCalledWith({ to: '/', replace: true })
+    await waitFor(() => expect(mockSignOut).toHaveBeenCalledOnce())
+    await waitFor(() => expect(mockReplaceLocation).toHaveBeenCalledWith('/'))
   })
 
   it('clears push onboarding completion when logout disconnects a device', async () => {
@@ -240,5 +251,108 @@ describe('AccountMenu', () => {
     await user.click(screen.getByText('Sign out'))
 
     expect(mockClearPushOnboardingCompletion).not.toHaveBeenCalled()
+  })
+
+  it('confirms anonymous sign-out with the app dialog', async () => {
+    const user = userEvent.setup()
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: {
+        id: 'guest-1',
+        name: 'Guest',
+        email: 'guest@anonymous.placeholder.local',
+        image: null,
+        emailVerified: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        isAnonymous: true,
+      },
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+
+    render(<AccountMenu />)
+    await user.click(screen.getByRole('button', { name: /account/i }))
+    await user.click(screen.getByText('Sign out'))
+
+    expect(mockSignOut).not.toHaveBeenCalled()
+    expect(
+      screen.getByText(
+        'This anonymous account can only be accessed with your saved sign in link. Sign out now?',
+      ),
+    ).toBeInTheDocument()
+
+    expect(
+      screen.getByRole('dialog', { name: 'Sign out?' }),
+    ).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Sign out' }))
+
+    expect(mockSignOut).toHaveBeenCalledOnce()
+    expect(mockReplaceLocation).toHaveBeenCalledWith('/')
+  })
+
+  it('cancels anonymous sign-out without touching the session', async () => {
+    const user = userEvent.setup()
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: {
+        id: 'guest-1',
+        name: 'Guest',
+        email: 'guest@anonymous.placeholder.local',
+        image: null,
+        emailVerified: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        isAnonymous: true,
+      },
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+
+    render(<AccountMenu />)
+    await user.click(screen.getByRole('button', { name: /account/i }))
+    await user.click(screen.getByText('Sign out'))
+    await user.click(screen.getByRole('button', { name: 'Cancel' }))
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(mockSignOut).not.toHaveBeenCalled()
+    expect(mockReplaceLocation).not.toHaveBeenCalled()
+  })
+
+  it('keeps the session when Better Auth sign-out fails', async () => {
+    mockSignOut.mockResolvedValue({
+      data: null,
+      error: { message: 'failed' },
+    })
+    const user = userEvent.setup()
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: {
+        id: 'user-1',
+        name: 'Alice',
+        email: 'alice@example.com',
+        image: null,
+        emailVerified: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+
+    render(<AccountMenu />)
+    await user.click(screen.getByRole('button', { name: /account/i }))
+    await user.click(screen.getByText('Sign out'))
+
+    await waitFor(() =>
+      expect(mockToast).toHaveBeenCalledWith({
+        description: 'Could not sign out. Please try again.',
+        variant: 'destructive',
+      }),
+    )
+    expect(mockReplaceLocation).not.toHaveBeenCalled()
   })
 })

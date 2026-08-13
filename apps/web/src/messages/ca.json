@@ -57,7 +57,11 @@
     "accountSettings": "Configuració del compte",
     "back": "Enrere",
     "menu": "Menú",
-    "feedback": "Comentaris"
+    "feedback": "Comentaris",
+    "anonymousSignOutWarning": "Aquest compte anònim només es pot recuperar amb el vostre enllaç d'inici de sessió desat. Tancar la sessió ara?",
+    "signOutTitle": "Tancar la sessió?",
+    "signOutError": "No s'ha pogut tancar la sessió. Si us plau, torna-ho a provar.",
+    "cancel": "Cancel·la"
   },
   "Footer": {
     "madeIn": "Fet per la comunitat de codi obert amb amor ❤️",
@@ -1697,7 +1701,8 @@
       "useInvitedEmail": "Utilitza l'adreça de correu electrònic amb què t'han convidat."
     },
     "signInWithX": "Continua amb X",
-    "signInWithOidc": "Continua amb {name}"
+    "signInWithOidc": "Continua amb {name}",
+    "signInAnonymously": "Anònim"
   },
   "CompleteProfile": {
     "title": "Completa el teu perfil",
@@ -2948,5 +2953,74 @@
     "fromParticipant": "de {name}",
     "createSingle": "Registra el pagament",
     "createMultiple": "Registra {count} pagaments"
+  },
+  "AnonymousAccount": {
+    "signup": {
+      "title": "Compte anònim",
+      "description": "Creeu un compte anònim sense adreça de correu electrònic, contrasenya ni inici de sessió social.",
+      "warning": "Les vostres dades s'emmagatzemen a Split Cloud, però aquest compte no té correu electrònic ni cap altre mètode de recuperació. Heu de desar l'enllaç d'inici de sessió que es mostra a continuació.",
+      "cancel": "Cancel·la",
+      "recoverDescription": "Enganxeu l'enllaç d'inici de sessió desat per tornar a un compte anònim existent.",
+      "recoveryOnlyHelp": "Els comptes anònims nous no estan disponibles aquí. Enganxeu l'enllaç d'inici de sessió desat complet per continuar.",
+      "recover": "Recuperar el compte anònim",
+      "create": "Crea un compte anònim",
+      "createError": "No s'ha pogut crear el compte anònim. Si us plau, torna-ho a provar.",
+      "recoverError": "Aquest enllaç d'inici de sessió no és vàlid. Comprova l'enllaç complet i torna-ho a provar.",
+      "recoveryLinkRequiredLabel": "Enllaç d'inici de sessió",
+      "createTitle": "Crea un compte nou",
+      "or": "O",
+      "recoverTitle": "Ja teniu un compte anònim?"
+    },
+    "onboarding": {
+      "title": "Desa l'enllaç d'inici de sessió",
+      "description": "Aquesta és l'única manera de tornar al vostre compte anònim després de tancar la sessió, esborrar les dades del navegador o passar a un altre dispositiu.",
+      "unavailableTitle": "El vostre enllaç d'inici de sessió no es pot mostrar",
+      "unavailableDescription": "Genereu un enllaç de substitució explícitament i deseu-lo abans de continuar.",
+      "generateReplacement": "Genera un enllaç de substitució",
+      "error": "Alguna cosa va fallar. Si us plau, torna-ho a provar.",
+      "start": "Comenceu a utilitzar Split"
+    },
+    "recovery": {
+      "warningTitle": "Guarda-ho en un lloc segur",
+      "warning": "Aquest enllaç mai caduca ni canvia tret que el substituïu. Qualsevol persona que el tingui pot accedir al vostre compte anònim.",
+      "storedDataNote": "Anònim vol dir que el compte no està connectat a una identitat d'inici de sessió. Les dades del vostre compte encara s'emmagatzemen a Split Cloud.",
+      "linkLabel": "Enllaç d'inici de sessió",
+      "copyLink": "Copia l'enllaç",
+      "copied": "Copiat",
+      "howItWorks": "Obriu l'enllaç d'inici de sessió a qualsevol navegador per iniciar la sessió. A la PWA instal·lada, seleccioneu Anònim i enganxeu l'enllaç d'inici de sessió complet.",
+      "confirmation": "Vaig copiar i emmagatzemar de manera segura el meu enllaç d'inici de sessió.",
+      "copyFailed": "No s'ha pogut copiar. Seleccioneu l'enllaç d'inici de sessió i copieu-lo manualment."
+    },
+    "recover": {
+      "title": "Recuperar un compte anònim",
+      "description": "Obriu l'enllaç d'inici de sessió desat o enganxeu l'enllaç complet a continuació.",
+      "howItWorks": "Un enllaç d'inici de sessió us inicia la sessió quan s'obre en un navegador. A la PWA instal·lada, trieu Anònim i enganxeu l'enllaç desat complet.",
+      "recovering": "S'està recuperant el teu compte...",
+      "invalid": "Aquest enllaç d'inici de sessió no és vàlid. Comprova l'enllaç complet i torna-ho a provar.",
+      "anonymousAccount": "compte anònim",
+      "switchTitle": "Canviar de compte?",
+      "switchDescription": "Ja heu iniciat la sessió. Continueu canviant aquest navegador a {name}.",
+      "switchConfirm": "Canvia i recupera",
+      "submit": "Recuperar el compte",
+      "back": "Torna per iniciar la sessió",
+      "linkLabel": "Enllaç d'inici de sessió"
+    },
+    "settings": {
+      "recoveryTitle": "Enllaç d'inici de sessió",
+      "recoveryDescription": "Aquest compte anònim només es pot recuperar amb el vostre enllaç desat. Obriu-lo en un navegador o trieu Anònim i enganxeu l'enllaç complet al PWA instal·lat. L'enllaç actual no es pot tornar a mostrar.",
+      "replace": "Substitueix l'enllaç d'inici de sessió",
+      "replaceTitle": "Voleu substituir el vostre enllaç d'inici de sessió?",
+      "replaceDescription": "Genereu un enllaç de substitució per revisar-lo i desar-lo. El vostre enllaç d'inici de sessió actual continua funcionant fins que activeu el reemplaçament.",
+      "cancel": "Cancel·la",
+      "replaceConfirm": "Genera un enllaç de substitució",
+      "error": "No s'ha pogut substituir l'enllaç d'inici de sessió. Si us plau, torna-ho a provar.",
+      "activateDescription": "Deseu l'enllaç de substitució abans d'activar-lo.",
+      "stagedDescription": "El vostre enllaç d'inici de sessió actual continua funcionant fins que activeu aquesta substitució. Tancar o actualitzar descarta el reemplaçament.",
+      "activateConfirm": "Activa la substitució",
+      "linkAccountTitle": "Enllaça amb un compte",
+      "linkAccountDescription": "Connecteu aquest compte anònim a un correu electrònic o a un inici de sessió social.",
+      "comingSoon": "Pròximament",
+      "replacementActivated": "L'enllaç d'inici de sessió de substitució ja està actiu."
+    }
   }
 }

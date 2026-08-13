@@ -97,6 +97,17 @@ may remain empty.
   group or friend email invitation, or by opening a live share-link invite.
   Existing users can always sign in. Inviting someone to a group or friend
   ledger is how they get an account.
+- Anonymous account creation requires `ENABLE_ANONYMOUS_AUTH=true`,
+  `SIGNUP_MODE=open`, a stable `BETTER_AUTH_SECRET`, and `TRUST_PROXY=true`
+  behind a correctly configured trusted proxy. The proxy must sanitize client
+  IP headers so per-client signup and recovery limits are meaningful. Turning
+  anonymous creation off later prevents new anonymous accounts but keeps
+  recovery available for existing ones. Recovery links are permanent bearer
+  credentials, so back up the secret; changing it makes interrupted,
+  not-yet-confirmed setup links unreadable. The background worker permanently
+  deletes anonymous accounts that do not start recovery-link setup within seven
+  days, or leave setup unacknowledged for seven days. Acknowledged anonymous
+  accounts are never removed by this sweep.
 - Expense documents require
   `PUBLIC_ENABLE_EXPENSE_DOCUMENTS=true` and the required `S3_UPLOAD_*` values.
   Configure the bucket with a lifecycle rule that expires objects under

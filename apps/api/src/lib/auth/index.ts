@@ -3,7 +3,11 @@ import { randomUUID } from 'node:crypto'
 import { oauthProvider } from '@better-auth/oauth-provider'
 import { betterAuth } from 'better-auth'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
-import { APIError, createAuthMiddleware } from 'better-auth/api'
+import {
+  APIError,
+  createAuthMiddleware,
+  getSessionFromCtx,
+} from 'better-auth/api'
 import {
   jwt,
   magicLink,
@@ -11,6 +15,7 @@ import {
   type Jwk,
   type JwtOptions,
 } from 'better-auth/plugins'
+import { anonymous } from 'better-auth/plugins/anonymous'
 import { genericOAuth } from 'better-auth/plugins/generic-oauth'
 
 import { prisma, type Account } from '@spliit/db'
@@ -29,8 +34,10 @@ import {
   FixedWindowLimiter,
   hashRateLimitIdentity,
   logRateLimitExceeded,
+  resolveClientIp,
 } from '../rate-limit'
 import { invalidateAccountCache } from './account-cache'
+import { anonymousRecovery } from './anonymous-recovery'
 import {
   assertCanCreateAccount,
   enforceSignupGate,
@@ -41,6 +48,11 @@ import { getApiBaseUrl } from './urls'
 const oidcProvider = getConfiguredOidcProvider()
 
 const authEmailRecipientLimiter = new FixedWindowLimiter({
+  limit: 10,
+  windowMs: 60 * 60 * 1000,
+})
+
+const anonymousSignupLimiter = new FixedWindowLimiter({
   limit: 10,
   windowMs: 60 * 60 * 1000,
 })
@@ -79,6 +91,42 @@ function buildPasswordRecoveryEmail(opts: {
 }
 
 const beforeAuthMiddleware = createAuthMiddleware(async (ctx) => {
+  if (ctx.path === '/sign-in/anonymous') {
+    if (!env.ENABLE_ANONYMOUS_AUTH || env.SIGNUP_MODE !== 'open') {
+      throw new APIError('FORBIDDEN', {
+        message: 'Anonymous account creation is disabled.',
+        code: 'ANONYMOUS_SIGNUP_DISABLED',
+      })
+    }
+    const current = await getSessionFromCtx(ctx, { disableRefresh: true })
+    if (current) {
+      throw new APIError('CONFLICT', {
+        message: 'Sign out before creating an anonymous account.',
+        code: 'ANONYMOUS_SIGNUP_ACCOUNT_CONFLICT',
+      })
+    }
+    const ip = resolveClientIp(ctx.headers ?? new Headers(), {
+      trustProxy: env.TRUST_PROXY,
+    })
+    const decision = anonymousSignupLimiter.hit(ip)
+    if (!decision.allowed) {
+      logRateLimitExceeded({
+        policy: 'anonymous-signup',
+        identity: ip,
+        retryAfterSeconds: decision.retryAfterSeconds,
+        path: ctx.path,
+      })
+      throw new APIError(
+        'TOO_MANY_REQUESTS',
+        {
+          message: 'Too many anonymous accounts. Please try again later.',
+          code: 'ANONYMOUS_SIGNUP_RATE_LIMITED',
+        },
+        { 'Retry-After': String(decision.retryAfterSeconds) },
+      )
+    }
+  }
+
   const password =
     ctx.path === '/sign-up/email'
       ? ctx.body?.password
@@ -423,6 +471,9 @@ export const auth = betterAuth({
             email: user.email,
             context,
           })
+          if (user.isAnonymous) {
+            return { data: { ...user, name: user.email } }
+          }
         },
         after: async (user) => {
           if (user.email) {
@@ -547,6 +598,12 @@ export const auth = betterAuth({
   })(),
 
   plugins: [
+    anonymous({
+      disableDeleteAnonymousUser: true,
+      generateRandomEmail: () =>
+        `guest-${randomUUID()}@anonymous.placeholder.local`,
+    }),
+    anonymousRecovery(),
     ...(oidcProvider
       ? [
           genericOAuth({

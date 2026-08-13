@@ -100,6 +100,48 @@ describe('protectedProcedure', () => {
     })
   })
 
+  it('blocks an anonymous account until its recovery key is acknowledged', async () => {
+    authState.session = {
+      user: { id: 'anonymous-1' },
+      session: { id: 'sess-anonymous' },
+    }
+    prismaMock.account.findUnique.mockResolvedValue({
+      id: 'anonymous-1',
+      email: 'guest@test.anonymous.placeholder.local',
+      emailVerified: false,
+      isAnonymous: true,
+      name: 'Anonymous',
+    } as never)
+    prismaMock.anonymousRecoveryCredential.findUnique.mockResolvedValue(null)
+    const ctx = await createTRPCContext({ req: makeRequest() })
+
+    await expect(callProbe(ctx)).rejects.toMatchObject({
+      code: 'PRECONDITION_FAILED',
+      message: 'ANONYMOUS_SETUP_REQUIRED',
+    })
+  })
+
+  it('allows an anonymous account after recovery onboarding completes', async () => {
+    authState.session = {
+      user: { id: 'anonymous-2' },
+      session: { id: 'sess-anonymous-2' },
+    }
+    prismaMock.account.findUnique.mockResolvedValue({
+      id: 'anonymous-2',
+      email: 'guest2@test.anonymous.placeholder.local',
+      emailVerified: false,
+      isAnonymous: true,
+      name: 'Guest name',
+    } as never)
+    prismaMock.anonymousRecoveryCredential.findUnique.mockResolvedValue({
+      acknowledgedAt: new Date(),
+      onboardingCompletedAt: new Date(),
+    } as never)
+    const ctx = await createTRPCContext({ req: makeRequest() })
+
+    await expect(callProbe(ctx)).resolves.toEqual({ authUserId: 'anonymous-2' })
+  })
+
   it('does not accept OAuth bearer credentials on existing procedures', async () => {
     await expect(
       callProbe({

@@ -42,6 +42,13 @@ export function CompleteProfilePage() {
   const updateProfile = trpc.account.updateProfile.useMutation()
 
   const needsProfile = !!account && needsDisplayName(account)
+  const signedInLabel = account
+    ? !isPlaceholderEmail(account.email)
+      ? account.email
+      : account.name && account.name !== account.email
+        ? account.name
+        : null
+    : null
 
   if (isPending) {
     return (
@@ -94,15 +101,11 @@ export function CompleteProfilePage() {
           <CardDescription>{t('description')}</CardDescription>
         </CardHeader>
         <CardContent>
-          {(account.name || !isPlaceholderEmail(account.email)) && (
+          {signedInLabel ? (
             <p className="mb-4 text-center text-xs text-muted-foreground">
-              {t('signedInAs', {
-                email: !isPlaceholderEmail(account.email)
-                  ? account.email
-                  : account.name,
-              })}
+              {t('signedInAs', { email: signedInLabel })}
             </p>
-          )}
+          ) : null}
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <div className="grid gap-1.5">
               <Label htmlFor="profile-name">{t('nameLabel')}</Label>

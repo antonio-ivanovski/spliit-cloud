@@ -57,7 +57,11 @@
     "accountSettings": "Configurações da conta",
     "back": "Voltar",
     "menu": "Menu",
-    "feedback": "Comentários"
+    "feedback": "Comentários",
+    "anonymousSignOutWarning": "Esta conta anónima só pode ser recuperada com o ligação de início de sessão guardado. Sair agora?",
+    "signOutTitle": "Sair?",
+    "signOutError": "Não foi possível sair. Por favor, tente novamente.",
+    "cancel": "Cancelar"
   },
   "Footer": {
     "madeIn": "Feito pela comunidade de código aberto com amor ❤️",
@@ -716,7 +720,8 @@
       "useInvitedEmail": "Usa o endereço de email com que recebeste o convite."
     },
     "signInWithX": "Continuar com X",
-    "signInWithOidc": "Continuar com {name}"
+    "signInWithOidc": "Continuar com {name}",
+    "signInAnonymously": "Anónimo"
   },
   "CompleteProfile": {
     "title": "Completa o teu perfil",
@@ -2948,5 +2953,74 @@
     "fromParticipant": "de {name}",
     "createSingle": "Registar pagamento",
     "createMultiple": "Registar {count} pagamentos"
+  },
+  "AnonymousAccount": {
+    "signup": {
+      "title": "Conta anónima",
+      "description": "Crie uma conta anónima sem endereço de e-mail, palavra-passe ou login social.",
+      "warning": "Os seus dados são armazenados no Spliit Cloud, mas esta conta não tem e-mail ou outro método de recuperação. Deve guardar o ligação de início de sessão mostrado a seguir.",
+      "cancel": "Cancelar",
+      "recoverDescription": "Cole o ligação de início de sessão guardado para voltar a uma conta anónima existente.",
+      "recoveryOnlyHelp": "As novas contas anónimas não estão disponíveis aqui. Cole o ligação de início de sessão completo guardado para continuar.",
+      "recover": "Recuperar conta anónima",
+      "create": "Criar conta anónima",
+      "createError": "A conta anónima não pôde ser criada. Por favor, tente novamente.",
+      "recoverError": "Esta ligação de início de sessão é inválida. Verifique o link completo e tente novamente.",
+      "recoveryLinkRequiredLabel": "Ligação de início de sessão",
+      "createTitle": "Criar uma conta nova",
+      "or": "OU",
+      "recoverTitle": "Já tem uma conta anónima?"
+    },
+    "onboarding": {
+      "title": "Guarde o seu ligação de início de sessão",
+      "description": "Esta é a única forma de voltar à sua conta anónima depois de sair, limpar os dados do browser ou mudar para outro dispositivo.",
+      "unavailableTitle": "O seu ligação de início de sessão não pode ser apresentado",
+      "unavailableDescription": "Gere explicitamente um link de substituição e guarde-o antes de continuar.",
+      "generateReplacement": "Gerar ligação de substituição",
+      "error": "Algo correu mal. Por favor, tente novamente.",
+      "start": "Comece a utilizar o Split"
+    },
+    "recovery": {
+      "warningTitle": "Guarde isso em algum lugar seguro",
+      "warning": "Este link nunca expira ou muda, a menos que o substitua. Qualquer pessoa que o possua pode aceder à sua conta anónima.",
+      "storedDataNote": "Anónimo significa que a conta não está ligada a uma identidade de login. Os dados da sua conta ainda estão armazenados no Spliit Cloud.",
+      "linkLabel": "Ligação de início de sessão",
+      "copyLink": "Copiar link",
+      "copied": "Copiado",
+      "howItWorks": "Abra o ligação de início de sessão em qualquer browser para iniciar sessão. No PWA instalado, escolha Anónimo e cole o ligação de início de sessão completo.",
+      "confirmation": "Copiei e armazenei em segurança o meu ligação de início de sessão.",
+      "copyFailed": "A cópia falhou. Selecione a ligação de início de sessão e copie-a manualmente."
+    },
+    "recover": {
+      "title": "Recuperar conta anónima",
+      "description": "Abra o ligação de início de sessão guardado ou cole o link completo abaixo.",
+      "howItWorks": "Um ligação de início de sessão liga-o quando aberto num browser. No PWA instalado, escolha Anónimo e cole o link completo guardado.",
+      "recovering": "Recuperar a sua conta…",
+      "invalid": "Esta ligação de início de sessão é inválida. Verifique o link completo e tente novamente.",
+      "anonymousAccount": "conta anónima",
+      "switchTitle": "Trocar de conta?",
+      "switchDescription": "Já está conectado. Continue a alterar este navegador para {name}.",
+      "switchConfirm": "Trocar e recuperar",
+      "submit": "Recuperar conta",
+      "back": "Voltar para fazer login",
+      "linkLabel": "Ligação de início de sessão"
+    },
+    "settings": {
+      "recoveryTitle": "Ligação de início de sessão",
+      "recoveryDescription": "Esta conta anónima só pode ser recuperada com o link guardado. Abra-o num browser ou escolha Anónimo e cole o link completo no PWA instalado. O link atual não pode ser mostrado novamente.",
+      "replace": "Substitua a ligação de início de sessão",
+      "replaceTitle": "Substituir o seu ligação de início de sessão?",
+      "replaceDescription": "Gere um link de substituição para rever e guardar. O seu ligação de início de sessão atual continua a funcionar até ativar a substituição.",
+      "cancel": "Cancelar",
+      "replaceConfirm": "Gerar ligação de substituição",
+      "error": "O ligação de início de sessão não pôde ser substituído. Por favor, tente novamente.",
+      "activateDescription": "Guarde o link de substituição antes de o ativar.",
+      "stagedDescription": "O seu ligação de início de sessão atual continua a funcionar até ativar esta substituição. Fechar ou atualizar descarta a substituição.",
+      "activateConfirm": "Ativar substituição",
+      "linkAccountTitle": "Associar a uma conta",
+      "linkAccountDescription": "Associe esta conta anónima a um e-mail ou início de sessão social.",
+      "comingSoon": "Em breve",
+      "replacementActivated": "A ligação de início de sessão de substituição está agora ativa."
+    }
   }
 }

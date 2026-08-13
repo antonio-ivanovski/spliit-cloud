@@ -57,7 +57,11 @@
     "accountSettings": "Impostazioni account",
     "back": "Indietro",
     "menu": "Menu",
-    "feedback": "Segnalazioni"
+    "feedback": "Segnalazioni",
+    "anonymousSignOutWarning": "Questo account anonimo può essere recuperato solo con il link di accesso salvato. Uscire adesso?",
+    "signOutTitle": "Uscire?",
+    "signOutError": "Impossibile uscire. Per favore riprova.",
+    "cancel": "Annulla"
   },
   "Footer": {
     "madeIn": "Realizzato dalla comunità open-source con amore ❤️",
@@ -1697,7 +1701,8 @@
       "useInvitedEmail": "Usa l'indirizzo email con cui hai ricevuto l'invito."
     },
     "signInWithX": "Continua con X",
-    "signInWithOidc": "Continua con {name}"
+    "signInWithOidc": "Continua con {name}",
+    "signInAnonymously": "Anonimo"
   },
   "CompleteProfile": {
     "title": "Completa il tuo profilo",
@@ -2948,5 +2953,74 @@
     "fromParticipant": "da {name}",
     "createSingle": "Registra pagamento",
     "createMultiple": "Registra {count} pagamenti"
+  },
+  "AnonymousAccount": {
+    "signup": {
+      "title": "Account anonimo",
+      "description": "Crea un account anonimo senza indirizzo email, password o accesso social.",
+      "warning": "I tuoi dati sono archiviati in Spliit Cloud, ma questo account non dispone di e-mail o altro metodo di recupero. È necessario salvare il link di accesso mostrato di seguito.",
+      "cancel": "Annulla",
+      "recoverDescription": "Incolla il link di accesso salvato per tornare a un account anonimo esistente.",
+      "recoveryOnlyHelp": "Nuovi account anonimi non sono disponibili qui. Incolla il link di ripristino salvato completo per continuare.",
+      "recover": "Recupera account anonimo",
+      "create": "Crea un account anonimo",
+      "createError": "Impossibile creare l'account anonimo. Per favore riprova.",
+      "recoverError": "Questo link di accesso non è valido. Controlla il collegamento completo e riprova.",
+      "recoveryLinkRequiredLabel": "Collegamento per il ripristino",
+      "createTitle": "Crea un nuovo account",
+      "or": "OPPURE",
+      "recoverTitle": "Hai già un account anonimo?"
+    },
+    "onboarding": {
+      "title": "Salva il link di accesso",
+      "description": "Questo è l'unico modo per tornare al tuo account anonimo dopo esserti disconnesso, cancellato i dati del browser o passato a un altro dispositivo.",
+      "unavailableTitle": "Impossibile visualizzare il link di accesso",
+      "unavailableDescription": "Genera esplicitamente un collegamento sostitutivo, quindi salvalo prima di continuare.",
+      "generateReplacement": "Genera collegamento sostitutivo",
+      "error": "Qualcosa è andato storto. Per favore riprova.",
+      "start": "Inizia a utilizzare Split"
+    },
+    "recovery": {
+      "warningTitle": "Conservalo in un posto sicuro",
+      "warning": "Questo collegamento non scade né cambia mai a meno che tu non lo sostituisca. Chiunque lo abbia può accedere al tuo account anonimo.",
+      "storedDataNote": "Anonimo significa che l'account non è collegato a un'identità di accesso. I dati del tuo account sono ancora archiviati in Splitit Cloud.",
+      "linkLabel": "Link di accesso",
+      "copyLink": "Copia collegamento",
+      "copied": "Copiato",
+      "howItWorks": "Apri il link di accesso in qualsiasi browser per accedere. Nella PWA installata, scegli Anonimo e incolla il link di accesso completo.",
+      "confirmation": "Ho copiato e archiviato in modo sicuro il mio link di accesso.",
+      "copyFailed": "Copia non riuscita. Seleziona il link di accesso e copialo manualmente."
+    },
+    "recover": {
+      "title": "Recupera account anonimo",
+      "description": "Apri il link di ripristino salvato o incolla il link completo di seguito.",
+      "howItWorks": "Un link di accesso ti consente di accedere quando viene aperto in un browser. Nella PWA installata, scegli Anonimo e incolla il collegamento salvato completo.",
+      "recovering": "Recupero del tuo account…",
+      "invalid": "Questo link di accesso non è valido. Controlla il collegamento completo e riprova.",
+      "anonymousAccount": "conto anonimo",
+      "switchTitle": "Cambiare account?",
+      "switchDescription": "Hai già effettuato l'accesso. Continua a cambiare questo browser in {name}.",
+      "switchConfirm": "Cambia e recupera",
+      "submit": "Recupera conto",
+      "back": "Torna per accedere",
+      "linkLabel": "Collegamento per il ripristino"
+    },
+    "settings": {
+      "recoveryTitle": "Collegamento per il ripristino",
+      "recoveryDescription": "Questo account anonimo può essere recuperato solo con il collegamento salvato. Aprilo in un browser o scegli Anonimo e incolla il collegamento completo nella PWA installata. Il collegamento corrente non può essere visualizzato nuovamente.",
+      "replace": "Sostituisci il link di accesso",
+      "replaceTitle": "Sostituire il link di accesso?",
+      "replaceDescription": "Genera un collegamento sostitutivo da rivedere e salvare. Il tuo attuale link di accesso continua a funzionare finché non attivi la sostituzione.",
+      "cancel": "Annulla",
+      "replaceConfirm": "Genera collegamento sostitutivo",
+      "error": "Impossibile sostituire il link di accesso. Per favore riprova.",
+      "activateDescription": "Salva il collegamento sostitutivo prima di attivarlo.",
+      "stagedDescription": "Il tuo attuale link di accesso continua a funzionare finché non attivi questa sostituzione. La chiusura o l'aggiornamento elimina la sostituzione.",
+      "activateConfirm": "Attiva la sostituzione",
+      "linkAccountTitle": "Collega a un account",
+      "linkAccountDescription": "Collega questo account anonimo a un indirizzo email o a un accesso social.",
+      "comingSoon": "Prossimamente",
+      "replacementActivated": "Il link di accesso sostitutivo è ora attivo."
+    }
   }
 }

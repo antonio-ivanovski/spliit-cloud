@@ -57,7 +57,11 @@
     "accountSettings": "账户设置",
     "back": "返回",
     "menu": "菜单",
-    "feedback": "反馈"
+    "feedback": "反馈",
+    "anonymousSignOutWarning": "此匿名帐户只能使用您保存的登录链接来恢复。现在退出吗？",
+    "signOutTitle": "退出？",
+    "signOutError": "无法注销。请再试一次。",
+    "cancel": "取消"
   },
   "Footer": {
     "madeIn": "由开源社区用爱打造 ❤️",
@@ -1682,7 +1686,8 @@
       "useInvitedEmail": "请使用收到邀请的邮箱地址。"
     },
     "signInWithX": "使用 X 继续",
-    "signInWithOidc": "使用 {name} 继续"
+    "signInWithOidc": "使用 {name} 继续",
+    "signInAnonymously": "匿名"
   },
   "CompleteProfile": {
     "title": "完善您的个人资料",
@@ -2913,5 +2918,74 @@
     "fromParticipant": "来自{name}",
     "createSingle": "记录付款",
     "createMultiple": "记录 {count} 笔付款"
+  },
+  "AnonymousAccount": {
+    "signup": {
+      "title": "匿名帐户",
+      "description": "创建一个没有电子邮件地址、密码或社交登录的匿名帐户。",
+      "warning": "您的数据存储在Spliit Cloud中，但该帐户没有电子邮件或其他恢复方法。您必须保存接下来显示的登录链接。",
+      "cancel": "取消",
+      "recoverDescription": "粘贴您保存的登录链接以返回到现有的匿名帐户。",
+      "recoveryOnlyHelp": "此处不提供新的匿名帐户。粘贴您完整保存的登录链接以继续。",
+      "recover": "恢复匿名帐户",
+      "create": "创建匿名帐户",
+      "createError": "无法创建匿名帐户。请再试一次。",
+      "recoverError": "此登录链接无效。检查完整的链接并重试。",
+      "recoveryLinkRequiredLabel": "登录链接",
+      "createTitle": "创建新帐户",
+      "or": "或",
+      "recoverTitle": "已有匿名帐户？"
+    },
+    "onboarding": {
+      "title": "保存您的登录链接",
+      "description": "这是退出、清除浏览器数据或移动到其他设备后返回匿名帐户的唯一方法。",
+      "unavailableTitle": "您的登录链接无法显示",
+      "unavailableDescription": "显式生成替换链接，然后在继续之前保存它。",
+      "generateReplacement": "生成替换链接",
+      "error": "出了点问题。请再试一次。",
+      "start": "开始使用拆分"
+    },
+    "recovery": {
+      "warningTitle": "将其保存在安全的地方",
+      "warning": "该链接永远不会过期或更改，除非您替换它。任何拥有它的人都可以访问您的匿名帐户。",
+      "storedDataNote": "匿名意味着该帐户未连接到登录身份。您的帐户数据仍存储在 Split Cloud 中。",
+      "linkLabel": "登录链接",
+      "copyLink": "复制链接",
+      "copied": "已复制",
+      "howItWorks": "在任何浏览器中打开登录链接进行登录。在已安装的 PWA 中，选择“匿名”并粘贴完整的登录链接。",
+      "confirmation": "我复制并安全存储了我的登录链接。",
+      "copyFailed": "复制失败。请选择登录链接并手动复制。"
+    },
+    "recover": {
+      "title": "恢复匿名帐户",
+      "description": "打开您保存的登录链接或粘贴下面的完整链接。",
+      "howItWorks": "登录链接在浏览器中打开时会让您登录。在安装的 PWA 中，选择“匿名”并粘贴完整的已保存链接。",
+      "recovering": "正在恢复您的帐户...",
+      "invalid": "此登录链接无效。检查完整的链接并重试。",
+      "anonymousAccount": "匿名账户",
+      "switchTitle": "切换账户？",
+      "switchDescription": "您已登录。继续将此浏览器切换到 {name}。",
+      "switchConfirm": "切换并恢复",
+      "submit": "恢复帐户",
+      "back": "返回登录",
+      "linkLabel": "登录链接"
+    },
+    "settings": {
+      "recoveryTitle": "登录链接",
+      "recoveryDescription": "此匿名帐户只能通过您保存的链接来恢复。在浏览器中打开它，或选择“匿名”并将完整链接粘贴到已安装的 PWA 中。当前链接无法再次显示。",
+      "replace": "替换登录链接",
+      "replaceTitle": "替换您的登录链接？",
+      "replaceDescription": "生成替换链接以查看并保存。您当前的登录链接将继续有效，直到您激活替代链接。",
+      "cancel": "取消",
+      "replaceConfirm": "生成替换链接",
+      "error": "无法替换登录链接。请再试一次。",
+      "activateDescription": "在激活替换链接之前保存它。",
+      "stagedDescription": "您当前的登录链接将一直有效，直到您激活此替代链接。关闭或刷新会放弃替换。",
+      "activateConfirm": "激活替换",
+      "linkAccountTitle": "关联帐户",
+      "linkAccountDescription": "将此匿名帐户与电子邮件或社交登录方式关联。",
+      "comingSoon": "即将推出",
+      "replacementActivated": "您的替代登录链接现已生效。"
+    }
   }
 }

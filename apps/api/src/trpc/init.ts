@@ -78,6 +78,18 @@ export const protectedProcedure = baseProcedure.use(
         message: 'Authentication required',
       })
     }
+    if (ctx.auth.user.isAnonymous) {
+      const recovery = await prisma.anonymousRecoveryCredential.findUnique({
+        where: { accountId: ctx.auth.user.id },
+        select: { acknowledgedAt: true, onboardingCompletedAt: true },
+      })
+      if (!recovery?.acknowledgedAt || !recovery.onboardingCompletedAt) {
+        throw new TRPCError({
+          code: 'PRECONDITION_FAILED',
+          message: 'ANONYMOUS_SETUP_REQUIRED',
+        })
+      }
+    }
     if (type === 'mutation') {
       const decision = authenticatedMutationLimiter.hit(ctx.auth.user.id)
       if (!decision.allowed) {

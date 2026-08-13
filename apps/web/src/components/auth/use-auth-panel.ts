@@ -182,6 +182,7 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
   const socialEnabled =
     googleEnabled || githubEnabled || twitterEnabled || oidcProviders.length > 0
   const mode = canSignUp ? requestedMode : 'sign-in'
+  const anonymousEnabled = deployment.enableAnonymousAuth
 
   const canSubmitPassword = (() => {
     if (!email.trim()) return false
@@ -275,6 +276,7 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
     twitterEnabled,
     oidcProviders,
     socialEnabled,
+    anonymousEnabled,
     callbackURL,
     setEmail,
     setPassword,

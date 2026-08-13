@@ -37,6 +37,7 @@ model Account {
   id            String   @id
   email         String   @unique
   emailVerified Boolean  @default(false)
+  isAnonymous   Boolean  @default(false)
   name          String
   image         String?
   createdAt     DateTime @default(now())
@@ -60,20 +61,32 @@ model Account {
   pushSubscriptions             PushSubscription[]
   notificationPreferences       AccountNotificationPreference[]
   notificationDeliveries        NotificationDelivery[]
+  anonymousRecoveryCredential   AnonymousRecoveryCredential?
   recurringExpenseSeriesCreated RecurringExpenseSeries[]        @relation("RecurringExpenseSeriesCreator")
   expensesCreated               Expense[]                       @relation("ExpenseCreator")
   expenseComments               ExpenseComment[]
   idempotencyRequests           IdempotencyRequest[]
 }
 
+model AnonymousRecoveryCredential {
+  account               Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId             String    @id
+  keyHash               String    @unique
+  pendingKeyCiphertext  String?
+  acknowledgedAt        DateTime?
+  onboardingCompletedAt DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
 model IdempotencyRequest {
-  account     Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  account     Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
   accountId   String
   operation   String
-  requestId   String   @db.Uuid
+  requestId   String    @db.Uuid
   requestHash String
   result      Json?
-  createdAt   DateTime @default(now())
+  createdAt   DateTime  @default(now())
   completedAt DateTime?
 
   @@id([accountId, operation, requestId])
@@ -288,12 +301,12 @@ model Verification {
 // ---------------------------------------------------------------------------
 
 model Ledger {
-  id                        String   @id
+  id           String   @id
   // The base currency of the ledger. `currency` is the display symbol (e.g. "$"),
   // `currencyCode` is the ISO-4217 code (e.g. "USD") or null for custom currencies.
-  currency                  String   @default("$")
-  currencyCode              String?
-  createdAt                 DateTime @default(now())
+  currency     String   @default("$")
+  currencyCode String?
+  createdAt    DateTime @default(now())
 
   participants           LedgerParticipant[]
   expenses               Expense[]
@@ -301,7 +314,7 @@ model Ledger {
   documents              ExpenseDocument[]        @relation("LedgerDocuments")
   recurringExpenseSeries RecurringExpenseSeries[]
 
-  group Group?
+  group   Group?
   budgets GroupBudget[]
 }
 
@@ -318,28 +331,28 @@ enum BudgetScopeMode {
 }
 
 model GroupBudget {
-  id                 String          @id
-  group              Group           @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  id                 String             @id
+  group              Group              @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId            String
-  ledger             Ledger          @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
+  ledger             Ledger             @relation(fields: [ledgerId], references: [id], onDelete: Cascade)
   ledgerId           String
   name               String
   amount             Int
   period             BudgetPeriod
-  timeZone           String          @default("UTC")
-  customStartDate    DateTime?       @db.Date
-  customEndDate      DateTime?       @db.Date
-  categoryScope      BudgetScopeMode @default(ALL)
-  categoryNodeIds    String[]        @default([])
-  participantScope   BudgetScopeMode @default(ALL)
-  participantIds     String[]        @default([])
-  notifyTrending     Boolean         @default(true)
-  notifyOver         Boolean         @default(true)
-  archived           Boolean         @default(false)
+  timeZone           String             @default("UTC")
+  customStartDate    DateTime?          @db.Date
+  customEndDate      DateTime?          @db.Date
+  categoryScope      BudgetScopeMode    @default(ALL)
+  categoryNodeIds    String[]           @default([])
+  participantScope   BudgetScopeMode    @default(ALL)
+  participantIds     String[]           @default([])
+  notifyTrending     Boolean            @default(true)
+  notifyOver         Boolean            @default(true)
+  archived           Boolean            @default(false)
   archivedAt         DateTime?
   createdByAccountId String
-  createdAt          DateTime         @default(now())
-  updatedAt          DateTime         @updatedAt
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
   alerts             GroupBudgetAlert[]
 
   @@index([groupId, archived])
@@ -352,13 +365,13 @@ enum BudgetAlertType {
 }
 
 model GroupBudgetAlert {
-  id            String          @id
-  budget        GroupBudget      @relation(fields: [budgetId], references: [id], onDelete: Cascade)
-  budgetId      String
-  periodStart   DateTime         @db.Date
-  alertType     BudgetAlertType
-  createdAt     DateTime         @default(now())
-  deliveredAt   DateTime?
+  id          String          @id
+  budget      GroupBudget     @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  budgetId    String
+  periodStart DateTime        @db.Date
+  alertType   BudgetAlertType
+  createdAt   DateTime        @default(now())
+  deliveredAt DateTime?
 
   @@unique([budgetId, periodStart, alertType])
   @@index([budgetId, periodStart])
@@ -448,7 +461,7 @@ model Group {
   accountPreferences AccountGroupPreference[]
   defaultSplits      AccountGroupDefaultSplit[]
   budgets            GroupBudget[]
-  subgroupsEnabled   Boolean       @default(false)
+  subgroupsEnabled   Boolean                    @default(false)
   subgroups          Subgroup[]
   // Two-person friend ledgers: the unordered account pair key stored as
   // "accountAId:accountBId" where accountAId < accountBId. Null during the
@@ -472,10 +485,10 @@ model Subgroup {
 }
 
 model SubgroupMember {
-  subgroup             Subgroup          @relation(fields: [subgroupId], references: [id], onDelete: Cascade)
-  subgroupId           String
-  ledgerParticipant    LedgerParticipant @relation(fields: [ledgerParticipantId], references: [id], onDelete: Cascade)
-  ledgerParticipantId  String            @unique
+  subgroup            Subgroup          @relation(fields: [subgroupId], references: [id], onDelete: Cascade)
+  subgroupId          String
+  ledgerParticipant   LedgerParticipant @relation(fields: [ledgerParticipantId], references: [id], onDelete: Cascade)
+  ledgerParticipantId String            @unique
 
   @@id([subgroupId, ledgerParticipantId])
 }
@@ -610,17 +623,17 @@ model AccountPreference {
   accountId String  @unique
 
   // Values are validated against shared @spliit/domain schemas at API boundaries.
-  defaultCurrencyCode   String?
-  timeZone              String?
-  locale                String?
-  theme                 String?
-  mascot                String   @default("bill")
+  defaultCurrencyCode String?
+  timeZone            String?
+  locale              String?
+  theme               String?
+  mascot              String  @default("bill")
 
-  notificationsEnabled      Boolean  @default(true)
-  aiFeaturesEnabled         Boolean  @default(true)
-  aiCategoryExtractEnabled  Boolean? @default(true)
-  aiReceiptScanEnabled      Boolean? @default(true)
-  aiVoiceExpenseEnabled     Boolean? @default(true)
+  notificationsEnabled     Boolean  @default(true)
+  aiFeaturesEnabled        Boolean  @default(true)
+  aiCategoryExtractEnabled Boolean? @default(true)
+  aiReceiptScanEnabled     Boolean? @default(true)
+  aiVoiceExpenseEnabled    Boolean? @default(true)
 }
 
 model AccountGroupPreference {
@@ -746,10 +759,10 @@ model ExpenseDocument {
   contentType String?
   width       Int?
   height      Int?
-  Expense   Expense? @relation(fields: [expenseId], references: [id])
-  expenseId String?
-  Ledger    Ledger   @relation("LedgerDocuments", fields: [ledgerId], references: [id])
-  ledgerId  String
+  Expense     Expense? @relation(fields: [expenseId], references: [id])
+  expenseId   String?
+  Ledger      Ledger   @relation("LedgerDocuments", fields: [ledgerId], references: [id])
+  ledgerId    String
 
   @@index([ledgerId])
 }

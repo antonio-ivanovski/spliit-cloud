@@ -380,7 +380,8 @@
       "useInvitedEmail": "Använd den e-postadress du blev inbjuden med."
     },
     "signInWithX": "Fortsätt med X",
-    "signInWithOidc": "Fortsätt med {name}"
+    "signInWithOidc": "Fortsätt med {name}",
+    "signInAnonymously": "Anonym"
   },
   "Balances": {
     "title": "Balanser",
@@ -2080,7 +2081,11 @@
     "accountSettings": "Kontoinställningar",
     "back": "Tillbaka",
     "menu": "Meny",
-    "feedback": "Återkoppling"
+    "feedback": "Återkoppling",
+    "anonymousSignOutWarning": "Det här anonyma kontot kan endast återställas med din sparade inloggningslänk. Logga ut nu?",
+    "signOutTitle": "Logga ut?",
+    "signOutError": "Kunde inte logga ut. Försök igen.",
+    "cancel": "Avbryt"
   },
   "Homepage": {
     "title": "Dela <strong>utgifter</strong> med <strong>vänner & familj</strong>",
@@ -2926,5 +2931,74 @@
     "fromParticipant": "från {name}",
     "createSingle": "Registrera betalning",
     "createMultiple": "Registrera {count} betalningar"
+  },
+  "AnonymousAccount": {
+    "signup": {
+      "title": "Anonymt konto",
+      "description": "Skapa ett anonymt konto utan e-postadress, lösenord eller social inloggning.",
+      "warning": "Din data lagras i Spliit Cloud, men det här kontot har ingen e-post eller annan återställningsmetod. Du måste spara inloggningslänken som visas härnäst.",
+      "cancel": "Avbryt",
+      "recoverDescription": "Klistra in din sparade inloggningslänk för att återgå till ett befintligt anonymt konto.",
+      "recoveryOnlyHelp": "Nya anonyma konton är inte tillgängliga här. Klistra in din fullständiga sparade inloggningslänk för att fortsätta.",
+      "recover": "Återställ anonymt konto",
+      "create": "Skapa anonymt konto",
+      "createError": "Det anonyma kontot kunde inte skapas. Försök igen.",
+      "recoverError": "Denna inloggningslänk är ogiltig. Kontrollera hela länken och försök igen.",
+      "recoveryLinkRequiredLabel": "Inloggningslänk",
+      "createTitle": "Skapa ett nytt konto",
+      "or": "ELLER",
+      "recoverTitle": "Har du redan ett anonymt konto?"
+    },
+    "onboarding": {
+      "title": "Spara din inloggningslänk",
+      "description": "Detta är det enda sättet att komma tillbaka till ditt anonyma konto efter att ha loggat ut, rensat webbläsardata eller flyttat till en annan enhet.",
+      "unavailableTitle": "Din inloggningslänk kan inte visas",
+      "unavailableDescription": "Skapa en ersättningslänk uttryckligen och spara den sedan innan du fortsätter.",
+      "generateReplacement": "Generera ersättningslänk",
+      "error": "Något gick fel. Försök igen.",
+      "start": "Börja använda Spliit"
+    },
+    "recovery": {
+      "warningTitle": "Spara detta på ett säkert ställe",
+      "warning": "Den här länken upphör aldrig att gälla eller ändras om du inte ersätter den. Alla som har det kan komma åt ditt anonyma konto.",
+      "storedDataNote": "Anonym betyder att kontot inte är kopplat till en inloggningsidentitet. Din kontodata lagras fortfarande i Spliit Cloud.",
+      "linkLabel": "Inloggningslänk",
+      "copyLink": "Kopiera länk",
+      "copied": "Kopierade",
+      "howItWorks": "Öppna inloggningslänken i valfri webbläsare för att logga in. Välj Anonym i den installerade PWA:n och klistra in hela inloggningslänken.",
+      "confirmation": "Jag kopierade och lagrade min inloggningslänk på ett säkert sätt.",
+      "copyFailed": "Kopieringen misslyckades. Markera inloggningslänken och kopiera den manuellt."
+    },
+    "recover": {
+      "title": "Återställ anonymt konto",
+      "description": "Öppna din sparade inloggningslänk eller klistra in hela länken nedan.",
+      "howItWorks": "En inloggningslänk loggar in dig när den öppnas i en webbläsare. I den installerade PWA, välj Anonym och klistra in hela den sparade länken.",
+      "recovering": "Återställer ditt konto...",
+      "invalid": "Denna inloggningslänk är ogiltig. Kontrollera hela länken och försök igen.",
+      "anonymousAccount": "anonymt konto",
+      "switchTitle": "Byta konto?",
+      "switchDescription": "Du är redan inloggad. Fortsätt att byta webbläsare till {name}.",
+      "switchConfirm": "Byt och återställ",
+      "submit": "Återställ konto",
+      "back": "Tillbaka för att logga in",
+      "linkLabel": "Inloggningslänk"
+    },
+    "settings": {
+      "recoveryTitle": "Inloggningslänk",
+      "recoveryDescription": "Det här anonyma kontot kan endast återställas med din sparade länk. Öppna den i en webbläsare eller välj Anonym och klistra in hela länken i den installerade PWA. Den aktuella länken kan inte visas igen.",
+      "replace": "Ersätt inloggningslänk",
+      "replaceTitle": "Vill du byta ut din inloggningslänk?",
+      "replaceDescription": "Skapa en ersättningslänk för att granska och spara. Din nuvarande inloggningslänk fortsätter att fungera tills du aktiverar ersättningen.",
+      "cancel": "Avbryt",
+      "replaceConfirm": "Generera ersättningslänk",
+      "error": "Inloggningslänken kunde inte ersättas. Försök igen.",
+      "activateDescription": "Spara ersättningslänken innan du aktiverar den.",
+      "stagedDescription": "Din nuvarande inloggningslänk fortsätter att fungera tills du aktiverar den här ersättningen. Stängning eller uppdatering kasserar ersättningen.",
+      "activateConfirm": "Aktivera ersättning",
+      "linkAccountTitle": "Länka till ett konto",
+      "linkAccountDescription": "Anslut det här anonyma kontot till e-post eller social inloggning.",
+      "comingSoon": "Kommer snart",
+      "replacementActivated": "Din ersättande inloggningslänk är nu aktiv."
+    }
   }
 }

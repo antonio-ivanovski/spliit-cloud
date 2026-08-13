@@ -1,5 +1,9 @@
 import { oauthProviderClient } from '@better-auth/oauth-provider/client'
-import { genericOAuthClient, magicLinkClient } from 'better-auth/client/plugins'
+import {
+  anonymousClient,
+  genericOAuthClient,
+  magicLinkClient,
+} from 'better-auth/client/plugins'
 import { createAuthClient } from 'better-auth/react'
 
 import { getApiBaseUrl } from './api-url'
@@ -20,11 +24,18 @@ export const authClient = createAuthClient({
   fetchOptions: {
     credentials: 'include',
   },
-  plugins: [oauthProviderClient(), magicLinkClient(), genericOAuthClient()],
+  plugins: [
+    oauthProviderClient(),
+    magicLinkClient(),
+    genericOAuthClient(),
+    anonymousClient(),
+  ],
 })
 
 export type AuthSession = NonNullable<
   ReturnType<typeof authClient.useSession>['data']
 >
 
-export type AuthAccount = AuthSession['user']
+export type AuthAccount = Omit<AuthSession['user'], 'isAnonymous'> & {
+  isAnonymous?: boolean | null
+}

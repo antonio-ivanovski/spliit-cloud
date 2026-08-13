@@ -8,7 +8,10 @@ import {
   clearAccountCache,
   invalidateAccountCache,
 } from '../lib/auth/account-cache'
-import { getAuthFromRequest } from '../lib/auth/session'
+import {
+  getApplicationAuthFromRequest,
+  getAuthFromRequest,
+} from '../lib/auth/session'
 import { authState, prismaMock } from './state'
 
 function makeRequest(): Request {
@@ -134,5 +137,56 @@ describe('getAuthFromRequest', () => {
     authState.session = null
     const result = await getAuthFromRequest(makeRequest())
     expect(result).toBeNull()
+  })
+})
+
+describe('getApplicationAuthFromRequest', () => {
+  beforeEach(() => {
+    clearAccountCache()
+  })
+
+  it('blocks an anonymous account with unfinished recovery setup', async () => {
+    authState.session = {
+      user: { id: 'anonymous-pending' },
+      session: { id: 'sess-pending' },
+    }
+    prismaMock.account.findUnique.mockResolvedValue({
+      id: 'anonymous-pending',
+      name: 'Guest',
+      isAnonymous: true,
+    } as never)
+    prismaMock.anonymousRecoveryCredential.findUnique.mockResolvedValue({
+      acknowledgedAt: null,
+      onboardingCompletedAt: null,
+    } as never)
+
+    const result = await getApplicationAuthFromRequest(makeRequest())
+
+    expect(result.auth).toBeUndefined()
+    expect(result.response?.status).toBe(428)
+    await expect(result.response?.json()).resolves.toEqual({
+      error: 'ANONYMOUS_SETUP_REQUIRED',
+    })
+  })
+
+  it('allows an anonymous account with acknowledged recovery setup', async () => {
+    authState.session = {
+      user: { id: 'anonymous-ready' },
+      session: { id: 'sess-ready' },
+    }
+    prismaMock.account.findUnique.mockResolvedValue({
+      id: 'anonymous-ready',
+      name: 'Guest',
+      isAnonymous: true,
+    } as never)
+    prismaMock.anonymousRecoveryCredential.findUnique.mockResolvedValue({
+      acknowledgedAt: new Date(),
+      onboardingCompletedAt: new Date(),
+    } as never)
+
+    const result = await getApplicationAuthFromRequest(makeRequest())
+
+    expect(result.response).toBeUndefined()
+    expect(result.auth?.user.id).toBe('anonymous-ready')
   })
 })

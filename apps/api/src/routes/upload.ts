@@ -16,7 +16,7 @@ import {
 } from '@spliit/domain'
 
 import { randomId } from '../lib/api/shared'
-import { getAuthFromRequest } from '../lib/auth/session'
+import { getApplicationAuthFromRequest } from '../lib/auth/session'
 import { env } from '../lib/env'
 import {
   openSourceDocumentClaims,
@@ -65,10 +65,8 @@ export async function createProfileImageUploadUrl(
   request: Request,
   fileSize?: number,
 ) {
-  const auth = await getAuthFromRequest(request)
-  if (!auth) {
-    return Response.json({ error: 'Unauthenticated' }, { status: 401 })
-  }
+  const { auth, response } = await getApplicationAuthFromRequest(request)
+  if (response) return response
   return mintProfileImagePresign({ fileSize, accountId: auth.user.id })
 }
 
@@ -566,10 +564,8 @@ export async function createUploadUrl(
 ) {
   // Auth is checked first so unauthenticated callers always get 401, even
   // when the server-side uploader is not configured.
-  const auth = await getAuthFromRequest(request)
-  if (!auth) {
-    return Response.json({ error: 'Unauthenticated' }, { status: 401 })
-  }
+  const { auth, response } = await getApplicationAuthFromRequest(request)
+  if (response) return response
 
   // Presign URLs are only minted for authenticated members of the target
   // ledger. Uploads without a ledgerId are not allowed because the resulting
@@ -590,7 +586,7 @@ export async function createUploadUrl(
 /**
  * Presign a document upload for an already-authenticated account. Used by the
  * tRPC `uploads.presign` mutation — the `protectedProcedure` middleware has
- * already enforced auth, so we skip the `getAuthFromRequest` round-trip the
+ * already enforced auth, so we skip the authentication round-trip the
  * HTTP-shaped helper requires.
  */
 export async function createUploadPresignForAccount({

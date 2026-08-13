@@ -57,7 +57,11 @@
     "accountSettings": "Account settings",
     "back": "Back",
     "menu": "Menu",
-    "feedback": "Feedback"
+    "feedback": "Feedback",
+    "anonymousSignOutWarning": "This anonymous account can only be accessed with your saved sign in link. Sign out now?",
+    "signOutTitle": "Sign out?",
+    "signOutError": "Could not sign out. Please try again.",
+    "cancel": "Cancel"
   },
   "Common": {
     "close": "Close",
@@ -754,7 +758,8 @@
       "useInvitedEmail": "Use the email address you were invited with."
     },
     "signInWithX": "Continue with X",
-    "signInWithOidc": "Continue with {name}"
+    "signInWithOidc": "Continue with {name}",
+    "signInAnonymously": "Anonymous"
   },
   "AccountSettings": {
     "title": "Account settings",
@@ -3002,5 +3007,74 @@
     "fromParticipant": "from {name}",
     "createSingle": "Record payment",
     "createMultiple": "Record {count} payments"
+  },
+  "AnonymousAccount": {
+    "signup": {
+      "title": "Anonymous account",
+      "description": "Create a new anonymous account or use a saved sign in link.",
+      "warning": "Use Spliit without email, password, or social sign-in. Before you start, you will need to save a permanent sign in link.",
+      "cancel": "Cancel",
+      "recoverDescription": "Paste your complete saved sign in link to access it.",
+      "recoveryOnlyHelp": "New anonymous accounts are not available here. Paste your complete saved sign in link to continue.",
+      "recover": "Sign in to anonymous account",
+      "create": "Create anonymous account",
+      "createError": "The anonymous account could not be created. Please try again.",
+      "recoverError": "This sign in link is invalid. Check the complete link and try again.",
+      "recoveryLinkRequiredLabel": "Sign in link",
+      "createTitle": "Create a new account",
+      "or": "OR",
+      "recoverTitle": "Already have an anonymous account?"
+    },
+    "onboarding": {
+      "title": "Save your sign in link",
+      "description": "This is the only way to get back into your anonymous account after signing out, clearing browser data, or moving to another device.",
+      "unavailableTitle": "Your sign in link cannot be displayed",
+      "unavailableDescription": "Generate a replacement link explicitly, then save it before continuing.",
+      "generateReplacement": "Generate replacement link",
+      "error": "Something went wrong. Please try again.",
+      "start": "Start using Spliit"
+    },
+    "recovery": {
+      "warningTitle": "Save this somewhere safe",
+      "warning": "This link never expires or changes unless you replace it. Anyone who has it can access your anonymous account.",
+      "storedDataNote": "Anonymous means the account is not connected to a sign-in identity. Your account data is still stored in Spliit Cloud.",
+      "linkLabel": "Sign in link",
+      "copyLink": "Copy link",
+      "copied": "Copied",
+      "howItWorks": "Open the sign in link in any browser to access your account. In the installed PWA, choose Anonymous and paste the complete sign in link.",
+      "confirmation": "I copied and safely stored my sign in link.",
+      "copyFailed": "Copy failed. Select the sign in link and copy it manually."
+    },
+    "recover": {
+      "title": "Sign in to anonymous account",
+      "description": "Open your saved sign in link or paste the complete link below.",
+      "howItWorks": "A sign in link gives access to your account when opened in a browser. In the installed PWA, choose Anonymous and paste the complete saved link.",
+      "recovering": "Signing in to your account…",
+      "invalid": "This sign in link is invalid. Check the complete link and try again.",
+      "anonymousAccount": "anonymous account",
+      "switchTitle": "Switch accounts?",
+      "switchDescription": "You are already signed in. Continue to switch this browser to {name}.",
+      "switchConfirm": "Switch and sign in",
+      "submit": "Sign in",
+      "back": "Back to sign in",
+      "linkLabel": "Sign in link"
+    },
+    "settings": {
+      "recoveryTitle": "Sign in link",
+      "recoveryDescription": "This anonymous account can only be accessed with your saved link. Open it in a browser, or choose Anonymous and paste the complete link in the installed PWA. The current link cannot be shown again.",
+      "replace": "Replace sign in link",
+      "replaceTitle": "Replace your sign in link?",
+      "replaceDescription": "Generate a replacement link to review and save. Your current sign in link keeps working until you activate the replacement.",
+      "cancel": "Cancel",
+      "replaceConfirm": "Generate replacement link",
+      "error": "The sign in link could not be replaced. Please try again.",
+      "activateDescription": "Save the replacement link before activating it.",
+      "stagedDescription": "Your current sign in link keeps working until you activate this replacement. Closing or refreshing discards the replacement.",
+      "activateConfirm": "Activate replacement",
+      "linkAccountTitle": "Link to account",
+      "linkAccountDescription": "Connect this anonymous account to email or a social sign-in.",
+      "comingSoon": "Coming soon",
+      "replacementActivated": "Your replacement sign in link is now active."
+    }
   }
 }

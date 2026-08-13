@@ -57,7 +57,11 @@
     "accountSettings": "Kontuaren ezarpenak",
     "back": "Atzera",
     "menu": "Menua",
-    "feedback": "Iritzia"
+    "feedback": "Iritzia",
+    "anonymousSignOutWarning": "Kontu anonimo hau gordetako saioa hasteko estekarekin soilik berreskura daiteke. Saioa amaitu nahi duzu?",
+    "signOutTitle": "Saioa amaitu?",
+    "signOutError": "Ezin izan da saioa amaitu. Mesedez, saiatu berriro.",
+    "cancel": "Utzi"
   },
   "Footer": {
     "madeIn": "Kode irekiko komunitateak maitasunez egina ❤️",
@@ -1697,7 +1701,8 @@
       "useInvitedEmail": "Erabili gonbidapena jaso zenuen helbide elektronikoa."
     },
     "signInWithX": "Jarraitu X-ekin",
-    "signInWithOidc": "Jarraitu {name}-rekin"
+    "signInWithOidc": "Jarraitu {name}-rekin",
+    "signInAnonymously": "Anonimoa"
   },
   "CompleteProfile": {
     "title": "Osatu zure profila",
@@ -2947,5 +2952,74 @@
     "fromParticipant": "{name}-gandik",
     "createSingle": "Erregistratu ordainketa",
     "createMultiple": "Erregistratu {count} ordainketa"
+  },
+  "AnonymousAccount": {
+    "signup": {
+      "title": "Kontu anonimoa",
+      "description": "Sortu kontu anonimo bat helbide elektronikorik, pasahitzik edo sare sozialetan saioa hasi gabe.",
+      "warning": "Zure datuak Split Cloud-en gordetzen dira, baina kontu honek ez du posta elektronikorik edo beste berreskuratzeko metodorik. Ondoren agertzen den saioa hasteko esteka gorde behar duzu.",
+      "cancel": "Utzi",
+      "recoverDescription": "Itsatsi gordetako saioa hasteko esteka lehendik dagoen kontu anonimo batera itzultzeko.",
+      "recoveryOnlyHelp": "Hemen ez daude kontu anonimo berriak erabilgarri. Jarraitzeko, itsatsi gordetako saioa hasteko esteka osoa.",
+      "recover": "Berreskuratu kontu anonimoa",
+      "create": "Sortu kontu anonimoa",
+      "createError": "Ezin izan da sortu kontu anonimoa. Mesedez, saiatu berriro.",
+      "recoverError": "Saioa hasteko esteka hau baliogabea da. Egiaztatu esteka osoa eta saiatu berriro.",
+      "recoveryLinkRequiredLabel": "Saioa hasteko esteka",
+      "createTitle": "Sortu kontu berria",
+      "or": "EDO",
+      "recoverTitle": "Baduzu kontu anonimo bat?"
+    },
+    "onboarding": {
+      "title": "Gorde saioa hasteko esteka",
+      "description": "Hau da zure kontu anonimoan itzultzeko modu bakarra saioa amaitu ondoren, arakatzailearen datuak garbitu edo beste gailu batera eraman ondoren.",
+      "unavailableTitle": "Zure saioa hasteko esteka ezin da bistaratu",
+      "unavailableDescription": "Sortu ordezko esteka bat esplizituki, gero gorde jarraitu aurretik.",
+      "generateReplacement": "Sortu ordezko esteka",
+      "error": "Zerbait gaizki joan da. Mesedez, saiatu berriro.",
+      "start": "Hasi Split erabiltzen"
+    },
+    "recovery": {
+      "warningTitle": "Gorde hau leku seguru batean",
+      "warning": "Esteka hau ez da inoiz iraungitzen edo aldatzen ez baduzu ordezkatzen. Hori duen edonork sar dezake zure kontu anonimoa.",
+      "storedDataNote": "Anonimoak esan nahi du kontua ez dagoela saioa hasteko identitate batekin konektatuta. Zure kontuaren datuak Split Cloud-en gordetzen dira oraindik.",
+      "linkLabel": "Saioa hasteko esteka",
+      "copyLink": "Kopiatu esteka",
+      "copied": "Kopiatua",
+      "howItWorks": "Ireki saioa hasteko esteka edozein arakatzailetan saioa hasteko. Instalatutako PWA-n, aukeratu Anonimoa eta itsatsi saioa hasteko esteka osoa.",
+      "confirmation": "Nire saioa hasteko esteka kopiatu eta segurtasunez gorde nuen.",
+      "copyFailed": "Ezin izan da kopiatu. Hautatu saioa hasteko esteka eta kopiatu eskuz."
+    },
+    "recover": {
+      "title": "Berreskuratu kontu anonimoa",
+      "description": "Ireki gordetako saioa hasteko esteka edo itsatsi beheko esteka osoa.",
+      "howItWorks": "Saioa hasteko esteka batek saioa hasten du arakatzaile batean irekitzen duzunean. Instalatutako PWA-n, aukeratu Anonimoa eta itsatsi gordetako esteka osoa.",
+      "recovering": "Zure kontua berreskuratzen…",
+      "invalid": "Saioa hasteko esteka hau ez da baliozkoa. Egiaztatu esteka osoa eta saiatu berriro.",
+      "anonymousAccount": "kontu anonimoa",
+      "switchTitle": "Kontuz aldatu?",
+      "switchDescription": "Saioa hasi duzu dagoeneko. Jarraitu arakatzaile hau {name}-ra aldatzen.",
+      "switchConfirm": "Aldatu eta berreskuratu",
+      "submit": "Berreskuratu kontua",
+      "back": "Itzuli saioa hasteko",
+      "linkLabel": "Saioa hasteko esteka"
+    },
+    "settings": {
+      "recoveryTitle": "Saioa hasteko esteka",
+      "recoveryDescription": "Kontu anonimo hau gordetako estekarekin soilik berreskura daiteke. Ireki arakatzaile batean edo aukeratu Anonimoa eta itsatsi esteka osoa instalatutako PWA-n. Uneko esteka ezin da berriro erakutsi.",
+      "replace": "Ordeztu saioa hasteko esteka",
+      "replaceTitle": "Saioa hasteko esteka ordeztu?",
+      "replaceDescription": "Sortu ordezko esteka bat berrikusteko eta gordetzeko. Oraingo saioa hasteko estekak funtzionatzen jarraituko du ordezkoa aktibatu arte.",
+      "cancel": "Utzi",
+      "replaceConfirm": "Sortu ordezko esteka",
+      "error": "Ezin izan da saioa hasteko esteka ordeztu. Mesedez, saiatu berriro.",
+      "activateDescription": "Gorde ordezko esteka aktibatu aurretik.",
+      "stagedDescription": "Zure oraingo saioa hasteko estekak funtzionatzen jarraituko du ordezko hau aktibatzen duzun arte. Itxi edo freskatzeak ordezkoa baztertzen du.",
+      "activateConfirm": "Aktibatu ordezkoa",
+      "linkAccountTitle": "Lotu kontu batera",
+      "linkAccountDescription": "Lotu kontu anonimo hau posta elektroniko edo sare sozial bidezko saio-hasiera batekin.",
+      "comingSoon": "Laster",
+      "replacementActivated": "Ordezko saioa hasteko esteka aktibo dago orain."
+    }
   }
 }

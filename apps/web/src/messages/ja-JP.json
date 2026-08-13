@@ -57,7 +57,11 @@
     "accountSettings": "アカウント設定",
     "back": "戻る",
     "menu": "メニュー",
-    "feedback": "フィードバック"
+    "feedback": "フィードバック",
+    "anonymousSignOutWarning": "この匿名アカウントは、保存したサインインリンクを使用してのみ回復できます。今すぐサインアウトしますか?",
+    "signOutTitle": "サインアウトしますか?",
+    "signOutError": "サインアウトできませんでした。もう一度試してください。",
+    "cancel": "キャンセル"
   },
   "Footer": {
     "madeIn": "オープンソースコミュニティによって愛を込めて作られました ❤️",
@@ -1682,7 +1686,8 @@
       "useInvitedEmail": "招待されたメールアドレスを使用してください。"
     },
     "signInWithX": "Xで続ける",
-    "signInWithOidc": "{name}で続ける"
+    "signInWithOidc": "{name}で続ける",
+    "signInAnonymously": "匿名"
   },
   "CompleteProfile": {
     "title": "プロフィールを完成",
@@ -2913,5 +2918,74 @@
     "fromParticipant": "{name}さんから",
     "createSingle": "支払いを記録",
     "createMultiple": "{count}件の支払いを記録"
+  },
+  "AnonymousAccount": {
+    "signup": {
+      "title": "匿名アカウント",
+      "description": "電子メール アドレス、パスワード、ソーシャル サインインを使用せずに匿名アカウントを作成します。",
+      "warning": "データは Spliit Cloud に保存されますが、このアカウントには電子メールやその他の回復方法がありません。次に示すサインインリンクを保存する必要があります。",
+      "cancel": "キャンセル",
+      "recoverDescription": "保存したサインインリンクを貼り付けて、既存の匿名アカウントに戻ります。",
+      "recoveryOnlyHelp": "ここでは新しい匿名アカウントは利用できません。保存した完全なサインインリンクを貼り付けて続行します。",
+      "recover": "匿名アカウントを回復する",
+      "create": "匿名アカウントを作成する",
+      "createError": "匿名アカウントを作成できませんでした。もう一度試してください。",
+      "recoverError": "このサインインリンクは無効です。完全なリンクを確認して、再試行してください。",
+      "recoveryLinkRequiredLabel": "サインインリンク",
+      "createTitle": "新しいアカウントを作成",
+      "or": "または",
+      "recoverTitle": "匿名アカウントをお持ちですか？"
+    },
+    "onboarding": {
+      "title": "サインインリンクを保存します",
+      "description": "これは、サインアウトしたり、ブラウザ データをクリアしたり、別のデバイスに移動したりした後に、匿名アカウントに戻る唯一の方法です。",
+      "unavailableTitle": "サインインリンクは表示できません",
+      "unavailableDescription": "置換リンクを明示的に生成し、続行する前にそれを保存します。",
+      "generateReplacement": "置換リンクの生成",
+      "error": "何か問題が発生しました。もう一度試してください。",
+      "start": "Split の使用を開始する"
+    },
+    "recovery": {
+      "warningTitle": "これを安全な場所に保存してください",
+      "warning": "このリンクは、置き換えない限り期限切れになったり、変更されたりすることはありません。それを持っている人は誰でもあなたの匿名アカウントにアクセスできます。",
+      "storedDataNote": "匿名とは、アカウントがサインイン ID に接続されていないことを意味します。アカウント データは Spliit Cloud に引き続き保存されます。",
+      "linkLabel": "サインインリンク",
+      "copyLink": "リンクをコピー",
+      "copied": "コピーされました",
+      "howItWorks": "任意のブラウザでサインインリンクを開いてサインインします。インストールされた PWA で [匿名] を選択し、完全なサインインリンクを貼り付けます。",
+      "confirmation": "サインインリンクをコピーして安全に保管しました。",
+      "copyFailed": "コピーできませんでした。サインインリンクを選択して手動でコピーしてください。"
+    },
+    "recover": {
+      "title": "匿名アカウントを回復する",
+      "description": "保存したサインインリンクを開くか、以下の完全なリンクを貼り付けてください。",
+      "howItWorks": "サインインリンクは、ブラウザーで開くとサインインします。インストールされた PWA で、[匿名] を選択し、保存された完全なリンクを貼り付けます。",
+      "recovering": "アカウントを回復しています…",
+      "invalid": "このサインインリンクは無効です。完全なリンクを確認して、再試行してください。",
+      "anonymousAccount": "匿名アカウント",
+      "switchTitle": "アカウントを切り替えますか?",
+      "switchDescription": "すでにサインインしています。引き続きこのブラウザを {name} に切り替えてください。",
+      "switchConfirm": "切り替えて回復する",
+      "submit": "アカウントを回復する",
+      "back": "サインインに戻る",
+      "linkLabel": "サインインリンク"
+    },
+    "settings": {
+      "recoveryTitle": "サインインリンク",
+      "recoveryDescription": "この匿名アカウントは、保存したリンクを使用してのみ復元できます。ブラウザで開くか、[匿名] を選択して、インストールされている PWA に完全なリンクを貼り付けます。現在のリンクを再度表示することはできません。",
+      "replace": "サインインリンクを交換します",
+      "replaceTitle": "サインインリンクを交換しますか?",
+      "replaceDescription": "確認して保存するための置換リンクを生成します。現在のサインインリンクは、代替リンクをアクティブ化するまで機能し続けます。",
+      "cancel": "キャンセル",
+      "replaceConfirm": "置換リンクの生成",
+      "error": "サインインリンクを交換できませんでした。もう一度試してください。",
+      "activateDescription": "置換リンクをアクティブ化する前に保存してください。",
+      "stagedDescription": "現在のサインインリンクは、この代替品をアクティブ化するまで機能し続けます。閉じるか更新すると、置換は破棄されます。",
+      "activateConfirm": "置換をアクティブ化する",
+      "linkAccountTitle": "アカウントに連携",
+      "linkAccountDescription": "この匿名アカウントをメールまたはソーシャルログインに連携します。",
+      "comingSoon": "近日公開",
+      "replacementActivated": "新しいサインインリンクが有効になりました。"
+    }
   }
 }

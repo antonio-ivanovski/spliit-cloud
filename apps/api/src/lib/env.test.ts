@@ -156,6 +156,54 @@ describe('envSchema — development', () => {
     expect(env.SIGNUP_MODE).toBe('open')
   })
 
+  it('defaults anonymous account creation to disabled', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('ENABLE_ANONYMOUS_AUTH', '')
+    vi.resetModules()
+    const { env } = await import('./env')
+    expect(env.ENABLE_ANONYMOUS_AUTH).toBe(false)
+  })
+
+  it('parses the deployed false value for anonymous account creation', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('ENABLE_ANONYMOUS_AUTH', 'false')
+    vi.resetModules()
+    const { env } = await import('./env')
+    expect(env.ENABLE_ANONYMOUS_AUTH).toBe(false)
+  })
+
+  it('parses enabled anonymous account creation', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('ENABLE_ANONYMOUS_AUTH', 'true')
+    vi.stubEnv('BETTER_AUTH_SECRET', 'test-secret')
+    vi.stubEnv('TRUST_PROXY', 'true')
+    vi.resetModules()
+    const { env } = await import('./env')
+    expect(env.ENABLE_ANONYMOUS_AUTH).toBe(true)
+  })
+
+  it('requires a Better Auth secret for anonymous account creation', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('ENABLE_ANONYMOUS_AUTH', 'true')
+    vi.stubEnv('BETTER_AUTH_SECRET', '')
+    vi.stubEnv('TRUST_PROXY', 'true')
+    vi.resetModules()
+    await expect(import('./env')).rejects.toThrow(
+      /BETTER_AUTH_SECRET is required when ENABLE_ANONYMOUS_AUTH is true/,
+    )
+  })
+
+  it('requires a trusted proxy for anonymous signup rate limits', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('ENABLE_ANONYMOUS_AUTH', 'true')
+    vi.stubEnv('BETTER_AUTH_SECRET', 'test-secret')
+    vi.stubEnv('TRUST_PROXY', 'false')
+    vi.resetModules()
+    await expect(import('./env')).rejects.toThrow(
+      /TRUST_PROXY is required when ENABLE_ANONYMOUS_AUTH is true/,
+    )
+  })
+
   it('parses invite_only SIGNUP_MODE', async () => {
     vi.stubEnv('NODE_ENV', 'development')
     vi.stubEnv('SIGNUP_MODE', 'invite_only')

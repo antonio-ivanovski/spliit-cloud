@@ -702,7 +702,7 @@ describe('ExpenseForm', () => {
       }),
     )
     expect(
-      screen.getByRole('combobox', { name: 'Groceries' }),
+      await screen.findByRole('combobox', { name: 'Groceries' }),
     ).toBeInTheDocument()
   })
 

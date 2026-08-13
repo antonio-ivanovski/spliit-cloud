@@ -6,7 +6,17 @@ import { prismaMock } from '../test/state'
 const authMock = vi.hoisted(() => vi.fn())
 
 vi.mock('../lib/auth/session', () => ({
-  getAuthFromRequest: authMock,
+  getApplicationAuthFromRequest: async (request: Request) => {
+    const auth = await authMock(request)
+    return auth
+      ? { auth }
+      : {
+          response: Response.json(
+            { error: 'Unauthenticated' },
+            { status: 401 },
+          ),
+        }
+  },
 }))
 
 import { reportGroupData } from './report-data'

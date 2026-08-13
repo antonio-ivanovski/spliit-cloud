@@ -84,6 +84,8 @@ export class FixedWindowLimiter {
  * they are client-controlled and spoofable, so every caller shares a single
  * conservative bucket. Cloudflare's single-value client header is preferred;
  * generic proxy headers are compatibility fallbacks for self-hosted installs.
+ * For an appending trusted proxy, the right-most forwarded hop is the address
+ * observed by that proxy; earlier values may have been supplied by the client.
  */
 export function resolveClientIp(
   headers: Headers,

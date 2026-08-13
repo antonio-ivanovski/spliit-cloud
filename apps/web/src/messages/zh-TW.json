@@ -57,7 +57,11 @@
     "accountSettings": "帳戶設定",
     "back": "返回",
     "menu": "選單",
-    "feedback": "意見回饋"
+    "feedback": "意見回饋",
+    "anonymousSignOutWarning": "此匿名帳戶只能使用您儲存的登入連結來復原。現在退出嗎？",
+    "signOutTitle": "退出？",
+    "signOutError": "無法登出。請再試一次。",
+    "cancel": "取消"
   },
   "Footer": {
     "madeIn": "由開源社群用愛打造 ❤️",
@@ -1373,7 +1377,8 @@
       "useInvitedEmail": "請使用收到邀請的電子郵件地址。"
     },
     "signInWithX": "使用 X 繼續",
-    "signInWithOidc": "使用 {name} 繼續"
+    "signInWithOidc": "使用 {name} 繼續",
+    "signInAnonymously": "匿名"
   },
   "CompleteProfile": {
     "title": "完善您的個人資料",
@@ -2913,5 +2918,74 @@
     "fromParticipant": "來自{name}",
     "createSingle": "記錄付款",
     "createMultiple": "記錄 {count} 筆付款"
+  },
+  "AnonymousAccount": {
+    "signup": {
+      "title": "匿名帳戶",
+      "description": "建立一個沒有電子郵件地址、密碼或社群登入的匿名帳號。",
+      "warning": "您的資料儲存在Spliit Cloud中，但該帳戶沒有電子郵件或其他復原方法。您必須儲存接下來顯示的登入連結。",
+      "cancel": "取消",
+      "recoverDescription": "貼上您儲存的登入連結以返回現有的匿名帳戶。",
+      "recoveryOnlyHelp": "此處不提供新的匿名帳戶。貼上您完整保存的登入連結以繼續。",
+      "recover": "恢復匿名帳戶",
+      "create": "建立匿名帳戶",
+      "createError": "無法建立匿名帳戶。請再試一次。",
+      "recoverError": "此登入連結無效。檢查完整的連結並重試。",
+      "recoveryLinkRequiredLabel": "恢復鏈接",
+      "createTitle": "建立新帳戶",
+      "or": "或",
+      "recoverTitle": "已有匿名帳戶？"
+    },
+    "onboarding": {
+      "title": "保存您的恢復鏈接",
+      "description": "這是退出、清除瀏覽器資料或移動到其他裝置後返回匿名帳戶的唯一方法。",
+      "unavailableTitle": "您的登入連結無法顯示",
+      "unavailableDescription": "明確產生替換鏈接，然後在繼續之前保存它。",
+      "generateReplacement": "產生替換鏈接",
+      "error": "出了點問題。請再試一次。",
+      "start": "開始使用拆分"
+    },
+    "recovery": {
+      "warningTitle": "將其保存在安全的地方",
+      "warning": "該連結永遠不會過期或更改，除非您替換它。任何擁有它的人都可以存取您的匿名帳戶。",
+      "storedDataNote": "匿名表示該帳戶未連線到登入身分。您的帳戶資料仍儲存在 Split Cloud 中。",
+      "linkLabel": "登入連結",
+      "copyLink": "複製連結",
+      "copied": "已複製",
+      "howItWorks": "在任何瀏覽器中開啟登入連結進行登入。在已安裝的 PWA 中，選擇「匿名」並貼上完整的登入連結。",
+      "confirmation": "我複製並安全地儲存了我的登入連結。",
+      "copyFailed": "複製失敗。請選取登入連結並手動複製。"
+    },
+    "recover": {
+      "title": "恢復匿名帳戶",
+      "description": "打開您儲存的登入連結或貼上下面的完整連結。",
+      "howItWorks": "登入連結在瀏覽器中開啟時會讓您登入。在安裝的 PWA 中，選擇「匿名」並貼上完整的已儲存連結。",
+      "recovering": "正在恢復您的帳戶...",
+      "invalid": "此登入連結無效。檢查完整的連結並重試。",
+      "anonymousAccount": "匿名帳戶",
+      "switchTitle": "切換帳戶？",
+      "switchDescription": "您已登入。繼續將此瀏覽器切換到 {name}。",
+      "switchConfirm": "切換並恢復",
+      "submit": "恢復帳戶",
+      "back": "返回登入",
+      "linkLabel": "恢復鏈接"
+    },
+    "settings": {
+      "recoveryTitle": "恢復鏈接",
+      "recoveryDescription": "此匿名帳戶只能透過您儲存的連結來復原。在瀏覽器中開啟它，或選擇「匿名」並將完整連結貼到已安裝的 PWA 中。目前連結無法再次顯示。",
+      "replace": "替換恢復鏈接",
+      "replaceTitle": "替換您的登入連結？",
+      "replaceDescription": "產生替換連結以查看並儲存。您目前的登入連結將繼續有效，直到您啟動替代連結。",
+      "cancel": "取消",
+      "replaceConfirm": "產生替換鏈接",
+      "error": "無法替換登入連結。請再試一次。",
+      "activateDescription": "在啟動替換連結之前保存它。",
+      "stagedDescription": "您目前的登入連結將一直有效，直到您啟動此替代連結。關閉或刷新會放棄替換。",
+      "activateConfirm": "啟動替換",
+      "linkAccountTitle": "連結帳戶",
+      "linkAccountDescription": "將此匿名帳戶連結至電子郵件或社群登入方式。",
+      "comingSoon": "即將推出",
+      "replacementActivated": "您的替代登入連結現已生效。"
+    }
   }
 }

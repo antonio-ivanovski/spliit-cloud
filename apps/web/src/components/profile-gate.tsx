@@ -7,6 +7,7 @@ import { useCurrentAccount } from '@/lib/use-current-account'
 
 const ungatedPaths = new Set([
   '/auth/complete-profile',
+  '/auth/recover',
   '/privacy',
   '/terms',
   '/imprint',

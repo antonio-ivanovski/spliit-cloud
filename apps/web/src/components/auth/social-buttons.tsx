@@ -1,4 +1,4 @@
-import { KeyRound } from 'lucide-react'
+import { HatGlasses, KeyRound } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import githubSvg from '@/components/auth/github.svg'
@@ -16,6 +16,7 @@ export function SocialButtons({
   onGithub,
   onTwitter,
   onOidc,
+  onAnonymous,
 }: {
   googleEnabled: boolean
   githubEnabled: boolean
@@ -26,17 +27,9 @@ export function SocialButtons({
   onGithub: () => void
   onTwitter: () => void
   onOidc: (providerId: string) => void
+  onAnonymous: () => void
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
-
-  if (
-    !googleEnabled &&
-    !githubEnabled &&
-    !twitterEnabled &&
-    oidcProviders.length === 0
-  ) {
-    return null
-  }
 
   return (
     <section className="flex flex-col gap-3">
@@ -48,7 +41,7 @@ export function SocialButtons({
           onClick={onGoogle}
           disabled={disabled}
         >
-          <img src={googleSvg} alt="" className="me-2 h-4 w-4" />
+          <img src={googleSvg} alt="" className="me-2 h-4 w-4 dark:invert" />
           {t('signInWithGoogle')}
         </Button>
       )}
@@ -60,7 +53,7 @@ export function SocialButtons({
           onClick={onGithub}
           disabled={disabled}
         >
-          <img src={githubSvg} alt="" className="me-2 h-4 w-4" />
+          <img src={githubSvg} alt="" className="me-2 h-4 w-4 dark:invert" />
           {t('signInWithGithub')}
         </Button>
       )}
@@ -72,7 +65,7 @@ export function SocialButtons({
           onClick={onTwitter}
           disabled={disabled}
         >
-          <img src={xSvg} alt="" className="me-2 h-4 w-4" />
+          <img src={xSvg} alt="" className="me-2 h-4 w-4 dark:invert" />
           {t('signInWithX')}
         </Button>
       )}
@@ -89,6 +82,16 @@ export function SocialButtons({
           {t('signInWithOidc', { name: provider.name })}
         </Button>
       ))}
+      <Button
+        type="button"
+        variant="outline"
+        className="w-full justify-center border-border/80 bg-background"
+        onClick={onAnonymous}
+        disabled={disabled}
+      >
+        <HatGlasses className="me-2 h-4 w-4" />
+        {t('signInAnonymously')}
+      </Button>
     </section>
   )
 }

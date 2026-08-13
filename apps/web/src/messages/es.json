@@ -57,7 +57,11 @@
     "accountSettings": "Configuración de la cuenta",
     "back": "Volver",
     "menu": "Menú",
-    "feedback": "Comentarios"
+    "feedback": "Comentarios",
+    "anonymousSignOutWarning": "Esta cuenta anónima solo se puede recuperar con su enlace de inicio de sesión guardado. ¿Cerrar sesión ahora?",
+    "signOutTitle": "¿Cerrar sesión?",
+    "signOutError": "No se pudo cerrar sesión. Por favor inténtalo de nuevo.",
+    "cancel": "Cancelar"
   },
   "Footer": {
     "madeIn": "Hecho por la comunidad de código abierto con amor ❤️",
@@ -1697,7 +1701,8 @@
       "useInvitedEmail": "Usa la dirección de correo electrónico con la que te invitaron."
     },
     "signInWithX": "Continuar con X",
-    "signInWithOidc": "Continuar con {name}"
+    "signInWithOidc": "Continuar con {name}",
+    "signInAnonymously": "Anónimo"
   },
   "CompleteProfile": {
     "title": "Completa tu perfil",
@@ -2948,5 +2953,74 @@
     "fromParticipant": "de {name}",
     "createSingle": "Registrar pago",
     "createMultiple": "Registrar {count} pagos"
+  },
+  "AnonymousAccount": {
+    "signup": {
+      "title": "Cuenta anónima",
+      "description": "Cree una cuenta anónima sin dirección de correo electrónico, contraseña ni inicio de sesión social.",
+      "warning": "Tus datos se almacenan en Spliit Cloud, pero esta cuenta no tiene correo electrónico ni ningún otro método de recuperación. Debe guardar el enlace de inicio de sesión que se muestra a continuación.",
+      "cancel": "Cancelar",
+      "recoverDescription": "Pegue su enlace de inicio de sesión guardado para regresar a una cuenta anónima existente.",
+      "recoveryOnlyHelp": "Las nuevas cuentas anónimas no están disponibles aquí. Pegue su enlace de inicio de sesión completo guardado para continuar.",
+      "recover": "Recuperar cuenta anónima",
+      "create": "Crear cuenta anónima",
+      "createError": "No se pudo crear la cuenta anónima. Por favor inténtalo de nuevo.",
+      "recoverError": "Este enlace de inicio de sesión no es válido. Consulta el enlace completo y vuelve a intentarlo.",
+      "recoveryLinkRequiredLabel": "Enlace de inicio de sesión",
+      "createTitle": "Crear una cuenta nueva",
+      "or": "O",
+      "recoverTitle": "¿Ya tienes una cuenta anónima?"
+    },
+    "onboarding": {
+      "title": "Guarde su enlace de inicio de sesión",
+      "description": "Esta es la única forma de volver a acceder a su cuenta anónima después de cerrar sesión, borrar los datos del navegador o pasar a otro dispositivo.",
+      "unavailableTitle": "Su enlace de inicio de sesión no se puede mostrar",
+      "unavailableDescription": "Genere un enlace de reemplazo explícitamente y luego guárdelo antes de continuar.",
+      "generateReplacement": "Generar enlace de reemplazo",
+      "error": "Algo salió mal. Por favor inténtalo de nuevo.",
+      "start": "Comience a usar Split"
+    },
+    "recovery": {
+      "warningTitle": "Guarda esto en algún lugar seguro",
+      "warning": "Este enlace nunca caduca ni cambia a menos que lo reemplace. Cualquiera que lo tenga puede acceder a su cuenta anónima.",
+      "storedDataNote": "Anónimo significa que la cuenta no está conectada a una identidad de inicio de sesión. Los datos de su cuenta todavía están almacenados en Spliit Cloud.",
+      "linkLabel": "Enlace de inicio de sesión",
+      "copyLink": "Copiar enlace",
+      "copied": "copiado",
+      "howItWorks": "Abra el enlace de inicio de sesión en cualquier navegador para iniciar sesión. En la PWA instalada, elija Anónimo y pegue el enlace de inicio de sesión completo.",
+      "confirmation": "Copié y almacené de forma segura mi enlace de inicio de sesión.",
+      "copyFailed": "No se pudo copiar. Seleccione el enlace de inicio de sesión y cópielo manualmente."
+    },
+    "recover": {
+      "title": "Recuperar cuenta anónima",
+      "description": "Abra el enlace de inicio de sesión guardado o pegue el enlace completo a continuación.",
+      "howItWorks": "Un enlace de inicio de sesión inicia sesión cuando se abre en un navegador. En la PWA instalada, elija Anónimo y pegue el enlace guardado completo.",
+      "recovering": "Recuperando tu cuenta…",
+      "invalid": "Este enlace de inicio de sesión no es válido. Consulta el enlace completo y vuelve a intentarlo.",
+      "anonymousAccount": "cuenta anónima",
+      "switchTitle": "¿Cambiar de cuenta?",
+      "switchDescription": "Ya has iniciado sesión. Continúe cambiando este navegador a {name}.",
+      "switchConfirm": "Cambiar y recuperar",
+      "submit": "Recuperar cuenta",
+      "back": "Volver para iniciar sesión",
+      "linkLabel": "Enlace de inicio de sesión"
+    },
+    "settings": {
+      "recoveryTitle": "Enlace de inicio de sesión",
+      "recoveryDescription": "Esta cuenta anónima solo se puede recuperar con su enlace guardado. Ábralo en un navegador o elija Anónimo y pegue el enlace completo en la PWA instalada. El enlace actual no se puede volver a mostrar.",
+      "replace": "Reemplazar enlace de inicio de sesión",
+      "replaceTitle": "¿Reemplazar su enlace de inicio de sesión?",
+      "replaceDescription": "Genera un enlace de reemplazo para revisar y guardar. Su enlace de inicio de sesión actual sigue funcionando hasta que active el reemplazo.",
+      "cancel": "Cancelar",
+      "replaceConfirm": "Generar enlace de reemplazo",
+      "error": "No se pudo reemplazar el enlace de inicio de sesión. Por favor inténtalo de nuevo.",
+      "activateDescription": "Guarde el enlace de reemplazo antes de activarlo.",
+      "stagedDescription": "Su enlace de inicio de sesión actual sigue funcionando hasta que active este reemplazo. Cerrar o actualizar descarta el reemplazo.",
+      "activateConfirm": "Activar reemplazo",
+      "linkAccountTitle": "Vincular a una cuenta",
+      "linkAccountDescription": "Conecta esta cuenta anónima a un correo electrónico o inicio de sesión social.",
+      "comingSoon": "Próximamente",
+      "replacementActivated": "El enlace de inicio de sesión de reemplazo ya está activo."
+    }
   }
 }

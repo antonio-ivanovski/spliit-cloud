@@ -25,6 +25,7 @@ export const featuresRouter = createTRPCRouter({
         ),
         signupMode: z.enum(['open', 'invite_only']),
         allowUninvitedSignup: z.boolean(),
+        enableAnonymousAuth: z.boolean(),
       }),
     )
     .query(async () => {
@@ -44,6 +45,8 @@ export const featuresRouter = createTRPCRouter({
         oidcProviders: oidc ? [{ id: oidc.id, name: oidc.name }] : [],
         signupMode: env.SIGNUP_MODE,
         allowUninvitedSignup: await allowUninvitedSignup(),
+        enableAnonymousAuth:
+          env.ENABLE_ANONYMOUS_AUTH && env.SIGNUP_MODE === 'open',
       }
     }),
 })

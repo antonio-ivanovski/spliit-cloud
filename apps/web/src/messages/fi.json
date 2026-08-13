@@ -57,7 +57,11 @@
     "accountSettings": "Tilin asetukset",
     "back": "Takaisin",
     "menu": "Valikko",
-    "feedback": "Palaute"
+    "feedback": "Palaute",
+    "anonymousSignOutWarning": "Tämä anonyymi tili voidaan palauttaa vain tallennetulla palautuslinkilläsi. Kirjaudu ulos nyt?",
+    "signOutTitle": "Kirjaudu ulos?",
+    "signOutError": "Uloskirjautuminen ei onnistunut. Yritä uudelleen.",
+    "cancel": "Peruuta"
   },
   "Footer": {
     "madeIn": "Avoimen lähdekoodin yhteisön rakkaudella tekemä ❤️",
@@ -1689,7 +1693,8 @@
       "useInvitedEmail": "Käytä sähköpostiosoitetta, jolla sinut kutsuttiin."
     },
     "signInWithX": "Jatka X:llä",
-    "signInWithOidc": "Jatka: {name}"
+    "signInWithOidc": "Jatka: {name}",
+    "signInAnonymously": "Nimetön"
   },
   "CompleteProfile": {
     "title": "Täydennä profiilisi",
@@ -2930,5 +2935,74 @@
     "fromParticipant": "{name}lta",
     "createSingle": "Kirjaa maksu",
     "createMultiple": "Kirjaa {count} maksua"
+  },
+  "AnonymousAccount": {
+    "signup": {
+      "title": "Nimetön tili",
+      "description": "Luo anonyymi tili ilman sähköpostiosoitetta, salasanaa tai sosiaalista sisäänkirjautumista.",
+      "warning": "Tietosi on tallennettu Spliit Cloudiin, mutta tällä tilillä ei ole sähköpostia tai muuta palautustapaa. Sinun on tallennettava seuraavaksi näkyvä kirjautumislinkki.",
+      "cancel": "Peruuta",
+      "recoverDescription": "Liitä tallennettu kirjautumislinkki palataksesi olemassa olevaan nimettömään tiliin.",
+      "recoveryOnlyHelp": "Uusia anonyymejä tilejä ei ole saatavilla täällä. Liitä täydellinen tallennettu kirjautumislinkki jatkaaksesi.",
+      "recover": "Palauta anonyymi tili",
+      "create": "Luo anonyymi tili",
+      "createError": "Nimetöntä tiliä ei voitu luoda. Yritä uudelleen.",
+      "recoverError": "Tämä kirjautumislinkki on virheellinen. Tarkista täydellinen linkki ja yritä uudelleen.",
+      "recoveryLinkRequiredLabel": "Kirjautumislinkki",
+      "createTitle": "Luo uusi tili",
+      "or": "TAI",
+      "recoverTitle": "Onko sinulla jo anonyymi tili?"
+    },
+    "onboarding": {
+      "title": "Tallenna kirjautumislinkki",
+      "description": "Tämä on ainoa tapa päästä takaisin anonyymiin tiliisi uloskirjautumisen, selaintietojen tyhjentämisen tai toiseen laitteeseen siirtymisen jälkeen.",
+      "unavailableTitle": "Kirjautumislinkkiäsi ei voida näyttää",
+      "unavailableDescription": "Luo korvaava linkki erikseen ja tallenna se ennen jatkamista.",
+      "generateReplacement": "Luo korvaava linkki",
+      "error": "Jotain meni pieleen. Yritä uudelleen.",
+      "start": "Aloita Spliitin käyttö"
+    },
+    "recovery": {
+      "warningTitle": "Tallenna tämä jonnekin turvalliseen paikkaan",
+      "warning": "Tämä linkki ei koskaan vanhene tai muutu, ellet vaihda sitä. Kuka tahansa, jolla on se, voi käyttää anonyymiä tiliäsi.",
+      "storedDataNote": "Anonyymi tarkoittaa, että tiliä ei ole yhdistetty kirjautumisidentiteettiin. Tilisi tiedot säilyvät edelleen Spliit Cloudissa.",
+      "linkLabel": "Kirjautumislinkki",
+      "copyLink": "Kopioi linkki",
+      "copied": "Kopioitu",
+      "howItWorks": "Avaa kirjautumislinkki missä tahansa selaimessa kirjautuaksesi sisään. Valitse asennetussa PWA:ssa Nimetön ja liitä täydellinen kirjautumislinkki.",
+      "confirmation": "Kopioin ja tallensin palautuslinkin turvallisesti.",
+      "copyFailed": "Kopiointi epäonnistui. Valitse kirjautumislinkki ja kopioi se manuaalisesti."
+    },
+    "recover": {
+      "title": "Palauta anonyymi tili",
+      "description": "Avaa tallennettu kirjautumislinkki tai liitä koko linkki alle.",
+      "howItWorks": "Kirjautumislinkki kirjaa sinut sisään, kun se avataan selaimessa. Valitse asennetussa PWA:ssa Nimetön ja liitä täydellinen tallennettu linkki.",
+      "recovering": "Palautetaan tiliäsi…",
+      "invalid": "Tämä kirjautumislinkki on virheellinen. Tarkista täydellinen linkki ja yritä uudelleen.",
+      "anonymousAccount": "anonyymi tili",
+      "switchTitle": "Vaihdetaanko tiliä?",
+      "switchDescription": "Olet jo kirjautunut sisään. Jatka tämän selaimen vaihtamista käyttämään {name}.",
+      "switchConfirm": "Vaihda ja palauta",
+      "submit": "Palauta tili",
+      "back": "Takaisin kirjautumaan sisään",
+      "linkLabel": "Kirjautumislinkki"
+    },
+    "settings": {
+      "recoveryTitle": "Kirjautumislinkki",
+      "recoveryDescription": "Tämä anonyymi tili voidaan palauttaa vain tallennetulla linkilläsi. Avaa se selaimessa tai valitse Nimetön ja liitä täydellinen linkki asennettuun PWA:han. Nykyistä linkkiä ei voi näyttää uudelleen.",
+      "replace": "Korvaa kirjautumislinkki",
+      "replaceTitle": "Korvataanko kirjautumislinkki?",
+      "replaceDescription": "Luo korvaava linkki tarkistaaksesi ja tallentaaksesi. Nykyinen kirjautumislinkkisi toimii, kunnes aktivoit korvaavan vaihtoehdon.",
+      "cancel": "Peruuta",
+      "replaceConfirm": "Luo korvaava linkki",
+      "error": "Kirjautumislinkkiä ei voitu korvata. Yritä uudelleen.",
+      "activateDescription": "Tallenna korvaava linkki ennen sen aktivointia.",
+      "stagedDescription": "Nykyinen kirjautumislinkkisi toimii, kunnes aktivoit tämän korvaavan linkin. Sulkeminen tai päivittäminen hylkää korvaavan tuotteen.",
+      "activateConfirm": "Aktivoi vaihto",
+      "linkAccountTitle": "Yhdistä tiliin",
+      "linkAccountDescription": "Yhdistä tämä anonyymi tili sähköpostiin tai sosiaaliseen kirjautumiseen.",
+      "comingSoon": "Tulossa pian",
+      "replacementActivated": "Korvaava kirjautumislinkkisi on nyt käytössä."
+    }
   }
 }

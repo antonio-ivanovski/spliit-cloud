@@ -57,7 +57,11 @@
     "accountSettings": "Pengaturan akun",
     "back": "Kembali",
     "menu": "Menu",
-    "feedback": "Masukan"
+    "feedback": "Masukan",
+    "anonymousSignOutWarning": "Akun anonim ini hanya dapat dipulihkan dengan tautan masuk yang Anda simpan. Keluar sekarang?",
+    "signOutTitle": "Keluar?",
+    "signOutError": "Tidak dapat keluar. Silakan coba lagi.",
+    "cancel": "Batal"
   },
   "Footer": {
     "madeIn": "Dibuat oleh komunitas open-source dengan cinta ❤️",
@@ -1682,7 +1686,8 @@
       "useInvitedEmail": "Gunakan alamat email yang digunakan untuk mengundang Anda."
     },
     "signInWithX": "Lanjutkan dengan X",
-    "signInWithOidc": "Lanjutkan dengan {name}"
+    "signInWithOidc": "Lanjutkan dengan {name}",
+    "signInAnonymously": "Anonim"
   },
   "CompleteProfile": {
     "title": "Lengkapi profil Anda",
@@ -2914,5 +2919,74 @@
     "fromParticipant": "dari {name}",
     "createSingle": "Catat pembayaran",
     "createMultiple": "Catat {count} pembayaran"
+  },
+  "AnonymousAccount": {
+    "signup": {
+      "title": "Akun anonim",
+      "description": "Buat akun anonim tanpa alamat email, kata sandi, atau login sosial.",
+      "warning": "Data Anda disimpan di Split Cloud, tetapi akun ini tidak memiliki email atau metode pemulihan lainnya. Anda harus menyimpan tautan masuk yang ditunjukkan berikutnya.",
+      "cancel": "Batalkan",
+      "recoverDescription": "Tempel tautan masuk tersimpan Anda untuk kembali ke akun anonim yang ada.",
+      "recoveryOnlyHelp": "Akun anonim baru tidak tersedia di sini. Tempelkan tautan masuk lengkap yang Anda simpan untuk melanjutkan.",
+      "recover": "Pulihkan akun anonim",
+      "create": "Buat akun anonim",
+      "createError": "Akun anonim tidak dapat dibuat. Silakan coba lagi.",
+      "recoverError": "Tautan masuk ini tidak valid. Periksa tautan lengkapnya dan coba lagi.",
+      "recoveryLinkRequiredLabel": "Tautan masuk",
+      "createTitle": "Buat akun baru",
+      "or": "ATAU",
+      "recoverTitle": "Sudah punya akun anonim?"
+    },
+    "onboarding": {
+      "title": "Simpan tautan masuk Anda",
+      "description": "Ini adalah satu-satunya cara untuk kembali ke akun anonim Anda setelah keluar, menghapus data browser, atau berpindah ke perangkat lain.",
+      "unavailableTitle": "Tautan masuk Anda tidak dapat ditampilkan",
+      "unavailableDescription": "Buat tautan pengganti secara eksplisit, lalu simpan sebelum melanjutkan.",
+      "generateReplacement": "Buat tautan pengganti",
+      "error": "Ada yang tidak beres. Silakan coba lagi.",
+      "start": "Mulai gunakan Split"
+    },
+    "recovery": {
+      "warningTitle": "Simpan ini di tempat yang aman",
+      "warning": "Tautan ini tidak pernah kedaluwarsa atau berubah kecuali Anda menggantinya. Siapa pun yang memilikinya dapat mengakses akun anonim Anda.",
+      "storedDataNote": "Anonim berarti akun tidak terhubung dengan identitas masuk. Data akun Anda masih tersimpan di Split Cloud.",
+      "linkLabel": "Tautan masuk",
+      "copyLink": "Salin tautan",
+      "copied": "Disalin",
+      "howItWorks": "Buka tautan masuk di browser apa pun untuk masuk. Di PWA yang terinstal, pilih Anonim dan tempelkan tautan masuk lengkap.",
+      "confirmation": "Saya menyalin dan menyimpan tautan masuk saya dengan aman.",
+      "copyFailed": "Gagal menyalin. Pilih tautan masuk lalu salin secara manual."
+    },
+    "recover": {
+      "title": "Pulihkan akun anonim",
+      "description": "Buka tautan masuk tersimpan Anda atau tempel tautan lengkap di bawah.",
+      "howItWorks": "Tautan masuk memasukkan Anda saat dibuka di browser. Di PWA yang terinstal, pilih Anonim dan tempel tautan tersimpan lengkap.",
+      "recovering": "Memulihkan akun Anda…",
+      "invalid": "Tautan masuk ini tidak valid. Periksa tautan lengkapnya dan coba lagi.",
+      "anonymousAccount": "akun anonim",
+      "switchTitle": "Ganti akun?",
+      "switchDescription": "Anda sudah masuk. Lanjutkan untuk mengalihkan browser ini ke {name}.",
+      "switchConfirm": "Beralih dan pulihkan",
+      "submit": "Pulihkan akun",
+      "back": "Kembali untuk masuk",
+      "linkLabel": "Tautan masuk"
+    },
+    "settings": {
+      "recoveryTitle": "Tautan masuk",
+      "recoveryDescription": "Akun anonim ini hanya dapat dipulihkan dengan tautan tersimpan Anda. Buka di browser, atau pilih Anonim dan tempel tautan lengkap di PWA yang diinstal. Tautan saat ini tidak dapat ditampilkan lagi.",
+      "replace": "Ganti tautan masuk",
+      "replaceTitle": "Ganti tautan masuk Anda?",
+      "replaceDescription": "Buat tautan pengganti untuk ditinjau dan disimpan. Tautan masuk Anda saat ini tetap berfungsi hingga Anda mengaktifkan penggantinya.",
+      "cancel": "Batalkan",
+      "replaceConfirm": "Buat tautan pengganti",
+      "error": "Tautan masuk tidak dapat diganti. Silakan coba lagi.",
+      "activateDescription": "Simpan link pengganti sebelum mengaktifkannya.",
+      "stagedDescription": "Tautan masuk Anda saat ini tetap berfungsi hingga Anda mengaktifkan penggantinya. Menutup atau menyegarkan akan membuang penggantinya.",
+      "activateConfirm": "Aktifkan penggantian",
+      "linkAccountTitle": "Tautkan ke akun",
+      "linkAccountDescription": "Hubungkan akun anonim ini ke email atau login sosial.",
+      "comingSoon": "Segera hadir",
+      "replacementActivated": "Tautan masuk pengganti Anda kini aktif."
+    }
   }
 }

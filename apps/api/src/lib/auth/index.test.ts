@@ -39,6 +39,9 @@ const realAuthModule = (await vi.importActual('./index')) as {
         options?: {
           disableSettingJwtHeader?: boolean
           adapter?: unknown
+          disableDeleteAnonymousUser?: boolean
+          generateName?: (ctx: { headers?: Headers }) => string
+          generateRandomEmail?: () => string
         }
       }>
       emailVerification?: {
@@ -55,6 +58,16 @@ const realAuthModule = (await vi.importActual('./index')) as {
       hooks?: { before?: unknown }
       databaseHooks?: {
         user?: {
+          create?: {
+            before?: (
+              user: Record<string, unknown>,
+              context: { path?: string },
+            ) =>
+              | Promise<{ data: Record<string, unknown> } | false | void>
+              | { data: Record<string, unknown> }
+              | false
+              | void
+          }
           update?: { after?: (user: { id: string }) => void | Promise<void> }
           delete?: { after?: (user: { id: string }) => void | Promise<void> }
         }
@@ -105,6 +118,46 @@ afterEach(() => {
 })
 
 describe('better-auth session config', () => {
+  it('registers anonymous auth with destructive linking disabled', () => {
+    const plugin = realAuthModule.auth.options.plugins?.find(
+      (candidate) => candidate.id === 'anonymous',
+    )
+    expect(plugin).toBeDefined()
+    expect(plugin?.options).toMatchObject({
+      disableDeleteAnonymousUser: true,
+    })
+    expect(plugin?.options?.generateName).toBeUndefined()
+    expect(plugin?.options?.generateRandomEmail?.()).toMatch(
+      /^guest-[0-9a-f-]+@anonymous\.placeholder\.local$/,
+    )
+  })
+
+  it('marks a new anonymous account for the standard profile-name flow', async () => {
+    prismaMock.account.count.mockResolvedValue(0)
+    const beforeCreate =
+      realAuthModule.auth.options.databaseHooks?.user?.create?.before
+    expect(beforeCreate).toBeDefined()
+
+    const result = await beforeCreate?.(
+      {
+        id: 'anonymous-1',
+        email: 'guest-1@anonymous.placeholder.local',
+        emailVerified: false,
+        isAnonymous: true,
+        name: 'Anonymous',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      } as never,
+      { path: '/sign-in/anonymous' } as never,
+    )
+
+    expect(result).toMatchObject({
+      data: {
+        name: 'guest-1@anonymous.placeholder.local',
+      },
+    })
+  })
+
   it('uses a 180-day rolling session refreshed daily', () => {
     expect(realAuthModule.auth.options.session?.expiresIn).toBe(
       60 * 60 * 24 * 180,

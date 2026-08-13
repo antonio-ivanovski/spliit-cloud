@@ -425,7 +425,8 @@
       "useInvitedEmail": "use the email you got invited with."
     },
     "signInWithX": "continue with X",
-    "signInWithOidc": "continue with {name}"
+    "signInWithOidc": "continue with {name}",
+    "signInAnonymously": "Anon"
   },
   "Balances": {
     "title": "balance check ",
@@ -2299,7 +2300,11 @@
     "accountSettings": "account settings",
     "back": "go back",
     "menu": "menu mode",
-    "feedback": "feedback zone"
+    "feedback": "feedback zone",
+    "anonymousSignOutWarning": "Your saved sign in link is the only way back into this anon account. Sign out now?",
+    "signOutTitle": "Sign out, yeah?",
+    "signOutError": "Couldn't sign out. Give it another go.",
+    "cancel": "Nah, go back"
   },
   "Homepage": {
     "title": "Split <strong>Expenses</strong> with <strong>Besties & Family</strong>",
@@ -2922,5 +2927,74 @@
     "fromParticipant": "from {name}, bestie",
     "createSingle": "record payment",
     "createMultiple": "record {count} payments"
+  },
+  "AnonymousAccount": {
+    "signup": {
+      "title": "Use Spliit as anon",
+      "description": "Make an anonymous account with no email, password, or social sign-in. Pick your display name after you secure it.",
+      "warning": "Your data still lives in Spliit Cloud, but this account has no email or backup sign-in. Save the sign in link shown next—it is essential.",
+      "cancel": "Never mind",
+      "recoverDescription": "Paste your saved sign in link to get back into an existing anon account.",
+      "recoveryOnlyHelp": "You can't make a new anon account here. Paste your full saved sign in link to carry on.",
+      "recover": "Recover anon account",
+      "create": "Make anon account",
+      "createError": "Couldn't make the anon account. Give it another go.",
+      "recoverError": "That sign in link is no good. Check the whole link and try again.",
+      "recoveryLinkRequiredLabel": "Your sign in link",
+      "createTitle": "Make a fresh account",
+      "or": "or",
+      "recoverTitle": "Already got an anon account?"
+    },
+    "onboarding": {
+      "title": "Keep your sign in link safe",
+      "description": "This is your only way back into the anon account after signing out, clearing browser data, or switching devices.",
+      "unavailableTitle": "We cannot show your sign in link",
+      "unavailableDescription": "Create a replacement link yourself, then save it before moving on.",
+      "generateReplacement": "Create a replacement link",
+      "error": "That did not work. Try again.",
+      "start": "Start splitting with Spliit"
+    },
+    "recovery": {
+      "warningTitle": "Keep this somewhere seriously safe",
+      "warning": "This link stays valid until you replace it. Anyone with the link can get into your anonymous account.",
+      "storedDataNote": "Anon means no sign-in identity is connected. Your account data still lives in Spliit Cloud.",
+      "linkLabel": "Your sign-in link",
+      "copyLink": "Copy the link",
+      "copied": "Copied, nice",
+      "howItWorks": "Open the sign in link in any browser to sign in. In the installed PWA, pick “Recover an anon account” and paste the full sign in link.",
+      "confirmation": "I copied my sign in link and put it somewhere safe.",
+      "copyFailed": "copy failed. select the sign-in link and copy it manually."
+    },
+    "recover": {
+      "title": "Recover an anon account",
+      "description": "Open your saved sign in link, or paste the full link below.",
+      "howItWorks": "Opening a sign in link in a browser signs you in. In the installed PWA, paste the full saved link below.",
+      "recovering": "Getting your account back…",
+      "invalid": "That sign in link does not work. Check the full link and try again.",
+      "anonymousAccount": "anon account",
+      "switchTitle": "Switch to another account?",
+      "switchDescription": "You are already signed in. Keep going to switch this browser over to {name}.",
+      "switchConfirm": "Switch, then recover",
+      "submit": "Get account back",
+      "back": "Head back to sign in",
+      "linkLabel": "Your sign in link"
+    },
+    "settings": {
+      "recoveryTitle": "Your sign in link",
+      "recoveryDescription": "Open your saved link in a browser, or paste the full link into “Recover an anon account” in the PWA. We cannot show the current link again after you confirm it.",
+      "replace": "Swap sign in link",
+      "replaceTitle": "Swap your sign in link?",
+      "replaceDescription": "Create a new link to check and save. Your current sign in link still works until you activate the new one.",
+      "cancel": "Never mind",
+      "replaceConfirm": "Create replacement link",
+      "error": "We could not replace the sign in link. Try again.",
+      "activateDescription": "Save the new link before you activate it.",
+      "stagedDescription": "Your current sign in link still works until you activate this one. Close or refresh and this replacement is gone.",
+      "activateConfirm": "Activate new link",
+      "linkAccountTitle": "Link to an account",
+      "linkAccountDescription": "Connect this anon account to email or social sign-in.",
+      "comingSoon": "coming soon, fr",
+      "replacementActivated": "your replacement sign-in link is active now."
+    }
   }
 }

@@ -12,6 +12,7 @@ export type DeploymentConfig = Pick<
   | 'oidcProviders'
   | 'signupMode'
   | 'allowUninvitedSignup'
+  | 'enableAnonymousAuth'
 >
 
 function getBuildTimeFallback(): DeploymentConfig {
@@ -29,6 +30,7 @@ function getBuildTimeFallback(): DeploymentConfig {
     oidcProviders: [],
     signupMode: 'open',
     allowUninvitedSignup: true,
+    enableAnonymousAuth: false,
   }
 }
 
@@ -44,6 +46,7 @@ export function useDeploymentConfig(): DeploymentConfig {
       oidcProviders,
       signupMode,
       allowUninvitedSignup,
+      enableAnonymousAuth,
     }): DeploymentConfig => ({
       defaultCurrencyCode,
       enableGoogleOAuth,
@@ -52,6 +55,7 @@ export function useDeploymentConfig(): DeploymentConfig {
       oidcProviders,
       signupMode,
       allowUninvitedSignup,
+      enableAnonymousAuth,
     }),
     staleTime: Infinity,
     enabled: import.meta.env.MODE !== 'test',

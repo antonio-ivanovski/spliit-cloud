@@ -57,7 +57,11 @@
     "accountSettings": "Nastavení účtu",
     "back": "Zpět",
     "menu": "Nabídka",
-    "feedback": "Zpětná vazba"
+    "feedback": "Zpětná vazba",
+    "anonymousSignOutWarning": "Tento anonymní účet lze obnovit pouze pomocí vašeho uloženého přihlašovacího odkazu. Odhlásit se nyní?",
+    "signOutTitle": "Odhlásit se?",
+    "signOutError": "Nelze se odhlásit. Zkuste to prosím znovu.",
+    "cancel": "Zrušit"
   },
   "Footer": {
     "madeIn": "Vytvořeno open-source komunitou s láskou ❤️",
@@ -1396,7 +1400,8 @@
       "useInvitedEmail": "Použijte e-mailovou adresu, na kterou vám přišla pozvánka."
     },
     "signInWithX": "Pokračovat přes X",
-    "signInWithOidc": "Pokračovat přes {name}"
+    "signInWithOidc": "Pokračovat přes {name}",
+    "signInAnonymously": "Anonymní"
   },
   "CompleteProfile": {
     "title": "Dokončete svůj profil",
@@ -2964,5 +2969,74 @@
     "fromParticipant": "od {name}",
     "createSingle": "Zaznamenat platbu",
     "createMultiple": "Zaznamenat {count} plateb"
+  },
+  "AnonymousAccount": {
+    "signup": {
+      "title": "Anonymní účet",
+      "description": "Vytvořte si anonymní účet bez e-mailové adresy, hesla nebo sociálního přihlášení.",
+      "warning": "Vaše data jsou uložena ve službě Spliit Cloud, ale tento účet nemá žádný e-mail ani jinou metodu obnovení. Musíte uložit přihlašovací odkaz zobrazený dále.",
+      "cancel": "Zrušit",
+      "recoverDescription": "Vložte svůj uložený přihlašovací odkaz a vraťte se ke stávajícímu anonymnímu účtu.",
+      "recoveryOnlyHelp": "Nové anonymní účty zde nejsou dostupné. Chcete-li pokračovat, vložte celý uložený přihlašovací odkaz.",
+      "recover": "Obnovte anonymní účet",
+      "create": "Vytvořte anonymní účet",
+      "createError": "Anonymní účet nelze vytvořit. Zkuste to prosím znovu.",
+      "recoverError": "Tento přihlašovací odkaz je neplatný. Zkontrolujte celý odkaz a zkuste to znovu.",
+      "recoveryLinkRequiredLabel": "Odkaz pro obnovení",
+      "createTitle": "Vytvořit nový účet",
+      "or": "NEBO",
+      "recoverTitle": "Už máte anonymní účet?"
+    },
+    "onboarding": {
+      "title": "Uložte přihlašovací odkaz",
+      "description": "Je to jediný způsob, jak se po odhlášení, vymazání dat prohlížeče nebo přesunu na jiné zařízení vrátit zpět ke svému anonymnímu účtu.",
+      "unavailableTitle": "Váš přihlašovací odkaz nelze zobrazit",
+      "unavailableDescription": "Explicitně vygenerujte náhradní odkaz a před pokračováním jej uložte.",
+      "generateReplacement": "Vygenerovat náhradní odkaz",
+      "error": "Něco se pokazilo. Zkuste to prosím znovu.",
+      "start": "Začněte používat Split"
+    },
+    "recovery": {
+      "warningTitle": "Uložte si to někde v bezpečí",
+      "warning": "Tento odkaz nikdy nevyprší ani se nezmění, pokud jej nenahradíte. Kdokoli, kdo jej má, má přístup k vašemu anonymnímu účtu.",
+      "storedDataNote": "Anonymní znamená, že účet není propojen s přihlašovací identitou. Data vašeho účtu jsou stále uložena ve službě Spliit Cloud.",
+      "linkLabel": "Přihlašovací odkaz",
+      "copyLink": "Zkopírujte odkaz",
+      "copied": "Zkopírováno",
+      "howItWorks": "Otevřete přihlašovací odkaz v libovolném prohlížeči a přihlaste se. V nainstalovaném PWA vyberte možnost Anonymní a vložte úplný přihlašovací odkaz.",
+      "confirmation": "Zkopíroval jsem a bezpečně uložil svůj přihlašovací odkaz.",
+      "copyFailed": "Kopírování se nezdařilo. Vyberte přihlašovací odkaz a zkopírujte ho ručně."
+    },
+    "recover": {
+      "title": "Obnovit anonymní účet",
+      "description": "Otevřete uložený přihlašovací odkaz nebo vložte celý odkaz níže.",
+      "howItWorks": "Odkaz pro obnovení vás přihlásí při otevření v prohlížeči. V nainstalovaném PWA zvolte Anonymní a vložte celý uložený odkaz.",
+      "recovering": "Obnovování účtu…",
+      "invalid": "Tento přihlašovací odkaz je neplatný. Zkontrolujte celý odkaz a zkuste to znovu.",
+      "anonymousAccount": "anonymní účet",
+      "switchTitle": "Přepnout účty?",
+      "switchDescription": "Již jste přihlášeni. Pokračujte v přepnutí tohoto prohlížeče na {name}.",
+      "switchConfirm": "Přepnout a obnovit",
+      "submit": "Obnovit účet",
+      "back": "Zpět k přihlášení",
+      "linkLabel": "Odkaz pro obnovení"
+    },
+    "settings": {
+      "recoveryTitle": "Odkaz pro obnovení",
+      "recoveryDescription": "Tento anonymní účet lze obnovit pouze pomocí vašeho uloženého odkazu. Otevřete jej v prohlížeči nebo zvolte Anonymní a vložte celý odkaz do nainstalovaného PWA. Aktuální odkaz nelze znovu zobrazit.",
+      "replace": "Nahraďte přihlašovací odkaz",
+      "replaceTitle": "Nahradit přihlašovací odkaz?",
+      "replaceDescription": "Vygenerujte náhradní odkaz ke kontrole a uložení. Váš aktuální přihlašovací odkaz funguje, dokud neaktivujete náhradu.",
+      "cancel": "Zrušit",
+      "replaceConfirm": "Vygenerovat náhradní odkaz",
+      "error": "Odkaz pro obnovení nelze nahradit. Zkuste to prosím znovu.",
+      "activateDescription": "Uložte náhradní odkaz před jeho aktivací.",
+      "stagedDescription": "Váš aktuální přihlašovací odkaz funguje, dokud tuto náhradu neaktivujete. Zavřením nebo obnovením se náhrada zahodí.",
+      "activateConfirm": "Aktivujte náhradu",
+      "linkAccountTitle": "Propojit s účtem",
+      "linkAccountDescription": "Propojte tento anonymní účet s e-mailem nebo přihlášením přes sociální síť.",
+      "comingSoon": "Již brzy",
+      "replacementActivated": "Náhradní přihlašovací odkaz je nyní aktivní."
+    }
   }
 }

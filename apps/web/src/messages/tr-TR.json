@@ -57,7 +57,11 @@
     "accountSettings": "Hesap ayarları",
     "back": "Geri",
     "menu": "Menü",
-    "feedback": "Geri bildirim"
+    "feedback": "Geri bildirim",
+    "anonymousSignOutWarning": "Bu anonim hesap yalnızca kayıtlı oturum açma bağlantınızla kurtarılabilir. Şimdi oturum kapatılsın mı?",
+    "signOutTitle": "Çıkış yapılsın mı?",
+    "signOutError": "Oturum kapatılamadı. Lütfen tekrar deneyin.",
+    "cancel": "İptal"
   },
   "Footer": {
     "madeIn": "Açık kaynak topluluğu tarafından sevgiyle yapıldı ❤️",
@@ -1380,7 +1384,8 @@
       "useInvitedEmail": "Davet edildiğiniz e-posta adresini kullanın."
     },
     "signInWithX": "X ile devam et",
-    "signInWithOidc": "{name} ile devam et"
+    "signInWithOidc": "{name} ile devam et",
+    "signInAnonymously": "Anonim"
   },
   "CompleteProfile": {
     "title": "Profilinizi tamamlayın",
@@ -2930,5 +2935,74 @@
     "fromParticipant": "{name} adlı kişiden",
     "createSingle": "Ödemeyi kaydet",
     "createMultiple": "{count} ödemeyi kaydet"
+  },
+  "AnonymousAccount": {
+    "signup": {
+      "title": "Anonim hesap",
+      "description": "E-posta adresi, şifre veya sosyal oturum açma olmadan anonim bir hesap oluşturun.",
+      "warning": "Verileriniz Split Cloud'da saklanıyor ancak bu hesabın e-posta veya başka bir kurtarma yöntemi yok. Daha sonra gösterilen oturum açma bağlantısını kaydetmelisiniz.",
+      "cancel": "İptal",
+      "recoverDescription": "Mevcut bir anonim hesaba geri dönmek için kayıtlı kurtarma bağlantınızı yapıştırın.",
+      "recoveryOnlyHelp": "Yeni anonim hesaplar burada mevcut değil. Devam etmek için kayıtlı kurtarma bağlantınızın tamamını yapıştırın.",
+      "recover": "Anonim hesabı kurtar",
+      "create": "Anonim hesap oluştur",
+      "createError": "Anonim hesap oluşturulamadı. Lütfen tekrar deneyin.",
+      "recoverError": "Bu oturum açma bağlantısı geçersiz. Bağlantının tamamını kontrol edip tekrar deneyin.",
+      "recoveryLinkRequiredLabel": "Oturum açma bağlantısı",
+      "createTitle": "Yeni hesap oluştur",
+      "or": "VEYA",
+      "recoverTitle": "Zaten anonim hesabınız var mı?"
+    },
+    "onboarding": {
+      "title": "Kurtarma bağlantınızı kaydedin",
+      "description": "Oturumu kapattıktan, tarayıcı verilerini temizledikten veya başka bir cihaza geçtikten sonra anonim hesabınıza geri dönmenin tek yolu budur.",
+      "unavailableTitle": "Kurtarma bağlantınız görüntülenemiyor",
+      "unavailableDescription": "Açıkça bir yedek bağlantı oluşturun ve devam etmeden önce bunu kaydedin.",
+      "generateReplacement": "Yedek bağlantı oluştur",
+      "error": "Bir şeyler ters gitti. Lütfen tekrar deneyin.",
+      "start": "Split'i kullanmaya başlayın"
+    },
+    "recovery": {
+      "warningTitle": "Bunu güvenli bir yere kaydedin",
+      "warning": "Bu bağlantı siz değiştirmediğiniz sürece asla sona ermez veya değişmez. Ona sahip olan herkes anonim hesabınıza erişebilir.",
+      "storedDataNote": "Anonim, hesabın oturum açma kimliğine bağlı olmadığı anlamına gelir. Hesap verileriniz hâlâ Split Cloud'da saklanıyor.",
+      "linkLabel": "Oturum açma bağlantısı",
+      "copyLink": "Bağlantıyı kopyala",
+      "copied": "Kopyalandı",
+      "howItWorks": "Oturum açmak için herhangi bir tarayıcıda oturum açma bağlantısını açın. Yüklü PWA'da Anonim'i seçin ve oturum açma bağlantısının tamamını yapıştırın.",
+      "confirmation": "Kurtarma bağlantımı kopyalayıp güvenli bir şekilde sakladım.",
+      "copyFailed": "Kopyalama başarısız oldu. Oturum açma bağlantısını seçip elle kopyalayın."
+    },
+    "recover": {
+      "title": "Anonim hesabı kurtar",
+      "description": "Kaydedilmiş kurtarma bağlantınızı açın veya bağlantının tamamını aşağıya yapıştırın.",
+      "howItWorks": "Oturum açma bağlantısı, tarayıcıda açıldığında oturumunuzu açar. Yüklü PWA'da Anonim'i seçin ve kayıtlı bağlantının tamamını yapıştırın.",
+      "recovering": "Hesabınız kurtarılıyor…",
+      "invalid": "Bu oturum açma bağlantısı geçersiz. Bağlantının tamamını kontrol edip tekrar deneyin.",
+      "anonymousAccount": "anonim hesap",
+      "switchTitle": "Hesaplar değiştirilsin mi?",
+      "switchDescription": "Zaten oturum açtınız. Bu tarayıcıyı {name} olarak değiştirmeye devam edin.",
+      "switchConfirm": "Geçiş yapın ve kurtarın",
+      "submit": "Hesabı kurtar",
+      "back": "Oturum açmak için geri dön",
+      "linkLabel": "Oturum açma bağlantısı"
+    },
+    "settings": {
+      "recoveryTitle": "Oturum açma bağlantısı",
+      "recoveryDescription": "Bu anonim hesap yalnızca kayıtlı bağlantınızla kurtarılabilir. Bir tarayıcıda açın veya Anonim'i seçin ve bağlantının tamamını kurulu PWA'ya yapıştırın. Geçerli bağlantı tekrar gösterilemiyor.",
+      "replace": "Oturum açma bağlantısını değiştirin",
+      "replaceTitle": "Kurtarma bağlantınız değiştirilsin mi?",
+      "replaceDescription": "İnceleyip kaydetmek için yeni bir bağlantı oluşturun. Mevcut kurtarma bağlantınız siz değiştirmeyi etkinleştirene kadar çalışmaya devam eder.",
+      "cancel": "İptal",
+      "replaceConfirm": "Yedek bağlantı oluştur",
+      "error": "Oturum açma bağlantısı değiştirilemedi. Lütfen tekrar deneyin.",
+      "activateDescription": "Etkinleştirmeden önce yeni bağlantıyı kaydedin.",
+      "stagedDescription": "Mevcut kurtarma bağlantınız siz bu değişikliği etkinleştirene kadar çalışmaya devam eder. Kapatma veya yenileme, değiştirme işlemini iptal eder.",
+      "activateConfirm": "Değiştirmeyi etkinleştir",
+      "linkAccountTitle": "Bir hesaba bağla",
+      "linkAccountDescription": "Bu anonim hesabı e-posta veya sosyal oturum açma yöntemiyle bağlayın.",
+      "comingSoon": "Yakında",
+      "replacementActivated": "Yeni oturum açma bağlantınız artık etkin."
+    }
   }
 }

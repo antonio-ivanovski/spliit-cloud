@@ -17,6 +17,7 @@ import { trpc } from '@/trpc/client'
 import { AccountExportModal } from './account-export-modal'
 import { AccountPreferences } from './account-preferences'
 import { AccountAiPreferences } from './ai-preferences'
+import { AnonymousAccountSettings } from './anonymous-account-settings'
 import { NotificationsPreferences } from './notifications-preferences'
 import {
   SettingsFieldRow,
@@ -282,21 +283,24 @@ function AccountSettingsContent() {
                 />
               }
             />
-            <SettingsFieldRow
-              id="account-settings-email"
-              label={t('emailLabel')}
-              description={t('emailHelp')}
-              control={
-                <Input
-                  id={settingsControlId('account-settings-email')}
-                  type="email"
-                  value={account.email ?? ''}
-                  readOnly
-                  disabled
-                  className={cn('w-full sm:max-w-xs')}
-                />
-              }
-            />
+            {!account.isAnonymous ? (
+              <SettingsFieldRow
+                id="account-settings-email"
+                label={t('emailLabel')}
+                description={t('emailHelp')}
+                control={
+                  <Input
+                    id={settingsControlId('account-settings-email')}
+                    type="email"
+                    value={account.email ?? ''}
+                    readOnly
+                    disabled
+                    className={cn('w-full sm:max-w-xs')}
+                  />
+                }
+              />
+            ) : null}
+            {account.isAnonymous ? <AnonymousAccountSettings /> : null}
           </SettingsList>
         </SettingsSection>
       </form>

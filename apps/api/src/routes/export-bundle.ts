@@ -2,7 +2,7 @@ import { create as contentDisposition } from 'content-disposition'
 
 import { prisma } from '@spliit/db'
 
-import { getAuthFromRequest } from '../lib/auth/session'
+import { getApplicationAuthFromRequest } from '../lib/auth/session'
 import {
   createGroupExportArtifact,
   loadGroupExportSource,
@@ -10,8 +10,8 @@ import {
 } from '../lib/exports'
 
 export async function exportGroupBundle(request: Request, groupId: string) {
-  const auth = await getAuthFromRequest(request)
-  if (!auth) return Response.json({ error: 'Unauthenticated' }, { status: 401 })
+  const { auth, response } = await getApplicationAuthFromRequest(request)
+  if (response) return response
 
   const member = await prisma.groupMember.findUnique({
     where: { groupId_accountId: { groupId, accountId: auth.user.id } },
