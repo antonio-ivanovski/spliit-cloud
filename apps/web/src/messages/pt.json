@@ -3030,7 +3030,7 @@
   "GroupViewLink": {
     "title": "Ligação pública apenas de leitura",
     "description": "Permite que qualquer pessoa com esta ligação pública veja o grupo sem iniciar sessão.",
-    "warning": "A ligação dá acesso a despesas, saldos, recibos, comentários, atividade, membros e orçamentos. Partilhe-a apenas com pessoas em quem confia.",
+    "warning": "Esta ligação dá acesso só de leitura a todo o conteúdo do grupo. Partilhe-a apenas com pessoas em quem confia.",
     "linkLabel": "Ligação pública apenas de leitura",
     "copy": "Copiar ligação pública",
     "copied": "Ligação pública copiada",

@@ -67,15 +67,14 @@ export const EditGroup = () => {
         archived={!!group?.archived}
         hideNameField={isFriendLedger}
         currencyLocked={!!data?.hasExpenses}
-        additionalSettings={
-          currentMember && !isFriendLedger ? (
-            <PublicViewOnlyLinkSection groupId={groupId} />
-          ) : null
-        }
         onSubmit={(groupFormValues) =>
           updateMutation.mutateAsync({ groupId, groupFormValues })
         }
       />
+
+      {currentMember && !isFriendLedger ? (
+        <PublicViewOnlyLinkSection groupId={groupId} />
+      ) : null}
 
       {!isReadOnlyViewer ? (
         <Card className="mobile-surface mb-4">

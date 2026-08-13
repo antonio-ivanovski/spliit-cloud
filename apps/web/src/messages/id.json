@@ -2996,7 +2996,7 @@
   "GroupViewLink": {
     "title": "Tautan publik hanya lihat",
     "description": "Izinkan siapa pun yang memiliki tautan ini melihat grup tanpa masuk.",
-    "warning": "Tautan ini memberikan akses ke pengeluaran, saldo, struk, komentar, aktivitas, anggota, dan anggaran. Bagikan hanya kepada orang yang Anda percayai.",
+    "warning": "Tautan ini memberikan akses hanya lihat ke semua hal dalam grup. Bagikan hanya kepada orang yang Anda percayai.",
     "linkLabel": "Tautan publik hanya lihat",
     "copy": "Salin tautan publik hanya lihat",
     "copied": "Tautan publik hanya lihat disalin",

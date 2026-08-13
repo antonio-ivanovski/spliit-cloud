@@ -85,6 +85,12 @@ vi.mock('@/app/groups/[groupId]/edit/delete-group-dialog', () => ({
   DeleteGroupDialog: () => null,
 }))
 
+vi.mock('@/app/groups/[groupId]/edit/group-view-link-card', () => ({
+  PublicViewOnlyLinkSection: () => (
+    <section data-testid="public-view-link-card">Public View-only link</section>
+  ),
+}))
+
 import { EditGroup } from '@/app/groups/[groupId]/edit/edit-group'
 
 function setFriendGroup() {
@@ -212,6 +218,18 @@ describe('EditGroup', () => {
     render(<EditGroup />)
 
     expect(screen.getByLabelText('Group name')).toBeInTheDocument()
+  })
+
+  it('renders the Public View-only link card below Group information', () => {
+    setGroupGroup()
+    render(<EditGroup />)
+
+    const groupForm = screen.getByTestId('group-form')
+    const publicViewLink = screen.getByTestId('public-view-link-card')
+    expect(
+      groupForm.compareDocumentPosition(publicViewLink) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
   })
 
   // ── Export card visibility ─────────────────────────────────────────

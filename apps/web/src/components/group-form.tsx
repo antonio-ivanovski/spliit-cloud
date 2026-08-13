@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link } from '@tanstack/react-router'
 import { Save, UserPlus } from 'lucide-react'
-import { useEffect, type ReactNode } from 'react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type { z } from 'zod'
@@ -45,8 +45,6 @@ export type Props = {
    * covers pending invitations, public links, and a future view-only member.
    */
   readOnly?: boolean
-  /** Extra group settings rendered inside the Group information card. */
-  additionalSettings?: ReactNode
   /**
    * When `true`, the group is archived and its settings are frozen. All inputs
    * are disabled and no Save button is shown. Archived groups are not editable
@@ -121,7 +119,6 @@ export function GroupForm({
   group,
   currentMemberRole,
   readOnly: explicitReadOnly,
-  additionalSettings,
   archived = false,
   hideInviteHint = false,
   initialValues,
@@ -360,8 +357,6 @@ export function GroupForm({
               </div>
             </CardContent>
           )}
-
-          {additionalSettings}
         </Card>
 
         {!group && !hideInviteHint && (

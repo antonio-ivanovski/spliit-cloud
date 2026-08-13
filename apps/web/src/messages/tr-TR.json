@@ -3012,7 +3012,7 @@
   "GroupViewLink": {
     "title": "Herkese açık salt görüntüleme bağlantısı",
     "description": "Bu bağlantıya sahip herkesin oturum açmadan grubu görüntülemesine izin verin.",
-    "warning": "Bu bağlantı harcamalara, bakiyelere, fişlere, yorumlara, etkinliklere, üyelere ve bütçelere erişim sağlar. Yalnızca güvendiğiniz kişilerle paylaşın.",
+    "warning": "Bu bağlantı gruptaki her şeye salt görüntüleme erişimi sağlar. Yalnızca güvendiğiniz kişilerle paylaşın.",
     "linkLabel": "Herkese açık salt görüntüleme bağlantısı",
     "copy": "Herkese açık salt görüntüleme bağlantısını kopyala",
     "copied": "Herkese açık salt görüntüleme bağlantısı kopyalandı",

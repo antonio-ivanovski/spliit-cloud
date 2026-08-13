@@ -3046,7 +3046,7 @@
   "GroupViewLink": {
     "title": "Veřejný odkaz pro prohlížení",
     "description": "Každý s tímto veřejným odkazem si může skupinu prohlédnout bez přihlášení.",
-    "warning": "Odkaz poskytuje přístup k výdajům, zůstatkům, účtenkám, komentářům, aktivitě, členům a rozpočtům. Sdílejte ho jen s lidmi, kterým důvěřujete.",
+    "warning": "Tento odkaz poskytuje přístup ke všemu ve skupině pouze pro čtení. Sdílejte ho jen s lidmi, kterým důvěřujete.",
     "linkLabel": "Veřejný odkaz pro prohlížení",
     "copy": "Zkopírovat veřejný odkaz",
     "copied": "Veřejný odkaz zkopírován",

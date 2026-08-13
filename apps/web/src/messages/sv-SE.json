@@ -3008,7 +3008,7 @@
   "GroupViewLink": {
     "title": "Offentlig länk med endast visning",
     "description": "Med den här länken kan vem som helst visa gruppen utan att logga in.",
-    "warning": "Länken ger åtkomst till utgifter, saldon, kvitton, kommentarer, aktivitet, medlemmar och budgetar. Dela den bara med personer du litar på.",
+    "warning": "Länken ger skrivskyddad åtkomst till allt i gruppen. Dela den bara med personer du litar på.",
     "linkLabel": "Offentlig länk",
     "copy": "Kopiera offentlig länk",
     "copied": "Offentlig länk kopierad",

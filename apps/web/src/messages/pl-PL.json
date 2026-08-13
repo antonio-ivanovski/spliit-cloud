@@ -3046,7 +3046,7 @@
   "GroupViewLink": {
     "title": "Publiczny link tylko do odczytu",
     "description": "Każda osoba mająca ten publiczny link może przeglądać grupę bez logowania.",
-    "warning": "Link zapewnia dostęp do wydatków, sald, rachunków, komentarzy, aktywności, członków i budżetów. Udostępniaj go tylko zaufanym osobom.",
+    "warning": "Ten link zapewnia dostęp tylko do odczytu do wszystkiego w grupie. Udostępniaj go tylko zaufanym osobom.",
     "linkLabel": "Publiczny link tylko do odczytu",
     "copy": "Kopiuj link publiczny",
     "copied": "Skopiowano link publiczny",

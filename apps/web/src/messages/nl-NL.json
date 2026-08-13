@@ -3012,7 +3012,7 @@
   "GroupViewLink": {
     "title": "Openbare alleen-lezen link",
     "description": "Met deze link kan iedereen de groep bekijken zonder in te loggen.",
-    "warning": "De link geeft toegang tot uitgaven, saldi, bonnetjes, opmerkingen, activiteit, leden en budgetten. Deel hem alleen met mensen die je vertrouwt.",
+    "warning": "Deze link geeft alleen-lezen toegang tot alles in de groep. Deel hem alleen met mensen die je vertrouwt.",
     "linkLabel": "Openbare link",
     "copy": "Openbare link kopiëren",
     "copied": "Openbare link gekopieerd",

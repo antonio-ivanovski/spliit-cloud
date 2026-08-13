@@ -3084,7 +3084,7 @@
   "GroupViewLink": {
     "title": "Liên kết công khai chỉ xem",
     "description": "Cho phép bất kỳ ai có liên kết này xem nhóm mà không cần đăng nhập.",
-    "warning": "Liên kết này cho phép xem các khoản chi, số dư, biên lai, bình luận, hoạt động, thành viên và ngân sách. Chỉ chia sẻ với người bạn tin tưởng.",
+    "warning": "Liên kết này cho phép chỉ xem mọi nội dung trong nhóm. Chỉ chia sẻ với người bạn tin tưởng.",
     "linkLabel": "Liên kết công khai chỉ xem",
     "copy": "Sao chép liên kết công khai chỉ xem",
     "copied": "Đã sao chép liên kết công khai chỉ xem",

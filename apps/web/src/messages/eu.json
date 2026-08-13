@@ -3029,7 +3029,7 @@
   "GroupViewLink": {
     "title": "Ikusteko soilik den esteka publikoa",
     "description": "Esteka publiko hau duen edonork taldea saioa hasi gabe ikus dezake.",
-    "warning": "Estekak gastuetarako, saldoetarako, ordainagirietarako, iruzkinetarako, jarduerarako, kideetarako eta aurrekontuetarako sarbidea ematen du. Partekatu konfiantzazko pertsonekin soilik.",
+    "warning": "Esteka honek taldeko guztia ikusteko soilik sarbidea ematen du. Partekatu konfiantzazko pertsonekin soilik.",
     "linkLabel": "Ikusteko soilik den esteka publikoa",
     "copy": "Kopiatu esteka publikoa",
     "copied": "Esteka publikoa kopiatu da",

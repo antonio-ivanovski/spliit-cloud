@@ -317,24 +317,6 @@ describe('GroupForm', () => {
     expect(screen.getByRole('button', { name: /save/i })).toBeInTheDocument()
   })
 
-  it('keeps the save action above additional group settings', () => {
-    const onSubmit = vi.fn()
-    render(
-      <GroupForm
-        group={mockGroup as Props['group']}
-        additionalSettings={<div data-testid="additional-settings" />}
-        onSubmit={onSubmit}
-      />,
-    )
-
-    const save = screen.getByRole('button', { name: /save/i })
-    const additionalSettings = screen.getByTestId('additional-settings')
-    expect(
-      save.compareDocumentPosition(additionalSettings) &
-        Node.DOCUMENT_POSITION_FOLLOWING,
-    ).toBeTruthy()
-  })
-
   it('hides the name input when hideNameField is true', () => {
     const onSubmit = vi.fn()
     render(

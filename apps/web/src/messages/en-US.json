@@ -3084,7 +3084,7 @@
   "GroupViewLink": {
     "title": "Public View-only link",
     "description": "Let anyone with this link view the group without signing in.",
-    "warning": "The link provides access to expenses, balances, receipts, comments, activity, members, and budgets. Share it only with people you trust.",
+    "warning": "This link provides view-only access to everything in the group. Share it only with people you trust.",
     "linkLabel": "Public View-only link",
     "copy": "Copy Public View-only link",
     "copied": "Public View-only link copied",

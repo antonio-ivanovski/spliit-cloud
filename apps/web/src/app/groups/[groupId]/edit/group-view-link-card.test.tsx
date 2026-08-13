@@ -81,6 +81,8 @@ describe('PublicViewOnlyLinkSection', () => {
       canManage: true,
     }
     renderSection()
+    expect(screen.getByRole('button', { name: 'replace' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'remove' })).toBeInTheDocument()
     await userEvent.click(
       screen.getByRole('button', { name: 'replace / remove' }),
     )

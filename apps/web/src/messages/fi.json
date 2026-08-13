@@ -3012,7 +3012,7 @@
   "GroupViewLink": {
     "title": "Julkinen vain katseluun tarkoitettu linkki",
     "description": "Tämän linkin avulla kuka tahansa voi tarkastella ryhmää kirjautumatta sisään.",
-    "warning": "Linkin kautta pääsee tarkastelemaan kuluja, saldoja, kuitteja, kommentteja, toimintaa, jäseniä ja budjetteja. Jaa se vain luottamiesi ihmisten kanssa.",
+    "warning": "Tämä linkki antaa vain katseluoikeuden kaikkeen ryhmän sisältöön. Jaa se vain luottamiesi ihmisten kanssa.",
     "linkLabel": "Julkinen linkki",
     "copy": "Kopioi julkinen linkki",
     "copied": "Julkinen linkki kopioitu",

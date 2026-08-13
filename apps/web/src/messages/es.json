@@ -3030,7 +3030,7 @@
   "GroupViewLink": {
     "title": "Enlace público de solo lectura",
     "description": "Permite que cualquiera que tenga este enlace público vea el grupo sin iniciar sesión.",
-    "warning": "El enlace da acceso a gastos, saldos, recibos, comentarios, actividad, miembros y presupuestos. Compártelo solo con personas de confianza.",
+    "warning": "Este enlace da acceso de solo lectura a todo el contenido del grupo. Compártelo solo con personas de confianza.",
     "linkLabel": "Enlace público de solo lectura",
     "copy": "Copiar enlace público",
     "copied": "Enlace público copiado",

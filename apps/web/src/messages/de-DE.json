@@ -3080,7 +3080,7 @@
   "GroupViewLink": {
     "title": "Öffentlicher Link mit Nur-Lese-Zugriff",
     "description": "Mit diesem Link kann jeder die Gruppe ansehen, ohne sich anzumelden.",
-    "warning": "Der Link gewährt Zugriff auf Ausgaben, Salden, Belege, Kommentare, Aktivitäten, Mitglieder und Budgets. Teile ihn nur mit Personen, denen du vertraust.",
+    "warning": "Dieser Link gewährt Lesezugriff auf alles in der Gruppe. Teile ihn nur mit Personen, denen du vertraust.",
     "linkLabel": "Öffentlicher Link",
     "copy": "Öffentlichen Link kopieren",
     "copied": "Öffentlicher Link kopiert",

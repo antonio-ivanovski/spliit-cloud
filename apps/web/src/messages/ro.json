@@ -3030,7 +3030,7 @@
   "GroupViewLink": {
     "title": "Link public de vizualizare",
     "description": "Permite oricărei persoane care are acest link public să vadă grupul fără să se autentifice.",
-    "warning": "Linkul oferă acces la cheltuieli, solduri, chitanțe, comentarii, activitate, membri și bugete. Distribuie-l doar persoanelor în care ai încredere.",
+    "warning": "Acest link oferă acces doar pentru vizualizare la tot conținutul grupului. Distribuie-l doar persoanelor în care ai încredere.",
     "linkLabel": "Link public de vizualizare",
     "copy": "Copiază linkul public",
     "copied": "Link public copiat",
