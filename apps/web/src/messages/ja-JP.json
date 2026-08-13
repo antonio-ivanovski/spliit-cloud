@@ -1674,7 +1674,8 @@
     "inviteOnly": {
       "message": "このインスタンスは招待制です。招待リンクを使用するか、誰かにグループへ招待してもらってください。",
       "useInvitedEmail": "招待されたメールアドレスを使用してください。"
-    }
+    },
+    "signInWithX": "Xで続ける"
   },
   "CompleteProfile": {
     "title": "プロフィールを完成",

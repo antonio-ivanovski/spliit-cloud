@@ -49,6 +49,7 @@ describe('useDeploymentConfig', () => {
       defaultCurrencyCode: 'EUR',
       enableGoogleOAuth: true,
       enableGitHubOAuth: false,
+      enableTwitterOAuth: true,
       signupMode: 'invite_only',
       allowUninvitedSignup: false,
     })
@@ -62,6 +63,7 @@ describe('useDeploymentConfig', () => {
         defaultCurrencyCode: 'EUR',
         enableGoogleOAuth: true,
         enableGitHubOAuth: false,
+        enableTwitterOAuth: true,
         signupMode: 'invite_only',
         allowUninvitedSignup: false,
       })

@@ -1689,7 +1689,8 @@
     "inviteOnly": {
       "message": "Questa istanza è accessibile solo su invito. Usa un link di invito o chiedi a qualcuno di invitarti in un gruppo.",
       "useInvitedEmail": "Usa l'indirizzo email con cui hai ricevuto l'invito."
-    }
+    },
+    "signInWithX": "Continua con X"
   },
   "CompleteProfile": {
     "title": "Completa il tuo profilo",

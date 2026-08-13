@@ -36,6 +36,7 @@ const authMethodLabels: Record<string, string> = {
   credential: 'email and password',
   google: 'Google',
   github: 'GitHub',
+  twitter: 'X',
   'magic-link': 'email sign-in link',
 }
 
@@ -202,6 +203,78 @@ export async function getVerifiedGitHubUserInfo(token: OAuthToken) {
   }
 }
 
+type TwitterProfile = {
+  data?: {
+    id?: string
+    name?: string | null
+    username?: string | null
+    profile_image_url?: string | null
+    confirmed_email?: string | null
+  }
+}
+
+/**
+ * Resolve the Spliit `Account` for an X (Twitter) OAuth sign-in. Prefers the
+ * confirmed email from X API v2 (`user.fields=confirmed_email`); falls back to
+ * a synthetic placeholder (`<id>@twitter.placeholder.local`) when the user has
+ * no confirmed email. Better Auth's default uses the X username as the email in
+ * that case, which is not a real address and would break account linking and
+ * email-only features.
+ */
+export async function getVerifiedTwitterUserInfo(token: OAuthToken) {
+  if (!token.accessToken) return null
+
+  const response = await fetch(
+    'https://api.x.com/2/users/me?user.fields=profile_image_url,confirmed_email',
+    {
+      headers: {
+        Authorization: `Bearer ${token.accessToken}`,
+      },
+    },
+  )
+  if (!response.ok) return null
+
+  const profile = (await response.json()) as TwitterProfile
+  const data = profile.data
+  if (!data?.id) return null
+
+  const profileId = String(data.id)
+  const displayName = data.name || data.username || ''
+  const image = data.profile_image_url ?? undefined
+  const confirmedEmail = data.confirmed_email?.trim()
+
+  if (confirmedEmail) {
+    return {
+      user: {
+        id: profileId,
+        name: displayName,
+        email: confirmedEmail,
+        image,
+        emailVerified: true,
+      },
+      data: {
+        ...data,
+        email: confirmedEmail,
+      },
+    }
+  }
+
+  return {
+    user: {
+      id: profileId,
+      name: displayName,
+      email: buildProviderPlaceholderEmail('twitter', profileId),
+      image,
+      emailVerified: false,
+    },
+    data: {
+      ...data,
+      email: null,
+      isPlaceholderEmail: true,
+    },
+  }
+}
+
 /**
  * Spliit authentication is built on better-auth. better-auth owns its own
  * schema (user, session, account, verification). We map those tables to our
@@ -259,7 +332,13 @@ export const auth = betterAuth({
     modelName: 'AuthIdentity',
     accountLinking: {
       enabled: true,
-      trustedProviders: ['google', 'github', 'credential', 'magic-link'],
+      trustedProviders: [
+        'google',
+        'github',
+        'twitter',
+        'credential',
+        'magic-link',
+      ],
     },
   },
   verification: {
@@ -377,7 +456,9 @@ export const auth = betterAuth({
       {
         clientId: string
         clientSecret: string
-        getUserInfo?: typeof getVerifiedGitHubUserInfo
+        getUserInfo?:
+          | typeof getVerifiedGitHubUserInfo
+          | typeof getVerifiedTwitterUserInfo
       }
     > = {}
     if (env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET) {
@@ -391,6 +472,13 @@ export const auth = betterAuth({
         clientId: env.GITHUB_CLIENT_ID,
         clientSecret: env.GITHUB_CLIENT_SECRET,
         getUserInfo: getVerifiedGitHubUserInfo,
+      }
+    }
+    if (env.TWITTER_CLIENT_ID && env.TWITTER_CLIENT_SECRET) {
+      providers.twitter = {
+        clientId: env.TWITTER_CLIENT_ID,
+        clientSecret: env.TWITTER_CLIENT_SECRET,
+        getUserInfo: getVerifiedTwitterUserInfo,
       }
     }
     return Object.keys(providers).length > 0 ? providers : undefined

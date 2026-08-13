@@ -79,6 +79,8 @@ const envSchema = z
     GOOGLE_CLIENT_SECRET: optionalString,
     GITHUB_CLIENT_ID: optionalString,
     GITHUB_CLIENT_SECRET: optionalString,
+    TWITTER_CLIENT_ID: optionalString,
+    TWITTER_CLIENT_SECRET: optionalString,
     ENABLE_MCP: z.preprocess(interpretEnvVarAsBool, z.boolean().default(false)),
     MCP_PUBLIC_URL: optionalUrl,
     ASSISTANT_CONFIRMATION_SECRET: optionalString,

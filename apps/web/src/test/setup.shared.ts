@@ -9,6 +9,7 @@ vi.stubGlobal('import.meta', {
     VITE_API_URL: 'http://localhost:3001',
     VITE_ENABLE_GOOGLE_OAUTH: 'false',
     VITE_ENABLE_GITHUB_OAUTH: 'false',
+    VITE_ENABLE_TWITTER_OAUTH: 'false',
     MODE: 'test',
     DEV: true,
     PROD: false,
