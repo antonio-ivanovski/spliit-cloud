@@ -369,6 +369,7 @@ export const invitationsRouter = createTRPCRouter({
             ctx.auth.user.email,
           inviterRole: member.role,
           recipientEmail: value.email,
+          senderAccountId: ctx.auth.user.id,
           recipientIsExistingUser: false,
           temporaryName: value.temporaryName,
         })

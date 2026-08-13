@@ -25,6 +25,7 @@ import { randomId } from '../api/shared'
 import { removeParticipantFromSubgroup } from '../api/subgroups'
 import { sendEmail } from '../mail/send'
 import { renderInvitationEmail } from '../mail/templates/invitation'
+import { allowUserGeneratedEmail } from '../outbound-email-rate-limit'
 import { getInvitationDisplayName } from './display'
 import {
   materializePendingInvitationParticipant,
@@ -492,6 +493,7 @@ export async function sendInvitationEmail(opts: {
   inviterDisplayName: string
   inviterRole: GroupRole
   recipientEmail: string
+  senderAccountId: string
   recipientIsExistingUser: boolean
   temporaryName?: string | null
   sourceProvider?: string
@@ -500,6 +502,15 @@ export async function sendInvitationEmail(opts: {
   totalAmount?: number
   currencyCode?: string | null
 }) {
+  if (
+    !allowUserGeneratedEmail({
+      senderAccountId: opts.senderAccountId,
+      recipientEmail: opts.recipientEmail,
+      policy: 'invitation-email',
+    })
+  )
+    return
+
   try {
     const rendered = await renderInvitationEmail(opts)
     await sendEmail({ to: opts.recipientEmail, ...rendered })

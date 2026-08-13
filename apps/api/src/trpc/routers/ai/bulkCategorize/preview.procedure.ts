@@ -18,7 +18,11 @@ import {
   type BulkCategorizeCandidateRow,
 } from '../../../../lib/api/category-bulk'
 import { env } from '../../../../lib/env'
-import { loadGroupContext, protectedProcedure } from '../../../init'
+import {
+  enforceBulkAiRequestLimit,
+  loadGroupContext,
+  protectedProcedure,
+} from '../../../init'
 import { previewBulkCategorizeOutputSchema } from '../../../outputs/ai'
 
 const previewInputSchema = z.object({
@@ -52,6 +56,12 @@ export const aiBulkCategorizePreviewProcedure = protectedProcedure
   .input(previewInputSchema)
   .output(previewBulkCategorizeOutputSchema)
   .mutation(async ({ ctx, input }) => {
+    if (!env.PUBLIC_ENABLE_BULK_CATEGORIZE) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'Bulk categorization is disabled',
+      })
+    }
     const { member, group } = await loadGroupContext({
       groupId: input.groupId,
       accountId: ctx.auth.user.id,
@@ -100,6 +110,11 @@ export const aiBulkCategorizePreviewProcedure = protectedProcedure
     const suggestions: BulkPreviewResponse['suggestions'] = []
     const seenIds = new Set<string>()
 
+    enforceBulkAiRequestLimit(
+      ctx.auth.user.id,
+      'ai.bulkCategorize.preview',
+      ctx.resHeaders,
+    )
     for (const chunk of chunks) {
       const userContent = renderPreviewChunkPrompt({
         chunk,

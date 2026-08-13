@@ -278,6 +278,7 @@ export async function updatePendingInvitation(
       inviterDisplayName: opts.inviterDisplayName,
       inviterRole: opts.inviterRole,
       recipientEmail: updated.email,
+      senderAccountId: opts.actorAccountId,
       recipientIsExistingUser: matchedAccount !== null,
       temporaryName: matchedAccount ? undefined : updated.temporaryName,
     })

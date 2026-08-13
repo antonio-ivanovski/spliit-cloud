@@ -11,13 +11,15 @@ import {
 } from '../lib/auth/session'
 import { env } from '../lib/env'
 import { hashLinkToken } from '../lib/invitations'
-import { FixedWindowLimiter } from '../lib/rate-limit'
+import { FixedWindowLimiter, logRateLimitExceeded } from '../lib/rate-limit'
 
 export type AuthContext = {
   /** Authenticated account + better-auth session, or null. */
   auth: ResolvedAuth | OAuthResolvedAuth | null
   /** Outgoing fetch Request, when available (tRPC context only sees headers). */
   req?: Request
+  /** Mutable response headers supplied by the fetch adapter. */
+  resHeaders?: Headers
 }
 
 export async function createTRPCContext(opts: {
@@ -29,7 +31,7 @@ export async function createTRPCContext(opts: {
   const auth =
     (await getAuthFromRequest(request).catch(() => null)) ??
     (await getOAuthAuthFromRequest(request).catch(() => null))
-  return { auth, req: opts.req }
+  return { auth, req: opts.req, resHeaders: opts.resHeaders }
 }
 
 // Avoid exporting the entire t-object
@@ -56,29 +58,121 @@ const assistantRequestLimiter = new FixedWindowLimiter({
   limit: 120,
   windowMs: 60_000,
 })
+const authenticatedMutationLimiter = new FixedWindowLimiter({
+  limit: 120,
+  windowMs: 60_000,
+})
 
 /**
  * Procedure that requires an authenticated account. The account is exposed to
  * the procedure via `ctx.auth.user`.
  */
-export const protectedProcedure = baseProcedure.use(async ({ ctx, next }) => {
-  if (
-    !ctx.auth ||
-    ('credentialKind' in ctx.auth && ctx.auth.credentialKind === 'oauth')
-  ) {
+export const protectedProcedure = baseProcedure.use(
+  async ({ ctx, next, path, type }) => {
+    if (
+      !ctx.auth ||
+      ('credentialKind' in ctx.auth && ctx.auth.credentialKind === 'oauth')
+    ) {
+      throw new TRPCError({
+        code: 'UNAUTHORIZED',
+        message: 'Authentication required',
+      })
+    }
+    if (type === 'mutation') {
+      const decision = authenticatedMutationLimiter.hit(ctx.auth.user.id)
+      if (!decision.allowed) {
+        logRateLimitExceeded({
+          policy: 'authenticated-mutation',
+          identity: ctx.auth.user.id,
+          retryAfterSeconds: decision.retryAfterSeconds,
+          path,
+        })
+        ctx.resHeaders?.set('Retry-After', String(decision.retryAfterSeconds))
+        throw new TRPCError({
+          code: 'TOO_MANY_REQUESTS',
+          message: 'Request limit exceeded; try again shortly',
+        })
+      }
+    }
+
+    return next({
+      ctx: {
+        ...ctx,
+        // Narrow the type so procedures can rely on a non-null auth.
+        auth: ctx.auth,
+      },
+    })
+  },
+)
+
+function accountRateLimitedProcedure(options: {
+  policy: string
+  limit: number
+  windowMs: number
+}) {
+  const limiter = new FixedWindowLimiter({
+    limit: options.limit,
+    windowMs: options.windowMs,
+  })
+
+  const enforce = (accountId: string, path?: string, resHeaders?: Headers) => {
+    const decision = limiter.hit(accountId)
+    if (decision.allowed) return
+    logRateLimitExceeded({
+      policy: options.policy,
+      identity: accountId,
+      retryAfterSeconds: decision.retryAfterSeconds,
+      path,
+    })
+    resHeaders?.set('Retry-After', String(decision.retryAfterSeconds))
     throw new TRPCError({
-      code: 'UNAUTHORIZED',
-      message: 'Authentication required',
+      code: 'TOO_MANY_REQUESTS',
+      message: 'Request limit exceeded; try again later',
     })
   }
-  return next({
-    ctx: {
-      ...ctx,
-      // Narrow the type so procedures can rely on a non-null auth.
-      auth: ctx.auth,
-    },
-  })
+
+  return {
+    procedure: protectedProcedure.use(({ ctx, next, path }) => {
+      enforce(ctx.auth.user.id, path, ctx.resHeaders)
+      return next()
+    }),
+    enforce,
+  }
+}
+
+const aiRequests = accountRateLimitedProcedure({
+  policy: 'ai',
+  limit: 60,
+  windowMs: 60 * 60 * 1000,
 })
+const categoryAiRequests = accountRateLimitedProcedure({
+  policy: 'ai-category',
+  limit: 120,
+  windowMs: 60 * 60 * 1000,
+})
+const bulkAiRequests = accountRateLimitedProcedure({
+  policy: 'ai-bulk',
+  limit: 20,
+  windowMs: 60 * 60 * 1000,
+})
+const uploadPresignRequests = accountRateLimitedProcedure({
+  policy: 'upload-presign',
+  limit: 120,
+  windowMs: 60 * 60 * 1000,
+})
+const importRequests = accountRateLimitedProcedure({
+  policy: 'group-import',
+  limit: 20,
+  windowMs: 60 * 60 * 1000,
+})
+
+export const uploadPresignProcedure = uploadPresignRequests.procedure
+export const importProcedure = importRequests.procedure
+
+/** Charge AI quotas only immediately before provider work. */
+export const enforceAiRequestLimit = aiRequests.enforce
+export const enforceCategoryAiRequestLimit = categoryAiRequests.enforce
+export const enforceBulkAiRequestLimit = bulkAiRequests.enforce
 
 export function assistantProcedure(requiredScope: string) {
   return baseProcedure.use(async ({ ctx, next }) => {

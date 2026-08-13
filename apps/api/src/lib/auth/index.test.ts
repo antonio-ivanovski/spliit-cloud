@@ -41,7 +41,13 @@ const realAuthModule = (await vi.importActual('./index')) as {
           adapter?: unknown
         }
       }>
-      emailVerification?: { autoSignInAfterVerification?: boolean }
+      emailVerification?: {
+        autoSignInAfterVerification?: boolean
+        sendVerificationEmail?: (params: {
+          user: { id: string; email: string }
+          url: string
+        }) => Promise<void>
+      }
       session?: {
         expiresIn?: number
         updateAge?: number
@@ -59,6 +65,13 @@ const realAuthModule = (await vi.importActual('./index')) as {
           trustedProviders?: string[]
         }
       }
+      advanced?: {
+        ipAddress?: {
+          ipAddressHeaders?: string[]
+          disableIpTracking?: boolean
+        }
+      }
+      rateLimit?: { enabled?: boolean }
       socialProviders?: Record<
         string,
         {
@@ -111,6 +124,19 @@ describe('better-auth session config', () => {
     expect(jwtPlugin?.options?.disableSettingJwtHeader).toBe(true)
   })
 
+  it('checks Cloudflare and conventional proxy IP headers in order', () => {
+    expect(
+      realAuthModule.auth.options.advanced?.ipAddress?.ipAddressHeaders,
+    ).toEqual(['cf-connecting-ip', 'x-real-ip', 'x-forwarded-for'])
+  })
+
+  it('disables built-in IP tracking and throttling without a trusted proxy', () => {
+    expect(realAuthModule.auth.options.rateLimit?.enabled).toBe(false)
+    expect(
+      realAuthModule.auth.options.advanced?.ipAddress?.disableIpTracking,
+    ).toBe(true)
+  })
+
   it('uses an isolated JWKS adapter in the test environment', () => {
     const jwtPlugin = realAuthModule.auth.options.plugins?.find(
       (plugin) => plugin.id === 'jwt',
@@ -152,6 +178,33 @@ describe('better-auth emailVerification config', () => {
       realAuthModule.auth.options.emailVerification
         ?.autoSignInAfterVerification,
     ).toBe(true)
+  })
+
+  it('charges recipient quota only from the email delivery callback', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+    const sendVerificationEmail =
+      realAuthModule.auth.options.emailVerification?.sendVerificationEmail
+    expect(sendVerificationEmail).toBeDefined()
+    const params = {
+      user: {
+        id: 'recipient-delivery-limit-account',
+        email: 'recipient-delivery-limit@example.test',
+      },
+      url: 'https://example.test/verify',
+    }
+
+    for (let count = 0; count < 10; count += 1) {
+      await expect(sendVerificationEmail?.(params)).resolves.toBeUndefined()
+    }
+    await expect(sendVerificationEmail?.(params)).rejects.toMatchObject({
+      status: 'TOO_MANY_REQUESTS',
+      body: { code: 'EMAIL_RATE_LIMIT_EXCEEDED' },
+    })
+
+    expect(sendEmailMock).toHaveBeenCalledTimes(10)
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('auth-email-recipient'),
+    )
   })
 })
 

@@ -15,7 +15,7 @@ import {
 } from '../../../lib/api/import-cloud'
 import { enqueueBudgetEvaluation } from '../../../lib/budgets/enqueue'
 import { deleteS3Object } from '../../../routes/upload'
-import { protectedProcedure } from '../../init'
+import { importProcedure } from '../../init'
 import { importCloudBundleOutputSchema } from '../../outputs/imports'
 
 const participantMappingSchema = z.discriminatedUnion('mode', [
@@ -100,7 +100,7 @@ const cloudImportInputSchema = z.object({
     .optional(),
 })
 
-export const importCloudBundleProcedure = protectedProcedure
+export const importCloudBundleProcedure = importProcedure
   .input(cloudImportInputSchema)
   .output(importCloudBundleOutputSchema)
   .mutation(async ({ input, ctx }) => {

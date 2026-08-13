@@ -36,12 +36,20 @@ beforeEach(() => {
 
 describe('suggestExpenseCategory', () => {
   it('returns a dictionary hit without querying titles or calling the model', async () => {
+    envState.PUBLIC_ENABLE_CATEGORY_EXTRACT = true
+    const beforeAi = vi.fn()
     await expect(
-      suggestExpenseCategory({ groupId: 'group-1', title: 'Whole Foods' }),
+      suggestExpenseCategory({
+        groupId: 'group-1',
+        title: 'Whole Foods',
+        allowAi: true,
+        beforeAi,
+      }),
     ).resolves.toEqual({ categoryId: 'groceries' })
     expect(prismaMock.group.findUnique).not.toHaveBeenCalled()
     expect(prisma$QueryRaw).not.toHaveBeenCalled()
     expect(generateText).not.toHaveBeenCalled()
+    expect(beforeAi).not.toHaveBeenCalled()
   })
 
   it('returns null for 1–2 letter titles without querying or calling the model', async () => {
@@ -97,15 +105,21 @@ describe('suggestExpenseCategory', () => {
 
   it('calls the model when local matching is weak and AI is allowed', async () => {
     envState.PUBLIC_ENABLE_CATEGORY_EXTRACT = true
+    const beforeAi = vi.fn()
 
     await expect(
       suggestExpenseCategory({
         groupId: 'group-1',
         title: 'Luigi mysterious trattoria xyzzy',
         allowAi: true,
+        beforeAi,
       }),
     ).resolves.toEqual({ categoryId: 'groceries' })
+    expect(beforeAi).toHaveBeenCalledOnce()
     expect(generateText).toHaveBeenCalledTimes(1)
+    expect(beforeAi.mock.invocationCallOrder[0]).toBeLessThan(
+      generateText.mock.invocationCallOrder[0]!,
+    )
   })
 
   it('does not call the model when allowAi is false even if the flag is on', async () => {

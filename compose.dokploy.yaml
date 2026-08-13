@@ -24,7 +24,7 @@ services:
     environment:
       PORT: 3001
       WEB_ORIGINS: ${WEB_ORIGINS}
-      TRUST_PROXY: ${TRUST_PROXY:-true}
+      TRUST_PROXY: ${TRUST_PROXY:-false}
       DATABASE_URL: ${DATABASE_URL}
       DATABASE_APPLICATION_NAME: spliit-api
       DATABASE_POOL_SIZE: ${DATABASE_POOL_SIZE:-10}

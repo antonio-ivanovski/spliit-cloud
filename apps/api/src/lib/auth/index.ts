@@ -25,6 +25,11 @@ import {
   renderPasswordRecoveryEmail,
   renderVerificationEmail,
 } from '../mail/templates'
+import {
+  FixedWindowLimiter,
+  hashRateLimitIdentity,
+  logRateLimitExceeded,
+} from '../rate-limit'
 import { invalidateAccountCache } from './account-cache'
 import {
   assertCanCreateAccount,
@@ -34,6 +39,11 @@ import {
 import { getApiBaseUrl } from './urls'
 
 const oidcProvider = getConfiguredOidcProvider()
+
+const authEmailRecipientLimiter = new FixedWindowLimiter({
+  limit: 10,
+  windowMs: 60 * 60 * 1000,
+})
 
 const authMethodLabels: Record<string, string> = {
   credential: 'email and password',
@@ -87,6 +97,29 @@ const beforeAuthMiddleware = createAuthMiddleware(async (ctx) => {
   await persistSignupInviteCookie(ctx)
   await enforceSignupGate(ctx)
 })
+
+function enforceAuthEmailRecipientLimit(email: string, path: string): void {
+  const normalizedEmail = email.trim().toLowerCase()
+  const decision = authEmailRecipientLimiter.hit(
+    hashRateLimitIdentity(normalizedEmail),
+  )
+  if (decision.allowed) return
+
+  logRateLimitExceeded({
+    policy: 'auth-email-recipient',
+    identity: normalizedEmail,
+    retryAfterSeconds: decision.retryAfterSeconds,
+    path,
+  })
+  throw new APIError(
+    'TOO_MANY_REQUESTS',
+    {
+      message: 'Too many email requests. Please try again later.',
+      code: 'EMAIL_RATE_LIMIT_EXCEEDED',
+    },
+    { 'Retry-After': String(decision.retryAfterSeconds) },
+  )
+}
 
 // Integration and unit tests share the local PostgreSQL database with the
 // already-running development API. Persisting test signing keys there would
@@ -324,6 +357,14 @@ export const auth = betterAuth({
   // and then be rejected by better-auth.
   trustedOrigins: webOrigins,
 
+  // Better Auth's built-in limiter is keyed by client IP. Without a trusted
+  // proxy there is no safe per-client IP identity, so enabling it would put
+  // every caller into one replica-wide bucket. The recipient-based email
+  // limiter above remains active in either mode.
+  rateLimit: {
+    enabled: env.TRUST_PROXY,
+  },
+
   database: prismaAdapter(prisma, {
     provider: 'postgresql',
   }),
@@ -419,6 +460,7 @@ export const auth = betterAuth({
     // outlived the user noticing the breach, the reset kicks it out.
     revokeSessionsOnPasswordReset: true,
     async sendResetPassword({ user, url }) {
+      enforceAuthEmailRecipientLimit(user.email, '/request-password-reset')
       // Best-effort: a failed send must not break the forgot-password flow.
       // better-auth already created the verification token in the DB, so the
       // user can retry from the forgot-password page and a fresh token will
@@ -448,6 +490,7 @@ export const auth = betterAuth({
     // redirecting back to the web app.
     autoSignInAfterVerification: true,
     async sendVerificationEmail({ user, url }) {
+      enforceAuthEmailRecipientLimit(user.email, '/send-verification-email')
       // Best-effort: a failed send must not break the sign-up flow.
       // better-auth already created the verification token in the DB, so the
       // user can retry from the sign-in page and a fresh token will be issued.
@@ -572,6 +615,7 @@ export const auth = betterAuth({
     magicLink({
       disableSignUp: false,
       sendMagicLink: async ({ email, url }) => {
+        enforceAuthEmailRecipientLimit(email, '/sign-in/magic-link')
         // Best-effort: a failed send must not break the magic-link sign-in
         // flow. better-auth already created the verification token in the DB,
         // so the user can retry from the sign-in page and a fresh token will
@@ -620,6 +664,14 @@ export const auth = betterAuth({
       httpOnly: true,
       sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production',
+    },
+    ipAddress: {
+      disableIpTracking: !env.TRUST_PROXY,
+      // The public deployment is origin-locked behind Cloudflare. Prefer its
+      // single-value client header, with conventional proxy headers retained
+      // for supported self-hosted gateways. The Hono adapter strips all three
+      // before calling Better Auth when TRUST_PROXY is disabled.
+      ipAddressHeaders: ['cf-connecting-ip', 'x-real-ip', 'x-forwarded-for'],
     },
   },
 })

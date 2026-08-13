@@ -7,7 +7,7 @@ import {
   mintImportDocumentPresign,
   mintProfileImagePresign,
 } from '../../../routes/upload'
-import { createTRPCRouter, protectedProcedure } from '../../init'
+import { createTRPCRouter, uploadPresignProcedure } from '../../init'
 import {
   profileImagePresignOutputSchema,
   importDocumentPresignOutputSchema,
@@ -50,7 +50,7 @@ const profileImageInput = z.object({
  * caller's account, so we skip the redundant cookie round-trip.
  */
 export const uploadsRouter = createTRPCRouter({
-  importDocumentPresign: protectedProcedure
+  importDocumentPresign: uploadPresignProcedure
     .input(
       z.object({
         sessionId: z.uuid(),
@@ -72,7 +72,7 @@ export const uploadsRouter = createTRPCRouter({
       )) as { uploadUrl: string; stagedToken: string }
     }),
 
-  cloudImportDocumentPresign: protectedProcedure
+  cloudImportDocumentPresign: uploadPresignProcedure
     .input(
       z.object({
         sessionId: z.uuid(),
@@ -102,7 +102,7 @@ export const uploadsRouter = createTRPCRouter({
    * directly to S3/R2, then passes the returned `fileUrl` in the expense's
    * `documents` array.
    */
-  presign: protectedProcedure
+  presign: uploadPresignProcedure
     .input(presignInput)
     .output(uploadPresignOutputSchema)
     .mutation(async ({ ctx, input }) => {
@@ -125,7 +125,7 @@ export const uploadsRouter = createTRPCRouter({
    * Get a presigned PUT URL for a profile image upload. Pass the returned
    * `fileUrl` to `account.setProfileImage`.
    */
-  profileImagePresign: protectedProcedure
+  profileImagePresign: uploadPresignProcedure
     .input(profileImageInput)
     .output(profileImagePresignOutputSchema)
     .mutation(async ({ ctx, input }) => {

@@ -47,7 +47,7 @@ services:
       WEB_ORIGINS: ${WEB_ORIGINS:-${APP_URL:?APP_URL must be set}}
       BETTER_AUTH_URL: ${BETTER_AUTH_URL:-${APP_URL:?APP_URL must be set}}
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?BETTER_AUTH_SECRET must be set}
-      TRUST_PROXY: ${TRUST_PROXY:-true}
+      TRUST_PROXY: ${TRUST_PROXY:-false}
       SMTP_HOST: ${SMTP_HOST:?SMTP_HOST must be set}
       SMTP_PORT: ${SMTP_PORT:-587}
       SMTP_USER: ${SMTP_USER:-}

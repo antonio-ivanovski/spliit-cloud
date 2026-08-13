@@ -1,3 +1,10 @@
+import { createHmac, randomBytes } from 'node:crypto'
+import { isIP } from 'node:net'
+
+import { env } from './env'
+
+const rateLimitHashSecret = env.BETTER_AUTH_SECRET ?? randomBytes(32)
+
 type Bucket = { count: number; resetAt: number }
 
 export type RateLimitDecision = {
@@ -24,14 +31,21 @@ export class FixedWindowLimiter {
     },
   ) {}
 
-  hit(key: string, now: number = Date.now()): RateLimitDecision {
+  hit(
+    key: string,
+    now: number = Date.now(),
+    cost: number = 1,
+  ): RateLimitDecision {
+    if (!Number.isSafeInteger(cost) || cost <= 0) {
+      throw new RangeError('Rate-limit cost must be a positive safe integer')
+    }
     this.evict(now)
     const existing = this.buckets.get(key)
     const bucket: Bucket =
       !existing || existing.resetAt <= now
         ? { count: 0, resetAt: now + this.options.windowMs }
         : existing
-    bucket.count += 1
+    bucket.count += cost
     this.buckets.set(key, bucket)
     if (bucket.count > this.options.limit) {
       return {
@@ -68,23 +82,59 @@ export class FixedWindowLimiter {
  * Resolve a rate-limit identity from request headers. Forwarded headers are
  * only honored when the API is known to sit behind a trusted proxy; otherwise
  * they are client-controlled and spoofable, so every caller shares a single
- * conservative bucket. When trusted, the right-most `x-forwarded-for` hop is
- * used because the closest proxy appends (or overwrites with) the real client
- * address, while earlier entries can be forged by the client.
+ * conservative bucket. Cloudflare's single-value client header is preferred;
+ * generic proxy headers are compatibility fallbacks for self-hosted installs.
  */
 export function resolveClientIp(
   headers: Headers,
   options: { trustProxy: boolean },
 ): string {
   if (!options.trustProxy) return 'direct'
+
+  const cloudflareIp = normalizeIpHeader(headers.get('cf-connecting-ip'))
+  if (cloudflareIp) return cloudflareIp
+
+  const realIp = normalizeIpHeader(headers.get('x-real-ip'))
+  if (realIp) return realIp
+
   const forwarded = headers.get('x-forwarded-for')
   if (forwarded) {
     const hops = forwarded
       .split(',')
       .map((hop) => hop.trim())
       .filter(Boolean)
-    const ip = hops[hops.length - 1]
+    const ip = normalizeIpHeader(hops[hops.length - 1] ?? null)
     if (ip) return ip
   }
-  return headers.get('x-real-ip') ?? 'unknown'
+  return 'unknown'
+}
+
+function normalizeIpHeader(value: string | null): string | null {
+  const candidate = value?.trim()
+  if (!candidate || isIP(candidate) === 0) return null
+  return candidate.toLowerCase()
+}
+
+/** Keep abuse logs correlatable without recording raw accounts, IPs or emails. */
+export function hashRateLimitIdentity(value: string): string {
+  return createHmac('sha256', rateLimitHashSecret)
+    .update(value)
+    .digest('hex')
+    .slice(0, 16)
+}
+
+export function logRateLimitExceeded(options: {
+  policy: string
+  identity: string
+  retryAfterSeconds: number
+  path?: string
+}) {
+  console.warn(
+    `[rate-limit] ${JSON.stringify({
+      policy: options.policy,
+      actorHash: hashRateLimitIdentity(options.identity),
+      retryAfterSeconds: options.retryAfterSeconds,
+      ...(options.path ? { path: options.path } : {}),
+    })}`,
+  )
 }
