@@ -263,13 +263,12 @@ export const auth = betterAuth({
     modelName: 'AuthIdentity',
     accountLinking: {
       enabled: true,
-      trustedProviders: [
-        'google',
-        'github',
-        'credential',
-        'magic-link',
-        ...(oidcProvider ? [oidcProvider.id] : []),
-      ],
+      // Generic OIDC is operator-configured and may report unverified
+      // emails. Better Auth implicit-links a trusted provider even when
+      // `emailVerified` is false, which would let a matching address take
+      // over an existing account. Google and GitHub stay trusted; OIDC
+      // still links when the IdP marks the email verified.
+      trustedProviders: ['google', 'github', 'credential', 'magic-link'],
     },
   },
   verification: {

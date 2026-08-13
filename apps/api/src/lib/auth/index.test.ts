@@ -247,7 +247,16 @@ describe('better-auth socialProviders config', () => {
     expect(trusted).toContain('google')
     expect(trusted).toContain('credential')
     expect(trusted).toContain('magic-link')
-    expect(trusted).toContain('oidc')
+  })
+
+  it('does not trust generic OIDC for unverified implicit linking', () => {
+    // A matching unverified OIDC email must not take over an existing
+    // account. Better Auth still implicit-links untrusted providers when
+    // the IdP reports `emailVerified: true`.
+    const trusted =
+      realAuthModule.auth.options.account?.accountLinking?.trustedProviders ??
+      []
+    expect(trusted).not.toContain('oidc')
   })
 
   it('registers generic OIDC when OIDC env is complete', () => {
