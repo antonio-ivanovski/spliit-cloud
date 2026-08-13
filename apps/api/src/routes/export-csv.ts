@@ -15,7 +15,7 @@ import {
 
 import { expenseCsvExportSelect } from '../lib/api/selects/expense-list'
 import { participantDisplayNameSelect } from '../lib/api/selects/participant-display-name'
-import { getAuthFromRequest } from '../lib/auth/session'
+import { getApplicationAuthFromRequest } from '../lib/auth/session'
 import { resolveParticipantDisplayName } from '../lib/invitations'
 
 const splitModeLabel = {
@@ -31,10 +31,8 @@ function formatDate(dateValue: Date, timeZone: string): string {
 }
 
 async function ensureMemberOr404(request: Request, groupId: string) {
-  const auth = await getAuthFromRequest(request)
-  if (!auth) {
-    return Response.json({ error: 'Unauthenticated' }, { status: 401 })
-  }
+  const { auth, response } = await getApplicationAuthFromRequest(request)
+  if (response) return response
   const member = await prisma.groupMember.findUnique({
     where: { groupId_accountId: { groupId, accountId: auth.user.id } },
     select: { status: true },

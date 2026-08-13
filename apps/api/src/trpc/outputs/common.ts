@@ -15,6 +15,7 @@ export const accountProfileSchema = z.object({
   name: z.string(),
   email: z.string(),
   emailVerified: z.boolean(),
+  isAnonymous: z.boolean().default(false),
   image: z.string().nullable(),
 })
 

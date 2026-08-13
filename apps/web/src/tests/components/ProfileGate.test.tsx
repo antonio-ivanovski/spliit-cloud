@@ -175,7 +175,7 @@ describe('ProfileGate', () => {
     expect(screen.queryByTestId('navigate')).not.toBeInTheDocument()
   })
 
-  it.each(['/privacy', '/terms', '/imprint'])(
+  it.each(['/privacy', '/terms', '/imprint', '/auth/recover'])(
     'does NOT redirect from %s when account has no name',
     (path) => {
       mockCurrentPath = path

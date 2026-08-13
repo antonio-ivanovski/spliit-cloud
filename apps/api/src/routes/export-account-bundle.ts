@@ -3,7 +3,7 @@ import { create as contentDisposition } from 'content-disposition'
 import { prisma } from '@spliit/db'
 import { accountExportSelectionSchema } from '@spliit/domain'
 
-import { getAuthFromRequest } from '../lib/auth/session'
+import { getApplicationAuthFromRequest } from '../lib/auth/session'
 import {
   createAccountExportArtifact,
   InvalidAccountExportSelectionError,
@@ -28,8 +28,8 @@ async function readSelection(request: Request): Promise<unknown> {
 }
 
 export async function exportAccountBundle(request: Request) {
-  const auth = await getAuthFromRequest(request)
-  if (!auth) return Response.json({ error: 'Unauthenticated' }, { status: 401 })
+  const { auth, response } = await getApplicationAuthFromRequest(request)
+  if (response) return response
 
   let selection
   try {

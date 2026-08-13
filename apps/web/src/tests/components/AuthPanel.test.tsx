@@ -11,6 +11,8 @@ const {
   mockSignInMagicLink,
   mockSignInSocial,
   mockSignInOauth2,
+  mockSignInAnonymous,
+  mockRecoverAnonymous,
   mockGetSession,
   mockNavigate,
   mockDeploymentConfig,
@@ -22,6 +24,8 @@ const {
   mockSignInMagicLink: vi.fn(),
   mockSignInSocial: vi.fn(),
   mockSignInOauth2: vi.fn(),
+  mockSignInAnonymous: vi.fn(),
+  mockRecoverAnonymous: vi.fn(),
   mockGetSession: vi.fn(),
   mockNavigate: vi.fn(),
   mockDeploymentConfig: {
@@ -32,6 +36,7 @@ const {
     oidcProviders: [] as Array<{ id: string; name: string }>,
     signupMode: 'open' as 'open' | 'invite_only',
     allowUninvitedSignup: true,
+    enableAnonymousAuth: false,
   },
   mockMascotReact: vi.fn(),
   mockSearch: {
@@ -49,6 +54,7 @@ vi.mock('@/lib/auth', () => ({
       magicLink: mockSignInMagicLink,
       social: mockSignInSocial,
       oauth2: mockSignInOauth2,
+      anonymous: mockSignInAnonymous,
     },
     signUp: {
       email: mockSignUpEmail,
@@ -59,6 +65,21 @@ vi.mock('@/lib/auth', () => ({
 
 vi.mock('@/lib/deployment-config', () => ({
   useDeploymentConfig: () => mockDeploymentConfig,
+}))
+
+vi.mock('@/lib/anonymous-recovery', () => ({
+  parseAnonymousRecoveryLink: (value: string) => {
+    try {
+      const url = new URL(value.trim())
+      const code = new URLSearchParams(url.hash.slice(1)).get('code')
+      return code && /^spliit_anonymous_v1_[A-Za-z0-9_-]{43}$/.test(code)
+        ? code
+        : null
+    } catch {
+      return null
+    }
+  },
+  recoverAnonymousAccount: mockRecoverAnonymous,
 }))
 
 vi.mock('@tanstack/react-router', () => ({
@@ -105,12 +126,14 @@ async function fillEmail(
 describe('AuthPanel', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    sessionStorage.clear()
     mockDeploymentConfig.enableGoogleOAuth = false
     mockDeploymentConfig.enableGitHubOAuth = false
     mockDeploymentConfig.enableTwitterOAuth = false
     mockDeploymentConfig.oidcProviders = []
     mockDeploymentConfig.signupMode = 'open'
     mockDeploymentConfig.allowUninvitedSignup = true
+    mockDeploymentConfig.enableAnonymousAuth = false
     mockSearch.redirect = undefined
     mockSearch.mode = undefined
     mockSearch.email = undefined
@@ -391,5 +414,110 @@ describe('AuthPanel', () => {
       screen.getByText('Use the email address you were invited with.'),
     ).toBeInTheDocument()
     expect(screen.getByLabelText('Email')).toHaveValue('invited@example.com')
+  })
+
+  it('creates an anonymous account without collecting a display name', async () => {
+    mockDeploymentConfig.enableAnonymousAuth = true
+    mockSignInAnonymous.mockResolvedValue({ data: {}, error: null })
+    const { user } = render(<AuthPanel redirectTo="/groups" />)
+
+    await user.click(screen.getByRole('button', { name: 'Anonymous' }))
+
+    expect(screen.getByText('Create a new account')).toBeInTheDocument()
+    expect(screen.getByText('OR')).toBeInTheDocument()
+    expect(
+      screen.getByText(/you will need to save a permanent sign in link/i),
+    ).toBeInTheDocument()
+    const createButton = screen.getByRole('button', {
+      name: 'Create anonymous account',
+    })
+    expect(createButton).toBeEnabled()
+    expect(screen.queryByLabelText('Display name')).not.toBeInTheDocument()
+    await user.click(createButton)
+
+    expect(mockSignInAnonymous).toHaveBeenCalledWith()
+    expect(sessionStorage.getItem('spliit.anonymous.redirect')).toBe('/groups')
+  })
+
+  it('shows recovery-only anonymous access when signup is disabled', async () => {
+    mockDeploymentConfig.enableAnonymousAuth = false
+
+    const { user } = render(<AuthPanel />)
+
+    await user.click(screen.getByRole('button', { name: 'Anonymous' }))
+
+    expect(
+      screen.getByText(/New anonymous accounts are not available here/i),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Sign in to anonymous account' }),
+    ).toBeDisabled()
+    expect(
+      screen.queryByRole('button', { name: 'Create anonymous account' }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('renders Anonymous as the final sign-in button', () => {
+    mockDeploymentConfig.enableAnonymousAuth = true
+    mockDeploymentConfig.enableTwitterOAuth = true
+    mockDeploymentConfig.oidcProviders = [{ id: 'oidc', name: 'Company SSO' }]
+
+    render(<AuthPanel />)
+
+    const methods = screen
+      .getAllByRole('button')
+      .filter((button) =>
+        ['Continue with X', 'Continue with Company SSO', 'Anonymous'].includes(
+          button.textContent ?? '',
+        ),
+      )
+    expect(methods.map((button) => button.textContent)).toEqual([
+      'Continue with X',
+      'Continue with Company SSO',
+      'Anonymous',
+    ])
+    expect(methods.at(-1)).toHaveClass('w-full', 'border-border/80')
+  })
+
+  it('offers creation first and a separate sign-in-link form below it', async () => {
+    mockDeploymentConfig.enableAnonymousAuth = true
+    mockRecoverAnonymous.mockRejectedValue(new Error('stop after assertion'))
+    const savedKey = `spliit_anonymous_v1_${'a'.repeat(43)}`
+    const { user } = render(<AuthPanel />)
+
+    await user.click(screen.getByRole('button', { name: 'Anonymous' }))
+    expect(
+      screen.getByRole('button', { name: 'Create anonymous account' }),
+    ).toBeInTheDocument()
+
+    await user.type(
+      screen.getByLabelText('Sign in link'),
+      `https://app.example/auth/recover#code=${savedKey}`,
+    )
+    await user.click(
+      screen.getByRole('button', { name: 'Sign in to anonymous account' }),
+    )
+
+    expect(mockRecoverAnonymous).toHaveBeenCalledWith({ code: savedKey })
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'This sign in link is invalid.',
+    )
+    expect(mockSignInAnonymous).not.toHaveBeenCalled()
+  })
+
+  it('rejects a malformed sign in link without submitting it', async () => {
+    mockDeploymentConfig.enableAnonymousAuth = true
+    const { user } = render(<AuthPanel />)
+
+    await user.click(screen.getByRole('button', { name: 'Anonymous' }))
+    await user.type(screen.getByLabelText('Sign in link'), 'not a sign in link')
+    await user.click(
+      screen.getByRole('button', { name: 'Sign in to anonymous account' }),
+    )
+
+    expect(mockRecoverAnonymous).not.toHaveBeenCalled()
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'This sign in link is invalid.',
+    )
   })
 })

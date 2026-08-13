@@ -119,6 +119,7 @@ const accountFixture = {
   email: 'user@example.com',
   emailVerified: true,
   image: null,
+  isAnonymous: false,
 }
 
 beforeEach(() => {
@@ -172,6 +173,35 @@ describe('AccountSettingsPage', () => {
     await waitFor(() => {
       expect(saveButton).not.toBeDisabled()
     })
+  })
+
+  it('renders anonymous recovery as a row inside Profile without a separate card', () => {
+    mocks.useCurrentAccount.mockReturnValue({
+      data: {
+        ...accountFixture,
+        email: 'guest-1@anonymous.placeholder.local',
+        isAnonymous: true,
+      },
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: mocks.refetchAccount,
+    })
+
+    render(<AccountSettingsPage />)
+
+    expect(screen.getByRole('heading', { name: 'Profile' })).toBeInTheDocument()
+    expect(screen.getByText('Sign in link')).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Replace sign in link' }),
+    ).toBeInTheDocument()
+    expect(screen.getByText('Link another account')).toBeInTheDocument()
+    expect(screen.getByText('Coming soon')).toBeInTheDocument()
+    expect(
+      screen.queryByRole('heading', { name: 'Anonymous account' }),
+    ).not.toBeInTheDocument()
+    expect(screen.queryByText('Saved and confirmed')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Email')).not.toBeInTheDocument()
   })
 
   it('opens the lightweight account export configuration modal', async () => {

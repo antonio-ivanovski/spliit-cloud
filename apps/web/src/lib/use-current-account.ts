@@ -1,4 +1,5 @@
 import { authClient } from '@/lib/auth'
+import type { AuthAccount } from '@/lib/auth'
 
 /**
  * Resolve the current signed-in account. Wraps better-auth's `useSession` so
@@ -14,7 +15,7 @@ import { authClient } from '@/lib/auth'
 export function useCurrentAccount() {
   const session = authClient.useSession()
   return {
-    data: session.data?.user ?? null,
+    data: (session.data?.user as AuthAccount | undefined) ?? null,
     isPending: session.isPending,
     isRefetching: session.isRefetching,
     error: session.error,

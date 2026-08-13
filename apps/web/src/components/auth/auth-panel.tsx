@@ -1,9 +1,11 @@
 import { Link } from '@tanstack/react-router'
+import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
+import { AnonymousSignupDialog } from './anonymous-signup-dialog'
 import { AuthCard } from './auth-card'
 import { AuthSuccess } from './auth-success'
 import { MagicLinkForm } from './magic-link-form'
@@ -19,6 +21,7 @@ export function AuthPanel({
   embedded?: boolean
 } = {}) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
+  const [anonymousDialogOpen, setAnonymousDialogOpen] = useState(false)
   const {
     mode,
     emailVariant,
@@ -33,7 +36,8 @@ export function AuthPanel({
     githubEnabled,
     twitterEnabled,
     oidcProviders,
-    socialEnabled,
+    anonymousEnabled,
+    redirectTo: resolvedRedirectTo,
     setEmail,
     setPassword,
     setConfirmPassword,
@@ -71,27 +75,24 @@ export function AuthPanel({
 
   const content = (
     <div className="flex flex-col gap-5">
-      {socialEnabled && (
-        <SocialButtons
-          googleEnabled={googleEnabled}
-          githubEnabled={githubEnabled}
-          twitterEnabled={twitterEnabled}
-          oidcProviders={oidcProviders}
-          disabled={emailAuth.isPending || magicLink.isPending}
-          onGoogle={handleGoogle}
-          onGithub={handleGithub}
-          onTwitter={handleTwitter}
-          onOidc={handleOidc}
-        />
-      )}
+      <SocialButtons
+        googleEnabled={googleEnabled}
+        githubEnabled={githubEnabled}
+        twitterEnabled={twitterEnabled}
+        oidcProviders={oidcProviders}
+        disabled={emailAuth.isPending || magicLink.isPending}
+        onGoogle={handleGoogle}
+        onGithub={handleGithub}
+        onTwitter={handleTwitter}
+        onOidc={handleOidc}
+        onAnonymous={() => setAnonymousDialogOpen(true)}
+      />
 
-      {socialEnabled && (
-        <div className="flex items-center gap-3 text-xs text-muted-foreground uppercase">
-          <div className="h-px flex-1 bg-border" />
-          <span>{t('orContinueWithEmail')}</span>
-          <div className="h-px flex-1 bg-border" />
-        </div>
-      )}
+      <div className="flex items-center gap-3 text-xs text-muted-foreground uppercase">
+        <div className="h-px flex-1 bg-border" />
+        <span>{t('orContinueWithEmail')}</span>
+        <div className="h-px flex-1 bg-border" />
+      </div>
 
       <section className="rounded-lg bg-muted/20 p-3">
         <Tabs
@@ -172,9 +173,21 @@ export function AuthPanel({
     </div>
   )
 
-  return embedded ? (
+  const panel = embedded ? (
     <div data-auth-panel="">{content}</div>
   ) : (
     <AuthCard mode={mode}>{content}</AuthCard>
+  )
+
+  return (
+    <>
+      {panel}
+      <AnonymousSignupDialog
+        open={anonymousDialogOpen}
+        onOpenChange={setAnonymousDialogOpen}
+        redirectTo={resolvedRedirectTo}
+        creationEnabled={anonymousEnabled}
+      />
+    </>
   )
 }

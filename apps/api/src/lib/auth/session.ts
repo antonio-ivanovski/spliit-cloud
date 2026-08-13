@@ -31,6 +31,35 @@ export async function getAuthFromRequest(
   return { ...session, user: account }
 }
 
+export async function getApplicationAuthFromRequest(
+  request: Request,
+): Promise<
+  | { auth: ResolvedAuth; response?: never }
+  | { auth?: never; response: Response }
+> {
+  const auth = await getAuthFromRequest(request)
+  if (!auth) {
+    return {
+      response: Response.json({ error: 'Unauthenticated' }, { status: 401 }),
+    }
+  }
+  if (auth.user.isAnonymous) {
+    const recovery = await prisma.anonymousRecoveryCredential.findUnique({
+      where: { accountId: auth.user.id },
+      select: { acknowledgedAt: true, onboardingCompletedAt: true },
+    })
+    if (!recovery?.acknowledgedAt || !recovery.onboardingCompletedAt) {
+      return {
+        response: Response.json(
+          { error: 'ANONYMOUS_SETUP_REQUIRED' },
+          { status: 428 },
+        ),
+      }
+    }
+  }
+  return { auth }
+}
+
 const oauthResource = oauthProviderResourceClient().getActions()
 
 export async function getOAuthAuthFromRequest(

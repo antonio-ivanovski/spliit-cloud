@@ -165,6 +165,7 @@ export const accountRouter = createTRPCRouter({
         account: {
           ...ctx.auth.user,
           image: ctx.auth.user.image ?? null,
+          isAnonymous: ctx.auth.user.isAnonymous === true,
         },
       }
     }),
@@ -308,6 +309,7 @@ export const accountRouter = createTRPCRouter({
           name: true,
           email: true,
           emailVerified: true,
+          isAnonymous: true,
           image: true,
         },
       })
@@ -331,6 +333,7 @@ export const accountRouter = createTRPCRouter({
           name: true,
           email: true,
           emailVerified: true,
+          isAnonymous: true,
           image: true,
         },
       })
@@ -379,6 +382,7 @@ export const accountRouter = createTRPCRouter({
           name: true,
           email: true,
           emailVerified: true,
+          isAnonymous: true,
           image: true,
         },
       })

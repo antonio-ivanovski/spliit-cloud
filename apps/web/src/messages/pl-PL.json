@@ -57,7 +57,11 @@
     "accountSettings": "Ustawienia konta",
     "back": "Wstecz",
     "menu": "Menu",
-    "feedback": "Opinie"
+    "feedback": "Opinie",
+    "anonymousSignOutWarning": "To anonimowe konto można odzyskać tylko za pomocą zapisanego linku odzyskiwania. Wylogować się teraz?",
+    "signOutTitle": "Wylogować się?",
+    "signOutError": "Nie można się wylogować. Spróbuj ponownie.",
+    "cancel": "Anuluj"
   },
   "Footer": {
     "madeIn": "Stworzone przez społeczność open-source z miłością ❤️",
@@ -1396,7 +1400,8 @@
       "useInvitedEmail": "Użyj adresu e-mail, na który wysłano zaproszenie."
     },
     "signInWithX": "Kontynuuj przez X",
-    "signInWithOidc": "Kontynuuj przez {name}"
+    "signInWithOidc": "Kontynuuj przez {name}",
+    "signInAnonymously": "Anonimowy"
   },
   "CompleteProfile": {
     "title": "Uzupełnij swój profil",
@@ -2964,5 +2969,72 @@
     "fromParticipant": "od {name}",
     "createSingle": "Zapisz płatność",
     "createMultiple": "Zapisz {count} płatności"
+  },
+  "AnonymousAccount": {
+    "signup": {
+      "title": "Konto anonimowe",
+      "description": "Utwórz anonimowe konto bez adresu e-mail, hasła i logowania społecznościowego.",
+      "warning": "Twoje dane są przechowywane w Split Cloud, ale na tym koncie nie ma poczty e-mail ani innej metody odzyskiwania. Musisz zapisać link logowania pokazany obok.",
+      "cancel": "Anuluj",
+      "recoverDescription": "Wklej zapisany link logowania, aby powrócić do istniejącego konta anonimowego.",
+      "recoveryOnlyHelp": "Nowe anonimowe konta nie są tutaj dostępne. Aby kontynuować, wklej pełny link logowania zapisanych danych.",
+      "recover": "Odzyskaj anonimowe konto",
+      "create": "Utwórz anonimowe konto",
+      "createError": "Nie można utworzyć anonimowego konta. Spróbuj ponownie.",
+      "recoverError": "Ten link logowania jest nieprawidłowy. Sprawdź cały link i spróbuj ponownie.",
+      "recoveryLinkRequiredLabel": "Link odzyskiwania",
+      "createTitle": "Utwórz nowe konto",
+      "or": "LUB",
+      "recoverTitle": "Masz już anonimowe konto?"
+    },
+    "onboarding": {
+      "title": "Zapisz link logowania",
+      "description": "Tylko w ten sposób możesz odzyskać dostęp do swojego anonimowego konta po wylogowaniu się, wyczyszczeniu danych przeglądarki lub przeniesieniu się na inne urządzenie.",
+      "unavailableTitle": "Nie można wyświetlić łącza odzyskiwania",
+      "unavailableDescription": "Wygeneruj jawnie link zastępczy, a następnie zapisz go przed kontynuowaniem.",
+      "generateReplacement": "Wygeneruj link zastępczy",
+      "error": "Coś poszło nie tak. Spróbuj ponownie.",
+      "start": "Zacznij korzystać ze Splitu"
+    },
+    "recovery": {
+      "warningTitle": "Zapisz to w bezpiecznym miejscu",
+      "warning": "Ten link nigdy nie wygasa ani nie ulega zmianie, chyba że go zastąpisz. Każdy, kto go posiada, może uzyskać dostęp do Twojego anonimowego konta.",
+      "storedDataNote": "Anonimowe oznacza, że konto nie jest połączone z tożsamością logowania. Dane Twojego konta są nadal przechowywane w Split Cloud.",
+      "linkLabel": "Link logowania",
+      "copyLink": "Skopiuj link",
+      "copied": "Skopiowano",
+      "howItWorks": "Otwórz link logowania w dowolnej przeglądarce, aby się zalogować. W zainstalowanym programie PWA wybierz opcję Anonimowy i wklej pełny link logowania.",
+      "confirmation": "Skopiowałem i bezpiecznie zapisałem link logowania."
+    },
+    "recover": {
+      "title": "Odzyskaj anonimowe konto",
+      "description": "Otwórz zapisany link logowania lub wklej cały link poniżej.",
+      "howItWorks": "Link odzyskiwania umożliwia zalogowanie się po otwarciu w przeglądarce. W zainstalowanym PWA wybierz Anonimowy i wklej cały zapisany link.",
+      "recovering": "Odzyskiwanie konta…",
+      "invalid": "Ten link logowania jest nieprawidłowy. Sprawdź cały link i spróbuj ponownie.",
+      "anonymousAccount": "anonimowe konto",
+      "switchTitle": "Przełączyć konta?",
+      "switchDescription": "Jesteś już zalogowany. Kontynuuj przełączanie tej przeglądarki na {name}.",
+      "switchConfirm": "Zmień i odzyskaj",
+      "submit": "Odzyskaj konto",
+      "back": "Wróć do logowania",
+      "linkLabel": "Link odzyskiwania"
+    },
+    "settings": {
+      "recoveryTitle": "Link odzyskiwania",
+      "recoveryDescription": "To anonimowe konto można odzyskać tylko za pomocą zapisanego linku. Otwórz go w przeglądarce lub wybierz Anonimowy i wklej cały link w zainstalowanym PWA. Bieżącego łącza nie można wyświetlić ponownie.",
+      "replace": "Wymień łącze odzyskiwania",
+      "replaceTitle": "Wymienić łącze odzyskiwania?",
+      "replaceDescription": "Wygeneruj link zastępczy, aby przejrzeć i zapisać. Twoje obecne łącze odzyskiwania będzie działać, dopóki nie aktywujesz zamiennika.",
+      "cancel": "Anuluj",
+      "replaceConfirm": "Wygeneruj link zastępczy",
+      "error": "Nie można zastąpić łącza odzyskiwania. Spróbuj ponownie.",
+      "activateDescription": "Zapisz link zastępczy przed jego aktywacją.",
+      "stagedDescription": "Twoje obecne łącze odzyskiwania będzie działać, dopóki nie aktywujesz tego zamiennika. Zamknięcie lub odświeżenie powoduje odrzucenie zamiennika.",
+      "activateConfirm": "Aktywuj wymianę",
+      "linkAccountTitle": "Połącz inne konto",
+      "linkAccountDescription": "Połącz to anonimowe konto z adresem e-mail lub logowaniem społecznościowym.",
+      "comingSoon": "Już wkrótce"
+    }
   }
 }

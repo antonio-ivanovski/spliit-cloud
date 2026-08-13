@@ -57,7 +57,11 @@
     "accountSettings": "Cài đặt",
     "back": "Quay lại",
     "menu": "Menu",
-    "feedback": "Phản hồi"
+    "feedback": "Phản hồi",
+    "anonymousSignOutWarning": "Tài khoản ẩn danh này chỉ có thể được khôi phục bằng liên kết đăng nhập đã lưu của bạn. Đăng xuất bây giờ?",
+    "signOutTitle": "Đăng xuất?",
+    "signOutError": "Không thể đăng xuất. Vui lòng thử lại.",
+    "cancel": "Hủy"
   },
   "Common": {
     "close": "Đóng",
@@ -754,7 +758,8 @@
       "useInvitedEmail": "Hãy dùng địa chỉ email bạn đã được mời."
     },
     "signInWithX": "Đăng nhập bằng X",
-    "signInWithOidc": "Đăng nhập bằng {name}"
+    "signInWithOidc": "Đăng nhập bằng {name}",
+    "signInAnonymously": "Ẩn danh"
   },
   "AccountSettings": {
     "title": "Cài đặt tài khoản",
@@ -3002,5 +3007,72 @@
     "fromParticipant": "từ {name}",
     "createSingle": "Ghi nhận thanh toán",
     "createMultiple": "Ghi nhận {count} khoản thanh toán"
+  },
+  "AnonymousAccount": {
+    "signup": {
+      "title": "Tài khoản ẩn danh",
+      "description": "Tạo tài khoản ẩn danh mà không cần địa chỉ email, mật khẩu hoặc đăng nhập mạng xã hội.",
+      "warning": "Dữ liệu của bạn được lưu trữ trong Split Cloud nhưng tài khoản này không có email hoặc phương thức khôi phục khác. Bạn phải lưu liên kết đăng nhập hiển thị tiếp theo.",
+      "cancel": "Hủy bỏ",
+      "recoverDescription": "Dán liên kết đăng nhập đã lưu của bạn để quay lại tài khoản ẩn danh hiện có.",
+      "recoveryOnlyHelp": "Tài khoản ẩn danh mới không có ở đây. Dán liên kết đăng nhập đã lưu hoàn chỉnh của bạn để tiếp tục.",
+      "recover": "Khôi phục tài khoản ẩn danh",
+      "create": "Tạo tài khoản ẩn danh",
+      "createError": "Không thể tạo tài khoản ẩn danh. Vui lòng thử lại.",
+      "recoverError": "Liên kết đăng nhập này không hợp lệ. Kiểm tra liên kết đầy đủ và thử lại.",
+      "recoveryLinkRequiredLabel": "Liên kết đăng nhập",
+      "createTitle": "Tạo tài khoản mới",
+      "or": "HOẶC",
+      "recoverTitle": "Đã có tài khoản ẩn danh?"
+    },
+    "onboarding": {
+      "title": "Lưu liên kết đăng nhập của bạn",
+      "description": "Đây là cách duy nhất để quay lại tài khoản ẩn danh của bạn sau khi đăng xuất, xóa dữ liệu trình duyệt hoặc chuyển sang thiết bị khác.",
+      "unavailableTitle": "Liên kết đăng nhập của bạn không thể hiển thị",
+      "unavailableDescription": "Tạo liên kết thay thế một cách rõ ràng, sau đó lưu liên kết đó trước khi tiếp tục.",
+      "generateReplacement": "Tạo liên kết thay thế",
+      "error": "Đã xảy ra lỗi. Vui lòng thử lại.",
+      "start": "Bắt đầu sử dụng Split"
+    },
+    "recovery": {
+      "warningTitle": "Hãy lưu cái này ở nơi nào đó an toàn",
+      "warning": "Liên kết này không bao giờ hết hạn hoặc thay đổi trừ khi bạn thay thế nó. Bất cứ ai có nó đều có thể truy cập vào tài khoản ẩn danh của bạn.",
+      "storedDataNote": "Ẩn danh có nghĩa là tài khoản không được kết nối với danh tính đăng nhập. Dữ liệu tài khoản của bạn vẫn được lưu trữ trong Split Cloud.",
+      "linkLabel": "Liên kết đăng nhập",
+      "copyLink": "Sao chép liên kết",
+      "copied": "Đã sao chép",
+      "howItWorks": "Mở liên kết đăng nhập trong bất kỳ trình duyệt nào để đăng nhập. Trong PWA đã cài đặt, chọn Ẩn danh và dán liên kết đăng nhập hoàn chỉnh.",
+      "confirmation": "Tôi đã sao chép và lưu trữ an toàn liên kết đăng nhập của mình."
+    },
+    "recover": {
+      "title": "Khôi phục tài khoản ẩn danh",
+      "description": "Mở liên kết đăng nhập đã lưu của bạn hoặc dán liên kết hoàn chỉnh bên dưới.",
+      "howItWorks": "Liên kết đăng nhập giúp bạn đăng nhập khi mở trong trình duyệt. Trong PWA đã cài đặt, chọn Ẩn danh và dán liên kết đã lưu đầy đủ.",
+      "recovering": "Đang khôi phục tài khoản của bạn…",
+      "invalid": "Liên kết đăng nhập này không hợp lệ. Kiểm tra liên kết đầy đủ và thử lại.",
+      "anonymousAccount": "tài khoản ẩn danh",
+      "switchTitle": "Chuyển đổi tài khoản?",
+      "switchDescription": "Bạn đã đăng nhập. Tiếp tục chuyển trình duyệt này sang {name}.",
+      "switchConfirm": "Chuyển đổi và phục hồi",
+      "submit": "Khôi phục tài khoản",
+      "back": "Quay lại để đăng nhập",
+      "linkLabel": "Liên kết đăng nhập"
+    },
+    "settings": {
+      "recoveryTitle": "Liên kết đăng nhập",
+      "recoveryDescription": "Tài khoản ẩn danh này chỉ có thể được khôi phục bằng liên kết đã lưu của bạn. Mở nó trong trình duyệt hoặc chọn Ẩn danh và dán liên kết đầy đủ vào PWA đã cài đặt. Liên kết hiện tại không thể được hiển thị lại.",
+      "replace": "Thay thế liên kết đăng nhập",
+      "replaceTitle": "Thay thế liên kết đăng nhập của bạn?",
+      "replaceDescription": "Tạo liên kết thay thế để xem lại và lưu. Liên kết đăng nhập hiện tại của bạn tiếp tục hoạt động cho đến khi bạn kích hoạt liên kết thay thế.",
+      "cancel": "Hủy bỏ",
+      "replaceConfirm": "Tạo liên kết thay thế",
+      "error": "Không thể thay thế liên kết đăng nhập. Vui lòng thử lại.",
+      "activateDescription": "Lưu liên kết thay thế trước khi kích hoạt.",
+      "stagedDescription": "Liên kết đăng nhập hiện tại của bạn tiếp tục hoạt động cho đến khi bạn kích hoạt thay thế này. Đóng hoặc làm mới sẽ loại bỏ sự thay thế.",
+      "activateConfirm": "Kích hoạt thay thế",
+      "linkAccountTitle": "Liên kết tài khoản khác",
+      "linkAccountDescription": "Kết nối tài khoản ẩn danh này với email hoặc đăng nhập mạng xã hội.",
+      "comingSoon": "Sắp ra mắt"
+    }
   }
 }

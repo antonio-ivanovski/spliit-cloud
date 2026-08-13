@@ -57,7 +57,11 @@
     "accountSettings": "Accountinstellingen",
     "back": "Terug",
     "menu": "Menu",
-    "feedback": "Terugkoppeling"
+    "feedback": "Terugkoppeling",
+    "anonymousSignOutWarning": "Dit anonieme account kan alleen worden hersteld met uw opgeslagen inloglink. Nu uitloggen?",
+    "signOutTitle": "Uitloggen?",
+    "signOutError": "Kan niet afmelden. Probeer het opnieuw.",
+    "cancel": "Annuleren"
   },
   "Footer": {
     "madeIn": "Gemaakt met liefde door de open-source community ❤️",
@@ -1689,7 +1693,8 @@
       "useInvitedEmail": "Gebruik het e-mailadres waarmee je bent uitgenodigd."
     },
     "signInWithX": "Doorgaan met X",
-    "signInWithOidc": "Doorgaan met {name}"
+    "signInWithOidc": "Doorgaan met {name}",
+    "signInAnonymously": "Anoniem"
   },
   "CompleteProfile": {
     "title": "Voltooi je profiel",
@@ -2930,5 +2935,72 @@
     "fromParticipant": "van {name}",
     "createSingle": "Betaling vastleggen",
     "createMultiple": "{count} betalingen vastleggen"
+  },
+  "AnonymousAccount": {
+    "signup": {
+      "title": "Anoniem account",
+      "description": "Maak een anoniem account zonder e-mailadres, wachtwoord of sociale login.",
+      "warning": "Uw gegevens worden opgeslagen in Split Cloud, maar dit account heeft geen e-mail of andere herstelmethode. U moet de hieronder weergegeven inloglink opslaan.",
+      "cancel": "Annuleer",
+      "recoverDescription": "Plak uw opgeslagen inloglink om terug te keren naar een bestaand anoniem account.",
+      "recoveryOnlyHelp": "Nieuwe anonieme accounts zijn hier niet beschikbaar. Plak uw volledige opgeslagen inloglink om door te gaan.",
+      "recover": "Herstel anonieme account",
+      "create": "Maak een anoniem account aan",
+      "createError": "Het anonieme account kon niet worden aangemaakt. Probeer het opnieuw.",
+      "recoverError": "Deze inloglink is ongeldig. Controleer de volledige link en probeer het opnieuw.",
+      "recoveryLinkRequiredLabel": "Inloglink",
+      "createTitle": "Nieuw account maken",
+      "or": "OF",
+      "recoverTitle": "Heb je al een anoniem account?"
+    },
+    "onboarding": {
+      "title": "Sla uw inloglink op",
+      "description": "Dit is de enige manier om weer toegang te krijgen tot uw anonieme account nadat u zich heeft afgemeld, browsergegevens heeft gewist of naar een ander apparaat is overgestapt.",
+      "unavailableTitle": "Uw inloglink kan niet worden weergegeven",
+      "unavailableDescription": "Genereer expliciet een vervangende link en sla deze op voordat u doorgaat.",
+      "generateReplacement": "Genereer een vervangende link",
+      "error": "Er is iets misgegaan. Probeer het opnieuw.",
+      "start": "Begin met het gebruik van Split"
+    },
+    "recovery": {
+      "warningTitle": "Bewaar dit ergens veilig",
+      "warning": "Deze link verloopt nooit en verandert nooit tenzij u hem vervangt. Iedereen die het heeft, heeft toegang tot uw anonieme account.",
+      "storedDataNote": "Anoniem betekent dat het account niet is gekoppeld aan een aanmeldingsidentiteit. Uw accountgegevens worden nog steeds opgeslagen in Split Cloud.",
+      "linkLabel": "Inloglink",
+      "copyLink": "Kopieer link",
+      "copied": "Gekopieerd",
+      "howItWorks": "Open de inloglink in een willekeurige browser om in te loggen. Kies in de geïnstalleerde PWA Anoniem en plak de volledige inloglink.",
+      "confirmation": "Ik heb mijn inloglink gekopieerd en veilig opgeslagen."
+    },
+    "recover": {
+      "title": "Anoniem account herstellen",
+      "description": "Open uw opgeslagen inloglink of plak de volledige link hieronder.",
+      "howItWorks": "Met een inloglink wordt u aangemeld wanneer deze in een browser wordt geopend. Kies in de geïnstalleerde PWA Anoniem en plak de volledige opgeslagen link.",
+      "recovering": "Uw account herstellen…",
+      "invalid": "Deze inloglink is ongeldig. Controleer de volledige link en probeer het opnieuw.",
+      "anonymousAccount": "anonieme rekening",
+      "switchTitle": "Van account wisselen?",
+      "switchDescription": "U bent al aangemeld. Ga door met het overschakelen van deze browser naar {name}.",
+      "switchConfirm": "Schakel over en herstel",
+      "submit": "Account herstellen",
+      "back": "Terug naar inloggen",
+      "linkLabel": "Inloglink"
+    },
+    "settings": {
+      "recoveryTitle": "Inloglink",
+      "recoveryDescription": "Dit anonieme account kan alleen worden hersteld met uw opgeslagen link. Open het in een browser, of kies Anoniem en plak de volledige link in de geïnstalleerde PWA. De huidige link kan niet opnieuw worden weergegeven.",
+      "replace": "Inloglink vervangen",
+      "replaceTitle": "Uw inloglink vervangen?",
+      "replaceDescription": "Genereer een vervangende link om te bekijken en op te slaan. Uw huidige inloglink blijft werken totdat u de vervanging activeert.",
+      "cancel": "Annuleer",
+      "replaceConfirm": "Genereer een vervangende link",
+      "error": "De inloglink kon niet worden vervangen. Probeer het opnieuw.",
+      "activateDescription": "Bewaar de vervangende link voordat u deze activeert.",
+      "stagedDescription": "Uw huidige inloglink blijft werken totdat u deze vervanging activeert. Als u sluit of vernieuwt, wordt de vervanging verwijderd.",
+      "activateConfirm": "Activeer vervanging",
+      "linkAccountTitle": "Ander account koppelen",
+      "linkAccountDescription": "Koppel dit anonieme account aan e-mail of een sociale login.",
+      "comingSoon": "Binnenkort beschikbaar"
+    }
   }
 }

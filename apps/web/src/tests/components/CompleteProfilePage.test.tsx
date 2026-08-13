@@ -144,6 +144,22 @@ describe('CompleteProfilePage', () => {
     expect(screen.getByText('Save and continue')).toBeInTheDocument()
   })
 
+  it('hides an anonymous account synthetic email while naming the profile', () => {
+    const email = 'guest-1@anonymous.placeholder.local'
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: mockAccount({ name: email, email }),
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+
+    render(<CompleteProfilePage />)
+
+    expect(screen.getByLabelText('Display name')).toBeInTheDocument()
+    expect(screen.queryByText(email)).not.toBeInTheDocument()
+  })
+
   it('shows error when name is empty', () => {
     vi.mocked(useCurrentAccount).mockReturnValue({
       data: mockAccount({ name: '' }),

@@ -57,7 +57,11 @@
     "accountSettings": "Configurações da conta",
     "back": "Voltar",
     "menu": "Menu",
-    "feedback": "Comentários"
+    "feedback": "Comentários",
+    "anonymousSignOutWarning": "Esta conta anônima só pode ser recuperada com o link de login salvo. Sair agora?",
+    "signOutTitle": "Sair?",
+    "signOutError": "Não foi possível sair. Por favor, tente novamente.",
+    "cancel": "Cancelar"
   },
   "Footer": {
     "madeIn": "Feito pela comunidade de código aberto com amor ❤️",
@@ -1697,7 +1701,8 @@
       "useInvitedEmail": "Use o endereço de e-mail com o qual você recebeu o convite."
     },
     "signInWithX": "Continuar com X",
-    "signInWithOidc": "Continuar com {name}"
+    "signInWithOidc": "Continuar com {name}",
+    "signInAnonymously": "Anônimo"
   },
   "CompleteProfile": {
     "title": "Complete seu perfil",
@@ -2948,5 +2953,72 @@
     "fromParticipant": "de {name}",
     "createSingle": "Registrar pagamento",
     "createMultiple": "Registrar {count} pagamentos"
+  },
+  "AnonymousAccount": {
+    "signup": {
+      "title": "Conta anônima",
+      "description": "Crie uma conta anônima sem endereço de e-mail, senha ou login social.",
+      "warning": "Seus dados são armazenados no Split Cloud, mas esta conta não possui e-mail ou outro método de recuperação. Você deve salvar o link de login mostrado a seguir.",
+      "cancel": "Cancelar",
+      "recoverDescription": "Cole o link de login salvo para retornar a uma conta anônima existente.",
+      "recoveryOnlyHelp": "Novas contas anônimas não estão disponíveis aqui. Cole o link de login completo salvo para continuar.",
+      "recover": "Recuperar conta anônima",
+      "create": "Criar conta anônima",
+      "createError": "A conta anônima não pôde ser criada. Por favor, tente novamente.",
+      "recoverError": "Este link de login é inválido. Verifique o link completo e tente novamente.",
+      "recoveryLinkRequiredLabel": "Link de login",
+      "createTitle": "Criar uma nova conta",
+      "or": "OU",
+      "recoverTitle": "Já tem uma conta anônima?"
+    },
+    "onboarding": {
+      "title": "Salve seu link de login",
+      "description": "Esta é a única maneira de voltar à sua conta anônima depois de sair, limpar os dados do navegador ou mudar para outro dispositivo.",
+      "unavailableTitle": "Seu link de login não pode ser exibido",
+      "unavailableDescription": "Gere explicitamente um link de substituição e salve-o antes de continuar.",
+      "generateReplacement": "Gerar link de substituição",
+      "error": "Algo deu errado. Por favor, tente novamente.",
+      "start": "Comece a usar o Split"
+    },
+    "recovery": {
+      "warningTitle": "Salve isso em algum lugar seguro",
+      "warning": "Este link nunca expira ou muda, a menos que você o substitua. Qualquer pessoa que o possua pode acessar sua conta anônima.",
+      "storedDataNote": "Anônimo significa que a conta não está conectada a uma identidade de login. Os dados da sua conta ainda estão armazenados no Split Cloud.",
+      "linkLabel": "Link de login",
+      "copyLink": "Copiar link",
+      "copied": "Copiado",
+      "howItWorks": "Abra o link de login em qualquer navegador para fazer login. No PWA instalado, escolha Anônimo e cole o link de login completo.",
+      "confirmation": "Copiei e armazenei com segurança meu link de login."
+    },
+    "recover": {
+      "title": "Recuperar conta anônima",
+      "description": "Abra o link de login salvo ou cole o link completo abaixo.",
+      "howItWorks": "Um link de login conecta você quando aberto em um navegador. No PWA instalado, escolha Anônimo e cole o link completo salvo.",
+      "recovering": "Recuperando sua conta…",
+      "invalid": "Este link de login é inválido. Verifique o link completo e tente novamente.",
+      "anonymousAccount": "conta anônima",
+      "switchTitle": "Trocar de conta?",
+      "switchDescription": "Você já está conectado. Continue mudando este navegador para {name}.",
+      "switchConfirm": "Trocar e recuperar",
+      "submit": "Recuperar conta",
+      "back": "Voltar para fazer login",
+      "linkLabel": "Link de login"
+    },
+    "settings": {
+      "recoveryTitle": "Link de login",
+      "recoveryDescription": "Esta conta anônima só pode ser recuperada com o link salvo. Abra-o em um navegador ou escolha Anônimo e cole o link completo no PWA instalado. O link atual não pode ser mostrado novamente.",
+      "replace": "Substitua o link de login",
+      "replaceTitle": "Substituir seu link de login?",
+      "replaceDescription": "Gere um link de substituição para revisar e salvar. Seu link de login atual continua funcionando até você ativar a substituição.",
+      "cancel": "Cancelar",
+      "replaceConfirm": "Gerar link de substituição",
+      "error": "O link de login não pôde ser substituído. Por favor, tente novamente.",
+      "activateDescription": "Salve o link de substituição antes de ativá-lo.",
+      "stagedDescription": "Seu link de login atual continua funcionando até você ativar esta substituição. Fechar ou atualizar descarta a substituição.",
+      "activateConfirm": "Ativar substituição",
+      "linkAccountTitle": "Vincular outra conta",
+      "linkAccountDescription": "Conecte esta conta anônima a um e-mail ou login social.",
+      "comingSoon": "Em breve"
+    }
   }
 }

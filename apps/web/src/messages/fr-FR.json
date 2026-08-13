@@ -57,7 +57,11 @@
     "accountSettings": "Paramètres du compte",
     "back": "Retour",
     "menu": "Menu",
-    "feedback": "Commentaires"
+    "feedback": "Commentaires",
+    "anonymousSignOutWarning": "Ce compte anonyme ne peut être récupéré qu'avec votre lien de connexion enregistré. Se déconnecter maintenant ?",
+    "signOutTitle": "Se déconnecter ?",
+    "signOutError": "Impossible de se déconnecter. Veuillez réessayer.",
+    "cancel": "Annuler"
   },
   "Footer": {
     "madeIn": "Créé par la communauté open-source avec amour ❤️",
@@ -1697,7 +1701,8 @@
       "useInvitedEmail": "Utilisez l'adresse e-mail avec laquelle vous avez reçu l'invitation."
     },
     "signInWithX": "Continuer avec X",
-    "signInWithOidc": "Continuer avec {name}"
+    "signInWithOidc": "Continuer avec {name}",
+    "signInAnonymously": "Anonyme"
   },
   "CompleteProfile": {
     "title": "Complétez votre profil",
@@ -2948,5 +2953,72 @@
     "fromParticipant": "de {name}",
     "createSingle": "Enregistrer le paiement",
     "createMultiple": "Enregistrer {count} paiements"
+  },
+  "AnonymousAccount": {
+    "signup": {
+      "title": "Compte anonyme",
+      "description": "Créez un compte anonyme sans adresse e-mail, mot de passe ou connexion sociale.",
+      "warning": "Vos données sont stockées dans Spliit Cloud, mais ce compte n'a pas de courrier électronique ni aucune autre méthode de récupération. Vous devez enregistrer le lien de connexion affiché ensuite.",
+      "cancel": "Annuler",
+      "recoverDescription": "Collez votre lien de connexion enregistré pour revenir à un compte anonyme existant.",
+      "recoveryOnlyHelp": "Les nouveaux comptes anonymes ne sont pas disponibles ici. Collez votre lien de connexion enregistré complet pour continuer.",
+      "recover": "Récupérer un compte anonyme",
+      "create": "Créer un compte anonyme",
+      "createError": "Le compte anonyme n'a pas pu être créé. Veuillez réessayer.",
+      "recoverError": "Ce lien de connexion n'est pas valide. Vérifiez le lien complet et réessayez.",
+      "recoveryLinkRequiredLabel": "Lien de connexion",
+      "createTitle": "Créer un nouveau compte",
+      "or": "OU",
+      "recoverTitle": "Vous avez déjà un compte anonyme ?"
+    },
+    "onboarding": {
+      "title": "Enregistrez votre lien de connexion",
+      "description": "C'est le seul moyen de revenir à votre compte anonyme après vous être déconnecté, avoir effacé les données du navigateur ou être passé à un autre appareil.",
+      "unavailableTitle": "Votre lien de connexion ne peut pas être affiché",
+      "unavailableDescription": "Générez explicitement un lien de remplacement, puis enregistrez-le avant de continuer.",
+      "generateReplacement": "Générer un lien de remplacement",
+      "error": "Quelque chose s'est mal passé. Veuillez réessayer.",
+      "start": "Commencez à utiliser Split"
+    },
+    "recovery": {
+      "warningTitle": "Enregistrez ceci dans un endroit sûr",
+      "warning": "Ce lien n'expire ni ne change jamais à moins que vous ne le remplaciez. Toute personne qui le possède peut accéder à votre compte anonyme.",
+      "storedDataNote": "Anonyme signifie que le compte n'est pas connecté à une identité de connexion. Les données de votre compte sont toujours stockées dans Spliit Cloud.",
+      "linkLabel": "Lien de connexion",
+      "copyLink": "Copier le lien",
+      "copied": "Copié",
+      "howItWorks": "Ouvrez le lien de connexion dans n'importe quel navigateur pour vous connecter. Dans la PWA installée, choisissez Anonyme et collez le lien de connexion complet.",
+      "confirmation": "J'ai copié et stocké en toute sécurité mon lien de connexion."
+    },
+    "recover": {
+      "title": "Récupérer un compte anonyme",
+      "description": "Ouvrez votre lien de connexion enregistré ou collez le lien complet ci-dessous.",
+      "howItWorks": "Un lien de connexion vous connecte lorsqu'il est ouvert dans un navigateur. Dans la PWA installée, choisissez Anonyme et collez le lien complet enregistré.",
+      "recovering": "Récupération de votre compte…",
+      "invalid": "Ce lien de connexion n'est pas valide. Vérifiez le lien complet et réessayez.",
+      "anonymousAccount": "compte anonyme",
+      "switchTitle": "Changer de compte ?",
+      "switchDescription": "Vous êtes déjà connecté. Continuez à basculer ce navigateur sur {name}.",
+      "switchConfirm": "Changer et récupérer",
+      "submit": "Récupérer le compte",
+      "back": "Retour pour vous connecter",
+      "linkLabel": "Lien de connexion"
+    },
+    "settings": {
+      "recoveryTitle": "Lien de connexion",
+      "recoveryDescription": "Ce compte anonyme ne peut être récupéré qu'avec votre lien enregistré. Ouvrez-le dans un navigateur ou choisissez Anonyme et collez le lien complet dans la PWA installée. Le lien actuel ne peut pas être affiché à nouveau.",
+      "replace": "Remplacer le lien de connexion",
+      "replaceTitle": "Remplacer votre lien de connexion ?",
+      "replaceDescription": "Générez un lien de remplacement pour le consulter et l'enregistrer. Votre lien de connexion actuel continue de fonctionner jusqu'à ce que vous activiez le remplacement.",
+      "cancel": "Annuler",
+      "replaceConfirm": "Générer un lien de remplacement",
+      "error": "Le lien de connexion n'a pas pu être remplacé. Veuillez réessayer.",
+      "activateDescription": "Enregistrez le lien de remplacement avant de l'activer.",
+      "stagedDescription": "Votre lien de connexion actuel continue de fonctionner jusqu'à ce que vous activiez ce remplacement. La fermeture ou l'actualisation supprime le remplacement.",
+      "activateConfirm": "Activer le remplacement",
+      "linkAccountTitle": "Associer un autre compte",
+      "linkAccountDescription": "Associez ce compte anonyme à une adresse e-mail ou à une connexion sociale.",
+      "comingSoon": "Bientôt disponible"
+    }
   }
 }

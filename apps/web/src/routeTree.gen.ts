@@ -22,6 +22,7 @@ import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as AccountSettingsRouteImport } from './routes/account/settings'
 import { Route as AuthCompleteProfileRouteImport } from './routes/auth/complete-profile'
 import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
+import { Route as AuthRecoverRouteImport } from './routes/auth/recover'
 import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-password'
 import { Route as FriendsCreateRouteImport } from './routes/friends/create'
 import { Route as GroupsGroupIdRouteRouteImport } from './routes/groups/$groupId/route'
@@ -117,6 +118,11 @@ const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
 } as any).lazy(() =>
   import('./routes/auth/forgot-password.lazy').then((d) => d.Route),
 )
+const AuthRecoverRoute = AuthRecoverRouteImport.update({
+  id: '/auth/recover',
+  path: '/auth/recover',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/auth/recover.lazy').then((d) => d.Route))
 const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
   id: '/auth/reset-password',
   path: '/auth/reset-password',
@@ -328,6 +334,7 @@ export interface FileRoutesByFullPath {
   '/account/settings': typeof AccountSettingsRoute
   '/auth/complete-profile': typeof AuthCompleteProfileRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
+  '/auth/recover': typeof AuthRecoverRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/friends/create': typeof FriendsCreateRoute
   '/groups/create': typeof GroupsCreateRoute
@@ -366,6 +373,7 @@ export interface FileRoutesByTo {
   '/account/settings': typeof AccountSettingsRoute
   '/auth/complete-profile': typeof AuthCompleteProfileRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
+  '/auth/recover': typeof AuthRecoverRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/friends/create': typeof FriendsCreateRoute
   '/groups/create': typeof GroupsCreateRoute
@@ -404,6 +412,7 @@ export interface FileRoutesById {
   '/account/settings': typeof AccountSettingsRoute
   '/auth/complete-profile': typeof AuthCompleteProfileRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
+  '/auth/recover': typeof AuthRecoverRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/friends/create': typeof FriendsCreateRoute
   '/groups/create': typeof GroupsCreateRoute
@@ -445,6 +454,7 @@ export interface FileRouteTypes {
     | '/account/settings'
     | '/auth/complete-profile'
     | '/auth/forgot-password'
+    | '/auth/recover'
     | '/auth/reset-password'
     | '/friends/create'
     | '/groups/create'
@@ -483,6 +493,7 @@ export interface FileRouteTypes {
     | '/account/settings'
     | '/auth/complete-profile'
     | '/auth/forgot-password'
+    | '/auth/recover'
     | '/auth/reset-password'
     | '/friends/create'
     | '/groups/create'
@@ -520,6 +531,7 @@ export interface FileRouteTypes {
     | '/account/settings'
     | '/auth/complete-profile'
     | '/auth/forgot-password'
+    | '/auth/recover'
     | '/auth/reset-password'
     | '/friends/create'
     | '/groups/create'
@@ -559,6 +571,7 @@ export interface RootRouteChildren {
   AccountSettingsRoute: typeof AccountSettingsRoute
   AuthCompleteProfileRoute: typeof AuthCompleteProfileRoute
   AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
+  AuthRecoverRoute: typeof AuthRecoverRoute
   AuthResetPasswordRoute: typeof AuthResetPasswordRoute
   FriendsCreateRoute: typeof FriendsCreateRoute
   OauthConsentRoute: typeof OauthConsentRoute
@@ -642,6 +655,13 @@ declare module '@tanstack/react-router' {
       path: '/auth/forgot-password'
       fullPath: '/auth/forgot-password'
       preLoaderRoute: typeof AuthForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/recover': {
+      id: '/auth/recover'
+      path: '/auth/recover'
+      fullPath: '/auth/recover'
+      preLoaderRoute: typeof AuthRecoverRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/reset-password': {
@@ -928,6 +948,7 @@ const rootRouteChildren: RootRouteChildren = {
   AccountSettingsRoute: AccountSettingsRoute,
   AuthCompleteProfileRoute: AuthCompleteProfileRoute,
   AuthForgotPasswordRoute: AuthForgotPasswordRoute,
+  AuthRecoverRoute: AuthRecoverRoute,
   AuthResetPasswordRoute: AuthResetPasswordRoute,
   FriendsCreateRoute: FriendsCreateRoute,
   OauthConsentRoute: OauthConsentRoute,

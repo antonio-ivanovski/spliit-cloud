@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { prisma } from '@spliit/db'
 import { locales } from '@spliit/domain'
 
-import { getAuthFromRequest } from '../lib/auth/session'
+import { getApplicationAuthFromRequest } from '../lib/auth/session'
 import { isDateRangeValid, parseReportDate } from '../lib/report/dates'
 import { formatExpenseReport } from '../lib/report/format'
 import { reportLabelsSchema } from '../lib/report/labels'
@@ -39,10 +39,8 @@ async function parseRequestBody(request: Request) {
  * already-formatted strings with HTML/CSS.
  */
 export async function reportGroupData(request: Request, groupId: string) {
-  const auth = await getAuthFromRequest(request)
-  if (!auth) {
-    return Response.json({ error: 'Unauthenticated' }, { status: 401 })
-  }
+  const { auth, response } = await getApplicationAuthFromRequest(request)
+  if (response) return response
 
   const member = await prisma.groupMember.findUnique({
     where: { groupId_accountId: { groupId, accountId: auth.user.id } },

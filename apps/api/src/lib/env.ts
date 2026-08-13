@@ -102,6 +102,10 @@ const envSchema = z
         )
         .optional(),
     ),
+    ENABLE_ANONYMOUS_AUTH: z.preprocess(
+      interpretEnvVarAsBool,
+      z.boolean().default(false),
+    ),
     ENABLE_MCP: z.preprocess(interpretEnvVarAsBool, z.boolean().default(false)),
     MCP_PUBLIC_URL: optionalUrl,
     ASSISTANT_CONFIRMATION_SECRET: optionalString,

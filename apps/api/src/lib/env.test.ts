@@ -156,6 +156,22 @@ describe('envSchema — development', () => {
     expect(env.SIGNUP_MODE).toBe('open')
   })
 
+  it('defaults anonymous account creation to disabled', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('ENABLE_ANONYMOUS_AUTH', '')
+    vi.resetModules()
+    const { env } = await import('./env')
+    expect(env.ENABLE_ANONYMOUS_AUTH).toBe(false)
+  })
+
+  it('parses enabled anonymous account creation', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('ENABLE_ANONYMOUS_AUTH', 'true')
+    vi.resetModules()
+    const { env } = await import('./env')
+    expect(env.ENABLE_ANONYMOUS_AUTH).toBe(true)
+  })
+
   it('parses invite_only SIGNUP_MODE', async () => {
     vi.stubEnv('NODE_ENV', 'development')
     vi.stubEnv('SIGNUP_MODE', 'invite_only')

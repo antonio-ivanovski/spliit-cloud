@@ -16,6 +16,8 @@ const originalDeploymentValues = {
   OIDC_DISCOVERY_URL: env.OIDC_DISCOVERY_URL,
   OIDC_DISPLAY_NAME: env.OIDC_DISPLAY_NAME,
   OIDC_PROVIDER_ID: env.OIDC_PROVIDER_ID,
+  ENABLE_ANONYMOUS_AUTH: env.ENABLE_ANONYMOUS_AUTH,
+  SIGNUP_MODE: env.SIGNUP_MODE,
 }
 
 afterEach(() => {
@@ -38,6 +40,8 @@ describe('features.get', () => {
         'https://auth.example.com/.well-known/openid-configuration',
       OIDC_DISPLAY_NAME: 'Company SSO',
       OIDC_PROVIDER_ID: 'keycloak',
+      ENABLE_ANONYMOUS_AUTH: true,
+      SIGNUP_MODE: 'open',
     })
 
     const result = await featuresRouter.createCaller({ auth: null }).get()
@@ -51,7 +55,19 @@ describe('features.get', () => {
       enableVoiceExpense: false,
       signupMode: 'open',
       allowUninvitedSignup: true,
+      enableAnonymousAuth: true,
     })
+  })
+
+  it('hides anonymous signup in invite-only mode', async () => {
+    Object.assign(env, {
+      ENABLE_ANONYMOUS_AUTH: true,
+      SIGNUP_MODE: 'invite_only',
+    })
+
+    const result = await featuresRouter.createCaller({ auth: null }).get()
+
+    expect(result.enableAnonymousAuth).toBe(false)
   })
 
   it('omits OIDC providers when credentials are unset', async () => {

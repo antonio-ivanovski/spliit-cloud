@@ -57,7 +57,11 @@
     "accountSettings": "Kontoeinstellungen",
     "back": "Zurück",
     "menu": "Menü",
-    "feedback": "Rückmeldung"
+    "feedback": "Rückmeldung",
+    "anonymousSignOutWarning": "Dieses anonyme Konto kann nur mit Ihrem gespeicherten Anmeldelink wiederhergestellt werden. Jetzt abmelden?",
+    "signOutTitle": "Abmelden?",
+    "signOutError": "Konnte sich nicht abmelden. Bitte versuchen Sie es erneut.",
+    "cancel": "Abbrechen"
   },
   "Footer": {
     "madeIn": "Von der Open-Source-Community mit Liebe gemacht ❤️",
@@ -1721,7 +1725,8 @@
       "useInvitedEmail": "Verwenden Sie die E-Mail-Adresse, mit der Sie eingeladen wurden."
     },
     "signInWithX": "Weiter mit X",
-    "signInWithOidc": "Weiter mit {name}"
+    "signInWithOidc": "Weiter mit {name}",
+    "signInAnonymously": "Anonym"
   },
   "CompleteProfile": {
     "title": "Profil vervollständigen",
@@ -2998,5 +3003,72 @@
     "fromParticipant": "von {name}",
     "createSingle": "Zahlung erfassen",
     "createMultiple": "{count} Zahlungen erfassen"
+  },
+  "AnonymousAccount": {
+    "signup": {
+      "title": "Anonymes Konto",
+      "description": "Erstellen Sie ein anonymes Konto ohne E-Mail-Adresse, Passwort oder soziale Anmeldung.",
+      "warning": "Ihre Daten werden in der Spliit Cloud gespeichert, aber dieses Konto verfügt über keine E-Mail-Adresse oder andere Wiederherstellungsmethode. Sie müssen den unten angezeigten Anmeldelink speichern.",
+      "cancel": "Abbrechen",
+      "recoverDescription": "Fügen Sie Ihren gespeicherten Anmeldelink ein, um zu einem bestehenden anonymen Konto zurückzukehren.",
+      "recoveryOnlyHelp": "Neue anonyme Konten sind hier nicht verfügbar. Fügen Sie Ihren vollständig gespeicherten Anmeldelink ein, um fortzufahren.",
+      "recover": "Anonymes Konto wiederherstellen",
+      "create": "Anonymes Konto erstellen",
+      "createError": "Das anonyme Konto konnte nicht erstellt werden. Bitte versuchen Sie es erneut.",
+      "recoverError": "Dieser Anmeldelink ist ungültig. Überprüfen Sie den vollständigen Link und versuchen Sie es erneut.",
+      "recoveryLinkRequiredLabel": "Anmeldelink",
+      "createTitle": "Neues Konto erstellen",
+      "or": "ODER",
+      "recoverTitle": "Hast du bereits ein anonymes Konto?"
+    },
+    "onboarding": {
+      "title": "Speichern Sie Ihren Anmeldelink",
+      "description": "Dies ist die einzige Möglichkeit, nach dem Abmelden, dem Löschen von Browserdaten oder dem Wechsel zu einem anderen Gerät wieder auf Ihr anonymes Konto zuzugreifen.",
+      "unavailableTitle": "Ihr Anmeldelink kann nicht angezeigt werden",
+      "unavailableDescription": "Erzeugen Sie explizit einen Ersatzlink und speichern Sie ihn, bevor Sie fortfahren.",
+      "generateReplacement": "Ersatzlink generieren",
+      "error": "Etwas ist schief gelaufen. Bitte versuchen Sie es erneut.",
+      "start": "Beginnen Sie mit der Verwendung von Split"
+    },
+    "recovery": {
+      "warningTitle": "Bewahren Sie dies an einem sicheren Ort auf",
+      "warning": "Dieser Link läuft nie ab und ändert sich nie, es sei denn, Sie ersetzen ihn. Jeder, der es hat, kann auf Ihr anonymes Konto zugreifen.",
+      "storedDataNote": "Anonym bedeutet, dass das Konto nicht mit einer Anmeldeidentität verknüpft ist. Ihre Kontodaten werden weiterhin in der Split Cloud gespeichert.",
+      "linkLabel": "Anmeldelink",
+      "copyLink": "Link kopieren",
+      "copied": "Kopiert",
+      "howItWorks": "Öffnen Sie den Anmeldelink in einem beliebigen Browser, um sich anzumelden. Wählen Sie in der installierten PWA „Anonym“ und fügen Sie den vollständigen Anmeldelink ein.",
+      "confirmation": "Ich habe meinen Anmeldelink kopiert und sicher gespeichert."
+    },
+    "recover": {
+      "title": "Anonymes Konto wiederherstellen",
+      "description": "Öffnen Sie Ihren gespeicherten Anmeldelink oder fügen Sie den vollständigen Link unten ein.",
+      "howItWorks": "Ein Anmeldelink meldet Sie an, wenn Sie ihn in einem Browser öffnen. Wählen Sie in der installierten PWA „Anonymous“ und fügen Sie den vollständigen gespeicherten Link ein.",
+      "recovering": "Ihr Konto wird wiederhergestellt…",
+      "invalid": "Dieser Anmeldelink ist ungültig. Überprüfen Sie den vollständigen Link und versuchen Sie es erneut.",
+      "anonymousAccount": "anonymes Konto",
+      "switchTitle": "Konto wechseln?",
+      "switchDescription": "Sie sind bereits angemeldet. Stellen Sie diesen Browser weiterhin auf {name} um.",
+      "switchConfirm": "Wechseln und erholen",
+      "submit": "Konto wiederherstellen",
+      "back": "Zurück zur Anmeldung",
+      "linkLabel": "Anmeldelink"
+    },
+    "settings": {
+      "recoveryTitle": "Anmeldelink",
+      "recoveryDescription": "Dieses anonyme Konto kann nur mit Ihrem gespeicherten Link wiederhergestellt werden. Öffnen Sie es in einem Browser oder wählen Sie „Anonym“ und fügen Sie den vollständigen Link in die installierte PWA ein. Der aktuelle Link kann nicht erneut angezeigt werden.",
+      "replace": "Anmeldelink ersetzen",
+      "replaceTitle": "Anmeldelink ersetzen?",
+      "replaceDescription": "Erzeugen Sie einen Ersatzlink zum Überprüfen und Speichern. Ihr aktueller Anmeldelink funktioniert weiterhin, bis Sie den Ersatz aktivieren.",
+      "cancel": "Abbrechen",
+      "replaceConfirm": "Ersatzlink generieren",
+      "error": "Der Anmeldelink konnte nicht ersetzt werden. Bitte versuchen Sie es erneut.",
+      "activateDescription": "Speichern Sie den Ersatzlink, bevor Sie ihn aktivieren.",
+      "stagedDescription": "Ihr aktueller Anmeldelink funktioniert weiterhin, bis Sie diesen Ersatz aktivieren. Beim Schließen oder Aktualisieren wird der Ersatz verworfen.",
+      "activateConfirm": "Ersetzung aktivieren",
+      "linkAccountTitle": "Anderes Konto verknüpfen",
+      "linkAccountDescription": "Verknüpfe dieses anonyme Konto mit einer E-Mail-Adresse oder einem Social-Login.",
+      "comingSoon": "Demnächst verfügbar"
+    }
   }
 }

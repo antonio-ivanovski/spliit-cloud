@@ -1,12 +1,12 @@
-import { getAuthFromRequest } from '../lib/auth/session'
+import { getApplicationAuthFromRequest } from '../lib/auth/session'
 import {
   fetchSourceDocument,
   openSourceDocumentClaims,
 } from '../lib/import-documents'
 
 export async function proxyImportDocument(request: Request) {
-  const auth = await getAuthFromRequest(request)
-  if (!auth) return Response.json({ error: 'Unauthenticated' }, { status: 401 })
+  const { auth, response } = await getApplicationAuthFromRequest(request)
+  if (response) return response
 
   const token = request.headers.get('x-import-document-token')
   if (!token) return Response.json({ error: 'Missing token' }, { status: 400 })

@@ -97,6 +97,11 @@ may remain empty.
   group or friend email invitation, or by opening a live share-link invite.
   Existing users can always sign in. Inviting someone to a group or friend
   ledger is how they get an account.
+- Anonymous account creation requires both `ENABLE_ANONYMOUS_AUTH=true` and
+  `SIGNUP_MODE=open`. Turning it off later prevents new anonymous accounts but
+  keeps recovery available for existing ones. Recovery keys are permanent
+  bearer credentials, so keep `BETTER_AUTH_SECRET` stable and backed up; a
+  changed secret makes interrupted, not-yet-confirmed setup keys unreadable.
 - Expense documents require
   `PUBLIC_ENABLE_EXPENSE_DOCUMENTS=true` and the required `S3_UPLOAD_*` values.
   Configure the bucket with a lifecycle rule that expires objects under
