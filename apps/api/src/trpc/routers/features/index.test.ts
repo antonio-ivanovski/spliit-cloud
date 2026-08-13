@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it } from 'vitest'
 
 import '../../../test/mocks'
-import { prismaMock } from '../../../test/state'
 import { featuresRouter } from '.'
 import { env } from '../../../lib/env'
+import { prismaMock } from '../../../test/state'
 
 const originalDeploymentValues = {
   PUBLIC_DEFAULT_CURRENCY_CODE: env.PUBLIC_DEFAULT_CURRENCY_CODE,
