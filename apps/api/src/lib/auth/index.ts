@@ -213,6 +213,23 @@ type TwitterProfile = {
   }
 }
 
+const TWITTER_PROFILE_FETCH_TIMEOUT_MS = 8_000
+
+async function fetchTwitterJson<T>(url: string, accessToken: string) {
+  try {
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      signal: AbortSignal.timeout(TWITTER_PROFILE_FETCH_TIMEOUT_MS),
+    })
+    if (!response.ok) return null
+    return (await response.json()) as T
+  } catch {
+    return null
+  }
+}
+
 /**
  * Resolve the Spliit `Account` for an X (Twitter) OAuth sign-in. Prefers the
  * confirmed email from X API v2 (`user.fields=confirmed_email`); falls back to
@@ -224,18 +241,11 @@ type TwitterProfile = {
 export async function getVerifiedTwitterUserInfo(token: OAuthToken) {
   if (!token.accessToken) return null
 
-  const response = await fetch(
+  const profile = await fetchTwitterJson<TwitterProfile>(
     'https://api.x.com/2/users/me?user.fields=profile_image_url,confirmed_email',
-    {
-      headers: {
-        Authorization: `Bearer ${token.accessToken}`,
-      },
-    },
+    token.accessToken,
   )
-  if (!response.ok) return null
-
-  const profile = (await response.json()) as TwitterProfile
-  const data = profile.data
+  const data = profile?.data
   if (!data?.id) return null
 
   const profileId = String(data.id)

@@ -448,4 +448,33 @@ describe('better-auth socialProviders config', () => {
     })
     expect(result?.data).toMatchObject({ isPlaceholderEmail: true })
   })
+
+  it('returns null when the X profile request fails', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => {
+        throw new Error('network failure')
+      }),
+    )
+
+    await expect(
+      realAuthModule.getVerifiedTwitterUserInfo({ accessToken: 'token-x-3' }),
+    ).resolves.toBeNull()
+  })
+
+  it('returns null when the X profile response is not JSON', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => ({
+        ok: true,
+        json: async () => {
+          throw new Error('invalid JSON')
+        },
+      })),
+    )
+
+    await expect(
+      realAuthModule.getVerifiedTwitterUserInfo({ accessToken: 'token-x-4' }),
+    ).resolves.toBeNull()
+  })
 })
