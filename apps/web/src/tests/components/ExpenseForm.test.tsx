@@ -53,6 +53,7 @@ const {
   mockAccountDefaultSplit,
   mockInvalidateDefaultSplit,
   mockCommonCurrencies,
+  mockCategoryMemory,
 } = vi.hoisted(() => {
   // Shape returned by tRPC `useQuery` mocks. `data` is `unknown` here so
   // per-test overrides (e.g. `{ defaultSplit: { splitMode, paidFor } }`)
@@ -62,6 +63,7 @@ const {
     error: null
     isLoading: boolean
     isSuccess?: boolean
+    isError?: boolean
     refetch: ReturnType<typeof vi.fn>
   }
 
@@ -80,13 +82,13 @@ const {
     }
     return {
       mutate,
-      mutateAsync: vi.fn().mockResolvedValue({ categoryId: 'general' }),
+      mutateAsync: vi.fn().mockResolvedValue({ categoryId: null }),
       isPending: false,
     }
   })
   const mockCategoryMutateAsync = vi
     .fn()
-    .mockResolvedValue({ categoryId: 'general' })
+    .mockResolvedValue({ categoryId: null })
   const mockCategoryReset = vi.fn()
 
   const mockCurrencyGetRate = vi.fn(
@@ -123,6 +125,19 @@ const {
     }),
   )
 
+  const mockCategoryMemoryResult: MockQueryResult = {
+    data: { expenses: [] },
+    error: null,
+    isLoading: false,
+    isSuccess: true,
+    isError: false,
+    refetch: vi.fn(),
+  }
+
+  const mockCategoryMemory = vi.fn(
+    (_opts?: unknown): MockQueryResult => mockCategoryMemoryResult,
+  )
+
   const mockInvalidateDefaultSplit = vi.fn()
 
   return {
@@ -133,20 +148,12 @@ const {
     mockAccountDefaultSplit,
     mockInvalidateDefaultSplit,
     mockCommonCurrencies,
+    mockCategoryMemory,
   }
 })
 
 vi.mock('@/trpc/client', () => ({
   trpc: {
-    ai: {
-      extractCategoryFromTitle: {
-        useMutation: () => ({
-          mutateAsync: mockCategoryMutateAsync,
-          reset: mockCategoryReset,
-          isPending: false,
-        }),
-      },
-    },
     currency: {
       getRate: {
         useQuery: (opts: unknown) => mockCurrencyGetRate(opts),
@@ -156,6 +163,16 @@ vi.mock('@/trpc/client', () => ({
       expenses: {
         commonCurrencies: {
           useQuery: (opts: unknown) => mockCommonCurrencies(opts),
+        },
+        categoryMemory: {
+          useQuery: (opts: unknown) => mockCategoryMemory(opts),
+        },
+        suggestCategory: {
+          useMutation: () => ({
+            mutateAsync: mockCategoryMutateAsync,
+            reset: mockCategoryReset,
+            isPending: false,
+          }),
         },
       },
     },
@@ -315,6 +332,7 @@ type MockQueryResult = {
   error: null
   isLoading: boolean
   isSuccess?: boolean
+  isError?: boolean
   refetch: ReturnType<typeof vi.fn>
 }
 
@@ -330,7 +348,7 @@ beforeEach(() => {
     promptActive: false,
   }
   mockCategoryMutateAsync.mockReset()
-  mockCategoryMutateAsync.mockResolvedValue({ categoryId: 'general' })
+  mockCategoryMutateAsync.mockResolvedValue({ categoryId: null })
   mockCategoryReset.mockReset()
   mockAccountDefaultSplit.mockReset()
   mockAccountDefaultSplit.mockImplementation(
@@ -614,7 +632,51 @@ describe('ExpenseForm', () => {
     ).toBeInTheDocument()
   })
 
-  it('applies an AI category suggestion when the expense is uncategorized', async () => {
+  it('applies a local category suggestion while typing without calling AI', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    const title = screen.getByRole('textbox', { name: /expense title/i })
+    await user.type(title, 'Whole Foods')
+
+    await vi.waitFor(() => {
+      expect(
+        screen.getByRole('combobox', { name: 'Groceries' }),
+      ).toBeInTheDocument()
+    })
+    expect(mockCategoryMutateAsync).not.toHaveBeenCalled()
+  })
+
+  it('does not guess a category for 1–2 letter titles', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={{
+          ...runtimeFeatureFlags,
+          enableCategoryExtract: true,
+        }}
+      />,
+    )
+
+    const title = screen.getByRole('textbox', { name: /expense title/i })
+    await user.type(title, 'ai')
+
+    await vi.waitFor(() => {
+      expect(title).toHaveValue('ai')
+    })
+    expect(mockCategoryMutateAsync).not.toHaveBeenCalled()
+    expect(
+      screen.getByRole('combobox', { name: 'General' }),
+    ).toBeInTheDocument()
+  })
+
+  it('applies an AI category suggestion when local ranking is not confident', async () => {
     const { user } = render(
       <ExpenseForm
         group={mockGroup as unknown as GroupShape}
@@ -628,14 +690,77 @@ describe('ExpenseForm', () => {
 
     mockCategoryMutateAsync.mockResolvedValueOnce({ categoryId: 'groceries' })
     const title = screen.getByRole('textbox', { name: /expense title/i })
-    await user.type(title, 'Whole Foods')
-    await user.tab()
+    await user.type(title, 'Luigi mysterious trattoria xyzzy')
+
+    await vi.waitFor(() => {
+      expect(mockCategoryMutateAsync).toHaveBeenCalledTimes(1)
+    })
+    expect(mockCategoryMutateAsync).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: 'Luigi mysterious trattoria xyzzy',
+        groupId: 'group-1',
+        allowAi: true,
+      }),
+    )
+    expect(
+      screen.getByRole('combobox', { name: 'Groceries' }),
+    ).toBeInTheDocument()
+  })
+
+  it('still asks the API for a category when AI is off and local ranking is weak', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    mockCategoryMutateAsync.mockReturnValue(
+      new Promise<{ categoryId: string | null }>(() => {
+        /* pending so the spinner stays visible */
+      }),
+    )
+    const title = screen.getByRole('textbox', { name: /expense title/i })
+    await user.type(title, 'Luigi mysterious trattoria xyzzy')
+
+    await vi.waitFor(() => {
+      expect(mockCategoryMutateAsync).toHaveBeenCalledTimes(1)
+      expect(screen.getByRole('combobox', { name: 'General' })).toHaveAttribute(
+        'aria-busy',
+        'true',
+      )
+    })
+    expect(mockCategoryMutateAsync).toHaveBeenCalledWith(
+      expect.objectContaining({ allowAi: false }),
+    )
+    const categoryButton = screen.getByRole('combobox', { name: 'General' })
+    expect(
+      categoryButton.querySelector('[data-icon="category-loading-spinner"]'),
+    ).toBeInTheDocument()
+    expect(
+      categoryButton.querySelector('[data-icon="category-loading-ai"]'),
+    ).toBeNull()
+  })
+
+  it('leaves the default category when the API returns no suggestion', async () => {
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    mockCategoryMutateAsync.mockResolvedValueOnce({ categoryId: null })
+    const title = screen.getByRole('textbox', { name: /expense title/i })
+    await user.type(title, 'Luigi mysterious trattoria xyzzy')
 
     await vi.waitFor(() => {
       expect(mockCategoryMutateAsync).toHaveBeenCalledTimes(1)
     })
     expect(
-      screen.getByRole('combobox', { name: 'Groceries' }),
+      screen.getByRole('combobox', { name: 'General' }),
     ).toBeInTheDocument()
   })
 
@@ -661,10 +786,11 @@ describe('ExpenseForm', () => {
 
   it('ignores an in-flight AI suggestion after a manual category selection', async () => {
     let resolveSuggestion: ((value: { categoryId: string }) => void) | undefined
-    mockCategoryMutateAsync.mockReturnValueOnce(
-      new Promise<{ categoryId: string }>((resolve) => {
-        resolveSuggestion = resolve
-      }),
+    mockCategoryMutateAsync.mockImplementation(
+      () =>
+        new Promise<{ categoryId: string }>((resolve) => {
+          resolveSuggestion = resolve
+        }),
     )
     const { user } = render(
       <ExpenseForm
@@ -678,15 +804,18 @@ describe('ExpenseForm', () => {
     )
 
     const title = screen.getByRole('textbox', { name: /expense title/i })
-    await user.type(title, 'Whole Foods')
-    await user.tab()
+    await user.type(title, 'Luigi mysterious trattoria xyzzy')
     await vi.waitFor(() => {
       expect(mockCategoryMutateAsync).toHaveBeenCalledTimes(1)
+      expect(screen.getByRole('combobox', { name: 'General' })).toHaveAttribute(
+        'aria-busy',
+        'true',
+      )
     })
-
     const categoryButton = screen.getByRole('combobox', { name: 'General' })
-    expect(categoryButton).toHaveAttribute('aria-busy', 'true')
-    expect(categoryButton.querySelector('.lucide-sparkles')).toBeInTheDocument()
+    expect(
+      categoryButton.querySelector('[data-icon="category-loading-ai"]'),
+    ).toBeInTheDocument()
 
     await user.click(categoryButton)
     await user.click(screen.getByText('Groceries'))
@@ -704,10 +833,11 @@ describe('ExpenseForm', () => {
   })
   it('cancels the AI categorizer on submit so a late response cannot clobber the saved value', async () => {
     let resolveSuggestion: ((value: { categoryId: string }) => void) | undefined
-    mockCategoryMutateAsync.mockReturnValueOnce(
-      new Promise<{ categoryId: string }>((resolve) => {
-        resolveSuggestion = resolve
-      }),
+    mockCategoryMutateAsync.mockImplementation(
+      () =>
+        new Promise<{ categoryId: string }>((resolve) => {
+          resolveSuggestion = resolve
+        }),
     )
     const onSubmit = vi.fn().mockResolvedValue('saved' as const)
     const { user } = render(
@@ -723,8 +853,7 @@ describe('ExpenseForm', () => {
     )
 
     const titleInput = screen.getByPlaceholderText('Monday evening restaurant')
-    await user.type(titleInput, 'Whole Foods')
-    await user.tab()
+    await user.type(titleInput, 'Luigi mysterious trattoria xyzzy')
     await vi.waitFor(() => {
       expect(mockCategoryMutateAsync).toHaveBeenCalledTimes(1)
     })

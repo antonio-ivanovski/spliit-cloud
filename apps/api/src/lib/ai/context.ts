@@ -31,9 +31,10 @@ export type RecentExpenseContext = {
  * Repetition is intentional: frequency in the prompt acts as an implicit
  * weighting signal for the AI.
  *
- * `limit` defaults to env.AI_CATEGORY_RECENT_EXPENSES_LIMIT (50). The function
- * does not trigger any side effects (no recurring-expense materialization) so
- * it is safe to call from batch/backfill jobs.
+ * `limit` defaults to env.AI_CATEGORY_RECENT_EXPENSES_LIMIT (50) for LLM
+ * prompts. Local matching should pass env.CATEGORY_MEMORY_LIMIT (default 200).
+ * The function does not trigger any side effects (no recurring-expense
+ * materialization) so it is safe to call from batch/backfill jobs.
  */
 export async function getRecentExpenseContext(
   groupId: string,

@@ -1,0 +1,70 @@
+{
+  "taxi": {
+    "aliases": ["vtc"],
+    "samples": ["taxi aeroport", "course uber"]
+  },
+  "dining-out": {
+    "aliases": ["restaurant", "resto", "dejeuner", "diner", "cafe", "creperie"],
+    "samples": []
+  },
+  "groceries": {
+    "aliases": ["courses", "supermarche", "epicerie", "boulangerie", "biocoop"],
+    "samples": ["courses de la semaine"]
+  },
+  "liquor": {
+    "aliases": ["vin", "biere"],
+    "samples": []
+  },
+  "rent": {
+    "aliases": ["loyer"],
+    "samples": []
+  },
+  "gas-fuel": {
+    "aliases": ["essence", "carburant"],
+    "samples": []
+  },
+  "hotel": {
+    "aliases": ["hebergement"],
+    "samples": []
+  },
+  "plane": {
+    "aliases": ["vol", "avion", "billet avion"],
+    "samples": []
+  },
+  "bus-train": {
+    "aliases": ["metro", "train", "rer", "ter"],
+    "samples": ["billet de train"]
+  },
+  "parking": {
+    "aliases": ["stationnement"],
+    "samples": []
+  },
+  "tolls": {
+    "aliases": ["peage"],
+    "samples": ["peage aller"]
+  },
+  "movies": {
+    "aliases": ["cinema"],
+    "samples": []
+  },
+  "medical-expenses": {
+    "aliases": ["pharmacie", "medecin", "dentiste"],
+    "samples": []
+  },
+  "gifts": {
+    "aliases": ["cadeau"],
+    "samples": []
+  },
+  "electricity": {
+    "aliases": ["electricite", "facture electricite"],
+    "samples": []
+  },
+  "payment": {
+    "aliases": ["remboursement", "regler"],
+    "samples": []
+  },
+  "general": {
+    "aliases": ["autre", "divers"],
+    "samples": []
+  }
+}

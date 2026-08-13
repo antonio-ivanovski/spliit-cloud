@@ -22,10 +22,6 @@ const candidateResponseSchema = z.object({
   amount: z.number().int(),
 })
 
-export const extractCategoryOutputSchema = z.object({
-  categoryId: categoryIdSchema,
-})
-
 export const extractExpenseInformationOutputSchema = z.object({
   amount: z.number().or(z.nan()),
   categoryId: categoryIdSchema.nullable(),

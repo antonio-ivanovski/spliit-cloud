@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import '../../../test/mocks'
-import { prismaMock } from '../../../test/state'
+import { prisma$QueryRaw, prismaMock } from '../../../test/state'
 import { groupExpenseListCardSelect } from '../selects/expense-list'
 import {
   getGroupBalanceExpenses,
@@ -124,5 +124,34 @@ describe('getGroupExpenses', () => {
       where: { ledgerId: 'ledger-known' },
       select: expect.any(Object),
     })
+  })
+
+  it('ors title contains, trigram ids, and alias-expanded categories', async () => {
+    prismaMock.expense.findMany.mockResolvedValue([])
+    prisma$QueryRaw.mockResolvedValue([{ id: 'exp-fuzzy' }])
+
+    await getGroupExpenses('group-1', {
+      ledgerId: 'ledger-known',
+      filter: 'uber',
+      locale: 'en-US',
+    })
+
+    expect(prisma$QueryRaw).toHaveBeenCalled()
+    expect(prismaMock.expense.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          ledgerId: 'ledger-known',
+          AND: [
+            expect.objectContaining({
+              OR: expect.arrayContaining([
+                { title: { contains: 'uber', mode: 'insensitive' } },
+                { id: { in: ['exp-fuzzy'] } },
+                { categoryId: { in: ['taxi'] } },
+              ]),
+            }),
+          ],
+        }),
+      }),
+    )
   })
 })

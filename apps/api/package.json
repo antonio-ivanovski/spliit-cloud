@@ -34,6 +34,7 @@
     "generate-openapi": "bun run scripts/generate-openapi.ts",
     "lint": "oxlint -c ../../.oxlintrc.json --format=unix --report-unused-disable-directives .",
     "lint:fix": "oxlint -c ../../.oxlintrc.json --format=unix --report-unused-disable-directives --fix .",
+    "mine-category-aliases": "bun --env-file=../../.env run scripts/mine-category-aliases.ts",
     "start": "bun --env-file=../../.env run src/server.ts",
     "start:integration": "bun --env-file=.env.integration run src/server.ts",
     "test": "bun --env-file=.env.test vitest run --globals src",

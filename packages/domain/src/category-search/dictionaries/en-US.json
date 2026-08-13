@@ -1,0 +1,196 @@
+{
+  "taxi": {
+    "aliases": ["cab", "rideshare", "ride share", "ride-hail", "lyft ride"],
+    "samples": ["uber to airport", "taxi from station", "cab downtown"]
+  },
+  "dining-out": {
+    "aliases": [
+      "restaurant",
+      "dinner",
+      "lunch",
+      "brunch",
+      "cafe",
+      "coffee",
+      "takeout",
+      "takeaway",
+      "delivery"
+    ],
+    "samples": ["dinner out", "lunch with friends", "coffee shop"]
+  },
+  "groceries": {
+    "aliases": ["supermarket", "grocery", "food shop"],
+    "samples": ["weekly shop", "grocery run", "supermarket run"]
+  },
+  "liquor": {
+    "aliases": ["alcohol", "beer", "wine", "spirits", "bar"],
+    "samples": ["beer run", "wine shop"]
+  },
+  "rent": {
+    "aliases": ["lease", "apartment"],
+    "samples": ["monthly rent"]
+  },
+  "mortgage": {
+    "aliases": ["home loan"],
+    "samples": []
+  },
+  "gas-fuel": {
+    "aliases": ["petrol", "gasoline", "fuel", "gas station"],
+    "samples": ["fill up", "gas station"]
+  },
+  "hotel": {
+    "aliases": ["lodging", "accommodation", "airbnb stay"],
+    "samples": ["hotel night", "weekend stay"]
+  },
+  "plane": {
+    "aliases": ["flight", "airfare", "airline"],
+    "samples": ["flight tickets"]
+  },
+  "bus-train": {
+    "aliases": ["transit", "metro", "subway", "rail", "commute"],
+    "samples": ["train tickets", "bus pass"]
+  },
+  "car": {
+    "aliases": ["auto", "vehicle", "rental car"],
+    "samples": ["car rental"]
+  },
+  "parking": {
+    "aliases": ["garage"],
+    "samples": ["parking at airport"]
+  },
+  "bicycle": {
+    "aliases": ["bike", "cycling", "bikeshare"],
+    "samples": []
+  },
+  "digital-subscriptions": {
+    "aliases": ["streaming", "saas", "software", "cloud"],
+    "samples": ["monthly subscription"]
+  },
+  "memberships": {
+    "aliases": ["gym", "fitness", "club", "dues"],
+    "samples": ["gym membership"]
+  },
+  "movies": {
+    "aliases": ["cinema", "theater", "film"],
+    "samples": ["movie tickets"]
+  },
+  "games": {
+    "aliases": ["gaming", "videogame", "video game"],
+    "samples": []
+  },
+  "music": {
+    "aliases": ["concert", "gig", "festival"],
+    "samples": ["concert tickets"]
+  },
+  "sports": {
+    "aliases": ["game tickets", "match", "stadium"],
+    "samples": []
+  },
+  "medical-expenses": {
+    "aliases": ["doctor", "pharmacy", "hospital", "dentist", "health"],
+    "samples": ["doctor visit", "pharmacy run"]
+  },
+  "insurance": {
+    "aliases": ["premium"],
+    "samples": ["car insurance"]
+  },
+  "taxes": {
+    "aliases": ["irs", "tax return"],
+    "samples": []
+  },
+  "childcare": {
+    "aliases": ["daycare", "nanny", "babysitter"],
+    "samples": []
+  },
+  "education": {
+    "aliases": ["school", "tuition", "course", "university"],
+    "samples": []
+  },
+  "clothing": {
+    "aliases": ["clothes", "apparel", "shoes"],
+    "samples": []
+  },
+  "gifts": {
+    "aliases": ["present", "birthday"],
+    "samples": []
+  },
+  "donation": {
+    "aliases": ["charity", "nonprofit"],
+    "samples": []
+  },
+  "pets": {
+    "aliases": ["vet", "pet food", "dog", "cat"],
+    "samples": ["vet visit"]
+  },
+  "gardening": {
+    "aliases": ["garden", "yard", "lawn"],
+    "samples": []
+  },
+  "plants": {
+    "aliases": ["houseplant", "florist"],
+    "samples": []
+  },
+  "electronics": {
+    "aliases": ["gadget", "phone", "laptop", "computer"],
+    "samples": []
+  },
+  "furniture": {
+    "aliases": ["sofa", "desk", "chair"],
+    "samples": []
+  },
+  "household-supplies": {
+    "aliases": ["cleaning supplies", "paper towels", "toiletries"],
+    "samples": []
+  },
+  "maintenance": {
+    "aliases": ["repair", "plumber", "handyman"],
+    "samples": []
+  },
+  "services": {
+    "aliases": ["contractor", "cleaner"],
+    "samples": []
+  },
+  "cleaning": {
+    "aliases": ["maid", "housekeeping"],
+    "samples": []
+  },
+  "electricity": {
+    "aliases": ["power", "electric bill", "energy"],
+    "samples": ["electric bill"]
+  },
+  "heat-gas": {
+    "aliases": ["heating", "gas bill"],
+    "samples": []
+  },
+  "trash": {
+    "aliases": ["garbage", "waste", "recycling"],
+    "samples": []
+  },
+  "tv-phone-internet": {
+    "aliases": ["internet", "wifi", "broadband", "phone bill", "cable"],
+    "samples": ["internet bill"]
+  },
+  "water": {
+    "aliases": ["water bill"],
+    "samples": []
+  },
+  "events-and-activities": {
+    "aliases": ["outing", "activity", "party", "event", "museum"],
+    "samples": []
+  },
+  "personal-care-and-wellness": {
+    "aliases": ["salon", "spa", "haircut", "barber", "massage", "wellness"],
+    "samples": ["haircut"]
+  },
+  "income": {
+    "aliases": ["salary", "paycheck", "wage", "reimbursement income"],
+    "samples": []
+  },
+  "payment": {
+    "aliases": ["reimbursement", "settle", "payback"],
+    "samples": []
+  },
+  "general": {
+    "aliases": ["other", "misc", "miscellaneous"],
+    "samples": []
+  }
+}

@@ -737,6 +737,7 @@ model Expense {
   @@index([createdByAccountId])
   @@index([ledgerId, amount])
   @@index([recurringSeriesId, recurrenceSequence])
+  @@index([title(ops: raw("gin_trgm_ops"))], type: Gin, map: "Expense_title_trgm_idx")
 }
 
 model ExpenseDocument {

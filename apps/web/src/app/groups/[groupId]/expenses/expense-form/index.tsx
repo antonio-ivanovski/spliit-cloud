@@ -186,6 +186,8 @@ export function ExpenseForm(props: {
     groupId: props.group.id,
   })
   const savedDefault = savedDefaultQuery.data?.defaultSplit ?? null
+  const suggestCategoryMutation =
+    trpc.groups.expenses.suggestCategory.useMutation()
 
   const form = useForm<ExpenseFormInputValues>({
     resolver: zodResolver(
@@ -490,7 +492,7 @@ export function ExpenseForm(props: {
             !isCreate ? (props.expense?.recurrence ?? null) : undefined
           }
           linkInviteToken={props.linkInviteToken}
-          extractCategoryMutation={trpc.ai.extractCategoryFromTitle.useMutation()}
+          suggestCategoryMutation={suggestCategoryMutation}
           runtimeFeatureFlags={props.runtimeFeatureFlags}
           receiptDocuments={form.getValues('documents').flatMap((document) => {
             if (

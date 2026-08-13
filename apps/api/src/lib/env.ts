@@ -71,6 +71,13 @@ const envSchema = z
       .int()
       .positive()
       .default(50),
+    /** Recent title→category pairs for local matching (not sent to the LLM). */
+    CATEGORY_MEMORY_LIMIT: z.coerce
+      .number()
+      .int()
+      .positive()
+      .max(2000)
+      .default(200),
 
     // better-auth
     BETTER_AUTH_SECRET: optionalString,

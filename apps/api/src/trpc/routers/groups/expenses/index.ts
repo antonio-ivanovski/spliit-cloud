@@ -1,5 +1,6 @@
 import { createTRPCRouter } from '../../../init'
 import { bulkUpdateExpenseCategoriesProcedure } from './bulkUpdateCategories.procedure'
+import { categoryMemoryProcedure } from './category-memory.procedure'
 import { expenseCommentsRouter } from './comments'
 import { commonCurrenciesProcedure } from './common-currencies.procedure'
 import { createGroupExpenseProcedure } from './create.procedure'
@@ -9,6 +10,7 @@ import { listGroupExpensesProcedure } from './list.procedure'
 import { listRecurringExpenseSeriesProcedure } from './series-list.procedure'
 import { seriesProgressProcedure } from './series-progress.procedure'
 import { stopRecurrenceProcedure } from './stopRecurrence.procedure'
+import { suggestCategoryProcedure } from './suggest-category.procedure'
 import { updateGroupExpenseProcedure } from './update.procedure'
 
 export const groupExpensesRouter = createTRPCRouter({
@@ -26,6 +28,17 @@ export const groupExpensesRouter = createTRPCRouter({
    * filter.
    */
   commonCurrencies: commonCurrenciesProcedure,
+  /**
+   * Recent title→category pairs for local category suggestion. Not an AI
+   * feature — available whenever the caller can list expenses.
+   */
+  categoryMemory: categoryMemoryProcedure,
+  /**
+   * Suggest a category from an expense title. Dictionaries and similar past
+   * titles run first; the LLM is only used when those are weak, the client
+   * asked for AI, and PUBLIC_ENABLE_CATEGORY_EXTRACT is on.
+   */
+  suggestCategory: suggestCategoryProcedure,
   /**
    * Create an expense in a group. Rejects if the group is archived. May fetch
    * an FX rate when `conversion.type` is 'exchange'.

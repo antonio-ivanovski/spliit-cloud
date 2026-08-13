@@ -1,0 +1,84 @@
+{
+  "taxi": {
+    "aliases": ["taxi", "tvde"],
+    "samples": ["taxi para o aeroporto"]
+  },
+  "dining-out": {
+    "aliases": ["restaurante", "jantar", "almoco", "cafe", "tasca"],
+    "samples": ["jantar fora"]
+  },
+  "groceries": {
+    "aliases": [
+      "compras",
+      "supermercado",
+      "continente",
+      "pingo doce",
+      "minipreco"
+    ],
+    "samples": ["compras da semana"]
+  },
+  "liquor": {
+    "aliases": ["alcool", "cerveja", "vinho"],
+    "samples": []
+  },
+  "rent": {
+    "aliases": ["renda", "aluguer", "apartamento"],
+    "samples": ["renda mensal"]
+  },
+  "gas-fuel": {
+    "aliases": ["gasolina", "combustivel", "bomba"],
+    "samples": []
+  },
+  "hotel": {
+    "aliases": ["alojamento", "pensao"],
+    "samples": []
+  },
+  "plane": {
+    "aliases": ["voo", "aeroporto", "tap"],
+    "samples": ["bilhetes de aviao"]
+  },
+  "bus-train": {
+    "aliases": ["transportes", "metro", "comboio", "cp", "autocarro", "carris"],
+    "samples": ["bilhete de comboio"]
+  },
+  "car": {
+    "aliases": ["carro", "aluguer de carro"],
+    "samples": []
+  },
+  "parking": {
+    "aliases": ["estacionamento", "parque"],
+    "samples": []
+  },
+  "memberships": {
+    "aliases": ["ginasio", "quota"],
+    "samples": []
+  },
+  "movies": {
+    "aliases": ["cinema", "filme"],
+    "samples": []
+  },
+  "medical-expenses": {
+    "aliases": ["medico", "farmacia", "hospital", "dentista"],
+    "samples": []
+  },
+  "electricity": {
+    "aliases": ["luz", "edp", "fatura da luz"],
+    "samples": []
+  },
+  "tv-phone-internet": {
+    "aliases": ["internet", "wifi", "nos", "meo", "vodafone"],
+    "samples": []
+  },
+  "clothing": {
+    "aliases": ["roupa", "sapatos"],
+    "samples": []
+  },
+  "payment": {
+    "aliases": ["reembolso", "acerto"],
+    "samples": []
+  },
+  "general": {
+    "aliases": ["outros", "diversos"],
+    "samples": []
+  }
+}

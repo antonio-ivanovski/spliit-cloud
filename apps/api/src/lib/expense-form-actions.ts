@@ -4,6 +4,7 @@ import {
   DEFAULT_CATEGORIES,
   DEFAULT_CATEGORY_ID,
   formatCategoryForAIPrompt,
+  type CategoryId,
 } from '@spliit/domain'
 
 import { getModel } from './ai'
@@ -19,8 +20,8 @@ import { env } from './env'
 /** Limit of characters to be evaluated. May help avoiding abuse when using AI. */
 const limit = 40 // ~10 tokens
 
-export type ExtractCategoryOptions = {
-  /** Recent expense titles + their assigned category IDs from the group. */
+export type SuggestCategoryWithAIOptions = {
+  /** Recent or similar expense titles + their assigned category IDs. */
   recentExpenses?: RecentExpense[]
   /**
    * User's locale (e.g. 'es', 'ja-JP'); translated into a human-readable
@@ -32,20 +33,14 @@ export type ExtractCategoryOptions = {
 }
 
 /**
- * Attempt extraction of category from expense title. The system prompt may be
- * enriched with the group's name + currency, the user's locale, and recent past
- * expenses from the group to help the AI learn this group's categorization
- * patterns.
- *
- * @param description Expense title or description. Only the first characters as
- *   defined in {@link limit} will be used.
- * @param options Context hints (group, recent expenses, locale). All fields
- *   optional — omitted fields produce today's prompt.
+ * LLM fallback for title → category. Callers must already have failed local
+ * dictionaries and title-history matching. Returns null when the model produces
+ * nothing usable, including the default `general` category.
  */
-export async function extractCategoryFromTitle(
+export async function suggestCategoryWithAI(
   description: string,
-  options?: ExtractCategoryOptions,
-) {
+  options?: SuggestCategoryWithAIOptions,
+): Promise<{ categoryId: CategoryId | null }> {
   const categories = DEFAULT_CATEGORIES
   const groupSection = buildGroupContextSection(options?.groupContext)
   const localeHint = buildLocaleHint(options?.locale)
@@ -73,20 +68,12 @@ export async function extractCategoryFromTitle(
     temperature: 0.1,
   })
 
-  // ensure the returned id actually exists in the in-code list
   const categoryId = extractAllowedIdFromAIResponse(
     rawContent,
     categories.map((category) => category.id),
   )
-
-  const category = categories.find((category) => category.id === categoryId)
-  const result = { categoryId: category?.id ?? DEFAULT_CATEGORY_ID }
-
-  // fall back to the default category ("General") if the model did not
-  // return a valid id
-  return result
+  if (!categoryId || categoryId === DEFAULT_CATEGORY_ID) {
+    return { categoryId: null }
+  }
+  return { categoryId: categoryId as CategoryId }
 }
-
-export type TitleExtractedInfo = Awaited<
-  ReturnType<typeof extractCategoryFromTitle>
->
