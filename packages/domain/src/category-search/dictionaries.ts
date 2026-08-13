@@ -135,9 +135,9 @@ export function peekLocaleDictionary(
 }
 
 export async function loadLocaleDictionary(
-  locale: string,
+  locale?: string,
 ): Promise<LocaleDictionary | undefined> {
-  const key = dictionaryLocaleFor(locale)
+  const key = dictionaryLocaleFor(locale ?? defaultLocale)
   const cached = loadedDictionaries.get(key)
   if (cached) return cached
 
