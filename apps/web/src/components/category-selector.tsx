@@ -6,7 +6,7 @@ import {
   Layers,
   Sparkles,
 } from 'lucide-react'
-import { forwardRef, useState } from 'react'
+import { forwardRef, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
@@ -15,10 +15,10 @@ import type { ButtonProps } from '@/components/ui/button'
 import { Button } from '@/components/ui/button'
 import {
   Command,
-  CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from '@/components/ui/command'
 import {
   Drawer,
@@ -33,6 +33,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { useLocale } from '@/i18n/react'
 import { useMediaQuery } from '@/lib/hooks'
 import { cn } from '@/lib/utils'
 import {
@@ -41,9 +42,11 @@ import {
   type CategoryId,
   DEFAULT_CATEGORY_ID,
   categorySelectionDisplayCount,
+  createCategorySearchDocument,
   getCategoryById,
   getChildCategories,
   isParentCategory,
+  rankCategories,
 } from '@spliit/domain'
 
 type Props = {
@@ -252,89 +255,218 @@ function CategoryCommand({
   onValueToggle?: (categoryId: CategoryId) => void
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Categories' })
+  const locale = useLocale()
+  const [search, setSearch] = useState('')
+  const [keyboardValue, setKeyboardValue] = useState<string | null>(null)
   const selectedSet = new Set(selectedValues)
   const isEffectivelySelected = (category: Category) =>
     selectedSet.has(category.id) ||
     (category.parentId !== null && selectedSet.has(category.parentId))
 
-  return (
-    <Command>
-      <CommandInput placeholder={t('search')} className="text-base" />
-      <CommandEmpty>{t('noCategory')}</CommandEmpty>
-      <div className="max-h-[300px] w-full overflow-y-auto">
-        {hierarchy.map(({ parent, children }) => {
-          const groupLabel = t(
+  const documents = useMemo(
+    () =>
+      hierarchy.flatMap(({ parent, children }) => {
+        const grouping = String(
+          t(
             CATEGORY_GROUPING_HEADINGS[
               parent.grouping as keyof typeof CATEGORY_GROUPING_HEADINGS
             ],
-          )
-          const parentSelected =
-            mode === 'multi'
-              ? isEffectivelySelected(parent)
-              : selectedSet.has(parent.id)
+          ),
+        )
+        return [parent, ...children].map((category) =>
+          createCategorySearchDocument(category, {
+            label:
+              category.parentId === null
+                ? grouping
+                : categoryLabel(t, category.id),
+            grouping,
+            locale,
+          }),
+        )
+      }),
+    [hierarchy, locale, t],
+  )
 
-          return (
-            <CommandGroup key={parent.id}>
-              <CommandItem
-                value={`${parent.id} ${String(groupLabel)}`}
-                onSelect={() => {
-                  if (mode === 'multi') {
-                    onValueToggle?.(parent.id)
-                  } else {
-                    onValueChange?.(parent.id)
+  const categoryById = useMemo(() => {
+    const map = new Map<CategoryId, Category>()
+    for (const { parent, children } of hierarchy) {
+      map.set(parent.id, parent)
+      for (const child of children) map.set(child.id, child)
+    }
+    return map
+  }, [hierarchy])
+
+  const documentById = useMemo(
+    () => new Map(documents.map((document) => [document.id, document])),
+    [documents],
+  )
+
+  const ranked = useMemo(() => {
+    const query = search.trim()
+    if (!query) return null
+    return rankCategories(query, documents)
+  }, [documents, search])
+
+  const topHitId = ranked?.[0]?.id
+  const selectedId = selectedValues[0] ?? ''
+  const activeValue = keyboardValue ?? topHitId ?? selectedId
+
+  const selectCategory = (categoryId: CategoryId) => {
+    if (mode === 'multi') {
+      onValueToggle?.(categoryId)
+    } else {
+      onValueChange?.(categoryId)
+    }
+  }
+
+  return (
+    <Command
+      shouldFilter={false}
+      value={activeValue}
+      onValueChange={setKeyboardValue}
+    >
+      <CommandInput
+        placeholder={t('search')}
+        className="text-base"
+        value={search}
+        onValueChange={(next) => {
+          setSearch(next)
+          setKeyboardValue(null)
+        }}
+      />
+      <CommandList>
+        {ranked && ranked.length === 0 ? (
+          <div className="py-6 text-center text-sm">{t('noCategory')}</div>
+        ) : ranked ? (
+          <CommandGroup>
+            {ranked.map((hit) => {
+              const category = categoryById.get(hit.id)
+              if (!category) return null
+              const document = documentById.get(hit.id)
+              if (!document) return null
+              return (
+                <CategoryCommandRow
+                  key={hit.id}
+                  category={category}
+                  label={document.label}
+                  grouping={document.grouping}
+                  mode={mode}
+                  selected={
+                    mode === 'multi'
+                      ? isEffectivelySelected(category)
+                      : selectedSet.has(category.id)
                   }
-                }}
-                aria-label={String(groupLabel)}
-                className="w-full bg-muted/40 font-semibold"
-              >
-                {mode === 'multi' && (
-                  <Check
-                    className={cn(
-                      'me-2 h-4 w-4 shrink-0',
-                      parentSelected ? '' : 'invisible',
-                    )}
-                  />
-                )}
-                <Layers className="me-2 h-4 w-4 shrink-0" aria-hidden="true" />
-                <span className="min-w-0 flex-1 truncate">{groupLabel}</span>
-              </CommandItem>
-              {children.map((category) => {
-                const childSelected =
-                  mode === 'multi'
-                    ? isEffectivelySelected(category)
-                    : selectedSet.has(category.id)
-                const childLabel = categoryLabel(t, category.id)
-                return (
-                  <CommandItem
-                    key={category.id}
-                    value={`${category.id} ${groupLabel} ${childLabel}`}
-                    onSelect={() => {
-                      if (mode === 'multi') {
-                        onValueToggle?.(category.id)
-                      } else {
-                        onValueChange?.(category.id)
-                      }
-                    }}
-                  >
-                    {mode === 'multi' && (
-                      <Check
-                        className={cn(
-                          'me-2 h-4 w-4 shrink-0',
-                          childSelected ? '' : 'invisible',
-                        )}
-                      />
-                    )}
-                    <span className="ps-8">
-                      <CategoryLabel category={category} />
-                    </span>
-                  </CommandItem>
-                )
-              })}
-            </CommandGroup>
-          )
-        })}
-      </div>
+                  ranked
+                  onSelect={() => selectCategory(hit.id)}
+                />
+              )
+            })}
+          </CommandGroup>
+        ) : (
+          hierarchy.map(({ parent, children }) => {
+            const groupLabel = String(
+              t(
+                CATEGORY_GROUPING_HEADINGS[
+                  parent.grouping as keyof typeof CATEGORY_GROUPING_HEADINGS
+                ],
+              ),
+            )
+            const parentSelected =
+              mode === 'multi'
+                ? isEffectivelySelected(parent)
+                : selectedSet.has(parent.id)
+
+            return (
+              <CommandGroup key={parent.id}>
+                <CategoryCommandRow
+                  category={parent}
+                  label={groupLabel}
+                  grouping={groupLabel}
+                  mode={mode}
+                  selected={parentSelected}
+                  parentRow
+                  onSelect={() => selectCategory(parent.id)}
+                />
+                {children.map((category) => {
+                  const childSelected =
+                    mode === 'multi'
+                      ? isEffectivelySelected(category)
+                      : selectedSet.has(category.id)
+                  return (
+                    <CategoryCommandRow
+                      key={category.id}
+                      category={category}
+                      label={categoryLabel(t, category.id)}
+                      grouping={groupLabel}
+                      mode={mode}
+                      selected={childSelected}
+                      indented
+                      onSelect={() => selectCategory(category.id)}
+                    />
+                  )
+                })}
+              </CommandGroup>
+            )
+          })
+        )}
+      </CommandList>
     </Command>
+  )
+}
+
+function CategoryCommandRow({
+  category,
+  label,
+  grouping,
+  mode,
+  selected,
+  onSelect,
+  parentRow = false,
+  indented = false,
+  ranked = false,
+}: {
+  category: Category
+  label: string
+  grouping: string
+  mode: 'single' | 'multi'
+  selected: boolean
+  onSelect: () => void
+  parentRow?: boolean
+  indented?: boolean
+  ranked?: boolean
+}) {
+  return (
+    <CommandItem
+      value={category.id}
+      onSelect={onSelect}
+      aria-label={label}
+      className={cn('w-full', parentRow && 'bg-muted/40 font-semibold')}
+    >
+      {mode === 'multi' && (
+        <Check
+          className={cn('me-2 h-4 w-4 shrink-0', selected ? '' : 'invisible')}
+        />
+      )}
+      {parentRow ? (
+        <Layers className="me-2 h-4 w-4 shrink-0" aria-hidden="true" />
+      ) : null}
+      {indented ? (
+        <span className="ps-8">
+          <CategoryLabel category={category} />
+        </span>
+      ) : parentRow ? (
+        <span className="min-w-0 flex-1 truncate">{label}</span>
+      ) : (
+        <span className="min-w-0 flex-1">
+          <CategoryLabel category={category} />
+        </span>
+      )}
+      {ranked && grouping !== label ? (
+        <span className="ms-auto ps-2 text-xs text-muted-foreground">
+          {grouping}
+        </span>
+      ) : null}
+    </CommandItem>
   )
 }
 

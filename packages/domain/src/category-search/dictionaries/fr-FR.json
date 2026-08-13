@@ -1,0 +1,22 @@
+{
+  "taxi": {
+    "aliases": ["vtc", "course"],
+    "samples": ["taxi aeroport", "course uber"]
+  },
+  "dining-out": {
+    "aliases": ["restaurant", "resto", "dejeuner", "diner", "cafe"],
+    "samples": []
+  },
+  "groceries": {
+    "aliases": ["courses", "supermarche", "epicerie"],
+    "samples": ["courses de la semaine"]
+  },
+  "rent": {
+    "aliases": ["loyer"],
+    "samples": []
+  },
+  "gas-fuel": {
+    "aliases": ["essence", "carburant"],
+    "samples": []
+  }
+}
