@@ -366,6 +366,14 @@ export const auth = betterAuth({
   // and then be rejected by better-auth.
   trustedOrigins: webOrigins,
 
+  // Better Auth's built-in limiter is keyed by client IP. Without a trusted
+  // proxy there is no safe per-client IP identity, so enabling it would put
+  // every caller into one replica-wide bucket. The recipient-based email
+  // limiter above remains active in either mode.
+  rateLimit: {
+    enabled: env.TRUST_PROXY,
+  },
+
   database: prismaAdapter(prisma, {
     provider: 'postgresql',
   }),
@@ -664,6 +672,7 @@ export const auth = betterAuth({
       secure: process.env.NODE_ENV === 'production',
     },
     ipAddress: {
+      disableIpTracking: !env.TRUST_PROXY,
       // The public deployment is origin-locked behind Cloudflare. Prefer its
       // single-value client header, with conventional proxy headers retained
       // for supported self-hosted gateways. The Hono adapter strips all three

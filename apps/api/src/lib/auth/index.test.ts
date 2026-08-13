@@ -60,8 +60,12 @@ const realAuthModule = (await vi.importActual('./index')) as {
         }
       }
       advanced?: {
-        ipAddress?: { ipAddressHeaders?: string[] }
+        ipAddress?: {
+          ipAddressHeaders?: string[]
+          disableIpTracking?: boolean
+        }
       }
+      rateLimit?: { enabled?: boolean }
       socialProviders?: Record<
         string,
         {
@@ -118,6 +122,13 @@ describe('better-auth session config', () => {
     expect(
       realAuthModule.auth.options.advanced?.ipAddress?.ipAddressHeaders,
     ).toEqual(['cf-connecting-ip', 'x-real-ip', 'x-forwarded-for'])
+  })
+
+  it('disables built-in IP tracking and throttling without a trusted proxy', () => {
+    expect(realAuthModule.auth.options.rateLimit?.enabled).toBe(false)
+    expect(
+      realAuthModule.auth.options.advanced?.ipAddress?.disableIpTracking,
+    ).toBe(true)
   })
 
   it('uses an isolated JWKS adapter in the test environment', () => {

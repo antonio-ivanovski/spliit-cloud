@@ -105,23 +105,25 @@ app.get('/health', () => checkLiveness())
 app.get('/health/liveness', () => checkLiveness())
 app.get('/health/readiness', () => checkReadiness())
 
-const oauthRegistrationLimiter = new FixedWindowLimiter({
-  limit: 20,
-  windowMs: 60 * 60 * 1000,
-})
-
-function clientRateLimitMiddleware(options: {
+export function clientRateLimitMiddleware(options: {
   policy: string
   limit: number
   windowMs: number
+  trustProxy?: boolean
 }): MiddlewareHandler {
   const limiter = new FixedWindowLimiter({
     limit: options.limit,
     windowMs: options.windowMs,
   })
   return async (c, next) => {
+    const trustProxy = options.trustProxy ?? env.TRUST_PROXY
+    if (!trustProxy) {
+      await next()
+      return
+    }
+
     const ip = resolveClientIp(c.req.raw.headers, {
-      trustProxy: env.TRUST_PROXY,
+      trustProxy,
     })
     const decision = limiter.hit(ip)
     if (!decision.allowed) {
@@ -153,22 +155,12 @@ const reportRateLimit = clientRateLimitMiddleware({
   limit: 120,
   windowMs: 60 * 60 * 1000,
 })
-app.use('/auth/oauth2/register', async (c, next) => {
-  const ip = resolveClientIp(c.req.raw.headers, {
-    trustProxy: env.TRUST_PROXY,
-  })
-  const decision = oauthRegistrationLimiter.hit(ip)
-  if (!decision.allowed) {
-    return c.json(
-      { error: 'rate_limit_exceeded' },
-      {
-        status: 429,
-        headers: { 'Retry-After': String(decision.retryAfterSeconds) },
-      },
-    )
-  }
-  await next()
+const oauthRegistrationRateLimit = clientRateLimitMiddleware({
+  policy: 'oauth-registration',
+  limit: 20,
+  windowMs: 60 * 60 * 1000,
 })
+app.use('/auth/oauth2/register', oauthRegistrationRateLimit)
 
 // Public, stateless optional-email unsubscribe endpoint. GET only renders a
 // confirmation page; POST performs the RFC 8058 one-click mutation.
