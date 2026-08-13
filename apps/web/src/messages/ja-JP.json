@@ -1306,6 +1306,9 @@
       "heading": "サブスクリプションと会員費",
       "Digital Subscriptions": "デジタルサブスクリプション",
       "Memberships": "会員費"
+    },
+    "Income": {
+      "heading": "収入"
     }
   },
   "Currencies": {

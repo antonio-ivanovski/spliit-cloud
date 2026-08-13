@@ -1554,6 +1554,9 @@
       "Water": "ماء",
       "Electricity": "كهرباء",
       "Cleaning": "تنظيف"
+    },
+    "Income": {
+      "heading": "دخل"
     }
   },
   "AccountSettings": {

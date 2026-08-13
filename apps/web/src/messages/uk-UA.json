@@ -1329,6 +1329,9 @@
       "heading": "Підписки та членство",
       "Digital Subscriptions": "Цифрові підписки",
       "Memberships": "Членство"
+    },
+    "Income": {
+      "heading": "Дохід"
     }
   },
   "Auth": {

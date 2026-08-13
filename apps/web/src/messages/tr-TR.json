@@ -1313,6 +1313,9 @@
       "heading": "Abonelikler ve Üyelikler",
       "Digital Subscriptions": "Dijital Abonelikler",
       "Memberships": "Üyelikler"
+    },
+    "Income": {
+      "heading": "Gelir"
     }
   },
   "Auth": {

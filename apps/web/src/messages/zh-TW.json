@@ -1306,6 +1306,9 @@
       "heading": "訂閱與會員",
       "Digital Subscriptions": "數位訂閱",
       "Memberships": "會員"
+    },
+    "Income": {
+      "heading": "收入"
     }
   },
   "Auth": {

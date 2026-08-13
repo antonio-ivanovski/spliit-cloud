@@ -71,6 +71,13 @@ export const DEFAULT_CATEGORIES = defineCategories([
     name: 'Payment',
     parentId: 'uncategorized',
   },
+  // Income
+  {
+    id: 'income',
+    grouping: 'Income',
+    name: 'Income',
+    parentId: null,
+  },
   // Entertainment
   {
     id: 'entertainment',
@@ -335,6 +342,9 @@ export const DEFAULT_CATEGORY_ID: CategoryId = 'general'
 
 /** Category used by reimbursement-style expenses (manual or auto). */
 export const PAYMENT_CATEGORY_ID: CategoryId = 'payment'
+
+/** Category used for true income (negative amounts that are not refunds). */
+export const INCOME_CATEGORY_ID: CategoryId = 'income'
 
 /** Parent categories in declaration order. */
 export const PARENT_CATEGORIES = DEFAULT_CATEGORIES.filter(

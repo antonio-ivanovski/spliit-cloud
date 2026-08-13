@@ -38,4 +38,12 @@ describe('CategoryIcon', () => {
     expect(svg).toHaveClass('lucide-clapperboard')
     expect(svg).toHaveClass('w-5 h-5')
   })
+
+  it('renders the Wallet icon for Income', () => {
+    const { container } = render(
+      <CategoryIcon category={{ grouping: 'Income', name: 'Income' }} />,
+    )
+    const svg = container.querySelector('svg')
+    expect(svg).toHaveClass('lucide-wallet')
+  })
 })

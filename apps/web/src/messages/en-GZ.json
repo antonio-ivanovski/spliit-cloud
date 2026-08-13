@@ -766,6 +766,9 @@
       "Trash": "trash day",
       "TV/Phone/Internet": "TV, phone, or internet",
       "Water": "water bill"
+    },
+    "Income": {
+      "heading": "money in"
     }
   },
   "Common": {
