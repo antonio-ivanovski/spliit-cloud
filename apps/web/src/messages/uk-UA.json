@@ -837,9 +837,6 @@
       "customRate": "Використовується власний курс",
       "via": "через {currencies}"
     },
-    "isReimbursementField": {
-      "label": "Це платіж для погашення боргу"
-    },
     "categoryField": {
       "label": "Категорія"
     },
@@ -1332,6 +1329,9 @@
     },
     "Income": {
       "heading": "Дохід"
+    },
+    "Settlement": {
+      "heading": "Розрахунок"
     }
   },
   "Auth": {

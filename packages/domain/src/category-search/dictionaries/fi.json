@@ -78,8 +78,12 @@
     "aliases": ["vaatteet", "kengat"],
     "samples": []
   },
+  "settlement": {
+    "aliases": ["tasaus"],
+    "samples": []
+  },
   "payment": {
-    "aliases": ["hyvitys", "tasaus", "siirto"],
+    "aliases": ["siirto"],
     "samples": []
   },
   "general": {

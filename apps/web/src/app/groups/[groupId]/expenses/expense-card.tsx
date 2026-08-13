@@ -13,6 +13,7 @@ import type { getGroupExpenses } from '@/lib/api'
 import { getCurrency, type Currency } from '@/lib/currency'
 import { formatExpenseClosed } from '@/lib/expense-display'
 import { cn, formatCurrency } from '@/lib/utils'
+import { isSettlementCategory } from '@spliit/domain'
 
 import { ExpenseItemsOverflowToggle } from './expense-items-overflow-toggle'
 import { RecurringBadge } from './series-controls'
@@ -193,7 +194,7 @@ export function ExpenseCard({
       data-testid={`expense-item-${expense.id}`}
       className={cn(
         'motion-surface motion-surface-interactive relative flex items-stretch justify-between gap-1 px-4 py-4 text-sm hover:bg-accent sm:mx-6 sm:rounded-lg sm:ps-4 sm:pe-2',
-        expense.isReimbursement && 'italic',
+        isSettlementCategory(expense.categoryId) && 'italic',
       )}
     >
       {expensesSearch ? (
@@ -225,12 +226,12 @@ export function ExpenseCard({
         <div
           className={cn(
             'mb-1 flex min-w-0 items-center gap-2',
-            expense.isReimbursement && 'italic',
+            isSettlementCategory(expense.categoryId) && 'italic',
           )}
           data-testid="expense-title"
         >
           <span className="min-w-0 break-words">{expense.title}</span>
-          {expense.isReimbursement && (
+          {isSettlementCategory(expense.categoryId) && (
             <Badge variant="secondary" className="shrink-0 text-xs">
               {t('settlementBadge')}
             </Badge>
@@ -267,7 +268,7 @@ export function ExpenseCard({
         <div
           className={cn(
             'whitespace-nowrap tabular-nums',
-            expense.isReimbursement ? 'italic' : 'font-bold',
+            isSettlementCategory(expense.categoryId) ? 'italic' : 'font-bold',
           )}
           data-testid="expense-amount"
         >

@@ -64,12 +64,12 @@ async function seedLegacyData(client: PrismaClient) {
       ('lp-b', 'lg-1', 'ACCOUNT_MEMBER'),
       ('lp-c', 'lg-1', 'ACCOUNT_MEMBER');
 
-    INSERT INTO "Expense" ("id", "ledgerId", "expenseDate", "title", "categoryId", "amount", "paidBySplitMode", "isReimbursement", "splitMode", "createdAt")
+    INSERT INTO "Expense" ("id", "ledgerId", "expenseDate", "title", "categoryId", "amount", "paidBySplitMode", "splitMode", "createdAt")
     VALUES
-      ('e-shares', 'lg-1', CURRENT_DATE, 'Shares expense', 'general', 3000, 'BY_SHARES', false, 'BY_SHARES', CURRENT_TIMESTAMP),
-      ('e-even', 'lg-1', CURRENT_DATE, 'Even expense', 'general', 2000, 'BY_AMOUNT', false, 'EVENLY', CURRENT_TIMESTAMP),
-      ('e-pct', 'lg-1', CURRENT_DATE, 'Pct expense', 'general', 1000, 'BY_AMOUNT', false, 'BY_PERCENTAGE', CURRENT_TIMESTAMP),
-      ('e-amt', 'lg-1', CURRENT_DATE, 'Amount expense', 'general', 1000, 'BY_AMOUNT', false, 'BY_AMOUNT', CURRENT_TIMESTAMP);
+      ('e-shares', 'lg-1', CURRENT_DATE, 'Shares expense', 'general', 3000, 'BY_SHARES', 'BY_SHARES', CURRENT_TIMESTAMP),
+      ('e-even', 'lg-1', CURRENT_DATE, 'Even expense', 'general', 2000, 'BY_AMOUNT', 'EVENLY', CURRENT_TIMESTAMP),
+      ('e-pct', 'lg-1', CURRENT_DATE, 'Pct expense', 'general', 1000, 'BY_AMOUNT', 'BY_PERCENTAGE', CURRENT_TIMESTAMP),
+      ('e-amt', 'lg-1', CURRENT_DATE, 'Amount expense', 'general', 1000, 'BY_AMOUNT', 'BY_AMOUNT', CURRENT_TIMESTAMP);
 
     INSERT INTO "ExpensePaidFor" ("expenseId", "ledgerParticipantId", "shares")
     VALUES
@@ -90,8 +90,8 @@ async function seedLegacyData(client: PrismaClient) {
       ('e-pct', 'lp-a', 1000),
       ('e-amt', 'lp-a', 1000);
 
-    INSERT INTO "Expense" ("id", "ledgerId", "expenseDate", "title", "categoryId", "amount", "paidBySplitMode", "isReimbursement", "splitMode", "createdAt")
-    VALUES ('e-item', 'lg-1', CURRENT_DATE, 'Itemized', 'general', 3000, 'BY_AMOUNT', false, 'ITEMIZED', CURRENT_TIMESTAMP);
+    INSERT INTO "Expense" ("id", "ledgerId", "expenseDate", "title", "categoryId", "amount", "paidBySplitMode", "splitMode", "createdAt")
+    VALUES ('e-item', 'lg-1', CURRENT_DATE, 'Itemized', 'general', 3000, 'BY_AMOUNT', 'ITEMIZED', CURRENT_TIMESTAMP);
 
     INSERT INTO "ExpenseItem" ("id", "expenseId", "title", "unitPrice", "quantity", "amount", "splitMode", "createdAt")
     VALUES
@@ -109,8 +109,8 @@ async function seedLegacyData(client: PrismaClient) {
     INSERT INTO "ExpenseItemizedRemainderPaidFor" ("expenseId", "ledgerParticipantId", "shares")
     VALUES ('e-item', 'lp-a', 3), ('e-item', 'lp-b', 3);
 
-    INSERT INTO "Expense" ("id", "ledgerId", "expenseDate", "title", "categoryId", "amount", "paidBySplitMode", "isReimbursement", "splitMode", "createdAt")
-    VALUES ('e-item2', 'lg-1', CURRENT_DATE, 'Evenly remainder', 'general', 2000, 'BY_AMOUNT', false, 'ITEMIZED', CURRENT_TIMESTAMP);
+    INSERT INTO "Expense" ("id", "ledgerId", "expenseDate", "title", "categoryId", "amount", "paidBySplitMode", "splitMode", "createdAt")
+    VALUES ('e-item2', 'lg-1', CURRENT_DATE, 'Evenly remainder', 'general', 2000, 'BY_AMOUNT', 'ITEMIZED', CURRENT_TIMESTAMP);
 
     INSERT INTO "ExpenseItemizedRemainder" ("expenseId", "splitMode")
     VALUES ('e-item2', 'EVENLY');
@@ -135,12 +135,12 @@ async function seedLegacyData(client: PrismaClient) {
     )
     VALUES (
       'rs-shares', 'lg-1', 'WEEKLY', 1, CURRENT_DATE, 1, CURRENT_DATE + INTERVAL '7 days', 2, 'INDEFINITE', 1, 'ACTIVE',
-      '{"title":"Shares series","categoryId":"general","amount":3000,"originalAmount":null,"originalCurrency":null,"conversionRate":null,"conversionSource":null,"paidBySplitMode":"BY_SHARES","paidByList":[{"ledgerParticipantId":"lp-a","shares":1},{"ledgerParticipantId":"lp-b","shares":1}],"paidFor":[{"ledgerParticipantId":"lp-a","shares":2},{"ledgerParticipantId":"lp-b","shares":1}],"splitMode":"BY_SHARES","isReimbursement":false,"notes":null,"items":[{"title":"Beer","unitPrice":1000,"quantity":1,"amount":1000,"splitMode":"BY_SHARES","paidFor":[{"ledgerParticipantId":"lp-a","shares":2},{"ledgerParticipantId":"lp-b","shares":1}]}],"itemizedRemainder":{"splitMode":"BY_SHARES","paidFor":[{"ledgerParticipantId":"lp-a","shares":3},{"ledgerParticipantId":"lp-b","shares":3}]}}'::JSONB,
+      '{"title":"Shares series","categoryId":"general","amount":3000,"originalAmount":null,"originalCurrency":null,"conversionRate":null,"conversionSource":null,"paidBySplitMode":"BY_SHARES","paidByList":[{"ledgerParticipantId":"lp-a","shares":1},{"ledgerParticipantId":"lp-b","shares":1}],"paidFor":[{"ledgerParticipantId":"lp-a","shares":2},{"ledgerParticipantId":"lp-b","shares":1}],"splitMode":"BY_SHARES","notes":null,"items":[{"title":"Beer","unitPrice":1000,"quantity":1,"amount":1000,"splitMode":"BY_SHARES","paidFor":[{"ledgerParticipantId":"lp-a","shares":2},{"ledgerParticipantId":"lp-b","shares":1}]}],"itemizedRemainder":{"splitMode":"BY_SHARES","paidFor":[{"ledgerParticipantId":"lp-a","shares":3},{"ledgerParticipantId":"lp-b","shares":3}]}}'::JSONB,
       1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
     ),
     (
       'rs-even', 'lg-1', 'WEEKLY', 1, CURRENT_DATE, 1, CURRENT_DATE + INTERVAL '7 days', 2, 'INDEFINITE', 1, 'ACTIVE',
-      '{"title":"Even series","categoryId":"general","amount":2000,"originalAmount":null,"originalCurrency":null,"conversionRate":null,"conversionSource":null,"paidBySplitMode":"BY_AMOUNT","paidByList":[{"ledgerParticipantId":"lp-a","shares":2000}],"paidFor":[{"ledgerParticipantId":"lp-a","shares":1},{"ledgerParticipantId":"lp-b","shares":1}],"splitMode":"EVENLY","isReimbursement":false,"notes":null,"items":[],"itemizedRemainder":null}'::JSONB,
+      '{"title":"Even series","categoryId":"general","amount":2000,"originalAmount":null,"originalCurrency":null,"conversionRate":null,"conversionSource":null,"paidBySplitMode":"BY_AMOUNT","paidByList":[{"ledgerParticipantId":"lp-a","shares":2000}],"paidFor":[{"ledgerParticipantId":"lp-a","shares":1},{"ledgerParticipantId":"lp-b","shares":1}],"splitMode":"EVENLY","notes":null,"items":[],"itemizedRemainder":null}'::JSONB,
       1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
     ),
     (
@@ -148,7 +148,7 @@ async function seedLegacyData(client: PrismaClient) {
       -- is BY_SHARES (×100), one item is BY_SHARES (×100) while the other
       -- is BY_PERCENTAGE (untouched), and the remainder is BY_SHARES (×100).
       'rs-mixed', 'lg-1', 'WEEKLY', 1, CURRENT_DATE, 1, CURRENT_DATE + INTERVAL '7 days', 2, 'INDEFINITE', 1, 'ACTIVE',
-      '{"title":"Mixed series","categoryId":"general","amount":3000,"originalAmount":null,"originalCurrency":null,"conversionRate":null,"conversionSource":null,"paidBySplitMode":"BY_SHARES","paidByList":[{"ledgerParticipantId":"lp-a","shares":1},{"ledgerParticipantId":"lp-b","shares":1}],"paidFor":[{"ledgerParticipantId":"lp-a","shares":1},{"ledgerParticipantId":"lp-b","shares":1}],"splitMode":"EVENLY","isReimbursement":false,"notes":null,"items":[{"title":"Beer","unitPrice":1000,"quantity":1,"amount":1000,"splitMode":"BY_SHARES","paidFor":[{"ledgerParticipantId":"lp-a","shares":2},{"ledgerParticipantId":"lp-b","shares":1}]},{"title":"Wine","unitPrice":2000,"quantity":1,"amount":2000,"splitMode":"BY_PERCENTAGE","paidFor":[{"ledgerParticipantId":"lp-a","shares":7000},{"ledgerParticipantId":"lp-b","shares":3000}]}],"itemizedRemainder":{"splitMode":"BY_SHARES","paidFor":[{"ledgerParticipantId":"lp-a","shares":3},{"ledgerParticipantId":"lp-b","shares":3}]}}'::JSONB,
+      '{"title":"Mixed series","categoryId":"general","amount":3000,"originalAmount":null,"originalCurrency":null,"conversionRate":null,"conversionSource":null,"paidBySplitMode":"BY_SHARES","paidByList":[{"ledgerParticipantId":"lp-a","shares":1},{"ledgerParticipantId":"lp-b","shares":1}],"paidFor":[{"ledgerParticipantId":"lp-a","shares":1},{"ledgerParticipantId":"lp-b","shares":1}],"splitMode":"EVENLY","notes":null,"items":[{"title":"Beer","unitPrice":1000,"quantity":1,"amount":1000,"splitMode":"BY_SHARES","paidFor":[{"ledgerParticipantId":"lp-a","shares":2},{"ledgerParticipantId":"lp-b","shares":1}]},{"title":"Wine","unitPrice":2000,"quantity":1,"amount":2000,"splitMode":"BY_PERCENTAGE","paidFor":[{"ledgerParticipantId":"lp-a","shares":7000},{"ledgerParticipantId":"lp-b","shares":3000}]}],"itemizedRemainder":{"splitMode":"BY_SHARES","paidFor":[{"ledgerParticipantId":"lp-a","shares":3},{"ledgerParticipantId":"lp-b","shares":3}]}}'::JSONB,
       1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
     );
   `)
@@ -490,8 +490,8 @@ describe('share fixed-point migration', () => {
           VALUES ('lg-ovf', '$', 'USD', CURRENT_TIMESTAMP);
           INSERT INTO "LedgerParticipant" ("id", "ledgerId", "kind")
           VALUES ('lp-ovf', 'lg-ovf', 'ACCOUNT_MEMBER');
-          INSERT INTO "Expense" ("id", "ledgerId", "expenseDate", "title", "categoryId", "amount", "paidBySplitMode", "isReimbursement", "splitMode", "createdAt")
-          VALUES ('e-ovf', 'lg-ovf', CURRENT_DATE, 'Overflow', 'general', 1000, 'BY_AMOUNT', false, 'BY_SHARES', CURRENT_TIMESTAMP);
+          INSERT INTO "Expense" ("id", "ledgerId", "expenseDate", "title", "categoryId", "amount", "paidBySplitMode", "splitMode", "createdAt")
+          VALUES ('e-ovf', 'lg-ovf', CURRENT_DATE, 'Overflow', 'general', 1000, 'BY_AMOUNT', 'BY_SHARES', CURRENT_TIMESTAMP);
           -- 21,474,837 × 100 > 2,147,483,647 → preflight must abort.
           INSERT INTO "ExpensePaidFor" ("expenseId", "ledgerParticipantId", "shares")
           VALUES ('e-ovf', 'lp-ovf', 21474837);

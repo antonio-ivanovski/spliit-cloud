@@ -940,9 +940,6 @@
       "customRate": "A usar taxa personalizada",
       "via": "através de {currencies}"
     },
-    "isReimbursementField": {
-      "label": "Este é um pagamento de acerto"
-    },
     "categoryField": {
       "label": "Categoria"
     },
@@ -1433,6 +1430,9 @@
     },
     "Income": {
       "heading": "Rendimentos"
+    },
+    "Settlement": {
+      "heading": "Acerto"
     }
   },
   "Currencies": {

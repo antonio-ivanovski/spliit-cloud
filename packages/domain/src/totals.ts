@@ -1,4 +1,5 @@
 import { getBalances } from './balances'
+import { isSettlementCategory } from './categories'
 import type { ConversionSource } from './conversion'
 import type { Currency } from './currency'
 import type { SplitMode } from './enums'
@@ -20,7 +21,7 @@ export type TotalsExpense = {
   amount: number
   splitMode: SplitMode
   paidBySplitMode: SplitMode
-  isReimbursement: boolean
+  categoryId?: string | null
   paidByList: Array<{
     shares: number
     participant: { id: string; name?: string }
@@ -63,7 +64,7 @@ type SharesExpense = Pick<
   | 'amount'
   | 'splitMode'
   | 'paidFor'
-  | 'isReimbursement'
+  | 'categoryId'
   | 'originalAmount'
   | 'originalCurrency'
   | 'conversionRate'
@@ -78,7 +79,7 @@ type PaidBySharesExpense = Pick<
   | 'amount'
   | 'paidByList'
   | 'paidBySplitMode'
-  | 'isReimbursement'
+  | 'categoryId'
   | 'originalAmount'
   | 'originalCurrency'
   | 'conversionRate'
@@ -273,7 +274,7 @@ export function calculatePaidByShare(
   participantId: string | null,
   expense: PaidBySharesExpense,
 ): number {
-  if (expense.isReimbursement) return 0
+  if (isSettlementCategory(expense.categoryId)) return 0
   if (participantId == null) return 0
   return calculatePaidByShares(expense)[participantId] ?? 0
 }
@@ -282,7 +283,7 @@ export function calculateShare(
   participantId: string | null,
   expense: SharesExpense,
 ): number {
-  if (expense.isReimbursement) return 0
+  if (isSettlementCategory(expense.categoryId)) return 0
   if (participantId == null) return 0
   return calculateShares(expense)[participantId] ?? 0
 }
@@ -290,7 +291,7 @@ export function calculateShare(
 export function getTotalGroupSpending(expenses: TotalsExpense[]): number {
   return expenses.reduce(
     (total, expense) =>
-      expense.isReimbursement ? total : total + expense.amount,
+      isSettlementCategory(expense.categoryId) ? total : total + expense.amount,
     0,
   )
 }
@@ -300,7 +301,9 @@ export function getTotalActiveUserPaidFor(
   expenses: TotalsExpense[],
 ): number {
   if (activeUserId == null) return 0
-  const balances = getBalances(expenses.filter((e) => !e.isReimbursement))
+  const balances = getBalances(
+    expenses.filter((e) => !isSettlementCategory(e.categoryId)),
+  )
   return balances[activeUserId]?.paid ?? 0
 }
 
@@ -309,7 +312,9 @@ export function getTotalActiveUserShare(
   expenses: TotalsExpense[],
 ): number {
   if (activeUserId == null) return 0
-  const balances = getBalances(expenses.filter((e) => !e.isReimbursement))
+  const balances = getBalances(
+    expenses.filter((e) => !isSettlementCategory(e.categoryId)),
+  )
   return balances[activeUserId]?.paidFor ?? 0
 }
 

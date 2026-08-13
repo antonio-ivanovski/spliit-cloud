@@ -28,7 +28,6 @@ function makeExpense(overrides: Partial<Expense> = {}): Expense {
     ],
     isMultiPayer: false,
     splitMode: 'EVENLY',
-    isReimbursement: false,
     documents: [],
     recurrenceRule: 'NONE',
     ...overrides,
@@ -346,18 +345,18 @@ describe('getExpenseChangeSummary (backward-compat)', () => {
     ).toBeNull()
   })
 
-  it('detects a reimbursement-only toggle', () => {
+  it('detects a category change onto settlement', () => {
     const result = getExpenseChangeSummary(
-      makeExpense({ isReimbursement: false }),
-      makeExpense({ isReimbursement: true }),
+      makeExpense({ category: 'general' }),
+      makeExpense({ category: 'settlement' }),
       ctx,
     )
     expect(result).not.toBeNull()
-    expect(result!.changedFields).toEqual(['reimbursement'])
+    expect(result!.changedFields).toEqual(['category'])
     expect(result!.changes[0]).toEqual({
-      field: 'reimbursement',
-      before: 'Expense',
-      after: 'Reimbursement',
+      field: 'category',
+      before: 'General',
+      after: 'settlement',
     })
   })
 

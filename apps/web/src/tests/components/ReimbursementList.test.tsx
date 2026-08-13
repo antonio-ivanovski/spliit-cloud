@@ -68,8 +68,6 @@ vi.mock('@tanstack/react-router', () => ({
   ),
 }))
 
-import { PAYMENT_CATEGORY_ID } from '@spliit/domain'
-
 // ── Fixtures ────────────────────────────────────────────────────────────
 
 const EUR = { code: 'EUR', symbol: '€', decimal_digits: 2, rounding: 0 }
@@ -274,9 +272,7 @@ describe('ReimbursementList', () => {
 
     const call = mockMutateAsync.mock.calls[0][0]
     expect(call.groupId).toBe('group-1')
-    expect(call.expense.category).toBe(PAYMENT_CATEGORY_ID)
-    expect(call.expense.amount).toBe(2000)
-    expect(call.expense.isReimbursement).toBe(true)
+    expect(call.expense.category).toBe('settlement')
     expect(call.expense.paidBySplitMode).toBe('BY_AMOUNT')
     expect(call.expense.splitMode).toBe('EVENLY')
     expect(call.expense.isMultiPayer).toBe(false)

@@ -168,8 +168,12 @@
     "aliases": ["stipendio", "paga"],
     "samples": []
   },
-  "payment": {
+  "settlement": {
     "aliases": ["rimborso", "saldo", "restituzione"],
+    "samples": []
+  },
+  "payment": {
+    "aliases": ["pagamento", "bonifico"],
     "samples": []
   },
   "general": {

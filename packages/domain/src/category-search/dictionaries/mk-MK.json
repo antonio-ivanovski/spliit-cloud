@@ -120,8 +120,12 @@
     "aliases": ["облека", "чевли", "obleka"],
     "samples": []
   },
-  "payment": {
+  "settlement": {
     "aliases": ["враќање", "порамнување", "порамнителна уплата"],
+    "samples": []
+  },
+  "payment": {
+    "aliases": ["уплата"],
     "samples": []
   },
   "general": {

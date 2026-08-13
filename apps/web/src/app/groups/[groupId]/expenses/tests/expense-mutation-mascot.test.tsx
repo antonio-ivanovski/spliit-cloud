@@ -108,7 +108,7 @@ describe('expense mutation mascot reactions', () => {
       { expenseId: 'expense-1' } as never,
       {
         groupId: 'group-1',
-        expense: { isReimbursement: false },
+        expense: { category: 'general' },
       } as never,
     )
     expect(react).toHaveBeenCalledWith('success')
@@ -118,7 +118,7 @@ describe('expense mutation mascot reactions', () => {
       { expenseId: 'expense-2' } as never,
       {
         groupId: 'group-1',
-        expense: { isReimbursement: true },
+        expense: { category: 'settlement' },
       } as never,
     )
     expect(react).toHaveBeenCalledWith('celebrate')

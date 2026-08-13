@@ -1,6 +1,7 @@
 import type { LucideIcon, LucideProps } from 'lucide-react'
 import {
   Armchair,
+  ArrowLeftRight,
   Baby,
   Banknote,
   Bike,
@@ -69,6 +70,8 @@ function getCategoryIcon(category: string): LucideIcon {
       return Banknote
     case 'Income/Income':
       return Wallet
+    case 'Settlement/Settlement':
+      return ArrowLeftRight
     case 'Entertainment/Entertainment':
       return FerrisWheel
     case 'Entertainment/Games':

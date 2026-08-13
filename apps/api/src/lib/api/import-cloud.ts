@@ -7,6 +7,7 @@ import {
 } from '@spliit/db'
 import {
   wallTimeToUtc,
+  SETTLEMENT_CATEGORY_ID,
   spliitGroupExportManifestSchema,
   toSecondPrecision,
   type SpliitGroupExportManifest,
@@ -143,8 +144,10 @@ function remapTemplate(
       }
     })
   }
+  const { isReimbursement, ...rest } = template
   return {
-    ...template,
+    ...rest,
+    ...(isReimbursement === true ? { categoryId: SETTLEMENT_CATEGORY_ID } : {}),
     paidByList: remap(template.paidByList),
     paidFor: remap(template.paidFor),
     items: Array.isArray(template.items)
@@ -969,7 +972,9 @@ export async function importCloudGroup(
           expenseDate: toSecondPrecision(canonicalExpenseDate),
           expenseTimeZone,
           title: expense.title,
-          categoryId: expense.categoryId,
+          categoryId: expense.isReimbursement
+            ? SETTLEMENT_CATEGORY_ID
+            : expense.categoryId,
           amount: expense.amount,
           originalAmount: expense.originalAmount,
           originalCurrency: expense.originalCurrency,
@@ -977,7 +982,6 @@ export async function importCloudGroup(
           conversionSource: expense.conversionSource,
           paidBySplitMode: expense.paidBySplitMode,
           splitMode: expense.splitMode,
-          isReimbursement: expense.isReimbursement,
           version: expense.version,
           createdAt: asDate(expense.createdAt),
           notes: expense.notes,

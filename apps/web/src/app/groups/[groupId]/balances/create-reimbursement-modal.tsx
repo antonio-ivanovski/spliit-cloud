@@ -32,7 +32,7 @@ import {
   getCurrencyFromGroup,
 } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
-import { PAYMENT_CATEGORY_ID } from '@spliit/domain'
+import { SETTLEMENT_CATEGORY_ID } from '@spliit/domain'
 
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
@@ -205,14 +205,13 @@ export function CreateReimbursementModal({
           expenseDate,
           expenseTimeZone: accountTimeZone,
           title: tForm('reimbursement'),
-          category: PAYMENT_CATEGORY_ID,
+          category: SETTLEMENT_CATEGORY_ID,
           amount: selectedTotal,
           paidBySplitMode: 'BY_AMOUNT',
           paidByList,
           splitMode: isLegacySingle ? 'EVENLY' : 'BY_AMOUNT',
           paidFor,
           isMultiPayer: direction === 'receive' && paidByList.length > 1,
-          isReimbursement: true,
           documents: [],
           recurrence: null,
           ...(needsConversion && originalCurrencyCode
@@ -364,7 +363,7 @@ export function CreateReimbursementModal({
           <div className="text-sm text-muted-foreground">
             {t('category')}:{' '}
             <span className="text-foreground">
-              {categoryLabel(tCategories, PAYMENT_CATEGORY_ID)}
+              {categoryLabel(tCategories, SETTLEMENT_CATEGORY_ID)}
             </span>
           </div>
         </ResponsiveDialogBody>

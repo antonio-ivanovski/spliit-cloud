@@ -25,7 +25,6 @@ const baseExpense = {
     { participant: 'payer', shares: 1 },
     { participant: 'friend', shares: 1 },
   ],
-  isReimbursement: false,
   documents: [],
   recurrenceRule: 'NONE' as const,
   recurrence: null,

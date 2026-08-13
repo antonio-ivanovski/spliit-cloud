@@ -604,6 +604,9 @@
     },
     "Income": {
       "heading": "আয়"
+    },
+    "Settlement": {
+      "heading": "নিষ্পত্তি"
     }
   },
   "Common": {
@@ -1329,9 +1332,6 @@
     "participantSharesLabel": "{name} এর জন্য ভাগ",
     "decreaseShares": "{name} এর জন্য ভাগ হ্রাস করুন",
     "increaseShares": "{name} এর জন্য ভাগ বৃদ্ধি করুন",
-    "isReimbursementField": {
-      "label": "এটি একটি নিষ্পত্তি পেমেন্ট"
-    },
     "paidForOptionItemized": "আইটেমাইজড",
     "paidForOptionItemizedHelper": "খরচের পৃথক আইটেম থেকে প্রতিটি অংশগ্রহণকারীর ভাগ গণনা করুন।",
     "items": {

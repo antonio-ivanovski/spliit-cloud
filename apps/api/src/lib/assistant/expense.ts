@@ -693,7 +693,6 @@ export async function prepareAssistantExpense(
     isMultiPayer: paidByList.length > 1,
     splitMode,
     paidFor,
-    isReimbursement: false,
     documents: [],
     notes: input.notes,
     recurrenceRule: 'NONE',

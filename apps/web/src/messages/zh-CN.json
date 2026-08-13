@@ -799,9 +799,6 @@
         "replaceItemsHint": "替换当前行"
       }
     },
-    "isReimbursementField": {
-      "label": "这是结算付款"
-    },
     "categoryField": {
       "label": "类别"
     },
@@ -1309,6 +1306,9 @@
     },
     "Income": {
       "heading": "收入"
+    },
+    "Settlement": {
+      "heading": "结算"
     }
   },
   "Currencies": {

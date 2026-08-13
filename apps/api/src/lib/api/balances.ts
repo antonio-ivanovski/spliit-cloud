@@ -3,7 +3,7 @@ import {
   getBalances,
   getPublicBalances,
   getSuggestedReimbursements,
-  PAYMENT_CATEGORY_ID,
+  SETTLEMENT_CATEGORY_ID,
   toSecondPrecision,
   type Balances,
   type Reimbursement,
@@ -124,7 +124,7 @@ export async function createSettlementExpensesForArchive(
         expenseDate: toSecondPrecision(now),
         expenseTimeZone: 'UTC',
         title: SETTLEMENT_TITLE,
-        categoryId: PAYMENT_CATEGORY_ID,
+        categoryId: SETTLEMENT_CATEGORY_ID,
         amount: leg.amount,
         paidBySplitMode: 'BY_AMOUNT',
         paidByList: {
@@ -133,7 +133,6 @@ export async function createSettlementExpensesForArchive(
           },
         },
         splitMode: 'EVENLY',
-        isReimbursement: true,
         paidFor: {
           createMany: {
             data: [{ ledgerParticipantId: leg.to, shares: 1 }],
@@ -223,7 +222,7 @@ export async function createSettlementExpensesForLeave(
         expenseDate: toSecondPrecision(now),
         expenseTimeZone: 'UTC',
         title: SETTLEMENT_ON_LEAVE_TITLE,
-        categoryId: PAYMENT_CATEGORY_ID,
+        categoryId: SETTLEMENT_CATEGORY_ID,
         amount: leg.amount,
         paidBySplitMode: 'BY_AMOUNT',
         paidByList: {
@@ -232,7 +231,6 @@ export async function createSettlementExpensesForLeave(
           },
         },
         splitMode: 'EVENLY',
-        isReimbursement: true,
         paidFor: {
           createMany: {
             data: [{ ledgerParticipantId: leg.to, shares: 1 }],

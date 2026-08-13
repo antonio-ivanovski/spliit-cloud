@@ -19,7 +19,6 @@ function row(
     expenseDate: new Date('2026-07-01T00:00:00.000Z'),
     createdAt: new Date('2026-07-01T00:00:00.000Z'),
     categoryId: 'general',
-    isReimbursement: false,
     title: 'Dinner',
     splitMode: 'EVENLY',
     paidBySplitMode: 'EVENLY',
@@ -128,8 +127,7 @@ describe('buildExpenseReport', () => {
         row({
           id: 'r1',
           amount: 2000,
-          categoryId: 'payment',
-          isReimbursement: true,
+          categoryId: 'settlement',
           expenseDate: new Date('2026-07-20T00:00:00.000Z'),
           paidByList: [{ ledgerParticipantId: 'bob', shares: 2000 }],
           paidFor: [{ ledgerParticipantId: 'alice', shares: 2000 }],
@@ -137,8 +135,7 @@ describe('buildExpenseReport', () => {
         row({
           id: 'r2',
           amount: 500,
-          categoryId: 'payment',
-          isReimbursement: true,
+          categoryId: 'settlement',
           expenseDate: new Date('2026-06-20T00:00:00.000Z'),
           paidByList: [{ ledgerParticipantId: 'alice', shares: 500 }],
           paidFor: [{ ledgerParticipantId: 'bob', shares: 500 }],
@@ -146,8 +143,7 @@ describe('buildExpenseReport', () => {
         row({
           id: 'r3',
           amount: 700,
-          categoryId: 'payment',
-          isReimbursement: true,
+          categoryId: 'settlement',
           expenseDate: new Date('2026-08-05T00:00:00.000Z'),
           paidByList: [{ ledgerParticipantId: 'alice', shares: 700 }],
           paidFor: [{ ledgerParticipantId: 'bob', shares: 700 }],
@@ -187,8 +183,7 @@ describe('buildExpenseReport', () => {
         row({
           id: 'r1',
           amount: 300,
-          categoryId: 'payment',
-          isReimbursement: true,
+          categoryId: 'settlement',
           paidByList: [{ ledgerParticipantId: 'bob', shares: 300 }],
           paidFor: [{ ledgerParticipantId: 'alice', shares: 300 }],
         }),
@@ -248,8 +243,7 @@ describe('buildExpenseReport', () => {
       row({
         id: 'r1',
         amount: 4000,
-        categoryId: 'payment',
-        isReimbursement: true,
+        categoryId: 'settlement',
         expenseDate: new Date('2026-07-03T00:00:00.000Z'),
         paidByList: [{ ledgerParticipantId: 'bob', shares: 4000 }],
         paidFor: [{ ledgerParticipantId: 'alice', shares: 4000 }],

@@ -8,11 +8,7 @@ import {
   type GroupShape,
   type LoadedExpense,
 } from '@/app/groups/[groupId]/expenses/expense-form/default-values'
-import {
-  getCurrency,
-  PAYMENT_CATEGORY_ID,
-  RecurrenceRule,
-} from '@spliit/domain'
+import { getCurrency, RecurrenceRule } from '@spliit/domain'
 
 const mockGroup = {
   id: 'group-1',
@@ -384,8 +380,7 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
 
     expect(result.splitMode).toBe('EVENLY')
     expect(result.paidFor).toEqual([{ participant: 'lp-2', shares: 1 }])
-    expect(result.isReimbursement).toBe(true)
-    expect(result.category).toBe(PAYMENT_CATEGORY_ID)
+    expect(result.category).toBe('settlement')
     // searchParams.amount is in cents (e.g., 50 cents = $0.50); the form
     // stores amount and paidByList shares in major units.
     expect(result.paidByList).toEqual([{ participant: 'lp-1', shares: 0.5 }])
@@ -480,7 +475,7 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
       savedDefault: null,
     })
 
-    expect(result.category).toBe(PAYMENT_CATEGORY_ID)
+    expect(result.category).toBe('settlement')
     expect(result.recurrenceRule).toBe(RecurrenceRule.NONE)
   })
 
@@ -602,7 +597,6 @@ describe('buildExpenseFormDefaults (copy branch)', () => {
       { ledgerParticipantId: 'lp-2', shares: 2500 },
     ],
     splitMode: 'EVENLY',
-    isReimbursement: false,
     documents: [],
     notes: 'Weekly groceries',
     recurrenceRule: 'NONE',

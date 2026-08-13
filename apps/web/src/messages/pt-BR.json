@@ -811,9 +811,6 @@
         "replaceItemsHint": "Substitua os itens atuais"
       }
     },
-    "isReimbursementField": {
-      "label": "Este é um pagamento de acerto"
-    },
     "categoryField": {
       "label": "Categoria"
     },
@@ -1324,6 +1321,9 @@
     },
     "Income": {
       "heading": "Receitas"
+    },
+    "Settlement": {
+      "heading": "Acerto"
     }
   },
   "Currencies": {

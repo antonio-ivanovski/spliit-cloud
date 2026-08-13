@@ -604,6 +604,9 @@
     },
     "Income": {
       "heading": "आय"
+    },
+    "Settlement": {
+      "heading": "निपटान"
     }
   },
   "Common": {
@@ -1329,9 +1332,6 @@
     "participantSharesLabel": "{name} के लिए शेयर",
     "decreaseShares": "{name} के शेयर घटाएं",
     "increaseShares": "{name} के शेयर बढ़ाएं",
-    "isReimbursementField": {
-      "label": "यह एक निपटान भुगतान है"
-    },
     "paidForOptionItemized": "आइटमीकृत",
     "paidForOptionItemizedHelper": "खर्च में अलग-अलग आइटम से प्रत्येक सदस्य के हिस्से की गणना करें।",
     "items": {

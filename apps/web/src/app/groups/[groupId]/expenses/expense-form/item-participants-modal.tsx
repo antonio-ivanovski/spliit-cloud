@@ -325,7 +325,6 @@ export function ItemParticipantsModal(props: {
                     participantId: '',
                   })),
                   splitMode: mode,
-                  isReimbursement: false,
                 })
               : null
 

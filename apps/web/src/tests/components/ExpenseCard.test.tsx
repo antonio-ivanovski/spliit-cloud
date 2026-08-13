@@ -56,7 +56,6 @@ function makeExpense(overrides: Record<string, unknown> = {}): GroupExpense {
     expenseTimeZone: 'UTC',
     createdAt: new Date('2025-06-15T00:00:00.000Z'),
     categoryId: 'general',
-    isReimbursement: false,
     splitMode: 'EVENLY',
     paidBySplitMode: 'BY_AMOUNT',
     originalAmount: null,
@@ -198,11 +197,11 @@ describe('ExpenseCard', () => {
     expect(screen.queryByTestId('expense-original-amount')).toBeNull()
   })
 
-  it('shows reimbursement badge when isReimbursement', () => {
+  it('shows settlement badge when category is settlement', () => {
     vi.mocked(useIsPendingInvitee).mockReturnValue(false)
     vi.mocked(useActiveUser).mockReturnValue(null)
 
-    const expense = makeExpense({ isReimbursement: true })
+    const expense = makeExpense({ categoryId: 'settlement' })
     render(
       <ExpenseCard
         expense={expense}
@@ -214,7 +213,7 @@ describe('ExpenseCard', () => {
 
     // The "Settlement" badge should be visible
     expect(screen.getByText('Settlement')).toBeInTheDocument()
-    // The container has italic class when isReimbursement
+    // The container has italic class when the expense is a settlement
     const card = screen.getByTestId('expense-item-exp-1')
     expect(card.className).toContain('italic')
   })
@@ -306,7 +305,7 @@ describe('ExpenseCard', () => {
     vi.mocked(useIsPendingInvitee).mockReturnValue(false)
     vi.mocked(useActiveUser).mockReturnValue(null)
 
-    const expense = makeExpense({ isReimbursement: true })
+    const expense = makeExpense({ categoryId: 'settlement' })
     render(
       <ExpenseCard
         expense={expense}

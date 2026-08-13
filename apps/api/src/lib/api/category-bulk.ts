@@ -2,6 +2,7 @@ import { prisma } from '@spliit/db'
 import {
   BULK_APPLY_HARD_LIMIT,
   DEFAULT_CATEGORY_ID,
+  SETTLEMENT_CATEGORY_ID,
   categoryIdSchema,
   type CategoryId,
   type ExpenseCategoriesBulkUpdatedActivityData,
@@ -94,6 +95,15 @@ export async function bulkUpdateExpenseCategories(args: {
     throw new Error('Cannot bulk-update categories on an archived group')
   }
 
+  if (
+    fromCategoryId === SETTLEMENT_CATEGORY_ID ||
+    Array.from(wantedById.values()).some(
+      (categoryId) => categoryId === SETTLEMENT_CATEGORY_ID,
+    )
+  ) {
+    throw new Error('Cannot bulk-apply the settlement category')
+  }
+
   const boss = await getApiBoss()
   const result = await prisma.$transaction(async (tx) => {
     // Lock the candidate rows by selecting them. Update via updateMany
@@ -103,7 +113,6 @@ export async function bulkUpdateExpenseCategories(args: {
       where: {
         ledgerId: group.ledgerId,
         id: { in: Array.from(wantedById.keys()) },
-        isReimbursement: false,
         categoryId: fromCategoryId,
       },
       select: { id: true, title: true, categoryId: true, version: true },
@@ -140,7 +149,6 @@ export async function bulkUpdateExpenseCategories(args: {
         where: {
           id: candidate.id,
           ledgerId: group.ledgerId,
-          isReimbursement: false,
           categoryId: candidate.categoryId,
           version: candidate.version,
         },
@@ -235,11 +243,11 @@ export async function listBulkCategorizeCandidates(args: {
   })
   if (!group) return []
   const from = args.fromCategoryId ?? DEFAULT_CATEGORY_ID
+  if (from === SETTLEMENT_CATEGORY_ID) return []
 
   return prisma.expense.findMany({
     where: {
       ledgerId: group.ledgerId,
-      isReimbursement: false,
       categoryId: from,
     },
     select: {

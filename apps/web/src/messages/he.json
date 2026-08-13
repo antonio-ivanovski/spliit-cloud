@@ -831,9 +831,6 @@
       "dateMismatch": "שערים מתאריך: {date}",
       "via": "דרך {currencies}"
     },
-    "isReimbursementField": {
-      "label": "זהו תשלום להסדרת היתרה"
-    },
     "categoryField": {
       "label": "קטגוריה"
     },
@@ -1324,6 +1321,9 @@
     },
     "Income": {
       "heading": "הכנסה"
+    },
+    "Settlement": {
+      "heading": "הסדר"
     }
   },
   "Currencies": {

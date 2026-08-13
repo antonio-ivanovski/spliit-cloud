@@ -811,9 +811,6 @@
         "replaceItemsHint": "Sostituisci le voci attuali"
       }
     },
-    "isReimbursementField": {
-      "label": "Questo è un pagamento di saldo"
-    },
     "categoryField": {
       "label": "Categoria"
     },
@@ -1324,6 +1321,9 @@
     },
     "Income": {
       "heading": "Entrate"
+    },
+    "Settlement": {
+      "heading": "Pareggio"
     }
   },
   "Currencies": {

@@ -805,9 +805,6 @@
         "replaceItemsHint": "Mevcut satırları değiştir"
       }
     },
-    "isReimbursementField": {
-      "label": "Bu bir borç kapatma ödemesidir"
-    },
     "categoryField": {
       "label": "Kategori"
     },
@@ -1316,6 +1313,9 @@
     },
     "Income": {
       "heading": "Gelir"
+    },
+    "Settlement": {
+      "heading": "Mutabakat"
     }
   },
   "Auth": {

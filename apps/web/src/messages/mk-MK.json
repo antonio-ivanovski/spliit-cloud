@@ -1166,9 +1166,6 @@
       "customRate": "Се користи прилагоден курс",
       "via": "преку {currencies}"
     },
-    "isReimbursementField": {
-      "label": "Ова е порамнителна уплата"
-    },
     "categoryField": {
       "label": "Категорија"
     },
@@ -1657,6 +1654,9 @@
     },
     "Income": {
       "heading": "Приход"
+    },
+    "Settlement": {
+      "heading": "Пресметка"
     }
   },
   "Currencies": {

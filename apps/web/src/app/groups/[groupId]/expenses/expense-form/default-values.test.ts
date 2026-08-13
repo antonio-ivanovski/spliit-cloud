@@ -112,7 +112,6 @@ describe('buildExpenseFormDefaults edit-mode item hydration', () => {
     paidByList: [{ ledgerParticipantId: 'alice', shares: 10000 }],
     paidFor: [],
     splitMode: 'ITEMIZED',
-    isReimbursement: false,
     documents: [],
     notes: '',
     recurrenceRule: 'NONE',

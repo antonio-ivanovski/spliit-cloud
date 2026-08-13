@@ -61,7 +61,6 @@ describe('formatExpenseReport', () => {
           expenseDate: new Date('2026-07-01T00:00:00.000Z'),
           createdAt: new Date('2026-07-01T00:00:00.000Z'),
           categoryId: 'food',
-          isReimbursement: false,
           title: 'Dinner',
           splitMode: 'EVENLY',
           paidBySplitMode: 'EVENLY',

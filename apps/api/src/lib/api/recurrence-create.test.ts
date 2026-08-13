@@ -52,7 +52,6 @@ const template: RecurringExpenseTemplate = {
   paidByList: [{ ledgerParticipantId: 'p1', shares: 1000 }],
   paidFor: [{ ledgerParticipantId: 'p1', shares: 1 }],
   splitMode: 'EVENLY',
-  isReimbursement: false,
   notes: null,
   items: [],
   itemizedRemainder: null,

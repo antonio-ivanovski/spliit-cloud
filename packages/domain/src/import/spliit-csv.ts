@@ -1,6 +1,6 @@
 import Papa from 'papaparse'
 
-import { DEFAULT_CATEGORIES } from '../categories'
+import { DEFAULT_CATEGORIES, SETTLEMENT_CATEGORY_ID } from '../categories'
 import type { Currency } from '../currency'
 import { getCurrency } from '../currency'
 import { distributeRemainder } from '../remainder-distribution'
@@ -231,7 +231,10 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
     expenses.push({
       title,
       expenseDate: date.slice(0, 10),
-      category: categoryToId(category),
+      category:
+        isReimbursement || categoryToId(category) === SETTLEMENT_CATEGORY_ID
+          ? SETTLEMENT_CATEGORY_ID
+          : categoryToId(category),
       amountCurrency: expenseCurrency,
       amount: expenseAmount,
       originalAmount: shouldRecover ? expenseAmount : null,
@@ -248,7 +251,6 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
       splitMode,
       recurrenceRule: 'NONE',
       recurrence: null,
-      isReimbursement,
       notes: null,
     })
   }

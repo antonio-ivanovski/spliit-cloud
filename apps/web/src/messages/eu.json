@@ -831,9 +831,6 @@
       "customRate": "Tasa pertsonalizatua erabiltzen",
       "via": "{currencies} bidez"
     },
-    "isReimbursementField": {
-      "label": "Hau zor-kitapenaren ordainketa bat da"
-    },
     "categoryField": {
       "label": "Kategoria"
     },
@@ -1324,6 +1321,9 @@
     },
     "Income": {
       "heading": "Diru-sarrerak"
+    },
+    "Settlement": {
+      "heading": "Kitzea"
     }
   },
   "Currencies": {

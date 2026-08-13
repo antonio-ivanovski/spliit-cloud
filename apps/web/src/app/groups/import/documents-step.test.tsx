@@ -60,7 +60,6 @@ const source: NormalizedSource = {
       paidFor: [{ sourceId: 'participant-1', shares: 1000 }],
       splitMode: 'BY_AMOUNT',
       recurrenceRule: 'NONE',
-      isReimbursement: false,
       notes: null,
     },
   ],

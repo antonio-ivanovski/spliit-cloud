@@ -825,9 +825,6 @@
       "customRate": "Käytetään mukautettua kurssia",
       "via": "{currencies} kautta"
     },
-    "isReimbursementField": {
-      "label": "Tämä on tasausmaksu"
-    },
     "categoryField": {
       "label": "Kategoria"
     },
@@ -1316,6 +1313,9 @@
     },
     "Income": {
       "heading": "Tulot"
+    },
+    "Settlement": {
+      "heading": "Tasaus"
     }
   },
   "Currencies": {

@@ -20,7 +20,6 @@ export const futureRowSnapshotSelect = {
   expenseTimeZone: true,
   categoryId: true,
   notes: true,
-  isReimbursement: true,
   splitMode: true,
   paidBySplitMode: true,
   originalAmount: true,
@@ -143,7 +142,6 @@ export function futureRowBeforeShape(
     originalCurrency: row.originalCurrency ?? undefined,
     conversionRate: row.conversionRate ?? undefined,
     conversionSource: row.conversionSource,
-    isReimbursement: row.isReimbursement,
   } as Expense & {
     originalAmount?: number
     originalCurrency?: string
@@ -236,7 +234,6 @@ export function futureRowAfterShape(args: {
     originalCurrency: rowConv.originalCurrency ?? undefined,
     conversionRate: rowConv.conversionRate ?? undefined,
     conversionSource: rowConv.conversionSource,
-    isReimbursement: template.isReimbursement,
   } as Expense & {
     originalAmount?: number
     originalCurrency?: string

@@ -17,7 +17,6 @@ const makeExpense = (overrides: Partial<BalancesExpense>): BalancesExpense =>
     expenseDate: new Date('2025-01-01T00:00:00.000Z'),
     title: 'Dinner',
     amount: 0,
-    isReimbursement: false,
     splitMode: 'EVENLY',
     createdAt: new Date('2025-01-01T00:00:00.000Z'),
     recurrenceRule: null,
@@ -1185,7 +1184,7 @@ describe('getSuggestedReimbursements', () => {
     const combinedReimbursement = makeExpense({
       id: 'settlement',
       amount: 150,
-      isReimbursement: true,
+      categoryId: 'settlement',
       splitMode: 'BY_AMOUNT',
       paidBySplitMode: 'BY_AMOUNT',
       paidByList: [{ participant: { id: 'p0', name: 'P0' }, shares: 150 }],
@@ -1230,7 +1229,7 @@ describe('getSuggestedReimbursements', () => {
     const combinedReimbursement = makeExpense({
       id: 'settlement',
       amount: 100,
-      isReimbursement: true,
+      categoryId: 'settlement',
       splitMode: 'BY_AMOUNT',
       paidBySplitMode: 'BY_AMOUNT',
       paidByList: [

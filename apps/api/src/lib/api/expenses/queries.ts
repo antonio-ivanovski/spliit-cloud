@@ -2,6 +2,7 @@ import type { Prisma } from '@spliit/db'
 import { prisma } from '@spliit/db'
 import {
   COMMON_CURRENCY_LIMIT,
+  SETTLEMENT_CATEGORY_ID,
   expandCategorySelection,
   commonCurrencyLookbackDate,
   isSupportedCurrencyCode,
@@ -222,18 +223,18 @@ export async function getGroupExpenses(
 
   let where: Prisma.ExpenseWhereInput = {
     ledgerId,
-    isReimbursement: options?.hideReimbursements ? false : undefined,
-    categoryId:
-      options?.categories && options.categories.length > 0
-        ? {
-            in: (() => {
-              const expanded = expandCategorySelection(options.categories)
-              // Keep unknown legacy values restrictive rather than turning an
-              // invalid filter into an unfiltered query.
-              return expanded.length > 0 ? expanded : options.categories
-            })(),
-          }
-        : undefined,
+    categoryId: (() => {
+      if (options?.categories && options.categories.length > 0) {
+        const expanded = expandCategorySelection(options.categories)
+        return {
+          in: expanded.length > 0 ? expanded : options.categories,
+        }
+      }
+      if (options?.hideReimbursements) {
+        return { not: SETTLEMENT_CATEGORY_ID }
+      }
+      return undefined
+    })(),
     originalCurrency:
       options?.currencies && options.currencies.length > 0
         ? { in: options.currencies }

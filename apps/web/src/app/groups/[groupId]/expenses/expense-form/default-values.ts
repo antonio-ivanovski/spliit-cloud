@@ -10,7 +10,7 @@ import type {
 } from '@spliit/domain'
 import {
   DEFAULT_CATEGORY_ID,
-  PAYMENT_CATEGORY_ID,
+  SETTLEMENT_CATEGORY_ID,
   amountAsDecimal,
   categoryIdSchema,
   getCurrency,
@@ -474,7 +474,6 @@ export function buildExpenseFormDefaults(args: {
       isMultiPayer: expense.paidByList.length > 1,
       paidFor,
       splitMode: expense.splitMode,
-      isReimbursement: expense.isReimbursement,
       documents: expense.documents,
       notes: expense.notes ?? '',
       recurrence: expense.recurrence ?? null,
@@ -576,13 +575,12 @@ export function buildExpenseFormDefaults(args: {
         originalCurrency: searchOriginalCurrency,
         conversionRate: undefined,
         conversionType: reimbursementNeedsConversion ? 'EXCHANGE' : undefined,
-        category: PAYMENT_CATEGORY_ID,
+        category: SETTLEMENT_CATEGORY_ID,
         paidBySplitMode: 'BY_AMOUNT' as const,
         paidByList,
         isMultiPayer:
           prefilledSettlement.direction === 'receive' && paidByList.length > 1,
         paidFor,
-        isReimbursement: true,
         splitMode: 'BY_AMOUNT' as const,
         documents: [],
         notes: '',
@@ -609,7 +607,7 @@ export function buildExpenseFormDefaults(args: {
       originalCurrency: searchOriginalCurrency,
       conversionRate: undefined,
       conversionType: reimbursementNeedsConversion ? 'EXCHANGE' : undefined,
-      category: PAYMENT_CATEGORY_ID,
+      category: SETTLEMENT_CATEGORY_ID,
       paidBySplitMode: 'BY_AMOUNT' as const,
       paidByList: searchParams.from
         ? [
@@ -631,7 +629,6 @@ export function buildExpenseFormDefaults(args: {
             },
           ]
         : [],
-      isReimbursement: true,
       splitMode: 'EVENLY' as const,
       documents: [],
       notes: '',
@@ -684,7 +681,6 @@ export function buildExpenseFormDefaults(args: {
     paidFor: prefilledParticipants.length
       ? prefilledParticipants.map((participant) => ({ participant, shares: 1 }))
       : defaultSplittingOptions.paidFor,
-    isReimbursement: false,
     splitMode: hasPrefilledItemSplits
       ? ('ITEMIZED' as const)
       : prefilledParticipants.length

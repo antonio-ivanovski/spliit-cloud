@@ -83,7 +83,6 @@ const baseExpense = (
   paidFor,
   splitMode: 'EVENLY',
   recurrenceRule: 'NONE',
-  isReimbursement: false,
   notes: null,
   ...overrides,
 })
@@ -1022,7 +1021,7 @@ describe('buildImportBatch', () => {
           amount: 9200,
           splitMode: exp.splitMode,
           paidBySplitMode: exp.paidBySplitMode,
-          isReimbursement: exp.isReimbursement,
+
           originalAmount: 10000,
           originalCurrency: 'EUR',
           conversionRate: 0.92,

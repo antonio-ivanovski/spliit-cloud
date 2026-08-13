@@ -825,9 +825,6 @@
       "customRate": "Aangepaste wisselkoers wordt gebruikt",
       "via": "omgerekend via {currencies}"
     },
-    "isReimbursementField": {
-      "label": "Dit is een vereffeningsbetaling"
-    },
     "categoryField": {
       "label": "Categorie"
     },
@@ -1316,6 +1313,9 @@
     },
     "Income": {
       "heading": "Inkomsten"
+    },
+    "Settlement": {
+      "heading": "Verrekening"
     }
   },
   "Currencies": {

@@ -707,19 +707,18 @@ describe('Import summary — totalAmount excludes reimbursements', () => {
   function makeExpense(opts: {
     title: string
     amount: number
-    isReimbursement: boolean
+    settlement?: boolean
     adminLp: string
   }) {
     return {
       title: opts.title,
       amount: opts.amount,
       expenseDate: new Date('2026-06-01'),
-      category: 'general',
+      category: opts.settlement ? 'settlement' : 'general',
       splitMode: 'EVENLY' as const,
       paidBySplitMode: 'BY_AMOUNT' as const,
       paidByList: [{ participant: opts.adminLp, shares: opts.amount }],
       paidFor: [{ participant: opts.adminLp, shares: 1 }],
-      isReimbursement: opts.isReimbursement,
       documents: [],
       recurrenceRule: 'NONE' as const,
     }
@@ -742,20 +741,18 @@ describe('Import summary — totalAmount excludes reimbursements', () => {
         makeExpense({
           title: 'Dinner',
           amount: 3000,
-          isReimbursement: false,
           adminLp,
         }),
         makeExpense({
           title: 'Lunch',
           amount: 1500,
-          isReimbursement: false,
           adminLp,
         }),
         // Settlement from previous balance — should NOT be counted in spending total
         makeExpense({
           title: 'Settlement from Bob',
           amount: 5192,
-          isReimbursement: true,
+          settlement: true,
           adminLp,
         }),
       ],
@@ -790,13 +787,11 @@ describe('Import summary — totalAmount excludes reimbursements', () => {
         makeExpense({
           title: 'Coffee',
           amount: 500,
-          isReimbursement: false,
           adminLp,
         }),
         makeExpense({
           title: 'Brunch',
           amount: 2500,
-          isReimbursement: false,
           adminLp,
         }),
       ],
@@ -826,13 +821,13 @@ describe('Import summary — totalAmount excludes reimbursements', () => {
         makeExpense({
           title: 'Settlement 1',
           amount: 1000,
-          isReimbursement: true,
+          settlement: true,
           adminLp,
         }),
         makeExpense({
           title: 'Settlement 2',
           amount: 2000,
-          isReimbursement: true,
+          settlement: true,
           adminLp,
         }),
       ],

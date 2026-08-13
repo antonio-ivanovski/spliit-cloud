@@ -76,8 +76,12 @@
     "aliases": ["衣服", "鞋子"],
     "samples": []
   },
+  "settlement": {
+    "aliases": ["报销", "还款"],
+    "samples": []
+  },
   "payment": {
-    "aliases": ["报销", "还款", "转账"],
+    "aliases": ["转账"],
     "samples": []
   },
   "general": {

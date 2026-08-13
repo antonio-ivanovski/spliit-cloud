@@ -495,6 +495,7 @@ function buildHierarchy(categories: ReadonlyArray<Category>): Hierarchy {
 const CATEGORY_GROUPING_HEADINGS = {
   Uncategorized: 'Uncategorized.heading',
   Income: 'Income.heading',
+  Settlement: 'Settlement.heading',
   Entertainment: 'Entertainment.heading',
   'Food and Drink': 'Food and Drink.heading',
   Home: 'Home.heading',

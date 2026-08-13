@@ -811,9 +811,6 @@
         "replaceItemsHint": "Sustituye las partidas actuales"
       }
     },
-    "isReimbursementField": {
-      "label": "Este es un pago de liquidación"
-    },
     "categoryField": {
       "label": "Categoria"
     },
@@ -1324,6 +1321,9 @@
     },
     "Income": {
       "heading": "Ingresos"
+    },
+    "Settlement": {
+      "heading": "Liquidación"
     }
   },
   "Currencies": {

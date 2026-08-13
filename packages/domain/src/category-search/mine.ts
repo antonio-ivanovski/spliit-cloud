@@ -8,6 +8,7 @@ export const DEFAULT_MINE_EXCLUDE: ReadonlySet<string> = new Set([
   'general',
   'uncategorized',
   'payment',
+  'settlement',
 ])
 
 const STOPWORDS = new Set([

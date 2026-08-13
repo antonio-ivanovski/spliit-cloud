@@ -771,6 +771,9 @@
     },
     "Income": {
       "heading": "money in"
+    },
+    "Settlement": {
+      "heading": "settlement era"
     }
   },
   "Common": {
@@ -1510,9 +1513,6 @@
     "participantSharesLabel": "shares for {name}",
     "decreaseShares": "decrease shares for {name}",
     "increaseShares": "increase shares for {name}",
-    "isReimbursementField": {
-      "label": "this is a settlement payment"
-    },
     "paidForOptionItemized": "itemized mode ",
     "paidForOptionItemizedHelper": "calculate each person's share from the individual items",
     "items": {

@@ -811,9 +811,6 @@
         "replaceItemsHint": "Substitueix els articles actuals"
       }
     },
-    "isReimbursementField": {
-      "label": "Això és un pagament de liquidació"
-    },
     "categoryField": {
       "label": "Categoria"
     },
@@ -1324,6 +1321,9 @@
     },
     "Income": {
       "heading": "Ingressos"
+    },
+    "Settlement": {
+      "heading": "Liquidació"
     }
   },
   "Currencies": {

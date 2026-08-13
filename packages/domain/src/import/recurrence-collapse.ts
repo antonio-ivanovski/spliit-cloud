@@ -1,3 +1,4 @@
+import { isSettlementCategory } from '../categories'
 import { calculateRecurrenceDate } from '../recurring-expenses'
 import { legacyRuleToRecurrence, type LegacyRecurrenceRule } from './recurrence'
 import type { RecurrenceConfig, RecurrenceFrequency } from './types'
@@ -9,7 +10,7 @@ export type LegacyRecurringCollapseExpense = {
   amount: number
   recurrenceRule: LegacyRecurrenceRule
   splitMode: string
-  isReimbursement: boolean
+  category: string
   paidBy: Array<{ id: string; shares: number }>
   paidFor: Array<{ id: string; shares: number }>
   originalCurrency?: string | null
@@ -83,7 +84,7 @@ export function fingerprintLegacyRecurringExpense(
     expense.recurrenceRule,
     String(expense.amount),
     expense.splitMode,
-    expense.isReimbursement ? '1' : '0',
+    isSettlementCategory(expense.category) ? '1' : '0',
     participantFingerprint(expense.paidBy),
     participantFingerprint(expense.paidFor),
     currency,
@@ -224,7 +225,7 @@ export function collapseExpenseFromNormalized(expense: {
   amount: number
   recurrenceRule: LegacyRecurrenceRule
   splitMode: string
-  isReimbursement: boolean
+  category: string
   paidBySourceId?: string
   paidBy?: Array<{ sourceId: string; shares: number }>
   paidFor: Array<{ sourceId: string; shares: number }>
@@ -243,7 +244,7 @@ export function collapseExpenseFromNormalized(expense: {
     amount: expense.amount,
     recurrenceRule: expense.recurrenceRule,
     splitMode: expense.splitMode,
-    isReimbursement: expense.isReimbursement,
+    category: expense.category,
     paidBy,
     paidFor: expense.paidFor.map((row) => ({
       id: row.sourceId,
@@ -260,7 +261,7 @@ export function collapseExpenseFromApi(expense: {
   amount: number
   recurrenceRule?: LegacyRecurrenceRule | null
   splitMode: string
-  isReimbursement: boolean
+  category: string
   paidByList: Array<{ participant: string; shares: number }>
   paidFor: Array<{ participant: string; shares: number }>
   originalCurrency?: string | null
@@ -285,7 +286,7 @@ export function collapseExpenseFromApi(expense: {
     amount: expense.amount,
     recurrenceRule: expense.recurrenceRule ?? 'NONE',
     splitMode: expense.splitMode,
-    isReimbursement: expense.isReimbursement,
+    category: expense.category,
     paidBy: expense.paidByList.map((row) => ({
       id: row.participant,
       shares: row.shares,

@@ -216,7 +216,6 @@ function buildExpensePayload(args: {
       expenseDate: expenseDate.toISOString(),
       expenseTimeZone: 'UTC',
       category: 'general',
-      isReimbursement: false,
       recurrenceRule: 'NONE' as const,
       items: args.items,
       ...(args.itemizedRemainder
@@ -322,7 +321,6 @@ describe('Expense items — ExpenseCard via existing API', () => {
             paidFor: [
               { ledgerParticipant: { id: adminId, name: 'Admin' }, shares: 1 },
             ],
-            isReimbursement: false,
             paidBySplitMode: 'BY_AMOUNT',
             splitMode: 'EVENLY',
             expenseTimeZone: 'UTC',
@@ -711,7 +709,6 @@ describe('Expense items — ExpenseCard via existing API', () => {
         expenseDate: updateExpenseAt.toISOString(),
         expenseTimeZone: 'UTC',
         category: 'general',
-        isReimbursement: false,
         recurrenceRule: 'NONE',
         items: [
           {

@@ -30,7 +30,6 @@ const expense = (overrides: Record<string, unknown> = {}): BudgetExpense => ({
   amount: 1200,
   splitMode: 'EVENLY',
   paidBySplitMode: 'BY_AMOUNT',
-  isReimbursement: false,
   categoryId: 'general',
   expenseDate: new Date('2026-07-15'),
   paidByList: [{ shares: 1, participant: { id: 'a' } }],
@@ -150,7 +149,7 @@ describe('calculateExpenseContribution exclusions', () => {
     expect(
       calculateExpenseContribution(
         rule,
-        expense({ isReimbursement: true }),
+        expense({ categoryId: 'settlement' }),
         julBounds,
       ),
     ).toBe(0)
@@ -517,7 +516,7 @@ describe('calculateBudgetUsage aggregation', () => {
     expect(
       calculateBudgetUsage(
         rule,
-        [expense(), expense({ id: 'e2', isReimbursement: true })],
+        [expense(), expense({ id: 'e2', categoryId: 'settlement' })],
         julBounds,
       ),
     ).toBe(600)

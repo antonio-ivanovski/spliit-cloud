@@ -811,9 +811,6 @@
         "replaceItemsHint": "Remplacez les lignes actuelles"
       }
     },
-    "isReimbursementField": {
-      "label": "Il s’agit d’un paiement de règlement"
-    },
     "categoryField": {
       "label": "Catégorie"
     },
@@ -1324,6 +1321,9 @@
     },
     "Income": {
       "heading": "Revenus"
+    },
+    "Settlement": {
+      "heading": "Règlement"
     }
   },
   "Currencies": {

@@ -159,8 +159,12 @@
     "aliases": ["nomina", "sueldo", "salario"],
     "samples": []
   },
-  "payment": {
+  "settlement": {
     "aliases": ["reembolso", "ajuste", "devolver"],
+    "samples": []
+  },
+  "payment": {
+    "aliases": ["transferencia"],
     "samples": []
   },
   "general": {

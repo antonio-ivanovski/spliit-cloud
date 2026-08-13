@@ -184,8 +184,12 @@
     "aliases": ["gehalt", "lohn", "einkommen"],
     "samples": []
   },
-  "payment": {
+  "settlement": {
     "aliases": ["rueckzahlung", "ausgleich", "erstatten"],
+    "samples": []
+  },
+  "payment": {
+    "aliases": ["ueberweisung"],
     "samples": []
   },
   "general": {

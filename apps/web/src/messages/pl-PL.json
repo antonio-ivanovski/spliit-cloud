@@ -837,9 +837,6 @@
       "customRate": "Używany kurs niestandardowy",
       "via": "przez {currencies}"
     },
-    "isReimbursementField": {
-      "label": "To płatność rozliczeniowa"
-    },
     "categoryField": {
       "label": "Kategoria"
     },
@@ -1332,6 +1329,9 @@
     },
     "Income": {
       "heading": "Przychody"
+    },
+    "Settlement": {
+      "heading": "Rozliczenie"
     }
   },
   "Auth": {

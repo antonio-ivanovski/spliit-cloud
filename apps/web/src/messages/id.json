@@ -819,9 +819,6 @@
       "customRate": "Menggunakan kurs kustom",
       "via": "melalui {currencies}"
     },
-    "isReimbursementField": {
-      "label": "Ini adalah pembayaran pelunasan"
-    },
     "categoryField": {
       "label": "Kategori"
     },
@@ -1618,6 +1615,9 @@
     },
     "Income": {
       "heading": "Pemasukan"
+    },
+    "Settlement": {
+      "heading": "Penyelesaian"
     }
   },
   "Auth": {

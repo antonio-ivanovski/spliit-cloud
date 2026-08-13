@@ -673,7 +673,6 @@ export const expenseFormInputSchema = z
     paidFor: z.array(formPaidForRowSchema).min(1, { error: 'paidForMin1' }),
     isMultiPayer: z.boolean().default(false),
     splitMode: splitModeSchema,
-    isReimbursement: z.boolean(),
     documents: documentsSchema,
     notes: z.string().optional(),
     // Authoritative series cadence. `recurrenceRule` below remains accepted
@@ -923,11 +922,6 @@ export const expenseApiSchema = z
         'Whether multiple participants paid. When false, paidByList must contain a single row.',
       ),
     splitMode: splitModeSchema,
-    isReimbursement: z
-      .boolean()
-      .describe(
-        'Marks a payment between participants rather than an expense. Excluded from spend stats.',
-      ),
     documents: documentsSchema,
     notes: z.string().optional(),
     recurrence: recurrenceConfigSchema.nullish(),

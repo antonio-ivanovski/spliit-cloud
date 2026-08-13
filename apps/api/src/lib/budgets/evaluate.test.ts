@@ -78,7 +78,6 @@ function overBudgetData(overrides: Record<string, unknown> = {}) {
         categoryId: 'groceries',
         amount: 1500,
         paidBySplitMode: 'BY_AMOUNT',
-        isReimbursement: false,
         splitMode: 'EVENLY',
         createdAt: new Date('2026-01-01T00:00:00Z'),
       },

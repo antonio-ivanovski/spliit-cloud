@@ -175,7 +175,6 @@ describe('Silent expense creation — activity + notification', () => {
         paidBySplitMode: 'BY_AMOUNT',
         paidByList: [{ participant: adminLp, shares: 1000 }],
         paidFor: [{ participant: adminLp, shares: 1 }],
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'DAILY',
       },
@@ -212,7 +211,6 @@ describe('Silent expense creation — activity + notification', () => {
           { participant: adminLp, shares: 1 },
           { participant: aliceLp!, shares: 1 },
         ],
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'NONE',
       },
@@ -222,7 +220,7 @@ describe('Silent expense creation — activity + notification', () => {
     await makeCaller().archive({ groupId, archived: true, force: true })
 
     const settlements = await prisma.expense.findMany({
-      where: { ledger: { group: { id: groupId } }, isReimbursement: true },
+      where: { ledger: { group: { id: groupId } }, categoryId: 'settlement' },
     })
 
     for (const s of settlements) {
@@ -277,7 +275,6 @@ describe('Silent expense creation — activity + notification', () => {
           { participant: adminLp, shares: 1 },
           { participant: aliceLp!, shares: 1 },
         ],
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'NONE',
       },
@@ -299,7 +296,7 @@ describe('Silent expense creation — activity + notification', () => {
     expect(adminMemberAfter?.status).toBe('LEFT')
 
     const settlements = await prisma.expense.findMany({
-      where: { ledgerId, isReimbursement: true },
+      where: { ledgerId, categoryId: 'settlement' },
     })
     // Should have at least one settlement expense
     expect(settlements.length).toBeGreaterThanOrEqual(1)
@@ -350,7 +347,6 @@ describe('Silent expense creation — activity + notification', () => {
         paidBySplitMode: 'BY_AMOUNT',
         paidByList: [{ participant: adminLp, shares: 1000 }],
         paidFor: [{ participant: adminLp, shares: 1 }],
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'WEEKLY',
       },
@@ -415,7 +411,6 @@ describe('Silent expense creation — activity + notification', () => {
         paidBySplitMode: 'BY_AMOUNT',
         paidByList: [{ participant: adminLp, shares: 1200 }],
         paidFor: [{ participant: adminLp, shares: 1 }],
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'WEEKLY',
         recurrence: {

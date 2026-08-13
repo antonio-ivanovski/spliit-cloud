@@ -10,6 +10,7 @@ import type { Expense, GroupFormValues } from '@spliit/domain'
 import {
   dateOnlyInTimeZone,
   exchangeRateLookupDate,
+  isSettlementCategory,
   toSecondPrecision,
   utcToWallTime,
   type Expense as DomainExpense,
@@ -751,7 +752,7 @@ export async function importGroup(
       const resolvedParticipants = resolvePaidParticipants(expense)
       resolvedParticipantsByExpenseIndex.push(resolvedParticipants)
 
-      if (!expense.isReimbursement) {
+      if (!isSettlementCategory(expense.category)) {
         totalAmount += conversion.ledgerAmountMinor
       }
       for (const row of resolvedParticipants.resolvedPaidByList) {
@@ -784,7 +785,6 @@ export async function importGroup(
         splitMode: expense.splitMode,
         recurringSeriesId,
         recurrenceSequence: membership?.sequence,
-        isReimbursement: expense.isReimbursement,
         notes: expense.notes,
       })
       for (const { id, document } of prepared.documents) {

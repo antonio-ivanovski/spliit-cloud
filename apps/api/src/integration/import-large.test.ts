@@ -89,7 +89,6 @@ describe('large group imports', () => {
         { participant: secondParticipantId, shares: 500 + index },
       ],
       splitMode: 'BY_AMOUNT' as const,
-      isReimbursement: false,
       documents: [
         {
           id: `receipt-${runId}-${index}`,

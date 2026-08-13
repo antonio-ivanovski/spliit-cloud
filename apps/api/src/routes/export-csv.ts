@@ -9,6 +9,7 @@ import {
   getCategoryById,
   getCurrency,
   getCurrencyFromGroup,
+  isSettlementCategory,
   utcToWallTime,
 } from '@spliit/domain'
 
@@ -127,7 +128,7 @@ export async function exportGroupCsv(request: Request, groupId: string) {
       amount: expense.amount,
       splitMode: expense.splitMode,
       paidBySplitMode: expense.paidBySplitMode,
-      isReimbursement: expense.isReimbursement,
+      categoryId: expense.categoryId,
       originalAmount: expense.originalAmount,
       originalCurrency: expense.originalCurrency,
       conversionRate:
@@ -163,7 +164,7 @@ export async function exportGroupCsv(request: Request, groupId: string) {
         ? expense.conversionRate.toString()
         : null,
       conversionSource: expense.conversionSource,
-      isReimbursement: expense.isReimbursement ? 'Yes' : 'No',
+      isReimbursement: isSettlementCategory(expense.categoryId) ? 'Yes' : 'No',
       splitMode: splitModeLabel[expense.splitMode],
       ...Object.fromEntries(
         participants.map((participant) => {

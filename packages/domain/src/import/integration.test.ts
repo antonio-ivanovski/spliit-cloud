@@ -108,7 +108,6 @@ describe('JSON integration: Spliit export round-trips', () => {
       if (!parsed) continue
 
       expect(parsed.amount).toBe(src.amount)
-      expect(parsed.isReimbursement).toBe(src.isReimbursement)
       expect(parsed.recurrenceRule).toBe(src.recurrenceRule ?? 'NONE')
       expect(parsed.splitMode).toBe(src.splitMode ?? 'EVENLY')
 
@@ -118,10 +117,11 @@ describe('JSON integration: Spliit export round-trips', () => {
         src.category?.grouping ?? '',
         src.category?.name ?? '',
       )
+      const expectedId = src.isReimbursement ? 'settlement' : exp.id
       expect({
         id: parsed.category,
         matched: exp.matched,
-      }).toEqual({ id: exp.id, matched: exp.matched })
+      }).toEqual({ id: expectedId, matched: exp.matched })
 
       expect(parsed.paidFor).toHaveLength(src.paidFor.length)
       for (const srcRow of src.paidFor) {
@@ -287,8 +287,11 @@ describe('CSV integration: Spliit CSV round-trips', () => {
         jsonRow.category?.name ?? '',
       )
       if (exp.matched !== 'exact' && exp.matched !== 'name-only') continue
-      if (csvE.category !== exp.id) {
-        mismatches.push(`"${csvE.title}" CSV=${csvE.category} JSON=${exp.id}`)
+      const expectedId = jsonRow.isReimbursement ? 'settlement' : exp.id
+      if (csvE.category !== expectedId) {
+        mismatches.push(
+          `"${csvE.title}" CSV=${csvE.category} JSON=${expectedId}`,
+        )
       }
     }
     expect(mismatches).toEqual([])

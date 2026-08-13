@@ -604,6 +604,9 @@
     },
     "Income": {
       "heading": "Inkomst"
+    },
+    "Settlement": {
+      "heading": "Reglering"
     }
   },
   "Common": {
@@ -1329,9 +1332,6 @@
     "participantSharesLabel": "Andelar för {name}",
     "decreaseShares": "Minska andelar för {name}",
     "increaseShares": "Öka andelar för {name}",
-    "isReimbursementField": {
-      "label": "Detta är en regleringsbetalning"
-    },
     "paidForOptionItemized": "Artikelfördelning",
     "paidForOptionItemizedHelper": "Beräkna varje deltagares andel från enskilda rader i utgiften.",
     "items": {

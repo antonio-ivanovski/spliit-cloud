@@ -88,7 +88,6 @@ beforeEach(() => {
       createdAt: new Date('2026-07-10T09:00:00.000Z'),
       expenseDate: new Date('2026-07-10T00:00:00.000Z'),
       categoryId: 'food',
-      isReimbursement: false,
       title: 'Dinner',
       splitMode: 'EVENLY',
       paidBySplitMode: 'EVENLY',

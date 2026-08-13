@@ -57,7 +57,7 @@ const recurringTemplate = z.object({
   paidByList: z.array(recurringShareRow),
   paidFor: z.array(recurringShareRow),
   splitMode,
-  isReimbursement: z.boolean(),
+  isReimbursement: z.boolean().optional(),
   notes: z.string().nullable(),
   items: z.array(
     z.object({
@@ -112,7 +112,7 @@ const expense = z.object({
   conversionRate: z.number().nullable(),
   conversionSource: z.enum(['EXCHANGE', 'CUSTOM']).nullable(),
   paidBySplitMode: splitMode,
-  isReimbursement: z.boolean(),
+  isReimbursement: z.boolean().optional(),
   splitMode,
   version: z.number().int().positive(),
   createdByParticipantId: sourceId.nullable(),

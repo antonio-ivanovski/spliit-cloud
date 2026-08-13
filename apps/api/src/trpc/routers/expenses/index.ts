@@ -2,7 +2,11 @@ import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
 import { GroupMemberStatus, prisma, type Prisma } from '@spliit/db'
-import { expandCategorySelection, loadLocaleDictionary } from '@spliit/domain'
+import {
+  SETTLEMENT_CATEGORY_ID,
+  expandCategorySelection,
+  loadLocaleDictionary,
+} from '@spliit/domain'
 
 import {
   mapExpenseListRow,
@@ -306,11 +310,15 @@ async function listGlobalExpenses(
 
   let where: Prisma.ExpenseWhereInput = {
     ledgerId: { in: groups.map((group) => group.ledgerId) },
-    isReimbursement: input.hideReimbursements ? false : undefined,
-    categoryId:
-      input.categories && input.categories.length > 0
-        ? { in: expandCategorySelection(input.categories) }
-        : undefined,
+    categoryId: (() => {
+      if (input.categories && input.categories.length > 0) {
+        return { in: expandCategorySelection(input.categories) }
+      }
+      if (input.hideReimbursements) {
+        return { not: SETTLEMENT_CATEGORY_ID }
+      }
+      return undefined
+    })(),
     expenseDate:
       input.dateFrom || input.dateTo
         ? {

@@ -40,7 +40,6 @@ function makeExpense(document: ExportDocumentRecord) {
     conversionRate: null,
     conversionSource: null,
     paidBySplitMode: 'BY_AMOUNT' as const,
-    isReimbursement: false,
     splitMode: 'EVENLY' as const,
     version: 1,
     createdByAccountId: null,
@@ -204,7 +203,9 @@ describe('createGroupExportArtifact', () => {
     expect(manifest.expenses[0]).toMatchObject({
       expenseDate: '2026-08-08T12:00:00.000Z',
       expenseTimeZone: 'UTC',
+      categoryId: 'dining-out',
     })
+    expect(manifest.expenses[0]).not.toHaveProperty('isReimbursement')
     expect(manifest.expenses[0].documents[0]).toMatchObject({
       status: 'INCLUDED',
       path,
@@ -226,6 +227,29 @@ describe('createGroupExportArtifact', () => {
       expect(archive[entryPath]).toBeDefined()
     }
     expect(reader.read).toHaveBeenCalledWith(document, expect.any(AbortSignal))
+  })
+
+  it('exports settlement as categoryId and omits isReimbursement', async () => {
+    const document = makeDocument()
+    const group = makeGroup(document)
+    group.ledger.expenses[0] = {
+      ...group.ledger.expenses[0],
+      title: 'Paid Alice back',
+      categoryId: 'settlement',
+    }
+
+    const { manifest } = await readArtifact(
+      createGroupExportArtifact(group, {
+        exportedAt: EXPORTED_AT,
+        documentReader: documentReader(),
+      }),
+    )
+
+    expect(manifest.expenses[0]).toMatchObject({
+      title: 'Paid Alice back',
+      categoryId: 'settlement',
+    })
+    expect(manifest.expenses[0]).not.toHaveProperty('isReimbursement')
   })
 
   it('uses the friend peer name for FRIEND ledger downloads', async () => {

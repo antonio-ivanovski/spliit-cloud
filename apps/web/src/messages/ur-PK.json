@@ -604,6 +604,9 @@
     },
     "Income": {
       "heading": "آمدنی"
+    },
+    "Settlement": {
+      "heading": "تصفیہ"
     }
   },
   "Common": {
@@ -1329,9 +1332,6 @@
     "participantSharesLabel": "{name} کے لیے حصص",
     "decreaseShares": "{name} کے حصص کم کریں",
     "increaseShares": "{name} کے حصص بڑھائیں",
-    "isReimbursementField": {
-      "label": "یہ تصفیہ کی ادائیگی ہے"
-    },
     "paidForOptionItemized": "آئٹمائزڈ",
     "paidForOptionItemizedHelper": "خرچے میں انفرادی آئٹمز سے ہر شریک کے حصے کا حساب لگائیں۔",
     "items": {

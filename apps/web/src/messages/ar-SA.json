@@ -1451,9 +1451,6 @@
       "cancel": "إلغاء"
     },
     "paidForOptionByPercentage": "بالنسبة المئوية",
-    "isReimbursementField": {
-      "label": "هذه دفعة تسوية"
-    },
     "paidForOptionByPercentageHelper": "خصص نسبة مئوية لكل شخص",
     "save": "حفظ",
     "multiplePayers": "دافعون متعددون",
@@ -1557,6 +1554,9 @@
     },
     "Income": {
       "heading": "دخل"
+    },
+    "Settlement": {
+      "heading": "تسوية"
     }
   },
   "AccountSettings": {

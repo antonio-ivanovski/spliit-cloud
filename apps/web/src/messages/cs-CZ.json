@@ -837,9 +837,6 @@
       "customRate": "Použít vlastní kurz",
       "via": "přes {currencies}"
     },
-    "isReimbursementField": {
-      "label": "Toto je vyrovnávací platba"
-    },
     "categoryField": {
       "label": "Kategorie"
     },
@@ -1332,6 +1329,9 @@
     },
     "Income": {
       "heading": "Příjmy"
+    },
+    "Settlement": {
+      "heading": "Vyrovnání"
     }
   },
   "Auth": {

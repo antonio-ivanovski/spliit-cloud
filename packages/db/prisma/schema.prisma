@@ -714,7 +714,6 @@ model Expense {
   paidBySplitMode    SplitMode         @default(BY_AMOUNT)
   paidByList         ExpensePaidBy[]
   paidFor            ExpensePaidFor[]
-  isReimbursement    Boolean           @default(false)
   splitMode          SplitMode         @default(EVENLY)
   version            Int               @default(1)
   createdAt          DateTime          @default(now())

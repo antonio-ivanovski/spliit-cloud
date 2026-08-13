@@ -4,6 +4,7 @@ import { useMascotController } from '@/components/mascot/mascot-context'
 import { useToast } from '@/components/ui/use-toast'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { trpc } from '@/trpc/client'
+import { isSettlementCategory } from '@spliit/domain'
 
 /**
  * Mirrors `getRecurringSeriesProgress`'s return shape. Kept inline so the web
@@ -208,7 +209,11 @@ export function useCreateExpenseMutation({
 
   return trpc.groups.expenses.create.useMutation({
     onSuccess: (data, variables) => {
-      mascot.react(variables.expense.isReimbursement ? 'celebrate' : 'success')
+      mascot.react(
+        isSettlementCategory(variables.expense.category)
+          ? 'celebrate'
+          : 'success',
+      )
       // Fire-and-forget catch-up poll for past-dated series. The worker
       // materializes the remaining occurrences asynchronously; without
       // polling, expenses/activities/balances stay stale until an

@@ -849,9 +849,6 @@
       "customRate": "Benutzerdefinierte Rate verwenden",
       "via": "über {currencies}"
     },
-    "isReimbursementField": {
-      "label": "Dies ist eine Ausgleichszahlung"
-    },
     "categoryField": {
       "label": "Kategorie"
     },
@@ -1348,6 +1345,9 @@
     },
     "Income": {
       "heading": "Einnahmen"
+    },
+    "Settlement": {
+      "heading": "Ausgleich"
     }
   },
   "Currencies": {

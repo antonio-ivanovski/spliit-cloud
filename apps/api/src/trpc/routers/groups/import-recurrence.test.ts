@@ -41,7 +41,6 @@ function monthlyExpense(date: string) {
       { participant: 'dest-lp-2', shares: 1 },
     ],
     splitMode: 'EVENLY',
-    isReimbursement: false,
     documents: [],
     recurrenceRule: 'MONTHLY' as const,
   }

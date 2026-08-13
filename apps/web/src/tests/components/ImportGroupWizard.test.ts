@@ -52,7 +52,6 @@ describe('buildImportExpenses', () => {
         originalCurrency: 'USD',
         title: 'Dinner',
         splitMode: 'EVENLY',
-        isReimbursement: false,
       },
     ]
     const expenses = buildImportExpenses(input)
@@ -60,7 +59,6 @@ describe('buildImportExpenses', () => {
     expect(expenses[0]).toMatchObject({
       title: 'Dinner',
       splitMode: 'EVENLY',
-      isReimbursement: false,
       originalAmount: 5000,
       originalCurrency: 'USD',
     })

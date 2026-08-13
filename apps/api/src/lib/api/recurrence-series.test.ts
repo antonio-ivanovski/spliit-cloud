@@ -37,7 +37,6 @@ describe('recurrence-series API helpers', () => {
         title: 'Dinner',
         category: 'general',
         amount: 1200,
-        isReimbursement: false,
         notes: undefined,
         paidBySplitMode: 'BY_AMOUNT',
         paidByList: [{ participant: 'p1', shares: 1200 }],

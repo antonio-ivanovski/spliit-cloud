@@ -70,7 +70,6 @@ describe('getGroupExpenses', () => {
         createdAt: new Date('2026-07-01T00:00:00.000Z'),
         expenseDate: new Date('2026-07-01T00:00:00.000Z'),
         categoryId: 'general',
-        isReimbursement: false,
         splitMode: 'ITEMIZED',
         paidBySplitMode: 'BY_AMOUNT',
         originalAmount: null,

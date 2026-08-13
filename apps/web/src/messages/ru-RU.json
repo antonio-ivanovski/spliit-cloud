@@ -837,9 +837,6 @@
       "customRate": "Используется свой курс",
       "via": "через {currencies}"
     },
-    "isReimbursementField": {
-      "label": "Это платёж для погашения долга"
-    },
     "categoryField": {
       "label": "Категория"
     },
@@ -1332,6 +1329,9 @@
     },
     "Income": {
       "heading": "Доход"
+    },
+    "Settlement": {
+      "heading": "Расчет"
     }
   },
   "Auth": {

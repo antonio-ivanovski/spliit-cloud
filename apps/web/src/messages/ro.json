@@ -811,9 +811,6 @@
         "replaceItemsHint": "Înlocuiește articolele curente"
       }
     },
-    "isReimbursementField": {
-      "label": "Aceasta este o plată de decontare"
-    },
     "categoryField": {
       "label": "Categorie"
     },
@@ -1324,6 +1321,9 @@
     },
     "Income": {
       "heading": "Venituri"
+    },
+    "Settlement": {
+      "heading": "Decontare"
     }
   },
   "Currencies": {

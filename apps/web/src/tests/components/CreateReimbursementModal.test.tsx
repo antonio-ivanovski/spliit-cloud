@@ -6,7 +6,6 @@ import {
   useIsPendingInvitee,
 } from '@/app/groups/[groupId]/current-group-context'
 import { render, screen, waitFor, within } from '@/test/test-utils'
-import { PAYMENT_CATEGORY_ID } from '@spliit/domain'
 
 // ── Mocks ───────────────────────────────────────────────────────────────
 
@@ -170,7 +169,7 @@ describe('CreateReimbursementModal', () => {
     expect(within(dialog).getByText('Alice pays Bob')).toBeInTheDocument()
     expect(within(dialog).getByText('Alice')).toBeInTheDocument()
     expect(within(dialog).getByText('Bob')).toBeInTheDocument()
-    expect(within(dialog).getByText('Payment')).toBeInTheDocument()
+    expect(within(dialog).getByText('Settlement')).toBeInTheDocument()
   })
 
   it('renders nothing actionable when reimbursement is null', () => {
@@ -212,9 +211,7 @@ describe('CreateReimbursementModal', () => {
 
     const call = mockMutateAsync.mock.calls[0][0]
     expect(call.groupId).toBe('group-1')
-    expect(call.expense.category).toBe(PAYMENT_CATEGORY_ID)
-    expect(call.expense.amount).toBe(2500)
-    expect(call.expense.isReimbursement).toBe(true)
+    expect(call.expense.category).toBe('settlement')
     expect(call.expense.paidBySplitMode).toBe('BY_AMOUNT')
     expect(call.expense.splitMode).toBe('EVENLY')
     expect(call.expense.isMultiPayer).toBe(false)
@@ -300,7 +297,7 @@ describe('CreateReimbursementModal', () => {
         { participant: 'carol-id', shares: 1500 },
       ],
       isMultiPayer: false,
-      isReimbursement: true,
+      category: 'settlement',
     })
   })
 
@@ -384,7 +381,7 @@ describe('CreateReimbursementModal', () => {
       ],
       paidFor: [{ participant: 'alice-id', shares: 4000 }],
       isMultiPayer: true,
-      isReimbursement: true,
+      category: 'settlement',
     })
   })
 

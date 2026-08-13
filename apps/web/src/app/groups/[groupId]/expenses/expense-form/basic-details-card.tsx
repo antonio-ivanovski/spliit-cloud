@@ -9,7 +9,6 @@ import { CurrencyRateProviderAttribution } from '@/components/currency-rate-prov
 import { CurrencySelector } from '@/components/currency-selector'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Checkbox } from '@/components/ui/checkbox'
 import {
   Collapsible,
   CollapsibleContent,
@@ -608,31 +607,6 @@ export function BasicDetailsCard(props: {
               </FormItem>
             )}
           />
-
-          {!isIncome && (
-            <FormField
-              control={form.control}
-              name="isReimbursement"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center gap-3 space-y-0 py-1">
-                  <FormControl>
-                    <Checkbox
-                      id="is-reimbursement"
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      disabled={readOnly}
-                    />
-                  </FormControl>
-                  <FormLabel
-                    htmlFor="is-reimbursement"
-                    className="cursor-pointer leading-5"
-                  >
-                    {t('isReimbursementField.label')}
-                  </FormLabel>
-                </FormItem>
-              )}
-            />
-          )}
         </section>
       </CardContent>
       <ResponsiveDialog

@@ -799,9 +799,6 @@
         "replaceItemsHint": "現在の行を置換"
       }
     },
-    "isReimbursementField": {
-      "label": "これは精算金です"
-    },
     "categoryField": {
       "label": "カテゴリー"
     },
@@ -1309,6 +1306,9 @@
     },
     "Income": {
       "heading": "収入"
+    },
+    "Settlement": {
+      "heading": "精算"
     }
   },
   "Currencies": {

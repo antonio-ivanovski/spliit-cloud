@@ -37,13 +37,13 @@ describe('complex spliit.app export with all features', () => {
     expect(rules.has('MONTHLY')).toBe(true)
   })
 
-  it('handles reimbursement flag', () => {
+  it('handles settlement category', () => {
     const result = tryParseSpliitExport(raw)
     if (!result.ok) return
-    const reimbursements = result.source.expenses.filter(
-      (e) => e.isReimbursement,
+    const settlements = result.source.expenses.filter(
+      (e) => e.category === 'settlement',
     )
-    expect(reimbursements.length).toBeGreaterThan(0)
+    expect(settlements.length).toBeGreaterThan(0)
   })
 
   it('handles multi-currency fields', () => {
@@ -65,7 +65,7 @@ describe('complex spliit.app export with all features', () => {
     expect(cats.has('rent')).toBe(true)
     expect(cats.has('groceries')).toBe(true)
     expect(cats.has('gas-fuel')).toBe(true)
-    expect(cats.has('payment')).toBe(true)
+    expect(cats.has('settlement')).toBe(true)
   })
 
   it('handles string conversionRate values', () => {

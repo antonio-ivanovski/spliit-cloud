@@ -702,9 +702,6 @@
       "customRate": "직접 설정한 환율 사용 중",
       "via": "{currencies} 경유"
     },
-    "isReimbursementField": {
-      "label": "정산금이에요"
-    },
     "categoryField": {
       "label": "카테고리"
     },
@@ -1142,6 +1139,9 @@
     },
     "Income": {
       "heading": "수입"
+    },
+    "Settlement": {
+      "heading": "정산"
     }
   },
   "Homepage": {

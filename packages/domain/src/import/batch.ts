@@ -161,7 +161,6 @@ export type ImportBatchExpense = {
   paidBySplitMode: 'BY_AMOUNT'
   paidFor: Array<{ participant: string; shares: number }>
   splitMode: 'EVENLY' | 'BY_SHARES' | 'BY_PERCENTAGE' | 'BY_AMOUNT'
-  isReimbursement: boolean
   documents: never[]
   notes: string | undefined
   /** Internal mapping of the legacy recurrence rule. */
@@ -464,7 +463,6 @@ export function buildImportBatch(
         paidBySplitMode: 'BY_AMOUNT',
         paidFor: inputPaidFor,
         splitMode: e.splitMode,
-        isReimbursement: e.isReimbursement,
         documents: [],
         notes: e.notes ?? undefined,
         recurrence: e.recurrence ?? null,
@@ -482,7 +480,6 @@ export function buildImportBatch(
       paidBySplitMode: 'BY_AMOUNT',
       paidFor: inputPaidFor,
       splitMode: e.splitMode,
-      isReimbursement: e.isReimbursement,
       documents: [],
       notes: e.notes ?? undefined,
       recurrence: e.recurrence ?? null,

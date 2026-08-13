@@ -8,7 +8,8 @@ const CATEGORY_MAP: Record<string, CategoryId> = {
   // ── English ──────────────────────────────────────────────────────────
   // Uncategorized
   general: 'general',
-  payment: 'payment',
+  payment: 'settlement',
+  settlement: 'settlement',
   // Entertainment
   entertainment: 'entertainment',
   games: 'games',

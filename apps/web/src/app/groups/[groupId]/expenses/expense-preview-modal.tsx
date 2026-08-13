@@ -37,7 +37,11 @@ import { formatCurrency, getCurrencyFromGroup } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type { SplitMode } from '@spliit/domain'
-import { calculatePaidByShares, calculateShares } from '@spliit/domain'
+import {
+  calculatePaidByShares,
+  calculateShares,
+  isSettlementCategory,
+} from '@spliit/domain'
 
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
@@ -83,7 +87,7 @@ function toBalanceExpense(
   return {
     id: expense.id,
     amount: expense.amount,
-    isReimbursement: expense.isReimbursement,
+    categoryId: expense.categoryId,
     splitMode: expense.splitMode,
     paidBySplitMode: expense.paidBySplitMode,
     originalAmount: expense.originalAmount,
@@ -186,17 +190,9 @@ export function ExpensePreviewModal({
     ? toBalanceExpense(expense, participants)
     : null
   const paidForShares =
-    balanceExpense && expense
-      ? calculateShares({
-          ...balanceExpense,
-          isReimbursement: expense.isReimbursement,
-        })
-      : {}
+    balanceExpense && expense ? calculateShares(balanceExpense) : {}
   const paidByShares = balanceExpense
-    ? calculatePaidByShares({
-        ...balanceExpense,
-        isReimbursement: expense?.isReimbursement ?? false,
-      })
+    ? calculatePaidByShares(balanceExpense)
     : {}
   const splitModeLabel = (
     side: 'paidBy' | 'paidFor',
@@ -348,7 +344,7 @@ export function ExpensePreviewModal({
               />
             ) : null}
             <span className="truncate">{expense?.title ?? t('title')}</span>
-            {expense?.isReimbursement && (
+            {expense && isSettlementCategory(expense.categoryId) && (
               <Badge variant="secondary" className="shrink-0 text-xs">
                 {tForm('reimbursement')}
               </Badge>

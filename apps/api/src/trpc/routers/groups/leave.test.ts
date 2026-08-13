@@ -143,7 +143,6 @@ function makeExpenseRow(args: {
     expenseDate: new Date(),
     createdAt: new Date(),
     categoryId: 'general',
-    isReimbursement: false,
     splitMode: 'EVENLY',
     paidBySplitMode: 'BY_AMOUNT',
     originalAmount: null,
@@ -634,7 +633,6 @@ describe('groupsRouter.leave — unsettled balances', () => {
           }
         }
         paidFor: { createMany: { data: Array<{ shares: number }> } }
-        isReimbursement: boolean
         categoryId: string
       }
     }
@@ -647,8 +645,7 @@ describe('groupsRouter.leave — unsettled balances', () => {
     expect(createCall.data.paidFor.createMany.data).toEqual([
       expect.objectContaining({ shares: 1 }),
     ])
-    expect(createCall.data.isReimbursement).toBe(true)
-    expect(createCall.data.categoryId).toBe('payment')
+    expect(createCall.data.categoryId).toBe('settlement')
     expect(prisma$Transaction).toHaveBeenCalledTimes(1)
     // The settlement-on-leave activity is logged with the leaving user's
     // participant id so the activity feed renders their name instead of

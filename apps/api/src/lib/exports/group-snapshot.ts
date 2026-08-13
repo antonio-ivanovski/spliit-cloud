@@ -266,7 +266,6 @@ export function createGroupExportSnapshot(
     conversionRate: expense.conversionRate,
     conversionSource: expense.conversionSource,
     paidBySplitMode: expense.paidBySplitMode,
-    isReimbursement: expense.isReimbursement,
     splitMode: expense.splitMode,
     version: expense.version,
     createdByParticipantId: expense.createdByAccountId

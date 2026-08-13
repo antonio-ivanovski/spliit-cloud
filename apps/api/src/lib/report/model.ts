@@ -5,6 +5,7 @@ import {
   getBalances,
   getPublicBalances,
   getSuggestedReimbursements,
+  isSettlementCategory,
 } from '@spliit/domain'
 
 import { endOfReportDay, formatIsoDate } from './dates'
@@ -20,7 +21,6 @@ export type ReportExpenseRow = {
   expenseDate: Date
   createdAt: Date
   categoryId: string
-  isReimbursement: boolean
   title: string
   splitMode: SplitMode
   paidBySplitMode: SplitMode
@@ -100,9 +100,7 @@ export type ExpenseReportModel = {
   expenses: ReportExpenseDetail[]
 }
 
-type BalanceLike = Parameters<typeof getBalances>[0][number] & {
-  isReimbursement: boolean
-}
+type BalanceLike = Parameters<typeof getBalances>[0][number]
 
 function compareByDateCreated(
   a: ReportExpenseRow,
@@ -119,7 +117,7 @@ function toBalanceLike(row: ReportExpenseRow): BalanceLike {
     amount: row.amount,
     splitMode: row.splitMode,
     paidBySplitMode: row.paidBySplitMode,
-    isReimbursement: row.isReimbursement,
+    categoryId: row.categoryId,
     originalAmount: row.originalAmount,
     originalCurrency: row.originalCurrency,
     conversionRate: row.conversionRate,
@@ -171,7 +169,10 @@ export function buildExpenseReport(input: {
     date.getTime() >= from.getTime() && date.getTime() <= toEnd.getTime()
 
   const periodExpenses = input.rows
-    .filter((row) => !row.isReimbursement && inPeriod(row.expenseDate))
+    .filter(
+      (row) =>
+        !isSettlementCategory(row.categoryId) && inPeriod(row.expenseDate),
+    )
     .sort(compareByDateCreated)
   const asOfExpenses = input.rows.filter(
     (row) => row.expenseDate.getTime() <= toEnd.getTime(),
@@ -214,7 +215,7 @@ export function buildExpenseReport(input: {
   )
 
   const reimbursements: ReportReimbursement[] = asOfExpenses
-    .filter((row) => row.isReimbursement)
+    .filter((row) => isSettlementCategory(row.categoryId))
     .sort(compareByDateCreated)
     .map((row) => ({
       date: formatIsoDate(row.expenseDate),

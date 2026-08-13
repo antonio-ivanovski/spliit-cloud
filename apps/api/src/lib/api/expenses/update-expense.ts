@@ -619,7 +619,6 @@ export async function updateExpense(
               recurrenceSequence: null,
             }
           : {}),
-        isReimbursement: expense.isReimbursement,
         documents: {
           connectOrCreate: documents.map((doc) => ({
             create: { ...doc, ledgerId: group.ledgerId },
@@ -1076,7 +1075,6 @@ async function updateMaterializedOccurrence(
       categoryId: template.categoryId,
       paidBySplitMode: template.paidBySplitMode as never,
       splitMode: template.splitMode as never,
-      isReimbursement: template.isReimbursement,
       notes: template.notes,
       paidByList: {
         deleteMany: {},

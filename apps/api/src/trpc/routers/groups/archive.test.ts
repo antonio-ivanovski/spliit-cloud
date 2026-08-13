@@ -203,7 +203,6 @@ function makeExpenseRow(args: {
     expenseDate: new Date(),
     createdAt: new Date(),
     categoryId: 'general',
-    isReimbursement: false,
     splitMode: args.splitMode ?? 'EVENLY',
     paidBySplitMode: 'BY_AMOUNT',
     originalAmount: null,
@@ -396,7 +395,6 @@ describe('groupsRouter.archive — unsettled balances', () => {
             data: Array<{ ledgerParticipantId: string; shares: number }>
           }
         }
-        isReimbursement: boolean
         categoryId: string
         paidFor: { createMany: { data: Array<{ shares: number }> } }
       }
@@ -407,8 +405,7 @@ describe('groupsRouter.archive — unsettled balances', () => {
     expect(createCall.data.paidByList.createMany.data).toEqual([
       { ledgerParticipantId: 'lp-bob', shares: 50 },
     ])
-    expect(createCall.data.isReimbursement).toBe(true)
-    expect(createCall.data.categoryId).toBe('payment')
+    expect(createCall.data.categoryId).toBe('settlement')
     expect(createCall.data.paidFor.createMany.data).toEqual([
       expect.objectContaining({ shares: 1 }),
     ])
@@ -727,7 +724,6 @@ describe('groupsRouter.archive — unsettled balances', () => {
                   data: Array<{ ledgerParticipantId: string; shares: number }>
                 }
               }
-              isReimbursement: boolean
               categoryId: string
             }
           }
@@ -736,8 +732,7 @@ describe('groupsRouter.archive — unsettled balances', () => {
     const amounts = legs.map((l) => l.amount).sort((a, b) => a - b)
     expect(amounts).toEqual([333, 333])
     for (const leg of legs) {
-      expect(leg.isReimbursement).toBe(true)
-      expect(leg.categoryId).toBe('payment')
+      expect(leg.categoryId).toBe('settlement')
       expect(['lp-bob', 'lp-carol']).toContain(
         leg.paidByList.createMany.data[0].ledgerParticipantId,
       )

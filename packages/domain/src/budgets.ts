@@ -1,5 +1,6 @@
 import { z } from 'zod'
 
+import { isSettlementCategory } from './categories'
 import { calculateShares, type TotalsExpense } from './totals'
 
 export const budgetPeriodSchema = z.enum([
@@ -128,12 +129,12 @@ export type BudgetUsageOptions = {
 /**
  * Contribution of a single expense toward a budget period, in integer cents.
  *
- * Returns 0 when the expense is excluded: reimbursements and zero amounts,
- * dates outside the period bounds, categories outside a SELECTED scope, and
- * shares owed by participants outside a SELECTED scope. Otherwise it sums the
- * selected participants' calculated owed shares, reusing the shared split
- * calculation (even, shares, basis-point percentages, explicit amounts,
- * cross-currency, and itemized expenses). Negative amounts reduce usage.
+ * Returns 0 when the expense is excluded: settlements and zero amounts, dates
+ * outside the period bounds, categories outside a SELECTED scope, and shares
+ * owed by participants outside a SELECTED scope. Otherwise it sums the selected
+ * participants' calculated owed shares, reusing the shared split calculation
+ * (even, shares, basis-point percentages, explicit amounts, cross-currency, and
+ * itemized expenses). Negative amounts reduce usage.
  */
 export function dateOnlyInBudgetZone(instant: Date, timeZone: string): Date {
   const parts = new Intl.DateTimeFormat('en-US', {
@@ -165,7 +166,7 @@ export function calculateExpenseContribution(
   bounds: BudgetPeriodBounds,
   options: BudgetUsageOptions = {},
 ): number {
-  if (expense.isReimbursement || expense.amount === 0) return 0
+  if (isSettlementCategory(expense.categoryId) || expense.amount === 0) return 0
   const date = expenseDateInBudgetZone(expense, rule.timeZone)
   if (!date || Number.isNaN(date.getTime())) return 0
   if (date < bounds.start || date > bounds.end) return 0
@@ -193,8 +194,8 @@ export function calculateExpenseContribution(
 }
 
 /**
- * Calculates selected paid-for shares, excluding reimbursements and zero
- * amounts. Negative amounts reduce usage.
+ * Calculates selected paid-for shares, excluding settlements and zero amounts.
+ * Negative amounts reduce usage.
  */
 export function calculateBudgetUsage(
   rule: BudgetRule,

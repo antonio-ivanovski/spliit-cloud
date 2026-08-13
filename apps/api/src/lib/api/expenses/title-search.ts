@@ -1,5 +1,8 @@
 import { Prisma, prisma } from '@spliit/db'
-import { expandExpenseQueryForLocale } from '@spliit/domain'
+import {
+  SETTLEMENT_CATEGORY_ID,
+  expandExpenseQueryForLocale,
+} from '@spliit/domain'
 
 const TITLE_TRIGRAM_MIN_LENGTH = 3
 const TITLE_TRIGRAM_MIN_SIMILARITY = 0.35
@@ -34,7 +37,7 @@ export async function findSimilarExpenseTitles(args: {
   }
   const limit = args.limit ?? TITLE_TRIGRAM_ID_LIMIT
   const reimbursementFilter = args.excludeReimbursements
-    ? Prisma.sql`AND "isReimbursement" = false`
+    ? Prisma.sql`AND "categoryId" <> ${SETTLEMENT_CATEGORY_ID}`
     : Prisma.sql``
   const categoryFilter =
     args.excludeCategoryIds && args.excludeCategoryIds.length > 0

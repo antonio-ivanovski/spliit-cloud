@@ -16,7 +16,6 @@ describe('Ledger split unit preservation', () => {
     ({
       id: 'lp-ledger-1',
       amount: 0,
-      isReimbursement: false,
       splitMode: 'EVENLY',
       paidBySplitMode: 'EVENLY',
       paidByList: [
@@ -127,7 +126,6 @@ describe('Ledger participant identifiers in domain math', () => {
     ({
       id: 'le-1',
       amount: 1000,
-      isReimbursement: false,
       splitMode: 'EVENLY',
       paidBySplitMode: 'EVENLY',
       paidByList: [
@@ -184,7 +182,6 @@ describe('Ledger balance inputs', () => {
         amount: 333,
         splitMode: 'EVENLY',
         paidBySplitMode: 'EVENLY',
-        isReimbursement: false,
         paidByList: [{ participant: { id: 'lp-a', name: 'A' }, shares: 1 }],
         paidFor: [
           { participant: { id: 'lp-a', name: 'A' }, shares: 1 },
@@ -210,7 +207,6 @@ describe('Ledger balance inputs', () => {
         amount: ledgerCents,
         splitMode: 'BY_AMOUNT',
         paidBySplitMode: 'EVENLY',
-        isReimbursement: false,
         paidByList: [{ participant: { id: 'lp-a', name: 'A' }, shares: 1 }],
         paidFor: [
           { participant: { id: 'lp-a', name: 'A' }, shares: 400 },
@@ -234,7 +230,7 @@ describe('Ledger balance inputs', () => {
         amount: 5000,
         splitMode: 'EVENLY',
         paidBySplitMode: 'EVENLY',
-        isReimbursement: true,
+        categoryId: 'settlement',
         paidByList: [
           { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
         ],
@@ -251,7 +247,7 @@ describe('Ledger balance inputs', () => {
         amount: 5000,
         splitMode: 'EVENLY',
         paidBySplitMode: 'EVENLY',
-        isReimbursement: true,
+        categoryId: 'settlement',
         paidByList: [
           { participant: { id: 'lp-alice', name: 'Alice' }, shares: 1 },
         ],
@@ -313,7 +309,6 @@ describe('Ledger currency conversion rules', () => {
         { participant: 'lp-bob', shares: 25 },
       ],
       splitMode: 'BY_AMOUNT' as const,
-      isReimbursement: false,
       originalCurrency: 'EUR',
       conversionRate: 0.85,
     }
@@ -331,7 +326,6 @@ describe('Ledger currency conversion rules', () => {
         amount,
         splitMode: 'EVENLY',
         paidBySplitMode: 'EVENLY',
-        isReimbursement: false,
         paidByList: [{ participant: { id: 'lp-a', name: 'A' }, shares: 1 }],
         paidFor: [
           { participant: { id: 'lp-a', name: 'A' }, shares: 1 },
@@ -355,7 +349,6 @@ describe('Split unit preservation edge cases', () => {
     ({
       id: 'le-1',
       amount: 0,
-      isReimbursement: false,
       splitMode: 'EVENLY',
       paidBySplitMode: 'EVENLY',
       paidByList: [{ participant: { id: 'lp-a', name: 'A' }, shares: 1 }],
@@ -378,7 +371,6 @@ describe('Split unit preservation edge cases', () => {
         { participant: 'lp-c', shares: 30 },
       ],
       splitMode: 'BY_AMOUNT' as const,
-      isReimbursement: false,
     }
     expect(() => expenseFormInputSchema.parse(raw)).toThrow()
   })
@@ -439,7 +431,6 @@ describe('Ledger balance input integrity', () => {
         amount: 1000,
         splitMode: 'EVENLY',
         paidBySplitMode: 'EVENLY',
-        isReimbursement: false,
         paidByList: [{ participant: { id: 'lp-a', name: 'A' }, shares: 1 }],
         paidFor: [
           { participant: { id: 'lp-a', name: 'A' }, shares: 1 },
@@ -477,7 +468,6 @@ describe('Ledger balance input integrity', () => {
         amount: 2000,
         splitMode: 'EVENLY',
         paidBySplitMode: 'EVENLY',
-        isReimbursement: false,
         paidByList: [
           { participant: { id: aliceId, name: 'Alice' }, shares: 1 },
         ],

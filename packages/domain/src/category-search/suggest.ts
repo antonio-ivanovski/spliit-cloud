@@ -1,4 +1,8 @@
-import { categoryIdSchema, type CategoryId } from '../categories'
+import {
+  categoryIdSchema,
+  isSettlementCategory,
+  type CategoryId,
+} from '../categories'
 import { defaultLocale } from '../i18n'
 import { dictionaryLocaleFor, onLocaleDictionaryLoaded } from './dictionaries'
 import {
@@ -15,6 +19,12 @@ import {
  * the list. Covers exact/prefix/alias and edit-distance 1.
  */
 export const CATEGORY_CONFIDENT_MIN_SCORE = 0.7
+
+/**
+ * Settlement changes accounting, so dictionary auto-apply needs a near-exact
+ * hit. Weak aliases like "payback" must not silently exclude spend.
+ */
+export const SETTLEMENT_CONFIDENT_MIN_SCORE = 0.95
 
 /**
  * Treat scores this close as a tie (auto-apply rejects; list search keeps
@@ -124,7 +134,10 @@ function dictionarySuggestion(
   if (!meetsCategorySuggestMinQueryLength(title)) return null
   const ranked = rankCategories(title, documents)
   const top = ranked[0]
-  if (!top || top.score < CATEGORY_CONFIDENT_MIN_SCORE) return null
+  const minScore = isSettlementCategory(top?.id)
+    ? SETTLEMENT_CONFIDENT_MIN_SCORE
+    : CATEGORY_CONFIDENT_MIN_SCORE
+  if (!top || top.score < minScore) return null
   const runnerUp = ranked[1]
   if (
     runnerUp &&
@@ -153,15 +166,21 @@ export function suggestCategoryFromTitle(
     if (historyHit.count >= 2) {
       return { id: historyId, score: 1, source: 'history' }
     }
-    if (!dictHit || dictHit.id === historyId) {
-      return { id: historyId, score: 0.85, source: 'history' }
+    if (!isSettlementCategory(historyId)) {
+      if (!dictHit || dictHit.id === historyId) {
+        return { id: historyId, score: 0.85, source: 'history' }
+      }
+      return dictHit
     }
-    return dictHit
   }
 
   if (dictHit) return dictHit
 
-  if (historyHit?.kind === 'fuzzy' && historyId) {
+  if (
+    historyHit?.kind === 'fuzzy' &&
+    historyId &&
+    !isSettlementCategory(historyId)
+  ) {
     return { id: historyId, score: 0.75, source: 'history' }
   }
 
@@ -176,9 +195,12 @@ export function expandExpenseQuery(
   if (!meetsCategorySuggestMinQueryLength(query)) {
     return { categoryIds: [] }
   }
-  const ranked = rankCategories(query, documents).filter(
-    (hit) => hit.score >= CATEGORY_CONFIDENT_MIN_SCORE,
-  )
+  const ranked = rankCategories(query, documents).filter((hit) => {
+    const minScore = isSettlementCategory(hit.id)
+      ? SETTLEMENT_CONFIDENT_MIN_SCORE
+      : CATEGORY_CONFIDENT_MIN_SCORE
+    return hit.score >= minScore
+  })
   const topScore = ranked[0]?.score
   if (topScore === undefined) return { categoryIds: [] }
   const categoryIds = ranked

@@ -19,7 +19,6 @@ const validExport = {
       amount: 1000,
       paidById: 'p1',
       paidFor: [{ participantId: 'p1', shares: 1000 }],
-      isReimbursement: false,
       splitMode: 'EVENLY',
       recurrenceRule: 'NONE',
       expenseDate: '2025-11-15T00:00:00.000Z',
