@@ -290,6 +290,13 @@ export function anonymousRecovery() {
             const credential = await tx.anonymousRecoveryCredential.findUnique({
               where: { accountId: user.id },
             })
+            if (
+              credential?.acknowledgedAt &&
+              credential.onboardingCompletedAt &&
+              !credential.pendingKeyCiphertext
+            ) {
+              return
+            }
             if (!credential?.pendingKeyCiphertext) {
               throw new APIError('CONFLICT', {
                 message: 'A pending recovery key is required.',

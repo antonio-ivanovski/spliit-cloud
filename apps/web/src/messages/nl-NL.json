@@ -2998,7 +2998,7 @@
       "activateDescription": "Bewaar de vervangende link voordat u deze activeert.",
       "stagedDescription": "Uw huidige inloglink blijft werken totdat u deze vervanging activeert. Als u sluit of vernieuwt, wordt de vervanging verwijderd.",
       "activateConfirm": "Activeer vervanging",
-      "linkAccountTitle": "Ander account koppelen",
+      "linkAccountTitle": "Aan account koppelen",
       "linkAccountDescription": "Koppel dit anonieme account aan e-mail of een sociale login.",
       "comingSoon": "Binnenkort beschikbaar"
     }

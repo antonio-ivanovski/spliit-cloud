@@ -2981,7 +2981,7 @@
       "activateDescription": "在啟動替換連結之前保存它。",
       "stagedDescription": "您目前的登入連結將一直有效，直到您啟動此替代連結。關閉或刷新會放棄替換。",
       "activateConfirm": "啟動替換",
-      "linkAccountTitle": "連結其他帳戶",
+      "linkAccountTitle": "連結帳戶",
       "linkAccountDescription": "將此匿名帳戶連結至電子郵件或社群登入方式。",
       "comingSoon": "即將推出"
     }

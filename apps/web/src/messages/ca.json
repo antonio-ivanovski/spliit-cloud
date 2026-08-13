@@ -3016,7 +3016,7 @@
       "activateDescription": "Deseu l'enllaç de substitució abans d'activar-lo.",
       "stagedDescription": "El vostre enllaç d'inici de sessió actual continua funcionant fins que activeu aquesta substitució. Tancar o actualitzar descarta el reemplaçament.",
       "activateConfirm": "Activa la substitució",
-      "linkAccountTitle": "Enllaça un altre compte",
+      "linkAccountTitle": "Enllaça amb un compte",
       "linkAccountDescription": "Connecteu aquest compte anònim a un correu electrònic o a un inici de sessió social.",
       "comingSoon": "Pròximament"
     }

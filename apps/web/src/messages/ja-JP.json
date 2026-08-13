@@ -2981,7 +2981,7 @@
       "activateDescription": "置換リンクをアクティブ化する前に保存してください。",
       "stagedDescription": "現在のサインインリンクは、この代替品をアクティブ化するまで機能し続けます。閉じるか更新すると、置換は破棄されます。",
       "activateConfirm": "置換をアクティブ化する",
-      "linkAccountTitle": "別のアカウントを連携",
+      "linkAccountTitle": "アカウントに連携",
       "linkAccountDescription": "この匿名アカウントをメールまたはソーシャルログインに連携します。",
       "comingSoon": "近日公開"
     }

@@ -2998,7 +2998,7 @@
       "activateDescription": "Tallenna korvaava linkki ennen sen aktivointia.",
       "stagedDescription": "Nykyinen kirjautumislinkkisi toimii, kunnes aktivoit tämän korvaavan linkin. Sulkeminen tai päivittäminen hylkää korvaavan tuotteen.",
       "activateConfirm": "Aktivoi vaihto",
-      "linkAccountTitle": "Yhdistä toinen tili",
+      "linkAccountTitle": "Yhdistä tiliin",
       "linkAccountDescription": "Yhdistä tämä anonyymi tili sähköpostiin tai sosiaaliseen kirjautumiseen.",
       "comingSoon": "Tulossa pian"
     }

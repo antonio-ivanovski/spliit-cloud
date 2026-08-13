@@ -3016,7 +3016,7 @@
       "activateDescription": "Enregistrez le lien de remplacement avant de l'activer.",
       "stagedDescription": "Votre lien de connexion actuel continue de fonctionner jusqu'à ce que vous activiez ce remplacement. La fermeture ou l'actualisation supprime le remplacement.",
       "activateConfirm": "Activer le remplacement",
-      "linkAccountTitle": "Associer un autre compte",
+      "linkAccountTitle": "Associer à un compte",
       "linkAccountDescription": "Associez ce compte anonyme à une adresse e-mail ou à une connexion sociale.",
       "comingSoon": "Bientôt disponible"
     }

@@ -3016,7 +3016,7 @@
       "activateDescription": "Salve o link de substituição antes de ativá-lo.",
       "stagedDescription": "Seu link de login atual continua funcionando até você ativar esta substituição. Fechar ou atualizar descarta a substituição.",
       "activateConfirm": "Ativar substituição",
-      "linkAccountTitle": "Vincular outra conta",
+      "linkAccountTitle": "Vincular a uma conta",
       "linkAccountDescription": "Conecte esta conta anônima a um e-mail ou login social.",
       "comingSoon": "Em breve"
     }

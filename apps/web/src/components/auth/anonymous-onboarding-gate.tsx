@@ -1,6 +1,6 @@
-import { useLocation, useNavigate } from '@tanstack/react-router'
+import { useLocation } from '@tanstack/react-router'
 import { AlertTriangle, Loader2, RefreshCw } from 'lucide-react'
-import { useCallback, useEffect, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
@@ -21,6 +21,7 @@ import {
   type AnonymousRecoveryKey,
   type AnonymousRecoveryStatus,
 } from '@/lib/anonymous-recovery'
+import { replaceBrowserLocation } from '@/lib/browser-navigation'
 import { useCurrentAccount } from '@/lib/use-current-account'
 
 import { AnonymousRecoveryKeyPanel } from './anonymous-recovery-key-panel'
@@ -31,7 +32,6 @@ export function AnonymousOnboardingGate({ children }: { children: ReactNode }) {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'AnonymousAccount.onboarding',
   })
-  const navigate = useNavigate()
   const pathname = useLocation({ select: (location) => location.pathname })
   const isRecoveryRoute = pathname === '/auth/recover'
   const { data: account, isPending: accountPending } = useCurrentAccount()
@@ -40,6 +40,7 @@ export function AnonymousOnboardingGate({ children }: { children: ReactNode }) {
   const [confirmed, setConfirmed] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const acknowledgingRef = useRef(false)
 
   const load = useCallback(async () => {
     if (isRecoveryRoute || !account?.isAnonymous) return
@@ -73,9 +74,17 @@ export function AnonymousOnboardingGate({ children }: { children: ReactNode }) {
   }
   if (!account?.isAnonymous) return <>{children}</>
   if (status?.acknowledged && status.onboardingCompleted) return <>{children}</>
+  if (!error && (status === null || (loading && !recovery))) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-background">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      </main>
+    )
+  }
 
   async function acknowledge() {
-    if (!confirmed) return
+    if (!confirmed || acknowledgingRef.current) return
+    acknowledgingRef.current = true
     setLoading(true)
     setError(null)
     try {
@@ -83,14 +92,11 @@ export function AnonymousOnboardingGate({ children }: { children: ReactNode }) {
       const redirect =
         sessionStorage.getItem(ANONYMOUS_REDIRECT_STORAGE_KEY) ?? '/'
       sessionStorage.removeItem(ANONYMOUS_REDIRECT_STORAGE_KEY)
-      await navigate({
-        to: '/auth/complete-profile',
-        search: { redirect },
-        replace: true,
-      })
+      const search = new URLSearchParams({ redirect })
+      replaceBrowserLocation(`/auth/complete-profile?${search.toString()}`)
     } catch {
+      acknowledgingRef.current = false
       setError('ACKNOWLEDGE_FAILED')
-    } finally {
       setLoading(false)
     }
   }

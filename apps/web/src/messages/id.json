@@ -2982,7 +2982,7 @@
       "activateDescription": "Simpan link pengganti sebelum mengaktifkannya.",
       "stagedDescription": "Tautan masuk Anda saat ini tetap berfungsi hingga Anda mengaktifkan penggantinya. Menutup atau menyegarkan akan membuang penggantinya.",
       "activateConfirm": "Aktifkan penggantian",
-      "linkAccountTitle": "Tautkan akun lain",
+      "linkAccountTitle": "Tautkan ke akun",
       "linkAccountDescription": "Hubungkan akun anonim ini ke email atau login sosial.",
       "comingSoon": "Segera hadir"
     }

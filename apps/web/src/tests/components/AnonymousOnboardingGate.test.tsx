@@ -5,22 +5,25 @@ import { render, screen, waitFor } from '@/test/test-utils'
 
 const {
   acknowledgeMock,
-  navigateMock,
+  replaceLocationMock,
   replacePendingMock,
   setupMock,
   statusMock,
 } = vi.hoisted(() => ({
   acknowledgeMock: vi.fn(),
-  navigateMock: vi.fn(),
+  replaceLocationMock: vi.fn(),
   replacePendingMock: vi.fn(),
   setupMock: vi.fn(),
   statusMock: vi.fn(),
 }))
 
 vi.mock('@tanstack/react-router', () => ({
-  useNavigate: () => navigateMock,
   useLocation: ({ select }: { select: (value: unknown) => unknown }) =>
     select({ pathname: '/' }),
+}))
+
+vi.mock('@/lib/browser-navigation', () => ({
+  replaceBrowserLocation: replaceLocationMock,
 }))
 
 vi.mock('@/lib/use-current-account', () => ({
@@ -60,7 +63,41 @@ describe('AnonymousOnboardingGate', () => {
         'https://app.example/auth/recover#code=spliit_anonymous_v1_test-key',
     })
     acknowledgeMock.mockResolvedValue({ success: true })
-    navigateMock.mockResolvedValue(undefined)
+  })
+
+  it('shows only a neutral loading state while setup status is unresolved', () => {
+    statusMock.mockReturnValue(new Promise(() => undefined))
+
+    render(
+      <AnonymousOnboardingGate>
+        <div>Protected app content</div>
+      </AnonymousOnboardingGate>,
+    )
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(screen.queryByText('Save your sign in link')).not.toBeInTheDocument()
+    expect(screen.queryByText('Protected app content')).not.toBeInTheDocument()
+  })
+
+  it('releases an acknowledged account without flashing the onboarding dialog', async () => {
+    statusMock.mockResolvedValue({
+      isAnonymous: true,
+      hasRecoveryKey: true,
+      acknowledged: true,
+      onboardingCompleted: true,
+      canResumeSetup: false,
+    })
+
+    render(
+      <AnonymousOnboardingGate>
+        <div>Protected app content</div>
+      </AnonymousOnboardingGate>,
+    )
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(screen.queryByText('Save your sign in link')).not.toBeInTheDocument()
+    expect(await screen.findByText('Protected app content')).toBeInTheDocument()
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
   it('blocks app content until the sign in link is confirmed', async () => {
@@ -101,11 +138,10 @@ describe('AnonymousOnboardingGate', () => {
         confirmedCopied: true,
       }),
     )
-    expect(navigateMock).toHaveBeenCalledWith({
-      to: '/auth/complete-profile',
-      search: { redirect: '/groups' },
-      replace: true,
-    })
+    expect(replaceLocationMock).toHaveBeenCalledWith(
+      '/auth/complete-profile?redirect=%2Fgroups',
+    )
+    expect(acknowledgeMock).toHaveBeenCalledTimes(1)
     expect(screen.queryByText('Protected app content')).not.toBeInTheDocument()
   })
 })

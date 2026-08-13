@@ -2981,7 +2981,7 @@
       "activateDescription": "在激活替换链接之前保存它。",
       "stagedDescription": "您当前的登录链接将一直有效，直到您激活此替代链接。关闭或刷新会放弃替换。",
       "activateConfirm": "激活替换",
-      "linkAccountTitle": "关联其他帐户",
+      "linkAccountTitle": "关联帐户",
       "linkAccountDescription": "将此匿名帐户与电子邮件或社交登录方式关联。",
       "comingSoon": "即将推出"
     }

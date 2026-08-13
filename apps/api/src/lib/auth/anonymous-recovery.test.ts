@@ -71,6 +71,67 @@ describe('anonymous recovery keys', () => {
     expect(() => readRotationActivationTicket(tampered, 'account-1')).toThrow()
   })
 
+  it('acknowledges a pending key and accepts an idempotent retry', async () => {
+    const endpoint = anonymousRecovery().endpoints.acknowledgeAnonymousRecovery
+    prismaMock.anonymousRecoveryCredential.findUnique
+      .mockResolvedValueOnce({
+        pendingKeyCiphertext: 'encrypted-key',
+        acknowledgedAt: null,
+        onboardingCompletedAt: null,
+      } as never)
+      .mockResolvedValueOnce({
+        pendingKeyCiphertext: null,
+        acknowledgedAt: new Date(),
+        onboardingCompletedAt: new Date(),
+      } as never)
+    const request = {
+      body: { confirmedCopied: true },
+      context: {
+        session: {
+          session: { id: 'session-1' },
+          user: { id: 'account-1', isAnonymous: true },
+        },
+      },
+    } as never
+
+    await expect(endpoint(request)).resolves.toEqual({ success: true })
+    await expect(endpoint(request)).resolves.toEqual({ success: true })
+
+    expect(prismaMock.anonymousRecoveryCredential.update).toHaveBeenCalledTimes(
+      1,
+    )
+    expect(prismaMock.anonymousRecoveryCredential.update).toHaveBeenCalledWith({
+      where: { accountId: 'account-1' },
+      data: {
+        pendingKeyCiphertext: null,
+        acknowledgedAt: expect.any(Date),
+        onboardingCompletedAt: expect.any(Date),
+      },
+    })
+  })
+
+  it('rejects acknowledgment without a pending or completed key', async () => {
+    prismaMock.anonymousRecoveryCredential.findUnique.mockResolvedValue({
+      pendingKeyCiphertext: null,
+      acknowledgedAt: null,
+      onboardingCompletedAt: null,
+    } as never)
+
+    await expect(
+      anonymousRecovery().endpoints.acknowledgeAnonymousRecovery({
+        body: { confirmedCopied: true },
+        context: {
+          session: {
+            session: { id: 'session-1' },
+            user: { id: 'account-1', isAnonymous: true },
+          },
+        },
+      } as never),
+    ).rejects.toMatchObject({
+      body: { code: 'PENDING_RECOVERY_KEY_REQUIRED' },
+    })
+  })
+
   it('stages a replacement without changing the active recovery hash', async () => {
     const currentKeyHash = hashAnonymousRecoveryKey(
       generateAnonymousRecoveryKey(),

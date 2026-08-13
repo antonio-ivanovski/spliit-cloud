@@ -3032,7 +3032,7 @@
       "activateDescription": "Uložte náhradní odkaz před jeho aktivací.",
       "stagedDescription": "Váš aktuální přihlašovací odkaz funguje, dokud tuto náhradu neaktivujete. Zavřením nebo obnovením se náhrada zahodí.",
       "activateConfirm": "Aktivujte náhradu",
-      "linkAccountTitle": "Propojit jiný účet",
+      "linkAccountTitle": "Propojit s účtem",
       "linkAccountDescription": "Propojte tento anonymní účet s e-mailem nebo přihlášením přes sociální síť.",
       "comingSoon": "Již brzy"
     }

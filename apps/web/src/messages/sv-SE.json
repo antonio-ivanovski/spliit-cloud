@@ -2994,7 +2994,7 @@
       "activateDescription": "Spara ersättningslänken innan du aktiverar den.",
       "stagedDescription": "Din nuvarande inloggningslänk fortsätter att fungera tills du aktiverar den här ersättningen. Stängning eller uppdatering kasserar ersättningen.",
       "activateConfirm": "Aktivera ersättning",
-      "linkAccountTitle": "Länka ett annat konto",
+      "linkAccountTitle": "Länka till ett konto",
       "linkAccountDescription": "Anslut det här anonyma kontot till e-post eller social inloggning.",
       "comingSoon": "Kommer snart"
     }

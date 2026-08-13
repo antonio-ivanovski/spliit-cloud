@@ -3016,7 +3016,7 @@
       "activateDescription": "Guarde el enlace de reemplazo antes de activarlo.",
       "stagedDescription": "Su enlace de inicio de sesión actual sigue funcionando hasta que active este reemplazo. Cerrar o actualizar descarta el reemplazo.",
       "activateConfirm": "Activar reemplazo",
-      "linkAccountTitle": "Vincular otra cuenta",
+      "linkAccountTitle": "Vincular a una cuenta",
       "linkAccountDescription": "Conecta esta cuenta anónima a un correo electrónico o inicio de sesión social.",
       "comingSoon": "Próximamente"
     }

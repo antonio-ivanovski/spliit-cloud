@@ -2981,7 +2981,7 @@
       "activateDescription": "활성화하기 전에 대체 링크를 저장하세요.",
       "stagedDescription": "이 교체를 활성화할 때까지 현재 로그인 링크가 계속 작동합니다. 닫거나 새로 고치면 대체 항목이 삭제됩니다.",
       "activateConfirm": "교체 활성화",
-      "linkAccountTitle": "다른 계정 연결",
+      "linkAccountTitle": "계정에 연결",
       "linkAccountDescription": "이 익명 계정을 이메일 또는 소셜 로그인에 연결합니다.",
       "comingSoon": "곧 제공됩니다"
     }

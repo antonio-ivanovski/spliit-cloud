@@ -3016,7 +3016,7 @@
       "activateDescription": "Salva il collegamento sostitutivo prima di attivarlo.",
       "stagedDescription": "Il tuo attuale link di accesso continua a funzionare finché non attivi questa sostituzione. La chiusura o l'aggiornamento elimina la sostituzione.",
       "activateConfirm": "Attiva la sostituzione",
-      "linkAccountTitle": "Collega un altro account",
+      "linkAccountTitle": "Collega a un account",
       "linkAccountDescription": "Collega questo account anonimo a un indirizzo email o a un accesso social.",
       "comingSoon": "Prossimamente"
     }

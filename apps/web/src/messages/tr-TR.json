@@ -2998,7 +2998,7 @@
       "activateDescription": "Etkinleştirmeden önce yeni bağlantıyı kaydedin.",
       "stagedDescription": "Mevcut kurtarma bağlantınız siz bu değişikliği etkinleştirene kadar çalışmaya devam eder. Kapatma veya yenileme, değiştirme işlemini iptal eder.",
       "activateConfirm": "Değiştirmeyi etkinleştir",
-      "linkAccountTitle": "Başka bir hesap bağla",
+      "linkAccountTitle": "Bir hesaba bağla",
       "linkAccountDescription": "Bu anonim hesabı e-posta veya sosyal oturum açma yöntemiyle bağlayın.",
       "comingSoon": "Yakında"
     }

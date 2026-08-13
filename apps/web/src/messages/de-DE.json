@@ -3066,7 +3066,7 @@
       "activateDescription": "Speichern Sie den Ersatzlink, bevor Sie ihn aktivieren.",
       "stagedDescription": "Ihr aktueller Anmeldelink funktioniert weiterhin, bis Sie diesen Ersatz aktivieren. Beim Schließen oder Aktualisieren wird der Ersatz verworfen.",
       "activateConfirm": "Ersetzung aktivieren",
-      "linkAccountTitle": "Anderes Konto verknüpfen",
+      "linkAccountTitle": "Mit Konto verknüpfen",
       "linkAccountDescription": "Verknüpfe dieses anonyme Konto mit einer E-Mail-Adresse oder einem Social-Login.",
       "comingSoon": "Demnächst verfügbar"
     }

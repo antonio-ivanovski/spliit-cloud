@@ -2990,7 +2990,7 @@
       "activateDescription": "Save the new link before you activate it.",
       "stagedDescription": "Your current sign in link still works until you activate this one. Close or refresh and this replacement is gone.",
       "activateConfirm": "Activate new link",
-      "linkAccountTitle": "Link another login",
+      "linkAccountTitle": "Link to an account",
       "linkAccountDescription": "Connect this anon account to email or social sign-in.",
       "comingSoon": "coming soon, fr"
     }

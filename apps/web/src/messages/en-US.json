@@ -3070,7 +3070,7 @@
       "activateDescription": "Save the replacement link before activating it.",
       "stagedDescription": "Your current sign in link keeps working until you activate this replacement. Closing or refreshing discards the replacement.",
       "activateConfirm": "Activate replacement",
-      "linkAccountTitle": "Link another account",
+      "linkAccountTitle": "Link to account",
       "linkAccountDescription": "Connect this anonymous account to email or a social sign-in.",
       "comingSoon": "Coming soon"
     }

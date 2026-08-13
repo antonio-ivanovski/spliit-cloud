@@ -195,7 +195,7 @@ describe('AccountSettingsPage', () => {
     expect(
       screen.getByRole('button', { name: 'Replace sign in link' }),
     ).toBeInTheDocument()
-    expect(screen.getByText('Link another account')).toBeInTheDocument()
+    expect(screen.getByText('Link to account')).toBeInTheDocument()
     expect(screen.getByText('Coming soon')).toBeInTheDocument()
     expect(
       screen.queryByRole('heading', { name: 'Anonymous account' }),
