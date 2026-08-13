@@ -29,7 +29,7 @@ describe('anonymous-account-cleanup', () => {
     )
   })
 
-  it('deletes only unacknowledged anonymous accounts older than one week', async () => {
+  it('deletes credential-less and unacknowledged anonymous accounts older than one week', async () => {
     const now = new Date('2026-08-14T12:00:00.000Z')
     mocks.findMany.mockResolvedValueOnce([
       { id: 'anonymous-1' },
@@ -45,12 +45,20 @@ describe('anonymous-account-cleanup', () => {
     )
     const eligibility = {
       isAnonymous: true,
-      anonymousRecoveryCredential: {
-        is: {
-          acknowledgedAt: null,
+      OR: [
+        {
           createdAt: { lte: cutoff },
+          anonymousRecoveryCredential: { is: null },
         },
-      },
+        {
+          anonymousRecoveryCredential: {
+            is: {
+              acknowledgedAt: null,
+              createdAt: { lte: cutoff },
+            },
+          },
+        },
+      ],
     }
     expect(mocks.findMany).toHaveBeenCalledWith({
       where: eligibility,

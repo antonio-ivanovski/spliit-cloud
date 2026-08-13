@@ -7,17 +7,26 @@ const CLEANUP_BATCH_SIZE = 100
 function eligibleAnonymousAccounts(cutoff: Date): Prisma.AccountWhereInput {
   return {
     isAnonymous: true,
-    anonymousRecoveryCredential: {
-      is: {
-        acknowledgedAt: null,
+    OR: [
+      {
         createdAt: { lte: cutoff },
+        anonymousRecoveryCredential: { is: null },
       },
-    },
+      {
+        anonymousRecoveryCredential: {
+          is: {
+            acknowledgedAt: null,
+            createdAt: { lte: cutoff },
+          },
+        },
+      },
+    ],
   }
 }
 
 /**
- * Delete anonymous accounts that never completed recovery-link onboarding.
+ * Delete anonymous accounts that never started or completed recovery-link
+ * onboarding.
  *
  * Candidates are selected in bounded pages, then the complete eligibility
  * predicate is repeated in the delete. An account acknowledged between those

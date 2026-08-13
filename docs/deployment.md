@@ -105,8 +105,9 @@ may remain empty.
   recovery available for existing ones. Recovery links are permanent bearer
   credentials, so back up the secret; changing it makes interrupted,
   not-yet-confirmed setup links unreadable. The background worker permanently
-  deletes anonymous accounts that leave recovery-link setup unacknowledged for
-  seven days; acknowledged anonymous accounts are never removed by this sweep.
+  deletes anonymous accounts that do not start recovery-link setup within seven
+  days, or leave setup unacknowledged for seven days. Acknowledged anonymous
+  accounts are never removed by this sweep.
 - Expense documents require
   `PUBLIC_ENABLE_EXPENSE_DOCUMENTS=true` and the required `S3_UPLOAD_*` values.
   Configure the bucket with a lifecycle rule that expires objects under
