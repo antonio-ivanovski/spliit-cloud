@@ -712,6 +712,7 @@
       "message": "Esta instância é apenas por convite. Usa uma ligação de convite ou pede a alguém que te convide para um grupo.",
       "useInvitedEmail": "Usa o endereço de email com que recebeste o convite."
     },
+    "signInWithX": "Continuar com X",
     "signInWithOidc": "Continuar com {name}"
   },
   "CompleteProfile": {
@@ -1429,6 +1430,9 @@
       "heading": "Assinaturas e filiações",
       "Digital Subscriptions": "Assinaturas digitais",
       "Memberships": "Filiações"
+    },
+    "Income": {
+      "heading": "Rendimentos"
     }
   },
   "Currencies": {

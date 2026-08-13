@@ -16,6 +16,7 @@ export const featuresRouter = createTRPCRouter({
         defaultCurrencyCode: z.string(),
         enableGoogleOAuth: z.boolean(),
         enableGitHubOAuth: z.boolean(),
+        enableTwitterOAuth: z.boolean(),
         oidcProviders: z.array(
           z.object({
             id: z.string(),
@@ -37,6 +38,9 @@ export const featuresRouter = createTRPCRouter({
         defaultCurrencyCode: env.PUBLIC_DEFAULT_CURRENCY_CODE,
         enableGoogleOAuth: !!(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET),
         enableGitHubOAuth: !!(env.GITHUB_CLIENT_ID && env.GITHUB_CLIENT_SECRET),
+        enableTwitterOAuth: !!(
+          env.TWITTER_CLIENT_ID && env.TWITTER_CLIENT_SECRET
+        ),
         oidcProviders: oidc ? [{ id: oidc.id, name: oidc.name }] : [],
         signupMode: env.SIGNUP_MODE,
         allowUninvitedSignup: await allowUninvitedSignup(),

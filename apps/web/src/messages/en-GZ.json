@@ -423,6 +423,7 @@
       "message": "this instance is invite-only. grab an invite link or ask someone to pull you into a group.",
       "useInvitedEmail": "use the email you got invited with."
     },
+    "signInWithX": "continue with X",
     "signInWithOidc": "continue with {name}"
   },
   "Balances": {
@@ -767,6 +768,9 @@
       "Trash": "trash day",
       "TV/Phone/Internet": "TV, phone, or internet",
       "Water": "water bill"
+    },
+    "Income": {
+      "heading": "money in"
     }
   },
   "Common": {

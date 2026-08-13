@@ -5,6 +5,7 @@ import {
   DEFAULT_CATEGORIES,
   DEFAULT_CATEGORY_ID,
   DEFAULT_GROUPINGS,
+  INCOME_CATEGORY_ID,
   PARENT_CATEGORIES,
   PAYMENT_CATEGORY_ID,
   categoryIdSchema,
@@ -33,6 +34,12 @@ describe('DEFAULT_CATEGORIES', () => {
   it('keeps the legacy default and payment ids', () => {
     expect(getCategoryById(DEFAULT_CATEGORY_ID)?.name).toBe('General')
     expect(getCategoryById(PAYMENT_CATEGORY_ID)?.name).toBe('Payment')
+    expect(getCategoryById(INCOME_CATEGORY_ID)).toEqual({
+      id: 'income',
+      grouping: 'Income',
+      name: 'Income',
+      parentId: null,
+    })
   })
 
   it('has a parent for every declared grouping', () => {

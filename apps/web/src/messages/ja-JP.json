@@ -1306,6 +1306,9 @@
       "heading": "サブスクリプションと会員費",
       "Digital Subscriptions": "デジタルサブスクリプション",
       "Memberships": "会員費"
+    },
+    "Income": {
+      "heading": "収入"
     }
   },
   "Currencies": {
@@ -1675,6 +1678,7 @@
       "message": "このインスタンスは招待制です。招待リンクを使用するか、誰かにグループへ招待してもらってください。",
       "useInvitedEmail": "招待されたメールアドレスを使用してください。"
     },
+    "signInWithX": "Xで続ける",
     "signInWithOidc": "{name}で続ける"
   },
   "CompleteProfile": {

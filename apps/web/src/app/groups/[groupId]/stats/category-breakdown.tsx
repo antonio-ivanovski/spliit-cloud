@@ -74,7 +74,7 @@ export function CategoryBreakdown({ data, currency }: Props) {
                 <div
                   className="h-full rounded-full"
                   style={{
-                    width: `${Math.max(category.percentage * 100, 3)}%`,
+                    width: `${Math.max(Math.abs(category.percentage) * 100, 3)}%`,
                     backgroundColor: getCategoryColor(index),
                   }}
                 />

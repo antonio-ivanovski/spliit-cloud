@@ -61,7 +61,7 @@ export function ParticipantBreakdown({ data, currency }: Props) {
                 <div
                   className="h-full rounded-full bg-primary"
                   style={{
-                    width: `${Math.max(participant.percentage * 100, 3)}%`,
+                    width: `${Math.max(Math.abs(participant.percentage) * 100, 3)}%`,
                     opacity: 1 - index * 0.07,
                   }}
                 />

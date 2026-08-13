@@ -1313,6 +1313,9 @@
       "heading": "Abonelikler ve Üyelikler",
       "Digital Subscriptions": "Dijital Abonelikler",
       "Memberships": "Üyelikler"
+    },
+    "Income": {
+      "heading": "Gelir"
     }
   },
   "Auth": {
@@ -1373,6 +1376,7 @@
       "message": "Bu kurulum yalnızca davetle erişilebilir. Bir davet bağlantısı kullanın veya birinden sizi bir gruba davet etmesini isteyin.",
       "useInvitedEmail": "Davet edildiğiniz e-posta adresini kullanın."
     },
+    "signInWithX": "X ile devam et",
     "signInWithOidc": "{name} ile devam et"
   },
   "CompleteProfile": {

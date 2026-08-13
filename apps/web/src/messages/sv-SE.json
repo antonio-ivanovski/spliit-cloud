@@ -378,6 +378,7 @@
       "message": "Den här instansen är endast för inbjudna. Använd en inbjudningslänk eller be någon att bjuda in dig till en grupp.",
       "useInvitedEmail": "Använd den e-postadress du blev inbjuden med."
     },
+    "signInWithX": "Fortsätt med X",
     "signInWithOidc": "Fortsätt med {name}"
   },
   "Balances": {
@@ -600,6 +601,9 @@
       "Trash": "Sophämtning",
       "TV/Phone/Internet": "TV/Telefon/Internet",
       "Water": "Vatten"
+    },
+    "Income": {
+      "heading": "Inkomst"
     }
   },
   "Common": {

@@ -1321,6 +1321,9 @@
       "heading": "Harpidetzak eta kidetzak",
       "Digital Subscriptions": "Harpidetza digitalak",
       "Memberships": "Kidetzak"
+    },
+    "Income": {
+      "heading": "Diru-sarrerak"
     }
   },
   "Currencies": {
@@ -1690,6 +1693,7 @@
       "message": "Instantzia hau gonbidapen bidezkoa da soilik. Erabili gonbidapen-esteka bat edo eskatu norbaiti talde batera gonbidatzeko.",
       "useInvitedEmail": "Erabili gonbidapena jaso zenuen helbide elektronikoa."
     },
+    "signInWithX": "Jarraitu X-ekin",
     "signInWithOidc": "Jarraitu {name}-rekin"
   },
   "CompleteProfile": {

@@ -1321,6 +1321,9 @@
       "heading": "מינויים וחברויות",
       "Digital Subscriptions": "מינויים דיגיטליים",
       "Memberships": "חברויות"
+    },
+    "Income": {
+      "heading": "הכנסה"
     }
   },
   "Currencies": {
@@ -1690,6 +1693,7 @@
       "message": "המופע הזה פתוח להזמנות בלבד. השתמש בקישור הזמנה או בקש ממישהו להזמין אותך לקבוצה.",
       "useInvitedEmail": "השתמש בכתובת האימייל שאליה נשלחה ההזמנה."
     },
+    "signInWithX": "המשך עם X",
     "signInWithOidc": "המשך עם {name}"
   },
   "CompleteProfile": {

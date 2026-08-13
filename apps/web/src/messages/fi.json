@@ -1313,6 +1313,9 @@
       "heading": "Tilaukset ja jäsenyydet",
       "Digital Subscriptions": "Digitaaliset tilaukset",
       "Memberships": "Jäsenyydet"
+    },
+    "Income": {
+      "heading": "Tulot"
     }
   },
   "Currencies": {
@@ -1682,6 +1685,7 @@
       "message": "Tämä instanssi on vain kutsutuille. Käytä kutsulinkkiä tai pyydä jotakuta kutsumaan sinut ryhmään.",
       "useInvitedEmail": "Käytä sähköpostiosoitetta, jolla sinut kutsuttiin."
     },
+    "signInWithX": "Jatka X:llä",
     "signInWithOidc": "Jatka: {name}"
   },
   "CompleteProfile": {

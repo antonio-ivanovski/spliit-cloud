@@ -28,6 +28,7 @@ const {
     defaultCurrencyCode: 'USD',
     enableGoogleOAuth: false,
     enableGitHubOAuth: false,
+    enableTwitterOAuth: false,
     oidcProviders: [] as Array<{ id: string; name: string }>,
     signupMode: 'open' as 'open' | 'invite_only',
     allowUninvitedSignup: true,
@@ -106,6 +107,7 @@ describe('AuthPanel', () => {
     vi.clearAllMocks()
     mockDeploymentConfig.enableGoogleOAuth = false
     mockDeploymentConfig.enableGitHubOAuth = false
+    mockDeploymentConfig.enableTwitterOAuth = false
     mockDeploymentConfig.oidcProviders = []
     mockDeploymentConfig.signupMode = 'open'
     mockDeploymentConfig.allowUninvitedSignup = true
@@ -273,11 +275,28 @@ describe('AuthPanel', () => {
   it('social buttons appear when feature flags are enabled', () => {
     mockDeploymentConfig.enableGoogleOAuth = true
     mockDeploymentConfig.enableGitHubOAuth = true
+    mockDeploymentConfig.enableTwitterOAuth = true
 
     render(<AuthPanel />)
 
     expect(screen.getByText('Continue with Google')).toBeInTheDocument()
     expect(screen.getByText('Continue with GitHub')).toBeInTheDocument()
+    expect(screen.getByText('Continue with X')).toBeInTheDocument()
+  })
+
+  it('returns X social sign-in with the twitter provider', async () => {
+    mockDeploymentConfig.enableTwitterOAuth = true
+    const { user } = render(<AuthPanel />)
+
+    await user.click(screen.getByText('Continue with X'))
+
+    expect(mockSignInSocial).toHaveBeenCalledWith(
+      {
+        provider: 'twitter',
+        callbackURL: `${window.location.origin}/`,
+      },
+      {},
+    )
   })
 
   it('returns social sign-in to an overridden OAuth continuation path', async () => {

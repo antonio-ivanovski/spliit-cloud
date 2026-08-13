@@ -1329,6 +1329,9 @@
       "heading": "Subskrypcje i członkostwa",
       "Digital Subscriptions": "Subskrypcje cyfrowe",
       "Memberships": "Członkostwa"
+    },
+    "Income": {
+      "heading": "Przychody"
     }
   },
   "Auth": {
@@ -1389,6 +1392,7 @@
       "message": "Ta instancja jest dostępna tylko na zaproszenie. Użyj linku zaproszenia lub poproś kogoś o zaproszenie do grupy.",
       "useInvitedEmail": "Użyj adresu e-mail, na który wysłano zaproszenie."
     },
+    "signInWithX": "Kontynuuj przez X",
     "signInWithOidc": "Kontynuuj przez {name}"
   },
   "CompleteProfile": {

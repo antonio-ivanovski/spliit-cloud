@@ -177,9 +177,10 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
 
   const googleEnabled = deployment.enableGoogleOAuth
   const githubEnabled = deployment.enableGitHubOAuth
+  const twitterEnabled = deployment.enableTwitterOAuth
   const oidcProviders = deployment.oidcProviders
   const socialEnabled =
-    googleEnabled || githubEnabled || oidcProviders.length > 0
+    googleEnabled || githubEnabled || twitterEnabled || oidcProviders.length > 0
   const mode = canSignUp ? requestedMode : 'sign-in'
 
   const canSubmitPassword = (() => {
@@ -237,6 +238,16 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
     )
   }
 
+  function handleTwitter() {
+    void authClient.signIn.social(
+      {
+        provider: 'twitter',
+        callbackURL,
+      },
+      signupInviteFetchOptions(linkInviteToken),
+    )
+  }
+
   function handleOidc(providerId: string) {
     void authClient.signIn.oauth2(
       {
@@ -261,6 +272,7 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
     hasEmailInvitation,
     googleEnabled,
     githubEnabled,
+    twitterEnabled,
     oidcProviders,
     socialEnabled,
     callbackURL,
@@ -275,6 +287,7 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
     handlePasswordSubmit,
     handleGoogle,
     handleGithub,
+    handleTwitter,
     handleOidc,
     emailAuth,
     magicLink,

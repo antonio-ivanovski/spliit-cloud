@@ -220,7 +220,7 @@ export function SpendingChart({ data, currency }: Props) {
         <div className="space-y-1.5">
           {payload.map((item) => {
             const amount = Number(item.value ?? 0)
-            if (amount <= 0) return null
+            if (amount === 0) return null
             const categoryId =
               typeof item.dataKey === 'string' ? item.dataKey : undefined
             const category = categories.find(

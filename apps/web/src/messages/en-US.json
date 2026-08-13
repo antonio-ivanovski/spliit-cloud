@@ -750,6 +750,7 @@
       "message": "This instance is invite-only. Use an invitation link or ask someone to invite you to a group.",
       "useInvitedEmail": "Use the email address you were invited with."
     },
+    "signInWithX": "Continue with X",
     "signInWithOidc": "Continue with {name}"
   },
   "AccountSettings": {
@@ -1762,6 +1763,9 @@
     },
     "Personal Care and Wellness": {
       "heading": "Personal Care and Wellness"
+    },
+    "Income": {
+      "heading": "Income"
     }
   },
   "Currencies": {

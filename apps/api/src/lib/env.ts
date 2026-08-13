@@ -79,6 +79,8 @@ const envSchema = z
     GOOGLE_CLIENT_SECRET: optionalString,
     GITHUB_CLIENT_ID: optionalString,
     GITHUB_CLIENT_SECRET: optionalString,
+    TWITTER_CLIENT_ID: optionalString,
+    TWITTER_CLIENT_SECRET: optionalString,
     OIDC_CLIENT_ID: optionalString,
     OIDC_CLIENT_SECRET: optionalString,
     OIDC_DISCOVERY_URL: optionalUrl,

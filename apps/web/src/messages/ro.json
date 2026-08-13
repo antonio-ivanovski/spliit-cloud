@@ -1321,6 +1321,9 @@
       "heading": "Abonamente și membri",
       "Digital Subscriptions": "Abonamente digitale",
       "Memberships": "Membri"
+    },
+    "Income": {
+      "heading": "Venituri"
     }
   },
   "Currencies": {
@@ -1690,6 +1693,7 @@
       "message": "Această instanță este doar pe bază de invitație. Folosește un link de invitație sau cere cuiva să te invite într-un grup.",
       "useInvitedEmail": "Folosește adresa de email cu care ai primit invitația."
     },
+    "signInWithX": "Continuă cu X",
     "signInWithOidc": "Continuă cu {name}"
   },
   "CompleteProfile": {

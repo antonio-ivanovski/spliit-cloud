@@ -1329,6 +1329,9 @@
       "heading": "Předplatné a členství",
       "Digital Subscriptions": "Digitální předplatné",
       "Memberships": "Členství"
+    },
+    "Income": {
+      "heading": "Příjmy"
     }
   },
   "Auth": {
@@ -1389,6 +1392,7 @@
       "message": "Tato instance je pouze na pozvánku. Použijte odkaz pozvánky nebo požádejte někoho, aby vás pozval do skupiny.",
       "useInvitedEmail": "Použijte e-mailovou adresu, na kterou vám přišla pozvánka."
     },
+    "signInWithX": "Pokračovat přes X",
     "signInWithOidc": "Pokračovat přes {name}"
   },
   "CompleteProfile": {

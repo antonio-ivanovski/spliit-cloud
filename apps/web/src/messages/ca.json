@@ -1321,6 +1321,9 @@
       "heading": "Subscripcions i membresies",
       "Digital Subscriptions": "Subscripcions digitals",
       "Memberships": "Membresies"
+    },
+    "Income": {
+      "heading": "Ingressos"
     }
   },
   "Currencies": {
@@ -1690,6 +1693,7 @@
       "message": "Aquesta instància és només per invitació. Utilitza un enllaç d'invitació o demana a algú que t'inviti a un grup.",
       "useInvitedEmail": "Utilitza l'adreça de correu electrònic amb què t'han convidat."
     },
+    "signInWithX": "Continua amb X",
     "signInWithOidc": "Continua amb {name}"
   },
   "CompleteProfile": {
