@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import '../test/mocks'
 import { clearAccountCache } from '../lib/auth/account-cache'
@@ -112,6 +112,45 @@ describe('protectedProcedure', () => {
         } as never,
       }),
     ).rejects.toMatchObject({ code: 'UNAUTHORIZED' })
+  })
+
+  it('limits authenticated mutations per account and returns Retry-After', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+    const resHeaders = new Headers()
+    const mutation = protectedProcedure.mutation(() => 'ok')
+    const ctx = {
+      auth: {
+        session: { id: 'mutation-limit-session' },
+        user: {
+          id: 'mutation-limit-account',
+          email: 'mutation-limit@example.test',
+          emailVerified: true,
+          name: 'Mutation Limit',
+        },
+      },
+      resHeaders,
+    }
+    const callMutation = () =>
+      mutation({
+        ctx,
+        type: 'mutation',
+        path: 'mutationProbe',
+        getRawInput: async () => undefined,
+        meta: undefined,
+        signal: undefined,
+      } as never)
+
+    for (let count = 0; count < 120; count += 1) {
+      await expect(callMutation()).resolves.toBe('ok')
+    }
+    await expect(callMutation()).rejects.toMatchObject({
+      code: 'TOO_MANY_REQUESTS',
+    })
+
+    expect(Number(resHeaders.get('Retry-After'))).toBeGreaterThan(0)
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('authenticated-mutation'),
+    )
   })
 })
 

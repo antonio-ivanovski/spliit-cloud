@@ -6,10 +6,14 @@ import { categoryIdSchema } from '@spliit/domain'
 import { getRecentExpenseContext } from '../../../lib/ai/context'
 import { env } from '../../../lib/env'
 import { extractExpenseInformationFromImage } from '../../../lib/receipt-actions'
-import { aiProcedure, loadGroupViewer } from '../../init'
+import {
+  enforceAiRequestLimit,
+  loadGroupViewer,
+  protectedProcedure,
+} from '../../init'
 import { extractExpenseInformationOutputSchema } from '../../outputs/ai'
 
-export const extractExpenseInformationFromImageProcedure = aiProcedure
+export const extractExpenseInformationFromImageProcedure = protectedProcedure
   .input(
     z.object({
       imageUrl: z.url(),
@@ -56,6 +60,11 @@ export const extractExpenseInformationFromImageProcedure = aiProcedure
       linkTokenHash: null,
     })
     const context = await getRecentExpenseContext(input.groupId)
+    enforceAiRequestLimit(
+      ctx.auth.user.id,
+      'ai.extractExpenseInformationFromImage',
+      ctx.resHeaders,
+    )
 
     const result = await extractExpenseInformationFromImage(
       input.imageUrl,

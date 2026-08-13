@@ -24,20 +24,25 @@ export function allowUserGeneratedEmail(options: {
   policy: string
 }): boolean {
   const senderDecision = senderLimiter.hit(options.senderAccountId)
+  if (!senderDecision.allowed) {
+    logRateLimitExceeded({
+      policy: `${options.policy}-sender`,
+      identity: options.senderAccountId,
+      retryAfterSeconds: senderDecision.retryAfterSeconds,
+    })
+    return false
+  }
+
   const normalizedRecipient = options.recipientEmail.trim().toLowerCase()
   const recipientDecision = recipientLimiter.hit(
     hashRateLimitIdentity(normalizedRecipient),
   )
-  if (senderDecision.allowed && recipientDecision.allowed) return true
+  if (recipientDecision.allowed) return true
 
-  const limitedByRecipient = senderDecision.allowed
-  const decision = limitedByRecipient ? recipientDecision : senderDecision
   logRateLimitExceeded({
-    policy: `${options.policy}-${limitedByRecipient ? 'recipient' : 'sender'}`,
-    identity: limitedByRecipient
-      ? normalizedRecipient
-      : options.senderAccountId,
-    retryAfterSeconds: decision.retryAfterSeconds,
+    policy: `${options.policy}-recipient`,
+    identity: normalizedRecipient,
+    retryAfterSeconds: recipientDecision.retryAfterSeconds,
   })
   return false
 }

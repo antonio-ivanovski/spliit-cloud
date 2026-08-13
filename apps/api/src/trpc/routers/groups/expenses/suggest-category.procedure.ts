@@ -5,7 +5,7 @@ import { categoryIdSchema } from '@spliit/domain'
 import { suggestExpenseCategory } from '../../../../lib/api/expenses/suggest-category'
 import {
   hashLinkInviteToken,
-  enforceAiRequestLimit,
+  enforceCategoryAiRequestLimit,
   linkInviteTokenInput,
   loadGroupViewer,
   protectedProcedure,
@@ -41,7 +41,7 @@ export const suggestCategoryProcedure = protectedProcedure
       locale: input.locale,
       allowAi: input.allowAi,
       beforeAi: () =>
-        enforceAiRequestLimit(
+        enforceCategoryAiRequestLimit(
           ctx.auth.user.id,
           'groups.expenses.suggestCategory',
           ctx.resHeaders,

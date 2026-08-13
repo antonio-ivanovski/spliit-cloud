@@ -18,7 +18,11 @@ import {
   type BulkCategorizeCandidateRow,
 } from '../../../../lib/api/category-bulk'
 import { env } from '../../../../lib/env'
-import { bulkAiProcedure, loadGroupContext } from '../../../init'
+import {
+  enforceBulkAiRequestLimit,
+  loadGroupContext,
+  protectedProcedure,
+} from '../../../init'
 import { previewBulkCategorizeOutputSchema } from '../../../outputs/ai'
 
 const previewInputSchema = z.object({
@@ -48,7 +52,7 @@ const previewInputSchema = z.object({
     ),
 })
 
-export const aiBulkCategorizePreviewProcedure = bulkAiProcedure
+export const aiBulkCategorizePreviewProcedure = protectedProcedure
   .input(previewInputSchema)
   .output(previewBulkCategorizeOutputSchema)
   .mutation(async ({ ctx, input }) => {
@@ -106,6 +110,11 @@ export const aiBulkCategorizePreviewProcedure = bulkAiProcedure
     const suggestions: BulkPreviewResponse['suggestions'] = []
     const seenIds = new Set<string>()
 
+    enforceBulkAiRequestLimit(
+      ctx.auth.user.id,
+      'ai.bulkCategorize.preview',
+      ctx.resHeaders,
+    )
     for (const chunk of chunks) {
       const userContent = renderPreviewChunkPrompt({
         chunk,

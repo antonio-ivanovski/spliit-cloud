@@ -16,4 +16,39 @@ describe('user-generated email limits', () => {
     }
     expect(allowUserGeneratedEmail(options)).toBe(false)
   })
+
+  it('does not consume recipient quota after the sender is over quota', () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+    const exhaustedSender = 'sender-dual-hit-test'
+
+    for (let count = 0; count < 200; count += 1) {
+      expect(
+        allowUserGeneratedEmail({
+          senderAccountId: exhaustedSender,
+          recipientEmail: `recipient-${count}@example.test`,
+          policy: 'test-email',
+        }),
+      ).toBe(true)
+    }
+
+    for (let count = 0; count < 10; count += 1) {
+      expect(
+        allowUserGeneratedEmail({
+          senderAccountId: exhaustedSender,
+          recipientEmail: 'protected-recipient@example.test',
+          policy: 'test-email',
+        }),
+      ).toBe(false)
+    }
+
+    for (let count = 0; count < 10; count += 1) {
+      expect(
+        allowUserGeneratedEmail({
+          senderAccountId: 'fresh-sender-dual-hit-test',
+          recipientEmail: 'protected-recipient@example.test',
+          policy: 'test-email',
+        }),
+      ).toBe(true)
+    }
+  })
 })

@@ -18,7 +18,11 @@ import {
   type BulkCategorizeCandidateRow,
 } from '../../../../lib/api/category-bulk'
 import { env } from '../../../../lib/env'
-import { bulkAiProcedure, loadGroupContext } from '../../../init'
+import {
+  enforceBulkAiRequestLimit,
+  loadGroupContext,
+  protectedProcedure,
+} from '../../../init'
 import { calibrateBulkCategorizeOutputSchema } from '../../../outputs/ai'
 
 const calibrateInputSchema = z.object({
@@ -59,7 +63,7 @@ const calibrateInputSchema = z.object({
     ),
 })
 
-export const aiBulkCategorizeCalibrateProcedure = bulkAiProcedure
+export const aiBulkCategorizeCalibrateProcedure = protectedProcedure
   .input(calibrateInputSchema)
   .output(calibrateBulkCategorizeOutputSchema)
   .mutation(async ({ ctx, input }) => {
@@ -135,6 +139,11 @@ export const aiBulkCategorizeCalibrateProcedure = bulkAiProcedure
       round: input.round,
     })
 
+    enforceBulkAiRequestLimit(
+      ctx.auth.user.id,
+      'ai.bulkCategorize.calibrate',
+      ctx.resHeaders,
+    )
     const raw = await callBulkCategorizationModel({
       operation: 'bulk-calibration',
       candidateCount: candidates.length,

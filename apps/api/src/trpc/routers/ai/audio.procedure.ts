@@ -6,7 +6,11 @@ import { prisma } from '@spliit/db'
 import { extractExpenseInformationFromAudio } from '../../../lib/audio-expense'
 import { env } from '../../../lib/env'
 import { resolveParticipantDisplayName } from '../../../lib/invitations/display'
-import { aiProcedure, loadGroupContext } from '../../init'
+import {
+  enforceAiRequestLimit,
+  loadGroupContext,
+  protectedProcedure,
+} from '../../init'
 import { extractExpenseInformationFromAudioOutputSchema } from '../../outputs/ai'
 
 const audioInputSchema = z.object({
@@ -19,7 +23,7 @@ const audioInputSchema = z.object({
   timezoneOffsetMinutes: z.number().int().min(-840).max(840).optional(),
 })
 
-export const extractExpenseInformationFromAudioProcedure = aiProcedure
+export const extractExpenseInformationFromAudioProcedure = protectedProcedure
   .input(audioInputSchema)
   .output(extractExpenseInformationFromAudioOutputSchema)
   .mutation(async ({ input, ctx }) => {
@@ -57,6 +61,12 @@ export const extractExpenseInformationFromAudioProcedure = aiProcedure
         },
       },
     })
+
+    enforceAiRequestLimit(
+      ctx.auth.user.id,
+      'ai.extractExpenseInformationFromAudio',
+      ctx.resHeaders,
+    )
 
     try {
       return await extractExpenseInformationFromAudio({

@@ -58,29 +58,52 @@ const assistantRequestLimiter = new FixedWindowLimiter({
   limit: 120,
   windowMs: 60_000,
 })
+const authenticatedMutationLimiter = new FixedWindowLimiter({
+  limit: 120,
+  windowMs: 60_000,
+})
 
 /**
  * Procedure that requires an authenticated account. The account is exposed to
  * the procedure via `ctx.auth.user`.
  */
-export const protectedProcedure = baseProcedure.use(async ({ ctx, next }) => {
-  if (
-    !ctx.auth ||
-    ('credentialKind' in ctx.auth && ctx.auth.credentialKind === 'oauth')
-  ) {
-    throw new TRPCError({
-      code: 'UNAUTHORIZED',
-      message: 'Authentication required',
+export const protectedProcedure = baseProcedure.use(
+  async ({ ctx, next, path, type }) => {
+    if (
+      !ctx.auth ||
+      ('credentialKind' in ctx.auth && ctx.auth.credentialKind === 'oauth')
+    ) {
+      throw new TRPCError({
+        code: 'UNAUTHORIZED',
+        message: 'Authentication required',
+      })
+    }
+    if (type === 'mutation') {
+      const decision = authenticatedMutationLimiter.hit(ctx.auth.user.id)
+      if (!decision.allowed) {
+        logRateLimitExceeded({
+          policy: 'authenticated-mutation',
+          identity: ctx.auth.user.id,
+          retryAfterSeconds: decision.retryAfterSeconds,
+          path,
+        })
+        ctx.resHeaders?.set('Retry-After', String(decision.retryAfterSeconds))
+        throw new TRPCError({
+          code: 'TOO_MANY_REQUESTS',
+          message: 'Request limit exceeded; try again shortly',
+        })
+      }
+    }
+
+    return next({
+      ctx: {
+        ...ctx,
+        // Narrow the type so procedures can rely on a non-null auth.
+        auth: ctx.auth,
+      },
     })
-  }
-  return next({
-    ctx: {
-      ...ctx,
-      // Narrow the type so procedures can rely on a non-null auth.
-      auth: ctx.auth,
-    },
-  })
-})
+  },
+)
 
 function accountRateLimitedProcedure(options: {
   policy: string
@@ -122,6 +145,11 @@ const aiRequests = accountRateLimitedProcedure({
   limit: 60,
   windowMs: 60 * 60 * 1000,
 })
+const categoryAiRequests = accountRateLimitedProcedure({
+  policy: 'ai-category',
+  limit: 120,
+  windowMs: 60 * 60 * 1000,
+})
 const bulkAiRequests = accountRateLimitedProcedure({
   policy: 'ai-bulk',
   limit: 20,
@@ -138,13 +166,13 @@ const importRequests = accountRateLimitedProcedure({
   windowMs: 60 * 60 * 1000,
 })
 
-export const aiProcedure = aiRequests.procedure
-export const bulkAiProcedure = bulkAiRequests.procedure
 export const uploadPresignProcedure = uploadPresignRequests.procedure
 export const importProcedure = importRequests.procedure
 
-/** Charge only the provider fallback, leaving local category suggestions free. */
+/** Charge AI quotas only immediately before provider work. */
 export const enforceAiRequestLimit = aiRequests.enforce
+export const enforceCategoryAiRequestLimit = categoryAiRequests.enforce
+export const enforceBulkAiRequestLimit = bulkAiRequests.enforce
 
 export function assistantProcedure(requiredScope: string) {
   return baseProcedure.use(async ({ ctx, next }) => {

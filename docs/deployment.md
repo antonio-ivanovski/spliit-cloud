@@ -141,9 +141,10 @@ storage must be backed up separately when expense documents are enabled.
 - Terminate HTTPS before the web container and enable HSTS at the outer proxy.
 - Do not publish PostgreSQL or the worker health port.
 - Leave the API private unless a split-origin deployment requires it.
-- Keep `TRUST_PROXY=true` only when the gateway is reached through a trusted
-  reverse proxy. Set it to `false` if clients connect directly to a gateway
-  bound beyond loopback.
+- Keep `TRUST_PROXY=false` until the origin is restricted to trusted proxy
+  traffic. Enable it only after that restriction is active; otherwise direct
+  callers can spoof forwarded client-IP headers. For Cloudflare, apply the
+  Cloudflare-source allowlist before deploying with `TRUST_PROXY=true`.
 - Protect `container.env`, database backups, SMTP credentials, and auth secrets.
 - Configure SPF, DKIM, and DMARC for `EMAIL_FROM`.
 - Pin `SPLIIT_TAG` when you prefer scheduled upgrades over tracking `latest`.
