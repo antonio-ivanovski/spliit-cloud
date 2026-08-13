@@ -39,7 +39,8 @@ describe('complex spliit.app export with all features', () => {
 
   it('handles settlement category', () => {
     const result = tryParseSpliitExport(raw)
-    if (!result.ok) return
+    expect(result.ok).toBe(true)
+    if (!result.ok) throw new Error(result.error)
     const settlements = result.source.expenses.filter(
       (e) => e.category === 'settlement',
     )

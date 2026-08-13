@@ -90,7 +90,6 @@ export function BasicDetailsCard(props: {
   groupCurrency: Currency
   readOnly: boolean
   sExpense: 'Expense' | 'Income'
-  isIncome: boolean
   isCreate: boolean
   isCopy?: boolean
   recurrenceSequence?: number
@@ -149,7 +148,6 @@ export function BasicDetailsCard(props: {
     groupCurrency,
     readOnly,
     sExpense,
-    isIncome,
     isCreate,
     heading,
     savedDefault,

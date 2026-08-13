@@ -32,7 +32,6 @@ import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
 import {
   INCOME_CATEGORY_ID,
-  SETTLEMENT_CATEGORY_ID,
   amountAsDecimal,
   isExpenseDocumentImage,
   isSettlementCategory,

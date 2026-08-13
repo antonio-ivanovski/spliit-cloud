@@ -8,6 +8,7 @@ import {
 import {
   wallTimeToUtc,
   SETTLEMENT_CATEGORY_ID,
+  isSettlementCategory,
   spliitGroupExportManifestSchema,
   toSecondPrecision,
   type SpliitGroupExportManifest,
@@ -927,7 +928,12 @@ export async function importCloudGroup(
     let totalAmount = 0
     for (const expense of manifest.expenses) {
       const expenseId = randomId()
-      totalAmount += expense.amount
+      const categoryId = expense.isReimbursement
+        ? SETTLEMENT_CATEGORY_ID
+        : expense.categoryId
+      if (!isSettlementCategory(categoryId)) {
+        totalAmount += expense.amount
+      }
       const createdBy = expense.createdByParticipantId
         ? mappingBySource.get(expense.createdByParticipantId)?.mode ===
           'LINK_ACCOUNT'
@@ -972,9 +978,7 @@ export async function importCloudGroup(
           expenseDate: toSecondPrecision(canonicalExpenseDate),
           expenseTimeZone,
           title: expense.title,
-          categoryId: expense.isReimbursement
-            ? SETTLEMENT_CATEGORY_ID
-            : expense.categoryId,
+          categoryId,
           amount: expense.amount,
           originalAmount: expense.originalAmount,
           originalCurrency: expense.originalCurrency,

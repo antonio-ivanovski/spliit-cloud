@@ -166,7 +166,6 @@ export function ExpenseCard({
   const showContribution =
     typeof contributionAmount === 'number' &&
     contributionAmount !== expense.amount
-  const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseCard' })
   const { t: tForm } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const locale = useLocale()
   const accountPreferences = useSyncedAccountPreferences()

@@ -526,7 +526,10 @@ export function buildExpenseFormDefaults(args: {
         values.indexOf(participant) === index,
     )
 
-  if (searchParams.settlement ?? searchParams.reimbursement) {
+  if (
+    searchParams.settlement === 'yes' ||
+    searchParams.reimbursement === 'yes'
+  ) {
     const settlementNeedsConversion =
       searchOriginalCurrency != null &&
       searchOriginalCurrency !== group.currencyCode

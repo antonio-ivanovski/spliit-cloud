@@ -96,6 +96,26 @@ describe('buildExpenseFormDefaults grouped settlements', () => {
     expect(values.paidFor).toEqual([{ participant: 'bob', shares: 1 }])
   })
 
+  it('ignores settlement=no and reimbursement=no', () => {
+    const values = buildExpenseFormDefaults({
+      isCreate: true,
+      searchParams: {
+        settlement: 'no',
+        reimbursement: 'no',
+        amount: '4000',
+        from: 'alice',
+        to: 'bob',
+      } as CreateExpenseSearch,
+      group,
+      groupCurrency: EUR,
+      currentLedgerParticipantId: 'alice',
+      settlementTitle: 'Settlement payment',
+    })
+
+    expect(values.category).not.toBe('settlement')
+    expect(values.title).not.toBe('Settlement payment')
+  })
+
   it('honors legacy reimbursement=yes as a settlement create default', () => {
     const values = buildExpenseFormDefaults({
       isCreate: true,

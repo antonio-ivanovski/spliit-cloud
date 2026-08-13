@@ -18,7 +18,7 @@ The `+` badge is host chrome, not character artwork — every mascot gets it whe
 | `idle`        | Resting companion                                                     | —          | —                   |
 | `thinking`    | Long-running work (receipt / voice)                                   | 20s safety | Idle _can_ clear it |
 | `success`     | Create / update / import; homepage auth success                       | 2500ms     | Protected           |
-| `celebrate`   | Reimbursement / settle                                                | 2800ms     | Protected           |
+| `celebrate`   | Settlement / settle                                                   | 2800ms     | Protected           |
 | `acknowledge` | Delete, archive, leave, remove member/subgroup                        | 1200ms     | Protected           |
 | `welcome`     | Every login (and each authenticated host mount); also a mild tap pose | 2200ms     | Protected           |
 | `failure`     | Mutation or capture error                                             | 2600ms     | Protected           |
