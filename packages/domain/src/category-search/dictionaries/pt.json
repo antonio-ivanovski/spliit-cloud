@@ -8,7 +8,13 @@
     "samples": ["jantar fora"]
   },
   "groceries": {
-    "aliases": ["compras", "supermercado", "continente", "pingo doce"],
+    "aliases": [
+      "compras",
+      "supermercado",
+      "continente",
+      "pingo doce",
+      "minipreco"
+    ],
     "samples": ["compras da semana"]
   },
   "liquor": {
@@ -28,7 +34,7 @@
     "samples": []
   },
   "plane": {
-    "aliases": ["voo", "bilhete", "aeroporto", "tap"],
+    "aliases": ["voo", "aeroporto", "tap"],
     "samples": ["bilhetes de aviao"]
   },
   "bus-train": {

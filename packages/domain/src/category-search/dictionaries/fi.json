@@ -8,7 +8,14 @@
     "samples": ["illallinen ravintolassa"]
   },
   "groceries": {
-    "aliases": ["ruokaostokset", "kauppa", "k-market", "s-market", "prisma"],
+    "aliases": [
+      "ruokaostokset",
+      "kauppa",
+      "safkat",
+      "k-market",
+      "s-market",
+      "prisma"
+    ],
     "samples": ["viikon ostokset"]
   },
   "liquor": {
@@ -20,15 +27,15 @@
     "samples": ["kuukauden vuokra"]
   },
   "gas-fuel": {
-    "aliases": ["bensa", "polttoaine", "huoltoasema"],
-    "samples": ["tankkaus"]
+    "aliases": ["bensa", "polttoaine", "huoltoasema", "tankki"],
+    "samples": ["tankkaus", "tankki tayteen"]
   },
   "hotel": {
     "aliases": ["majoitus", "hotelli"],
     "samples": []
   },
   "plane": {
-    "aliases": ["lento", "lentolippu", "lentokentta", "finnair"],
+    "aliases": ["lento", "lentolippu", "finnair"],
     "samples": ["lentoliput"]
   },
   "bus-train": {
@@ -51,6 +58,10 @@
     "aliases": ["elokuva", "kinopalatsi"],
     "samples": []
   },
+  "sports": {
+    "aliases": ["latkalippu"],
+    "samples": ["latkaliput"]
+  },
   "medical-expenses": {
     "aliases": ["laakari", "apteekki", "hammaslaakari"],
     "samples": []
@@ -68,7 +79,7 @@
     "samples": []
   },
   "payment": {
-    "aliases": ["hyvitys", "tasaus"],
+    "aliases": ["hyvitys", "tasaus", "siirto"],
     "samples": []
   },
   "general": {

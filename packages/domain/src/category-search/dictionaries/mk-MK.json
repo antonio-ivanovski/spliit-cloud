@@ -8,8 +8,18 @@
     "samples": ["вечера надвор"]
   },
   "groceries": {
-    "aliases": ["намирници", "супермаркет", "тинекс", "веро", "namirnici"],
-    "samples": ["неделно купување"]
+    "aliases": [
+      "намирници",
+      "супермаркет",
+      "тинекс",
+      "веро",
+      "namirnici",
+      "пазарење",
+      "pazarenje",
+      "рамстор",
+      "ramstor"
+    ],
+    "samples": ["неделно купување", "pazarenje"]
   },
   "liquor": {
     "aliases": ["алкохол", "пиво", "вино", "pivo"],
@@ -18,6 +28,10 @@
   "rent": {
     "aliases": ["кирија", "стан", "kirija", "rent"],
     "samples": ["месечна кирија"]
+  },
+  "mortgage": {
+    "aliases": ["кредит", "kredit", "кредит рата"],
+    "samples": ["kredit rata"]
   },
   "gas-fuel": {
     "aliases": ["бензин", "гориво", "пумпа", "benzin"],
@@ -28,7 +42,7 @@
     "samples": []
   },
   "plane": {
-    "aliases": ["авион", "билет", "аеродром", "avion", "flight"],
+    "aliases": ["авион", "авионски билет", "avion", "flight"],
     "samples": ["авионски билети"]
   },
   "bus-train": {
@@ -40,7 +54,7 @@
     "samples": []
   },
   "parking": {
-    "aliases": ["паркинг", "parking"],
+    "aliases": ["паркинг", "parking", "гаражно место"],
     "samples": []
   },
   "memberships": {
@@ -51,16 +65,55 @@
     "aliases": ["кино", "филм", "kino"],
     "samples": []
   },
+  "sports": {
+    "aliases": ["ски карта"],
+    "samples": []
+  },
   "medical-expenses": {
     "aliases": ["лекар", "аптека", "болница", "apteka"],
     "samples": []
   },
-  "electricity": {
-    "aliases": ["струја", "евн", "struja"],
+  "insurance": {
+    "aliases": ["осигурување", "osiguruvanje"],
+    "samples": ["осигурување стан"]
+  },
+  "taxes": {
+    "aliases": ["данок", "danok", "данок на имот"],
+    "samples": ["данок на имот"]
+  },
+  "gifts": {
+    "aliases": ["поклони", "pokloni"],
     "samples": []
   },
+  "cleaning": {
+    "aliases": ["домалекс", "domaleks"],
+    "samples": []
+  },
+  "electricity": {
+    "aliases": ["струја", "евн", "есм", "evn", "esm", "struja"],
+    "samples": ["евн", "esm"]
+  },
+  "heat-gas": {
+    "aliases": ["бег", "beg"],
+    "samples": []
+  },
+  "water": {
+    "aliases": ["водовод", "vodovod"],
+    "samples": ["водовод"]
+  },
   "tv-phone-internet": {
-    "aliases": ["интернет", "а1", "македонски телеком", "internet"],
+    "aliases": [
+      "интернет",
+      "а1",
+      "македонски телеком",
+      "телеком",
+      "telekom",
+      "неотел",
+      "neotel",
+      "т-хоум",
+      "t-home",
+      "internet"
+    ],
     "samples": []
   },
   "clothing": {
@@ -68,7 +121,7 @@
     "samples": []
   },
   "payment": {
-    "aliases": ["враќање", "порамнување"],
+    "aliases": ["враќање", "порамнување", "порамнителна уплата"],
     "samples": []
   },
   "general": {

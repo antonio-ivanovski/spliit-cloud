@@ -37,7 +37,7 @@
     "samples": []
   },
   "plane": {
-    "aliases": ["机票", "飞机", "航班", "机场", "flight", "airport"],
+    "aliases": ["机票", "飞机", "航班", "flight"],
     "samples": ["买机票"]
   },
   "bus-train": {

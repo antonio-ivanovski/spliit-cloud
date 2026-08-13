@@ -30,16 +30,6 @@ function documentsFor(locale: string): CategorySearchDocument[] {
   )
 }
 
-function documentsFor(locale: string): CategorySearchDocument[] {
-  return DEFAULT_CATEGORIES.map((category) =>
-    createCategorySearchDocument(category, {
-      label: category.parentId === null ? category.grouping : category.name,
-      grouping: category.grouping,
-      locale,
-    }),
-  )
-}
-
 describe('parse dictionaries', () => {
   it('rejects unknown category ids in the shared dictionary', () => {
     expect(() => parseSharedDictionary({ 'not-a-category': ['x'] })).toThrow()
@@ -260,6 +250,72 @@ describe('suggestCategoryFromTitle', () => {
     const chinese = documentsFor('zh-CN')
     expect(suggestCategoryFromTitle('滴滴', chinese)?.id).toBe('taxi')
     expect(suggestCategoryFromTitle('flight', chinese)?.id).toBe('plane')
+  })
+
+  it('does not treat airport as a plane title', () => {
+    expect(suggestCategoryFromTitle('airport', english)).toBeNull()
+    expect(suggestCategoryFromTitle('airport parking', english)?.id).toBe(
+      'parking',
+    )
+  })
+})
+
+describe('prod dump patterns', () => {
+  it('maps dated utility bills and local grocery words for mk-MK', async () => {
+    await loadLocaleDictionary('mk-MK')
+    const macedonian = documentsFor('mk-MK')
+    expect(suggestCategoryFromTitle('EVN 01-02.2024', macedonian)?.id).toBe(
+      'electricity',
+    )
+    expect(suggestCategoryFromTitle('Vodovod 04.2025', macedonian)?.id).toBe(
+      'water',
+    )
+    expect(suggestCategoryFromTitle('Telekom 01.26', macedonian)?.id).toBe(
+      'tv-phone-internet',
+    )
+    expect(suggestCategoryFromTitle('Pazarenje', macedonian)?.id).toBe(
+      'groceries',
+    )
+    expect(suggestCategoryFromTitle('Kirija', macedonian)?.id).toBe('rent')
+    expect(suggestCategoryFromTitle('Danok na imot', macedonian)?.id).toBe(
+      'taxes',
+    )
+  })
+
+  it('maps Finnish shop and transfer titles, not the dump mislabels', async () => {
+    await loadLocaleDictionary('fi')
+    const finnish = documentsFor('fi')
+    expect(suggestCategoryFromTitle('Kauppa', finnish)?.id).toBe('groceries')
+    expect(suggestCategoryFromTitle('Siirto 11.4', finnish)?.id).toBe('payment')
+    expect(suggestCategoryFromTitle('Bensa Austin Shell', finnish)?.id).toBe(
+      'gas-fuel',
+    )
+  })
+
+  it('maps French grocery and fuel words dumped as general', async () => {
+    await loadLocaleDictionary('fr-FR')
+    const french = documentsFor('fr-FR')
+    expect(suggestCategoryFromTitle('Épicerie', french)?.id).toBe('groceries')
+    expect(suggestCategoryFromTitle('Essence France', french)?.id).toBe(
+      'gas-fuel',
+    )
+    expect(suggestCategoryFromTitle('Péage aller 1', french)?.id).toBe('tolls')
+  })
+
+  it('maps Deutschlandticket to bus/train and mietwagen to car', async () => {
+    await loadLocaleDictionary('de-DE')
+    const german = documentsFor('de-DE')
+    expect(
+      suggestCategoryFromTitle('Deutschlandticket – April 2025', german)?.id,
+    ).toBe('bus-train')
+    expect(suggestCategoryFromTitle('mietwagen', german)?.id).toBe('car')
+  })
+
+  it('maps shared operators from the dump to the right child category', () => {
+    const english = documentsFor('en-US')
+    expect(suggestCategoryFromTitle('Regiojet', english)?.id).toBe('bus-train')
+    expect(suggestCategoryFromTitle('HEB', english)?.id).toBe('groceries')
+    expect(suggestCategoryFromTitle('Ryanair', english)?.id).toBe('plane')
   })
 })
 

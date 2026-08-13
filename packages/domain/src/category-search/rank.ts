@@ -119,16 +119,34 @@ function scoreDocument(
   document: CategorySearchDocument,
 ): number {
   const phrase = bestFieldScore(needle, document)
-  const tokens = needle.split(' ')
-  if (tokens.length === 1) return phrase
+  // Skip dates/amounts so "EVN 01-02.2024" still hits the EVN alias.
+  const tokens = needle
+    .split(' ')
+    .filter((token) => token.length >= 2 && !/^\d+$/.test(token))
+  if (tokens.length === 0) return phrase
 
-  let tokenTotal = 0
+  let matchedTotal = 0
+  let matchedCount = 0
+  let bestToken = 0
   for (const token of tokens) {
     const tokenScore = bestFieldScore(token, document)
-    if (tokenScore === 0) return phrase
-    tokenTotal += tokenScore
+    bestToken = Math.max(bestToken, tokenScore)
+    if (tokenScore === 0) continue
+    matchedCount += 1
+    matchedTotal += tokenScore
   }
-  return Math.max(phrase, tokenTotal / tokens.length)
+
+  let score = phrase
+  if (matchedCount === tokens.length) {
+    score = Math.max(score, matchedTotal / tokens.length)
+  } else if (tokens.length === 1) {
+    score = Math.max(score, bestToken)
+  }
+  // A full alias/label token in a longer title ("Deutschlandticket – April").
+  if (bestToken >= ALIAS_WEIGHT) {
+    score = Math.max(score, bestToken)
+  }
+  return score
 }
 
 function computeNormalizedFields(

@@ -18,7 +18,7 @@
     "samples": ["dinner out", "lunch with friends", "coffee shop"]
   },
   "groceries": {
-    "aliases": ["supermarket", "grocery", "market", "food shop"],
+    "aliases": ["supermarket", "grocery", "food shop"],
     "samples": ["weekly shop", "grocery run", "supermarket run"]
   },
   "liquor": {
@@ -42,7 +42,7 @@
     "samples": ["hotel night", "weekend stay"]
   },
   "plane": {
-    "aliases": ["flight", "airfare", "airline", "airport"],
+    "aliases": ["flight", "airfare", "airline"],
     "samples": ["flight tickets"]
   },
   "bus-train": {
@@ -55,7 +55,7 @@
   },
   "parking": {
     "aliases": ["garage"],
-    "samples": ["airport parking"]
+    "samples": ["parking at airport"]
   },
   "bicycle": {
     "aliases": ["bike", "cycling", "bikeshare"],
@@ -174,7 +174,7 @@
     "samples": []
   },
   "events-and-activities": {
-    "aliases": ["tickets", "outing", "activity", "party", "event"],
+    "aliases": ["outing", "activity", "party", "event", "museum"],
     "samples": []
   },
   "personal-care-and-wellness": {

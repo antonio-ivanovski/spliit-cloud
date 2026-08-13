@@ -11,7 +11,8 @@
       "brunch",
       "bar",
       "trattoria",
-      "pizzeria"
+      "pizzeria",
+      "gelato"
     ],
     "samples": ["cena fuori", "pranzo al ristorante"]
   },
@@ -40,7 +41,7 @@
     "samples": ["notte in hotel"]
   },
   "plane": {
-    "aliases": ["volo", "biglietto aereo", "compagnia", "aeroporto"],
+    "aliases": ["volo", "biglietto aereo", "compagnia"],
     "samples": ["biglietti aerei"]
   },
   "bus-train": {
@@ -80,7 +81,7 @@
     "samples": []
   },
   "sports": {
-    "aliases": ["biglietti", "stadio", "partita"],
+    "aliases": ["stadio", "partita"],
     "samples": []
   },
   "medical-expenses": {
@@ -140,7 +141,7 @@
     "samples": ["bolletta della luce"]
   },
   "heat-gas": {
-    "aliases": ["riscaldamento", "bolletta gas"],
+    "aliases": ["riscaldamento", "bolletta gas", "metano"],
     "samples": []
   },
   "trash": {
@@ -156,7 +157,7 @@
     "samples": []
   },
   "events-and-activities": {
-    "aliases": ["biglietti", "uscita", "festa"],
+    "aliases": ["uscita", "festa"],
     "samples": []
   },
   "personal-care-and-wellness": {

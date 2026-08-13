@@ -8,7 +8,8 @@
     "cabify",
     "ola",
     "freenow",
-    "kapten"
+    "kapten",
+    "indrive"
   ],
   "dining-out": [
     "mcdonalds",
@@ -34,7 +35,15 @@
     "trader joes",
     "mercadona",
     "kroger",
-    "target"
+    "target",
+    "spar",
+    "heb",
+    "kaufland",
+    "billa",
+    "leclerc",
+    "rewe",
+    "edeka",
+    "99 ranch"
   ],
   "digital-subscriptions": [
     "netflix",
@@ -62,10 +71,36 @@
     "hilton",
     "bookingcom"
   ],
-  "plane": ["ryanair", "easyjet", "united", "delta", "lufthansa"],
-  "bus-train": ["flixbus", "amtrak", "sncf", "trainline", "eurostar"],
+  "plane": [
+    "ryanair",
+    "easyjet",
+    "united",
+    "delta",
+    "lufthansa",
+    "wizz air",
+    "wizzair",
+    "vueling",
+    "airasia"
+  ],
+  "bus-train": [
+    "flixbus",
+    "amtrak",
+    "sncf",
+    "trainline",
+    "eurostar",
+    "regiojet",
+    "leoexpress",
+    "leo express",
+    "renfe",
+    "alsa",
+    "obb",
+    "öbb",
+    "sbb",
+    "ceske drahy",
+    "české dráhy"
+  ],
   "car": ["hertz", "enterprise", "sixt", "turo"],
-  "movies": ["amc", "pathe", "pathé", "cineworld"],
+  "movies": ["amc", "pathe", "pathé", "cineworld", "kinepolis"],
   "games": ["steam", "playstation", "xbox", "nintendo", "epic games"],
   "music": ["concert", "bandcamp"],
   "tv-phone-internet": [

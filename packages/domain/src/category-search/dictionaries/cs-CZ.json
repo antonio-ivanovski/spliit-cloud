@@ -28,11 +28,11 @@
     "samples": []
   },
   "plane": {
-    "aliases": ["let", "letenka", "letiste", "csa"],
+    "aliases": ["let", "letenka", "csa"],
     "samples": ["letenky"]
   },
   "bus-train": {
-    "aliases": ["mhd", "metro", "vlak", "autobus", "pid", "cd"],
+    "aliases": ["mhd", "metro", "vlak", "autobus", "pid", "cd", "ceske drahy"],
     "samples": ["jizdenka na vlak"]
   },
   "car": {

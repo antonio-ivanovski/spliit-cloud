@@ -1,6 +1,6 @@
 {
   "taxi": {
-    "aliases": ["taxi", "cab", "fahrdienst", "mietwagen"],
+    "aliases": ["taxi", "cab", "fahrdienst"],
     "samples": ["taxi zum flughafen", "uber zum bahnhof"]
   },
   "dining-out": {
@@ -48,7 +48,7 @@
     "samples": ["hoteluebernachtung"]
   },
   "plane": {
-    "aliases": ["flug", "flugticket", "airline", "flughafen"],
+    "aliases": ["flug", "flugticket", "airline"],
     "samples": ["flugtickets"]
   },
   "bus-train": {
@@ -59,7 +59,8 @@
       "s-bahn",
       "u-bahn",
       "bus",
-      "pendeln"
+      "pendeln",
+      "deutschlandticket"
     ],
     "samples": ["zugtickets", "deutschlandticket"]
   },
@@ -164,7 +165,7 @@
     "samples": []
   },
   "tv-phone-internet": {
-    "aliases": ["internet", "wlan", "handyvertrag", "telefon"],
+    "aliases": ["internet", "wlan", "handyvertrag", "telefon", "telekom"],
     "samples": ["internetrechnung"]
   },
   "water": {
