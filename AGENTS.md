@@ -14,3 +14,7 @@ Spliit is a Bun monorepo (web, api, domain, db). Explore `package.json`, workspa
 
 - Translations: `.agents/skills/translate-strings/SKILL.md`
 - OpenSpec workflows: `.agents/skills/openspec-*/SKILL.md`
+
+## Environment-specific instructions
+
+- Cursor Cloud agents: [`.agents/cursor-cloud.md`](.agents/cursor-cloud.md) (VM-only startup/run gotchas; not relevant to local development).
