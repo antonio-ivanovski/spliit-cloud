@@ -180,6 +180,31 @@ describe('persistSignupInviteCookie', () => {
     )
   })
 
+  it('stores a usable link token from the header on OIDC sign-in', async () => {
+    const token = 'b'.repeat(32)
+    prismaMock.groupInvitation.findFirst.mockResolvedValue({
+      status: 'PENDING',
+      expiresAt: new Date(Date.now() + 60_000),
+      temporaryName: null,
+      role: 'MEMBER',
+      group: { id: 'grp-1', name: 'Trip', groupType: 'GROUP' },
+      invitedBy: { name: 'Alice' },
+    } as never)
+    const setCookie = vi.fn()
+    await persistSignupInviteCookie({
+      path: '/sign-in/oauth2',
+      headers: {
+        get: (name) => (name === SIGNUP_INVITE_HEADER ? token : null),
+      },
+      setCookie,
+    })
+    expect(setCookie).toHaveBeenCalledWith(
+      SIGNUP_INVITE_COOKIE,
+      token,
+      expect.objectContaining({ httpOnly: true, sameSite: 'lax', path: '/' }),
+    )
+  })
+
   it('does not store an unusable token', async () => {
     prismaMock.groupInvitation.findFirst.mockResolvedValue(null)
     const setCookie = vi.fn()

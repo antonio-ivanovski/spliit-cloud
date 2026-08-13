@@ -11,12 +11,13 @@ import {
   type Jwk,
   type JwtOptions,
 } from 'better-auth/plugins'
+import { genericOAuth } from 'better-auth/plugins/generic-oauth'
 
 import { prisma, type Account } from '@spliit/db'
 import { isStrongPassword } from '@spliit/domain/password'
 
 import { autoAcceptPendingFriendInvitationsForAccount } from '../api/friends'
-import { env, webOrigins } from '../env'
+import { env, getConfiguredOidcProvider, webOrigins } from '../env'
 import { buildProviderPlaceholderEmail } from '../invitations'
 import { sendEmail } from '../mail/send'
 import {
@@ -32,11 +33,14 @@ import {
 } from './signup-gate'
 import { getApiBaseUrl } from './urls'
 
+const oidcProvider = getConfiguredOidcProvider()
+
 const authMethodLabels: Record<string, string> = {
   credential: 'email and password',
   google: 'Google',
   github: 'GitHub',
   'magic-link': 'email sign-in link',
+  ...(oidcProvider ? { [oidcProvider.id]: oidcProvider.name } : {}),
 }
 
 async function getAuthMethodLabels(userId: string) {
@@ -259,7 +263,13 @@ export const auth = betterAuth({
     modelName: 'AuthIdentity',
     accountLinking: {
       enabled: true,
-      trustedProviders: ['google', 'github', 'credential', 'magic-link'],
+      trustedProviders: [
+        'google',
+        'github',
+        'credential',
+        'magic-link',
+        ...(oidcProvider ? [oidcProvider.id] : []),
+      ],
     },
   },
   verification: {
@@ -397,6 +407,23 @@ export const auth = betterAuth({
   })(),
 
   plugins: [
+    ...(oidcProvider
+      ? [
+          genericOAuth({
+            config: [
+              {
+                providerId: oidcProvider.id,
+                clientId: oidcProvider.clientId,
+                clientSecret: oidcProvider.clientSecret,
+                discoveryUrl: oidcProvider.discoveryUrl,
+                scopes: ['openid', 'email', 'profile'],
+                pkce: true,
+                requireIssuerValidation: true,
+              },
+            ],
+          }),
+        ]
+      : []),
     ...(env.ENABLE_MCP
       ? [
           oauthProvider({

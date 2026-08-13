@@ -749,7 +749,8 @@
     "inviteOnly": {
       "message": "Phiên bản này chỉ dành cho người được mời. Hãy dùng liên kết mời hoặc nhờ ai đó mời bạn vào một nhóm.",
       "useInvitedEmail": "Hãy dùng địa chỉ email bạn đã được mời."
-    }
+    },
+    "signInWithOidc": "Đăng nhập bằng {name}"
   },
   "AccountSettings": {
     "title": "Cài đặt tài khoản",

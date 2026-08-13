@@ -14,6 +14,7 @@ const SIGNUP_GATE_PATHS = new Set([
   '/sign-up/email',
   '/sign-in/magic-link',
   '/sign-in/social',
+  '/sign-in/oauth2',
 ])
 
 export type SignupGateRequest = {

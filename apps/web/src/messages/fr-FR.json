@@ -1689,7 +1689,8 @@
     "inviteOnly": {
       "message": "Cette instance est réservée aux invitations. Utilisez un lien d'invitation ou demandez à quelqu'un de vous inviter dans un groupe.",
       "useInvitedEmail": "Utilisez l'adresse e-mail avec laquelle vous avez reçu l'invitation."
-    }
+    },
+    "signInWithOidc": "Continuer avec {name}"
   },
   "CompleteProfile": {
     "title": "Complétez votre profil",

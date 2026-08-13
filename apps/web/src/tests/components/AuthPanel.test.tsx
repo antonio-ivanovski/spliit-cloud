@@ -10,6 +10,7 @@ const {
   mockSignUpEmail,
   mockSignInMagicLink,
   mockSignInSocial,
+  mockSignInOauth2,
   mockGetSession,
   mockNavigate,
   mockDeploymentConfig,
@@ -20,12 +21,14 @@ const {
   mockSignUpEmail: vi.fn(),
   mockSignInMagicLink: vi.fn(),
   mockSignInSocial: vi.fn(),
+  mockSignInOauth2: vi.fn(),
   mockGetSession: vi.fn(),
   mockNavigate: vi.fn(),
   mockDeploymentConfig: {
     defaultCurrencyCode: 'USD',
     enableGoogleOAuth: false,
     enableGitHubOAuth: false,
+    oidcProviders: [] as Array<{ id: string; name: string }>,
     signupMode: 'open' as 'open' | 'invite_only',
     allowUninvitedSignup: true,
   },
@@ -44,6 +47,7 @@ vi.mock('@/lib/auth', () => ({
       email: mockSignInEmail,
       magicLink: mockSignInMagicLink,
       social: mockSignInSocial,
+      oauth2: mockSignInOauth2,
     },
     signUp: {
       email: mockSignUpEmail,
@@ -102,6 +106,7 @@ describe('AuthPanel', () => {
     vi.clearAllMocks()
     mockDeploymentConfig.enableGoogleOAuth = false
     mockDeploymentConfig.enableGitHubOAuth = false
+    mockDeploymentConfig.oidcProviders = []
     mockDeploymentConfig.signupMode = 'open'
     mockDeploymentConfig.allowUninvitedSignup = true
     mockSearch.redirect = undefined
@@ -293,6 +298,25 @@ describe('AuthPanel', () => {
     expect(
       screen.queryByText('Sign in to Spliit Cloud'),
     ).not.toBeInTheDocument()
+  })
+
+  it('OIDC button appears and signs in with oauth2', async () => {
+    mockDeploymentConfig.oidcProviders = [{ id: 'oidc', name: 'Company SSO' }]
+    mockSearch.redirect = '/groups/abc?invite=link-invite-token'
+
+    const { user } = render(<AuthPanel />)
+
+    expect(screen.getByText('Continue with Company SSO')).toBeInTheDocument()
+
+    await user.click(screen.getByText('Continue with Company SSO'))
+
+    expect(mockSignInOauth2).toHaveBeenCalledWith(
+      {
+        providerId: 'oidc',
+        callbackURL: `${window.location.origin}/groups/abc?invite=link-invite-token`,
+      },
+      { headers: { 'X-Spliit-Invite-Token': 'link-invite-token' } },
+    )
   })
 
   // ── Forgot password link ────────────────────────────────────────────

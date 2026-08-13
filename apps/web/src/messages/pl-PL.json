@@ -1388,7 +1388,8 @@
     "inviteOnly": {
       "message": "Ta instancja jest dostępna tylko na zaproszenie. Użyj linku zaproszenia lub poproś kogoś o zaproszenie do grupy.",
       "useInvitedEmail": "Użyj adresu e-mail, na który wysłano zaproszenie."
-    }
+    },
+    "signInWithOidc": "Kontynuuj przez {name}"
   },
   "CompleteProfile": {
     "title": "Uzupełnij swój profil",

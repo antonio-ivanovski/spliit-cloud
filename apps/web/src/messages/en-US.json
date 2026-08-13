@@ -749,7 +749,8 @@
     "inviteOnly": {
       "message": "This instance is invite-only. Use an invitation link or ask someone to invite you to a group.",
       "useInvitedEmail": "Use the email address you were invited with."
-    }
+    },
+    "signInWithOidc": "Continue with {name}"
   },
   "AccountSettings": {
     "title": "Account settings",

@@ -422,7 +422,8 @@
     "inviteOnly": {
       "message": "this instance is invite-only. grab an invite link or ask someone to pull you into a group.",
       "useInvitedEmail": "use the email you got invited with."
-    }
+    },
+    "signInWithOidc": "continue with {name}"
   },
   "Balances": {
     "title": "balance check ",

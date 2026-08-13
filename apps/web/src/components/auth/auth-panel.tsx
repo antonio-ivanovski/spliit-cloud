@@ -31,6 +31,7 @@ export function AuthPanel({
     hasEmailInvitation,
     googleEnabled,
     githubEnabled,
+    oidcProviders,
     socialEnabled,
     setEmail,
     setPassword,
@@ -42,6 +43,7 @@ export function AuthPanel({
     handlePasswordSubmit,
     handleGoogle,
     handleGithub,
+    handleOidc,
     emailAuth,
     magicLink,
   } = useAuthPanel({ redirectTo })
@@ -71,9 +73,11 @@ export function AuthPanel({
         <SocialButtons
           googleEnabled={googleEnabled}
           githubEnabled={githubEnabled}
+          oidcProviders={oidcProviders}
           disabled={emailAuth.isPending || magicLink.isPending}
           onGoogle={handleGoogle}
           onGithub={handleGithub}
+          onOidc={handleOidc}
         />
       )}
 

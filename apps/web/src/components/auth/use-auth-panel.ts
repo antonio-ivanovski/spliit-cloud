@@ -177,7 +177,9 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
 
   const googleEnabled = deployment.enableGoogleOAuth
   const githubEnabled = deployment.enableGitHubOAuth
-  const socialEnabled = googleEnabled || githubEnabled
+  const oidcProviders = deployment.oidcProviders
+  const socialEnabled =
+    googleEnabled || githubEnabled || oidcProviders.length > 0
   const mode = canSignUp ? requestedMode : 'sign-in'
 
   const canSubmitPassword = (() => {
@@ -235,6 +237,16 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
     )
   }
 
+  function handleOidc(providerId: string) {
+    void authClient.signIn.oauth2(
+      {
+        providerId,
+        callbackURL,
+      },
+      signupInviteFetchOptions(linkInviteToken),
+    )
+  }
+
   return {
     mode,
     emailVariant,
@@ -249,6 +261,7 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
     hasEmailInvitation,
     googleEnabled,
     githubEnabled,
+    oidcProviders,
     socialEnabled,
     callbackURL,
     setEmail,
@@ -262,6 +275,7 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
     handlePasswordSubmit,
     handleGoogle,
     handleGithub,
+    handleOidc,
     emailAuth,
     magicLink,
   }

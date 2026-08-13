@@ -212,6 +212,27 @@ describe('better-auth emailAndPassword config', () => {
       }),
     )
   })
+
+  it('uses the OIDC display name for password recovery method labels', async () => {
+    prismaMock.authIdentity.findMany.mockResolvedValueOnce([
+      { providerId: 'oidc' },
+    ])
+
+    await realAuthModule.auth.options.emailAndPassword?.sendResetPassword?.({
+      user: { id: 'acct-1', email: 'alice@example.com' },
+      url: 'https://spliit.test/reset-token',
+    })
+
+    expect(sendEmailMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: 'alice@example.com',
+        subject: 'Sign in to Spliit Cloud',
+        text: expect.stringContaining(
+          'Use one of these sign-in methods instead: Test SSO.',
+        ),
+      }),
+    )
+  })
 })
 
 describe('better-auth socialProviders config', () => {
@@ -226,6 +247,14 @@ describe('better-auth socialProviders config', () => {
     expect(trusted).toContain('google')
     expect(trusted).toContain('credential')
     expect(trusted).toContain('magic-link')
+    expect(trusted).toContain('oidc')
+  })
+
+  it('registers generic OIDC when OIDC env is complete', () => {
+    const plugin = realAuthModule.auth.options.plugins?.find(
+      (candidate) => candidate.id === 'generic-oauth',
+    )
+    expect(plugin).toBeDefined()
   })
 
   it('exposes GitHub credentials from env when both are set', () => {
