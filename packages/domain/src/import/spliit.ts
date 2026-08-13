@@ -14,14 +14,15 @@ import type {
 } from './types'
 
 /**
- * This parser intentionally targets the immutable legacy export produced by the
- * original spliit.app. Keep this wire schema stable; map its fields to the
- * current internal model in `normalizeSpliitExport` instead of adding current
- * Spliit Cloud recurrence state here.
+ * This parser accepts the original unversioned export and the upstream v3
+ * extension. Keep current Spliit Cloud-only recurrence state out of this wire
+ * schema; normalize only fields emitted by spliit.app.
  */
 export const spliitExportSchema = z.object({
+  exportVersion: z.literal(3).optional(),
   id: z.string().min(1),
   name: z.string().min(1),
+  information: z.string().nullable().optional(),
   currency: z.string().min(1).max(5),
   // Legacy spliit.app exports use an empty string for custom currencies.
   // Normalize that representation to null at the parser boundary below.
@@ -39,6 +40,7 @@ export const spliitExportSchema = z.object({
     .min(1),
   expenses: z.array(
     z.object({
+      id: z.string().min(1).optional(),
       createdAt: z.iso.datetime().optional(),
       title: z.string().min(1),
       amount: z.number().int().nonnegative(),
@@ -71,9 +73,36 @@ export const spliitExportSchema = z.object({
       originalAmount: z.coerce.number().int().nullable().optional(),
       originalCurrency: z.string().min(3).max(4).nullable().optional(),
       conversionRate: z.coerce.number().nullable().optional(),
-      notes: z.string().optional(),
+      notes: z.string().nullable().optional(),
+      documents: z
+        .array(
+          z.object({
+            id: z.string().min(1),
+            url: z.url(),
+            width: z.number().int().positive(),
+            height: z.number().int().positive(),
+          }),
+        )
+        .optional(),
     }),
   ),
+  activities: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        time: z.iso.datetime(),
+        activityType: z.enum([
+          'UPDATE_GROUP',
+          'CREATE_EXPENSE',
+          'UPDATE_EXPENSE',
+          'DELETE_EXPENSE',
+        ]),
+        participantId: z.string().min(1).nullable(),
+        expenseId: z.string().min(1).nullable(),
+        data: z.string().nullable(),
+      }),
+    )
+    .optional(),
 })
 
 export type SpliitExport = z.infer<typeof spliitExportSchema>
@@ -122,7 +151,23 @@ function normalizeSpliitExport(parsed: SpliitExport): NormalizedSource {
     return sourceId
   }
 
+  const seenExpenseIds = new Set<string>()
+  const seenDocumentIds = new Set<string>()
   const expenses: NormalizedSourceExpense[] = parsed.expenses.map((e) => {
+    if (e.id && seenExpenseIds.has(e.id)) {
+      throw new ImportError(
+        `The export contains duplicate expense ids (id "${e.id}").`,
+      )
+    }
+    if (e.id) seenExpenseIds.add(e.id)
+    for (const document of e.documents ?? []) {
+      if (seenDocumentIds.has(document.id)) {
+        throw new ImportError(
+          `The export contains duplicate document ids (id "${document.id}").`,
+        )
+      }
+      seenDocumentIds.add(document.id)
+    }
     const paidBySourceId = mustGetSourceId(e.paidById, e.title)
     const paidFor: NormalizedSourceExpense['paidFor'] = []
     const seenInRow = new Set<string>()
@@ -168,6 +213,7 @@ function normalizeSpliitExport(parsed: SpliitExport): NormalizedSource {
     const recurrence = legacyRuleToRecurrence(e.recurrenceRule)
 
     return {
+      sourceId: e.id ?? null,
       sourceCreatedAt: e.createdAt ?? null,
       title: e.title,
       expenseDate: e.expenseDate.slice(0, 10),
@@ -186,18 +232,42 @@ function normalizeSpliitExport(parsed: SpliitExport): NormalizedSource {
       recurrenceRule: e.recurrenceRule,
       recurrence,
       notes: e.notes ?? null,
+      ...(parsed.exportVersion === 3
+        ? {
+            sourceDocuments: (e.documents ?? []).map((document) => ({
+              sourceId: document.id,
+              sourceUrl: document.url,
+              width: document.width,
+              height: document.height,
+            })),
+          }
+        : {}),
     }
   })
 
+  const activities = parsed.activities?.map((activity) => ({
+    time: activity.time,
+    activityType: activity.activityType,
+    participantSourceId: activity.participantId
+      ? (upstreamIdToSourceId.get(activity.participantId) ?? null)
+      : null,
+    expenseSourceId: activity.expenseId,
+    data: activity.data,
+  }))
+
   return {
     provider: 'SPLIIT',
+    exportVersion: parsed.exportVersion ?? null,
     sourceGroupId: parsed.id,
     sourceUrl: `https://spliit.app/groups/${parsed.id}`,
     name: parsed.name,
+    information: parsed.information ?? null,
     currency: parsed.currency,
     currencyCode: parsed.currencyCode || null,
     participants,
     expenses,
+    documentSource: parsed.exportVersion === 3 ? 'EMBEDDED' : 'DISCOVERY',
+    ...(activities !== undefined ? { activities } : {}),
   }
 }
 

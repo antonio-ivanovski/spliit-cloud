@@ -448,7 +448,9 @@
         "cloudBundleReadyTitle": "Spliit Cloud paketi hazır",
         "cloudBundleReadyDescription": "İncelenen bu paket içe aktarmaya hazır. Dosyayı yeniden seçmeden devam edebilirsiniz.",
         "resumeCloudBundle": "Bu paketle devam et",
-        "spliitCloudScopeDescription": ".spliit.zip dosyasından birden fazla grup içeren Spliit Cloud hesabı yedeğini veya tek bir grup dışa aktarımını içe aktarın."
+        "spliitCloudScopeDescription": ".spliit.zip dosyasından birden fazla grup içeren Spliit Cloud hesabı yedeğini veya tek bir grup dışa aktarımını içe aktarın.",
+        "legacyExportTitle": "Daha yeni bir Spliit dışa aktarımı mevcut",
+        "legacyExportDescription": "Bu eski dışa aktarımda Spliit Cloud'un belgeleri spliit.app üzerinde araması gerekir. En güvenilir içe aktarım için spliit.app üzerindeki grup bağlantısını kopyalayın veya yeni bir JSON dışa aktarımı indirip buraya ekleyin."
       },
       "StepHeader": {
         "title": "Bir grubu içe aktar",

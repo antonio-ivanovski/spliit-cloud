@@ -357,7 +357,9 @@
         "cloudBundleReadyTitle": "Spliit Cloud 번들 준비 완료",
         "cloudBundleReadyDescription": "검사한 번들을 가져올 준비가 되었습니다. 파일을 다시 선택하지 않고 계속할 수 있습니다.",
         "resumeCloudBundle": "이 번들로 계속",
-        "spliitCloudScopeDescription": "여러 그룹이 포함된 Spliit Cloud 계정 백업 또는 단일 그룹 내보내기를 .spliit.zip 파일에서 가져옵니다."
+        "spliitCloudScopeDescription": "여러 그룹이 포함된 Spliit Cloud 계정 백업 또는 단일 그룹 내보내기를 .spliit.zip 파일에서 가져옵니다.",
+        "legacyExportTitle": "더 새로운 Spliit 내보내기를 사용할 수 있습니다",
+        "legacyExportDescription": "이전 내보내기에서는 Spliit Cloud가 spliit.app에서 문서를 검색해야 합니다. 가장 안정적으로 가져오려면 spliit.app에서 그룹 링크를 복사하거나 새 JSON 내보내기를 다운로드해 여기에 첨부하세요."
       },
       "StepHeader": {
         "title": "그룹 가져오기",

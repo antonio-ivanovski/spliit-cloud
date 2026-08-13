@@ -19,6 +19,16 @@ const MAX_PAGES = 100
 const sourceExpenseInputSchema = z.object({
   sourceCreatedAt: z.iso.datetime().nullable().optional(),
   title: z.string(),
+  sourceDocuments: z
+    .array(
+      z.object({
+        sourceId: z.string().min(1),
+        sourceUrl: z.url(),
+        width: z.number().int().positive(),
+        height: z.number().int().positive(),
+      }),
+    )
+    .optional(),
 })
 
 export type ImportDocumentDiscoveryInput = z.infer<
@@ -214,10 +224,44 @@ export async function discoverSpliitDocuments(args: {
   sessionId: string
   sourceGroupId: string
   expenses: ImportDocumentDiscoveryInput[]
+  exportVersion?: 3 | null
   fetchImpl?: typeof fetch
 }): Promise<ImportDocumentDiscoveryResult> {
   const fetchImpl = args.fetchImpl ?? fetch
   const expenses = z.array(sourceExpenseInputSchema).parse(args.expenses)
+  if (args.exportVersion === 3) {
+    const embedded = expenses.flatMap((expense, expenseIndex) =>
+      (expense.sourceDocuments ?? []).map((document) => ({
+        document,
+        expenseIndex,
+        expenseTitle: expense.title,
+      })),
+    )
+    const documents = await Promise.all(
+      embedded.map(async ({ document, expenseIndex, expenseTitle }) => {
+        const claims: SourceDocumentClaims = {
+          aud: SOURCE_DOCUMENT_AUDIENCE,
+          accountId: args.accountId,
+          sessionId: args.sessionId,
+          sourceGroupId: args.sourceGroupId,
+          expenseIndex,
+          sourceDocumentId: document.sourceId,
+          sourceUrl: document.sourceUrl,
+          width: document.width,
+          height: document.height,
+        }
+        return {
+          expenseIndex,
+          expenseTitle,
+          sourceDocumentId: document.sourceId,
+          width: document.width,
+          height: document.height,
+          token: await sealSourceDocumentClaims(claims),
+        }
+      }),
+    )
+    return { documents, failures: [] }
+  }
   const sourceIndexByCreatedAt = new Map<string, number[]>()
   expenses.forEach((expense, index) => {
     if (!expense.sourceCreatedAt) return

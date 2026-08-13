@@ -44,6 +44,7 @@ import { openStagedDocumentClaims } from '../import-documents'
 import { getPlaceholderEmailDisplayName } from '../invitations/display'
 import {
   buildExpenseActivityData,
+  buildGroupActivityData,
   buildImportSummaryActivityData,
   logActivity,
   planNotificationForActivity,
@@ -115,6 +116,17 @@ export type ImportInput = {
   participants: ImportParticipantMapping[]
   expenses: Expense[]
   sourceMeta?: ImportSourceMeta
+  historicalActivities?: Array<{
+    time: Date
+    activityType:
+      | 'UPDATE_GROUP'
+      | 'CREATE_EXPENSE'
+      | 'UPDATE_EXPENSE'
+      | 'DELETE_EXPENSE'
+    actorParticipantId: string | null
+    expenseIndex: number | null
+    data: string | null
+  }>
   documentImport?: {
     sessionId: string
     stagedTokens: string[]
@@ -797,10 +809,52 @@ export async function importGroup(
           height: document.height,
         })
       }
+      if (input.historicalActivities === undefined) {
+        activityRows.push({
+          ...prepared.activity,
+          ledgerId,
+          data: prepared.activity.data,
+        })
+      }
+    }
+
+    const historicalType = {
+      UPDATE_GROUP: 'GROUP_UPDATED',
+      CREATE_EXPENSE: 'EXPENSE_CREATED',
+      UPDATE_EXPENSE: 'EXPENSE_UPDATED',
+      DELETE_EXPENSE: 'EXPENSE_DELETED',
+    } as const
+    for (const historical of input.historicalActivities ?? []) {
+      const preparedExpense =
+        historical.expenseIndex === null
+          ? null
+          : (preparedExpenses[historical.expenseIndex] ?? null)
+      const actorId = historical.actorParticipantId
+        ? (destIdByClientKey.get(historical.actorParticipantId) ?? null)
+        : null
+      const isGroupActivity = historical.activityType === 'UPDATE_GROUP'
+      const title =
+        historical.data ?? preparedExpense?.expense.title ?? 'Imported expense'
       activityRows.push({
-        ...prepared.activity,
+        id: randomId(),
         ledgerId,
-        data: prepared.activity.data,
+        time: historical.time,
+        type: historicalType[historical.activityType],
+        actorType: actorId ? 'LEDGER_PARTICIPANT' : null,
+        actorId,
+        subjectType: isGroupActivity
+          ? 'GROUP'
+          : preparedExpense
+            ? 'EXPENSE'
+            : null,
+        subjectId: isGroupActivity
+          ? groupId
+          : (preparedExpense?.expenseId ?? null),
+        data: isGroupActivity
+          ? buildGroupActivityData({
+              summary: historical.data ?? undefined,
+            })
+          : buildExpenseActivityData({ summary: title, title }),
       })
     }
 
@@ -894,9 +948,8 @@ export async function importGroup(
       tx.activity.createMany({ data }),
     )
 
-    // Single summary activity for the whole import so the feed shows
-    // "Alice imported N expenses from <provider>" once. Per-expense
-    // EXPENSE_CREATED rows above keep the detailed audit trail.
+    // Single current-time summary for the import. Sources without historical
+    // activity also retain the synthetic per-expense create rows above.
     const summaryActivity = await logActivity(
       groupId,
       {

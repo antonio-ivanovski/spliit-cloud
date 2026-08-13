@@ -134,6 +134,105 @@ describe('importGroup', () => {
     expect('recurrenceSeries' in parsed).toBe(false)
   })
 
+  it('restores source history with mapped actors and expenses without synthetic duplicates', async () => {
+    await authAs('acct-importer')
+    stubGroupWithLedger('dest-grp', 'dest-ledger')
+    prismaMock.ledger.create.mockResolvedValue({
+      id: 'dest-ledger',
+      currency: '€',
+      currencyCode: 'EUR',
+      createdAt: new Date(),
+    } as never)
+    prismaMock.group.create.mockResolvedValue({
+      id: 'dest-grp',
+      name: 'Imported',
+      information: 'Source information',
+      archived: false,
+      createdAt: new Date(),
+      ledgerId: 'dest-ledger',
+    } as never)
+    prismaMock.groupMember.create.mockResolvedValue({
+      id: 'dest-gm',
+      groupId: 'dest-grp',
+      accountId: 'acct-importer',
+      role: 'ADMIN',
+      status: 'ACTIVE',
+    } as never)
+    prismaMock.ledgerParticipant.create.mockResolvedValue({} as never)
+
+    await importGroup(
+      {
+        groupFormValues: {
+          name: 'Imported',
+          information: 'Source information',
+          currency: '€',
+          currencyCode: 'EUR',
+          participants: [{ name: 'Owner' }],
+        },
+        participants: [...baseParticipants],
+        expenses: [baseExpense as never],
+        historicalActivities: [
+          {
+            time: new Date('2025-11-15T01:00:00.000Z'),
+            activityType: 'CREATE_EXPENSE',
+            actorParticipantId: 'dest-lp-1',
+            expenseIndex: 0,
+            data: 'Dures Bari',
+          },
+          {
+            time: new Date('2025-11-16T01:00:00.000Z'),
+            activityType: 'UPDATE_GROUP',
+            actorParticipantId: 'dest-lp-2',
+            expenseIndex: null,
+            data: null,
+          },
+          {
+            time: new Date('2025-11-17T01:00:00.000Z'),
+            activityType: 'DELETE_EXPENSE',
+            actorParticipantId: null,
+            expenseIndex: null,
+            data: 'Deleted receipt',
+          },
+        ],
+      },
+      { accountId: 'acct-importer' },
+    )
+
+    const activityRows = prismaMock.activity.createMany.mock.calls.flatMap(
+      ([args]) => args.data as Array<Record<string, unknown>>,
+    )
+    expect(activityRows).toHaveLength(3)
+    const expenseId = (
+      prismaMock.expense.createMany.mock.calls[0]![0].data as Array<{
+        id: string
+      }>
+    )[0]!.id
+    expect(activityRows[0]).toMatchObject({
+      ledgerId: 'dest-ledger',
+      time: new Date('2025-11-15T01:00:00.000Z'),
+      type: 'EXPENSE_CREATED',
+      actorType: 'LEDGER_PARTICIPANT',
+      actorId: 'dest-lp-1',
+      subjectType: 'EXPENSE',
+      subjectId: expenseId,
+      data: { kind: 'expense', title: 'Dures Bari' },
+    })
+    expect(activityRows[1]).toMatchObject({
+      type: 'GROUP_UPDATED',
+      actorId: 'dest-lp-2',
+      subjectType: 'GROUP',
+      subjectId: 'dest-grp',
+      data: { kind: 'group' },
+    })
+    expect(activityRows[2]).toMatchObject({
+      type: 'EXPENSE_DELETED',
+      actorType: null,
+      subjectType: null,
+      subjectId: null,
+      data: { kind: 'expense', title: 'Deleted receipt' },
+    })
+  })
+
   it('creates a new group when groupFormValues is supplied and the destination id is fresh', async () => {
     await authAs('acct-importer')
     stubGroupWithLedger('dest-grp', 'dest-ledger')

@@ -363,7 +363,9 @@
         "cloudBundleReadyTitle": "Пакетот Spliit Cloud е подготвен",
         "cloudBundleReadyDescription": "Овој проверен пакет е подготвен за увоз. Може да продолжите без повторно да ја избирате датотеката.",
         "resumeCloudBundle": "Продолжи со овој пакет",
-        "spliitCloudScopeDescription": "Увези резервна копија од сметка на Spliit Cloud со повеќе групи или извоз на една група од датотека .spliit.zip."
+        "spliitCloudScopeDescription": "Увези резервна копија од сметка на Spliit Cloud со повеќе групи или извоз на една група од датотека .spliit.zip.",
+        "legacyExportTitle": "Достапен е понов извоз од Spliit",
+        "legacyExportDescription": "Овој постар извоз бара Spliit Cloud да ги пребарува документите на spliit.app. За најсигурен увоз, копирајте ја врската до групата од spliit.app или преземете нов JSON извоз и прикачете го тука."
       },
       "Destination": {
         "heading": "Каде сакате да го увезете <strong>{name}</strong>? ({participantCount} учесници · {expenseCount} трошоци)",

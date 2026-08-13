@@ -353,9 +353,11 @@ export function DocumentsStep({
       const result = await discover.mutateAsync({
         sessionId,
         sourceGroupId: source.sourceGroupId,
+        exportVersion: source.exportVersion,
         expenses: source.expenses.map((expense) => ({
           sourceCreatedAt: expense.sourceCreatedAt,
           title: expense.title,
+          sourceDocuments: expense.sourceDocuments,
         })),
       })
       nextFailures.push(...result.failures)

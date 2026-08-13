@@ -1857,7 +1857,9 @@
         "cloudBundleReadyTitle": "Spliit Cloud بنڈل تیار ہے",
         "cloudBundleReadyDescription": "یہ جانچا ہوا بنڈل درآمد کے لیے تیار ہے۔ فائل دوبارہ منتخب کیے بغیر جاری رکھ سکتے ہیں۔",
         "resumeCloudBundle": "اس بنڈل کے ساتھ جاری رکھیں",
-        "spliitCloudScopeDescription": ".spliit.zip فائل سے متعدد گروپس پر مشتمل Spliit Cloud اکاؤنٹ کا بیک اپ یا ایک گروپ کا ایکسپورٹ درآمد کریں۔"
+        "spliitCloudScopeDescription": ".spliit.zip فائل سے متعدد گروپس پر مشتمل Spliit Cloud اکاؤنٹ کا بیک اپ یا ایک گروپ کا ایکسپورٹ درآمد کریں۔",
+        "legacyExportTitle": "Spliit کا نیا ایکسپورٹ دستیاب ہے",
+        "legacyExportDescription": "اس پرانے ایکسپورٹ میں دستاویزات تلاش کرنے کے لیے Spliit Cloud کو spliit.app پر تلاش کرنا پڑتا ہے۔ زیادہ قابلِ اعتماد امپورٹ کے لیے spliit.app سے گروپ کا لنک کاپی کریں، یا نیا JSON ایکسپورٹ ڈاؤن لوڈ کر کے یہاں منسلک کریں۔"
       },
       "StepHeader": {
         "title": "گروپ درآمد کریں",

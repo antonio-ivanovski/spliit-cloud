@@ -62,6 +62,15 @@ describe('initialWizardState', () => {
 })
 
 describe('initialGroupFormValues', () => {
+  it('preserves exported group information', () => {
+    expect(
+      initialGroupFormValues({
+        ...makeSource([]),
+        information: 'Bring receipts',
+      }).information,
+    ).toBe('Bring receipts')
+  })
+
   it('maps a custom exported ruble symbol to RUB', () => {
     const values = initialGroupFormValues({
       provider: 'SPLIIT',

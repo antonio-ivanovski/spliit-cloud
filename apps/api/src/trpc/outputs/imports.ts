@@ -8,6 +8,7 @@ const normalizedSourceParticipantSchema = z.object({
 })
 
 const normalizedSourceExpenseSchema = z.object({
+  sourceId: z.string().nullable().optional(),
   sourceCreatedAt: z.string().nullable().optional(),
   title: z.string(),
   expenseDate: z.string(),
@@ -26,23 +27,52 @@ const normalizedSourceExpenseSchema = z.object({
   recurrenceRule: z.enum(['NONE', 'DAILY', 'WEEKLY', 'MONTHLY']),
   recurrence: recurrenceConfigSchema.nullable().optional(),
   notes: z.string().nullable(),
+  sourceDocuments: z
+    .array(
+      z.object({
+        sourceId: z.string(),
+        sourceUrl: z.url(),
+        width: z.number().int().positive(),
+        height: z.number().int().positive(),
+      }),
+    )
+    .optional(),
 })
 
 export const normalizedSourceSchema = z.object({
   provider: z.enum(['SPLIIT', 'SPLITWISE']),
+  exportVersion: z.literal(3).nullable().optional(),
   sourceGroupId: z.string(),
   sourceUrl: z.string().nullable(),
   name: z.string(),
+  information: z.string().nullable().optional(),
   currency: z.string(),
   currencyCode: z.string().nullable(),
   participants: z.array(normalizedSourceParticipantSchema),
   expenses: z.array(normalizedSourceExpenseSchema),
+  documentSource: z.enum(['EMBEDDED', 'DISCOVERY', 'NONE']).optional(),
+  activities: z
+    .array(
+      z.object({
+        time: z.iso.datetime(),
+        activityType: z.enum([
+          'UPDATE_GROUP',
+          'CREATE_EXPENSE',
+          'UPDATE_EXPENSE',
+          'DELETE_EXPENSE',
+        ]),
+        participantSourceId: z.string().nullable(),
+        expenseSourceId: z.string().nullable(),
+        data: z.string().nullable(),
+      }),
+    )
+    .optional(),
 })
 
 export const lookupGroupOutputSchema = z.object({
   status: z.literal('IMPORTABLE'),
   sourceProvider: z.literal('SPLIIT'),
-  sourceUrl: z.string().url(),
+  sourceUrl: z.url(),
   sourceGroupId: z.string(),
   source: normalizedSourceSchema,
 })

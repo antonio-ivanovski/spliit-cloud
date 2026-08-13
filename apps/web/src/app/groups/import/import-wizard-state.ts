@@ -121,7 +121,7 @@ export const initialGroupFormValues = (source: NormalizedSource | null) => {
 
   return {
     name: source?.name ?? '',
-    information: '',
+    information: source?.information ?? '',
     currency: sourceCurrency,
     currencyCode,
   }

@@ -474,7 +474,9 @@
         "cloudBundleReadyTitle": "Gói Spliit Cloud đã sẵn sàng",
         "cloudBundleReadyDescription": "Gói đã kiểm tra này sẵn sàng để nhập. Bạn có thể tiếp tục mà không cần chọn lại tệp.",
         "resumeCloudBundle": "Tiếp tục với gói này",
-        "spliitCloudScopeDescription": "Nhập bản sao lưu tài khoản Spliit Cloud có nhiều nhóm hoặc bản xuất của một nhóm từ tệp .spliit.zip."
+        "spliitCloudScopeDescription": "Nhập bản sao lưu tài khoản Spliit Cloud có nhiều nhóm hoặc bản xuất của một nhóm từ tệp .spliit.zip.",
+        "legacyExportTitle": "Đã có bản xuất Spliit mới hơn",
+        "legacyExportDescription": "Bản xuất cũ này yêu cầu Spliit Cloud tìm tài liệu trên spliit.app. Để nhập dữ liệu đáng tin cậy nhất, hãy sao chép liên kết nhóm từ spliit.app hoặc tải xuống bản xuất JSON mới rồi đính kèm tại đây."
       },
       "Destination": {
         "heading": "Bạn muốn nhập <strong>{name}</strong> vào đâu? ({participantCount} người tham gia · {expenseCount} chi phí)",

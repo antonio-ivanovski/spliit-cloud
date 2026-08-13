@@ -1857,7 +1857,9 @@
         "cloudBundleReadyTitle": "Spliit Cloud बंडल तैयार है",
         "cloudBundleReadyDescription": "यह जाँचा गया बंडल आयात के लिए तैयार है। फ़ाइल फिर से चुने बिना आगे बढ़ सकते हैं।",
         "resumeCloudBundle": "इस बंडल के साथ आगे बढ़ें",
-        "spliitCloudScopeDescription": "एकाधिक समूहों वाले Spliit Cloud खाते का बैकअप या किसी एक समूह का एक्सपोर्ट, .spliit.zip फ़ाइल से आयात करें।"
+        "spliitCloudScopeDescription": "एकाधिक समूहों वाले Spliit Cloud खाते का बैकअप या किसी एक समूह का एक्सपोर्ट, .spliit.zip फ़ाइल से आयात करें।",
+        "legacyExportTitle": "Spliit का नया एक्सपोर्ट उपलब्ध है",
+        "legacyExportDescription": "इस पुराने एक्सपोर्ट में दस्तावेज़ खोजने के लिए Spliit Cloud को spliit.app पर खोजना पड़ता है। सबसे भरोसेमंद इम्पोर्ट के लिए spliit.app से ग्रुप का लिंक कॉपी करें या नया JSON एक्सपोर्ट डाउनलोड करके यहाँ संलग्न करें।"
       },
       "StepHeader": {
         "title": "एक समूह आयात करें",

@@ -41,9 +41,11 @@ export function cloudInspectionToSource(
       : undefined
   return {
     provider: 'SPLIIT',
+    exportVersion: null,
     sourceGroupId: manifest.group.sourceId,
     sourceUrl: null,
     name: friendPeer?.displayName ?? manifest.group.name,
+    information: manifest.group.information,
     currency: manifest.group.ledger.currency,
     currencyCode: manifest.group.ledger.currencyCode,
     participants: manifest.participants.map((participant) => ({
@@ -81,6 +83,7 @@ export function cloudInspectionToSource(
         notes: expense.notes,
       }
     }),
+    documentSource: 'NONE',
   }
 }
 

@@ -14,6 +14,44 @@ function trpcResponse(data: unknown) {
 }
 
 describe('discoverSpliitDocuments', () => {
+  it('seals embedded export links without calling the live upstream API', async () => {
+    const fetchMock = vi.fn<typeof fetch>()
+    const result = await discoverSpliitDocuments({
+      accountId: 'account-1',
+      sessionId: '00000000-0000-4000-8000-000000000001',
+      sourceGroupId: 'group-1',
+      exportVersion: 3,
+      expenses: [
+        {
+          title: 'Dinner',
+          sourceDocuments: [
+            {
+              sourceId: 'doc-1',
+              sourceUrl: 'https://receipts.example.com/doc-1.jpg',
+              width: 800,
+              height: 1200,
+            },
+          ],
+        },
+        { title: 'No receipt', sourceDocuments: [] },
+      ],
+      fetchImpl: fetchMock,
+    })
+
+    expect(fetchMock).not.toHaveBeenCalled()
+    expect(result.failures).toEqual([])
+    expect(result.documents).toHaveLength(1)
+    const claims = await openSourceDocumentClaims(result.documents[0].token)
+    expect(claims).toMatchObject({
+      accountId: 'account-1',
+      expenseIndex: 0,
+      sourceDocumentId: 'doc-1',
+      sourceUrl: 'https://receipts.example.com/doc-1.jpg',
+      width: 800,
+      height: 1200,
+    })
+  })
+
   it('matches a live expense by createdAt and seals its document URL', async () => {
     const fetchMock = vi
       .fn<typeof fetch>()

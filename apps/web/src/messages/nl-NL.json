@@ -448,7 +448,9 @@
         "cloudBundleReadyTitle": "Spliit Cloud-bundel klaar",
         "cloudBundleReadyDescription": "Deze gecontroleerde bundel is klaar om te importeren. Je kunt doorgaan zonder het bestand opnieuw te selecteren.",
         "resumeCloudBundle": "Doorgaan met deze bundel",
-        "spliitCloudScopeDescription": "Importeer vanuit een .spliit.zip-bestand een back-up van een Spliit Cloud-account met meerdere groepen of een export van één groep."
+        "spliitCloudScopeDescription": "Importeer vanuit een .spliit.zip-bestand een back-up van een Spliit Cloud-account met meerdere groepen of een export van één groep.",
+        "legacyExportTitle": "Er is een nieuwere Spliit-export beschikbaar",
+        "legacyExportDescription": "Bij deze oudere export moet Spliit Cloud op spliit.app naar documenten zoeken. Kopieer voor de betrouwbaarste import de groepslink van spliit.app, of download een nieuwe JSON-export en voeg die hier toe."
       },
       "StepHeader": {
         "title": "Importeer een groep",

@@ -875,7 +875,9 @@
         "cloudBundleReadyTitle": "حزمة Spliit Cloud جاهزة",
         "cloudBundleReadyDescription": "هذه الحزمة التي فُحصت جاهزة للاستيراد. يمكنك المتابعة دون اختيار الملف مرة أخرى.",
         "resumeCloudBundle": "المتابعة بهذه الحزمة",
-        "spliitCloudScopeDescription": "استورد من ملف ‎.spliit.zip نسخة احتياطية لحساب Spliit Cloud تحتوي على مجموعات متعددة، أو تصدير مجموعة واحدة."
+        "spliitCloudScopeDescription": "استورد من ملف ‎.spliit.zip نسخة احتياطية لحساب Spliit Cloud تحتوي على مجموعات متعددة، أو تصدير مجموعة واحدة.",
+        "legacyExportTitle": "يتوفر تصدير أحدث من Spliit",
+        "legacyExportDescription": "يتطلب هذا التصدير القديم من Spliit Cloud البحث في spliit.app عن المستندات. لضمان استيراد أكثر موثوقية، انسخ رابط المجموعة من spliit.app أو نزّل تصدير JSON جديدًا وأرفقه هنا."
       },
       "Destination": {
         "noAdminGroups": "أنت لا تدير أي مجموعة.",

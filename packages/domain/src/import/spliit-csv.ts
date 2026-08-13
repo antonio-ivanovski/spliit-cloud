@@ -281,13 +281,16 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
     ok: true,
     source: {
       provider: 'SPLIIT',
+      exportVersion: null,
       sourceGroupId: 'csv-import',
       sourceUrl: null,
       name: 'Imported from CSV',
+      information: null,
       currency,
       currencyCode: mostCommonCurrency,
       participants,
       expenses,
+      documentSource: 'NONE',
     },
   }
 }

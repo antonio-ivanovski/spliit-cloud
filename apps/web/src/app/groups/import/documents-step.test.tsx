@@ -65,10 +65,13 @@ const source: NormalizedSource = {
   ],
 }
 
-function renderStep(onContinue = vi.fn()) {
+function renderStep(
+  onContinue = vi.fn(),
+  sourceOverride: NormalizedSource = source,
+) {
   render(
     <DocumentsStep
-      source={source}
+      source={sourceOverride}
       sessionId="00000000-0000-4000-8000-000000000001"
       initialTokens={[]}
       initialRecoveredCount={0}
@@ -125,6 +128,38 @@ describe('DocumentsStep', () => {
         /Spliit Cloud can securely copy receipt images from the original spliit\.app group/i,
       ),
     ).toBeInTheDocument()
+  })
+
+  it('prepares embedded empty document arrays without requesting discovery metadata', async () => {
+    const user = userEvent.setup()
+    const onContinue = vi.fn()
+    mocks.discover.mockResolvedValue({ failures: [], documents: [] })
+    renderStep(onContinue, {
+      ...source,
+      exportVersion: 3,
+      documentSource: 'EMBEDDED',
+      expenses: source.expenses.map((expense) => ({
+        ...expense,
+        sourceDocuments: [],
+      })),
+    })
+
+    await user.click(
+      screen.getByRole('button', { name: /continue to confirm/i }),
+    )
+
+    expect(mocks.discover).toHaveBeenCalledWith(
+      expect.objectContaining({
+        exportVersion: 3,
+        expenses: [expect.objectContaining({ sourceDocuments: [] })],
+      }),
+    )
+    expect(onContinue).toHaveBeenCalledWith({
+      stagedTokens: [],
+      recoveredCount: 0,
+      skippedCount: 0,
+      skippedEntirely: false,
+    })
   })
 
   it('shows partial loss in a dialog and can continue with recovered documents', async () => {

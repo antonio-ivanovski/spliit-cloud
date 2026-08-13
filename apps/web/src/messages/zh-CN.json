@@ -443,7 +443,9 @@
         "cloudBundleReadyTitle": "Spliit Cloud 备份包已准备就绪",
         "cloudBundleReadyDescription": "此备份包已检查完毕，可以导入。无需重新选择文件即可继续。",
         "resumeCloudBundle": "使用此备份包继续",
-        "spliitCloudScopeDescription": "从 .spliit.zip 文件导入包含多个群组的 Spliit Cloud 账户备份，或导入单个群组的导出文件。"
+        "spliitCloudScopeDescription": "从 .spliit.zip 文件导入包含多个群组的 Spliit Cloud 账户备份，或导入单个群组的导出文件。",
+        "legacyExportTitle": "有更新的 Spliit 导出可用",
+        "legacyExportDescription": "此旧版导出需要 Spliit Cloud 在 spliit.app 中搜索文档。为确保导入更可靠，请从 spliit.app 复制群组链接，或下载新的 JSON 导出并在此处附加。"
       },
       "StepHeader": {
         "title": "导入群组",

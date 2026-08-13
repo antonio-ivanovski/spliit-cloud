@@ -1857,7 +1857,9 @@
         "cloudBundleReadyTitle": "Spliit Cloud-paketet är klart",
         "cloudBundleReadyDescription": "Det här granskade paketet är klart att importeras. Du kan fortsätta utan att välja filen igen.",
         "resumeCloudBundle": "Fortsätt med det här paketet",
-        "spliitCloudScopeDescription": "Importera en säkerhetskopia av ett Spliit Cloud-konto med flera grupper, eller en export av en enda grupp, från en .spliit.zip-fil."
+        "spliitCloudScopeDescription": "Importera en säkerhetskopia av ett Spliit Cloud-konto med flera grupper, eller en export av en enda grupp, från en .spliit.zip-fil.",
+        "legacyExportTitle": "En nyare Spliit-export är tillgänglig",
+        "legacyExportDescription": "Den här äldre exporten kräver att Spliit Cloud söker efter dokument på spliit.app. För en så tillförlitlig import som möjligt kan du kopiera grupplänken från spliit.app eller ladda ned en ny JSON-export och bifoga den här."
       },
       "StepHeader": {
         "title": "Importera en grupp",

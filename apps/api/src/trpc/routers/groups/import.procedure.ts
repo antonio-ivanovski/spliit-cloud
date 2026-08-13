@@ -65,6 +65,19 @@ const importSourceMetaSchema = z.object({
   sourceUrl: z.url().optional(),
 })
 
+const historicalActivitySchema = z.object({
+  time: z.coerce.date(),
+  activityType: z.enum([
+    'UPDATE_GROUP',
+    'CREATE_EXPENSE',
+    'UPDATE_EXPENSE',
+    'DELETE_EXPENSE',
+  ]),
+  actorParticipantId: z.string().min(1).nullable(),
+  expenseIndex: z.number().int().nonnegative().nullable(),
+  data: z.string().nullable(),
+})
+
 /**
  * Spliit imports intentionally remain the immutable legacy spliit.app
  * transport. Internal Cloud series metadata is never accepted here; legacy
@@ -116,6 +129,7 @@ export const importGroupProcedure = importProcedure
         participants: z.array(importParticipantMappingSchema).min(1),
         expenses: z.array(importExpenseSchema).min(0).default([]),
         sourceMeta: importSourceMetaSchema.optional(),
+        historicalActivities: z.array(historicalActivitySchema).optional(),
         documentImport: z
           .object({
             sessionId: z.uuid(),
@@ -132,6 +146,9 @@ export const importGroupProcedure = importProcedure
           })
         }
         const seen = new Set<string>()
+        const destinationParticipantIds = new Set(
+          value.participants.map((mapping) => mapping.destLedgerParticipantId),
+        )
         for (const [i, mapping] of value.participants.entries()) {
           const key = mapping.sourceName.toLowerCase()
           if (seen.has(key)) {
@@ -142,6 +159,31 @@ export const importGroupProcedure = importProcedure
             })
           }
           seen.add(key)
+        }
+        for (const [i, activity] of (
+          value.historicalActivities ?? []
+        ).entries()) {
+          if (
+            activity.actorParticipantId &&
+            !destinationParticipantIds.has(activity.actorParticipantId)
+          ) {
+            ctx.addIssue({
+              code: 'custom',
+              message:
+                'Historical activity actor is not an imported participant',
+              path: ['historicalActivities', i, 'actorParticipantId'],
+            })
+          }
+          if (
+            activity.expenseIndex !== null &&
+            activity.expenseIndex >= value.expenses.length
+          ) {
+            ctx.addIssue({
+              code: 'custom',
+              message: 'Historical activity references an unknown expense',
+              path: ['historicalActivities', i, 'expenseIndex'],
+            })
+          }
         }
       }),
   )

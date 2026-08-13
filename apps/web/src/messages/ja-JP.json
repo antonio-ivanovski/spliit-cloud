@@ -443,7 +443,9 @@
         "cloudBundleReadyTitle": "Spliit Cloud バンドルの準備完了",
         "cloudBundleReadyDescription": "検査済みのこのバンドルはインポートできます。ファイルを再選択せずに続行できます。",
         "resumeCloudBundle": "このバンドルで続行",
-        "spliitCloudScopeDescription": ".spliit.zipファイルから、複数のグループを含むSpliit Cloudアカウントのバックアップ、または1つのグループのエクスポートをインポートします。"
+        "spliitCloudScopeDescription": ".spliit.zipファイルから、複数のグループを含むSpliit Cloudアカウントのバックアップ、または1つのグループのエクスポートをインポートします。",
+        "legacyExportTitle": "新しいSpliitエクスポートを利用できます",
+        "legacyExportDescription": "この古いエクスポートでは、Spliit Cloudがspliit.app上のドキュメントを検索する必要があります。より確実にインポートするには、spliit.appからグループのリンクをコピーするか、新しいJSONエクスポートをダウンロードしてここに添付してください。"
       },
       "StepHeader": {
         "title": "グループをインポート",

@@ -458,7 +458,9 @@
         "cloudBundleReadyTitle": "Balíček Spliit Cloud je připraven",
         "cloudBundleReadyDescription": "Tento zkontrolovaný balíček je připraven k importu. Můžete pokračovat, aniž byste soubor znovu vybírali.",
         "resumeCloudBundle": "Pokračovat s tímto balíčkem",
-        "spliitCloudScopeDescription": "Importujte ze souboru .spliit.zip zálohu účtu Spliit Cloud obsahující více skupin nebo export jedné skupiny."
+        "spliitCloudScopeDescription": "Importujte ze souboru .spliit.zip zálohu účtu Spliit Cloud obsahující více skupin nebo export jedné skupiny.",
+        "legacyExportTitle": "Je k dispozici novější export ze Spliitu",
+        "legacyExportDescription": "Tento starší export vyžaduje, aby Spliit Cloud hledal dokumenty na spliit.app. Pro co nejspolehlivější import zkopírujte odkaz na skupinu ze spliit.app nebo stáhněte nový export JSON a přiložte ho sem."
       },
       "StepHeader": {
         "title": "Importovat skupinu",

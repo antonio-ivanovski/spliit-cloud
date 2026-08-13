@@ -443,7 +443,9 @@
         "cloudBundleReadyTitle": "Bundel Spliit Cloud siap",
         "cloudBundleReadyDescription": "Bundel yang telah diperiksa ini siap diimpor. Anda dapat melanjutkan tanpa memilih file lagi.",
         "resumeCloudBundle": "Lanjutkan dengan bundel ini",
-        "spliitCloudScopeDescription": "Impor cadangan akun Spliit Cloud yang berisi beberapa grup, atau ekspor satu grup, dari file .spliit.zip."
+        "spliitCloudScopeDescription": "Impor cadangan akun Spliit Cloud yang berisi beberapa grup, atau ekspor satu grup, dari file .spliit.zip.",
+        "legacyExportTitle": "Ekspor Spliit yang lebih baru tersedia",
+        "legacyExportDescription": "Ekspor lama ini mengharuskan Spliit Cloud mencari dokumen di spliit.app. Agar impor lebih andal, salin tautan grup dari spliit.app atau unduh ekspor JSON baru lalu lampirkan di sini."
       },
       "StepHeader": {
         "title": "Impor grup",

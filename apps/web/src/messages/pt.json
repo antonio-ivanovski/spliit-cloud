@@ -453,7 +453,9 @@
         "cloudBundleReadyTitle": "Pacote Spliit Cloud pronto",
         "cloudBundleReadyDescription": "Este pacote inspecionado está pronto para importar. Pode continuar sem selecionar o ficheiro novamente.",
         "resumeCloudBundle": "Continuar com este pacote",
-        "spliitCloudScopeDescription": "Importe, a partir de um ficheiro .spliit.zip, uma cópia de segurança de uma conta Spliit Cloud com vários grupos ou a exportação de um único grupo."
+        "spliitCloudScopeDescription": "Importe, a partir de um ficheiro .spliit.zip, uma cópia de segurança de uma conta Spliit Cloud com vários grupos ou a exportação de um único grupo.",
+        "legacyExportTitle": "Está disponível uma exportação mais recente do Spliit",
+        "legacyExportDescription": "Esta exportação antiga obriga o Spliit Cloud a procurar documentos no spliit.app. Para uma importação mais fiável, copie a ligação do grupo no spliit.app ou descarregue uma nova exportação JSON e anexe-a aqui."
       },
       "StepHeader": {
         "title": "Importar um grupo",

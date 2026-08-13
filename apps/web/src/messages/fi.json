@@ -448,7 +448,9 @@
         "cloudBundleReadyTitle": "Spliit Cloud -paketti valmis",
         "cloudBundleReadyDescription": "Tämä tarkistettu paketti on valmis tuotavaksi. Voit jatkaa valitsematta tiedostoa uudelleen.",
         "resumeCloudBundle": "Jatka tällä paketilla",
-        "spliitCloudScopeDescription": "Tuo .spliit.zip-tiedostosta Spliit Cloud -tilin varmuuskopio, joka sisältää useita ryhmiä, tai yhden ryhmän vienti."
+        "spliitCloudScopeDescription": "Tuo .spliit.zip-tiedostosta Spliit Cloud -tilin varmuuskopio, joka sisältää useita ryhmiä, tai yhden ryhmän vienti.",
+        "legacyExportTitle": "Uudempi Spliit-vienti on saatavilla",
+        "legacyExportDescription": "Tämä vanhempi vienti edellyttää, että Spliit Cloud etsii asiakirjoja spliit.app-palvelusta. Luotettavimman tuonnin saat kopioimalla ryhmän linkin spliit.app-palvelusta tai lataamalla uuden JSON-viennin ja liittämällä sen tähän."
       },
       "StepHeader": {
         "title": "Tuo ryhmä",

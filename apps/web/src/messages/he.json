@@ -453,7 +453,9 @@
         "cloudBundleReadyTitle": "חבילת Spliit Cloud מוכנה",
         "cloudBundleReadyDescription": "החבילה שנבדקה מוכנה לייבוא. אפשר להמשיך בלי לבחור את הקובץ שוב.",
         "resumeCloudBundle": "המשך עם חבילה זו",
-        "spliitCloudScopeDescription": "ייבא מקובץ ‎.spliit.zip גיבוי של חשבון Spliit Cloud שמכיל כמה קבוצות, או ייצוא של קבוצה יחידה."
+        "spliitCloudScopeDescription": "ייבא מקובץ ‎.spliit.zip גיבוי של חשבון Spliit Cloud שמכיל כמה קבוצות, או ייצוא של קבוצה יחידה.",
+        "legacyExportTitle": "זמין ייצוא חדש יותר של Spliit",
+        "legacyExportDescription": "הייצוא הישן הזה מחייב את Spliit Cloud לחפש מסמכים ב-spliit.app. לייבוא האמין ביותר, העתיקו את קישור הקבוצה מ-spliit.app או הורידו ייצוא JSON חדש וצרפו אותו כאן."
       },
       "StepHeader": {
         "title": "ייבא קבוצה",

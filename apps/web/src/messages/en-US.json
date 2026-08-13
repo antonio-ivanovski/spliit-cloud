@@ -474,7 +474,9 @@
         "cloudBundleReadyTitle": "Spliit Cloud bundle ready",
         "cloudBundleReadyDescription": "This inspected bundle is ready to import. You can continue without selecting the file again.",
         "resumeCloudBundle": "Continue with this bundle",
-        "spliitCloudScopeDescription": "Import a Spliit Cloud account backup containing multiple groups, or a single group export, from a .spliit.zip file."
+        "spliitCloudScopeDescription": "Import a Spliit Cloud account backup containing multiple groups, or a single group export, from a .spliit.zip file.",
+        "legacyExportTitle": "A newer Spliit export is available",
+        "legacyExportDescription": "This older export requires Spliit Cloud to search spliit.app for documents. For the most reliable import, copy the group link from spliit.app or download a new JSON export and attach it here."
       },
       "Destination": {
         "heading": "Where would you like to import <strong>{name}</strong>? ({participantCount} participants · {expenseCount} expenses)",

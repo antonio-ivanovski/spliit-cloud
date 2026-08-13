@@ -8,10 +8,21 @@ export const discoverImportDocumentsProcedure = protectedProcedure
     z.object({
       sessionId: z.uuid(),
       sourceGroupId: z.string().min(1),
+      exportVersion: z.literal(3).nullable().optional(),
       expenses: z.array(
         z.object({
           sourceCreatedAt: z.iso.datetime().nullable().optional(),
           title: z.string().min(1),
+          sourceDocuments: z
+            .array(
+              z.object({
+                sourceId: z.string().min(1),
+                sourceUrl: z.url(),
+                width: z.number().int().positive(),
+                height: z.number().int().positive(),
+              }),
+            )
+            .optional(),
         }),
       ),
     }),
@@ -43,5 +54,6 @@ export const discoverImportDocumentsProcedure = protectedProcedure
       sessionId: input.sessionId,
       sourceGroupId: input.sourceGroupId,
       expenses: input.expenses,
+      exportVersion: input.exportVersion,
     }),
   )

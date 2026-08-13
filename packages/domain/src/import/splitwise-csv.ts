@@ -257,13 +257,16 @@ export function tryParseSplitwiseCsv(input: string): ImportParseResult {
     ok: true,
     source: {
       provider: 'SPLITWISE',
+      exportVersion: null,
       sourceGroupId: 'splitwise-csv-import',
       sourceUrl: null,
       name: 'Imported from Splitwise',
+      information: null,
       currency: mostCommonCurrency || '',
       currencyCode: mostCommonCurrency || null,
       participants,
       expenses,
+      documentSource: 'NONE',
     },
   }
 }

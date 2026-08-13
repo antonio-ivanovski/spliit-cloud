@@ -58,6 +58,7 @@ import {
   isDocumentImportFailure,
   shouldDiscardStagedDocumentTokens,
 } from './import-wizard-state'
+import { LegacyExportWarning } from './legacy-export-warning'
 import { MappingStep } from './mapping-step'
 import { SourceStep } from './source-step'
 import { useImportSource } from './use-import-source'
@@ -587,6 +588,22 @@ export function ImportGroupWizard() {
         state.rates ?? undefined,
       )
       const expenses = buildImportExpenses(batch.expenses)
+      const sourceExpenseIndex = new Map(
+        state.source.expenses.flatMap((expense, index) =>
+          expense.sourceId ? [[expense.sourceId, index] as const] : [],
+        ),
+      )
+      const historicalActivities = state.source.activities?.map((activity) => ({
+        time: new Date(activity.time),
+        activityType: activity.activityType,
+        actorParticipantId: activity.participantSourceId
+          ? (state.sourceIdToDestId[activity.participantSourceId] ?? null)
+          : null,
+        expenseIndex: activity.expenseSourceId
+          ? (sourceExpenseIndex.get(activity.expenseSourceId) ?? null)
+          : null,
+        data: activity.data,
+      }))
       await importAttempt.run((requestId) =>
         importGroup({
           ...batch,
@@ -594,6 +611,7 @@ export function ImportGroupWizard() {
             'groupFormValues' in batch ? batch.groupFormValues : undefined,
           expenses,
           sourceMeta,
+          historicalActivities,
           documentImport:
             state.stagedDocumentTokens.length > 0
               ? {
@@ -951,6 +969,9 @@ export function ImportGroupWizard() {
 
       {state.step === 'destination' && state.source && (
         <>
+          {state.sourceKind === 'LEGACY' && (
+            <LegacyExportWarning source={state.source} />
+          )}
           {state.sourceKind === 'CLOUD' &&
             state.cloudInspection?.manifest.complete === false && (
               <Alert>

@@ -54,6 +54,127 @@ const validExport = {
 }
 
 describe('parseSpliitExport', () => {
+  it('parses export v3 information, embedded documents, and history', () => {
+    const result = parseSpliitExport({
+      ...validExport,
+      exportVersion: 3,
+      information: 'Bring receipts',
+      expenses: [
+        {
+          ...validExport.expenses[0],
+          id: 'expense-1',
+          notes: 'Paid at the counter',
+          documents: [
+            {
+              id: 'document-1',
+              url: 'https://uploads.example.com/receipt.jpg',
+              width: 1200,
+              height: 900,
+            },
+          ],
+        },
+      ],
+      activities: [
+        {
+          id: 'activity-1',
+          time: '2025-11-15T01:00:00.000Z',
+          activityType: 'CREATE_EXPENSE',
+          participantId: 'p-1',
+          expenseId: 'expense-1',
+          data: 'Dures Bari',
+        },
+        {
+          id: 'activity-2',
+          time: '2025-11-16T01:00:00.000Z',
+          activityType: 'DELETE_EXPENSE',
+          participantId: 'deleted-participant',
+          expenseId: 'deleted-expense',
+          data: 'Old receipt',
+        },
+      ],
+    })
+
+    expect(result.information).toBe('Bring receipts')
+    expect(result.exportVersion).toBe(3)
+    expect(result.documentSource).toBe('EMBEDDED')
+    expect(result.expenses[0]).toMatchObject({
+      sourceId: 'expense-1',
+      notes: 'Paid at the counter',
+      sourceDocuments: [
+        {
+          sourceId: 'document-1',
+          sourceUrl: 'https://uploads.example.com/receipt.jpg',
+          width: 1200,
+          height: 900,
+        },
+      ],
+    })
+    expect(result.activities).toEqual([
+      {
+        time: '2025-11-15T01:00:00.000Z',
+        activityType: 'CREATE_EXPENSE',
+        participantSourceId: 'spliit-participant-0',
+        expenseSourceId: 'expense-1',
+        data: 'Dures Bari',
+      },
+      {
+        time: '2025-11-16T01:00:00.000Z',
+        activityType: 'DELETE_EXPENSE',
+        participantSourceId: null,
+        expenseSourceId: 'deleted-expense',
+        data: 'Old receipt',
+      },
+    ])
+  })
+
+  it('treats embedded empty document arrays as authoritative', () => {
+    const result = parseSpliitExport({
+      ...validExport,
+      exportVersion: 3,
+      expenses: validExport.expenses.map((expense) => ({
+        ...expense,
+        notes: null,
+        documents: [],
+      })),
+    })
+    expect(result.documentSource).toBe('EMBEDDED')
+    expect(result.expenses.every((expense) => expense.sourceDocuments)).toBe(
+      true,
+    )
+  })
+
+  it('accepts the unversioned notes-and-history export before v3', () => {
+    const result = parseSpliitExport({
+      ...validExport,
+      information: 'Unversioned information',
+      activities: [],
+    })
+    expect(result.information).toBe('Unversioned information')
+    expect(result.exportVersion).toBeNull()
+    expect(result.activities).toEqual([])
+    expect(result.documentSource).toBe('DISCOVERY')
+  })
+
+  it('does not infer embedded document support for an unversioned export', () => {
+    const result = parseSpliitExport({
+      ...validExport,
+      expenses: validExport.expenses.map((expense) => ({
+        ...expense,
+        documents: [],
+      })),
+    })
+    expect(result.exportVersion).toBeNull()
+    expect(result.documentSource).toBe('DISCOVERY')
+    expect(result.expenses[0].sourceDocuments).toBeUndefined()
+  })
+
+  it('rejects unknown explicit export versions', () => {
+    expect(tryParseSpliitExport({ ...validExport, exportVersion: 4 })).toEqual({
+      ok: false,
+      error: 'This file is not a supported spliit.app JSON export.',
+    })
+  })
+
   it('maps legacy recurrence rules to an interval-one indefinite config', () => {
     const result = parseSpliitExport({
       ...validExport,

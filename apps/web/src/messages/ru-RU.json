@@ -458,7 +458,9 @@
         "cloudBundleReadyTitle": "Пакет Spliit Cloud готов",
         "cloudBundleReadyDescription": "Этот проверенный пакет готов к импорту. Можно продолжить, не выбирая файл снова.",
         "resumeCloudBundle": "Продолжить с этим пакетом",
-        "spliitCloudScopeDescription": "Импортируйте из файла .spliit.zip резервную копию аккаунта Spliit Cloud с несколькими группами или экспорт одной группы."
+        "spliitCloudScopeDescription": "Импортируйте из файла .spliit.zip резервную копию аккаунта Spliit Cloud с несколькими группами или экспорт одной группы.",
+        "legacyExportTitle": "Доступен более новый экспорт Spliit",
+        "legacyExportDescription": "Для этого старого экспорта Spliit Cloud приходится искать документы на spliit.app. Чтобы импорт был максимально надёжным, скопируйте ссылку на группу из spliit.app или скачайте новый экспорт JSON и прикрепите его здесь."
       },
       "StepHeader": {
         "title": "Импортировать группу",

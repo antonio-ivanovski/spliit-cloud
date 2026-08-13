@@ -453,7 +453,9 @@
         "cloudBundleReadyTitle": "Spliit Cloud sorta prest",
         "cloudBundleReadyDescription": "Ikuskatutako sorta hau inportatzeko prest dago. Aurrera egin dezakezu fitxategia berriro hautatu gabe.",
         "resumeCloudBundle": "Jarraitu sorta honekin",
-        "spliitCloudScopeDescription": "Inportatu hainbat talde dituen Spliit Cloud kontu baten segurtasun-kopia, edo talde bakar baten esportazioa, .spliit.zip fitxategi batetik."
+        "spliitCloudScopeDescription": "Inportatu hainbat talde dituen Spliit Cloud kontu baten segurtasun-kopia, edo talde bakar baten esportazioa, .spliit.zip fitxategi batetik.",
+        "legacyExportTitle": "Spliit-en esportazio berriago bat dago erabilgarri",
+        "legacyExportDescription": "Esportazio zahar honekin, Spliit Cloud-ek dokumentuak spliit.app-en bilatu behar ditu. Inportazio fidagarriena lortzeko, kopiatu taldearen esteka spliit.app-etik edo deskargatu JSON esportazio berri bat eta erantsi hemen."
       },
       "StepHeader": {
         "title": "Talde bat inportatu",
