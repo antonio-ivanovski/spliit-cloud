@@ -51,13 +51,13 @@ Each roadmap item also references the upstream [`spliit-app/spliit`](https://git
 ### Headline features (the moat)
 
 - [ ] **End-to-end encrypted groups and expenses** — per-group passphrase protecting group, participant, and expense data with a client-side derivation layer. The single biggest open-source expense-splitter differentiator and a real answer to upstream **[#34](https://github.com/spliit-app/spliit/issues/34)** (open since 2024, never touched).
-- [x] **Published OpenAPI spec and Scalar reference** — generated API documentation is available at [api.spliit.cloud/docs](https://api.spliit.cloud/docs) with the [OpenAPI document](https://api.spliit.cloud/openapi.json). Stable per-user API tokens and MCP support remain planned. Addresses upstream **[#117](https://github.com/spliit-app/spliit/issues/117)**.
+- [x] **Published OpenAPI spec, Scalar reference, and MCP assistant** — generated API documentation is available at [api.spliit.cloud/docs](https://api.spliit.cloud/docs) with the [OpenAPI document](https://api.spliit.cloud/openapi.json). An optional MCP app can create expenses from ChatGPT and Claude. Stable per-user API tokens remain planned. Addresses upstream **[#117](https://github.com/spliit-app/spliit/issues/117)**.
 - [ ] **Better offline support** — improve the existing PWA; read-only cache first, then a write queue. Addresses upstream [#79](https://github.com/spliit-app/spliit/issues/79).
 - [x] Test coverage for critical flows
 
 ### Privacy-respecting AI
 
-- [ ] **Bring-your-own AI for receipt scanning & category** — make the OpenAI client OpenAI-compatible and expose `OPENAI_BASE_URL`, `OPENAI_MODEL`, and `OPENAI_API_KEY` env vars. Unlocks Ollama, LM Studio, OpenRouter, and any other OpenAI-shaped endpoint for self-hosters. Addresses upstream [#309](https://github.com/spliit-app/spliit/issues/309), [#378](https://github.com/spliit-app/spliit/issues/378), [#379](https://github.com/spliit-app/spliit/issues/379), PR [#166](https://github.com/spliit-app/spliit/pull/166), and supersedes the deprecated default model in [#517](https://github.com/spliit-app/spliit/issues/517) (PR [#522](https://github.com/spliit-app/spliit/pull/522)).
+- [x] **Configurable instance AI providers** — OpenAI, Anthropic, Google, and OpenAI-compatible endpoints via `AI_PROVIDER` / `AI_BASE_URL` for self-hosters (Ollama, LM Studio, OpenRouter, and similar). Addresses upstream [#309](https://github.com/spliit-app/spliit/issues/309), [#378](https://github.com/spliit-app/spliit/issues/378), [#379](https://github.com/spliit-app/spliit/issues/379), PR [#166](https://github.com/spliit-app/spliit/pull/166), and supersedes the deprecated default model in [#517](https://github.com/spliit-app/spliit/issues/517) (PR [#522](https://github.com/spliit-app/spliit/pull/522)). Per-participant bring-your-own AI remains in Phase 5.
 
 ### Trust-building bug sweep
 
@@ -71,7 +71,7 @@ These are upstream issues that affect every user of Spliit Cloud too. Each one i
 - [x] **Exchange rate API redirect strips CORS** — upstream [#514](https://github.com/spliit-app/spliit/issues/514), fix PR [#515](https://github.com/spliit-app/spliit/pull/515)
 - [ ] **Keyboard navigation broken in category / currency selectors** — upstream [#491](https://github.com/spliit-app/spliit/pull/491)
 - [ ] **CSV export 500 on group names with umlauts** — upstream [#458](https://github.com/spliit-app/spliit/issues/458), fix PR [#377](https://github.com/spliit-app/spliit/pull/377)
-- [ ] **Postgres volume mount in modern images** — upstream [#463](https://github.com/spliit-app/spliit/issues/463), fix PR [#464](https://github.com/spliit-app/spliit/pull/464)
+- [x] **Postgres volume mount in modern images** — Compose mounts `/var/lib/postgresql` for PostgreSQL 18. Addresses upstream [#463](https://github.com/spliit-app/spliit/issues/463), fix PR [#464](https://github.com/spliit-app/spliit/pull/464)
 
 ## Phase 5: Account customization & settings — planned
 
@@ -80,7 +80,7 @@ These are upstream issues that affect every user of Spliit Cloud too. Each one i
 - [x] **Profile photos** — upload and manage profile avatars, displayed across account, group, and expense contexts
 - [x] **Account preferences** — default currency, timezone, app language, and light/dark/system theme persisted per account and synced across devices
 - [x] **Group timezone** — new ledgers inherit the creator's account timezone, remain independently configurable, and materialize recurring expenses on the group's local date
-- [ ] **Bring-your-own AI key (per-user)** — per-user API key configuration for receipt scanning and category extraction, allowing users to bring their own OpenAI-compatible endpoint and model. Complements the server-level BYOK from Phase 4.
+- [ ] **Bring-your-own AI (per participant)** — each account holder can plug in their own API key and OpenAI-compatible endpoint for receipt scanning and category extraction, instead of depending on the instance default. Complements the instance-level providers from Phase 4.
 - [x] **Settings sync across devices** — account currency, timezone, language, and theme preferences are stored server-side and synced across sessions. Builds on the account system from Phase 1.
 
 ## Cross-cutting
@@ -89,12 +89,13 @@ These are upstream issues that affect every user of Spliit Cloud too. Each one i
 - **Migrations & imports** — every frustrated Splitwise / Tricount user is a potential customer
   - [ ] Tricount import — PR [#526](https://github.com/spliit-app/spliit/pull/526)
   - [x] Splitwise (CSV) import — upstream [#22](https://github.com/spliit-app/spliit/issues/22), PR [#483](https://github.com/spliit-app/spliit/pull/483)
+  - [x] Spliit Cloud bundle import and export — group, account, and friend-ledger ZIP round-trip, including documents, plus CSV and printable PDF reports
 - **Self-hosting polish** — turn the README's "self-hosting is supported" into "self-hosting is easy"
   - [ ] Docker Hub published image (CI on tag) — upstream [#60](https://github.com/spliit-app/spliit/issues/60)
   - [ ] `basePath` support for reverse-proxy subpath hosting — upstream [#444](https://github.com/spliit-app/spliit/issues/444)
-  - [ ] Default currency env var for self-hosters — upstream [#510](https://github.com/spliit-app/spliit/issues/510)
+  - [x] Default currency env var for self-hosters — `PUBLIC_DEFAULT_CURRENCY_CODE`. Addresses upstream [#510](https://github.com/spliit-app/spliit/issues/510)
   - [ ] Simple PIN-protected group access — upstream [#373](https://github.com/spliit-app/spliit/issues/373)
-  - [ ] `npm`-free Docker image — PR [#219](https://github.com/spliit-app/spliit/pull/219)
+  - [x] Bun-based Docker images (no npm in the image) — PR [#219](https://github.com/spliit-app/spliit/pull/219)
 - **Currencies**
   - [ ] Support currencies not in the Frankfurter API (BYO rate or alternate source) — upstream [#449](https://github.com/spliit-app/spliit/issues/449)
   - [x] Currency framework to absorb the steady stream of "add NPR / MOP / VND / COP / MYR / MKD" PRs — supersedes [#418](https://github.com/spliit-app/spliit/issues/418), [#431](https://github.com/spliit-app/spliit/issues/431), [#438](https://github.com/spliit-app/spliit/issues/438)
@@ -106,7 +107,7 @@ These are upstream issues that affect every user of Spliit Cloud too. Each one i
 - **Analytics** — turn Spliit from "log splitter" into "money insights"
   - [x] Pie chart by category — PR [#163](https://github.com/spliit-app/spliit/pull/163)
   - [x] Monthly category visuals — PR [#532](https://github.com/spliit-app/spliit/pull/532)
-  - [ ] Cross-group balance roll-up — upstream [#509](https://github.com/spliit-app/spliit/issues/509)
+  - [x] Cross-group balance roll-up — covered by the account overview homepage. Addresses upstream [#509](https://github.com/spliit-app/spliit/issues/509)
 - Bundle-size reduction (main chunk from ~1500 kB to ~750 kB)
 - TypeScript and tooling upgrades
 - [x] Complete locale translations and automated i18n auditing
@@ -115,7 +116,7 @@ These are upstream issues that affect every user of Spliit Cloud too. Each one i
 
 The items above are a mix of:
 
-- shipped work in this repo (recurring expenses, notification preferences, direct expenses, OpenAPI/Scalar, settlements, localization, and server-authoritative currency);
+- shipped work in this repo (recurring expenses, notification preferences, friend ledgers, subgroups, OpenAPI/Scalar/MCP, import and export, settlements, localization, and server-authoritative currency);
 - features the upstream community has been asking for, with linked issues so anyone can verify the demand and history.
 
 When picking up an item with an upstream link, the first step is to review the upstream PR (if any) for prior art and credit the author; if a clean port is feasible on this stack it can land quickly.
