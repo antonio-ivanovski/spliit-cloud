@@ -1,13 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { ArrowLeft, Calculator } from 'lucide-react'
-import {
-  useEffect,
-  useRef,
-  useState,
-  type Dispatch,
-  type SetStateAction,
-} from 'react'
-import { useFormState, useWatch, type UseFormReturn } from 'react-hook-form'
+import { useState, type Dispatch, type SetStateAction } from 'react'
+import { useWatch, type UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { CategorySelector } from '@/components/category-selector'
@@ -52,7 +46,7 @@ import type {
   ExpenseFormInputValues,
   ExpenseFormItemValues,
 } from '@spliit/domain'
-import { DEFAULT_CATEGORIES, DEFAULT_CATEGORY_ID } from '@spliit/domain'
+import { DEFAULT_CATEGORIES } from '@spliit/domain'
 import {
   formatCalculatorAmount,
   type CalculatorItem,
@@ -79,6 +73,7 @@ import {
 import { ExpenseDateTimeField } from './expense-date-time-field'
 import { expenseTabPriority } from './focus-navigation'
 import { RecurrenceSection } from './recurrence-section'
+import { useSuggestCategoryFromTitle } from './use-suggest-category-from-title'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
 
@@ -100,8 +95,8 @@ export function BasicDetailsCard(props: {
   cancelLink?: ExpenseCancelLink
   /** Link-invite token carried in the URL for pending invitees. */
   linkInviteToken?: string
-  extractCategoryMutation: ReturnType<
-    typeof trpc.ai.extractCategoryFromTitle.useMutation
+  suggestCategoryMutation: ReturnType<
+    typeof trpc.groups.expenses.suggestCategory.useMutation
   >
   runtimeFeatureFlags: RuntimeFeatureFlags
   originalCurrency: Currency
@@ -157,29 +152,15 @@ export function BasicDetailsCard(props: {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const locale = useLocale() as Locale
-  const [isCategoryLoading, setCategoryLoading] = useState(false)
-  const categoryRequestRef = useRef(0)
-  const categoryAbortRef = useRef<AbortController | null>(null)
-  const categorySourceRef = useRef<'default' | 'manual' | 'ai'>(
-    form.getValues('category') === DEFAULT_CATEGORY_ID ? 'default' : 'manual',
-  )
-  const lastCategorizedTitleRef = useRef<string | null>(null)
-  // Abort any in-flight categorization when the form goes away (submit
-  // navigates us off this route). Saving the expense must never have to
-  // wait for a pending AI suggestion to resolve.
-  useEffect(() => {
-    return () => {
-      categoryAbortRef.current?.abort()
-    }
-  }, [])
-  // Also abort the moment the user submits — even before the form
-  // unmounts, any late AI response would try to setValue on a form
-  // that's about to navigate away.
-  const { isSubmitting } = useFormState()
-  useEffect(() => {
-    if (!isSubmitting) return
-    categoryAbortRef.current?.abort()
-  }, [isSubmitting])
+  const { isCategoryLoading, onManualCategory } = useSuggestCategoryFromTitle({
+    form,
+    groupId: group.id,
+    locale,
+    readOnly,
+    enableCategoryExtract: props.runtimeFeatureFlags.enableCategoryExtract,
+    linkInviteToken: props.linkInviteToken,
+    suggestCategoryMutation: props.suggestCategoryMutation,
+  })
   const [calculatorOpen, setCalculatorOpen] = useState(false)
   const [calculatorExpression, setCalculatorExpression] = useState<
     string | null
@@ -311,17 +292,15 @@ export function BasicDetailsCard(props: {
                       defaultValue={categoryField.value}
                       compact
                       onValueChange={(categoryId) => {
-                        // User picked a category — cancel any pending AI
-                        // suggestion rather than letting it clobber this
-                        // choice a moment later.
-                        categoryRequestRef.current += 1
-                        categoryAbortRef.current?.abort()
-                        categorySourceRef.current = 'manual'
-                        setCategoryLoading(false)
-                        props.extractCategoryMutation.reset?.()
+                        onManualCategory()
                         categoryField.onChange(categoryId)
                       }}
                       isLoading={isCategoryLoading}
+                      loadingAppearance={
+                        props.runtimeFeatureFlags.enableCategoryExtract
+                          ? 'ai'
+                          : 'spinner'
+                      }
                       disabled={readOnly}
                     />
                   )}
@@ -334,64 +313,6 @@ export function BasicDetailsCard(props: {
                       className="h-10 w-full rounded-none border-0 text-base shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
                       disabled={readOnly}
                       {...field}
-                      onBlur={() => {
-                        field.onBlur()
-                        const title = field.value.trim()
-                        const canSuggest =
-                          !readOnly &&
-                          props.runtimeFeatureFlags.enableCategoryExtract &&
-                          title.length > 0 &&
-                          (categorySourceRef.current === 'default' ||
-                            categorySourceRef.current === 'ai') &&
-                          lastCategorizedTitleRef.current !== title
-
-                        if (!canSuggest) return
-
-                        const requestId = ++categoryRequestRef.current
-                        categoryAbortRef.current?.abort()
-                        const abortController = new AbortController()
-                        categoryAbortRef.current = abortController
-                        setCategoryLoading(true)
-
-                        // Suppress the result if the AI categorization has
-                        // been cancelled (form submitted, user picked a
-                        // category manually, or component unmounted). Save
-                        // therefore never blocks on the categorizer.
-                        void props.extractCategoryMutation
-                          .mutateAsync({
-                            description: title,
-                            groupId: group.id,
-                            locale,
-                            linkInviteToken: props.linkInviteToken,
-                          })
-                          .then(({ categoryId }) => {
-                            if (
-                              requestId !== categoryRequestRef.current ||
-                              abortController.signal.aborted ||
-                              form.getValues('title').trim() !== title ||
-                              (categorySourceRef.current !== 'default' &&
-                                categorySourceRef.current !== 'ai')
-                            ) {
-                              return
-                            }
-
-                            lastCategorizedTitleRef.current = title
-                            categorySourceRef.current = 'ai'
-                            form.setValue('category', categoryId, {
-                              shouldDirty: true,
-                              shouldTouch: true,
-                              shouldValidate: true,
-                            })
-                          })
-                          .catch(() => {
-                            if (abortController.signal.aborted) return
-                          })
-                          .finally(() => {
-                            if (requestId === categoryRequestRef.current) {
-                              setCategoryLoading(false)
-                            }
-                          })
-                      }}
                     />
                   </FormControl>
                 </div>

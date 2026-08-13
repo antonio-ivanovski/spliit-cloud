@@ -570,6 +570,7 @@ function GlobalExpensePreview({
 
 function GlobalExpensesContent() {
   const { t } = useTranslation()
+  const locale = useLocale()
   const navigate = useNavigate({ from: '/expenses' })
   const search = routeApi.useSearch()
   const selectedExpenseId = search.expenseId
@@ -616,6 +617,7 @@ function GlobalExpensesContent() {
     return {
       limit: 20,
       query: debouncedSearch || undefined,
+      locale,
       groupIds: filters.groups.length ? filters.groups : undefined,
       categories: filters.categories.length ? filters.categories : undefined,
       paidBy: filters.paidBy.length ? filters.paidBy : undefined,
@@ -635,7 +637,7 @@ function GlobalExpensesContent() {
       sortBy: filters.sortBy,
       sortDir: filters.sortDir,
     }
-  }, [debouncedSearch, filters])
+  }, [debouncedSearch, filters, locale])
   const expensesQuery = trpc.expenses.list.useInfiniteQuery(input, {
     enabled: options !== undefined,
     getNextPageParam: (page) => page.nextCursor ?? undefined,

@@ -13,6 +13,11 @@ import { toRecurrenceConfig } from '../recurrence-series'
 import { balanceExpenseSelect } from '../selects/balance-expense'
 import { groupExpenseListCardSelect } from '../selects/expense-list'
 import { narrowCategoryId, resolveCategory } from './helpers'
+import {
+  expenseTextSearchOr,
+  findSimilarExpenseTitleIds,
+  mergeWhereAnd,
+} from './title-search'
 
 /** Prisma row shape fed into `mapExpenseListRow`. */
 export type ExpenseListDbRow = Prisma.ExpenseGetPayload<{
@@ -135,6 +140,7 @@ type GetGroupExpensesOptions = {
   offset?: number
   length?: number
   filter?: string
+  locale?: string
   hideReimbursements?: boolean
   categories?: string[]
   paidBy?: string[]
@@ -213,11 +219,8 @@ export async function getGroupExpenses(
         }
       : undefined
 
-  const where: Prisma.ExpenseWhereInput = {
+  let where: Prisma.ExpenseWhereInput = {
     ledgerId,
-    title: options?.filter
-      ? { contains: options.filter, mode: 'insensitive' }
-      : undefined,
     isReimbursement: options?.hideReimbursements ? false : undefined,
     categoryId:
       options?.categories && options.categories.length > 0
@@ -246,6 +249,22 @@ export async function getGroupExpenses(
       options?.paidForMatch,
       'paidFor',
     ),
+  }
+
+  const filter = options?.filter?.trim()
+  if (filter) {
+    const similarTitleIds = await findSimilarExpenseTitleIds({
+      ledgerIds: [ledgerId],
+      query: filter,
+    })
+    where = mergeWhereAnd(
+      where,
+      expenseTextSearchOr({
+        query: filter,
+        locale: options?.locale,
+        similarTitleIds,
+      }),
+    )
   }
 
   const effectiveField = options?.sortBy ?? 'expenseDate'

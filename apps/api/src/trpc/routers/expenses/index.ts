@@ -8,6 +8,11 @@ import {
   mapExpenseListRow,
   type ExpenseListDbRow,
 } from '../../../lib/api/expenses/queries'
+import {
+  expenseTextSearchOr,
+  findSimilarExpenseTitleIds,
+  mergeWhereAnd,
+} from '../../../lib/api/expenses/title-search'
 import { groupExpenseListCardSelect } from '../../../lib/api/selects/expense-list'
 import { resolveParticipantDisplayName } from '../../../lib/invitations/display'
 import { createTRPCRouter, protectedProcedure } from '../../init'
@@ -33,6 +38,7 @@ const globalExpensesInputSchema = z.object({
   cursor: z.string().optional(),
   limit: z.number().int().min(1).max(50).default(20),
   query: z.string().optional(),
+  locale: z.string().optional(),
   groupIds: z.array(z.string().min(1)).optional(),
   hideReimbursements: z.boolean().default(false),
   categories: z.array(z.string()).optional(),
@@ -298,7 +304,7 @@ async function listGlobalExpenses(
     input.paidForMatch,
   )
 
-  const where: Prisma.ExpenseWhereInput = {
+  let where: Prisma.ExpenseWhereInput = {
     ledgerId: { in: groups.map((group) => group.ledgerId) },
     isReimbursement: input.hideReimbursements ? false : undefined,
     categoryId:
@@ -319,26 +325,25 @@ async function listGlobalExpenses(
             ...(input.maxAmount !== undefined ? { lte: input.maxAmount } : {}),
           }
         : undefined,
-    ...(input.query?.trim()
-      ? {
-          OR: [
-            { title: { contains: input.query.trim(), mode: 'insensitive' } },
-            { notes: { contains: input.query.trim(), mode: 'insensitive' } },
-            {
-              items: {
-                some: {
-                  title: {
-                    contains: input.query.trim(),
-                    mode: 'insensitive',
-                  },
-                },
-              },
-            },
-          ],
-        }
-      : {}),
   }
   if (personFilters) where.AND = personFilters.AND
+
+  const query = input.query?.trim()
+  if (query) {
+    const similarTitleIds = await findSimilarExpenseTitleIds({
+      ledgerIds: groups.map((group) => group.ledgerId),
+      query,
+    })
+    where = mergeWhereAnd(
+      where,
+      expenseTextSearchOr({
+        query,
+        locale: input.locale,
+        similarTitleIds,
+        includeNotesAndItems: true,
+      }),
+    )
+  }
 
   if (input.cursor) {
     const cursor = decodeCursor(input.cursor)

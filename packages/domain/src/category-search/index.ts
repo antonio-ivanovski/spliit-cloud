@@ -25,8 +25,21 @@ export {
 } from './mine'
 export {
   createCategorySearchDocument,
+  createCategorySearchDocumentsForLocale,
+  damerauLevenshtein,
   normalizeSearchText,
   rankCategories,
   type CategorySearchDocument,
   type RankedCategory,
 } from './rank'
+export {
+  CATEGORY_CONFIDENT_MIN_SCORE,
+  CATEGORY_SUGGEST_MIN_QUERY_LENGTH,
+  expandExpenseQuery,
+  expandExpenseQueryForLocale,
+  suggestCategoryFromTitle,
+  type CategorySuggestion,
+  type CategorySuggestionSource,
+  type CategoryTitleMemory,
+  type ExpandedExpenseQuery,
+} from './suggest'

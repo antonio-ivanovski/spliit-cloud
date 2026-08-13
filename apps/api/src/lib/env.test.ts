@@ -335,6 +335,21 @@ describe('envSchema — AI', () => {
     await expect(import('./env')).rejects.toThrow()
   })
 
+  it('applies default CATEGORY_MEMORY_LIMIT of 200 when absent', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.resetModules()
+    const { env } = await import('./env')
+    expect(env.CATEGORY_MEMORY_LIMIT).toBe(200)
+  })
+
+  it('parses a custom CATEGORY_MEMORY_LIMIT', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('CATEGORY_MEMORY_LIMIT', '400')
+    vi.resetModules()
+    const { env } = await import('./env')
+    expect(env.CATEGORY_MEMORY_LIMIT).toBe(400)
+  })
+
   it('parses a valid AI_BASE_URL', async () => {
     vi.stubEnv('NODE_ENV', 'development')
     vi.stubEnv('AI_BASE_URL', 'https://openrouter.ai/api/v1')

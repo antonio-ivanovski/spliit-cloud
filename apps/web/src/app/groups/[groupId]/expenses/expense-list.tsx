@@ -22,6 +22,7 @@ import {
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import { Button } from '@/components/ui/button'
 import { SearchBar } from '@/components/ui/search-bar'
+import { useLocale } from '@/i18n/react'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
 import { getCurrencyFromGroup } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
@@ -79,6 +80,7 @@ const ExpenseListForSearch = ({
   const { t: tFilters } = useTranslation(undefined, {
     keyPrefix: 'Expenses.filters',
   })
+  const locale = useLocale()
   const { ref: loadingRef, inView } = useInView()
 
   const hasActiveFiltersOrSort =
@@ -95,6 +97,7 @@ const ExpenseListForSearch = ({
       groupId,
       limit: EXPENSE_LIST_PAGE_SIZE,
       filter: searchText,
+      locale,
       linkInviteToken,
       ...queryInput,
     },

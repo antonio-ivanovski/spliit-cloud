@@ -4,6 +4,7 @@ import {
   ChevronDown,
   ChevronsUpDown,
   Layers,
+  Loader2,
   Sparkles,
 } from 'lucide-react'
 import { forwardRef, useMemo, useState } from 'react'
@@ -58,6 +59,11 @@ type Props = {
    */
   defaultValue: CategoryId
   isLoading: boolean
+  /**
+   * Sparkles when an AI fallback may still run; a generic spinner otherwise.
+   * Ignored when `isLoading` is false.
+   */
+  loadingAppearance?: 'ai' | 'spinner'
   disabled?: boolean
   /** Render an icon-only trigger for embedding beside a title input. */
   compact?: boolean
@@ -82,6 +88,7 @@ export function CategorySelector({
   onValueChange,
   defaultValue,
   isLoading,
+  loadingAppearance = 'spinner',
   disabled = false,
   compact = false,
   mode = 'single',
@@ -193,6 +200,7 @@ export function CategorySelector({
               category={selectedCategory}
               open={open}
               isLoading={isLoading}
+              loadingAppearance={loadingAppearance}
               disabled={disabled}
               compact={compact}
             />
@@ -221,6 +229,7 @@ export function CategorySelector({
             category={selectedCategory}
             open={open}
             isLoading={isLoading}
+            loadingAppearance={loadingAppearance}
             disabled={disabled}
             compact={compact}
           />
@@ -501,6 +510,7 @@ type CategoryButtonProps = {
   category: Category
   open: boolean
   isLoading: boolean
+  loadingAppearance?: 'ai' | 'spinner'
   disabled?: boolean
   compact?: boolean
 }
@@ -510,6 +520,7 @@ const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>(
       category,
       open,
       isLoading,
+      loadingAppearance = 'spinner',
       compact = false,
       className,
       ...props
@@ -544,10 +555,17 @@ const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>(
           <CategoryLabel category={category} compact={compact} />
         </span>
         {isLoading ? (
-          <Sparkles
-            aria-hidden="true"
-            className="h-4 w-4 shrink-0 animate-sparkle-pulse text-primary motion-reduce:animate-none"
-          />
+          loadingAppearance === 'ai' ? (
+            <Sparkles
+              aria-hidden="true"
+              className="h-4 w-4 shrink-0 animate-sparkle-pulse text-primary motion-reduce:animate-none"
+            />
+          ) : (
+            <Loader2
+              aria-hidden="true"
+              className="h-4 w-4 shrink-0 animate-spin text-muted-foreground motion-reduce:animate-none"
+            />
+          )
         ) : (
           <ChevronDown className={iconClassName} />
         )}

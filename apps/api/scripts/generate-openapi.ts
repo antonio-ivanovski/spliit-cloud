@@ -51,7 +51,6 @@ const PUBLIC_PROCEDURES = new Set<string>([
   'features.get',
   'currency.getRate',
   'invitations.previewLink',
-  'ai.extractCategoryFromTitle',
   'ai.extractExpenseInformationFromImage',
 ])
 

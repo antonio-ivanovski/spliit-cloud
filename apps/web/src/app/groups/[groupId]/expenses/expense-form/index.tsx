@@ -490,7 +490,7 @@ export function ExpenseForm(props: {
             !isCreate ? (props.expense?.recurrence ?? null) : undefined
           }
           linkInviteToken={props.linkInviteToken}
-          extractCategoryMutation={trpc.ai.extractCategoryFromTitle.useMutation()}
+          suggestCategoryMutation={trpc.groups.expenses.suggestCategory.useMutation()}
           runtimeFeatureFlags={props.runtimeFeatureFlags}
           receiptDocuments={form.getValues('documents').flatMap((document) => {
             if (

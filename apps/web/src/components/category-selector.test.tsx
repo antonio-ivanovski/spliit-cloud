@@ -179,4 +179,37 @@ describe('CategorySelector', () => {
       ),
     ).toEqual(['home'])
   })
+
+  it('shows sparkles while loading when AI appearance is requested', () => {
+    render(
+      <CategorySelector
+        categories={DEFAULT_CATEGORIES}
+        defaultValue={DEFAULT_CATEGORY_ID}
+        isLoading
+        loadingAppearance="ai"
+        onValueChange={() => {}}
+      />,
+    )
+
+    const trigger = screen.getByRole('combobox')
+    expect(trigger).toHaveAttribute('aria-busy', 'true')
+    expect(trigger.querySelector('.lucide-sparkles')).toBeInTheDocument()
+    expect(trigger.querySelector('.lucide-loader-circle')).toBeNull()
+  })
+
+  it('shows a generic spinner while loading by default', () => {
+    render(
+      <CategorySelector
+        categories={DEFAULT_CATEGORIES}
+        defaultValue={DEFAULT_CATEGORY_ID}
+        isLoading
+        onValueChange={() => {}}
+      />,
+    )
+
+    const trigger = screen.getByRole('combobox')
+    expect(trigger).toHaveAttribute('aria-busy', 'true')
+    expect(trigger.querySelector('.lucide-loader-circle')).toBeInTheDocument()
+    expect(trigger.querySelector('.lucide-sparkles')).toBeNull()
+  })
 })

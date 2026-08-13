@@ -5,13 +5,16 @@ import {
   aliasCandidatesToPatch,
   createCategorySearchDocument,
   dictionaryLocaleFor,
+  expandExpenseQuery,
   knownTokensForCategory,
   mineAliasCandidates,
   parseLocaleDictionary,
   parseSharedDictionary,
   rankCategories,
   resolveCategorySearchFields,
+  suggestCategoryFromTitle,
   type CategorySearchDocument,
+  type CategoryTitleMemory,
 } from './index'
 
 function documentsFor(locale: string): CategorySearchDocument[] {
@@ -131,6 +134,80 @@ describe('rankCategories', () => {
     const vtc = rankCategories('vtc', french)[0]
     const cab = rankCategories('cab', french)[0]
     expect((vtc?.score ?? 0) > (cab?.score ?? 0)).toBe(true)
+  })
+})
+
+describe('suggestCategoryFromTitle', () => {
+  const english = documentsFor('en-US')
+
+  it('auto-applies a confident alias', () => {
+    const hit = suggestCategoryFromTitle('uber', english)
+    expect(hit).toMatchObject({ id: 'taxi', source: 'dictionary' })
+    expect(hit!.score).toBeGreaterThanOrEqual(0.7)
+  })
+
+  it('auto-applies a one-character label typo', () => {
+    expect(suggestCategoryFromTitle('grocereis', english)?.id).toBe('groceries')
+  })
+
+  it('does not auto-apply a weak subsequence', () => {
+    expect(suggestCategoryFromTitle('xyzzy', english)).toBeNull()
+  })
+
+  it('does not auto-apply very short keystrokes', () => {
+    expect(suggestCategoryFromTitle('di', english)).toBeNull()
+    expect(suggestCategoryFromTitle('ub', english)).toBeNull()
+  })
+
+  it('lets repeated exact history beat a missing dictionary', () => {
+    const memory: CategoryTitleMemory[] = [
+      { title: 'Luigi mysterious trattoria', categoryId: 'dining-out' },
+      { title: 'Luigi mysterious trattoria', categoryId: 'dining-out' },
+    ]
+    expect(
+      suggestCategoryFromTitle('Luigi mysterious trattoria', english, memory),
+    ).toMatchObject({ id: 'dining-out', source: 'history' })
+  })
+
+  it('does not let a one-off history outlier override a strong alias', () => {
+    const memory: CategoryTitleMemory[] = [
+      { title: 'uber', categoryId: 'bus-train' },
+    ]
+    expect(suggestCategoryFromTitle('uber', english, memory)).toMatchObject({
+      id: 'taxi',
+      source: 'dictionary',
+    })
+  })
+
+  it('uses a single exact history hit when dictionaries are weak', () => {
+    const memory: CategoryTitleMemory[] = [
+      { title: 'Luigi mysterious trattoria', categoryId: 'dining-out' },
+    ]
+    expect(
+      suggestCategoryFromTitle('Luigi mysterious trattoria', english, memory),
+    ).toMatchObject({ id: 'dining-out', source: 'history' })
+  })
+})
+
+describe('expandExpenseQuery', () => {
+  const english = documentsFor('en-US')
+
+  it('expands a brand alias to the matching category', () => {
+    expect(expandExpenseQuery('uber', english).categoryIds).toEqual(['taxi'])
+  })
+
+  it('expands a category-name typo', () => {
+    expect(expandExpenseQuery('grocereis', english).categoryIds).toContain(
+      'groceries',
+    )
+  })
+
+  it('does not expand weak subsequence noise', () => {
+    expect(expandExpenseQuery('xyzzy', english).categoryIds).toEqual([])
+  })
+
+  it('does not expand very short queries', () => {
+    expect(expandExpenseQuery('ub', english).categoryIds).toEqual([])
   })
 })
 

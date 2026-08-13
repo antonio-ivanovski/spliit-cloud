@@ -1,4 +1,8 @@
-import type { Category, CategoryId } from '../categories'
+import {
+  DEFAULT_CATEGORIES,
+  type Category,
+  type CategoryId,
+} from '../categories'
 import { resolveCategorySearchFields, tokenizeSearchText } from './dictionaries'
 
 const LABEL_WEIGHT = 1
@@ -49,6 +53,22 @@ export function createCategorySearchDocument(
     samples: fields.samples,
     fallbackAliases: fields.fallbackAliases,
   }
+}
+
+/**
+ * English in-code names plus locale dictionaries — used when i18n labels are
+ * unavailable (API).
+ */
+export function createCategorySearchDocumentsForLocale(
+  locale: string,
+): CategorySearchDocument[] {
+  return DEFAULT_CATEGORIES.map((category) =>
+    createCategorySearchDocument(category, {
+      label: category.parentId === null ? category.grouping : category.name,
+      grouping: category.grouping,
+      locale,
+    }),
+  )
 }
 
 export function rankCategories(
@@ -169,7 +189,11 @@ function isSubsequence(needle: string, haystack: string): boolean {
  * Damerau-Levenshtein distance with an early exit when the distance would
  * exceed `max`. Returns `max + 1` when the strings are farther apart.
  */
-function damerauLevenshtein(left: string, right: string, max: number): number {
+export function damerauLevenshtein(
+  left: string,
+  right: string,
+  max: number,
+): number {
   if (left === right) return 0
   const leftLength = left.length
   const rightLength = right.length
