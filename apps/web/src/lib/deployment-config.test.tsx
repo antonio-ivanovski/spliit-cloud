@@ -50,6 +50,7 @@ describe('useDeploymentConfig', () => {
       enableGoogleOAuth: true,
       enableGitHubOAuth: false,
       enableTwitterOAuth: true,
+      oidcProviders: [{ id: 'oidc', name: 'Company SSO' }],
       signupMode: 'invite_only',
       allowUninvitedSignup: false,
     })
@@ -64,6 +65,7 @@ describe('useDeploymentConfig', () => {
         enableGoogleOAuth: true,
         enableGitHubOAuth: false,
         enableTwitterOAuth: true,
+        oidcProviders: [{ id: 'oidc', name: 'Company SSO' }],
         signupMode: 'invite_only',
         allowUninvitedSignup: false,
       })

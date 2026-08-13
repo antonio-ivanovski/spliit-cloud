@@ -1717,7 +1717,8 @@
       "message": "Diese Instanz ist nur auf Einladung zugänglich. Nutzen Sie einen Einladungslink oder bitten Sie jemanden, Sie in eine Gruppe einzuladen.",
       "useInvitedEmail": "Verwenden Sie die E-Mail-Adresse, mit der Sie eingeladen wurden."
     },
-    "signInWithX": "Weiter mit X"
+    "signInWithX": "Weiter mit X",
+    "signInWithOidc": "Weiter mit {name}"
   },
   "CompleteProfile": {
     "title": "Profil vervollständigen",

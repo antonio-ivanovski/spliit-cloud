@@ -1693,7 +1693,8 @@
       "message": "Esta instância é apenas por convite. Use um link de convite ou peça a alguém que te convide para um grupo.",
       "useInvitedEmail": "Use o endereço de e-mail com o qual você recebeu o convite."
     },
-    "signInWithX": "Continuar com X"
+    "signInWithX": "Continuar com X",
+    "signInWithOidc": "Continuar com {name}"
   },
   "CompleteProfile": {
     "title": "Complete seu perfil",

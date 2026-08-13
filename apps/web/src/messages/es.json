@@ -1693,7 +1693,8 @@
       "message": "Esta instancia es solo por invitación. Usa un enlace de invitación o pide a alguien que te invite a un grupo.",
       "useInvitedEmail": "Usa la dirección de correo electrónico con la que te invitaron."
     },
-    "signInWithX": "Continuar con X"
+    "signInWithX": "Continuar con X",
+    "signInWithOidc": "Continuar con {name}"
   },
   "CompleteProfile": {
     "title": "Completa tu perfil",

@@ -11,12 +11,13 @@ import {
   type Jwk,
   type JwtOptions,
 } from 'better-auth/plugins'
+import { genericOAuth } from 'better-auth/plugins/generic-oauth'
 
 import { prisma, type Account } from '@spliit/db'
 import { isStrongPassword } from '@spliit/domain/password'
 
 import { autoAcceptPendingFriendInvitationsForAccount } from '../api/friends'
-import { env, webOrigins } from '../env'
+import { env, getConfiguredOidcProvider, webOrigins } from '../env'
 import { buildProviderPlaceholderEmail } from '../invitations'
 import { sendEmail } from '../mail/send'
 import {
@@ -32,12 +33,15 @@ import {
 } from './signup-gate'
 import { getApiBaseUrl } from './urls'
 
+const oidcProvider = getConfiguredOidcProvider()
+
 const authMethodLabels: Record<string, string> = {
   credential: 'email and password',
   google: 'Google',
   github: 'GitHub',
   twitter: 'X',
   'magic-link': 'email sign-in link',
+  ...(oidcProvider ? { [oidcProvider.id]: oidcProvider.name } : {}),
 }
 
 async function getAuthMethodLabels(userId: string) {
@@ -342,6 +346,11 @@ export const auth = betterAuth({
     modelName: 'AuthIdentity',
     accountLinking: {
       enabled: true,
+      // Generic OIDC is operator-configured and may report unverified
+      // emails. Better Auth implicit-links a trusted provider even when
+      // `emailVerified` is false, which would let a matching address take
+      // over an existing account. Google, GitHub, and X stay trusted; OIDC
+      // still links when the IdP marks the email verified.
       trustedProviders: [
         'google',
         'github',
@@ -495,6 +504,23 @@ export const auth = betterAuth({
   })(),
 
   plugins: [
+    ...(oidcProvider
+      ? [
+          genericOAuth({
+            config: [
+              {
+                providerId: oidcProvider.id,
+                clientId: oidcProvider.clientId,
+                clientSecret: oidcProvider.clientSecret,
+                discoveryUrl: oidcProvider.discoveryUrl,
+                scopes: ['openid', 'email', 'profile'],
+                pkce: true,
+                requireIssuerValidation: true,
+              },
+            ],
+          }),
+        ]
+      : []),
     ...(env.ENABLE_MCP
       ? [
           oauthProvider({

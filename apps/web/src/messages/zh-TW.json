@@ -1369,7 +1369,8 @@
       "message": "此執行個體僅限邀請加入。請使用邀請連結，或請他人邀請您加入群組。",
       "useInvitedEmail": "請使用收到邀請的電子郵件地址。"
     },
-    "signInWithX": "使用 X 繼續"
+    "signInWithX": "使用 X 繼續",
+    "signInWithOidc": "使用 {name} 繼續"
   },
   "CompleteProfile": {
     "title": "完善您的個人資料",

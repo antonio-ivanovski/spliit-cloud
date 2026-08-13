@@ -9,6 +9,7 @@ export type DeploymentConfig = Pick<
   | 'enableGoogleOAuth'
   | 'enableGitHubOAuth'
   | 'enableTwitterOAuth'
+  | 'oidcProviders'
   | 'signupMode'
   | 'allowUninvitedSignup'
 >
@@ -25,6 +26,7 @@ function getBuildTimeFallback(): DeploymentConfig {
     enableTwitterOAuth:
       import.meta.env.VITE_ENABLE_TWITTER_OAUTH === 'true' ||
       import.meta.env.VITE_ENABLE_TWITTER_OAUTH === '1',
+    oidcProviders: [],
     signupMode: 'open',
     allowUninvitedSignup: true,
   }
@@ -39,6 +41,7 @@ export function useDeploymentConfig(): DeploymentConfig {
       enableGoogleOAuth,
       enableGitHubOAuth,
       enableTwitterOAuth,
+      oidcProviders,
       signupMode,
       allowUninvitedSignup,
     }): DeploymentConfig => ({
@@ -46,6 +49,7 @@ export function useDeploymentConfig(): DeploymentConfig {
       enableGoogleOAuth,
       enableGitHubOAuth,
       enableTwitterOAuth,
+      oidcProviders,
       signupMode,
       allowUninvitedSignup,
     }),

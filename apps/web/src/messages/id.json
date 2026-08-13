@@ -1678,7 +1678,8 @@
       "message": "Instans ini hanya bisa diakses dengan undangan. Gunakan tautan undangan atau minta seseorang mengundang Anda ke sebuah grup.",
       "useInvitedEmail": "Gunakan alamat email yang digunakan untuk mengundang Anda."
     },
-    "signInWithX": "Lanjutkan dengan X"
+    "signInWithX": "Lanjutkan dengan X",
+    "signInWithOidc": "Lanjutkan dengan {name}"
   },
   "CompleteProfile": {
     "title": "Lengkapi profil Anda",

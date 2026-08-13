@@ -1685,7 +1685,8 @@
       "message": "Deze instantie is alleen op uitnodiging. Gebruik een uitnodigingslink of vraag iemand om je uit te nodigen voor een groep.",
       "useInvitedEmail": "Gebruik het e-mailadres waarmee je bent uitgenodigd."
     },
-    "signInWithX": "Doorgaan met X"
+    "signInWithX": "Doorgaan met X",
+    "signInWithOidc": "Doorgaan met {name}"
   },
   "CompleteProfile": {
     "title": "Voltooi je profiel",

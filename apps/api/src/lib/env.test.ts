@@ -179,6 +179,106 @@ describe('envSchema — development', () => {
   })
 })
 
+describe('envSchema — OIDC', () => {
+  it('allows all OIDC vars to be missing', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('OIDC_CLIENT_ID', '')
+    vi.stubEnv('OIDC_CLIENT_SECRET', '')
+    vi.stubEnv('OIDC_DISCOVERY_URL', '')
+    vi.stubEnv('OIDC_DISPLAY_NAME', '')
+    vi.stubEnv('OIDC_PROVIDER_ID', '')
+    vi.resetModules()
+    const { env, getConfiguredOidcProvider } = await import('./env')
+    expect(env.OIDC_CLIENT_ID).toBeUndefined()
+    expect(env.OIDC_CLIENT_SECRET).toBeUndefined()
+    expect(env.OIDC_DISCOVERY_URL).toBeUndefined()
+    expect(getConfiguredOidcProvider(env)).toBeUndefined()
+  })
+
+  it('rejects a partial OIDC configuration', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('OIDC_CLIENT_ID', 'oidc-client')
+    vi.stubEnv('OIDC_CLIENT_SECRET', '')
+    vi.stubEnv('OIDC_DISCOVERY_URL', '')
+    vi.stubEnv('OIDC_DISPLAY_NAME', '')
+    vi.stubEnv('OIDC_PROVIDER_ID', '')
+    vi.resetModules()
+    await expect(import('./env')).rejects.toThrow(
+      /OIDC_CLIENT_ID, OIDC_CLIENT_SECRET and OIDC_DISCOVERY_URL must be configured together/,
+    )
+  })
+
+  it('rejects a display name without credentials', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('OIDC_CLIENT_ID', '')
+    vi.stubEnv('OIDC_CLIENT_SECRET', '')
+    vi.stubEnv('OIDC_DISCOVERY_URL', '')
+    vi.stubEnv('OIDC_DISPLAY_NAME', 'Company SSO')
+    vi.stubEnv('OIDC_PROVIDER_ID', '')
+    vi.resetModules()
+    await expect(import('./env')).rejects.toThrow(
+      /OIDC_CLIENT_ID, OIDC_CLIENT_SECRET and OIDC_DISCOVERY_URL must be configured together/,
+    )
+  })
+
+  it('accepts a complete OIDC configuration and applies defaults', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('OIDC_CLIENT_ID', 'oidc-client')
+    vi.stubEnv('OIDC_CLIENT_SECRET', 'oidc-secret')
+    vi.stubEnv(
+      'OIDC_DISCOVERY_URL',
+      'https://auth.example.com/.well-known/openid-configuration',
+    )
+    vi.stubEnv('OIDC_DISPLAY_NAME', '')
+    vi.stubEnv('OIDC_PROVIDER_ID', '')
+    vi.resetModules()
+    const { env, getConfiguredOidcProvider } = await import('./env')
+    expect(getConfiguredOidcProvider(env)).toEqual({
+      id: 'oidc',
+      name: 'SSO',
+      clientId: 'oidc-client',
+      clientSecret: 'oidc-secret',
+      discoveryUrl: 'https://auth.example.com/.well-known/openid-configuration',
+    })
+  })
+
+  it('accepts custom provider id and display name', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('OIDC_CLIENT_ID', 'oidc-client')
+    vi.stubEnv('OIDC_CLIENT_SECRET', 'oidc-secret')
+    vi.stubEnv(
+      'OIDC_DISCOVERY_URL',
+      'https://auth.example.com/.well-known/openid-configuration',
+    )
+    vi.stubEnv('OIDC_PROVIDER_ID', 'keycloak')
+    vi.stubEnv('OIDC_DISPLAY_NAME', 'Company SSO')
+    vi.resetModules()
+    const { env, getConfiguredOidcProvider } = await import('./env')
+    expect(getConfiguredOidcProvider(env)).toEqual({
+      id: 'keycloak',
+      name: 'Company SSO',
+      clientId: 'oidc-client',
+      clientSecret: 'oidc-secret',
+      discoveryUrl: 'https://auth.example.com/.well-known/openid-configuration',
+    })
+  })
+
+  it('rejects an invalid OIDC_PROVIDER_ID', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('OIDC_CLIENT_ID', 'oidc-client')
+    vi.stubEnv('OIDC_CLIENT_SECRET', 'oidc-secret')
+    vi.stubEnv(
+      'OIDC_DISCOVERY_URL',
+      'https://auth.example.com/.well-known/openid-configuration',
+    )
+    vi.stubEnv('OIDC_PROVIDER_ID', 'not a slug')
+    vi.resetModules()
+    await expect(import('./env')).rejects.toThrow(
+      /OIDC_PROVIDER_ID must be a URL-safe identifier/,
+    )
+  })
+})
+
 describe('envSchema — AI', () => {
   it('applies default provider and models when AI settings are absent', async () => {
     vi.stubEnv('NODE_ENV', 'development')

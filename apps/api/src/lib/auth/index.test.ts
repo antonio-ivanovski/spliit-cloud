@@ -222,6 +222,27 @@ describe('better-auth emailAndPassword config', () => {
       }),
     )
   })
+
+  it('uses the OIDC display name for password recovery method labels', async () => {
+    prismaMock.authIdentity.findMany.mockResolvedValueOnce([
+      { providerId: 'oidc' },
+    ])
+
+    await realAuthModule.auth.options.emailAndPassword?.sendResetPassword?.({
+      user: { id: 'acct-1', email: 'alice@example.com' },
+      url: 'https://spliit.test/reset-token',
+    })
+
+    expect(sendEmailMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: 'alice@example.com',
+        subject: 'Sign in to Spliit Cloud',
+        text: expect.stringContaining(
+          'Use one of these sign-in methods instead: Test SSO.',
+        ),
+      }),
+    )
+  })
 })
 
 describe('better-auth socialProviders config', () => {
@@ -237,6 +258,23 @@ describe('better-auth socialProviders config', () => {
     expect(trusted).toContain('twitter')
     expect(trusted).toContain('credential')
     expect(trusted).toContain('magic-link')
+  })
+
+  it('does not trust generic OIDC for unverified implicit linking', () => {
+    // A matching unverified OIDC email must not take over an existing
+    // account. Better Auth still implicit-links untrusted providers when
+    // the IdP reports `emailVerified: true`.
+    const trusted =
+      realAuthModule.auth.options.account?.accountLinking?.trustedProviders ??
+      []
+    expect(trusted).not.toContain('oidc')
+  })
+
+  it('registers generic OIDC when OIDC env is complete', () => {
+    const plugin = realAuthModule.auth.options.plugins?.find(
+      (candidate) => candidate.id === 'generic-oauth',
+    )
+    expect(plugin).toBeDefined()
   })
 
   it('exposes GitHub credentials from env when both are set', () => {

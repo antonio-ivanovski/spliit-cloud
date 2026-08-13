@@ -32,6 +32,7 @@ export function AuthPanel({
     googleEnabled,
     githubEnabled,
     twitterEnabled,
+    oidcProviders,
     socialEnabled,
     setEmail,
     setPassword,
@@ -44,6 +45,7 @@ export function AuthPanel({
     handleGoogle,
     handleGithub,
     handleTwitter,
+    handleOidc,
     emailAuth,
     magicLink,
   } = useAuthPanel({ redirectTo })
@@ -74,10 +76,12 @@ export function AuthPanel({
           googleEnabled={googleEnabled}
           githubEnabled={githubEnabled}
           twitterEnabled={twitterEnabled}
+          oidcProviders={oidcProviders}
           disabled={emailAuth.isPending || magicLink.isPending}
           onGoogle={handleGoogle}
           onGithub={handleGithub}
           onTwitter={handleTwitter}
+          onOidc={handleOidc}
         />
       )}
 

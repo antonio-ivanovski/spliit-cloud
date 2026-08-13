@@ -81,6 +81,20 @@ const envSchema = z
     GITHUB_CLIENT_SECRET: optionalString,
     TWITTER_CLIENT_ID: optionalString,
     TWITTER_CLIENT_SECRET: optionalString,
+    OIDC_CLIENT_ID: optionalString,
+    OIDC_CLIENT_SECRET: optionalString,
+    OIDC_DISCOVERY_URL: optionalUrl,
+    OIDC_DISPLAY_NAME: optionalString,
+    OIDC_PROVIDER_ID: z.preprocess(
+      emptyStringAsUndefined,
+      z
+        .string()
+        .regex(
+          /^[a-zA-Z0-9][a-zA-Z0-9_-]*$/,
+          'OIDC_PROVIDER_ID must be a URL-safe identifier',
+        )
+        .optional(),
+    ),
     ENABLE_MCP: z.preprocess(interpretEnvVarAsBool, z.boolean().default(false)),
     MCP_PUBLIC_URL: optionalUrl,
     ASSISTANT_CONFIRMATION_SECRET: optionalString,
@@ -227,6 +241,26 @@ const envSchema = z
           'AI_VOICE_MODEL must be specified when PUBLIC_ENABLE_VOICE_EXPENSE is enabled',
       })
     }
+    const oidcValues = [
+      env.OIDC_CLIENT_ID,
+      env.OIDC_CLIENT_SECRET,
+      env.OIDC_DISCOVERY_URL,
+      env.OIDC_DISPLAY_NAME,
+      env.OIDC_PROVIDER_ID,
+    ]
+    if (
+      oidcValues.some(Boolean) &&
+      (!env.OIDC_CLIENT_ID ||
+        !env.OIDC_CLIENT_SECRET ||
+        !env.OIDC_DISCOVERY_URL)
+    ) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['OIDC_CLIENT_ID'],
+        message:
+          'OIDC_CLIENT_ID, OIDC_CLIENT_SECRET and OIDC_DISCOVERY_URL must be configured together',
+      })
+    }
   })
 
 export const env = envSchema.parse(process.env)
@@ -234,3 +268,39 @@ export const webOrigins = env.WEB_ORIGINS.split(',')
   .map((origin) => origin.trim())
   .filter(Boolean)
 export const hasDatabaseEnv = !!env.DATABASE_URL
+
+export const DEFAULT_OIDC_PROVIDER_ID = 'oidc'
+export const DEFAULT_OIDC_DISPLAY_NAME = 'SSO'
+
+export type ConfiguredOidcProvider = {
+  id: string
+  name: string
+  clientId: string
+  clientSecret: string
+  discoveryUrl: string
+}
+
+export function getConfiguredOidcProvider(
+  source: {
+    OIDC_CLIENT_ID?: string
+    OIDC_CLIENT_SECRET?: string
+    OIDC_DISCOVERY_URL?: string
+    OIDC_DISPLAY_NAME?: string
+    OIDC_PROVIDER_ID?: string
+  } = env,
+): ConfiguredOidcProvider | undefined {
+  if (
+    !source.OIDC_CLIENT_ID ||
+    !source.OIDC_CLIENT_SECRET ||
+    !source.OIDC_DISCOVERY_URL
+  ) {
+    return undefined
+  }
+  return {
+    id: source.OIDC_PROVIDER_ID ?? DEFAULT_OIDC_PROVIDER_ID,
+    name: source.OIDC_DISPLAY_NAME ?? DEFAULT_OIDC_DISPLAY_NAME,
+    clientId: source.OIDC_CLIENT_ID,
+    clientSecret: source.OIDC_CLIENT_SECRET,
+    discoveryUrl: source.OIDC_DISCOVERY_URL,
+  }
+}

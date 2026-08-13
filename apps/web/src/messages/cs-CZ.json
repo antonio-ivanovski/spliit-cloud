@@ -1392,7 +1392,8 @@
       "message": "Tato instance je pouze na pozvánku. Použijte odkaz pozvánky nebo požádejte někoho, aby vás pozval do skupiny.",
       "useInvitedEmail": "Použijte e-mailovou adresu, na kterou vám přišla pozvánka."
     },
-    "signInWithX": "Pokračovat přes X"
+    "signInWithX": "Pokračovat přes X",
+    "signInWithOidc": "Pokračovat přes {name}"
   },
   "CompleteProfile": {
     "title": "Dokončete svůj profil",

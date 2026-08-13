@@ -423,7 +423,8 @@
       "message": "this instance is invite-only. grab an invite link or ask someone to pull you into a group.",
       "useInvitedEmail": "use the email you got invited with."
     },
-    "signInWithX": "continue with X"
+    "signInWithX": "continue with X",
+    "signInWithOidc": "continue with {name}"
   },
   "Balances": {
     "title": "balance check ",
