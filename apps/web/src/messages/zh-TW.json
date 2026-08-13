@@ -190,7 +190,8 @@
       "participants": "{names}",
       "showLess": "收合"
     },
-    "copyToast": "已啟動複製支出。將使用現有的支出詳細資料來建立新的支出。"
+    "copyToast": "已啟動複製支出。將使用現有的支出詳細資料來建立新的支出。",
+    "incomeBadge": "收入"
   },
   "Groups": {
     "myGroups": "我的群組",
@@ -648,8 +649,7 @@
       "edit": "編輯收入",
       "TitleField": {
         "label": "收入標題",
-        "placeholder": "薪資或退款",
-        "description": "說明這筆收入的來源。"
+        "placeholder": "薪資或退款"
       },
       "DateField": {
         "label": "收入日期",
@@ -679,8 +679,7 @@
       "edit": "編輯消費紀錄",
       "TitleField": {
         "label": "支出標題",
-        "placeholder": "週一晚餐",
-        "description": "輸入此筆消費的描述。"
+        "placeholder": "週一晚餐"
       },
       "DateField": {
         "label": "消費日期",
@@ -799,9 +798,6 @@
         "replaceItemsHint": "取代目前列"
       }
     },
-    "isReimbursementField": {
-      "label": "這是結算付款"
-    },
     "categoryField": {
       "label": "類別"
     },
@@ -856,7 +852,6 @@
     "participant": {
       "pending": "（已邀請）"
     },
-    "reimbursement": "結算付款",
     "readOnlyNotice": "此群組已封存。支出以唯讀方式顯示。",
     "PaidBySplitModeField": {
       "label": "付款人分帳方式"
@@ -971,7 +966,10 @@
       "chooseTimezone": "選擇時區",
       "done": "完成",
       "yourTime": "您的當地時間"
-    }
+    },
+    "settlementTitle": "結算付款",
+    "settlementHint": "{category}：不計入總額、統計與預算中的支出。仍會更新誰欠誰。",
+    "incomeHint": "{category}：用於收到的錢。歸為收入，而不是一筆消費。"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "刪除文檔",
@@ -1045,14 +1043,6 @@
     "title": "總覽",
     "description": "查看每位參與者的淨餘額。",
     "removedBadge": "已移除",
-    "Reimbursements": {
-      "title": "建議的結算付款",
-      "description": "使用這些付款，以盡可能少的轉賬次數結清餘額。",
-      "noImbursements": "群組中所有人的餘額均已結清 😁",
-      "owes": "<strong>{from}</strong> 欠 <strong>{to}</strong>",
-      "markAsPaid": "標記為已支付",
-      "markAsPaidAria": "將 {from} 向 {to} 的 {amount} 標記為已付款"
-    },
     "currencyDisplay": {
       "label": "貨幣",
       "group": "群組貨幣 ({currency})",
@@ -1115,6 +1105,14 @@
       "individualAllHint": "您正在查看標準的全組個人結算方案。其中可能包含子群組之間的付款。",
       "unknownParticipant": "待接受邀請",
       "individualWithinHint": "您正在查看考量子群組的個人結算方案。當子群組之間已結算時，建議的付款會保持在每個子群組內部。"
+    },
+    "Settlements": {
+      "title": "建議結算",
+      "description": "使用這些付款，以盡可能少的轉賬次數結清餘額。",
+      "noSettlements": "群組中所有人的餘額均已結清 😁",
+      "owes": "<strong>{from}</strong> 欠 <strong>{to}</strong>",
+      "markAsPaid": "標記為已支付",
+      "markAsPaidAria": "將 {from} 向 {to} 的 {amount} 標記為已付款"
     }
   },
   "Stats": {
@@ -1309,6 +1307,9 @@
     },
     "Income": {
       "heading": "收入"
+    },
+    "Settlement": {
+      "heading": "結算"
     }
   },
   "Auth": {
@@ -2208,7 +2209,8 @@
         "recurrence": "重複",
         "reimbursement": "結算付款",
         "conversionSource": "轉換來源",
-        "conversionRate": "轉換匯率"
+        "conversionRate": "轉換匯率",
+        "settlement": "結算付款"
       },
       "recurringCreated": "{participant}建立了定期支出「{title}」",
       "stopped": "{participant}停止了定期支出「{title}」",
@@ -2413,28 +2415,6 @@
     "commentDelete": "刪除留言",
     "commentSend": "傳送留言",
     "openDocument": "開啟文件"
-  },
-  "CreateReimbursement": {
-    "description": "請確認付款資訊後再記錄。",
-    "pays": "{from} 支付給 {to}",
-    "amount": "金額",
-    "date": "日期",
-    "category": "分類",
-    "create": "新增",
-    "edit": "編輯詳細資訊",
-    "creating": "新增中…",
-    "successToast": "已記錄結算付款",
-    "successToastMultiple": "已將 {count} 筆結算付款記錄為一筆",
-    "paysMany": "{from} 支付給 {count} 人",
-    "receivesMany": "{to} 收到 {count} 筆付款",
-    "paymentsToInclude": "要包含的付款",
-    "selectionSummary": "已選擇 {count} 筆付款，總計 {total}",
-    "legToAria": "{from} 支付給 {to}，{amount}",
-    "legFromAria": "{from} 支付給 {to}，{amount}",
-    "toParticipant": "支付給{name}",
-    "fromParticipant": "來自{name}",
-    "createSingle": "記錄付款",
-    "createMultiple": "記錄 {count} 筆付款"
   },
   "Participants": {
     "search": "搜尋參與者……",
@@ -2854,7 +2834,6 @@
     "participantsCountLabel": "參與者人數",
     "participantsSectionLabel": "參與者摘要",
     "settlementsSectionLabel": "建議的結算",
-    "reimbursementsSectionLabel": "已記錄的報銷",
     "expensesSectionLabel": "消費明細",
     "amountColumnLabel": "金額",
     "participantColumnLabel": "參與者",
@@ -2868,10 +2847,11 @@
     "noExpensesLabel": "所選期間內沒有消費。",
     "noParticipantsLabel": "所選期間內沒有參與活動的參與者。",
     "noSettlementsLabel": "截至結束日期已全部結清。",
-    "noReimbursementsLabel": "截至結束日期沒有報銷紀錄。",
     "originalAmountLabel": "原始金額",
     "expenseColumnLabel": "支出",
-    "categoryColumnLabel": "類別"
+    "categoryColumnLabel": "類別",
+    "recordedSettlementsSectionLabel": "已記錄的結算",
+    "noRecordedSettlementsLabel": "截至結束日期沒有結算紀錄。"
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2909,5 +2889,27 @@
     "hintTapToAddExpense": "我是 {name}，點我即可新增一筆支出。",
     "hintTapToCreateGroup": "我是 {name}，點我即可建立群組。",
     "billName": "Bill"
+  },
+  "CreateSettlement": {
+    "description": "請確認付款資訊後再記錄。",
+    "pays": "{from} 支付給 {to}",
+    "amount": "金額",
+    "date": "日期",
+    "category": "分類",
+    "create": "新增",
+    "edit": "編輯詳細資訊",
+    "creating": "新增中…",
+    "successToast": "已記錄結算付款",
+    "successToastMultiple": "已將 {count} 筆結算付款記錄為一筆",
+    "paysMany": "{from} 支付給 {count} 人",
+    "receivesMany": "{to} 收到 {count} 筆付款",
+    "paymentsToInclude": "要包含的付款",
+    "selectionSummary": "已選擇 {count} 筆付款，總計 {total}",
+    "legToAria": "{from} 支付給 {to}，{amount}",
+    "legFromAria": "{from} 支付給 {to}，{amount}",
+    "toParticipant": "支付給{name}",
+    "fromParticipant": "來自{name}",
+    "createSingle": "記錄付款",
+    "createMultiple": "記錄 {count} 筆付款"
   }
 }

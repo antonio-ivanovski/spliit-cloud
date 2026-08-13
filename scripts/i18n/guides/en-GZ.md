@@ -8,3 +8,4 @@ Apply `default.md` first, then these Gen-Z English rules.
 - Avoid strong use of slang, sarcasm, memes, or ambiguous jokes in money amounts, balances, destructive actions, validation errors, security messages, or accessibility labels. Ok to use, but the meaning behind shall remain clear and unambiguous.
 - Keep the same US English spelling, number conventions, placeholder names, rich-text tags, and financial precision as en-US.
 - Prefer a clear plain-English fallback when a slang term could age quickly, be misunderstood internationally, or obscure what the user must do.
+- Exclusive settlement term: settlement / settle up. Never reimbursement or refund for this concept.

@@ -307,7 +307,6 @@ const mockExpense = {
     { ledgerParticipantId: 'lp-2', shares: 2500 },
   ],
   splitMode: 'EVENLY',
-  isReimbursement: false,
   documents: [],
   notes: 'Great dinner',
   recurrenceRule: 'NONE',

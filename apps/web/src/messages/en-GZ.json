@@ -295,7 +295,8 @@
         "recurrence": "recurrence",
         "reimbursement": "settlement payment",
         "conversionSource": "conversion source",
-        "conversionRate": "conversion rate"
+        "conversionRate": "conversion rate",
+        "settlement": "settlement payment"
       },
       "recurringCreated": "{participant} spawned recurring expense “{title}”",
       "stopped": "{participant} called time on recurring expense {title}",
@@ -430,14 +431,6 @@
     "title": "balance check ",
     "description": "see each participant's net balance.",
     "removedBadge": "removed",
-    "Reimbursements": {
-      "title": "suggested settle-up moves ",
-      "description": "use these payments to settle balances with as few transfers as possible. fewer money moves, more slay ",
-      "noImbursements": "everyone in your group is settled up  huge W",
-      "owes": "<strong>{from}</strong> owes <strong>{to}</strong>, no cap",
-      "markAsPaid": "mark as paid ",
-      "markAsPaidAria": "mark {amount} from {from} to {to} as paid"
-    },
     "currencyDisplay": {
       "label": "currency",
       "group": "group currency ({currency}), obviously",
@@ -500,6 +493,14 @@
       "individualAllHint": "this is the standard group-wide individual plan — it may include moves between subgroups.",
       "unknownParticipant": "pending invite, bestie",
       "individualWithinHint": "this is a subgroup-aware individual plan: suggested moves stay within each subgroup once the subgroup totals are already settled up."
+    },
+    "Settlements": {
+      "title": "suggested settle-ups",
+      "description": "use these payments to settle balances with as few transfers as possible. fewer money moves, more slay ",
+      "noSettlements": "everyone in your group is settled up  huge W",
+      "owes": "<strong>{from}</strong> owes <strong>{to}</strong>, no cap",
+      "markAsPaid": "mark as paid ",
+      "markAsPaidAria": "mark {amount} from {from} to {to} as paid"
     }
   },
   "Budgets": {
@@ -771,6 +772,9 @@
     },
     "Income": {
       "heading": "money in"
+    },
+    "Settlement": {
+      "heading": "settlement era"
     }
   },
   "Common": {
@@ -846,28 +850,6 @@
       "title": "image needed",
       "aiDescription": "AI receipt scanning is image-only."
     }
-  },
-  "CreateReimbursement": {
-    "description": "review the payment before recording it, bestie.",
-    "pays": "{from} pays {to}, obviously",
-    "amount": "damage amount",
-    "date": "date",
-    "category": "category",
-    "create": "create it",
-    "edit": "edit the details",
-    "creating": "creating…",
-    "successToast": "settlement payment recorded. adulting.",
-    "successToastMultiple": "recorded {count} settlement payments as one entry",
-    "paysMany": "{from} pays {count} people, fr",
-    "receivesMany": "{to} receives {count} payments, fr",
-    "paymentsToInclude": "payments to include",
-    "selectionSummary": "{count} payments selected, totaling {total}, no cap",
-    "legToAria": "{from} pays {to}, {amount}, fr",
-    "legFromAria": "{from} pays {to}, {amount}, fr",
-    "toParticipant": "to {name}, bestie",
-    "fromParticipant": "from {name}, bestie",
-    "createSingle": "record payment",
-    "createMultiple": "record {count} payments"
   },
   "Currencies": {
     "search": "search currency…",
@@ -1228,7 +1210,8 @@
       "title": "expense items",
       "participants": "{names}, obviously",
       "showLess": "fold these up"
-    }
+    },
+    "incomeBadge": "income"
   },
   "ExpenseDocumentsInput": {
     "ErrorToast": {
@@ -1283,8 +1266,7 @@
       "edit": "edit the expense",
       "TitleField": {
         "label": "expense title",
-        "placeholder": "monday evening restaurant vibes",
-        "description": "enter a description for the expense."
+        "placeholder": "monday evening restaurant vibes"
       },
       "categoryFieldDescription": "select the expense category.",
       "splitModeDescription": "choose how to split the bag, bestie.",
@@ -1373,8 +1355,7 @@
       "edit": "edit the income",
       "TitleField": {
         "label": "income title",
-        "placeholder": "salary or refund vibes",
-        "description": "describe where the income came from."
+        "placeholder": "salary or refund vibes"
       },
       "categoryFieldDescription": "select the income category.",
       "splitModeDescription": "choose how to split the payout.",
@@ -1404,7 +1385,6 @@
     "save": "save the expense",
     "saving": "saving the expense…",
     "cancel": "cancel, never mind",
-    "reimbursement": "settlement payment",
     "readOnlyNotice": "this group is archived. the expense is shown read-only.",
     "ParticipantDistribution": {
       "missing": "missing {missing} of {total}, oops",
@@ -1510,9 +1490,6 @@
     "participantSharesLabel": "shares for {name}",
     "decreaseShares": "decrease shares for {name}",
     "increaseShares": "increase shares for {name}",
-    "isReimbursementField": {
-      "label": "this is a settlement payment"
-    },
     "paidForOptionItemized": "itemized mode ",
     "paidForOptionItemizedHelper": "calculate each person's share from the individual items",
     "items": {
@@ -1582,7 +1559,10 @@
       "chooseTimezone": "pick a timezone",
       "done": "all set",
       "yourTime": "your local time"
-    }
+    },
+    "settlementTitle": "settlement payment",
+    "settlementHint": "{category}: not counted as spending in totals, stats, or budgets. still updates who owes whom.",
+    "incomeHint": "{category}: for money received. grouped as income, not a purchase."
   },
   "ExpensePreview": {
     "title": "expense preview era",
@@ -2863,7 +2843,6 @@
     "participantsCountLabel": "besties",
     "participantsSectionLabel": "besties summary",
     "settlementsSectionLabel": "suggested settle-ups",
-    "reimbursementsSectionLabel": "recorded settle-ups",
     "expensesSectionLabel": "expense details",
     "amountColumnLabel": "the damage",
     "participantColumnLabel": "bestie",
@@ -2877,10 +2856,11 @@
     "noExpensesLabel": "no expenses in this era.",
     "noParticipantsLabel": "no besties active in this era.",
     "noSettlementsLabel": "everything settled by the end date. we ate.",
-    "noReimbursementsLabel": "no settle-ups recorded through the end date.",
     "originalAmountLabel": "original damage",
     "expenseColumnLabel": "expense",
-    "categoryColumnLabel": "vibe category"
+    "categoryColumnLabel": "vibe category",
+    "recordedSettlementsSectionLabel": "recorded settle-ups",
+    "noRecordedSettlementsLabel": "no settle-ups recorded through the end date."
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2918,5 +2898,27 @@
     "hintTapToAddExpense": "i'm {name} — tap me to add an expense.",
     "hintTapToCreateGroup": "i'm {name} — tap me to start a group.",
     "billName": "Bill"
+  },
+  "CreateSettlement": {
+    "description": "review the payment before recording it, bestie.",
+    "pays": "{from} pays {to}, obviously",
+    "amount": "damage amount",
+    "date": "date",
+    "category": "category",
+    "create": "create it",
+    "edit": "edit the details",
+    "creating": "creating…",
+    "successToast": "settlement payment recorded. adulting.",
+    "successToastMultiple": "recorded {count} settlement payments as one entry",
+    "paysMany": "{from} pays {count} people, fr",
+    "receivesMany": "{to} receives {count} payments, fr",
+    "paymentsToInclude": "payments to include",
+    "selectionSummary": "{count} payments selected, totaling {total}, no cap",
+    "legToAria": "{from} pays {to}, {amount}, fr",
+    "legFromAria": "{from} pays {to}, {amount}, fr",
+    "toParticipant": "to {name}, bestie",
+    "fromParticipant": "from {name}, bestie",
+    "createSingle": "record payment",
+    "createMultiple": "record {count} payments"
   }
 }

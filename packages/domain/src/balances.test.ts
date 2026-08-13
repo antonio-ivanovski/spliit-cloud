@@ -2,7 +2,7 @@ import {
   getBalances,
   getCurrencyBalanceSummaries,
   getPublicBalances,
-  getSuggestedReimbursements,
+  getSuggestedSettlements,
 } from './balances'
 
 type BalancesExpense = Parameters<typeof getBalances>[0][number]
@@ -17,7 +17,6 @@ const makeExpense = (overrides: Partial<BalancesExpense>): BalancesExpense =>
     expenseDate: new Date('2025-01-01T00:00:00.000Z'),
     title: 'Dinner',
     amount: 0,
-    isReimbursement: false,
     splitMode: 'EVENLY',
     createdAt: new Date('2025-01-01T00:00:00.000Z'),
     recurrenceRule: null,
@@ -594,9 +593,9 @@ describe('getBalances', () => {
     expect(balances.p1).toEqual({ paid: 0, paidFor: 75, total: -75 })
   })
 
-  it('multi-payer 2-payer + reimbursement leaves the group with a zero public balance', () => {
+  it('multi-payer 2-payer + settlement leaves the group with a zero public balance', () => {
     // Two payers on an expense, with a 3-person split. The full pipeline
-    // (getBalances -> reimbursements -> public) must net to zero.
+    // (getBalances -> suggested settlements -> public) must net to zero.
     const expenses: BalancesExpense[] = [
       makeExpense({
         id: 'e1',
@@ -627,8 +626,8 @@ describe('getBalances', () => {
     ]
 
     const balances = getBalances(expenses)
-    const reimbursements = getSuggestedReimbursements(balances)
-    const publicBalances = getPublicBalances(reimbursements)
+    const suggestedSettlements = getSuggestedSettlements(balances)
+    const publicBalances = getPublicBalances(suggestedSettlements)
 
     // Global accumulation: paidFor exact 200/3 + 67/3 each → 89 each
     expect(balances.p0.paid).toBe(100)
@@ -1107,7 +1106,7 @@ describe('getCurrencyBalanceSummaries', () => {
           p0: { paid: 10000, paidFor: 0, total: 10000 },
           p1: { paid: 0, paidFor: 10000, total: -10000 },
         },
-        reimbursements: [{ from: 'p1', to: 'p0', amount: 10000 }],
+        suggestedSettlements: [{ from: 'p1', to: 'p0', amount: 10000 }],
       },
       {
         currencyCode: 'EUR',
@@ -1115,7 +1114,7 @@ describe('getCurrencyBalanceSummaries', () => {
           p1: { paid: 5000, paidFor: 0, total: 5000 },
           p0: { paid: 0, paidFor: 5000, total: -5000 },
         },
-        reimbursements: [{ from: 'p0', to: 'p1', amount: 5000 }],
+        suggestedSettlements: [{ from: 'p0', to: 'p1', amount: 5000 }],
       },
     ])
   })
@@ -1150,17 +1149,17 @@ describe('getCurrencyBalanceSummaries', () => {
     )
 
     expect(summary.currencyCode).toBe('USD')
-    expect(summary.reimbursements).toEqual([
+    expect(summary.suggestedSettlements).toEqual([
       { from: 'p1', to: 'p0', amount: 1000 },
     ])
   })
 })
 
-describe('getSuggestedReimbursements', () => {
-  it('clears multiple debtor legs with one payer reimbursement expense', () => {
+describe('getSuggestedSettlements', () => {
+  it('clears multiple debtor legs with one payer settlement expense', () => {
     // P0 owes P1 100 and P2 50. Recording those two transfers as one
-    // BY_AMOUNT reimbursement (P0 pays both recipients) should settle the
-    // same legs that getSuggestedReimbursements recommends.
+    // BY_AMOUNT settlement (P0 pays both recipients) should settle the
+    // same legs that getSuggestedSettlements recommends.
     const expenses: BalancesExpense[] = [
       makeExpense({
         id: 'e1',
@@ -1177,15 +1176,15 @@ describe('getSuggestedReimbursements', () => {
     ]
 
     const balances = getBalances(expenses)
-    expect(getSuggestedReimbursements(balances)).toEqual([
+    expect(getSuggestedSettlements(balances)).toEqual([
       { from: 'p0', to: 'p1', amount: 100 },
       { from: 'p0', to: 'p2', amount: 50 },
     ])
 
-    const combinedReimbursement = makeExpense({
+    const combinedSettlement = makeExpense({
       id: 'settlement',
       amount: 150,
-      isReimbursement: true,
+      categoryId: 'settlement',
       splitMode: 'BY_AMOUNT',
       paidBySplitMode: 'BY_AMOUNT',
       paidByList: [{ participant: { id: 'p0', name: 'P0' }, shares: 150 }],
@@ -1195,15 +1194,15 @@ describe('getSuggestedReimbursements', () => {
       ],
     })
 
-    const settledBalances = getBalances([...expenses, combinedReimbursement])
-    expect(getSuggestedReimbursements(settledBalances)).toEqual([])
+    const settledBalances = getBalances([...expenses, combinedSettlement])
+    expect(getSuggestedSettlements(settledBalances)).toEqual([])
     expect(
       Object.values(settledBalances).every((balance) => balance.total === 0),
     ).toBe(true)
   })
 
-  it('clears multiple payer legs with one recipient reimbursement expense', () => {
-    // P0 and P2 each owe P1 50. One reimbursement with both debtors as
+  it('clears multiple payer legs with one recipient settlement expense', () => {
+    // P0 and P2 each owe P1 50. One settlement with both debtors as
     // exact-amount payers and P1 as the sole recipient settles both legs.
     const expenses: BalancesExpense[] = [
       makeExpense({
@@ -1218,7 +1217,7 @@ describe('getSuggestedReimbursements', () => {
     ]
 
     const balances = getBalances(expenses)
-    const suggested = getSuggestedReimbursements(balances)
+    const suggested = getSuggestedSettlements(balances)
     expect(suggested).toHaveLength(2)
     expect(suggested).toEqual(
       expect.arrayContaining([
@@ -1227,10 +1226,10 @@ describe('getSuggestedReimbursements', () => {
       ]),
     )
 
-    const combinedReimbursement = makeExpense({
+    const combinedSettlement = makeExpense({
       id: 'settlement',
       amount: 100,
-      isReimbursement: true,
+      categoryId: 'settlement',
       splitMode: 'BY_AMOUNT',
       paidBySplitMode: 'BY_AMOUNT',
       paidByList: [
@@ -1240,8 +1239,8 @@ describe('getSuggestedReimbursements', () => {
       paidFor: [{ participant: { id: 'p1', name: 'P1' }, shares: 100 }],
     })
 
-    const settledBalances = getBalances([...expenses, combinedReimbursement])
-    expect(getSuggestedReimbursements(settledBalances)).toEqual([])
+    const settledBalances = getBalances([...expenses, combinedSettlement])
+    expect(getSuggestedSettlements(settledBalances)).toEqual([])
     expect(
       Object.values(settledBalances).every((balance) => balance.total === 0),
     ).toBe(true)
@@ -1254,11 +1253,11 @@ describe('getSuggestedReimbursements', () => {
       p2: { paid: 50, paidFor: 70, total: -20 }, // negative
     }
 
-    const reimbursements = getSuggestedReimbursements(balances)
+    const suggestedSettlements = getSuggestedSettlements(balances)
 
     // Verify positive balances are settled first
-    expect(reimbursements.length).toBeGreaterThan(0)
-    expect(reimbursements[0].to).toBe('p0') // p0 has positive balance
+    expect(suggestedSettlements.length).toBeGreaterThan(0)
+    expect(suggestedSettlements[0].to).toBe('p0') // p0 has positive balance
   })
 
   it('handles complex 5+ person scenario', () => {
@@ -1276,21 +1275,21 @@ describe('getSuggestedReimbursements', () => {
       eve: { paid: 0, paidFor: 100, total: -100 },
     }
 
-    const reimbursements = getSuggestedReimbursements(balances)
+    const suggestedSettlements = getSuggestedSettlements(balances)
 
-    // Verify sum of reimbursements balances out
-    const totalPaid = reimbursements.reduce((sum, r) => sum + r.amount, 0)
+    // Verify sum of suggested settlements balances out
+    const totalPaid = suggestedSettlements.reduce((sum, r) => sum + r.amount, 0)
     const totalOwed = 200 + 50 // alice + carol
     expect(totalPaid).toBe(totalOwed)
 
     // Verify all debtors are covered
-    const debtorsSettled = new Set(reimbursements.map((r) => r.from))
+    const debtorsSettled = new Set(suggestedSettlements.map((r) => r.from))
     expect(debtorsSettled.has('bob')).toBe(true)
     expect(debtorsSettled.has('dave')).toBe(true)
     expect(debtorsSettled.has('eve')).toBe(true)
 
     // Verify minimal transactions (should be <= 4 for 5 people)
-    expect(reimbursements.length).toBeLessThanOrEqual(4)
+    expect(suggestedSettlements.length).toBeLessThanOrEqual(4)
   })
 
   it('handles all participants with negative balances', () => {
@@ -1301,12 +1300,12 @@ describe('getSuggestedReimbursements', () => {
       p2: { paid: 0, paidFor: 50, total: -50 },
     }
 
-    const reimbursements = getSuggestedReimbursements(balances)
+    const suggestedSettlements = getSuggestedSettlements(balances)
 
     // When all are negative, algorithm still produces "settlements"
     // Verify the function handles this case without throwing
-    expect(Array.isArray(reimbursements)).toBe(true)
-    expect(reimbursements.length).toBeGreaterThanOrEqual(0)
+    expect(Array.isArray(suggestedSettlements)).toBe(true)
+    expect(suggestedSettlements.length).toBeGreaterThanOrEqual(0)
   })
 
   it('returns [] when all totals are 0', () => {
@@ -1316,13 +1315,13 @@ describe('getSuggestedReimbursements', () => {
       p2: { paid: 0, paidFor: 0, total: 0 },
     }
 
-    const reimbursements = getSuggestedReimbursements(balances)
+    const suggestedSettlements = getSuggestedSettlements(balances)
 
-    expect(reimbursements).toEqual([])
+    expect(suggestedSettlements).toEqual([])
   })
 })
 
-describe('getPublicBalances + getSuggestedReimbursements (UI pipeline)', () => {
+describe('getPublicBalances + getSuggestedSettlements (UI pipeline)', () => {
   it('distributes 1¢ EVENLY/3 so net is zero (no residual to mask)', () => {
     // Global distributeRemainder assigns the single cent to p0 (seed 0).
     // Payer p0 paid 1 and paidFor 1 → total 0; no residual for the UI pipeline.
@@ -1345,10 +1344,10 @@ describe('getPublicBalances + getSuggestedReimbursements (UI pipeline)', () => {
     expect(rawBalances.p1).toEqual({ paid: 0, paidFor: 0, total: 0 })
     expect(rawBalances.p2).toEqual({ paid: 0, paidFor: 0, total: 0 })
 
-    const reimbursements = getSuggestedReimbursements(rawBalances)
-    expect(reimbursements).toEqual([])
+    const suggestedSettlements = getSuggestedSettlements(rawBalances)
+    expect(suggestedSettlements).toEqual([])
 
-    const publicBalances = getPublicBalances(reimbursements)
+    const publicBalances = getPublicBalances(suggestedSettlements)
     expect(Object.values(publicBalances).every((b) => b.total === 0)).toBe(true)
     expect(Object.keys(publicBalances)).toHaveLength(0)
   })
@@ -1375,8 +1374,8 @@ describe('getPublicBalances + getSuggestedReimbursements (UI pipeline)', () => {
     expect(rawBalances.p1).toEqual({ paid: 0, paidFor: 10, total: -10 })
     expect(rawBalances.p2).toEqual({ paid: 0, paidFor: 10, total: -10 })
 
-    const reimbursements = getSuggestedReimbursements(rawBalances)
-    const publicBalances = getPublicBalances(reimbursements)
+    const suggestedSettlements = getSuggestedSettlements(rawBalances)
+    const publicBalances = getPublicBalances(suggestedSettlements)
 
     // Both pipelines agree on the same per-participant totals when
     // there is no rounding leftover.

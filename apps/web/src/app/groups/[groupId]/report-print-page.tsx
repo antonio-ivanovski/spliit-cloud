@@ -161,7 +161,7 @@ function ParticipantTable({ report }: { report: ExpenseReportViewModel }) {
 
 function SettlementsTable({ report }: { report: ExpenseReportViewModel }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseReport' })
-  return report.settlements.length > 0 ? (
+  return report.suggestedSettlements.length > 0 ? (
     <table className="print-report-table">
       <thead>
         <tr>
@@ -171,7 +171,7 @@ function SettlementsTable({ report }: { report: ExpenseReportViewModel }) {
         </tr>
       </thead>
       <tbody>
-        {report.settlements.map((settlement) => (
+        {report.suggestedSettlements.map((settlement) => (
           <tr key={`${settlement.from}-${settlement.to}-${settlement.amount}`}>
             <td>{settlement.from}</td>
             <td>{settlement.to}</td>
@@ -185,9 +185,13 @@ function SettlementsTable({ report }: { report: ExpenseReportViewModel }) {
   )
 }
 
-function ReimbursementsTable({ report }: { report: ExpenseReportViewModel }) {
+function RecordedSettlementsTable({
+  report,
+}: {
+  report: ExpenseReportViewModel
+}) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseReport' })
-  return report.reimbursements.length > 0 ? (
+  return report.recordedSettlements.length > 0 ? (
     <table className="print-report-table">
       <thead>
         <tr>
@@ -198,20 +202,20 @@ function ReimbursementsTable({ report }: { report: ExpenseReportViewModel }) {
         </tr>
       </thead>
       <tbody>
-        {report.reimbursements.map((reimbursement) => (
+        {report.recordedSettlements.map((settlement) => (
           <tr
-            key={`${reimbursement.date}-${reimbursement.from}-${reimbursement.to}-${reimbursement.amount}`}
+            key={`${settlement.date}-${settlement.from}-${settlement.to}-${settlement.amount}`}
           >
-            <td>{reimbursement.date}</td>
-            <td>{reimbursement.from}</td>
-            <td>{reimbursement.to}</td>
-            <td className="numeric strong">{reimbursement.amount}</td>
+            <td>{settlement.date}</td>
+            <td>{settlement.from}</td>
+            <td>{settlement.to}</td>
+            <td className="numeric strong">{settlement.amount}</td>
           </tr>
         ))}
       </tbody>
     </table>
   ) : (
-    <p className="print-report-empty">{t('noReimbursementsLabel')}</p>
+    <p className="print-report-empty">{t('noRecordedSettlementsLabel')}</p>
   )
 }
 
@@ -394,8 +398,10 @@ export function ReportPrintPage({ groupId, from, to }: ReportPrintPageProps) {
         </section>
 
         <section className="print-report-section">
-          <SectionHeading>{labels.reimbursementsSectionLabel}</SectionHeading>
-          <ReimbursementsTable report={report} />
+          <SectionHeading>
+            {labels.recordedSettlementsSectionLabel}
+          </SectionHeading>
+          <RecordedSettlementsTable report={report} />
         </section>
 
         <section className="print-report-section">

@@ -196,7 +196,8 @@
       "participants": "{names}",
       "showLess": "Zobrazit méně"
     },
-    "copyToast": "Vytvoření kopie výdaje zahájeno. Stávající údaje výdaje budou použity k vytvoření nového."
+    "copyToast": "Vytvoření kopie výdaje zahájeno. Stávající údaje výdaje budou použity k vytvoření nového.",
+    "incomeBadge": "Příjem"
   },
   "Groups": {
     "myGroups": "Moje skupiny",
@@ -666,8 +667,7 @@
       "edit": "Upravit příjem",
       "TitleField": {
         "label": "Název příjmu",
-        "placeholder": "Mzda nebo vratka",
-        "description": "Popište, odkud příjem pochází."
+        "placeholder": "Mzda nebo vratka"
       },
       "DateField": {
         "label": "Datum příjmu",
@@ -697,8 +697,7 @@
       "edit": "Upravit výdaj",
       "TitleField": {
         "label": "Název výdaje",
-        "placeholder": "Pondělní večerní restaurace",
-        "description": "Zadejte popis výdaje."
+        "placeholder": "Pondělní večerní restaurace"
       },
       "DateField": {
         "label": "Datum výdaje",
@@ -837,9 +836,6 @@
       "customRate": "Použít vlastní kurz",
       "via": "přes {currencies}"
     },
-    "isReimbursementField": {
-      "label": "Toto je vyrovnávací platba"
-    },
     "categoryField": {
       "label": "Kategorie"
     },
@@ -874,7 +870,6 @@
     "save": "Uložit",
     "saving": "Ukládání…",
     "cancel": "Zrušit",
-    "reimbursement": "Vyrovnávací platba",
     "readOnlyNotice": "Tato skupina je archivována. Výdaj je zobrazen pouze pro čtení.",
     "PaidBySplitModeField": {
       "label": "Způsob rozdělení plátce"
@@ -992,7 +987,10 @@
       "chooseTimezone": "Vybrat časové pásmo",
       "done": "Hotovo",
       "yourTime": "váš čas"
-    }
+    },
+    "settlementTitle": "Vyrovnávací platba",
+    "settlementHint": "{category}: Nezapočítává se jako výdaj do součtů, statistik ani rozpočtů. Přesto aktualizuje, kdo komu dluží.",
+    "incomeHint": "{category}: Pro přijaté peníze. Seskupeno jako příjem, ne jako nákup."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Smazat dokument",
@@ -1066,14 +1064,6 @@
     "title": "Zůstatky",
     "description": "Zobrazte čistý zůstatek každého účastníka.",
     "removedBadge": "Odebrán",
-    "Reimbursements": {
-      "title": "Navrhované vyrovnávací platby",
-      "description": "Těmito platbami vyrovnáte zůstatky s co nejmenším počtem převodů.",
-      "noImbursements": "Všichni ve skupině mají vyrovnáno 😁",
-      "owes": "<strong>{from}</strong> dluží <strong>{to}</strong>",
-      "markAsPaid": "Označit jako zaplaceno",
-      "markAsPaidAria": "Označit {amount} od {from} pro {to} jako zaplacené"
-    },
     "currencyDisplay": {
       "label": "Měna",
       "group": "Měna skupiny ({currency})",
@@ -1136,6 +1126,14 @@
       "individualAllHint": "Zobrazujete standardní individuální plán pro celou skupinu. Může obsahovat platby mezi podskupinami.",
       "unknownParticipant": "Čekající pozvánka",
       "individualWithinHint": "Zobrazujete individuální plán zohledňující podskupiny. Navrhované platby zůstávají v rámci každé podskupiny, pokud jsou součty podskupin již vyrovnané."
+    },
+    "Settlements": {
+      "title": "Navržená vyrovnání",
+      "description": "Těmito platbami vyrovnáte zůstatky s co nejmenším počtem převodů.",
+      "noSettlements": "Všichni ve skupině mají vyrovnáno 😁",
+      "owes": "<strong>{from}</strong> dluží <strong>{to}</strong>",
+      "markAsPaid": "Označit jako zaplaceno",
+      "markAsPaidAria": "Označit {amount} od {from} pro {to} jako zaplacené"
     }
   },
   "Stats": {
@@ -1332,6 +1330,9 @@
     },
     "Income": {
       "heading": "Příjmy"
+    },
+    "Settlement": {
+      "heading": "Vyrovnání"
     }
   },
   "Auth": {
@@ -2233,7 +2234,8 @@
         "recurrence": "Opakování",
         "reimbursement": "Vyrovnávací platba",
         "conversionSource": "Zdroj konverze",
-        "conversionRate": "Směnný kurz"
+        "conversionRate": "Směnný kurz",
+        "settlement": "Vyrovnávací platba"
       },
       "recurringCreated": "{participant} vytvořil(a) opakovaný výdaj „{title}“",
       "stopped": "{participant} zastavil(a) opakovaný výdaj „{title}“",
@@ -2465,28 +2467,6 @@
     "commentDelete": "Smazat komentář",
     "commentSend": "Odeslat komentář",
     "openDocument": "Otevřít dokument"
-  },
-  "CreateReimbursement": {
-    "description": "Zkontrolujte platbu před jejím zaznamenáním.",
-    "pays": "{from} platí {to}",
-    "amount": "Částka",
-    "date": "Datum",
-    "category": "Kategorie",
-    "create": "Vytvořit",
-    "edit": "Upravit podrobnosti",
-    "creating": "Vytváření…",
-    "successToast": "Vyrovnávací platba zaznamenána",
-    "successToastMultiple": "Zaznamenáno {count} vyrovnávacích plateb jako jedna položka",
-    "paysMany": "{from} platí {count} lidem",
-    "receivesMany": "{to} přijímá {count} plateb",
-    "paymentsToInclude": "Platby k zahrnutí",
-    "selectionSummary": "Vybráno {count} plateb, celkem {total}",
-    "legToAria": "{from} platí {to}, {amount}",
-    "legFromAria": "{from} platí {to}, {amount}",
-    "toParticipant": "pro {name}",
-    "fromParticipant": "od {name}",
-    "createSingle": "Zaznamenat platbu",
-    "createMultiple": "Zaznamenat {count} plateb"
   },
   "Participants": {
     "search": "Hledat účastníky...",
@@ -2905,7 +2885,6 @@
     "participantsCountLabel": "Účastníci",
     "participantsSectionLabel": "Souhrn účastníků",
     "settlementsSectionLabel": "Navrhovaná vyrovnání",
-    "reimbursementsSectionLabel": "Zaznamenané náhrady",
     "expensesSectionLabel": "Podrobnosti výdajů",
     "amountColumnLabel": "Částka",
     "participantColumnLabel": "Účastník",
@@ -2919,10 +2898,11 @@
     "noExpensesLabel": "Ve vybraném období nejsou žádné výdaje.",
     "noParticipantsLabel": "Ve vybraném období nejsou žádní účastníci s aktivitou.",
     "noSettlementsLabel": "K datu ukončení je vše vyrovnáno.",
-    "noReimbursementsLabel": "Do koncového data nebyly zaznamenány žádné náhrady.",
     "originalAmountLabel": "Původní částka",
     "expenseColumnLabel": "Výdaj",
-    "categoryColumnLabel": "Kategorie"
+    "categoryColumnLabel": "Kategorie",
+    "recordedSettlementsSectionLabel": "Zaznamenaná vyrovnání",
+    "noRecordedSettlementsLabel": "Do koncového data nebyla zaznamenána žádná vyrovnání."
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2960,5 +2940,27 @@
     "hintTapToAddExpense": "Jsem {name} — klepni na mě a přidej výdaj.",
     "hintTapToCreateGroup": "Jsem {name} — klepni na mě a vytvoř skupinu.",
     "billName": "Bill"
+  },
+  "CreateSettlement": {
+    "description": "Zkontrolujte platbu před jejím zaznamenáním.",
+    "pays": "{from} platí {to}",
+    "amount": "Částka",
+    "date": "Datum",
+    "category": "Kategorie",
+    "create": "Vytvořit",
+    "edit": "Upravit podrobnosti",
+    "creating": "Vytváření…",
+    "successToast": "Vyrovnávací platba zaznamenána",
+    "successToastMultiple": "Zaznamenáno {count} vyrovnávacích plateb jako jedna položka",
+    "paysMany": "{from} platí {count} lidem",
+    "receivesMany": "{to} přijímá {count} plateb",
+    "paymentsToInclude": "Platby k zahrnutí",
+    "selectionSummary": "Vybráno {count} plateb, celkem {total}",
+    "legToAria": "{from} platí {to}, {amount}",
+    "legFromAria": "{from} platí {to}, {amount}",
+    "toParticipant": "pro {name}",
+    "fromParticipant": "od {name}",
+    "createSingle": "Zaznamenat platbu",
+    "createMultiple": "Zaznamenat {count} plateb"
   }
 }

@@ -206,7 +206,6 @@ describe('Group flow — real DB', () => {
         splitMode: 'EVENLY',
         expenseDate: new Date().toISOString(),
         expenseTimeZone: 'UTC',
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'NONE',
       },
@@ -231,7 +230,6 @@ describe('Group flow — real DB', () => {
         splitMode: 'EVENLY',
         expenseDate: new Date().toISOString(),
         expenseTimeZone: 'UTC',
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'NONE',
       },
@@ -246,7 +244,7 @@ describe('Group flow — real DB', () => {
       linkInviteToken: undefined,
     })
     expect(balanceResult).toHaveProperty('balances')
-    expect(balanceResult).toHaveProperty('reimbursements')
+    expect(balanceResult).toHaveProperty('suggestedSettlements')
 
     // publicBalances only includes participants with non-zero totals
     expect(balanceResult.balances[adminParticipant.id].total).toBe(1500)

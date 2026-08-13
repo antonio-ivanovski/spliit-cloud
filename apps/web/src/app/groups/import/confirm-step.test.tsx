@@ -153,7 +153,6 @@ describe('ConfirmStep', () => {
         interval: 1,
         end: { type: 'INDEFINITE' as const },
       },
-      isReimbursement: false,
       notes: null,
     }
     render(

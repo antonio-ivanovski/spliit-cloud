@@ -4,7 +4,7 @@ export type CurrencyBalance = {
   currencyCode: string
   currency: Currency
   balances: Record<string, { paid: number; paidFor: number; total: number }>
-  reimbursements: Array<{ from: string; to: string; amount: number }>
+  suggestedSettlements: Array<{ from: string; to: string; amount: number }>
 }
 
 export function withDisplayCurrencies(

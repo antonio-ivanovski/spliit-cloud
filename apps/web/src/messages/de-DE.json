@@ -200,7 +200,8 @@
       "participants": "{names}",
       "showLess": "Weniger anzeigen"
     },
-    "copyToast": "Ausgabe wird kopiert. Die bestehenden Ausgabedetails werden zum Erstellen einer neuen Ausgabe verwendet."
+    "copyToast": "Ausgabe wird kopiert. Die bestehenden Ausgabedetails werden zum Erstellen einer neuen Ausgabe verwendet.",
+    "incomeBadge": "Einnahme"
   },
   "Groups": {
     "myGroups": "Meine Gruppen",
@@ -678,8 +679,7 @@
       "edit": "Einnahme bearbeiten",
       "TitleField": {
         "label": "Titel der Einnahme",
-        "placeholder": "Gehalt oder Rückerstattung",
-        "description": "Beschreibe, woher die Einnahme stammt."
+        "placeholder": "Gehalt oder Rückerstattung"
       },
       "DateField": {
         "label": "Datum der Einnahme",
@@ -709,8 +709,7 @@
       "edit": "Ausgabe bearbeiten",
       "TitleField": {
         "label": "Titel der Ausgabe",
-        "placeholder": "Montagabend Restaurant",
-        "description": "Füge eine Beschreibung für die Ausgabe hinzu."
+        "placeholder": "Montagabend Restaurant"
       },
       "DateField": {
         "label": "Datum der Ausgabe",
@@ -849,9 +848,6 @@
       "customRate": "Benutzerdefinierte Rate verwenden",
       "via": "über {currencies}"
     },
-    "isReimbursementField": {
-      "label": "Dies ist eine Ausgleichszahlung"
-    },
     "categoryField": {
       "label": "Kategorie"
     },
@@ -886,7 +882,6 @@
     "save": "Speichern",
     "saving": "Speichert…",
     "cancel": "Abbrechen",
-    "reimbursement": "Ausgleichszahlung",
     "readOnlyNotice": "Diese Gruppe ist archiviert. Die Ausgabe wird schreibgeschützt angezeigt.",
     "PaidBySplitModeField": {
       "label": "Aufteilungsart des Zahlers"
@@ -1006,7 +1001,10 @@
       "chooseTimezone": "Zeitzone auswählen",
       "done": "Fertig",
       "yourTime": "deine Zeit"
-    }
+    },
+    "settlementTitle": "Ausgleichszahlung",
+    "settlementHint": "{category}: Zählt in Totals, Statistiken und Budgets nicht als Ausgabe. Aktualisiert trotzdem, wer wem etwas schuldet.",
+    "incomeHint": "{category}: Für erhaltenes Geld. Wird als Einnahme gruppiert, nicht als Kauf."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Dokument löschen",
@@ -1080,14 +1078,6 @@
     "title": "Salden",
     "description": "Zeigt den Nettosaldo jeder teilnehmenden Person.",
     "removedBadge": "Entfernt",
-    "Reimbursements": {
-      "title": "Vorgeschlagene Ausgleichszahlungen",
-      "description": "Mit diesen Zahlungen gleichst du die Salden mit möglichst wenigen Überweisungen aus.",
-      "noImbursements": "Alle in deiner Gruppe sind ausgeglichen 😁",
-      "owes": "<strong>{from}</strong> schuldet <strong>{to}</strong>",
-      "markAsPaid": "Als gezahlt markieren",
-      "markAsPaidAria": "Markiere {amount} von {from} an {to} als bezahlt"
-    },
     "currencyDisplay": {
       "label": "Währung",
       "group": "Gruppenwährung ({currency})",
@@ -1150,6 +1140,14 @@
       "individualAllHint": "Du siehst den standardmäßigen individuellen Plan für die gesamte Gruppe. Er kann Zahlungen zwischen Untergruppen enthalten.",
       "unknownParticipant": "Ausstehende Einladung",
       "individualWithinHint": "Du siehst einen individuellen Plan, der Untergruppen berücksichtigt. Vorgeschlagene Zahlungen bleiben innerhalb der jeweiligen Untergruppe, sobald deren Salden bereits ausgeglichen sind."
+    },
+    "Settlements": {
+      "title": "Vorgeschlagene Ausgleichszahlungen",
+      "description": "Mit diesen Zahlungen gleichst du die Salden mit möglichst wenigen Überweisungen aus.",
+      "noSettlements": "Alle in deiner Gruppe sind ausgeglichen 😁",
+      "owes": "<strong>{from}</strong> schuldet <strong>{to}</strong>",
+      "markAsPaid": "Als gezahlt markieren",
+      "markAsPaidAria": "Markiere {amount} von {from} an {to} als bezahlt"
     }
   },
   "Stats": {
@@ -1348,6 +1346,9 @@
     },
     "Income": {
       "heading": "Einnahmen"
+    },
+    "Settlement": {
+      "heading": "Ausgleich"
     }
   },
   "Currencies": {
@@ -2247,7 +2248,8 @@
         "recurrence": "Wiederholung",
         "reimbursement": "Ausgleichszahlung",
         "conversionSource": "Umrechnungsquelle",
-        "conversionRate": "Umrechnungskurs"
+        "conversionRate": "Umrechnungskurs",
+        "settlement": "Ausgleichszahlung"
       },
       "recurringCreated": "{participant} hat die wiederkehrende Ausgabe „{title}“ erstellt",
       "stopped": "{participant} hat die wiederkehrende Ausgabe {title} gestoppt",
@@ -2497,28 +2499,6 @@
     "commentDelete": "Kommentar löschen",
     "commentSend": "Kommentar senden",
     "openDocument": "Dokument öffnen"
-  },
-  "CreateReimbursement": {
-    "description": "Überprüfe die Zahlung, bevor du sie aufzeichnest.",
-    "pays": "{from} zahlt {to}",
-    "amount": "Betrag",
-    "date": "Datum",
-    "category": "Kategorie",
-    "create": "Erstellen",
-    "edit": "Details bearbeiten",
-    "creating": "Erstellt…",
-    "successToast": "Ausgleichszahlung erfasst",
-    "successToastMultiple": "{count} Ausgleichszahlungen als einen Eintrag erfasst",
-    "paysMany": "{from} zahlt an {count} Personen",
-    "receivesMany": "{to} erhält {count} Zahlungen",
-    "paymentsToInclude": "Einzubeziehende Zahlungen",
-    "selectionSummary": "{count} Zahlungen ausgewählt, insgesamt {total}",
-    "legToAria": "{from} zahlt an {to}, {amount}",
-    "legFromAria": "{from} zahlt an {to}, {amount}",
-    "toParticipant": "an {name}",
-    "fromParticipant": "von {name}",
-    "createSingle": "Zahlung erfassen",
-    "createMultiple": "{count} Zahlungen erfassen"
   },
   "Participants": {
     "search": "Teilnehmer suchen...",
@@ -2939,7 +2919,6 @@
     "participantsCountLabel": "Teilnehmende",
     "participantsSectionLabel": "Zusammenfassung der Teilnehmer",
     "settlementsSectionLabel": "Vorgeschlagene Ausgleichszahlungen",
-    "reimbursementsSectionLabel": "Erfasste Ausgleichszahlungen",
     "expensesSectionLabel": "Ausgabendetails",
     "amountColumnLabel": "Betrag",
     "participantColumnLabel": "Teilnehmer",
@@ -2953,10 +2932,11 @@
     "noExpensesLabel": "Keine Ausgaben im ausgewählten Zeitraum.",
     "noParticipantsLabel": "Keine Teilnehmenden mit Aktivität im ausgewählten Zeitraum.",
     "noSettlementsLabel": "Alles ist bis zum Enddatum ausgeglichen.",
-    "noReimbursementsLabel": "Bis zum Enddatum wurden keine Ausgleichszahlungen erfasst.",
     "originalAmountLabel": "Originalbetrag",
     "expenseColumnLabel": "Ausgabe",
-    "categoryColumnLabel": "Kategorie"
+    "categoryColumnLabel": "Kategorie",
+    "recordedSettlementsSectionLabel": "Erfasste Ausgleichszahlungen",
+    "noRecordedSettlementsLabel": "Bis zum Enddatum wurden keine Ausgleichszahlungen erfasst."
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2994,5 +2974,27 @@
     "hintTapToAddExpense": "Ich bin {name} — tippe mich an, um eine Ausgabe hinzuzufügen.",
     "hintTapToCreateGroup": "Ich bin {name} — tippe mich an, um eine Gruppe zu erstellen.",
     "billName": "Bill"
+  },
+  "CreateSettlement": {
+    "description": "Überprüfe die Zahlung, bevor du sie aufzeichnest.",
+    "pays": "{from} zahlt {to}",
+    "amount": "Betrag",
+    "date": "Datum",
+    "category": "Kategorie",
+    "create": "Erstellen",
+    "edit": "Details bearbeiten",
+    "creating": "Erstellt…",
+    "successToast": "Ausgleichszahlung erfasst",
+    "successToastMultiple": "{count} Ausgleichszahlungen als einen Eintrag erfasst",
+    "paysMany": "{from} zahlt an {count} Personen",
+    "receivesMany": "{to} erhält {count} Zahlungen",
+    "paymentsToInclude": "Einzubeziehende Zahlungen",
+    "selectionSummary": "{count} Zahlungen ausgewählt, insgesamt {total}",
+    "legToAria": "{from} zahlt an {to}, {amount}",
+    "legFromAria": "{from} zahlt an {to}, {amount}",
+    "toParticipant": "an {name}",
+    "fromParticipant": "von {name}",
+    "createSingle": "Zahlung erfassen",
+    "createMultiple": "{count} Zahlungen erfassen"
   }
 }

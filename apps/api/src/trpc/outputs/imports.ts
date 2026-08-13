@@ -25,7 +25,6 @@ const normalizedSourceExpenseSchema = z.object({
   splitMode: z.enum(['EVENLY', 'BY_SHARES', 'BY_PERCENTAGE', 'BY_AMOUNT']),
   recurrenceRule: z.enum(['NONE', 'DAILY', 'WEEKLY', 'MONTHLY']),
   recurrence: recurrenceConfigSchema.nullable().optional(),
-  isReimbursement: z.boolean(),
   notes: z.string().nullable(),
 })
 

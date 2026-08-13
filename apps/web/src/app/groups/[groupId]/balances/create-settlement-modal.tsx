@@ -22,7 +22,7 @@ import {
 import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
-import type { Reimbursement } from '@/lib/balances'
+import type { SuggestedSettlement } from '@/lib/balances'
 import type { Currency } from '@/lib/currency'
 import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 import {
@@ -32,7 +32,7 @@ import {
   getCurrencyFromGroup,
 } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
-import { PAYMENT_CATEGORY_ID } from '@spliit/domain'
+import { SETTLEMENT_CATEGORY_ID } from '@spliit/domain'
 
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
@@ -45,10 +45,10 @@ import {
 } from './settlement-groups'
 import { SettlementAvatar } from './settlement-ui'
 
-type CreateReimbursementModalProps = {
+type CreateSettlementModalProps = {
   groupId: string
   /** Kept for the existing single-leg entry point. */
-  reimbursement?: Reimbursement | null
+  settlement?: SuggestedSettlement | null
   settlementGroup?: SettlementGroup
   initialSelectedKeys?: string[]
   currency: Currency
@@ -67,9 +67,9 @@ type CreateReimbursementModalProps = {
   onOpenChange: (open: boolean) => void
 }
 
-export function CreateReimbursementModal({
+export function CreateSettlementModal({
   groupId,
-  reimbursement,
+  settlement,
   settlementGroup,
   initialSelectedKeys,
   currency,
@@ -77,7 +77,7 @@ export function CreateReimbursementModal({
   participants: participantsProp,
   open,
   onOpenChange,
-}: CreateReimbursementModalProps) {
+}: CreateSettlementModalProps) {
   const { group } = useCurrentGroup()
   const isPendingInvitee = useIsPendingInvitee()
   const linkInviteToken = useLinkInviteToken()
@@ -88,7 +88,7 @@ export function CreateReimbursementModal({
   const today = dateOnlyInAccountTimeZone(new Date(), accountTimeZone)
   const utils = trpc.useUtils()
   const { toast } = useToast()
-  const { t } = useTranslation(undefined, { keyPrefix: 'CreateReimbursement' })
+  const { t } = useTranslation(undefined, { keyPrefix: 'CreateSettlement' })
   const { t: tForm } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const { t: tCategories } = useTranslation(undefined, {
     keyPrefix: 'Categories',
@@ -103,10 +103,10 @@ export function CreateReimbursementModal({
       removed: 'removed' in participant ? Boolean(participant.removed) : false,
     }),
   )
-  const legs = settlementGroup?.legs ?? (reimbursement ? [reimbursement] : [])
+  const legs = settlementGroup?.legs ?? (settlement ? [settlement] : [])
   const direction: SettlementDirection = settlementGroup?.direction ?? 'pay'
   const centralParticipantId =
-    settlementGroup?.participantId ?? reimbursement?.from
+    settlementGroup?.participantId ?? settlement?.from
   const centralParticipant = participants.find(
     (participant) => participant.id === centralParticipantId,
   )
@@ -156,7 +156,7 @@ export function CreateReimbursementModal({
       ? undefined
       : selectedLegs.length > 1 && settlementGroup
         ? {
-            reimbursement: 'yes' as const,
+            settlement: 'yes' as const,
             amount: selectedTotal.toString(),
             settlements: JSON.stringify({
               direction,
@@ -168,7 +168,7 @@ export function CreateReimbursementModal({
               : {}),
           }
         : {
-            reimbursement: 'yes' as const,
+            settlement: 'yes' as const,
             from: selectedLegs[0]!.from,
             to: selectedLegs[0]!.to,
             amount: selectedLegs[0]!.amount.toString(),
@@ -204,15 +204,14 @@ export function CreateReimbursementModal({
         expense: {
           expenseDate,
           expenseTimeZone: accountTimeZone,
-          title: tForm('reimbursement'),
-          category: PAYMENT_CATEGORY_ID,
+          title: tForm('settlementTitle'),
+          category: SETTLEMENT_CATEGORY_ID,
           amount: selectedTotal,
           paidBySplitMode: 'BY_AMOUNT',
           paidByList,
           splitMode: isLegacySingle ? 'EVENLY' : 'BY_AMOUNT',
           paidFor,
           isMultiPayer: direction === 'receive' && paidByList.length > 1,
-          isReimbursement: true,
           documents: [],
           recurrence: null,
           ...(needsConversion && originalCurrencyCode
@@ -252,10 +251,10 @@ export function CreateReimbursementModal({
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle className="flex items-center gap-2">
             <CategoryIcon
-              category={{ grouping: 'Uncategorized', name: 'Payment' }}
+              category={{ grouping: 'Settlement', name: 'Settlement' }}
               className="h-5 w-5 shrink-0 text-muted-foreground"
             />
-            <span className="truncate">{tForm('reimbursement')}</span>
+            <span className="truncate">{tForm('settlementTitle')}</span>
           </ResponsiveDialogTitle>
           <ResponsiveDialogDescription>
             {t('description')}
@@ -290,7 +289,7 @@ export function CreateReimbursementModal({
                       )?.name ?? '',
                   })}
             </div>
-            <ReimbursementSelectionList
+            <SettlementSelectionList
               legs={legs}
               direction={direction}
               participants={participants}
@@ -364,7 +363,7 @@ export function CreateReimbursementModal({
           <div className="text-sm text-muted-foreground">
             {t('category')}:{' '}
             <span className="text-foreground">
-              {categoryLabel(tCategories, PAYMENT_CATEGORY_ID)}
+              {categoryLabel(tCategories, SETTLEMENT_CATEGORY_ID)}
             </span>
           </div>
         </ResponsiveDialogBody>
@@ -386,7 +385,7 @@ export function CreateReimbursementModal({
                   ) : undefined
                 }
                 onClick={() => onOpenChange(false)}
-                data-testid="reimbursement-edit"
+                data-testid="settlement-edit"
               >
                 <Pencil className="me-2 h-4 w-4" />
                 {t('edit')}
@@ -396,7 +395,7 @@ export function CreateReimbursementModal({
                 className="flex-1 sm:flex-none"
                 onClick={handleCreate}
                 disabled={isPending || selectedLegs.length === 0}
-                data-testid="reimbursement-create"
+                data-testid="settlement-create"
               >
                 <Check className="me-2 h-4 w-4" />
                 {isPending
@@ -413,7 +412,7 @@ export function CreateReimbursementModal({
   )
 }
 
-function ReimbursementSelectionList({
+function SettlementSelectionList({
   legs,
   direction,
   participants,
@@ -423,7 +422,7 @@ function ReimbursementSelectionList({
   selectedKeySet,
   setSelectedKeys,
 }: {
-  legs: Reimbursement[]
+  legs: SuggestedSettlement[]
   direction: SettlementDirection
   participants: Array<{ id: string; name: string; removed?: boolean }>
   centralParticipant?: { id: string; name: string; removed?: boolean }
@@ -432,7 +431,7 @@ function ReimbursementSelectionList({
   selectedKeySet: Set<string>
   setSelectedKeys: Dispatch<SetStateAction<string[]>>
 }) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'CreateReimbursement' })
+  const { t } = useTranslation(undefined, { keyPrefix: 'CreateSettlement' })
   return (
     <div className="space-y-2" role="group" aria-label={t('paymentsToInclude')}>
       {legs.map((leg) => {
@@ -444,11 +443,11 @@ function ReimbursementSelectionList({
         return (
           <label
             key={key}
-            htmlFor={`reimbursement-${key}`}
+            htmlFor={`settlement-${key}`}
             className="flex min-h-11 cursor-pointer items-center gap-3 rounded-md border border-border/70 px-3 py-2 transition-colors hover:bg-muted/50"
           >
             <Checkbox
-              id={`reimbursement-${key}`}
+              id={`settlement-${key}`}
               checked={selectedKeySet.has(key)}
               onCheckedChange={(checked) => {
                 setSelectedKeys((current) =>
@@ -470,7 +469,7 @@ function ReimbursementSelectionList({
                       amount: formatCurrency(currency, leg.amount, locale),
                     })
               }
-              data-testid={`reimbursement-select-${key}`}
+              data-testid={`settlement-select-${key}`}
             />
             {counterparty && (
               <SettlementAvatar

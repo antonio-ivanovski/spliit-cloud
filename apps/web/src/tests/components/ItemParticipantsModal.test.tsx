@@ -63,7 +63,6 @@ const EMPTY_DEFAULTS: ExpenseFormInputValues = {
   isMultiPayer: false,
   paidFor: [],
   splitMode: 'EVENLY',
-  isReimbursement: false,
   documents: [],
   notes: '',
   recurrenceRule: 'NONE',

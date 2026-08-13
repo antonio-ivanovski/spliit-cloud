@@ -27,7 +27,6 @@ const makeExpense = (overrides: Partial<TotalsExpense>): TotalsExpense =>
     expenseDate: new Date('2025-01-01T00:00:00.000Z'),
     title: 'Dinner',
     amount: 0,
-    isReimbursement: false,
     splitMode: 'EVENLY',
     createdAt: new Date('2025-01-01T00:00:00.000Z'),
     recurrenceRule: null,
@@ -59,21 +58,21 @@ const sumValues = (map: Record<string, number>) =>
   Object.values(map).reduce((s, n) => s + n, 0)
 
 describe('getTotalGroupSpending', () => {
-  it('sums all non-reimbursement expenses', () => {
+  it('sums all non-settlement expenses', () => {
     const expenses = [
-      makeExpense({ id: 'e1', amount: 100, isReimbursement: false }),
-      makeExpense({ id: 'e2', amount: 250, isReimbursement: false }),
-      makeExpense({ id: 'e3', amount: 50, isReimbursement: false }),
+      makeExpense({ id: 'e1', amount: 100 }),
+      makeExpense({ id: 'e2', amount: 250 }),
+      makeExpense({ id: 'e3', amount: 50 }),
     ]
 
     expect(getTotalGroupSpending(expenses)).toBe(400)
   })
 
-  it('excludes reimbursements from total spending', () => {
+  it('excludes settlements from total spending', () => {
     const expenses = [
-      makeExpense({ id: 'e1', amount: 100, isReimbursement: false }),
-      makeExpense({ id: 'e2', amount: 999, isReimbursement: true }),
-      makeExpense({ id: 'e3', amount: 250, isReimbursement: false }),
+      makeExpense({ id: 'e1', amount: 100 }),
+      makeExpense({ id: 'e2', amount: 999, categoryId: 'settlement' }),
+      makeExpense({ id: 'e3', amount: 250 }),
     ]
 
     expect(getTotalGroupSpending(expenses)).toBe(350)
@@ -109,18 +108,17 @@ describe('getTotalActiveUserPaidFor', () => {
     expect(getTotalActiveUserPaidFor('u1', expenses)).toBe(2025)
   })
 
-  it('excludes reimbursements even if paid by active user', () => {
+  it('excludes settlements even if paid by active user', () => {
     const expenses: TotalsExpense[] = [
       makeExpense({
         id: 'e1',
         amount: 1000,
-        isReimbursement: false,
         paidByList: [makePaidBy('u1', 1)],
       }),
       makeExpense({
         id: 'e2',
         amount: 500,
-        isReimbursement: true,
+        categoryId: 'settlement',
         paidByList: [makePaidBy('u1', 1)],
       }),
     ]
@@ -227,7 +225,6 @@ describe('getTotalActiveUserShare', () => {
       makeExpense({
         id: 'e1',
         amount: 100,
-        isReimbursement: false,
         splitMode: 'EVENLY',
         paidFor: [
           makePaidFor('u1', 1),
@@ -238,14 +235,12 @@ describe('getTotalActiveUserShare', () => {
       makeExpense({
         id: 'e2',
         amount: 90,
-        isReimbursement: false,
         splitMode: 'BY_AMOUNT',
         paidFor: [makePaidFor('u1', 30), makePaidFor('u2', 60)],
       }),
       makeExpense({
         id: 'e3',
         amount: 50,
-        isReimbursement: false,
         splitMode: 'EVENLY',
         paidFor: [makePaidFor('u1', 1), makePaidFor('u2', 1)],
       }),
@@ -643,10 +638,10 @@ describe('calculatePaidByShares', () => {
 })
 
 describe('calculateShare', () => {
-  it('returns 0 for reimbursements', () => {
+  it('returns 0 for settlements', () => {
     const expense: ShareExpense = {
       amount: 100,
-      isReimbursement: true,
+      categoryId: 'settlement',
       splitMode: 'EVENLY',
       paidFor: [makePaidFor('u1', 1), makePaidFor('u2', 1)],
     }
@@ -658,7 +653,6 @@ describe('calculateShare', () => {
   it('returns 0 if participant not in paidFor', () => {
     const expense: ShareExpense = {
       amount: 100,
-      isReimbursement: false,
       splitMode: 'EVENLY',
       paidFor: [makePaidFor('u1', 1), makePaidFor('u2', 1)],
     }
@@ -669,7 +663,6 @@ describe('calculateShare', () => {
   it('EVENLY returns integer cents summing to amount', () => {
     const expense: ShareExpense = {
       amount: 100,
-      isReimbursement: false,
       splitMode: 'EVENLY',
       paidFor: [
         makePaidFor('u1', 1),
@@ -688,7 +681,6 @@ describe('calculateShare', () => {
   it('BY_AMOUNT returns exact share amount', () => {
     const expense: ShareExpense = {
       amount: 999,
-      isReimbursement: false,
       splitMode: 'BY_AMOUNT',
       paidFor: [makePaidFor('u1', 123), makePaidFor('u2', 456)],
       paidByList: [makePaidBy('payer', 1)],
@@ -702,7 +694,6 @@ describe('calculateShare', () => {
   it('BY_PERCENTAGE calculates share using shares/10000', () => {
     const expense: ShareExpense = {
       amount: 1000,
-      isReimbursement: false,
       splitMode: 'BY_PERCENTAGE',
       paidFor: [makePaidFor('u1', 2500), makePaidFor('u2', 7500)],
     }
@@ -714,7 +705,6 @@ describe('calculateShare', () => {
   it('BY_SHARES weights shares by ratio', () => {
     const expense: ShareExpense = {
       amount: 600,
-      isReimbursement: false,
       splitMode: 'BY_SHARES',
       paidFor: [
         makePaidFor('u1', 1),
@@ -731,7 +721,6 @@ describe('calculateShare', () => {
   it('ITEMIZED returns exact share (cents) for each participant', () => {
     const expense: ShareExpense = {
       amount: 10000,
-      isReimbursement: false,
       splitMode: 'ITEMIZED',
       paidFor: [makePaidFor('alice', 7000), makePaidFor('bob', 3000)],
       paidByList: [makePaidBy('alice', 1)],
@@ -747,7 +736,6 @@ describe('calculateShare', () => {
       originalAmount: 20100,
       originalCurrency: 'ARS',
       conversionRate: 0.00059,
-      isReimbursement: false,
       splitMode: 'ITEMIZED',
       paidFor: [makePaidFor('alice', 6700), makePaidFor('bob', 13400)],
       paidByList: [makePaidBy('alice', 1)],
@@ -761,7 +749,6 @@ describe('calculateShare', () => {
   it('mixed EVENLY + ITEMIZED totals for calculateShare', () => {
     const aliceShare1 = calculateShare('alice', {
       amount: 600,
-      isReimbursement: false,
       splitMode: 'EVENLY',
       paidFor: [
         makePaidFor('alice', 1),
@@ -771,7 +758,6 @@ describe('calculateShare', () => {
     })
     const aliceShare2 = calculateShare('alice', {
       amount: 1000,
-      isReimbursement: false,
       splitMode: 'ITEMIZED',
       paidFor: [
         makePaidFor('alice', 300),
@@ -803,10 +789,10 @@ describe('calculateShare', () => {
 })
 
 describe('calculatePaidByShare', () => {
-  it('returns 0 for reimbursements', () => {
+  it('returns 0 for settlements', () => {
     const expense: PaidByShareExpense = {
       amount: 100,
-      isReimbursement: true,
+      categoryId: 'settlement',
       paidBySplitMode: 'EVENLY',
       paidByList: [makePaidBy('u1', 1), makePaidBy('u2', 1)],
     }
@@ -818,7 +804,6 @@ describe('calculatePaidByShare', () => {
   it('returns 0 if participant not in paidByList', () => {
     const expense: PaidByShareExpense = {
       amount: 100,
-      isReimbursement: false,
       paidBySplitMode: 'EVENLY',
       paidByList: [makePaidBy('u1', 1), makePaidBy('u2', 1)],
     }
@@ -829,7 +814,6 @@ describe('calculatePaidByShare', () => {
   it('EVENLY divides expense amount by payer count as integer cents', () => {
     const expense: PaidByShareExpense = {
       amount: 100,
-      isReimbursement: false,
       paidBySplitMode: 'EVENLY',
       paidByList: [
         makePaidBy('u1', 1),
@@ -847,7 +831,6 @@ describe('calculatePaidByShare', () => {
   it('BY_AMOUNT returns the literal share when sums match', () => {
     const expense: PaidByShareExpense = {
       amount: 579,
-      isReimbursement: false,
       paidBySplitMode: 'BY_AMOUNT',
       paidByList: [makePaidBy('u1', 123), makePaidBy('u2', 456)],
     }
@@ -859,7 +842,6 @@ describe('calculatePaidByShare', () => {
   it('BY_PERCENTAGE uses shares/10000 of the amount', () => {
     const expense: PaidByShareExpense = {
       amount: 1000,
-      isReimbursement: false,
       paidBySplitMode: 'BY_PERCENTAGE',
       paidByList: [makePaidBy('u1', 2500), makePaidBy('u2', 7500)],
     }
@@ -871,7 +853,6 @@ describe('calculatePaidByShare', () => {
   it('BY_SHARES weights by shares ratio', () => {
     const expense: PaidByShareExpense = {
       amount: 600,
-      isReimbursement: false,
       paidBySplitMode: 'BY_SHARES',
       paidByList: [
         makePaidBy('u1', 1),
@@ -888,7 +869,6 @@ describe('calculatePaidByShare', () => {
   it('mirrors calculateShare for each split mode', () => {
     const baseExpense = {
       amount: 600,
-      isReimbursement: false,
     } as const
 
     for (const mode of ['EVENLY', 'BY_SHARES', 'BY_PERCENTAGE'] as const) {
@@ -940,7 +920,6 @@ describe('calculatePaidByShare', () => {
   it('cross-currency BY_AMOUNT returns the share converted to ledger currency', () => {
     const expense: PaidByShareExpense = {
       amount: 9200,
-      isReimbursement: false,
       paidBySplitMode: 'BY_AMOUNT',
       originalAmount: 10000,
       originalCurrency: 'USD',
@@ -955,7 +934,6 @@ describe('calculatePaidByShare', () => {
   it('cross-currency BY_PERCENTAGE converts after percentage of original', () => {
     const expense: PaidByShareExpense = {
       amount: 9200,
-      isReimbursement: false,
       paidBySplitMode: 'BY_PERCENTAGE',
       originalAmount: 10000,
       originalCurrency: 'USD',

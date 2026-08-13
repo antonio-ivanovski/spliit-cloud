@@ -111,7 +111,6 @@ const expenseCommonFieldsSchema = {
   expenseTimeZone: timeZoneSchema,
   categoryId: categoryIdSchema,
   category: categoryResponseSchema,
-  isReimbursement: z.boolean(),
   splitMode: splitModeSchema,
   paidBySplitMode: splitModeSchema,
   originalAmount: z.number().int().nullable(),

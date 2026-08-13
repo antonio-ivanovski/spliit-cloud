@@ -115,7 +115,6 @@ export function toExpenseDomainShape(
     originalCurrency: existing.originalCurrency ?? undefined,
     conversionRate: existing.conversionRate ?? undefined,
     conversionSource: existing.conversionSource,
-    isReimbursement: existing.isReimbursement,
   } as Expense & {
     originalAmount?: number
     originalCurrency?: string

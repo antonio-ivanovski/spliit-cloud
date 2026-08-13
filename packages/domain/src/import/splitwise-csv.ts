@@ -1,5 +1,6 @@
 import Papa from 'papaparse'
 
+import { SETTLEMENT_CATEGORY_ID } from '../categories'
 import type { Currency } from '../currency'
 import { getCurrency } from '../currency'
 import { distributeRemainder } from '../remainder-distribution'
@@ -104,7 +105,7 @@ export function tryParseSplitwiseCsv(input: string): ImportParseResult {
       (currencyCounts.get(currencyCode) ?? 0) + 1,
     )
 
-    const isReimbursement =
+    const isSettlement =
       category.toLowerCase() === 'payment' || /^.+ paid .+ /.test(title)
 
     // Per Splitwise convention each cell is `Paid - Owe`.
@@ -222,7 +223,9 @@ export function tryParseSplitwiseCsv(input: string): ImportParseResult {
     expenses.push({
       title,
       expenseDate: date.slice(0, 10),
-      category: splitwiseCategoryToId(category),
+      category: isSettlement
+        ? SETTLEMENT_CATEGORY_ID
+        : splitwiseCategoryToId(category),
       amountCurrency: currencyCode,
       amount: amountCents,
       originalAmount: null,
@@ -233,7 +236,6 @@ export function tryParseSplitwiseCsv(input: string): ImportParseResult {
       paidFor: resolvedPaidFor,
       splitMode,
       recurrenceRule: 'NONE',
-      isReimbursement,
       notes: null,
     })
   }

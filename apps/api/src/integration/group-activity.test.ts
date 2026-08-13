@@ -330,7 +330,6 @@ describe('Group activity — real DB', () => {
         splitMode: 'EVENLY',
         expenseDate: new Date().toISOString(),
         expenseTimeZone: 'UTC',
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'NONE',
       },

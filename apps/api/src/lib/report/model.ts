@@ -4,7 +4,8 @@ import {
   calculateShares,
   getBalances,
   getPublicBalances,
-  getSuggestedReimbursements,
+  getSuggestedSettlements,
+  isSettlementCategory,
 } from '@spliit/domain'
 
 import { endOfReportDay, formatIsoDate } from './dates'
@@ -20,7 +21,6 @@ export type ReportExpenseRow = {
   expenseDate: Date
   createdAt: Date
   categoryId: string
-  isReimbursement: boolean
   title: string
   splitMode: SplitMode
   paidBySplitMode: SplitMode
@@ -75,7 +75,7 @@ export type ReportExpenseDetail = {
   shares: Array<{ participantId: string; amount: number }>
 }
 
-export type ReportReimbursement = {
+export type RecordedSettlement = {
   date: string
   fromIds: string[]
   toIds: string[]
@@ -95,14 +95,12 @@ export type ExpenseReportModel = {
     categories: ReportCategoryTotal[]
   }
   participants: ReportParticipantSummary[]
-  settlements: Array<{ from: string; to: string; amount: number }>
-  reimbursements: ReportReimbursement[]
+  suggestedSettlements: Array<{ from: string; to: string; amount: number }>
+  recordedSettlements: RecordedSettlement[]
   expenses: ReportExpenseDetail[]
 }
 
-type BalanceLike = Parameters<typeof getBalances>[0][number] & {
-  isReimbursement: boolean
-}
+type BalanceLike = Parameters<typeof getBalances>[0][number]
 
 function compareByDateCreated(
   a: ReportExpenseRow,
@@ -119,7 +117,7 @@ function toBalanceLike(row: ReportExpenseRow): BalanceLike {
     amount: row.amount,
     splitMode: row.splitMode,
     paidBySplitMode: row.paidBySplitMode,
-    isReimbursement: row.isReimbursement,
+    categoryId: row.categoryId,
     originalAmount: row.originalAmount,
     originalCurrency: row.originalCurrency,
     conversionRate: row.conversionRate,
@@ -171,7 +169,10 @@ export function buildExpenseReport(input: {
     date.getTime() >= from.getTime() && date.getTime() <= toEnd.getTime()
 
   const periodExpenses = input.rows
-    .filter((row) => !row.isReimbursement && inPeriod(row.expenseDate))
+    .filter(
+      (row) =>
+        !isSettlementCategory(row.categoryId) && inPeriod(row.expenseDate),
+    )
     .sort(compareByDateCreated)
   const asOfExpenses = input.rows.filter(
     (row) => row.expenseDate.getTime() <= toEnd.getTime(),
@@ -198,8 +199,8 @@ export function buildExpenseReport(input: {
 
   const periodBalances = getBalances(periodExpenses.map(toBalanceLike))
   const balances = getBalances(asOfExpenses.map(toBalanceLike))
-  const settlements = getSuggestedReimbursements(balances)
-  const publicBalances = getPublicBalances(settlements)
+  const suggestedSettlements = getSuggestedSettlements(balances)
+  const publicBalances = getPublicBalances(suggestedSettlements)
 
   const participants: ReportParticipantSummary[] = input.participants.map(
     (participant) => {
@@ -213,8 +214,8 @@ export function buildExpenseReport(input: {
     },
   )
 
-  const reimbursements: ReportReimbursement[] = asOfExpenses
-    .filter((row) => row.isReimbursement)
+  const recordedSettlements: RecordedSettlement[] = asOfExpenses
+    .filter((row) => isSettlementCategory(row.categoryId))
     .sort(compareByDateCreated)
     .map((row) => ({
       date: formatIsoDate(row.expenseDate),
@@ -265,8 +266,8 @@ export function buildExpenseReport(input: {
       categories,
     },
     participants,
-    settlements,
-    reimbursements,
+    suggestedSettlements,
+    recordedSettlements,
     expenses,
   }
 }

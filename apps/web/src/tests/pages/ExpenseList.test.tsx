@@ -103,7 +103,6 @@ function makeExpense(overrides: Record<string, unknown> = {}) {
       { ledgerParticipant: { id: 'p1', name: 'Alice' }, shares: 4500 },
     ],
     paidFor: [{ ledgerParticipant: { id: 'lp2', name: 'Bob' }, shares: null }],
-    isReimbursement: false,
     splitMode: 'EVENLY',
     recurrenceRule: null,
     documentCount: 0,

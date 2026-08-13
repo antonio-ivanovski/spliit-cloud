@@ -94,7 +94,6 @@ const baseExpense = {
     { participant: 'dest-lp-2', shares: 9200 },
   ],
   splitMode: 'BY_AMOUNT',
-  isReimbursement: false,
   documents: [],
   recurrenceRule: 'NONE',
 } as const
@@ -458,7 +457,6 @@ describe('importGroup', () => {
             paidByList: [{ participant: 'web-supplied-lp', shares: 10000 }],
             paidFor: [{ participant: 'dest-lp-2', shares: 5000 }],
             splitMode: 'BY_AMOUNT',
-            isReimbursement: false,
             documents: [],
             recurrenceRule: 'NONE',
           },
@@ -624,7 +622,6 @@ describe('importGroup', () => {
                 { participant: 'dest-lp-1', shares: 0 },
               ],
               splitMode: 'BY_AMOUNT',
-              isReimbursement: false,
               documents: [],
               recurrenceRule: 'NONE',
             },

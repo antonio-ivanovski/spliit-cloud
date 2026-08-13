@@ -563,8 +563,7 @@
       "edit": "지출 수정하기",
       "TitleField": {
         "label": "지출 이름",
-        "placeholder": "월요일 저녁 식사",
-        "description": "지출 내용을 입력해 주세요."
+        "placeholder": "월요일 저녁 식사"
       },
       "DateField": {
         "label": "지출 날짜",
@@ -702,9 +701,6 @@
       "customRate": "직접 설정한 환율 사용 중",
       "via": "{currencies} 경유"
     },
-    "isReimbursementField": {
-      "label": "정산금이에요"
-    },
     "categoryField": {
       "label": "카테고리"
     },
@@ -730,8 +726,7 @@
     "Income": {
       "TitleField": {
         "label": "수입 제목",
-        "placeholder": "급여 또는 환불",
-        "description": "수입이 어디에서 발생했는지 입력하세요."
+        "placeholder": "급여 또는 환불"
       },
       "create": "수입 만들기",
       "edit": "수입 편집",
@@ -771,7 +766,6 @@
     "creating": "만드는 중…",
     "save": "저장",
     "saving": "저장 중…",
-    "reimbursement": "정산금",
     "readOnlyNotice": "이 그룹은 보관되었습니다. 지출이 읽기 전용으로 표시됩니다.",
     "PaidBySplitModeField": {
       "label": "결제자"
@@ -886,20 +880,15 @@
       "chooseTimezone": "시간대 선택",
       "done": "완료",
       "yourTime": "현지 시간"
-    }
+    },
+    "settlementTitle": "정산금",
+    "settlementHint": "{category}: 합계, 통계, 예산에서 지출로 집계되지 않습니다. 누가 누구에게 빚졌는지는 계속 반영됩니다.",
+    "incomeHint": "{category}: 받은 돈에 사용합니다. 구매가 아니라 수입으로 분류됩니다."
   },
   "Balances": {
     "title": "잔액",
     "description": "참여자별 순잔액을 확인하세요.",
     "removedBadge": "제거됨",
-    "Reimbursements": {
-      "title": "추천 정산금",
-      "description": "가능한 한 적은 송금으로 잔액을 정산할 수 있어요.",
-      "markAsPaid": "지불 완료로 표시하기",
-      "noImbursements": "그룹의 모든 정산이 끝났어요 😁",
-      "owes": "<strong>{from}</strong>가 <strong>{to}</strong>에게 돈을 내야 해요",
-      "markAsPaidAria": "{from}에서 {to}로 {amount}을(를) 결제 완료로 표시"
-    },
     "currencyDisplay": {
       "label": "통화",
       "group": "그룹 통화 ({currency})",
@@ -962,6 +951,14 @@
       "individualAllHint": "그룹 전체에 적용되는 표준 개인별 정산안을 보고 있습니다. 하위 그룹 간 결제가 포함될 수 있습니다.",
       "unknownParticipant": "초대 대기 중",
       "individualWithinHint": "하위 그룹을 고려한 개인별 정산안을 보고 있습니다. 하위 그룹 간 합계가 이미 정산된 경우, 추천 결제는 각 하위 그룹 내에서 이루어집니다."
+    },
+    "Settlements": {
+      "title": "제안된 정산",
+      "description": "가능한 한 적은 송금으로 잔액을 정산할 수 있어요.",
+      "noSettlements": "그룹의 모든 정산이 끝났어요 😁",
+      "owes": "<strong>{from}</strong>가 <strong>{to}</strong>에게 돈을 내야 해요",
+      "markAsPaid": "지불 완료로 표시하기",
+      "markAsPaidAria": "{from}에서 {to}로 {amount}을(를) 결제 완료로 표시"
     }
   },
   "Stats": {
@@ -1142,6 +1139,9 @@
     },
     "Income": {
       "heading": "수입"
+    },
+    "Settlement": {
+      "heading": "정산"
     }
   },
   "Homepage": {
@@ -1236,7 +1236,8 @@
       "participants": "{names}",
       "showLess": "간략히 보기"
     },
-    "copyToast": "지출 복사가 시작되었습니다. 기존 지출 정보를 사용해 새 지출이 생성됩니다."
+    "copyToast": "지출 복사가 시작되었습니다. 기존 지출 정보를 사용해 새 지출이 생성됩니다.",
+    "incomeBadge": "수입"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "문서 삭제",
@@ -2208,7 +2209,8 @@
         "recurrence": "반복",
         "reimbursement": "정산금",
         "conversionSource": "변환 출처",
-        "conversionRate": "변환 환율"
+        "conversionRate": "변환 환율",
+        "settlement": "정산금"
       },
       "recurringCreated": "{participant}님이 반복 지출 ‘{title}’을 만들었습니다",
       "stopped": "{participant}님이 반복 지출 ‘{title}’을 중지했습니다",
@@ -2413,28 +2415,6 @@
     "commentDelete": "댓글 삭제",
     "commentSend": "댓글 보내기",
     "openDocument": "문서 열기"
-  },
-  "CreateReimbursement": {
-    "description": "지불을 기록하기 전에 확인하세요.",
-    "pays": "{from}님이 {to}님에게 지불",
-    "amount": "금액",
-    "date": "날짜",
-    "category": "카테고리",
-    "create": "만들기",
-    "edit": "세부 정보 수정",
-    "creating": "만드는 중…",
-    "successToast": "정산금을 기록했어요",
-    "successToastMultiple": "{count}건의 정산 결제를 하나의 항목으로 기록했어요",
-    "paysMany": "{from}님이 {count}명에게 결제",
-    "receivesMany": "{to}님이 {count}건의 결제를 받음",
-    "paymentsToInclude": "포함할 결제",
-    "selectionSummary": "{count}건의 결제를 선택했으며 총액은 {total}",
-    "legToAria": "{from}님이 {to}님에게 {amount} 결제",
-    "legFromAria": "{from}님이 {to}님에게 {amount} 결제",
-    "toParticipant": "{name}님에게",
-    "fromParticipant": "{name}님에게서",
-    "createSingle": "결제 기록",
-    "createMultiple": "{count}건 결제 기록"
   },
   "Participants": {
     "search": "참여자 검색...",
@@ -2854,7 +2834,6 @@
     "participantsCountLabel": "참여자 수",
     "participantsSectionLabel": "참여자 요약",
     "settlementsSectionLabel": "정산 제안",
-    "reimbursementsSectionLabel": "기록된 환급",
     "expensesSectionLabel": "지출 상세",
     "amountColumnLabel": "금액",
     "participantColumnLabel": "참여자",
@@ -2868,10 +2847,11 @@
     "noExpensesLabel": "선택한 기간에 지출이 없습니다.",
     "noParticipantsLabel": "선택한 기간에 활동한 참여자가 없습니다.",
     "noSettlementsLabel": "종료일 기준으로 모두 정산되었습니다.",
-    "noReimbursementsLabel": "종료일까지 기록된 환급이 없습니다.",
     "originalAmountLabel": "원래 금액",
     "expenseColumnLabel": "지출",
-    "categoryColumnLabel": "카테고리"
+    "categoryColumnLabel": "카테고리",
+    "recordedSettlementsSectionLabel": "기록된 정산",
+    "noRecordedSettlementsLabel": "종료일까지 기록된 정산이 없습니다."
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2909,5 +2889,27 @@
     "hintTapToAddExpense": "저는 {name}입니다. 나를 눌러 지출을 추가하세요.",
     "hintTapToCreateGroup": "저는 {name}입니다. 나를 눌러 그룹을 만드세요.",
     "billName": "빌"
+  },
+  "CreateSettlement": {
+    "description": "지불을 기록하기 전에 확인하세요.",
+    "pays": "{from}님이 {to}님에게 지불",
+    "amount": "금액",
+    "date": "날짜",
+    "category": "카테고리",
+    "create": "만들기",
+    "edit": "세부 정보 수정",
+    "creating": "만드는 중…",
+    "successToast": "정산금을 기록했어요",
+    "successToastMultiple": "{count}건의 정산 결제를 하나의 항목으로 기록했어요",
+    "paysMany": "{from}님이 {count}명에게 결제",
+    "receivesMany": "{to}님이 {count}건의 결제를 받음",
+    "paymentsToInclude": "포함할 결제",
+    "selectionSummary": "{count}건의 결제를 선택했으며 총액은 {total}",
+    "legToAria": "{from}님이 {to}님에게 {amount} 결제",
+    "legFromAria": "{from}님이 {to}님에게 {amount} 결제",
+    "toParticipant": "{name}님에게",
+    "fromParticipant": "{name}님에게서",
+    "createSingle": "결제 기록",
+    "createMultiple": "{count}건 결제 기록"
   }
 }

@@ -29,7 +29,6 @@ export type NormalizedSourceExpense = {
   /** Legacy alias retained for old import callers during the schema cutover. */
   recurrenceRule: 'NONE' | 'DAILY' | 'WEEKLY' | 'MONTHLY'
   recurrence?: RecurrenceConfig | null
-  isReimbursement: boolean
   notes: string | null
 }
 

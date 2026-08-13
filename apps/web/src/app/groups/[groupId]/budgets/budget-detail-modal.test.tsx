@@ -79,7 +79,6 @@ function buildExpense(overrides: Record<string, unknown>) {
       grouping: 'Food and Drink',
       name: 'Groceries',
     },
-    isReimbursement: false,
     splitMode: 'EVENLY',
     paidBySplitMode: 'BY_AMOUNT',
     originalAmount: null,

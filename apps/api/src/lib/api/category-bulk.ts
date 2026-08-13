@@ -2,6 +2,7 @@ import { prisma } from '@spliit/db'
 import {
   BULK_APPLY_HARD_LIMIT,
   DEFAULT_CATEGORY_ID,
+  SETTLEMENT_CATEGORY_ID,
   categoryIdSchema,
   type CategoryId,
   type ExpenseCategoriesBulkUpdatedActivityData,
@@ -43,7 +44,7 @@ export type BulkCategorizeApplyResult = {
  *
  * - Every `change.expenseId` must belong to the target group
  * - The row must currently sit on `fromCategoryId` (default "general") AND not be
- *   a reimbursement row
+ *   a settlement row
  * - Everything else (the destination `categoryId`) is enforced by Zod upstream
  *
  * After the update we log a single `EXPENSE_CATEGORIES_BULK_UPDATED` activity
@@ -94,6 +95,15 @@ export async function bulkUpdateExpenseCategories(args: {
     throw new Error('Cannot bulk-update categories on an archived group')
   }
 
+  if (
+    fromCategoryId === SETTLEMENT_CATEGORY_ID ||
+    Array.from(wantedById.values()).some(
+      (categoryId) => categoryId === SETTLEMENT_CATEGORY_ID,
+    )
+  ) {
+    throw new Error('Cannot bulk-apply the settlement category')
+  }
+
   const boss = await getApiBoss()
   const result = await prisma.$transaction(async (tx) => {
     // Lock the candidate rows by selecting them. Update via updateMany
@@ -103,7 +113,6 @@ export async function bulkUpdateExpenseCategories(args: {
       where: {
         ledgerId: group.ledgerId,
         id: { in: Array.from(wantedById.keys()) },
-        isReimbursement: false,
         categoryId: fromCategoryId,
       },
       select: { id: true, title: true, categoryId: true, version: true },
@@ -111,7 +120,7 @@ export async function bulkUpdateExpenseCategories(args: {
 
     if (candidates.length === 0) {
       // Nothing eligible (every requested row either doesn't belong
-      // to this group, is a reimbursement, or already has the
+      // to this group, is a settlement, or already has the
       // destination category). Surface every requested expenseId as
       // skipped so the caller's accounting is correct.
       return {
@@ -140,7 +149,6 @@ export async function bulkUpdateExpenseCategories(args: {
         where: {
           id: candidate.id,
           ledgerId: group.ledgerId,
-          isReimbursement: false,
           categoryId: candidate.categoryId,
           version: candidate.version,
         },
@@ -212,9 +220,9 @@ export async function bulkUpdateExpenseCategories(args: {
 
 /**
  * Read-side helper used by the AI preview / calibrate endpoints. Returns the
- * expenses eligible for bulk categorization: non- reimbursements whose
- * `categoryId` matches `fromCategoryId` and whose `ledgerId` is the group's.
- * Read-only — no side effects, so safe to call many times during calibration.
+ * expenses eligible for bulk categorization: non-settlements whose `categoryId`
+ * matches `fromCategoryId` and whose `ledgerId` is the group's. Read-only — no
+ * side effects, so safe to call many times during calibration.
  */
 export async function listBulkCategorizeCandidates(args: {
   groupId: string
@@ -235,11 +243,11 @@ export async function listBulkCategorizeCandidates(args: {
   })
   if (!group) return []
   const from = args.fromCategoryId ?? DEFAULT_CATEGORY_ID
+  if (from === SETTLEMENT_CATEGORY_ID) return []
 
   return prisma.expense.findMany({
     where: {
       ledgerId: group.ledgerId,
-      isReimbursement: false,
       categoryId: from,
     },
     select: {

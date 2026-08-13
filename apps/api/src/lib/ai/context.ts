@@ -1,5 +1,5 @@
 import { prisma } from '@spliit/db'
-import { DEFAULT_CATEGORY_ID } from '@spliit/domain'
+import { DEFAULT_CATEGORY_ID, SETTLEMENT_CATEGORY_ID } from '@spliit/domain'
 
 import { env } from '../env'
 
@@ -19,7 +19,7 @@ export type RecentExpenseContext = {
 }
 
 /**
- * Fetch the most recent non-reimbursement, non-default expenses for a group's
+ * Fetch the most recent non-settlement, non-default expenses for a group's
  * ledger, plus group metadata useful as AI hints.
  *
  * Expenses left on the default category (`general`) are excluded because they
@@ -57,10 +57,7 @@ export async function getRecentExpenseContext(
   const expenses = await prisma.expense.findMany({
     where: {
       ledgerId: ledger.id,
-      isReimbursement: false,
-      // Exclude default-category rows: they were never meaningfully
-      // categorized, so including them would bias the AI toward the fallback.
-      categoryId: { not: DEFAULT_CATEGORY_ID },
+      categoryId: { notIn: [DEFAULT_CATEGORY_ID, SETTLEMENT_CATEGORY_ID] },
     },
     select: { title: true, categoryId: true },
     orderBy: [{ expenseDate: 'desc' }, { createdAt: 'desc' }],

@@ -196,7 +196,8 @@
       "participants": "{names}",
       "showLess": "Показати менше"
     },
-    "copyToast": "Копіювання витрати розпочато. Наявні дані витрати будуть використані для створення нової."
+    "copyToast": "Копіювання витрати розпочато. Наявні дані витрати будуть використані для створення нової.",
+    "incomeBadge": "Дохід"
   },
   "Groups": {
     "myGroups": "Мої групи",
@@ -666,8 +667,7 @@
       "edit": "Редагувати дохід",
       "TitleField": {
         "label": "Назва доходу",
-        "placeholder": "Ресторан в понеділок ввечері",
-        "description": "Введіть опис для доходу"
+        "placeholder": "Ресторан в понеділок ввечері"
       },
       "DateField": {
         "label": "Дата доходу",
@@ -697,8 +697,7 @@
       "edit": "Редагувати витрату",
       "TitleField": {
         "label": "Назва витрати",
-        "placeholder": "Ресторан в понеділок ввечері",
-        "description": "Введіть опис для витрати"
+        "placeholder": "Ресторан в понеділок ввечері"
       },
       "DateField": {
         "label": "Дата витрати",
@@ -837,9 +836,6 @@
       "customRate": "Використовується власний курс",
       "via": "через {currencies}"
     },
-    "isReimbursementField": {
-      "label": "Це платіж для погашення боргу"
-    },
     "categoryField": {
       "label": "Категорія"
     },
@@ -874,7 +870,6 @@
     "save": "Зберегти",
     "saving": "Збереження..",
     "cancel": "Скасувати",
-    "reimbursement": "Платіж для погашення боргу",
     "readOnlyNotice": "Цю групу заархівовано. Витрата відображається лише для читання.",
     "PaidBySplitModeField": {
       "label": "Режим поділу платника"
@@ -992,7 +987,10 @@
       "chooseTimezone": "Вибрати часовий пояс",
       "done": "Готово",
       "yourTime": "місцевий час"
-    }
+    },
+    "settlementTitle": "Платіж для погашення боргу",
+    "settlementHint": "{category}: Не враховується як витрата в підсумках, статистиці чи бюджетах. Усе одно оновлює, хто кому винен.",
+    "incomeHint": "{category}: Для отриманих грошей. Групується як дохід, а не як покупка."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Видалити документ",
@@ -1066,14 +1064,6 @@
     "title": "Баланси",
     "description": "Перегляньте чисте сальдо кожного учасника.",
     "removedBadge": "Видалено",
-    "Reimbursements": {
-      "title": "Запропоновані платежі для погашення боргів",
-      "description": "Скористайтеся цими платежами, щоб погасити заборгованість із якнайменшою кількістю переказів.",
-      "noImbursements": "Усі учасники групи розрахувалися 😁",
-      "owes": "<strong>{from}</strong> винен <strong>{to}</strong>",
-      "markAsPaid": "Позначити як сплачене",
-      "markAsPaidAria": "Позначити {amount} від {from} для {to} як сплачені"
-    },
     "currencyDisplay": {
       "label": "Валюта",
       "group": "Валюта групи ({currency})",
@@ -1136,6 +1126,14 @@
       "individualAllHint": "Ви переглядаєте стандартний індивідуальний план для всієї групи. Він може містити платежі між підгрупами.",
       "unknownParticipant": "Очікуване запрошення",
       "individualWithinHint": "Ви переглядаєте індивідуальний план з урахуванням підгруп. Запропоновані платежі залишаються в межах кожної підгрупи, коли підсумки підгруп уже врегульовані."
+    },
+    "Settlements": {
+      "title": "Запропоновані розрахунки",
+      "description": "Скористайтеся цими платежами, щоб погасити заборгованість із якнайменшою кількістю переказів.",
+      "noSettlements": "Усі учасники групи розрахувалися 😁",
+      "owes": "<strong>{from}</strong> винен <strong>{to}</strong>",
+      "markAsPaid": "Позначити як сплачене",
+      "markAsPaidAria": "Позначити {amount} від {from} для {to} як сплачені"
     }
   },
   "Stats": {
@@ -1332,6 +1330,9 @@
     },
     "Income": {
       "heading": "Дохід"
+    },
+    "Settlement": {
+      "heading": "Розрахунок"
     }
   },
   "Auth": {
@@ -2233,7 +2234,8 @@
         "recurrence": "Повторення",
         "reimbursement": "Платіж для погашення боргу",
         "conversionSource": "Джерело конвертації",
-        "conversionRate": "Обмінний курс"
+        "conversionRate": "Обмінний курс",
+        "settlement": "Платіж для погашення боргу"
       },
       "recurringCreated": "{participant} створив(-ла) регулярну витрату «{title}»",
       "stopped": "{participant} зупинив(-ла) регулярну витрату «{title}»",
@@ -2465,28 +2467,6 @@
     "commentDelete": "Видалити коментар",
     "commentSend": "Надіслати коментар",
     "openDocument": "Відкрити документ"
-  },
-  "CreateReimbursement": {
-    "description": "Перевірте платіж перед його записом.",
-    "pays": "{from} платить {to}",
-    "amount": "Сума",
-    "date": "Дата",
-    "category": "Категорія",
-    "create": "Створити",
-    "edit": "Редагувати деталі",
-    "creating": "Створення…",
-    "successToast": "Платіж для погашення боргу записано",
-    "successToastMultiple": "Записано {count} платежів для погашення боргів як один запис",
-    "paysMany": "{from} платить {count} людям",
-    "receivesMany": "{to} отримує {count} платежів",
-    "paymentsToInclude": "Платежі для включення",
-    "selectionSummary": "Вибрано платежів: {count}, на суму {total}",
-    "legToAria": "{from} платить {to}, {amount}",
-    "legFromAria": "{from} платить {to}, {amount}",
-    "toParticipant": "для {name}",
-    "fromParticipant": "від {name}",
-    "createSingle": "Записати платіж",
-    "createMultiple": "Записати {count} платежів"
   },
   "Participants": {
     "search": "Пошук учасників...",
@@ -2905,7 +2885,6 @@
     "participantsCountLabel": "Учасники",
     "participantsSectionLabel": "Підсумок учасників",
     "settlementsSectionLabel": "Запропоновані розрахунки",
-    "reimbursementsSectionLabel": "Зареєстровані відшкодування",
     "expensesSectionLabel": "Деталі витрат",
     "amountColumnLabel": "Сума",
     "participantColumnLabel": "Учасник",
@@ -2919,10 +2898,11 @@
     "noExpensesLabel": "За вибраний період витрат немає.",
     "noParticipantsLabel": "За вибраний період немає учасників з активністю.",
     "noSettlementsLabel": "Станом на кінцеву дату все розраховано.",
-    "noReimbursementsLabel": "До кінцевої дати відшкодувань не зареєстровано.",
     "originalAmountLabel": "Початкова сума",
     "expenseColumnLabel": "Витрата",
-    "categoryColumnLabel": "Категорія"
+    "categoryColumnLabel": "Категорія",
+    "recordedSettlementsSectionLabel": "Зафіксовані розрахунки",
+    "noRecordedSettlementsLabel": "До кінцевої дати розрахунків не зареєстровано."
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2960,5 +2940,27 @@
     "hintTapToAddExpense": "Я {name} — натисни мене, щоб додати витрату.",
     "hintTapToCreateGroup": "Я {name} — натисни мене, щоб створити групу.",
     "billName": "Білл"
+  },
+  "CreateSettlement": {
+    "description": "Перевірте платіж перед його записом.",
+    "pays": "{from} платить {to}",
+    "amount": "Сума",
+    "date": "Дата",
+    "category": "Категорія",
+    "create": "Створити",
+    "edit": "Редагувати деталі",
+    "creating": "Створення…",
+    "successToast": "Платіж для погашення боргу записано",
+    "successToastMultiple": "Записано {count} платежів для погашення боргів як один запис",
+    "paysMany": "{from} платить {count} людям",
+    "receivesMany": "{to} отримує {count} платежів",
+    "paymentsToInclude": "Платежі для включення",
+    "selectionSummary": "Вибрано платежів: {count}, на суму {total}",
+    "legToAria": "{from} платить {to}, {amount}",
+    "legFromAria": "{from} платить {to}, {amount}",
+    "toParticipant": "для {name}",
+    "fromParticipant": "від {name}",
+    "createSingle": "Записати платіж",
+    "createMultiple": "Записати {count} платежів"
   }
 }

@@ -245,6 +245,46 @@ describe('suggestCategoryFromTitle', () => {
     ).toMatchObject({ id: 'dining-out', source: 'history' })
   })
 
+  it('does not auto-apply weak settlement aliases', () => {
+    expect(suggestCategoryFromTitle('payback', english)).toBeNull()
+    expect(suggestCategoryFromTitle('settle', english)).toBeNull()
+  })
+
+  it('auto-applies near-exact settlement aliases', () => {
+    expect(suggestCategoryFromTitle('settlement', english)?.id).toBe(
+      'settlement',
+    )
+  })
+
+  it('does not auto-apply settlement from a single history hit', () => {
+    const memory: CategoryTitleMemory[] = [
+      { title: 'Paid Alice back', categoryId: 'settlement' },
+    ]
+    expect(
+      suggestCategoryFromTitle('Paid Alice back', english, memory),
+    ).toBeNull()
+  })
+
+  it('auto-applies settlement from an exact history majority of two', () => {
+    const memory: CategoryTitleMemory[] = [
+      { title: 'Paid Alice back', categoryId: 'settlement' },
+      { title: 'Paid Alice back', categoryId: 'settlement' },
+    ]
+    expect(
+      suggestCategoryFromTitle('Paid Alice back', english, memory),
+    ).toMatchObject({ id: 'settlement', source: 'history' })
+  })
+
+  it('does not auto-apply settlement from fuzzy history', () => {
+    const memory: CategoryTitleMemory[] = [
+      { title: 'Paid Alice back Friday', categoryId: 'settlement' },
+      { title: 'Paid Alice back Friday', categoryId: 'settlement' },
+    ]
+    expect(
+      suggestCategoryFromTitle('Paid Alice back', english, memory),
+    ).toBeNull()
+  })
+
   it('auto-applies a CJK title and a Latin title for zh-CN', async () => {
     await loadLocaleDictionary('zh-CN')
     const chinese = documentsFor('zh-CN')

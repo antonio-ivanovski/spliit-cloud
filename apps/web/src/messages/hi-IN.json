@@ -250,7 +250,8 @@
         "recurrence": "पुनरावृत्ति",
         "reimbursement": "निपटान भुगतान",
         "conversionSource": "रूपांतरण स्रोत",
-        "conversionRate": "रूपांतरण दर"
+        "conversionRate": "रूपांतरण दर",
+        "settlement": "निपटान भुगतान"
       },
       "recurringCreated": "{participant} ने आवर्ती खर्च “{title}” बनाया",
       "stopped": "{participant} ने आवर्ती खर्च {title} बंद किया",
@@ -385,14 +386,6 @@
     "title": "शेष राशि",
     "description": "प्रत्येक सदस्य की शुद्ध शेष राशि देखें।",
     "removedBadge": "हटाया गया",
-    "Reimbursements": {
-      "title": "सुझाए गए निपटान भुगतान",
-      "description": "यथासंभव कम लेन-देन के साथ शेष राशि निपटाने के लिए इन भुगतानों का उपयोग करें।",
-      "noImbursements": "आपके समूह में सभी का निपटान हो गया है 😁",
-      "owes": "<strong>{from}</strong> <strong>{to}</strong> को देता है",
-      "markAsPaid": "भुगतान किया गया चिह्नित करें",
-      "markAsPaidAria": "{from} से {to} को {amount} भुगतान किया गया चिह्नित करें"
-    },
     "currencyDisplay": {
       "label": "मुद्रा",
       "group": "समूह मुद्रा ({currency})",
@@ -455,6 +448,14 @@
       "individualAllHint": "आप मानक समूह-व्यापी व्यक्तिगत योजना देख रहे हैं। इसमें उपसमूहों के बीच भुगतान शामिल हो सकते हैं।",
       "unknownParticipant": "लंबित निमंत्रण",
       "individualWithinHint": "आप उपसमूह-जागरूक व्यक्तिगत योजना देख रहे हैं। जब उपसमूह की कुल राशि पहले से निपटाई जा चुकी होती है, तो सुझाए गए भुगतान प्रत्येक उपसमूह के भीतर ही रहते हैं।"
+    },
+    "Settlements": {
+      "title": "सुझाए गए निपटान",
+      "description": "यथासंभव कम लेन-देन के साथ शेष राशि निपटाने के लिए इन भुगतानों का उपयोग करें।",
+      "noSettlements": "आपके समूह में सभी का निपटान हो गया है 😁",
+      "owes": "<strong>{from}</strong> <strong>{to}</strong> को देता है",
+      "markAsPaid": "भुगतान किया गया चिह्नित करें",
+      "markAsPaidAria": "{from} से {to} को {amount} भुगतान किया गया चिह्नित करें"
     }
   },
   "BulkCategorize": {
@@ -604,6 +605,9 @@
     },
     "Income": {
       "heading": "आय"
+    },
+    "Settlement": {
+      "heading": "निपटान"
     }
   },
   "Common": {
@@ -679,28 +683,6 @@
       "title": "फ़ोटो आवश्यक है",
       "aiDescription": "AI से रसीद स्कैन करने के लिए केवल इमेज फ़ाइलें समर्थित हैं।"
     }
-  },
-  "CreateReimbursement": {
-    "description": "रिकॉर्ड करने से पहले भुगतान की समीक्षा करें।",
-    "pays": "{from} {to} को भुगतान करता है",
-    "amount": "राशि",
-    "date": "तारीख",
-    "category": "श्रेणी",
-    "create": "बनाएं",
-    "edit": "विवरण संपादित करें",
-    "creating": "बनाया जा रहा है…",
-    "successToast": "निपटान भुगतान रिकॉर्ड किया गया",
-    "successToastMultiple": "{count} निपटान भुगतान एक प्रविष्टि के रूप में रिकॉर्ड किए गए",
-    "paysMany": "{from} {count} लोगों को भुगतान करता है",
-    "receivesMany": "{to} को {count} भुगतान प्राप्त होते हैं",
-    "paymentsToInclude": "शामिल करने के लिए भुगतान",
-    "selectionSummary": "{count} भुगतान चुने गए, कुल {total}",
-    "legToAria": "{from} {to} को {amount} भुगतान करता है",
-    "legFromAria": "{from} {to} को {amount} भुगतान करता है",
-    "toParticipant": "{name} को",
-    "fromParticipant": "{name} से",
-    "createSingle": "भुगतान रिकॉर्ड करें",
-    "createMultiple": "{count} भुगतान रिकॉर्ड करें"
   },
   "Currencies": {
     "search": "मुद्रा खोजें…",
@@ -1047,7 +1029,8 @@
       "title": "आइटम",
       "participants": "{names}",
       "showLess": "कम दिखाएँ"
-    }
+    },
+    "incomeBadge": "आय"
   },
   "ExpenseDocumentsInput": {
     "ErrorToast": {
@@ -1102,8 +1085,7 @@
       "edit": "खर्च संपादित करें",
       "TitleField": {
         "label": "खर्च शीर्षक",
-        "placeholder": "सोमवार शाम रेस्तरां",
-        "description": "खर्च का विवरण दर्ज करें।"
+        "placeholder": "सोमवार शाम रेस्तरां"
       },
       "categoryFieldDescription": "खर्च श्रेणी चुनें।",
       "splitModeDescription": "खर्च को विभाजित करने का तरीका चुनें।",
@@ -1192,8 +1174,7 @@
       "edit": "आय संपादित करें",
       "TitleField": {
         "label": "आय शीर्षक",
-        "placeholder": "वेतन या रिफंड",
-        "description": "बताएं कि आय कहां से आई।"
+        "placeholder": "वेतन या रिफंड"
       },
       "categoryFieldDescription": "आय श्रेणी चुनें।",
       "splitModeDescription": "आय को विभाजित करने का तरीका चुनें।",
@@ -1223,7 +1204,6 @@
     "save": "सहेजें",
     "saving": "सहेजा जा रहा है…",
     "cancel": "रद्द करें",
-    "reimbursement": "निपटान भुगतान",
     "readOnlyNotice": "यह समूह संग्रहीत है। खर्च केवल-पढ़ने के लिए दिखाया गया है।",
     "ParticipantDistribution": {
       "missing": "{total} में से {missing} कमी",
@@ -1329,9 +1309,6 @@
     "participantSharesLabel": "{name} के लिए शेयर",
     "decreaseShares": "{name} के शेयर घटाएं",
     "increaseShares": "{name} के शेयर बढ़ाएं",
-    "isReimbursementField": {
-      "label": "यह एक निपटान भुगतान है"
-    },
     "paidForOptionItemized": "आइटमीकृत",
     "paidForOptionItemizedHelper": "खर्च में अलग-अलग आइटम से प्रत्येक सदस्य के हिस्से की गणना करें।",
     "items": {
@@ -1401,7 +1378,10 @@
       "chooseTimezone": "समय क्षेत्र चुनें",
       "done": "हो गया",
       "yourTime": "आपका समय"
-    }
+    },
+    "settlementTitle": "निपटान भुगतान",
+    "settlementHint": "{category}: कुल, आँकड़ों या बजट में खर्च नहीं गिना जाता। फिर भी अपडेट करता है कि कौन किसे देता है।",
+    "incomeHint": "{category}: प्राप्त धन के लिए। खरीद नहीं, आय के रूप में समूहित।"
   },
   "ExpensePreview": {
     "title": "खर्च पूर्वावलोकन",
@@ -2867,7 +2847,6 @@
     "participantsCountLabel": "प्रतिभागी",
     "participantsSectionLabel": "प्रतिभागी सारांश",
     "settlementsSectionLabel": "सुझाए गए निपटान",
-    "reimbursementsSectionLabel": "दर्ज की गई प्रतिपूर्तियां",
     "expensesSectionLabel": "खर्च का विवरण",
     "amountColumnLabel": "राशि",
     "participantColumnLabel": "प्रतिभागी",
@@ -2881,10 +2860,11 @@
     "noExpensesLabel": "चुनी गई अवधि में कोई खर्च नहीं है।",
     "noParticipantsLabel": "चुनी गई अवधि में किसी प्रतिभागी की कोई गतिविधि नहीं है।",
     "noSettlementsLabel": "अंतिम तारीख तक सभी हिसाब चुकता हो चुके हैं।",
-    "noReimbursementsLabel": "अंतिम तारीख तक कोई प्रतिपूर्ति दर्ज नहीं की गई।",
     "originalAmountLabel": "मूल राशि",
     "expenseColumnLabel": "खर्च",
-    "categoryColumnLabel": "श्रेणी"
+    "categoryColumnLabel": "श्रेणी",
+    "recordedSettlementsSectionLabel": "दर्ज किए गए निपटान",
+    "noRecordedSettlementsLabel": "अंतिम तारीख तक कोई निपटान दर्ज नहीं किया गया।"
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2922,5 +2902,27 @@
     "hintTapToAddExpense": "मैं {name} हूँ — खर्च जोड़ने के लिए मुझे टैप करें।",
     "hintTapToCreateGroup": "मैं {name} हूँ — समूह बनाने के लिए मुझे टैप करें।",
     "billName": "बिल"
+  },
+  "CreateSettlement": {
+    "description": "रिकॉर्ड करने से पहले भुगतान की समीक्षा करें।",
+    "pays": "{from} {to} को भुगतान करता है",
+    "amount": "राशि",
+    "date": "तारीख",
+    "category": "श्रेणी",
+    "create": "बनाएं",
+    "edit": "विवरण संपादित करें",
+    "creating": "बनाया जा रहा है…",
+    "successToast": "निपटान भुगतान रिकॉर्ड किया गया",
+    "successToastMultiple": "{count} निपटान भुगतान एक प्रविष्टि के रूप में रिकॉर्ड किए गए",
+    "paysMany": "{from} {count} लोगों को भुगतान करता है",
+    "receivesMany": "{to} को {count} भुगतान प्राप्त होते हैं",
+    "paymentsToInclude": "शामिल करने के लिए भुगतान",
+    "selectionSummary": "{count} भुगतान चुने गए, कुल {total}",
+    "legToAria": "{from} {to} को {amount} भुगतान करता है",
+    "legFromAria": "{from} {to} को {amount} भुगतान करता है",
+    "toParticipant": "{name} को",
+    "fromParticipant": "{name} से",
+    "createSingle": "भुगतान रिकॉर्ड करें",
+    "createMultiple": "{count} भुगतान रिकॉर्ड करें"
   }
 }

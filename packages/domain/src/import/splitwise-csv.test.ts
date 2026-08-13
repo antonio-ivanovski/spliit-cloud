@@ -305,7 +305,7 @@ describe('tryParseSplitwiseCsv', () => {
     expect(result.source.expenses).toHaveLength(1)
   })
 
-  it('marks Payment category rows as reimbursements', () => {
+  it('marks Payment category rows as settlements', () => {
     const csv = splitwiseCsv([
       [
         '2026-01-15',
@@ -320,11 +320,10 @@ describe('tryParseSplitwiseCsv', () => {
     const result = tryParseSplitwiseCsv(csv)
     expect(result.ok).toBe(true)
     if (!result.ok) return
-    expect(result.source.expenses[0].isReimbursement).toBe(true)
-    expect(result.source.expenses[0].category).toBe('payment')
+    expect(result.source.expenses[0].category).toBe('settlement')
   })
 
-  it('marks "<Name> I. paid <Name> I." description as reimbursement', () => {
+  it('marks "<Name> I. paid <Name> I." description as settlement', () => {
     const csv = splitwiseCsv([
       [
         '2026-01-15',
@@ -339,20 +338,20 @@ describe('tryParseSplitwiseCsv', () => {
     const result = tryParseSplitwiseCsv(csv)
     expect(result.ok).toBe(true)
     if (!result.ok) return
-    expect(result.source.expenses[0].isReimbursement).toBe(true)
+    expect(result.source.expenses[0].category).toBe('settlement')
   })
 
-  it('does NOT mark ordinary expenses as reimbursements', () => {
+  it('does NOT mark ordinary expenses as settlements', () => {
     const csv = splitwiseCsv([
       ['2026-01-15', 'Pazarenje', 'General', '30.00', 'MKD', '15.00', '-15.00'],
     ])
     const result = tryParseSplitwiseCsv(csv)
     expect(result.ok).toBe(true)
     if (!result.ok) return
-    expect(result.source.expenses[0].isReimbursement).toBe(false)
+    expect(result.source.expenses[0].category).not.toBe('settlement')
   })
 
-  it('handles a real-style reimbursement row with both payer and receiver columns', () => {
+  it('handles a real-style settlement row with both payer and receiver columns', () => {
     const csv = splitwiseCsv([
       [
         '2026-01-15',
@@ -368,14 +367,14 @@ describe('tryParseSplitwiseCsv', () => {
     expect(result.ok).toBe(true)
     if (!result.ok) return
     const e = result.source.expenses[0]
-    expect(e.isReimbursement).toBe(true)
+    expect(e.category).toBe('settlement')
     expect(e.amount).toBe(5000)
     expect(e.paidBySourceId).toBe(aid(result.source, 0))
     // receiver is Dejan (negative), payer consumed nothing
     expect(e.paidFor).toEqual([pf(aid(result.source, 1), 5000)])
   })
 
-  it('handles Payment-category reimbursement with positive+negative columns', () => {
+  it('handles Payment-category settlement with positive+negative columns', () => {
     const csv = splitwiseCsv([
       [
         '2026-01-15',
@@ -391,8 +390,7 @@ describe('tryParseSplitwiseCsv', () => {
     expect(result.ok).toBe(true)
     if (!result.ok) return
     const e = result.source.expenses[0]
-    expect(e.isReimbursement).toBe(true)
-    expect(e.category).toBe('payment')
+    expect(e.category).toBe('settlement')
     expect(e.amount).toBe(12000)
     expect(e.paidFor).toEqual([pf(aid(result.source, 1), 12000)])
   })

@@ -613,7 +613,7 @@ describe('Import participant deduplication', () => {
   })
 })
 
-describe('Import summary — totalAmount excludes reimbursements', () => {
+describe('Import summary — totalAmount excludes settlements', () => {
   const runId4 = testRunId()
   const adminId4 = `acct-total-${runId4}`
   const adminEmail4 = `total-${runId4}@test.example`
@@ -707,25 +707,24 @@ describe('Import summary — totalAmount excludes reimbursements', () => {
   function makeExpense(opts: {
     title: string
     amount: number
-    isReimbursement: boolean
+    settlement?: boolean
     adminLp: string
   }) {
     return {
       title: opts.title,
       amount: opts.amount,
       expenseDate: new Date('2026-06-01'),
-      category: 'general',
+      category: opts.settlement ? 'settlement' : 'general',
       splitMode: 'EVENLY' as const,
       paidBySplitMode: 'BY_AMOUNT' as const,
       paidByList: [{ participant: opts.adminLp, shares: opts.amount }],
       paidFor: [{ participant: opts.adminLp, shares: 1 }],
-      isReimbursement: opts.isReimbursement,
       documents: [],
       recurrenceRule: 'NONE' as const,
     }
   }
 
-  it('totalAmount excludes reimbursement expenses so it matches Total group spendings', async () => {
+  it('totalAmount excludes settlement expenses so it matches Total group spendings', async () => {
     const { groupId, ledgerId, adminLp } = await createGroupWithAdmin('EUR')
 
     await makeCaller4().import({
@@ -742,20 +741,18 @@ describe('Import summary — totalAmount excludes reimbursements', () => {
         makeExpense({
           title: 'Dinner',
           amount: 3000,
-          isReimbursement: false,
           adminLp,
         }),
         makeExpense({
           title: 'Lunch',
           amount: 1500,
-          isReimbursement: false,
           adminLp,
         }),
         // Settlement from previous balance — should NOT be counted in spending total
         makeExpense({
           title: 'Settlement from Bob',
           amount: 5192,
-          isReimbursement: true,
+          settlement: true,
           adminLp,
         }),
       ],
@@ -767,13 +764,13 @@ describe('Import summary — totalAmount excludes reimbursements', () => {
     expect(summaryActivities).toHaveLength(1)
     const summaryData = summaryActivities[0].data as Record<string, unknown>
     expect(summaryData.kind).toBe('import_summary')
-    // count includes the reimbursement (76 in the user's report); totalAmount does not
+    // count includes the settlement (76 in the user's report); totalAmount does not
     expect(summaryData.count).toBe(3)
     expect(summaryData.totalAmount).toBe(4500)
     expect(summaryData.currencyCode).toBe('EUR')
   })
 
-  it('totalAmount equals sum of all expenses when none are reimbursements', async () => {
+  it('totalAmount equals sum of all expenses when none are settlements', async () => {
     const { groupId, ledgerId, adminLp } = await createGroupWithAdmin('EUR')
 
     await makeCaller4().import({
@@ -790,13 +787,11 @@ describe('Import summary — totalAmount excludes reimbursements', () => {
         makeExpense({
           title: 'Coffee',
           amount: 500,
-          isReimbursement: false,
           adminLp,
         }),
         makeExpense({
           title: 'Brunch',
           amount: 2500,
-          isReimbursement: false,
           adminLp,
         }),
       ],
@@ -809,7 +804,7 @@ describe('Import summary — totalAmount excludes reimbursements', () => {
     expect(summaryData.totalAmount).toBe(3000)
   })
 
-  it('totalAmount is zero when all expenses are reimbursements', async () => {
+  it('totalAmount is zero when all expenses are settlements', async () => {
     const { groupId, ledgerId, adminLp } = await createGroupWithAdmin('EUR')
 
     await makeCaller4().import({
@@ -826,13 +821,13 @@ describe('Import summary — totalAmount excludes reimbursements', () => {
         makeExpense({
           title: 'Settlement 1',
           amount: 1000,
-          isReimbursement: true,
+          settlement: true,
           adminLp,
         }),
         makeExpense({
           title: 'Settlement 2',
           amount: 2000,
-          isReimbursement: true,
+          settlement: true,
           adminLp,
         }),
       ],

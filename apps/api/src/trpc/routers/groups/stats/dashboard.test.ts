@@ -14,7 +14,6 @@ function expense(
     categoryId,
     expenseDate: new Date(`${date}T00:00:00.000Z`),
     expenseTimeZone: 'UTC',
-    isReimbursement: false,
     splitMode: 'EVENLY',
     paidBySplitMode: 'BY_AMOUNT',
     paidByList: [
@@ -80,15 +79,14 @@ describe('buildGroupStatsDashboard', () => {
     ])
   })
 
-  it('excludes reimbursements and nets non-positive expenses in spending visuals', () => {
-    const reimbursement = expense('reimbursement', '2024-06-05', 900, 'payment')
-    reimbursement.isReimbursement = true
+  it('excludes settlements and nets non-positive expenses in spending visuals', () => {
+    const settlement = expense('settlement', '2024-06-05', 900, 'settlement')
     const refund = expense('refund', '2024-06-06', -200, 'groceries')
 
     const dashboard = buildGroupStatsDashboard(
       [
         expense('spending', '2024-06-07', 1500, 'groceries'),
-        reimbursement,
+        settlement,
         refund,
       ],
       'WEEK',

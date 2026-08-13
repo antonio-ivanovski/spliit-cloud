@@ -7,3 +7,4 @@ Apply `default.md` first, then these Russian rules.
 - Respect Russian plural categories and count-dependent case changes; do not copy one noun form into every plural key.
 - Use Cyrillic punctuation and Russian quotation conventions, and keep terminology distinct from Ukrainian or Belarusian.
 - Preserve exact amounts, percentages, and placeholder names while keeping action labels concise.
+- Exclusive settlement term: _расчёт_ (noun) and _рассчитаться_ (verb). Never _возмещение_ or _компенсация_ for this concept.

@@ -45,6 +45,11 @@ describe('suggestCategoryWithAI', () => {
     expect(captured[0]!.prompt).toBe('Luigi mysterious trattoria xyzzy')
   })
 
+  it('does not offer settlement as an AI category', async () => {
+    await suggestCategoryWithAI('Luigi mysterious trattoria xyzzy')
+    expect(instructions()).not.toContain('settlement')
+  })
+
   it('includes a soft-hint locale line when locale is provided', async () => {
     await suggestCategoryWithAI('Luigi mysterious trattoria xyzzy', {
       locale: 'es',

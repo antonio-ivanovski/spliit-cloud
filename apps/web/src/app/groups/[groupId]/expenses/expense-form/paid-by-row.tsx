@@ -12,6 +12,7 @@ import type {
   ExpenseFormInputValues,
   SplitMode,
 } from '@spliit/domain'
+import { isSettlementCategory } from '@spliit/domain'
 
 import { safeSharesToFixedUnits } from './currency-utils'
 import { expenseTabPriority } from './focus-navigation'
@@ -49,10 +50,11 @@ export function PaidByRow({
     control: form.control,
     name: 'paidBySplitMode',
   })
-  const isReimbursement = useWatch({
+  const category = useWatch({
     control: form.control,
-    name: 'isReimbursement',
+    name: 'category',
   })
+  const isSettlement = isSettlementCategory(category)
   const amount = useWatch({ control: form.control, name: 'amount' })
   const paidByList = useWatch({ control: form.control, name: 'paidByList' })
   const conversionRate = useWatch({
@@ -83,7 +85,7 @@ export function PaidByRow({
     amount: amountAsMinorUnits(targetAmount, payerCurrency),
     paidByList: paidByListForCalc,
     paidBySplitMode: paidBySplitMode,
-    isReimbursement: false,
+    categoryId: category,
   }
 
   return (
@@ -140,7 +142,7 @@ export function PaidByRow({
             }
             preview={
               checked &&
-              !isReimbursement &&
+              !isSettlement &&
               (paidBySplitMode === 'BY_AMOUNT'
                 ? isOriginalPayer &&
                   inputValue && (

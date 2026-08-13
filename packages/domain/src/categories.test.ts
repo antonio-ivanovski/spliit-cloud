@@ -8,6 +8,8 @@ import {
   INCOME_CATEGORY_ID,
   PARENT_CATEGORIES,
   PAYMENT_CATEGORY_ID,
+  SETTLEMENT_CATEGORY_ID,
+  isSettlementCategory,
   categoryIdSchema,
   categoryMatchesSelection,
   categorySelectionDisplayCount,
@@ -40,6 +42,14 @@ describe('DEFAULT_CATEGORIES', () => {
       name: 'Income',
       parentId: null,
     })
+    expect(getCategoryById(SETTLEMENT_CATEGORY_ID)).toEqual({
+      id: 'settlement',
+      grouping: 'Settlement',
+      name: 'Settlement',
+      parentId: null,
+    })
+    expect(isSettlementCategory(SETTLEMENT_CATEGORY_ID)).toBe(true)
+    expect(isSettlementCategory(PAYMENT_CATEGORY_ID)).toBe(false)
   })
 
   it('has a parent for every declared grouping', () => {

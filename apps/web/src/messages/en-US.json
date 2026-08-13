@@ -224,7 +224,8 @@
       "participants": "{names}",
       "showLess": "Show less"
     },
-    "copyToast": "Copy expense initiated. The existing expense details will be used to create a new one."
+    "copyToast": "Copy expense initiated. The existing expense details will be used to create a new one.",
+    "incomeBadge": "Income"
   },
   "ExpenseSeries": {
     "badge": "Recurring",
@@ -1096,8 +1097,7 @@
       "edit": "Edit income",
       "TitleField": {
         "label": "Income title",
-        "placeholder": "Salary or refund",
-        "description": "Describe where the income came from."
+        "placeholder": "Salary or refund"
       },
       "DateField": {
         "label": "Income date",
@@ -1127,8 +1127,7 @@
       "edit": "Edit expense",
       "TitleField": {
         "label": "Expense title",
-        "placeholder": "Monday evening restaurant",
-        "description": "Enter a description for the expense."
+        "placeholder": "Monday evening restaurant"
       },
       "DateField": {
         "label": "Expense date",
@@ -1267,9 +1266,6 @@
       "customRate": "Using custom rate",
       "via": "via {currencies}"
     },
-    "isReimbursementField": {
-      "label": "This is a settlement payment"
-    },
     "categoryField": {
       "label": "Category"
     },
@@ -1307,7 +1303,6 @@
     "save": "Save",
     "saving": "Saving…",
     "cancel": "Cancel",
-    "reimbursement": "Settlement payment",
     "readOnlyNotice": "This group is archived. The expense is shown read-only.",
     "ParticipantDistribution": {
       "missing": "Missing {missing} of {total}",
@@ -1424,7 +1419,10 @@
       "chooseTimezone": "Choose timezone",
       "done": "Done",
       "yourTime": "your time"
-    }
+    },
+    "settlementTitle": "Settlement payment",
+    "settlementHint": "{category}: Not counted as spending in totals, stats, or budgets. Still updates who owes whom.",
+    "incomeHint": "{category}: For money received. Grouped as income, not as a purchase."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Delete document",
@@ -1498,14 +1496,6 @@
     "title": "Balances",
     "description": "See each participant’s net balance.",
     "removedBadge": "Removed",
-    "Reimbursements": {
-      "title": "Suggested settlement payments",
-      "description": "Use these payments to settle balances with as few transfers as possible.",
-      "noImbursements": "Everyone in your group is settled up 😁",
-      "owes": "<strong>{from}</strong> owes <strong>{to}</strong>",
-      "markAsPaid": "Mark as paid",
-      "markAsPaidAria": "Mark {amount} from {from} to {to} as paid"
-    },
     "currencyDisplay": {
       "label": "Currency",
       "group": "Group currency ({currency})",
@@ -1568,6 +1558,14 @@
       "individualAllHint": "You are viewing the standard group-wide individual plan. It may include payments between subgroups.",
       "unknownParticipant": "Pending invite",
       "individualWithinHint": "You are viewing a subgroup-aware individual plan. Suggested payments stay within each subgroup when the subgroup totals are already settled."
+    },
+    "Settlements": {
+      "title": "Suggested settlements",
+      "description": "Use these payments to settle balances with as few transfers as possible.",
+      "noSettlements": "Everyone in your group is settled up 😁",
+      "owes": "<strong>{from}</strong> owes <strong>{to}</strong>",
+      "markAsPaid": "Mark as paid",
+      "markAsPaidAria": "Mark {amount} from {from} to {to} as paid"
     }
   },
   "Stats": {
@@ -1766,6 +1764,9 @@
     },
     "Income": {
       "heading": "Income"
+    },
+    "Settlement": {
+      "heading": "Settlement"
     }
   },
   "Currencies": {
@@ -2327,7 +2328,8 @@
         "recurrence": "Recurrence",
         "reimbursement": "Settlement payment",
         "conversionSource": "Conversion source",
-        "conversionRate": "Conversion rate"
+        "conversionRate": "Conversion rate",
+        "settlement": "Settlement payment"
       },
       "changeEmptyValue": "Not set",
       "recurringCreated": "{participant} created recurring expense “{title}”",
@@ -2594,28 +2596,6 @@
     "commentDelete": "Delete comment",
     "commentSend": "Send comment",
     "openDocument": "Open document"
-  },
-  "CreateReimbursement": {
-    "description": "Review the payment before recording it.",
-    "pays": "{from} pays {to}",
-    "amount": "Amount",
-    "date": "Date",
-    "category": "Category",
-    "create": "Create",
-    "edit": "Edit details",
-    "creating": "Creating…",
-    "successToast": "Settlement payment recorded",
-    "successToastMultiple": "Recorded {count} settlement payments as one entry",
-    "paysMany": "{from} pays {count} people",
-    "receivesMany": "{to} receives {count} payments",
-    "paymentsToInclude": "Payments to include",
-    "selectionSummary": "{count} payments selected, totaling {total}",
-    "legToAria": "{from} pays {to}, {amount}",
-    "legFromAria": "{from} pays {to}, {amount}",
-    "toParticipant": "to {name}",
-    "fromParticipant": "from {name}",
-    "createSingle": "Record payment",
-    "createMultiple": "Record {count} payments"
   },
   "Participants": {
     "search": "Search participants...",
@@ -2943,7 +2923,6 @@
     "participantsCountLabel": "Participants",
     "participantsSectionLabel": "Participant summary",
     "settlementsSectionLabel": "Suggested settlements",
-    "reimbursementsSectionLabel": "Recorded reimbursements",
     "expensesSectionLabel": "Expense details",
     "amountColumnLabel": "Amount",
     "participantColumnLabel": "Participant",
@@ -2957,10 +2936,11 @@
     "noExpensesLabel": "No expenses in the selected period.",
     "noParticipantsLabel": "No participants with activity in the selected period.",
     "noSettlementsLabel": "Everything is settled as of the end date.",
-    "noReimbursementsLabel": "No reimbursements recorded through the end date.",
     "originalAmountLabel": "Original amount",
     "expenseColumnLabel": "Expense",
-    "categoryColumnLabel": "Category"
+    "categoryColumnLabel": "Category",
+    "recordedSettlementsSectionLabel": "Recorded settlements",
+    "noRecordedSettlementsLabel": "No settlements recorded through the end date."
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2998,5 +2978,27 @@
     "hintTapToAddExpense": "I'm {name} — tap me to add an expense.",
     "hintTapToCreateGroup": "I'm {name} — tap me to create a group.",
     "billName": "Bill"
+  },
+  "CreateSettlement": {
+    "description": "Review the payment before recording it.",
+    "pays": "{from} pays {to}",
+    "amount": "Amount",
+    "date": "Date",
+    "category": "Category",
+    "create": "Create",
+    "edit": "Edit details",
+    "creating": "Creating…",
+    "successToast": "Settlement payment recorded",
+    "successToastMultiple": "Recorded {count} settlement payments as one entry",
+    "paysMany": "{from} pays {count} people",
+    "receivesMany": "{to} receives {count} payments",
+    "paymentsToInclude": "Payments to include",
+    "selectionSummary": "{count} payments selected, totaling {total}",
+    "legToAria": "{from} pays {to}, {amount}",
+    "legFromAria": "{from} pays {to}, {amount}",
+    "toParticipant": "to {name}",
+    "fromParticipant": "from {name}",
+    "createSingle": "Record payment",
+    "createMultiple": "Record {count} payments"
   }
 }

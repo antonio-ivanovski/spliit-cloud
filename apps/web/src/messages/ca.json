@@ -194,7 +194,8 @@
       "participants": "{names}",
       "showLess": "Mostra menys"
     },
-    "copyToast": "S'ha iniciat la còpia de la despesa. Les dades de la despesa existent s'utilitzaran per crear-ne una de nova."
+    "copyToast": "S'ha iniciat la còpia de la despesa. Les dades de la despesa existent s'utilitzaran per crear-ne una de nova.",
+    "incomeBadge": "Ingressos"
   },
   "Groups": {
     "myGroups": "Els meus grups",
@@ -660,8 +661,7 @@
       "edit": "Editar despesa",
       "TitleField": {
         "label": "Títol de la despesa",
-        "placeholder": "Sou o devolució",
-        "description": "Descriu d’on provenen els ingressos."
+        "placeholder": "Sou o devolució"
       },
       "DateField": {
         "label": "Data de la despesa",
@@ -691,8 +691,7 @@
       "edit": "Editar despesa",
       "TitleField": {
         "label": "Títol de la despesa",
-        "placeholder": "Llaunes del queviures",
-        "description": "Afegeix una descripció per la despesa."
+        "placeholder": "Llaunes del queviures"
       },
       "DateField": {
         "label": "Data de la despesa",
@@ -811,9 +810,6 @@
         "replaceItemsHint": "Substitueix els articles actuals"
       }
     },
-    "isReimbursementField": {
-      "label": "Això és un pagament de liquidació"
-    },
     "categoryField": {
       "label": "Categoria"
     },
@@ -868,7 +864,6 @@
     "participant": {
       "pending": "(convidat)"
     },
-    "reimbursement": "Pagament de liquidació",
     "readOnlyNotice": "Aquest grup està arxivat. La despesa es mostra només de lectura.",
     "PaidBySplitModeField": {
       "label": "Mode de divisió del pagador"
@@ -985,7 +980,10 @@
       "chooseTimezone": "Tria la zona horària",
       "done": "Fet",
       "yourTime": "la teva hora"
-    }
+    },
+    "settlementTitle": "Pagament de liquidació",
+    "settlementHint": "{category}: No es compta com a despesa als totals, estadístiques ni pressupostos. Tot i això actualitza qui deu a qui.",
+    "incomeHint": "{category}: Per als diners rebuts. Es agrupa com a ingressos, no com una compra."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Suprimeix el document",
@@ -1059,14 +1057,6 @@
     "title": "Balanç",
     "description": "Consulta el saldo net de cada participant.",
     "removedBadge": "Eliminat",
-    "Reimbursements": {
-      "title": "Pagaments de liquidació suggerits",
-      "description": "Fes servir aquests pagaments per liquidar els saldos amb el mínim de transferències.",
-      "noImbursements": "Tothom del grup té els comptes liquidats 😁",
-      "owes": "<strong>{from}</strong> deu a <strong>{to}</strong>",
-      "markAsPaid": "Marcar com a pagat",
-      "markAsPaidAria": "Marca {amount} de {from} a {to} com a pagat"
-    },
     "currencyDisplay": {
       "label": "Moneda",
       "group": "Moneda del grup ({currency})",
@@ -1129,6 +1119,14 @@
       "individualAllHint": "Estàs veient el pla individual estàndard de tot el grup. Pot incloure pagaments entre subgrups.",
       "unknownParticipant": "Invitació pendent",
       "individualWithinHint": "Estàs veient un pla individual que té en compte els subgrups. Els pagaments suggerits es mantenen dins de cada subgrup quan els totals dels subgrups ja estan liquidats."
+    },
+    "Settlements": {
+      "title": "Liquidacions suggerides",
+      "description": "Fes servir aquests pagaments per liquidar els saldos amb el mínim de transferències.",
+      "noSettlements": "Tothom del grup té els comptes liquidats 😁",
+      "owes": "<strong>{from}</strong> deu a <strong>{to}</strong>",
+      "markAsPaid": "Marcar com a pagat",
+      "markAsPaidAria": "Marca {amount} de {from} a {to} com a pagat"
     }
   },
   "Stats": {
@@ -1324,6 +1322,9 @@
     },
     "Income": {
       "heading": "Ingressos"
+    },
+    "Settlement": {
+      "heading": "Liquidació"
     }
   },
   "Currencies": {
@@ -2224,7 +2225,8 @@
         "recurrence": "Recurrència",
         "reimbursement": "pagament de liquidació",
         "conversionSource": "Font de conversió",
-        "conversionRate": "Tasa de conversió"
+        "conversionRate": "Tasa de conversió",
+        "settlement": "pagament de liquidació"
       },
       "recurringCreated": "{participant} ha creat la despesa recurrent «{title}»",
       "stopped": "{participant} ha aturat la despesa recurrent {title}",
@@ -2447,28 +2449,6 @@
     "commentDelete": "Suprimeix el comentari",
     "commentSend": "Envia el comentari",
     "openDocument": "Obre el document"
-  },
-  "CreateReimbursement": {
-    "description": "Revisa el pagament abans de registrar-lo.",
-    "pays": "{from} paga {to}",
-    "amount": "Quantitat",
-    "date": "Data",
-    "category": "Categoria",
-    "create": "Crea",
-    "edit": "Edita els detalls",
-    "creating": "Creant…",
-    "successToast": "S’ha creat el pagament de liquidació.",
-    "successToastMultiple": "S’han registrat {count} pagaments de liquidació en una sola entrada",
-    "paysMany": "{from} paga a {count} persones",
-    "receivesMany": "{to} rep {count} pagaments",
-    "paymentsToInclude": "Pagaments a incloure",
-    "selectionSummary": "{count} pagaments seleccionats, total: {total}",
-    "legToAria": "{from} paga a {to}, {amount}",
-    "legFromAria": "{from} paga a {to}, {amount}",
-    "toParticipant": "a {name}",
-    "fromParticipant": "de {name}",
-    "createSingle": "Registra el pagament",
-    "createMultiple": "Registra {count} pagaments"
   },
   "Participants": {
     "search": "Cerca participants...",
@@ -2889,7 +2869,6 @@
     "participantsCountLabel": "Persones participants",
     "participantsSectionLabel": "Resum dels participants",
     "settlementsSectionLabel": "Liquidacions suggerides",
-    "reimbursementsSectionLabel": "Reemborsaments registrats",
     "expensesSectionLabel": "Detalls de les despeses",
     "amountColumnLabel": "Import",
     "participantColumnLabel": "Persona participant",
@@ -2903,10 +2882,11 @@
     "noExpensesLabel": "No hi ha despeses en el període seleccionat.",
     "noParticipantsLabel": "No hi ha participants amb activitat en el període seleccionat.",
     "noSettlementsLabel": "Tot està liquidat a la data final.",
-    "noReimbursementsLabel": "No s'han registrat reemborsaments fins a la data final.",
     "originalAmountLabel": "Import original",
     "expenseColumnLabel": "Despesa",
-    "categoryColumnLabel": "Categoria"
+    "categoryColumnLabel": "Categoria",
+    "recordedSettlementsSectionLabel": "Liquidacions registrades",
+    "noRecordedSettlementsLabel": "No s’han registrat liquidacions fins a la data final."
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2944,5 +2924,27 @@
     "hintTapToAddExpense": "Sóc {name} — toca'm per afegir una despesa.",
     "hintTapToCreateGroup": "Sóc {name} — toca'm per crear un grup.",
     "billName": "Bill"
+  },
+  "CreateSettlement": {
+    "description": "Revisa el pagament abans de registrar-lo.",
+    "pays": "{from} paga {to}",
+    "amount": "Quantitat",
+    "date": "Data",
+    "category": "Categoria",
+    "create": "Crea",
+    "edit": "Edita els detalls",
+    "creating": "Creant…",
+    "successToast": "S’ha creat el pagament de liquidació.",
+    "successToastMultiple": "S’han registrat {count} pagaments de liquidació en una sola entrada",
+    "paysMany": "{from} paga a {count} persones",
+    "receivesMany": "{to} rep {count} pagaments",
+    "paymentsToInclude": "Pagaments a incloure",
+    "selectionSummary": "{count} pagaments seleccionats, total: {total}",
+    "legToAria": "{from} paga a {to}, {amount}",
+    "legFromAria": "{from} paga a {to}, {amount}",
+    "toParticipant": "a {name}",
+    "fromParticipant": "de {name}",
+    "createSingle": "Registra el pagament",
+    "createMultiple": "Registra {count} pagaments"
   }
 }

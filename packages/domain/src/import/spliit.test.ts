@@ -152,6 +152,27 @@ describe('parseSpliitExport', () => {
     ])
   })
 
+  it('maps isReimbursement true onto settlement regardless of stored category', () => {
+    const result = parseSpliitExport({
+      ...validExport,
+      expenses: [
+        {
+          ...validExport.expenses[0],
+          category: { grouping: 'Food and Drink', name: 'Dining Out' },
+          isReimbursement: true,
+        },
+        {
+          ...validExport.expenses[0],
+          title: 'Bank transfer',
+          category: { grouping: 'Uncategorized', name: 'Payment' },
+          isReimbursement: false,
+        },
+      ],
+    })
+    expect(result.expenses[0].category).toBe('settlement')
+    expect(result.expenses[1].category).toBe('payment')
+  })
+
   it('mints parser-local source ids instead of trusting upstream ids', () => {
     const result = parseSpliitExport({
       ...validExport,

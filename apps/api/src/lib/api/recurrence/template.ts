@@ -53,7 +53,6 @@ export function buildRecurringTemplate(args: {
     title: string
     category: string
     amount: number
-    isReimbursement: boolean
     notes?: string
     paidBySplitMode: string
     paidByList: Array<{ participant: string; shares: number }>
@@ -101,7 +100,6 @@ export function buildRecurringTemplate(args: {
       shares: p.shares,
     })),
     splitMode: expense.splitMode,
-    isReimbursement: expense.isReimbursement,
     notes: expense.notes ?? null,
     items: (expense.items ?? []).map((item) => ({
       title: item.title,
@@ -206,7 +204,6 @@ export function occurrenceExpenseData(
     title: template.title,
     paidBySplitMode: template.paidBySplitMode as never,
     splitMode: template.splitMode as never,
-    isReimbursement: template.isReimbursement,
     notes: template.notes,
     paidByList: { createMany: { data: template.paidByList } },
     paidFor: { createMany: { data: template.paidFor } },

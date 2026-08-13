@@ -8,11 +8,7 @@ import {
   type GroupShape,
   type LoadedExpense,
 } from '@/app/groups/[groupId]/expenses/expense-form/default-values'
-import {
-  getCurrency,
-  PAYMENT_CATEGORY_ID,
-  RecurrenceRule,
-} from '@spliit/domain'
+import { getCurrency, RecurrenceRule } from '@spliit/domain'
 
 const mockGroup = {
   id: 'group-1',
@@ -313,7 +309,7 @@ describe('buildExpenseFormDefaults (saved default)', () => {
       group: mockGroup,
       groupCurrency: usd(),
       currentLedgerParticipantId: 'lp-1',
-      reimbursementTitle: 'Reimbursement',
+      settlementTitle: 'Settlement payment',
       savedDefault: {
         splitMode: 'BY_PERCENTAGE',
         paidFor: [
@@ -337,7 +333,7 @@ describe('buildExpenseFormDefaults (saved default)', () => {
       group: mockGroup,
       groupCurrency: usd(),
       currentLedgerParticipantId: null,
-      reimbursementTitle: 'Reimbursement',
+      settlementTitle: 'Settlement payment',
       savedDefault: null,
     })
 
@@ -353,7 +349,7 @@ describe('buildExpenseFormDefaults (saved default)', () => {
       group: mockGroup,
       groupCurrency: usd(),
       currentLedgerParticipantId: null,
-      reimbursementTitle: 'Reimbursement',
+      settlementTitle: 'Settlement payment',
       savedDefault: {
         splitMode: 'BY_SHARES',
         paidFor: [{ participant: 'lp-removed', shares: 3 }],
@@ -365,12 +361,12 @@ describe('buildExpenseFormDefaults (saved default)', () => {
   })
 })
 
-describe('buildExpenseFormDefaults (reimbursement branch)', () => {
+describe('buildExpenseFormDefaults (settlement branch)', () => {
   it('forces splitMode to EVENLY when no saved defaults exist', () => {
     const result = buildExpenseFormDefaults({
       isCreate: true,
       searchParams: {
-        reimbursement: 'yes',
+        settlement: 'yes',
         from: 'lp-1',
         to: 'lp-2',
         amount: '50',
@@ -378,14 +374,13 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
       group: mockGroup,
       groupCurrency: usd(),
       currentLedgerParticipantId: null,
-      reimbursementTitle: 'Reimbursement',
+      settlementTitle: 'Settlement payment',
       savedDefault: null,
     })
 
     expect(result.splitMode).toBe('EVENLY')
     expect(result.paidFor).toEqual([{ participant: 'lp-2', shares: 1 }])
-    expect(result.isReimbursement).toBe(true)
-    expect(result.category).toBe(PAYMENT_CATEGORY_ID)
+    expect(result.category).toBe('settlement')
     // searchParams.amount is in cents (e.g., 50 cents = $0.50); the form
     // stores amount and paidByList shares in major units.
     expect(result.paidByList).toEqual([{ participant: 'lp-1', shares: 0.5 }])
@@ -396,7 +391,7 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
     const result = buildExpenseFormDefaults({
       isCreate: true,
       searchParams: {
-        reimbursement: 'yes',
+        settlement: 'yes',
         from: 'lp-1',
         to: 'lp-2',
         amount: '50',
@@ -404,7 +399,7 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
       group: mockGroup,
       groupCurrency: usd(),
       currentLedgerParticipantId: null,
-      reimbursementTitle: 'Reimbursement',
+      settlementTitle: 'Settlement payment',
       savedDefault: {
         splitMode: 'BY_AMOUNT',
         paidFor: [
@@ -422,7 +417,7 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
     const result = buildExpenseFormDefaults({
       isCreate: true,
       searchParams: {
-        reimbursement: 'yes',
+        settlement: 'yes',
         from: 'lp-1',
         to: 'lp-2',
         amount: '50',
@@ -430,7 +425,7 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
       group: mockGroup,
       groupCurrency: usd(),
       currentLedgerParticipantId: null,
-      reimbursementTitle: 'Reimbursement',
+      settlementTitle: 'Settlement payment',
       savedDefault: {
         splitMode: 'BY_PERCENTAGE',
         paidFor: [
@@ -448,7 +443,7 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
     const result = buildExpenseFormDefaults({
       isCreate: true,
       searchParams: {
-        reimbursement: 'yes',
+        settlement: 'yes',
         from: 'lp-1',
         to: 'lp-2',
         amount: '25',
@@ -456,7 +451,7 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
       group: mockGroup,
       groupCurrency: usd(),
       currentLedgerParticipantId: null,
-      reimbursementTitle: 'Reimbursement',
+      settlementTitle: 'Settlement payment',
       savedDefault: null,
     })
 
@@ -464,11 +459,11 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
     expect(result.paidFor[0]).toEqual({ participant: 'lp-2', shares: 1 })
   })
 
-  it('still sets the payment category and recurrence for reimbursement', () => {
+  it('still sets the payment category and recurrence for settlement', () => {
     const result = buildExpenseFormDefaults({
       isCreate: true,
       searchParams: {
-        reimbursement: 'yes',
+        settlement: 'yes',
         from: 'lp-1',
         to: 'lp-2',
         amount: '0',
@@ -476,19 +471,19 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
       group: mockGroup,
       groupCurrency: usd(),
       currentLedgerParticipantId: null,
-      reimbursementTitle: 'Reimbursement',
+      settlementTitle: 'Settlement payment',
       savedDefault: null,
     })
 
-    expect(result.category).toBe(PAYMENT_CATEGORY_ID)
+    expect(result.category).toBe('settlement')
     expect(result.recurrenceRule).toBe(RecurrenceRule.NONE)
   })
 
-  it('prefills an original-currency reimbursement with exchange conversion', () => {
+  it('prefills an original-currency settlement with exchange conversion', () => {
     const result = buildExpenseFormDefaults({
       isCreate: true,
       searchParams: {
-        reimbursement: 'yes',
+        settlement: 'yes',
         from: 'lp-1',
         to: 'lp-2',
         amount: '2500',
@@ -497,7 +492,7 @@ describe('buildExpenseFormDefaults (reimbursement branch)', () => {
       group: mockGroup,
       groupCurrency: usd(),
       currentLedgerParticipantId: null,
-      reimbursementTitle: 'Reimbursement',
+      settlementTitle: 'Settlement payment',
       savedDefault: null,
     })
 
@@ -521,7 +516,7 @@ describe('buildExpenseFormDefaults (prefilled items)', () => {
       group: mockGroup,
       groupCurrency: usd(),
       currentLedgerParticipantId: 'lp-1',
-      reimbursementTitle: 'Reimbursement',
+      settlementTitle: 'Settlement payment',
       savedDefault: null,
     })
 
@@ -560,7 +555,7 @@ describe('buildExpenseFormDefaults (prefilled items)', () => {
       group: mockGroup,
       groupCurrency: usd(),
       currentLedgerParticipantId: 'lp-1',
-      reimbursementTitle: 'Reimbursement',
+      settlementTitle: 'Settlement payment',
       savedDefault: null,
     })
 
@@ -602,7 +597,6 @@ describe('buildExpenseFormDefaults (copy branch)', () => {
       { ledgerParticipantId: 'lp-2', shares: 2500 },
     ],
     splitMode: 'EVENLY',
-    isReimbursement: false,
     documents: [],
     notes: 'Weekly groceries',
     recurrenceRule: 'NONE',
@@ -628,7 +622,7 @@ describe('buildExpenseFormDefaults (copy branch)', () => {
       group: mockGroup,
       groupCurrency: usd(),
       currentLedgerParticipantId: 'lp-1',
-      reimbursementTitle: 'Reimbursement',
+      settlementTitle: 'Settlement payment',
       savedDefault: null,
     })
 
@@ -657,7 +651,7 @@ describe('buildExpenseFormDefaults (copy branch)', () => {
       group: mockGroup,
       groupCurrency: usd(),
       currentLedgerParticipantId: 'lp-1',
-      reimbursementTitle: 'Reimbursement',
+      settlementTitle: 'Settlement payment',
       savedDefault: null,
     })
 
@@ -685,7 +679,7 @@ describe('buildExpenseFormDefaults (copy branch)', () => {
       group: mockGroup,
       groupCurrency: usd(),
       currentLedgerParticipantId: 'lp-1',
-      reimbursementTitle: 'Reimbursement',
+      settlementTitle: 'Settlement payment',
       savedDefault: null,
     })
 
@@ -707,7 +701,7 @@ describe('buildExpenseFormDefaults (copy branch)', () => {
       group: mockGroup,
       groupCurrency: usd(),
       currentLedgerParticipantId: 'lp-1',
-      reimbursementTitle: 'Reimbursement',
+      settlementTitle: 'Settlement payment',
       savedDefault: null,
     })
 
@@ -724,7 +718,7 @@ describe('buildExpenseFormDefaults (copy branch)', () => {
       group: mockGroup,
       groupCurrency: usd(),
       currentLedgerParticipantId: 'lp-1',
-      reimbursementTitle: 'Reimbursement',
+      settlementTitle: 'Settlement payment',
       savedDefault: null,
     })
 

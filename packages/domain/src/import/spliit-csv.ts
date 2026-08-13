@@ -1,6 +1,6 @@
 import Papa from 'papaparse'
 
-import { DEFAULT_CATEGORIES } from '../categories'
+import { DEFAULT_CATEGORIES, SETTLEMENT_CATEGORY_ID } from '../categories'
 import type { Currency } from '../currency'
 import { getCurrency } from '../currency'
 import { distributeRemainder } from '../remainder-distribution'
@@ -25,9 +25,14 @@ const FALLBACK_CURRENCY: Currency = {
  * current models after parsing.
  */
 type CsvLayout = {
+  /** Column index of `Is Settlement` or the legacy `Is Reimbursement` alias. */
   isReimbursement: number
   splitMode: number
   participantStart: number
+}
+
+function isSettlementCsvHeader(value: string | undefined): boolean {
+  return value === 'Is Settlement' || value === 'Is Reimbursement'
 }
 
 function toNumberOrNull(value: string | undefined): number | null {
@@ -231,7 +236,10 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
     expenses.push({
       title,
       expenseDate: date.slice(0, 10),
-      category: categoryToId(category),
+      category:
+        isReimbursement || categoryToId(category) === SETTLEMENT_CATEGORY_ID
+          ? SETTLEMENT_CATEGORY_ID
+          : categoryToId(category),
       amountCurrency: expenseCurrency,
       amount: expenseAmount,
       originalAmount: shouldRecover ? expenseAmount : null,
@@ -248,7 +256,6 @@ export function tryParseSpliitCsv(input: string): ImportParseResult {
       splitMode,
       recurrenceRule: 'NONE',
       recurrence: null,
-      isReimbursement,
       notes: null,
     })
   }
@@ -307,12 +314,12 @@ function detectCsvLayout(header: string[]): CsvLayout | null {
   let splitMode: number
   if (
     header[8] === 'Conversion source' &&
-    header[9] === 'Is Reimbursement' &&
+    isSettlementCsvHeader(header[9]) &&
     header[10] === 'Split mode'
   ) {
     isReimbursement = 9
     splitMode = 10
-  } else if (header[8] === 'Is Reimbursement' && header[9] === 'Split mode') {
+  } else if (isSettlementCsvHeader(header[8]) && header[9] === 'Split mode') {
     isReimbursement = 8
     splitMode = 9
   } else {

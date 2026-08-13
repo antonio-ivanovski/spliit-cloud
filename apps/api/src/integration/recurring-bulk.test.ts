@@ -209,7 +209,6 @@ describe('Recurring bulk updates — real DB', () => {
         paidBySplitMode: 'BY_AMOUNT',
         paidByList: [{ participant: args.participants.Admin, shares: 6000 }],
         paidFor: args.initialPaidFor,
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'WEEKLY',
       },
@@ -293,7 +292,6 @@ describe('Recurring bulk updates — real DB', () => {
         paidByList: [{ participant: participants.Admin, shares: 6000 }],
         // Drop Bob from paidFor on the new template.
         paidFor: [{ participant: participants.Admin, shares: 1 }],
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'WEEKLY',
         recurrence: {
@@ -389,7 +387,6 @@ describe('Recurring bulk updates — real DB', () => {
           { participant: participants.Admin, shares: 1 },
           { participant: participants.Bob, shares: 1 },
         ],
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'WEEKLY',
         recurrence: {
@@ -468,7 +465,6 @@ describe('Recurring bulk updates — real DB', () => {
         paidBySplitMode: 'BY_AMOUNT',
         paidByList: [{ participant: participants.Admin, shares: 6000 }],
         paidFor: [{ participant: participants.Admin, shares: 1 }],
-        isReimbursement: false,
         notes: 'added by test',
         documents: [],
         recurrenceRule: 'WEEKLY',
@@ -495,9 +491,9 @@ describe('Recurring bulk updates — real DB', () => {
   })
 
   // ------------------------------------------------------------------------
-  // F3b — Reimbursement-only update on future rows logs 'reimbursement'
+  // F3b — Settlement-only update on future rows logs 'category'
   // ------------------------------------------------------------------------
-  it('THIS_AND_FUTURE reimbursement-only change logs reimbursement on future rows', async () => {
+  it('THIS_AND_FUTURE settlement category change logs category on future rows', async () => {
     const { groupId, participants } = await createGroupWithParticipants(
       `RB-F3b-${runId}`,
       [],
@@ -532,12 +528,11 @@ describe('Recurring bulk updates — real DB', () => {
           })
         ).expenseDate.toISOString(),
         expenseTimeZone: 'UTC',
-        category: 'general',
+        category: 'settlement',
         splitMode: 'EVENLY',
         paidBySplitMode: 'BY_AMOUNT',
         paidByList: [{ participant: participants.Admin, shares: 6000 }],
         paidFor: [{ participant: participants.Admin, shares: 1 }],
-        isReimbursement: true,
         documents: [],
         recurrenceRule: 'WEEKLY',
         recurrence: {
@@ -556,7 +551,7 @@ describe('Recurring bulk updates — real DB', () => {
       expect(activity).not.toBeNull()
       const data = activity!.data as Record<string, unknown>
       expect((data.changedFields as string[]) ?? []).toEqual(
-        expect.arrayContaining(['reimbursement']),
+        expect.arrayContaining(['category']),
       )
       expect((data.changedFields as string[]) ?? []).not.toContain('recurrence')
     }
@@ -663,7 +658,6 @@ describe('Recurring bulk updates — real DB', () => {
           { participant: participants.Admin, shares: 1 },
           { participant: participants.Bob, shares: 1 },
         ],
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'DAILY',
         recurrence: {
@@ -734,7 +728,6 @@ describe('Recurring bulk updates — real DB', () => {
           { participant: participants.Admin, shares: 1 },
           { participant: participants.Bob, shares: 1 },
         ],
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'DAILY',
         // Keep COUNT high so catch-up through today leaves the series ACTIVE
@@ -797,7 +790,6 @@ describe('Recurring bulk updates — real DB', () => {
           { participant: participants.Admin, shares: 1 },
           { participant: participants.Bob, shares: 1 },
         ],
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'WEEKLY',
         recurrence: {
@@ -868,7 +860,6 @@ describe('Recurring bulk updates — real DB', () => {
           { participant: participants.Admin, shares: 1 },
           { participant: participants.Bob, shares: 1 },
         ],
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'WEEKLY',
         recurrence: {
@@ -945,7 +936,6 @@ describe('Recurring bulk updates — real DB', () => {
           { participant: participants.Admin, shares: 1 },
           { participant: participants.Bob, shares: 1 },
         ],
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'DAILY',
         recurrence: {
@@ -1021,7 +1011,6 @@ describe('Recurring bulk updates — real DB', () => {
           { participant: participants.Admin, shares: 1 },
           { participant: participants.Bob, shares: 1 },
         ],
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'DAILY',
         recurrence: {
@@ -1277,7 +1266,6 @@ describe('Recurring bulk updates — real DB', () => {
         paidBySplitMode: 'BY_AMOUNT',
         paidByList: [{ participant: participants.Admin, shares: 6000 }],
         paidFor: [{ participant: participants.Admin, shares: 1 }],
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'WEEKLY',
         recurrence: {
@@ -1349,7 +1337,6 @@ describe('Recurring bulk updates — real DB', () => {
         paidBySplitMode: 'BY_AMOUNT',
         paidByList: [{ participant: participants.Admin, shares: 6000 }],
         paidFor: [{ participant: participants.Admin, shares: 1 }],
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'WEEKLY',
         recurrence: {

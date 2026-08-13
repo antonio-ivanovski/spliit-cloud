@@ -10,7 +10,7 @@ import type {
 } from '@spliit/domain'
 import {
   DEFAULT_CATEGORY_ID,
-  PAYMENT_CATEGORY_ID,
+  SETTLEMENT_CATEGORY_ID,
   amountAsDecimal,
   categoryIdSchema,
   getCurrency,
@@ -248,7 +248,7 @@ export function buildExpenseFormDefaults(args: {
   group: GroupShape
   groupCurrency: Currency
   currentLedgerParticipantId: string | null | undefined
-  reimbursementTitle: string
+  settlementTitle: string
   today?: Date
   now?: Date
   timeZone?: string
@@ -263,7 +263,7 @@ export function buildExpenseFormDefaults(args: {
     group,
     groupCurrency,
     currentLedgerParticipantId,
-    reimbursementTitle,
+    settlementTitle,
     savedDefault,
     today = new Date(),
     now = new Date(),
@@ -280,7 +280,7 @@ export function buildExpenseFormDefaults(args: {
       group,
       groupCurrency,
       currentLedgerParticipantId,
-      reimbursementTitle,
+      settlementTitle,
       today,
       now,
       timeZone,
@@ -474,7 +474,6 @@ export function buildExpenseFormDefaults(args: {
       isMultiPayer: expense.paidByList.length > 1,
       paidFor,
       splitMode: expense.splitMode,
-      isReimbursement: expense.isReimbursement,
       documents: expense.documents,
       notes: expense.notes ?? '',
       recurrence: expense.recurrence ?? null,
@@ -527,8 +526,11 @@ export function buildExpenseFormDefaults(args: {
         values.indexOf(participant) === index,
     )
 
-  if (searchParams.reimbursement) {
-    const reimbursementNeedsConversion =
+  if (
+    searchParams.settlement === 'yes' ||
+    searchParams.reimbursement === 'yes'
+  ) {
+    const settlementNeedsConversion =
       searchOriginalCurrency != null &&
       searchOriginalCurrency !== group.currencyCode
     const prefilledSettlement = parsePrefilledSettlement(
@@ -566,7 +568,7 @@ export function buildExpenseFormDefaults(args: {
               },
             ]
       return {
-        title: reimbursementTitle,
+        title: settlementTitle,
         expenseDay: dateToIsoDay(today),
         expenseTime: formatTimeMinutes(
           utcToWallTime(now, timeZone).timeMinutes,
@@ -575,14 +577,13 @@ export function buildExpenseFormDefaults(args: {
         amount: totalDisplay,
         originalCurrency: searchOriginalCurrency,
         conversionRate: undefined,
-        conversionType: reimbursementNeedsConversion ? 'EXCHANGE' : undefined,
-        category: PAYMENT_CATEGORY_ID,
+        conversionType: settlementNeedsConversion ? 'EXCHANGE' : undefined,
+        category: SETTLEMENT_CATEGORY_ID,
         paidBySplitMode: 'BY_AMOUNT' as const,
         paidByList,
         isMultiPayer:
           prefilledSettlement.direction === 'receive' && paidByList.length > 1,
         paidFor,
-        isReimbursement: true,
         splitMode: 'BY_AMOUNT' as const,
         documents: [],
         notes: '',
@@ -598,7 +599,7 @@ export function buildExpenseFormDefaults(args: {
       }
     }
     return {
-      title: reimbursementTitle,
+      title: settlementTitle,
       expenseDay: dateToIsoDay(today),
       expenseTime: formatTimeMinutes(utcToWallTime(now, timeZone).timeMinutes),
       expenseTimeZone: timeZone,
@@ -608,8 +609,8 @@ export function buildExpenseFormDefaults(args: {
           : ('' as unknown as number),
       originalCurrency: searchOriginalCurrency,
       conversionRate: undefined,
-      conversionType: reimbursementNeedsConversion ? 'EXCHANGE' : undefined,
-      category: PAYMENT_CATEGORY_ID,
+      conversionType: settlementNeedsConversion ? 'EXCHANGE' : undefined,
+      category: SETTLEMENT_CATEGORY_ID,
       paidBySplitMode: 'BY_AMOUNT' as const,
       paidByList: searchParams.from
         ? [
@@ -631,7 +632,6 @@ export function buildExpenseFormDefaults(args: {
             },
           ]
         : [],
-      isReimbursement: true,
       splitMode: 'EVENLY' as const,
       documents: [],
       notes: '',
@@ -684,7 +684,6 @@ export function buildExpenseFormDefaults(args: {
     paidFor: prefilledParticipants.length
       ? prefilledParticipants.map((participant) => ({ participant, shares: 1 }))
       : defaultSplittingOptions.paidFor,
-    isReimbursement: false,
     splitMode: hasPrefilledItemSplits
       ? ('ITEMIZED' as const)
       : prefilledParticipants.length

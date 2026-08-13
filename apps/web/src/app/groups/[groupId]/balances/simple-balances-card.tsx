@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useLocale } from '@/i18n/react'
-import type { Balances, Reimbursement } from '@/lib/balances'
+import type { Balances, SuggestedSettlement } from '@/lib/balances'
 import type { Currency } from '@/lib/currency'
 import { cn, formatCurrency } from '@/lib/utils'
 import type {
@@ -18,7 +18,7 @@ import type {
 
 import type { BalanceView } from './balance-view-selector'
 import { SettlementSection } from './balances-card'
-import { BalancesLoading, ReimbursementsLoading } from './balances-loading'
+import { BalancesLoading, SettlementsLoading } from './balances-loading'
 import type { CurrencyBalance } from './currency-balances'
 import { CurrencySection } from './currency-section'
 import { SettlementCardHeader } from './settlement-card-header'
@@ -57,7 +57,7 @@ export function SimpleBalancesCard({
   participantCount,
   currencyDisplay,
   balances,
-  reimbursements,
+  suggestedSettlements,
   currencyBalances,
   participants,
   groupCurrency,
@@ -73,7 +73,7 @@ export function SimpleBalancesCard({
   participantCount?: number
   currencyDisplay: 'group' | 'original'
   balances: Balances | undefined
-  reimbursements: Reimbursement[] | undefined
+  suggestedSettlements: SuggestedSettlement[] | undefined
   currencyBalances: CurrencyBalance[]
   participants: Participant[]
   groupCurrency: Currency | undefined
@@ -91,7 +91,7 @@ export function SimpleBalancesCard({
       ? currencyBalances.some(hasActivity)
       : hasActivity({
           balances: balances ?? {},
-          reimbursements: reimbursements ?? [],
+          suggestedSettlements: suggestedSettlements ?? [],
         }) || Boolean(subgroupSettlementPlan?.hasInternalBalances)
 
   return (
@@ -101,7 +101,7 @@ export function SimpleBalancesCard({
         participantCount={participantCount}
         currencyDisplay={currencyDisplay}
         balances={balances}
-        reimbursements={reimbursements}
+        suggestedSettlements={suggestedSettlements}
         currencyBalances={currencyBalances}
         participants={participants}
         groupCurrency={groupCurrency}
@@ -120,7 +120,7 @@ export function SimpleBalancesCard({
           participantCount={participantCount}
           currencyDisplay={currencyDisplay}
           balances={balances}
-          reimbursements={reimbursements}
+          suggestedSettlements={suggestedSettlements}
           currencyBalances={currencyBalances}
           participants={participants}
           groupCurrency={groupCurrency}
@@ -140,7 +140,7 @@ type BalanceCardProps = {
   participantCount?: number
   currencyDisplay: 'group' | 'original'
   balances: Balances | undefined
-  reimbursements: Reimbursement[] | undefined
+  suggestedSettlements: SuggestedSettlement[] | undefined
   currencyBalances: CurrencyBalance[]
   participants: Participant[]
   groupCurrency: Currency | undefined
@@ -158,7 +158,7 @@ function SuggestedPaymentsCard({
   participantCount,
   currencyDisplay,
   balances,
-  reimbursements,
+  suggestedSettlements,
   currencyBalances,
   participants,
   groupCurrency,
@@ -180,7 +180,7 @@ function SuggestedPaymentsCard({
     <Card className="mobile-surface">
       <SettlementCardHeader
         title={t('simple.suggestedPayments')}
-        description={t('Reimbursements.description')}
+        description={t('Settlements.description')}
         settlementMode={
           currencyDisplay === 'group' && onSettlementModeChange
             ? settlementMode
@@ -190,7 +190,7 @@ function SuggestedPaymentsCard({
       />
       <CardContent className="px-0 pb-5 sm:px-6 sm:pb-6">
         {isLoading ? (
-          <ReimbursementsLoading participantCount={participantCount} />
+          <SettlementsLoading participantCount={participantCount} />
         ) : currencyDisplay === 'original' ? (
           <OriginalCurrencyPayments
             view={view}
@@ -202,12 +202,12 @@ function SuggestedPaymentsCard({
           />
         ) : hasActivity({
             balances: balances ?? {},
-            reimbursements: reimbursements ?? [],
+            suggestedSettlements: suggestedSettlements ?? [],
           }) || subgroupSettlementPlan?.hasInternalBalances ? (
           <GroupCurrencyPayments
             view={view}
             balances={balances ?? {}}
-            reimbursements={reimbursements ?? []}
+            suggestedSettlements={suggestedSettlements ?? []}
             participants={participants}
             currency={groupCurrency}
             groupId={groupId}
@@ -349,7 +349,7 @@ function SettlementDirectionOption({
 function GroupCurrencyPayments({
   view,
   balances,
-  reimbursements,
+  suggestedSettlements,
   participants,
   currency,
   groupId,
@@ -363,7 +363,7 @@ function GroupCurrencyPayments({
 }: {
   view: BalanceView
   balances: Balances
-  reimbursements: Reimbursement[]
+  suggestedSettlements: SuggestedSettlement[]
   participants: Participant[]
   currency: Currency | undefined
   groupId: string
@@ -401,7 +401,7 @@ function GroupCurrencyPayments({
   return view === 'visual' ? (
     <SettlementSection
       balances={balances}
-      reimbursements={reimbursements}
+      suggestedSettlements={suggestedSettlements}
       participants={participants}
       currency={currency}
       groupId={groupId}
@@ -410,7 +410,7 @@ function GroupCurrencyPayments({
   ) : (
     <SimpleSuggestedPaymentsContent
       balances={balances}
-      reimbursements={reimbursements}
+      suggestedSettlements={suggestedSettlements}
       participants={participants}
       currency={currency}
       groupId={groupId}
@@ -446,7 +446,7 @@ function OriginalCurrencyPayments({
           {view === 'visual' ? (
             <SettlementSection
               balances={summary.balances}
-              reimbursements={summary.reimbursements}
+              suggestedSettlements={summary.suggestedSettlements}
               participants={participants}
               currency={summary.currency}
               groupId={groupId}
@@ -455,7 +455,7 @@ function OriginalCurrencyPayments({
           ) : (
             <SimpleSuggestedPaymentsContent
               balances={summary.balances}
-              reimbursements={summary.reimbursements}
+              suggestedSettlements={summary.suggestedSettlements}
               participants={participants}
               currency={summary.currency}
               currencyCode={summary.currencyCode}
@@ -496,10 +496,10 @@ function OriginalCurrencyOverview({
 }
 
 function hasActivity(
-  summary: Pick<CurrencyBalance, 'balances' | 'reimbursements'>,
+  summary: Pick<CurrencyBalance, 'balances' | 'suggestedSettlements'>,
 ) {
   return (
-    summary.reimbursements.length > 0 ||
+    summary.suggestedSettlements.length > 0 ||
     Object.values(summary.balances).some((balance) => balance.total !== 0)
   )
 }
@@ -553,7 +553,7 @@ function SimpleBalanceOverviewContent({
 
 function SimpleSuggestedPaymentsContent({
   balances,
-  reimbursements,
+  suggestedSettlements,
   participants,
   currency,
   currencyCode,
@@ -563,7 +563,7 @@ function SimpleSuggestedPaymentsContent({
   onGroupByChange,
 }: {
   balances: Balances
-  reimbursements: Reimbursement[]
+  suggestedSettlements: SuggestedSettlement[]
   participants: Participant[]
   currency: Currency
   currencyCode?: string
@@ -587,10 +587,10 @@ function SimpleSuggestedPaymentsContent({
       ) : null}
       <SimpleSettlementDirections
         balances={balances}
-        reimbursements={reimbursements}
+        suggestedSettlements={suggestedSettlements}
         participants={participants}
         currency={currency}
-        reimbursementCurrencyCode={currencyCode}
+        originalCurrencyCode={currencyCode}
         groupId={groupId}
         groupBy={groupBy}
         onGroupByChange={onGroupByChange}
@@ -650,19 +650,19 @@ function SettlementPolicyNote({ children }: { children: ReactNode }) {
 
 function SimpleSettlementDirections({
   balances,
-  reimbursements,
+  suggestedSettlements,
   participants,
   currency,
-  reimbursementCurrencyCode,
+  originalCurrencyCode,
   groupId,
   groupBy,
   onGroupByChange,
 }: {
   balances: Balances
-  reimbursements: Reimbursement[]
+  suggestedSettlements: SuggestedSettlement[]
   participants: Participant[]
   currency: Currency
-  reimbursementCurrencyCode?: string
+  originalCurrencyCode?: string
   groupId: string
   groupBy: SettlementDirection
   onGroupByChange: (value: SettlementDirection) => void
@@ -681,7 +681,11 @@ function SimpleSettlementDirections({
   const participantIds = participantIdsWithBalance(
     groupBy === 'pay' ? (total) => total < 0 : (total) => total > 0,
   )
-  const groups = buildSettlementGroups(reimbursements, participantIds, groupBy)
+  const groups = buildSettlementGroups(
+    suggestedSettlements,
+    participantIds,
+    groupBy,
+  )
 
   return (
     <section aria-label={title} className="space-y-3">
@@ -692,7 +696,7 @@ function SimpleSettlementDirections({
       />
       {groups.length === 0 ? (
         <p className="text-sm text-muted-foreground">
-          {t('Reimbursements.noImbursements')}
+          {t('Settlements.noSettlements')}
         </p>
       ) : (
         <div className="space-y-3">
@@ -707,7 +711,7 @@ function SimpleSettlementDirections({
                 key={`${groupBy}-${group.participantId}`}
                 group={group}
                 currency={currency}
-                originalCurrencyCode={reimbursementCurrencyCode}
+                originalCurrencyCode={originalCurrencyCode}
                 groupId={groupId}
                 participants={participants}
               >
@@ -796,7 +800,7 @@ function SimpleSettlementDirections({
                               className="h-auto shrink-0 p-0 text-xs"
                               onClick={() => openFor([settlementLegKey(leg)])}
                               aria-label={settleAriaLabel}
-                              data-testid={`reimbursement-settle-${groupBy}-${leg.from}-${leg.to}`}
+                              data-testid={`settlement-settle-${groupBy}-${leg.from}-${leg.to}`}
                             >
                               {t('direction.settle')}
                             </Button>

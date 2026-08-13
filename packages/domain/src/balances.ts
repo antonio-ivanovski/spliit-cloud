@@ -50,7 +50,7 @@ export type Balances = Record<
   { paid: number; paidFor: number; total: number }
 >
 
-export type Reimbursement = {
+export type SuggestedSettlement = {
   from: string
   to: string
   amount: number
@@ -59,7 +59,7 @@ export type Reimbursement = {
 export type CurrencyBalanceSummary = {
   currencyCode: string
   balances: Balances
-  reimbursements: Reimbursement[]
+  suggestedSettlements: SuggestedSettlement[]
 }
 
 function isCrossCurrency(expense: BalanceExpense): boolean {
@@ -382,40 +382,42 @@ export function getCurrencyBalanceSummaries(
 ): CurrencyBalanceSummary[] {
   return Object.entries(getBalancesByCurrency(expenses, groupCurrencyCode)).map(
     ([currencyCode, balances]) => {
-      const reimbursements = getSuggestedReimbursements(balances)
+      const suggestedSettlements = getSuggestedSettlements(balances)
       return {
         currencyCode,
-        balances: getPublicBalances(reimbursements),
-        reimbursements,
+        balances: getPublicBalances(suggestedSettlements),
+        suggestedSettlements,
       }
     },
   )
 }
 
-export function getPublicBalances(reimbursements: Reimbursement[]): Balances {
+export function getPublicBalances(
+  suggestedSettlements: SuggestedSettlement[],
+): Balances {
   const balances: Balances = {}
-  reimbursements.forEach((reimbursement) => {
-    if (!balances[reimbursement.from])
-      balances[reimbursement.from] = { paid: 0, paidFor: 0, total: 0 }
+  suggestedSettlements.forEach((settlement) => {
+    if (!balances[settlement.from])
+      balances[settlement.from] = { paid: 0, paidFor: 0, total: 0 }
 
-    if (!balances[reimbursement.to])
-      balances[reimbursement.to] = { paid: 0, paidFor: 0, total: 0 }
+    if (!balances[settlement.to])
+      balances[settlement.to] = { paid: 0, paidFor: 0, total: 0 }
 
-    balances[reimbursement.from].paidFor += reimbursement.amount
-    balances[reimbursement.from].total -= reimbursement.amount
+    balances[settlement.from].paidFor += settlement.amount
+    balances[settlement.from].total -= settlement.amount
 
-    balances[reimbursement.to].paid += reimbursement.amount
-    balances[reimbursement.to].total += reimbursement.amount
+    balances[settlement.to].paid += settlement.amount
+    balances[settlement.to].total += settlement.amount
   })
   return balances
 }
 
 /**
- * A comparator that is stable across reimbursements. This ensures that a
- * participant executing a suggested reimbursement does not result in completely
+ * A comparator that is stable across suggested settlements. This ensures that a
+ * participant executing a suggested settlement does not result in completely
  * new repayment suggestions.
  */
-function compareBalancesForReimbursements(
+function compareBalancesForSettlements(
   b1: { participantId: string; total: number },
   b2: { participantId: string; total: number },
 ): number {
@@ -429,20 +431,20 @@ function compareBalancesForReimbursements(
   return b1.participantId < b2.participantId ? -1 : 1
 }
 
-export function getSuggestedReimbursements(
+export function getSuggestedSettlements(
   balances: Balances,
-): Reimbursement[] {
+): SuggestedSettlement[] {
   const balancesArray = Object.entries(balances)
     .map(([participantId, { total }]) => ({ participantId, total }))
     .filter((b) => b.total !== 0)
-  balancesArray.sort(compareBalancesForReimbursements)
-  const reimbursements: Reimbursement[] = []
+  balancesArray.sort(compareBalancesForSettlements)
+  const suggestedSettlements: SuggestedSettlement[] = []
   while (balancesArray.length > 1) {
     const first = balancesArray[0]
     const last = balancesArray[balancesArray.length - 1]
     const amount = first.total + last.total
     if (first.total > -last.total) {
-      reimbursements.push({
+      suggestedSettlements.push({
         from: last.participantId,
         to: first.participantId,
         amount: -last.total,
@@ -450,7 +452,7 @@ export function getSuggestedReimbursements(
       first.total = amount
       balancesArray.pop()
     } else {
-      reimbursements.push({
+      suggestedSettlements.push({
         from: last.participantId,
         to: first.participantId,
         amount: first.total,
@@ -459,5 +461,7 @@ export function getSuggestedReimbursements(
       balancesArray.shift()
     }
   }
-  return reimbursements.filter(({ amount }) => Math.round(amount) + 0 !== 0)
+  return suggestedSettlements.filter(
+    ({ amount }) => Math.round(amount) + 0 !== 0,
+  )
 }

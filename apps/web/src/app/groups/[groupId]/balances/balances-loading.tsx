@@ -1,6 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton'
 
-export function ReimbursementsLoading({
+export function SettlementsLoading({
   participantCount = 3,
 }: {
   participantCount?: number

@@ -5,7 +5,7 @@ import {
   getBalances,
   getCurrencyBalanceSummaries,
   getPublicBalances,
-  getSuggestedReimbursements,
+  getSuggestedSettlements,
 } from '@spliit/domain'
 import {
   getIndividualSettlementPlan,
@@ -69,8 +69,8 @@ export const listGroupBalancesProcedure = protectedProcedure
             }),
           })
     const balances = getBalances(expenses)
-    const globalReimbursements = getSuggestedReimbursements(balances)
-    const publicBalances = getPublicBalances(globalReimbursements)
+    const globalSuggestedSettlements = getSuggestedSettlements(balances)
+    const publicBalances = getPublicBalances(globalSuggestedSettlements)
     const subgroupRows = group.subgroupsEnabled
       ? ((await prisma.subgroup.findMany({
           where: { groupId },
@@ -119,10 +119,10 @@ export const listGroupBalancesProcedure = protectedProcedure
 
     return {
       balances: publicBalances,
-      // Keep the legacy root field aligned with the individual settlement
+      // Keep the root field aligned with the individual settlement
       // projection. Consumers that need subgroup-unit legs should use the
       // structured `settlement` payload below.
-      reimbursements: individualSettlement.reimbursements,
+      suggestedSettlements: individualSettlement.suggestedSettlements,
       currencyBalances,
       participants: publicParticipants,
       settlement: {

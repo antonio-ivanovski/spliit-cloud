@@ -7,6 +7,8 @@ import {
 } from '@spliit/db'
 import {
   wallTimeToUtc,
+  SETTLEMENT_CATEGORY_ID,
+  isSettlementCategory,
   spliitGroupExportManifestSchema,
   toSecondPrecision,
   type SpliitGroupExportManifest,
@@ -143,8 +145,10 @@ function remapTemplate(
       }
     })
   }
+  const { isReimbursement, ...rest } = template
   return {
-    ...template,
+    ...rest,
+    ...(isReimbursement === true ? { categoryId: SETTLEMENT_CATEGORY_ID } : {}),
     paidByList: remap(template.paidByList),
     paidFor: remap(template.paidFor),
     items: Array.isArray(template.items)
@@ -924,7 +928,12 @@ export async function importCloudGroup(
     let totalAmount = 0
     for (const expense of manifest.expenses) {
       const expenseId = randomId()
-      totalAmount += expense.amount
+      const categoryId = expense.isReimbursement
+        ? SETTLEMENT_CATEGORY_ID
+        : expense.categoryId
+      if (!isSettlementCategory(categoryId)) {
+        totalAmount += expense.amount
+      }
       const createdBy = expense.createdByParticipantId
         ? mappingBySource.get(expense.createdByParticipantId)?.mode ===
           'LINK_ACCOUNT'
@@ -969,7 +978,7 @@ export async function importCloudGroup(
           expenseDate: toSecondPrecision(canonicalExpenseDate),
           expenseTimeZone,
           title: expense.title,
-          categoryId: expense.categoryId,
+          categoryId,
           amount: expense.amount,
           originalAmount: expense.originalAmount,
           originalCurrency: expense.originalCurrency,
@@ -977,7 +986,6 @@ export async function importCloudGroup(
           conversionSource: expense.conversionSource,
           paidBySplitMode: expense.paidBySplitMode,
           splitMode: expense.splitMode,
-          isReimbursement: expense.isReimbursement,
           version: expense.version,
           createdAt: asDate(expense.createdAt),
           notes: expense.notes,

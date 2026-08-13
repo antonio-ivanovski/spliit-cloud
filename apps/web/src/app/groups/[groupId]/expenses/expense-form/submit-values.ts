@@ -96,7 +96,6 @@ export function buildSubmitValues(
     splitMode: values.splitMode,
     paidFor,
     isMultiPayer: values.isMultiPayer,
-    isReimbursement: values.isReimbursement,
     documents: values.documents,
     notes: values.notes,
     recurrenceRule: 'NONE' as const,

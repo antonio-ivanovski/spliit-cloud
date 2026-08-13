@@ -2,7 +2,7 @@ import { Check, Info } from 'lucide-react'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { CreateReimbursementModal } from '@/app/groups/[groupId]/balances/create-reimbursement-modal'
+import { CreateSettlementModal } from '@/app/groups/[groupId]/balances/create-settlement-modal'
 import { ParticipantSegmentBar } from '@/components/participant-segment-bar'
 import { Button } from '@/components/ui/button'
 import { useLocale } from '@/i18n/react'
@@ -141,9 +141,9 @@ export function VisualSubgroupSettlement({
       )}
 
       {pendingLeg ? (
-        <CreateReimbursementModal
+        <CreateSettlementModal
           groupId={groupId}
-          reimbursement={{
+          settlement={{
             from: pendingLeg.payerId,
             to: pendingLeg.receiverId,
             amount: pendingLeg.amount,

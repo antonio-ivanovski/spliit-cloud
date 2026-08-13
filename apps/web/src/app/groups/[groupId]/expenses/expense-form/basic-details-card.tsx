@@ -4,12 +4,12 @@ import { useState, type Dispatch, type SetStateAction } from 'react'
 import { useWatch, type UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
+import { categoryLabel } from '@/app/groups/[groupId]/stats/category-utils'
 import { CategorySelector } from '@/components/category-selector'
 import { CurrencyRateProviderAttribution } from '@/components/currency-rate-provider-attribution'
 import { CurrencySelector } from '@/components/currency-selector'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Checkbox } from '@/components/ui/checkbox'
 import {
   Collapsible,
   CollapsibleContent,
@@ -46,7 +46,12 @@ import type {
   ExpenseFormInputValues,
   ExpenseFormItemValues,
 } from '@spliit/domain'
-import { DEFAULT_CATEGORIES } from '@spliit/domain'
+import {
+  DEFAULT_CATEGORIES,
+  INCOME_CATEGORY_ID,
+  SETTLEMENT_CATEGORY_ID,
+  isSettlementCategory,
+} from '@spliit/domain'
 import {
   formatCalculatorAmount,
   type CalculatorItem,
@@ -85,7 +90,6 @@ export function BasicDetailsCard(props: {
   groupCurrency: Currency
   readOnly: boolean
   sExpense: 'Expense' | 'Income'
-  isIncome: boolean
   isCreate: boolean
   isCopy?: boolean
   recurrenceSequence?: number
@@ -144,13 +148,15 @@ export function BasicDetailsCard(props: {
     groupCurrency,
     readOnly,
     sExpense,
-    isIncome,
     isCreate,
     heading,
     savedDefault,
   } = props
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
+  const { t: tCategories } = useTranslation(undefined, {
+    keyPrefix: 'Categories',
+  })
   const locale = useLocale() as Locale
   const { isCategoryLoading, onManualCategory } = useSuggestCategoryFromTitle({
     form,
@@ -169,6 +175,16 @@ export function BasicDetailsCard(props: {
     CalculatorItem[] | null
   >(null)
   const watchedItems = useWatch({ control: form.control, name: 'items' }) ?? []
+  const watchedCategory = useWatch({ control: form.control, name: 'category' })
+  const categoryHint = isSettlementCategory(watchedCategory)
+    ? t('settlementHint', {
+        category: categoryLabel(tCategories, SETTLEMENT_CATEGORY_ID),
+      })
+    : watchedCategory === INCOME_CATEGORY_ID
+      ? t('incomeHint', {
+          category: categoryLabel(tCategories, INCOME_CATEGORY_ID),
+        })
+      : null
 
   const inputCurrency = props.originalCurrency
   const hasExistingItems = watchedItems.some(
@@ -317,9 +333,11 @@ export function BasicDetailsCard(props: {
                   </FormControl>
                 </div>
               </div>
-              <FormDescription className="hidden sm:block">
-                {t(`${sExpense}.TitleField.description`)}
-              </FormDescription>
+              {categoryHint ? (
+                <FormDescription className="text-xs">
+                  {categoryHint}
+                </FormDescription>
+              ) : null}
               <FormMessage />
             </FormItem>
           )}
@@ -608,31 +626,6 @@ export function BasicDetailsCard(props: {
               </FormItem>
             )}
           />
-
-          {!isIncome && (
-            <FormField
-              control={form.control}
-              name="isReimbursement"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center gap-3 space-y-0 py-1">
-                  <FormControl>
-                    <Checkbox
-                      id="is-reimbursement"
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      disabled={readOnly}
-                    />
-                  </FormControl>
-                  <FormLabel
-                    htmlFor="is-reimbursement"
-                    className="cursor-pointer leading-5"
-                  >
-                    {t('isReimbursementField.label')}
-                  </FormLabel>
-                </FormItem>
-              )}
-            />
-          )}
         </section>
       </CardContent>
       <ResponsiveDialog

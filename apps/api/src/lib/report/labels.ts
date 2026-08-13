@@ -23,7 +23,7 @@ export const reportLabelsSchema = z.object({
   // Sections
   participantsSectionLabel: short(120),
   settlementsSectionLabel: short(120),
-  reimbursementsSectionLabel: short(120),
+  recordedSettlementsSectionLabel: short(120),
   expensesSectionLabel: short(120),
   // Table columns
   amountColumnLabel: short(80),
@@ -42,7 +42,7 @@ export const reportLabelsSchema = z.object({
   noExpensesLabel: short(160),
   noParticipantsLabel: short(160),
   noSettlementsLabel: short(160),
-  noReimbursementsLabel: short(160),
+  noRecordedSettlementsLabel: short(160),
   // Conversion note for cross-currency expenses
   originalAmountLabel: short(160),
   // Category id → localized category name

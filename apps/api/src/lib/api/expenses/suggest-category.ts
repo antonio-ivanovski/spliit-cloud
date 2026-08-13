@@ -59,7 +59,7 @@ export async function suggestExpenseCategory(
         ledgerIds: [ledger.id],
         query: args.title,
         limit: TITLE_TRIGRAM_CATEGORY_LIMIT,
-        excludeReimbursements: true,
+        excludeSettlements: true,
         excludeCategoryIds: [DEFAULT_CATEGORY_ID],
       })
     : []

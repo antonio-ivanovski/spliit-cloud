@@ -59,8 +59,12 @@
     "aliases": ["electricite", "facture electricite"],
     "samples": []
   },
-  "payment": {
+  "settlement": {
     "aliases": ["remboursement", "regler"],
+    "samples": []
+  },
+  "payment": {
+    "aliases": ["virement"],
     "samples": []
   },
   "general": {

@@ -73,7 +73,7 @@ describe('subgroup settlement projections', () => {
     )
 
     expect(plan.policy).toBe('within-subgroups')
-    expect(plan.reimbursements).toEqual([
+    expect(plan.suggestedSettlements).toEqual([
       { from: 'bob', to: 'alice', amount: 100 },
       { from: 'dave', to: 'carol', amount: 100 },
     ])
@@ -91,7 +91,7 @@ describe('subgroup settlement projections', () => {
     )
 
     expect(plan.policy).toBe('all-individual')
-    expect(plan.reimbursements).toEqual([
+    expect(plan.suggestedSettlements).toEqual([
       { from: 'carol', to: 'alice', amount: 100 },
     ])
   })
@@ -102,7 +102,7 @@ describe('subgroup settlement projections', () => {
       [],
     )
 
-    expect(plan).toEqual({ reimbursements: [], policy: 'standard' })
+    expect(plan).toEqual({ suggestedSettlements: [], policy: 'standard' })
   })
 
   it('reports internal balances after subgroup totals are settled', () => {

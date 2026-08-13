@@ -45,14 +45,14 @@ Each per-participant cell in the CSV is `Paid − Owe` (Splitwise convention). T
 
 The payer is whichever positive-value participant has the largest recovered `Paid` (typically the one who fronted the whole cost). This is why the parser's `paidBy` matches the convention used by the Splitwise web app, and why the resulting per-currency balances line up with the `Total balance` footer rows at the bottom of the export.
 
-### Reimbursement detection
+### Settlement detection
 
-A row is imported as a reimbursement (no split) when either of the following matches:
+A row is imported as a settlement (no split) when either of the following matches:
 
 - The `Category` column is `Payment`.
 - The `Description` column matches the pattern `<Name> I. paid <Name> I.` (or `<Name> paid <Name>` for non-initialed names) — Splitwise's own "you paid someone" notation.
 
-For these rows the parser picks the participant with the negative column value as the receiver (`paidFor`) and the positive-value participant as the payer, so the row imports cleanly even when Splitwise lists both sides of the transfer.
+For these rows the parser picks the participant with the negative column value as the receiver (`paidFor`) and the positive-value participant as the payer, so the row imports cleanly even when Splitwise lists both sides of the transfer. The legacy `isReimbursement` import flag is accepted only as an alias that maps onto the settlement category.
 
 ### Footer skip
 
@@ -75,7 +75,7 @@ One CSV file produces one Spliit group. There is no auto-grouping of multiple Sp
 
 - **Group metadata**: name, currency
 - **Participants**: name, color (all mapped by you in the wizard)
-- **Expenses**: title, amount, date, payer, category, notes, split mode (evenly / by shares / by percentage / by amount), recurrence, reimbursement flag
+- **Expenses**: title, amount, date, payer, category, notes, split mode (evenly / by shares / by percentage / by amount), recurrence, settlement category (legacy CSV `Is Reimbursement` maps to settlement)
 - **Original currency fields**: `originalAmount`, `originalCurrency`, `conversionRate` are preserved from the source when available
 - **Source trace**: an "Imported from `<sourceUrl>`" note on the group and an activity entry
 

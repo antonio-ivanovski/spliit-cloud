@@ -624,7 +624,7 @@ function GlobalExpensesContent() {
       paidByMatch: filters.paidByMatch,
       paidFor: filters.paidFor.length ? filters.paidFor : undefined,
       paidForMatch: filters.paidForMatch,
-      hideReimbursements: !filters.showSettlements,
+      hideSettlements: !filters.showSettlements,
       dateFrom: filters.dateFrom
         ? new Date(`${filters.dateFrom}T00:00:00.000Z`)
         : undefined,

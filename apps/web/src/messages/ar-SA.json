@@ -270,14 +270,6 @@
       "label": "عرض العملة",
       "originalDescription": "عرض الأرصدة بكل عملة أصلية."
     },
-    "Reimbursements": {
-      "owes": "<strong>{from}</strong> مدين لـ <strong>{to}</strong>",
-      "markAsPaid": "وضع علامة كمدفوع",
-      "noImbursements": "لا توجد تسويات بعد.",
-      "title": "التسويات",
-      "description": "سجل دفعات التسوية.",
-      "markAsPaidAria": "وضع علامة على {amount} من {from} إلى {to} كمدفوع"
-    },
     "settlementMode": {
       "label": "تسوية الأرصدة كـ",
       "individual": "فردي",
@@ -300,6 +292,14 @@
       "individualAllHint": "أنت تشاهد خطة الأفراد القياسية على مستوى المجموعة بأكملها. قد تتضمن دفعات بين المجموعات الفرعية.",
       "unknownParticipant": "دعوة معلقة",
       "individualWithinHint": "أنت تشاهد خطة أفراد تراعي المجموعات الفرعية. تبقى الدفعات المقترحة داخل كل مجموعة فرعية عندما تكون إجماليات المجموعة الفرعية قد سُوّيت بالفعل."
+    },
+    "Settlements": {
+      "title": "تسويات مقترحة",
+      "description": "سجل دفعات التسوية.",
+      "noSettlements": "لا توجد تسويات بعد.",
+      "owes": "<strong>{from}</strong> مدين لـ <strong>{to}</strong>",
+      "markAsPaid": "وضع علامة كمدفوع",
+      "markAsPaidAria": "وضع علامة على {amount} من {from} إلى {to} كمدفوع"
     }
   },
   "BulkCategorize": {
@@ -507,7 +507,8 @@
     "copyToast": "نسخ المصروفات بدأ. تفاصيل المصروفات الموجودة ستُستخدم لإنشاء مصروف جديد.",
     "yourBalance": "رصيدك:",
     "notInvolved": "أنت غير مشترك",
-    "receivedBy": "استلم بواسطة <strong>{paidBy}</strong> · مخصص لـ <paidFor></paidFor>"
+    "receivedBy": "استلم بواسطة <strong>{paidBy}</strong> · مخصص لـ <paidFor></paidFor>",
+    "incomeBadge": "دخل"
   },
   "Homepage": {
     "features": {
@@ -1119,28 +1120,6 @@
     "cancel": "الاستمرار في استلام هذه الرسائل الإلكترونية",
     "manageSettings": "مراجعة جميع إعدادات الإشعارات"
   },
-  "CreateReimbursement": {
-    "creating": "جارٍ الإنشاء…",
-    "receivesMany": "يستلم {to} {count} دفعة",
-    "category": "الفئة",
-    "date": "التاريخ",
-    "legToAria": "{from} يدفع لـ {to}، {amount}",
-    "paysMany": "{from} يدفع لـ {count} أشخاص",
-    "createMultiple": "تسجيل {count} دفعة",
-    "successToastMultiple": "تم تسجيل {count} دفعة تسوية كإدخال واحد",
-    "selectionSummary": "تم اختيار {count} دفعة، بإجمالي {total}",
-    "edit": "تعديل التفاصيل",
-    "create": "إنشاء",
-    "amount": "المبلغ",
-    "toParticipant": "إلى {name}",
-    "legFromAria": "{from} يدفع لـ {to}، {amount}",
-    "description": "سوِّ الحسابات مع عضو في المجموعة.",
-    "paymentsToInclude": "المدفوعات المضمنة",
-    "fromParticipant": "من {name}",
-    "successToast": "تم تسجيل دفعة التسوية",
-    "pays": "{from} يدفع لـ {to}",
-    "createSingle": "تسجيل دفعة"
-  },
   "ExpenseForm": {
     "PaidBySplitModeField": {
       "label": "نمط تقسيم الدفع"
@@ -1183,7 +1162,6 @@
     },
     "paidByOptionEvenly": "بالتساوي",
     "decreaseShares": "تقليل الحصص لـ {name}",
-    "reimbursement": "دفعة التسوية",
     "paidForOptionBySharesHelper": "خصص حصة لكل شخص",
     "splittingOptions": "خيارات التقسيم",
     "scanReceipt": "مسح الإيصال بالذكاء الاصطناعي",
@@ -1321,7 +1299,6 @@
       "create": "إنشاء مصروفات",
       "createCopy": "إنشاء نسخة: {title}",
       "TitleField": {
-        "description": "تسجيل الدخول وصف لـ مصروفات.",
         "label": "عنوان المصروف",
         "placeholder": "مطعم مساء الإثنين"
       },
@@ -1357,7 +1334,6 @@
       "edit": "تغيير دخل",
       "create": "إنشاء دخل",
       "TitleField": {
-        "description": "صف من أين جاء الدخل.",
         "label": "عنوان الدخل",
         "placeholder": "راتب أو استرداد"
       },
@@ -1451,9 +1427,6 @@
       "cancel": "إلغاء"
     },
     "paidForOptionByPercentage": "بالنسبة المئوية",
-    "isReimbursementField": {
-      "label": "هذه دفعة تسوية"
-    },
     "paidForOptionByPercentageHelper": "خصص نسبة مئوية لكل شخص",
     "save": "حفظ",
     "multiplePayers": "دافعون متعددون",
@@ -1475,7 +1448,10 @@
       "chooseTimezone": "اختيار المنطقة الزمنية",
       "done": "تم",
       "yourTime": "وقتك"
-    }
+    },
+    "settlementTitle": "دفعة التسوية",
+    "settlementHint": "{category}: لا يُحتسب إنفاقًا في الإجماليات أو الإحصاءات أو الميزانيات. ما زال يحدّث من يدين لمن.",
+    "incomeHint": "{category}: للأموال المستلمة. يُصنَّف كدخل لا كعملية شراء."
   },
   "Categories": {
     "noCategory": "لا توجد فئة مطابقة.",
@@ -1557,6 +1533,9 @@
     },
     "Income": {
       "heading": "دخل"
+    },
+    "Settlement": {
+      "heading": "تسوية"
     }
   },
   "AccountSettings": {
@@ -2577,16 +2556,17 @@
         "items": "البنود",
         "amount": "المبلغ",
         "recurrence": "التكرار",
-        "reimbursement": "التعويض",
         "date": "التاريخ",
         "title": "العنوان",
         "split": "التقسيم",
         "payers": "الدافعون",
         "notes": "الملاحظات",
         "category": "الفئة",
+        "reimbursement": "دفعة التسوية",
         "conversionSource": "مصدر سعر الصرف",
         "conversionRate": "سعر الصرف",
-        "documents": "المستندات"
+        "documents": "المستندات",
+        "settlement": "دفعة التسوية"
       }
     },
     "member": {
@@ -2943,7 +2923,6 @@
     "participantsCountLabel": "المشاركون",
     "participantsSectionLabel": "ملخص المشاركين",
     "settlementsSectionLabel": "التسويات المقترحة",
-    "reimbursementsSectionLabel": "المبالغ المستردة المسجلة",
     "expensesSectionLabel": "تفاصيل المصروفات",
     "amountColumnLabel": "المبلغ",
     "participantColumnLabel": "المشارك",
@@ -2957,10 +2936,11 @@
     "noExpensesLabel": "لا توجد مصروفات في الفترة المحددة.",
     "noParticipantsLabel": "لا يوجد مشاركون بنشاط في الفترة المحددة.",
     "noSettlementsLabel": "تمت تسوية كل شيء حتى تاريخ الانتهاء.",
-    "noReimbursementsLabel": "لم تُسجَّل أي مبالغ مستردة حتى تاريخ الانتهاء.",
     "originalAmountLabel": "المبلغ الأصلي",
     "expenseColumnLabel": "المصروف",
-    "categoryColumnLabel": "الفئة"
+    "categoryColumnLabel": "الفئة",
+    "recordedSettlementsSectionLabel": "تسويات مسجَّلة",
+    "noRecordedSettlementsLabel": "لم تُسجَّل أي تسويات حتى تاريخ الانتهاء."
   },
   "CurrencyRateProviders": {
     "frankfurter": "فرانكفورتر",
@@ -2998,5 +2978,27 @@
     "hintTapToAddExpense": "أنا {name} — انقر عليّ لإضافة نفقة.",
     "hintTapToCreateGroup": "أنا {name} — انقر عليّ لإنشاء مجموعة.",
     "billName": "بيل"
+  },
+  "CreateSettlement": {
+    "description": "سوِّ الحسابات مع عضو في المجموعة.",
+    "pays": "{from} يدفع لـ {to}",
+    "amount": "المبلغ",
+    "date": "التاريخ",
+    "category": "الفئة",
+    "create": "إنشاء",
+    "edit": "تعديل التفاصيل",
+    "creating": "جارٍ الإنشاء…",
+    "successToast": "تم تسجيل دفعة التسوية",
+    "successToastMultiple": "تم تسجيل {count} دفعة تسوية كإدخال واحد",
+    "paysMany": "{from} يدفع لـ {count} أشخاص",
+    "receivesMany": "يستلم {to} {count} دفعة",
+    "paymentsToInclude": "المدفوعات المضمنة",
+    "selectionSummary": "تم اختيار {count} دفعة، بإجمالي {total}",
+    "legToAria": "{from} يدفع لـ {to}، {amount}",
+    "legFromAria": "{from} يدفع لـ {to}، {amount}",
+    "toParticipant": "إلى {name}",
+    "fromParticipant": "من {name}",
+    "createSingle": "تسجيل دفعة",
+    "createMultiple": "تسجيل {count} دفعة"
   }
 }

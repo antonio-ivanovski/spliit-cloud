@@ -200,7 +200,6 @@ describe('Group CRUD via existing API', () => {
             expenseDate: expenseDate.toISOString(),
             expenseTimeZone: 'UTC',
             category: 'dining-out',
-            isReimbursement: false,
             recurrenceRule: 'NONE',
           },
         },
@@ -292,7 +291,6 @@ describe('Group CRUD via existing API', () => {
           shares: 1,
         },
       ],
-      isReimbursement: false,
       paidBySplitMode: 'BY_AMOUNT' as const,
       splitMode: 'EVENLY' as const,
       recurrenceRule: 'NONE' as const,
@@ -323,7 +321,7 @@ describe('Group CRUD via existing API', () => {
     // The API returns { balances: { [participantId]: { paid, paidFor, total } } }
     const balancesResult = await trpcCall<{
       balances: Record<string, { paid: number; paidFor: number; total: number }>
-      reimbursements: Array<unknown>
+      suggestedSettlements: Array<unknown>
     }>('groups.balances.list', {
       groupId: testGroup.id,
       linkInviteToken: undefined,

@@ -1,4 +1,5 @@
 import type { AuthAccount } from '@/lib/auth'
+import { SETTLEMENT_CATEGORY_ID } from '@spliit/domain'
 import type { NormalizedSource } from '@spliit/domain/import'
 
 import type { CloudGroupBundleInspection } from './cloud-bundle'
@@ -55,7 +56,9 @@ export function cloudInspectionToSource(
         sourceCreatedAt: expense.createdAt,
         title: expense.title,
         expenseDate: expense.expenseDate,
-        category: expense.categoryId,
+        category: expense.isReimbursement
+          ? SETTLEMENT_CATEGORY_ID
+          : expense.categoryId,
         amountCurrency: manifest.group.ledger.currencyCode,
         amount: expense.amount,
         originalAmount: expense.originalAmount,
@@ -75,7 +78,6 @@ export function cloudInspectionToSource(
           expense.splitMode === 'ITEMIZED' ? 'EVENLY' : expense.splitMode,
         recurrenceRule: 'NONE',
         recurrence: null,
-        isReimbursement: expense.isReimbursement,
         notes: expense.notes,
       }
     }),

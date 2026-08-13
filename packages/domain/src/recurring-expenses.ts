@@ -49,7 +49,6 @@ export type RecurringExpenseTemplate = {
   paidByList: Array<{ ledgerParticipantId: string; shares: number }>
   paidFor: Array<{ ledgerParticipantId: string; shares: number }>
   splitMode: string
-  isReimbursement: boolean
   notes: string | null
   items: Array<{
     title: string

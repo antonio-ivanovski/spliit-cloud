@@ -7,3 +7,4 @@ Apply `default.md` first, then these Dutch (Netherlands) rules.
 - Use correct `de`/`het` agreement and natural Dutch word order. Dutch usually does not need gendered user language.
 - Capitalize sentence starts and proper names normally; do not capitalize every UI label as in English.
 - Preserve Dutch punctuation, accents, and exact amounts while keeping placeholders and tags intact.
+- Exclusive settlement term: _verrekening_ (noun) and _verrekenen_ (verb). Never _terugbetaling_ or _vergoeding_. Prefer _verrekening_ over _vereffening_ when both appear.

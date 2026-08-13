@@ -190,7 +190,8 @@
       "participants": "{names}",
       "showLess": "Tampilkan lebih sedikit"
     },
-    "copyToast": "Penyalinan pengeluaran dimulai. Detail pengeluaran yang ada akan digunakan untuk membuat pengeluaran baru."
+    "copyToast": "Penyalinan pengeluaran dimulai. Detail pengeluaran yang ada akan digunakan untuk membuat pengeluaran baru.",
+    "incomeBadge": "Pendapatan"
   },
   "Groups": {
     "myGroups": "Grup saya",
@@ -648,8 +649,7 @@
       "edit": "Ubah pemasukan",
       "TitleField": {
         "label": "Judul pemasukan",
-        "placeholder": "Gaji atau pengembalian dana",
-        "description": "Jelaskan sumber pendapatan ini."
+        "placeholder": "Gaji atau pengembalian dana"
       },
       "DateField": {
         "label": "Tanggal pemasukan",
@@ -679,8 +679,7 @@
       "edit": "Ubah pengeluaran",
       "TitleField": {
         "label": "Judul pengeluaran",
-        "placeholder": "Restoran Senin malam",
-        "description": "Masukkan deskripsi untuk pengeluaran."
+        "placeholder": "Restoran Senin malam"
       },
       "DateField": {
         "label": "Tanggal pengeluaran",
@@ -819,9 +818,6 @@
       "customRate": "Menggunakan kurs kustom",
       "via": "melalui {currencies}"
     },
-    "isReimbursementField": {
-      "label": "Ini adalah pembayaran pelunasan"
-    },
     "categoryField": {
       "label": "Kategori"
     },
@@ -856,7 +852,6 @@
     "participant": {
       "pending": "(diundang)"
     },
-    "reimbursement": "Pembayaran pelunasan",
     "readOnlyNotice": "Grup ini diarsipkan. Pengeluaran ditampilkan hanya-baca.",
     "PaidBySplitModeField": {
       "label": "Mode pembagian pembayaran"
@@ -971,7 +966,10 @@
       "chooseTimezone": "Pilih zona waktu",
       "done": "Selesai",
       "yourTime": "waktu Anda"
-    }
+    },
+    "settlementTitle": "Pembayaran pelunasan",
+    "settlementHint": "{category}: Tidak dihitung sebagai pengeluaran di total, statistik, atau anggaran. Tetap memperbarui siapa berutang kepada siapa.",
+    "incomeHint": "{category}: Untuk uang yang diterima. Dikelompokkan sebagai pendapatan, bukan pembelian."
   },
   "Currencies": {
     "search": "Cari mata uang...",
@@ -1354,14 +1352,6 @@
     "title": "Saldo",
     "description": "Lihat saldo bersih setiap peserta.",
     "removedBadge": "Dihapus",
-    "Reimbursements": {
-      "title": "Saran pembayaran pelunasan",
-      "description": "Gunakan pembayaran ini untuk melunasi saldo dengan transfer sesedikit mungkin.",
-      "noImbursements": "Saldo semua orang di grup sudah lunas 😁",
-      "owes": "<strong>{from}</strong> berutang <strong>{to}</strong>",
-      "markAsPaid": "Tandai sebagai telah dibayar",
-      "markAsPaidAria": "Tandai {amount} dari {from} ke {to} sebagai sudah dibayar"
-    },
     "currencyDisplay": {
       "label": "Mata uang",
       "group": "Mata uang grup ({currency})",
@@ -1424,6 +1414,14 @@
       "individualAllHint": "Anda melihat rencana individual standar untuk seluruh grup. Rencana ini dapat mencakup pembayaran antar subgrup.",
       "unknownParticipant": "Undangan tertunda",
       "individualWithinHint": "Anda melihat rencana individual yang memperhitungkan subgrup. Pembayaran yang disarankan tetap berada di dalam setiap subgrup jika total subgrup sudah dilunasi."
+    },
+    "Settlements": {
+      "title": "Pelunasan yang disarankan",
+      "description": "Gunakan pembayaran ini untuk melunasi saldo dengan transfer sesedikit mungkin.",
+      "noSettlements": "Saldo semua orang di grup sudah lunas 😁",
+      "owes": "<strong>{from}</strong> berutang <strong>{to}</strong>",
+      "markAsPaid": "Tandai sebagai telah dibayar",
+      "markAsPaidAria": "Tandai {amount} dari {from} ke {to} sebagai sudah dibayar"
     }
   },
   "Stats": {
@@ -1618,6 +1616,9 @@
     },
     "Income": {
       "heading": "Pemasukan"
+    },
+    "Settlement": {
+      "heading": "Penyelesaian"
     }
   },
   "Auth": {
@@ -2208,7 +2209,8 @@
         "recurrence": "Pengulangan",
         "reimbursement": "Pembayaran pelunasan",
         "conversionSource": "Sumber konversi",
-        "conversionRate": "Kurs"
+        "conversionRate": "Kurs",
+        "settlement": "Pembayaran pelunasan"
       },
       "recurringCreated": "{participant} membuat pengeluaran berulang “{title}”",
       "stopped": "{participant} menghentikan pengeluaran berulang “{title}”",
@@ -2413,28 +2415,6 @@
     "commentDelete": "Hapus komentar",
     "commentSend": "Kirim komentar",
     "openDocument": "Buka dokumen"
-  },
-  "CreateReimbursement": {
-    "description": "Tinjau pembayaran sebelum mencatatnya.",
-    "pays": "{from} membayar {to}",
-    "amount": "Jumlah",
-    "date": "Tanggal",
-    "category": "Kategori",
-    "create": "Buat",
-    "edit": "Ubah detail",
-    "creating": "Membuat…",
-    "successToast": "Pembayaran pelunasan dicatat",
-    "successToastMultiple": "{count} pembayaran pelunasan dicatat sebagai satu entri",
-    "paysMany": "{from} membayar {count} orang",
-    "receivesMany": "{to} menerima {count} pembayaran",
-    "paymentsToInclude": "Pembayaran yang disertakan",
-    "selectionSummary": "{count} pembayaran dipilih, total {total}",
-    "legToAria": "{from} membayar {to}, {amount}",
-    "legFromAria": "{from} membayar {to}, {amount}",
-    "toParticipant": "kepada {name}",
-    "fromParticipant": "dari {name}",
-    "createSingle": "Catat pembayaran",
-    "createMultiple": "Catat {count} pembayaran"
   },
   "Participants": {
     "search": "Cari peserta...",
@@ -2855,7 +2835,6 @@
     "participantsCountLabel": "Peserta",
     "participantsSectionLabel": "Ringkasan peserta",
     "settlementsSectionLabel": "Pembayaran yang disarankan",
-    "reimbursementsSectionLabel": "Pembayaran pelunasan yang tercatat",
     "expensesSectionLabel": "Detail pengeluaran",
     "amountColumnLabel": "Jumlah",
     "participantColumnLabel": "Peserta",
@@ -2869,10 +2848,11 @@
     "noExpensesLabel": "Tidak ada pengeluaran pada periode yang dipilih.",
     "noParticipantsLabel": "Tidak ada peserta dengan aktivitas pada periode yang dipilih.",
     "noSettlementsLabel": "Semua sudah dilunasi per tanggal akhir.",
-    "noReimbursementsLabel": "Tidak ada pembayaran pelunasan yang tercatat hingga tanggal akhir.",
     "originalAmountLabel": "Jumlah asli",
     "expenseColumnLabel": "Pengeluaran",
-    "categoryColumnLabel": "Kategori"
+    "categoryColumnLabel": "Kategori",
+    "recordedSettlementsSectionLabel": "Pelunasan tercatat",
+    "noRecordedSettlementsLabel": "Tidak ada pelunasan yang tercatat hingga tanggal akhir."
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2910,5 +2890,27 @@
     "hintTapToAddExpense": "Saya {name} — ketuk saya untuk menambah pengeluaran.",
     "hintTapToCreateGroup": "Saya {name} — ketuk saya untuk membuat grup.",
     "billName": "Bill"
+  },
+  "CreateSettlement": {
+    "description": "Tinjau pembayaran sebelum mencatatnya.",
+    "pays": "{from} membayar {to}",
+    "amount": "Jumlah",
+    "date": "Tanggal",
+    "category": "Kategori",
+    "create": "Buat",
+    "edit": "Ubah detail",
+    "creating": "Membuat…",
+    "successToast": "Pembayaran pelunasan dicatat",
+    "successToastMultiple": "{count} pembayaran pelunasan dicatat sebagai satu entri",
+    "paysMany": "{from} membayar {count} orang",
+    "receivesMany": "{to} menerima {count} pembayaran",
+    "paymentsToInclude": "Pembayaran yang disertakan",
+    "selectionSummary": "{count} pembayaran dipilih, total {total}",
+    "legToAria": "{from} membayar {to}, {amount}",
+    "legFromAria": "{from} membayar {to}, {amount}",
+    "toParticipant": "kepada {name}",
+    "fromParticipant": "dari {name}",
+    "createSingle": "Catat pembayaran",
+    "createMultiple": "Catat {count} pembayaran"
   }
 }

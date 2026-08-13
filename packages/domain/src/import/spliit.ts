@@ -1,6 +1,6 @@
 import * as z from 'zod'
 
-import { DEFAULT_CATEGORIES } from '../categories'
+import { DEFAULT_CATEGORIES, SETTLEMENT_CATEGORY_ID } from '../categories'
 import { sharesAsFixedUnits } from '../shares'
 import { legacyRuleToRecurrence } from './recurrence'
 import {
@@ -171,7 +171,9 @@ function normalizeSpliitExport(parsed: SpliitExport): NormalizedSource {
       sourceCreatedAt: e.createdAt ?? null,
       title: e.title,
       expenseDate: e.expenseDate.slice(0, 10),
-      category: resolveCategoryId(e.category ?? null),
+      category: e.isReimbursement
+        ? SETTLEMENT_CATEGORY_ID
+        : resolveCategoryId(e.category ?? null),
       amountCurrency: expenseCurrency,
       amount: expenseAmount,
       originalAmount: shouldRecover ? expenseAmount : null,
@@ -183,7 +185,6 @@ function normalizeSpliitExport(parsed: SpliitExport): NormalizedSource {
       splitMode: e.splitMode,
       recurrenceRule: e.recurrenceRule,
       recurrence,
-      isReimbursement: e.isReimbursement,
       notes: e.notes ?? null,
     }
   })

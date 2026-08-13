@@ -122,6 +122,45 @@ describe('spliitGroupExportManifestSchema', () => {
     ).toMatchObject({ scope: { type: 'ACCOUNT' }, groups: [] })
   })
 
+  it('accepts a legacy isReimbursement boolean on expenses and templates', () => {
+    const expense = {
+      sourceId: 'exp-1',
+      createdAt: '2026-08-08T12:00:00.000Z',
+      expenseDate: '2026-08-08T12:00:00.000Z',
+      expenseTimeZone: 'UTC',
+      title: 'Paid Alice',
+      categoryId: 'payment',
+      amount: 1000,
+      originalAmount: null,
+      originalCurrency: null,
+      conversionRate: null,
+      conversionSource: null,
+      paidBySplitMode: 'EVENLY' as const,
+      splitMode: 'EVENLY' as const,
+      version: 1,
+      createdByParticipantId: null,
+      recurringSeriesId: null,
+      recurrenceSequence: null,
+      notes: null,
+      paidByList: [],
+      paidFor: [],
+      items: [],
+      itemizedRemainder: null,
+      documents: [],
+      comments: [],
+      isReimbursement: true,
+    }
+
+    expect(
+      spliitGroupExportManifestSchema.parse({
+        ...minimalManifest,
+        expenses: [expense],
+      }),
+    ).toMatchObject({
+      expenses: [{ isReimbursement: true, categoryId: 'payment' }],
+    })
+  })
+
   it('allows an intentionally omitted document without a storage reference', () => {
     expect(
       spliitGroupExportManifestSchema.parse({

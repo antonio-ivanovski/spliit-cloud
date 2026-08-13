@@ -8,3 +8,4 @@ Apply `default.md` first, then these Arabic (Saudi Arabia) rules.
 - Prefer gender-neutral constructions. When gender is unavoidable, follow the grammatical gender of the noun rather than inventing English-style gender-neutral forms.
 - Respect Arabic plural categories and agreement; do not translate every plural as a singular plus a number.
 - Keep app terminology consistent: members, groups, expenses, shares, balances, and settlements should use one established Arabic term each.
+- Exclusive settlement term: _تسوية_ (noun) and _سوّى_ (verb). Never _تعويض_ or _استرداد_ for this concept.

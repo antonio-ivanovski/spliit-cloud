@@ -250,7 +250,8 @@
         "recurrence": "تکرار",
         "reimbursement": "تصفیہ کی ادائیگی",
         "conversionSource": "تبادلے کا ذریعہ",
-        "conversionRate": "تبادلے کی شرح"
+        "conversionRate": "تبادلے کی شرح",
+        "settlement": "تصفیہ کی ادائیگی"
       },
       "recurringCreated": "{participant} نے متواتر خرچہ \"{title}\" تخلیق کیا",
       "stopped": "{participant} نے متواتر خرچہ {title} روک دیا",
@@ -385,14 +386,6 @@
     "title": "بیلنس",
     "description": "ہر شریک کا خالص بیلنس دیکھیں۔",
     "removedBadge": "ہٹا دیا گیا",
-    "Reimbursements": {
-      "title": "تجویز کردہ تصفیہ کی ادائیگیاں",
-      "description": "یہ ادائیگیاں کم سے کم منتقلی کے ساتھ بیلنس تصفیہ کرنے کے لیے استعمال کریں۔",
-      "noImbursements": "آپ کے گروپ میں سب برابر ہو گئے ہیں 😁",
-      "owes": "<strong>{from}</strong> <strong>{to}</strong> کو مقروض ہے",
-      "markAsPaid": "ادا شدہ نشان زد کریں",
-      "markAsPaidAria": "{from} سے {to} کو {amount} ادا شدہ نشان زد کریں"
-    },
     "currencyDisplay": {
       "label": "کرنسی",
       "group": "گروپ کرنسی ({currency})",
@@ -455,6 +448,14 @@
       "individualAllHint": "آپ معیاری گروپ گیر انفرادی منصوبہ دیکھ رہے ہیں۔ اس میں ذیلی گروپوں کے درمیان ادائیگیاں شامل ہو سکتی ہیں۔",
       "unknownParticipant": "زیر التواء دعوت",
       "individualWithinHint": "آپ ذیلی گروپ سے آگاہ انفرادی منصوبہ دیکھ رہے ہیں۔ جب ذیلی گروپ کی کل رقم پہلے سے طے ہو چکی ہوتی ہے تو تجویز کردہ ادائیگیاں ہر ذیلی گروپ کے اندر ہی رہتی ہیں۔"
+    },
+    "Settlements": {
+      "title": "تجویز کردہ تصفیے",
+      "description": "یہ ادائیگیاں کم سے کم منتقلی کے ساتھ بیلنس تصفیہ کرنے کے لیے استعمال کریں۔",
+      "noSettlements": "آپ کے گروپ میں سب برابر ہو گئے ہیں 😁",
+      "owes": "<strong>{from}</strong> <strong>{to}</strong> کو مقروض ہے",
+      "markAsPaid": "ادا شدہ نشان زد کریں",
+      "markAsPaidAria": "{from} سے {to} کو {amount} ادا شدہ نشان زد کریں"
     }
   },
   "BulkCategorize": {
@@ -604,6 +605,9 @@
     },
     "Income": {
       "heading": "آمدنی"
+    },
+    "Settlement": {
+      "heading": "تصفیہ"
     }
   },
   "Common": {
@@ -679,28 +683,6 @@
       "title": "تصویر درکار ہے",
       "aiDescription": "AI سے رسید اسکین کرنے کے لیے صرف تصویری فائلیں معاون ہیں۔"
     }
-  },
-  "CreateReimbursement": {
-    "description": "ریکارڈ کرنے سے پہلے ادائیگی کا جائزہ لیں۔",
-    "pays": "{from}، {to} کو ادا کرتا ہے",
-    "amount": "رقم",
-    "date": "تاریخ",
-    "category": "زمرہ",
-    "create": "تخلیق کریں",
-    "edit": "تفصیلات میں ترمیم کریں",
-    "creating": "تخلیق ہو رہا ہے…",
-    "successToast": "تصفیہ کی ادائیگی ریکارڈ ہو گئی",
-    "successToastMultiple": "{count} تصفیہ کی ادائیگیاں ایک اندراج کے طور پر ریکارڈ ہو گئیں",
-    "paysMany": "{from}، {count} لوگوں کو ادا کرتا ہے",
-    "receivesMany": "{to}، {count} ادائیگیاں وصول کرتا ہے",
-    "paymentsToInclude": "شامل کرنے کے لیے ادائیگیاں",
-    "selectionSummary": "{count} ادائیگیاں منتخب، کل {total}",
-    "legToAria": "{from}، {to} کو {amount} ادا کرتا ہے",
-    "legFromAria": "{from}، {to} کو {amount} ادا کرتا ہے",
-    "toParticipant": "{name} کو",
-    "fromParticipant": "{name} سے",
-    "createSingle": "ادائیگی ریکارڈ کریں",
-    "createMultiple": "{count} ادائیگیاں ریکارڈ کریں"
   },
   "Currencies": {
     "search": "کرنسی تلاش کریں...",
@@ -1047,7 +1029,8 @@
       "title": "آئٹمز",
       "participants": "{names}",
       "showLess": "کم دکھائیں"
-    }
+    },
+    "incomeBadge": "آمدنی"
   },
   "ExpenseDocumentsInput": {
     "ErrorToast": {
@@ -1102,8 +1085,7 @@
       "edit": "خرچے میں ترمیم کریں",
       "TitleField": {
         "label": "خرچے کا عنوان",
-        "placeholder": "پیر کی شام کا ریستوراں",
-        "description": "خرچے کی تفصیل درج کریں۔"
+        "placeholder": "پیر کی شام کا ریستوراں"
       },
       "categoryFieldDescription": "خرچے کا زمرہ منتخب کریں۔",
       "splitModeDescription": "منتخب کریں کہ خرچہ کیسے تقسیم کیا جائے۔",
@@ -1192,8 +1174,7 @@
       "edit": "آمدنی میں ترمیم کریں",
       "TitleField": {
         "label": "آمدنی کا عنوان",
-        "placeholder": "تنخواہ یا رقم کی واپسی",
-        "description": "بیان کریں کہ آمدنی کہاں سے آئی۔"
+        "placeholder": "تنخواہ یا رقم کی واپسی"
       },
       "categoryFieldDescription": "آمدنی کا زمرہ منتخب کریں۔",
       "splitModeDescription": "منتخب کریں کہ آمدنی کیسے تقسیم کی جائے۔",
@@ -1223,7 +1204,6 @@
     "save": "محفوظ کریں",
     "saving": "محفوظ ہو رہا ہے…",
     "cancel": "منسوخ کریں",
-    "reimbursement": "تصفیہ کی ادائیگی",
     "readOnlyNotice": "یہ گروپ آرکائیو شدہ ہے۔ خرچہ صرف پڑھنے کے لیے دکھایا گیا ہے۔",
     "ParticipantDistribution": {
       "missing": "{total} میں سے {missing} کم ہے",
@@ -1329,9 +1309,6 @@
     "participantSharesLabel": "{name} کے لیے حصص",
     "decreaseShares": "{name} کے حصص کم کریں",
     "increaseShares": "{name} کے حصص بڑھائیں",
-    "isReimbursementField": {
-      "label": "یہ تصفیہ کی ادائیگی ہے"
-    },
     "paidForOptionItemized": "آئٹمائزڈ",
     "paidForOptionItemizedHelper": "خرچے میں انفرادی آئٹمز سے ہر شریک کے حصے کا حساب لگائیں۔",
     "items": {
@@ -1401,7 +1378,10 @@
       "chooseTimezone": "منطقۂ وقت منتخب کریں",
       "done": "مکمل",
       "yourTime": "آپ کا وقت"
-    }
+    },
+    "settlementTitle": "تصفیہ کی ادائیگی",
+    "settlementHint": "{category}: کل، اعداد و شمار یا بجٹ میں خرچ نہیں گنا جاتا۔ پھر بھی اپ ڈیٹ کرتا ہے کہ کون کس کا مقروض ہے۔",
+    "incomeHint": "{category}: موصول شدہ رقم کے لیے۔ خریداری نہیں، آمدنی کے طور پر گروپ کیا جاتا ہے۔"
   },
   "ExpensePreview": {
     "title": "خرچے کا پیش نظارہ",
@@ -2868,7 +2848,6 @@
     "participantsCountLabel": "شرکاء",
     "participantsSectionLabel": "شرکاء کا خلاصہ",
     "settlementsSectionLabel": "تجویز کردہ تصفیے",
-    "reimbursementsSectionLabel": "درج شدہ باز ادائیگیاں",
     "expensesSectionLabel": "اخراجات کی تفصیلات",
     "amountColumnLabel": "رقم",
     "participantColumnLabel": "شریک",
@@ -2882,10 +2861,11 @@
     "noExpensesLabel": "منتخب مدت میں کوئی خرچ نہیں ہے۔",
     "noParticipantsLabel": "منتخب مدت میں کسی شریک کی کوئی سرگرمی نہیں ہے۔",
     "noSettlementsLabel": "آخری تاریخ تک تمام حسابات طے ہو چکے ہیں۔",
-    "noReimbursementsLabel": "آخری تاریخ تک کوئی باز ادائیگی درج نہیں کی گئی۔",
     "originalAmountLabel": "اصل رقم",
     "expenseColumnLabel": "خرچہ",
-    "categoryColumnLabel": "زمرہ"
+    "categoryColumnLabel": "زمرہ",
+    "recordedSettlementsSectionLabel": "درج شدہ تصفیے",
+    "noRecordedSettlementsLabel": "آخری تاریخ تک کوئی تصفیہ درج نہیں کیا گیا۔"
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2923,5 +2903,27 @@
     "hintTapToAddExpense": "میں {name} ہوں — خرچہ شامل کرنے کے لیے مجھے تھپتھپائیں۔",
     "hintTapToCreateGroup": "میں {name} ہوں — گروپ بنانے کے لیے مجھے تھپتھپائیں۔",
     "billName": "بل"
+  },
+  "CreateSettlement": {
+    "description": "ریکارڈ کرنے سے پہلے ادائیگی کا جائزہ لیں۔",
+    "pays": "{from}، {to} کو ادا کرتا ہے",
+    "amount": "رقم",
+    "date": "تاریخ",
+    "category": "زمرہ",
+    "create": "تخلیق کریں",
+    "edit": "تفصیلات میں ترمیم کریں",
+    "creating": "تخلیق ہو رہا ہے…",
+    "successToast": "تصفیہ کی ادائیگی ریکارڈ ہو گئی",
+    "successToastMultiple": "{count} تصفیہ کی ادائیگیاں ایک اندراج کے طور پر ریکارڈ ہو گئیں",
+    "paysMany": "{from}، {count} لوگوں کو ادا کرتا ہے",
+    "receivesMany": "{to}، {count} ادائیگیاں وصول کرتا ہے",
+    "paymentsToInclude": "شامل کرنے کے لیے ادائیگیاں",
+    "selectionSummary": "{count} ادائیگیاں منتخب، کل {total}",
+    "legToAria": "{from}، {to} کو {amount} ادا کرتا ہے",
+    "legFromAria": "{from}، {to} کو {amount} ادا کرتا ہے",
+    "toParticipant": "{name} کو",
+    "fromParticipant": "{name} سے",
+    "createSingle": "ادائیگی ریکارڈ کریں",
+    "createMultiple": "{count} ادائیگیاں ریکارڈ کریں"
   }
 }

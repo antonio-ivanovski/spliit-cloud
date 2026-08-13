@@ -3,6 +3,7 @@ import { generateText } from 'ai'
 import {
   DEFAULT_CATEGORIES,
   DEFAULT_CATEGORY_ID,
+  SETTLEMENT_CATEGORY_ID,
   formatCategoryForAIPrompt,
   type CategoryId,
 } from '@spliit/domain'
@@ -41,7 +42,9 @@ export async function suggestCategoryWithAI(
   description: string,
   options?: SuggestCategoryWithAIOptions,
 ): Promise<{ categoryId: CategoryId | null }> {
-  const categories = DEFAULT_CATEGORIES
+  const categories = DEFAULT_CATEGORIES.filter(
+    (category) => category.id !== SETTLEMENT_CATEGORY_ID,
+  )
   const groupSection = buildGroupContextSection(options?.groupContext)
   const localeHint = buildLocaleHint(options?.locale)
   const recentSection = buildRecentExpensesSection(
@@ -72,7 +75,11 @@ export async function suggestCategoryWithAI(
     rawContent,
     categories.map((category) => category.id),
   )
-  if (!categoryId || categoryId === DEFAULT_CATEGORY_ID) {
+  if (
+    !categoryId ||
+    categoryId === DEFAULT_CATEGORY_ID ||
+    categoryId === SETTLEMENT_CATEGORY_ID
+  ) {
     return { categoryId: null }
   }
   return { categoryId: categoryId as CategoryId }

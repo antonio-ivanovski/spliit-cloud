@@ -83,7 +83,7 @@ describe('tryParseSpliitCsv', () => {
     expect(expense.amount).toBe(Math.round(1000 / 1.1))
     expect(expense.originalCurrency).toBe('USD')
     expect(expense.conversionRate).toBe(1.1)
-    expect(expense.isReimbursement).toBe(false)
+    expect(expense.category).not.toBe('settlement')
   })
 
   it('skips rows with unparseable amounts and returns no expenses', () => {
@@ -96,13 +96,13 @@ describe('tryParseSpliitCsv', () => {
     expect(result.error).toMatch(/CSV had no parseable expenses/i)
   })
 
-  it('marks reimbursement expenses as such', () => {
+  it('maps Is Reimbursement Yes onto settlement (legacy alias)', () => {
     const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
 "2026-03-12","Reimbursement","Payment","EUR","51.92",,,,"Yes","Unevenly – By shares",0,-51.92`
     const result = tryParseSpliitCsv(csv)
     expect(result.ok).toBe(true)
     if (!result.ok) return
-    expect(result.source.expenses[0].isReimbursement).toBe(true)
+    expect(result.source.expenses[0].category).toBe('settlement')
     expect(result.source.expenses[0].amount).toBe(5192)
     expect(result.source.expenses[0].paidBySourceId).toBe(
       result.source.participants[0].sourceId,
@@ -110,6 +110,24 @@ describe('tryParseSpliitCsv', () => {
     expect(result.source.expenses[0].paidFor).toEqual([
       { sourceId: result.source.participants[1].sourceId, shares: 5192 },
     ])
+  })
+
+  it('keeps Payment without Is Reimbursement Yes as ordinary spend', () => {
+    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Reimbursement","Split mode","John ","Jane"
+"2026-01-31","Bank transfer","Payment","EUR","17.40",,,,"No","Evenly",10.44,-6.96`
+    const result = tryParseSpliitCsv(csv)
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    expect(result.source.expenses[0].category).toBe('payment')
+  })
+
+  it('accepts the current Is Settlement CSV header as a settlement flag', () => {
+    const csv = `"Date","Description","Category","Currency","Cost","Original cost","Original currency","Conversion rate","Is Settlement","Split mode","John ","Jane"
+"2026-01-31","Paid Jane","Settlement","EUR","17.40",,,,"Yes","Evenly",17.40,-17.40`
+    const result = tryParseSpliitCsv(csv)
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    expect(result.source.expenses[0].category).toBe('settlement')
   })
 
   it('recovers original amount from Cost ÷ rate (ignores Original cost; upstream #513)', () => {

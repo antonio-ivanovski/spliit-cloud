@@ -67,8 +67,12 @@
     "aliases": ["obleceni", "boty"],
     "samples": []
   },
-  "payment": {
+  "settlement": {
     "aliases": ["refundace", "vyrovnani"],
+    "samples": []
+  },
+  "payment": {
+    "aliases": ["prevod"],
     "samples": []
   },
   "general": {

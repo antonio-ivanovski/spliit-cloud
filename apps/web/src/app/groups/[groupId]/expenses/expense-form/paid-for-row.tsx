@@ -12,6 +12,7 @@ import type {
   ExpenseFormInputValues,
   SplitMode,
 } from '@spliit/domain'
+import { isSettlementCategory } from '@spliit/domain'
 
 import { safeSharesToFixedUnits } from './currency-utils'
 import { expenseTabPriority } from './focus-navigation'
@@ -50,10 +51,11 @@ export function PaidForRow({
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const splitMode = useWatch({ control: form.control, name: 'splitMode' })
-  const isReimbursement = useWatch({
+  const category = useWatch({
     control: form.control,
-    name: 'isReimbursement',
+    name: 'category',
   })
+  const isSettlement = isSettlementCategory(category)
   const amount = useWatch({ control: form.control, name: 'amount' })
 
   const { id } = participant
@@ -113,7 +115,7 @@ export function PaidForRow({
             }
             preview={
               checked &&
-              !isReimbursement &&
+              !isSettlement &&
               (splitMode === 'BY_AMOUNT' ? (
                 (() => {
                   const shareValue = Number(row?.shares ?? 0)
@@ -160,7 +162,7 @@ export function PaidForRow({
                       }),
                     ),
                     splitMode: splitMode,
-                    isReimbursement: isReimbursement,
+                    categoryId: category,
                   })}
                   currency={inputCurrency}
                 />

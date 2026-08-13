@@ -7,7 +7,7 @@ import {
 } from '@spliit/db'
 import {
   getBalances,
-  getSuggestedReimbursements,
+  getSuggestedSettlements,
   type BalanceExpense,
   type Balances,
 } from '@spliit/domain'
@@ -247,7 +247,7 @@ export function summarizePeopleBalances(
     const currentParticipantId = group.currentParticipantId
     if (currentParticipantId === null) continue
 
-    for (const leg of getSuggestedReimbursements(group.balances)) {
+    for (const leg of getSuggestedSettlements(group.balances)) {
       if (leg.amount <= 0) continue
       const counterpartyId =
         leg.from === currentParticipantId

@@ -192,7 +192,8 @@
       "participants": "{names}",
       "showLess": "Minder tonen"
     },
-    "copyToast": "Kopiëren gestart. De bestaande uitgavedetails worden gebruikt om een nieuwe aan te maken."
+    "copyToast": "Kopiëren gestart. De bestaande uitgavedetails worden gebruikt om een nieuwe aan te maken.",
+    "incomeBadge": "Inkomen"
   },
   "Groups": {
     "myGroups": "Mijn groepen",
@@ -654,8 +655,7 @@
       "edit": "Bewerk inkomen",
       "TitleField": {
         "label": "Titel inkomen",
-        "placeholder": "Salaris of terugbetaling",
-        "description": "Beschrijf waar de inkomsten vandaan kwamen."
+        "placeholder": "Salaris of terugbetaling"
       },
       "DateField": {
         "label": "Datum inkomen",
@@ -685,8 +685,7 @@
       "edit": "Bewerk uitgave",
       "TitleField": {
         "label": "Titel uitgave",
-        "placeholder": "Restaurant maandagavond",
-        "description": "Voer een beschrijving in voor de uitgave."
+        "placeholder": "Restaurant maandagavond"
       },
       "DateField": {
         "label": "Datum uitgave",
@@ -825,9 +824,6 @@
       "customRate": "Aangepaste wisselkoers wordt gebruikt",
       "via": "omgerekend via {currencies}"
     },
-    "isReimbursementField": {
-      "label": "Dit is een vereffeningsbetaling"
-    },
     "categoryField": {
       "label": "Categorie"
     },
@@ -862,7 +858,6 @@
     "save": "Opslaan",
     "saving": "Aan het opslaan…",
     "cancel": "Annuleren",
-    "reimbursement": "Vereffeningsbetaling",
     "readOnlyNotice": "Deze groep is gearchiveerd. De uitgave wordt alleen-lezen weergegeven.",
     "PaidBySplitModeField": {
       "label": "Splitsingssoort betaler"
@@ -978,7 +973,10 @@
       "chooseTimezone": "Tijdzone kiezen",
       "done": "Klaar",
       "yourTime": "jouw tijd"
-    }
+    },
+    "settlementTitle": "Vereffeningsbetaling",
+    "settlementHint": "{category}: Telt niet mee als uitgave in totalen, statistieken of budgetten. Werkt nog steeds bij wie wie iets verschuldigd is.",
+    "incomeHint": "{category}: Voor ontvangen geld. Gegroepeerd als inkomen, niet als aankoop."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Document verwijderen",
@@ -1052,14 +1050,6 @@
     "title": "Balans",
     "description": "Bekijk het nettosaldo van elke deelnemer.",
     "removedBadge": "Verwijderd",
-    "Reimbursements": {
-      "title": "Voorgestelde vereffeningsbetalingen",
-      "description": "Gebruik deze betalingen om saldi met zo min mogelijk overschrijvingen te vereffenen.",
-      "noImbursements": "Iedereen in je groep heeft een vereffend saldo 😁",
-      "owes": "<strong>{from}</strong> betaalt aan <strong>{to}</strong>",
-      "markAsPaid": "Markeer als betaald",
-      "markAsPaidAria": "Markeer {amount} van {from} aan {to} als betaald"
-    },
     "currencyDisplay": {
       "label": "Valuta",
       "group": "Groepsvaluta ({currency})",
@@ -1122,6 +1112,14 @@
       "individualAllHint": "Je bekijkt het standaard individuele plan voor de hele groep. Het kan betalingen tussen subgroepen bevatten.",
       "unknownParticipant": "Openstaande uitnodiging",
       "individualWithinHint": "Je bekijkt een individueel plan dat rekening houdt met subgroepen. Voorgestelde betalingen blijven binnen elke subgroep wanneer de subtotalen van de subgroepen al zijn vereffend."
+    },
+    "Settlements": {
+      "title": "Voorgestelde verrekeningen",
+      "description": "Gebruik deze betalingen om saldi met zo min mogelijk overschrijvingen te vereffenen.",
+      "noSettlements": "Iedereen in je groep heeft een vereffend saldo 😁",
+      "owes": "<strong>{from}</strong> betaalt aan <strong>{to}</strong>",
+      "markAsPaid": "Markeer als betaald",
+      "markAsPaidAria": "Markeer {amount} van {from} aan {to} als betaald"
     }
   },
   "Stats": {
@@ -1316,6 +1314,9 @@
     },
     "Income": {
       "heading": "Inkomsten"
+    },
+    "Settlement": {
+      "heading": "Verrekening"
     }
   },
   "Currencies": {
@@ -2215,7 +2216,8 @@
         "recurrence": "Herhaling",
         "reimbursement": "Vereffeningsbetaling",
         "conversionSource": "Conversiebron",
-        "conversionRate": "Conversiekoers"
+        "conversionRate": "Conversiekoers",
+        "settlement": "Vereffeningsbetaling"
       },
       "recurringCreated": "{participant} heeft de terugkerende uitgave ‘{title}’ aangemaakt",
       "stopped": "{participant} is de terugkerende uitgave {title} gestopt",
@@ -2429,28 +2431,6 @@
     "commentDelete": "Opmerking verwijderen",
     "commentSend": "Opmerking verzenden",
     "openDocument": "Document openen"
-  },
-  "CreateReimbursement": {
-    "description": "Controleer de betaling voordat je deze vastlegt.",
-    "pays": "{from} betaalt {to}",
-    "amount": "Bedrag",
-    "date": "Datum",
-    "category": "Categorie",
-    "create": "Maken",
-    "edit": "Details bewerken",
-    "creating": "Aan het maken…",
-    "successToast": "Vereffeningsbetaling vastgelegd",
-    "successToastMultiple": "{count} vereffeningsbetalingen vastgelegd als één boeking",
-    "paysMany": "{from} betaalt aan {count} personen",
-    "receivesMany": "{to} ontvangt {count} betalingen",
-    "paymentsToInclude": "Op te nemen betalingen",
-    "selectionSummary": "{count} betalingen geselecteerd, totaal {total}",
-    "legToAria": "{from} betaalt aan {to}, {amount}",
-    "legFromAria": "{from} betaalt aan {to}, {amount}",
-    "toParticipant": "aan {name}",
-    "fromParticipant": "van {name}",
-    "createSingle": "Betaling vastleggen",
-    "createMultiple": "{count} betalingen vastleggen"
   },
   "Participants": {
     "search": "Deelnemers zoeken...",
@@ -2871,7 +2851,6 @@
     "participantsCountLabel": "Deelnemers",
     "participantsSectionLabel": "Samenvatting van deelnemers",
     "settlementsSectionLabel": "Voorgestelde verrekeningen",
-    "reimbursementsSectionLabel": "Vastgelegde verrekeningen",
     "expensesSectionLabel": "Uitgavedetails",
     "amountColumnLabel": "Bedrag",
     "participantColumnLabel": "Deelnemer",
@@ -2885,10 +2864,11 @@
     "noExpensesLabel": "Geen uitgaven in de geselecteerde periode.",
     "noParticipantsLabel": "Geen deelnemers met activiteit in de geselecteerde periode.",
     "noSettlementsLabel": "Alles is verrekend tot de einddatum.",
-    "noReimbursementsLabel": "Tot de einddatum zijn geen verrekeningen vastgelegd.",
     "originalAmountLabel": "Oorspronkelijk bedrag",
     "expenseColumnLabel": "Uitgave",
-    "categoryColumnLabel": "Categorie"
+    "categoryColumnLabel": "Categorie",
+    "recordedSettlementsSectionLabel": "Vastgelegde verrekeningen",
+    "noRecordedSettlementsLabel": "Tot de einddatum zijn geen verrekeningen vastgelegd."
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2926,5 +2906,27 @@
     "hintTapToAddExpense": "Ik ben {name} — tik op me om een uitgave toe te voegen.",
     "hintTapToCreateGroup": "Ik ben {name} — tik op me om een groep aan te maken.",
     "billName": "Bill"
+  },
+  "CreateSettlement": {
+    "description": "Controleer de betaling voordat je deze vastlegt.",
+    "pays": "{from} betaalt {to}",
+    "amount": "Bedrag",
+    "date": "Datum",
+    "category": "Categorie",
+    "create": "Maken",
+    "edit": "Details bewerken",
+    "creating": "Aan het maken…",
+    "successToast": "Vereffeningsbetaling vastgelegd",
+    "successToastMultiple": "{count} vereffeningsbetalingen vastgelegd als één boeking",
+    "paysMany": "{from} betaalt aan {count} personen",
+    "receivesMany": "{to} ontvangt {count} betalingen",
+    "paymentsToInclude": "Op te nemen betalingen",
+    "selectionSummary": "{count} betalingen geselecteerd, totaal {total}",
+    "legToAria": "{from} betaalt aan {to}, {amount}",
+    "legFromAria": "{from} betaalt aan {to}, {amount}",
+    "toParticipant": "aan {name}",
+    "fromParticipant": "van {name}",
+    "createSingle": "Betaling vastleggen",
+    "createMultiple": "{count} betalingen vastleggen"
   }
 }

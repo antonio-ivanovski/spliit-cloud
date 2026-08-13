@@ -78,6 +78,13 @@ export const DEFAULT_CATEGORIES = defineCategories([
     name: 'Income',
     parentId: null,
   },
+  // Settlement
+  {
+    id: 'settlement',
+    grouping: 'Settlement',
+    name: 'Settlement',
+    parentId: null,
+  },
   // Entertainment
   {
     id: 'entertainment',
@@ -340,11 +347,21 @@ export const categoryIdSchema = z.enum(CATEGORY_IDS)
 /** Category used as the default selection on the expense form. */
 export const DEFAULT_CATEGORY_ID: CategoryId = 'general'
 
-/** Category used by reimbursement-style expenses (manual or auto). */
+/** Ordinary spend category for transfers that are not settlements. */
 export const PAYMENT_CATEGORY_ID: CategoryId = 'payment'
 
 /** Category used for true income (negative amounts that are not refunds). */
 export const INCOME_CATEGORY_ID: CategoryId = 'income'
+
+/** Category that marks a settlement between participants (not spending). */
+export const SETTLEMENT_CATEGORY_ID: CategoryId = 'settlement'
+
+/** True when `categoryId` is the settlement category that excludes spend. */
+export function isSettlementCategory(
+  categoryId: string | null | undefined,
+): boolean {
+  return categoryId === SETTLEMENT_CATEGORY_ID
+}
 
 /** Parent categories in declaration order. */
 export const PARENT_CATEGORIES = DEFAULT_CATEGORIES.filter(

@@ -39,7 +39,6 @@ describe('bulkUpdateExpenseCategories — real DB', () => {
   async function makeExpense(args: {
     title: string
     categoryId?: string
-    isReimbursement?: boolean
   }): Promise<{ id: string }> {
     const caller = makeCaller()
     const result = await caller.expenses.create({
@@ -56,7 +55,6 @@ describe('bulkUpdateExpenseCategories — real DB', () => {
         splitMode: 'EVENLY',
         expenseDate: new Date().toISOString(),
         expenseTimeZone: 'UTC',
-        isReimbursement: args.isReimbursement ?? false,
         documents: [],
         recurrenceRule: 'NONE',
       },
@@ -112,15 +110,15 @@ describe('bulkUpdateExpenseCategories — real DB', () => {
     await prisma.account.delete({ where: { id: adminId } }).catch(() => null)
   })
 
-  it('lists general, non-reimbursement expenses as categorization candidates', async () => {
+  it('lists general, non-settlement expenses as categorization candidates', async () => {
     const general = await makeExpense({ title: 'Needs a category' })
     const categorized = await makeExpense({
       title: 'Already categorized',
       categoryId: 'groceries',
     })
-    const reimbursement = await makeExpense({
+    const settlement = await makeExpense({
       title: 'Settlement',
-      isReimbursement: true,
+      categoryId: 'settlement',
     })
 
     const candidates = await listBulkCategorizeCandidates({ groupId })
@@ -128,10 +126,24 @@ describe('bulkUpdateExpenseCategories — real DB', () => {
 
     expect(ids).toContain(general.id)
     expect(ids).not.toContain(categorized.id)
-    expect(ids).not.toContain(reimbursement.id)
+    expect(ids).not.toContain(settlement.id)
   })
 
-  it('updates categories for matching, non-reimbursement rows', async () => {
+  it('rejects settlement as a bulk destination', async () => {
+    const e = await makeExpense({ title: 'Needs a category' })
+    await expect(
+      bulkUpdateExpenseCategories({
+        groupId,
+        accountId: adminId,
+        input: {
+          groupId,
+          changes: [{ expenseId: e.id, categoryId: 'settlement' }],
+        },
+      }),
+    ).rejects.toThrow('Cannot bulk-apply the settlement category')
+  })
+
+  it('updates categories for matching, non-settlement rows', async () => {
     const e1 = await makeExpense({ title: 'Uber' })
     const e2 = await makeExpense({ title: 'Mercadona' })
 
@@ -191,8 +203,8 @@ describe('bulkUpdateExpenseCategories — real DB', () => {
     expect(r?.categoryId).toBe('dining-out')
   })
 
-  it('skips reimbursement rows even if they match fromCategoryId', async () => {
-    const e = await makeExpense({ title: 'Settle', isReimbursement: true })
+  it('skips settlement rows even if they match fromCategoryId', async () => {
+    const e = await makeExpense({ title: 'Settle', categoryId: 'settlement' })
 
     const result = await bulkUpdateExpenseCategories({
       groupId,
@@ -205,7 +217,7 @@ describe('bulkUpdateExpenseCategories — real DB', () => {
     expect(result.applied).toBe(0)
 
     const r = await prisma.expense.findUnique({ where: { id: e.id } })
-    expect(r?.categoryId).toBe(DEFAULT_CATEGORY_ID)
+    expect(r?.categoryId).toBe('settlement')
   })
 
   it('records a single bulk activity row', async () => {

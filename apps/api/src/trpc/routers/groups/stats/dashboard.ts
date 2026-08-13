@@ -1,5 +1,6 @@
 import {
   getBalances,
+  isSettlementCategory,
   type BalanceExpense,
   type CategoryId,
   dateOnlyInTimeZone,
@@ -26,7 +27,6 @@ export type StatsExpense = BalanceExpense & {
   expenseDate: Date
   expenseTimeZone: string
   categoryId: CategoryId
-  isReimbursement: boolean
   paidByList: Array<{ shares: number; participant: StatsParticipant }>
   paidFor: Array<{ shares: number; participant: StatsParticipant }>
 }
@@ -235,7 +235,9 @@ export function buildGroupStatsDashboard(
   period: StatsPeriod,
   customRange?: StatsCustomRange,
 ) {
-  const expenses = rows.filter((expense) => !expense.isReimbursement)
+  const expenses = rows.filter(
+    (expense) => !isSettlementCategory(expense.categoryId),
+  )
   const lifetimeTotal = expenses.reduce(
     (total, expense) => total + expense.amount,
     0,

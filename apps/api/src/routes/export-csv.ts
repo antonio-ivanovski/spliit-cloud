@@ -9,6 +9,7 @@ import {
   getCategoryById,
   getCurrency,
   getCurrencyFromGroup,
+  isSettlementCategory,
   utcToWallTime,
 } from '@spliit/domain'
 
@@ -111,7 +112,7 @@ export async function exportGroupCsv(request: Request, groupId: string) {
     { label: 'Original currency', value: 'originalCurrency' },
     { label: 'Conversion rate', value: 'conversionRate' },
     { label: 'Conversion source', value: 'conversionSource' },
-    { label: 'Is Reimbursement', value: 'isReimbursement' },
+    { label: 'Is Settlement', value: 'isSettlement' },
     { label: 'Split mode', value: 'splitMode' },
     ...participants.map((participant) => ({
       label: resolveParticipantDisplayName(participant),
@@ -127,7 +128,7 @@ export async function exportGroupCsv(request: Request, groupId: string) {
       amount: expense.amount,
       splitMode: expense.splitMode,
       paidBySplitMode: expense.paidBySplitMode,
-      isReimbursement: expense.isReimbursement,
+      categoryId: expense.categoryId,
       originalAmount: expense.originalAmount,
       originalCurrency: expense.originalCurrency,
       conversionRate:
@@ -163,7 +164,7 @@ export async function exportGroupCsv(request: Request, groupId: string) {
         ? expense.conversionRate.toString()
         : null,
       conversionSource: expense.conversionSource,
-      isReimbursement: expense.isReimbursement ? 'Yes' : 'No',
+      isSettlement: isSettlementCategory(expense.categoryId) ? 'Yes' : 'No',
       splitMode: splitModeLabel[expense.splitMode],
       ...Object.fromEntries(
         participants.map((participant) => {

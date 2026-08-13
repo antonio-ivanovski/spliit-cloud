@@ -185,7 +185,7 @@
     "receivedByMultiple": "Recebido por <paidByNames></paidByNames> para <paidFor></paidFor>",
     "yourBalance": "O teu saldo:",
     "notInvolved": "Não participaste",
-    "settlementBadge": "Acerto",
+    "settlementBadge": "Liquidação",
     "items": {
       "more_one": "+{count} a mais",
       "more_many": "+{count} a mais",
@@ -194,7 +194,8 @@
       "participants": "{names}",
       "showLess": "Mostrar menos"
     },
-    "copyToast": "Iniciada a cópia da despesa. Os detalhes da despesa existente serão usados para criar uma nova."
+    "copyToast": "Iniciada a cópia da despesa. Os detalhes da despesa existente serão usados para criar uma nova.",
+    "incomeBadge": "Rendimento"
   },
   "Groups": {
     "myGroups": "Os meus grupos",
@@ -234,10 +235,10 @@
     "archiveSuccess": "Grupo arquivado.",
     "unarchiveSuccess": "Grupo desarquivado.",
     "archiveWithBalancesTitle": "Saldos por liquidar",
-    "archiveWithBalancesDescription": "Este grupo tem saldos por liquidar. O arquivamento criará despesas de acerto para os zerar. Continuar?",
+    "archiveWithBalancesDescription": "Este grupo tem saldos por liquidar. O arquivamento criará despesas de liquidação para os zerar. Continuar?",
     "archiveWithBalancesForce": "Forçar arquivamento",
     "archiveWithBalancesCancel": "Cancelar",
-    "archiveWithBalancesSuccess": "Despesas de acerto criadas e grupo arquivado.",
+    "archiveWithBalancesSuccess": "Despesas de liquidação criadas e grupo arquivado.",
     "archiveWithBalancesView": "Ver saldos",
     "archiveSectionTitle": "Arquivar grupo",
     "archiveSectionDescription": "O arquivamento congela o grupo. Não é possível adicionar ou modificar novas despesas, mas os dados existentes permanecem visíveis. Podes desarquivar o grupo a qualquer momento.",
@@ -590,7 +591,7 @@
     "scopePickerMembers_many": "{count} membro(s)",
     "scopePickerMembers_other": "{count} membro(s)",
     "createFriendLedgerCard": {
-      "description": "Acertar contas individualmente com uma pessoa específica.",
+      "description": "Liquidar contas individualmente com uma pessoa específica.",
       "title": "Regista despesas com um amigo"
     },
     "importGroup": "Importar grupo",
@@ -769,8 +770,7 @@
       "edit": "Editar receita",
       "TitleField": {
         "label": "Título da receita",
-        "placeholder": "Restaurante de segunda à noite",
-        "description": "Introduz uma descrição para a receita."
+        "placeholder": "Restaurante de segunda à noite"
       },
       "DateField": {
         "label": "Data da receita",
@@ -800,8 +800,7 @@
       "edit": "Editar despesa",
       "TitleField": {
         "label": "Título da despesa",
-        "placeholder": "Restaurante de segunda à noite",
-        "description": "Introduz uma descrição para a despesa."
+        "placeholder": "Restaurante de segunda à noite"
       },
       "DateField": {
         "label": "Data da despesa",
@@ -940,9 +939,6 @@
       "customRate": "A usar taxa personalizada",
       "via": "através de {currencies}"
     },
-    "isReimbursementField": {
-      "label": "Este é um pagamento de acerto"
-    },
     "categoryField": {
       "label": "Categoria"
     },
@@ -977,7 +973,6 @@
     "save": "Guardar",
     "saving": "A guardar…",
     "cancel": "Cancelar",
-    "reimbursement": "Pagamento de acerto",
     "readOnlyNotice": "Este grupo está arquivado. A despesa é exibida apenas como leitura.",
     "PaidBySplitModeField": {
       "label": "Modo de divisão do pagador"
@@ -1094,7 +1089,10 @@
       "chooseTimezone": "Escolher fuso horário",
       "done": "Concluído",
       "yourTime": "a tua hora"
-    }
+    },
+    "settlementTitle": "Pagamento de liquidação",
+    "settlementHint": "{category}: Não conta como despesa nos totais, estatísticas ou orçamentos. Continua a atualizar quem deve a quem.",
+    "incomeHint": "{category}: Para dinheiro recebido. Agrupado como rendimento, não como uma compra."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Eliminar documento",
@@ -1168,14 +1166,6 @@
     "title": "Saldos",
     "description": "Vê o saldo líquido de cada participante.",
     "removedBadge": "Removido",
-    "Reimbursements": {
-      "title": "Pagamentos de acerto sugeridos",
-      "description": "Usa estes pagamentos para acertar os saldos com o menor número possível de transferências.",
-      "noImbursements": "Todos os saldos do teu grupo estão acertados 😁",
-      "owes": "<strong>{from}</strong> deve a <strong>{to}</strong>",
-      "markAsPaid": "Marcar como pago",
-      "markAsPaidAria": "Marcar {amount} de {from} para {to} como pago"
-    },
     "currencyDisplay": {
       "label": "Moeda",
       "group": "Moeda do grupo ({currency})",
@@ -1203,7 +1193,7 @@
       "label": "Vista",
       "title": "Escolha como ver os saldos",
       "simple": "Simples",
-      "simpleDescription": "Vê quem deve a quem e regista pagamentos de acerto.",
+      "simpleDescription": "Vê quem deve a quem e regista pagamentos de liquidação.",
       "visual": "Visual",
       "visualDescription": "Detalhes dos saldos e gráficos."
     },
@@ -1238,6 +1228,14 @@
       "individualAllHint": "Estás a ver o plano individual padrão para todo o grupo. Pode incluir pagamentos entre subgrupos.",
       "unknownParticipant": "Convite pendente",
       "individualWithinHint": "Estás a ver um plano individual que tem em conta os subgrupos. Os pagamentos sugeridos mantêm-se dentro de cada subgrupo quando os totais dos subgrupos já estão liquidados."
+    },
+    "Settlements": {
+      "title": "Liquidações sugeridas",
+      "description": "Usa estes pagamentos para liquidar os saldos com o menor número possível de transferências.",
+      "noSettlements": "Todos os saldos do teu grupo estão liquidados 😁",
+      "owes": "<strong>{from}</strong> deve a <strong>{to}</strong>",
+      "markAsPaid": "Marcar como pago",
+      "markAsPaidAria": "Marcar {amount} de {from} para {to} como pago"
     }
   },
   "Stats": {
@@ -1433,6 +1431,9 @@
     },
     "Income": {
       "heading": "Rendimentos"
+    },
+    "Settlement": {
+      "heading": "Liquidação"
     }
   },
   "Currencies": {
@@ -1831,13 +1832,13 @@
       "confirm": "Remover",
       "unsettled": {
         "title": "Remover membro com saldo pendente?",
-        "toast": "Membro removido, saldos acertados.",
         "description": "Remover {name} deste grupo? Tem saldos pendentes — marca a caixa abaixo para acertá-los automaticamente antes de remover.",
         "warning": {
           "title": "Este membro tem saldos pendentes",
-          "description": "Se removeres este membro sem acertar os saldos, estes permanecerão no grupo indefinidamente. Seleciona a opção abaixo para criar um pagamento de acerto por cada saldo deste membro, ou remove-o e acerta os saldos manualmente."
+          "description": "Se removeres este membro sem liquidar os saldos, estes permanecerão no grupo indefinidamente. Seleciona a opção abaixo para criar um pagamento de liquidação por cada saldo deste membro, ou remove-o e liquida os saldos manualmente."
         },
-        "checkbox": "Acertar os saldos deste membro antes de o remover",
+        "toast": "Membro removido, saldos liquidados.",
+        "checkbox": "Liquidar os saldos deste membro antes de o remover",
         "previewWillCreate_one": "Será criado {count} pagamento de liquidação",
         "previewPays": "{name} pagará",
         "previewReceives": "{name} receberá",
@@ -1866,7 +1867,7 @@
         },
         "unsettled": {
           "title": "Tem saldos pendentes",
-          "description": "O Spliit criará pagamentos de acerto para os saldos que te envolvem antes de saíres. Os saldos dos outros participantes não serão alterados."
+          "description": "O Spliit criará pagamentos de liquidação para os saldos que te envolvem antes de saíres. Os saldos dos outros participantes não serão alterados."
         }
       },
       "toast": {
@@ -2222,9 +2223,10 @@
         "items": "Itens",
         "documents": "Documentos",
         "recurrence": "Recorrência",
-        "reimbursement": "Pagamento de acerto",
+        "reimbursement": "Pagamento de liquidação",
         "conversionSource": "Fonte de conversão",
-        "conversionRate": "Taxa de conversão"
+        "conversionRate": "Taxa de conversão",
+        "settlement": "Pagamento de liquidação"
       },
       "recurringCreated": "{participant} criou a despesa recorrente «{title}»",
       "stopped": "{participant} parou a despesa recorrente {title}",
@@ -2447,28 +2449,6 @@
     "commentDelete": "Eliminar comentário",
     "commentSend": "Enviar comentário",
     "openDocument": "Abrir documento"
-  },
-  "CreateReimbursement": {
-    "description": "Reveja o pagamento antes de registá-lo.",
-    "pays": "{from} paga {to}",
-    "amount": "Montante",
-    "date": "Data",
-    "category": "Categoria",
-    "create": "Criar",
-    "edit": "Editar detalhes",
-    "creating": "A criar…",
-    "successToast": "Pagamento de acerto registado",
-    "successToastMultiple": "Foram registados {count} pagamentos de acerto numa única entrada",
-    "paysMany": "{from} paga a {count} pessoas",
-    "receivesMany": "{to} recebe {count} pagamentos",
-    "paymentsToInclude": "Pagamentos a incluir",
-    "selectionSummary": "{count} pagamentos selecionados, totalizando {total}",
-    "legToAria": "{from} paga a {to}, {amount}",
-    "legFromAria": "{from} paga a {to}, {amount}",
-    "toParticipant": "a {name}",
-    "fromParticipant": "de {name}",
-    "createSingle": "Registar pagamento",
-    "createMultiple": "Registar {count} pagamentos"
   },
   "Participants": {
     "search": "Pesquisar participantes...",
@@ -2889,7 +2869,6 @@
     "participantsCountLabel": "Participantes",
     "participantsSectionLabel": "Resumo dos participantes",
     "settlementsSectionLabel": "Liquidações sugeridas",
-    "reimbursementsSectionLabel": "Reembolsos registados",
     "expensesSectionLabel": "Detalhes das despesas",
     "amountColumnLabel": "Montante",
     "participantColumnLabel": "Participante",
@@ -2903,10 +2882,11 @@
     "noExpensesLabel": "Não existem despesas no período selecionado.",
     "noParticipantsLabel": "Não existem participantes com atividade no período selecionado.",
     "noSettlementsLabel": "Está tudo liquidado à data final.",
-    "noReimbursementsLabel": "Não foram registados reembolsos até à data final.",
     "originalAmountLabel": "Montante original",
     "expenseColumnLabel": "Despesa",
-    "categoryColumnLabel": "Categoria"
+    "categoryColumnLabel": "Categoria",
+    "recordedSettlementsSectionLabel": "Liquidações registadas",
+    "noRecordedSettlementsLabel": "Não foram registadas liquidações até à data final."
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2944,5 +2924,27 @@
     "hintTapToAddExpense": "Sou o {name} — toca-me para adicionar uma despesa.",
     "hintTapToCreateGroup": "Sou o {name} — toca-me para criar um grupo.",
     "billName": "Bill"
+  },
+  "CreateSettlement": {
+    "description": "Reveja o pagamento antes de registá-lo.",
+    "pays": "{from} paga {to}",
+    "amount": "Montante",
+    "date": "Data",
+    "category": "Categoria",
+    "create": "Criar",
+    "edit": "Editar detalhes",
+    "creating": "A criar…",
+    "successToast": "Pagamento de liquidação registado",
+    "successToastMultiple": "Foram registados {count} pagamentos de liquidação numa única entrada",
+    "paysMany": "{from} paga a {count} pessoas",
+    "receivesMany": "{to} recebe {count} pagamentos",
+    "paymentsToInclude": "Pagamentos a incluir",
+    "selectionSummary": "{count} pagamentos selecionados, totalizando {total}",
+    "legToAria": "{from} paga a {to}, {amount}",
+    "legFromAria": "{from} paga a {to}, {amount}",
+    "toParticipant": "a {name}",
+    "fromParticipant": "de {name}",
+    "createSingle": "Registar pagamento",
+    "createMultiple": "Registar {count} pagamentos"
   }
 }

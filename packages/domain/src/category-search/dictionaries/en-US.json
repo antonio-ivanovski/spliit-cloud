@@ -185,8 +185,12 @@
     "aliases": ["salary", "paycheck", "wage", "reimbursement income"],
     "samples": []
   },
+  "settlement": {
+    "aliases": ["settlement", "settle up", "mark as paid"],
+    "samples": []
+  },
   "payment": {
-    "aliases": ["reimbursement", "settle", "payback"],
+    "aliases": ["bank transfer", "wire transfer"],
     "samples": []
   },
   "general": {

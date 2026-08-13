@@ -932,7 +932,6 @@ describe('Friend ledger — real DB', () => {
         splitMode: 'EVENLY' as const,
         expenseDate: new Date().toISOString(),
         expenseTimeZone: 'UTC',
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'NONE' as const,
       }
@@ -1046,7 +1045,6 @@ describe('Friend ledger — real DB', () => {
           splitMode: 'EVENLY',
           expenseDate: new Date().toISOString(),
           expenseTimeZone: 'UTC',
-          isReimbursement: false,
           documents: [],
           recurrenceRule: 'NONE',
         },

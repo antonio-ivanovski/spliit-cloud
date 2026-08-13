@@ -70,7 +70,6 @@ describe('getGroupExpenses', () => {
         createdAt: new Date('2026-07-01T00:00:00.000Z'),
         expenseDate: new Date('2026-07-01T00:00:00.000Z'),
         categoryId: 'general',
-        isReimbursement: false,
         splitMode: 'ITEMIZED',
         paidBySplitMode: 'BY_AMOUNT',
         originalAmount: null,
@@ -150,6 +149,24 @@ describe('getGroupExpenses', () => {
               ]),
             }),
           ],
+        }),
+      }),
+    )
+  })
+
+  it('excludes settlement expenses when hideSettlements is true', async () => {
+    prismaMock.expense.findMany.mockResolvedValue([])
+
+    await getGroupExpenses('group-1', {
+      ledgerId: 'ledger-known',
+      hideSettlements: true,
+    })
+
+    expect(prismaMock.expense.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          ledgerId: 'ledger-known',
+          categoryId: { not: 'settlement' },
         }),
       }),
     )

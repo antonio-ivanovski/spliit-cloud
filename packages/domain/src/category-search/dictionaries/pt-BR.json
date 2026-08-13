@@ -73,8 +73,12 @@
     "aliases": ["roupa", "sapatos"],
     "samples": []
   },
-  "payment": {
+  "settlement": {
     "aliases": ["reembolso", "acerto", "pix de volta"],
+    "samples": []
+  },
+  "payment": {
+    "aliases": ["transferencia", "pix"],
     "samples": []
   },
   "general": {

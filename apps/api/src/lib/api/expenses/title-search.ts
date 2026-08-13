@@ -1,5 +1,8 @@
 import { Prisma, prisma } from '@spliit/db'
-import { expandExpenseQueryForLocale } from '@spliit/domain'
+import {
+  SETTLEMENT_CATEGORY_ID,
+  expandExpenseQueryForLocale,
+} from '@spliit/domain'
 
 const TITLE_TRIGRAM_MIN_LENGTH = 3
 const TITLE_TRIGRAM_MIN_SIMILARITY = 0.35
@@ -25,7 +28,7 @@ export async function findSimilarExpenseTitles(args: {
   ledgerIds: readonly string[]
   query: string
   limit?: number
-  excludeReimbursements?: boolean
+  excludeSettlements?: boolean
   excludeCategoryIds?: readonly string[]
 }): Promise<SimilarExpenseTitle[]> {
   const query = args.query.trim()
@@ -33,8 +36,8 @@ export async function findSimilarExpenseTitles(args: {
     return []
   }
   const limit = args.limit ?? TITLE_TRIGRAM_ID_LIMIT
-  const reimbursementFilter = args.excludeReimbursements
-    ? Prisma.sql`AND "isReimbursement" = false`
+  const settlementFilter = args.excludeSettlements
+    ? Prisma.sql`AND "categoryId" <> ${SETTLEMENT_CATEGORY_ID}`
     : Prisma.sql``
   const categoryFilter =
     args.excludeCategoryIds && args.excludeCategoryIds.length > 0
@@ -46,7 +49,7 @@ export async function findSimilarExpenseTitles(args: {
       GREATEST(similarity(title, ${query}), word_similarity(${query}, title)) AS similarity
     FROM "Expense"
     WHERE "ledgerId" IN (${Prisma.join([...args.ledgerIds])})
-      ${reimbursementFilter}
+      ${settlementFilter}
       ${categoryFilter}
       AND (title % ${query} OR ${query} <% title)
       AND GREATEST(similarity(title, ${query}), word_similarity(${query}, title))

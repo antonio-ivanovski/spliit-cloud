@@ -194,7 +194,8 @@
       "participants": "{names}",
       "showLess": "Arată mai puțin"
     },
-    "copyToast": "Copierea cheltuielii a fost inițiată. Detaliile cheltuielii existente vor fi folosite pentru a crea una nouă."
+    "copyToast": "Copierea cheltuielii a fost inițiată. Detaliile cheltuielii existente vor fi folosite pentru a crea una nouă.",
+    "incomeBadge": "Venit"
   },
   "Groups": {
     "myGroups": "Grupurile mele",
@@ -660,8 +661,7 @@
       "edit": "Modifică venitul",
       "TitleField": {
         "label": "Titlul venitului",
-        "placeholder": "Cina de luni seară",
-        "description": "Adaugă o descriere pentru venit."
+        "placeholder": "Cina de luni seară"
       },
       "DateField": {
         "label": "Data venitului",
@@ -691,8 +691,7 @@
       "edit": "Modifică cheltuiala",
       "TitleField": {
         "label": "Titlul cheltuielii",
-        "placeholder": "Cina de luni seară",
-        "description": "Adaugă o descriere pentru cheltuială."
+        "placeholder": "Cina de luni seară"
       },
       "DateField": {
         "label": "Data cheltuielii",
@@ -811,9 +810,6 @@
         "replaceItemsHint": "Înlocuiește articolele curente"
       }
     },
-    "isReimbursementField": {
-      "label": "Aceasta este o plată de decontare"
-    },
     "categoryField": {
       "label": "Categorie"
     },
@@ -868,7 +864,6 @@
     "participant": {
       "pending": "(invitat)"
     },
-    "reimbursement": "Plată de decontare",
     "readOnlyNotice": "Acest grup este arhivat. Cheltuiala este afișată doar în citire.",
     "PaidBySplitModeField": {
       "label": "Mod de împărțire plătitor"
@@ -985,7 +980,10 @@
       "chooseTimezone": "Alege fusul orar",
       "done": "Gata",
       "yourTime": "ora ta"
-    }
+    },
+    "settlementTitle": "Plată de decontare",
+    "settlementHint": "{category}: Nu se numără ca cheltuială în totaluri, statistici sau bugete. Actualizează totuși cine datorează cui.",
+    "incomeHint": "{category}: Pentru banii primiți. Grupat ca venit, nu ca o achiziție."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Șterge documentul",
@@ -1059,14 +1057,6 @@
     "title": "Solduri",
     "description": "Vezi soldul net al fiecărui participant.",
     "removedBadge": "Eliminat",
-    "Reimbursements": {
-      "title": "Plăți de decontare sugerate",
-      "description": "Folosește aceste plăți pentru a deconta soldurile cu cât mai puține transferuri.",
-      "noImbursements": "Toate soldurile din grupul tău sunt decontate 😁",
-      "owes": "<strong>{from}</strong> datorează <strong>{to}</strong>",
-      "markAsPaid": "Bifează ca plătit",
-      "markAsPaidAria": "Marchează {amount} de la {from} către {to} ca plătit"
-    },
     "currencyDisplay": {
       "label": "Monedă",
       "group": "Moneda grupului ({currency})",
@@ -1129,6 +1119,14 @@
       "individualAllHint": "Vizualizezi planul individual standard pentru întregul grup. Poate include plăți între subgrupuri.",
       "unknownParticipant": "Invitație în așteptare",
       "individualWithinHint": "Vizualizezi un plan individual care ține cont de subgrupuri. Plățile sugerate rămân în interiorul fiecărui subgrup atunci când totalurile subgrupurilor sunt deja decontate."
+    },
+    "Settlements": {
+      "title": "Decontări sugerate",
+      "description": "Folosește aceste plăți pentru a deconta soldurile cu cât mai puține transferuri.",
+      "noSettlements": "Toate soldurile din grupul tău sunt decontate 😁",
+      "owes": "<strong>{from}</strong> datorează <strong>{to}</strong>",
+      "markAsPaid": "Bifează ca plătit",
+      "markAsPaidAria": "Marchează {amount} de la {from} către {to} ca plătit"
     }
   },
   "Stats": {
@@ -1324,6 +1322,9 @@
     },
     "Income": {
       "heading": "Venituri"
+    },
+    "Settlement": {
+      "heading": "Decontare"
     }
   },
   "Currencies": {
@@ -2224,7 +2225,8 @@
         "recurrence": "Recurență",
         "reimbursement": "Plată de decontare",
         "conversionSource": "Sursa conversiei",
-        "conversionRate": "Curs de conversie"
+        "conversionRate": "Curs de conversie",
+        "settlement": "Plată de decontare"
       },
       "recurringCreated": "{participant} a creat cheltuiala recurentă „{title}”",
       "stopped": "{participant} a oprit cheltuiala recurentă {title}",
@@ -2447,28 +2449,6 @@
     "commentDelete": "Șterge comentariul",
     "commentSend": "Trimite comentariul",
     "openDocument": "Deschide documentul"
-  },
-  "CreateReimbursement": {
-    "description": "Revizuiește plata înainte de a o înregistra.",
-    "pays": "{from} plătește {to}",
-    "amount": "Sumă",
-    "date": "Data",
-    "category": "Categorie",
-    "create": "Adaugă",
-    "edit": "Modifică detaliile",
-    "creating": "Se adaugă…",
-    "successToast": "Plată de decontare înregistrată",
-    "successToastMultiple": "Au fost înregistrate {count} plăți de decontare ca o singură înregistrare",
-    "paysMany": "{from} plătește {count} persoane",
-    "receivesMany": "{to} primește {count} plăți",
-    "paymentsToInclude": "Plăți de inclus",
-    "selectionSummary": "{count} plăți selectate, în total {total}",
-    "legToAria": "{from} îi plătește lui {to}, {amount}",
-    "legFromAria": "{from} îi plătește lui {to}, {amount}",
-    "toParticipant": "către {name}",
-    "fromParticipant": "de la {name}",
-    "createSingle": "Înregistrează plata",
-    "createMultiple": "Înregistrează {count} plăți"
   },
   "Participants": {
     "search": "Caută participanți...",
@@ -2889,7 +2869,6 @@
     "participantsCountLabel": "Participanți",
     "participantsSectionLabel": "Rezumatul participanților",
     "settlementsSectionLabel": "Decontări sugerate",
-    "reimbursementsSectionLabel": "Rambursări înregistrate",
     "expensesSectionLabel": "Detalii cheltuieli",
     "amountColumnLabel": "Sumă",
     "participantColumnLabel": "Persoană participantă",
@@ -2903,10 +2882,11 @@
     "noExpensesLabel": "Nu există cheltuieli în perioada selectată.",
     "noParticipantsLabel": "Nu există participanți cu activitate în perioada selectată.",
     "noSettlementsLabel": "Totul este achitat la data de sfârșit.",
-    "noReimbursementsLabel": "Nu au fost înregistrate rambursări până la data de sfârșit.",
     "originalAmountLabel": "Sumă inițială",
     "expenseColumnLabel": "Cheltuială",
-    "categoryColumnLabel": "Categorie"
+    "categoryColumnLabel": "Categorie",
+    "recordedSettlementsSectionLabel": "Decontări înregistrate",
+    "noRecordedSettlementsLabel": "Nu au fost înregistrate decontări până la data de sfârșit."
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2944,5 +2924,27 @@
     "hintTapToAddExpense": "Sunt {name} — atinge-mă ca să adaugi o cheltuială.",
     "hintTapToCreateGroup": "Sunt {name} — atinge-mă ca să creezi un grup.",
     "billName": "Bill"
+  },
+  "CreateSettlement": {
+    "description": "Revizuiește plata înainte de a o înregistra.",
+    "pays": "{from} plătește {to}",
+    "amount": "Sumă",
+    "date": "Data",
+    "category": "Categorie",
+    "create": "Adaugă",
+    "edit": "Modifică detaliile",
+    "creating": "Se adaugă…",
+    "successToast": "Plată de decontare înregistrată",
+    "successToastMultiple": "Au fost înregistrate {count} plăți de decontare ca o singură înregistrare",
+    "paysMany": "{from} plătește {count} persoane",
+    "receivesMany": "{to} primește {count} plăți",
+    "paymentsToInclude": "Plăți de inclus",
+    "selectionSummary": "{count} plăți selectate, în total {total}",
+    "legToAria": "{from} îi plătește lui {to}, {amount}",
+    "legFromAria": "{from} îi plătește lui {to}, {amount}",
+    "toParticipant": "către {name}",
+    "fromParticipant": "de la {name}",
+    "createSingle": "Înregistrează plata",
+    "createMultiple": "Înregistrează {count} plăți"
   }
 }

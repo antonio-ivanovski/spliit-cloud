@@ -35,7 +35,6 @@ const expense = {
   paidByList: [{ participant: 'dest-1', shares: 1000 }],
   paidFor: [{ participant: 'dest-1', shares: 1000 }],
   splitMode: 'BY_AMOUNT' as const,
-  isReimbursement: false,
   documents: [],
   recurrenceRule: 'NONE' as const,
 }

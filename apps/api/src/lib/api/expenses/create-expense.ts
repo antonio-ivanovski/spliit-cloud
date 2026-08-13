@@ -4,6 +4,7 @@ import {
   calculateRecurrenceDate,
   computePaidForFromItems,
   dateOnlyInTimeZone,
+  isSettlementCategory,
   toSecondPrecision,
   utcToWallTime,
   type Expense,
@@ -131,8 +132,8 @@ export async function createExpense(
     select: { id: true },
   })
   // Settlements may involve soft-removed participants who still appear in
-  // balances. Keep them off new ordinary expenses, but allow reimbursements.
-  const removedParticipants = expense.isReimbursement
+  // balances. Keep them off new ordinary expenses, but allow settlements.
+  const removedParticipants = isSettlementCategory(expense.category)
     ? await client.ledgerParticipant.findMany({
         where: { ledgerId, removedAt: { not: null } },
         select: { id: true },
@@ -391,7 +392,6 @@ export async function createExpense(
               },
             }
           : {}),
-        isReimbursement: expense.isReimbursement,
         documents: {
           createMany: {
             data: documents.map((doc) => ({

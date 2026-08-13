@@ -24,7 +24,7 @@ function expense(
     amount: overrides.amount ?? 1000,
     recurrenceRule: overrides.recurrenceRule ?? 'MONTHLY',
     splitMode: overrides.splitMode ?? 'EVENLY',
-    isReimbursement: overrides.isReimbursement ?? false,
+    category: overrides.category ?? 'general',
     paidBy: overrides.paidBy ?? [{ id: 'p1', shares: 1000 }],
     paidFor: overrides.paidFor ?? [
       { id: 'p1', shares: 1 },
@@ -50,6 +50,16 @@ describe('fingerprintLegacyRecurringExpense', () => {
     const c = fingerprintLegacyRecurringExpense(expense({ amount: 2000 }))
     expect(a).toBe(b)
     expect(a).not.toBe(c)
+  })
+
+  it('treats settlement and ordinary payment as different fingerprints', () => {
+    const payment = fingerprintLegacyRecurringExpense(
+      expense({ category: 'payment' }),
+    )
+    const settlement = fingerprintLegacyRecurringExpense(
+      expense({ category: 'settlement' }),
+    )
+    expect(payment).not.toBe(settlement)
   })
 })
 
@@ -232,7 +242,7 @@ describe('collapseExpenseFromNormalized', () => {
       amount: 500,
       recurrenceRule: 'MONTHLY',
       splitMode: 'EVENLY',
-      isReimbursement: false,
+      category: 'general',
       paidBySourceId: 'p1',
       paidFor: [{ sourceId: 'p1', shares: 1 }],
     })

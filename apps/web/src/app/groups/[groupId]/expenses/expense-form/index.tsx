@@ -31,8 +31,10 @@ import type { CreateExpenseSearch } from '@/router/schemas'
 import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
 import {
+  INCOME_CATEGORY_ID,
   amountAsDecimal,
   isExpenseDocumentImage,
+  isSettlementCategory,
   type Currency,
 } from '@spliit/domain'
 
@@ -205,7 +207,7 @@ export function ExpenseForm(props: {
       group: props.group,
       groupCurrency: getCurrencyFromGroup(props.group),
       currentLedgerParticipantId: props.currentLedgerParticipantId,
-      reimbursementTitle: t('reimbursement'),
+      settlementTitle: t('settlementTitle'),
       savedDefault,
       today: dateOnlyInAccountTimeZone(formNow, accountTimeZone),
       now: formNow,
@@ -272,11 +274,11 @@ export function ExpenseForm(props: {
 
   const isIncome = conversion.isIncome
 
-  // Income expenses cannot be reimbursements; clear the flag automatically
-  // so saving an income expense doesn't accidentally pay the user back.
+  // Income expenses cannot stay on Settlement; move off it automatically
+  // so saving an income expense doesn't accidentally settle a balance.
   useEffect(() => {
-    if (isIncome && form.getValues('isReimbursement')) {
-      form.setValue('isReimbursement', false)
+    if (isIncome && isSettlementCategory(form.getValues('category'))) {
+      form.setValue('category', INCOME_CATEGORY_ID)
     }
   }, [isIncome, form])
 

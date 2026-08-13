@@ -135,7 +135,6 @@ describe('Expense items — real DB', () => {
         splitMode: 'ITEMIZED',
         expenseDate: new Date().toISOString(),
         expenseTimeZone: 'UTC',
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'NONE',
         items: [
@@ -219,7 +218,6 @@ describe('Expense items — real DB', () => {
       splitMode: 'EVENLY' as const,
       expenseDate: new Date().toISOString(),
       expenseTimeZone: 'UTC',
-      isReimbursement: false,
       documents: [],
       recurrenceRule: 'NONE' as const,
       items: [
@@ -279,7 +277,6 @@ describe('Expense items — real DB', () => {
         splitMode: 'ITEMIZED',
         expenseDate: new Date().toISOString(),
         expenseTimeZone: 'UTC',
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'NONE',
         items: [
@@ -340,7 +337,6 @@ describe('Expense items — real DB', () => {
         splitMode: 'EVENLY',
         expenseDate: new Date().toISOString(),
         expenseTimeZone: 'UTC',
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'NONE',
         items: [
@@ -395,7 +391,6 @@ describe('Expense items — real DB', () => {
         splitMode: 'ITEMIZED',
         expenseDate: new Date().toISOString(),
         expenseTimeZone: 'UTC',
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'NONE',
         items: [
@@ -444,7 +439,6 @@ describe('Expense items — real DB', () => {
         splitMode: 'EVENLY',
         expenseDate: new Date().toISOString(),
         expenseTimeZone: 'UTC',
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'NONE',
         items: [
@@ -494,7 +488,6 @@ describe('Expense items — real DB', () => {
         splitMode: 'ITEMIZED',
         expenseDate: new Date().toISOString(),
         expenseTimeZone: 'UTC',
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'NONE',
         items: [
@@ -534,7 +527,6 @@ describe('Expense items — real DB', () => {
         splitMode: 'ITEMIZED',
         expenseDate: new Date().toISOString(),
         expenseTimeZone: 'UTC',
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'NONE',
         items: [
@@ -596,7 +588,6 @@ describe('Expense items — real DB', () => {
           splitMode: 'ITEMIZED',
           expenseDate: new Date().toISOString(),
           expenseTimeZone: 'UTC',
-          isReimbursement: false,
           documents: [],
           recurrenceRule: 'NONE',
           items: [
@@ -638,7 +629,6 @@ describe('Expense items — real DB', () => {
           splitMode: 'ITEMIZED',
           expenseDate: new Date().toISOString(),
           expenseTimeZone: 'UTC',
-          isReimbursement: false,
           documents: [],
           recurrenceRule: 'NONE',
           items: [],
@@ -670,7 +660,6 @@ describe('Expense items — real DB', () => {
         splitMode: 'ITEMIZED',
         expenseDate: new Date().toISOString(),
         expenseTimeZone: 'UTC',
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'NONE',
         items: [
@@ -737,7 +726,6 @@ describe('Expense items — real DB', () => {
         splitMode: 'EVENLY',
         expenseDate: new Date().toISOString(),
         expenseTimeZone: 'UTC',
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'NONE',
         items: [
@@ -788,7 +776,6 @@ describe('Expense items — real DB', () => {
         splitMode: 'ITEMIZED',
         expenseDate: new Date().toISOString(),
         expenseTimeZone: 'UTC',
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'NONE',
         items: [
@@ -858,7 +845,6 @@ describe('Expense items — real DB', () => {
         splitMode: 'ITEMIZED',
         expenseDate: new Date().toISOString(),
         expenseTimeZone: 'UTC',
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'NONE',
         items: [
@@ -921,7 +907,6 @@ describe('Expense items — real DB', () => {
         splitMode: 'ITEMIZED',
         expenseDate: new Date().toISOString(),
         expenseTimeZone: 'UTC',
-        isReimbursement: false,
         documents: [],
         recurrenceRule: 'NONE',
         items: [
@@ -993,7 +978,6 @@ describe('Expense items — real DB', () => {
           splitMode: 'EVENLY',
           expenseDate: new Date().toISOString(),
           expenseTimeZone: 'UTC',
-          isReimbursement: false,
           documents: [],
           recurrenceRule: 'NONE',
           items: [
@@ -1038,7 +1022,6 @@ describe('Expense items — real DB', () => {
           splitMode: 'EVENLY',
           expenseDate: new Date().toISOString(),
           expenseTimeZone: 'UTC',
-          isReimbursement: false,
           documents: [],
           recurrenceRule: 'NONE',
           items: [

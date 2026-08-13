@@ -52,7 +52,6 @@ function makeExpenseRow(args: {
     createdAt: new Date(),
     expenseDate: new Date(),
     categoryId: 'general',
-    isReimbursement: false,
     splitMode: 'EVENLY',
     paidBySplitMode: 'BY_AMOUNT',
     originalAmount: null,

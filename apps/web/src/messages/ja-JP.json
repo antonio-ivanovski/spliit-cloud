@@ -190,7 +190,8 @@
       "participants": "{names}",
       "showLess": "表示を減らす"
     },
-    "copyToast": "支出のコピーを開始しました。既存の支出の詳細を使用して新しい支出を作成します。"
+    "copyToast": "支出のコピーを開始しました。既存の支出の詳細を使用して新しい支出を作成します。",
+    "incomeBadge": "収入"
   },
   "Groups": {
     "myGroups": "マイグループ",
@@ -648,8 +649,7 @@
       "edit": "収入を編集",
       "TitleField": {
         "label": "収入タイトル",
-        "placeholder": "給与や返金",
-        "description": "収入の出所を入力します。"
+        "placeholder": "給与や返金"
       },
       "DateField": {
         "label": "収入日",
@@ -679,8 +679,7 @@
       "edit": "支出を編集",
       "TitleField": {
         "label": "支出タイトル",
-        "placeholder": "月曜日の夕食レストラン",
-        "description": "支出の説明を入力してください。"
+        "placeholder": "月曜日の夕食レストラン"
       },
       "DateField": {
         "label": "支出日",
@@ -799,9 +798,6 @@
         "replaceItemsHint": "現在の行を置換"
       }
     },
-    "isReimbursementField": {
-      "label": "これは精算金です"
-    },
     "categoryField": {
       "label": "カテゴリー"
     },
@@ -856,7 +852,6 @@
     "participant": {
       "pending": "(招待済み)"
     },
-    "reimbursement": "精算金",
     "readOnlyNotice": "このグループはアーカイブされています。この支出は読み取り専用で表示されています。",
     "PaidBySplitModeField": {
       "label": "支払者の分割モード"
@@ -971,7 +966,10 @@
       "chooseTimezone": "タイムゾーンを選択",
       "done": "完了",
       "yourTime": "お使いの地域の時刻"
-    }
+    },
+    "settlementTitle": "精算金",
+    "settlementHint": "{category}：合計・統計・予算では支出として数えません。誰が誰に払うべきかは更新されます。",
+    "incomeHint": "{category}：受け取ったお金用です。購入ではなく収入として分類されます。"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "書類を削除",
@@ -1045,14 +1043,6 @@
     "title": "残高",
     "description": "各参加者の差引残高を確認できます。",
     "removedBadge": "削除済み",
-    "Reimbursements": {
-      "title": "精算金の提案",
-      "description": "送金回数をできるだけ少なくして残高を精算するための支払いです。",
-      "noImbursements": "全員の精算が完了しています 😁",
-      "owes": "<strong>{from}</strong>は<strong>{to}</strong>に借りがあります",
-      "markAsPaid": "支払い済みとしてマーク",
-      "markAsPaidAria": "{from}から{to}への{amount}を支払い済みとしてマーク"
-    },
     "currencyDisplay": {
       "label": "通貨",
       "group": "グループ通貨 ({currency})",
@@ -1115,6 +1105,14 @@
       "individualAllHint": "グループ全体の標準的な個人別プランを表示しています。サブグループ間の支払いが含まれる場合があります。",
       "unknownParticipant": "招待待ち",
       "individualWithinHint": "サブグループを考慮した個人別プランを表示しています。サブグループ間の合計が精算済みの場合、推奨される支払いは各サブグループ内に収まります。"
+    },
+    "Settlements": {
+      "title": "提案された精算",
+      "description": "送金回数をできるだけ少なくして残高を精算するための支払いです。",
+      "noSettlements": "全員の精算が完了しています 😁",
+      "owes": "<strong>{from}</strong>は<strong>{to}</strong>に借りがあります",
+      "markAsPaid": "支払い済みとしてマーク",
+      "markAsPaidAria": "{from}から{to}への{amount}を支払い済みとしてマーク"
     }
   },
   "Stats": {
@@ -1309,6 +1307,9 @@
     },
     "Income": {
       "heading": "収入"
+    },
+    "Settlement": {
+      "heading": "精算"
     }
   },
   "Currencies": {
@@ -2208,7 +2209,8 @@
         "recurrence": "繰り返し",
         "reimbursement": "精算金",
         "conversionSource": "換算元",
-        "conversionRate": "換算レート"
+        "conversionRate": "換算レート",
+        "settlement": "精算金"
       },
       "recurringCreated": "{participant}さんが定期支出「{title}」を作成しました",
       "stopped": "{participant}さんが定期支出「{title}」を停止しました",
@@ -2413,28 +2415,6 @@
     "commentDelete": "コメントを削除",
     "commentSend": "コメントを送信",
     "openDocument": "書類を開く"
-  },
-  "CreateReimbursement": {
-    "description": "支払いを記録する前に確認してください。",
-    "pays": "{from} が {to} に支払う",
-    "amount": "金額",
-    "date": "日付",
-    "category": "カテゴリー",
-    "create": "作成する",
-    "edit": "詳細を編集",
-    "creating": "作成中…",
-    "successToast": "精算金を記録しました",
-    "successToastMultiple": "{count}件の精算支払いを1件として記録しました",
-    "paysMany": "{from}さんが{count}人に支払う",
-    "receivesMany": "{to}さんが{count}件の支払いを受け取る",
-    "paymentsToInclude": "含める支払い",
-    "selectionSummary": "{count}件の支払いを選択、合計{total}",
-    "legToAria": "{from}さんが{to}さんに支払い、{amount}",
-    "legFromAria": "{from}さんが{to}さんに支払い、{amount}",
-    "toParticipant": "{name}さんへ",
-    "fromParticipant": "{name}さんから",
-    "createSingle": "支払いを記録",
-    "createMultiple": "{count}件の支払いを記録"
   },
   "Participants": {
     "search": "参加者を検索...",
@@ -2854,7 +2834,6 @@
     "participantsCountLabel": "参加者数",
     "participantsSectionLabel": "参加者の概要",
     "settlementsSectionLabel": "精算の提案",
-    "reimbursementsSectionLabel": "記録された立替",
     "expensesSectionLabel": "支出一覧",
     "amountColumnLabel": "金額",
     "participantColumnLabel": "参加者",
@@ -2868,10 +2847,11 @@
     "noExpensesLabel": "選択期間内に支出はありません。",
     "noParticipantsLabel": "選択期間内に活動のある参加者はいません。",
     "noSettlementsLabel": "終了日時点で精算済みです。",
-    "noReimbursementsLabel": "終了日までに記録された立替はありません。",
     "originalAmountLabel": "元の金額",
     "expenseColumnLabel": "支出",
-    "categoryColumnLabel": "カテゴリ"
+    "categoryColumnLabel": "カテゴリ",
+    "recordedSettlementsSectionLabel": "記録済みの精算",
+    "noRecordedSettlementsLabel": "終了日までに記録された精算はありません。"
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2909,5 +2889,27 @@
     "hintTapToAddExpense": "私は{name}です。タップして支出を追加できます。",
     "hintTapToCreateGroup": "私は{name}です。タップしてグループを作成できます。",
     "billName": "ビル"
+  },
+  "CreateSettlement": {
+    "description": "支払いを記録する前に確認してください。",
+    "pays": "{from} が {to} に支払う",
+    "amount": "金額",
+    "date": "日付",
+    "category": "カテゴリー",
+    "create": "作成する",
+    "edit": "詳細を編集",
+    "creating": "作成中…",
+    "successToast": "精算金を記録しました",
+    "successToastMultiple": "{count}件の精算支払いを1件として記録しました",
+    "paysMany": "{from}さんが{count}人に支払う",
+    "receivesMany": "{to}さんが{count}件の支払いを受け取る",
+    "paymentsToInclude": "含める支払い",
+    "selectionSummary": "{count}件の支払いを選択、合計{total}",
+    "legToAria": "{from}さんが{to}さんに支払い、{amount}",
+    "legFromAria": "{from}さんが{to}さんに支払い、{amount}",
+    "toParticipant": "{name}さんへ",
+    "fromParticipant": "{name}さんから",
+    "createSingle": "支払いを記録",
+    "createMultiple": "{count}件の支払いを記録"
   }
 }

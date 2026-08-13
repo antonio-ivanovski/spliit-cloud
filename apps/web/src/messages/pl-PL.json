@@ -196,7 +196,8 @@
       "participants": "{names}",
       "showLess": "Pokaż mniej"
     },
-    "copyToast": "Kopiowanie wydatku rozpoczęte. Istniejące szczegóły wydatku zostaną użyte do utworzenia nowego."
+    "copyToast": "Kopiowanie wydatku rozpoczęte. Istniejące szczegóły wydatku zostaną użyte do utworzenia nowego.",
+    "incomeBadge": "Przychód"
   },
   "Groups": {
     "myGroups": "Moje grupy",
@@ -666,8 +667,7 @@
       "edit": "Edytuj wpływ",
       "TitleField": {
         "label": "Tytuł wpływu",
-        "placeholder": "Zwrot kaucji",
-        "description": "Podaj opis wpływu."
+        "placeholder": "Zwrot kaucji"
       },
       "DateField": {
         "label": "Data wpływu",
@@ -697,8 +697,7 @@
       "edit": "Edytuj wydatek",
       "TitleField": {
         "label": "Tytuł wydatku",
-        "placeholder": "Poniedziałkowe wyjście do restauracji",
-        "description": "Podaj opis wydatku."
+        "placeholder": "Poniedziałkowe wyjście do restauracji"
       },
       "DateField": {
         "label": "Data wydatku",
@@ -837,9 +836,6 @@
       "customRate": "Używany kurs niestandardowy",
       "via": "przez {currencies}"
     },
-    "isReimbursementField": {
-      "label": "To płatność rozliczeniowa"
-    },
     "categoryField": {
       "label": "Kategoria"
     },
@@ -874,7 +870,6 @@
     "save": "Zapisz",
     "saving": "Zapisywanie…",
     "cancel": "Anuluj",
-    "reimbursement": "Płatność rozliczeniowa",
     "readOnlyNotice": "Ta grupa jest zarchiwizowana. Wydatek jest wyświetlany tylko do odczytu.",
     "PaidBySplitModeField": {
       "label": "Typ podziału płatnika"
@@ -992,7 +987,10 @@
       "chooseTimezone": "Wybierz strefę czasową",
       "done": "Gotowe",
       "yourTime": "Twój czas"
-    }
+    },
+    "settlementTitle": "Płatność rozliczeniowa",
+    "settlementHint": "{category}: Nie wlicza się do wydatków w sumach, statystykach ani budżetach. Nadal aktualizuje, kto komu jest winien.",
+    "incomeHint": "{category}: Dla otrzymanych pieniędzy. Grupowane jako przychód, nie jako zakup."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Usuń dokument",
@@ -1066,14 +1064,6 @@
     "title": "Salda",
     "description": "Jest to kwota, którą każdy członek zapłacił lub otrzymał.",
     "removedBadge": "Usunięty",
-    "Reimbursements": {
-      "title": "Sugerowane płatności rozliczeniowe",
-      "description": "Użyj tych płatności, aby rozliczyć salda przy jak najmniejszej liczbie przelewów.",
-      "noImbursements": "Wszyscy w grupie są rozliczeni 😁",
-      "owes": "<strong>{from}</strong> jest winny dla <strong>{to}</strong>",
-      "markAsPaid": "Zaznacz jako opłacone",
-      "markAsPaidAria": "Oznacz {amount} od {from} dla {to} jako zapłacone"
-    },
     "currencyDisplay": {
       "label": "Waluta",
       "group": "Waluta grupy ({currency})",
@@ -1136,6 +1126,14 @@
       "individualAllHint": "Wyświetlasz standardowy indywidualny plan dla całej grupy. Może on obejmować płatności między podgrupami.",
       "unknownParticipant": "Oczekujące zaproszenie",
       "individualWithinHint": "Wyświetlasz indywidualny plan uwzględniający podgrupy. Sugerowane płatności pozostają w obrębie każdej podgrupy, gdy jej saldo jest już rozliczone."
+    },
+    "Settlements": {
+      "title": "Sugerowane rozliczenia",
+      "description": "Użyj tych płatności, aby rozliczyć salda przy jak najmniejszej liczbie przelewów.",
+      "noSettlements": "Wszyscy w grupie są rozliczeni 😁",
+      "owes": "<strong>{from}</strong> jest winny dla <strong>{to}</strong>",
+      "markAsPaid": "Zaznacz jako opłacone",
+      "markAsPaidAria": "Oznacz {amount} od {from} dla {to} jako zapłacone"
     }
   },
   "Stats": {
@@ -1332,6 +1330,9 @@
     },
     "Income": {
       "heading": "Przychody"
+    },
+    "Settlement": {
+      "heading": "Rozliczenie"
     }
   },
   "Auth": {
@@ -2233,7 +2234,8 @@
         "recurrence": "Powtarzanie",
         "reimbursement": "Płatność rozliczeniowa",
         "conversionSource": "Źródło konwersji",
-        "conversionRate": "Kurs wymiany"
+        "conversionRate": "Kurs wymiany",
+        "settlement": "Płatność rozliczeniowa"
       },
       "recurringCreated": "{participant} utworzył(a) cykliczny wydatek „{title}”",
       "stopped": "{participant} zatrzymał(a) cykliczny wydatek „{title}”",
@@ -2465,28 +2467,6 @@
     "commentDelete": "Usuń komentarz",
     "commentSend": "Wyślij komentarz",
     "openDocument": "Otwórz dokument"
-  },
-  "CreateReimbursement": {
-    "description": "Sprawdź płatność przed jej zapisaniem.",
-    "pays": "{from} płaci {to}",
-    "amount": "Kwota",
-    "date": "Data",
-    "category": "Kategoria",
-    "create": "Stwórz",
-    "edit": "Edytuj szczegóły",
-    "creating": "Tworzenie…",
-    "successToast": "Zapisano płatność rozliczeniową",
-    "successToastMultiple": "Zapisano {count} płatności rozliczeniowych jako jeden wpis",
-    "paysMany": "{from} płaci {count} osobom",
-    "receivesMany": "{to} otrzymuje {count} płatności",
-    "paymentsToInclude": "Płatności do uwzględnienia",
-    "selectionSummary": "Wybrano {count} płatności, łącznie {total}",
-    "legToAria": "{from} płaci {to}, {amount}",
-    "legFromAria": "{from} płaci {to}, {amount}",
-    "toParticipant": "dla {name}",
-    "fromParticipant": "od {name}",
-    "createSingle": "Zapisz płatność",
-    "createMultiple": "Zapisz {count} płatności"
   },
   "Participants": {
     "search": "Szukaj uczestników...",
@@ -2905,7 +2885,6 @@
     "participantsCountLabel": "Uczestnicy",
     "participantsSectionLabel": "Podsumowanie uczestników",
     "settlementsSectionLabel": "Sugerowane rozliczenia",
-    "reimbursementsSectionLabel": "Zarejestrowane zwroty",
     "expensesSectionLabel": "Szczegóły wydatków",
     "amountColumnLabel": "Kwota",
     "participantColumnLabel": "Uczestnik",
@@ -2919,10 +2898,11 @@
     "noExpensesLabel": "Brak wydatków w wybranym okresie.",
     "noParticipantsLabel": "Brak uczestników z aktywnością w wybranym okresie.",
     "noSettlementsLabel": "Na datę końcową wszystko jest rozliczone.",
-    "noReimbursementsLabel": "Brak zarejestrowanych zwrotów do daty końcowej.",
     "originalAmountLabel": "Kwota pierwotna",
     "expenseColumnLabel": "Wydatek",
-    "categoryColumnLabel": "Kategoria"
+    "categoryColumnLabel": "Kategoria",
+    "recordedSettlementsSectionLabel": "Zarejestrowane rozliczenia",
+    "noRecordedSettlementsLabel": "Brak zarejestrowanych rozliczeń do daty końcowej."
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2960,5 +2940,27 @@
     "hintTapToAddExpense": "Jestem {name} — kliknij mnie, żeby dodać wydatek.",
     "hintTapToCreateGroup": "Jestem {name} — kliknij mnie, żeby utworzyć grupę.",
     "billName": "Bill"
+  },
+  "CreateSettlement": {
+    "description": "Sprawdź płatność przed jej zapisaniem.",
+    "pays": "{from} płaci {to}",
+    "amount": "Kwota",
+    "date": "Data",
+    "category": "Kategoria",
+    "create": "Stwórz",
+    "edit": "Edytuj szczegóły",
+    "creating": "Tworzenie…",
+    "successToast": "Zapisano płatność rozliczeniową",
+    "successToastMultiple": "Zapisano {count} płatności rozliczeniowych jako jeden wpis",
+    "paysMany": "{from} płaci {count} osobom",
+    "receivesMany": "{to} otrzymuje {count} płatności",
+    "paymentsToInclude": "Płatności do uwzględnienia",
+    "selectionSummary": "Wybrano {count} płatności, łącznie {total}",
+    "legToAria": "{from} płaci {to}, {amount}",
+    "legFromAria": "{from} płaci {to}, {amount}",
+    "toParticipant": "dla {name}",
+    "fromParticipant": "od {name}",
+    "createSingle": "Zapisz płatność",
+    "createMultiple": "Zapisz {count} płatności"
   }
 }

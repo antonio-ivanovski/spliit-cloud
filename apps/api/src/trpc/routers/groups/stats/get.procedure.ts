@@ -76,7 +76,6 @@ export const getGroupStatsProcedure = protectedProcedure
       const expenses: TotalsExpense[] = rows.map((row) => ({
         ...toBalanceExpense(row),
         expenseDate: row.expenseDate,
-        isReimbursement: row.isReimbursement,
       }))
 
       const totalGroupSpendings = getTotalGroupSpending(expenses)
@@ -141,7 +140,6 @@ export const getGroupStatsProcedure = protectedProcedure
         expenseDate: new Date(row.expenseDate),
         expenseTimeZone: row.expenseTimeZone,
         categoryId: narrowCategoryId(row.categoryId),
-        isReimbursement: row.isReimbursement,
         paidByList: row.paidByList.map((share) => ({
           shares: share.shares,
           participant: enrichParticipant(share.ledgerParticipantId),

@@ -97,7 +97,6 @@ describe('exportGroupCsv', () => {
           { ledgerParticipantId: 'lp-1', shares: 1 },
           { ledgerParticipantId: 'lp-2', shares: 1 },
         ],
-        isReimbursement: false,
         splitMode: 'EVENLY',
         recurrenceRule: 'NONE',
         recurrenceSequence: 4,
@@ -128,7 +127,6 @@ describe('exportGroupCsv', () => {
               { ledgerParticipantId: 'lp-2', shares: 1 },
             ],
             splitMode: 'EVENLY',
-            isReimbursement: false,
             notes: 'current template',
             items: [],
             itemizedRemainder: null,
@@ -169,6 +167,8 @@ describe('exportGroupCsv', () => {
     expect(text).toContain('Alice')
     expect(text).toContain('Bob')
     expect(text).toContain('Dinner')
+    expect(text).toContain('Is Settlement')
+    expect(text).not.toContain('Is Reimbursement')
     expect(text).not.toContain('Recurrence series ID')
     expect(text).not.toContain('Recurrence frequency')
     expect(text).not.toContain('Recurrence status')
@@ -225,7 +225,6 @@ describe('exportGroupCsv', () => {
           { ledgerParticipantId: 'lp-1', shares: 1 },
           { ledgerParticipantId: 'lp-pending', shares: 1 },
         ],
-        isReimbursement: false,
         splitMode: 'EVENLY',
         recurrenceRule: 'NONE',
       },
@@ -339,7 +338,6 @@ describe('exportGroupCsv', () => {
           { ledgerParticipantId: 'lp-1', shares: 1 },
           { ledgerParticipantId: 'lp-2', shares: 1 },
         ],
-        isReimbursement: false,
         splitMode: 'EVENLY',
         recurrenceRule: 'NONE',
       },

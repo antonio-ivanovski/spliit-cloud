@@ -1,7 +1,7 @@
 import {
-  getSuggestedReimbursements,
+  getSuggestedSettlements,
   type Balances,
-  type Reimbursement,
+  type SuggestedSettlement,
 } from './balances'
 
 /** A persisted subgroup as consumed by the settlement projection. */
@@ -39,7 +39,7 @@ export type IndividualSettlementPolicy =
   | 'all-individual'
 
 export type IndividualSettlementPlan = {
-  reimbursements: Reimbursement[]
+  suggestedSettlements: SuggestedSettlement[]
   policy: IndividualSettlementPolicy
 }
 
@@ -107,7 +107,7 @@ function resolveRepresentativeReceiver(
  * Build settlement legs after replacing each valid subgroup with one virtual
  * unit. Ungrouped participants remain one-person units. Representative payer
  * and receiver identities are resolved in the same deterministic projection so
- * the UI and reimbursement form use the exact same people.
+ * the UI and settlement form use the exact same people.
  */
 export function getSubgroupSettlementPlan(
   balances: Balances,
@@ -156,10 +156,10 @@ export function getSubgroupSettlementPlan(
     ]),
   )
 
-  const legs = getSuggestedReimbursements(virtualBalances).map(
-    (reimbursement): SubgroupSettlementLeg => {
-      const from = units.find((unit) => partyKey(unit) === reimbursement.from)
-      const to = units.find((unit) => partyKey(unit) === reimbursement.to)
+  const legs = getSuggestedSettlements(virtualBalances).map(
+    (settlement): SubgroupSettlementLeg => {
+      const from = units.find((unit) => partyKey(unit) === settlement.from)
+      const to = units.find((unit) => partyKey(unit) === settlement.to)
       if (!from || !to) {
         throw new Error('Settlement leg references an unknown virtual unit')
       }
@@ -176,11 +176,11 @@ export function getSubgroupSettlementPlan(
       )
       projectedBalances.set(
         payerId,
-        (projectedBalances.get(payerId) ?? 0) + reimbursement.amount,
+        (projectedBalances.get(payerId) ?? 0) + settlement.amount,
       )
       projectedBalances.set(
         receiverId,
-        (projectedBalances.get(receiverId) ?? 0) - reimbursement.amount,
+        (projectedBalances.get(receiverId) ?? 0) - settlement.amount,
       )
 
       return {
@@ -188,7 +188,7 @@ export function getSubgroupSettlementPlan(
         to: { kind: to.kind, id: to.id },
         fromMemberIds: from.memberIds,
         toMemberIds: to.memberIds,
-        amount: reimbursement.amount,
+        amount: settlement.amount,
         payerId,
         receiverId,
       }
@@ -247,8 +247,8 @@ export function getIndividualSettlementPlan(
     normalizedSubgroups.length > 0 &&
     virtualUnits.every((unit) => unit.total === 0)
   ) {
-    const reimbursements = normalizedSubgroups.flatMap((subgroup) =>
-      getSuggestedReimbursements(
+    const suggestedSettlements = normalizedSubgroups.flatMap((subgroup) =>
+      getSuggestedSettlements(
         Object.fromEntries(
           subgroup.memberIds.map((memberId) => [
             memberId,
@@ -259,13 +259,13 @@ export function getIndividualSettlementPlan(
     )
 
     return {
-      reimbursements,
+      suggestedSettlements,
       policy: 'within-subgroups',
     }
   }
 
   return {
-    reimbursements: getSuggestedReimbursements(balances),
+    suggestedSettlements: getSuggestedSettlements(balances),
     policy: normalizedSubgroups.length > 0 ? 'all-individual' : 'standard',
   }
 }

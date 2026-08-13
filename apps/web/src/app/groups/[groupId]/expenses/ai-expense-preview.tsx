@@ -164,7 +164,7 @@ export function AiExpensePreview({
       group,
       groupCurrency,
       currentLedgerParticipantId,
-      reimbursementTitle: tForm('reimbursement'),
+      settlementTitle: tForm('settlementTitle'),
       savedDefault: savedDefaultQuery.data.defaultSplit,
       today: new Date(),
     })

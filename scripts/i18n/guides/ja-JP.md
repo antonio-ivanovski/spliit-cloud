@@ -7,3 +7,4 @@ Apply `default.md` first, then these Japanese (Japan) rules.
 - Use natural Japanese particles, counters, and word order. Japanese often omits subjects; do not add pronouns merely because English has one.
 - Use Japanese punctuation such as `。`, `、`, and `？`; normally do not insert spaces between Japanese words, but keep readable spacing around Latin placeholders and codes.
 - Preserve the exact meaning of counts and money, and do not put a placeholder inside a word unless Japanese grammar requires it.
+- Exclusive settlement term: 精算. Never 立替, 払い戻し, or 返金 for this concept.

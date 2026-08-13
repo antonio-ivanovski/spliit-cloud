@@ -2,11 +2,11 @@ import { prisma, type Prisma } from '@spliit/db'
 import {
   getBalances,
   getPublicBalances,
-  getSuggestedReimbursements,
-  PAYMENT_CATEGORY_ID,
+  getSuggestedSettlements,
+  SETTLEMENT_CATEGORY_ID,
   toSecondPrecision,
   type Balances,
-  type Reimbursement,
+  type SuggestedSettlement,
 } from '@spliit/domain'
 
 import { buildExpenseActivityData, logActivity } from './activities'
@@ -22,8 +22,8 @@ export async function getGroupBalances(
   const rows = await getGroupBalanceExpenses(groupId, ledgerId)
   const expenses = rows.map(toBalanceExpense)
   const balances = getBalances(expenses)
-  const reimbursements = getSuggestedReimbursements(balances)
-  return getPublicBalances(reimbursements)
+  const suggestedSettlements = getSuggestedSettlements(balances)
+  return getPublicBalances(suggestedSettlements)
 }
 
 /**
@@ -54,12 +54,12 @@ const SETTLEMENT_TITLE = 'Settlement on archive'
  * Build the optimal list of "settlement legs" (from, to, amount) that zero out
  * the group's balances.
  */
-export function buildSettlementLegs(balances: Balances): Reimbursement[] {
-  return getSuggestedReimbursements(balances)
+export function buildSettlementLegs(balances: Balances): SuggestedSettlement[] {
+  return getSuggestedSettlements(balances)
 }
 
 /**
- * Create one reimbursement-style `Expense` per settlement leg produced by
+ * Create one settlement `Expense` per settlement leg produced by
  * {@link buildSettlementLegs}.
  */
 export async function createSettlementExpensesForArchive(
@@ -124,7 +124,7 @@ export async function createSettlementExpensesForArchive(
         expenseDate: toSecondPrecision(now),
         expenseTimeZone: 'UTC',
         title: SETTLEMENT_TITLE,
-        categoryId: PAYMENT_CATEGORY_ID,
+        categoryId: SETTLEMENT_CATEGORY_ID,
         amount: leg.amount,
         paidBySplitMode: 'BY_AMOUNT',
         paidByList: {
@@ -133,7 +133,6 @@ export async function createSettlementExpensesForArchive(
           },
         },
         splitMode: 'EVENLY',
-        isReimbursement: true,
         paidFor: {
           createMany: {
             data: [{ ledgerParticipantId: leg.to, shares: 1 }],
@@ -156,14 +155,14 @@ const SETTLEMENT_ON_LEAVE_TITLE = 'Settlement on leave'
 export function getSettlementLegsForParticipant(
   balances: Balances,
   participantId: string,
-): Reimbursement[] {
+): SuggestedSettlement[] {
   return buildSettlementLegs(balances).filter(
     (leg) => leg.from === participantId || leg.to === participantId,
   )
 }
 
 /**
- * Create one reimbursement-style `Expense` per settlement leg that involves
+ * Create one settlement `Expense` per settlement leg that involves
  * `participantId`, scoped to a single participant.
  */
 export async function createSettlementExpensesForLeave(
@@ -223,7 +222,7 @@ export async function createSettlementExpensesForLeave(
         expenseDate: toSecondPrecision(now),
         expenseTimeZone: 'UTC',
         title: SETTLEMENT_ON_LEAVE_TITLE,
-        categoryId: PAYMENT_CATEGORY_ID,
+        categoryId: SETTLEMENT_CATEGORY_ID,
         amount: leg.amount,
         paidBySplitMode: 'BY_AMOUNT',
         paidByList: {
@@ -232,7 +231,6 @@ export async function createSettlementExpensesForLeave(
           },
         },
         splitMode: 'EVENLY',
-        isReimbursement: true,
         paidFor: {
           createMany: {
             data: [{ ledgerParticipantId: leg.to, shares: 1 }],

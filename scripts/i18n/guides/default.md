@@ -12,3 +12,4 @@ Apply this baseline together with the guide for every locale you own.
 - Translate accessibility labels and error messages explicitly and unambiguously. Do not add jokes, slang, or ambiguity to destructive, security, money, or validation messages.
 - Keep every required plural category natural for the locale. Do not collapse categories or copy the English sentence into every form.
 - Never use English as a placeholder translation. Preserve brands and technical tokens only when the baseline or locale guide says they are proper names.
+- Settlement is the exclusive term for a payment that clears who owes whom. Use one local noun and one local verb throughout the locale. Do not mix in reimbursement, refund, payout, or merchant-return wording. Income is money received, not a settlement. Do not tell users to type a negative amount.

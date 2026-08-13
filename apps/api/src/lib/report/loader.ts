@@ -14,7 +14,6 @@ export const reportExpenseSelect = {
   expenseDate: true,
   createdAt: true,
   categoryId: true,
-  isReimbursement: true,
 } satisfies Prisma.ExpenseSelect
 
 export type ReportExpenseRowRow = Prisma.ExpenseGetPayload<{
@@ -44,7 +43,6 @@ function mapReportRow(row: ReportExpenseRowRow): ReportExpenseRow {
     expenseDate: row.expenseDate,
     createdAt: row.createdAt,
     categoryId: row.categoryId,
-    isReimbursement: row.isReimbursement,
     title: row.title,
     splitMode: row.splitMode,
     paidBySplitMode: row.paidBySplitMode,

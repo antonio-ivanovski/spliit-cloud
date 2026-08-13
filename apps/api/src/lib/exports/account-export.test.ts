@@ -57,7 +57,6 @@ function makeGroup(document: ExportDocumentRecord | null = null) {
               conversionRate: null,
               conversionSource: null,
               paidBySplitMode: 'BY_AMOUNT' as const,
-              isReimbursement: false,
               splitMode: 'EVENLY' as const,
               version: 1,
               createdByAccountId: null,
@@ -174,6 +173,7 @@ describe('createAccountExportArtifact', () => {
     })
     expect(spliitAccountExportManifestSchema.parse(root)).toEqual(root)
     expect(spliitGroupExportManifestSchema.parse(group)).toEqual(group)
+    expect(group.expenses[0]).not.toHaveProperty('isReimbursement')
     expect(reader.read).toHaveBeenCalledOnce()
   })
 

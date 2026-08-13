@@ -23,7 +23,6 @@ const baseValues: ExpenseFormInputValues = {
     { participant: 'p2', shares: 1 },
   ],
   isMultiPayer: false,
-  isReimbursement: false,
   documents: [],
   notes: '',
   recurrenceRule: 'NONE',

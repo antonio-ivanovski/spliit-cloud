@@ -4,6 +4,10 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
+import {
+  CategorySideEffectBadge,
+  getCategorySideEffectKind,
+} from '@/app/groups/[groupId]/expenses/category-side-effect-badge'
 import { ExpenseAttachmentsPreview } from '@/app/groups/[groupId]/expenses/expense-attachments-preview'
 import { ExpenseComments } from '@/app/groups/[groupId]/expenses/expense-comments'
 import { ExpenseItemsSummary } from '@/app/groups/[groupId]/expenses/expense-items-summary'
@@ -15,7 +19,6 @@ import { ExpenseSplitBars } from '@/app/groups/[groupId]/expenses/expense-split-
 import { categoryLabel } from '@/app/groups/[groupId]/stats/category-utils'
 import { DeletePopup } from '@/components/delete-popup'
 import { EditButton } from '@/components/edit-button'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   ResponsiveDialog,
@@ -83,7 +86,7 @@ function toBalanceExpense(
   return {
     id: expense.id,
     amount: expense.amount,
-    isReimbursement: expense.isReimbursement,
+    categoryId: expense.categoryId,
     splitMode: expense.splitMode,
     paidBySplitMode: expense.paidBySplitMode,
     originalAmount: expense.originalAmount,
@@ -186,17 +189,9 @@ export function ExpensePreviewModal({
     ? toBalanceExpense(expense, participants)
     : null
   const paidForShares =
-    balanceExpense && expense
-      ? calculateShares({
-          ...balanceExpense,
-          isReimbursement: expense.isReimbursement,
-        })
-      : {}
+    balanceExpense && expense ? calculateShares(balanceExpense) : {}
   const paidByShares = balanceExpense
-    ? calculatePaidByShares({
-        ...balanceExpense,
-        isReimbursement: expense?.isReimbursement ?? false,
-      })
+    ? calculatePaidByShares(balanceExpense)
     : {}
   const splitModeLabel = (
     side: 'paidBy' | 'paidFor',
@@ -335,6 +330,7 @@ export function ExpensePreviewModal({
           currentLedgerParticipantId
         ]?.total ?? null)
       : null
+  const categorySideEffect = getCategorySideEffectKind(expense?.categoryId)
 
   return (
     <ResponsiveDialog open={open} onOpenChange={handleOpenChange}>
@@ -348,17 +344,17 @@ export function ExpensePreviewModal({
               />
             ) : null}
             <span className="truncate">{expense?.title ?? t('title')}</span>
-            {expense?.isReimbursement && (
-              <Badge variant="secondary" className="shrink-0 text-xs">
-                {tForm('reimbursement')}
-              </Badge>
-            )}
+            {categorySideEffect ? (
+              <CategorySideEffectBadge kind={categorySideEffect} />
+            ) : null}
           </ResponsiveDialogTitle>
-          <ResponsiveDialogDescription>
-            {expense
-              ? categoryLabel(tCategories, expense.categoryId)
-              : t('title')}
-          </ResponsiveDialogDescription>
+          {categorySideEffect ? null : (
+            <ResponsiveDialogDescription>
+              {expense
+                ? categoryLabel(tCategories, expense.categoryId)
+                : t('title')}
+            </ResponsiveDialogDescription>
+          )}
         </ResponsiveDialogHeader>
 
         <ResponsiveDialogBody className="max-h-[70vh] space-y-5 overflow-y-auto">

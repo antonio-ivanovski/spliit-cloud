@@ -1,48 +1,62 @@
 import type { LucideIcon, LucideProps } from 'lucide-react'
 import {
   Armchair,
+  ArrowLeftRight,
   Baby,
   Banknote,
   Bike,
   Bus,
+  Calculator,
   Car,
   CarTaxiFront,
-  Cat,
   Clapperboard,
-  CupSoda,
   Dices,
-  Dumbbell,
-  Eraser,
+  Drama,
+  Droplets,
   FerrisWheel,
   Flower2,
   Fuel,
   Gift,
+  GraduationCap,
+  HandCoins,
   HandHelping,
+  Handshake,
+  Heart,
+  HeartPulse,
   Home,
   Hotel,
-  Lamp,
+  IdCard,
+  KeyRound,
   Landmark,
-  LibraryBig,
-  Martini,
+  MonitorPlay,
   Music,
   ParkingMeter,
-  Phone,
-  Receipt,
-  PiggyBank,
+  PartyPopper,
+  PawPrint,
   Plane,
   Plug,
   PlugZap,
+  Receipt,
+  Repeat,
+  Shapes,
+  ShieldCheck,
   Shirt,
   ShoppingCart,
+  Sparkles,
+  SprayCan,
   Sprout,
   Stethoscope,
   ThermometerSun,
   Train,
   Trash,
+  Trophy,
   Utensils,
+  UtensilsCrossed,
   Wallet,
+  Wifi,
   Wine,
   Wrench,
+  Zap,
 } from 'lucide-react'
 
 type Category = {
@@ -62,15 +76,17 @@ export function CategoryIcon({
 function getCategoryIcon(category: string): LucideIcon {
   switch (category) {
     case 'Uncategorized/Uncategorized':
-      return Banknote
+      return Shapes
     case 'Uncategorized/General':
       return Banknote
     case 'Uncategorized/Payment':
-      return Banknote
+      return HandCoins
     case 'Income/Income':
       return Wallet
+    case 'Settlement/Settlement':
+      return ArrowLeftRight
     case 'Entertainment/Entertainment':
-      return FerrisWheel
+      return Drama
     case 'Entertainment/Games':
       return Dices
     case 'Entertainment/Movies':
@@ -78,11 +94,11 @@ function getCategoryIcon(category: string): LucideIcon {
     case 'Entertainment/Music':
       return Music
     case 'Entertainment/Sports':
-      return Dumbbell
+      return Trophy
     case 'Food and Drink/Food and Drink':
       return Utensils
     case 'Food and Drink/Dining Out':
-      return Martini
+      return UtensilsCrossed
     case 'Food and Drink/Groceries':
       return ShoppingCart
     case 'Food and Drink/Liquor':
@@ -94,7 +110,7 @@ function getCategoryIcon(category: string): LucideIcon {
     case 'Home/Furniture':
       return Armchair
     case 'Home/Household Supplies':
-      return Lamp
+      return SprayCan
     case 'Home/Maintenance':
       return Wrench
     case 'Home/Gardening':
@@ -104,13 +120,13 @@ function getCategoryIcon(category: string): LucideIcon {
     case 'Home/Plants':
       return Flower2
     case 'Home/Pets':
-      return Cat
+      return PawPrint
     case 'Home/Rent':
-      return PiggyBank
+      return KeyRound
     case 'Home/Services':
-      return Wrench
+      return Handshake
     case 'Life/Life':
-      return Landmark
+      return Heart
     case 'Life/Childcare':
       return Baby
     case 'Life/Clothing':
@@ -118,15 +134,15 @@ function getCategoryIcon(category: string): LucideIcon {
     case 'Life/Donation':
       return HandHelping
     case 'Life/Education':
-      return LibraryBig
+      return GraduationCap
     case 'Life/Gifts':
       return Gift
     case 'Life/Insurance':
-      return Landmark
+      return ShieldCheck
     case 'Life/Medical Expenses':
       return Stethoscope
     case 'Life/Taxes':
-      return Banknote
+      return Calculator
     case 'Transportation/Transportation':
       return Bus
     case 'Transportation/Bicycle':
@@ -148,9 +164,9 @@ function getCategoryIcon(category: string): LucideIcon {
     case 'Transportation/Taxi':
       return CarTaxiFront
     case 'Utilities/Utilities':
-      return Banknote
+      return Zap
     case 'Utilities/Cleaning':
-      return Eraser
+      return Sparkles
     case 'Utilities/Electricity':
       return PlugZap
     case 'Utilities/Heat/Gas':
@@ -158,27 +174,21 @@ function getCategoryIcon(category: string): LucideIcon {
     case 'Utilities/Trash':
       return Trash
     case 'Utilities/TV/Phone/Internet':
-      return Phone
+      return Wifi
     case 'Utilities/Water':
-      return CupSoda
+      return Droplets
     case 'Social and Activities/Social and Activities':
       return FerrisWheel
     case 'Social and Activities/Events and Activities':
-      return FerrisWheel
+      return PartyPopper
     case 'Subscriptions and Memberships/Subscriptions and Memberships':
-      return Clapperboard
+      return Repeat
     case 'Subscriptions and Memberships/Digital Subscriptions':
-      return Clapperboard
+      return MonitorPlay
     case 'Subscriptions and Memberships/Memberships':
-      return HandHelping
+      return IdCard
     case 'Personal Care and Wellness/Personal Care and Wellness':
-      return HandHelping
-    case 'Personal Care and Wellness/Personal Care':
-      return Shirt
-    case 'Personal Care and Wellness/Fitness':
-      return Dumbbell
-    case 'Personal Care and Wellness/Wellness':
-      return HandHelping
+      return HeartPulse
     default:
       return Banknote
   }
