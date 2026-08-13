@@ -2,11 +2,12 @@ import { z } from 'zod'
 
 import { getGroupExpenses } from '../../../../lib/api'
 import { expensePermissions } from '../../../../lib/api/resource-permissions'
+import { redactViewerDisplayName } from '../../../../lib/group-view'
 import {
   hashLinkInviteToken,
+  groupReadProcedure,
   linkInviteTokenInput,
   loadGroupViewer,
-  protectedProcedure,
 } from '../../../init'
 import { listExpensesOutputSchema } from '../../../outputs/expenses'
 
@@ -42,7 +43,7 @@ const listExpensesInputSchema = z.object({
   ),
 })
 
-export const listGroupExpensesProcedure = protectedProcedure
+export const listGroupExpensesProcedure = groupReadProcedure
   .input(listExpensesInputSchema)
   .output(listExpensesOutputSchema)
   .query(
@@ -72,9 +73,10 @@ export const listGroupExpensesProcedure = protectedProcedure
     }) => {
       const { group, ledger, member, viewer } = await loadGroupViewer({
         groupId,
-        accountId: ctx.auth.user.id,
-        accountEmail: ctx.auth.user.email,
+        accountId: ctx.auth?.user.id,
+        accountEmail: ctx.auth?.user.email,
         linkTokenHash: await hashLinkInviteToken(linkInviteToken),
+        viewerSession: ctx.groupViewerSession,
       })
       const expenses = await getGroupExpenses(groupId, {
         ledgerId: ledger.id,
@@ -103,15 +105,37 @@ export const listGroupExpensesProcedure = protectedProcedure
             createdByAccountId,
             ...publicExpense
           } = expense
+          const redactShares = (shares: typeof publicExpense.paidByList) =>
+            shares.map((share) => ({
+              ...share,
+              ledgerParticipant: {
+                ...share.ledgerParticipant,
+                name: redactViewerDisplayName(share.ledgerParticipant.name),
+                account: share.ledgerParticipant.account
+                  ? {
+                      ...share.ledgerParticipant.account,
+                      id: `public_${share.ledgerParticipant.id}`,
+                    }
+                  : null,
+              },
+            }))
+          const viewerExpense =
+            viewer.kind === 'ACTIVE'
+              ? publicExpense
+              : {
+                  ...publicExpense,
+                  paidByList: redactShares(publicExpense.paidByList),
+                  paidFor: redactShares(publicExpense.paidFor),
+                }
           return {
-            ...publicExpense,
+            ...viewerExpense,
             createdAt: new Date(expense.createdAt),
             expenseDate: new Date(expense.expenseDate),
             permissions:
               viewer.kind === 'ACTIVE' && member
                 ? expensePermissions({
                     role: member.role,
-                    accountId: ctx.auth.user.id,
+                    accountId: ctx.auth?.user.id ?? '',
                     createdByAccountId,
                     recurringSeries: expense.recurringSeriesId
                       ? {

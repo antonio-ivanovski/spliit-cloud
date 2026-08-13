@@ -19,7 +19,7 @@ import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 import { trpc } from '@/trpc/client'
 
-import { useIsPendingInvitee } from '../current-group-context'
+import { useIsReadOnlyGroupViewer } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
 import { ExpenseForm } from './expense-form/index'
 import { useCreateExpenseMutation } from './expense-mutation-hooks'
@@ -43,7 +43,7 @@ export function CreateExpenseForm({
   const group = groupData?.group
   const currentLedgerParticipantId =
     groupData?.currentLedgerParticipantId ?? null
-  const isPendingInvitee = useIsPendingInvitee()
+  const isReadOnlyGroupViewer = useIsReadOnlyGroupViewer()
   const linkInviteToken = useLinkInviteToken()
 
   const { mutateAsync: createExpenseMutateAsync } = useCreateExpenseMutation({
@@ -70,7 +70,7 @@ export function CreateExpenseForm({
 
   if (!group) return null
 
-  if (isPendingInvitee) {
+  if (isReadOnlyGroupViewer) {
     return (
       <Card className="mobile-surface">
         <CardHeader className="hidden sm:flex">

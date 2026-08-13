@@ -73,7 +73,7 @@ const GROUP_NAV_TO = {
 export function MobileGroupNav({ groupId }: GroupNavProps) {
   const pathname = useLocation({ select: (location) => location.pathname })
   const { t } = useTranslation()
-  const { group } = useCurrentGroup()
+  const { group, viewer } = useCurrentGroup()
   const [moreOpen, setMoreOpen] = useState(false)
   const tabs = [
     {
@@ -112,11 +112,15 @@ export function MobileGroupNav({ groupId }: GroupNavProps) {
             icon: Users,
           },
         ]),
-    {
-      to: GROUP_NAV_TO.edit,
-      label: t('Settings.title'),
-      icon: Settings2,
-    },
+    ...(viewer
+      ? [
+          {
+            to: GROUP_NAV_TO.edit,
+            label: t('Settings.title'),
+            icon: Settings2,
+          },
+        ]
+      : []),
   ] as const
   const activeMore =
     moreTabs.some((tab) => pathname === tab.to.replace('$groupId', groupId)) ||

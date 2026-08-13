@@ -11,7 +11,7 @@ import {
 } from '@/app/groups/[groupId]/budgets/budget-types'
 import {
   useCurrentGroup,
-  useIsPendingInvitee,
+  useIsReadOnlyGroupViewer,
 } from '@/app/groups/[groupId]/current-group-context'
 import { CollapsibleSection } from '@/app/groups/collapsible-section'
 import { Button } from '@/components/ui/button'
@@ -55,8 +55,9 @@ function CreateBudgetCard({ groupId }: { groupId: string }) {
 export default function GroupBudgetsPageClient() {
   const t = useBudgetTranslation()
   const { groupId, group, currentMember } = useCurrentGroup()
-  const isPendingInvitee = useIsPendingInvitee()
-  const canCreate = !!currentMember && !group?.archived && !isPendingInvitee
+  const isReadOnlyGroupViewer = useIsReadOnlyGroupViewer()
+  const canCreate =
+    !!currentMember && !group?.archived && !isReadOnlyGroupViewer
   const budgetsQuery = trpc.groups.budgets.list.useQuery({
     groupId,
     includeArchived: true,

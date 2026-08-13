@@ -3,13 +3,13 @@ import { z } from 'zod'
 import { getGroupCommonCurrencies } from '../../../../lib/api'
 import {
   hashLinkInviteToken,
+  groupReadProcedure,
   linkInviteTokenInput,
   loadGroupViewer,
-  protectedProcedure,
 } from '../../../init'
 import { commonCurrenciesOutputSchema } from '../../../outputs/expenses'
 
-export const commonCurrenciesProcedure = protectedProcedure
+export const commonCurrenciesProcedure = groupReadProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
@@ -22,9 +22,10 @@ export const commonCurrenciesProcedure = protectedProcedure
   .query(async ({ input: { groupId, linkInviteToken }, ctx }) => {
     await loadGroupViewer({
       groupId,
-      accountId: ctx.auth.user.id,
-      accountEmail: ctx.auth.user.email,
+      accountId: ctx.auth?.user.id,
+      accountEmail: ctx.auth?.user.email,
       linkTokenHash: await hashLinkInviteToken(linkInviteToken),
+      viewerSession: ctx.groupViewerSession,
     })
     const currencies = await getGroupCommonCurrencies(groupId)
     return { currencies }

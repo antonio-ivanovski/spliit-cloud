@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { prisma } from '@spliit/db'
 
 import { formatIsoDate, todayInTimeZone } from '../../../../lib/report/dates'
-import { loadGroupContext, protectedProcedure } from '../../../init'
+import { loadGroupMutationContext, protectedProcedure } from '../../../init'
 
 /**
  * Default date bounds for the PDF report dialog: earliest ledger entry through
@@ -17,7 +17,7 @@ export const groupReportsBoundsProcedure = protectedProcedure
     }),
   )
   .query(async ({ input: { groupId, timeZone }, ctx }) => {
-    const { ledger } = await loadGroupContext({
+    const { ledger } = await loadGroupMutationContext({
       groupId,
       accountId: ctx.auth.user.id,
     })

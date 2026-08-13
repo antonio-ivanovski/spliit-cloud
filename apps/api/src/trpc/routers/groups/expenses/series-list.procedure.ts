@@ -3,13 +3,13 @@ import { z } from 'zod'
 import { getRecurringExpenseSeries } from '../../../../lib/api'
 import {
   hashLinkInviteToken,
+  groupReadProcedure,
   linkInviteTokenInput,
   loadGroupViewer,
-  protectedProcedure,
 } from '../../../init'
 import { listRecurringExpenseSeriesOutputSchema } from '../../../outputs/expenses'
 
-export const listRecurringExpenseSeriesProcedure = protectedProcedure
+export const listRecurringExpenseSeriesProcedure = groupReadProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
@@ -25,9 +25,10 @@ export const listRecurringExpenseSeriesProcedure = protectedProcedure
   .query(async ({ input, ctx }) => {
     await loadGroupViewer({
       groupId: input.groupId,
-      accountId: ctx.auth.user.id,
-      accountEmail: ctx.auth.user.email,
+      accountId: ctx.auth?.user.id,
+      accountEmail: ctx.auth?.user.email,
       linkTokenHash: await hashLinkInviteToken(input.linkInviteToken),
+      viewerSession: ctx.groupViewerSession,
     })
     return getRecurringExpenseSeries(input.groupId, {
       cursor: input.cursor,

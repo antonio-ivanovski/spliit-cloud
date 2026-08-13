@@ -1177,7 +1177,7 @@ export async function importCloudGroup(
           sourceName: participant.displayName,
           kind: 'LINK',
           invitationId: invitation.id,
-          inviteUrl: `${getWebBaseUrl()}/groups/${group.id}?invite=${token}`,
+          inviteUrl: `${getWebBaseUrl()}/groups/${group.id}#invite=${token}`,
         })
       }
     }

@@ -44,13 +44,16 @@ export function GroupTabs({ groupId }: Props) {
   const utils = trpc.useUtils()
   const { toast } = useToast()
   const { mutateAsync: archiveGroup } = trpc.groups.archive.useMutation()
-  const { data } = trpc.account.members.useQuery({ groupId })
-  const { group, currentMember } = useCurrentGroup()
-  const memberCount = data?.members?.length ?? 0
+  const { group, currentMember, viewer } = useCurrentGroup()
+  const { data } = trpc.account.members.useQuery(
+    { groupId },
+    { enabled: viewer?.source === 'MEMBER' || !!currentMember },
+  )
+  const memberCount = data?.members?.length ?? group?.members.length ?? 0
   // The "Settings" tab is also the member-accessible home for export.
   // Members see a read-only settings view; admins additionally see the
   // group editing and lifecycle controls.
-  const canViewSettings = !!currentMember
+  const canViewSettings = !!viewer
   const canUnarchive = !!group?.archived && currentMember?.role === 'ADMIN'
   const isArchived = !!group?.archived
   // FRIEND-typed ledgers are strictly 2 people, so the Members tab is

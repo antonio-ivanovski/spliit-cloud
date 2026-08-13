@@ -38,7 +38,7 @@ if (!(await probeExistingApi())) {
 
 const contextMocks = vi.hoisted(() => ({
   mockUseCurrentGroup: vi.fn(),
-  mockUseIsPendingInvitee: vi.fn(() => false),
+  mockUseIsReadOnlyGroupViewer: vi.fn(() => false),
 }))
 
 const tanstackMocks = vi.hoisted(() => ({
@@ -51,7 +51,7 @@ const tanstackMocks = vi.hoisted(() => ({
 vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useCurrentGroup: contextMocks.mockUseCurrentGroup,
   useCurrentGroupOrNull: () => null,
-  useIsPendingInvitee: contextMocks.mockUseIsPendingInvitee,
+  useIsReadOnlyGroupViewer: contextMocks.mockUseIsReadOnlyGroupViewer,
 }))
 
 vi.mock('@tanstack/react-router', () => ({
@@ -255,7 +255,7 @@ describe('Group CRUD via existing API', () => {
       currentInvitation: null,
       linkInviteState: null,
     })
-    contextMocks.mockUseIsPendingInvitee.mockReturnValue(false)
+    contextMocks.mockUseIsReadOnlyGroupViewer.mockReturnValue(false)
 
     const { ExpenseCard } =
       await import('@/app/groups/[groupId]/expenses/expense-card')

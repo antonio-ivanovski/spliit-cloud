@@ -139,7 +139,7 @@ describe('Link invitation flow — real DB', () => {
     expect(createResult).toHaveProperty('invitationId')
     expect(createResult).toHaveProperty('inviteUrl')
     expect(createResult.inviteUrl).toMatch(
-      /^http:\/\/localhost:3000\/groups\/.+\?invite=[A-Za-z0-9_-]+$/,
+      /^http:\/\/localhost:3000\/groups\/.+#invite=[A-Za-z0-9_-]+$/,
     )
 
     // Verify invitation was created in DB with type LINK

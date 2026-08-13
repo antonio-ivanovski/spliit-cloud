@@ -25,7 +25,7 @@ const mocks = vi.hoisted(() => ({
   mockUseInView: vi.fn(() => ({ ref: vi.fn(), inView: false })),
   mockLinkInviteToken: vi.fn(() => undefined),
   mockUseCurrentGroup: vi.fn(),
-  mockUseIsPendingInvitee: vi.fn(() => false),
+  mockUseIsReadOnlyGroupViewer: vi.fn(() => false),
 }))
 
 // ── Module mocks ────────────────────────────────────────────────────────
@@ -49,7 +49,7 @@ vi.mock('@/trpc/client', () => ({
 vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useCurrentGroup: mocks.mockUseCurrentGroup,
   useCurrentGroupOrNull: () => null,
-  useIsPendingInvitee: mocks.mockUseIsPendingInvitee,
+  useIsReadOnlyGroupViewer: mocks.mockUseIsReadOnlyGroupViewer,
 }))
 
 vi.mock('@/app/groups/[groupId]/use-link-invite-token', () => ({
@@ -158,7 +158,7 @@ describe('ExpenseList', () => {
     vi.clearAllMocks()
     setDefaultGroup()
     mocks.mockUseInfiniteQuery.mockReturnValue(defaultInfiniteReturnValue)
-    mocks.mockUseIsPendingInvitee.mockReturnValue(false)
+    mocks.mockUseIsReadOnlyGroupViewer.mockReturnValue(false)
   })
 
   // ── Search bar ────────────────────────────────────────────────────
@@ -254,7 +254,7 @@ describe('ExpenseList', () => {
       currentInvitation: { id: 'inv-1', role: 'MEMBER', type: 'EMAIL' },
       linkInviteState: null,
     })
-    mocks.mockUseIsPendingInvitee.mockReturnValue(true)
+    mocks.mockUseIsReadOnlyGroupViewer.mockReturnValue(true)
 
     render(<ExpenseList />)
 
@@ -402,7 +402,7 @@ describe('ExpenseList', () => {
       currentInvitation: { id: 'inv-1', role: 'MEMBER', type: 'EMAIL' },
       linkInviteState: null,
     })
-    mocks.mockUseIsPendingInvitee.mockReturnValue(true)
+    mocks.mockUseIsReadOnlyGroupViewer.mockReturnValue(true)
 
     const expense = makeExpense({
       id: 'exp-pending-view',

@@ -6,13 +6,13 @@ import { prisma } from '@spliit/db'
 import { getGroup, getGroupExpensesParticipants } from '../../../lib/api'
 import {
   hashLinkInviteToken,
+  groupReadProcedure,
   linkInviteTokenInput,
   loadGroupViewer,
-  protectedProcedure,
 } from '../../init'
 import { getGroupDetailsOutputSchema } from '../../outputs/groups'
 
-export const getGroupDetailsProcedure = protectedProcedure
+export const getGroupDetailsProcedure = groupReadProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
@@ -25,9 +25,10 @@ export const getGroupDetailsProcedure = protectedProcedure
   .query(async ({ input: { groupId, linkInviteToken }, ctx }) => {
     await loadGroupViewer({
       groupId,
-      accountId: ctx.auth.user.id,
-      accountEmail: ctx.auth.user.email,
+      accountId: ctx.auth?.user.id,
+      accountEmail: ctx.auth?.user.email,
       linkTokenHash: await hashLinkInviteToken(linkInviteToken),
+      viewerSession: ctx.groupViewerSession,
     })
     const group = await getGroup(groupId)
     if (!group) {

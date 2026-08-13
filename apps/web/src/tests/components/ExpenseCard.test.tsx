@@ -7,7 +7,7 @@ import { render, screen } from '@/test/test-utils'
 
 vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useCurrentGroupOrNull: vi.fn().mockReturnValue(null),
-  useIsPendingInvitee: vi.fn(),
+  useIsReadOnlyGroupViewer: vi.fn(),
 }))
 
 vi.mock('@tanstack/react-router', () => ({
@@ -38,7 +38,7 @@ vi.mock('@/components/account-preferences-sync', () => ({
 
 // ── SUT ─────────────────────────────────────────────────────────────────
 
-import { useIsPendingInvitee } from '@/app/groups/[groupId]/current-group-context'
+import { useIsReadOnlyGroupViewer } from '@/app/groups/[groupId]/current-group-context'
 import { ExpenseCard } from '@/app/groups/[groupId]/expenses/expense-card'
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
 import { useActiveUser } from '@/lib/hooks'
@@ -92,7 +92,7 @@ describe('ExpenseCard', () => {
   it('renders expense title, amount, date', () => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date('2026-08-12T12:00:00.000Z'))
-    vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+    vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
     vi.mocked(useActiveUser).mockReturnValue(null)
 
     const expense = makeExpense()
@@ -120,7 +120,7 @@ describe('ExpenseCard', () => {
   it('shows a city-only timezone hint under the title for a foreign zone', () => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date('2026-08-12T12:00:00.000Z'))
-    vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+    vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
     vi.mocked(useActiveUser).mockReturnValue(null)
     vi.mocked(useSyncedAccountPreferences).mockReturnValue({
       timeZone: 'UTC',
@@ -148,7 +148,7 @@ describe('ExpenseCard', () => {
   })
 
   it('shows converted amount first and original amount second for cross-currency expenses', () => {
-    vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+    vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
     vi.mocked(useActiveUser).mockReturnValue(null)
 
     const expense = makeExpense({
@@ -174,7 +174,7 @@ describe('ExpenseCard', () => {
   })
 
   it('does not show a secondary amount for same-currency expenses', () => {
-    vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+    vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
     vi.mocked(useActiveUser).mockReturnValue(null)
 
     const expense = makeExpense({
@@ -198,7 +198,7 @@ describe('ExpenseCard', () => {
   })
 
   it('shows settlement badge when category is settlement', () => {
-    vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+    vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
     vi.mocked(useActiveUser).mockReturnValue(null)
 
     const expense = makeExpense({ categoryId: 'settlement' })
@@ -219,7 +219,7 @@ describe('ExpenseCard', () => {
   })
 
   it('keeps the preview affordance available to pending invitees', () => {
-    vi.mocked(useIsPendingInvitee).mockReturnValue(true)
+    vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(true)
     vi.mocked(useActiveUser).mockReturnValue(null)
 
     const expense = makeExpense()
@@ -240,7 +240,7 @@ describe('ExpenseCard', () => {
   })
 
   it('shows preview affordance as a link to the expense', () => {
-    vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+    vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
     vi.mocked(useActiveUser).mockReturnValue(null)
 
     const expense = makeExpense()
@@ -262,7 +262,7 @@ describe('ExpenseCard', () => {
   })
 
   it('links to the global expenses overlay when expensesSearch is provided', () => {
-    vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+    vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
     vi.mocked(useActiveUser).mockReturnValue(null)
 
     render(
@@ -282,7 +282,7 @@ describe('ExpenseCard', () => {
   })
 
   it('renders the RecurringBadge for expenses that belong to a recurring series', () => {
-    vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+    vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
     vi.mocked(useActiveUser).mockReturnValue(null)
 
     const expense = makeExpense({
@@ -302,7 +302,7 @@ describe('ExpenseCard', () => {
   })
 
   it('shows settlement badge for settlement expenses', () => {
-    vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+    vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
     vi.mocked(useActiveUser).mockReturnValue(null)
 
     const expense = makeExpense({ categoryId: 'settlement' })
@@ -323,7 +323,7 @@ describe('ExpenseCard', () => {
   })
 
   it('shows balance line for active user', () => {
-    vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+    vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
     // Set active user to match a participant in the expense
     vi.mocked(useActiveUser).mockReturnValue('user-alice')
 
@@ -357,7 +357,7 @@ describe('ExpenseCard', () => {
   })
 
   it('uses stored top-level shares for itemized balances with slim item rows', () => {
-    vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+    vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
     vi.mocked(useActiveUser).mockReturnValue('user-bob')
 
     const expense = makeExpense({
@@ -398,7 +398,7 @@ describe('ExpenseCard', () => {
 
   describe('multi-payer rendering', () => {
     it('renders comma-separated payer names (alphabetical) using paidByMultiple key', () => {
-      vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+      vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
       vi.mocked(useActiveUser).mockReturnValue(null)
 
       // Fixture is intentionally in non-alphabetical order to verify the
@@ -450,7 +450,7 @@ describe('ExpenseCard', () => {
     })
 
     it('sorts 3 payers alphabetically (Bob, Alice, Carol) before the payee', () => {
-      vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+      vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
       vi.mocked(useActiveUser).mockReturnValue(null)
 
       // 3 payers in non-alphabetical source order, single payee Dave,
@@ -512,7 +512,7 @@ describe('ExpenseCard', () => {
     ]
 
     it('hides overflow items until the more control is pressed', async () => {
-      vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+      vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
       vi.mocked(useActiveUser).mockReturnValue(null)
       const { user } = render(
         <ExpenseCard
@@ -536,7 +536,7 @@ describe('ExpenseCard', () => {
     })
 
     it('collapses overflow items when Show less is pressed', async () => {
-      vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+      vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
       vi.mocked(useActiveUser).mockReturnValue(null)
 
       const { user } = render(
@@ -558,7 +558,7 @@ describe('ExpenseCard', () => {
     })
 
     it('does not render an overflow control when there are at most two items', () => {
-      vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+      vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
       vi.mocked(useActiveUser).mockReturnValue(null)
 
       render(

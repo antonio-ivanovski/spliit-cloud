@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 
 import {
   useCurrentGroup,
-  useIsPendingInvitee,
+  useIsReadOnlyGroupViewer,
 } from '@/app/groups/[groupId]/current-group-context'
 import { SettlementList } from '@/app/groups/[groupId]/settlement-list'
 import { render, screen, waitFor, within } from '@/test/test-utils'
@@ -17,7 +17,7 @@ const mockNavigate = vi.fn()
 vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useCurrentGroup: vi.fn(),
   useCurrentGroupOrNull: vi.fn().mockReturnValue(null),
-  useIsPendingInvitee: vi.fn(),
+  useIsReadOnlyGroupViewer: vi.fn(),
 }))
 
 vi.mock('@/app/groups/[groupId]/use-link-invite-token', () => ({
@@ -124,7 +124,7 @@ function setupCurrentGroup(participants: ReturnType<typeof makeParticipant>[]) {
     currentInvitation: null,
     linkInviteState: null,
   })
-  vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+  vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
 }
 
 // ── Tests ───────────────────────────────────────────────────────────────

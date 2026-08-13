@@ -608,7 +608,10 @@
     },
     "importGroup": "Importovat skupinu",
     "exportDescription": "Stáhněte si výdaje skupiny jako přehled v PDF, tabulku CSV nebo zálohu JSON.",
-    "allExpenses": "Všechny výdaje"
+    "allExpenses": "Všechny výdaje",
+    "viewOnlyBannerTitle": "Přístup pouze pro čtení",
+    "viewOnlyBannerDescription": "Tuto skupinu si můžete prohlížet, ale nemůžete přidávat, upravovat, mazat, komentovat, vyrovnávat zůstatky ani stahovat její data.",
+    "invitationSignInToAccept": "Přihlaste se pro přijetí"
   },
   "GroupForm": {
     "title": "Informace o skupině",
@@ -1988,7 +1991,8 @@
     "regenerate": {
       "title": "Vygenerovat nový odkaz"
     },
-    "actionsFor": "Akce pro {name}"
+    "actionsFor": "Akce pro {name}",
+    "readOnlyDescription": "Lidé a účastníci zahrnutí do této skupiny. E-mailové adresy a podrobnosti pozvánek jsou skryté."
   },
   "AccountSettings": {
     "title": "Nastavení účtu",
@@ -3038,5 +3042,24 @@
       "comingSoon": "Již brzy",
       "replacementActivated": "Náhradní přihlašovací odkaz je nyní aktivní."
     }
+  },
+  "GroupViewLink": {
+    "title": "Veřejný odkaz pro prohlížení",
+    "description": "Každý s tímto veřejným odkazem si může skupinu prohlédnout bez přihlášení.",
+    "warning": "Odkaz poskytuje přístup k výdajům, zůstatkům, účtenkám, komentářům, aktivitě, členům a rozpočtům. Sdílejte ho jen s lidmi, kterým důvěřujete.",
+    "linkLabel": "Veřejný odkaz pro prohlížení",
+    "copy": "Zkopírovat veřejný odkaz",
+    "copied": "Veřejný odkaz zkopírován",
+    "enable": "Povolit veřejný odkaz",
+    "cancel": "Zrušit",
+    "enabledStatus": "Kdokoli s tímto odkazem může skupinu zobrazit.",
+    "replace": "Nahradit odkaz",
+    "remove": "Odebrat veřejný odkaz",
+    "replaceDialogTitle": "Nahradit veřejný odkaz pro prohlížení?",
+    "replaceDialogDescription": "Předchozí odkaz a všechny relace veřejného prohlížení vytvořené pomocí něj okamžitě přestanou fungovat.",
+    "replaceConfirm": "Nahradit odkaz",
+    "removeDialogTitle": "Odebrat veřejný odkaz pro prohlížení?",
+    "removeDialogDescription": "Aktuální odkaz a všechny relace veřejného prohlížení vytvořené pomocí něj okamžitě přestanou fungovat.",
+    "removeConfirm": "Odebrat odkaz"
   }
 }

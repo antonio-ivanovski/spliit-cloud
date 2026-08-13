@@ -15,7 +15,10 @@ import {
 } from '@/components/ui/card'
 import { trpc } from '@/trpc/client'
 
-import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
+import {
+  useCurrentGroup,
+  useIsReadOnlyGroupViewer,
+} from '../current-group-context'
 import { ExportOptionsCard } from '../export-options-card'
 import { useLinkInviteToken } from '../use-link-invite-token'
 import { DeleteGroupDialog } from './delete-group-dialog'
@@ -24,10 +27,11 @@ import {
   useDeleteGroupMutation,
   useUpdateGroupMutation,
 } from './edit-group-mutations'
+import { PublicViewOnlyLinkSection } from './group-view-link-card'
 
 export const EditGroup = () => {
   const { groupId, group, currentMember } = useCurrentGroup()
-  const isPendingInvitee = useIsPendingInvitee()
+  const isReadOnlyViewer = useIsReadOnlyGroupViewer()
   const linkInviteToken = useLinkInviteToken()
   const { data, isLoading } = trpc.groups.getDetails.useQuery({
     groupId,
@@ -47,27 +51,7 @@ export const EditGroup = () => {
   })
 
   if (isLoading) return <></>
-
-  if (isPendingInvitee) {
-    return (
-      <Card className="mobile-surface mb-4">
-        <CardHeader>
-          <CardTitle>{tGroups('pendingInviteeSettingsTitle')}</CardTitle>
-          <CardDescription>
-            {tGroups('pendingInviteeSettingsDescription')}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Button
-            variant="secondary"
-            render={<Link to="/groups/$groupId" params={{ groupId }} />}
-          >
-            {t('readOnlyBack')}
-          </Button>
-        </CardContent>
-      </Card>
-    )
-  }
+  if (!group) return null
 
   const isFriendLedger = group?.groupType === 'FRIEND'
   const canArchive = currentMember?.role === 'ADMIN' && !isFriendLedger
@@ -79,23 +63,31 @@ export const EditGroup = () => {
       <GroupForm
         group={data?.group}
         currentMemberRole={currentMember?.role}
+        readOnly={isReadOnlyViewer || currentMember?.role === 'MEMBER'}
         archived={!!group?.archived}
         hideNameField={isFriendLedger}
         currencyLocked={!!data?.hasExpenses}
+        additionalSettings={
+          currentMember && !isFriendLedger ? (
+            <PublicViewOnlyLinkSection groupId={groupId} />
+          ) : null
+        }
         onSubmit={(groupFormValues) =>
           updateMutation.mutateAsync({ groupId, groupFormValues })
         }
       />
 
-      <Card className="mobile-surface mb-4">
-        <CardHeader>
-          <CardTitle>{tExpenses('export')}</CardTitle>
-          <CardDescription>{tGroups('exportDescription')}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ExportOptionsCard groupId={groupId} />
-        </CardContent>
-      </Card>
+      {!isReadOnlyViewer ? (
+        <Card className="mobile-surface mb-4">
+          <CardHeader>
+            <CardTitle>{tExpenses('export')}</CardTitle>
+            <CardDescription>{tGroups('exportDescription')}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ExportOptionsCard groupId={groupId} />
+          </CardContent>
+        </Card>
+      ) : null}
 
       {canArchive && !isArchived && features?.enableBulkCategorize && (
         <Card className="mobile-surface mb-2">

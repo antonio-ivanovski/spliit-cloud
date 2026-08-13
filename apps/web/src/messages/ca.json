@@ -602,7 +602,10 @@
     },
     "importGroup": "Importa un grup",
     "exportDescription": "Baixa les despeses del grup com a informe PDF, full de càlcul CSV o còpia de seguretat JSON.",
-    "allExpenses": "Totes les despeses"
+    "allExpenses": "Totes les despeses",
+    "viewOnlyBannerTitle": "Accés només de lectura",
+    "viewOnlyBannerDescription": "Pots explorar aquest grup, però no hi pots afegir, editar, eliminar ni comentar elements, liquidar saldos o descarregar-ne les dades.",
+    "invitationSignInToAccept": "Inicia sessió per acceptar"
   },
   "GroupForm": {
     "title": "Informació del grup",
@@ -1979,7 +1982,8 @@
     "regenerate": {
       "title": "Genera un enllaç nou"
     },
-    "actionsFor": "Accions per a {name}"
+    "actionsFor": "Accions per a {name}",
+    "readOnlyDescription": "Persones i participants inclosos en aquest grup. Les adreces electròniques i els detalls de les invitacions estan ocults."
   },
   "AccountSettings": {
     "title": "Configuració del compte",
@@ -3022,5 +3026,24 @@
       "comingSoon": "Pròximament",
       "replacementActivated": "L'enllaç d'inici de sessió de substitució ja està actiu."
     }
+  },
+  "GroupViewLink": {
+    "title": "Enllaç públic de només lectura",
+    "description": "Permet que qualsevol persona que tingui aquest enllaç públic vegi el grup sense iniciar sessió.",
+    "warning": "L’enllaç dona accés a les despeses, els saldos, els rebuts, els comentaris, l’activitat, els membres i els pressupostos. Comparteix-lo només amb persones de confiança.",
+    "linkLabel": "Enllaç públic de només lectura",
+    "copy": "Copia l’enllaç públic",
+    "copied": "Enllaç públic copiat",
+    "enable": "Activa l’enllaç públic",
+    "cancel": "Cancel·la",
+    "enabledStatus": "Qualsevol persona que tingui aquest enllaç pot veure el grup.",
+    "replace": "Substitueix l’enllaç",
+    "remove": "Elimina l’enllaç públic",
+    "replaceDialogTitle": "Vols substituir l’enllaç públic de només lectura?",
+    "replaceDialogDescription": "L’enllaç anterior i totes les sessions de visualització pública que s’hi hagin creat deixaran de funcionar immediatament.",
+    "replaceConfirm": "Substitueix l’enllaç",
+    "removeDialogTitle": "Vols eliminar l’enllaç públic de només lectura?",
+    "removeDialogDescription": "L’enllaç actual i totes les sessions de visualització pública que s’hi hagin creat deixaran de funcionar immediatament.",
+    "removeConfirm": "Elimina l’enllaç"
   }
 }

@@ -8,7 +8,7 @@ import {
   expenseOwnerAccountId,
 } from '../../../../lib/api/resource-permissions'
 import { enqueueBudgetEvaluation } from '../../../../lib/budgets/enqueue'
-import { loadGroupContext, protectedProcedure } from '../../../init'
+import { loadGroupMutationContext, protectedProcedure } from '../../../init'
 import { deleteExpenseOutputSchema } from '../../../outputs/expenses'
 
 export const deleteGroupExpenseProcedure = protectedProcedure
@@ -36,7 +36,7 @@ export const deleteGroupExpenseProcedure = protectedProcedure
   .output(deleteExpenseOutputSchema)
   .mutation(
     async ({ input: { expenseId, groupId, scope, stopRecurrence }, ctx }) => {
-      const { group, member } = await loadGroupContext({
+      const { group, member } = await loadGroupMutationContext({
         groupId,
         accountId: ctx.auth.user.id,
       })

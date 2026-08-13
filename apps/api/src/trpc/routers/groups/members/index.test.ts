@@ -837,7 +837,7 @@ describe('groupsRouter.members.removePreview', () => {
   it('rejects an unknown member with NOT_FOUND', async () => {
     await authAs('acct-admin')
     mockGroupContext({ callerMemberId: 'gm-admin', callerRole: 'ADMIN' })
-    // The procedure looks up the caller (`loadGroupContext`) and then the
+    // The procedure looks up the caller (`loadGroupMutationContext`) and then the
     // target by id. Returning null for the target while keeping the
     // caller lookup working triggers the "Member not found in this group"
     // branch which maps to NOT_FOUND.

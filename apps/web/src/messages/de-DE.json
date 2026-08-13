@@ -620,7 +620,10 @@
     },
     "importGroup": "Gruppe importieren",
     "exportDescription": "Lade die Gruppenausgaben als PDF-Bericht, CSV-Tabelle oder JSON-Sicherung herunter.",
-    "allExpenses": "Alle Ausgaben"
+    "allExpenses": "Alle Ausgaben",
+    "viewOnlyBannerTitle": "Nur-Lese-Zugriff",
+    "viewOnlyBannerDescription": "Du kannst diese Gruppe ansehen, aber keine Inhalte hinzufügen, bearbeiten oder löschen, kommentieren, Salden ausgleichen oder ihre Daten herunterladen.",
+    "invitationSignInToAccept": "Zum Akzeptieren anmelden"
   },
   "GroupForm": {
     "title": "Gruppeninformationen",
@@ -2002,7 +2005,8 @@
     "regenerate": {
       "title": "Neuen Link erstellen"
     },
-    "actionsFor": "Aktionen für {name}"
+    "actionsFor": "Aktionen für {name}",
+    "readOnlyDescription": "Personen und Teilnehmende dieser Gruppe. E-Mail-Adressen und Einladungsdetails werden ausgeblendet."
   },
   "AccountSettings": {
     "title": "Kontoeinstellungen",
@@ -3072,5 +3076,24 @@
       "comingSoon": "Demnächst verfügbar",
       "replacementActivated": "Dein neuer Anmeldelink ist jetzt aktiv."
     }
+  },
+  "GroupViewLink": {
+    "title": "Öffentlicher Link mit Nur-Lese-Zugriff",
+    "description": "Mit diesem Link kann jeder die Gruppe ansehen, ohne sich anzumelden.",
+    "warning": "Der Link gewährt Zugriff auf Ausgaben, Salden, Belege, Kommentare, Aktivitäten, Mitglieder und Budgets. Teile ihn nur mit Personen, denen du vertraust.",
+    "linkLabel": "Öffentlicher Link",
+    "copy": "Öffentlichen Link kopieren",
+    "copied": "Öffentlicher Link kopiert",
+    "enable": "Öffentlichen Link aktivieren",
+    "cancel": "Abbrechen",
+    "enabledStatus": "Jeder mit diesem Link kann die Gruppe ansehen.",
+    "replace": "Link ersetzen",
+    "remove": "Öffentlichen Link entfernen",
+    "replaceDialogTitle": "Öffentlichen Link mit Nur-Lese-Zugriff ersetzen?",
+    "replaceDialogDescription": "Der bisherige Link und alle damit erstellten öffentlichen Ansichtssitzungen funktionieren ab sofort nicht mehr.",
+    "replaceConfirm": "Link ersetzen",
+    "removeDialogTitle": "Öffentlichen Link mit Nur-Lese-Zugriff entfernen?",
+    "removeDialogDescription": "Der aktuelle Link und alle damit erstellten öffentlichen Ansichtssitzungen funktionieren ab sofort nicht mehr.",
+    "removeConfirm": "Link entfernen"
   }
 }

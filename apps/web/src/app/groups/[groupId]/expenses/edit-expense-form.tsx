@@ -19,7 +19,7 @@ import {
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { trpc } from '@/trpc/client'
 
-import { useIsPendingInvitee } from '../current-group-context'
+import { useIsReadOnlyGroupViewer } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
 import { ExpenseForm, type ExpenseSubmitOutcome } from './expense-form/index'
 import {
@@ -53,7 +53,7 @@ export function EditExpenseForm({
   const group = groupData?.group
   const currentLedgerParticipantId =
     groupData?.currentLedgerParticipantId ?? null
-  const isPendingInvitee = useIsPendingInvitee()
+  const isReadOnlyGroupViewer = useIsReadOnlyGroupViewer()
   const linkInviteToken = useLinkInviteToken()
 
   const expenseQuery = trpc.groups.expenses.get.useQuery({
@@ -133,9 +133,9 @@ export function EditExpenseForm({
   // viewer is a PENDING invitee. The server enforces the same rule on
   // `groups.expenses.update` and `groups.expenses.delete`.
   const readOnly =
-    !!group.archived || isPendingInvitee || !expense.permissions.canEdit
+    !!group.archived || isReadOnlyGroupViewer || !expense.permissions.canEdit
 
-  if (isPendingInvitee) {
+  if (isReadOnlyGroupViewer) {
     return (
       <Card className="mobile-surface">
         <CardHeader className="hidden sm:flex">

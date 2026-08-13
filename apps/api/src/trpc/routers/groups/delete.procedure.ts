@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { GroupType } from '@spliit/db'
 
 import { deleteGroup } from '../../../lib/api'
-import { loadGroupContext, protectedProcedure } from '../../init'
+import { loadGroupMutationContext, protectedProcedure } from '../../init'
 import { deleteGroupOutputSchema } from '../../outputs/groups'
 
 /**
@@ -29,7 +29,7 @@ export const deleteGroupProcedure = protectedProcedure
   )
   .output(deleteGroupOutputSchema)
   .mutation(async ({ input: { groupId }, ctx }) => {
-    const { group, member } = await loadGroupContext({
+    const { group, member } = await loadGroupMutationContext({
       groupId,
       accountId: ctx.auth.user.id,
     })

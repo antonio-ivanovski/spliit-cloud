@@ -608,7 +608,10 @@
     },
     "importGroup": "Importuj grupę",
     "exportDescription": "Pobierz wydatki grupy jako raport PDF, arkusz CSV lub kopię zapasową JSON.",
-    "allExpenses": "Wszystkie wydatki"
+    "allExpenses": "Wszystkie wydatki",
+    "viewOnlyBannerTitle": "Dostęp tylko do odczytu",
+    "viewOnlyBannerDescription": "Możesz przeglądać tę grupę, ale nie możesz dodawać, edytować, usuwać, komentować, rozliczać sald ani pobierać jej danych.",
+    "invitationSignInToAccept": "Zaloguj się, aby przyjąć"
   },
   "GroupForm": {
     "title": "Informacje o grupie",
@@ -1988,7 +1991,8 @@
     "regenerate": {
       "title": "Wygeneruj nowy link"
     },
-    "actionsFor": "Akcje dla {name}"
+    "actionsFor": "Akcje dla {name}",
+    "readOnlyDescription": "Osoby i uczestnicy należący do tej grupy. Adresy e-mail i szczegóły zaproszeń są ukryte."
   },
   "AccountSettings": {
     "title": "Ustawienia konta",
@@ -3038,5 +3042,24 @@
       "comingSoon": "Już wkrótce",
       "replacementActivated": "Zastępczy link logowania jest teraz aktywny."
     }
+  },
+  "GroupViewLink": {
+    "title": "Publiczny link tylko do odczytu",
+    "description": "Każda osoba mająca ten publiczny link może przeglądać grupę bez logowania.",
+    "warning": "Link zapewnia dostęp do wydatków, sald, rachunków, komentarzy, aktywności, członków i budżetów. Udostępniaj go tylko zaufanym osobom.",
+    "linkLabel": "Publiczny link tylko do odczytu",
+    "copy": "Kopiuj link publiczny",
+    "copied": "Skopiowano link publiczny",
+    "enable": "Włącz link publiczny",
+    "cancel": "Anuluj",
+    "enabledStatus": "Każda osoba mająca ten link może przeglądać grupę.",
+    "replace": "Zastąp link",
+    "remove": "Usuń link publiczny",
+    "replaceDialogTitle": "Zastąpić publiczny link tylko do odczytu?",
+    "replaceDialogDescription": "Poprzedni link i wszystkie utworzone za jego pomocą publiczne sesje podglądu natychmiast przestaną działać.",
+    "replaceConfirm": "Zastąp link",
+    "removeDialogTitle": "Usunąć publiczny link tylko do odczytu?",
+    "removeDialogDescription": "Bieżący link i wszystkie utworzone za jego pomocą publiczne sesje podglądu natychmiast przestaną działać.",
+    "removeConfirm": "Usuń link"
   }
 }

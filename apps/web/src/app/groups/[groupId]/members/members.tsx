@@ -1,4 +1,5 @@
 import { Navigate } from '@tanstack/react-router'
+import { Users } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -27,7 +28,7 @@ import { RemoveParticipantDialog } from './remove-participant-dialog'
 import { SubgroupsCard } from './subgroups-card'
 
 export default function GroupMembers() {
-  const { groupId, group } = useCurrentGroup()
+  const { groupId, group, viewer } = useCurrentGroup()
 
   if (group?.groupType === 'FRIEND') {
     return (
@@ -35,7 +36,60 @@ export default function GroupMembers() {
     )
   }
 
+  if (viewer && !viewer.canMutate) return <ReadOnlyMembers />
+
   return <GroupMembersBody />
+}
+
+function ReadOnlyMembers() {
+  const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
+  const { groupId, group } = useCurrentGroup()
+  if (!group) return null
+  const accountMembers = group.members.map((member) => ({
+    id: member.id,
+    name: member.account.name,
+    role: member.role,
+  }))
+  const otherParticipants = group.participants
+    .filter((participant) => participant.account == null)
+    .map((participant) => ({
+      id: participant.id,
+      name: participant.name,
+      role: null,
+    }))
+  return (
+    <div className="flex flex-col gap-4">
+      <Card className="mobile-surface">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Users className="size-5" aria-hidden="true" />
+            {t('title')}
+          </CardTitle>
+          <CardDescription>{t('readOnlyDescription')}</CardDescription>
+        </CardHeader>
+        <CardContent className="divide-y">
+          {[...accountMembers, ...otherParticipants].map((member) => (
+            <div
+              key={member.id}
+              className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0"
+            >
+              <span className="font-medium">{member.name}</span>
+              {member.role ? (
+                <span className="text-xs text-muted-foreground">
+                  {member.role === 'ADMIN' ? t('role.admin') : t('role.member')}
+                </span>
+              ) : null}
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+      <SubgroupsCard
+        groupId={groupId}
+        participants={group.participants}
+        canManage={false}
+      />
+    </div>
+  )
 }
 
 function GroupMembersBody() {

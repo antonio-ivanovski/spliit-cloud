@@ -590,7 +590,10 @@
     },
     "importGroup": "Impor grup",
     "exportDescription": "Unduh pengeluaran grup sebagai laporan PDF, lembar kerja CSV, atau cadangan JSON.",
-    "allExpenses": "Semua pengeluaran"
+    "allExpenses": "Semua pengeluaran",
+    "viewOnlyBannerTitle": "Akses hanya lihat",
+    "viewOnlyBannerDescription": "Anda dapat menjelajahi grup ini, tetapi tidak dapat menambah, mengedit, menghapus, berkomentar, melunasi saldo, atau mengunduh datanya.",
+    "invitationSignInToAccept": "Masuk untuk menerima"
   },
   "GroupForm": {
     "title": "Informasi grup",
@@ -1963,7 +1966,8 @@
     "regenerate": {
       "title": "Buat tautan baru"
     },
-    "actionsFor": "Tindakan untuk {name}"
+    "actionsFor": "Tindakan untuk {name}",
+    "readOnlyDescription": "Orang dan peserta yang termasuk dalam grup ini. Alamat email dan detail undangan disembunyikan."
   },
   "AccountSettings": {
     "title": "Pengaturan akun",
@@ -2988,5 +2992,24 @@
       "comingSoon": "Segera hadir",
       "replacementActivated": "Tautan masuk pengganti Anda kini aktif."
     }
+  },
+  "GroupViewLink": {
+    "title": "Tautan publik hanya lihat",
+    "description": "Izinkan siapa pun yang memiliki tautan ini melihat grup tanpa masuk.",
+    "warning": "Tautan ini memberikan akses ke pengeluaran, saldo, struk, komentar, aktivitas, anggota, dan anggaran. Bagikan hanya kepada orang yang Anda percayai.",
+    "linkLabel": "Tautan publik hanya lihat",
+    "copy": "Salin tautan publik hanya lihat",
+    "copied": "Tautan publik hanya lihat disalin",
+    "enable": "Aktifkan tautan publik",
+    "cancel": "Batal",
+    "enabledStatus": "Siapa pun yang memiliki tautan ini dapat melihat grup.",
+    "replace": "Ganti tautan",
+    "remove": "Hapus tautan publik",
+    "replaceDialogTitle": "Ganti tautan publik hanya lihat?",
+    "replaceDialogDescription": "Tautan sebelumnya dan semua sesi tampilan publik yang dibuat darinya akan langsung berhenti berfungsi.",
+    "replaceConfirm": "Ganti tautan",
+    "removeDialogTitle": "Hapus tautan publik hanya lihat?",
+    "removeDialogDescription": "Tautan saat ini dan semua sesi tampilan publik yang dibuat darinya akan langsung berhenti berfungsi.",
+    "removeConfirm": "Hapus tautan"
   }
 }

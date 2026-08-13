@@ -34,7 +34,10 @@ import {
 import { trpc } from '@/trpc/client'
 import { SETTLEMENT_CATEGORY_ID } from '@spliit/domain'
 
-import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
+import {
+  useCurrentGroup,
+  useIsReadOnlyGroupViewer,
+} from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
 import { RemovedParticipantBadge } from './removed-participant-badge'
 import {
@@ -79,7 +82,7 @@ export function CreateSettlementModal({
   onOpenChange,
 }: CreateSettlementModalProps) {
   const { group } = useCurrentGroup()
-  const isPendingInvitee = useIsPendingInvitee()
+  const isReadOnlyGroupViewer = useIsReadOnlyGroupViewer()
   const linkInviteToken = useLinkInviteToken()
   const locale = useLocale()
   const accountPreferences = useSyncedAccountPreferences()
@@ -123,7 +126,7 @@ export function CreateSettlementModal({
   const selectedTotal = sumSettlementLegs(selectedLegs)
   const isLegacySingle = !settlementGroup && selectedLegs.length === 1
   const canCreate = Boolean(
-    legs.length > 0 && group && !group.archived && !isPendingInvitee,
+    legs.length > 0 && group && !group.archived && !isReadOnlyGroupViewer,
   )
   const needsConversion =
     legs.length > 0 &&

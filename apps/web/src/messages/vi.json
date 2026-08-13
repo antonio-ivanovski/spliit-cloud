@@ -697,7 +697,10 @@
     },
     "importGroup": "Nhập dữ liệu",
     "exportDescription": "Tải chi phí của nhóm xuống dưới dạng báo cáo PDF, bảng tính CSV hoặc bản sao lưu JSON.",
-    "allExpenses": "Tất cả chi phí"
+    "allExpenses": "Tất cả chi phí",
+    "viewOnlyBannerTitle": "Quyền chỉ xem",
+    "viewOnlyBannerDescription": "Bạn có thể xem nhóm này nhưng không thể thêm, sửa, xóa, bình luận, tất toán số dư hoặc tải dữ liệu xuống.",
+    "invitationSignInToAccept": "Đăng nhập để chấp nhận"
   },
   "Auth": {
     "title": "Đăng nhập",
@@ -2315,7 +2318,8 @@
     "regenerate": {
       "title": "Tạo liên kết mới"
     },
-    "actionsFor": "Thao tác cho {name}"
+    "actionsFor": "Thao tác cho {name}",
+    "readOnlyDescription": "Những người và người tham gia trong nhóm này. Địa chỉ email và chi tiết lời mời được ẩn."
   },
   "Activities": {
     "expense": {
@@ -3076,5 +3080,24 @@
       "comingSoon": "Sắp ra mắt",
       "replacementActivated": "Liên kết đăng nhập thay thế của bạn hiện đã hoạt động."
     }
+  },
+  "GroupViewLink": {
+    "title": "Liên kết công khai chỉ xem",
+    "description": "Cho phép bất kỳ ai có liên kết này xem nhóm mà không cần đăng nhập.",
+    "warning": "Liên kết này cho phép xem các khoản chi, số dư, biên lai, bình luận, hoạt động, thành viên và ngân sách. Chỉ chia sẻ với người bạn tin tưởng.",
+    "linkLabel": "Liên kết công khai chỉ xem",
+    "copy": "Sao chép liên kết công khai chỉ xem",
+    "copied": "Đã sao chép liên kết công khai chỉ xem",
+    "enable": "Bật liên kết công khai",
+    "cancel": "Hủy",
+    "enabledStatus": "Bất kỳ ai có liên kết này đều có thể xem nhóm.",
+    "replace": "Thay liên kết",
+    "remove": "Xóa liên kết công khai",
+    "replaceDialogTitle": "Thay liên kết công khai chỉ xem?",
+    "replaceDialogDescription": "Liên kết trước đó và mọi phiên xem công khai được tạo từ liên kết đó sẽ ngừng hoạt động ngay lập tức.",
+    "replaceConfirm": "Thay liên kết",
+    "removeDialogTitle": "Xóa liên kết công khai chỉ xem?",
+    "removeDialogDescription": "Liên kết hiện tại và mọi phiên xem công khai được tạo từ liên kết đó sẽ ngừng hoạt động ngay lập tức.",
+    "removeConfirm": "Xóa liên kết"
   }
 }

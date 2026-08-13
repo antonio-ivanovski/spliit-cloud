@@ -4,13 +4,13 @@ import { z } from 'zod'
 import { getExpenseComments } from '../../../../../lib/api'
 import {
   hashLinkInviteToken,
+  groupReadProcedure,
   linkInviteTokenInput,
   loadGroupViewer,
-  protectedProcedure,
 } from '../../../../init'
 import { listExpenseCommentsOutputSchema } from '../../../../outputs/expense-comments'
 
-export const listExpenseCommentsProcedure = protectedProcedure
+export const listExpenseCommentsProcedure = groupReadProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
@@ -22,9 +22,10 @@ export const listExpenseCommentsProcedure = protectedProcedure
   .query(async ({ input, ctx }) => {
     const { group, viewer } = await loadGroupViewer({
       groupId: input.groupId,
-      accountId: ctx.auth.user.id,
-      accountEmail: ctx.auth.user.email,
+      accountId: ctx.auth?.user.id,
+      accountEmail: ctx.auth?.user.email,
       linkTokenHash: await hashLinkInviteToken(input.linkInviteToken),
+      viewerSession: ctx.groupViewerSession,
     })
     const comments = await getExpenseComments(input.groupId, input.expenseId)
     if (!comments) {
@@ -36,14 +37,15 @@ export const listExpenseCommentsProcedure = protectedProcedure
         body: comment.text,
         createdAt: comment.createdAt,
         author: {
-          accountId: comment.authorAccountId,
+          accountId:
+            viewer.kind === 'ACTIVE' ? comment.authorAccountId : 'public',
           name: comment.authorName,
           image: comment.authorImage,
         },
         canDelete:
           !group.archived &&
           viewer.kind === 'ACTIVE' &&
-          comment.authorAccountId === ctx.auth.user.id,
+          comment.authorAccountId === ctx.auth?.user.id,
       })),
     }
   })

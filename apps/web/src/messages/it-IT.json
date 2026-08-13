@@ -602,7 +602,10 @@
     },
     "importGroup": "Importa gruppo",
     "exportDescription": "Scarica le spese del gruppo come report PDF, foglio di calcolo CSV o backup JSON.",
-    "allExpenses": "Tutte le spese"
+    "allExpenses": "Tutte le spese",
+    "viewOnlyBannerTitle": "Accesso in sola lettura",
+    "viewOnlyBannerDescription": "Puoi esplorare questo gruppo, ma non puoi aggiungere, modificare, eliminare o commentare elementi, liquidare i saldi o scaricare i dati.",
+    "invitationSignInToAccept": "Accedi per accettare"
   },
   "GroupForm": {
     "title": "Informazioni del gruppo",
@@ -1979,7 +1982,8 @@
     "regenerate": {
       "title": "Genera nuovo link"
     },
-    "actionsFor": "Azioni per {name}"
+    "actionsFor": "Azioni per {name}",
+    "readOnlyDescription": "Persone e partecipanti inclusi in questo gruppo. Gli indirizzi email e i dettagli degli inviti sono nascosti."
   },
   "AccountSettings": {
     "title": "Impostazioni account",
@@ -3022,5 +3026,24 @@
       "comingSoon": "Prossimamente",
       "replacementActivated": "Il link di accesso sostitutivo è ora attivo."
     }
+  },
+  "GroupViewLink": {
+    "title": "Link pubblico di sola lettura",
+    "description": "Consente a chiunque abbia questo link pubblico di visualizzare il gruppo senza accedere.",
+    "warning": "Il link dà accesso a spese, saldi, ricevute, commenti, attività, membri e budget. Condividilo solo con persone di cui ti fidi.",
+    "linkLabel": "Link pubblico di sola lettura",
+    "copy": "Copia link pubblico",
+    "copied": "Link pubblico copiato",
+    "enable": "Attiva link pubblico",
+    "cancel": "Annulla",
+    "enabledStatus": "Chiunque abbia questo link può visualizzare il gruppo.",
+    "replace": "Sostituisci link",
+    "remove": "Rimuovi link pubblico",
+    "replaceDialogTitle": "Sostituire il link pubblico di sola lettura?",
+    "replaceDialogDescription": "Il link precedente e tutte le sessioni di visualizzazione pubblica create tramite quel link smetteranno immediatamente di funzionare.",
+    "replaceConfirm": "Sostituisci link",
+    "removeDialogTitle": "Rimuovere il link pubblico di sola lettura?",
+    "removeDialogDescription": "Il link attuale e tutte le sessioni di visualizzazione pubblica create tramite quel link smetteranno immediatamente di funzionare.",
+    "removeConfirm": "Rimuovi link"
   }
 }

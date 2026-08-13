@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { BULK_PREVIEW_MAX_TARGETS } from '@spliit/domain'
 
 import { listBulkCategorizeCandidates } from '../../../../lib/api/category-bulk'
-import { loadGroupContext, protectedProcedure } from '../../../init'
+import { loadGroupMutationContext, protectedProcedure } from '../../../init'
 import { listBulkCategorizeCandidatesOutputSchema } from '../../../outputs/ai'
 
 /**
@@ -27,7 +27,7 @@ export const aiBulkCategorizeListCandidatesProcedure = protectedProcedure
   )
   .output(listBulkCategorizeCandidatesOutputSchema)
   .query(async ({ ctx, input }) => {
-    const { member, group } = await loadGroupContext({
+    const { member, group } = await loadGroupMutationContext({
       groupId: input.groupId,
       accountId: ctx.auth.user.id,
     })

@@ -602,7 +602,10 @@
     },
     "importGroup": "Importar grupo",
     "exportDescription": "Baixe as despesas do grupo como relatório PDF, planilha CSV ou backup JSON.",
-    "allExpenses": "Todas as despesas"
+    "allExpenses": "Todas as despesas",
+    "viewOnlyBannerTitle": "Acesso somente para visualização",
+    "viewOnlyBannerDescription": "Você pode explorar este grupo, mas não pode adicionar, editar, excluir ou comentar, acertar saldos nem baixar os dados.",
+    "invitationSignInToAccept": "Faça login para aceitar"
   },
   "GroupForm": {
     "title": "Informações do grupo",
@@ -1979,7 +1982,8 @@
     "regenerate": {
       "title": "Gerar novo link"
     },
-    "actionsFor": "Ações para {name}"
+    "actionsFor": "Ações para {name}",
+    "readOnlyDescription": "Pessoas e participantes incluídos neste grupo. Os endereços de e-mail e os detalhes dos convites estão ocultos."
   },
   "AccountSettings": {
     "title": "Configurações da conta",
@@ -3022,5 +3026,24 @@
       "comingSoon": "Em breve",
       "replacementActivated": "Seu link de login substituto agora está ativo."
     }
+  },
+  "GroupViewLink": {
+    "title": "Link público somente para visualização",
+    "description": "Permite que qualquer pessoa com este link público veja o grupo sem fazer login.",
+    "warning": "O link dá acesso a despesas, saldos, recibos, comentários, atividades, membros e orçamentos. Compartilhe-o somente com pessoas em quem confia.",
+    "linkLabel": "Link público somente para visualização",
+    "copy": "Copiar link público",
+    "copied": "Link público copiado",
+    "enable": "Ativar link público",
+    "cancel": "Cancelar",
+    "enabledStatus": "Qualquer pessoa com este link pode ver o grupo.",
+    "replace": "Substituir link",
+    "remove": "Remover link público",
+    "replaceDialogTitle": "Substituir o link público somente para visualização?",
+    "replaceDialogDescription": "O link anterior e todas as sessões de visualização pública criadas por ele deixarão de funcionar imediatamente.",
+    "replaceConfirm": "Substituir link",
+    "removeDialogTitle": "Remover o link público somente para visualização?",
+    "removeDialogDescription": "O link atual e todas as sessões de visualização pública criadas por ele deixarão de funcionar imediatamente.",
+    "removeConfirm": "Remover link"
   }
 }

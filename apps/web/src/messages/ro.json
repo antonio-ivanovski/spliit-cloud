@@ -602,7 +602,10 @@
     },
     "importGroup": "Importă grup",
     "exportDescription": "Descarcă cheltuielile grupului ca raport PDF, foaie de calcul CSV sau copie de rezervă JSON.",
-    "allExpenses": "Toate cheltuielile"
+    "allExpenses": "Toate cheltuielile",
+    "viewOnlyBannerTitle": "Acces doar pentru vizualizare",
+    "viewOnlyBannerDescription": "Poți explora acest grup, dar nu poți adăuga, edita, șterge sau comenta, nu poți deconta soldurile și nu poți descărca datele.",
+    "invitationSignInToAccept": "Conectează-te pentru a accepta"
   },
   "GroupForm": {
     "title": "Informații despre grup",
@@ -1979,7 +1982,8 @@
     "regenerate": {
       "title": "Generează link nou"
     },
-    "actionsFor": "Acțiuni pentru {name}"
+    "actionsFor": "Acțiuni pentru {name}",
+    "readOnlyDescription": "Persoanele și participanții incluși în acest grup. Adresele de e-mail și detaliile invitațiilor sunt ascunse."
   },
   "AccountSettings": {
     "title": "Setările contului",
@@ -3022,5 +3026,24 @@
       "comingSoon": "În curând",
       "replacementActivated": "Linkul de conectare înlocuitor este acum activ."
     }
+  },
+  "GroupViewLink": {
+    "title": "Link public de vizualizare",
+    "description": "Permite oricărei persoane care are acest link public să vadă grupul fără să se autentifice.",
+    "warning": "Linkul oferă acces la cheltuieli, solduri, chitanțe, comentarii, activitate, membri și bugete. Distribuie-l doar persoanelor în care ai încredere.",
+    "linkLabel": "Link public de vizualizare",
+    "copy": "Copiază linkul public",
+    "copied": "Link public copiat",
+    "enable": "Activează linkul public",
+    "cancel": "Anulează",
+    "enabledStatus": "Oricine are acest link poate vedea grupul.",
+    "replace": "Înlocuiește linkul",
+    "remove": "Elimină linkul public",
+    "replaceDialogTitle": "Înlocuiești linkul public de vizualizare?",
+    "replaceDialogDescription": "Linkul anterior și toate sesiunile de vizualizare publică create prin acesta vor înceta să funcționeze imediat.",
+    "replaceConfirm": "Înlocuiește linkul",
+    "removeDialogTitle": "Elimini linkul public de vizualizare?",
+    "removeDialogDescription": "Linkul actual și toate sesiunile de vizualizare publică create prin acesta vor înceta să funcționeze imediat.",
+    "removeConfirm": "Elimină linkul"
   }
 }

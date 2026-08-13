@@ -8,7 +8,7 @@ import {
 } from '@tanstack/react-router'
 import { Cloud, Loader2, Share2 } from 'lucide-react'
 import type { PropsWithChildren } from 'react'
-import { useEffect, useState, useSyncExternalStore } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { CopyButton } from '@/components/copy-button'
@@ -25,6 +25,10 @@ import {
 } from '@/components/ui/responsive-dialog'
 import { useToast } from '@/components/ui/use-toast'
 import { useEffectiveRuntimeFeatureFlags } from '@/lib/effective-runtime-feature-flags'
+import {
+  exchangeGroupViewerFragment,
+  readGroupViewerFragment,
+} from '@/lib/group-view-session'
 import { isFocusedMobilePath, isMobileGroupNavPath } from '@/lib/mobile-nav'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
@@ -60,6 +64,44 @@ export function GroupLayoutClient({
   const focusedMobileRoute = isFocusedMobilePath(pathname)
   const showMobileNav = isMobileGroupNavPath(pathname)
   const isPrintReportRoute = pathname.endsWith('/expenses/print')
+  const [fragmentCredential] = useState(
+    () =>
+      readGroupViewerFragment() ??
+      (linkInviteToken
+        ? { kind: 'PENDING_INVITEE' as const, key: linkInviteToken }
+        : null),
+  )
+  const [viewerExchange, setViewerExchange] = useState<
+    'pending' | 'ready' | 'invalid'
+  >(fragmentCredential ? 'pending' : 'ready')
+  const viewerExchangeStarted = useRef(false)
+
+  useEffect(() => {
+    if (!fragmentCredential || viewerExchangeStarted.current) return
+    viewerExchangeStarted.current = true
+    window.history.replaceState(
+      window.history.state,
+      '',
+      (() => {
+        const url = new URL(window.location.href)
+        url.searchParams.delete('invite')
+        return `${url.pathname}${url.search}`
+      })(),
+    )
+    void exchangeGroupViewerFragment(groupId, fragmentCredential)
+      .then((ok) => {
+        setViewerExchange(ok ? 'ready' : 'invalid')
+        if (ok && linkInviteToken) {
+          void navigate({
+            to: '/groups/$groupId',
+            params: { groupId },
+            search: { invite: undefined },
+            replace: true,
+          })
+        }
+      })
+      .catch(() => setViewerExchange('invalid'))
+  }, [fragmentCredential, groupId, linkInviteToken, navigate])
 
   // Friend-ledger link-path creation navigates here with the invite URL
   // in the `friendLinkInvite` search param. Open a one-time dialog so the
@@ -79,8 +121,11 @@ export function GroupLayoutClient({
   }, [friendLinkInviteUrl, groupId, navigate])
 
   const { data, isLoading, error } = trpc.groups.get.useQuery(
-    { groupId, linkInviteToken },
-    { retry: false },
+    {
+      groupId,
+      linkInviteToken: fragmentCredential ? undefined : linkInviteToken,
+    },
+    { retry: false, enabled: viewerExchange === 'ready' },
   )
   const { t: tNotFound } = useTranslation(undefined, {
     keyPrefix: 'Groups.NotFound',
@@ -124,6 +169,30 @@ export function GroupLayoutClient({
       })
     }
   }, [data, tNotFound, toast])
+
+  if (viewerExchange === 'pending') {
+    return (
+      <main className="flex min-h-64 items-center justify-center">
+        <Loader2 className="size-6 animate-spin text-muted-foreground" />
+      </main>
+    )
+  }
+
+  if (viewerExchange === 'invalid') {
+    return (
+      <main className="flex flex-1 items-center justify-center px-4 py-10">
+        <div className="flex max-w-md flex-col items-center gap-3 text-center">
+          <h1 className="text-2xl font-semibold">{tInvalid('title')}</h1>
+          <p className="text-sm text-muted-foreground">
+            {tInvalid('description')}
+          </p>
+          <Button variant="outline" render={<Link to="/" />}>
+            {tForbidden('backToHome')}
+          </Button>
+        </div>
+      </main>
+    )
+  }
 
   // Unauthenticated visitors carrying a link-invite token are bounced
   // through the home auth panel with a redirect back here, so the
@@ -196,6 +265,7 @@ export function GroupLayoutClient({
           currentMember: undefined,
           currentInvitation: undefined,
           linkInviteState: undefined,
+          viewer: undefined,
         }
       : {
           isLoading: false as const,
@@ -206,6 +276,7 @@ export function GroupLayoutClient({
           currentMember: data.currentMember,
           currentInvitation: data.currentInvitation ?? null,
           linkInviteState: data.linkInviteState ?? null,
+          viewer: data.viewer,
         }
 
   return (

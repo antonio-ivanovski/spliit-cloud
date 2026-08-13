@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link } from '@tanstack/react-router'
 import { Save, UserPlus } from 'lucide-react'
-import { useEffect } from 'react'
+import { useEffect, type ReactNode } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type { z } from 'zod'
@@ -40,6 +40,13 @@ export type Props = {
    * longer collects pending invitations.
    */
   currentMemberRole?: 'ADMIN' | 'MEMBER'
+  /**
+   * Explicit group-wide access mode. Unlike `currentMemberRole`, this also
+   * covers pending invitations, public links, and a future view-only member.
+   */
+  readOnly?: boolean
+  /** Extra group settings rendered inside the Group information card. */
+  additionalSettings?: ReactNode
   /**
    * When `true`, the group is archived and its settings are frozen. All inputs
    * are disabled and no Save button is shown. Archived groups are not editable
@@ -113,6 +120,8 @@ type GroupFormInput = z.input<typeof groupFormSchema>
 export function GroupForm({
   group,
   currentMemberRole,
+  readOnly: explicitReadOnly,
+  additionalSettings,
   archived = false,
   hideInviteHint = false,
   initialValues,
@@ -124,7 +133,8 @@ export function GroupForm({
   onSubmit,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'GroupForm' })
-  const readOnly = !!group && currentMemberRole === 'MEMBER'
+  const readOnly =
+    !!group && (explicitReadOnly ?? currentMemberRole === 'MEMBER')
   const isArchived = !!group && archived
   const accountPreferences =
     useSyncedAccountPreferences() as AccountPreferences | null
@@ -350,6 +360,8 @@ export function GroupForm({
               </div>
             </CardContent>
           )}
+
+          {additionalSettings}
         </Card>
 
         {!group && !hideInviteHint && (

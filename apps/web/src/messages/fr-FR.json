@@ -602,7 +602,10 @@
     },
     "importGroup": "Importer un groupe",
     "exportDescription": "Téléchargez les dépenses du groupe sous forme de rapport PDF, de feuille de calcul CSV ou de sauvegarde JSON.",
-    "allExpenses": "Toutes les dépenses"
+    "allExpenses": "Toutes les dépenses",
+    "viewOnlyBannerTitle": "Accès en lecture seule",
+    "viewOnlyBannerDescription": "Vous pouvez explorer ce groupe, mais vous ne pouvez rien ajouter, modifier, supprimer ou commenter, ni régler les soldes ou télécharger ses données.",
+    "invitationSignInToAccept": "Connectez-vous pour accepter"
   },
   "GroupForm": {
     "title": "Informations sur le groupe",
@@ -1979,7 +1982,8 @@
     "regenerate": {
       "title": "Générer un nouveau lien"
     },
-    "actionsFor": "Actions pour {name}"
+    "actionsFor": "Actions pour {name}",
+    "readOnlyDescription": "Personnes et participants inclus dans ce groupe. Les adresses e-mail et les détails des invitations sont masqués."
   },
   "AccountSettings": {
     "title": "Paramètres du compte",
@@ -3022,5 +3026,24 @@
       "comingSoon": "Bientôt disponible",
       "replacementActivated": "Votre lien de connexion de remplacement est maintenant actif."
     }
+  },
+  "GroupViewLink": {
+    "title": "Lien public en lecture seule",
+    "description": "Permet à toute personne disposant de ce lien public de consulter le groupe sans se connecter.",
+    "warning": "Ce lien donne accès aux dépenses, soldes, reçus, commentaires, activité, membres et budgets. Partagez-le uniquement avec des personnes de confiance.",
+    "linkLabel": "Lien public en lecture seule",
+    "copy": "Copier le lien public",
+    "copied": "Lien public copié",
+    "enable": "Activer le lien public",
+    "cancel": "Annuler",
+    "enabledStatus": "Toute personne disposant de ce lien peut consulter le groupe.",
+    "replace": "Remplacer le lien",
+    "remove": "Supprimer le lien public",
+    "replaceDialogTitle": "Remplacer le lien public en lecture seule ?",
+    "replaceDialogDescription": "Le lien précédent et toutes les sessions de consultation publique créées à partir de celui-ci cesseront immédiatement de fonctionner.",
+    "replaceConfirm": "Remplacer le lien",
+    "removeDialogTitle": "Supprimer le lien public en lecture seule ?",
+    "removeDialogDescription": "Le lien actuel et toutes les sessions de consultation publique créées à partir de celui-ci cesseront immédiatement de fonctionner.",
+    "removeConfirm": "Supprimer le lien"
   }
 }

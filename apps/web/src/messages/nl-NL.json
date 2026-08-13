@@ -596,7 +596,10 @@
     },
     "importGroup": "Groep importeren",
     "exportDescription": "Download de groepsuitgaven als PDF-rapport, CSV-spreadsheet of JSON-back-up.",
-    "allExpenses": "Alle uitgaven"
+    "allExpenses": "Alle uitgaven",
+    "viewOnlyBannerTitle": "Alleen-lezen toegang",
+    "viewOnlyBannerDescription": "Je kunt deze groep bekijken, maar je kunt niets toevoegen, bewerken of verwijderen, geen opmerkingen plaatsen, saldi niet verrekenen en de gegevens niet downloaden.",
+    "invitationSignInToAccept": "Log in om te accepteren"
   },
   "GroupForm": {
     "title": "Groepsinformatie",
@@ -1970,7 +1973,8 @@
     "regenerate": {
       "title": "Nieuwe link genereren"
     },
-    "actionsFor": "Acties voor {name}"
+    "actionsFor": "Acties voor {name}",
+    "readOnlyDescription": "Personen en deelnemers in deze groep. E-mailadressen en uitnodigingsgegevens zijn verborgen."
   },
   "AccountSettings": {
     "title": "Accountinstellingen",
@@ -3004,5 +3008,24 @@
       "comingSoon": "Binnenkort beschikbaar",
       "replacementActivated": "Je vervangende inloglink is nu actief."
     }
+  },
+  "GroupViewLink": {
+    "title": "Openbare alleen-lezen link",
+    "description": "Met deze link kan iedereen de groep bekijken zonder in te loggen.",
+    "warning": "De link geeft toegang tot uitgaven, saldi, bonnetjes, opmerkingen, activiteit, leden en budgetten. Deel hem alleen met mensen die je vertrouwt.",
+    "linkLabel": "Openbare link",
+    "copy": "Openbare link kopiëren",
+    "copied": "Openbare link gekopieerd",
+    "enable": "Openbare link inschakelen",
+    "cancel": "Annuleren",
+    "enabledStatus": "Iedereen met deze link kan de groep bekijken.",
+    "replace": "Link vervangen",
+    "remove": "Openbare link verwijderen",
+    "replaceDialogTitle": "Openbare alleen-lezen link vervangen?",
+    "replaceDialogDescription": "De vorige link en alle openbare kijksessies die ermee zijn aangemaakt, werken onmiddellijk niet meer.",
+    "replaceConfirm": "Link vervangen",
+    "removeDialogTitle": "Openbare alleen-lezen link verwijderen?",
+    "removeDialogDescription": "De huidige link en alle openbare kijksessies die ermee zijn aangemaakt, werken onmiddellijk niet meer.",
+    "removeConfirm": "Link verwijderen"
   }
 }

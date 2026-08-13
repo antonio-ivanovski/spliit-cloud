@@ -187,7 +187,7 @@ export async function createLinkInvitation(
       expiresAt: invitation.expiresAt!,
     },
     token,
-    inviteUrl: `${webBase}/groups/${invitation.groupId}?invite=${token}`,
+    inviteUrl: `${webBase}/groups/${invitation.groupId}#invite=${token}`,
   }
 }
 
@@ -206,6 +206,12 @@ export async function getLinkInvitationPreview(
   token: string,
 ): Promise<LinkInvitationPreview | null> {
   const tokenHash = await hashLinkToken(token)
+  return getLinkInvitationPreviewByHash(tokenHash)
+}
+
+async function getLinkInvitationPreviewByHash(
+  tokenHash: string,
+): Promise<LinkInvitationPreview | null> {
   const invitation = await prisma.groupInvitation.findFirst({
     where: { tokenHash },
     select: {
@@ -251,14 +257,14 @@ export async function getLinkInvitationPreview(
 }
 
 /** Accept a link invitation for the current account. */
-export async function acceptLinkInvitation(opts: {
-  token: string
-  accountId: string
-}) {
-  const [tokenHash, preview] = await Promise.all([
-    hashLinkToken(opts.token),
-    getLinkInvitationPreview(opts.token),
-  ])
+export async function acceptLinkInvitation(
+  opts: {
+    accountId: string
+  } & ({ token: string } | { tokenHash: string }),
+) {
+  const tokenHash =
+    'tokenHash' in opts ? opts.tokenHash : await hashLinkToken(opts.token)
+  const preview = await getLinkInvitationPreviewByHash(tokenHash)
   if (!preview) {
     throw new InvitationError('Invitation not found.')
   }

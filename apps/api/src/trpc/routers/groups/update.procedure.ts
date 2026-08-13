@@ -5,7 +5,7 @@ import { GroupType } from '@spliit/db'
 import { groupUpdateFormSchema } from '@spliit/domain'
 
 import { updateGroup } from '../../../lib/api'
-import { loadGroupContext, protectedProcedure } from '../../init'
+import { loadGroupMutationContext, protectedProcedure } from '../../init'
 
 export const updateGroupProcedure = protectedProcedure
   .input(
@@ -16,7 +16,7 @@ export const updateGroupProcedure = protectedProcedure
   )
   .output(z.void())
   .mutation(async ({ input: { groupId, groupFormValues }, ctx }) => {
-    const { group, member } = await loadGroupContext({
+    const { group, member } = await loadGroupMutationContext({
       groupId,
       accountId: ctx.auth.user.id,
     })

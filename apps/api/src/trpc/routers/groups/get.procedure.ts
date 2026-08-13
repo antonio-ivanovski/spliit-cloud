@@ -1,3 +1,5 @@
+import { createHash } from 'node:crypto'
+
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
@@ -9,6 +11,7 @@ import {
 } from '@spliit/db'
 
 import { getGroup } from '../../../lib/api/groups'
+import { redactViewerDisplayName } from '../../../lib/group-view'
 import { getInvitationDisplayName } from '../../../lib/invitations/display'
 import { findPendingEmailInvitation } from '../../../lib/invitations/email-invitations'
 import {
@@ -17,8 +20,10 @@ import {
 } from '../../../lib/invitations/link-invitations'
 import {
   linkInviteTokenInput,
-  loadGroupContext,
-  protectedProcedure,
+  groupReadProcedure,
+  hashLinkInviteToken,
+  loadGroupMutationContext,
+  loadGroupViewer,
 } from '../../init'
 import { getGroupOutputSchema } from '../../outputs/groups'
 
@@ -41,12 +46,12 @@ export type LinkInviteState =
   | 'DECLINED'
   | 'EXPIRED'
 
-export const getGroupProcedure = protectedProcedure
+export const getGroupProcedure = groupReadProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
       // Optional raw link-invite token from the page URL. Validity is
-      // enforced by `loadGroupContext` (for members) and the inline
+      // enforced by `loadGroupMutationContext` (for members) and the inline
       // LINK check below (for non-members) against the stored hash, so
       // no client-side format check is needed here.
       linkInviteToken: linkInviteTokenInput.describe(
@@ -56,7 +61,7 @@ export const getGroupProcedure = protectedProcedure
   )
   .output(getGroupOutputSchema)
   .query(async ({ input: { groupId, linkInviteToken }, ctx }) => {
-    const account = ctx.auth.user
+    const account = ctx.auth?.user
 
     // Distinguish "group does not exist" from "you are not a member":
     // the web layout uses NOT_FOUND to trigger the import hand-off
@@ -73,14 +78,16 @@ export const getGroupProcedure = protectedProcedure
     // Active members get the full payload. If they also carry a link
     // token, look it up so we can tell them whether the link is
     // still usable (typically it isn't — they're already in).
-    const memberLookup = await prisma.groupMember.findUnique({
-      where: { groupId_accountId: { groupId, accountId: account.id } },
-      include: { ledgerParticipant: true },
-    })
+    const memberLookup = account
+      ? await prisma.groupMember.findUnique({
+          where: { groupId_accountId: { groupId, accountId: account.id } },
+          include: { ledgerParticipant: true },
+        })
+      : null
     const isActiveMember = !!memberLookup && memberLookup.status === 'ACTIVE'
 
-    if (isActiveMember) {
-      const { member } = await loadGroupContext({
+    if (isActiveMember && account) {
+      const { member } = await loadGroupMutationContext({
         groupId,
         accountId: account.id,
       })
@@ -103,6 +110,47 @@ export const getGroupProcedure = protectedProcedure
         },
         currentInvitation: null,
         linkInviteState,
+        viewer: {
+          source: 'MEMBER' as const,
+          access: 'READ_WRITE' as const,
+          canMutate: true,
+          canAcceptInvitation: false,
+        },
+      }
+    }
+
+    if (!account) {
+      const access = await loadGroupViewer({
+        groupId,
+        linkTokenHash: await hashLinkInviteToken(linkInviteToken),
+        viewerSession: ctx.groupViewerSession,
+      })
+      const group = await getGroup(groupId)
+      if (!group) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Group not found' })
+      }
+      const invitation =
+        access.viewer.kind === 'PENDING_INVITEE'
+          ? access.viewer.invitation
+          : null
+      return {
+        group: redactGroupForViewer(group),
+        displayName: resolveDisplayName(group, ''),
+        currentLedgerParticipantId: null,
+        currentMember: null,
+        currentInvitation: invitation,
+        linkInviteState: invitation ? ('PENDING' as const) : null,
+        viewer: {
+          source:
+            access.viewer.kind === 'ACTIVE'
+              ? ('MEMBER' as const)
+              : access.viewer.kind === 'PUBLIC_VIEW'
+                ? ('PUBLIC_LINK' as const)
+                : ('PENDING_INVITATION' as const),
+          access: access.viewer.access,
+          canMutate: false,
+          canAcceptInvitation: invitation != null,
+        },
       }
     }
 
@@ -150,6 +198,12 @@ export const getGroupProcedure = protectedProcedure
             type: pendingEmailInvitation.type,
           },
           linkInviteState: null,
+          viewer: {
+            source: 'PENDING_INVITATION' as const,
+            access: 'READ_ONLY' as const,
+            canMutate: false,
+            canAcceptInvitation: true,
+          },
         }
       }
 
@@ -183,7 +237,7 @@ export const getGroupProcedure = protectedProcedure
             include: { ledgerParticipant: true },
           })
           if (memberLookupRetry && memberLookupRetry.status === 'ACTIVE') {
-            const { member } = await loadGroupContext({
+            const { member } = await loadGroupMutationContext({
               groupId,
               accountId: account.id,
             })
@@ -206,6 +260,12 @@ export const getGroupProcedure = protectedProcedure
               },
               currentInvitation: null,
               linkInviteState: 'ACCEPTED' as const,
+              viewer: {
+                source: 'MEMBER' as const,
+                access: 'READ_WRITE' as const,
+                canMutate: true,
+                canAcceptInvitation: false,
+              },
             }
           }
         }
@@ -223,20 +283,27 @@ export const getGroupProcedure = protectedProcedure
         },
         select: { id: true, role: true, type: true, status: true },
       })
+      const currentInvitation =
+        linkInviteState === 'PENDING' && linkRow
+          ? {
+              id: linkRow.id,
+              role: linkRow.role,
+              type: linkRow.type,
+            }
+          : null
       return {
         group,
         displayName,
         currentLedgerParticipantId: null,
         currentMember: null,
-        currentInvitation:
-          linkInviteState === 'PENDING' && linkRow
-            ? {
-                id: linkRow.id,
-                role: linkRow.role,
-                type: linkRow.type,
-              }
-            : null,
+        currentInvitation,
         linkInviteState,
+        viewer: {
+          source: 'PENDING_INVITATION' as const,
+          access: 'READ_ONLY' as const,
+          canMutate: false,
+          canAcceptInvitation: currentInvitation != null,
+        },
       }
     }
 
@@ -270,7 +337,40 @@ export const getGroupProcedure = protectedProcedure
             type: invitation.type,
           },
           linkInviteState: null,
+          viewer: {
+            source: 'PENDING_INVITATION' as const,
+            access: 'READ_ONLY' as const,
+            canMutate: false,
+            canAcceptInvitation: true,
+          },
         }
+      }
+    }
+
+    const viewerAccess = await loadGroupViewer({
+      groupId,
+      accountId: account.id,
+      accountEmail: account.email,
+      viewerSession: ctx.groupViewerSession,
+    }).catch(() => null)
+    if (viewerAccess?.viewer.kind === 'PUBLIC_VIEW') {
+      const group = await getGroup(groupId)
+      if (!group) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Group not found' })
+      }
+      return {
+        group: redactGroupForViewer(group),
+        displayName: resolveDisplayName(group, account.id),
+        currentLedgerParticipantId: null,
+        currentMember: null,
+        currentInvitation: null,
+        linkInviteState: null,
+        viewer: {
+          source: 'PUBLIC_LINK' as const,
+          access: 'READ_ONLY' as const,
+          canMutate: false,
+          canAcceptInvitation: false,
+        },
       }
     }
 
@@ -279,6 +379,60 @@ export const getGroupProcedure = protectedProcedure
       message: 'You are not an active member of this group',
     })
   })
+
+function publicId(groupId: string, kind: string, id: string) {
+  return `public_${createHash('sha256')
+    .update(groupId)
+    .update('\0')
+    .update(kind)
+    .update('\0')
+    .update(id)
+    .digest('base64url')
+    .slice(0, 22)}`
+}
+
+function redactGroupForViewer(
+  group: NonNullable<Awaited<ReturnType<typeof getGroup>>>,
+) {
+  const memberIds = new Map(
+    group.members.map((member) => [
+      member.id,
+      publicId(group.id, 'member', member.id),
+    ]),
+  )
+  return {
+    ...group,
+    friendPairKey: null,
+    invitations: [],
+    members: group.members.map((member) => ({
+      ...member,
+      id: memberIds.get(member.id)!,
+      accountId: publicId(group.id, 'account', member.accountId),
+      account: {
+        ...member.account,
+        id: publicId(group.id, 'account', member.account.id),
+      },
+      ledgerParticipant: member.ledgerParticipant
+        ? {
+            ...member.ledgerParticipant,
+            groupMemberId: memberIds.get(member.id)!,
+          }
+        : null,
+    })),
+    participants: group.participants.map((participant) => ({
+      ...participant,
+      name: participant.pending
+        ? 'Pending participant'
+        : redactViewerDisplayName(participant.name),
+      account: participant.account
+        ? {
+            ...participant.account,
+            id: publicId(group.id, 'account', participant.account.id),
+          }
+        : null,
+    })),
+  }
+}
 
 /**
  * Compute a human-readable display name for the group. For FRIEND-typed groups

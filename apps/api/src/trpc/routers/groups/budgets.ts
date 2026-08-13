@@ -45,7 +45,12 @@ import {
 } from '../../../lib/api/resource-permissions'
 import { groupExpenseListCardSelect } from '../../../lib/api/selects/expense-list'
 import { budgetCategoryMatches } from '../../../lib/budgets/category-match'
-import { loadGroupContext, protectedProcedure } from '../../init'
+import {
+  groupReadProcedure,
+  loadGroupMutationContext,
+  loadGroupViewer,
+  protectedProcedure,
+} from '../../init'
 import { createTRPCRouter } from '../../init'
 import {
   archiveBudgetOutputSchema,
@@ -449,7 +454,7 @@ async function establishAlertBaseline(
   else await prisma.$transaction(run)
 }
 
-const list = protectedProcedure
+const list = groupReadProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
@@ -458,9 +463,11 @@ const list = protectedProcedure
   )
   .output(listBudgetsOutputSchema)
   .query(async ({ input, ctx }) => {
-    const { group, member } = await loadGroupContext({
+    const { group, member } = await loadGroupViewer({
       groupId: input.groupId,
-      accountId: ctx.auth.user.id,
+      accountId: ctx.auth?.user.id,
+      accountEmail: ctx.auth?.user.email,
+      viewerSession: ctx.groupViewerSession,
     })
     const budgets = await prisma.groupBudget.findMany({
       where: {
@@ -474,8 +481,8 @@ const list = protectedProcedure
       budgets: await Promise.all(
         budgets.map(async (budget) =>
           output(budget, await summary(budget, false, sharedCurrentRows), {
-            role: member.role,
-            accountId: ctx.auth.user.id,
+            role: member?.role ?? 'MEMBER',
+            accountId: ctx.auth?.user.id ?? '',
             groupArchived: group.archived,
           }),
         ),
@@ -483,13 +490,15 @@ const list = protectedProcedure
     }
   })
 
-const get = protectedProcedure
+const get = groupReadProcedure
   .input(z.object({ groupId: z.string().min(1), budgetId: z.string().min(1) }))
   .output(getBudgetOutputSchema)
   .query(async ({ input, ctx }) => {
-    const { group, member } = await loadGroupContext({
+    const { group, member } = await loadGroupViewer({
       groupId: input.groupId,
-      accountId: ctx.auth.user.id,
+      accountId: ctx.auth?.user.id,
+      accountEmail: ctx.auth?.user.email,
+      viewerSession: ctx.groupViewerSession,
     })
     const budget = await prisma.groupBudget.findFirst({
       where: { id: input.budgetId, groupId: group.id },
@@ -498,8 +507,8 @@ const get = protectedProcedure
       throw new TRPCError({ code: 'NOT_FOUND', message: 'Budget not found' })
     return {
       budget: output(budget, await summary(budget), {
-        role: member.role,
-        accountId: ctx.auth.user.id,
+        role: member?.role ?? 'MEMBER',
+        accountId: ctx.auth?.user.id ?? '',
         groupArchived: group.archived,
       }),
     }
@@ -509,7 +518,7 @@ const create = protectedProcedure
   .input(budgetInput.extend({ requestId: createRequestIdSchema }))
   .output(createBudgetOutputSchema)
   .mutation(async ({ input, ctx }) => {
-    const { group, member } = await loadGroupContext({
+    const { group, member } = await loadGroupMutationContext({
       groupId: input.groupId,
       accountId: ctx.auth.user.id,
     })
@@ -595,7 +604,7 @@ const update = protectedProcedure
   .input(budgetInput.extend({ budgetId: z.string().min(1) }))
   .output(updateBudgetOutputSchema)
   .mutation(async ({ input, ctx }) => {
-    const { group, member } = await loadGroupContext({
+    const { group, member } = await loadGroupMutationContext({
       groupId: input.groupId,
       accountId: ctx.auth.user.id,
     })
@@ -676,7 +685,7 @@ const archive = protectedProcedure
   )
   .output(archiveBudgetOutputSchema)
   .mutation(async ({ input, ctx }) => {
-    const { group, member } = await loadGroupContext({
+    const { group, member } = await loadGroupMutationContext({
       groupId: input.groupId,
       accountId: ctx.auth.user.id,
     })
@@ -712,7 +721,7 @@ const remove = protectedProcedure
   .input(z.object({ groupId: z.string().min(1), budgetId: z.string().min(1) }))
   .output(deleteBudgetOutputSchema)
   .mutation(async ({ input, ctx }) => {
-    const { group, member } = await loadGroupContext({
+    const { group, member } = await loadGroupMutationContext({
       groupId: input.groupId,
       accountId: ctx.auth.user.id,
     })

@@ -259,7 +259,7 @@ export async function updatePendingInvitation(
 
   const inviteUrl =
     newToken && updated.expiresAt
-      ? `${getWebBaseUrl()}/groups/${updated.groupId}?invite=${newToken}`
+      ? `${getWebBaseUrl()}/groups/${updated.groupId}#invite=${newToken}`
       : null
 
   // Only notify the new recipient when the destination actually changed or
@@ -395,7 +395,7 @@ export async function regenerateLinkInvitation(
       ledgerParticipantId: updated.ledgerParticipantId,
       updatedAt: updated.updatedAt,
     },
-    inviteUrl: `${getWebBaseUrl()}/groups/${updated.groupId}?invite=${token}`,
+    inviteUrl: `${getWebBaseUrl()}/groups/${updated.groupId}#invite=${token}`,
   }
 }
 

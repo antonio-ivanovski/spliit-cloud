@@ -27,7 +27,10 @@ import { detectDeviceTimeZone } from '@/lib/account-preferences'
 import { getCurrencyFromGroup } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 
-import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
+import {
+  useCurrentGroup,
+  useIsReadOnlyGroupViewer,
+} from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
 import { EXPENSE_LIST_PAGE_SIZE } from './expense-list-query'
 import { ExpenseTimeline, ExpensesLoading } from './expense-timeline'
@@ -72,7 +75,7 @@ const ExpenseListForSearch = ({
   const accountPreferences = useSyncedAccountPreferences()
   const accountTimeZone =
     accountPreferences?.timeZone ?? detectDeviceTimeZone() ?? 'UTC'
-  const isPendingInvitee = useIsPendingInvitee()
+  const isReadOnlyGroupViewer = useIsReadOnlyGroupViewer()
 
   const { queryInput, sort, activeCount, setFilters } =
     useExpenseFiltersContext()
@@ -134,7 +137,7 @@ const ExpenseListForSearch = ({
         ) : (
           <p>
             {t('noExpenses')}{' '}
-            {group.archived || isPendingInvitee ? null : (
+            {group.archived || isReadOnlyGroupViewer ? null : (
               <Button
                 variant="link"
                 className="-m-4 hidden sm:inline-flex"

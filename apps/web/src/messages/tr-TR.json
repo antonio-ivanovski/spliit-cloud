@@ -596,7 +596,10 @@
     },
     "importGroup": "Grubu içe aktar",
     "exportDescription": "Grup masraflarını PDF raporu, CSV elektronik tablosu veya JSON yedeği olarak indirin.",
-    "allExpenses": "Tüm harcamalar"
+    "allExpenses": "Tüm harcamalar",
+    "viewOnlyBannerTitle": "Salt görüntüleme erişimi",
+    "viewOnlyBannerDescription": "Bu grubu inceleyebilirsiniz ancak ekleme, düzenleme, silme, yorum yapma, borç kapatma veya verileri indirme işlemlerini yapamazsınız.",
+    "invitationSignInToAccept": "Kabul etmek için oturum aç"
   },
   "GroupForm": {
     "title": "Grup bilgileri",
@@ -1970,7 +1973,8 @@
     "regenerate": {
       "title": "Yeni bağlantı oluştur"
     },
-    "actionsFor": "{name} için işlemler"
+    "actionsFor": "{name} için işlemler",
+    "readOnlyDescription": "Bu gruptaki kişiler ve katılımcılar. E-posta adresleri ve davet ayrıntıları gizlenir."
   },
   "AccountSettings": {
     "title": "Hesap ayarları",
@@ -3004,5 +3008,24 @@
       "comingSoon": "Yakında",
       "replacementActivated": "Yeni oturum açma bağlantınız artık etkin."
     }
+  },
+  "GroupViewLink": {
+    "title": "Herkese açık salt görüntüleme bağlantısı",
+    "description": "Bu bağlantıya sahip herkesin oturum açmadan grubu görüntülemesine izin verin.",
+    "warning": "Bu bağlantı harcamalara, bakiyelere, fişlere, yorumlara, etkinliklere, üyelere ve bütçelere erişim sağlar. Yalnızca güvendiğiniz kişilerle paylaşın.",
+    "linkLabel": "Herkese açık salt görüntüleme bağlantısı",
+    "copy": "Herkese açık salt görüntüleme bağlantısını kopyala",
+    "copied": "Herkese açık salt görüntüleme bağlantısı kopyalandı",
+    "enable": "Herkese açık bağlantıyı etkinleştir",
+    "cancel": "İptal",
+    "enabledStatus": "Bu bağlantıya sahip herkes grubu görüntüleyebilir.",
+    "replace": "Bağlantıyı değiştir",
+    "remove": "Herkese açık bağlantıyı kaldır",
+    "replaceDialogTitle": "Herkese açık salt görüntüleme bağlantısı değiştirilsin mi?",
+    "replaceDialogDescription": "Önceki bağlantı ve bu bağlantıyla oluşturulan tüm herkese açık görüntüleme oturumları hemen çalışmayı durduracak.",
+    "replaceConfirm": "Bağlantıyı değiştir",
+    "removeDialogTitle": "Herkese açık salt görüntüleme bağlantısı kaldırılsın mı?",
+    "removeDialogDescription": "Mevcut bağlantı ve bu bağlantıyla oluşturulan tüm herkese açık görüntüleme oturumları hemen çalışmayı durduracak.",
+    "removeConfirm": "Bağlantıyı kaldır"
   }
 }

@@ -5,13 +5,13 @@ import { getExpense } from '../../../../lib/api'
 import { expensePermissions } from '../../../../lib/api/resource-permissions'
 import {
   hashLinkInviteToken,
+  groupReadProcedure,
   linkInviteTokenInput,
   loadGroupViewer,
-  protectedProcedure,
 } from '../../../init'
 import { getExpenseOutputSchema } from '../../../outputs/expenses'
 
-export const getGroupExpenseProcedure = protectedProcedure
+export const getGroupExpenseProcedure = groupReadProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
@@ -25,9 +25,10 @@ export const getGroupExpenseProcedure = protectedProcedure
   .query(async ({ input: { groupId, expenseId, linkInviteToken }, ctx }) => {
     const { group, member, viewer } = await loadGroupViewer({
       groupId,
-      accountId: ctx.auth.user.id,
-      accountEmail: ctx.auth.user.email,
+      accountId: ctx.auth?.user.id,
+      accountEmail: ctx.auth?.user.email,
       linkTokenHash: await hashLinkInviteToken(linkInviteToken),
+      viewerSession: ctx.groupViewerSession,
     })
     const expense = await getExpense(groupId, expenseId)
     if (!expense) {
@@ -44,7 +45,7 @@ export const getGroupExpenseProcedure = protectedProcedure
           viewer.kind === 'ACTIVE' && member
             ? expensePermissions({
                 role: member.role,
-                accountId: ctx.auth.user.id,
+                accountId: ctx.auth?.user.id ?? '',
                 createdByAccountId,
                 recurringSeries: expense.recurringSeries,
                 archived: group.archived,

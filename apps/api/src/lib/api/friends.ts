@@ -338,7 +338,7 @@ export async function createFriendLedger(
       },
     })
     const webBase = getWebBaseUrl()
-    const inviteUrl = `${webBase}/groups/${group.id}?invite=${token}`
+    const inviteUrl = `${webBase}/groups/${group.id}#invite=${token}`
     return {
       groupId: group.id,
       existed: false as const,

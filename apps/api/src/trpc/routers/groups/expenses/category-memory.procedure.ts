@@ -4,9 +4,9 @@ import { getRecentExpenseContext } from '../../../../lib/ai/context'
 import { env } from '../../../../lib/env'
 import {
   hashLinkInviteToken,
+  groupReadProcedure,
   linkInviteTokenInput,
   loadGroupViewer,
-  protectedProcedure,
 } from '../../../init'
 
 export const categoryMemoryOutputSchema = z.object({
@@ -18,7 +18,7 @@ export const categoryMemoryOutputSchema = z.object({
   ),
 })
 
-export const categoryMemoryProcedure = protectedProcedure
+export const categoryMemoryProcedure = groupReadProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
@@ -31,9 +31,10 @@ export const categoryMemoryProcedure = protectedProcedure
   .query(async ({ input: { groupId, linkInviteToken }, ctx }) => {
     await loadGroupViewer({
       groupId,
-      accountId: ctx.auth.user.id,
-      accountEmail: ctx.auth.user.email,
+      accountId: ctx.auth?.user.id,
+      accountEmail: ctx.auth?.user.email,
       linkTokenHash: await hashLinkInviteToken(linkInviteToken),
+      viewerSession: ctx.groupViewerSession,
     })
     const context = await getRecentExpenseContext(
       groupId,

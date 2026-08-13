@@ -12,7 +12,10 @@ import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 import { formatZonedDate } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 
-import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
+import {
+  useCurrentGroup,
+  useIsReadOnlyGroupViewer,
+} from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
 
 const MAX_COMMENT_LENGTH = 500
@@ -28,7 +31,7 @@ type ExpenseCommentsProps = {
  */
 export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
   const { group, currentMember } = useCurrentGroup()
-  const isPendingInvitee = useIsPendingInvitee()
+  const isReadOnlyGroupViewer = useIsReadOnlyGroupViewer()
   const linkInviteToken = useLinkInviteToken()
   const locale = useLocale()
   const accountPreferences = useSyncedAccountPreferences()
@@ -52,7 +55,7 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
   const deleteMutation = trpc.groups.expenses.comments.delete.useMutation()
 
   const canComment = Boolean(
-    group && !group.archived && !isPendingInvitee && currentMember,
+    group && !group.archived && !isReadOnlyGroupViewer && currentMember,
   )
 
   const invalidateComments = async () => {

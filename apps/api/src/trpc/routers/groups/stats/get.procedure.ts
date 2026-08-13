@@ -15,12 +15,13 @@ import {
   participantDisplayNameSelect,
   type ParticipantDisplayName,
 } from '../../../../lib/api/selects/participant-display-name'
+import { redactViewerDisplayName } from '../../../../lib/group-view'
 import { resolveParticipantDisplayName } from '../../../../lib/invitations'
 import {
   hashLinkInviteToken,
+  groupReadProcedure,
   linkInviteTokenInput,
   loadGroupViewer,
-  protectedProcedure,
 } from '../../../init'
 import { getStatsOutputSchema } from '../../../outputs/stats'
 import {
@@ -37,7 +38,7 @@ import {
  * `activeParticipantId` and the per-user totals are 0 — the FE surfaces the
  * Accept/Decline banner in that case.
  */
-export const getGroupStatsProcedure = protectedProcedure
+export const getGroupStatsProcedure = groupReadProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
@@ -63,11 +64,12 @@ export const getGroupStatsProcedure = protectedProcedure
       input: { groupId, linkInviteToken, period, customRange },
       ctx,
     }) => {
-      const { member, ledger } = await loadGroupViewer({
+      const { member, ledger, viewer } = await loadGroupViewer({
         groupId,
-        accountId: ctx.auth.user.id,
-        accountEmail: ctx.auth.user.email,
+        accountId: ctx.auth?.user.id,
+        accountEmail: ctx.auth?.user.email,
         linkTokenHash: await hashLinkInviteToken(linkInviteToken),
+        viewerSession: ctx.groupViewerSession,
       })
 
       const activeParticipantId = member?.ledgerParticipant?.id ?? null
@@ -128,9 +130,21 @@ export const getGroupStatsProcedure = protectedProcedure
         const account = participant.groupMember?.account ?? null
         return {
           id: participant.id,
-          name: resolveParticipantDisplayName(participant),
+          name:
+            viewer.kind === 'ACTIVE'
+              ? resolveParticipantDisplayName(participant)
+              : redactViewerDisplayName(
+                  resolveParticipantDisplayName(participant),
+                ),
           account: account
-            ? { id: account.id, name: account.name, image: account.image }
+            ? {
+                id:
+                  viewer.kind === 'ACTIVE'
+                    ? account.id
+                    : `public_${participant.id}`,
+                name: account.name,
+                image: account.image,
+              }
             : null,
         }
       }

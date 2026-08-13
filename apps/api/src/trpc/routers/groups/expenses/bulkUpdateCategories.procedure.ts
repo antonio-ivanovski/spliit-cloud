@@ -4,14 +4,14 @@ import { bulkUpdateExpenseCategoriesInputSchema } from '@spliit/domain/schemas'
 
 import { bulkUpdateExpenseCategories } from '../../../../lib/api/category-bulk'
 import { enqueueBudgetEvaluation } from '../../../../lib/budgets/enqueue'
-import { loadGroupContext, protectedProcedure } from '../../../init'
+import { loadGroupMutationContext, protectedProcedure } from '../../../init'
 import { bulkUpdateCategoriesOutputSchema } from '../../../outputs/expenses'
 
 export const bulkUpdateExpenseCategoriesProcedure = protectedProcedure
   .input(bulkUpdateExpenseCategoriesInputSchema)
   .output(bulkUpdateCategoriesOutputSchema)
   .mutation(async ({ ctx, input }) => {
-    const { member, group } = await loadGroupContext({
+    const { member, group } = await loadGroupMutationContext({
       groupId: input.groupId,
       accountId: ctx.auth.user.id,
     })

@@ -602,7 +602,10 @@
     },
     "importGroup": "Importar grupo",
     "exportDescription": "Descarrega as despesas do grupo como relatório PDF, folha de cálculo CSV ou cópia de segurança JSON.",
-    "allExpenses": "Todas as despesas"
+    "allExpenses": "Todas as despesas",
+    "viewOnlyBannerTitle": "Acesso apenas de leitura",
+    "viewOnlyBannerDescription": "Pode explorar este grupo, mas não pode adicionar, editar, eliminar ou comentar, liquidar saldos ou descarregar os respetivos dados.",
+    "invitationSignInToAccept": "Inicie sessão para aceitar"
   },
   "GroupForm": {
     "title": "Informações do grupo",
@@ -1979,7 +1982,8 @@
     "regenerate": {
       "title": "Gerar nova ligação"
     },
-    "actionsFor": "Ações para {name}"
+    "actionsFor": "Ações para {name}",
+    "readOnlyDescription": "Pessoas e participantes incluídos neste grupo. Os endereços de e-mail e os detalhes dos convites estão ocultos."
   },
   "AccountSettings": {
     "title": "Configurações da conta",
@@ -3022,5 +3026,24 @@
       "comingSoon": "Em breve",
       "replacementActivated": "A ligação de início de sessão de substituição está agora ativa."
     }
+  },
+  "GroupViewLink": {
+    "title": "Ligação pública apenas de leitura",
+    "description": "Permite que qualquer pessoa com esta ligação pública veja o grupo sem iniciar sessão.",
+    "warning": "A ligação dá acesso a despesas, saldos, recibos, comentários, atividade, membros e orçamentos. Partilhe-a apenas com pessoas em quem confia.",
+    "linkLabel": "Ligação pública apenas de leitura",
+    "copy": "Copiar ligação pública",
+    "copied": "Ligação pública copiada",
+    "enable": "Ativar ligação pública",
+    "cancel": "Cancelar",
+    "enabledStatus": "Qualquer pessoa com esta ligação pode ver o grupo.",
+    "replace": "Substituir ligação",
+    "remove": "Remover ligação pública",
+    "replaceDialogTitle": "Substituir a ligação pública apenas de leitura?",
+    "replaceDialogDescription": "A ligação anterior e todas as sessões de visualização pública criadas a partir dela deixarão de funcionar imediatamente.",
+    "replaceConfirm": "Substituir ligação",
+    "removeDialogTitle": "Remover a ligação pública apenas de leitura?",
+    "removeDialogDescription": "A ligação atual e todas as sessões de visualização pública criadas a partir dela deixarão de funcionar imediatamente.",
+    "removeConfirm": "Remover ligação"
   }
 }

@@ -8,7 +8,7 @@ import {
   createRequestIdSchema,
   runIdempotentCreate,
 } from '../../../../../lib/api/idempotency'
-import { loadGroupContext, protectedProcedure } from '../../../../init'
+import { loadGroupMutationContext, protectedProcedure } from '../../../../init'
 import { createExpenseCommentOutputSchema } from '../../../../outputs/expense-comments'
 
 export const createExpenseCommentProcedure = protectedProcedure
@@ -22,7 +22,7 @@ export const createExpenseCommentProcedure = protectedProcedure
   )
   .output(createExpenseCommentOutputSchema)
   .mutation(async ({ input, ctx }) => {
-    const { group } = await loadGroupContext({
+    const { group } = await loadGroupMutationContext({
       groupId: input.groupId,
       accountId: ctx.auth.user.id,
     })

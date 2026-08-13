@@ -50,7 +50,7 @@ import {
 } from '../../../lib/invitations/manage-invitations'
 import {
   createTRPCRouter,
-  loadGroupContext,
+  loadGroupMutationContext,
   protectedProcedure,
   publicProcedure,
 } from '../../init'
@@ -91,7 +91,7 @@ export const invitationsRouter = createTRPCRouter({
     .output(invitationsListOutputSchema)
     .query(async ({ input: { groupId }, ctx }) => {
       const [{ group, member }, allInvitations] = await Promise.all([
-        loadGroupContext({
+        loadGroupMutationContext({
           groupId,
           accountId: ctx.auth.user.id,
         }),
@@ -165,7 +165,7 @@ export const invitationsRouter = createTRPCRouter({
     )
     .output(createLinkInvitationOutputSchema)
     .mutation(async ({ input, ctx }) => {
-      const { group, member } = await loadGroupContext({
+      const { group, member } = await loadGroupMutationContext({
         groupId: input.groupId,
         accountId: ctx.auth.user.id,
       })
@@ -232,7 +232,7 @@ export const invitationsRouter = createTRPCRouter({
           }
           return {
             ...result,
-            inviteUrl: `${getWebBaseUrl()}/groups/${input.groupId}?invite=${token}`,
+            inviteUrl: `${getWebBaseUrl()}/groups/${input.groupId}#invite=${token}`,
             expiresAt: new Date(result.expiresAt),
           }
         },
@@ -278,6 +278,48 @@ export const invitationsRouter = createTRPCRouter({
       return { groupId: result.groupId, role: result.role }
     }),
 
+  /**
+   * Accept the pending link invitation represented by the HttpOnly viewer
+   * session.
+   */
+  acceptViewerSession: protectedProcedure
+    .input(z.object({ groupId: z.string().min(1) }))
+    .output(
+      z.object({ groupId: z.string(), role: z.enum(['ADMIN', 'MEMBER']) }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const session = ctx.groupViewerSession
+      if (
+        session?.kind !== 'PENDING_INVITEE' ||
+        session.groupId !== input.groupId
+      ) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'This invitation is no longer available',
+        })
+      }
+      const invitation = await prisma.groupInvitation.findFirst({
+        where: {
+          id: session.invitationId,
+          groupId: input.groupId,
+          type: GroupInvitationType.LINK,
+          status: GroupInvitationStatus.PENDING,
+        },
+        select: { tokenHash: true },
+      })
+      if (!invitation?.tokenHash) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'This invitation is no longer available',
+        })
+      }
+      const result = await acceptLinkInvitation({
+        tokenHash: invitation.tokenHash,
+        accountId: ctx.auth.user.id,
+      })
+      return { groupId: result.groupId, role: result.role }
+    }),
+
   /** Send an email invitation. The invitee appears as pending until they accept. */
   // Create an email invitation (ADMIN only). Today this is the only
   // invite kind; a link-invite sibling will sit next to it later.
@@ -303,7 +345,7 @@ export const invitationsRouter = createTRPCRouter({
     )
     .output(z.object({ invitationId: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      const { group, member } = await loadGroupContext({
+      const { group, member } = await loadGroupMutationContext({
         groupId: input.groupId,
         accountId: ctx.auth.user.id,
       })
@@ -392,7 +434,7 @@ export const invitationsRouter = createTRPCRouter({
     )
     .output(revokeInvitationPreviewSchema)
     .query(async ({ input: { invitationId, groupId }, ctx }) => {
-      const { group, member } = await loadGroupContext({
+      const { group, member } = await loadGroupMutationContext({
         groupId,
         accountId: ctx.auth.user.id,
       }).catch(() => {
@@ -485,7 +527,7 @@ export const invitationsRouter = createTRPCRouter({
           message: 'friendLedgerNotRevocable',
         })
       }
-      const { group, member } = await loadGroupContext({
+      const { group, member } = await loadGroupMutationContext({
         groupId: existing.groupId,
         accountId: ctx.auth.user.id,
       })
@@ -577,7 +619,7 @@ export const invitationsRouter = createTRPCRouter({
     .output(updatePendingInvitationOutputSchema)
     .mutation(async ({ input, ctx }) => {
       const invitation = await loadInvitationWithGroup(input.invitationId)
-      const { group, member } = await loadGroupContext({
+      const { group, member } = await loadGroupMutationContext({
         groupId: invitation.groupId,
         accountId: ctx.auth.user.id,
       })
@@ -635,7 +677,7 @@ export const invitationsRouter = createTRPCRouter({
     .output(regenerateLinkInvitationOutputSchema)
     .mutation(async ({ input, ctx }) => {
       const invitation = await loadInvitationWithGroup(input.invitationId)
-      const { group, member } = await loadGroupContext({
+      const { group, member } = await loadGroupMutationContext({
         groupId: invitation.groupId,
         accountId: ctx.auth.user.id,
       })

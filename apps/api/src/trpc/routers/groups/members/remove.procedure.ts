@@ -8,7 +8,7 @@ import {
   getRemoveMemberPreview,
   removeMember,
 } from '../../../../lib/api'
-import { loadGroupContext, protectedProcedure } from '../../../init'
+import { loadGroupMutationContext, protectedProcedure } from '../../../init'
 import {
   removeMemberOutputSchema,
   removeMemberPreviewOutputSchema,
@@ -24,7 +24,7 @@ export const removeMemberPreviewProcedure = protectedProcedure
   .input(z.object({ groupId: z.string().min(1), memberId: z.string().min(1) }))
   .output(removeMemberPreviewOutputSchema)
   .query(async ({ input: { groupId, memberId }, ctx }) => {
-    const { group, member } = await loadGroupContext({
+    const { group, member } = await loadGroupMutationContext({
       groupId,
       accountId: ctx.auth.user.id,
     }).catch(() => {
@@ -86,7 +86,7 @@ export const removeMemberProcedure = protectedProcedure
   )
   .output(removeMemberOutputSchema)
   .mutation(async ({ input: { groupId, memberId, settleBalances }, ctx }) => {
-    const { group, member } = await loadGroupContext({
+    const { group, member } = await loadGroupMutationContext({
       groupId,
       accountId: ctx.auth.user.id,
     })

@@ -18,7 +18,7 @@ vi.mock('@tanstack/react-router', () => ({
 }))
 
 vi.mock('../../current-group-context', () => ({
-  useIsPendingInvitee: () => false,
+  useIsReadOnlyGroupViewer: () => false,
 }))
 
 vi.mock('../../use-link-invite-token', () => ({

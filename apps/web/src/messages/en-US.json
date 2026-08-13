@@ -697,7 +697,10 @@
     },
     "importGroup": "Import group",
     "exportDescription": "Print the group expenses as a PDF report, or download them as CSV or JSON.",
-    "allExpenses": "All expenses"
+    "allExpenses": "All expenses",
+    "viewOnlyBannerTitle": "View-only access",
+    "viewOnlyBannerDescription": "You can explore this group, but you cannot add, edit, delete, comment, settle balances, or download its data.",
+    "invitationSignInToAccept": "Sign in to accept"
   },
   "Auth": {
     "title": "Sign in to Spliit Cloud",
@@ -2315,7 +2318,8 @@
     "regenerate": {
       "title": "Generate new link"
     },
-    "actionsFor": "Actions for {name}"
+    "actionsFor": "Actions for {name}",
+    "readOnlyDescription": "People and participants included in this group. Email addresses and invitation details are hidden."
   },
   "Activities": {
     "expense": {
@@ -3076,5 +3080,24 @@
       "comingSoon": "Coming soon",
       "replacementActivated": "Your replacement sign in link is now active."
     }
+  },
+  "GroupViewLink": {
+    "title": "Public View-only link",
+    "description": "Let anyone with this link view the group without signing in.",
+    "warning": "The link provides access to expenses, balances, receipts, comments, activity, members, and budgets. Share it only with people you trust.",
+    "linkLabel": "Public View-only link",
+    "copy": "Copy Public View-only link",
+    "copied": "Public View-only link copied",
+    "enable": "Enable public link",
+    "cancel": "Cancel",
+    "enabledStatus": "Anyone with this link can view the group.",
+    "replace": "Replace link",
+    "remove": "Remove public link",
+    "replaceDialogTitle": "Replace Public View-only link?",
+    "replaceDialogDescription": "The previous link and all public-view sessions created from it will stop working immediately.",
+    "replaceConfirm": "Replace link",
+    "removeDialogTitle": "Remove Public View-only link?",
+    "removeDialogDescription": "The current link and all public-view sessions created from it will stop working immediately.",
+    "removeConfirm": "Remove link"
   }
 }

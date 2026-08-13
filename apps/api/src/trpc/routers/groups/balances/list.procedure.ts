@@ -19,16 +19,17 @@ import {
   mapSubgroup,
   subgroupWithMembersSelect,
 } from '../../../../lib/api/subgroups'
+import { redactViewerDisplayName } from '../../../../lib/group-view'
 import { resolveParticipantDisplayName } from '../../../../lib/invitations/display'
 import {
   hashLinkInviteToken,
+  groupReadProcedure,
   linkInviteTokenInput,
   loadGroupViewer,
-  protectedProcedure,
 } from '../../../init'
 import { listBalancesOutputSchema } from '../../../outputs/balances'
 
-export const listGroupBalancesProcedure = protectedProcedure
+export const listGroupBalancesProcedure = groupReadProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
@@ -39,11 +40,12 @@ export const listGroupBalancesProcedure = protectedProcedure
   )
   .output(listBalancesOutputSchema)
   .query(async ({ input: { groupId, linkInviteToken }, ctx }) => {
-    const { group, ledger } = await loadGroupViewer({
+    const { group, ledger, viewer } = await loadGroupViewer({
       groupId,
-      accountId: ctx.auth.user.id,
-      accountEmail: ctx.auth.user.email,
+      accountId: ctx.auth?.user.id,
+      accountEmail: ctx.auth?.user.email,
       linkTokenHash: await hashLinkInviteToken(linkInviteToken),
+      viewerSession: ctx.groupViewerSession,
     })
     const rows = await getGroupBalanceExpenses(groupId, ledger.id)
     const expenses = rows.map(toBalanceExpense)
@@ -113,7 +115,10 @@ export const listGroupBalancesProcedure = protectedProcedure
     // so the balances UI can label settlement counterparties correctly.
     const publicParticipants = participants.map((participant) => ({
       id: participant.id,
-      name: resolveParticipantDisplayName(participant),
+      name:
+        viewer.kind === 'ACTIVE'
+          ? resolveParticipantDisplayName(participant)
+          : redactViewerDisplayName(resolveParticipantDisplayName(participant)),
       removed: participant.removedAt != null,
     }))
 

@@ -2072,7 +2072,10 @@
       "description": "Länken är felaktig eller matchar ingen inbjudan till denna grupp."
     },
     "exportDescription": "Ladda ner gruppens utgifter som en PDF-rapport, ett CSV-kalkylblad eller en JSON-säkerhetskopia.",
-    "allExpenses": "Alla utgifter"
+    "allExpenses": "Alla utgifter",
+    "viewOnlyBannerTitle": "Endast visning",
+    "viewOnlyBannerDescription": "Du kan utforska den här gruppen, men du kan inte lägga till, redigera eller ta bort något, kommentera, reglera saldon eller ladda ned dess data.",
+    "invitationSignInToAccept": "Logga in för att acceptera"
   },
   "Header": {
     "signIn": "Logga in",
@@ -2393,7 +2396,8 @@
     "regenerate": {
       "title": "Generera ny länk"
     },
-    "actionsFor": "Åtgärder för {name}"
+    "actionsFor": "Åtgärder för {name}",
+    "readOnlyDescription": "Personer och deltagare som ingår i gruppen. E-postadresser och inbjudningsuppgifter är dolda."
   },
   "OfflineBanner": {
     "message": "Du är offline. Ändringar du gör nu sparas inte förrän du återansluter."
@@ -3000,5 +3004,24 @@
       "comingSoon": "Kommer snart",
       "replacementActivated": "Din ersättande inloggningslänk är nu aktiv."
     }
+  },
+  "GroupViewLink": {
+    "title": "Offentlig länk med endast visning",
+    "description": "Med den här länken kan vem som helst visa gruppen utan att logga in.",
+    "warning": "Länken ger åtkomst till utgifter, saldon, kvitton, kommentarer, aktivitet, medlemmar och budgetar. Dela den bara med personer du litar på.",
+    "linkLabel": "Offentlig länk",
+    "copy": "Kopiera offentlig länk",
+    "copied": "Offentlig länk kopierad",
+    "enable": "Aktivera offentlig länk",
+    "cancel": "Avbryt",
+    "enabledStatus": "Alla som har den här länken kan visa gruppen.",
+    "replace": "Ersätt länken",
+    "remove": "Ta bort offentlig länk",
+    "replaceDialogTitle": "Ersätt den offentliga länken med endast visning?",
+    "replaceDialogDescription": "Den tidigare länken och alla offentliga visningssessioner som skapats med den slutar fungera omedelbart.",
+    "replaceConfirm": "Ersätt länken",
+    "removeDialogTitle": "Ta bort den offentliga länken med endast visning?",
+    "removeDialogDescription": "Den aktuella länken och alla offentliga visningssessioner som skapats med den slutar fungera omedelbart.",
+    "removeConfirm": "Ta bort länken"
   }
 }

@@ -42,7 +42,10 @@ import type { AppRouterOutput } from '@spliit/api/router'
 import type { SplitMode } from '@spliit/domain'
 import { calculatePaidByShares, calculateShares } from '@spliit/domain'
 
-import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
+import {
+  useCurrentGroup,
+  useIsReadOnlyGroupViewer,
+} from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
 import { expenseShareRatioLabel } from './expense-share-ratio-label'
 import {
@@ -133,7 +136,7 @@ export function ExpensePreviewModal({
   onMakeCopy,
 }: ExpensePreviewModalProps) {
   const { group, currentLedgerParticipantId, currentMember } = useCurrentGroup()
-  const isPendingInvitee = useIsPendingInvitee()
+  const isReadOnlyGroupViewer = useIsReadOnlyGroupViewer()
   const linkInviteToken = useLinkInviteToken()
   const locale = useLocale()
   const navigate = useNavigate()
@@ -182,7 +185,11 @@ export function ExpensePreviewModal({
   const canDelete = Boolean(expense?.permissions.canDelete)
   const canManageRecurrence = Boolean(expense?.permissions.canManageRecurrence)
   const canCopy = Boolean(
-    expense && group && currentMember && !group.archived && !isPendingInvitee,
+    expense &&
+    group &&
+    currentMember &&
+    !group.archived &&
+    !isReadOnlyGroupViewer,
   )
   const participants = group?.participants ?? []
   const balanceExpense = expense

@@ -17,6 +17,11 @@ function currentPathWithSearch(): string {
  */
 export function RequireAuth({ children }: PropsWithChildren) {
   const { data: account, isPending } = useCurrentAccount()
+  const permitsGroupViewer =
+    typeof window !== 'undefined' &&
+    /^\/groups\/(?!create(?:\/|$)|import(?:\/|$)|bulk-categorize(?:\/|$))[^/]+(?:\/|$)/.test(
+      window.location.pathname,
+    )
 
   if (isPending) {
     return (
@@ -27,6 +32,7 @@ export function RequireAuth({ children }: PropsWithChildren) {
   }
 
   if (!account) {
+    if (permitsGroupViewer) return <>{children}</>
     return (
       <Navigate to="/" search={{ redirect: currentPathWithSearch() }} replace />
     )

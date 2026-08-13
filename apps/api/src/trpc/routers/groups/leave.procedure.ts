@@ -9,7 +9,7 @@ import {
   getLeavePreview,
   leaveGroup,
 } from '../../../lib/api'
-import { loadGroupContext, protectedProcedure } from '../../init'
+import { loadGroupMutationContext, protectedProcedure } from '../../init'
 import {
   archiveForSelfOutputSchema,
   leaveOutputSchema,
@@ -84,10 +84,10 @@ export const leaveGroupProcedure = protectedProcedure
   .output(leaveOutputSchema)
   .mutation(async ({ input: { groupId, force, promoteMemberId }, ctx }) => {
     // Authenticate the caller as an active member before we start
-    // counting admins / checking balances. `loadGroupContext` already
+    // counting admins / checking balances. `loadGroupMutationContext` already
     // throws `FORBIDDEN` for non-members, but the call also guarantees
     // `group` is non-null so downstream helpers don't have to re-check.
-    const { group } = await loadGroupContext({
+    const { group } = await loadGroupMutationContext({
       groupId,
       accountId: ctx.auth.user.id,
     }).catch((err) => {

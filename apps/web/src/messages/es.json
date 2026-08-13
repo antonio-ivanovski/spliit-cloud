@@ -602,7 +602,10 @@
     },
     "importGroup": "Importar grupo",
     "exportDescription": "Descarga los gastos del grupo como informe PDF, hoja de cálculo CSV o copia de seguridad JSON.",
-    "allExpenses": "Todos los gastos"
+    "allExpenses": "Todos los gastos",
+    "viewOnlyBannerTitle": "Acceso de solo lectura",
+    "viewOnlyBannerDescription": "Puedes explorar este grupo, pero no puedes añadir, editar, eliminar ni comentar elementos, liquidar saldos ni descargar sus datos.",
+    "invitationSignInToAccept": "Inicia sesión para aceptar"
   },
   "GroupForm": {
     "title": "Información del grupo",
@@ -1979,7 +1982,8 @@
     "regenerate": {
       "title": "Generar nuevo enlace"
     },
-    "actionsFor": "Acciones para {name}"
+    "actionsFor": "Acciones para {name}",
+    "readOnlyDescription": "Personas y participantes incluidos en este grupo. Las direcciones de correo electrónico y los detalles de las invitaciones están ocultos."
   },
   "AccountSettings": {
     "title": "Configuración de la cuenta",
@@ -3022,5 +3026,24 @@
       "comingSoon": "Próximamente",
       "replacementActivated": "El enlace de inicio de sesión de reemplazo ya está activo."
     }
+  },
+  "GroupViewLink": {
+    "title": "Enlace público de solo lectura",
+    "description": "Permite que cualquiera que tenga este enlace público vea el grupo sin iniciar sesión.",
+    "warning": "El enlace da acceso a gastos, saldos, recibos, comentarios, actividad, miembros y presupuestos. Compártelo solo con personas de confianza.",
+    "linkLabel": "Enlace público de solo lectura",
+    "copy": "Copiar enlace público",
+    "copied": "Enlace público copiado",
+    "enable": "Activar enlace público",
+    "cancel": "Cancelar",
+    "enabledStatus": "Cualquiera que tenga este enlace puede ver el grupo.",
+    "replace": "Reemplazar enlace",
+    "remove": "Eliminar enlace público",
+    "replaceDialogTitle": "¿Reemplazar el enlace público de solo lectura?",
+    "replaceDialogDescription": "El enlace anterior y todas las sesiones de vista pública creadas a partir de él dejarán de funcionar inmediatamente.",
+    "replaceConfirm": "Reemplazar enlace",
+    "removeDialogTitle": "¿Eliminar el enlace público de solo lectura?",
+    "removeDialogDescription": "El enlace actual y todas las sesiones de vista pública creadas a partir de él dejarán de funcionar inmediatamente.",
+    "removeConfirm": "Eliminar enlace"
   }
 }

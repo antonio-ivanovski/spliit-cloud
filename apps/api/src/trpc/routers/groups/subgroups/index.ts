@@ -22,8 +22,9 @@ import {
 import {
   createTRPCRouter,
   hashLinkInviteToken,
+  groupReadProcedure,
   linkInviteTokenInput,
-  loadGroupContext,
+  loadGroupMutationContext,
   loadGroupViewer,
   protectedProcedure,
 } from '../../../init'
@@ -42,7 +43,7 @@ const subgroupFields = z.object({
 })
 
 async function requireAdmin(groupId: string, accountId: string) {
-  const context = await loadGroupContext({ groupId, accountId })
+  const context = await loadGroupMutationContext({ groupId, accountId })
   if (context.group.groupType === GroupType.FRIEND) {
     throw new TRPCError({
       code: 'FORBIDDEN',
@@ -129,7 +130,7 @@ function mapWriteError(error: unknown): never {
   throw error
 }
 
-export const listSubgroupsProcedure = protectedProcedure
+export const listSubgroupsProcedure = groupReadProcedure
   .input(
     groupIdInput.extend({
       linkInviteToken: linkInviteTokenInput.describe(
@@ -141,9 +142,10 @@ export const listSubgroupsProcedure = protectedProcedure
   .query(async ({ input, ctx }) => {
     await loadGroupViewer({
       groupId: input.groupId,
-      accountId: ctx.auth.user.id,
-      accountEmail: ctx.auth.user.email,
+      accountId: ctx.auth?.user.id,
+      accountEmail: ctx.auth?.user.email,
       linkTokenHash: await hashLinkInviteToken(input.linkInviteToken),
+      viewerSession: ctx.groupViewerSession,
     })
     const result = await listSubgroups(input.groupId)
     if (!result)

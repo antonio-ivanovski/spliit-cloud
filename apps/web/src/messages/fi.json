@@ -596,7 +596,10 @@
     },
     "importGroup": "Tuo ryhmä",
     "exportDescription": "Lataa ryhmän kulut PDF-raporttina, CSV-taulukkona tai JSON-varmuuskopiona.",
-    "allExpenses": "Kaikki kulut"
+    "allExpenses": "Kaikki kulut",
+    "viewOnlyBannerTitle": "Vain katselu",
+    "viewOnlyBannerDescription": "Voit tarkastella tätä ryhmää, mutta et voi lisätä, muokata tai poistaa sisältöä, kommentoida, tasata saldoja tai ladata sen tietoja.",
+    "invitationSignInToAccept": "Kirjaudu sisään hyväksyäksesi"
   },
   "GroupForm": {
     "title": "Ryhmän tiedot",
@@ -1970,7 +1973,8 @@
     "regenerate": {
       "title": "Luo uusi linkki"
     },
-    "actionsFor": "Toiminnot: {name}"
+    "actionsFor": "Toiminnot: {name}",
+    "readOnlyDescription": "Tähän ryhmään kuuluvat henkilöt ja osallistujat. Sähköpostiosoitteet ja kutsutiedot on piilotettu."
   },
   "AccountSettings": {
     "title": "Tilin asetukset",
@@ -3004,5 +3008,24 @@
       "comingSoon": "Tulossa pian",
       "replacementActivated": "Korvaava kirjautumislinkkisi on nyt käytössä."
     }
+  },
+  "GroupViewLink": {
+    "title": "Julkinen vain katseluun tarkoitettu linkki",
+    "description": "Tämän linkin avulla kuka tahansa voi tarkastella ryhmää kirjautumatta sisään.",
+    "warning": "Linkin kautta pääsee tarkastelemaan kuluja, saldoja, kuitteja, kommentteja, toimintaa, jäseniä ja budjetteja. Jaa se vain luottamiesi ihmisten kanssa.",
+    "linkLabel": "Julkinen linkki",
+    "copy": "Kopioi julkinen linkki",
+    "copied": "Julkinen linkki kopioitu",
+    "enable": "Ota julkinen linkki käyttöön",
+    "cancel": "Peruuta",
+    "enabledStatus": "Kaikki tämän linkin saaneet voivat tarkastella ryhmää.",
+    "replace": "Vaihda linkki",
+    "remove": "Poista julkinen linkki",
+    "replaceDialogTitle": "Vaihdetaanko julkinen vain katseluun tarkoitettu linkki?",
+    "replaceDialogDescription": "Edellinen linkki ja kaikki sillä luodut julkiset katseluistunnot lakkaavat toimimasta välittömästi.",
+    "replaceConfirm": "Vaihda linkki",
+    "removeDialogTitle": "Poistetaanko julkinen vain katseluun tarkoitettu linkki?",
+    "removeDialogDescription": "Nykyinen linkki ja kaikki sillä luodut julkiset katseluistunnot lakkaavat toimimasta välittömästi.",
+    "removeConfirm": "Poista linkki"
   }
 }

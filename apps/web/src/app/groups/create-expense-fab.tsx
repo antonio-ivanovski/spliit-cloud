@@ -60,7 +60,7 @@ export function CreateExpenseFab({
   const isBudgetsRoute = pathname.includes('/budgets')
   const canEditCurrentGroup = Boolean(
     currentGroup?.group &&
-    !currentGroup.currentInvitation &&
+    (currentGroup.viewer?.canMutate ?? !currentGroup.currentInvitation) &&
     !currentGroup.group.archived,
   )
   const actionFlowActive =

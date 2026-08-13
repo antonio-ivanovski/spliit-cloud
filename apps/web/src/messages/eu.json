@@ -602,7 +602,10 @@
     },
     "importGroup": "Inportatu taldea",
     "exportDescription": "Deskargatu taldeko gastuak PDF txosten, CSV kalkulu-orri edo JSON babeskopia gisa.",
-    "allExpenses": "Gastu guztiak"
+    "allExpenses": "Gastu guztiak",
+    "viewOnlyBannerTitle": "Ikusteko soilik sarbidea",
+    "viewOnlyBannerDescription": "Talde hau arakatu dezakezu, baina ezin duzu ezer gehitu, editatu, ezabatu edo iruzkinik egin, ezta saldoak kitatu edo datuak deskargatu ere.",
+    "invitationSignInToAccept": "Hasi saioa onartzeko"
   },
   "GroupForm": {
     "title": "Taldeko informazioa",
@@ -1978,7 +1981,8 @@
     "regenerate": {
       "title": "Sortu esteka berria"
     },
-    "actionsFor": "Ekintzak: {name}"
+    "actionsFor": "Ekintzak: {name}",
+    "readOnlyDescription": "Talde honetan dauden pertsonak eta parte-hartzaileak. Helbide elektronikoak eta gonbidapenen xehetasunak ezkutatuta daude."
   },
   "AccountSettings": {
     "title": "Kontuaren ezarpenak",
@@ -3021,5 +3025,24 @@
       "comingSoon": "Laster",
       "replacementActivated": "Ordezko saioa hasteko esteka aktibo dago orain."
     }
+  },
+  "GroupViewLink": {
+    "title": "Ikusteko soilik den esteka publikoa",
+    "description": "Esteka publiko hau duen edonork taldea saioa hasi gabe ikus dezake.",
+    "warning": "Estekak gastuetarako, saldoetarako, ordainagirietarako, iruzkinetarako, jarduerarako, kideetarako eta aurrekontuetarako sarbidea ematen du. Partekatu konfiantzazko pertsonekin soilik.",
+    "linkLabel": "Ikusteko soilik den esteka publikoa",
+    "copy": "Kopiatu esteka publikoa",
+    "copied": "Esteka publikoa kopiatu da",
+    "enable": "Gaitu esteka publikoa",
+    "cancel": "Utzi",
+    "enabledStatus": "Esteka hau duen edonork taldea ikus dezake.",
+    "replace": "Ordeztu esteka",
+    "remove": "Kendu esteka publikoa",
+    "replaceDialogTitle": "Esteka publiko eta ikusteko soilik dena ordeztu?",
+    "replaceDialogDescription": "Aurreko estekak eta esteka horretatik sortutako ikuspegi publikoko saio guztiek berehala utziko diote funtzionatzeari.",
+    "replaceConfirm": "Ordeztu esteka",
+    "removeDialogTitle": "Esteka publiko eta ikusteko soilik dena kendu?",
+    "removeDialogDescription": "Uneko estekak eta esteka horretatik sortutako ikuspegi publikoko saio guztiek berehala utziko diote funtzionatzeari.",
+    "removeConfirm": "Kendu esteka"
   }
 }
