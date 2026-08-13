@@ -1391,7 +1391,8 @@
     "inviteOnly": {
       "message": "Tato instance je pouze na pozvánku. Použijte odkaz pozvánky nebo požádejte někoho, aby vás pozval do skupiny.",
       "useInvitedEmail": "Použijte e-mailovou adresu, na kterou vám přišla pozvánka."
-    }
+    },
+    "signInWithX": "Pokračovat přes X"
   },
   "CompleteProfile": {
     "title": "Dokončete svůj profil",

@@ -1684,7 +1684,8 @@
     "inviteOnly": {
       "message": "Tämä instanssi on vain kutsutuille. Käytä kutsulinkkiä tai pyydä jotakuta kutsumaan sinut ryhmään.",
       "useInvitedEmail": "Käytä sähköpostiosoitetta, jolla sinut kutsuttiin."
-    }
+    },
+    "signInWithX": "Jatka X:llä"
   },
   "CompleteProfile": {
     "title": "Täydennä profiilisi",

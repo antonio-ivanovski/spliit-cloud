@@ -21,6 +21,16 @@ const realAuthModule = (await vi.importActual('./index')) as {
       emailVerified: boolean
     }
   } | null>
+  getVerifiedTwitterUserInfo: (token: { accessToken?: string }) => Promise<{
+    user: {
+      id: string
+      name: string
+      email: string
+      image?: string
+      emailVerified: boolean
+    }
+    data?: { isPlaceholderEmail?: boolean }
+  } | null>
   auth: {
     options: {
       disabledPaths?: string[]
@@ -224,6 +234,7 @@ describe('better-auth socialProviders config', () => {
       []
     expect(trusted).toContain('github')
     expect(trusted).toContain('google')
+    expect(trusted).toContain('twitter')
     expect(trusted).toContain('credential')
     expect(trusted).toContain('magic-link')
   })
@@ -373,5 +384,97 @@ describe('better-auth socialProviders config', () => {
         clientSecret: expect.any(String),
       }),
     )
+  })
+
+  it('exposes X credentials from env when both are set', () => {
+    const providers = realAuthModule.auth.options.socialProviders ?? {}
+    expect(providers.twitter).toEqual(
+      expect.objectContaining({
+        clientId: expect.any(String),
+        clientSecret: expect.any(String),
+        getUserInfo: expect.any(Function),
+      }),
+    )
+  })
+
+  it('uses the confirmed X email when the profile includes one', async () => {
+    const fetchMock = vi.fn(async () =>
+      Response.json({
+        data: {
+          id: '2244994945',
+          name: 'X Dev',
+          username: 'xdev',
+          profile_image_url: 'https://x.test/avatar.png',
+          confirmed_email: 'dev@example.com',
+        },
+      }),
+    )
+    vi.stubGlobal('fetch', fetchMock)
+
+    const result = await realAuthModule.getVerifiedTwitterUserInfo({
+      accessToken: 'token-x-1',
+    })
+
+    expect(result?.user).toMatchObject({
+      id: '2244994945',
+      name: 'X Dev',
+      email: 'dev@example.com',
+      emailVerified: true,
+    })
+  })
+
+  it('falls back to a synthetic placeholder email when X returns no confirmed email', async () => {
+    const fetchMock = vi.fn(async () =>
+      Response.json({
+        data: {
+          id: '12',
+          name: 'Jack',
+          username: 'jack',
+          profile_image_url: null,
+        },
+      }),
+    )
+    vi.stubGlobal('fetch', fetchMock)
+
+    const result = await realAuthModule.getVerifiedTwitterUserInfo({
+      accessToken: 'token-x-2',
+    })
+
+    expect(result?.user).toMatchObject({
+      id: '12',
+      name: 'Jack',
+      email: '12@twitter.placeholder.local',
+      emailVerified: false,
+    })
+    expect(result?.data).toMatchObject({ isPlaceholderEmail: true })
+  })
+
+  it('returns null when the X profile request fails', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => {
+        throw new Error('network failure')
+      }),
+    )
+
+    await expect(
+      realAuthModule.getVerifiedTwitterUserInfo({ accessToken: 'token-x-3' }),
+    ).resolves.toBeNull()
+  })
+
+  it('returns null when the X profile response is not JSON', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => ({
+        ok: true,
+        json: async () => {
+          throw new Error('invalid JSON')
+        },
+      })),
+    )
+
+    await expect(
+      realAuthModule.getVerifiedTwitterUserInfo({ accessToken: 'token-x-4' }),
+    ).resolves.toBeNull()
   })
 })

@@ -9,6 +9,8 @@ const originalDeploymentValues = {
   GOOGLE_CLIENT_SECRET: env.GOOGLE_CLIENT_SECRET,
   GITHUB_CLIENT_ID: env.GITHUB_CLIENT_ID,
   GITHUB_CLIENT_SECRET: env.GITHUB_CLIENT_SECRET,
+  TWITTER_CLIENT_ID: env.TWITTER_CLIENT_ID,
+  TWITTER_CLIENT_SECRET: env.TWITTER_CLIENT_SECRET,
 }
 
 afterEach(() => {
@@ -23,6 +25,8 @@ describe('features.get', () => {
       GOOGLE_CLIENT_SECRET: 'google-secret',
       GITHUB_CLIENT_ID: 'github-client',
       GITHUB_CLIENT_SECRET: undefined,
+      TWITTER_CLIENT_ID: 'twitter-client',
+      TWITTER_CLIENT_SECRET: 'twitter-secret',
     })
 
     const result = await featuresRouter.createCaller({ auth: null }).get()
@@ -31,6 +35,7 @@ describe('features.get', () => {
       defaultCurrencyCode: 'EUR',
       enableGoogleOAuth: true,
       enableGitHubOAuth: false,
+      enableTwitterOAuth: true,
       enableVoiceExpense: false,
       signupMode: 'open',
       allowUninvitedSignup: true,

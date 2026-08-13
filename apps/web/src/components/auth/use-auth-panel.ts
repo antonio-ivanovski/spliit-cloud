@@ -177,7 +177,8 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
 
   const googleEnabled = deployment.enableGoogleOAuth
   const githubEnabled = deployment.enableGitHubOAuth
-  const socialEnabled = googleEnabled || githubEnabled
+  const twitterEnabled = deployment.enableTwitterOAuth
+  const socialEnabled = googleEnabled || githubEnabled || twitterEnabled
   const mode = canSignUp ? requestedMode : 'sign-in'
 
   const canSubmitPassword = (() => {
@@ -235,6 +236,16 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
     )
   }
 
+  function handleTwitter() {
+    void authClient.signIn.social(
+      {
+        provider: 'twitter',
+        callbackURL,
+      },
+      signupInviteFetchOptions(linkInviteToken),
+    )
+  }
+
   return {
     mode,
     emailVariant,
@@ -249,6 +260,7 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
     hasEmailInvitation,
     googleEnabled,
     githubEnabled,
+    twitterEnabled,
     socialEnabled,
     callbackURL,
     setEmail,
@@ -262,6 +274,7 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
     handlePasswordSubmit,
     handleGoogle,
     handleGithub,
+    handleTwitter,
     emailAuth,
     magicLink,
   }

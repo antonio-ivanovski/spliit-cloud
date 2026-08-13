@@ -1375,7 +1375,8 @@
     "inviteOnly": {
       "message": "Bu kurulum yalnızca davetle erişilebilir. Bir davet bağlantısı kullanın veya birinden sizi bir gruba davet etmesini isteyin.",
       "useInvitedEmail": "Davet edildiğiniz e-posta adresini kullanın."
-    }
+    },
+    "signInWithX": "X ile devam et"
   },
   "CompleteProfile": {
     "title": "Profilinizi tamamlayın",

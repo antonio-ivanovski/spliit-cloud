@@ -1692,7 +1692,8 @@
     "inviteOnly": {
       "message": "Această instanță este doar pe bază de invitație. Folosește un link de invitație sau cere cuiva să te invite într-un grup.",
       "useInvitedEmail": "Folosește adresa de email cu care ai primit invitația."
-    }
+    },
+    "signInWithX": "Continuă cu X"
   },
   "CompleteProfile": {
     "title": "Completează-ți profilul",

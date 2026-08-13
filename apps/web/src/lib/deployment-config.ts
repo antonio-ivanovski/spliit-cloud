@@ -8,6 +8,7 @@ export type DeploymentConfig = Pick<
   | 'defaultCurrencyCode'
   | 'enableGoogleOAuth'
   | 'enableGitHubOAuth'
+  | 'enableTwitterOAuth'
   | 'signupMode'
   | 'allowUninvitedSignup'
 >
@@ -21,6 +22,9 @@ function getBuildTimeFallback(): DeploymentConfig {
     enableGitHubOAuth:
       import.meta.env.VITE_ENABLE_GITHUB_OAUTH === 'true' ||
       import.meta.env.VITE_ENABLE_GITHUB_OAUTH === '1',
+    enableTwitterOAuth:
+      import.meta.env.VITE_ENABLE_TWITTER_OAUTH === 'true' ||
+      import.meta.env.VITE_ENABLE_TWITTER_OAUTH === '1',
     signupMode: 'open',
     allowUninvitedSignup: true,
   }
@@ -34,12 +38,14 @@ export function useDeploymentConfig(): DeploymentConfig {
       defaultCurrencyCode,
       enableGoogleOAuth,
       enableGitHubOAuth,
+      enableTwitterOAuth,
       signupMode,
       allowUninvitedSignup,
     }): DeploymentConfig => ({
       defaultCurrencyCode,
       enableGoogleOAuth,
       enableGitHubOAuth,
+      enableTwitterOAuth,
       signupMode,
       allowUninvitedSignup,
     }),

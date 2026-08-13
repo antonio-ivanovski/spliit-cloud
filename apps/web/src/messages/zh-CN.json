@@ -1677,7 +1677,8 @@
     "inviteOnly": {
       "message": "此实例仅限邀请加入。请使用邀请链接，或请他人邀请您加入群组。",
       "useInvitedEmail": "请使用收到邀请的邮箱地址。"
-    }
+    },
+    "signInWithX": "使用 X 继续"
   },
   "CompleteProfile": {
     "title": "完善您的个人资料",
