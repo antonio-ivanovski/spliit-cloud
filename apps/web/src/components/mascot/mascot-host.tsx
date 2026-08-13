@@ -534,12 +534,7 @@ export function MascotHost() {
             )}
           />
           <Character
-            className={cn(
-              'relative h-full w-full drop-shadow-[0_14px_14px_hsl(var(--mascot-ink)/0.22)] dark:drop-shadow-[0_18px_22px_hsl(0_0%_0%/0.55)]',
-              !docked &&
-                !dragPx &&
-                'transition-transform duration-300 ease-out group-hover:-translate-y-1 group-hover:scale-[1.035] group-active:translate-y-0 group-active:scale-95',
-            )}
+            className="relative h-full w-full drop-shadow-[0_14px_14px_hsl(var(--mascot-ink)/0.22)] dark:drop-shadow-[0_18px_22px_hsl(0_0%_0%/0.55)]"
             docked={docked}
             open={open}
             reaction={mascot.reaction}

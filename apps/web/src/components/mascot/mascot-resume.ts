@@ -1,6 +1,11 @@
 const resumeListeners = new Set<() => void>()
 let resumeCycle = 0
 let resumeAttached = false
+let backgrounded = false
+
+function markBackgrounded() {
+  backgrounded = true
+}
 
 function emitResume() {
   if (
@@ -9,17 +14,25 @@ function emitResume() {
   ) {
     return
   }
+  if (!backgrounded) return
+  backgrounded = false
   resumeCycle += 1
   for (const listener of resumeListeners) listener()
 }
 
 function onVisibilityChange() {
-  if (document.visibilityState === 'visible') emitResume()
+  if (document.visibilityState === 'hidden') {
+    markBackgrounded()
+    return
+  }
+  emitResume()
 }
 
 function attachResumeListeners() {
   if (resumeAttached || typeof window === 'undefined') return
   resumeAttached = true
+  window.addEventListener('blur', markBackgrounded)
+  window.addEventListener('pagehide', markBackgrounded)
   window.addEventListener('focus', emitResume)
   window.addEventListener('pageshow', emitResume)
   document.addEventListener('visibilitychange', onVisibilityChange)
@@ -34,6 +47,9 @@ function detachResumeListeners() {
     return
   }
   resumeAttached = false
+  backgrounded = false
+  window.removeEventListener('blur', markBackgrounded)
+  window.removeEventListener('pagehide', markBackgrounded)
   window.removeEventListener('focus', emitResume)
   window.removeEventListener('pageshow', emitResume)
   document.removeEventListener('visibilitychange', onVisibilityChange)

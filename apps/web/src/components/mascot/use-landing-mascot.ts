@@ -2,6 +2,7 @@ import { useReducedMotion } from 'motion/react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import {
+  DEFAULT_REACTION_DURATION,
   useMascotController,
   useMascotState,
   type MascotReaction,
@@ -26,9 +27,9 @@ const AMBIENT_REACTIONS: Array<{
   reaction: MascotReaction
   duration: number
 }> = [
-  { reaction: 'welcome', duration: 2_200 },
+  { reaction: 'welcome', duration: DEFAULT_REACTION_DURATION.welcome },
   { reaction: 'thinking', duration: 1_600 },
-  { reaction: 'success', duration: 2_500 },
+  { reaction: 'success', duration: DEFAULT_REACTION_DURATION.success },
 ]
 
 function wrapIndex(index: number) {
@@ -79,7 +80,7 @@ export function useLandingMascot() {
 
   const onTap = useCallback(() => {
     resetIdle()
-    mascot.react('success', 900)
+    mascot.react('success')
     openSpeech(speechIndexRef.current + 1)
   }, [mascot, openSpeech, resetIdle])
 

@@ -124,7 +124,17 @@ function BillArtwork({
       className={className}
       aria-hidden="true"
       focusable="false"
-      initial={false}
+      initial={
+        reaction === 'idle'
+          ? {
+              opacity: 1,
+              x: 0,
+              y: 0,
+              rotate: 0,
+              scale: docked ? 0.78 : 1,
+            }
+          : false
+      }
       animate={{ opacity: 1, ...wholeAnimation }}
       transition={
         reaction === 'idle'
@@ -132,10 +142,20 @@ function BillArtwork({
               opacity: { duration: 0.24 },
               scale: spring,
               y: ambient
-                ? { duration: 3.6, ease: 'easeInOut', repeat: Infinity }
+                ? {
+                    duration: 3.6,
+                    ease: 'easeInOut',
+                    repeat: Infinity,
+                    repeatType: 'loop',
+                  }
                 : spring,
               rotate: ambient
-                ? { duration: 5.4, ease: 'easeInOut', repeat: Infinity }
+                ? {
+                    duration: 5.4,
+                    ease: 'easeInOut',
+                    repeat: Infinity,
+                    repeatType: 'loop',
+                  }
                 : spring,
             }
           : reaction === 'thinking'

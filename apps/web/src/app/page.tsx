@@ -18,9 +18,11 @@ export default function HomePage() {
   if (!isPending && !account) {
     return (
       <main className="flex-1 px-4 py-8 sm:py-12 lg:py-16">
-        <div className="motion-stagger container grid min-h-[calc(100vh-12rem)] max-w-(--breakpoint-lg) items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(360px,420px)]">
+        <div className="container grid min-h-[calc(100vh-12rem)] max-w-(--breakpoint-lg) items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(360px,420px)]">
           <LandingIntro />
-          <AuthPanel />
+          <div className="motion-enter">
+            <AuthPanel />
+          </div>
         </div>
       </main>
     )
@@ -58,11 +60,11 @@ function LandingIntro() {
           type="button"
           data-testid="landing-bill"
           aria-label={t('Mascot.greetBill')}
-          className="group relative shrink-0 rounded-[2rem] outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          className="relative shrink-0 overflow-visible rounded-[2rem] outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           onClick={onTap}
         >
           <LandingCharacter
-            className="relative h-[168px] w-[154px] drop-shadow-[0_14px_14px_hsl(var(--mascot-ink)/0.22)] transition-transform duration-300 ease-out group-hover:-translate-y-1 group-hover:scale-[1.035] group-active:translate-y-0 group-active:scale-95 sm:h-[196px] sm:w-[180px] dark:drop-shadow-[0_18px_22px_hsl(0_0%_0%/0.55)]"
+            className="relative h-[168px] w-[154px] drop-shadow-[0_14px_14px_hsl(var(--mascot-ink)/0.22)] sm:h-[196px] sm:w-[180px] dark:drop-shadow-[0_18px_22px_hsl(0_0%_0%/0.55)]"
             reaction={reaction}
             reactionKey={reactionKey}
           />
@@ -82,7 +84,7 @@ function LandingIntro() {
           </MascotSpeechBubble>
         ) : null}
       </div>
-      <div className="flex flex-col gap-4">
+      <div className="motion-enter flex flex-col gap-4">
         <h1 className="landing-header py-2 text-3xl leading-none! font-bold sm:text-4xl lg:text-5xl">
           <Trans i18nKey="Homepage.title" components={{ strong: <strong /> }} />
         </h1>

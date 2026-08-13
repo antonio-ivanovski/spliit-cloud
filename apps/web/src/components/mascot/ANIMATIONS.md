@@ -35,7 +35,9 @@ Paper is **always a solid receipt**, including in dark mode. Fills use opaque `-
 
 Infinite `y` (3.6s) and `rotate` (5.4s) on the root SVG, plus blink / glance on the face. **Do not** stop these targets when the document hides — flipping to `{ y: 0, rotate: 0 }` is what froze the landing loop under extension popups.
 
-On `window` `focus`, `pageshow`, and `visibilitychange` → `visible`, [`mascot-resume.ts`](./mascot-resume.ts) bumps `resumeCycle`. Idle remounts the Motion node (`key={`idle-${resumeCycle}`}`, `data-mascot-cycle`) so a dead clock starts from rest.
+Do **not** put CSS `transform` / `transition-transform` / hover-translate on the Motion SVG or on an ancestor that plays a one-shot transform animation (`motion-stagger`, `motion-rise`). Those steal the compositor layer and cut the idle loop mid-bob. Hover lift lives off Bill’s Motion node.
+
+On `window` `blur`/`pagehide` or `visibilitychange` → `hidden`, then a later `focus` / `pageshow` / `visible`, [`mascot-resume.ts`](./mascot-resume.ts) bumps `resumeCycle`. Idle remounts the Motion node from rest (`key={`idle-${resumeCycle}`}`, `data-mascot-cycle`, explicit `initial`) so a dead clock starts again. Spurious `focus` while the tab stayed in the foreground does **not** remount — that was cutting the homepage bob in half.
 
 ### Welcome
 

@@ -44,13 +44,30 @@ describe('BillCharacter', () => {
     ).not.toBe(cycle)
   })
 
-  it('remounts the idle loop when the window regains focus', () => {
+  it('does not remount idle on a spurious window focus', () => {
     const { container } = render(<BillCharacter />)
     const cycle = container
       .querySelector('[data-mascot-reaction="idle"]')
       ?.getAttribute('data-mascot-cycle')
 
     act(() => {
+      window.dispatchEvent(new Event('focus'))
+    })
+    expect(
+      container
+        .querySelector('[data-mascot-reaction="idle"]')
+        ?.getAttribute('data-mascot-cycle'),
+    ).toBe(cycle)
+  })
+
+  it('remounts the idle loop when the window blurs then regains focus', () => {
+    const { container } = render(<BillCharacter />)
+    const cycle = container
+      .querySelector('[data-mascot-reaction="idle"]')
+      ?.getAttribute('data-mascot-cycle')
+
+    act(() => {
+      window.dispatchEvent(new Event('blur'))
       window.dispatchEvent(new Event('focus'))
     })
     expect(

@@ -114,7 +114,12 @@ describe('HomePage (signed-out)', () => {
 
     const { user } = render(<HomePage />)
 
-    expect(screen.getByTestId('landing-bill')).toBeInTheDocument()
+    const bill = screen.getByTestId('landing-bill')
+    expect(bill).toBeInTheDocument()
+    expect(bill.closest('.motion-stagger')).toBeNull()
+    expect(bill.querySelector('svg')?.getAttribute('class')).not.toMatch(
+      /transition-transform/,
+    )
     expect(screen.queryByTestId('bill-mascot-trigger')).toBeNull()
     expect(screen.queryByText('Accounts')).not.toBeInTheDocument()
     expect(screen.queryByText('Groups + sync')).not.toBeInTheDocument()
