@@ -80,12 +80,7 @@ describe('buildGroupStatsDashboard', () => {
   })
 
   it('excludes settlements and nets non-positive expenses in spending visuals', () => {
-    const settlement = expense(
-      'settlement',
-      '2024-06-05',
-      900,
-      'settlement',
-    )
+    const settlement = expense('settlement', '2024-06-05', 900, 'settlement')
     const refund = expense('refund', '2024-06-06', -200, 'groceries')
 
     const dashboard = buildGroupStatsDashboard(

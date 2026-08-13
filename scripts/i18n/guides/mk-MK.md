@@ -7,4 +7,4 @@ Apply `default.md` first, then these Macedonian rules.
 - Match grammatical gender and number; rephrase when a short label can stay neutral without sounding forced.
 - Fill the locale’s CLDR plural categories with complete natural Macedonian phrases and keep `{count}` in each required form.
 - Keep terminology stable for members, groups, expenses, shares, balances, and settlements.
-- Exclusive settlement term: *порамнување* (noun) and *порамни* (verb). Never *надомест* or *рефундација* for this concept.
+- Exclusive settlement term: _порамнување_ (noun) and _порамни_ (verb). Never _надомест_ or _рефундација_ for this concept.

@@ -7,4 +7,4 @@ Apply `default.md` first, then these Bangla (Bangladesh) rules.
 - Prefer neutral phrasing that does not force a person’s gender. Use respectful forms consistently rather than switching between familiar and formal address.
 - Bangla often expresses plurality through context; still fill every CLDR plural key with a natural sentence and keep `{count}` where required.
 - Use Bangladesh-appropriate terms for groups, members, expenses, and money, while preserving the exact numeric meaning supplied by the app.
-- Exclusive settlement term: *নিষ্পত্তি* (noun and verb). Never *রিফান্ড* or *ক্ষতিপূরণ* for this concept.
+- Exclusive settlement term: _নিষ্পত্তি_ (noun and verb). Never _রিফান্ড_ or _ক্ষতিপূরণ_ for this concept.

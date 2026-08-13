@@ -7,4 +7,4 @@ Apply `default.md` first, then these Swedish (Sweden) rules.
 - Swedish has common/neuter noun gender (`en`/`ett`); maintain agreement but avoid gendered language about users where possible.
 - Preserve Swedish diacritics and punctuation, and do not capitalize every word in a label.
 - Keep terminology stable for expenses, shares, balances, and settlements and preserve exact numeric meaning.
-- Exclusive settlement term: *reglering* (noun) and *reglera* (verb). Never *återbetalning* or *ersättning* for this concept.
+- Exclusive settlement term: _reglering_ (noun) and _reglera_ (verb). Never _återbetalning_ or _ersättning_ for this concept.

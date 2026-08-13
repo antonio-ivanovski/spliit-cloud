@@ -220,9 +220,9 @@ export async function bulkUpdateExpenseCategories(args: {
 
 /**
  * Read-side helper used by the AI preview / calibrate endpoints. Returns the
- * expenses eligible for bulk categorization: non-settlements whose
- * `categoryId` matches `fromCategoryId` and whose `ledgerId` is the group's.
- * Read-only — no side effects, so safe to call many times during calibration.
+ * expenses eligible for bulk categorization: non-settlements whose `categoryId`
+ * matches `fromCategoryId` and whose `ledgerId` is the group's. Read-only — no
+ * side effects, so safe to call many times during calibration.
  */
 export async function listBulkCategorizeCandidates(args: {
   groupId: string

@@ -7,4 +7,4 @@ Apply `default.md` first, then these Ukrainian rules.
 - Respect Ukrainian plural categories and count-dependent forms. Keep `{count}` in each required form and do not copy Russian plural wording.
 - Preserve Ukrainian apostrophes, diacritics, quotation marks, and punctuation.
 - Use stable Ukrainian product terminology for expenses, shares, balances, and settlements, with no change to numeric meaning.
-- Exclusive settlement term: *розрахунок* (noun) and *розрахуватися* (verb). Never *відшкодування* or *компенсація* for this concept.
+- Exclusive settlement term: _розрахунок_ (noun) and _розрахуватися_ (verb). Never _відшкодування_ or _компенсація_ for this concept.

@@ -7,4 +7,4 @@ Apply `default.md` first, then these Vietnamese rules.
 - Preserve Vietnamese tone marks and natural word order. Use classifiers and measure words only when Vietnamese requires them.
 - Vietnamese often expresses plurality through context or a number; still provide natural text for every required plural key.
 - Keep labels concise, avoid English calques, and preserve exact numeric and currency meaning.
-- Exclusive settlement term: *tất toán* (noun and verb). Never *hoàn trả*, *hoàn tiền*, or refund cognates.
+- Exclusive settlement term: _tất toán_ (noun and verb). Never _hoàn trả_, _hoàn tiền_, or refund cognates.

@@ -7,4 +7,4 @@ Apply `default.md` first, then these German (Germany) rules.
 - Use Germany terminology rather than Swiss or Austrian variants unless the existing bundle establishes another term.
 - Preserve grammatical gender and case, but rephrase when that avoids awkward gendered references in a short UI label.
 - Keep numbers, currency, and punctuation readable in German; never alter the app’s numeric value or placeholder syntax.
-- Exclusive settlement term: *Ausgleich* (noun) and *ausgleichen* (verb). Never *Erstattung* or *Rückerstattung*.
+- Exclusive settlement term: _Ausgleich_ (noun) and _ausgleichen_ (verb). Never _Erstattung_ or _Rückerstattung_.

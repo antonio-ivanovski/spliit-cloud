@@ -59,8 +59,8 @@ export const leavePreviewProcedure = protectedProcedure
  * - If the caller has unsettled balances and `force` is not `true`, the mutation
  *   throws `PRECONDITION_FAILED` so the UI can prompt for the forced
  *   settlement,
- * - On `force`, one settlement expense is created per leg
- *   involving the leaving user before flipping the membership to `LEFT`.
+ * - On `force`, one settlement expense is created per leg involving the leaving
+ *   user before flipping the membership to `LEFT`.
  */
 export const leaveGroupProcedure = protectedProcedure
   .input(

@@ -7,4 +7,4 @@ Apply `default.md` first, then these Hindi (India) rules.
 - Maintain correct gender and number agreement, but rephrase to avoid unnecessary gender assumptions in labels and accessibility text.
 - Use the Devanagari danda where natural, preserve vowel marks, and keep Latin brands, URLs, and placeholders intact.
 - Fill locale-specific plural forms naturally and preserve the exact amount, percentage, or count represented by the app.
-- Exclusive settlement term: *निपटान* (noun) and *निपटाना* (verb). Never *प्रतिपूर्ति* or *रिफंड* for this concept.
+- Exclusive settlement term: _निपटान_ (noun) and _निपटाना_ (verb). Never _प्रतिपूर्ति_ or _रिफंड_ for this concept.

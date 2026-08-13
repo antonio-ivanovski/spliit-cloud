@@ -54,9 +54,7 @@ const SETTLEMENT_TITLE = 'Settlement on archive'
  * Build the optimal list of "settlement legs" (from, to, amount) that zero out
  * the group's balances.
  */
-export function buildSettlementLegs(
-  balances: Balances,
-): SuggestedSettlement[] {
+export function buildSettlementLegs(balances: Balances): SuggestedSettlement[] {
   return getSuggestedSettlements(balances)
 }
 
