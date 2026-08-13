@@ -586,7 +586,7 @@ describe('groupsRouter.leave — unsettled balances', () => {
     // Alice paid 60 for [Alice, Bob]: Alice +30, Bob -30.
     // Carol paid 30 for [Bob, Carol]: Carol +15, Bob -15.
     // Totals: Alice +30, Bob -45, Carol +15.
-    // Greedy reimbursements:
+    // Greedy settlements:
     //   Bob -> Alice, $30  (involves Alice)
     //   Bob -> Carol, $15  (does NOT involve Alice)
     // Only the first leg involves Alice and should be written.

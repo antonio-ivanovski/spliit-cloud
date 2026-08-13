@@ -6,7 +6,7 @@ const balanceSchema = z.object({
   total: z.number().int(),
 })
 
-const reimbursementSchema = z.object({
+const suggestedSettlementSchema = z.object({
   from: z.string(),
   to: z.string(),
   amount: z.number().int(),
@@ -45,18 +45,18 @@ const subgroupSettlementPlanSchema = z.object({
 })
 
 const individualSettlementPlanSchema = z.object({
-  reimbursements: z.array(reimbursementSchema),
+  suggestedSettlements: z.array(suggestedSettlementSchema),
   policy: z.enum(['standard', 'within-subgroups', 'all-individual']),
 })
 
 export const listBalancesOutputSchema = z.object({
   balances: balancesRecordSchema,
-  reimbursements: z.array(reimbursementSchema),
+  suggestedSettlements: z.array(suggestedSettlementSchema),
   currencyBalances: z.array(
     z.object({
       currencyCode: z.string(),
       balances: balancesRecordSchema,
-      reimbursements: z.array(reimbursementSchema),
+      suggestedSettlements: z.array(suggestedSettlementSchema),
     }),
   ),
   participants: z.array(

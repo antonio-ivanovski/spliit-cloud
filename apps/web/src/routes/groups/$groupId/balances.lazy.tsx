@@ -1,7 +1,7 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
 
-import BalancesAndReimbursements from '@/app/groups/[groupId]/balances/balances-and-reimbursements'
+import BalancesAndSettlements from '@/app/groups/[groupId]/balances/balances-and-settlements'
 
 export const Route = createLazyFileRoute('/groups/$groupId/balances')({
-  component: BalancesAndReimbursements,
+  component: BalancesAndSettlements,
 })

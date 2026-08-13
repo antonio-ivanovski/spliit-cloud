@@ -305,7 +305,7 @@ describe('tryParseSplitwiseCsv', () => {
     expect(result.source.expenses).toHaveLength(1)
   })
 
-  it('marks Payment category rows as reimbursements', () => {
+  it('marks Payment category rows as settlements', () => {
     const csv = splitwiseCsv([
       [
         '2026-01-15',
@@ -323,7 +323,7 @@ describe('tryParseSplitwiseCsv', () => {
     expect(result.source.expenses[0].category).toBe('settlement')
   })
 
-  it('marks "<Name> I. paid <Name> I." description as reimbursement', () => {
+  it('marks "<Name> I. paid <Name> I." description as settlement', () => {
     const csv = splitwiseCsv([
       [
         '2026-01-15',
@@ -341,7 +341,7 @@ describe('tryParseSplitwiseCsv', () => {
     expect(result.source.expenses[0].category).toBe('settlement')
   })
 
-  it('does NOT mark ordinary expenses as reimbursements', () => {
+  it('does NOT mark ordinary expenses as settlements', () => {
     const csv = splitwiseCsv([
       ['2026-01-15', 'Pazarenje', 'General', '30.00', 'MKD', '15.00', '-15.00'],
     ])
@@ -351,7 +351,7 @@ describe('tryParseSplitwiseCsv', () => {
     expect(result.source.expenses[0].category).not.toBe('settlement')
   })
 
-  it('handles a real-style reimbursement row with both payer and receiver columns', () => {
+  it('handles a real-style settlement row with both payer and receiver columns', () => {
     const csv = splitwiseCsv([
       [
         '2026-01-15',
@@ -374,7 +374,7 @@ describe('tryParseSplitwiseCsv', () => {
     expect(e.paidFor).toEqual([pf(aid(result.source, 1), 5000)])
   })
 
-  it('handles Payment-category reimbursement with positive+negative columns', () => {
+  it('handles Payment-category settlement with positive+negative columns', () => {
     const csv = splitwiseCsv([
       [
         '2026-01-15',

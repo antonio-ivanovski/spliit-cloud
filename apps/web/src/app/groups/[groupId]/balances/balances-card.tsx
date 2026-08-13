@@ -5,7 +5,7 @@ import { ParticipantSegmentBar } from '@/components/participant-segment-bar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { useLocale } from '@/i18n/react'
-import type { Balances, Reimbursement } from '@/lib/balances'
+import type { Balances, SuggestedSettlement } from '@/lib/balances'
 import type { Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
 import type {
@@ -48,7 +48,7 @@ export function BalancesCard({
   participantCount,
   currencyDisplay,
   balances,
-  reimbursements,
+  suggestedSettlements,
   currencyBalances,
   participants,
   groupCurrency,
@@ -63,7 +63,7 @@ export function BalancesCard({
   participantCount?: number
   currencyDisplay: 'group' | 'original'
   balances: Balances | undefined
-  reimbursements: Reimbursement[] | undefined
+  suggestedSettlements: SuggestedSettlement[] | undefined
   currencyBalances: CurrencyBalance[]
   participants: Participant[]
   groupCurrency: Currency | undefined
@@ -96,7 +96,7 @@ export function BalancesCard({
             {currencyBalances.length === 0 ? (
               <SettlementSection
                 balances={{}}
-                reimbursements={[]}
+                suggestedSettlements={[]}
                 participants={participants}
                 currency={groupCurrency!}
                 groupId={groupId}
@@ -109,7 +109,7 @@ export function BalancesCard({
                 >
                   <SettlementSection
                     balances={summary.balances}
-                    reimbursements={summary.reimbursements}
+                    suggestedSettlements={summary.suggestedSettlements}
                     participants={participants}
                     currency={summary.currency}
                     groupId={groupId}
@@ -132,7 +132,7 @@ export function BalancesCard({
         ) : (
           <SettlementSection
             balances={balances ?? {}}
-            reimbursements={reimbursements ?? []}
+            suggestedSettlements={suggestedSettlements ?? []}
             participants={participants}
             currency={groupCurrency!}
             groupId={groupId}
@@ -150,7 +150,7 @@ export function BalancesCard({
 
 export function SettlementSection({
   balances,
-  reimbursements,
+  suggestedSettlements,
   participants,
   currency,
   groupId,
@@ -158,7 +158,7 @@ export function SettlementSection({
   individualSettlementPolicy,
 }: {
   balances: Balances
-  reimbursements: Reimbursement[]
+  suggestedSettlements: SuggestedSettlement[]
   participants: Participant[]
   currency: Currency
   groupId: string
@@ -194,7 +194,7 @@ export function SettlementSection({
         <SettlementDirection
           title={t('direction.toReceive')}
           participants={receiving}
-          reimbursements={reimbursements}
+          suggestedSettlements={suggestedSettlements}
           direction="receive"
           currency={currency}
           locale={locale}
@@ -208,7 +208,7 @@ export function SettlementSection({
         <SettlementDirection
           title={t('direction.toPay')}
           participants={paying}
-          reimbursements={reimbursements}
+          suggestedSettlements={suggestedSettlements}
           direction="pay"
           currency={currency}
           locale={locale}
@@ -245,7 +245,7 @@ export function SettlementSection({
         paying.length === 0 &&
         settled.length === 0 && (
           <p className="text-sm text-muted-foreground">
-            {t('Reimbursements.noImbursements')}
+            {t('Settlements.noSettlements')}
           </p>
         )}
     </div>
@@ -280,7 +280,7 @@ function SettlementPolicyNote({
 function SettlementDirection({
   title,
   participants,
-  reimbursements,
+  suggestedSettlements,
   direction,
   currency,
   locale,
@@ -291,7 +291,7 @@ function SettlementDirection({
 }: {
   title: string
   participants: Participant[]
-  reimbursements: Reimbursement[]
+  suggestedSettlements: SuggestedSettlement[]
   direction: 'receive' | 'pay'
   currency: Currency
   locale: string
@@ -315,10 +315,10 @@ function SettlementDirection({
       </p>
       <div className="space-y-5">
         {participants.map((participant) => {
-          const legs = reimbursements.filter((reimbursement) =>
+          const legs = suggestedSettlements.filter((settlement) =>
             direction === 'receive'
-              ? reimbursement.to === participant.id
-              : reimbursement.from === participant.id,
+              ? settlement.to === participant.id
+              : settlement.from === participant.id,
           )
           const rows = legs.map((leg) => {
             const counterparty = getParticipant(
@@ -441,7 +441,7 @@ function SettlementDirection({
                                     amount: legAmount,
                                   },
                                 )}
-                                data-testid={`reimbursement-settle-${direction}-${leg.from}-${leg.to}`}
+                                data-testid={`settlement-settle-${direction}-${leg.from}-${leg.to}`}
                               >
                                 {t('direction.settle')}
                               </Button>

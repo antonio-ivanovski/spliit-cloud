@@ -58,7 +58,7 @@ const sumValues = (map: Record<string, number>) =>
   Object.values(map).reduce((s, n) => s + n, 0)
 
 describe('getTotalGroupSpending', () => {
-  it('sums all non-reimbursement expenses', () => {
+  it('sums all non-settlement expenses', () => {
     const expenses = [
       makeExpense({ id: 'e1', amount: 100 }),
       makeExpense({ id: 'e2', amount: 250 }),
@@ -68,7 +68,7 @@ describe('getTotalGroupSpending', () => {
     expect(getTotalGroupSpending(expenses)).toBe(400)
   })
 
-  it('excludes reimbursements from total spending', () => {
+  it('excludes settlements from total spending', () => {
     const expenses = [
       makeExpense({ id: 'e1', amount: 100 }),
       makeExpense({ id: 'e2', amount: 999, categoryId: 'settlement' }),
@@ -108,7 +108,7 @@ describe('getTotalActiveUserPaidFor', () => {
     expect(getTotalActiveUserPaidFor('u1', expenses)).toBe(2025)
   })
 
-  it('excludes reimbursements even if paid by active user', () => {
+  it('excludes settlements even if paid by active user', () => {
     const expenses: TotalsExpense[] = [
       makeExpense({
         id: 'e1',
@@ -638,7 +638,7 @@ describe('calculatePaidByShares', () => {
 })
 
 describe('calculateShare', () => {
-  it('returns 0 for reimbursements', () => {
+  it('returns 0 for settlements', () => {
     const expense: ShareExpense = {
       amount: 100,
       categoryId: 'settlement',
@@ -789,7 +789,7 @@ describe('calculateShare', () => {
 })
 
 describe('calculatePaidByShare', () => {
-  it('returns 0 for reimbursements', () => {
+  it('returns 0 for settlements', () => {
     const expense: PaidByShareExpense = {
       amount: 100,
       categoryId: 'settlement',

@@ -613,7 +613,7 @@ describe('Import participant deduplication', () => {
   })
 })
 
-describe('Import summary — totalAmount excludes reimbursements', () => {
+describe('Import summary — totalAmount excludes settlements', () => {
   const runId4 = testRunId()
   const adminId4 = `acct-total-${runId4}`
   const adminEmail4 = `total-${runId4}@test.example`
@@ -724,7 +724,7 @@ describe('Import summary — totalAmount excludes reimbursements', () => {
     }
   }
 
-  it('totalAmount excludes reimbursement expenses so it matches Total group spendings', async () => {
+  it('totalAmount excludes settlement expenses so it matches Total group spendings', async () => {
     const { groupId, ledgerId, adminLp } = await createGroupWithAdmin('EUR')
 
     await makeCaller4().import({
@@ -764,13 +764,13 @@ describe('Import summary — totalAmount excludes reimbursements', () => {
     expect(summaryActivities).toHaveLength(1)
     const summaryData = summaryActivities[0].data as Record<string, unknown>
     expect(summaryData.kind).toBe('import_summary')
-    // count includes the reimbursement (76 in the user's report); totalAmount does not
+    // count includes the settlement (76 in the user's report); totalAmount does not
     expect(summaryData.count).toBe(3)
     expect(summaryData.totalAmount).toBe(4500)
     expect(summaryData.currencyCode).toBe('EUR')
   })
 
-  it('totalAmount equals sum of all expenses when none are reimbursements', async () => {
+  it('totalAmount equals sum of all expenses when none are settlements', async () => {
     const { groupId, ledgerId, adminLp } = await createGroupWithAdmin('EUR')
 
     await makeCaller4().import({
@@ -804,7 +804,7 @@ describe('Import summary — totalAmount excludes reimbursements', () => {
     expect(summaryData.totalAmount).toBe(3000)
   })
 
-  it('totalAmount is zero when all expenses are reimbursements', async () => {
+  it('totalAmount is zero when all expenses are settlements', async () => {
     const { groupId, ledgerId, adminLp } = await createGroupWithAdmin('EUR')
 
     await makeCaller4().import({

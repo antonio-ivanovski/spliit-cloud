@@ -47,7 +47,7 @@ Small hop plus a temporary stick arm (`data-mascot-arm="wave"`) painted **behind
 
 Modest bounce (`y` −13 then −6) and a short scale pulse. Happy squint eyes and a **closed** stroke smile (`M57 76Q70 88 83 76`) — not an open mouth. Money-rain confetti (coins and small bills falling past Bill, `data-mascot-fx="success"` / `data-mascot-rain`). No star sparkles.
 
-### Celebrate (reimbursement / settle)
+### Celebrate (settlement / settle)
 
 Not a bigger success. Receipt halves clap (`data-mascot-clap="true"`): split, meet, split a little, meet. Coin burst plus the same star sparkles (`data-mascot-fx="celebrate"` / `data-mascot-sparkles`). Same squint eyes, slightly wider closed smile. Whole-body motion stays small so the clap reads.
 

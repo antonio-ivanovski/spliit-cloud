@@ -212,7 +212,7 @@
     "receivedByMultiple": "Được nhận bởi <paidByNames></paidByNames> · phân bổ cho <paidFor></paidFor>",
     "yourBalance": "Số dư của bạn",
     "notInvolved": "Bạn không liên quan",
-    "settlementBadge": "Thanh toán",
+    "settlementBadge": "Tất toán",
     "items": {
       "more_zero": "+{count} nữa",
       "more_one": "+{count} nữa",
@@ -224,7 +224,8 @@
       "participants": "{names}",
       "showLess": "Thu gọn"
     },
-    "copyToast": "Đã bắt đầu sao chép chi phí. Chi tiết chi phí hiện tại sẽ được dùng để tạo chi phí mới."
+    "copyToast": "Đã bắt đầu sao chép chi phí. Chi tiết chi phí hiện tại sẽ được dùng để tạo chi phí mới.",
+    "incomeBadge": "Thu nhập"
   },
   "ExpenseSeries": {
     "badge": "Định kỳ",
@@ -1096,8 +1097,7 @@
       "edit": "Cập nhật khoản thu",
       "TitleField": {
         "label": "Tiêu đề",
-        "placeholder": "Nhập tiêu đề…",
-        "description": "Mô tả ngắn về khoản thu."
+        "placeholder": "Nhập tiêu đề…"
       },
       "DateField": {
         "label": "Ngày",
@@ -1127,8 +1127,7 @@
       "edit": "Cập nhật chi phí",
       "TitleField": {
         "label": "Tiêu đề",
-        "placeholder": "Nhập tiêu đề…",
-        "description": "Mô tả ngắn về chi phí."
+        "placeholder": "Nhập tiêu đề…"
       },
       "DateField": {
         "label": "Ngày",
@@ -1304,7 +1303,6 @@
     "save": "Lưu",
     "saving": "Đang lưu…",
     "cancel": "Hủy",
-    "reimbursement": "Thanh toán hoàn trả",
     "readOnlyNotice": "Chế độ chỉ đọc.",
     "ParticipantDistribution": {
       "missing": "Thiếu {missing} {total}",
@@ -1421,7 +1419,10 @@
       "chooseTimezone": "Chọn múi giờ",
       "done": "Xong",
       "yourTime": "giờ của bạn"
-    }
+    },
+    "settlementTitle": "Thanh toán tất toán",
+    "settlementHint": "{category}: Không tính là chi tiêu trong tổng, thống kê hoặc ngân sách. Vẫn cập nhật ai nợ ai.",
+    "incomeHint": "{category}: Dùng cho tiền nhận được. Được nhóm là thu nhập, không phải một lần mua."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Xóa tài liệu",
@@ -1495,14 +1496,6 @@
     "title": "Số dư",
     "description": "Xem ai nợ ai.",
     "removedBadge": "Đã xóa",
-    "Reimbursements": {
-      "title": "Các khoản thanh toán hoàn trả gợi ý",
-      "description": "Theo dõi các khoản thanh toán.",
-      "noImbursements": "Không có hoàn trả.",
-      "owes": "<strong>{from}</strong> nợ <strong>{to}</strong>",
-      "markAsPaid": "Đã thanh toán",
-      "markAsPaidAria": "Đánh dấu đã thanh toán {amount} {from} {to}"
-    },
     "currencyDisplay": {
       "label": "Hiển thị",
       "group": "Theo nhóm {currency}",
@@ -1510,7 +1503,7 @@
       "title": "Tùy chọn",
       "groupDescription": "Hiển thị bằng loại tiền nhóm. {currency}",
       "originalDescription": "Hiển thị bằng loại tiền gốc.",
-      "originalNote": "Các khoản thanh toán hoàn trả thường được ghi bằng loại tiền nhóm. Chế độ xem theo loại tiền gốc là một sổ riêng cho từng loại tiền, nên số dư có thể trông chưa thanh toán ngay cả khi kế hoạch theo loại tiền nhóm đã xong. Nên dùng chế độ xem theo loại tiền nhóm khi thanh toán."
+      "originalNote": "Các khoản thanh toán tất toán thường được ghi bằng loại tiền nhóm. Chế độ xem theo loại tiền gốc là một sổ riêng cho từng loại tiền, nên số dư có thể trông chưa tất toán ngay cả khi kế hoạch theo loại tiền nhóm đã xong. Nên dùng chế độ xem theo loại tiền nhóm khi tất toán."
     },
     "view": {
       "label": "Giao diện",
@@ -1565,6 +1558,14 @@
       "individualAllHint": "Bạn đang xem kế hoạch cá nhân tiêu chuẩn của cả nhóm. Kế hoạch này có thể gồm các khoản thanh toán giữa các nhóm con.",
       "unknownParticipant": "Lời mời đang chờ",
       "individualWithinHint": "Bạn đang xem kế hoạch cá nhân theo nhóm con. Các khoản thanh toán đề xuất nằm trong mỗi nhóm con khi tổng của nhóm con đã được thanh toán."
+    },
+    "Settlements": {
+      "title": "Tất toán đề xuất",
+      "description": "Theo dõi các khoản thanh toán.",
+      "noSettlements": "Mọi số dư trong nhóm của bạn đã được tất toán 😁",
+      "owes": "<strong>{from}</strong> nợ <strong>{to}</strong>",
+      "markAsPaid": "Đã thanh toán",
+      "markAsPaidAria": "Đánh dấu đã thanh toán {amount} {from} {to}"
     }
   },
   "Stats": {
@@ -1765,7 +1766,7 @@
       "heading": "Thu nhập"
     },
     "Settlement": {
-      "heading": "Thanh toán"
+      "heading": "Tất toán"
     }
   },
   "Currencies": {
@@ -2104,8 +2105,8 @@
           "title": "Thành viên này có số dư chưa thanh toán",
           "description": "Xóa mà không thanh toán sẽ để lại các số dư này trong nhóm vô thời hạn. Chọn tùy chọn bên dưới để tạo một khoản thanh toán cho mỗi số dư của thành viên này, hoặc xóa và tự thanh toán thủ công."
         },
-        "toast": "Đã xóa và tạo hoàn trả.",
-        "checkbox": "Tạo hoàn trả",
+        "toast": "Đã xóa thành viên và tất toán số dư.",
+        "checkbox": "Tất toán số dư của thành viên này trước khi xóa",
         "previewWillCreate_one": "Sẽ tạo {count} khoản thanh toán",
         "previewPays": "trả {name}",
         "previewReceives": "nhận {name}",
@@ -2325,9 +2326,10 @@
         "items": "Mục",
         "documents": "Tài liệu",
         "recurrence": "Định kỳ",
-        "reimbursement": "Hoàn trả",
+        "reimbursement": "Thanh toán tất toán",
         "conversionSource": "Nguồn chuyển đổi",
-        "conversionRate": "Tỷ giá"
+        "conversionRate": "Tỷ giá",
+        "settlement": "Thanh toán tất toán"
       },
       "changeEmptyValue": "Chưa đặt",
       "recurringCreated": "{participant} đã tạo chi phí định kỳ \"{title}\"",
@@ -2594,28 +2596,6 @@
     "commentDelete": "Xóa",
     "commentSend": "Gửi",
     "openDocument": "Mở tài liệu"
-  },
-  "CreateReimbursement": {
-    "description": "Xem lại khoản thanh toán trước khi ghi nhận.",
-    "pays": "{from} trả {to}",
-    "amount": "Số tiền",
-    "date": "Ngày",
-    "category": "Danh mục",
-    "create": "Tạo",
-    "edit": "Sửa",
-    "creating": "Đang tạo…",
-    "successToast": "Đã ghi nhận khoản thanh toán.",
-    "successToastMultiple": "Đã ghi nhận {count} khoản thanh toán thành một mục.",
-    "paysMany": "trả {from} {count}",
-    "receivesMany": "nhận {to} {count}",
-    "paymentsToInclude": "Bao gồm",
-    "selectionSummary": "Đã chọn {count} {total}",
-    "legToAria": "{from} trả {to}, {amount}",
-    "legFromAria": "Từ {from} {to} {amount}",
-    "toParticipant": "cho {name}",
-    "fromParticipant": "từ {name}",
-    "createSingle": "Tạo hoàn trả",
-    "createMultiple": "Tạo hoàn trả {count}"
   },
   "Participants": {
     "search": "Tìm…",
@@ -2943,7 +2923,6 @@
     "participantsCountLabel": "Thành viên",
     "participantsSectionLabel": "Tóm tắt người tham gia",
     "settlementsSectionLabel": "Thanh toán gợi ý",
-    "reimbursementsSectionLabel": "Các khoản hoàn trả đã ghi nhận",
     "expensesSectionLabel": "Chi tiết chi phí",
     "amountColumnLabel": "Số tiền",
     "participantColumnLabel": "Thành viên",
@@ -2957,10 +2936,11 @@
     "noExpensesLabel": "Không có chi phí nào trong kỳ đã chọn.",
     "noParticipantsLabel": "Không có thành viên nào có hoạt động trong kỳ đã chọn.",
     "noSettlementsLabel": "Mọi khoản đã được thanh toán tính đến ngày kết thúc.",
-    "noReimbursementsLabel": "Không có khoản hoàn trả nào được ghi nhận đến ngày kết thúc.",
     "originalAmountLabel": "Số tiền gốc",
     "expenseColumnLabel": "Chi phí",
-    "categoryColumnLabel": "Danh mục"
+    "categoryColumnLabel": "Danh mục",
+    "recordedSettlementsSectionLabel": "Tất toán đã ghi",
+    "noRecordedSettlementsLabel": "Không có khoản tất toán nào được ghi nhận đến ngày kết thúc."
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2998,5 +2978,27 @@
     "hintTapToAddExpense": "Tôi là {name} — chạm vào tôi để thêm khoản chi.",
     "hintTapToCreateGroup": "Tôi là {name} — chạm vào tôi để tạo nhóm.",
     "billName": "Bill"
+  },
+  "CreateSettlement": {
+    "description": "Xem lại khoản thanh toán trước khi ghi nhận.",
+    "pays": "{from} trả {to}",
+    "amount": "Số tiền",
+    "date": "Ngày",
+    "category": "Danh mục",
+    "create": "Tạo",
+    "edit": "Sửa",
+    "creating": "Đang tạo…",
+    "successToast": "Đã ghi nhận khoản thanh toán.",
+    "successToastMultiple": "Đã ghi nhận {count} khoản thanh toán thành một mục.",
+    "paysMany": "trả {from} {count}",
+    "receivesMany": "nhận {to} {count}",
+    "paymentsToInclude": "Bao gồm",
+    "selectionSummary": "Đã chọn {count} {total}",
+    "legToAria": "{from} trả {to}, {amount}",
+    "legFromAria": "Từ {from} {to} {amount}",
+    "toParticipant": "cho {name}",
+    "fromParticipant": "từ {name}",
+    "createSingle": "Ghi nhận thanh toán",
+    "createMultiple": "Ghi nhận {count} khoản thanh toán"
   }
 }

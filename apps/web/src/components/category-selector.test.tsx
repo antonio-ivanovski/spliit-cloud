@@ -101,6 +101,25 @@ describe('CategorySelector', () => {
     expect(screen.getByText('Rent').parentElement).toHaveClass('ps-8')
   })
 
+  it('styles childless parents as normal options instead of group headers', async () => {
+    render(
+      <CategorySelector
+        categories={DEFAULT_CATEGORIES}
+        defaultValue={DEFAULT_CATEGORY_ID}
+        isLoading={false}
+        onValueChange={() => {}}
+      />,
+    )
+
+    await openSelector()
+    const income = screen.getByRole('option', { name: /^Income$/ })
+    const settlement = screen.getByRole('option', { name: /^Settlement$/ })
+    expect(income).not.toHaveClass('font-semibold')
+    expect(settlement).not.toHaveClass('font-semibold')
+    expect(income.querySelector('svg.lucide-wallet')).toBeTruthy()
+    expect(settlement.querySelector('svg.lucide-arrow-left-right')).toBeTruthy()
+  })
+
   it('highlights the best alias match and hides non-matches', async () => {
     render(
       <CategorySelector

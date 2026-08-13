@@ -248,7 +248,7 @@ export function buildExpenseFormDefaults(args: {
   group: GroupShape
   groupCurrency: Currency
   currentLedgerParticipantId: string | null | undefined
-  reimbursementTitle: string
+  settlementTitle: string
   today?: Date
   now?: Date
   timeZone?: string
@@ -263,7 +263,7 @@ export function buildExpenseFormDefaults(args: {
     group,
     groupCurrency,
     currentLedgerParticipantId,
-    reimbursementTitle,
+    settlementTitle,
     savedDefault,
     today = new Date(),
     now = new Date(),
@@ -280,7 +280,7 @@ export function buildExpenseFormDefaults(args: {
       group,
       groupCurrency,
       currentLedgerParticipantId,
-      reimbursementTitle,
+      settlementTitle,
       today,
       now,
       timeZone,
@@ -526,8 +526,8 @@ export function buildExpenseFormDefaults(args: {
         values.indexOf(participant) === index,
     )
 
-  if (searchParams.reimbursement) {
-    const reimbursementNeedsConversion =
+  if (searchParams.settlement ?? searchParams.reimbursement) {
+    const settlementNeedsConversion =
       searchOriginalCurrency != null &&
       searchOriginalCurrency !== group.currencyCode
     const prefilledSettlement = parsePrefilledSettlement(
@@ -565,7 +565,7 @@ export function buildExpenseFormDefaults(args: {
               },
             ]
       return {
-        title: reimbursementTitle,
+        title: settlementTitle,
         expenseDay: dateToIsoDay(today),
         expenseTime: formatTimeMinutes(
           utcToWallTime(now, timeZone).timeMinutes,
@@ -574,7 +574,7 @@ export function buildExpenseFormDefaults(args: {
         amount: totalDisplay,
         originalCurrency: searchOriginalCurrency,
         conversionRate: undefined,
-        conversionType: reimbursementNeedsConversion ? 'EXCHANGE' : undefined,
+        conversionType: settlementNeedsConversion ? 'EXCHANGE' : undefined,
         category: SETTLEMENT_CATEGORY_ID,
         paidBySplitMode: 'BY_AMOUNT' as const,
         paidByList,
@@ -596,7 +596,7 @@ export function buildExpenseFormDefaults(args: {
       }
     }
     return {
-      title: reimbursementTitle,
+      title: settlementTitle,
       expenseDay: dateToIsoDay(today),
       expenseTime: formatTimeMinutes(utcToWallTime(now, timeZone).timeMinutes),
       expenseTimeZone: timeZone,
@@ -606,7 +606,7 @@ export function buildExpenseFormDefaults(args: {
           : ('' as unknown as number),
       originalCurrency: searchOriginalCurrency,
       conversionRate: undefined,
-      conversionType: reimbursementNeedsConversion ? 'EXCHANGE' : undefined,
+      conversionType: settlementNeedsConversion ? 'EXCHANGE' : undefined,
       category: SETTLEMENT_CATEGORY_ID,
       paidBySplitMode: 'BY_AMOUNT' as const,
       paidByList: searchParams.from

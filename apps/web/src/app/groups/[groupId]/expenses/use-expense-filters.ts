@@ -27,7 +27,7 @@ export type ExpenseSort = {
 }
 
 export type ExpenseQueryInput = {
-  hideReimbursements: boolean
+  hideSettlements: boolean
   categories?: string[]
   paidBy?: string[]
   paidByMatch?: ExpenseMatchMode
@@ -254,7 +254,7 @@ export function useExpenseFilters(groupId: string) {
 
   const queryInput: ExpenseQueryInput = useMemo(() => {
     const input: ExpenseQueryInput = {
-      hideReimbursements: !filters.showSettlements,
+      hideSettlements: !filters.showSettlements,
     }
     if (filters.categories.length > 0) input.categories = filters.categories
     if (filters.paidBy.length > 0) {

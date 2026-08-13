@@ -7,3 +7,4 @@ Apply `default.md` first, then these Romanian rules.
 - Use natural Romanian word order and established product terms instead of mirroring English syntax.
 - Respect Romanian plural behavior and write every required form as a complete natural phrase containing `{count}` where required.
 - Keep labels concise and terminology stable across members, groups, expenses, shares, and settlements.
+- Exclusive settlement term: *decontare* (noun) and *deconta* (verb). Never *rambursare* or *compensație* for this concept.

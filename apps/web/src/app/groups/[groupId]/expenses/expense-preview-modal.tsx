@@ -4,6 +4,10 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
+import {
+  CategorySideEffectBadge,
+  getCategorySideEffectKind,
+} from '@/app/groups/[groupId]/expenses/category-side-effect-badge'
 import { ExpenseAttachmentsPreview } from '@/app/groups/[groupId]/expenses/expense-attachments-preview'
 import { ExpenseComments } from '@/app/groups/[groupId]/expenses/expense-comments'
 import { ExpenseItemsSummary } from '@/app/groups/[groupId]/expenses/expense-items-summary'
@@ -15,7 +19,6 @@ import { ExpenseSplitBars } from '@/app/groups/[groupId]/expenses/expense-split-
 import { categoryLabel } from '@/app/groups/[groupId]/stats/category-utils'
 import { DeletePopup } from '@/components/delete-popup'
 import { EditButton } from '@/components/edit-button'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   ResponsiveDialog,
@@ -37,11 +40,7 @@ import { formatCurrency, getCurrencyFromGroup } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type { SplitMode } from '@spliit/domain'
-import {
-  calculatePaidByShares,
-  calculateShares,
-  isSettlementCategory,
-} from '@spliit/domain'
+import { calculatePaidByShares, calculateShares } from '@spliit/domain'
 
 import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
 import { useLinkInviteToken } from '../use-link-invite-token'
@@ -331,6 +330,7 @@ export function ExpensePreviewModal({
           currentLedgerParticipantId
         ]?.total ?? null)
       : null
+  const categorySideEffect = getCategorySideEffectKind(expense?.categoryId)
 
   return (
     <ResponsiveDialog open={open} onOpenChange={handleOpenChange}>
@@ -344,17 +344,17 @@ export function ExpensePreviewModal({
               />
             ) : null}
             <span className="truncate">{expense?.title ?? t('title')}</span>
-            {expense && isSettlementCategory(expense.categoryId) && (
-              <Badge variant="secondary" className="shrink-0 text-xs">
-                {tForm('reimbursement')}
-              </Badge>
-            )}
+            {categorySideEffect ? (
+              <CategorySideEffectBadge kind={categorySideEffect} />
+            ) : null}
           </ResponsiveDialogTitle>
-          <ResponsiveDialogDescription>
-            {expense
-              ? categoryLabel(tCategories, expense.categoryId)
-              : t('title')}
-          </ResponsiveDialogDescription>
+          {categorySideEffect ? null : (
+            <ResponsiveDialogDescription>
+              {expense
+                ? categoryLabel(tCategories, expense.categoryId)
+                : t('title')}
+            </ResponsiveDialogDescription>
+          )}
         </ResponsiveDialogHeader>
 
         <ResponsiveDialogBody className="max-h-[70vh] space-y-5 overflow-y-auto">

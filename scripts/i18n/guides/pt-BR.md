@@ -7,3 +7,4 @@ Apply `default.md` first, then these Brazilian Portuguese rules.
 - Preserve accents, contractions, gender/number agreement, and Brazilian punctuation. Rephrase when a short label can avoid unnecessary gender.
 - Keep Brazilian terminology consistent for expenses, shares, balances, and settlements, while preserving all numeric values and currency codes.
 - Use concise action labels and avoid formal legalistic language in ordinary UI text.
+- Exclusive settlement term: *acerto* (noun) and *acertar* (verb). Never *reembolso*. Prefer *acerto* over *liquidação* when both appear.

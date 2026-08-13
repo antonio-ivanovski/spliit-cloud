@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Defines how users import a group from a Splitwise CSV export into Spliit Cloud. Covers the CSV parser, category mapping rules, reimbursement detection, multi-currency handling, and the source-step UI that wires the Splitwise tab to the shared import wizard and commit path without provider-specific document recovery.
+Defines how users import a group from a Splitwise CSV export into Spliit Cloud. Covers the CSV parser, category mapping rules, settlement detection, multi-currency handling, and the source-step UI that wires the Splitwise tab to the shared import wizard and commit path without provider-specific document recovery.
 
 ## Requirements
 ### Requirement: Splitwise CSV source format
@@ -71,29 +71,29 @@ The source-level `currency` and `currencyCode` fields on `NormalizedSource` are 
 - **WHEN** a CSV has 40 MKD rows and 10 EUR rows
 - **THEN** `NormalizedSource.currency` is `"MKD"` and `NormalizedSource.currencyCode` is `"MKD"` so the destination step opens with MKD pre-selected
 
-### Requirement: Splitwise reimbursement detection
+### Requirement: Splitwise settlement detection
 
-The parser SHALL mark a row as a reimbursement (`isReimbursement: true`) when either:
+The parser SHALL import a row as a settlement (`category: "settlement"`) when either:
 
 - `Category` equals `Payment` (case-insensitive), **or**
 - `Description` matches the regex `/^.+ paid .+ /` (e.g. `"Jane D. paid John D. ден610.00 for "Settleup Ljubanishta""` — the trailing space in the regex matches the space between the second name and whatever follows)
 
-Both signals appear in Splitwise exports. The `Payment` category is the canonical Splitwise signal; the description pattern catches older entries that pre-date the category rename.
+Both signals appear in Splitwise exports. The `Payment` category is the canonical Splitwise signal; the description pattern catches older entries that pre-date the category rename. The legacy `isReimbursement` import flag is accepted only as an alias that maps onto the settlement category.
 
-#### Scenario: Payment category is a reimbursement
+#### Scenario: Payment category is a settlement
 
 - **WHEN** a row has `Category: "Payment"` and any `Description`
-- **THEN** the imported expense has `isReimbursement: true` and `category: "payment"`
+- **THEN** the imported expense has `category: "settlement"`
 
-#### Scenario: Description with "paid" pattern is a reimbursement
+#### Scenario: Description with "paid" pattern is a settlement
 
 - **WHEN** a row has `Description: "Jane D. paid John D."` (no trailing text — the regex still matches because the space between `John` and `.` falls between `.+ ` and the `D.`)
-- **THEN** the imported expense has `isReimbursement: true`
+- **THEN** the imported expense has `category: "settlement"`
 
-#### Scenario: Ordinary expense is not a reimbursement
+#### Scenario: Ordinary expense is not a settlement
 
 - **WHEN** a row has `Category: "General"` and `Description: "Pazarenje"`
-- **THEN** the imported expense has `isReimbursement: false`
+- **THEN** the imported expense is not assigned the settlement category
 
 ### Requirement: Splitwise payer is the highest positive-value column
 
@@ -158,7 +158,7 @@ The parser SHALL set `splitMode` to `EVENLY` when every `paidFor` entry shares a
 
 #### Scenario: Single paidFor entry defaults to BY_AMOUNT
 
-- **WHEN** a row produces only one `paidFor` entry (e.g. a reimbursement with one receiver)
+- **WHEN** a row produces only one `paidFor` entry (e.g. a settlement with one receiver)
 - **THEN** `splitMode` is `BY_AMOUNT`
 
 ### Requirement: Splitwise category mapping

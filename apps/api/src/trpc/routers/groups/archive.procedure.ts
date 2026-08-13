@@ -25,7 +25,7 @@ import { archiveGroupOutputSchema } from '../../outputs/groups'
  *
  * When archiving (`archived = true`) and the group has unsettled balances, the
  * mutation throws `FAILED_PRECONDITION` unless the caller passes `force: true`,
- * in which case it auto-creates one reimbursement-style "Settlement" expense
+ * in which case it auto-creates one settlement expense
  * per non-zero leg (inside the same transaction as the archive flip) so the new
  * `Group.archived = true` state matches a zeroed-out ledger.
  */

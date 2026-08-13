@@ -19,7 +19,7 @@ Imports SHALL continue accepting legacy DAILY, WEEKLY, and MONTHLY recurrence ru
 - **THEN** the imported recurrence uses monthly frequency, interval one, and indefinite termination
 
 ### Requirement: Legacy recurring import collapse
-The Spliit JSON importer SHALL collapse matching historical recurring expense rows into one `RecurringExpenseSeries` with ordered `recurrenceSequence` values. Matching uses the same conservative fingerprint as legacy recurrence migration for link-less rows: title, recurrence rule, amount, split mode, reimbursement flag, sorted paid-by and paid-for participant shares, original currency, and conversion rate. The series template and `anchorDate` SHALL come from the latest expense date in each collapsed group.
+The Spliit JSON importer SHALL collapse matching historical recurring expense rows into one `RecurringExpenseSeries` with ordered `recurrenceSequence` values. Matching uses the same conservative fingerprint as legacy recurrence migration for link-less rows: title, recurrence rule, amount, split mode, settlement category (legacy `isReimbursement` alias), sorted paid-by and paid-for participant shares, original currency, and conversion rate. The series template and `anchorDate` SHALL come from the latest expense date in each collapsed group.
 
 #### Scenario: Multiple matching monthlies become one series
 - **WHEN** an import batch contains multiple expenses with the same fingerprint and non-NONE recurrence rule

@@ -194,7 +194,8 @@
       "participants": "{names}",
       "showLess": "הצג פחות"
     },
-    "copyToast": "העתקת ההוצאה הותחלה. פרטי ההוצאה הקיימים ישמשו ליצירת הוצאה חדשה."
+    "copyToast": "העתקת ההוצאה הותחלה. פרטי ההוצאה הקיימים ישמשו ליצירת הוצאה חדשה.",
+    "incomeBadge": "הכנסה"
   },
   "Groups": {
     "myGroups": "הקבוצות שלי",
@@ -660,8 +661,7 @@
       "edit": "ערוך הכנסה",
       "TitleField": {
         "label": "כותרת הכנסה",
-        "placeholder": "משכורת או החזר כספי",
-        "description": "תיאור מקור ההכנסה."
+        "placeholder": "משכורת או החזר כספי"
       },
       "DateField": {
         "label": "תאריך ההכנסה",
@@ -691,8 +691,7 @@
       "edit": "ערוך הוצאה",
       "TitleField": {
         "label": "כותרת הוצאה",
-        "placeholder": "מסעדה בערב יום שני",
-        "description": "הזן תיאור עבור ההוצאה."
+        "placeholder": "מסעדה בערב יום שני"
       },
       "DateField": {
         "label": "תאריך הוצאה",
@@ -865,7 +864,6 @@
     "participant": {
       "pending": "(הוזמן)"
     },
-    "reimbursement": "תשלום להסדרת היתרה",
     "readOnlyNotice": "קבוצה זו בארכיון. ההוצאה מוצגת לקריאה בלבד.",
     "PaidBySplitModeField": {
       "label": "מצב פיצול לפי משלם"
@@ -982,7 +980,10 @@
       "chooseTimezone": "בחירת אזור זמן",
       "done": "סיום",
       "yourTime": "השעה שלך"
-    }
+    },
+    "settlementTitle": "תשלום להסדרת היתרה",
+    "settlementHint": "{category}: לא נספר כהוצאה בסיכומים, בסטטיסטיקה או בתקציבים. עדיין מעדכן מי חייב למי.",
+    "incomeHint": "{category}: עבור כסף שהתקבל. מקובץ כהכנסה, לא כרכישה."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "מחיקת מסמך",
@@ -1056,14 +1057,6 @@
     "title": "יתרות",
     "description": "הצגת היתרה נטו של כל משתתף ומשתתפת.",
     "removedBadge": "הוסר",
-    "Reimbursements": {
-      "title": "תשלומים מוצעים להסדרת היתרה",
-      "description": "התשלומים האלה מאפשרים להסדיר את היתרות במספר ההעברות הקטן ביותר.",
-      "noImbursements": "היתרות של כל חברי הקבוצה הוסדרו 😁",
-      "owes": "<strong>{from}</strong> חייב ל<strong>{to}</strong>",
-      "markAsPaid": "סמן כשולם",
-      "markAsPaidAria": "סמן {amount} מ־{from} ל־{to} כשולם"
-    },
     "currencyDisplay": {
       "label": "מטבע",
       "group": "מטבע הקבוצה ({currency})",
@@ -1126,6 +1119,14 @@
       "individualAllHint": "אתה צופה בתוכנית האישית הסטנדרטית לכל הקבוצה. היא עשויה לכלול תשלומים בין תת־קבוצות.",
       "unknownParticipant": "הזמנה ממתינה",
       "individualWithinHint": "אתה צופה בתוכנית אישית שמודעת לתת־קבוצות. התשלומים המוצעים נשארים בתוך כל תת־קבוצה כשהסכומים הכוללים שלה כבר הוסדרו."
+    },
+    "Settlements": {
+      "title": "הסדרים מוצעים",
+      "description": "התשלומים האלה מאפשרים להסדיר את היתרות במספר ההעברות הקטן ביותר.",
+      "noSettlements": "היתרות של כל חברי הקבוצה הוסדרו 😁",
+      "owes": "<strong>{from}</strong> חייב ל<strong>{to}</strong>",
+      "markAsPaid": "סמן כשולם",
+      "markAsPaidAria": "סמן {amount} מ־{from} ל־{to} כשולם"
     }
   },
   "Stats": {
@@ -2224,7 +2225,8 @@
         "recurrence": "תדירות",
         "reimbursement": "תשלום להסדרת היתרה",
         "conversionSource": "מקור ההמרה",
-        "conversionRate": "שער המרה"
+        "conversionRate": "שער המרה",
+        "settlement": "תשלום להסדרת היתרה"
       },
       "recurringCreated": "{participant} יצר/ה את ההוצאה החוזרת „{title}”",
       "stopped": "{participant} עצר/ה את ההוצאה החוזרת „{title}”",
@@ -2447,28 +2449,6 @@
     "commentDelete": "מחיקת תגובה",
     "commentSend": "שליחת תגובה",
     "openDocument": "פתיחת מסמך"
-  },
-  "CreateReimbursement": {
-    "description": "סקור את התשלום לפני רישומו.",
-    "pays": "{from} משלם ל-{to}",
-    "amount": "סכום",
-    "date": "תאריך",
-    "category": "קטגוריה",
-    "create": "צור",
-    "edit": "ערוך פרטים",
-    "creating": "יוצר…",
-    "successToast": "התשלום להסדרת היתרה נרשם",
-    "successToastMultiple": "נרשמו {count} תשלומים להסדרת היתרה כרשומה אחת",
-    "paysMany": "{from} משלם/ת ל־{count} אנשים",
-    "receivesMany": "{to} מקבל/ת {count} תשלומים",
-    "paymentsToInclude": "תשלומים להכללה",
-    "selectionSummary": "נבחרו {count} תשלומים, בסך הכול {total}",
-    "legToAria": "{from} משלם/ת ל־{to}, {amount}",
-    "legFromAria": "{from} משלם/ת ל־{to}, {amount}",
-    "toParticipant": "אל {name}",
-    "fromParticipant": "מאת {name}",
-    "createSingle": "רשום תשלום",
-    "createMultiple": "רשום {count} תשלומים"
   },
   "Participants": {
     "search": "חפש משתתפים...",
@@ -2889,7 +2869,6 @@
     "participantsCountLabel": "משתתפים",
     "participantsSectionLabel": "סיכום המשתתפים",
     "settlementsSectionLabel": "הסדרים מוצעים",
-    "reimbursementsSectionLabel": "החזרים שנרשמו",
     "expensesSectionLabel": "פירוט ההוצאות",
     "amountColumnLabel": "סכום",
     "participantColumnLabel": "משתתף",
@@ -2903,10 +2882,11 @@
     "noExpensesLabel": "אין הוצאות בתקופה שנבחרה.",
     "noParticipantsLabel": "אין משתתפים עם פעילות בתקופה שנבחרה.",
     "noSettlementsLabel": "הכל מוסדר נכון לתאריך הסיום.",
-    "noReimbursementsLabel": "לא נרשמו החזרים עד תאריך הסיום.",
     "originalAmountLabel": "סכום מקורי",
     "expenseColumnLabel": "הוצאה",
-    "categoryColumnLabel": "קטגוריה"
+    "categoryColumnLabel": "קטגוריה",
+    "recordedSettlementsSectionLabel": "הסדרים שנרשמו",
+    "noRecordedSettlementsLabel": "לא נרשמו הסדרים עד תאריך הסיום."
   },
   "CurrencyRateProviders": {
     "frankfurter": "פרנקפורטר",
@@ -2944,5 +2924,27 @@
     "hintTapToAddExpense": "אני {name} — גע בי כדי להוסיף הוצאה.",
     "hintTapToCreateGroup": "אני {name} — גע בי כדי ליצור קבוצה.",
     "billName": "ביל"
+  },
+  "CreateSettlement": {
+    "description": "סקור את התשלום לפני רישומו.",
+    "pays": "{from} משלם ל-{to}",
+    "amount": "סכום",
+    "date": "תאריך",
+    "category": "קטגוריה",
+    "create": "צור",
+    "edit": "ערוך פרטים",
+    "creating": "יוצר…",
+    "successToast": "התשלום להסדרת היתרה נרשם",
+    "successToastMultiple": "נרשמו {count} תשלומים להסדרת היתרה כרשומה אחת",
+    "paysMany": "{from} משלם/ת ל־{count} אנשים",
+    "receivesMany": "{to} מקבל/ת {count} תשלומים",
+    "paymentsToInclude": "תשלומים להכללה",
+    "selectionSummary": "נבחרו {count} תשלומים, בסך הכול {total}",
+    "legToAria": "{from} משלם/ת ל־{to}, {amount}",
+    "legFromAria": "{from} משלם/ת ל־{to}, {amount}",
+    "toParticipant": "אל {name}",
+    "fromParticipant": "מאת {name}",
+    "createSingle": "רשום תשלום",
+    "createMultiple": "רשום {count} תשלומים"
   }
 }

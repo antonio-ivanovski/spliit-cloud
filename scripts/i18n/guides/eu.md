@@ -7,3 +7,4 @@ Apply `default.md` first, then these Basque rules.
 - Keep a neutral, approachable UI register and avoid adding gender where Basque does not require it.
 - Preserve correct diacritics and natural Basque punctuation. Keep placeholders and rich-text tags in positions that do not break the surrounding word.
 - Use one consistent term for each Spliit concept, checking nearby translations when a compound can be formed more than one way.
+- Exclusive settlement term: *zor-kitapen* (noun) and *kitatu* (verb). Never *itzulketa* or Spanish *reembolso*.

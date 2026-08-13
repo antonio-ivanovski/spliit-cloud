@@ -223,7 +223,7 @@ describe('Ledger balance inputs', () => {
     expect(balances['lp-b'].total).toBe(-600)
   })
 
-  it('reimbursement does not affect split math from ledger amounts', () => {
+  it('settlement does not affect split math from ledger amounts', () => {
     const expenses: BalanceExpense[] = [
       {
         id: 'le-1',
@@ -445,11 +445,11 @@ describe('Ledger balance input integrity', () => {
   })
 
   it('getPublicBalances with ledger participant IDs', () => {
-    const reimbursements = [
+    const suggestedSettlements = [
       { from: 'lp-bob', to: 'lp-alice', amount: 2500 },
       { from: 'lp-carol', to: 'lp-alice', amount: 1500 },
     ]
-    const balances = getPublicBalances(reimbursements)
+    const balances = getPublicBalances(suggestedSettlements)
     expect(balances['lp-alice'].paid).toBe(4000)
     expect(balances['lp-alice'].paidFor).toBe(0)
     expect(balances['lp-alice'].total).toBe(4000)

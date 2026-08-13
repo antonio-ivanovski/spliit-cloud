@@ -21,7 +21,7 @@ export function buildReportLabels(
     participantsCountLabel: t('participantsCountLabel'),
     participantsSectionLabel: t('participantsSectionLabel'),
     settlementsSectionLabel: t('settlementsSectionLabel'),
-    reimbursementsSectionLabel: t('reimbursementsSectionLabel'),
+    recordedSettlementsSectionLabel: t('recordedSettlementsSectionLabel'),
     expensesSectionLabel: t('expensesSectionLabel'),
     amountColumnLabel: t('amountColumnLabel'),
     participantColumnLabel: t('participantColumnLabel'),
@@ -37,7 +37,7 @@ export function buildReportLabels(
     noExpensesLabel: t('noExpensesLabel'),
     noParticipantsLabel: t('noParticipantsLabel'),
     noSettlementsLabel: t('noSettlementsLabel'),
-    noReimbursementsLabel: t('noReimbursementsLabel'),
+    noRecordedSettlementsLabel: t('noRecordedSettlementsLabel'),
     originalAmountLabel: t('originalAmountLabel'),
     categoryNames,
   }

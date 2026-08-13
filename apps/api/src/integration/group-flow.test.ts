@@ -244,7 +244,7 @@ describe('Group flow — real DB', () => {
       linkInviteToken: undefined,
     })
     expect(balanceResult).toHaveProperty('balances')
-    expect(balanceResult).toHaveProperty('reimbursements')
+    expect(balanceResult).toHaveProperty('suggestedSettlements')
 
     // publicBalances only includes participants with non-zero totals
     expect(balanceResult.balances[adminParticipant.id].total).toBe(1500)

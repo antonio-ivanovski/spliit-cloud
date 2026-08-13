@@ -145,7 +145,7 @@ describe('period bounds', () => {
 })
 
 describe('calculateExpenseContribution exclusions', () => {
-  it('ignores reimbursements and zero amounts', () => {
+  it('ignores settlements and zero amounts', () => {
     expect(
       calculateExpenseContribution(
         rule,
@@ -512,7 +512,7 @@ describe('overlapping budgets', () => {
 })
 
 describe('calculateBudgetUsage aggregation', () => {
-  it('sums selected paid-for shares and ignores reimbursements', () => {
+  it('sums selected paid-for shares and ignores settlements', () => {
     expect(
       calculateBudgetUsage(
         rule,

@@ -2,7 +2,7 @@ import { getRouteApi, useNavigate } from '@tanstack/react-router'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { Balances, Reimbursement } from '@/lib/balances'
+import type { Balances, SuggestedSettlement } from '@/lib/balances'
 import { getCurrencyFromGroup } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import type {
@@ -28,7 +28,7 @@ type BalanceParticipant = {
 
 type CurrencyBalanceBucket = {
   balances: Balances
-  reimbursements: Reimbursement[]
+  suggestedSettlements: SuggestedSettlement[]
 }
 
 function mergeBalanceParticipants(
@@ -61,12 +61,12 @@ function mergeBalanceParticipants(
   return Array.from(byId.values())
 }
 
-function appearsOnReimbursementLeg(
+function appearsOnSettlementLeg(
   participantId: string,
-  reimbursements: Reimbursement[] | undefined,
+  suggestedSettlements: SuggestedSettlement[] | undefined,
 ): boolean {
   return (
-    reimbursements?.some(
+    suggestedSettlements?.some(
       (leg) => leg.from === participantId || leg.to === participantId,
     ) ?? false
   )
@@ -76,21 +76,21 @@ function appearsOnReimbursementLeg(
 function hasUnsettledBalance(
   participantId: string,
   balances: Balances | undefined,
-  reimbursements: Reimbursement[] | undefined,
+  suggestedSettlements: SuggestedSettlement[] | undefined,
   currencyBalances: CurrencyBalanceBucket[] | undefined,
 ): boolean {
   if ((balances?.[participantId]?.total ?? 0) !== 0) return true
-  if (appearsOnReimbursementLeg(participantId, reimbursements)) return true
+  if (appearsOnSettlementLeg(participantId, suggestedSettlements)) return true
   for (const bucket of currencyBalances ?? []) {
     if ((bucket.balances[participantId]?.total ?? 0) !== 0) return true
-    if (appearsOnReimbursementLeg(participantId, bucket.reimbursements)) {
+    if (appearsOnSettlementLeg(participantId, bucket.suggestedSettlements)) {
       return true
     }
   }
   return false
 }
 
-export default function BalancesAndReimbursements() {
+export default function BalancesAndSettlements() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Balances' })
   const utils = trpc.useUtils()
   const { groupId, group } = useCurrentGroup()
@@ -141,7 +141,7 @@ export default function BalancesAndReimbursements() {
         hasUnsettledBalance(
           participant.id,
           balancesData.balances,
-          balancesData.reimbursements,
+          balancesData.suggestedSettlements,
           balancesData.currencyBalances,
         ),
     )
@@ -176,7 +176,7 @@ export default function BalancesAndReimbursements() {
     | SubgroupSettlementPlan
     | undefined
   const individualSettlementPlan = balancesData?.settlement.individual ?? {
-    reimbursements: balancesData?.reimbursements ?? [],
+    suggestedSettlements: balancesData?.suggestedSettlements ?? [],
     policy: 'standard' as const,
   }
 
@@ -248,9 +248,9 @@ export default function BalancesAndReimbursements() {
         participantCount={participants.length}
         currencyDisplay={currencyDisplay}
         balances={settlementBalances}
-        reimbursements={
+        suggestedSettlements={
           currencyDisplay === 'group'
-            ? individualSettlementPlan.reimbursements
+            ? individualSettlementPlan.suggestedSettlements
             : undefined
         }
         currencyBalances={currencyBalances}

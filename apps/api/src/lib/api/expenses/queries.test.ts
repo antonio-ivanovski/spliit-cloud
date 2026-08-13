@@ -153,4 +153,22 @@ describe('getGroupExpenses', () => {
       }),
     )
   })
+
+  it('excludes settlement expenses when hideSettlements is true', async () => {
+    prismaMock.expense.findMany.mockResolvedValue([])
+
+    await getGroupExpenses('group-1', {
+      ledgerId: 'ledger-known',
+      hideSettlements: true,
+    })
+
+    expect(prismaMock.expense.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          ledgerId: 'ledger-known',
+          categoryId: { not: 'settlement' },
+        }),
+      }),
+    )
+  })
 })

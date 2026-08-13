@@ -6,7 +6,7 @@ import { aiBulkCategorizePreviewProcedure } from './preview.procedure'
 export const aiBulkCategorizeRouter = createTRPCRouter({
   /**
    * Expenses eligible for bulk recategorization (still on `fromCategoryId`,
-   * non-reimbursement).
+   * non-settlement).
    */
   listCandidates: aiBulkCategorizeListCandidatesProcedure,
   /**

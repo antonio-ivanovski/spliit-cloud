@@ -250,7 +250,8 @@
         "recurrence": "পুনরাবৃত্তি",
         "reimbursement": "নিষ্পত্তি প্রদান",
         "conversionSource": "রূপান্তর উৎস",
-        "conversionRate": "বিনিময় হার"
+        "conversionRate": "বিনিময় হার",
+        "settlement": "নিষ্পত্তি প্রদান"
       },
       "recurringCreated": "{participant} “{title}” পুনরাবৃত্তিমূলক খরচ তৈরি করেছেন",
       "stopped": "{participant} {title} পুনরাবৃত্তিমূলক খরচ বন্ধ করেছেন",
@@ -385,14 +386,6 @@
     "title": "ব্যালেন্স",
     "description": "প্রত্যেক অংশগ্রহণকারীর নেট ব্যালেন্স দেখুন।",
     "removedBadge": "সরানো হয়েছে",
-    "Reimbursements": {
-      "title": "প্রস্তাবিত নিষ্পত্তি পেমেন্ট",
-      "description": "সর্বনিম্ন স্থানান্তর দিয়ে ব্যালেন্স নিষ্পত্তি করতে এই পেমেন্টগুলি ব্যবহার করুন।",
-      "noImbursements": "আপনার গ্রুপের সবাই নিষ্পত্তি হয়েছে 😁",
-      "owes": "<strong>{from}</strong> <strong>{to}</strong>-কে ঋণী",
-      "markAsPaid": "পরিশোধিত হিসাবে চিহ্নিত করুন",
-      "markAsPaidAria": "{amount} {from} থেকে {to}-কে পরিশোধিত হিসাবে চিহ্নিত করুন"
-    },
     "currencyDisplay": {
       "label": "মুদ্রা",
       "group": "গ্রুপ মুদ্রা ({currency})",
@@ -455,6 +448,14 @@
       "individualAllHint": "আপনি গ্রুপব্যাপী স্ট্যান্ডার্ড ব্যক্তিগত পরিকল্পনা দেখছেন। এতে উপগ্রুপগুলোর মধ্যে পেমেন্ট অন্তর্ভুক্ত থাকতে পারে।",
       "unknownParticipant": "অপেক্ষমাণ আমন্ত্রণ",
       "individualWithinHint": "আপনি উপগ্রুপ-সচেতন ব্যক্তিগত পরিকল্পনা দেখছেন। উপগ্রুপগুলোর মোট অঙ্ক নিষ্পত্তি হয়ে গেলে প্রস্তাবিত পেমেন্ট প্রতিটি উপগ্রুপের ভেতরেই থাকে।"
+    },
+    "Settlements": {
+      "title": "প্রস্তাবিত নিষ্পত্তি",
+      "description": "সর্বনিম্ন স্থানান্তর দিয়ে ব্যালেন্স নিষ্পত্তি করতে এই পেমেন্টগুলি ব্যবহার করুন।",
+      "noSettlements": "আপনার গ্রুপের সবাই নিষ্পত্তি হয়েছে 😁",
+      "owes": "<strong>{from}</strong> <strong>{to}</strong>-কে ঋণী",
+      "markAsPaid": "পরিশোধিত হিসাবে চিহ্নিত করুন",
+      "markAsPaidAria": "{amount} {from} থেকে {to}-কে পরিশোধিত হিসাবে চিহ্নিত করুন"
     }
   },
   "BulkCategorize": {
@@ -682,28 +683,6 @@
       "title": "ছবি প্রয়োজন",
       "aiDescription": "AI দিয়ে রসিদ স্ক্যান করতে শুধু ছবির ফাইল সমর্থিত।"
     }
-  },
-  "CreateReimbursement": {
-    "description": "রেকর্ড করার আগে পেমেন্ট পর্যালোচনা করুন।",
-    "pays": "{from} {to}-কে প্রদান করে",
-    "amount": "পরিমাণ",
-    "date": "তারিখ",
-    "category": "বিভাগ",
-    "create": "তৈরি করুন",
-    "edit": "বিবরণ সম্পাদনা করুন",
-    "creating": "তৈরি করা হচ্ছে…",
-    "successToast": "নিষ্পত্তি পেমেন্ট রেকর্ড করা হয়েছে",
-    "successToastMultiple": "{count}টি নিষ্পত্তি পেমেন্ট একটি এন্ট্রি হিসাবে রেকর্ড করা হয়েছে",
-    "paysMany": "{from} {count} জনকে প্রদান করে",
-    "receivesMany": "{to} {count}টি পেমেন্ট গ্রহণ করে",
-    "paymentsToInclude": "অন্তর্ভুক্ত করার পেমেন্ট",
-    "selectionSummary": "{count}টি পেমেন্ট নির্বাচিত, মোট {total}",
-    "legToAria": "{from} {to}-কে {amount} প্রদান করে",
-    "legFromAria": "{from} {to}-কে {amount} প্রদান করে",
-    "toParticipant": "{name}-কে",
-    "fromParticipant": "{name} এর কাছ থেকে",
-    "createSingle": "পেমেন্ট রেকর্ড করুন",
-    "createMultiple": "{count}টি পেমেন্ট রেকর্ড করুন"
   },
   "Currencies": {
     "search": "মুদ্রা খুঁজুন...",
@@ -1050,7 +1029,8 @@
       "title": "আইটেম",
       "participants": "{names}",
       "showLess": "কম দেখান"
-    }
+    },
+    "incomeBadge": "আয়"
   },
   "ExpenseDocumentsInput": {
     "ErrorToast": {
@@ -1105,8 +1085,7 @@
       "edit": "খরচ সম্পাদনা করুন",
       "TitleField": {
         "label": "খরচের শিরোনাম",
-        "placeholder": "সোমবার সন্ধ্যার রেস্তোরাঁ",
-        "description": "খরচের জন্য একটি বিবরণ লিখুন।"
+        "placeholder": "সোমবার সন্ধ্যার রেস্তোরাঁ"
       },
       "categoryFieldDescription": "খরচের বিভাগ নির্বাচন করুন।",
       "splitModeDescription": "কীভাবে খরচ ভাগ করবেন তা নির্বাচন করুন।",
@@ -1195,8 +1174,7 @@
       "edit": "আয় সম্পাদনা করুন",
       "TitleField": {
         "label": "আয়ের শিরোনাম",
-        "placeholder": "বেতন বা ফেরত",
-        "description": "আয় কোথা থেকে এসেছে তা বর্ণনা করুন।"
+        "placeholder": "বেতন বা ফেরত"
       },
       "categoryFieldDescription": "আয়ের বিভাগ নির্বাচন করুন।",
       "splitModeDescription": "কীভাবে আয় ভাগ করবেন তা নির্বাচন করুন।",
@@ -1226,7 +1204,6 @@
     "save": "সংরক্ষণ করুন",
     "saving": "সংরক্ষণ করা হচ্ছে…",
     "cancel": "বাতিল করুন",
-    "reimbursement": "নিষ্পত্তি পেমেন্ট",
     "readOnlyNotice": "এই গ্রুপটি আর্কাইভ করা হয়েছে। খরচ শুধুমাত্র-পঠনযোগ্য হিসাবে দেখানো হচ্ছে।",
     "ParticipantDistribution": {
       "missing": "{total} এর {missing} অনুপস্থিত",
@@ -1401,7 +1378,10 @@
       "chooseTimezone": "সময় অঞ্চল বেছে নিন",
       "done": "সম্পন্ন",
       "yourTime": "আপনার সময়"
-    }
+    },
+    "settlementTitle": "নিষ্পত্তি পেমেন্ট",
+    "settlementHint": "{category}: মোট, পরিসংখ্যান বা বাজেটে খরচ হিসেবে গণনা হয় না। তবুও আপডেট করে কে কাকে দেয়।",
+    "incomeHint": "{category}: প্রাপ্ত অর্থের জন্য। কেনাকাটা নয়, আয় হিসেবে গ্রুপ করা হয়।"
   },
   "ExpensePreview": {
     "title": "খরচ প্রিভিউ",
@@ -2867,7 +2847,6 @@
     "participantsCountLabel": "অংশগ্রহণকারী",
     "participantsSectionLabel": "অংশগ্রহণকারীদের সারাংশ",
     "settlementsSectionLabel": "প্রস্তাবিত হিসাব নিষ্পত্তি",
-    "reimbursementsSectionLabel": "রেকর্ড করা ফেরত পরিশোধ",
     "expensesSectionLabel": "খরচের বিস্তারিত",
     "amountColumnLabel": "পরিমাণ",
     "participantColumnLabel": "অংশগ্রহণকারী",
@@ -2881,10 +2860,11 @@
     "noExpensesLabel": "নির্বাচিত সময়কালে কোনো খরচ নেই।",
     "noParticipantsLabel": "নির্বাচিত সময়কালে কোনো অংশগ্রহণকারীর কার্যকলাপ নেই।",
     "noSettlementsLabel": "শেষ তারিখ পর্যন্ত সব হিসাব মিটে গেছে।",
-    "noReimbursementsLabel": "শেষ তারিখ পর্যন্ত কোনো ফেরত পরিশোধ রেকর্ড করা হয়নি।",
     "originalAmountLabel": "মূল পরিমাণ",
     "expenseColumnLabel": "খরচ",
-    "categoryColumnLabel": "বিভাগ"
+    "categoryColumnLabel": "বিভাগ",
+    "recordedSettlementsSectionLabel": "রেকর্ডকৃত নিষ্পত্তি",
+    "noRecordedSettlementsLabel": "শেষ তারিখ পর্যন্ত কোনো নিষ্পত্তি রেকর্ড করা হয়নি।"
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2922,5 +2902,27 @@
     "hintTapToAddExpense": "আমি {name} — খরচ যোগ করতে আমাকে ট্যাপ করুন।",
     "hintTapToCreateGroup": "আমি {name} — গ্রুপ তৈরি করতে আমাকে ট্যাপ করুন।",
     "billName": "বিল"
+  },
+  "CreateSettlement": {
+    "description": "রেকর্ড করার আগে পেমেন্ট পর্যালোচনা করুন।",
+    "pays": "{from} {to}-কে প্রদান করে",
+    "amount": "পরিমাণ",
+    "date": "তারিখ",
+    "category": "বিভাগ",
+    "create": "তৈরি করুন",
+    "edit": "বিবরণ সম্পাদনা করুন",
+    "creating": "তৈরি করা হচ্ছে…",
+    "successToast": "নিষ্পত্তি পেমেন্ট রেকর্ড করা হয়েছে",
+    "successToastMultiple": "{count}টি নিষ্পত্তি পেমেন্ট একটি এন্ট্রি হিসাবে রেকর্ড করা হয়েছে",
+    "paysMany": "{from} {count} জনকে প্রদান করে",
+    "receivesMany": "{to} {count}টি পেমেন্ট গ্রহণ করে",
+    "paymentsToInclude": "অন্তর্ভুক্ত করার পেমেন্ট",
+    "selectionSummary": "{count}টি পেমেন্ট নির্বাচিত, মোট {total}",
+    "legToAria": "{from} {to}-কে {amount} প্রদান করে",
+    "legFromAria": "{from} {to}-কে {amount} প্রদান করে",
+    "toParticipant": "{name}-কে",
+    "fromParticipant": "{name} এর কাছ থেকে",
+    "createSingle": "পেমেন্ট রেকর্ড করুন",
+    "createMultiple": "{count}টি পেমেন্ট রেকর্ড করুন"
   }
 }

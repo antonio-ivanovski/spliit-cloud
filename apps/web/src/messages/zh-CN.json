@@ -190,7 +190,8 @@
       "participants": "{names}",
       "showLess": "收起"
     },
-    "copyToast": "已启动复制支出。将使用现有支出详情创建新的支出。"
+    "copyToast": "已启动复制支出。将使用现有支出详情创建新的支出。",
+    "incomeBadge": "收入"
   },
   "Groups": {
     "myGroups": "我的群组",
@@ -648,8 +649,7 @@
       "edit": "编辑收入",
       "TitleField": {
         "label": "收入标题",
-        "placeholder": "工资或退款",
-        "description": "说明这笔收入的来源。"
+        "placeholder": "工资或退款"
       },
       "DateField": {
         "label": "收入日期",
@@ -679,8 +679,7 @@
       "edit": "编辑消费",
       "TitleField": {
         "label": "消费标题",
-        "placeholder": "周一晚上的餐厅",
-        "description": "描述这个消费。"
+        "placeholder": "周一晚上的餐厅"
       },
       "DateField": {
         "label": "消费日期",
@@ -853,7 +852,6 @@
     "participant": {
       "pending": "（已邀请）"
     },
-    "reimbursement": "结算付款",
     "readOnlyNotice": "此群组已归档。支出以只读方式显示。",
     "PaidBySplitModeField": {
       "label": "付款人分账模式"
@@ -968,7 +966,10 @@
       "chooseTimezone": "选择时区",
       "done": "完成",
       "yourTime": "你的本地时间"
-    }
+    },
+    "settlementTitle": "结算付款",
+    "settlementHint": "{category}：不计入总额、统计和预算中的支出。仍会更新谁欠谁。",
+    "incomeHint": "{category}：用于收到的钱。计入收入，而不是一笔消费。"
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "删除文档",
@@ -1042,14 +1043,6 @@
     "title": "余额",
     "description": "查看每位参与者的净余额。",
     "removedBadge": "已移除",
-    "Reimbursements": {
-      "title": "建议的结算付款",
-      "description": "使用这些付款，以尽可能少的转账次数结清余额。",
-      "noImbursements": "群组中所有人的余额均已结清 😁",
-      "owes": "<strong>{from}</strong> 欠 <strong>{to}</strong>",
-      "markAsPaid": "标记为已支付",
-      "markAsPaidAria": "将 {from} 向 {to} 的 {amount} 标记为已付款"
-    },
     "currencyDisplay": {
       "label": "货币",
       "group": "群组货币 ({currency})",
@@ -1112,6 +1105,14 @@
       "individualAllHint": "您正在查看标准的全组个人结算方案。其中可能包含子群组之间的付款。",
       "unknownParticipant": "待接受邀请",
       "individualWithinHint": "您正在查看考虑子群组的个人结算方案。当子群组之间已结算时，建议的付款将保持在每个子群组内部。"
+    },
+    "Settlements": {
+      "title": "建议结算",
+      "description": "使用这些付款，以尽可能少的转账次数结清余额。",
+      "noSettlements": "群组中所有人的余额均已结清 😁",
+      "owes": "<strong>{from}</strong> 欠 <strong>{to}</strong>",
+      "markAsPaid": "标记为已支付",
+      "markAsPaidAria": "将 {from} 向 {to} 的 {amount} 标记为已付款"
     }
   },
   "Stats": {
@@ -2208,7 +2209,8 @@
         "recurrence": "重复",
         "reimbursement": "结算付款",
         "conversionSource": "转换来源",
-        "conversionRate": "转换汇率"
+        "conversionRate": "转换汇率",
+        "settlement": "结算付款"
       },
       "recurringCreated": "{participant}创建了定期支出“{title}”",
       "stopped": "{participant}停止了定期支出“{title}”",
@@ -2413,28 +2415,6 @@
     "commentDelete": "删除评论",
     "commentSend": "发送评论",
     "openDocument": "打开文档"
-  },
-  "CreateReimbursement": {
-    "description": "请核对付款信息后再记录。",
-    "pays": "{from} 支付给 {to}",
-    "amount": "金额",
-    "date": "日期",
-    "category": "分类",
-    "create": "创建",
-    "edit": "编辑详情",
-    "creating": "创建中…",
-    "successToast": "已记录结算付款",
-    "successToastMultiple": "已将 {count} 笔结算付款记录为一笔",
-    "paysMany": "{from} 支付给 {count} 人",
-    "receivesMany": "{to} 收到 {count} 笔付款",
-    "paymentsToInclude": "要包含的付款",
-    "selectionSummary": "已选择 {count} 笔付款，总计 {total}",
-    "legToAria": "{from} 支付给 {to}，{amount}",
-    "legFromAria": "{from} 支付给 {to}，{amount}",
-    "toParticipant": "支付给{name}",
-    "fromParticipant": "来自{name}",
-    "createSingle": "记录付款",
-    "createMultiple": "记录 {count} 笔付款"
   },
   "Participants": {
     "search": "搜索参与者……",
@@ -2854,7 +2834,6 @@
     "participantsCountLabel": "参与人数",
     "participantsSectionLabel": "参与者摘要",
     "settlementsSectionLabel": "建议的结算",
-    "reimbursementsSectionLabel": "已记录的报销",
     "expensesSectionLabel": "消费明细",
     "amountColumnLabel": "金额",
     "participantColumnLabel": "参与者",
@@ -2868,10 +2847,11 @@
     "noExpensesLabel": "所选期间内没有消费。",
     "noParticipantsLabel": "所选期间内没有参与活动的参与者。",
     "noSettlementsLabel": "截至结束日期已全部结清。",
-    "noReimbursementsLabel": "截至结束日期没有报销记录。",
     "originalAmountLabel": "原始金额",
     "expenseColumnLabel": "支出",
-    "categoryColumnLabel": "类别"
+    "categoryColumnLabel": "类别",
+    "recordedSettlementsSectionLabel": "已记录的结算",
+    "noRecordedSettlementsLabel": "截至结束日期没有结算记录。"
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2909,5 +2889,27 @@
     "hintTapToAddExpense": "我是 {name}，点我即可添加一笔支出。",
     "hintTapToCreateGroup": "我是 {name}，点我即可创建群组。",
     "billName": "Bill"
+  },
+  "CreateSettlement": {
+    "description": "请核对付款信息后再记录。",
+    "pays": "{from} 支付给 {to}",
+    "amount": "金额",
+    "date": "日期",
+    "category": "分类",
+    "create": "创建",
+    "edit": "编辑详情",
+    "creating": "创建中…",
+    "successToast": "已记录结算付款",
+    "successToastMultiple": "已将 {count} 笔结算付款记录为一笔",
+    "paysMany": "{from} 支付给 {count} 人",
+    "receivesMany": "{to} 收到 {count} 笔付款",
+    "paymentsToInclude": "要包含的付款",
+    "selectionSummary": "已选择 {count} 笔付款，总计 {total}",
+    "legToAria": "{from} 支付给 {to}，{amount}",
+    "legFromAria": "{from} 支付给 {to}，{amount}",
+    "toParticipant": "支付给{name}",
+    "fromParticipant": "来自{name}",
+    "createSingle": "记录付款",
+    "createMultiple": "记录 {count} 笔付款"
   }
 }

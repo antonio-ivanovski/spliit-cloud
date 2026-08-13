@@ -132,7 +132,7 @@ export async function createExpense(
     select: { id: true },
   })
   // Settlements may involve soft-removed participants who still appear in
-  // balances. Keep them off new ordinary expenses, but allow reimbursements.
+  // balances. Keep them off new ordinary expenses, but allow settlements.
   const removedParticipants = isSettlementCategory(expense.category)
     ? await client.ledgerParticipant.findMany({
         where: { ledgerId, removedAt: { not: null } },

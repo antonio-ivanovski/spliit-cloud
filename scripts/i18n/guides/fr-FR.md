@@ -6,4 +6,5 @@ Apply `default.md` first, then these French (France) rules.
 - Keep a friendly but respectful UI voice; use `vous` or impersonal phrasing consistently and do not switch to casual `tu` without context.
 - Preserve accents, apostrophes, elisions, and French spacing conventions around punctuation such as `:`, `;`, `!`, and `?`.
 - Prefer established French product terminology over literal English calques, especially for expenses, shares, balances, and settlements.
+- Exclusive settlement term: *règlement* (noun) and *régler* (verb). Never *remboursement*, *rembourser*, or refund cognates.
 - Handle gender and agreement carefully; rephrase short labels when that produces a more natural and inclusive result.

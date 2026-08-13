@@ -6,7 +6,7 @@ import { useLocale } from '@/i18n/react'
 import type { Currency } from '@/lib/currency'
 import { formatCurrency } from '@/lib/utils'
 
-import { CreateReimbursementModal } from './create-reimbursement-modal'
+import { CreateSettlementModal } from './create-settlement-modal'
 import {
   settlementLegKey,
   sumSettlementLegs,
@@ -43,7 +43,7 @@ export function SettlementGroupActions({
   return (
     <>
       {children(openFor)}
-      <CreateReimbursementModal
+      <CreateSettlementModal
         groupId={groupId}
         settlementGroup={group}
         initialSelectedKeys={initialSelectedKeys}

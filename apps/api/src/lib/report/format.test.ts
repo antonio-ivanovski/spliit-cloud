@@ -14,7 +14,7 @@ const labels: ReportLabels = {
   participantsCountLabel: 'Participants',
   participantsSectionLabel: 'Participant summary',
   settlementsSectionLabel: 'Suggested settlements',
-  reimbursementsSectionLabel: 'Recorded reimbursements',
+  recordedSettlementsSectionLabel: 'Recorded settlements',
   expensesSectionLabel: 'Expense details',
   amountColumnLabel: 'Amount',
   participantColumnLabel: 'Participant',
@@ -30,7 +30,7 @@ const labels: ReportLabels = {
   noExpensesLabel: 'No expenses',
   noParticipantsLabel: 'No participants',
   noSettlementsLabel: 'Settled',
-  noReimbursementsLabel: 'No reimbursements',
+  noRecordedSettlementsLabel: 'No settlements',
   originalAmountLabel: 'Original amount',
   categoryNames: { food: 'Food' },
 }

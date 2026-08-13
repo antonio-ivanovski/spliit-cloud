@@ -4,6 +4,7 @@ import { useState, type Dispatch, type SetStateAction } from 'react'
 import { useWatch, type UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
+import { categoryLabel } from '@/app/groups/[groupId]/stats/category-utils'
 import { CategorySelector } from '@/components/category-selector'
 import { CurrencyRateProviderAttribution } from '@/components/currency-rate-provider-attribution'
 import { CurrencySelector } from '@/components/currency-selector'
@@ -45,7 +46,12 @@ import type {
   ExpenseFormInputValues,
   ExpenseFormItemValues,
 } from '@spliit/domain'
-import { DEFAULT_CATEGORIES } from '@spliit/domain'
+import {
+  DEFAULT_CATEGORIES,
+  INCOME_CATEGORY_ID,
+  SETTLEMENT_CATEGORY_ID,
+  isSettlementCategory,
+} from '@spliit/domain'
 import {
   formatCalculatorAmount,
   type CalculatorItem,
@@ -150,6 +156,9 @@ export function BasicDetailsCard(props: {
   } = props
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
+  const { t: tCategories } = useTranslation(undefined, {
+    keyPrefix: 'Categories',
+  })
   const locale = useLocale() as Locale
   const { isCategoryLoading, onManualCategory } = useSuggestCategoryFromTitle({
     form,
@@ -168,6 +177,16 @@ export function BasicDetailsCard(props: {
     CalculatorItem[] | null
   >(null)
   const watchedItems = useWatch({ control: form.control, name: 'items' }) ?? []
+  const watchedCategory = useWatch({ control: form.control, name: 'category' })
+  const categoryHint = isSettlementCategory(watchedCategory)
+    ? t('settlementHint', {
+        category: categoryLabel(tCategories, SETTLEMENT_CATEGORY_ID),
+      })
+    : watchedCategory === INCOME_CATEGORY_ID
+      ? t('incomeHint', {
+          category: categoryLabel(tCategories, INCOME_CATEGORY_ID),
+        })
+      : null
 
   const inputCurrency = props.originalCurrency
   const hasExistingItems = watchedItems.some(
@@ -316,9 +335,11 @@ export function BasicDetailsCard(props: {
                   </FormControl>
                 </div>
               </div>
-              <FormDescription className="hidden sm:block">
-                {t(`${sExpense}.TitleField.description`)}
-              </FormDescription>
+              {categoryHint ? (
+                <FormDescription className="text-xs">
+                  {categoryHint}
+                </FormDescription>
+              ) : null}
               <FormMessage />
             </FormItem>
           )}

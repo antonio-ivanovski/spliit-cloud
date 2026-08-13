@@ -3,7 +3,6 @@ import {
   Check,
   ChevronDown,
   ChevronsUpDown,
-  Layers,
   Loader2,
   Sparkles,
 } from 'lucide-react'
@@ -397,6 +396,7 @@ function CategoryCommand({
                   mode={mode}
                   selected={parentSelected}
                   parentRow
+                  hasChildren={children.length > 0}
                   onSelect={() => selectCategory(parent.id)}
                 />
                 {children.map((category) => {
@@ -434,6 +434,7 @@ function CategoryCommandRow({
   selected,
   onSelect,
   parentRow = false,
+  hasChildren = false,
   indented = false,
   ranked = false,
 }: {
@@ -444,32 +445,29 @@ function CategoryCommandRow({
   selected: boolean
   onSelect: () => void
   parentRow?: boolean
+  hasChildren?: boolean
   indented?: boolean
   ranked?: boolean
 }) {
+  const isGroupHeader = parentRow && hasChildren
   return (
     <CommandItem
       value={category.id}
       onSelect={onSelect}
       aria-label={label}
-      className={cn('w-full', parentRow && 'bg-muted/40 font-semibold')}
+      className={cn('w-full', isGroupHeader && 'bg-muted/40 font-semibold')}
     >
       {mode === 'multi' && (
         <Check
           className={cn('me-2 h-4 w-4 shrink-0', selected ? '' : 'invisible')}
         />
       )}
-      {parentRow ? (
-        <Layers className="me-2 h-4 w-4 shrink-0" aria-hidden="true" />
-      ) : null}
       {indented ? (
         <span className="ps-8">
           <CategoryLabel category={category} />
         </span>
-      ) : parentRow ? (
-        <span className="min-w-0 flex-1 truncate">{label}</span>
       ) : (
-        <span className="min-w-0 flex-1">
+        <span className="min-w-0 flex-1 truncate">
           <CategoryLabel category={category} />
         </span>
       )}

@@ -37,8 +37,8 @@ export type ExpenseReportViewModel = {
     share: string
     balance: string
   }>
-  settlements: Array<{ from: string; to: string; amount: string }>
-  reimbursements: Array<{
+  suggestedSettlements: Array<{ from: string; to: string; amount: string }>
+  recordedSettlements: Array<{
     date: string
     from: string
     to: string
@@ -136,20 +136,18 @@ export function formatExpenseReport(
       share: formatAmount(participant.periodShare),
       balance: formatAmount(participant.balanceAsOf),
     })),
-    settlements: model.settlements.map((settlement) => ({
+    suggestedSettlements: model.suggestedSettlements.map((settlement) => ({
       from: participantName(model, settlement.from),
       to: participantName(model, settlement.to),
       amount: formatAmount(settlement.amount),
     })),
-    reimbursements: model.reimbursements.map((reimbursement) => ({
-      date: formatDate(reimbursement.date),
+    recordedSettlements: model.recordedSettlements.map((settlement) => ({
+      date: formatDate(settlement.date),
       from: joinNames(
-        reimbursement.fromIds.map((id) => participantName(model, id)),
+        settlement.fromIds.map((id) => participantName(model, id)),
       ),
-      to: joinNames(
-        reimbursement.toIds.map((id) => participantName(model, id)),
-      ),
-      amount: formatAmount(reimbursement.amount),
+      to: joinNames(settlement.toIds.map((id) => participantName(model, id))),
+      amount: formatAmount(settlement.amount),
     })),
     expenses: model.expenses.map((expense) => {
       const payers = expense.payers.map((payer) => ({

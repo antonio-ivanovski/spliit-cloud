@@ -21,7 +21,7 @@ const labels = {
   participantsCountLabel: 'Participants',
   participantsSectionLabel: 'Participant summary',
   settlementsSectionLabel: 'Suggested settlements',
-  reimbursementsSectionLabel: 'Recorded reimbursements',
+  recordedSettlementsSectionLabel: 'Recorded settlements',
   expensesSectionLabel: 'Expense details',
   amountColumnLabel: 'Amount',
   participantColumnLabel: 'Participant',
@@ -37,7 +37,7 @@ const labels = {
   noExpensesLabel: 'No expenses in the selected period.',
   noParticipantsLabel: 'No participants.',
   noSettlementsLabel: 'Everything is settled.',
-  noReimbursementsLabel: 'No reimbursements recorded.',
+  noRecordedSettlementsLabel: 'No settlements recorded.',
   originalAmountLabel: 'Original amount',
   categoryNames: { food: 'Food' },
 }

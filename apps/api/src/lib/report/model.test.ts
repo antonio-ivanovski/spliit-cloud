@@ -1,7 +1,7 @@
 import {
   getBalances,
   getPublicBalances,
-  getSuggestedReimbursements,
+  getSuggestedSettlements,
 } from '@spliit/domain'
 
 import {
@@ -119,7 +119,7 @@ describe('buildExpenseReport', () => {
     ])
   })
 
-  it('excludes reimbursements from period totals but records them as reimbursements', () => {
+  it('excludes settlements from period totals but records them as recorded settlements', () => {
     const model = buildExpenseReport({
       ...baseInput,
       rows: [
@@ -154,12 +154,12 @@ describe('buildExpenseReport', () => {
     expect(model.period.total).toBe(3000)
     expect(model.period.expenseCount).toBe(1)
     expect(model.expenses.map((expense) => expense.id)).toEqual(['e1'])
-    // Only reimbursements dated through end of `to` are recorded.
-    expect(model.reimbursements.map((r) => r.date)).toEqual([
+    // Only settlements dated through end of `to` are recorded.
+    expect(model.recordedSettlements.map((r) => r.date)).toEqual([
       '2026-06-20',
       '2026-07-20',
     ])
-    expect(model.reimbursements[1]).toEqual({
+    expect(model.recordedSettlements[1]).toEqual({
       date: '2026-07-20',
       fromIds: ['bob'],
       toIds: ['alice'],
@@ -206,10 +206,10 @@ describe('buildExpenseReport', () => {
 
     // As of balances: Alice paid 1000, owes 500, received 300 → net +200;
     // Bob owes 500, paid 300 → net -200. Public balances reflect the
-    // remaining flow after suggested reimbursements are accounted.
+    // remaining flow after suggested settlements are accounted.
     expect(alice.balanceAsOf).toBe(200)
     expect(bob.balanceAsOf).toBe(-200)
-    expect(model.settlements).toEqual([
+    expect(model.suggestedSettlements).toEqual([
       { from: 'bob', to: 'alice', amount: 200 },
     ])
   })
@@ -277,10 +277,10 @@ describe('buildExpenseReport', () => {
       itemizedRemainder: r.itemizedRemainder,
     }))
     const balances = getBalances(balanceRows)
-    const suggested = getSuggestedReimbursements(balances)
+    const suggested = getSuggestedSettlements(balances)
     const publicBalances = getPublicBalances(suggested)
 
-    expect(model.settlements).toEqual(suggested)
+    expect(model.suggestedSettlements).toEqual(suggested)
     for (const participant of model.participants) {
       expect(participant.balanceAsOf).toBe(
         publicBalances[participant.id]?.total ?? 0,
@@ -440,8 +440,8 @@ describe('buildExpenseReport', () => {
     expect(model.period.expenseCount).toBe(0)
     expect(model.period.categories).toEqual([])
     expect(model.expenses).toEqual([])
-    expect(model.settlements).toEqual([])
-    expect(model.reimbursements).toEqual([])
+    expect(model.suggestedSettlements).toEqual([])
+    expect(model.recordedSettlements).toEqual([])
     expect(model.participants).toHaveLength(3)
     for (const participant of model.participants) {
       expect(participant.periodPaid).toBe(0)

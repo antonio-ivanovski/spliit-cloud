@@ -180,13 +180,13 @@ describe('groups.balances.list participant labels', () => {
 
     expect(result.settlement.individual).toEqual({
       policy: 'within-subgroups',
-      reimbursements: [
+      suggestedSettlements: [
         { from: 'lp-bob', to: 'lp-alice', amount: 100 },
         { from: 'lp-dave', to: 'lp-carol', amount: 100 },
       ],
     })
-    expect(result.reimbursements).toEqual(
-      result.settlement.individual.reimbursements,
+    expect(result.suggestedSettlements).toEqual(
+      result.settlement.individual.suggestedSettlements,
     )
     expect(result.settlement.subgroup.units).toEqual(
       expect.arrayContaining([

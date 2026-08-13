@@ -194,7 +194,8 @@
       "participants": "{names}",
       "showLess": "Afficher moins"
     },
-    "copyToast": "Copie de la dépense initiée. Les détails de la dépense existante seront utilisés pour en créer une nouvelle."
+    "copyToast": "Copie de la dépense initiée. Les détails de la dépense existante seront utilisés pour en créer une nouvelle.",
+    "incomeBadge": "Revenu"
   },
   "Groups": {
     "myGroups": "Mes groupes",
@@ -660,8 +661,7 @@
       "edit": "Modifier le revenu",
       "TitleField": {
         "label": "Titre du revenu",
-        "placeholder": "Restaurant du lundi soir",
-        "description": "Entrez une description pour le revenu."
+        "placeholder": "Restaurant du lundi soir"
       },
       "DateField": {
         "label": "Date du revenu",
@@ -691,8 +691,7 @@
       "edit": "Modifier la dépense",
       "TitleField": {
         "label": "Titre de la dépense",
-        "placeholder": "Restaurant du lundi soir",
-        "description": "Entrez une description pour la dépense."
+        "placeholder": "Restaurant du lundi soir"
       },
       "DateField": {
         "label": "Date de la dépense",
@@ -865,7 +864,6 @@
     "participant": {
       "pending": "(invité)"
     },
-    "reimbursement": "Paiement de règlement",
     "readOnlyNotice": "Ce groupe est archivé. La dépense est affichée en lecture seule.",
     "PaidBySplitModeField": {
       "label": "Mode de répartition du payeur"
@@ -982,7 +980,10 @@
       "chooseTimezone": "Choisir le fuseau horaire",
       "done": "Terminé",
       "yourTime": "votre heure"
-    }
+    },
+    "settlementTitle": "Paiement de règlement",
+    "settlementHint": "{category} : Non compté comme une dépense dans les totaux, statistiques et budgets. Met tout de même à jour qui doit quoi à qui.",
+    "incomeHint": "{category} : Pour l’argent reçu. Comptabilisé comme un revenu, pas comme un achat."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Supprimer le document",
@@ -1056,14 +1057,6 @@
     "title": "Équilibres",
     "description": "Consultez le solde net de chaque participant.",
     "removedBadge": "Supprimé",
-    "Reimbursements": {
-      "title": "Paiements de règlement suggérés",
-      "description": "Utilisez ces paiements pour régler les soldes avec le moins de virements possible.",
-      "noImbursements": "Tous les soldes de votre groupe sont réglés 😁",
-      "owes": "<strong>{from}</strong> doit à <strong>{to}</strong>",
-      "markAsPaid": "Marquer comme payé",
-      "markAsPaidAria": "Marquer comme payé : {amount} de {from} à {to}"
-    },
     "currencyDisplay": {
       "label": "Devise",
       "group": "Devise du groupe ({currency})",
@@ -1126,6 +1119,14 @@
       "individualAllHint": "Vous consultez le plan individuel standard à l'échelle du groupe. Il peut inclure des paiements entre sous-groupes.",
       "unknownParticipant": "Invitation en attente",
       "individualWithinHint": "Vous consultez un plan individuel tenant compte des sous-groupes. Les paiements suggérés restent au sein de chaque sous-groupe lorsque les totaux des sous-groupes sont déjà réglés."
+    },
+    "Settlements": {
+      "title": "Règlements suggérés",
+      "description": "Utilisez ces paiements pour régler les soldes avec le moins de virements possible.",
+      "noSettlements": "Tous les soldes de votre groupe sont réglés 😁",
+      "owes": "<strong>{from}</strong> doit à <strong>{to}</strong>",
+      "markAsPaid": "Marquer comme payé",
+      "markAsPaidAria": "Marquer comme payé : {amount} de {from} à {to}"
     }
   },
   "Stats": {
@@ -2224,7 +2225,8 @@
         "recurrence": "Récurrence",
         "reimbursement": "Paiement de règlement",
         "conversionSource": "Source de conversion",
-        "conversionRate": "Taux de conversion"
+        "conversionRate": "Taux de conversion",
+        "settlement": "Paiement de règlement"
       },
       "recurringCreated": "{participant} a créé la dépense récurrente « {title} »",
       "stopped": "{participant} a arrêté la dépense récurrente {title}",
@@ -2447,28 +2449,6 @@
     "commentDelete": "Supprimer le commentaire",
     "commentSend": "Envoyer le commentaire",
     "openDocument": "Ouvrir le document"
-  },
-  "CreateReimbursement": {
-    "description": "Vérifiez le paiement avant de l'enregistrer.",
-    "pays": "{from} paie {to}",
-    "amount": "Montant",
-    "date": "Date",
-    "category": "Catégorie",
-    "create": "Créer",
-    "edit": "Modifier les détails",
-    "creating": "Création…",
-    "successToast": "Paiement de règlement enregistré",
-    "successToastMultiple": "{count} paiements de règlement enregistrés en une seule entrée",
-    "paysMany": "{from} paie {count} personnes",
-    "receivesMany": "{to} reçoit {count} paiements",
-    "paymentsToInclude": "Paiements à inclure",
-    "selectionSummary": "{count} paiements sélectionnés, total : {total}",
-    "legToAria": "{from} paie {to}, {amount}",
-    "legFromAria": "{from} paie {to}, {amount}",
-    "toParticipant": "à {name}",
-    "fromParticipant": "de {name}",
-    "createSingle": "Enregistrer le paiement",
-    "createMultiple": "Enregistrer {count} paiements"
   },
   "Participants": {
     "search": "Rechercher des participants...",
@@ -2889,7 +2869,6 @@
     "participantsCountLabel": "Personnes participantes",
     "participantsSectionLabel": "Résumé des participants",
     "settlementsSectionLabel": "Règlements suggérés",
-    "reimbursementsSectionLabel": "Remboursements enregistrés",
     "expensesSectionLabel": "Détails des dépenses",
     "amountColumnLabel": "Montant",
     "participantColumnLabel": "Personne participante",
@@ -2903,10 +2882,11 @@
     "noExpensesLabel": "Aucune dépense sur la période sélectionnée.",
     "noParticipantsLabel": "Aucun participant n’a eu d’activité sur la période sélectionnée.",
     "noSettlementsLabel": "Tout est réglé à la date de fin.",
-    "noReimbursementsLabel": "Aucun remboursement enregistré jusqu’à la date de fin.",
     "originalAmountLabel": "Montant d’origine",
     "expenseColumnLabel": "Dépense",
-    "categoryColumnLabel": "Catégorie"
+    "categoryColumnLabel": "Catégorie",
+    "recordedSettlementsSectionLabel": "Règlements enregistrés",
+    "noRecordedSettlementsLabel": "Aucun règlement enregistré jusqu’à la date de fin."
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2944,5 +2924,27 @@
     "hintTapToAddExpense": "Je suis {name} — touchez-moi pour ajouter une dépense.",
     "hintTapToCreateGroup": "Je suis {name} — touchez-moi pour créer un groupe.",
     "billName": "Bill"
+  },
+  "CreateSettlement": {
+    "description": "Vérifiez le paiement avant de l'enregistrer.",
+    "pays": "{from} paie {to}",
+    "amount": "Montant",
+    "date": "Date du règlement",
+    "category": "Catégorie",
+    "create": "Créer",
+    "edit": "Modifier les détails",
+    "creating": "Création…",
+    "successToast": "Paiement de règlement enregistré",
+    "successToastMultiple": "{count} paiements de règlement enregistrés en une seule entrée",
+    "paysMany": "{from} paie {count} personnes",
+    "receivesMany": "{to} reçoit {count} paiements",
+    "paymentsToInclude": "Paiements à inclure",
+    "selectionSummary": "{count} paiements sélectionnés, total : {total}",
+    "legToAria": "{from} paie {to}, {amount}",
+    "legFromAria": "{from} paie {to}, {amount}",
+    "toParticipant": "à {name}",
+    "fromParticipant": "de {name}",
+    "createSingle": "Enregistrer le paiement",
+    "createMultiple": "Enregistrer {count} paiements"
   }
 }

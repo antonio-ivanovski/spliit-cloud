@@ -7,3 +7,4 @@ Apply `default.md` first, then these Korean rules.
 - Preserve spacing, Hangul spelling, particles, and native counters. Add a counter only when Korean requires it for a natural count.
 - Use Korean punctuation and avoid unnecessary English capitalization or loanwords when an ordinary Korean term exists.
 - Keep placeholders and tags outside grammatical endings unless attaching them is the only natural construction.
+- Exclusive settlement term: 정산. Never 환급 or 환불 for this concept.

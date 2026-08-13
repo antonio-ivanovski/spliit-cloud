@@ -17,7 +17,7 @@ const group = {
 
 function searchParams(overrides: Partial<CreateExpenseSearch> = {}) {
   return {
-    reimbursement: 'yes',
+    settlement: 'yes',
     amount: '4000',
     ...overrides,
   } as CreateExpenseSearch
@@ -30,11 +30,11 @@ function build(search: CreateExpenseSearch) {
     group,
     groupCurrency: EUR,
     currentLedgerParticipantId: 'alice',
-    reimbursementTitle: 'Settlement payment',
+    settlementTitle: 'Settlement payment',
   })
 }
 
-describe('buildExpenseFormDefaults grouped reimbursements', () => {
+describe('buildExpenseFormDefaults grouped settlements', () => {
   it('prefills one payer and multiple exact recipients', () => {
     const values = build(
       searchParams({
@@ -81,7 +81,7 @@ describe('buildExpenseFormDefaults grouped reimbursements', () => {
     expect(values.isMultiPayer).toBe(true)
   })
 
-  it('falls back to scalar reimbursement defaults for malformed grouped state', () => {
+  it('falls back to scalar settlement defaults for malformed grouped state', () => {
     const values = build(
       searchParams({
         from: 'alice',
@@ -94,6 +94,25 @@ describe('buildExpenseFormDefaults grouped reimbursements', () => {
     expect(values.splitMode).toBe('EVENLY')
     expect(values.paidByList).toEqual([{ participant: 'alice', shares: 25 }])
     expect(values.paidFor).toEqual([{ participant: 'bob', shares: 1 }])
+  })
+
+  it('honors legacy reimbursement=yes as a settlement create default', () => {
+    const values = buildExpenseFormDefaults({
+      isCreate: true,
+      searchParams: {
+        reimbursement: 'yes',
+        amount: '4000',
+        from: 'alice',
+        to: 'bob',
+      } as CreateExpenseSearch,
+      group,
+      groupCurrency: EUR,
+      currentLedgerParticipantId: 'alice',
+      settlementTitle: 'Settlement payment',
+    })
+
+    expect(values.category).toBe('settlement')
+    expect(values.title).toBe('Settlement payment')
   })
 })
 
@@ -148,7 +167,7 @@ describe('buildExpenseFormDefaults edit-mode item hydration', () => {
       group,
       groupCurrency: EUR,
       currentLedgerParticipantId: 'alice',
-      reimbursementTitle: 'Settlement payment',
+      settlementTitle: 'Settlement payment',
     })
 
     expect(values.items?.[0]?.paidFor).toEqual([

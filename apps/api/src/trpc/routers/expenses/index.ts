@@ -44,7 +44,7 @@ const globalExpensesInputSchema = z.object({
   query: z.string().optional(),
   locale: z.string().optional(),
   groupIds: z.array(z.string().min(1)).optional(),
-  hideReimbursements: z.boolean().default(false),
+  hideSettlements: z.boolean().default(false),
   categories: z.array(z.string()).optional(),
   paidBy: z.array(personRefSchema).optional(),
   paidByMatch: matchModeSchema,
@@ -314,7 +314,7 @@ async function listGlobalExpenses(
       if (input.categories && input.categories.length > 0) {
         return { in: expandCategorySelection(input.categories) }
       }
-      if (input.hideReimbursements) {
+      if (input.hideSettlements) {
         return { not: SETTLEMENT_CATEGORY_ID }
       }
       return undefined

@@ -192,7 +192,8 @@
       "participants": "{names}",
       "showLess": "Näytä vähemmän"
     },
-    "copyToast": "Kulun kopiointi aloitettu. Olemassa olevia kulun tietoja käytetään uuden kulun luomiseen."
+    "copyToast": "Kulun kopiointi aloitettu. Olemassa olevia kulun tietoja käytetään uuden kulun luomiseen.",
+    "incomeBadge": "Tulo"
   },
   "Groups": {
     "myGroups": "Omat ryhmät",
@@ -654,8 +655,7 @@
       "edit": "Muokkaa tuloa",
       "TitleField": {
         "label": "Otsikko",
-        "placeholder": "Palkka tai hyvitys",
-        "description": "Kuvaile, mistä tulo on peräisin."
+        "placeholder": "Palkka tai hyvitys"
       },
       "DateField": {
         "label": "Päivä",
@@ -685,8 +685,7 @@
       "edit": "Muokkaa kulua",
       "TitleField": {
         "label": "Otsikko",
-        "placeholder": "Maanantain ravintola",
-        "description": "Anna lyhyt kuvaus kululle."
+        "placeholder": "Maanantain ravintola"
       },
       "DateField": {
         "label": "Päivä",
@@ -859,7 +858,6 @@
     "save": "Tallenna",
     "saving": "Tallennetaan…",
     "cancel": "Peruuta",
-    "reimbursement": "Tasausmaksu",
     "readOnlyNotice": "Tämä ryhmä on arkistoitu. Kulu näytetään vain luku -tilassa.",
     "PaidBySplitModeField": {
       "label": "Maksajan jakamistapa"
@@ -975,7 +973,10 @@
       "chooseTimezone": "Valitse aikavyöhyke",
       "done": "Valmis",
       "yourTime": "paikallinen aikasi"
-    }
+    },
+    "settlementTitle": "Tasausmaksu",
+    "settlementHint": "{category}: Ei lasketa kuluksi kokonaissummiin, tilastoihin tai budjetteihin. Päivittää silti, kuka on velkaa kenelle.",
+    "incomeHint": "{category}: Vastaanotetulle rahalle. Ryhmitellään tuloksi, ei ostoksi."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Poista asiakirja",
@@ -1049,14 +1050,6 @@
     "title": "Saldo",
     "description": "Näe kunkin osallistujan nettosaldo.",
     "removedBadge": "Poistettu",
-    "Reimbursements": {
-      "title": "Ehdotetut tasausmaksut",
-      "description": "Näillä maksuilla voit tasata saldot mahdollisimman vähillä tilisiirroilla.",
-      "noImbursements": "Kaikkien ryhmän jäsenten saldot on tasattu 😁",
-      "owes": "<strong>{from}</strong> maksaa henkilölle <strong>{to}</strong>",
-      "markAsPaid": "Merkitse maksetuksi",
-      "markAsPaidAria": "Merkitse {from}–{to}, {amount}, maksetuksi"
-    },
     "currencyDisplay": {
       "label": "Valuutta",
       "group": "Ryhmän valuutta ({currency})",
@@ -1119,6 +1112,14 @@
       "individualAllHint": "Näet tavallisen koko ryhmän kattavan yksilöllisen suunnitelman. Se voi sisältää maksuja alaryhmien välillä.",
       "unknownParticipant": "Odottava kutsu",
       "individualWithinHint": "Näet alaryhmät huomioivan yksilöllisen suunnitelman. Ehdotetut maksut pysyvät kunkin alaryhmän sisällä, kun alaryhmien summat on jo tasattu."
+    },
+    "Settlements": {
+      "title": "Ehdotetut tilitykset",
+      "description": "Näillä maksuilla voit tasata saldot mahdollisimman vähillä tilisiirroilla.",
+      "noSettlements": "Kaikkien ryhmän jäsenten saldot on tasattu 😁",
+      "owes": "<strong>{from}</strong> maksaa henkilölle <strong>{to}</strong>",
+      "markAsPaid": "Merkitse maksetuksi",
+      "markAsPaidAria": "Merkitse {from}–{to}, {amount}, maksetuksi"
     }
   },
   "Stats": {
@@ -2215,7 +2216,8 @@
         "recurrence": "Toistuminen",
         "reimbursement": "Tasausmaksu",
         "conversionSource": "Muunnoslähde",
-        "conversionRate": "Muunnoskurssi"
+        "conversionRate": "Muunnoskurssi",
+        "settlement": "Tasausmaksu"
       },
       "recurringCreated": "{participant} loi toistuvan kulun ”{title}”",
       "stopped": "{participant} pysäytti toistuvan kulun {title}",
@@ -2429,28 +2431,6 @@
     "commentDelete": "Poista kommentti",
     "commentSend": "Lähetä kommentti",
     "openDocument": "Avaa asiakirja"
-  },
-  "CreateReimbursement": {
-    "description": "Tarkista maksu ennen sen tallentamista.",
-    "pays": "{from} maksaa {to}:lle",
-    "amount": "Summa",
-    "date": "Päivä",
-    "category": "Kategoria",
-    "create": "Luo",
-    "edit": "Muokkaa tietoja",
-    "creating": "Luodaan…",
-    "successToast": "Tasausmaksu kirjattu",
-    "successToastMultiple": "{count} tasausmaksua kirjattu yhdeksi merkinnäksi",
-    "paysMany": "{from} maksaa {count} henkilölle",
-    "receivesMany": "{to} vastaanottaa {count} maksua",
-    "paymentsToInclude": "Mukaan otettavat maksut",
-    "selectionSummary": "{count} maksua valittu, yhteensä {total}",
-    "legToAria": "{from} maksaa {to}:lle, {amount}",
-    "legFromAria": "{from} maksaa {to}:lle, {amount}",
-    "toParticipant": "{name}lle",
-    "fromParticipant": "{name}lta",
-    "createSingle": "Kirjaa maksu",
-    "createMultiple": "Kirjaa {count} maksua"
   },
   "Participants": {
     "search": "Hae osallistujia...",
@@ -2871,7 +2851,6 @@
     "participantsCountLabel": "Osallistujat",
     "participantsSectionLabel": "Osallistujien yhteenveto",
     "settlementsSectionLabel": "Ehdotetut selvitykset",
-    "reimbursementsSectionLabel": "Kirjatut hyvitykset",
     "expensesSectionLabel": "Kulujen tiedot",
     "amountColumnLabel": "Summa",
     "participantColumnLabel": "Osallistuja",
@@ -2885,10 +2864,11 @@
     "noExpensesLabel": "Valitulla jaksolla ei ole kuluja.",
     "noParticipantsLabel": "Valitulla jaksolla ei ole aktiivisia osallistujia.",
     "noSettlementsLabel": "Kaikki on selvitetty päättymispäivään mennessä.",
-    "noReimbursementsLabel": "Päättymispäivään mennessä ei ole kirjattu hyvityksiä.",
     "originalAmountLabel": "Alkuperäinen summa",
     "expenseColumnLabel": "Kulu",
-    "categoryColumnLabel": "Kategoria"
+    "categoryColumnLabel": "Kategoria",
+    "recordedSettlementsSectionLabel": "Kirjatut tilitykset",
+    "noRecordedSettlementsLabel": "Päättymispäivään mennessä ei ole kirjattu tilityksiä."
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2926,5 +2906,27 @@
     "hintTapToAddExpense": "Olen {name} — napauta minua lisätäksesi kulun.",
     "hintTapToCreateGroup": "Olen {name} — napauta minua luodaksesi ryhmän.",
     "billName": "Bill"
+  },
+  "CreateSettlement": {
+    "description": "Tarkista maksu ennen sen tallentamista.",
+    "pays": "{from} maksaa {to}:lle",
+    "amount": "Summa",
+    "date": "Päivä",
+    "category": "Kategoria",
+    "create": "Luo",
+    "edit": "Muokkaa tietoja",
+    "creating": "Luodaan…",
+    "successToast": "Tasausmaksu kirjattu",
+    "successToastMultiple": "{count} tasausmaksua kirjattu yhdeksi merkinnäksi",
+    "paysMany": "{from} maksaa {count} henkilölle",
+    "receivesMany": "{to} vastaanottaa {count} maksua",
+    "paymentsToInclude": "Mukaan otettavat maksut",
+    "selectionSummary": "{count} maksua valittu, yhteensä {total}",
+    "legToAria": "{from} maksaa {to}:lle, {amount}",
+    "legFromAria": "{from} maksaa {to}:lle, {amount}",
+    "toParticipant": "{name}lle",
+    "fromParticipant": "{name}lta",
+    "createSingle": "Kirjaa maksu",
+    "createMultiple": "Kirjaa {count} maksua"
   }
 }

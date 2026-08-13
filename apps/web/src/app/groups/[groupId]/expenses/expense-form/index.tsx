@@ -208,7 +208,7 @@ export function ExpenseForm(props: {
       group: props.group,
       groupCurrency: getCurrencyFromGroup(props.group),
       currentLedgerParticipantId: props.currentLedgerParticipantId,
-      reimbursementTitle: t('reimbursement'),
+      settlementTitle: t('settlementTitle'),
       savedDefault,
       today: dateOnlyInAccountTimeZone(formNow, accountTimeZone),
       now: formNow,

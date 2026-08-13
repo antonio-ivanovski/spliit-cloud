@@ -250,7 +250,8 @@
         "recurrence": "Upprepning",
         "reimbursement": "Regleringsbetalning",
         "conversionSource": "Valutakälla",
-        "conversionRate": "Växelkurs"
+        "conversionRate": "Växelkurs",
+        "settlement": "Regleringsbetalning"
       },
       "recurringCreated": "{participant} skapade den återkommande utgiften ”{title}”",
       "stopped": "{participant} stoppade den återkommande utgiften {title}",
@@ -385,14 +386,6 @@
     "title": "Balanser",
     "description": "Se varje deltagares nettobalans.",
     "removedBadge": "Borttagen",
-    "Reimbursements": {
-      "title": "Föreslagna regleringsbetalningar",
-      "description": "Använd dessa betalningar för att reglera balanserna med så få överföringar som möjligt.",
-      "noImbursements": "Alla i din grupp är kvitt 😁",
-      "owes": "<strong>{from}</strong> är skyldig <strong>{to}</strong>",
-      "markAsPaid": "Markera som betald",
-      "markAsPaidAria": "Markera {amount} från {from} till {to} som betald"
-    },
     "currencyDisplay": {
       "label": "Valuta",
       "group": "Gruppvaluta ({currency})",
@@ -455,6 +448,14 @@
       "individualAllHint": "Du tittar på den vanliga gruppomfattande individuella planen. Den kan innehålla betalningar mellan subgrupper.",
       "unknownParticipant": "Väntande inbjudan",
       "individualWithinHint": "Du tittar på en individuell plan som tar hänsyn till subgrupper. Föreslagna betalningar stannar inom varje subgrupp när subgruppens summor redan är reglerade."
+    },
+    "Settlements": {
+      "title": "Föreslagna regleringar",
+      "description": "Använd dessa betalningar för att reglera balanserna med så få överföringar som möjligt.",
+      "noSettlements": "Alla i din grupp är kvitt 😁",
+      "owes": "<strong>{from}</strong> är skyldig <strong>{to}</strong>",
+      "markAsPaid": "Markera som betald",
+      "markAsPaidAria": "Markera {amount} från {from} till {to} som betald"
     }
   },
   "BulkCategorize": {
@@ -682,28 +683,6 @@
       "title": "Bild krävs",
       "aiDescription": "AI-kvittoskanning stöder endast bildfiler."
     }
-  },
-  "CreateReimbursement": {
-    "description": "Granska betalningen innan du registrerar den.",
-    "pays": "{from} betalar {to}",
-    "amount": "Belopp",
-    "date": "Datum",
-    "category": "Kategori",
-    "create": "Skapa",
-    "edit": "Redigera detaljer",
-    "creating": "Skapar…",
-    "successToast": "Regleringsbetalning registrerad",
-    "successToastMultiple": "Registrerade {count} regleringsbetalningar som en post",
-    "paysMany": "{from} betalar {count} personer",
-    "receivesMany": "{to} får {count} betalningar",
-    "paymentsToInclude": "Betalningar att inkludera",
-    "selectionSummary": "{count} betalningar valda, totalt {total}",
-    "legToAria": "{from} betalar {to}, {amount}",
-    "legFromAria": "{from} betalar {to}, {amount}",
-    "toParticipant": "till {name}",
-    "fromParticipant": "från {name}",
-    "createSingle": "Registrera betalning",
-    "createMultiple": "Registrera {count} betalningar"
   },
   "Currencies": {
     "search": "Sök valuta...",
@@ -1050,7 +1029,8 @@
       "title": "Rader",
       "participants": "{names}",
       "showLess": "Visa mindre"
-    }
+    },
+    "incomeBadge": "Inkomst"
   },
   "ExpenseDocumentsInput": {
     "ErrorToast": {
@@ -1105,8 +1085,7 @@
       "edit": "Redigera utgift",
       "TitleField": {
         "label": "Utgiftstitel",
-        "placeholder": "Måndagskvällens restaurang",
-        "description": "Ange en beskrivning av utgiften."
+        "placeholder": "Måndagskvällens restaurang"
       },
       "categoryFieldDescription": "Välj utgiftskategori.",
       "splitModeDescription": "Välj hur utgiften ska fördelas.",
@@ -1195,8 +1174,7 @@
       "edit": "Redigera inkomst",
       "TitleField": {
         "label": "Inkomsttitel",
-        "placeholder": "Lön eller återbetalning",
-        "description": "Beskriv var inkomsten kom ifrån."
+        "placeholder": "Lön eller återbetalning"
       },
       "categoryFieldDescription": "Välj inkomstkategori.",
       "splitModeDescription": "Välj hur inkomsten ska fördelas.",
@@ -1226,7 +1204,6 @@
     "save": "Spara",
     "saving": "Sparar…",
     "cancel": "Avbryt",
-    "reimbursement": "Regleringsbetalning",
     "readOnlyNotice": "Denna grupp är arkiverad. Utgiften visas i skrivskyddat läge.",
     "ParticipantDistribution": {
       "missing": "Saknar {missing} av {total}",
@@ -1401,7 +1378,10 @@
       "chooseTimezone": "Välj tidszon",
       "done": "Klar",
       "yourTime": "din tid"
-    }
+    },
+    "settlementTitle": "Regleringsbetalning",
+    "settlementHint": "{category}: Räknas inte som utgift i totaler, statistik eller budgetar. Uppdaterar ändå vem som är skyldig vem.",
+    "incomeHint": "{category}: För pengar som tas emot. Grupperas som inkomst, inte som ett köp."
   },
   "ExpensePreview": {
     "title": "Utgiftsförhandsvisning",
@@ -2867,7 +2847,6 @@
     "participantsCountLabel": "Deltagare",
     "participantsSectionLabel": "Deltagaröversikt",
     "settlementsSectionLabel": "Föreslagna avräkningar",
-    "reimbursementsSectionLabel": "Registrerade återbetalningar",
     "expensesSectionLabel": "Utgiftsdetaljer",
     "amountColumnLabel": "Belopp",
     "participantColumnLabel": "Deltagare",
@@ -2881,10 +2860,11 @@
     "noExpensesLabel": "Inga utgifter i den valda perioden.",
     "noParticipantsLabel": "Inga deltagare med aktivitet i den valda perioden.",
     "noSettlementsLabel": "Allt är avräknat fram till slutdatumet.",
-    "noReimbursementsLabel": "Inga återbetalningar registrerade fram till slutdatumet.",
     "originalAmountLabel": "Ursprungligt belopp",
     "expenseColumnLabel": "Utgift",
-    "categoryColumnLabel": "Kategori"
+    "categoryColumnLabel": "Kategori",
+    "recordedSettlementsSectionLabel": "Registrerade regleringar",
+    "noRecordedSettlementsLabel": "Inga regleringar registrerade fram till slutdatumet."
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2922,5 +2902,27 @@
     "hintTapToAddExpense": "Jag är {name} — tryck på mig för att lägga till en utgift.",
     "hintTapToCreateGroup": "Jag är {name} — tryck på mig för att skapa en grupp.",
     "billName": "Bill"
+  },
+  "CreateSettlement": {
+    "description": "Granska betalningen innan du registrerar den.",
+    "pays": "{from} betalar {to}",
+    "amount": "Belopp",
+    "date": "Datum",
+    "category": "Kategori",
+    "create": "Skapa",
+    "edit": "Redigera detaljer",
+    "creating": "Skapar…",
+    "successToast": "Regleringsbetalning registrerad",
+    "successToastMultiple": "Registrerade {count} regleringsbetalningar som en post",
+    "paysMany": "{from} betalar {count} personer",
+    "receivesMany": "{to} får {count} betalningar",
+    "paymentsToInclude": "Betalningar att inkludera",
+    "selectionSummary": "{count} betalningar valda, totalt {total}",
+    "legToAria": "{from} betalar {to}, {amount}",
+    "legFromAria": "{from} betalar {to}, {amount}",
+    "toParticipant": "till {name}",
+    "fromParticipant": "från {name}",
+    "createSingle": "Registrera betalning",
+    "createMultiple": "Registrera {count} betalningar"
   }
 }

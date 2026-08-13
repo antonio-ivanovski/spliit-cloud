@@ -32,8 +32,8 @@ const report = {
       balance: '-€15.00',
     },
   ],
-  settlements: [{ from: 'Bob', to: 'Alice', amount: '€15.00' }],
-  reimbursements: [],
+  suggestedSettlements: [{ from: 'Bob', to: 'Alice', amount: '€15.00' }],
+  recordedSettlements: [],
   expenses: [
     {
       id: 'e1',

@@ -7,3 +7,4 @@ Apply `default.md` first, then these Indonesian rules.
 - Use natural Indonesian affixes and word order rather than literal English syntax. Keep labels concise.
 - Plurality is often expressed by context or a number, but every required plural key still needs a natural translation.
 - Preserve Indonesian capitalization, diacritics, punctuation, and the app’s exact numeric meaning.
+- Exclusive settlement term: *pelunasan* (noun) and *lunasi* (verb). Never *reimbursement* or *pengembalian dana* for this concept.

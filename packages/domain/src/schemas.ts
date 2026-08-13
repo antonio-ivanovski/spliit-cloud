@@ -1053,7 +1053,7 @@ export type Expense = z.infer<typeof expenseApiSchema>
  * Input to the admin bulk-categorize apply step. Each row pairs an expense id
  * with the destination category. The server validates that the expense is
  * eligible for the bulk operation (still on `general`, scoped to the group's
- * ledger, non-reimbursement, etc.) before applying the change in a single
+ * ledger, non-settlement, etc.) before applying the change in a single
  * transaction.
  */
 export const bulkUpdateExpenseCategoriesInputSchema = z.object({

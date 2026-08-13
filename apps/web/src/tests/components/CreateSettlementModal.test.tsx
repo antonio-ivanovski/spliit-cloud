@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { CreateReimbursementModal } from '@/app/groups/[groupId]/balances/create-reimbursement-modal'
+import { CreateSettlementModal } from '@/app/groups/[groupId]/balances/create-settlement-modal'
 import {
   useCurrentGroup,
   useIsPendingInvitee,
@@ -68,7 +68,7 @@ vi.mock('@tanstack/react-router', () => ({
 const EUR = { code: 'EUR', symbol: '€', decimal_digits: 2, rounding: 0 }
 const USD = { code: 'USD', symbol: '$', decimal_digits: 2, rounding: 0 }
 
-const reimbursement = { from: 'alice-id', to: 'bob-id', amount: 2500 }
+const suggestedSettlement = { from: 'alice-id', to: 'bob-id', amount: 2500 }
 
 function makeGroup({
   currencyCode = 'EUR',
@@ -146,17 +146,17 @@ function setupCurrentGroup({
 
 // ── Tests ───────────────────────────────────────────────────────────────
 
-describe('CreateReimbursementModal', () => {
+describe('CreateSettlementModal', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     setupCurrentGroup()
   })
 
-  it('renders a view-only summary of the reimbursement', () => {
+  it('renders a view-only summary of the settlement', () => {
     render(
-      <CreateReimbursementModal
+      <CreateSettlementModal
         groupId="group-1"
-        reimbursement={reimbursement}
+        settlement={suggestedSettlement}
         currency={EUR}
         open={true}
         onOpenChange={vi.fn()}
@@ -172,11 +172,11 @@ describe('CreateReimbursementModal', () => {
     expect(within(dialog).getByText('Settlement')).toBeInTheDocument()
   })
 
-  it('renders nothing actionable when reimbursement is null', () => {
+  it('renders nothing actionable when settlement is null', () => {
     render(
-      <CreateReimbursementModal
+      <CreateSettlementModal
         groupId="group-1"
-        reimbursement={null}
+        settlement={null}
         currency={EUR}
         open={true}
         onOpenChange={vi.fn()}
@@ -184,26 +184,26 @@ describe('CreateReimbursementModal', () => {
     )
 
     expect(screen.queryByText('Alice pays Bob')).not.toBeInTheDocument()
-    expect(screen.queryByTestId('reimbursement-create')).not.toBeInTheDocument()
-    expect(screen.queryByTestId('reimbursement-edit')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('settlement-create')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('settlement-edit')).not.toBeInTheDocument()
   })
 
-  it('creates a reimbursement via mutation when clicking Create', async () => {
+  it('creates a settlement via mutation when clicking Create', async () => {
     mockMutateAsync.mockResolvedValue({ expenseId: 'new-expense' })
     mockInvalidateBalances.mockResolvedValue(undefined)
 
     const onOpenChange = vi.fn()
     const { user } = render(
-      <CreateReimbursementModal
+      <CreateSettlementModal
         groupId="group-1"
-        reimbursement={reimbursement}
+        settlement={suggestedSettlement}
         currency={EUR}
         open={true}
         onOpenChange={onOpenChange}
       />,
     )
 
-    await user.click(screen.getByTestId('reimbursement-create'))
+    await user.click(screen.getByTestId('settlement-create'))
 
     await waitFor(() => {
       expect(mockMutateAsync).toHaveBeenCalledTimes(1)
@@ -235,9 +235,9 @@ describe('CreateReimbursementModal', () => {
     mockMutateAsync.mockResolvedValue({ expenseId: 'new-expense' })
 
     const { user } = render(
-      <CreateReimbursementModal
+      <CreateSettlementModal
         groupId="group-1"
-        reimbursement={reimbursement}
+        settlement={suggestedSettlement}
         currency={USD}
         originalCurrencyCode="USD"
         open={true}
@@ -245,7 +245,7 @@ describe('CreateReimbursementModal', () => {
       />,
     )
 
-    await user.click(screen.getByTestId('reimbursement-create'))
+    await user.click(screen.getByTestId('settlement-create'))
 
     await waitFor(() => {
       expect(mockMutateAsync).toHaveBeenCalledTimes(1)
@@ -257,7 +257,7 @@ describe('CreateReimbursementModal', () => {
     })
   })
 
-  it('records multiple recipients as one exact-amount reimbursement', async () => {
+  it('records multiple recipients as one exact-amount settlement', async () => {
     setupCurrentGroup({
       participants: [
         { id: 'alice-id', name: 'Alice' },
@@ -268,7 +268,7 @@ describe('CreateReimbursementModal', () => {
     mockMutateAsync.mockResolvedValue({ expenseId: 'new-expense' })
 
     const { user } = render(
-      <CreateReimbursementModal
+      <CreateSettlementModal
         groupId="group-1"
         settlementGroup={{
           direction: 'pay',
@@ -284,7 +284,7 @@ describe('CreateReimbursementModal', () => {
       />,
     )
 
-    await user.click(screen.getByTestId('reimbursement-create'))
+    await user.click(screen.getByTestId('settlement-create'))
 
     await waitFor(() => expect(mockMutateAsync).toHaveBeenCalledTimes(1))
     expect(mockMutateAsync.mock.calls[0][0].expense).toMatchObject({
@@ -312,7 +312,7 @@ describe('CreateReimbursementModal', () => {
     mockMutateAsync.mockResolvedValue({ expenseId: 'new-expense' })
 
     const { user } = render(
-      <CreateReimbursementModal
+      <CreateSettlementModal
         groupId="group-1"
         settlementGroup={{
           direction: 'pay',
@@ -330,9 +330,9 @@ describe('CreateReimbursementModal', () => {
     )
 
     expect(
-      screen.getByTestId('reimbursement-select-alice-id:carol-id'),
+      screen.getByTestId('settlement-select-alice-id:carol-id'),
     ).toHaveAttribute('aria-checked', 'false')
-    await user.click(screen.getByTestId('reimbursement-create'))
+    await user.click(screen.getByTestId('settlement-create'))
 
     await waitFor(() => expect(mockMutateAsync).toHaveBeenCalledTimes(1))
     expect(mockMutateAsync.mock.calls[0][0].expense.amount).toBe(2500)
@@ -341,7 +341,7 @@ describe('CreateReimbursementModal', () => {
     ])
   })
 
-  it('records multiple payers to one recipient as one reimbursement', async () => {
+  it('records multiple payers to one recipient as one settlement', async () => {
     setupCurrentGroup({
       participants: [
         { id: 'alice-id', name: 'Alice' },
@@ -352,7 +352,7 @@ describe('CreateReimbursementModal', () => {
     mockMutateAsync.mockResolvedValue({ expenseId: 'new-expense' })
 
     const { user } = render(
-      <CreateReimbursementModal
+      <CreateSettlementModal
         groupId="group-1"
         settlementGroup={{
           direction: 'receive',
@@ -368,7 +368,7 @@ describe('CreateReimbursementModal', () => {
       />,
     )
 
-    await user.click(screen.getByTestId('reimbursement-create'))
+    await user.click(screen.getByTestId('settlement-create'))
 
     await waitFor(() => expect(mockMutateAsync).toHaveBeenCalledTimes(1))
     expect(mockMutateAsync.mock.calls[0][0].expense).toMatchObject({
@@ -388,9 +388,9 @@ describe('CreateReimbursementModal', () => {
   it('links to the full create form with search params when clicking Edit', async () => {
     const onOpenChange = vi.fn()
     const { user } = render(
-      <CreateReimbursementModal
+      <CreateSettlementModal
         groupId="group-1"
-        reimbursement={reimbursement}
+        settlement={suggestedSettlement}
         currency={USD}
         originalCurrencyCode="USD"
         open={true}
@@ -398,12 +398,12 @@ describe('CreateReimbursementModal', () => {
       />,
     )
 
-    const edit = screen.getByTestId('reimbursement-edit')
+    const edit = screen.getByTestId('settlement-edit')
     expect(edit).toHaveAttribute('href', '/groups/$groupId/expenses/create')
     expect(edit).toHaveAttribute(
       'data-search',
       JSON.stringify({
-        reimbursement: 'yes',
+        settlement: 'yes',
         from: 'alice-id',
         to: 'bob-id',
         amount: '2500',
@@ -418,42 +418,42 @@ describe('CreateReimbursementModal', () => {
     setupCurrentGroup({ archived: true })
 
     render(
-      <CreateReimbursementModal
+      <CreateSettlementModal
         groupId="group-1"
-        reimbursement={reimbursement}
+        settlement={suggestedSettlement}
         currency={EUR}
         open={true}
         onOpenChange={vi.fn()}
       />,
     )
 
-    expect(screen.queryByTestId('reimbursement-create')).not.toBeInTheDocument()
-    expect(screen.queryByTestId('reimbursement-edit')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('settlement-create')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('settlement-edit')).not.toBeInTheDocument()
   })
 
   it('hides actions when viewer is a pending invitee', () => {
     setupCurrentGroup({ isPendingInvitee: true })
 
     render(
-      <CreateReimbursementModal
+      <CreateSettlementModal
         groupId="group-1"
-        reimbursement={reimbursement}
+        settlement={suggestedSettlement}
         currency={EUR}
         open={true}
         onOpenChange={vi.fn()}
       />,
     )
 
-    expect(screen.queryByTestId('reimbursement-create')).not.toBeInTheDocument()
-    expect(screen.queryByTestId('reimbursement-edit')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('settlement-create')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('settlement-edit')).not.toBeInTheDocument()
   })
 
   it('closes the modal when open changes to false', async () => {
     const onOpenChange = vi.fn()
     render(
-      <CreateReimbursementModal
+      <CreateSettlementModal
         groupId="group-1"
-        reimbursement={reimbursement}
+        settlement={suggestedSettlement}
         currency={EUR}
         open={true}
         onOpenChange={onOpenChange}

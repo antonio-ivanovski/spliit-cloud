@@ -5,9 +5,12 @@ import { Trans, useTranslation } from 'react-i18next'
 
 import { ActiveUserBalance } from '@/app/groups/[groupId]/expenses/active-user-balance'
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
+import {
+  CategorySideEffectBadge,
+  getCategorySideEffectKind,
+} from '@/app/groups/[groupId]/expenses/category-side-effect-badge'
 import { DocumentsCount } from '@/app/groups/[groupId]/expenses/documents-count'
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
-import { Badge } from '@/components/ui/badge'
 import { useLocale } from '@/i18n/react'
 import type { getGroupExpenses } from '@/lib/api'
 import { getCurrency, type Currency } from '@/lib/currency'
@@ -176,6 +179,7 @@ export function ExpenseCard({
   const whenLabel = [closed.shortDate, closed.time, closed.tzHint]
     .filter(Boolean)
     .join(' · ')
+  const categorySideEffect = getCategorySideEffectKind(expense.categoryId)
   const originalCurrency =
     expense.originalCurrency && expense.originalCurrency !== currency.code
       ? getCurrency(expense.originalCurrency)
@@ -231,11 +235,9 @@ export function ExpenseCard({
           data-testid="expense-title"
         >
           <span className="min-w-0 break-words">{expense.title}</span>
-          {isSettlementCategory(expense.categoryId) && (
-            <Badge variant="secondary" className="shrink-0 text-xs">
-              {t('settlementBadge')}
-            </Badge>
-          )}
+          {categorySideEffect ? (
+            <CategorySideEffectBadge kind={categorySideEffect} />
+          ) : null}
           {seriesId && (
             <RecurringBadge
               className="shrink-0 text-[0.68rem]"

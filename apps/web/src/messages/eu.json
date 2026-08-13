@@ -194,7 +194,8 @@
       "participants": "{names}",
       "showLess": "Erakutsi gutxiago"
     },
-    "copyToast": "Gastuaren kopia hasi da. Lehendik dagoen gastuaren datuak erabiliko dira berri bat sortzeko."
+    "copyToast": "Gastuaren kopia hasi da. Lehendik dagoen gastuaren datuak erabiliko dira berri bat sortzeko.",
+    "incomeBadge": "Diru-sarrera"
   },
   "Groups": {
     "myGroups": "Nire taldeak",
@@ -660,8 +661,7 @@
       "edit": "Editatu diru-sarrera",
       "TitleField": {
         "label": "Diru-sarreraren izena",
-        "placeholder": "Astelehenen arratseko jatetxea",
-        "description": "Sartu diru-sarreraren deskripzioa."
+        "placeholder": "Astelehenen arratseko jatetxea"
       },
       "DateField": {
         "label": "Diru-sarreraren data",
@@ -691,8 +691,7 @@
       "edit": "Editatu gastua",
       "TitleField": {
         "label": "Gastuaren izena",
-        "placeholder": "Astelehen arratseko jatetxea",
-        "description": "Sartu gastuaren deskripzioa."
+        "placeholder": "Astelehen arratseko jatetxea"
       },
       "DateField": {
         "label": "Gastuaren data",
@@ -865,7 +864,6 @@
     "participant": {
       "pending": "(gonbidatua)"
     },
-    "reimbursement": "Zor-kitapenaren ordainketa",
     "readOnlyNotice": "Talde hau artxibatuta dago. Gastua irakurtzeko soilik erakusten da.",
     "PaidBySplitModeField": {
       "label": "Ordaintzailearen zatiketa modua"
@@ -982,7 +980,10 @@
       "chooseTimezone": "Aukeratu ordu-zona",
       "done": "Eginda",
       "yourTime": "zure ordua"
-    }
+    },
+    "settlementTitle": "Zor-kitapenaren ordainketa",
+    "settlementHint": "{category}: Ez da gastutzat hartzen guztizkoetan, estatistiketan edo aurrekontuetan. Hala ere, nork nori zor dion eguneratzen du.",
+    "incomeHint": "{category}: Jasotako diruarentzat. Sarrera gisa taldekatzen da, ez erosketa gisa."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Ezabatu dokumentua",
@@ -1056,14 +1057,6 @@
     "title": "Saldoak",
     "description": "Ikusi parte-hartzaile bakoitzaren saldo garbia.",
     "removedBadge": "Kenduta",
-    "Reimbursements": {
-      "title": "Iradokitako zor-kitapenaren ordainketak",
-      "description": "Erabili ordainketa hauek saldoak ahalik eta transferentzia gutxienekin kitatzeko.",
-      "noImbursements": "Taldeko kide guztien saldoak kitatuta daude 😁",
-      "owes": "<strong>{from}</strong>(e)k <strong>{to}</strong>(r)i zor dio",
-      "markAsPaid": "Markatu ordainduta gisa",
-      "markAsPaidAria": "Markatu {amount}-ko ordainketa ({from} → {to}) ordainduta gisa"
-    },
     "currencyDisplay": {
       "label": "Moneta",
       "group": "Taldearen moneta ({currency})",
@@ -1126,6 +1119,14 @@
       "individualAllHint": "Talde osoko banakako plan estandarra ikusten ari zara. Azpitaldeen arteko ordainketak izan ditzake.",
       "unknownParticipant": "Gonbidapenaren zain",
       "individualWithinHint": "Azpitaldeak kontuan hartzen dituen banakako plana ikusten ari zara. Iradokitako ordainketak azpitalde bakoitzaren barruan mantentzen dira azpitaldeen guztizkoak jada kitatuta daudenean."
+    },
+    "Settlements": {
+      "title": "Iradokitako likidazioak",
+      "description": "Erabili ordainketa hauek saldoak ahalik eta transferentzia gutxienekin kitatzeko.",
+      "noSettlements": "Taldeko kide guztien saldoak kitatuta daude 😁",
+      "owes": "<strong>{from}</strong>(e)k <strong>{to}</strong>(r)i zor dio",
+      "markAsPaid": "Markatu ordainduta gisa",
+      "markAsPaidAria": "Markatu {amount}-ko ordainketa ({from} → {to}) ordainduta gisa"
     }
   },
   "Stats": {
@@ -2223,7 +2224,8 @@
         "recurrence": "Maiztasuna",
         "reimbursement": "Zor-kitapenaren ordainketa",
         "conversionSource": "Bihurketa-iturria",
-        "conversionRate": "Bihurketa-tasa"
+        "conversionRate": "Bihurketa-tasa",
+        "settlement": "Zor-kitapenaren ordainketa"
       },
       "recurringCreated": "{participant}(e)k «{title}» gastu errepikaria sortu du",
       "stopped": "{participant}(e)k {title} gastu errepikaria gelditu du",
@@ -2446,28 +2448,6 @@
     "commentDelete": "Ezabatu iruzkina",
     "commentSend": "Iruzkina bidali",
     "openDocument": "Ireki dokumentua"
-  },
-  "CreateReimbursement": {
-    "description": "Berrikusi ordainketa erregistratu aurretik.",
-    "pays": "{from} {to}-ri ordaintzen dio",
-    "amount": "Zenbatekoa",
-    "date": "Data",
-    "category": "Kategoria",
-    "create": "Sortu",
-    "edit": "Editatu xehetasunak",
-    "creating": "Sortzen…",
-    "successToast": "Zor-kitapenaren ordainketa erregistratu da",
-    "successToastMultiple": "{count} likidazio-ordainketa sarrera bakar gisa erregistratu dira",
-    "paysMany": "{from}k {count} laguni ordaintzen die",
-    "receivesMany": "{to}k {count} ordainketa jasotzen ditu",
-    "paymentsToInclude": "Sartu beharreko ordainketak",
-    "selectionSummary": "{count} ordainketa hautatuta, guztira {total}",
-    "legToAria": "{from}k {to}ri ordaintzen dio, {amount}",
-    "legFromAria": "{from}k {to}ri ordaintzen dio, {amount}",
-    "toParticipant": "{name}-ri",
-    "fromParticipant": "{name}-gandik",
-    "createSingle": "Erregistratu ordainketa",
-    "createMultiple": "Erregistratu {count} ordainketa"
   },
   "Participants": {
     "search": "Bilatu kideak...",
@@ -2888,7 +2868,6 @@
     "participantsCountLabel": "Parte-hartzaileak",
     "participantsSectionLabel": "Parte-hartzaileen laburpena",
     "settlementsSectionLabel": "Gomendatutako likidazioak",
-    "reimbursementsSectionLabel": "Erregistratutako itzulketak",
     "expensesSectionLabel": "Gastuen xehetasunak",
     "amountColumnLabel": "Zenbatekoa",
     "participantColumnLabel": "Parte-hartzailea",
@@ -2902,10 +2881,11 @@
     "noExpensesLabel": "Ez dago gasturik hautatutako aldian.",
     "noParticipantsLabel": "Ez dago hautatutako aldian jarduerarik izan duen parte-hartzailerik.",
     "noSettlementsLabel": "Dena likidatuta dago amaiera-datan.",
-    "noReimbursementsLabel": "Ez da itzulketarik erregistratu amaiera-datara arte.",
     "originalAmountLabel": "Jatorrizko zenbatekoa",
     "expenseColumnLabel": "Gastua",
-    "categoryColumnLabel": "Kategoria"
+    "categoryColumnLabel": "Kategoria",
+    "recordedSettlementsSectionLabel": "Erregistratutako likidazioak",
+    "noRecordedSettlementsLabel": "Ez da likidaziorik erregistratu amaiera-datara arte."
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2943,5 +2923,27 @@
     "hintTapToAddExpense": "{name} naiz — sakatu niri gastu bat gehitzeko.",
     "hintTapToCreateGroup": "{name} naiz — sakatu niri talde bat sortzeko.",
     "billName": "Bill"
+  },
+  "CreateSettlement": {
+    "description": "Berrikusi ordainketa erregistratu aurretik.",
+    "pays": "{from} {to}-ri ordaintzen dio",
+    "amount": "Zenbatekoa",
+    "date": "Data",
+    "category": "Kategoria",
+    "create": "Sortu",
+    "edit": "Editatu xehetasunak",
+    "creating": "Sortzen…",
+    "successToast": "Zor-kitapenaren ordainketa erregistratu da",
+    "successToastMultiple": "{count} likidazio-ordainketa sarrera bakar gisa erregistratu dira",
+    "paysMany": "{from}k {count} laguni ordaintzen die",
+    "receivesMany": "{to}k {count} ordainketa jasotzen ditu",
+    "paymentsToInclude": "Sartu beharreko ordainketak",
+    "selectionSummary": "{count} ordainketa hautatuta, guztira {total}",
+    "legToAria": "{from}k {to}ri ordaintzen dio, {amount}",
+    "legFromAria": "{from}k {to}ri ordaintzen dio, {amount}",
+    "toParticipant": "{name}-ri",
+    "fromParticipant": "{name}-gandik",
+    "createSingle": "Erregistratu ordainketa",
+    "createMultiple": "Erregistratu {count} ordainketa"
   }
 }

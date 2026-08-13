@@ -14,6 +14,8 @@ export const expenseChangedFields = [
   'items',
   'documents',
   'recurrence',
+  'settlement',
+  /** Legacy alias for stored activity payloads that used `reimbursement`. */
   'reimbursement',
   'conversionSource',
   'conversionRate',

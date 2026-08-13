@@ -301,7 +301,7 @@ describe('ExpenseCard', () => {
     expect(screen.getByText('Recurring · Stopped')).toBeInTheDocument()
   })
 
-  it('shows settlement badge for reimbursements', () => {
+  it('shows settlement badge for settlement expenses', () => {
     vi.mocked(useIsPendingInvitee).mockReturnValue(false)
     vi.mocked(useActiveUser).mockReturnValue(null)
 

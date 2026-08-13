@@ -70,7 +70,7 @@ const balances = {
   carol: { paid: 0, paidFor: 1000, total: -1000 },
 }
 
-const reimbursements = [
+const suggestedSettlements = [
   { from: 'bob', to: 'alice', amount: 2000 },
   { from: 'carol', to: 'alice', amount: 1000 },
 ]
@@ -101,13 +101,13 @@ describe('BalancesCard', () => {
     setupCurrentGroup()
   })
 
-  it('renders receive and pay sections from suggested reimbursement legs', () => {
+  it('renders receive and pay sections from suggested settlement legs', () => {
     render(
       <BalancesCard
         isLoading={false}
         currencyDisplay="group"
         balances={balances}
-        reimbursements={reimbursements}
+        suggestedSettlements={suggestedSettlements}
         currencyBalances={[]}
         participants={participants}
         groupCurrency={EUR}
@@ -156,22 +156,22 @@ describe('BalancesCard', () => {
         .every((bar) => bar.querySelector('[aria-hidden="true"].h-4')),
     ).toBe(true)
     expect(screen.queryByText(/owes/)).not.toBeInTheDocument()
-    expect(screen.getAllByTestId(/reimbursement-settle-/)).toHaveLength(4)
+    expect(screen.getAllByTestId(/settlement-settle-/)).toHaveLength(4)
     expect(
-      screen.getByTestId('reimbursement-settle-pay-bob-alice'),
+      screen.getByTestId('settlement-settle-pay-bob-alice'),
     ).toHaveTextContent('Settle')
     expect(
-      screen.getByTestId('reimbursement-settle-receive-bob-alice'),
+      screen.getByTestId('settlement-settle-receive-bob-alice'),
     ).toBeInTheDocument()
   })
 
-  it('opens the create reimbursement modal when clicking a per-leg settle action', async () => {
+  it('opens the create settlement modal when clicking a per-leg settle action', async () => {
     const { user } = render(
       <BalancesCard
         isLoading={false}
         currencyDisplay="group"
         balances={balances}
-        reimbursements={reimbursements}
+        suggestedSettlements={suggestedSettlements}
         currencyBalances={[]}
         participants={participants}
         groupCurrency={EUR}
@@ -180,7 +180,7 @@ describe('BalancesCard', () => {
     )
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-    await user.click(screen.getByTestId('reimbursement-settle-pay-bob-alice'))
+    await user.click(screen.getByTestId('settlement-settle-pay-bob-alice'))
 
     expect(screen.getByRole('dialog')).toBeInTheDocument()
     expect(screen.getByText('Settlement payment')).toBeInTheDocument()
@@ -192,13 +192,13 @@ describe('BalancesCard', () => {
         isLoading={false}
         currencyDisplay="original"
         balances={undefined}
-        reimbursements={undefined}
+        suggestedSettlements={undefined}
         currencyBalances={[
           {
             currencyCode: 'EUR',
             currency: EUR,
             balances,
-            reimbursements,
+            suggestedSettlements,
           },
         ]}
         participants={participants}
@@ -211,9 +211,9 @@ describe('BalancesCard', () => {
     expect(
       document.querySelector('img[src*="flagcdn.com/h24/eu.png"]'),
     ).toBeInTheDocument()
-    expect(
-      screen.getAllByTestId(/reimbursement-settle-/).length,
-    ).toBeGreaterThan(0)
+    expect(screen.getAllByTestId(/settlement-settle-/).length).toBeGreaterThan(
+      0,
+    )
   })
 
   it('renders virtual subgroup units and segment bars in visual subgroup mode', async () => {
@@ -228,7 +228,7 @@ describe('BalancesCard', () => {
           carol: { paid: 1000, paidFor: 0, total: 1000 },
           dave: { paid: 0, paidFor: 1500, total: -1500 },
         }}
-        reimbursements={[]}
+        suggestedSettlements={[]}
         currencyBalances={[]}
         participants={[
           { id: 'alice', name: 'Alice' },
@@ -293,7 +293,7 @@ describe('BalancesCard', () => {
         settlementMode="individual"
         onSettlementModeChange={vi.fn()}
         balances={balances}
-        reimbursements={reimbursements}
+        suggestedSettlements={suggestedSettlements}
         currencyBalances={[]}
         participants={participants}
         groupCurrency={EUR}

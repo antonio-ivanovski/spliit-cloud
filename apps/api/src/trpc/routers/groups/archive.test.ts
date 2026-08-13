@@ -567,8 +567,8 @@ describe('groupsRouter.archive — unsettled balances', () => {
     // computation gives each non-payer 0.333… cents (rounds to 0) and
     // leaves the payer with a 1-cent residual — `hasUnsettledBalances`
     // would have flagged that as "unsettled" before the fix. The UI's
-    // `getPublicBalances(getSuggestedReimbursements(...))` pipeline
-    // drops the residual (no reimbursements are produced when only the
+    // `getPublicBalances(getSuggestedSettlements(...))` pipeline
+    // drops the residual (no suggested settlements are produced when only the
     // payer has a non-zero total), so the archive mutation must agree
     // with the UI and let the archive proceed without `force`.
     prismaMock.expense.findMany.mockResolvedValue([
@@ -598,7 +598,7 @@ describe('groupsRouter.archive — unsettled balances', () => {
         data: { archived: true },
       }),
     )
-    // The archive check matches the UI view (no reimbursements, no
+    // The archive check matches the UI view (no suggested settlements, no
     // settlement expenses written).
     expect(prismaMock.expense.create).not.toHaveBeenCalled()
   })
@@ -608,7 +608,7 @@ describe('groupsRouter.archive — unsettled balances', () => {
     mockGroupWithMember('ADMIN')
     // Same 1-cent 3-way expense as above, archived with `force: true`.
     // The UI shows no balances to settle, so the force-archive should
-    // not auto-create any reimbursement expenses.
+    // not auto-create any settlement expenses.
     prismaMock.expense.findMany.mockResolvedValue([
       makeExpenseRow({
         id: 'exp-1',
@@ -651,7 +651,7 @@ describe('groupsRouter.archive — unsettled balances', () => {
     // 1000 cents split evenly among 3 = 333.333… each, which rounds
     // to 333 per participant. Raw: Alice +667, Bob -333, Carol -333.
     // Public: Alice +666, Bob -333, Carol -333 (1-cent residual on
-    // Alice's side from the integer-cents reimbursement pipeline).
+    // Alice's side from the integer-cents settlement pipeline).
     // The UI balance is non-zero, so the archive must reject.
     prismaMock.expense.findMany.mockResolvedValue([
       makeExpenseRow({
@@ -679,7 +679,7 @@ describe('groupsRouter.archive — unsettled balances', () => {
     mockGroupWithMember('ADMIN')
     // Alice paid 1000 cents for all 3 evenly. The UI shows Alice
     // +666, Bob -333, Carol -333 (a 1-cent residual from the
-    // integer-cents reimbursement). The expected settlement legs are
+    // integer-cents settlement). The expected settlement legs are
     // Bob -> Alice for 333 and Carol -> Alice for 333 (totaling 666,
     // which is what the UI actually shows).
     prismaMock.expense.findMany.mockResolvedValue([

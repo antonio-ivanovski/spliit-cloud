@@ -44,7 +44,7 @@ export type BulkCategorizeApplyResult = {
  *
  * - Every `change.expenseId` must belong to the target group
  * - The row must currently sit on `fromCategoryId` (default "general") AND not be
- *   a reimbursement row
+ *   a settlement row
  * - Everything else (the destination `categoryId`) is enforced by Zod upstream
  *
  * After the update we log a single `EXPENSE_CATEGORIES_BULK_UPDATED` activity
@@ -120,7 +120,7 @@ export async function bulkUpdateExpenseCategories(args: {
 
     if (candidates.length === 0) {
       // Nothing eligible (every requested row either doesn't belong
-      // to this group, is a reimbursement, or already has the
+      // to this group, is a settlement, or already has the
       // destination category). Surface every requested expenseId as
       // skipped so the caller's accounting is correct.
       return {
@@ -220,7 +220,7 @@ export async function bulkUpdateExpenseCategories(args: {
 
 /**
  * Read-side helper used by the AI preview / calibrate endpoints. Returns the
- * expenses eligible for bulk categorization: non- reimbursements whose
+ * expenses eligible for bulk categorization: non-settlements whose
  * `categoryId` matches `fromCategoryId` and whose `ledgerId` is the group's.
  * Read-only — no side effects, so safe to call many times during calibration.
  */

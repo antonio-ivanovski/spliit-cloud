@@ -192,7 +192,8 @@
       "participants": "{names}",
       "showLess": "Daha az göster"
     },
-    "copyToast": "Masraf kopyalama başlatıldı. Mevcut masraf ayrıntıları yeni bir tane oluşturmak için kullanılacak."
+    "copyToast": "Masraf kopyalama başlatıldı. Mevcut masraf ayrıntıları yeni bir tane oluşturmak için kullanılacak.",
+    "incomeBadge": "Gelir"
   },
   "Groups": {
     "myGroups": "Gruplarım",
@@ -654,8 +655,7 @@
       "edit": "Geliri düzenle",
       "TitleField": {
         "label": "Gelir başlığı",
-        "placeholder": "Maaş veya para iadesi",
-        "description": "Gelirin nereden geldiğini açıklayın."
+        "placeholder": "Maaş veya para iadesi"
       },
       "DateField": {
         "label": "Gelir tarihi",
@@ -685,8 +685,7 @@
       "edit": "Masrafı düzenle",
       "TitleField": {
         "label": "Masraf başlığı",
-        "placeholder": "Pazartesi akşamı restoran",
-        "description": "Masraf için bir açıklama girin."
+        "placeholder": "Pazartesi akşamı restoran"
       },
       "DateField": {
         "label": "Masraf tarihi",
@@ -859,7 +858,6 @@
     "participant": {
       "pending": "(davet edildi)"
     },
-    "reimbursement": "Borç kapatma ödemesi",
     "readOnlyNotice": "Bu grup arşivlendi. Gider salt okunur olarak gösteriliyor.",
     "PaidBySplitModeField": {
       "label": "Ödeyen paylaşım modu"
@@ -975,7 +973,10 @@
       "chooseTimezone": "Saat dilimi seç",
       "done": "Bitti",
       "yourTime": "yerel saatiniz"
-    }
+    },
+    "settlementTitle": "Borç kapatma ödemesi",
+    "settlementHint": "{category}: Toplamlarda, istatistiklerde veya bütçelerde harcama sayılmaz. Yine de kimin kime borcu olduğunu günceller.",
+    "incomeHint": "{category}: Alınan para için. Satın alma değil, gelir olarak gruplanır."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Belgeyi sil",
@@ -1049,14 +1050,6 @@
     "title": "Bakiyeler",
     "description": "Her katılımcının net bakiyesini görün.",
     "removedBadge": "Kaldırıldı",
-    "Reimbursements": {
-      "title": "Önerilen borç kapatma ödemeleri",
-      "description": "Bakiyeleri mümkün olan en az transferle kapatmak için bu ödemeleri kullanın.",
-      "noImbursements": "Gruptaki herkesin hesabı kapandı 😁",
-      "owes": "<strong>{from}</strong>, <strong>{to}</strong>'ya borçlu",
-      "markAsPaid": "Ödendi olarak işaretle",
-      "markAsPaidAria": "{from} tarafından {to} için {amount} ödemesini yapıldı olarak işaretle"
-    },
     "currencyDisplay": {
       "label": "Para birimi",
       "group": "Grup para birimi ({currency})",
@@ -1119,6 +1112,14 @@
       "individualAllHint": "Grup genelindeki standart bireysel planı görüntülüyorsunuz. Alt gruplar arası ödemeler içerebilir.",
       "unknownParticipant": "Bekleyen davet",
       "individualWithinHint": "Alt grupları dikkate alan bireysel planı görüntülüyorsunuz. Alt grup toplamları zaten kapatıldıysa önerilen ödemeler her alt grubun içinde kalır."
+    },
+    "Settlements": {
+      "title": "Önerilen mahsuplaşmalar",
+      "description": "Bakiyeleri mümkün olan en az transferle kapatmak için bu ödemeleri kullanın.",
+      "noSettlements": "Gruptaki herkesin hesabı kapandı 😁",
+      "owes": "<strong>{from}</strong>, <strong>{to}</strong>'ya borçlu",
+      "markAsPaid": "Ödendi olarak işaretle",
+      "markAsPaidAria": "{from} tarafından {to} için {amount} ödemesini yapıldı olarak işaretle"
     }
   },
   "Stats": {
@@ -2215,7 +2216,8 @@
         "recurrence": "Tekrarlama",
         "reimbursement": "Borç kapatma ödemesi",
         "conversionSource": "Dönüşüm kaynağı",
-        "conversionRate": "Döviz kuru"
+        "conversionRate": "Döviz kuru",
+        "settlement": "Borç kapatma ödemesi"
       },
       "recurringCreated": "{participant}, “{title}” yinelenen giderini oluşturdu",
       "stopped": "{participant}, “{title}” yinelenen giderini durdurdu",
@@ -2429,28 +2431,6 @@
     "commentDelete": "Yorumu sil",
     "commentSend": "Yorum gönder",
     "openDocument": "Belgeyi aç"
-  },
-  "CreateReimbursement": {
-    "description": "Ödemeyi kaydetmeden önce gözden geçirin.",
-    "pays": "{from}, {to}'ye öder",
-    "amount": "Tutar",
-    "date": "Tarih",
-    "category": "Kategori",
-    "create": "Oluştur",
-    "edit": "Detayları düzenle",
-    "creating": "Oluşturuluyor…",
-    "successToast": "Borç kapatma ödemesi kaydedildi",
-    "successToastMultiple": "{count} borç kapatma ödemesi tek kayıt olarak kaydedildi",
-    "paysMany": "{from}, {count} kişiye ödeme yapar",
-    "receivesMany": "{to}, {count} ödeme alır",
-    "paymentsToInclude": "Dahil edilecek ödemeler",
-    "selectionSummary": "{count} ödeme seçildi, toplam {total}",
-    "legToAria": "{from}, {to} kişisine {amount} öder",
-    "legFromAria": "{from}, {to} kişisine {amount} öder",
-    "toParticipant": "{name} adlı kişiye",
-    "fromParticipant": "{name} adlı kişiden",
-    "createSingle": "Ödemeyi kaydet",
-    "createMultiple": "{count} ödemeyi kaydet"
   },
   "Participants": {
     "search": "Katılımcı ara...",
@@ -2871,7 +2851,6 @@
     "participantsCountLabel": "Katılımcılar",
     "participantsSectionLabel": "Katılımcı özeti",
     "settlementsSectionLabel": "Önerilen denkleştirmeler",
-    "reimbursementsSectionLabel": "Kaydedilen geri ödemeler",
     "expensesSectionLabel": "Masraf ayrıntıları",
     "amountColumnLabel": "Tutar",
     "participantColumnLabel": "Katılımcı",
@@ -2885,10 +2864,11 @@
     "noExpensesLabel": "Seçilen dönemde masraf yok.",
     "noParticipantsLabel": "Seçilen dönemde etkinliği olan katılımcı yok.",
     "noSettlementsLabel": "Bitiş tarihi itibarıyla tüm hesaplar denkleştirilmiş.",
-    "noReimbursementsLabel": "Bitiş tarihine kadar kaydedilmiş geri ödeme yok.",
     "originalAmountLabel": "Orijinal tutar",
     "expenseColumnLabel": "Harcama",
-    "categoryColumnLabel": "Kategori"
+    "categoryColumnLabel": "Kategori",
+    "recordedSettlementsSectionLabel": "Kaydedilen mahsuplaşmalar",
+    "noRecordedSettlementsLabel": "Bitiş tarihine kadar kaydedilmiş mahsuplaşma yok."
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2926,5 +2906,27 @@
     "hintTapToAddExpense": "Ben {name} — gider eklemek için bana dokun.",
     "hintTapToCreateGroup": "Ben {name} — grup oluşturmak için bana dokun.",
     "billName": "Bill"
+  },
+  "CreateSettlement": {
+    "description": "Ödemeyi kaydetmeden önce gözden geçirin.",
+    "pays": "{from}, {to}'ye öder",
+    "amount": "Tutar",
+    "date": "Tarih",
+    "category": "Kategori",
+    "create": "Oluştur",
+    "edit": "Detayları düzenle",
+    "creating": "Oluşturuluyor…",
+    "successToast": "Borç kapatma ödemesi kaydedildi",
+    "successToastMultiple": "{count} borç kapatma ödemesi tek kayıt olarak kaydedildi",
+    "paysMany": "{from}, {count} kişiye ödeme yapar",
+    "receivesMany": "{to}, {count} ödeme alır",
+    "paymentsToInclude": "Dahil edilecek ödemeler",
+    "selectionSummary": "{count} ödeme seçildi, toplam {total}",
+    "legToAria": "{from}, {to} kişisine {amount} öder",
+    "legFromAria": "{from}, {to} kişisine {amount} öder",
+    "toParticipant": "{name} adlı kişiye",
+    "fromParticipant": "{name} adlı kişiden",
+    "createSingle": "Ödemeyi kaydet",
+    "createMultiple": "{count} ödemeyi kaydet"
   }
 }

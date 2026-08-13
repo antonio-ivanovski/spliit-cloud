@@ -4,7 +4,7 @@ import {
   calculateShares,
   getBalances,
   getPublicBalances,
-  getSuggestedReimbursements,
+  getSuggestedSettlements,
   isSettlementCategory,
 } from '@spliit/domain'
 
@@ -75,7 +75,7 @@ export type ReportExpenseDetail = {
   shares: Array<{ participantId: string; amount: number }>
 }
 
-export type ReportReimbursement = {
+export type RecordedSettlement = {
   date: string
   fromIds: string[]
   toIds: string[]
@@ -95,8 +95,8 @@ export type ExpenseReportModel = {
     categories: ReportCategoryTotal[]
   }
   participants: ReportParticipantSummary[]
-  settlements: Array<{ from: string; to: string; amount: number }>
-  reimbursements: ReportReimbursement[]
+  suggestedSettlements: Array<{ from: string; to: string; amount: number }>
+  recordedSettlements: RecordedSettlement[]
   expenses: ReportExpenseDetail[]
 }
 
@@ -199,8 +199,8 @@ export function buildExpenseReport(input: {
 
   const periodBalances = getBalances(periodExpenses.map(toBalanceLike))
   const balances = getBalances(asOfExpenses.map(toBalanceLike))
-  const settlements = getSuggestedReimbursements(balances)
-  const publicBalances = getPublicBalances(settlements)
+  const suggestedSettlements = getSuggestedSettlements(balances)
+  const publicBalances = getPublicBalances(suggestedSettlements)
 
   const participants: ReportParticipantSummary[] = input.participants.map(
     (participant) => {
@@ -214,7 +214,7 @@ export function buildExpenseReport(input: {
     },
   )
 
-  const reimbursements: ReportReimbursement[] = asOfExpenses
+  const recordedSettlements: RecordedSettlement[] = asOfExpenses
     .filter((row) => isSettlementCategory(row.categoryId))
     .sort(compareByDateCreated)
     .map((row) => ({
@@ -266,8 +266,8 @@ export function buildExpenseReport(input: {
       categories,
     },
     participants,
-    settlements,
-    reimbursements,
+    suggestedSettlements,
+    recordedSettlements,
     expenses,
   }
 }

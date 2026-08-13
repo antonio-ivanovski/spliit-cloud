@@ -7,3 +7,4 @@ Apply `default.md` first, then these Polish rules.
 - Respect Polish plural categories and agreement; do not mechanically reuse one noun form for every count.
 - Use Polish diacritics and quotation/punctuation conventions, and keep terminology distinct from Russian or Czech.
 - Prefer concise, natural action labels and stable terms for expenses, shares, balances, and settlements.
+- Exclusive settlement term: *rozliczenie* (noun) and *rozliczyć* (verb). Never *zwrot* or *rekompensata* for this concept.

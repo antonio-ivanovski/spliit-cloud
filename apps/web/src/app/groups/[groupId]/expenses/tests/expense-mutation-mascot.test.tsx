@@ -101,7 +101,7 @@ function HookProbe() {
 }
 
 describe('expense mutation mascot reactions', () => {
-  it('celebrates reimbursements, keeps create as success, and acknowledges deletes', async () => {
+  it('celebrates suggestedSettlements, keeps create as success, and acknowledges deletes', async () => {
     render(<HookProbe />)
 
     await captured.create?.onSuccess?.(

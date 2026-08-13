@@ -321,7 +321,7 @@ describe('Group CRUD via existing API', () => {
     // The API returns { balances: { [participantId]: { paid, paidFor, total } } }
     const balancesResult = await trpcCall<{
       balances: Record<string, { paid: number; paidFor: number; total: number }>
-      reimbursements: Array<unknown>
+      suggestedSettlements: Array<unknown>
     }>('groups.balances.list', {
       groupId: testGroup.id,
       linkInviteToken: undefined,

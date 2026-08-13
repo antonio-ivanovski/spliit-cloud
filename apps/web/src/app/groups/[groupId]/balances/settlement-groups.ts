@@ -1,25 +1,25 @@
-import type { Reimbursement } from '@/lib/balances'
+import type { SuggestedSettlement } from '@/lib/balances'
 
 export type SettlementDirection = 'pay' | 'receive'
 
 export type SettlementGroup = {
   direction: SettlementDirection
   participantId: string
-  legs: Reimbursement[]
+  legs: SuggestedSettlement[]
 }
 
-export function settlementLegKey(leg: Reimbursement): string {
+export function settlementLegKey(leg: SuggestedSettlement): string {
   return `${leg.from}:${leg.to}`
 }
 
 export function buildSettlementGroups(
-  reimbursements: Reimbursement[],
+  suggestedSettlements: SuggestedSettlement[],
   participantIds: string[],
   direction: SettlementDirection,
 ): SettlementGroup[] {
-  const legsByParticipant = new Map<string, Reimbursement[]>()
+  const legsByParticipant = new Map<string, SuggestedSettlement[]>()
 
-  for (const leg of reimbursements) {
+  for (const leg of suggestedSettlements) {
     const participantId = direction === 'pay' ? leg.from : leg.to
     const legs = legsByParticipant.get(participantId) ?? []
     legs.push(leg)
@@ -32,6 +32,6 @@ export function buildSettlementGroups(
   })
 }
 
-export function sumSettlementLegs(legs: Reimbursement[]): number {
+export function sumSettlementLegs(legs: SuggestedSettlement[]): number {
   return legs.reduce((sum, leg) => sum + leg.amount, 0)
 }

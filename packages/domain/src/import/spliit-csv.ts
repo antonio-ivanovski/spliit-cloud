@@ -25,9 +25,14 @@ const FALLBACK_CURRENCY: Currency = {
  * current models after parsing.
  */
 type CsvLayout = {
+  /** Column index of `Is Settlement` or the legacy `Is Reimbursement` alias. */
   isReimbursement: number
   splitMode: number
   participantStart: number
+}
+
+function isSettlementCsvHeader(value: string | undefined): boolean {
+  return value === 'Is Settlement' || value === 'Is Reimbursement'
 }
 
 function toNumberOrNull(value: string | undefined): number | null {
@@ -309,12 +314,12 @@ function detectCsvLayout(header: string[]): CsvLayout | null {
   let splitMode: number
   if (
     header[8] === 'Conversion source' &&
-    header[9] === 'Is Reimbursement' &&
+    isSettlementCsvHeader(header[9]) &&
     header[10] === 'Split mode'
   ) {
     isReimbursement = 9
     splitMode = 10
-  } else if (header[8] === 'Is Reimbursement' && header[9] === 'Split mode') {
+  } else if (isSettlementCsvHeader(header[8]) && header[9] === 'Split mode') {
     isReimbursement = 8
     splitMode = 9
   } else {

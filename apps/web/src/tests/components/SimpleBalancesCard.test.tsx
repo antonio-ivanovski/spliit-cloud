@@ -65,7 +65,7 @@ const balances = {
   alice: { paid: 3000, paidFor: 0, total: 3000 },
   bob: { paid: 0, paidFor: 3000, total: -3000 },
 }
-const reimbursements = [{ from: 'bob', to: 'alice', amount: 3000 }]
+const suggestedSettlements = [{ from: 'bob', to: 'alice', amount: 3000 }]
 
 function setupCurrentGroup() {
   vi.mocked(useCurrentGroup).mockReturnValue({
@@ -99,7 +99,7 @@ describe('SimpleBalancesCard', () => {
         isLoading={false}
         currencyDisplay="group"
         balances={balances}
-        reimbursements={reimbursements}
+        suggestedSettlements={suggestedSettlements}
         currencyBalances={[]}
         participants={participants}
         groupCurrency={EUR}
@@ -127,10 +127,10 @@ describe('SimpleBalancesCard', () => {
     ).toBe(true)
     expect(screen.queryByText(/<strong>/)).not.toBeInTheDocument()
     expect(
-      screen.getByTestId('reimbursement-settle-pay-bob-alice'),
+      screen.getByTestId('settlement-settle-pay-bob-alice'),
     ).toHaveTextContent('Settle')
     expect(
-      screen.getByTestId('reimbursement-settle-pay-bob-alice'),
+      screen.getByTestId('settlement-settle-pay-bob-alice'),
     ).toHaveAttribute('aria-label', 'Settle 1 payments by Bob, €30.00')
     expect(
       screen.queryByTestId('participant-segment-bar'),
@@ -143,7 +143,7 @@ describe('SimpleBalancesCard', () => {
         isLoading={false}
         currencyDisplay="group"
         balances={balances}
-        reimbursements={reimbursements}
+        suggestedSettlements={suggestedSettlements}
         currencyBalances={[]}
         participants={participants}
         groupCurrency={EUR}
@@ -168,7 +168,7 @@ describe('SimpleBalancesCard', () => {
         isLoading={false}
         currencyDisplay="group"
         balances={balances}
-        reimbursements={reimbursements}
+        suggestedSettlements={suggestedSettlements}
         currencyBalances={[]}
         participants={participants}
         groupCurrency={EUR}
@@ -184,10 +184,10 @@ describe('SimpleBalancesCard', () => {
     expect(screen.getByRole('radio', { name: 'To receive' })).toBeChecked()
     expect(screen.getByRole('radio', { name: 'To pay' })).not.toBeChecked()
     expect(
-      screen.getByTestId('reimbursement-settle-receive-bob-alice'),
+      screen.getByTestId('settlement-settle-receive-bob-alice'),
     ).toHaveTextContent('Settle')
     expect(
-      screen.getByTestId('reimbursement-settle-receive-bob-alice'),
+      screen.getByTestId('settlement-settle-receive-bob-alice'),
     ).toHaveAttribute('aria-label', 'Settle 1 payments to Alice, €30.00')
   })
 
@@ -197,13 +197,13 @@ describe('SimpleBalancesCard', () => {
         isLoading={false}
         currencyDisplay="original"
         balances={undefined}
-        reimbursements={undefined}
+        suggestedSettlements={undefined}
         currencyBalances={[
           {
             currencyCode: 'EUR',
             currency: EUR,
             balances,
-            reimbursements,
+            suggestedSettlements,
           },
         ]}
         participants={participants}
@@ -213,9 +213,9 @@ describe('SimpleBalancesCard', () => {
     )
 
     expect(screen.getAllByText('EUR')).toHaveLength(2)
-    expect(
-      screen.getAllByTestId(/reimbursement-settle-/).length,
-    ).toBeGreaterThan(0)
+    expect(screen.getAllByTestId(/settlement-settle-/).length).toBeGreaterThan(
+      0,
+    )
   })
 
   it('renders loading skeletons without crashing when participantCount is 0', () => {
@@ -226,7 +226,7 @@ describe('SimpleBalancesCard', () => {
           participantCount={0}
           currencyDisplay="group"
           balances={undefined}
-          reimbursements={undefined}
+          suggestedSettlements={undefined}
           currencyBalances={[]}
           participants={[]}
           groupCurrency={undefined}
@@ -251,7 +251,7 @@ describe('SimpleBalancesCard', () => {
           bob: { paid: 0, paidFor: 1000, total: -1000 },
           [pendingId]: { paid: 500, paidFor: 0, total: 500 },
         }}
-        reimbursements={[]}
+        suggestedSettlements={[]}
         currencyBalances={[]}
         participants={[
           { id: 'alice', name: 'Alice' },
@@ -296,7 +296,7 @@ describe('SimpleBalancesCard', () => {
         isLoading={false}
         currencyDisplay="group"
         balances={balances}
-        reimbursements={reimbursements}
+        suggestedSettlements={suggestedSettlements}
         currencyBalances={[]}
         participants={participants}
         groupCurrency={EUR}

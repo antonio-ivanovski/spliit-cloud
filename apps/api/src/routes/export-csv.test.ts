@@ -167,6 +167,8 @@ describe('exportGroupCsv', () => {
     expect(text).toContain('Alice')
     expect(text).toContain('Bob')
     expect(text).toContain('Dinner')
+    expect(text).toContain('Is Settlement')
+    expect(text).not.toContain('Is Reimbursement')
     expect(text).not.toContain('Recurrence series ID')
     expect(text).not.toContain('Recurrence frequency')
     expect(text).not.toContain('Recurrence status')

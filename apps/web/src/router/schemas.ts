@@ -168,6 +168,8 @@ export const oauthFlowSearchSchema = z.object({
 })
 
 export const createExpenseSearchSchema = z.object({
+  settlement: optionalString,
+  /** Legacy alias for `settlement=yes` bookmarks. */
   reimbursement: optionalString,
   settlements: optionalString,
   amount: numericString,

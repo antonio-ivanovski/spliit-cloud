@@ -194,7 +194,8 @@
       "participants": "{names}",
       "showLess": "Mostrar menos"
     },
-    "copyToast": "Se ha iniciado la copia del gasto. Los datos del gasto existente se utilizarán para crear uno nuevo."
+    "copyToast": "Se ha iniciado la copia del gasto. Los datos del gasto existente se utilizarán para crear uno nuevo.",
+    "incomeBadge": "Ingreso"
   },
   "Groups": {
     "myGroups": "Mis grupos",
@@ -660,8 +661,7 @@
       "edit": "Editar ingreso",
       "TitleField": {
         "label": "Título del ingreso",
-        "placeholder": "Sueldo o devolución",
-        "description": "Describe de dónde proceden los ingresos."
+        "placeholder": "Sueldo o devolución"
       },
       "DateField": {
         "label": "Fecha del ingreso",
@@ -691,8 +691,7 @@
       "edit": "Editar gasto",
       "TitleField": {
         "label": "Título del gasto",
-        "placeholder": "Restaurante de lunes por la noche",
-        "description": "Ingrese una descripción del gasto."
+        "placeholder": "Restaurante de lunes por la noche"
       },
       "DateField": {
         "label": "Fecha del gasto",
@@ -865,7 +864,6 @@
     "participant": {
       "pending": "(invitado)"
     },
-    "reimbursement": "Pago de liquidación",
     "readOnlyNotice": "Este grupo está archivado. El gasto se muestra en modo de solo lectura.",
     "PaidBySplitModeField": {
       "label": "Modo de división del pagador"
@@ -982,7 +980,10 @@
       "chooseTimezone": "Elegir zona horaria",
       "done": "Listo",
       "yourTime": "tu hora"
-    }
+    },
+    "settlementTitle": "Pago de liquidación",
+    "settlementHint": "{category}: No cuenta como gasto en totales, estadísticas ni presupuestos. Sí actualiza quién debe a quién.",
+    "incomeHint": "{category}: Para dinero recibido. Se agrupa como ingreso, no como una compra."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Eliminar documento",
@@ -1056,14 +1057,6 @@
     "title": "Balances",
     "description": "Consulta el saldo neto de cada participante.",
     "removedBadge": "Eliminado",
-    "Reimbursements": {
-      "title": "Pagos de liquidación sugeridos",
-      "description": "Usa estos pagos para liquidar los saldos con el menor número posible de transferencias.",
-      "noImbursements": "Todos los saldos del grupo están liquidados 😁",
-      "owes": "<strong>{from}</strong> debe a <strong>{to}</strong>",
-      "markAsPaid": "Marcar como pagado",
-      "markAsPaidAria": "Marca {amount} de {from} a {to} como pagado"
-    },
     "currencyDisplay": {
       "label": "Moneda",
       "group": "Moneda del grupo ({currency})",
@@ -1126,6 +1119,14 @@
       "individualAllHint": "Estás viendo el plan individual estándar de todo el grupo. Puede incluir pagos entre subgrupos.",
       "unknownParticipant": "Invitación pendiente",
       "individualWithinHint": "Estás viendo un plan individual que tiene en cuenta los subgrupos. Los pagos sugeridos se mantienen dentro de cada subgrupo cuando los totales de los subgrupos ya están liquidados."
+    },
+    "Settlements": {
+      "title": "Liquidaciones sugeridas",
+      "description": "Usa estos pagos para liquidar los saldos con el menor número posible de transferencias.",
+      "noSettlements": "Todos los saldos del grupo están liquidados 😁",
+      "owes": "<strong>{from}</strong> debe a <strong>{to}</strong>",
+      "markAsPaid": "Marcar como pagado",
+      "markAsPaidAria": "Marca {amount} de {from} a {to} como pagado"
     }
   },
   "Stats": {
@@ -2224,7 +2225,8 @@
         "recurrence": "Recurrencia",
         "reimbursement": "pago de liquidación",
         "conversionSource": "Fuente de conversión",
-        "conversionRate": "Tasa de conversión"
+        "conversionRate": "Tasa de conversión",
+        "settlement": "pago de liquidación"
       },
       "recurringCreated": "{participant} creó el gasto recurrent «{title}»",
       "stopped": "{participant} detuvo el gasto recurrente {title}",
@@ -2447,28 +2449,6 @@
     "commentDelete": "Eliminar comentario",
     "commentSend": "Enviar comentario",
     "openDocument": "Abrir documento"
-  },
-  "CreateReimbursement": {
-    "description": "Revisa el pago antes de registrarlo.",
-    "pays": "{from} paga a {to}",
-    "amount": "Cantidad",
-    "date": "Fecha",
-    "category": "Categoría",
-    "create": "Crear",
-    "edit": "Editar detalles",
-    "creating": "Creando…",
-    "successToast": "Se creó el pago de liquidación.",
-    "successToastMultiple": "Se registraron {count} pagos de liquidación en una sola entrada",
-    "paysMany": "{from} paga a {count} personas",
-    "receivesMany": "{to} recibe {count} pagos",
-    "paymentsToInclude": "Pagos que incluir",
-    "selectionSummary": "{count} pagos seleccionados, total: {total}",
-    "legToAria": "{from} paga a {to}, {amount}",
-    "legFromAria": "{from} paga a {to}, {amount}",
-    "toParticipant": "a {name}",
-    "fromParticipant": "de {name}",
-    "createSingle": "Registrar pago",
-    "createMultiple": "Registrar {count} pagos"
   },
   "Participants": {
     "search": "Buscar participantes...",
@@ -2889,7 +2869,6 @@
     "participantsCountLabel": "Participantes",
     "participantsSectionLabel": "Resumen de participantes",
     "settlementsSectionLabel": "Liquidaciones sugeridas",
-    "reimbursementsSectionLabel": "Reembolsos registrados",
     "expensesSectionLabel": "Detalles de gastos",
     "amountColumnLabel": "Importe",
     "participantColumnLabel": "Participante",
@@ -2903,10 +2882,11 @@
     "noExpensesLabel": "No hay gastos en el periodo seleccionado.",
     "noParticipantsLabel": "No hay participantes con actividad en el periodo seleccionado.",
     "noSettlementsLabel": "Todo está saldado a fecha final.",
-    "noReimbursementsLabel": "No hay reembolsos registrados hasta la fecha final.",
     "originalAmountLabel": "Importe original",
     "expenseColumnLabel": "Gasto",
-    "categoryColumnLabel": "Categoria"
+    "categoryColumnLabel": "Categoria",
+    "recordedSettlementsSectionLabel": "Liquidaciones registradas",
+    "noRecordedSettlementsLabel": "No hay liquidaciones registradas hasta la fecha final."
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2944,5 +2924,27 @@
     "hintTapToAddExpense": "Soy {name} — tócame para añadir un gasto.",
     "hintTapToCreateGroup": "Soy {name} — tócame para crear un grupo.",
     "billName": "Bill"
+  },
+  "CreateSettlement": {
+    "description": "Revisa el pago antes de registrarlo.",
+    "pays": "{from} paga a {to}",
+    "amount": "Cantidad",
+    "date": "Fecha",
+    "category": "Categoría",
+    "create": "Crear",
+    "edit": "Editar detalles",
+    "creating": "Creando…",
+    "successToast": "Se creó el pago de liquidación.",
+    "successToastMultiple": "Se registraron {count} pagos de liquidación en una sola entrada",
+    "paysMany": "{from} paga a {count} personas",
+    "receivesMany": "{to} recibe {count} pagos",
+    "paymentsToInclude": "Pagos que incluir",
+    "selectionSummary": "{count} pagos seleccionados, total: {total}",
+    "legToAria": "{from} paga a {to}, {amount}",
+    "legFromAria": "{from} paga a {to}, {amount}",
+    "toParticipant": "a {name}",
+    "fromParticipant": "de {name}",
+    "createSingle": "Registrar pago",
+    "createMultiple": "Registrar {count} pagos"
   }
 }

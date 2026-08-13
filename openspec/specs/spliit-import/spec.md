@@ -24,7 +24,7 @@ The Spliit JSON import SHALL convert legacy BY_SHARES whole-number weights to fi
 - **THEN** it applies the fixed `× 100` conversion from the mode declaration alone, without inferring the scale from the magnitude of the values
 
 ### Requirement: Legacy JSON recurring import collapse
-The Spliit JSON import commit path SHALL collapse matching historical `recurrenceRule` rows into one `RecurringExpenseSeries` before creating expenses, using the same conservative fingerprint as legacy recurrence migration for link-less rows (title, recurrence rule, amount, split mode, reimbursement flag, sorted paid-by and paid-for participant shares, original currency, conversion rate). Overdue skip SHALL set `nextOccurrenceDate` and `nextOccurrenceOrdinal` with anchored occurrence math (same as materialization), not iterative next-from-previous stepping.
+The Spliit JSON import commit path SHALL collapse matching historical `recurrenceRule` rows into one `RecurringExpenseSeries` before creating expenses, using the same conservative fingerprint as legacy recurrence migration for link-less rows (title, recurrence rule, amount, split mode, settlement category / legacy `isReimbursement` alias, sorted paid-by and paid-for participant shares, original currency, conversion rate). Overdue skip SHALL set `nextOccurrenceDate` and `nextOccurrenceOrdinal` with anchored occurrence math (same as materialization), not iterative next-from-previous stepping.
 
 #### Scenario: Confirm summary matches collapsed series
 - **WHEN** the user reaches the import confirm step and the parsed batch contains recurring JSON rows

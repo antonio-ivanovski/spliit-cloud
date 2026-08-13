@@ -192,7 +192,8 @@
       "participants": "{names}",
       "showLess": "Прикажи помалку"
     },
-    "copyToast": "Копирањето на трошокот е започнато. Постоечките детали за трошокот ќе бидат искористени за создавање нов."
+    "copyToast": "Копирањето на трошокот е започнато. Постоечките детали за трошокот ќе бидат искористени за создавање нов.",
+    "incomeBadge": "Приход"
   },
   "Groups": {
     "myGroups": "Мои групи",
@@ -995,8 +996,7 @@
       "edit": "Уреди приход",
       "TitleField": {
         "label": "Наслов на приход",
-        "placeholder": "Плата или поврат",
-        "description": "Опишете од каде потекнува приходот."
+        "placeholder": "Плата или поврат"
       },
       "DateField": {
         "label": "Датум на приход",
@@ -1026,8 +1026,7 @@
       "edit": "Уреди трошок",
       "TitleField": {
         "label": "Наслов на трошок",
-        "placeholder": "Ресторан во понеделник навечер",
-        "description": "Внесете опис на трошокот."
+        "placeholder": "Ресторан во понеделник навечер"
       },
       "DateField": {
         "label": "Датум на трошок",
@@ -1200,7 +1199,6 @@
     "save": "Зачувај",
     "saving": "Се зачувува…",
     "cancel": "Откажи",
-    "reimbursement": "Порамнителна уплата",
     "readOnlyNotice": "Оваа група е архивирана. Трошокот се прикажува само за читање.",
     "PaidBySplitModeField": {
       "label": "Начин на делење за плаќач"
@@ -1316,7 +1314,10 @@
       "chooseTimezone": "Избери временска зона",
       "done": "Готово",
       "yourTime": "вашето време"
-    }
+    },
+    "settlementTitle": "Порамнителна уплата",
+    "settlementHint": "{category}: Не се брои како трошок во вкупните износи, статистиката или буџетите. Сепак ажурира кој кому должи.",
+    "incomeHint": "{category}: За примени пари. Се групира како приход, не како купување."
   },
   "ExpenseDocumentsInput": {
     "deleteDocument": "Избриши документ",
@@ -1390,14 +1391,6 @@
     "title": "Салда",
     "description": "Погледнете го нето-салдото на секој учесник.",
     "removedBadge": "Отстранет",
-    "Reimbursements": {
-      "title": "Предложени порамнителни уплати",
-      "description": "Користете ги овие уплати за да ги порамните салдата со што е можно помалку трансфери.",
-      "noImbursements": "Сите во групата се порамнети 😁",
-      "owes": "<strong>{from}</strong> должи на <strong>{to}</strong>",
-      "markAsPaid": "Означи како платено",
-      "markAsPaidAria": "Означи {amount} од {from} кон {to} како платено"
-    },
     "currencyDisplay": {
       "label": "Валута",
       "group": "Валута на групата ({currency})",
@@ -1460,6 +1453,14 @@
       "individualAllHint": "Го гледате стандардниот индивидуален план за целата група. Може да вклучува плаќања помеѓу подгрупи.",
       "unknownParticipant": "Покана во очекување",
       "individualWithinHint": "Гледате индивидуален план што ги зема предвид подгрупите. Предложените плаќања остануваат во рамките на секоја подгрупа кога вкупните износи на подгрупите се веќе порамнети."
+    },
+    "Settlements": {
+      "title": "Предложени порамнувања",
+      "description": "Користете ги овие уплати за да ги порамните салдата со што е можно помалку трансфери.",
+      "noSettlements": "Сите во групата се порамнети 😁",
+      "owes": "<strong>{from}</strong> должи на <strong>{to}</strong>",
+      "markAsPaid": "Означи како платено",
+      "markAsPaidAria": "Означи {amount} од {from} кон {to} како платено"
     }
   },
   "Stats": {
@@ -2215,7 +2216,8 @@
         "recurrence": "Повторување",
         "reimbursement": "Порамнителна уплата",
         "conversionSource": "Извор на конверзија",
-        "conversionRate": "Девизен курс"
+        "conversionRate": "Девизен курс",
+        "settlement": "Порамнителна уплата"
       },
       "recurringCreated": "{participant} го создаде повторливиот трошок „{title}“",
       "stopped": "{participant} го запре повторливиот трошок „{title}“",
@@ -2429,28 +2431,6 @@
     "commentDelete": "Избриши коментар",
     "commentSend": "Испрати коментар",
     "openDocument": "Отвори документ"
-  },
-  "CreateReimbursement": {
-    "description": "Прегледајте го плаќањето пред да го снимите.",
-    "pays": "{from} плаќа {to}",
-    "amount": "Износ",
-    "date": "Датум",
-    "category": "Категорија",
-    "create": "Креирај",
-    "edit": "Уреди детали",
-    "creating": "Се креира…",
-    "successToast": "Порамнителната уплата е евидентирана",
-    "successToastMultiple": "Евидентирани се {count} порамнителни уплати како една ставка",
-    "paysMany": "{from} плаќа на {count} лица",
-    "receivesMany": "{to} прима {count} уплати",
-    "paymentsToInclude": "Уплати за вклучување",
-    "selectionSummary": "Избрани се {count} уплати, вкупно {total}",
-    "legToAria": "{from} му плаќа на {to}, {amount}",
-    "legFromAria": "{from} му плаќа на {to}, {amount}",
-    "toParticipant": "на {name}",
-    "fromParticipant": "од {name}",
-    "createSingle": "Евидентирај уплата",
-    "createMultiple": "Евидентирај {count} уплати"
   },
   "Participants": {
     "search": "Пребарувај учесници...",
@@ -2869,7 +2849,6 @@
     "participantsCountLabel": "Учесници",
     "participantsSectionLabel": "Резиме на учесниците",
     "settlementsSectionLabel": "Предложени порамнувања",
-    "reimbursementsSectionLabel": "Евидентирани надоместоци",
     "expensesSectionLabel": "Детали за трошоците",
     "amountColumnLabel": "Износ",
     "participantColumnLabel": "Учесник",
@@ -2883,10 +2862,11 @@
     "noExpensesLabel": "Нема трошоци во избраниот период.",
     "noParticipantsLabel": "Нема учесници со активност во избраниот период.",
     "noSettlementsLabel": "Сè е порамнето на крајниот датум.",
-    "noReimbursementsLabel": "Нема евидентирани надоместоци до крајниот датум.",
     "originalAmountLabel": "Оригинален износ",
     "expenseColumnLabel": "Трошок",
-    "categoryColumnLabel": "Категорија"
+    "categoryColumnLabel": "Категорија",
+    "recordedSettlementsSectionLabel": "Запишани порамнувања",
+    "noRecordedSettlementsLabel": "Нема евидентирани порамнувања до крајниот датум."
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2924,5 +2904,27 @@
     "hintTapToAddExpense": "Јас сум {name} — допри ме за да додадеш трошок.",
     "hintTapToCreateGroup": "Јас сум {name} — допри ме за да создадеш група.",
     "billName": "Бил"
+  },
+  "CreateSettlement": {
+    "description": "Прегледајте го плаќањето пред да го снимите.",
+    "pays": "{from} плаќа {to}",
+    "amount": "Износ",
+    "date": "Датум",
+    "category": "Категорија",
+    "create": "Креирај",
+    "edit": "Уреди детали",
+    "creating": "Се креира…",
+    "successToast": "Порамнителната уплата е евидентирана",
+    "successToastMultiple": "Евидентирани се {count} порамнителни уплати како една ставка",
+    "paysMany": "{from} плаќа на {count} лица",
+    "receivesMany": "{to} прима {count} уплати",
+    "paymentsToInclude": "Уплати за вклучување",
+    "selectionSummary": "Избрани се {count} уплати, вкупно {total}",
+    "legToAria": "{from} му плаќа на {to}, {amount}",
+    "legFromAria": "{from} му плаќа на {to}, {amount}",
+    "toParticipant": "на {name}",
+    "fromParticipant": "од {name}",
+    "createSingle": "Евидентирај уплата",
+    "createMultiple": "Евидентирај {count} уплати"
   }
 }

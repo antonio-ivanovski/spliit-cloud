@@ -7,3 +7,4 @@ Apply `default.md` first, then these Hebrew rules.
 - Hebrew requires gender and number agreement. Prefer concise neutral constructions; when agreement is unavoidable, match the grammatical subject rather than guessing a user’s gender.
 - Respect Hebrew plural forms and noun patterns instead of adding an English-style plural suffix.
 - Keep terminology distinct from Arabic and avoid literal English word order where Hebrew syntax would be clearer.
+- Exclusive settlement term: *הסדרה* (noun) and *להסדיר* (verb). Never *החזר* for this concept.

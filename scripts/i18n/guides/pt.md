@@ -7,3 +7,4 @@ Apply `default.md` first, then these European Portuguese rules.
 - Preserve European spelling, accents, contractions, and punctuation. Prefer Portugal terms for files, phones, groups, expenses, and balances where the distinction matters.
 - Match gender, number, and article agreement carefully; rephrase short labels when that is more natural and inclusive.
 - Keep action labels concise and do not change numeric or currency meaning.
+- Exclusive settlement term: *liquidação* (noun) and *liquidar* (verb). Never *reembolso*.

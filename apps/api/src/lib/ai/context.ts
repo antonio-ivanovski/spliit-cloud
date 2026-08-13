@@ -19,7 +19,7 @@ export type RecentExpenseContext = {
 }
 
 /**
- * Fetch the most recent non-reimbursement, non-default expenses for a group's
+ * Fetch the most recent non-settlement, non-default expenses for a group's
  * ledger, plus group metadata useful as AI hints.
  *
  * Expenses left on the default category (`general`) are excluded because they

@@ -28,7 +28,7 @@ export async function findSimilarExpenseTitles(args: {
   ledgerIds: readonly string[]
   query: string
   limit?: number
-  excludeReimbursements?: boolean
+  excludeSettlements?: boolean
   excludeCategoryIds?: readonly string[]
 }): Promise<SimilarExpenseTitle[]> {
   const query = args.query.trim()
@@ -36,7 +36,7 @@ export async function findSimilarExpenseTitles(args: {
     return []
   }
   const limit = args.limit ?? TITLE_TRIGRAM_ID_LIMIT
-  const reimbursementFilter = args.excludeReimbursements
+  const settlementFilter = args.excludeSettlements
     ? Prisma.sql`AND "categoryId" <> ${SETTLEMENT_CATEGORY_ID}`
     : Prisma.sql``
   const categoryFilter =
@@ -49,7 +49,7 @@ export async function findSimilarExpenseTitles(args: {
       GREATEST(similarity(title, ${query}), word_similarity(${query}, title)) AS similarity
     FROM "Expense"
     WHERE "ledgerId" IN (${Prisma.join([...args.ledgerIds])})
-      ${reimbursementFilter}
+      ${settlementFilter}
       ${categoryFilter}
       AND (title % ${query} OR ${query} <% title)
       AND GREATEST(similarity(title, ${query}), word_similarity(${query}, title))

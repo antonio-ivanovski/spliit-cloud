@@ -143,7 +143,7 @@ type GetGroupExpensesOptions = {
   length?: number
   filter?: string
   locale?: string
-  hideReimbursements?: boolean
+  hideSettlements?: boolean
   categories?: string[]
   paidBy?: string[]
   paidByMatch?: GetGroupExpensesMatch
@@ -230,7 +230,7 @@ export async function getGroupExpenses(
           in: expanded.length > 0 ? expanded : options.categories,
         }
       }
-      if (options?.hideReimbursements) {
+      if (options?.hideSettlements) {
         return { not: SETTLEMENT_CATEGORY_ID }
       }
       return undefined

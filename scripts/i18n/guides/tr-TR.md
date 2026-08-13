@@ -7,3 +7,4 @@ Apply `default.md` first, then these Turkish (Türkiye) rules.
 - Preserve dotted/dotless `İ/ı`, Turkish spelling, and normal Turkish capitalization; avoid accidental English casing rules.
 - Use natural plural and possessive forms and do not add a plural suffix when Turkish context does not require one.
 - Keep labels concise and terminology consistent for groups, members, expenses, shares, and balances.
+- Exclusive settlement term: *borç kapatma* (noun) and *kapatmak* (verb). Never *geri ödeme* or *iade* for this concept.

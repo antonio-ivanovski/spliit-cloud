@@ -192,7 +192,7 @@ The system SHALL transactionally migrate legacy recurrence data to `RecurringExp
 
 #### Scenario: Link-less recurring expenses collapse by fingerprint
 - **WHEN** a recurring expense has no legacy link and is not the next frame of a chain edge
-- **THEN** it is grouped with other link-less rows on the same ledger that share the legacy import fingerprint (title, recurrence rule, amount, split mode, reimbursement flag, sorted paid-by and paid-for participant shares, original currency, conversion rate), sorted by expense date, and migrated as one series with sequences `1..N` anchored on the latest row
+- **THEN** it is grouped with other link-less rows on the same ledger that share the legacy import fingerprint (title, recurrence rule, amount, split mode, settlement category / legacy `isReimbursement` alias, sorted paid-by and paid-for participant shares, original currency, conversion rate), sorted by expense date, and migrated as one series with sequences `1..N` anchored on the latest row
 
 #### Scenario: Fingerprint mismatch stays separate
 - **WHEN** two link-less recurring rows share a title but differ in amount, participants, or other fingerprint fields

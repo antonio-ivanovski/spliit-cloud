@@ -7,3 +7,4 @@ Apply `default.md` first, then these Simplified Chinese (Mainland China) rules.
 - Chinese normally has no spaces between CJK words. Keep readable spaces around Latin placeholders, URLs, and codes when needed.
 - Use Chinese punctuation such as `。`, `，`, `：`, and `？`; do not copy English comma/colon spacing mechanically.
 - Add the correct measure word or classifier when a count requires one, and handle plural keys as natural Chinese rather than suffixing nouns.
+- Exclusive settlement term: 结算. Never 报销 or 退款 for this concept.
