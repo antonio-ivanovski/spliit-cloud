@@ -45,14 +45,6 @@ const authEmailRecipientLimiter = new FixedWindowLimiter({
   windowMs: 60 * 60 * 1000,
 })
 
-const authEmailPaths = new Map<string, 'email' | 'newEmail'>([
-  ['/sign-up/email', 'email'],
-  ['/sign-in/magic-link', 'email'],
-  ['/request-password-reset', 'email'],
-  ['/send-verification-email', 'email'],
-  ['/change-email', 'newEmail'],
-])
-
 const authMethodLabels: Record<string, string> = {
   credential: 'email and password',
   google: 'Google',
@@ -102,33 +94,32 @@ const beforeAuthMiddleware = createAuthMiddleware(async (ctx) => {
     })
   }
 
-  const emailField = authEmailPaths.get(ctx.path)
-  const rawEmail = emailField ? ctx.body?.[emailField] : undefined
-  if (typeof rawEmail === 'string') {
-    const normalizedEmail = rawEmail.trim().toLowerCase()
-    const key = hashRateLimitIdentity(normalizedEmail)
-    const decision = authEmailRecipientLimiter.hit(key)
-    if (!decision.allowed) {
-      logRateLimitExceeded({
-        policy: 'auth-email-recipient',
-        identity: normalizedEmail,
-        retryAfterSeconds: decision.retryAfterSeconds,
-        path: ctx.path,
-      })
-      throw new APIError(
-        'TOO_MANY_REQUESTS',
-        {
-          message: 'Too many email requests. Please try again later.',
-          code: 'EMAIL_RATE_LIMIT_EXCEEDED',
-        },
-        { 'Retry-After': String(decision.retryAfterSeconds) },
-      )
-    }
-  }
-
   await persistSignupInviteCookie(ctx)
   await enforceSignupGate(ctx)
 })
+
+function enforceAuthEmailRecipientLimit(email: string, path: string): void {
+  const normalizedEmail = email.trim().toLowerCase()
+  const decision = authEmailRecipientLimiter.hit(
+    hashRateLimitIdentity(normalizedEmail),
+  )
+  if (decision.allowed) return
+
+  logRateLimitExceeded({
+    policy: 'auth-email-recipient',
+    identity: normalizedEmail,
+    retryAfterSeconds: decision.retryAfterSeconds,
+    path,
+  })
+  throw new APIError(
+    'TOO_MANY_REQUESTS',
+    {
+      message: 'Too many email requests. Please try again later.',
+      code: 'EMAIL_RATE_LIMIT_EXCEEDED',
+    },
+    { 'Retry-After': String(decision.retryAfterSeconds) },
+  )
+}
 
 // Integration and unit tests share the local PostgreSQL database with the
 // already-running development API. Persisting test signing keys there would
@@ -469,6 +460,7 @@ export const auth = betterAuth({
     // outlived the user noticing the breach, the reset kicks it out.
     revokeSessionsOnPasswordReset: true,
     async sendResetPassword({ user, url }) {
+      enforceAuthEmailRecipientLimit(user.email, '/request-password-reset')
       // Best-effort: a failed send must not break the forgot-password flow.
       // better-auth already created the verification token in the DB, so the
       // user can retry from the forgot-password page and a fresh token will
@@ -498,6 +490,7 @@ export const auth = betterAuth({
     // redirecting back to the web app.
     autoSignInAfterVerification: true,
     async sendVerificationEmail({ user, url }) {
+      enforceAuthEmailRecipientLimit(user.email, '/send-verification-email')
       // Best-effort: a failed send must not break the sign-up flow.
       // better-auth already created the verification token in the DB, so the
       // user can retry from the sign-in page and a fresh token will be issued.
@@ -622,6 +615,7 @@ export const auth = betterAuth({
     magicLink({
       disableSignUp: false,
       sendMagicLink: async ({ email, url }) => {
+        enforceAuthEmailRecipientLimit(email, '/sign-in/magic-link')
         // Best-effort: a failed send must not break the magic-link sign-in
         // flow. better-auth already created the verification token in the DB,
         // so the user can retry from the sign-in page and a fresh token will

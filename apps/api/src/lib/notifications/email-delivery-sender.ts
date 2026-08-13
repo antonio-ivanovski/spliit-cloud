@@ -8,6 +8,7 @@ import { renderBudgetAlertEmail } from '../mail/templates/budget-alert'
 import { renderExpenseActivityEmail } from '../mail/templates/expense-activity'
 import { renderFriendLedgerEmail } from '../mail/templates/friend-ledger'
 import { renderGroupActivityEmail } from '../mail/templates/group-activity'
+import { allowUserGeneratedEmail } from '../outbound-email-rate-limit'
 import {
   PermanentDeliveryError,
   TransientDeliveryError,
@@ -450,6 +451,31 @@ export class EmailDeliverySenderImpl implements EmailDeliverySender {
         'Recipient email is a placeholder',
         'TARGET_GONE',
       )
+    }
+
+    if (
+      args.snapshot.kind === 'invitation' ||
+      args.snapshot.kind === 'friend_added'
+    ) {
+      const senderAccountId = args.snapshot.actor?.id
+      if (!senderAccountId) {
+        throw new PermanentDeliveryError(
+          'User-generated email is missing its sender',
+          'DATA_CONTRACT',
+        )
+      }
+      if (
+        !allowUserGeneratedEmail({
+          senderAccountId,
+          recipientEmail: account.email,
+          policy:
+            args.snapshot.kind === 'invitation'
+              ? 'invitation-email'
+              : 'friend-ledger-email',
+        })
+      ) {
+        return
+      }
     }
 
     let unsubscribeUrl: string | undefined

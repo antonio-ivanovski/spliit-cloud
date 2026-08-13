@@ -41,7 +41,13 @@ const realAuthModule = (await vi.importActual('./index')) as {
           adapter?: unknown
         }
       }>
-      emailVerification?: { autoSignInAfterVerification?: boolean }
+      emailVerification?: {
+        autoSignInAfterVerification?: boolean
+        sendVerificationEmail?: (params: {
+          user: { id: string; email: string }
+          url: string
+        }) => Promise<void>
+      }
       session?: {
         expiresIn?: number
         updateAge?: number
@@ -172,6 +178,33 @@ describe('better-auth emailVerification config', () => {
       realAuthModule.auth.options.emailVerification
         ?.autoSignInAfterVerification,
     ).toBe(true)
+  })
+
+  it('charges recipient quota only from the email delivery callback', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+    const sendVerificationEmail =
+      realAuthModule.auth.options.emailVerification?.sendVerificationEmail
+    expect(sendVerificationEmail).toBeDefined()
+    const params = {
+      user: {
+        id: 'recipient-delivery-limit-account',
+        email: 'recipient-delivery-limit@example.test',
+      },
+      url: 'https://example.test/verify',
+    }
+
+    for (let count = 0; count < 10; count += 1) {
+      await expect(sendVerificationEmail?.(params)).resolves.toBeUndefined()
+    }
+    await expect(sendVerificationEmail?.(params)).rejects.toMatchObject({
+      status: 'TOO_MANY_REQUESTS',
+      body: { code: 'EMAIL_RATE_LIMIT_EXCEEDED' },
+    })
+
+    expect(sendEmailMock).toHaveBeenCalledTimes(10)
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('auth-email-recipient'),
+    )
   })
 })
 

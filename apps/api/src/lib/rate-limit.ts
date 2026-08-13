@@ -1,5 +1,9 @@
-import { createHash } from 'node:crypto'
+import { createHmac, randomBytes } from 'node:crypto'
 import { isIP } from 'node:net'
+
+import { env } from './env'
+
+const rateLimitHashSecret = env.BETTER_AUTH_SECRET ?? randomBytes(32)
 
 type Bucket = { count: number; resetAt: number }
 
@@ -113,7 +117,10 @@ function normalizeIpHeader(value: string | null): string | null {
 
 /** Keep abuse logs correlatable without recording raw accounts, IPs or emails. */
 export function hashRateLimitIdentity(value: string): string {
-  return createHash('sha256').update(value).digest('hex').slice(0, 16)
+  return createHmac('sha256', rateLimitHashSecret)
+    .update(value)
+    .digest('hex')
+    .slice(0, 16)
 }
 
 export function logRateLimitExceeded(options: {

@@ -36,11 +36,13 @@ beforeEach(() => {
 
 describe('suggestExpenseCategory', () => {
   it('returns a dictionary hit without querying titles or calling the model', async () => {
+    envState.PUBLIC_ENABLE_CATEGORY_EXTRACT = true
     const beforeAi = vi.fn()
     await expect(
       suggestExpenseCategory({
         groupId: 'group-1',
         title: 'Whole Foods',
+        allowAi: true,
         beforeAi,
       }),
     ).resolves.toEqual({ categoryId: 'groceries' })
@@ -115,6 +117,9 @@ describe('suggestExpenseCategory', () => {
     ).resolves.toEqual({ categoryId: 'groceries' })
     expect(beforeAi).toHaveBeenCalledOnce()
     expect(generateText).toHaveBeenCalledTimes(1)
+    expect(beforeAi.mock.invocationCallOrder[0]).toBeLessThan(
+      generateText.mock.invocationCallOrder[0]!,
+    )
   })
 
   it('does not call the model when allowAi is false even if the flag is on', async () => {

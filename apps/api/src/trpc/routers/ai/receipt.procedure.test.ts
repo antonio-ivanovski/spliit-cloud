@@ -1,6 +1,24 @@
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+const envState = vi.hoisted(() => ({
+  PUBLIC_ENABLE_RECEIPT_EXTRACT: false,
+}))
+
+vi.mock(import('../../../lib/env'), async (importOriginal) => {
+  const actual = await importOriginal()
+  const mockedEnv = { ...actual.env }
+  Object.defineProperty(mockedEnv, 'PUBLIC_ENABLE_RECEIPT_EXTRACT', {
+    enumerable: true,
+    get: () => envState.PUBLIC_ENABLE_RECEIPT_EXTRACT,
+  })
+  return { ...actual, env: mockedEnv }
+})
 
 import { aiRouter } from '.'
+
+beforeEach(() => {
+  envState.PUBLIC_ENABLE_RECEIPT_EXTRACT = false
+})
 
 describe('receipt extraction authorization', () => {
   it('rejects anonymous requests before invoking receipt extraction', async () => {

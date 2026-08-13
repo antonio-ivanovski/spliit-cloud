@@ -17,12 +17,16 @@ import { EmailDeliverySenderImpl } from './email-delivery-sender'
 import { PushDeliverySenderImpl } from './push-delivery-sender'
 
 const sendPushMock = vi.hoisted(() => vi.fn(async () => undefined))
+const allowUserGeneratedEmailMock = vi.hoisted(() => vi.fn(() => true))
 vi.mock('./push', () => ({
   sendPushNotification: sendPushMock,
   isPermanentPushError: (error: unknown) => {
     const statusCode = (error as { statusCode?: number } | null)?.statusCode
     return statusCode === 404 || statusCode === 410
   },
+}))
+vi.mock('../outbound-email-rate-limit', () => ({
+  allowUserGeneratedEmail: allowUserGeneratedEmailMock,
 }))
 
 const buildEmailUnsubscribeMetadataMock = vi.hoisted(() =>
@@ -104,6 +108,8 @@ beforeEach(() => {
   sendPushMock.mockClear()
   buildEmailUnsubscribeMetadataMock.mockReset()
   buildEmailUnsubscribeMetadataMock.mockResolvedValue(null)
+  allowUserGeneratedEmailMock.mockReset()
+  allowUserGeneratedEmailMock.mockReturnValue(true)
 })
 
 describe('EmailDeliverySenderImpl', () => {
@@ -131,6 +137,7 @@ describe('EmailDeliverySenderImpl', () => {
     expect(message.html).toContain('Dinner')
     expect(message.headers?.['Message-ID']).toBe('<delivery-1@spliit.app>')
     expect(buildEmailUnsubscribeMetadataMock).not.toHaveBeenCalled()
+    expect(allowUserGeneratedEmailMock).not.toHaveBeenCalled()
     expect(message.headers?.['List-Unsubscribe']).toBeUndefined()
   })
 
@@ -201,6 +208,47 @@ describe('EmailDeliverySenderImpl', () => {
     })
     expect(sendEmailMock).not.toHaveBeenCalled()
   })
+
+  it.each([
+    ['invitation', NotificationCategory.GROUP_INVITE_RECEIVED],
+    ['friend_added', NotificationCategory.FRIEND_ADDED],
+  ] as const)(
+    'enforces user-generated quotas for %s planner emails',
+    async (kind, category) => {
+      prismaMock.account.findUnique.mockResolvedValue({
+        email: 'bob@example.com',
+        emailVerified: true,
+      } as never)
+      allowUserGeneratedEmailMock.mockReturnValue(false)
+      const snapshot = deliverySnapshotV1Schema.parse({
+        version: 1,
+        kind,
+        category,
+        occurredAt: '2026-07-02T12:00:00Z',
+        actor: { id: 'acct-alice', name: 'Alice' },
+        recipient: { accountId: 'acct-bob', displayName: 'Bob' },
+        group: { id: 'grp-1', name: 'Trip' },
+        link: 'http://localhost:3000/groups/grp-1',
+        ...(kind === 'invitation'
+          ? { inviterName: 'Alice', inviterRole: 'ADMIN' }
+          : { friendName: 'Alice' }),
+      })
+
+      await emailSender.send({
+        deliveryId: `delivery-${kind}`,
+        snapshot,
+        recipientAccountId: 'acct-bob',
+      })
+
+      expect(allowUserGeneratedEmailMock).toHaveBeenCalledWith({
+        senderAccountId: 'acct-alice',
+        recipientEmail: 'bob@example.com',
+        policy:
+          kind === 'invitation' ? 'invitation-email' : 'friend-ledger-email',
+      })
+      expect(sendEmailMock).not.toHaveBeenCalled()
+    },
+  )
 
   it('adds RFC 8058 headers and footer when the snapshot opts in to unsubscribe', async () => {
     prismaMock.account.findUnique.mockResolvedValue({
