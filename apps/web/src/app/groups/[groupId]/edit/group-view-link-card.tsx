@@ -1,10 +1,16 @@
-import { Ellipsis, Eye, KeyRound, RotateCw, Trash2 } from 'lucide-react'
+import { Ellipsis, KeyRound, RotateCw, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { CopyButton } from '@/components/copy-button'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -58,21 +64,13 @@ export function PublicViewOnlyLinkSection({ groupId }: { groupId: string }) {
   return (
     <>
       <Card className="mobile-surface mb-4">
-        <CardContent className="pt-6">
-          <div className="flex items-start gap-3">
-            <span className="rounded-full bg-sky-500/10 p-2 text-sky-700 dark:text-sky-300">
-              <Eye className="size-4" aria-hidden="true" />
-            </span>
-            <div className="min-w-0 flex-1">
-              <h3 className="font-medium">{t('title')}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {t('description')}
-              </p>
-            </div>
-          </div>
-
+        <CardHeader>
+          <CardTitle>{t('title')}</CardTitle>
+          <CardDescription>{t('description')}</CardDescription>
+        </CardHeader>
+        <CardContent>
           {url ? (
-            <div className="mt-4 space-y-3">
+            <div className="space-y-3">
               <p className="text-sm text-muted-foreground">
                 {t('enabledStatus')}
               </p>
@@ -160,7 +158,7 @@ export function PublicViewOnlyLinkSection({ groupId }: { groupId: string }) {
               <p className="text-xs text-muted-foreground">{t('warning')}</p>
             </div>
           ) : canManage ? (
-            <div className="mt-4">
+            <div>
               <Button
                 type="button"
                 variant="secondary"
