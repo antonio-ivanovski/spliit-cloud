@@ -1,7 +1,6 @@
 {
   "Homepage": {
     "title": "Comparteix <strong>despeses</strong> amb <strong>família i amics</strong>",
-    "description": "Seguiu les despeses compartides i saldeu els comptes. Gratuït i de codi obert, <strong>sincronitzat i protegit amb el vostre compte</strong>.",
     "button": {
       "github": "GitHub",
       "signIn": "Inicia sessió a Spliit Cloud",
@@ -10,6 +9,7 @@
       "importGroup": "Importa un grup des d'un altre servei",
       "createFriendLedger": "Registra despeses amb una amistat"
     },
+    "description": "Fes el seguiment de les despeses compartides i liquida els comptes. Gratuït i de codi obert, <strong>sincronitzat i protegit amb el teu compte</strong>.",
     "features": {
       "groupsSync": {
         "title": "Grups i sincronització",
@@ -81,7 +81,7 @@
     "createFirst": "Crea la primera",
     "noExpenses": "El teu grup encara no té despeses.",
     "exportCsv": "Exportar a CSV",
-    "searchPlaceholder": "Cerca una despesa.",
+    "searchPlaceholder": "Cerca una despesa…",
     "ActiveUserModal": {
       "title": "Qui ets?",
       "description": "Duige'ns quin participant ets, perquè puguem personalitzar com es mostra la informació.",
@@ -187,10 +187,10 @@
   "ExpenseCard": {
     "receivedBy": "Rebut per <strong>{paidBy}</strong> · assignat a <paidFor></paidFor>",
     "receivedByMultiple": "Rebut per <paidByNames></paidByNames> · assignat a <paidFor></paidFor>",
-    "yourBalance": "El teu balanç: balance:",
     "paidBy": "Pagat per <strong>{paidBy}</strong> · repartit entre <paidFor></paidFor>",
     "paidByMultiple": "Pagat per <paidByNames></paidByNames> · repartit entre <paidFor></paidFor>",
     "everyone": "totes",
+    "yourBalance": "El teu balanç:",
     "notInvolved": "No ets implicat o implicada",
     "settlementBadge": "Liquidació",
     "items": {
@@ -369,8 +369,8 @@
           "inviteConflictsMember": "Esteu convidant {email} però ja és membre d'aquest grup; enllaceu-hi en lloc seu.",
           "duplicateMemberName": "Dos membres existents semblen la mateixa persona — trieu-ne un.",
           "onlyOneLinkedAccount": "Només una fila d'origen pot estar enllaçada al vostre compte.",
-          "missingExistingMember": "Trieu un membre existent per enllaçar.",
-          "missingEmail": "Afegiu una adreça de correu electrònic per convidar per correu.",
+          "missingExistingMember": "Tria un membre existent per enllaçar.",
+          "missingEmail": "Afegeix una adreça electrònica per convidar per correu.",
           "selfEmailAddress": "Aquest és el vostre correu — trieu «Enllaça'm» en lloc seu.",
           "duplicateEmail": "Aquest correu electrònic ja està convidat des d'una altra fila."
         },
@@ -392,7 +392,7 @@
           "linkToExisting": "Enllaça a un membre existent",
           "linkToExistingDescription": "Assigna aquesta persona a un membre actiu existent o invitació pendent al grup de destí. No es crea cap participant nou.",
           "selectExistingMember": "Selecciona un membre existent",
-          "selectExistingPlaceholder": "Trieu un membre existent…",
+          "selectExistingPlaceholder": "Tria un membre existent…",
           "membersLabel": "Membres",
           "pendingInvitesLabel": "Invitacions pendents",
           "pendingSuffix": "(pendent)",
@@ -632,7 +632,7 @@
     },
     "InformationField": {
       "label": "Informació del grupo",
-      "placeholder": "Quina informació és rellevant per les participants?"
+      "placeholder": "Quina informació és rellevant per als participants del grup?"
     },
     "CurrencyField": {
       "label": "Símbol de la divisa",
@@ -641,10 +641,10 @@
     },
     "Participants": {
       "title": "Participants",
-      "description": "Afegeix el nom de totes les participants.",
+      "description": "Afegeix el nom de cada participant.",
       "protectedParticipant": "Aquest participant està vinculat a un compte i no es pot suprimir.",
       "new": "Nou",
-      "add": "Afegir participants",
+      "add": "Afegeix un participant",
       "John": "Ermessenda",
       "Jane": "Guillem",
       "Jack": "Jaume"
@@ -654,21 +654,21 @@
       "description": "Aquesta configuració s'estableix per aquest diposotiu i s'utilitzarà per personalitzar la teva experiència.",
       "ActiveUserField": {
         "label": "Usuària activa",
-        "placeholder": "Selecciona una participant...",
+        "placeholder": "Selecciona un participant…",
         "none": "Cap",
         "description": "Usuària que paga les despeses de manera predeterminada."
       },
       "save": "Desar",
-      "saving": "Desant",
+      "saving": "Desant…",
       "create": "Crear",
-      "creating": "Creant",
+      "creating": "Creant…",
       "cancel": "Cancel·lar",
       "inviteAfterCreate": "Quan el grup estigui creat, obre la pestanya Membres per convidar gent per correu o amb un enllaç per compartir."
     },
     "CurrencyCodeField": {
       "label": "Divisa principal",
-      "createDescription": "Totes les quantitats i els balanços es mostraràn en aquesta moneda.",
-      "editDescription": "Totes les quantitas i balanços es mostraràn en aquesta moneda. Canviar açò NO convertirà despeses ja enregistrades, excepte quan la moneda tinga \"unitats menors\" diferents que la actual (per exemple, canviar de Dólars estadounidencs a Yens japonesos)",
+      "createDescription": "Totes les quantitats i els saldos es mostraran en aquesta moneda.",
+      "editDescription": "Totes les quantitats i els saldos es mostraran en aquesta moneda. En canviar-la, NO es convertiran les despeses ja introduïdes, excepte quan la moneda tingui unitats menors diferents de l'actual (per exemple, en canviar de dòlars nord-americans a iens japonesos)",
       "customOption": "Personalitzat",
       "lockedAfterExpenses": "La moneda està bloquejada perquè aquest grup ja té despeses."
     },
@@ -862,9 +862,9 @@
     },
     "attachDocuments": "Adjuntar documents",
     "create": "Crear",
-    "creating": "Creant",
+    "creating": "Creant…",
     "save": "Desar",
-    "saving": "Desant",
+    "saving": "Desant…",
     "cancel": "Cancel·lar",
     "conversionUnavailable": "Per a seleccionar una moneda diferent per despesa i convertir quantitats, tria una moneda no personalitzada per al grup.",
     "conversionRateField": {
@@ -930,8 +930,8 @@
     "convertedAmountField": {
       "label": "Quantitat convertida"
     },
-    "paidForOptionItemized": "Itemized",
-    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "paidForOptionItemized": "Per articles",
+    "paidForOptionItemizedHelper": "Calcula la part de cada participant a partir dels articles individuals de la despesa.",
     "items": {
       "title": "Articles",
       "description": "Afegeix articles per repartir la despesa amb precisió o per conservar-los com a documentació amb qualsevol mode de repartiment.",
@@ -1094,7 +1094,7 @@
     "direction": {
       "toReceive": "Per rebre",
       "toPay": "Per pagar",
-      "settledUp": "Saldats",
+      "settledUp": "Liquidat",
       "toReceiveDescription": "Cada segment mostra qui paga a aquesta persona.",
       "toPayDescription": "Cada segment mostra a qui paga aquesta persona.",
       "participantReceives": "<strong>{name}</strong> rep",
@@ -1114,13 +1114,13 @@
       "visualDescription": "Desglossament dels saldos i gràfics."
     },
     "simple": {
-      "title": "Saldar comptes",
+      "title": "Liquidar saldos",
       "description": "Consulta qui deu què i marca els pagaments com a liquidats.",
       "netBalances": "Saldos nets",
       "isOwed": "ha de rebre {amount}",
       "owes": "deu {amount}",
       "suggestedPayments": "Pagaments suggerits",
-      "empty": "Tots els comptes estan saldats."
+      "empty": "Tots els saldos estan liquidats."
     },
     "settlementMode": {
       "label": "Liquidar els saldos com a",
@@ -1245,13 +1245,13 @@
     "min2": "Introdueix com a mínim dos caràcters.",
     "max5": "Introdueix com a màxim cinc caràcters.",
     "max50": "Introdueix com a màxim cinquanta caràcters.",
-    "duplicateParticipantName": "Una altra participant ja té el mateix nom",
+    "duplicateParticipantName": "Un altre participant ja té aquest nom.",
     "titleRequired": "Si us plau, afegeix un títol",
     "invalidNumber": "Número invàlid",
     "amountRequired": "Cal introduir un import",
     "amountNotZero": "L'import no pot ser zero.",
     "amountTenMillion": "L'import ha de ser inferior a 10.000.000.",
-    "paidByRequired": "Cal seleccionar una participant",
+    "paidByRequired": "Cal seleccionar un participant.",
     "paidForMin1": "La despesa s’ha de repartir com a mínim entre un participant.",
     "noZeroShares": "Totes les participacions han de ser superiors a 0",
     "amountSum": "La suma dels imports ha de ser igual a la suma de la despesa",
@@ -1913,7 +1913,7 @@
       "idHint": "ID del participant al llibre de comptes: {id}",
       "linkButton": "Vincula",
       "linkDialog": {
-        "title": "Vincula participant no vinculat",
+        "title": "Vincula un participant no vinculat",
         "description": "Tria el membre existent al qual s’ha de vincular {displayName}. Aquest membre no pot tenir ja cap saldo de despeses amb aquest participant.",
         "membersGroup": "Membres",
         "cancel": "Cancel·la",
@@ -2022,7 +2022,7 @@
     },
     "image": {
       "label": "Foto de perfil",
-      "help": "Trieu una foto per actualitzar-la immediatament. Si no en teniu cap, es mostraran les vostres inicials.",
+      "help": "Tria una foto per actualitzar-la immediatament. Si no en tens cap, es mostraran les teves inicials.",
       "choose": "Tria una foto",
       "uploading": "S'està pujant…",
       "updated": "Foto de perfil actualitzada.",
@@ -2457,7 +2457,7 @@
     "date": "Data",
     "paidBy": "Pagat per",
     "paidFor": "Repartit entre",
-    "yourBalance": "El teu balanç:",
+    "yourBalance": "El teu balanç",
     "notes": "Notes",
     "attachments_one": "Fitxer adjunt ({count})",
     "attachments_many": "Fitxers adjunts ({count})",
@@ -2739,7 +2739,7 @@
       "startDate": "Data d’inici",
       "endDate": "Data de finalització",
       "categories": "Tipus de despesa",
-      "participants": "Membres",
+      "participants": "Participants",
       "chooseCategories": "Tria categories",
       "chooseParticipants": "Tria participants",
       "notifications": "Notificacions",

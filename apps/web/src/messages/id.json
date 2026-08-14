@@ -146,10 +146,10 @@
       "allCurrencies": "Semua mata uang",
       "nSelected_other": "{count} dipilih",
       "removeFilter": "Hapus filter",
-      "settlementsHidden": "Pembayaran tersembunyi",
+      "settlementsHidden": "Pelunasan tersembunyi",
       "title": "Filter"
     },
-    "showSettlements": "Tampilkan pembayaran",
+    "showSettlements": "Tampilkan pelunasan",
     "globalTitle": "Semua pengeluaran",
     "globalDescription": "Cari dan jelajahi pengeluaran dari semua grup Anda.",
     "globalGroups": "Grup",
@@ -190,7 +190,7 @@
     "receivedByMultiple": "Diterima oleh <paidByNames></paidByNames> · dialokasikan kepada <paidFor></paidFor>",
     "yourBalance": "Saldo Anda:",
     "notInvolved": "Anda tidak terlibat",
-    "settlementBadge": "Penyelesaian",
+    "settlementBadge": "Pelunasan",
     "items": {
       "more_other": "+{count} lainnya",
       "title": "Items",
@@ -237,11 +237,11 @@
     "unarchiveGroup": "Batalkan pengarsipan grup",
     "archiveSuccess": "Grup diarsipkan.",
     "unarchiveSuccess": "Pengarsipan grup dibatalkan.",
-    "archiveWithBalancesTitle": "Saldo yang belum diselesaikan",
-    "archiveWithBalancesDescription": "Grup ini memiliki saldo yang belum diselesaikan. Pengarsipan akan membuat pengeluaran penyelesaian untuk menghilangkannya. Lanjutkan?",
+    "archiveWithBalancesTitle": "Saldo yang belum dilunasi",
+    "archiveWithBalancesDescription": "Grup ini memiliki saldo yang belum dilunasi. Pengarsipan akan membuat pengeluaran pelunasan untuk menihilkannya. Lanjutkan?",
     "archiveWithBalancesForce": "Paksa arsipkan",
     "archiveWithBalancesCancel": "Batal",
-    "archiveWithBalancesSuccess": "Pengeluaran penyelesaian dibuat dan grup diarsipkan.",
+    "archiveWithBalancesSuccess": "Pengeluaran pelunasan dibuat dan grup diarsipkan.",
     "archiveWithBalancesView": "Lihat saldo",
     "archiveSectionTitle": "Arsipkan grup",
     "archiveSectionDescription": "Pengarsipan membekukan grup. Pengeluaran baru tidak dapat ditambahkan atau diubah, tetapi data yang ada tetap terlihat. Anda dapat membatalkan pengarsipan grup kapan saja.",
@@ -439,7 +439,7 @@
         "splitwiseAnonymizeIssuesLink": "Buka issue impor",
         "splitwiseAnonymizeError": "Tidak dapat menganonimkan file ini. Pastikan itu adalah ekspor CSV Splitwise.",
         "csvRecurrenceLimitation": "Ekspor CSV tidak menyertakan pengulangan. Gunakan ekspor JSON dari spliit.app untuk mengimpor pengeluaran berulang.",
-        "fromSpliitCloud": "Impor Spliit Cloud",
+        "fromSpliitCloud": "Spliit Cloud",
         "cloudZipRequired": "Pilih cadangan Spliit Cloud berformat .spliit.zip.",
         "wrongImporterCloudTitle": "File ini untuk pengimpor Spliit Cloud",
         "wrongImporterCloudDescription": "File yang dipilih adalah cadangan atau manifes Spliit Cloud. Buka tab Spliit Cloud untuk melanjutkan.",
@@ -472,7 +472,7 @@
         "fixedRateRow": "1 {source} = {rate} {target}",
         "customRateLabel": "Kurs kustom",
         "fetchingRates": "Mengambil kurs pertukaran…",
-        "fixedDescription": "Kurang akurat, tetapi memastikan semua jumlah menggunakan kurs konversi yang sama, sehingga saldo grup tetap nol bersih setelah impor.",
+        "fixedDescription": "Gunakan satu kurs untuk semua pengeluaran pada pasangan mata uang ini. Secara default kurs diambil dari Frankfurter untuk tanggal terpilih; Anda juga dapat memasukkan kurs kustom.",
         "fixedTitle": "Kurs tetap",
         "noConversionNeeded": "Semua pengeluaran dalam mata uang default grup. Tidak diperlukan konversi mata uang.",
         "perDateDescription": "Lebih akurat — menggunakan kurs pertukaran dari tanggal aktual setiap pengeluaran.",
@@ -1384,7 +1384,7 @@
       "title": "Pilih cara melihat saldo",
       "groupDescription": "Konversi semua pengeluaran ke {currency} untuk satu tampilan gabungan.",
       "originalDescription": "Biarkan setiap pengeluaran dalam mata uang saat dimasukkan.",
-      "originalNote": "Pembayaran penyelesaian biasanya dicatat dalam mata uang grup. Tampilan mata uang asli ini adalah buku besar terpisah per mata uang, sehingga saldo dapat terlihat belum diselesaikan di sini meskipun rencana dalam mata uang grup sudah diselesaikan. Gunakan tampilan mata uang grup untuk menyelesaikan saldo."
+      "originalNote": "Pembayaran pelunasan biasanya dicatat dalam mata uang grup. Tampilan mata uang asli ini adalah buku besar terpisah per mata uang, sehingga saldo dapat terlihat belum dilunasi di sini meskipun rencana dalam mata uang grup sudah dilunasi. Gunakan tampilan mata uang grup saat melunasi."
     },
     "direction": {
       "toReceive": "Akan menerima",
@@ -1424,7 +1424,7 @@
     },
     "subgroups": {
       "balanceTitle": "Saldo subgrup",
-      "balanceDescription": "Gunakan setiap subgrup sebagai satu unit penyelesaian untuk orang-orang yang berbagi pengeluaran, seperti pasangan atau keluarga. Pembagian pengeluaran individual tetap tidak berubah.",
+      "balanceDescription": "Gunakan setiap subgrup sebagai satu unit pelunasan untuk orang-orang yang berbagi pengeluaran, seperti pasangan atau keluarga. Pembagian pengeluaran individual tetap tidak berubah.",
       "emptyBalances": "Semua subgrup sudah saling dilunasi.",
       "internalBalancesNote": "Setelah pembayaran subgrup dilunasi, anggota mungkin masih memiliki saldo di dalam subgrupnya.",
       "viewIndividual": "Lihat saldo perorangan",
@@ -1643,7 +1643,7 @@
       "heading": "Pemasukan"
     },
     "Settlement": {
-      "heading": "Penyelesaian"
+      "heading": "Pelunasan"
     }
   },
   "Auth": {
@@ -1842,20 +1842,20 @@
       "cancel": "Batal",
       "confirm": "Hapus",
       "unsettled": {
-        "title": "Hapus anggota dengan saldo belum diselesaikan?",
-        "toast": "Anggota dihapus, saldo diselesaikan.",
-        "description": "Hapus {name} dari grup ini? Mereka memiliki saldo yang belum diselesaikan — centang kotak di bawah untuk menyelesaikannya secara otomatis sebelum menghapus.",
+        "title": "Hapus anggota dengan saldo belum dilunasi?",
+        "description": "Hapus {name} dari grup ini? Mereka memiliki saldo yang belum dilunasi — centang kotak di bawah untuk melunasinya secara otomatis sebelum menghapus.",
         "warning": {
-          "title": "Anggota ini memiliki saldo yang belum diselesaikan",
-          "description": "Menghapus tanpa melunasi akan membuat saldo ini tetap berada di grup. Pilih opsi di bawah untuk membuat satu pembayaran pelunasan bagi setiap saldo yang melibatkan anggota ini, atau hapus anggota lalu lunasi saldo secara manual."
+          "title": "Anggota ini memiliki saldo yang belum dilunasi",
+          "description": "Menghapus tanpa pelunasan akan membuat saldo ini tetap berada di grup. Pilih opsi di bawah untuk membuat satu pembayaran pelunasan bagi setiap saldo yang melibatkan anggota ini, atau hapus anggota lalu lunasi saldo secara manual."
         },
+        "toast": "Anggota dihapus, saldo dilunasi.",
         "checkbox": "Lunasi saldo anggota ini sebelum menghapusnya",
-        "previewWillCreate_one": "Akan membuat {count} pembayaran penyelesaian",
+        "previewWillCreate_one": "Akan membuat {count} pembayaran pelunasan",
         "previewPays": "{name} akan membayar",
         "previewReceives": "{name} akan menerima",
         "previewTo": "ke {name}",
         "previewFrom": "dari {name}",
-        "previewWillCreate_other": "Akan membuat {count} pembayaran penyelesaian"
+        "previewWillCreate_other": "Akan membuat {count} pembayaran pelunasan"
       }
     },
     "leave": {
@@ -1870,7 +1870,7 @@
       "body": {
         "otherAdmins": "Para admin ini akan tetap memegang kendali setelah Anda pergi: {names}.",
         "unsettled": {
-          "title": "Anda memiliki saldo yang belum diselesaikan",
+          "title": "Anda memiliki saldo yang belum dilunasi",
           "description": "Spliit akan membuat pembayaran pelunasan untuk saldo yang melibatkan Anda sebelum Anda keluar. Saldo peserta lain tidak akan berubah."
         },
         "lastAdmin": {
@@ -1885,7 +1885,7 @@
       },
       "error": {
         "lastAdmin": "Pilih anggota untuk dijadikan admin sebelum pergi.",
-        "unsettled": "Selesaikan saldo Anda atau konfirmasi penyelesaian paksa untuk pergi."
+        "unsettled": "Lunasi saldo Anda atau konfirmasi pelunasan paksa untuk pergi."
       }
     },
     "unlinked": {
@@ -1931,7 +1931,7 @@
       "deleteAria": "Hapus {name}",
       "disableTitle": "Nonaktifkan Subgrup?",
       "disableDescription": "Menonaktifkan Subgrup akan menghapus semua definisi subgrup dari grup ini secara permanen.",
-      "disableImpact": "Pengeluaran dan saldo yang ada akan tetap tidak berubah, tetapi opsi penyelesaian subgrup tidak akan tersedia lagi.",
+      "disableImpact": "Pengeluaran dan saldo yang ada akan tetap tidak berubah, tetapi opsi pelunasan subgrup tidak akan tersedia lagi.",
       "keep": "Pertahankan Subgrup",
       "disable": "Nonaktifkan Subgrup",
       "disabling": "Menonaktifkan…",
@@ -2862,7 +2862,7 @@
     "expensesCountLabel": "Pengeluaran",
     "participantsCountLabel": "Peserta",
     "participantsSectionLabel": "Ringkasan peserta",
-    "settlementsSectionLabel": "Pembayaran yang disarankan",
+    "settlementsSectionLabel": "Pelunasan yang disarankan",
     "expensesSectionLabel": "Detail pengeluaran",
     "amountColumnLabel": "Jumlah",
     "participantColumnLabel": "Peserta",

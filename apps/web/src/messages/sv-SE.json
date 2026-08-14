@@ -522,7 +522,7 @@
     "roundCount": "Omgång {round} av {max}",
     "confidence": {
       "high": "Hög",
-      "medium": "Medium",
+      "medium": "Mellan",
       "low": "Låg"
     },
     "confidenceColumn": "Säkerhet"
@@ -1688,7 +1688,7 @@
     "backToHome": "Tillbaka till startsidan",
     "Import": {
       "Confirm": {
-        "destinationLabel": "Destination",
+        "destinationLabel": "Mål",
         "newGroupFormat": "Ny grupp · {currency}",
         "existingGroupFormat": "Befintlig grupp · sammanslagen",
         "summaryLabel": "Sammanfattning",
@@ -1848,7 +1848,7 @@
         "splitwiseAnonymizeIssuesLink": "Öppna ett importärende",
         "splitwiseAnonymizeError": "Kunde inte anonymisera denna fil. Se till att det är en Splitwise CSV-export.",
         "csvRecurrenceLimitation": "CSV-exporter innehåller inte upprepning. Använd en JSON-export från spliit.app för att importera återkommande utgifter.",
-        "fromSpliitCloud": "Spliit Cloud-import",
+        "fromSpliitCloud": "Spliit Cloud",
         "cloudZipRequired": "Välj en Spliit Cloud-säkerhetskopia i formatet .spliit.zip.",
         "wrongImporterCloudTitle": "Den här filen hör till Spliit Cloud-importen",
         "wrongImporterCloudDescription": "Den valda filen är en Spliit Cloud-säkerhetskopia eller ett manifest. Öppna fliken Spliit Cloud för att fortsätta.",
@@ -1866,7 +1866,7 @@
       "StepHeader": {
         "title": "Importera en grupp",
         "source": "Källa",
-        "destination": "Destination",
+        "destination": "Mål",
         "mapping": "Koppling",
         "confirm": "Bekräfta",
         "done": "Klart",

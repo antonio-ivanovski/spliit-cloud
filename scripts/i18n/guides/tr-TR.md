@@ -6,5 +6,6 @@ Apply `default.md` first, then these Turkish (Türkiye) rules.
 - Turkish is agglutinative: attach suffixes and cases naturally, respecting vowel harmony, instead of copying English prepositions.
 - Preserve dotted/dotless `İ/ı`, Turkish spelling, and normal Turkish capitalization; avoid accidental English casing rules.
 - Use natural plural and possessive forms and do not add a plural suffix when Turkish context does not require one.
-- Keep labels concise and terminology consistent for groups, members, expenses, shares, and balances.
-- Exclusive settlement term: _borç kapatma_ (noun) and _kapatmak_ (verb). Never _geri ödeme_ or _iade_ for this concept.
+- Keep labels concise and terminology consistent for groups, members, expenses, shares, and balances. Recurrence is `Günlük`/`Haftalık` (never `GGünlük`). Brand `Spliit Cloud` stays as-is in source pickers (never `Spliit Cloud içe aktarma`). Category `Mortgage` is `Konut kredisi`. Itemized split is `Kalem bazında`.
+- Fixed-rate import wording must describe a single exchange rate per currency pair from Frankfurter (not "Daha az doğru/sıfırda kalır").
+- Exclusive settlement term: _borç kapatma_ (noun) and _kapatmak_ (verb). Never _geri ödeme_ or _iade_ for this concept. Income placeholder `Maaş veya para iadesi` is repayment, not settlement, and is the only allowed _iade_. Do not use _mutabakat_, _mahsuplaşma_, or _denkleştirme_ for settlement — use only _borç kapatma_/_kapatma_/_kapatılmış_ forms.

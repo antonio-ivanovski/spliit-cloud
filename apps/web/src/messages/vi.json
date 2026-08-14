@@ -17,7 +17,7 @@
       },
       "settlement": {
         "title": "Số dư",
-        "description": "Theo dõi ai nợ ai."
+        "description": "Xem ai đã trả gì và tối ưu các khoản chuyển tiền giữa các thành viên."
       },
       "organization": {
         "title": "Tổ chức",
@@ -175,10 +175,10 @@
       "nSelected_many": "Đã chọn {count}",
       "nSelected_other": "Đã chọn {count}",
       "removeFilter": "Xóa bộ lọc",
-      "settlementsHidden": "Đã ẩn thanh toán",
+      "settlementsHidden": "Đã ẩn tất toán",
       "title": "Bộ lọc"
     },
-    "showSettlements": "Hiện thanh toán",
+    "showSettlements": "Hiện tất toán",
     "globalTitle": "Tất cả chi phí",
     "globalDescription": "Tìm kiếm và xem chi phí từ tất cả các nhóm của bạn.",
     "globalGroups": "Nhóm",
@@ -311,8 +311,8 @@
     "unarchiveGroup": "Bỏ lưu trữ",
     "archiveSuccess": "Đã lưu trữ nhóm.",
     "unarchiveSuccess": "Đã bỏ lưu trữ.",
-    "archiveWithBalancesTitle": "Số dư chưa thanh toán",
-    "archiveWithBalancesDescription": "Nhóm còn số dư. Vẫn lưu trữ?",
+    "archiveWithBalancesTitle": "Số dư chưa tất toán",
+    "archiveWithBalancesDescription": "Nhóm này còn số dư chưa tất toán. Lưu trữ sẽ tạo các chi phí tất toán để đưa về 0. Tiếp tục?",
     "archiveWithBalancesForce": "Buộc lưu trữ",
     "archiveWithBalancesCancel": "Hủy",
     "archiveWithBalancesSuccess": "Đã tạo khoản thanh toán và lưu trữ nhóm.",
@@ -470,7 +470,7 @@
         "splitwiseAnonymizeIssuesLink": "Báo cáo vấn đề",
         "splitwiseAnonymizeError": "Lỗi ẩn danh.",
         "csvRecurrenceLimitation": "CSV không hỗ trợ định kỳ.",
-        "fromSpliitCloud": "Nhập Spliit Cloud",
+        "fromSpliitCloud": "Spliit Cloud",
         "cloudZipRequired": "Chọn bản sao lưu Spliit Cloud dạng .spliit.zip.",
         "wrongImporterCloudTitle": "Tệp này thuộc trình nhập Spliit Cloud",
         "wrongImporterCloudDescription": "Tệp đã chọn là bản sao lưu hoặc tệp kê khai Spliit Cloud. Mở thẻ Spliit Cloud để tiếp tục.",
@@ -592,7 +592,7 @@
         "description": "Nhóm đã nhập sẵn sàng. Hãy so sánh chi phí và số dư đã nhập với bản xuất gốc. Nếu có sai sót, hãy mở một issue nhập trên GitHub; lỗi nhập được ưu tiên cao nhất.",
         "openGroup": "Mở nhóm",
         "shareableLinksTitle": "Liên kết mời",
-        "shareableLinksDescription": "Chia sẻ liên kết.",
+        "shareableLinksDescription": "Sao chép từng liên kết và gửi cho người tương ứng. Liên kết chỉ dùng một lần; họ sẽ tham gia nhóm ngay khi mở liên kết.",
         "shareAriaLabel": "Chia sẻ",
         "emailInvitesTitle": "Mời qua email",
         "emailInvitesDescription": "Mời thành viên qua email.",
@@ -606,10 +606,10 @@
         "fixedRateRow": "1 {source} = {rate} {target}",
         "customRateLabel": "Tỷ giá tùy chỉnh",
         "fetchingRates": "Đang tải…",
-        "fixedDescription": "Dùng một tỷ giá.",
-        "fixedTitle": "Cố định",
-        "noConversionNeeded": "Không cần chuyển đổi.",
-        "perDateDescription": "Tỷ giá theo từng ngày.",
+        "fixedDescription": "Dùng một tỷ giá cho mọi chi phí trong cặp tiền này. Mặc định lấy từ Frankfurter theo ngày đã chọn; bạn cũng có thể nhập tỷ giá tùy chỉnh.",
+        "fixedTitle": "Tỷ giá cố định",
+        "noConversionNeeded": "Mọi chi phí đều dùng loại tiền mặc định của nhóm. Không cần chuyển đổi tiền tệ.",
+        "perDateDescription": "Chính xác hơn — dùng tỷ giá theo ngày thực tế của từng chi phí.",
         "perDateSelectedHint": "Áp dụng theo ngày chi phí.",
         "perDateTitle": "Theo ngày",
         "rateDateLabel": "Ngày",
@@ -691,7 +691,7 @@
     "scopePickerMembers_many": "{count} thành viên",
     "scopePickerMembers_other": "{count} thành viên",
     "createFriendLedgerCard": {
-      "description": "Theo dõi chi phí với bạn bè.",
+      "description": "Tất toán trực tiếp một-một với một người cụ thể.",
       "title": "Theo dõi chi phí với bạn bè"
     },
     "createGroupCard": {
@@ -1082,7 +1082,7 @@
     },
     "CurrencyCodeField": {
       "label": "Loại tiền",
-      "createDescription": "Chọn loại tiền mặc định.",
+      "createDescription": "Mọi số tiền và số dư sẽ được tính bằng loại tiền này.",
       "editDescription": "Mọi số tiền và số dư sẽ tính bằng loại tiền này. Việc đổi loại tiền KHÔNG chuyển đổi các chi phí đã nhập, trừ khi loại tiền mới có 'đơn vị nhỏ' khác loại tiền hiện tại (ví dụ đổi từ Đô la Mỹ sang Yên Nhật).",
       "customOption": "Tùy chỉnh",
       "lockedAfterExpenses": "Không thể thay đổi sau khi có chi phí."
@@ -1368,7 +1368,7 @@
       "label": "Đã quy đổi"
     },
     "paidForOptionItemized": "Theo mục",
-    "paidForOptionItemizedHelper": "Phân bổ theo mục.",
+    "paidForOptionItemizedHelper": "Tính phần chia của mỗi người dựa trên từng mục trong chi phí.",
     "items": {
       "title": "Mục",
       "description": "Chia thành nhiều mục.",
@@ -1526,22 +1526,22 @@
       "label": "Hiển thị",
       "group": "Theo nhóm {currency}",
       "original": "Theo loại gốc",
-      "title": "Tùy chọn",
-      "groupDescription": "Hiển thị bằng loại tiền nhóm. {currency}",
-      "originalDescription": "Hiển thị bằng loại tiền gốc.",
+      "title": "Chọn cách xem số dư",
+      "groupDescription": "Quy đổi mọi chi phí sang {currency} để xem tổng hợp.",
+      "originalDescription": "Giữ nguyên loại tiền gốc của từng chi phí.",
       "originalNote": "Các khoản thanh toán tất toán thường được ghi bằng loại tiền nhóm. Chế độ xem theo loại tiền gốc là một sổ riêng cho từng loại tiền, nên số dư có thể trông chưa tất toán ngay cả khi kế hoạch theo loại tiền nhóm đã xong. Nên dùng chế độ xem theo loại tiền nhóm khi tất toán."
     },
     "view": {
       "label": "Giao diện",
-      "title": "Giao diện",
+      "title": "Chọn cách xem số dư",
       "simple": "Đơn giản",
-      "simpleDescription": "Số dư mỗi thành viên.",
+      "simpleDescription": "Xem ai nợ ai và ghi nhận các khoản thanh toán tất toán.",
       "visual": "Trực quan",
       "visualDescription": "Sơ đồ trực quan."
     },
     "simple": {
-      "title": "Đơn giản",
-      "description": "Số dư ròng.",
+      "title": "Tất toán số dư",
+      "description": "Xem ai nợ gì và đánh dấu các khoản đã tất toán.",
       "netBalances": "Số dư ròng",
       "isOwed": "được nợ {amount}",
       "owes": "nợ {amount}",
@@ -1551,16 +1551,16 @@
     "direction": {
       "toReceive": "Được nhận",
       "toPay": "Phải trả",
-      "settledUp": "Đã thanh toán",
+      "settledUp": "Đã tất toán",
       "toReceiveDescription": "Số tiền bạn sẽ nhận.",
       "toPayDescription": "Số tiền bạn phải trả.",
       "participantReceives": "<strong>{name}</strong> nhận",
       "participantPays": "<strong>{name}</strong> trả",
       "fromParticipant": "từ <strong>{name}</strong>",
       "toParticipant": "cho <strong>{name}</strong>",
-      "settle": "Thanh toán",
-      "settlePaymentsBy": "Thanh toán {count} khoản qua {name}, {amount}",
-      "settlePaymentsTo": "Thanh toán {count} khoản cho {name}, {amount}"
+      "settle": "Tất toán",
+      "settlePaymentsBy": "Tất toán {count} khoản qua {name}, {amount}",
+      "settlePaymentsTo": "Tất toán {count} khoản cho {name}, {amount}"
     },
     "settlementMode": {
       "label": "Giải quyết số dư theo",
@@ -1580,18 +1580,18 @@
       "to": "cho",
       "from": "từ",
       "personPays": "trả",
-      "settle": "Thanh toán",
+      "settle": "Tất toán",
       "individualAllHint": "Bạn đang xem kế hoạch cá nhân tiêu chuẩn của cả nhóm. Kế hoạch này có thể gồm các khoản thanh toán giữa các nhóm con.",
       "unknownParticipant": "Lời mời đang chờ",
       "individualWithinHint": "Bạn đang xem kế hoạch cá nhân theo nhóm con. Các khoản thanh toán đề xuất nằm trong mỗi nhóm con khi tổng của nhóm con đã được thanh toán."
     },
     "Settlements": {
       "title": "Tất toán đề xuất",
-      "description": "Theo dõi các khoản thanh toán.",
+      "description": "Dùng các khoản thanh toán này để tất toán số dư với ít lần chuyển khoản nhất.",
       "noSettlements": "Mọi số dư trong nhóm của bạn đã được tất toán 😁",
       "owes": "<strong>{from}</strong> nợ <strong>{to}</strong>",
-      "markAsPaid": "Đã thanh toán",
-      "markAsPaidAria": "Đánh dấu đã thanh toán {amount} {from} {to}"
+      "markAsPaid": "Đánh dấu đã tất toán",
+      "markAsPaidAria": "Đánh dấu đã tất toán {amount} {from} → {to}"
     }
   },
   "Stats": {
@@ -2125,24 +2125,24 @@
       "cancel": "Hủy",
       "confirm": "Xóa",
       "unsettled": {
-        "title": "Số dư chưa thanh toán",
-        "description": "Thành viên có số dư. {name}",
+        "title": "Xóa thành viên có số dư chưa tất toán?",
+        "description": "Xóa {name} khỏi nhóm này? Họ còn số dư chưa tất toán — hãy tích vào ô bên dưới để tất toán tự động trước khi xóa.",
         "warning": {
-          "title": "Thành viên này có số dư chưa thanh toán",
-          "description": "Xóa mà không thanh toán sẽ để lại các số dư này trong nhóm vô thời hạn. Chọn tùy chọn bên dưới để tạo một khoản thanh toán cho mỗi số dư của thành viên này, hoặc xóa và tự thanh toán thủ công."
+          "title": "Thành viên này có số dư chưa tất toán",
+          "description": "Xóa mà không tất toán sẽ để lại các số dư này trong nhóm vô thời hạn. Chọn tùy chọn bên dưới để tạo một khoản thanh toán tất toán cho mỗi số dư của thành viên này, hoặc xóa và tự tất toán thủ công."
         },
         "toast": "Đã xóa thành viên và tất toán số dư.",
         "checkbox": "Tất toán số dư của thành viên này trước khi xóa",
-        "previewWillCreate_one": "Sẽ tạo {count} khoản thanh toán",
+        "previewWillCreate_one": "Sẽ tạo {count} khoản thanh toán tất toán",
         "previewPays": "trả {name}",
         "previewReceives": "nhận {name}",
         "previewTo": "Đến {name}",
         "previewFrom": "Từ {name}",
-        "previewWillCreate_other": "Sẽ tạo {count} khoản thanh toán",
-        "previewWillCreate_zero": "Sẽ tạo {count} khoản thanh toán",
-        "previewWillCreate_two": "Sẽ tạo {count} khoản thanh toán",
-        "previewWillCreate_few": "Sẽ tạo {count} khoản thanh toán",
-        "previewWillCreate_many": "Sẽ tạo {count} khoản thanh toán"
+        "previewWillCreate_other": "Sẽ tạo {count} khoản thanh toán tất toán",
+        "previewWillCreate_zero": "Sẽ tạo {count} khoản thanh toán tất toán",
+        "previewWillCreate_two": "Sẽ tạo {count} khoản thanh toán tất toán",
+        "previewWillCreate_few": "Sẽ tạo {count} khoản thanh toán tất toán",
+        "previewWillCreate_many": "Sẽ tạo {count} khoản thanh toán tất toán"
       }
     },
     "noManagePermission": "Bạn không có quyền.",
@@ -2225,19 +2225,19 @@
           "placeholder": "Chọn quản trị viên mới…"
         },
         "unsettled": {
-          "title": "Số dư chưa thanh toán",
-          "description": "Bạn còn số dư."
+          "title": "Số dư chưa tất toán",
+          "description": "Spliit sẽ tạo các khoản thanh toán tất toán cho những số dư liên quan đến bạn trước khi rời nhóm. Số dư của những người khác sẽ không thay đổi."
         }
       },
       "cancel": "Hủy",
       "confirm": "Xác nhận",
-      "confirmWithForce": "Vẫn rời",
+      "confirmWithForce": "Tất toán và rời nhóm",
       "toast": {
         "left": "Đã rời nhóm."
       },
       "error": {
         "lastAdmin": "Chỉ định quản trị viên khác.",
-        "unsettled": "Giải quyết số dư trước."
+        "unsettled": "Hãy tất toán số dư hoặc xác nhận tất toán bắt buộc để rời nhóm."
       }
     },
     "unlinked": {
@@ -2950,7 +2950,7 @@
     "expensesCountLabel": "Chi phí",
     "participantsCountLabel": "Thành viên",
     "participantsSectionLabel": "Tóm tắt người tham gia",
-    "settlementsSectionLabel": "Thanh toán gợi ý",
+    "settlementsSectionLabel": "Tất toán đề xuất",
     "expensesSectionLabel": "Chi tiết chi phí",
     "amountColumnLabel": "Số tiền",
     "participantColumnLabel": "Thành viên",
@@ -2963,7 +2963,7 @@
     "splitLabel": "Phân chia",
     "noExpensesLabel": "Không có chi phí nào trong kỳ đã chọn.",
     "noParticipantsLabel": "Không có thành viên nào có hoạt động trong kỳ đã chọn.",
-    "noSettlementsLabel": "Mọi khoản đã được thanh toán tính đến ngày kết thúc.",
+    "noSettlementsLabel": "Mọi khoản đã được tất toán tính đến ngày kết thúc.",
     "originalAmountLabel": "Số tiền gốc",
     "expenseColumnLabel": "Chi phí",
     "categoryColumnLabel": "Danh mục",
@@ -2997,18 +2997,18 @@
     "noActionSettings": "Cài đặt linh vật",
     "landingGreeting": "Xin chào — tôi sẽ giúp chia chi tiêu sau khi đăng nhập.",
     "hintReceiptVoice": "Tôi có thể điền khoản chi từ biên lai hoặc đoạn ghi âm giọng nói.",
-    "hintSettle": "Số dư là nơi chúng ta thanh toán.",
+    "hintSettle": "Số dư là nơi chúng ta tất toán.",
     "hintSettings": "Bạn có thể đổi hoặc tắt tôi trong cài đặt linh vật.",
     "resetPosition": "Đặt lại vị trí",
     "landingHintSplit": "Chia bữa tối, chuyến đi hoặc tiền thuê nhà — tôi lo phần tính toán.",
-    "landingHintSettle": "Khi sẵn sàng thanh toán, tôi sẽ cổ vũ.",
+    "landingHintSettle": "Khi sẵn sàng tất toán, tôi sẽ cổ vũ.",
     "landingHintTap": "Nhấn vào tôi bất cứ lúc nào. Tôi không cắn — tôi là biên lai.",
     "hintTapToAddExpense": "Tôi là {name} — chạm vào tôi để thêm khoản chi.",
     "hintTapToCreateGroup": "Tôi là {name} — chạm vào tôi để tạo nhóm.",
     "billName": "Bill"
   },
   "CreateSettlement": {
-    "description": "Xem lại khoản thanh toán trước khi ghi nhận.",
+    "description": "Xem lại khoản thanh toán tất toán trước khi ghi nhận.",
     "pays": "{from} trả {to}",
     "amount": "Số tiền",
     "date": "Ngày",
@@ -3016,8 +3016,8 @@
     "create": "Tạo",
     "edit": "Sửa",
     "creating": "Đang tạo…",
-    "successToast": "Đã ghi nhận khoản thanh toán.",
-    "successToastMultiple": "Đã ghi nhận {count} khoản thanh toán thành một mục.",
+    "successToast": "Đã ghi nhận khoản thanh toán tất toán",
+    "successToastMultiple": "Đã ghi nhận {count} khoản thanh toán tất toán thành một mục",
     "paysMany": "trả {from} {count}",
     "receivesMany": "nhận {to} {count}",
     "paymentsToInclude": "Bao gồm",
@@ -3026,8 +3026,8 @@
     "legFromAria": "Từ {from} {to} {amount}",
     "toParticipant": "cho {name}",
     "fromParticipant": "từ {name}",
-    "createSingle": "Ghi nhận thanh toán",
-    "createMultiple": "Ghi nhận {count} khoản thanh toán"
+    "createSingle": "Ghi nhận thanh toán tất toán",
+    "createMultiple": "Ghi nhận {count} khoản thanh toán tất toán"
   },
   "AnonymousAccount": {
     "signup": {

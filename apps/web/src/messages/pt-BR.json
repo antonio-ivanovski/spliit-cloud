@@ -148,10 +148,10 @@
       "nSelected_many": "{count} selecionados",
       "nSelected_other": "{count} selecionados",
       "removeFilter": "Remover filtro",
-      "settlementsHidden": "Liquidações ocultas",
+      "settlementsHidden": "Acertos ocultos",
       "title": "Filtros"
     },
-    "showSettlements": "Mostrar liquidações",
+    "showSettlements": "Mostrar acertos",
     "globalTitle": "Todas as despesas",
     "globalDescription": "Pesquise e navegue pelas despesas de todos os seus grupos.",
     "globalGroups": "Grupos",
@@ -241,8 +241,8 @@
     "unarchiveGroup": "Desarquivar grupo",
     "archiveSuccess": "Grupo arquivado.",
     "unarchiveSuccess": "Grupo desarquivado.",
-    "archiveWithBalancesTitle": "Saldos não liquidados",
-    "archiveWithBalancesDescription": "Este grupo tem saldos não liquidados. O arquivamento criará despesas de acerto para zerá-los. Continuar?",
+    "archiveWithBalancesTitle": "Saldos não acertados",
+    "archiveWithBalancesDescription": "Este grupo tem saldos não acertados. O arquivamento criará despesas de acerto para zerá-los. Continuar?",
     "archiveWithBalancesForce": "Forçar arquivamento",
     "archiveWithBalancesCancel": "Cancelar",
     "archiveWithBalancesSuccess": "Despesas de acerto criadas e grupo arquivado.",
@@ -332,7 +332,7 @@
         "recurringSchedulesLabel": "Agendamentos recorrentes a importar",
         "recurringScheduleItem": "{title} · {rule}",
         "recurrenceRule": {
-          "daily": "DiDiária",
+          "daily": "Diária",
           "weekly": "Semanal",
           "monthly": "Mensal"
         },
@@ -449,7 +449,7 @@
         "splitwiseAnonymizeIssuesLink": "Abrir uma issue de importação",
         "splitwiseAnonymizeError": "Não foi possível anonimizar este arquivo. Verifique se é uma exportação CSV do Splitwise.",
         "csvRecurrenceLimitation": "Exportações CSV não incluem recorrência. Use uma exportação JSON do spliit.app para importar despesas recorrentes.",
-        "fromSpliitCloud": "Importação do Spliit Cloud",
+        "fromSpliitCloud": "Spliit Cloud",
         "cloudZipRequired": "Escolha um backup do Spliit Cloud no formato .spliit.zip.",
         "wrongImporterCloudTitle": "Este arquivo pertence ao importador do Spliit Cloud",
         "wrongImporterCloudDescription": "O arquivo selecionado é um backup ou manifesto do Spliit Cloud. Abra a aba Spliit Cloud para continuar.",
@@ -482,7 +482,7 @@
         "fixedRateRow": "1 {source} = {rate} {target}",
         "customRateLabel": "Taxa personalizada",
         "fetchingRates": "Obtendo taxas de câmbio…",
-        "fixedDescription": "Menos preciso, mas garante que todos os valores usem a mesma taxa de conversão, para que o saldo do grupo fique zerado após a importação.",
+        "fixedDescription": "Use uma única taxa de câmbio para todas as despesas deste par de moedas. Por padrão, a taxa é obtida do Frankfurter para a data selecionada; você também pode inserir uma taxa personalizada.",
         "fixedTitle": "Taxa fixa",
         "noConversionNeeded": "Todas as despesas estão na moeda padrão do grupo. Não é necessária nenhuma conversão de moeda.",
         "perDateDescription": "Mais preciso — usa a taxa de câmbio da data real de cada despesa.",
@@ -686,7 +686,7 @@
       "edit": "Editar receita",
       "TitleField": {
         "label": "Título da receita",
-        "placeholder": "Restaurante na segunda à noite"
+        "placeholder": "Salário ou reembolso"
       },
       "DateField": {
         "label": "Data da receita",
@@ -1880,7 +1880,6 @@
       "description": "Você perderá o acesso às despesas, saldos e atividades deste grupo. Os dados passados são mantidos no livro-razão para que outros membros ainda possam vê-los.",
       "cancel": "Cancelar",
       "confirm": "Sair do grupo",
-      "confirmWithForce": "Liquidar e sair",
       "descriptionOnlyMember": "Você é o único membro ativo deste grupo, então não é possível sair do grupo desta forma. Para eliminar o grupo por completo, exclua-o na página de configurações.",
       "onlyMemberHint": "Você é o único membro ativo. Use a opção \"Excluir grupo\" em Configurações para remover o grupo.",
       "lastMemberRedirect": "Você não pode sair de um grupo do qual é o único membro ativo. Em vez disso, exclua o grupo na página de configurações.",
@@ -1896,12 +1895,13 @@
           "description": "O Spliit criará pagamentos de acerto para os saldos que envolvem você antes da sua saída. Os saldos dos outros participantes não serão alterados."
         }
       },
+      "confirmWithForce": "Acertar e sair",
       "toast": {
         "left": "Você saiu do grupo."
       },
       "error": {
         "lastAdmin": "Escolha um membro para promover a administrador antes de sair.",
-        "unsettled": "Liquide seu saldo ou confirme a liquidação forçada para sair."
+        "unsettled": "Acerte seu saldo ou confirme o acerto forçado para sair."
       }
     },
     "unlinked": {
@@ -1946,7 +1946,7 @@
       "editAria": "Editar {name}",
       "deleteAria": "Excluir {name}",
       "disableTitle": "Desativar Subgrupos?",
-      "disableDescription": "Desativar Subgrupos excluirá permanentemente todas as definições de subgrupos deste grupo.",
+      "disableDescription": "Desativar Subgrupos excluirá permanentemente todas as configurações de subgrupos deste grupo.",
       "disableImpact": "As despesas e os saldos existentes permanecerão inalterados, mas a opção de quitação por subgrupos não estará mais disponível.",
       "keep": "Manter Subgrupos",
       "disable": "Desativar Subgrupos",

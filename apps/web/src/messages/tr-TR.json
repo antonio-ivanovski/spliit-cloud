@@ -191,7 +191,7 @@
     "paidByMultiple": "<paidByNames></paidByNames> ödedi · <paidFor></paidFor> arasında bölüştürüldü",
     "everyone": "herkes",
     "notInvolved": "Dahil değilsiniz",
-    "settlementBadge": "Mutabakat",
+    "settlementBadge": "Borç kapatma",
     "items": {
       "more_one": "+{count} tane daha",
       "more_other": "+{count} tane daha",
@@ -240,10 +240,10 @@
     "archiveSuccess": "Grup arşivlendi.",
     "unarchiveSuccess": "Grup arşivden çıkarıldı.",
     "archiveWithBalancesTitle": "Kapatılmamış bakiyeler",
-    "archiveWithBalancesDescription": "Bu grupta kapatılmamış bakiyeler var. Arşivleme, bakiyeleri sıfırlamak için mutabakat giderleri oluşturacak. Devam edilsin mi?",
+    "archiveWithBalancesDescription": "Bu grupta kapatılmamış bakiyeler var. Arşivleme, bakiyeleri sıfırlamak için borç kapatma giderleri oluşturacak. Devam edilsin mi?",
     "archiveWithBalancesForce": "Zorla arşivle",
     "archiveWithBalancesCancel": "İptal",
-    "archiveWithBalancesSuccess": "Mutabakat giderleri oluşturuldu ve grup arşivlendi.",
+    "archiveWithBalancesSuccess": "Borç kapatma giderleri oluşturuldu ve grup arşivlendi.",
     "archiveWithBalancesView": "Bakiyeleri görüntüle",
     "archiveSectionTitle": "Grubu arşivle",
     "archiveSectionDescription": "Arşivleme grubu dondurur. Yeni gider eklenemez veya değiştirilemez, ancak mevcut veriler görünür kalır. Grubu istediğiniz zaman arşivden çıkarabilirsiniz.",
@@ -328,7 +328,7 @@
         "recurringSchedulesLabel": "İçe aktarılacak yinelenen planlar",
         "recurringScheduleItem": "{title} · {rule}",
         "recurrenceRule": {
-          "daily": "GGünlük",
+          "daily": "Günlük",
           "weekly": "Haftalık",
           "monthly": "Aylık"
         },
@@ -444,7 +444,7 @@
         "splitwiseAnonymizeIssuesLink": "İçe aktarma için issue aç",
         "splitwiseAnonymizeError": "Bu dosya anonimleştirilemedi. Bunun bir Splitwise CSV dışa aktarımı olduğundan emin olun.",
         "csvRecurrenceLimitation": "CSV dışa aktarımları yinelenmeyi içermez. Yinelenen giderleri içe aktarmak için spliit.app’ten bir JSON dışa aktarımı kullanın.",
-        "fromSpliitCloud": "Spliit Cloud içe aktarma",
+        "fromSpliitCloud": "Spliit Cloud",
         "cloudZipRequired": ".spliit.zip biçiminde bir Spliit Cloud yedeği seçin.",
         "wrongImporterCloudTitle": "Bu dosya Spliit Cloud içe aktarıcısına aittir",
         "wrongImporterCloudDescription": "Seçilen dosya bir Spliit Cloud yedeği veya manifestidir. Devam etmek için Spliit Cloud sekmesini açın.",
@@ -477,7 +477,7 @@
         "fixedRateRow": "1 {source} = {rate} {target}",
         "customRateLabel": "Özel kur",
         "fetchingRates": "Döviz kurları alınıyor…",
-        "fixedDescription": "Daha az doğru, ancak tüm tutarların aynı dönüşüm kurunu kullanmasını sağlar, böylece grup bakiyesi içe aktarımdan sonra sıfırda kalır.",
+        "fixedDescription": "Bu para birimi çiftindeki tüm harcamalar için tek bir döviz kuru kullanın. Varsayılan olarak kur, seçilen tarih için Frankfurter'dan alınır; dilerseniz özel bir kur da girebilirsiniz.",
         "fixedTitle": "Sabit kur",
         "noConversionNeeded": "Tüm harcamalar grubun varsayılan para biriminde. Para birimi dönüşümü gerekmez.",
         "perDateDescription": "Daha doğru — her harcamanın gerçek tarihindeki döviz kurunu kullanır.",
@@ -1082,7 +1082,7 @@
       "title": "Bakiye görüntüleme şeklini seçin",
       "groupDescription": "Tek bir birleşik görünüm için tüm harcamaları {currency} para birimine çevirin.",
       "originalDescription": "Her harcamayı girildiği para biriminde tutun.",
-      "originalNote": "Mahsuplaşma ödemeleri genellikle grup para biriminde kaydedilir. Bu orijinal para birimi görünümü, para birimi başına ayrı bir defterdir; grup para birimindeki plan mahsuplaşmış olsa bile burada bakiyeler mahsuplaşmamış görünebilir. Mahsuplaşma için grup para birimi görünümünü tercih edin."
+      "originalNote": "Borç kapatma ödemeleri genellikle grup para biriminde kaydedilir. Bu orijinal para birimi görünümü, para birimi başına ayrı bir defterdir; grup para birimindeki plan kapatılmış olsa bile burada bakiyeler kapatılmamış görünebilir. Borç kapatma için grup para birimi görünümünü tercih edin."
     },
     "direction": {
       "toReceive": "Alınacak",
@@ -1139,7 +1139,7 @@
       "individualWithinHint": "Alt grupları dikkate alan bireysel planı görüntülüyorsunuz. Alt grup toplamları zaten kapatıldıysa önerilen ödemeler her alt grubun içinde kalır."
     },
     "Settlements": {
-      "title": "Önerilen mahsuplaşmalar",
+      "title": "Önerilen borç kapatmalar",
       "description": "Bakiyeleri mümkün olan en az transferle kapatmak için bu ödemeleri kullanın.",
       "noSettlements": "Gruptaki herkesin hesabı kapandı 😁",
       "owes": "<strong>{from}</strong>, <strong>{to}</strong>'ya borçlu",
@@ -1286,7 +1286,7 @@
       "Furniture": "Mobilya",
       "Household Supplies": "Ev İhtiyaçları",
       "Maintenance": "Bakım",
-      "Mortgage": "Mortgage",
+      "Mortgage": "Konut kredisi",
       "Pets": "Evcil Hayvanlar",
       "Rent": "Kira",
       "Services": "Hizmetler",
@@ -1341,7 +1341,7 @@
       "heading": "Gelir"
     },
     "Settlement": {
-      "heading": "Mutabakat"
+      "heading": "Borç kapatma"
     }
   },
   "Auth": {
@@ -1857,12 +1857,12 @@
           "description": "Bakiyeleri kapatmadan kaldırmak, bu bakiyelerin grupta süresiz kalmasına neden olur. Bu üyeyle ilgili her bakiye için bir borç kapatma ödemesi oluşturmak üzere aşağıdaki seçeneği işaretleyin veya üyeyi kaldırıp bakiyeleri elle kapatın."
         },
         "checkbox": "Kaldırmadan önce bu üyenin bakiyelerini kapat",
-        "previewWillCreate_one": "{count} mahsuplaşma ödemesi oluşturulacak",
+        "previewWillCreate_one": "{count} borç kapatma ödemesi oluşturulacak",
         "previewPays": "{name} ödeyecek",
         "previewReceives": "{name} alacak",
         "previewTo": "{name} kullanıcısına",
         "previewFrom": "{name} kullanıcısından",
-        "previewWillCreate_other": "{count} mahsuplaşma ödemesi oluşturulacak"
+        "previewWillCreate_other": "{count} borç kapatma ödemesi oluşturulacak"
       }
     },
     "leave": {
@@ -2878,7 +2878,7 @@
     "expensesCountLabel": "Masraflar",
     "participantsCountLabel": "Katılımcılar",
     "participantsSectionLabel": "Katılımcı özeti",
-    "settlementsSectionLabel": "Önerilen denkleştirmeler",
+    "settlementsSectionLabel": "Önerilen borç kapatmalar",
     "expensesSectionLabel": "Masraf ayrıntıları",
     "amountColumnLabel": "Tutar",
     "participantColumnLabel": "Katılımcı",
@@ -2891,12 +2891,12 @@
     "splitLabel": "Pay",
     "noExpensesLabel": "Seçilen dönemde masraf yok.",
     "noParticipantsLabel": "Seçilen dönemde etkinliği olan katılımcı yok.",
-    "noSettlementsLabel": "Bitiş tarihi itibarıyla tüm hesaplar denkleştirilmiş.",
+    "noSettlementsLabel": "Bitiş tarihi itibarıyla tüm hesaplar kapatılmış durumda.",
     "originalAmountLabel": "Orijinal tutar",
     "expenseColumnLabel": "Harcama",
     "categoryColumnLabel": "Kategori",
-    "recordedSettlementsSectionLabel": "Kaydedilen mahsuplaşmalar",
-    "noRecordedSettlementsLabel": "Bitiş tarihine kadar kaydedilmiş mahsuplaşma yok."
+    "recordedSettlementsSectionLabel": "Kaydedilen borç kapatmalar",
+    "noRecordedSettlementsLabel": "Bitiş tarihine kadar kaydedilmiş borç kapatma yok."
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",

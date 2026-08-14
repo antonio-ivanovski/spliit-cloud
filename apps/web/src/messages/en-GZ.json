@@ -3,7 +3,7 @@
     "title": "review AI expense",
     "description": "check what Spliit understood before you yeet this expense into existence.",
     "created": "expense dropped. we ate.",
-    "createError": "expense creation flopped ",
+    "createError": "expense creation flopped",
     "missing": "not detected",
     "group": "group chat",
     "expenseTitle": "title",
@@ -25,8 +25,8 @@
     "voiceTitle": "describe an expense, bestie",
     "voiceDescription": "say the expense naturally. fill in missing lore in the full form, no cap.",
     "processingError": "couldn't understand that recording. run it back, bestie.",
-    "audioError": "couldn't cook that recording. try again, bestie ",
-    "microphoneError": "mic access is unavailable. check your browser perms and try again ",
+    "audioError": "couldn't cook that recording. try again, bestie",
+    "microphoneError": "mic access is unavailable. check your browser perms and try again",
     "recording": "listening…",
     "stop": "stop",
     "record": "record",
@@ -42,7 +42,7 @@
       "invalidDate": "pick a real date in the full expense form, bestie.",
       "unsupportedCurrency": "that spoken currency is not supported; choose one in the full expense form, fr."
     },
-    "addExpenseAction": "add expense, bestie "
+    "addExpenseAction": "add expense, bestie"
   },
   "AccountSettings": {
     "nameLabel": "display name",
@@ -215,7 +215,7 @@
     "preferences": {
       "title": "app vibes",
       "description": "use the same defaults and look on every signed-in device.",
-      "saveError": "couldn't save preferences ",
+      "saveError": "couldn't save preferences",
       "defaultCurrency": "main currency",
       "timeZone": "account time zone",
       "timeZoneHelp": "sets the default timezone for new expense times and recurring schedules, plus timestamp and relative-date displays.",
@@ -288,7 +288,7 @@
         "date": "date",
         "category": "vibe category",
         "notes": "notes",
-        "payers": "fronted by ",
+        "payers": "fronted by",
         "split": "split the bag",
         "items": "line-item lore",
         "documents": "attachments",
@@ -430,7 +430,7 @@
     "signInAnonymously": "Anon"
   },
   "Balances": {
-    "title": "balance check ",
+    "title": "balance check",
     "description": "see each participant's net balance.",
     "removedBadge": "removed",
     "currencyDisplay": {
@@ -457,7 +457,7 @@
       "settlePaymentsTo": "settle {count} payments to {name}, {amount}"
     },
     "simple": {
-      "title": "settle the balances ",
+      "title": "settle the balances",
       "description": "see who owes what and mark payments as settled.",
       "netBalances": "net balances",
       "isOwed": "is owed {amount}, slay",
@@ -498,10 +498,10 @@
     },
     "Settlements": {
       "title": "suggested settle-ups",
-      "description": "use these payments to settle balances with as few transfers as possible. fewer money moves, more slay ",
+      "description": "use these payments to settle balances with as few transfers as possible. fewer money moves, more slay",
       "noSettlements": "everyone in your group is settled up  huge W",
       "owes": "<strong>{from}</strong> owes <strong>{to}</strong>, no cap",
-      "markAsPaid": "mark as paid ",
+      "markAsPaid": "mark as paid",
       "markAsPaidAria": "mark {amount} from {from} to {to} as paid"
     }
   },
@@ -1280,7 +1280,7 @@
       },
       "editTitle": "edit: {title}",
       "paidByField": {
-        "label": "who paid ",
+        "label": "who paid",
         "placeholder": "pick a payer",
         "description": "choose who fronted the money and how much they put in."
       },
@@ -1367,7 +1367,7 @@
         "description": "the currency in which the income arrived."
       },
       "paidByField": {
-        "label": "who got paid ",
+        "label": "who got paid",
         "description": "choose who received the money and how much they got."
       },
       "paidFor": {
@@ -1379,7 +1379,7 @@
       }
     },
     "PaidBySplitModeField": {
-      "label": "how the payer split the bag "
+      "label": "how the payer split the bag"
     },
     "attachDocuments": "attach the docs",
     "create": "create it",
@@ -1392,7 +1392,7 @@
       "missing": "missing {missing} of {total}, oops",
       "surplus": "surplus {extra} of {total}, oops",
       "matches": "✓ matches {total}, slay",
-      "evenlySplit": "even split: {amount} × {count} ",
+      "evenlySplit": "even split: {amount} × {count}",
       "sharesTotal": "total weight: {sum} shares",
       "percentageMatches": "✓ matches 100%, no cap",
       "percentageMissing": "missing {pct}%, fix the math",
@@ -1400,10 +1400,10 @@
     },
     "SplitModeField": {
       "label": "how to split the bag",
-      "evenly": "even split, no drama ",
-      "byShares": "uneven — by shares ",
-      "byPercentage": "uneven — by percentage ",
-      "byAmount": "uneven — by amount "
+      "evenly": "even split, no drama",
+      "byShares": "uneven — by shares",
+      "byPercentage": "uneven — by percentage",
+      "byAmount": "uneven — by amount"
     },
     "amountField": {
       "label": "damage amount",
@@ -1461,15 +1461,15 @@
     },
     "splittingOptions": "split settings",
     "multiplePayers": "multiple people paid",
-    "paidByOptionSinglePayer": "single payer ",
-    "paidByOptionEvenly": "evenly ",
-    "paidByOptionByShares": "by shares ",
-    "paidByOptionByPercentage": "by percentage ",
-    "paidByOptionByAmount": "by amount ",
-    "paidForOptionEvenly": "evenly ",
-    "paidForOptionByShares": "by shares ",
-    "paidForOptionByPercentage": "by percentage ",
-    "paidForOptionByAmount": "by amount ",
+    "paidByOptionSinglePayer": "single payer",
+    "paidByOptionEvenly": "evenly",
+    "paidByOptionByShares": "by shares",
+    "paidByOptionByPercentage": "by percentage",
+    "paidByOptionByAmount": "by amount",
+    "paidForOptionEvenly": "evenly",
+    "paidForOptionByShares": "by shares",
+    "paidForOptionByPercentage": "by percentage",
+    "paidForOptionByAmount": "by amount",
     "paidBySectionSingle": "who paid",
     "paidBySectionMultiple": "who paid the bag",
     "paidForSection": "who's in on the expense",
@@ -1492,7 +1492,7 @@
     "participantSharesLabel": "shares for {name}",
     "decreaseShares": "decrease shares for {name}",
     "increaseShares": "increase shares for {name}",
-    "paidForOptionItemized": "itemized mode ",
+    "paidForOptionItemized": "itemized mode",
     "paidForOptionItemizedHelper": "calculate each person's share from the individual items",
     "items": {
       "title": "expense items",
@@ -1517,10 +1517,10 @@
       "columnParticipants": "participants",
       "columnTotal": "total",
       "setExpenseAmount": "set the expense amount",
-      "splitEvenlyLabel": "split evenly ",
-      "splitBySharesLabel": "split by shares ",
-      "splitByPercentageLabel": "split by percentage ",
-      "splitByAmountLabel": "split by amount ",
+      "splitEvenlyLabel": "split evenly",
+      "splitBySharesLabel": "split by shares",
+      "splitByPercentageLabel": "split by percentage",
+      "splitByAmountLabel": "split by amount",
       "switchToItemizedTitle": "switch to itemized split?",
       "switchToItemizedDescription": "editing item participants changes the split to Itemized and replaces your current participant split.",
       "switchToItemizedConfirm": "switch to itemized mode",
@@ -1570,7 +1570,7 @@
     "title": "expense preview era",
     "category": "vibe category",
     "date": "date",
-    "paidBy": "fronted by ",
+    "paidBy": "fronted by",
     "paidFor": "split with",
     "yourBalance": "your balance",
     "notes": "notes",
@@ -1793,7 +1793,7 @@
     }
   },
   "Footer": {
-    "madeIn": "made by the open-source community with love and vibes ",
+    "madeIn": "made by the open-source community with love and vibes",
     "builtBy": "see <source>source and contributors</source>",
     "legalNavigation": "legal links",
     "privacy": "privacy stuff",
@@ -2067,7 +2067,7 @@
         "splitwiseAnonymizeIssuesLink": "open an import issue",
         "splitwiseAnonymizeError": "could not anonymize this file. make sure it is a Splitwise CSV export.",
         "csvRecurrenceLimitation": "CSV exports do not include recurrence. use JSON from spliit.app to import recurring expenses.",
-        "fromSpliitCloud": "Spliit Cloud import",
+        "fromSpliitCloud": "Spliit Cloud",
         "cloudZipRequired": "Pick a Spliit Cloud .spliit.zip backup.",
         "wrongImporterCloudTitle": "this file belongs in the Spliit Cloud importer",
         "wrongImporterCloudDescription": "That file is a Spliit Cloud backup or manifest. Open the Spliit Cloud tab to keep going.",
@@ -2327,7 +2327,7 @@
     "title": "Split <strong>Expenses</strong> with <strong>Besties & Family</strong>",
     "description": "track shared expenses and settle up. free and open source, <strong>synced and secured by your account</strong>.",
     "button": {
-      "github": "GitHub ",
+      "github": "GitHub",
       "signIn": "sign in to Spliit Cloud",
       "createAccount": "make an account",
       "createGroup": "make a group",
@@ -2651,9 +2651,9 @@
       "title": "connect Spliit to {client}?",
       "description": "review the account and access below. you control every expense creation.",
       "connectionDetails": "connection details",
-      "spliitAccount": "Spliit account ",
+      "spliitAccount": "Spliit account",
       "connectingTo": "connecting to",
-      "assistantVia": "via Spliit Assistant ",
+      "assistantVia": "via Spliit Assistant",
       "defaultClient": "your AI bestie",
       "defaultUser": "Spliit account user",
       "sessionUnavailable": "session unavailable. return and sign in again.",
@@ -2804,10 +2804,10 @@
       "title": "spending activity tea",
       "periods": {
         "LATEST_ACTIVITY": "latest activity",
-        "WEEK": "1W ",
-        "MONTH": "1M ",
-        "QUARTER": "3M ",
-        "YEAR": "1Y ",
+        "WEEK": "1W",
+        "MONTH": "1M",
+        "QUARTER": "3M",
+        "YEAR": "1Y",
         "CUSTOM": "custom range"
       }
     },
@@ -2899,7 +2899,7 @@
     },
     "bridged": "by way of {currencies} (<providers></providers>)",
     "fallbackPrefix": "rates from",
-    "fallbackSeparator": " & "
+    "fallbackSeparator": " &"
   },
   "DatePicker": {
     "presets": {

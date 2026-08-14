@@ -1,7 +1,6 @@
 {
   "Homepage": {
     "title": "Distribuie <strong>Cheltuielile</strong> cu <strong>Prietenii & Familia</strong>",
-    "description": "Urmărește cheltuielile comune și regularizează conturile. Gratuit și open source, <strong>sincronizat și securizat de contul tău</strong>.",
     "button": {
       "github": "GitHub",
       "signIn": "Autentifică-te pe Spliit Cloud",
@@ -10,6 +9,7 @@
       "importGroup": "Importă grup dintr-un alt serviciu",
       "createFriendLedger": "Urmărește cheltuielile cu un prieten"
     },
+    "description": "Urmărește cheltuielile comune și decontează-le. Gratuit și cu sursă deschisă, <strong>sincronizat și securizat de contul tău</strong>.",
     "features": {
       "groupsSync": {
         "title": "Grupuri și sincronizare",
@@ -84,7 +84,7 @@
     "searchPlaceholder": "Caută o cheltuială…",
     "ActiveUserModal": {
       "title": "Cum te numești?",
-      "description": "Spune-ne cine ești ca să putem îți afișăm informațiile relevante.",
+      "description": "Spune-ne cine ești ca să îți putem afișa informațiile relevante.",
       "nobody": "Nu doresc să aleg pe nimeni",
       "save": "Salvează",
       "footer": "Această setare se poate schimba mai târziu din setările grupului."
@@ -241,8 +241,8 @@
     "unarchiveGroup": "Dezarhivează grupul",
     "archiveSuccess": "Grup arhivat.",
     "unarchiveSuccess": "Grup dezarhivat.",
-    "archiveWithBalancesTitle": "Solduri nereglate",
-    "archiveWithBalancesDescription": "Acest grup are solduri nereglate. Arhivarea va crea cheltuieli de decontare pentru a le aduce la zero. Continui?",
+    "archiveWithBalancesTitle": "Solduri nedecontate",
+    "archiveWithBalancesDescription": "Acest grup are solduri nedecontate. Arhivarea va crea cheltuieli de decontare pentru a le aduce la zero. Continui?",
     "archiveWithBalancesForce": "Forțează arhivarea",
     "archiveWithBalancesCancel": "Anulează",
     "archiveWithBalancesSuccess": "Cheltuieli de decontare create și grup arhivat.",
@@ -482,7 +482,7 @@
         "fixedRateRow": "1 {source} = {rate} {target}",
         "customRateLabel": "Curs personalizat",
         "fetchingRates": "Se preiau cursurile de schimb…",
-        "fixedDescription": "Mai puțin precis, dar asigură că toate sumele folosesc același curs de conversie, astfel încât soldul grupului rămâne zero după import.",
+        "fixedDescription": "Folosește un singur curs de schimb pentru toate cheltuielile din această pereche valutară. În mod implicit, cursul este preluat de la Frankfurter pentru data selectată; poți introduce și un curs personalizat.",
         "fixedTitle": "Curs fix",
         "noConversionNeeded": "Toate cheltuielile sunt în moneda implicită a grupului. Nu este necesară nicio conversie valutară.",
         "perDateDescription": "Mai precis — folosește cursul de schimb din data reală a fiecărei cheltuieli.",
@@ -600,7 +600,7 @@
     "scopePickerMembers_few": "{count} membru/membri",
     "scopePickerMembers_other": "{count} membru/membri",
     "createFriendLedgerCard": {
-      "description": "Echilibrează socotelile unu-la-unu cu o anumită persoană.",
+      "description": "Decontează unu-la-unu cu o anumită persoană.",
       "title": "Urmărește cheltuielile cu un prieten"
     },
     "importGroup": "Importă grup",
@@ -1089,7 +1089,7 @@
       "title": "Alege cum să vizualizezi soldurile",
       "groupDescription": "Convertește toate cheltuielile în {currency} pentru o singură vizualizare.",
       "originalDescription": "Păstrează fiecare cheltuială în moneda în care a fost introdusă.",
-      "originalNote": "Plățile de decontare sunt de obicei înregistrate în moneda grupului. Această vizualizare în moneda originală este un registru separat pe monedă, astfel că soldurile pot părea neachitate aici chiar și când planul în moneda grupului este decontat. Preferați vizualizarea în moneda grupului pentru decontare."
+      "originalNote": "Plățile de decontare sunt de obicei înregistrate în moneda grupului. Această vizualizare în moneda originală este un registru separat pe monedă, astfel că soldurile pot părea nedecontate aici chiar și când planul în moneda grupului este decontat. Preferă vizualizarea în moneda grupului pentru decontare."
     },
     "direction": {
       "toReceive": "De primit",
@@ -1880,7 +1880,6 @@
       "description": "Vei pierde accesul la cheltuielile, soldurile și activitatea acestui grup. Datele anterioare sunt păstrate în registru, astfel încât ceilalți membri să le poată vedea.",
       "cancel": "Anulează",
       "confirm": "Părăsește grupul",
-      "confirmWithForce": "Regularizează și pleacă",
       "descriptionOnlyMember": "Ești singurul membru activ al acestui grup, așa că nu este posibil să părăsești grupul în acest mod. Pentru a elimina grupul complet, șterge-l din pagina de setări.",
       "onlyMemberHint": "Ești singurul membru activ. Folosește opțiunea „Șterge grupul” din Setări pentru a elimina grupul.",
       "lastMemberRedirect": "Nu poți părăsi un grup în care ești singurul membru activ. În schimb, șterge grupul din pagina de setări.",
@@ -1892,16 +1891,17 @@
           "placeholder": "Selectează un membru"
         },
         "unsettled": {
-          "title": "Ai solduri neregularizate",
+          "title": "Ai solduri nedecontate",
           "description": "Spliit va crea plăți de decontare pentru soldurile care te implică înainte să pleci. Soldurile celorlalți participanți nu se vor schimba."
         }
       },
+      "confirmWithForce": "Decontează și pleacă",
       "toast": {
         "left": "Ai părăsit grupul."
       },
       "error": {
         "lastAdmin": "Alege un membru de promovat la administrator înainte de a pleca.",
-        "unsettled": "Regularizează-ți soldul sau confirmă regularizarea forțată pentru a pleca."
+        "unsettled": "Decontează-ți soldul sau confirmă decontarea forțată pentru a pleca."
       }
     },
     "unlinked": {
@@ -2909,7 +2909,7 @@
     "splitLabel": "Împărțire",
     "noExpensesLabel": "Nu există cheltuieli în perioada selectată.",
     "noParticipantsLabel": "Nu există participanți cu activitate în perioada selectată.",
-    "noSettlementsLabel": "Totul este achitat la data de sfârșit.",
+    "noSettlementsLabel": "Totul este decontat la data de sfârșit.",
     "originalAmountLabel": "Sumă inițială",
     "expenseColumnLabel": "Cheltuială",
     "categoryColumnLabel": "Categorie",
@@ -2979,7 +2979,7 @@
     "signup": {
       "title": "Cont anonim",
       "description": "Creați un cont anonim fără adresă de e-mail, parolă sau conectare la rețele sociale.",
-      "warning": "Datele dvs. sunt stocate în Split Cloud, dar acest cont nu are e-mail sau altă metodă de recuperare. Trebuie să salvați linkul de recuperare afișat în continuare.",
+      "warning": "Folosește Spliit fără e-mail, parolă sau autentificare socială. Înainte să începi, va trebui să salvezi un link permanent de conectare.",
       "cancel": "Anulează",
       "recoverDescription": "Inserați linkul de recuperare salvat pentru a reveni la un cont anonim existent.",
       "recoveryOnlyHelp": "Noile conturi anonime nu sunt disponibile aici. Lipiți linkul complet de recuperare salvat pentru a continua.",
@@ -3004,7 +3004,7 @@
     "recovery": {
       "warningTitle": "Păstrează asta undeva în siguranță",
       "warning": "Acest link nu expiră și nu se modifică niciodată decât dacă îl înlocuiți. Oricine îl are poate accesa contul dvs. anonim.",
-      "storedDataNote": "Anonim înseamnă că contul nu este conectat la o identitate de conectare. Datele contului dvs. sunt încă stocate în Split Cloud.",
+      "storedDataNote": "Anonim înseamnă că contul nu este conectat la o identitate de conectare. Datele contului tău sunt încă stocate în Spliit Cloud.",
       "linkLabel": "Link de conectare",
       "copyLink": "Copiați linkul",
       "copied": "Copiat",

@@ -1,7 +1,6 @@
 {
   "Homepage": {
     "title": "Partilha <strong>Despesas</strong> com <strong>Amigos e Família</strong>",
-    "description": "Acompanhe despesas partilhadas e acerte contas. Gratuito e de código aberto, <strong>sincronizado e protegido pela sua conta</strong>.",
     "button": {
       "github": "GitHub",
       "signIn": "Iniciar sessão no Spliit Cloud",
@@ -10,6 +9,7 @@
       "importGroup": "Importar grupo de outro serviço",
       "createFriendLedger": "Regista despesas com um amigo"
     },
+    "description": "Acompanha despesas partilhadas e acerta contas. Gratuito e de código aberto, <strong>sincronizado e protegido pela tua conta</strong>.",
     "features": {
       "groupsSync": {
         "title": "Grupos e sincronização",
@@ -57,11 +57,11 @@
     "signIn": "Iniciar sessão",
     "signOut": "Terminar sessão",
     "account": "Conta",
-    "accountSettings": "Configurações da conta",
+    "accountSettings": "Definições da conta",
     "back": "Voltar",
     "menu": "Menu",
     "feedback": "Comentários",
-    "anonymousSignOutWarning": "Esta conta anónima só pode ser recuperada com o ligação de início de sessão guardado. Sair agora?",
+    "anonymousSignOutWarning": "Esta conta anónima só pode ser recuperada com a ligação de início de sessão guardada. Sair agora?",
     "signOutTitle": "Sair?",
     "signOutError": "Não foi possível sair. Por favor, tente novamente.",
     "cancel": "Cancelar"
@@ -85,7 +85,7 @@
     "searchPlaceholder": "Pesquisar uma despesa…",
     "ActiveUserModal": {
       "title": "Quem és?",
-      "description": "Diz-nos que participante és para nos permitir customizar como a informação é apresentada.",
+      "description": "Diz-nos que participante és para nos permitir personalizar como a informação é apresentada.",
       "nobody": "Não quero selecionar ninguém",
       "save": "Guardar alterações",
       "footer": "Esta definição pode ser alterada posteriormente nas definições do grupo."
@@ -295,7 +295,7 @@
     "linkInvitationExpiredTitle": "Esta ligação de convite já não é válida",
     "linkInvitationExpiredDescription": "A ligação foi revogada, recusada ou expirou. Pede a quem convidou para enviar uma nova.",
     "linkInvitationInvalid": {
-      "title": "Este link de convite é inválido",
+      "title": "Esta ligação de convite é inválida",
       "description": "O link está malformado ou não corresponde a nenhum convite neste grupo."
     },
     "backToHome": "Voltar ao início",
@@ -332,7 +332,7 @@
         "recurringSchedulesLabel": "Agendamentos recorrentes a importar",
         "recurringScheduleItem": "{title} · {rule}",
         "recurrenceRule": {
-          "daily": "DiDiária",
+          "daily": "Diária",
           "weekly": "Semanal",
           "monthly": "Mensal"
         },
@@ -354,7 +354,7 @@
         "openGroup": "Abrir grupo",
         "shareableLinksTitle": "Links de convite partilháveis",
         "shareableLinksDescription": "Copie cada link e envie para a pessoa correspondente. O link é de uso único; eles entram no grupo assim que o abrem.",
-        "shareAriaLabel": "Partilhar link de convite",
+        "shareAriaLabel": "Partilhar ligação de convite",
         "emailInvitesTitle": "Convites por e-mail enviados",
         "emailInvitesDescription": "O servidor enviou e-mail para as seguintes pessoas. Elas verão um banner Aceitar/Recusar na página do grupo quando fizerem login.",
         "shareTitle": "Entre no meu grupo Spliit",
@@ -375,7 +375,7 @@
           "duplicateEmail": "Este e-mail já foi convidado de outra linha."
         },
         "headsUp": "Aviso",
-        "noLinkAccount": "Nenhum participante está vinculado à sua conta. O importador (você) será criado como um novo participante proprietário no grupo importado — a sua parte das despesas importadas será zero até que vincule uma linha de origem à sua conta ou se convide.",
+        "noLinkAccount": "Nenhum participante está vinculado à sua conta. O importador será criado como um novo participante proprietário no grupo importado — a sua parte das despesas importadas será zero até vincular uma linha de origem à sua conta ou convidar-se a si próprio.",
         "continue": "Continuar para confirmar",
         "Row": {
           "linkToMe": "Vincular-me",
@@ -658,7 +658,7 @@
     },
     "Settings": {
       "title": "Definições locais",
-      "description": "Estas definições são definidas por dispositivo, e são utilizadas para customizar a tua experiência.",
+      "description": "Estas definições são definidas por dispositivo e são utilizadas para personalizar a tua experiência.",
       "ActiveUserField": {
         "label": "Utilizador ativo",
         "placeholder": "Selecionar um participante",
@@ -1197,8 +1197,8 @@
       "group": "Moeda do grupo ({currency})",
       "original": "Original",
       "title": "Escolha como ver os saldos",
-      "groupDescription": "Converta todas as despesas para {currency} para uma visão combinada.",
-      "originalDescription": "Mantenha cada despesa na moeda em que foi inserida.",
+      "groupDescription": "Converte todas as despesas para {currency} para uma vista combinada.",
+      "originalDescription": "Mantém cada despesa na moeda em que foi inserida.",
       "originalNote": "Os pagamentos de liquidação são normalmente registados na moeda do grupo. Esta vista em moeda original é um livro-razão separado por moeda, pelo que os saldos podem parecer por liquidar aqui mesmo quando o plano na moeda do grupo está liquidado. Prefira a vista em moeda do grupo para liquidar."
     },
     "direction": {
@@ -1217,7 +1217,7 @@
     },
     "view": {
       "label": "Vista",
-      "title": "Escolha como ver os saldos",
+      "title": "Escolhe como ver os saldos",
       "simple": "Simples",
       "simpleDescription": "Vê quem deve a quem e regista pagamentos de liquidação.",
       "visual": "Visual",
@@ -1225,7 +1225,7 @@
     },
     "simple": {
       "title": "Liquidar saldos",
-      "description": "Veja quem deve o quê e marque os pagamentos como liquidados.",
+      "description": "Vê quem deve o quê e marca os pagamentos como liquidados.",
       "netBalances": "Saldos líquidos",
       "isOwed": "tem a receber {amount}",
       "owes": "deve {amount}",
@@ -2002,7 +2002,7 @@
     "readOnlyDescription": "Pessoas e participantes incluídos neste grupo. Os endereços de e-mail e os detalhes dos convites estão ocultos."
   },
   "AccountSettings": {
-    "title": "Configurações da conta",
+    "title": "Definições da conta",
     "profile": {
       "title": "Perfil",
       "description": "Atualize a forma como aparece nos seus grupos."
@@ -2116,7 +2116,7 @@
         },
         "addedToGroup": {
           "title": "Adicionado a um grupo",
-          "description": "Quando alguém adiciona você a um grupo."
+          "description": "Quando alguém te adiciona a um grupo."
         },
         "cloudNews": {
           "title": "Notícias e atualizações do Spliit Cloud",
@@ -2538,9 +2538,9 @@
     },
     "success": {
       "title": "Estes e-mails estão desativados",
-      "description": "Você não receberá e-mails de {category}. Suas outras configurações de notificações não foram alteradas."
+      "description": "Não receberás e-mails de {category}. As tuas restantes definições de notificações não foram alteradas."
     },
-    "scope": "Somente esta notificação por e-mail será desativada. Seus outros e-mails e notificações push continuarão iguais."
+    "scope": "Apenas esta notificação por e-mail será desativada. Os seus restantes e-mails e notificações push continuarão iguais."
   },
   "ExpenseSeries": {
     "badge": "Recorrente",
@@ -2979,45 +2979,45 @@
     "signup": {
       "title": "Conta anónima",
       "description": "Crie uma conta anónima sem endereço de e-mail, palavra-passe ou login social.",
-      "warning": "Os seus dados são armazenados no Spliit Cloud, mas esta conta não tem e-mail ou outro método de recuperação. Deve guardar o ligação de início de sessão mostrado a seguir.",
+      "warning": "Os seus dados são armazenados no Spliit Cloud, mas esta conta não tem e-mail ou outro método de recuperação. Deve guardar a ligação de início de sessão mostrada a seguir.",
       "cancel": "Cancelar",
-      "recoverDescription": "Cole o ligação de início de sessão guardado para voltar a uma conta anónima existente.",
-      "recoveryOnlyHelp": "As novas contas anónimas não estão disponíveis aqui. Cole o ligação de início de sessão completo guardado para continuar.",
+      "recoverDescription": "Cole a ligação de início de sessão guardada para voltar a uma conta anónima existente.",
+      "recoveryOnlyHelp": "As novas contas anónimas não estão disponíveis aqui. Cole a ligação de início de sessão completa guardada para continuar.",
       "recover": "Recuperar conta anónima",
       "create": "Criar conta anónima",
       "createError": "A conta anónima não pôde ser criada. Por favor, tente novamente.",
-      "recoverError": "Esta ligação de início de sessão é inválida. Verifique o link completo e tente novamente.",
+      "recoverError": "Esta ligação de início de sessão é inválida. Verifica a ligação completa e tenta novamente.",
       "recoveryLinkRequiredLabel": "Ligação de início de sessão",
       "createTitle": "Criar uma conta nova",
       "or": "OU",
       "recoverTitle": "Já tem uma conta anónima?"
     },
     "onboarding": {
-      "title": "Guarde o seu ligação de início de sessão",
+      "title": "Guarde a sua ligação de início de sessão",
       "description": "Esta é a única forma de voltar à sua conta anónima depois de sair, limpar os dados do browser ou mudar para outro dispositivo.",
-      "unavailableTitle": "O seu ligação de início de sessão não pode ser apresentado",
+      "unavailableTitle": "A sua ligação de início de sessão não pode ser apresentada",
       "unavailableDescription": "Gere explicitamente um link de substituição e guarde-o antes de continuar.",
       "generateReplacement": "Gerar ligação de substituição",
       "error": "Algo correu mal. Por favor, tente novamente.",
-      "start": "Comece a utilizar o Split"
+      "start": "Comece a utilizar o Spliit"
     },
     "recovery": {
       "warningTitle": "Guarde isso em algum lugar seguro",
-      "warning": "Este link nunca expira ou muda, a menos que o substitua. Qualquer pessoa que o possua pode aceder à sua conta anónima.",
+      "warning": "Esta ligação nunca expira nem muda, a menos que a substitua. Qualquer pessoa que a possua pode aceder à sua conta anónima.",
       "storedDataNote": "Anónimo significa que a conta não está ligada a uma identidade de login. Os dados da sua conta ainda estão armazenados no Spliit Cloud.",
       "linkLabel": "Ligação de início de sessão",
-      "copyLink": "Copiar link",
+      "copyLink": "Copiar ligação",
       "copied": "Copiado",
-      "howItWorks": "Abra o ligação de início de sessão em qualquer browser para iniciar sessão. No PWA instalado, escolha Anónimo e cole o ligação de início de sessão completo.",
-      "confirmation": "Copiei e armazenei em segurança o meu ligação de início de sessão.",
+      "howItWorks": "Abra a ligação de início de sessão em qualquer navegador para iniciar sessão. No PWA instalado, escolha Anónimo e cole a ligação de início de sessão completa.",
+      "confirmation": "Copiei e armazenei em segurança a minha ligação de início de sessão.",
       "copyFailed": "A cópia falhou. Selecione a ligação de início de sessão e copie-a manualmente."
     },
     "recover": {
       "title": "Recuperar conta anónima",
-      "description": "Abra o ligação de início de sessão guardado ou cole o link completo abaixo.",
-      "howItWorks": "Um ligação de início de sessão liga-o quando aberto num browser. No PWA instalado, escolha Anónimo e cole o link completo guardado.",
+      "description": "Abra a ligação de início de sessão guardada ou cole a ligação completa abaixo.",
+      "howItWorks": "Uma ligação de início de sessão liga-o quando aberta num navegador. No PWA instalado, escolha Anónimo e cole a ligação completa guardada.",
       "recovering": "Recuperar a sua conta…",
-      "invalid": "Esta ligação de início de sessão é inválida. Verifique o link completo e tente novamente.",
+      "invalid": "Esta ligação de início de sessão é inválida. Verifica a ligação completa e tenta novamente.",
       "anonymousAccount": "conta anónima",
       "switchTitle": "Trocar de conta?",
       "switchDescription": "Já está conectado. Continue a alterar este navegador para {name}.",
@@ -3028,15 +3028,15 @@
     },
     "settings": {
       "recoveryTitle": "Ligação de início de sessão",
-      "recoveryDescription": "Esta conta anónima só pode ser recuperada com o link guardado. Abra-o num browser ou escolha Anónimo e cole o link completo no PWA instalado. O link atual não pode ser mostrado novamente.",
+      "recoveryDescription": "Esta conta anónima só pode ser recuperada com a ligação guardada. Abre-a num navegador ou escolhe Anónimo e cola a ligação completa no PWA instalado. A ligação atual não pode ser mostrada novamente.",
       "replace": "Substitua a ligação de início de sessão",
       "replaceTitle": "Substituir o seu ligação de início de sessão?",
-      "replaceDescription": "Gere um link de substituição para rever e guardar. O seu ligação de início de sessão atual continua a funcionar até ativar a substituição.",
+      "replaceDescription": "Gere uma ligação de substituição para rever e guardar. A sua ligação de início de sessão atual continua a funcionar até ativar a substituição.",
       "cancel": "Cancelar",
       "replaceConfirm": "Gerar ligação de substituição",
-      "error": "O ligação de início de sessão não pôde ser substituído. Por favor, tente novamente.",
-      "activateDescription": "Guarde o link de substituição antes de o ativar.",
-      "stagedDescription": "O seu ligação de início de sessão atual continua a funcionar até ativar esta substituição. Fechar ou atualizar descarta a substituição.",
+      "error": "A ligação de início de sessão não pôde ser substituída. Por favor, tente novamente.",
+      "activateDescription": "Guarda a ligação de substituição antes de a ativar.",
+      "stagedDescription": "A sua ligação de início de sessão atual continua a funcionar até ativar esta substituição. Fechar ou atualizar descarta a substituição.",
       "activateConfirm": "Ativar substituição",
       "linkAccountTitle": "Associar a uma conta",
       "linkAccountDescription": "Associe esta conta anónima a um e-mail ou início de sessão social.",

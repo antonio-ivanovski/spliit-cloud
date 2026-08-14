@@ -454,7 +454,7 @@
         "splitwiseAnonymizeIssuesLink": "Otwórz zgłoszenie importu",
         "splitwiseAnonymizeError": "Nie udało się zanonimizować tego pliku. Upewnij się, że to eksport CSV ze Splitwise.",
         "csvRecurrenceLimitation": "Eksporty CSV nie zawierają cykliczności. Użyj eksportu JSON ze spliit.app, aby zaimportować cykliczne wydatki.",
-        "fromSpliitCloud": "Import Spliit Cloud",
+        "fromSpliitCloud": "Spliit Cloud",
         "cloudZipRequired": "Wybierz kopię Spliit Cloud w formacie .spliit.zip.",
         "wrongImporterCloudTitle": "Ten plik należy importować przez Spliit Cloud",
         "wrongImporterCloudDescription": "Wybrany plik to kopia lub manifest Spliit Cloud. Otwórz kartę Spliit Cloud, aby kontynuować.",
@@ -487,7 +487,7 @@
         "fixedRateRow": "1 {source} = {rate} {target}",
         "customRateLabel": "Własny kurs",
         "fetchingRates": "Pobieranie kursów wymiany…",
-        "fixedDescription": "Mniej dokładne, ale zapewnia, że wszystkie kwoty używają tego samego kursu wymiany, dzięki czemu saldo grupy po imporcie wynosi zero.",
+        "fixedDescription": "Użyj jednego kursu wymiany dla wszystkich wydatków w tej parze walut. Domyślnie kurs jest pobierany z serwisu Frankfurter dla wybranej daty; możesz też wprowadzić własny kurs.",
         "fixedTitle": "Stały kurs",
         "noConversionNeeded": "Wszystkie wydatki są w domyślnej walucie grupy. Konwersja walut nie jest potrzebna.",
         "perDateDescription": "Bardziej dokładne — używa kursu wymiany z rzeczywistej daty każdego wydatku.",
@@ -684,7 +684,7 @@
     },
     "bulkCategorizeSectionTitle": "Zbiorcze narzędzia AI",
     "bulkCategorizeSectionDescription": "Uruchom kategoryzator AI dla wielu wydatków naraz. Przydatne po zaimportowaniu wydatków lub gdy wiele tytułów wciąż nie ma kategorii.",
-    "bulkCategorizeButton": "Open bulk categorizer"
+    "bulkCategorizeButton": "Otwórz kategoryzator zbiorczy"
   },
   "ExpenseForm": {
     "Income": {
@@ -692,7 +692,7 @@
       "edit": "Edytuj wpływ",
       "TitleField": {
         "label": "Tytuł wpływu",
-        "placeholder": "Zwrot kaucji"
+        "placeholder": "Wynagrodzenie lub zwrot"
       },
       "DateField": {
         "label": "Data wpływu",
@@ -936,8 +936,8 @@
     "convertedAmountField": {
       "label": "Przeliczona kwota"
     },
-    "paidForOptionItemized": "Itemized",
-    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "paidForOptionItemized": "Pozycjami",
+    "paidForOptionItemizedHelper": "Oblicz udział każdego uczestnika na podstawie poszczególnych pozycji wydatku.",
     "items": {
       "title": "Pozycje",
       "description": "Dodaj pozycje, aby dokładnie podzielić wydatek lub zachować je jako dokumentację przy dowolnym sposobie podziału.",
@@ -1867,7 +1867,7 @@
       "unsettled": {
         "title": "Usunąć członka z nierozliczonym saldem?",
         "toast": "Członek usunięty, salda rozliczone.",
-        "description": "Usunąć {name} z tej grupy? {name} ma nierozliczone salda — zaznacz pole poniżej, aby rozliczyć je automatycznie przed usunięciem.",
+        "description": "Usunąć {name} z tej grupy? Ta osoba ma nierozliczone salda — zaznacz pole poniżej, aby rozliczyć je automatycznie przed usunięciem.",
         "warning": {
           "title": "Ten członek ma nierozliczone salda",
           "description": "Usunięcie bez rozliczenia sprawi, że te salda pozostaną w grupie bezterminowo. Zaznacz opcję poniżej, aby utworzyć po jednej płatności rozliczeniowej dla każdego salda z udziałem tego członka, albo usuń go i rozlicz salda ręcznie."

@@ -487,7 +487,7 @@
         "fixedRateRow": "1 {source} = {rate} {target}",
         "customRateLabel": "Vlastní kurz",
         "fetchingRates": "Načítání směnných kurzů…",
-        "fixedDescription": "Méně přesné, ale zajišťuje, že všechny částky použijí stejný směnný kurz, takže zůstatek skupiny zůstane po importu na nule.",
+        "fixedDescription": "Použijte jeden směnný kurz pro všechny výdaje v této měnové dvojici. Kurz se standardně načítá z Frankfurter pro zvolené datum; můžete také zadat vlastní kurz.",
         "fixedTitle": "Pevný kurz",
         "noConversionNeeded": "Všechny výdaje jsou ve výchozí měně skupiny. Není potřeba žádná konverze měn.",
         "perDateDescription": "Přesnější — použije směnný kurz z data každého výdaje.",
@@ -936,8 +936,8 @@
     "convertedAmountField": {
       "label": "Přepočtená částka"
     },
-    "paidForOptionItemized": "Itemized",
-    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "paidForOptionItemized": "Podle položek",
+    "paidForOptionItemizedHelper": "Podíl každého účastníka se vypočítá z jednotlivých položek výdaje.",
     "items": {
       "title": "Položky",
       "description": "Přidejte položky pro přesné rozdělení výdaje nebo je uchovejte jako dokumentaci u libovolného způsobu rozdělení.",
@@ -1096,7 +1096,7 @@
       "title": "Zvolte, jak zobrazit zůstatky",
       "groupDescription": "Převeďte všechny výdaje na {currency} pro jednotný pohled.",
       "originalDescription": "Ponechte každý výdaj v měně, ve které byl zadán.",
-      "originalNote": "Vyrovnávací platby se obvykle zaznamenávají ve skupinové měně. Toto zobrazení v původní měně je samostatná účetní kniha pro každou měnu, takže zde mohou zůstat nesplacené zůstatky i tehdy, když je plán ve skupinové měně vyrovnán. Pro vypořádání použijte zobrazení ve skupinové měně."
+      "originalNote": "Vyrovnávací platby se obvykle zaznamenávají ve skupinové měně. Toto zobrazení v původní měně je samostatná účetní kniha pro každou měnu, takže zde mohou zůstat nevyrovnané zůstatky i tehdy, když je plán ve skupinové měně vyrovnán. Pro vyrovnání použijte zobrazení ve skupinové měně."
     },
     "direction": {
       "toReceive": "K obdržení",

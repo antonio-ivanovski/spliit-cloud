@@ -60,10 +60,10 @@
     "accountSettings": "Impostazioni account",
     "back": "Indietro",
     "menu": "Menu",
-    "feedback": "Segnalazioni",
+    "feedback": "Feedback",
     "anonymousSignOutWarning": "Questo account anonimo può essere recuperato solo con il link di accesso salvato. Uscire adesso?",
     "signOutTitle": "Uscire?",
-    "signOutError": "Impossibile uscire. Per favore riprova.",
+    "signOutError": "Impossibile uscire. Riprova.",
     "cancel": "Annulla"
   },
   "Footer": {
@@ -208,7 +208,7 @@
     "myGroups": "I miei gruppi",
     "create": "Crea",
     "loadingRecent": "Caricamento gruppi recenti…",
-    "starred": "Speciali",
+    "starred": "Preferiti",
     "archived": "Gruppi archiviati",
     "backToGroups": "Torna ai gruppi",
     "removeRecent": "Rimuovi dai gruppi recenti",
@@ -449,7 +449,7 @@
         "splitwiseAnonymizeIssuesLink": "Apri una issue di importazione",
         "splitwiseAnonymizeError": "Impossibile anonimizzare questo file. Assicurati che sia un'esportazione CSV di Splitwise.",
         "csvRecurrenceLimitation": "Le esportazioni CSV non includono la ricorrenza. Usa un’esportazione JSON da spliit.app per importare le spese ricorrenti.",
-        "fromSpliitCloud": "Importazione Spliit Cloud",
+        "fromSpliitCloud": "Spliit Cloud",
         "cloudZipRequired": "Scegli un backup Spliit Cloud in formato .spliit.zip.",
         "wrongImporterCloudTitle": "Questo file appartiene all’importatore Spliit Cloud",
         "wrongImporterCloudDescription": "Il file selezionato è un backup o un manifest Spliit Cloud. Apri la scheda Spliit Cloud per continuare.",
@@ -482,7 +482,7 @@
         "fixedRateRow": "1 {source} = {rate} {target}",
         "customRateLabel": "Tasso personalizzato",
         "fetchingRates": "Recupero dei tassi di cambio…",
-        "fixedDescription": "Meno preciso, ma garantisce che tutti gli importi utilizzino lo stesso tasso di conversione, così il saldo del gruppo resta a zero dopo l'importazione.",
+        "fixedDescription": "Usa un unico tasso di cambio per tutte le spese di questa coppia di valute. Di norma il tasso viene recuperato da Frankfurter per la data selezionata; puoi anche inserire un tasso personalizzato.",
         "fixedTitle": "Tasso fisso",
         "noConversionNeeded": "Tutte le spese sono nella valuta predefinita del gruppo. Non è necessaria alcuna conversione di valuta.",
         "perDateDescription": "Più preciso — usa il tasso di cambio della data effettiva di ogni spesa.",
@@ -715,7 +715,7 @@
       "create": "Crea spesa",
       "edit": "Edita spesa",
       "TitleField": {
-        "label": "Titolo Spesa",
+        "label": "Titolo spesa",
         "placeholder": "Ristorante del lunedì sera"
       },
       "DateField": {
@@ -738,7 +738,7 @@
       },
       "paidFor": {
         "title": "Diviso tra",
-        "description": "Seleleziona per chi è stato pagato."
+        "description": "Seleziona per chi è stata pagata."
       },
       "splitModeDescription": "Seleziona come dividere la spesa.",
       "attachDescription": "Vedi ed allega la ricevuta per la spesa.",
@@ -1079,7 +1079,7 @@
     }
   },
   "Balances": {
-    "title": "Bilanci",
+    "title": "Saldi",
     "description": "Vedi il saldo netto di ogni partecipante.",
     "removedBadge": "Rimosso",
     "currencyDisplay": {
@@ -1462,7 +1462,7 @@
         "name": "leu moldavo"
       },
       "MKD": {
-        "name": "denaro macedone"
+        "name": "dinaro macedone"
       },
       "MXN": {
         "name": "peso messicano"
@@ -1534,7 +1534,7 @@
         "name": "rand sudafricano"
       },
       "NPR": {
-        "name": "Rupia nepalese"
+        "name": "rupia nepalese"
       },
       "BHD": {
         "name": "dinaro del Bahrein"
@@ -1704,8 +1704,8 @@
       "emailRequired": "Inserisci il tuo indirizzo email.",
       "passwordRequired": "Inserisci la tua password.",
       "nameRequired": "Inserisci un nome visualizzato.",
-      "generic": "Qualcosa è andato storto. Per favore riprova.",
       "passwordPolicy": "Usa almeno 8 caratteri con una maiuscola, una minuscola, un numero e un simbolo.",
+      "generic": "Qualcosa è andato storto. Riprova.",
       "magicLinkFailed": "Impossibile inviare il link di accesso.",
       "signupInviteRequired": "Questa istanza è accessibile solo su invito. Usa un link di invito o chiedi a qualcuno di invitarti in un gruppo."
     },
@@ -1734,7 +1734,7 @@
     "errors": {
       "nameRequired": "Inserisci un nome visualizzato.",
       "nameTooShort": "Il nome deve contenere almeno 2 caratteri.",
-      "generic": "Qualcosa è andato storto. Per favore riprova."
+      "generic": "Qualcosa è andato storto. Riprova."
     }
   },
   "ForgotPassword": {
@@ -1746,7 +1746,7 @@
     "tryAgain": "Usa un'email diversa",
     "backToSignIn": "Torna all'accesso",
     "errors": {
-      "sendFailed": "Impossibile inviare il link di reimpostazione. Per favore riprova."
+      "sendFailed": "Impossibile inviare il link di reimpostazione. Riprova."
     }
   },
   "ResetPassword": {
@@ -1765,7 +1765,7 @@
     "requestNewLink": "Richiedi un nuovo link",
     "backToSignIn": "Torna all'accesso",
     "errors": {
-      "generic": "Qualcosa è andato storto. Per favore riprova.",
+      "generic": "Qualcosa è andato storto. Riprova.",
       "invalidToken": "Questo link di reimpostazione è scaduto o è già stato utilizzato.",
       "passwordTooShort": "La password deve contenere almeno 8 caratteri.",
       "passwordPolicy": "Usa almeno 8 caratteri con una maiuscola, una minuscola, un numero e un simbolo."
@@ -2943,7 +2943,7 @@
     "noActionSettings": "Impostazioni mascotte",
     "landingGreeting": "Ciao — ti aiuto a dividere le spese dopo l'accesso.",
     "hintReceiptVoice": "Posso compilare una spesa da una ricevuta o da una registrazione vocale.",
-    "hintSettle": "Bilanci è dove saldiamo i conti.",
+    "hintSettle": "Saldi è dove saldiamo i conti.",
     "hintSettings": "Puoi modificarmi o disattivarmi nelle impostazioni mascotte.",
     "resetPosition": "Reimposta posizione",
     "landingHintSplit": "Dividi una cena, un viaggio o l’affitto — ai calcoli ci penso io.",
@@ -2985,7 +2985,7 @@
       "recoveryOnlyHelp": "Nuovi account anonimi non sono disponibili qui. Incolla il link di ripristino salvato completo per continuare.",
       "recover": "Recupera account anonimo",
       "create": "Crea un account anonimo",
-      "createError": "Impossibile creare l'account anonimo. Per favore riprova.",
+      "createError": "Impossibile creare l'account anonimo. Riprova.",
       "recoverError": "Questo link di accesso non è valido. Controlla il collegamento completo e riprova.",
       "recoveryLinkRequiredLabel": "Collegamento per il ripristino",
       "createTitle": "Crea un nuovo account",
@@ -2998,7 +2998,7 @@
       "unavailableTitle": "Impossibile visualizzare il link di accesso",
       "unavailableDescription": "Genera esplicitamente un collegamento sostitutivo, quindi salvalo prima di continuare.",
       "generateReplacement": "Genera collegamento sostitutivo",
-      "error": "Qualcosa è andato storto. Per favore riprova.",
+      "error": "Qualcosa è andato storto. Riprova.",
       "start": "Inizia a utilizzare Split"
     },
     "recovery": {
@@ -3034,7 +3034,7 @@
       "replaceDescription": "Genera un collegamento sostitutivo da rivedere e salvare. Il tuo attuale link di accesso continua a funzionare finché non attivi la sostituzione.",
       "cancel": "Annulla",
       "replaceConfirm": "Genera collegamento sostitutivo",
-      "error": "Impossibile sostituire il link di accesso. Per favore riprova.",
+      "error": "Impossibile sostituire il link di accesso. Riprova.",
       "activateDescription": "Salva il collegamento sostitutivo prima di attivarlo.",
       "stagedDescription": "Il tuo attuale link di accesso continua a funzionare finché non attivi questa sostituzione. La chiusura o l'aggiornamento elimina la sostituzione.",
       "activateConfirm": "Attiva la sostituzione",

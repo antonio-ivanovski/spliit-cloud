@@ -193,7 +193,7 @@
     "settlementBadge": "結算",
     "items": {
       "more_other": "另有 {count} 項",
-      "title": "Items",
+      "title": "項目",
       "participants": "{names}",
       "showLess": "收合"
     },
@@ -439,7 +439,7 @@
         "splitwiseAnonymizeIssuesLink": "提交匯入問題",
         "splitwiseAnonymizeError": "無法對此檔案進行匿名處理。請確認它是 Splitwise CSV 匯出檔案。",
         "csvRecurrenceLimitation": "CSV 匯出不包含週期性資訊。請使用 spliit.app 的 JSON 匯出來匯入週期性支出。",
-        "fromSpliitCloud": "Spliit Cloud 匯入",
+        "fromSpliitCloud": "Spliit Cloud",
         "cloudZipRequired": "請選擇 Spliit Cloud 的 .spliit.zip 備份。",
         "wrongImporterCloudTitle": "此檔案應使用 Spliit Cloud 匯入器",
         "wrongImporterCloudDescription": "選取的檔案是 Spliit Cloud 備份或資訊清單。請開啟 Spliit Cloud 分頁繼續。",
@@ -472,7 +472,7 @@
         "fixedRateRow": "1 {source} = {rate} {target}",
         "customRateLabel": "使用自訂匯率",
         "fetchingRates": "正在取得匯率…",
-        "fixedDescription": "精確度較低,但能確保所有金額使用相同的換算匯率,因此匯入後群組餘額保持為零。",
+        "fixedDescription": "對此貨幣組合的所有支出使用單一匯率。預設從 Frankfurter 取得所選日期的匯率；亦可輸入自訂匯率。",
         "fixedTitle": "固定匯率",
         "noConversionNeeded": "所有支出皆使用群組的預設貨幣。無需進行貨幣換算。",
         "perDateDescription": "更精確——使用每筆支出實際日期的匯率。",
@@ -647,7 +647,7 @@
         "description": "用於支付消費的預設用戶"
       },
       "save": "保存",
-      "saving": "保存中……",
+      "saving": "儲存中……",
       "create": "建立",
       "creating": "建立中……",
       "cancel": "取消",
@@ -923,7 +923,7 @@
     "items": {
       "title": "項目",
       "description": "添加項目可精確分攤支出，也可在任意分攤方式下將其保留為明細記錄。",
-      "addItem": "添加項目",
+      "addItem": "新增項目",
       "empty": "目前沒有項目。按一下「新增項目」即可開始。",
       "allMembers": "所有參與者",
       "noMembers": "無參與者",
@@ -1228,8 +1228,8 @@
   "SchemaErrors": {
     "min1": "請輸入至少 1 個字。",
     "min2": "請輸入至少 2 個字。",
-    "max5": "請輸入至少 5 個字。",
-    "max50": "請輸入至少 50 個字。",
+    "max5": "請輸入至多 5 個字。",
+    "max50": "請輸入至多 50 個字。",
     "duplicateParticipantName": "此名稱已被使用",
     "titleRequired": "請輸入標題。",
     "invalidNumber": "數值無效。",
@@ -2571,8 +2571,8 @@
     "createIn": "建立支出於…",
     "noGroups": "未找到符合條件的群組。",
     "staleRate": "匯率日期:",
-    "fromLabel": "From",
-    "toLabel": "To",
+    "fromLabel": "來源貨幣",
+    "toLabel": "目標貨幣",
     "via": "經 {currencies}"
   },
   "LanguageSwitcher": {

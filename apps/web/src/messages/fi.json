@@ -147,10 +147,10 @@
       "nSelected_one": "{count} valittu",
       "nSelected_other": "{count} valittu",
       "removeFilter": "Poista suodatin",
-      "settlementsHidden": "Tilitykset piilotettu",
+      "settlementsHidden": "Tasaukset piilotettu",
       "title": "Suodattimet"
     },
-    "showSettlements": "Näytä tilitykset",
+    "showSettlements": "Näytä tasaukset",
     "globalTitle": "Kaikki kulut",
     "globalDescription": "Hae ja selaa kaikkien ryhmiesi kuluja.",
     "globalGroups": "Ryhmät",
@@ -444,7 +444,7 @@
         "splitwiseAnonymizeIssuesLink": "Ilmoita tuontiongelmasta",
         "splitwiseAnonymizeError": "Tätä tiedostoa ei voitu anonymisoida. Varmista, että se on Splitwise-CSV-vienti.",
         "csvRecurrenceLimitation": "CSV-viennit eivät sisällä toistoa. Käytä JSON-vientiä spliit.appista toistuvien kulujen tuomiseen.",
-        "fromSpliitCloud": "Spliit Cloud -tuonti",
+        "fromSpliitCloud": "Spliit Cloud",
         "cloudZipRequired": "Valitse Spliit Cloud -varmuuskopio muodossa .spliit.zip.",
         "wrongImporterCloudTitle": "Tämä kuuluu Spliit Cloud -tuontiin",
         "wrongImporterCloudDescription": "Valittu tiedosto on Spliit Cloud -varmuuskopio tai manifesti. Jatka avaamalla Spliit Cloud -välilehti.",
@@ -477,7 +477,7 @@
         "fixedRateRow": "1 {source} = {rate} {target}",
         "customRateLabel": "Mukautettu kurssi",
         "fetchingRates": "Haetaan valuuttakursseja…",
-        "fixedDescription": "Vähemmän tarkka, mutta varmistaa, että kaikki summat käyttävät samaa vaihtokurssia, joten ryhmän saldo pysyy nollassa tuonnin jälkeen.",
+        "fixedDescription": "Käytä yhtä vaihtokurssia kaikille tämän valuuttaparin kuluille. Oletuksena kurssi haetaan Frankfurterista valitulle päivälle; voit myös syöttää oman kurssin.",
         "fixedTitle": "Kiinteä kurssi",
         "noConversionNeeded": "Kaikki kulut ovat ryhmän oletusvaluutassa. Valuutan muuntoa ei tarvita.",
         "perDateDescription": "Tarkempi — käyttää kunkin kulun todellisen päivän valuuttakurssia.",
@@ -680,7 +680,7 @@
       "edit": "Muokkaa tuloa",
       "TitleField": {
         "label": "Otsikko",
-        "placeholder": "Palkka tai hyvitys"
+        "placeholder": "Palkka tai palautus"
       },
       "DateField": {
         "label": "Päivä",
@@ -924,8 +924,8 @@
     "convertedAmountField": {
       "label": "Muunnettu summa"
     },
-    "paidForOptionItemized": "Itemized",
-    "paidForOptionItemizedHelper": "Calculate each participant's share from individual items in the expense.",
+    "paidForOptionItemized": "Nimikkeittäin",
+    "paidForOptionItemizedHelper": "Laske kunkin osallistujan osuus kulun yksittäisistä nimikkeistä.",
     "items": {
       "title": "Kohteet",
       "description": "Lisää kohteita jakaaksesi kulun tarkasti tai säilyttääksesi ne dokumentaationa minkä tahansa jakotavan yhteydessä.",
@@ -1082,7 +1082,7 @@
       "title": "Valitse, miten saldot näytetään",
       "groupDescription": "Muunna kaikki kulut valuutaksi {currency} yhtenäistä näkymää varten.",
       "originalDescription": "Pidä jokainen kulu siinä valuutassa, johon se on syötetty.",
-      "originalNote": "Tilitysmaksut kirjataan yleensä ryhmän valuutassa. Tämä alkuperäisen valuutan näkymä on erillinen valuuttakohtainen kirjanpito, joten saldot voivat näyttää maksamattomilta vaikka ryhmän valuutan suunnitelma olisi tasoitettu. Käytä tilityksiin ryhmän valuutan näkymää."
+      "originalNote": "Tasausmaksut kirjataan yleensä ryhmän valuutassa. Tämä alkuperäisen valuutan näkymä on erillinen valuuttakohtainen kirjanpito, joten saldot voivat näyttää tasaamattomilta vaikka ryhmän valuutan suunnitelma olisi tasattu. Käytä tasaukseen ryhmän valuutan näkymää."
     },
     "direction": {
       "toReceive": "Saatavaa",
@@ -1094,9 +1094,9 @@
       "participantPays": "<strong>{name}</strong> maksaa",
       "fromParticipant": "<strong>{name}</strong>lta",
       "toParticipant": "<strong>{name}</strong>lle",
-      "settle": "Selvitä",
-      "settlePaymentsBy": "Selvitä {count} {name}n maksamaa maksua, {amount}",
-      "settlePaymentsTo": "Selvitä {count} maksua {name}lle, {amount}"
+      "settle": "Tasaa",
+      "settlePaymentsBy": "Tasaa {count} {name}n maksamaa maksua, {amount}",
+      "settlePaymentsTo": "Tasaa {count} maksua {name}lle, {amount}"
     },
     "view": {
       "label": "Näkymä",
@@ -1107,7 +1107,7 @@
       "visualDescription": "Saldojen erittely ja kaaviot."
     },
     "simple": {
-      "title": "Selvitä saldot",
+      "title": "Tasaa saldot",
       "description": "Näe kuka on velkaa ja merkitse maksut suoritetuiksi.",
       "netBalances": "Nettosaldot",
       "isOwed": "saa {amount}",
@@ -1116,7 +1116,7 @@
       "empty": "Kaikki ovat tasoissa."
     },
     "settlementMode": {
-      "label": "Selvitä saldot",
+      "label": "Tasaa saldot",
       "individual": "Yksitellen",
       "subgroups": "Alaryhmät"
     },
@@ -1124,7 +1124,7 @@
       "balanceTitle": "Alaryhmien saldot",
       "balanceDescription": "Käytä jokaista alaryhmää yhtenä tasausyksikkönä ihmisille, jotka jakavat kulut keskenään, kuten pareille tai perheille. Yksittäiset kulujen jako-osuudet pysyvät ennallaan.",
       "emptyBalances": "Jokainen alaryhmä on tasoissa muiden kanssa.",
-      "internalBalancesNote": "Kun alaryhmien maksut on selvitetty, jäsenillä voi silti olla saldoja oman alaryhmänsä sisällä.",
+      "internalBalancesNote": "Kun alaryhmien maksut on tasattu, jäsenillä voi silti olla saldoja oman alaryhmänsä sisällä.",
       "viewIndividual": "Näytä yksilölliset saldot",
       "suggestedPayments": "Ehdotetut maksut",
       "emptyPayments": "Alaryhmien välillä ei ole velkoja.",
@@ -1133,13 +1133,13 @@
       "to": "henkilölle",
       "from": "henkilöltä",
       "personPays": "maksaa henkilölle",
-      "settle": "Selvitä",
+      "settle": "Tasaa",
       "individualAllHint": "Näet tavallisen koko ryhmän kattavan yksilöllisen suunnitelman. Se voi sisältää maksuja alaryhmien välillä.",
       "unknownParticipant": "Odottava kutsu",
       "individualWithinHint": "Näet alaryhmät huomioivan yksilöllisen suunnitelman. Ehdotetut maksut pysyvät kunkin alaryhmän sisällä, kun alaryhmien summat on jo tasattu."
     },
     "Settlements": {
-      "title": "Ehdotetut tilitykset",
+      "title": "Ehdotetut tasaukset",
       "description": "Näillä maksuilla voit tasata saldot mahdollisimman vähillä tilisiirroilla.",
       "noSettlements": "Kaikkien ryhmän jäsenten saldot on tasattu 😁",
       "owes": "<strong>{from}</strong> maksaa henkilölle <strong>{to}</strong>",
@@ -1852,12 +1852,12 @@
           "description": "Jos jäsen poistetaan tasaamatta, nämä saldot jäävät ryhmään pysyvästi. Valitse alla oleva vaihtoehto, niin jokaisesta tähän jäseneen liittyvästä saldosta luodaan tasausmaksu, tai poista jäsen ja tasaa saldot käsin."
         },
         "checkbox": "Tasaa tämän jäsenen saldot ennen poistamista",
-        "previewWillCreate_one": "Luodaan {count} tilitysmaksu",
+        "previewWillCreate_one": "Luodaan {count} tasausmaksu",
         "previewPays": "{name} maksaa",
         "previewReceives": "{name} saa",
         "previewTo": "käyttäjälle {name}",
         "previewFrom": "käyttäjältä {name}",
-        "previewWillCreate_other": "Luodaan {count} tilitysmaksua"
+        "previewWillCreate_other": "Luodaan {count} tasausmaksua"
       },
       "title": "Poistetaanko jäsen?",
       "description": "Aiemmat kulut säilyvät kirjanpidossa, mutta tämä osallistuja ei enää näy jäsenluettelossa eikä uusissa kuluissa.",
@@ -1925,12 +1925,12 @@
     },
     "subgroups": {
       "title": "Alaryhmät",
-      "description": "Ryhmittele ihmiset, jotka hoitavat matkakulut yhdessä, kuten parit tai perheet. Saldoissa jokaista alaryhmää voidaan tarkastella ja selvittää yhtenä yksikkönä; kulut ja jako-osuudet pysyvät yksilöllisinä.",
+      "description": "Ryhmittele ihmiset, jotka hoitavat matkakulut yhdessä, kuten parit tai perheet. Saldoissa jokaista alaryhmää voidaan tarkastella ja tasata yhtenä yksikkönä; kulut ja jako-osuudet pysyvät yksilöllisinä.",
       "enableAria": "Ota alaryhmät käyttöön",
       "emptyTitle": "Ei vielä alaryhmiä",
-      "emptyDescription": "Luo sellainen parille, kotitaloudelle tai muille henkilöille, jotka selvittävät maksunsa yhtenä yksikkönä.",
+      "emptyDescription": "Luo sellainen parille, kotitaloudelle tai muille henkilöille, jotka tasaavat maksunsa yhtenä yksikkönä.",
       "ungroupedTitle": "Ei alaryhmässä",
-      "ungroupedDescription": "Nämä jäsenet selvittävät maksunsa erikseen, kunnes he liittyvät alaryhmään.",
+      "ungroupedDescription": "Nämä jäsenet tasaavat maksunsa erikseen, kunnes he liittyvät alaryhmään.",
       "create": "Luo alaryhmä",
       "edit": "Muokkaa alaryhmää",
       "delete": "Poista alaryhmä",
@@ -1949,7 +1949,7 @@
       "deleting": "Poistetaan…",
       "editorCreateTitle": "Luo alaryhmä",
       "editorEditTitle": "Muokkaa alaryhmää",
-      "editorDescription": "Anna sille nimi ja valitse henkilöt, jotka selvittävät yhdessä.",
+      "editorDescription": "Anna sille nimi ja valitse henkilöt, jotka tasaavat yhdessä.",
       "namePlaceholder": "Alaryhmän nimi",
       "notInTitle": "Ei alaryhmässä",
       "inTitle": "Alaryhmässä",
@@ -2878,7 +2878,7 @@
     "expensesCountLabel": "Kulut",
     "participantsCountLabel": "Osallistujat",
     "participantsSectionLabel": "Osallistujien yhteenveto",
-    "settlementsSectionLabel": "Ehdotetut selvitykset",
+    "settlementsSectionLabel": "Ehdotetut tasaukset",
     "expensesSectionLabel": "Kulujen tiedot",
     "amountColumnLabel": "Summa",
     "participantColumnLabel": "Osallistuja",
@@ -2895,8 +2895,8 @@
     "originalAmountLabel": "Alkuperäinen summa",
     "expenseColumnLabel": "Kulu",
     "categoryColumnLabel": "Kategoria",
-    "recordedSettlementsSectionLabel": "Kirjatut tilitykset",
-    "noRecordedSettlementsLabel": "Päättymispäivään mennessä ei ole kirjattu tilityksiä."
+    "recordedSettlementsSectionLabel": "Kirjatut tasaukset",
+    "noRecordedSettlementsLabel": "Päättymispäivään mennessä ei ole kirjattu tasauksia."
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2925,11 +2925,11 @@
     "noActionSettings": "Maskotin asetukset",
     "landingGreeting": "Hei — autan jakamaan kuluja, kun kirjaudut sisään.",
     "hintReceiptVoice": "Voin täyttää kulun kuitin tai äänitallenteen perusteella.",
-    "hintSettle": "Saldossa selvitämme tilit.",
+    "hintSettle": "Saldossa tasaamme tilit.",
     "hintSettings": "Voit vaihtaa tai poistaa minut käytöstä maskotin asetuksista.",
     "resetPosition": "Palauta sijainti",
     "landingHintSplit": "Jaa illallinen, matka tai vuokra — minä hoidan laskutoimitukset.",
-    "landingHintSettle": "Kun olet valmis selvittämään tilit, kannustan sinua.",
+    "landingHintSettle": "Kun olet valmis tasaamaan tilit, kannustan sinua.",
     "landingHintTap": "Napauta minua milloin tahansa. En pure — olen kuitti.",
     "hintTapToAddExpense": "Olen {name} — napauta minua lisätäksesi kulun.",
     "hintTapToCreateGroup": "Olen {name} — napauta minua luodaksesi ryhmän.",

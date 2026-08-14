@@ -1,7 +1,6 @@
 {
   "Homepage": {
     "title": "Partagez <strong>vos dépenses</strong> avec <strong>vos amis & votre famille</strong>",
-    "description": "Suivez les dépenses partagées et équilibrez les comptes. Gratuit et open source, <strong>synchronisé et sécurisé par votre compte</strong>.",
     "button": {
       "github": "GitHub",
       "signIn": "Se connecter à Spliit Cloud",
@@ -10,6 +9,7 @@
       "importGroup": "Importer un groupe depuis un autre service",
       "createFriendLedger": "Suivre les dépenses avec un proche"
     },
+    "description": "Suivez les dépenses partagées et réglez les comptes. Gratuit et open source, <strong>synchronisé et sécurisé par votre compte</strong>.",
     "features": {
       "groupsSync": {
         "title": "Groupes et synchronisation",
@@ -78,7 +78,7 @@
     "title": "Dépenses",
     "description": "Voici les dépenses que vous avez créées pour votre groupe.",
     "create": "Créer une dépense",
-    "createFirst": "Créer la première :)",
+    "createFirst": "Créer la première",
     "noExpenses": "Votre groupe n'a effectué aucune dépense pour le moment.",
     "exportCsv": "Exporter en CSV",
     "searchPlaceholder": "Rechercher une dépense…",
@@ -86,7 +86,7 @@
       "title": "Qui êtes-vous ?",
       "description": "Dites-nous quel participant vous êtes pour personnaliser l'affichage des informations.",
       "nobody": "Je ne veux sélectionner personne",
-      "save": "Sauvegarder les modifications",
+      "save": "Enregistrer les modifications",
       "footer": "Ce paramètre peut être modifié plus tard dans les paramètres du groupe."
     },
     "Groups": {
@@ -489,7 +489,7 @@
         "perDateSelectedHint": "Utilise le taux de change historique à la date de chaque dépense (Frankfurter API).",
         "perDateTitle": "Conversion par date",
         "rateDateLabel": "Date du taux",
-        "ratesError": "Impossible de récupérer les taux de change. Vérifie ta connexion et réessaie.",
+        "ratesError": "Impossible de récupérer les taux de change. Vérifiez votre connexion et réessayez.",
         "refresh": "Actualiser"
       },
       "Documents": {
@@ -658,8 +658,8 @@
         "none": "Aucun",
         "description": "Utilisateur utilisé comme défaut pour payer les dépenses."
       },
-      "save": "Sauvegarder",
-      "saving": "Sauvegarde…",
+      "save": "Enregistrer",
+      "saving": "Enregistrement…",
       "create": "Créer",
       "creating": "Création…",
       "cancel": "Annuler",
@@ -863,8 +863,8 @@
     "attachDocuments": "Joindre des documents",
     "create": "Créer",
     "creating": "Création…",
-    "save": "Sauvegarder",
-    "saving": "Sauvegarde…",
+    "save": "Enregistrer",
+    "saving": "Enregistrement…",
     "cancel": "Annuler",
     "conversionUnavailable": "Pour définir une devise différente pour chaque dépense et convertir les montants, sélectionnez une devise non personnalisée pour le groupe.",
     "conversionRateField": {
@@ -984,7 +984,7 @@
       "savedAsDefault": "Enregistré comme par défaut",
       "heading": "Répartition par défaut",
       "load": "Charger",
-      "save": "Sauvegarder"
+      "save": "Enregistrer"
     },
     "scanReceipt": "Analyser le reçu avec l’IA",
     "participantAmountLabel": "Montant pour {name}",
@@ -1079,7 +1079,7 @@
     }
   },
   "Balances": {
-    "title": "Équilibres",
+    "title": "Soldes",
     "description": "Consultez le solde net de chaque participant.",
     "removedBadge": "Supprimé",
     "currencyDisplay": {
@@ -1353,7 +1353,7 @@
     }
   },
   "Currencies": {
-    "search": "Chercher une devise...",
+    "search": "Rechercher une devise…",
     "noCurrency": "Aucune devise trouvée.",
     "byCode": {
       "AED": {
@@ -1513,7 +1513,7 @@
         "name": "Baht thaïlandais"
       },
       "TRY": {
-        "name": "Lire turque"
+        "name": "Livre turque"
       },
       "TWD": {
         "name": "Dollar taïwanais"
@@ -1682,7 +1682,7 @@
     "passwordFormDescriptionSignUp": "Créez un compte avec votre e-mail et un mot de passe.",
     "useDifferentEmail": "Utiliser un autre e-mail",
     "magicLinkSent": "Consultez votre boîte de réception pour un lien de connexion.",
-    "verificationEmailSent": "Vérifie ta boîte de réception pour confirmer ton compte.",
+    "verificationEmailSent": "Vérifiez votre boîte de réception pour confirmer votre compte.",
     "noAccount": "Vous n'avez pas encore de compte ?",
     "haveAccount": "Vous avez déjà un compte ?",
     "createAccount": "Créer un compte",
@@ -2479,7 +2479,7 @@
     "openDocument": "Ouvrir le document"
   },
   "Participants": {
-    "search": "Rechercher des participants...",
+    "search": "Rechercher des participants…",
     "noParticipant": "Aucun participant trouvé"
   },
   "Common": {
@@ -2611,7 +2611,7 @@
   },
   "LanguageSwitcher": {
     "title": "Choisir la langue",
-    "search": "Rechercher des langues...",
+    "search": "Rechercher des langues…",
     "noLanguage": "Aucune langue trouvée.",
     "suggested": "Suggérées",
     "popular": "Populaires",
@@ -2943,7 +2943,7 @@
     "noActionSettings": "Paramètres de la mascotte",
     "landingGreeting": "Bonjour — je vous aide à partager les dépenses une fois connecté.",
     "hintReceiptVoice": "Je peux remplir une dépense à partir d’un reçu ou d’un enregistrement vocal.",
-    "hintSettle": "C’est dans Équilibres que nous réglons les comptes.",
+    "hintSettle": "C’est dans Soldes que nous réglons les comptes.",
     "hintSettings": "Vous pouvez me changer ou me désactiver dans les paramètres de la mascotte.",
     "resetPosition": "Réinitialiser la position",
     "landingHintSplit": "Partagez un dîner, un voyage ou le loyer — je m’occupe des calculs.",

@@ -1,7 +1,6 @@
 {
   "Homepage": {
     "title": "Partekatu <strong>gastuak</strong> <strong>lagunekin eta familiarekin</strong>",
-    "description": "Jarraitu partekatutako gastuak eta likidatu kontuak. Doakoa eta kode irekikoa, <strong>zure kontuarekin sinkronizatua eta babestua</strong>.",
     "button": {
       "github": "GitHub",
       "signIn": "Hasi saioa Spliit Cloud-en",
@@ -10,6 +9,7 @@
       "importGroup": "Inportatu taldea beste zerbitzu batetik",
       "createFriendLedger": "Jarraitu lagun batekin izandako gastuak"
     },
+    "description": "Jarraitu partekatutako gastuak eta kitatu kontuak. Doakoa eta kode irekikoa, <strong>zure kontuarekin sinkronizatua eta babestua</strong>.",
     "features": {
       "groupsSync": {
         "title": "Taldeak eta sinkronizazioa",
@@ -148,10 +148,10 @@
       "nSelected_many": "{count} hautatuta",
       "nSelected_other": "{count} hautatuta",
       "removeFilter": "Kendu filtroa",
-      "settlementsHidden": "Kitapenak ezkutatuta",
+      "settlementsHidden": "Zor-kitapenak ezkutatuta",
       "title": "Iragazkiak"
     },
-    "showSettlements": "Erakutsi kitapenak",
+    "showSettlements": "Erakutsi zor-kitapenak",
     "globalTitle": "Gastu guztiak",
     "globalDescription": "Bilatu eta arakatu talde guztietako gastuak.",
     "globalGroups": "Taldeak",
@@ -192,7 +192,7 @@
     "receivedByMultiple": "<paidByNames></paidByNames>-ek jasota <paidFor></paidFor>-rentzat",
     "yourBalance": "Zure saldoa:",
     "notInvolved": "Ez duzu parte hartzen",
-    "settlementBadge": "Kitzea",
+    "settlementBadge": "Zor-kitapena",
     "items": {
       "more_one": "+{count} gehiago",
       "more_many": "+{count} gehiago",
@@ -1089,7 +1089,7 @@
       "title": "Aukeratu nola ikusi saldoak",
       "groupDescription": "Bihurtu gastu guztiak {currency} monetan ikuspegi bakarra lortzeko.",
       "originalDescription": "Mantendu gastu bakoitza sartu zen monetan.",
-      "originalNote": "Ordainketa konpentsazioak normalean taldeko monetan erregistratzen dira. Jatorrizko monetako ikuspegi hau monetako liburu kontu bereizia da, beraz saldoak konpentsatugabeak dirudite hemen taldeko monetako plana konpentsatuta egon arren. Konpentsatzeko, hobe da taldeko monetako ikuspegia."
+      "originalNote": "Zor-kitapeneko ordainketak normalean taldearen monetan erregistratzen dira. Jatorrizko monetako ikuspegi hau moneta bakoitzeko liburu bereizia da, beraz saldoak kitatu gabe ager daitezke hemen taldearen monetako plana kitatuta egon arren. Kitatzerakoan, hobe da taldearen monetako ikuspegia erabiltzea."
     },
     "direction": {
       "toReceive": "Jasotzeko",
@@ -1129,7 +1129,7 @@
     },
     "subgroups": {
       "balanceTitle": "Azpitaldeen saldoak",
-      "balanceDescription": "Erabili azpitalde bakoitza kitapen-unitate gisa gastuak partekatzen dituzten pertsonentzat, hala nola bikoteak edo familiak. Gastuen banakako zatitzeak ez dira aldatzen.",
+      "balanceDescription": "Erabili azpitalde bakoitza zor-kitapeneko unitate gisa gastuak partekatzen dituzten pertsonentzat, hala nola bikoteak edo familiak. Gastuen banakako zatitzeak ez dira aldatzen.",
       "emptyBalances": "Azpitalde guztiak kitatuta daude gainerakoekin.",
       "internalBalancesNote": "Azpitaldeetako ordainketak kitatu ondoren, kideek oraindik saldoak izan ditzakete beren azpitaldearen barruan.",
       "viewIndividual": "Ikusi banakako saldoak",
@@ -1146,7 +1146,7 @@
       "individualWithinHint": "Azpitaldeak kontuan hartzen dituen banakako plana ikusten ari zara. Iradokitako ordainketak azpitalde bakoitzaren barruan mantentzen dira azpitaldeen guztizkoak jada kitatuta daudenean."
     },
     "Settlements": {
-      "title": "Iradokitako likidazioak",
+      "title": "Iradokitako zor-kitapenak",
       "description": "Erabili ordainketa hauek saldoak ahalik eta transferentzia gutxienekin kitatzeko.",
       "noSettlements": "Taldeko kide guztien saldoak kitatuta daude 😁",
       "owes": "<strong>{from}</strong>(e)k <strong>{to}</strong>(r)i zor dio",
@@ -1349,7 +1349,7 @@
       "heading": "Diru-sarrerak"
     },
     "Settlement": {
-      "heading": "Kitzea"
+      "heading": "Zor-kitapena"
     }
   },
   "Currencies": {
@@ -1865,12 +1865,13 @@
           "description": "Kidea saldoak kitatu gabe kentzen baduzu, saldo horiek taldean geratuko dira behin betiko. Hautatu beheko aukera kide honen saldo bakoitzerako zor-kitapenaren ordainketa bat sortzeko, edo kendu kidea eta kitatu saldoak eskuz."
         },
         "checkbox": "Kitatu kide honen saldoak kidea kendu aurretik",
-        "previewWillCreate_one": "{count} ordainketa konpentsazio sortuko da",
+        "previewWillCreate_one": "{count} zor-kitapen-ordainketa sortuko da",
         "previewPays": "{name} ordainduko du",
         "previewReceives": "{name} jasoko du",
         "previewTo": "{name}(r)i",
         "previewFrom": "{name}(t)ik",
-        "previewWillCreate_other": "{count} ordainketa konpentsazio sortuko dira"
+        "previewWillCreate_other": "{count} zor-kitapen-ordainketa sortuko dira",
+        "previewWillCreate_many": "{count} zor-kitapen-ordainketa sortuko dira"
       }
     },
     "leave": {
@@ -2895,7 +2896,7 @@
     "expensesCountLabel": "Gastuak",
     "participantsCountLabel": "Parte-hartzaileak",
     "participantsSectionLabel": "Parte-hartzaileen laburpena",
-    "settlementsSectionLabel": "Gomendatutako likidazioak",
+    "settlementsSectionLabel": "Gomendatutako zor-kitapenak",
     "expensesSectionLabel": "Gastuen xehetasunak",
     "amountColumnLabel": "Zenbatekoa",
     "participantColumnLabel": "Parte-hartzailea",
@@ -2908,12 +2909,12 @@
     "splitLabel": "Banaketa",
     "noExpensesLabel": "Ez dago gasturik hautatutako aldian.",
     "noParticipantsLabel": "Ez dago hautatutako aldian jarduerarik izan duen parte-hartzailerik.",
-    "noSettlementsLabel": "Dena likidatuta dago amaiera-datan.",
+    "noSettlementsLabel": "Dena kitatuta dago amaiera-datan.",
     "originalAmountLabel": "Jatorrizko zenbatekoa",
     "expenseColumnLabel": "Gastua",
     "categoryColumnLabel": "Kategoria",
-    "recordedSettlementsSectionLabel": "Erregistratutako likidazioak",
-    "noRecordedSettlementsLabel": "Ez da likidaziorik erregistratu amaiera-datara arte."
+    "recordedSettlementsSectionLabel": "Erregistratutako zor-kitapenak",
+    "noRecordedSettlementsLabel": "Ez da zor-kitapenik erregistratu amaiera-datara arte."
   },
   "CurrencyRateProviders": {
     "frankfurter": "Frankfurter",
@@ -2962,7 +2963,7 @@
     "edit": "Editatu xehetasunak",
     "creating": "Sortzen…",
     "successToast": "Zor-kitapenaren ordainketa erregistratu da",
-    "successToastMultiple": "{count} likidazio-ordainketa sarrera bakar gisa erregistratu dira",
+    "successToastMultiple": "{count} zor-kitapen-ordainketa sarrera bakar gisa erregistratu dira",
     "paysMany": "{from}k {count} laguni ordaintzen die",
     "receivesMany": "{to}k {count} ordainketa jasotzen ditu",
     "paymentsToInclude": "Sartu beharreko ordainketak",

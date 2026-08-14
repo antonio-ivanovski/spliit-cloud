@@ -1,7 +1,6 @@
 {
   "Homepage": {
     "title": "友達や家族と<strong>費用</strong>を<strong>分担</strong>しよう",
-    "description": "共有費用在追跡して精算しましょう。無料でオープンソース、<strong>あなたのアカウントで同期・保護</strong>されています。",
     "button": {
       "github": "GitHub",
       "signIn": "Spliit Cloudにサインイン",
@@ -10,6 +9,7 @@
       "importGroup": "他のサービスからグループをインポート",
       "createFriendLedger": "友人との支出を記録"
     },
+    "description": "共有費用を追跡して精算しましょう。無料でオープンソース、<strong>あなたのアカウントで同期・保護</strong>されています。",
     "features": {
       "groupsSync": {
         "title": "グループと同期",
@@ -193,7 +193,7 @@
     "settlementBadge": "精算",
     "items": {
       "more_other": "+{count}件",
-      "title": "Items",
+      "title": "品目",
       "participants": "{names}",
       "showLess": "表示を減らす"
     },
@@ -237,11 +237,11 @@
     "unarchiveGroup": "グループのアーカイブを解除",
     "archiveSuccess": "グループをアーカイブしました。",
     "unarchiveSuccess": "グループのアーカイブを解除しました。",
-    "archiveWithBalancesTitle": "未決済の残高",
-    "archiveWithBalancesDescription": "このグループには未決済の残高があります。アーカイブすると、残高をゼロにするための決済支出が作成されます。続行しますか？",
+    "archiveWithBalancesTitle": "未精算の残高",
+    "archiveWithBalancesDescription": "このグループには未精算の残高があります。アーカイブすると、残高をゼロにするための精算支出が作成されます。続行しますか？",
     "archiveWithBalancesForce": "強制アーカイブ",
     "archiveWithBalancesCancel": "キャンセル",
-    "archiveWithBalancesSuccess": "決済支出が作成され、グループがアーカイブされました。",
+    "archiveWithBalancesSuccess": "精算支出が作成され、グループがアーカイブされました。",
     "archiveWithBalancesView": "残高を表示",
     "archiveSectionTitle": "グループをアーカイブ",
     "archiveSectionDescription": "アーカイブするとグループは凍結されます。新しい支出の追加や変更はできなくなりますが、既存のデータは引き続き表示されます。アーカイブはいつでも解除できます。",
@@ -439,7 +439,7 @@
         "splitwiseAnonymizeIssuesLink": "インポートに関する issue を作成する",
         "splitwiseAnonymizeError": "このファイルを匿名化できませんでした。Splitwise の CSV エクスポートであることを確認してください。",
         "csvRecurrenceLimitation": "CSVエクスポートには繰り返し情報が含まれません。定期的な支出をインポートするには、spliit.appのJSONエクスポートを使用してください。",
-        "fromSpliitCloud": "Spliit Cloudインポート",
+        "fromSpliitCloud": "Spliit Cloud",
         "cloudZipRequired": "Spliit Cloudの.spliit.zipバックアップを選択してください。",
         "wrongImporterCloudTitle": "このファイルはSpliit Cloudインポーターで扱います",
         "wrongImporterCloudDescription": "選択したファイルはSpliit Cloudのバックアップまたはマニフェストです。続行するにはSpliit Cloudタブを開いてください。",
@@ -462,7 +462,7 @@
         "confirm": "確認",
         "done": "完了",
         "backAriaLabel": "戻る",
-        "currencyConversion": "Currency conversion",
+        "currencyConversion": "通貨換算",
         "backTo": "{step}に戻る",
         "continueTo": "{step}に進む",
         "documents": "書類"
@@ -472,7 +472,7 @@
         "fixedRateRow": "1 {source} = {rate} {target}",
         "customRateLabel": "カスタムレート",
         "fetchingRates": "為替レートを取得しています…",
-        "fixedDescription": "精度は劣りますが、すべての金額が同じ換算レートを使用するため、インポート後にグループの残高がちょうどゼロになります。",
+        "fixedDescription": "この通貨ペアのすべての支出に1つの為替レートを使用します。標準では選択した日付のレートをFrankfurterから取得します。カスタムレートを入力することもできます。",
         "fixedTitle": "固定レート",
         "noConversionNeeded": "すべての支出がグループのデフォルト通貨です。通貨換算の必要はありません。",
         "perDateDescription": "より正確 — 各支出の実際の日付の為替レートを使用します。",
@@ -1842,13 +1842,13 @@
       "cancel": "キャンセル",
       "confirm": "削除する",
       "unsettled": {
-        "title": "未決済の残高があるメンバーを削除しますか？",
-        "toast": "メンバーが削除され、残高が決済されました。",
-        "description": "{name}をこのグループから削除しますか？未決済の残高があります — 下のチェックボックスをオンにすると、削除前に自動的に決済されます。",
+        "title": "未精算の残高があるメンバーを削除しますか？",
+        "description": "{name}をこのグループから削除しますか？未精算の残高があります — 下のチェックボックスをオンにすると、削除前に自動的に精算されます。",
         "warning": {
-          "title": "このメンバーには未決済の残高があります",
+          "title": "このメンバーには未精算の残高があります",
           "description": "精算せずに削除すると、この残高はグループに残り続けます。下のオプションを選んで、このメンバーに関係する残高ごとに精算金を作成するか、削除後に手動で精算してください。"
         },
+        "toast": "メンバーが削除され、残高が精算されました。",
         "checkbox": "削除前にこのメンバーの残高を精算する",
         "previewWillCreate_one": "精算支払いを{count}件作成します",
         "previewPays": "{name}が支払います",
@@ -1876,7 +1876,7 @@
           "placeholder": "メンバーを選択"
         },
         "unsettled": {
-          "title": "未決済の残高があります",
+          "title": "未精算の残高があります",
           "description": "退出前に、あなたに関係する残高の精算金が作成されます。他の参加者の残高は変わりません。"
         }
       },
@@ -2571,9 +2571,9 @@
     "createIn": "支出を作成するグループ…",
     "noGroups": "該当するグループが見つかりません。",
     "staleRate": "レート情報:",
-    "fromLabel": "From",
-    "toLabel": "To",
-    "via": "{currencies}経由"
+    "fromLabel": "変換元",
+    "toLabel": "変換先",
+    "via": "{currencies} 経由"
   },
   "LanguageSwitcher": {
     "title": "言語を選択",
