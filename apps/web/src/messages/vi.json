@@ -697,7 +697,14 @@
     },
     "importGroup": "Nhập dữ liệu",
     "exportDescription": "Tải chi phí của nhóm xuống dưới dạng báo cáo PDF, bảng tính CSV hoặc bản sao lưu JSON.",
-    "allExpenses": "Tất cả chi phí"
+    "allExpenses": "Tất cả chi phí",
+    "viewOnlyBannerTitle": "Quyền chỉ xem",
+    "viewOnlyBannerDescription": "Bạn có thể xem nhóm này nhưng không thể thêm, sửa, xóa, bình luận, tất toán số dư hoặc tải dữ liệu xuống.",
+    "invitationSignInToAccept": "Đăng nhập để chấp nhận",
+    "viewLinkInvalid": {
+      "title": "Liên kết chỉ xem này không hợp lệ",
+      "description": "Liên kết bị sai định dạng hoặc không khớp với quyền chỉ xem nào của nhóm này."
+    }
   },
   "Auth": {
     "title": "Đăng nhập",
@@ -2315,7 +2322,8 @@
     "regenerate": {
       "title": "Tạo liên kết mới"
     },
-    "actionsFor": "Thao tác cho {name}"
+    "actionsFor": "Thao tác cho {name}",
+    "readOnlyDescription": "Những người và người tham gia trong nhóm này. Địa chỉ email và chi tiết lời mời được ẩn."
   },
   "Activities": {
     "expense": {
@@ -2353,7 +2361,8 @@
         "currency": "Loại tiền",
         "currencyCode": "Mã loại tiền",
         "linkedParticipant": "Người tham gia",
-        "subgroupsEnabled": "Nhóm con"
+        "subgroupsEnabled": "Nhóm con",
+        "publicViewLink": "Liên kết công khai chỉ xem"
       }
     },
     "member": {
@@ -3076,5 +3085,27 @@
       "comingSoon": "Sắp ra mắt",
       "replacementActivated": "Liên kết đăng nhập thay thế của bạn hiện đã hoạt động."
     }
+  },
+  "GroupViewLink": {
+    "title": "Liên kết công khai chỉ xem",
+    "description": "Cho phép bất kỳ ai có liên kết này xem nhóm mà không cần đăng nhập.",
+    "warning": "Liên kết này cho phép chỉ xem mọi nội dung trong nhóm. Chỉ chia sẻ với người bạn tin tưởng.",
+    "linkLabel": "Liên kết công khai chỉ xem",
+    "copy": "Sao chép liên kết công khai chỉ xem",
+    "copied": "Đã sao chép liên kết công khai chỉ xem",
+    "enable": "Bật liên kết công khai",
+    "cancel": "Hủy",
+    "enabledStatus": "Bất kỳ ai có liên kết này đều có thể xem nhóm.",
+    "replace": "Thay liên kết",
+    "remove": "Xóa liên kết công khai",
+    "replaceDialogTitle": "Thay liên kết công khai chỉ xem?",
+    "replaceDialogDescription": "Liên kết trước đó sẽ ngừng hoạt động ngay lập tức. Bất kỳ ai đã có liên kết này sẽ mất quyền chỉ xem.",
+    "replaceConfirm": "Thay liên kết",
+    "removeDialogTitle": "Xóa liên kết công khai chỉ xem?",
+    "removeDialogDescription": "Liên kết hiện tại sẽ ngừng hoạt động ngay lập tức. Bất kỳ ai đã có liên kết này sẽ mất quyền chỉ xem.",
+    "removeConfirm": "Xóa liên kết",
+    "enableSuccess": "Đã tạo liên kết công khai chỉ xem",
+    "replaceSuccess": "Đã thay liên kết công khai chỉ xem. Liên kết trước đó không còn hoạt động.",
+    "removeSuccess": "Đã xóa liên kết công khai chỉ xem"
   }
 }

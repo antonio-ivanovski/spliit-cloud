@@ -596,7 +596,14 @@
     },
     "importGroup": "Groep importeren",
     "exportDescription": "Download de groepsuitgaven als PDF-rapport, CSV-spreadsheet of JSON-back-up.",
-    "allExpenses": "Alle uitgaven"
+    "allExpenses": "Alle uitgaven",
+    "viewOnlyBannerTitle": "Alleen-lezen toegang",
+    "viewOnlyBannerDescription": "Je kunt deze groep bekijken, maar je kunt niets toevoegen, bewerken of verwijderen, geen opmerkingen plaatsen, saldi niet verrekenen en de gegevens niet downloaden.",
+    "invitationSignInToAccept": "Log in om te accepteren",
+    "viewLinkInvalid": {
+      "title": "Deze alleen-lezen-link is ongeldig",
+      "description": "De link is misvormd of komt niet overeen met alleen-lezen toegang voor deze groep."
+    }
   },
   "GroupForm": {
     "title": "Groepsinformatie",
@@ -1970,7 +1977,8 @@
     "regenerate": {
       "title": "Nieuwe link genereren"
     },
-    "actionsFor": "Acties voor {name}"
+    "actionsFor": "Acties voor {name}",
+    "readOnlyDescription": "Personen en deelnemers in deze groep. E-mailadressen en uitnodigingsgegevens zijn verborgen."
   },
   "AccountSettings": {
     "title": "Accountinstellingen",
@@ -2240,7 +2248,8 @@
         "currency": "Valuta",
         "currencyCode": "Valutacode",
         "linkedParticipant": "Gekoppelde deelnemer",
-        "subgroupsEnabled": "Subgroepen"
+        "subgroupsEnabled": "Subgroepen",
+        "publicViewLink": "Openbare alleen-lezen link"
       }
     },
     "member": {
@@ -3004,5 +3013,27 @@
       "comingSoon": "Binnenkort beschikbaar",
       "replacementActivated": "Je vervangende inloglink is nu actief."
     }
+  },
+  "GroupViewLink": {
+    "title": "Openbare alleen-lezen link",
+    "description": "Met deze link kan iedereen de groep bekijken zonder in te loggen.",
+    "warning": "Deze link geeft alleen-lezen toegang tot alles in de groep. Deel hem alleen met mensen die je vertrouwt.",
+    "linkLabel": "Openbare link",
+    "copy": "Openbare link kopiëren",
+    "copied": "Openbare link gekopieerd",
+    "enable": "Openbare link inschakelen",
+    "cancel": "Annuleren",
+    "enabledStatus": "Iedereen met deze link kan de groep bekijken.",
+    "replace": "Link vervangen",
+    "remove": "Openbare link verwijderen",
+    "replaceDialogTitle": "Openbare alleen-lezen link vervangen?",
+    "replaceDialogDescription": "De vorige link werkt onmiddellijk niet meer. Iedereen die hem had, verliest de alleen-lezen toegang.",
+    "replaceConfirm": "Link vervangen",
+    "removeDialogTitle": "Openbare alleen-lezen link verwijderen?",
+    "removeDialogDescription": "De huidige link werkt onmiddellijk niet meer. Iedereen die hem had, verliest de alleen-lezen toegang.",
+    "removeConfirm": "Link verwijderen",
+    "enableSuccess": "Openbare alleen-lezen link aangemaakt",
+    "replaceSuccess": "Openbare alleen-lezen link vervangen. De vorige link werkt niet meer.",
+    "removeSuccess": "Openbare alleen-lezen link verwijderd"
   }
 }

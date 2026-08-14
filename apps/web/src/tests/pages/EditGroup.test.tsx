@@ -4,13 +4,13 @@ import { render, screen } from '@/test/test-utils'
 
 const mocks = vi.hoisted(() => ({
   mockUseCurrentGroup: vi.fn(),
-  mockUseIsPendingInvitee: vi.fn(() => false),
+  mockUseIsReadOnlyGroupViewer: vi.fn(() => false),
 }))
 
 vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useCurrentGroup: mocks.mockUseCurrentGroup,
   useCurrentGroupOrNull: () => null,
-  useIsPendingInvitee: mocks.mockUseIsPendingInvitee,
+  useIsReadOnlyGroupViewer: mocks.mockUseIsReadOnlyGroupViewer,
 }))
 
 vi.mock('@/trpc/client', () => ({
@@ -46,10 +46,16 @@ vi.mock('@/app/groups/[groupId]/edit/edit-group-mutations', () => ({
 }))
 
 vi.mock('@/components/group-form', () => ({
-  GroupForm: (props: { hideNameField?: boolean; nameReadOnly?: boolean }) => (
+  GroupForm: (props: {
+    hideNameField?: boolean
+    readOnly?: boolean
+    additionalSettings?: React.ReactNode
+  }) => (
     <div
       data-testid="group-form"
       data-hide-name-field={String(props.hideNameField)}
+      data-read-only={String(props.readOnly)}
+      data-has-additional-settings={String(!!props.additionalSettings)}
     >
       {props.hideNameField ? null : <input aria-label="Group name" />}
       GroupForm
@@ -57,14 +63,17 @@ vi.mock('@/components/group-form', () => ({
   ),
 }))
 
-vi.mock('@/app/groups/[groupId]/use-link-invite-token', () => ({
-  useLinkInviteToken: vi.fn(() => undefined),
-}))
-
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
     <a href={to}>{children}</a>
   ),
+}))
+
+vi.mock('@/app/groups/[groupId]/use-group-access-search', () => ({
+  useGroupAccessSearch: () => ({
+    linkInviteToken: undefined,
+    viewKey: undefined,
+  }),
 }))
 
 vi.mock('@/lib/api-url', () => ({
@@ -77,6 +86,12 @@ vi.mock('@/components/force-archive-dialog', () => ({
 
 vi.mock('@/app/groups/[groupId]/edit/delete-group-dialog', () => ({
   DeleteGroupDialog: () => null,
+}))
+
+vi.mock('@/app/groups/[groupId]/edit/group-view-link-card', () => ({
+  PublicViewOnlyLinkSection: () => (
+    <section data-testid="public-view-link-card">Public View-only link</section>
+  ),
 }))
 
 import { EditGroup } from '@/app/groups/[groupId]/edit/edit-group'
@@ -121,7 +136,7 @@ function setFriendGroup() {
 describe('EditGroup', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    mocks.mockUseIsPendingInvitee.mockReturnValue(false)
+    mocks.mockUseIsReadOnlyGroupViewer.mockReturnValue(false)
     setFriendGroup()
   })
 
@@ -208,6 +223,18 @@ describe('EditGroup', () => {
     expect(screen.getByLabelText('Group name')).toBeInTheDocument()
   })
 
+  it('renders the Public View-only link card below Group information', () => {
+    setGroupGroup()
+    render(<EditGroup />)
+
+    const groupForm = screen.getByTestId('group-form')
+    const publicViewLink = screen.getByTestId('public-view-link-card')
+    expect(
+      groupForm.compareDocumentPosition(publicViewLink) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
+  })
+
   // ── Export card visibility ─────────────────────────────────────────
 
   it('renders the export options card for admins', () => {
@@ -262,8 +289,8 @@ describe('EditGroup', () => {
     ).toBeInTheDocument()
   })
 
-  it('keeps pending invitees on the locked settings explanation', () => {
-    mocks.mockUseIsPendingInvitee.mockReturnValue(true)
+  it('renders the regular Group information form read-only for invitees', () => {
+    mocks.mockUseIsReadOnlyGroupViewer.mockReturnValue(true)
     mocks.mockUseCurrentGroup.mockReturnValue({
       isLoading: false,
       groupId: 'group-1',
@@ -286,10 +313,17 @@ describe('EditGroup', () => {
     })
     render(<EditGroup />)
 
+    expect(screen.getByTestId('group-form')).toHaveAttribute(
+      'data-read-only',
+      'true',
+    )
+    expect(screen.getByTestId('group-form')).toHaveAttribute(
+      'data-has-additional-settings',
+      'false',
+    )
     expect(
-      screen.getByRole('heading', { name: 'Group settings are locked' }),
-    ).toBeInTheDocument()
-    expect(screen.queryByTestId('group-form')).not.toBeInTheDocument()
+      screen.queryByRole('link', { name: 'Download CSV' }),
+    ).not.toBeInTheDocument()
   })
 
   // GroupTabs Members tab is tested in apps/web/src/tests/components/GroupTabs.test.tsx

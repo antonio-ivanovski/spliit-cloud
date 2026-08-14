@@ -11,7 +11,7 @@ import {
 
 import { randomId } from '../../../../lib/api'
 import { getInvitationDisplayName } from '../../../../lib/invitations'
-import { loadGroupContext, protectedProcedure } from '../../../init'
+import { loadGroupMutationContext, protectedProcedure } from '../../../init'
 import { importLinkCandidatesOutputSchema } from '../../../outputs/import-links'
 
 /**
@@ -67,7 +67,7 @@ export const candidatesProcedure = protectedProcedure
     }
     const ledgerId = participant.ledger.id
 
-    const { group, member } = await loadGroupContext({
+    const { group, member } = await loadGroupMutationContext({
       groupId,
       accountId: ctx.auth.user.id,
     })

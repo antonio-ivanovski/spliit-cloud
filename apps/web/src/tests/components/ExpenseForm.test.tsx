@@ -214,6 +214,13 @@ vi.mock('@tanstack/react-router', () => ({
   ),
 }))
 
+vi.mock('@/app/groups/[groupId]/use-group-access-search', () => ({
+  useGroupAccessSearch: () => ({
+    linkInviteToken: undefined,
+    viewKey: undefined,
+  }),
+}))
+
 vi.mock('@/lib/currency', () => ({
   getCurrency: vi.fn(),
   useCurrencies: vi.fn(),

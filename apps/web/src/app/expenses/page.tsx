@@ -529,10 +529,7 @@ function GlobalExpensePreview({
   returnTo: string
   onClose: () => void
 }) {
-  const groupQuery = trpc.groups.get.useQuery(
-    { groupId, linkInviteToken: undefined },
-    { retry: false },
-  )
+  const groupQuery = trpc.groups.get.useQuery({ groupId }, { retry: false })
   const data = groupQuery.data
   const context = data?.group
     ? {

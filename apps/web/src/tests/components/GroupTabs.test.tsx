@@ -9,7 +9,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useCurrentGroup: mocks.mockUseCurrentGroup,
   useCurrentGroupOrNull: () => null,
-  useIsPendingInvitee: () => false,
+  useIsReadOnlyGroupViewer: () => false,
 }))
 
 vi.mock('@/trpc/client', () => ({

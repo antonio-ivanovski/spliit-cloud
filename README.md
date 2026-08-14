@@ -41,15 +41,15 @@ This fork is meant to continue that work openly, with proper credit to the origi
 
 The main things I wanted to improve are:
 
-- authenticated accounts
+- authenticated accounts, including an email-free and social-free anonymous option
 - reliable group syncing across devices and users
-- account-only groups (no more anonymous local-only groups)
+- account-bound groups (no more local-only groups identified only by a URL)
 - a stronger test suite
 - a lighter and easier-to-operate stack
 - clearer self-hosting and deployment paths
 - migration/import support for existing Spliit groups
 
-Spliit Cloud intentionally ships only account-bound groups. I explored supporting both local and synced groups in [spliit-app/spliit#495](https://github.com/spliit-app/spliit/pull/495), but the dual model became hard to implement and hard to explain. Account-only groups keep the mental model simple, the data secure, and the path clear for future features. See the [FAQ](#why-are-there-no-local-only--anonymous-groups) for the full reasoning.
+Spliit Cloud ships only account-bound groups. I explored supporting both local and synced groups in [spliit-app/spliit#495](https://github.com/spliit-app/spliit/pull/495), but the dual model became hard to implement and hard to explain. Binding groups to accounts keeps the mental model simple, the data secure, and every action attributable to a member. You do not have to use email or social login: an anonymous account type exists for people who want that privacy, while still giving the group clear authorization and responsibility for what each member does. See the [FAQ](#do-i-need-email-or-social-login) for the full reasoning.
 
 Spliit Cloud is not affiliated with the original Spliit project unless stated otherwise.
 
@@ -69,32 +69,32 @@ Spliit Cloud may be useful if you want:
 
 - a free and open-source alternative to Splitwise
 - shared expense tracking for trips, friends, roommates, couples, or small groups
-- a hosted app with accounts and synced groups
+- a hosted app with synced groups and accounts, including anonymous accounts that do not require email or social login
 - a self-hostable expense splitting app
 - a project that is actively maintained and open to contributions
 - a codebase with stronger tests and a simpler operating model
 
 ## Features
 
-| Feature                               | Why it matters                                                                                                                                                                                    | Spliit Cloud | Original Spliit                                                 |
-| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | --------------------------------------------------------------- |
-| Core Spliit features                  | Groups, categories, receipts and drag-and-drop attachments, balances, settlements, advanced splits, PWA support, and no ads.                                                                      | ✅           | ✅                                                              |
-| Accounts, friends, and synced groups  | Sign in (including optional OIDC and OAuth), profile avatars, 1-on-1 friend ledgers, and groups that follow you across devices instead of living only behind shared links.                        | ✅           | ❌                                                              |
-| Import and export                     | Import Splitwise, original Spliit, and Spliit Cloud bundles; export CSV, printable PDF reports, and full group or account ZIP archives including documents.                                       | ✅           | ❓ (group JSON export only)                                     |
-| Reliable currency handling            | Multi-currency expenses with server-side conversion, a conversion widget, and cryptocurrency support.                                                                                             | ✅           | ❓ (bad implementation with broken API)                         |
-| Multiple payers and itemized expenses | Track several payers, line items, tax, tip, and precise per-person shares in one expense.                                                                                                         | ✅           | ❌                                                              |
-| Durable recurring expenses            | Create real recurrence series with intervals, date/count/indefinite endings, catch-up, retries, history, previews, navigation, and explicit stop/edit/delete controls—not read-time side effects. | ✅           | ❓ (bare minimum support with recurrence being an afterthought) |
-| Activity, comments, and discovery     | Per-expense change history and comments, plus preview, filtering, sorting, and search across groups—without opening the edit form.                                                                | ✅           | ❓                                                              |
-| Email and push notifications          | Deliver group and expense updates through email or push, with per-user preferences for which categories and channels are enabled.                                                                 | ✅           | ❌                                                              |
-| Stats, charts, and budgets            | Per-group spending charts plus weekly, monthly, yearly, or custom budgets by category and participant, with over-budget notifications.                                                            | ✅           | ❌                                                              |
-| Balances, settlements, and subgroups  | Switch between balance views, settle faster, combine compatible payments, or settle as subgroup units such as couples.                                                                            | ✅           | ❌                                                              |
-| Full localization                     | Supported languages have complete and a maintained i18n validation workflow.                                                                                                                      | ✅           | ❌                                                              |
-| OpenAPI, Scalar, and MCP              | Explore the published API interactively, consume the OpenAPI spec, or create expenses from ChatGPT and Claude through the optional MCP assistant.                                                 | ✅           | ❌                                                              |
-| Group archive & delete                | Archive groups to make them view-only, or permanently delete them when no longer needed.                                                                                                          | ✅           | ❌                                                              |
-| AI-assisted expense workflows         | Categorize from the title (including without an AI provider), scan receipts, and describe expenses by voice; extracted details stay up for review before saving.                                  | ✅           | ❓ (limited AI support)                                         |
-| Expense amount calculator             | A calculator widget in the expense amount field for quick arithmetic while entering expenses.                                                                                                     | ✅           | ❌                                                              |
-| Responsive mobile experience          | Mobile-specific layouts and interaction patterns improve the experience beyond simply narrowing the desktop UI.                                                                                   | ✅           | ❓ (just a narrow desktop app)                                  |
-| Active maintenance                    | New features, fixes, and self-hosting improvements continue to move forward.                                                                                                                      | ✅           | ❓                                                              |
+| Feature                               | Why it matters                                                                                                                                                                                                                  | Spliit Cloud | Original Spliit                                                 |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | --------------------------------------------------------------- |
+| Core Spliit features                  | Groups, categories, receipts and drag-and-drop attachments, balances, settlements, advanced splits, PWA support, and no ads.                                                                                                    | ✅           | ✅                                                              |
+| Accounts, friends, and synced groups  | Sign in with email, optional OIDC/OAuth, or an anonymous account with no email or social login. Profile avatars, 1-on-1 friend ledgers, and groups that follow you across devices—with every action attributable to an account. | ✅           | ❌                                                              |
+| Import and export                     | Import Splitwise, original Spliit, and Spliit Cloud bundles; export CSV, printable PDF reports, and full group or account ZIP archives including documents.                                                                     | ✅           | ❓ (group JSON export only)                                     |
+| Reliable currency handling            | Multi-currency expenses with server-side conversion, a conversion widget, and cryptocurrency support.                                                                                                                           | ✅           | ❓ (bad implementation with broken API)                         |
+| Multiple payers and itemized expenses | Track several payers, line items, tax, tip, and precise per-person shares in one expense.                                                                                                                                       | ✅           | ❌                                                              |
+| Durable recurring expenses            | Create real recurrence series with intervals, date/count/indefinite endings, catch-up, retries, history, previews, navigation, and explicit stop/edit/delete controls—not read-time side effects.                               | ✅           | ❓ (bare minimum support with recurrence being an afterthought) |
+| Activity, comments, and discovery     | Per-expense change history and comments, plus preview, filtering, sorting, and search across groups—without opening the edit form.                                                                                              | ✅           | ❓                                                              |
+| Email and push notifications          | Deliver group and expense updates through email or push, with per-user preferences for which categories and channels are enabled.                                                                                               | ✅           | ❌                                                              |
+| Stats, charts, and budgets            | Per-group spending charts plus weekly, monthly, yearly, or custom budgets by category and participant, with over-budget notifications.                                                                                          | ✅           | ❌                                                              |
+| Balances, settlements, and subgroups  | Switch between balance views, settle faster, combine compatible payments, or settle as subgroup units such as couples.                                                                                                          | ✅           | ❌                                                              |
+| Full localization                     | Supported languages have complete and a maintained i18n validation workflow.                                                                                                                                                    | ✅           | ❌                                                              |
+| OpenAPI, Scalar, and MCP              | Explore the published API interactively, consume the OpenAPI spec, or create expenses from ChatGPT and Claude through the optional MCP assistant.                                                                               | ✅           | ❌                                                              |
+| Group archive & delete                | Archive groups to make them view-only, or permanently delete them when no longer needed.                                                                                                                                        | ✅           | ❌                                                              |
+| AI-assisted expense workflows         | Categorize from the title (including without an AI provider), scan receipts, and describe expenses by voice; extracted details stay up for review before saving.                                                                | ✅           | ❓ (limited AI support)                                         |
+| Expense amount calculator             | A calculator widget in the expense amount field for quick arithmetic while entering expenses.                                                                                                                                   | ✅           | ❌                                                              |
+| Responsive mobile experience          | Mobile-specific layouts and interaction patterns improve the experience beyond simply narrowing the desktop UI.                                                                                                                 | ✅           | ❓ (just a narrow desktop app)                                  |
+| Active maintenance                    | New features, fixes, and self-hosting improvements continue to move forward.                                                                                                                                                    | ✅           | ❓                                                              |
 
 ## Roadmap
 
@@ -375,16 +375,20 @@ Yes. Import of `spliit.app` group exports is supported today; see [docs/migratio
 
 You can also export Spliit Cloud data as CSV, printable PDF reports, and ZIP bundles that include documents.
 
-### Why are there no local-only / anonymous groups?
+### Do I need email or social login?
 
-In the original Spliit, groups lived entirely in your browser and were identified by a URL or group ID. In practice that led to:
+No. Groups in Spliit Cloud are always bound to an account so membership, edits, and responsibility stay clear, but that account does not have to be tied to email or a social provider.
+
+You can create an **anonymous account**: no email address, no Google/GitHub/OIDC. You keep a recovery link instead. The group still sees a real member with authorization, so actions are attributable instead of living behind a shared URL that anyone can edit.
+
+That is different from original Spliit's local-only groups, which lived entirely in the browser and were identified by a URL or group ID. In practice that led to:
 
 - **Confusion**: friends and family who tried the app weren't sure how local groups worked, who could edit what, or where the data lived.
 - **Data loss**: clearing site data, switching browsers, or reinstalling silently remove the group from their "account".
 - **Lost access**: lose the link and the group is gone.
 - **Weak security**: anyone who stumbled on a group ID had full edit access, and even trusted participants could make a mistaken or bad-faith edit with no real recourse.
 
-I tried supporting both local and synced groups in [spliit-app/spliit#495](https://github.com/spliit-app/spliit/pull/495), but the dual model became too complex to build and too complex to explain. Account-only groups give Spliit Cloud a simpler mental model, real ownership, easier collaboration, and a foundation for features like member management and notifications. Local-only groups are probably not coming back.
+I tried supporting both local and synced groups in [spliit-app/spliit#495](https://github.com/spliit-app/spliit/pull/495), but the dual model became too complex to build and too complex to explain. Account-bound groups give Spliit Cloud a simpler mental model, real ownership, easier collaboration, and a foundation for features like member management and notifications. Local-only groups are probably not coming back. Anonymous accounts are the way to keep that authorization model without forcing people onto email or social login.
 
 ### Is my data end-to-end encrypted?
 

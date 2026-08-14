@@ -590,7 +590,14 @@
     },
     "importGroup": "匯入群組",
     "exportDescription": "將群組支出下載為 PDF 報告、CSV 試算表或 JSON 備份。",
-    "allExpenses": "所有支出"
+    "allExpenses": "所有支出",
+    "viewOnlyBannerTitle": "僅限檢視的存取權限",
+    "viewOnlyBannerDescription": "您可以瀏覽此群組，但無法新增、編輯、刪除、留言、結算餘額或下載其資料。",
+    "invitationSignInToAccept": "登入後接受",
+    "viewLinkInvalid": {
+      "title": "此唯讀連結無效",
+      "description": "該連結格式錯誤或與本群組中的任何僅限檢視的存取權限都不相符。"
+    }
   },
   "GroupForm": {
     "title": "群組資訊",
@@ -1963,7 +1970,8 @@
     "regenerate": {
       "title": "產生新連結"
     },
-    "actionsFor": "{name}的操作"
+    "actionsFor": "{name}的操作",
+    "readOnlyDescription": "此群組中的人員與參與者。電子郵件地址和邀請詳細資料已隱藏。"
   },
   "AccountSettings": {
     "title": "帳戶設定",
@@ -2233,7 +2241,8 @@
         "currency": "貨幣",
         "currencyCode": "貨幣代碼",
         "linkedParticipant": "關聯參與者",
-        "subgroupsEnabled": "子群組"
+        "subgroupsEnabled": "子群組",
+        "publicViewLink": "公開僅限檢視連結"
       }
     },
     "member": {
@@ -2987,5 +2996,27 @@
       "comingSoon": "即將推出",
       "replacementActivated": "您的替代登入連結現已生效。"
     }
+  },
+  "GroupViewLink": {
+    "title": "公開僅限檢視連結",
+    "description": "任何擁有此連結的人都無須登入即可檢視群組。",
+    "warning": "此連結提供群組內所有內容的僅限檢視權限。請只與您信任的人分享。",
+    "linkLabel": "公開僅限檢視連結",
+    "copy": "複製公開連結",
+    "copied": "已複製公開連結",
+    "enable": "啟用公開連結",
+    "cancel": "取消",
+    "enabledStatus": "任何擁有此連結的人都可以檢視群組。",
+    "replace": "取代連結",
+    "remove": "移除公開連結",
+    "replaceDialogTitle": "要取代公開僅限檢視連結嗎？",
+    "replaceDialogDescription": "舊連結會立即失效。擁有該連結的人將失去僅限檢視權限。",
+    "replaceConfirm": "取代連結",
+    "removeDialogTitle": "要移除公開僅限檢視連結嗎？",
+    "removeDialogDescription": "目前的連結會立即失效。擁有該連結的人將失去僅限檢視權限。",
+    "removeConfirm": "移除連結",
+    "enableSuccess": "已建立公開僅限檢視連結",
+    "replaceSuccess": "已取代公開僅限檢視連結。舊連結已失效。",
+    "removeSuccess": "已移除公開僅限檢視連結"
   }
 }

@@ -602,7 +602,14 @@
     },
     "importGroup": "Importar grupo",
     "exportDescription": "Descarrega as despesas do grupo como relatório PDF, folha de cálculo CSV ou cópia de segurança JSON.",
-    "allExpenses": "Todas as despesas"
+    "allExpenses": "Todas as despesas",
+    "viewOnlyBannerTitle": "Acesso apenas de leitura",
+    "viewOnlyBannerDescription": "Pode explorar este grupo, mas não pode adicionar, editar, eliminar ou comentar, liquidar saldos ou descarregar os respetivos dados.",
+    "invitationSignInToAccept": "Inicie sessão para aceitar",
+    "viewLinkInvalid": {
+      "title": "Este link de apenas leitura é inválido",
+      "description": "O link está malformado ou não corresponde a nenhum acesso de apenas leitura neste grupo."
+    }
   },
   "GroupForm": {
     "title": "Informações do grupo",
@@ -1979,7 +1986,8 @@
     "regenerate": {
       "title": "Gerar nova ligação"
     },
-    "actionsFor": "Ações para {name}"
+    "actionsFor": "Ações para {name}",
+    "readOnlyDescription": "Pessoas e participantes incluídos neste grupo. Os endereços de e-mail e os detalhes dos convites estão ocultos."
   },
   "AccountSettings": {
     "title": "Configurações da conta",
@@ -2249,7 +2257,8 @@
         "currency": "Moeda",
         "currencyCode": "Código da moeda",
         "linkedParticipant": "Participante vinculado",
-        "subgroupsEnabled": "Subgrupos"
+        "subgroupsEnabled": "Subgrupos",
+        "publicViewLink": "Ligação pública apenas de leitura"
       }
     },
     "member": {
@@ -3022,5 +3031,27 @@
       "comingSoon": "Em breve",
       "replacementActivated": "A ligação de início de sessão de substituição está agora ativa."
     }
+  },
+  "GroupViewLink": {
+    "title": "Ligação pública apenas de leitura",
+    "description": "Permite que qualquer pessoa com esta ligação pública veja o grupo sem iniciar sessão.",
+    "warning": "Esta ligação dá acesso só de leitura a todo o conteúdo do grupo. Partilhe-a apenas com pessoas em quem confia.",
+    "linkLabel": "Ligação pública apenas de leitura",
+    "copy": "Copiar ligação pública",
+    "copied": "Ligação pública copiada",
+    "enable": "Ativar ligação pública",
+    "cancel": "Cancelar",
+    "enabledStatus": "Qualquer pessoa com esta ligação pode ver o grupo.",
+    "replace": "Substituir ligação",
+    "remove": "Remover ligação pública",
+    "replaceDialogTitle": "Substituir a ligação pública apenas de leitura?",
+    "replaceDialogDescription": "A ligação anterior deixará de funcionar imediatamente. Qualquer pessoa que a tivesse perderá o acesso só de leitura.",
+    "replaceConfirm": "Substituir ligação",
+    "removeDialogTitle": "Remover a ligação pública apenas de leitura?",
+    "removeDialogDescription": "A ligação atual deixará de funcionar imediatamente. Qualquer pessoa que a tivesse perderá o acesso só de leitura.",
+    "removeConfirm": "Remover ligação",
+    "enableSuccess": "Ligação pública apenas de leitura criada",
+    "replaceSuccess": "Ligação pública apenas de leitura substituída. A ligação anterior já não funciona.",
+    "removeSuccess": "Ligação pública apenas de leitura removida"
   }
 }

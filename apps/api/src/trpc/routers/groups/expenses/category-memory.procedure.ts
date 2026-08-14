@@ -3,10 +3,10 @@ import { z } from 'zod'
 import { getRecentExpenseContext } from '../../../../lib/ai/context'
 import { env } from '../../../../lib/env'
 import {
-  hashLinkInviteToken,
-  linkInviteTokenInput,
+  groupAccessFields,
+  groupReadProcedure,
+  groupViewerArgs,
   loadGroupViewer,
-  protectedProcedure,
 } from '../../../init'
 
 export const categoryMemoryOutputSchema = z.object({
@@ -18,25 +18,18 @@ export const categoryMemoryOutputSchema = z.object({
   ),
 })
 
-export const categoryMemoryProcedure = protectedProcedure
+export const categoryMemoryProcedure = groupReadProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
-      linkInviteToken: linkInviteTokenInput.describe(
-        'Raw link-invite token from the share URL. Grants read access to pending link-invitees.',
-      ),
+      ...groupAccessFields,
     }),
   )
   .output(categoryMemoryOutputSchema)
-  .query(async ({ input: { groupId, linkInviteToken }, ctx }) => {
-    await loadGroupViewer({
-      groupId,
-      accountId: ctx.auth.user.id,
-      accountEmail: ctx.auth.user.email,
-      linkTokenHash: await hashLinkInviteToken(linkInviteToken),
-    })
+  .query(async ({ input, ctx }) => {
+    const { group } = await loadGroupViewer(groupViewerArgs(input, ctx))
     const context = await getRecentExpenseContext(
-      groupId,
+      group.id,
       env.CATEGORY_MEMORY_LIMIT,
     )
     return { expenses: context.expenses }

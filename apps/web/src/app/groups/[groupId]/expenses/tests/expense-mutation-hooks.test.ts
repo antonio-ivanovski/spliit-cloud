@@ -34,19 +34,17 @@ describe('invalidateExpenseDependencies', () => {
   })
 
   it('invalidates balances, overview, and account.groups for financial mutations', async () => {
-    await invalidateExpenseDependencies(utils, 'invite-token', {
+    await invalidateExpenseDependencies(utils, {
       groupId: 'group-1',
       expenseId: 'expense-1',
     })
 
     expect(invalidations.list).toHaveBeenCalledWith({
       groupId: 'group-1',
-      linkInviteToken: 'invite-token',
     })
     expect(invalidations.get).toHaveBeenCalledWith({
       groupId: 'group-1',
       expenseId: 'expense-1',
-      linkInviteToken: 'invite-token',
     })
     expect(invalidations.balances).toHaveBeenCalledWith({ groupId: 'group-1' })
     expect(invalidations.overview).toHaveBeenCalledTimes(1)
@@ -56,14 +54,13 @@ describe('invalidateExpenseDependencies', () => {
   })
 
   it('skips balances, overview, and account.groups for non-financial mutations', async () => {
-    await invalidateExpenseDependencies(utils, undefined, {
+    await invalidateExpenseDependencies(utils, {
       groupId: 'group-1',
       financial: false,
     })
 
     expect(invalidations.list).toHaveBeenCalledWith({
       groupId: 'group-1',
-      linkInviteToken: undefined,
     })
     expect(invalidations.get).not.toHaveBeenCalled()
     expect(invalidations.balances).not.toHaveBeenCalled()

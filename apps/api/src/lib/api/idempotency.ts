@@ -174,7 +174,8 @@ export function deriveCreateToken(args: {
     .update(args.requestId)
     .update('\0')
     .update(args.discriminator)
-    .digest('base64url')
+    .digest('hex')
+    .slice(0, 32)
 }
 
 function defaultEncode<T>(value: T): EncodedResult {

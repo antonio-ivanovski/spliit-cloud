@@ -15,7 +15,7 @@ import {
 } from '../../../lib/api/balances'
 import { getApiBoss } from '../../../lib/api/boss'
 import { resumeRecurringExpenseSeries } from '../../../lib/api/recurrence-series'
-import { loadGroupContext, protectedProcedure } from '../../init'
+import { loadGroupMutationContext, protectedProcedure } from '../../init'
 import { archiveGroupOutputSchema } from '../../outputs/groups'
 
 /**
@@ -42,7 +42,7 @@ export const archiveGroupProcedure = protectedProcedure
   )
   .output(archiveGroupOutputSchema)
   .mutation(async ({ input: { groupId, archived, force = false }, ctx }) => {
-    const { group, member } = await loadGroupContext({
+    const { group, member } = await loadGroupMutationContext({
       groupId,
       accountId: ctx.auth.user.id,
     })

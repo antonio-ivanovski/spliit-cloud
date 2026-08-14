@@ -7,7 +7,7 @@ import {
   assertCanManageOwnedResource,
   expenseOwnerAccountId,
 } from '../../../../lib/api/resource-permissions'
-import { loadGroupContext, protectedProcedure } from '../../../init'
+import { loadGroupMutationContext, protectedProcedure } from '../../../init'
 import { deleteExpenseOutputSchema } from '../../../outputs/expenses'
 
 export const stopRecurrenceProcedure = protectedProcedure
@@ -19,7 +19,7 @@ export const stopRecurrenceProcedure = protectedProcedure
   )
   .output(deleteExpenseOutputSchema)
   .mutation(async ({ input: { expenseId, groupId }, ctx }) => {
-    const { group, member } = await loadGroupContext({
+    const { group, member } = await loadGroupMutationContext({
       groupId,
       accountId: ctx.auth.user.id,
     })

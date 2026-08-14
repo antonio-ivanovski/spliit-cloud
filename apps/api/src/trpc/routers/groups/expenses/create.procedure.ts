@@ -14,7 +14,7 @@ import {
 } from '../../../../lib/api/idempotency'
 import { enqueueBudgetEvaluation } from '../../../../lib/budgets/enqueue'
 import { ConversionError } from '../../../../lib/expense-conversion'
-import { loadGroupContext, protectedProcedure } from '../../../init'
+import { loadGroupMutationContext, protectedProcedure } from '../../../init'
 import { createExpenseOutputSchema } from '../../../outputs/expenses'
 
 export const createGroupExpenseProcedure = protectedProcedure
@@ -27,7 +27,7 @@ export const createGroupExpenseProcedure = protectedProcedure
   )
   .output(createExpenseOutputSchema)
   .mutation(async ({ input: { groupId, requestId, expense }, ctx }) => {
-    const { group } = await loadGroupContext({
+    const { group } = await loadGroupMutationContext({
       groupId,
       accountId: ctx.auth.user.id,
     })

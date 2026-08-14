@@ -602,7 +602,14 @@
     },
     "importGroup": "Importă grup",
     "exportDescription": "Descarcă cheltuielile grupului ca raport PDF, foaie de calcul CSV sau copie de rezervă JSON.",
-    "allExpenses": "Toate cheltuielile"
+    "allExpenses": "Toate cheltuielile",
+    "viewOnlyBannerTitle": "Acces doar pentru vizualizare",
+    "viewOnlyBannerDescription": "Poți explora acest grup, dar nu poți adăuga, edita, șterge sau comenta, nu poți deconta soldurile și nu poți descărca datele.",
+    "invitationSignInToAccept": "Conectează-te pentru a accepta",
+    "viewLinkInvalid": {
+      "title": "Acest link doar pentru vizualizare este invalid",
+      "description": "Linkul este deformat sau nu corespunde niciunui acces doar pentru vizualizare din acest grup."
+    }
   },
   "GroupForm": {
     "title": "Informații despre grup",
@@ -1979,7 +1986,8 @@
     "regenerate": {
       "title": "Generează link nou"
     },
-    "actionsFor": "Acțiuni pentru {name}"
+    "actionsFor": "Acțiuni pentru {name}",
+    "readOnlyDescription": "Persoanele și participanții incluși în acest grup. Adresele de e-mail și detaliile invitațiilor sunt ascunse."
   },
   "AccountSettings": {
     "title": "Setările contului",
@@ -2249,7 +2257,8 @@
         "currency": "Monedă",
         "currencyCode": "Cod monedă",
         "linkedParticipant": "Participant legat",
-        "subgroupsEnabled": "Subgrupuri"
+        "subgroupsEnabled": "Subgrupuri",
+        "publicViewLink": "Link public de vizualizare"
       }
     },
     "member": {
@@ -3022,5 +3031,27 @@
       "comingSoon": "În curând",
       "replacementActivated": "Linkul de conectare înlocuitor este acum activ."
     }
+  },
+  "GroupViewLink": {
+    "title": "Link public de vizualizare",
+    "description": "Permite oricărei persoane care are acest link public să vadă grupul fără să se autentifice.",
+    "warning": "Acest link oferă acces doar pentru vizualizare la tot conținutul grupului. Distribuie-l doar persoanelor în care ai încredere.",
+    "linkLabel": "Link public de vizualizare",
+    "copy": "Copiază linkul public",
+    "copied": "Link public copiat",
+    "enable": "Activează linkul public",
+    "cancel": "Anulează",
+    "enabledStatus": "Oricine are acest link poate vedea grupul.",
+    "replace": "Înlocuiește linkul",
+    "remove": "Elimină linkul public",
+    "replaceDialogTitle": "Înlocuiești linkul public de vizualizare?",
+    "replaceDialogDescription": "Linkul anterior va înceta să funcționeze imediat. Oricine îl avea va pierde accesul doar pentru vizualizare.",
+    "replaceConfirm": "Înlocuiește linkul",
+    "removeDialogTitle": "Elimini linkul public de vizualizare?",
+    "removeDialogDescription": "Linkul actual va înceta să funcționeze imediat. Oricine îl avea va pierde accesul doar pentru vizualizare.",
+    "removeConfirm": "Elimină linkul",
+    "enableSuccess": "Link public de vizualizare creat",
+    "replaceSuccess": "Link public de vizualizare înlocuit. Linkul anterior nu mai funcționează.",
+    "removeSuccess": "Link public de vizualizare eliminat"
   }
 }

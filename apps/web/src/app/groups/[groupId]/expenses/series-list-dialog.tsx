@@ -17,7 +17,7 @@ import { formatExpenseClosed } from '@/lib/expense-display'
 import { formatCurrency, getCurrencyFromGroup } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 
-import { useLinkInviteToken } from '../use-link-invite-token'
+import { useGroupAccessSearch } from '../use-group-access-search'
 import { RecurringBadge } from './series-controls'
 
 export function SeriesListDialog({
@@ -34,7 +34,7 @@ export function SeriesListDialog({
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseSeries' })
   const { t: tForm } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const locale = useLocale()
-  const linkInviteToken = useLinkInviteToken()
+  const { linkInviteToken, viewKey } = useGroupAccessSearch()
   const [occurrenceCursor, setOccurrenceCursor] = useState<number | undefined>()
   const [loadedExpenses, setLoadedExpenses] = useState<
     Array<{
@@ -53,7 +53,7 @@ export function SeriesListDialog({
     setLoadedExpenses([])
   }, [open, seriesId])
   const groupQuery = trpc.groups.get.useQuery(
-    { groupId, linkInviteToken },
+    { groupId, linkInviteToken, viewKey },
     { enabled: open },
   )
   const seriesQuery = trpc.groups.expenses.series.useQuery(
@@ -64,6 +64,7 @@ export function SeriesListDialog({
       occurrenceCursor,
       occurrenceLimit: 50,
       linkInviteToken,
+      viewKey,
     },
     { enabled: open },
   )
@@ -120,9 +121,6 @@ export function SeriesListDialog({
                   <Link
                     to="/groups/$groupId/expenses/$expenseId"
                     params={{ groupId, expenseId: expense.id }}
-                    search={
-                      linkInviteToken ? { invite: linkInviteToken } : undefined
-                    }
                     className="flex items-center gap-3 px-3 py-3 transition-colors hover:bg-accent focus-visible:bg-accent"
                     onClick={() => onOpenChange(false)}
                   >

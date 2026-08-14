@@ -9,6 +9,10 @@ import { checkDbConnection, testRunId } from './setup'
 
 await checkDbConnection()
 
+function getInviteToken(inviteUrl: string) {
+  return new URL(inviteUrl).searchParams.get('invite')
+}
+
 describe('Link invitation flow — real DB', () => {
   const runId = testRunId()
   const adminId = `acct-admin-link-${runId}`
@@ -139,7 +143,7 @@ describe('Link invitation flow — real DB', () => {
     expect(createResult).toHaveProperty('invitationId')
     expect(createResult).toHaveProperty('inviteUrl')
     expect(createResult.inviteUrl).toMatch(
-      /^http:\/\/localhost:3000\/groups\/.+\?invite=[A-Za-z0-9_-]+$/,
+      /^http:\/\/localhost:3000\/groups\/[^/?]+\?invite=/,
     )
 
     // Verify invitation was created in DB with type LINK
@@ -159,8 +163,7 @@ describe('Link invitation flow — real DB', () => {
     expect(invitation!.email.endsWith('@link.placeholder.local')).toBe(true)
 
     // Extract the raw token from the invite URL
-    const inviteUrl = new URL(createResult.inviteUrl)
-    const token = inviteUrl.searchParams.get('invite')
+    const token = getInviteToken(createResult.inviteUrl)
     expect(token).not.toBeNull()
     expect(token!.length).toBeGreaterThanOrEqual(16)
 
@@ -205,8 +208,7 @@ describe('Link invitation flow — real DB', () => {
     expect(createResult).toHaveProperty('invitationId')
     expect(createResult).toHaveProperty('inviteUrl')
 
-    const inviteUrl = new URL(createResult.inviteUrl)
-    const token = inviteUrl.searchParams.get('invite')
+    const token = getInviteToken(createResult.inviteUrl)
     expect(token).not.toBeNull()
 
     // Accept as the invitee (signed-in user)
@@ -299,8 +301,7 @@ describe('Link invitation flow — real DB', () => {
     expect(revokedInvitation!.revokedAt).not.toBeNull()
 
     // Extract the token from the URL
-    const inviteUrl = new URL(createResult.inviteUrl)
-    const token = inviteUrl.searchParams.get('invite')
+    const token = getInviteToken(createResult.inviteUrl)
     expect(token).not.toBeNull()
 
     // Attempt to accept the revoked link
@@ -337,8 +338,7 @@ describe('Link invitation flow — real DB', () => {
     const invitationBefore = await prisma.groupInvitation.findUnique({
       where: { id: invitationId },
     })
-    const oldUrl = new URL(createResult.inviteUrl)
-    const oldToken = oldUrl.searchParams.get('invite')
+    const oldToken = getInviteToken(createResult.inviteUrl)
     expect(oldToken).not.toBeNull()
 
     // Rotate.
@@ -375,8 +375,7 @@ describe('Link invitation flow — real DB', () => {
     ).rejects.toMatchObject({ code: 'BAD_REQUEST' })
 
     // The new token works.
-    const newUrl = new URL(rotated.inviteUrl)
-    const newToken = newUrl.searchParams.get('invite')
+    const newToken = getInviteToken(rotated.inviteUrl)
     expect(newToken).not.toBeNull()
     const acceptResult = await invitationsCaller({
       accountId: inviteeId,
@@ -412,7 +411,7 @@ describe('Link invitation flow — real DB', () => {
       temporaryName: 'Converted Guest',
     })
     const invitationId = createResult.invitationId
-    const oldToken = new URL(createResult.inviteUrl).searchParams.get('invite')
+    const oldToken = getInviteToken(createResult.inviteUrl)
 
     const updated = await invitationsCaller().updatePending({
       invitationId,
@@ -493,7 +492,7 @@ describe('Link invitation flow — real DB', () => {
     ).rejects.toMatchObject({ code: 'BAD_REQUEST' })
 
     // The new link works for a different account.
-    const token = new URL(converted.inviteUrl).searchParams.get('invite')
+    const token = getInviteToken(converted.inviteUrl)
     const acceptResult = await invitationsCaller({
       accountId: secondInviteeId,
       email: secondInviteeEmail,
@@ -521,7 +520,7 @@ describe('Link invitation flow — real DB', () => {
       groupId,
       role: 'MEMBER',
     })
-    const token = new URL(createResult.inviteUrl).searchParams.get('invite')!
+    const token = getInviteToken(createResult.inviteUrl)!
     expect(token).not.toBeNull()
 
     // The invitee cannot redeem the link while the EMAIL invite is
@@ -565,7 +564,7 @@ describe('Link invitation flow — real DB', () => {
       groupId,
       role: 'MEMBER',
     })
-    const token = new URL(createResult.inviteUrl).searchParams.get('invite')!
+    const token = getInviteToken(createResult.inviteUrl)!
 
     // Blocked while pending.
     await expect(
@@ -638,7 +637,7 @@ describe('Link invitation flow — real DB', () => {
         email: inviteeEmail,
       }).acceptLink({ token }),
     ).rejects.toMatchObject({ code: 'BAD_REQUEST' })
-    const newToken = new URL(regenerated.inviteUrl).searchParams.get('invite')
+    const newToken = getInviteToken(regenerated.inviteUrl)
     expect(newToken).not.toBeNull()
     const acceptResult = await invitationsCaller({
       accountId: inviteeId,

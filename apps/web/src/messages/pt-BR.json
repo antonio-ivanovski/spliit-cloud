@@ -602,7 +602,14 @@
     },
     "importGroup": "Importar grupo",
     "exportDescription": "Baixe as despesas do grupo como relatório PDF, planilha CSV ou backup JSON.",
-    "allExpenses": "Todas as despesas"
+    "allExpenses": "Todas as despesas",
+    "viewOnlyBannerTitle": "Acesso somente para visualização",
+    "viewOnlyBannerDescription": "Você pode explorar este grupo, mas não pode adicionar, editar, excluir ou comentar, acertar saldos nem baixar os dados.",
+    "invitationSignInToAccept": "Faça login para aceitar",
+    "viewLinkInvalid": {
+      "title": "Este link somente para visualização é inválido",
+      "description": "O link está malformado ou não corresponde a nenhum acesso somente para visualização neste grupo."
+    }
   },
   "GroupForm": {
     "title": "Informações do grupo",
@@ -1979,7 +1986,8 @@
     "regenerate": {
       "title": "Gerar novo link"
     },
-    "actionsFor": "Ações para {name}"
+    "actionsFor": "Ações para {name}",
+    "readOnlyDescription": "Pessoas e participantes incluídos neste grupo. Os endereços de e-mail e os detalhes dos convites estão ocultos."
   },
   "AccountSettings": {
     "title": "Configurações da conta",
@@ -2249,7 +2257,8 @@
         "currency": "Moeda",
         "currencyCode": "Código da moeda",
         "linkedParticipant": "Participante vinculado",
-        "subgroupsEnabled": "Subgrupos"
+        "subgroupsEnabled": "Subgrupos",
+        "publicViewLink": "Link público somente para visualização"
       }
     },
     "member": {
@@ -3022,5 +3031,27 @@
       "comingSoon": "Em breve",
       "replacementActivated": "Seu link de login substituto agora está ativo."
     }
+  },
+  "GroupViewLink": {
+    "title": "Link público somente para visualização",
+    "description": "Permite que qualquer pessoa com este link público veja o grupo sem fazer login.",
+    "warning": "Este link dá acesso somente para visualização a todo o conteúdo do grupo. Compartilhe-o somente com pessoas em quem confia.",
+    "linkLabel": "Link público somente para visualização",
+    "copy": "Copiar link público",
+    "copied": "Link público copiado",
+    "enable": "Ativar link público",
+    "cancel": "Cancelar",
+    "enabledStatus": "Qualquer pessoa com este link pode ver o grupo.",
+    "replace": "Substituir link",
+    "remove": "Remover link público",
+    "replaceDialogTitle": "Substituir o link público somente para visualização?",
+    "replaceDialogDescription": "O link anterior deixará de funcionar imediatamente. Qualquer pessoa que o tivesse perderá o acesso somente para visualização.",
+    "replaceConfirm": "Substituir link",
+    "removeDialogTitle": "Remover o link público somente para visualização?",
+    "removeDialogDescription": "O link atual deixará de funcionar imediatamente. Qualquer pessoa que o tivesse perderá o acesso somente para visualização.",
+    "removeConfirm": "Remover link",
+    "enableSuccess": "Link público somente para visualização criado",
+    "replaceSuccess": "Link público somente para visualização substituído. O link anterior não funciona mais.",
+    "removeSuccess": "Link público somente para visualização removido"
   }
 }

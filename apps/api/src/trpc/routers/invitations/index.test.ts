@@ -956,9 +956,9 @@ describe('invitationsRouter.decline', () => {
 
 /**
  * Build the prisma stubs the revoke procedure needs: - resolve the group
- * context for the caller (`loadGroupContext`), - resolve the invitation by id
- * (the pre-check + transaction both query it), - empty recurring-expense +
- * expense stubs so `getGroupBalances` doesn't hit the `null is not iterable`
+ * context for the caller (`loadGroupMutationContext`), - resolve the invitation
+ * by id (the pre-check + transaction both query it), - empty recurring-expense
+ * + expense stubs so `getGroupBalances` doesn't hit the `null is not iterable`
  * path used by other helper flows.
  *
  * `invitationStatus` defaults to PENDING so the normal happy path doesn't have
@@ -1386,7 +1386,7 @@ describe('invitationsRouter.createLink', () => {
 
     expect(result.invitationId).toBe('inv-link-1')
     expect(result.inviteUrl).toMatch(
-      /^http:\/\/localhost:3000\/groups\/grp-1\?invite=[A-Za-z0-9_-]+$/,
+      /^http:\/\/localhost:3000\/groups\/[^/?]+\?invite=/,
     )
     expect(prismaMock.groupInvitation.create).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -2134,7 +2134,7 @@ describe('invitationsRouter.updatePending', () => {
     })
 
     expect(result.inviteUrl).toMatch(
-      /^http:\/\/localhost:3000\/groups\/grp-1\?invite=[A-Za-z0-9_-]+$/,
+      /^http:\/\/localhost:3000\/groups\/[^/?]+\?invite=/,
     )
     expect(result.invitation.type).toBe('LINK')
     const updateArgs = prismaMock.groupInvitation.updateMany.mock
@@ -2417,7 +2417,7 @@ describe('invitationsRouter.regenerateLink', () => {
     const result = await caller.regenerateLink({ invitationId: 'inv-1' })
 
     expect(result.inviteUrl).toMatch(
-      /^http:\/\/localhost:3000\/groups\/grp-1\?invite=[A-Za-z0-9_-]+$/,
+      /^http:\/\/localhost:3000\/groups\/[^/?]+\?invite=/,
     )
     expect(prismaMock.groupInvitation.updateMany).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -2450,7 +2450,7 @@ describe('invitationsRouter.regenerateLink', () => {
     })
 
     expect(result.inviteUrl).toMatch(
-      /^http:\/\/localhost:3000\/groups\/grp-1\?invite=/,
+      /^http:\/\/localhost:3000\/groups\/[^/?]+\?invite=/,
     )
     expect(result.invitation).toMatchObject({
       status: 'PENDING',

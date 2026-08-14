@@ -2,7 +2,12 @@ import { initTRPC, TRPCError } from '@trpc/server'
 import superjson from 'superjson'
 import { z } from 'zod'
 
-import { GroupInvitationStatus, GroupInvitationType, prisma } from '@spliit/db'
+import {
+  GroupInvitationStatus,
+  GroupInvitationType,
+  type GroupRole,
+  prisma,
+} from '@spliit/db'
 
 import type { OAuthResolvedAuth, ResolvedAuth } from '../lib/auth/session'
 import {
@@ -10,6 +15,7 @@ import {
   getOAuthAuthFromRequest,
 } from '../lib/auth/session'
 import { env } from '../lib/env'
+import { groupViewKeysMatch } from '../lib/group-view'
 import { hashLinkToken } from '../lib/invitations'
 import { FixedWindowLimiter, logRateLimitExceeded } from '../lib/rate-limit'
 
@@ -31,7 +37,11 @@ export async function createTRPCContext(opts: {
   const auth =
     (await getAuthFromRequest(request).catch(() => null)) ??
     (await getOAuthAuthFromRequest(request).catch(() => null))
-  return { auth, req: opts.req, resHeaders: opts.resHeaders }
+  return {
+    auth,
+    req: opts.req,
+    resHeaders: opts.resHeaders,
+  }
 }
 
 // Avoid exporting the entire t-object
@@ -53,6 +63,33 @@ export const baseProcedure = t.procedure
  * not rely on it.
  */
 export const publicProcedure = baseProcedure
+
+/**
+ * Read procedure that permits sessions and bearer group tokens (`viewKey` /
+ * `linkInviteToken`). Individual resolvers still call `loadGroupViewer`.
+ */
+export const groupReadProcedure = baseProcedure.use(async ({ ctx, next }) => {
+  if (
+    ctx.auth &&
+    'credentialKind' in ctx.auth &&
+    ctx.auth.credentialKind === 'oauth'
+  ) {
+    throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Session required' })
+  }
+  if (ctx.auth?.user.isAnonymous) {
+    const recovery = await prisma.anonymousRecoveryCredential.findUnique({
+      where: { accountId: ctx.auth.user.id },
+      select: { acknowledgedAt: true, onboardingCompletedAt: true },
+    })
+    if (!recovery?.acknowledgedAt || !recovery.onboardingCompletedAt) {
+      throw new TRPCError({
+        code: 'PRECONDITION_FAILED',
+        message: 'ANONYMOUS_SETUP_REQUIRED',
+      })
+    }
+  }
+  return next()
+})
 
 const assistantRequestLimiter = new FixedWindowLimiter({
   limit: 120,
@@ -253,32 +290,11 @@ export function groupProcedure(opts: {
         },
         // Will be filled in by the per-procedure input middleware if needed.
         // Procedures using `groupProcedure` should additionally call
-        // `loadGroupContext` to populate `group`, `member`, and `ledger`.
+        // `loadGroupMutationContext` to populate `group`, `member`, and `ledger`.
         __groupMiddlewareTag: path,
       },
     })
   })
-}
-
-/**
- * Shared input field for a raw link-invite token carried in the page URL. Use
- * in any read procedure that should be accessible to pending link-invitees (in
- * addition to active members and pending email-invitees, which the viewer
- * already accepts). Token validity is enforced by `loadGroupViewer` against the
- * stored hash, so no client-side format check is needed.
- */
-export const linkInviteTokenInput = z.string().optional()
-
-/**
- * Hash a raw link-invite token for use with {@link loadGroupViewer}'s
- * `linkTokenHash` parameter. Returns `null` when no token is present so callers
- * can forward the value unchanged.
- */
-export async function hashLinkInviteToken(
-  token: string | undefined,
-): Promise<string | null> {
-  if (!token) return null
-  return hashLinkToken(token)
 }
 
 /**
@@ -287,7 +303,7 @@ export async function hashLinkInviteToken(
  * member. Designed to be called from within a `groupProcedure` (or
  * `protectedProcedure`) resolver.
  */
-export async function loadGroupContext({
+export async function loadGroupMutationContext({
   groupId,
   accountId,
 }: {
@@ -316,18 +332,39 @@ export async function loadGroupContext({
   return { group, member, ledger: group.ledger }
 }
 
+/** Shared input fields for bearer tokens carried in the group page URL. */
+export const groupAccessFields = {
+  linkInviteToken: z.string().optional(),
+  viewKey: z.string().optional(),
+}
+
+export function groupViewerArgs(
+  input: { groupId: string; linkInviteToken?: string; viewKey?: string },
+  ctx: { auth?: { user?: { id: string; email?: string | null } } | null },
+) {
+  return {
+    groupId: input.groupId,
+    accountId: ctx.auth?.user?.id,
+    accountEmail: ctx.auth?.user?.email,
+    linkInviteToken: input.linkInviteToken,
+    viewKey: input.viewKey,
+  }
+}
+
 /**
- * Read-only group viewer: ACTIVE member, or PENDING email invitee (the
- * account's email matches a PENDING EMAIL GroupInvitation). Mutations must
- * still use `loadGroupContext` to enforce the ACTIVE-only check.
+ * Read-only group viewer: ACTIVE member, public view-only key, or PENDING
+ * invitee (email match or `?invite=` token). Mutations must still use
+ * `loadGroupMutationContext` to enforce write eligibility.
  */
 export type GroupViewer =
-  | { kind: 'ACTIVE' }
+  | { kind: 'ACTIVE'; access: 'READ_WRITE' }
+  | { kind: 'PUBLIC_VIEW'; access: 'READ_ONLY' }
   | {
       kind: 'PENDING_INVITEE'
+      access: 'READ_ONLY'
       invitation: {
         id: string
-        role: string
+        role: GroupRole
         type: GroupInvitationType
       }
     }
@@ -353,17 +390,14 @@ export async function loadGroupViewer({
   groupId,
   accountId,
   accountEmail,
-  linkTokenHash,
+  viewKey,
+  linkInviteToken,
 }: {
   groupId: string
-  accountId: string
-  accountEmail: string
-  /**
-   * Optional SHA-256 hash of the raw link-invite token carried in the page URL.
-   * When present, a PENDING LINK invitation with a matching `tokenHash` is
-   * enough to grant the read-only viewer — the token itself is the credential.
-   */
-  linkTokenHash?: string | null
+  accountId?: string | null
+  accountEmail?: string | null
+  viewKey?: string | null
+  linkInviteToken?: string | null
 }): Promise<GroupViewerContext> {
   const group = await prisma.group.findUnique({
     where: { id: groupId },
@@ -373,19 +407,22 @@ export async function loadGroupViewer({
     throw new TRPCError({ code: 'NOT_FOUND', message: 'Group not found' })
   }
 
-  const member = await prisma.groupMember.findUnique({
-    where: { groupId_accountId: { groupId, accountId } },
-    include: { ledgerParticipant: true },
-  })
+  const member = accountId
+    ? await prisma.groupMember.findUnique({
+        where: { groupId_accountId: { groupId, accountId } },
+        include: { ledgerParticipant: true },
+      })
+    : null
 
   if (member && member.status === 'ACTIVE') {
-    return { group, member, ledger: group.ledger, viewer: { kind: 'ACTIVE' } }
+    return {
+      group,
+      member,
+      ledger: group.ledger,
+      viewer: { kind: 'ACTIVE', access: 'READ_WRITE' },
+    }
   }
 
-  // Fall back to a PENDING email invitation matching the account
-  // email. Skipped when the account has no email (forward-compat with
-  // email-less accounts); those callers fall through to a LINK token
-  // check, then to FORBIDDEN.
   if (accountEmail) {
     const invitation = await prisma.groupInvitation.findFirst({
       where: {
@@ -404,6 +441,7 @@ export async function loadGroupViewer({
         ledger: group.ledger,
         viewer: {
           kind: 'PENDING_INVITEE',
+          access: 'READ_ONLY',
           invitation: {
             id: invitation.id,
             role: invitation.role,
@@ -414,16 +452,30 @@ export async function loadGroupViewer({
     }
   }
 
-  // Last chance: a PENDING LINK invitation whose `tokenHash` matches
-  // the URL-borne token. The lookup is by hashed value (the raw token
-  // is never stored), so the page URL itself is the credential.
-  if (linkTokenHash) {
+  const trimmedViewKey = viewKey?.trim()
+  if (
+    trimmedViewKey &&
+    group.groupType === 'GROUP' &&
+    group.publicViewKey &&
+    groupViewKeysMatch(group.publicViewKey, trimmedViewKey)
+  ) {
+    return {
+      group,
+      member: null,
+      ledger: group.ledger,
+      viewer: { kind: 'PUBLIC_VIEW', access: 'READ_ONLY' },
+    }
+  }
+
+  const trimmedInvite = linkInviteToken?.trim()
+  if (trimmedInvite) {
     const invitation = await prisma.groupInvitation.findFirst({
       where: {
         groupId,
         type: GroupInvitationType.LINK,
         status: GroupInvitationStatus.PENDING,
-        tokenHash: linkTokenHash,
+        tokenHash: await hashLinkToken(trimmedInvite),
+        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
       },
       select: { id: true, role: true, type: true },
     })
@@ -434,6 +486,7 @@ export async function loadGroupViewer({
         ledger: group.ledger,
         viewer: {
           kind: 'PENDING_INVITEE',
+          access: 'READ_ONLY',
           invitation: {
             id: invitation.id,
             role: invitation.role,
@@ -442,6 +495,22 @@ export async function loadGroupViewer({
         },
       }
     }
+  }
+
+  if (trimmedViewKey || trimmedInvite) {
+    throw new TRPCError({
+      code: 'FORBIDDEN',
+      message: trimmedViewKey
+        ? 'This view-only link is not valid for this group.'
+        : 'This invite link is not valid for this group.',
+    })
+  }
+
+  if (!accountId) {
+    throw new TRPCError({
+      code: 'UNAUTHORIZED',
+      message: 'Authentication required',
+    })
   }
 
   throw new TRPCError({

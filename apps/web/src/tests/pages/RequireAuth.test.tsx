@@ -38,6 +38,8 @@ import { RequireAuth } from '@/components/require-auth'
 describe('RequireAuth', () => {
   afterEach(() => {
     vi.clearAllMocks()
+    window.sessionStorage.clear()
+    window.history.replaceState(null, '', '/')
   })
 
   it('shows loading spinner when isPending', () => {
@@ -113,6 +115,67 @@ describe('RequireAuth', () => {
     expect(navigate).toHaveAttribute('data-to', '/')
     expect(navigate.getAttribute('data-search')).toContain('redirect')
     expect(screen.queryByTestId('child')).not.toBeInTheDocument()
+  })
+
+  it('redirects signed-out group visits that have no viewKey or invite param', () => {
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: null,
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+    window.history.replaceState(null, '', '/groups/group-1')
+
+    render(
+      <RequireAuth>
+        <div data-testid="child">group</div>
+      </RequireAuth>,
+    )
+    const navigate = screen.getByTestId('navigate')
+    expect(navigate).toHaveAttribute('data-to', '/')
+    expect(navigate.getAttribute('data-search')).toContain('redirect')
+    expect(screen.queryByTestId('child')).not.toBeInTheDocument()
+  })
+
+  it('lets signed-out visitors through when the URL has a viewKey', () => {
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: null,
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+    window.history.replaceState(
+      null,
+      '',
+      '/groups/group-1?viewKey=public-secret',
+    )
+
+    render(
+      <RequireAuth>
+        <div data-testid="child">group</div>
+      </RequireAuth>,
+    )
+    expect(screen.getByTestId('child')).toBeInTheDocument()
+  })
+
+  it('lets signed-out visitors through when the URL has an invite token', () => {
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: null,
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+    window.history.replaceState(null, '', '/groups/group-1?invite=invite-token')
+
+    render(
+      <RequireAuth>
+        <div data-testid="child">group</div>
+      </RequireAuth>,
+    )
+    expect(screen.getByTestId('child')).toBeInTheDocument()
   })
 
   it('redirects to complete-profile when account has no name', () => {

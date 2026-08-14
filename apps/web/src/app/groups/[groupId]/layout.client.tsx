@@ -37,15 +37,13 @@ export function GroupLayoutClient({
   groupId,
   children,
 }: PropsWithChildren<{ groupId: string }>) {
-  // The link-invite token lives in the URL search params, e.g.
-  // `/groups/<id>?invite=<token>`. The route search schema captures
-  // any non-empty value so the server can decide whether the token is
-  // valid. The token is forwarded to `groups.get` as the credential.
-  const { invite: linkInviteToken, friendLinkInvite: friendLinkInviteUrl } =
-    useSearch({
-      from: '/groups/$groupId',
-    })
-  const hasInviteInUrl = linkInviteToken !== undefined
+  const {
+    invite: linkInviteToken,
+    viewKey,
+    friendLinkInvite: friendLinkInviteUrl,
+  } = useSearch({
+    from: '/groups/$groupId',
+  })
   const [friendLinkDialogUrl, setFriendLinkDialogUrl] = useState<string | null>(
     null,
   )
@@ -60,7 +58,6 @@ export function GroupLayoutClient({
   const focusedMobileRoute = isFocusedMobilePath(pathname)
   const showMobileNav = isMobileGroupNavPath(pathname)
   const isPrintReportRoute = pathname.endsWith('/expenses/print')
-
   // Friend-ledger link-path creation navigates here with the invite URL
   // in the `friendLinkInvite` search param. Open a one-time dialog so the
   // user can copy or share the link before continuing. Strip the param
@@ -72,21 +69,24 @@ export function GroupLayoutClient({
       void navigate({
         to: '/groups/$groupId',
         params: { groupId },
-        search: { friendLinkInvite: undefined },
+        search: (prev) => ({ ...prev, friendLinkInvite: undefined }),
         replace: true,
       })
     }
   }, [friendLinkInviteUrl, groupId, navigate])
 
   const { data, isLoading, error } = trpc.groups.get.useQuery(
-    { groupId, linkInviteToken },
+    { groupId, linkInviteToken, viewKey },
     { retry: false },
   )
   const { t: tNotFound } = useTranslation(undefined, {
     keyPrefix: 'Groups.NotFound',
   })
-  const { t: tInvalid } = useTranslation(undefined, {
+  const { t: tInvalidInvite } = useTranslation(undefined, {
     keyPrefix: 'Groups.linkInvitationInvalid',
+  })
+  const { t: tInvalidView } = useTranslation(undefined, {
+    keyPrefix: 'Groups.viewLinkInvalid',
   })
   const { t: tForbidden } = useTranslation(undefined, {
     keyPrefix: 'Groups',
@@ -125,29 +125,42 @@ export function GroupLayoutClient({
     }
   }, [data, tNotFound, toast])
 
-  // Unauthenticated visitors carrying a link-invite token are bounced
-  // through the home auth panel with a redirect back here, so the
-  // same link is recoverable after sign-in.
-  if (
-    !accountPending &&
-    error?.data?.code === 'UNAUTHORIZED' &&
-    hasInviteInUrl
-  ) {
-    const back = `/groups/${groupId}?invite=${encodeURIComponent(linkInviteToken)}`
-    return <Navigate to="/" search={{ redirect: back }} replace />
+  if (!accountPending && error?.data?.code === 'UNAUTHORIZED') {
+    return (
+      <Navigate
+        to="/"
+        search={{ redirect: `${pathname}${window.location.search}` }}
+        replace
+      />
+    )
   }
 
-  // A signed-in visitor with a link token that the server doesn't
-  // recognize gets a friendly "invalid link" page instead of a blank
-  // FORBIDDEN. Without a token we still surface the original "not a
-  // member" message.
-  if (!isLoading && error?.data?.code === 'FORBIDDEN' && hasInviteInUrl) {
+  // Visitors carrying a bearer token that the server doesn't recognize
+  // get a token-specific "invalid link" page. Without a token we still
+  // surface the original "not a member" message.
+  if (!isLoading && error?.data?.code === 'FORBIDDEN' && linkInviteToken) {
     return (
       <main className="flex flex-1 items-center justify-center px-4 py-10">
         <div className="flex max-w-md flex-col items-center gap-3 text-center">
-          <h1 className="text-2xl font-semibold">{tInvalid('title')}</h1>
+          <h1 className="text-2xl font-semibold">{tInvalidInvite('title')}</h1>
           <p className="text-sm text-muted-foreground">
-            {tInvalid('description')}
+            {tInvalidInvite('description')}
+          </p>
+          <Button variant="outline" render={<Link to="/" />}>
+            {tForbidden('backToHome')}
+          </Button>
+        </div>
+      </main>
+    )
+  }
+
+  if (!isLoading && error?.data?.code === 'FORBIDDEN' && viewKey) {
+    return (
+      <main className="flex flex-1 items-center justify-center px-4 py-10">
+        <div className="flex max-w-md flex-col items-center gap-3 text-center">
+          <h1 className="text-2xl font-semibold">{tInvalidView('title')}</h1>
+          <p className="text-sm text-muted-foreground">
+            {tInvalidView('description')}
           </p>
           <Button variant="outline" render={<Link to="/" />}>
             {tForbidden('backToHome')}
@@ -196,6 +209,7 @@ export function GroupLayoutClient({
           currentMember: undefined,
           currentInvitation: undefined,
           linkInviteState: undefined,
+          viewer: undefined,
         }
       : {
           isLoading: false as const,
@@ -206,6 +220,7 @@ export function GroupLayoutClient({
           currentMember: data.currentMember,
           currentInvitation: data.currentInvitation ?? null,
           linkInviteState: data.linkInviteState ?? null,
+          viewer: data.viewer,
         }
 
   return (
@@ -224,7 +239,7 @@ export function GroupLayoutClient({
         {children ?? <Outlet />}
       </div>
       {!isPrintReportRoute && showMobileNav && (
-        <MobileGroupNav groupId={groupId} />
+        <MobileGroupNav groupId={props.groupId} />
       )}
       {!isPrintReportRoute && <SaveGroupLocally />}
       <ResponsiveDialog

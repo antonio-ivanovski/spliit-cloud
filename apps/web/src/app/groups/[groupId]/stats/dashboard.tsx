@@ -21,7 +21,7 @@ import { trpc } from '@/trpc/client'
 import { resolveFormattingLocale } from '@spliit/domain'
 
 import { useCurrentGroup } from '../current-group-context'
-import { useLinkInviteToken } from '../use-link-invite-token'
+import { useGroupAccessSearch } from '../use-group-access-search'
 import type { StatsCustomRange, StatsPeriod } from './dashboard-types'
 
 function formatDateInput(date: Date): string {
@@ -86,7 +86,7 @@ function DashboardLoading() {
 export function StatsDashboard() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Stats.Dashboard' })
   const { groupId, group } = useCurrentGroup()
-  const linkInviteToken = useLinkInviteToken()
+  const { linkInviteToken, viewKey } = useGroupAccessSearch()
   const locale = useLocale()
   const dateRange = useMemo(
     () =>
@@ -102,8 +102,9 @@ export function StatsDashboard() {
   const { data, error, refetch, isFetching } = trpc.groups.stats.get.useQuery(
     {
       groupId,
-      linkInviteToken,
       period,
+      linkInviteToken,
+      viewKey,
       customRange:
         period === 'CUSTOM' && customRange
           ? {

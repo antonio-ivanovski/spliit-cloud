@@ -8,6 +8,10 @@ import { checkDbConnection, testRunId } from './setup'
 
 await checkDbConnection()
 
+function getInviteToken(inviteUrl: string) {
+  return new URL(inviteUrl).searchParams.get('invite')
+}
+
 describe('Invitation flow — real DB', () => {
   const runId = testRunId()
   const adminId = `acct-admin-${runId}`
@@ -406,7 +410,7 @@ describe('Invitation flow — real DB', () => {
     expect(updated.inviteUrl).toBeNull()
 
     // The old link still works.
-    const token = new URL(created.inviteUrl).searchParams.get('invite')
+    const token = getInviteToken(created.inviteUrl)
     const acceptResult = await invitationsCaller({
       accountId: inviteeId,
       email: inviteeEmail,

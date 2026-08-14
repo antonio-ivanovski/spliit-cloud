@@ -4,32 +4,28 @@ import { z } from 'zod'
 import { prisma } from '@spliit/db'
 
 import { getGroup, getGroupExpensesParticipants } from '../../../lib/api'
+import { redactGroupForViewer } from '../../../lib/group-view-redaction'
 import {
-  hashLinkInviteToken,
-  linkInviteTokenInput,
+  groupAccessFields,
+  groupReadProcedure,
+  groupViewerArgs,
   loadGroupViewer,
-  protectedProcedure,
 } from '../../init'
 import { getGroupDetailsOutputSchema } from '../../outputs/groups'
 
-export const getGroupDetailsProcedure = protectedProcedure
+export const getGroupDetailsProcedure = groupReadProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
-      linkInviteToken: linkInviteTokenInput.describe(
-        'Raw link-invite token from the share URL. Grants read access to pending link-invitees.',
-      ),
+      ...groupAccessFields,
     }),
   )
   .output(getGroupDetailsOutputSchema)
-  .query(async ({ input: { groupId, linkInviteToken }, ctx }) => {
-    await loadGroupViewer({
-      groupId,
-      accountId: ctx.auth.user.id,
-      accountEmail: ctx.auth.user.email,
-      linkTokenHash: await hashLinkInviteToken(linkInviteToken),
-    })
-    const group = await getGroup(groupId)
+  .query(async ({ input, ctx }) => {
+    const { group: accessGroup, viewer } = await loadGroupViewer(
+      groupViewerArgs(input, ctx),
+    )
+    const group = await getGroup(accessGroup.id)
     if (!group) {
       throw new TRPCError({
         code: 'NOT_FOUND',
@@ -37,10 +33,16 @@ export const getGroupDetailsProcedure = protectedProcedure
       })
     }
 
-    const participantsWithExpenses = await getGroupExpensesParticipants(groupId)
+    const participantsWithExpenses = await getGroupExpensesParticipants(
+      accessGroup.id,
+    )
     const hasExpenses = group.ledgerId
       ? (await prisma.expense.count({ where: { ledgerId: group.ledgerId } })) >
         0
       : false
-    return { group, participantsWithExpenses, hasExpenses }
+    return {
+      group: viewer.kind === 'ACTIVE' ? group : redactGroupForViewer(group),
+      participantsWithExpenses,
+      hasExpenses,
+    }
   })

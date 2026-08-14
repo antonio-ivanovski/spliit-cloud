@@ -41,6 +41,11 @@ export type Props = {
    */
   currentMemberRole?: 'ADMIN' | 'MEMBER'
   /**
+   * Explicit group-wide access mode. Unlike `currentMemberRole`, this also
+   * covers pending invitations, public links, and a future view-only member.
+   */
+  readOnly?: boolean
+  /**
    * When `true`, the group is archived and its settings are frozen. All inputs
    * are disabled and no Save button is shown. Archived groups are not editable
    * from this form even for ADMIN — unarchive the group first.
@@ -113,6 +118,7 @@ type GroupFormInput = z.input<typeof groupFormSchema>
 export function GroupForm({
   group,
   currentMemberRole,
+  readOnly: explicitReadOnly,
   archived = false,
   hideInviteHint = false,
   initialValues,
@@ -124,7 +130,8 @@ export function GroupForm({
   onSubmit,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'GroupForm' })
-  const readOnly = !!group && currentMemberRole === 'MEMBER'
+  const readOnly =
+    !!group && (explicitReadOnly ?? currentMemberRole === 'MEMBER')
   const isArchived = !!group && archived
   const accountPreferences =
     useSyncedAccountPreferences() as AccountPreferences | null

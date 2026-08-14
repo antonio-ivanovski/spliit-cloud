@@ -17,12 +17,15 @@ vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => vi.fn(),
 }))
 
-vi.mock('../../current-group-context', () => ({
-  useIsPendingInvitee: () => false,
+vi.mock('@/app/groups/[groupId]/use-group-access-search', () => ({
+  useGroupAccessSearch: () => ({
+    linkInviteToken: undefined,
+    viewKey: undefined,
+  }),
 }))
 
-vi.mock('../../use-link-invite-token', () => ({
-  useLinkInviteToken: () => null,
+vi.mock('../../current-group-context', () => ({
+  useIsReadOnlyGroupViewer: () => false,
 }))
 
 vi.mock('../expense-mutation-hooks', () => ({

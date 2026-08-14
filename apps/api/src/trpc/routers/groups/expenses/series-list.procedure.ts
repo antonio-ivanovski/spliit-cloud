@@ -2,14 +2,14 @@ import { z } from 'zod'
 
 import { getRecurringExpenseSeries } from '../../../../lib/api'
 import {
-  hashLinkInviteToken,
-  linkInviteTokenInput,
+  groupAccessFields,
+  groupReadProcedure,
+  groupViewerArgs,
   loadGroupViewer,
-  protectedProcedure,
 } from '../../../init'
 import { listRecurringExpenseSeriesOutputSchema } from '../../../outputs/expenses'
 
-export const listRecurringExpenseSeriesProcedure = protectedProcedure
+export const listRecurringExpenseSeriesProcedure = groupReadProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
@@ -18,18 +18,13 @@ export const listRecurringExpenseSeriesProcedure = protectedProcedure
       seriesId: z.string().optional(),
       occurrenceCursor: z.number().int().positive().optional(),
       occurrenceLimit: z.number().int().min(1).max(100).optional(),
-      linkInviteToken: linkInviteTokenInput,
+      ...groupAccessFields,
     }),
   )
   .output(listRecurringExpenseSeriesOutputSchema)
   .query(async ({ input, ctx }) => {
-    await loadGroupViewer({
-      groupId: input.groupId,
-      accountId: ctx.auth.user.id,
-      accountEmail: ctx.auth.user.email,
-      linkTokenHash: await hashLinkInviteToken(input.linkInviteToken),
-    })
-    return getRecurringExpenseSeries(input.groupId, {
+    const { group } = await loadGroupViewer(groupViewerArgs(input, ctx))
+    return getRecurringExpenseSeries(group.id, {
       cursor: input.cursor,
       limit: input.limit,
       seriesId: input.seriesId,

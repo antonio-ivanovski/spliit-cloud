@@ -500,7 +500,14 @@
     },
     "importGroup": "그룹 가져오기",
     "exportDescription": "그룹 지출을 PDF 보고서, CSV 스프레드시트, JSON 백업으로 다운로드합니다.",
-    "allExpenses": "모든 지출"
+    "allExpenses": "모든 지출",
+    "viewOnlyBannerTitle": "보기 전용 액세스",
+    "viewOnlyBannerDescription": "이 그룹을 둘러볼 수 있지만 추가, 수정, 삭제, 댓글 작성, 잔액 정산 또는 데이터 다운로드는 할 수 없습니다.",
+    "invitationSignInToAccept": "로그인하여 수락",
+    "viewLinkInvalid": {
+      "title": "이 보기 전용 링크는 유효하지 않습니다",
+      "description": "링크 형식이 잘못되었거나 이 그룹의 보기 전용 액세스와 일치하지 않습니다."
+    }
   },
   "GroupForm": {
     "title": "그룹 정보",
@@ -1963,7 +1970,8 @@
     "regenerate": {
       "title": "새 링크 생성"
     },
-    "actionsFor": "{name}에 대한 작업"
+    "actionsFor": "{name}에 대한 작업",
+    "readOnlyDescription": "이 그룹에 포함된 사람과 참여자입니다. 이메일 주소와 초대 정보는 숨겨집니다."
   },
   "AccountSettings": {
     "title": "계정 설정",
@@ -2233,7 +2241,8 @@
         "currency": "통화",
         "currencyCode": "통화 코드",
         "linkedParticipant": "연결된 참가자",
-        "subgroupsEnabled": "하위 그룹"
+        "subgroupsEnabled": "하위 그룹",
+        "publicViewLink": "공개 보기 전용 링크"
       }
     },
     "member": {
@@ -2987,5 +2996,27 @@
       "comingSoon": "곧 제공됩니다",
       "replacementActivated": "새 로그인 링크가 이제 활성화되었습니다."
     }
+  },
+  "GroupViewLink": {
+    "title": "공개 보기 전용 링크",
+    "description": "이 링크가 있는 사람은 누구나 로그인하지 않고 그룹을 볼 수 있습니다.",
+    "warning": "이 링크는 그룹의 모든 항목에 보기 전용 액세스 권한을 제공합니다. 신뢰할 수 있는 사람에게만 공유하세요.",
+    "linkLabel": "공개 보기 전용 링크",
+    "copy": "공개 링크 복사",
+    "copied": "공개 링크를 복사했습니다",
+    "enable": "공개 링크 사용",
+    "cancel": "취소",
+    "enabledStatus": "이 링크가 있는 사람은 누구나 그룹을 볼 수 있습니다.",
+    "replace": "링크 교체",
+    "remove": "공개 링크 제거",
+    "replaceDialogTitle": "공개 보기 전용 링크를 교체하시겠어요?",
+    "replaceDialogDescription": "이전 링크는 즉시 사용할 수 없게 됩니다. 링크를 갖고 있던 사람은 보기 전용 액세스 권한을 잃습니다.",
+    "replaceConfirm": "링크 교체",
+    "removeDialogTitle": "공개 보기 전용 링크를 제거하시겠어요?",
+    "removeDialogDescription": "현재 링크는 즉시 사용할 수 없게 됩니다. 링크를 갖고 있던 사람은 보기 전용 액세스 권한을 잃습니다.",
+    "removeConfirm": "링크 제거",
+    "enableSuccess": "공개 보기 전용 링크를 만들었습니다",
+    "replaceSuccess": "공개 보기 전용 링크를 교체했습니다. 이전 링크는 더 이상 작동하지 않습니다.",
+    "removeSuccess": "공개 보기 전용 링크를 제거했습니다"
   }
 }

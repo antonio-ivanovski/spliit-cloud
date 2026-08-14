@@ -51,7 +51,19 @@ bun test:integration
 1. Branch off `main` (`fix/...`, `feat/...`, `docs/...`)
 2. One logical change per PR. Add or update tests.
 3. Run `bun run check` and `bun run test` before pushing.
-4. Schema changes: commit schema, migration, and generated client together.
+4. Schema changes: commit schema, migration, and generated Prisma client together.
+   Create SQL migrations with `bun --filter @spliit/db prisma-create-migration`
+   so Prisma stamps the current UTC `YYYYMMDDHHmmss`. Do not invent, backdate,
+   or reuse a timestamp prefix, and do not treat the `dd` (day) digits as a
+   same-day sequence number — that inserts a migration _before_ later-named
+   folders already on `main`/prod.
+   `prisma migrate deploy` still applies a pending earlier-named migration
+   after later ones are already recorded. Independent `ADD COLUMN` SQL usually
+   succeeds, but anything that assumes chronological schema order can fail or
+   leave a fresh database with a different apply order than production.
+   Before committing, confirm the new folder name sorts after every existing
+   directory in `packages/db/prisma/migrations/`. Two folders already share
+   `20260813120000`; do not add another collision.
 5. Reference the issue with `Closes #123`.
 
 ### AI-assisted contributions

@@ -12,7 +12,7 @@ import {
 } from '../../../../lib/api/soft-remove-participant'
 import { RevokeInvitationPreconditionError } from '../../../../lib/invitations'
 import { isInvitationParticipantUnused } from '../../../../lib/invitations/email-invitations'
-import { loadGroupContext, protectedProcedure } from '../../../init'
+import { loadGroupMutationContext, protectedProcedure } from '../../../init'
 import {
   participantRemovalOutputSchema,
   participantRemovalPreviewOutputSchema,
@@ -112,7 +112,7 @@ export const removeParticipantPreviewProcedure = protectedProcedure
   )
   .output(participantRemovalPreviewOutputSchema)
   .query(async ({ input: { groupId, ledgerParticipantId }, ctx }) => {
-    const { group, member } = await loadGroupContext({
+    const { group, member } = await loadGroupMutationContext({
       groupId,
       accountId: ctx.auth.user.id,
     })
@@ -143,7 +143,7 @@ export const removeParticipantProcedure = protectedProcedure
   )
   .output(participantRemovalOutputSchema)
   .mutation(async ({ input, ctx }) => {
-    const { group, member } = await loadGroupContext({
+    const { group, member } = await loadGroupMutationContext({
       groupId: input.groupId,
       accountId: ctx.auth.user.id,
     })

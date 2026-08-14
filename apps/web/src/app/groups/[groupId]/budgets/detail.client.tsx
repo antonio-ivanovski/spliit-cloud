@@ -22,6 +22,7 @@ import { resolveBudgetStatus } from '@/app/groups/[groupId]/budgets/budget-statu
 import { normalizeBudgetDetail } from '@/app/groups/[groupId]/budgets/budget-types'
 import { useCurrentGroup } from '@/app/groups/[groupId]/current-group-context'
 import { ExpenseCard } from '@/app/groups/[groupId]/expenses/expense-card'
+import { useGroupAccessSearch } from '@/app/groups/[groupId]/use-group-access-search'
 import { DeletePopup } from '@/components/delete-popup'
 import { EditButton } from '@/components/edit-button'
 import { Badge } from '@/components/ui/badge'
@@ -67,10 +68,16 @@ export function BudgetDetailModal({
   })
   const locale = useLocale()
   const { groupId, group } = useCurrentGroup()
+  const { linkInviteToken, viewKey } = useGroupAccessSearch()
   const [detailOpen, setDetailOpen] = useState(true)
   const { toast } = useToast()
   const utils = trpc.useUtils()
-  const budgetQuery = trpc.groups.budgets.get.useQuery({ groupId, budgetId })
+  const budgetQuery = trpc.groups.budgets.get.useQuery({
+    groupId,
+    budgetId,
+    linkInviteToken,
+    viewKey,
+  })
   const archiveMutation = trpc.groups.budgets.archive.useMutation({
     onSuccess: async (_data, variables) => {
       await utils.groups.budgets.get.invalidate({ groupId, budgetId })

@@ -21,9 +21,10 @@ import {
 } from '../../../../lib/api/subgroups'
 import {
   createTRPCRouter,
-  hashLinkInviteToken,
-  linkInviteTokenInput,
-  loadGroupContext,
+  groupAccessFields,
+  groupReadProcedure,
+  groupViewerArgs,
+  loadGroupMutationContext,
   loadGroupViewer,
   protectedProcedure,
 } from '../../../init'
@@ -42,7 +43,7 @@ const subgroupFields = z.object({
 })
 
 async function requireAdmin(groupId: string, accountId: string) {
-  const context = await loadGroupContext({ groupId, accountId })
+  const context = await loadGroupMutationContext({ groupId, accountId })
   if (context.group.groupType === GroupType.FRIEND) {
     throw new TRPCError({
       code: 'FORBIDDEN',
@@ -129,23 +130,12 @@ function mapWriteError(error: unknown): never {
   throw error
 }
 
-export const listSubgroupsProcedure = protectedProcedure
-  .input(
-    groupIdInput.extend({
-      linkInviteToken: linkInviteTokenInput.describe(
-        'Raw link-invite token from the share URL. Grants read access to pending link-invitees.',
-      ),
-    }),
-  )
+export const listSubgroupsProcedure = groupReadProcedure
+  .input(groupIdInput.extend(groupAccessFields))
   .output(listSubgroupsOutputSchema)
   .query(async ({ input, ctx }) => {
-    await loadGroupViewer({
-      groupId: input.groupId,
-      accountId: ctx.auth.user.id,
-      accountEmail: ctx.auth.user.email,
-      linkTokenHash: await hashLinkInviteToken(input.linkInviteToken),
-    })
-    const result = await listSubgroups(input.groupId)
+    const { group } = await loadGroupViewer(groupViewerArgs(input, ctx))
+    const result = await listSubgroups(group.id)
     if (!result)
       throw new TRPCError({ code: 'NOT_FOUND', message: 'Group not found' })
     return result

@@ -16,7 +16,7 @@ import { enqueueBudgetEvaluation } from '../../../lib/budgets/enqueue'
 import { ConversionError } from '../../../lib/expense-conversion'
 import { sendInvitationEmail } from '../../../lib/invitations'
 import { deleteS3Object } from '../../../routes/upload'
-import { importProcedure, loadGroupContext } from '../../init'
+import { importProcedure, loadGroupMutationContext } from '../../init'
 import { importGroupOutputSchema } from '../../outputs/imports'
 
 // `sourceName` is the imported participant's display label. It is required for
@@ -190,7 +190,7 @@ export const importGroupProcedure = importProcedure
   .output(importGroupOutputSchema)
   .mutation(async ({ input, ctx }) => {
     if (input.targetGroupId) {
-      const { group, member } = await loadGroupContext({
+      const { group, member } = await loadGroupMutationContext({
         groupId: input.targetGroupId,
         accountId: ctx.auth.user.id,
       })
@@ -251,14 +251,12 @@ export const importGroupProcedure = importProcedure
               invite.kind === 'LINK'
                 ? {
                     ...invite,
-                    inviteUrl: `${getWebBaseUrl()}/groups/${created.groupId}?invite=${deriveCreateToken(
-                      {
-                        accountId: ctx.auth.user.id,
-                        operation: CREATE_OPERATIONS.import,
-                        requestId: input.requestId,
-                        discriminator: `import-link:${invite.sourceName}`,
-                      },
-                    )}`,
+                    inviteUrl: `${getWebBaseUrl()}/groups/${deriveCreateToken({
+                      accountId: ctx.auth.user.id,
+                      operation: CREATE_OPERATIONS.import,
+                      requestId: input.requestId,
+                      discriminator: `import-link:${invite.sourceName}`,
+                    })}`,
                   }
                 : invite,
             ),

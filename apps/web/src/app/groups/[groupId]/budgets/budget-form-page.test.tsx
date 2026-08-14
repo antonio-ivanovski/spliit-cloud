@@ -40,6 +40,13 @@ vi.mock('@tanstack/react-router', () => ({
   ),
 }))
 
+vi.mock('@/app/groups/[groupId]/use-group-access-search', () => ({
+  useGroupAccessSearch: () => ({
+    linkInviteToken: undefined,
+    viewKey: undefined,
+  }),
+}))
+
 const fakeGroup = {
   currency: '$',
   currencyCode: 'USD',
@@ -57,7 +64,7 @@ vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
     group: fakeGroup,
     currentMember: { role: mockMemberRole },
   }),
-  useIsPendingInvitee: () => false,
+  useIsReadOnlyGroupViewer: () => false,
 }))
 
 const fakeBudget = {

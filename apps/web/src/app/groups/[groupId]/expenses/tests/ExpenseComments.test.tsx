@@ -10,8 +10,8 @@ const mocks = vi.hoisted(() => ({
   invalidateComments: vi.fn(),
   invalidateActivities: vi.fn(),
   useCurrentGroup: vi.fn(),
-  useIsPendingInvitee: vi.fn(),
-  useLinkInviteToken: vi.fn(),
+  useIsReadOnlyGroupViewer: vi.fn(),
+  useGroupAccessSearch: vi.fn(),
 }))
 
 vi.mock('@/trpc/client', () => ({
@@ -50,11 +50,11 @@ vi.mock('@/trpc/client', () => ({
 
 vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useCurrentGroup: mocks.useCurrentGroup,
-  useIsPendingInvitee: mocks.useIsPendingInvitee,
+  useIsReadOnlyGroupViewer: mocks.useIsReadOnlyGroupViewer,
 }))
 
-vi.mock('@/app/groups/[groupId]/use-link-invite-token', () => ({
-  useLinkInviteToken: mocks.useLinkInviteToken,
+vi.mock('@/app/groups/[groupId]/use-group-access-search', () => ({
+  useGroupAccessSearch: mocks.useGroupAccessSearch,
 }))
 
 import { ExpenseComments } from '../expense-comments'
@@ -78,8 +78,11 @@ describe('ExpenseComments', () => {
       group: { archived: false },
       currentMember: { id: 'member-1' },
     })
-    mocks.useIsPendingInvitee.mockReturnValue(false)
-    mocks.useLinkInviteToken.mockReturnValue('invite-token')
+    mocks.useIsReadOnlyGroupViewer.mockReturnValue(false)
+    mocks.useGroupAccessSearch.mockReturnValue({
+      linkInviteToken: 'invite-token',
+      viewKey: undefined,
+    })
     mocks.listQuery.mockReturnValue({
       data: { comments: [comment] },
       isLoading: false,
@@ -113,10 +116,12 @@ describe('ExpenseComments', () => {
       groupId: 'group-1',
       expenseId: 'expense-1',
       linkInviteToken: 'invite-token',
+      viewKey: undefined,
     })
     expect(mocks.invalidateActivities).toHaveBeenCalledWith({
       groupId: 'group-1',
       linkInviteToken: 'invite-token',
+      viewKey: undefined,
     })
     expect(input).toHaveValue('')
   })
@@ -174,18 +179,27 @@ describe('ExpenseComments', () => {
   })
 
   it('shows comments to pending or archived viewers without a composer', () => {
-    mocks.useIsPendingInvitee.mockReturnValue(true)
+    mocks.useIsReadOnlyGroupViewer.mockReturnValue(true)
     render(<ExpenseComments groupId="group-1" expenseId="expense-1" />)
     expect(screen.getByText('Bring the receipt next time.')).toBeInTheDocument()
     expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
 
-    mocks.useIsPendingInvitee.mockReturnValue(false)
+    mocks.useIsReadOnlyGroupViewer.mockReturnValue(false)
     mocks.useCurrentGroup.mockReturnValue({
       group: { archived: true },
       currentMember: { id: 'member-1' },
     })
     render(<ExpenseComments groupId="group-1" expenseId="expense-1" />)
     expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+  })
+
+  it('hides delete controls from read-only viewers', () => {
+    mocks.useIsReadOnlyGroupViewer.mockReturnValue(true)
+    render(<ExpenseComments groupId="group-1" expenseId="expense-1" />)
+
+    expect(
+      screen.queryByRole('button', { name: 'Delete comment' }),
+    ).not.toBeInTheDocument()
   })
 
   it('only renders delete controls for comments marked deletable', async () => {

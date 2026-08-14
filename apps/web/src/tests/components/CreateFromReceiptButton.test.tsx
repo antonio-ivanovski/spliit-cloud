@@ -14,7 +14,7 @@ const mockOpenFileDialog = vi.fn()
 vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useCurrentGroup: vi.fn(),
   useCurrentGroupOrNull: vi.fn(),
-  useIsPendingInvitee: vi.fn().mockReturnValue(false),
+  useIsReadOnlyGroupViewer: vi.fn().mockReturnValue(false),
 }))
 
 vi.mock('@/trpc/client', () => ({

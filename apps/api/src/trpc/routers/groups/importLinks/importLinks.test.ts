@@ -90,7 +90,7 @@ describe('importLinksRouter.link — email-based lookup', () => {
 
   it('looks up the account by email and links it to the unlinked participant', async () => {
     stubGroupContext()
-    // First call (loadGroupContext) returns the admin member; the
+    // First call (loadGroupMutationContext) returns the admin member; the
     // second call (linkUnlinkedParticipantToAccount's existing-member
     // lookup for the target account) returns null so the test
     // exercises the new-member branch.

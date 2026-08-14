@@ -2,11 +2,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import '../test/mocks'
 import { clearAccountCache } from '../lib/auth/account-cache'
+import { generateGroupViewKey } from '../lib/group-view'
 import { authState, prismaMock } from '../test/state'
 import {
   assistantProcedure,
   createTRPCContext,
-  loadGroupContext,
+  loadGroupMutationContext,
   loadGroupViewer,
   protectedProcedure,
 } from './init'
@@ -28,6 +29,21 @@ describe('createTRPCContext', () => {
     const ctx = await createTRPCContext({ req: makeRequest() })
 
     expect(ctx.auth).toBeNull()
+  })
+
+  it('does not derive group credentials from request headers', async () => {
+    authState.session = null
+    const request = new Request('http://localhost/api/test', {
+      headers: {
+        'x-spliit-public-view-key': 'ignored',
+        'x-spliit-link-invite-token': 'invite-token',
+      },
+    })
+
+    const ctx = await createTRPCContext({ req: request })
+
+    expect(ctx).not.toHaveProperty('publicGroupViewKey')
+    expect(ctx).not.toHaveProperty('groupLinkInviteToken')
   })
 
   it('returns the resolved auth when the session is valid', async () => {
@@ -237,7 +253,7 @@ describe('assistantProcedure', () => {
   })
 })
 
-describe('loadGroupContext', () => {
+describe('loadGroupMutationContext', () => {
   const groupId = 'grp-1'
   const accountId = 'acct-1'
 
@@ -246,7 +262,7 @@ describe('loadGroupContext', () => {
     prismaMock.groupMember.findUnique.mockResolvedValue(null)
 
     await expect(
-      loadGroupContext({ groupId, accountId }),
+      loadGroupMutationContext({ groupId, accountId }),
     ).rejects.toMatchObject({
       code: 'NOT_FOUND',
     })
@@ -261,7 +277,7 @@ describe('loadGroupContext', () => {
     prismaMock.groupMember.findUnique.mockResolvedValue(null)
 
     await expect(
-      loadGroupContext({ groupId, accountId }),
+      loadGroupMutationContext({ groupId, accountId }),
     ).rejects.toMatchObject({
       code: 'FORBIDDEN',
     })
@@ -281,7 +297,7 @@ describe('loadGroupContext', () => {
     } as never)
 
     await expect(
-      loadGroupContext({ groupId, accountId }),
+      loadGroupMutationContext({ groupId, accountId }),
     ).rejects.toMatchObject({
       code: 'FORBIDDEN',
     })
@@ -297,7 +313,7 @@ describe('loadGroupContext', () => {
     prismaMock.group.findUnique.mockResolvedValue(group as never)
     prismaMock.groupMember.findUnique.mockResolvedValue(member as never)
 
-    const result = await loadGroupContext({ groupId, accountId })
+    const result = await loadGroupMutationContext({ groupId, accountId })
 
     expect(result.group).toEqual(group)
     expect(result.member).toEqual(member)
@@ -310,7 +326,7 @@ describe('loadGroupViewer', () => {
   const accountId = 'acct-1'
   const accountEmail = 'alice@example.com'
 
-  it('throws NOT_FOUND when the group does not exist', async () => {
+  it('returns NOT_FOUND when the canonical group id does not exist', async () => {
     prismaMock.group.findUnique.mockResolvedValue(null)
     prismaMock.groupMember.findUnique.mockResolvedValue(null)
 
@@ -336,7 +352,10 @@ describe('loadGroupViewer', () => {
     expect(result.group).toEqual(group)
     expect(result.member).toEqual(member)
     expect(result.ledger).toEqual(group.ledger)
-    expect(result.viewer).toEqual({ kind: 'ACTIVE' })
+    expect(result.viewer).toEqual({
+      kind: 'ACTIVE',
+      access: 'READ_WRITE',
+    })
   })
 
   it('returns a PENDING_INVITEE viewer when a PENDING invitation matches the account email', async () => {
@@ -350,6 +369,7 @@ describe('loadGroupViewer', () => {
     prismaMock.groupInvitation.findFirst.mockResolvedValue({
       id: 'inv-1',
       role: 'MEMBER',
+      type: 'EMAIL',
     } as never)
 
     const result = await loadGroupViewer({ groupId, accountId, accountEmail })
@@ -358,7 +378,8 @@ describe('loadGroupViewer', () => {
     expect(result.ledger).toEqual(group.ledger)
     expect(result.viewer).toEqual({
       kind: 'PENDING_INVITEE',
-      invitation: { id: 'inv-1', role: 'MEMBER' },
+      access: 'READ_ONLY',
+      invitation: { id: 'inv-1', role: 'MEMBER', type: 'EMAIL' },
     })
   })
 
@@ -378,6 +399,7 @@ describe('loadGroupViewer', () => {
     prismaMock.groupInvitation.findFirst.mockResolvedValue({
       id: 'inv-2',
       role: 'ADMIN',
+      type: 'EMAIL',
     } as never)
 
     const result = await loadGroupViewer({ groupId, accountId, accountEmail })
@@ -385,7 +407,37 @@ describe('loadGroupViewer', () => {
     expect(result.member).toBeNull()
     expect(result.viewer).toEqual({
       kind: 'PENDING_INVITEE',
-      invitation: { id: 'inv-2', role: 'ADMIN' },
+      access: 'READ_ONLY',
+      invitation: { id: 'inv-2', role: 'ADMIN', type: 'EMAIL' },
+    })
+  })
+
+  it('accepts a matching public view key on a regular group', async () => {
+    const viewKey = generateGroupViewKey()
+    prismaMock.group.findUnique.mockResolvedValue({
+      id: groupId,
+      groupType: 'GROUP',
+      publicViewKey: viewKey,
+      ledger: { id: 'ledger-1' },
+    } as never)
+    prismaMock.groupMember.findUnique.mockResolvedValue(null)
+
+    await expect(loadGroupViewer({ groupId, viewKey })).resolves.toMatchObject({
+      viewer: { kind: 'PUBLIC_VIEW', access: 'READ_ONLY' },
+    })
+
+    await expect(
+      loadGroupViewer({ groupId, viewKey: generateGroupViewKey() }),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+
+    prismaMock.group.findUnique.mockResolvedValue({
+      id: groupId,
+      groupType: 'FRIEND',
+      publicViewKey: viewKey,
+      ledger: { id: 'ledger-1' },
+    } as never)
+    await expect(loadGroupViewer({ groupId, viewKey })).rejects.toMatchObject({
+      code: 'FORBIDDEN',
     })
   })
 

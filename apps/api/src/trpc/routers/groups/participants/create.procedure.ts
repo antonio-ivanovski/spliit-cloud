@@ -9,7 +9,7 @@ import {
   runIdempotentCreate,
 } from '../../../../lib/api/idempotency'
 import { randomId } from '../../../../lib/api/shared'
-import { loadGroupContext, protectedProcedure } from '../../../init'
+import { loadGroupMutationContext, protectedProcedure } from '../../../init'
 import { createParticipantOutputSchema } from '../../../outputs/members'
 
 /**
@@ -26,7 +26,7 @@ export const createParticipantProcedure = protectedProcedure
   )
   .output(createParticipantOutputSchema)
   .mutation(async ({ input, ctx }) => {
-    const { group } = await loadGroupContext({
+    const { group } = await loadGroupMutationContext({
       groupId: input.groupId,
       accountId: ctx.auth.user.id,
     })

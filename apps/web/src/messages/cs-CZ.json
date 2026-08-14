@@ -608,7 +608,14 @@
     },
     "importGroup": "Importovat skupinu",
     "exportDescription": "Stáhněte si výdaje skupiny jako přehled v PDF, tabulku CSV nebo zálohu JSON.",
-    "allExpenses": "Všechny výdaje"
+    "allExpenses": "Všechny výdaje",
+    "viewOnlyBannerTitle": "Přístup pouze pro čtení",
+    "viewOnlyBannerDescription": "Tuto skupinu si můžete prohlížet, ale nemůžete přidávat, upravovat, mazat, komentovat, vyrovnávat zůstatky ani stahovat její data.",
+    "invitationSignInToAccept": "Přihlaste se pro přijetí",
+    "viewLinkInvalid": {
+      "title": "Tento odkaz pouze pro čtení není platný",
+      "description": "Odkaz má nesprávný formát nebo neodpovídá žádnému přístupu pouze pro čtení v této skupině."
+    }
   },
   "GroupForm": {
     "title": "Informace o skupině",
@@ -1988,7 +1995,8 @@
     "regenerate": {
       "title": "Vygenerovat nový odkaz"
     },
-    "actionsFor": "Akce pro {name}"
+    "actionsFor": "Akce pro {name}",
+    "readOnlyDescription": "Lidé a účastníci zahrnutí do této skupiny. E-mailové adresy a podrobnosti pozvánek jsou skryté."
   },
   "AccountSettings": {
     "title": "Nastavení účtu",
@@ -2258,7 +2266,8 @@
         "currency": "Měna",
         "currencyCode": "Kód měny",
         "linkedParticipant": "Propojený účastník",
-        "subgroupsEnabled": "Podskupiny"
+        "subgroupsEnabled": "Podskupiny",
+        "publicViewLink": "Veřejný odkaz pro prohlížení"
       }
     },
     "member": {
@@ -3038,5 +3047,27 @@
       "comingSoon": "Již brzy",
       "replacementActivated": "Náhradní přihlašovací odkaz je nyní aktivní."
     }
+  },
+  "GroupViewLink": {
+    "title": "Veřejný odkaz pro prohlížení",
+    "description": "Každý s tímto veřejným odkazem si může skupinu prohlédnout bez přihlášení.",
+    "warning": "Tento odkaz poskytuje přístup ke všemu ve skupině pouze pro čtení. Sdílejte ho jen s lidmi, kterým důvěřujete.",
+    "linkLabel": "Veřejný odkaz pro prohlížení",
+    "copy": "Zkopírovat veřejný odkaz",
+    "copied": "Veřejný odkaz zkopírován",
+    "enable": "Povolit veřejný odkaz",
+    "cancel": "Zrušit",
+    "enabledStatus": "Kdokoli s tímto odkazem může skupinu zobrazit.",
+    "replace": "Nahradit odkaz",
+    "remove": "Odebrat veřejný odkaz",
+    "replaceDialogTitle": "Nahradit veřejný odkaz pro prohlížení?",
+    "replaceDialogDescription": "Předchozí odkaz okamžitě přestane fungovat. Kdokoli, kdo ho měl, ztratí přístup pouze pro čtení.",
+    "replaceConfirm": "Nahradit odkaz",
+    "removeDialogTitle": "Odebrat veřejný odkaz pro prohlížení?",
+    "removeDialogDescription": "Aktuální odkaz okamžitě přestane fungovat. Kdokoli, kdo ho měl, ztratí přístup pouze pro čtení.",
+    "removeConfirm": "Odebrat odkaz",
+    "enableSuccess": "Veřejný odkaz pro prohlížení vytvořen",
+    "replaceSuccess": "Veřejný odkaz pro prohlížení nahrazen. Předchozí odkaz už nefunguje.",
+    "removeSuccess": "Veřejný odkaz pro prohlížení odebrán"
   }
 }

@@ -19,8 +19,8 @@ import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 import { trpc } from '@/trpc/client'
 
-import { useIsPendingInvitee } from '../current-group-context'
-import { useLinkInviteToken } from '../use-link-invite-token'
+import { useIsReadOnlyGroupViewer } from '../current-group-context'
+import { useGroupAccessSearch } from '../use-group-access-search'
 import { ExpenseForm } from './expense-form/index'
 import { useCreateExpenseMutation } from './expense-mutation-hooks'
 
@@ -39,16 +39,16 @@ export function CreateExpenseForm({
   const { t: tExpenseForm } = useTranslation(undefined, {
     keyPrefix: 'ExpenseForm',
   })
-  const { data: groupData } = trpc.groups.get.useQuery({ groupId })
+  const access = useGroupAccessSearch()
+  const { data: groupData } = trpc.groups.get.useQuery({
+    groupId,
+    ...access,
+  })
   const group = groupData?.group
   const currentLedgerParticipantId =
     groupData?.currentLedgerParticipantId ?? null
-  const isPendingInvitee = useIsPendingInvitee()
-  const linkInviteToken = useLinkInviteToken()
-
-  const { mutateAsync: createExpenseMutateAsync } = useCreateExpenseMutation({
-    linkInviteToken,
-  })
+  const isReadOnlyGroupViewer = useIsReadOnlyGroupViewer()
+  const { mutateAsync: createExpenseMutateAsync } = useCreateExpenseMutation()
   const navigate = useNavigate()
   const createAttempt = useIdempotentCreate()
   // `ExpenseForm` is shared with the edit route, where calling
@@ -62,7 +62,7 @@ export function CreateExpenseForm({
       {
         groupId,
         expenseId: sourceExpenseId,
-        linkInviteToken,
+        ...access,
       },
       { enabled: !!sourceExpenseId },
     )
@@ -70,7 +70,7 @@ export function CreateExpenseForm({
 
   if (!group) return null
 
-  if (isPendingInvitee) {
+  if (isReadOnlyGroupViewer) {
     return (
       <Card className="mobile-surface">
         <CardHeader className="hidden sm:flex">
@@ -145,7 +145,6 @@ export function CreateExpenseForm({
       searchParams={searchParams}
       cancelLink={expenseFormCancelLink(group.id, searchParams.returnTo)}
       currentLedgerParticipantId={currentLedgerParticipantId}
-      linkInviteToken={linkInviteToken}
       heading={
         sourceExpense
           ? tExpenseForm('Expense.createCopy', { title: sourceExpense.title })

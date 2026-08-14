@@ -602,7 +602,14 @@
     },
     "importGroup": "Importa gruppo",
     "exportDescription": "Scarica le spese del gruppo come report PDF, foglio di calcolo CSV o backup JSON.",
-    "allExpenses": "Tutte le spese"
+    "allExpenses": "Tutte le spese",
+    "viewOnlyBannerTitle": "Accesso in sola lettura",
+    "viewOnlyBannerDescription": "Puoi esplorare questo gruppo, ma non puoi aggiungere, modificare, eliminare o commentare elementi, liquidare i saldi o scaricare i dati.",
+    "invitationSignInToAccept": "Accedi per accettare",
+    "viewLinkInvalid": {
+      "title": "Questo link in sola lettura non è valido",
+      "description": "Il link è in un formato non valido o non corrisponde a nessun accesso in sola lettura di questo gruppo."
+    }
   },
   "GroupForm": {
     "title": "Informazioni del gruppo",
@@ -1979,7 +1986,8 @@
     "regenerate": {
       "title": "Genera nuovo link"
     },
-    "actionsFor": "Azioni per {name}"
+    "actionsFor": "Azioni per {name}",
+    "readOnlyDescription": "Persone e partecipanti inclusi in questo gruppo. Gli indirizzi email e i dettagli degli inviti sono nascosti."
   },
   "AccountSettings": {
     "title": "Impostazioni account",
@@ -2249,7 +2257,8 @@
         "currency": "Valuta",
         "currencyCode": "Codice valuta",
         "linkedParticipant": "Partecipante collegato",
-        "subgroupsEnabled": "Sottogruppi"
+        "subgroupsEnabled": "Sottogruppi",
+        "publicViewLink": "Link pubblico di sola lettura"
       }
     },
     "member": {
@@ -3022,5 +3031,27 @@
       "comingSoon": "Prossimamente",
       "replacementActivated": "Il link di accesso sostitutivo è ora attivo."
     }
+  },
+  "GroupViewLink": {
+    "title": "Link pubblico di sola lettura",
+    "description": "Consente a chiunque abbia questo link pubblico di visualizzare il gruppo senza accedere.",
+    "warning": "Questo link dà accesso in sola lettura a tutto il contenuto del gruppo. Condividilo solo con persone di cui ti fidi.",
+    "linkLabel": "Link pubblico di sola lettura",
+    "copy": "Copia link pubblico",
+    "copied": "Link pubblico copiato",
+    "enable": "Attiva link pubblico",
+    "cancel": "Annulla",
+    "enabledStatus": "Chiunque abbia questo link può visualizzare il gruppo.",
+    "replace": "Sostituisci link",
+    "remove": "Rimuovi link pubblico",
+    "replaceDialogTitle": "Sostituire il link pubblico di sola lettura?",
+    "replaceDialogDescription": "Il link precedente smetterà immediatamente di funzionare. Chiunque lo avesse perderà l’accesso in sola lettura.",
+    "replaceConfirm": "Sostituisci link",
+    "removeDialogTitle": "Rimuovere il link pubblico di sola lettura?",
+    "removeDialogDescription": "Il link attuale smetterà immediatamente di funzionare. Chiunque lo avesse perderà l’accesso in sola lettura.",
+    "removeConfirm": "Rimuovi link",
+    "enableSuccess": "Link pubblico di sola lettura creato",
+    "replaceSuccess": "Link pubblico di sola lettura sostituito. Il link precedente non funziona più.",
+    "removeSuccess": "Link pubblico di sola lettura rimosso"
   }
 }

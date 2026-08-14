@@ -596,7 +596,14 @@
     },
     "importGroup": "Grubu içe aktar",
     "exportDescription": "Grup masraflarını PDF raporu, CSV elektronik tablosu veya JSON yedeği olarak indirin.",
-    "allExpenses": "Tüm harcamalar"
+    "allExpenses": "Tüm harcamalar",
+    "viewOnlyBannerTitle": "Salt görüntüleme erişimi",
+    "viewOnlyBannerDescription": "Bu grubu inceleyebilirsiniz ancak ekleme, düzenleme, silme, yorum yapma, borç kapatma veya verileri indirme işlemlerini yapamazsınız.",
+    "invitationSignInToAccept": "Kabul etmek için oturum aç",
+    "viewLinkInvalid": {
+      "title": "Bu salt görüntüleme bağlantısı geçersiz",
+      "description": "Bağlantı hatalı biçimlendirilmiş veya bu gruptaki hiçbir salt görüntüleme erişimiyle eşleşmiyor."
+    }
   },
   "GroupForm": {
     "title": "Grup bilgileri",
@@ -1970,7 +1977,8 @@
     "regenerate": {
       "title": "Yeni bağlantı oluştur"
     },
-    "actionsFor": "{name} için işlemler"
+    "actionsFor": "{name} için işlemler",
+    "readOnlyDescription": "Bu gruptaki kişiler ve katılımcılar. E-posta adresleri ve davet ayrıntıları gizlenir."
   },
   "AccountSettings": {
     "title": "Hesap ayarları",
@@ -2240,7 +2248,8 @@
         "currency": "Para birimi",
         "currencyCode": "Para birimi kodu",
         "linkedParticipant": "Bağlı katılımcı",
-        "subgroupsEnabled": "Alt gruplar"
+        "subgroupsEnabled": "Alt gruplar",
+        "publicViewLink": "Herkese açık salt görüntüleme bağlantısı"
       }
     },
     "member": {
@@ -3004,5 +3013,27 @@
       "comingSoon": "Yakında",
       "replacementActivated": "Yeni oturum açma bağlantınız artık etkin."
     }
+  },
+  "GroupViewLink": {
+    "title": "Herkese açık salt görüntüleme bağlantısı",
+    "description": "Bu bağlantıya sahip herkesin oturum açmadan grubu görüntülemesine izin verin.",
+    "warning": "Bu bağlantı gruptaki her şeye salt görüntüleme erişimi sağlar. Yalnızca güvendiğiniz kişilerle paylaşın.",
+    "linkLabel": "Herkese açık salt görüntüleme bağlantısı",
+    "copy": "Herkese açık salt görüntüleme bağlantısını kopyala",
+    "copied": "Herkese açık salt görüntüleme bağlantısı kopyalandı",
+    "enable": "Herkese açık bağlantıyı etkinleştir",
+    "cancel": "İptal",
+    "enabledStatus": "Bu bağlantıya sahip herkes grubu görüntüleyebilir.",
+    "replace": "Bağlantıyı değiştir",
+    "remove": "Herkese açık bağlantıyı kaldır",
+    "replaceDialogTitle": "Herkese açık salt görüntüleme bağlantısı değiştirilsin mi?",
+    "replaceDialogDescription": "Önceki bağlantı hemen çalışmayı durduracak. Bu bağlantıya sahip olan herkes salt görüntüleme erişimini kaybedecek.",
+    "replaceConfirm": "Bağlantıyı değiştir",
+    "removeDialogTitle": "Herkese açık salt görüntüleme bağlantısı kaldırılsın mı?",
+    "removeDialogDescription": "Mevcut bağlantı hemen çalışmayı durduracak. Bu bağlantıya sahip olan herkes salt görüntüleme erişimini kaybedecek.",
+    "removeConfirm": "Bağlantıyı kaldır",
+    "enableSuccess": "Herkese açık salt görüntüleme bağlantısı oluşturuldu",
+    "replaceSuccess": "Herkese açık salt görüntüleme bağlantısı değiştirildi. Önceki bağlantı artık çalışmıyor.",
+    "removeSuccess": "Herkese açık salt görüntüleme bağlantısı kaldırıldı"
   }
 }

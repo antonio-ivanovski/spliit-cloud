@@ -118,6 +118,12 @@ export const getGroupOutputSchema = z.object({
   linkInviteState: z
     .enum(['PENDING', 'ACCEPTED', 'REVOKED', 'DECLINED', 'EXPIRED'])
     .nullable(),
+  viewer: z.object({
+    source: z.enum(['MEMBER', 'PENDING_INVITATION', 'PUBLIC_LINK']),
+    access: z.enum(['READ_WRITE', 'READ_ONLY']),
+    canMutate: z.boolean(),
+    canAcceptInvitation: z.boolean(),
+  }),
 })
 
 export const getGroupDetailsOutputSchema = z.object({

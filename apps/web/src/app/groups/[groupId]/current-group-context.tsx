@@ -13,6 +13,7 @@ type CurrentInvitation = NonNullable<
 type LinkInviteState = NonNullable<
   AppRouterOutput['groups']['get']['linkInviteState']
 >
+type Viewer = AppRouterOutput['groups']['get']['viewer']
 
 type GroupContext =
   | {
@@ -44,6 +45,7 @@ type GroupContext =
       // resolves to a non-PENDING invitation. `null` when the URL has
       // no token (or it didn't match anything).
       linkInviteState: LinkInviteState | null
+      viewer?: Viewer
     }
   | {
       isLoading: true
@@ -54,6 +56,7 @@ type GroupContext =
       currentMember: undefined
       currentInvitation: undefined
       linkInviteState: undefined
+      viewer?: undefined
     }
 
 const CurrentGroupContext = createContext<GroupContext | null>(null)
@@ -74,17 +77,11 @@ export const useCurrentGroup = () => {
  */
 export const useCurrentGroupOrNull = () => useContext(CurrentGroupContext)
 
-/**
- * True when the signed-in viewer is a PENDING invitee of this group (i.e. their
- * account email matches a PENDING GroupInvitation, and they have not yet
- * accepted). Pending invitees can read the group, but every mutation
- * (create/update/delete/archive/invitations) is rejected on the server and edit
- * affordances are hidden in the UI.
- */
+/** True for every group access source that must not expose mutations. */
 // react-doctor-disable-next-line react-doctor/only-export-components -- hook export (use[A-Z]) allowed per rule docs
-export function useIsPendingInvitee() {
-  const { currentInvitation } = useCurrentGroup()
-  return currentInvitation != null
+export function useIsReadOnlyGroupViewer() {
+  const { viewer, currentInvitation } = useCurrentGroup()
+  return viewer ? viewer.access === 'READ_ONLY' : currentInvitation != null
 }
 
 export const CurrentGroupProvider = ({

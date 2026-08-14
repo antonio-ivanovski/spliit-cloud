@@ -60,11 +60,17 @@ export const importGroupSearchSchema = z.object({
 })
 
 /**
- * Search-param schema for the `/groups/$groupId` route. The `invite` field
- * carries a link-invite token. Any string (or absence) is captured and
- * forwarded to the server, which is the source of truth for token validity —
- * malformed or empty tokens are rejected with FORBIDDEN, rendered as the
- * "invalid link" page by the layout.
+ * Bearer tokens on `/groups/$groupId`. Child `validateSearch` schemas must
+ * include these fields so they are not stripped; `retainSearchParams` on the
+ * parent keeps them across in-group navigations.
+ */
+export const groupAccessSearchSchema = z.object({
+  invite: z.string().optional(),
+  viewKey: z.string().optional(),
+})
+
+/**
+ * Search-param schema for the `/groups/$groupId` route.
  *
  * `friendLinkInvite` carries the invite URL returned by `friends.create` on the
  * link path. The layout surfaces it as a one-time dialog so the user can
@@ -77,8 +83,7 @@ export const importGroupSearchSchema = z.object({
  * visibility alongside the other filters (it is omitted when at the default
  * `true`).
  */
-export const groupSearchSchema = z.object({
-  invite: z.string().optional(),
+export const groupSearchSchema = groupAccessSearchSchema.extend({
   seriesId: optionalString,
   friendLinkInvite: optionalString,
   returnTo: globalExpensesReturnTo,
@@ -109,7 +114,7 @@ export const expenseParamsSchema = z.object({
   expenseId: expenseIdParamSchema,
 })
 
-export const editExpenseSearchSchema = z.object({
+export const editExpenseSearchSchema = groupAccessSearchSchema.extend({
   scope: z.enum(['OCCURRENCE', 'THIS_AND_FUTURE']).optional().catch(undefined),
   returnTo: globalExpensesReturnTo,
 })
@@ -144,7 +149,7 @@ export const globalExpensesSearchSchema = z.object({
   expenseGroupId: optionalString,
 })
 
-export const expensePreviewSearchSchema = z.object({
+export const expensePreviewSearchSchema = groupAccessSearchSchema.extend({
   returnTo: globalExpensesReturnTo,
 })
 
@@ -167,7 +172,7 @@ export const oauthFlowSearchSchema = z.object({
   scope: optionalString,
 })
 
-export const createExpenseSearchSchema = z.object({
+export const createExpenseSearchSchema = groupAccessSearchSchema.extend({
   settlement: optionalString,
   /** Legacy alias for `settlement=yes` bookmarks. */
   reimbursement: optionalString,
@@ -191,7 +196,7 @@ export const createExpenseSearchSchema = z.object({
   returnTo: globalExpensesReturnTo,
 })
 
-export const balancesSearchSchema = z.object({
+export const balancesSearchSchema = groupAccessSearchSchema.extend({
   currencyDisplay: z.enum(['group', 'original']).optional().catch(undefined),
   view: z.enum(['simple', 'visual']).optional().catch(undefined),
   settlementMode: z

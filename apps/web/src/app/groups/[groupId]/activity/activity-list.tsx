@@ -13,7 +13,7 @@ import { detectDeviceTimeZone } from '@/lib/account-preferences'
 import { trpc } from '@/trpc/client'
 
 import { useCurrentGroup } from '../current-group-context'
-import { useLinkInviteToken } from '../use-link-invite-token'
+import { useGroupAccessSearch } from '../use-group-access-search'
 
 const PAGE_SIZE = 20
 
@@ -57,17 +57,17 @@ export function ActivityList() {
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'Activity' })
   const locale = i18n.language || 'en-US'
   const { group, groupId } = useCurrentGroup()
+  const { linkInviteToken, viewKey } = useGroupAccessSearch()
   const accountPreferences = useSyncedAccountPreferences()
   const accountTimeZone =
     accountPreferences?.timeZone ?? detectDeviceTimeZone() ?? 'UTC'
-  const linkInviteToken = useLinkInviteToken()
 
   const {
     data: activitiesData,
     isLoading,
     fetchNextPage,
   } = trpc.groups.activities.list.useInfiniteQuery(
-    { groupId, limit: PAGE_SIZE, linkInviteToken },
+    { groupId, limit: PAGE_SIZE, linkInviteToken, viewKey },
     { getNextPageParam: ({ nextCursor }) => nextCursor },
   )
   const { ref: loadingRef, inView } = useInView()

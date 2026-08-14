@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { GroupType } from '@spliit/db'
 
 import { updateMemberRole } from '../../../../lib/api'
-import { loadGroupContext, protectedProcedure } from '../../../init'
+import { loadGroupMutationContext, protectedProcedure } from '../../../init'
 import { memberRoleOutputSchema } from '../../../outputs/members'
 
 /**
@@ -26,7 +26,7 @@ export const updateMemberRoleProcedure = protectedProcedure
   )
   .output(memberRoleOutputSchema)
   .mutation(async ({ input: { groupId, memberId, role }, ctx }) => {
-    const { group, member } = await loadGroupContext({
+    const { group, member } = await loadGroupMutationContext({
       groupId,
       accountId: ctx.auth.user.id,
     })

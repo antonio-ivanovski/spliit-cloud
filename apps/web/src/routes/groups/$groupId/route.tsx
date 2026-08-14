@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, retainSearchParams } from '@tanstack/react-router'
 
 import { groupParamsSchema, groupSearchSchema } from '@/router/schemas'
 
@@ -8,4 +8,7 @@ export const Route = createFileRoute('/groups/$groupId')({
     stringify: (params) => ({ groupId: params.groupId }),
   },
   validateSearch: groupSearchSchema,
+  search: {
+    middlewares: [retainSearchParams(['viewKey', 'invite'])],
+  },
 })

@@ -45,7 +45,15 @@ import {
 } from '../../../lib/api/resource-permissions'
 import { groupExpenseListCardSelect } from '../../../lib/api/selects/expense-list'
 import { budgetCategoryMatches } from '../../../lib/budgets/category-match'
-import { loadGroupContext, protectedProcedure } from '../../init'
+import { redactExpenseListShares } from '../../../lib/group-view-redaction'
+import {
+  groupAccessFields,
+  groupReadProcedure,
+  groupViewerArgs,
+  loadGroupMutationContext,
+  loadGroupViewer,
+  protectedProcedure,
+} from '../../init'
 import { createTRPCRouter } from '../../init'
 import {
   archiveBudgetOutputSchema,
@@ -416,6 +424,21 @@ function output(
   }
 }
 
+function redactBudgetForPublicViewer(budget: ReturnType<typeof output>) {
+  return {
+    ...budget,
+    summary: {
+      ...budget.summary,
+      matchingExpenses: budget.summary.matchingExpenses.map(
+        redactExpenseListShares,
+      ),
+      upcomingExpenses: budget.summary.upcomingExpenses.map(
+        redactExpenseListShares,
+      ),
+    },
+  }
+}
+
 async function establishAlertBaseline(
   budget: GroupBudget,
   currentSummary: Awaited<ReturnType<typeof summary>>,
@@ -449,19 +472,19 @@ async function establishAlertBaseline(
   else await prisma.$transaction(run)
 }
 
-const list = protectedProcedure
+const list = groupReadProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
       includeArchived: z.boolean().optional(),
+      ...groupAccessFields,
     }),
   )
   .output(listBudgetsOutputSchema)
   .query(async ({ input, ctx }) => {
-    const { group, member } = await loadGroupContext({
-      groupId: input.groupId,
-      accountId: ctx.auth.user.id,
-    })
+    const { group, member, viewer } = await loadGroupViewer(
+      groupViewerArgs(input, ctx),
+    )
     const budgets = await prisma.groupBudget.findMany({
       where: {
         groupId: group.id,
@@ -472,36 +495,49 @@ const list = protectedProcedure
     const sharedCurrentRows = await loadSharedCurrentRows(budgets)
     return {
       budgets: await Promise.all(
-        budgets.map(async (budget) =>
-          output(budget, await summary(budget, false, sharedCurrentRows), {
-            role: member.role,
-            accountId: ctx.auth.user.id,
-            groupArchived: group.archived,
-          }),
-        ),
+        budgets.map(async (budget) => {
+          const dto = output(
+            budget,
+            await summary(budget, false, sharedCurrentRows),
+            {
+              role: member?.role ?? 'MEMBER',
+              accountId: ctx.auth?.user.id ?? '',
+              groupArchived: group.archived,
+            },
+          )
+          return viewer.kind === 'ACTIVE'
+            ? dto
+            : redactBudgetForPublicViewer(dto)
+        }),
       ),
     }
   })
 
-const get = protectedProcedure
-  .input(z.object({ groupId: z.string().min(1), budgetId: z.string().min(1) }))
+const get = groupReadProcedure
+  .input(
+    z.object({
+      groupId: z.string().min(1),
+      budgetId: z.string().min(1),
+      ...groupAccessFields,
+    }),
+  )
   .output(getBudgetOutputSchema)
   .query(async ({ input, ctx }) => {
-    const { group, member } = await loadGroupContext({
-      groupId: input.groupId,
-      accountId: ctx.auth.user.id,
-    })
+    const { group, member, viewer } = await loadGroupViewer(
+      groupViewerArgs(input, ctx),
+    )
     const budget = await prisma.groupBudget.findFirst({
       where: { id: input.budgetId, groupId: group.id },
     })
     if (!budget)
       throw new TRPCError({ code: 'NOT_FOUND', message: 'Budget not found' })
+    const dto = output(budget, await summary(budget), {
+      role: member?.role ?? 'MEMBER',
+      accountId: ctx.auth?.user.id ?? '',
+      groupArchived: group.archived,
+    })
     return {
-      budget: output(budget, await summary(budget), {
-        role: member.role,
-        accountId: ctx.auth.user.id,
-        groupArchived: group.archived,
-      }),
+      budget: viewer.kind === 'ACTIVE' ? dto : redactBudgetForPublicViewer(dto),
     }
   })
 
@@ -509,7 +545,7 @@ const create = protectedProcedure
   .input(budgetInput.extend({ requestId: createRequestIdSchema }))
   .output(createBudgetOutputSchema)
   .mutation(async ({ input, ctx }) => {
-    const { group, member } = await loadGroupContext({
+    const { group, member } = await loadGroupMutationContext({
       groupId: input.groupId,
       accountId: ctx.auth.user.id,
     })
@@ -595,7 +631,7 @@ const update = protectedProcedure
   .input(budgetInput.extend({ budgetId: z.string().min(1) }))
   .output(updateBudgetOutputSchema)
   .mutation(async ({ input, ctx }) => {
-    const { group, member } = await loadGroupContext({
+    const { group, member } = await loadGroupMutationContext({
       groupId: input.groupId,
       accountId: ctx.auth.user.id,
     })
@@ -676,7 +712,7 @@ const archive = protectedProcedure
   )
   .output(archiveBudgetOutputSchema)
   .mutation(async ({ input, ctx }) => {
-    const { group, member } = await loadGroupContext({
+    const { group, member } = await loadGroupMutationContext({
       groupId: input.groupId,
       accountId: ctx.auth.user.id,
     })
@@ -712,7 +748,7 @@ const remove = protectedProcedure
   .input(z.object({ groupId: z.string().min(1), budgetId: z.string().min(1) }))
   .output(deleteBudgetOutputSchema)
   .mutation(async ({ input, ctx }) => {
-    const { group, member } = await loadGroupContext({
+    const { group, member } = await loadGroupMutationContext({
       groupId: input.groupId,
       accountId: ctx.auth.user.id,
     })

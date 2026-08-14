@@ -590,7 +590,14 @@
     },
     "importGroup": "Impor grup",
     "exportDescription": "Unduh pengeluaran grup sebagai laporan PDF, lembar kerja CSV, atau cadangan JSON.",
-    "allExpenses": "Semua pengeluaran"
+    "allExpenses": "Semua pengeluaran",
+    "viewOnlyBannerTitle": "Akses hanya lihat",
+    "viewOnlyBannerDescription": "Anda dapat menjelajahi grup ini, tetapi tidak dapat menambah, mengedit, menghapus, berkomentar, melunasi saldo, atau mengunduh datanya.",
+    "invitationSignInToAccept": "Masuk untuk menerima",
+    "viewLinkInvalid": {
+      "title": "Tautan hanya-lihat ini tidak valid",
+      "description": "Tautan ini tidak valid atau tidak cocok dengan akses hanya lihat apa pun di grup ini."
+    }
   },
   "GroupForm": {
     "title": "Informasi grup",
@@ -1963,7 +1970,8 @@
     "regenerate": {
       "title": "Buat tautan baru"
     },
-    "actionsFor": "Tindakan untuk {name}"
+    "actionsFor": "Tindakan untuk {name}",
+    "readOnlyDescription": "Orang dan peserta yang termasuk dalam grup ini. Alamat email dan detail undangan disembunyikan."
   },
   "AccountSettings": {
     "title": "Pengaturan akun",
@@ -2233,7 +2241,8 @@
         "currency": "Mata uang",
         "currencyCode": "Kode mata uang",
         "linkedParticipant": "Peserta terkait",
-        "subgroupsEnabled": "Subgrup"
+        "subgroupsEnabled": "Subgrup",
+        "publicViewLink": "Tautan publik hanya lihat"
       }
     },
     "member": {
@@ -2988,5 +2997,27 @@
       "comingSoon": "Segera hadir",
       "replacementActivated": "Tautan masuk pengganti Anda kini aktif."
     }
+  },
+  "GroupViewLink": {
+    "title": "Tautan publik hanya lihat",
+    "description": "Izinkan siapa pun yang memiliki tautan ini melihat grup tanpa masuk.",
+    "warning": "Tautan ini memberikan akses hanya lihat ke semua hal dalam grup. Bagikan hanya kepada orang yang Anda percayai.",
+    "linkLabel": "Tautan publik hanya lihat",
+    "copy": "Salin tautan publik hanya lihat",
+    "copied": "Tautan publik hanya lihat disalin",
+    "enable": "Aktifkan tautan publik",
+    "cancel": "Batal",
+    "enabledStatus": "Siapa pun yang memiliki tautan ini dapat melihat grup.",
+    "replace": "Ganti tautan",
+    "remove": "Hapus tautan publik",
+    "replaceDialogTitle": "Ganti tautan publik hanya lihat?",
+    "replaceDialogDescription": "Tautan sebelumnya akan langsung berhenti berfungsi. Siapa pun yang memilikinya akan kehilangan akses hanya lihat.",
+    "replaceConfirm": "Ganti tautan",
+    "removeDialogTitle": "Hapus tautan publik hanya lihat?",
+    "removeDialogDescription": "Tautan saat ini akan langsung berhenti berfungsi. Siapa pun yang memilikinya akan kehilangan akses hanya lihat.",
+    "removeConfirm": "Hapus tautan",
+    "enableSuccess": "Tautan publik hanya lihat dibuat",
+    "replaceSuccess": "Tautan publik hanya lihat diganti. Tautan sebelumnya tidak lagi berfungsi.",
+    "removeSuccess": "Tautan publik hanya lihat dihapus"
   }
 }

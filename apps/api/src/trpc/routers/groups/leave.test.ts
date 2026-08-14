@@ -41,7 +41,7 @@ async function authAs(userId: string) {
 /**
  * Build the prisma stubs the leave procedure needs to:
  *
- * - Resolve the group and the caller's membership (`loadGroupContext`),
+ * - Resolve the group and the caller's membership (`loadGroupMutationContext`),
  * - Count remaining active admins / members,
  * - Run balance queries via `getGroupBalances`.
  *
@@ -789,7 +789,7 @@ describe('groupsRouter.leave — guards', () => {
         },
       ],
     })
-    // `loadGroupContext` queries the caller's membership by `acct-outside`.
+    // `loadGroupMutationContext` queries the caller's membership by `acct-outside`.
     // The default `findUnique` mock returns null for unknown ids, so the
     // authAs setup is enough.
     prismaMock.groupMember.findUnique.mockResolvedValue(null)

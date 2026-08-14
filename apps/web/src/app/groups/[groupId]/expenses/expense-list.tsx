@@ -27,14 +27,16 @@ import { detectDeviceTimeZone } from '@/lib/account-preferences'
 import { getCurrencyFromGroup } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 
-import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
-import { useLinkInviteToken } from '../use-link-invite-token'
+import {
+  useCurrentGroup,
+  useIsReadOnlyGroupViewer,
+} from '../current-group-context'
+import { useGroupAccessSearch } from '../use-group-access-search'
 import { EXPENSE_LIST_PAGE_SIZE } from './expense-list-query'
 import { ExpenseTimeline, ExpensesLoading } from './expense-timeline'
 
 export function ExpenseList() {
   const { groupId } = useCurrentGroup()
-  const linkInviteToken = useLinkInviteToken()
   const [searchText, setSearchText] = useState('')
   const [debouncedSearchText] = useDebounce(searchText, 300)
   const filtersApi = useExpenseFilters(groupId)
@@ -53,7 +55,6 @@ export function ExpenseList() {
       <ExpenseListForSearch
         groupId={groupId}
         searchText={debouncedSearchText}
-        linkInviteToken={linkInviteToken}
       />
     </ExpenseFiltersProvider>
   )
@@ -62,17 +63,16 @@ export function ExpenseList() {
 const ExpenseListForSearch = ({
   groupId,
   searchText,
-  linkInviteToken,
 }: {
   groupId: string
   searchText: string
-  linkInviteToken: string | undefined
 }) => {
   const { group } = useCurrentGroup()
+  const { linkInviteToken, viewKey } = useGroupAccessSearch()
   const accountPreferences = useSyncedAccountPreferences()
   const accountTimeZone =
     accountPreferences?.timeZone ?? detectDeviceTimeZone() ?? 'UTC'
-  const isPendingInvitee = useIsPendingInvitee()
+  const isReadOnlyGroupViewer = useIsReadOnlyGroupViewer()
 
   const { queryInput, sort, activeCount, setFilters } =
     useExpenseFiltersContext()
@@ -99,6 +99,7 @@ const ExpenseListForSearch = ({
       filter: searchText,
       locale,
       linkInviteToken,
+      viewKey,
       ...queryInput,
     },
     { getNextPageParam: ({ nextCursor }) => nextCursor },
@@ -134,7 +135,7 @@ const ExpenseListForSearch = ({
         ) : (
           <p>
             {t('noExpenses')}{' '}
-            {group.archived || isPendingInvitee ? null : (
+            {group.archived || isReadOnlyGroupViewer ? null : (
               <Button
                 variant="link"
                 className="-m-4 hidden sm:inline-flex"

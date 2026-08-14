@@ -620,7 +620,14 @@
     },
     "importGroup": "Gruppe importieren",
     "exportDescription": "Lade die Gruppenausgaben als PDF-Bericht, CSV-Tabelle oder JSON-Sicherung herunter.",
-    "allExpenses": "Alle Ausgaben"
+    "allExpenses": "Alle Ausgaben",
+    "viewOnlyBannerTitle": "Nur-Lese-Zugriff",
+    "viewOnlyBannerDescription": "Du kannst diese Gruppe ansehen, aber keine Inhalte hinzufügen, bearbeiten oder löschen, kommentieren, Salden ausgleichen oder ihre Daten herunterladen.",
+    "invitationSignInToAccept": "Zum Akzeptieren anmelden",
+    "viewLinkInvalid": {
+      "title": "Dieser Nur-Lese-Link ist ungültig",
+      "description": "Der Link ist fehlerhaft oder stimmt mit keinem Nur-Lese-Zugriff in dieser Gruppe überein."
+    }
   },
   "GroupForm": {
     "title": "Gruppeninformationen",
@@ -2002,7 +2009,8 @@
     "regenerate": {
       "title": "Neuen Link erstellen"
     },
-    "actionsFor": "Aktionen für {name}"
+    "actionsFor": "Aktionen für {name}",
+    "readOnlyDescription": "Personen und Teilnehmende dieser Gruppe. E-Mail-Adressen und Einladungsdetails werden ausgeblendet."
   },
   "AccountSettings": {
     "title": "Kontoeinstellungen",
@@ -2272,7 +2280,8 @@
         "currency": "Währung",
         "currencyCode": "Währungscode",
         "linkedParticipant": "Verknüpfter Teilnehmer",
-        "subgroupsEnabled": "Untergruppen"
+        "subgroupsEnabled": "Untergruppen",
+        "publicViewLink": "Öffentlicher Link mit Nur-Lese-Zugriff"
       }
     },
     "member": {
@@ -3072,5 +3081,27 @@
       "comingSoon": "Demnächst verfügbar",
       "replacementActivated": "Dein neuer Anmeldelink ist jetzt aktiv."
     }
+  },
+  "GroupViewLink": {
+    "title": "Öffentlicher Link mit Nur-Lese-Zugriff",
+    "description": "Mit diesem Link kann jeder die Gruppe ansehen, ohne sich anzumelden.",
+    "warning": "Dieser Link gewährt Lesezugriff auf alles in der Gruppe. Teile ihn nur mit Personen, denen du vertraust.",
+    "linkLabel": "Öffentlicher Link",
+    "copy": "Öffentlichen Link kopieren",
+    "copied": "Öffentlicher Link kopiert",
+    "enable": "Öffentlichen Link aktivieren",
+    "cancel": "Abbrechen",
+    "enabledStatus": "Jeder mit diesem Link kann die Gruppe ansehen.",
+    "replace": "Link ersetzen",
+    "remove": "Öffentlichen Link entfernen",
+    "replaceDialogTitle": "Öffentlichen Link mit Nur-Lese-Zugriff ersetzen?",
+    "replaceDialogDescription": "Der bisherige Link funktioniert ab sofort nicht mehr. Wer ihn hatte, verliert den Nur-Lese-Zugriff.",
+    "replaceConfirm": "Link ersetzen",
+    "removeDialogTitle": "Öffentlichen Link mit Nur-Lese-Zugriff entfernen?",
+    "removeDialogDescription": "Der aktuelle Link funktioniert ab sofort nicht mehr. Wer ihn hatte, verliert den Nur-Lese-Zugriff.",
+    "removeConfirm": "Link entfernen",
+    "enableSuccess": "Öffentlicher Link mit Nur-Lese-Zugriff erstellt",
+    "replaceSuccess": "Öffentlicher Link mit Nur-Lese-Zugriff ersetzt. Der bisherige Link funktioniert nicht mehr.",
+    "removeSuccess": "Öffentlicher Link mit Nur-Lese-Zugriff entfernt"
   }
 }

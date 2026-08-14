@@ -26,6 +26,7 @@ import { groupReportsRouter } from './reports'
 import { groupStatsRouter } from './stats'
 import { groupSubgroupsRouter } from './subgroups'
 import { updateGroupProcedure } from './update.procedure'
+import { groupViewRouter } from './view'
 
 export const groupsRouter = createTRPCRouter({
   expenses: groupExpensesRouter,
@@ -38,10 +39,12 @@ export const groupsRouter = createTRPCRouter({
   budgets: groupBudgetsRouter,
   subgroups: groupSubgroupsRouter,
   reports: groupReportsRouter,
+  view: groupViewRouter,
 
   /**
    * Get a single group plus the caller's membership and link-invite state.
-   * Read-accessible to pending link-invitees via `linkInviteToken`.
+   * Public view (`viewKey`) and pending link invites (`linkInviteToken`) share
+   * the same canonical group id.
    */
   get: getGroupProcedure,
 

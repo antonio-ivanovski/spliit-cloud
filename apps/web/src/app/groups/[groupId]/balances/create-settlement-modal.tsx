@@ -34,8 +34,10 @@ import {
 import { trpc } from '@/trpc/client'
 import { SETTLEMENT_CATEGORY_ID } from '@spliit/domain'
 
-import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
-import { useLinkInviteToken } from '../use-link-invite-token'
+import {
+  useCurrentGroup,
+  useIsReadOnlyGroupViewer,
+} from '../current-group-context'
 import { RemovedParticipantBadge } from './removed-participant-badge'
 import {
   settlementLegKey,
@@ -79,8 +81,7 @@ export function CreateSettlementModal({
   onOpenChange,
 }: CreateSettlementModalProps) {
   const { group } = useCurrentGroup()
-  const isPendingInvitee = useIsPendingInvitee()
-  const linkInviteToken = useLinkInviteToken()
+  const isReadOnlyGroupViewer = useIsReadOnlyGroupViewer()
   const locale = useLocale()
   const accountPreferences = useSyncedAccountPreferences()
   const accountTimeZone =
@@ -123,7 +124,7 @@ export function CreateSettlementModal({
   const selectedTotal = sumSettlementLegs(selectedLegs)
   const isLegacySingle = !settlementGroup && selectedLegs.length === 1
   const canCreate = Boolean(
-    legs.length > 0 && group && !group.archived && !isPendingInvitee,
+    legs.length > 0 && group && !group.archived && !isReadOnlyGroupViewer,
   )
   const needsConversion =
     legs.length > 0 &&
@@ -132,7 +133,7 @@ export function CreateSettlementModal({
     originalCurrencyCode !== groupCurrency.code
 
   const { mutateAsync: createExpenseMutateAsync, isPending } =
-    useCreateExpenseMutation({ linkInviteToken })
+    useCreateExpenseMutation()
   const createAttempt = useIdempotentCreate()
 
   useEffect(() => {

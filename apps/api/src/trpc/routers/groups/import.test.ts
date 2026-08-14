@@ -1092,7 +1092,7 @@ describe('importGroup (tRPC caller)', () => {
       },
     } as never)
 
-    // loadGroupContext queries
+    // loadGroupMutationContext queries
     prismaMock.group.findUnique.mockResolvedValue({
       id: 'grp-1',
       name: 'Trip',

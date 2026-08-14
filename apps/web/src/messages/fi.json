@@ -596,7 +596,14 @@
     },
     "importGroup": "Tuo ryhmä",
     "exportDescription": "Lataa ryhmän kulut PDF-raporttina, CSV-taulukkona tai JSON-varmuuskopiona.",
-    "allExpenses": "Kaikki kulut"
+    "allExpenses": "Kaikki kulut",
+    "viewOnlyBannerTitle": "Vain katselu",
+    "viewOnlyBannerDescription": "Voit tarkastella tätä ryhmää, mutta et voi lisätä, muokata tai poistaa sisältöä, kommentoida, tasata saldoja tai ladata sen tietoja.",
+    "invitationSignInToAccept": "Kirjaudu sisään hyväksyäksesi",
+    "viewLinkInvalid": {
+      "title": "Tämä katselulinkki ei ole kelvollinen",
+      "description": "Linkki on virheellinen tai se ei vastaa mitään tämän ryhmän katseluoikeutta."
+    }
   },
   "GroupForm": {
     "title": "Ryhmän tiedot",
@@ -1970,7 +1977,8 @@
     "regenerate": {
       "title": "Luo uusi linkki"
     },
-    "actionsFor": "Toiminnot: {name}"
+    "actionsFor": "Toiminnot: {name}",
+    "readOnlyDescription": "Tähän ryhmään kuuluvat henkilöt ja osallistujat. Sähköpostiosoitteet ja kutsutiedot on piilotettu."
   },
   "AccountSettings": {
     "title": "Tilin asetukset",
@@ -2240,7 +2248,8 @@
         "currency": "Valuutta",
         "currencyCode": "Valuuttakoodi",
         "linkedParticipant": "Linkitetty osallistuja",
-        "subgroupsEnabled": "Alaryhmät"
+        "subgroupsEnabled": "Alaryhmät",
+        "publicViewLink": "Julkinen vain katseluun tarkoitettu linkki"
       }
     },
     "member": {
@@ -3004,5 +3013,27 @@
       "comingSoon": "Tulossa pian",
       "replacementActivated": "Korvaava kirjautumislinkkisi on nyt käytössä."
     }
+  },
+  "GroupViewLink": {
+    "title": "Julkinen vain katseluun tarkoitettu linkki",
+    "description": "Tämän linkin avulla kuka tahansa voi tarkastella ryhmää kirjautumatta sisään.",
+    "warning": "Tämä linkki antaa vain katseluoikeuden kaikkeen ryhmän sisältöön. Jaa se vain luottamiesi ihmisten kanssa.",
+    "linkLabel": "Julkinen linkki",
+    "copy": "Kopioi julkinen linkki",
+    "copied": "Julkinen linkki kopioitu",
+    "enable": "Ota julkinen linkki käyttöön",
+    "cancel": "Peruuta",
+    "enabledStatus": "Kaikki tämän linkin saaneet voivat tarkastella ryhmää.",
+    "replace": "Vaihda linkki",
+    "remove": "Poista julkinen linkki",
+    "replaceDialogTitle": "Vaihdetaanko julkinen vain katseluun tarkoitettu linkki?",
+    "replaceDialogDescription": "Edellinen linkki lakkaa toimimasta välittömästi. Kaikki, joilla se oli, menettävät katseluoikeuden.",
+    "replaceConfirm": "Vaihda linkki",
+    "removeDialogTitle": "Poistetaanko julkinen vain katseluun tarkoitettu linkki?",
+    "removeDialogDescription": "Nykyinen linkki lakkaa toimimasta välittömästi. Kaikki, joilla se oli, menettävät katseluoikeuden.",
+    "removeConfirm": "Poista linkki",
+    "enableSuccess": "Julkinen vain katseluun tarkoitettu linkki luotu",
+    "replaceSuccess": "Julkinen vain katseluun tarkoitettu linkki vaihdettu. Edellinen linkki ei enää toimi.",
+    "removeSuccess": "Julkinen vain katseluun tarkoitettu linkki poistettu"
   }
 }

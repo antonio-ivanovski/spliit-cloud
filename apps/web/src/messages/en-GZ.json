@@ -313,7 +313,8 @@
         "currency": "currency",
         "currencyCode": "currency code",
         "linkedParticipant": "linked bestie",
-        "subgroupsEnabled": "subgroups"
+        "subgroupsEnabled": "subgroups",
+        "publicViewLink": "public view-only link"
       }
     },
     "import": {
@@ -2291,6 +2292,13 @@
     "linkInvitationInvalid": {
       "title": "this invite link is invalid",
       "description": "the link is malformed or does not match an invite for this group."
+    },
+    "viewOnlyBannerTitle": "view-only access",
+    "viewOnlyBannerDescription": "you can look around this group, but you can’t add, edit, delete, comment, settle balances, or download its data.",
+    "invitationSignInToAccept": "sign in to accept",
+    "viewLinkInvalid": {
+      "title": "this view-only link is invalid",
+      "description": "the link is malformed or does not match any view-only access for this group."
     }
   },
   "Header": {
@@ -2623,7 +2631,8 @@
     "regenerate": {
       "title": "generate a fresh link"
     },
-    "actionsFor": "actions for {name}"
+    "actionsFor": "actions for {name}",
+    "readOnlyDescription": "people and participants in this group. email addresses and invite details stay hidden."
   },
   "OAuth": {
     "consent": {
@@ -2996,5 +3005,27 @@
       "comingSoon": "coming soon, fr",
       "replacementActivated": "your replacement sign-in link is active now."
     }
+  },
+  "GroupViewLink": {
+    "title": "public view-only link",
+    "description": "anyone with this link can view the group without signing in.",
+    "warning": "this link gives view-only access to everything in the group. share it only with people you trust.",
+    "linkLabel": "public link",
+    "copy": "copy public link",
+    "copied": "public link copied",
+    "enable": "enable public link",
+    "cancel": "cancel",
+    "enabledStatus": "anyone with this link can view the group.",
+    "replace": "replace link",
+    "remove": "remove public link",
+    "replaceDialogTitle": "replace public view-only link?",
+    "replaceDialogDescription": "the previous link stops working right away. anyone who had it loses view-only access.",
+    "replaceConfirm": "replace link",
+    "removeDialogTitle": "remove public view-only link?",
+    "removeDialogDescription": "the current link stops working right away. anyone who had it loses view-only access.",
+    "removeConfirm": "remove link",
+    "enableSuccess": "public view-only link is live",
+    "replaceSuccess": "public view-only link swapped. the old one no longer works.",
+    "removeSuccess": "public view-only link is gone"
   }
 }

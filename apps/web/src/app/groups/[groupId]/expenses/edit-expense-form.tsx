@@ -19,8 +19,8 @@ import {
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { trpc } from '@/trpc/client'
 
-import { useIsPendingInvitee } from '../current-group-context'
-import { useLinkInviteToken } from '../use-link-invite-token'
+import { useIsReadOnlyGroupViewer } from '../current-group-context'
+import { useGroupAccessSearch } from '../use-group-access-search'
 import { ExpenseForm, type ExpenseSubmitOutcome } from './expense-form/index'
 import {
   useDeleteExpenseMutation,
@@ -49,17 +49,16 @@ export function EditExpenseForm({
   const { t: tExpenseForm } = useTranslation(undefined, {
     keyPrefix: 'ExpenseForm',
   })
-  const { data: groupData } = trpc.groups.get.useQuery({ groupId })
+  const access = useGroupAccessSearch()
+  const { data: groupData } = trpc.groups.get.useQuery({ groupId, ...access })
   const group = groupData?.group
   const currentLedgerParticipantId =
     groupData?.currentLedgerParticipantId ?? null
-  const isPendingInvitee = useIsPendingInvitee()
-  const linkInviteToken = useLinkInviteToken()
-
+  const isReadOnlyGroupViewer = useIsReadOnlyGroupViewer()
   const expenseQuery = trpc.groups.expenses.get.useQuery({
     groupId,
     expenseId,
-    linkInviteToken,
+    ...access,
   })
   const expenseData = expenseQuery.data
   const expense = expenseData?.expense
@@ -93,11 +92,9 @@ export function EditExpenseForm({
   const navigate = useNavigate()
 
   const { mutateAsync: updateExpenseMutateAsync } = useUpdateExpenseMutation({
-    linkInviteToken,
     onConflict: () => setConflictOpen(true),
   })
   const { mutateAsync: deleteExpenseMutateAsync } = useDeleteExpenseMutation({
-    linkInviteToken,
     onDeleted: isGlobalExpensesReturnTo(returnTo)
       ? () =>
           navigate({
@@ -133,9 +130,9 @@ export function EditExpenseForm({
   // viewer is a PENDING invitee. The server enforces the same rule on
   // `groups.expenses.update` and `groups.expenses.delete`.
   const readOnly =
-    !!group.archived || isPendingInvitee || !expense.permissions.canEdit
+    !!group.archived || isReadOnlyGroupViewer || !expense.permissions.canEdit
 
-  if (isPendingInvitee) {
+  if (isReadOnlyGroupViewer) {
     return (
       <Card className="mobile-surface">
         <CardHeader className="hidden sm:flex">
@@ -179,7 +176,6 @@ export function EditExpenseForm({
         expense={expense}
         cancelLink={expenseFormCancelLink(group.id, returnTo)}
         currentLedgerParticipantId={currentLedgerParticipantId}
-        linkInviteToken={linkInviteToken}
         readOnly={readOnly}
         editScope={selectedScope}
         heading={tExpenseForm('Expense.editTitle', { title: expense.title })}

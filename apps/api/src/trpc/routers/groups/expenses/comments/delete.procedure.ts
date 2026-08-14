@@ -5,7 +5,7 @@ import {
   deleteExpenseComment,
   findExpenseComment,
 } from '../../../../../lib/api'
-import { loadGroupContext, protectedProcedure } from '../../../../init'
+import { loadGroupMutationContext, protectedProcedure } from '../../../../init'
 import { deleteExpenseCommentOutputSchema } from '../../../../outputs/expense-comments'
 
 export const deleteExpenseCommentProcedure = protectedProcedure
@@ -18,7 +18,7 @@ export const deleteExpenseCommentProcedure = protectedProcedure
   )
   .output(deleteExpenseCommentOutputSchema)
   .mutation(async ({ input, ctx }) => {
-    const { group } = await loadGroupContext({
+    const { group } = await loadGroupMutationContext({
       groupId: input.groupId,
       accountId: ctx.auth.user.id,
     })

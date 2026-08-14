@@ -42,8 +42,11 @@ import type { AppRouterOutput } from '@spliit/api/router'
 import type { SplitMode } from '@spliit/domain'
 import { calculatePaidByShares, calculateShares } from '@spliit/domain'
 
-import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
-import { useLinkInviteToken } from '../use-link-invite-token'
+import {
+  useCurrentGroup,
+  useIsReadOnlyGroupViewer,
+} from '../current-group-context'
+import { useGroupAccessSearch } from '../use-group-access-search'
 import { expenseShareRatioLabel } from './expense-share-ratio-label'
 import {
   RecurringActionsMenu,
@@ -133,8 +136,8 @@ export function ExpensePreviewModal({
   onMakeCopy,
 }: ExpensePreviewModalProps) {
   const { group, currentLedgerParticipantId, currentMember } = useCurrentGroup()
-  const isPendingInvitee = useIsPendingInvitee()
-  const linkInviteToken = useLinkInviteToken()
+  const isReadOnlyGroupViewer = useIsReadOnlyGroupViewer()
+  const { linkInviteToken, viewKey } = useGroupAccessSearch()
   const locale = useLocale()
   const navigate = useNavigate()
   const { toast } = useToast()
@@ -146,7 +149,7 @@ export function ExpensePreviewModal({
   })
 
   const { data, isLoading, error } = trpc.groups.expenses.get.useQuery(
-    { groupId, expenseId, linkInviteToken },
+    { groupId, expenseId, linkInviteToken, viewKey },
     { enabled: open, retry: false },
   )
 
@@ -182,7 +185,11 @@ export function ExpensePreviewModal({
   const canDelete = Boolean(expense?.permissions.canDelete)
   const canManageRecurrence = Boolean(expense?.permissions.canManageRecurrence)
   const canCopy = Boolean(
-    expense && group && currentMember && !group.archived && !isPendingInvitee,
+    expense &&
+    group &&
+    currentMember &&
+    !group.archived &&
+    !isReadOnlyGroupViewer,
   )
   const participants = group?.participants ?? []
   const balanceExpense = expense
@@ -286,12 +293,9 @@ export function ExpensePreviewModal({
   }
 
   const { mutateAsync: deleteExpenseMutateAsync } = useDeleteExpenseMutation({
-    linkInviteToken,
     onDeleted: onClose,
   })
-  const { mutateAsync: stopRecurrenceMutateAsync } = useStopRecurrenceMutation({
-    linkInviteToken,
-  })
+  const { mutateAsync: stopRecurrenceMutateAsync } = useStopRecurrenceMutation()
   const handleDelete = async (option?: RecurringDeleteOption) => {
     if (!option) {
       await deleteExpenseMutateAsync({ expenseId, groupId })

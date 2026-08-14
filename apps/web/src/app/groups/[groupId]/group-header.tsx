@@ -4,7 +4,7 @@ import {
   useNavigate,
   useSearch,
 } from '@tanstack/react-router'
-import { ArrowLeft, Check, Info, X } from 'lucide-react'
+import { ArrowLeft, Check, Eye, Info, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { GroupTabs } from '@/app/groups/[groupId]/group-tabs'
@@ -15,6 +15,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { isFocusedMobilePath } from '@/lib/mobile-nav'
+import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 
 import { useCurrentGroup } from './current-group-context'
@@ -34,17 +35,15 @@ export const GroupHeader = ({
     currentMember,
     currentInvitation,
     linkInviteState,
+    viewer,
   } = useCurrentGroup()
   const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const { toast } = useToast()
-  const navigate = useNavigate()
+  const { data: account } = useCurrentAccount()
+  const navigate = useNavigate({ from: '/groups/$groupId' })
   const utils = trpc.useUtils()
   const pathname = useLocation({ select: (location) => location.pathname })
   const focusedMobileRoute = isFocusedMobilePath(pathname)
-
-  // The `?invite=<token>` search param is the single source of truth
-  // for link-invite banner state. The route schema captures any
-  // non-empty string and leaves token validity to the server.
   const { invite: inviteToken } = useSearch({
     from: '/groups/$groupId',
   })
@@ -55,13 +54,9 @@ export const GroupHeader = ({
         description: tGroups('invitationAccepted'),
         variant: 'success',
       })
-      // Strip the consumed `?invite=<token>` so the URL returns to the
-      // plain group page — otherwise the "already a member" banner
-      // would reappear on the next load.
       void navigate({
-        to: '/groups/$groupId',
-        params: { groupId },
-        search: { invite: undefined },
+        search: (prev) => ({ ...prev, invite: undefined }),
+        replace: true,
       })
       void utils.groups.get.invalidate({ groupId })
       void invalidateAccountGroupLists(utils)
@@ -75,7 +70,6 @@ export const GroupHeader = ({
       })
     },
   })
-
   const acceptMutation = trpc.invitations.accept.useMutation({
     onSuccess: () => {
       toast({
@@ -200,57 +194,91 @@ export const GroupHeader = ({
                 </p>
               )}
             </div>
-            <div className="flex gap-2">
-              <Button
-                size="sm"
-                onClick={() =>
-                  isLinkBanner && inviteToken
-                    ? acceptLinkMutation.mutate({ token: inviteToken })
-                    : acceptMutation.mutate({
-                        invitationId: currentInvitation.id,
-                      })
-                }
-                disabled={
-                  acceptMutation.isPending ||
-                  declineMutation.isPending ||
-                  acceptLinkMutation.isPending
-                }
-              >
-                <Check className="me-2 h-4 w-4" />
-                {tGroups('invitationAccept')}
-              </Button>
-              {isLinkBanner ? (
-                // Link invites are one-shot: declining just drops the
-                // token from the URL. The viewer is a non-member so
-                // the bare group URL would surface the "no access"
-                // page — send them to the groups list instead.
+            {account ? (
+              <div className="flex gap-2">
                 <Button
                   size="sm"
-                  variant="outline"
-                  render={<Link to="/" />}
-                  disabled={acceptLinkMutation.isPending}
-                >
-                  <X className="me-2 h-4 w-4" />
-                  {tGroups('invitationDecline')}
-                </Button>
-              ) : (
-                <Button
-                  size="sm"
-                  variant="outline"
                   onClick={() =>
-                    declineMutation.mutate({
-                      invitationId: currentInvitation.id,
-                    })
+                    isLinkBanner
+                      ? inviteToken
+                        ? acceptLinkMutation.mutate({
+                            token: inviteToken,
+                          })
+                        : undefined
+                      : acceptMutation.mutate({
+                          invitationId: currentInvitation.id,
+                        })
                   }
                   disabled={
-                    acceptMutation.isPending || declineMutation.isPending
+                    acceptMutation.isPending ||
+                    declineMutation.isPending ||
+                    acceptLinkMutation.isPending ||
+                    (isLinkBanner && !inviteToken)
                   }
                 >
-                  <X className="me-2 h-4 w-4" />
-                  {tGroups('invitationDecline')}
+                  <Check className="me-2 h-4 w-4" />
+                  {tGroups('invitationAccept')}
                 </Button>
-              )}
-            </div>
+                {isLinkBanner ? (
+                  // Link invites are one-shot: declining just drops the
+                  // token from the URL. The viewer is a non-member so
+                  // the bare group URL would surface the "no access"
+                  // page — send them to the groups list instead.
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    render={<Link to="/" />}
+                    disabled={acceptLinkMutation.isPending}
+                  >
+                    <X className="me-2 h-4 w-4" />
+                    {tGroups('invitationDecline')}
+                  </Button>
+                ) : (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() =>
+                      declineMutation.mutate({
+                        invitationId: currentInvitation.id,
+                      })
+                    }
+                    disabled={
+                      acceptMutation.isPending || declineMutation.isPending
+                    }
+                  >
+                    <X className="me-2 h-4 w-4" />
+                    {tGroups('invitationDecline')}
+                  </Button>
+                )}
+              </div>
+            ) : (
+              <Button
+                size="sm"
+                render={
+                  <Link
+                    to="/"
+                    search={{
+                      redirect: inviteToken
+                        ? `/groups/${groupId}?invite=${encodeURIComponent(inviteToken)}`
+                        : `/groups/${groupId}`,
+                      invitation: isLinkBanner ? inviteToken : undefined,
+                    }}
+                  />
+                }
+              >
+                {tGroups('invitationSignInToAccept')}
+              </Button>
+            )}
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {viewer?.source === 'PUBLIC_LINK' && (
+        <Alert className="border-sky-500/30 bg-sky-500/5">
+          <Eye className="size-4 text-sky-600" aria-hidden="true" />
+          <AlertTitle>{tGroups('viewOnlyBannerTitle')}</AlertTitle>
+          <AlertDescription>
+            {tGroups('viewOnlyBannerDescription')}
           </AlertDescription>
         </Alert>
       )}
@@ -297,13 +325,9 @@ export const GroupHeader = ({
         </Alert>
       )}
 
-      {/* Group tabs are rendered for active members (including those
-          carrying a link token) so they can navigate the group.
-          Tabs are suppressed when a pending invite banner is showing
-          — the viewer is read-only and the affordances would be
-          misleading. They're also suppressed for the "no longer
-          valid" link banner since the viewer can't act. */}
-      {currentMember && !isLoading && (
+      {/* Every valid access source gets the complete navigation. Mutation
+          affordances are controlled independently by the access mode. */}
+      {viewer && !isLoading && (
         <div className="flex flex-col gap-3">
           <GroupTabs groupId={groupId} />
         </div>

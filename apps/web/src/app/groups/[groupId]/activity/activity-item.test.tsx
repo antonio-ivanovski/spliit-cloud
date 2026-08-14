@@ -268,6 +268,31 @@ describe('ActivityItem', () => {
     expect(change.textContent).toMatch(/Guest User.*→.*Alice/)
   })
 
+  it('renders public view-only link changes in the activity feed', () => {
+    renderItem(
+      makeActivity({
+        type: 'GROUP_UPDATED',
+        data: {
+          kind: 'group',
+          changedFields: ['publicViewLink'],
+          changes: [
+            {
+              field: 'publicViewLink',
+              before: 'Disabled',
+              after: 'Enabled',
+            },
+          ],
+        },
+      }),
+    )
+
+    expect(screen.getByText('Public view-only link')).toBeInTheDocument()
+    const change = screen.getByTestId(
+      'activity-item-act-1-change-publicViewLink',
+    )
+    expect(change.textContent).toMatch(/Disabled.*→.*Enabled/)
+  })
+
   it('renders subgroup enablement changes in the activity feed', () => {
     renderItem(
       makeActivity({

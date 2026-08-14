@@ -14,7 +14,7 @@ import {
 } from '../../../../lib/api/resource-permissions'
 import { enqueueBudgetEvaluation } from '../../../../lib/budgets/enqueue'
 import { ConversionError } from '../../../../lib/expense-conversion'
-import { loadGroupContext, protectedProcedure } from '../../../init'
+import { loadGroupMutationContext, protectedProcedure } from '../../../init'
 import { updateExpenseOutputSchema } from '../../../outputs/expenses'
 
 export const updateGroupExpenseProcedure = protectedProcedure
@@ -33,7 +33,7 @@ export const updateGroupExpenseProcedure = protectedProcedure
       input: { expenseId, groupId, expectedVersion, expense, scope },
       ctx,
     }) => {
-      const { group, member } = await loadGroupContext({
+      const { group, member } = await loadGroupMutationContext({
         groupId,
         accountId: ctx.auth.user.id,
       })

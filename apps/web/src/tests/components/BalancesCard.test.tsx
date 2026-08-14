@@ -3,18 +3,14 @@ import { describe, expect, it, vi } from 'vitest'
 import { BalancesCard } from '@/app/groups/[groupId]/balances/balances-card'
 import {
   useCurrentGroup,
-  useIsPendingInvitee,
+  useIsReadOnlyGroupViewer,
 } from '@/app/groups/[groupId]/current-group-context'
 import { render, screen } from '@/test/test-utils'
 
 vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useCurrentGroup: vi.fn(),
   useCurrentGroupOrNull: vi.fn().mockReturnValue(null),
-  useIsPendingInvitee: vi.fn(),
-}))
-
-vi.mock('@/app/groups/[groupId]/use-link-invite-token', () => ({
-  useLinkInviteToken: vi.fn(() => undefined),
+  useIsReadOnlyGroupViewer: vi.fn(),
 }))
 
 vi.mock('@/app/groups/[groupId]/expenses/expense-mutation-hooks', () => ({
@@ -92,7 +88,7 @@ function setupCurrentGroup() {
     currentInvitation: null,
     linkInviteState: null,
   })
-  vi.mocked(useIsPendingInvitee).mockReturnValue(false)
+  vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
 }
 
 describe('BalancesCard', () => {

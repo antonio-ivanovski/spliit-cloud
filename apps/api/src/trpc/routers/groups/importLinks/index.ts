@@ -10,7 +10,7 @@ import {
 } from '../../../../lib/api'
 import {
   createTRPCRouter,
-  loadGroupContext,
+  loadGroupMutationContext,
   protectedProcedure,
 } from '../../../init'
 import {
@@ -42,7 +42,7 @@ export const importLinksRouter = createTRPCRouter({
     .input(z.object({ groupId: z.string().min(1) }))
     .output(unlinkedParticipantsOutputSchema)
     .query(async ({ input: { groupId }, ctx }) => {
-      await loadGroupContext({ groupId, accountId: ctx.auth.user.id })
+      await loadGroupMutationContext({ groupId, accountId: ctx.auth.user.id })
       const unlinked = await listUnlinkedParticipants(groupId)
       return { unlinked }
     }),
@@ -90,7 +90,7 @@ export const importLinksRouter = createTRPCRouter({
         },
         ctx,
       }) => {
-        const { group, member } = await loadGroupContext({
+        const { group, member } = await loadGroupMutationContext({
           groupId,
           accountId: ctx.auth.user.id,
         })

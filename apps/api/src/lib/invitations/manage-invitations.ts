@@ -395,7 +395,7 @@ export async function regenerateLinkInvitation(
       ledgerParticipantId: updated.ledgerParticipantId,
       updatedAt: updated.updatedAt,
     },
-    inviteUrl: `${getWebBaseUrl()}/groups/${updated.groupId}?invite=${token}`,
+    inviteUrl: `${getWebBaseUrl()}/groups/${opts.groupId}?invite=${token}`,
   }
 }
 

@@ -590,7 +590,14 @@
     },
     "importGroup": "グループをインポート",
     "exportDescription": "グループの支出をPDFレポート、CSVスプレッドシート、JSONバックアップとしてダウンロードします。",
-    "allExpenses": "すべての支出"
+    "allExpenses": "すべての支出",
+    "viewOnlyBannerTitle": "閲覧のみのアクセス",
+    "viewOnlyBannerDescription": "このグループを閲覧できますが、追加、編集、削除、コメント、残高の精算、データのダウンロードはできません。",
+    "invitationSignInToAccept": "サインインして承認",
+    "viewLinkInvalid": {
+      "title": "この閲覧専用リンクは無効です",
+      "description": "リンクの形式が正しくないか、このグループの閲覧のみのアクセスに一致しません。"
+    }
   },
   "GroupForm": {
     "title": "グループ情報",
@@ -1963,7 +1970,8 @@
     "regenerate": {
       "title": "新しいリンクを生成"
     },
-    "actionsFor": "{name}の操作"
+    "actionsFor": "{name}の操作",
+    "readOnlyDescription": "このグループに含まれるメンバーと参加者。メールアドレスと招待の詳細は表示されません。"
   },
   "AccountSettings": {
     "title": "アカウント設定",
@@ -2233,7 +2241,8 @@
         "currency": "通貨",
         "currencyCode": "通貨コード",
         "linkedParticipant": "リンクされた参加者",
-        "subgroupsEnabled": "サブグループ"
+        "subgroupsEnabled": "サブグループ",
+        "publicViewLink": "公開閲覧専用リンク"
       }
     },
     "member": {
@@ -2987,5 +2996,27 @@
       "comingSoon": "近日公開",
       "replacementActivated": "新しいサインインリンクが有効になりました。"
     }
+  },
+  "GroupViewLink": {
+    "title": "公開閲覧専用リンク",
+    "description": "このリンクを知っている人は誰でも、サインインせずにグループを閲覧できます。",
+    "warning": "このリンクを使うと、グループ内のすべてを閲覧専用で確認できます。信頼できる人とのみ共有してください。",
+    "linkLabel": "公開閲覧専用リンク",
+    "copy": "公開リンクをコピー",
+    "copied": "公開リンクをコピーしました",
+    "enable": "公開リンクを有効にする",
+    "cancel": "キャンセル",
+    "enabledStatus": "このリンクを知っている人は誰でもグループを閲覧できます。",
+    "replace": "リンクを置き換える",
+    "remove": "公開リンクを削除",
+    "replaceDialogTitle": "公開閲覧専用リンクを置き換えますか？",
+    "replaceDialogDescription": "以前のリンクは直ちに利用できなくなります。持っていた人は閲覧専用アクセスを失います。",
+    "replaceConfirm": "リンクを置き換える",
+    "removeDialogTitle": "公開閲覧専用リンクを削除しますか？",
+    "removeDialogDescription": "現在のリンクは直ちに利用できなくなります。持っていた人は閲覧専用アクセスを失います。",
+    "removeConfirm": "リンクを削除",
+    "enableSuccess": "公開閲覧専用リンクを作成しました",
+    "replaceSuccess": "公開閲覧専用リンクを置き換えました。以前のリンクは使えません。",
+    "removeSuccess": "公開閲覧専用リンクを削除しました"
   }
 }

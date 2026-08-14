@@ -45,7 +45,8 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
   } = useSearch({ strict: false }) as HomeSearch
   const redirectTo = options?.redirectTo ?? redirect ?? '/'
   const deployment = useDeploymentConfig()
-  const linkInviteToken = extractLinkInviteTokenFromRedirect(redirect)
+  const linkInviteToken =
+    invitation?.trim() || extractLinkInviteTokenFromRedirect(redirect)
   const hasInviteProof = hasSignupInviteProof({ redirect, invitation })
   const hasEmailInvitation = Boolean(invitation?.trim())
   const canSignUp =

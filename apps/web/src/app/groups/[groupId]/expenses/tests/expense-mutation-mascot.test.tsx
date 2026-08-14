@@ -94,9 +94,9 @@ import {
 } from '../expense-mutation-hooks'
 
 function HookProbe() {
-  useCreateExpenseMutation({ linkInviteToken: undefined })
-  useUpdateExpenseMutation({ linkInviteToken: undefined })
-  useDeleteExpenseMutation({ linkInviteToken: undefined })
+  useCreateExpenseMutation()
+  useUpdateExpenseMutation()
+  useDeleteExpenseMutation()
   return null
 }
 

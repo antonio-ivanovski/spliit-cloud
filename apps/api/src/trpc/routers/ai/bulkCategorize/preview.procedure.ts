@@ -20,7 +20,7 @@ import {
 import { env } from '../../../../lib/env'
 import {
   enforceBulkAiRequestLimit,
-  loadGroupContext,
+  loadGroupMutationContext,
   protectedProcedure,
 } from '../../../init'
 import { previewBulkCategorizeOutputSchema } from '../../../outputs/ai'
@@ -62,7 +62,7 @@ export const aiBulkCategorizePreviewProcedure = protectedProcedure
         message: 'Bulk categorization is disabled',
       })
     }
-    const { member, group } = await loadGroupContext({
+    const { member, group } = await loadGroupMutationContext({
       groupId: input.groupId,
       accountId: ctx.auth.user.id,
     })

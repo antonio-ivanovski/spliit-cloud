@@ -15,6 +15,8 @@ import {
   type ExpenseFormInputValues,
 } from '@spliit/domain'
 
+import { useGroupAccessSearch } from '../../use-group-access-search'
+
 const TITLE_SUGGEST_DEBOUNCE_MS = 250
 
 export function useSuggestCategoryFromTitle(args: {
@@ -23,7 +25,6 @@ export function useSuggestCategoryFromTitle(args: {
   locale: string
   readOnly: boolean
   enableCategoryExtract: boolean
-  linkInviteToken?: string
   suggestCategoryMutation: ReturnType<
     typeof trpc.groups.expenses.suggestCategory.useMutation
   >
@@ -34,7 +35,6 @@ export function useSuggestCategoryFromTitle(args: {
     locale,
     readOnly,
     enableCategoryExtract,
-    linkInviteToken,
     suggestCategoryMutation,
   } = args
   const { t } = useTranslation(undefined, { keyPrefix: 'Categories' })
@@ -71,7 +71,7 @@ export function useSuggestCategoryFromTitle(args: {
   )
 
   const memoryQuery = trpc.groups.expenses.categoryMemory.useQuery(
-    { groupId, linkInviteToken },
+    { groupId, ...useGroupAccessSearch() },
     { enabled: !readOnly },
   )
   const memory = memoryQuery.data?.expenses
@@ -130,7 +130,6 @@ export function useSuggestCategoryFromTitle(args: {
       groupId,
       locale,
       allowAi: enableCategoryExtract,
-      linkInviteToken,
     })
       .then(({ categoryId }) => {
         if (
@@ -167,7 +166,6 @@ export function useSuggestCategoryFromTitle(args: {
     enableCategoryExtract,
     form,
     groupId,
-    linkInviteToken,
     locale,
     memory,
     memoryReady,

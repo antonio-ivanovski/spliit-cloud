@@ -8,7 +8,7 @@ import { env } from '../../../lib/env'
 import { resolveParticipantDisplayName } from '../../../lib/invitations/display'
 import {
   enforceAiRequestLimit,
-  loadGroupContext,
+  loadGroupMutationContext,
   protectedProcedure,
 } from '../../init'
 import { extractExpenseInformationFromAudioOutputSchema } from '../../outputs/ai'
@@ -34,7 +34,7 @@ export const extractExpenseInformationFromAudioProcedure = protectedProcedure
       })
     }
 
-    const group = await loadGroupContext({
+    const group = await loadGroupMutationContext({
       groupId: input.groupId,
       accountId: ctx.auth.user.id,
     })

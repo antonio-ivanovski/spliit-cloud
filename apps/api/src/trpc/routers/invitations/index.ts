@@ -50,7 +50,7 @@ import {
 } from '../../../lib/invitations/manage-invitations'
 import {
   createTRPCRouter,
-  loadGroupContext,
+  loadGroupMutationContext,
   protectedProcedure,
   publicProcedure,
 } from '../../init'
@@ -70,12 +70,12 @@ import {
 // admins or members; ownership transfers are not a separate flow.
 const invitationRoleSchema = z.enum(['ADMIN', 'MEMBER'])
 
-/** Validate a raw link-invite token. Same charset the generator emits. */
-const linkTokenSchema = z
+/** Validate a raw link-invitation token from `?invite=`. */
+const invitationTokenSchema = z
   .string()
   .min(16)
   .max(128)
-  .regex(/^[A-Za-z0-9_-]+$/, 'Invalid invitation token')
+  .regex(/^[A-Za-z0-9_-]+$/, 'Invalid invitation link')
 
 export const invitationsRouter = createTRPCRouter({
   // Admins see every pending invitation; members see only invitations they
@@ -91,7 +91,7 @@ export const invitationsRouter = createTRPCRouter({
     .output(invitationsListOutputSchema)
     .query(async ({ input: { groupId }, ctx }) => {
       const [{ group, member }, allInvitations] = await Promise.all([
-        loadGroupContext({
+        loadGroupMutationContext({
           groupId,
           accountId: ctx.auth.user.id,
         }),
@@ -165,7 +165,7 @@ export const invitationsRouter = createTRPCRouter({
     )
     .output(createLinkInvitationOutputSchema)
     .mutation(async ({ input, ctx }) => {
-      const { group, member } = await loadGroupContext({
+      const { group, member } = await loadGroupMutationContext({
         groupId: input.groupId,
         accountId: ctx.auth.user.id,
       })
@@ -251,7 +251,7 @@ export const invitationsRouter = createTRPCRouter({
   // itself is the credential — and the helper returns only redacted
   // fields, not the full invitation row.
   previewLink: publicProcedure
-    .input(z.object({ token: linkTokenSchema }))
+    .input(z.object({ token: invitationTokenSchema }))
     .output(z.object({ preview: linkInvitationPreviewSchema.nullable() }))
     .query(async ({ input }) => {
       const preview = await getLinkInvitationPreview(input.token)
@@ -266,7 +266,7 @@ export const invitationsRouter = createTRPCRouter({
   // refuses expired / revoked / already-used tokens and the
   // double-active-member case.
   acceptLink: protectedProcedure
-    .input(z.object({ token: linkTokenSchema }))
+    .input(z.object({ token: invitationTokenSchema }))
     .output(
       z.object({ groupId: z.string(), role: z.enum(['ADMIN', 'MEMBER']) }),
     )
@@ -303,7 +303,7 @@ export const invitationsRouter = createTRPCRouter({
     )
     .output(z.object({ invitationId: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      const { group, member } = await loadGroupContext({
+      const { group, member } = await loadGroupMutationContext({
         groupId: input.groupId,
         accountId: ctx.auth.user.id,
       })
@@ -392,7 +392,7 @@ export const invitationsRouter = createTRPCRouter({
     )
     .output(revokeInvitationPreviewSchema)
     .query(async ({ input: { invitationId, groupId }, ctx }) => {
-      const { group, member } = await loadGroupContext({
+      const { group, member } = await loadGroupMutationContext({
         groupId,
         accountId: ctx.auth.user.id,
       }).catch(() => {
@@ -485,7 +485,7 @@ export const invitationsRouter = createTRPCRouter({
           message: 'friendLedgerNotRevocable',
         })
       }
-      const { group, member } = await loadGroupContext({
+      const { group, member } = await loadGroupMutationContext({
         groupId: existing.groupId,
         accountId: ctx.auth.user.id,
       })
@@ -577,7 +577,7 @@ export const invitationsRouter = createTRPCRouter({
     .output(updatePendingInvitationOutputSchema)
     .mutation(async ({ input, ctx }) => {
       const invitation = await loadInvitationWithGroup(input.invitationId)
-      const { group, member } = await loadGroupContext({
+      const { group, member } = await loadGroupMutationContext({
         groupId: invitation.groupId,
         accountId: ctx.auth.user.id,
       })
@@ -635,7 +635,7 @@ export const invitationsRouter = createTRPCRouter({
     .output(regenerateLinkInvitationOutputSchema)
     .mutation(async ({ input, ctx }) => {
       const invitation = await loadInvitationWithGroup(input.invitationId)
-      const { group, member } = await loadGroupContext({
+      const { group, member } = await loadGroupMutationContext({
         groupId: invitation.groupId,
         accountId: ctx.auth.user.id,
       })

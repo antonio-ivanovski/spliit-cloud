@@ -19,33 +19,29 @@ import {
   mapSubgroup,
   subgroupWithMembersSelect,
 } from '../../../../lib/api/subgroups'
+import { redactViewerDisplayName } from '../../../../lib/group-view'
 import { resolveParticipantDisplayName } from '../../../../lib/invitations/display'
 import {
-  hashLinkInviteToken,
-  linkInviteTokenInput,
+  groupAccessFields,
+  groupReadProcedure,
+  groupViewerArgs,
   loadGroupViewer,
-  protectedProcedure,
 } from '../../../init'
 import { listBalancesOutputSchema } from '../../../outputs/balances'
 
-export const listGroupBalancesProcedure = protectedProcedure
+export const listGroupBalancesProcedure = groupReadProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
-      linkInviteToken: linkInviteTokenInput.describe(
-        'Raw link-invite token from the share URL. Grants read access to pending link-invitees.',
-      ),
+      ...groupAccessFields,
     }),
   )
   .output(listBalancesOutputSchema)
-  .query(async ({ input: { groupId, linkInviteToken }, ctx }) => {
-    const { group, ledger } = await loadGroupViewer({
-      groupId,
-      accountId: ctx.auth.user.id,
-      accountEmail: ctx.auth.user.email,
-      linkTokenHash: await hashLinkInviteToken(linkInviteToken),
-    })
-    const rows = await getGroupBalanceExpenses(groupId, ledger.id)
+  .query(async ({ input, ctx }) => {
+    const { group, ledger, viewer } = await loadGroupViewer(
+      groupViewerArgs(input, ctx),
+    )
+    const rows = await getGroupBalanceExpenses(group.id, ledger.id)
     const expenses = rows.map(toBalanceExpense)
     const participantIds = Array.from(
       new Set(
@@ -73,7 +69,7 @@ export const listGroupBalancesProcedure = protectedProcedure
     const publicBalances = getPublicBalances(globalSuggestedSettlements)
     const subgroupRows = group.subgroupsEnabled
       ? ((await prisma.subgroup.findMany({
-          where: { groupId },
+          where: { groupId: group.id },
           orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
           select: subgroupWithMembersSelect,
         })) ?? [])
@@ -113,7 +109,10 @@ export const listGroupBalancesProcedure = protectedProcedure
     // so the balances UI can label settlement counterparties correctly.
     const publicParticipants = participants.map((participant) => ({
       id: participant.id,
-      name: resolveParticipantDisplayName(participant),
+      name:
+        viewer.kind === 'ACTIVE'
+          ? resolveParticipantDisplayName(participant)
+          : redactViewerDisplayName(resolveParticipantDisplayName(participant)),
       removed: participant.removedAt != null,
     }))
 

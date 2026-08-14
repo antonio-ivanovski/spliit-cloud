@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { CreateSettlementModal } from '@/app/groups/[groupId]/balances/create-settlement-modal'
 import {
   useCurrentGroup,
-  useIsPendingInvitee,
+  useIsReadOnlyGroupViewer,
 } from '@/app/groups/[groupId]/current-group-context'
 import { render, screen, waitFor, within } from '@/test/test-utils'
 
@@ -17,11 +17,7 @@ const mockNavigate = vi.fn()
 vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useCurrentGroup: vi.fn(),
   useCurrentGroupOrNull: vi.fn().mockReturnValue(null),
-  useIsPendingInvitee: vi.fn(),
-}))
-
-vi.mock('@/app/groups/[groupId]/use-link-invite-token', () => ({
-  useLinkInviteToken: vi.fn(() => undefined),
+  useIsReadOnlyGroupViewer: vi.fn(),
 }))
 
 vi.mock('@/app/groups/[groupId]/expenses/expense-mutation-hooks', () => ({
@@ -124,12 +120,12 @@ function setupCurrentGroup({
     { id: 'alice-id', name: 'Alice' },
     { id: 'bob-id', name: 'Bob' },
   ],
-  isPendingInvitee = false,
+  isReadOnlyGroupViewer = false,
 }: {
   archived?: boolean
   currencyCode?: string
   participants?: Array<{ id: string; name: string }>
-  isPendingInvitee?: boolean
+  isReadOnlyGroupViewer?: boolean
 } = {}) {
   vi.mocked(useCurrentGroup).mockReturnValue({
     isLoading: false,
@@ -138,10 +134,10 @@ function setupCurrentGroup({
     displayName: 'Trip',
     currentLedgerParticipantId: null,
     currentMember: null,
-    currentInvitation: isPendingInvitee ? ({} as never) : null,
+    currentInvitation: null,
     linkInviteState: null,
   })
-  vi.mocked(useIsPendingInvitee).mockReturnValue(isPendingInvitee)
+  vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(isReadOnlyGroupViewer)
 }
 
 // ── Tests ───────────────────────────────────────────────────────────────
@@ -431,8 +427,8 @@ describe('CreateSettlementModal', () => {
     expect(screen.queryByTestId('settlement-edit')).not.toBeInTheDocument()
   })
 
-  it('hides actions when viewer is a pending invitee', () => {
-    setupCurrentGroup({ isPendingInvitee: true })
+  it('hides actions for a read-only viewer independently of invitation state', () => {
+    setupCurrentGroup({ isReadOnlyGroupViewer: true })
 
     render(
       <CreateSettlementModal

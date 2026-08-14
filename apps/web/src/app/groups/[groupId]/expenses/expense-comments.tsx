@@ -12,8 +12,11 @@ import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 import { formatZonedDate } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 
-import { useCurrentGroup, useIsPendingInvitee } from '../current-group-context'
-import { useLinkInviteToken } from '../use-link-invite-token'
+import {
+  useCurrentGroup,
+  useIsReadOnlyGroupViewer,
+} from '../current-group-context'
+import { useGroupAccessSearch } from '../use-group-access-search'
 
 const MAX_COMMENT_LENGTH = 500
 
@@ -28,8 +31,8 @@ type ExpenseCommentsProps = {
  */
 export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
   const { group, currentMember } = useCurrentGroup()
-  const isPendingInvitee = useIsPendingInvitee()
-  const linkInviteToken = useLinkInviteToken()
+  const isReadOnlyGroupViewer = useIsReadOnlyGroupViewer()
+  const { linkInviteToken, viewKey } = useGroupAccessSearch()
   const locale = useLocale()
   const accountPreferences = useSyncedAccountPreferences()
   const accountTimeZone =
@@ -39,7 +42,7 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
   const createAttempt = useIdempotentCreate()
 
   const commentsQuery = trpc.groups.expenses.comments.list.useQuery(
-    { groupId, expenseId, linkInviteToken },
+    { groupId, expenseId, linkInviteToken, viewKey },
     { retry: false },
   )
   const [draft, setDraft] = useState('')
@@ -52,7 +55,7 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
   const deleteMutation = trpc.groups.expenses.comments.delete.useMutation()
 
   const canComment = Boolean(
-    group && !group.archived && !isPendingInvitee && currentMember,
+    group && !group.archived && !isReadOnlyGroupViewer && currentMember,
   )
 
   const invalidateComments = async () => {
@@ -62,8 +65,13 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
         groupId,
         expenseId,
         linkInviteToken,
+        viewKey,
       }),
-      utils.groups.activities.list.invalidate({ groupId, linkInviteToken }),
+      utils.groups.activities.list.invalidate({
+        groupId,
+        linkInviteToken,
+        viewKey,
+      }),
     ])
   }
 
@@ -170,7 +178,7 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
                       accountTimeZone,
                     )}
                   </time>
-                  {comment.canDelete && (
+                  {!isReadOnlyGroupViewer && comment.canDelete && (
                     <Button
                       type="button"
                       variant="ghost"

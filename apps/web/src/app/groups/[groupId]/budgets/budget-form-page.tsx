@@ -5,8 +5,9 @@ import { BudgetForm } from '@/app/groups/[groupId]/budgets/budget-form'
 import { normalizeBudgetDetail } from '@/app/groups/[groupId]/budgets/budget-types'
 import {
   useCurrentGroup,
-  useIsPendingInvitee,
+  useIsReadOnlyGroupViewer,
 } from '@/app/groups/[groupId]/current-group-context'
+import { useGroupAccessSearch } from '@/app/groups/[groupId]/use-group-access-search'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -31,14 +32,15 @@ type Props = {
 export function BudgetFormPage({ groupId, budgetId }: Props) {
   const t = useBudgetTranslation()
   const { group, currentMember } = useCurrentGroup()
-  const isPendingInvitee = useIsPendingInvitee()
+  const isReadOnlyGroupViewer = useIsReadOnlyGroupViewer()
   const navigate = useNavigate()
   const { toast } = useToast()
   const utils = trpc.useUtils()
+  const { linkInviteToken, viewKey } = useGroupAccessSearch()
 
   const isEdit = budgetId != null
   const budgetQuery = trpc.groups.budgets.get.useQuery(
-    { groupId, budgetId: budgetId ?? '' },
+    { groupId, budgetId: budgetId ?? '', linkInviteToken, viewKey },
     { enabled: isEdit },
   )
   const budget =
@@ -70,7 +72,7 @@ export function BudgetFormPage({ groupId, budgetId }: Props) {
   const canEdit =
     !!currentMember &&
     !group?.archived &&
-    !isPendingInvitee &&
+    !isReadOnlyGroupViewer &&
     (isEdit ? Boolean(budget?.permissions.canEdit) : true)
 
   if (!group) {

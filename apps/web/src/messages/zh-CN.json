@@ -590,7 +590,14 @@
     },
     "importGroup": "导入群组",
     "exportDescription": "将群组支出下载为 PDF 报告、CSV 电子表格或 JSON 备份。",
-    "allExpenses": "所有支出"
+    "allExpenses": "所有支出",
+    "viewOnlyBannerTitle": "仅限查看的访问权限",
+    "viewOnlyBannerDescription": "您可以浏览此群组，但无法添加、编辑、删除、发表评论、结算余额或下载其数据。",
+    "invitationSignInToAccept": "登录后接受",
+    "viewLinkInvalid": {
+      "title": "此只读链接无效",
+      "description": "该链接格式错误或与本群组中的任何仅限查看的访问权限都不匹配。"
+    }
   },
   "GroupForm": {
     "title": "群组信息",
@@ -1963,7 +1970,8 @@
     "regenerate": {
       "title": "生成新链接"
     },
-    "actionsFor": "{name}的操作"
+    "actionsFor": "{name}的操作",
+    "readOnlyDescription": "此群组中的人员和参与者。电子邮件地址和邀请详情已隐藏。"
   },
   "AccountSettings": {
     "title": "账户设置",
@@ -2233,7 +2241,8 @@
         "currency": "货币",
         "currencyCode": "货币代码",
         "linkedParticipant": "关联参与者",
-        "subgroupsEnabled": "子群组"
+        "subgroupsEnabled": "子群组",
+        "publicViewLink": "公开仅限查看链接"
       }
     },
     "member": {
@@ -2987,5 +2996,27 @@
       "comingSoon": "即将推出",
       "replacementActivated": "您的替代登录链接现已生效。"
     }
+  },
+  "GroupViewLink": {
+    "title": "公开仅限查看链接",
+    "description": "任何拥有此链接的人无需登录即可查看群组。",
+    "warning": "此链接提供对群组内所有内容的仅查看访问权限。请仅与您信任的人分享。",
+    "linkLabel": "公开仅限查看链接",
+    "copy": "复制公开链接",
+    "copied": "已复制公开链接",
+    "enable": "启用公开链接",
+    "cancel": "取消",
+    "enabledStatus": "任何拥有此链接的人都可以查看群组。",
+    "replace": "替换链接",
+    "remove": "移除公开链接",
+    "replaceDialogTitle": "替换公开仅限查看链接？",
+    "replaceDialogDescription": "旧链接将立即失效。拥有该链接的人将失去仅查看访问权限。",
+    "replaceConfirm": "替换链接",
+    "removeDialogTitle": "移除公开仅限查看链接？",
+    "removeDialogDescription": "当前链接将立即失效。拥有该链接的人将失去仅查看访问权限。",
+    "removeConfirm": "移除链接",
+    "enableSuccess": "已创建公开仅限查看链接",
+    "replaceSuccess": "已替换公开仅限查看链接。旧链接已失效。",
+    "removeSuccess": "已移除公开仅限查看链接"
   }
 }

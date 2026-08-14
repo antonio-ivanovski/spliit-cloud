@@ -608,7 +608,14 @@
     },
     "importGroup": "Importuj grupę",
     "exportDescription": "Pobierz wydatki grupy jako raport PDF, arkusz CSV lub kopię zapasową JSON.",
-    "allExpenses": "Wszystkie wydatki"
+    "allExpenses": "Wszystkie wydatki",
+    "viewOnlyBannerTitle": "Dostęp tylko do odczytu",
+    "viewOnlyBannerDescription": "Możesz przeglądać tę grupę, ale nie możesz dodawać, edytować, usuwać, komentować, rozliczać sald ani pobierać jej danych.",
+    "invitationSignInToAccept": "Zaloguj się, aby przyjąć",
+    "viewLinkInvalid": {
+      "title": "Ten link tylko do odczytu jest nieprawidłowy",
+      "description": "Link jest nieprawidłowo sformatowany lub nie pasuje do żadnego dostępu tylko do odczytu w tej grupie."
+    }
   },
   "GroupForm": {
     "title": "Informacje o grupie",
@@ -1988,7 +1995,8 @@
     "regenerate": {
       "title": "Wygeneruj nowy link"
     },
-    "actionsFor": "Akcje dla {name}"
+    "actionsFor": "Akcje dla {name}",
+    "readOnlyDescription": "Osoby i uczestnicy należący do tej grupy. Adresy e-mail i szczegóły zaproszeń są ukryte."
   },
   "AccountSettings": {
     "title": "Ustawienia konta",
@@ -2258,7 +2266,8 @@
         "currency": "Waluta",
         "currencyCode": "Kod waluty",
         "linkedParticipant": "Powiązany uczestnik",
-        "subgroupsEnabled": "Podgrupy"
+        "subgroupsEnabled": "Podgrupy",
+        "publicViewLink": "Publiczny link tylko do odczytu"
       }
     },
     "member": {
@@ -3038,5 +3047,27 @@
       "comingSoon": "Już wkrótce",
       "replacementActivated": "Zastępczy link logowania jest teraz aktywny."
     }
+  },
+  "GroupViewLink": {
+    "title": "Publiczny link tylko do odczytu",
+    "description": "Każda osoba mająca ten publiczny link może przeglądać grupę bez logowania.",
+    "warning": "Ten link zapewnia dostęp tylko do odczytu do wszystkiego w grupie. Udostępniaj go tylko zaufanym osobom.",
+    "linkLabel": "Publiczny link tylko do odczytu",
+    "copy": "Kopiuj link publiczny",
+    "copied": "Skopiowano link publiczny",
+    "enable": "Włącz link publiczny",
+    "cancel": "Anuluj",
+    "enabledStatus": "Każda osoba mająca ten link może przeglądać grupę.",
+    "replace": "Zastąp link",
+    "remove": "Usuń link publiczny",
+    "replaceDialogTitle": "Zastąpić publiczny link tylko do odczytu?",
+    "replaceDialogDescription": "Poprzedni link natychmiast przestanie działać. Każda osoba, która go miała, straci dostęp tylko do odczytu.",
+    "replaceConfirm": "Zastąp link",
+    "removeDialogTitle": "Usunąć publiczny link tylko do odczytu?",
+    "removeDialogDescription": "Bieżący link natychmiast przestanie działać. Każda osoba, która go miała, straci dostęp tylko do odczytu.",
+    "removeConfirm": "Usuń link",
+    "enableSuccess": "Utworzono publiczny link tylko do odczytu",
+    "replaceSuccess": "Zastąpiono publiczny link tylko do odczytu. Poprzedni link już nie działa.",
+    "removeSuccess": "Usunięto publiczny link tylko do odczytu"
   }
 }

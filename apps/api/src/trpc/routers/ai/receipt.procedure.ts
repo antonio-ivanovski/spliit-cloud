@@ -8,7 +8,7 @@ import { env } from '../../../lib/env'
 import { extractExpenseInformationFromImage } from '../../../lib/receipt-actions'
 import {
   enforceAiRequestLimit,
-  loadGroupViewer,
+  loadGroupMutationContext,
   protectedProcedure,
 } from '../../init'
 import { extractExpenseInformationOutputSchema } from '../../outputs/ai'
@@ -53,11 +53,9 @@ export const extractExpenseInformationFromImageProcedure = protectedProcedure
         message: 'Receipt extraction is disabled',
       })
     }
-    await loadGroupViewer({
+    await loadGroupMutationContext({
       groupId: input.groupId,
       accountId: ctx.auth.user.id,
-      accountEmail: ctx.auth.user.email,
-      linkTokenHash: null,
     })
     const context = await getRecentExpenseContext(input.groupId)
     enforceAiRequestLimit(

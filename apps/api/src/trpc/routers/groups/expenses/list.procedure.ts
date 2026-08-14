@@ -2,11 +2,12 @@ import { z } from 'zod'
 
 import { getGroupExpenses } from '../../../../lib/api'
 import { expensePermissions } from '../../../../lib/api/resource-permissions'
+import { redactExpenseListShares } from '../../../../lib/group-view-redaction'
 import {
-  hashLinkInviteToken,
-  linkInviteTokenInput,
+  groupAccessFields,
+  groupReadProcedure,
+  groupViewerArgs,
   loadGroupViewer,
-  protectedProcedure,
 } from '../../../init'
 import { listExpensesOutputSchema } from '../../../outputs/expenses'
 
@@ -37,98 +38,91 @@ const listExpensesInputSchema = z.object({
     .optional()
     .catch(undefined),
   sortDir: z.enum(['asc', 'desc']).optional().catch(undefined),
-  linkInviteToken: linkInviteTokenInput.describe(
-    'Raw link-invite token from the share URL. Grants read access to pending link-invitees.',
-  ),
+  ...groupAccessFields,
 })
 
-export const listGroupExpensesProcedure = protectedProcedure
+export const listGroupExpensesProcedure = groupReadProcedure
   .input(listExpensesInputSchema)
   .output(listExpensesOutputSchema)
-  .query(
-    async ({
-      input: {
-        groupId,
-        cursor = 0,
-        limit = 10,
-        filter,
-        locale,
-        hideSettlements,
-        categories,
-        paidBy,
-        paidByMatch,
-        paidFor,
-        paidForMatch,
-        dateFrom,
-        dateTo,
-        minAmount,
-        maxAmount,
-        currencies,
-        sortBy,
-        sortDir,
-        linkInviteToken,
-      },
-      ctx,
-    }) => {
-      const { group, ledger, member, viewer } = await loadGroupViewer({
-        groupId,
-        accountId: ctx.auth.user.id,
-        accountEmail: ctx.auth.user.email,
-        linkTokenHash: await hashLinkInviteToken(linkInviteToken),
-      })
-      const expenses = await getGroupExpenses(groupId, {
-        ledgerId: ledger.id,
-        offset: cursor,
-        length: limit + 1,
-        filter,
-        locale,
-        hideSettlements,
-        categories,
-        paidBy,
-        paidByMatch,
-        paidFor,
-        paidForMatch,
-        dateFrom,
-        dateTo,
-        minAmount,
-        maxAmount,
-        currencies,
-        sortBy,
-        sortDir,
-      })
-      return {
-        expenses: expenses.slice(0, limit).map((expense) => {
-          const {
-            recurringSeriesCreatorAccountId,
-            createdByAccountId,
-            ...publicExpense
-          } = expense
-          return {
-            ...publicExpense,
-            createdAt: new Date(expense.createdAt),
-            expenseDate: new Date(expense.expenseDate),
-            permissions:
-              viewer.kind === 'ACTIVE' && member
-                ? expensePermissions({
-                    role: member.role,
-                    accountId: ctx.auth.user.id,
-                    createdByAccountId,
-                    recurringSeries: expense.recurringSeriesId
-                      ? {
-                          creatorAccountId: recurringSeriesCreatorAccountId,
-                        }
-                      : null,
-                    archived: group.archived,
-                  })
-                : {
-                    canEdit: false,
-                    canDelete: false,
-                    canManageRecurrence: false,
-                  },
-          }
-        }),
-        hasMore: !!expenses[limit],
-        nextCursor: cursor + limit,
-      }
-    },
-  )
+  .query(async ({ input, ctx }) => {
+    const {
+      cursor = 0,
+      limit = 10,
+      filter,
+      locale,
+      hideSettlements,
+      categories,
+      paidBy,
+      paidByMatch,
+      paidFor,
+      paidForMatch,
+      dateFrom,
+      dateTo,
+      minAmount,
+      maxAmount,
+      currencies,
+      sortBy,
+      sortDir,
+    } = input
+    const { group, ledger, member, viewer } = await loadGroupViewer(
+      groupViewerArgs(input, ctx),
+    )
+    const expenses = await getGroupExpenses(group.id, {
+      ledgerId: ledger.id,
+      offset: cursor,
+      length: limit + 1,
+      filter,
+      locale,
+      hideSettlements,
+      categories,
+      paidBy,
+      paidByMatch,
+      paidFor,
+      paidForMatch,
+      dateFrom,
+      dateTo,
+      minAmount,
+      maxAmount,
+      currencies,
+      sortBy,
+      sortDir,
+    })
+    return {
+      expenses: expenses.slice(0, limit).map((expense) => {
+        const {
+          recurringSeriesCreatorAccountId,
+          createdByAccountId,
+          ...publicExpense
+        } = expense
+        const viewerExpense =
+          viewer.kind === 'ACTIVE'
+            ? publicExpense
+            : redactExpenseListShares(publicExpense)
+        return {
+          ...viewerExpense,
+          createdAt: new Date(expense.createdAt),
+          expenseDate: new Date(expense.expenseDate),
+          permissions:
+            viewer.kind === 'ACTIVE' && member
+              ? expensePermissions({
+                  role: member.role,
+                  accountId: ctx.auth?.user.id ?? '',
+                  createdByAccountId,
+                  recurringSeries: expense.recurringSeriesId
+                    ? {
+                        creatorAccountId: recurringSeriesCreatorAccountId,
+                      }
+                    : null,
+                  archived: group.archived,
+                })
+              : {
+                  canEdit: false,
+                  canDelete: false,
+                  canManageRecurrence: false,
+                },
+        }
+      }),
+      hasMore: !!expenses[limit],
+      nextCursor: cursor + limit,
+    }
+  })

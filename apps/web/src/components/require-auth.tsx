@@ -10,13 +10,30 @@ function currentPathWithSearch(): string {
   return `${window.location.pathname}${window.location.search}${window.location.hash}`
 }
 
+function hasGroupViewerCredential(): boolean {
+  if (typeof window === 'undefined') return false
+  const search = new URLSearchParams(window.location.search)
+  return Boolean(search.get('viewKey') || search.get('invite'))
+}
+
 /**
  * Route guard. Shows a loader while the session is being resolved, redirects
  * unauthenticated users to `/` (preserving the original target in a `redirect`
  * query parameter), and otherwise renders the protected content.
+ *
+ * Anonymous visitors may enter `/groups/:id` only when the URL carries a
+ * retained `viewKey` or `invite` search param. Everyone else is sent through
+ * sign-in so members without a public/invite link are not stranded on a
+ * dead-end unauthorized page.
  */
 export function RequireAuth({ children }: PropsWithChildren) {
   const { data: account, isPending } = useCurrentAccount()
+  const permitsGroupViewer =
+    typeof window !== 'undefined' &&
+    /^\/groups\/(?!create(?:\/|$)|import(?:\/|$)|bulk-categorize(?:\/|$))[^/]+(?:\/|$)/.test(
+      window.location.pathname,
+    ) &&
+    hasGroupViewerCredential()
 
   if (isPending) {
     return (
@@ -27,6 +44,7 @@ export function RequireAuth({ children }: PropsWithChildren) {
   }
 
   if (!account) {
+    if (permitsGroupViewer) return <>{children}</>
     return (
       <Navigate to="/" search={{ redirect: currentPathWithSearch() }} replace />
     )
