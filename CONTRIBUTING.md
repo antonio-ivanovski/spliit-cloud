@@ -69,15 +69,9 @@ bun test:integration
 ### AI-assisted contributions
 
 AI agent contributions are welcome, but the PR must make the agent's context
-and reasoning reviewable. If AI was used, include either:
-
-- the initial prompt and every follow-up prompt that materially shaped the
-  implementation, along with any relevant notes about what was accepted or
-  changed; or
-- for a new feature or a larger chunk of work, a well-defined and up-to-date
-  [OpenSpec](https://github.com/Fission-AI/OpenSpec/) describing the proposal,
-  design, and implementation tasks. Keep the OpenSpec in sync with the code in
-  the PR.
+and reasoning reviewable. If AI was used, include the initial prompt and
+every follow-up prompt that materially shaped the implementation, along with
+any relevant notes about what was accepted or changed.
 
 The PR author remains responsible for the implementation, tests, security,
 and review of all generated code. Do not include secrets, private data, or

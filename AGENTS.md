@@ -14,7 +14,6 @@ Spliit is a Bun monorepo (web, api, domain, db). Explore `package.json`, workspa
 ## Skills
 
 - Translations: `.agents/skills/translate-strings/SKILL.md`
-- OpenSpec workflows (used only when explicitly asked): `.agents/skills/openspec-*/SKILL.md`
 
 ## Environment-specific instructions
 

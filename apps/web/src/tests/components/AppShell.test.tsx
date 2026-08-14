@@ -72,6 +72,9 @@ vi.mock('@/components/ui/toaster', () => ({ Toaster: () => null }))
 vi.mock('@/i18n/react', () => ({
   I18nProvider: ({ children }: React.PropsWithChildren) => children,
 }))
+vi.mock('@/app/groups/merge-device-saved-views', () => ({
+  MergeDeviceSavedViews: () => null,
+}))
 vi.mock('@/trpc/client', () => ({
   TRPCProvider: ({ children }: React.PropsWithChildren) => children,
 }))

@@ -22,14 +22,10 @@
 - [ ] AI was used, and I included the initial prompt plus all materially
       relevant follow-up prompts below (with notes on important changes or
       decisions).
-- [ ] AI was used for a new feature or larger change, and this PR includes a
-      well-defined, up-to-date [OpenSpec](https://github.com/Fission-AI/OpenSpec/)
-      instead of prompt history:
-      <!-- Link to the OpenSpec here. -->
 
-### Prompt history or OpenSpec link
+### Prompt history
 
-<!-- Paste the prompt history here, or link to the OpenSpec. -->
+<!-- Paste the prompt history here. -->
 
 ## Checklist
 

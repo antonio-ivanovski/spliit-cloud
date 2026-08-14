@@ -36,7 +36,6 @@ storage
 .DS_Store
 
 # docs & non-runtime repo content
-openspec
 docs
 handoff
 .github

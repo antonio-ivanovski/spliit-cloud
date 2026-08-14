@@ -24,6 +24,5 @@ export default defineConfig({
     'apps/web/src/components/ui/**',
     'apps/web/src/routeTree.gen.ts',
     'packages/db/src/generated/**',
-    'openspec/**/*.md',
   ],
 })

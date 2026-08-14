@@ -23,9 +23,9 @@ Each roadmap item also references the upstream [`spliit-app/spliit`](https://git
 
 - [x] **Multi-payer expenses** — a single expense paid by several members, with a share per payer. Closes the gap with Splitwise. — upstream **[#14](https://github.com/spliit-app/spliit/issues/14)** (PRs [#146](https://github.com/spliit-app/spliit/pull/146) / [#396](https://github.com/spliit-app/spliit/pull/396) open 1.5+ years)
 - [x] **Itemized expenses** — split an expense by line items, with tax and tip, and per-person sub-totals. The most-asked "real Splitwise" feature after recurring. — upstream [#395](https://github.com/spliit-app/spliit/issues/395)
-- [x] Direct account-to-account expenses ([design](./openspec/changes/add-direct-account-expenses))
-- [x] **Durable recurring expenses** — explicit recurrence series with configurable intervals, indefinite/count/date termination, durable worker processing, catch-up, retries, lifecycle status, navigation, previews, and scoped stop/edit/delete controls. ([design](./openspec/changes/durable-recurring-expenses))
-- [x] Account overview homepage ([design](./openspec/changes/add-overview-homepage)) — also covers the cross-group balance view in upstream [#509](https://github.com/spliit-app/spliit/issues/509)
+- [x] Direct account-to-account expenses
+- [x] **Durable recurring expenses** — explicit recurrence series with configurable intervals, indefinite/count/date termination, durable worker processing, catch-up, retries, lifecycle status, navigation, previews, and scoped stop/edit/delete controls.
+- [x] Account overview homepage — also covers the cross-group balance view in upstream [#509](https://github.com/spliit-app/spliit/issues/509)
 - [x] **Notifications and delivery preferences** — email and push channels with per-user category and delivery preferences
 
 ### Quality-of-life additions (small, high-trust, ship in batches)
@@ -85,7 +85,7 @@ These are upstream issues that affect every user of Spliit Cloud too. Each one i
 
 ## Cross-cutting
 
-- Server-authoritative currency conversion ([design](./openspec/changes/server-authoritative-currency-conversion)) — addresses upstream [#513](https://github.com/spliit-app/spliit/issues/513) / [#425](https://github.com/spliit-app/spliit/pull/425) and [#514](https://github.com/spliit-app/spliit/issues/514) / [#515](https://github.com/spliit-app/spliit/pull/515)
+- Server-authoritative currency conversion — addresses upstream [#513](https://github.com/spliit-app/spliit/issues/513) / [#425](https://github.com/spliit-app/spliit/pull/425) and [#514](https://github.com/spliit-app/spliit/issues/514) / [#515](https://github.com/spliit-app/spliit/pull/515)
 - **Migrations & imports** — every frustrated Splitwise / Tricount user is a potential customer
   - [ ] Tricount import — PR [#526](https://github.com/spliit-app/spliit/pull/526)
   - [x] Splitwise (CSV) import — upstream [#22](https://github.com/spliit-app/spliit/issues/22), PR [#483](https://github.com/spliit-app/spliit/pull/483)
