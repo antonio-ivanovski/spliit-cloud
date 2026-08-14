@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
 
-import { redactGroupForViewer } from './group-view-redaction'
+import {
+  redactExpenseListShares,
+  redactGroupForViewer,
+} from './group-view-redaction'
 
 describe('public group redaction', () => {
   it('removes invitations and contact fields while preserving useful names', () => {
@@ -57,5 +60,39 @@ describe('public group redaction', () => {
       image: null,
     })
     expect(redacted.participants[1]?.name).toBe('')
+  })
+
+  it('masks email-shaped share names and raw account ids on expense list rows', () => {
+    const expense = {
+      id: 'exp-1',
+      paidByList: [
+        {
+          shares: 1000,
+          ledgerParticipant: {
+            id: 'lp-1',
+            name: 'Ada',
+            account: { id: 'acct-1', name: 'Ada', image: null },
+          },
+        },
+      ],
+      paidFor: [
+        {
+          shares: 500,
+          ledgerParticipant: {
+            id: 'lp-2',
+            name: 'pending@example.com',
+            account: null,
+          },
+        },
+      ],
+    }
+
+    const redacted = redactExpenseListShares(expense)
+
+    expect(redacted.paidByList[0]?.ledgerParticipant.account?.id).toBe(
+      'public_lp-1',
+    )
+    expect(redacted.paidByList[0]?.ledgerParticipant.name).toBe('Ada')
+    expect(redacted.paidFor[0]?.ledgerParticipant.name).toBe('')
   })
 })

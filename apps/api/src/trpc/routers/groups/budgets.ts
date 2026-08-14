@@ -45,6 +45,7 @@ import {
 } from '../../../lib/api/resource-permissions'
 import { groupExpenseListCardSelect } from '../../../lib/api/selects/expense-list'
 import { budgetCategoryMatches } from '../../../lib/budgets/category-match'
+import { redactExpenseListShares } from '../../../lib/group-view-redaction'
 import {
   groupAccessFields,
   groupReadProcedure,
@@ -423,6 +424,21 @@ function output(
   }
 }
 
+function redactBudgetForPublicViewer(budget: ReturnType<typeof output>) {
+  return {
+    ...budget,
+    summary: {
+      ...budget.summary,
+      matchingExpenses: budget.summary.matchingExpenses.map(
+        redactExpenseListShares,
+      ),
+      upcomingExpenses: budget.summary.upcomingExpenses.map(
+        redactExpenseListShares,
+      ),
+    },
+  }
+}
+
 async function establishAlertBaseline(
   budget: GroupBudget,
   currentSummary: Awaited<ReturnType<typeof summary>>,
@@ -466,7 +482,9 @@ const list = groupReadProcedure
   )
   .output(listBudgetsOutputSchema)
   .query(async ({ input, ctx }) => {
-    const { group, member } = await loadGroupViewer(groupViewerArgs(input, ctx))
+    const { group, member, viewer } = await loadGroupViewer(
+      groupViewerArgs(input, ctx),
+    )
     const budgets = await prisma.groupBudget.findMany({
       where: {
         groupId: group.id,
@@ -477,13 +495,20 @@ const list = groupReadProcedure
     const sharedCurrentRows = await loadSharedCurrentRows(budgets)
     return {
       budgets: await Promise.all(
-        budgets.map(async (budget) =>
-          output(budget, await summary(budget, false, sharedCurrentRows), {
-            role: member?.role ?? 'MEMBER',
-            accountId: ctx.auth?.user.id ?? '',
-            groupArchived: group.archived,
-          }),
-        ),
+        budgets.map(async (budget) => {
+          const dto = output(
+            budget,
+            await summary(budget, false, sharedCurrentRows),
+            {
+              role: member?.role ?? 'MEMBER',
+              accountId: ctx.auth?.user.id ?? '',
+              groupArchived: group.archived,
+            },
+          )
+          return viewer.kind === 'ACTIVE'
+            ? dto
+            : redactBudgetForPublicViewer(dto)
+        }),
       ),
     }
   })
@@ -498,18 +523,21 @@ const get = groupReadProcedure
   )
   .output(getBudgetOutputSchema)
   .query(async ({ input, ctx }) => {
-    const { group, member } = await loadGroupViewer(groupViewerArgs(input, ctx))
+    const { group, member, viewer } = await loadGroupViewer(
+      groupViewerArgs(input, ctx),
+    )
     const budget = await prisma.groupBudget.findFirst({
       where: { id: input.budgetId, groupId: group.id },
     })
     if (!budget)
       throw new TRPCError({ code: 'NOT_FOUND', message: 'Budget not found' })
+    const dto = output(budget, await summary(budget), {
+      role: member?.role ?? 'MEMBER',
+      accountId: ctx.auth?.user.id ?? '',
+      groupArchived: group.archived,
+    })
     return {
-      budget: output(budget, await summary(budget), {
-        role: member?.role ?? 'MEMBER',
-        accountId: ctx.auth?.user.id ?? '',
-        groupArchived: group.archived,
-      }),
+      budget: viewer.kind === 'ACTIVE' ? dto : redactBudgetForPublicViewer(dto),
     }
   })
 

@@ -9,6 +9,7 @@ Spliit is a Bun monorepo (web, api, domain, db). Explore `package.json`, workspa
 - Integration tests: never start the API yourself. Web integration needs an existing API on `:3001` — ask the user if it is not running. API `createCaller` tests need the DB only.
 - Money is integer cents. `BY_PERCENTAGE` shares are basis points (`2500` = 25%).
 - Never hand-edit `apps/web/src/messages/*`. Use `bun i18n` and [`.agents/skills/translate-strings/SKILL.md`](.agents/skills/translate-strings/SKILL.md).
+- Prisma migrations: create with `bun --filter @spliit/db prisma-create-migration`. Never invent, backdate, or reuse a `YYYYMMDDHHmmss` folder prefix; the new directory must sort after every existing `packages/db/prisma/migrations/*` folder. See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## Skills
 

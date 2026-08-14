@@ -14,6 +14,39 @@ function publicId(groupId: string, kind: string, id: string) {
     .slice(0, 22)}`
 }
 
+type ExpenseListShare = {
+  ledgerParticipant: {
+    id: string
+    name: string
+    account: { id: string } | null
+  }
+}
+
+/** Mask emails and raw account ids on expense-list shares for read-only viewers. */
+export function redactExpenseListShares<
+  T extends { paidByList: ExpenseListShare[]; paidFor: ExpenseListShare[] },
+>(expense: T): T {
+  const redactShares = <S extends ExpenseListShare>(shares: S[]): S[] =>
+    shares.map((share) => ({
+      ...share,
+      ledgerParticipant: {
+        ...share.ledgerParticipant,
+        name: redactViewerDisplayName(share.ledgerParticipant.name),
+        account: share.ledgerParticipant.account
+          ? {
+              ...share.ledgerParticipant.account,
+              id: `public_${share.ledgerParticipant.id}`,
+            }
+          : null,
+      },
+    }))
+  return {
+    ...expense,
+    paidByList: redactShares(expense.paidByList),
+    paidFor: redactShares(expense.paidFor),
+  }
+}
+
 /** Remove contact fields and invitation metadata from read-only group payloads. */
 export function redactGroupForViewer(
   group: NonNullable<Awaited<ReturnType<typeof getGroup>>>,

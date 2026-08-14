@@ -79,6 +79,8 @@ describe('Public view-only query param — real DB', () => {
     })
     expect(group.group.id).toBe(groupId)
     expect(details.group.id).toBe(groupId)
+    expect(details.group.invitations).toEqual([])
+    expect(details.group.members[0]?.account.image).toBeNull()
     expect(balances).toHaveProperty('balances')
     expect(activities).toHaveProperty('activities')
   })
