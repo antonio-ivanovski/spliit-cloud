@@ -605,7 +605,11 @@
     "allExpenses": "Gastu guztiak",
     "viewOnlyBannerTitle": "Ikusteko soilik sarbidea",
     "viewOnlyBannerDescription": "Talde hau arakatu dezakezu, baina ezin duzu ezer gehitu, editatu, ezabatu edo iruzkinik egin, ezta saldoak kitatu edo datuak deskargatu ere.",
-    "invitationSignInToAccept": "Hasi saioa onartzeko"
+    "invitationSignInToAccept": "Hasi saioa onartzeko",
+    "viewLinkInvalid": {
+      "title": "Ikusteko soilik esteka hau ez da baliozkoa",
+      "description": "Estekak formatu okerra du edo ez dagokio taldeko inolako ikusteko soilik sarbideari."
+    }
   },
   "GroupForm": {
     "title": "Taldeko informazioa",

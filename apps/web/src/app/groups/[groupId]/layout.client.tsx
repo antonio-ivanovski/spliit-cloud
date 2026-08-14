@@ -37,7 +37,11 @@ export function GroupLayoutClient({
   groupId,
   children,
 }: PropsWithChildren<{ groupId: string }>) {
-  const { friendLinkInvite: friendLinkInviteUrl } = useSearch({
+  const {
+    invite: linkInviteToken,
+    viewKey,
+    friendLinkInvite: friendLinkInviteUrl,
+  } = useSearch({
     from: '/groups/$groupId',
   })
   const [friendLinkDialogUrl, setFriendLinkDialogUrl] = useState<string | null>(
@@ -65,21 +69,24 @@ export function GroupLayoutClient({
       void navigate({
         to: '/groups/$groupId',
         params: { groupId },
-        search: { friendLinkInvite: undefined },
+        search: (prev) => ({ ...prev, friendLinkInvite: undefined }),
         replace: true,
       })
     }
   }, [friendLinkInviteUrl, groupId, navigate])
 
   const { data, isLoading, error } = trpc.groups.get.useQuery(
-    { groupId },
+    { groupId, linkInviteToken, viewKey },
     { retry: false },
   )
   const { t: tNotFound } = useTranslation(undefined, {
     keyPrefix: 'Groups.NotFound',
   })
-  const { t: tInvalid } = useTranslation(undefined, {
+  const { t: tInvalidInvite } = useTranslation(undefined, {
     keyPrefix: 'Groups.linkInvitationInvalid',
+  })
+  const { t: tInvalidView } = useTranslation(undefined, {
+    keyPrefix: 'Groups.viewLinkInvalid',
   })
   const { t: tForbidden } = useTranslation(undefined, {
     keyPrefix: 'Groups',
@@ -89,7 +96,7 @@ export function GroupLayoutClient({
   })
   const { t: tTitles } = useTranslation()
   const { toast } = useToast()
-  const { data: account, isPending: accountPending } = useCurrentAccount()
+  const { isPending: accountPending } = useCurrentAccount()
   const { flags: effectiveRuntimeFlags } = useEffectiveRuntimeFeatureFlags()
 
   useEffect(() => {
@@ -110,20 +117,6 @@ export function GroupLayoutClient({
   }, [data, focusedMobileRoute, pathname, tTitles])
 
   useEffect(() => {
-    if (data?.viewer.source !== 'MEMBER' || data.canonicalGroupId === groupId) {
-      return
-    }
-    const prefix = `/groups/${encodeURIComponent(groupId)}`
-    const suffix = pathname.startsWith(prefix)
-      ? pathname.slice(prefix.length)
-      : ''
-    void navigate({
-      href: `/groups/${encodeURIComponent(data.canonicalGroupId)}${suffix}${window.location.search}`,
-      replace: true,
-    })
-  }, [data, groupId, navigate, pathname])
-
-  useEffect(() => {
     if (data && !data.group) {
       toast({
         description: tNotFound('text'),
@@ -142,17 +135,32 @@ export function GroupLayoutClient({
     )
   }
 
-  // A signed-in visitor with a link token that the server doesn't
-  // recognize gets a friendly "invalid link" page instead of a blank
-  // FORBIDDEN. Without a token we still surface the original "not a
-  // member" message.
-  if (!isLoading && error?.data?.code === 'FORBIDDEN' && !account) {
+  // Visitors carrying a bearer token that the server doesn't recognize
+  // get a token-specific "invalid link" page. Without a token we still
+  // surface the original "not a member" message.
+  if (!isLoading && error?.data?.code === 'FORBIDDEN' && linkInviteToken) {
     return (
       <main className="flex flex-1 items-center justify-center px-4 py-10">
         <div className="flex max-w-md flex-col items-center gap-3 text-center">
-          <h1 className="text-2xl font-semibold">{tInvalid('title')}</h1>
+          <h1 className="text-2xl font-semibold">{tInvalidInvite('title')}</h1>
           <p className="text-sm text-muted-foreground">
-            {tInvalid('description')}
+            {tInvalidInvite('description')}
+          </p>
+          <Button variant="outline" render={<Link to="/" />}>
+            {tForbidden('backToHome')}
+          </Button>
+        </div>
+      </main>
+    )
+  }
+
+  if (!isLoading && error?.data?.code === 'FORBIDDEN' && viewKey) {
+    return (
+      <main className="flex flex-1 items-center justify-center px-4 py-10">
+        <div className="flex max-w-md flex-col items-center gap-3 text-center">
+          <h1 className="text-2xl font-semibold">{tInvalidView('title')}</h1>
+          <p className="text-sm text-muted-foreground">
+            {tInvalidView('description')}
           </p>
           <Button variant="outline" render={<Link to="/" />}>
             {tForbidden('backToHome')}
@@ -205,8 +213,7 @@ export function GroupLayoutClient({
         }
       : {
           isLoading: false as const,
-          groupId:
-            data.viewer.source === 'MEMBER' ? data.canonicalGroupId : groupId,
+          groupId,
           group: data.group,
           displayName: data.displayName ?? '',
           currentLedgerParticipantId: data.currentLedgerParticipantId ?? null,

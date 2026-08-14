@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useCurrentGroup } from '@/app/groups/[groupId]/current-group-context'
 import { categoryLabel } from '@/app/groups/[groupId]/stats/category-utils'
+import { useGroupAccessSearch } from '@/app/groups/[groupId]/use-group-access-search'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible'
@@ -360,11 +361,12 @@ export function ExpenseListFilterChips({ className }: { className?: string }) {
 
 export function ExpenseListFiltersPanel() {
   const { group, groupId } = useCurrentGroup()
+  const { linkInviteToken, viewKey } = useGroupAccessSearch()
   const { filters, setFilters, filtersOpen, setFiltersOpen } =
     useExpenseFiltersContext()
 
   const currenciesQuery = trpc.groups.expenses.commonCurrencies.useQuery(
-    { groupId },
+    { groupId, linkInviteToken, viewKey },
     { enabled: !!group, staleTime: 60_000 },
   )
 

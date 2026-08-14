@@ -17,6 +17,7 @@ import { formatExpenseClosed } from '@/lib/expense-display'
 import { formatCurrency, getCurrencyFromGroup } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 
+import { useGroupAccessSearch } from '../use-group-access-search'
 import { RecurringBadge } from './series-controls'
 
 export function SeriesListDialog({
@@ -33,6 +34,7 @@ export function SeriesListDialog({
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseSeries' })
   const { t: tForm } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const locale = useLocale()
+  const { linkInviteToken, viewKey } = useGroupAccessSearch()
   const [occurrenceCursor, setOccurrenceCursor] = useState<number | undefined>()
   const [loadedExpenses, setLoadedExpenses] = useState<
     Array<{
@@ -50,7 +52,10 @@ export function SeriesListDialog({
     setOccurrenceCursor(undefined)
     setLoadedExpenses([])
   }, [open, seriesId])
-  const groupQuery = trpc.groups.get.useQuery({ groupId }, { enabled: open })
+  const groupQuery = trpc.groups.get.useQuery(
+    { groupId, linkInviteToken, viewKey },
+    { enabled: open },
+  )
   const seriesQuery = trpc.groups.expenses.series.useQuery(
     {
       groupId,
@@ -58,6 +63,8 @@ export function SeriesListDialog({
       limit: 1,
       occurrenceCursor,
       occurrenceLimit: 50,
+      linkInviteToken,
+      viewKey,
     },
     { enabled: open },
   )

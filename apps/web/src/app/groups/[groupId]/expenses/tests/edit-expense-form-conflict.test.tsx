@@ -17,6 +17,13 @@ vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => vi.fn(),
 }))
 
+vi.mock('@/app/groups/[groupId]/use-group-access-search', () => ({
+  useGroupAccessSearch: () => ({
+    linkInviteToken: undefined,
+    viewKey: undefined,
+  }),
+}))
+
 vi.mock('../../current-group-context', () => ({
   useIsReadOnlyGroupViewer: () => false,
 }))

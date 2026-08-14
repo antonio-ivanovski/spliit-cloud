@@ -46,7 +46,9 @@ import {
 import { groupExpenseListCardSelect } from '../../../lib/api/selects/expense-list'
 import { budgetCategoryMatches } from '../../../lib/budgets/category-match'
 import {
+  groupAccessFields,
   groupReadProcedure,
+  groupViewerArgs,
   loadGroupMutationContext,
   loadGroupViewer,
   protectedProcedure,
@@ -459,15 +461,12 @@ const list = groupReadProcedure
     z.object({
       groupId: z.string().min(1),
       includeArchived: z.boolean().optional(),
+      ...groupAccessFields,
     }),
   )
   .output(listBudgetsOutputSchema)
   .query(async ({ input, ctx }) => {
-    const { group, member } = await loadGroupViewer({
-      groupId: input.groupId,
-      accountId: ctx.auth?.user.id,
-      accountEmail: ctx.auth?.user.email,
-    })
+    const { group, member } = await loadGroupViewer(groupViewerArgs(input, ctx))
     const budgets = await prisma.groupBudget.findMany({
       where: {
         groupId: group.id,
@@ -490,14 +489,16 @@ const list = groupReadProcedure
   })
 
 const get = groupReadProcedure
-  .input(z.object({ groupId: z.string().min(1), budgetId: z.string().min(1) }))
+  .input(
+    z.object({
+      groupId: z.string().min(1),
+      budgetId: z.string().min(1),
+      ...groupAccessFields,
+    }),
+  )
   .output(getBudgetOutputSchema)
   .query(async ({ input, ctx }) => {
-    const { group, member } = await loadGroupViewer({
-      groupId: input.groupId,
-      accountId: ctx.auth?.user.id,
-      accountEmail: ctx.auth?.user.email,
-    })
+    const { group, member } = await loadGroupViewer(groupViewerArgs(input, ctx))
     const budget = await prisma.groupBudget.findFirst({
       where: { id: input.budgetId, groupId: group.id },
     })

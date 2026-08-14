@@ -2075,7 +2075,11 @@
     "allExpenses": "সব খরচ",
     "viewOnlyBannerTitle": "শুধু দেখার অনুমতি",
     "viewOnlyBannerDescription": "আপনি এই গ্রুপটি দেখতে পারবেন, কিন্তু এতে কিছু যোগ, সম্পাদনা, মুছে ফেলা বা মন্তব্য করা, হিসাব নিষ্পত্তি করা কিংবা ডেটা ডাউনলোড করা যাবে না।",
-    "invitationSignInToAccept": "গ্রহণ করতে সাইন ইন করুন"
+    "invitationSignInToAccept": "গ্রহণ করতে সাইন ইন করুন",
+    "viewLinkInvalid": {
+      "title": "এই শুধু-দেখার লিংক অবৈধ",
+      "description": "লিংকটি বিকৃত বা এই গ্রুপের কোনো শুধু-দেখার অনুমতির সাথে মেলে না।"
+    }
   },
   "Header": {
     "signIn": "সাইন ইন",

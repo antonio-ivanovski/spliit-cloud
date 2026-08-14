@@ -700,7 +700,11 @@
     "allExpenses": "Tất cả chi phí",
     "viewOnlyBannerTitle": "Quyền chỉ xem",
     "viewOnlyBannerDescription": "Bạn có thể xem nhóm này nhưng không thể thêm, sửa, xóa, bình luận, tất toán số dư hoặc tải dữ liệu xuống.",
-    "invitationSignInToAccept": "Đăng nhập để chấp nhận"
+    "invitationSignInToAccept": "Đăng nhập để chấp nhận",
+    "viewLinkInvalid": {
+      "title": "Liên kết chỉ xem này không hợp lệ",
+      "description": "Liên kết bị sai định dạng hoặc không khớp với quyền chỉ xem nào của nhóm này."
+    }
   },
   "Auth": {
     "title": "Đăng nhập",

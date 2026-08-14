@@ -3,7 +3,12 @@ import { z } from 'zod'
 
 import { getExpenseComments } from '../../../../../lib/api'
 import { redactViewerDisplayName } from '../../../../../lib/group-view'
-import { groupReadProcedure, loadGroupViewer } from '../../../../init'
+import {
+  groupAccessFields,
+  groupReadProcedure,
+  groupViewerArgs,
+  loadGroupViewer,
+} from '../../../../init'
 import { listExpenseCommentsOutputSchema } from '../../../../outputs/expense-comments'
 
 export const listExpenseCommentsProcedure = groupReadProcedure
@@ -11,15 +16,12 @@ export const listExpenseCommentsProcedure = groupReadProcedure
     z.object({
       groupId: z.string().min(1),
       expenseId: z.string().min(1),
+      ...groupAccessFields,
     }),
   )
   .output(listExpenseCommentsOutputSchema)
   .query(async ({ input, ctx }) => {
-    const { group, viewer } = await loadGroupViewer({
-      groupId: input.groupId,
-      accountId: ctx.auth?.user.id,
-      accountEmail: ctx.auth?.user.email,
-    })
+    const { group, viewer } = await loadGroupViewer(groupViewerArgs(input, ctx))
     const comments = await getExpenseComments(group.id, input.expenseId)
     if (!comments) {
       throw new TRPCError({ code: 'NOT_FOUND', message: 'Expense not found' })

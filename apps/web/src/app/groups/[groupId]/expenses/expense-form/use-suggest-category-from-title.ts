@@ -15,6 +15,8 @@ import {
   type ExpenseFormInputValues,
 } from '@spliit/domain'
 
+import { useGroupAccessSearch } from '../../use-group-access-search'
+
 const TITLE_SUGGEST_DEBOUNCE_MS = 250
 
 export function useSuggestCategoryFromTitle(args: {
@@ -69,7 +71,7 @@ export function useSuggestCategoryFromTitle(args: {
   )
 
   const memoryQuery = trpc.groups.expenses.categoryMemory.useQuery(
-    { groupId },
+    { groupId, ...useGroupAccessSearch() },
     { enabled: !readOnly },
   )
   const memory = memoryQuery.data?.expenses

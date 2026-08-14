@@ -17,7 +17,12 @@ import {
 } from '../../../../lib/api/selects/participant-display-name'
 import { redactViewerDisplayName } from '../../../../lib/group-view'
 import { resolveParticipantDisplayName } from '../../../../lib/invitations'
-import { groupReadProcedure, loadGroupViewer } from '../../../init'
+import {
+  groupAccessFields,
+  groupReadProcedure,
+  groupViewerArgs,
+  loadGroupViewer,
+} from '../../../init'
 import { getStatsOutputSchema } from '../../../outputs/stats'
 import {
   buildGroupStatsDashboard,
@@ -48,19 +53,19 @@ export const getGroupStatsProcedure = groupReadProcedure
         })
         .describe('Required when period is CUSTOM. Inclusive date range.')
         .optional(),
+      ...groupAccessFields,
     }),
   )
   .output(getStatsOutputSchema)
-  .query(async ({ input: { groupId, period, customRange }, ctx }) => {
-    const { canonicalGroupId, member, ledger, viewer } = await loadGroupViewer({
-      groupId,
-      accountId: ctx.auth?.user.id,
-      accountEmail: ctx.auth?.user.email,
-    })
+  .query(async ({ input, ctx }) => {
+    const { period, customRange } = input
+    const { group, member, ledger, viewer } = await loadGroupViewer(
+      groupViewerArgs(input, ctx),
+    )
 
     const activeParticipantId = member?.ledgerParticipant?.id ?? null
 
-    const rows = await getGroupBalanceExpenses(canonicalGroupId, ledger.id)
+    const rows = await getGroupBalanceExpenses(group.id, ledger.id)
     const expenses: TotalsExpense[] = rows.map((row) => ({
       ...toBalanceExpense(row),
       expenseDate: row.expenseDate,

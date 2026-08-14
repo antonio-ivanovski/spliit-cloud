@@ -700,7 +700,11 @@
     "allExpenses": "All expenses",
     "viewOnlyBannerTitle": "View-only access",
     "viewOnlyBannerDescription": "You can explore this group, but you cannot add, edit, delete, comment, settle balances, or download its data.",
-    "invitationSignInToAccept": "Sign in to accept"
+    "invitationSignInToAccept": "Sign in to accept",
+    "viewLinkInvalid": {
+      "title": "This view-only link is invalid",
+      "description": "The link is malformed or doesn't match any view-only access for this group."
+    }
   },
   "Auth": {
     "title": "Sign in to Spliit Cloud",

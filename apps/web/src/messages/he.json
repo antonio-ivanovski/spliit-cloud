@@ -605,7 +605,11 @@
     "allExpenses": "כל ההוצאות",
     "viewOnlyBannerTitle": "גישה לצפייה בלבד",
     "viewOnlyBannerDescription": "אפשר לעיין בקבוצה הזו, אך אי אפשר להוסיף, לערוך, למחוק, להגיב, להסדיר יתרות או להוריד את הנתונים שלה.",
-    "invitationSignInToAccept": "התחבר כדי לאשר"
+    "invitationSignInToAccept": "התחבר כדי לאשר",
+    "viewLinkInvalid": {
+      "title": "קישור הצפייה בלבד אינו תקין",
+      "description": "הקישור שגוי או שאינו תואם אף גישה לצפייה בלבד בקבוצה זו."
+    }
   },
   "GroupForm": {
     "title": "מידע על הקבוצה",

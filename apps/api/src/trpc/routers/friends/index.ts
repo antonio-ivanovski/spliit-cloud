@@ -194,7 +194,7 @@ export const friendsRouter = createTRPCRouter({
               ...created,
               existed: false as const,
               token,
-              inviteUrl: `${getWebBaseUrl()}/groups/${token}`,
+              inviteUrl: `${getWebBaseUrl()}/groups/${created.groupId}?invite=${token}`,
             }
           }
           return created as Awaited<ReturnType<typeof createFriendLedger>>

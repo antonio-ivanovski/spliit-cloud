@@ -2294,7 +2294,11 @@
     },
     "viewOnlyBannerTitle": "view-only access",
     "viewOnlyBannerDescription": "you can look around this group, but you can’t add, edit, delete, comment, settle balances, or download its data.",
-    "invitationSignInToAccept": "sign in to accept"
+    "invitationSignInToAccept": "sign in to accept",
+    "viewLinkInvalid": {
+      "title": "this view-only link is invalid",
+      "description": "the link is malformed or does not match any view-only access for this group."
+    }
   },
   "Header": {
     "signIn": "sign in",

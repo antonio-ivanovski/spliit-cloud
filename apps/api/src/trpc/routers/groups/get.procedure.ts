@@ -1,15 +1,25 @@
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
-import { GroupType } from '@spliit/db'
+import {
+  GroupInvitationStatus,
+  GroupInvitationType,
+  GroupType,
+  prisma,
+} from '@spliit/db'
 
 import { getGroup } from '../../../lib/api/groups'
 import { redactViewerDisplayName } from '../../../lib/group-view'
 import { redactGroupForViewer } from '../../../lib/group-view-redaction'
 import { getInvitationDisplayName } from '../../../lib/invitations/display'
-import { acceptLinkInvitation } from '../../../lib/invitations/link-invitations'
 import {
+  acceptLinkInvitation,
+  hashLinkToken,
+} from '../../../lib/invitations/link-invitations'
+import {
+  groupAccessFields,
   groupReadProcedure,
+  groupViewerArgs,
   loadGroupMutationContext,
   loadGroupViewer,
 } from '../../init'
@@ -23,51 +33,49 @@ export type LinkInviteState =
   | 'EXPIRED'
 
 export const getGroupProcedure = groupReadProcedure
-  .input(z.object({ groupId: z.string().min(1) }))
+  .input(
+    z.object({
+      groupId: z.string().min(1),
+      ...groupAccessFields,
+    }),
+  )
   .output(getGroupOutputSchema)
   .query(async ({ input, ctx }) => {
     const account = ctx.auth?.user
-    let access = await loadGroupViewer({
-      groupId: input.groupId,
-      accountId: account?.id,
-      accountEmail: account?.email,
-    })
+    let access = await loadGroupViewer(groupViewerArgs(input, ctx))
 
     if (
       account &&
-      access.routeSource === 'INVITATION' &&
+      input.linkInviteToken &&
       access.group.groupType === GroupType.FRIEND &&
       access.viewer.kind === 'PENDING_INVITEE'
     ) {
       try {
         await acceptLinkInvitation({
-          token: input.groupId,
+          token: input.linkInviteToken,
           accountId: account.id,
         })
-        access = await loadGroupViewer({
-          groupId: input.groupId,
-          accountId: account.id,
-          accountEmail: account.email,
-        })
+        access = await loadGroupViewer(groupViewerArgs(input, ctx))
       } catch {
         // A concurrent request may have consumed or revoked the invitation.
-        // The follow-up authorization below remains the source of truth.
       }
     }
 
-    const group = await getGroup(access.canonicalGroupId)
+    const group = await getGroup(access.group.id)
     if (!group) {
-      throw new TRPCError({ code: 'FORBIDDEN', message: 'Group access denied' })
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'Group not found' })
     }
 
     if (access.viewer.kind === 'ACTIVE' && account) {
       const { member } = await loadGroupMutationContext({
-        groupId: access.canonicalGroupId,
+        groupId: access.group.id,
         accountId: account.id,
       })
+      const linkInviteState = input.linkInviteToken
+        ? await resolveLinkInviteState(access.group.id, input.linkInviteToken)
+        : null
       return {
         group,
-        canonicalGroupId: access.canonicalGroupId,
         displayName: resolveDisplayName(group, account.id),
         currentLedgerParticipantId: member.ledgerParticipant?.id ?? null,
         currentMember: {
@@ -76,7 +84,7 @@ export const getGroupProcedure = groupReadProcedure
           status: member.status,
         },
         currentInvitation: null,
-        linkInviteState: null,
+        linkInviteState,
         viewer: {
           source: 'MEMBER' as const,
           access: 'READ_WRITE' as const,
@@ -93,7 +101,6 @@ export const getGroupProcedure = groupReadProcedure
 
     return {
       group: shouldRedact ? redactGroupForViewer(group) : group,
-      canonicalGroupId: access.canonicalGroupId,
       displayName: shouldRedact
         ? redactViewerDisplayName(displayName)
         : displayName,
@@ -114,12 +121,6 @@ export const getGroupProcedure = groupReadProcedure
     }
   })
 
-/**
- * Compute a human-readable display name for the group. For FRIEND-typed groups
- * whose `name` is always empty, resolve the name from the peer active member's
- * account, a pending invitation's temporary name, or the invitation display
- * label. For regular groups, returns the stored name.
- */
 function resolveDisplayName(
   group: NonNullable<Awaited<ReturnType<typeof getGroup>>>,
   viewerAccountId: string,
@@ -131,4 +132,24 @@ function resolveDisplayName(
   if (pendingInv?.temporaryName) return pendingInv.temporaryName
   if (pendingInv?.email) return getInvitationDisplayName(pendingInv)
   return ''
+}
+
+async function resolveLinkInviteState(
+  groupId: string,
+  linkInviteToken: string,
+): Promise<LinkInviteState | null> {
+  const tokenHash = await hashLinkToken(linkInviteToken)
+  const row = await prisma.groupInvitation.findFirst({
+    where: { groupId, type: GroupInvitationType.LINK, tokenHash },
+    select: { status: true, expiresAt: true },
+  })
+  if (!row) return null
+  if (row.status === GroupInvitationStatus.PENDING) {
+    if (row.expiresAt && row.expiresAt < new Date()) return 'EXPIRED'
+    return 'PENDING'
+  }
+  if (row.status === GroupInvitationStatus.ACCEPTED) return 'ACCEPTED'
+  if (row.status === GroupInvitationStatus.REVOKED) return 'REVOKED'
+  if (row.status === GroupInvitationStatus.DECLINED) return 'DECLINED'
+  return null
 }

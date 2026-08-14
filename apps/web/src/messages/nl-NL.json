@@ -599,7 +599,11 @@
     "allExpenses": "Alle uitgaven",
     "viewOnlyBannerTitle": "Alleen-lezen toegang",
     "viewOnlyBannerDescription": "Je kunt deze groep bekijken, maar je kunt niets toevoegen, bewerken of verwijderen, geen opmerkingen plaatsen, saldi niet verrekenen en de gegevens niet downloaden.",
-    "invitationSignInToAccept": "Log in om te accepteren"
+    "invitationSignInToAccept": "Log in om te accepteren",
+    "viewLinkInvalid": {
+      "title": "Deze alleen-lezen-link is ongeldig",
+      "description": "De link is misvormd of komt niet overeen met alleen-lezen toegang voor deze groep."
+    }
   },
   "GroupForm": {
     "title": "Groepsinformatie",

@@ -20,10 +20,6 @@ import {
 } from '../../routes/upload'
 import { getWebBaseUrl } from '../auth/urls'
 import {
-  assertInvitationRouteIdDoesNotMatchGroup,
-  generateUniqueGroupRouteId,
-} from '../group-route'
-import {
   LINK_INVITATION_DEFAULT_TTL_MS,
   buildLinkPlaceholderEmail,
   hashLinkToken,
@@ -783,7 +779,7 @@ export async function importCloudGroup(
       })
       const createdGroup = await tx.group.create({
         data: {
-          id: await generateUniqueGroupRouteId(tx),
+          id: randomId(),
           name: input.groupFormValues.name,
           information: input.groupFormValues.information ?? null,
           archived: false,
@@ -1163,7 +1159,6 @@ export async function importCloudGroup(
         })
       } else {
         const token = randomId()
-        await assertInvitationRouteIdDoesNotMatchGroup(token, tx)
         const invitation = await tx.groupInvitation.create({
           data: {
             id: randomId(),
@@ -1182,7 +1177,7 @@ export async function importCloudGroup(
           sourceName: participant.displayName,
           kind: 'LINK',
           invitationId: invitation.id,
-          inviteUrl: `${getWebBaseUrl()}/groups/${token}`,
+          inviteUrl: `${getWebBaseUrl()}/groups/${group.id}?invite=${token}`,
         })
       }
     }

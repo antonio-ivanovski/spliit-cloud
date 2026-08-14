@@ -1,7 +1,12 @@
 import { z } from 'zod'
 
 import { getRecurringSeriesProgress } from '../../../../lib/api/series-progress'
-import { groupReadProcedure, loadGroupViewer } from '../../../init'
+import {
+  groupAccessFields,
+  groupReadProcedure,
+  groupViewerArgs,
+  loadGroupViewer,
+} from '../../../init'
 import { recurringSeriesProgressOutputSchema } from '../../../outputs/expenses'
 
 export const seriesProgressProcedure = groupReadProcedure
@@ -9,14 +14,11 @@ export const seriesProgressProcedure = groupReadProcedure
     z.object({
       groupId: z.string().min(1),
       seriesId: z.string().min(1),
+      ...groupAccessFields,
     }),
   )
   .output(recurringSeriesProgressOutputSchema)
   .query(async ({ input, ctx }) => {
-    const { canonicalGroupId } = await loadGroupViewer({
-      groupId: input.groupId,
-      accountId: ctx.auth?.user.id,
-      accountEmail: ctx.auth?.user.email,
-    })
-    return getRecurringSeriesProgress(canonicalGroupId, input.seriesId)
+    const { group } = await loadGroupViewer(groupViewerArgs(input, ctx))
+    return getRecurringSeriesProgress(group.id, input.seriesId)
   })

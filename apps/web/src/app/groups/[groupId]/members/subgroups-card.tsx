@@ -37,6 +37,8 @@ import { useToast } from '@/components/ui/use-toast'
 import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 import { trpc } from '@/trpc/client'
 
+import { useGroupAccessSearch } from '../use-group-access-search'
+
 type Participant = {
   id: string
   name: string
@@ -64,7 +66,12 @@ export function SubgroupsCard({
   const { toast } = useToast()
   const mascot = useMascotController()
   const utils = trpc.useUtils()
-  const subgroupsQuery = trpc.groups.subgroups.list.useQuery({ groupId })
+  const { linkInviteToken, viewKey } = useGroupAccessSearch()
+  const subgroupsQuery = trpc.groups.subgroups.list.useQuery({
+    groupId,
+    linkInviteToken,
+    viewKey,
+  })
   const [editor, setEditor] = useState<EditState | null>(null)
   const [disableDialogOpen, setDisableDialogOpen] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<{
@@ -76,7 +83,11 @@ export function SubgroupsCard({
 
   const refresh = async () => {
     await Promise.all([
-      utils.groups.subgroups.list.invalidate({ groupId }),
+      utils.groups.subgroups.list.invalidate({
+        groupId,
+        linkInviteToken,
+        viewKey,
+      }),
       utils.groups.get.invalidate({ groupId }),
       utils.groups.balances.list.invalidate({ groupId }),
     ])

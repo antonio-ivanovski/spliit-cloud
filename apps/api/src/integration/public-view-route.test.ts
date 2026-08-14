@@ -7,13 +7,13 @@ import { checkDbConnection, testRunId } from './setup'
 
 await checkDbConnection()
 
-describe('Public View-only path — real DB', () => {
+describe('Public view-only query param — real DB', () => {
   const runId = testRunId()
   const adminId = `acct-public-route-${runId}`
   const adminEmail = `public-route-${runId}@test.example`
   let groupId: string
   let ledgerId: string
-  let publicViewId: string
+  let viewKey: string
 
   const adminCaller = () =>
     groupsRouter.createCaller({
@@ -56,7 +56,7 @@ describe('Public View-only path — real DB', () => {
     })
     ledgerId = group.ledgerId
     const enabled = await adminCaller().view.enable({ groupId })
-    publicViewId = new URL(enabled.url).pathname.split('/').at(-1)!
+    viewKey = new URL(enabled.url).searchParams.get('viewKey')!
   })
 
   afterAll(async () => {
@@ -64,50 +64,50 @@ describe('Public View-only path — real DB', () => {
     await prisma.account.delete({ where: { id: adminId } }).catch(() => {})
   })
 
-  it('uses the opaque path id across group read procedures', async () => {
+  it('uses the canonical group id plus viewKey across group read procedures', async () => {
     const caller = publicCaller()
+    const input = { groupId, viewKey }
     const [group, details, balances, activities] = await Promise.all([
-      caller.get({ groupId: publicViewId }),
-      caller.getDetails({ groupId: publicViewId }),
-      caller.balances.list({ groupId: publicViewId }),
-      caller.activities.list({ groupId: publicViewId }),
+      caller.get(input),
+      caller.getDetails(input),
+      caller.balances.list(input),
+      caller.activities.list(input),
     ])
 
     expect(group).toMatchObject({
-      canonicalGroupId: groupId,
       viewer: { source: 'PUBLIC_LINK', access: 'READ_ONLY' },
     })
+    expect(group.group.id).toBe(groupId)
     expect(details.group.id).toBe(groupId)
     expect(balances).toHaveProperty('balances')
     expect(activities).toHaveProperty('activities')
   })
 
-  it('upgrades an active member who opens the public alias', async () => {
+  it('upgrades an active member who opens the public view link', async () => {
     await expect(
-      adminCaller().get({ groupId: publicViewId }),
+      adminCaller().get({ groupId, viewKey }),
     ).resolves.toMatchObject({
-      canonicalGroupId: groupId,
       viewer: { source: 'MEMBER', access: 'READ_WRITE' },
     })
   })
 
-  it('invalidates the old path immediately when replaced or removed', async () => {
+  it('invalidates the old key immediately when replaced or removed', async () => {
     const replaced = await adminCaller().view.replace({
       groupId,
       confirmed: true,
     })
-    const replacementId = new URL(replaced.url).pathname.split('/').at(-1)!
+    const replacementKey = new URL(replaced.url).searchParams.get('viewKey')!
 
     await expect(
-      publicCaller().get({ groupId: publicViewId }),
+      publicCaller().get({ groupId, viewKey }),
     ).rejects.toMatchObject({ code: 'FORBIDDEN' })
     await expect(
-      publicCaller().get({ groupId: replacementId }),
+      publicCaller().get({ groupId, viewKey: replacementKey }),
     ).resolves.toMatchObject({ viewer: { source: 'PUBLIC_LINK' } })
 
     await adminCaller().view.remove({ groupId, confirmed: true })
     await expect(
-      publicCaller().get({ groupId: replacementId }),
+      publicCaller().get({ groupId, viewKey: replacementKey }),
     ).rejects.toMatchObject({ code: 'FORBIDDEN' })
   })
 })

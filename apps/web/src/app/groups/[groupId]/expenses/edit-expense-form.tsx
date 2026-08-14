@@ -20,6 +20,7 @@ import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { trpc } from '@/trpc/client'
 
 import { useIsReadOnlyGroupViewer } from '../current-group-context'
+import { useGroupAccessSearch } from '../use-group-access-search'
 import { ExpenseForm, type ExpenseSubmitOutcome } from './expense-form/index'
 import {
   useDeleteExpenseMutation,
@@ -48,7 +49,8 @@ export function EditExpenseForm({
   const { t: tExpenseForm } = useTranslation(undefined, {
     keyPrefix: 'ExpenseForm',
   })
-  const { data: groupData } = trpc.groups.get.useQuery({ groupId })
+  const access = useGroupAccessSearch()
+  const { data: groupData } = trpc.groups.get.useQuery({ groupId, ...access })
   const group = groupData?.group
   const currentLedgerParticipantId =
     groupData?.currentLedgerParticipantId ?? null
@@ -56,6 +58,7 @@ export function EditExpenseForm({
   const expenseQuery = trpc.groups.expenses.get.useQuery({
     groupId,
     expenseId,
+    ...access,
   })
   const expenseData = expenseQuery.data
   const expense = expenseData?.expense

@@ -40,7 +40,6 @@ import {
   resolveConversion,
   type ConversionResolution,
 } from '../expense-conversion'
-import { generateUniqueGroupRouteId } from '../group-route'
 import { openStagedDocumentClaims } from '../import-documents'
 import { getPlaceholderEmailDisplayName } from '../invitations/display'
 import {
@@ -544,7 +543,7 @@ export async function importGroup(
       })
       const group = await tx.group.create({
         data: {
-          id: await generateUniqueGroupRouteId(tx),
+          id: randomId(),
           name: input.groupFormValues.name,
           information: input.groupFormValues.information,
           ledgerId: ledger.id,

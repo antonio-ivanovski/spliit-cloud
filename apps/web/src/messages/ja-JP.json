@@ -593,7 +593,11 @@
     "allExpenses": "すべての支出",
     "viewOnlyBannerTitle": "閲覧のみのアクセス",
     "viewOnlyBannerDescription": "このグループを閲覧できますが、追加、編集、削除、コメント、残高の精算、データのダウンロードはできません。",
-    "invitationSignInToAccept": "サインインして承認"
+    "invitationSignInToAccept": "サインインして承認",
+    "viewLinkInvalid": {
+      "title": "この閲覧専用リンクは無効です",
+      "description": "リンクの形式が正しくないか、このグループの閲覧のみのアクセスに一致しません。"
+    }
   },
   "GroupForm": {
     "title": "グループ情報",

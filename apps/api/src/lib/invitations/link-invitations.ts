@@ -20,7 +20,6 @@ import {
 import { getApiBoss } from '../api/boss'
 import { randomId } from '../api/shared'
 import { getWebBaseUrl } from '../auth/urls'
-import { assertInvitationRouteIdDoesNotMatchGroup } from '../group-route'
 import { buildLinkPlaceholderEmail, getInvitationDisplayName } from './display'
 import { findPendingEmailInvitation } from './email-invitations'
 import {
@@ -139,7 +138,6 @@ export async function createLinkInvitation(
       : await getApiBoss()
 
   const run = async (tx: PrismaTypes.TransactionClient) => {
-    await assertInvitationRouteIdDoesNotMatchGroup(token, tx)
     const participantId = await materializePendingInvitationParticipant(tx, {
       groupId: input.groupId,
       suppliedParticipantId: input.ledgerParticipantId,
@@ -191,7 +189,7 @@ export async function createLinkInvitation(
       expiresAt: invitation.expiresAt!,
     },
     token,
-    inviteUrl: `${webBase}/groups/${token}`,
+    inviteUrl: `${webBase}/groups/${invitation.groupId}?invite=${token}`,
   }
 }
 

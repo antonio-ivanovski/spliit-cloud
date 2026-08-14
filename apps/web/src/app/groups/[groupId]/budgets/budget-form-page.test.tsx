@@ -40,6 +40,13 @@ vi.mock('@tanstack/react-router', () => ({
   ),
 }))
 
+vi.mock('@/app/groups/[groupId]/use-group-access-search', () => ({
+  useGroupAccessSearch: () => ({
+    linkInviteToken: undefined,
+    viewKey: undefined,
+  }),
+}))
+
 const fakeGroup = {
   currency: '$',
   currencyCode: 'USD',

@@ -21,22 +21,26 @@ import {
 } from '../../../../lib/api/subgroups'
 import { redactViewerDisplayName } from '../../../../lib/group-view'
 import { resolveParticipantDisplayName } from '../../../../lib/invitations/display'
-import { groupReadProcedure, loadGroupViewer } from '../../../init'
+import {
+  groupAccessFields,
+  groupReadProcedure,
+  groupViewerArgs,
+  loadGroupViewer,
+} from '../../../init'
 import { listBalancesOutputSchema } from '../../../outputs/balances'
 
 export const listGroupBalancesProcedure = groupReadProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
+      ...groupAccessFields,
     }),
   )
   .output(listBalancesOutputSchema)
-  .query(async ({ input: { groupId }, ctx }) => {
-    const { group, ledger, viewer } = await loadGroupViewer({
-      groupId,
-      accountId: ctx.auth?.user.id,
-      accountEmail: ctx.auth?.user.email,
-    })
+  .query(async ({ input, ctx }) => {
+    const { group, ledger, viewer } = await loadGroupViewer(
+      groupViewerArgs(input, ctx),
+    )
     const rows = await getGroupBalanceExpenses(group.id, ledger.id)
     const expenses = rows.map(toBalanceExpense)
     const participantIds = Array.from(

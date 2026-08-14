@@ -11,6 +11,8 @@ import { trpc } from '@/trpc/client'
 import type { Currency, ExpenseFormInputValues } from '@spliit/domain'
 import { utcTodayIso } from '@spliit/domain'
 
+import { useGroupAccessSearch } from '../../use-group-access-search'
+
 export function useExpenseCurrencyConversion(args: {
   form: UseFormReturn<ExpenseFormInputValues>
   group: Group
@@ -81,6 +83,7 @@ export function useExpenseCurrencyConversion(args: {
 
   const commonCurrenciesQuery = trpc.groups.expenses.commonCurrencies.useQuery({
     groupId: args.group.id,
+    ...useGroupAccessSearch(),
   })
   const pinnedCurrencyCode = args.group.currencyCode || undefined
   // Only swap the static common list after a successful response.

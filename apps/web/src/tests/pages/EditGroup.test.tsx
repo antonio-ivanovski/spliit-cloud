@@ -69,6 +69,13 @@ vi.mock('@tanstack/react-router', () => ({
   ),
 }))
 
+vi.mock('@/app/groups/[groupId]/use-group-access-search', () => ({
+  useGroupAccessSearch: () => ({
+    linkInviteToken: undefined,
+    viewKey: undefined,
+  }),
+}))
+
 vi.mock('@/lib/api-url', () => ({
   getApiBaseUrl: () => 'http://localhost:3001',
 }))

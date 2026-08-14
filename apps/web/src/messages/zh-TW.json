@@ -593,7 +593,11 @@
     "allExpenses": "所有支出",
     "viewOnlyBannerTitle": "僅限檢視的存取權限",
     "viewOnlyBannerDescription": "您可以瀏覽此群組，但無法新增、編輯、刪除、留言、結算餘額或下載其資料。",
-    "invitationSignInToAccept": "登入後接受"
+    "invitationSignInToAccept": "登入後接受",
+    "viewLinkInvalid": {
+      "title": "此唯讀連結無效",
+      "description": "該連結格式錯誤或與本群組中的任何僅限檢視的存取權限都不相符。"
+    }
   },
   "GroupForm": {
     "title": "群組資訊",

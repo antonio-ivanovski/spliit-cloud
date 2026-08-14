@@ -31,6 +31,7 @@ import {
   useCurrentGroup,
   useIsReadOnlyGroupViewer,
 } from '../current-group-context'
+import { useGroupAccessSearch } from '../use-group-access-search'
 import { EXPENSE_LIST_PAGE_SIZE } from './expense-list-query'
 import { ExpenseTimeline, ExpensesLoading } from './expense-timeline'
 
@@ -67,6 +68,7 @@ const ExpenseListForSearch = ({
   searchText: string
 }) => {
   const { group } = useCurrentGroup()
+  const { linkInviteToken, viewKey } = useGroupAccessSearch()
   const accountPreferences = useSyncedAccountPreferences()
   const accountTimeZone =
     accountPreferences?.timeZone ?? detectDeviceTimeZone() ?? 'UTC'
@@ -96,6 +98,8 @@ const ExpenseListForSearch = ({
       limit: EXPENSE_LIST_PAGE_SIZE,
       filter: searchText,
       locale,
+      linkInviteToken,
+      viewKey,
       ...queryInput,
     },
     { getNextPageParam: ({ nextCursor }) => nextCursor },

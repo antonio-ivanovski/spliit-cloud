@@ -1,4 +1,9 @@
-import { Link, useLocation, useNavigate } from '@tanstack/react-router'
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearch,
+} from '@tanstack/react-router'
 import { ArrowLeft, Check, Eye, Info, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -35,29 +40,22 @@ export const GroupHeader = ({
   const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const { toast } = useToast()
   const { data: account } = useCurrentAccount()
-  const navigate = useNavigate()
+  const navigate = useNavigate({ from: '/groups/$groupId' })
   const utils = trpc.useUtils()
   const pathname = useLocation({ select: (location) => location.pathname })
   const focusedMobileRoute = isFocusedMobilePath(pathname)
-
-  const invitationRouteId =
-    viewer?.source === 'PENDING_INVITATION' &&
-    currentInvitation?.type === 'LINK'
-      ? groupId
-      : undefined
+  const { invite: inviteToken } = useSearch({
+    from: '/groups/$groupId',
+  })
 
   const acceptLinkMutation = trpc.invitations.acceptLink.useMutation({
-    onSuccess: (result) => {
+    onSuccess: () => {
       toast({
         description: tGroups('invitationAccepted'),
         variant: 'success',
       })
-      const prefix = `/groups/${encodeURIComponent(groupId)}`
-      const suffix = pathname.startsWith(prefix)
-        ? pathname.slice(prefix.length)
-        : ''
       void navigate({
-        href: `/groups/${encodeURIComponent(result.groupId)}${suffix}${window.location.search}`,
+        search: (prev) => ({ ...prev, invite: undefined }),
         replace: true,
       })
       void utils.groups.get.invalidate({ groupId })
@@ -112,8 +110,8 @@ export const GroupHeader = ({
   // preview is only useful while the URL still carries a token and
   // the viewer hasn't accepted yet.
   const previewQuery = trpc.invitations.previewLink.useQuery(
-    { token: invitationRouteId ?? '' },
-    { enabled: !!invitationRouteId, retry: false },
+    { token: inviteToken ?? '' },
+    { enabled: !!inviteToken, retry: false },
   )
 
   // Banner state comes from the server-side `linkInviteState` (set
@@ -121,13 +119,13 @@ export const GroupHeader = ({
   // URL has no token — we fall back to the regular email-invite
   // banner.
   const showLinkAlreadyMember =
-    !!invitationRouteId &&
+    !!inviteToken &&
     !!currentMember &&
     !isLoading &&
     linkInviteState !== 'ACCEPTED'
 
   const showLinkExpiredOrInvalid =
-    !!invitationRouteId &&
+    !!inviteToken &&
     !currentMember &&
     !currentInvitation &&
     !isLoading &&
@@ -202,9 +200,9 @@ export const GroupHeader = ({
                   size="sm"
                   onClick={() =>
                     isLinkBanner
-                      ? invitationRouteId
+                      ? inviteToken
                         ? acceptLinkMutation.mutate({
-                            token: invitationRouteId,
+                            token: inviteToken,
                           })
                         : undefined
                       : acceptMutation.mutate({
@@ -215,7 +213,7 @@ export const GroupHeader = ({
                     acceptMutation.isPending ||
                     declineMutation.isPending ||
                     acceptLinkMutation.isPending ||
-                    (isLinkBanner && !invitationRouteId)
+                    (isLinkBanner && !inviteToken)
                   }
                 >
                   <Check className="me-2 h-4 w-4" />
@@ -260,8 +258,10 @@ export const GroupHeader = ({
                   <Link
                     to="/"
                     search={{
-                      redirect: `/groups/${groupId}`,
-                      invitation: isLinkBanner ? groupId : undefined,
+                      redirect: inviteToken
+                        ? `/groups/${groupId}?invite=${encodeURIComponent(inviteToken)}`
+                        : `/groups/${groupId}`,
+                      invitation: isLinkBanner ? inviteToken : undefined,
                     }}
                   />
                 }

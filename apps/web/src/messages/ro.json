@@ -605,7 +605,11 @@
     "allExpenses": "Toate cheltuielile",
     "viewOnlyBannerTitle": "Acces doar pentru vizualizare",
     "viewOnlyBannerDescription": "Poți explora acest grup, dar nu poți adăuga, edita, șterge sau comenta, nu poți deconta soldurile și nu poți descărca datele.",
-    "invitationSignInToAccept": "Conectează-te pentru a accepta"
+    "invitationSignInToAccept": "Conectează-te pentru a accepta",
+    "viewLinkInvalid": {
+      "title": "Acest link doar pentru vizualizare este invalid",
+      "description": "Linkul este deformat sau nu corespunde niciunui acces doar pentru vizualizare din acest grup."
+    }
   },
   "GroupForm": {
     "title": "Informații despre grup",

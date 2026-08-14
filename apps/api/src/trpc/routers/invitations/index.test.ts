@@ -1386,7 +1386,7 @@ describe('invitationsRouter.createLink', () => {
 
     expect(result.invitationId).toBe('inv-link-1')
     expect(result.inviteUrl).toMatch(
-      /^http:\/\/localhost:3000\/groups\/[a-f0-9]{32}$/,
+      /^http:\/\/localhost:3000\/groups\/[^/?]+\?invite=/,
     )
     expect(prismaMock.groupInvitation.create).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -2134,7 +2134,7 @@ describe('invitationsRouter.updatePending', () => {
     })
 
     expect(result.inviteUrl).toMatch(
-      /^http:\/\/localhost:3000\/groups\/[a-f0-9]{32}$/,
+      /^http:\/\/localhost:3000\/groups\/[^/?]+\?invite=/,
     )
     expect(result.invitation.type).toBe('LINK')
     const updateArgs = prismaMock.groupInvitation.updateMany.mock
@@ -2417,7 +2417,7 @@ describe('invitationsRouter.regenerateLink', () => {
     const result = await caller.regenerateLink({ invitationId: 'inv-1' })
 
     expect(result.inviteUrl).toMatch(
-      /^http:\/\/localhost:3000\/groups\/[a-f0-9]{32}$/,
+      /^http:\/\/localhost:3000\/groups\/[^/?]+\?invite=/,
     )
     expect(prismaMock.groupInvitation.updateMany).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -2450,7 +2450,7 @@ describe('invitationsRouter.regenerateLink', () => {
     })
 
     expect(result.inviteUrl).toMatch(
-      /^http:\/\/localhost:3000\/groups\/[a-f0-9]{32}$/,
+      /^http:\/\/localhost:3000\/groups\/[^/?]+\?invite=/,
     )
     expect(result.invitation).toMatchObject({
       status: 'PENDING',

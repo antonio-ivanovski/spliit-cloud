@@ -21,7 +21,9 @@ import {
 } from '../../../../lib/api/subgroups'
 import {
   createTRPCRouter,
+  groupAccessFields,
   groupReadProcedure,
+  groupViewerArgs,
   loadGroupMutationContext,
   loadGroupViewer,
   protectedProcedure,
@@ -129,15 +131,11 @@ function mapWriteError(error: unknown): never {
 }
 
 export const listSubgroupsProcedure = groupReadProcedure
-  .input(groupIdInput)
+  .input(groupIdInput.extend(groupAccessFields))
   .output(listSubgroupsOutputSchema)
   .query(async ({ input, ctx }) => {
-    const { canonicalGroupId } = await loadGroupViewer({
-      groupId: input.groupId,
-      accountId: ctx.auth?.user.id,
-      accountEmail: ctx.auth?.user.email,
-    })
-    const result = await listSubgroups(canonicalGroupId)
+    const { group } = await loadGroupViewer(groupViewerArgs(input, ctx))
+    const result = await listSubgroups(group.id)
     if (!result)
       throw new TRPCError({ code: 'NOT_FOUND', message: 'Group not found' })
     return result

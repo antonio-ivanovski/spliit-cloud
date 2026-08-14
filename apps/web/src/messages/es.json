@@ -605,7 +605,11 @@
     "allExpenses": "Todos los gastos",
     "viewOnlyBannerTitle": "Acceso de solo lectura",
     "viewOnlyBannerDescription": "Puedes explorar este grupo, pero no puedes añadir, editar, eliminar ni comentar elementos, liquidar saldos ni descargar sus datos.",
-    "invitationSignInToAccept": "Inicia sesión para aceptar"
+    "invitationSignInToAccept": "Inicia sesión para aceptar",
+    "viewLinkInvalid": {
+      "title": "Este enlace de solo lectura no es válido",
+      "description": "El enlace tiene un formato incorrecto o no coincide con ningún acceso de solo lectura de este grupo."
+    }
   },
   "GroupForm": {
     "title": "Información del grupo",

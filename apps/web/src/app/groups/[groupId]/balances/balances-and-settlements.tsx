@@ -11,6 +11,7 @@ import type {
 } from '@spliit/domain/subgroup-settlements'
 
 import { useCurrentGroup } from '../current-group-context'
+import { useGroupAccessSearch } from '../use-group-access-search'
 import { BalanceViewSelector, type BalanceView } from './balance-view-selector'
 import { withDisplayCurrencies } from './currency-balances'
 import { CurrencyDisplaySelector } from './currency-display-selector'
@@ -93,6 +94,7 @@ export default function BalancesAndSettlements() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Balances' })
   const utils = trpc.useUtils()
   const { groupId, group } = useCurrentGroup()
+  const { linkInviteToken, viewKey } = useGroupAccessSearch()
   const {
     currencyDisplay = 'group',
     view: viewParam,
@@ -102,9 +104,9 @@ export default function BalancesAndSettlements() {
   const [storedView, setStoredView] = useState<BalanceView>('simple')
   const settlementMode = settlementModeParam ?? 'individual'
   const { data: balancesData, isLoading: balancesAreLoading } =
-    trpc.groups.balances.list.useQuery({ groupId })
+    trpc.groups.balances.list.useQuery({ groupId, linkInviteToken, viewKey })
   const { data: subgroupsData, isLoading: subgroupsAreLoading } =
-    trpc.groups.subgroups.list.useQuery({ groupId })
+    trpc.groups.subgroups.list.useQuery({ groupId, linkInviteToken, viewKey })
 
   useEffect(() => {
     // Until we use tRPC more widely and can invalidate the cache on expense

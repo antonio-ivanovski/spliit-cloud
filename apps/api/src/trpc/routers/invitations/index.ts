@@ -70,8 +70,8 @@ import {
 // admins or members; ownership transfers are not a separate flow.
 const invitationRoleSchema = z.enum(['ADMIN', 'MEMBER'])
 
-/** Validate an opaque invitation route id, including legacy URL-safe ids. */
-const invitationRouteIdSchema = z
+/** Validate a raw link-invitation token from `?invite=`. */
+const invitationTokenSchema = z
   .string()
   .min(16)
   .max(128)
@@ -232,7 +232,7 @@ export const invitationsRouter = createTRPCRouter({
           }
           return {
             ...result,
-            inviteUrl: `${getWebBaseUrl()}/groups/${token}`,
+            inviteUrl: `${getWebBaseUrl()}/groups/${input.groupId}?invite=${token}`,
             expiresAt: new Date(result.expiresAt),
           }
         },
@@ -251,7 +251,7 @@ export const invitationsRouter = createTRPCRouter({
   // itself is the credential — and the helper returns only redacted
   // fields, not the full invitation row.
   previewLink: publicProcedure
-    .input(z.object({ token: invitationRouteIdSchema }))
+    .input(z.object({ token: invitationTokenSchema }))
     .output(z.object({ preview: linkInvitationPreviewSchema.nullable() }))
     .query(async ({ input }) => {
       const preview = await getLinkInvitationPreview(input.token)
@@ -266,7 +266,7 @@ export const invitationsRouter = createTRPCRouter({
   // refuses expired / revoked / already-used tokens and the
   // double-active-member case.
   acceptLink: protectedProcedure
-    .input(z.object({ token: invitationRouteIdSchema }))
+    .input(z.object({ token: invitationTokenSchema }))
     .output(
       z.object({ groupId: z.string(), role: z.enum(['ADMIN', 'MEMBER']) }),
     )

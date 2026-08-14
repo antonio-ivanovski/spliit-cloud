@@ -20,6 +20,7 @@ import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 import { trpc } from '@/trpc/client'
 
 import { useIsReadOnlyGroupViewer } from '../current-group-context'
+import { useGroupAccessSearch } from '../use-group-access-search'
 import { ExpenseForm } from './expense-form/index'
 import { useCreateExpenseMutation } from './expense-mutation-hooks'
 
@@ -38,7 +39,11 @@ export function CreateExpenseForm({
   const { t: tExpenseForm } = useTranslation(undefined, {
     keyPrefix: 'ExpenseForm',
   })
-  const { data: groupData } = trpc.groups.get.useQuery({ groupId })
+  const access = useGroupAccessSearch()
+  const { data: groupData } = trpc.groups.get.useQuery({
+    groupId,
+    ...access,
+  })
   const group = groupData?.group
   const currentLedgerParticipantId =
     groupData?.currentLedgerParticipantId ?? null
@@ -57,6 +62,7 @@ export function CreateExpenseForm({
       {
         groupId,
         expenseId: sourceExpenseId,
+        ...access,
       },
       { enabled: !!sourceExpenseId },
     )

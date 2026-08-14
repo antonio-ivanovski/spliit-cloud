@@ -2075,7 +2075,11 @@
     "allExpenses": "Alla utgifter",
     "viewOnlyBannerTitle": "Endast visning",
     "viewOnlyBannerDescription": "Du kan utforska den här gruppen, men du kan inte lägga till, redigera eller ta bort något, kommentera, reglera saldon eller ladda ned dess data.",
-    "invitationSignInToAccept": "Logga in för att acceptera"
+    "invitationSignInToAccept": "Logga in för att acceptera",
+    "viewLinkInvalid": {
+      "title": "Denna visningslänk är ogiltig",
+      "description": "Länken är felaktig eller matchar ingen visningsbehörighet för denna grupp."
+    }
   },
   "Header": {
     "signIn": "Logga in",

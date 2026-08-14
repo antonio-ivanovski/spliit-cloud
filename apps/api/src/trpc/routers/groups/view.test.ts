@@ -21,13 +21,13 @@ function makeCaller() {
 
 function seedMember(args: {
   role: 'ADMIN' | 'MEMBER'
-  publicViewId?: string | null
+  publicViewKey?: string | null
   groupType?: 'GROUP' | 'FRIEND'
 }) {
   prismaMock.group.findUnique.mockResolvedValue({
     id: 'group-1',
     groupType: args.groupType ?? 'GROUP',
-    publicViewId: args.publicViewId ?? null,
+    publicViewKey: args.publicViewKey ?? null,
     ledger: { id: 'ledger-1' },
   } as never)
   prismaMock.groupMember.findUnique.mockResolvedValue({
@@ -45,15 +45,17 @@ describe('groups.view', () => {
     prismaMock.groupInvitation.findFirst.mockResolvedValue(null)
   })
 
-  it('returns the stable link to a regular active member without management access', async () => {
-    seedMember({ role: 'MEMBER', publicViewId: 'a'.repeat(32) })
+  it('returns the stable query-param link to a regular active member without management access', async () => {
+    seedMember({ role: 'MEMBER', publicViewKey: 'view-key-member' })
 
     const first = await makeCaller().view.get({ groupId: 'group-1' })
     const second = await makeCaller().view.get({ groupId: 'group-1' })
 
     expect(first).toEqual(second)
     expect(first.canManage).toBe(false)
-    expect(first.url).toContain(`/groups/${'a'.repeat(32)}`)
+    expect(first.url).toBe(
+      'http://localhost:3000/groups/group-1?viewKey=view-key-member',
+    )
   })
 
   it('allows only an admin to enable the public link', async () => {
@@ -64,32 +66,36 @@ describe('groups.view', () => {
 
     seedMember({ role: 'ADMIN' })
     const result = await makeCaller().view.enable({ groupId: 'group-1' })
-    expect(result.url).toMatch(/\/groups\/[a-f0-9]{32}$/)
+    expect(result.url).toMatch(
+      /^http:\/\/localhost:3000\/groups\/group-1\?viewKey=[A-Za-z0-9_-]+$/,
+    )
     expect(prismaMock.group.updateMany).toHaveBeenCalledWith({
-      where: { id: 'group-1', publicViewId: null },
-      data: { publicViewId: expect.stringMatching(/^[a-f0-9]{32}$/) },
+      where: { id: 'group-1', publicViewKey: null },
+      data: { publicViewKey: expect.stringMatching(/^[A-Za-z0-9_-]+$/) },
     })
   })
 
   it('replaces and removes the current key only after explicit confirmation', async () => {
-    seedMember({ role: 'ADMIN', publicViewId: 'b'.repeat(32) })
+    seedMember({ role: 'ADMIN', publicViewKey: 'view-key-admin' })
 
     const replacement = await makeCaller().view.replace({
       groupId: 'group-1',
       confirmed: true,
     })
-    expect(replacement.url).toMatch(/\/groups\/[a-f0-9]{32}$/)
+    expect(replacement.url).toMatch(
+      /^http:\/\/localhost:3000\/groups\/group-1\?viewKey=[A-Za-z0-9_-]+$/,
+    )
     expect(prismaMock.group.updateMany).toHaveBeenLastCalledWith({
-      where: { id: 'group-1', publicViewId: { not: null } },
-      data: { publicViewId: expect.stringMatching(/^[a-f0-9]{32}$/) },
+      where: { id: 'group-1', publicViewKey: { not: null } },
+      data: { publicViewKey: expect.stringMatching(/^[A-Za-z0-9_-]+$/) },
     })
 
     await expect(
       makeCaller().view.remove({ groupId: 'group-1', confirmed: true }),
     ).resolves.toEqual({ removed: true })
     expect(prismaMock.group.updateMany).toHaveBeenLastCalledWith({
-      where: { id: 'group-1', publicViewId: { not: null } },
-      data: { publicViewId: null },
+      where: { id: 'group-1', publicViewKey: { not: null } },
+      data: { publicViewKey: null },
     })
   })
 
@@ -101,7 +107,7 @@ describe('groups.view', () => {
   })
 
   it('reports concurrent public-link state changes consistently', async () => {
-    seedMember({ role: 'ADMIN', publicViewId: 'c'.repeat(32) })
+    seedMember({ role: 'ADMIN', publicViewKey: 'view-key-conflict' })
     prismaMock.group.updateMany.mockResolvedValue({ count: 0 })
 
     await expect(

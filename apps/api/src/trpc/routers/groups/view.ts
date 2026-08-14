@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { prisma } from '@spliit/db'
 
 import { getWebBaseUrl } from '../../../lib/auth/urls'
-import { generateUniqueGroupRouteId } from '../../../lib/group-route'
+import { generateGroupViewKey } from '../../../lib/group-view'
 import {
   createTRPCRouter,
   loadGroupMutationContext,
@@ -30,8 +30,8 @@ async function requireRegularGroupAdmin(groupId: string, accountId: string) {
   return context
 }
 
-function viewUrl(publicViewId: string) {
-  return `${getWebBaseUrl()}/groups/${publicViewId}`
+function viewUrl(groupId: string, viewKey: string) {
+  return `${getWebBaseUrl()}/groups/${groupId}?viewKey=${encodeURIComponent(viewKey)}`
 }
 
 const groupInput = z.object({ groupId: z.string().min(1) })
@@ -52,7 +52,9 @@ export const groupViewRouter = createTRPCRouter({
         ctx.auth.user.id,
       )
       return {
-        url: group.publicViewId ? viewUrl(group.publicViewId) : null,
+        url: group.publicViewKey
+          ? viewUrl(input.groupId, group.publicViewKey)
+          : null,
         canManage: member.role === 'ADMIN',
       }
     }),
@@ -62,10 +64,10 @@ export const groupViewRouter = createTRPCRouter({
     .output(viewLinkUrlOutput)
     .mutation(async ({ input, ctx }) => {
       await requireRegularGroupAdmin(input.groupId, ctx.auth.user.id)
-      const publicViewId = await generateUniqueGroupRouteId()
+      const publicViewKey = generateGroupViewKey()
       const result = await prisma.group.updateMany({
-        where: { id: input.groupId, publicViewId: null },
-        data: { publicViewId },
+        where: { id: input.groupId, publicViewKey: null },
+        data: { publicViewKey },
       })
       if (result.count !== 1) {
         throw new TRPCError({
@@ -73,7 +75,7 @@ export const groupViewRouter = createTRPCRouter({
           message: 'Public view-only link is already enabled',
         })
       }
-      return { url: viewUrl(publicViewId) }
+      return { url: viewUrl(input.groupId, publicViewKey) }
     }),
 
   replace: protectedProcedure
@@ -81,10 +83,10 @@ export const groupViewRouter = createTRPCRouter({
     .output(viewLinkUrlOutput)
     .mutation(async ({ input, ctx }) => {
       await requireRegularGroupAdmin(input.groupId, ctx.auth.user.id)
-      const publicViewId = await generateUniqueGroupRouteId()
+      const publicViewKey = generateGroupViewKey()
       const result = await prisma.group.updateMany({
-        where: { id: input.groupId, publicViewId: { not: null } },
-        data: { publicViewId },
+        where: { id: input.groupId, publicViewKey: { not: null } },
+        data: { publicViewKey },
       })
       if (result.count !== 1) {
         throw new TRPCError({
@@ -92,7 +94,7 @@ export const groupViewRouter = createTRPCRouter({
           message: 'Public view-only link is not enabled',
         })
       }
-      return { url: viewUrl(publicViewId) }
+      return { url: viewUrl(input.groupId, publicViewKey) }
     }),
 
   remove: protectedProcedure
@@ -101,8 +103,8 @@ export const groupViewRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       await requireRegularGroupAdmin(input.groupId, ctx.auth.user.id)
       const result = await prisma.group.updateMany({
-        where: { id: input.groupId, publicViewId: { not: null } },
-        data: { publicViewId: null },
+        where: { id: input.groupId, publicViewKey: { not: null } },
+        data: { publicViewKey: null },
       })
       if (result.count !== 1) {
         throw new TRPCError({

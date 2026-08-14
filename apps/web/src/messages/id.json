@@ -593,7 +593,11 @@
     "allExpenses": "Semua pengeluaran",
     "viewOnlyBannerTitle": "Akses hanya lihat",
     "viewOnlyBannerDescription": "Anda dapat menjelajahi grup ini, tetapi tidak dapat menambah, mengedit, menghapus, berkomentar, melunasi saldo, atau mengunduh datanya.",
-    "invitationSignInToAccept": "Masuk untuk menerima"
+    "invitationSignInToAccept": "Masuk untuk menerima",
+    "viewLinkInvalid": {
+      "title": "Tautan hanya-lihat ini tidak valid",
+      "description": "Tautan ini tidak valid atau tidak cocok dengan akses hanya lihat apa pun di grup ini."
+    }
   },
   "GroupForm": {
     "title": "Informasi grup",

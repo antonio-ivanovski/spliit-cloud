@@ -593,7 +593,11 @@
     "allExpenses": "所有支出",
     "viewOnlyBannerTitle": "仅限查看的访问权限",
     "viewOnlyBannerDescription": "您可以浏览此群组，但无法添加、编辑、删除、发表评论、结算余额或下载其数据。",
-    "invitationSignInToAccept": "登录后接受"
+    "invitationSignInToAccept": "登录后接受",
+    "viewLinkInvalid": {
+      "title": "此只读链接无效",
+      "description": "该链接格式错误或与本群组中的任何仅限查看的访问权限都不匹配。"
+    }
   },
   "GroupForm": {
     "title": "群组信息",

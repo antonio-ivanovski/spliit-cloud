@@ -605,7 +605,11 @@
     "allExpenses": "Toutes les dépenses",
     "viewOnlyBannerTitle": "Accès en lecture seule",
     "viewOnlyBannerDescription": "Vous pouvez explorer ce groupe, mais vous ne pouvez rien ajouter, modifier, supprimer ou commenter, ni régler les soldes ou télécharger ses données.",
-    "invitationSignInToAccept": "Connectez-vous pour accepter"
+    "invitationSignInToAccept": "Connectez-vous pour accepter",
+    "viewLinkInvalid": {
+      "title": "Ce lien en lecture seule est invalide",
+      "description": "Le lien est mal formé ou ne correspond à aucun accès en lecture seule de ce groupe."
+    }
   },
   "GroupForm": {
     "title": "Informations sur le groupe",

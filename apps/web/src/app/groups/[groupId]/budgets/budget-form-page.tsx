@@ -7,6 +7,7 @@ import {
   useCurrentGroup,
   useIsReadOnlyGroupViewer,
 } from '@/app/groups/[groupId]/current-group-context'
+import { useGroupAccessSearch } from '@/app/groups/[groupId]/use-group-access-search'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -35,10 +36,11 @@ export function BudgetFormPage({ groupId, budgetId }: Props) {
   const navigate = useNavigate()
   const { toast } = useToast()
   const utils = trpc.useUtils()
+  const { linkInviteToken, viewKey } = useGroupAccessSearch()
 
   const isEdit = budgetId != null
   const budgetQuery = trpc.groups.budgets.get.useQuery(
-    { groupId, budgetId: budgetId ?? '' },
+    { groupId, budgetId: budgetId ?? '', linkInviteToken, viewKey },
     { enabled: isEdit },
   )
   const budget =

@@ -599,7 +599,11 @@
     "allExpenses": "Kaikki kulut",
     "viewOnlyBannerTitle": "Vain katselu",
     "viewOnlyBannerDescription": "Voit tarkastella tätä ryhmää, mutta et voi lisätä, muokata tai poistaa sisältöä, kommentoida, tasata saldoja tai ladata sen tietoja.",
-    "invitationSignInToAccept": "Kirjaudu sisään hyväksyäksesi"
+    "invitationSignInToAccept": "Kirjaudu sisään hyväksyäksesi",
+    "viewLinkInvalid": {
+      "title": "Tämä katselulinkki ei ole kelvollinen",
+      "description": "Linkki on virheellinen tai se ei vastaa mitään tämän ryhmän katseluoikeutta."
+    }
   },
   "GroupForm": {
     "title": "Ryhmän tiedot",

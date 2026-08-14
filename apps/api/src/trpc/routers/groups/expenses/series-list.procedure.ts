@@ -1,7 +1,12 @@
 import { z } from 'zod'
 
 import { getRecurringExpenseSeries } from '../../../../lib/api'
-import { groupReadProcedure, loadGroupViewer } from '../../../init'
+import {
+  groupAccessFields,
+  groupReadProcedure,
+  groupViewerArgs,
+  loadGroupViewer,
+} from '../../../init'
 import { listRecurringExpenseSeriesOutputSchema } from '../../../outputs/expenses'
 
 export const listRecurringExpenseSeriesProcedure = groupReadProcedure
@@ -13,16 +18,13 @@ export const listRecurringExpenseSeriesProcedure = groupReadProcedure
       seriesId: z.string().optional(),
       occurrenceCursor: z.number().int().positive().optional(),
       occurrenceLimit: z.number().int().min(1).max(100).optional(),
+      ...groupAccessFields,
     }),
   )
   .output(listRecurringExpenseSeriesOutputSchema)
   .query(async ({ input, ctx }) => {
-    const { canonicalGroupId } = await loadGroupViewer({
-      groupId: input.groupId,
-      accountId: ctx.auth?.user.id,
-      accountEmail: ctx.auth?.user.email,
-    })
-    return getRecurringExpenseSeries(canonicalGroupId, {
+    const { group } = await loadGroupViewer(groupViewerArgs(input, ctx))
+    return getRecurringExpenseSeries(group.id, {
       cursor: input.cursor,
       limit: input.limit,
       seriesId: input.seriesId,

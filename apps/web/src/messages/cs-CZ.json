@@ -611,7 +611,11 @@
     "allExpenses": "Všechny výdaje",
     "viewOnlyBannerTitle": "Přístup pouze pro čtení",
     "viewOnlyBannerDescription": "Tuto skupinu si můžete prohlížet, ale nemůžete přidávat, upravovat, mazat, komentovat, vyrovnávat zůstatky ani stahovat její data.",
-    "invitationSignInToAccept": "Přihlaste se pro přijetí"
+    "invitationSignInToAccept": "Přihlaste se pro přijetí",
+    "viewLinkInvalid": {
+      "title": "Tento odkaz pouze pro čtení není platný",
+      "description": "Odkaz má nesprávný formát nebo neodpovídá žádnému přístupu pouze pro čtení v této skupině."
+    }
   },
   "GroupForm": {
     "title": "Informace o skupině",

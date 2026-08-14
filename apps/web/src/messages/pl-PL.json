@@ -611,7 +611,11 @@
     "allExpenses": "Wszystkie wydatki",
     "viewOnlyBannerTitle": "Dostęp tylko do odczytu",
     "viewOnlyBannerDescription": "Możesz przeglądać tę grupę, ale nie możesz dodawać, edytować, usuwać, komentować, rozliczać sald ani pobierać jej danych.",
-    "invitationSignInToAccept": "Zaloguj się, aby przyjąć"
+    "invitationSignInToAccept": "Zaloguj się, aby przyjąć",
+    "viewLinkInvalid": {
+      "title": "Ten link tylko do odczytu jest nieprawidłowy",
+      "description": "Link jest nieprawidłowo sformatowany lub nie pasuje do żadnego dostępu tylko do odczytu w tej grupie."
+    }
   },
   "GroupForm": {
     "title": "Informacje o grupie",

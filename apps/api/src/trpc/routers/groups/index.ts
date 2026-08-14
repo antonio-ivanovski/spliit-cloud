@@ -43,7 +43,8 @@ export const groupsRouter = createTRPCRouter({
 
   /**
    * Get a single group plus the caller's membership and link-invite state.
-   * Read-accessible through canonical, public, and invitation route ids.
+   * Public view (`viewKey`) and pending link invites (`linkInviteToken`) share
+   * the same canonical group id.
    */
   get: getGroupProcedure,
 

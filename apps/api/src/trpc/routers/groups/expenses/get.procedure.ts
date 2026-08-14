@@ -3,7 +3,12 @@ import { z } from 'zod'
 
 import { getExpense } from '../../../../lib/api'
 import { expensePermissions } from '../../../../lib/api/resource-permissions'
-import { groupReadProcedure, loadGroupViewer } from '../../../init'
+import {
+  groupAccessFields,
+  groupReadProcedure,
+  groupViewerArgs,
+  loadGroupViewer,
+} from '../../../init'
 import { getExpenseOutputSchema } from '../../../outputs/expenses'
 
 export const getGroupExpenseProcedure = groupReadProcedure
@@ -11,15 +16,15 @@ export const getGroupExpenseProcedure = groupReadProcedure
     z.object({
       groupId: z.string().min(1),
       expenseId: z.string().min(1),
+      ...groupAccessFields,
     }),
   )
   .output(getExpenseOutputSchema)
-  .query(async ({ input: { groupId, expenseId }, ctx }) => {
-    const { group, member, viewer } = await loadGroupViewer({
-      groupId,
-      accountId: ctx.auth?.user.id,
-      accountEmail: ctx.auth?.user.email,
-    })
+  .query(async ({ input, ctx }) => {
+    const { expenseId } = input
+    const { group, member, viewer } = await loadGroupViewer(
+      groupViewerArgs(input, ctx),
+    )
     const expense = await getExpense(group.id, expenseId)
     if (!expense) {
       throw new TRPCError({

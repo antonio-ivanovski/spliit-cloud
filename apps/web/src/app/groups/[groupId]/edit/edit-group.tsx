@@ -20,6 +20,7 @@ import {
   useIsReadOnlyGroupViewer,
 } from '../current-group-context'
 import { ExportOptionsCard } from '../export-options-card'
+import { useGroupAccessSearch } from '../use-group-access-search'
 import { DeleteGroupDialog } from './delete-group-dialog'
 import {
   useArchiveGroupMutation,
@@ -31,7 +32,12 @@ import { PublicViewOnlyLinkSection } from './group-view-link-card'
 export const EditGroup = () => {
   const { groupId, group, currentMember } = useCurrentGroup()
   const isReadOnlyViewer = useIsReadOnlyGroupViewer()
-  const { data, isLoading } = trpc.groups.getDetails.useQuery({ groupId })
+  const { linkInviteToken, viewKey } = useGroupAccessSearch()
+  const { data, isLoading } = trpc.groups.getDetails.useQuery({
+    groupId,
+    linkInviteToken,
+    viewKey,
+  })
   const updateMutation = useUpdateGroupMutation()
   const deleteMutation = useDeleteGroupMutation()
   const { data: features } = trpc.features.get.useQuery()

@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import '../test/mocks'
 import { clearAccountCache } from '../lib/auth/account-cache'
-import { generateGroupRouteId } from '../lib/group-view'
+import { generateGroupViewKey } from '../lib/group-view'
 import { authState, prismaMock } from '../test/state'
 import {
   assistantProcedure,
@@ -326,14 +326,14 @@ describe('loadGroupViewer', () => {
   const accountId = 'acct-1'
   const accountEmail = 'alice@example.com'
 
-  it('returns a generic denial when the route id does not resolve', async () => {
+  it('returns NOT_FOUND when the canonical group id does not exist', async () => {
     prismaMock.group.findUnique.mockResolvedValue(null)
     prismaMock.groupMember.findUnique.mockResolvedValue(null)
 
     await expect(
       loadGroupViewer({ groupId, accountId, accountEmail }),
     ).rejects.toMatchObject({
-      code: 'FORBIDDEN',
+      code: 'NOT_FOUND',
     })
   })
 
@@ -369,6 +369,7 @@ describe('loadGroupViewer', () => {
     prismaMock.groupInvitation.findFirst.mockResolvedValue({
       id: 'inv-1',
       role: 'MEMBER',
+      type: 'EMAIL',
     } as never)
 
     const result = await loadGroupViewer({ groupId, accountId, accountEmail })
@@ -378,7 +379,7 @@ describe('loadGroupViewer', () => {
     expect(result.viewer).toEqual({
       kind: 'PENDING_INVITEE',
       access: 'READ_ONLY',
-      invitation: { id: 'inv-1', role: 'MEMBER' },
+      invitation: { id: 'inv-1', role: 'MEMBER', type: 'EMAIL' },
     })
   })
 
@@ -398,6 +399,7 @@ describe('loadGroupViewer', () => {
     prismaMock.groupInvitation.findFirst.mockResolvedValue({
       id: 'inv-2',
       role: 'ADMIN',
+      type: 'EMAIL',
     } as never)
 
     const result = await loadGroupViewer({ groupId, accountId, accountEmail })
@@ -406,47 +408,37 @@ describe('loadGroupViewer', () => {
     expect(result.viewer).toEqual({
       kind: 'PENDING_INVITEE',
       access: 'READ_ONLY',
-      invitation: { id: 'inv-2', role: 'ADMIN' },
+      invitation: { id: 'inv-2', role: 'ADMIN', type: 'EMAIL' },
     })
   })
 
-  it('accepts only the current public route id for regular groups', async () => {
-    const publicViewId = generateGroupRouteId()
-    prismaMock.group.findUnique
-      .mockResolvedValueOnce(null)
-      .mockResolvedValueOnce({
-        id: groupId,
-        groupType: 'GROUP',
-        publicViewId,
-        ledger: { id: 'ledger-1' },
-      } as never)
+  it('accepts a matching public view key on a regular group', async () => {
+    const viewKey = generateGroupViewKey()
+    prismaMock.group.findUnique.mockResolvedValue({
+      id: groupId,
+      groupType: 'GROUP',
+      publicViewKey: viewKey,
+      ledger: { id: 'ledger-1' },
+    } as never)
     prismaMock.groupMember.findUnique.mockResolvedValue(null)
 
-    await expect(
-      loadGroupViewer({ groupId: publicViewId }),
-    ).resolves.toMatchObject({
+    await expect(loadGroupViewer({ groupId, viewKey })).resolves.toMatchObject({
       viewer: { kind: 'PUBLIC_VIEW', access: 'READ_ONLY' },
-      canonicalGroupId: groupId,
-      routeSource: 'PUBLIC_LINK',
     })
 
-    prismaMock.group.findUnique.mockResolvedValue(null)
-    prismaMock.groupInvitation.findUnique.mockResolvedValue(null)
     await expect(
-      loadGroupViewer({ groupId: generateGroupRouteId() }),
+      loadGroupViewer({ groupId, viewKey: generateGroupViewKey() }),
     ).rejects.toMatchObject({ code: 'FORBIDDEN' })
 
-    prismaMock.group.findUnique
-      .mockResolvedValueOnce(null)
-      .mockResolvedValueOnce({
-        id: groupId,
-        groupType: 'FRIEND',
-        publicViewId,
-        ledger: { id: 'ledger-1' },
-      } as never)
-    await expect(
-      loadGroupViewer({ groupId: publicViewId }),
-    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+    prismaMock.group.findUnique.mockResolvedValue({
+      id: groupId,
+      groupType: 'FRIEND',
+      publicViewKey: viewKey,
+      ledger: { id: 'ledger-1' },
+    } as never)
+    await expect(loadGroupViewer({ groupId, viewKey })).rejects.toMatchObject({
+      code: 'FORBIDDEN',
+    })
   })
 
   it('throws FORBIDDEN when there is no ACTIVE member and no matching PENDING invitation', async () => {

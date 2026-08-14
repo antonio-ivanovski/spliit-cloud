@@ -1,12 +1,15 @@
-import { randomBytes } from 'node:crypto'
+import { randomBytes, timingSafeEqual } from 'node:crypto'
 
-/** Opaque route ids intentionally have the same shape as canonical group ids. */
-export function generateGroupRouteId() {
-  return randomBytes(16).toString('hex')
+/** 256-bit URL-safe secret used as `?viewKey=` on a canonical group URL. */
+export function generateGroupViewKey() {
+  return randomBytes(32).toString('base64url')
 }
 
-export function isGroupRouteId(value: string) {
-  return /^[a-f0-9]{32}$/u.test(value)
+export function groupViewKeysMatch(stored: string, candidate: string) {
+  const current = Buffer.from(stored)
+  const provided = Buffer.from(candidate)
+  if (current.length !== provided.length) return false
+  return timingSafeEqual(current, provided)
 }
 
 /** Prevent pending invitation email addresses from becoming display labels. */

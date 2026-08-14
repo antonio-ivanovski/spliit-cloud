@@ -605,7 +605,11 @@
     "allExpenses": "Todas as despesas",
     "viewOnlyBannerTitle": "Acesso somente para visualização",
     "viewOnlyBannerDescription": "Você pode explorar este grupo, mas não pode adicionar, editar, excluir ou comentar, acertar saldos nem baixar os dados.",
-    "invitationSignInToAccept": "Faça login para aceitar"
+    "invitationSignInToAccept": "Faça login para aceitar",
+    "viewLinkInvalid": {
+      "title": "Este link somente para visualização é inválido",
+      "description": "O link está malformado ou não corresponde a nenhum acesso somente para visualização neste grupo."
+    }
   },
   "GroupForm": {
     "title": "Informações do grupo",

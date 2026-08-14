@@ -1103,7 +1103,11 @@
     "allExpenses": "جميع النفقات",
     "viewOnlyBannerTitle": "صلاحية العرض فقط",
     "viewOnlyBannerDescription": "يمكنك استعراض هذه المجموعة، لكن لا يمكنك إضافة أو تعديل أو حذف أو التعليق أو تسوية الأرصدة أو تنزيل بياناتها.",
-    "invitationSignInToAccept": "سجّل الدخول لقبول الدعوة"
+    "invitationSignInToAccept": "سجّل الدخول لقبول الدعوة",
+    "viewLinkInvalid": {
+      "title": "رابط العرض فقط هذا غير صالح",
+      "description": "هذا الرابط غير صالح أو لا يتطابق مع أي صلاحية عرض فقط لهذه المجموعة."
+    }
   },
   "Unsubscribe": {
     "submitting": "جارٍ إلغاء الاشتراك…",

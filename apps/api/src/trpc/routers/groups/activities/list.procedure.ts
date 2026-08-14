@@ -2,7 +2,12 @@ import { z } from 'zod'
 
 import { getActivities } from '../../../../lib/api'
 import { redactViewerDisplayName } from '../../../../lib/group-view'
-import { groupReadProcedure, loadGroupViewer } from '../../../init'
+import {
+  groupAccessFields,
+  groupReadProcedure,
+  groupViewerArgs,
+  loadGroupViewer,
+} from '../../../init'
 import { listActivitiesOutputSchema } from '../../../outputs/activities'
 
 export const listGroupActivitiesProcedure = groupReadProcedure
@@ -11,16 +16,15 @@ export const listGroupActivitiesProcedure = groupReadProcedure
       groupId: z.string(),
       cursor: z.number().optional().default(0),
       limit: z.number().optional().default(5),
+      ...groupAccessFields,
     }),
   )
   .output(listActivitiesOutputSchema)
-  .query(async ({ input: { groupId, cursor, limit }, ctx }) => {
-    const { canonicalGroupId, viewer } = await loadGroupViewer({
-      groupId,
-      accountId: ctx.auth?.user.id,
-      accountEmail: ctx.auth?.user.email,
-    })
-    const activities = await getActivities(canonicalGroupId, {
+  .query(async ({ input: { groupId, cursor, limit, ...access }, ctx }) => {
+    const { group, viewer } = await loadGroupViewer(
+      groupViewerArgs({ groupId, ...access }, ctx),
+    )
+    const activities = await getActivities(group.id, {
       offset: cursor,
       length: limit + 1,
     })

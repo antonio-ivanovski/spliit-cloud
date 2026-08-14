@@ -13,7 +13,6 @@ import {
 } from '../api/activities'
 import { getApiBoss } from '../api/boss'
 import { getWebBaseUrl } from '../auth/urls'
-import { assertInvitationRouteIdDoesNotMatchGroup } from '../group-route'
 import { buildLinkPlaceholderEmail, getInvitationDisplayName } from './display'
 import {
   InvitationError,
@@ -260,7 +259,7 @@ export async function updatePendingInvitation(
 
   const inviteUrl =
     newToken && updated.expiresAt
-      ? `${getWebBaseUrl()}/groups/${newToken}`
+      ? `${getWebBaseUrl()}/groups/${updated.groupId}?invite=${newToken}`
       : null
 
   // Only notify the new recipient when the destination actually changed or
@@ -343,7 +342,6 @@ export async function regenerateLinkInvitation(
   }
 
   const token = generateLinkToken()
-  await assertInvitationRouteIdDoesNotMatchGroup(token)
   const tokenHash = await hashLinkToken(token)
   const expiresAt = new Date(Date.now() + LINK_INVITATION_DEFAULT_TTL_MS)
 
@@ -397,7 +395,7 @@ export async function regenerateLinkInvitation(
       ledgerParticipantId: updated.ledgerParticipantId,
       updatedAt: updated.updatedAt,
     },
-    inviteUrl: `${getWebBaseUrl()}/groups/${token}`,
+    inviteUrl: `${getWebBaseUrl()}/groups/${opts.groupId}?invite=${token}`,
   }
 }
 

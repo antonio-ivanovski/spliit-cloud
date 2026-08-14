@@ -5,23 +5,27 @@ import { prisma } from '@spliit/db'
 
 import { getGroup, getGroupExpensesParticipants } from '../../../lib/api'
 import { redactGroupForViewer } from '../../../lib/group-view-redaction'
-import { groupReadProcedure, loadGroupViewer } from '../../init'
+import {
+  groupAccessFields,
+  groupReadProcedure,
+  groupViewerArgs,
+  loadGroupViewer,
+} from '../../init'
 import { getGroupDetailsOutputSchema } from '../../outputs/groups'
 
 export const getGroupDetailsProcedure = groupReadProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
+      ...groupAccessFields,
     }),
   )
   .output(getGroupDetailsOutputSchema)
-  .query(async ({ input: { groupId }, ctx }) => {
-    const { canonicalGroupId, viewer } = await loadGroupViewer({
-      groupId,
-      accountId: ctx.auth?.user.id,
-      accountEmail: ctx.auth?.user.email,
-    })
-    const group = await getGroup(canonicalGroupId)
+  .query(async ({ input, ctx }) => {
+    const { group: accessGroup, viewer } = await loadGroupViewer(
+      groupViewerArgs(input, ctx),
+    )
+    const group = await getGroup(accessGroup.id)
     if (!group) {
       throw new TRPCError({
         code: 'NOT_FOUND',
@@ -29,8 +33,9 @@ export const getGroupDetailsProcedure = groupReadProcedure
       })
     }
 
-    const participantsWithExpenses =
-      await getGroupExpensesParticipants(canonicalGroupId)
+    const participantsWithExpenses = await getGroupExpensesParticipants(
+      accessGroup.id,
+    )
     const hasExpenses = group.ledgerId
       ? (await prisma.expense.count({ where: { ledgerId: group.ledgerId } })) >
         0

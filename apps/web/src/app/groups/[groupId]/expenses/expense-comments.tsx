@@ -16,6 +16,7 @@ import {
   useCurrentGroup,
   useIsReadOnlyGroupViewer,
 } from '../current-group-context'
+import { useGroupAccessSearch } from '../use-group-access-search'
 
 const MAX_COMMENT_LENGTH = 500
 
@@ -31,6 +32,7 @@ type ExpenseCommentsProps = {
 export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
   const { group, currentMember } = useCurrentGroup()
   const isReadOnlyGroupViewer = useIsReadOnlyGroupViewer()
+  const { linkInviteToken, viewKey } = useGroupAccessSearch()
   const locale = useLocale()
   const accountPreferences = useSyncedAccountPreferences()
   const accountTimeZone =
@@ -40,7 +42,7 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
   const createAttempt = useIdempotentCreate()
 
   const commentsQuery = trpc.groups.expenses.comments.list.useQuery(
-    { groupId, expenseId },
+    { groupId, expenseId, linkInviteToken, viewKey },
     { retry: false },
   )
   const [draft, setDraft] = useState('')
@@ -62,8 +64,14 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
       utils.groups.expenses.comments.list.invalidate({
         groupId,
         expenseId,
+        linkInviteToken,
+        viewKey,
       }),
-      utils.groups.activities.list.invalidate({ groupId }),
+      utils.groups.activities.list.invalidate({
+        groupId,
+        linkInviteToken,
+        viewKey,
+      }),
     ])
   }
 

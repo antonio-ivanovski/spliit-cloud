@@ -599,7 +599,11 @@
     "allExpenses": "Tüm harcamalar",
     "viewOnlyBannerTitle": "Salt görüntüleme erişimi",
     "viewOnlyBannerDescription": "Bu grubu inceleyebilirsiniz ancak ekleme, düzenleme, silme, yorum yapma, borç kapatma veya verileri indirme işlemlerini yapamazsınız.",
-    "invitationSignInToAccept": "Kabul etmek için oturum aç"
+    "invitationSignInToAccept": "Kabul etmek için oturum aç",
+    "viewLinkInvalid": {
+      "title": "Bu salt görüntüleme bağlantısı geçersiz",
+      "description": "Bağlantı hatalı biçimlendirilmiş veya bu gruptaki hiçbir salt görüntüleme erişimiyle eşleşmiyor."
+    }
   },
   "GroupForm": {
     "title": "Grup bilgileri",

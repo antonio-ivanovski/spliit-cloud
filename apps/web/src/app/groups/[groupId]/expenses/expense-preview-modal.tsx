@@ -46,6 +46,7 @@ import {
   useCurrentGroup,
   useIsReadOnlyGroupViewer,
 } from '../current-group-context'
+import { useGroupAccessSearch } from '../use-group-access-search'
 import { expenseShareRatioLabel } from './expense-share-ratio-label'
 import {
   RecurringActionsMenu,
@@ -136,6 +137,7 @@ export function ExpensePreviewModal({
 }: ExpensePreviewModalProps) {
   const { group, currentLedgerParticipantId, currentMember } = useCurrentGroup()
   const isReadOnlyGroupViewer = useIsReadOnlyGroupViewer()
+  const { linkInviteToken, viewKey } = useGroupAccessSearch()
   const locale = useLocale()
   const navigate = useNavigate()
   const { toast } = useToast()
@@ -147,7 +149,7 @@ export function ExpensePreviewModal({
   })
 
   const { data, isLoading, error } = trpc.groups.expenses.get.useQuery(
-    { groupId, expenseId },
+    { groupId, expenseId, linkInviteToken, viewKey },
     { enabled: open, retry: false },
   )
 

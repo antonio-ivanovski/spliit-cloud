@@ -11,6 +11,7 @@ const mocks = vi.hoisted(() => ({
   invalidateActivities: vi.fn(),
   useCurrentGroup: vi.fn(),
   useIsReadOnlyGroupViewer: vi.fn(),
+  useGroupAccessSearch: vi.fn(),
 }))
 
 vi.mock('@/trpc/client', () => ({
@@ -52,6 +53,10 @@ vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useIsReadOnlyGroupViewer: mocks.useIsReadOnlyGroupViewer,
 }))
 
+vi.mock('@/app/groups/[groupId]/use-group-access-search', () => ({
+  useGroupAccessSearch: mocks.useGroupAccessSearch,
+}))
+
 import { ExpenseComments } from '../expense-comments'
 
 const comment = {
@@ -74,6 +79,10 @@ describe('ExpenseComments', () => {
       currentMember: { id: 'member-1' },
     })
     mocks.useIsReadOnlyGroupViewer.mockReturnValue(false)
+    mocks.useGroupAccessSearch.mockReturnValue({
+      linkInviteToken: 'invite-token',
+      viewKey: undefined,
+    })
     mocks.listQuery.mockReturnValue({
       data: { comments: [comment] },
       isLoading: false,
@@ -106,9 +115,13 @@ describe('ExpenseComments', () => {
     expect(mocks.invalidateComments).toHaveBeenCalledWith({
       groupId: 'group-1',
       expenseId: 'expense-1',
+      linkInviteToken: 'invite-token',
+      viewKey: undefined,
     })
     expect(mocks.invalidateActivities).toHaveBeenCalledWith({
       groupId: 'group-1',
+      linkInviteToken: 'invite-token',
+      viewKey: undefined,
     })
     expect(input).toHaveValue('')
   })

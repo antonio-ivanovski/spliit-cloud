@@ -605,7 +605,11 @@
     "allExpenses": "Totes les despeses",
     "viewOnlyBannerTitle": "Accés només de lectura",
     "viewOnlyBannerDescription": "Pots explorar aquest grup, però no hi pots afegir, editar, eliminar ni comentar elements, liquidar saldos o descarregar-ne les dades.",
-    "invitationSignInToAccept": "Inicia sessió per acceptar"
+    "invitationSignInToAccept": "Inicia sessió per acceptar",
+    "viewLinkInvalid": {
+      "title": "Aquest enllaç de només lectura no és vàlid",
+      "description": "L'enllaç té un format incorrecte o no coincideix amb cap accés de només lectura d'aquest grup."
+    }
   },
   "GroupForm": {
     "title": "Informació del grup",

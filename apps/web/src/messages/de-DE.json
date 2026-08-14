@@ -623,7 +623,11 @@
     "allExpenses": "Alle Ausgaben",
     "viewOnlyBannerTitle": "Nur-Lese-Zugriff",
     "viewOnlyBannerDescription": "Du kannst diese Gruppe ansehen, aber keine Inhalte hinzufügen, bearbeiten oder löschen, kommentieren, Salden ausgleichen oder ihre Daten herunterladen.",
-    "invitationSignInToAccept": "Zum Akzeptieren anmelden"
+    "invitationSignInToAccept": "Zum Akzeptieren anmelden",
+    "viewLinkInvalid": {
+      "title": "Dieser Nur-Lese-Link ist ungültig",
+      "description": "Der Link ist fehlerhaft oder stimmt mit keinem Nur-Lese-Zugriff in dieser Gruppe überein."
+    }
   },
   "GroupForm": {
     "title": "Gruppeninformationen",
