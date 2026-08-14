@@ -2257,7 +2257,8 @@
         "currency": "Moeda",
         "currencyCode": "Código da moeda",
         "linkedParticipant": "Participante vinculado",
-        "subgroupsEnabled": "Subgrupos"
+        "subgroupsEnabled": "Subgrupos",
+        "publicViewLink": "Ligação pública apenas de leitura"
       }
     },
     "member": {
@@ -3044,10 +3045,13 @@
     "replace": "Substituir ligação",
     "remove": "Remover ligação pública",
     "replaceDialogTitle": "Substituir a ligação pública apenas de leitura?",
-    "replaceDialogDescription": "A ligação anterior e todas as sessões de visualização pública criadas a partir dela deixarão de funcionar imediatamente.",
+    "replaceDialogDescription": "A ligação anterior deixará de funcionar imediatamente. Qualquer pessoa que a tivesse perderá o acesso só de leitura.",
     "replaceConfirm": "Substituir ligação",
     "removeDialogTitle": "Remover a ligação pública apenas de leitura?",
-    "removeDialogDescription": "A ligação atual e todas as sessões de visualização pública criadas a partir dela deixarão de funcionar imediatamente.",
-    "removeConfirm": "Remover ligação"
+    "removeDialogDescription": "A ligação atual deixará de funcionar imediatamente. Qualquer pessoa que a tivesse perderá o acesso só de leitura.",
+    "removeConfirm": "Remover ligação",
+    "enableSuccess": "Ligação pública apenas de leitura criada",
+    "replaceSuccess": "Ligação pública apenas de leitura substituída. A ligação anterior já não funciona.",
+    "removeSuccess": "Ligação pública apenas de leitura removida"
   }
 }

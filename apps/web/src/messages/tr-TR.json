@@ -2248,7 +2248,8 @@
         "currency": "Para birimi",
         "currencyCode": "Para birimi kodu",
         "linkedParticipant": "Bağlı katılımcı",
-        "subgroupsEnabled": "Alt gruplar"
+        "subgroupsEnabled": "Alt gruplar",
+        "publicViewLink": "Herkese açık salt görüntüleme bağlantısı"
       }
     },
     "member": {
@@ -3026,10 +3027,13 @@
     "replace": "Bağlantıyı değiştir",
     "remove": "Herkese açık bağlantıyı kaldır",
     "replaceDialogTitle": "Herkese açık salt görüntüleme bağlantısı değiştirilsin mi?",
-    "replaceDialogDescription": "Önceki bağlantı ve bu bağlantıyla oluşturulan tüm herkese açık görüntüleme oturumları hemen çalışmayı durduracak.",
+    "replaceDialogDescription": "Önceki bağlantı hemen çalışmayı durduracak. Bu bağlantıya sahip olan herkes salt görüntüleme erişimini kaybedecek.",
     "replaceConfirm": "Bağlantıyı değiştir",
     "removeDialogTitle": "Herkese açık salt görüntüleme bağlantısı kaldırılsın mı?",
-    "removeDialogDescription": "Mevcut bağlantı ve bu bağlantıyla oluşturulan tüm herkese açık görüntüleme oturumları hemen çalışmayı durduracak.",
-    "removeConfirm": "Bağlantıyı kaldır"
+    "removeDialogDescription": "Mevcut bağlantı hemen çalışmayı durduracak. Bu bağlantıya sahip olan herkes salt görüntüleme erişimini kaybedecek.",
+    "removeConfirm": "Bağlantıyı kaldır",
+    "enableSuccess": "Herkese açık salt görüntüleme bağlantısı oluşturuldu",
+    "replaceSuccess": "Herkese açık salt görüntüleme bağlantısı değiştirildi. Önceki bağlantı artık çalışmıyor.",
+    "removeSuccess": "Herkese açık salt görüntüleme bağlantısı kaldırıldı"
   }
 }

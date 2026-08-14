@@ -2241,7 +2241,8 @@
         "currency": "貨幣",
         "currencyCode": "貨幣代碼",
         "linkedParticipant": "關聯參與者",
-        "subgroupsEnabled": "子群組"
+        "subgroupsEnabled": "子群組",
+        "publicViewLink": "公開僅限檢視連結"
       }
     },
     "member": {
@@ -3009,10 +3010,13 @@
     "replace": "取代連結",
     "remove": "移除公開連結",
     "replaceDialogTitle": "要取代公開僅限檢視連結嗎？",
-    "replaceDialogDescription": "舊連結及所有透過該連結建立的公開檢視工作階段都會立即失效。",
+    "replaceDialogDescription": "舊連結會立即失效。擁有該連結的人將失去僅限檢視權限。",
     "replaceConfirm": "取代連結",
     "removeDialogTitle": "要移除公開僅限檢視連結嗎？",
-    "removeDialogDescription": "目前的連結及所有透過該連結建立的公開檢視工作階段都會立即失效。",
-    "removeConfirm": "移除連結"
+    "removeDialogDescription": "目前的連結會立即失效。擁有該連結的人將失去僅限檢視權限。",
+    "removeConfirm": "移除連結",
+    "enableSuccess": "已建立公開僅限檢視連結",
+    "replaceSuccess": "已取代公開僅限檢視連結。舊連結已失效。",
+    "removeSuccess": "已移除公開僅限檢視連結"
   }
 }

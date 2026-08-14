@@ -2266,7 +2266,8 @@
         "currency": "Měna",
         "currencyCode": "Kód měny",
         "linkedParticipant": "Propojený účastník",
-        "subgroupsEnabled": "Podskupiny"
+        "subgroupsEnabled": "Podskupiny",
+        "publicViewLink": "Veřejný odkaz pro prohlížení"
       }
     },
     "member": {
@@ -3060,10 +3061,13 @@
     "replace": "Nahradit odkaz",
     "remove": "Odebrat veřejný odkaz",
     "replaceDialogTitle": "Nahradit veřejný odkaz pro prohlížení?",
-    "replaceDialogDescription": "Předchozí odkaz a všechny relace veřejného prohlížení vytvořené pomocí něj okamžitě přestanou fungovat.",
+    "replaceDialogDescription": "Předchozí odkaz okamžitě přestane fungovat. Kdokoli, kdo ho měl, ztratí přístup pouze pro čtení.",
     "replaceConfirm": "Nahradit odkaz",
     "removeDialogTitle": "Odebrat veřejný odkaz pro prohlížení?",
-    "removeDialogDescription": "Aktuální odkaz a všechny relace veřejného prohlížení vytvořené pomocí něj okamžitě přestanou fungovat.",
-    "removeConfirm": "Odebrat odkaz"
+    "removeDialogDescription": "Aktuální odkaz okamžitě přestane fungovat. Kdokoli, kdo ho měl, ztratí přístup pouze pro čtení.",
+    "removeConfirm": "Odebrat odkaz",
+    "enableSuccess": "Veřejný odkaz pro prohlížení vytvořen",
+    "replaceSuccess": "Veřejný odkaz pro prohlížení nahrazen. Předchozí odkaz už nefunguje.",
+    "removeSuccess": "Veřejný odkaz pro prohlížení odebrán"
   }
 }

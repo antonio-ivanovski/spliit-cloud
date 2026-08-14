@@ -2256,7 +2256,8 @@
         "currency": "Moneta",
         "currencyCode": "Moneta-kodea",
         "linkedParticipant": "Lotutako parte-hartzailea",
-        "subgroupsEnabled": "Azpitaldeak"
+        "subgroupsEnabled": "Azpitaldeak",
+        "publicViewLink": "Ikusteko soilik den esteka publikoa"
       }
     },
     "member": {
@@ -3043,10 +3044,13 @@
     "replace": "Ordeztu esteka",
     "remove": "Kendu esteka publikoa",
     "replaceDialogTitle": "Esteka publiko eta ikusteko soilik dena ordeztu?",
-    "replaceDialogDescription": "Aurreko estekak eta esteka horretatik sortutako ikuspegi publikoko saio guztiek berehala utziko diote funtzionatzeari.",
+    "replaceDialogDescription": "Aurreko estekak berehala utziko dio funtzionatzeari. Esteka hori zuen edonork ikusteko soilik sarbidea galduko du.",
     "replaceConfirm": "Ordeztu esteka",
     "removeDialogTitle": "Esteka publiko eta ikusteko soilik dena kendu?",
-    "removeDialogDescription": "Uneko estekak eta esteka horretatik sortutako ikuspegi publikoko saio guztiek berehala utziko diote funtzionatzeari.",
-    "removeConfirm": "Kendu esteka"
+    "removeDialogDescription": "Uneko estekak berehala utziko dio funtzionatzeari. Esteka hori zuen edonork ikusteko soilik sarbidea galduko du.",
+    "removeConfirm": "Kendu esteka",
+    "enableSuccess": "Ikusteko soilik den esteka publikoa sortu da",
+    "replaceSuccess": "Ikusteko soilik den esteka publikoa ordeztu da. Aurreko estekak jada ez du funtzionatzen.",
+    "removeSuccess": "Ikusteko soilik den esteka publikoa kendu da"
   }
 }

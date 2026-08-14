@@ -1,5 +1,5 @@
 import { Ellipsis, KeyRound, RotateCw, Trash2 } from 'lucide-react'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { CopyButton } from '@/components/copy-button'
@@ -37,6 +37,7 @@ export function PublicViewOnlyLinkSection({ groupId }: { groupId: string }) {
   const [confirmation, setConfirmation] = useState<'replace' | 'remove' | null>(
     null,
   )
+  const copyButtonRef = useRef<HTMLButtonElement>(null)
 
   const refresh = async () => {
     setConfirmation(null)
@@ -45,15 +46,24 @@ export function PublicViewOnlyLinkSection({ groupId }: { groupId: string }) {
   const failure = (error: { message: string }) =>
     toast({ description: error.message, variant: 'destructive' })
   const enable = trpc.groups.view.enable.useMutation({
-    onSuccess: () => void refresh(),
+    onSuccess: () => {
+      toast({ description: t('enableSuccess') })
+      void refresh()
+    },
     onError: failure,
   })
   const replace = trpc.groups.view.replace.useMutation({
-    onSuccess: () => void refresh(),
+    onSuccess: () => {
+      toast({ description: t('replaceSuccess') })
+      void refresh()
+    },
     onError: failure,
   })
   const remove = trpc.groups.view.remove.useMutation({
-    onSuccess: () => void refresh(),
+    onSuccess: () => {
+      toast({ description: t('removeSuccess') })
+      void refresh()
+    },
     onError: failure,
   })
 
@@ -79,10 +89,12 @@ export function PublicViewOnlyLinkSection({ groupId }: { groupId: string }) {
                   value={url}
                   readOnly
                   aria-label={t('linkLabel')}
-                  className="min-w-0 flex-1 rounded-none border-0 bg-transparent font-mono text-xs shadow-none focus-visible:ring-0"
+                  className="min-w-0 flex-1 cursor-pointer rounded-none border-0 bg-transparent font-mono text-xs shadow-none focus-visible:ring-0"
                   onFocus={(event) => event.currentTarget.select()}
+                  onClick={() => copyButtonRef.current?.click()}
                 />
                 <CopyButton
+                  ref={copyButtonRef}
                   text={url}
                   ariaLabel={t('copy')}
                   copiedLabel={t('copied')}

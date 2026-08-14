@@ -2257,7 +2257,8 @@
         "currency": "Moeda",
         "currencyCode": "Código da moeda",
         "linkedParticipant": "Participante vinculado",
-        "subgroupsEnabled": "Subgrupos"
+        "subgroupsEnabled": "Subgrupos",
+        "publicViewLink": "Link público somente para visualização"
       }
     },
     "member": {
@@ -3044,10 +3045,13 @@
     "replace": "Substituir link",
     "remove": "Remover link público",
     "replaceDialogTitle": "Substituir o link público somente para visualização?",
-    "replaceDialogDescription": "O link anterior e todas as sessões de visualização pública criadas por ele deixarão de funcionar imediatamente.",
+    "replaceDialogDescription": "O link anterior deixará de funcionar imediatamente. Qualquer pessoa que o tivesse perderá o acesso somente para visualização.",
     "replaceConfirm": "Substituir link",
     "removeDialogTitle": "Remover o link público somente para visualização?",
-    "removeDialogDescription": "O link atual e todas as sessões de visualização pública criadas por ele deixarão de funcionar imediatamente.",
-    "removeConfirm": "Remover link"
+    "removeDialogDescription": "O link atual deixará de funcionar imediatamente. Qualquer pessoa que o tivesse perderá o acesso somente para visualização.",
+    "removeConfirm": "Remover link",
+    "enableSuccess": "Link público somente para visualização criado",
+    "replaceSuccess": "Link público somente para visualização substituído. O link anterior não funciona mais.",
+    "removeSuccess": "Link público somente para visualização removido"
   }
 }

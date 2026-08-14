@@ -12,16 +12,17 @@ import { useCurrentGroup } from './current-group-context'
  * group loads.
  */
 export function SaveGroupLocally() {
-  const { group } = useCurrentGroup()
+  const { group, viewer } = useCurrentGroup()
   const utils = trpc.useUtils()
 
   useEffect(() => {
-    if (group) {
-      // Refresh the server-backed group list so the visited group shows up
-      // in the "recent" section on the groups page.
+    // Membership visits refresh the account group list. Public-view and
+    // pending-invite visits are not memberships — leave those lists alone
+    // so a later "save this view-only group" flow can persist them itself.
+    if (group && viewer?.source === 'MEMBER') {
       void invalidateAccountGroupLists(utils)
     }
-  }, [group, utils])
+  }, [group, utils, viewer?.source])
 
   return null
 }

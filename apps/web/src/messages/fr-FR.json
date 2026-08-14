@@ -2257,7 +2257,8 @@
         "currency": "Devise",
         "currencyCode": "Code devise",
         "linkedParticipant": "Participant lié",
-        "subgroupsEnabled": "Sous-groupes"
+        "subgroupsEnabled": "Sous-groupes",
+        "publicViewLink": "Lien public en lecture seule"
       }
     },
     "member": {
@@ -3044,10 +3045,13 @@
     "replace": "Remplacer le lien",
     "remove": "Supprimer le lien public",
     "replaceDialogTitle": "Remplacer le lien public en lecture seule ?",
-    "replaceDialogDescription": "Le lien précédent et toutes les sessions de consultation publique créées à partir de celui-ci cesseront immédiatement de fonctionner.",
+    "replaceDialogDescription": "Le lien précédent cessera immédiatement de fonctionner. Toute personne qui le possédait perdra l’accès en lecture seule.",
     "replaceConfirm": "Remplacer le lien",
     "removeDialogTitle": "Supprimer le lien public en lecture seule ?",
-    "removeDialogDescription": "Le lien actuel et toutes les sessions de consultation publique créées à partir de celui-ci cesseront immédiatement de fonctionner.",
-    "removeConfirm": "Supprimer le lien"
+    "removeDialogDescription": "Le lien actuel cessera immédiatement de fonctionner. Toute personne qui le possédait perdra l’accès en lecture seule.",
+    "removeConfirm": "Supprimer le lien",
+    "enableSuccess": "Lien public en lecture seule créé",
+    "replaceSuccess": "Lien public en lecture seule remplacé. Le lien précédent ne fonctionne plus.",
+    "removeSuccess": "Lien public en lecture seule supprimé"
   }
 }

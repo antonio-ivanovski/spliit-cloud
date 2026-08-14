@@ -2361,7 +2361,8 @@
         "currency": "Loại tiền",
         "currencyCode": "Mã loại tiền",
         "linkedParticipant": "Người tham gia",
-        "subgroupsEnabled": "Nhóm con"
+        "subgroupsEnabled": "Nhóm con",
+        "publicViewLink": "Liên kết công khai chỉ xem"
       }
     },
     "member": {
@@ -3098,10 +3099,13 @@
     "replace": "Thay liên kết",
     "remove": "Xóa liên kết công khai",
     "replaceDialogTitle": "Thay liên kết công khai chỉ xem?",
-    "replaceDialogDescription": "Liên kết trước đó và mọi phiên xem công khai được tạo từ liên kết đó sẽ ngừng hoạt động ngay lập tức.",
+    "replaceDialogDescription": "Liên kết trước đó sẽ ngừng hoạt động ngay lập tức. Bất kỳ ai đã có liên kết này sẽ mất quyền chỉ xem.",
     "replaceConfirm": "Thay liên kết",
     "removeDialogTitle": "Xóa liên kết công khai chỉ xem?",
-    "removeDialogDescription": "Liên kết hiện tại và mọi phiên xem công khai được tạo từ liên kết đó sẽ ngừng hoạt động ngay lập tức.",
-    "removeConfirm": "Xóa liên kết"
+    "removeDialogDescription": "Liên kết hiện tại sẽ ngừng hoạt động ngay lập tức. Bất kỳ ai đã có liên kết này sẽ mất quyền chỉ xem.",
+    "removeConfirm": "Xóa liên kết",
+    "enableSuccess": "Đã tạo liên kết công khai chỉ xem",
+    "replaceSuccess": "Đã thay liên kết công khai chỉ xem. Liên kết trước đó không còn hoạt động.",
+    "removeSuccess": "Đã xóa liên kết công khai chỉ xem"
   }
 }

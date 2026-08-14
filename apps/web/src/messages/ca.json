@@ -2257,7 +2257,8 @@
         "currency": "Moneda",
         "currencyCode": "Codi de moneda",
         "linkedParticipant": "Participant vinculat",
-        "subgroupsEnabled": "Subgrups"
+        "subgroupsEnabled": "Subgrups",
+        "publicViewLink": "Enllaç públic de només lectura"
       }
     },
     "member": {
@@ -3044,10 +3045,13 @@
     "replace": "Substitueix l’enllaç",
     "remove": "Elimina l’enllaç públic",
     "replaceDialogTitle": "Vols substituir l’enllaç públic de només lectura?",
-    "replaceDialogDescription": "L’enllaç anterior i totes les sessions de visualització pública que s’hi hagin creat deixaran de funcionar immediatament.",
+    "replaceDialogDescription": "L’enllaç anterior deixarà de funcionar immediatament. Qualsevol persona que el tingués perdrà l’accés de només lectura.",
     "replaceConfirm": "Substitueix l’enllaç",
     "removeDialogTitle": "Vols eliminar l’enllaç públic de només lectura?",
-    "removeDialogDescription": "L’enllaç actual i totes les sessions de visualització pública que s’hi hagin creat deixaran de funcionar immediatament.",
-    "removeConfirm": "Elimina l’enllaç"
+    "removeDialogDescription": "L’enllaç actual deixarà de funcionar immediatament. Qualsevol persona que el tingués perdrà l’accés de només lectura.",
+    "removeConfirm": "Elimina l’enllaç",
+    "enableSuccess": "Enllaç públic de només lectura creat",
+    "replaceSuccess": "Enllaç públic de només lectura substituït. L’enllaç anterior ja no funciona.",
+    "removeSuccess": "Enllaç públic de només lectura eliminat"
   }
 }

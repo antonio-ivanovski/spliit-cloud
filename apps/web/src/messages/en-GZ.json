@@ -313,7 +313,8 @@
         "currency": "currency",
         "currencyCode": "currency code",
         "linkedParticipant": "linked bestie",
-        "subgroupsEnabled": "subgroups"
+        "subgroupsEnabled": "subgroups",
+        "publicViewLink": "public view-only link"
       }
     },
     "import": {
@@ -3018,10 +3019,13 @@
     "replace": "replace link",
     "remove": "remove public link",
     "replaceDialogTitle": "replace public view-only link?",
-    "replaceDialogDescription": "the previous link and all public-view sessions created from it will stop working right away.",
+    "replaceDialogDescription": "the previous link stops working right away. anyone who had it loses view-only access.",
     "replaceConfirm": "replace link",
     "removeDialogTitle": "remove public view-only link?",
-    "removeDialogDescription": "the current link and all public-view sessions created from it will stop working right away.",
-    "removeConfirm": "remove link"
+    "removeDialogDescription": "the current link stops working right away. anyone who had it loses view-only access.",
+    "removeConfirm": "remove link",
+    "enableSuccess": "public view-only link is live",
+    "replaceSuccess": "public view-only link swapped. the old one no longer works.",
+    "removeSuccess": "public view-only link is gone"
   }
 }

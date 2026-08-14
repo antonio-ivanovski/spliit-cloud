@@ -73,6 +73,20 @@ describe('groups.view', () => {
       where: { id: 'group-1', publicViewKey: null },
       data: { publicViewKey: expect.stringMatching(/^[A-Za-z0-9_-]+$/) },
     })
+    expect(prismaMock.activity.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        type: 'GROUP_UPDATED',
+        actorType: 'ACCOUNT',
+        actorId: 'account-1',
+        subjectType: 'GROUP',
+        subjectId: 'group-1',
+        data: expect.objectContaining({
+          kind: 'group',
+          summary: 'publicViewLink:enabled',
+          changedFields: ['publicViewLink'],
+        }),
+      }),
+    })
   })
 
   it('replaces and removes the current key only after explicit confirmation', async () => {
@@ -96,6 +110,22 @@ describe('groups.view', () => {
     expect(prismaMock.group.updateMany).toHaveBeenLastCalledWith({
       where: { id: 'group-1', publicViewKey: { not: null } },
       data: { publicViewKey: null },
+    })
+    expect(prismaMock.activity.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        type: 'GROUP_UPDATED',
+        data: expect.objectContaining({
+          summary: 'publicViewLink:replaced',
+        }),
+      }),
+    })
+    expect(prismaMock.activity.create).toHaveBeenLastCalledWith({
+      data: expect.objectContaining({
+        type: 'GROUP_UPDATED',
+        data: expect.objectContaining({
+          summary: 'publicViewLink:removed',
+        }),
+      }),
     })
   })
 

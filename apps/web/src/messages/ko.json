@@ -2241,7 +2241,8 @@
         "currency": "통화",
         "currencyCode": "통화 코드",
         "linkedParticipant": "연결된 참가자",
-        "subgroupsEnabled": "하위 그룹"
+        "subgroupsEnabled": "하위 그룹",
+        "publicViewLink": "공개 보기 전용 링크"
       }
     },
     "member": {
@@ -3009,10 +3010,13 @@
     "replace": "링크 교체",
     "remove": "공개 링크 제거",
     "replaceDialogTitle": "공개 보기 전용 링크를 교체하시겠어요?",
-    "replaceDialogDescription": "이전 링크와 해당 링크로 생성된 모든 공개 보기 세션을 즉시 사용할 수 없게 됩니다.",
+    "replaceDialogDescription": "이전 링크는 즉시 사용할 수 없게 됩니다. 링크를 갖고 있던 사람은 보기 전용 액세스 권한을 잃습니다.",
     "replaceConfirm": "링크 교체",
     "removeDialogTitle": "공개 보기 전용 링크를 제거하시겠어요?",
-    "removeDialogDescription": "현재 링크와 이 링크로 생성된 모든 공개 보기 세션을 즉시 사용할 수 없게 됩니다.",
-    "removeConfirm": "링크 제거"
+    "removeDialogDescription": "현재 링크는 즉시 사용할 수 없게 됩니다. 링크를 갖고 있던 사람은 보기 전용 액세스 권한을 잃습니다.",
+    "removeConfirm": "링크 제거",
+    "enableSuccess": "공개 보기 전용 링크를 만들었습니다",
+    "replaceSuccess": "공개 보기 전용 링크를 교체했습니다. 이전 링크는 더 이상 작동하지 않습니다.",
+    "removeSuccess": "공개 보기 전용 링크를 제거했습니다"
   }
 }

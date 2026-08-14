@@ -268,7 +268,8 @@
         "currency": "کرنسی",
         "currencyCode": "کرنسی کوڈ",
         "linkedParticipant": "منسلک شریک",
-        "subgroupsEnabled": "ذیلی گروپ"
+        "subgroupsEnabled": "ذیلی گروپ",
+        "publicViewLink": "عوامی صرف دیکھنے کا لنک"
       }
     },
     "import": {
@@ -3023,10 +3024,13 @@
     "replace": "لنک تبدیل کریں",
     "remove": "عوامی لنک ہٹائیں",
     "replaceDialogTitle": "عوامی صرف دیکھنے کا لنک تبدیل کریں؟",
-    "replaceDialogDescription": "پچھلا لنک اور اس سے بنائے گئے تمام عوامی ویو سیشن فوری طور پر کام کرنا بند کر دیں گے۔",
+    "replaceDialogDescription": "پچھلا لنک فوری طور پر کام کرنا بند کر دے گا۔ جن کے پاس یہ تھا وہ صرف دیکھنے کی رسائی کھو دیں گے۔",
     "replaceConfirm": "لنک تبدیل کریں",
     "removeDialogTitle": "عوامی صرف دیکھنے کا لنک ہٹائیں؟",
-    "removeDialogDescription": "موجودہ لنک اور اس سے بنائے گئے تمام عوامی ویو سیشن فوری طور پر کام کرنا بند کر دیں گے۔",
-    "removeConfirm": "لنک ہٹائیں"
+    "removeDialogDescription": "موجودہ لنک فوری طور پر کام کرنا بند کر دے گا۔ جن کے پاس یہ تھا وہ صرف دیکھنے کی رسائی کھو دیں گے۔",
+    "removeConfirm": "لنک ہٹائیں",
+    "enableSuccess": "عوامی صرف دیکھنے کا لنک بن گیا",
+    "replaceSuccess": "عوامی صرف دیکھنے کا لنک تبدیل ہو گیا۔ پچھلا لنک اب کام نہیں کرتا۔",
+    "removeSuccess": "عوامی صرف دیکھنے کا لنک ہٹ گیا"
   }
 }

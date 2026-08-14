@@ -2248,7 +2248,8 @@
         "currency": "Valuta",
         "currencyCode": "Valutacode",
         "linkedParticipant": "Gekoppelde deelnemer",
-        "subgroupsEnabled": "Subgroepen"
+        "subgroupsEnabled": "Subgroepen",
+        "publicViewLink": "Openbare alleen-lezen link"
       }
     },
     "member": {
@@ -3026,10 +3027,13 @@
     "replace": "Link vervangen",
     "remove": "Openbare link verwijderen",
     "replaceDialogTitle": "Openbare alleen-lezen link vervangen?",
-    "replaceDialogDescription": "De vorige link en alle openbare kijksessies die ermee zijn aangemaakt, werken onmiddellijk niet meer.",
+    "replaceDialogDescription": "De vorige link werkt onmiddellijk niet meer. Iedereen die hem had, verliest de alleen-lezen toegang.",
     "replaceConfirm": "Link vervangen",
     "removeDialogTitle": "Openbare alleen-lezen link verwijderen?",
-    "removeDialogDescription": "De huidige link en alle openbare kijksessies die ermee zijn aangemaakt, werken onmiddellijk niet meer.",
-    "removeConfirm": "Link verwijderen"
+    "removeDialogDescription": "De huidige link werkt onmiddellijk niet meer. Iedereen die hem had, verliest de alleen-lezen toegang.",
+    "removeConfirm": "Link verwijderen",
+    "enableSuccess": "Openbare alleen-lezen link aangemaakt",
+    "replaceSuccess": "Openbare alleen-lezen link vervangen. De vorige link werkt niet meer.",
+    "removeSuccess": "Openbare alleen-lezen link verwijderd"
   }
 }

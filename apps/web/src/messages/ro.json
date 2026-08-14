@@ -2257,7 +2257,8 @@
         "currency": "Monedă",
         "currencyCode": "Cod monedă",
         "linkedParticipant": "Participant legat",
-        "subgroupsEnabled": "Subgrupuri"
+        "subgroupsEnabled": "Subgrupuri",
+        "publicViewLink": "Link public de vizualizare"
       }
     },
     "member": {
@@ -3044,10 +3045,13 @@
     "replace": "Înlocuiește linkul",
     "remove": "Elimină linkul public",
     "replaceDialogTitle": "Înlocuiești linkul public de vizualizare?",
-    "replaceDialogDescription": "Linkul anterior și toate sesiunile de vizualizare publică create prin acesta vor înceta să funcționeze imediat.",
+    "replaceDialogDescription": "Linkul anterior va înceta să funcționeze imediat. Oricine îl avea va pierde accesul doar pentru vizualizare.",
     "replaceConfirm": "Înlocuiește linkul",
     "removeDialogTitle": "Elimini linkul public de vizualizare?",
-    "removeDialogDescription": "Linkul actual și toate sesiunile de vizualizare publică create prin acesta vor înceta să funcționeze imediat.",
-    "removeConfirm": "Elimină linkul"
+    "removeDialogDescription": "Linkul actual va înceta să funcționeze imediat. Oricine îl avea va pierde accesul doar pentru vizualizare.",
+    "removeConfirm": "Elimină linkul",
+    "enableSuccess": "Link public de vizualizare creat",
+    "replaceSuccess": "Link public de vizualizare înlocuit. Linkul anterior nu mai funcționează.",
+    "removeSuccess": "Link public de vizualizare eliminat"
   }
 }

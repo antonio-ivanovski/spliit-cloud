@@ -2241,7 +2241,8 @@
         "currency": "通貨",
         "currencyCode": "通貨コード",
         "linkedParticipant": "リンクされた参加者",
-        "subgroupsEnabled": "サブグループ"
+        "subgroupsEnabled": "サブグループ",
+        "publicViewLink": "公開閲覧専用リンク"
       }
     },
     "member": {
@@ -3009,10 +3010,13 @@
     "replace": "リンクを置き換える",
     "remove": "公開リンクを削除",
     "replaceDialogTitle": "公開閲覧専用リンクを置き換えますか？",
-    "replaceDialogDescription": "以前のリンクと、そのリンクから作成されたすべての公開閲覧セッションは直ちに利用できなくなります。",
+    "replaceDialogDescription": "以前のリンクは直ちに利用できなくなります。持っていた人は閲覧専用アクセスを失います。",
     "replaceConfirm": "リンクを置き換える",
     "removeDialogTitle": "公開閲覧専用リンクを削除しますか？",
-    "removeDialogDescription": "現在のリンクと、そのリンクから作成されたすべての公開閲覧セッションは直ちに利用できなくなります。",
-    "removeConfirm": "リンクを削除"
+    "removeDialogDescription": "現在のリンクは直ちに利用できなくなります。持っていた人は閲覧専用アクセスを失います。",
+    "removeConfirm": "リンクを削除",
+    "enableSuccess": "公開閲覧専用リンクを作成しました",
+    "replaceSuccess": "公開閲覧専用リンクを置き換えました。以前のリンクは使えません。",
+    "removeSuccess": "公開閲覧専用リンクを削除しました"
   }
 }

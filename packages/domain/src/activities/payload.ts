@@ -97,6 +97,7 @@ export const groupChangedFields = [
   'currencyCode',
   'linkedParticipant',
   'subgroupsEnabled',
+  'publicViewLink',
 ] as const
 export const groupChangedFieldSchema = z.enum(groupChangedFields)
 export type GroupChangedField = z.infer<typeof groupChangedFieldSchema>

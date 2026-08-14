@@ -8,7 +8,24 @@ import { PublicViewOnlyLinkSection } from './group-view-link-card'
 const enable = vi.fn()
 const replace = vi.fn()
 const remove = vi.fn()
+const toast = vi.fn()
 let result: { url: string | null; canManage: boolean }
+
+type MutationCallbacks = {
+  onSuccess?: () => void
+  onError?: (error: { message: string }) => void
+}
+
+function mutationMock(fn: (input: unknown) => void, succeed = true) {
+  return (opts: MutationCallbacks) => ({
+    mutate: (input: unknown) => {
+      fn(input)
+      if (succeed) opts.onSuccess?.()
+      else opts.onError?.({ message: 'mutation failed' })
+    },
+    isPending: false,
+  })
+}
 
 vi.mock('@/trpc/client', () => ({
   trpc: {
@@ -19,13 +36,13 @@ vi.mock('@/trpc/client', () => ({
           useQuery: () => ({ data: result, isLoading: false }),
         },
         enable: {
-          useMutation: () => ({ mutate: enable, isPending: false }),
+          useMutation: (opts: MutationCallbacks) => mutationMock(enable)(opts),
         },
         replace: {
-          useMutation: () => ({ mutate: replace, isPending: false }),
+          useMutation: (opts: MutationCallbacks) => mutationMock(replace)(opts),
         },
         remove: {
-          useMutation: () => ({ mutate: remove, isPending: false }),
+          useMutation: (opts: MutationCallbacks) => mutationMock(remove)(opts),
         },
       },
     },
@@ -33,7 +50,7 @@ vi.mock('@/trpc/client', () => ({
 }))
 
 vi.mock('@/components/ui/use-toast', () => ({
-  useToast: () => ({ toast: vi.fn() }),
+  useToast: () => ({ toast }),
 }))
 
 vi.mock('react-i18next', () => ({
@@ -54,11 +71,12 @@ describe('PublicViewOnlyLinkSection', () => {
     result = { url: null, canManage: true }
   })
 
-  it('lets an admin enable the public link', async () => {
+  it('lets an admin enable the public link and toasts success', async () => {
     renderSection()
     expect(screen.getByText('description')).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name: 'enable' }))
     expect(enable).toHaveBeenCalledWith({ groupId: 'group-1' })
+    expect(toast).toHaveBeenCalledWith({ description: 'enableSuccess' })
   })
 
   it('lets a regular member copy but not manage the current link', () => {
@@ -75,7 +93,25 @@ describe('PublicViewOnlyLinkSection', () => {
     ).toBeNull()
   })
 
-  it('confirms replacement in a modal', async () => {
+  it('copies the URL when the link field is clicked and shows a checkmark', async () => {
+    result = {
+      url: 'https://spliit.test/groups/group-1?viewKey=secret',
+      canManage: false,
+    }
+    renderSection()
+    const writeText = vi
+      .spyOn(navigator.clipboard, 'writeText')
+      .mockResolvedValue(undefined)
+
+    await userEvent.click(screen.getByRole('textbox', { name: 'linkLabel' }))
+
+    expect(writeText).toHaveBeenCalledWith(result.url)
+    const copyButton = screen.getByRole('button', { name: 'copy' })
+    expect(copyButton.querySelector('.lucide-copy')).not.toBeInTheDocument()
+    expect(copyButton.querySelector('.lucide-check')).toBeInTheDocument()
+  })
+
+  it('confirms replacement in a modal and toasts success', async () => {
     result = {
       url: `https://spliit.test/groups/${'a'.repeat(32)}`,
       canManage: true,
@@ -95,5 +131,21 @@ describe('PublicViewOnlyLinkSection', () => {
       groupId: 'group-1',
       confirmed: true,
     })
+    expect(toast).toHaveBeenCalledWith({ description: 'replaceSuccess' })
+  })
+
+  it('toasts success after removing the public link', async () => {
+    result = {
+      url: `https://spliit.test/groups/${'a'.repeat(32)}`,
+      canManage: true,
+    }
+    renderSection()
+    await userEvent.click(screen.getByRole('button', { name: 'remove' }))
+    await userEvent.click(screen.getByRole('button', { name: 'removeConfirm' }))
+    expect(remove).toHaveBeenCalledWith({
+      groupId: 'group-1',
+      confirmed: true,
+    })
+    expect(toast).toHaveBeenCalledWith({ description: 'removeSuccess' })
   })
 })

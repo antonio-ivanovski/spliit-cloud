@@ -2266,7 +2266,8 @@
         "currency": "Waluta",
         "currencyCode": "Kod waluty",
         "linkedParticipant": "Powiązany uczestnik",
-        "subgroupsEnabled": "Podgrupy"
+        "subgroupsEnabled": "Podgrupy",
+        "publicViewLink": "Publiczny link tylko do odczytu"
       }
     },
     "member": {
@@ -3060,10 +3061,13 @@
     "replace": "Zastąp link",
     "remove": "Usuń link publiczny",
     "replaceDialogTitle": "Zastąpić publiczny link tylko do odczytu?",
-    "replaceDialogDescription": "Poprzedni link i wszystkie utworzone za jego pomocą publiczne sesje podglądu natychmiast przestaną działać.",
+    "replaceDialogDescription": "Poprzedni link natychmiast przestanie działać. Każda osoba, która go miała, straci dostęp tylko do odczytu.",
     "replaceConfirm": "Zastąp link",
     "removeDialogTitle": "Usunąć publiczny link tylko do odczytu?",
-    "removeDialogDescription": "Bieżący link i wszystkie utworzone za jego pomocą publiczne sesje podglądu natychmiast przestaną działać.",
-    "removeConfirm": "Usuń link"
+    "removeDialogDescription": "Bieżący link natychmiast przestanie działać. Każda osoba, która go miała, straci dostęp tylko do odczytu.",
+    "removeConfirm": "Usuń link",
+    "enableSuccess": "Utworzono publiczny link tylko do odczytu",
+    "replaceSuccess": "Zastąpiono publiczny link tylko do odczytu. Poprzedni link już nie działa.",
+    "removeSuccess": "Usunięto publiczny link tylko do odczytu"
   }
 }

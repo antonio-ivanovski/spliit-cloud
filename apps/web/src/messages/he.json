@@ -2257,7 +2257,8 @@
         "currency": "מטבע",
         "currencyCode": "קוד מטבע",
         "linkedParticipant": "משתתף מקושר",
-        "subgroupsEnabled": "תת־קבוצות"
+        "subgroupsEnabled": "תת־קבוצות",
+        "publicViewLink": "קישור ציבורי לצפייה בלבד"
       }
     },
     "member": {
@@ -3044,10 +3045,13 @@
     "replace": "החלפת הקישור",
     "remove": "הסרת הקישור הציבורי",
     "replaceDialogTitle": "להחליף את הקישור הציבורי לצפייה בלבד?",
-    "replaceDialogDescription": "הקישור הקודם וכל הפעלות הצפייה הציבורית שנוצרו באמצעותו יפסיקו לפעול מיד.",
+    "replaceDialogDescription": "הקישור הקודם יפסיק לפעול מיד. כל מי שהיה לו הקישור יאבד את הגישה לצפייה בלבד.",
     "replaceConfirm": "החלפת הקישור",
     "removeDialogTitle": "להסיר את הקישור הציבורי לצפייה בלבד?",
-    "removeDialogDescription": "הקישור הנוכחי וכל הפעלות הצפייה הציבורית שנוצרו באמצעותו יפסיקו לפעול מיד.",
-    "removeConfirm": "הסרת הקישור"
+    "removeDialogDescription": "הקישור הנוכחי יפסיק לפעול מיד. כל מי שהיה לו הקישור יאבד את הגישה לצפייה בלבד.",
+    "removeConfirm": "הסרת הקישור",
+    "enableSuccess": "הקישור הציבורי לצפייה בלבד נוצר",
+    "replaceSuccess": "הקישור הציבורי לצפייה בלבד הוחלף. הקישור הקודם כבר לא עובד.",
+    "removeSuccess": "הקישור הציבורי לצפייה בלבד הוסר"
   }
 }

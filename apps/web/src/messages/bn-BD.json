@@ -268,7 +268,8 @@
         "currency": "মুদ্রা",
         "currencyCode": "মুদ্রা কোড",
         "linkedParticipant": "সংযুক্ত অংশগ্রহণকারী",
-        "subgroupsEnabled": "উপগ্রুপ"
+        "subgroupsEnabled": "উপগ্রুপ",
+        "publicViewLink": "পাবলিক শুধু দেখার লিংক"
       }
     },
     "import": {
@@ -3022,10 +3023,13 @@
     "replace": "লিংক বদলান",
     "remove": "পাবলিক লিংক সরান",
     "replaceDialogTitle": "পাবলিক শুধু দেখার লিংক বদলাবেন?",
-    "replaceDialogDescription": "আগের লিংক এবং এটি দিয়ে তৈরি সব পাবলিক ভিউ সেশন অবিলম্বে কাজ করা বন্ধ করবে।",
+    "replaceDialogDescription": "আগের লিংক অবিলম্বে কাজ করা বন্ধ করবে। যাদের কাছে এটি ছিল তারা শুধু দেখার সুযোগ হারাবেন।",
     "replaceConfirm": "লিংক বদলান",
     "removeDialogTitle": "পাবলিক শুধু দেখার লিংক সরাবেন?",
-    "removeDialogDescription": "বর্তমান লিংক এবং এটি দিয়ে তৈরি সব পাবলিক ভিউ সেশন অবিলম্বে কাজ করা বন্ধ করবে।",
-    "removeConfirm": "লিংক সরান"
+    "removeDialogDescription": "বর্তমান লিংক অবিলম্বে কাজ করা বন্ধ করবে। যাদের কাছে এটি ছিল তারা শুধু দেখার সুযোগ হারাবেন।",
+    "removeConfirm": "লিংক সরান",
+    "enableSuccess": "পাবলিক শুধু দেখার লিংক তৈরি হয়েছে",
+    "replaceSuccess": "পাবলিক শুধু দেখার লিংক বদলানো হয়েছে। আগের লিংক আর কাজ করবে না।",
+    "removeSuccess": "পাবলিক শুধু দেখার লিংক সরানো হয়েছে"
   }
 }

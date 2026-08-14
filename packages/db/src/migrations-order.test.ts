@@ -30,7 +30,8 @@ describe('prisma migration folder names', () => {
 
     const unexpected = [...byPrefix.entries()].filter(
       ([prefix, names]) =>
-        names.length > 1 && !GRANDFATHERED_PREFIX_COLLISIONS.has(prefix),
+        names.length > 1 &&
+        (!GRANDFATHERED_PREFIX_COLLISIONS.has(prefix) || names.length > 2),
     )
     expect(unexpected).toEqual([])
   })

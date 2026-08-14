@@ -268,7 +268,8 @@
         "currency": "Valuta",
         "currencyCode": "Valutakod",
         "linkedParticipant": "Länkad deltagare",
-        "subgroupsEnabled": "Subgrupper"
+        "subgroupsEnabled": "Subgrupper",
+        "publicViewLink": "Offentlig länk med endast visning"
       }
     },
     "import": {
@@ -3022,10 +3023,13 @@
     "replace": "Ersätt länken",
     "remove": "Ta bort offentlig länk",
     "replaceDialogTitle": "Ersätt den offentliga länken med endast visning?",
-    "replaceDialogDescription": "Den tidigare länken och alla offentliga visningssessioner som skapats med den slutar fungera omedelbart.",
+    "replaceDialogDescription": "Den tidigare länken slutar fungera omedelbart. Alla som hade den förlorar den skrivskyddade åtkomsten.",
     "replaceConfirm": "Ersätt länken",
     "removeDialogTitle": "Ta bort den offentliga länken med endast visning?",
-    "removeDialogDescription": "Den aktuella länken och alla offentliga visningssessioner som skapats med den slutar fungera omedelbart.",
-    "removeConfirm": "Ta bort länken"
+    "removeDialogDescription": "Den aktuella länken slutar fungera omedelbart. Alla som hade den förlorar den skrivskyddade åtkomsten.",
+    "removeConfirm": "Ta bort länken",
+    "enableSuccess": "Offentlig länk med endast visning skapad",
+    "replaceSuccess": "Offentlig länk med endast visning ersatt. Den tidigare länken fungerar inte längre.",
+    "removeSuccess": "Offentlig länk med endast visning borttagen"
   }
 }

@@ -2248,7 +2248,8 @@
         "currency": "Valuutta",
         "currencyCode": "Valuuttakoodi",
         "linkedParticipant": "Linkitetty osallistuja",
-        "subgroupsEnabled": "Alaryhmät"
+        "subgroupsEnabled": "Alaryhmät",
+        "publicViewLink": "Julkinen vain katseluun tarkoitettu linkki"
       }
     },
     "member": {
@@ -3026,10 +3027,13 @@
     "replace": "Vaihda linkki",
     "remove": "Poista julkinen linkki",
     "replaceDialogTitle": "Vaihdetaanko julkinen vain katseluun tarkoitettu linkki?",
-    "replaceDialogDescription": "Edellinen linkki ja kaikki sillä luodut julkiset katseluistunnot lakkaavat toimimasta välittömästi.",
+    "replaceDialogDescription": "Edellinen linkki lakkaa toimimasta välittömästi. Kaikki, joilla se oli, menettävät katseluoikeuden.",
     "replaceConfirm": "Vaihda linkki",
     "removeDialogTitle": "Poistetaanko julkinen vain katseluun tarkoitettu linkki?",
-    "removeDialogDescription": "Nykyinen linkki ja kaikki sillä luodut julkiset katseluistunnot lakkaavat toimimasta välittömästi.",
-    "removeConfirm": "Poista linkki"
+    "removeDialogDescription": "Nykyinen linkki lakkaa toimimasta välittömästi. Kaikki, joilla se oli, menettävät katseluoikeuden.",
+    "removeConfirm": "Poista linkki",
+    "enableSuccess": "Julkinen vain katseluun tarkoitettu linkki luotu",
+    "replaceSuccess": "Julkinen vain katseluun tarkoitettu linkki vaihdettu. Edellinen linkki ei enää toimi.",
+    "removeSuccess": "Julkinen vain katseluun tarkoitettu linkki poistettu"
   }
 }

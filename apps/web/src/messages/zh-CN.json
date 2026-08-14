@@ -2241,7 +2241,8 @@
         "currency": "货币",
         "currencyCode": "货币代码",
         "linkedParticipant": "关联参与者",
-        "subgroupsEnabled": "子群组"
+        "subgroupsEnabled": "子群组",
+        "publicViewLink": "公开仅限查看链接"
       }
     },
     "member": {
@@ -3009,10 +3010,13 @@
     "replace": "替换链接",
     "remove": "移除公开链接",
     "replaceDialogTitle": "替换公开仅限查看链接？",
-    "replaceDialogDescription": "旧链接以及通过该链接创建的所有公开查看会话将立即失效。",
+    "replaceDialogDescription": "旧链接将立即失效。拥有该链接的人将失去仅查看访问权限。",
     "replaceConfirm": "替换链接",
     "removeDialogTitle": "移除公开仅限查看链接？",
-    "removeDialogDescription": "当前链接以及通过该链接创建的所有公开查看会话将立即失效。",
-    "removeConfirm": "移除链接"
+    "removeDialogDescription": "当前链接将立即失效。拥有该链接的人将失去仅查看访问权限。",
+    "removeConfirm": "移除链接",
+    "enableSuccess": "已创建公开仅限查看链接",
+    "replaceSuccess": "已替换公开仅限查看链接。旧链接已失效。",
+    "removeSuccess": "已移除公开仅限查看链接"
   }
 }
