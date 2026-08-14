@@ -16,7 +16,6 @@ import {
   useCurrentGroup,
   useIsReadOnlyGroupViewer,
 } from '../current-group-context'
-import { useLinkInviteToken } from '../use-link-invite-token'
 
 const MAX_COMMENT_LENGTH = 500
 
@@ -32,7 +31,6 @@ type ExpenseCommentsProps = {
 export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
   const { group, currentMember } = useCurrentGroup()
   const isReadOnlyGroupViewer = useIsReadOnlyGroupViewer()
-  const linkInviteToken = useLinkInviteToken()
   const locale = useLocale()
   const accountPreferences = useSyncedAccountPreferences()
   const accountTimeZone =
@@ -42,7 +40,7 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
   const createAttempt = useIdempotentCreate()
 
   const commentsQuery = trpc.groups.expenses.comments.list.useQuery(
-    { groupId, expenseId, linkInviteToken },
+    { groupId, expenseId },
     { retry: false },
   )
   const [draft, setDraft] = useState('')
@@ -64,9 +62,8 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
       utils.groups.expenses.comments.list.invalidate({
         groupId,
         expenseId,
-        linkInviteToken,
       }),
-      utils.groups.activities.list.invalidate({ groupId, linkInviteToken }),
+      utils.groups.activities.list.invalidate({ groupId }),
     ])
   }
 
@@ -173,7 +170,7 @@ export function ExpenseComments({ groupId, expenseId }: ExpenseCommentsProps) {
                       accountTimeZone,
                     )}
                   </time>
-                  {comment.canDelete && (
+                  {!isReadOnlyGroupViewer && comment.canDelete && (
                     <Button
                       type="button"
                       variant="ghost"

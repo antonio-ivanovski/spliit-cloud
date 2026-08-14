@@ -6,10 +6,6 @@ import {
 } from '@/app/groups/[groupId]/expenses/series-controls'
 import { render, screen } from '@/test/test-utils'
 
-vi.mock('@/app/groups/[groupId]/use-link-invite-token', () => ({
-  useLinkInviteToken: vi.fn(() => undefined),
-}))
-
 vi.mock('@tanstack/react-router', () => ({
   Link: ({
     to,

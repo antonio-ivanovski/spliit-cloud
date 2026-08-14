@@ -31,10 +31,9 @@ const CATCH_UP_POLL_TIMEOUT_MS = 30_000
 
 export function invalidateExpenseDependencies(
   utils: ReturnType<typeof trpc.useUtils>,
-  linkInviteToken: string | undefined,
   { groupId, expenseId, financial = true }: InvalidateExpenseOptions,
 ) {
-  const tokens = { groupId, linkInviteToken }
+  const input = { groupId }
   const globalExpenses = (
     utils as unknown as {
       expenses?: {
@@ -44,17 +43,16 @@ export function invalidateExpenseDependencies(
     }
   ).expenses
   const tasks: Promise<unknown>[] = [
-    utils.groups.expenses.list.invalidate(tokens),
+    utils.groups.expenses.list.invalidate(input),
     expenseId
       ? utils.groups.expenses.get.invalidate({
           groupId,
           expenseId,
-          linkInviteToken,
         })
       : Promise.resolve(),
-    utils.groups.expenses.series.invalidate(tokens),
-    utils.groups.expenses.commonCurrencies.invalidate(tokens),
-    utils.groups.activities.list.invalidate(tokens),
+    utils.groups.expenses.series.invalidate(input),
+    utils.groups.expenses.commonCurrencies.invalidate(input),
+    utils.groups.activities.list.invalidate(input),
   ]
   if (globalExpenses) {
     tasks.push(
@@ -74,11 +72,11 @@ export function invalidateExpenseDependencies(
   return Promise.all(tasks)
 }
 
-function useInvalidateExpenseDependencies(linkInviteToken: string | undefined) {
+function useInvalidateExpenseDependencies() {
   const utils = trpc.useUtils()
 
   return (options: InvalidateExpenseOptions) =>
-    invalidateExpenseDependencies(utils, linkInviteToken, options)
+    invalidateExpenseDependencies(utils, options)
 }
 
 /**
@@ -93,7 +91,6 @@ function startCatchUpPoll(args: {
   utils: ReturnType<typeof trpc.useUtils>
   groupId: string
   seriesId: string
-  linkInviteToken: string | undefined
   invalidate: () => Promise<unknown>
 }) {
   const { seriesId } = args
@@ -130,7 +127,6 @@ function startCatchUpPoll(args: {
       progress = await args.utils.groups.expenses.seriesProgress.fetch({
         groupId: args.groupId,
         seriesId: args.seriesId,
-        linkInviteToken: args.linkInviteToken,
       })
     } catch {
       handle.abort()
@@ -166,16 +162,13 @@ function startCatchUpPoll(args: {
 }
 
 export function useUpdateExpenseMutation({
-  linkInviteToken,
   onConflict,
 }: {
-  linkInviteToken: string | undefined
   onConflict?: () => void
-}) {
+} = {}) {
   const { toast } = useToast()
   const mascot = useMascotController()
-  const invalidateExpenseDependencies =
-    useInvalidateExpenseDependencies(linkInviteToken)
+  const invalidateExpenseDependencies = useInvalidateExpenseDependencies()
 
   return trpc.groups.expenses.update.useMutation({
     onSuccess: (_data, variables) => {
@@ -196,16 +189,11 @@ export function useUpdateExpenseMutation({
   })
 }
 
-export function useCreateExpenseMutation({
-  linkInviteToken,
-}: {
-  linkInviteToken: string | undefined
-}) {
+export function useCreateExpenseMutation() {
   const { toast } = useToast()
   const mascot = useMascotController()
   const utils = trpc.useUtils()
-  const invalidateExpenseDependencies =
-    useInvalidateExpenseDependencies(linkInviteToken)
+  const invalidateExpenseDependencies = useInvalidateExpenseDependencies()
 
   return trpc.groups.expenses.create.useMutation({
     onSuccess: (data, variables) => {
@@ -224,7 +212,6 @@ export function useCreateExpenseMutation({
           utils,
           groupId: variables.groupId,
           seriesId: data.recurringSeriesId,
-          linkInviteToken,
           invalidate: () =>
             invalidateExpenseDependencies({
               groupId: variables.groupId,
@@ -247,17 +234,14 @@ export function useCreateExpenseMutation({
 }
 
 export function useDeleteExpenseMutation({
-  linkInviteToken,
   onDeleted,
 }: {
-  linkInviteToken: string | undefined
   onDeleted?: () => void | Promise<void>
-}) {
+} = {}) {
   const navigate = useNavigate()
   const { toast } = useToast()
   const mascot = useMascotController()
-  const invalidateExpenseDependencies =
-    useInvalidateExpenseDependencies(linkInviteToken)
+  const invalidateExpenseDependencies = useInvalidateExpenseDependencies()
 
   return trpc.groups.expenses.delete.useMutation({
     onSuccess: async (_data, variables) => {
@@ -284,13 +268,8 @@ export function useDeleteExpenseMutation({
   })
 }
 
-export function useStopRecurrenceMutation({
-  linkInviteToken,
-}: {
-  linkInviteToken: string | undefined
-}) {
-  const invalidateExpenseDependencies =
-    useInvalidateExpenseDependencies(linkInviteToken)
+export function useStopRecurrenceMutation() {
+  const invalidateExpenseDependencies = useInvalidateExpenseDependencies()
 
   return trpc.groups.expenses.stopRecurrence.useMutation({
     onSuccess: (_data, variables) =>

@@ -34,7 +34,6 @@ import {
   type ExpenseFormInputValues,
 } from '@spliit/domain'
 
-import { useLinkInviteToken } from '../use-link-invite-token'
 import {
   buildExpenseFormDefaults,
   type GroupShape,
@@ -106,8 +105,7 @@ export function AiExpensePreview({
   })
   const locale = useTranslation().i18n.language
   const { toast } = useToast()
-  const linkInviteToken = useLinkInviteToken()
-  const createMutation = useCreateExpenseMutation({ linkInviteToken })
+  const createMutation = useCreateExpenseMutation()
   const createAttempt = useIdempotentCreate()
   const savedDefaultQuery = trpc.account.defaultSplit.useQuery(
     { groupId: group.id },

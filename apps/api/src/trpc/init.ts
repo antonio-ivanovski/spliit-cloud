@@ -1,6 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server'
 import superjson from 'superjson'
-import { z } from 'zod'
 
 import {
   GroupInvitationStatus,
@@ -16,13 +15,10 @@ import {
 } from '../lib/auth/session'
 import { env } from '../lib/env'
 import {
-  fingerprintGroupViewKey,
-  GROUP_VIEW_COOKIE,
-  readCookie,
-  type GroupViewerSession,
-  verifyGroupViewerSession,
-} from '../lib/group-view'
-import { hashLinkToken } from '../lib/invitations'
+  isPendingUsableRouteInvitation,
+  resolveGroupRouteId,
+  type GroupRouteSource,
+} from '../lib/group-route'
 import { FixedWindowLimiter, logRateLimitExceeded } from '../lib/rate-limit'
 
 export type AuthContext = {
@@ -32,8 +28,6 @@ export type AuthContext = {
   req?: Request
   /** Mutable response headers supplied by the fetch adapter. */
   resHeaders?: Headers
-  /** Group-scoped, read-only bearer session established from a fragment link. */
-  groupViewerSession?: GroupViewerSession | null
 }
 
 export async function createTRPCContext(opts: {
@@ -45,15 +39,10 @@ export async function createTRPCContext(opts: {
   const auth =
     (await getAuthFromRequest(request).catch(() => null)) ??
     (await getOAuthAuthFromRequest(request).catch(() => null))
-  const viewerToken = readCookie(request.headers, GROUP_VIEW_COOKIE)
-  const groupViewerSession = viewerToken
-    ? await verifyGroupViewerSession(viewerToken)
-    : null
   return {
     auth,
     req: opts.req,
     resHeaders: opts.resHeaders,
-    groupViewerSession,
   }
 }
 
@@ -78,9 +67,8 @@ export const baseProcedure = t.procedure
 export const publicProcedure = baseProcedure
 
 /**
- * Read procedure that permits either a normal application account or a valid
- * group-scoped viewer cookie. Individual resolvers still call
- * `loadGroupViewer`, which validates the group and current credential state.
+ * Read procedure that permits sessions and opaque group route ids. Individual
+ * resolvers still call `loadGroupViewer`, which validates the route id.
  */
 export const groupReadProcedure = baseProcedure.use(async ({ ctx, next }) => {
   if (
@@ -312,27 +300,6 @@ export function groupProcedure(opts: {
 }
 
 /**
- * Shared input field for a raw link-invite token carried in the page URL. Use
- * in any read procedure that should be accessible to pending link-invitees (in
- * addition to active members and pending email-invitees, which the viewer
- * already accepts). Token validity is enforced by `loadGroupViewer` against the
- * stored hash, so no client-side format check is needed.
- */
-export const linkInviteTokenInput = z.string().optional()
-
-/**
- * Hash a raw link-invite token for use with {@link loadGroupViewer}'s
- * `linkTokenHash` parameter. Returns `null` when no token is present so callers
- * can forward the value unchanged.
- */
-export async function hashLinkInviteToken(
-  token: string | undefined,
-): Promise<string | null> {
-  if (!token) return null
-  return hashLinkToken(token)
-}
-
-/**
  * Resolve the current account's membership, role, status, and the group +
  * ledger records for a given groupId. Throws when the account is not an active
  * member. Designed to be called from within a `groupProcedure` (or
@@ -402,46 +369,46 @@ export type GroupViewerContext = {
     | null
   ledger: NonNullable<Awaited<ReturnType<typeof prisma.ledger.findUnique>>>
   viewer: GroupViewer
+  routeSource: GroupRouteSource
+  canonicalGroupId: string
 }
 
 export async function loadGroupViewer({
   groupId,
   accountId,
   accountEmail,
-  linkTokenHash,
-  viewerSession,
 }: {
+  /** Canonical group id or opaque public/invitation route id. */
   groupId: string
   accountId?: string | null
   accountEmail?: string | null
-  /**
-   * Optional SHA-256 hash of the raw link-invite token carried in the page URL.
-   * When present, a PENDING LINK invitation with a matching `tokenHash` is
-   * enough to grant the read-only viewer — the token itself is the credential.
-   */
-  linkTokenHash?: string | null
-  viewerSession?: GroupViewerSession | null
 }): Promise<GroupViewerContext> {
-  const group = await prisma.group.findUnique({
-    where: { id: groupId },
-    include: { ledger: true },
-  })
-  if (!group) {
-    throw new TRPCError({ code: 'NOT_FOUND', message: 'Group not found' })
+  const route = await resolveGroupRouteId(groupId)
+  if (!route) {
+    throw new TRPCError({
+      code: 'FORBIDDEN',
+      message: 'Group access denied',
+    })
+  }
+  const { group } = route
+  const resolved = {
+    group,
+    ledger: group.ledger,
+    routeSource: route.source,
+    canonicalGroupId: group.id,
   }
 
   const member = accountId
     ? await prisma.groupMember.findUnique({
-        where: { groupId_accountId: { groupId, accountId } },
+        where: { groupId_accountId: { groupId: group.id, accountId } },
         include: { ledgerParticipant: true },
       })
     : null
 
   if (member && member.status === 'ACTIVE') {
     return {
-      group,
+      ...resolved,
       member,
-      ledger: group.ledger,
       viewer: { kind: 'ACTIVE', access: 'READ_WRITE' },
     }
   }
@@ -453,7 +420,7 @@ export async function loadGroupViewer({
   if (accountEmail) {
     const invitation = await prisma.groupInvitation.findFirst({
       where: {
-        groupId,
+        groupId: group.id,
         type: GroupInvitationType.EMAIL,
         status: GroupInvitationStatus.PENDING,
         email: { equals: accountEmail, mode: 'insensitive' },
@@ -463,9 +430,8 @@ export async function loadGroupViewer({
 
     if (invitation) {
       return {
-        group,
+        ...resolved,
         member: null,
-        ledger: group.ledger,
         viewer: {
           kind: 'PENDING_INVITEE',
           access: 'READ_ONLY',
@@ -479,76 +445,39 @@ export async function loadGroupViewer({
     }
   }
 
-  if (viewerSession?.groupId === groupId) {
-    if (viewerSession.kind === 'PUBLIC_VIEW') {
-      if (
-        group.publicViewKey &&
-        fingerprintGroupViewKey(group.publicViewKey) ===
-          viewerSession.keyFingerprint &&
-        group.groupType === 'GROUP'
-      ) {
-        return {
-          group,
-          member: null,
-          ledger: group.ledger,
-          viewer: { kind: 'PUBLIC_VIEW', access: 'READ_ONLY' },
-        }
-      }
-    } else {
-      const invitation = await prisma.groupInvitation.findFirst({
-        where: {
-          id: viewerSession.invitationId,
-          groupId,
-          type: GroupInvitationType.LINK,
-          status: GroupInvitationStatus.PENDING,
-          OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
-        },
-        select: { id: true, role: true, type: true },
-      })
-      if (invitation) {
-        return {
-          group,
-          member: null,
-          ledger: group.ledger,
-          viewer: {
-            kind: 'PENDING_INVITEE',
-            access: 'READ_ONLY',
-            invitation,
-          },
-        }
-      }
+  if (route.source === 'PUBLIC_LINK' && group.groupType === 'GROUP') {
+    return {
+      ...resolved,
+      member: null,
+      viewer: { kind: 'PUBLIC_VIEW', access: 'READ_ONLY' },
     }
   }
 
-  // Last chance: a PENDING LINK invitation whose `tokenHash` matches
-  // the URL-borne token. The lookup is by hashed value (the raw token
-  // is never stored), so the page URL itself is the credential.
-  if (linkTokenHash) {
-    const invitation = await prisma.groupInvitation.findFirst({
-      where: {
-        groupId,
-        type: GroupInvitationType.LINK,
-        status: GroupInvitationStatus.PENDING,
-        tokenHash: linkTokenHash,
+  if (
+    route.source === 'INVITATION' &&
+    route.invitation &&
+    isPendingUsableRouteInvitation(route.invitation)
+  ) {
+    return {
+      ...resolved,
+      member: null,
+      viewer: {
+        kind: 'PENDING_INVITEE',
+        access: 'READ_ONLY',
+        invitation: {
+          id: route.invitation.id,
+          role: route.invitation.role,
+          type: route.invitation.type,
+        },
       },
-      select: { id: true, role: true, type: true },
-    })
-    if (invitation) {
-      return {
-        group,
-        member: null,
-        ledger: group.ledger,
-        viewer: {
-          kind: 'PENDING_INVITEE',
-          access: 'READ_ONLY',
-          invitation: {
-            id: invitation.id,
-            role: invitation.role,
-            type: invitation.type,
-          },
-        },
-      }
     }
+  }
+
+  if (!accountId && route.source === 'CANONICAL') {
+    throw new TRPCError({
+      code: 'UNAUTHORIZED',
+      message: 'Authentication required',
+    })
   }
 
   throw new TRPCError({

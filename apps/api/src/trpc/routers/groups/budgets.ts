@@ -467,7 +467,6 @@ const list = groupReadProcedure
       groupId: input.groupId,
       accountId: ctx.auth?.user.id,
       accountEmail: ctx.auth?.user.email,
-      viewerSession: ctx.groupViewerSession,
     })
     const budgets = await prisma.groupBudget.findMany({
       where: {
@@ -498,7 +497,6 @@ const get = groupReadProcedure
       groupId: input.groupId,
       accountId: ctx.auth?.user.id,
       accountEmail: ctx.auth?.user.email,
-      viewerSession: ctx.groupViewerSession,
     })
     const budget = await prisma.groupBudget.findFirst({
       where: { id: input.budgetId, groupId: group.id },

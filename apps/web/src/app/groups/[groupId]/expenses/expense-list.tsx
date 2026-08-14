@@ -31,13 +31,11 @@ import {
   useCurrentGroup,
   useIsReadOnlyGroupViewer,
 } from '../current-group-context'
-import { useLinkInviteToken } from '../use-link-invite-token'
 import { EXPENSE_LIST_PAGE_SIZE } from './expense-list-query'
 import { ExpenseTimeline, ExpensesLoading } from './expense-timeline'
 
 export function ExpenseList() {
   const { groupId } = useCurrentGroup()
-  const linkInviteToken = useLinkInviteToken()
   const [searchText, setSearchText] = useState('')
   const [debouncedSearchText] = useDebounce(searchText, 300)
   const filtersApi = useExpenseFilters(groupId)
@@ -56,7 +54,6 @@ export function ExpenseList() {
       <ExpenseListForSearch
         groupId={groupId}
         searchText={debouncedSearchText}
-        linkInviteToken={linkInviteToken}
       />
     </ExpenseFiltersProvider>
   )
@@ -65,11 +62,9 @@ export function ExpenseList() {
 const ExpenseListForSearch = ({
   groupId,
   searchText,
-  linkInviteToken,
 }: {
   groupId: string
   searchText: string
-  linkInviteToken: string | undefined
 }) => {
   const { group } = useCurrentGroup()
   const accountPreferences = useSyncedAccountPreferences()
@@ -101,7 +96,6 @@ const ExpenseListForSearch = ({
       limit: EXPENSE_LIST_PAGE_SIZE,
       filter: searchText,
       locale,
-      linkInviteToken,
       ...queryInput,
     },
     { getNextPageParam: ({ nextCursor }) => nextCursor },

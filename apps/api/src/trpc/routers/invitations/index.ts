@@ -70,12 +70,12 @@ import {
 // admins or members; ownership transfers are not a separate flow.
 const invitationRoleSchema = z.enum(['ADMIN', 'MEMBER'])
 
-/** Validate a raw link-invite token. Same charset the generator emits. */
-const linkTokenSchema = z
+/** Validate an opaque invitation route id, including legacy URL-safe ids. */
+const invitationRouteIdSchema = z
   .string()
   .min(16)
   .max(128)
-  .regex(/^[A-Za-z0-9_-]+$/, 'Invalid invitation token')
+  .regex(/^[A-Za-z0-9_-]+$/, 'Invalid invitation link')
 
 export const invitationsRouter = createTRPCRouter({
   // Admins see every pending invitation; members see only invitations they
@@ -232,7 +232,7 @@ export const invitationsRouter = createTRPCRouter({
           }
           return {
             ...result,
-            inviteUrl: `${getWebBaseUrl()}/groups/${input.groupId}#invite=${token}`,
+            inviteUrl: `${getWebBaseUrl()}/groups/${token}`,
             expiresAt: new Date(result.expiresAt),
           }
         },
@@ -251,7 +251,7 @@ export const invitationsRouter = createTRPCRouter({
   // itself is the credential — and the helper returns only redacted
   // fields, not the full invitation row.
   previewLink: publicProcedure
-    .input(z.object({ token: linkTokenSchema }))
+    .input(z.object({ token: invitationRouteIdSchema }))
     .output(z.object({ preview: linkInvitationPreviewSchema.nullable() }))
     .query(async ({ input }) => {
       const preview = await getLinkInvitationPreview(input.token)
@@ -266,55 +266,13 @@ export const invitationsRouter = createTRPCRouter({
   // refuses expired / revoked / already-used tokens and the
   // double-active-member case.
   acceptLink: protectedProcedure
-    .input(z.object({ token: linkTokenSchema }))
+    .input(z.object({ token: invitationRouteIdSchema }))
     .output(
       z.object({ groupId: z.string(), role: z.enum(['ADMIN', 'MEMBER']) }),
     )
     .mutation(async ({ input: { token }, ctx }) => {
       const result = await acceptLinkInvitation({
         token,
-        accountId: ctx.auth.user.id,
-      })
-      return { groupId: result.groupId, role: result.role }
-    }),
-
-  /**
-   * Accept the pending link invitation represented by the HttpOnly viewer
-   * session.
-   */
-  acceptViewerSession: protectedProcedure
-    .input(z.object({ groupId: z.string().min(1) }))
-    .output(
-      z.object({ groupId: z.string(), role: z.enum(['ADMIN', 'MEMBER']) }),
-    )
-    .mutation(async ({ input, ctx }) => {
-      const session = ctx.groupViewerSession
-      if (
-        session?.kind !== 'PENDING_INVITEE' ||
-        session.groupId !== input.groupId
-      ) {
-        throw new TRPCError({
-          code: 'FORBIDDEN',
-          message: 'This invitation is no longer available',
-        })
-      }
-      const invitation = await prisma.groupInvitation.findFirst({
-        where: {
-          id: session.invitationId,
-          groupId: input.groupId,
-          type: GroupInvitationType.LINK,
-          status: GroupInvitationStatus.PENDING,
-        },
-        select: { tokenHash: true },
-      })
-      if (!invitation?.tokenHash) {
-        throw new TRPCError({
-          code: 'FORBIDDEN',
-          message: 'This invitation is no longer available',
-        })
-      }
-      const result = await acceptLinkInvitation({
-        tokenHash: invitation.tokenHash,
         accountId: ctx.auth.user.id,
       })
       return { groupId: result.groupId, role: result.role }

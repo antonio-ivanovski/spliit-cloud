@@ -279,7 +279,6 @@ describe('Expense items — ExpenseCard via existing API', () => {
       currentLedgerParticipantId: string | null
     }>('groups.get', {
       groupId: createResult.groupId,
-      linkInviteToken: undefined,
     })
     testGroup = groupResult.group
   }, 30000)
@@ -381,7 +380,6 @@ describe('Expense items — ExpenseCard via existing API', () => {
       }>
     }>('groups.expenses.list', {
       groupId: testGroup.id,
-      linkInviteToken: undefined,
     })
     const fetched = listResult.expenses.find((e) => e.id === expenseId)!
     expect(fetched.items).toHaveLength(1)
@@ -463,7 +461,6 @@ describe('Expense items — ExpenseCard via existing API', () => {
       }>
     }>('groups.expenses.list', {
       groupId: testGroup.id,
-      linkInviteToken: undefined,
     })
     const fetched = listResult.expenses.find((e) => e.id === expenseId)!
     const renderable = {
@@ -545,7 +542,6 @@ describe('Expense items — ExpenseCard via existing API', () => {
       }>
     }>('groups.expenses.list', {
       groupId: testGroup.id,
-      linkInviteToken: undefined,
     })
     const fetched = listResult.expenses.find((e) => e.id === expenseId)!
     expect(fetched.items).toHaveLength(3)

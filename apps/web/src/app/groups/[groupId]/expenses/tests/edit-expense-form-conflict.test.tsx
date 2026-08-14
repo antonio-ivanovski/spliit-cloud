@@ -21,10 +21,6 @@ vi.mock('../../current-group-context', () => ({
   useIsReadOnlyGroupViewer: () => false,
 }))
 
-vi.mock('../../use-link-invite-token', () => ({
-  useLinkInviteToken: () => null,
-}))
-
 vi.mock('../expense-mutation-hooks', () => ({
   useUpdateExpenseMutation: (options: { onConflict: () => void }) => {
     mocks.onConflict = options.onConflict

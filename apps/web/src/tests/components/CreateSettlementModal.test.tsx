@@ -20,10 +20,6 @@ vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useIsReadOnlyGroupViewer: vi.fn(),
 }))
 
-vi.mock('@/app/groups/[groupId]/use-link-invite-token', () => ({
-  useLinkInviteToken: vi.fn(() => undefined),
-}))
-
 vi.mock('@/app/groups/[groupId]/expenses/expense-mutation-hooks', () => ({
   useCreateExpenseMutation: () => ({
     mutateAsync: mockMutateAsync,
@@ -138,7 +134,7 @@ function setupCurrentGroup({
     displayName: 'Trip',
     currentLedgerParticipantId: null,
     currentMember: null,
-    currentInvitation: isReadOnlyGroupViewer ? ({} as never) : null,
+    currentInvitation: null,
     linkInviteState: null,
   })
   vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(isReadOnlyGroupViewer)
@@ -431,7 +427,7 @@ describe('CreateSettlementModal', () => {
     expect(screen.queryByTestId('settlement-edit')).not.toBeInTheDocument()
   })
 
-  it('hides actions when viewer is a pending invitee', () => {
+  it('hides actions for a read-only viewer independently of invitation state', () => {
     setupCurrentGroup({ isReadOnlyGroupViewer: true })
 
     render(

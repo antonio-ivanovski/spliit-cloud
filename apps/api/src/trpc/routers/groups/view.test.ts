@@ -21,13 +21,13 @@ function makeCaller() {
 
 function seedMember(args: {
   role: 'ADMIN' | 'MEMBER'
-  publicViewKey?: string | null
+  publicViewId?: string | null
   groupType?: 'GROUP' | 'FRIEND'
 }) {
   prismaMock.group.findUnique.mockResolvedValue({
     id: 'group-1',
     groupType: args.groupType ?? 'GROUP',
-    publicViewKey: args.publicViewKey ?? null,
+    publicViewId: args.publicViewId ?? null,
     ledger: { id: 'ledger-1' },
   } as never)
   prismaMock.groupMember.findUnique.mockResolvedValue({
@@ -41,17 +41,19 @@ function seedMember(args: {
 describe('groups.view', () => {
   beforeEach(() => {
     prismaMock.group.updateMany.mockResolvedValue({ count: 1 })
+    prismaMock.group.findFirst.mockResolvedValue(null)
+    prismaMock.groupInvitation.findFirst.mockResolvedValue(null)
   })
 
   it('returns the stable link to a regular active member without management access', async () => {
-    seedMember({ role: 'MEMBER', publicViewKey: 'stable-key' })
+    seedMember({ role: 'MEMBER', publicViewId: 'a'.repeat(32) })
 
     const first = await makeCaller().view.get({ groupId: 'group-1' })
     const second = await makeCaller().view.get({ groupId: 'group-1' })
 
     expect(first).toEqual(second)
     expect(first.canManage).toBe(false)
-    expect(first.url).toContain('/groups/group-1#view=stable-key')
+    expect(first.url).toContain(`/groups/${'a'.repeat(32)}`)
   })
 
   it('allows only an admin to enable the public link', async () => {
@@ -62,32 +64,32 @@ describe('groups.view', () => {
 
     seedMember({ role: 'ADMIN' })
     const result = await makeCaller().view.enable({ groupId: 'group-1' })
-    expect(result.url).toMatch(/#view=spliit_group_view_v1_/)
+    expect(result.url).toMatch(/\/groups\/[a-f0-9]{32}$/)
     expect(prismaMock.group.updateMany).toHaveBeenCalledWith({
-      where: { id: 'group-1', publicViewKey: null },
-      data: { publicViewKey: expect.stringMatching(/^spliit_group_view_v1_/) },
+      where: { id: 'group-1', publicViewId: null },
+      data: { publicViewId: expect.stringMatching(/^[a-f0-9]{32}$/) },
     })
   })
 
   it('replaces and removes the current key only after explicit confirmation', async () => {
-    seedMember({ role: 'ADMIN', publicViewKey: 'old-key' })
+    seedMember({ role: 'ADMIN', publicViewId: 'b'.repeat(32) })
 
     const replacement = await makeCaller().view.replace({
       groupId: 'group-1',
       confirmed: true,
     })
-    expect(replacement.url).toMatch(/#view=spliit_group_view_v1_/)
+    expect(replacement.url).toMatch(/\/groups\/[a-f0-9]{32}$/)
     expect(prismaMock.group.updateMany).toHaveBeenLastCalledWith({
-      where: { id: 'group-1', publicViewKey: { not: null } },
-      data: { publicViewKey: expect.stringMatching(/^spliit_group_view_v1_/) },
+      where: { id: 'group-1', publicViewId: { not: null } },
+      data: { publicViewId: expect.stringMatching(/^[a-f0-9]{32}$/) },
     })
 
     await expect(
       makeCaller().view.remove({ groupId: 'group-1', confirmed: true }),
     ).resolves.toEqual({ removed: true })
     expect(prismaMock.group.updateMany).toHaveBeenLastCalledWith({
-      where: { id: 'group-1', publicViewKey: { not: null } },
-      data: { publicViewKey: null },
+      where: { id: 'group-1', publicViewId: { not: null } },
+      data: { publicViewId: null },
     })
   })
 
@@ -96,5 +98,20 @@ describe('groups.view', () => {
     await expect(
       makeCaller().view.get({ groupId: 'group-1' }),
     ).rejects.toMatchObject({ code: 'BAD_REQUEST' })
+  })
+
+  it('reports concurrent public-link state changes consistently', async () => {
+    seedMember({ role: 'ADMIN', publicViewId: 'c'.repeat(32) })
+    prismaMock.group.updateMany.mockResolvedValue({ count: 0 })
+
+    await expect(
+      makeCaller().view.enable({ groupId: 'group-1' }),
+    ).rejects.toMatchObject({ code: 'CONFLICT' })
+    await expect(
+      makeCaller().view.replace({ groupId: 'group-1', confirmed: true }),
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' })
+    await expect(
+      makeCaller().view.remove({ groupId: 'group-1', confirmed: true }),
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' })
   })
 })

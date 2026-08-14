@@ -23,7 +23,6 @@ const mocks = vi.hoisted(() => ({
     },
   })),
   mockUseInView: vi.fn(() => ({ ref: vi.fn(), inView: false })),
-  mockLinkInviteToken: vi.fn(() => undefined),
   mockUseCurrentGroup: vi.fn(),
   mockUseIsReadOnlyGroupViewer: vi.fn(() => false),
 }))
@@ -50,10 +49,6 @@ vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useCurrentGroup: mocks.mockUseCurrentGroup,
   useCurrentGroupOrNull: () => null,
   useIsReadOnlyGroupViewer: mocks.mockUseIsReadOnlyGroupViewer,
-}))
-
-vi.mock('@/app/groups/[groupId]/use-link-invite-token', () => ({
-  useLinkInviteToken: mocks.mockLinkInviteToken,
 }))
 
 vi.mock('react-intersection-observer', () => ({

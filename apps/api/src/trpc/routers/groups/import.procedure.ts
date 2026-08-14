@@ -251,14 +251,12 @@ export const importGroupProcedure = importProcedure
               invite.kind === 'LINK'
                 ? {
                     ...invite,
-                    inviteUrl: `${getWebBaseUrl()}/groups/${created.groupId}#invite=${deriveCreateToken(
-                      {
-                        accountId: ctx.auth.user.id,
-                        operation: CREATE_OPERATIONS.import,
-                        requestId: input.requestId,
-                        discriminator: `import-link:${invite.sourceName}`,
-                      },
-                    )}`,
+                    inviteUrl: `${getWebBaseUrl()}/groups/${deriveCreateToken({
+                      accountId: ctx.auth.user.id,
+                      operation: CREATE_OPERATIONS.import,
+                      requestId: input.requestId,
+                      discriminator: `import-link:${invite.sourceName}`,
+                    })}`,
                   }
                 : invite,
             ),

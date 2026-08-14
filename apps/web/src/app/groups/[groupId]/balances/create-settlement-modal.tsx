@@ -38,7 +38,6 @@ import {
   useCurrentGroup,
   useIsReadOnlyGroupViewer,
 } from '../current-group-context'
-import { useLinkInviteToken } from '../use-link-invite-token'
 import { RemovedParticipantBadge } from './removed-participant-badge'
 import {
   settlementLegKey,
@@ -83,7 +82,6 @@ export function CreateSettlementModal({
 }: CreateSettlementModalProps) {
   const { group } = useCurrentGroup()
   const isReadOnlyGroupViewer = useIsReadOnlyGroupViewer()
-  const linkInviteToken = useLinkInviteToken()
   const locale = useLocale()
   const accountPreferences = useSyncedAccountPreferences()
   const accountTimeZone =
@@ -135,7 +133,7 @@ export function CreateSettlementModal({
     originalCurrencyCode !== groupCurrency.code
 
   const { mutateAsync: createExpenseMutateAsync, isPending } =
-    useCreateExpenseMutation({ linkInviteToken })
+    useCreateExpenseMutation()
   const createAttempt = useIdempotentCreate()
 
   useEffect(() => {

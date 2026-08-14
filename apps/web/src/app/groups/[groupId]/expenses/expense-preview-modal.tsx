@@ -46,7 +46,6 @@ import {
   useCurrentGroup,
   useIsReadOnlyGroupViewer,
 } from '../current-group-context'
-import { useLinkInviteToken } from '../use-link-invite-token'
 import { expenseShareRatioLabel } from './expense-share-ratio-label'
 import {
   RecurringActionsMenu,
@@ -137,7 +136,6 @@ export function ExpensePreviewModal({
 }: ExpensePreviewModalProps) {
   const { group, currentLedgerParticipantId, currentMember } = useCurrentGroup()
   const isReadOnlyGroupViewer = useIsReadOnlyGroupViewer()
-  const linkInviteToken = useLinkInviteToken()
   const locale = useLocale()
   const navigate = useNavigate()
   const { toast } = useToast()
@@ -149,7 +147,7 @@ export function ExpensePreviewModal({
   })
 
   const { data, isLoading, error } = trpc.groups.expenses.get.useQuery(
-    { groupId, expenseId, linkInviteToken },
+    { groupId, expenseId },
     { enabled: open, retry: false },
   )
 
@@ -293,12 +291,9 @@ export function ExpensePreviewModal({
   }
 
   const { mutateAsync: deleteExpenseMutateAsync } = useDeleteExpenseMutation({
-    linkInviteToken,
     onDeleted: onClose,
   })
-  const { mutateAsync: stopRecurrenceMutateAsync } = useStopRecurrenceMutation({
-    linkInviteToken,
-  })
+  const { mutateAsync: stopRecurrenceMutateAsync } = useStopRecurrenceMutation()
   const handleDelete = async (option?: RecurringDeleteOption) => {
     if (!option) {
       await deleteExpenseMutateAsync({ expenseId, groupId })

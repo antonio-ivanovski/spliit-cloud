@@ -13,10 +13,6 @@ vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useIsReadOnlyGroupViewer: vi.fn(),
 }))
 
-vi.mock('@/app/groups/[groupId]/use-link-invite-token', () => ({
-  useLinkInviteToken: vi.fn(() => undefined),
-}))
-
 vi.mock('@/app/groups/[groupId]/expenses/expense-mutation-hooks', () => ({
   useCreateExpenseMutation: () => ({
     mutateAsync: vi.fn(),

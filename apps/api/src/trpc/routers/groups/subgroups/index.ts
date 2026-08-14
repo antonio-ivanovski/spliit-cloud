@@ -21,9 +21,7 @@ import {
 } from '../../../../lib/api/subgroups'
 import {
   createTRPCRouter,
-  hashLinkInviteToken,
   groupReadProcedure,
-  linkInviteTokenInput,
   loadGroupMutationContext,
   loadGroupViewer,
   protectedProcedure,
@@ -131,23 +129,15 @@ function mapWriteError(error: unknown): never {
 }
 
 export const listSubgroupsProcedure = groupReadProcedure
-  .input(
-    groupIdInput.extend({
-      linkInviteToken: linkInviteTokenInput.describe(
-        'Raw link-invite token from the share URL. Grants read access to pending link-invitees.',
-      ),
-    }),
-  )
+  .input(groupIdInput)
   .output(listSubgroupsOutputSchema)
   .query(async ({ input, ctx }) => {
-    await loadGroupViewer({
+    const { canonicalGroupId } = await loadGroupViewer({
       groupId: input.groupId,
       accountId: ctx.auth?.user.id,
       accountEmail: ctx.auth?.user.email,
-      linkTokenHash: await hashLinkInviteToken(input.linkInviteToken),
-      viewerSession: ctx.groupViewerSession,
     })
-    const result = await listSubgroups(input.groupId)
+    const result = await listSubgroups(canonicalGroupId)
     if (!result)
       throw new TRPCError({ code: 'NOT_FOUND', message: 'Group not found' })
     return result

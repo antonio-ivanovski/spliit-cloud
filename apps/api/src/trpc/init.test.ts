@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import '../test/mocks'
 import { clearAccountCache } from '../lib/auth/account-cache'
-import { fingerprintGroupViewKey } from '../lib/group-view'
+import { generateGroupRouteId } from '../lib/group-view'
 import { authState, prismaMock } from '../test/state'
 import {
   assistantProcedure,
@@ -29,6 +29,21 @@ describe('createTRPCContext', () => {
     const ctx = await createTRPCContext({ req: makeRequest() })
 
     expect(ctx.auth).toBeNull()
+  })
+
+  it('does not derive group credentials from request headers', async () => {
+    authState.session = null
+    const request = new Request('http://localhost/api/test', {
+      headers: {
+        'x-spliit-public-view-key': 'ignored',
+        'x-spliit-link-invite-token': 'invite-token',
+      },
+    })
+
+    const ctx = await createTRPCContext({ req: request })
+
+    expect(ctx).not.toHaveProperty('publicGroupViewKey')
+    expect(ctx).not.toHaveProperty('groupLinkInviteToken')
   })
 
   it('returns the resolved auth when the session is valid', async () => {
@@ -311,14 +326,14 @@ describe('loadGroupViewer', () => {
   const accountId = 'acct-1'
   const accountEmail = 'alice@example.com'
 
-  it('throws NOT_FOUND when the group does not exist', async () => {
+  it('returns a generic denial when the route id does not resolve', async () => {
     prismaMock.group.findUnique.mockResolvedValue(null)
     prismaMock.groupMember.findUnique.mockResolvedValue(null)
 
     await expect(
       loadGroupViewer({ groupId, accountId, accountEmail }),
     ).rejects.toMatchObject({
-      code: 'NOT_FOUND',
+      code: 'FORBIDDEN',
     })
   })
 
@@ -395,38 +410,42 @@ describe('loadGroupViewer', () => {
     })
   })
 
-  it('invalidates a public viewer session when the group key changes', async () => {
-    const currentKey = 'current-public-view-key'
-    prismaMock.group.findUnique.mockResolvedValue({
-      id: groupId,
-      groupType: 'GROUP',
-      publicViewKey: currentKey,
-      ledger: { id: 'ledger-1' },
-    } as never)
+  it('accepts only the current public route id for regular groups', async () => {
+    const publicViewId = generateGroupRouteId()
+    prismaMock.group.findUnique
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce({
+        id: groupId,
+        groupType: 'GROUP',
+        publicViewId,
+        ledger: { id: 'ledger-1' },
+      } as never)
     prismaMock.groupMember.findUnique.mockResolvedValue(null)
 
     await expect(
-      loadGroupViewer({
-        groupId,
-        viewerSession: {
-          kind: 'PUBLIC_VIEW',
-          groupId,
-          keyFingerprint: fingerprintGroupViewKey(currentKey),
-        },
-      }),
+      loadGroupViewer({ groupId: publicViewId }),
     ).resolves.toMatchObject({
       viewer: { kind: 'PUBLIC_VIEW', access: 'READ_ONLY' },
+      canonicalGroupId: groupId,
+      routeSource: 'PUBLIC_LINK',
     })
 
+    prismaMock.group.findUnique.mockResolvedValue(null)
+    prismaMock.groupInvitation.findUnique.mockResolvedValue(null)
     await expect(
-      loadGroupViewer({
-        groupId,
-        viewerSession: {
-          kind: 'PUBLIC_VIEW',
-          groupId,
-          keyFingerprint: fingerprintGroupViewKey('replaced-key'),
-        },
-      }),
+      loadGroupViewer({ groupId: generateGroupRouteId() }),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+
+    prismaMock.group.findUnique
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce({
+        id: groupId,
+        groupType: 'FRIEND',
+        publicViewId,
+        ledger: { id: 'ledger-1' },
+      } as never)
+    await expect(
+      loadGroupViewer({ groupId: publicViewId }),
     ).rejects.toMatchObject({ code: 'FORBIDDEN' })
   })
 

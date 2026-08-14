@@ -176,7 +176,6 @@ describe('Group CRUD via existing API', () => {
       currentLedgerParticipantId: string | null
     }>('groups.get', {
       groupId: createResult.groupId,
-      linkInviteToken: undefined,
     })
     testGroup = groupResult.group
 
@@ -324,7 +323,6 @@ describe('Group CRUD via existing API', () => {
       suggestedSettlements: Array<unknown>
     }>('groups.balances.list', {
       groupId: testGroup.id,
-      linkInviteToken: undefined,
     })
 
     // BalancesList expects { [participantId]: { paid, paidFor, total } }

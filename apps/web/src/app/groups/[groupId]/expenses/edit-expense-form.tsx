@@ -20,7 +20,6 @@ import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
 import { trpc } from '@/trpc/client'
 
 import { useIsReadOnlyGroupViewer } from '../current-group-context'
-import { useLinkInviteToken } from '../use-link-invite-token'
 import { ExpenseForm, type ExpenseSubmitOutcome } from './expense-form/index'
 import {
   useDeleteExpenseMutation,
@@ -54,12 +53,9 @@ export function EditExpenseForm({
   const currentLedgerParticipantId =
     groupData?.currentLedgerParticipantId ?? null
   const isReadOnlyGroupViewer = useIsReadOnlyGroupViewer()
-  const linkInviteToken = useLinkInviteToken()
-
   const expenseQuery = trpc.groups.expenses.get.useQuery({
     groupId,
     expenseId,
-    linkInviteToken,
   })
   const expenseData = expenseQuery.data
   const expense = expenseData?.expense
@@ -93,11 +89,9 @@ export function EditExpenseForm({
   const navigate = useNavigate()
 
   const { mutateAsync: updateExpenseMutateAsync } = useUpdateExpenseMutation({
-    linkInviteToken,
     onConflict: () => setConflictOpen(true),
   })
   const { mutateAsync: deleteExpenseMutateAsync } = useDeleteExpenseMutation({
-    linkInviteToken,
     onDeleted: isGlobalExpensesReturnTo(returnTo)
       ? () =>
           navigate({
@@ -179,7 +173,6 @@ export function EditExpenseForm({
         expense={expense}
         cancelLink={expenseFormCancelLink(group.id, returnTo)}
         currentLedgerParticipantId={currentLedgerParticipantId}
-        linkInviteToken={linkInviteToken}
         readOnly={readOnly}
         editScope={selectedScope}
         heading={tExpenseForm('Expense.editTitle', { title: expense.title })}

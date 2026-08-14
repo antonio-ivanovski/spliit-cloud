@@ -4,33 +4,24 @@ import { z } from 'zod'
 import { prisma } from '@spliit/db'
 
 import { getGroup, getGroupExpensesParticipants } from '../../../lib/api'
-import {
-  hashLinkInviteToken,
-  groupReadProcedure,
-  linkInviteTokenInput,
-  loadGroupViewer,
-} from '../../init'
+import { redactGroupForViewer } from '../../../lib/group-view-redaction'
+import { groupReadProcedure, loadGroupViewer } from '../../init'
 import { getGroupDetailsOutputSchema } from '../../outputs/groups'
 
 export const getGroupDetailsProcedure = groupReadProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
-      linkInviteToken: linkInviteTokenInput.describe(
-        'Raw link-invite token from the share URL. Grants read access to pending link-invitees.',
-      ),
     }),
   )
   .output(getGroupDetailsOutputSchema)
-  .query(async ({ input: { groupId, linkInviteToken }, ctx }) => {
-    await loadGroupViewer({
+  .query(async ({ input: { groupId }, ctx }) => {
+    const { canonicalGroupId, viewer } = await loadGroupViewer({
       groupId,
       accountId: ctx.auth?.user.id,
       accountEmail: ctx.auth?.user.email,
-      linkTokenHash: await hashLinkInviteToken(linkInviteToken),
-      viewerSession: ctx.groupViewerSession,
     })
-    const group = await getGroup(groupId)
+    const group = await getGroup(canonicalGroupId)
     if (!group) {
       throw new TRPCError({
         code: 'NOT_FOUND',
@@ -38,10 +29,15 @@ export const getGroupDetailsProcedure = groupReadProcedure
       })
     }
 
-    const participantsWithExpenses = await getGroupExpensesParticipants(groupId)
+    const participantsWithExpenses =
+      await getGroupExpensesParticipants(canonicalGroupId)
     const hasExpenses = group.ledgerId
       ? (await prisma.expense.count({ where: { ledgerId: group.ledgerId } })) >
         0
       : false
-    return { group, participantsWithExpenses, hasExpenses }
+    return {
+      group: viewer.kind === 'ACTIVE' ? group : redactGroupForViewer(group),
+      participantsWithExpenses,
+      hasExpenses,
+    }
   })

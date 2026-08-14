@@ -23,7 +23,6 @@ export function useSuggestCategoryFromTitle(args: {
   locale: string
   readOnly: boolean
   enableCategoryExtract: boolean
-  linkInviteToken?: string
   suggestCategoryMutation: ReturnType<
     typeof trpc.groups.expenses.suggestCategory.useMutation
   >
@@ -34,7 +33,6 @@ export function useSuggestCategoryFromTitle(args: {
     locale,
     readOnly,
     enableCategoryExtract,
-    linkInviteToken,
     suggestCategoryMutation,
   } = args
   const { t } = useTranslation(undefined, { keyPrefix: 'Categories' })
@@ -71,7 +69,7 @@ export function useSuggestCategoryFromTitle(args: {
   )
 
   const memoryQuery = trpc.groups.expenses.categoryMemory.useQuery(
-    { groupId, linkInviteToken },
+    { groupId },
     { enabled: !readOnly },
   )
   const memory = memoryQuery.data?.expenses
@@ -130,7 +128,6 @@ export function useSuggestCategoryFromTitle(args: {
       groupId,
       locale,
       allowAi: enableCategoryExtract,
-      linkInviteToken,
     })
       .then(({ categoryId }) => {
         if (
@@ -167,7 +164,6 @@ export function useSuggestCategoryFromTitle(args: {
     enableCategoryExtract,
     form,
     groupId,
-    linkInviteToken,
     locale,
     memory,
     memoryReady,

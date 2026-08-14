@@ -4,6 +4,7 @@ import {
   type GroupUpdateFormValues,
 } from '@spliit/domain'
 
+import { generateUniqueGroupRouteId } from '../group-route'
 import { resolveParticipantDisplayName } from '../invitations/display'
 import {
   buildGroupActivityData,
@@ -39,7 +40,7 @@ export async function createGroup(
 
     const group = await tx.group.create({
       data: {
-        id: randomId(),
+        id: await generateUniqueGroupRouteId(tx),
         name: groupFormValues.name,
         information: groupFormValues.information,
         ledgerId: ledger.id,

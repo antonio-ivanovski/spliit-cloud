@@ -1,9 +1,4 @@
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useSearch,
-} from '@tanstack/react-router'
+import { Link, useLocation, useNavigate } from '@tanstack/react-router'
 import { ArrowLeft, Check, Eye, Info, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -45,26 +40,25 @@ export const GroupHeader = ({
   const pathname = useLocation({ select: (location) => location.pathname })
   const focusedMobileRoute = isFocusedMobilePath(pathname)
 
-  // The `?invite=<token>` search param is the single source of truth
-  // for link-invite banner state. The route schema captures any
-  // non-empty string and leaves token validity to the server.
-  const { invite: inviteToken } = useSearch({
-    from: '/groups/$groupId',
-  })
+  const invitationRouteId =
+    viewer?.source === 'PENDING_INVITATION' &&
+    currentInvitation?.type === 'LINK'
+      ? groupId
+      : undefined
 
   const acceptLinkMutation = trpc.invitations.acceptLink.useMutation({
-    onSuccess: () => {
+    onSuccess: (result) => {
       toast({
         description: tGroups('invitationAccepted'),
         variant: 'success',
       })
-      // Strip the consumed `?invite=<token>` so the URL returns to the
-      // plain group page — otherwise the "already a member" banner
-      // would reappear on the next load.
+      const prefix = `/groups/${encodeURIComponent(groupId)}`
+      const suffix = pathname.startsWith(prefix)
+        ? pathname.slice(prefix.length)
+        : ''
       void navigate({
-        to: '/groups/$groupId',
-        params: { groupId },
-        search: { invite: undefined },
+        href: `/groups/${encodeURIComponent(result.groupId)}${suffix}${window.location.search}`,
+        replace: true,
       })
       void utils.groups.get.invalidate({ groupId })
       void invalidateAccountGroupLists(utils)
@@ -78,20 +72,6 @@ export const GroupHeader = ({
       })
     },
   })
-  const acceptViewerSessionMutation =
-    trpc.invitations.acceptViewerSession.useMutation({
-      onSuccess: () => {
-        toast({
-          description: tGroups('invitationAccepted'),
-          variant: 'success',
-        })
-        window.location.reload()
-      },
-      onError: (err) => {
-        toast({ description: err.message, variant: 'destructive' })
-      },
-    })
-
   const acceptMutation = trpc.invitations.accept.useMutation({
     onSuccess: () => {
       toast({
@@ -132,8 +112,8 @@ export const GroupHeader = ({
   // preview is only useful while the URL still carries a token and
   // the viewer hasn't accepted yet.
   const previewQuery = trpc.invitations.previewLink.useQuery(
-    { token: inviteToken ?? '' },
-    { enabled: !!inviteToken, retry: false },
+    { token: invitationRouteId ?? '' },
+    { enabled: !!invitationRouteId, retry: false },
   )
 
   // Banner state comes from the server-side `linkInviteState` (set
@@ -141,13 +121,13 @@ export const GroupHeader = ({
   // URL has no token — we fall back to the regular email-invite
   // banner.
   const showLinkAlreadyMember =
-    !!inviteToken &&
+    !!invitationRouteId &&
     !!currentMember &&
     !isLoading &&
     linkInviteState !== 'ACCEPTED'
 
   const showLinkExpiredOrInvalid =
-    !!inviteToken &&
+    !!invitationRouteId &&
     !currentMember &&
     !currentInvitation &&
     !isLoading &&
@@ -222,9 +202,11 @@ export const GroupHeader = ({
                   size="sm"
                   onClick={() =>
                     isLinkBanner
-                      ? inviteToken
-                        ? acceptLinkMutation.mutate({ token: inviteToken })
-                        : acceptViewerSessionMutation.mutate({ groupId })
+                      ? invitationRouteId
+                        ? acceptLinkMutation.mutate({
+                            token: invitationRouteId,
+                          })
+                        : undefined
                       : acceptMutation.mutate({
                           invitationId: currentInvitation.id,
                         })
@@ -233,7 +215,7 @@ export const GroupHeader = ({
                     acceptMutation.isPending ||
                     declineMutation.isPending ||
                     acceptLinkMutation.isPending ||
-                    acceptViewerSessionMutation.isPending
+                    (isLinkBanner && !invitationRouteId)
                   }
                 >
                   <Check className="me-2 h-4 w-4" />
@@ -275,7 +257,13 @@ export const GroupHeader = ({
               <Button
                 size="sm"
                 render={
-                  <Link to="/" search={{ redirect: `/groups/${groupId}` }} />
+                  <Link
+                    to="/"
+                    search={{
+                      redirect: `/groups/${groupId}`,
+                      invitation: isLinkBanner ? groupId : undefined,
+                    }}
+                  />
                 }
               >
                 {tGroups('invitationSignInToAccept')}

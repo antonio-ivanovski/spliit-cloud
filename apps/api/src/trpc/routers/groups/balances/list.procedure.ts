@@ -21,33 +21,23 @@ import {
 } from '../../../../lib/api/subgroups'
 import { redactViewerDisplayName } from '../../../../lib/group-view'
 import { resolveParticipantDisplayName } from '../../../../lib/invitations/display'
-import {
-  hashLinkInviteToken,
-  groupReadProcedure,
-  linkInviteTokenInput,
-  loadGroupViewer,
-} from '../../../init'
+import { groupReadProcedure, loadGroupViewer } from '../../../init'
 import { listBalancesOutputSchema } from '../../../outputs/balances'
 
 export const listGroupBalancesProcedure = groupReadProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
-      linkInviteToken: linkInviteTokenInput.describe(
-        'Raw link-invite token from the share URL. Grants read access to pending link-invitees.',
-      ),
     }),
   )
   .output(listBalancesOutputSchema)
-  .query(async ({ input: { groupId, linkInviteToken }, ctx }) => {
+  .query(async ({ input: { groupId }, ctx }) => {
     const { group, ledger, viewer } = await loadGroupViewer({
       groupId,
       accountId: ctx.auth?.user.id,
       accountEmail: ctx.auth?.user.email,
-      linkTokenHash: await hashLinkInviteToken(linkInviteToken),
-      viewerSession: ctx.groupViewerSession,
     })
-    const rows = await getGroupBalanceExpenses(groupId, ledger.id)
+    const rows = await getGroupBalanceExpenses(group.id, ledger.id)
     const expenses = rows.map(toBalanceExpense)
     const participantIds = Array.from(
       new Set(
@@ -75,7 +65,7 @@ export const listGroupBalancesProcedure = groupReadProcedure
     const publicBalances = getPublicBalances(globalSuggestedSettlements)
     const subgroupRows = group.subgroupsEnabled
       ? ((await prisma.subgroup.findMany({
-          where: { groupId },
+          where: { groupId: group.id },
           orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
           select: subgroupWithMembersSelect,
         })) ?? [])

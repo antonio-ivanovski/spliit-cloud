@@ -13,8 +13,6 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
-import { useLinkInviteToken } from '../use-link-invite-token'
-
 export type ExpenseSeriesMetadata = {
   id: string
   sequence: number
@@ -74,8 +72,6 @@ export function SeriesControls({
   onViewSeries?: () => void
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseSeries' })
-  const linkInviteToken = useLinkInviteToken()
-  const inviteSearch = linkInviteToken ? { invite: linkInviteToken } : undefined
 
   return (
     <div className="flex flex-wrap items-center gap-2 border-t pt-4">
@@ -91,7 +87,6 @@ export function SeriesControls({
             <Link
               to="/groups/$groupId/expenses/$expenseId"
               params={{ groupId, expenseId: series.previousExpenseId }}
-              search={inviteSearch}
             />
           }
         >
@@ -118,7 +113,6 @@ export function SeriesControls({
             <Link
               to="/groups/$groupId/expenses/$expenseId"
               params={{ groupId, expenseId: series.nextExpenseId }}
-              search={inviteSearch}
             />
           }
         >
@@ -149,10 +143,7 @@ export function SeriesControls({
             <Link
               to="/groups/$groupId/expenses"
               params={{ groupId }}
-              search={{
-                seriesId: series.id,
-                ...(linkInviteToken ? { invite: linkInviteToken } : {}),
-              }}
+              search={{ seriesId: series.id }}
             />
           }
         >

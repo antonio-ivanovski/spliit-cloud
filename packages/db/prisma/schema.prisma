@@ -458,9 +458,9 @@ model Group {
 
   members            GroupMember[]
   invitations        GroupInvitation[]
-  // Stable bearer secret for the optional Public View-only link. Null means
+  // Stable opaque route id for the optional Public View-only link. Null means
   // public access is unavailable; replacing/removing it invalidates the link.
-  publicViewKey      String?
+  publicViewId       String?                    @unique
   accountPreferences AccountGroupPreference[]
   defaultSplits      AccountGroupDefaultSplit[]
   budgets            GroupBudget[]

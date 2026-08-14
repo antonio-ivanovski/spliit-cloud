@@ -60,11 +60,8 @@ export const importGroupSearchSchema = z.object({
 })
 
 /**
- * Search-param schema for the `/groups/$groupId` route. The `invite` field
- * carries a link-invite token. Any string (or absence) is captured and
- * forwarded to the server, which is the source of truth for token validity —
- * malformed or empty tokens are rejected with FORBIDDEN, rendered as the
- * "invalid link" page by the layout.
+ * Search-param schema for the `/groups/$groupId` route. The legacy `invite`
+ * field is retained only so old links can be converted to opaque path ids.
  *
  * `friendLinkInvite` carries the invite URL returned by `friends.create` on the
  * link path. The layout surfaces it as a one-time dialog so the user can

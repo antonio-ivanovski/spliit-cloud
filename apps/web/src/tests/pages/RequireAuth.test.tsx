@@ -38,6 +38,8 @@ import { RequireAuth } from '@/components/require-auth'
 describe('RequireAuth', () => {
   afterEach(() => {
     vi.clearAllMocks()
+    window.sessionStorage.clear()
+    window.history.replaceState(null, '', '/')
   })
 
   it('shows loading spinner when isPending', () => {
@@ -113,6 +115,24 @@ describe('RequireAuth', () => {
     expect(navigate).toHaveAttribute('data-to', '/')
     expect(navigate.getAttribute('data-search')).toContain('redirect')
     expect(screen.queryByTestId('child')).not.toBeInTheDocument()
+  })
+
+  it('lets group routes resolve opaque path access before requiring sign-in', () => {
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: null,
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+    window.history.replaceState(null, '', '/groups/group-1')
+
+    render(
+      <RequireAuth>
+        <div data-testid="child">group</div>
+      </RequireAuth>,
+    )
+    expect(screen.getByTestId('child')).toBeInTheDocument()
   })
 
   it('redirects to complete-profile when account has no name', () => {

@@ -224,6 +224,7 @@ describe('prepareCloudImport', () => {
         ]),
       },
       groupInvitation: {
+        findFirst: vi.fn(async () => null),
         create: vi.fn(async ({ data }: { data: { id: string } }) => ({
           id: data.id,
         })),
@@ -304,6 +305,7 @@ describe('prepareCloudImport', () => {
         }),
       },
       group: {
+        findFirst: vi.fn(async () => null),
         create: vi.fn(async ({ data }: { data: { id: string } }) => {
           calls.push('group.create')
           return { id: data.id }
@@ -313,6 +315,7 @@ describe('prepareCloudImport', () => {
           return {}
         }),
       },
+      groupInvitation: { findFirst: vi.fn(async () => null) },
       groupMember: {
         create: vi.fn(async () => {
           calls.push('groupMember.create')
@@ -369,11 +372,13 @@ describe('prepareCloudImport', () => {
         })),
       },
       group: {
+        findFirst: vi.fn(async () => null),
         create: vi.fn(async ({ data }: { data: { id: string } }) => ({
           id: data.id,
         })),
         update: vi.fn(async () => ({})),
       },
+      groupInvitation: { findFirst: vi.fn(async () => null) },
       groupMember: { create: vi.fn(async () => ({ id: 'member-1' })) },
       ledgerParticipant: {
         create: vi.fn(async ({ data }: { data: { id?: string } }) => ({

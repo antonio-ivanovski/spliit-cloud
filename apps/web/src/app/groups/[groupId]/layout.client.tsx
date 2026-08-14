@@ -8,7 +8,7 @@ import {
 } from '@tanstack/react-router'
 import { Cloud, Loader2, Share2 } from 'lucide-react'
 import type { PropsWithChildren } from 'react'
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { useEffect, useState, useSyncExternalStore } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { CopyButton } from '@/components/copy-button'
@@ -25,10 +25,6 @@ import {
 } from '@/components/ui/responsive-dialog'
 import { useToast } from '@/components/ui/use-toast'
 import { useEffectiveRuntimeFeatureFlags } from '@/lib/effective-runtime-feature-flags'
-import {
-  exchangeGroupViewerFragment,
-  readGroupViewerFragment,
-} from '@/lib/group-view-session'
 import { isFocusedMobilePath, isMobileGroupNavPath } from '@/lib/mobile-nav'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
@@ -41,15 +37,9 @@ export function GroupLayoutClient({
   groupId,
   children,
 }: PropsWithChildren<{ groupId: string }>) {
-  // The link-invite token lives in the URL search params, e.g.
-  // `/groups/<id>?invite=<token>`. The route search schema captures
-  // any non-empty value so the server can decide whether the token is
-  // valid. The token is forwarded to `groups.get` as the credential.
-  const { invite: linkInviteToken, friendLinkInvite: friendLinkInviteUrl } =
-    useSearch({
-      from: '/groups/$groupId',
-    })
-  const hasInviteInUrl = linkInviteToken !== undefined
+  const { friendLinkInvite: friendLinkInviteUrl } = useSearch({
+    from: '/groups/$groupId',
+  })
   const [friendLinkDialogUrl, setFriendLinkDialogUrl] = useState<string | null>(
     null,
   )
@@ -64,45 +54,6 @@ export function GroupLayoutClient({
   const focusedMobileRoute = isFocusedMobilePath(pathname)
   const showMobileNav = isMobileGroupNavPath(pathname)
   const isPrintReportRoute = pathname.endsWith('/expenses/print')
-  const [fragmentCredential] = useState(
-    () =>
-      readGroupViewerFragment() ??
-      (linkInviteToken
-        ? { kind: 'PENDING_INVITEE' as const, key: linkInviteToken }
-        : null),
-  )
-  const [viewerExchange, setViewerExchange] = useState<
-    'pending' | 'ready' | 'invalid'
-  >(fragmentCredential ? 'pending' : 'ready')
-  const viewerExchangeStarted = useRef(false)
-
-  useEffect(() => {
-    if (!fragmentCredential || viewerExchangeStarted.current) return
-    viewerExchangeStarted.current = true
-    window.history.replaceState(
-      window.history.state,
-      '',
-      (() => {
-        const url = new URL(window.location.href)
-        url.searchParams.delete('invite')
-        return `${url.pathname}${url.search}`
-      })(),
-    )
-    void exchangeGroupViewerFragment(groupId, fragmentCredential)
-      .then((ok) => {
-        setViewerExchange(ok ? 'ready' : 'invalid')
-        if (ok && linkInviteToken) {
-          void navigate({
-            to: '/groups/$groupId',
-            params: { groupId },
-            search: { invite: undefined },
-            replace: true,
-          })
-        }
-      })
-      .catch(() => setViewerExchange('invalid'))
-  }, [fragmentCredential, groupId, linkInviteToken, navigate])
-
   // Friend-ledger link-path creation navigates here with the invite URL
   // in the `friendLinkInvite` search param. Open a one-time dialog so the
   // user can copy or share the link before continuing. Strip the param
@@ -121,11 +72,8 @@ export function GroupLayoutClient({
   }, [friendLinkInviteUrl, groupId, navigate])
 
   const { data, isLoading, error } = trpc.groups.get.useQuery(
-    {
-      groupId,
-      linkInviteToken: fragmentCredential ? undefined : linkInviteToken,
-    },
-    { retry: false, enabled: viewerExchange === 'ready' },
+    { groupId },
+    { retry: false },
   )
   const { t: tNotFound } = useTranslation(undefined, {
     keyPrefix: 'Groups.NotFound',
@@ -141,7 +89,7 @@ export function GroupLayoutClient({
   })
   const { t: tTitles } = useTranslation()
   const { toast } = useToast()
-  const { isPending: accountPending } = useCurrentAccount()
+  const { data: account, isPending: accountPending } = useCurrentAccount()
   const { flags: effectiveRuntimeFlags } = useEffectiveRuntimeFeatureFlags()
 
   useEffect(() => {
@@ -162,6 +110,20 @@ export function GroupLayoutClient({
   }, [data, focusedMobileRoute, pathname, tTitles])
 
   useEffect(() => {
+    if (data?.viewer.source !== 'MEMBER' || data.canonicalGroupId === groupId) {
+      return
+    }
+    const prefix = `/groups/${encodeURIComponent(groupId)}`
+    const suffix = pathname.startsWith(prefix)
+      ? pathname.slice(prefix.length)
+      : ''
+    void navigate({
+      href: `/groups/${encodeURIComponent(data.canonicalGroupId)}${suffix}${window.location.search}`,
+      replace: true,
+    })
+  }, [data, groupId, navigate, pathname])
+
+  useEffect(() => {
     if (data && !data.group) {
       toast({
         description: tNotFound('text'),
@@ -170,47 +132,21 @@ export function GroupLayoutClient({
     }
   }, [data, tNotFound, toast])
 
-  if (viewerExchange === 'pending') {
+  if (!accountPending && error?.data?.code === 'UNAUTHORIZED') {
     return (
-      <main className="flex min-h-64 items-center justify-center">
-        <Loader2 className="size-6 animate-spin text-muted-foreground" />
-      </main>
+      <Navigate
+        to="/"
+        search={{ redirect: `${pathname}${window.location.search}` }}
+        replace
+      />
     )
-  }
-
-  if (viewerExchange === 'invalid') {
-    return (
-      <main className="flex flex-1 items-center justify-center px-4 py-10">
-        <div className="flex max-w-md flex-col items-center gap-3 text-center">
-          <h1 className="text-2xl font-semibold">{tInvalid('title')}</h1>
-          <p className="text-sm text-muted-foreground">
-            {tInvalid('description')}
-          </p>
-          <Button variant="outline" render={<Link to="/" />}>
-            {tForbidden('backToHome')}
-          </Button>
-        </div>
-      </main>
-    )
-  }
-
-  // Unauthenticated visitors carrying a link-invite token are bounced
-  // through the home auth panel with a redirect back here, so the
-  // same link is recoverable after sign-in.
-  if (
-    !accountPending &&
-    error?.data?.code === 'UNAUTHORIZED' &&
-    hasInviteInUrl
-  ) {
-    const back = `/groups/${groupId}?invite=${encodeURIComponent(linkInviteToken)}`
-    return <Navigate to="/" search={{ redirect: back }} replace />
   }
 
   // A signed-in visitor with a link token that the server doesn't
   // recognize gets a friendly "invalid link" page instead of a blank
   // FORBIDDEN. Without a token we still surface the original "not a
   // member" message.
-  if (!isLoading && error?.data?.code === 'FORBIDDEN' && hasInviteInUrl) {
+  if (!isLoading && error?.data?.code === 'FORBIDDEN' && !account) {
     return (
       <main className="flex flex-1 items-center justify-center px-4 py-10">
         <div className="flex max-w-md flex-col items-center gap-3 text-center">
@@ -269,7 +205,8 @@ export function GroupLayoutClient({
         }
       : {
           isLoading: false as const,
-          groupId,
+          groupId:
+            data.viewer.source === 'MEMBER' ? data.canonicalGroupId : groupId,
           group: data.group,
           displayName: data.displayName ?? '',
           currentLedgerParticipantId: data.currentLedgerParticipantId ?? null,
@@ -295,7 +232,7 @@ export function GroupLayoutClient({
         {children ?? <Outlet />}
       </div>
       {!isPrintReportRoute && showMobileNav && (
-        <MobileGroupNav groupId={groupId} />
+        <MobileGroupNav groupId={props.groupId} />
       )}
       {!isPrintReportRoute && <SaveGroupLocally />}
       <ResponsiveDialog

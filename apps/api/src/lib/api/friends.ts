@@ -13,6 +13,10 @@ import {
 
 import { getWebBaseUrl } from '../auth/urls'
 import {
+  assertInvitationRouteIdDoesNotMatchGroup,
+  generateUniqueGroupRouteId,
+} from '../group-route'
+import {
   buildLinkPlaceholderEmail,
   generateLinkToken,
   hashLinkToken,
@@ -241,7 +245,7 @@ export async function createFriendLedger(
 
     const group = await tx.group.create({
       data: {
-        id: randomId(),
+        id: await generateUniqueGroupRouteId(tx),
         name: randomId(),
         information: information ?? null,
         groupType: GroupType.FRIEND,
@@ -322,6 +326,7 @@ export async function createFriendLedger(
     }
 
     const token = args.linkToken ?? generateLinkToken()
+    await assertInvitationRouteIdDoesNotMatchGroup(token, tx)
     const tokenHash = await hashLinkToken(token)
     const invitation = await tx.groupInvitation.create({
       data: {
@@ -338,7 +343,7 @@ export async function createFriendLedger(
       },
     })
     const webBase = getWebBaseUrl()
-    const inviteUrl = `${webBase}/groups/${group.id}#invite=${token}`
+    const inviteUrl = `${webBase}/groups/${token}`
     return {
       groupId: group.id,
       existed: false as const,

@@ -63,7 +63,7 @@ describe('PublicViewOnlyLinkSection', () => {
 
   it('lets a regular member copy but not manage the current link', () => {
     result = {
-      url: 'https://spliit.test/groups/group-1#view=secret',
+      url: `https://spliit.test/groups/${'a'.repeat(32)}`,
       canManage: false,
     }
     renderSection()
@@ -77,7 +77,7 @@ describe('PublicViewOnlyLinkSection', () => {
 
   it('confirms replacement in a modal', async () => {
     result = {
-      url: 'https://spliit.test/groups/group-1#view=secret',
+      url: `https://spliit.test/groups/${'a'.repeat(32)}`,
       canManage: true,
     }
     renderSection()

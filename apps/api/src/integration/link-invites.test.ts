@@ -10,7 +10,7 @@ import { checkDbConnection, testRunId } from './setup'
 await checkDbConnection()
 
 function getInviteToken(inviteUrl: string) {
-  return new URLSearchParams(new URL(inviteUrl).hash.slice(1)).get('invite')
+  return new URL(inviteUrl).pathname.split('/').at(-1) ?? null
 }
 
 describe('Link invitation flow — real DB', () => {
@@ -143,7 +143,7 @@ describe('Link invitation flow — real DB', () => {
     expect(createResult).toHaveProperty('invitationId')
     expect(createResult).toHaveProperty('inviteUrl')
     expect(createResult.inviteUrl).toMatch(
-      /^http:\/\/localhost:3000\/groups\/.+#invite=[A-Za-z0-9_-]+$/,
+      /^http:\/\/localhost:3000\/groups\/[a-f0-9]{32}$/,
     )
 
     // Verify invitation was created in DB with type LINK

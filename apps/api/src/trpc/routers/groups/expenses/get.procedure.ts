@@ -3,12 +3,7 @@ import { z } from 'zod'
 
 import { getExpense } from '../../../../lib/api'
 import { expensePermissions } from '../../../../lib/api/resource-permissions'
-import {
-  hashLinkInviteToken,
-  groupReadProcedure,
-  linkInviteTokenInput,
-  loadGroupViewer,
-} from '../../../init'
+import { groupReadProcedure, loadGroupViewer } from '../../../init'
 import { getExpenseOutputSchema } from '../../../outputs/expenses'
 
 export const getGroupExpenseProcedure = groupReadProcedure
@@ -16,21 +11,16 @@ export const getGroupExpenseProcedure = groupReadProcedure
     z.object({
       groupId: z.string().min(1),
       expenseId: z.string().min(1),
-      linkInviteToken: linkInviteTokenInput.describe(
-        'Raw link-invite token from the share URL. Grants read access to pending link-invitees.',
-      ),
     }),
   )
   .output(getExpenseOutputSchema)
-  .query(async ({ input: { groupId, expenseId, linkInviteToken }, ctx }) => {
+  .query(async ({ input: { groupId, expenseId }, ctx }) => {
     const { group, member, viewer } = await loadGroupViewer({
       groupId,
       accountId: ctx.auth?.user.id,
       accountEmail: ctx.auth?.user.email,
-      linkTokenHash: await hashLinkInviteToken(linkInviteToken),
-      viewerSession: ctx.groupViewerSession,
     })
-    const expense = await getExpense(groupId, expenseId)
+    const expense = await getExpense(group.id, expenseId)
     if (!expense) {
       throw new TRPCError({
         code: 'NOT_FOUND',

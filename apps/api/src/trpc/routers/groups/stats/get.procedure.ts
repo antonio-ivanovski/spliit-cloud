@@ -17,12 +17,7 @@ import {
 } from '../../../../lib/api/selects/participant-display-name'
 import { redactViewerDisplayName } from '../../../../lib/group-view'
 import { resolveParticipantDisplayName } from '../../../../lib/invitations'
-import {
-  hashLinkInviteToken,
-  groupReadProcedure,
-  linkInviteTokenInput,
-  loadGroupViewer,
-} from '../../../init'
+import { groupReadProcedure, loadGroupViewer } from '../../../init'
 import { getStatsOutputSchema } from '../../../outputs/stats'
 import {
   buildGroupStatsDashboard,
@@ -42,9 +37,6 @@ export const getGroupStatsProcedure = groupReadProcedure
   .input(
     z.object({
       groupId: z.string().min(1),
-      linkInviteToken: linkInviteTokenInput.describe(
-        'Raw link-invite token from the share URL. Grants read access to pending link-invitees.',
-      ),
       period: z.enum(statsPeriods).default('LATEST_ACTIVITY'),
       customRange: z
         .object({
@@ -59,121 +51,117 @@ export const getGroupStatsProcedure = groupReadProcedure
     }),
   )
   .output(getStatsOutputSchema)
-  .query(
-    async ({
-      input: { groupId, linkInviteToken, period, customRange },
-      ctx,
-    }) => {
-      const { member, ledger, viewer } = await loadGroupViewer({
-        groupId,
-        accountId: ctx.auth?.user.id,
-        accountEmail: ctx.auth?.user.email,
-        linkTokenHash: await hashLinkInviteToken(linkInviteToken),
-        viewerSession: ctx.groupViewerSession,
-      })
+  .query(async ({ input: { groupId, period, customRange }, ctx }) => {
+    const { canonicalGroupId, member, ledger, viewer } = await loadGroupViewer({
+      groupId,
+      accountId: ctx.auth?.user.id,
+      accountEmail: ctx.auth?.user.email,
+    })
 
-      const activeParticipantId = member?.ledgerParticipant?.id ?? null
+    const activeParticipantId = member?.ledgerParticipant?.id ?? null
 
-      const rows = await getGroupBalanceExpenses(groupId, ledger.id)
-      const expenses: TotalsExpense[] = rows.map((row) => ({
-        ...toBalanceExpense(row),
-        expenseDate: row.expenseDate,
-      }))
+    const rows = await getGroupBalanceExpenses(canonicalGroupId, ledger.id)
+    const expenses: TotalsExpense[] = rows.map((row) => ({
+      ...toBalanceExpense(row),
+      expenseDate: row.expenseDate,
+    }))
 
-      const totalGroupSpendings = getTotalGroupSpending(expenses)
-      const totalParticipantSpendings = getTotalActiveUserPaidFor(
-        activeParticipantId,
-        expenses,
-      )
-      const totalParticipantShare = getTotalActiveUserShare(
-        activeParticipantId,
-        expenses,
-      )
+    const totalGroupSpendings = getTotalGroupSpending(expenses)
+    const totalParticipantSpendings = getTotalActiveUserPaidFor(
+      activeParticipantId,
+      expenses,
+    )
+    const totalParticipantShare = getTotalActiveUserShare(
+      activeParticipantId,
+      expenses,
+    )
 
-      // The lean `BalanceExpense` shape only carries `participant.id`; the
-      // dashboard needs `name` + `account` for the participant breakdown UI.
-      // Resolve them in a single follow-up `ledgerParticipant.findMany` so the
-      // lean main query stays cheap.
-      const participantIds = Array.from(
-        new Set(
-          rows.flatMap((row) => [
-            ...row.paidByList.map((share) => share.ledgerParticipantId),
-            ...row.paidFor.map((share) => share.ledgerParticipantId),
-            ...row.items.flatMap((item) =>
-              item.paidFor.map((share) => share.ledgerParticipantId),
-            ),
-            ...(row.itemizedRemainder?.paidFor.map(
-              (share) => share.ledgerParticipantId,
-            ) ?? []),
-          ]),
-        ),
-      )
-      const participants =
-        participantIds.length === 0
-          ? ([] as ParticipantDisplayName[])
-          : await prisma.ledgerParticipant.findMany({
-              where: { id: { in: participantIds } },
-              select: participantDisplayNameSelect(),
-            })
-      const participantDisplay = new Map<string, ParticipantDisplayName>(
-        participants.map((participant) => [participant.id, participant]),
-      )
-      const enrichParticipant = (
-        id: string,
-      ): {
-        id: string
-        name?: string
-        account?: { id: string; name: string; image: string | null } | null
-      } => {
-        const participant = participantDisplay.get(id)
-        if (!participant) return { id }
-        const account = participant.groupMember?.account ?? null
-        return {
-          id: participant.id,
-          name:
-            viewer.kind === 'ACTIVE'
-              ? resolveParticipantDisplayName(participant)
-              : redactViewerDisplayName(
-                  resolveParticipantDisplayName(participant),
-                ),
-          account: account
-            ? {
-                id:
-                  viewer.kind === 'ACTIVE'
-                    ? account.id
-                    : `public_${participant.id}`,
-                name: account.name,
-                image: account.image,
-              }
-            : null,
-        }
-      }
-
-      const dashboardExpenses: StatsExpense[] = rows.map((row) => ({
-        ...toBalanceExpense(row),
-        expenseDate: new Date(row.expenseDate),
-        expenseTimeZone: row.expenseTimeZone,
-        categoryId: narrowCategoryId(row.categoryId),
-        paidByList: row.paidByList.map((share) => ({
-          shares: share.shares,
-          participant: enrichParticipant(share.ledgerParticipantId),
-        })),
-        paidFor: row.paidFor.map((share) => ({
-          shares: share.shares,
-          participant: enrichParticipant(share.ledgerParticipantId),
-        })),
-      }))
-
+    // The lean `BalanceExpense` shape only carries `participant.id`; the
+    // dashboard needs `name` + `account` for the participant breakdown UI.
+    // Resolve them in a single follow-up `ledgerParticipant.findMany` so the
+    // lean main query stays cheap.
+    const participantIds = Array.from(
+      new Set(
+        rows.flatMap((row) => [
+          ...row.paidByList.map((share) => share.ledgerParticipantId),
+          ...row.paidFor.map((share) => share.ledgerParticipantId),
+          ...row.items.flatMap((item) =>
+            item.paidFor.map((share) => share.ledgerParticipantId),
+          ),
+          ...(row.itemizedRemainder?.paidFor.map(
+            (share) => share.ledgerParticipantId,
+          ) ?? []),
+        ]),
+      ),
+    )
+    const participants =
+      participantIds.length === 0
+        ? ([] as ParticipantDisplayName[])
+        : await prisma.ledgerParticipant.findMany({
+            where: { id: { in: participantIds } },
+            select: participantDisplayNameSelect(),
+          })
+    const participantDisplay = new Map<string, ParticipantDisplayName>(
+      participants.map((participant) => [participant.id, participant]),
+    )
+    const enrichParticipant = (
+      id: string,
+    ): {
+      id: string
+      name?: string
+      account?: { id: string; name: string; image: string | null } | null
+    } => {
+      const participant = participantDisplay.get(id)
+      if (!participant) return { id }
+      const account = participant.groupMember?.account ?? null
       return {
-        totalGroupSpendings,
-        totalParticipantSpendings,
-        totalParticipantShare,
-        activeParticipantId,
-        dashboard: buildGroupStatsDashboard(
-          dashboardExpenses,
-          period,
-          customRange,
-        ),
+        id: participant.id,
+        name:
+          viewer.kind === 'ACTIVE'
+            ? resolveParticipantDisplayName(participant)
+            : redactViewerDisplayName(
+                resolveParticipantDisplayName(participant),
+              ),
+        account: account
+          ? {
+              id:
+                viewer.kind === 'ACTIVE'
+                  ? account.id
+                  : `public_${participant.id}`,
+              name:
+                viewer.kind === 'ACTIVE'
+                  ? account.name
+                  : redactViewerDisplayName(account.name),
+              image: viewer.kind === 'ACTIVE' ? account.image : null,
+            }
+          : null,
       }
-    },
-  )
+    }
+
+    const dashboardExpenses: StatsExpense[] = rows.map((row) => ({
+      ...toBalanceExpense(row),
+      expenseDate: new Date(row.expenseDate),
+      expenseTimeZone: row.expenseTimeZone,
+      categoryId: narrowCategoryId(row.categoryId),
+      paidByList: row.paidByList.map((share) => ({
+        shares: share.shares,
+        participant: enrichParticipant(share.ledgerParticipantId),
+      })),
+      paidFor: row.paidFor.map((share) => ({
+        shares: share.shares,
+        participant: enrichParticipant(share.ledgerParticipantId),
+      })),
+    }))
+
+    return {
+      totalGroupSpendings,
+      totalParticipantSpendings,
+      totalParticipantShare,
+      activeParticipantId,
+      dashboard: buildGroupStatsDashboard(
+        dashboardExpenses,
+        period,
+        customRange,
+      ),
+    }
+  })

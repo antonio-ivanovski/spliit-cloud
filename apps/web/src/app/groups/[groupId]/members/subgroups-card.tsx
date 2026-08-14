@@ -37,8 +37,6 @@ import { useToast } from '@/components/ui/use-toast'
 import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 import { trpc } from '@/trpc/client'
 
-import { useLinkInviteToken } from '../use-link-invite-token'
-
 type Participant = {
   id: string
   name: string
@@ -66,11 +64,7 @@ export function SubgroupsCard({
   const { toast } = useToast()
   const mascot = useMascotController()
   const utils = trpc.useUtils()
-  const linkInviteToken = useLinkInviteToken()
-  const subgroupsQuery = trpc.groups.subgroups.list.useQuery({
-    groupId,
-    linkInviteToken,
-  })
+  const subgroupsQuery = trpc.groups.subgroups.list.useQuery({ groupId })
   const [editor, setEditor] = useState<EditState | null>(null)
   const [disableDialogOpen, setDisableDialogOpen] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<{
@@ -82,9 +76,9 @@ export function SubgroupsCard({
 
   const refresh = async () => {
     await Promise.all([
-      utils.groups.subgroups.list.invalidate({ groupId, linkInviteToken }),
+      utils.groups.subgroups.list.invalidate({ groupId }),
       utils.groups.get.invalidate({ groupId }),
-      utils.groups.balances.list.invalidate({ groupId, linkInviteToken }),
+      utils.groups.balances.list.invalidate({ groupId }),
     ])
   }
 

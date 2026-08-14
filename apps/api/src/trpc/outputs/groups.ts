@@ -99,6 +99,7 @@ export const groupListItemSchema = z.object({
 
 export const getGroupOutputSchema = z.object({
   group: groupSchema,
+  canonicalGroupId: z.string(),
   displayName: z.string(),
   currentLedgerParticipantId: z.string().nullable(),
   currentMember: z

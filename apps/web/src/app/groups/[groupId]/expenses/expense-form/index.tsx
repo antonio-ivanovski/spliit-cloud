@@ -153,8 +153,6 @@ export function ExpenseForm(props: {
   runtimeFeatureFlags: RuntimeFeatureFlags
   currentLedgerParticipantId?: string | null
   readOnly?: boolean
-  /** Link-invite token for pending invitees (currency recommendations). */
-  linkInviteToken?: string
   /** Locked series edit scope when editing a recurring expense. */
   editScope?: 'OCCURRENCE' | 'THIS_AND_FUTURE' | null
 }) {
@@ -269,7 +267,6 @@ export function ExpenseForm(props: {
     form,
     group: props.group,
     groupCurrency,
-    linkInviteToken: props.linkInviteToken,
   })
 
   const isIncome = conversion.isIncome
@@ -493,7 +490,6 @@ export function ExpenseForm(props: {
           initialRecurrence={
             !isCreate ? (props.expense?.recurrence ?? null) : undefined
           }
-          linkInviteToken={props.linkInviteToken}
           suggestCategoryMutation={suggestCategoryMutation}
           runtimeFeatureFlags={props.runtimeFeatureFlags}
           receiptDocuments={form.getValues('documents').flatMap((document) => {

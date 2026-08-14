@@ -97,8 +97,6 @@ export function BasicDetailsCard(props: {
   initialRecurrence?: ExpenseFormInputValues['recurrence']
   heading?: string
   cancelLink?: ExpenseCancelLink
-  /** Link-invite token carried in the URL for pending invitees. */
-  linkInviteToken?: string
   suggestCategoryMutation: ReturnType<
     typeof trpc.groups.expenses.suggestCategory.useMutation
   >
@@ -164,7 +162,6 @@ export function BasicDetailsCard(props: {
     locale,
     readOnly,
     enableCategoryExtract: props.runtimeFeatureFlags.enableCategoryExtract,
-    linkInviteToken: props.linkInviteToken,
     suggestCategoryMutation: props.suggestCategoryMutation,
   })
   const [calculatorOpen, setCalculatorOpen] = useState(false)

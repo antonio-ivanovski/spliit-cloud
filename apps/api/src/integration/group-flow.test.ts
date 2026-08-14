@@ -241,7 +241,6 @@ describe('Group flow — real DB', () => {
     // Member2: paid 0, owes 1000+500=1500 → net -1500 (debtor)
     const balanceResult = await caller.balances.list({
       groupId,
-      linkInviteToken: undefined,
     })
     expect(balanceResult).toHaveProperty('balances')
     expect(balanceResult).toHaveProperty('suggestedSettlements')

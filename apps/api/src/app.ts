@@ -30,10 +30,6 @@ import {
 import { exportAccountBundle } from './routes/export-account-bundle'
 import { exportGroupBundle } from './routes/export-bundle'
 import { exportGroupCsv } from './routes/export-csv'
-import {
-  clearGroupViewerSession,
-  exchangeGroupViewerSession,
-} from './routes/group-view-session'
 import { proxyImportDocument } from './routes/import-document'
 import { reportGroupData } from './routes/report-data'
 import { createTRPCContext } from './trpc/init'
@@ -164,11 +160,6 @@ const oauthRegistrationRateLimit = clientRateLimitMiddleware({
   limit: 20,
   windowMs: 60 * 60 * 1000,
 })
-const groupViewerExchangeRateLimit = clientRateLimitMiddleware({
-  policy: 'group-view-session',
-  limit: 30,
-  windowMs: 60 * 1000,
-})
 app.use('/auth/oauth2/register', oauthRegistrationRateLimit)
 
 // Public, stateless optional-email unsubscribe endpoint. GET only renders a
@@ -219,10 +210,6 @@ app.get('/groups/:groupId/expenses/export/csv', exportRateLimit, (c) =>
   exportGroupCsv(c.req.raw, c.req.param('groupId')),
 )
 app.post('/imports/documents/file', (c) => proxyImportDocument(c.req.raw))
-app.post('/groups/:groupId/view-session', groupViewerExchangeRateLimit, (c) =>
-  exchangeGroupViewerSession(c.req.raw, c.req.param('groupId')),
-)
-app.post('/groups/view-session/clear', () => clearGroupViewerSession())
 app.post('/groups/:groupId/expenses/report-data', reportRateLimit, (c) =>
   reportGroupData(c.req.raw, c.req.param('groupId')),
 )

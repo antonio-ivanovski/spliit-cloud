@@ -153,10 +153,9 @@ describe('buildLinkPlaceholderEmail', () => {
 })
 
 describe('generateLinkToken', () => {
-  it('returns a high-entropy base64url string', () => {
+  it('returns an ordinary-looking 128-bit hexadecimal route id', () => {
     const token = generateLinkToken()
-    // 32 random bytes encoded as base64url (no padding) = 43 chars.
-    expect(token).toMatch(/^[A-Za-z0-9_-]{43}$/)
+    expect(token).toMatch(/^[a-f0-9]{32}$/)
   })
 
   it('produces a different value on every call', () => {

@@ -11,7 +11,6 @@ const mocks = vi.hoisted(() => ({
   invalidateActivities: vi.fn(),
   useCurrentGroup: vi.fn(),
   useIsReadOnlyGroupViewer: vi.fn(),
-  useLinkInviteToken: vi.fn(),
 }))
 
 vi.mock('@/trpc/client', () => ({
@@ -53,10 +52,6 @@ vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useIsReadOnlyGroupViewer: mocks.useIsReadOnlyGroupViewer,
 }))
 
-vi.mock('@/app/groups/[groupId]/use-link-invite-token', () => ({
-  useLinkInviteToken: mocks.useLinkInviteToken,
-}))
-
 import { ExpenseComments } from '../expense-comments'
 
 const comment = {
@@ -79,7 +74,6 @@ describe('ExpenseComments', () => {
       currentMember: { id: 'member-1' },
     })
     mocks.useIsReadOnlyGroupViewer.mockReturnValue(false)
-    mocks.useLinkInviteToken.mockReturnValue('invite-token')
     mocks.listQuery.mockReturnValue({
       data: { comments: [comment] },
       isLoading: false,
@@ -112,11 +106,9 @@ describe('ExpenseComments', () => {
     expect(mocks.invalidateComments).toHaveBeenCalledWith({
       groupId: 'group-1',
       expenseId: 'expense-1',
-      linkInviteToken: 'invite-token',
     })
     expect(mocks.invalidateActivities).toHaveBeenCalledWith({
       groupId: 'group-1',
-      linkInviteToken: 'invite-token',
     })
     expect(input).toHaveValue('')
   })
@@ -186,6 +178,15 @@ describe('ExpenseComments', () => {
     })
     render(<ExpenseComments groupId="group-1" expenseId="expense-1" />)
     expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+  })
+
+  it('hides delete controls from read-only viewers', () => {
+    mocks.useIsReadOnlyGroupViewer.mockReturnValue(true)
+    render(<ExpenseComments groupId="group-1" expenseId="expense-1" />)
+
+    expect(
+      screen.queryByRole('button', { name: 'Delete comment' }),
+    ).not.toBeInTheDocument()
   })
 
   it('only renders delete controls for comments marked deletable', async () => {

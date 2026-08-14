@@ -198,7 +198,6 @@ describe('ExpenseDocumentsInput — real API + real MaxIO', () => {
       currentLedgerParticipantId: string | null
     }>('groups.get', {
       groupId: createResult.groupId,
-      linkInviteToken: undefined,
     })
 
     testGroup = groupResult.group

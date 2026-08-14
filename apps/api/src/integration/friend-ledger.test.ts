@@ -514,7 +514,7 @@ describe('Friend ledger — real DB', () => {
         accountId: linkRecipientId,
         email: linkRecipientEmail,
         name: 'Link Recipient',
-      }).get({ groupId, linkInviteToken: token })
+      }).get({ groupId: token })
 
       const after = await prisma.groupMember.findUnique({
         where: { groupId_accountId: { groupId, accountId: linkRecipientId } },

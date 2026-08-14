@@ -3,12 +3,7 @@ import { z } from 'zod'
 import { getGroupExpenses } from '../../../../lib/api'
 import { expensePermissions } from '../../../../lib/api/resource-permissions'
 import { redactViewerDisplayName } from '../../../../lib/group-view'
-import {
-  hashLinkInviteToken,
-  groupReadProcedure,
-  linkInviteTokenInput,
-  loadGroupViewer,
-} from '../../../init'
+import { groupReadProcedure, loadGroupViewer } from '../../../init'
 import { listExpensesOutputSchema } from '../../../outputs/expenses'
 
 const matchModeSchema = z
@@ -38,9 +33,6 @@ const listExpensesInputSchema = z.object({
     .optional()
     .catch(undefined),
   sortDir: z.enum(['asc', 'desc']).optional().catch(undefined),
-  linkInviteToken: linkInviteTokenInput.describe(
-    'Raw link-invite token from the share URL. Grants read access to pending link-invitees.',
-  ),
 })
 
 export const listGroupExpensesProcedure = groupReadProcedure
@@ -67,7 +59,6 @@ export const listGroupExpensesProcedure = groupReadProcedure
         currencies,
         sortBy,
         sortDir,
-        linkInviteToken,
       },
       ctx,
     }) => {
@@ -75,10 +66,8 @@ export const listGroupExpensesProcedure = groupReadProcedure
         groupId,
         accountId: ctx.auth?.user.id,
         accountEmail: ctx.auth?.user.email,
-        linkTokenHash: await hashLinkInviteToken(linkInviteToken),
-        viewerSession: ctx.groupViewerSession,
       })
-      const expenses = await getGroupExpenses(groupId, {
+      const expenses = await getGroupExpenses(group.id, {
         ledgerId: ledger.id,
         offset: cursor,
         length: limit + 1,

@@ -9,7 +9,7 @@ import { checkDbConnection, testRunId } from './setup'
 await checkDbConnection()
 
 function getInviteToken(inviteUrl: string) {
-  return new URLSearchParams(new URL(inviteUrl).hash.slice(1)).get('invite')
+  return new URL(inviteUrl).pathname.split('/').at(-1) ?? null
 }
 
 describe('Invitation flow — real DB', () => {

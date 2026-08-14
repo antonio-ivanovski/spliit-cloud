@@ -15,8 +15,6 @@ export function useExpenseCurrencyConversion(args: {
   form: UseFormReturn<ExpenseFormInputValues>
   group: Group
   groupCurrency: Currency
-  /** Forwarded so link-invite viewers get the same recommendations. */
-  linkInviteToken?: string
 }): {
   originalCurrency: Currency
   originalCurrencies: ReturnType<typeof useCurrencies>
@@ -83,7 +81,6 @@ export function useExpenseCurrencyConversion(args: {
 
   const commonCurrenciesQuery = trpc.groups.expenses.commonCurrencies.useQuery({
     groupId: args.group.id,
-    linkInviteToken: args.linkInviteToken,
   })
   const pinnedCurrencyCode = args.group.currencyCode || undefined
   // Only swap the static common list after a successful response.
