@@ -48,7 +48,10 @@
       "peopleTab": "Personen",
       "unknownPerson": "Onbekende deelnemer",
       "viewPersonGroups": "Groepen van {name} bekijken ({currency})"
-    }
+    },
+    "savedGroupsAction": "Opgeslagen groepen bekijken",
+    "savedGroupsTitle": "Opgeslagen groepen",
+    "savedGroupsDescription": "Groepen die je op dit apparaat hebt opgeslagen."
   },
   "Header": {
     "signIn": "Inloggen",
@@ -603,7 +606,16 @@
     "viewLinkInvalid": {
       "title": "Deze alleen-lezen-link is ongeldig",
       "description": "De link is misvormd of komt niet overeen met alleen-lezen toegang voor deze groep."
-    }
+    },
+    "viewOnlyBannerSaveNoteAccount": "Sla deze groep op om hem op je overzicht terug te vinden.",
+    "viewOnlyBannerSaveNoteDevice": "Sla deze groep op om hem op dit apparaat terug te vinden als je terugkomt.",
+    "viewOnlyBannerSave": "Groep opslaan",
+    "viewOnlyBannerSavedAccount": "Opgeslagen. Je vindt de groep op je overzicht.",
+    "viewOnlyBannerSavedDevice": "Opgeslagen. Je vindt de groep op dit apparaat.",
+    "viewOnlyBadge": "Alleen-lezen",
+    "removeSavedView": "Verwijderen",
+    "removeSavedViewAccount": "Verwijderd van je overzicht.",
+    "removeSavedViewDevice": "Verwijderd van dit apparaat."
   },
   "GroupForm": {
     "title": "Groepsinformatie",

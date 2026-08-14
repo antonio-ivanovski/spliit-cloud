@@ -325,6 +325,18 @@ export function summarizePeopleBalances(
     .sort((a, b) => a.name.localeCompare(b.name) || a.key.localeCompare(b.key))
 }
 
+function recencyTimestamp(group: {
+  access: 'MEMBER' | 'VIEW_ONLY'
+  createdAt: string
+  lastOpenedAt: string | null
+  financialSummary: { latestExpenseCreatedAt: string | null }
+}) {
+  if (group.access === 'VIEW_ONLY') {
+    return group.lastOpenedAt ?? group.createdAt
+  }
+  return group.financialSummary.latestExpenseCreatedAt ?? group.createdAt
+}
+
 export const overviewRouter = createTRPCRouter({
   get: protectedProcedure
     .output(overviewOutputSchema)
@@ -370,7 +382,7 @@ export const overviewRouter = createTRPCRouter({
 
       const groupIds = memberships.map((membership) => membership.groupId)
       const preferenceRows = await prisma.accountGroupPreference.findMany({
-        where: { accountId, groupId: { in: groupIds } },
+        where: { accountId },
         select: { groupId: true, starred: true, hidden: true },
       })
       const preferences = new Map(
@@ -491,8 +503,69 @@ export const overviewRouter = createTRPCRouter({
           friendAccount,
           memberAccounts,
           financialSummary,
+          access: 'MEMBER' as const,
+          viewKey: null,
+          lastOpenedAt: null,
         }
       })
+
+      const savedViewRows = await prisma.accountSavedView.findMany({
+        where: {
+          accountId,
+          ...(groupIds.length > 0 ? { groupId: { notIn: groupIds } } : {}),
+        },
+        include: {
+          group: {
+            select: {
+              name: true,
+              ledger: {
+                select: { currency: true, currencyCode: true },
+              },
+              _count: {
+                select: {
+                  members: { where: { status: GroupMemberStatus.ACTIVE } },
+                },
+              },
+              members: {
+                where: { status: GroupMemberStatus.ACTIVE },
+                orderBy: { joinedAt: 'asc' },
+                take: 4,
+                select: { account: { select: accountSummarySelect } },
+              },
+            },
+          },
+        },
+      })
+      const savedGroups = savedViewRows.map((row) => ({
+        id: row.groupId,
+        name: row.group.name,
+        information: null,
+        archived: false,
+        createdAt: row.createdAt.toISOString(),
+        groupType: GroupType.GROUP,
+        ledger: {
+          currency: row.group.ledger.currency,
+          currencyCode: row.group.ledger.currencyCode,
+        },
+        memberCount: row.group._count.members,
+        currentMemberRole: 'MEMBER' as const,
+        preference: preferences.get(row.groupId) ?? {
+          starred: false,
+          hidden: false,
+        },
+        displayName: row.group.name,
+        friendAccount: null,
+        memberAccounts: row.group.members.map((member) => member.account),
+        financialSummary: {
+          expenseCount: 0,
+          netBalance: null,
+          state: 'UNAVAILABLE' as const,
+          latestExpenseCreatedAt: null,
+        },
+        access: 'VIEW_ONLY' as const,
+        viewKey: row.viewKey,
+        lastOpenedAt: row.lastOpenedAt.toISOString(),
+      }))
 
       const participantIds = Array.from(
         new Set(
@@ -541,9 +614,9 @@ export const overviewRouter = createTRPCRouter({
           balanceSummaries: summarizeBalances(groups),
           peopleBalances,
         },
-        groups: groups.sort((a, b) => {
-          const aTime = a.financialSummary.latestExpenseCreatedAt ?? a.createdAt
-          const bTime = b.financialSummary.latestExpenseCreatedAt ?? b.createdAt
+        groups: [...groups, ...savedGroups].sort((a, b) => {
+          const aTime = recencyTimestamp(a)
+          const bTime = recencyTimestamp(b)
           return bTime.localeCompare(aTime) || a.id.localeCompare(b.id)
         }),
       }

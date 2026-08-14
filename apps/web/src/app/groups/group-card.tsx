@@ -9,6 +9,7 @@ import {
   EyeOff,
   MoreHorizontal,
   Star,
+  Trash2,
   Users,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -25,7 +26,8 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { getCurrencyFromGroup } from '@/lib/currency'
 
-import type { AccountGroup } from './group-buckets'
+import { isViewOnlyGroup, type AccountGroup } from './group-buckets'
+import { ViewOnlyBadge } from './view-only-badge'
 
 /**
  * Per-card minimum height shared with `CreateCard`. Both are designed to match
@@ -40,12 +42,14 @@ export function GroupCard({
   onToggleStar,
   onToggleHidden,
   onToggleArchived,
+  onRemoveSavedView,
 }: {
   group: AccountGroup
   variant?: 'groups' | 'friends' | 'starred' | 'archived' | 'hidden'
-  onToggleStar: () => void
-  onToggleHidden: () => void
+  onToggleStar?: () => void
+  onToggleHidden?: () => void
   onToggleArchived?: () => void
+  onRemoveSavedView?: () => void
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const { t: tOverview } = useTranslation(undefined, {
@@ -58,6 +62,11 @@ export function GroupCard({
   const isArchived = group.archived
   const isFriend = group.groupType === 'FRIEND'
   const isPending = isFriend && group.memberCount === 1
+  const isViewOnly = isViewOnlyGroup(group)
+  const showActionsMenu =
+    Boolean(onToggleHidden) ||
+    Boolean(onToggleArchived && !isFriend) ||
+    Boolean(onRemoveSavedView)
   const memberAccounts = group.memberAccounts ?? []
   const currency = getCurrencyFromGroup(group.ledger)
   const financial = group.financialSummary ?? {
@@ -126,11 +135,17 @@ export function GroupCard({
               <Link
                 to="/groups/$groupId"
                 params={{ groupId: group.id }}
+                search={
+                  isViewOnly && group.viewKey
+                    ? { viewKey: group.viewKey }
+                    : undefined
+                }
                 className="min-w-0 truncate text-foreground no-underline outline-hidden before:absolute before:inset-0 before:rounded-lg before:content-[''] focus-visible:underline"
                 title={group.displayName}
               >
                 {group.displayName}
               </Link>
+              {isViewOnly && <ViewOnlyBadge />}
               {isPending && (
                 <span className="ms-1 inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground opacity-70">
                   {t('pending')}
@@ -138,90 +153,107 @@ export function GroupCard({
               )}
             </span>
             <span className="relative z-10 flex shrink-0 items-center">
-              <Button
-                size="icon"
-                variant="ghost"
-                className="-my-3 -ms-3 -me-1.5"
-                onClick={(event) => {
-                  event.stopPropagation()
-                  onToggleStar()
-                }}
-                aria-label={
-                  isStarred
-                    ? isFriend
-                      ? t('unstarFriend')
-                      : t('unstarGroup')
-                    : isFriend
-                      ? t('starFriend')
-                      : t('starGroup')
-                }
-              >
-                {isStarred ? (
-                  <Star
-                    fill="currentColor"
-                    className="h-4 w-4 text-orange-400"
-                  />
-                ) : (
-                  <Star className="h-4 w-4 text-muted-foreground" />
-                )}
-              </Button>
-              <DropdownMenu>
-                <DropdownMenuTrigger
-                  render={
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="-my-3 -ms-1.5 -me-2"
-                      onClick={(event) => event.stopPropagation()}
-                      aria-label={
-                        isFriend ? t('friendActions') : t('groupActions')
-                      }
-                    />
+              {onToggleStar ? (
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="-my-3 -ms-3 -me-1.5"
+                  onClick={(event) => {
+                    event.stopPropagation()
+                    onToggleStar()
+                  }}
+                  aria-label={
+                    isStarred
+                      ? isFriend
+                        ? t('unstarFriend')
+                        : t('unstarGroup')
+                      : isFriend
+                        ? t('starFriend')
+                        : t('starGroup')
                   }
                 >
-                  <MoreHorizontal className="h-4 w-4" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem
-                    onClick={(event) => {
-                      event.stopPropagation()
-                      onToggleHidden()
-                    }}
-                  >
-                    {isHidden ? (
-                      <>
-                        <Eye className="me-2 h-4 w-4" />
-                        {isFriend ? t('unhideFriend') : t('unhide')}
-                      </>
-                    ) : (
-                      <>
-                        <EyeOff className="me-2 h-4 w-4" />
-                        {isFriend ? t('hideFriend') : t('hide')}
-                      </>
-                    )}
-                  </DropdownMenuItem>
-                  {onToggleArchived && !isFriend && (
-                    <DropdownMenuItem
-                      onClick={(event) => {
-                        event.stopPropagation()
-                        onToggleArchived()
-                      }}
-                    >
-                      {isArchived ? (
-                        <>
-                          <ArchiveRestore className="me-2 h-4 w-4" />
-                          {t('unarchiveGroup')}
-                        </>
-                      ) : (
-                        <>
-                          <Archive className="me-2 h-4 w-4" />
-                          {t('archiveGroup')}
-                        </>
-                      )}
-                    </DropdownMenuItem>
+                  {isStarred ? (
+                    <Star
+                      fill="currentColor"
+                      className="h-4 w-4 text-orange-400"
+                    />
+                  ) : (
+                    <Star className="h-4 w-4 text-muted-foreground" />
                   )}
-                </DropdownMenuContent>
-              </DropdownMenu>
+                </Button>
+              ) : null}
+              {showActionsMenu ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger
+                    render={
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="-my-3 -ms-1.5 -me-2"
+                        onClick={(event) => event.stopPropagation()}
+                        aria-label={
+                          isFriend ? t('friendActions') : t('groupActions')
+                        }
+                      />
+                    }
+                  >
+                    <MoreHorizontal className="h-4 w-4" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    {onToggleHidden ? (
+                      <DropdownMenuItem
+                        onClick={(event) => {
+                          event.stopPropagation()
+                          onToggleHidden()
+                        }}
+                      >
+                        {isHidden ? (
+                          <>
+                            <Eye className="me-2 h-4 w-4" />
+                            {isFriend ? t('unhideFriend') : t('unhide')}
+                          </>
+                        ) : (
+                          <>
+                            <EyeOff className="me-2 h-4 w-4" />
+                            {isFriend ? t('hideFriend') : t('hide')}
+                          </>
+                        )}
+                      </DropdownMenuItem>
+                    ) : null}
+                    {onToggleArchived && !isFriend ? (
+                      <DropdownMenuItem
+                        onClick={(event) => {
+                          event.stopPropagation()
+                          onToggleArchived()
+                        }}
+                      >
+                        {isArchived ? (
+                          <>
+                            <ArchiveRestore className="me-2 h-4 w-4" />
+                            {t('unarchiveGroup')}
+                          </>
+                        ) : (
+                          <>
+                            <Archive className="me-2 h-4 w-4" />
+                            {t('archiveGroup')}
+                          </>
+                        )}
+                      </DropdownMenuItem>
+                    ) : null}
+                    {onRemoveSavedView ? (
+                      <DropdownMenuItem
+                        onClick={(event) => {
+                          event.stopPropagation()
+                          onRemoveSavedView()
+                        }}
+                      >
+                        <Trash2 className="me-2 h-4 w-4" />
+                        {t('removeSavedView')}
+                      </DropdownMenuItem>
+                    ) : null}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : null}
             </span>
           </div>
           <div className="text-xs font-normal text-muted-foreground">
@@ -244,7 +276,9 @@ export function GroupCard({
                   )}
                 </div>
               )}
-              <div className="truncate">{renderFinancialSummary()}</div>
+              {isViewOnly ? null : (
+                <div className="truncate">{renderFinancialSummary()}</div>
+              )}
             </div>
           </div>
         </div>

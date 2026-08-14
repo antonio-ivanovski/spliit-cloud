@@ -48,7 +48,10 @@
       "peopleTab": "Osoby",
       "unknownPerson": "Nieznany uczestnik",
       "viewPersonGroups": "Wyświetl grupy użytkownika {name} ({currency})"
-    }
+    },
+    "savedGroupsAction": "Zobacz zapisane grupy",
+    "savedGroupsTitle": "Zapisane grupy",
+    "savedGroupsDescription": "Grupy zapisane na tym urządzeniu."
   },
   "Header": {
     "signIn": "Zaloguj się",
@@ -615,7 +618,16 @@
     "viewLinkInvalid": {
       "title": "Ten link tylko do odczytu jest nieprawidłowy",
       "description": "Link jest nieprawidłowo sformatowany lub nie pasuje do żadnego dostępu tylko do odczytu w tej grupie."
-    }
+    },
+    "viewOnlyBannerSaveNoteAccount": "Zapisz tę grupę, aby znaleźć ją na pulpicie.",
+    "viewOnlyBannerSaveNoteDevice": "Zapisz tę grupę, aby znaleźć ją na tym urządzeniu po powrocie.",
+    "viewOnlyBannerSave": "Zapisz grupę",
+    "viewOnlyBannerSavedAccount": "Zapisano. Znajdziesz ją na pulpicie.",
+    "viewOnlyBannerSavedDevice": "Zapisano. Znajdziesz ją na tym urządzeniu.",
+    "viewOnlyBadge": "Tylko odczyt",
+    "removeSavedView": "Usuń",
+    "removeSavedViewAccount": "Usunięto z pulpitu.",
+    "removeSavedViewDevice": "Usunięto z tego urządzenia."
   },
   "GroupForm": {
     "title": "Informacje o grupie",

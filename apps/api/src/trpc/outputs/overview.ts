@@ -21,6 +21,9 @@ export const overviewGroupSchema = accountGroupSchema.extend({
     state: overviewFinancialStateSchema,
     latestExpenseCreatedAt: z.string().nullable(),
   }),
+  access: z.enum(['MEMBER', 'VIEW_ONLY']).default('MEMBER'),
+  viewKey: z.string().nullable().default(null),
+  lastOpenedAt: z.string().nullable().default(null),
 })
 
 export const overviewOutputSchema = z.object({

@@ -1,3 +1,4 @@
+import type { DeviceSavedView } from '@/lib/saved-view-groups'
 import type { AppRouterOutput } from '@spliit/api/router'
 import {
   accountExportGroupSectionFor,
@@ -6,6 +7,44 @@ import {
 } from '@spliit/domain'
 
 export type AccountGroup = AppRouterOutput['overview']['get']['groups'][number]
+
+export function isViewOnlyGroup(group: AccountGroup) {
+  return group.access === 'VIEW_ONLY'
+}
+
+function recencyTimestamp(group: AccountGroup) {
+  if (isViewOnlyGroup(group)) {
+    return group.lastOpenedAt ?? group.createdAt
+  }
+  return group.financialSummary?.latestExpenseCreatedAt ?? group.createdAt
+}
+
+export function savedViewToAccountGroup(view: DeviceSavedView): AccountGroup {
+  return {
+    id: view.groupId,
+    name: view.name,
+    information: null,
+    archived: false,
+    createdAt: view.lastOpenedAt,
+    groupType: 'GROUP',
+    ledger: { currency: '', currencyCode: null },
+    memberCount: view.memberCount,
+    currentMemberRole: 'MEMBER',
+    preference: { starred: false, hidden: false },
+    displayName: view.name,
+    friendAccount: null,
+    memberAccounts: [],
+    financialSummary: {
+      expenseCount: 0,
+      netBalance: null,
+      state: 'UNAVAILABLE',
+      latestExpenseCreatedAt: null,
+    },
+    access: 'VIEW_ONLY',
+    viewKey: view.viewKey,
+    lastOpenedAt: view.lastOpenedAt,
+  }
+}
 
 export type GroupType = AccountGroup['groupType']
 
@@ -41,6 +80,11 @@ const bucketBySection = {
  * rather hide it from the archived section.
  */
 export function bucketFor(group: AccountGroup): GroupBucket {
+  if (group.access === 'VIEW_ONLY') {
+    if (group.preference.hidden) return 'hidden'
+    if (group.preference.starred) return 'starred'
+    return 'groups'
+  }
   return bucketBySection[
     accountExportGroupSectionFor({
       groupType: group.groupType,
@@ -63,8 +107,8 @@ export function partitionGroups(groups: AccountGroup[]) {
     grouped[bucketFor(group)].push(group)
   }
   const sortByRecentExpense = (a: AccountGroup, b: AccountGroup) => {
-    const aTime = a.financialSummary?.latestExpenseCreatedAt ?? a.createdAt
-    const bTime = b.financialSummary?.latestExpenseCreatedAt ?? b.createdAt
+    const aTime = recencyTimestamp(a)
+    const bTime = recencyTimestamp(b)
     return bTime.localeCompare(aTime) || a.id.localeCompare(b.id)
   }
 

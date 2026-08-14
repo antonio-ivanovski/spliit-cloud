@@ -20,9 +20,10 @@ export function UnlinkedParticipantsSection({
   onRemove: (participant: { ledgerParticipantId: string; name: string }) => void
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
-  const { data, isLoading } = trpc.groups.importLinks.listUnlinked.useQuery({
-    groupId,
-  })
+  const { data, isLoading } = trpc.groups.importLinks.listUnlinked.useQuery(
+    { groupId },
+    { enabled: canManage },
+  )
 
   const [linkTarget, setLinkTarget] = useState<{
     id: string

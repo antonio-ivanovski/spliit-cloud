@@ -48,7 +48,10 @@
       "peopleTab": "Kişiler",
       "unknownPerson": "Bilinmeyen katılımcı",
       "viewPersonGroups": "{name} için grupları görüntüle ({currency})"
-    }
+    },
+    "savedGroupsAction": "Kayıtlı grupları görüntüle",
+    "savedGroupsTitle": "Kayıtlı gruplar",
+    "savedGroupsDescription": "Bu cihazda kaydettiğiniz gruplar."
   },
   "Header": {
     "signIn": "Oturum aç",
@@ -603,7 +606,16 @@
     "viewLinkInvalid": {
       "title": "Bu salt görüntüleme bağlantısı geçersiz",
       "description": "Bağlantı hatalı biçimlendirilmiş veya bu gruptaki hiçbir salt görüntüleme erişimiyle eşleşmiyor."
-    }
+    },
+    "viewOnlyBannerSaveNoteAccount": "Bu grubu ana sayfanızda bulmak için kaydedin.",
+    "viewOnlyBannerSaveNoteDevice": "Daha sonra bu cihazda bulmak için bu grubu kaydedin.",
+    "viewOnlyBannerSave": "Grubu kaydet",
+    "viewOnlyBannerSavedAccount": "Kaydedildi. Ana sayfanızda bulabilirsiniz.",
+    "viewOnlyBannerSavedDevice": "Kaydedildi. Bu cihazda bulabilirsiniz.",
+    "viewOnlyBadge": "Yalnızca görüntüleme",
+    "removeSavedView": "Kaldır",
+    "removeSavedViewAccount": "Ana sayfanızdan kaldırıldı.",
+    "removeSavedViewDevice": "Bu cihazdan kaldırıldı."
   },
   "GroupForm": {
     "title": "Grup bilgileri",

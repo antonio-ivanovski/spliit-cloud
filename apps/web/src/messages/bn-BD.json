@@ -2080,7 +2080,16 @@
     "viewLinkInvalid": {
       "title": "এই শুধু-দেখার লিংক অবৈধ",
       "description": "লিংকটি বিকৃত বা এই গ্রুপের কোনো শুধু-দেখার অনুমতির সাথে মেলে না।"
-    }
+    },
+    "viewOnlyBannerSaveNoteAccount": "ড্যাশবোর্ডে খুঁজে পেতে এই গ্রুপ সংরক্ষণ করুন।",
+    "viewOnlyBannerSaveNoteDevice": "ফিরে এলে এই ডিভাইসে খুঁজে পেতে এই গ্রুপ সংরক্ষণ করুন।",
+    "viewOnlyBannerSave": "গ্রুপ সংরক্ষণ করুন",
+    "viewOnlyBannerSavedAccount": "সংরক্ষণ করা হয়েছে। আপনি এটি আপনার ড্যাশবোর্ডে পাবেন।",
+    "viewOnlyBannerSavedDevice": "সংরক্ষণ করা হয়েছে। আপনি এটি এই ডিভাইসে পাবেন।",
+    "viewOnlyBadge": "শুধুমাত্র দেখা",
+    "removeSavedView": "সরান",
+    "removeSavedViewAccount": "আপনার ড্যাশবোর্ড থেকে সরানো হয়েছে।",
+    "removeSavedViewDevice": "এই ডিভাইস থেকে সরানো হয়েছে।"
   },
   "Header": {
     "signIn": "সাইন ইন",
@@ -2144,7 +2153,10 @@
       "peopleTab": "মানুষ",
       "unknownPerson": "অজানা অংশগ্রহণকারী",
       "viewPersonGroups": "{name}-এর গোষ্ঠীগুলো দেখুন ({currency})"
-    }
+    },
+    "savedGroupsAction": "সংরক্ষিত গ্রুপ দেখুন",
+    "savedGroupsTitle": "সংরক্ষিত গ্রুপ",
+    "savedGroupsDescription": "এই ডিভাইসে আপনি যে গ্রুপগুলো সংরক্ষণ করেছেন।"
   },
   "Information": {
     "title": "তথ্য",

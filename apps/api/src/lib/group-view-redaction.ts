@@ -68,7 +68,7 @@ export function redactGroupForViewer(
       account: {
         id: publicId(group.id, 'account', member.account.id),
         name: member.account.name,
-        image: null,
+        image: member.account.image ?? null,
       },
       ledgerParticipant: member.ledgerParticipant
         ? {
@@ -84,7 +84,7 @@ export function redactGroupForViewer(
         ? {
             id: publicId(group.id, 'account', participant.account.id),
             name: participant.account.name,
-            image: null,
+            image: participant.account.image ?? null,
           }
         : null,
     })),

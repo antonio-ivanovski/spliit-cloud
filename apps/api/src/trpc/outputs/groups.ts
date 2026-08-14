@@ -124,6 +124,7 @@ export const getGroupOutputSchema = z.object({
     canMutate: z.boolean(),
     canAcceptInvitation: z.boolean(),
   }),
+  hasSavedView: z.boolean().default(false),
 })
 
 export const getGroupDetailsOutputSchema = z.object({

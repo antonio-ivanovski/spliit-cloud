@@ -56,6 +56,7 @@ model Account {
   // Invitations this account has issued as an owner/admin.
   sentInvitations               GroupInvitation[]               @relation("InvitationInviter")
   groupPreferences              AccountGroupPreference[]
+  savedViews                    AccountSavedView[]
   preference                    AccountPreference?
   defaultSplits                 AccountGroupDefaultSplit[]
   pushSubscriptions             PushSubscription[]
@@ -462,6 +463,7 @@ model Group {
   // access is unavailable; replacing/removing it invalidates the link.
   publicViewKey      String?                    @unique
   accountPreferences AccountGroupPreference[]
+  savedViews         AccountSavedView[]
   defaultSplits      AccountGroupDefaultSplit[]
   budgets            GroupBudget[]
   subgroupsEnabled   Boolean                    @default(false)
@@ -656,6 +658,27 @@ model AccountGroupPreference {
   hidden  Boolean @default(false)
 
   @@unique([accountId, groupId])
+}
+
+// Per-account bookmark of a public view-only group. Not membership: opening
+// still requires `viewKey`. Replacing/removing the group's public key leaves
+// this row in place until the account removes it.
+model AccountSavedView {
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId String
+  group     Group   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId   String
+
+  /// Stored in plaintext so the client can rebuild `?viewKey=`. Hashing is out of scope.
+  viewKey      String
+  lastOpenedAt DateTime
+
+  @@unique([accountId, groupId])
+  @@index([accountId, lastOpenedAt])
 }
 
 model AccountGroupDefaultSplit {

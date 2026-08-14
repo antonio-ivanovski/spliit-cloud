@@ -20,6 +20,7 @@ const mocks = vi.hoisted(() => ({
   // Mutations (simple mutateAsync)
   mockSetPreference: vi.fn(),
   mockArchiveGroup: vi.fn(),
+  mockRemoveSavedView: vi.fn(),
   // Mutation callbacks (accept / decline use onSuccess/onError options)
   mockInvitationsAcceptMutate: vi.fn(),
   mockInvitationsDeclineMutate: vi.fn(),
@@ -59,6 +60,13 @@ vi.mock('@/trpc/client', () => ({
         useMutation: () => ({
           mutateAsync: mocks.mockArchiveGroup,
         }),
+      },
+      savedViews: {
+        remove: {
+          useMutation: () => ({
+            mutateAsync: mocks.mockRemoveSavedView,
+          }),
+        },
       },
     },
     invitations: {
@@ -216,6 +224,7 @@ describe('RecentGroupList', () => {
     })
     mocks.mockSetPreference.mockResolvedValue(undefined)
     mocks.mockArchiveGroup.mockResolvedValue(undefined)
+    mocks.mockRemoveSavedView.mockResolvedValue(undefined)
     mocks.mockInvalidateAccountGroups.mockResolvedValue(undefined)
     mocks.mockInvalidateOverview.mockResolvedValue(undefined)
     mocks.mockInvalidateGroupsGet.mockResolvedValue(undefined)
@@ -706,6 +715,41 @@ describe('RecentGroupList', () => {
     expect(mocks.mockSetPreference).toHaveBeenCalledWith({
       groupId: 'g-unstar',
       starred: false,
+    })
+  })
+
+  it('lets a signed-in user star, hide, and remove a view-only bookmark', async () => {
+    const group = makeGroup({
+      id: 'g-view-only',
+      name: 'Cabin trip',
+      displayName: 'Cabin trip',
+      access: 'VIEW_ONLY',
+      viewKey: 'secret',
+    })
+    mocks.mockUseOverviewQuery.mockReturnValue({
+      data: { groups: [group] },
+      isLoading: false,
+    })
+
+    const { user } = render(<RecentGroupList />)
+
+    await user.click(screen.getByRole('button', { name: /star group/i }))
+    expect(mocks.mockSetPreference).toHaveBeenCalledWith({
+      groupId: 'g-view-only',
+      starred: true,
+    })
+
+    await user.click(screen.getByRole('button', { name: /group actions/i }))
+    await user.click(screen.getByText('Hide group'))
+    expect(mocks.mockSetPreference).toHaveBeenCalledWith({
+      groupId: 'g-view-only',
+      hidden: true,
+    })
+
+    await user.click(screen.getByRole('button', { name: /group actions/i }))
+    await user.click(screen.getByText('Remove'))
+    expect(mocks.mockRemoveSavedView).toHaveBeenCalledWith({
+      groupId: 'g-view-only',
     })
   })
 

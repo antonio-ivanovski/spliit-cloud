@@ -48,7 +48,10 @@
       "peopleTab": "Persones",
       "unknownPerson": "Participant desconegut",
       "viewPersonGroups": "Veure els grups de {name} ({currency})"
-    }
+    },
+    "savedGroupsAction": "Veure els grups desats",
+    "savedGroupsTitle": "Grups desats",
+    "savedGroupsDescription": "Grups que has desat en aquest dispositiu."
   },
   "Header": {
     "signIn": "Inicia sessió",
@@ -609,7 +612,16 @@
     "viewLinkInvalid": {
       "title": "Aquest enllaç de només lectura no és vàlid",
       "description": "L'enllaç té un format incorrecte o no coincideix amb cap accés de només lectura d'aquest grup."
-    }
+    },
+    "viewOnlyBannerSaveNoteAccount": "Desa aquest grup per trobar-lo a l'inici.",
+    "viewOnlyBannerSaveNoteDevice": "Desa aquest grup per trobar-lo en aquest dispositiu quan hi tornis.",
+    "viewOnlyBannerSave": "Desa el grup",
+    "viewOnlyBannerSavedAccount": "Desat. El trobaràs a l'inici.",
+    "viewOnlyBannerSavedDevice": "Desat. El trobaràs en aquest dispositiu.",
+    "viewOnlyBadge": "Només de lectura",
+    "removeSavedView": "Suprimeix",
+    "removeSavedViewAccount": "S'ha suprimit de l'inici.",
+    "removeSavedViewDevice": "S'ha suprimit d'aquest dispositiu."
   },
   "GroupForm": {
     "title": "Informació del grup",

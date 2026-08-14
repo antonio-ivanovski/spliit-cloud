@@ -221,6 +221,7 @@ export function GroupLayoutClient({
           currentInvitation: data.currentInvitation ?? null,
           linkInviteState: data.linkInviteState ?? null,
           viewer: data.viewer,
+          hasSavedView: data.hasSavedView,
         }
 
   return (

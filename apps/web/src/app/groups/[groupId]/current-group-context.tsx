@@ -46,6 +46,7 @@ type GroupContext =
       // no token (or it didn't match anything).
       linkInviteState: LinkInviteState | null
       viewer?: Viewer
+      hasSavedView?: boolean
     }
   | {
       isLoading: true
@@ -57,6 +58,7 @@ type GroupContext =
       currentInvitation: undefined
       linkInviteState: undefined
       viewer?: undefined
+      hasSavedView?: undefined
     }
 
 const CurrentGroupContext = createContext<GroupContext | null>(null)

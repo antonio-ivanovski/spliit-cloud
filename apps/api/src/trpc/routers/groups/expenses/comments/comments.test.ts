@@ -82,6 +82,48 @@ describe('groups.expenses.comments', () => {
     ])
   })
 
+  it('keeps author images for public view-only readers', async () => {
+    prismaMock.group.findUnique.mockResolvedValue({
+      id: groupId,
+      name: 'Trip',
+      groupType: 'GROUP',
+      publicViewKey: 'view-secret',
+      ledgerId: 'ledger-1',
+      ledger: { id: 'ledger-1', currencyCode: null },
+      archived: false,
+    } as never)
+    prismaMock.groupMember.findUnique.mockResolvedValue(null as never)
+    prismaMock.groupInvitation.findFirst.mockResolvedValue(null as never)
+    prismaMock.expense.findFirst.mockResolvedValue({ id: expenseId } as never)
+    prismaMock.expenseComment.findMany.mockResolvedValue([
+      {
+        id: 'comment-1',
+        expenseId,
+        authorAccountId: accountId,
+        authorName: 'Alice',
+        authorAccount: { image: 'alice.png' },
+        text: 'First',
+        createdAt: new Date('2026-01-01T00:00:00Z'),
+      },
+    ] as never)
+
+    const result = await caller().expenses.comments.list({
+      groupId,
+      expenseId,
+      viewKey: 'view-secret',
+    })
+
+    expect(result.comments).toEqual([
+      {
+        id: 'comment-1',
+        body: 'First',
+        createdAt: new Date('2026-01-01T00:00:00Z'),
+        author: { accountId: 'public', name: 'Alice', image: 'alice.png' },
+        canDelete: false,
+      },
+    ])
+  })
+
   it('trims and atomically creates a comment activity', async () => {
     activeMember()
     prismaMock.expense.findFirst.mockResolvedValue({

@@ -48,7 +48,10 @@
       "peopleTab": "人员",
       "unknownPerson": "未知参与者",
       "viewPersonGroups": "查看 {name} 的群组（{currency}）"
-    }
+    },
+    "savedGroupsAction": "查看已保存的群组",
+    "savedGroupsTitle": "已保存的群组",
+    "savedGroupsDescription": "你在此设备上保存的群组。"
   },
   "Header": {
     "signIn": "登录",
@@ -597,7 +600,16 @@
     "viewLinkInvalid": {
       "title": "此只读链接无效",
       "description": "该链接格式错误或与本群组中的任何仅限查看的访问权限都不匹配。"
-    }
+    },
+    "viewOnlyBannerSaveNoteAccount": "保存此群组，即可在首页找到它。",
+    "viewOnlyBannerSaveNoteDevice": "保存此群组，下次回来时可在此设备上找到它。",
+    "viewOnlyBannerSave": "保存群组",
+    "viewOnlyBannerSavedAccount": "已保存。你可以在首页找到它。",
+    "viewOnlyBannerSavedDevice": "已保存。你可以在此设备上找到它。",
+    "viewOnlyBadge": "仅查看",
+    "removeSavedView": "移除",
+    "removeSavedViewAccount": "已从首页移除。",
+    "removeSavedViewDevice": "已从此设备移除。"
   },
   "GroupForm": {
     "title": "群组信息",

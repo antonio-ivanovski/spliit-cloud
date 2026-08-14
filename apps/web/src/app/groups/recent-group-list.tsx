@@ -43,7 +43,7 @@ import { CollapsibleSection } from './collapsible-section'
 import { CreateCard } from './create-card'
 import { ForceArchiveDialogSection } from './force-archive-dialog-section'
 import type { AccountGroup } from './group-buckets'
-import { partitionGroups } from './group-buckets'
+import { isViewOnlyGroup, partitionGroups } from './group-buckets'
 import { GroupCard } from './group-card'
 import { PendingInvitations } from './pending-invitations'
 
@@ -95,6 +95,8 @@ export function RecentGroupList() {
   const { mutateAsync: setPreference } =
     trpc.account.setPreference.useMutation()
   const { mutateAsync: archiveGroup } = trpc.groups.archive.useMutation()
+  const { mutateAsync: removeSavedView } =
+    trpc.groups.savedViews.remove.useMutation()
   const { toast } = useToast()
   const mascot = useMascotController()
 
@@ -173,8 +175,18 @@ export function RecentGroupList() {
               variant !== 'friends' &&
               variant !== 'hidden' &&
               group.currentMemberRole === 'ADMIN' &&
-              group.groupType !== 'FRIEND'
+              group.groupType !== 'FRIEND' &&
+              !isViewOnlyGroup(group)
                 ? () => toggleArchived(group)
+                : undefined
+            }
+            onRemoveSavedView={
+              isViewOnlyGroup(group)
+                ? async () => {
+                    await removeSavedView({ groupId: group.id })
+                    await invalidateAccountGroupLists(utils)
+                    toast({ description: t('removeSavedViewAccount') })
+                  }
                 : undefined
             }
           />

@@ -48,7 +48,10 @@
       "peopleTab": "Persone",
       "unknownPerson": "Partecipante sconosciuto",
       "viewPersonGroups": "Visualizza i gruppi di {name} ({currency})"
-    }
+    },
+    "savedGroupsAction": "Vedi i gruppi salvati",
+    "savedGroupsTitle": "Gruppi salvati",
+    "savedGroupsDescription": "Gruppi che hai salvato su questo dispositivo."
   },
   "Header": {
     "signIn": "Accedi",
@@ -609,7 +612,16 @@
     "viewLinkInvalid": {
       "title": "Questo link in sola lettura non è valido",
       "description": "Il link è in un formato non valido o non corrisponde a nessun accesso in sola lettura di questo gruppo."
-    }
+    },
+    "viewOnlyBannerSaveNoteAccount": "Salva questo gruppo per ritrovarlo nella home.",
+    "viewOnlyBannerSaveNoteDevice": "Salva questo gruppo per ritrovarlo su questo dispositivo quando torni.",
+    "viewOnlyBannerSave": "Salva gruppo",
+    "viewOnlyBannerSavedAccount": "Salvato. Lo troverai nella home.",
+    "viewOnlyBannerSavedDevice": "Salvato. Lo troverai su questo dispositivo.",
+    "viewOnlyBadge": "Sola lettura",
+    "removeSavedView": "Rimuovi",
+    "removeSavedViewAccount": "Rimosso dalla home.",
+    "removeSavedViewDevice": "Rimosso da questo dispositivo."
   },
   "GroupForm": {
     "title": "Informazioni del gruppo",

@@ -38,6 +38,7 @@ describe('Public view-only query param — real DB', () => {
         email: adminEmail,
         emailVerified: true,
         name: 'Public Route Admin',
+        image: 'https://example.com/public-route.png',
       },
     })
     const created = await adminCaller().create({
@@ -67,11 +68,12 @@ describe('Public view-only query param — real DB', () => {
   it('uses the canonical group id plus viewKey across group read procedures', async () => {
     const caller = publicCaller()
     const input = { groupId, viewKey }
-    const [group, details, balances, activities] = await Promise.all([
+    const [group, details, balances, activities, stats] = await Promise.all([
       caller.get(input),
       caller.getDetails(input),
       caller.balances.list(input),
       caller.activities.list(input),
+      caller.stats.get(input),
     ])
 
     expect(group).toMatchObject({
@@ -80,9 +82,12 @@ describe('Public view-only query param — real DB', () => {
     expect(group.group.id).toBe(groupId)
     expect(details.group.id).toBe(groupId)
     expect(details.group.invitations).toEqual([])
-    expect(details.group.members[0]?.account.image).toBeNull()
+    expect(details.group.members[0]?.account.image).toBe(
+      'https://example.com/public-route.png',
+    )
     expect(balances).toHaveProperty('balances')
     expect(activities).toHaveProperty('activities')
+    expect(stats).toHaveProperty('dashboard')
   })
 
   it('upgrades an active member who opens the public view link', async () => {

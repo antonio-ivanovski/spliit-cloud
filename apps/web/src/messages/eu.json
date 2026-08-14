@@ -48,7 +48,10 @@
       "peopleTab": "Pertsonak",
       "unknownPerson": "Parte-hartzaile ezezaguna",
       "viewPersonGroups": "Ikusi {name}(r)en taldeak ({currency})"
-    }
+    },
+    "savedGroupsAction": "Ikusi gordetako taldeak",
+    "savedGroupsTitle": "Gordetako taldeak",
+    "savedGroupsDescription": "Gailu honetan gorde dituzun taldeak."
   },
   "Header": {
     "signIn": "Hasi saioa",
@@ -609,7 +612,16 @@
     "viewLinkInvalid": {
       "title": "Ikusteko soilik esteka hau ez da baliozkoa",
       "description": "Estekak formatu okerra du edo ez dagokio taldeko inolako ikusteko soilik sarbideari."
-    }
+    },
+    "viewOnlyBannerSaveNoteAccount": "Gorde talde hau hasieran aurkitzeko.",
+    "viewOnlyBannerSaveNoteDevice": "Gorde talde hau gailu honetan aurkitzeko itzultzen zarenean.",
+    "viewOnlyBannerSave": "Gorde taldea",
+    "viewOnlyBannerSavedAccount": "Gordeta. Hasieran aurkituko duzu.",
+    "viewOnlyBannerSavedDevice": "Gordeta. Gailu honetan aurkituko duzu.",
+    "viewOnlyBadge": "Ikusteko soilik",
+    "removeSavedView": "Kendu",
+    "removeSavedViewAccount": "Hasieratik kendu da.",
+    "removeSavedViewDevice": "Gailu honetatik kendu da."
   },
   "GroupForm": {
     "title": "Taldeko informazioa",

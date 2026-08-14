@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
+import { DEVICE_SAVED_VIEWS_KEY } from '@/lib/saved-view-groups'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { act, render, screen } from '@/test/test-utils'
 
@@ -66,6 +67,7 @@ describe('HomePage (signed-out)', () => {
   afterEach(() => {
     vi.clearAllMocks()
     vi.useRealTimers()
+    window.localStorage.removeItem(DEVICE_SAVED_VIEWS_KEY)
   })
 
   it('renders home page with title and description', () => {
@@ -101,6 +103,38 @@ describe('HomePage (signed-out)', () => {
     render(<HomePage />)
 
     expect(screen.getByTestId('auth-panel')).toBeInTheDocument()
+  })
+
+  it('keeps the marketing landing and opens saved groups from a subtle action', async () => {
+    window.localStorage.setItem(
+      DEVICE_SAVED_VIEWS_KEY,
+      JSON.stringify([
+        {
+          groupId: 'group-1',
+          viewKey: 'secret',
+          name: 'Cabin trip',
+          memberCount: 3,
+          lastOpenedAt: '2026-08-01T00:00:00.000Z',
+        },
+      ]),
+    )
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: null,
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+
+    const { user } = render(<HomePage />)
+
+    expect(screen.getByTestId('landing-bill')).toBeInTheDocument()
+    expect(screen.getByTestId('auth-panel')).toBeInTheDocument()
+    expect(screen.queryByText('Cabin trip')).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'View saved groups' }))
+    expect(screen.getByText('Cabin trip')).toBeInTheDocument()
+    expect(screen.getByText('View-only')).toBeInTheDocument()
   })
 
   it('shows Bill in the landing content instead of feature cards', async () => {

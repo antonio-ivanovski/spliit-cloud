@@ -527,4 +527,63 @@ describe('GroupMembers', () => {
     expect(leaveButton).not.toBeDisabled()
     expect(screen.queryByRole('note')).not.toBeInTheDocument()
   })
+
+  it('shows avatars and joined dates for view-only members without emails', () => {
+    vi.mocked(useCurrentGroup).mockReturnValue({
+      isLoading: false,
+      groupId: 'group-1',
+      group: {
+        ...mockGroup,
+        members: [
+          {
+            id: 'gm-1',
+            accountId: 'user-1',
+            role: 'ADMIN',
+            status: 'ACTIVE',
+            joinedAt: new Date('2026-01-15T00:00:00.000Z'),
+            ledgerParticipant: { id: 'lp-1' },
+            account: {
+              id: 'user-1',
+              name: 'Alice',
+              image: 'https://example.com/alice.png',
+            },
+          },
+        ],
+        participants: [
+          {
+            id: 'lp-1',
+            name: 'Alice',
+            account: {
+              id: 'user-1',
+              name: 'Alice',
+              image: 'https://example.com/alice.png',
+            },
+            pending: false,
+            unlinked: false,
+          },
+        ],
+      } as unknown as Group,
+      displayName: mockGroup.name,
+      currentLedgerParticipantId: null,
+      currentMember: null,
+      currentInvitation: null,
+      linkInviteState: null,
+      viewer: {
+        source: 'PUBLIC_LINK',
+        access: 'READ_ONLY',
+        canMutate: false,
+        canAcceptInvitation: false,
+      },
+    })
+
+    render(<GroupMembers />)
+
+    expect(screen.getByText('Alice')).toBeInTheDocument()
+    expect(screen.getByText('Admin')).toBeInTheDocument()
+    expect(
+      document.querySelector('img[src="https://example.com/alice.png"]'),
+    ).not.toBeNull()
+    expect(screen.queryByText('alice@example.com')).not.toBeInTheDocument()
+    expect(screen.queryByText('Add people')).not.toBeInTheDocument()
+  })
 })

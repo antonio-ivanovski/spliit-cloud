@@ -2080,7 +2080,16 @@
     "viewLinkInvalid": {
       "title": "यह केवल-देखने वाला लिंक अमान्य है",
       "description": "लिंक खराब है या इस समूह की किसी केवल-देखने की अनुमति से मेल नहीं खाता।"
-    }
+    },
+    "viewOnlyBannerSaveNoteAccount": "अपने डैशबोर्ड पर पाने के लिए इस समूह को सहेजें।",
+    "viewOnlyBannerSaveNoteDevice": "वापस आने पर इस डिवाइस पर पाने के लिए इस समूह को सहेजें।",
+    "viewOnlyBannerSave": "समूह सहेजें",
+    "viewOnlyBannerSavedAccount": "सहेज लिया गया। यह आपके डैशबोर्ड पर मिलेगा।",
+    "viewOnlyBannerSavedDevice": "सहेज लिया गया। यह इस डिवाइस पर मिलेगा।",
+    "viewOnlyBadge": "केवल देखें",
+    "removeSavedView": "हटाएं",
+    "removeSavedViewAccount": "आपके डैशबोर्ड से हटा दिया गया।",
+    "removeSavedViewDevice": "इस डिवाइस से हटा दिया गया।"
   },
   "Header": {
     "signIn": "साइन इन करें",
@@ -2144,7 +2153,10 @@
       "peopleTab": "लोग",
       "unknownPerson": "अज्ञात प्रतिभागी",
       "viewPersonGroups": "{name} के समूह देखें ({currency})"
-    }
+    },
+    "savedGroupsAction": "सहेजे गए समूह देखें",
+    "savedGroupsTitle": "सहेजे गए समूह",
+    "savedGroupsDescription": "इस डिवाइस पर आपके द्वारा सहेजे गए समूह।"
   },
   "Information": {
     "title": "जानकारी",

@@ -48,7 +48,10 @@
       "peopleTab": "Persoane",
       "unknownPerson": "Participant necunoscut",
       "viewPersonGroups": "Vezi grupurile lui {name} ({currency})"
-    }
+    },
+    "savedGroupsAction": "Vezi grupurile salvate",
+    "savedGroupsTitle": "Grupuri salvate",
+    "savedGroupsDescription": "Grupuri pe care le-ai salvat pe acest dispozitiv."
   },
   "Header": {
     "signIn": "Autentifică-te",
@@ -609,7 +612,16 @@
     "viewLinkInvalid": {
       "title": "Acest link doar pentru vizualizare este invalid",
       "description": "Linkul este deformat sau nu corespunde niciunui acces doar pentru vizualizare din acest grup."
-    }
+    },
+    "viewOnlyBannerSaveNoteAccount": "Salvează acest grup ca să-l găsești pe pagina principală.",
+    "viewOnlyBannerSaveNoteDevice": "Salvează acest grup ca să-l găsești pe acest dispozitiv când revii.",
+    "viewOnlyBannerSave": "Salvează grupul",
+    "viewOnlyBannerSavedAccount": "Salvat. Îl vei găsi pe pagina principală.",
+    "viewOnlyBannerSavedDevice": "Salvat. Îl vei găsi pe acest dispozitiv.",
+    "viewOnlyBadge": "Doar vizualizare",
+    "removeSavedView": "Șterge",
+    "removeSavedViewAccount": "Șters de pe pagina principală.",
+    "removeSavedViewDevice": "Șters de pe acest dispozitiv."
   },
   "GroupForm": {
     "title": "Informații despre grup",

@@ -541,6 +541,7 @@ function GlobalExpensePreview({
         currentMember: data.currentMember,
         currentInvitation: data.currentInvitation ?? null,
         linkInviteState: data.linkInviteState ?? null,
+        hasSavedView: data.hasSavedView,
       }
     : {
         isLoading: true as const,

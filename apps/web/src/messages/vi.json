@@ -48,7 +48,10 @@
       "peopleTab": "Mọi người",
       "unknownPerson": "Người tham gia không xác định",
       "viewPersonGroups": "Xem các nhóm của {name} ({currency})"
-    }
+    },
+    "savedGroupsAction": "Xem nhóm đã lưu",
+    "savedGroupsTitle": "Nhóm đã lưu",
+    "savedGroupsDescription": "Các nhóm bạn đã lưu trên thiết bị này."
   },
   "Header": {
     "signIn": "Đăng nhập",
@@ -704,7 +707,16 @@
     "viewLinkInvalid": {
       "title": "Liên kết chỉ xem này không hợp lệ",
       "description": "Liên kết bị sai định dạng hoặc không khớp với quyền chỉ xem nào của nhóm này."
-    }
+    },
+    "viewOnlyBannerSaveNoteAccount": "Lưu nhóm này để tìm lại trên trang chủ.",
+    "viewOnlyBannerSaveNoteDevice": "Lưu nhóm này để tìm lại trên thiết bị này khi quay lại.",
+    "viewOnlyBannerSave": "Lưu nhóm",
+    "viewOnlyBannerSavedAccount": "Đã lưu. Bạn sẽ thấy nhóm này trên trang chủ.",
+    "viewOnlyBannerSavedDevice": "Đã lưu. Bạn sẽ thấy nhóm này trên thiết bị này.",
+    "viewOnlyBadge": "Chỉ xem",
+    "removeSavedView": "Xóa",
+    "removeSavedViewAccount": "Đã xóa khỏi trang chủ.",
+    "removeSavedViewDevice": "Đã xóa khỏi thiết bị này."
   },
   "Auth": {
     "title": "Đăng nhập",

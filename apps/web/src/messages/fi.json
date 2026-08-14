@@ -48,7 +48,10 @@
       "peopleTab": "Ihmiset",
       "unknownPerson": "Tuntematon osallistuja",
       "viewPersonGroups": "Näytä henkilön {name} ryhmät ({currency})"
-    }
+    },
+    "savedGroupsAction": "Näytä tallennetut ryhmät",
+    "savedGroupsTitle": "Tallennetut ryhmät",
+    "savedGroupsDescription": "Tälle laitteelle tallentamasi ryhmät."
   },
   "Header": {
     "signIn": "Kirjaudu sisään",
@@ -603,7 +606,16 @@
     "viewLinkInvalid": {
       "title": "Tämä katselulinkki ei ole kelvollinen",
       "description": "Linkki on virheellinen tai se ei vastaa mitään tämän ryhmän katseluoikeutta."
-    }
+    },
+    "viewOnlyBannerSaveNoteAccount": "Tallenna tämä ryhmä, niin löydät sen etusivultasi.",
+    "viewOnlyBannerSaveNoteDevice": "Tallenna tämä ryhmä, niin löydät sen tältä laitteelta, kun palaat.",
+    "viewOnlyBannerSave": "Tallenna ryhmä",
+    "viewOnlyBannerSavedAccount": "Tallennettu. Löydät sen etusivultasi.",
+    "viewOnlyBannerSavedDevice": "Tallennettu. Löydät sen tältä laitteelta.",
+    "viewOnlyBadge": "Vain katselu",
+    "removeSavedView": "Poista",
+    "removeSavedViewAccount": "Poistettu etusivultasi.",
+    "removeSavedViewDevice": "Poistettu tältä laitteelta."
   },
   "GroupForm": {
     "title": "Ryhmän tiedot",

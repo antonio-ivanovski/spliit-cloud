@@ -11,6 +11,7 @@ import { useLandingMascot } from '@/components/mascot/use-landing-mascot'
 import { useCurrentAccount } from '@/lib/use-current-account'
 
 import { RecentGroupList } from './groups/recent-group-list'
+import { SignedOutSavedGroupsEntry } from './groups/signed-out-saved-view-list'
 
 export default function HomePage() {
   const { data: account, isPending } = useCurrentAccount()
@@ -94,6 +95,7 @@ function LandingIntro() {
             components={{ strong: <strong /> }}
           />
         </p>
+        <SignedOutSavedGroupsEntry />
       </div>
     </section>
   )

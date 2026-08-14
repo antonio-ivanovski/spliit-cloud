@@ -25,6 +25,7 @@ import { I18nProvider } from '@/i18n/react'
 import { isFocusedMobilePath } from '@/lib/mobile-nav'
 import { TRPCProvider } from '@/trpc/client'
 
+import { MergeDeviceSavedViews } from './app/groups/merge-device-saved-views'
 import githubSvg from './components/auth/github.svg'
 
 function AccountPreferencesBoundary({
@@ -55,6 +56,7 @@ function Content() {
 
   return (
     <TRPCProvider>
+      <MergeDeviceSavedViews />
       <AnonymousOnboardingGate>
         <AccountPreferencesBoundary isAuthRoute={isAuthRoute}>
           <MascotProvider>

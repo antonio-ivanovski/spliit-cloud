@@ -91,6 +91,33 @@ describe('bucketFor', () => {
     })
     expect(bucketFor(group)).toBe('friends')
   })
+
+  it('keeps view-only bookmarks out of archived even if the group is archived', () => {
+    const group = makeGroup({
+      archived: true,
+      access: 'VIEW_ONLY',
+      viewKey: 'secret',
+    })
+    expect(bucketFor(group)).toBe('groups')
+  })
+
+  it('puts a starred view-only bookmark in starred', () => {
+    const group = makeGroup({
+      access: 'VIEW_ONLY',
+      viewKey: 'secret',
+      preference: { starred: true, hidden: false },
+    })
+    expect(bucketFor(group)).toBe('starred')
+  })
+
+  it('puts a hidden view-only bookmark in hidden, even if starred', () => {
+    const group = makeGroup({
+      access: 'VIEW_ONLY',
+      viewKey: 'secret',
+      preference: { starred: true, hidden: true },
+    })
+    expect(bucketFor(group)).toBe('hidden')
+  })
 })
 
 describe('partitionGroups', () => {
@@ -118,6 +145,35 @@ describe('partitionGroups', () => {
       'newer',
       'older',
     ])
+  })
+
+  it('sorts view-only bookmarks by lastOpenedAt instead of expense time', () => {
+    const openedEarlier = makeGroup({
+      id: 'earlier',
+      access: 'VIEW_ONLY',
+      lastOpenedAt: '2026-06-02T00:00:00Z',
+      financialSummary: {
+        expenseCount: 0,
+        netBalance: null,
+        state: 'UNAVAILABLE',
+        latestExpenseCreatedAt: '2026-07-01T00:00:00Z',
+      },
+    })
+    const openedLater = makeGroup({
+      id: 'later',
+      access: 'VIEW_ONLY',
+      lastOpenedAt: '2026-06-04T00:00:00Z',
+      financialSummary: {
+        expenseCount: 0,
+        netBalance: null,
+        state: 'UNAVAILABLE',
+        latestExpenseCreatedAt: '2026-05-01T00:00:00Z',
+      },
+    })
+
+    expect(
+      partitionGroups([openedEarlier, openedLater]).groups.map((g) => g.id),
+    ).toEqual(['later', 'earlier'])
   })
 
   it('partitions groups and friends into separate arrays', () => {
@@ -153,6 +209,20 @@ describe('partitionGroups', () => {
     expect(result.groups.map((g) => g.id)).toEqual(['g1'])
     expect(result.friends).toEqual([])
     expect(result.starred.map((g) => g.id)).toEqual(['f1', 'g2'])
+  })
+
+  it('pulls starred view-only bookmarks into the starred bucket', () => {
+    const g1 = makeGroup({ id: 'g1' })
+    const viewOnly = makeGroup({
+      id: 'saved',
+      access: 'VIEW_ONLY',
+      preference: { starred: true, hidden: false },
+    })
+
+    const result = partitionGroups([g1, viewOnly])
+
+    expect(result.groups.map((g) => g.id)).toEqual(['g1'])
+    expect(result.starred.map((g) => g.id)).toEqual(['saved'])
   })
 
   it('puts hidden groups in the hidden bucket and removes them from others', () => {

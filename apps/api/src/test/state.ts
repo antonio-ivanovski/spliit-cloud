@@ -27,6 +27,8 @@ export function resetPrisma() {
 
   prismaMock.accountPreference.findMany.mockResolvedValue([] as never)
   prismaMock.accountPreference.findUnique.mockResolvedValue(null as never)
+  prismaMock.accountSavedView.findMany.mockResolvedValue([] as never)
+  prismaMock.accountSavedView.findUnique.mockResolvedValue(null as never)
   prismaMock.expensePaidBy.findMany.mockResolvedValue([] as never)
   prismaMock.expensePaidFor.findMany.mockResolvedValue([] as never)
   prismaMock.expenseItemPaidFor.findMany.mockResolvedValue([] as never)

@@ -52,12 +52,13 @@ describe('public group redaction', () => {
     expect(redacted.members[0]?.account).toEqual({
       id: expect.stringMatching(/^public_/),
       name: 'Alice',
-      image: null,
+      image: 'https://example.com/avatar.png',
     })
+    expect(redacted.members[0]?.account).not.toHaveProperty('email')
     expect(redacted.participants[0]?.account).toEqual({
       id: expect.stringMatching(/^public_/),
       name: 'Alice',
-      image: null,
+      image: 'https://example.com/avatar.png',
     })
     expect(redacted.participants[1]?.name).toBe('')
   })

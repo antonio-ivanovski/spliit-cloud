@@ -48,7 +48,10 @@
       "peopleTab": "People",
       "unknownPerson": "Unknown participant",
       "viewPersonGroups": "View groups for {name} ({currency})"
-    }
+    },
+    "savedGroupsAction": "View saved groups",
+    "savedGroupsTitle": "Saved groups",
+    "savedGroupsDescription": "Groups you saved on this device."
   },
   "Header": {
     "signIn": "Sign in",
@@ -704,7 +707,16 @@
     "viewLinkInvalid": {
       "title": "This view-only link is invalid",
       "description": "The link is malformed or doesn't match any view-only access for this group."
-    }
+    },
+    "viewOnlyBannerSaveNoteAccount": "Save this group to find it on your dashboard.",
+    "viewOnlyBannerSaveNoteDevice": "Save this group to find it on this device when you come back.",
+    "viewOnlyBannerSave": "Save group",
+    "viewOnlyBannerSavedAccount": "Saved. You'll find it on your dashboard.",
+    "viewOnlyBannerSavedDevice": "Saved. You'll find it on this device.",
+    "viewOnlyBadge": "View-only",
+    "removeSavedView": "Remove",
+    "removeSavedViewAccount": "Removed from your dashboard.",
+    "removeSavedViewDevice": "Removed from this device."
   },
   "Auth": {
     "title": "Sign in to Spliit Cloud",

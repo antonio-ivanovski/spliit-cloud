@@ -48,7 +48,10 @@
       "peopleTab": "Orang",
       "unknownPerson": "Peserta tidak dikenal",
       "viewPersonGroups": "Lihat grup untuk {name} ({currency})"
-    }
+    },
+    "savedGroupsAction": "Lihat grup tersimpan",
+    "savedGroupsTitle": "Grup tersimpan",
+    "savedGroupsDescription": "Grup yang Anda simpan di perangkat ini."
   },
   "Header": {
     "signIn": "Masuk",
@@ -597,7 +600,16 @@
     "viewLinkInvalid": {
       "title": "Tautan hanya-lihat ini tidak valid",
       "description": "Tautan ini tidak valid atau tidak cocok dengan akses hanya lihat apa pun di grup ini."
-    }
+    },
+    "viewOnlyBannerSaveNoteAccount": "Simpan grup ini agar mudah ditemukan di beranda.",
+    "viewOnlyBannerSaveNoteDevice": "Simpan grup ini agar mudah ditemukan di perangkat ini saat Anda kembali.",
+    "viewOnlyBannerSave": "Simpan grup",
+    "viewOnlyBannerSavedAccount": "Tersimpan. Anda dapat menemukannya di beranda.",
+    "viewOnlyBannerSavedDevice": "Tersimpan. Anda dapat menemukannya di perangkat ini.",
+    "viewOnlyBadge": "Hanya lihat",
+    "removeSavedView": "Hapus",
+    "removeSavedViewAccount": "Dihapus dari beranda.",
+    "removeSavedViewDevice": "Dihapus dari perangkat ini."
   },
   "GroupForm": {
     "title": "Informasi grup",

@@ -48,7 +48,10 @@
       "peopleTab": "Люди",
       "unknownPerson": "Невідомий учасник",
       "viewPersonGroups": "Переглянути групи для {name} ({currency})"
-    }
+    },
+    "savedGroupsAction": "Переглянути збережені групи",
+    "savedGroupsTitle": "Збережені групи",
+    "savedGroupsDescription": "Групи, збережені на цьому пристрої."
   },
   "Header": {
     "signIn": "Увійти",
@@ -615,7 +618,16 @@
     "viewLinkInvalid": {
       "title": "Це посилання лише для перегляду недійсне",
       "description": "Посилання має неправильний формат або не відповідає жодному доступу лише для перегляду в цій групі."
-    }
+    },
+    "viewOnlyBannerSaveNoteAccount": "Збережи цю групу, щоб знайти її на головній.",
+    "viewOnlyBannerSaveNoteDevice": "Збережи цю групу, щоб знайти її на цьому пристрої, коли повернешся.",
+    "viewOnlyBannerSave": "Зберегти групу",
+    "viewOnlyBannerSavedAccount": "Збережено. Знайдеш її на головній.",
+    "viewOnlyBannerSavedDevice": "Збережено. Знайдеш її на цьому пристрої.",
+    "viewOnlyBadge": "Лише перегляд",
+    "removeSavedView": "Прибрати",
+    "removeSavedViewAccount": "Прибрано з головної.",
+    "removeSavedViewDevice": "Прибрано з цього пристрою."
   },
   "GroupForm": {
     "title": "Інформація про групу",

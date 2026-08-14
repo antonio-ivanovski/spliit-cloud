@@ -48,7 +48,10 @@
       "peopleTab": "Люди",
       "unknownPerson": "Неизвестный участник",
       "viewPersonGroups": "Посмотреть группы для {name} ({currency})"
-    }
+    },
+    "savedGroupsAction": "Посмотреть сохранённые группы",
+    "savedGroupsTitle": "Сохранённые группы",
+    "savedGroupsDescription": "Группы, сохранённые на этом устройстве."
   },
   "Header": {
     "signIn": "Войти",
@@ -615,7 +618,16 @@
     "viewLinkInvalid": {
       "title": "Эта ссылка только для просмотра недействительна",
       "description": "Ссылка повреждена или не соответствует доступу только для просмотра в этой группе."
-    }
+    },
+    "viewOnlyBannerSaveNoteAccount": "Сохрани эту группу, чтобы найти её на главной.",
+    "viewOnlyBannerSaveNoteDevice": "Сохрани эту группу, чтобы найти её на этом устройстве, когда вернёшься.",
+    "viewOnlyBannerSave": "Сохранить группу",
+    "viewOnlyBannerSavedAccount": "Сохранено. Ты найдёшь её на главной.",
+    "viewOnlyBannerSavedDevice": "Сохранено. Ты найдёшь её на этом устройстве.",
+    "viewOnlyBadge": "Только просмотр",
+    "removeSavedView": "Убрать",
+    "removeSavedViewAccount": "Убрано с главной.",
+    "removeSavedViewDevice": "Убрано с этого устройства."
   },
   "GroupForm": {
     "title": "Сведения о группе",

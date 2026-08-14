@@ -559,7 +559,10 @@
       "peopleTab": "الأشخاص",
       "unknownPerson": "مشارك غير معروف",
       "viewPersonGroups": "عرض مجموعات {name} ({currency})"
-    }
+    },
+    "savedGroupsAction": "عرض المجموعات المحفوظة",
+    "savedGroupsTitle": "المجموعات المحفوظة",
+    "savedGroupsDescription": "المجموعات التي حفظتها على هذا الجهاز."
   },
   "ExpensePreview": {
     "paidFor": "مقسم بين",
@@ -1107,7 +1110,16 @@
     "viewLinkInvalid": {
       "title": "رابط العرض فقط هذا غير صالح",
       "description": "هذا الرابط غير صالح أو لا يتطابق مع أي صلاحية عرض فقط لهذه المجموعة."
-    }
+    },
+    "viewOnlyBannerSaveNoteAccount": "احفظ هذه المجموعة لتظهر في صفحتك الرئيسية.",
+    "viewOnlyBannerSaveNoteDevice": "احفظ هذه المجموعة لتظهر على هذا الجهاز عند العودة.",
+    "viewOnlyBannerSave": "حفظ المجموعة",
+    "viewOnlyBannerSavedAccount": "تم الحفظ. ستظهر في صفحتك الرئيسية.",
+    "viewOnlyBannerSavedDevice": "تم الحفظ. ستظهر على هذا الجهاز.",
+    "viewOnlyBadge": "للعرض فقط",
+    "removeSavedView": "إزالة",
+    "removeSavedViewAccount": "أُزيلت من صفحتك الرئيسية.",
+    "removeSavedViewDevice": "أُزيلت من هذا الجهاز."
   },
   "Unsubscribe": {
     "submitting": "جارٍ إلغاء الاشتراك…",

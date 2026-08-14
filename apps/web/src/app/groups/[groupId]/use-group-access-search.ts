@@ -6,8 +6,8 @@ import { useSearch } from '@tanstack/react-router'
  * to group read procedures. `undefined` means "no credential of that kind".
  *
  * The URL is the only place these credentials live (no cookies or
- * sessionStorage). Later account-level or localStorage persistence should
- * reconstruct `/groups/$groupId?viewKey=` (or `?invite=`) from a stored pair.
+ * sessionStorage). Saved view-only groups reconstruct
+ * `/groups/$groupId?viewKey=` from an account or localStorage bookmark.
  */
 export function useGroupAccessSearch(): {
   linkInviteToken: string | undefined

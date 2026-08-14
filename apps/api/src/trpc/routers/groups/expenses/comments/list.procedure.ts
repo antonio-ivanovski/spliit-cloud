@@ -38,7 +38,7 @@ export const listExpenseCommentsProcedure = groupReadProcedure
             viewer.kind === 'ACTIVE'
               ? comment.authorName
               : redactViewerDisplayName(comment.authorName),
-          image: viewer.kind === 'ACTIVE' ? comment.authorImage : null,
+          image: comment.authorImage,
         },
         canDelete:
           !group.archived &&

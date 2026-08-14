@@ -48,7 +48,10 @@
       "peopleTab": "Луѓе",
       "unknownPerson": "Непознат учесник",
       "viewPersonGroups": "Прикажи ги групите на {name} ({currency})"
-    }
+    },
+    "savedGroupsAction": "Прикажи зачувани групи",
+    "savedGroupsTitle": "Зачувани групи",
+    "savedGroupsDescription": "Групи што ги зачувавте на овој уред."
   },
   "Header": {
     "signIn": "Најава",
@@ -603,7 +606,16 @@
     "viewLinkInvalid": {
       "title": "Овој линк само за преглед е неважечки",
       "description": "Линкот е неправилно формиран или не одговара на ниту еден пристап само за преглед во оваа група."
-    }
+    },
+    "viewOnlyBannerSaveNoteAccount": "Зачувајте ја оваа група за да ја најдете на почетната страница.",
+    "viewOnlyBannerSaveNoteDevice": "Зачувајте ја оваа група за да ја најдете на овој уред кога ќе се вратите.",
+    "viewOnlyBannerSave": "Зачувај група",
+    "viewOnlyBannerSavedAccount": "Зачувано. Ќе ја најдете на почетната страница.",
+    "viewOnlyBannerSavedDevice": "Зачувано. Ќе ја најдете на овој уред.",
+    "viewOnlyBadge": "Само преглед",
+    "removeSavedView": "Отстрани",
+    "removeSavedViewAccount": "Отстрането од почетната страница.",
+    "removeSavedViewDevice": "Отстрането од овој уред."
   },
   "Auth": {
     "title": "Најавете се на Spliit Cloud",

@@ -137,7 +137,7 @@ export const getGroupStatsProcedure = groupReadProcedure
                 viewer.kind === 'ACTIVE'
                   ? account.name
                   : redactViewerDisplayName(account.name),
-              image: viewer.kind === 'ACTIVE' ? account.image : null,
+              image: account.image,
             }
           : null,
       }

@@ -287,4 +287,71 @@ describe('overviewRouter.get', () => {
     })
     expect(prismaMock.expense.findMany).not.toHaveBeenCalled()
   })
+
+  it('mixes saved view-only groups into the list without affecting balances', async () => {
+    prismaMock.groupMember.findMany.mockResolvedValue([] as never)
+    prismaMock.accountGroupPreference.findMany.mockResolvedValue([
+      { groupId: 'view-group', starred: true, hidden: false },
+    ] as never)
+    prismaMock.accountSavedView.findMany.mockResolvedValue([
+      {
+        groupId: 'view-group',
+        viewKey: 'secret',
+        createdAt: new Date('2026-08-01T00:00:00Z'),
+        lastOpenedAt: new Date('2026-08-02T00:00:00Z'),
+        group: {
+          name: 'Cabin trip',
+          ledger: { currency: '$', currencyCode: 'USD' },
+          _count: { members: 4 },
+          members: [
+            {
+              account: {
+                id: 'acct-ada',
+                name: 'Ada',
+                image: 'https://example.com/ada.png',
+              },
+            },
+          ],
+        },
+      },
+    ] as never)
+
+    const caller = overviewRouter.createCaller({
+      auth: {
+        session: { id: 'session-1' },
+        user: {
+          id: 'acct-1',
+          email: 'alice@example.com',
+          emailVerified: true,
+          name: 'Alice',
+        },
+      },
+    } as never)
+
+    const result = await caller.get()
+
+    expect(result.stats.balanceSummaries).toEqual([])
+    expect(result.groups).toEqual([
+      expect.objectContaining({
+        id: 'view-group',
+        displayName: 'Cabin trip',
+        access: 'VIEW_ONLY',
+        viewKey: 'secret',
+        memberCount: 4,
+        lastOpenedAt: '2026-08-02T00:00:00.000Z',
+        preference: { starred: true, hidden: false },
+        memberAccounts: [
+          {
+            id: 'acct-ada',
+            name: 'Ada',
+            image: 'https://example.com/ada.png',
+          },
+        ],
+        financialSummary: expect.objectContaining({
+          state: 'UNAVAILABLE',
+          latestExpenseCreatedAt: null,
+        }),
+      }),
+    ])
+  })
 })

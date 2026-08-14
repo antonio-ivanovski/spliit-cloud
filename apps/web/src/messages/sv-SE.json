@@ -2080,7 +2080,16 @@
     "viewLinkInvalid": {
       "title": "Denna visningslänk är ogiltig",
       "description": "Länken är felaktig eller matchar ingen visningsbehörighet för denna grupp."
-    }
+    },
+    "viewOnlyBannerSaveNoteAccount": "Spara den här gruppen för att hitta den på din översikt.",
+    "viewOnlyBannerSaveNoteDevice": "Spara den här gruppen för att hitta den på den här enheten när du kommer tillbaka.",
+    "viewOnlyBannerSave": "Spara grupp",
+    "viewOnlyBannerSavedAccount": "Sparad. Du hittar den på din översikt.",
+    "viewOnlyBannerSavedDevice": "Sparad. Du hittar den på den här enheten.",
+    "viewOnlyBadge": "Endast visning",
+    "removeSavedView": "Ta bort",
+    "removeSavedViewAccount": "Borttagen från din översikt.",
+    "removeSavedViewDevice": "Borttagen från den här enheten."
   },
   "Header": {
     "signIn": "Logga in",
@@ -2144,7 +2153,10 @@
       "peopleTab": "Personer",
       "unknownPerson": "Okänd deltagare",
       "viewPersonGroups": "Visa grupper för {name} ({currency})"
-    }
+    },
+    "savedGroupsAction": "Visa sparade grupper",
+    "savedGroupsTitle": "Sparade grupper",
+    "savedGroupsDescription": "Grupper du har sparat på den här enheten."
   },
   "Information": {
     "title": "Information",

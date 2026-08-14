@@ -66,6 +66,8 @@ export const getGroupProcedure = groupReadProcedure
       throw new TRPCError({ code: 'NOT_FOUND', message: 'Group not found' })
     }
 
+    const hasSavedView = await accountHasSavedView(account?.id, group.id)
+
     if (access.viewer.kind === 'ACTIVE' && account) {
       const { member } = await loadGroupMutationContext({
         groupId: access.group.id,
@@ -91,6 +93,7 @@ export const getGroupProcedure = groupReadProcedure
           canMutate: true,
           canAcceptInvitation: false,
         },
+        hasSavedView,
       }
     }
 
@@ -118,8 +121,21 @@ export const getGroupProcedure = groupReadProcedure
         canMutate: false,
         canAcceptInvitation: invitation != null,
       },
+      hasSavedView,
     }
   })
+
+async function accountHasSavedView(
+  accountId: string | undefined,
+  groupId: string,
+) {
+  if (!accountId) return false
+  const row = await prisma.accountSavedView.findUnique({
+    where: { accountId_groupId: { accountId, groupId } },
+    select: { id: true },
+  })
+  return row != null
+}
 
 function resolveDisplayName(
   group: NonNullable<Awaited<ReturnType<typeof getGroup>>>,

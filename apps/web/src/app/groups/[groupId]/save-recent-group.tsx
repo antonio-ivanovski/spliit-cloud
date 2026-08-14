@@ -1,28 +1,47 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
+import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 
 import { useCurrentGroup } from './current-group-context'
 
 /**
- * Server-backed replacement for the localStorage "save recent group" side
- * effect. Visiting a group the account is a member of is enough to make it
- * appear in the server-backed group list, so we just refresh that list when the
- * group loads.
+ * Membership visits refresh the account group list and drop a leftover
+ * view-only bookmark for the same group. Public-view persistence is owned by
+ * `useSavedViewBookmark`.
  */
 export function SaveGroupLocally() {
   const { group, viewer } = useCurrentGroup()
+  const { data: account } = useCurrentAccount()
   const utils = trpc.useUtils()
+  const lastVisit = useRef<string | null>(null)
+  const removeSavedView = trpc.groups.savedViews.remove.useMutation({
+    onSuccess: () => {
+      void invalidateAccountGroupLists(utils)
+    },
+  })
+  const removeMutate = removeSavedView.mutate
+  const groupId = group?.id
+  const persistToAccount = Boolean(account && !account.isAnonymous)
 
   useEffect(() => {
-    // Membership visits refresh the account group list. Public-view and
-    // pending-invite visits are not memberships — leave those lists alone
-    // so a later "save this view-only group" flow can persist them itself.
-    if (group && viewer?.source === 'MEMBER') {
-      void invalidateAccountGroupLists(utils)
+    if (!groupId || viewer?.source !== 'MEMBER') return
+    const visitKey = `${account?.id ?? ''}:${groupId}`
+    if (lastVisit.current === visitKey) return
+    lastVisit.current = visitKey
+    void invalidateAccountGroupLists(utils)
+    if (persistToAccount) {
+      removeMutate({ groupId })
     }
-  }, [group, utils, viewer?.source])
+  }, [
+    account?.id,
+    groupId,
+    persistToAccount,
+    removeMutate,
+    utils,
+    viewer?.source,
+  ])
 
   return null
 }

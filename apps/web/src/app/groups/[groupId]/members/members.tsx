@@ -3,7 +3,9 @@ import { Users } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { AccountAvatar } from '@/components/account-avatar'
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -21,7 +23,13 @@ import { InviteCard } from './invite-card'
 import { LeaveGroupDialog } from './leave-group-dialog'
 import { ManagePendingInvitationDialog } from './manage-pending-invitation-dialog'
 import { MemberListCard } from './member-list-card'
-import { useMembersDialogs, type PendingInvitation } from './members-hooks'
+import {
+  badgeVariantForRole,
+  formatDate,
+  roleLabel,
+  useMembersDialogs,
+  type PendingInvitation,
+} from './members-hooks'
 import { PendingInvitationsCard } from './pending-invitations-card'
 import { RegenerateLinkDialog } from './regenerate-link-dialog'
 import { RemoveParticipantDialog } from './remove-participant-dialog'
@@ -43,20 +51,20 @@ export default function GroupMembers() {
 
 function ReadOnlyMembers() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Members' })
+  const locale = useLocale()
+  const accountPreferences = useSyncedAccountPreferences()
+  const accountTimeZone =
+    accountPreferences?.timeZone ?? detectDeviceTimeZone() ?? 'UTC'
   const { groupId, group } = useCurrentGroup()
   if (!group) return null
-  const accountMembers = group.members.map((member) => ({
-    id: member.id,
-    name: member.account.name,
-    role: member.role,
-  }))
-  const otherParticipants = group.participants
-    .filter((participant) => participant.account == null)
-    .map((participant) => ({
-      id: participant.id,
-      name: participant.name,
-      role: null,
-    }))
+  const roleLabels = {
+    ADMIN: t('role.admin'),
+    MEMBER: t('role.member'),
+  } as const
+  const otherParticipants = group.participants.filter(
+    (participant) =>
+      participant.account == null && participant.name.trim().length > 0,
+  )
   return (
     <div className="flex flex-col gap-4">
       <Card className="mobile-surface">
@@ -68,17 +76,48 @@ function ReadOnlyMembers() {
           <CardDescription>{t('readOnlyDescription')}</CardDescription>
         </CardHeader>
         <CardContent className="divide-y">
-          {[...accountMembers, ...otherParticipants].map((member) => (
+          {group.members.map((member) => (
             <div
               key={member.id}
+              className="flex items-start gap-3 py-3 first:pt-0 last:pb-0"
+            >
+              <AccountAvatar
+                account={member.account}
+                size="lg"
+                className="mt-0.5 shrink-0"
+              />
+              <div className="min-w-0 flex-1">
+                <div className="flex min-w-0 flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
+                  <span className="truncate font-medium">
+                    {member.account.name}
+                  </span>
+                  <Badge
+                    variant={badgeVariantForRole(member.role)}
+                    className="w-fit shrink-0"
+                  >
+                    {roleLabel(member.role, roleLabels)}
+                  </Badge>
+                </div>
+                {member.joinedAt && (
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    {t('joinedOn', {
+                      date: formatDate(
+                        member.joinedAt,
+                        locale,
+                        accountTimeZone,
+                      ),
+                    })}
+                  </p>
+                )}
+              </div>
+            </div>
+          ))}
+          {otherParticipants.map((participant) => (
+            <div
+              key={participant.id}
               className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0"
             >
-              <span className="font-medium">{member.name}</span>
-              {member.role ? (
-                <span className="text-xs text-muted-foreground">
-                  {member.role === 'ADMIN' ? t('role.admin') : t('role.member')}
-                </span>
-              ) : null}
+              <span className="font-medium">{participant.name}</span>
             </div>
           ))}
         </CardContent>

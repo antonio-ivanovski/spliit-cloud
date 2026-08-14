@@ -48,7 +48,10 @@
       "peopleTab": "人員",
       "unknownPerson": "未知參與者",
       "viewPersonGroups": "查看 {name} 的群組（{currency}）"
-    }
+    },
+    "savedGroupsAction": "查看已儲存的群組",
+    "savedGroupsTitle": "已儲存的群組",
+    "savedGroupsDescription": "你在此裝置上儲存的群組。"
   },
   "Header": {
     "signIn": "登入",
@@ -597,7 +600,16 @@
     "viewLinkInvalid": {
       "title": "此唯讀連結無效",
       "description": "該連結格式錯誤或與本群組中的任何僅限檢視的存取權限都不相符。"
-    }
+    },
+    "viewOnlyBannerSaveNoteAccount": "儲存此群組，即可在首頁找到它。",
+    "viewOnlyBannerSaveNoteDevice": "儲存此群組，下次回來時可在此裝置上找到它。",
+    "viewOnlyBannerSave": "儲存群組",
+    "viewOnlyBannerSavedAccount": "已儲存。您可以在首頁找到它。",
+    "viewOnlyBannerSavedDevice": "已儲存。您可以在此裝置上找到它。",
+    "viewOnlyBadge": "僅檢視",
+    "removeSavedView": "移除",
+    "removeSavedViewAccount": "已從首頁移除。",
+    "removeSavedViewDevice": "已從此裝置移除。"
   },
   "GroupForm": {
     "title": "群組資訊",

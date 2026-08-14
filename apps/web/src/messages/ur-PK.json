@@ -2080,7 +2080,16 @@
     "viewLinkInvalid": {
       "title": "یہ صرف دیکھنے کا لنک غلط ہے",
       "description": "لنک خراب ہے یا اس گروپ پر کسی صرف دیکھنے کی رسائی سے مماثل نہیں ہے۔"
-    }
+    },
+    "viewOnlyBannerSaveNoteAccount": "اپنے ڈیش بورڈ پر پانے کے لیے اس گروپ کو محفوظ کریں۔",
+    "viewOnlyBannerSaveNoteDevice": "واپس آنے پر اس ڈیوائس پر پانے کے لیے اس گروپ کو محفوظ کریں۔",
+    "viewOnlyBannerSave": "گروپ محفوظ کریں",
+    "viewOnlyBannerSavedAccount": "محفوظ ہو گیا۔ یہ آپ کے ڈیش بورڈ پر ملے گا۔",
+    "viewOnlyBannerSavedDevice": "محفوظ ہو گیا۔ یہ اس ڈیوائس پر ملے گا۔",
+    "viewOnlyBadge": "صرف دیکھیں",
+    "removeSavedView": "ہٹائیں",
+    "removeSavedViewAccount": "آپ کے ڈیش بورڈ سے ہٹا دیا گیا۔",
+    "removeSavedViewDevice": "اس ڈیوائس سے ہٹا دیا گیا۔"
   },
   "Header": {
     "signIn": "سائن ان",
@@ -2144,7 +2153,10 @@
       "peopleTab": "لوگ",
       "unknownPerson": "نامعلوم شریک",
       "viewPersonGroups": "{name} کے گروپس دیکھیں ({currency})"
-    }
+    },
+    "savedGroupsAction": "محفوظ گروپ دیکھیں",
+    "savedGroupsTitle": "محفوظ گروپ",
+    "savedGroupsDescription": "اس ڈیوائس پر آپ کے محفوظ کردہ گروپ۔"
   },
   "Information": {
     "title": "معلومات",

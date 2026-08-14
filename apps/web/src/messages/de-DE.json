@@ -48,7 +48,10 @@
       "peopleTab": "Personen",
       "unknownPerson": "Unbekannter Teilnehmer",
       "viewPersonGroups": "Gruppen von {name} anzeigen ({currency})"
-    }
+    },
+    "savedGroupsAction": "Gespeicherte Gruppen anzeigen",
+    "savedGroupsTitle": "Gespeicherte Gruppen",
+    "savedGroupsDescription": "Gruppen, die du auf diesem Gerät gespeichert hast."
   },
   "Header": {
     "signIn": "Anmelden",
@@ -627,7 +630,16 @@
     "viewLinkInvalid": {
       "title": "Dieser Nur-Lese-Link ist ungültig",
       "description": "Der Link ist fehlerhaft oder stimmt mit keinem Nur-Lese-Zugriff in dieser Gruppe überein."
-    }
+    },
+    "viewOnlyBannerSaveNoteAccount": "Speichere diese Gruppe, um sie auf deiner Übersicht wiederzufinden.",
+    "viewOnlyBannerSaveNoteDevice": "Speichere diese Gruppe, um sie auf diesem Gerät wiederzufinden, wenn du zurückkommst.",
+    "viewOnlyBannerSave": "Gruppe speichern",
+    "viewOnlyBannerSavedAccount": "Gespeichert. Du findest sie auf deiner Übersicht.",
+    "viewOnlyBannerSavedDevice": "Gespeichert. Du findest sie auf diesem Gerät.",
+    "viewOnlyBadge": "Nur lesen",
+    "removeSavedView": "Entfernen",
+    "removeSavedViewAccount": "Von deiner Übersicht entfernt.",
+    "removeSavedViewDevice": "Von diesem Gerät entfernt."
   },
   "GroupForm": {
     "title": "Gruppeninformationen",

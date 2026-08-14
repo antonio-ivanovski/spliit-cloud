@@ -48,7 +48,10 @@
       "peopleTab": "ユーザー",
       "unknownPerson": "不明な参加者",
       "viewPersonGroups": "{name} のグループを表示 ({currency})"
-    }
+    },
+    "savedGroupsAction": "保存したグループを見る",
+    "savedGroupsTitle": "保存したグループ",
+    "savedGroupsDescription": "このデバイスに保存したグループです。"
   },
   "Header": {
     "signIn": "サインイン",
@@ -597,7 +600,16 @@
     "viewLinkInvalid": {
       "title": "この閲覧専用リンクは無効です",
       "description": "リンクの形式が正しくないか、このグループの閲覧のみのアクセスに一致しません。"
-    }
+    },
+    "viewOnlyBannerSaveNoteAccount": "このグループを保存すると、ホームから探せます。",
+    "viewOnlyBannerSaveNoteDevice": "このグループを保存すると、再訪時にこのデバイスから探せます。",
+    "viewOnlyBannerSave": "グループを保存",
+    "viewOnlyBannerSavedAccount": "保存しました。ホームから探せます。",
+    "viewOnlyBannerSavedDevice": "保存しました。このデバイスで探せます。",
+    "viewOnlyBadge": "閲覧のみ",
+    "removeSavedView": "削除",
+    "removeSavedViewAccount": "ホームから削除しました。",
+    "removeSavedViewDevice": "このデバイスから削除しました。"
   },
   "GroupForm": {
     "title": "グループ情報",

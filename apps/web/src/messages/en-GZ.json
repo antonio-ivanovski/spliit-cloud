@@ -2299,7 +2299,16 @@
     "viewLinkInvalid": {
       "title": "this view-only link is invalid",
       "description": "the link is malformed or does not match any view-only access for this group."
-    }
+    },
+    "viewOnlyBannerSaveNoteAccount": "save this group so it shows up on your dashboard.",
+    "viewOnlyBannerSaveNoteDevice": "save this group so it shows up on this device when you come back.",
+    "viewOnlyBannerSave": "save this group",
+    "viewOnlyBannerSavedAccount": "saved. it'll be on your dashboard.",
+    "viewOnlyBannerSavedDevice": "saved. it'll live on this device.",
+    "viewOnlyBadge": "just looking",
+    "removeSavedView": "remove it",
+    "removeSavedViewAccount": "gone from your dashboard.",
+    "removeSavedViewDevice": "gone from this device."
   },
   "Header": {
     "signIn": "sign in",
@@ -2363,7 +2372,10 @@
       "peopleTab": "besties",
       "unknownPerson": "mystery participant",
       "viewPersonGroups": "view groups for {name} ({currency})"
-    }
+    },
+    "savedGroupsAction": "view saved groups",
+    "savedGroupsTitle": "saved groups",
+    "savedGroupsDescription": "groups you saved on this device."
   },
   "Information": {
     "title": "group info",

@@ -4,11 +4,12 @@ import {
   useNavigate,
   useSearch,
 } from '@tanstack/react-router'
-import { ArrowLeft, Check, Eye, Info, X } from 'lucide-react'
+import { ArrowLeft, Check, Info, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { GroupTabs } from '@/app/groups/[groupId]/group-tabs'
 import { CreateExpenseFab } from '@/app/groups/create-expense-fab'
+import { ViewOnlyBadge } from '@/app/groups/view-only-badge'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -19,6 +20,8 @@ import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 
 import { useCurrentGroup } from './current-group-context'
+import { useSavedViewBookmark } from './use-saved-view-bookmark'
+import { ViewOnlyBanner } from './view-only-save-offer'
 
 export const GroupHeader = ({
   enableReceiptExtract,
@@ -40,6 +43,20 @@ export const GroupHeader = ({
   const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const { toast } = useToast()
   const { data: account } = useCurrentAccount()
+  const persistToAccount = Boolean(account && !account.isAnonymous)
+  const savedView = useSavedViewBookmark({
+    onSaved: () =>
+      toast({
+        description: persistToAccount
+          ? tGroups('viewOnlyBannerSavedAccount')
+          : tGroups('viewOnlyBannerSavedDevice'),
+      }),
+    onError: (message) =>
+      toast({
+        description: message,
+        variant: 'destructive',
+      }),
+  })
   const navigate = useNavigate({ from: '/groups/$groupId' })
   const utils = trpc.useUtils()
   const pathname = useLocation({ select: (location) => location.pathname })
@@ -160,6 +177,9 @@ export const GroupHeader = ({
               <div className="truncate">{displayName || group.name}</div>
             )}
           </Link>
+          {savedView.isPublicLink && savedView.isSaved ? (
+            <ViewOnlyBadge compactOnMobile />
+          ) : null}
         </h1>
         <CreateExpenseFab
           enableReceiptExtract={enableReceiptExtract}
@@ -273,15 +293,13 @@ export const GroupHeader = ({
         </Alert>
       )}
 
-      {viewer?.source === 'PUBLIC_LINK' && (
-        <Alert className="border-sky-500/30 bg-sky-500/5">
-          <Eye className="size-4 text-sky-600" aria-hidden="true" />
-          <AlertTitle>{tGroups('viewOnlyBannerTitle')}</AlertTitle>
-          <AlertDescription>
-            {tGroups('viewOnlyBannerDescription')}
-          </AlertDescription>
-        </Alert>
-      )}
+      <ViewOnlyBanner
+        isPublicLink={savedView.isPublicLink}
+        isSaved={savedView.isSaved}
+        persistToAccount={savedView.persistToAccount}
+        pending={savedView.pending}
+        onSave={savedView.save}
+      />
 
       {showLinkAlreadyMember && (
         <Alert data-testid="invitation-already-member-banner">

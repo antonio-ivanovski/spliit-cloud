@@ -48,7 +48,10 @@
       "peopleTab": "אנשים",
       "unknownPerson": "משתתף לא ידוע",
       "viewPersonGroups": "הצגת הקבוצות של {name} ({currency})"
-    }
+    },
+    "savedGroupsAction": "הצגת קבוצות שמורות",
+    "savedGroupsTitle": "קבוצות שמורות",
+    "savedGroupsDescription": "קבוצות ששמרת במכשיר הזה."
   },
   "Header": {
     "signIn": "התחבר",
@@ -609,7 +612,16 @@
     "viewLinkInvalid": {
       "title": "קישור הצפייה בלבד אינו תקין",
       "description": "הקישור שגוי או שאינו תואם אף גישה לצפייה בלבד בקבוצה זו."
-    }
+    },
+    "viewOnlyBannerSaveNoteAccount": "שמור את הקבוצה הזו כדי שתופיע בדף הראשי.",
+    "viewOnlyBannerSaveNoteDevice": "שמור את הקבוצה הזו כדי שתופיע במכשיר הזה בפעם הבאה.",
+    "viewOnlyBannerSave": "שמור קבוצה",
+    "viewOnlyBannerSavedAccount": "נשמרה. היא תופיע בדף הראשי.",
+    "viewOnlyBannerSavedDevice": "נשמרה. היא תופיע במכשיר הזה.",
+    "viewOnlyBadge": "לצפייה בלבד",
+    "removeSavedView": "הסר",
+    "removeSavedViewAccount": "הוסרה מהדף הראשי.",
+    "removeSavedViewDevice": "הוסרה מהמכשיר הזה."
   },
   "GroupForm": {
     "title": "מידע על הקבוצה",
