@@ -2000,7 +2000,6 @@
     },
     "nameLabel": "Görünen ad",
     "emailLabel": "E-posta",
-    "emailHelp": "E-postanız hesabınıza bağlıdır ve buradan değiştirilemez.",
     "submit": "Değişiklikleri kaydet",
     "saving": "Kaydediliyor…",
     "success": "Profil güncellendi.",
@@ -2053,7 +2052,6 @@
       "pushMissingTarget": "Anlık bildirim seçildi ancak bir cihaz etkinleştirene kadar bu bildirimler teslim edilmeyecek. Aşağıdan veya Ayarlar'dan bir cihaz etkinleştirebilirsiniz.",
       "rowSaved": "Bildirim tercihi kaydedildi.",
       "comingSoon": "Yakında",
-      "emailComingSoon": "E-posta yapılandırması yakında kullanıma sunulacak.",
       "inherited": "Devralındı",
       "currently": "Şu anda: {channels}",
       "expenseActivity": "Masraf etkinliği",
@@ -2144,7 +2142,9 @@
         "summaries": "Özetler"
       },
       "masterLabel": "Bildirimleri etkinleştir",
-      "masterDescription": "Kapatarak tüm e-posta ve anlık bildirimleri susturun. Kategori bazlı seçimleriniz korunur."
+      "masterDescription": "Kapatarak tüm e-posta ve anlık bildirimleri susturun. Kategori bazlı seçimleriniz korunur.",
+      "emailAddToEnable": "Gelen kutusu bildirimleri almak için doğrulanmış bir e-posta ekleyin.",
+      "emailAddLink": "E-posta ekle"
     },
     "preferences": {
       "title": "Uygulama tercihleri",
@@ -2222,6 +2222,45 @@
         "HIDDEN": "Gizli"
       },
       "import": "İçe aktar"
+    },
+    "email": {
+      "empty": "E-posta yok",
+      "add": "E-posta ekle",
+      "change": "E-postayı değiştir",
+      "addHelp": "Bu hesabı kurtarmak ve bildirim almak için doğrulanmış bir e-posta ekleyin.",
+      "changeHelp": "E-postayı değiştirmek için yeni adrese bir onay kodu gönderilir.",
+      "addTitle": "E-posta adresi ekleyin",
+      "changeTitle": "E-postanızı değiştirin",
+      "addDescription": "Bu adrese 6 haneli bir kod gönderilir. E-posta yalnızca onaylandıktan sonra kaydedilir.",
+      "changeDescription": "Yeni adrese 6 haneli bir kod gönderilir. Mevcut e-posta onaylanana kadar geçerli kalır.",
+      "newLabel": "E-posta adresi",
+      "sendCode": "Kod gönder",
+      "sending": "Gönderiliyor…",
+      "codeTitle": "Onay kodunu girin",
+      "codeDescription": "{email} adresine 6 haneli bir kod gönderildi.",
+      "codeLabel": "Onay kodu",
+      "verify": "E-postayı onayla",
+      "verifying": "Onaylanıyor…",
+      "resend": "Kodu yeniden gönder",
+      "cancel": "İptal",
+      "added": "E-posta eklendi.",
+      "changed": "E-posta güncellendi.",
+      "graduationBody": "Anonim oturum açma bağlantıları zayıf bir güvenlik yöntemidir: kayıtlı URL'ye sahip herkes bu hesabı kullanabilir. Doğrulanmış bir e-posta ekledikten sonra bu bağlantı çalışmayı durdurur ve geri getirilemez. Bundan sonra e-posta ile oturum açarsınız.",
+      "errors": {
+        "inUse": "Bu e-posta başka bir hesap tarafından kullanılıyor.",
+        "invalid": "Geçerli bir e-posta adresi girin.",
+        "same": "Bu zaten e-posta adresiniz.",
+        "graduation": "E-posta eklemenin oturum açma bağlantınızın yerini alacağını onaylayın.",
+        "otp": "Kod hatalı. Tekrar deneyin.",
+        "expired": "Bu kodun süresi doldu. Yeni bir kod isteyin.",
+        "rateLimited": "Çok fazla e-posta isteği gönderildi. Lütfen daha sonra tekrar deneyin.",
+        "generic": "E-posta güncellenemedi. Lütfen tekrar deneyin.",
+        "sendFailed": "Onay e-postası gönderilemedi. Lütfen tekrar deneyin."
+      },
+      "graduationTitle": "Bu, oturum açma bağlantınızın yerini alır",
+      "useDifferent": "Farklı bir e-posta kullan",
+      "resendIn": "{seconds} sn içinde yeniden gönder",
+      "sent": "Kod gönderildi"
     }
   },
   "Activities": {
@@ -3020,9 +3059,6 @@
       "activateDescription": "Etkinleştirmeden önce yeni bağlantıyı kaydedin.",
       "stagedDescription": "Mevcut kurtarma bağlantınız siz bu değişikliği etkinleştirene kadar çalışmaya devam eder. Kapatma veya yenileme, değiştirme işlemini iptal eder.",
       "activateConfirm": "Değiştirmeyi etkinleştir",
-      "linkAccountTitle": "Bir hesaba bağla",
-      "linkAccountDescription": "Bu anonim hesabı e-posta veya sosyal oturum açma yöntemiyle bağlayın.",
-      "comingSoon": "Yakında",
       "replacementActivated": "Yeni oturum açma bağlantınız artık etkin."
     }
   },

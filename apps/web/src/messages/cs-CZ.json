@@ -2018,7 +2018,6 @@
     },
     "nameLabel": "Zobrazované jméno",
     "emailLabel": "E-mail",
-    "emailHelp": "Váš e-mail je propojen s účtem a nelze jej zde změnit.",
     "submit": "Uložit změny",
     "saving": "Ukládání…",
     "success": "Profil aktualizován.",
@@ -2071,7 +2070,6 @@
       "pushMissingTarget": "Push je vybrán, ale tato oznámení nebudou doručena, dokud nepovolíte zařízení. Zařízení můžete povolit níže nebo v Nastavení.",
       "rowSaved": "Předvolba oznámení byla uložena.",
       "comingSoon": "Již brzy",
-      "emailComingSoon": "Nastavení e-mailu bude k dispozici již brzy.",
       "inherited": "Zděděné",
       "currently": "Aktuálně: {channels}",
       "expenseActivity": "Aktivita výdajů",
@@ -2162,7 +2160,9 @@
         "summaries": "Souhrny"
       },
       "masterLabel": "Povolit oznámení",
-      "masterDescription": "Vypnutím ztlumíte e-mailová i push oznámení. Vaše volby podle kategorií zůstanou zachovány."
+      "masterDescription": "Vypnutím ztlumíte e-mailová i push oznámení. Vaše volby podle kategorií zůstanou zachovány.",
+      "emailAddToEnable": "Přidejte ověřený e-mail, abyste dostávali oznámení do schránky.",
+      "emailAddLink": "Přidat e-mail"
     },
     "preferences": {
       "title": "Předvolby aplikace",
@@ -2240,6 +2240,45 @@
         "HIDDEN": "Skryté"
       },
       "import": "Importovat"
+    },
+    "email": {
+      "empty": "Žádný e-mail",
+      "add": "Přidat e-mail",
+      "change": "Změnit e-mail",
+      "addHelp": "Přidejte ověřený e-mail pro obnovení tohoto účtu a příjem oznámení.",
+      "changeHelp": "Ke změně e-mailu je potřeba potvrzovací kód odeslaný na novou adresu.",
+      "addTitle": "Přidat e-mailovou adresu",
+      "changeTitle": "Změnit e-mail",
+      "addDescription": "Na tuto adresu pošleme šestimístný kód. E-mail se uloží až po potvrzení.",
+      "changeDescription": "Na novou adresu pošleme šestimístný kód. Současný e-mail zůstane, dokud změnu nepotvrdíte.",
+      "newLabel": "E-mailová adresa",
+      "sendCode": "Odeslat kód",
+      "sending": "Odesílání…",
+      "codeTitle": "Zadejte potvrzovací kód",
+      "codeDescription": "Na adresu {email} jsme odeslali šestimístný kód.",
+      "codeLabel": "Potvrzovací kód",
+      "verify": "Potvrdit e-mail",
+      "verifying": "Potvrzování…",
+      "resend": "Odeslat kód znovu",
+      "cancel": "Zrušit",
+      "added": "E-mail přidán.",
+      "changed": "E-mail aktualizován.",
+      "graduationBody": "Anonymní přihlašovací odkazy jsou slabou formou zabezpečení: kdokoli s uloženou URL může tento účet použít. Po přidání ověřeného e-mailu odkaz přestane fungovat a nelze ho obnovit. Budete se přihlašovat e-mailem.",
+      "errors": {
+        "inUse": "Tento e-mail už používá jiný účet.",
+        "invalid": "Zadejte platnou e-mailovou adresu.",
+        "same": "Toto už je vaše e-mailová adresa.",
+        "graduation": "Potvrďte, že přidání e-mailu nahradí váš přihlašovací odkaz.",
+        "otp": "Tento kód je nesprávný. Zkuste to znovu.",
+        "expired": "Platnost tohoto kódu vypršela. Požádejte o nový.",
+        "rateLimited": "Příliš mnoho e-mailových požadavků. Zkuste to později.",
+        "generic": "E-mail se nepodařilo aktualizovat. Zkuste to znovu.",
+        "sendFailed": "Potvrzovací e-mail se nepodařilo odeslat. Zkuste to znovu."
+      },
+      "graduationTitle": "Toto nahradí váš přihlašovací odkaz",
+      "useDifferent": "Použít jiný e-mail",
+      "resendIn": "Znovu za {seconds} s",
+      "sent": "Kód odeslán"
     }
   },
   "Activities": {
@@ -3054,9 +3093,6 @@
       "activateDescription": "Uložte náhradní odkaz před jeho aktivací.",
       "stagedDescription": "Váš aktuální přihlašovací odkaz funguje, dokud tuto náhradu neaktivujete. Zavřením nebo obnovením se náhrada zahodí.",
       "activateConfirm": "Aktivujte náhradu",
-      "linkAccountTitle": "Propojit s účtem",
-      "linkAccountDescription": "Propojte tento anonymní účet s e-mailem nebo přihlášením přes sociální síť.",
-      "comingSoon": "Již brzy",
       "replacementActivated": "Náhradní přihlašovací odkaz je nyní aktivní."
     }
   },

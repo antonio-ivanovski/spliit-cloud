@@ -1993,7 +1993,6 @@
     },
     "nameLabel": "显示名称",
     "emailLabel": "邮箱",
-    "emailHelp": "您的邮箱与账户绑定，无法在此更改。",
     "submit": "保存更改",
     "saving": "保存中…",
     "success": "个人资料已更新。",
@@ -2046,7 +2045,6 @@
       "pushMissingTarget": "已选择推送，但在启用设备前不会发送这些通知。你可以在下方或设置中启用设备。",
       "rowSaved": "通知偏好设置已保存。",
       "comingSoon": "即将推出",
-      "emailComingSoon": "电子邮件配置即将推出。",
       "inherited": "继承",
       "currently": "当前：{channels}",
       "expenseActivity": "支出活动",
@@ -2137,7 +2135,9 @@
         "summaries": "摘要"
       },
       "masterLabel": "启用通知",
-      "masterDescription": "关闭后，所有电子邮件和推送通知都将静默。您的分类选择会保留。"
+      "masterDescription": "关闭后，所有电子邮件和推送通知都将静默。您的分类选择会保留。",
+      "emailAddToEnable": "添加已验证的邮箱以接收收件箱通知。",
+      "emailAddLink": "添加邮箱"
     },
     "preferences": {
       "title": "应用偏好设置",
@@ -2215,6 +2215,45 @@
         "HIDDEN": "已隐藏"
       },
       "import": "导入"
+    },
+    "email": {
+      "empty": "暂无邮箱",
+      "add": "添加邮箱",
+      "change": "更改邮箱",
+      "addHelp": "添加已验证的邮箱，以便找回此账户并接收通知。",
+      "changeHelp": "更改邮箱需要向新地址发送验证码。",
+      "addTitle": "添加邮箱地址",
+      "changeTitle": "更改邮箱",
+      "addDescription": "我们将向此地址发送6位验证码。只有确认后才会保存该邮箱。",
+      "changeDescription": "我们将向新地址发送6位验证码。确认前，当前邮箱保持不变。",
+      "newLabel": "邮箱地址",
+      "sendCode": "发送验证码",
+      "sending": "发送中…",
+      "codeTitle": "输入验证码",
+      "codeDescription": "我们已向 {email} 发送6位验证码。",
+      "codeLabel": "验证码",
+      "verify": "确认邮箱",
+      "verifying": "确认中…",
+      "resend": "重新发送验证码",
+      "cancel": "取消",
+      "added": "已添加邮箱。",
+      "changed": "邮箱已更新。",
+      "graduationBody": "匿名登录链接的安全性较弱：任何持有已保存网址的人都可以使用此账户。添加已验证的邮箱后，该链接将失效且无法恢复。之后您将使用邮箱登录。",
+      "errors": {
+        "inUse": "此邮箱已被其他账户使用。",
+        "invalid": "请输入有效的邮箱地址。",
+        "same": "这已经是您当前的邮箱。",
+        "graduation": "请确认添加邮箱会替换您的登录链接。",
+        "otp": "验证码不正确。请重试。",
+        "expired": "此验证码已过期。请重新获取。",
+        "rateLimited": "邮箱请求过于频繁。请稍后再试。",
+        "generic": "无法更新您的邮箱。请重试。",
+        "sendFailed": "无法发送确认邮件。请重试。"
+      },
+      "graduationTitle": "这将替换您的登录链接",
+      "useDifferent": "使用其他邮箱",
+      "resendIn": "{seconds} 秒后重新发送",
+      "sent": "验证码已发送"
     }
   },
   "Activities": {
@@ -3003,9 +3042,6 @@
       "activateDescription": "在激活替换链接之前保存它。",
       "stagedDescription": "您当前的登录链接将一直有效，直到您激活此替代链接。关闭或刷新会放弃替换。",
       "activateConfirm": "激活替换",
-      "linkAccountTitle": "关联帐户",
-      "linkAccountDescription": "将此匿名帐户与电子邮件或社交登录方式关联。",
-      "comingSoon": "即将推出",
       "replacementActivated": "您的替代登录链接现已生效。"
     }
   },

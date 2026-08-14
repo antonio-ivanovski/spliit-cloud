@@ -1993,7 +1993,6 @@
     },
     "nameLabel": "Nama tampilan",
     "emailLabel": "Email",
-    "emailHelp": "Email Anda terikat ke akun dan tidak dapat diubah di sini.",
     "submit": "Simpan perubahan",
     "saving": "Menyimpan…",
     "success": "Profil diperbarui.",
@@ -2046,7 +2045,6 @@
       "pushMissingTarget": "Push dipilih, tetapi notifikasi ini tidak akan terkirim sampai Anda mengaktifkan perangkat. Anda dapat mengaktifkannya di bawah atau di Pengaturan.",
       "rowSaved": "Preferensi notifikasi disimpan.",
       "comingSoon": "Segera hadir",
-      "emailComingSoon": "Konfigurasi email segera hadir.",
       "inherited": "Diwariskan",
       "currently": "Saat ini: {channels}",
       "expenseActivity": "Aktivitas pengeluaran",
@@ -2137,7 +2135,9 @@
         "summaries": "Ringkasan"
       },
       "masterLabel": "Aktifkan notifikasi",
-      "masterDescription": "Matikan untuk membungkam semua notifikasi email dan push. Pilihan per kategori Anda tetap dipertahankan."
+      "masterDescription": "Matikan untuk membungkam semua notifikasi email dan push. Pilihan per kategori Anda tetap dipertahankan.",
+      "emailAddToEnable": "Tambahkan email terverifikasi untuk menerima notifikasi di kotak masuk.",
+      "emailAddLink": "Tambah email"
     },
     "preferences": {
       "title": "Preferensi aplikasi",
@@ -2215,6 +2215,45 @@
         "HIDDEN": "Tersembunyi"
       },
       "import": "Impor"
+    },
+    "email": {
+      "empty": "Tidak ada email",
+      "add": "Tambah email",
+      "change": "Ubah email",
+      "addHelp": "Tambahkan email terverifikasi untuk memulihkan akun ini dan menerima notifikasi.",
+      "changeHelp": "Mengubah email memerlukan kode konfirmasi yang dikirim ke alamat baru.",
+      "addTitle": "Tambahkan alamat email",
+      "changeTitle": "Ubah email Anda",
+      "addDescription": "Kode 6 digit akan dikirim ke alamat ini. Email disimpan hanya setelah Anda mengonfirmasinya.",
+      "changeDescription": "Kode 6 digit akan dikirim ke alamat baru. Email Anda saat ini tetap berlaku sampai Anda mengonfirmasi.",
+      "newLabel": "Alamat email",
+      "sendCode": "Kirim kode",
+      "sending": "Mengirim…",
+      "codeTitle": "Masukkan kode konfirmasi",
+      "codeDescription": "Kode 6 digit telah dikirim ke {email}.",
+      "codeLabel": "Kode konfirmasi",
+      "verify": "Konfirmasi email",
+      "verifying": "Mengonfirmasi…",
+      "resend": "Kirim ulang kode",
+      "cancel": "Batal",
+      "added": "Email ditambahkan.",
+      "changed": "Email diperbarui.",
+      "graduationBody": "Tautan masuk anonim adalah bentuk keamanan yang lemah: siapa pun yang memiliki URL tersimpan dapat menggunakan akun ini. Setelah Anda menambahkan email terverifikasi, tautan itu berhenti berfungsi dan tidak dapat dipulihkan. Anda akan masuk dengan email sebagai gantinya.",
+      "errors": {
+        "inUse": "Email ini sudah digunakan oleh akun lain.",
+        "invalid": "Masukkan alamat email yang valid.",
+        "same": "Itu sudah alamat email Anda.",
+        "graduation": "Konfirmasikan bahwa menambahkan email mengganti tautan masuk Anda.",
+        "otp": "Kode itu salah. Coba lagi.",
+        "expired": "Kode ini telah kedaluwarsa. Minta yang baru.",
+        "rateLimited": "Terlalu banyak permintaan email. Silakan coba lagi nanti.",
+        "generic": "Tidak dapat memperbarui email Anda. Silakan coba lagi.",
+        "sendFailed": "Tidak dapat mengirim email konfirmasi. Silakan coba lagi."
+      },
+      "graduationTitle": "Ini mengganti tautan masuk Anda",
+      "useDifferent": "Gunakan email yang berbeda",
+      "resendIn": "Kirim ulang dalam {seconds} dtk",
+      "sent": "Kode terkirim"
     }
   },
   "Activities": {
@@ -3004,9 +3043,6 @@
       "activateDescription": "Simpan link pengganti sebelum mengaktifkannya.",
       "stagedDescription": "Tautan masuk Anda saat ini tetap berfungsi hingga Anda mengaktifkan penggantinya. Menutup atau menyegarkan akan membuang penggantinya.",
       "activateConfirm": "Aktifkan penggantian",
-      "linkAccountTitle": "Tautkan ke akun",
-      "linkAccountDescription": "Hubungkan akun anonim ini ke email atau login sosial.",
-      "comingSoon": "Segera hadir",
       "replacementActivated": "Tautan masuk pengganti Anda kini aktif."
     }
   },

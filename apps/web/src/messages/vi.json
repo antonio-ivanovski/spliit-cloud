@@ -788,7 +788,6 @@
     },
     "nameLabel": "Tên hiển thị",
     "emailLabel": "Email",
-    "emailHelp": "Email của bạn được gắn với tài khoản và không thể thay đổi ở đây.",
     "submit": "Lưu thay đổi",
     "saving": "Đang lưu…",
     "success": "Đã cập nhật hồ sơ.",
@@ -848,7 +847,6 @@
       "pushMissingTarget": "Đã chọn push nhưng chưa có thiết bị.",
       "rowSaved": "Đã lưu tùy chọn thông báo.",
       "comingSoon": "Sắp ra mắt",
-      "emailComingSoon": "Cấu hình email sắp ra mắt.",
       "sections": {
         "groups": "Nhóm và bạn bè",
         "expenses": "Chi phí",
@@ -932,7 +930,9 @@
       "retry": "Thử lại",
       "pushChannel": "Push",
       "masterLabel": "Bật thông báo",
-      "masterDescription": "Tắt để im lặng mọi thông báo qua email và push. Các lựa chọn theo danh mục của bạn vẫn được giữ nguyên."
+      "masterDescription": "Tắt để im lặng mọi thông báo qua email và push. Các lựa chọn theo danh mục của bạn vẫn được giữ nguyên.",
+      "emailAddToEnable": "Thêm email đã xác minh để nhận thông báo qua hộp thư đến.",
+      "emailAddLink": "Thêm email"
     },
     "preferences": {
       "title": "Tùy chọn ứng dụng",
@@ -1010,6 +1010,45 @@
         "HIDDEN": "Đã ẩn"
       },
       "import": "Nhập"
+    },
+    "email": {
+      "empty": "Không có email",
+      "add": "Thêm email",
+      "change": "Thay đổi email",
+      "addHelp": "Thêm email đã xác minh để khôi phục tài khoản này và nhận thông báo.",
+      "changeHelp": "Thay đổi email yêu cầu mã xác nhận được gửi đến địa chỉ mới.",
+      "addTitle": "Thêm địa chỉ email",
+      "changeTitle": "Thay đổi email của bạn",
+      "addDescription": "Mã 6 chữ số sẽ được gửi đến địa chỉ này. Email chỉ được lưu sau khi xác nhận.",
+      "changeDescription": "Mã 6 chữ số sẽ được gửi đến địa chỉ mới. Email hiện tại vẫn được giữ cho đến khi bạn xác nhận.",
+      "newLabel": "Địa chỉ email",
+      "sendCode": "Gửi mã",
+      "sending": "Đang gửi…",
+      "codeTitle": "Nhập mã xác nhận",
+      "codeDescription": "Đã gửi mã 6 chữ số đến {email}.",
+      "codeLabel": "Mã xác nhận",
+      "verify": "Xác nhận email",
+      "verifying": "Đang xác nhận…",
+      "resend": "Gửi lại mã",
+      "cancel": "Hủy",
+      "added": "Đã thêm email.",
+      "changed": "Đã cập nhật email.",
+      "graduationBody": "Liên kết đăng nhập ẩn danh là hình thức bảo mật yếu: bất kỳ ai có URL đã lưu đều có thể dùng tài khoản này. Sau khi thêm email đã xác minh, liên kết đó ngừng hoạt động và không thể khôi phục. Bạn sẽ đăng nhập bằng email.",
+      "errors": {
+        "inUse": "Email này đã được dùng bởi tài khoản khác.",
+        "invalid": "Nhập địa chỉ email hợp lệ.",
+        "same": "Đó đã là địa chỉ email của bạn.",
+        "graduation": "Xác nhận rằng thêm email sẽ thay thế liên kết đăng nhập của bạn.",
+        "otp": "Mã không đúng. Thử lại.",
+        "expired": "Mã này đã hết hạn. Yêu cầu mã mới.",
+        "rateLimited": "Quá nhiều yêu cầu email. Vui lòng thử lại sau.",
+        "generic": "Không thể cập nhật email. Vui lòng thử lại.",
+        "sendFailed": "Không thể gửi email xác nhận. Vui lòng thử lại."
+      },
+      "graduationTitle": "Thao tác này thay thế liên kết đăng nhập của bạn",
+      "useDifferent": "Dùng email khác",
+      "resendIn": "Gửi lại sau {seconds} giây",
+      "sent": "Đã gửi mã"
     }
   },
   "CompleteProfile": {
@@ -3092,9 +3131,6 @@
       "activateDescription": "Lưu liên kết thay thế trước khi kích hoạt.",
       "stagedDescription": "Liên kết đăng nhập hiện tại của bạn tiếp tục hoạt động cho đến khi bạn kích hoạt thay thế này. Đóng hoặc làm mới sẽ loại bỏ sự thay thế.",
       "activateConfirm": "Kích hoạt thay thế",
-      "linkAccountTitle": "Liên kết với tài khoản",
-      "linkAccountDescription": "Kết nối tài khoản ẩn danh này với email hoặc đăng nhập mạng xã hội.",
-      "comingSoon": "Sắp ra mắt",
       "replacementActivated": "Liên kết đăng nhập thay thế của bạn hiện đã hoạt động."
     }
   },

@@ -788,7 +788,6 @@
     },
     "nameLabel": "Display name",
     "emailLabel": "Email",
-    "emailHelp": "Your email is tied to your account and can't be changed here.",
     "submit": "Save changes",
     "saving": "Saving…",
     "success": "Profile updated.",
@@ -848,7 +847,6 @@
       "pushMissingTarget": "Push is selected, but these notifications will not be delivered until you enable a device. You can enable one below or in Settings.",
       "rowSaved": "Notification preference saved.",
       "comingSoon": "Coming soon",
-      "emailComingSoon": "Email configuration coming soon.",
       "sections": {
         "groups": "Groups and friends",
         "expenses": "Expenses",
@@ -932,7 +930,9 @@
       "retry": "Try again",
       "pushChannel": "Push",
       "masterLabel": "Enable notifications",
-      "masterDescription": "Turn off to silence all email and push notifications. Your per-category choices are preserved."
+      "masterDescription": "Turn off to silence all email and push notifications. Your per-category choices are preserved.",
+      "emailAddToEnable": "Add a verified email to receive inbox notifications.",
+      "emailAddLink": "Add email"
     },
     "preferences": {
       "title": "App preferences",
@@ -1010,6 +1010,45 @@
       },
       "sectionOverrides": "{count} exceptions",
       "import": "Import"
+    },
+    "email": {
+      "empty": "No email",
+      "add": "Add email",
+      "change": "Change email",
+      "addHelp": "Add a verified email to recover this account and receive notifications.",
+      "changeHelp": "Changing your email requires a confirmation code sent to the new address.",
+      "addTitle": "Add an email address",
+      "changeTitle": "Change your email",
+      "addDescription": "We'll send a 6-digit code to this address. The email is saved only after you confirm it.",
+      "changeDescription": "We'll send a 6-digit code to the new address. Your current email stays until you confirm.",
+      "newLabel": "Email address",
+      "sendCode": "Send code",
+      "sending": "Sending…",
+      "codeTitle": "Enter the confirmation code",
+      "codeDescription": "We sent a 6-digit code to {email}.",
+      "codeLabel": "Confirmation code",
+      "verify": "Confirm email",
+      "verifying": "Confirming…",
+      "resend": "Resend code",
+      "cancel": "Cancel",
+      "added": "Email added.",
+      "changed": "Email updated.",
+      "graduationBody": "Anonymous sign-in links are a weak form of security: anyone with the saved URL can use this account. After you add a verified email, that link stops working and cannot be restored. You will sign in with the email instead.",
+      "errors": {
+        "inUse": "This email is already used by another account.",
+        "invalid": "Enter a valid email address.",
+        "same": "That is already your email address.",
+        "graduation": "Confirm that adding an email replaces your sign-in link.",
+        "otp": "That code is incorrect. Try again.",
+        "expired": "This code has expired. Request a new one.",
+        "rateLimited": "Too many email requests. Please try again later.",
+        "generic": "Could not update your email. Please try again.",
+        "sendFailed": "Could not send the confirmation email. Please try again."
+      },
+      "graduationTitle": "This replaces your sign-in link",
+      "useDifferent": "Use a different email",
+      "resendIn": "Resend in {seconds}s",
+      "sent": "Code sent"
     }
   },
   "CompleteProfile": {
@@ -3092,9 +3131,6 @@
       "activateDescription": "Save the replacement link before activating it.",
       "stagedDescription": "Your current sign in link keeps working until you activate this replacement. Closing or refreshing discards the replacement.",
       "activateConfirm": "Activate replacement",
-      "linkAccountTitle": "Link to account",
-      "linkAccountDescription": "Connect this anonymous account to email or a social sign-in.",
-      "comingSoon": "Coming soon",
       "replacementActivated": "Your replacement sign in link is now active."
     }
   },

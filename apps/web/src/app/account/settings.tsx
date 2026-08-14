@@ -14,6 +14,7 @@ import { useHashTargetFocus } from '@/lib/use-hash-target-focus'
 import { cn } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 
+import { AccountEmailSettings } from './account-email-settings'
 import { AccountExportModal } from './account-export-modal'
 import { AccountPreferences } from './account-preferences'
 import { AccountAiPreferences } from './ai-preferences'
@@ -29,9 +30,9 @@ import {
 
 /**
  * Account settings page. Allows a signed-in user to update their display name
- * and view (read-only) the email tied to their account. Reuses the same
- * `account.updateProfile` mutation as the magic-link `complete-profile` flow,
- * with matching validation (trimmed name, 2-50 characters).
+ * and add or change a verified email. Reuses the same `account.updateProfile`
+ * mutation as the magic-link `complete-profile` flow, with matching validation
+ * (trimmed name, 2-50 characters).
  */
 export function AccountSettingsPage() {
   return (
@@ -283,23 +284,11 @@ function AccountSettingsContent() {
                 />
               }
             />
-            {!account.isAnonymous ? (
-              <SettingsFieldRow
-                id="account-settings-email"
-                label={t('emailLabel')}
-                description={t('emailHelp')}
-                control={
-                  <Input
-                    id={settingsControlId('account-settings-email')}
-                    type="email"
-                    value={account.email ?? ''}
-                    readOnly
-                    disabled
-                    className={cn('w-full sm:max-w-xs')}
-                  />
-                }
-              />
-            ) : null}
+            <AccountEmailSettings
+              email={account.email}
+              isAnonymous={account.isAnonymous}
+              onUpdated={refreshAccount}
+            />
             {account.isAnonymous ? <AnonymousAccountSettings /> : null}
           </SettingsList>
         </SettingsSection>

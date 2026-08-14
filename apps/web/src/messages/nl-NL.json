@@ -2036,7 +2036,6 @@
     },
     "nameLabel": "Weergavenaam",
     "emailLabel": "E-mail",
-    "emailHelp": "Je e-mail is gekoppeld aan je account en kan hier niet worden gewijzigd.",
     "submit": "Wijzigingen opslaan",
     "saving": "Opslaan…",
     "success": "Profiel bijgewerkt.",
@@ -2089,7 +2088,6 @@
       "pushMissingTarget": "Push is geselecteerd, maar deze meldingen worden pas bezorgd zodra je een apparaat inschakelt. Je kunt dit hieronder of in Instellingen doen.",
       "rowSaved": "Meldingsvoorkeur opgeslagen.",
       "comingSoon": "Binnenkort beschikbaar",
-      "emailComingSoon": "E-mailconfiguratie binnenkort beschikbaar.",
       "inherited": "Overgenomen",
       "currently": "Momenteel: {channels}",
       "expenseActivity": "Uitgavenactiviteit",
@@ -2180,7 +2178,9 @@
         "summaries": "Samenvattingen"
       },
       "masterLabel": "Meldingen inschakelen",
-      "masterDescription": "Zet dit uit om alle e-mail- en pushmeldingen te dempen. Je keuzes per categorie blijven bewaard."
+      "masterDescription": "Zet dit uit om alle e-mail- en pushmeldingen te dempen. Je keuzes per categorie blijven bewaard.",
+      "emailAddToEnable": "Voeg een geverifieerd e-mailadres toe om meldingen in je inbox te ontvangen.",
+      "emailAddLink": "E-mail toevoegen"
     },
     "preferences": {
       "title": "Appvoorkeuren",
@@ -2258,6 +2258,45 @@
         "HIDDEN": "Verborgen"
       },
       "import": "Importeren"
+    },
+    "email": {
+      "empty": "Geen e-mail",
+      "add": "E-mail toevoegen",
+      "change": "E-mail wijzigen",
+      "addHelp": "Voeg een geverifieerd e-mailadres toe om dit account te herstellen en meldingen te ontvangen.",
+      "changeHelp": "Om je e-mail te wijzigen, sturen we een bevestigingscode naar het nieuwe adres.",
+      "addTitle": "E-mailadres toevoegen",
+      "changeTitle": "E-mail wijzigen",
+      "addDescription": "We sturen een 6-cijferige code naar dit adres. Het e-mailadres wordt pas opgeslagen nadat je het hebt bevestigd.",
+      "changeDescription": "We sturen een 6-cijferige code naar het nieuwe adres. Je huidige e-mail blijft tot je bevestigt.",
+      "newLabel": "E-mailadres",
+      "sendCode": "Code versturen",
+      "sending": "Versturen…",
+      "codeTitle": "Voer de bevestigingscode in",
+      "codeDescription": "We hebben een 6-cijferige code naar {email} gestuurd.",
+      "codeLabel": "Bevestigingscode",
+      "verify": "E-mail bevestigen",
+      "verifying": "Bevestigen…",
+      "resend": "Code opnieuw versturen",
+      "cancel": "Annuleren",
+      "added": "E-mail toegevoegd.",
+      "changed": "E-mail bijgewerkt.",
+      "graduationBody": "Anonieme inloglinks zijn een zwakke beveiliging: iedereen met de opgeslagen URL kan dit account gebruiken. Nadat je een geverifieerd e-mailadres toevoegt, werkt die link niet meer en kan hij niet worden hersteld. Je logt daarna in met je e-mail.",
+      "errors": {
+        "inUse": "Dit e-mailadres wordt al door een ander account gebruikt.",
+        "invalid": "Voer een geldig e-mailadres in.",
+        "same": "Dat is al je e-mailadres.",
+        "graduation": "Bevestig dat het toevoegen van een e-mail je inloglink vervangt.",
+        "otp": "Die code is onjuist. Probeer het opnieuw.",
+        "expired": "Deze code is verlopen. Vraag een nieuwe aan.",
+        "rateLimited": "Te veel e-mailverzoeken. Probeer het later opnieuw.",
+        "generic": "Je e-mail kon niet worden bijgewerkt. Probeer het opnieuw.",
+        "sendFailed": "De bevestigings-e-mail kon niet worden verstuurd. Probeer het opnieuw."
+      },
+      "graduationTitle": "Dit vervangt je inloglink",
+      "useDifferent": "Ander e-mailadres gebruiken",
+      "resendIn": "Opnieuw over {seconds}s",
+      "sent": "Code verstuurd"
     }
   },
   "Activities": {
@@ -3092,9 +3131,6 @@
       "activateDescription": "Bewaar de vervangende link voordat u deze activeert.",
       "stagedDescription": "Uw huidige inloglink blijft werken totdat u deze vervanging activeert. Als u sluit of vernieuwt, wordt de vervanging verwijderd.",
       "activateConfirm": "Activeer vervanging",
-      "linkAccountTitle": "Aan account koppelen",
-      "linkAccountDescription": "Koppel dit anonieme account aan e-mail of een sociale login.",
-      "comingSoon": "Binnenkort beschikbaar",
       "replacementActivated": "Je vervangende inloglink is nu actief."
     }
   },

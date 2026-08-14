@@ -2009,7 +2009,6 @@
     },
     "nameLabel": "Erakusteko izena",
     "emailLabel": "Helbide elektronikoa",
-    "emailHelp": "Zure helbide elektronikoa kontuarekin lotuta dago eta ezin da hemen aldatu.",
     "submit": "Gorde aldaketak",
     "saving": "Gordetzen…",
     "success": "Profila eguneratu da.",
@@ -2062,7 +2061,6 @@
       "pushMissingTarget": "Pusha hautatuta dago, baina jakinarazpen hauek ez dira bidaliko gailu bat aktibatu arte. Behean edo Ezarpenetan aktiba dezakezu.",
       "rowSaved": "Jakinarazpen-hobespena gorde da.",
       "comingSoon": "Laster",
-      "emailComingSoon": "Posta elektronikoaren konfigurazioa laster egongo da erabilgarri.",
       "inherited": "Heredatua",
       "currently": "Une honetan: {channels}",
       "expenseActivity": "Gastuen jarduera",
@@ -2153,7 +2151,9 @@
         "summaries": "Laburpenak"
       },
       "masterLabel": "Gaitu jakinarazpenak",
-      "masterDescription": "Desaktibatu posta- eta push-jakinarazpen guztiak isiltzeko. Kategorien araberako aukerak gordeta mantentzen dira."
+      "masterDescription": "Desaktibatu posta- eta push-jakinarazpen guztiak isiltzeko. Kategorien araberako aukerak gordeta mantentzen dira.",
+      "emailAddToEnable": "Gehitu egiaztatutako helbide elektroniko bat sarrerako ontziko jakinarazpenak jasotzeko.",
+      "emailAddLink": "Gehitu helbidea"
     },
     "preferences": {
       "title": "Aplikazioaren hobespenak",
@@ -2231,6 +2231,45 @@
         "HIDDEN": "Ezkutukoak"
       },
       "import": "Inportatu"
+    },
+    "email": {
+      "empty": "Helbiderik ez",
+      "add": "Gehitu helbidea",
+      "change": "Aldatu helbidea",
+      "addHelp": "Gehitu egiaztatutako helbide elektroniko bat kontu hau berreskuratzeko eta jakinarazpenak jasotzeko.",
+      "changeHelp": "Helbide elektronikoa aldatzeko, helbide berrira bidalitako berrespen-kode bat behar da.",
+      "addTitle": "Gehitu helbide elektronikoa",
+      "changeTitle": "Aldatu helbide elektronikoa",
+      "addDescription": "6 digituko kode bat bidaliko dugu helbide honetara. Helbide elektronikoa berretsi ondoren soilik gordeko da.",
+      "changeDescription": "6 digituko kode bat bidaliko dugu helbide berrira. Uneko helbidea berretsi arte mantenduko da.",
+      "newLabel": "Helbide elektronikoa",
+      "sendCode": "Bidali kodea",
+      "sending": "Bidaltzen…",
+      "codeTitle": "Sartu berrespen-kodea",
+      "codeDescription": "6 digituko kode bat bidali dugu {email} helbidera.",
+      "codeLabel": "Berrespen-kodea",
+      "verify": "Berretsi helbidea",
+      "verifying": "Berresten…",
+      "resend": "Birbidali kodea",
+      "cancel": "Utzi",
+      "added": "Helbide elektronikoa gehitu da.",
+      "changed": "Helbide elektronikoa eguneratu da.",
+      "graduationBody": "Saioa hasteko esteka anonimoak segurtasun ahula dira: gordetako URLa duen edonork erabil dezake kontu hau. Egiaztatutako helbide elektroniko bat gehitzen duzunean, esteka horrek funtzionatzeari uzten dio eta ezin da leheneratu. Hemendik aurrera, helbide elektronikoarekin hasiko duzu saioa.",
+      "errors": {
+        "inUse": "Helbide elektroniko hau beste kontu batek erabiltzen du jada.",
+        "invalid": "Sartu helbide elektroniko baliozko bat.",
+        "same": "Hori da jada zure helbide elektronikoa.",
+        "graduation": "Berretsi helbide elektronikoa gehitzeak saioa hasteko esteka ordezkatzen duela.",
+        "otp": "Kode hori ez da zuzena. Saiatu berriro.",
+        "expired": "Kode hau iraungi da. Eskatu berri bat.",
+        "rateLimited": "Helbide elektroniko eskaera gehiegi. Saiatu berriro geroago.",
+        "generic": "Ezin izan da helbide elektronikoa eguneratu. Saiatu berriro.",
+        "sendFailed": "Ezin izan da berrespeneko mezu elektronikoa bidali. Saiatu berriro."
+      },
+      "graduationTitle": "Honek saioa hasteko esteka ordezkatzen du",
+      "useDifferent": "Erabili beste helbide bat",
+      "resendIn": "Birbidali {seconds}s barru",
+      "sent": "Kodea bidali da"
     }
   },
   "Activities": {
@@ -3038,9 +3077,6 @@
       "activateDescription": "Gorde ordezko esteka aktibatu aurretik.",
       "stagedDescription": "Zure oraingo saioa hasteko estekak funtzionatzen jarraituko du ordezko hau aktibatzen duzun arte. Itxi edo freskatzeak ordezkoa baztertzen du.",
       "activateConfirm": "Aktibatu ordezkoa",
-      "linkAccountTitle": "Lotu kontu batera",
-      "linkAccountDescription": "Lotu kontu anonimo hau posta elektroniko edo sare sozial bidezko saio-hasiera batekin.",
-      "comingSoon": "Laster",
       "replacementActivated": "Ordezko saioa hasteko esteka aktibo dago orain."
     }
   },

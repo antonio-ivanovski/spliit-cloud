@@ -1993,7 +1993,6 @@
     },
     "nameLabel": "顯示名稱",
     "emailLabel": "電子郵件",
-    "emailHelp": "您的電子郵件與帳戶綁定，無法在此變更。",
     "submit": "儲存變更",
     "saving": "儲存中…",
     "success": "個人資料已更新。",
@@ -2046,7 +2045,6 @@
       "pushMissingTarget": "已選擇推播，但在啟用裝置前不會傳送這些通知。你可以在下方或設定中啟用裝置。",
       "rowSaved": "通知偏好設定已儲存。",
       "comingSoon": "即將推出",
-      "emailComingSoon": "電子郵件設定即將推出。",
       "inherited": "沿用",
       "currently": "目前：{channels}",
       "expenseActivity": "支出活動",
@@ -2137,7 +2135,9 @@
         "summaries": "摘要"
       },
       "masterLabel": "啟用通知",
-      "masterDescription": "關閉後，所有電子郵件和推播通知都會靜默。您的分類選擇會保留。"
+      "masterDescription": "關閉後，所有電子郵件和推播通知都會靜默。您的分類選擇會保留。",
+      "emailAddToEnable": "新增已驗證的電子郵件以接收收件匣通知。",
+      "emailAddLink": "新增電子郵件"
     },
     "preferences": {
       "title": "應用程式偏好設定",
@@ -2215,6 +2215,45 @@
         "HIDDEN": "已隱藏"
       },
       "import": "匯入"
+    },
+    "email": {
+      "empty": "尚無電子郵件",
+      "add": "新增電子郵件",
+      "change": "變更電子郵件",
+      "addHelp": "新增已驗證的電子郵件，以便復原此帳戶並接收通知。",
+      "changeHelp": "變更電子郵件需要向新地址傳送驗證碼。",
+      "addTitle": "新增電子郵件地址",
+      "changeTitle": "變更電子郵件",
+      "addDescription": "我們會向此地址傳送6位數驗證碼。確認後才會儲存此電子郵件。",
+      "changeDescription": "我們會向新地址傳送6位數驗證碼。確認前，目前的電子郵件維持不變。",
+      "newLabel": "電子郵件地址",
+      "sendCode": "傳送驗證碼",
+      "sending": "傳送中…",
+      "codeTitle": "輸入驗證碼",
+      "codeDescription": "我們已向 {email} 傳送6位數驗證碼。",
+      "codeLabel": "驗證碼",
+      "verify": "確認電子郵件",
+      "verifying": "確認中…",
+      "resend": "重新傳送驗證碼",
+      "cancel": "取消",
+      "added": "已新增電子郵件。",
+      "changed": "電子郵件已更新。",
+      "graduationBody": "匿名登入連結的安全性較弱：任何持有已儲存網址的人都可以使用此帳戶。新增已驗證的電子郵件後，該連結將失效且無法復原。之後您將使用電子郵件登入。",
+      "errors": {
+        "inUse": "此電子郵件已被其他帳戶使用。",
+        "invalid": "請輸入有效的電子郵件地址。",
+        "same": "這已經是您目前的電子郵件。",
+        "graduation": "請確認新增電子郵件會替換您的登入連結。",
+        "otp": "驗證碼不正確。請再試一次。",
+        "expired": "此驗證碼已過期。請重新取得。",
+        "rateLimited": "電子郵件請求過於頻繁。請稍後再試。",
+        "generic": "無法更新您的電子郵件。請重試。",
+        "sendFailed": "無法傳送確認電子郵件。請重試。"
+      },
+      "graduationTitle": "這將替換您的登入連結",
+      "useDifferent": "使用其他電子郵件",
+      "resendIn": "{seconds} 秒後重新傳送",
+      "sent": "驗證碼已傳送"
     }
   },
   "Activities": {
@@ -3003,9 +3042,6 @@
       "activateDescription": "在啟動替換連結之前保存它。",
       "stagedDescription": "您目前的登入連結將一直有效，直到您啟動此替代連結。關閉或刷新會放棄替換。",
       "activateConfirm": "啟動替換",
-      "linkAccountTitle": "連結帳戶",
-      "linkAccountDescription": "將此匿名帳戶連結至電子郵件或社群登入方式。",
-      "comingSoon": "即將推出",
       "replacementActivated": "您的替代登入連結現已生效。"
     }
   },

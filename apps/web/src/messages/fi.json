@@ -2000,7 +2000,6 @@
     },
     "nameLabel": "Näyttönimi",
     "emailLabel": "Sähköposti",
-    "emailHelp": "Sähköpostisi on sidottu tiliisi, eikä sitä voi muuttaa tässä.",
     "submit": "Tallenna muutokset",
     "saving": "Tallennetaan…",
     "success": "Profiili päivitetty.",
@@ -2053,7 +2052,6 @@
       "pushMissingTarget": "Push on valittu, mutta näitä ilmoituksia ei toimiteta ennen kuin otat laitteen käyttöön. Voit ottaa laitteen käyttöön alla tai asetuksissa.",
       "rowSaved": "Ilmoitusasetus tallennettu.",
       "comingSoon": "Tulossa pian",
-      "emailComingSoon": "Sähköpostiasetukset ovat tulossa pian.",
       "inherited": "Peritty",
       "currently": "Tällä hetkellä: {channels}",
       "expenseActivity": "Kulutapahtumat",
@@ -2144,7 +2142,9 @@
         "summaries": "Yhteenvedot"
       },
       "masterLabel": "Ota ilmoitukset käyttöön",
-      "masterDescription": "Poista käytöstä mykistääksesi kaikki sähköposti- ja push-ilmoitukset. Luokkakohtaiset valintasi säilyvät ennallaan."
+      "masterDescription": "Poista käytöstä mykistääksesi kaikki sähköposti- ja push-ilmoitukset. Luokkakohtaiset valintasi säilyvät ennallaan.",
+      "emailAddToEnable": "Lisää vahvistettu sähköposti vastaanottaaksesi ilmoituksia postilaatikkoosi.",
+      "emailAddLink": "Lisää sähköposti"
     },
     "preferences": {
       "title": "Sovellusasetukset",
@@ -2222,6 +2222,45 @@
         "HIDDEN": "Piilotettu"
       },
       "import": "Tuo"
+    },
+    "email": {
+      "empty": "Ei sähköpostia",
+      "add": "Lisää sähköposti",
+      "change": "Vaihda sähköposti",
+      "addHelp": "Lisää vahvistettu sähköposti, jotta voit palauttaa tämän tilin ja vastaanottaa ilmoituksia.",
+      "changeHelp": "Sähköpostin vaihtaminen edellyttää vahvistuskoodia, joka lähetetään uuteen osoitteeseen.",
+      "addTitle": "Lisää sähköpostiosoite",
+      "changeTitle": "Vaihda sähköpostisi",
+      "addDescription": "Lähetämme 6-numeroisen koodin tähän osoitteeseen. Sähköposti tallennetaan vasta, kun vahvistat sen.",
+      "changeDescription": "Lähetämme 6-numeroisen koodin uuteen osoitteeseen. Nykyinen sähköpostisi säilyy, kunnes vahvistat.",
+      "newLabel": "Sähköpostiosoite",
+      "sendCode": "Lähetä koodi",
+      "sending": "Lähetetään…",
+      "codeTitle": "Anna vahvistuskoodi",
+      "codeDescription": "Lähetimme 6-numeroisen koodin osoitteeseen {email}.",
+      "codeLabel": "Vahvistuskoodi",
+      "verify": "Vahvista sähköposti",
+      "verifying": "Vahvistetaan…",
+      "resend": "Lähetä koodi uudelleen",
+      "cancel": "Peruuta",
+      "added": "Sähköposti lisätty.",
+      "changed": "Sähköposti päivitetty.",
+      "graduationBody": "Nimettömät kirjautumislinkit ovat heikko suojaus: kuka tahansa tallennetun URL-osoitteen haltija voi käyttää tätä tiliä. Kun lisäät vahvistetun sähköpostin, linkki lakkaa toimimasta eikä sitä voi palauttaa. Kirjaudut sen jälkeen sähköpostilla.",
+      "errors": {
+        "inUse": "Tämä sähköposti on jo toisen tilin käytössä.",
+        "invalid": "Anna kelvollinen sähköpostiosoite.",
+        "same": "Tämä on jo sähköpostiosoitteesi.",
+        "graduation": "Vahvista, että sähköpostin lisääminen korvaa kirjautumislinkkisi.",
+        "otp": "Koodi on virheellinen. Yritä uudelleen.",
+        "expired": "Tämä koodi on vanhentunut. Pyydä uusi.",
+        "rateLimited": "Liian monta sähköpostipyyntöä. Yritä myöhemmin uudelleen.",
+        "generic": "Sähköpostia ei voitu päivittää. Yritä uudelleen.",
+        "sendFailed": "Vahvistussähköpostia ei voitu lähettää. Yritä uudelleen."
+      },
+      "graduationTitle": "Tämä korvaa kirjautumislinkkisi",
+      "useDifferent": "Käytä toista sähköpostia",
+      "resendIn": "Uudelleen {seconds} s kuluttua",
+      "sent": "Koodi lähetetty"
     }
   },
   "Activities": {
@@ -3020,9 +3059,6 @@
       "activateDescription": "Tallenna korvaava linkki ennen sen aktivointia.",
       "stagedDescription": "Nykyinen kirjautumislinkkisi toimii, kunnes aktivoit tämän korvaavan linkin. Sulkeminen tai päivittäminen hylkää korvaavan tuotteen.",
       "activateConfirm": "Aktivoi vaihto",
-      "linkAccountTitle": "Yhdistä tiliin",
-      "linkAccountDescription": "Yhdistä tämä anonyymi tili sähköpostiin tai sosiaaliseen kirjautumiseen.",
-      "comingSoon": "Tulossa pian",
       "replacementActivated": "Korvaava kirjautumislinkkisi on nyt käytössä."
     }
   },

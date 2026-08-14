@@ -2009,7 +2009,6 @@
     },
     "nameLabel": "Nome de exibição",
     "emailLabel": "E-mail",
-    "emailHelp": "Seu e-mail está vinculado à sua conta e não pode ser alterado aqui.",
     "submit": "Salvar alterações",
     "saving": "Salvando…",
     "success": "Perfil atualizado.",
@@ -2062,7 +2061,6 @@
       "pushMissingTarget": "As notificações push estão selecionadas, mas não serão entregues até que você ative um dispositivo. Você pode ativar um abaixo ou em Configurações.",
       "rowSaved": "Preferência de notificação salva.",
       "comingSoon": "Em breve",
-      "emailComingSoon": "A configuração de e-mail estará disponível em breve.",
       "inherited": "Herdado",
       "currently": "Atualmente: {channels}",
       "expenseActivity": "Atividade de despesas",
@@ -2153,7 +2151,9 @@
         "summaries": "Resumos"
       },
       "masterLabel": "Ativar notificações",
-      "masterDescription": "Desative para silenciar todos os e-mails e notificações push. Suas escolhas por categoria são preservadas."
+      "masterDescription": "Desative para silenciar todos os e-mails e notificações push. Suas escolhas por categoria são preservadas.",
+      "emailAddToEnable": "Adicione um e-mail verificado para receber notificações na caixa de entrada.",
+      "emailAddLink": "Adicionar e-mail"
     },
     "preferences": {
       "title": "Preferências do aplicativo",
@@ -2231,6 +2231,45 @@
         "HIDDEN": "Ocultos"
       },
       "import": "Importar"
+    },
+    "email": {
+      "empty": "Sem e-mail",
+      "add": "Adicionar e-mail",
+      "change": "Alterar e-mail",
+      "addHelp": "Adicione um e-mail verificado para recuperar esta conta e receber notificações.",
+      "changeHelp": "Para alterar o e-mail, é necessário um código de confirmação enviado ao novo endereço.",
+      "addTitle": "Adicionar um endereço de e-mail",
+      "changeTitle": "Alterar seu e-mail",
+      "addDescription": "Enviaremos um código de 6 dígitos para este endereço. O e-mail só é salvo depois que você confirmar.",
+      "changeDescription": "Enviaremos um código de 6 dígitos para o novo endereço. Seu e-mail atual permanece até você confirmar.",
+      "newLabel": "Endereço de e-mail",
+      "sendCode": "Enviar código",
+      "sending": "Enviando…",
+      "codeTitle": "Digite o código de confirmação",
+      "codeDescription": "Enviamos um código de 6 dígitos para {email}.",
+      "codeLabel": "Código de confirmação",
+      "verify": "Confirmar e-mail",
+      "verifying": "Confirmando…",
+      "resend": "Reenviar código",
+      "cancel": "Cancelar",
+      "added": "E-mail adicionado.",
+      "changed": "E-mail atualizado.",
+      "graduationBody": "Links de acesso anônimos são uma forma fraca de segurança: qualquer pessoa com o URL salvo pode usar esta conta. Depois que você adicionar um e-mail verificado, esse link deixa de funcionar e não pode ser restaurado. Você vai entrar com o e-mail.",
+      "errors": {
+        "inUse": "Este e-mail já é usado por outra conta.",
+        "invalid": "Digite um endereço de e-mail válido.",
+        "same": "Esse já é o seu endereço de e-mail.",
+        "graduation": "Confirme que adicionar um e-mail substitui seu link de acesso.",
+        "otp": "Esse código está incorreto. Tente novamente.",
+        "expired": "Este código expirou. Solicite um novo.",
+        "rateLimited": "Muitas solicitações de e-mail. Tente novamente mais tarde.",
+        "generic": "Não foi possível atualizar seu e-mail. Tente novamente.",
+        "sendFailed": "Não foi possível enviar o e-mail de confirmação. Tente novamente."
+      },
+      "graduationTitle": "Isso substitui seu link de acesso",
+      "useDifferent": "Usar outro e-mail",
+      "resendIn": "Reenviar em {seconds}s",
+      "sent": "Código enviado"
     }
   },
   "Activities": {
@@ -3038,9 +3077,6 @@
       "activateDescription": "Salve o link de substituição antes de ativá-lo.",
       "stagedDescription": "Seu link de login atual continua funcionando até você ativar esta substituição. Fechar ou atualizar descarta a substituição.",
       "activateConfirm": "Ativar substituição",
-      "linkAccountTitle": "Vincular a uma conta",
-      "linkAccountDescription": "Conecte esta conta anônima a um e-mail ou login social.",
-      "comingSoon": "Em breve",
       "replacementActivated": "Seu link de login substituto agora está ativo."
     }
   },

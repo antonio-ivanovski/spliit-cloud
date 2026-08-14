@@ -132,6 +132,13 @@ describe('better-auth session config', () => {
     )
   })
 
+  it('registers the Spliit email add/change plugin', () => {
+    const plugin = realAuthModule.auth.options.plugins?.find(
+      (candidate) => candidate.id === 'spliit-email-change',
+    )
+    expect(plugin).toBeDefined()
+  })
+
   it('marks a new anonymous account for the standard profile-name flow', async () => {
     prismaMock.account.count.mockResolvedValue(0)
     const beforeCreate =

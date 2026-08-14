@@ -47,7 +47,6 @@
   "AccountSettings": {
     "nameLabel": "display name",
     "emailLabel": "email, obviously",
-    "emailHelp": "your email is locked to the account and cannot change here, sorry bestie.",
     "aiPreferences": {
       "title": "AI antics",
       "description": "configure the AI antics and decide how it behaves.",
@@ -120,7 +119,6 @@
       "pushMissingTarget": "push is selected, but these pings will not arrive until you enable a device. do it below or in Settings.",
       "rowSaved": "notification preference saved. we love growth.",
       "comingSoon": "coming soon, no cap",
-      "emailComingSoon": "email setup is coming soon, allegedly.",
       "inherited": "inherited vibes",
       "currently": "currently: {channels}",
       "categories": {
@@ -210,7 +208,9 @@
         "summaries": "recap zone"
       },
       "masterLabel": "turn on notifications",
-      "masterDescription": "Switch off to mute all email and push notifications. Your per-category picks are kept."
+      "masterDescription": "Switch off to mute all email and push notifications. Your per-category picks are kept.",
+      "emailAddToEnable": "add a verified email to get inbox notifications.",
+      "emailAddLink": "add an email"
     },
     "preferences": {
       "title": "app vibes",
@@ -274,6 +274,45 @@
         "HIDDEN": "hidden"
       },
       "import": "bring it in"
+    },
+    "email": {
+      "empty": "no email yet",
+      "add": "add an email",
+      "change": "change email",
+      "addHelp": "add a verified email so you can recover this account and get notifications.",
+      "changeHelp": "changing your email needs a confirmation code sent to the new address.",
+      "addTitle": "add an email address",
+      "changeTitle": "change your email",
+      "addDescription": "we'll send a 6-digit code to this address. the email only sticks after you confirm it.",
+      "changeDescription": "we'll send a 6-digit code to the new address. your current email stays until you confirm.",
+      "newLabel": "email address",
+      "sendCode": "send the code",
+      "sending": "sending it…",
+      "codeTitle": "enter the confirmation code",
+      "codeDescription": "we sent a 6-digit code to {email}.",
+      "codeLabel": "confirmation code",
+      "verify": "confirm the email",
+      "verifying": "confirming…",
+      "resend": "resend the code",
+      "cancel": "never mind",
+      "added": "email added. we love to see it.",
+      "changed": "email updated. we love to see it.",
+      "graduationBody": "anon sign-in links are weak security: anyone with the saved URL can use this account. after you add a verified email, that link stops working and cannot be restored. you will sign in with the email instead.",
+      "errors": {
+        "inUse": "this email is already used by another account.",
+        "invalid": "enter a real email address.",
+        "same": "that's already your email, bestie.",
+        "graduation": "confirm that adding an email replaces your sign-in link.",
+        "otp": "that code is wrong. try again.",
+        "expired": "this code expired. request a new one.",
+        "rateLimited": "too many email requests. try again later.",
+        "generic": "couldn't update your email. try again.",
+        "sendFailed": "couldn't send the confirmation email. try again."
+      },
+      "graduationTitle": "this replaces your sign-in link",
+      "useDifferent": "use a different email",
+      "resendIn": "resend in {seconds}s",
+      "sent": "code sent"
     }
   },
   "Activities": {
@@ -3012,9 +3051,6 @@
       "activateDescription": "Save the new link before you activate it.",
       "stagedDescription": "Your current sign in link still works until you activate this one. Close or refresh and this replacement is gone.",
       "activateConfirm": "Activate new link",
-      "linkAccountTitle": "Link to an account",
-      "linkAccountDescription": "Connect this anon account to email or social sign-in.",
-      "comingSoon": "coming soon, fr",
       "replacementActivated": "your replacement sign-in link is active now."
     }
   },

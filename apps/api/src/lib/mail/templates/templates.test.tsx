@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest'
 
 import {
   renderBudgetAlertEmail,
+  renderEmailChangedNoticeEmail,
+  renderEmailChangeOtpEmail,
   renderExpenseActivityEmail,
   renderFriendLedgerEmail,
   renderGroupActivityEmail,
@@ -81,6 +83,31 @@ describe('email templates', () => {
         'If you did not request this email, you can safely ignore it.',
       )
       expect(r.html).toContain('Your Spliit Cloud sign-in link')
+    })
+  })
+
+  describe('renderEmailChangeOtpEmail', () => {
+    it('renders the confirmation code in both email formats', async () => {
+      const r = await renderEmailChangeOtpEmail({
+        otp: '482917',
+        expiresInMinutes: 10,
+      })
+      expect(r.subject).toBe('Your Spliit Cloud email confirmation code')
+      expect(r.text).toContain('482917')
+      expect(r.text).toContain('expires in 10 minutes')
+      expect(r.html).toContain('482917')
+      expect(r.html).toContain('Confirm your email')
+    })
+  })
+
+  describe('renderEmailChangedNoticeEmail', () => {
+    it('names the new address in both email formats', async () => {
+      const r = await renderEmailChangedNoticeEmail({
+        newEmail: 'new@example.com',
+      })
+      expect(r.subject).toBe('Your Spliit Cloud email address was changed')
+      expect(r.text).toContain('new@example.com')
+      expect(r.html).toContain('new@example.com')
     })
   })
 

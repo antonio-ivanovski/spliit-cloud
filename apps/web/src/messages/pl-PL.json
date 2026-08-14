@@ -2018,7 +2018,6 @@
     },
     "nameLabel": "Nazwa wyświetlana",
     "emailLabel": "E-mail",
-    "emailHelp": "Twój e-mail jest powiązany z kontem i nie można go tutaj zmienić.",
     "submit": "Zapisz zmiany",
     "saving": "Zapisywanie…",
     "success": "Profil zaktualizowany.",
@@ -2071,7 +2070,6 @@
       "pushMissingTarget": "Wybrano push, ale te powiadomienia nie będą dostarczane, dopóki nie włączysz urządzenia. Możesz włączyć je poniżej lub w Ustawieniach.",
       "rowSaved": "Preferencja powiadomień została zapisana.",
       "comingSoon": "Już wkrótce",
-      "emailComingSoon": "Konfiguracja poczty e-mail już wkrótce.",
       "inherited": "Dziedziczone",
       "currently": "Obecnie: {channels}",
       "expenseActivity": "Aktywność wydatków",
@@ -2162,7 +2160,9 @@
         "summaries": "Podsumowania"
       },
       "masterLabel": "Włącz powiadomienia",
-      "masterDescription": "Wyłącz, aby wyciszyć wszystkie powiadomienia e-mail i push. Twoje wybory według kategorii zostaną zachowane."
+      "masterDescription": "Wyłącz, aby wyciszyć wszystkie powiadomienia e-mail i push. Twoje wybory według kategorii zostaną zachowane.",
+      "emailAddToEnable": "Dodaj zweryfikowany e-mail, aby otrzymywać powiadomienia na skrzynkę.",
+      "emailAddLink": "Dodaj e-mail"
     },
     "preferences": {
       "title": "Preferencje aplikacji",
@@ -2240,6 +2240,45 @@
         "HIDDEN": "Ukryte"
       },
       "import": "Importuj"
+    },
+    "email": {
+      "empty": "Brak e-maila",
+      "add": "Dodaj e-mail",
+      "change": "Zmień e-mail",
+      "addHelp": "Dodaj zweryfikowany e-mail, aby odzyskać to konto i otrzymywać powiadomienia.",
+      "changeHelp": "Zmiana e-maila wymaga kodu potwierdzenia wysłanego na nowy adres.",
+      "addTitle": "Dodaj adres e-mail",
+      "changeTitle": "Zmień e-mail",
+      "addDescription": "Wyślemy 6-cyfrowy kod na ten adres. E-mail zostanie zapisany dopiero po potwierdzeniu.",
+      "changeDescription": "Wyślemy 6-cyfrowy kod na nowy adres. Obecny e-mail pozostanie, dopóki nie potwierdzisz.",
+      "newLabel": "Adres e-mail",
+      "sendCode": "Wyślij kod",
+      "sending": "Wysyłanie…",
+      "codeTitle": "Wprowadź kod potwierdzenia",
+      "codeDescription": "Wysłaliśmy 6-cyfrowy kod na adres {email}.",
+      "codeLabel": "Kod potwierdzenia",
+      "verify": "Potwierdź e-mail",
+      "verifying": "Potwierdzanie…",
+      "resend": "Wyślij kod ponownie",
+      "cancel": "Anuluj",
+      "added": "Dodano e-mail.",
+      "changed": "Zaktualizowano e-mail.",
+      "graduationBody": "Anonimowe linki logowania to słaba forma zabezpieczenia: każdy, kto ma zapisany adres URL, może korzystać z tego konta. Po dodaniu zweryfikowanego e-maila ten link przestanie działać i nie będzie można go przywrócić. Będziesz logować się za pomocą e-maila.",
+      "errors": {
+        "inUse": "Ten e-mail jest już używany przez inne konto.",
+        "invalid": "Wprowadź prawidłowy adres e-mail.",
+        "same": "To już jest Twój adres e-mail.",
+        "graduation": "Potwierdź, że dodanie e-maila zastąpi Twój link logowania.",
+        "otp": "Ten kod jest nieprawidłowy. Spróbuj ponownie.",
+        "expired": "Ten kod wygasł. Poproś o nowy.",
+        "rateLimited": "Zbyt wiele żądań e-mail. Spróbuj ponownie później.",
+        "generic": "Nie udało się zaktualizować e-maila. Spróbuj ponownie.",
+        "sendFailed": "Nie udało się wysłać e-maila z potwierdzeniem. Spróbuj ponownie."
+      },
+      "graduationTitle": "To zastąpi Twój link logowania",
+      "useDifferent": "Użyj innego e-maila",
+      "resendIn": "Ponownie za {seconds} s",
+      "sent": "Kod wysłany"
     }
   },
   "Activities": {
@@ -3054,9 +3093,6 @@
       "activateDescription": "Zapisz link zastępczy przed jego aktywacją.",
       "stagedDescription": "Twoje obecne łącze odzyskiwania będzie działać, dopóki nie aktywujesz tego zamiennika. Zamknięcie lub odświeżenie powoduje odrzucenie zamiennika.",
       "activateConfirm": "Aktywuj wymianę",
-      "linkAccountTitle": "Połącz z kontem",
-      "linkAccountDescription": "Połącz to anonimowe konto z adresem e-mail lub logowaniem społecznościowym.",
-      "comingSoon": "Już wkrótce",
       "replacementActivated": "Zastępczy link logowania jest teraz aktywny."
     }
   },

@@ -32,12 +32,13 @@ import {
 } from '../mail/templates'
 import {
   FixedWindowLimiter,
-  hashRateLimitIdentity,
   logRateLimitExceeded,
   resolveClientIp,
 } from '../rate-limit'
 import { invalidateAccountCache } from './account-cache'
 import { anonymousRecovery } from './anonymous-recovery'
+import { emailChange } from './email-change'
+import { enforceAuthEmailRecipientLimit } from './email-rate-limit'
 import {
   assertCanCreateAccount,
   enforceSignupGate,
@@ -46,11 +47,6 @@ import {
 import { getApiBaseUrl } from './urls'
 
 const oidcProvider = getConfiguredOidcProvider()
-
-const authEmailRecipientLimiter = new FixedWindowLimiter({
-  limit: 10,
-  windowMs: 60 * 60 * 1000,
-})
 
 const anonymousSignupLimiter = new FixedWindowLimiter({
   limit: 10,
@@ -145,29 +141,6 @@ const beforeAuthMiddleware = createAuthMiddleware(async (ctx) => {
   await persistSignupInviteCookie(ctx)
   await enforceSignupGate(ctx)
 })
-
-function enforceAuthEmailRecipientLimit(email: string, path: string): void {
-  const normalizedEmail = email.trim().toLowerCase()
-  const decision = authEmailRecipientLimiter.hit(
-    hashRateLimitIdentity(normalizedEmail),
-  )
-  if (decision.allowed) return
-
-  logRateLimitExceeded({
-    policy: 'auth-email-recipient',
-    identity: normalizedEmail,
-    retryAfterSeconds: decision.retryAfterSeconds,
-    path,
-  })
-  throw new APIError(
-    'TOO_MANY_REQUESTS',
-    {
-      message: 'Too many email requests. Please try again later.',
-      code: 'EMAIL_RATE_LIMIT_EXCEEDED',
-    },
-    { 'Retry-After': String(decision.retryAfterSeconds) },
-  )
-}
 
 // Integration and unit tests share the local PostgreSQL database with the
 // already-running development API. Persisting test signing keys there would
@@ -604,6 +577,7 @@ export const auth = betterAuth({
         `guest-${randomUUID()}@anonymous.placeholder.local`,
     }),
     anonymousRecovery(),
+    emailChange(),
     ...(oidcProvider
       ? [
           genericOAuth({

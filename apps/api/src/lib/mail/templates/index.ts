@@ -1,8 +1,12 @@
 export {
+  EmailChangedNoticeEmail,
+  EmailChangeOtpEmail,
   MagicLinkEmail,
   PasswordRecoveryEmail,
   SignInGuidanceEmail,
   VerificationEmail,
+  renderEmailChangedNoticeEmail,
+  renderEmailChangeOtpEmail,
   renderMagicLinkEmail,
   renderPasswordRecoveryEmail,
   renderVerificationEmail,

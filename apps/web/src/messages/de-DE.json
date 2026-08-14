@@ -2036,7 +2036,6 @@
     },
     "nameLabel": "Anzeigename",
     "emailLabel": "E-Mail",
-    "emailHelp": "Deine E-Mail ist mit deinem Konto verknüpft und kann hier nicht geändert werden.",
     "submit": "Änderungen speichern",
     "saving": "Speichern…",
     "success": "Profil aktualisiert.",
@@ -2089,7 +2088,6 @@
       "pushMissingTarget": "Push ist ausgewählt, aber diese Benachrichtigungen werden erst zugestellt, wenn du ein Gerät aktivierst. Du kannst unten oder in den Einstellungen eines aktivieren.",
       "rowSaved": "Benachrichtigungseinstellung gespeichert.",
       "comingSoon": "Demnächst verfügbar",
-      "emailComingSoon": "Die E-Mail-Konfiguration ist demnächst verfügbar.",
       "inherited": "Übernommen",
       "currently": "Aktuell: {channels}",
       "expenseActivity": "Ausgabenaktivität",
@@ -2180,7 +2178,9 @@
         "summaries": "Zusammenfassungen"
       },
       "masterLabel": "Benachrichtigungen aktivieren",
-      "masterDescription": "Deaktivieren, um alle E-Mail- und Push-Benachrichtigungen stummzuschalten. Deine Auswahl pro Kategorie bleibt erhalten."
+      "masterDescription": "Deaktivieren, um alle E-Mail- und Push-Benachrichtigungen stummzuschalten. Deine Auswahl pro Kategorie bleibt erhalten.",
+      "emailAddToEnable": "Füge eine bestätigte E-Mail hinzu, um Benachrichtigungen im Posteingang zu erhalten.",
+      "emailAddLink": "E-Mail hinzufügen"
     },
     "preferences": {
       "title": "App-Einstellungen",
@@ -2258,6 +2258,45 @@
         "HIDDEN": "Ausgeblendet"
       },
       "import": "Importieren"
+    },
+    "email": {
+      "empty": "Keine E-Mail",
+      "add": "E-Mail hinzufügen",
+      "change": "E-Mail ändern",
+      "addHelp": "Füge eine bestätigte E-Mail hinzu, um dieses Konto wiederherzustellen und Benachrichtigungen zu erhalten.",
+      "changeHelp": "Zum Ändern deiner E-Mail wird ein Bestätigungscode an die neue Adresse gesendet.",
+      "addTitle": "E-Mail-Adresse hinzufügen",
+      "changeTitle": "E-Mail ändern",
+      "addDescription": "Wir senden einen 6-stelligen Code an diese Adresse. Die E-Mail wird erst gespeichert, wenn du sie bestätigt hast.",
+      "changeDescription": "Wir senden einen 6-stelligen Code an die neue Adresse. Deine aktuelle E-Mail bleibt, bis du bestätigt hast.",
+      "newLabel": "E-Mail-Adresse",
+      "sendCode": "Code senden",
+      "sending": "Wird gesendet…",
+      "codeTitle": "Bestätigungscode eingeben",
+      "codeDescription": "Wir haben einen 6-stelligen Code an {email} gesendet.",
+      "codeLabel": "Bestätigungscode",
+      "verify": "E-Mail bestätigen",
+      "verifying": "Wird bestätigt…",
+      "resend": "Code erneut senden",
+      "cancel": "Abbrechen",
+      "added": "E-Mail hinzugefügt.",
+      "changed": "E-Mail aktualisiert.",
+      "graduationBody": "Anonyme Anmeldelinks sind unsicher: Jeder mit der gespeicherten URL kann dieses Konto nutzen. Sobald du eine bestätigte E-Mail hinzufügst, funktioniert dieser Link nicht mehr und kann nicht wiederhergestellt werden. Du meldest dich dann mit der E-Mail an.",
+      "errors": {
+        "inUse": "Diese E-Mail wird bereits von einem anderen Konto verwendet.",
+        "invalid": "Gib eine gültige E-Mail-Adresse ein.",
+        "same": "Das ist bereits deine E-Mail-Adresse.",
+        "graduation": "Bestätige, dass das Hinzufügen einer E-Mail deinen Anmeldelink ersetzt.",
+        "otp": "Dieser Code ist falsch. Versuche es erneut.",
+        "expired": "Dieser Code ist abgelaufen. Fordere einen neuen an.",
+        "rateLimited": "Zu viele E-Mail-Anfragen. Bitte versuche es später erneut.",
+        "generic": "Deine E-Mail konnte nicht aktualisiert werden. Bitte versuche es erneut.",
+        "sendFailed": "Die Bestätigungs-E-Mail konnte nicht gesendet werden. Bitte versuche es erneut."
+      },
+      "graduationTitle": "Das ersetzt deinen Anmeldelink",
+      "useDifferent": "Andere E-Mail verwenden",
+      "resendIn": "Erneut in {seconds}s",
+      "sent": "Code gesendet"
     }
   },
   "Activities": {
@@ -3092,9 +3131,6 @@
       "activateDescription": "Speichere den Ersatzlink, bevor du ihn aktivierst.",
       "stagedDescription": "Dein aktueller Anmeldelink funktioniert weiterhin, bis du diesen Ersatz aktivierst. Beim Schließen oder Aktualisieren wird der Ersatz verworfen.",
       "activateConfirm": "Ersetzung aktivieren",
-      "linkAccountTitle": "Mit Konto verknüpfen",
-      "linkAccountDescription": "Verknüpfe dieses anonyme Konto mit einer E-Mail-Adresse oder einem Social-Login.",
-      "comingSoon": "Demnächst verfügbar",
       "replacementActivated": "Dein neuer Anmeldelink ist jetzt aktiv."
     }
   },

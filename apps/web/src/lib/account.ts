@@ -22,3 +22,8 @@ export function isPlaceholderEmail(email?: string | null): boolean {
   if (!email) return false
   return email.toLowerCase().endsWith(`.${PLACEHOLDER_EMAIL_DOMAIN}`)
 }
+
+/** Whether the account has a deliverable, non-synthetic email. */
+export function hasRealEmail(email?: string | null): boolean {
+  return Boolean(email) && !isPlaceholderEmail(email)
+}

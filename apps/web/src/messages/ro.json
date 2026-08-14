@@ -2009,7 +2009,6 @@
     },
     "nameLabel": "Nume afișat",
     "emailLabel": "E-mail",
-    "emailHelp": "E-mailul dvs. este legat de cont și nu poate fi schimbat aici.",
     "submit": "Salvați modificările",
     "saving": "Se salvează…",
     "success": "Profil actualizat.",
@@ -2062,7 +2061,6 @@
       "pushMissingTarget": "Notificările push sunt selectate, dar nu vor fi livrate până când nu activezi un dispozitiv. Poți activa unul mai jos sau din Setări.",
       "rowSaved": "Preferința de notificare a fost salvată.",
       "comingSoon": "În curând",
-      "emailComingSoon": "Configurarea e-mailului va fi disponibilă în curând.",
       "inherited": "Moștenit",
       "currently": "În prezent: {channels}",
       "expenseActivity": "Activitatea cheltuielilor",
@@ -2153,7 +2151,9 @@
         "summaries": "Rezumate"
       },
       "masterLabel": "Activează notificările",
-      "masterDescription": "Dezactivează-le pentru a reduce la tăcere toate e-mailurile și notificările push. Alegerile tale pe categorii sunt păstrate."
+      "masterDescription": "Dezactivează-le pentru a reduce la tăcere toate e-mailurile și notificările push. Alegerile tale pe categorii sunt păstrate.",
+      "emailAddToEnable": "Adaugă un e-mail verificat pentru a primi notificări în căsuța de e-mail.",
+      "emailAddLink": "Adaugă e-mail"
     },
     "preferences": {
       "title": "Preferințele aplicației",
@@ -2231,6 +2231,45 @@
         "HIDDEN": "Ascunse"
       },
       "import": "Importă"
+    },
+    "email": {
+      "empty": "Fără e-mail",
+      "add": "Adaugă e-mail",
+      "change": "Schimbă e-mailul",
+      "addHelp": "Adaugă un e-mail verificat pentru a recupera acest cont și a primi notificări.",
+      "changeHelp": "Schimbarea e-mailului necesită un cod de confirmare trimis la noua adresă.",
+      "addTitle": "Adaugă o adresă de e-mail",
+      "changeTitle": "Schimbă e-mailul",
+      "addDescription": "Vom trimite un cod de 6 cifre la această adresă. E-mailul este salvat abia după ce îl confirmi.",
+      "changeDescription": "Vom trimite un cod de 6 cifre la noua adresă. E-mailul actual rămâne până confirmi.",
+      "newLabel": "Adresă de e-mail",
+      "sendCode": "Trimite codul",
+      "sending": "Se trimite…",
+      "codeTitle": "Introdu codul de confirmare",
+      "codeDescription": "Am trimis un cod de 6 cifre la {email}.",
+      "codeLabel": "Cod de confirmare",
+      "verify": "Confirmă e-mailul",
+      "verifying": "Se confirmă…",
+      "resend": "Retrimite codul",
+      "cancel": "Anulează",
+      "added": "E-mail adăugat.",
+      "changed": "E-mail actualizat.",
+      "graduationBody": "Linkurile de autentificare anonime sunt o formă slabă de securitate: oricine are URL-ul salvat poate folosi acest cont. După ce adaugi un e-mail verificat, acel link nu mai funcționează și nu poate fi restaurat. Te vei autentifica cu e-mailul.",
+      "errors": {
+        "inUse": "Acest e-mail este deja folosit de un alt cont.",
+        "invalid": "Introdu o adresă de e-mail validă.",
+        "same": "Aceasta este deja adresa ta de e-mail.",
+        "graduation": "Confirmă că adăugarea unui e-mail înlocuiește linkul de autentificare.",
+        "otp": "Codul este greșit. Încearcă din nou.",
+        "expired": "Acest cod a expirat. Solicită unul nou.",
+        "rateLimited": "Prea multe solicitări de e-mail. Încearcă din nou mai târziu.",
+        "generic": "Nu s-a putut actualiza e-mailul. Încearcă din nou.",
+        "sendFailed": "Nu s-a putut trimite e-mailul de confirmare. Încearcă din nou."
+      },
+      "graduationTitle": "Asta înlocuiește linkul de autentificare",
+      "useDifferent": "Folosește alt e-mail",
+      "resendIn": "Retrimite în {seconds}s",
+      "sent": "Cod trimis"
     }
   },
   "Activities": {
@@ -3038,9 +3077,6 @@
       "activateDescription": "Salvați linkul de înlocuire înainte de a-l activa.",
       "stagedDescription": "Linkul dvs. actual de recuperare continuă să funcționeze până când activați această înlocuire. Închiderea sau reîmprospătarea elimină înlocuitorul.",
       "activateConfirm": "Activați înlocuirea",
-      "linkAccountTitle": "Conectați la un cont",
-      "linkAccountDescription": "Conectați acest cont anonim la un e-mail sau la o autentificare socială.",
-      "comingSoon": "În curând",
       "replacementActivated": "Linkul de conectare înlocuitor este acum activ."
     }
   },

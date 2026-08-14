@@ -2009,7 +2009,6 @@
     },
     "nameLabel": "Nom d'affichage",
     "emailLabel": "E-mail",
-    "emailHelp": "Votre e-mail est lié à votre compte et ne peut pas être modifié ici.",
     "submit": "Enregistrer",
     "saving": "Enregistrement…",
     "success": "Profil mis à jour.",
@@ -2062,7 +2061,6 @@
       "pushMissingTarget": "Les notifications push sont sélectionnées, mais elles ne seront pas envoyées tant que vous n’aurez pas activé un appareil. Vous pouvez en activer un ci-dessous ou dans les paramètres.",
       "rowSaved": "Préférence de notification enregistrée.",
       "comingSoon": "Bientôt disponible",
-      "emailComingSoon": "La configuration des e-mails sera bientôt disponible.",
       "inherited": "Hérité",
       "currently": "Actuellement : {channels}",
       "expenseActivity": "Activité des dépenses",
@@ -2153,7 +2151,9 @@
         "summaries": "Résumés"
       },
       "masterLabel": "Activer les notifications",
-      "masterDescription": "Désactivez-les pour mettre en silence tous les e-mails et toutes les notifications push. Vos choix par catégorie sont conservés."
+      "masterDescription": "Désactivez-les pour mettre en silence tous les e-mails et toutes les notifications push. Vos choix par catégorie sont conservés.",
+      "emailAddToEnable": "Ajoutez un e-mail vérifié pour recevoir des notifications dans votre boîte de réception.",
+      "emailAddLink": "Ajouter un e-mail"
     },
     "preferences": {
       "title": "Préférences de l’application",
@@ -2231,6 +2231,45 @@
         "HIDDEN": "Masqués"
       },
       "import": "Importer"
+    },
+    "email": {
+      "empty": "Aucun e-mail",
+      "add": "Ajouter un e-mail",
+      "change": "Modifier l'e-mail",
+      "addHelp": "Ajoutez un e-mail vérifié pour récupérer ce compte et recevoir des notifications.",
+      "changeHelp": "Pour modifier votre e-mail, un code de confirmation est envoyé à la nouvelle adresse.",
+      "addTitle": "Ajouter une adresse e-mail",
+      "changeTitle": "Modifier votre e-mail",
+      "addDescription": "Nous enverrons un code à 6 chiffres à cette adresse. L'e-mail n'est enregistré qu'après confirmation.",
+      "changeDescription": "Nous enverrons un code à 6 chiffres à la nouvelle adresse. Votre e-mail actuel est conservé jusqu'à confirmation.",
+      "newLabel": "Adresse e-mail",
+      "sendCode": "Envoyer le code",
+      "sending": "Envoi…",
+      "codeTitle": "Saisissez le code de confirmation",
+      "codeDescription": "Nous avons envoyé un code à 6 chiffres à {email}.",
+      "codeLabel": "Code de confirmation",
+      "verify": "Confirmer l'e-mail",
+      "verifying": "Confirmation…",
+      "resend": "Renvoyer le code",
+      "cancel": "Annuler",
+      "added": "E-mail ajouté.",
+      "changed": "E-mail mis à jour.",
+      "graduationBody": "Les liens de connexion anonymes offrent une sécurité faible : toute personne disposant de l'URL enregistrée peut utiliser ce compte. Après l'ajout d'un e-mail vérifié, ce lien cesse de fonctionner et ne peut pas être restauré. Vous vous connecterez ensuite avec l'e-mail.",
+      "errors": {
+        "inUse": "Cet e-mail est déjà utilisé par un autre compte.",
+        "invalid": "Saisissez une adresse e-mail valide.",
+        "same": "C'est déjà votre adresse e-mail.",
+        "graduation": "Confirmez que l'ajout d'un e-mail remplace votre lien de connexion.",
+        "otp": "Ce code est incorrect. Réessayez.",
+        "expired": "Ce code a expiré. Demandez-en un nouveau.",
+        "rateLimited": "Trop de demandes d'e-mail. Veuillez réessayer plus tard.",
+        "generic": "Impossible de mettre à jour votre e-mail. Veuillez réessayer.",
+        "sendFailed": "Impossible d'envoyer l'e-mail de confirmation. Veuillez réessayer."
+      },
+      "graduationTitle": "Cela remplace votre lien de connexion",
+      "useDifferent": "Utiliser un autre e-mail",
+      "resendIn": "Renvoyer dans {seconds}s",
+      "sent": "Code envoyé"
     }
   },
   "Activities": {
@@ -3038,9 +3077,6 @@
       "activateDescription": "Enregistrez le lien de remplacement avant de l'activer.",
       "stagedDescription": "Votre lien de connexion actuel continue de fonctionner jusqu'à ce que vous activiez ce remplacement. La fermeture ou l'actualisation supprime le remplacement.",
       "activateConfirm": "Activer le remplacement",
-      "linkAccountTitle": "Associer à un compte",
-      "linkAccountDescription": "Associez ce compte anonyme à une adresse e-mail ou à une connexion sociale.",
-      "comingSoon": "Bientôt disponible",
       "replacementActivated": "Votre lien de connexion de remplacement est maintenant actif."
     }
   },

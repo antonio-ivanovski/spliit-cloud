@@ -20,7 +20,7 @@ import {
   type AnonymousRecoveryRotation,
 } from '@/lib/anonymous-recovery'
 
-import { SettingsBadge, SettingsRow } from './settings-ui'
+import { SettingsRow } from './settings-ui'
 
 export function AnonymousAccountSettings() {
   const { t } = useTranslation(undefined, {
@@ -91,12 +91,6 @@ export function AnonymousAccountSettings() {
             {t('replace')}
           </Button>
         }
-      />
-      <SettingsRow
-        id="anonymous-link-account"
-        label={t('linkAccountTitle')}
-        description={t('linkAccountDescription')}
-        badges={<SettingsBadge>{t('comingSoon')}</SettingsBadge>}
       />
 
       <Dialog open={confirmOpen} onOpenChange={setOpen}>

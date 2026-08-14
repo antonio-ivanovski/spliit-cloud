@@ -2,7 +2,6 @@
   "AccountSettings": {
     "nameLabel": "Visningsnamn",
     "emailLabel": "E-post",
-    "emailHelp": "Din e-postadress är kopplad till ditt konto och kan inte ändras här.",
     "submit": "Spara ändringar",
     "saving": "Sparar…",
     "success": "Profil uppdaterad.",
@@ -56,7 +55,6 @@
       "pushMissingTarget": "Inga push-prenumeranter registrerade.",
       "rowSaved": "Notifieringsinställningar uppdaterade.",
       "comingSoon": "Kommer snart",
-      "emailComingSoon": "Inställningar för e-post kommer snart.",
       "inherited": "Ärvd",
       "currently": "Just nu: {channels}",
       "categories": {
@@ -146,7 +144,9 @@
         "summaries": "Sammanfattningar"
       },
       "masterLabel": "Aktivera aviseringar",
-      "masterDescription": "Stäng av för att tysta alla e-post- och push-aviseringar. Dina val per kategori behålls."
+      "masterDescription": "Stäng av för att tysta alla e-post- och push-aviseringar. Dina val per kategori behålls.",
+      "emailAddToEnable": "Lägg till en verifierad e-postadress för att ta emot aviseringar i inkorgen.",
+      "emailAddLink": "Lägg till e-post"
     },
     "title": "Kontoinställningar",
     "profile": {
@@ -229,6 +229,45 @@
         "HIDDEN": "Dolda"
       },
       "import": "Importera"
+    },
+    "email": {
+      "empty": "Ingen e-post",
+      "add": "Lägg till e-post",
+      "change": "Ändra e-post",
+      "addHelp": "Lägg till en verifierad e-postadress för att återställa det här kontot och ta emot aviseringar.",
+      "changeHelp": "För att ändra e-post krävs en bekräftelsekod som skickas till den nya adressen.",
+      "addTitle": "Lägg till en e-postadress",
+      "changeTitle": "Ändra din e-post",
+      "addDescription": "Vi skickar en 6-siffrig kod till den här adressen. E-postadressen sparas först när du har bekräftat den.",
+      "changeDescription": "Vi skickar en 6-siffrig kod till den nya adressen. Din nuvarande e-postadress behålls tills du bekräftar.",
+      "newLabel": "E-postadress",
+      "sendCode": "Skicka kod",
+      "sending": "Skickar…",
+      "codeTitle": "Ange bekräftelsekoden",
+      "codeDescription": "Vi skickade en 6-siffrig kod till {email}.",
+      "codeLabel": "Bekräftelsekod",
+      "verify": "Bekräfta e-post",
+      "verifying": "Bekräftar…",
+      "resend": "Skicka koden igen",
+      "cancel": "Avbryt",
+      "added": "E-post tillagd.",
+      "changed": "E-post uppdaterad.",
+      "graduationBody": "Anonyma inloggningslänkar är ett svagt skydd: vem som helst med den sparade URL:en kan använda det här kontot. När du lägger till en verifierad e-post slutar länken att fungera och kan inte återställas. Du loggar in med e-posten i stället.",
+      "errors": {
+        "inUse": "Den här e-postadressen används redan av ett annat konto.",
+        "invalid": "Ange en giltig e-postadress.",
+        "same": "Det är redan din e-postadress.",
+        "graduation": "Bekräfta att tillägg av e-post ersätter din inloggningslänk.",
+        "otp": "Koden är felaktig. Försök igen.",
+        "expired": "Den här koden har gått ut. Begär en ny.",
+        "rateLimited": "För många e-postförfrågningar. Försök igen senare.",
+        "generic": "Det gick inte att uppdatera din e-post. Försök igen.",
+        "sendFailed": "Det gick inte att skicka bekräftelse-e-posten. Försök igen."
+      },
+      "graduationTitle": "Detta ersätter din inloggningslänk",
+      "useDifferent": "Använd en annan e-post",
+      "resendIn": "Skicka igen om {seconds}s",
+      "sent": "Kod skickad"
     }
   },
   "Activities": {
@@ -3016,9 +3055,6 @@
       "activateDescription": "Spara ersättningslänken innan du aktiverar den.",
       "stagedDescription": "Din nuvarande inloggningslänk fortsätter att fungera tills du aktiverar den här ersättningen. Stängning eller uppdatering kasserar ersättningen.",
       "activateConfirm": "Aktivera ersättning",
-      "linkAccountTitle": "Länka till ett konto",
-      "linkAccountDescription": "Anslut det här anonyma kontot till e-post eller social inloggning.",
-      "comingSoon": "Kommer snart",
       "replacementActivated": "Din ersättande inloggningslänk är nu aktiv."
     }
   },

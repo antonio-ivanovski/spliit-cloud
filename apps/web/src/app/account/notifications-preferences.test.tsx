@@ -46,6 +46,24 @@ vi.mock('@/components/ui/use-toast', () => ({
   useToast: () => ({ toast: mocks.toast }),
 }))
 
+vi.mock('@tanstack/react-router', () => ({
+  Link: ({
+    to,
+    hash,
+    children,
+    className,
+  }: {
+    to: string
+    hash?: string
+    children?: string
+    className?: string
+  }) => (
+    <a href={hash ? `${to}#${hash}` : to} className={className}>
+      {children}
+    </a>
+  ),
+}))
+
 import { NotificationsPreferences } from './notifications-preferences'
 
 type MockPreferenceData = {
@@ -163,6 +181,21 @@ describe('NotificationsPreferences', () => {
     expect(screen.getByText('Budget alerts')).toBeInTheDocument()
     expect(screen.getAllByRole('combobox')).toHaveLength(7)
     expect(screen.getAllByText('Coming soon').length).toBeGreaterThan(0)
+  })
+
+  it('points placeholder-email accounts to add a verified address', () => {
+    mocks.useCurrentAccount.mockReturnValue({
+      data: { id: 'account-1', email: '789@github.placeholder.local' },
+    })
+    render(<NotificationsPreferences />)
+
+    expect(
+      screen.getByText(/add a verified email to receive inbox notifications/i),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Add email' })).toHaveAttribute(
+      'href',
+      '/account/settings#account-settings-email',
+    )
   })
 
   it('enrolls the current device before selecting Push and saves one row', async () => {

@@ -1,4 +1,5 @@
 /* oxlint-disable jsx-a11y/prefer-tag-over-role, jsx-a11y/role-has-required-aria-props -- popover trigger exposes combobox semantics; popup IDs are managed by the UI primitive. */
+import { Link } from '@tanstack/react-router'
 import { Bell, Check, ChevronsUpDown } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -488,7 +489,14 @@ export function NotificationsPreferences() {
             {emailDisabled ? (
               <Alert variant="default" className="py-3">
                 <AlertDescription className="text-sm">
-                  {t('emailComingSoon')}
+                  {t('emailAddToEnable')}{' '}
+                  <Link
+                    to="/account/settings"
+                    hash="account-settings-email"
+                    className="font-medium text-foreground underline"
+                  >
+                    {t('emailAddLink')}
+                  </Link>
                 </AlertDescription>
               </Alert>
             ) : null}

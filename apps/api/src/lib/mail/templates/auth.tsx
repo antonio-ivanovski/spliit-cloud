@@ -131,6 +131,67 @@ export function VerificationEmail(props: {
   )
 }
 
+export function EmailChangeOtpEmail(props: {
+  brandBaseUrl: string
+  otp: string
+  expiresInMinutes: number
+}): ReactElement {
+  return (
+    <EmailLayout
+      preview="Your Spliit Cloud email confirmation code"
+      brandBaseUrl={props.brandBaseUrl}
+    >
+      <Heading
+        as="h1"
+        className="m-0 mb-4 text-[24px] font-semibold tracking-tight text-[#0f172a]"
+      >
+        Confirm your email
+      </Heading>
+      <Text className="m-0 mb-6 text-[15px] leading-[24px] text-[#0f172a]">
+        Use this code in Spliit Cloud to confirm your email address. It expires
+        in {props.expiresInMinutes} minutes.
+      </Text>
+      <Section className="my-6 rounded-md border border-solid border-[#e5e7eb] bg-[#f8fafc] px-5 py-5 text-center">
+        <Text className="m-0 font-mono text-[32px] leading-[40px] font-semibold tracking-[0.35em] text-[#0f172a]">
+          {props.otp}
+        </Text>
+      </Section>
+      <Text className="m-0 text-[13px] leading-[20px] text-[#64748b]">
+        If you did not request this change, you can safely ignore this email.
+      </Text>
+    </EmailLayout>
+  )
+}
+
+export function EmailChangedNoticeEmail(props: {
+  brandBaseUrl: string
+  newEmail: string
+}): ReactElement {
+  return (
+    <EmailLayout
+      preview="Your Spliit Cloud email address was changed"
+      brandBaseUrl={props.brandBaseUrl}
+    >
+      <Heading
+        as="h1"
+        className="m-0 mb-4 text-[24px] font-semibold tracking-tight text-[#0f172a]"
+      >
+        Your email address was changed
+      </Heading>
+      <Text className="m-0 mb-4 text-[15px] leading-[24px] text-[#0f172a]">
+        The email on your Spliit Cloud account is now {props.newEmail}.
+      </Text>
+      <Text className="m-0 mb-4 text-[15px] leading-[24px] text-[#0f172a]">
+        If you made this change, you can ignore this message. If you did not,
+        sign in to Spliit Cloud and change the email back from account settings.
+      </Text>
+      <Text className="m-0 text-[13px] leading-[20px] text-[#64748b]">
+        This notice was sent to the previous address on the account.
+      </Text>
+    </EmailLayout>
+  )
+}
+
 export function MagicLinkEmail(props: {
   brandBaseUrl: string
   signInUrl: string
@@ -238,6 +299,40 @@ export async function renderVerificationEmail(input: {
       verificationUrl={input.verificationUrl}
     />,
     { subject: 'Verify your Spliit Cloud account', text },
+  )
+}
+
+export async function renderEmailChangeOtpEmail(input: {
+  otp: string
+  expiresInMinutes: number
+}): Promise<RenderedEmail> {
+  const text =
+    `Use this code in Spliit Cloud to confirm your email address. It expires in ${input.expiresInMinutes} minutes.\n\n${input.otp}\n\n` +
+    `If you did not request this change, you can safely ignore this email.`
+
+  return renderTemplate(
+    <EmailChangeOtpEmail
+      brandBaseUrl={authBaseUrl()}
+      otp={input.otp}
+      expiresInMinutes={input.expiresInMinutes}
+    />,
+    { subject: 'Your Spliit Cloud email confirmation code', text },
+  )
+}
+
+export async function renderEmailChangedNoticeEmail(input: {
+  newEmail: string
+}): Promise<RenderedEmail> {
+  const text =
+    `The email on your Spliit Cloud account is now ${input.newEmail}.\n\n` +
+    `If you made this change, you can ignore this message. If you did not, sign in to Spliit Cloud and change the email back from account settings.`
+
+  return renderTemplate(
+    <EmailChangedNoticeEmail
+      brandBaseUrl={authBaseUrl()}
+      newEmail={input.newEmail}
+    />,
+    { subject: 'Your Spliit Cloud email address was changed', text },
   )
 }
 

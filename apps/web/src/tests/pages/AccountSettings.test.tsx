@@ -195,13 +195,44 @@ describe('AccountSettingsPage', () => {
     expect(
       screen.getByRole('button', { name: 'Replace sign in link' }),
     ).toBeInTheDocument()
-    expect(screen.getByText('Link to account')).toBeInTheDocument()
-    expect(screen.getByText('Coming soon')).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Add email' }),
+    ).toBeInTheDocument()
+    expect(screen.queryByText('Link to account')).not.toBeInTheDocument()
+    expect(screen.queryByText('Coming soon')).not.toBeInTheDocument()
     expect(
       screen.queryByRole('heading', { name: 'Anonymous account' }),
     ).not.toBeInTheDocument()
     expect(screen.queryByText('Saved and confirmed')).not.toBeInTheDocument()
-    expect(screen.queryByLabelText('Email')).not.toBeInTheDocument()
+    expect(
+      screen.queryByDisplayValue('guest-1@anonymous.placeholder.local'),
+    ).not.toBeInTheDocument()
+  })
+
+  it('lets GitHub accounts without a real email add one', () => {
+    mocks.useCurrentAccount.mockReturnValue({
+      data: {
+        ...accountFixture,
+        email: '789@github.placeholder.local',
+        emailVerified: false,
+        isAnonymous: false,
+      },
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: mocks.refetchAccount,
+    })
+
+    render(<AccountSettingsPage />)
+
+    expect(screen.getByText('No email')).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Add email' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByDisplayValue('789@github.placeholder.local'),
+    ).not.toBeInTheDocument()
+    expect(screen.queryByText('Sign in link')).not.toBeInTheDocument()
   })
 
   it('opens the lightweight account export configuration modal', async () => {

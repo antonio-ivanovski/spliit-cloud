@@ -2036,7 +2036,6 @@
     },
     "nameLabel": "Nombre para mostrar",
     "emailLabel": "Correo electrónico",
-    "emailHelp": "Tu correo está vinculado a tu cuenta y no se puede cambiar aquí.",
     "submit": "Guardar cambios",
     "saving": "Guardando…",
     "success": "Perfil actualizado.",
@@ -2089,7 +2088,6 @@
       "pushMissingTarget": "Las notificaciones push están seleccionadas, pero no se entregarán hasta que actives un dispositivo. Puedes activar uno abajo o en Ajustes.",
       "rowSaved": "Preferencia de notificaciones guardada.",
       "comingSoon": "Próximamente",
-      "emailComingSoon": "La configuración del correo electrónico estará disponible próximamente.",
       "inherited": "Heredado",
       "currently": "Actualmente: {channels}",
       "expenseActivity": "Actividad de gastos",
@@ -2180,7 +2178,9 @@
         "summaries": "Resúmenes"
       },
       "masterLabel": "Activar las notificaciones",
-      "masterDescription": "Desactívalas para silenciar todos los correos y las notificaciones push. Tus preferencias por categoría se conservan."
+      "masterDescription": "Desactívalas para silenciar todos los correos y las notificaciones push. Tus preferencias por categoría se conservan.",
+      "emailAddToEnable": "Añade un correo verificado para recibir notificaciones en la bandeja de entrada.",
+      "emailAddLink": "Añadir correo"
     },
     "preferences": {
       "title": "Preferencias de la aplicación",
@@ -2258,6 +2258,45 @@
         "HIDDEN": "Ocultos"
       },
       "import": "Importar"
+    },
+    "email": {
+      "empty": "Sin correo",
+      "add": "Añadir correo",
+      "change": "Cambiar correo",
+      "addHelp": "Añade un correo verificado para recuperar esta cuenta y recibir notificaciones.",
+      "changeHelp": "Para cambiar el correo se necesita un código de confirmación enviado a la nueva dirección.",
+      "addTitle": "Añadir una dirección de correo",
+      "changeTitle": "Cambiar tu correo",
+      "addDescription": "Enviaremos un código de 6 dígitos a esta dirección. El correo se guarda solo después de que lo confirmes.",
+      "changeDescription": "Enviaremos un código de 6 dígitos a la nueva dirección. Tu correo actual se mantiene hasta que confirmes.",
+      "newLabel": "Dirección de correo electrónico",
+      "sendCode": "Enviar código",
+      "sending": "Enviando…",
+      "codeTitle": "Introduce el código de confirmación",
+      "codeDescription": "Hemos enviado un código de 6 dígitos a {email}.",
+      "codeLabel": "Código de confirmación",
+      "verify": "Confirmar correo",
+      "verifying": "Confirmando…",
+      "resend": "Reenviar código",
+      "cancel": "Cancelar",
+      "added": "Correo añadido.",
+      "changed": "Correo actualizado.",
+      "graduationBody": "Los enlaces de inicio de sesión anónimos son una forma débil de seguridad: cualquiera con la URL guardada puede usar esta cuenta. Cuando añadas un correo verificado, ese enlace deja de funcionar y no se puede restaurar. En su lugar, iniciarás sesión con el correo.",
+      "errors": {
+        "inUse": "Este correo ya lo usa otra cuenta.",
+        "invalid": "Introduce una dirección de correo válida.",
+        "same": "Esa ya es tu dirección de correo.",
+        "graduation": "Confirma que añadir un correo sustituye tu enlace de inicio de sesión.",
+        "otp": "Ese código no es correcto. Inténtalo de nuevo.",
+        "expired": "Este código ha caducado. Solicita uno nuevo.",
+        "rateLimited": "Demasiadas solicitudes de correo. Inténtalo de nuevo más tarde.",
+        "generic": "No se ha podido actualizar tu correo. Inténtalo de nuevo.",
+        "sendFailed": "No se ha podido enviar el correo de confirmación. Inténtalo de nuevo."
+      },
+      "graduationTitle": "Esto sustituye tu enlace de inicio de sesión",
+      "useDifferent": "Usar otro correo",
+      "resendIn": "Reenviar en {seconds}s",
+      "sent": "Código enviado"
     }
   },
   "Activities": {
@@ -3092,9 +3131,6 @@
       "activateDescription": "Guarde el enlace de reemplazo antes de activarlo.",
       "stagedDescription": "Su enlace de inicio de sesión actual sigue funcionando hasta que active este reemplazo. Cerrar o actualizar descarta el reemplazo.",
       "activateConfirm": "Activar reemplazo",
-      "linkAccountTitle": "Vincular a una cuenta",
-      "linkAccountDescription": "Conecta esta cuenta anónima a un correo electrónico o inicio de sesión social.",
-      "comingSoon": "Próximamente",
       "replacementActivated": "El enlace de inicio de sesión de reemplazo ya está activo."
     }
   },

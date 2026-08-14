@@ -2036,7 +2036,6 @@
     },
     "nameLabel": "표시 이름",
     "emailLabel": "이메일",
-    "emailHelp": "이메일은 계정에 연결되어 있어 여기에서 변경할 수 없습니다.",
     "submit": "변경사항 저장",
     "saving": "저장 중…",
     "success": "프로필이 업데이트되었습니다.",
@@ -2089,7 +2088,6 @@
       "pushMissingTarget": "푸시가 선택되었지만 기기를 활성화할 때까지 이러한 알림이 전송되지 않습니다. 아래 또는 설정에서 기기를 활성화할 수 있습니다.",
       "rowSaved": "알림 설정이 저장되었습니다.",
       "comingSoon": "곧 제공됩니다",
-      "emailComingSoon": "이메일 설정은 곧 제공됩니다.",
       "inherited": "상속됨",
       "currently": "현재: {channels}",
       "expenseActivity": "지출 활동",
@@ -2180,7 +2178,9 @@
         "summaries": "요약"
       },
       "masterLabel": "알림 사용",
-      "masterDescription": "끄면 모든 이메일 및 푸시 알림이 전송되지 않습니다. 카테고리별 선택은 유지됩니다."
+      "masterDescription": "끄면 모든 이메일 및 푸시 알림이 전송되지 않습니다. 카테고리별 선택은 유지됩니다.",
+      "emailAddToEnable": "받은편지함 알림을 받으려면 인증된 이메일을 추가하세요.",
+      "emailAddLink": "이메일 추가"
     },
     "preferences": {
       "title": "앱 환경설정",
@@ -2258,6 +2258,45 @@
         "HIDDEN": "숨김"
       },
       "import": "가져오기"
+    },
+    "email": {
+      "empty": "이메일 없음",
+      "add": "이메일 추가",
+      "change": "이메일 변경",
+      "addHelp": "인증된 이메일을 추가하면 이 계정을 복구하고 알림을 받을 수 있습니다.",
+      "changeHelp": "이메일을 변경하려면 새 주소로 보낸 확인 코드가 필요합니다.",
+      "addTitle": "이메일 주소 추가",
+      "changeTitle": "이메일 변경",
+      "addDescription": "이 주소로 6자리 코드를 보냅니다. 확인한 후에만 이메일이 저장됩니다.",
+      "changeDescription": "새 주소로 6자리 코드를 보냅니다. 확인하기 전까지 현재 이메일이 유지됩니다.",
+      "newLabel": "이메일 주소",
+      "sendCode": "코드 보내기",
+      "sending": "보내는 중…",
+      "codeTitle": "확인 코드 입력",
+      "codeDescription": "{email}에 6자리 코드를 보냈습니다.",
+      "codeLabel": "확인 코드",
+      "verify": "이메일 확인",
+      "verifying": "확인 중…",
+      "resend": "코드 다시 보내기",
+      "cancel": "취소",
+      "added": "이메일을 추가했습니다.",
+      "changed": "이메일이 업데이트되었습니다.",
+      "graduationBody": "익명 로그인 링크는 보안이 약한 방식입니다. 저장된 URL을 아는 사람은 누구나 이 계정을 사용할 수 있습니다. 인증된 이메일을 추가하면 해당 링크는 더 이상 작동하지 않으며 복원할 수 없습니다. 이후에는 이메일로 로그인하게 됩니다.",
+      "errors": {
+        "inUse": "이 이메일은 다른 계정에서 이미 사용 중입니다.",
+        "invalid": "올바른 이메일 주소를 입력하세요.",
+        "same": "이미 사용 중인 이메일 주소입니다.",
+        "graduation": "이메일을 추가하면 로그인 링크가 교체된다는 점을 확인해 주세요.",
+        "otp": "코드가 올바르지 않습니다. 다시 시도해 주세요.",
+        "expired": "이 코드가 만료되었습니다. 새 코드를 요청하세요.",
+        "rateLimited": "이메일 요청이 너무 많습니다. 나중에 다시 시도해 주세요.",
+        "generic": "이메일을 업데이트할 수 없습니다. 다시 시도해 주세요.",
+        "sendFailed": "확인 이메일을 보낼 수 없습니다. 다시 시도해 주세요."
+      },
+      "graduationTitle": "로그인 링크가 교체됩니다",
+      "useDifferent": "다른 이메일 사용",
+      "resendIn": "{seconds}초 후 다시 보내기",
+      "sent": "코드를 보냈습니다"
     }
   },
   "Activities": {
@@ -3092,9 +3131,6 @@
       "activateDescription": "활성화하기 전에 대체 링크를 저장하세요.",
       "stagedDescription": "이 교체를 활성화할 때까지 현재 로그인 링크가 계속 작동합니다. 닫거나 새로 고치면 대체 항목이 삭제됩니다.",
       "activateConfirm": "교체 활성화",
-      "linkAccountTitle": "계정에 연결",
-      "linkAccountDescription": "이 익명 계정을 이메일 또는 소셜 로그인에 연결합니다.",
-      "comingSoon": "곧 제공됩니다",
       "replacementActivated": "새 로그인 링크가 이제 활성화되었습니다."
     }
   },

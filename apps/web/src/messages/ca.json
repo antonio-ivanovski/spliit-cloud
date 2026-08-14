@@ -2009,7 +2009,6 @@
     },
     "nameLabel": "Nom per mostrar",
     "emailLabel": "Correu electrònic",
-    "emailHelp": "El vostre correu està vinculat al vostre compte i no es pot canviar aquí.",
     "submit": "Desa els canvis",
     "saving": "Desant…",
     "success": "Perfil actualitzat.",
@@ -2062,7 +2061,6 @@
       "pushMissingTarget": "La notificació push està seleccionada, però aquestes notificacions no s'enviaran fins que activis un dispositiu. Pots activar-ne un aquí baix o a Configuració.",
       "rowSaved": "Preferència de notificacions desada.",
       "comingSoon": "Pròximament",
-      "emailComingSoon": "La configuració del correu electrònic estarà disponible aviat.",
       "inherited": "Heretat",
       "currently": "Actualment: {channels}",
       "expenseActivity": "Activitat de despeses",
@@ -2153,7 +2151,9 @@
         "summaries": "Resums"
       },
       "masterLabel": "Activa les notificacions",
-      "masterDescription": "Desactiva-les per silenciar tots els correus electrònics i les notificacions push. Les teves preferències per categoria es conserven."
+      "masterDescription": "Desactiva-les per silenciar tots els correus electrònics i les notificacions push. Les teves preferències per categoria es conserven.",
+      "emailAddToEnable": "Afegeix un correu verificat per rebre notificacions a la safata d'entrada.",
+      "emailAddLink": "Afegeix un correu"
     },
     "preferences": {
       "title": "Preferències de l'aplicació",
@@ -2231,6 +2231,45 @@
         "HIDDEN": "Amagats"
       },
       "import": "Importa"
+    },
+    "email": {
+      "empty": "Sense correu",
+      "add": "Afegeix un correu",
+      "change": "Canvia el correu",
+      "addHelp": "Afegeix un correu verificat per recuperar aquest compte i rebre notificacions.",
+      "changeHelp": "Per canviar el correu cal un codi de confirmació enviat a la nova adreça.",
+      "addTitle": "Afegeix una adreça de correu",
+      "changeTitle": "Canvia el correu electrònic",
+      "addDescription": "T'enviarem un codi de 6 dígits a aquesta adreça. El correu només es desa un cop el confirmis.",
+      "changeDescription": "T'enviarem un codi de 6 dígits a la nova adreça. El correu actual es manté fins que el confirmis.",
+      "newLabel": "Adreça de correu electrònic",
+      "sendCode": "Envia el codi",
+      "sending": "Enviant…",
+      "codeTitle": "Introdueix el codi de confirmació",
+      "codeDescription": "Hem enviat un codi de 6 dígits a {email}.",
+      "codeLabel": "Codi de confirmació",
+      "verify": "Confirma el correu",
+      "verifying": "Confirmant…",
+      "resend": "Reenvia el codi",
+      "cancel": "Cancel·lar",
+      "added": "S'ha afegit el correu electrònic.",
+      "changed": "S'ha actualitzat el correu electrònic.",
+      "graduationBody": "Els enllaços d'inici de sessió anònims són una forma de seguretat feble: qualsevol persona amb l'URL desada pot fer servir aquest compte. Quan afegeixis un correu verificat, aquest enllaç deixa de funcionar i no es pot restaurar. En el seu lloc, iniciaràs la sessió amb el correu.",
+      "errors": {
+        "inUse": "Aquest correu ja l'utilitza un altre compte.",
+        "invalid": "Introdueix una adreça de correu vàlida.",
+        "same": "Aquesta ja és la teva adreça de correu.",
+        "graduation": "Confirma que afegir un correu substitueix l'enllaç d'inici de sessió.",
+        "otp": "Aquest codi no és correcte. Torna-ho a provar.",
+        "expired": "Aquest codi ha caducat. Sol·licita'n un de nou.",
+        "rateLimited": "Massa sol·licituds de correu. Torna-ho a provar més tard.",
+        "generic": "No s'ha pogut actualitzar el correu electrònic. Torna-ho a provar.",
+        "sendFailed": "No s'ha pogut enviar el correu de confirmació. Torna-ho a provar."
+      },
+      "graduationTitle": "Això substitueix l'enllaç d'inici de sessió",
+      "useDifferent": "Usa un altre correu",
+      "resendIn": "Reenvia d'aquí {seconds}s",
+      "sent": "Codi enviat"
     }
   },
   "Activities": {
@@ -3038,9 +3077,6 @@
       "activateDescription": "Deseu l'enllaç de substitució abans d'activar-lo.",
       "stagedDescription": "El vostre enllaç d'inici de sessió actual continua funcionant fins que activeu aquesta substitució. Tancar o actualitzar descarta el reemplaçament.",
       "activateConfirm": "Activa la substitució",
-      "linkAccountTitle": "Enllaça amb un compte",
-      "linkAccountDescription": "Connecteu aquest compte anònim a un correu electrònic o a un inici de sessió social.",
-      "comingSoon": "Pròximament",
       "replacementActivated": "L'enllaç d'inici de sessió de substitució ja està actiu."
     }
   },
