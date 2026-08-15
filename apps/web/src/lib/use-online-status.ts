@@ -1,31 +1,52 @@
 import { useEffect, useState } from 'react'
 
+import {
+  hasFetchNetworkFailure,
+  reportNetworkSuccess,
+  subscribeConnectivity,
+} from '@/lib/connectivity'
+
 /**
- * Tracks the browser's online status.
+ * Tracks whether the app can reach the network.
  *
- * Combines `navigator.onLine` with the `online` / `offline` window events. Note
- * that `navigator.onLine` is unreliable on its own (returns true whenever the
- * device has a network interface, even without actual internet), so this hook
- * is best used for UI hints — individual network requests should still be
- * guarded by their own error handling.
+ * Combines `navigator.onLine` with a latch set when fetch throws a connectivity
+ * error. DevTools "service worker offline" often leaves `navigator.onLine` true
+ * while API calls fail, so the latch is what surfaces the offline banner.
  */
 export function useOnlineStatus(): boolean {
-  const [isOnline, setIsOnline] = useState<boolean>(() =>
+  const [browserOnline, setBrowserOnline] = useState<boolean>(() =>
     typeof navigator === 'undefined' ? true : navigator.onLine,
   )
+  const [fetchFailed, setFetchFailed] = useState(hasFetchNetworkFailure)
 
   useEffect(() => {
-    const handleOnline = () => setIsOnline(true)
-    const handleOffline = () => setIsOnline(false)
+    const handleOnline = () => {
+      reportNetworkSuccess()
+      setBrowserOnline(true)
+    }
+    const handleOffline = () => setBrowserOnline(false)
 
     window.addEventListener('online', handleOnline)
     window.addEventListener('offline', handleOffline)
+    const unsubscribe = subscribeConnectivity(() => {
+      setFetchFailed(hasFetchNetworkFailure())
+    })
 
     return () => {
       window.removeEventListener('online', handleOnline)
       window.removeEventListener('offline', handleOffline)
+      unsubscribe()
     }
   }, [])
 
-  return isOnline
+  return browserOnline && !fetchFailed
+}
+
+/**
+ * True when the shell is offline and this view has no in-session data. Used to
+ * show an honest empty state instead of a spinner, generic error, or pretending
+ * cached groups/expenses are available.
+ */
+export function useOfflineWithoutData(hasData: boolean): boolean {
+  return !useOnlineStatus() && !hasData
 }

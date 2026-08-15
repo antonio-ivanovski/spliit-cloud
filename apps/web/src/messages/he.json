@@ -2646,7 +2646,9 @@
     "staleRate": "שער מ:",
     "fromLabel": "מ",
     "toLabel": "עד",
-    "via": "דרך {currencies}"
+    "via": "דרך {currencies}",
+    "offlineDescription": "המרת מטבע דורשת חיבור. התחברו מחדש כדי להמיר סכומים וליצור הוצאות.",
+    "offlineComingSoon": "תמיכה מלאה במצב לא מקוון לתכונה זו נמצאת גבוה ברשימת העדיפויות שלנו ותגיע בקרוב."
   },
   "LanguageSwitcher": {
     "title": "בחירת שפה",
@@ -2990,7 +2992,8 @@
     "landingHintTap": "הקישו עליי מתי שתרצו. אני לא נושך — אני קבלה.",
     "hintTapToAddExpense": "אני {name} — גע בי כדי להוסיף הוצאה.",
     "hintTapToCreateGroup": "אני {name} — גע בי כדי ליצור קבוצה.",
-    "billName": "ביל"
+    "billName": "ביל",
+    "offlineMessage": "אני לא יכול ליצור כלום כשאין חיבור לרשת."
   },
   "CreateSettlement": {
     "description": "סקור את התשלום לפני רישומו.",
@@ -3101,5 +3104,10 @@
     "enableSuccess": "הקישור הציבורי לצפייה בלבד נוצר",
     "replaceSuccess": "הקישור הציבורי לצפייה בלבד הוחלף. הקישור הקודם כבר לא עובד.",
     "removeSuccess": "הקישור הציבורי לצפייה בלבד הוסר"
+  },
+  "OfflineEmptyState": {
+    "title": "אין חיבור לרשת",
+    "description": "המסך הזה דורש חיבור. התחברו מחדש כדי לטעון את הקבוצות וההוצאות.",
+    "retry": "נסו שוב"
   }
 }

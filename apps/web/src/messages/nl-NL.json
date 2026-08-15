@@ -2700,7 +2700,9 @@
     "staleRate": "Koers van:",
     "fromLabel": "Van",
     "toLabel": "Naar",
-    "via": "omgerekend via {currencies}"
+    "via": "omgerekend via {currencies}",
+    "offlineDescription": "Valutaconversie heeft een verbinding nodig. Maak opnieuw verbinding om bedragen te converteren en uitgaven te maken.",
+    "offlineComingSoon": "Volledige offline-ondersteuning voor deze functie heeft hoge prioriteit en is binnenkort beschikbaar."
   },
   "LanguageSwitcher": {
     "title": "Kies taal",
@@ -3044,7 +3046,8 @@
     "landingHintTap": "Tik me wanneer je wilt. Ik bijt niet — ik ben een bon.",
     "hintTapToAddExpense": "Ik ben {name} — tik op me om een uitgave toe te voegen.",
     "hintTapToCreateGroup": "Ik ben {name} — tik op me om een groep aan te maken.",
-    "billName": "Bill"
+    "billName": "Bill",
+    "offlineMessage": "Ik kan niets aanmaken zolang je offline bent."
   },
   "CreateSettlement": {
     "description": "Controleer de betaling voordat je deze vastlegt.",
@@ -3155,5 +3158,10 @@
     "enableSuccess": "Openbare alleen-lezen link aangemaakt",
     "replaceSuccess": "Openbare alleen-lezen link vervangen. De vorige link werkt niet meer.",
     "removeSuccess": "Openbare alleen-lezen link verwijderd"
+  },
+  "OfflineEmptyState": {
+    "title": "Je bent offline",
+    "description": "Dit scherm heeft een verbinding nodig. Maak opnieuw verbinding om je groepen en uitgaven te laden.",
+    "retry": "Opnieuw proberen"
   }
 }

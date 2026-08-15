@@ -2700,7 +2700,9 @@
     "staleRate": "سعر من:",
     "fromLabel": "من",
     "toLabel": "إلى",
-    "via": "عبر {currencies}"
+    "via": "عبر {currencies}",
+    "offlineDescription": "تحويل العملة يحتاج إلى اتصال. أعد الاتصال لتحويل المبالغ وإنشاء المصروفات.",
+    "offlineComingSoon": "الدعم الكامل دون اتصال لهذه الميزة أولوية عالية لدينا وسيتوفر قريبًا."
   },
   "LanguageSwitcher": {
     "title": "اختر لغة",
@@ -3044,7 +3046,8 @@
     "landingHintTap": "انقر عليّ في أي وقت. لا أعضّ، فأنا إيصال.",
     "hintTapToAddExpense": "أنا {name} — انقر عليّ لإضافة نفقة.",
     "hintTapToCreateGroup": "أنا {name} — انقر عليّ لإنشاء مجموعة.",
-    "billName": "بيل"
+    "billName": "بيل",
+    "offlineMessage": "لا أستطيع إنشاء أي شيء وأنت غير متصل."
   },
   "CreateSettlement": {
     "description": "سوِّ الحسابات مع عضو في المجموعة.",
@@ -3155,5 +3158,10 @@
     "enableSuccess": "تم إنشاء الرابط العام للعرض فقط",
     "replaceSuccess": "تم استبدال الرابط العام للعرض فقط. الرابط السابق لم يعد يعمل.",
     "removeSuccess": "تمت إزالة الرابط العام للعرض فقط"
+  },
+  "OfflineEmptyState": {
+    "title": "أنت غير متصل",
+    "description": "هذه الشاشة تحتاج إلى اتصال. أعد الاتصال لتحميل مجموعاتك ونفقاتك.",
+    "retry": "حاول مرة أخرى"
   }
 }

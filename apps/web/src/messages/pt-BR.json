@@ -2646,7 +2646,9 @@
     "staleRate": "Taxa de:",
     "fromLabel": "De",
     "toLabel": "Para",
-    "via": "por meio de {currencies}"
+    "via": "por meio de {currencies}",
+    "offlineDescription": "A conversão de moeda precisa de uma conexão. Reconecte-se para converter valores e criar despesas.",
+    "offlineComingSoon": "O suporte completo offline deste recurso está no topo das nossas prioridades e chegará em breve."
   },
   "LanguageSwitcher": {
     "title": "Escolher idioma",
@@ -2990,7 +2992,8 @@
     "landingHintTap": "Toque em mim quando quiser. Eu não mordo — sou um recibo.",
     "hintTapToAddExpense": "Eu sou o {name} — toque em mim para adicionar uma despesa.",
     "hintTapToCreateGroup": "Eu sou o {name} — toque em mim para criar um grupo.",
-    "billName": "Bill"
+    "billName": "Bill",
+    "offlineMessage": "Não consigo criar nada enquanto você está offline."
   },
   "CreateSettlement": {
     "description": "Revise o pagamento antes de registrá-lo.",
@@ -3101,5 +3104,10 @@
     "enableSuccess": "Link público somente para visualização criado",
     "replaceSuccess": "Link público somente para visualização substituído. O link anterior não funciona mais.",
     "removeSuccess": "Link público somente para visualização removido"
+  },
+  "OfflineEmptyState": {
+    "title": "Você está offline",
+    "description": "Esta tela precisa de uma conexão. Reconecte-se para carregar seus grupos e despesas.",
+    "retry": "Tentar novamente"
   }
 }

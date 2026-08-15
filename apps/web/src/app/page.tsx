@@ -9,14 +9,25 @@ import {
 import { MascotSpeechBubble } from '@/components/mascot/mascot-speech-bubble'
 import { useLandingMascot } from '@/components/mascot/use-landing-mascot'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { useOnlineStatus } from '@/lib/use-online-status'
 
 import { RecentGroupList } from './groups/recent-group-list'
 import { SignedOutSavedGroupsEntry } from './groups/signed-out-saved-view-list'
 
 export default function HomePage() {
   const { data: account, isPending } = useCurrentAccount()
+  const isOnline = useOnlineStatus()
 
-  if (!isPending && !account) {
+  if (!account) {
+    if (isPending && isOnline) {
+      return (
+        <main className="mx-auto flex w-full max-w-(--breakpoint-md) flex-1 flex-col px-4 py-6">
+          <div className="flex items-center justify-center py-10">
+            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          </div>
+        </main>
+      )
+    }
     return (
       <main className="flex-1 px-4 py-8 sm:py-12 lg:py-16">
         <div className="container grid min-h-[calc(100vh-12rem)] max-w-(--breakpoint-lg) items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(360px,420px)]">
@@ -31,17 +42,7 @@ export default function HomePage() {
 
   return (
     <main className="mx-auto flex w-full max-w-(--breakpoint-md) flex-1 flex-col gap-6 px-4 py-6">
-      {isPending ? (
-        <div className="flex items-center justify-center py-10">
-          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-        </div>
-      ) : (
-        account && (
-          <>
-            <RecentGroupList />
-          </>
-        )
-      )}
+      <RecentGroupList />
     </main>
   )
 }

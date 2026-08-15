@@ -1,4 +1,11 @@
+import { afterEach } from 'vitest'
+
 import { initI18n } from '@/i18n/setup'
+import { resetConnectivityForTests } from '@/lib/connectivity'
+
+afterEach(() => {
+  resetConnectivityForTests()
+})
 
 // ── Initialize i18n (loads en-US locale for tests) ─────────────────────
 await initI18n()

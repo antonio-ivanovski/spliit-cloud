@@ -8,8 +8,10 @@ import {
 } from '@/app/groups/[groupId]/activity/activity-grouping'
 import { ActivityItem } from '@/app/groups/[groupId]/activity/activity-item'
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
+import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
+import { useOfflineWithoutData } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 
 import { useCurrentGroup } from '../current-group-context'
@@ -66,6 +68,7 @@ export function ActivityList() {
     data: activitiesData,
     isLoading,
     fetchNextPage,
+    refetch,
   } = trpc.groups.activities.list.useInfiniteQuery(
     { groupId, limit: PAGE_SIZE, linkInviteToken, viewKey },
     { getNextPageParam: ({ nextCursor }) => nextCursor },
@@ -74,10 +77,15 @@ export function ActivityList() {
 
   const activities = activitiesData?.pages.flatMap((page) => page.activities)
   const hasMore = activitiesData?.pages.at(-1)?.hasMore ?? false
+  const showOfflineEmpty = useOfflineWithoutData(!!activitiesData)
 
   useEffect(() => {
     if (inView && hasMore && !isLoading) void fetchNextPage()
   }, [fetchNextPage, hasMore, inView, isLoading])
+
+  if (showOfflineEmpty) {
+    return <OfflineEmptyState onRetry={() => void refetch()} />
+  }
 
   if (isLoading || !activities || !group) return <ActivitiesLoading />
 

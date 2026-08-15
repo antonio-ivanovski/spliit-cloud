@@ -1,7 +1,14 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
+import {
+  reportNetworkFailure,
+  resetConnectivityForTests,
+} from '@/lib/connectivity'
 import { DEVICE_SAVED_VIEWS_KEY } from '@/lib/saved-view-groups'
-import { useCurrentAccount } from '@/lib/use-current-account'
+import {
+  useCurrentAccount,
+  type UseCurrentAccountResult,
+} from '@/lib/use-current-account'
 import { act, render, screen } from '@/test/test-utils'
 
 // ── Module mocks ────────────────────────────────────────────────────────
@@ -68,6 +75,11 @@ describe('HomePage (signed-out)', () => {
     vi.clearAllMocks()
     vi.useRealTimers()
     window.localStorage.removeItem(DEVICE_SAVED_VIEWS_KEY)
+    Object.defineProperty(navigator, 'onLine', {
+      configurable: true,
+      value: true,
+    })
+    resetConnectivityForTests()
   })
 
   it('renders home page with title and description', () => {
@@ -103,6 +115,67 @@ describe('HomePage (signed-out)', () => {
     render(<HomePage />)
 
     expect(screen.getByTestId('auth-panel')).toBeInTheDocument()
+  })
+
+  it('keeps the marketing landing and sign-in card when offline', () => {
+    Object.defineProperty(navigator, 'onLine', {
+      configurable: true,
+      value: false,
+    })
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: null,
+      isPending: false,
+      isRefetching: false,
+      error: new TypeError(
+        'Failed to fetch',
+      ) as UseCurrentAccountResult['error'],
+      refetch: vi.fn(),
+    })
+
+    const { container } = render(<HomePage />)
+
+    expect(container.textContent).toContain('Share')
+    expect(screen.getByTestId('landing-bill')).toBeInTheDocument()
+    expect(screen.getByTestId('auth-panel')).toBeInTheDocument()
+    expect(screen.queryByTestId('offline-empty-state')).not.toBeInTheDocument()
+  })
+
+  it('shows the landing while a signed-out session is still resolving offline', () => {
+    Object.defineProperty(navigator, 'onLine', {
+      configurable: true,
+      value: false,
+    })
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: null,
+      isPending: true,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+
+    render(<HomePage />)
+
+    expect(screen.getByTestId('auth-panel')).toBeInTheDocument()
+    expect(screen.getByTestId('landing-bill')).toBeInTheDocument()
+    expect(screen.queryByTestId('offline-empty-state')).not.toBeInTheDocument()
+  })
+
+  it('shows the landing when get-session fails and navigator.onLine is still true', () => {
+    reportNetworkFailure(new TypeError('Failed to fetch'))
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: null,
+      isPending: false,
+      isRefetching: false,
+      error: new TypeError(
+        'Failed to fetch',
+      ) as UseCurrentAccountResult['error'],
+      refetch: vi.fn(),
+    })
+
+    render(<HomePage />)
+
+    expect(screen.getByTestId('auth-panel')).toBeInTheDocument()
+    expect(screen.queryByTestId('offline-empty-state')).not.toBeInTheDocument()
   })
 
   it('keeps the marketing landing and opens saved groups from a subtle action', async () => {
@@ -220,6 +293,11 @@ describe('HomePage (signed-out)', () => {
 describe('HomePage (signed-in)', () => {
   afterEach(() => {
     vi.clearAllMocks()
+    Object.defineProperty(navigator, 'onLine', {
+      configurable: true,
+      value: true,
+    })
+    resetConnectivityForTests()
   })
 
   it('does not show the signed-in marketing title', () => {

@@ -1,6 +1,14 @@
 /// <reference lib="webworker" />
 
-import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching'
+import { clientsClaim } from 'workbox-core'
+import {
+  cleanupOutdatedCaches,
+  createHandlerBoundToURL,
+  precacheAndRoute,
+} from 'workbox-precaching'
+import { NavigationRoute, registerRoute } from 'workbox-routing'
+
+import { APP_SHELL_NAVIGATION_DENYLIST } from '@/lib/pwa-navigation'
 
 declare const self: ServiceWorkerGlobalScope
 
@@ -15,10 +23,25 @@ type PushPayload = {
 
 const manifest = self.__WB_MANIFEST
 
-// Keep the intentionally conservative PWA cache policy from the generated
-// worker. HTML and the hashed application graph remain network-only.
+// Atomic app shell: this worker's precache is one Vite graph. Do not
+// skipWaiting on install — the page reloads after SKIP_WAITING so HTML and
+// hashed chunks swap together. cleanupOutdatedCaches then drops the previous
+// graph only after that reload.
 precacheAndRoute(manifest)
 cleanupOutdatedCaches()
+clientsClaim()
+
+registerRoute(
+  new NavigationRoute(createHandlerBoundToURL('/index.html'), {
+    denylist: [...APP_SHELL_NAVIGATION_DENYLIST],
+  }),
+)
+
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    void self.skipWaiting()
+  }
+})
 
 function parsePayload(data: PushMessageData | null): PushPayload | null {
   if (!data) return null

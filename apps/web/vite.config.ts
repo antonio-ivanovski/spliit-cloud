@@ -38,7 +38,8 @@ export default defineConfig({
     tailwindcss(),
     react(),
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
+      injectRegister: false,
       devOptions: { enabled: false },
       strategies: 'injectManifest',
       srcDir: 'src',
@@ -83,11 +84,18 @@ export default defineConfig({
         ],
       },
       injectManifest: {
-        // Keep only version-independent public media in the interim worker.
-        // HTML and Vite's hashed module graph must always come from the network
-        // so a stale entry point cannot reference a different deployment.
-        globPatterns: ['**/*.{svg,png,ico,webp}'],
-        globIgnores: ['assets/**/*'],
+        // Precache one complete Vite graph per deploy. HTML and hashed chunks
+        // must switch together so a stale entry point cannot import missing
+        // modules. Cloudflare Pages files stay out of the app-shell cache.
+        globPatterns: [
+          '**/*.{html,js,css,svg,png,ico,webp,woff2,json,webmanifest}',
+        ],
+        globIgnores: [
+          '_worker.js',
+          '404.html',
+          // ~3 MiB receipt-upload codec; not needed to launch the app offline.
+          'assets/heic-to-*.js',
+        ],
       },
     }),
   ],

@@ -2612,7 +2612,9 @@
     "staleRate": "Kurs dari:",
     "fromLabel": "Dari",
     "toLabel": "Ke",
-    "via": "melalui {currencies}"
+    "via": "melalui {currencies}",
+    "offlineDescription": "Konversi mata uang membutuhkan koneksi. Sambungkan kembali untuk mengonversi jumlah dan membuat pengeluaran.",
+    "offlineComingSoon": "Dukungan offline penuh untuk fitur ini menjadi prioritas kami dan segera hadir."
   },
   "LanguageSwitcher": {
     "title": "Pilih bahasa",
@@ -2956,7 +2958,8 @@
     "landingHintTap": "Ketuk saya kapan saja. Saya tidak menggigit — saya struk.",
     "hintTapToAddExpense": "Saya {name} — ketuk saya untuk menambah pengeluaran.",
     "hintTapToCreateGroup": "Saya {name} — ketuk saya untuk membuat grup.",
-    "billName": "Bill"
+    "billName": "Bill",
+    "offlineMessage": "Saya tidak bisa membuat apa pun selama Anda offline."
   },
   "CreateSettlement": {
     "description": "Tinjau pembayaran sebelum mencatatnya.",
@@ -3067,5 +3070,10 @@
     "enableSuccess": "Tautan publik hanya lihat dibuat",
     "replaceSuccess": "Tautan publik hanya lihat diganti. Tautan sebelumnya tidak lagi berfungsi.",
     "removeSuccess": "Tautan publik hanya lihat dihapus"
+  },
+  "OfflineEmptyState": {
+    "title": "Anda sedang offline",
+    "description": "Layar ini membutuhkan koneksi. Sambungkan kembali untuk memuat grup dan pengeluaran.",
+    "retry": "Coba lagi"
   }
 }

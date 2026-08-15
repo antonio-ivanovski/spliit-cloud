@@ -2612,7 +2612,9 @@
     "staleRate": "汇率日期:",
     "fromLabel": "源货币",
     "toLabel": "目标货币",
-    "via": "经 {currencies}"
+    "via": "经 {currencies}",
+    "offlineDescription": "货币转换需要网络连接。重新连接后即可转换金额并创建支出。",
+    "offlineComingSoon": "此功能的完整离线支持是我们的优先事项，即将推出。"
   },
   "LanguageSwitcher": {
     "title": "选择语言",
@@ -2955,7 +2957,8 @@
     "landingHintTap": "随时点我。我不咬人——我是一张收据。",
     "hintTapToAddExpense": "我是 {name}，点我即可添加一笔支出。",
     "hintTapToCreateGroup": "我是 {name}，点我即可创建群组。",
-    "billName": "Bill"
+    "billName": "Bill",
+    "offlineMessage": "处于离线状态时，我无法创建任何内容。"
   },
   "CreateSettlement": {
     "description": "请核对付款信息后再记录。",
@@ -3066,5 +3069,10 @@
     "enableSuccess": "已创建公开仅限查看链接",
     "replaceSuccess": "已替换公开仅限查看链接。旧链接已失效。",
     "removeSuccess": "已移除公开仅限查看链接"
+  },
+  "OfflineEmptyState": {
+    "title": "当前处于离线状态",
+    "description": "此页面需要网络连接。重新连接后即可加载群组和消费。",
+    "retry": "重试"
   }
 }

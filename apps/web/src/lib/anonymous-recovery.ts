@@ -1,4 +1,5 @@
 import { getApiBaseUrl } from './api-url'
+import { trackedFetch } from './connectivity'
 
 const baseUrl = `${getApiBaseUrl()}/auth`
 
@@ -33,7 +34,7 @@ export class AnonymousRecoveryError extends Error {
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const headers = new Headers(init?.headers)
   if (init?.body) headers.set('Content-Type', 'application/json')
-  const response = await fetch(`${baseUrl}${path}`, {
+  const response = await trackedFetch(`${baseUrl}${path}`, {
     ...init,
     credentials: 'include',
     cache: 'no-store',

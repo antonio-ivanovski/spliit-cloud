@@ -2612,7 +2612,9 @@
     "staleRate": "匯率日期:",
     "fromLabel": "來源貨幣",
     "toLabel": "目標貨幣",
-    "via": "經 {currencies}"
+    "via": "經 {currencies}",
+    "offlineDescription": "貨幣轉換需要網路連線。重新連線後即可轉換金額並建立支出。",
+    "offlineComingSoon": "此功能的完整離線支援是我們的優先事項，即將推出。"
   },
   "LanguageSwitcher": {
     "title": "選擇語言",
@@ -2955,7 +2957,8 @@
     "landingHintTap": "隨時點我。我不咬人——我是一張收據。",
     "hintTapToAddExpense": "我是 {name}，點我即可新增一筆支出。",
     "hintTapToCreateGroup": "我是 {name}，點我即可建立群組。",
-    "billName": "Bill"
+    "billName": "Bill",
+    "offlineMessage": "處於離線狀態時，我無法建立任何內容。"
   },
   "CreateSettlement": {
     "description": "請確認付款資訊後再記錄。",
@@ -3066,5 +3069,10 @@
     "enableSuccess": "已建立公開僅限檢視連結",
     "replaceSuccess": "已取代公開僅限檢視連結。舊連結已失效。",
     "removeSuccess": "已移除公開僅限檢視連結"
+  },
+  "OfflineEmptyState": {
+    "title": "目前處於離線狀態",
+    "description": "此畫面需要網路連線。重新連線後即可載入群組與消費。",
+    "retry": "再試一次"
   }
 }

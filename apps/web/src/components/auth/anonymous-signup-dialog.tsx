@@ -20,23 +20,21 @@ import {
 } from '@/lib/anonymous-recovery'
 import { authClient } from '@/lib/auth'
 import { replaceBrowserLocation } from '@/lib/browser-navigation'
-
-import { ANONYMOUS_REDIRECT_STORAGE_KEY } from './anonymous-onboarding-gate'
+import { useOnlineStatus } from '@/lib/use-online-status'
 
 export function AnonymousSignupDialog({
   open,
   onOpenChange,
-  redirectTo,
   creationEnabled,
 }: {
   open: boolean
   onOpenChange: (open: boolean) => void
-  redirectTo: string
   creationEnabled: boolean
 }) {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'AnonymousAccount.signup',
   })
+  const isOnline = useOnlineStatus()
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<'create' | 'recover' | null>(null)
   const [recoveryLink, setRecoveryLink] = useState('')
@@ -51,16 +49,15 @@ export function AnonymousSignupDialog({
   }
 
   async function createAccount() {
+    if (!isOnline) return
     setPending(true)
     setError(null)
     try {
-      sessionStorage.setItem(ANONYMOUS_REDIRECT_STORAGE_KEY, redirectTo)
       const result = await authClient.signIn.anonymous()
       if (result.error) throw new Error(result.error.message)
       onOpenChange(false)
       setRecoveryLink('')
     } catch {
-      sessionStorage.removeItem(ANONYMOUS_REDIRECT_STORAGE_KEY)
       setError('create')
     } finally {
       setPending(false)
@@ -68,6 +65,7 @@ export function AnonymousSignupDialog({
   }
 
   async function recoverAccount() {
+    if (!isOnline) return
     const code = parseAnonymousRecoveryLink(recoveryLink)
     if (!code) {
       setError('recover')
@@ -110,7 +108,7 @@ export function AnonymousSignupDialog({
                 type="button"
                 className="w-full"
                 onClick={() => void createAccount()}
-                disabled={pending}
+                disabled={pending || !isOnline}
               >
                 {pending ? (
                   <Loader2 className="me-2 h-4 w-4 animate-spin" />
@@ -163,7 +161,7 @@ export function AnonymousSignupDialog({
                 inputMode="url"
                 spellCheck={false}
                 placeholder="https://…/auth/recover#code=…"
-                disabled={pending}
+                disabled={pending || !isOnline}
               />
             </div>
             <Button
@@ -171,7 +169,7 @@ export function AnonymousSignupDialog({
               variant="outline"
               className="w-full"
               onClick={() => void recoverAccount()}
-              disabled={pending || !recoveryLink.trim()}
+              disabled={pending || !isOnline || !recoveryLink.trim()}
             >
               {pending ? (
                 <Loader2 className="me-2 h-4 w-4 animate-spin" />

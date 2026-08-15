@@ -2646,7 +2646,9 @@
     "staleRate": "Taxa de:",
     "fromLabel": "De",
     "toLabel": "Para",
-    "via": "através de {currencies}"
+    "via": "através de {currencies}",
+    "offlineDescription": "A conversão de moeda precisa de uma ligação. Volta a ligar-te para converter valores e criar despesas.",
+    "offlineComingSoon": "O suporte completo offline desta funcionalidade é uma das nossas prioridades e estará disponível em breve."
   },
   "LanguageSwitcher": {
     "title": "Escolher idioma",
@@ -2990,7 +2992,8 @@
     "landingHintTap": "Toca-me quando quiseres. Não mordo — sou um recibo.",
     "hintTapToAddExpense": "Sou o {name} — toca-me para adicionar uma despesa.",
     "hintTapToCreateGroup": "Sou o {name} — toca-me para criar um grupo.",
-    "billName": "Bill"
+    "billName": "Bill",
+    "offlineMessage": "Não consigo criar nada enquanto estás offline."
   },
   "CreateSettlement": {
     "description": "Reveja o pagamento antes de registá-lo.",
@@ -3101,5 +3104,10 @@
     "enableSuccess": "Ligação pública apenas de leitura criada",
     "replaceSuccess": "Ligação pública apenas de leitura substituída. A ligação anterior já não funciona.",
     "removeSuccess": "Ligação pública apenas de leitura removida"
+  },
+  "OfflineEmptyState": {
+    "title": "Estás offline",
+    "description": "Este ecrã precisa de uma ligação. Volta a ligar-te para carregar os teus grupos e despesas.",
+    "retry": "Tentar novamente"
   }
 }

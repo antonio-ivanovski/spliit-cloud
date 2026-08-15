@@ -19,15 +19,21 @@ export function PasswordForm(props: {
   canSubmit: boolean
   error: string | null
   isPending: boolean
+  disabled?: boolean
   onEmailChange: (email: string) => void
   onPasswordChange: (password: string) => void
   onConfirmPasswordChange: (password: string) => void
   onSubmit: (event: React.FormEvent) => void
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
+  const actionsDisabled = Boolean(props.disabled)
   return (
     <form className="flex flex-col gap-3 pt-4" onSubmit={props.onSubmit}>
-      <EmailField value={props.email} onChange={props.onEmailChange} />
+      <EmailField
+        value={props.email}
+        onChange={props.onEmailChange}
+        disabled={actionsDisabled}
+      />
       <div className="grid gap-1.5">
         <Label htmlFor="auth-password">{t('password')}</Label>
         <Input
@@ -38,6 +44,7 @@ export function PasswordForm(props: {
           }
           value={props.password}
           onChange={(event) => props.onPasswordChange(event.target.value)}
+          disabled={actionsDisabled}
           required
         />
       </div>
@@ -46,6 +53,7 @@ export function PasswordForm(props: {
           variant="link"
           size="sm"
           className="h-auto self-start px-0 py-0"
+          disabled={actionsDisabled}
           render={
             <Link
               to="/auth/forgot-password"
@@ -75,6 +83,7 @@ export function PasswordForm(props: {
               onChange={(event) =>
                 props.onConfirmPasswordChange(event.target.value)
               }
+              disabled={actionsDisabled}
               required
             />
             {props.confirmPassword.length > 0 &&
@@ -95,7 +104,7 @@ export function PasswordForm(props: {
         type="submit"
         variant={props.mode === 'sign-in' ? 'default' : 'outline'}
         className="w-full"
-        disabled={props.isPending || !props.canSubmit}
+        disabled={actionsDisabled || props.isPending || !props.canSubmit}
       >
         {props.isPending && <Loader2 className="me-2 h-4 w-4 animate-spin" />}
         {props.mode === 'sign-in'

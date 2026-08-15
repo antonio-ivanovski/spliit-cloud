@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { CurrencyRateProviderAttribution } from '@/components/currency-rate-provider-attribution'
 import { CurrencySelector } from '@/components/currency-selector'
+import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { Button } from '@/components/ui/button'
 import {
   ResponsiveDialog,
@@ -24,6 +25,7 @@ import {
 } from '@/lib/currency-input'
 import { useCurrencyRate } from '@/lib/hooks'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 import {
   amountAsMinorUnits,
@@ -166,6 +168,7 @@ function getDeviceCurrency(availableCodes: Set<string>): string {
 export function CurrencyConverterButton() {
   const { t } = useTranslation(undefined, { keyPrefix: 'CurrencyConverter' })
   const { data: account, isPending } = useCurrentAccount()
+  const isOnline = useOnlineStatus()
   const [open, setOpen] = useState(false)
 
   if (isPending || !account) return null
@@ -192,12 +195,22 @@ export function CurrencyConverterButton() {
       <ResponsiveDialogContent className="sm:max-w-lg">
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>{t('title')}</ResponsiveDialogTitle>
-          <ResponsiveDialogDescription className="text-start">
-            {t('description')}
+          <ResponsiveDialogDescription
+            className={isOnline ? 'text-start' : 'sr-only'}
+          >
+            {isOnline ? t('description') : t('offlineDescription')}
           </ResponsiveDialogDescription>
         </ResponsiveDialogHeader>
         <ResponsiveDialogBody className="min-w-0">
-          <ConverterContent />
+          {isOnline ? (
+            <ConverterContent />
+          ) : (
+            <OfflineEmptyState
+              variant="plain"
+              description={t('offlineDescription')}
+              detail={t('offlineComingSoon')}
+            />
+          )}
         </ResponsiveDialogBody>
       </ResponsiveDialogContent>
     </ResponsiveDialog>
@@ -208,6 +221,7 @@ export function ConverterContent() {
   const { t } = useTranslation(undefined, { keyPrefix: 'CurrencyConverter' })
   const locale = useLocale()
   const currencies = useCurrencies('')
+  const isOnline = useOnlineStatus()
 
   const resolveInitialCode = useCallback(
     (key: string) => {
@@ -225,7 +239,7 @@ export function ConverterContent() {
 
   const { data: groupsData } = trpc.account.groups.useQuery(
     { includeArchived: false },
-    { staleTime: 60_000 },
+    { staleTime: 60_000, enabled: isOnline },
   )
 
   const today = useMemo(() => new Date(`${utcTodayIso()}T12:00:00.000Z`), [])
@@ -237,7 +251,7 @@ export function ConverterContent() {
     sources,
     isLoading: rateLoading,
     error: rateError,
-  } = useCurrencyRate(today, fromCode, toCode)
+  } = useCurrencyRate(today, fromCode, toCode, { enabled: isOnline })
 
   const isStaleRate = rateError instanceof RangeError
   const rateFailed = rateError != null && !isStaleRate
@@ -284,6 +298,16 @@ export function ConverterContent() {
   }, [fromCode, toCode])
 
   const toCurrency = currencies.find((c) => c.code === toCode)
+
+  if (!isOnline) {
+    return (
+      <OfflineEmptyState
+        variant="plain"
+        description={t('offlineDescription')}
+        detail={t('offlineComingSoon')}
+      />
+    )
+  }
 
   return (
     <div className="flex min-w-0 flex-col gap-4">

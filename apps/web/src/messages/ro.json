@@ -2646,7 +2646,9 @@
     "staleRate": "Rată din:",
     "fromLabel": "Din",
     "toLabel": "În",
-    "via": "prin {currencies}"
+    "via": "prin {currencies}",
+    "offlineDescription": "Conversia monetară are nevoie de o conexiune. Reconectează-te pentru a converti sume și a crea cheltuieli.",
+    "offlineComingSoon": "Suportul offline complet pentru această funcție este o prioritate și va fi disponibil în curând."
   },
   "LanguageSwitcher": {
     "title": "Alege limba",
@@ -2990,7 +2992,8 @@
     "landingHintTap": "Atinge-mă oricând. Nu mușc — sunt o chitanță.",
     "hintTapToAddExpense": "Sunt {name} — atinge-mă ca să adaugi o cheltuială.",
     "hintTapToCreateGroup": "Sunt {name} — atinge-mă ca să creezi un grup.",
-    "billName": "Bill"
+    "billName": "Bill",
+    "offlineMessage": "Nu pot crea nimic cât timp ești offline."
   },
   "CreateSettlement": {
     "description": "Revizuiește plata înainte de a o înregistra.",
@@ -3101,5 +3104,10 @@
     "enableSuccess": "Link public de vizualizare creat",
     "replaceSuccess": "Link public de vizualizare înlocuit. Linkul anterior nu mai funcționează.",
     "removeSuccess": "Link public de vizualizare eliminat"
+  },
+  "OfflineEmptyState": {
+    "title": "Ești offline",
+    "description": "Acest ecran are nevoie de o conexiune. Reconectează-te pentru a încărca grupurile și cheltuielile.",
+    "retry": "Încearcă din nou"
   }
 }

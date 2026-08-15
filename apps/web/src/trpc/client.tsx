@@ -6,6 +6,7 @@ import { useState } from 'react'
 import superjson from 'superjson'
 
 import { getApiBaseUrl } from '@/lib/api-url'
+import { trackedFetch } from '@/lib/connectivity'
 import type { AppRouter } from '@spliit/api/router'
 
 import { makeQueryClient } from './query-client'
@@ -36,7 +37,7 @@ export function getTrpcClient() {
         transformer: superjson,
         url: getUrl(),
         fetch(url, options) {
-          return fetch(url, {
+          return trackedFetch(url, {
             ...options,
             credentials: 'include',
           })

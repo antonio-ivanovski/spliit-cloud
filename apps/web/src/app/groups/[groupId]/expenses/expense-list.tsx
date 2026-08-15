@@ -20,10 +20,12 @@ import {
   useExpenseFilters,
 } from '@/app/groups/[groupId]/expenses/use-expense-filters'
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
+import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { Button } from '@/components/ui/button'
 import { SearchBar } from '@/components/ui/search-bar'
 import { useLocale } from '@/i18n/react'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
+import { useOfflineWithoutData } from '@/lib/use-online-status'
 import { getCurrencyFromGroup } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 
@@ -92,6 +94,7 @@ const ExpenseListForSearch = ({
     data,
     isLoading: expensesAreLoading,
     fetchNextPage,
+    refetch,
   } = trpc.groups.expenses.list.useInfiniteQuery(
     {
       groupId,
@@ -106,12 +109,17 @@ const ExpenseListForSearch = ({
   )
   const expenses = data?.pages.flatMap((page) => page.expenses)
   const hasMore = data?.pages.at(-1)?.hasMore ?? false
+  const showOfflineEmpty = useOfflineWithoutData(!!data)
 
   const isLoading = expensesAreLoading || !expenses || !group
 
   useEffect(() => {
     if (inView && hasMore && !isLoading) void fetchNextPage()
   }, [fetchNextPage, hasMore, inView, isLoading])
+
+  if (showOfflineEmpty) {
+    return <OfflineEmptyState onRetry={() => void refetch()} />
+  }
 
   if (isLoading) return <ExpensesLoading />
 

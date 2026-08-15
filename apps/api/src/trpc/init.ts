@@ -9,6 +9,7 @@ import {
   prisma,
 } from '@spliit/db'
 
+import { isAnonymousSetupIncomplete } from '../lib/auth/account-cache'
 import type { OAuthResolvedAuth, ResolvedAuth } from '../lib/auth/session'
 import {
   getAuthFromRequest,
@@ -76,17 +77,11 @@ export const groupReadProcedure = baseProcedure.use(async ({ ctx, next }) => {
   ) {
     throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Session required' })
   }
-  if (ctx.auth?.user.isAnonymous) {
-    const recovery = await prisma.anonymousRecoveryCredential.findUnique({
-      where: { accountId: ctx.auth.user.id },
-      select: { acknowledgedAt: true, onboardingCompletedAt: true },
+  if (ctx.auth && isAnonymousSetupIncomplete(ctx.auth.user)) {
+    throw new TRPCError({
+      code: 'PRECONDITION_FAILED',
+      message: 'ANONYMOUS_SETUP_REQUIRED',
     })
-    if (!recovery?.acknowledgedAt || !recovery.onboardingCompletedAt) {
-      throw new TRPCError({
-        code: 'PRECONDITION_FAILED',
-        message: 'ANONYMOUS_SETUP_REQUIRED',
-      })
-    }
   }
   return next()
 })
@@ -115,17 +110,11 @@ export const protectedProcedure = baseProcedure.use(
         message: 'Authentication required',
       })
     }
-    if (ctx.auth.user.isAnonymous) {
-      const recovery = await prisma.anonymousRecoveryCredential.findUnique({
-        where: { accountId: ctx.auth.user.id },
-        select: { acknowledgedAt: true, onboardingCompletedAt: true },
+    if (isAnonymousSetupIncomplete(ctx.auth.user)) {
+      throw new TRPCError({
+        code: 'PRECONDITION_FAILED',
+        message: 'ANONYMOUS_SETUP_REQUIRED',
       })
-      if (!recovery?.acknowledgedAt || !recovery.onboardingCompletedAt) {
-        throw new TRPCError({
-          code: 'PRECONDITION_FAILED',
-          message: 'ANONYMOUS_SETUP_REQUIRED',
-        })
-      }
     }
     if (type === 'mutation') {
       const decision = authenticatedMutationLimiter.hit(ctx.auth.user.id)

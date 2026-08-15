@@ -2612,7 +2612,9 @@
     "staleRate": "レート情報:",
     "fromLabel": "変換元",
     "toLabel": "変換先",
-    "via": "{currencies} 経由"
+    "via": "{currencies} 経由",
+    "offlineDescription": "通貨換算には接続が必要です。金額を換算して支出を作成するには、再接続してください。",
+    "offlineComingSoon": "この機能の完全なオフライン対応は優先度が高く、近日公開予定です。"
   },
   "LanguageSwitcher": {
     "title": "言語を選択",
@@ -2955,7 +2957,8 @@
     "landingHintTap": "いつでもタップしてください。かみません。私はレシートです。",
     "hintTapToAddExpense": "私は{name}です。タップして支出を追加できます。",
     "hintTapToCreateGroup": "私は{name}です。タップしてグループを作成できます。",
-    "billName": "ビル"
+    "billName": "ビル",
+    "offlineMessage": "オフライン中は何も作成できません。"
   },
   "CreateSettlement": {
     "description": "支払いを記録する前に確認してください。",
@@ -3066,5 +3069,10 @@
     "enableSuccess": "公開閲覧専用リンクを作成しました",
     "replaceSuccess": "公開閲覧専用リンクを置き換えました。以前のリンクは使えません。",
     "removeSuccess": "公開閲覧専用リンクを削除しました"
+  },
+  "OfflineEmptyState": {
+    "title": "現在オフラインです",
+    "description": "この画面には接続が必要です。グループと支出を読み込むには、再接続してください。",
+    "retry": "もう一度試す"
   }
 }

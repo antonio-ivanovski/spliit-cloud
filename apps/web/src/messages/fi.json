@@ -2628,7 +2628,9 @@
     "staleRate": "Kurssi:",
     "fromLabel": "Mistä",
     "toLabel": "Mihin",
-    "via": "{currencies} kautta"
+    "via": "{currencies} kautta",
+    "offlineDescription": "Valuuttamuunnos tarvitsee yhteyden. Muodosta yhteys uudelleen muuntaaksesi summia ja luodaksesi kuluja.",
+    "offlineComingSoon": "Tämän ominaisuuden täysi tuki ilman verkkoyhteyttä on korkealla prioriteettilistallamme ja tulossa pian."
   },
   "LanguageSwitcher": {
     "title": "Valitse kieli",
@@ -2972,7 +2974,8 @@
     "landingHintTap": "Napauta minua milloin tahansa. En pure — olen kuitti.",
     "hintTapToAddExpense": "Olen {name} — napauta minua lisätäksesi kulun.",
     "hintTapToCreateGroup": "Olen {name} — napauta minua luodaksesi ryhmän.",
-    "billName": "Bill"
+    "billName": "Bill",
+    "offlineMessage": "En voi luoda mitään, kun et ole yhteydessä."
   },
   "CreateSettlement": {
     "description": "Tarkista maksu ennen sen tallentamista.",
@@ -3083,5 +3086,10 @@
     "enableSuccess": "Julkinen vain katseluun tarkoitettu linkki luotu",
     "replaceSuccess": "Julkinen vain katseluun tarkoitettu linkki vaihdettu. Edellinen linkki ei enää toimi.",
     "removeSuccess": "Julkinen vain katseluun tarkoitettu linkki poistettu"
+  },
+  "OfflineEmptyState": {
+    "title": "Et ole yhteydessä",
+    "description": "Tämä näyttö tarvitsee yhteyden. Muodosta yhteys uudelleen ladataksesi ryhmäsi ja kulusi.",
+    "retry": "Yritä uudelleen"
   }
 }

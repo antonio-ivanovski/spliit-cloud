@@ -2700,7 +2700,9 @@
     "staleRate": "Tipo del:",
     "fromLabel": "De",
     "toLabel": "A",
-    "via": "vía {currencies}"
+    "via": "vía {currencies}",
+    "offlineDescription": "La conversión de moneda necesita conexión. Vuelve a conectarte para convertir cantidades y crear gastos.",
+    "offlineComingSoon": "El soporte completo sin conexión de esta función es una de nuestras prioridades y estará disponible próximamente."
   },
   "LanguageSwitcher": {
     "title": "Elegir idioma",
@@ -3044,7 +3046,8 @@
     "landingHintTap": "Tócame cuando quieras. No muerdo — soy un recibo.",
     "hintTapToAddExpense": "Soy {name} — tócame para añadir un gasto.",
     "hintTapToCreateGroup": "Soy {name} — tócame para crear un grupo.",
-    "billName": "Bill"
+    "billName": "Bill",
+    "offlineMessage": "No puedo crear nada mientras estás sin conexión."
   },
   "CreateSettlement": {
     "description": "Revisa el pago antes de registrarlo.",
@@ -3155,5 +3158,10 @@
     "enableSuccess": "Enlace público de solo lectura creado",
     "replaceSuccess": "Enlace público de solo lectura reemplazado. El enlace anterior ya no funciona.",
     "removeSuccess": "Enlace público de solo lectura eliminado"
+  },
+  "OfflineEmptyState": {
+    "title": "Estás sin conexión",
+    "description": "Esta pantalla necesita conexión. Vuelve a conectarte para cargar tus grupos y gastos.",
+    "retry": "Intentar de nuevo"
   }
 }

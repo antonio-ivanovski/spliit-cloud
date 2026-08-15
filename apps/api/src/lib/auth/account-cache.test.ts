@@ -44,12 +44,18 @@ describe('account cache generation guard', () => {
     resolveFirst(staleAccount as never)
 
     const firstResult = await inFlight
-    expect(firstResult).toEqual(staleAccount)
+    expect(firstResult).toEqual({
+      ...staleAccount,
+      anonymousOnboardingCompleted: true,
+    })
 
     // The stale row must NOT have been written to the cache; the second call
     // must hit Prisma again and return the fresh row.
     const secondResult = await getCachedAccount(id)
-    expect(secondResult).toEqual(freshAccount)
+    expect(secondResult).toEqual({
+      ...freshAccount,
+      anonymousOnboardingCompleted: true,
+    })
     expect(prismaMock.account.findUnique).toHaveBeenCalledTimes(2)
   })
 
@@ -69,7 +75,10 @@ describe('account cache generation guard', () => {
 
     // First result was awaited to completion before invalidate ran, so it is
     // returned regardless of the generation bump.
-    expect(firstResult).toEqual(account)
+    expect(firstResult).toEqual({
+      ...account,
+      anonymousOnboardingCompleted: true,
+    })
     expect(prismaMock.account.findUnique).toHaveBeenCalledTimes(1)
   })
 
@@ -101,8 +110,59 @@ describe('account cache generation guard', () => {
     clearAccountCache()
     resolveFirst(firstAccount as never)
 
-    expect(await inFlight).toEqual(firstAccount)
-    expect(await getCachedAccount(id)).toEqual(secondAccount)
+    expect(await inFlight).toEqual({
+      ...firstAccount,
+      anonymousOnboardingCompleted: true,
+    })
+    expect(await getCachedAccount(id)).toEqual({
+      ...secondAccount,
+      anonymousOnboardingCompleted: true,
+    })
     expect(prismaMock.account.findUnique).toHaveBeenCalledTimes(2)
+  })
+
+  it('marks an anonymous account complete only after recovery is acknowledged', async () => {
+    prismaMock.account.findUnique.mockResolvedValue({
+      id: 'anonymous-1',
+      isAnonymous: true,
+      name: 'Guest',
+    } as never)
+    prismaMock.anonymousRecoveryCredential.findUnique.mockResolvedValue({
+      acknowledgedAt: null,
+      onboardingCompletedAt: null,
+    } as never)
+
+    await expect(getCachedAccount('anonymous-1')).resolves.toMatchObject({
+      id: 'anonymous-1',
+      anonymousOnboardingCompleted: false,
+    })
+
+    invalidateAccountCache('anonymous-1')
+    prismaMock.anonymousRecoveryCredential.findUnique.mockResolvedValue({
+      acknowledgedAt: new Date(),
+      onboardingCompletedAt: new Date(),
+    } as never)
+
+    await expect(getCachedAccount('anonymous-1')).resolves.toMatchObject({
+      anonymousOnboardingCompleted: true,
+    })
+    expect(
+      prismaMock.anonymousRecoveryCredential.findUnique,
+    ).toHaveBeenCalledTimes(2)
+  })
+
+  it('does not look up recovery credentials for ordinary accounts', async () => {
+    prismaMock.account.findUnique.mockResolvedValue({
+      id: 'acct-1',
+      isAnonymous: false,
+      name: 'Alice',
+    } as never)
+
+    await expect(getCachedAccount('acct-1')).resolves.toMatchObject({
+      anonymousOnboardingCompleted: true,
+    })
+    expect(
+      prismaMock.anonymousRecoveryCredential.findUnique,
+    ).not.toHaveBeenCalled()
   })
 })

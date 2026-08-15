@@ -2646,7 +2646,9 @@
     "staleRate": "Tipus del:",
     "fromLabel": "De",
     "toLabel": "A",
-    "via": "a través de {currencies}"
+    "via": "a través de {currencies}",
+    "offlineDescription": "La conversió de moneda necessita connexió. Torna a connectar-te per convertir imports i crear despeses.",
+    "offlineComingSoon": "El suport complet sense connexió d'aquesta funció és una de les nostres prioritats i arribarà aviat."
   },
   "LanguageSwitcher": {
     "title": "Tria l'idioma",
@@ -2990,7 +2992,8 @@
     "landingHintTap": "Toca’m quan vulguis. No et mordo — sóc un rebut.",
     "hintTapToAddExpense": "Sóc {name} — toca'm per afegir una despesa.",
     "hintTapToCreateGroup": "Sóc {name} — toca'm per crear un grup.",
-    "billName": "Bill"
+    "billName": "Bill",
+    "offlineMessage": "No puc crear res mentre no tens connexió."
   },
   "CreateSettlement": {
     "description": "Revisa el pagament abans de registrar-lo.",
@@ -3101,5 +3104,10 @@
     "enableSuccess": "Enllaç públic de només lectura creat",
     "replaceSuccess": "Enllaç públic de només lectura substituït. L’enllaç anterior ja no funciona.",
     "removeSuccess": "Enllaç públic de només lectura eliminat"
+  },
+  "OfflineEmptyState": {
+    "title": "No tens connexió",
+    "description": "Aquesta pantalla necessita connexió. Torna a connectar-te per carregar els teus grups i despeses.",
+    "retry": "Torna-ho a provar"
   }
 }

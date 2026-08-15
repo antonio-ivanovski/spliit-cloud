@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label'
 export function EmailField(props: {
   value: string
   onChange: (email: string) => void
+  disabled?: boolean
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
   return (
@@ -18,6 +19,7 @@ export function EmailField(props: {
         placeholder="you@example.com"
         value={props.value}
         onChange={(event) => props.onChange(event.target.value)}
+        disabled={props.disabled}
         required
       />
     </div>

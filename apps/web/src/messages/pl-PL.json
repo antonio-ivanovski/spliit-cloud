@@ -2664,7 +2664,9 @@
     "staleRate": "Kurs z:",
     "fromLabel": "Z",
     "toLabel": "Na",
-    "via": "przez {currencies}"
+    "via": "przez {currencies}",
+    "offlineDescription": "Przeliczanie waluty wymaga połączenia. Połącz się ponownie, aby przeliczać kwoty i tworzyć wydatki.",
+    "offlineComingSoon": "Pełna obsługa tej funkcji w trybie offline jest jednym z naszych priorytetów i pojawi się już wkrótce."
   },
   "LanguageSwitcher": {
     "title": "Wybierz język",
@@ -3006,7 +3008,8 @@
     "landingHintTap": "Stuknij mnie kiedy chcesz. Nie gryzę — jestem paragonem.",
     "hintTapToAddExpense": "Jestem {name} — kliknij mnie, żeby dodać wydatek.",
     "hintTapToCreateGroup": "Jestem {name} — kliknij mnie, żeby utworzyć grupę.",
-    "billName": "Bill"
+    "billName": "Bill",
+    "offlineMessage": "Nie mogę nic utworzyć, dopóki jesteś offline."
   },
   "CreateSettlement": {
     "description": "Sprawdź płatność przed jej zapisaniem.",
@@ -3117,5 +3120,10 @@
     "enableSuccess": "Utworzono publiczny link tylko do odczytu",
     "replaceSuccess": "Zastąpiono publiczny link tylko do odczytu. Poprzedni link już nie działa.",
     "removeSuccess": "Usunięto publiczny link tylko do odczytu"
+  },
+  "OfflineEmptyState": {
+    "title": "Jesteś offline",
+    "description": "Ten ekran wymaga połączenia. Połącz się ponownie, aby wczytać grupy i wydatki.",
+    "retry": "Spróbuj ponownie"
   }
 }

@@ -2624,7 +2624,9 @@
     "staleRate": "Kurs från:",
     "fromLabel": "Från",
     "toLabel": "Till",
-    "via": "omräknat via {currencies}"
+    "via": "omräknat via {currencies}",
+    "offlineDescription": "Valutakonvertering behöver en anslutning. Återanslut för att konvertera belopp och skapa utgifter.",
+    "offlineComingSoon": "Fullständigt offlinestöd för den här funktionen har hög prioritet och kommer snart."
   },
   "LanguageSwitcher": {
     "title": "Välj språk",
@@ -2968,7 +2970,8 @@
     "landingHintTap": "Tryck på mig när som helst. Jag biter inte — jag är ett kvitto.",
     "hintTapToAddExpense": "Jag är {name} — tryck på mig för att lägga till en utgift.",
     "hintTapToCreateGroup": "Jag är {name} — tryck på mig för att skapa en grupp.",
-    "billName": "Bill"
+    "billName": "Bill",
+    "offlineMessage": "Jag kan inte skapa något medan du är offline."
   },
   "CreateSettlement": {
     "description": "Granska betalningen innan du registrerar den.",
@@ -3079,5 +3082,10 @@
     "enableSuccess": "Offentlig länk med endast visning skapad",
     "replaceSuccess": "Offentlig länk med endast visning ersatt. Den tidigare länken fungerar inte längre.",
     "removeSuccess": "Offentlig länk med endast visning borttagen"
+  },
+  "OfflineEmptyState": {
+    "title": "Du är offline",
+    "description": "Den här skärmen behöver en anslutning. Återanslut för att läsa in dina grupper och utgifter.",
+    "retry": "Försök igen"
   }
 }

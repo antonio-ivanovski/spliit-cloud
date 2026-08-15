@@ -225,7 +225,7 @@ describe('CurrencyConverter group navigation', () => {
 
     expect(accountGroupsQuerySpy).toHaveBeenCalledWith(
       { includeArchived: false },
-      { staleTime: 60_000 },
+      { staleTime: 60_000, enabled: true },
     )
 
     const amountInput = screen.getByLabelText(/from/i)
@@ -301,5 +301,55 @@ describe('CurrencyConverter group navigation', () => {
     expect(
       screen.queryByRole('link', { name: /Trip/i }),
     ).not.toBeInTheDocument()
+  })
+})
+
+describe('CurrencyConverter offline', () => {
+  beforeEach(() => {
+    window.localStorage.clear()
+    useCurrencyRateSpy.mockReset()
+    accountGroupsQuerySpy.mockReset()
+    Object.defineProperty(navigator, 'onLine', {
+      configurable: true,
+      value: false,
+    })
+  })
+
+  afterEach(() => {
+    Object.defineProperty(navigator, 'onLine', {
+      configurable: true,
+      value: true,
+    })
+  })
+
+  it('shows the offline message and does not fetch rates or groups', () => {
+    useCurrencyRateSpy.mockReturnValue({
+      data: undefined,
+      via: undefined,
+      sources: [],
+      isLoading: false,
+      error: undefined,
+    })
+    accountGroupsQuerySpy.mockReturnValue({
+      data: undefined,
+      isLoading: false,
+    })
+
+    render(<ConverterContent />)
+
+    expect(screen.getByTestId('offline-empty-state')).toHaveTextContent(
+      /full offline support for this feature is high on our priority list/i,
+    )
+    expect(screen.queryByLabelText(/from/i)).not.toBeInTheDocument()
+    expect(accountGroupsQuerySpy).toHaveBeenCalledWith(
+      { includeArchived: false },
+      expect.objectContaining({ enabled: false }),
+    )
+    expect(useCurrencyRateSpy).toHaveBeenCalledWith(
+      expect.any(Date),
+      expect.any(String),
+      expect.any(String),
+      { enabled: false },
+    )
   })
 })

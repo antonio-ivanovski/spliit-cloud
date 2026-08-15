@@ -2700,7 +2700,9 @@
     "staleRate": "Using rate from:",
     "fromLabel": "From",
     "toLabel": "To",
-    "via": "via {currencies}"
+    "via": "via {currencies}",
+    "offlineDescription": "Currency conversion needs a connection. Reconnect to convert amounts and create expenses.",
+    "offlineComingSoon": "Full offline support for this feature is high on our priority list and coming soon."
   },
   "LanguageSwitcher": {
     "title": "Choose language",
@@ -3044,7 +3046,8 @@
     "landingHintTap": "Tap me anytime. I don’t bite — I’m a receipt.",
     "hintTapToAddExpense": "I'm {name} — tap me to add an expense.",
     "hintTapToCreateGroup": "I'm {name} — tap me to create a group.",
-    "billName": "Bill"
+    "billName": "Bill",
+    "offlineMessage": "I can't create anything while you're offline."
   },
   "CreateSettlement": {
     "description": "Review the payment before recording it.",
@@ -3155,5 +3158,10 @@
     "enableSuccess": "Public View-only link created",
     "replaceSuccess": "Public View-only link replaced. The previous link no longer works.",
     "removeSuccess": "Public View-only link removed"
+  },
+  "OfflineEmptyState": {
+    "title": "You're offline",
+    "description": "This screen needs a connection. Reconnect to load your groups and expenses.",
+    "retry": "Try again"
   }
 }

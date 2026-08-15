@@ -7,6 +7,7 @@ import {
 import { createAuthClient } from 'better-auth/react'
 
 import { getApiBaseUrl } from './api-url'
+import { trackedFetch } from './connectivity'
 
 /**
  * Spliit web auth client. Talks to the better-auth handler mounted at `/auth/*`
@@ -23,6 +24,7 @@ export const authClient = createAuthClient({
   baseURL: `${apiBaseUrl}/auth`,
   fetchOptions: {
     credentials: 'include',
+    customFetchImpl: trackedFetch,
   },
   plugins: [
     oauthProviderClient(),
@@ -38,4 +40,5 @@ export type AuthSession = NonNullable<
 
 export type AuthAccount = Omit<AuthSession['user'], 'isAnonymous'> & {
   isAnonymous?: boolean | null
+  anonymousOnboardingCompleted?: boolean | null
 }

@@ -2,7 +2,9 @@ import { getRouteApi, useNavigate } from '@tanstack/react-router'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { OfflineEmptyState } from '@/components/offline-empty-state'
 import type { Balances, SuggestedSettlement } from '@/lib/balances'
+import { useOfflineWithoutData } from '@/lib/use-online-status'
 import { getCurrencyFromGroup } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import type {
@@ -103,10 +105,14 @@ export default function BalancesAndSettlements() {
   const navigate = useNavigate()
   const [storedView, setStoredView] = useState<BalanceView>('simple')
   const settlementMode = settlementModeParam ?? 'individual'
-  const { data: balancesData, isLoading: balancesAreLoading } =
-    trpc.groups.balances.list.useQuery({ groupId, linkInviteToken, viewKey })
+  const {
+    data: balancesData,
+    isLoading: balancesAreLoading,
+    refetch: refetchBalances,
+  } = trpc.groups.balances.list.useQuery({ groupId, linkInviteToken, viewKey })
   const { data: subgroupsData, isLoading: subgroupsAreLoading } =
     trpc.groups.subgroups.list.useQuery({ groupId, linkInviteToken, viewKey })
+  const showOfflineEmpty = useOfflineWithoutData(!!balancesData)
 
   useEffect(() => {
     // Until we use tRPC more widely and can invalidate the cache on expense
@@ -163,6 +169,9 @@ export default function BalancesAndSettlements() {
         : [],
     [subgroupsData],
   )
+  if (showOfflineEmpty) {
+    return <OfflineEmptyState onRetry={() => void refetchBalances()} />
+  }
   const canUseSubgroupSettlement =
     !isLoading &&
     subgroupsData?.enabled === true &&

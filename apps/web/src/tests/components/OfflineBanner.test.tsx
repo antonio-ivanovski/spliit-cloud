@@ -1,6 +1,10 @@
 import { afterEach, describe, expect, it } from 'vitest'
 
 import { OfflineBanner } from '@/components/offline-banner'
+import {
+  reportNetworkFailure,
+  resetConnectivityForTests,
+} from '@/lib/connectivity'
 import { act, render, screen, waitFor } from '@/test/test-utils'
 
 describe('OfflineBanner', () => {
@@ -10,6 +14,7 @@ describe('OfflineBanner', () => {
       configurable: true,
       value: true,
     })
+    resetConnectivityForTests()
   })
 
   it('renders nothing when online', () => {
@@ -64,6 +69,17 @@ describe('OfflineBanner', () => {
     })
   })
 
+  it('shows the banner when a fetch fails even if navigator.onLine is true', async () => {
+    render(<OfflineBanner />)
+    expect(screen.queryByTestId('offline-banner')).not.toBeInTheDocument()
+
+    act(() => {
+      reportNetworkFailure(new TypeError('Failed to fetch'))
+    })
+
+    expect(await screen.findByTestId('offline-banner')).toBeInTheDocument()
+  })
+
   it('exposes role=status and aria-live=polite for screen readers', () => {
     Object.defineProperty(navigator, 'onLine', {
       configurable: true,
@@ -73,5 +89,16 @@ describe('OfflineBanner', () => {
     const banner = screen.getByTestId('offline-banner')
     expect(banner).toHaveAttribute('role', 'status')
     expect(banner).toHaveAttribute('aria-live', 'polite')
+  })
+
+  it('occupies layout space instead of overlaying the page heading', () => {
+    Object.defineProperty(navigator, 'onLine', {
+      configurable: true,
+      value: false,
+    })
+    render(<OfflineBanner />)
+    const banner = screen.getByTestId('offline-banner')
+    expect(banner.className).toContain('sticky')
+    expect(banner.className).not.toMatch(/(?:^|\s)fixed(?:\s|$)/)
   })
 })

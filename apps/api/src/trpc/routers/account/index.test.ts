@@ -604,9 +604,10 @@ describe('accountRouter profile cache invalidation', () => {
     await makeCaller('acct-profile').updateProfile({ name: 'Alice Updated' })
     prismaMock.account.findUnique.mockResolvedValueOnce(updatedAccount as never)
 
-    await expect(getCachedAccount('acct-profile')).resolves.toEqual(
-      updatedAccount,
-    )
+    await expect(getCachedAccount('acct-profile')).resolves.toEqual({
+      ...updatedAccount,
+      anonymousOnboardingCompleted: true,
+    })
     expect(prismaMock.account.findUnique).toHaveBeenCalledTimes(2)
   })
 })

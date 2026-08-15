@@ -2646,7 +2646,9 @@
     "staleRate": "Honako tasa:",
     "fromLabel": "Nondik",
     "toLabel": "Nora",
-    "via": "{currencies} bidez"
+    "via": "{currencies} bidez",
+    "offlineDescription": "Moneda bihurketak konexioa behar du. Konektatu berriro kopuruak bihurtzeko eta gastuak sortzeko.",
+    "offlineComingSoon": "Eginbide honen lineaz kanpoko euskarri osoa lehentasun handia da guretzat eta laster iritsiko da."
   },
   "LanguageSwitcher": {
     "title": "Aukeratu hizkuntza",
@@ -2990,7 +2992,8 @@
     "landingHintTap": "Sakatu niri nahi duzunean. Ez dut hozka egiten — ordainagiri bat naiz.",
     "hintTapToAddExpense": "{name} naiz — sakatu niri gastu bat gehitzeko.",
     "hintTapToCreateGroup": "{name} naiz — sakatu niri talde bat sortzeko.",
-    "billName": "Bill"
+    "billName": "Bill",
+    "offlineMessage": "Ezin dut ezer sortu lineaz kanpo zauden bitartean."
   },
   "CreateSettlement": {
     "description": "Berrikusi ordainketa erregistratu aurretik.",
@@ -3101,5 +3104,10 @@
     "enableSuccess": "Ikusteko soilik den esteka publikoa sortu da",
     "replaceSuccess": "Ikusteko soilik den esteka publikoa ordeztu da. Aurreko estekak jada ez du funtzionatzen.",
     "removeSuccess": "Ikusteko soilik den esteka publikoa kendu da"
+  },
+  "OfflineEmptyState": {
+    "title": "Lineaz kanpo zaude",
+    "description": "Pantaila honek konexioa behar du. Konektatu berriro zure taldeak eta gastuak kargatzeko.",
+    "retry": "Saiatu berriro"
   }
 }

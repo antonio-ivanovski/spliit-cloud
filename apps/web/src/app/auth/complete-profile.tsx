@@ -1,8 +1,9 @@
 import { getRouteApi, Navigate, useNavigate } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { AnonymousRecoveryOnboarding } from '@/components/auth/anonymous-recovery-onboarding'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -13,20 +14,23 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { isPlaceholderEmail, needsDisplayName } from '@/lib/account'
+import {
+  isPlaceholderEmail,
+  needsAnonymousOnboarding,
+  needsDisplayName,
+} from '@/lib/account'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 
 const completeProfileRouteApi = getRouteApi('/auth/complete-profile')
 
 /**
- * Profile completion screen. Shown when an authenticated account has no display
- * name yet (e.g. right after a magic-link sign-up, which creates an account
- * with only an email).
+ * First-run account setup. Anonymous users save their recovery link here, then
+ * (like magic-link sign-up) choose a display name.
  *
- * If the account already has a display name, the route redirects to the
- * original `redirect` target (defaulting to `/`). If the visitor is not signed
- * in, they are sent to `/` with a redirect back here.
+ * If neither step is needed, the route redirects to the original `redirect`
+ * target (defaulting to `/`). Signed-out visitors are sent to `/` with a
+ * redirect back here.
  */
 export function CompleteProfilePage() {
   const { t } = useTranslation(undefined, { keyPrefix: 'CompleteProfile' })
@@ -34,6 +38,7 @@ export function CompleteProfilePage() {
   const { redirect } = completeProfileRouteApi.useSearch()
   const redirectTo = redirect ?? '/'
   const { data: account, isPending, refetch } = useCurrentAccount()
+  const [recoveryAcknowledged, setRecoveryAcknowledged] = useState(false)
 
   const [name, setName] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -42,6 +47,8 @@ export function CompleteProfilePage() {
   const updateProfile = trpc.account.updateProfile.useMutation()
 
   const needsProfile = !!account && needsDisplayName(account)
+  const needsRecovery =
+    !!account && needsAnonymousOnboarding(account) && !recoveryAcknowledged
   const signedInLabel = account
     ? !isPlaceholderEmail(account.email)
       ? account.email
@@ -49,6 +56,11 @@ export function CompleteProfilePage() {
         ? account.name
         : null
     : null
+
+  const handleRecoveryComplete = useCallback(async () => {
+    setRecoveryAcknowledged(true)
+    await refetch({ query: { disableCookieCache: true } })
+  }, [refetch])
 
   if (isPending) {
     return (
@@ -63,7 +75,7 @@ export function CompleteProfilePage() {
     return <Navigate to="/" search={{ redirect: back }} replace />
   }
 
-  if (!needsProfile) {
+  if (!needsProfile && !needsRecovery) {
     return <Navigate to={redirectTo} replace />
   }
 
@@ -91,6 +103,18 @@ export function CompleteProfilePage() {
     } finally {
       setSubmitting(false)
     }
+  }
+
+  if (needsRecovery) {
+    return (
+      <main className="flex flex-1 items-center justify-center px-4 py-10">
+        <Card className="w-full max-w-xl">
+          <CardContent className="pt-6">
+            <AnonymousRecoveryOnboarding onComplete={handleRecoveryComplete} />
+          </CardContent>
+        </Card>
+      </main>
+    )
   }
 
   return (

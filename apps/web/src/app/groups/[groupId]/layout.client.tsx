@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next'
 
 import { CopyButton } from '@/components/copy-button'
 import { MobileGroupNav } from '@/components/mobile-shell'
+import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -27,6 +28,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { useEffectiveRuntimeFeatureFlags } from '@/lib/effective-runtime-feature-flags'
 import { isFocusedMobilePath, isMobileGroupNavPath } from '@/lib/mobile-nav'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 
 import { CurrentGroupProvider } from './current-group-context'
@@ -75,10 +77,12 @@ export function GroupLayoutClient({
     }
   }, [friendLinkInviteUrl, groupId, navigate])
 
-  const { data, isLoading, error } = trpc.groups.get.useQuery(
+  const { data, isLoading, error, refetch } = trpc.groups.get.useQuery(
     { groupId, linkInviteToken, viewKey },
     { retry: false },
   )
+  const isOnline = useOnlineStatus()
+  const showOfflineEmpty = !isOnline && !data?.group
   const { t: tNotFound } = useTranslation(undefined, {
     keyPrefix: 'Groups.NotFound',
   })
@@ -125,7 +129,15 @@ export function GroupLayoutClient({
     }
   }, [data, tNotFound, toast])
 
-  if (!accountPending && error?.data?.code === 'UNAUTHORIZED') {
+  if (showOfflineEmpty) {
+    return (
+      <main className="flex flex-1 flex-col">
+        <OfflineEmptyState variant="page" onRetry={() => void refetch()} />
+      </main>
+    )
+  }
+
+  if (!accountPending && isOnline && error?.data?.code === 'UNAUTHORIZED') {
     return (
       <Navigate
         to="/"

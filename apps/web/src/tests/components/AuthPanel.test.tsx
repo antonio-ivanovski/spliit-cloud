@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { AuthPanel } from '@/components/auth/auth-panel'
+import { resetConnectivityForTests } from '@/lib/connectivity'
 import { render, screen } from '@/test/test-utils'
 
 // ── Hoisted mocks ───────────────────────────────────────────────────────
@@ -138,6 +139,11 @@ describe('AuthPanel', () => {
     mockSearch.mode = undefined
     mockSearch.email = undefined
     mockSearch.invitation = undefined
+    Object.defineProperty(navigator, 'onLine', {
+      configurable: true,
+      value: true,
+    })
+    resetConnectivityForTests()
   })
 
   // ── Mode switching ──────────────────────────────────────────────────
@@ -436,7 +442,7 @@ describe('AuthPanel', () => {
     await user.click(createButton)
 
     expect(mockSignInAnonymous).toHaveBeenCalledWith()
-    expect(sessionStorage.getItem('spliit.anonymous.redirect')).toBe('/groups')
+    expect(sessionStorage.getItem('spliit.anonymous.redirect')).toBeNull()
   })
 
   it('shows recovery-only anonymous access when signup is disabled', async () => {
@@ -519,5 +525,39 @@ describe('AuthPanel', () => {
     expect(screen.getByRole('alert')).toHaveTextContent(
       'This sign in link is invalid.',
     )
+  })
+
+  it('disables social, email, and anonymous sign-in while keeping legal links when offline', () => {
+    mockDeploymentConfig.enableGoogleOAuth = true
+    mockDeploymentConfig.enableGitHubOAuth = true
+    mockDeploymentConfig.enableTwitterOAuth = true
+    Object.defineProperty(navigator, 'onLine', {
+      configurable: true,
+      value: false,
+    })
+
+    render(<AuthPanel />)
+
+    expect(
+      screen.getByRole('button', { name: 'Continue with Google' }),
+    ).toBeDisabled()
+    expect(
+      screen.getByRole('button', { name: 'Continue with GitHub' }),
+    ).toBeDisabled()
+    expect(
+      screen.getByRole('button', { name: 'Continue with X' }),
+    ).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Anonymous' })).toBeDisabled()
+    expect(
+      screen.getByRole('button', { name: 'Send sign-in link' }),
+    ).toBeDisabled()
+    expect(screen.getByLabelText('Email')).toBeDisabled()
+    expect(screen.getByRole('link', { name: 'Terms of use' })).toHaveAttribute(
+      'href',
+      '/terms',
+    )
+    expect(
+      screen.getByRole('link', { name: 'Privacy notice' }),
+    ).toHaveAttribute('href', '/privacy')
   })
 })

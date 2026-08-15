@@ -1213,7 +1213,9 @@
     "staleRate": "using rate from:",
     "fromLabel": "from currency",
     "toLabel": "to currency",
-    "via": "by way of {currencies}"
+    "via": "by way of {currencies}",
+    "offlineDescription": "currency conversion needs the internet. hop back online to convert amounts and make expenses.",
+    "offlineComingSoon": "full offline support for this is high on our list and coming soon."
   },
   "EmptyState": {
     "actions": {
@@ -2964,7 +2966,8 @@
     "landingHintTap": "tap me whenever. i don’t bite — i’m literally a receipt.",
     "hintTapToAddExpense": "i'm {name} — tap me to add an expense.",
     "hintTapToCreateGroup": "i'm {name} — tap me to start a group.",
-    "billName": "Bill"
+    "billName": "Bill",
+    "offlineMessage": "can't create stuff while you're offline."
   },
   "CreateSettlement": {
     "description": "review the payment before recording it, bestie.",
@@ -3075,5 +3078,10 @@
     "enableSuccess": "public view-only link is live",
     "replaceSuccess": "public view-only link swapped. the old one no longer works.",
     "removeSuccess": "public view-only link is gone"
+  },
+  "OfflineEmptyState": {
+    "title": "you are offline",
+    "description": "this screen needs the internet. hop back online to load your groups and expenses.",
+    "retry": "try it again"
   }
 }

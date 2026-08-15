@@ -2628,7 +2628,9 @@
     "staleRate": "Kur:",
     "fromLabel": "Kaynak",
     "toLabel": "Hedef",
-    "via": "{currencies} üzerinden"
+    "via": "{currencies} üzerinden",
+    "offlineDescription": "Para birimi dönüşümü bağlantı gerektiriyor. Tutarları dönüştürmek ve gider oluşturmak için yeniden bağlanın.",
+    "offlineComingSoon": "Bu özelliğin tam çevrimdışı desteği öncelik listemizin başında ve yakında geliyor."
   },
   "LanguageSwitcher": {
     "title": "Dil seçin",
@@ -2972,7 +2974,8 @@
     "landingHintTap": "İstediğin zaman bana dokun. Isırmam — ben bir fişim.",
     "hintTapToAddExpense": "Ben {name} — gider eklemek için bana dokun.",
     "hintTapToCreateGroup": "Ben {name} — grup oluşturmak için bana dokun.",
-    "billName": "Bill"
+    "billName": "Bill",
+    "offlineMessage": "Çevrimdışıyken hiçbir şey oluşturamam."
   },
   "CreateSettlement": {
     "description": "Ödemeyi kaydetmeden önce gözden geçirin.",
@@ -3083,5 +3086,10 @@
     "enableSuccess": "Herkese açık salt görüntüleme bağlantısı oluşturuldu",
     "replaceSuccess": "Herkese açık salt görüntüleme bağlantısı değiştirildi. Önceki bağlantı artık çalışmıyor.",
     "removeSuccess": "Herkese açık salt görüntüleme bağlantısı kaldırıldı"
+  },
+  "OfflineEmptyState": {
+    "title": "Çevrimdışısınız",
+    "description": "Bu ekran bağlantı gerektiriyor. Gruplarınızı ve harcamalarınızı yüklemek için yeniden bağlanın.",
+    "retry": "Tekrar deneyin"
   }
 }

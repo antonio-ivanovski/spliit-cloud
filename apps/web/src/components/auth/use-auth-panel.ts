@@ -12,6 +12,7 @@ import {
   hasSignupInviteProof,
   signupInviteFetchOptions,
 } from '@/lib/signup-invite'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import type { HomeSearch } from '@/router/schemas'
 import { isStrongPassword } from '@spliit/domain/password'
 
@@ -36,6 +37,7 @@ function isSignupInviteRequired(
 export function useAuthPanel(options?: { redirectTo?: string }) {
   const mascot = useMascotController()
   const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
+  const isOnline = useOnlineStatus()
   const navigate = useNavigate()
   const {
     redirect,
@@ -212,15 +214,18 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
 
   function handleMagicLink(event: React.FormEvent) {
     event.preventDefault()
+    if (!isOnline) return
     magicLink.mutate({ email, callbackURL })
   }
 
   function handlePasswordSubmit(event: React.FormEvent) {
     event.preventDefault()
+    if (!isOnline) return
     emailAuth.mutate({ mode, email, password, confirmPassword })
   }
 
   function handleGoogle() {
+    if (!isOnline) return
     void authClient.signIn.social(
       {
         provider: 'google',
@@ -231,6 +236,7 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
   }
 
   function handleGithub() {
+    if (!isOnline) return
     void authClient.signIn.social(
       {
         provider: 'github',
@@ -241,6 +247,7 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
   }
 
   function handleTwitter() {
+    if (!isOnline) return
     void authClient.signIn.social(
       {
         provider: 'twitter',
@@ -251,6 +258,7 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
   }
 
   function handleOidc(providerId: string) {
+    if (!isOnline) return
     void authClient.signIn.oauth2(
       {
         providerId,

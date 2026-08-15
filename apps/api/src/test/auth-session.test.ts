@@ -73,8 +73,14 @@ describe('getAuthFromRequest', () => {
     const cachedResult = await getAuthFromRequest(makeRequest())
 
     expect(result).not.toBeNull()
-    expect(result?.user).toEqual(refreshedAccount)
-    expect(cachedResult?.user).toEqual(refreshedAccount)
+    expect(result?.user).toEqual({
+      ...refreshedAccount,
+      anonymousOnboardingCompleted: true,
+    })
+    expect(cachedResult?.user).toEqual({
+      ...refreshedAccount,
+      anonymousOnboardingCompleted: true,
+    })
     expect(prismaMock.account.findUnique).toHaveBeenCalledTimes(1)
     expect(prismaMock.account.findUnique).toHaveBeenCalledWith({
       where: { id: 'acct-1' },
@@ -100,11 +106,11 @@ describe('getAuthFromRequest', () => {
       .mockResolvedValueOnce(refreshedAccount as never)
 
     await expect(getAuthFromRequest(makeRequest())).resolves.toMatchObject({
-      user: initialAccount,
+      user: { ...initialAccount, anonymousOnboardingCompleted: true },
     })
     vi.advanceTimersByTime(30_001)
     await expect(getAuthFromRequest(makeRequest())).resolves.toMatchObject({
-      user: refreshedAccount,
+      user: { ...refreshedAccount, anonymousOnboardingCompleted: true },
     })
     expect(prismaMock.account.findUnique).toHaveBeenCalledTimes(2)
   })
@@ -129,7 +135,10 @@ describe('getAuthFromRequest', () => {
     invalidateAccountCache('acct-invalidated')
     const result = await getAuthFromRequest(makeRequest())
 
-    expect(result?.user).toEqual(updatedAccount)
+    expect(result?.user).toEqual({
+      ...updatedAccount,
+      anonymousOnboardingCompleted: true,
+    })
     expect(prismaMock.account.findUnique).toHaveBeenCalledTimes(2)
   })
 

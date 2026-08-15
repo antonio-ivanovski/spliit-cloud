@@ -2646,7 +2646,9 @@
     "staleRate": "Taux du :",
     "fromLabel": "De",
     "toLabel": "À",
-    "via": "par le biais de {currencies}"
+    "via": "par le biais de {currencies}",
+    "offlineDescription": "La conversion de devise nécessite une connexion. Reconnectez-vous pour convertir des montants et créer des dépenses.",
+    "offlineComingSoon": "Le mode hors ligne complet pour cette fonctionnalité est l'une de nos priorités et arrivera bientôt."
   },
   "LanguageSwitcher": {
     "title": "Choisir la langue",
@@ -2990,7 +2992,8 @@
     "landingHintTap": "Touchez-moi quand vous voulez. Je ne mords pas — je suis un reçu.",
     "hintTapToAddExpense": "Je suis {name} — touchez-moi pour ajouter une dépense.",
     "hintTapToCreateGroup": "Je suis {name} — touchez-moi pour créer un groupe.",
-    "billName": "Bill"
+    "billName": "Bill",
+    "offlineMessage": "Je ne peux rien créer tant que vous êtes hors ligne."
   },
   "CreateSettlement": {
     "description": "Vérifiez le paiement avant de l'enregistrer.",
@@ -3101,5 +3104,10 @@
     "enableSuccess": "Lien public en lecture seule créé",
     "replaceSuccess": "Lien public en lecture seule remplacé. Le lien précédent ne fonctionne plus.",
     "removeSuccess": "Lien public en lecture seule supprimé"
+  },
+  "OfflineEmptyState": {
+    "title": "Vous êtes hors ligne",
+    "description": "Cet écran nécessite une connexion. Reconnectez-vous pour charger vos groupes et vos dépenses.",
+    "retry": "Réessayer"
   }
 }

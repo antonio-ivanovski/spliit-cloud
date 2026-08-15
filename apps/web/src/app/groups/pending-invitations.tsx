@@ -18,6 +18,7 @@ import { useLocale } from '@/i18n/react'
 import { isPlaceholderEmail } from '@/lib/account'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
+import { useOfflineWithoutData, useOnlineStatus } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 
 import { formatDate } from './group-buckets'
@@ -29,7 +30,11 @@ export function PendingInvitations() {
   const navigate = useNavigate()
   const { toast } = useToast()
   const utils = trpc.useUtils()
-  const invitationsQuery = trpc.invitations.listForAccount.useQuery()
+  const isOnline = useOnlineStatus()
+  const invitationsQuery = trpc.invitations.listForAccount.useQuery(undefined, {
+    enabled: isOnline,
+  })
+  const showOfflineEmpty = useOfflineWithoutData(!!invitationsQuery.data)
 
   const acceptMutation = trpc.invitations.accept.useMutation({
     onSuccess: (data) => {
@@ -60,6 +65,8 @@ export function PendingInvitations() {
   })
 
   const invitations = invitationsQuery.data?.invitations ?? []
+
+  if (showOfflineEmpty) return null
 
   if (invitationsQuery.isLoading) {
     return (
@@ -137,7 +144,7 @@ export function PendingInvitations() {
                   <Button
                     size="sm"
                     variant="ghost"
-                    disabled={declineMutation.isPending}
+                    disabled={!isOnline || declineMutation.isPending}
                     onClick={() =>
                       declineMutation.mutate({ invitationId: invitation.id })
                     }
@@ -147,7 +154,7 @@ export function PendingInvitations() {
                   </Button>
                   <Button
                     size="sm"
-                    disabled={acceptMutation.isPending}
+                    disabled={!isOnline || acceptMutation.isPending}
                     onClick={() =>
                       acceptMutation.mutate({ invitationId: invitation.id })
                     }

@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useMascotController } from '@/components/mascot/mascot-context'
 import { Money } from '@/components/money'
+import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { ParticipantAvatar } from '@/components/participant-avatar'
 import {
   Drawer,
@@ -37,6 +38,7 @@ import { getCurrencyFromGroup } from '@/lib/currency'
 import { useMediaQuery } from '@/lib/hooks'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { useOfflineWithoutData } from '@/lib/use-online-status'
 import { trpc } from '@/trpc/client'
 
 import { CollapsibleSection } from './collapsible-section'
@@ -90,6 +92,7 @@ export function RecentGroupList() {
   const utils = trpc.useUtils()
   const { data, error, isLoading, refetch } =
     trpc.overview.get.useQuery(undefined)
+  const showOfflineEmpty = useOfflineWithoutData(!!data)
   const [forceArchiveTarget, setForceArchiveTarget] =
     useState<AccountGroup | null>(null)
   const { mutateAsync: setPreference } =
@@ -196,7 +199,9 @@ export function RecentGroupList() {
   }
 
   let body: React.ReactNode
-  if (isGroupsLoading) {
+  if (showOfflineEmpty) {
+    body = <OfflineEmptyState onRetry={() => void refetch()} />
+  } else if (isGroupsLoading) {
     body = (
       <div className="flex items-center justify-center rounded-lg border bg-card py-10 text-sm text-muted-foreground">
         <Loader2 className="me-2 h-4 w-4 animate-spin" />

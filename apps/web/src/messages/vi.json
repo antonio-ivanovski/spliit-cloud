@@ -2700,7 +2700,9 @@
     "staleRate": "Tỷ giá từ:",
     "fromLabel": "Từ",
     "toLabel": "Sang",
-    "via": "qua {currencies}"
+    "via": "qua {currencies}",
+    "offlineDescription": "Chuyển đổi tiền tệ cần kết nối. Kết nối lại để chuyển đổi số tiền và tạo khoản chi.",
+    "offlineComingSoon": "Hỗ trợ ngoại tuyến đầy đủ cho tính năng này đang được ưu tiên và sẽ sớm ra mắt."
   },
   "LanguageSwitcher": {
     "title": "Chọn ngôn ngữ",
@@ -3044,7 +3046,8 @@
     "landingHintTap": "Nhấn vào tôi bất cứ lúc nào. Tôi không cắn — tôi là biên lai.",
     "hintTapToAddExpense": "Tôi là {name} — chạm vào tôi để thêm khoản chi.",
     "hintTapToCreateGroup": "Tôi là {name} — chạm vào tôi để tạo nhóm.",
-    "billName": "Bill"
+    "billName": "Bill",
+    "offlineMessage": "Tôi không thể tạo gì khi bạn đang ngoại tuyến."
   },
   "CreateSettlement": {
     "description": "Xem lại khoản thanh toán tất toán trước khi ghi nhận.",
@@ -3155,5 +3158,10 @@
     "enableSuccess": "Đã tạo liên kết công khai chỉ xem",
     "replaceSuccess": "Đã thay liên kết công khai chỉ xem. Liên kết trước đó không còn hoạt động.",
     "removeSuccess": "Đã xóa liên kết công khai chỉ xem"
+  },
+  "OfflineEmptyState": {
+    "title": "Bạn đang ngoại tuyến",
+    "description": "Màn hình này cần kết nối. Kết nối lại để tải nhóm và chi phí.",
+    "retry": "Thử lại"
   }
 }

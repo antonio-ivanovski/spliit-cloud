@@ -201,6 +201,10 @@ function makeInvitation(overrides: Record<string, unknown> = {}) {
 describe('RecentGroupList', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    Object.defineProperty(navigator, 'onLine', {
+      configurable: true,
+      value: true,
+    })
 
     // Reset mutation callbacks from previous renders
     mocks.acceptOnSuccess = null
@@ -520,6 +524,23 @@ describe('RecentGroupList', () => {
 
     // The component renders a Loader2 spinner with loading text
     expect(screen.getByText(/loading recent/i)).toBeInTheDocument()
+  })
+
+  it('shows the offline empty state instead of a loader or groups', () => {
+    Object.defineProperty(navigator, 'onLine', {
+      configurable: true,
+      value: false,
+    })
+    mocks.mockUseOverviewQuery.mockReturnValue({
+      data: undefined,
+      isLoading: true,
+      refetch: vi.fn(),
+    })
+
+    render(<RecentGroupList />)
+
+    expect(screen.getByTestId('offline-empty-state')).toBeInTheDocument()
+    expect(screen.queryByText(/loading recent/i)).not.toBeInTheDocument()
   })
 
   // ── Empty state (no groups at all) ──────────────────────────────────
@@ -996,5 +1017,44 @@ describe('RecentGroupList', () => {
     expect(skeletons.length).toBeGreaterThan(0)
     // The title should still be visible
     expect(screen.getByText('Pending invitations')).toBeInTheDocument()
+  })
+
+  it('does not fetch or skeleton pending invitations while offline', () => {
+    Object.defineProperty(navigator, 'onLine', {
+      configurable: true,
+      value: false,
+    })
+    mocks.mockUseInvitationsQuery.mockReturnValue({
+      data: undefined,
+      isLoading: true,
+    })
+
+    const { container } = render(<RecentGroupList />)
+
+    expect(screen.queryByText('Pending invitations')).not.toBeInTheDocument()
+    expect(container.querySelectorAll('[class*="animate-pulse"]')).toHaveLength(
+      0,
+    )
+    expect(mocks.mockUseInvitationsQuery).toHaveBeenCalledWith(
+      undefined,
+      expect.objectContaining({ enabled: false }),
+    )
+  })
+
+  it('keeps cached pending invitations visible while offline', () => {
+    Object.defineProperty(navigator, 'onLine', {
+      configurable: true,
+      value: false,
+    })
+    mocks.mockUseInvitationsQuery.mockReturnValue({
+      data: { invitations: [makeInvitation()] },
+      isLoading: false,
+    })
+
+    render(<RecentGroupList />)
+
+    expect(screen.getByText('Pending invitations')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /accept/i })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /decline/i })).toBeDisabled()
   })
 })

@@ -2664,7 +2664,9 @@
     "staleRate": "Kurz z:",
     "fromLabel": "Z",
     "toLabel": "Na",
-    "via": "přes {currencies}"
+    "via": "přes {currencies}",
+    "offlineDescription": "Převod měny potřebuje připojení. Připojte se znovu, abyste mohli převádět částky a vytvářet výdaje.",
+    "offlineComingSoon": "Plná podpora této funkce offline je jednou z našich priorit a již brzy bude k dispozici."
   },
   "LanguageSwitcher": {
     "title": "Vyberte jazyk",
@@ -3006,7 +3008,8 @@
     "landingHintTap": "Klepni na mě kdykoli. Nekousu — jsem účtenka.",
     "hintTapToAddExpense": "Jsem {name} — klepni na mě a přidej výdaj.",
     "hintTapToCreateGroup": "Jsem {name} — klepni na mě a vytvoř skupinu.",
-    "billName": "Bill"
+    "billName": "Bill",
+    "offlineMessage": "Nemůžu nic vytvořit, když jsi offline."
   },
   "CreateSettlement": {
     "description": "Zkontrolujte platbu před jejím zaznamenáním.",
@@ -3117,5 +3120,10 @@
     "enableSuccess": "Veřejný odkaz pro prohlížení vytvořen",
     "replaceSuccess": "Veřejný odkaz pro prohlížení nahrazen. Předchozí odkaz už nefunguje.",
     "removeSuccess": "Veřejný odkaz pro prohlížení odebrán"
+  },
+  "OfflineEmptyState": {
+    "title": "Jste offline",
+    "description": "Tato obrazovka potřebuje připojení. Připojte se znovu pro načtení skupin a výdajů.",
+    "retry": "Zkusit znovu"
   }
 }

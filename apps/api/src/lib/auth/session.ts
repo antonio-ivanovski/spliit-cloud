@@ -3,13 +3,20 @@ import { oauthProviderResourceClient } from '@better-auth/oauth-provider/resourc
 import { prisma } from '@spliit/db'
 
 import { env } from '../env'
-import { getCachedAccount } from './account-cache'
+import {
+  getCachedAccount,
+  isAnonymousSetupIncomplete,
+  type CachedAccount,
+} from './account-cache'
 import { auth } from './index'
 import { getApiBaseUrl } from './urls'
 
-export type ResolvedAuth = NonNullable<
-  Awaited<ReturnType<typeof auth.api.getSession>>
->
+export type ResolvedAuth = Omit<
+  NonNullable<Awaited<ReturnType<typeof auth.api.getSession>>>,
+  'user'
+> & {
+  user: CachedAccount
+}
 
 export type OAuthResolvedAuth = {
   credentialKind: 'oauth'
@@ -43,18 +50,12 @@ export async function getApplicationAuthFromRequest(
       response: Response.json({ error: 'Unauthenticated' }, { status: 401 }),
     }
   }
-  if (auth.user.isAnonymous) {
-    const recovery = await prisma.anonymousRecoveryCredential.findUnique({
-      where: { accountId: auth.user.id },
-      select: { acknowledgedAt: true, onboardingCompletedAt: true },
-    })
-    if (!recovery?.acknowledgedAt || !recovery.onboardingCompletedAt) {
-      return {
-        response: Response.json(
-          { error: 'ANONYMOUS_SETUP_REQUIRED' },
-          { status: 428 },
-        ),
-      }
+  if (isAnonymousSetupIncomplete(auth.user)) {
+    return {
+      response: Response.json(
+        { error: 'ANONYMOUS_SETUP_REQUIRED' },
+        { status: 428 },
+      ),
     }
   }
   return { auth }
@@ -96,7 +97,10 @@ export async function getOAuthAuthFromRequest(
     credentialKind: 'oauth',
     accessToken,
     scopes,
-    user: account,
+    user: {
+      ...account,
+      anonymousOnboardingCompleted: true,
+    },
     session: {
       id: typeof claims.sid === 'string' ? claims.sid : `oauth:${claims.sub}`,
       userId: account.id,

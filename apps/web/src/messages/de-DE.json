@@ -2700,7 +2700,9 @@
     "staleRate": "Kurs vom:",
     "fromLabel": "Von",
     "toLabel": "Zu",
-    "via": "über {currencies}"
+    "via": "über {currencies}",
+    "offlineDescription": "Die Währungsumrechnung braucht eine Verbindung. Stelle die Verbindung wieder her, um Beträge umzurechnen und Ausgaben zu erstellen.",
+    "offlineComingSoon": "Die vollständige Offline-Unterstützung für diese Funktion hat hohe Priorität und ist bald verfügbar."
   },
   "LanguageSwitcher": {
     "title": "Sprache auswählen",
@@ -3044,7 +3046,8 @@
     "landingHintTap": "Tippe mich jederzeit an. Ich beiße nicht — ich bin ein Beleg.",
     "hintTapToAddExpense": "Ich bin {name} — tippe mich an, um eine Ausgabe hinzuzufügen.",
     "hintTapToCreateGroup": "Ich bin {name} — tippe mich an, um eine Gruppe zu erstellen.",
-    "billName": "Bill"
+    "billName": "Bill",
+    "offlineMessage": "Ich kann nichts erstellen, während du offline bist."
   },
   "CreateSettlement": {
     "description": "Überprüfe die Zahlung, bevor du sie aufzeichnest.",
@@ -3155,5 +3158,10 @@
     "enableSuccess": "Öffentlicher Link mit Nur-Lese-Zugriff erstellt",
     "replaceSuccess": "Öffentlicher Link mit Nur-Lese-Zugriff ersetzt. Der bisherige Link funktioniert nicht mehr.",
     "removeSuccess": "Öffentlicher Link mit Nur-Lese-Zugriff entfernt"
+  },
+  "OfflineEmptyState": {
+    "title": "Du bist offline",
+    "description": "Dieser Bildschirm braucht eine Verbindung. Stelle die Verbindung wieder her, um deine Gruppen und Ausgaben zu laden.",
+    "retry": "Erneut versuchen"
   }
 }

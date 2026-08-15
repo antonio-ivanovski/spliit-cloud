@@ -2,13 +2,24 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { CompleteProfilePage } from '@/app/auth/complete-profile'
 import { useCurrentAccount } from '@/lib/use-current-account'
-import { fireEvent, render, screen } from '@/test/test-utils'
+import { fireEvent, render, screen, waitFor } from '@/test/test-utils'
 
 // ── Hoisted mocks ───────────────────────────────────────────────────────
 
-const { mockUpdateProfile, mockNavigate } = vi.hoisted(() => ({
-  mockUpdateProfile: vi.fn(),
+const {
+  acknowledgeMock,
+  mockNavigate,
+  mockUpdateProfile,
+  replacePendingMock,
+  setupMock,
+  statusMock,
+} = vi.hoisted(() => ({
+  acknowledgeMock: vi.fn(),
   mockNavigate: vi.fn(),
+  mockUpdateProfile: vi.fn(),
+  replacePendingMock: vi.fn(),
+  setupMock: vi.fn(),
+  statusMock: vi.fn(),
 }))
 
 vi.mock('@tanstack/react-router', () => ({
@@ -26,6 +37,13 @@ vi.mock('@tanstack/react-router', () => ({
     // Render nothing in tests; the caller asserts that the form is absent.
     return null
   },
+}))
+
+vi.mock('@/lib/anonymous-recovery', () => ({
+  acknowledgeAnonymousRecovery: acknowledgeMock,
+  getAnonymousRecoveryStatus: statusMock,
+  replacePendingAnonymousRecovery: replacePendingMock,
+  setupAnonymousRecovery: setupMock,
 }))
 
 vi.mock('@/lib/use-current-account', () => ({
@@ -52,6 +70,8 @@ function mockAccount(
     name: string
     email: string
     emailVerified: boolean
+    isAnonymous?: boolean | null
+    anonymousOnboardingCompleted?: boolean | null
     image: string | null
     createdAt: Date
     updatedAt: Date
@@ -74,6 +94,23 @@ function mockAccount(
 describe('CompleteProfilePage', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    Object.defineProperty(navigator, 'onLine', {
+      configurable: true,
+      value: true,
+    })
+    statusMock.mockResolvedValue({
+      isAnonymous: true,
+      hasRecoveryKey: false,
+      acknowledged: false,
+      onboardingCompleted: false,
+      canResumeSetup: false,
+    })
+    setupMock.mockResolvedValue({
+      code: 'spliit_anonymous_v1_test-key',
+      recoveryUrl:
+        'https://app.example/auth/recover#code=spliit_anonymous_v1_test-key',
+    })
+    acknowledgeMock.mockResolvedValue({ success: true })
   })
 
   it('shows loading spinner while account is pending', () => {
@@ -147,7 +184,12 @@ describe('CompleteProfilePage', () => {
   it('hides an anonymous account synthetic email while naming the profile', () => {
     const email = 'guest-1@anonymous.placeholder.local'
     vi.mocked(useCurrentAccount).mockReturnValue({
-      data: mockAccount({ name: email, email }),
+      data: mockAccount({
+        name: email,
+        email,
+        isAnonymous: true,
+        anonymousOnboardingCompleted: true,
+      }),
       isPending: false,
       isRefetching: false,
       error: null,
@@ -233,5 +275,106 @@ describe('CompleteProfilePage', () => {
       href: '/',
       replace: true,
     })
+  })
+
+  it('asks an anonymous account to save its sign in link before naming', async () => {
+    const mockRefetch = vi.fn().mockResolvedValue(undefined)
+    const email = 'guest-1@anonymous.placeholder.local'
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: mockAccount({
+        name: email,
+        email,
+        isAnonymous: true,
+      }),
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: mockRefetch,
+    })
+
+    const { user } = render(<CompleteProfilePage />)
+
+    expect(
+      await screen.findByText('Save your sign in link'),
+    ).toBeInTheDocument()
+    expect(screen.queryByLabelText('Display name')).not.toBeInTheDocument()
+    expect(
+      screen.getByDisplayValue(
+        'https://app.example/auth/recover#code=spliit_anonymous_v1_test-key',
+      ),
+    ).toBeInTheDocument()
+
+    const start = screen.getByRole('button', { name: 'Start using Spliit' })
+    expect(start).toBeDisabled()
+    await user.click(
+      screen.getByRole('checkbox', {
+        name: 'I copied and safely stored my sign in link.',
+      }),
+    )
+    await user.click(start)
+
+    await waitFor(() =>
+      expect(acknowledgeMock).toHaveBeenCalledWith({
+        confirmedCopied: true,
+        code: 'spliit_anonymous_v1_test-key',
+      }),
+    )
+    expect(mockRefetch).toHaveBeenCalledWith({
+      query: { disableCookieCache: true },
+    })
+    expect(await screen.findByLabelText('Display name')).toBeInTheDocument()
+  })
+
+  it('skips recovery setup when the anonymous account already finished it', async () => {
+    statusMock.mockResolvedValue({
+      isAnonymous: true,
+      hasRecoveryKey: true,
+      acknowledged: true,
+      onboardingCompleted: true,
+      canResumeSetup: false,
+    })
+    const email = 'guest-1@anonymous.placeholder.local'
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: mockAccount({
+        name: email,
+        email,
+        isAnonymous: true,
+      }),
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+
+    render(<CompleteProfilePage />)
+
+    expect(await screen.findByLabelText('Display name')).toBeInTheDocument()
+    expect(screen.queryByText('Save your sign in link')).not.toBeInTheDocument()
+    expect(setupMock).not.toHaveBeenCalled()
+  })
+
+  it('does not enter the app when recovery setup cannot run offline', () => {
+    Object.defineProperty(navigator, 'onLine', {
+      configurable: true,
+      value: false,
+    })
+    const email = 'guest-1@anonymous.placeholder.local'
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: mockAccount({
+        name: email,
+        email,
+        isAnonymous: true,
+      }),
+      isPending: false,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+
+    render(<CompleteProfilePage />)
+
+    expect(screen.getByTestId('offline-empty-state')).toBeInTheDocument()
+    expect(screen.queryByLabelText('Display name')).not.toBeInTheDocument()
+    expect(statusMock).not.toHaveBeenCalled()
   })
 })

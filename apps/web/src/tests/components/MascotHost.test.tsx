@@ -91,6 +91,10 @@ describe('MascotHost', () => {
     localStorage.clear()
     sessionStorage.clear()
     vi.clearAllMocks()
+    Object.defineProperty(navigator, 'onLine', {
+      configurable: true,
+      value: true,
+    })
   })
 
   afterEach(() => {
@@ -479,5 +483,70 @@ describe('MascotHost', () => {
       "I'm Bill — tap me to create a group.",
     )
     vi.useRealTimers()
+  })
+
+  it('hides create actions, stays large, and loops failure while offline', async () => {
+    Object.defineProperty(navigator, 'onLine', {
+      configurable: true,
+      value: false,
+    })
+    vi.useFakeTimers()
+    renderHost(<GroupActionRegistration />)
+
+    const host = screen.getByTestId('bill-mascot')
+    expect(host).toHaveAttribute('data-mascot-offline', 'true')
+    expect(host).toHaveAttribute('data-mascot-docked', 'false')
+    expect(host).toHaveAttribute('data-reaction', 'failure')
+    expect(screen.getByTestId('bill-mascot-trigger')).toHaveClass(
+      'h-[118px]',
+      'w-[108px]',
+    )
+    expect(
+      screen.getByRole('button', { name: 'Say hello to Bill' }),
+    ).toBeInTheDocument()
+    expect(screen.queryByTestId('bill-mascot-action-badge')).toBeNull()
+    expect(screen.queryByRole('menu')).toBeNull()
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(2_600)
+    })
+    expect(screen.getByTestId('bill-mascot')).toHaveAttribute(
+      'data-reaction',
+      'failure',
+    )
+  })
+
+  it('stays large on focused routes while offline', () => {
+    Object.defineProperty(navigator, 'onLine', {
+      configurable: true,
+      value: false,
+    })
+    state.pathname = '/groups/create'
+    renderHost()
+
+    expect(screen.getByTestId('bill-mascot')).toHaveAttribute(
+      'data-mascot-docked',
+      'false',
+    )
+    expect(screen.queryByTestId('bill-mascot-docked')).toBeNull()
+    expect(screen.getByTestId('bill-mascot-trigger')).toHaveClass('h-[118px]')
+  })
+
+  it('explains that create actions are unavailable when tapped offline', async () => {
+    Object.defineProperty(navigator, 'onLine', {
+      configurable: true,
+      value: false,
+    })
+    const { user } = renderHost()
+
+    await user.click(screen.getByRole('button', { name: 'Say hello to Bill' }))
+
+    expect(screen.getByTestId('bill-mascot-speech')).toHaveTextContent(
+      "I can't create anything while you're offline.",
+    )
+    expect(screen.getByTestId('bill-mascot')).toHaveAttribute(
+      'data-reaction',
+      'failure',
+    )
   })
 })

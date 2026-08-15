@@ -62,7 +62,8 @@ describe('createTRPCContext', () => {
     const ctx = await createTRPCContext({ req: makeRequest() })
 
     expect(ctx.auth).not.toBeNull()
-    expect(ctx.auth?.user).toEqual(refreshedAccount)
+    expect(ctx.auth?.user).toMatchObject(refreshedAccount)
+    expect(ctx.auth?.user.anonymousOnboardingCompleted).toBe(true)
   })
 })
 

@@ -32,6 +32,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { isPlaceholderEmail } from '@/lib/account'
 import { authClient } from '@/lib/auth'
 import { replaceBrowserLocation } from '@/lib/browser-navigation'
+import { clearLastAccount } from '@/lib/last-account'
 import { disconnectPushSubscription } from '@/lib/push-notifications'
 import { useCurrentAccount } from '@/lib/use-current-account'
 
@@ -64,6 +65,7 @@ export function AccountMenu() {
       if (disconnected) clearPushOnboardingCompletion(accountId)
       const result = await authClient.signOut()
       if (result?.error) throw new Error(result.error.message)
+      clearLastAccount()
       queryClient.clear()
       replaceBrowserLocation('/')
     } catch {

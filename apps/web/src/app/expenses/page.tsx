@@ -18,6 +18,7 @@ import {
 } from '@/app/groups/[groupId]/expenses/expense-timeline'
 import { categoryLabel } from '@/app/groups/[groupId]/stats/category-utils'
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
+import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { RequireAuth } from '@/components/require-auth'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -44,6 +45,7 @@ import {
   enforceCurrencyPattern,
   localizeCurrencyInput,
 } from '@/lib/currency-input'
+import { useOfflineWithoutData } from '@/lib/use-online-status'
 import { cn } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
@@ -643,6 +645,7 @@ function GlobalExpensesContent() {
   const expenses =
     expensesQuery.data?.pages.flatMap((page) => page.expenses) ?? []
   const hasMore = expensesQuery.data?.pages.at(-1)?.hasMore ?? false
+  const showOfflineEmpty = useOfflineWithoutData(!!expensesQuery.data)
 
   useEffect(() => {
     if (inView && hasMore && !expensesQuery.isFetching)
@@ -764,7 +767,16 @@ function GlobalExpensesContent() {
               </div>
             )}
             <section aria-label={t('Expenses.globalTitle')}>
-              {optionsQuery.error || expensesQuery.error ? (
+              {showOfflineEmpty ? (
+                <div className="mx-4 sm:mx-6">
+                  <OfflineEmptyState
+                    onRetry={() => {
+                      void optionsQuery.refetch()
+                      void expensesQuery.refetch()
+                    }}
+                  />
+                </div>
+              ) : optionsQuery.error || expensesQuery.error ? (
                 <div className="mx-4 rounded-lg border bg-card px-4 py-10 text-center text-sm text-destructive sm:mx-6">
                   {(optionsQuery.error ?? expensesQuery.error)?.message}
                 </div>

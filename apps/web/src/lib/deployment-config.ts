@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { getTrpcClient } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
 
@@ -35,6 +36,7 @@ function getBuildTimeFallback(): DeploymentConfig {
 }
 
 export function useDeploymentConfig(): DeploymentConfig {
+  const isOnline = useOnlineStatus()
   const query = useQuery({
     queryKey: ['deployment-config'],
     queryFn: () => getTrpcClient().features.get.query(),
@@ -58,7 +60,7 @@ export function useDeploymentConfig(): DeploymentConfig {
       enableAnonymousAuth,
     }),
     staleTime: Infinity,
-    enabled: import.meta.env.MODE !== 'test',
+    enabled: import.meta.env.MODE !== 'test' && isOnline,
   })
 
   return query.data ?? getBuildTimeFallback()

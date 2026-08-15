@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/speed-dial'
 import { isFocusedMobilePath, isMobileGroupNavPath } from '@/lib/mobile-nav'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { useOnlineStatus } from '@/lib/use-online-status'
 import { cn } from '@/lib/utils'
 
 import {
@@ -32,6 +33,7 @@ import {
   subscribeMascotActionsDiscovered,
 } from './mascot-actions-discovery'
 import {
+  DEFAULT_REACTION_DURATION,
   isExpressiveMascotReaction,
   useMascotController,
   useMascotState,
@@ -58,12 +60,14 @@ import {
   buildMascotSpeechCycle,
   coachSpeechForActions,
   isCoachSpeechLine,
+  OFFLINE_SPEECH_LINE,
   type MascotSpeechLine,
 } from './mascot-speech'
 import { MascotSpeechBubble } from './mascot-speech-bubble'
 
 const SPEECH_DISMISS_MS = 3_000
 const DRAG_THRESHOLD_PX = 8
+const OFFLINE_FAILURE_LOOP_MS = DEFAULT_REACTION_DURATION.failure
 
 const mascotActionElevation =
   'shadow-[0_1px_3px_rgba(15,23,42,0.08),0_8px_20px_-6px_rgba(15,23,42,0.18),0_18px_36px_-10px_rgba(15,23,42,0.12)] ring-1 ring-black/10 dark:shadow-[0_6px_14px_rgba(0,0,0,0.55),0_18px_36px_-6px_rgba(0,0,0,0.62),0_0_16px_hsl(var(--primary)/0.14),0_0_0_1px_hsl(var(--primary)/0.32)] dark:ring-1 dark:ring-primary/30'
@@ -98,6 +102,8 @@ export function MascotHost() {
   const mascot = useMascotState()
   const { react } = useMascotController()
   const { data: account, isPending } = useCurrentAccount()
+  const isOnline = useOnlineStatus()
+  const offline = !isOnline
   const welcomedAccountRef = useRef<string | null>(null)
   const pathname = useLocation({ select: (location) => location.pathname })
   const navigate = useNavigate()
@@ -184,12 +190,19 @@ export function MascotHost() {
     [navigate, pathname, t],
   )
 
-  const actions = mascot?.actions.length ? mascot.actions : homeActions
+  const actions =
+    offline || !mascot
+      ? []
+      : mascot.actions.length
+        ? mascot.actions
+        : homeActions
   const focusedRoute = isFocusedMobilePath(pathname)
   const expressive = Boolean(
     mascot && isExpressiveMascotReaction(mascot.reaction),
   )
-  const docked = Boolean((mascot?.busy || focusedRoute) && !expressive)
+  const docked = Boolean(
+    !offline && (mascot?.busy || focusedRoute) && !expressive,
+  )
   const blockedByOverlay = dialogOpen && !expressive
   const aboveMobileNav = isMobileGroupNavPath(pathname)
   const hiddenSurface = pathname.endsWith('/expenses/print')
@@ -228,6 +241,10 @@ export function MascotHost() {
   }, [account?.id, navigate])
 
   const handlePersonalityTap = useCallback(() => {
+    if (offline) {
+      setSpeech({ path: pathname, line: OFFLINE_SPEECH_LINE })
+      return
+    }
     if (cycleRef.current.path !== pathname) {
       cycleRef.current = { path: pathname, index: 0 }
     }
@@ -235,7 +252,7 @@ export function MascotHost() {
     cycleRef.current.index += 1
     setSpeech({ path: pathname, line })
     mascot?.react('welcome', 900)
-  }, [mascot, pathname, speechLines])
+  }, [mascot, offline, pathname, speechLines])
 
   useEffect(() => {
     if (!speechLine) return
@@ -278,10 +295,24 @@ export function MascotHost() {
       return
     }
     if (hiddenSurface || !definition) return
+    if (offline) return
     if (welcomedAccountRef.current === account.id) return
     welcomedAccountRef.current = account.id
     react('welcome')
-  }, [account?.id, definition, hiddenSurface, react])
+  }, [account?.id, definition, hiddenSurface, offline, react])
+
+  useEffect(() => {
+    if (!account?.id || hiddenSurface || !definition || !offline) return
+    const play = () => {
+      react('failure', OFFLINE_FAILURE_LOOP_MS + 400)
+    }
+    play()
+    const interval = window.setInterval(play, OFFLINE_FAILURE_LOOP_MS)
+    return () => {
+      window.clearInterval(interval)
+      react('idle')
+    }
+  }, [account?.id, definition, hiddenSurface, offline, react])
 
   function onTriggerPointerDown(event: ReactPointerEvent<HTMLButtonElement>) {
     if (!finePointer || blockedByOverlay || event.button !== 0) return
@@ -387,6 +418,7 @@ export function MascotHost() {
       data-testid={docked ? 'bill-mascot-docked' : 'bill-mascot'}
       data-reaction={mascot.reaction}
       data-mascot-docked={docked ? 'true' : 'false'}
+      data-mascot-offline={offline ? 'true' : 'false'}
       data-mascot-blocked={blockedByOverlay ? 'true' : 'false'}
       data-mascot-pinned={pinned ? 'true' : 'false'}
       data-mascot-placement={placement}

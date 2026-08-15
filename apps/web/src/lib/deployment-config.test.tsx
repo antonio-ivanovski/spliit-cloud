@@ -22,6 +22,10 @@ vi.mock('@/trpc/client', () => ({
 afterEach(() => {
   vi.clearAllMocks()
   vi.unstubAllEnvs()
+  Object.defineProperty(navigator, 'onLine', {
+    configurable: true,
+    value: true,
+  })
 })
 
 function createWrapper() {
@@ -71,5 +75,21 @@ describe('useDeploymentConfig', () => {
       })
     })
     expect(mockGetFeatures).toHaveBeenCalledOnce()
+  })
+
+  it('uses build-time env flags when offline instead of fetching features', () => {
+    vi.stubEnv('MODE', 'development')
+    vi.stubEnv('VITE_ENABLE_GOOGLE_OAUTH', 'true')
+    Object.defineProperty(navigator, 'onLine', {
+      configurable: true,
+      value: false,
+    })
+
+    const { result } = renderHook(() => useDeploymentConfig(), {
+      wrapper: createWrapper(),
+    })
+
+    expect(result.current.enableGoogleOAuth).toBe(true)
+    expect(mockGetFeatures).not.toHaveBeenCalled()
   })
 })

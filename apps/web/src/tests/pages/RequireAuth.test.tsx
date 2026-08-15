@@ -1,6 +1,10 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { useCurrentAccount } from '@/lib/use-current-account'
+import { reportNetworkFailure } from '@/lib/connectivity'
+import {
+  useCurrentAccount,
+  type UseCurrentAccountResult,
+} from '@/lib/use-current-account'
 import { render, screen } from '@/test/test-utils'
 
 // ── Module mocks ────────────────────────────────────────────────────────
@@ -40,6 +44,10 @@ describe('RequireAuth', () => {
     vi.clearAllMocks()
     window.sessionStorage.clear()
     window.history.replaceState(null, '', '/')
+    Object.defineProperty(navigator, 'onLine', {
+      configurable: true,
+      value: true,
+    })
   })
 
   it('shows loading spinner when isPending', () => {
@@ -115,6 +123,54 @@ describe('RequireAuth', () => {
     expect(navigate).toHaveAttribute('data-to', '/')
     expect(navigate.getAttribute('data-search')).toContain('redirect')
     expect(screen.queryByTestId('child')).not.toBeInTheDocument()
+  })
+
+  it('shows the offline empty state instead of redirecting when offline', () => {
+    Object.defineProperty(navigator, 'onLine', {
+      configurable: true,
+      value: false,
+    })
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: null,
+      isPending: false,
+      isRefetching: false,
+      error: new TypeError(
+        'Failed to fetch',
+      ) as UseCurrentAccountResult['error'],
+      refetch: vi.fn(),
+    })
+
+    render(
+      <RequireAuth>
+        <div data-testid="child">protected content</div>
+      </RequireAuth>,
+    )
+
+    expect(screen.getByTestId('offline-empty-state')).toBeInTheDocument()
+    expect(screen.queryByTestId('navigate')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('child')).not.toBeInTheDocument()
+  })
+
+  it('shows the offline empty state when get-session fails and navigator.onLine is still true', () => {
+    reportNetworkFailure(new TypeError('Failed to fetch'))
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: null,
+      isPending: false,
+      isRefetching: false,
+      error: new TypeError(
+        'Failed to fetch',
+      ) as UseCurrentAccountResult['error'],
+      refetch: vi.fn(),
+    })
+
+    render(
+      <RequireAuth>
+        <div data-testid="child">protected content</div>
+      </RequireAuth>,
+    )
+
+    expect(screen.getByTestId('offline-empty-state')).toBeInTheDocument()
+    expect(screen.queryByTestId('navigate')).not.toBeInTheDocument()
   })
 
   it('redirects signed-out group visits that have no viewKey or invite param', () => {

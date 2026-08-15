@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import {
   buildMascotSpeechCycle,
   coachSpeechForActions,
+  OFFLINE_SPEECH_LINE,
 } from '@/components/mascot/mascot-speech'
 
 describe('mascot speech cycle', () => {
@@ -64,5 +65,13 @@ describe('mascot speech cycle', () => {
       'Mascot.hintTapToCreateGroup',
     )
     expect(coachSpeechForActions(['import-group'])).toBeNull()
+  })
+
+  it('uses a dedicated offline line instead of the empty-route fallback', () => {
+    expect(OFFLINE_SPEECH_LINE).toEqual({
+      id: 'offline',
+      messageKey: 'Mascot.offlineMessage',
+      showSettings: false,
+    })
   })
 })

@@ -4,6 +4,7 @@ import { Trans, useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useOnlineStatus } from '@/lib/use-online-status'
 
 import { AnonymousSignupDialog } from './anonymous-signup-dialog'
 import { AuthCard } from './auth-card'
@@ -21,6 +22,7 @@ export function AuthPanel({
   embedded?: boolean
 } = {}) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
+  const isOnline = useOnlineStatus()
   const [anonymousDialogOpen, setAnonymousDialogOpen] = useState(false)
   const {
     mode,
@@ -37,7 +39,6 @@ export function AuthPanel({
     twitterEnabled,
     oidcProviders,
     anonymousEnabled,
-    redirectTo: resolvedRedirectTo,
     setEmail,
     setPassword,
     setConfirmPassword,
@@ -80,7 +81,7 @@ export function AuthPanel({
         githubEnabled={githubEnabled}
         twitterEnabled={twitterEnabled}
         oidcProviders={oidcProviders}
-        disabled={emailAuth.isPending || magicLink.isPending}
+        disabled={!isOnline || emailAuth.isPending || magicLink.isPending}
         onGoogle={handleGoogle}
         onGithub={handleGithub}
         onTwitter={handleTwitter}
@@ -115,6 +116,7 @@ export function AuthPanel({
             email={email}
             error={magicLink.isError ? getErrorMessage(magicLink.error) : null}
             isPending={magicLink.isPending}
+            disabled={!isOnline}
             onEmailChange={setEmail}
             onSubmit={handleMagicLink}
           />
@@ -127,6 +129,7 @@ export function AuthPanel({
             canSubmit={canSubmitPassword}
             error={emailAuth.isError ? getErrorMessage(emailAuth.error) : null}
             isPending={emailAuth.isPending}
+            disabled={!isOnline}
             onEmailChange={setEmail}
             onPasswordChange={setPassword}
             onConfirmPasswordChange={setConfirmPassword}
@@ -185,7 +188,6 @@ export function AuthPanel({
       <AnonymousSignupDialog
         open={anonymousDialogOpen}
         onOpenChange={setAnonymousDialogOpen}
-        redirectTo={resolvedRedirectTo}
         creationEnabled={anonymousEnabled}
       />
     </>

@@ -151,6 +151,10 @@ const defaultInfiniteReturnValue = {
 describe('ExpenseList', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    Object.defineProperty(navigator, 'onLine', {
+      configurable: true,
+      value: true,
+    })
     setDefaultGroup()
     mocks.mockUseInfiniteQuery.mockReturnValue(defaultInfiniteReturnValue)
     mocks.mockUseIsReadOnlyGroupViewer.mockReturnValue(false)
@@ -179,6 +183,24 @@ describe('ExpenseList', () => {
 
     const skeletons = container.querySelectorAll('.animate-pulse')
     expect(skeletons.length).toBeGreaterThanOrEqual(1)
+  })
+
+  it('shows the offline empty state instead of loading skeletons', () => {
+    Object.defineProperty(navigator, 'onLine', {
+      configurable: true,
+      value: false,
+    })
+    mocks.mockUseInfiniteQuery.mockReturnValue({
+      data: undefined,
+      isLoading: true,
+      fetchNextPage: vi.fn(),
+      refetch: vi.fn(),
+    })
+
+    render(<ExpenseList />)
+
+    expect(screen.getByTestId('offline-empty-state')).toBeInTheDocument()
+    expect(document.querySelectorAll('.animate-pulse').length).toBe(0)
   })
 
   // ── Empty states ──────────────────────────────────────────────────

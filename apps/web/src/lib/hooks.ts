@@ -89,6 +89,7 @@ export function useCurrencyRate(
   date: Date,
   baseCurrency: string,
   targetCurrency: string,
+  options?: { enabled?: boolean },
 ): UseCurrencyRateResult {
   // Match server date serialization (UTC calendar day).
   const expenseDateIso = Number.isNaN(date.getTime())
@@ -99,6 +100,7 @@ export function useCurrencyRate(
     : expenseDateIso
 
   const enabled =
+    (options?.enabled ?? true) &&
     !isNaN(date.getTime()) &&
     !!baseCurrency.length &&
     !!targetCurrency.length &&

@@ -2,8 +2,10 @@ import { Navigate } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
 import type { PropsWithChildren } from 'react'
 
-import { needsDisplayName } from '@/lib/account'
+import { OfflineEmptyState } from '@/components/offline-empty-state'
+import { needsAccountOnboarding } from '@/lib/account'
 import { useCurrentAccount } from '@/lib/use-current-account'
+import { useOnlineStatus } from '@/lib/use-online-status'
 
 function currentPathWithSearch(): string {
   if (typeof window === 'undefined') return '/'
@@ -27,7 +29,8 @@ function hasGroupViewerCredential(): boolean {
  * dead-end unauthorized page.
  */
 export function RequireAuth({ children }: PropsWithChildren) {
-  const { data: account, isPending } = useCurrentAccount()
+  const { data: account, isPending, refetch } = useCurrentAccount()
+  const isOnline = useOnlineStatus()
   const permitsGroupViewer =
     typeof window !== 'undefined' &&
     /^\/groups\/(?!create(?:\/|$)|import(?:\/|$)|bulk-categorize(?:\/|$))[^/]+(?:\/|$)/.test(
@@ -45,12 +48,15 @@ export function RequireAuth({ children }: PropsWithChildren) {
 
   if (!account) {
     if (permitsGroupViewer) return <>{children}</>
+    if (!isOnline) {
+      return <OfflineEmptyState variant="page" onRetry={() => void refetch()} />
+    }
     return (
       <Navigate to="/" search={{ redirect: currentPathWithSearch() }} replace />
     )
   }
 
-  if (needsDisplayName(account)) {
+  if (needsAccountOnboarding(account)) {
     const target = currentPathWithSearch()
     return (
       <Navigate
