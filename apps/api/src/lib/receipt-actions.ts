@@ -21,6 +21,7 @@ import {
   buildTranslationDirective,
 } from './ai/prompt'
 import { env } from './env'
+import { getStorageDriver, objectBodyToBytes } from './storage'
 
 type ParsedReceiptAIResponse = {
   amount: number
@@ -177,6 +178,7 @@ export async function extractExpenseInformationFromImage(
     ? `\nCurrent form values are soft hints only. Re-check them against the receipt and improve or replace them when the image supports it:\n${JSON.stringify(context.currentExpense)}`
     : ''
 
+  const imageData = await imageDataForAI(imageUrl)
   const { text: rawContent } = await generateText({
     model: await getModel(env.AI_RECEIPT_MODEL),
     messages: [
@@ -210,7 +212,7 @@ export async function extractExpenseInformationFromImage(
       },
       {
         role: 'user',
-        content: [{ type: 'file', mediaType: 'image', data: imageUrl }],
+        content: [{ type: 'file', mediaType: 'image', data: imageData }],
       },
     ],
   })
@@ -230,3 +232,22 @@ export async function extractExpenseInformationFromImage(
 export type ReceiptExtractedInfo = Awaited<
   ReturnType<typeof extractExpenseInformationFromImage>
 >
+
+/**
+ * The AI provider only sees a URL string here. S3 URLs are publicly readable,
+ * so they pass straight through. Local upload URLs live behind the API origin,
+ * which an external model provider cannot reach, so in local mode we read the
+ * bytes through the storage driver and hand the provider a base64 data URI.
+ */
+async function imageDataForAI(imageUrl: string): Promise<string> {
+  const driver = getStorageDriver()
+  if (driver.kind !== 'local' || !driver.uploadsConfigured()) {
+    return imageUrl
+  }
+  const { body, contentType } = await driver.getObject(
+    driver.keyFromFileUrl(imageUrl),
+  )
+  const bytes = await objectBodyToBytes(body)
+  const base64 = Buffer.from(bytes).toString('base64')
+  return `data:${contentType ?? 'application/octet-stream'};base64,${base64}`
+}

@@ -1,6 +1,6 @@
 import { MAX_EXPENSE_DOCUMENT_SIZE } from '@spliit/domain'
 
-import { getS3Object } from '../storage'
+import { getStorageDriver } from '../storage'
 import type { ExportDocumentReader } from './types'
 
 function toBytes(value: unknown): Uint8Array {
@@ -127,7 +127,14 @@ async function readBody(
 
 export const s3ExportDocumentReader: ExportDocumentReader = {
   async read(document, signal) {
-    const response = await getS3Object(document.url, signal)
-    return readBody(response.Body, signal)
+    const driver = getStorageDriver()
+    if (!driver.uploadsConfigured()) {
+      throw new Error('Uploads are not configured')
+    }
+    const { body } = await driver.getObject(
+      driver.keyFromFileUrl(document.url),
+      signal,
+    )
+    return readBody(body, signal)
   },
 }

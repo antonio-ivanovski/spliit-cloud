@@ -36,6 +36,10 @@ const envSchema = z
     S3_UPLOAD_REGION: optionalString,
     S3_UPLOAD_ENDPOINT: optionalString,
     S3_UPLOAD_PUBLIC_URL: optionalUrl,
+    // Upload storage backend. `s3` uses the S3_UPLOAD_* credentials;
+    // `local` stores files on the filesystem under UPLOADS_DIR.
+    UPLOADS_DRIVER: z.enum(['s3', 'local']).default('s3'),
+    UPLOADS_DIR: optionalString,
     PUBLIC_ENABLE_RECEIPT_EXTRACT: z.preprocess(
       interpretEnvVarAsBool,
       z.boolean().default(false),
@@ -234,17 +238,24 @@ const envSchema = z
         })
       }
     }
-    if (
-      env.PUBLIC_ENABLE_EXPENSE_DOCUMENTS &&
-      (!env.S3_UPLOAD_BUCKET ||
-        !env.S3_UPLOAD_KEY ||
-        !env.S3_UPLOAD_REGION ||
-        !env.S3_UPLOAD_SECRET)
-    ) {
+    const uploadsConfigured =
+      (!!env.S3_UPLOAD_BUCKET &&
+        !!env.S3_UPLOAD_KEY &&
+        !!env.S3_UPLOAD_REGION &&
+        !!env.S3_UPLOAD_SECRET) ||
+      (env.UPLOADS_DRIVER === 'local' && !!env.UPLOADS_DIR)
+    if (env.PUBLIC_ENABLE_EXPENSE_DOCUMENTS && !uploadsConfigured) {
       ctx.addIssue({
         code: 'custom',
         message:
-          'If PUBLIC_ENABLE_EXPENSE_DOCUMENTS is specified, then S3_* must be specified too',
+          'If PUBLIC_ENABLE_EXPENSE_DOCUMENTS is specified, then either the full S3_UPLOAD_* set or UPLOADS_DIR with UPLOADS_DRIVER=local must be specified too',
+      })
+    }
+    if (env.UPLOADS_DRIVER === 'local' && !env.UPLOADS_DIR) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['UPLOADS_DIR'],
+        message: 'UPLOADS_DIR is required when UPLOADS_DRIVER is local',
       })
     }
     if (

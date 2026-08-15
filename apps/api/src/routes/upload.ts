@@ -1,14 +1,5 @@
 import { createHash } from 'node:crypto'
 
-import {
-  CopyObjectCommand,
-  DeleteObjectCommand,
-  GetObjectCommand,
-  HeadObjectCommand,
-  PutObjectCommand,
-} from '@aws-sdk/client-s3'
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
-
 import { prisma } from '@spliit/db'
 import {
   isExpenseDocumentSizeWithinLimit,
@@ -17,7 +8,6 @@ import {
 
 import { randomId } from '../lib/api/shared'
 import { getApplicationAuthFromRequest } from '../lib/auth/session'
-import { env } from '../lib/env'
 import {
   openSourceDocumentClaims,
   openCloudStagedDocumentClaims,
@@ -26,36 +16,35 @@ import {
   sealStagedDocumentClaims,
 } from '../lib/import-documents'
 import {
-  getS3Client,
-  keyFromFileUrl,
-  publicUrlForKey,
-  uploadsConfigured,
+  getStorageDriver,
+  ObjectNotFoundError,
+  objectBodyToBytes,
 } from '../lib/storage'
 
+export const MAX_PROFILE_IMAGE_SIZE = 512 * 1024
+
 export function permanentDocumentUrl(fileUrl: string): string {
-  const key = keyFromFileUrl(fileUrl)
+  const driver = getStorageDriver()
+  const key = driver.keyFromFileUrl(fileUrl)
   return key.startsWith('tmp/')
-    ? publicUrlForKey(key.replace(/^tmp\//, 'documents/'))
+    ? driver.publicUrlForKey(key.replace(/^tmp\//, 'documents/'))
     : fileUrl
 }
 
 export async function deleteS3Object(fileUrl: string) {
-  if (!uploadsConfigured()) return
-
-  const key = keyFromFileUrl(fileUrl)
-  await getS3Client().send(
-    new DeleteObjectCommand({ Bucket: env.S3_UPLOAD_BUCKET, Key: key }),
-  )
+  const driver = getStorageDriver()
+  if (!driver.uploadsConfigured()) return
+  await driver.deleteObject(driver.keyFromFileUrl(fileUrl))
 }
-
-const MAX_PROFILE_IMAGE_SIZE = 512 * 1024
 
 export function isProfileImageUrlForAccount(
   fileUrl: string,
   accountId: string,
 ): boolean {
   try {
-    return keyFromFileUrl(fileUrl).startsWith(`profile-images/${accountId}/`)
+    return getStorageDriver()
+      .keyFromFileUrl(fileUrl)
+      .startsWith(`profile-images/${accountId}/`)
   } catch {
     return false
   }
@@ -89,7 +78,8 @@ export async function mintProfileImagePresign({
       { status: 400 },
     )
   }
-  if (!uploadsConfigured()) {
+  const driver = getStorageDriver()
+  if (!driver.uploadsConfigured()) {
     return Response.json(
       { error: 'Uploads are not configured' },
       { status: 503 },
@@ -97,16 +87,11 @@ export async function mintProfileImagePresign({
   }
 
   const key = `profile-images/${accountId}/${randomId()}.jpg`
-  const fileUrl = publicUrlForKey(key)
-  const uploadUrl = await getSignedUrl(
-    getS3Client(),
-    new PutObjectCommand({
-      Bucket: env.S3_UPLOAD_BUCKET,
-      Key: key,
-      ContentType: 'image/jpeg',
-    }),
-    { expiresIn: 60 },
-  )
+  const fileUrl = driver.publicUrlForKey(key)
+  const uploadUrl = await driver.getUploadUrl({
+    key,
+    contentType: 'image/jpeg',
+  })
   return Response.json({ uploadUrl, fileUrl })
 }
 
@@ -114,23 +99,19 @@ export async function validateProfileImageUpload(
   fileUrl: string,
   accountId: string,
 ) {
+  const driver = getStorageDriver()
   if (
-    !uploadsConfigured() ||
+    !driver.uploadsConfigured() ||
     !isProfileImageUrlForAccount(fileUrl, accountId)
   ) {
     return false
   }
   try {
-    const metadata = await getS3Client().send(
-      new HeadObjectCommand({
-        Bucket: env.S3_UPLOAD_BUCKET,
-        Key: keyFromFileUrl(fileUrl),
-      }),
-    )
+    const metadata = await driver.headObject(driver.keyFromFileUrl(fileUrl))
     return (
-      metadata.ContentType === 'image/jpeg' &&
-      !!metadata.ContentLength &&
-      metadata.ContentLength <= MAX_PROFILE_IMAGE_SIZE
+      metadata.contentType === 'image/jpeg' &&
+      !!metadata.contentLength &&
+      metadata.contentLength <= MAX_PROFILE_IMAGE_SIZE
     )
   } catch {
     return false
@@ -141,35 +122,27 @@ export async function validateProfileImageUpload(
  * Promote an uploaded document from the temporary `tmp/` prefix to a permanent
  * `documents/` prefix. Ordinary uploads delete the source; import preparation
  * retains it until the database transaction commits so a failed import can be
- * retried with the same staged token.
+ * retried with the same staged token. The local driver promotes via an atomic
+ * rename; S3 copies then deletes.
  */
 export async function promoteUploadedDocument(
   fileUrl: string,
   options: { deleteSource?: boolean } = {},
 ): Promise<string> {
-  if (!uploadsConfigured()) return fileUrl
+  const driver = getStorageDriver()
+  if (!driver.uploadsConfigured()) return fileUrl
 
-  const key = keyFromFileUrl(fileUrl)
+  const key = driver.keyFromFileUrl(fileUrl)
   if (!key.startsWith('tmp/')) return fileUrl
 
   const permanentKey = key.replace(/^tmp\//, 'documents/')
 
   const permanentObjectExists = async () => {
     try {
-      await getS3Client().send(
-        new HeadObjectCommand({
-          Bucket: env.S3_UPLOAD_BUCKET,
-          Key: permanentKey,
-        }),
-      )
+      await driver.headObject(permanentKey)
       return true
     } catch (error) {
-      const status =
-        typeof error === 'object' && error !== null && '$metadata' in error
-          ? (error as { $metadata?: { httpStatusCode?: number } }).$metadata
-              ?.httpStatusCode
-          : undefined
-      if (status === 404) return false
+      if (error instanceof ObjectNotFoundError) return false
       throw error
     }
   }
@@ -177,36 +150,30 @@ export async function promoteUploadedDocument(
   // A create retry may arrive after the first request copied and deleted the
   // temporary object but before its response reached the browser.
   if (await permanentObjectExists()) {
-    return publicUrlForKey(permanentKey)
+    return driver.publicUrlForKey(permanentKey)
   }
 
   try {
-    await getS3Client().send(
-      new CopyObjectCommand({
-        Bucket: env.S3_UPLOAD_BUCKET,
-        CopySource: `${env.S3_UPLOAD_BUCKET}/${encodeURIComponent(key)}`,
-        Key: permanentKey,
-      }),
-    )
+    if (driver.kind === 'local' && options.deleteSource !== false) {
+      await driver.moveObject(key, permanentKey)
+    } else {
+      await driver.copyObject(key, permanentKey)
+    }
   } catch (error) {
     // Two same-request attempts may both observe a missing destination before
     // one wins the copy/delete race. If the permanent object now exists, the
     // losing promotion converges on the same URL; otherwise preserve the real
     // copy failure.
-    if (await permanentObjectExists()) return publicUrlForKey(permanentKey)
+    if (await permanentObjectExists())
+      return driver.publicUrlForKey(permanentKey)
     throw error
   }
 
-  if (options.deleteSource !== false) {
-    await getS3Client().send(
-      new DeleteObjectCommand({
-        Bucket: env.S3_UPLOAD_BUCKET,
-        Key: key,
-      }),
-    )
+  if (options.deleteSource !== false && driver.kind !== 'local') {
+    await driver.deleteObject(key)
   }
 
-  return publicUrlForKey(permanentKey)
+  return driver.publicUrlForKey(permanentKey)
 }
 
 export async function mintImportDocumentPresign(input: {
@@ -223,7 +190,8 @@ export async function mintImportDocumentPresign(input: {
       { status: 400 },
     )
   }
-  if (!uploadsConfigured()) {
+  const driver = getStorageDriver()
+  if (!driver.uploadsConfigured()) {
     return Response.json(
       { error: 'Uploads are not configured' },
       { status: 503 },
@@ -238,16 +206,11 @@ export async function mintImportDocumentPresign(input: {
       return Response.json({ error: 'Invalid import session' }, { status: 403 })
     }
     const key = `tmp/imports/${input.accountId}/${input.sessionId}/${randomId()}.jpg`
-    const fileUrl = publicUrlForKey(key)
-    const uploadUrl = await getSignedUrl(
-      getS3Client(),
-      new PutObjectCommand({
-        Bucket: env.S3_UPLOAD_BUCKET,
-        Key: key,
-        ContentType: 'image/jpeg',
-      }),
-      { expiresIn: 60 },
-    )
+    const fileUrl = driver.publicUrlForKey(key)
+    const uploadUrl = await driver.getUploadUrl({
+      key,
+      contentType: 'image/jpeg',
+    })
     const stagedToken = await sealStagedDocumentClaims({
       aud: 'spliit:import-staged-document',
       accountId: input.accountId,
@@ -282,21 +245,15 @@ export async function verifyAndPromoteImportDocument(input: {
   ) {
     throw new Error('Invalid staged import document')
   }
+  const driver = getStorageDriver()
   const permanentUrl = permanentDocumentUrl(claims.fileUrl)
   let metadata
   let url: string | undefined
   try {
-    metadata = await getS3Client().send(
-      new HeadObjectCommand({ Bucket: env.S3_UPLOAD_BUCKET, Key: claims.key }),
-    )
+    metadata = await driver.headObject(claims.key)
   } catch (temporaryCause) {
     try {
-      metadata = await getS3Client().send(
-        new HeadObjectCommand({
-          Bucket: env.S3_UPLOAD_BUCKET,
-          Key: keyFromFileUrl(permanentUrl),
-        }),
-      )
+      metadata = await driver.headObject(driver.keyFromFileUrl(permanentUrl))
       url = permanentUrl
     } catch (permanentCause) {
       throw new Error('Staged import document is unavailable', {
@@ -305,10 +262,10 @@ export async function verifyAndPromoteImportDocument(input: {
     }
   }
   if (
-    metadata.ContentType !== 'image/jpeg' ||
-    metadata.ContentLength !== claims.fileSize ||
-    !metadata.ContentLength ||
-    !isExpenseDocumentSizeWithinLimit(metadata.ContentLength ?? -1)
+    metadata.contentType !== 'image/jpeg' ||
+    metadata.contentLength !== claims.fileSize ||
+    !metadata.contentLength ||
+    !isExpenseDocumentSizeWithinLimit(metadata.contentLength)
   ) {
     throw new Error('Staged import document failed validation')
   }
@@ -368,7 +325,8 @@ export async function mintCloudImportDocumentPresign(input: {
       { status: 400 },
     )
   }
-  if (!uploadsConfigured()) {
+  const driver = getStorageDriver()
+  if (!driver.uploadsConfigured()) {
     return Response.json(
       { error: 'Uploads are not configured' },
       { status: 503 },
@@ -378,16 +336,11 @@ export async function mintCloudImportDocumentPresign(input: {
   const extension =
     input.fileName?.match(/(\.[^.\s]+)$/)?.[1]?.toLowerCase() ?? ''
   const key = `tmp/cloud-imports/${input.accountId}/${input.sessionId}/${randomId()}${extension}`
-  const fileUrl = publicUrlForKey(key)
-  const uploadUrl = await getSignedUrl(
-    getS3Client(),
-    new PutObjectCommand({
-      Bucket: env.S3_UPLOAD_BUCKET,
-      Key: key,
-      ContentType: input.contentType ?? 'application/octet-stream',
-    }),
-    { expiresIn: 60 },
-  )
+  const fileUrl = driver.publicUrlForKey(key)
+  const uploadUrl = await driver.getUploadUrl({
+    key,
+    contentType: input.contentType ?? 'application/octet-stream',
+  })
   const stagedToken = await sealCloudStagedDocumentClaims({
     aud: 'spliit:cloud-staged-document',
     accountId: input.accountId,
@@ -420,20 +373,13 @@ export async function verifyAndPromoteCloudImportDocument(input: {
   ) {
     throw new Error('Invalid staged Cloud import document')
   }
-  if (!uploadsConfigured()) throw new Error('Uploads are not configured')
+  const driver = getStorageDriver()
+  if (!driver.uploadsConfigured()) throw new Error('Uploads are not configured')
 
   let body: Uint8Array
   try {
-    const response = await getS3Client().send(
-      new GetObjectCommand({
-        Bucket: env.S3_UPLOAD_BUCKET,
-        Key: claims.key,
-      }),
-    )
-    if (!response.Body || !('transformToByteArray' in response.Body)) {
-      throw new Error('Staged Cloud import document has no body')
-    }
-    body = await response.Body.transformToByteArray()
+    const { body: objectBody } = await driver.getObject(claims.key)
+    body = await objectBodyToBytes(objectBody)
   } catch (cause) {
     throw new Error('Staged Cloud import document is unavailable', { cause })
   }
@@ -472,10 +418,10 @@ export async function verifyAndPromoteCloudImportDocument(input: {
 /**
  * Internal helper used by both the legacy HTTP `/uploads/presign` route (via
  * `createUploadUrl`) and the tRPC `uploads.presign` mutation. Performs the
- * post-auth work — membership check, file-size validation, S3 presign — given
- * an already-resolved account id. Returns a `Response` so the caller decides
- * how to map the status code (HTTP route maps to itself; the tRPC procedure
- * maps via `statusToTRPCCode`).
+ * post-auth work — membership check, file-size validation, upload-URL minting —
+ * given an already-resolved account id. Returns a `Response` so the caller
+ * decides how to map the status code (HTTP route maps to itself; the tRPC
+ * procedure maps via `statusToTRPCCode`).
  */
 async function mintUploadPresign({
   ledgerId,
@@ -503,12 +449,8 @@ async function mintUploadPresign({
     )
   }
 
-  if (
-    !env.S3_UPLOAD_BUCKET ||
-    !env.S3_UPLOAD_KEY ||
-    !env.S3_UPLOAD_REGION ||
-    !env.S3_UPLOAD_SECRET
-  ) {
+  const driver = getStorageDriver()
+  if (!driver.uploadsConfigured()) {
     return Response.json(
       { error: 'Uploads are not configured' },
       { status: 503 },
@@ -542,15 +484,8 @@ async function mintUploadPresign({
 
   const [, extension = ''] = fileName.match(/(\.[^.]*)$/) ?? []
   const key = `tmp/document-${new Date().toISOString()}-${randomId()}${extension.toLowerCase()}`
-  const command = new PutObjectCommand({
-    Bucket: env.S3_UPLOAD_BUCKET,
-    Key: key,
-    ContentType: contentType,
-  })
-  const uploadUrl = await getSignedUrl(getS3Client(), command, {
-    expiresIn: 60,
-  })
-  const fileUrl = publicUrlForKey(key)
+  const uploadUrl = await driver.getUploadUrl({ key, contentType })
+  const fileUrl = driver.publicUrlForKey(key)
 
   return Response.json({ uploadUrl, fileUrl, key })
 }
@@ -567,7 +502,7 @@ export async function createUploadUrl(
   const { auth, response } = await getApplicationAuthFromRequest(request)
   if (response) return response
 
-  // Presign URLs are only minted for authenticated members of the target
+  // Upload URLs are only minted for authenticated members of the target
   // ledger. Uploads without a ledgerId are not allowed because the resulting
   // document would be unowned and could be attached to any expense.
   if (!ledgerId) {
@@ -584,10 +519,10 @@ export async function createUploadUrl(
 }
 
 /**
- * Presign a document upload for an already-authenticated account. Used by the
- * tRPC `uploads.presign` mutation — the `protectedProcedure` middleware has
- * already enforced auth, so we skip the authentication round-trip the
- * HTTP-shaped helper requires.
+ * Mint an upload URL for an already-authenticated account. Used by the tRPC
+ * `uploads.presign` mutation — the `protectedProcedure` middleware has already
+ * enforced auth, so we skip the authentication round-trip the HTTP-shaped
+ * helper requires.
  */
 export async function createUploadPresignForAccount({
   ledgerId,
