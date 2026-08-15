@@ -472,3 +472,85 @@ describe('envSchema — AI', () => {
     )
   })
 })
+
+describe('envSchema — uploads', () => {
+  it('defaults the driver to s3', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.resetModules()
+    const { env } = await import('./env')
+    expect(env.UPLOADS_DRIVER).toBe('s3')
+    expect(env.UPLOADS_DIR).toBeUndefined()
+  })
+
+  it('parses UPLOADS_DRIVER=local with an UPLOADS_DIR', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('UPLOADS_DRIVER', 'local')
+    vi.stubEnv('UPLOADS_DIR', '/uploads')
+    vi.resetModules()
+    const { env } = await import('./env')
+    expect(env.UPLOADS_DRIVER).toBe('local')
+    expect(env.UPLOADS_DIR).toBe('/uploads')
+  })
+
+  it('rejects UPLOADS_DRIVER=local without an UPLOADS_DIR', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('UPLOADS_DRIVER', 'local')
+    vi.resetModules()
+    await expect(import('./env')).rejects.toThrow(
+      /UPLOADS_DIR is required when UPLOADS_DRIVER is local/,
+    )
+  })
+
+  it('rejects an unknown uploads driver', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('UPLOADS_DRIVER', 'ftp')
+    vi.resetModules()
+    await expect(import('./env')).rejects.toThrow()
+  })
+
+  it('requires a configured backend when expense documents are enabled', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('PUBLIC_ENABLE_EXPENSE_DOCUMENTS', 'true')
+    vi.stubEnv('S3_UPLOAD_BUCKET', '')
+    vi.stubEnv('S3_UPLOAD_KEY', '')
+    vi.stubEnv('S3_UPLOAD_REGION', '')
+    vi.stubEnv('S3_UPLOAD_SECRET', '')
+    vi.resetModules()
+    await expect(import('./env')).rejects.toThrow(
+      /If PUBLIC_ENABLE_EXPENSE_DOCUMENTS is specified, then either the full S3_UPLOAD_\* set or UPLOADS_DIR with UPLOADS_DRIVER=local must be specified too/,
+    )
+  })
+
+  it('accepts expense documents with the full S3 set', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('PUBLIC_ENABLE_EXPENSE_DOCUMENTS', 'true')
+    vi.stubEnv('S3_UPLOAD_BUCKET', 'bucket')
+    vi.stubEnv('S3_UPLOAD_KEY', 'key')
+    vi.stubEnv('S3_UPLOAD_REGION', 'us-east-1')
+    vi.stubEnv('S3_UPLOAD_SECRET', 'secret')
+    vi.resetModules()
+    const { env } = await import('./env')
+    expect(env.PUBLIC_ENABLE_EXPENSE_DOCUMENTS).toBe(true)
+  })
+
+  it('accepts expense documents with local storage', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('PUBLIC_ENABLE_EXPENSE_DOCUMENTS', 'true')
+    vi.stubEnv('UPLOADS_DRIVER', 'local')
+    vi.stubEnv('UPLOADS_DIR', '/uploads')
+    vi.resetModules()
+    const { env } = await import('./env')
+    expect(env.PUBLIC_ENABLE_EXPENSE_DOCUMENTS).toBe(true)
+    expect(env.UPLOADS_DRIVER).toBe('local')
+  })
+
+  it('rejects local expense documents without an UPLOADS_DIR', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('PUBLIC_ENABLE_EXPENSE_DOCUMENTS', 'true')
+    vi.stubEnv('UPLOADS_DRIVER', 'local')
+    vi.resetModules()
+    await expect(import('./env')).rejects.toThrow(
+      /UPLOADS_DIR is required when UPLOADS_DRIVER is local/,
+    )
+  })
+})

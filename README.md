@@ -230,10 +230,9 @@ The application has a health check endpoint that can be used to check if the app
 
 ### Expense documents
 
-Spliit Cloud offers users to upload images (to an AWS S3 bucket) and attach them to expenses. To enable this feature:
+Spliit Cloud offers users to upload images and attach them to expenses. To enable this feature you need one upload backend:
 
-- Create and configure an S3-compatible bucket where images will be stored.
-- Update your environments variables with appropriate values:
+**Option A — S3-compatible object storage.** Create and configure an S3-compatible bucket where images will be stored, then update your environment variables:
 
 ```.env
 PUBLIC_ENABLE_EXPENSE_DOCUMENTS=true
@@ -259,6 +258,22 @@ Configure an object lifecycle rule for the `tmp/imports/` prefix with a
 one-day expiration. The import flow deletes its temporary copies after a
 successful database commit, while the lifecycle rule cleans up abandoned or
 interrupted imports.
+
+**Option B — local filesystem storage.** No object store is required; files are
+written to a Docker volume. The provided compose files already mount a
+persistent `uploads_data` volume at `/uploads`:
+
+```.env
+PUBLIC_ENABLE_EXPENSE_DOCUMENTS=true
+UPLOADS_DRIVER=local
+UPLOADS_DIR=/uploads
+```
+
+The API serves the stored files itself (via `/uploads/<key>`), so no public
+bucket URL is needed. Back up the `uploads_data` volume with your regular
+backups. To switch between the S3 and local backends later, use the
+[`scripts/migrate-uploads.ts`](apps/api/scripts/migrate-uploads.ts) migration
+script (see [docs/deployment.md](docs/deployment.md)).
 
 ### Create expense from receipt
 

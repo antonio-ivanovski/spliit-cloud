@@ -109,11 +109,14 @@ may remain empty.
   days, or leave setup unacknowledged for seven days. Acknowledged anonymous
   accounts are never removed by this sweep.
 - Expense documents require
-  `PUBLIC_ENABLE_EXPENSE_DOCUMENTS=true` and the required `S3_UPLOAD_*` values.
-  Configure the bucket with a lifecycle rule that expires objects under
-  `tmp/imports/` after 24 hours. Import retries intentionally retain these
-  temporary objects until the database transaction commits; the lifecycle rule
-  removes abandoned browser sessions and interrupted uploads.
+  `PUBLIC_ENABLE_EXPENSE_DOCUMENTS=true` and one configured upload backend:
+  the full `S3_UPLOAD_*` set (S3-compatible object storage), or
+  `UPLOADS_DRIVER=local` with a persistent `UPLOADS_DIR` (a Docker volume is
+  mounted at `/uploads` by the provided compose files). With S3, configure the
+  bucket with a lifecycle rule that expires objects under `tmp/imports/` after
+  24 hours. Import retries intentionally retain these temporary objects until
+  the database transaction commits; the lifecycle rule removes abandoned
+  browser sessions and interrupted uploads.
 - AI features require their corresponding `PUBLIC_ENABLE_*` flag and
   `AI_API_KEY`. `AI_PROVIDER`, model names, and `AI_BASE_URL` are optional.
 - Web Push requires the public key, private key, and subject together.
@@ -145,7 +148,28 @@ incompatible database migration, restore the matching database backup as well.
 The `postgres_data` volume contains the primary application data. Use regular
 off-host `pg_dump` backups or an equivalent PostgreSQL-aware backup system.
 Periodically test a full restore into a separate PostgreSQL instance. Object
-storage must be backed up separately when expense documents are enabled.
+storage must be backed up separately when expense documents are enabled — for
+the local driver that is the `uploads_data` volume; with S3, back up the
+bucket. When switching backends, copy the stored objects and rewrite the
+database URLs with the migration script (below) rather than restoring across
+storage backends.
+
+## Migrating between upload backends
+
+To move expense documents and profile images between S3-compatible storage and
+the local filesystem, run the uploads migration script from `apps/api`:
+
+```bash
+bun --env-file=../../.env scripts/migrate-uploads.ts --dry-run   # report only
+bun --env-file=../../.env scripts/migrate-uploads.ts --rewrite   # copy + rewrite URLs
+```
+
+The source is whatever backend `UPLOADS_DRIVER` selects; the destination is the
+other one, so point `UPLOADS_DRIVER`, `UPLOADS_DIR`, and the `S3_UPLOAD_*`
+values at the *source* before running. Missing objects are skipped, failures
+are reported and exit non-zero, and `--dry-run` copies nothing. Back up the
+uploads volume and/or the S3 bucket before `--rewrite` — the object copy is
+idempotent but the database URL rewrite is one-way.
 
 ## Hardening
 
