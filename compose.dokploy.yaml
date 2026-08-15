@@ -33,6 +33,8 @@ services:
       DATABASE_TRANSACTION_TIMEOUT_MS: ${DATABASE_TRANSACTION_TIMEOUT_MS:-5000}
       PUBLIC_DEFAULT_CURRENCY_CODE: ${PUBLIC_DEFAULT_CURRENCY_CODE:-USD}
       PUBLIC_ENABLE_EXPENSE_DOCUMENTS: ${PUBLIC_ENABLE_EXPENSE_DOCUMENTS:-false}
+      UPLOADS_DRIVER: ${UPLOADS_DRIVER:-s3}
+      UPLOADS_DIR: ${UPLOADS_DIR:-/uploads}
       PUBLIC_ENABLE_RECEIPT_EXTRACT: ${PUBLIC_ENABLE_RECEIPT_EXTRACT:-false}
       PUBLIC_ENABLE_VOICE_EXPENSE: ${PUBLIC_ENABLE_VOICE_EXPENSE:-false}
       PUBLIC_ENABLE_CATEGORY_EXTRACT: ${PUBLIC_ENABLE_CATEGORY_EXTRACT:-false}
@@ -78,6 +80,8 @@ services:
       SIGNUP_MODE: ${SIGNUP_MODE:-open}
       ENABLE_ANONYMOUS_AUTH: ${ENABLE_ANONYMOUS_AUTH:-false}
       JOBS_ENABLED: ${JOBS_ENABLED:-true}
+    volumes:
+      - uploads_data:/uploads
     networks:
       - dokploy-network
     healthcheck:
@@ -178,3 +182,6 @@ services:
 networks:
   dokploy-network:
     external: true
+
+volumes:
+  uploads_data:

@@ -23,6 +23,9 @@ services:
       - spliit-dev
 
   maxio:
+    # S3-compatible object store for the default s3 uploads driver. To develop
+    # against the local filesystem driver instead, set UPLOADS_DRIVER=local and
+    # UPLOADS_DIR=./storage/uploads in the root .env and drop this service.
     image: ghcr.io/coollabsio/maxio:0.4.2
     container_name: spliit-maxio
     restart: unless-stopped

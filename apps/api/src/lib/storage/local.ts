@@ -15,13 +15,14 @@ import { finished } from 'node:stream/promises'
 
 import { EncryptJWT, jwtDecrypt } from 'jose'
 
+import { MAX_EXPENSE_DOCUMENT_SIZE } from '@spliit/domain'
+
 import { getApiBaseUrl } from '../auth/urls'
 import { env } from '../env'
 import {
   ObjectNotFoundError,
   type ObjectMetadata,
   type StorageDriver,
-  type StoredObject,
 } from './types'
 
 const LOCAL_UPLOAD_AUDIENCE = 'spliit:local-upload'
@@ -48,20 +49,37 @@ function uploadTokenKey(): Uint8Array {
   return createHash('sha256').update(secret).digest()
 }
 
-async function sealUploadToken(key: string): Promise<string> {
-  return new EncryptJWT({ key, aud: LOCAL_UPLOAD_AUDIENCE })
+async function sealUploadToken(
+  key: string,
+  contentType: string,
+  maxSize: number,
+): Promise<string> {
+  return new EncryptJWT({
+    key,
+    contentType,
+    maxSize,
+    aud: LOCAL_UPLOAD_AUDIENCE,
+  })
     .setProtectedHeader({ alg: 'dir', enc: 'A256GCM', typ: 'JWT' })
     .setIssuedAt()
     .setExpirationTime(LOCAL_UPLOAD_TTL)
     .encrypt(uploadTokenKey())
 }
 
-export async function openUploadToken(token: string): Promise<{ key: string }> {
+export async function openUploadToken(
+  token: string,
+): Promise<{ key: string; contentType: string; maxSize: number }> {
   const { payload } = await jwtDecrypt(token, uploadTokenKey(), {
     audience: LOCAL_UPLOAD_AUDIENCE,
     clockTolerance: 5,
   })
-  return { key: payload.key as string }
+  return {
+    key: payload.key as string,
+    contentType:
+      (payload.contentType as string | undefined) ?? 'application/octet-stream',
+    maxSize:
+      (payload.maxSize as number | undefined) ?? MAX_EXPENSE_DOCUMENT_SIZE,
+  }
 }
 
 function isEnoent(error: unknown): boolean {
@@ -163,8 +181,12 @@ export function createLocalDriver(uploadsDir: string): StorageDriver {
     uploadsConfigured() {
       return !!uploadsDir
     },
-    async getUploadUrl({ key }) {
-      const token = await sealUploadToken(key)
+    async getUploadUrl({ key, contentType, maxSize }) {
+      const token = await sealUploadToken(
+        key,
+        contentType,
+        maxSize ?? MAX_EXPENSE_DOCUMENT_SIZE,
+      )
       return `${getApiBaseUrl()}/uploads/${key}?token=${encodeURIComponent(token)}`
     },
     async getObject(key, signal) {

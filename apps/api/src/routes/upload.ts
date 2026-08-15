@@ -4,6 +4,7 @@ import { prisma } from '@spliit/db'
 import {
   isExpenseDocumentSizeWithinLimit,
   isSupportedExpenseDocumentUpload,
+  MAX_EXPENSE_DOCUMENT_SIZE,
 } from '@spliit/domain'
 
 import { randomId } from '../lib/api/shared'
@@ -91,6 +92,7 @@ export async function mintProfileImagePresign({
   const uploadUrl = await driver.getUploadUrl({
     key,
     contentType: 'image/jpeg',
+    maxSize: MAX_PROFILE_IMAGE_SIZE,
   })
   return Response.json({ uploadUrl, fileUrl })
 }
@@ -210,6 +212,7 @@ export async function mintImportDocumentPresign(input: {
     const uploadUrl = await driver.getUploadUrl({
       key,
       contentType: 'image/jpeg',
+      maxSize: MAX_EXPENSE_DOCUMENT_SIZE,
     })
     const stagedToken = await sealStagedDocumentClaims({
       aud: 'spliit:import-staged-document',
@@ -340,6 +343,7 @@ export async function mintCloudImportDocumentPresign(input: {
   const uploadUrl = await driver.getUploadUrl({
     key,
     contentType: input.contentType ?? 'application/octet-stream',
+    maxSize: MAX_EXPENSE_DOCUMENT_SIZE,
   })
   const stagedToken = await sealCloudStagedDocumentClaims({
     aud: 'spliit:cloud-staged-document',
@@ -484,7 +488,11 @@ async function mintUploadPresign({
 
   const [, extension = ''] = fileName.match(/(\.[^.]*)$/) ?? []
   const key = `tmp/document-${new Date().toISOString()}-${randomId()}${extension.toLowerCase()}`
-  const uploadUrl = await driver.getUploadUrl({ key, contentType })
+  const uploadUrl = await driver.getUploadUrl({
+    key,
+    contentType,
+    maxSize: MAX_EXPENSE_DOCUMENT_SIZE,
+  })
   const fileUrl = driver.publicUrlForKey(key)
 
   return Response.json({ uploadUrl, fileUrl, key })

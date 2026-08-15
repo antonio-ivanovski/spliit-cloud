@@ -36,7 +36,12 @@ export interface StorageDriver {
   readonly kind: 's3' | 'local'
   uploadsConfigured(): boolean
   /** URL the web client PUTs the uploaded bytes to. */
-  getUploadUrl(input: { key: string; contentType: string }): Promise<string>
+  getUploadUrl(input: {
+    key: string
+    contentType: string
+    /** Hard cap on bytes. The local driver seals it into the upload token. */
+    maxSize?: number
+  }): Promise<string>
   getObject(key: string, signal?: AbortSignal): Promise<StoredObject>
   headObject(key: string): Promise<ObjectMetadata>
   copyObject(sourceKey: string, destinationKey: string): Promise<void>

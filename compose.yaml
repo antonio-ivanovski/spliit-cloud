@@ -67,6 +67,8 @@ services:
       OIDC_DISPLAY_NAME: ${OIDC_DISPLAY_NAME:-}
       OIDC_PROVIDER_ID: ${OIDC_PROVIDER_ID:-}
       PUBLIC_ENABLE_EXPENSE_DOCUMENTS: ${PUBLIC_ENABLE_EXPENSE_DOCUMENTS:-false}
+      UPLOADS_DRIVER: ${UPLOADS_DRIVER:-s3}
+      UPLOADS_DIR: ${UPLOADS_DIR:-/uploads}
       S3_UPLOAD_KEY: ${S3_UPLOAD_KEY:-}
       S3_UPLOAD_SECRET: ${S3_UPLOAD_SECRET:-}
       S3_UPLOAD_BUCKET: ${S3_UPLOAD_BUCKET:-}
@@ -106,6 +108,8 @@ services:
       timeout: 5s
       retries: 10
       start_period: 20s
+    volumes:
+      - uploads_data:/uploads
     networks:
       - spliit
 
@@ -181,6 +185,7 @@ services:
 
 volumes:
   postgres_data:
+  uploads_data:
 
 networks:
   spliit:
