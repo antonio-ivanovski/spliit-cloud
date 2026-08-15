@@ -277,7 +277,7 @@ script (see [docs/deployment.md](docs/deployment.md)).
 
 ### Create expense from receipt
 
-You can offer users to create expense by uploading a receipt. This feature relies on an AI provider and a public S3 storage endpoint.
+You can offer users to create expense by uploading a receipt. This feature relies on an AI provider; the receipt image is read either from your S3-compatible bucket (which must be publicly readable) or, with `UPLOADS_DRIVER=local`, fetched by the API from the uploads volume and passed to the provider directly.
 
 To enable the feature:
 
