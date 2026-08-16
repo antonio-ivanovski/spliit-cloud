@@ -16,7 +16,8 @@
     },
     "build": {
       "dependsOn": ["^build", "check-types", "@spliit/db#prisma-generate"],
-      "outputs": ["dist/**", "build/**", ".vite/**"]
+      "outputs": ["dist/**", "build/**", ".vite/**"],
+      "env": ["MCP_URL", "MCP_PUBLIC_URL", "MCP_API_URL", "MCP_WEB_URL"]
     },
     "dev": {
       "dependsOn": ["@spliit/db#prisma-generate"],
