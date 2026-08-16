@@ -1,4 +1,4 @@
-import { generateText, Output } from 'ai'
+import { generateText, NoObjectGeneratedError, Output } from 'ai'
 import * as z from 'zod'
 
 import {
@@ -256,38 +256,59 @@ type BulkCategorizationModelArgs = {
 
 export function callBulkCategorizationModel(
   args: BulkCategorizationModelArgs & { operation: 'bulk-calibration' },
-): Promise<CalibrationResponse>
+): Promise<CalibrationResponse | undefined>
 export function callBulkCategorizationModel(
   args: BulkCategorizationModelArgs & { operation: 'bulk-preview' },
-): Promise<BulkPreviewResponse>
+): Promise<BulkPreviewResponse | undefined>
 export async function callBulkCategorizationModel(
   args: BulkCategorizationModelArgs,
-): Promise<CalibrationResponse | BulkPreviewResponse> {
-  const output =
+): Promise<CalibrationResponse | BulkPreviewResponse | undefined> {
+  const model = await getModel(args.prompt.model)
+  const supportsStructuredOutputs = !(
+    typeof model === 'object' &&
+    model !== null &&
+    'supportsStructuredOutputs' in model &&
+    model.supportsStructuredOutputs === false
+  )
+  const metadata =
     args.operation === 'bulk-calibration'
-      ? Output.object({
+      ? {
           name: 'bulk_calibration',
           description:
             'Representative expenses to review before bulk categorization.',
-          schema: calibrationModelResponseSchema,
-        })
-      : Output.object({
+        }
+      : {
           name: 'bulk_category_preview',
           description: 'Category suggestions for a chunk of expenses.',
-          schema: bulkPreviewModelResponseSchema,
-        })
+        }
+  const output = !supportsStructuredOutputs
+    ? Output.json(metadata)
+    : args.operation === 'bulk-calibration'
+      ? Output.object({ ...metadata, schema: calibrationModelResponseSchema })
+      : Output.object({ ...metadata, schema: bulkPreviewModelResponseSchema })
 
-  const result = await generateText({
-    model: await getModel(args.prompt.model),
-    instructions: args.prompt.instructions,
-    prompt: args.prompt.prompt,
-    output,
-    reasoning: 'none',
-    maxRetries: BULK_CATEGORIZATION_MAX_RETRIES,
-    timeout: BULK_CATEGORIZATION_TIMEOUT_MS,
-    ...(args.prompt.temperature === undefined
-      ? {}
-      : { temperature: args.prompt.temperature }),
-  })
-  return result.output
+  try {
+    const result = await generateText({
+      model,
+      instructions: args.prompt.instructions,
+      prompt: args.prompt.prompt,
+      output,
+      reasoning: 'none',
+      maxRetries: BULK_CATEGORIZATION_MAX_RETRIES,
+      timeout: BULK_CATEGORIZATION_TIMEOUT_MS,
+      ...(args.prompt.temperature === undefined
+        ? {}
+        : { temperature: args.prompt.temperature }),
+    })
+    const parsed =
+      args.operation === 'bulk-calibration'
+        ? calibrationResponseSchema.safeParse(result.output)
+        : bulkPreviewResponseSchema.safeParse(result.output)
+    return parsed.success ? parsed.data : undefined
+  } catch (cause) {
+    // Preserve the callers' existing malformed-response handling while
+    // allowing provider, timeout, and rate-limit errors to propagate.
+    if (NoObjectGeneratedError.isInstance(cause)) return undefined
+    throw cause
+  }
 }

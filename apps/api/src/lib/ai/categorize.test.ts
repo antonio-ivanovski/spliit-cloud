@@ -229,6 +229,69 @@ describe('callBulkCategorizationModel', () => {
       }),
     )
   })
+
+  it('uses tolerant JSON parsing when the model lacks structured outputs', async () => {
+    getModelMock.mockResolvedValue({
+      modelId: 'compatible-model',
+      supportsStructuredOutputs: false,
+    } as never)
+    generateTextMock.mockResolvedValue({
+      output: {
+        suggestions: [
+          {
+            expenseId: 'expense-3',
+            suggestedCategoryId: 'groceries',
+            confidence: ' High ',
+          },
+        ],
+      },
+    } as never)
+
+    await expect(
+      callBulkCategorizationModel({
+        operation: 'bulk-preview',
+        prompt: {
+          model: 'compatible-model',
+          instructions: 'Classify expenses.',
+          prompt: 'Expense candidates',
+        },
+        candidateCount: 1,
+        priorFeedbackCount: 0,
+      }),
+    ).resolves.toEqual({
+      suggestions: [
+        {
+          expenseId: 'expense-3',
+          suggestedCategoryId: 'groceries',
+          confidence: 'high',
+        },
+      ],
+    })
+
+    expect(generateTextMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        output: expect.objectContaining({ name: 'json' }),
+      }),
+    )
+  })
+
+  it('propagates provider errors', async () => {
+    const providerError = new Error('provider unavailable')
+    generateTextMock.mockRejectedValue(providerError)
+
+    await expect(
+      callBulkCategorizationModel({
+        operation: 'bulk-preview',
+        prompt: {
+          model: 'configured-model',
+          instructions: 'Classify expenses.',
+          prompt: 'Expense candidates',
+        },
+        candidateCount: 1,
+        priorFeedbackCount: 0,
+      }),
+    ).rejects.toBe(providerError)
+  })
 })
 
 describe('parseCategoryId', () => {

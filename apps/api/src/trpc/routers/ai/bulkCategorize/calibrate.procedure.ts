@@ -144,23 +144,21 @@ export const aiBulkCategorizeCalibrateProcedure = protectedProcedure
       'ai.bulkCategorize.calibrate',
       ctx.resHeaders,
     )
-    let parsed: CalibrationResponse
-    try {
-      parsed = calibrationResponseSchema.parse(
-        await callBulkCategorizationModel({
-          operation: 'bulk-calibration',
-          candidateCount: candidates.length,
-          priorFeedbackCount: priorFeedback.length,
-          round: input.round,
-          prompt: {
-            model: env.AI_CATEGORY_MODEL,
-            temperature: 0.1,
-            instructions: system,
-            prompt: userContent,
-          },
-        }),
-      )
-    } catch {
+    const raw = await callBulkCategorizationModel({
+      operation: 'bulk-calibration',
+      candidateCount: candidates.length,
+      priorFeedbackCount: priorFeedback.length,
+      round: input.round,
+      prompt: {
+        model: env.AI_CATEGORY_MODEL,
+        temperature: 0.1,
+        instructions: system,
+        prompt: userContent,
+      },
+    })
+
+    const parsed = calibrationResponseSchema.safeParse(raw)
+    if (!parsed.success) {
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',
         message:
@@ -175,7 +173,7 @@ export const aiBulkCategorizeCalibrateProcedure = protectedProcedure
       priorFeedback.map((selection) => selection.expenseId),
     )
     const selectedIds = new Set<string>()
-    const selectedForReview = parsed.selections.filter((selection) => {
+    const selectedForReview = parsed.data.selections.filter((selection) => {
       if (
         !candidateIds.has(selection.expenseId) ||
         reviewedIds.has(selection.expenseId) ||
@@ -188,8 +186,8 @@ export const aiBulkCategorizeCalibrateProcedure = protectedProcedure
     })
 
     if (
-      (input.round === 1 && !parsed.needsFeedback) ||
-      (parsed.needsFeedback && selectedForReview.length === 0)
+      (input.round === 1 && !parsed.data.needsFeedback) ||
+      (parsed.data.needsFeedback && selectedForReview.length === 0)
     ) {
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',
@@ -207,8 +205,8 @@ export const aiBulkCategorizeCalibrateProcedure = protectedProcedure
       })),
       totalEligible,
       response: {
-        needsFeedback: parsed.needsFeedback,
-        selections: parsed.needsFeedback ? selectedForReview : [],
+        needsFeedback: parsed.data.needsFeedback,
+        selections: parsed.data.needsFeedback ? selectedForReview : [],
       } satisfies CalibrationResponse,
       forcedReady: false,
     }

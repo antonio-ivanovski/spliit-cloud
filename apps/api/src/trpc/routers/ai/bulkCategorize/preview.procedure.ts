@@ -120,27 +120,24 @@ export const aiBulkCategorizePreviewProcedure = protectedProcedure
         chunk,
         priorFeedback,
       })
-      let parsed: BulkPreviewResponse
-      try {
-        parsed = bulkPreviewResponseSchema.parse(
-          await callBulkCategorizationModel({
-            operation: 'bulk-preview',
-            candidateCount: chunk.length,
-            priorFeedbackCount: priorFeedback.length,
-            prompt: {
-              model: env.AI_CATEGORY_MODEL,
-              temperature: 0.1,
-              instructions: system,
-              prompt: userContent,
-            },
-          }),
-        )
-      } catch {
+      const raw = await callBulkCategorizationModel({
+        operation: 'bulk-preview',
+        candidateCount: chunk.length,
+        priorFeedbackCount: priorFeedback.length,
+        prompt: {
+          model: env.AI_CATEGORY_MODEL,
+          temperature: 0.1,
+          instructions: system,
+          prompt: userContent,
+        },
+      })
+      const parsed = bulkPreviewResponseSchema.safeParse(raw)
+      if (!parsed.success) {
         // Skip this chunk; the UI shows the surviving rows and
         // the admin can correct the rest manually.
         continue
       }
-      for (const s of parsed.suggestions) {
+      for (const s of parsed.data.suggestions) {
         if (!candidateIds.has(s.expenseId)) continue
         if (seenIds.has(s.expenseId)) continue
         seenIds.add(s.expenseId)
