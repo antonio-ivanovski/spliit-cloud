@@ -71,19 +71,20 @@ exit immediately when one is absent or malformed. The Docker Compose service
 also uses required-variable checks and will not create the MCP container when
 one is missing.
 
-The previous `MCP_URL`, `SPLIIT_API_URL`, and `SPLIIT_WEB_URL` names are no
-longer read. Rename them in local `.env` files and deployment secrets before
-starting the updated server.
+The previous `MCP_URL`, `SPLIIT_API_URL`, and `SPLIIT_WEB_URL` names are not
+application configuration. Rename them in local `.env` files and deployment
+secrets before starting the updated server. The server supplies mcp-use's
+internal `MCP_URL` value from `MCP_PUBLIC_URL`.
 
 The API must use the same `MCP_PUBLIC_URL` as the OAuth audience. The API separately
 configures `BETTER_AUTH_URL`, `WEB_ORIGINS`, and a dedicated
 `ASSISTANT_CONFIRMATION_SECRET` of at least 32 bytes. The confirmation secret
 is API-only; it is deliberately not passed to the MCP service.
 
-The expense widget reuses `MCP_PUBLIC_URL` as its unique submitted widget
-domain. Production startup writes that origin into the built widget manifest
-before mcp-use mounts the resources, so no separate widget-domain environment
-variable or deployment is required.
+mcp-use builds the expense View assets and serves them below
+`/mcp/_mcp-use/`, so no separate View origin or deployment is required. The
+View deliberately omits the host-specific `ui.domain` field and runs in the
+sandbox origin assigned by each MCP host.
 
 For a remote assistant host, these origins must be public HTTPS URLs:
 
@@ -130,8 +131,8 @@ server and clear the Inspector's saved connection before reconnecting.
 
 To verify the UI:
 
-1. List tools and confirm `prepare-expense` contains both
-   `_meta.ui.resourceUri` and `openai/outputTemplate`.
+1. List tools and confirm `prepare-expense` references
+   `ui://views/expense-preview.html` in its UI metadata.
 2. Call `get-expense-context`, copy one returned group ID, and call
    `prepare-expense` with `groupId`, `amount`, and `title`.
 3. The result should render the expense card. `create-expense` is app-only, so
@@ -172,6 +173,6 @@ needed for the consent/login pages and links opened from previews.
 Restart all services after changing these values, then configure the assistant
 with `https://mcp.example.test/mcp`.
 
-After rebuilding or changing tool/widget metadata, restart the MCP deployment
-and reconnect the host so it fetches the new tool list and versioned widget
+After rebuilding or changing tool/View metadata, restart the MCP deployment
+and reconnect the host so it fetches the new tool list and versioned View
 resource.

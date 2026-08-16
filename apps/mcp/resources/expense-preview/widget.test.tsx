@@ -3,28 +3,29 @@
 import '@testing-library/jest-dom/vitest'
 import { cleanup, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import type { ReactNode } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { ExpensePreviewMetadata, ExpensePreviewProps } from './types'
 
 const state = vi.hoisted(() => ({
-  widget: {
-    props: {} as ExpensePreviewProps,
-    metadata: {} as ExpensePreviewMetadata,
-    isPending: false,
-    openExternal: vi.fn(),
+  view: {
+    status: 'ready' as 'pending' | 'ready' | 'error',
+    toolOutput: {} as ExpensePreviewProps | undefined,
+    meta: {} as ExpensePreviewMetadata | undefined,
+    error: undefined as Error | undefined,
   },
+  openExternal: vi.fn(),
   tool: {
-    callToolAsync: vi.fn(),
+    callTool: vi.fn(),
     isPending: false,
-    error: null as Error | null,
+    error: undefined as Error | undefined,
   },
 }))
 
 vi.mock('mcp-use/react', () => ({
-  McpUseProvider: ({ children }: { children: ReactNode }) => children,
-  useWidget: () => state.widget,
+  getPublicBaseUrl: () => 'https://spliit.example/mcp/_mcp-use/public/',
+  useToolContext: () => state.view,
+  useOpenExternal: () => state.openExternal,
   useCallTool: () => state.tool,
 }))
 
@@ -79,13 +80,14 @@ describe('ExpensePreview', () => {
   afterEach(cleanup)
 
   beforeEach(() => {
-    state.widget.props = props
-    state.widget.metadata = metadata
-    state.widget.isPending = false
-    state.widget.openExternal.mockReset()
-    state.tool.callToolAsync.mockReset()
+    state.view.status = 'ready'
+    state.view.toolOutput = props
+    state.view.meta = metadata
+    state.view.error = undefined
+    state.openExternal.mockReset()
+    state.tool.callTool.mockReset()
     state.tool.isPending = false
-    state.tool.error = null
+    state.tool.error = undefined
   })
 
   it('renders an accessible, non-editable narrow-friendly preview', () => {
@@ -108,7 +110,7 @@ describe('ExpensePreview', () => {
   })
 
   it('sends only the confirmation token and transitions to success', async () => {
-    state.tool.callToolAsync.mockResolvedValue({
+    state.tool.callTool.mockResolvedValue({
       structuredContent: {
         expenseId: 'expense-1',
         expenseUrl: 'https://spliit.example/groups/group-1/expenses/expense-1',
@@ -119,20 +121,20 @@ describe('ExpensePreview', () => {
 
     await user.click(screen.getByRole('button', { name: 'Create expense' }))
 
-    expect(state.tool.callToolAsync).toHaveBeenCalledWith({
+    expect(state.tool.callTool).toHaveBeenCalledWith({
       confirmationToken: metadata.confirmationToken,
     })
     await waitFor(() =>
       expect(screen.getByText('Expense created')).toBeInTheDocument(),
     )
     await user.click(screen.getByRole('button', { name: 'Open in Spliit' }))
-    expect(state.widget.openExternal).toHaveBeenCalledWith(
-      'https://spliit.example/groups/group-1/expenses/expense-1',
-    )
+    expect(state.openExternal).toHaveBeenCalledWith({
+      url: 'https://spliit.example/groups/group-1/expenses/expense-1',
+    })
   })
 
   it('shows the entered currency and sealed group-currency conversion', () => {
-    state.widget.props = {
+    state.view.toolOutput = {
       ...props,
       preview: {
         ...props.preview,
@@ -160,7 +162,7 @@ describe('ExpensePreview', () => {
   })
 
   it('renders item allocations, remainder and aggregate participant totals', () => {
-    state.widget.props = {
+    state.view.toolOutput = {
       ...props,
       preview: {
         ...props.preview,
@@ -228,7 +230,7 @@ describe('ExpensePreview', () => {
   })
 
   it('renders BY_SHARES splits as display shares across flat, item, and remainder routes', () => {
-    state.widget.props = {
+    state.view.toolOutput = {
       ...props,
       preview: {
         ...props.preview,
@@ -303,7 +305,7 @@ describe('ExpensePreview', () => {
   })
 
   it('disables confirmation when widget-only metadata is missing', () => {
-    state.widget.metadata = {} as ExpensePreviewMetadata
+    state.view.meta = {} as ExpensePreviewMetadata
     render(<ExpensePreview />)
 
     expect(screen.getByRole('alert')).toHaveTextContent(
@@ -315,11 +317,11 @@ describe('ExpensePreview', () => {
   })
 
   it('renders a loading state and disables the action while creating', () => {
-    state.widget.isPending = true
+    state.view.status = 'pending'
     const { rerender } = render(<ExpensePreview />)
     expect(screen.getByRole('main')).toHaveAttribute('aria-busy', 'true')
 
-    state.widget.isPending = false
+    state.view.status = 'ready'
     state.tool.isPending = true
     rerender(<ExpensePreview />)
     expect(screen.getByRole('button', { name: 'Creating…' })).toBeDisabled()

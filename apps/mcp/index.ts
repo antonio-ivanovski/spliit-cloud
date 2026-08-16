@@ -1,12 +1,6 @@
 import { createTRPCProxyClient, httpLink, TRPCClientError } from '@trpc/client'
-import { createRemoteJWKSet, jwtVerify } from 'jose'
-import {
-  MCPServer,
-  error,
-  object,
-  oauthBetterAuthProvider,
-  text,
-} from 'mcp-use/server'
+import { MCPServer } from 'mcp-use'
+import { oauthBetterAuthProvider } from 'mcp-use/oauth/better-auth'
 import superjson from 'superjson'
 import { z } from 'zod'
 
@@ -24,7 +18,6 @@ import {
   type ExpenseContextOutput,
   type GroupSummaryOutput,
 } from './schemas'
-import { configureBuiltWidgetDomain } from './widget-manifest'
 
 const runtimeEnv =
   (
@@ -34,6 +27,11 @@ const runtimeEnv =
   ).process?.env ?? {}
 const mcpEnv = parseMcpEnv(runtimeEnv)
 const { apiUrl, mcpUrl, webUrl } = mcpEnv
+
+// mcp-use v2 reads MCP_URL when generating absolute View asset URLs. Keep the
+// app's existing MCP_PUBLIC_URL setting as the single public origin.
+process.env.MCP_URL ??= mcpUrl
+
 const scopes = [
   'openid',
   'profile',
@@ -45,19 +43,9 @@ const scopes = [
 
 const oauth = oauthBetterAuthProvider({
   authURL: `${apiUrl}/auth`,
-  verifyJwt: true,
+  resource: `${mcpUrl}/mcp`,
   scopesSupported: scopes,
-  getUserInfo: (payload) => ({
-    userId:
-      typeof payload.sub === 'string' ? payload.sub : 'unknown-spliit-user',
-  }),
 })
-const oauthJwks = createRemoteJWKSet(new URL('/auth/jwks', apiUrl))
-oauth.verifyToken = async (token) =>
-  jwtVerify(token, oauthJwks, {
-    issuer: `${apiUrl}/auth`,
-    audience: `${mcpUrl}/mcp`,
-  })
 
 const server = new MCPServer({
   name: 'spliit-cloud',
@@ -73,15 +61,16 @@ const server = new MCPServer({
     'For receipt images, read only clearly supported totals, currency, merchant/title, date, category, line items, quantities, and participant assignments from the conversation. Use item shares for quantity statements such as Alex had 2 beers and Alice had 3. Ask one focused clarification if the image or assignments are unreadable, contradictory, or ambiguous; never invent receipt values. Do not send or store the receipt image.',
     'prepare-expense never creates an expense. It returns the required non-editable UI preview. Do not claim the UI is unavailable unless the tool itself returns an error. Do not call create-expense conversationally: only the preview button may commit its sealed payload.',
   ].join(' '),
-  baseUrl: mcpUrl,
+  basePath: '/mcp',
+  port: mcpEnv.port,
   websiteUrl: webUrl,
   favicon: 'favicon.ico',
   icons: [{ src: 'icon.svg', mimeType: 'image/svg+xml', sizes: ['512x512'] }],
   publicLandingPage: false,
   cors: {
     origin: '*',
-    allowMethods: ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowHeaders: [
+    methods: ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: [
       'Content-Type',
       'Accept',
       'Authorization',
@@ -90,7 +79,6 @@ const server = new MCPServer({
       'X-Proxy-Token',
       'X-Target-URL',
     ],
-    exposeHeaders: ['mcp-session-id', 'WWW-Authenticate'],
   },
   oauth,
 })
@@ -137,26 +125,19 @@ if (mcpEnv.nodeEnv === 'production') {
   server.app.get('/inspector/*', (c) => c.body(null, 404))
 }
 
-// mcp-use's root protected-resource route currently advertises only the
-// service origin. OAuth clients treat that value as the canonical MCP
-// resource and retry initialization at `/`, so keep it aligned with the
-// actual streamable HTTP endpoint and token audience.
-server.app.get('/.well-known/oauth-protected-resource', () => {
-  return new Response(
-    JSON.stringify({
+// RFC 9728 derives the canonical metadata URL from the `/mcp` resource path.
+// Keep the origin-level alias for older hosts that only probe the root URL.
+server.app.get('/.well-known/oauth-protected-resource', () =>
+  Response.json(
+    {
       resource: `${mcpUrl}/mcp`,
       authorization_servers: [`${apiUrl}/auth`],
       scopes_supported: scopes,
       bearer_methods_supported: ['header'],
-    }),
-    {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'content-type': 'application/json; charset=UTF-8',
-      },
     },
-  )
-})
+    { headers: { 'Access-Control-Allow-Origin': '*' } },
+  ),
+)
 
 type AssistantClient = {
   assistant: {
@@ -221,6 +202,39 @@ function safeError(cause: unknown) {
   return 'Spliit Cloud could not complete this request. Please try again.'
 }
 
+function jsonResult<T>(value: T) {
+  return {
+    content: [{ type: 'text' as const, text: JSON.stringify(value, null, 2) }],
+    structuredContent: value,
+  }
+}
+
+function toolError(message: string) {
+  return {
+    isError: true as const,
+    content: [{ type: 'text' as const, text: message }],
+  }
+}
+
+function getTimezoneOffsetMinutes(timeZone: string | undefined) {
+  if (!timeZone) return undefined
+  try {
+    const offset = new Intl.DateTimeFormat('en-US', {
+      timeZone,
+      timeZoneName: 'longOffset',
+    })
+      .formatToParts()
+      .find(({ type }) => type === 'timeZoneName')?.value
+    if (!offset || offset === 'GMT') return 0
+    const match = /^GMT([+-])(\d{2}):(\d{2})$/.exec(offset)
+    if (!match) return undefined
+    const minutes = Number(match[2]) * 60 + Number(match[3])
+    return match[1] === '-' ? -minutes : minutes
+  } catch {
+    return undefined
+  }
+}
+
 const decimalString = z
   .string()
   .regex(/^(?:0|[1-9]\d*)(?:\.\d+)?$/)
@@ -257,13 +271,13 @@ const expenseItem = z.object({
     ),
 })
 
-server.tool(
+export const getExpenseContext = server.tool(
   {
     name: 'get-expense-context',
     title: 'Get Spliit expense context',
     description:
       "Start here for one-shot expense preparation. Lists only the OAuth-connected Spliit account's active, visible, non-archived groups. Each group includes stable IDs, currency, caller participant ID, every eligible participant with name/status/disambiguation label, and the response includes the complete valid category catalog. Exact duplicate rows are removed. Resolve unique group and participant names here, continue immediately, and ask only when multiple stable IDs remain plausible. Responses are capped; when truncated is true, pass a case-insensitive groupHint (part of the group name) to narrow the list.",
-    schema: z.object({
+    inputSchema: z.object({
       groupHint: z
         .string()
         .max(120)
@@ -286,20 +300,20 @@ server.tool(
       ).assistant.listGroups.query(
         input.groupHint ? { groupHint: input.groupHint } : undefined,
       )
-      return object(expenseContextOutputSchema.parse(result))
+      return jsonResult(expenseContextOutputSchema.parse(result))
     } catch (cause) {
-      return error(safeError(cause))
+      return toolError(safeError(cause))
     }
   },
 )
 
-server.tool(
+export const getGroupSummary = server.tool(
   {
     name: 'get-group-summary',
     title: 'Get group summary',
     description:
       "Get one authorized group's saved default split, balances, and recent expenses plus participant context. Use for group insights or deeper context; get-expense-context already provides the participant IDs needed for one-shot expense preparation.",
-    schema: z.object({
+    inputSchema: z.object({
       groupId: z
         .string()
         .describe('Exact stable group ID returned by get-expense-context'),
@@ -320,7 +334,7 @@ server.tool(
   },
   async (input, ctx) => {
     try {
-      return object(
+      return jsonResult(
         groupSummaryOutputSchema.parse(
           await apiClient(ctx.auth.accessToken).assistant.getGroupSummary.query(
             input,
@@ -328,18 +342,18 @@ server.tool(
         ),
       )
     } catch (cause) {
-      return error(safeError(cause))
+      return toolError(safeError(cause))
     }
   },
 )
 
-server.tool(
+export const prepareExpense = server.tool(
   {
     name: 'prepare-expense',
     title: 'Preview a Spliit expense',
     description:
       "Required final step for every conversational expense request. Call it in the same turn as soon as group, amount, and title are known; it validates the authenticated account's access and renders the non-editable confirmation UI. Supports flat splits and receipt-itemized expenses with a different split per item. Omit payer, flat split, item splits, date, category, and currency only when the corresponding Spliit defaults should apply. A different supported ISO currency uses Spliit's date-based exchange rate while preserving entered item and total values.",
-    schema: z.object({
+    inputSchema: z.object({
       groupId: z
         .string()
         .describe('Exact stable group ID returned by get-expense-context'),
@@ -398,12 +412,11 @@ server.tool(
       destructiveHint: false,
       openWorldHint: false,
     },
-    widget: {
+    view: {
       name: 'expense-preview',
-      invoking: 'Preparing expense preview…',
-      invoked: 'Expense ready to review',
-      widgetAccessible: true,
-      resultCanProduceWidget: true,
+      description:
+        'A non-editable Spliit expense preview with an explicit confirmation action.',
+      prefersBorder: false,
     },
   },
   async (input, ctx) => {
@@ -412,7 +425,9 @@ server.tool(
         ctx.auth.accessToken,
       ).assistant.prepareExpense.mutate({
         ...input,
-        timezoneOffsetMinutes: ctx.client.user()?.timezoneOffsetMinutes,
+        timezoneOffsetMinutes: getTimezoneOffsetMinutes(
+          ctx.client.user()?.location?.timezone,
+        ),
       })
       return createExpensePreviewResult({
         preview: previewSchema.parse(prepared.preview),
@@ -420,24 +435,20 @@ server.tool(
         webUrl,
       })
     } catch (cause) {
-      return error(safeError(cause))
+      return toolError(safeError(cause))
     }
   },
 )
 
-server.tool(
+export const createExpense = server.tool(
   {
     name: 'create-expense',
     title: 'Confirm previewed expense',
     description:
-      'Widget-only confirmation. Commits exactly the encrypted expense preview; accepts no editable expense fields.',
-    schema: z.object({ confirmationToken: z.string() }),
+      'View-only confirmation. Commits exactly the encrypted expense preview; accepts no editable expense fields.',
+    inputSchema: z.object({ confirmationToken: z.string() }),
     outputSchema: createExpenseOutputSchema,
-    _meta: {
-      ui: { visibility: ['app'] },
-      'openai/visibility': 'private',
-      'openai/widgetAccessible': true,
-    },
+    visibility: 'app',
     annotations: {
       readOnlyHint: false,
       destructiveHint: true,
@@ -449,19 +460,19 @@ server.tool(
       const result = await apiClient(
         ctx.auth.accessToken,
       ).assistant.createExpense.mutate(input)
-      return object(
+      return jsonResult(
         createExpenseOutputSchema.parse({
           ...result,
           expenseUrl: `${webUrl}/groups/${result.groupId}/expenses/${result.expenseId}`,
         }),
       )
     } catch (cause) {
-      return error(safeError(cause))
+      return toolError(safeError(cause))
     }
   },
 )
 
-server.prompt(
+export const addSpliitExpense = server.prompt(
   {
     name: 'add-spliit-expense',
     description:
@@ -474,24 +485,25 @@ server.prompt(
         ),
     }),
   },
-  async ({ request }) =>
-    text(
-      [
-        `Fulfil this Spliit expense request: ${request}`,
-        'Resolve the group with get-expense-context. Results are already restricted to the OAuth-connected Spliit account.',
-        'Resolve unique group and participant names case-insensitively from that one response. Ask one concise clarification only for multiple distinct matching IDs.',
-        'Choose the closest valid category when the title clearly supports one; otherwise use General. Treat bare $ as the group currency for dollar-currency groups and USD otherwise.',
-        'If the request contains a receipt image, extract only clearly readable total, currency, merchant/title, date, category, items, quantities, and assignments. Ask one focused question for unreadable or contradictory values. Do not pass or store the image.',
-        'Then call prepare-expense in the same turn; do not stop at a prose draft. Omit unspecified payer, split, date, category, and currency only where Spliit should apply its defaults.',
-        'The returned card is the only confirmation surface. Never call create-expense yourself.',
-      ].join('\n'),
-    ),
+  async ({ request }) => ({
+    messages: [
+      {
+        role: 'user',
+        content: {
+          type: 'text',
+          text: [
+            `Fulfil this Spliit expense request: ${request}`,
+            'Resolve the group with get-expense-context. Results are already restricted to the OAuth-connected Spliit account.',
+            'Resolve unique group and participant names case-insensitively from that one response. Ask one concise clarification only for multiple distinct matching IDs.',
+            'Choose the closest valid category when the title clearly supports one; otherwise use General. Treat bare $ as the group currency for dollar-currency groups and USD otherwise.',
+            'If the request contains a receipt image, extract only clearly readable total, currency, merchant/title, date, category, items, quantities, and assignments. Ask one focused question for unreadable or contradictory values. Do not pass or store the image.',
+            'Then call prepare-expense in the same turn; do not stop at a prose draft. Omit unspecified payer, split, date, category, and currency only where Spliit should apply its defaults.',
+            'The returned card is the only confirmation surface. Never call create-expense yourself.',
+          ].join('\n'),
+        },
+      },
+    ],
+  }),
 )
 
-if (mcpEnv.nodeEnv === 'production') {
-  configureBuiltWidgetDomain(new URL('./mcp-use.json', import.meta.url), mcpUrl)
-}
-
-void server.listen(mcpEnv.port).then(() => {
-  console.log('Spliit Assistant MCP server is running')
-})
+export default server
