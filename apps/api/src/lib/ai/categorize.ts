@@ -1,4 +1,4 @@
-import { generateText } from 'ai'
+import { generateText, Output } from 'ai'
 import * as z from 'zod'
 
 import {
@@ -107,6 +107,12 @@ const confidenceSchema = z.preprocess(
   z.enum(['high', 'medium', 'low']),
 )
 
+// Keep the model-facing schemas free of transforms and defaults. OpenAI's
+// strict structured-output mode requires every property to be represented as
+// required in the generated JSON Schema. The public parsers below stay
+// deliberately lenient for backwards compatibility with stored/test data.
+const modelConfidenceSchema = z.enum(['high', 'medium', 'low'])
+
 export const BULK_CATEGORIZATION_TIMEOUT_MS = 245_000
 export const BULK_CATEGORIZATION_MAX_RETRIES = 0
 
@@ -207,12 +213,35 @@ export const bulkPreviewResponseSchema = z.object({
 })
 export type BulkPreviewResponse = z.infer<typeof bulkPreviewResponseSchema>
 
+const calibrationModelResponseSchema = z.object({
+  needsFeedback: z.boolean(),
+  selections: z
+    .array(
+      z.object({
+        expenseId: z.string().min(1),
+        suggestedCategoryId: categoryIdSchema,
+        confidence: modelConfidenceSchema,
+      }),
+    )
+    .max(BULK_CALIBRATION_SAMPLE_SIZE),
+})
+
+const bulkPreviewModelResponseSchema = z.object({
+  suggestions: z.array(
+    z.object({
+      expenseId: z.string().min(1),
+      suggestedCategoryId: categoryIdSchema,
+      confidence: modelConfidenceSchema,
+    }),
+  ),
+})
+
 /**
  * Shared AI call for bulk calibration and preview. Keeps the request bounded
  * with an explicit timeout and no SDK retries so a slow provider cannot hang
  * the tRPC handler.
  */
-export async function callBulkCategorizationModel(args: {
+type BulkCategorizationModelArgs = {
   operation: 'bulk-calibration' | 'bulk-preview'
   prompt: {
     model: string
@@ -223,11 +252,36 @@ export async function callBulkCategorizationModel(args: {
   candidateCount: number
   priorFeedbackCount: number
   round?: number
-}): Promise<string | null | undefined> {
+}
+
+export function callBulkCategorizationModel(
+  args: BulkCategorizationModelArgs & { operation: 'bulk-calibration' },
+): Promise<CalibrationResponse>
+export function callBulkCategorizationModel(
+  args: BulkCategorizationModelArgs & { operation: 'bulk-preview' },
+): Promise<BulkPreviewResponse>
+export async function callBulkCategorizationModel(
+  args: BulkCategorizationModelArgs,
+): Promise<CalibrationResponse | BulkPreviewResponse> {
+  const output =
+    args.operation === 'bulk-calibration'
+      ? Output.object({
+          name: 'bulk_calibration',
+          description:
+            'Representative expenses to review before bulk categorization.',
+          schema: calibrationModelResponseSchema,
+        })
+      : Output.object({
+          name: 'bulk_category_preview',
+          description: 'Category suggestions for a chunk of expenses.',
+          schema: bulkPreviewModelResponseSchema,
+        })
+
   const result = await generateText({
     model: await getModel(args.prompt.model),
     instructions: args.prompt.instructions,
     prompt: args.prompt.prompt,
+    output,
     reasoning: 'none',
     maxRetries: BULK_CATEGORIZATION_MAX_RETRIES,
     timeout: BULK_CATEGORIZATION_TIMEOUT_MS,
@@ -235,5 +289,5 @@ export async function callBulkCategorizationModel(args: {
       ? {}
       : { temperature: args.prompt.temperature }),
   })
-  return result.text
+  return result.output
 }

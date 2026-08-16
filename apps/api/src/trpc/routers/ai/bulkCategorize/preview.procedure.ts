@@ -120,44 +120,21 @@ export const aiBulkCategorizePreviewProcedure = protectedProcedure
         chunk,
         priorFeedback,
       })
-      const raw = await callBulkCategorizationModel({
-        operation: 'bulk-preview',
-        candidateCount: chunk.length,
-        priorFeedbackCount: priorFeedback.length,
-        prompt: {
-          model: env.AI_CATEGORY_MODEL,
-          temperature: 0.1,
-          instructions: system,
-          prompt: userContent,
-        },
-      })
       let parsed: BulkPreviewResponse
       try {
-        const obj = JSON.parse(raw ?? '{}')
-        // The schema rejects unknown category ids, so a model
-        // hallucination produces a parse error instead of an
-        // untyped row.
-        parsed = bulkPreviewResponseSchema.parse({
-          suggestions: Array.isArray(obj.suggestions)
-            ? obj.suggestions.filter(
-                (
-                  s: unknown,
-                ): s is {
-                  expenseId: string
-                  suggestedCategoryId: string
-                  confidence: string
-                } =>
-                  typeof s === 'object' &&
-                  s !== null &&
-                  typeof (s as { expenseId?: unknown }).expenseId ===
-                    'string' &&
-                  typeof (s as { suggestedCategoryId?: unknown })
-                    .suggestedCategoryId === 'string' &&
-                  typeof (s as { confidence?: unknown }).confidence ===
-                    'string',
-              )
-            : [],
-        })
+        parsed = bulkPreviewResponseSchema.parse(
+          await callBulkCategorizationModel({
+            operation: 'bulk-preview',
+            candidateCount: chunk.length,
+            priorFeedbackCount: priorFeedback.length,
+            prompt: {
+              model: env.AI_CATEGORY_MODEL,
+              temperature: 0.1,
+              instructions: system,
+              prompt: userContent,
+            },
+          }),
+        )
       } catch {
         // Skip this chunk; the UI shows the surviving rows and
         // the admin can correct the rest manually.

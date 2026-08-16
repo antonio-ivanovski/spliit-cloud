@@ -144,23 +144,22 @@ export const aiBulkCategorizeCalibrateProcedure = protectedProcedure
       'ai.bulkCategorize.calibrate',
       ctx.resHeaders,
     )
-    const raw = await callBulkCategorizationModel({
-      operation: 'bulk-calibration',
-      candidateCount: candidates.length,
-      priorFeedbackCount: priorFeedback.length,
-      round: input.round,
-      prompt: {
-        model: env.AI_CATEGORY_MODEL,
-        temperature: 0.1,
-        instructions: system,
-        prompt: userContent,
-      },
-    })
-
     let parsed: CalibrationResponse
     try {
-      const json = JSON.parse(raw ?? '{}')
-      parsed = calibrationResponseSchema.parse(json)
+      parsed = calibrationResponseSchema.parse(
+        await callBulkCategorizationModel({
+          operation: 'bulk-calibration',
+          candidateCount: candidates.length,
+          priorFeedbackCount: priorFeedback.length,
+          round: input.round,
+          prompt: {
+            model: env.AI_CATEGORY_MODEL,
+            temperature: 0.1,
+            instructions: system,
+            prompt: userContent,
+          },
+        }),
+      )
     } catch {
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',
