@@ -77,6 +77,7 @@ RUN find apps/mcp/dist -type f -name '*.map' -delete
 FROM node:24.12.0-bookworm-slim AS mcp
 WORKDIR /app/apps/mcp
 ENV NODE_ENV=production
-COPY --from=mcp-builder /app/apps/mcp/dist ./dist
+COPY --chown=node:node --from=mcp-builder /app/apps/mcp/dist ./dist
+USER node
 EXPOSE 3002
 CMD ["node", "dist/runtime.mjs"]
