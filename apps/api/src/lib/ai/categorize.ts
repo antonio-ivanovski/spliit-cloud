@@ -1,4 +1,4 @@
-import { generateText } from 'ai'
+import { generateText, NoObjectGeneratedError, Output } from 'ai'
 import * as z from 'zod'
 
 import {
@@ -107,6 +107,12 @@ const confidenceSchema = z.preprocess(
   z.enum(['high', 'medium', 'low']),
 )
 
+// Keep the model-facing schemas free of transforms and defaults. OpenAI's
+// strict structured-output mode requires every property to be represented as
+// required in the generated JSON Schema. The public parsers below stay
+// deliberately lenient for backwards compatibility with stored/test data.
+const modelConfidenceSchema = z.enum(['high', 'medium', 'low'])
+
 export const BULK_CATEGORIZATION_TIMEOUT_MS = 245_000
 export const BULK_CATEGORIZATION_MAX_RETRIES = 0
 
@@ -207,12 +213,35 @@ export const bulkPreviewResponseSchema = z.object({
 })
 export type BulkPreviewResponse = z.infer<typeof bulkPreviewResponseSchema>
 
+const calibrationModelResponseSchema = z.object({
+  needsFeedback: z.boolean(),
+  selections: z
+    .array(
+      z.object({
+        expenseId: z.string().min(1),
+        suggestedCategoryId: categoryIdSchema,
+        confidence: modelConfidenceSchema,
+      }),
+    )
+    .max(BULK_CALIBRATION_SAMPLE_SIZE),
+})
+
+const bulkPreviewModelResponseSchema = z.object({
+  suggestions: z.array(
+    z.object({
+      expenseId: z.string().min(1),
+      suggestedCategoryId: categoryIdSchema,
+      confidence: modelConfidenceSchema,
+    }),
+  ),
+})
+
 /**
  * Shared AI call for bulk calibration and preview. Keeps the request bounded
  * with an explicit timeout and no SDK retries so a slow provider cannot hang
  * the tRPC handler.
  */
-export async function callBulkCategorizationModel(args: {
+type BulkCategorizationModelArgs = {
   operation: 'bulk-calibration' | 'bulk-preview'
   prompt: {
     model: string
@@ -223,17 +252,63 @@ export async function callBulkCategorizationModel(args: {
   candidateCount: number
   priorFeedbackCount: number
   round?: number
-}): Promise<string | null | undefined> {
-  const result = await generateText({
-    model: await getModel(args.prompt.model),
-    instructions: args.prompt.instructions,
-    prompt: args.prompt.prompt,
-    reasoning: 'none',
-    maxRetries: BULK_CATEGORIZATION_MAX_RETRIES,
-    timeout: BULK_CATEGORIZATION_TIMEOUT_MS,
-    ...(args.prompt.temperature === undefined
-      ? {}
-      : { temperature: args.prompt.temperature }),
-  })
-  return result.text
+}
+
+export function callBulkCategorizationModel(
+  args: BulkCategorizationModelArgs & { operation: 'bulk-calibration' },
+): Promise<CalibrationResponse | undefined>
+export function callBulkCategorizationModel(
+  args: BulkCategorizationModelArgs & { operation: 'bulk-preview' },
+): Promise<BulkPreviewResponse | undefined>
+export async function callBulkCategorizationModel(
+  args: BulkCategorizationModelArgs,
+): Promise<CalibrationResponse | BulkPreviewResponse | undefined> {
+  const model = await getModel(args.prompt.model)
+  const supportsStructuredOutputs = !(
+    typeof model === 'object' &&
+    model !== null &&
+    'supportsStructuredOutputs' in model &&
+    model.supportsStructuredOutputs === false
+  )
+  const metadata =
+    args.operation === 'bulk-calibration'
+      ? {
+          name: 'bulk_calibration',
+          description:
+            'Representative expenses to review before bulk categorization.',
+        }
+      : {
+          name: 'bulk_category_preview',
+          description: 'Category suggestions for a chunk of expenses.',
+        }
+  const output = !supportsStructuredOutputs
+    ? Output.json(metadata)
+    : args.operation === 'bulk-calibration'
+      ? Output.object({ ...metadata, schema: calibrationModelResponseSchema })
+      : Output.object({ ...metadata, schema: bulkPreviewModelResponseSchema })
+
+  try {
+    const result = await generateText({
+      model,
+      instructions: args.prompt.instructions,
+      prompt: args.prompt.prompt,
+      output,
+      reasoning: 'none',
+      maxRetries: BULK_CATEGORIZATION_MAX_RETRIES,
+      timeout: BULK_CATEGORIZATION_TIMEOUT_MS,
+      ...(args.prompt.temperature === undefined
+        ? {}
+        : { temperature: args.prompt.temperature }),
+    })
+    const parsed =
+      args.operation === 'bulk-calibration'
+        ? calibrationResponseSchema.safeParse(result.output)
+        : bulkPreviewResponseSchema.safeParse(result.output)
+    return parsed.success ? parsed.data : undefined
+  } catch (cause) {
+    // Preserve the callers' existing malformed-response handling while
+    // allowing provider, timeout, and rate-limit errors to propagate.
+    if (NoObjectGeneratedError.isInstance(cause)) return undefined
+    throw cause
+  }
 }

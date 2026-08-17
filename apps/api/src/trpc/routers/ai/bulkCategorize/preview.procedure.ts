@@ -131,39 +131,13 @@ export const aiBulkCategorizePreviewProcedure = protectedProcedure
           prompt: userContent,
         },
       })
-      let parsed: BulkPreviewResponse
-      try {
-        const obj = JSON.parse(raw ?? '{}')
-        // The schema rejects unknown category ids, so a model
-        // hallucination produces a parse error instead of an
-        // untyped row.
-        parsed = bulkPreviewResponseSchema.parse({
-          suggestions: Array.isArray(obj.suggestions)
-            ? obj.suggestions.filter(
-                (
-                  s: unknown,
-                ): s is {
-                  expenseId: string
-                  suggestedCategoryId: string
-                  confidence: string
-                } =>
-                  typeof s === 'object' &&
-                  s !== null &&
-                  typeof (s as { expenseId?: unknown }).expenseId ===
-                    'string' &&
-                  typeof (s as { suggestedCategoryId?: unknown })
-                    .suggestedCategoryId === 'string' &&
-                  typeof (s as { confidence?: unknown }).confidence ===
-                    'string',
-              )
-            : [],
-        })
-      } catch {
+      const parsed = bulkPreviewResponseSchema.safeParse(raw)
+      if (!parsed.success) {
         // Skip this chunk; the UI shows the surviving rows and
         // the admin can correct the rest manually.
         continue
       }
-      for (const s of parsed.suggestions) {
+      for (const s of parsed.data.suggestions) {
         if (!candidateIds.has(s.expenseId)) continue
         if (seenIds.has(s.expenseId)) continue
         seenIds.add(s.expenseId)
