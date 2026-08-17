@@ -19,9 +19,11 @@
   "include": [
     "index.ts",
     "global.d.ts",
+    "mcp-env.d.ts",
     "vitest-jest-dom.d.ts",
     "src/**/*",
     "resources/**/*",
+    "views/**/*",
     "server.ts",
     ".mcp-use/**/*.d.ts"
   ],

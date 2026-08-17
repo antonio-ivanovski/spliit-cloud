@@ -65,12 +65,10 @@ CMD ["bun", "run", "apps/worker/dist/server.js"]
 FROM installer AS mcp-builder
 ENV NODE_ENV=production
 COPY --from=pruner /app/out/full/ ./
-# mcp-use imports the server while compiling widgets. These non-routable
+# mcp-use imports the server while compiling Views. These non-routable
 # origins are build-time placeholders only; the runtime MCP image requires
-# MCP_PUBLIC_URL, MCP_API_URL, and MCP_WEB_URL from deployment env. Clear
-# NODE_ENV so runtime-only widget-domain preparation does not run before
-# mcp-use has created the manifest.
-RUN NODE_ENV= MCP_API_URL=https://api-build.invalid MCP_PUBLIC_URL=https://mcp-build.invalid MCP_WEB_URL=https://web-build.invalid bun --filter @spliit/mcp build
+# MCP_PUBLIC_URL, MCP_API_URL, and MCP_WEB_URL from deployment env.
+RUN NODE_ENV= MCP_URL=https://mcp-build.invalid MCP_API_URL=https://api-build.invalid MCP_PUBLIC_URL=https://mcp-build.invalid MCP_WEB_URL=https://web-build.invalid bun --filter @spliit/mcp build
 RUN bun --filter @spliit/mcp bundle:runtime
 RUN find apps/mcp/dist -type f -name '*.map' -delete
 
@@ -78,5 +76,6 @@ FROM node:24.12.0-bookworm-slim AS mcp
 WORKDIR /app/apps/mcp
 ENV NODE_ENV=production
 COPY --from=mcp-builder /app/apps/mcp/dist ./dist
+COPY --from=mcp-builder /app/apps/mcp/.mcp-use/build/views ./.mcp-use/build/views
 EXPOSE 3002
 CMD ["node", "dist/runtime.mjs"]

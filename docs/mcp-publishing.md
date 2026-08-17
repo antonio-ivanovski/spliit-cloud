@@ -80,8 +80,11 @@ Check the protected resource metadata:
 
 ```bash
 curl --fail \
-  https://mcp.spliit.example/.well-known/oauth-protected-resource
+  https://mcp.spliit.example/.well-known/oauth-protected-resource/mcp
 ```
+
+The origin-level `/.well-known/oauth-protected-resource` compatibility alias
+advertises the same resource for older hosts.
 
 It must advertise:
 
