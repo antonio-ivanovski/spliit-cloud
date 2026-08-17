@@ -15,6 +15,8 @@ vi.mock('@/lib/auth', () => ({
 
 import { useCurrentAccount } from '@/lib/use-current-account'
 
+const LAST_ACCOUNT_KEY = 'spliit:last-account'
+
 const account = {
   id: 'user-1',
   name: 'Alice',
@@ -33,6 +35,7 @@ function Probe() {
 describe('useCurrentAccount', () => {
   afterEach(() => {
     vi.clearAllMocks()
+    localStorage.clear()
     sessionStorage.clear()
   })
 
@@ -49,7 +52,21 @@ describe('useCurrentAccount', () => {
     expect(screen.getByTestId('account-id')).toHaveTextContent('user-1')
   })
 
-  it('restores the last account when get-session fails offline', () => {
+  it('restores the last account while get-session is pending', () => {
+    writeLastAccount(account)
+    mocks.useSession.mockReturnValue({
+      data: null,
+      error: null,
+      isPending: true,
+      isRefetching: false,
+      refetch: vi.fn(),
+    })
+
+    render(<Probe />)
+    expect(screen.getByTestId('account-id')).toHaveTextContent('user-1')
+  })
+
+  it('restores the last account when get-session fails', () => {
     writeLastAccount(account)
     mocks.useSession.mockReturnValue({
       data: null,
@@ -75,6 +92,6 @@ describe('useCurrentAccount', () => {
 
     render(<Probe />)
     expect(screen.getByTestId('account-id')).toHaveTextContent('none')
-    expect(sessionStorage.getItem('spliit:last-account')).toBeNull()
+    expect(localStorage.getItem(LAST_ACCOUNT_KEY)).toBeNull()
   })
 })

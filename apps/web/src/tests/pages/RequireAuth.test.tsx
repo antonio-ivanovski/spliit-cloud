@@ -71,6 +71,32 @@ describe('RequireAuth', () => {
     expect(screen.queryByTestId('child')).not.toBeInTheDocument()
   })
 
+  it('renders children from a cached account while get-session is pending', () => {
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: {
+        id: 'user-1',
+        name: 'Alice',
+        email: 'alice@example.com',
+        image: null,
+        emailVerified: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      isPending: true,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+
+    render(
+      <RequireAuth>
+        <div data-testid="child">protected content</div>
+      </RequireAuth>,
+    )
+
+    expect(screen.getByTestId('child')).toHaveTextContent('protected content')
+  })
+
   it('renders children when account is authenticated and has a display name', () => {
     vi.mocked(useCurrentAccount).mockReturnValue({
       data: {

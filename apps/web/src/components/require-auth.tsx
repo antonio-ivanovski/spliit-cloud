@@ -19,9 +19,10 @@ function hasGroupViewerCredential(): boolean {
 }
 
 /**
- * Route guard. Shows a loader while the session is being resolved, redirects
- * unauthenticated users to `/` (preserving the original target in a `redirect`
- * query parameter), and otherwise renders the protected content.
+ * Route guard. Shows a loader only while the session is unresolved and there is
+ * no cached account, redirects unauthenticated users to `/` (preserving the
+ * original target in a `redirect` query parameter), and otherwise renders the
+ * protected content.
  *
  * Anonymous visitors may enter `/groups/:id` only when the URL carries a
  * retained `viewKey` or `invite` search param. Everyone else is sent through
@@ -38,7 +39,7 @@ export function RequireAuth({ children }: PropsWithChildren) {
     ) &&
     hasGroupViewerCredential()
 
-  if (isPending) {
+  if (isPending && !account) {
     return (
       <div className="flex flex-1 items-center justify-center py-10">
         <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />

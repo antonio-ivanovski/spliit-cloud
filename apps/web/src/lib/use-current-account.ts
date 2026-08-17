@@ -7,19 +7,19 @@ import {
   readLastAccount,
   writeLastAccount,
 } from '@/lib/last-account'
-import { isNetworkError } from '@/lib/network-error'
 
 /**
  * Resolve the current signed-in account. Wraps better-auth's `useSession` so
  * the rest of the app has a single, stable hook to consume.
  *
- * Returns `null` for `data` when there is no session or while the session is
- * still being resolved for the first time. Use `isPending` to distinguish
- * "loading" from "signed out".
+ * The HTTP-only session cookie is the credential. This hook also hydrates a
+ * device-scoped account snapshot (`spliit:last-account`) so the shell can stay
+ * signed-in on a PWA cold start before `get-session` returns, or when that call
+ * fails offline. The snapshot is id/name/email/image/flags only — not a token.
  *
- * When `get-session` fails because the device is offline, the last account from
- * this tab is kept so RequireAuth does not dump the user on the sign-in
- * landing.
+ * Confirmed signed-out (`data: null`, `error: null`) clears the snapshot. A
+ * leftover cache may flash the dashboard until `get-session` returns; that is
+ * accepted for offline-first.
  *
  * `data` is the `Account` row (better-auth "user"), not the full `{ user,
  * session }` envelope.
@@ -31,15 +31,13 @@ export function useCurrentAccount() {
   useEffect(() => {
     if (live) {
       writeLastAccount(live)
-      return
-    }
-    if (!session.isPending && !isNetworkError(session.error)) {
+    } else if (!session.isPending && !session.error) {
       clearLastAccount()
     }
   }, [live, session.error, session.isPending])
 
-  const data =
-    live ?? (isNetworkError(session.error) ? readLastAccount() : null)
+  const cached = readLastAccount()
+  const data = live ?? (session.isPending || session.error ? cached : null)
 
   return {
     data,

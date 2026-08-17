@@ -140,11 +140,7 @@ describe('HomePage (signed-out)', () => {
     expect(screen.queryByTestId('offline-empty-state')).not.toBeInTheDocument()
   })
 
-  it('shows the landing while a signed-out session is still resolving offline', () => {
-    Object.defineProperty(navigator, 'onLine', {
-      configurable: true,
-      value: false,
-    })
+  it('shows the landing while a signed-out session is still resolving', () => {
     vi.mocked(useCurrentAccount).mockReturnValue({
       data: null,
       isPending: true,
@@ -157,7 +153,31 @@ describe('HomePage (signed-out)', () => {
 
     expect(screen.getByTestId('auth-panel')).toBeInTheDocument()
     expect(screen.getByTestId('landing-bill')).toBeInTheDocument()
+    expect(screen.queryByTestId('recent-group-list')).not.toBeInTheDocument()
     expect(screen.queryByTestId('offline-empty-state')).not.toBeInTheDocument()
+  })
+
+  it('shows the dashboard from a cached account while get-session is pending', () => {
+    vi.mocked(useCurrentAccount).mockReturnValue({
+      data: {
+        id: 'user-1',
+        name: 'Alice',
+        email: 'alice@example.com',
+        image: null,
+        emailVerified: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      isPending: true,
+      isRefetching: false,
+      error: null,
+      refetch: vi.fn(),
+    })
+
+    render(<HomePage />)
+
+    expect(screen.getByTestId('recent-group-list')).toBeInTheDocument()
+    expect(screen.queryByTestId('auth-panel')).not.toBeInTheDocument()
   })
 
   it('shows the landing when get-session fails and navigator.onLine is still true', () => {

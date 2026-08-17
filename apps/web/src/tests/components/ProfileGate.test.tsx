@@ -42,35 +42,9 @@ describe('ProfileGate', () => {
   afterEach(() => {
     vi.clearAllMocks()
     mockCurrentPath = '/'
-    sessionStorage.clear()
-    Object.defineProperty(navigator, 'onLine', {
-      configurable: true,
-      value: true,
-    })
   })
 
-  it('shows loading spinner while account is pending', () => {
-    ;(useCurrentAccount as Mock).mockReturnValue({
-      data: null,
-      isPending: true,
-    })
-
-    const { container } = render(
-      <ProfileGate>
-        <div data-testid="child">content</div>
-      </ProfileGate>,
-    )
-
-    const spinner = container.querySelector('.animate-spin')
-    expect(spinner).toBeInTheDocument()
-    expect(screen.queryByTestId('child')).not.toBeInTheDocument()
-  })
-
-  it('lets signed-out offline visitors through while the session is still resolving', () => {
-    Object.defineProperty(navigator, 'onLine', {
-      configurable: true,
-      value: false,
-    })
+  it('lets signed-out visitors through while the session is still resolving', () => {
     ;(useCurrentAccount as Mock).mockReturnValue({
       data: null,
       isPending: true,
@@ -86,35 +60,31 @@ describe('ProfileGate', () => {
     expect(container.querySelector('.animate-spin')).not.toBeInTheDocument()
   })
 
-  it('keeps the spinner when a previous session might restore offline', () => {
-    Object.defineProperty(navigator, 'onLine', {
-      configurable: true,
-      value: false,
-    })
-    sessionStorage.setItem(
-      'spliit:last-account',
-      JSON.stringify({
-        id: 'account-1',
-        name: 'Ada',
-        email: 'ada@example.com',
+  it('gates a cached account while get-session is still pending', () => {
+    mockCurrentPath = '/'
+    ;(useCurrentAccount as Mock).mockReturnValue({
+      data: {
+        id: 'user-1',
+        name: '',
+        email: 'alice@example.com',
         image: null,
         emailVerified: true,
-        createdAt: '2026-01-01T00:00:00.000Z',
-        updatedAt: '2026-01-01T00:00:00.000Z',
-      }),
-    )
-    ;(useCurrentAccount as Mock).mockReturnValue({
-      data: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
       isPending: true,
     })
 
-    const { container } = render(
+    render(
       <ProfileGate>
         <div data-testid="child">content</div>
       </ProfileGate>,
     )
 
-    expect(container.querySelector('.animate-spin')).toBeInTheDocument()
+    expect(screen.getByTestId('navigate')).toHaveAttribute(
+      'data-to',
+      '/auth/complete-profile',
+    )
     expect(screen.queryByTestId('child')).not.toBeInTheDocument()
   })
 
