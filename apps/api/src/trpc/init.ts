@@ -50,7 +50,19 @@ export async function createTRPCContext(opts: {
 // since it's not very descriptive.
 // For instance, the use of a t variable
 // is common in i18n libraries.
-const t = initTRPC.context<AuthContext>().create({
+/**
+ * Per-procedure metadata.
+ *
+ * `scope` records the OAuth scope a programmatic caller must hold. It is set by
+ * `apiProcedure` and `scopedGroupReadProcedure` rather than maintained
+ * separately, so the OpenAPI generator can read the real requirement off the
+ * router instead of tracking a table that would drift.
+ */
+export type ProcedureMeta = {
+  scope?: SpliitScope
+}
+
+const t = initTRPC.context<AuthContext>().meta<ProcedureMeta>().create({
   /** @see https://trpc.io/docs/server/data-transformers */
   transformer: superjson,
 })
@@ -261,23 +273,25 @@ function enforceScopedAccess(
  * resolves to its own account with no resolver change.
  */
 export function scopedGroupReadProcedure(requiredScope: SpliitScope) {
-  return baseProcedure.use(async ({ ctx, next, path }) => {
-    if (
-      ctx.auth &&
-      'credentialKind' in ctx.auth &&
-      ctx.auth.credentialKind === 'oauth'
-    ) {
-      enforceScopedAccess(ctx.auth, requiredScope, path, ctx.resHeaders)
+  return baseProcedure
+    .meta({ scope: requiredScope })
+    .use(async ({ ctx, next, path }) => {
+      if (
+        ctx.auth &&
+        'credentialKind' in ctx.auth &&
+        ctx.auth.credentialKind === 'oauth'
+      ) {
+        enforceScopedAccess(ctx.auth, requiredScope, path, ctx.resHeaders)
+        return next()
+      }
+      if (ctx.auth && isAnonymousSetupIncomplete(ctx.auth.user)) {
+        throw new TRPCError({
+          code: 'PRECONDITION_FAILED',
+          message: 'ANONYMOUS_SETUP_REQUIRED',
+        })
+      }
       return next()
-    }
-    if (ctx.auth && isAnonymousSetupIncomplete(ctx.auth.user)) {
-      throw new TRPCError({
-        code: 'PRECONDITION_FAILED',
-        message: 'ANONYMOUS_SETUP_REQUIRED',
-      })
-    }
-    return next()
-  })
+    })
 }
 
 /**
@@ -290,47 +304,49 @@ export function scopedGroupReadProcedure(requiredScope: SpliitScope) {
  * never widens what a browser session could already do.
  */
 export function apiProcedure(requiredScope: SpliitScope) {
-  return baseProcedure.use(async ({ ctx, next, path, type }) => {
-    if (!ctx.auth) {
-      throw new TRPCError({
-        code: 'UNAUTHORIZED',
-        message: 'Authentication required',
-      })
-    }
-
-    const isOAuth =
-      'credentialKind' in ctx.auth && ctx.auth.credentialKind === 'oauth'
-
-    if (isOAuth) {
-      const auth = ctx.auth as OAuthResolvedAuth
-      enforceScopedAccess(auth, requiredScope, path, ctx.resHeaders)
-      return next({ ctx: { ...ctx, auth } })
-    }
-
-    if (isAnonymousSetupIncomplete(ctx.auth.user)) {
-      throw new TRPCError({
-        code: 'PRECONDITION_FAILED',
-        message: 'ANONYMOUS_SETUP_REQUIRED',
-      })
-    }
-    if (type === 'mutation') {
-      const decision = authenticatedMutationLimiter.hit(ctx.auth.user.id)
-      if (!decision.allowed) {
-        logRateLimitExceeded({
-          policy: 'authenticated-mutation',
-          identity: ctx.auth.user.id,
-          retryAfterSeconds: decision.retryAfterSeconds,
-          path,
-        })
-        ctx.resHeaders?.set('Retry-After', String(decision.retryAfterSeconds))
+  return baseProcedure
+    .meta({ scope: requiredScope })
+    .use(async ({ ctx, next, path, type }) => {
+      if (!ctx.auth) {
         throw new TRPCError({
-          code: 'TOO_MANY_REQUESTS',
-          message: 'Request limit exceeded; try again shortly',
+          code: 'UNAUTHORIZED',
+          message: 'Authentication required',
         })
       }
-    }
-    return next({ ctx: { ...ctx, auth: ctx.auth } })
-  })
+
+      const isOAuth =
+        'credentialKind' in ctx.auth && ctx.auth.credentialKind === 'oauth'
+
+      if (isOAuth) {
+        const auth = ctx.auth as OAuthResolvedAuth
+        enforceScopedAccess(auth, requiredScope, path, ctx.resHeaders)
+        return next({ ctx: { ...ctx, auth } })
+      }
+
+      if (isAnonymousSetupIncomplete(ctx.auth.user)) {
+        throw new TRPCError({
+          code: 'PRECONDITION_FAILED',
+          message: 'ANONYMOUS_SETUP_REQUIRED',
+        })
+      }
+      if (type === 'mutation') {
+        const decision = authenticatedMutationLimiter.hit(ctx.auth.user.id)
+        if (!decision.allowed) {
+          logRateLimitExceeded({
+            policy: 'authenticated-mutation',
+            identity: ctx.auth.user.id,
+            retryAfterSeconds: decision.retryAfterSeconds,
+            path,
+          })
+          ctx.resHeaders?.set('Retry-After', String(decision.retryAfterSeconds))
+          throw new TRPCError({
+            code: 'TOO_MANY_REQUESTS',
+            message: 'Request limit exceeded; try again shortly',
+          })
+        }
+      }
+      return next({ ctx: { ...ctx, auth: ctx.auth } })
+    })
 }
 
 export function assistantProcedure(requiredScope: string) {
