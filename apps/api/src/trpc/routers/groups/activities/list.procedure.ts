@@ -4,13 +4,15 @@ import { getActivities } from '../../../../lib/api'
 import { redactViewerDisplayName } from '../../../../lib/group-view'
 import {
   groupAccessFields,
-  groupReadProcedure,
+  scopedGroupReadProcedure,
   groupViewerArgs,
   loadGroupViewer,
 } from '../../../init'
 import { listActivitiesOutputSchema } from '../../../outputs/activities'
 
-export const listGroupActivitiesProcedure = groupReadProcedure
+export const listGroupActivitiesProcedure = scopedGroupReadProcedure(
+  'spliit:groups:read',
+)
   .input(
     z.object({
       groupId: z.string(),

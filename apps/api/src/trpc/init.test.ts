@@ -11,6 +11,7 @@ import {
   loadGroupMutationContext,
   loadGroupViewer,
   protectedProcedure,
+  scopedGroupReadProcedure,
 } from './init'
 
 function makeRequest(): Request {
@@ -315,6 +316,76 @@ describe('apiProcedure', () => {
     await expect(callProbe(oauthAuth([]))).rejects.toMatchObject({
       code: 'FORBIDDEN',
     })
+  })
+
+  it('still gates a session whose anonymous setup is incomplete', async () => {
+    await expect(
+      callProbe({
+        user: {
+          id: 'anonymous-1',
+          isAnonymous: true,
+          anonymousOnboardingCompleted: false,
+        },
+        session: { id: 'sess-anon' },
+      }),
+    ).rejects.toMatchObject({ code: 'PRECONDITION_FAILED' })
+  })
+})
+
+describe('scopedGroupReadProcedure', () => {
+  const probe = scopedGroupReadProcedure('spliit:expenses:read').query(
+    ({ ctx }) => ({ accountId: ctx.auth?.user.id ?? null }),
+  )
+
+  function callProbe(auth: Record<string, unknown> | null) {
+    return probe({
+      ctx: { auth },
+      type: 'query',
+      path: 'groupReadProbe',
+      getRawInput: async () => undefined,
+      meta: undefined,
+      signal: undefined,
+    } as never)
+  }
+
+  function oauthAuth(scopes: string[]) {
+    return {
+      credentialKind: 'oauth',
+      accessToken: 'redacted',
+      scopes,
+      user: { id: 'acct-oauth' },
+      session: { id: 'oauth-session' },
+    }
+  }
+
+  it('still allows an unauthenticated view-key caller through', async () => {
+    // `viewKey` and `linkInviteToken` holders carry no credential; the
+    // resolver authorises them via loadGroupViewer.
+    await expect(callProbe(null)).resolves.toEqual({ accountId: null })
+  })
+
+  it('still allows a signed-in session through', async () => {
+    await expect(
+      callProbe({ user: { id: 'acct-session' }, session: { id: 'sess-1' } }),
+    ).resolves.toEqual({ accountId: 'acct-session' })
+  })
+
+  it('accepts an OAuth token carrying the required scope', async () => {
+    await expect(
+      callProbe(oauthAuth(['spliit:expenses:read'])),
+    ).resolves.toEqual({ accountId: 'acct-oauth' })
+  })
+
+  it('rejects an OAuth token missing the required scope', async () => {
+    await expect(
+      callProbe(oauthAuth(['spliit:groups:read'])),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+  })
+
+  it('accepts a pre-split token where write implies read', async () => {
+    await expect(
+      callProbe(oauthAuth(['spliit:expenses:write'])),
+    ).resolves.toEqual({ accountId: 'acct-oauth' })
   })
 
   it('still gates a session whose anonymous setup is incomplete', async () => {

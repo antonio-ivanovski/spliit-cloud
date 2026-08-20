@@ -219,6 +219,68 @@ const scopedRequestLimiter = new FixedWindowLimiter({
 })
 
 /**
+ * Enforce the scope and the programmatic rate limit for an OAuth caller. Shared
+ * by `apiProcedure` and `scopedGroupReadProcedure` so the two cannot drift
+ * apart on what a token is allowed to do.
+ */
+function enforceScopedAccess(
+  auth: OAuthResolvedAuth,
+  requiredScope: SpliitScope,
+  path: string | undefined,
+  resHeaders: Headers | undefined,
+): void {
+  if (!hasScope(auth.scopes, requiredScope)) {
+    throw new TRPCError({
+      code: 'FORBIDDEN',
+      message: `Missing required scope: ${requiredScope}`,
+    })
+  }
+  const decision = scopedRequestLimiter.hit(auth.user.id)
+  if (decision.allowed) return
+  logRateLimitExceeded({
+    policy: 'oauth-scoped',
+    identity: auth.user.id,
+    retryAfterSeconds: decision.retryAfterSeconds,
+    path,
+  })
+  resHeaders?.set('Retry-After', String(decision.retryAfterSeconds))
+  throw new TRPCError({
+    code: 'TOO_MANY_REQUESTS',
+    message: 'Request limit exceeded; try again shortly',
+  })
+}
+
+/**
+ * Group read procedure that also accepts an OAuth token carrying
+ * `requiredScope`.
+ *
+ * Every non-OAuth path is untouched: sessions, `viewKey` holders and
+ * `linkInviteToken` invitees reach the resolver exactly as they do through
+ * `groupReadProcedure`, anonymous access included. Resolvers derive identity
+ * through `groupViewerArgs`, which reads `ctx.auth.user.id`, so a token caller
+ * resolves to its own account with no resolver change.
+ */
+export function scopedGroupReadProcedure(requiredScope: SpliitScope) {
+  return baseProcedure.use(async ({ ctx, next, path }) => {
+    if (
+      ctx.auth &&
+      'credentialKind' in ctx.auth &&
+      ctx.auth.credentialKind === 'oauth'
+    ) {
+      enforceScopedAccess(ctx.auth, requiredScope, path, ctx.resHeaders)
+      return next()
+    }
+    if (ctx.auth && isAnonymousSetupIncomplete(ctx.auth.user)) {
+      throw new TRPCError({
+        code: 'PRECONDITION_FAILED',
+        message: 'ANONYMOUS_SETUP_REQUIRED',
+      })
+    }
+    return next()
+  })
+}
+
+/**
  * Procedure reachable by a signed-in session **or** an OAuth access token
  * carrying `requiredScope`.
  *
@@ -241,26 +303,7 @@ export function apiProcedure(requiredScope: SpliitScope) {
 
     if (isOAuth) {
       const auth = ctx.auth as OAuthResolvedAuth
-      if (!hasScope(auth.scopes, requiredScope)) {
-        throw new TRPCError({
-          code: 'FORBIDDEN',
-          message: `Missing required scope: ${requiredScope}`,
-        })
-      }
-      const decision = scopedRequestLimiter.hit(auth.user.id)
-      if (!decision.allowed) {
-        logRateLimitExceeded({
-          policy: 'oauth-scoped',
-          identity: auth.user.id,
-          retryAfterSeconds: decision.retryAfterSeconds,
-          path,
-        })
-        ctx.resHeaders?.set('Retry-After', String(decision.retryAfterSeconds))
-        throw new TRPCError({
-          code: 'TOO_MANY_REQUESTS',
-          message: 'Request limit exceeded; try again shortly',
-        })
-      }
+      enforceScopedAccess(auth, requiredScope, path, ctx.resHeaders)
       return next({ ctx: { ...ctx, auth } })
     }
 

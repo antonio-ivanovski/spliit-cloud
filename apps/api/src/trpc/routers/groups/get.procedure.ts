@@ -18,7 +18,7 @@ import {
 } from '../../../lib/invitations/link-invitations'
 import {
   groupAccessFields,
-  groupReadProcedure,
+  scopedGroupReadProcedure,
   groupViewerArgs,
   loadGroupMutationContext,
   loadGroupViewer,
@@ -32,7 +32,7 @@ export type LinkInviteState =
   | 'DECLINED'
   | 'EXPIRED'
 
-export const getGroupProcedure = groupReadProcedure
+export const getGroupProcedure = scopedGroupReadProcedure('spliit:groups:read')
   .input(
     z.object({
       groupId: z.string().min(1),
