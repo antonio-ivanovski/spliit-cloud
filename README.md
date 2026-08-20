@@ -315,8 +315,9 @@ Supported providers are `openai` (Responses API), `anthropic` (Messages API), `o
 Scripts and agents authenticate with OAuth 2.1 rather than a browser session.
 Scopes are granted per resource and verb, and the two delete scopes are never
 part of the default grant, so an agent cannot remove a group or an expense
-unless you asked for it. Connected apps can be reviewed and disconnected from
-account settings.
+unless you asked for it. Edits that destroy data, such as shortening a recurring
+series, need the delete scope too. Connected apps can be reviewed and
+disconnected from account settings.
 
 See [docs/api-access.md](./docs/api-access.md) for registering a client,
 obtaining a token, and the full scope list. The interactive reference lives at

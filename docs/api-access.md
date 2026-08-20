@@ -16,19 +16,32 @@ Access is granted per resource and per verb.
 | Scope                    | Covers                                         |
 | ------------------------ | ---------------------------------------------- |
 | `spliit:groups:read`     | groups, balances, statistics, activity         |
-| `spliit:groups:write`    | create and edit groups, add participants       |
+| `spliit:groups:manage`   | create and edit groups, add participants       |
 | `spliit:groups:delete`   | delete or archive a group, remove participants |
 | `spliit:expenses:read`   | expenses and recurring series                  |
-| `spliit:expenses:write`  | create and edit expenses, stop a recurrence    |
-| `spliit:expenses:delete` | delete an expense                              |
+| `spliit:expenses:manage` | create and edit expenses, stop a recurrence    |
+| `spliit:expenses:delete` | delete an expense, and edits that drop data    |
 
 A client that registers without naming scopes receives the four read and write
 scopes. **The two delete scopes are never granted by default** and must be
 requested explicitly, so an agent cannot destroy anything unless you decided it
 should be able to.
 
-Write implies read: a token holding `spliit:expenses:write` can read expenses
-without also holding `spliit:expenses:read`.
+Managing or deleting implies reading the same resource, so a token holding
+`spliit:expenses:manage` can read expenses without also holding
+`spliit:expenses:read`. Nothing implies a write, and nothing crosses between
+groups and expenses.
+
+`spliit:expenses:delete` covers more than the delete procedure. Shortening a
+recurring series with a `THIS_AND_FUTURE` edit drops the occurrences that no
+longer fit and their stored documents, so that edit needs the delete scope even
+though it goes through `groups.expenses.update`.
+
+There is one older scope, `spliit:expenses:write`. It predates direct access and
+belongs to the assistant, where creating an expense means calling
+`assistant.prepareExpense` for a preview and then `assistant.createExpense` with
+the token that preview returns. It grants no direct access at all, and is never
+part of a default grant.
 
 Scopes bound what a token may attempt, not who the caller is. Group role rules
 still apply on top: a token acting for a non-admin member can only delete
@@ -62,7 +75,7 @@ registered again and reauthorized.
   -d '{
     "client_name": "My agent",
     ...
-    "scope": "openid offline_access spliit:expenses:read spliit:expenses:write spliit:expenses:delete"
+    "scope": "openid offline_access spliit:expenses:read spliit:expenses:manage spliit:expenses:delete"
   }'
 ```
 
