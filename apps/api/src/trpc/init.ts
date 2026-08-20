@@ -228,7 +228,12 @@ export const enforceAiRequestLimit = aiRequests.enforce
 export const enforceCategoryAiRequestLimit = categoryAiRequests.enforce
 export const enforceBulkAiRequestLimit = bulkAiRequests.enforce
 
-const scopedRequestLimiter = new FixedWindowLimiter({
+/**
+ * Reads made with a token. Mutations deliberately do not use this bucket: they
+ * share `authenticatedMutationLimiter` with the account's own sessions, so a
+ * token can never out-mutate the account it acts for.
+ */
+const scopedReadLimiter = new FixedWindowLimiter({
   limit: 300,
   windowMs: 60_000,
 })
@@ -243,6 +248,7 @@ function enforceScopedAccess(
   requiredScope: SpliitScope,
   path: string | undefined,
   resHeaders: Headers | undefined,
+  type: 'query' | 'mutation' | 'subscription' = 'query',
 ): void {
   if (!hasScope(auth.scopes, requiredScope)) {
     throw new TRPCError({
@@ -250,10 +256,14 @@ function enforceScopedAccess(
       message: `Missing required scope: ${requiredScope}`,
     })
   }
-  const decision = scopedRequestLimiter.hit(auth.user.id)
+  // Mutations count against the same bucket as the account's browser
+  // sessions, so a leaked token cannot write faster than its own account.
+  const mutating = type === 'mutation'
+  const limiter = mutating ? authenticatedMutationLimiter : scopedReadLimiter
+  const decision = limiter.hit(auth.user.id)
   if (decision.allowed) return
   logRateLimitExceeded({
-    policy: 'oauth-scoped',
+    policy: mutating ? 'authenticated-mutation' : 'oauth-read',
     identity: auth.user.id,
     retryAfterSeconds: decision.retryAfterSeconds,
     path,
@@ -322,7 +332,7 @@ export function apiProcedure(requiredScope: SpliitScope) {
 
       if (isOAuth) {
         const auth = ctx.auth as OAuthResolvedAuth
-        enforceScopedAccess(auth, requiredScope, path, ctx.resHeaders)
+        enforceScopedAccess(auth, requiredScope, path, ctx.resHeaders, type)
         return next({ ctx: { ...ctx, auth } })
       }
 

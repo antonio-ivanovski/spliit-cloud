@@ -47,6 +47,24 @@ Scopes bound what a token may attempt, not who the caller is. Group role rules
 still apply on top: a token acting for a non-admin member can only delete
 expenses that member created.
 
+## What a token cannot reach
+
+Scopes cover groups and expenses: listing and reading groups, balances,
+statistics and activity, plus reading, creating, editing and deleting expenses
+and recurring series.
+
+Everything else stays session-only for now and answers `401 Session required`
+to a token, whatever scopes it holds:
+
+- budgets, subgroups, saved views
+- expense comments, category memory, common currencies
+- imports and exports
+- invitations, member roles, leaving a group
+- account preferences and profile
+
+This is a deliberate starting surface rather than an oversight. Say so if your
+integration needs one of them, so the list can grow with a reason attached.
+
 ## Registering a client
 
 Dynamic client registration is open, so a client can enrol itself:

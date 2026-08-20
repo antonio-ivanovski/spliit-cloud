@@ -342,6 +342,44 @@ describe('apiProcedure', () => {
   })
 })
 
+describe('token rate limits', () => {
+  const mutate = apiProcedure('spliit:expenses:manage').mutation(({ ctx }) => ({
+    accountId: ctx.auth.user.id,
+  }))
+
+  function callMutation(accountId: string) {
+    return mutate({
+      ctx: {
+        auth: {
+          credentialKind: 'oauth',
+          accessToken: 'redacted',
+          scopes: ['spliit:expenses:manage'],
+          user: { id: accountId },
+          session: { id: 'oauth-session' },
+        },
+      },
+      type: 'mutation',
+      path: 'rateProbe',
+      getRawInput: async () => undefined,
+      meta: undefined,
+      signal: undefined,
+    } as never)
+  }
+
+  it('caps token mutations at the same rate as the account own sessions', async () => {
+    // 120/min is the session cap. A token must not get a looser bucket, or a
+    // leaked one could out-mutate the account it acts for.
+    const accountId = `acct-rate-${Math.random()}`
+    for (let i = 0; i < 120; i++) {
+      await expect(callMutation(accountId)).resolves.toEqual({ accountId })
+    }
+
+    await expect(callMutation(accountId)).rejects.toMatchObject({
+      code: 'TOO_MANY_REQUESTS',
+    })
+  })
+})
+
 describe('scopedGroupReadProcedure', () => {
   const probe = scopedGroupReadProcedure('spliit:expenses:read').query(
     ({ ctx }) => ({ accountId: ctx.auth?.user.id ?? null }),
