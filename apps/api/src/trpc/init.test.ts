@@ -5,6 +5,7 @@ import { clearAccountCache } from '../lib/auth/account-cache'
 import { generateGroupViewKey } from '../lib/group-view'
 import { authState, prismaMock } from '../test/state'
 import {
+  apiProcedure,
   assistantProcedure,
   createTRPCContext,
   loadGroupMutationContext,
@@ -251,6 +252,82 @@ describe('assistantProcedure', () => {
         session: { id: 'oauth-session' },
       }),
     ).resolves.toEqual({ accountId: 'verified-spliit-account' })
+  })
+})
+
+describe('apiProcedure', () => {
+  const probe = apiProcedure('spliit:expenses:read').query(({ ctx }) => ({
+    accountId: ctx.auth.user.id,
+  }))
+
+  function callProbe(auth: Record<string, unknown> | null) {
+    return probe({
+      ctx: { auth },
+      type: 'query',
+      path: 'apiProbe',
+      getRawInput: async () => undefined,
+      meta: undefined,
+      signal: undefined,
+    } as never)
+  }
+
+  function oauthAuth(scopes: string[]) {
+    return {
+      credentialKind: 'oauth',
+      accessToken: 'redacted',
+      scopes,
+      user: { id: 'acct-oauth' },
+      session: { id: 'oauth-session' },
+    }
+  }
+
+  it('rejects an unauthenticated caller', async () => {
+    await expect(callProbe(null)).rejects.toMatchObject({
+      code: 'UNAUTHORIZED',
+    })
+  })
+
+  it('accepts a signed-in session without any scope', async () => {
+    await expect(
+      callProbe({ user: { id: 'acct-session' }, session: { id: 'sess-1' } }),
+    ).resolves.toEqual({ accountId: 'acct-session' })
+  })
+
+  it('accepts an OAuth token carrying the required scope', async () => {
+    await expect(
+      callProbe(oauthAuth(['spliit:expenses:read'])),
+    ).resolves.toEqual({ accountId: 'acct-oauth' })
+  })
+
+  it('rejects an OAuth token missing the required scope', async () => {
+    await expect(
+      callProbe(oauthAuth(['spliit:groups:read'])),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+  })
+
+  it('accepts a pre-split token where write implies read', async () => {
+    await expect(
+      callProbe(oauthAuth(['spliit:groups:read', 'spliit:expenses:write'])),
+    ).resolves.toEqual({ accountId: 'acct-oauth' })
+  })
+
+  it('rejects an OAuth token with no scopes at all', async () => {
+    await expect(callProbe(oauthAuth([]))).rejects.toMatchObject({
+      code: 'FORBIDDEN',
+    })
+  })
+
+  it('still gates a session whose anonymous setup is incomplete', async () => {
+    await expect(
+      callProbe({
+        user: {
+          id: 'anonymous-1',
+          isAnonymous: true,
+          anonymousOnboardingCompleted: false,
+        },
+        session: { id: 'sess-anon' },
+      }),
+    ).rejects.toMatchObject({ code: 'PRECONDITION_FAILED' })
   })
 })
 

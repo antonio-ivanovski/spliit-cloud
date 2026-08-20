@@ -172,32 +172,24 @@ app.on(['GET', 'POST'], '/auth/*', (c) =>
   auth.handler(requestWithTrustedProxyHeaders(c.req.raw)),
 )
 app.get('/.well-known/oauth-authorization-server', (c) =>
-  env.ENABLE_MCP
-    ? oauthProviderAuthServerMetadata(auth, {
-        headers: { 'Access-Control-Allow-Origin': '*' },
-      })(c.req.raw)
-    : c.notFound(),
+  oauthProviderAuthServerMetadata(auth, {
+    headers: { 'Access-Control-Allow-Origin': '*' },
+  })(c.req.raw),
 )
 app.get('/.well-known/oauth-authorization-server/auth', (c) =>
-  env.ENABLE_MCP
-    ? oauthProviderAuthServerMetadata(auth, {
-        headers: { 'Access-Control-Allow-Origin': '*' },
-      })(c.req.raw)
-    : c.notFound(),
+  oauthProviderAuthServerMetadata(auth, {
+    headers: { 'Access-Control-Allow-Origin': '*' },
+  })(c.req.raw),
 )
 app.get('/.well-known/openid-configuration', (c) =>
-  env.ENABLE_MCP
-    ? oauthProviderOpenIdConfigMetadata(auth, {
-        headers: { 'Access-Control-Allow-Origin': '*' },
-      })(c.req.raw)
-    : c.notFound(),
+  oauthProviderOpenIdConfigMetadata(auth, {
+    headers: { 'Access-Control-Allow-Origin': '*' },
+  })(c.req.raw),
 )
 app.get('/.well-known/openid-configuration/auth', (c) =>
-  env.ENABLE_MCP
-    ? oauthProviderOpenIdConfigMetadata(auth, {
-        headers: { 'Access-Control-Allow-Origin': '*' },
-      })(c.req.raw)
-    : c.notFound(),
+  oauthProviderOpenIdConfigMetadata(auth, {
+    headers: { 'Access-Control-Allow-Origin': '*' },
+  })(c.req.raw),
 )
 
 app.get('/groups/:groupId/export/bundle', exportRateLimit, (c) =>

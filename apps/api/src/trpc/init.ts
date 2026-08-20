@@ -10,6 +10,7 @@ import {
 } from '@spliit/db'
 
 import { isAnonymousSetupIncomplete } from '../lib/auth/account-cache'
+import { hasScope, type SpliitScope } from '../lib/auth/scopes'
 import type { OAuthResolvedAuth, ResolvedAuth } from '../lib/auth/session'
 import {
   getAuthFromRequest,
@@ -211,6 +212,83 @@ export const importProcedure = importRequests.procedure
 export const enforceAiRequestLimit = aiRequests.enforce
 export const enforceCategoryAiRequestLimit = categoryAiRequests.enforce
 export const enforceBulkAiRequestLimit = bulkAiRequests.enforce
+
+const scopedRequestLimiter = new FixedWindowLimiter({
+  limit: 300,
+  windowMs: 60_000,
+})
+
+/**
+ * Procedure reachable by a signed-in session **or** an OAuth access token
+ * carrying `requiredScope`.
+ *
+ * Session callers are unaffected: they reach the resolver exactly as they do
+ * through `protectedProcedure`, with the same anonymous-setup gate. Token
+ * callers must carry the scope, so widening a procedure to programmatic clients
+ * never widens what a browser session could already do.
+ */
+export function apiProcedure(requiredScope: SpliitScope) {
+  return baseProcedure.use(async ({ ctx, next, path, type }) => {
+    if (!ctx.auth) {
+      throw new TRPCError({
+        code: 'UNAUTHORIZED',
+        message: 'Authentication required',
+      })
+    }
+
+    const isOAuth =
+      'credentialKind' in ctx.auth && ctx.auth.credentialKind === 'oauth'
+
+    if (isOAuth) {
+      const auth = ctx.auth as OAuthResolvedAuth
+      if (!hasScope(auth.scopes, requiredScope)) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: `Missing required scope: ${requiredScope}`,
+        })
+      }
+      const decision = scopedRequestLimiter.hit(auth.user.id)
+      if (!decision.allowed) {
+        logRateLimitExceeded({
+          policy: 'oauth-scoped',
+          identity: auth.user.id,
+          retryAfterSeconds: decision.retryAfterSeconds,
+          path,
+        })
+        ctx.resHeaders?.set('Retry-After', String(decision.retryAfterSeconds))
+        throw new TRPCError({
+          code: 'TOO_MANY_REQUESTS',
+          message: 'Request limit exceeded; try again shortly',
+        })
+      }
+      return next({ ctx: { ...ctx, auth } })
+    }
+
+    if (isAnonymousSetupIncomplete(ctx.auth.user)) {
+      throw new TRPCError({
+        code: 'PRECONDITION_FAILED',
+        message: 'ANONYMOUS_SETUP_REQUIRED',
+      })
+    }
+    if (type === 'mutation') {
+      const decision = authenticatedMutationLimiter.hit(ctx.auth.user.id)
+      if (!decision.allowed) {
+        logRateLimitExceeded({
+          policy: 'authenticated-mutation',
+          identity: ctx.auth.user.id,
+          retryAfterSeconds: decision.retryAfterSeconds,
+          path,
+        })
+        ctx.resHeaders?.set('Retry-After', String(decision.retryAfterSeconds))
+        throw new TRPCError({
+          code: 'TOO_MANY_REQUESTS',
+          message: 'Request limit exceeded; try again shortly',
+        })
+      }
+    }
+    return next({ ctx: { ...ctx, auth: ctx.auth } })
+  })
+}
 
 export function assistantProcedure(requiredScope: string) {
   return baseProcedure.use(async ({ ctx, next }) => {
