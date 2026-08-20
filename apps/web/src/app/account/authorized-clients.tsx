@@ -2,7 +2,6 @@ import { KeyRound, Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   ResponsiveDialog,
@@ -18,7 +17,12 @@ import { useToast } from '@/components/ui/use-toast'
 import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
 
-import { SettingsSection } from './settings-ui'
+import {
+  SettingsBadge,
+  SettingsList,
+  SettingsRow,
+  SettingsSection,
+} from './settings-ui'
 
 type AuthorizedClient =
   AppRouterOutput['account']['authorizedClients']['clients'][number]
@@ -71,58 +75,54 @@ export function AuthorizedClients() {
         description={t('AccountAuthorizedClients.description')}
         icon={KeyRound}
       >
-        {authorized.isPending ? (
-          <p className="text-sm text-muted-foreground">
-            {t('AccountAuthorizedClients.loading')}
-          </p>
-        ) : clients.length === 0 ? (
-          <p className="text-sm text-muted-foreground">
-            {t('AccountAuthorizedClients.empty')}
+        {authorized.isPending || clients.length === 0 ? (
+          <p className="px-4 pb-4 text-sm text-muted-foreground sm:px-6 sm:pb-5">
+            {authorized.isPending
+              ? t('AccountAuthorizedClients.loading')
+              : t('AccountAuthorizedClients.empty')}
           </p>
         ) : (
-          <ul className="flex flex-col gap-4">
-            {clients.map((client) => {
-              const scopes = meaningfulScopes(client.scopes)
-              return (
-                <li
-                  key={client.consentId}
-                  className="flex flex-wrap items-start justify-between gap-3 border-b pb-4 last:border-b-0 last:pb-0"
-                >
-                  <div className="flex flex-col gap-2">
-                    <span className="font-medium">
-                      {client.name ??
-                        t('AccountAuthorizedClients.unnamedClient')}
-                    </span>
-                    {scopes.length > 0 && (
-                      <div className="flex flex-wrap gap-1">
-                        {scopes.map((scope) => (
-                          <Badge key={scope} variant="secondary">
-                            {scopeLabel(scope)}
-                          </Badge>
-                        ))}
-                      </div>
-                    )}
-                    {client.authorizedAt && (
-                      <span className="text-xs text-muted-foreground">
+          <SettingsList className="border-t border-border/70">
+            {clients.map((client) => (
+              <SettingsRow
+                key={client.consentId}
+                id={`authorized-client-${client.consentId}`}
+                label={
+                  client.name ?? t('AccountAuthorizedClients.unnamedClient')
+                }
+                description={
+                  <div className="flex flex-col gap-1.5">
+                    <div className="flex flex-wrap gap-1.5">
+                      {meaningfulScopes(client.scopes).map((scope) => (
+                        <SettingsBadge key={scope}>
+                          {scopeLabel(scope)}
+                        </SettingsBadge>
+                      ))}
+                    </div>
+                    {client.authorizedAt ? (
+                      <span>
                         {t('AccountAuthorizedClients.authorizedOn', {
                           date: dateFormat.format(
                             new Date(client.authorizedAt),
                           ),
                         })}
                       </span>
-                    )}
+                    ) : null}
                   </div>
+                }
+                control={
                   <Button
                     variant="outline"
                     size="sm"
+                    className="w-full sm:w-auto"
                     onClick={() => setPendingRevoke(client)}
                   >
                     {t('AccountAuthorizedClients.revoke')}
                   </Button>
-                </li>
-              )
-            })}
-          </ul>
+                }
+              />
+            ))}
+          </SettingsList>
         )}
       </SettingsSection>
 
