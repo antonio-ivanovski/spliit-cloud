@@ -1,14 +1,18 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import type * as OAuthApi from '@/app/oauth/oauth-api'
 import { OAuthConsentPage } from '@/app/oauth/oauth-consent-page'
 import { render, screen } from '@/test/test-utils'
+
+type OAuthApiModule = typeof OAuthApi
+
+const SIGNED_QUERY =
+  'client_id=chatgpt&scope=openid+profile+email+spliit%3Agroups%3Aread+spliit%3Aexpenses%3Amanage'
 
 const { clientMock, searchState, submitConsentMock } = vi.hoisted(() => ({
   clientMock: vi.fn(),
   searchState: {
-    oauth_query: 'client_id=chatgpt&scope=openid',
-    client_id: 'chatgpt',
-    scope: 'openid profile email spliit:groups:read spliit:expenses:write',
+    oauth_query: '' as string,
   },
   submitConsentMock: vi.fn(),
 }))
@@ -35,15 +39,19 @@ vi.mock('@/lib/auth', () => ({
   },
 }))
 
-vi.mock('@/app/oauth/oauth-api', () => ({
+// Only the network calls are stubbed. `readOAuthRequest` and
+// `resolveOAuthQuery` are pure parsing, and the point of these tests is that
+// the page reads its client and scopes from the signed request.
+vi.mock('@/app/oauth/oauth-api', async (importOriginal) => ({
+  ...(await importOriginal<OAuthApiModule>()),
   getOAuthPublicClient: clientMock,
-  resolveOAuthQuery: (query?: string) => query,
   submitConsent: submitConsentMock,
 }))
 
 describe('OAuthConsentPage', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    searchState.oauth_query = SIGNED_QUERY
     clientMock.mockResolvedValue({
       client_id: 'chatgpt',
       client_name: 'ChatGPT',
@@ -58,12 +66,43 @@ describe('OAuthConsentPage', () => {
     expect(screen.getByText('Antonio Example')).toBeVisible()
     expect(screen.getByText('antonio@example.com')).toBeVisible()
     expect(screen.getByText('What will be shared')).toBeVisible()
-    expect(screen.getByText('Group and spending context')).toBeVisible()
-    expect(screen.getByText('Confirmed expense creation')).toBeVisible()
     expect(screen.getByText('A quick privacy note')).toBeVisible()
     expect(
       screen.getByRole('button', { name: 'Allow and connect' }),
     ).toBeEnabled()
+  })
+
+  it('renders one permission per requested scope', async () => {
+    render(<OAuthConsentPage />)
+
+    expect(await screen.findByText('Group and spending context')).toBeVisible()
+    expect(screen.getByText('Create and edit expenses')).toBeVisible()
+    // Not requested, so not shown.
+    expect(screen.queryByText('Delete expenses')).toBeNull()
+    expect(screen.queryByText('Create and edit groups')).toBeNull()
+  })
+
+  it('reads the client and scopes from the signed request, not search params', async () => {
+    // A wrapped link could otherwise name one client while authorizing the
+    // scopes of another.
+    searchState.oauth_query =
+      'client_id=other-app&scope=openid+spliit%3Aexpenses%3Adelete'
+
+    render(<OAuthConsentPage />)
+
+    expect(await screen.findByText('Delete expenses')).toBeVisible()
+    expect(clientMock).toHaveBeenCalledWith('other-app')
+  })
+
+  it('refuses to approve a scope it cannot name', async () => {
+    searchState.oauth_query = 'client_id=chatgpt&scope=openid+spliit%3Aevil'
+
+    render(<OAuthConsentPage />)
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('spliit:evil')
+    expect(
+      screen.getByRole('button', { name: 'Allow and connect' }),
+    ).toBeDisabled()
   })
 
   it('submits the exact signed OAuth request when allowed', async () => {
@@ -76,8 +115,7 @@ describe('OAuthConsentPage', () => {
 
     expect(submitConsentMock).toHaveBeenCalledWith({
       accept: true,
-      oauthQuery: searchState.oauth_query,
-      scope: searchState.scope,
+      oauthQuery: SIGNED_QUERY,
     })
   })
 
