@@ -58,11 +58,19 @@ Add a `scope` field to request delete scopes. The response returns the
 The authorization code flow with PKCE, which needs a browser once:
 
 1. Send the account holder to `/auth/oauth2/authorize` with `response_type=code`,
-   your `client_id`, `redirect_uri`, `scope`, `state`, `code_challenge` and
-   `code_challenge_method=S256`.
+   your `client_id`, `redirect_uri`, `scope`, `state`, `code_challenge`,
+   `code_challenge_method=S256` and `resource=https://api.spliit.cloud`.
 2. They sign in and approve the scopes.
-3. Exchange the returned `code` at `/auth/oauth2/token` with `grant_type=authorization_code`
-   and your `code_verifier`.
+3. Exchange the returned `code` at `/auth/oauth2/token` with `grant_type=authorization_code`,
+   your `code_verifier` and the same `resource`.
+
+`resource` names the server the token is minted for, and it is not optional
+here. Omit it and the authorization server issues an opaque token instead of a
+JWT, which the API rejects with a plain `401`. Pass it on the refresh call too.
+
+Tokens issued for the MCP resource (`${MCP_PUBLIC_URL}/mcp`) are also accepted
+while that variable is configured, so clients set up before the API became its
+own resource server keep working without reauthorizing.
 
 Call the API with `Authorization: Bearer <access_token>`.
 
