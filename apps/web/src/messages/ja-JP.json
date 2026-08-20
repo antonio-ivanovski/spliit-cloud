@@ -3077,7 +3077,7 @@
   },
   "AccountAuthorizedClients": {
     "title": "連携中のアプリ",
-    "description": "Spliit Cloud アカウントの利用を許可したアプリとエージェントです。",
+    "description": "Spliit Cloudアカウントの利用を許可したアプリとエージェントです。",
     "loading": "連携中のアプリを読み込んでいます…",
     "empty": "アカウントに連携されているアプリはありません。",
     "unnamedClient": "名称未設定のアプリ",

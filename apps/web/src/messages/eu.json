@@ -3112,7 +3112,7 @@
   },
   "AccountAuthorizedClients": {
     "title": "Konektatutako aplikazioak",
-    "description": "Zure Spliit Cloud kontua erabiltzeko baimena eman diezun aplikazio eta agenteak.",
+    "description": "Spliit Cloud-eko zure kontua erabiltzeko baimena eman diezun aplikazio eta agenteak.",
     "loading": "Konektatutako aplikazioak kargatzen…",
     "empty": "Ez dago aplikaziorik zure kontura konektatuta.",
     "unnamedClient": "Izenik gabeko aplikazioa",

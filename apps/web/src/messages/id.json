@@ -3078,9 +3078,9 @@
   },
   "AccountAuthorizedClients": {
     "title": "Aplikasi terhubung",
-    "description": "Aplikasi dan agen yang kamu izinkan menggunakan akun Spliit Cloud-mu.",
+    "description": "Aplikasi dan agen yang Anda izinkan menggunakan akun Spliit Cloud Anda.",
     "loading": "Memuat aplikasi terhubung…",
-    "empty": "Tidak ada aplikasi yang terhubung ke akunmu.",
+    "empty": "Tidak ada aplikasi yang terhubung ke akun Anda.",
     "unnamedClient": "Aplikasi tanpa nama",
     "authorizedOn": "Terhubung pada {date}",
     "revoke": "Putuskan",
@@ -3088,7 +3088,7 @@
     "revokeFailed": "Tidak dapat memutuskan aplikasi ini",
     "cancel": "Batal",
     "confirmTitle": "Putuskan {name}?",
-    "confirmDescription": "Aplikasi tidak akan bisa lagi membaca atau mengubah apa pun di akunmu, dan harus meminta izinmu lagi.",
+    "confirmDescription": "Aplikasi tidak akan bisa lagi membaca atau mengubah apa pun di akun Anda, dan harus meminta izin Anda lagi.",
     "confirmGracePeriod": "Permintaan yang sudah berjalan masih bisa berhasil hingga satu jam."
   }
 }
