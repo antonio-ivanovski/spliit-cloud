@@ -2672,7 +2672,7 @@
     },
     "consent": {
       "title": "Ligar o Spliit a {client}?",
-      "description": "Reveja abaixo a conta e o acesso. Continua no controlo de cada criação de despesa.",
+      "description": "Verifique a conta e os acessos pedidos abaixo.",
       "connectionDetails": "Detalhes da ligação",
       "spliitAccount": "Conta Spliit",
       "connectingTo": "A ligar a",
@@ -2688,11 +2688,22 @@
       "expensesTitle": "Criação de despesa confirmada",
       "expensesDescription": "O assistente só pode criar a despesa exata apresentada na pré-visualização depois de premir Criar despesa.",
       "privacyTitle": "Uma breve nota de privacidade",
-      "privacyDescription": "Os detalhes financeiros do grupo podem ser sensíveis. Ficam disponíveis para {client} enquanto estiver ligado, mas o assistente não pode editar nem eliminar despesas e não pode criar nenhuma sem a sua confirmação na pré-visualização.",
+      "privacyDescription": "Os detalhes financeiros de um grupo podem ser sensíveis. Ficam disponíveis para {client} enquanto a ligação se mantiver. Pode desligá-la a qualquer momento nas definições da conta.",
       "authorityNote": "O Spliit continua a ser a fonte de verdade. A validação, os saldos, o histórico de atividade e as notificações existentes continuam a aplicar-se.",
       "allow": "Permitir e ligar",
       "cancel": "Cancelar",
-      "missingRequest": "O pedido de autorização está em falta. Volte ao seu assistente."
+      "missingRequest": "O pedido de autorização está em falta. Volte ao seu assistente.",
+      "groupsManageTitle": "Criar e editar grupos",
+      "groupsManageDescription": "Criar grupos, mudar-lhes o nome, alterar as suas definições e adicionar participantes.",
+      "groupsDeleteTitle": "Eliminar grupos e remover pessoas",
+      "groupsDeleteDescription": "Eliminar ou arquivar um grupo definitivamente e remover participantes dele. Não é possível anular.",
+      "expensesReadTitle": "Ler despesas",
+      "expensesReadDescription": "Todas as despesas dos seus grupos, incluindo valores, datas, categorias, notas e a forma como cada uma é dividida.",
+      "expensesManageTitle": "Criar e editar despesas",
+      "expensesManageDescription": "Adicionar despesas e alterar as existentes diretamente, sem lhe mostrar primeiro uma pré-visualização.",
+      "expensesDeleteTitle": "Eliminar despesas",
+      "expensesDeleteDescription": "Eliminar despesas definitivamente e fazer alterações que apagam dados, como encurtar uma série recorrente. Não é possível anular.",
+      "unknownScopes": "Esta aplicação está a pedir uma permissão que o Spliit Cloud não reconhece ({scopes}), por isso não pode ser aprovada aqui. Peça ao autor para verificar as permissões pedidas."
     },
     "login": {
       "missingTitle": "Pedido de autorização em falta",
@@ -3123,6 +3134,14 @@
     "cancel": "Cancelar",
     "confirmTitle": "Desligar {name}?",
     "confirmDescription": "Deixará de poder ler ou alterar seja o que for na sua conta e terá de lhe pedir autorização novamente.",
-    "confirmGracePeriod": "Um pedido já em curso pode ainda ser concluído durante no máximo uma hora."
+    "confirmGracePeriod": "Um pedido já em curso pode ainda ser concluído durante no máximo uma hora.",
+    "loadFailed": "Não foi possível carregar as aplicações ligadas.",
+    "scopeGroupsRead": "Ler grupos",
+    "scopeGroupsManage": "Gerir grupos",
+    "scopeGroupsDelete": "Eliminar grupos",
+    "scopeExpensesRead": "Ler despesas",
+    "scopeExpensesManage": "Gerir despesas",
+    "scopeExpensesDelete": "Eliminar despesas",
+    "scopeExpensesWrite": "Adicionar despesas com pré-visualização"
   }
 }

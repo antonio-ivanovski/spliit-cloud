@@ -38,7 +38,7 @@ import { generateOpenAPIDocument } from '@trpc/openapi'
 import type { OpenAPIV3_1 } from 'openapi-types'
 
 import { auth } from '../src/lib/auth'
-import { SPLIIT_SCOPES } from '../src/lib/auth/scopes'
+import { ASSISTANT_WRITE_SCOPE, SPLIIT_SCOPES } from '../src/lib/auth/scopes'
 import { appRouter } from '../src/trpc/routers/_app'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -53,14 +53,16 @@ const SCOPE_DESCRIPTIONS: Record<string, string> = {
   email: 'Read the account email address.',
   offline_access: 'Obtain a refresh token so the client can keep working.',
   [SPLIIT_SCOPES.groupsRead]: 'Read groups, balances, statistics and activity.',
-  [SPLIIT_SCOPES.groupsWrite]: 'Create and edit groups, and add participants.',
+  [SPLIIT_SCOPES.groupsManage]: 'Create and edit groups, and add participants.',
   [SPLIIT_SCOPES.groupsDelete]:
     'Delete or archive a group, and remove participants. Never granted by default.',
   [SPLIIT_SCOPES.expensesRead]: 'Read expenses and recurring series.',
-  [SPLIIT_SCOPES.expensesWrite]:
-    'Create and edit expenses, and stop a recurrence.',
+  [SPLIIT_SCOPES.expensesManage]:
+    'Create and edit expenses directly, and stop a recurrence.',
   [SPLIIT_SCOPES.expensesDelete]:
-    'Delete an expense. Never granted by default.',
+    'Delete an expense, and make edits that drop data such as shortening a recurring series. Never granted by default.',
+  [ASSISTANT_WRITE_SCOPE]:
+    'Create an expense through the assistant preview and confirmation flow. Does not grant direct writes.',
 }
 
 // OAuth scope per procedure, read off the router rather than restated here:

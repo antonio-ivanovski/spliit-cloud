@@ -2638,7 +2638,7 @@
     },
     "consent": {
       "title": "Hubungkan Spliit ke {client}?",
-      "description": "Tinjau akun dan akses di bawah ini. Anda tetap mengendalikan setiap pembuatan pengeluaran.",
+      "description": "Tinjau akun dan akses yang diminta di bawah ini.",
       "connectionDetails": "Detail koneksi",
       "spliitAccount": "Akun Spliit",
       "connectingTo": "Menghubungkan ke",
@@ -2654,11 +2654,22 @@
       "expensesTitle": "Pembuatan pengeluaran terkonfirmasi",
       "expensesDescription": "Asisten hanya dapat membuat pengeluaran yang persis seperti yang ditampilkan di pratinjau setelah Anda menekan Buat pengeluaran.",
       "privacyTitle": "Catatan privasi singkat",
-      "privacyDescription": "Detail grup keuangan dapat bersifat sensitif. Detail tersebut tersedia untuk {client} saat terhubung, tetapi asisten tidak dapat mengedit atau menghapus pengeluaran dan tidak dapat membuatnya tanpa konfirmasi pratinjau Anda.",
+      "privacyDescription": "Detail keuangan grup bisa bersifat sensitif. Detail itu tersedia bagi {client} selama koneksi masih ada. Anda dapat memutusnya kapan saja dari pengaturan akun.",
       "authorityNote": "Spliit tetap menjadi sumber kebenaran. Validasi, saldo, riwayat aktivitas, dan notifikasi yang ada tetap berlaku.",
       "allow": "Izinkan dan hubungkan",
       "cancel": "Batal",
-      "missingRequest": "Permintaan otorisasi tidak ditemukan. Kembali ke asisten Anda."
+      "missingRequest": "Permintaan otorisasi tidak ditemukan. Kembali ke asisten Anda.",
+      "groupsManageTitle": "Membuat dan mengedit grup",
+      "groupsManageDescription": "Membuat grup, mengganti namanya, mengubah pengaturannya, dan menambahkan peserta.",
+      "groupsDeleteTitle": "Menghapus grup dan mengeluarkan orang",
+      "groupsDeleteDescription": "Menghapus atau mengarsipkan grup secara permanen, dan mengeluarkan peserta darinya. Tidak dapat dibatalkan.",
+      "expensesReadTitle": "Membaca pengeluaran",
+      "expensesReadDescription": "Semua pengeluaran di grup Anda, termasuk jumlah, tanggal, kategori, catatan, dan cara pembagian tiap pengeluaran.",
+      "expensesManageTitle": "Membuat dan mengedit pengeluaran",
+      "expensesManageDescription": "Menambah pengeluaran dan mengubah yang sudah ada secara langsung, tanpa menampilkan pratinjau lebih dulu.",
+      "expensesDeleteTitle": "Menghapus pengeluaran",
+      "expensesDeleteDescription": "Menghapus pengeluaran secara permanen, dan melakukan perubahan yang menghilangkan data seperti memperpendek rangkaian berulang. Tidak dapat dibatalkan.",
+      "unknownScopes": "Aplikasi ini meminta izin yang tidak dikenali Spliit Cloud ({scopes}), jadi tidak dapat disetujui di sini. Minta pembuat aplikasi memeriksa izin yang diminta."
     },
     "login": {
       "missingTitle": "Permintaan otorisasi tidak ditemukan",
@@ -3089,6 +3100,14 @@
     "cancel": "Batal",
     "confirmTitle": "Putuskan {name}?",
     "confirmDescription": "Aplikasi tidak akan bisa lagi membaca atau mengubah apa pun di akun Anda, dan harus meminta izin Anda lagi.",
-    "confirmGracePeriod": "Permintaan yang sudah berjalan masih bisa berhasil hingga satu jam."
+    "confirmGracePeriod": "Permintaan yang sudah berjalan masih bisa berhasil hingga satu jam.",
+    "loadFailed": "Tidak dapat memuat aplikasi terhubung.",
+    "scopeGroupsRead": "Membaca grup",
+    "scopeGroupsManage": "Mengelola grup",
+    "scopeGroupsDelete": "Menghapus grup",
+    "scopeExpensesRead": "Membaca pengeluaran",
+    "scopeExpensesManage": "Mengelola pengeluaran",
+    "scopeExpensesDelete": "Menghapus pengeluaran",
+    "scopeExpensesWrite": "Menambah pengeluaran dengan pratinjau"
   }
 }

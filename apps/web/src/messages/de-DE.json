@@ -2718,7 +2718,7 @@
   "OAuth": {
     "consent": {
       "title": "Spliit mit {client} verbinden?",
-      "description": "Prüfe unten das Konto und die Zugriffsrechte. Du behältst die Kontrolle über jede Ausgabenerstellung.",
+      "description": "Prüfe unten das Konto und die angefragten Zugriffe.",
       "connectionDetails": "Verbindungsdetails",
       "spliitAccount": "Spliit-Konto",
       "connectingTo": "Verbindung zu",
@@ -2734,11 +2734,22 @@
       "expensesTitle": "Bestätigte Ausgabenerstellung",
       "expensesDescription": "Der Assistent darf erst nach einem Klick auf Ausgabe erstellen genau die in der Vorschau angezeigte Ausgabe anlegen.",
       "privacyTitle": "Kurzer Datenschutzhinweis",
-      "privacyDescription": "Finanzielle Gruppendetails können sensibel sein. Während der Verbindung sind sie für {client} verfügbar. Der Assistent kann Ausgaben jedoch weder bearbeiten noch löschen und ohne deine Vorschau-Bestätigung keine Ausgabe erstellen.",
+      "privacyDescription": "Finanzielle Gruppendetails können heikel sein. Sie stehen {client} zur Verfügung, solange die Verbindung besteht. Du kannst sie jederzeit in den Kontoeinstellungen trennen.",
       "authorityNote": "Spliit bleibt die maßgebliche Quelle. Die bestehenden Prüfungen, Salden, Aktivitätsverläufe und Benachrichtigungen gelten weiterhin.",
       "allow": "Erlauben und verbinden",
       "cancel": "Abbrechen",
-      "missingRequest": "Die Autorisierungsanfrage fehlt. Kehre zu deinem Assistenten zurück."
+      "missingRequest": "Die Autorisierungsanfrage fehlt. Kehre zu deinem Assistenten zurück.",
+      "groupsManageTitle": "Gruppen anlegen und bearbeiten",
+      "groupsManageDescription": "Gruppen anlegen, umbenennen, ihre Einstellungen ändern und Teilnehmende hinzufügen.",
+      "groupsDeleteTitle": "Gruppen löschen und Personen entfernen",
+      "groupsDeleteDescription": "Eine Gruppe endgültig löschen oder archivieren und Teilnehmende daraus entfernen. Das lässt sich nicht rückgängig machen.",
+      "expensesReadTitle": "Ausgaben lesen",
+      "expensesReadDescription": "Alle Ausgaben in deinen Gruppen, samt Beträgen, Daten, Kategorien, Notizen und der Aufteilung jeder einzelnen.",
+      "expensesManageTitle": "Ausgaben anlegen und bearbeiten",
+      "expensesManageDescription": "Ausgaben direkt hinzufügen und bestehende ändern, ohne dir vorher eine Vorschau zu zeigen.",
+      "expensesDeleteTitle": "Ausgaben löschen",
+      "expensesDeleteDescription": "Ausgaben endgültig löschen und Änderungen vornehmen, die Daten entfernen, etwa das Kürzen einer wiederkehrenden Serie. Das lässt sich nicht rückgängig machen.",
+      "unknownScopes": "Diese App fragt eine Berechtigung an, die Spliit Cloud nicht kennt ({scopes}), deshalb kann sie hier nicht bestätigt werden. Bitte die Entwickler, die angefragten Berechtigungen zu prüfen."
     },
     "login": {
       "missingTitle": "Autorisierungsanfrage fehlt",
@@ -3177,6 +3188,14 @@
     "cancel": "Abbrechen",
     "confirmTitle": "{name} trennen?",
     "confirmDescription": "Sie kann dann nichts mehr in deinem Konto lesen oder ändern und muss dich erneut um Erlaubnis bitten.",
-    "confirmGracePeriod": "Eine bereits laufende Anfrage kann noch bis zu eine Stunde lang erfolgreich sein."
+    "confirmGracePeriod": "Eine bereits laufende Anfrage kann noch bis zu eine Stunde lang erfolgreich sein.",
+    "loadFailed": "Verbundene Apps konnten nicht geladen werden.",
+    "scopeGroupsRead": "Gruppen lesen",
+    "scopeGroupsManage": "Gruppen verwalten",
+    "scopeGroupsDelete": "Gruppen löschen",
+    "scopeExpensesRead": "Ausgaben lesen",
+    "scopeExpensesManage": "Ausgaben verwalten",
+    "scopeExpensesDelete": "Ausgaben löschen",
+    "scopeExpensesWrite": "Ausgaben mit Vorschau hinzufügen"
   }
 }

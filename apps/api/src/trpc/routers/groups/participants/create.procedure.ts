@@ -16,7 +16,7 @@ import { createParticipantOutputSchema } from '../../../outputs/members'
  * Create a name-only participant. This is intentionally available to every
  * active member: it creates a ledger row, not a membership or invitation.
  */
-export const createParticipantProcedure = apiProcedure('spliit:groups:write')
+export const createParticipantProcedure = apiProcedure('spliit:groups:manage')
   .input(
     z.object({
       groupId: z.string().min(1),

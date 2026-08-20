@@ -2672,7 +2672,7 @@
     },
     "consent": {
       "title": "Conectezi Spliit la {client}?",
-      "description": "Verifică mai jos contul și accesul. Tu rămâi în controlul fiecărei creări de cheltuială.",
+      "description": "Verifică mai jos contul și accesul solicitat.",
       "connectionDetails": "Detalii conexiune",
       "spliitAccount": "Cont Spliit",
       "connectingTo": "Se conectează la",
@@ -2688,11 +2688,22 @@
       "expensesTitle": "Crearea confirmată a cheltuielii",
       "expensesDescription": "Asistentul poate crea doar cheltuiala exactă afișată în previzualizare după ce apeși Creează cheltuiala.",
       "privacyTitle": "O notă rapidă despre confidențialitate",
-      "privacyDescription": "Detaliile financiare ale grupului pot fi sensibile. Devin disponibile pentru {client} cât timp este conectat, dar asistentul nu poate edita sau șterge cheltuieli și nu poate crea una fără confirmarea previzualizării.",
+      "privacyDescription": "Detaliile financiare ale unui grup pot fi sensibile. Rămân disponibile pentru {client} cât timp conexiunea este activă. O poți deconecta oricând din setările contului.",
       "authorityNote": "Spliit rămâne sursa de adevăr. Validarea, soldurile, istoricul activității și notificările existente se aplică în continuare.",
       "allow": "Permite și conectează",
       "cancel": "Anulează",
-      "missingRequest": "Cererea de autorizare lipsește. Revino la asistent."
+      "missingRequest": "Cererea de autorizare lipsește. Revino la asistent.",
+      "groupsManageTitle": "Creează și modifică grupuri",
+      "groupsManageDescription": "Creează grupuri, redenumește-le, modifică-le setările și adaugă participanți.",
+      "groupsDeleteTitle": "Șterge grupuri și elimină persoane",
+      "groupsDeleteDescription": "Șterge sau arhivează definitiv un grup și elimină participanți din el. Nu se poate anula.",
+      "expensesReadTitle": "Citește cheltuielile",
+      "expensesReadDescription": "Toate cheltuielile din grupurile tale, inclusiv sume, date, categorii, note și modul în care se împarte fiecare.",
+      "expensesManageTitle": "Creează și modifică cheltuieli",
+      "expensesManageDescription": "Adaugă cheltuieli și modifică-le pe cele existente direct, fără să îți arate mai întâi o previzualizare.",
+      "expensesDeleteTitle": "Șterge cheltuieli",
+      "expensesDeleteDescription": "Șterge definitiv cheltuieli și fă modificări care elimină date, cum ar fi scurtarea unei serii recurente. Nu se poate anula.",
+      "unknownScopes": "Această aplicație cere o permisiune pe care Spliit Cloud nu o recunoaște ({scopes}), așa că nu poate fi aprobată aici. Roagă autorul aplicației să verifice permisiunile cerute."
     },
     "login": {
       "missingTitle": "Cerere de autorizare lipsă",
@@ -3123,6 +3134,14 @@
     "cancel": "Anulează",
     "confirmTitle": "Deconectezi {name}?",
     "confirmDescription": "Nu va mai putea citi sau modifica nimic în contul tău și va trebui să îți ceară din nou permisiunea.",
-    "confirmGracePeriod": "O cerere deja în curs poate reuși încă timp de cel mult o oră."
+    "confirmGracePeriod": "O cerere deja în curs poate reuși încă timp de cel mult o oră.",
+    "loadFailed": "Aplicațiile conectate nu au putut fi încărcate.",
+    "scopeGroupsRead": "Citește grupurile",
+    "scopeGroupsManage": "Gestionează grupurile",
+    "scopeGroupsDelete": "Șterge grupuri",
+    "scopeExpensesRead": "Citește cheltuielile",
+    "scopeExpensesManage": "Gestionează cheltuielile",
+    "scopeExpensesDelete": "Șterge cheltuieli",
+    "scopeExpensesWrite": "Adaugă cheltuieli cu previzualizare"
   }
 }

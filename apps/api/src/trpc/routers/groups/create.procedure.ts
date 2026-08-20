@@ -11,7 +11,7 @@ import {
 import { apiProcedure } from '../../init'
 import { createGroupOutputSchema } from '../../outputs/groups'
 
-export const createGroupProcedure = apiProcedure('spliit:groups:write')
+export const createGroupProcedure = apiProcedure('spliit:groups:manage')
   .input(
     z.object({
       requestId: createRequestIdSchema,

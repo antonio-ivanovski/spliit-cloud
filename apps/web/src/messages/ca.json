@@ -2672,7 +2672,7 @@
     },
     "consent": {
       "title": "Connectar Spliit a {client}?",
-      "description": "Revisa el compte i l'accés següents. Tu mantens el control de cada creació de despesa.",
+      "description": "Revisa el compte i els accessos sol·licitats a continuació.",
       "connectionDetails": "Detalls de la connexió",
       "spliitAccount": "Compte de Spliit",
       "connectingTo": "Connectant amb",
@@ -2688,11 +2688,22 @@
       "expensesTitle": "Creació de despesa confirmada",
       "expensesDescription": "L'assistent només pot crear la despesa exacta que es mostra a la previsualització després que premis Crea la despesa.",
       "privacyTitle": "Una nota ràpida sobre privadesa",
-      "privacyDescription": "Els detalls financers del grup poden ser sensibles. Estaran disponibles per a {client} mentre estigui connectat, però l'assistent no pot editar ni eliminar despeses ni crear-ne cap sense la teva confirmació de la previsualització.",
+      "privacyDescription": "Els detalls financers d'un grup poden ser sensibles. Queden disponibles per a {client} mentre la connexió sigui activa. La pots desconnectar quan vulguis des de la configuració del compte.",
       "authorityNote": "Spliit continua sent la font de veritat. La validació, els saldos, l'historial d'activitat i les notificacions existents continuen aplicant-se.",
       "allow": "Permet i connecta",
       "cancel": "Cancel·la",
-      "missingRequest": "Falta la sol·licitud d'autorització. Torna al teu assistent."
+      "missingRequest": "Falta la sol·licitud d'autorització. Torna al teu assistent.",
+      "groupsManageTitle": "Crear i editar grups",
+      "groupsManageDescription": "Crear grups, canviar-los el nom, modificar-ne la configuració i afegir-hi participants.",
+      "groupsDeleteTitle": "Eliminar grups i treure persones",
+      "groupsDeleteDescription": "Eliminar o arxivar un grup de manera permanent i treure'n participants. No es pot desfer.",
+      "expensesReadTitle": "Llegir les despeses",
+      "expensesReadDescription": "Totes les despeses dels teus grups, incloent-hi imports, dates, categories, notes i com es reparteix cadascuna.",
+      "expensesManageTitle": "Crear i editar despeses",
+      "expensesManageDescription": "Afegir despeses i canviar les existents directament, sense mostrar-te abans una previsualització.",
+      "expensesDeleteTitle": "Eliminar despeses",
+      "expensesDeleteDescription": "Eliminar despeses de manera permanent i fer canvis que esborren dades, com ara escurçar una sèrie recurrent. No es pot desfer.",
+      "unknownScopes": "Aquesta aplicació demana un permís que Spliit Cloud no reconeix ({scopes}), així que no es pot aprovar aquí. Demana a l'autor que revisi els permisos sol·licitats."
     },
     "login": {
       "missingTitle": "Falta la sol·licitud d'autorització",
@@ -3123,6 +3134,14 @@
     "cancel": "Cancel·la",
     "confirmTitle": "Vols desconnectar {name}?",
     "confirmDescription": "Ja no podrà llegir ni modificar res del teu compte, i haurà de demanar-te permís de nou.",
-    "confirmGracePeriod": "Una sol·licitud ja en curs encara pot completar-se durant un màxim d'una hora."
+    "confirmGracePeriod": "Una sol·licitud ja en curs encara pot completar-se durant un màxim d'una hora.",
+    "loadFailed": "No s'han pogut carregar les aplicacions connectades.",
+    "scopeGroupsRead": "Llegir els grups",
+    "scopeGroupsManage": "Gestionar els grups",
+    "scopeGroupsDelete": "Eliminar grups",
+    "scopeExpensesRead": "Llegir les despeses",
+    "scopeExpensesManage": "Gestionar les despeses",
+    "scopeExpensesDelete": "Eliminar despeses",
+    "scopeExpensesWrite": "Afegir despeses amb previsualització"
   }
 }

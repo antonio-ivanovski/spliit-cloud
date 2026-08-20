@@ -2672,7 +2672,7 @@
     },
     "consent": {
       "title": "Collegare Spliit a {client}?",
-      "description": "Esamina l'account e l'accesso qui sotto. Mantieni il controllo su ogni creazione di spesa.",
+      "description": "Controlla l'account e gli accessi richiesti qui sotto.",
       "connectionDetails": "Dettagli della connessione",
       "spliitAccount": "Account Spliit",
       "connectingTo": "Connessione a",
@@ -2688,11 +2688,22 @@
       "expensesTitle": "Creazione della spesa confermata",
       "expensesDescription": "L'assistente può creare solo la spesa esatta mostrata nell'anteprima dopo che hai premuto Crea spesa.",
       "privacyTitle": "Una breve nota sulla privacy",
-      "privacyDescription": "I dettagli finanziari del gruppo possono essere sensibili. Diventano disponibili per {client} durante la connessione, ma l'assistente non può modificare o eliminare spese né crearne una senza la conferma dell'anteprima.",
+      "privacyDescription": "I dettagli finanziari di un gruppo possono essere delicati. Restano disponibili per {client} finché la connessione è attiva. Puoi disconnetterla quando vuoi dalle impostazioni dell'account.",
       "authorityNote": "Spliit rimane la fonte di verità. Si applicano ancora la convalida, i saldi, la cronologia delle attività e le notifiche esistenti.",
       "allow": "Consenti e collega",
       "cancel": "Annulla",
-      "missingRequest": "Manca la richiesta di autorizzazione. Torna al tuo assistente."
+      "missingRequest": "Manca la richiesta di autorizzazione. Torna al tuo assistente.",
+      "groupsManageTitle": "Creare e modificare gruppi",
+      "groupsManageDescription": "Creare gruppi, rinominarli, modificarne le impostazioni e aggiungere partecipanti.",
+      "groupsDeleteTitle": "Eliminare gruppi e rimuovere persone",
+      "groupsDeleteDescription": "Eliminare o archiviare definitivamente un gruppo e rimuoverne i partecipanti. L'operazione è irreversibile.",
+      "expensesReadTitle": "Leggere le spese",
+      "expensesReadDescription": "Tutte le spese dei tuoi gruppi, inclusi importi, date, categorie, note e come viene divisa ciascuna.",
+      "expensesManageTitle": "Creare e modificare spese",
+      "expensesManageDescription": "Aggiungere spese e modificare quelle esistenti direttamente, senza mostrarti prima un'anteprima.",
+      "expensesDeleteTitle": "Eliminare spese",
+      "expensesDeleteDescription": "Eliminare definitivamente le spese e apportare modifiche che cancellano dati, come accorciare una serie ricorrente. L'operazione è irreversibile.",
+      "unknownScopes": "Questa app chiede un permesso che Spliit Cloud non riconosce ({scopes}), quindi non può essere approvata qui. Chiedi all'autore di verificare i permessi richiesti."
     },
     "login": {
       "missingTitle": "Richiesta di autorizzazione mancante",
@@ -3123,6 +3134,14 @@
     "cancel": "Annulla",
     "confirmTitle": "Disconnettere {name}?",
     "confirmDescription": "Non potrà più leggere né modificare nulla nel tuo account e dovrà chiederti di nuovo il permesso.",
-    "confirmGracePeriod": "Una richiesta già in corso può ancora andare a buon fine per un'ora al massimo."
+    "confirmGracePeriod": "Una richiesta già in corso può ancora andare a buon fine per un'ora al massimo.",
+    "loadFailed": "Impossibile caricare le app connesse.",
+    "scopeGroupsRead": "Leggere i gruppi",
+    "scopeGroupsManage": "Gestire i gruppi",
+    "scopeGroupsDelete": "Eliminare gruppi",
+    "scopeExpensesRead": "Leggere le spese",
+    "scopeExpensesManage": "Gestire le spese",
+    "scopeExpensesDelete": "Eliminare spese",
+    "scopeExpensesWrite": "Aggiungere spese con anteprima"
   }
 }

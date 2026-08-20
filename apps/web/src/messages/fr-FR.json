@@ -2664,7 +2664,7 @@
   "OAuth": {
     "consent": {
       "title": "Connecter Spliit à {client} ?",
-      "description": "Vérifiez ci-dessous le compte et les accès. Vous gardez le contrôle de chaque création de dépense.",
+      "description": "Vérifiez le compte et les accès demandés ci-dessous.",
       "connectionDetails": "Détails de la connexion",
       "spliitAccount": "Compte Spliit",
       "connectingTo": "Connexion à",
@@ -2680,11 +2680,22 @@
       "expensesTitle": "Création de dépense confirmée",
       "expensesDescription": "L’assistant ne peut créer que la dépense exacte affichée dans l’aperçu après que vous avez appuyé sur Créer la dépense.",
       "privacyTitle": "Quelques mots sur la confidentialité",
-      "privacyDescription": "Les informations financières des groupes peuvent être sensibles. Elles deviennent accessibles à {client} pendant la connexion, mais l’assistant ne peut ni modifier ni supprimer les dépenses et ne peut pas en créer sans votre confirmation de l’aperçu.",
+      "privacyDescription": "Les détails financiers d'un groupe peuvent être sensibles. Ils restent accessibles à {client} tant que la connexion est active. Vous pouvez la révoquer à tout moment dans les paramètres de votre compte.",
       "authorityNote": "Spliit reste la source de vérité. Les validations, soldes, historique d’activité et notifications existants continuent de s’appliquer.",
       "allow": "Autoriser et connecter",
       "cancel": "Annuler",
-      "missingRequest": "La demande d’autorisation est manquante. Revenez à votre assistant."
+      "missingRequest": "La demande d’autorisation est manquante. Revenez à votre assistant.",
+      "groupsManageTitle": "Créer et modifier des groupes",
+      "groupsManageDescription": "Créer des groupes, les renommer, modifier leurs réglages et y ajouter des participants.",
+      "groupsDeleteTitle": "Supprimer des groupes et retirer des personnes",
+      "groupsDeleteDescription": "Supprimer ou archiver définitivement un groupe, et en retirer des participants. C'est irréversible.",
+      "expensesReadTitle": "Lire les dépenses",
+      "expensesReadDescription": "Toutes les dépenses de vos groupes, y compris les montants, les dates, les catégories, les notes et la répartition de chacune.",
+      "expensesManageTitle": "Créer et modifier des dépenses",
+      "expensesManageDescription": "Ajouter des dépenses et modifier celles qui existent directement, sans vous montrer d'aperçu au préalable.",
+      "expensesDeleteTitle": "Supprimer des dépenses",
+      "expensesDeleteDescription": "Supprimer définitivement des dépenses et effectuer des modifications qui suppriment des données, par exemple raccourcir une série récurrente. C'est irréversible.",
+      "unknownScopes": "Cette application demande une autorisation que Spliit Cloud ne reconnaît pas ({scopes}) ; elle ne peut donc pas être approuvée ici. Demandez à son auteur de vérifier les autorisations demandées."
     },
     "login": {
       "missingTitle": "Demande d’autorisation manquante",
@@ -3123,6 +3134,14 @@
     "cancel": "Annuler",
     "confirmTitle": "Déconnecter {name} ?",
     "confirmDescription": "Elle ne pourra plus rien lire ni modifier dans votre compte, et devra vous redemander l'autorisation.",
-    "confirmGracePeriod": "Une requête déjà en cours peut encore aboutir pendant une heure au maximum."
+    "confirmGracePeriod": "Une requête déjà en cours peut encore aboutir pendant une heure au maximum.",
+    "loadFailed": "Impossible de charger les applications connectées.",
+    "scopeGroupsRead": "Lire les groupes",
+    "scopeGroupsManage": "Gérer les groupes",
+    "scopeGroupsDelete": "Supprimer des groupes",
+    "scopeExpensesRead": "Lire les dépenses",
+    "scopeExpensesManage": "Gérer les dépenses",
+    "scopeExpensesDelete": "Supprimer des dépenses",
+    "scopeExpensesWrite": "Ajouter des dépenses avec aperçu"
   }
 }

@@ -2638,7 +2638,7 @@
     },
     "consent": {
       "title": "连接 Spliit 与 {client}？",
-      "description": "请查看下方的账户和访问权限。每笔支出的创建仍由你掌控。",
+      "description": "请在下方核对账号和所请求的访问权限。",
       "connectionDetails": "连接详情",
       "spliitAccount": "Spliit 账户",
       "connectingTo": "连接至",
@@ -2654,11 +2654,22 @@
       "expensesTitle": "已确认的支出创建",
       "expensesDescription": "点击“创建支出”后，助手只能创建预览中显示的完全相同的支出。",
       "privacyTitle": "简短的隐私提示",
-      "privacyDescription": "财务群组详情可能较为敏感。连接期间，{client}可以访问这些信息，但助手无法编辑或删除支出，也不能在未得到你预览确认的情况下创建支出。",
+      "privacyDescription": "群组的财务信息可能较为敏感。在连接期间 {client} 都可以查看。你随时可以在账号设置中断开连接。",
       "authorityNote": "Spliit 仍是唯一可信来源。现有验证、余额、活动记录和通知仍然适用。",
       "allow": "允许并连接",
       "cancel": "取消",
-      "missingRequest": "缺少授权请求。请返回你的助手。"
+      "missingRequest": "缺少授权请求。请返回你的助手。",
+      "groupsManageTitle": "创建和编辑群组",
+      "groupsManageDescription": "创建群组、重命名、修改设置以及添加成员。",
+      "groupsDeleteTitle": "删除群组并移除成员",
+      "groupsDeleteDescription": "永久删除或归档群组，并从中移除成员。此操作无法撤销。",
+      "expensesReadTitle": "读取支出",
+      "expensesReadDescription": "你群组中的所有支出，包括金额、日期、分类、备注以及每笔支出的分摊方式。",
+      "expensesManageTitle": "创建和编辑支出",
+      "expensesManageDescription": "不先向你展示预览，直接添加支出并修改已有支出。",
+      "expensesDeleteTitle": "删除支出",
+      "expensesDeleteDescription": "永久删除支出，以及执行会丢失数据的修改，例如缩短周期性支出。此操作无法撤销。",
+      "unknownScopes": "该应用请求了 Spliit Cloud 无法识别的权限（{scopes}），因此无法在此批准。请让应用作者检查所请求的权限。"
     },
     "login": {
       "missingTitle": "授权请求缺失",
@@ -3088,6 +3099,14 @@
     "cancel": "取消",
     "confirmTitle": "要断开 {name} 吗？",
     "confirmDescription": "它将无法再读取或修改你账号中的任何内容，并且需要重新请求你的授权。",
-    "confirmGracePeriod": "已经发出的请求最多还可能在一小时内成功。"
+    "confirmGracePeriod": "已经发出的请求最多还可能在一小时内成功。",
+    "loadFailed": "无法加载已连接的应用。",
+    "scopeGroupsRead": "读取群组",
+    "scopeGroupsManage": "管理群组",
+    "scopeGroupsDelete": "删除群组",
+    "scopeExpensesRead": "读取支出",
+    "scopeExpensesManage": "管理支出",
+    "scopeExpensesDelete": "删除支出",
+    "scopeExpensesWrite": "通过预览添加支出"
   }
 }

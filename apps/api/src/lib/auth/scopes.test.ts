@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import {
   ALL_SCOPES,
+  ASSISTANT_WRITE_SCOPE,
   DEFAULT_CLIENT_SCOPES,
   DESTRUCTIVE_SCOPES,
   SPLIIT_SCOPES,
@@ -22,17 +23,32 @@ describe('scope catalogue', () => {
     }
   })
 
-  it('keeps the two scopes the MCP assistant already requests', () => {
+  it('keeps the read scope the MCP assistant already requests', () => {
     expect(DEFAULT_CLIENT_SCOPES).toContain(SPLIIT_SCOPES.groupsRead)
-    expect(DEFAULT_CLIENT_SCOPES).toContain(SPLIIT_SCOPES.expensesWrite)
+  })
+
+  it('never hands the legacy assistant scope to a fresh client', () => {
+    // `spliit:expenses:write` means "create after a preview and a confirmation
+    // token". A client that wants that flow asks for it by name.
+    expect(DEFAULT_CLIENT_SCOPES).not.toContain(ASSISTANT_WRITE_SCOPE)
+    expect(ALL_SCOPES).toContain(ASSISTANT_WRITE_SCOPE)
   })
 })
 
 describe('expandScopes', () => {
-  it('treats write as implying read', () => {
-    const expanded = expandScopes([SPLIIT_SCOPES.expensesWrite])
+  it('treats manage as implying read', () => {
+    const expanded = expandScopes([SPLIIT_SCOPES.expensesManage])
 
     expect(expanded.has(SPLIIT_SCOPES.expensesRead)).toBe(true)
+  })
+
+  it('grants nothing at all from the legacy assistant scope', () => {
+    // The whole point of keeping it separate: a live assistant grant must not
+    // reach direct reads or writes.
+    const expanded = expandScopes([ASSISTANT_WRITE_SCOPE])
+
+    expect(expanded.has(SPLIIT_SCOPES.expensesRead)).toBe(false)
+    expect(expanded.has(SPLIIT_SCOPES.expensesManage)).toBe(false)
   })
 
   it('treats delete as implying read', () => {
@@ -41,27 +57,27 @@ describe('expandScopes', () => {
     expect(expanded.has(SPLIIT_SCOPES.groupsRead)).toBe(true)
   })
 
-  it('does not let a write scope imply anything on the other resource', () => {
-    const expanded = expandScopes([SPLIIT_SCOPES.expensesWrite])
+  it('does not let a manage scope imply anything on the other resource', () => {
+    const expanded = expandScopes([SPLIIT_SCOPES.expensesManage])
 
     expect(expanded.has(SPLIIT_SCOPES.groupsRead)).toBe(false)
-    expect(expanded.has(SPLIIT_SCOPES.groupsWrite)).toBe(false)
+    expect(expanded.has(SPLIIT_SCOPES.groupsManage)).toBe(false)
   })
 
-  it('never lets read imply write', () => {
+  it('never lets read imply manage', () => {
     const expanded = expandScopes([
       SPLIIT_SCOPES.expensesRead,
       SPLIIT_SCOPES.groupsRead,
     ])
 
     expect(expanded.has(SPLIIT_SCOPES.expensesWrite)).toBe(false)
-    expect(expanded.has(SPLIIT_SCOPES.groupsWrite)).toBe(false)
+    expect(expanded.has(SPLIIT_SCOPES.groupsManage)).toBe(false)
   })
 
-  it('never lets write imply delete', () => {
+  it('never lets manage imply delete', () => {
     const expanded = expandScopes([
-      SPLIIT_SCOPES.expensesWrite,
-      SPLIIT_SCOPES.groupsWrite,
+      SPLIIT_SCOPES.expensesManage,
+      SPLIIT_SCOPES.groupsManage,
     ])
 
     expect(expanded.has(SPLIIT_SCOPES.expensesDelete)).toBe(false)
@@ -70,20 +86,21 @@ describe('expandScopes', () => {
 })
 
 describe('hasScope', () => {
-  it('accepts a token minted before the read/write split', () => {
-    // Tokens issued to the MCP assistant carry `expenses:write` without
-    // `expenses:read`; reads must keep working for those clients.
-    const granted = ['spliit:groups:read', 'spliit:expenses:write']
+  it('gives a live assistant grant no direct access whatsoever', () => {
+    // This is the grant every existing MCP client holds today. It must not
+    // reach a single direct-access procedure.
+    const granted = ['spliit:groups:read', ASSISTANT_WRITE_SCOPE]
 
-    expect(hasScope(granted, SPLIIT_SCOPES.expensesRead)).toBe(true)
-    expect(hasScope(granted, SPLIIT_SCOPES.expensesWrite)).toBe(true)
+    expect(hasScope(granted, SPLIIT_SCOPES.expensesRead)).toBe(false)
+    expect(hasScope(granted, SPLIIT_SCOPES.expensesManage)).toBe(false)
+    expect(hasScope(granted, SPLIIT_SCOPES.expensesDelete)).toBe(false)
   })
 
   it('rejects a scope that was never granted', () => {
-    const granted = ['spliit:groups:read', 'spliit:expenses:write']
+    const granted = ['spliit:groups:read', SPLIIT_SCOPES.expensesManage]
 
     expect(hasScope(granted, SPLIIT_SCOPES.expensesDelete)).toBe(false)
-    expect(hasScope(granted, SPLIIT_SCOPES.groupsWrite)).toBe(false)
+    expect(hasScope(granted, SPLIIT_SCOPES.groupsManage)).toBe(false)
   })
 
   it('rejects everything for an empty grant', () => {

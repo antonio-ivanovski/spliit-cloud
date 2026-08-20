@@ -14,6 +14,7 @@ import {
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
 import { useToast } from '@/components/ui/use-toast'
+import { cn } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import type { AppRouterOutput } from '@spliit/api/router'
 
@@ -27,11 +28,24 @@ import {
 type AuthorizedClient =
   AppRouterOutput['account']['authorizedClients']['clients'][number]
 
-/** `spliit:expenses:write` reads better as `expenses write`. */
-function scopeLabel(scope: string): string {
-  return scope.startsWith('spliit:')
-    ? scope.slice('spliit:'.length).replace(/:/g, ' ')
-    : scope
+/**
+ * Translation key per scope. A scope with no entry falls back to its raw name,
+ * which is ugly but honest: better an unfamiliar string than a wrong label.
+ */
+const SCOPE_LABELS = {
+  'spliit:groups:read': 'AccountAuthorizedClients.scopeGroupsRead',
+  'spliit:groups:manage': 'AccountAuthorizedClients.scopeGroupsManage',
+  'spliit:groups:delete': 'AccountAuthorizedClients.scopeGroupsDelete',
+  'spliit:expenses:read': 'AccountAuthorizedClients.scopeExpensesRead',
+  'spliit:expenses:manage': 'AccountAuthorizedClients.scopeExpensesManage',
+  'spliit:expenses:delete': 'AccountAuthorizedClients.scopeExpensesDelete',
+  'spliit:expenses:write': 'AccountAuthorizedClients.scopeExpensesWrite',
+} as const
+
+type KnownScope = keyof typeof SCOPE_LABELS
+
+function isKnownScope(scope: string): scope is KnownScope {
+  return scope in SCOPE_LABELS
 }
 
 /** OIDC scopes say nothing about what an app can reach in Spliit Cloud. */
@@ -75,11 +89,19 @@ export function AuthorizedClients() {
         description={t('AccountAuthorizedClients.description')}
         icon={KeyRound}
       >
-        {authorized.isPending || clients.length === 0 ? (
-          <p className="px-4 pb-4 text-sm text-muted-foreground sm:px-6 sm:pb-5">
+        {authorized.isPending || authorized.isError || clients.length === 0 ? (
+          <p
+            className={cn(
+              'px-4 pb-4 text-sm sm:px-6 sm:pb-5',
+              authorized.isError ? 'text-destructive' : 'text-muted-foreground',
+            )}
+            role={authorized.isError ? 'alert' : undefined}
+          >
             {authorized.isPending
               ? t('AccountAuthorizedClients.loading')
-              : t('AccountAuthorizedClients.empty')}
+              : authorized.isError
+                ? t('AccountAuthorizedClients.loadFailed')
+                : t('AccountAuthorizedClients.empty')}
           </p>
         ) : (
           <SettingsList className="border-t border-border/70">
@@ -95,7 +117,7 @@ export function AuthorizedClients() {
                     <div className="flex flex-wrap gap-1.5">
                       {meaningfulScopes(client.scopes).map((scope) => (
                         <SettingsBadge key={scope}>
-                          {scopeLabel(scope)}
+                          {isKnownScope(scope) ? t(SCOPE_LABELS[scope]) : scope}
                         </SettingsBadge>
                       ))}
                     </div>

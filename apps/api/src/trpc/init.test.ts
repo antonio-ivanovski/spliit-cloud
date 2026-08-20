@@ -6,6 +6,7 @@ import { generateGroupViewKey } from '../lib/group-view'
 import { authState, prismaMock } from '../test/state'
 import {
   apiProcedure,
+  assertScopeForDestructiveEdit,
   assistantProcedure,
   createTRPCContext,
   loadGroupMutationContext,
@@ -306,9 +307,18 @@ describe('apiProcedure', () => {
     ).rejects.toMatchObject({ code: 'FORBIDDEN' })
   })
 
-  it('accepts a pre-split token where write implies read', async () => {
+  it('refuses a live assistant grant', async () => {
+    // `spliit:expenses:write` was published for the assistant's preview and
+    // confirmation flow. Honouring it here would hand every existing grant a
+    // direct write its holder never consented to.
     await expect(
       callProbe(oauthAuth(['spliit:groups:read', 'spliit:expenses:write'])),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+  })
+
+  it('accepts the manage scope, which implies read on the same resource', async () => {
+    await expect(
+      callProbe(oauthAuth(['spliit:expenses:manage'])),
     ).resolves.toEqual({ accountId: 'acct-oauth' })
   })
 
@@ -382,9 +392,15 @@ describe('scopedGroupReadProcedure', () => {
     ).rejects.toMatchObject({ code: 'FORBIDDEN' })
   })
 
-  it('accepts a pre-split token where write implies read', async () => {
+  it('refuses a live assistant grant', async () => {
     await expect(
       callProbe(oauthAuth(['spliit:expenses:write'])),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+  })
+
+  it('accepts the manage scope, which implies read on the same resource', async () => {
+    await expect(
+      callProbe(oauthAuth(['spliit:expenses:manage'])),
     ).resolves.toEqual({ accountId: 'acct-oauth' })
   })
 
@@ -399,6 +415,45 @@ describe('scopedGroupReadProcedure', () => {
         session: { id: 'sess-anon' },
       }),
     ).rejects.toMatchObject({ code: 'PRECONDITION_FAILED' })
+  })
+})
+
+describe('assertScopeForDestructiveEdit', () => {
+  function oauth(scopes: string[]) {
+    return {
+      credentialKind: 'oauth',
+      accessToken: 'redacted',
+      scopes,
+      user: { id: 'acct-oauth' },
+      session: { id: 'oauth-session' },
+    } as never
+  }
+
+  it('lets a session through untouched', () => {
+    // Scopes constrain tokens; a signed-in member is bound by group role
+    // rules instead.
+    expect(() =>
+      assertScopeForDestructiveEdit({
+        user: { id: 'acct-session' },
+        session: { id: 'sess-1' },
+      } as never),
+    ).not.toThrow()
+  })
+
+  it('refuses a token holding only the manage scope', () => {
+    // Shortening a series drops occurrences and their stored documents, so
+    // the manage scope alone must not reach it.
+    expect(() =>
+      assertScopeForDestructiveEdit(oauth(['spliit:expenses:manage'])),
+    ).toThrow(/spliit:expenses:delete/)
+  })
+
+  it('accepts a token holding the delete scope', () => {
+    expect(() =>
+      assertScopeForDestructiveEdit(
+        oauth(['spliit:expenses:manage', 'spliit:expenses:delete']),
+      ),
+    ).not.toThrow()
   })
 })
 

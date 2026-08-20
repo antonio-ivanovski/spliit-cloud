@@ -2672,7 +2672,7 @@
     },
     "consent": {
       "title": "Spliit {client}-(e)kin konektatu?",
-      "description": "Berrikusi beheko kontua eta sarbidea. Gastu bakoitza sortzeko kontrola zuk izaten jarraitzen duzu.",
+      "description": "Berrikusi kontua eta eskatutako sarbideak behean.",
       "connectionDetails": "Konexioaren xehetasunak",
       "spliitAccount": "Spliit kontua",
       "connectingTo": "Hona konektatzen",
@@ -2688,11 +2688,22 @@
       "expensesTitle": "Berretsitako gastu-sorkuntza",
       "expensesDescription": "Laguntzaileak aurrebistan erakutsitako gastu zehatza bakarrik sor dezake Gastua sortu sakatu ondoren.",
       "privacyTitle": "Pribatutasunari buruzko ohar azkarra",
-      "privacyDescription": "Taldeko finantza-xehetasunak sentikorrak izan daitezke. Konektatuta dagoen bitartean {client}-(e)rentzat erabilgarri egongo dira, baina laguntzaileak ezin ditu gastuak editatu edo ezabatu, eta ezin du bat sortu aurrebistaren berrespenik gabe.",
+      "privacyDescription": "Talde baten finantza-xehetasunak sentikorrak izan daitezke. {client}(r)en eskura egongo dira konexioak dirauen bitartean. Noiznahi deskonekta dezakezu kontuaren ezarpenetatik.",
       "authorityNote": "Spliit da egia-iturria. Dauden baliozkotze, saldo, jarduera-historia eta jakinarazpenek aplikatzen jarraitzen dute.",
       "allow": "Baimendu eta konektatu",
       "cancel": "Utzi",
-      "missingRequest": "Baimen-eskaera falta da. Itzuli zure laguntzailera."
+      "missingRequest": "Baimen-eskaera falta da. Itzuli zure laguntzailera.",
+      "groupsManageTitle": "Sortu eta aldatu taldeak",
+      "groupsManageDescription": "Sortu taldeak, izena aldatu, ezarpenak aldatu eta partaideak gehitu.",
+      "groupsDeleteTitle": "Ezabatu taldeak eta kendu pertsonak",
+      "groupsDeleteDescription": "Ezabatu edo artxibatu talde bat behin betiko, eta kendu partaideak bertatik. Ezin da desegin.",
+      "expensesReadTitle": "Irakurri gastuak",
+      "expensesReadDescription": "Zure taldeetako gastu guztiak, zenbatekoak, datak, kategoriak, oharrak eta bakoitza nola banatzen den barne.",
+      "expensesManageTitle": "Sortu eta aldatu gastuak",
+      "expensesManageDescription": "Gehitu gastuak eta aldatu daudenak zuzenean, aurretik aurrebistarik erakutsi gabe.",
+      "expensesDeleteTitle": "Ezabatu gastuak",
+      "expensesDeleteDescription": "Ezabatu gastuak behin betiko eta egin datuak ezabatzen dituzten aldaketak, adibidez serie errepikari bat laburtzea. Ezin da desegin.",
+      "unknownScopes": "Aplikazio honek Spliit Cloud-ek ezagutzen ez duen baimen bat eskatzen du ({scopes}); beraz, ezin da hemen onartu. Eskatu egileari eskatutako baimenak berrikusteko."
     },
     "login": {
       "missingTitle": "Baimen-eskaera falta da",
@@ -3123,6 +3134,14 @@
     "cancel": "Utzi",
     "confirmTitle": "{name} deskonektatu?",
     "confirmDescription": "Ezingo du zure kontuko ezer irakurri edo aldatu, eta berriro eskatu beharko dizu baimena.",
-    "confirmGracePeriod": "Dagoeneko abian den eskaera batek ordubetez funtziona dezake oraindik."
+    "confirmGracePeriod": "Dagoeneko abian den eskaera batek ordubetez funtziona dezake oraindik.",
+    "loadFailed": "Ezin izan dira konektatutako aplikazioak kargatu.",
+    "scopeGroupsRead": "Irakurri taldeak",
+    "scopeGroupsManage": "Kudeatu taldeak",
+    "scopeGroupsDelete": "Ezabatu taldeak",
+    "scopeExpensesRead": "Irakurri gastuak",
+    "scopeExpensesManage": "Kudeatu gastuak",
+    "scopeExpensesDelete": "Ezabatu gastuak",
+    "scopeExpensesWrite": "Gehitu gastuak aurrebistarekin"
   }
 }

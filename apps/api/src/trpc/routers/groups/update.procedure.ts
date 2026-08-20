@@ -7,7 +7,7 @@ import { groupUpdateFormSchema } from '@spliit/domain'
 import { updateGroup } from '../../../lib/api'
 import { loadGroupMutationContext, apiProcedure } from '../../init'
 
-export const updateGroupProcedure = apiProcedure('spliit:groups:write')
+export const updateGroupProcedure = apiProcedure('spliit:groups:manage')
   .input(
     z.object({
       groupId: z.string().min(1),

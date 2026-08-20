@@ -10,7 +10,7 @@ import {
 } from '@spliit/db'
 
 import { isAnonymousSetupIncomplete } from '../lib/auth/account-cache'
-import { hasScope, type SpliitScope } from '../lib/auth/scopes'
+import { hasScope, SPLIIT_SCOPES, type SpliitScope } from '../lib/auth/scopes'
 import type { OAuthResolvedAuth, ResolvedAuth } from '../lib/auth/session'
 import {
   getAuthFromRequest,
@@ -54,12 +54,15 @@ export async function createTRPCContext(opts: {
  * Per-procedure metadata.
  *
  * `scope` records the OAuth scope a programmatic caller must hold. It is set by
- * `apiProcedure` and `scopedGroupReadProcedure` rather than maintained
- * separately, so the OpenAPI generator can read the real requirement off the
- * router instead of tracking a table that would drift.
+ * `apiProcedure`, `scopedGroupReadProcedure` and `assistantProcedure` rather
+ * than maintained separately, so the OpenAPI generator reads the real
+ * requirement off the router instead of tracking a table that would drift.
+ *
+ * Typed as a plain string because `assistantProcedure` carries the legacy
+ * assistant scope, which is deliberately outside `SpliitScope`.
  */
 export type ProcedureMeta = {
-  scope?: SpliitScope
+  scope?: string
 }
 
 const t = initTRPC.context<AuthContext>().meta<ProcedureMeta>().create({
@@ -349,39 +352,63 @@ export function apiProcedure(requiredScope: SpliitScope) {
     })
 }
 
-export function assistantProcedure(requiredScope: string) {
-  return baseProcedure.use(async ({ ctx, next }) => {
-    if (!env.ENABLE_MCP) {
-      throw new TRPCError({
-        code: 'NOT_FOUND',
-        message: 'Assistant API is disabled',
-      })
-    }
-    if (
-      !ctx.auth ||
-      !('credentialKind' in ctx.auth) ||
-      ctx.auth.credentialKind !== 'oauth'
-    ) {
-      throw new TRPCError({
-        code: 'UNAUTHORIZED',
-        message: 'OAuth bearer authentication required',
-      })
-    }
-    if (!ctx.auth.scopes.includes(requiredScope)) {
-      throw new TRPCError({
-        code: 'FORBIDDEN',
-        message: `Missing required scope: ${requiredScope}`,
-      })
-    }
-    const decision = assistantRequestLimiter.hit(ctx.auth.user.id)
-    if (!decision.allowed) {
-      throw new TRPCError({
-        code: 'TOO_MANY_REQUESTS',
-        message: 'Assistant request limit exceeded; try again shortly',
-      })
-    }
-    return next({ ctx: { ...ctx, auth: ctx.auth } })
+/**
+ * Require the delete scope for an edit that destroys data.
+ *
+ * Some mutations delete as a side effect: shortening a recurring series with
+ * `THIS_AND_FUTURE` drops the occurrences that fall outside the new schedule
+ * and their stored documents. Letting the manage scope cover that would break
+ * the promise that a default grant cannot destroy anything.
+ *
+ * Sessions are unaffected: a signed-in member is already bound by the group
+ * role rules, and scopes only ever constrain tokens.
+ */
+export function assertScopeForDestructiveEdit(
+  auth: ResolvedAuth | OAuthResolvedAuth,
+): void {
+  if (!('credentialKind' in auth) || auth.credentialKind !== 'oauth') return
+  if (hasScope(auth.scopes, SPLIIT_SCOPES.expensesDelete)) return
+  throw new TRPCError({
+    code: 'FORBIDDEN',
+    message: `Missing required scope: ${SPLIIT_SCOPES.expensesDelete}`,
   })
+}
+
+export function assistantProcedure(requiredScope: string) {
+  return baseProcedure
+    .meta({ scope: requiredScope })
+    .use(async ({ ctx, next }) => {
+      if (!env.ENABLE_MCP) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Assistant API is disabled',
+        })
+      }
+      if (
+        !ctx.auth ||
+        !('credentialKind' in ctx.auth) ||
+        ctx.auth.credentialKind !== 'oauth'
+      ) {
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'OAuth bearer authentication required',
+        })
+      }
+      if (!ctx.auth.scopes.includes(requiredScope)) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: `Missing required scope: ${requiredScope}`,
+        })
+      }
+      const decision = assistantRequestLimiter.hit(ctx.auth.user.id)
+      if (!decision.allowed) {
+        throw new TRPCError({
+          code: 'TOO_MANY_REQUESTS',
+          message: 'Assistant request limit exceeded; try again shortly',
+        })
+      }
+      return next({ ctx: { ...ctx, auth: ctx.auth } })
+    })
 }
 
 /**

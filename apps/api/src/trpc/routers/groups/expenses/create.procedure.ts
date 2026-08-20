@@ -17,7 +17,9 @@ import { ConversionError } from '../../../../lib/expense-conversion'
 import { loadGroupMutationContext, apiProcedure } from '../../../init'
 import { createExpenseOutputSchema } from '../../../outputs/expenses'
 
-export const createGroupExpenseProcedure = apiProcedure('spliit:expenses:write')
+export const createGroupExpenseProcedure = apiProcedure(
+  'spliit:expenses:manage',
+)
   .input(
     z.object({
       groupId: z.string().min(1),

@@ -10,7 +10,7 @@ import {
 import { loadGroupMutationContext, apiProcedure } from '../../../init'
 import { deleteExpenseOutputSchema } from '../../../outputs/expenses'
 
-export const stopRecurrenceProcedure = apiProcedure('spliit:expenses:write')
+export const stopRecurrenceProcedure = apiProcedure('spliit:expenses:manage')
   .input(
     z.object({
       expenseId: z.string().min(1),

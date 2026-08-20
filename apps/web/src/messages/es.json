@@ -2718,7 +2718,7 @@
   "OAuth": {
     "consent": {
       "title": "¿Conectar Spliit con {client}?",
-      "description": "Revisa la cuenta y el acceso que aparecen a continuación. Tú mantienes el control de cada creación de gasto.",
+      "description": "Revisa la cuenta y los accesos solicitados a continuación.",
       "connectionDetails": "Detalles de la conexión",
       "spliitAccount": "Cuenta de Spliit",
       "connectingTo": "Conectando con",
@@ -2734,11 +2734,22 @@
       "expensesTitle": "Creación de gastos confirmada",
       "expensesDescription": "El asistente solo puede crear exactamente el gasto mostrado en la vista previa después de que pulses Crear gasto.",
       "privacyTitle": "Una nota rápida sobre privacidad",
-      "privacyDescription": "Los detalles financieros de los grupos pueden ser sensibles. Estarán disponibles para {client} mientras esté conectado, pero el asistente no puede editar ni eliminar gastos y no puede crear uno sin tu confirmación de la vista previa.",
+      "privacyDescription": "Los detalles financieros de un grupo pueden ser sensibles. Quedan disponibles para {client} mientras siga conectada. Puedes desconectarla cuando quieras desde los ajustes de tu cuenta.",
       "authorityNote": "Spliit sigue siendo la fuente de verdad. Se mantienen las validaciones, los saldos, el historial de actividad y las notificaciones existentes.",
       "allow": "Permitir y conectar",
       "cancel": "Cancelar",
-      "missingRequest": "Falta la solicitud de autorización. Vuelve a tu asistente."
+      "missingRequest": "Falta la solicitud de autorización. Vuelve a tu asistente.",
+      "groupsManageTitle": "Crear y editar grupos",
+      "groupsManageDescription": "Crear grupos, renombrarlos, cambiar sus ajustes y añadir participantes.",
+      "groupsDeleteTitle": "Eliminar grupos y quitar personas",
+      "groupsDeleteDescription": "Eliminar o archivar un grupo de forma permanente, y quitar participantes de él. Esto no se puede deshacer.",
+      "expensesReadTitle": "Leer gastos",
+      "expensesReadDescription": "Todos los gastos de tus grupos, incluidos importes, fechas, categorías, notas y cómo se reparte cada uno.",
+      "expensesManageTitle": "Crear y editar gastos",
+      "expensesManageDescription": "Añadir gastos y cambiar los existentes directamente, sin mostrarte antes una vista previa.",
+      "expensesDeleteTitle": "Eliminar gastos",
+      "expensesDeleteDescription": "Eliminar gastos de forma permanente y hacer cambios que borran datos, como acortar una serie recurrente. Esto no se puede deshacer.",
+      "unknownScopes": "Esta aplicación pide un permiso que Spliit Cloud no reconoce ({scopes}), así que no se puede aprobar aquí. Pide a su autor que revise los permisos que solicita."
     },
     "login": {
       "missingTitle": "Falta la solicitud de autorización",
@@ -3177,6 +3188,14 @@
     "cancel": "Cancelar",
     "confirmTitle": "¿Desconectar {name}?",
     "confirmDescription": "Ya no podrá leer ni modificar nada de tu cuenta, y tendrá que pedirte permiso de nuevo.",
-    "confirmGracePeriod": "Una solicitud ya en curso todavía puede completarse durante un máximo de una hora."
+    "confirmGracePeriod": "Una solicitud ya en curso todavía puede completarse durante un máximo de una hora.",
+    "loadFailed": "No se pudieron cargar las aplicaciones conectadas.",
+    "scopeGroupsRead": "Leer grupos",
+    "scopeGroupsManage": "Gestionar grupos",
+    "scopeGroupsDelete": "Eliminar grupos",
+    "scopeExpensesRead": "Leer gastos",
+    "scopeExpensesManage": "Gestionar gastos",
+    "scopeExpensesDelete": "Eliminar gastos",
+    "scopeExpensesWrite": "Añadir gastos con vista previa"
   }
 }

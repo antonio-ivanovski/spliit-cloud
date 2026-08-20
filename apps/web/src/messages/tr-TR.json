@@ -2654,7 +2654,7 @@
     },
     "consent": {
       "title": "Spliit, {client} ile bağlansın mı?",
-      "description": "Aşağıdaki hesap ve erişim bilgilerini inceleyin. Her gider oluşturma işlemi sizin kontrolünüzdedir.",
+      "description": "Aşağıdan hesabı ve istenen erişimi gözden geçirin.",
       "connectionDetails": "Bağlantı ayrıntıları",
       "spliitAccount": "Spliit hesabı",
       "connectingTo": "Bağlanıyor:",
@@ -2670,11 +2670,22 @@
       "expensesTitle": "Onaylı gider oluşturma",
       "expensesDescription": "Asistan, yalnızca Gider oluştur düğmesine bastıktan sonra önizlemede gösterilen giderin aynısını oluşturabilir.",
       "privacyTitle": "Kısa bir gizlilik notu",
-      "privacyDescription": "Finansal grup ayrıntıları hassas olabilir. Bağlıyken {client} tarafından kullanılabilir; ancak asistan giderleri düzenleyemez veya silemez ve önizlemenizi onaylamadan gider oluşturamaz.",
+      "privacyDescription": "Grubun finansal ayrıntıları hassas olabilir. Bağlantı sürdüğü sürece {client} tarafından erişilebilir. Hesap ayarlarından istediğiniz zaman bağlantıyı kesebilirsiniz.",
       "authorityNote": "Doğru bilgilerin kaynağı Spliit olmaya devam eder. Mevcut doğrulama, bakiyeler, etkinlik geçmişi ve bildirimler uygulanır.",
       "allow": "İzin ver ve bağlan",
       "cancel": "İptal",
-      "missingRequest": "Yetkilendirme isteği eksik. Asistanınıza dönün."
+      "missingRequest": "Yetkilendirme isteği eksik. Asistanınıza dönün.",
+      "groupsManageTitle": "Grup oluşturma ve düzenleme",
+      "groupsManageDescription": "Grup oluşturmak, yeniden adlandırmak, ayarlarını değiştirmek ve katılımcı eklemek.",
+      "groupsDeleteTitle": "Grupları silme ve kişileri çıkarma",
+      "groupsDeleteDescription": "Bir grubu kalıcı olarak silmek veya arşivlemek ve gruptan katılımcı çıkarmak. Geri alınamaz.",
+      "expensesReadTitle": "Harcamaları okuma",
+      "expensesReadDescription": "Gruplarınızdaki tüm harcamalar; tutarlar, tarihler, kategoriler, notlar ve her birinin nasıl bölüşüldüğü dahil.",
+      "expensesManageTitle": "Harcama oluşturma ve düzenleme",
+      "expensesManageDescription": "Size önce önizleme göstermeden doğrudan harcama eklemek ve mevcut olanları değiştirmek.",
+      "expensesDeleteTitle": "Harcamaları silme",
+      "expensesDeleteDescription": "Harcamaları kalıcı olarak silmek ve yinelenen bir seriyi kısaltmak gibi veri silen değişiklikler yapmak. Geri alınamaz.",
+      "unknownScopes": "Bu uygulama Spliit Cloud'un tanımadığı bir izin istiyor ({scopes}), bu yüzden burada onaylanamaz. Uygulamanın geliştiricisinden istenen izinleri gözden geçirmesini isteyin."
     },
     "login": {
       "missingTitle": "Yetkilendirme isteği eksik",
@@ -3105,6 +3116,14 @@
     "cancel": "İptal",
     "confirmTitle": "{name} bağlantısı kesilsin mi?",
     "confirmDescription": "Artık hesabınızdaki hiçbir şeyi okuyamayacak veya değiştiremeyecek ve sizden yeniden izin istemek zorunda kalacak.",
-    "confirmGracePeriod": "Halihazırda süren bir istek en fazla bir saat daha başarılı olabilir."
+    "confirmGracePeriod": "Halihazırda süren bir istek en fazla bir saat daha başarılı olabilir.",
+    "loadFailed": "Bağlı uygulamalar yüklenemedi.",
+    "scopeGroupsRead": "Grupları okuma",
+    "scopeGroupsManage": "Grupları yönetme",
+    "scopeGroupsDelete": "Grupları silme",
+    "scopeExpensesRead": "Harcamaları okuma",
+    "scopeExpensesManage": "Harcamaları yönetme",
+    "scopeExpensesDelete": "Harcamaları silme",
+    "scopeExpensesWrite": "Önizlemeyle harcama ekleme"
   }
 }

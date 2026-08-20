@@ -2718,7 +2718,7 @@
   "OAuth": {
     "consent": {
       "title": "Spliit verbinden met {client}?",
-      "description": "Bekijk hieronder het account en de toegang. Jij houdt de controle over het aanmaken van elke uitgave.",
+      "description": "Controleer hieronder het account en de gevraagde toegang.",
       "connectionDetails": "Verbindingsdetails",
       "spliitAccount": "Spliit-account",
       "connectingTo": "Verbinden met",
@@ -2734,11 +2734,22 @@
       "expensesTitle": "Aanmaken van uitgave bevestigd",
       "expensesDescription": "De assistent kan alleen de exacte uitgave uit het voorbeeld aanmaken nadat je op Uitgave aanmaken hebt gedrukt.",
       "privacyTitle": "Een korte privacyopmerking",
-      "privacyDescription": "Financiële groepsgegevens kunnen gevoelig zijn. Ze zijn tijdens de verbinding beschikbaar voor {client}, maar de assistent kan uitgaven niet bewerken of verwijderen en kan er geen aanmaken zonder jouw bevestiging van het voorbeeld.",
+      "privacyDescription": "Financiële groepsgegevens kunnen gevoelig zijn. Ze blijven beschikbaar voor {client} zolang de verbinding bestaat. Je kunt die op elk moment verbreken via je accountinstellingen.",
       "authorityNote": "Spliit blijft de bron van waarheid. Bestaande validatie, saldi, activiteitengeschiedenis en meldingen blijven van toepassing.",
       "allow": "Toestaan en verbinden",
       "cancel": "Annuleren",
-      "missingRequest": "Het autorisatieverzoek ontbreekt. Ga terug naar je assistent."
+      "missingRequest": "Het autorisatieverzoek ontbreekt. Ga terug naar je assistent.",
+      "groupsManageTitle": "Groepen maken en bewerken",
+      "groupsManageDescription": "Groepen aanmaken, hernoemen, hun instellingen wijzigen en deelnemers toevoegen.",
+      "groupsDeleteTitle": "Groepen verwijderen en mensen verwijderen",
+      "groupsDeleteDescription": "Een groep definitief verwijderen of archiveren en er deelnemers uit verwijderen. Dit kan niet ongedaan worden gemaakt.",
+      "expensesReadTitle": "Uitgaven lezen",
+      "expensesReadDescription": "Alle uitgaven in je groepen, inclusief bedragen, datums, categorieën, notities en hoe elke uitgave wordt verdeeld.",
+      "expensesManageTitle": "Uitgaven maken en bewerken",
+      "expensesManageDescription": "Uitgaven direct toevoegen en bestaande wijzigen, zonder je eerst een voorbeeld te tonen.",
+      "expensesDeleteTitle": "Uitgaven verwijderen",
+      "expensesDeleteDescription": "Uitgaven definitief verwijderen en wijzigingen doorvoeren die gegevens wissen, zoals het inkorten van een terugkerende reeks. Dit kan niet ongedaan worden gemaakt.",
+      "unknownScopes": "Deze app vraagt een toestemming die Spliit Cloud niet kent ({scopes}), dus hij kan hier niet worden goedgekeurd. Vraag de maker om de gevraagde toestemmingen na te kijken."
     },
     "login": {
       "missingTitle": "Autorisatieverzoek ontbreekt",
@@ -3177,6 +3188,14 @@
     "cancel": "Annuleren",
     "confirmTitle": "{name} loskoppelen?",
     "confirmDescription": "De app kan dan niets meer in je account lezen of wijzigen en moet opnieuw om toestemming vragen.",
-    "confirmGracePeriod": "Een verzoek dat al loopt kan nog maximaal een uur slagen."
+    "confirmGracePeriod": "Een verzoek dat al loopt kan nog maximaal een uur slagen.",
+    "loadFailed": "Verbonden apps konden niet worden geladen.",
+    "scopeGroupsRead": "Groepen lezen",
+    "scopeGroupsManage": "Groepen beheren",
+    "scopeGroupsDelete": "Groepen verwijderen",
+    "scopeExpensesRead": "Uitgaven lezen",
+    "scopeExpensesManage": "Uitgaven beheren",
+    "scopeExpensesDelete": "Uitgaven verwijderen",
+    "scopeExpensesWrite": "Uitgaven toevoegen met voorbeeld"
   }
 }
