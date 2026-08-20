@@ -3109,5 +3109,20 @@
     "title": "Você está offline",
     "description": "Esta tela precisa de uma conexão. Reconecte-se para carregar seus grupos e despesas.",
     "retry": "Tentar novamente"
+  },
+  "AccountAuthorizedClients": {
+    "title": "Apps conectados",
+    "description": "Apps e agentes que você autorizou a usar sua conta Spliit.",
+    "loading": "Carregando apps conectados…",
+    "empty": "Nenhum app está conectado à sua conta.",
+    "unnamedClient": "App sem nome",
+    "authorizedOn": "Conectado em {date}",
+    "revoke": "Desconectar",
+    "revoked": "App desconectado",
+    "revokeFailed": "Não foi possível desconectar este app",
+    "cancel": "Cancelar",
+    "confirmTitle": "Desconectar {name}?",
+    "confirmDescription": "Ele não poderá mais ler nem alterar nada na sua conta e terá que pedir sua permissão de novo.",
+    "confirmGracePeriod": "Uma requisição já em andamento ainda pode ser concluída por até uma hora."
   }
 }

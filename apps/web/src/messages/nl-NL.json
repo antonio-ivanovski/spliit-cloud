@@ -3163,5 +3163,20 @@
     "title": "Je bent offline",
     "description": "Dit scherm heeft een verbinding nodig. Maak opnieuw verbinding om je groepen en uitgaven te laden.",
     "retry": "Opnieuw proberen"
+  },
+  "AccountAuthorizedClients": {
+    "title": "Verbonden apps",
+    "description": "Apps en agents die je toegang tot je Spliit-account hebt gegeven.",
+    "loading": "Verbonden apps laden…",
+    "empty": "Er is geen app met je account verbonden.",
+    "unnamedClient": "App zonder naam",
+    "authorizedOn": "Verbonden op {date}",
+    "revoke": "Loskoppelen",
+    "revoked": "App losgekoppeld",
+    "revokeFailed": "Deze app kon niet worden losgekoppeld",
+    "cancel": "Annuleren",
+    "confirmTitle": "{name} loskoppelen?",
+    "confirmDescription": "De app kan dan niets meer in je account lezen of wijzigen en moet opnieuw om toestemming vragen.",
+    "confirmGracePeriod": "Een verzoek dat al loopt kan nog maximaal een uur slagen."
   }
 }

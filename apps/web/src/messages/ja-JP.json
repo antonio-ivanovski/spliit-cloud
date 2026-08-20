@@ -3074,5 +3074,20 @@
     "title": "現在オフラインです",
     "description": "この画面には接続が必要です。グループと支出を読み込むには、再接続してください。",
     "retry": "もう一度試す"
+  },
+  "AccountAuthorizedClients": {
+    "title": "連携中のアプリ",
+    "description": "Spliit アカウントの利用を許可したアプリとエージェントです。",
+    "loading": "連携中のアプリを読み込んでいます…",
+    "empty": "アカウントに連携されているアプリはありません。",
+    "unnamedClient": "名称未設定のアプリ",
+    "authorizedOn": "{date} に連携",
+    "revoke": "連携を解除",
+    "revoked": "アプリの連携を解除しました",
+    "revokeFailed": "このアプリの連携を解除できませんでした",
+    "cancel": "キャンセル",
+    "confirmTitle": "{name} の連携を解除しますか？",
+    "confirmDescription": "アカウント内の情報を読み取ることも変更することもできなくなり、再度許可を求める必要があります。",
+    "confirmGracePeriod": "すでに進行中のリクエストは最大 1 時間は成功する場合があります。"
   }
 }

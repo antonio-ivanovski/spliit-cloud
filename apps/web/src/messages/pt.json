@@ -3109,5 +3109,20 @@
     "title": "Estás offline",
     "description": "Este ecrã precisa de uma ligação. Volta a ligar-te para carregar os teus grupos e despesas.",
     "retry": "Tentar novamente"
+  },
+  "AccountAuthorizedClients": {
+    "title": "Aplicações ligadas",
+    "description": "Aplicações e agentes a quem permitiu usar a sua conta Spliit.",
+    "loading": "A carregar as aplicações ligadas…",
+    "empty": "Nenhuma aplicação está ligada à sua conta.",
+    "unnamedClient": "Aplicação sem nome",
+    "authorizedOn": "Ligada a {date}",
+    "revoke": "Desligar",
+    "revoked": "Aplicação desligada",
+    "revokeFailed": "Não foi possível desligar esta aplicação",
+    "cancel": "Cancelar",
+    "confirmTitle": "Desligar {name}?",
+    "confirmDescription": "Deixará de poder ler ou alterar seja o que for na sua conta e terá de lhe pedir autorização novamente.",
+    "confirmGracePeriod": "Um pedido já em curso pode ainda ser concluído durante no máximo uma hora."
   }
 }

@@ -3163,5 +3163,20 @@
     "title": "Du bist offline",
     "description": "Dieser Bildschirm braucht eine Verbindung. Stelle die Verbindung wieder her, um deine Gruppen und Ausgaben zu laden.",
     "retry": "Erneut versuchen"
+  },
+  "AccountAuthorizedClients": {
+    "title": "Verbundene Apps",
+    "description": "Apps und Agenten, denen du die Nutzung deines Spliit-Kontos erlaubt hast.",
+    "loading": "Verbundene Apps werden geladen…",
+    "empty": "Mit deinem Konto ist keine App verbunden.",
+    "unnamedClient": "Unbenannte App",
+    "authorizedOn": "Verbunden am {date}",
+    "revoke": "Trennen",
+    "revoked": "App getrennt",
+    "revokeFailed": "Diese App konnte nicht getrennt werden",
+    "cancel": "Abbrechen",
+    "confirmTitle": "{name} trennen?",
+    "confirmDescription": "Sie kann dann nichts mehr in deinem Konto lesen oder ändern und muss dich erneut um Erlaubnis bitten.",
+    "confirmGracePeriod": "Eine bereits laufende Anfrage kann noch bis zu eine Stunde lang erfolgreich sein."
   }
 }

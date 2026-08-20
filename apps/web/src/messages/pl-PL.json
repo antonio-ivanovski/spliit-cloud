@@ -3125,5 +3125,20 @@
     "title": "Jesteś offline",
     "description": "Ten ekran wymaga połączenia. Połącz się ponownie, aby wczytać grupy i wydatki.",
     "retry": "Spróbuj ponownie"
+  },
+  "AccountAuthorizedClients": {
+    "title": "Połączone aplikacje",
+    "description": "Aplikacje i agenci, którym pozwoliłeś korzystać z Twojego konta Spliit.",
+    "loading": "Wczytywanie połączonych aplikacji…",
+    "empty": "Żadna aplikacja nie jest połączona z Twoim kontem.",
+    "unnamedClient": "Aplikacja bez nazwy",
+    "authorizedOn": "Połączono {date}",
+    "revoke": "Odłącz",
+    "revoked": "Aplikacja odłączona",
+    "revokeFailed": "Nie udało się odłączyć tej aplikacji",
+    "cancel": "Anuluj",
+    "confirmTitle": "Odłączyć {name}?",
+    "confirmDescription": "Nie będzie już mogła niczego odczytać ani zmienić na Twoim koncie i będzie musiała poprosić Cię o zgodę ponownie.",
+    "confirmGracePeriod": "Trwające już żądanie może jeszcze zakończyć się powodzeniem przez maksymalnie godzinę."
   }
 }

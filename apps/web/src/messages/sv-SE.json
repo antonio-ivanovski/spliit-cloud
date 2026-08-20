@@ -3087,5 +3087,20 @@
     "title": "Du är offline",
     "description": "Den här skärmen behöver en anslutning. Återanslut för att läsa in dina grupper och utgifter.",
     "retry": "Försök igen"
+  },
+  "AccountAuthorizedClients": {
+    "title": "Anslutna appar",
+    "description": "Appar och agenter som du har gett tillgång till ditt Spliit-konto.",
+    "loading": "Läser in anslutna appar…",
+    "empty": "Ingen app är ansluten till ditt konto.",
+    "unnamedClient": "Namnlös app",
+    "authorizedOn": "Ansluten den {date}",
+    "revoke": "Koppla från",
+    "revoked": "Appen frånkopplad",
+    "revokeFailed": "Det gick inte att koppla från appen",
+    "cancel": "Avbryt",
+    "confirmTitle": "Koppla från {name}?",
+    "confirmDescription": "Den kan då inte längre läsa eller ändra något i ditt konto och måste be om din tillåtelse igen.",
+    "confirmGracePeriod": "En begäran som redan pågår kan fortfarande lyckas i upp till en timme."
   }
 }

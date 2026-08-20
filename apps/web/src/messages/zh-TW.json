@@ -3074,5 +3074,20 @@
     "title": "目前處於離線狀態",
     "description": "此畫面需要網路連線。重新連線後即可載入群組與消費。",
     "retry": "再試一次"
+  },
+  "AccountAuthorizedClients": {
+    "title": "已連線的應用程式",
+    "description": "你已允許使用 Spliit 帳號的應用程式和代理程式。",
+    "loading": "正在載入已連線的應用程式…",
+    "empty": "沒有應用程式連線到你的帳號。",
+    "unnamedClient": "未命名的應用程式",
+    "authorizedOn": "於 {date} 連線",
+    "revoke": "中斷連線",
+    "revoked": "已中斷該應用程式",
+    "revokeFailed": "無法中斷這個應用程式",
+    "cancel": "取消",
+    "confirmTitle": "要中斷 {name} 嗎？",
+    "confirmDescription": "它將無法再讀取或修改你帳號中的任何內容，而且必須重新請求你的授權。",
+    "confirmGracePeriod": "已經送出的請求最多還可能在一小時內成功。"
   }
 }

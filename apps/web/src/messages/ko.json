@@ -3163,5 +3163,20 @@
     "title": "현재 오프라인 상태입니다",
     "description": "이 화면은 연결이 필요합니다. 그룹과 지출을 불러오려면 다시 연결하세요.",
     "retry": "다시 시도"
+  },
+  "AccountAuthorizedClients": {
+    "title": "연결된 앱",
+    "description": "Spliit 계정 사용을 허용한 앱과 에이전트입니다.",
+    "loading": "연결된 앱을 불러오는 중…",
+    "empty": "계정에 연결된 앱이 없습니다.",
+    "unnamedClient": "이름 없는 앱",
+    "authorizedOn": "{date}에 연결됨",
+    "revoke": "연결 해제",
+    "revoked": "앱 연결을 해제했습니다",
+    "revokeFailed": "이 앱의 연결을 해제하지 못했습니다",
+    "cancel": "취소",
+    "confirmTitle": "{name} 연결을 해제할까요?",
+    "confirmDescription": "더 이상 계정에서 아무것도 읽거나 변경할 수 없으며, 다시 권한을 요청해야 합니다.",
+    "confirmGracePeriod": "이미 진행 중인 요청은 최대 한 시간 동안 성공할 수 있습니다."
   }
 }

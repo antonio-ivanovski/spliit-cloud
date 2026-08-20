@@ -3163,5 +3163,20 @@
     "title": "Estás sin conexión",
     "description": "Esta pantalla necesita conexión. Vuelve a conectarte para cargar tus grupos y gastos.",
     "retry": "Intentar de nuevo"
+  },
+  "AccountAuthorizedClients": {
+    "title": "Aplicaciones conectadas",
+    "description": "Aplicaciones y agentes a los que has permitido usar tu cuenta de Spliit.",
+    "loading": "Cargando aplicaciones conectadas…",
+    "empty": "Ninguna aplicación está conectada a tu cuenta.",
+    "unnamedClient": "Aplicación sin nombre",
+    "authorizedOn": "Conectada el {date}",
+    "revoke": "Desconectar",
+    "revoked": "Aplicación desconectada",
+    "revokeFailed": "No se pudo desconectar esta aplicación",
+    "cancel": "Cancelar",
+    "confirmTitle": "¿Desconectar {name}?",
+    "confirmDescription": "Ya no podrá leer ni modificar nada de tu cuenta, y tendrá que pedirte permiso de nuevo.",
+    "confirmGracePeriod": "Una solicitud ya en curso todavía puede completarse durante un máximo de una hora."
   }
 }

@@ -3075,5 +3075,20 @@
     "title": "Anda sedang offline",
     "description": "Layar ini membutuhkan koneksi. Sambungkan kembali untuk memuat grup dan pengeluaran.",
     "retry": "Coba lagi"
+  },
+  "AccountAuthorizedClients": {
+    "title": "Aplikasi terhubung",
+    "description": "Aplikasi dan agen yang kamu izinkan menggunakan akun Spliit-mu.",
+    "loading": "Memuat aplikasi terhubung…",
+    "empty": "Tidak ada aplikasi yang terhubung ke akunmu.",
+    "unnamedClient": "Aplikasi tanpa nama",
+    "authorizedOn": "Terhubung pada {date}",
+    "revoke": "Putuskan",
+    "revoked": "Aplikasi diputuskan",
+    "revokeFailed": "Tidak dapat memutuskan aplikasi ini",
+    "cancel": "Batal",
+    "confirmTitle": "Putuskan {name}?",
+    "confirmDescription": "Aplikasi tidak akan bisa lagi membaca atau mengubah apa pun di akunmu, dan harus meminta izinmu lagi.",
+    "confirmGracePeriod": "Permintaan yang sudah berjalan masih bisa berhasil hingga satu jam."
   }
 }

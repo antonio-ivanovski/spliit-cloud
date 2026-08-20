@@ -3163,5 +3163,20 @@
     "title": "Bạn đang ngoại tuyến",
     "description": "Màn hình này cần kết nối. Kết nối lại để tải nhóm và chi phí.",
     "retry": "Thử lại"
+  },
+  "AccountAuthorizedClients": {
+    "title": "Ứng dụng đã kết nối",
+    "description": "Các ứng dụng và tác nhân mà bạn đã cho phép sử dụng tài khoản Spliit của mình.",
+    "loading": "Đang tải các ứng dụng đã kết nối…",
+    "empty": "Không có ứng dụng nào được kết nối với tài khoản của bạn.",
+    "unnamedClient": "Ứng dụng chưa đặt tên",
+    "authorizedOn": "Đã kết nối vào {date}",
+    "revoke": "Ngắt kết nối",
+    "revoked": "Đã ngắt kết nối ứng dụng",
+    "revokeFailed": "Không thể ngắt kết nối ứng dụng này",
+    "cancel": "Huỷ",
+    "confirmTitle": "Ngắt kết nối {name}?",
+    "confirmDescription": "Ứng dụng sẽ không thể đọc hay thay đổi bất cứ thứ gì trong tài khoản của bạn nữa, và sẽ phải xin phép bạn lại.",
+    "confirmGracePeriod": "Một yêu cầu đang được xử lý vẫn có thể thành công trong tối đa một giờ."
   }
 }

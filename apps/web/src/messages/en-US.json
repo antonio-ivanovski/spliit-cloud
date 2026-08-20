@@ -1051,6 +1051,21 @@
       "sent": "Code sent"
     }
   },
+  "AccountAuthorizedClients": {
+    "title": "Connected apps",
+    "description": "Apps and agents you have allowed to use your Spliit account.",
+    "loading": "Loading connected apps…",
+    "empty": "No app is connected to your account.",
+    "unnamedClient": "Unnamed app",
+    "authorizedOn": "Connected on {date}",
+    "revoke": "Disconnect",
+    "revoked": "App disconnected",
+    "revokeFailed": "Could not disconnect this app",
+    "cancel": "Cancel",
+    "confirmTitle": "Disconnect {name}?",
+    "confirmDescription": "It will no longer be able to read or change anything in your account, and will have to ask for your permission again.",
+    "confirmGracePeriod": "A request already in progress may still succeed for up to an hour."
+  },
   "CompleteProfile": {
     "title": "Complete your profile",
     "description": "Tell us the name you'd like your groups to see. You can change it later.",

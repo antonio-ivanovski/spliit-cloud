@@ -3125,5 +3125,20 @@
     "title": "Jste offline",
     "description": "Tato obrazovka potřebuje připojení. Připojte se znovu pro načtení skupin a výdajů.",
     "retry": "Zkusit znovu"
+  },
+  "AccountAuthorizedClients": {
+    "title": "Připojené aplikace",
+    "description": "Aplikace a agenti, kterým jsi povolil používat svůj účet Spliit.",
+    "loading": "Načítání připojených aplikací…",
+    "empty": "K tvému účtu není připojena žádná aplikace.",
+    "unnamedClient": "Aplikace bez názvu",
+    "authorizedOn": "Připojeno {date}",
+    "revoke": "Odpojit",
+    "revoked": "Aplikace odpojena",
+    "revokeFailed": "Tuto aplikaci se nepodařilo odpojit",
+    "cancel": "Zrušit",
+    "confirmTitle": "Odpojit {name}?",
+    "confirmDescription": "Nebude už moci nic číst ani měnit ve tvém účtu a bude tě muset znovu požádat o svolení.",
+    "confirmGracePeriod": "Již probíhající požadavek může ještě nejvýše hodinu proběhnout úspěšně."
   }
 }

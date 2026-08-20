@@ -3074,5 +3074,20 @@
     "title": "当前处于离线状态",
     "description": "此页面需要网络连接。重新连接后即可加载群组和消费。",
     "retry": "重试"
+  },
+  "AccountAuthorizedClients": {
+    "title": "已连接的应用",
+    "description": "你已允许使用 Spliit 账号的应用和智能体。",
+    "loading": "正在加载已连接的应用…",
+    "empty": "没有应用连接到你的账号。",
+    "unnamedClient": "未命名应用",
+    "authorizedOn": "于 {date} 连接",
+    "revoke": "断开连接",
+    "revoked": "已断开该应用",
+    "revokeFailed": "无法断开该应用",
+    "cancel": "取消",
+    "confirmTitle": "要断开 {name} 吗？",
+    "confirmDescription": "它将无法再读取或修改你账号中的任何内容，并且需要重新请求你的授权。",
+    "confirmGracePeriod": "已经发出的请求最多还可能在一小时内成功。"
   }
 }

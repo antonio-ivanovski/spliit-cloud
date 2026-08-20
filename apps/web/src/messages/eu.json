@@ -3109,5 +3109,20 @@
     "title": "Lineaz kanpo zaude",
     "description": "Pantaila honek konexioa behar du. Konektatu berriro zure taldeak eta gastuak kargatzeko.",
     "retry": "Saiatu berriro"
+  },
+  "AccountAuthorizedClients": {
+    "title": "Konektatutako aplikazioak",
+    "description": "Zure Spliit kontua erabiltzeko baimena eman diezun aplikazio eta agenteak.",
+    "loading": "Konektatutako aplikazioak kargatzen…",
+    "empty": "Ez dago aplikaziorik zure kontura konektatuta.",
+    "unnamedClient": "Izenik gabeko aplikazioa",
+    "authorizedOn": "{date} egunean konektatua",
+    "revoke": "Deskonektatu",
+    "revoked": "Aplikazioa deskonektatuta",
+    "revokeFailed": "Ezin izan da aplikazio hau deskonektatu",
+    "cancel": "Utzi",
+    "confirmTitle": "{name} deskonektatu?",
+    "confirmDescription": "Ezingo du zure kontuko ezer irakurri edo aldatu, eta berriro eskatu beharko dizu baimena.",
+    "confirmGracePeriod": "Dagoeneko abian den eskaera batek ordubetez funtziona dezake oraindik."
   }
 }

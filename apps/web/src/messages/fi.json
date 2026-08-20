@@ -3091,5 +3091,20 @@
     "title": "Et ole yhteydessä",
     "description": "Tämä näyttö tarvitsee yhteyden. Muodosta yhteys uudelleen ladataksesi ryhmäsi ja kulusi.",
     "retry": "Yritä uudelleen"
+  },
+  "AccountAuthorizedClients": {
+    "title": "Yhdistetyt sovellukset",
+    "description": "Sovellukset ja agentit, joille olet antanut luvan käyttää Spliit-tiliäsi.",
+    "loading": "Ladataan yhdistettyjä sovelluksia…",
+    "empty": "Tiliisi ei ole yhdistetty yhtään sovellusta.",
+    "unnamedClient": "Nimetön sovellus",
+    "authorizedOn": "Yhdistetty {date}",
+    "revoke": "Katkaise yhteys",
+    "revoked": "Sovelluksen yhteys katkaistu",
+    "revokeFailed": "Sovelluksen yhteyttä ei voitu katkaista",
+    "cancel": "Peruuta",
+    "confirmTitle": "Katkaistaanko yhteys sovellukseen {name}?",
+    "confirmDescription": "Se ei voi enää lukea eikä muuttaa mitään tililläsi, ja sen on pyydettävä lupaasi uudelleen.",
+    "confirmGracePeriod": "Jo käynnissä oleva pyyntö voi silti onnistua enintään tunnin ajan."
   }
 }

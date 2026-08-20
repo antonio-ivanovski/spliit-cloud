@@ -3109,5 +3109,20 @@
     "title": "Vous êtes hors ligne",
     "description": "Cet écran nécessite une connexion. Reconnectez-vous pour charger vos groupes et vos dépenses.",
     "retry": "Réessayer"
+  },
+  "AccountAuthorizedClients": {
+    "title": "Applications connectées",
+    "description": "Applications et agents que vous avez autorisés à utiliser votre compte Spliit.",
+    "loading": "Chargement des applications connectées…",
+    "empty": "Aucune application n'est connectée à votre compte.",
+    "unnamedClient": "Application sans nom",
+    "authorizedOn": "Connectée le {date}",
+    "revoke": "Déconnecter",
+    "revoked": "Application déconnectée",
+    "revokeFailed": "Impossible de déconnecter cette application",
+    "cancel": "Annuler",
+    "confirmTitle": "Déconnecter {name} ?",
+    "confirmDescription": "Elle ne pourra plus rien lire ni modifier dans votre compte, et devra vous redemander l'autorisation.",
+    "confirmGracePeriod": "Une requête déjà en cours peut encore aboutir pendant une heure au maximum."
   }
 }

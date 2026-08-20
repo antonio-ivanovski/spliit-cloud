@@ -3109,5 +3109,20 @@
     "title": "Ești offline",
     "description": "Acest ecran are nevoie de o conexiune. Reconectează-te pentru a încărca grupurile și cheltuielile.",
     "retry": "Încearcă din nou"
+  },
+  "AccountAuthorizedClients": {
+    "title": "Aplicații conectate",
+    "description": "Aplicații și agenți cărora le-ai permis să folosească contul tău Spliit.",
+    "loading": "Se încarcă aplicațiile conectate…",
+    "empty": "Nicio aplicație nu este conectată la contul tău.",
+    "unnamedClient": "Aplicație fără nume",
+    "authorizedOn": "Conectată pe {date}",
+    "revoke": "Deconectează",
+    "revoked": "Aplicație deconectată",
+    "revokeFailed": "Aplicația nu a putut fi deconectată",
+    "cancel": "Anulează",
+    "confirmTitle": "Deconectezi {name}?",
+    "confirmDescription": "Nu va mai putea citi sau modifica nimic în contul tău și va trebui să îți ceară din nou permisiunea.",
+    "confirmGracePeriod": "O cerere deja în curs poate reuși încă timp de cel mult o oră."
   }
 }

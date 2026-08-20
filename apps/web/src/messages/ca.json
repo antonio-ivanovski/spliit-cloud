@@ -3109,5 +3109,20 @@
     "title": "No tens connexió",
     "description": "Aquesta pantalla necessita connexió. Torna a connectar-te per carregar els teus grups i despeses.",
     "retry": "Torna-ho a provar"
+  },
+  "AccountAuthorizedClients": {
+    "title": "Aplicacions connectades",
+    "description": "Aplicacions i agents als quals has permès fer servir el teu compte de Spliit.",
+    "loading": "S'estan carregant les aplicacions connectades…",
+    "empty": "Cap aplicació no està connectada al teu compte.",
+    "unnamedClient": "Aplicació sense nom",
+    "authorizedOn": "Connectada el {date}",
+    "revoke": "Desconnecta",
+    "revoked": "Aplicació desconnectada",
+    "revokeFailed": "No s'ha pogut desconnectar aquesta aplicació",
+    "cancel": "Cancel·la",
+    "confirmTitle": "Vols desconnectar {name}?",
+    "confirmDescription": "Ja no podrà llegir ni modificar res del teu compte, i haurà de demanar-te permís de nou.",
+    "confirmGracePeriod": "Una sol·licitud ja en curs encara pot completar-se durant un màxim d'una hora."
   }
 }
