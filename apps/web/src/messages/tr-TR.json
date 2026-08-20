@@ -3094,7 +3094,7 @@
   },
   "AccountAuthorizedClients": {
     "title": "Bağlı uygulamalar",
-    "description": "Spliit hesabınızı kullanmasına izin verdiğiniz uygulamalar ve aracılar.",
+    "description": "Spliit Cloud hesabınızı kullanmasına izin verdiğiniz uygulamalar ve aracılar.",
     "loading": "Bağlı uygulamalar yükleniyor…",
     "empty": "Hesabınıza bağlı uygulama yok.",
     "unnamedClient": "Adsız uygulama",

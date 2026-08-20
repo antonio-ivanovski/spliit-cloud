@@ -3128,7 +3128,7 @@
   },
   "AccountAuthorizedClients": {
     "title": "Połączone aplikacje",
-    "description": "Aplikacje i agenci, którym pozwoliłeś korzystać z Twojego konta Spliit.",
+    "description": "Aplikacje i agenci, którym pozwoliłeś korzystać z Twojego konta Spliit Cloud.",
     "loading": "Wczytywanie połączonych aplikacji…",
     "empty": "Żadna aplikacja nie jest połączona z Twoim kontem.",
     "unnamedClient": "Aplikacja bez nazwy",

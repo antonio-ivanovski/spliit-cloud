@@ -34,7 +34,7 @@ function scopeLabel(scope: string): string {
     : scope
 }
 
-/** OIDC scopes say nothing about what an app can reach in Spliit. */
+/** OIDC scopes say nothing about what an app can reach in Spliit Cloud. */
 function meaningfulScopes(scopes: string[]): string[] {
   return scopes.filter((scope) => scope.startsWith('spliit:'))
 }

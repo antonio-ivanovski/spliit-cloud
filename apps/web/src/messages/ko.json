@@ -3166,7 +3166,7 @@
   },
   "AccountAuthorizedClients": {
     "title": "연결된 앱",
-    "description": "Spliit 계정 사용을 허용한 앱과 에이전트입니다.",
+    "description": "Spliit Cloud 계정 사용을 허용한 앱과 에이전트입니다.",
     "loading": "연결된 앱을 불러오는 중…",
     "empty": "계정에 연결된 앱이 없습니다.",
     "unnamedClient": "이름 없는 앱",

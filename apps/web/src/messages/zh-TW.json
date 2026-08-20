@@ -3077,7 +3077,7 @@
   },
   "AccountAuthorizedClients": {
     "title": "已連線的應用程式",
-    "description": "你已允許使用 Spliit 帳號的應用程式和代理程式。",
+    "description": "你已允許使用 Spliit Cloud 帳號的應用程式和代理程式。",
     "loading": "正在載入已連線的應用程式…",
     "empty": "沒有應用程式連線到你的帳號。",
     "unnamedClient": "未命名的應用程式",

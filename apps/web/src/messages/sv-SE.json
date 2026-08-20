@@ -3090,7 +3090,7 @@
   },
   "AccountAuthorizedClients": {
     "title": "Anslutna appar",
-    "description": "Appar och agenter som du har gett tillgång till ditt Spliit-konto.",
+    "description": "Appar och agenter som du har gett tillgång till ditt Spliit Cloud-konto.",
     "loading": "Läser in anslutna appar…",
     "empty": "Ingen app är ansluten till ditt konto.",
     "unnamedClient": "Namnlös app",

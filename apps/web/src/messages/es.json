@@ -3166,7 +3166,7 @@
   },
   "AccountAuthorizedClients": {
     "title": "Aplicaciones conectadas",
-    "description": "Aplicaciones y agentes a los que has permitido usar tu cuenta de Spliit.",
+    "description": "Aplicaciones y agentes a los que has permitido usar tu cuenta de Spliit Cloud.",
     "loading": "Cargando aplicaciones conectadas…",
     "empty": "Ninguna aplicación está conectada a tu cuenta.",
     "unnamedClient": "Aplicación sin nombre",

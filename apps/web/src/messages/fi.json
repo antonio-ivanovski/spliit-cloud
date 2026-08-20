@@ -3094,7 +3094,7 @@
   },
   "AccountAuthorizedClients": {
     "title": "Yhdistetyt sovellukset",
-    "description": "Sovellukset ja agentit, joille olet antanut luvan käyttää Spliit-tiliäsi.",
+    "description": "Sovellukset ja agentit, joille olet antanut luvan käyttää Spliit Cloud -tiliäsi.",
     "loading": "Ladataan yhdistettyjä sovelluksia…",
     "empty": "Tiliisi ei ole yhdistetty yhtään sovellusta.",
     "unnamedClient": "Nimetön sovellus",

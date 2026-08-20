@@ -3112,7 +3112,7 @@
   },
   "AccountAuthorizedClients": {
     "title": "Aplicações ligadas",
-    "description": "Aplicações e agentes a quem permitiu usar a sua conta Spliit.",
+    "description": "Aplicações e agentes a quem permitiu usar a sua conta Spliit Cloud.",
     "loading": "A carregar as aplicações ligadas…",
     "empty": "Nenhuma aplicação está ligada à sua conta.",
     "unnamedClient": "Aplicação sem nome",

@@ -3166,7 +3166,7 @@
   },
   "AccountAuthorizedClients": {
     "title": "Verbundene Apps",
-    "description": "Apps und Agenten, denen du die Nutzung deines Spliit-Kontos erlaubt hast.",
+    "description": "Apps und Agenten, denen du die Nutzung deines Spliit-Cloud-Kontos erlaubt hast.",
     "loading": "Verbundene Apps werden geladen…",
     "empty": "Mit deinem Konto ist keine App verbunden.",
     "unnamedClient": "Unbenannte App",

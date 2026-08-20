@@ -1053,7 +1053,7 @@
   },
   "AccountAuthorizedClients": {
     "title": "Connected apps",
-    "description": "Apps and agents you have allowed to use your Spliit account.",
+    "description": "Apps and agents you have allowed to use your Spliit Cloud account.",
     "loading": "Loading connected apps…",
     "empty": "No app is connected to your account.",
     "unnamedClient": "Unnamed app",

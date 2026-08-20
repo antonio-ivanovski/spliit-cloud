@@ -3128,7 +3128,7 @@
   },
   "AccountAuthorizedClients": {
     "title": "Připojené aplikace",
-    "description": "Aplikace a agenti, kterým jsi povolil používat svůj účet Spliit.",
+    "description": "Aplikace a agenti, kterým jsi povolil používat svůj účet Spliit Cloud.",
     "loading": "Načítání připojených aplikací…",
     "empty": "K tvému účtu není připojena žádná aplikace.",
     "unnamedClient": "Aplikace bez názvu",

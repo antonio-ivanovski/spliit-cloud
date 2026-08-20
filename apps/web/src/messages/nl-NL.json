@@ -3166,7 +3166,7 @@
   },
   "AccountAuthorizedClients": {
     "title": "Verbonden apps",
-    "description": "Apps en agents die je toegang tot je Spliit-account hebt gegeven.",
+    "description": "Apps en agents die je toegang tot je Spliit Cloud-account hebt gegeven.",
     "loading": "Verbonden apps laden…",
     "empty": "Er is geen app met je account verbonden.",
     "unnamedClient": "App zonder naam",

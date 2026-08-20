@@ -3078,7 +3078,7 @@
   },
   "AccountAuthorizedClients": {
     "title": "Aplikasi terhubung",
-    "description": "Aplikasi dan agen yang kamu izinkan menggunakan akun Spliit-mu.",
+    "description": "Aplikasi dan agen yang kamu izinkan menggunakan akun Spliit Cloud-mu.",
     "loading": "Memuat aplikasi terhubung…",
     "empty": "Tidak ada aplikasi yang terhubung ke akunmu.",
     "unnamedClient": "Aplikasi tanpa nama",

@@ -3166,7 +3166,7 @@
   },
   "AccountAuthorizedClients": {
     "title": "Ứng dụng đã kết nối",
-    "description": "Các ứng dụng và tác nhân mà bạn đã cho phép sử dụng tài khoản Spliit của mình.",
+    "description": "Các ứng dụng và tác nhân mà bạn đã cho phép sử dụng tài khoản Spliit Cloud của mình.",
     "loading": "Đang tải các ứng dụng đã kết nối…",
     "empty": "Không có ứng dụng nào được kết nối với tài khoản của bạn.",
     "unnamedClient": "Ứng dụng chưa đặt tên",

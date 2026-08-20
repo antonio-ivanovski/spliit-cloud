@@ -3077,7 +3077,7 @@
   },
   "AccountAuthorizedClients": {
     "title": "已连接的应用",
-    "description": "你已允许使用 Spliit 账号的应用和智能体。",
+    "description": "你已允许使用 Spliit Cloud 账号的应用和智能体。",
     "loading": "正在加载已连接的应用…",
     "empty": "没有应用连接到你的账号。",
     "unnamedClient": "未命名应用",

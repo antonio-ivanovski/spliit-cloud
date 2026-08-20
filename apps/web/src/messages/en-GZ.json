@@ -3086,7 +3086,7 @@
   },
   "AccountAuthorizedClients": {
     "title": "connected apps",
-    "description": "apps and agents you let into your spliit account.",
+    "description": "apps and agents you let into your spliit cloud account.",
     "loading": "loading your connected apps…",
     "empty": "no apps connected. squeaky clean.",
     "unnamedClient": "unnamed app",
