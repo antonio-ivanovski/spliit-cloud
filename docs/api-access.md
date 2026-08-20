@@ -50,8 +50,21 @@ curl -X POST https://api.spliit.cloud/auth/oauth2/register \
   }'
 ```
 
-Add a `scope` field to request delete scopes. The response returns the
-`client_id` to use below.
+The response returns the `client_id` to use below.
+
+Add a `scope` field to request a delete scope. This has to happen at
+registration: the authorization endpoint refuses any scope the client did not
+register for, with `The following scopes are invalid`. There is no endpoint to
+widen an existing client, so a client that needs to start deleting has to be
+registered again and reauthorized.
+
+```bash
+  -d '{
+    "client_name": "My agent",
+    ...
+    "scope": "openid offline_access spliit:expenses:read spliit:expenses:write spliit:expenses:delete"
+  }'
+```
 
 ## Getting a token
 
