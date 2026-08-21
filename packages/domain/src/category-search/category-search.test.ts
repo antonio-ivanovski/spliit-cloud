@@ -16,6 +16,7 @@ import {
   rankCategories,
   resolveCategorySearchFields,
   suggestCategoryFromTitle,
+  suggestCategoryFromTitleForLocale,
   type CategorySearchDocument,
   type CategoryTitleMemory,
 } from './index'
@@ -187,6 +188,12 @@ describe('rankCategories', () => {
   })
 })
 
+describe('suggestCategoryFromTitleForLocale', () => {
+  it('uses the locale document cache', () => {
+    expect(suggestCategoryFromTitleForLocale('uber', 'en-US')?.id).toBe('taxi')
+  })
+})
+
 describe('suggestCategoryFromTitle', () => {
   const english = documentsFor('en-US')
 
@@ -194,6 +201,10 @@ describe('suggestCategoryFromTitle', () => {
     const hit = suggestCategoryFromTitle('uber', english)
     expect(hit).toMatchObject({ id: 'taxi', source: 'dictionary' })
     expect(hit!.score).toBeGreaterThanOrEqual(0.7)
+  })
+
+  it('auto-applies a cuisine word as dining-out', () => {
+    expect(suggestCategoryFromTitle('pizza', english)?.id).toBe('dining-out')
   })
 
   it('auto-applies a one-character label typo', () => {
@@ -369,6 +380,25 @@ describe('prod dump patterns', () => {
     expect(suggestCategoryFromTitle('Regiojet', english)?.id).toBe('bus-train')
     expect(suggestCategoryFromTitle('HEB', english)?.id).toBe('groceries')
     expect(suggestCategoryFromTitle('Ryanair', english)?.id).toBe('plane')
+    expect(suggestCategoryFromTitle('Ouigo', english)?.id).toBe('bus-train')
+    expect(suggestCategoryFromTitle('Deutschlandticket', english)?.id).toBe(
+      'bus-train',
+    )
+    expect(suggestCategoryFromTitle('Siirto', english)?.id).toBe('payment')
+    expect(suggestCategoryFromTitle('Alipay', english)?.id).toBe('payment')
+    expect(suggestCategoryFromTitle('Pingo Doce', english)?.id).toBe(
+      'groceries',
+    )
+    expect(suggestCategoryFromTitle('Conad', english)?.id).toBe('groceries')
+    expect(suggestCategoryFromTitle('Decathlon', english)?.id).toBe('sports')
+    // Bare "ice cream" ping is now food-and-drink per tightened boundary (cafe/coffee/pizza/ice-cream -> food-and-drink for 2+ word titles; single-word pizza stays dining-out).
+    expect(suggestCategoryFromTitle('ice cream', english)?.id).toBe(
+      'food-and-drink',
+    )
+    expect(suggestCategoryFromTitle('Péage', english)?.id).toBe('tolls')
+    expect(suggestCategoryFromTitle('bowling', english)?.id).toBe('games')
+    expect(suggestCategoryFromTitle('souvenir', english)?.id).toBe('gifts')
+    expect(suggestCategoryFromTitle('zipcar', english)?.id).toBe('car')
   })
 })
 

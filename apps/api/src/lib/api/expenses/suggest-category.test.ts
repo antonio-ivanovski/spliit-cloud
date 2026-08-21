@@ -1,13 +1,14 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import '../../../test/mocks'
-import { prisma$QueryRaw, prismaMock } from '../../../test/state'
+import { prismaMock } from '../../../test/state'
 
 const generateText = vi.fn()
 const envState = vi.hoisted(() => ({
   PUBLIC_ENABLE_CATEGORY_EXTRACT: false,
   AI_CATEGORY_RECENT_EXPENSES_LIMIT: 50,
   AI_CATEGORY_MODEL: 'test-category-model',
+  CATEGORY_MEMORY_LIMIT: 200,
 }))
 
 vi.mock('ai', () => ({
@@ -26,30 +27,37 @@ beforeEach(() => {
   generateText.mockReset()
   generateText.mockResolvedValue({ text: 'groceries' })
   envState.PUBLIC_ENABLE_CATEGORY_EXTRACT = false
+  vi.spyOn(console, 'info').mockImplementation(() => {})
   prismaMock.group.findUnique.mockResolvedValue({
     name: 'Test Group',
     ledger: { id: 'ledger-1', currency: '$', currencyCode: 'USD' },
   } as never)
   prismaMock.expense.findMany.mockResolvedValue([])
-  prisma$QueryRaw.mockResolvedValue([])
+})
+
+afterEach(() => {
+  vi.restoreAllMocks()
 })
 
 describe('suggestExpenseCategory', () => {
-  it('returns a dictionary hit without querying titles or calling the model', async () => {
+  it('returns a dictionary hit without querying expenses or calling the model', async () => {
     envState.PUBLIC_ENABLE_CATEGORY_EXTRACT = true
     const beforeAi = vi.fn()
     await expect(
       suggestExpenseCategory({
         groupId: 'group-1',
-        title: 'Whole Foods',
+        title: 'uber',
         allowAi: true,
         beforeAi,
       }),
-    ).resolves.toEqual({ categoryId: 'groceries' })
+    ).resolves.toEqual({ categoryId: 'taxi' })
     expect(prismaMock.group.findUnique).not.toHaveBeenCalled()
-    expect(prisma$QueryRaw).not.toHaveBeenCalled()
+    expect(prismaMock.expense.findMany).not.toHaveBeenCalled()
     expect(generateText).not.toHaveBeenCalled()
     expect(beforeAi).not.toHaveBeenCalled()
+    expect(console.info).toHaveBeenCalledWith(
+      expect.stringContaining('"hit":"dictionary"'),
+    )
   })
 
   it('returns null for 1–2 letter titles without querying or calling the model', async () => {
@@ -62,25 +70,13 @@ describe('suggestExpenseCategory', () => {
       }),
     ).resolves.toEqual({ categoryId: null })
     expect(prismaMock.group.findUnique).not.toHaveBeenCalled()
-    expect(prisma$QueryRaw).not.toHaveBeenCalled()
     expect(generateText).not.toHaveBeenCalled()
   })
 
-  it('returns a similar-title history hit without calling the model', async () => {
-    prisma$QueryRaw.mockResolvedValue([
-      {
-        id: 'exp-1',
-        title: 'Luigi mysterious trattoria',
-        categoryId: 'dining-out',
-        similarity: 1,
-      },
-      {
-        id: 'exp-2',
-        title: 'Luigi mysterious trattoria',
-        categoryId: 'dining-out',
-        similarity: 0.9,
-      },
-    ])
+  it('returns a history exact match without calling the model', async () => {
+    prismaMock.expense.findMany.mockResolvedValue([
+      { title: 'Luigi mysterious trattoria', categoryId: 'dining-out' },
+    ] as never)
 
     await expect(
       suggestExpenseCategory({
@@ -88,11 +84,18 @@ describe('suggestExpenseCategory', () => {
         title: 'Luigi mysterious trattoria',
       }),
     ).resolves.toEqual({ categoryId: 'dining-out' })
-    expect(prisma$QueryRaw).toHaveBeenCalled()
+    expect(prismaMock.expense.findMany).toHaveBeenCalled()
     expect(generateText).not.toHaveBeenCalled()
+    expect(console.info).toHaveBeenCalledWith(
+      expect.stringContaining('"hit":"history"'),
+    )
   })
 
-  it('returns null when local matching is weak and AI is off', async () => {
+  it('returns null when history misses and AI is off', async () => {
+    prismaMock.expense.findMany.mockResolvedValue([
+      { title: 'Luigi mysterious trattoria', categoryId: 'dining-out' },
+    ] as never)
+
     await expect(
       suggestExpenseCategory({
         groupId: 'group-1',
@@ -103,9 +106,12 @@ describe('suggestExpenseCategory', () => {
     expect(generateText).not.toHaveBeenCalled()
   })
 
-  it('calls the model when local matching is weak and AI is allowed', async () => {
+  it('calls the model when history misses and AI is allowed', async () => {
     envState.PUBLIC_ENABLE_CATEGORY_EXTRACT = true
     const beforeAi = vi.fn()
+    prismaMock.expense.findMany.mockResolvedValue([
+      { title: 'Luigi mysterious trattoria', categoryId: 'dining-out' },
+    ] as never)
 
     await expect(
       suggestExpenseCategory({

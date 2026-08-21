@@ -7,7 +7,10 @@ import {
 const TITLE_TRIGRAM_MIN_LENGTH = 3
 const TITLE_TRIGRAM_MIN_SIMILARITY = 0.35
 const TITLE_TRIGRAM_ID_LIMIT = 250
-/** Similar titles fed into category voting — smaller than list-search. */
+/**
+ * Similar titles for expense-list text search (pg_trgm). Category suggest no
+ * longer uses this path — it uses last-200 memory.
+ */
 export const TITLE_TRIGRAM_CATEGORY_LIMIT = 50
 
 export type SimilarExpenseTitle = {

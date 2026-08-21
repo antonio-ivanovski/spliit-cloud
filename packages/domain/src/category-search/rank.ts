@@ -3,6 +3,7 @@ import {
   type Category,
   type CategoryId,
 } from '../categories'
+import { calibrateRankedCategories } from './calibration'
 import {
   resolveCategorySearchFields,
   tokenizeSearchText,
@@ -106,12 +107,13 @@ export function rankCategories(
     results.push({ id: document.id, score, isParent: document.isParent })
   }
 
-  results.sort((left, right) => {
+  const calibrated = calibrateRankedCategories({ needle, ranked: results })
+  calibrated.sort((left, right) => {
     if (right.score !== left.score) return right.score - left.score
     if (left.isParent !== right.isParent) return left.isParent ? 1 : -1
     return 0
   })
-  return results
+  return calibrated
 }
 
 function scoreDocument(

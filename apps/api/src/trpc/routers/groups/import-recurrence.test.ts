@@ -100,51 +100,61 @@ describe('importGroup recurring collapse', () => {
   })
 
   it('collapses matching monthly rows into one series with sequences', async () => {
-    const seriesCreates: Array<{ data: Record<string, unknown> }> = []
-    prismaMock.recurringExpenseSeries.create.mockImplementation(
-      async (args: unknown) => {
-        seriesCreates.push(args as { data: Record<string, unknown> })
-        return { id: (args as { data: { id: string } }).data.id } as never
-      },
-    )
-    const expenseRows: Array<Record<string, unknown>> = []
-    prismaMock.expense.createMany.mockImplementation(async (args: unknown) => {
-      expenseRows.push(
-        ...(args as { data: Array<Record<string, unknown>> }).data,
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-07-23T12:00:00.000Z'))
+    try {
+      const seriesCreates: Array<{ data: Record<string, unknown> }> = []
+      prismaMock.recurringExpenseSeries.create.mockImplementation(
+        async (args: unknown) => {
+          seriesCreates.push(args as { data: Record<string, unknown> })
+          return { id: (args as { data: { id: string } }).data.id } as never
+        },
       )
-      return { count: expenseRows.length } as never
-    })
+      const expenseRows: Array<Record<string, unknown>> = []
+      prismaMock.expense.createMany.mockImplementation(
+        async (args: unknown) => {
+          expenseRows.push(
+            ...(args as { data: Array<Record<string, unknown>> }).data,
+          )
+          return { count: expenseRows.length } as never
+        },
+      )
 
-    const input: ImportInput = {
-      groupFormValues: {
-        name: 'Imported',
-        information: '',
-        currency: '€',
-        currencyCode: 'EUR',
-        participants: [{ name: 'Owner' }],
-      },
-      participants: [...baseParticipants],
-      expenses: [
-        monthlyExpense('2025-05-19'),
-        monthlyExpense('2025-06-19'),
-        monthlyExpense('2025-07-19'),
-      ] as never,
+      const input: ImportInput = {
+        groupFormValues: {
+          name: 'Imported',
+          information: '',
+          currency: '€',
+          currencyCode: 'EUR',
+          participants: [{ name: 'Owner' }],
+        },
+        participants: [...baseParticipants],
+        expenses: [
+          monthlyExpense('2025-05-19'),
+          monthlyExpense('2025-06-19'),
+          monthlyExpense('2025-07-19'),
+        ] as never,
+      }
+
+      const result = await importGroup(input, { accountId: 'acct-importer' })
+      expect(result.importedExpenses).toBe(3)
+      expect(seriesCreates).toHaveLength(1)
+      expect(seriesCreates[0]!.data.occurrencesCreated).toBe(3)
+      expect(seriesCreates[0]!.data.nextOccurrenceOrdinal).toBe(14)
+      expect(
+        (seriesCreates[0]!.data.nextOccurrenceDate as Date)
+          .toISOString()
+          .slice(0, 10),
+      ).toBe('2026-08-19')
+
+      const sequences = expenseRows.map(
+        (row) => row.recurrenceSequence as number,
+      )
+      expect(sequences.sort((a, b) => a - b)).toEqual([1, 2, 3])
+      const seriesIds = new Set(expenseRows.map((row) => row.recurringSeriesId))
+      expect(seriesIds.size).toBe(1)
+    } finally {
+      vi.useRealTimers()
     }
-
-    const result = await importGroup(input, { accountId: 'acct-importer' })
-    expect(result.importedExpenses).toBe(3)
-    expect(seriesCreates).toHaveLength(1)
-    expect(seriesCreates[0]!.data.occurrencesCreated).toBe(3)
-    expect(seriesCreates[0]!.data.nextOccurrenceOrdinal).toBe(14)
-    expect(
-      (seriesCreates[0]!.data.nextOccurrenceDate as Date)
-        .toISOString()
-        .slice(0, 10),
-    ).toBe('2026-08-19')
-
-    const sequences = expenseRows.map((row) => row.recurrenceSequence as number)
-    expect(sequences.sort((a, b) => a - b)).toEqual([1, 2, 3])
-    const seriesIds = new Set(expenseRows.map((row) => row.recurringSeriesId))
-    expect(seriesIds.size).toBe(1)
   })
 })

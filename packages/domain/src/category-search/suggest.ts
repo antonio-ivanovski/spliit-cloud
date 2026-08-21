@@ -35,6 +35,12 @@ export const CATEGORY_CONFIDENT_SCORE_MARGIN = 0.04
 /** Ignore 1–2 character alphabetic keystrokes while the user is still typing. */
 export const CATEGORY_SUGGEST_MIN_QUERY_LENGTH = 3
 
+/**
+ * Live debounced typing needs more signal than a blur — avoids eager 3–4 char
+ * hits.
+ */
+export const CATEGORY_SUGGEST_LIVE_MIN_QUERY_LENGTH = 5
+
 const CJK_SCRIPT =
   /[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\u3400-\u9fff\uf900-\ufaff\uff66-\uff9f\uac00-\ud7af]/u
 
@@ -48,6 +54,19 @@ export function meetsCategorySuggestMinQueryLength(query: string): boolean {
   if (!needle) return false
   if (CJK_SCRIPT.test(query) || CJK_SCRIPT.test(needle)) return true
   return needle.replaceAll(' ', '').length >= CATEGORY_SUGGEST_MIN_QUERY_LENGTH
+}
+
+/**
+ * Stricter gate for live debounced typing — 5 chars (CJK still exempt). Blur
+ * uses the 3-char gate so short titles like `uber` still categorize on exit.
+ */
+export function meetsCategorySuggestLiveMinQueryLength(query: string): boolean {
+  const needle = normalizeSearchText(query)
+  if (!needle) return false
+  if (CJK_SCRIPT.test(query) || CJK_SCRIPT.test(needle)) return true
+  return (
+    needle.replaceAll(' ', '').length >= CATEGORY_SUGGEST_LIVE_MIN_QUERY_LENGTH
+  )
 }
 
 export type CategoryTitleMemory = {
@@ -229,4 +248,13 @@ export function expandExpenseQueryForLocale(
   locale: string = defaultLocale,
 ): ExpandedExpenseQuery {
   return expandExpenseQuery(query, documentsForLocale(locale))
+}
+
+/** Dictionary + history suggest using the shipped locale document cache. */
+export function suggestCategoryFromTitleForLocale(
+  title: string,
+  locale: string = defaultLocale,
+  memory: readonly CategoryTitleMemory[] = [],
+): CategorySuggestion | null {
+  return suggestCategoryFromTitle(title, documentsForLocale(locale), memory)
 }

@@ -156,14 +156,15 @@ export function BasicDetailsCard(props: {
     keyPrefix: 'Categories',
   })
   const locale = useLocale() as Locale
-  const { isCategoryLoading, onManualCategory } = useSuggestCategoryFromTitle({
-    form,
-    groupId: group.id,
-    locale,
-    readOnly,
-    enableCategoryExtract: props.runtimeFeatureFlags.enableCategoryExtract,
-    suggestCategoryMutation: props.suggestCategoryMutation,
-  })
+  const { isCategoryLoading, onManualCategory, onTitleBlur } =
+    useSuggestCategoryFromTitle({
+      form,
+      groupId: group.id,
+      locale,
+      readOnly,
+      enableCategoryExtract: props.runtimeFeatureFlags.enableCategoryExtract,
+      suggestCategoryMutation: props.suggestCategoryMutation,
+    })
   const [calculatorOpen, setCalculatorOpen] = useState(false)
   const [calculatorExpression, setCalculatorExpression] = useState<
     string | null
@@ -326,6 +327,10 @@ export function BasicDetailsCard(props: {
                       className="h-10 w-full rounded-none border-0 text-base shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
                       disabled={readOnly}
                       {...field}
+                      onBlur={() => {
+                        field.onBlur()
+                        onTitleBlur()
+                      }}
                     />
                   </FormControl>
                 </div>
