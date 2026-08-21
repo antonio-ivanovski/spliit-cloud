@@ -2726,7 +2726,7 @@
     },
     "consent": {
       "title": "Spliit을 {client}에 연결할까요?",
-      "description": "아래 계정과 접근 권한을 검토하세요. 모든 지출 생성은 계속 사용자가 제어합니다.",
+      "description": "아래에서 계정과 요청된 접근 권한을 확인하세요.",
       "connectionDetails": "연결 세부정보",
       "spliitAccount": "Spliit 계정",
       "connectingTo": "연결 대상",
@@ -2742,11 +2742,22 @@
       "expensesTitle": "확인된 지출 생성",
       "expensesDescription": "지출 생성을 누른 후 미리보기에 표시된 정확한 지출만 어시스턴트가 생성할 수 있습니다.",
       "privacyTitle": "간단한 개인정보 보호 안내",
-      "privacyDescription": "금융 그룹 정보는 민감할 수 있습니다. 연결된 동안 {client}에서 해당 정보에 접근할 수 있지만, 어시스턴트는 지출을 수정하거나 삭제할 수 없으며 미리보기를 확인하지 않고 지출을 생성할 수 없습니다.",
+      "privacyDescription": "그룹의 금전 정보는 민감할 수 있습니다. 연결되어 있는 동안 {client}에서 확인할 수 있습니다. 계정 설정에서 언제든 연결을 해제할 수 있습니다.",
       "authorityNote": "Spliit이 계속 원본 데이터의 기준입니다. 기존 검증, 잔액, 활동 기록 및 알림이 모두 적용됩니다.",
       "allow": "허용하고 연결",
       "cancel": "취소",
-      "missingRequest": "인증 요청이 없습니다. 어시스턴트로 돌아가세요."
+      "missingRequest": "인증 요청이 없습니다. 어시스턴트로 돌아가세요.",
+      "groupsManageTitle": "그룹 생성 및 수정",
+      "groupsManageDescription": "그룹을 만들고 이름을 바꾸며 설정을 변경하고 참가자를 추가합니다.",
+      "groupsDeleteTitle": "그룹 삭제 및 참가자 제외",
+      "groupsDeleteDescription": "그룹을 영구적으로 삭제하거나 보관하고, 그룹에서 참가자를 제외합니다. 되돌릴 수 없습니다.",
+      "expensesReadTitle": "지출 읽기",
+      "expensesReadDescription": "금액, 날짜, 카테고리, 메모, 각 지출의 분배 방식을 포함한 그룹의 모든 지출.",
+      "expensesManageTitle": "지출 생성 및 수정",
+      "expensesManageDescription": "미리 보기를 먼저 보여주지 않고 지출을 바로 추가하거나 기존 지출을 변경합니다.",
+      "expensesDeleteTitle": "지출 삭제",
+      "expensesDeleteDescription": "지출을 영구적으로 삭제하고, 반복 지출 기간 단축처럼 데이터가 사라지는 수정을 합니다. 되돌릴 수 없습니다.",
+      "unknownScopes": "이 앱은 Spliit Cloud가 인식하지 못하는 권한({scopes})을 요청하고 있어 여기서 승인할 수 없습니다. 앱 제작자에게 요청 권한을 확인해 달라고 요청하세요."
     },
     "login": {
       "missingTitle": "인증 요청 없음",
@@ -3163,5 +3174,28 @@
     "title": "현재 오프라인 상태입니다",
     "description": "이 화면은 연결이 필요합니다. 그룹과 지출을 불러오려면 다시 연결하세요.",
     "retry": "다시 시도"
+  },
+  "AccountAuthorizedClients": {
+    "title": "연결된 앱",
+    "description": "Spliit Cloud 계정 사용을 허용한 앱과 에이전트입니다.",
+    "loading": "연결된 앱을 불러오는 중…",
+    "empty": "계정에 연결된 앱이 없습니다.",
+    "unnamedClient": "이름 없는 앱",
+    "authorizedOn": "{date}에 연결됨",
+    "revoke": "연결 해제",
+    "revoked": "앱 연결을 해제했습니다",
+    "revokeFailed": "이 앱의 연결을 해제하지 못했습니다",
+    "cancel": "취소",
+    "confirmTitle": "{name} 연결을 해제할까요?",
+    "confirmDescription": "더 이상 계정에서 아무것도 읽거나 변경할 수 없으며, 다시 권한을 요청해야 합니다.",
+    "confirmGracePeriod": "이미 진행 중인 요청은 최대 한 시간 동안 성공할 수 있습니다.",
+    "loadFailed": "연결된 앱을 불러오지 못했습니다.",
+    "scopeGroupsRead": "그룹 읽기",
+    "scopeGroupsManage": "그룹 관리",
+    "scopeGroupsDelete": "그룹 삭제",
+    "scopeExpensesRead": "지출 읽기",
+    "scopeExpensesManage": "지출 관리",
+    "scopeExpensesDelete": "지출 삭제",
+    "scopeExpensesWrite": "미리 보기로 지출 추가"
   }
 }

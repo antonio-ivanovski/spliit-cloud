@@ -2726,7 +2726,7 @@
     },
     "consent": {
       "title": "Kết nối Spliit với {client}?",
-      "description": "Xem lại tài khoản và quyền truy cập bên dưới. Bạn vẫn kiểm soát mọi lần tạo chi phí.",
+      "description": "Hãy xem lại tài khoản và quyền truy cập được yêu cầu bên dưới.",
       "connectionDetails": "Chi tiết kết nối",
       "spliitAccount": "Tài khoản Spliit",
       "connectingTo": "Đang kết nối với",
@@ -2742,11 +2742,22 @@
       "expensesTitle": "Tạo chi phí có xác nhận",
       "expensesDescription": "Trợ lý chỉ có thể tạo đúng khoản chi hiển thị trong bản xem trước sau khi bạn nhấn Tạo chi phí.",
       "privacyTitle": "Lưu ý nhanh về quyền riêng tư",
-      "privacyDescription": "Thông tin nhóm tài chính có thể nhạy cảm. Thông tin này sẽ được cung cấp cho {client} khi kết nối, nhưng trợ lý không thể chỉnh sửa hoặc xóa chi phí và không thể tạo chi phí nếu bạn chưa xác nhận bản xem trước.",
+      "privacyDescription": "Thông tin tài chính của nhóm có thể nhạy cảm. {client} vẫn xem được chừng nào kết nối còn hiệu lực. Bạn có thể ngắt kết nối bất cứ lúc nào trong cài đặt tài khoản.",
       "authorityNote": "Spliit vẫn là nguồn dữ liệu chính xác. Các quy trình xác thực, số dư, lịch sử hoạt động và thông báo hiện có vẫn được áp dụng.",
       "allow": "Cho phép và kết nối",
       "cancel": "Hủy",
-      "missingRequest": "Thiếu yêu cầu cấp quyền. Hãy quay lại trợ lý của bạn."
+      "missingRequest": "Thiếu yêu cầu cấp quyền. Hãy quay lại trợ lý của bạn.",
+      "groupsManageTitle": "Tạo và sửa nhóm",
+      "groupsManageDescription": "Tạo nhóm, đổi tên, thay đổi cài đặt và thêm người tham gia.",
+      "groupsDeleteTitle": "Xoá nhóm và loại người tham gia",
+      "groupsDeleteDescription": "Xoá hoặc lưu trữ vĩnh viễn một nhóm, và loại người tham gia khỏi nhóm. Không thể hoàn tác.",
+      "expensesReadTitle": "Đọc chi tiêu",
+      "expensesReadDescription": "Mọi chi tiêu trong các nhóm của bạn, gồm số tiền, ngày, danh mục, ghi chú và cách chia từng khoản.",
+      "expensesManageTitle": "Tạo và sửa chi tiêu",
+      "expensesManageDescription": "Thêm chi tiêu và sửa những khoản đã có một cách trực tiếp, không hiển thị bản xem trước cho bạn trước đó.",
+      "expensesDeleteTitle": "Xoá chi tiêu",
+      "expensesDeleteDescription": "Xoá vĩnh viễn chi tiêu và thực hiện những thay đổi làm mất dữ liệu, chẳng hạn rút ngắn một chuỗi định kỳ. Không thể hoàn tác.",
+      "unknownScopes": "Ứng dụng này yêu cầu một quyền mà Spliit Cloud không nhận ra ({scopes}), nên không thể phê duyệt tại đây. Hãy đề nghị tác giả ứng dụng kiểm tra lại các quyền được yêu cầu."
     },
     "login": {
       "missingTitle": "Thiếu yêu cầu cấp quyền",
@@ -3163,5 +3174,28 @@
     "title": "Bạn đang ngoại tuyến",
     "description": "Màn hình này cần kết nối. Kết nối lại để tải nhóm và chi phí.",
     "retry": "Thử lại"
+  },
+  "AccountAuthorizedClients": {
+    "title": "Ứng dụng đã kết nối",
+    "description": "Các ứng dụng và tác nhân mà bạn đã cho phép sử dụng tài khoản Spliit Cloud của mình.",
+    "loading": "Đang tải các ứng dụng đã kết nối…",
+    "empty": "Không có ứng dụng nào được kết nối với tài khoản của bạn.",
+    "unnamedClient": "Ứng dụng chưa đặt tên",
+    "authorizedOn": "Đã kết nối vào {date}",
+    "revoke": "Ngắt kết nối",
+    "revoked": "Đã ngắt kết nối ứng dụng",
+    "revokeFailed": "Không thể ngắt kết nối ứng dụng này",
+    "cancel": "Huỷ",
+    "confirmTitle": "Ngắt kết nối {name}?",
+    "confirmDescription": "Ứng dụng sẽ không thể đọc hay thay đổi bất cứ thứ gì trong tài khoản của bạn nữa, và sẽ phải xin phép bạn lại.",
+    "confirmGracePeriod": "Một yêu cầu đang được xử lý vẫn có thể thành công trong tối đa một giờ.",
+    "loadFailed": "Không thể tải các ứng dụng đã kết nối.",
+    "scopeGroupsRead": "Đọc nhóm",
+    "scopeGroupsManage": "Quản lý nhóm",
+    "scopeGroupsDelete": "Xoá nhóm",
+    "scopeExpensesRead": "Đọc chi tiêu",
+    "scopeExpensesManage": "Quản lý chi tiêu",
+    "scopeExpensesDelete": "Xoá chi tiêu",
+    "scopeExpensesWrite": "Thêm chi tiêu kèm xem trước"
   }
 }

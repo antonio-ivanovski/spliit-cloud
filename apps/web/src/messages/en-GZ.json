@@ -2690,7 +2690,7 @@
   "OAuth": {
     "consent": {
       "title": "connect Spliit to {client}?",
-      "description": "review the account and access below. you control every expense creation.",
+      "description": "check the account and what it's asking for below.",
       "connectionDetails": "connection details",
       "spliitAccount": "Spliit account",
       "connectingTo": "connecting to",
@@ -2706,11 +2706,22 @@
       "expensesTitle": "confirmed expense creation",
       "expensesDescription": "the assistant may create only the exact previewed expense after you press Create expense.",
       "privacyTitle": "quick privacy note",
-      "privacyDescription": "financial group details can be sensitive. they become available to {client} while connected, but the assistant cannot edit or delete expenses or create one without your preview confirmation.",
+      "privacyDescription": "group money stuff can be sensitive. {client} can see it the whole time it's connected. you can disconnect it whenever from your account settings.",
       "authorityNote": "Spliit stays the source of truth. existing validation, balances, activity history, and notifications still apply.",
       "allow": "allow and connect",
       "cancel": "cancel, never mind",
-      "missingRequest": "authorization request missing. return to your assistant."
+      "missingRequest": "authorization request missing. return to your assistant.",
+      "groupsManageTitle": "create and edit groups",
+      "groupsManageDescription": "make new groups, rename them, change their settings, and add people.",
+      "groupsDeleteTitle": "delete groups and remove people",
+      "groupsDeleteDescription": "delete or archive a group for good, and remove people from it. no take-backs.",
+      "expensesReadTitle": "read expenses",
+      "expensesReadDescription": "every expense in your groups: amounts, dates, categories, notes, and how each one is split.",
+      "expensesManageTitle": "create and edit expenses",
+      "expensesManageDescription": "add expenses and change existing ones straight up, no preview shown to you first.",
+      "expensesDeleteTitle": "delete expenses",
+      "expensesDeleteDescription": "delete expenses for good, and make edits that wipe data like trimming a recurring series. no take-backs.",
+      "unknownScopes": "this app wants a permission spliit cloud doesn't know ({scopes}), so it can't be approved here. tell whoever made it to check what it's asking for."
     },
     "login": {
       "missingTitle": "authorization request missing",
@@ -3083,5 +3094,28 @@
     "title": "you are offline",
     "description": "this screen needs the internet. hop back online to load your groups and expenses.",
     "retry": "try it again"
+  },
+  "AccountAuthorizedClients": {
+    "title": "connected apps",
+    "description": "apps and agents you let into your spliit cloud account.",
+    "loading": "loading your connected apps…",
+    "empty": "no apps connected. squeaky clean.",
+    "unnamedClient": "unnamed app",
+    "authorizedOn": "connected {date}",
+    "revoke": "disconnect",
+    "revoked": "app disconnected. bye bye.",
+    "revokeFailed": "couldn't disconnect that one, try again",
+    "cancel": "cancel, never mind",
+    "confirmTitle": "disconnect {name}?",
+    "confirmDescription": "it won't be able to read or change anything in your account anymore, and it'll have to ask you again.",
+    "confirmGracePeriod": "a request already in flight might still go through for up to an hour.",
+    "loadFailed": "couldn't load your connected apps.",
+    "scopeGroupsRead": "read groups",
+    "scopeGroupsManage": "manage groups",
+    "scopeGroupsDelete": "delete groups",
+    "scopeExpensesRead": "read expenses",
+    "scopeExpensesManage": "manage expenses",
+    "scopeExpensesDelete": "delete expenses",
+    "scopeExpensesWrite": "add expenses with a preview"
   }
 }

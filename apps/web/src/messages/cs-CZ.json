@@ -2682,7 +2682,7 @@
   "OAuth": {
     "consent": {
       "title": "Připojit Spliit k {client}?",
-      "description": "Zkontrolujte níže uvedený účet a přístup. Každé vytvoření výdaje máte pod kontrolou.",
+      "description": "Zkontroluj níže účet a požadovaný přístup.",
       "connectionDetails": "Podrobnosti připojení",
       "spliitAccount": "Účet Spliit",
       "connectingTo": "Připojení k",
@@ -2698,11 +2698,22 @@
       "expensesTitle": "Potvrzené vytvoření výdaje",
       "expensesDescription": "Asistent může vytvořit pouze přesný výdaj z náhledu po stisknutí tlačítka Vytvořit výdaj.",
       "privacyTitle": "Krátká poznámka k soukromí",
-      "privacyDescription": "Podrobnosti finančních skupin mohou být citlivé. Po dobu připojení budou dostupné pro {client}, ale asistent nemůže upravovat ani mazat výdaje a nemůže vytvořit výdaj bez vašeho potvrzení náhledu.",
+      "privacyDescription": "Finanční údaje skupiny mohou být citlivé. Aplikace {client} k nim má přístup po celou dobu připojení. Kdykoli ji můžeš odpojit v nastavení účtu.",
       "authorityNote": "Spliit zůstává zdrojem pravdy. Nadále platí stávající ověřování, zůstatky, historie aktivit a oznámení.",
       "allow": "Povolit a připojit",
       "cancel": "Zrušit",
-      "missingRequest": "Autorizační požadavek chybí. Vraťte se ke svému asistentovi."
+      "missingRequest": "Autorizační požadavek chybí. Vraťte se ke svému asistentovi.",
+      "groupsManageTitle": "Vytvářet a upravovat skupiny",
+      "groupsManageDescription": "Vytvářet skupiny, přejmenovávat je, měnit jejich nastavení a přidávat účastníky.",
+      "groupsDeleteTitle": "Mazat skupiny a odebírat lidi",
+      "groupsDeleteDescription": "Trvale smazat nebo archivovat skupinu a odebrat z ní účastníky. Nelze vzít zpět.",
+      "expensesReadTitle": "Číst výdaje",
+      "expensesReadDescription": "Všechny výdaje ve tvých skupinách včetně částek, dat, kategorií, poznámek a způsobu rozdělení každého z nich.",
+      "expensesManageTitle": "Vytvářet a upravovat výdaje",
+      "expensesManageDescription": "Přidávat výdaje a měnit stávající přímo, bez zobrazení náhledu.",
+      "expensesDeleteTitle": "Mazat výdaje",
+      "expensesDeleteDescription": "Trvale mazat výdaje a provádět úpravy, které odstraní data, například zkrácení opakující se série. Nelze vzít zpět.",
+      "unknownScopes": "Tato aplikace žádá o oprávnění, které Spliit Cloud nezná ({scopes}), takže ji tu nelze schválit. Požádej autora, ať zkontroluje požadovaná oprávnění."
     },
     "login": {
       "missingTitle": "Autorizační požadavek chybí",
@@ -3125,5 +3136,28 @@
     "title": "Jste offline",
     "description": "Tato obrazovka potřebuje připojení. Připojte se znovu pro načtení skupin a výdajů.",
     "retry": "Zkusit znovu"
+  },
+  "AccountAuthorizedClients": {
+    "title": "Připojené aplikace",
+    "description": "Aplikace a agenti, kterým jsi povolil používat svůj účet Spliit Cloud.",
+    "loading": "Načítání připojených aplikací…",
+    "empty": "K tvému účtu není připojena žádná aplikace.",
+    "unnamedClient": "Aplikace bez názvu",
+    "authorizedOn": "Připojeno {date}",
+    "revoke": "Odpojit",
+    "revoked": "Aplikace odpojena",
+    "revokeFailed": "Tuto aplikaci se nepodařilo odpojit",
+    "cancel": "Zrušit",
+    "confirmTitle": "Odpojit {name}?",
+    "confirmDescription": "Nebude už moci nic číst ani měnit ve tvém účtu a bude tě muset znovu požádat o svolení.",
+    "confirmGracePeriod": "Již probíhající požadavek může ještě nejvýše hodinu proběhnout úspěšně.",
+    "loadFailed": "Připojené aplikace se nepodařilo načíst.",
+    "scopeGroupsRead": "Číst skupiny",
+    "scopeGroupsManage": "Spravovat skupiny",
+    "scopeGroupsDelete": "Mazat skupiny",
+    "scopeExpensesRead": "Číst výdaje",
+    "scopeExpensesManage": "Spravovat výdaje",
+    "scopeExpensesDelete": "Mazat výdaje",
+    "scopeExpensesWrite": "Přidávat výdaje s náhledem"
   }
 }

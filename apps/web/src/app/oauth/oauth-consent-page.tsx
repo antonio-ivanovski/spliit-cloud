@@ -7,7 +7,6 @@ import {
   Eye,
   Loader2,
   LockKeyhole,
-  PlusCircle,
   ShieldCheck,
   TriangleAlert,
 } from 'lucide-react'
@@ -20,21 +19,26 @@ import { authClient } from '@/lib/auth'
 
 import {
   getOAuthPublicClient,
+  readOAuthRequest,
   resolveOAuthQuery,
   submitConsent,
 } from './oauth-api'
+import {
+  describeScopes,
+  KNOWN_SCOPES,
+  OIDC_SCOPES,
+} from './oauth-consent-scopes'
 import { OAuthShell } from './oauth-shell'
 
 const route = getRouteApi('/oauth/consent')
 
 export function OAuthConsentPage() {
   const { t } = useTranslation(undefined, { keyPrefix: 'OAuth.consent' })
-  const {
-    oauth_query: explicitOAuthQuery,
-    client_id: clientId,
-    scope,
-  } = route.useSearch()
+  const { oauth_query: explicitOAuthQuery } = route.useSearch()
   const oauthQuery = resolveOAuthQuery(explicitOAuthQuery)
+  // Identity and scopes are read from the signed request itself, never from
+  // separate search params, so what is shown is what gets authorized.
+  const { clientId, scopes } = readOAuthRequest(oauthQuery)
   const { data: session, isPending: sessionPending } = authClient.useSession()
   const client = useQuery({
     queryKey: ['oauth-public-client', clientId],
@@ -44,9 +48,19 @@ export function OAuthConsentPage() {
   })
   const [pending, setPending] = useState<'accept' | 'deny' | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const requestedScopes = new Set(scope?.split(' ') ?? [])
+  const grants = describeScopes(scopes)
+  const unknownScopes = scopes.filter(
+    (scope) => !KNOWN_SCOPES.has(scope) && !OIDC_SCOPES.has(scope),
+  )
   const clientName = client.data?.client_name ?? t('defaultClient')
   const account = session?.user
+  // Approving is only meaningful once the account is known, the client has
+  // been resolved, and every requested scope is one we can name.
+  const canApprove =
+    Boolean(account) &&
+    Boolean(client.data) &&
+    unknownScopes.length === 0 &&
+    pending === null
 
   async function decide(accept: boolean) {
     if (!oauthQuery) {
@@ -55,7 +69,7 @@ export function OAuthConsentPage() {
     }
     setPending(accept ? 'accept' : 'deny')
     setError(null)
-    await submitConsent({ accept, oauthQuery, scope }).catch((cause) => {
+    await submitConsent({ accept, oauthQuery }).catch((cause) => {
       setError(cause instanceof Error ? cause.message : String(cause))
       setPending(null)
     })
@@ -135,20 +149,14 @@ export function OAuthConsentPage() {
               title={t('identityTitle')}
               description={t('identityDescription')}
             />
-            {requestedScopes.has('spliit:groups:read') && (
+            {grants.map((grant) => (
               <Permission
-                icon={<Database className="size-4" />}
-                title={t('groupsTitle')}
-                description={t('groupsDescription')}
+                key={grant.scope}
+                icon={<grant.icon className="size-4" />}
+                title={t(grant.titleKey)}
+                description={t(grant.descriptionKey)}
               />
-            )}
-            {requestedScopes.has('spliit:expenses:write') && (
-              <Permission
-                icon={<PlusCircle className="size-4" />}
-                title={t('expensesTitle')}
-                description={t('expensesDescription')}
-              />
-            )}
+            ))}
           </div>
         </section>
 
@@ -184,6 +192,12 @@ export function OAuthConsentPage() {
           </div>
         </div>
 
+        {unknownScopes.length > 0 && (
+          <p className="text-sm text-destructive" role="alert">
+            {t('unknownScopes', { scopes: unknownScopes.join(', ') })}
+          </p>
+        )}
+
         {error && (
           <p className="text-sm text-destructive" role="alert">
             {error}
@@ -193,7 +207,7 @@ export function OAuthConsentPage() {
         <div className="flex flex-col gap-2 border-t pt-3 sm:flex-row-reverse">
           <Button
             className="sm:min-w-48"
-            disabled={pending !== null || !account}
+            disabled={!canApprove}
             onClick={() => void decide(true)}
           >
             {pending === 'accept' ? (

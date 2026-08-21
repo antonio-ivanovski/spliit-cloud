@@ -2630,7 +2630,7 @@
   "OAuth": {
     "consent": {
       "title": "Spliitを{client}に接続しますか？",
-      "description": "以下のアカウントとアクセス権を確認してください。支出の作成はすべてあなたが管理します。",
+      "description": "以下でアカウントと要求されているアクセス権をご確認ください。",
       "connectionDetails": "接続の詳細",
       "spliitAccount": "Spliitアカウント",
       "connectingTo": "接続先",
@@ -2646,11 +2646,22 @@
       "expensesTitle": "確認済みの支出作成",
       "expensesDescription": "アシスタントが作成できるのは、「支出を作成」を押した後にプレビューに表示された内容と完全に同じ支出だけです。",
       "privacyTitle": "プライバシーに関する注意",
-      "privacyDescription": "グループの財務情報には機密性があります。接続中は{client}が利用できますが、アシスタントは支出の編集・削除を行えず、プレビューの確認なしに作成することもできません。",
+      "privacyDescription": "グループの金銭情報は慎重に扱うべき内容です。連携中は {client} から参照できます。アカウント設定からいつでも連携を解除できます。",
       "authorityNote": "Spliitが正規の情報源です。既存の検証、残高、アクティビティ履歴、通知が引き続き適用されます。",
       "allow": "許可して接続",
       "cancel": "キャンセル",
-      "missingRequest": "認証リクエストが見つかりません。アシスタントに戻ってください。"
+      "missingRequest": "認証リクエストが見つかりません。アシスタントに戻ってください。",
+      "groupsManageTitle": "グループの作成と編集",
+      "groupsManageDescription": "グループの作成、名称の変更、設定の変更、参加者の追加を行います。",
+      "groupsDeleteTitle": "グループの削除と参加者の除外",
+      "groupsDeleteDescription": "グループを完全に削除またはアーカイブし、参加者を外します。元に戻せません。",
+      "expensesReadTitle": "支出の閲覧",
+      "expensesReadDescription": "金額、日付、カテゴリ、メモ、割り勘の内訳を含む、グループ内のすべての支出。",
+      "expensesManageTitle": "支出の作成と編集",
+      "expensesManageDescription": "プレビューを表示せずに、支出を直接追加したり既存の支出を変更したりします。",
+      "expensesDeleteTitle": "支出の削除",
+      "expensesDeleteDescription": "支出を完全に削除し、繰り返し支出の期間短縮などデータが失われる編集を行います。元に戻せません。",
+      "unknownScopes": "このアプリは Spliit Cloud が認識できない権限（{scopes}）を要求しているため、ここでは承認できません。アプリの作者に要求している権限を確認するようご依頼ください。"
     },
     "login": {
       "missingTitle": "認証リクエストがありません",
@@ -3074,5 +3085,28 @@
     "title": "現在オフラインです",
     "description": "この画面には接続が必要です。グループと支出を読み込むには、再接続してください。",
     "retry": "もう一度試す"
+  },
+  "AccountAuthorizedClients": {
+    "title": "連携中のアプリ",
+    "description": "Spliit Cloudアカウントの利用を許可したアプリとエージェントです。",
+    "loading": "連携中のアプリを読み込んでいます…",
+    "empty": "アカウントに連携されているアプリはありません。",
+    "unnamedClient": "名称未設定のアプリ",
+    "authorizedOn": "{date} に連携",
+    "revoke": "連携を解除",
+    "revoked": "アプリの連携を解除しました",
+    "revokeFailed": "このアプリの連携を解除できませんでした",
+    "cancel": "キャンセル",
+    "confirmTitle": "{name} の連携を解除しますか？",
+    "confirmDescription": "アカウント内の情報を読み取ることも変更することもできなくなり、再度許可を求める必要があります。",
+    "confirmGracePeriod": "すでに進行中のリクエストは最大 1 時間は成功する場合があります。",
+    "loadFailed": "連携中のアプリを読み込めませんでした。",
+    "scopeGroupsRead": "グループの閲覧",
+    "scopeGroupsManage": "グループの管理",
+    "scopeGroupsDelete": "グループの削除",
+    "scopeExpensesRead": "支出の閲覧",
+    "scopeExpensesManage": "支出の管理",
+    "scopeExpensesDelete": "支出の削除",
+    "scopeExpensesWrite": "プレビュー付きで支出を追加"
   }
 }

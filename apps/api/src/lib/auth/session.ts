@@ -2,14 +2,13 @@ import { oauthProviderResourceClient } from '@better-auth/oauth-provider/resourc
 
 import { prisma } from '@spliit/db'
 
-import { env } from '../env'
 import {
   getCachedAccount,
   isAnonymousSetupIncomplete,
   type CachedAccount,
 } from './account-cache'
 import { auth } from './index'
-import { getApiBaseUrl } from './urls'
+import { getApiBaseUrl, oauthAudiences } from './urls'
 
 export type ResolvedAuth = Omit<
   NonNullable<Awaited<ReturnType<typeof auth.api.getSession>>>,
@@ -66,7 +65,6 @@ const oauthResource = oauthProviderResourceClient().getActions()
 export async function getOAuthAuthFromRequest(
   request: Request,
 ): Promise<OAuthResolvedAuth | null> {
-  if (!env.ENABLE_MCP || !env.MCP_PUBLIC_URL) return null
   const authorization = request.headers.get('authorization')
   if (!authorization?.startsWith('Bearer ')) return null
   const accessToken = authorization.slice('Bearer '.length)
@@ -75,7 +73,10 @@ export async function getOAuthAuthFromRequest(
   const issuer = `${getApiBaseUrl()}/auth`
   const claims = await oauthResource.verifyAccessToken(accessToken, {
     verifyOptions: {
-      audience: `${env.MCP_PUBLIC_URL}/mcp`,
+      // A token is accepted when its `aud` matches any configured audience,
+      // so tokens minted for the MCP resource stay valid alongside tokens
+      // minted for the API itself.
+      audience: oauthAudiences(),
       issuer,
     },
     jwksUrl: `${issuer}/jwks`,

@@ -38,11 +38,43 @@ import { generateOpenAPIDocument } from '@trpc/openapi'
 import type { OpenAPIV3_1 } from 'openapi-types'
 
 import { auth } from '../src/lib/auth'
+import { ASSISTANT_WRITE_SCOPE, SPLIIT_SCOPES } from '../src/lib/auth/scopes'
+import { appRouter } from '../src/trpc/routers/_app'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const apiRoot = resolve(__dirname, '..')
 const routerPath = resolve(apiRoot, 'src/trpc/routers/_app.ts')
 const outputPath = resolve(apiRoot, 'openapi.json')
+
+// Human-readable blurb per scope, shown in the Scalar security panel.
+const SCOPE_DESCRIPTIONS: Record<string, string> = {
+  openid: 'Identify the account (OpenID Connect).',
+  profile: 'Read the account name and avatar.',
+  email: 'Read the account email address.',
+  offline_access: 'Obtain a refresh token so the client can keep working.',
+  [SPLIIT_SCOPES.groupsRead]: 'Read groups, balances, statistics and activity.',
+  [SPLIIT_SCOPES.groupsManage]: 'Create and edit groups, and add participants.',
+  [SPLIIT_SCOPES.groupsDelete]:
+    'Delete or archive a group, and remove participants. Never granted by default.',
+  [SPLIIT_SCOPES.expensesRead]: 'Read expenses and recurring series.',
+  [SPLIIT_SCOPES.expensesManage]:
+    'Create and edit expenses directly, and stop a recurrence.',
+  [SPLIIT_SCOPES.expensesDelete]:
+    'Delete an expense, and make edits that drop data such as shortening a recurring series. Never granted by default.',
+  [ASSISTANT_WRITE_SCOPE]:
+    'Create an expense through the assistant preview and confirmation flow. Does not grant direct writes.',
+}
+
+// OAuth scope per procedure, read off the router rather than restated here:
+// `apiProcedure` and `scopedGroupReadProcedure` record it in tRPC meta, so a
+// procedure that changes scope updates the spec on the next build.
+const PROCEDURE_SCOPES = new Map<string, string>(
+  Object.entries(appRouter._def.procedures).flatMap(([path, procedure]) => {
+    const scope = (procedure as { _def?: { meta?: { scope?: string } } })._def
+      ?.meta?.scope
+    return scope ? [[path, scope] as [string, string]] : []
+  }),
+)
 
 // Procedures that don't require authentication. The generator emits no
 // auth metadata, so we apply `security` globally and override these to
@@ -140,6 +172,26 @@ async function postProcess(
         `cross-origin request (\`credentials: 'include'\` in the browser; ` +
         `\`Cookie: <name>=<value>\` from other clients).`,
     },
+    oauth2: {
+      type: 'oauth2',
+      description:
+        `OAuth 2.1 with PKCE, for scripts and agents that cannot hold a ` +
+        `browser session. Clients may register dynamically at ` +
+        `\`POST /auth/oauth2/register\`. A client that registers without ` +
+        `naming scopes is granted read and write, never a destructive one: ` +
+        `\`${SPLIIT_SCOPES.expensesDelete}\` and ` +
+        `\`${SPLIIT_SCOPES.groupsDelete}\` must be requested explicitly. ` +
+        `Access tokens last one hour; refresh tokens rotate on every renewal. ` +
+        `Send the token as \`Authorization: Bearer <token>\`.`,
+      flows: {
+        authorizationCode: {
+          authorizationUrl: '/auth/oauth2/authorize',
+          tokenUrl: '/auth/oauth2/token',
+          refreshUrl: '/auth/oauth2/token',
+          scopes: SCOPE_DESCRIPTIONS,
+        },
+      },
+    },
   }
   result.security = [{ session: [] }]
 
@@ -174,6 +226,11 @@ async function postProcess(
       }
       if (PUBLIC_PROCEDURES.has(procPath)) {
         op.security = []
+      } else {
+        // A scoped procedure takes a session or a token holding the scope;
+        // everything else stays session-only.
+        const scope = PROCEDURE_SCOPES.get(procPath)
+        if (scope) op.security = [{ session: [] }, { oauth2: [scope] }]
       }
       if (DEPRECATED_PROCEDURES.has(procPath)) {
         op.deprecated = true

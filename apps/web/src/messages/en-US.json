@@ -1051,6 +1051,29 @@
       "sent": "Code sent"
     }
   },
+  "AccountAuthorizedClients": {
+    "title": "Connected apps",
+    "description": "Apps and agents you have allowed to use your Spliit Cloud account.",
+    "loading": "Loading connected apps…",
+    "empty": "No app is connected to your account.",
+    "unnamedClient": "Unnamed app",
+    "authorizedOn": "Connected on {date}",
+    "revoke": "Disconnect",
+    "revoked": "App disconnected",
+    "revokeFailed": "Could not disconnect this app",
+    "cancel": "Cancel",
+    "confirmTitle": "Disconnect {name}?",
+    "confirmDescription": "It will no longer be able to read or change anything in your account, and will have to ask for your permission again.",
+    "confirmGracePeriod": "A request already in progress may still succeed for up to an hour.",
+    "loadFailed": "Could not load connected apps.",
+    "scopeGroupsRead": "Read groups",
+    "scopeGroupsManage": "Manage groups",
+    "scopeGroupsDelete": "Delete groups",
+    "scopeExpensesRead": "Read expenses",
+    "scopeExpensesManage": "Manage expenses",
+    "scopeExpensesDelete": "Delete expenses",
+    "scopeExpensesWrite": "Add expenses with preview"
+  },
   "CompleteProfile": {
     "title": "Complete your profile",
     "description": "Tell us the name you'd like your groups to see. You can change it later.",
@@ -2726,7 +2749,7 @@
     },
     "consent": {
       "title": "Connect Spliit to {client}?",
-      "description": "Review the account and access below. You stay in control of every expense creation.",
+      "description": "Review the account and the access being requested below.",
       "connectionDetails": "Connection details",
       "spliitAccount": "Spliit account",
       "connectingTo": "Connecting to",
@@ -2742,11 +2765,22 @@
       "expensesTitle": "Confirmed expense creation",
       "expensesDescription": "The assistant may create only the exact expense shown in the preview after you press Create expense.",
       "privacyTitle": "A quick privacy note",
-      "privacyDescription": "Financial group details can be sensitive. They become available to {client} while connected, but the assistant cannot edit or delete expenses and cannot create one without your preview confirmation.",
+      "privacyDescription": "Financial group details can be sensitive. They become available to {client} for as long as it stays connected. You can disconnect it at any time from your account settings.",
       "authorityNote": "Spliit remains the source of truth. Existing validation, balances, activity history and notifications still apply.",
       "allow": "Allow and connect",
       "cancel": "Cancel",
-      "missingRequest": "The authorization request is missing. Return to your assistant."
+      "missingRequest": "The authorization request is missing. Return to your assistant.",
+      "groupsManageTitle": "Create and edit groups",
+      "groupsManageDescription": "Set up new groups, rename them, change their settings and add participants.",
+      "groupsDeleteTitle": "Delete groups and remove people",
+      "groupsDeleteDescription": "Permanently delete or archive a group, and remove participants from one. This cannot be undone.",
+      "expensesReadTitle": "Read expenses",
+      "expensesReadDescription": "Every expense in your groups, including amounts, dates, categories, notes and how each one is split.",
+      "expensesManageTitle": "Create and edit expenses",
+      "expensesManageDescription": "Add expenses and change existing ones directly, without showing you a preview first.",
+      "expensesDeleteTitle": "Delete expenses",
+      "expensesDeleteDescription": "Permanently delete expenses, and make edits that drop data such as shortening a recurring series. This cannot be undone.",
+      "unknownScopes": "This app is asking for a permission Spliit Cloud does not recognise ({scopes}), so it cannot be approved here. Ask the app author to check the permissions it requests."
     },
     "login": {
       "missingTitle": "Authorization request missing",

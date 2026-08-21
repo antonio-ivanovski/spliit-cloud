@@ -16,6 +16,24 @@ export function resolveOAuthQuery(
   return new URLSearchParams(rawQuery).get('oauth_query') ?? rawQuery
 }
 
+/**
+ * Read the client and scopes out of the signed request that will actually be
+ * submitted.
+ *
+ * The page used to render `client_id` and `scope` from its own search params
+ * while posting `oauth_query` separately, so a wrapped link could name one
+ * client and authorize another. Everything shown now comes from the same string
+ * the server decodes.
+ */
+export function readOAuthRequest(oauthQuery: string | undefined) {
+  const query = new URLSearchParams(oauthQuery ?? '')
+  const scope = query.get('scope') ?? ''
+  return {
+    clientId: query.get('client_id') ?? undefined,
+    scopes: scope.split(' ').filter(Boolean),
+  }
+}
+
 export function buildOAuthAuthorizationUrl(oauthQuery: string) {
   const query = new URLSearchParams(oauthQuery)
   // These fields authenticate Better Auth's hand-off to our login/consent

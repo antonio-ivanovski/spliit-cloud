@@ -2682,7 +2682,7 @@
   "OAuth": {
     "consent": {
       "title": "Połączyć Spliit z {client}?",
-      "description": "Sprawdź poniżej konto i zakres dostępu. To Ty kontrolujesz każde utworzenie wydatku.",
+      "description": "Sprawdź poniżej konto i żądany dostęp.",
       "connectionDetails": "Szczegóły połączenia",
       "spliitAccount": "Konto Spliit",
       "connectingTo": "Łączenie z",
@@ -2698,11 +2698,22 @@
       "expensesTitle": "Potwierdzone utworzenie wydatku",
       "expensesDescription": "Asystent może utworzyć tylko dokładny wydatek pokazany w podglądzie po naciśnięciu „Utwórz wydatek”.",
       "privacyTitle": "Krótka uwaga dotycząca prywatności",
-      "privacyDescription": "Szczegóły grup finansowych mogą być wrażliwe. Podczas połączenia będą dostępne dla {client}, ale asystent nie może edytować ani usuwać wydatków i nie utworzy żadnego bez potwierdzenia podglądu.",
+      "privacyDescription": "Dane finansowe grupy bywają wrażliwe. Aplikacja {client} ma do nich dostęp przez cały czas połączenia. Możesz je odłączyć w każdej chwili w ustawieniach konta.",
       "authorityNote": "Spliit pozostaje źródłem prawdy. Nadal obowiązują dotychczasowa walidacja, salda, historia aktywności i powiadomienia.",
       "allow": "Zezwól i połącz",
       "cancel": "Anuluj",
-      "missingRequest": "Brakuje żądania autoryzacji. Wróć do swojego asystenta."
+      "missingRequest": "Brakuje żądania autoryzacji. Wróć do swojego asystenta.",
+      "groupsManageTitle": "Tworzenie i edycja grup",
+      "groupsManageDescription": "Tworzenie grup, zmiana ich nazw i ustawień oraz dodawanie uczestników.",
+      "groupsDeleteTitle": "Usuwanie grup i usuwanie osób",
+      "groupsDeleteDescription": "Trwałe usunięcie lub zarchiwizowanie grupy oraz usuwanie z niej uczestników. Nie można tego cofnąć.",
+      "expensesReadTitle": "Odczyt wydatków",
+      "expensesReadDescription": "Wszystkie wydatki w Twoich grupach, w tym kwoty, daty, kategorie, notatki i sposób podziału każdego z nich.",
+      "expensesManageTitle": "Tworzenie i edycja wydatków",
+      "expensesManageDescription": "Dodawanie wydatków i zmienianie istniejących bezpośrednio, bez pokazywania Ci wcześniej podglądu.",
+      "expensesDeleteTitle": "Usuwanie wydatków",
+      "expensesDeleteDescription": "Trwałe usuwanie wydatków oraz zmiany, które kasują dane, na przykład skrócenie serii cyklicznej. Nie można tego cofnąć.",
+      "unknownScopes": "Ta aplikacja prosi o uprawnienie, którego Spliit Cloud nie rozpoznaje ({scopes}), więc nie można jej tu zatwierdzić. Poproś autora o sprawdzenie żądanych uprawnień."
     },
     "login": {
       "missingTitle": "Brak żądania autoryzacji",
@@ -3125,5 +3136,28 @@
     "title": "Jesteś offline",
     "description": "Ten ekran wymaga połączenia. Połącz się ponownie, aby wczytać grupy i wydatki.",
     "retry": "Spróbuj ponownie"
+  },
+  "AccountAuthorizedClients": {
+    "title": "Połączone aplikacje",
+    "description": "Aplikacje i agenci, którym pozwoliłeś korzystać z Twojego konta Spliit Cloud.",
+    "loading": "Wczytywanie połączonych aplikacji…",
+    "empty": "Żadna aplikacja nie jest połączona z Twoim kontem.",
+    "unnamedClient": "Aplikacja bez nazwy",
+    "authorizedOn": "Połączono {date}",
+    "revoke": "Odłącz",
+    "revoked": "Aplikacja odłączona",
+    "revokeFailed": "Nie udało się odłączyć tej aplikacji",
+    "cancel": "Anuluj",
+    "confirmTitle": "Odłączyć {name}?",
+    "confirmDescription": "Nie będzie już mogła niczego odczytać ani zmienić na Twoim koncie i będzie musiała poprosić Cię o zgodę ponownie.",
+    "confirmGracePeriod": "Trwające już żądanie może jeszcze zakończyć się powodzeniem przez maksymalnie godzinę.",
+    "loadFailed": "Nie udało się wczytać połączonych aplikacji.",
+    "scopeGroupsRead": "Odczyt grup",
+    "scopeGroupsManage": "Zarządzanie grupami",
+    "scopeGroupsDelete": "Usuwanie grup",
+    "scopeExpensesRead": "Odczyt wydatków",
+    "scopeExpensesManage": "Zarządzanie wydatkami",
+    "scopeExpensesDelete": "Usuwanie wydatków",
+    "scopeExpensesWrite": "Dodawanie wydatków z podglądem"
   }
 }

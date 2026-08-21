@@ -39,12 +39,13 @@ import { invalidateAccountCache } from './account-cache'
 import { anonymousRecovery } from './anonymous-recovery'
 import { emailChange } from './email-change'
 import { enforceAuthEmailRecipientLimit } from './email-rate-limit'
+import { ALL_SCOPES, DEFAULT_CLIENT_SCOPES } from './scopes'
 import {
   assertCanCreateAccount,
   enforceSignupGate,
   persistSignupInviteCookie,
 } from './signup-gate'
-import { getApiBaseUrl } from './urls'
+import { getApiBaseUrl, oauthAudiences } from './urls'
 
 const oidcProvider = getConfiguredOidcProvider()
 
@@ -595,54 +596,38 @@ export const auth = betterAuth({
           }),
         ]
       : []),
-    ...(env.ENABLE_MCP
-      ? [
-          oauthProvider({
-            loginPage: `${webOrigins[0]}/oauth/login`,
-            consentPage: `${webOrigins[0]}/oauth/consent`,
-            scopes: [
-              'openid',
-              'profile',
-              'email',
-              'offline_access',
-              'spliit:groups:read',
-              'spliit:expenses:write',
-            ],
-            validAudiences: [`${env.MCP_PUBLIC_URL!}/mcp`],
-            allowDynamicClientRegistration: true,
-            allowUnauthenticatedClientRegistration: true,
-            allowPublicClientPrelogin: true,
-            silenceWarnings: { oauthAuthServerConfig: true },
-            grantTypes: ['authorization_code', 'refresh_token'],
-            clientRegistrationDefaultScopes: [
-              'openid',
-              'profile',
-              'email',
-              'offline_access',
-              'spliit:groups:read',
-              'spliit:expenses:write',
-            ],
-            clientRegistrationAllowedScopes: [
-              'openid',
-              'profile',
-              'email',
-              'offline_access',
-              'spliit:groups:read',
-              'spliit:expenses:write',
-            ],
-            customAccessTokenClaims: ({ user }) => ({
-              account_id: user?.id,
-            }),
-          }),
-          jwt({
-            // OAuth access tokens are minted by the OAuth Provider flow. Adding a
-            // JWT header to every cookie-session response is unnecessary and makes
-            // ordinary `/get-session` reads depend on the OAuth signing key.
-            disableSettingJwtHeader: true,
-            adapter: testJwtAdapter,
-          }),
-        ]
-      : []),
+    // The OAuth provider is no longer gated behind ENABLE_MCP. The MCP app is
+    // one client among others: any programmatic client (scripts, agents) needs
+    // the same authorization server, and gating it made the API unreachable
+    // whenever the assistant was disabled.
+    oauthProvider({
+      loginPage: `${webOrigins[0]}/oauth/login`,
+      consentPage: `${webOrigins[0]}/oauth/consent`,
+      scopes: [...ALL_SCOPES],
+      // The API is its own resource server. The MCP audience is kept while
+      // MCP_PUBLIC_URL is configured so tokens already issued to assistant
+      // clients keep verifying against a running deployment.
+      validAudiences: oauthAudiences(),
+      allowDynamicClientRegistration: true,
+      allowUnauthenticatedClientRegistration: true,
+      allowPublicClientPrelogin: true,
+      silenceWarnings: { oauthAuthServerConfig: true },
+      grantTypes: ['authorization_code', 'refresh_token'],
+      // Registering without asking for anything specific grants read and
+      // write, never a destructive scope. Those must be requested explicitly.
+      clientRegistrationDefaultScopes: [...DEFAULT_CLIENT_SCOPES],
+      clientRegistrationAllowedScopes: [...ALL_SCOPES],
+      customAccessTokenClaims: ({ user }) => ({
+        account_id: user?.id,
+      }),
+    }),
+    jwt({
+      // OAuth access tokens are minted by the OAuth Provider flow. Adding a
+      // JWT header to every cookie-session response is unnecessary and makes
+      // ordinary `/get-session` reads depend on the OAuth signing key.
+      disableSettingJwtHeader: true,
+      adapter: testJwtAdapter,
+    }),
     magicLink({
       disableSignUp: false,
       sendMagicLink: async ({ email, url }) => {

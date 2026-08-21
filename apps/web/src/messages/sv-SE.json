@@ -2642,7 +2642,7 @@
   "OAuth": {
     "consent": {
       "title": "Anslut Spliit till {client}?",
-      "description": "Granska kontot och åtkomsten nedan. Du behåller kontrollen över att skapa varje utgift.",
+      "description": "Granska kontot och den åtkomst som begärs nedan.",
       "connectionDetails": "Anslutningsdetaljer",
       "spliitAccount": "Spliit-konto",
       "connectingTo": "Ansluter till",
@@ -2658,11 +2658,22 @@
       "expensesTitle": "Bekräftat skapande av utgift",
       "expensesDescription": "Assistenten får bara skapa den exakta utgiften som visas i förhandsgranskningen när du trycker på Skapa utgift.",
       "privacyTitle": "En kort integritetsnotis",
-      "privacyDescription": "Ekonomiska gruppuppgifter kan vara känsliga. De blir tillgängliga för {client} medan anslutningen är aktiv, men assistenten kan inte redigera eller ta bort utgifter och kan inte skapa någon utan din bekräftelse av förhandsgranskningen.",
+      "privacyDescription": "Finansiella gruppuppgifter kan vara känsliga. De är tillgängliga för {client} så länge anslutningen finns kvar. Du kan koppla från den när som helst i kontoinställningarna.",
       "authorityNote": "Spliit förblir den auktoritativa källan. Befintlig validering, saldon, aktivitetshistorik och aviseringar gäller fortfarande.",
       "allow": "Tillåt och anslut",
       "cancel": "Avbryt",
-      "missingRequest": "Auktoriseringsbegäran saknas. Gå tillbaka till din assistent."
+      "missingRequest": "Auktoriseringsbegäran saknas. Gå tillbaka till din assistent.",
+      "groupsManageTitle": "Skapa och redigera grupper",
+      "groupsManageDescription": "Skapa grupper, byta namn på dem, ändra deras inställningar och lägga till deltagare.",
+      "groupsDeleteTitle": "Ta bort grupper och ta bort personer",
+      "groupsDeleteDescription": "Ta bort eller arkivera en grupp permanent och ta bort deltagare ur den. Det går inte att ångra.",
+      "expensesReadTitle": "Läsa utgifter",
+      "expensesReadDescription": "Alla utgifter i dina grupper, inklusive belopp, datum, kategorier, anteckningar och hur var och en delas.",
+      "expensesManageTitle": "Skapa och redigera utgifter",
+      "expensesManageDescription": "Lägga till utgifter och ändra befintliga direkt, utan att först visa dig en förhandsvisning.",
+      "expensesDeleteTitle": "Ta bort utgifter",
+      "expensesDeleteDescription": "Ta bort utgifter permanent och göra ändringar som raderar data, till exempel korta ned en återkommande serie. Det går inte att ångra.",
+      "unknownScopes": "Den här appen begär en behörighet som Spliit Cloud inte känner igen ({scopes}), så den kan inte godkännas här. Be utvecklaren se över vilka behörigheter appen begär."
     },
     "login": {
       "missingTitle": "Auktoriseringsbegäran saknas",
@@ -3087,5 +3098,28 @@
     "title": "Du är offline",
     "description": "Den här skärmen behöver en anslutning. Återanslut för att läsa in dina grupper och utgifter.",
     "retry": "Försök igen"
+  },
+  "AccountAuthorizedClients": {
+    "title": "Anslutna appar",
+    "description": "Appar och agenter som du har gett tillgång till ditt Spliit Cloud-konto.",
+    "loading": "Läser in anslutna appar…",
+    "empty": "Ingen app är ansluten till ditt konto.",
+    "unnamedClient": "Namnlös app",
+    "authorizedOn": "Ansluten den {date}",
+    "revoke": "Koppla från",
+    "revoked": "Appen frånkopplad",
+    "revokeFailed": "Det gick inte att koppla från appen",
+    "cancel": "Avbryt",
+    "confirmTitle": "Koppla från {name}?",
+    "confirmDescription": "Den kan då inte längre läsa eller ändra något i ditt konto och måste be om din tillåtelse igen.",
+    "confirmGracePeriod": "En begäran som redan pågår kan fortfarande lyckas i upp till en timme.",
+    "loadFailed": "Det gick inte att läsa in anslutna appar.",
+    "scopeGroupsRead": "Läsa grupper",
+    "scopeGroupsManage": "Hantera grupper",
+    "scopeGroupsDelete": "Ta bort grupper",
+    "scopeExpensesRead": "Läsa utgifter",
+    "scopeExpensesManage": "Hantera utgifter",
+    "scopeExpensesDelete": "Ta bort utgifter",
+    "scopeExpensesWrite": "Lägga till utgifter med förhandsvisning"
   }
 }

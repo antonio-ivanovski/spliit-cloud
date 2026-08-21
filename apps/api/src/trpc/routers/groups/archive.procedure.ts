@@ -15,7 +15,7 @@ import {
 } from '../../../lib/api/balances'
 import { getApiBoss } from '../../../lib/api/boss'
 import { resumeRecurringExpenseSeries } from '../../../lib/api/recurrence-series'
-import { loadGroupMutationContext, protectedProcedure } from '../../init'
+import { loadGroupMutationContext, apiProcedure } from '../../init'
 import { archiveGroupOutputSchema } from '../../outputs/groups'
 
 /**
@@ -29,7 +29,7 @@ import { archiveGroupOutputSchema } from '../../outputs/groups'
  * the same transaction as the archive flip) so the new `Group.archived = true`
  * state matches a zeroed-out ledger.
  */
-export const archiveGroupProcedure = protectedProcedure
+export const archiveGroupProcedure = apiProcedure('spliit:groups:delete')
   .input(
     z.object({
       groupId: z.string().min(1),

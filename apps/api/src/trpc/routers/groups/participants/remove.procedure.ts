@@ -12,7 +12,7 @@ import {
 } from '../../../../lib/api/soft-remove-participant'
 import { RevokeInvitationPreconditionError } from '../../../../lib/invitations'
 import { isInvitationParticipantUnused } from '../../../../lib/invitations/email-invitations'
-import { loadGroupMutationContext, protectedProcedure } from '../../../init'
+import { apiProcedure, loadGroupMutationContext } from '../../../init'
 import {
   participantRemovalOutputSchema,
   participantRemovalPreviewOutputSchema,
@@ -103,7 +103,9 @@ function mapRemoveError(error: unknown): never {
   throw error
 }
 
-export const removeParticipantPreviewProcedure = protectedProcedure
+export const removeParticipantPreviewProcedure = apiProcedure(
+  'spliit:groups:read',
+)
   .input(
     z.object({
       groupId: z.string().min(1),
@@ -133,7 +135,7 @@ export const removeParticipantPreviewProcedure = protectedProcedure
     }
   })
 
-export const removeParticipantProcedure = protectedProcedure
+export const removeParticipantProcedure = apiProcedure('spliit:groups:delete')
   .input(
     z.object({
       groupId: z.string().min(1),
