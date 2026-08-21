@@ -37,7 +37,7 @@ describe('OAuth dynamic client registration', () => {
     }
     if (body.client_id) clientIds.push(body.client_id)
 
-    expect(response.status).toBe(200)
+    expect(response.status).toBe(201)
     expect(body).toMatchObject({
       contacts: [],
       post_logout_redirect_uris: [],

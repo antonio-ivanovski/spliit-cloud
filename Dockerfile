@@ -36,6 +36,7 @@ RUN NODE_ENV= \
   ENABLE_MCP=true \
   MCP_PUBLIC_URL=https://mcp-build.invalid \
   ASSISTANT_CONFIRMATION_SECRET=assistant-build-secret-at-least-32-bytes \
+  SKIP_AUTH_OPENAPI=1 \
   bun run apps/api/scripts/generate-openapi.ts
 RUN bun --filter @spliit/api bundle:runtime
 

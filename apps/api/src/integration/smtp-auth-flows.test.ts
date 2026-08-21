@@ -144,6 +144,7 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
         data: {
           id: `ml-id-${runId}`,
           providerId: 'magic-link',
+          issuer: 'local:magic-link',
           accountId: mlEmail,
           userId: mlAccountId,
         },

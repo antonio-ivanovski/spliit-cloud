@@ -259,9 +259,9 @@ export function useAuthPanel(options?: { redirectTo?: string }) {
 
   function handleOidc(providerId: string) {
     if (!isOnline) return
-    void authClient.signIn.oauth2(
+    void authClient.signIn.social(
       {
-        providerId,
+        provider: providerId,
         callbackURL,
       },
       signupInviteFetchOptions(linkInviteToken),

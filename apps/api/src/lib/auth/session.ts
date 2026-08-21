@@ -73,7 +73,7 @@ export async function getOAuthAuthFromRequest(
   if (!accessToken) return null
 
   const issuer = `${getApiBaseUrl()}/auth`
-  const claims = await oauthResource.verifyAccessToken(accessToken, {
+  const claims = await oauthResource.verifyBearerToken(accessToken, {
     verifyOptions: {
       audience: `${env.MCP_PUBLIC_URL}/mcp`,
       issuer,

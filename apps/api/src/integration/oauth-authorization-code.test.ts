@@ -94,9 +94,20 @@ async function registerClient(clientName: string): Promise<string> {
       client_name: clientName,
       redirect_uris: [REDIRECT_URI],
       token_endpoint_auth_method: 'none',
+      grant_types: ['authorization_code', 'refresh_token'],
+      response_types: ['code'],
     }),
   })
-  const body = (await res.json()) as { client_id: string }
+  const body = (await res.json()) as {
+    client_id?: string
+    error?: string
+    error_description?: string
+  }
+  if (!res.ok || !body.client_id) {
+    throw new Error(
+      `client registration failed (${res.status}): ${JSON.stringify(body)}`,
+    )
+  }
   trackedClientIds.push(body.client_id)
   return body.client_id
 }

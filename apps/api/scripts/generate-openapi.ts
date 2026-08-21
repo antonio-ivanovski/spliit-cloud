@@ -37,7 +37,47 @@ import { fileURLToPath } from 'node:url'
 import { generateOpenAPIDocument } from '@trpc/openapi'
 import type { OpenAPIV3_1 } from 'openapi-types'
 
-import { auth } from '../src/lib/auth'
+// When Docker builds without a DB (SKIP_AUTH_OPENAPI=1) better-auth 1.7's
+// oauthProvider still fires a background OauthResource seed that surfaces as
+// an unhandled P1001/DatabaseNotReachable rejection *after* the file is
+// written. Swallow only that case so the build stays green; any other
+// unhandled error still crashes.
+if (process.env.SKIP_AUTH_OPENAPI === '1') {
+  const isDbUnreachable = (err: unknown): boolean => {
+    const msg =
+      err instanceof Error ? `${err.message}\n${err.stack ?? ''}` : String(err)
+    return (
+      msg.includes('P1001') ||
+      msg.includes('DatabaseNotReachable') ||
+      msg.includes("Can't reach database server")
+    )
+  }
+  process.on('unhandledRejection', (reason: unknown) => {
+    if (isDbUnreachable(reason)) {
+      console.warn(
+        `[openapi] suppressed unhandled DB rejection (SKIP_AUTH_OPENAPI=1): ${String(reason).slice(0, 600)}`,
+      )
+      return
+    }
+    console.error('Unhandled rejection in openapi generator:', reason)
+    process.exit(1)
+  })
+  process.on('uncaughtException', (err: unknown) => {
+    if (isDbUnreachable(err)) {
+      const m = err instanceof Error ? err.message : String(err)
+      console.warn(
+        `[openapi] suppressed uncaught DB exception (SKIP_AUTH_OPENAPI=1): ${m.slice(0, 600)}`,
+      )
+      return
+    }
+    console.error('Uncaught exception in openapi generator:', err)
+    process.exit(1)
+  })
+}
+
+// Lazy import auth only when needed — avoids pulling @spliit/db + better-auth at
+// build time in Docker where there's no DB. better-auth 1.7's oauthProvider
+// races a second OauthResource query that leaks as an unhandled rejection.
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const apiRoot = resolve(__dirname, '..')
@@ -86,10 +126,8 @@ async function main() {
     servers: [{ url: '/trpc', description: 'tRPC mount point' }],
   })
 
-  // The generated document uses `@trpc/openapi`'s stricter customized
-  // OpenAPI 3.1 type aliases; cast to the upstream `openapi-types`
-  // shapes so we can compose with hand-written paths in a single
-  // strongly-typed object.
+  // SAFETY: @trpc/openapi's generated document is structurally compatible with openapi-types' Document;
+  // cast via unknown to compose with hand-written paths in a single strongly-typed object.
   const merged = await postProcess(doc as unknown as OpenAPIV3_1.Document)
   await mkdir(dirname(outputPath), { recursive: true })
   await writeFile(outputPath, JSON.stringify(merged, null, 2) + '\n', 'utf8')
@@ -300,7 +338,34 @@ async function buildAuthPaths(): Promise<{
   paths: Record<string, OpenAPIV3_1.PathItemObject>
   schemas: Record<string, OpenAPIV3_1.SchemaObject>
 }> {
-  const authSchema = await auth.api.generateOpenAPISchema()
+  // Skip auth schema entirely when explicitly building without DB (Docker build).
+  // Set SKIP_AUTH_OPENAPI=1 in Dockerfile to get a tRPC-only spec and avoid the
+  // better-auth 1.7 OauthResource DB race entirely. Local dev (with DB) still
+  // generates full auth paths.
+  if (process.env.SKIP_AUTH_OPENAPI === '1') {
+    console.warn(
+      '[openapi] SKIP_AUTH_OPENAPI=1 — skipping auth paths (build without DB)',
+    )
+    return { paths: {}, schemas: {} }
+  }
+  type AuthModule = typeof import('../src/lib/auth')
+  let authSchema: Awaited<
+    ReturnType<AuthModule['auth']['api']['generateOpenAPISchema']>
+  >
+  try {
+    const { auth } = await import('../src/lib/auth')
+    authSchema = await auth.api.generateOpenAPISchema()
+  } catch (err) {
+    // better-auth 1.7's oauth provider now queries OauthResource at schema
+    // generation time. In Docker/CI builds there is no DB, so this throws
+    // DatabaseNotReachable (P1001) and breaks `Build api`. Degrade gracefully
+    // — the tRPC + export paths are still emitted and the image builds.
+    const msg = err instanceof Error ? err.message : String(err)
+    console.warn(
+      `[openapi] auth.api.generateOpenAPISchema() failed (no DB at build?) — proceeding without auth paths: ${msg}`,
+    )
+    return { paths: {}, schemas: {} }
+  }
   const paths: Record<string, OpenAPIV3_1.PathItemObject> = {}
   for (const [path, item] of Object.entries(authSchema.paths ?? {})) {
     if (!item) continue
@@ -325,6 +390,7 @@ async function buildAuthPaths(): Promise<{
     }
     paths[fullPath] = newItem
   }
+  // SAFETY: better-auth's openAPI plugin emits JSON Schema compatible with OpenAPI 3.1 SchemaObject; cast via unknown to satisfy openapi-types.
   const schemas = (authSchema.components?.schemas ?? {}) as unknown as Record<
     string,
     OpenAPIV3_1.SchemaObject

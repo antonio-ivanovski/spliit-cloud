@@ -14,22 +14,24 @@ import { clearAccountCache, getCachedAccount } from './account-cache'
 const realAuthModule = (await vi.importActual('./index')) as {
   getVerifiedGitHubUserInfo: (token: { accessToken?: string }) => Promise<{
     user: {
-      id: string
       name: string
       email: string
       image?: string
       emailVerified: boolean
     }
+    data?: { id?: number | string; isPlaceholderEmail?: boolean }
   } | null>
   getVerifiedTwitterUserInfo: (token: { accessToken?: string }) => Promise<{
     user: {
-      id: string
       name: string
       email: string
       image?: string
       emailVerified: boolean
     }
-    data?: { isPlaceholderEmail?: boolean }
+    data?: {
+      data?: { id?: string }
+      isPlaceholderEmail?: boolean
+    }
   } | null>
   auth: {
     options: {
@@ -92,12 +94,12 @@ const realAuthModule = (await vi.importActual('./index')) as {
           clientSecret: string
           getUserInfo?: (token: { accessToken?: string }) => Promise<{
             user: {
-              id: string
               name: string
               email: string
               image?: string
               emailVerified: boolean
             }
+            data?: unknown
           } | null>
         }
       >
@@ -438,11 +440,11 @@ describe('better-auth socialProviders config', () => {
     })
 
     expect(result?.user).toMatchObject({
-      id: '123',
       name: 'octo',
       email: 'private-primary@example.com',
       emailVerified: true,
     })
+    expect(result?.data).toMatchObject({ id: 123 })
   })
 
   it('falls back to the first verified GitHub email when the primary email is unverified', async () => {
@@ -478,11 +480,11 @@ describe('better-auth socialProviders config', () => {
     })
 
     expect(result?.user).toMatchObject({
-      id: '456',
       name: 'Mona',
       email: 'verified@example.com',
       emailVerified: true,
     })
+    expect(result?.data).toMatchObject({ id: 456 })
   })
 
   it('falls back to a synthetic placeholder email when GitHub returns no verified email', async () => {
@@ -519,12 +521,14 @@ describe('better-auth socialProviders config', () => {
     })
 
     expect(result?.user).toMatchObject({
-      id: '789',
       name: 'Octocat',
       email: '789@github.placeholder.local',
       emailVerified: false,
     })
-    expect(result?.data).toMatchObject({ isPlaceholderEmail: true })
+    expect(result?.data).toMatchObject({
+      id: 789,
+      isPlaceholderEmail: true,
+    })
   })
 
   it('keeps Google as a social provider alongside GitHub', () => {
@@ -567,11 +571,11 @@ describe('better-auth socialProviders config', () => {
     })
 
     expect(result?.user).toMatchObject({
-      id: '2244994945',
       name: 'X Dev',
       email: 'dev@example.com',
       emailVerified: true,
     })
+    expect(result?.data).toMatchObject({ data: { id: '2244994945' } })
   })
 
   it('falls back to a synthetic placeholder email when X returns no confirmed email', async () => {
@@ -592,12 +596,14 @@ describe('better-auth socialProviders config', () => {
     })
 
     expect(result?.user).toMatchObject({
-      id: '12',
       name: 'Jack',
       email: '12@twitter.placeholder.local',
       emailVerified: false,
     })
-    expect(result?.data).toMatchObject({ isPlaceholderEmail: true })
+    expect(result?.data).toMatchObject({
+      data: { id: '12' },
+      isPlaceholderEmail: true,
+    })
   })
 
   it('returns null when the X profile request fails', async () => {

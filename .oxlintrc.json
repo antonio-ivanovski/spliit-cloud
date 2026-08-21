@@ -42,6 +42,12 @@
   },
   "overrides": [
     {
+      "files": ["apps/api/scripts/generate-openapi.ts"],
+      "rules": {
+        "typescript/consistent-type-imports": "off"
+      }
+    },
+    {
       "files": [
         "**/*.{test,spec}.{ts,tsx}",
         "**/test/**/*.{ts,tsx}",

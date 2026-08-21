@@ -39,6 +39,7 @@ import { invalidateAccountCache } from './account-cache'
 import { anonymousRecovery } from './anonymous-recovery'
 import { emailChange } from './email-change'
 import { enforceAuthEmailRecipientLimit } from './email-rate-limit'
+import { applyNativeApplicationTypeForLoopbackRegistration } from './oauth-registration'
 import {
   assertCanCreateAccount,
   enforceSignupGate,
@@ -60,6 +61,10 @@ const authMethodLabels: Record<string, string> = {
   twitter: 'X',
   'magic-link': 'email sign-in link',
   ...(oidcProvider ? { [oidcProvider.id]: oidcProvider.name } : {}),
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
 }
 
 async function getAuthMethodLabels(userId: string) {
@@ -87,6 +92,10 @@ function buildPasswordRecoveryEmail(opts: {
 }
 
 const beforeAuthMiddleware = createAuthMiddleware(async (ctx) => {
+  if (ctx.path === '/oauth2/register' && isRecord(ctx.body)) {
+    applyNativeApplicationTypeForLoopbackRegistration(ctx.body)
+  }
+
   if (ctx.path === '/sign-in/anonymous') {
     if (!env.ENABLE_ANONYMOUS_AUTH || env.SIGNUP_MODE !== 'open') {
       throw new APIError('FORBIDDEN', {
@@ -227,7 +236,6 @@ export async function getVerifiedGitHubUserInfo(token: OAuthToken) {
   if (verifiedEmail) {
     return {
       user: {
-        id: profileId,
         name: displayName,
         email: verifiedEmail.email,
         image,
@@ -247,7 +255,6 @@ export async function getVerifiedGitHubUserInfo(token: OAuthToken) {
   // application-side marker to skip email-only features.
   return {
     user: {
-      id: profileId,
       name: displayName,
       email: buildProviderPlaceholderEmail('github', profileId),
       image,
@@ -314,30 +321,32 @@ export async function getVerifiedTwitterUserInfo(token: OAuthToken) {
   if (confirmedEmail) {
     return {
       user: {
-        id: profileId,
         name: displayName,
         email: confirmedEmail,
         image,
         emailVerified: true,
       },
       data: {
-        ...data,
-        email: confirmedEmail,
+        data: {
+          ...data,
+          email: confirmedEmail,
+        },
       },
     }
   }
 
   return {
     user: {
-      id: profileId,
       name: displayName,
       email: buildProviderPlaceholderEmail('twitter', profileId),
       image,
       emailVerified: false,
     },
     data: {
-      ...data,
-      email: null,
+      data: {
+        ...data,
+        email: null,
+      },
       isPlaceholderEmail: true,
     },
   }
@@ -588,8 +597,10 @@ export const auth = betterAuth({
                 clientSecret: oidcProvider.clientSecret,
                 discoveryUrl: oidcProvider.discoveryUrl,
                 scopes: ['openid', 'email', 'profile'],
-                pkce: true,
-                requireIssuerValidation: true,
+                // Keep the 1.6 synthetic issuer so existing AuthIdentity rows
+                // (`local:oauth:<providerId>`) continue to match after 1.7's
+                // discovery-based issuer default.
+                accountIssuer: `local:oauth:${encodeURIComponent(oidcProvider.id)}`,
               },
             ],
           }),
@@ -608,11 +619,12 @@ export const auth = betterAuth({
               'spliit:groups:read',
               'spliit:expenses:write',
             ],
-            validAudiences: [`${env.MCP_PUBLIC_URL!}/mcp`],
+            resources: [`${env.MCP_PUBLIC_URL!}/mcp`],
+            clientRegistrationDefaultResources: [`${env.MCP_PUBLIC_URL!}/mcp`],
+            clientRegistrationAllowedResources: [`${env.MCP_PUBLIC_URL!}/mcp`],
             allowDynamicClientRegistration: true,
             allowUnauthenticatedClientRegistration: true,
             allowPublicClientPrelogin: true,
-            silenceWarnings: { oauthAuthServerConfig: true },
             grantTypes: ['authorization_code', 'refresh_token'],
             clientRegistrationDefaultScopes: [
               'openid',
