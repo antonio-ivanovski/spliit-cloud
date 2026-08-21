@@ -12,7 +12,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
 import { isPlaceholderEmail } from '@/lib/account'
@@ -68,20 +67,7 @@ export function PendingInvitations() {
 
   if (showOfflineEmpty) return null
 
-  if (invitationsQuery.isLoading) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>{t('invitations.title')}</CardTitle>
-          <CardDescription>{t('invitations.description')}</CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-3 py-1">
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
-        </CardContent>
-      </Card>
-    )
-  }
+  if (invitationsQuery.isLoading) return null
 
   if (invitations.length === 0) return null
 
