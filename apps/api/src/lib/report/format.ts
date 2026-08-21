@@ -1,4 +1,6 @@
 import {
+  formatCurrency,
+  getCurrency,
   isRtlLocale,
   resolveFormattingLocale,
   type Locale,
@@ -12,9 +14,38 @@ export { isRtlLocale } from '@spliit/domain'
 export type ReportDirection = 'ltr' | 'rtl'
 export type ReportPageSize = 'A4' | 'LETTER'
 
-/** LETTER for en-US, A4 for every other supported locale. */
+/**
+ * Territories that standardize on LETTER (inch) rather than A4. ISO 216
+ * A-series is the default everywhere else. `en-*` alone is not a proxy — e.g.
+ * `en-GB` is A4 — so we check the region tag explicitly.
+ */
+const LETTER_REGIONS = new Set([
+  'US',
+  'CA',
+  'MX',
+  'CL',
+  'CO',
+  'VE',
+  'PA',
+  'PH',
+  'GT',
+  'CR',
+  'DO',
+  'PR',
+  'NI',
+  'SV',
+  'HN',
+])
+
 export function pageSizeFor(locale: Locale): ReportPageSize {
-  return locale === 'en-US' ? 'LETTER' : 'A4'
+  let region: string | undefined
+  try {
+    region = new Intl.Locale(resolveFormattingLocale(locale)).region
+  } catch {
+    region = undefined
+  }
+  if (region && LETTER_REGIONS.has(region.toUpperCase())) return 'LETTER'
+  return 'A4'
 }
 
 export type ExpenseReportViewModel = {
@@ -85,22 +116,39 @@ export function formatExpenseReport(
   model: ExpenseReportModel,
   locale: Locale,
   labels: ReportLabels,
+  options?: { timeZone?: string; generatedOn?: Date },
 ): ExpenseReportViewModel {
   const direction = isRtlLocale(locale) ? 'rtl' : 'ltr'
   const formattingLocale = resolveFormattingLocale(locale)
-  const currencyCode = model.currencyCode
-  const currencyFormat = new Intl.NumberFormat(formattingLocale, {
-    style: 'currency',
-    currency: currencyCode,
-  })
-  const formatAmount = (amount: number) => currencyFormat.format(amount / 100)
-  // Date-only report bounds are UTC midnights; force UTC so a non-UTC API
-  // host does not shift `2026-07-01` to the previous local calendar day.
+  const ledgerCurrency =
+    getCurrency(model.currencyCode) ??
+    ({
+      code: model.currencyCode,
+      symbol: model.currencySymbol,
+      rounding: 0,
+      decimal_digits: model.currencyDecimalDigits,
+    } as const)
+  const formatAmount = (amount: number) =>
+    formatCurrency(ledgerCurrency, amount, formattingLocale)
+  // Validate viewer time zone once; fall back to UTC for stale/invalid values
+  // rather than crashing the report request.
+  let reportTimeZone = 'UTC'
+  if (options?.timeZone) {
+    try {
+      new Intl.DateTimeFormat('en-US', { timeZone: options.timeZone }).format()
+      reportTimeZone = options.timeZone
+    } catch {
+      reportTimeZone = 'UTC'
+    }
+  }
+  // Date-only report bounds are UTC midnights; render calendar days in the
+  // *viewer's* wall time so Jun 30 22:00-04:00 EDT does not display as Jul 1.
+  // `generatedOn` also uses viewer wall time per Q3.
   const dateOnlyFormat = new Intl.DateTimeFormat(formattingLocale, {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
-    timeZone: 'UTC',
+    timeZone: reportTimeZone,
   })
   const formatDate = (isoDate: string) => {
     const [year, month, day] = isoDate.split('-').map(Number)
@@ -110,7 +158,7 @@ export function formatExpenseReport(
   const categoryNames = (categoryId: string) =>
     labels.categoryNames[categoryId] ?? categoryId
 
-  const generatedOn = dateOnlyFormat.format(new Date())
+  const generatedOn = dateOnlyFormat.format(options?.generatedOn ?? new Date())
 
   return {
     direction,
@@ -162,20 +210,27 @@ export function formatExpenseReport(
       }))
       let conversionNote: string | null = null
       if (expense.originalAmount != null && expense.originalCurrency) {
-        const originalFormat = new Intl.NumberFormat(formattingLocale, {
-          style: 'currency',
-          currency: expense.originalCurrency,
-        })
+        const originalCurrency =
+          getCurrency(expense.originalCurrency) ??
+          ({
+            code: expense.originalCurrency,
+            symbol: expense.originalCurrency,
+            rounding: 0,
+            decimal_digits: 2,
+          } as const)
         const rate =
-          expense.conversionRate != null
-            ? `1 ${expense.originalCurrency} = ${formatAmount(
-                Math.round(Number(expense.conversionRate) * 100),
-              )}`
-            : null
+          expense.conversionRate == null
+            ? null
+            : `1 ${expense.originalCurrency} = ${formatCurrency(ledgerCurrency, Number(expense.conversionRate), formattingLocale, true)}`
+        const originalText = formatCurrency(
+          originalCurrency,
+          expense.originalAmount,
+          formattingLocale,
+        )
         conversionNote =
-          rate != null
-            ? `${labels.originalAmountLabel} ${originalFormat.format(expense.originalAmount / 100)} (${rate})`
-            : `${labels.originalAmountLabel} ${originalFormat.format(expense.originalAmount / 100)}`
+          rate == null
+            ? `${labels.originalAmountLabel} ${originalText}`
+            : `${labels.originalAmountLabel} ${originalText} (${rate})`
       }
       return {
         id: expense.id,

@@ -105,7 +105,7 @@ export function formatExpenseAmount(
 ): string {
   const currency = currencyCode ? getCurrency(currencyCode) : undefined
   const digits = currency?.decimal_digits ?? 2
-  const formatted = (cents / 100).toFixed(digits)
+  const formatted = (cents / 10 ** digits).toFixed(digits)
   return currencyCode ? `${currencyCode} ${formatted}` : formatted
 }
 
@@ -183,6 +183,7 @@ export async function resolveCreatedExpenseRecipientIds(
     select: EXPENSE_AFFECTED_SELECT,
   })
   if (!raw) return []
+  // SAFETY: prisma select mirrors domain Expense participant shape (ledgerParticipantId→participant)
   const expenseForDiff = {
     paidByList: raw.paidByList.map((pb) => ({
       participant: pb.ledgerParticipantId,
@@ -284,6 +285,7 @@ export async function loadActivityChannelContext(args: {
         })
       : Promise.resolve(null),
   ])
+  // SAFETY: prisma groupMember→ExpenseNotificationParticipant projection
   return {
     participants: participants as unknown as ExpenseNotificationParticipant[],
     group: group as ExpenseNotificationGroup | null,

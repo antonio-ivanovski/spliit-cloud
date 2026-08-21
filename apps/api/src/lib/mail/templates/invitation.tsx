@@ -2,6 +2,7 @@ import { Heading, Link, Section, Text } from '@react-email/components'
 import type { ReactElement } from 'react'
 
 import type { GroupRole } from '@spliit/db'
+import { getCurrency } from '@spliit/domain'
 
 import { getWebBaseUrl } from '../../auth/urls'
 import { EmailButton } from './components/email-button'
@@ -104,7 +105,7 @@ export function InvitationEmail(
               The group contains {props.expenseCount} expense
               {props.expenseCount === 1 ? '' : 's'} from the import
               {props.totalAmount != null && props.currencyCode
-                ? ` (total ${props.currencyCode} ${(props.totalAmount / 100).toFixed(2)})`
+                ? ` (total ${props.currencyCode} ${(props.totalAmount / 10 ** (getCurrency(props.currencyCode)?.decimal_digits ?? 2)).toFixed(getCurrency(props.currencyCode)?.decimal_digits ?? 2)})`
                 : ''}
               .
             </>
@@ -179,7 +180,8 @@ function buildInvitationText(
       expenseLine += `The group contains ${input.expenseCount} expense${input.expenseCount === 1 ? '' : 's'} from the import`
     }
     if (input.totalAmount != null && input.currencyCode) {
-      const formattedTotal = `${input.currencyCode} ${(input.totalAmount / 100).toFixed(2)}`
+      const digits = getCurrency(input.currencyCode)?.decimal_digits ?? 2
+      const formattedTotal = `${input.currencyCode} ${(input.totalAmount / 10 ** digits).toFixed(digits)}`
       expenseLine += ` (total ${formattedTotal})`
     }
     if (expenseLine) {

@@ -28,6 +28,12 @@ async function fetchReportData(
   input: ReportDataQueryInput,
   signal: AbortSignal,
 ): Promise<ExpenseReportViewModel> {
+  let timeZone: string | undefined
+  try {
+    timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  } catch {
+    timeZone = undefined
+  }
   const response = await fetch(
     `${getApiBaseUrl()}/groups/${encodeURIComponent(input.groupId)}/expenses/report-data`,
     {
@@ -39,6 +45,8 @@ async function fetchReportData(
         to: input.to,
         locale: input.locale,
         labels: input.labels,
+        ...(timeZone ? { timeZone } : {}),
+        generatedOn: new Date().toISOString(),
       }),
       signal,
     },

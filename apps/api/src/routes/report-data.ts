@@ -15,6 +15,8 @@ const reportDataRequestSchema = z.object({
   to: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Expected YYYY-MM-DD'),
   locale: z.enum(locales),
   labels: reportLabelsSchema,
+  timeZone: z.string().optional(),
+  generatedOn: z.string().datetime().optional(),
 })
 
 async function parseRequestBody(request: Request) {
@@ -54,7 +56,7 @@ export async function reportGroupData(request: Request, groupId: string) {
   if (!parsed.body) {
     return Response.json({ error: parsed.error }, { status: 400 })
   }
-  const { from, to, locale, labels } = parsed.body
+  const { from, to, locale, labels, timeZone, generatedOn } = parsed.body
 
   let fromDate: Date
   let toDate: Date
@@ -90,7 +92,10 @@ export async function reportGroupData(request: Request, groupId: string) {
     rows: data.rows,
     participants: data.participants,
   })
-  const view = formatExpenseReport(model, locale, labels)
+  const view = formatExpenseReport(model, locale, labels, {
+    timeZone,
+    ...(generatedOn ? { generatedOn: new Date(generatedOn) } : {}),
+  })
 
   return Response.json(view, {
     headers: { 'Cache-Control': 'private, no-store' },

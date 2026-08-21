@@ -3,6 +3,7 @@ import { prisma } from '@spliit/db'
 import {
   computePaidForFromItems,
   dateOnlyInTimeZone,
+  getCurrency,
   utcToWallTime,
   wallTimeToUtc,
   type Expense,
@@ -150,10 +151,15 @@ export async function updateExpense(
     formatCurrencyCents: (cents, currency) => {
       const code =
         currency ?? group.ledger.currencyCode ?? group.ledger.currency
-      const whole = Math.floor(Math.abs(cents) / 100)
-      const frac = Math.abs(cents) % 100
+      const currencyDef = code ? getCurrency(code) : undefined
+      const digits = currencyDef?.decimal_digits ?? 2
       const sign = cents < 0 ? '-' : ''
-      return `${sign}${code} ${whole}.${frac.toString().padStart(2, '0')}`
+      const abs = Math.abs(cents)
+      const scale = 10 ** digits
+      const whole = Math.floor(abs / scale)
+      if (digits === 0) return `${sign}${code} ${whole}`
+      const frac = abs % scale
+      return `${sign}${code} ${whole}.${frac.toString().padStart(digits, '0')}`
     },
     ledgerCurrencyCode: group.ledger.currencyCode ?? group.ledger.currency,
   }
@@ -161,6 +167,7 @@ export async function updateExpense(
   const expenseDateStr = resolvedWallIso
 
   const documents = await promoteExpenseDocuments(expense.documents)
+  // SAFETY: domain Expense recurrence subset
   const recurrence = getExpenseRecurrence(
     expense as unknown as { recurrence?: unknown; recurrenceRule?: string },
     resolvedWallDate,
@@ -729,8 +736,9 @@ export async function updateExpense(
         await tx.recurringExpenseSeries.update({
           where: { id: existingSeries.id },
           data: {
-            ...(!terminal
-              ? {
+            ...(terminal
+              ? {}
+              : {
                   frequency: recurrence.frequency,
                   interval: recurrence.interval,
                   endType: recurrence.end.type,
@@ -749,8 +757,7 @@ export async function updateExpense(
                   occurrencesCreated: maxSequence,
                   nextOccurrenceDate,
                   nextOccurrenceOrdinal: nextOrdinal,
-                }
-              : {}),
+                }),
             status: nextStatus,
             version: { increment: 1 },
             template,
