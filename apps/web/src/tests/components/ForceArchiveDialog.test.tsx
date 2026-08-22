@@ -93,7 +93,7 @@ describe('ForceArchiveDialog', () => {
     render(<ForceArchiveDialog groupId="group-1" onClose={vi.fn()} />)
 
     expect(
-      screen.getByRole('link', { name: /view balances/i }),
+      screen.getByRole('button', { name: /view balances/i }),
     ).toBeInTheDocument()
     expect(
       screen.getByRole('button', { name: /force archive/i }),
@@ -172,7 +172,7 @@ describe('ForceArchiveDialog', () => {
       <ForceArchiveDialog groupId="group-1" onClose={onClose} />,
     )
 
-    const viewBalances = screen.getByRole('link', { name: /view balances/i })
+    const viewBalances = screen.getByRole('button', { name: /view balances/i })
     expect(viewBalances).toHaveAttribute('href', '/groups/$groupId/balances')
     await user.click(viewBalances)
 

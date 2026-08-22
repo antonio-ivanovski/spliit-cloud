@@ -350,7 +350,11 @@ export function GroupForm({
                   {t(group ? 'Settings.save' : 'Settings.create')}
                 </SubmitButton>
                 {!group && (
-                  <Button variant="ghost" render={<Link to="/" />}>
+                  <Button
+                    variant="ghost"
+                    nativeButton={false}
+                    render={<Link to="/" />}
+                  >
                     {t('Settings.cancel')}
                   </Button>
                 )}

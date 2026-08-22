@@ -88,6 +88,7 @@ export default function UnsubscribePage() {
           <CardFooter className="border-t bg-muted/20 p-6 sm:px-8">
             <Button
               className="h-auto min-h-10 min-w-0 py-2.5 text-center leading-5 whitespace-normal"
+              nativeButton={false}
               render={settingsLink}
             >
               {t('manageSettings')}
@@ -124,12 +125,14 @@ export default function UnsubscribePage() {
             <Button
               variant="outline"
               className="h-auto min-h-10 min-w-0 py-2.5 text-center leading-5 whitespace-normal"
+              nativeButton={false}
               render={<Link to="/" />}
             >
               {t('backHome')}
             </Button>
             <Button
               className="h-auto min-h-10 min-w-0 py-2.5 text-center leading-5 whitespace-normal"
+              nativeButton={false}
               render={settingsLink}
             >
               {t('manageSettings')}
@@ -187,6 +190,7 @@ export default function UnsubscribePage() {
             <Button
               size="lg"
               className="h-auto min-h-11 min-w-0 py-2.5 text-center leading-5 whitespace-normal"
+              nativeButton={false}
               render={<Link to="/" />}
             >
               {t('cancel')}
@@ -211,6 +215,7 @@ export default function UnsubscribePage() {
           <Button
             variant="link"
             className="h-auto min-w-0 self-center p-0 text-center leading-5 whitespace-normal"
+            nativeButton={false}
             render={settingsLink}
           >
             {t('manageSettings')}

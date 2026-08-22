@@ -84,6 +84,7 @@ export function CreateExpenseForm({
           <div>
             <Button
               variant="secondary"
+              nativeButton={false}
               render={
                 <Link to="/groups/$groupId/expenses" params={{ groupId }} />
               }
@@ -110,6 +111,7 @@ export function CreateExpenseForm({
           <div>
             <Button
               variant="secondary"
+              nativeButton={false}
               render={
                 <Link to="/groups/$groupId/expenses" params={{ groupId }} />
               }

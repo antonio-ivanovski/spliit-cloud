@@ -100,6 +100,7 @@ export const EditGroup = () => {
           <CardContent>
             <Button
               variant="secondary"
+              nativeButton={false}
               render={
                 <Link
                   to="/groups/bulk-categorize/$groupId"

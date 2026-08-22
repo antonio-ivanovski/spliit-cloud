@@ -9,7 +9,11 @@ export default function NotFound() {
     <div className="flex flex-col gap-2">
       <p>{t('text')}</p>
       <p>
-        <Button variant="secondary" render={<Link to="/" />}>
+        <Button
+          variant="secondary"
+          nativeButton={false}
+          render={<Link to="/" />}
+        >
           {t('link')}
         </Button>
       </p>

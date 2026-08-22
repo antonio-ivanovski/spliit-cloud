@@ -134,8 +134,8 @@ function Content() {
             )}
 
             <PwaRegister />
-            {!isAuthRoute ? <PushNotificationOnboarding /> : null}
-            {!isAuthRoute ? <InstallPromotionDialog /> : null}
+            {isAuthRoute ? null : <PushNotificationOnboarding />}
+            {isAuthRoute ? null : <InstallPromotionDialog />}
 
             <div className="relative z-20 flex flex-1 flex-col pt-(--app-header-height)">
               <OfflineBanner />
@@ -189,6 +189,7 @@ function Content() {
               <Button
                 variant="secondary"
                 size="sm"
+                nativeButton={false}
                 render={
                   <a href="https://github.com/antonio-ivanovski/spliit-cloud" />
                 }

@@ -272,6 +272,7 @@ export function BasicDetailsCard(props: {
           variant="ghost"
           size="icon"
           className="-ms-2 hidden shrink-0 sm:inline-flex"
+          nativeButton={false}
           render={
             <Link
               data-expense-tab-after-secondary

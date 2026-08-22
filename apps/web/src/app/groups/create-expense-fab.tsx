@@ -173,6 +173,7 @@ export function CreateExpenseFab({
           <Button
             variant="default"
             className="h-10 gap-2 self-center rounded-s-md rounded-e-none px-3.5 shadow-none"
+            nativeButton={!currentGroupId}
             render={
               currentGroupId ? (
                 <Link
@@ -305,6 +306,7 @@ export function CreateExpenseFab({
       <Button
         variant="default"
         aria-label={t('addExpenseAction')}
+        nativeButton={!currentGroupId}
         render={
           currentGroupId ? (
             <Link

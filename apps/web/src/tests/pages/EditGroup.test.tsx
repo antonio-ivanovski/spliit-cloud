@@ -243,12 +243,14 @@ describe('EditGroup', () => {
     expect(
       screen.getByRole('button', { name: 'Print / save PDF' }),
     ).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Download CSV' })).toHaveAttribute(
+    expect(
+      screen.getByRole('button', { name: 'Download CSV' }),
+    ).toHaveAttribute(
       'href',
       'http://localhost:3001/groups/group-1/expenses/export/csv',
     )
     expect(
-      screen.getByRole('link', { name: 'Download bundle' }),
+      screen.getByRole('button', { name: 'Download bundle' }),
     ).toHaveAttribute(
       'href',
       'http://localhost:3001/groups/group-1/export/bundle',
@@ -285,7 +287,7 @@ describe('EditGroup', () => {
       screen.getByRole('button', { name: 'Print / save PDF' }),
     ).toBeInTheDocument()
     expect(
-      screen.getByRole('link', { name: 'Download CSV' }),
+      screen.getByRole('button', { name: 'Download CSV' }),
     ).toBeInTheDocument()
   })
 

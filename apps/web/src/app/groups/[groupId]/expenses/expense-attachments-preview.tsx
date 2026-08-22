@@ -90,6 +90,7 @@ export function ExpenseAttachmentsPreview({
                       {document.fileName ?? t('attachments', { count: 1 })}
                     </p>
                     <Button
+                      nativeButton={false}
                       render={
                         <a
                           href={document.url}

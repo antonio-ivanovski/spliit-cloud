@@ -146,6 +146,7 @@ export function EditExpenseForm({
           <div>
             <Button
               variant="secondary"
+              nativeButton={false}
               render={<Link {...expenseListLink(groupId, returnTo)} />}
             >
               {t('backToExpenses')}

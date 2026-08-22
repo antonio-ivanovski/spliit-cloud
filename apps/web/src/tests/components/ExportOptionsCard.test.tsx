@@ -41,24 +41,24 @@ describe('ExportOptionsCard', () => {
       screen.getByRole('button', { name: 'Print / save PDF' }),
     ).toBeInTheDocument()
     expect(
-      screen.getByRole('link', { name: 'Download CSV' }),
+      screen.getByRole('button', { name: 'Download CSV' }),
     ).toBeInTheDocument()
     expect(
-      screen.getByRole('link', { name: 'Download bundle' }),
+      screen.getByRole('button', { name: 'Download bundle' }),
     ).toBeInTheDocument()
   })
 
   it('keeps the CSV/bundle download URLs and target', () => {
     render(<ExportOptionsCard groupId="grp-1" />)
 
-    const csv = screen.getByRole('link', { name: 'Download CSV' })
+    const csv = screen.getByRole('button', { name: 'Download CSV' })
     expect(csv).toHaveAttribute(
       'href',
       'http://localhost:3001/groups/grp-1/expenses/export/csv',
     )
     expect(csv).toHaveAttribute('target', '_blank')
 
-    const bundle = screen.getByRole('link', { name: 'Download bundle' })
+    const bundle = screen.getByRole('button', { name: 'Download bundle' })
     expect(bundle).toHaveAttribute(
       'href',
       'http://localhost:3001/groups/grp-1/export/bundle',
@@ -101,8 +101,8 @@ describe('ExportOptionsCard', () => {
     render(<ExportOptionsCard groupId="grp-1" />)
 
     const pdf = screen.getByRole('button', { name: 'Print / save PDF' })
-    const bundle = screen.getByRole('link', { name: 'Download bundle' })
-    const csv = screen.getByRole('link', { name: 'Download CSV' })
+    const bundle = screen.getByRole('button', { name: 'Download bundle' })
+    const csv = screen.getByRole('button', { name: 'Download CSV' })
     expect(
       pdf.compareDocumentPosition(csv) & Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy()

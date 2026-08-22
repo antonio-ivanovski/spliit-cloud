@@ -32,7 +32,11 @@ export const FormActions = memo(function FormActions(props: {
   if (props.readOnly) {
     return (
       <FixedActionBar>
-        <Button variant="ghost" render={<Link {...props.cancelLink} />}>
+        <Button
+          variant="ghost"
+          nativeButton={false}
+          render={<Link {...props.cancelLink} />}
+        >
           {t('cancel')}
         </Button>
       </FixedActionBar>
@@ -48,7 +52,11 @@ export const FormActions = memo(function FormActions(props: {
           className="me-auto"
         />
       )}
-      <Button variant="ghost" render={<Link {...props.cancelLink} />}>
+      <Button
+        variant="ghost"
+        nativeButton={false}
+        render={<Link {...props.cancelLink} />}
+      >
         {t('cancel')}
       </Button>
       <SubmitButton

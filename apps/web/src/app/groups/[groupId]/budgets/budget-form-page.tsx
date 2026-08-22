@@ -97,6 +97,7 @@ export function BudgetFormPage({ groupId, budgetId }: Props) {
           <div>
             <Button
               variant="secondary"
+              nativeButton={false}
               render={
                 <Link to="/groups/$groupId/budgets" params={{ groupId }} />
               }
@@ -119,6 +120,7 @@ export function BudgetFormPage({ groupId, budgetId }: Props) {
           <div>
             <Button
               variant="secondary"
+              nativeButton={false}
               render={
                 <Link to="/groups/$groupId/budgets" params={{ groupId }} />
               }
@@ -155,6 +157,7 @@ export function BudgetFormPage({ groupId, budgetId }: Props) {
             variant="ghost"
             size="icon"
             className="-ms-2 hidden shrink-0 sm:inline-flex"
+            nativeButton={false}
             render={
               <Link
                 to="/groups/$groupId/budgets"

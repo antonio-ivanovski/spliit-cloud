@@ -591,6 +591,7 @@ export function BudgetDetailModal({
                     {canEdit && (
                       <EditButton
                         label={t('edit')}
+                        nativeButton={false}
                         render={
                           <Link
                             to="/groups/$groupId/budgets/$budgetId/edit"

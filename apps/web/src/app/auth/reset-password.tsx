@@ -100,6 +100,7 @@ export function ResetPasswordPage() {
           <CardContent className="flex flex-col gap-4">
             <Button
               className="w-full"
+              nativeButton={false}
               render={<Link to="/auth/forgot-password" />}
             >
               {t('requestNewLink')}
@@ -108,6 +109,7 @@ export function ResetPasswordPage() {
               variant="ghost"
               size="sm"
               className="w-full"
+              nativeButton={false}
               render={<Link to="/" />}
             >
               {t('backToSignIn')}
@@ -127,7 +129,11 @@ export function ResetPasswordPage() {
             <CardDescription>{t('successDescription')}</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button className="w-full" render={<Link to="/" replace />}>
+            <Button
+              className="w-full"
+              nativeButton={false}
+              render={<Link to="/" replace />}
+            >
               {t('goToSignIn')}
             </Button>
           </CardContent>
@@ -194,6 +200,7 @@ export function ResetPasswordPage() {
             variant="ghost"
             size="sm"
             className="w-full"
+            nativeButton={false}
             render={<Link to="/" />}
           >
             {t('backToSignIn')}

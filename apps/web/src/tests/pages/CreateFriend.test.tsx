@@ -156,8 +156,9 @@ describe('CreateFriend', () => {
   it('renders a back link to the homepage', () => {
     render(<CreateFriend />)
 
-    const backLink = screen.getByRole('link', { name: 'Back' })
-    expect(backLink).toBeInTheDocument()
+    const backLinks = screen.getAllByRole('button', { name: 'Back' })
+    const backLink =
+      backLinks.find((el) => el.getAttribute('href') === '/') ?? backLinks[0]
     expect(backLink).toHaveAttribute('href', '/')
   })
 

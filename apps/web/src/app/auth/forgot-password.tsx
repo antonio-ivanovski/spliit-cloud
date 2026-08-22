@@ -129,6 +129,7 @@ export function ForgotPasswordPage() {
             variant="ghost"
             size="sm"
             className="w-full"
+            nativeButton={false}
             render={
               <Link
                 to="/"

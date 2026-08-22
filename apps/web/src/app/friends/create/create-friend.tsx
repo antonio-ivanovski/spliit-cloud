@@ -518,7 +518,11 @@ export function CreateFriend() {
               />
 
               <div className="flex justify-end gap-2">
-                <Button variant="ghost" render={<Link to="/" />}>
+                <Button
+                  variant="ghost"
+                  nativeButton={false}
+                  render={<Link to="/" />}
+                >
                   {tCommon('back')}
                 </Button>
                 <SubmitButton loadingContent={t('title')}>

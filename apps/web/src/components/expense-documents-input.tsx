@@ -518,6 +518,7 @@ export function DocumentThumbnail({
                         {document.fileName ?? t('document')}
                       </p>
                       <Button
+                        nativeButton={false}
                         render={
                           <a
                             href={document.url}

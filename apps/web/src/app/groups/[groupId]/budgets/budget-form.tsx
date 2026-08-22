@@ -534,6 +534,7 @@ export function BudgetForm({
       <FixedActionBar>
         <Button
           variant="ghost"
+          nativeButton={false}
           render={<Link to="/groups/$groupId/budgets" params={{ groupId }} />}
         >
           {t('cancel')}
