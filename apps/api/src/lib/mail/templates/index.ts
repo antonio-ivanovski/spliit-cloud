@@ -3,12 +3,16 @@ export {
   EmailChangeOtpEmail,
   MagicLinkEmail,
   PasswordRecoveryEmail,
+  PasswordRemovedNoticeEmail,
+  PasswordSetNoticeEmail,
   SignInGuidanceEmail,
   VerificationEmail,
   renderEmailChangedNoticeEmail,
   renderEmailChangeOtpEmail,
   renderMagicLinkEmail,
   renderPasswordRecoveryEmail,
+  renderPasswordRemovedNoticeEmail,
+  renderPasswordSetNoticeEmail,
   renderVerificationEmail,
 } from './auth'
 export {

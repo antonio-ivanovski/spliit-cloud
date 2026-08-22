@@ -10,6 +10,8 @@ import {
   renderInvitationEmail,
   renderMagicLinkEmail,
   renderPasswordRecoveryEmail,
+  renderPasswordRemovedNoticeEmail,
+  renderPasswordSetNoticeEmail,
   renderVerificationEmail,
 } from './index'
 
@@ -108,6 +110,36 @@ describe('email templates', () => {
       expect(r.subject).toBe('Your Spliit Cloud email address was changed')
       expect(r.text).toContain('new@example.com')
       expect(r.html).toContain('new@example.com')
+    })
+  })
+
+  describe('renderPasswordSetNoticeEmail', () => {
+    it('points at forgot-password in both email formats', async () => {
+      const r = await renderPasswordSetNoticeEmail()
+      expect(r.subject).toBe(
+        'A password was added to your Spliit Cloud account',
+      )
+      expect(r.text).toContain(
+        'A password was added to your Spliit Cloud account',
+      )
+      expect(r.text).toContain('/auth/forgot-password')
+      expect(r.html).toContain('A password was added to your account')
+      expect(r.html).toContain('/auth/forgot-password')
+    })
+  })
+
+  describe('renderPasswordRemovedNoticeEmail', () => {
+    it('points at forgot-password in both email formats', async () => {
+      const r = await renderPasswordRemovedNoticeEmail()
+      expect(r.subject).toBe(
+        'A password was removed from your Spliit Cloud account',
+      )
+      expect(r.text).toContain(
+        'The password on your Spliit Cloud account was removed',
+      )
+      expect(r.text).toContain('/auth/forgot-password')
+      expect(r.html).toContain('A password was removed from your account')
+      expect(r.html).toContain('/auth/forgot-password')
     })
   })
 

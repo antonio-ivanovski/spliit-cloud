@@ -6,6 +6,8 @@
  */
 
 const BRAND_TOKENS = new Set([
+  // Loanword kept verbatim in some locales (e.g. it-IT) — intentional keeper.
+  'Password',
   // Mascot character given name — same across locales.
   'Bill',
   'GitHub',

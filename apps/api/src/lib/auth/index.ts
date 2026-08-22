@@ -40,6 +40,7 @@ import { anonymousRecovery } from './anonymous-recovery'
 import { emailChange } from './email-change'
 import { enforceAuthEmailRecipientLimit } from './email-rate-limit'
 import { applyNativeApplicationTypeForLoopbackRegistration } from './oauth-registration'
+import { passwordSet } from './password-set'
 import {
   assertCanCreateAccount,
   enforceSignupGate,
@@ -50,6 +51,11 @@ import { getApiBaseUrl } from './urls'
 const oidcProvider = getConfiguredOidcProvider()
 
 const anonymousSignupLimiter = new FixedWindowLimiter({
+  limit: 10,
+  windowMs: 60 * 60 * 1000,
+})
+
+const changePasswordLimiter = new FixedWindowLimiter({
   limit: 10,
   windowMs: 60 * 60 * 1000,
 })
@@ -135,9 +141,41 @@ const beforeAuthMiddleware = createAuthMiddleware(async (ctx) => {
   const password =
     ctx.path === '/sign-up/email'
       ? ctx.body?.password
-      : ctx.path === '/reset-password' || ctx.path === '/change-password'
+      : ctx.path === '/reset-password' ||
+          ctx.path === '/change-password' ||
+          ctx.path === '/password/set'
         ? ctx.body?.newPassword
         : undefined
+
+  if (ctx.path === '/change-password') {
+    const session = await getSessionFromCtx(ctx, { disableRefresh: true })
+    const accountId =
+      session?.user && typeof session.user.id === 'string'
+        ? session.user.id
+        : null
+    if (accountId) {
+      const ip = resolveClientIp(ctx.headers ?? new Headers(), {
+        trustProxy: env.TRUST_PROXY,
+      })
+      const decision = changePasswordLimiter.hit(`${accountId}:${ip}`)
+      if (!decision.allowed) {
+        logRateLimitExceeded({
+          policy: 'password-change',
+          identity: accountId,
+          retryAfterSeconds: decision.retryAfterSeconds,
+          path: ctx.path,
+        })
+        throw new APIError(
+          'TOO_MANY_REQUESTS',
+          {
+            message: 'Too many attempts. Please try again later.',
+            code: 'PASSWORD_RATE_LIMITED',
+          },
+          { 'Retry-After': String(decision.retryAfterSeconds) },
+        )
+      }
+    }
+  }
 
   if (typeof password === 'string' && !isStrongPassword(password)) {
     throw new APIError('BAD_REQUEST', {
@@ -587,6 +625,7 @@ export const auth = betterAuth({
     }),
     anonymousRecovery(),
     emailChange(),
+    passwordSet(),
     ...(oidcProvider
       ? [
           genericOAuth({
