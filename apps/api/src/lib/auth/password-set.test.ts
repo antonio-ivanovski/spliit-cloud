@@ -1,4 +1,5 @@
 import { hashPassword } from 'better-auth/crypto'
+import { createLocalAccountIssuer } from 'better-auth/db'
 
 import '../../test/mocks'
 
@@ -23,11 +24,55 @@ function accountRow(overrides: Record<string, unknown> = {}) {
   }
 }
 
+function mockInternalAdapter(
+  overrides: {
+    findCredentialAccount?: ReturnType<typeof vi.fn>
+    findAccounts?: ReturnType<typeof vi.fn>
+    linkAccount?: ReturnType<typeof vi.fn>
+    updateAccount?: ReturnType<typeof vi.fn>
+  } = {},
+) {
+  return {
+    findCredentialAccount:
+      overrides.findCredentialAccount ??
+      vi.fn().mockResolvedValue(null as never),
+    findAccounts:
+      overrides.findAccounts ?? vi.fn().mockResolvedValue([] as never),
+    linkAccount:
+      overrides.linkAccount ??
+      vi.fn().mockResolvedValue({ id: 'new' } as never),
+    updateAccount:
+      overrides.updateAccount ??
+      vi.fn().mockResolvedValue({ id: 'cred-1' } as never),
+  }
+}
+
+function mockPassword(
+  overrides: {
+    hash?: ReturnType<typeof vi.fn>
+    verify?: ReturnType<typeof vi.fn>
+  } = {},
+) {
+  return {
+    hash: overrides.hash ?? vi.fn(async (pw: string) => hashPassword(pw)),
+    verify:
+      overrides.verify ??
+      vi.fn(async ({ hash, password }: { hash: string; password: string }) => {
+        // Use real verify via hashPassword round-trip check: re-hash comparison not exact,
+        // so delegate to real verify by importing dynamically
+        const { verifyPassword } = await import('better-auth/crypto')
+        return verifyPassword({ hash, password })
+      }),
+  }
+}
+
 function authContext(input: {
   user?: Record<string, unknown>
   body?: Record<string, unknown>
   headers?: Headers
   path?: string
+  internalAdapter?: ReturnType<typeof mockInternalAdapter>
+  password?: ReturnType<typeof mockPassword>
 }) {
   return {
     body: input.body ?? {},
@@ -45,6 +90,8 @@ function authContext(input: {
           ...input.user,
         },
       },
+      internalAdapter: input.internalAdapter ?? mockInternalAdapter(),
+      password: input.password ?? mockPassword(),
     },
     request: new Request(
       `https://api.example/auth${input.path ?? '/password/set'}`,
@@ -59,6 +106,8 @@ function sessionContext(
     user?: Record<string, unknown>
     body?: Record<string, unknown>
     headers?: Headers
+    internalAdapter?: ReturnType<typeof mockInternalAdapter>
+    password?: ReturnType<typeof mockPassword>
   } = {},
 ) {
   return authContext(input) as unknown as Parameters<
@@ -67,7 +116,12 @@ function sessionContext(
 }
 
 function statusContext(
-  input: { user?: Record<string, unknown>; headers?: Headers } = {},
+  input: {
+    user?: Record<string, unknown>
+    headers?: Headers
+    internalAdapter?: ReturnType<typeof mockInternalAdapter>
+    password?: ReturnType<typeof mockPassword>
+  } = {},
 ) {
   return authContext({
     ...input,
@@ -82,6 +136,8 @@ function removeContext(
     user?: Record<string, unknown>
     body?: Record<string, unknown>
     headers?: Headers
+    internalAdapter?: ReturnType<typeof mockInternalAdapter>
+    password?: ReturnType<typeof mockPassword>
   } = {},
 ) {
   return authContext({
@@ -97,26 +153,25 @@ describe('password-set plugin', () => {
     // restoreAllMocks would nuke the prismaMock reset from test/mocks.ts
     vi.clearAllMocks()
     prismaMock.account.findUnique.mockResolvedValue(accountRow() as never)
-    prismaMock.authIdentity.findFirst.mockResolvedValue(null as never)
-    prismaMock.authIdentity.findMany.mockResolvedValue([] as never)
-    prismaMock.authIdentity.create.mockResolvedValue({ id: 'new' } as never)
-    prismaMock.authIdentity.update.mockResolvedValue({ id: 'cred-1' } as never)
   })
 
   describe('getPasswordStatus', () => {
     it('returns hasPassword=false when no credential password exists', async () => {
-      prismaMock.authIdentity.findFirst.mockResolvedValue(null as never)
-      const ctx = statusContext()
+      const internalAdapter = mockInternalAdapter({
+        findCredentialAccount: vi.fn().mockResolvedValue(null as never),
+      })
+      const ctx = statusContext({ internalAdapter })
       const res = await plugin.endpoints.getPasswordStatus(ctx)
       expect(res).toEqual({ hasPassword: false })
     })
 
     it('returns hasPassword=true when credential password exists', async () => {
-      prismaMock.authIdentity.findFirst.mockResolvedValue({
-        id: 'cred-1',
-        password: 'hashed',
-      } as never)
-      const ctx = statusContext()
+      const internalAdapter = mockInternalAdapter({
+        findCredentialAccount: vi
+          .fn()
+          .mockResolvedValue({ id: 'cred-1', password: 'hashed' } as never),
+      })
+      const ctx = statusContext({ internalAdapter })
       const res = await plugin.endpoints.getPasswordStatus(ctx)
       expect(res).toEqual({ hasPassword: true })
     })
@@ -129,9 +184,11 @@ describe('password-set plugin', () => {
     })
 
     it('sets no-store headers on the response', async () => {
-      prismaMock.authIdentity.findFirst.mockResolvedValue(null as never)
+      const internalAdapter = mockInternalAdapter({
+        findCredentialAccount: vi.fn().mockResolvedValue(null as never),
+      })
       const ctx = {
-        ...statusContext(),
+        ...statusContext({ internalAdapter }),
         returnHeaders: true,
       } as unknown as Parameters<
         (typeof plugin)['endpoints']['getPasswordStatus']
@@ -189,34 +246,44 @@ describe('password-set plugin', () => {
     })
 
     it('rejects when password already set', async () => {
-      prismaMock.authIdentity.findFirst.mockResolvedValue({
-        id: 'cred-1',
-        password: await hashPassword(STRONG),
-      } as never)
+      const internalAdapter = mockInternalAdapter({
+        findCredentialAccount: vi.fn().mockResolvedValue({
+          id: 'cred-1',
+          password: await hashPassword(STRONG),
+        } as never),
+      })
       await expect(
         plugin.endpoints.setPassword(
-          sessionContext({ body: { newPassword: STRONG } }),
+          sessionContext({
+            body: { newPassword: STRONG },
+            internalAdapter,
+          }),
         ),
       ).rejects.toMatchObject({ body: { code: 'ALREADY_HAS_PASSWORD' } })
       expect(sendEmailMock).not.toHaveBeenCalled()
     })
 
     it('creates credential identity when none exists and emails the account', async () => {
-      prismaMock.authIdentity.findFirst.mockResolvedValue(null as never)
-      const ctx = sessionContext({ body: { newPassword: STRONG } })
+      const internalAdapter = mockInternalAdapter({
+        findCredentialAccount: vi.fn().mockResolvedValue(null as never),
+      })
+      const ctx = sessionContext({
+        body: { newPassword: STRONG },
+        internalAdapter,
+      })
       await expect(plugin.endpoints.setPassword(ctx)).resolves.toEqual({
         success: true,
       })
-      expect(prismaMock.authIdentity.create).toHaveBeenCalledWith(
+      expect(internalAdapter.linkAccount).toHaveBeenCalledWith(
         expect.objectContaining({
-          data: expect.objectContaining({
-            providerId: 'credential',
-            issuer: 'local:credential',
-            userId: 'account-1',
-            accountId: 'account-1',
-          }),
+          providerId: 'credential',
+          issuer: createLocalAccountIssuer('credential'),
+          userId: 'account-1',
+          accountId: 'account-1',
         }),
       )
+      // Do not mock createLocalAccountIssuer — assert real value
+      expect(createLocalAccountIssuer('credential')).toBe('local:credential')
       expect(sendEmailMock).toHaveBeenCalledWith(
         expect.objectContaining({
           to: 'user@example.com',
@@ -226,76 +293,85 @@ describe('password-set plugin', () => {
     })
 
     it('updates existing credential identity with null password', async () => {
-      prismaMock.authIdentity.findFirst.mockResolvedValue({
-        id: 'cred-1',
-        password: null,
-      } as never)
+      const internalAdapter = mockInternalAdapter({
+        findCredentialAccount: vi
+          .fn()
+          .mockResolvedValue({ id: 'cred-1', password: null } as never),
+      })
       await expect(
         plugin.endpoints.setPassword(
-          sessionContext({ body: { newPassword: STRONG } }),
+          sessionContext({ body: { newPassword: STRONG }, internalAdapter }),
         ),
       ).resolves.toEqual({ success: true })
-      expect(prismaMock.authIdentity.update).toHaveBeenCalledWith(
-        expect.objectContaining({ where: { id: 'cred-1' } }),
+      expect(internalAdapter.updateAccount).toHaveBeenCalledWith(
+        'cred-1',
+        expect.objectContaining({ password: expect.any(String) }),
       )
-      expect(prismaMock.authIdentity.create).not.toHaveBeenCalled()
+      expect(internalAdapter.linkAccount).not.toHaveBeenCalled()
       expect(sendEmailMock).toHaveBeenCalled()
     })
 
     it('still sets the password if the notice email fails', async () => {
-      prismaMock.authIdentity.findFirst.mockResolvedValue(null as never)
+      const internalAdapter = mockInternalAdapter({
+        findCredentialAccount: vi.fn().mockResolvedValue(null as never),
+      })
       sendEmailMock.mockRejectedValueOnce(new Error('smtp down'))
       await expect(
         plugin.endpoints.setPassword(
-          sessionContext({ body: { newPassword: STRONG } }),
+          sessionContext({ body: { newPassword: STRONG }, internalAdapter }),
         ),
       ).resolves.toEqual({ success: true })
-      expect(prismaMock.authIdentity.create).toHaveBeenCalled()
+      expect(internalAdapter.linkAccount).toHaveBeenCalled()
     })
 
     it('maps a create unique-constraint race to already-has-password', async () => {
-      prismaMock.authIdentity.findFirst.mockResolvedValue(null as never)
-      prismaMock.authIdentity.create.mockRejectedValue(
-        new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
-          code: 'P2002',
-          clientVersion: 'test',
-        }),
-      )
+      const internalAdapter = mockInternalAdapter({
+        findCredentialAccount: vi.fn().mockResolvedValue(null as never),
+        linkAccount: vi.fn().mockRejectedValue(
+          new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
+            code: 'P2002',
+            clientVersion: 'test',
+          }),
+        ),
+      })
       await expect(
         plugin.endpoints.setPassword(
-          sessionContext({ body: { newPassword: STRONG } }),
+          sessionContext({ body: { newPassword: STRONG }, internalAdapter }),
         ),
       ).rejects.toMatchObject({ body: { code: 'ALREADY_HAS_PASSWORD' } })
       expect(sendEmailMock).not.toHaveBeenCalled()
     })
 
     it('rate-limits per account+ip', async () => {
-      prismaMock.authIdentity.findFirst.mockResolvedValue(null as never)
       const headers = new Headers()
-      // Isolate this case with a unique ip-shaped key: TRUST_PROXY is false in
-      // tests so identity is "direct", but key is still accountId:direct — to
-      // avoid cross-test bleed we cleared limiters in beforeEach and use a
-      // distinct account id for the burst.
-      const makeCtx = () =>
-        sessionContext({
-          body: { newPassword: STRONG },
-          headers,
-        }) as unknown as {
-          context: { session: { user: { id: string } } }
-          body: Record<string, unknown>
-          request: Request
-          responseHeaders: Headers
-        } & ReturnType<typeof sessionContext>
+      const makeCtx = (_accountId: string) => {
+        const internalAdapter = mockInternalAdapter({
+          findCredentialAccount: vi.fn().mockResolvedValue(null as never),
+        })
+        return {
+          ctx: sessionContext({
+            body: { newPassword: STRONG },
+            headers,
+            internalAdapter,
+          }) as unknown as {
+            context: { session: { user: { id: string } } }
+            body: Record<string, unknown>
+            request: Request
+            responseHeaders: Headers
+          } & ReturnType<typeof sessionContext>,
+          internalAdapter,
+        }
+      }
       const accountId = `rate-set-${Date.now()}`
       for (let i = 0; i < 10; i += 1) {
-        const ctx = makeCtx()
+        const { ctx } = makeCtx(accountId)
         ;(ctx.context.session.user as { id: string }).id = accountId
         prismaMock.account.findUnique.mockResolvedValue(
           accountRow({ id: accountId }) as never,
         )
         await plugin.endpoints.setPassword(ctx as never).catch(() => undefined)
       }
-      const blocked = makeCtx()
+      const { ctx: blocked } = makeCtx(accountId)
       ;(blocked.context.session.user as { id: string }).id = accountId
       prismaMock.account.findUnique.mockResolvedValue(
         accountRow({ id: accountId }) as never,
@@ -303,7 +379,6 @@ describe('password-set plugin', () => {
       await expect(
         plugin.endpoints.setPassword(blocked as never),
       ).rejects.toMatchObject({ body: { code: 'PASSWORD_RATE_LIMITED' } })
-      // Retry-After is written to responseHeaders even though APIError is thrown
       expect(blocked.responseHeaders.get('Retry-After')).toBeDefined()
     })
 
@@ -322,9 +397,12 @@ describe('password-set plugin', () => {
   })
 
   describe('removePassword', () => {
-    async function seedCredential(password = STRONG) {
+    async function seedCredential(
+      internalAdapter: ReturnType<typeof mockInternalAdapter>,
+      password = STRONG,
+    ) {
       const hash = await hashPassword(password)
-      prismaMock.authIdentity.findFirst.mockResolvedValue({
+      internalAdapter.findCredentialAccount.mockResolvedValue({
         id: 'cred-1',
         password: hash,
       } as never)
@@ -343,10 +421,15 @@ describe('password-set plugin', () => {
     })
 
     it('rejects when no password set', async () => {
-      prismaMock.authIdentity.findFirst.mockResolvedValue(null as never)
+      const internalAdapter = mockInternalAdapter({
+        findCredentialAccount: vi.fn().mockResolvedValue(null as never),
+      })
       await expect(
         plugin.endpoints.removePassword(
-          removeContext({ body: { currentPassword: STRONG } }),
+          removeContext({
+            body: { currentPassword: STRONG },
+            internalAdapter,
+          }),
         ),
       ).rejects.toMatchObject({
         body: { code: 'CREDENTIAL_ACCOUNT_NOT_FOUND' },
@@ -354,54 +437,73 @@ describe('password-set plugin', () => {
     })
 
     it('rejects wrong current password', async () => {
-      await seedCredential(STRONG)
+      const internalAdapter = mockInternalAdapter()
+      await seedCredential(internalAdapter, STRONG)
+      const password = mockPassword({
+        verify: vi.fn().mockResolvedValue(false as never),
+      })
       await expect(
         plugin.endpoints.removePassword(
-          removeContext({ body: { currentPassword: 'Wrong1!Pass' } }),
+          removeContext({
+            body: { currentPassword: 'Wrong1!Pass' },
+            internalAdapter,
+            password,
+          }),
         ),
       ).rejects.toMatchObject({ body: { code: 'INVALID_PASSWORD' } })
     })
 
     it('rejects removal without alternative sign-in (no other provider, unverified email)', async () => {
-      await seedCredential(STRONG)
+      const internalAdapter = mockInternalAdapter()
+      await seedCredential(internalAdapter, STRONG)
       prismaMock.account.findUnique.mockResolvedValue(
         accountRow({ emailVerified: false }) as never,
       )
-      prismaMock.authIdentity.findMany.mockResolvedValue([] as never)
+      internalAdapter.findAccounts.mockResolvedValue([] as never)
       await expect(
         plugin.endpoints.removePassword(
-          removeContext({ body: { currentPassword: STRONG } }),
+          removeContext({
+            body: { currentPassword: STRONG },
+            internalAdapter,
+          }),
         ),
       ).rejects.toMatchObject({ body: { code: 'NO_ALTERNATIVE_SIGN_IN' } })
     })
 
     it('rejects removal when email is placeholder even if verified', async () => {
-      await seedCredential(STRONG)
+      const internalAdapter = mockInternalAdapter()
+      await seedCredential(internalAdapter, STRONG)
       prismaMock.account.findUnique.mockResolvedValue(
         accountRow({
           email: '123@github.placeholder.local',
           emailVerified: true,
         }) as never,
       )
-      prismaMock.authIdentity.findMany.mockResolvedValue([] as never)
+      internalAdapter.findAccounts.mockResolvedValue([] as never)
       await expect(
         plugin.endpoints.removePassword(
-          removeContext({ body: { currentPassword: STRONG } }),
+          removeContext({
+            body: { currentPassword: STRONG },
+            internalAdapter,
+          }),
         ),
       ).rejects.toMatchObject({ body: { code: 'NO_ALTERNATIVE_SIGN_IN' } })
     })
 
     it('allows removal with verified real email and emails the account', async () => {
-      await seedCredential(STRONG)
-      prismaMock.authIdentity.findMany.mockResolvedValue([] as never)
+      const internalAdapter = mockInternalAdapter()
+      await seedCredential(internalAdapter, STRONG)
+      internalAdapter.findAccounts.mockResolvedValue([] as never)
       await expect(
         plugin.endpoints.removePassword(
-          removeContext({ body: { currentPassword: STRONG } }),
+          removeContext({
+            body: { currentPassword: STRONG },
+            internalAdapter,
+          }),
         ),
       ).resolves.toEqual({ success: true })
-      expect(prismaMock.authIdentity.update).toHaveBeenCalledWith({
-        where: { id: 'cred-1' },
-        data: { password: null },
+      expect(internalAdapter.updateAccount).toHaveBeenCalledWith('cred-1', {
+        password: null,
       })
       expect(sendEmailMock).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -412,23 +514,25 @@ describe('password-set plugin', () => {
     })
 
     it('allows removal with another provider (oauth) even without verified email and still emails if the email is real', async () => {
-      await seedCredential(STRONG)
+      const internalAdapter = mockInternalAdapter()
+      await seedCredential(internalAdapter, STRONG)
       prismaMock.account.findUnique.mockResolvedValue(
         accountRow({
           email: 'user@example.com',
           emailVerified: false,
         }) as never,
       )
-      prismaMock.authIdentity.findMany.mockResolvedValue([
+      internalAdapter.findAccounts.mockResolvedValue([
         { providerId: 'google' },
       ] as never)
       await expect(
         plugin.endpoints.removePassword(
-          removeContext({ body: { currentPassword: STRONG } }),
+          removeContext({
+            body: { currentPassword: STRONG },
+            internalAdapter,
+          }),
         ),
       ).resolves.toEqual({ success: true })
-      // email is real (not placeholder) so the notice is still sent even though
-      // the guard used the OAuth provider, not the verified-email path.
       expect(sendEmailMock).toHaveBeenCalledWith(
         expect.objectContaining({
           subject: 'A password was removed from your Spliit Cloud account',
@@ -437,48 +541,56 @@ describe('password-set plugin', () => {
     })
 
     it('still removes the password if the notice email fails', async () => {
-      await seedCredential(STRONG)
-      prismaMock.authIdentity.findMany.mockResolvedValue([] as never)
+      const internalAdapter = mockInternalAdapter()
+      await seedCredential(internalAdapter, STRONG)
+      internalAdapter.findAccounts.mockResolvedValue([] as never)
       sendEmailMock.mockRejectedValueOnce(new Error('smtp down'))
       await expect(
         plugin.endpoints.removePassword(
-          removeContext({ body: { currentPassword: STRONG } }),
+          removeContext({
+            body: { currentPassword: STRONG },
+            internalAdapter,
+          }),
         ),
       ).resolves.toEqual({ success: true })
-      expect(prismaMock.authIdentity.update).toHaveBeenCalled()
+      expect(internalAdapter.updateAccount).toHaveBeenCalled()
     })
 
     it('rate-limits remove per account+ip', async () => {
       const accountId = `rate-remove-${Date.now()}`
       const headers = new Headers()
       for (let i = 0; i < 10; i += 1) {
-        await seedCredential(STRONG)
+        const internalAdapter = mockInternalAdapter()
+        await seedCredential(internalAdapter, STRONG)
         prismaMock.account.findUnique.mockResolvedValue(
           accountRow({ id: accountId }) as never,
         )
-        prismaMock.authIdentity.findMany.mockResolvedValue([
+        internalAdapter.findAccounts.mockResolvedValue([
           { providerId: 'google' },
         ] as never)
         const ctx = removeContext({
           body: { currentPassword: STRONG },
           headers,
           user: { id: accountId },
+          internalAdapter,
         })
         await plugin.endpoints
           .removePassword(ctx as never)
           .catch(() => undefined)
       }
-      await seedCredential(STRONG)
+      const finalAdapter = mockInternalAdapter()
+      await seedCredential(finalAdapter, STRONG)
       prismaMock.account.findUnique.mockResolvedValue(
         accountRow({ id: accountId }) as never,
       )
-      prismaMock.authIdentity.findMany.mockResolvedValue([
+      finalAdapter.findAccounts.mockResolvedValue([
         { providerId: 'google' },
       ] as never)
       const blocked = removeContext({
         body: { currentPassword: STRONG },
         headers,
         user: { id: accountId },
+        internalAdapter: finalAdapter,
       })
       await expect(
         plugin.endpoints.removePassword(blocked as never),

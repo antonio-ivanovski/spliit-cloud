@@ -9,6 +9,7 @@ import {
   renderGroupActivityEmail,
   renderInvitationEmail,
   renderMagicLinkEmail,
+  renderPasswordChangedNoticeEmail,
   renderPasswordRecoveryEmail,
   renderPasswordRemovedNoticeEmail,
   renderPasswordSetNoticeEmail,
@@ -139,6 +140,21 @@ describe('email templates', () => {
       )
       expect(r.text).toContain('/auth/forgot-password')
       expect(r.html).toContain('A password was removed from your account')
+      expect(r.html).toContain('/auth/forgot-password')
+    })
+  })
+
+  describe('renderPasswordChangedNoticeEmail', () => {
+    it('points at forgot-password and notes signed-out sessions', async () => {
+      const r = await renderPasswordChangedNoticeEmail()
+      expect(r.subject).toBe('Your Spliit Cloud password was changed')
+      expect(r.text).toContain(
+        'The password on your Spliit Cloud account was changed',
+      )
+      expect(r.text).toContain('Other sessions have been signed out')
+      expect(r.text).toContain('/auth/forgot-password')
+      expect(r.html).toContain('Your password was changed')
+      expect(r.html).toContain('Other sessions have been signed out')
       expect(r.html).toContain('/auth/forgot-password')
     })
   })

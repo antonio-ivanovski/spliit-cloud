@@ -269,6 +269,43 @@ export function PasswordRemovedNoticeEmail(props: {
   )
 }
 
+export function PasswordChangedNoticeEmail(props: {
+  brandBaseUrl: string
+  resetUrl: string
+}): ReactElement {
+  return (
+    <EmailLayout
+      preview="Your Spliit Cloud password was changed"
+      brandBaseUrl={props.brandBaseUrl}
+    >
+      <Heading
+        as="h1"
+        className="m-0 mb-4 text-[24px] font-semibold tracking-tight text-[#0f172a]"
+      >
+        Your password was changed
+      </Heading>
+      <Text className="m-0 mb-4 text-[15px] leading-[24px] text-[#0f172a]">
+        The password on your Spliit Cloud account was changed. Other sessions
+        have been signed out.
+      </Text>
+      <Text className="m-0 mb-6 text-[15px] leading-[24px] text-[#0f172a]">
+        If you did not make this change, reset the password immediately.
+      </Text>
+      <Section className="my-6 text-center">
+        <EmailButton href={props.resetUrl} label="Reset password" />
+      </Section>
+      <Text className="m-0 mb-2 text-[14px] leading-[22px] text-[#0f172a]">
+        If the button doesn't work, copy and paste this URL into your browser:
+      </Text>
+      <Text className="m-0 mb-4 text-[13px] leading-[20px] break-all text-[#64748b]">
+        <Link href={props.resetUrl} className="text-[#64748b] underline">
+          {props.resetUrl}
+        </Link>
+      </Text>
+    </EmailLayout>
+  )
+}
+
 export function MagicLinkEmail(props: {
   brandBaseUrl: string
   signInUrl: string
@@ -437,6 +474,21 @@ export async function renderPasswordRemovedNoticeEmail(): Promise<RenderedEmail>
       resetUrl={resetUrl}
     />,
     { subject: 'A password was removed from your Spliit Cloud account', text },
+  )
+}
+
+export async function renderPasswordChangedNoticeEmail(): Promise<RenderedEmail> {
+  const resetUrl = `${authBaseUrl()}/auth/forgot-password`
+  const text =
+    `The password on your Spliit Cloud account was changed. Other sessions have been signed out.\n\n` +
+    `If you did not make this change, reset the password immediately:\n\n${resetUrl}`
+
+  return renderTemplate(
+    <PasswordChangedNoticeEmail
+      brandBaseUrl={authBaseUrl()}
+      resetUrl={resetUrl}
+    />,
+    { subject: 'Your Spliit Cloud password was changed', text },
   )
 }
 

@@ -7,6 +7,7 @@ import {
   APIError,
   createAuthMiddleware,
   getSessionFromCtx,
+  isAPIError,
 } from 'better-auth/api'
 import {
   jwt,
@@ -23,10 +24,14 @@ import { isStrongPassword } from '@spliit/domain/password'
 
 import { autoAcceptPendingFriendInvitationsForAccount } from '../api/friends'
 import { env, getConfiguredOidcProvider, webOrigins } from '../env'
-import { buildProviderPlaceholderEmail } from '../invitations'
+import {
+  buildProviderPlaceholderEmail,
+  isPlaceholderEmail,
+} from '../invitations'
 import { sendEmail } from '../mail/send'
 import {
   renderMagicLinkEmail,
+  renderPasswordChangedNoticeEmail,
   renderPasswordRecoveryEmail,
   renderVerificationEmail,
 } from '../mail/templates'
@@ -174,6 +179,11 @@ const beforeAuthMiddleware = createAuthMiddleware(async (ctx) => {
           { 'Retry-After': String(decision.retryAfterSeconds) },
         )
       }
+    }
+    // Force revocation so the “other sessions have been signed out” notice is accurate
+    // even for raw API callers that omit the field. The web client already sends true.
+    if (isRecord(ctx.body)) {
+      ctx.body.revokeOtherSessions = true
     }
   }
 
@@ -475,6 +485,40 @@ export const auth = betterAuth({
 
   hooks: {
     before: beforeAuthMiddleware,
+    after: createAuthMiddleware(async (ctx) => {
+      if (ctx.path !== '/change-password') return
+      let data: unknown = ctx.context.returned
+      if (data instanceof Response) {
+        if (data.status !== 200) return
+        try {
+          data = await data.clone().json()
+        } catch {
+          return
+        }
+      }
+      if (isAPIError(data)) return
+      if (
+        !data ||
+        typeof data !== 'object' ||
+        !('user' in (data as Record<string, unknown>))
+      )
+        return
+      const returnedUser = (data as { user?: { email?: string } }).user
+      // Prefer returned user email (canonical after write); fall back to session
+      const sessionEmail =
+        returnedUser?.email ??
+        (ctx.context.session?.user as { email?: string } | undefined)?.email
+      if (!sessionEmail || isPlaceholderEmail(sessionEmail)) return
+      try {
+        const rendered = await renderPasswordChangedNoticeEmail()
+        await sendEmail({ to: sessionEmail, ...rendered })
+      } catch (err) {
+        console.warn(
+          `[password-change] failed to send notice to ${sessionEmail}:`,
+          err,
+        )
+      }
+    }),
   },
 
   // Reconcile pending friend-ledger invitations that target this

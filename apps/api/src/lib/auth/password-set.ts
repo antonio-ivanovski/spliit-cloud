@@ -4,13 +4,12 @@ import {
   sensitiveSessionMiddleware,
   sessionMiddleware,
 } from 'better-auth/api'
-import { hashPassword, verifyPassword } from 'better-auth/crypto'
+import { createLocalAccountIssuer } from 'better-auth/db'
 import { z } from 'zod'
 
 import { Prisma, prisma } from '@spliit/db'
 import { isStrongPassword } from '@spliit/domain/password'
 
-import { randomId } from '../api/shared'
 import { env } from '../env'
 import { isPlaceholderEmail } from '../invitations'
 import { sendEmail } from '../mail/send'
@@ -24,8 +23,6 @@ import {
   resolveClientIp,
 } from '../rate-limit'
 import { invalidateAccountCache } from './account-cache'
-
-const CREDENTIAL_ISSUER = 'local:credential'
 
 const setBody = z.object({
   newPassword: z.string().min(1).max(128),
@@ -94,10 +91,21 @@ function throwAlreadyHasPassword(): never {
 }
 
 function isUniqueConstraintError(error: unknown) {
-  return (
+  if (
     error instanceof Prisma.PrismaClientKnownRequestError &&
     error.code === 'P2002'
-  )
+  ) {
+    return true
+  }
+  if (
+    error != null &&
+    typeof error === 'object' &&
+    'code' in error &&
+    (error as { code?: unknown }).code === 'P2002'
+  ) {
+    return true
+  }
+  return false
 }
 
 async function loadAccount(accountId: string) {
@@ -117,18 +125,6 @@ async function loadAccount(accountId: string) {
     })
   }
   return account
-}
-
-async function findCredentialIdentity(userId: string) {
-  return prisma.authIdentity.findFirst({
-    where: { userId, providerId: 'credential' },
-    select: { id: true, password: true },
-  })
-}
-
-async function hasCredentialPassword(userId: string) {
-  const identity = await findCredentialIdentity(userId)
-  return identity?.password != null
 }
 
 async function notifyPasswordSet(email: string) {
@@ -159,7 +155,11 @@ export function passwordSet() {
         async (ctx) => {
           noStore(ctx)
           const sessionUser = requireSessionUser(ctx)
-          const hasPassword = await hasCredentialPassword(sessionUser.id)
+          const account =
+            await ctx.context.internalAdapter.findCredentialAccount(
+              sessionUser.id,
+            )
+          const hasPassword = account?.password != null
           return ctx.json({ hasPassword })
         },
       ),
@@ -189,7 +189,8 @@ export function passwordSet() {
             })
           }
 
-          const identity = await findCredentialIdentity(account.id)
+          const identity =
+            await ctx.context.internalAdapter.findCredentialAccount(account.id)
 
           if (!identity?.password) {
             throw new APIError('NOT_FOUND', {
@@ -200,7 +201,7 @@ export function passwordSet() {
 
           // Current password is required for removal. If the user does not
           // know it, they must use the forgot-password flow to reset first.
-          const valid = await verifyPassword({
+          const valid = await ctx.context.password.verify({
             hash: identity.password,
             password: ctx.body.currentPassword,
           })
@@ -214,11 +215,11 @@ export function passwordSet() {
           // Guard against lockout: require at least one alternative sign-in
           // method (another linked provider) or a verified real email that
           // can receive a magic link. Placeholder emails don't count.
-          const otherIdentities = await prisma.authIdentity.findMany({
-            where: { userId: account.id, providerId: { not: 'credential' } },
-            select: { providerId: true },
-          })
-          const hasOtherProvider = otherIdentities.length > 0
+          const otherIdentities =
+            await ctx.context.internalAdapter.findAccounts(account.id)
+          const hasOtherProvider = otherIdentities.some(
+            (acc) => acc.providerId !== 'credential',
+          )
           const hasVerifiedRealEmail =
             Boolean(account.email) &&
             !isPlaceholderEmail(account.email) &&
@@ -230,9 +231,8 @@ export function passwordSet() {
             })
           }
 
-          await prisma.authIdentity.update({
-            where: { id: identity.id },
-            data: { password: null },
+          await ctx.context.internalAdapter.updateAccount(identity.id, {
+            password: null,
           })
 
           invalidateAccountCache(account.id)
@@ -289,29 +289,24 @@ export function passwordSet() {
             })
           }
 
-          const existing = await findCredentialIdentity(account.id)
+          const existing =
+            await ctx.context.internalAdapter.findCredentialAccount(account.id)
           if (existing?.password) throwAlreadyHasPassword()
 
-          const passwordHash = await hashPassword(newPassword)
+          const passwordHash = await ctx.context.password.hash(newPassword)
 
           try {
             if (existing) {
-              await prisma.authIdentity.update({
-                where: { id: existing.id },
-                data: { password: passwordHash },
+              await ctx.context.internalAdapter.updateAccount(existing.id, {
+                password: passwordHash,
               })
             } else {
-              // `accountId` for credential identities is the user's id (matches
-              // better-auth's serverOnly setPassword: accountId = userId).
-              await prisma.authIdentity.create({
-                data: {
-                  id: randomId(),
-                  userId: account.id,
-                  providerId: 'credential',
-                  issuer: CREDENTIAL_ISSUER,
-                  accountId: account.id,
-                  password: passwordHash,
-                },
+              await ctx.context.internalAdapter.linkAccount({
+                userId: account.id,
+                providerId: 'credential',
+                issuer: createLocalAccountIssuer('credential'),
+                accountId: account.id,
+                password: passwordHash,
               })
             }
           } catch (error) {

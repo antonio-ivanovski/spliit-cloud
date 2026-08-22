@@ -1,9 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
-import { Check, Circle, Loader2, Pencil, Trash2 } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { Loader2, Pencil, Trash2 } from 'lucide-react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { PasswordChecklist } from '@/components/auth/password-checklist'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -25,12 +26,7 @@ import {
   removePassword,
   setPassword,
 } from '@/lib/password'
-import { cn } from '@/lib/utils'
-import {
-  getPasswordRequirements,
-  isStrongPassword,
-  type PasswordRequirementId,
-} from '@spliit/domain/password'
+import { isStrongPassword } from '@spliit/domain/password'
 
 import { SettingsRow } from './settings-ui'
 
@@ -51,41 +47,6 @@ const ERROR_MESSAGE_KEYS = {
   NO_ALTERNATIVE_SIGN_IN: 'noAlternativeSignIn',
   NOT_FOUND: 'notFound',
 } as const
-
-function PasswordChecklist({ password }: { password: string }) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'Auth' })
-  const requirements = useMemo(
-    () => getPasswordRequirements(password),
-    [password],
-  )
-  const labels: Record<PasswordRequirementId, string> = {
-    minLength: t('passwordRequirements.minLength'),
-    uppercase: t('passwordRequirements.uppercase'),
-    lowercase: t('passwordRequirements.lowercase'),
-    number: t('passwordRequirements.number'),
-    symbol: t('passwordRequirements.symbol'),
-  }
-  return (
-    <ul className="grid grid-cols-1 gap-1 text-xs text-muted-foreground sm:grid-cols-2">
-      {requirements.map((requirement) => (
-        <li
-          key={requirement.id}
-          className={cn(
-            'flex items-center gap-1.5',
-            requirement.isMet && 'text-foreground',
-          )}
-        >
-          {requirement.isMet ? (
-            <Check className="h-3.5 w-3.5 text-emerald-600" />
-          ) : (
-            <Circle className="h-3 w-3" />
-          )}
-          <span>{labels[requirement.id]}</span>
-        </li>
-      ))}
-    </ul>
-  )
-}
 
 export function AccountPasswordSettings({
   email,
@@ -558,7 +519,11 @@ export function AccountPasswordSettings({
                 {t('password.removeTitle')}
               </ResponsiveDialogTitle>
               <ResponsiveDialogDescription>
-                {t('password.removeDescription')}
+                {t(
+                  verifiedEmail
+                    ? 'password.removeDescription'
+                    : 'password.removeDescriptionNoAlternative',
+                )}
               </ResponsiveDialogDescription>
             </ResponsiveDialogHeader>
             <ResponsiveDialogBody className="flex flex-col gap-4">

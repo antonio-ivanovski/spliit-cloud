@@ -57,7 +57,7 @@ const realAuthModule = (await vi.importActual('./index')) as {
         expiresIn?: number
         updateAge?: number
       }
-      hooks?: { before?: unknown }
+      hooks?: { before?: unknown; after?: (ctx: unknown) => Promise<void> }
       databaseHooks?: {
         user?: {
           create?: {
@@ -633,5 +633,128 @@ describe('better-auth socialProviders config', () => {
     await expect(
       realAuthModule.getVerifiedTwitterUserInfo({ accessToken: 'token-x-4' }),
     ).resolves.toBeNull()
+  })
+})
+
+describe('password change notice after hook', () => {
+  afterEach(() => {
+    sendEmailMock.mockClear()
+    vi.restoreAllMocks()
+  })
+
+  it('exists and sends notice on success with { token, user }', async () => {
+    const after = realAuthModule.auth.options.hooks?.after
+    expect(after).toBeDefined()
+    await (after as (ctx: unknown) => Promise<void>)({
+      path: '/change-password',
+      context: {
+        returned: {
+          token: 'tok',
+          user: { email: 'alice@example.com', id: 'u1' },
+        },
+        session: { user: { email: 'alice@example.com' } },
+      },
+    } as never)
+    expect(sendEmailMock).toHaveBeenCalledOnce()
+    expect(sendEmailMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: 'alice@example.com',
+        subject: 'Your Spliit Cloud password was changed',
+        text: expect.stringContaining('Other sessions have been signed out'),
+      }),
+    )
+  })
+
+  it('prefers returned user email over session email', async () => {
+    const after = realAuthModule.auth.options.hooks!.after!
+    await (after as (ctx: unknown) => Promise<void>)({
+      path: '/change-password',
+      context: {
+        returned: { user: { email: 'new@example.com' } },
+        session: { user: { email: 'old@example.com' } },
+      },
+    } as never)
+    expect(sendEmailMock).toHaveBeenCalledWith(
+      expect.objectContaining({ to: 'new@example.com' }),
+    )
+  })
+
+  it('falls back to session email when returned has no email', async () => {
+    const after = realAuthModule.auth.options.hooks!.after!
+    await (after as (ctx: unknown) => Promise<void>)({
+      path: '/change-password',
+      context: {
+        returned: { user: { id: 'u1' } },
+        session: { user: { email: 'fallback@example.com' } },
+      },
+    } as never)
+    expect(sendEmailMock).toHaveBeenCalledWith(
+      expect.objectContaining({ to: 'fallback@example.com' }),
+    )
+  })
+
+  it('skips when returned is an APIError', async () => {
+    const { APIError } = await import('better-auth/api')
+    const after = realAuthModule.auth.options.hooks!.after!
+    await (after as (ctx: unknown) => Promise<void>)({
+      path: '/change-password',
+      context: {
+        returned: new APIError('BAD_REQUEST', {
+          message: 'Invalid password',
+          code: 'INVALID_PASSWORD',
+        }),
+        session: { user: { email: 'alice@example.com' } },
+      },
+    } as never)
+    expect(sendEmailMock).not.toHaveBeenCalled()
+  })
+
+  it('skips placeholder emails', async () => {
+    const after = realAuthModule.auth.options.hooks!.after!
+    await (after as (ctx: unknown) => Promise<void>)({
+      path: '/change-password',
+      context: {
+        returned: { user: { email: '123@github.placeholder.local' } },
+        session: null,
+      },
+    } as never)
+    expect(sendEmailMock).not.toHaveBeenCalled()
+  })
+
+  it('skips non-change-password paths', async () => {
+    const after = realAuthModule.auth.options.hooks!.after!
+    await (after as (ctx: unknown) => Promise<void>)({
+      path: '/sign-in/email',
+      context: {
+        returned: { user: { email: 'alice@example.com' } },
+        session: null,
+      },
+    } as never)
+    expect(sendEmailMock).not.toHaveBeenCalled()
+  })
+
+  it('parses a 200 Response clone', async () => {
+    const after = realAuthModule.auth.options.hooks!.after!
+    const response = new Response(
+      JSON.stringify({ user: { email: 'response@example.com' } }),
+      { status: 200, headers: { 'content-type': 'application/json' } },
+    )
+    await (after as (ctx: unknown) => Promise<void>)({
+      path: '/change-password',
+      context: { returned: response, session: null },
+    } as never)
+    expect(sendEmailMock).toHaveBeenCalledWith(
+      expect.objectContaining({ to: 'response@example.com' }),
+    )
+  })
+
+  it('skips non-200 Response', async () => {
+    const after = realAuthModule.auth.options.hooks!.after!
+    const response = new Response('error', { status: 400 })
+    await (after as (ctx: unknown) => Promise<void>)({
+      path: '/change-password',
+      context: { returned: response, session: null },
+    } as never)
+    expect(sendEmailMock).not.toHaveBeenCalled()
   })
 })
