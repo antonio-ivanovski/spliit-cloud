@@ -6,6 +6,7 @@ import { app } from '../app'
 import { randomId } from '../lib/api'
 import { appRouter } from '../trpc/routers/_app'
 import { groupsRouter } from '../trpc/routers/groups'
+import { cleanupMaildevInbox } from './maildev-client'
 import {
   getObjectBody,
   listObjects,
@@ -15,6 +16,10 @@ import {
 import { checkDbConnection, testRunId } from './setup'
 
 await checkDbConnection()
+
+// Sign-up verification emails land in the persistent MailDev store;
+// swept in afterAll. Keep in sync with new recipients.
+const trackedMailRecipients: string[] = []
 
 const maxioReachable = await probeMaxIO()
 
@@ -159,6 +164,9 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
   }
 
   afterAll(async () => {
+    if (trackedMailRecipients.length > 0) {
+      await cleanupMaildevInbox(trackedMailRecipients)
+    }
     for (const aid of trackedAccountIds) {
       await prisma.session
         .deleteMany({ where: { userId: aid } })
@@ -189,6 +197,7 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
   it('1a-1d: full upload-and-attach lifecycle', async () => {
     const runId = testRunId()
     const email = `s3-${runId}@test.example`
+    trackedMailRecipients.push(email)
 
     const { cookie, accountId } = await createSession(email)
     expect(cookie).not.toBe('')
@@ -276,6 +285,7 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
   it('2: cascade delete of all group documents on deleteGroup', async () => {
     const runId = testRunId()
     const email = `s3-cascade-${runId}@test.example`
+    trackedMailRecipients.push(email)
 
     const { cookie, accountId } = await createSession(email)
     expect(cookie).not.toBe('')
@@ -349,6 +359,7 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
   it('3: document swap on updateExpense', async () => {
     const runId = testRunId()
     const email = `s3-swap-${runId}@test.example`
+    trackedMailRecipients.push(email)
 
     const { cookie, accountId } = await createSession(email)
     expect(cookie).not.toBe('')
@@ -494,6 +505,7 @@ describe.skipIf(!maxioReachable)('S3 expense documents — real MaxIO', () => {
   it('4e: presign — valid cookie + member returns a callable URL', async () => {
     const runId = testRunId()
     const email = `s4e-${runId}@test.example`
+    trackedMailRecipients.push(email)
 
     const { accountId } = await createSession(email)
 

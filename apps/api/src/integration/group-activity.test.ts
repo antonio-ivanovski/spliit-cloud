@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterAll, afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 import { GroupMemberStatus, GroupRole, prisma } from '@spliit/db'
 
@@ -8,9 +8,20 @@ import {
 } from '../lib/notifications/dispatcher'
 import { groupsRouter } from '../trpc/routers/groups'
 import { invitationsRouter } from '../trpc/routers/invitations'
+import { cleanupMaildevInbox } from './maildev-client'
 import { CapturingDispatcher, checkDbConnection, testRunId } from './setup'
 
 await checkDbConnection()
+
+// Invitation emails this suite triggers land in the persistent MailDev store;
+// swept in afterAll. Keep in sync with new recipients.
+const trackedMailRecipients: string[] = []
+
+afterAll(async () => {
+  if (trackedMailRecipients.length > 0) {
+    await cleanupMaildevInbox(trackedMailRecipients)
+  }
+})
 
 function eventsForGroup(capture: CapturingDispatcher, groupId: string) {
   return capture.events.filter((event) => event.groupId === groupId)
@@ -42,6 +53,7 @@ async function createGroupActivityFixture(
   const runId = testRunId()
   const adminId = `acct-ga-${runId}`
   const adminEmail = `ga-${runId}@test.example`
+  trackedMailRecipients.push(adminEmail)
 
   const accountIdsToClean = [adminId]
 
@@ -96,6 +108,7 @@ async function createGroupActivityFixture(
   if (opts.withMember) {
     memberId = `acct-ga-m-${runId}`
     memberEmail = `ga-m-${runId}@test.example`
+    trackedMailRecipients.push(memberEmail)
     accountIdsToClean.push(memberId)
 
     await prisma.account.upsert({
@@ -136,6 +149,7 @@ async function createGroupActivityFixture(
   if (opts.withInvitee) {
     inviteeId = `acct-ga-i-${runId}`
     inviteeEmail = `ga-i-${runId}@test.example`
+    trackedMailRecipients.push(inviteeEmail)
     accountIdsToClean.push(inviteeId)
 
     await prisma.account.upsert({
@@ -493,12 +507,14 @@ describe('Group activity — real DB', () => {
     setDefaultActivityNotificationDispatchers([capture])
 
     const invCaller = makeInvitationCaller(fixture)
+    const newInviteeEmail = `new-invitee-${fixture.groupId}@test.example`
     const { invitationId } = await invCaller.create({
       requestId: crypto.randomUUID(),
       groupId: fixture.groupId,
-      email: `new-invitee-${fixture.groupId}@test.example`,
+      email: newInviteeEmail,
       role: 'MEMBER',
     })
+    trackedMailRecipients.push(newInviteeEmail)
     expect(invitationId).toBeDefined()
 
     // Check invitation created activity

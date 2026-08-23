@@ -8,7 +8,11 @@ import {
   waitForScheduledNotificationDispatchesForTest,
 } from '../lib/notifications/dispatcher'
 import { groupsRouter } from '../trpc/routers/groups'
-import { expectEmailEventually, probeMaildev } from './maildev-client'
+import {
+  cleanupMaildevInbox,
+  expectEmailEventually,
+  probeMaildev,
+} from './maildev-client'
 import { CapturingDispatcher, checkDbConnection, testRunId } from './setup'
 
 await checkDbConnection()
@@ -100,6 +104,9 @@ describe.skipIf(!maildevReachable)(
       for (const aid of accountIds) {
         await prisma.account.delete({ where: { id: aid } }).catch(() => {})
       }
+
+      // Sweep mail owned by this suite (also on assertion failure).
+      await cleanupMaildevInbox([inviteeEmail])
     })
 
     it('sends an invitation email with import context when importing from SPLIIT', async () => {
@@ -166,7 +173,10 @@ describe.skipIf(!maildevReachable)(
       expect(result.invites[0].kind).toBe('EMAIL')
       expect(result.invites[0].email).toBe(inviteeEmail.toLowerCase())
 
-      const captured = await expectEmailEventually({ recipient: inviteeEmail })
+      const captured = await expectEmailEventually({
+        recipient: inviteeEmail,
+        consume: true,
+      })
       expect(captured.text).toContain('You will appear as "Invited Friend"')
       expect(captured.text).toContain(
         'This invitation is part of an import from a Spliit export.',
@@ -427,6 +437,8 @@ describe('Import participant deduplication', () => {
   const runId3 = testRunId()
   const adminId3 = `acct-dedup-${runId3}`
   const adminEmail3 = `dedup-${runId3}@test.example`
+  // Declared at describe scope so afterAll can sweep its invitation email.
+  const inviteEmail3 = `invitee-dedup-${runId3}@test.local`
 
   const groupIds: string[] = []
 
@@ -486,6 +498,10 @@ describe('Import participant deduplication', () => {
 
   afterAll(async () => {
     await prisma.account.delete({ where: { id: adminId3 } }).catch(() => {})
+
+    // The dedup import dispatches a real invitation email that no assertion
+    // consumes; sweep it so the persistent MailDev store stays bounded.
+    await cleanupMaildevInbox([inviteEmail3])
   })
 
   async function createGroupWithAdmin() {
@@ -513,7 +529,7 @@ describe('Import participant deduplication', () => {
 
   it('INVITE_BY_EMAIL + LINK_EXISTING_PARTICIPANT yields exactly 2 participants', async () => {
     const { groupId, adminLp } = await createGroupWithAdmin()
-    const inviteEmail = `invitee-dedup-${runId3}@test.local`
+    const inviteEmail = inviteEmail3
     const inviteDestLpId = randomId()
 
     await makeCaller3().import({

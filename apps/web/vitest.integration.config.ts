@@ -21,7 +21,9 @@ export default defineConfig({
     css: false,
     restoreMocks: true,
     fileParallelism: true,
-    maxWorkers: 2,
+    // Integration tests share the API/DB with other suites; a single worker
+    // keeps their resource use predictable.
+    maxWorkers: 1,
   },
   resolve: {
     alias: {

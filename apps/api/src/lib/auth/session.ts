@@ -81,6 +81,13 @@ export async function getOAuthAuthFromRequest(
     jwksUrl: `${issuer}/jwks`,
   })
   if (typeof claims.sub !== 'string') return null
+  if (
+    typeof claims.exp !== 'number' ||
+    !Number.isFinite(claims.exp) ||
+    typeof claims.iat !== 'number' ||
+    !Number.isFinite(claims.iat)
+  )
+    return null
   const account = await prisma.account.findUnique({
     where: { id: claims.sub },
   })
@@ -105,9 +112,9 @@ export async function getOAuthAuthFromRequest(
       id: typeof claims.sid === 'string' ? claims.sid : `oauth:${claims.sub}`,
       userId: account.id,
       token: '',
-      expiresAt: new Date(Number(claims.exp ?? 0) * 1000),
-      createdAt: new Date(Number(claims.iat ?? 0) * 1000),
-      updatedAt: new Date(Number(claims.iat ?? 0) * 1000),
+      expiresAt: new Date(claims.exp * 1000),
+      createdAt: new Date(claims.iat * 1000),
+      updatedAt: new Date(claims.iat * 1000),
       ipAddress: null,
       userAgent: null,
     },

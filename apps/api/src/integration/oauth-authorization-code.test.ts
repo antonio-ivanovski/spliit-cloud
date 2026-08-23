@@ -1,7 +1,8 @@
 import { createHash, randomBytes } from 'node:crypto'
 
+import { makeSignature } from 'better-auth/crypto'
 import { createLocalJWKSet, jwtVerify } from 'jose'
-import { afterAll, describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { prisma } from '@spliit/db'
 
@@ -13,7 +14,6 @@ import { checkDbConnection, testRunId } from './setup'
 
 await checkDbConnection()
 
-const PASSWORD = 'TestPass123!'
 const REDIRECT_URI = 'http://localhost:3002/oauth/callback'
 const ISSUER = `${env.BETTER_AUTH_URL ?? 'http://localhost:3101'}/auth`
 const AUDIENCE = `${env.MCP_PUBLIC_URL}/mcp`
@@ -51,39 +51,6 @@ function makePkce() {
   const verifier = base64url(randomBytes(32))
   const challenge = base64url(createHash('sha256').update(verifier).digest())
   return { verifier, challenge }
-}
-
-async function createSession(
-  email: string,
-  name: string,
-): Promise<{ cookie: string; accountId: string }> {
-  const headers = {
-    'content-type': 'application/json',
-    origin: 'http://localhost:3000',
-  }
-  const signUpRes = await app.request('/auth/sign-up/email', {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({ email, password: PASSWORD, name }),
-  })
-  const signUp = (await signUpRes.json()) as { user?: { id: string } }
-  const accountId = signUp.user?.id ?? ''
-  if (accountId) trackedAccountIds.push(accountId)
-  await prisma.account.update({
-    where: { email },
-    data: { emailVerified: true },
-  })
-  const signInRes = await app.request('/auth/sign-in/email', {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({ email, password: PASSWORD }),
-  })
-  if (!signInRes.ok) throw new Error(`sign-in failed (${signInRes.status})`)
-  const setCookie = signInRes.headers.get('set-cookie') ?? ''
-  const match = setCookie.match(/better-auth\.session_token=([^;,]+)/)
-  const cookie = match ? `better-auth.session_token=${match[1]}` : ''
-  if (!cookie) throw new Error('no session cookie issued')
-  return { cookie, accountId }
 }
 
 async function registerClient(clientName: string): Promise<string> {
@@ -194,15 +161,52 @@ async function localJwks() {
 describe('OAuth authorization code + PKCE + refresh', () => {
   const runId = testRunId()
 
+  // One verified account + one signed Better Auth session cookie reused by
+  // every test: sign-up, credential sign-in and verification email are
+  // covered by dedicated suites; this file only needs a valid session.
+  let fixtureAccountId = ''
+  let fixtureCookie = ''
+
+  beforeAll(async () => {
+    const rawToken = randomBytes(32).toString('base64url')
+    const signature = await makeSignature(rawToken, env.BETTER_AUTH_SECRET)
+    // One hour comfortably outlives a suite run while limiting damage if
+    // cleanup never gets to run.
+    const expiresAt = new Date(Date.now() + 1000 * 60 * 60)
+    // Transaction so a failed session insert cannot leak the account row.
+    const accountId = await prisma.$transaction(async (tx) => {
+      const account = await tx.account.create({
+        data: {
+          id: `oauth-fixture-${runId}`,
+          email: `oauth-user-${runId}@test.example`,
+          name: 'OAuth Fixture',
+          emailVerified: true,
+        },
+      })
+      await tx.session.create({
+        data: {
+          id: `oauth-fixture-sess-${runId}`,
+          userId: account.id,
+          token: rawToken,
+          expiresAt,
+        },
+      })
+      return account.id
+    })
+    trackedAccountIds.push(accountId)
+    fixtureAccountId = accountId
+    // Same value format Better Auth sets on sign-in: raw.signature.
+    fixtureCookie = `better-auth.session_token=${rawToken}.${signature}`
+  })
+
   it('completes the full flow and mints a verifiable MCP-audience token', async () => {
-    const email = `oauth-flow-${runId}@test.example`
-    const { cookie, accountId } = await createSession(email, 'OAuth Flow')
     const clientId = await registerClient(`OAuth flow ${runId}`)
     const { verifier, challenge } = makePkce()
+    const accountId = fixtureAccountId
 
     const { code } = await authorizeToCode({
       clientId,
-      cookie,
+      cookie: fixtureCookie,
       challenge,
       state: `state-${runId}`,
       resource: AUDIENCE,
@@ -239,7 +243,10 @@ describe('OAuth authorization code + PKCE + refresh', () => {
     expect(payload.sub).toBe(accountId)
     expect(typeof payload.exp).toBe('number')
 
-    // The minted token authorizes the assistant boundary and is account-scoped.
+    // Exercise assistant procedures with the token's identity fields. This
+    // does not exercise bearer-token parsing (getOAuthAuthFromRequest);
+    // that security boundary has focused unit coverage in
+    // lib/auth/session.test.ts, keeping remote JWKS I/O out of this test.
     const account = await prisma.account.findUnique({
       where: { id: accountId },
     })
@@ -298,14 +305,12 @@ describe('OAuth authorization code + PKCE + refresh', () => {
   })
 
   it('rejects token exchange when the PKCE verifier is wrong', async () => {
-    const email = `oauth-pkce-${runId}@test.example`
-    const { cookie } = await createSession(email, 'OAuth PKCE')
     const clientId = await registerClient(`OAuth PKCE ${runId}`)
     const { challenge } = makePkce()
 
     const { code } = await authorizeToCode({
       clientId,
-      cookie,
+      cookie: fixtureCookie,
       challenge,
       state: `state-pkce-${runId}`,
       resource: AUDIENCE,
@@ -322,14 +327,12 @@ describe('OAuth authorization code + PKCE + refresh', () => {
   })
 
   it('rejects a requested resource that is not a valid audience', async () => {
-    const email = `oauth-aud-${runId}@test.example`
-    const { cookie } = await createSession(email, 'OAuth Audience')
     const clientId = await registerClient(`OAuth audience ${runId}`)
     const { verifier, challenge } = makePkce()
 
     const { code } = await authorizeToCode({
       clientId,
-      cookie,
+      cookie: fixtureCookie,
       challenge,
       state: `state-aud-${runId}`,
     })
@@ -345,16 +348,15 @@ describe('OAuth authorization code + PKCE + refresh', () => {
   })
 
   it('enforces scopes on the assistant write boundary', async () => {
-    const email = `oauth-scope-${runId}@test.example`
-    const { cookie, accountId } = await createSession(email, 'OAuth Scope')
     const clientId = await registerClient(`OAuth scope ${runId}`)
     const { verifier, challenge } = makePkce()
+    const accountId = fixtureAccountId
 
     // Read-only scope set: no spliit:expenses:write.
     const readScope = 'openid profile offline_access spliit:groups:read'
     const { code } = await authorizeToCode({
       clientId,
-      cookie,
+      cookie: fixtureCookie,
       challenge,
       state: `state-scope-${runId}`,
       scope: readScope,

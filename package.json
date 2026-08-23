@@ -28,8 +28,8 @@
     "prisma-migrate": "bun run --filter @spliit/db prisma-migrate",
     "start": "bun --filter @spliit/api start",
     "start-container": "docker compose --env-file container.env up",
-    "test": "turbo --ui=tui run test",
-    "test:integration": "turbo --ui=tui run test:integration"
+    "test": "turbo --ui=tui run test --concurrency=2",
+    "test:integration": "turbo --ui=tui run test:integration --concurrency=2"
   },
   "dependencies": {},
   "devDependencies": {

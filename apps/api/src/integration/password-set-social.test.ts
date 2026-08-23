@@ -3,6 +3,7 @@ import { afterAll, describe, expect, it } from 'vitest'
 import { prisma } from '@spliit/db'
 
 import { app } from '../app'
+import { cleanupMaildevInbox } from './maildev-client'
 import { checkDbConnection, testRunId } from './setup'
 
 await checkDbConnection()
@@ -11,8 +12,14 @@ const STRONG = 'Str0ng!Pass1'
 const STRONG_WRONG = 'Wr0ng!Pass2'
 
 const trackedAccountIds: string[] = []
+// Sign-up emails this suite triggers land in the persistent MailDev store;
+// swept in afterAll. Keep in sync with new recipients.
+const trackedMailRecipients: string[] = []
 
 afterAll(async () => {
+  if (trackedMailRecipients.length > 0) {
+    await cleanupMaildevInbox(trackedMailRecipients)
+  }
   if (trackedAccountIds.length > 0) {
     await prisma.session.deleteMany({
       where: { userId: { in: trackedAccountIds } },
@@ -78,6 +85,7 @@ describe('password-set for Google OAuth users → credential sign-in', () => {
 
   it('Google-only account can set password and then sign in with email+password (including mixed-case)', async () => {
     const email = `pw-social-${runId}@test.example`
+    trackedMailRecipients.push(email)
     const name = 'Social User'
 
     // 1. Sign up via email (creates verified credential user), then turn into Google-only
@@ -190,6 +198,7 @@ describe('password-set for Google OAuth users → credential sign-in', () => {
 
   it('stray legacy credential row does not prevent creating canonical row', async () => {
     const email = `pw-stray-${runId}@test.example`
+    trackedMailRecipients.push(email)
     const { account, cookie } = await signUpAndGetCookie(
       email,
       'Stray User',

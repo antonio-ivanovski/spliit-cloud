@@ -1,13 +1,19 @@
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 import { NotificationCategory } from '@spliit/domain/notifications'
 
+// The secret comes from the package-level .env.test file (loaded before
+// Vitest starts), so these tests use plain static imports.
+import {
+  buildEmailUnsubscribeMetadata,
+  createEmailUnsubscribeToken,
+  getEmailUnsubscribePreviewUrl,
+  previewEmailUnsubscribeToken,
+  verifyEmailUnsubscribeToken,
+} from './unsubscribe'
+
 describe('signed email unsubscribe tokens', () => {
   it('round-trips claims and rejects tampering', async () => {
-    vi.stubEnv('EMAIL_UNSUBSCRIBE_SECRET', 'a'.repeat(32))
-    vi.resetModules()
-    const { createEmailUnsubscribeToken, verifyEmailUnsubscribeToken } =
-      await import('./unsubscribe')
     const token = await createEmailUnsubscribeToken({
       accountId: 'acct-1',
       category: NotificationCategory.EXPENSE_CHANGED,
@@ -26,14 +32,9 @@ describe('signed email unsubscribe tokens', () => {
         category: 'GLOBAL' as never,
       }),
     ).rejects.toThrow()
-    vi.unstubAllEnvs()
   })
 
   it('rejects an expired token and a token with a changed account claim', async () => {
-    vi.stubEnv('EMAIL_UNSUBSCRIBE_SECRET', 'c'.repeat(32))
-    vi.resetModules()
-    const { createEmailUnsubscribeToken, verifyEmailUnsubscribeToken } =
-      await import('./unsubscribe')
     const now = Math.floor(Date.now() / 1000)
     const token = await createEmailUnsubscribeToken({
       accountId: 'acct-1',
@@ -62,13 +63,9 @@ describe('signed email unsubscribe tokens', () => {
       now: now - 90 * 24 * 60 * 60 - 1,
     })
     expect(await verifyEmailUnsubscribeToken(expiredToken)).toBeNull()
-    vi.unstubAllEnvs()
   })
 
   it('builds RFC 8058 metadata with a visible footer', async () => {
-    vi.stubEnv('EMAIL_UNSUBSCRIBE_SECRET', 'b'.repeat(32))
-    vi.resetModules()
-    const { buildEmailUnsubscribeMetadata } = await import('./unsubscribe')
     const metadata = await buildEmailUnsubscribeMetadata({
       accountId: 'acct-1',
       category: NotificationCategory.GROUP_INVITE_RECEIVED,
@@ -77,17 +74,9 @@ describe('signed email unsubscribe tokens', () => {
       'List-Unsubscribe=One-Click',
     )
     expect(metadata?.textFooter).toContain('unsubscribe')
-    vi.unstubAllEnvs()
   })
 
   it('builds the web preview URL with the token in the fragment', async () => {
-    vi.stubEnv('EMAIL_UNSUBSCRIBE_SECRET', 'd'.repeat(32))
-    vi.resetModules()
-    const {
-      createEmailUnsubscribeToken,
-      getEmailUnsubscribePreviewUrl,
-      previewEmailUnsubscribeToken,
-    } = await import('./unsubscribe')
     const token = await createEmailUnsubscribeToken({
       accountId: 'acct-1',
       category: NotificationCategory.EXPENSE_CREATED,
@@ -100,6 +89,5 @@ describe('signed email unsubscribe tokens', () => {
       category: NotificationCategory.EXPENSE_CREATED,
     })
     await expect(previewEmailUnsubscribeToken(`${token}x`)).resolves.toBeNull()
-    vi.unstubAllEnvs()
   })
 })

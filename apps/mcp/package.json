@@ -49,9 +49,9 @@
   "devDependencies": {
     "@spliit/config": "workspace:*",
     "@tailwindcss/vite": "^4.3.3",
-    "@testing-library/jest-dom": "^6.10.0",
+    "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.2",
-    "@testing-library/user-event": "^14.6.1",
+    "@testing-library/user-event": "^14.6.6",
     "@types/node": "24.13.2",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
@@ -60,7 +60,7 @@
     "tailwindcss": "^4.3.3",
     "tsx": "^4.21.0",
     "typescript": "7.0.2",
-    "vite": "^8.1.5",
-    "vitest": "5.0.0-beta.7"
+    "vite": "^8.2.2",
+    "vitest": "5.0.0-rc.2"
   }
 }

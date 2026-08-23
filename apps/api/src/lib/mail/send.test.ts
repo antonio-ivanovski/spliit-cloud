@@ -1,36 +1,34 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { mocked } from 'nodemailer-mock'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-// Patch `nodemailer` with `nodemailer-mock` so the real `sendEmail` runs
-// against an in-process mock transport. We deliberately do NOT import
-// `../test/mocks` here: that file would `vi.mock('../lib/mail/send', ...)`
-// and short-circuit the module under test.
+// Patch `nodemailer` with `nodemailer-mock` so real senders run against an
+// in-process mock transport. We deliberately do NOT import `../test/mocks`
+// here: that file would `vi.mock('../lib/mail/send', ...)` and short-circuit
+// the module under test.
 //
-// `vi.mock` is hoisted to the top of the file. The factory only runs the
-// first time something imports `nodemailer` after a `vi.resetModules()`,
-// which is exactly when each test imports `../mail/send`.
+// Every test constructs its own sender via `createEmailSender` with explicit
+// config, so no env stubbing or `vi.resetModules()` reloads are needed — the
+// transporter cache lives per-sender instance.
 vi.mock('nodemailer', async () => await import('nodemailer-mock'))
 
-beforeEach(async () => {
+import { createEmailSender } from './send'
+
+beforeEach(() => {
   // Clear mock state (sent mail cache, shouldFail flag, transporters) so
-  // each test sees a clean slate even when vi.resetModules is not called.
-  const mock = (await import('nodemailer-mock')).mocked
-  mock.mock.reset()
+  // each test sees a clean slate.
+  mocked.mock.reset()
 })
 
 afterEach(() => {
   vi.restoreAllMocks()
-  vi.unstubAllEnvs()
-  vi.resetModules()
 })
 
 describe('sendEmail', () => {
   it('throws when SMTP_HOST is unset', async () => {
-    // SMTP_HOST is intentionally not stubbed — it stays undefined.
-    vi.resetModules()
-    const { sendEmail } = await import('./send')
+    const send = createEmailSender({})
 
     await expect(
-      sendEmail({
+      send({
         to: 'dev@example.com',
         subject: 's',
         text: 't',
@@ -40,24 +38,22 @@ describe('sendEmail', () => {
   })
 
   it('sends through SMTP with full from/to/subject/text/html fields', async () => {
-    vi.stubEnv('SMTP_HOST', 'smtp.test')
-    vi.stubEnv('SMTP_PORT', '587')
-    vi.stubEnv('SMTP_USER', 'user')
-    vi.stubEnv('SMTP_PASS', 'pass')
-    vi.stubEnv('EMAIL_FROM', 'Spliit <noreply@test>')
-    vi.resetModules()
+    const send = createEmailSender({
+      host: 'smtp.test',
+      port: 587,
+      user: 'user',
+      pass: 'pass',
+      from: 'Spliit <noreply@test>',
+    })
 
-    const { sendEmail } = await import('./send')
-    const mock = (await import('nodemailer-mock')).mocked
-
-    await sendEmail({
+    await send({
       to: 'recipient@example.com',
       subject: 'Test subject',
       text: 'plain text body',
       html: '<p>html body</p>',
     })
 
-    const sent = mock.mock.getSentMail()
+    const sent = mocked.mock.getSentMail()
     expect(sent).toHaveLength(1)
     expect(sent[0].from).toBe('Spliit <noreply@test>')
     expect(sent[0].to).toBe('recipient@example.com')
@@ -72,14 +68,10 @@ describe('sendEmail', () => {
     { text: '   ', html: '<p>html body</p>' },
     { text: 'plain text body', html: '   ' },
   ])('rejects empty email bodies', async ({ text, html }) => {
-    vi.stubEnv('SMTP_HOST', 'smtp.test')
-    vi.stubEnv('EMAIL_FROM', 'Spliit <noreply@test>')
-    vi.resetModules()
-
-    const { sendEmail } = await import('./send')
+    const send = createEmailSender({ host: 'smtp.test' })
 
     await expect(
-      sendEmail({
+      send({
         to: 'recipient@example.com',
         subject: 'Test subject',
         text,
@@ -89,30 +81,28 @@ describe('sendEmail', () => {
   })
 
   it('uses EMAIL_FROM as the from address on every send', async () => {
-    vi.stubEnv('SMTP_HOST', 'smtp.test')
-    vi.stubEnv('SMTP_PORT', '587')
-    vi.stubEnv('SMTP_USER', 'user')
-    vi.stubEnv('SMTP_PASS', 'pass')
-    vi.stubEnv('EMAIL_FROM', 'Custom From <custom@test>')
-    vi.resetModules()
+    const send = createEmailSender({
+      host: 'smtp.test',
+      port: 587,
+      user: 'user',
+      pass: 'pass',
+      from: 'Custom From <custom@test>',
+    })
 
-    const { sendEmail } = await import('./send')
-    const mock = (await import('nodemailer-mock')).mocked
-
-    await sendEmail({
+    await send({
       to: 'a@example.com',
       subject: 's1',
       text: 'b1',
       html: '<p>b1</p>',
     })
-    await sendEmail({
+    await send({
       to: 'b@example.com',
       subject: 's2',
       text: 'b2',
       html: '<p>b2</p>',
     })
 
-    const sent = mock.mock.getSentMail()
+    const sent = mocked.mock.getSentMail()
     expect(sent).toHaveLength(2)
     expect(sent.map((m) => m.from)).toEqual([
       'Custom From <custom@test>',
@@ -128,22 +118,16 @@ describe('sendEmail', () => {
     ]
     for (const { port, secure, requireTLS } of cases) {
       it(`SMTP_PORT=${port} -> secure=${secure}, requireTLS=${requireTLS}`, async () => {
-        vi.stubEnv('SMTP_HOST', 'smtp.test')
-        vi.stubEnv('SMTP_PORT', String(port))
-        vi.stubEnv('SMTP_USER', 'user')
-        vi.stubEnv('SMTP_PASS', 'pass')
-        vi.stubEnv('EMAIL_FROM', 'Spliit <noreply@test>')
-        vi.resetModules()
-
-        // `send.ts` does `import nodemailer from 'nodemailer'`, which lands
-        // on the `mocked` instance's default export. To intercept that call
-        // we must spy on the `mocked` instance itself, not on the namespace
-        // object returned by `await import('nodemailer')`.
-        const mocked = (await import('nodemailer-mock')).mocked
         const createTransportSpy = vi.spyOn(mocked, 'createTransport')
-        const { sendEmail } = await import('./send')
+        const send = createEmailSender({
+          host: 'smtp.test',
+          port,
+          user: 'user',
+          pass: 'pass',
+          from: 'Spliit <noreply@test>',
+        })
 
-        await sendEmail({
+        await send({
           to: 'r@example.com',
           subject: 's',
           text: 't',
@@ -166,24 +150,22 @@ describe('sendEmail', () => {
   })
 
   it('caches the transporter across multiple sendEmail calls', async () => {
-    vi.stubEnv('SMTP_HOST', 'smtp.test')
-    vi.stubEnv('SMTP_PORT', '587')
-    vi.stubEnv('SMTP_USER', 'user')
-    vi.stubEnv('SMTP_PASS', 'pass')
-    vi.stubEnv('EMAIL_FROM', 'Spliit <noreply@test>')
-    vi.resetModules()
-
-    const mocked = (await import('nodemailer-mock')).mocked
     const createTransportSpy = vi.spyOn(mocked, 'createTransport')
-    const { sendEmail } = await import('./send')
+    const send = createEmailSender({
+      host: 'smtp.test',
+      port: 587,
+      user: 'user',
+      pass: 'pass',
+      from: 'Spliit <noreply@test>',
+    })
 
-    await sendEmail({
+    await send({
       to: 'a@example.com',
       subject: 's1',
       text: 't1',
       html: '<p>t1</p>',
     })
-    await sendEmail({
+    await send({
       to: 'b@example.com',
       subject: 's2',
       text: 't2',
@@ -194,19 +176,11 @@ describe('sendEmail', () => {
   })
 
   it('propagates errors from the SMTP send', async () => {
-    vi.stubEnv('SMTP_HOST', 'smtp.test')
-    vi.stubEnv('SMTP_PORT', '587')
-    vi.stubEnv('SMTP_USER', 'user')
-    vi.stubEnv('SMTP_PASS', 'pass')
-    vi.stubEnv('EMAIL_FROM', 'Spliit <noreply@test>')
-    vi.resetModules()
-
-    const { sendEmail } = await import('./send')
-    const mock = (await import('nodemailer-mock')).mocked
-    mock.mock.setShouldFail(true)
+    const send = createEmailSender({ host: 'smtp.test' })
+    mocked.mock.setShouldFail(true)
     try {
       await expect(
-        sendEmail({
+        send({
           to: 'r@example.com',
           subject: 's',
           text: 't',
@@ -214,23 +188,7 @@ describe('sendEmail', () => {
         }),
       ).rejects.toThrow(/nodemailer-mock failure/i)
     } finally {
-      mock.mock.setShouldFail(false)
+      mocked.mock.setShouldFail(false)
     }
-  })
-
-  it('throws at import time when EMAIL_FROM is empty in the SMTP path (production)', async () => {
-    // The env schema's superRefine only enforces SMTP/email_from when
-    // NODE_ENV === 'production'. Stubbing all three gives us the production
-    // validation path; an empty EMAIL_FROM is then caught at module load
-    // (send.ts -> env.ts).
-    vi.stubEnv('NODE_ENV', 'production')
-    vi.stubEnv('BETTER_AUTH_SECRET', 'test-secret')
-    vi.stubEnv('SMTP_HOST', 'smtp.test')
-    vi.stubEnv('EMAIL_FROM', '')
-    vi.resetModules()
-
-    await expect(import('./send')).rejects.toThrow(
-      /EMAIL_FROM is required in production/,
-    )
   })
 })

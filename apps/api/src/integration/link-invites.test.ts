@@ -5,6 +5,7 @@ import { prisma } from '@spliit/db'
 import { hashLinkToken } from '../lib/invitations'
 import { groupsRouter } from '../trpc/routers/groups'
 import { invitationsRouter } from '../trpc/routers/invitations'
+import { cleanupMaildevInbox } from './maildev-client'
 import { checkDbConnection, testRunId } from './setup'
 
 await checkDbConnection()
@@ -21,6 +22,10 @@ describe('Link invitation flow — real DB', () => {
   const inviteeEmail = `invitee-link-${runId}@test.example`
   const secondInviteeId = `acct-second-link-${runId}`
   const secondInviteeEmail = `second-link-${runId}@test.example`
+
+  // Addresses this suite may deliver to; swept in afterAll so the persistent
+  // MailDev store stays bounded. Keep in sync with new recipients.
+  const mailRecipients = [inviteeEmail, secondInviteeEmail]
 
   const ledgerIds: string[] = []
   function trackLedger(id: string) {
@@ -101,6 +106,7 @@ describe('Link invitation flow — real DB', () => {
     await prisma.account
       .delete({ where: { id: secondInviteeId } })
       .catch(() => {})
+    await cleanupMaildevInbox(mailRecipients)
   })
 
   // ------------------------------------------------------------------

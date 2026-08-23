@@ -5,6 +5,7 @@ import {
   cleanupTestAccount,
   createTestSession,
   INTEGRATION_API_URL,
+  integrationFetch,
   probeExistingApi,
 } from '@/test/integration/client'
 import { render, screen, waitFor } from '@/test/integration/test-utils'
@@ -124,15 +125,18 @@ async function trpcCall<T = unknown>(
 ): Promise<T> {
   const isQuery = queryProcedures.has(procedure)
 
-  let res: Response
+  let res: Awaited<ReturnType<typeof integrationFetch>>
   if (isQuery) {
     const inputParam = encodeURIComponent(JSON.stringify({ json: input }))
-    res = await fetch(`${API_URL}/trpc/${procedure}?input=${inputParam}`, {
-      method: 'GET',
-      headers: { Cookie: sessionCookie },
-    })
+    res = await integrationFetch(
+      `${API_URL}/trpc/${procedure}?input=${inputParam}`,
+      {
+        method: 'GET',
+        headers: { Cookie: sessionCookie },
+      },
+    )
   } else {
-    res = await fetch(`${API_URL}/trpc/${procedure}`, {
+    res = await integrationFetch(`${API_URL}/trpc/${procedure}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -142,7 +146,10 @@ async function trpcCall<T = unknown>(
     })
   }
 
-  const body = await res.json()
+  const body = (await res.json()) as {
+    error?: { json?: { message?: string }; message?: string }
+    result?: { data?: { json: T } }
+  }
   // tRPC error envelope: { error: { json: { message, ... } } }
   if (body.error) {
     const errMsg =

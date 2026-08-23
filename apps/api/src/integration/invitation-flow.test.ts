@@ -4,6 +4,7 @@ import { prisma } from '@spliit/db'
 
 import { groupsRouter } from '../trpc/routers/groups'
 import { invitationsRouter } from '../trpc/routers/invitations'
+import { cleanupMaildevInbox } from './maildev-client'
 import { checkDbConnection, testRunId } from './setup'
 
 await checkDbConnection()
@@ -98,6 +99,10 @@ describe('Invitation flow — real DB', () => {
     await prisma.account.delete({ where: { id: adminId } }).catch(() => {})
     await prisma.account.delete({ where: { id: inviteeId } }).catch(() => {})
     await prisma.account.delete({ where: { id: retargetedId } }).catch(() => {})
+
+    // Invitation deliveries this suite triggers; swept so the persistent
+    // MailDev store stays bounded (also on assertion failure).
+    await cleanupMaildevInbox([inviteeEmail, retargetedEmail])
   })
 
   // ------------------------------------------------------------------

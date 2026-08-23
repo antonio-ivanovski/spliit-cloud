@@ -1,24 +1,12 @@
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
-import type { createEmailUnsubscribeToken as createEmailUnsubscribeTokenType } from '../../../lib/notifications/unsubscribe'
+import { createEmailUnsubscribeToken } from '../../../lib/notifications/unsubscribe'
 import '../../../test/mocks'
-import type { notificationsRouter as notificationsRouterType } from './index'
+import { notificationsRouter } from './index'
 
-let createEmailUnsubscribeToken!: typeof createEmailUnsubscribeTokenType
-let notificationsRouter!: typeof notificationsRouterType
-
-beforeAll(async () => {
-  vi.stubEnv('EMAIL_UNSUBSCRIBE_SECRET', 'f'.repeat(32))
-  vi.resetModules()
-  const unsubscribe = await import('../../../lib/notifications/unsubscribe')
-  createEmailUnsubscribeToken = unsubscribe.createEmailUnsubscribeToken
-  const router = await import('./index')
-  notificationsRouter = router.notificationsRouter
-})
-
-afterAll(() => {
-  vi.unstubAllEnvs()
-})
+// The EMAIL_UNSUBSCRIBE_SECRET comes from the package-level .env.test file
+// (loaded before Vitest starts), so the router and token helpers can be
+// imported statically — no module-registry reloads required.
 
 describe('notifications.unsubscribe.preview', () => {
   it('returns only the category for a valid token without requiring auth', async () => {

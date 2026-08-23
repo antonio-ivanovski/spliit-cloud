@@ -14,6 +14,7 @@ import { accountRouter } from '../trpc/routers/account'
 import { friendsRouter } from '../trpc/routers/friends'
 import { groupsRouter } from '../trpc/routers/groups'
 import { invitationsRouter } from '../trpc/routers/invitations'
+import { cleanupMaildevInbox } from './maildev-client'
 import { checkDbConnection, testRunId } from './setup'
 
 await checkDbConnection()
@@ -44,6 +45,33 @@ describe('Friend ledger — real DB', () => {
   function trackLedger(id: string) {
     ledgerIds.push(id)
   }
+
+  // Every address this suite may deliver to; swept in afterAll so the
+  // persistent MailDev store stays bounded. Keep in sync with new recipients.
+  const mailRecipients = [
+    callerEmail,
+    peerEmail,
+    thirdEmail,
+    `pending-${runId}@unknown.example`,
+    `invitee-${runId}@example.test`,
+    ...[
+      'a',
+      'b',
+      'autosignup',
+      'linkrecv',
+      'crud-a',
+      'crud-b',
+      'bal-a',
+      'bal-b',
+      'cd-a',
+      'cd-new',
+      'race',
+      'dup-a',
+      'dup-b',
+      'pending-dn',
+      'pending-dn2',
+    ].map((prefix) => `${prefix}-${runId}@test.example`),
+  ]
   const trackedGroupIds: string[] = []
   function trackGroup(id: string) {
     trackedGroupIds.push(id)
@@ -163,6 +191,8 @@ describe('Friend ledger — real DB', () => {
     for (const aid of [callerId, peerId, thirdId]) {
       await prisma.account.delete({ where: { id: aid } }).catch(() => {})
     }
+
+    await cleanupMaildevInbox(mailRecipients)
   })
 
   // ───────────────────────────────────────────────────────────────────

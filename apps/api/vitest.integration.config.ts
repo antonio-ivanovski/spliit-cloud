@@ -6,6 +6,8 @@ export default defineConfig({
     include: ['src/integration/**/*.test.ts'],
     environment: 'node',
     fileParallelism: true,
-    maxWorkers: 4,
+    // Integration tests share real services (Postgres, MailDev, MaxIO) with
+    // other suites; a single worker keeps their resource use predictable.
+    maxWorkers: 1,
   },
 })

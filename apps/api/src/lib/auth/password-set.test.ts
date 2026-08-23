@@ -7,6 +7,22 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { Prisma } from '@spliit/db'
 
+// The rate-limit tests exercise limiter identity and threshold, not Better
+// Auth crypto or react-email rendering; render stubs keep them milliseconds-
+// fast. Subjects must match the real templates — other tests assert on them.
+vi.mock('../mail/templates', () => ({
+  renderPasswordSetNoticeEmail: vi.fn(async () => ({
+    subject: 'A password was added to your Spliit Cloud account',
+    html: '<p>A password was added to your Spliit Cloud account</p>',
+    text: 'A password was added to your Spliit Cloud account',
+  })),
+  renderPasswordRemovedNoticeEmail: vi.fn(async () => ({
+    subject: 'A password was removed from your Spliit Cloud account',
+    html: '<p>A password was removed from your Spliit Cloud account</p>',
+    text: 'A password was removed from your Spliit Cloud account',
+  })),
+}))
+
 import { prismaMock, sendEmailMock } from '../../test/state'
 import { passwordSet, removeLimiter, setLimiter } from './password-set'
 
@@ -63,6 +79,18 @@ function mockPassword(
         const { verifyPassword } = await import('better-auth/crypto')
         return verifyPassword({ hash, password })
       }),
+  }
+}
+
+/**
+ * Constant-time fake password implementation: the rate-limit tests only care
+ * about limiter identity and threshold, so they inject this instead of paying
+ * for real bcrypt hashing on every loop iteration.
+ */
+function fakePassword() {
+  return {
+    hash: vi.fn(async () => 'test-hash'),
+    verify: vi.fn(async () => true),
   }
 }
 
@@ -344,6 +372,7 @@ describe('password-set plugin', () => {
 
     it('rate-limits per account+ip', async () => {
       const headers = new Headers()
+      const password = fakePassword()
       const makeCtx = (_accountId: string) => {
         const internalAdapter = mockInternalAdapter({
           findCredentialAccount: vi.fn().mockResolvedValue(null as never),
@@ -353,6 +382,7 @@ describe('password-set plugin', () => {
             body: { newPassword: STRONG },
             headers,
             internalAdapter,
+            password,
           }) as unknown as {
             context: { session: { user: { id: string } } }
             body: Record<string, unknown>
@@ -363,13 +393,27 @@ describe('password-set plugin', () => {
         }
       }
       const accountId = `rate-set-${Date.now()}`
+      const allowedAdapters: ReturnType<typeof mockInternalAdapter>[] = []
       for (let i = 0; i < 10; i += 1) {
-        const { ctx } = makeCtx(accountId)
+        const { ctx, internalAdapter } = makeCtx(accountId)
+        allowedAdapters.push(internalAdapter)
         ;(ctx.context.session.user as { id: string }).id = accountId
         prismaMock.account.findUnique.mockResolvedValue(
           accountRow({ id: accountId }) as never,
         )
-        await plugin.endpoints.setPassword(ctx as never).catch(() => undefined)
+        // The first ten attempts must genuinely succeed — do not swallow
+        // failures here, or the limiter could fill up without the intended
+        // successful path ever running.
+        await expect(
+          plugin.endpoints.setPassword(ctx as never),
+        ).resolves.toEqual({ success: true })
+      }
+      // Each allowed attempt must traverse the real successful operation:
+      // hash (faked) then persist a new credential account.
+      for (const adapter of allowedAdapters) {
+        expect(adapter.linkAccount).toHaveBeenCalledWith(
+          expect.objectContaining({ password: 'test-hash' }),
+        )
       }
       const { ctx: blocked } = makeCtx(accountId)
       ;(blocked.context.session.user as { id: string }).id = accountId
@@ -559,42 +603,61 @@ describe('password-set plugin', () => {
     it('rate-limits remove per account+ip', async () => {
       const accountId = `rate-remove-${Date.now()}`
       const headers = new Headers()
-      for (let i = 0; i < 10; i += 1) {
+      const password = fakePassword()
+      // Placeholder email + another provider: removal is allowed via the
+      // linked provider and the notice email is skipped entirely (the test
+      // targets limiter identity/threshold, not the notice path).
+      const rateLimitAccount = accountRow({
+        id: accountId,
+        email: '123@github.placeholder.local',
+        emailVerified: true,
+      })
+      const seedRateLimitCredential = () => {
         const internalAdapter = mockInternalAdapter()
-        await seedCredential(internalAdapter, STRONG)
+        // Static credential hash — no real crypto in this test.
+        internalAdapter.findCredentialAccount.mockResolvedValue({
+          id: 'cred-1',
+          password: 'test-hash',
+        } as never)
         prismaMock.account.findUnique.mockResolvedValue(
-          accountRow({ id: accountId }) as never,
+          rateLimitAccount as never,
         )
         internalAdapter.findAccounts.mockResolvedValue([
           { providerId: 'google' },
         ] as never)
+        return internalAdapter
+      }
+      for (let i = 0; i < 10; i += 1) {
+        const internalAdapter = seedRateLimitCredential()
         const ctx = removeContext({
           body: { currentPassword: STRONG },
           headers,
           user: { id: accountId },
           internalAdapter,
+          password,
         })
-        await plugin.endpoints
-          .removePassword(ctx as never)
-          .catch(() => undefined)
+        // The first ten attempts must genuinely succeed — do not swallow
+        // failures here, or the limiter could fill up without the intended
+        // successful path ever running.
+        await expect(
+          plugin.endpoints.removePassword(ctx as never),
+        ).resolves.toEqual({ success: true })
+        expect(internalAdapter.updateAccount).toHaveBeenCalledWith('cred-1', {
+          password: null,
+        })
       }
-      const finalAdapter = mockInternalAdapter()
-      await seedCredential(finalAdapter, STRONG)
-      prismaMock.account.findUnique.mockResolvedValue(
-        accountRow({ id: accountId }) as never,
-      )
-      finalAdapter.findAccounts.mockResolvedValue([
-        { providerId: 'google' },
-      ] as never)
+      const finalAdapter = seedRateLimitCredential()
       const blocked = removeContext({
         body: { currentPassword: STRONG },
         headers,
         user: { id: accountId },
         internalAdapter: finalAdapter,
+        password,
       })
       await expect(
         plugin.endpoints.removePassword(blocked as never),
       ).rejects.toMatchObject({ body: { code: 'PASSWORD_RATE_LIMITED' } })
+      expect(finalAdapter.updateAccount).not.toHaveBeenCalled()
       expect(
         (
           blocked as unknown as { responseHeaders: Headers }
