@@ -203,6 +203,17 @@ describe('revokeAuthorizedClient', () => {
     expect(prismaMock.verification.deleteMany).toHaveBeenCalledWith({
       where: { id: { in: ['matching-code'] } },
     })
+    expect(prismaMock.verification.findMany).toHaveBeenCalledWith({
+      where: {
+        expiresAt: { gt: expect.any(Date) },
+        AND: [
+          { value: { contains: '"type":"authorization_code"' } },
+          { value: { contains: '"acct-1"' } },
+          { value: { contains: '"client-1"' } },
+        ],
+      },
+      select: { id: true, value: true },
+    })
     expect(prismaMock.verification.create).toHaveBeenCalledWith({
       data: expect.objectContaining({
         id: expect.any(String),

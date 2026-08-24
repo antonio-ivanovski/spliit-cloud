@@ -156,7 +156,11 @@ export async function revokeAuthorizedClient({
     const pendingCodes = await tx.verification.findMany({
       where: {
         expiresAt: { gt: revokedAt },
-        value: { contains: '"type":"authorization_code"' },
+        AND: [
+          { value: { contains: '"type":"authorization_code"' } },
+          { value: { contains: JSON.stringify(accountId) } },
+          { value: { contains: JSON.stringify(consent.clientId) } },
+        ],
       },
       select: { id: true, value: true },
     })
