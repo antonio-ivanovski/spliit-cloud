@@ -70,7 +70,7 @@ describe('expandScopes', () => {
       SPLIIT_SCOPES.groupsRead,
     ])
 
-    expect(expanded.has(SPLIIT_SCOPES.expensesWrite)).toBe(false)
+    expect(expanded.has(SPLIIT_SCOPES.expensesManage)).toBe(false)
     expect(expanded.has(SPLIIT_SCOPES.groupsManage)).toBe(false)
   })
 

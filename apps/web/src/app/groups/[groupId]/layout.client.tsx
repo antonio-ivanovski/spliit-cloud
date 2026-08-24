@@ -158,7 +158,11 @@ export function GroupLayoutClient({
           <p className="text-sm text-muted-foreground">
             {tInvalidInvite('description')}
           </p>
-          <Button variant="outline" render={<Link to="/" />}>
+          <Button
+            variant="outline"
+            nativeButton={false}
+            render={<Link to="/" />}
+          >
             {tForbidden('backToHome')}
           </Button>
         </div>
@@ -174,7 +178,11 @@ export function GroupLayoutClient({
           <p className="text-sm text-muted-foreground">
             {tInvalidView('description')}
           </p>
-          <Button variant="outline" render={<Link to="/" />}>
+          <Button
+            variant="outline"
+            nativeButton={false}
+            render={<Link to="/" />}
+          >
             {tForbidden('backToHome')}
           </Button>
         </div>
@@ -192,7 +200,11 @@ export function GroupLayoutClient({
           <p className="text-sm text-muted-foreground">
             {tForbidden('Unauthorized.description')}
           </p>
-          <Button variant="outline" render={<Link to="/" />}>
+          <Button
+            variant="outline"
+            nativeButton={false}
+            render={<Link to="/" />}
+          >
             {tForbidden('backToHome')}
           </Button>
         </div>
@@ -345,13 +357,18 @@ function NotFoundGroup({ groupId }: { groupId: string }) {
           </p>
           <div className="flex gap-2">
             <Button
+              nativeButton={false}
               render={
                 <Link to="/groups/import" search={{ prefill: sourceUrl }} />
               }
             >
               {tImportable('cta')}
             </Button>
-            <Button variant="outline" render={<Link to="/" />}>
+            <Button
+              variant="outline"
+              nativeButton={false}
+              render={<Link to="/" />}
+            >
               {tImportable('backToHome')}
             </Button>
           </div>
@@ -363,7 +380,7 @@ function NotFoundGroup({ groupId }: { groupId: string }) {
     <main className="flex flex-1 items-center justify-center px-4 py-10">
       <div className="flex max-w-md flex-col items-center gap-3 text-center">
         <h1 className="text-2xl font-semibold">{tNotFound('text')}</h1>
-        <Button variant="outline" render={<Link to="/" />}>
+        <Button variant="outline" nativeButton={false} render={<Link to="/" />}>
           {tNotFound('link')}
         </Button>
       </div>

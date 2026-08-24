@@ -100,6 +100,7 @@ export function ForceArchiveDialog({ groupId, onClose }: Props) {
           <Button
             variant="outline"
             disabled={pending}
+            nativeButton={false}
             render={
               <Link
                 to="/groups/$groupId/balances"

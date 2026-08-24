@@ -29,6 +29,15 @@ export function logServerError(
   console.error(`[${context}] ${describeError(err)}${payload}`)
 }
 
+/** Log a notable but non-error event (suggest hits, boot status). */
+export function logServerInfo(
+  context: string,
+  details?: Record<string, unknown>,
+) {
+  const payload = details ? ` ${JSON.stringify(details)}` : ''
+  console.info(`[${context}]${payload}`)
+}
+
 /** Log a known but user-impacting dependency failure (handled, not unexpected). */
 export function logServerWarn(
   context: string,

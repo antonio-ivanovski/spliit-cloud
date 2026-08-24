@@ -509,6 +509,7 @@ export function ExpensePreviewModal({
               <Button
                 variant="outline"
                 className="flex-1 sm:flex-none"
+                nativeButton={!!onMakeCopy}
                 render={
                   onMakeCopy ? undefined : (
                     <Link
@@ -530,6 +531,7 @@ export function ExpensePreviewModal({
               {canEdit && !series && (
                 <EditButton
                   label={t('edit')}
+                  nativeButton={!!onEdit}
                   render={
                     onEdit ? undefined : (
                       <Link

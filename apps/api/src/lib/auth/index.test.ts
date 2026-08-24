@@ -6,6 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import '../../test/mocks'
 import { prismaMock, sendEmailMock } from '../../test/state'
 import { clearAccountCache, getCachedAccount } from './account-cache'
+import { DEFAULT_CLIENT_SCOPES, SPLIIT_SCOPES } from './scopes'
 
 // `vi.importActual` returns the real (un-mocked) module so we can inspect the
 // better-auth options we configured in `lib/auth/index.ts`. The existing
@@ -14,22 +15,24 @@ import { clearAccountCache, getCachedAccount } from './account-cache'
 const realAuthModule = (await vi.importActual('./index')) as {
   getVerifiedGitHubUserInfo: (token: { accessToken?: string }) => Promise<{
     user: {
-      id: string
       name: string
       email: string
       image?: string
       emailVerified: boolean
     }
+    data?: { id?: number | string; isPlaceholderEmail?: boolean }
   } | null>
   getVerifiedTwitterUserInfo: (token: { accessToken?: string }) => Promise<{
     user: {
-      id: string
       name: string
       email: string
       image?: string
       emailVerified: boolean
     }
-    data?: { isPlaceholderEmail?: boolean }
+    data?: {
+      data?: { id?: string }
+      isPlaceholderEmail?: boolean
+    }
   } | null>
   auth: {
     options: {
@@ -55,7 +58,10 @@ const realAuthModule = (await vi.importActual('./index')) as {
         expiresIn?: number
         updateAge?: number
       }
-      hooks?: { before?: unknown }
+      hooks?: {
+        before?: unknown
+        after?: (ctx: unknown) => Promise<void>
+      }
       databaseHooks?: {
         user?: {
           create?: {
@@ -92,12 +98,12 @@ const realAuthModule = (await vi.importActual('./index')) as {
           clientSecret: string
           getUserInfo?: (token: { accessToken?: string }) => Promise<{
             user: {
-              id: string
               name: string
               email: string
               image?: string
               emailVerified: boolean
             }
+            data?: unknown
           } | null>
         }
       >
@@ -176,6 +182,12 @@ describe('better-auth session config', () => {
     expect(realAuthModule.auth.options.disabledPaths).toContain('/token')
   })
 
+  it('disables the provider consent deletion that would leave refresh tokens alive', () => {
+    expect(realAuthModule.auth.options.disabledPaths).toContain(
+      '/oauth2/delete-consent',
+    )
+  })
+
   it('does not attach a JWT header to ordinary cookie-session responses', () => {
     const jwtPlugin = realAuthModule.auth.options.plugins?.find(
       (plugin) => plugin.id === 'jwt',
@@ -204,6 +216,48 @@ describe('better-auth session config', () => {
 
     expect(jwtPlugin?.options?.adapter).toBeDefined()
   })
+
+  it('narrows a dynamic registration without scopes to safe defaults', async () => {
+    prismaMock.oauthClient.update.mockResolvedValue({} as never)
+    const returned = {
+      client_id: 'default-scope-client',
+      scope: 'broader-provider-capabilities',
+    }
+
+    await realAuthModule.auth.options.hooks?.after?.({
+      path: '/oauth2/register',
+      body: {},
+      context: { returned },
+    } as never)
+
+    expect(prismaMock.oauthClient.update).toHaveBeenCalledWith({
+      where: { clientId: 'default-scope-client' },
+      data: { scopes: DEFAULT_CLIENT_SCOPES },
+    })
+    expect(returned.scope).toBe(DEFAULT_CLIENT_SCOPES.join(' '))
+  })
+
+  it('retains an explicitly registered destructive scope without widening it', async () => {
+    prismaMock.oauthClient.update.mockResolvedValue({} as never)
+    const scopes = [...DEFAULT_CLIENT_SCOPES, SPLIIT_SCOPES.expensesDelete]
+    const returned = {
+      client_id: 'delete-scope-client',
+      scope: 'broader-provider-capabilities',
+    }
+
+    await realAuthModule.auth.options.hooks?.after?.({
+      path: '/oauth2/register',
+      body: { scope: scopes.join(' ') },
+      context: { returned },
+    } as never)
+
+    expect(prismaMock.oauthClient.update).toHaveBeenCalledWith({
+      where: { clientId: 'delete-scope-client' },
+      data: { scopes },
+    })
+    expect(returned.scope).toBe(scopes.join(' '))
+  })
+
   it('invalidates cached accounts after Better Auth user updates and deletes', async () => {
     clearAccountCache()
     const account = {
@@ -438,11 +492,11 @@ describe('better-auth socialProviders config', () => {
     })
 
     expect(result?.user).toMatchObject({
-      id: '123',
       name: 'octo',
       email: 'private-primary@example.com',
       emailVerified: true,
     })
+    expect(result?.data).toMatchObject({ id: 123 })
   })
 
   it('falls back to the first verified GitHub email when the primary email is unverified', async () => {
@@ -478,11 +532,11 @@ describe('better-auth socialProviders config', () => {
     })
 
     expect(result?.user).toMatchObject({
-      id: '456',
       name: 'Mona',
       email: 'verified@example.com',
       emailVerified: true,
     })
+    expect(result?.data).toMatchObject({ id: 456 })
   })
 
   it('falls back to a synthetic placeholder email when GitHub returns no verified email', async () => {
@@ -519,12 +573,14 @@ describe('better-auth socialProviders config', () => {
     })
 
     expect(result?.user).toMatchObject({
-      id: '789',
       name: 'Octocat',
       email: '789@github.placeholder.local',
       emailVerified: false,
     })
-    expect(result?.data).toMatchObject({ isPlaceholderEmail: true })
+    expect(result?.data).toMatchObject({
+      id: 789,
+      isPlaceholderEmail: true,
+    })
   })
 
   it('keeps Google as a social provider alongside GitHub', () => {
@@ -567,11 +623,11 @@ describe('better-auth socialProviders config', () => {
     })
 
     expect(result?.user).toMatchObject({
-      id: '2244994945',
       name: 'X Dev',
       email: 'dev@example.com',
       emailVerified: true,
     })
+    expect(result?.data).toMatchObject({ data: { id: '2244994945' } })
   })
 
   it('falls back to a synthetic placeholder email when X returns no confirmed email', async () => {
@@ -592,12 +648,14 @@ describe('better-auth socialProviders config', () => {
     })
 
     expect(result?.user).toMatchObject({
-      id: '12',
       name: 'Jack',
       email: '12@twitter.placeholder.local',
       emailVerified: false,
     })
-    expect(result?.data).toMatchObject({ isPlaceholderEmail: true })
+    expect(result?.data).toMatchObject({
+      data: { id: '12' },
+      isPlaceholderEmail: true,
+    })
   })
 
   it('returns null when the X profile request fails', async () => {
@@ -627,5 +685,128 @@ describe('better-auth socialProviders config', () => {
     await expect(
       realAuthModule.getVerifiedTwitterUserInfo({ accessToken: 'token-x-4' }),
     ).resolves.toBeNull()
+  })
+})
+
+describe('password change notice after hook', () => {
+  afterEach(() => {
+    sendEmailMock.mockClear()
+    vi.restoreAllMocks()
+  })
+
+  it('exists and sends notice on success with { token, user }', async () => {
+    const after = realAuthModule.auth.options.hooks?.after
+    expect(after).toBeDefined()
+    await (after as (ctx: unknown) => Promise<void>)({
+      path: '/change-password',
+      context: {
+        returned: {
+          token: 'tok',
+          user: { email: 'alice@example.com', id: 'u1' },
+        },
+        session: { user: { email: 'alice@example.com' } },
+      },
+    } as never)
+    expect(sendEmailMock).toHaveBeenCalledOnce()
+    expect(sendEmailMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: 'alice@example.com',
+        subject: 'Your Spliit Cloud password was changed',
+        text: expect.stringContaining('Other sessions have been signed out'),
+      }),
+    )
+  })
+
+  it('prefers returned user email over session email', async () => {
+    const after = realAuthModule.auth.options.hooks!.after!
+    await (after as (ctx: unknown) => Promise<void>)({
+      path: '/change-password',
+      context: {
+        returned: { user: { email: 'new@example.com' } },
+        session: { user: { email: 'old@example.com' } },
+      },
+    } as never)
+    expect(sendEmailMock).toHaveBeenCalledWith(
+      expect.objectContaining({ to: 'new@example.com' }),
+    )
+  })
+
+  it('falls back to session email when returned has no email', async () => {
+    const after = realAuthModule.auth.options.hooks!.after!
+    await (after as (ctx: unknown) => Promise<void>)({
+      path: '/change-password',
+      context: {
+        returned: { user: { id: 'u1' } },
+        session: { user: { email: 'fallback@example.com' } },
+      },
+    } as never)
+    expect(sendEmailMock).toHaveBeenCalledWith(
+      expect.objectContaining({ to: 'fallback@example.com' }),
+    )
+  })
+
+  it('skips when returned is an APIError', async () => {
+    const { APIError } = await import('better-auth/api')
+    const after = realAuthModule.auth.options.hooks!.after!
+    await (after as (ctx: unknown) => Promise<void>)({
+      path: '/change-password',
+      context: {
+        returned: new APIError('BAD_REQUEST', {
+          message: 'Invalid password',
+          code: 'INVALID_PASSWORD',
+        }),
+        session: { user: { email: 'alice@example.com' } },
+      },
+    } as never)
+    expect(sendEmailMock).not.toHaveBeenCalled()
+  })
+
+  it('skips placeholder emails', async () => {
+    const after = realAuthModule.auth.options.hooks!.after!
+    await (after as (ctx: unknown) => Promise<void>)({
+      path: '/change-password',
+      context: {
+        returned: { user: { email: '123@github.placeholder.local' } },
+        session: null,
+      },
+    } as never)
+    expect(sendEmailMock).not.toHaveBeenCalled()
+  })
+
+  it('skips non-change-password paths', async () => {
+    const after = realAuthModule.auth.options.hooks!.after!
+    await (after as (ctx: unknown) => Promise<void>)({
+      path: '/sign-in/email',
+      context: {
+        returned: { user: { email: 'alice@example.com' } },
+        session: null,
+      },
+    } as never)
+    expect(sendEmailMock).not.toHaveBeenCalled()
+  })
+
+  it('parses a 200 Response clone', async () => {
+    const after = realAuthModule.auth.options.hooks!.after!
+    const response = new Response(
+      JSON.stringify({ user: { email: 'response@example.com' } }),
+      { status: 200, headers: { 'content-type': 'application/json' } },
+    )
+    await (after as (ctx: unknown) => Promise<void>)({
+      path: '/change-password',
+      context: { returned: response, session: null },
+    } as never)
+    expect(sendEmailMock).toHaveBeenCalledWith(
+      expect.objectContaining({ to: 'response@example.com' }),
+    )
+  })
+
+  it('skips non-200 Response', async () => {
+    const after = realAuthModule.auth.options.hooks!.after!
+    const response = new Response('error', { status: 400 })
+    await (after as (ctx: unknown) => Promise<void>)({
+      path: '/change-password',
+      context: { returned: response, session: null },
+    } as never)
+    expect(sendEmailMock).not.toHaveBeenCalled()
   })
 })

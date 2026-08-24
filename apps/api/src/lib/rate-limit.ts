@@ -63,6 +63,10 @@ export class FixedWindowLimiter {
     return this.buckets.size
   }
 
+  clear(): void {
+    this.buckets.clear()
+  }
+
   private evict(now: number): void {
     const maxKeys = this.options.maxKeys ?? 10_000
     if (this.buckets.size < maxKeys) return

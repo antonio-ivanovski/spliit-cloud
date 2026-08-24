@@ -14,6 +14,7 @@ import { accountRouter } from '../trpc/routers/account'
 import { friendsRouter } from '../trpc/routers/friends'
 import { groupsRouter } from '../trpc/routers/groups'
 import { invitationsRouter } from '../trpc/routers/invitations'
+import { cleanupMaildevInbox } from './maildev-client'
 import { checkDbConnection, testRunId } from './setup'
 
 await checkDbConnection()
@@ -44,6 +45,33 @@ describe('Friend ledger — real DB', () => {
   function trackLedger(id: string) {
     ledgerIds.push(id)
   }
+
+  // Every address this suite may deliver to; swept in afterAll so the
+  // persistent MailDev store stays bounded. Keep in sync with new recipients.
+  const mailRecipients = [
+    callerEmail,
+    peerEmail,
+    thirdEmail,
+    `pending-${runId}@unknown.example`,
+    `invitee-${runId}@example.test`,
+    ...[
+      'a',
+      'b',
+      'autosignup',
+      'linkrecv',
+      'crud-a',
+      'crud-b',
+      'bal-a',
+      'bal-b',
+      'cd-a',
+      'cd-new',
+      'race',
+      'dup-a',
+      'dup-b',
+      'pending-dn',
+      'pending-dn2',
+    ].map((prefix) => `${prefix}-${runId}@test.example`),
+  ]
   const trackedGroupIds: string[] = []
   function trackGroup(id: string) {
     trackedGroupIds.push(id)
@@ -163,6 +191,8 @@ describe('Friend ledger — real DB', () => {
     for (const aid of [callerId, peerId, thirdId]) {
       await prisma.account.delete({ where: { id: aid } }).catch(() => {})
     }
+
+    await cleanupMaildevInbox(mailRecipients)
   })
 
   // ───────────────────────────────────────────────────────────────────
@@ -509,6 +539,39 @@ describe('Friend ledger — real DB', () => {
         where: { groupId_accountId: { groupId, accountId: linkRecipientId } },
       })
       expect(before).toBeNull()
+
+      // A read-scoped OAuth token may inspect the pending invitation, but a
+      // query must never consume it or create membership as a side effect.
+      const oauthView = await groupsRouter
+        .createCaller({
+          auth: {
+            credentialKind: 'oauth',
+            accessToken: 'oauth-link-read-test',
+            scopes: ['spliit:groups:read'],
+            session: { id: 'oauth-link-read-session' },
+            user: {
+              id: linkRecipientId,
+              email: linkRecipientEmail,
+              emailVerified: true,
+              name: 'Link Recipient',
+              anonymousOnboardingCompleted: true,
+            },
+          },
+        } as never)
+        .get({ groupId, linkInviteToken: token })
+
+      expect(oauthView.viewer.canAcceptInvitation).toBe(false)
+
+      expect(
+        await prisma.groupMember.findUnique({
+          where: { groupId_accountId: { groupId, accountId: linkRecipientId } },
+        }),
+      ).toBeNull()
+      expect(
+        await prisma.groupInvitation.findFirst({
+          where: { groupId, type: GroupInvitationType.LINK },
+        }),
+      ).toMatchObject({ status: GroupInvitationStatus.PENDING })
 
       await makeGroupsCaller({
         accountId: linkRecipientId,

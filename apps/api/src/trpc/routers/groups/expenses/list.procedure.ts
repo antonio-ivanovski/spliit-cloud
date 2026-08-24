@@ -18,8 +18,8 @@ const matchModeSchema = z
 
 const listExpensesInputSchema = z.object({
   groupId: z.string().min(1),
-  cursor: z.number().optional(),
-  limit: z.number().optional(),
+  cursor: z.number().int().min(0).optional(),
+  limit: z.number().int().min(1).max(100).optional(),
   filter: z.string().optional(),
   locale: z.string().optional(),
   hideSettlements: z.boolean().optional(),

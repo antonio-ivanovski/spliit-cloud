@@ -187,10 +187,11 @@ export const accountRouter = createTRPCRouter({
     }),
 
   /**
-   * Withdraw an authorization. Revokes the client's refresh tokens on top of
-   * deleting the consent, so access actually ends instead of lasting until the
-   * refresh token would have expired. An access token already issued stays
-   * valid until it expires, at most an hour.
+   * Withdraw an authorization. Invalidates pending authorization codes and
+   * revokes the client's refresh tokens on top of deleting the consent, so
+   * access actually ends instead of lasting until the refresh token would have
+   * expired. An access token already issued stays valid until it expires, at
+   * most an hour.
    */
   revokeAuthorizedClient: protectedProcedure
     .input(z.object({ consentId: z.string().min(1) }))

@@ -147,6 +147,7 @@ const ExpenseListForSearch = ({
               <Button
                 variant="link"
                 className="-m-4 hidden sm:inline-flex"
+                nativeButton={false}
                 render={
                   <Link
                     to="/groups/$groupId/expenses/create"

@@ -133,6 +133,7 @@ export default function GroupBudgetsPageClient() {
             {canCreate && (
               <Button
                 variant="outline"
+                nativeButton={false}
                 render={
                   <Link
                     to="/groups/$groupId/budgets/create"

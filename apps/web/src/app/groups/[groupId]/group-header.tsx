@@ -166,6 +166,7 @@ export const GroupHeader = ({
             variant="ghost"
             size="icon"
             className="-ms-2"
+            nativeButton={false}
             render={<Link to="/" title={tGroups('backToHome')} />}
           >
             <ArrowLeft className="h-5 w-5 rtl:rotate-180" />
@@ -247,6 +248,7 @@ export const GroupHeader = ({
                   <Button
                     size="sm"
                     variant="outline"
+                    nativeButton={false}
                     render={<Link to="/" />}
                     disabled={acceptLinkMutation.isPending}
                   >
@@ -274,6 +276,7 @@ export const GroupHeader = ({
             ) : (
               <Button
                 size="sm"
+                nativeButton={false}
                 render={
                   <Link
                     to="/"
@@ -317,6 +320,7 @@ export const GroupHeader = ({
             <Button
               size="sm"
               variant="outline"
+              nativeButton={false}
               render={
                 <Link
                   to="/groups/$groupId"
@@ -336,7 +340,12 @@ export const GroupHeader = ({
           <AlertTitle>{tGroups('linkInvitationExpiredTitle')}</AlertTitle>
           <AlertDescription className="flex flex-col items-start gap-3">
             <span>{tGroups('linkInvitationExpiredDescription')}</span>
-            <Button size="sm" variant="outline" render={<Link to="/" />}>
+            <Button
+              size="sm"
+              variant="outline"
+              nativeButton={false}
+              render={<Link to="/" />}
+            >
               {tGroups('linkInvitationDismiss')}
             </Button>
           </AlertDescription>

@@ -28,6 +28,7 @@ export function DoneStep(props: { groupId: string; applied: number }) {
       </CardContent>
       <CardFooter className="justify-end">
         <Button
+          nativeButton={false}
           render={
             <Link
               to="/groups/$groupId/edit"

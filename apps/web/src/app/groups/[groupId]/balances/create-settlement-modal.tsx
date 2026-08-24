@@ -376,6 +376,7 @@ export function CreateSettlementModal({
                 variant="outline"
                 className="flex-1 sm:flex-none"
                 disabled={isPending || selectedLegs.length === 0}
+                nativeButton={!editSearch}
                 render={
                   editSearch ? (
                     <Link

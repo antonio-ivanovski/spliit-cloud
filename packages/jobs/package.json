@@ -26,6 +26,6 @@
     "@spliit/config": "workspace:*",
     "@types/node": "24.13.2",
     "typescript": "7.0.2",
-    "vitest": "5.0.0-beta.7"
+    "vitest": "5.0.0-rc.2"
   }
 }

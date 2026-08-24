@@ -113,30 +113,35 @@ export function GroupTabs({ groupId }: Props) {
           <TabsList>
             <TabsTrigger
               value="expenses"
+              nativeButton={false}
               render={<Link to={GROUP_TAB_TO.expenses} params={{ groupId }} />}
             >
               {t('Expenses.title')}
             </TabsTrigger>
             <TabsTrigger
               value="balances"
+              nativeButton={false}
               render={<Link to={GROUP_TAB_TO.balances} params={{ groupId }} />}
             >
               {t('Balances.title')}
             </TabsTrigger>
             <TabsTrigger
               value="stats"
+              nativeButton={false}
               render={<Link to={GROUP_TAB_TO.stats} params={{ groupId }} />}
             >
               {t('Stats.title')}
             </TabsTrigger>
             <TabsTrigger
               value="budgets"
+              nativeButton={false}
               render={<Link to={GROUP_TAB_TO.budgets} params={{ groupId }} />}
             >
               {t('Budgets.title')}
             </TabsTrigger>
             <TabsTrigger
               value="activity"
+              nativeButton={false}
               render={<Link to={GROUP_TAB_TO.activity} params={{ groupId }} />}
             >
               {t('Activity.title')}
@@ -145,6 +150,7 @@ export function GroupTabs({ groupId }: Props) {
               <TabsTrigger
                 value="members"
                 className="flex items-center gap-2"
+                nativeButton={false}
                 render={<Link to={GROUP_TAB_TO.members} params={{ groupId }} />}
               >
                 <span>{t('Members.title')}</span>
@@ -161,6 +167,7 @@ export function GroupTabs({ groupId }: Props) {
             {canViewSettings && (
               <TabsTrigger
                 value="edit"
+                nativeButton={false}
                 render={<Link to={GROUP_TAB_TO.edit} params={{ groupId }} />}
               >
                 {t('Settings.title')}

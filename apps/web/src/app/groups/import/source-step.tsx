@@ -387,12 +387,14 @@ export function SourceStep({
         >
           <TabsTrigger
             value="spliit"
+            nativeButton={false}
             render={<Link to="/groups/import" search={{ source: 'spliit' }} />}
           >
             {t('Groups.Import.Source.fromSpliit')}
           </TabsTrigger>
           <TabsTrigger
             value="spliit-cloud"
+            nativeButton={false}
             render={
               <Link to="/groups/import" search={{ source: 'spliit-cloud' }} />
             }
@@ -401,6 +403,7 @@ export function SourceStep({
           </TabsTrigger>
           <TabsTrigger
             value="splitwise"
+            nativeButton={false}
             render={
               <Link to="/groups/import" search={{ source: 'splitwise' }} />
             }
@@ -409,6 +412,7 @@ export function SourceStep({
           </TabsTrigger>
           <TabsTrigger
             value="tricount"
+            nativeButton={false}
             render={
               <Link to="/groups/import" search={{ source: 'tricount' }} />
             }
@@ -417,6 +421,7 @@ export function SourceStep({
           </TabsTrigger>
           <TabsTrigger
             value="settleup"
+            nativeButton={false}
             render={
               <Link to="/groups/import" search={{ source: 'settleup' }} />
             }

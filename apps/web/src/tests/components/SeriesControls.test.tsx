@@ -47,13 +47,13 @@ describe('SeriesControls', () => {
   it('renders the Previous and Next controls as links when ids are set', () => {
     render(<SeriesControls groupId="g1" series={makeSeries()} />)
 
-    const previousLink = screen.getByRole('link', { name: /previous/i })
+    const previousLink = screen.getByRole('button', { name: /previous/i })
     expect(previousLink).toHaveAttribute(
       'href',
       '/groups/$groupId/expenses/$expenseId',
     )
 
-    const nextLink = screen.getByRole('link', { name: /next/i })
+    const nextLink = screen.getByRole('button', { name: /next/i })
     expect(nextLink).toHaveAttribute(
       'href',
       '/groups/$groupId/expenses/$expenseId',
@@ -104,7 +104,7 @@ describe('SeriesControls', () => {
   it('renders "View series" as a link to the series query when onViewSeries is omitted', () => {
     render(<SeriesControls groupId="g1" series={makeSeries()} />)
 
-    const link = screen.getByRole('link', { name: /view series/i })
+    const link = screen.getByRole('button', { name: /view series/i })
     expect(link).toHaveAttribute(
       'href',
       '/groups/$groupId/expenses?seriesId=series-1',

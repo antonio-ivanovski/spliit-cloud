@@ -1,3 +1,4 @@
+import { hashPassword } from 'better-auth/crypto'
 import {
   afterAll,
   beforeAll,
@@ -16,6 +17,7 @@ import { sendEmail } from '../lib/mail/send'
 import { groupsRouter } from '../trpc/routers/groups'
 import { invitationsRouter } from '../trpc/routers/invitations'
 import {
+  cleanupMaildevInbox,
   expectEmailEventually,
   getEmailForRecipient,
   probeMaildev,
@@ -34,6 +36,9 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
   const runId = testRunId()
   const accountIds: string[] = []
   const ledgerIds: string[] = []
+  // Recipients this suite may deliver to. Swept in afterAll so the persistent
+  // MailDev store stays bounded even when an assertion fails midway.
+  const mailRecipients: string[] = []
 
   afterAll(async () => {
     await prisma.verification
@@ -47,6 +52,8 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
     for (const aid of accountIds) {
       await prisma.account.delete({ where: { id: aid } }).catch(() => {})
     }
+
+    await cleanupMaildevInbox(mailRecipients)
   })
 
   // ---------------------------------------------------------------------------
@@ -54,42 +61,37 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
   // ---------------------------------------------------------------------------
   describe('password reset — credential user', () => {
     const email = `auth-${runId}@test-auth.example`
+    mailRecipients.push(email)
     const password = 'StrongP@ss123'
+    const accountId = `auth-acct-${runId}`
+
+    beforeAll(async () => {
+      // Seed a verified credential account directly: sign-up + verification
+      // delivery and sign-in are covered elsewhere in this file; this test is
+      // only about the password-reset flow. One precomputed hash for the
+      // whole group — no per-test crypto.
+      await prisma.account.create({
+        data: {
+          id: accountId,
+          email,
+          emailVerified: true,
+          name: 'SMTP Test',
+        },
+      })
+      accountIds.push(accountId)
+      await prisma.authIdentity.create({
+        data: {
+          id: `auth-id-${runId}`,
+          providerId: 'credential',
+          issuer: 'local:credential',
+          accountId,
+          userId: accountId,
+          password: await hashPassword(password),
+        },
+      })
+    })
 
     it('sends "Reset your Spliit Cloud password" email and the reset link redirects', async () => {
-      const signUpRes = await app.request('/auth/sign-up/email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          origin: 'http://localhost:3000',
-        },
-        body: JSON.stringify({ email, password, name: 'SMTP Test' }),
-      })
-      expect(signUpRes.status).toBe(200)
-
-      await expectEmailEventually({
-        recipient: email,
-        subject: 'Verify your Spliit Cloud account',
-      })
-
-      await prisma.account.update({
-        where: { email },
-        data: { emailVerified: true },
-      })
-
-      const signInRes = await app.request('/auth/sign-in/email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          origin: 'http://localhost:3000',
-        },
-        body: JSON.stringify({ email, password }),
-      })
-      expect(signInRes.status).toBe(200)
-
-      const acct = await prisma.account.findUnique({ where: { email } })
-      if (acct) accountIds.push(acct.id)
-
       const forgotRes = await app.request('/auth/request-password-reset', {
         method: 'POST',
         headers: {
@@ -106,6 +108,7 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
       const captured = await expectEmailEventually({
         recipient: email,
         subject: 'Reset your Spliit Cloud password',
+        consume: true,
       })
       expect(captured!.text).toContain('/auth/reset-password')
 
@@ -128,6 +131,7 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
   // ---------------------------------------------------------------------------
   describe('password reset — magic-link-only user', () => {
     const mlEmail = `ml-${runId}@test-auth.example`
+    mailRecipients.push(mlEmail)
     const mlAccountId = `ml-acct-${runId}`
 
     beforeAll(async () => {
@@ -144,6 +148,7 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
         data: {
           id: `ml-id-${runId}`,
           providerId: 'magic-link',
+          issuer: 'local:magic-link',
           accountId: mlEmail,
           userId: mlAccountId,
         },
@@ -167,6 +172,7 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
       const captured = await expectEmailEventually({
         recipient: mlEmail,
         subject: 'Sign in to Spliit Cloud',
+        consume: true,
       })
       expect(captured!.text).toContain('email sign-in link')
     })
@@ -177,6 +183,7 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
   // ---------------------------------------------------------------------------
   describe('email verification on sign-up', () => {
     const verifyEmail = `verify-${runId}@test-auth.example`
+    mailRecipients.push(verifyEmail)
     const verifyPassword = 'VerifyStr0ng!'
 
     it('sends verification email and marks account verified when clicked', async () => {
@@ -203,6 +210,7 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
       const captured = await expectEmailEventually({
         recipient: verifyEmail,
         subject: 'Verify your Spliit Cloud account',
+        consume: true,
       })
       expect(captured!.text).toContain('/auth/verify-email')
 
@@ -302,65 +310,73 @@ describe.skipIf(!maildevReachable)('SMTP auth flows — real MailDev', () => {
       adminLpId = adminLp.id
     })
 
-    it('sends invitation emails for each INVITE_BY_EMAIL participant mapping', async () => {
-      const destLp1 = randomId()
-      const destLp2 = randomId()
+    it('dispatches an invitation email for each INVITE_BY_EMAIL participant mapping', async () => {
+      // Assert dispatch mapping on a stubbed sendEmail: real SMTP delivery
+      // and the invitation template are covered by import-flows.test.ts.
+      const send = vi.mocked(sendEmail)
+      send.mockClear()
+      send.mockImplementation(async () => {})
 
-      const result = await makeCaller().import({
-        requestId: crypto.randomUUID(),
-        targetGroupId: groupId,
-        participants: [
-          {
-            mode: 'LINK_EXISTING_PARTICIPANT',
-            sourceName: 'Admin',
-            destLedgerParticipantId: adminLpId,
-          },
-          {
-            mode: 'INVITE_BY_EMAIL',
-            sourceName: 'Friend One',
-            email: invitee1Email,
-            destLedgerParticipantId: destLp1,
-          },
-          {
-            mode: 'INVITE_BY_EMAIL',
-            sourceName: 'Friend Two',
-            email: invitee2Email,
-            destLedgerParticipantId: destLp2,
-          },
-        ],
-        expenses: [
-          {
-            title: 'Dinner',
-            amount: 3000,
-            expenseDate: new Date('2026-06-15'),
-            category: 'general',
-            splitMode: 'EVENLY',
-            paidBySplitMode: 'BY_AMOUNT',
-            paidByList: [{ participant: destLp1, shares: 3000 }],
-            paidFor: [
-              { participant: destLp1, shares: 1 },
-              { participant: adminLpId, shares: 1 },
-            ],
-            documents: [],
-            recurrenceRule: 'NONE',
-          },
-        ],
-        sourceMeta: {
-          provider: 'SPLIIT',
-          sourceGroupId: 'src-import-test',
-        },
-      })
+      try {
+        const destLp1 = randomId()
+        const destLp2 = randomId()
 
-      expect(result.invites).toHaveLength(2)
-
-      for (const email of [invitee1Email, invitee2Email]) {
-        const captured = await expectEmailEventually({
-          recipient: email,
+        const result = await makeCaller().import({
+          requestId: crypto.randomUUID(),
+          targetGroupId: groupId,
+          participants: [
+            {
+              mode: 'LINK_EXISTING_PARTICIPANT',
+              sourceName: 'Admin',
+              destLedgerParticipantId: adminLpId,
+            },
+            {
+              mode: 'INVITE_BY_EMAIL',
+              sourceName: 'Friend One',
+              email: invitee1Email,
+              destLedgerParticipantId: destLp1,
+            },
+            {
+              mode: 'INVITE_BY_EMAIL',
+              sourceName: 'Friend Two',
+              email: invitee2Email,
+              destLedgerParticipantId: destLp2,
+            },
+          ],
+          expenses: [
+            {
+              title: 'Dinner',
+              amount: 3000,
+              expenseDate: new Date('2026-06-15'),
+              category: 'general',
+              splitMode: 'EVENLY',
+              paidBySplitMode: 'BY_AMOUNT',
+              paidByList: [{ participant: destLp1, shares: 3000 }],
+              paidFor: [
+                { participant: destLp1, shares: 1 },
+                { participant: adminLpId, shares: 1 },
+              ],
+              documents: [],
+              recurrenceRule: 'NONE',
+            },
+          ],
+          sourceMeta: {
+            provider: 'SPLIIT',
+            sourceGroupId: 'src-import-test',
+          },
         })
-        expect(captured!.text).toContain(`Import-Group-${impRunId}`)
-        expect(captured!.text).toContain(
-          'This invitation is part of an import from a Spliit export.',
+
+        expect(result.invites).toHaveLength(2)
+
+        expect(send).toHaveBeenCalledTimes(2)
+        expect(send).toHaveBeenCalledWith(
+          expect.objectContaining({ to: invitee1Email.toLowerCase() }),
         )
+        expect(send).toHaveBeenCalledWith(
+          expect.objectContaining({ to: invitee2Email.toLowerCase() }),
+        )
+      } finally {
+        send.mockRestore()
       }
     })
   })
@@ -447,6 +463,8 @@ describe.skipIf(!maildevReachable)('SMTP graceful degradation', () => {
       await prisma.ledger.delete({ where: { id: lid } }).catch(() => {})
     }
     await prisma.account.delete({ where: { id: adminId } }).catch(() => {})
+
+    await cleanupMaildevInbox([inviteeEmail])
   })
 
   beforeEach(async () => {

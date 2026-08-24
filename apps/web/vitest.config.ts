@@ -16,6 +16,9 @@ const sharedTest = {
   css: false,
   restoreMocks: true,
   exclude: ['src/tests/integration/**'],
+  // Several package test tasks run concurrently under turbo; uncapped forks
+  // oversubscribe the CPU and starve every suite (timeouts under load).
+  maxWorkers: 2,
 }
 
 export default defineConfig({

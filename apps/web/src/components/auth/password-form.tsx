@@ -54,6 +54,7 @@ export function PasswordForm(props: {
           size="sm"
           className="h-auto self-start px-0 py-0"
           disabled={actionsDisabled}
+          nativeButton={false}
           render={
             <Link
               to="/auth/forgot-password"

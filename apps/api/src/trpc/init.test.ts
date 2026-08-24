@@ -6,6 +6,7 @@ import { generateGroupViewKey } from '../lib/group-view'
 import { authState, prismaMock } from '../test/state'
 import {
   apiProcedure,
+  assertOAuthScope,
   assertScopeForDestructiveEdit,
   assistantProcedure,
   createTRPCContext,
@@ -255,6 +256,25 @@ describe('assistantProcedure', () => {
       }),
     ).resolves.toEqual({ accountId: 'verified-spliit-account' })
   })
+
+  it('blocks an OAuth account whose anonymous setup is incomplete', async () => {
+    await expect(
+      callProbe({
+        credentialKind: 'oauth',
+        accessToken: 'redacted',
+        scopes: ['spliit:groups:read'],
+        user: {
+          id: 'anonymous-oauth-assistant',
+          isAnonymous: true,
+          anonymousOnboardingCompleted: false,
+        },
+        session: { id: 'oauth-session' },
+      }),
+    ).rejects.toMatchObject({
+      code: 'PRECONDITION_FAILED',
+      message: 'ANONYMOUS_SETUP_REQUIRED',
+    })
+  })
 })
 
 describe('apiProcedure', () => {
@@ -338,7 +358,26 @@ describe('apiProcedure', () => {
         },
         session: { id: 'sess-anon' },
       }),
-    ).rejects.toMatchObject({ code: 'PRECONDITION_FAILED' })
+    ).rejects.toMatchObject({
+      code: 'PRECONDITION_FAILED',
+      message: 'ANONYMOUS_SETUP_REQUIRED',
+    })
+  })
+
+  it('gates an OAuth token whose anonymous setup is incomplete', async () => {
+    await expect(
+      callProbe({
+        ...oauthAuth(['spliit:expenses:read']),
+        user: {
+          id: 'anonymous-oauth-api',
+          isAnonymous: true,
+          anonymousOnboardingCompleted: false,
+        },
+      }),
+    ).rejects.toMatchObject({
+      code: 'PRECONDITION_FAILED',
+      message: 'ANONYMOUS_SETUP_REQUIRED',
+    })
   })
 })
 
@@ -452,7 +491,26 @@ describe('scopedGroupReadProcedure', () => {
         },
         session: { id: 'sess-anon' },
       }),
-    ).rejects.toMatchObject({ code: 'PRECONDITION_FAILED' })
+    ).rejects.toMatchObject({
+      code: 'PRECONDITION_FAILED',
+      message: 'ANONYMOUS_SETUP_REQUIRED',
+    })
+  })
+
+  it('gates an OAuth token whose anonymous setup is incomplete', async () => {
+    await expect(
+      callProbe({
+        ...oauthAuth(['spliit:expenses:read']),
+        user: {
+          id: 'anonymous-oauth-group-read',
+          isAnonymous: true,
+          anonymousOnboardingCompleted: false,
+        },
+      }),
+    ).rejects.toMatchObject({
+      code: 'PRECONDITION_FAILED',
+      message: 'ANONYMOUS_SETUP_REQUIRED',
+    })
   })
 })
 
@@ -490,6 +548,35 @@ describe('assertScopeForDestructiveEdit', () => {
     expect(() =>
       assertScopeForDestructiveEdit(
         oauth(['spliit:expenses:manage', 'spliit:expenses:delete']),
+      ),
+    ).not.toThrow()
+  })
+})
+
+describe('assertOAuthScope', () => {
+  it('keeps additional resource scopes separate for OAuth callers', () => {
+    expect(() =>
+      assertOAuthScope(
+        {
+          credentialKind: 'oauth',
+          accessToken: 'redacted',
+          scopes: ['spliit:groups:delete'],
+          user: { id: 'acct-oauth' },
+          session: { id: 'oauth-session' },
+        } as never,
+        'spliit:expenses:manage',
+      ),
+    ).toThrow(/spliit:expenses:manage/)
+  })
+
+  it('does not impose token scopes on a browser session', () => {
+    expect(() =>
+      assertOAuthScope(
+        {
+          user: { id: 'acct-session' },
+          session: { id: 'session' },
+        } as never,
+        'spliit:expenses:manage',
       ),
     ).not.toThrow()
   })

@@ -16,6 +16,7 @@ import { trpc } from '@/trpc/client'
 
 import { AccountEmailSettings } from './account-email-settings'
 import { AccountExportModal } from './account-export-modal'
+import { AccountPasswordSettings } from './account-password-settings'
 import { AccountPreferences } from './account-preferences'
 import { AccountAiPreferences } from './ai-preferences'
 import { AnonymousAccountSettings } from './anonymous-account-settings'
@@ -287,6 +288,12 @@ function AccountSettingsContent() {
             />
             <AccountEmailSettings
               email={account.email}
+              isAnonymous={account.isAnonymous}
+              onUpdated={refreshAccount}
+            />
+            <AccountPasswordSettings
+              email={account.email}
+              emailVerified={account.emailVerified}
               isAnonymous={account.isAnonymous}
               onUpdated={refreshAccount}
             />

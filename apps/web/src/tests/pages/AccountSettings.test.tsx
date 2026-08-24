@@ -265,7 +265,7 @@ describe('AccountSettingsPage', () => {
   it('opens the Spliit Cloud importer from the backup section', () => {
     render(<AccountSettingsPage />)
 
-    const importLink = screen.getByRole('link', { name: /^import$/i })
+    const importLink = screen.getByRole('button', { name: /^import$/i })
     expect(importLink).toHaveAttribute('href', '/groups/import')
     expect(importLink).toHaveAttribute(
       'data-search',

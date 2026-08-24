@@ -173,7 +173,12 @@ export function RecoverAnonymousAccountPage() {
               {t('submit')}
             </Button>
           ) : null}
-          <Button variant="ghost" render={<Link to="/" />} className="w-full">
+          <Button
+            variant="ghost"
+            nativeButton={false}
+            render={<Link to="/" />}
+            className="w-full"
+          >
             {t('back')}
           </Button>
         </CardFooter>

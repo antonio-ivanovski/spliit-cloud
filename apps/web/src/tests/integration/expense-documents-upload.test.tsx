@@ -4,6 +4,7 @@ import {
   cleanupTestAccount,
   createTestSession,
   INTEGRATION_API_URL,
+  integrationFetch,
   probeExistingApi,
 } from '@/test/integration/client'
 import { fireEvent, render, waitFor } from '@/test/integration/test-utils'
@@ -101,15 +102,18 @@ async function trpcCall<T = unknown>(
 ): Promise<T> {
   const isQuery = queryProcedures.has(procedure)
 
-  let res: Response
+  let res: Awaited<ReturnType<typeof integrationFetch>>
   if (isQuery) {
     const inputParam = encodeURIComponent(JSON.stringify({ json: input }))
-    res = await fetch(`${API_URL}/trpc/${procedure}?input=${inputParam}`, {
-      method: 'GET',
-      headers: { Cookie: sessionCookie },
-    })
+    res = await integrationFetch(
+      `${API_URL}/trpc/${procedure}?input=${inputParam}`,
+      {
+        method: 'GET',
+        headers: { Cookie: sessionCookie },
+      },
+    )
   } else {
-    res = await fetch(`${API_URL}/trpc/${procedure}`, {
+    res = await integrationFetch(`${API_URL}/trpc/${procedure}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -119,7 +123,10 @@ async function trpcCall<T = unknown>(
     })
   }
 
-  const body = await res.json()
+  const body = (await res.json()) as {
+    error?: { json?: { message?: string }; message?: string }
+    result?: { data?: { json: T } }
+  }
   if (body.error) {
     throw new Error(
       body.error?.json?.message ?? body.error.message ?? 'Unknown tRPC error',
@@ -220,25 +227,15 @@ describe('ExpenseDocumentsInput — real API + real MaxIO', () => {
   it('uploads a 1x1 JPEG and returns document with correct dimensions and URL', async () => {
     setupGroupContext()
 
-    // jsdom's cookie jar is not shared with the undici fetch used by
-    // vitest, so credentials:'include' won't send the session cookie.
-    // Override fetch to add the auth cookie for API requests instead.
-    // Also normalises Blob/File-like request bodies to ArrayBuffer,
-    // since jsdom's File objects are not valid BodyInit for Bun's
-    // native fetch.
+    // happy-dom's fetch strips Cookie/Set-Cookie per the Fetch spec and
+    // cannot handle jsdom File/Blob bodies as BodyInit for Bun's native
+    // fetch. Use undici for all http(s) requests so auth is preserved and
+    // binary PUTs to MaxIO are reliable under CI concurrency=2.
     const originalFetch = globalThis.fetch
     globalThis.fetch = (async (
       input: RequestInfo | URL,
       init?: RequestInit,
     ) => {
-      let reqBody = init?.body
-
-      // Convert Blob/File-like bodies to ArrayBuffer so Bun's native
-      // fetch can consume them. jsdom's File is not valid BodyInit.
-      if (isBlobLikeBody(reqBody)) {
-        reqBody = await reqBody.arrayBuffer()
-      }
-
       const url =
         typeof input === 'string'
           ? input
@@ -246,22 +243,67 @@ describe('ExpenseDocumentsInput — real API + real MaxIO', () => {
             ? input.href
             : (input as Request).url
 
-      if (url && url.startsWith(API_URL)) {
-        const h = new Headers(init?.headers)
-        h.set('Cookie', sessionCookie)
-        return originalFetch(input, {
-          ...init,
-          body: reqBody,
-          headers: h,
-        })
+      // Normalise Blob/File-like bodies to ArrayBuffer for both fetch
+      // implementations — jsdom's File is not valid BodyInit for undici
+      // or Bun's native fetch when passed via happy-dom.
+      let reqBody: unknown = init?.body
+      // If input is a Request with a blob body and no init.body, extract it.
+      if (reqBody === undefined && input instanceof Request) {
+        try {
+          const clone = (input as Request).clone()
+          const buf = await clone.arrayBuffer()
+          if (buf.byteLength) reqBody = buf
+        } catch {
+          // ignore — fall through to original body handling
+        }
       }
-      return originalFetch(input, { ...init, body: reqBody })
+      if (isBlobLikeBody(reqBody)) {
+        reqBody = await (
+          reqBody as { arrayBuffer(): Promise<ArrayBuffer> }
+        ).arrayBuffer()
+      }
+
+      const isHttp =
+        !!url && (url.startsWith('http://') || url.startsWith('https://'))
+
+      if (isHttp) {
+        const h = new Headers(init?.headers)
+        // Merge headers from a Request input if present.
+        if (input instanceof Request) {
+          for (const [k, v] of (input as Request).headers.entries()) {
+            if (!h.has(k)) h.set(k, v)
+          }
+        }
+        if (url.startsWith(API_URL)) {
+          h.set('Cookie', sessionCookie)
+        }
+        // Plain-object headers: undici must not receive a happy-dom Headers
+        // instance (cross-realm brand checks fail in happy-dom).
+        return integrationFetch(
+          input as Parameters<typeof integrationFetch>[0],
+          {
+            ...init,
+            method:
+              init?.method ??
+              (input instanceof Request ? input.method : undefined),
+            body: reqBody as NonNullable<
+              Parameters<typeof integrationFetch>[1]
+            >['body'],
+            headers: Object.fromEntries(h.entries()),
+            // undici handles duplex automatically for ArrayBuffer/strings
+          } as Parameters<typeof integrationFetch>[1],
+        )
+      }
+      return originalFetch(input as RequestInfo, {
+        ...init,
+        body: reqBody as BodyInit | null | undefined,
+      })
     }) as typeof globalThis.fetch
 
     try {
       // Surface any errors swallowed by the upload component's catch
       // so flaky CI runs leave a clear trace of what went wrong.
-      vi.spyOn(console, 'error')
+      const consoleErrorSpy = vi.spyOn(console, 'error')
 
       const updateDocuments = vi.fn()
 
@@ -289,13 +331,28 @@ describe('ExpenseDocumentsInput — real API + real MaxIO', () => {
       )
       fireEvent.change(fileInput!, { target: { files: [testFile] } })
 
-      // Wait for the upload pipeline (presign → PUT to MaxIO → updateDocuments)
-      await waitFor(
-        () => {
-          expect(updateDocuments).toHaveBeenCalledTimes(1)
-        },
-        { timeout: 15000 },
-      )
+      // Wait for the upload pipeline (presign → PUT to MaxIO → updateDocuments).
+      // 30s accommodates CI where turbo runs api+web in parallel (concurrency=2)
+      // and MaxIO can be briefly contended.
+      try {
+        await waitFor(
+          () => {
+            expect(updateDocuments).toHaveBeenCalledTimes(1)
+          },
+          { timeout: 30000, interval: 200 },
+        )
+      } catch (cause) {
+        // Dump swallowed errors for CI diagnostics before failing the test.
+        if (consoleErrorSpy.mock.calls.length) {
+          console.log(
+            '[expense-documents-upload] console.error calls:',
+            consoleErrorSpy.mock.calls
+              .map((a) => a.map((v) => String(v)).join(' '))
+              .join('\n'),
+          )
+        }
+        throw cause
+      }
 
       const documents = updateDocuments.mock.calls[0][0] as Array<{
         id: string
@@ -316,5 +373,5 @@ describe('ExpenseDocumentsInput — real API + real MaxIO', () => {
       globalThis.fetch = originalFetch
       vi.restoreAllMocks()
     }
-  }, 30000)
+  }, 45000)
 })

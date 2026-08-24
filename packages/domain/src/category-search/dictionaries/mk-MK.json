@@ -90,8 +90,8 @@
     "samples": []
   },
   "electricity": {
-    "aliases": ["струја", "евн", "есм", "evn", "esm", "struja"],
-    "samples": ["евн", "esm"]
+    "aliases": ["струја", "евн", "evn", "struja", "есм", "esm"],
+    "samples": ["евн"]
   },
   "heat-gas": {
     "aliases": ["бег", "beg"],

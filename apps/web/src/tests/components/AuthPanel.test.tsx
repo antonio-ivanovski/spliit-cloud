@@ -11,7 +11,6 @@ const {
   mockSignUpEmail,
   mockSignInMagicLink,
   mockSignInSocial,
-  mockSignInOauth2,
   mockSignInAnonymous,
   mockRecoverAnonymous,
   mockGetSession,
@@ -24,7 +23,6 @@ const {
   mockSignUpEmail: vi.fn(),
   mockSignInMagicLink: vi.fn(),
   mockSignInSocial: vi.fn(),
-  mockSignInOauth2: vi.fn(),
   mockSignInAnonymous: vi.fn(),
   mockRecoverAnonymous: vi.fn(),
   mockGetSession: vi.fn(),
@@ -54,7 +52,6 @@ vi.mock('@/lib/auth', () => ({
       email: mockSignInEmail,
       magicLink: mockSignInMagicLink,
       social: mockSignInSocial,
-      oauth2: mockSignInOauth2,
       anonymous: mockSignInAnonymous,
     },
     signUp: {
@@ -348,7 +345,7 @@ describe('AuthPanel', () => {
     ).not.toBeInTheDocument()
   })
 
-  it('OIDC button appears and signs in with oauth2', async () => {
+  it('OIDC button appears and signs in with social', async () => {
     mockDeploymentConfig.oidcProviders = [{ id: 'oidc', name: 'Company SSO' }]
     mockSearch.redirect = '/groups/abc?invite=link-invite-token'
 
@@ -358,9 +355,9 @@ describe('AuthPanel', () => {
 
     await user.click(screen.getByText('Continue with Company SSO'))
 
-    expect(mockSignInOauth2).toHaveBeenCalledWith(
+    expect(mockSignInSocial).toHaveBeenCalledWith(
       {
-        providerId: 'oidc',
+        provider: 'oidc',
         callbackURL: `${window.location.origin}/groups/abc?invite=link-invite-token`,
       },
       { headers: { 'X-Spliit-Invite-Token': 'link-invite-token' } },

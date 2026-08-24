@@ -265,6 +265,7 @@ function PageShell(props: {
           variant="ghost"
           size="sm"
           className="-ms-2 w-fit"
+          nativeButton={false}
           render={
             <Link
               to="/groups/$groupId/edit"

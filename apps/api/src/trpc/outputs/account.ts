@@ -104,4 +104,5 @@ export const authorizedClientsOutputSchema = z.object({
 export const revokeAuthorizedClientOutputSchema = z.object({
   refreshTokensRevoked: z.number().int(),
   accessTokensDeleted: z.number().int(),
+  authorizationCodesDeleted: z.number().int(),
 })

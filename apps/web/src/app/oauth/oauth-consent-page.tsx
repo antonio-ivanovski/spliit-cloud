@@ -2,11 +2,11 @@ import { useQuery } from '@tanstack/react-query'
 import { getRouteApi } from '@tanstack/react-router'
 import {
   ArrowRight,
-  Bot,
   Database,
   Eye,
   Loader2,
   LockKeyhole,
+  Plug,
   ShieldCheck,
   TriangleAlert,
 } from 'lucide-react'
@@ -32,6 +32,17 @@ import { OAuthShell } from './oauth-shell'
 
 const route = getRouteApi('/oauth/consent')
 
+function readExternalHttpUrl(value: string | undefined) {
+  if (!value) return null
+  try {
+    const url = new URL(value)
+    if (url.protocol !== 'https:' && url.protocol !== 'http:') return null
+    return { href: url.toString(), host: url.host }
+  } catch {
+    return null
+  }
+}
+
 export function OAuthConsentPage() {
   const { t } = useTranslation(undefined, { keyPrefix: 'OAuth.consent' })
   const { oauth_query: explicitOAuthQuery } = route.useSearch()
@@ -53,12 +64,22 @@ export function OAuthConsentPage() {
     (scope) => !KNOWN_SCOPES.has(scope) && !OIDC_SCOPES.has(scope),
   )
   const clientName = client.data?.client_name ?? t('defaultClient')
+  const clientWebsite = readExternalHttpUrl(client.data?.client_uri)
+  const privacyPolicy = readExternalHttpUrl(client.data?.policy_uri)
+  const clientError =
+    !oauthQuery || !clientId
+      ? t('missingRequest')
+      : client.isError
+        ? t('clientUnavailable')
+        : null
   const account = session?.user
   // Approving is only meaningful once the account is known, the client has
   // been resolved, and every requested scope is one we can name.
   const canApprove =
     Boolean(account) &&
     Boolean(client.data) &&
+    !client.isPending &&
+    !client.isError &&
     unknownScopes.length === 0 &&
     pending === null
 
@@ -119,7 +140,7 @@ export function OAuthConsentPage() {
 
             <IdentitySummary label={t('connectingTo')}>
               <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm shadow-primary/20">
-                <Bot className="size-5" aria-hidden="true" />
+                <Plug className="size-5" aria-hidden="true" />
               </div>
               <div className="min-w-0">
                 <p
@@ -131,6 +152,40 @@ export function OAuthConsentPage() {
                 <p className="text-xs break-words text-muted-foreground">
                   {t('assistantVia')}
                 </p>
+                {clientId ? (
+                  <p
+                    className="truncate font-mono text-[11px] text-muted-foreground"
+                    dir="ltr"
+                    title={clientId}
+                    translate="no"
+                  >
+                    {clientId}
+                  </p>
+                ) : null}
+                {clientWebsite || privacyPolicy ? (
+                  <div className="mt-0.5 flex min-w-0 flex-wrap gap-x-2 gap-y-0.5 text-[11px]">
+                    {clientWebsite ? (
+                      <a
+                        className="truncate text-primary underline-offset-2 hover:underline"
+                        href={clientWebsite.href}
+                        rel="noreferrer"
+                        target="_blank"
+                      >
+                        {t('clientWebsite')} ({clientWebsite.host})
+                      </a>
+                    ) : null}
+                    {privacyPolicy ? (
+                      <a
+                        className="text-primary underline-offset-2 hover:underline"
+                        href={privacyPolicy.href}
+                        rel="noreferrer"
+                        target="_blank"
+                      >
+                        {t('privacyPolicy')}
+                      </a>
+                    ) : null}
+                  </div>
+                ) : null}
               </div>
             </IdentitySummary>
           </div>
@@ -198,9 +253,9 @@ export function OAuthConsentPage() {
           </p>
         )}
 
-        {error && (
+        {(clientError || error) && (
           <p className="text-sm text-destructive" role="alert">
-            {error}
+            {clientError ?? error}
           </p>
         )}
 

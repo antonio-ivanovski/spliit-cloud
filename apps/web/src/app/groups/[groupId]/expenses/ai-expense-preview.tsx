@@ -375,6 +375,7 @@ export function AiExpensePreview({
           <Button
             variant={canCreate ? 'outline' : 'default'}
             className="flex-1 sm:flex-none"
+            nativeButton={false}
             render={
               <Link
                 to="/groups/$groupId/expenses/create"

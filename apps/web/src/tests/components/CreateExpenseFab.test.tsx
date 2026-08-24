@@ -182,7 +182,7 @@ describe('CreateExpenseFab', () => {
 
     const control = screen.getByTestId('expense-action-control')
     expect(
-      within(control).getByRole('link', { name: 'Add expense' }),
+      within(control).getByRole('button', { name: 'Add expense' }),
     ).toHaveAttribute('href', '/groups/$groupId/expenses/create')
     expect(
       within(control).getByRole('button', { name: 'Voice expense' }),
@@ -269,7 +269,7 @@ describe('CreateExpenseFab', () => {
     // button; the desktop toolbar still exposes the same action. Scope the
     // query to the desktop wrapper so both surfaces stay valid.
     const control = screen.getByTestId('expense-action-control')
-    const addExpense = within(control).getByRole('link', {
+    const addExpense = within(control).getByRole('button', {
       name: 'Add expense',
     })
     expect(addExpense).toHaveAttribute(
@@ -350,7 +350,7 @@ describe('CreateExpenseFab', () => {
     ).not.toBeInTheDocument()
     const control = screen.getByTestId('expense-action-control')
     expect(
-      within(control).getByRole('link', { name: 'Add expense' }),
+      within(control).getByRole('button', { name: 'Add expense' }),
     ).toHaveAttribute('href', '/groups/$groupId/expenses/create')
     expect(screen.getByTestId('create-expense-fab-mobile')).toHaveAttribute(
       'href',

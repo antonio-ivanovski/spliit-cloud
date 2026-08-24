@@ -422,6 +422,7 @@ export function AccountExportModal() {
             <Button
               variant="outline"
               className="flex-1"
+              nativeButton={false}
               render={
                 <Link to="/groups/import" search={{ source: 'spliit-cloud' }} />
               }

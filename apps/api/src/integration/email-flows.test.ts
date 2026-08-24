@@ -7,7 +7,11 @@ import { env } from '../lib/env'
 import '../lib/notifications'
 import { waitForScheduledNotificationDispatchesForTest } from '../lib/notifications/dispatcher'
 import { invitationsRouter } from '../trpc/routers/invitations'
-import { expectEmailEventually, probeMaildev } from './maildev-client'
+import {
+  cleanupMaildevInbox,
+  expectEmailEventually,
+  probeMaildev,
+} from './maildev-client'
 import { checkDbConnection, testRunId } from './setup'
 
 const API_BASE_URL = env.BETTER_AUTH_URL ?? 'http://localhost:3101'
@@ -126,6 +130,9 @@ describe.skipIf(!maildevReachable)('Email invitation flow — real DB', () => {
     for (const aid of accountIds) {
       await prisma.account.delete({ where: { id: aid } }).catch(() => {})
     }
+
+    // Sweep mail owned by this suite (also on assertion failure).
+    await cleanupMaildevInbox([inviteeEmail])
   })
 
   // ------------------------------------------------------------------
@@ -162,7 +169,10 @@ describe.skipIf(!maildevReachable)('Email invitation flow — real DB', () => {
     // recipient-scoped, so a non-null result already proves the email was
     // delivered to `inviteeEmail`. The body assertions below check the
     // template variant (new-user sign-up link) and the target URL.
-    const captured = await expectEmailEventually({ recipient: inviteeEmail })
+    const captured = await expectEmailEventually({
+      recipient: inviteeEmail,
+      consume: true,
+    })
     const mailContent = captured.text
     expect(mailContent).toContain(groupName)
     expect(mailContent).toContain('You will appear as "Invited User"')
@@ -269,6 +279,9 @@ describe.skipIf(!apiReachable || !maildevReachable)(
           .delete({ where: { id: account.id } })
           .catch(() => {})
       }
+
+      // Sweep mail owned by this suite (also on assertion failure).
+      await cleanupMaildevInbox([testEmail])
     })
 
     it('sends a magic link email and can verify the token', async () => {
@@ -287,7 +300,10 @@ describe.skipIf(!apiReachable || !maildevReachable)(
       expect(sendRes.status).toBe(200)
 
       // Pull the magic link email out of MailDev's inbox.
-      const captured = await expectEmailEventually({ recipient: testEmail })
+      const captured = await expectEmailEventually({
+        recipient: testEmail,
+        consume: true,
+      })
       const mailContent = captured.text
       expect(mailContent).toContain('Click the link below to sign in to Spliit')
       expect(captured.html).toContain('Sign in to Spliit Cloud')

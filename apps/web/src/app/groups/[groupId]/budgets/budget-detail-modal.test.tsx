@@ -253,7 +253,7 @@ describe('BudgetDetailModal', () => {
   it('shows edit, archive, and delete actions for admins', () => {
     render(<BudgetDetailModal budgetId="budget-1" onClose={vi.fn()} />)
 
-    expect(screen.getByRole('link', { name: 'Edit' })).toHaveAttribute(
+    expect(screen.getByRole('button', { name: 'Edit' })).toHaveAttribute(
       'href',
       '/groups/$groupId/budgets/$budgetId/edit',
     )
@@ -264,7 +264,7 @@ describe('BudgetDetailModal', () => {
   it('links to the edit page', () => {
     render(<BudgetDetailModal budgetId="budget-1" onClose={vi.fn()} />)
 
-    expect(screen.getByRole('link', { name: 'Edit' })).toHaveAttribute(
+    expect(screen.getByRole('button', { name: 'Edit' })).toHaveAttribute(
       'href',
       '/groups/$groupId/budgets/$budgetId/edit',
     )

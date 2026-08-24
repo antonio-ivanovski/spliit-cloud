@@ -8,7 +8,14 @@
     "samples": []
   },
   "groceries": {
-    "aliases": ["courses", "supermarche", "epicerie", "boulangerie", "biocoop"],
+    "aliases": [
+      "courses",
+      "supermarche",
+      "epicerie",
+      "boulangerie",
+      "biocoop",
+      "pain"
+    ],
     "samples": ["courses de la semaine"]
   },
   "liquor": {
@@ -16,7 +23,7 @@
     "samples": []
   },
   "rent": {
-    "aliases": ["loyer"],
+    "aliases": ["loyer", "maison"],
     "samples": []
   },
   "gas-fuel": {

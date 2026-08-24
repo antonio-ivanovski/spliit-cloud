@@ -110,26 +110,32 @@ export function clientRateLimitMiddleware(options: {
   limit: number
   windowMs: number
   trustProxy?: boolean
+  /** Shared conservative bucket for routes that must stay limited directly. */
+  untrustedFallbackIdentity?: string
 }): MiddlewareHandler {
   const limiter = new FixedWindowLimiter({
     limit: options.limit,
     windowMs: options.windowMs,
   })
   return async (c, next) => {
+    if (c.req.method === 'OPTIONS') {
+      await next()
+      return
+    }
     const trustProxy = options.trustProxy ?? env.TRUST_PROXY
-    if (!trustProxy) {
+    if (!trustProxy && !options.untrustedFallbackIdentity) {
       await next()
       return
     }
 
-    const ip = resolveClientIp(c.req.raw.headers, {
-      trustProxy,
-    })
-    const decision = limiter.hit(ip)
+    const identity = trustProxy
+      ? resolveClientIp(c.req.raw.headers, { trustProxy })
+      : options.untrustedFallbackIdentity!
+    const decision = limiter.hit(identity)
     if (!decision.allowed) {
       logRateLimitExceeded({
         policy: options.policy,
-        identity: ip,
+        identity,
         retryAfterSeconds: decision.retryAfterSeconds,
         path: c.req.path,
       })
@@ -159,6 +165,10 @@ const oauthRegistrationRateLimit = clientRateLimitMiddleware({
   policy: 'oauth-registration',
   limit: 20,
   windowMs: 60 * 60 * 1000,
+  // Direct deployments cannot derive a trustworthy remote address from the
+  // Fetch Request. A shared bucket is preferable to leaving anonymous dynamic
+  // registration completely unbounded.
+  untrustedFallbackIdentity: 'oauth-registration:direct',
 })
 app.use('/auth/oauth2/register', oauthRegistrationRateLimit)
 

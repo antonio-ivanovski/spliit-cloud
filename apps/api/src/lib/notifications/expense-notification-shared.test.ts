@@ -20,7 +20,7 @@ describe('formatExpenseAmount', () => {
   })
 
   it('renders JPY with zero decimal places', () => {
-    expect(formatExpenseAmount(100000, 'JPY')).toBe('JPY 1000')
+    expect(formatExpenseAmount(1000, 'JPY')).toBe('JPY 1000')
   })
 
   it('omits the currency prefix when no code is provided', () => {
@@ -30,7 +30,7 @@ describe('formatExpenseAmount', () => {
 
 describe('formatExpenseDualAmount', () => {
   it('renders both currencies when they differ', () => {
-    expect(formatExpenseDualAmount(670, 'JPY', 500000, 'EUR')).toBe(
+    expect(formatExpenseDualAmount(670, 'JPY', 5000, 'EUR')).toBe(
       'JPY 5000 (EUR 6.70)',
     )
   })

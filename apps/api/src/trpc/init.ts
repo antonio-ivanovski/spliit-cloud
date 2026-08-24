@@ -289,6 +289,12 @@ export function scopedGroupReadProcedure(requiredScope: SpliitScope) {
   return baseProcedure
     .meta({ scope: requiredScope })
     .use(async ({ ctx, next, path }) => {
+      if (ctx.auth && isAnonymousSetupIncomplete(ctx.auth.user)) {
+        throw new TRPCError({
+          code: 'PRECONDITION_FAILED',
+          message: 'ANONYMOUS_SETUP_REQUIRED',
+        })
+      }
       if (
         ctx.auth &&
         'credentialKind' in ctx.auth &&
@@ -296,12 +302,6 @@ export function scopedGroupReadProcedure(requiredScope: SpliitScope) {
       ) {
         enforceScopedAccess(ctx.auth, requiredScope, path, ctx.resHeaders)
         return next()
-      }
-      if (ctx.auth && isAnonymousSetupIncomplete(ctx.auth.user)) {
-        throw new TRPCError({
-          code: 'PRECONDITION_FAILED',
-          message: 'ANONYMOUS_SETUP_REQUIRED',
-        })
       }
       return next()
     })
@@ -327,6 +327,13 @@ export function apiProcedure(requiredScope: SpliitScope) {
         })
       }
 
+      if (isAnonymousSetupIncomplete(ctx.auth.user)) {
+        throw new TRPCError({
+          code: 'PRECONDITION_FAILED',
+          message: 'ANONYMOUS_SETUP_REQUIRED',
+        })
+      }
+
       const isOAuth =
         'credentialKind' in ctx.auth && ctx.auth.credentialKind === 'oauth'
 
@@ -336,12 +343,6 @@ export function apiProcedure(requiredScope: SpliitScope) {
         return next({ ctx: { ...ctx, auth } })
       }
 
-      if (isAnonymousSetupIncomplete(ctx.auth.user)) {
-        throw new TRPCError({
-          code: 'PRECONDITION_FAILED',
-          message: 'ANONYMOUS_SETUP_REQUIRED',
-        })
-      }
       if (type === 'mutation') {
         const decision = authenticatedMutationLimiter.hit(ctx.auth.user.id)
         if (!decision.allowed) {
@@ -376,11 +377,19 @@ export function apiProcedure(requiredScope: SpliitScope) {
 export function assertScopeForDestructiveEdit(
   auth: ResolvedAuth | OAuthResolvedAuth,
 ): void {
+  assertOAuthScope(auth, SPLIIT_SCOPES.expensesDelete)
+}
+
+/** Require an additional scope only for OAuth callers; sessions are unchanged. */
+export function assertOAuthScope(
+  auth: ResolvedAuth | OAuthResolvedAuth,
+  requiredScope: SpliitScope,
+): void {
   if (!('credentialKind' in auth) || auth.credentialKind !== 'oauth') return
-  if (hasScope(auth.scopes, SPLIIT_SCOPES.expensesDelete)) return
+  if (hasScope(auth.scopes, requiredScope)) return
   throw new TRPCError({
     code: 'FORBIDDEN',
-    message: `Missing required scope: ${SPLIIT_SCOPES.expensesDelete}`,
+    message: `Missing required scope: ${requiredScope}`,
   })
 }
 
@@ -402,6 +411,12 @@ export function assistantProcedure(requiredScope: string) {
         throw new TRPCError({
           code: 'UNAUTHORIZED',
           message: 'OAuth bearer authentication required',
+        })
+      }
+      if (isAnonymousSetupIncomplete(ctx.auth.user)) {
+        throw new TRPCError({
+          code: 'PRECONDITION_FAILED',
+          message: 'ANONYMOUS_SETUP_REQUIRED',
         })
       }
       if (!ctx.auth.scopes.includes(requiredScope)) {

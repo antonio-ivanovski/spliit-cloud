@@ -72,6 +72,19 @@ export const OIDC_SCOPES: ReadonlySet<string> = new Set([
 export function describeScopes(
   requested: readonly string[],
 ): readonly ScopeGrant[] {
-  const asked: ReadonlySet<string> = new Set(requested)
+  const asked = new Set(requested)
+  // Consent describes effective access, not only the literal scope strings.
+  // Runtime scope implication lets manage/delete tokens read the same resource,
+  // so make that inherited read access visible even when the client omitted the
+  // corresponding read scope from its request.
+  if (asked.has('spliit:groups:manage') || asked.has('spliit:groups:delete')) {
+    asked.add('spliit:groups:read')
+  }
+  if (
+    asked.has('spliit:expenses:manage') ||
+    asked.has('spliit:expenses:delete')
+  ) {
+    asked.add('spliit:expenses:read')
+  }
   return SCOPE_GRANTS.filter((grant) => asked.has(grant.scope))
 }

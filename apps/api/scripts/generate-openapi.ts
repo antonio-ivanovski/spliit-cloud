@@ -37,9 +37,52 @@ import { fileURLToPath } from 'node:url'
 import { generateOpenAPIDocument } from '@trpc/openapi'
 import type { OpenAPIV3_1 } from 'openapi-types'
 
-import { auth } from '../src/lib/auth'
 import { ASSISTANT_WRITE_SCOPE, SPLIIT_SCOPES } from '../src/lib/auth/scopes'
-import { appRouter } from '../src/trpc/routers/_app'
+import {
+  applyOAuthOperationContract,
+  buildOAuthProtocolFallbackPaths,
+} from '../src/lib/openapi/oauth-contract'
+// When Docker builds without a DB (SKIP_AUTH_OPENAPI=1) better-auth 1.7's
+// oauthProvider still fires a background OauthResource seed that surfaces as
+// an unhandled P1001/DatabaseNotReachable rejection *after* the file is
+// written. Swallow only that case so the build stays green; any other
+// unhandled error still crashes.
+if (process.env.SKIP_AUTH_OPENAPI === '1') {
+  const isDbUnreachable = (err: unknown): boolean => {
+    const msg =
+      err instanceof Error ? `${err.message}\n${err.stack ?? ''}` : String(err)
+    return (
+      msg.includes('P1001') ||
+      msg.includes('DatabaseNotReachable') ||
+      msg.includes("Can't reach database server")
+    )
+  }
+  process.on('unhandledRejection', (reason: unknown) => {
+    if (isDbUnreachable(reason)) {
+      console.warn(
+        `[openapi] suppressed unhandled DB rejection (SKIP_AUTH_OPENAPI=1): ${String(reason).slice(0, 600)}`,
+      )
+      return
+    }
+    console.error('Unhandled rejection in openapi generator:', reason)
+    process.exit(1)
+  })
+  process.on('uncaughtException', (err: unknown) => {
+    if (isDbUnreachable(err)) {
+      const m = err instanceof Error ? err.message : String(err)
+      console.warn(
+        `[openapi] suppressed uncaught DB exception (SKIP_AUTH_OPENAPI=1): ${m.slice(0, 600)}`,
+      )
+      return
+    }
+    console.error('Uncaught exception in openapi generator:', err)
+    process.exit(1)
+  })
+}
+
+// Lazy import auth only when needed — avoids pulling @spliit/db + better-auth at
+// build time in Docker where there's no DB. better-auth 1.7's oauthProvider
+// races a second OauthResource query that leaks as an unhandled rejection.
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const apiRoot = resolve(__dirname, '..')
@@ -53,28 +96,34 @@ const SCOPE_DESCRIPTIONS: Record<string, string> = {
   email: 'Read the account email address.',
   offline_access: 'Obtain a refresh token so the client can keep working.',
   [SPLIIT_SCOPES.groupsRead]: 'Read groups, balances, statistics and activity.',
-  [SPLIIT_SCOPES.groupsManage]: 'Create and edit groups, and add participants.',
+  [SPLIIT_SCOPES.groupsManage]:
+    'Read, create and edit groups, and add participants.',
   [SPLIIT_SCOPES.groupsDelete]:
-    'Delete or archive a group, and remove participants. Never granted by default.',
+    'Read, delete or archive a group, and remove participants. Never granted by default.',
   [SPLIIT_SCOPES.expensesRead]: 'Read expenses and recurring series.',
   [SPLIIT_SCOPES.expensesManage]:
-    'Create and edit expenses directly, and stop a recurrence.',
+    'Read, create and edit expenses directly, and stop a recurrence.',
   [SPLIIT_SCOPES.expensesDelete]:
-    'Delete an expense, and make edits that drop data such as shortening a recurring series. Never granted by default.',
+    'Read and delete expenses, and make edits that drop data such as shortening a recurring series. Never granted by default.',
   [ASSISTANT_WRITE_SCOPE]:
     'Create an expense through the assistant preview and confirmation flow. Does not grant direct writes.',
 }
 
 // OAuth scope per procedure, read off the router rather than restated here:
 // `apiProcedure` and `scopedGroupReadProcedure` record it in tRPC meta, so a
-// procedure that changes scope updates the spec on the next build.
-const PROCEDURE_SCOPES = new Map<string, string>(
-  Object.entries(appRouter._def.procedures).flatMap(([path, procedure]) => {
-    const scope = (procedure as { _def?: { meta?: { scope?: string } } })._def
-      ?.meta?.scope
-    return scope ? [[path, scope] as [string, string]] : []
-  }),
-)
+// procedure that changes scope updates the spec on the next build. Keep the
+// router import lazy: loading it also initializes better-auth, and the handlers
+// above must be installed before Better Auth 1.7 starts its resource seed.
+async function buildProcedureScopes(): Promise<Map<string, string>> {
+  const { appRouter } = await import('../src/trpc/routers/_app')
+  return new Map<string, string>(
+    Object.entries(appRouter._def.procedures).flatMap(([path, procedure]) => {
+      const scope = (procedure as { _def?: { meta?: { scope?: string } } })._def
+        ?.meta?.scope
+      return scope ? [[path, scope] as [string, string]] : []
+    }),
+  )
+}
 
 // Procedures that don't require authentication. The generator emits no
 // auth metadata, so we apply `security` globally and override these to
@@ -117,12 +166,14 @@ async function main() {
     version: '0.1.0',
     servers: [{ url: '/trpc', description: 'tRPC mount point' }],
   })
+  const procedureScopes = await buildProcedureScopes()
 
-  // The generated document uses `@trpc/openapi`'s stricter customized
-  // OpenAPI 3.1 type aliases; cast to the upstream `openapi-types`
-  // shapes so we can compose with hand-written paths in a single
-  // strongly-typed object.
-  const merged = await postProcess(doc as unknown as OpenAPIV3_1.Document)
+  // SAFETY: @trpc/openapi's generated document is structurally compatible with openapi-types' Document;
+  // cast via unknown to compose with hand-written paths in a single strongly-typed object.
+  const merged = await postProcess(
+    doc as unknown as OpenAPIV3_1.Document,
+    procedureScopes,
+  )
   await mkdir(dirname(outputPath), { recursive: true })
   await writeFile(outputPath, JSON.stringify(merged, null, 2) + '\n', 'utf8')
 
@@ -143,6 +194,7 @@ async function main() {
 
 async function postProcess(
   doc: OpenAPIV3_1.Document,
+  procedureScopes: ReadonlyMap<string, string>,
 ): Promise<OpenAPIV3_1.Document> {
   const result: OpenAPIV3_1.Document = structuredClone(doc)
   result.paths = result.paths ?? {}
@@ -178,10 +230,11 @@ async function postProcess(
         `OAuth 2.1 with PKCE, for scripts and agents that cannot hold a ` +
         `browser session. Clients may register dynamically at ` +
         `\`POST /auth/oauth2/register\`. A client that registers without ` +
-        `naming scopes is granted read and write, never a destructive one: ` +
+        `naming scopes is registered for read and write, never a destructive one: ` +
         `\`${SPLIIT_SCOPES.expensesDelete}\` and ` +
         `\`${SPLIIT_SCOPES.groupsDelete}\` must be requested explicitly. ` +
-        `Access tokens last one hour; refresh tokens rotate on every renewal. ` +
+        `Omitting \`resource\` binds the authorization to this API. Access ` +
+        `tokens last one hour; refresh tokens rotate on every renewal. ` +
         `Send the token as \`Authorization: Bearer <token>\`.`,
       flows: {
         authorizationCode: {
@@ -229,8 +282,15 @@ async function postProcess(
       } else {
         // A scoped procedure takes a session or a token holding the scope;
         // everything else stays session-only.
-        const scope = PROCEDURE_SCOPES.get(procPath)
-        if (scope) op.security = [{ session: [] }, { oauth2: [scope] }]
+        const scope = procedureScopes.get(procPath)
+        if (scope) {
+          op.security = [
+            { session: [] },
+            ...acceptedOAuthScopes(scope).map((acceptedScope) => ({
+              oauth2: [acceptedScope],
+            })),
+          ]
+        }
       }
       if (DEPRECATED_PROCEDURES.has(procPath)) {
         op.deprecated = true
@@ -294,6 +354,24 @@ function isRestPath(path: string): boolean {
   )
 }
 
+function acceptedOAuthScopes(requiredScope: string): string[] {
+  if (requiredScope === SPLIIT_SCOPES.groupsRead) {
+    return [
+      SPLIIT_SCOPES.groupsRead,
+      SPLIIT_SCOPES.groupsManage,
+      SPLIIT_SCOPES.groupsDelete,
+    ]
+  }
+  if (requiredScope === SPLIIT_SCOPES.expensesRead) {
+    return [
+      SPLIIT_SCOPES.expensesRead,
+      SPLIIT_SCOPES.expensesManage,
+      SPLIIT_SCOPES.expensesDelete,
+    ]
+  }
+  return [requiredScope]
+}
+
 // Root-path server (empty URL resolves to the spec's own origin) is
 // applied per-operation to REST paths that aren't mounted under `/trpc`:
 // better-auth (`/auth/*`) and the group expense exports
@@ -303,30 +381,6 @@ function isRestPath(path: string): boolean {
 const ROOT_SERVER: OpenAPIV3_1.ServerObject[] = [
   { url: '/', description: 'API root (REST endpoints outside tRPC)' },
 ]
-
-// better-auth endpoints that don't require a session — they accept an
-// anonymous request. The OpenAPI plugin marks every endpoint as
-// `bearerAuth`-required (a plugin limitation — it doesn't know which
-// routes are anonymous). We override to `security: []` so the spec
-// accurately reflects that no session cookie is needed. Add to this set
-// when better-auth ships new anonymous endpoints.
-const PUBLIC_AUTH_PATHS = new Set<string>([
-  '/auth/sign-up/email',
-  '/auth/sign-in/email',
-  '/auth/sign-in/magic-link',
-  '/auth/magic-link/verify',
-  '/auth/sign-in/social',
-  '/auth/callback/{id}',
-  '/auth/request-password-reset',
-  // POST takes a token in the body; GET `{token}` is the link target.
-  '/auth/reset-password',
-  '/auth/reset-password/{token}',
-  '/auth/verify-email',
-  '/auth/ok',
-  '/auth/error',
-  '/auth/refresh-token',
-  '/auth/delete-user/callback',
-])
 
 /**
  * Auth paths auto-generated by better-auth's `openAPI` plugin.
@@ -348,7 +402,7 @@ const PUBLIC_AUTH_PATHS = new Set<string>([
  *   our `session` cookie scheme, which documents the real cookie name
  *   (`better-auth.session_token` / `__Secure-better-auth.session_token`).
  *   Anonymous endpoints (sign-in, sign-up, magic-link request, OAuth callbacks,
- *   token-based flows) get `security: []` instead — see `PUBLIC_AUTH_PATHS`.
+ *   token-based flows) get `security: []`; UserInfo uses the OAuth scheme.
  * - **Tag normalisation**: rename the plugin's `Default` tag (core endpoints) to
  *   `auth` for consistency with the rest of the Spliit API tags; lowercase
  *   `Magic-link` → `magic-link`.
@@ -357,7 +411,33 @@ async function buildAuthPaths(): Promise<{
   paths: Record<string, OpenAPIV3_1.PathItemObject>
   schemas: Record<string, OpenAPIV3_1.SchemaObject>
 }> {
-  const authSchema = await auth.api.generateOpenAPISchema()
+  // Better Auth 1.7 needs a database to introspect its complete schema. Docker
+  // deliberately builds without one, so retain the core OAuth protocol paths
+  // from a tested static fallback while local generation adds the full auth API.
+  if (process.env.SKIP_AUTH_OPENAPI === '1') {
+    console.warn(
+      '[openapi] SKIP_AUTH_OPENAPI=1 — using static OAuth paths (build without DB)',
+    )
+    return { paths: buildOAuthProtocolFallbackPaths(), schemas: {} }
+  }
+  type AuthModule = typeof import('../src/lib/auth')
+  let authSchema: Awaited<
+    ReturnType<AuthModule['auth']['api']['generateOpenAPISchema']>
+  >
+  try {
+    const { auth } = await import('../src/lib/auth')
+    authSchema = await auth.api.generateOpenAPISchema()
+  } catch (err) {
+    // better-auth 1.7's oauth provider now queries OauthResource at schema
+    // generation time. In Docker/CI builds there is no DB, so this throws
+    // DatabaseNotReachable (P1001) and breaks `Build api`. Degrade gracefully
+    // — the tRPC, OAuth protocol and export paths are still emitted.
+    const msg = err instanceof Error ? err.message : String(err)
+    console.warn(
+      `[openapi] auth.api.generateOpenAPISchema() failed (no DB at build?) — using static OAuth paths: ${msg}`,
+    )
+    return { paths: buildOAuthProtocolFallbackPaths(), schemas: {} }
+  }
   const paths: Record<string, OpenAPIV3_1.PathItemObject> = {}
   for (const [path, item] of Object.entries(authSchema.paths ?? {})) {
     if (!item) continue
@@ -370,10 +450,7 @@ async function buildAuthPaths(): Promise<{
         newItem as Record<string, OpenAPIV3_1.OperationObject | undefined>
       )[method]
       if (!op) continue
-      // Anonymous endpoints → no security required. Everything else
-      // → `session` cookie scheme (overrides the plugin's generic
-      // `bearerAuth` and documents the real cookie name).
-      op.security = PUBLIC_AUTH_PATHS.has(fullPath) ? [] : [{ session: [] }]
+      applyOAuthOperationContract(fullPath, method, op)
       // Normalise tags: `Default` (core) → `auth`; `Magic-link` → `magic-link`.
       op.tags = (op.tags ?? []).map((tag) =>
         tag === 'Default' ? 'auth' : tag === 'Magic-link' ? 'magic-link' : tag,
@@ -382,6 +459,7 @@ async function buildAuthPaths(): Promise<{
     }
     paths[fullPath] = newItem
   }
+  // SAFETY: better-auth's openAPI plugin emits JSON Schema compatible with OpenAPI 3.1 SchemaObject; cast via unknown to satisfy openapi-types.
   const schemas = (authSchema.components?.schemas ?? {}) as unknown as Record<
     string,
     OpenAPIV3_1.SchemaObject

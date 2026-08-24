@@ -289,7 +289,18 @@ const envSchema = z
     }
   })
 
-export const env = envSchema.parse(process.env)
+export type Env = z.infer<typeof envSchema>
+
+/**
+ * Parse a raw environment mapping into the validated {@link Env} shape. Defaults
+ * to `process.env`; tests pass isolated literal objects so schema cases stay
+ * independent of ambient environment files.
+ */
+export function parseEnv(rawEnv: NodeJS.ProcessEnv = process.env): Env {
+  return envSchema.parse(rawEnv)
+}
+
+export const env = parseEnv()
 export const webOrigins = env.WEB_ORIGINS.split(',')
   .map((origin) => origin.trim())
   .filter(Boolean)

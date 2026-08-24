@@ -28,8 +28,8 @@
     "prisma-migrate": "bun run --filter @spliit/db prisma-migrate",
     "start": "bun --filter @spliit/api start",
     "start-container": "docker compose --env-file container.env up",
-    "test": "turbo --ui=tui run test",
-    "test:integration": "turbo --ui=tui run test:integration"
+    "test": "turbo --ui=tui run test --concurrency=2",
+    "test:integration": "turbo --ui=tui run test:integration --concurrency=2"
   },
   "dependencies": {},
   "devDependencies": {
@@ -41,7 +41,7 @@
     "typescript": "7.0.2",
     "typescript-compiler-api": "npm:typescript@6.0.3"
   },
-  "packageManager": "bun@1.3.14",
+  "packageManager": "bun@1.4.0",
   "patchedDependencies": {
     "@trpc/openapi@11.18.0-alpha": "patches/@trpc%2Fopenapi@11.18.0-alpha.patch"
   },

@@ -1,7 +1,5 @@
 import { oauthProviderResourceClient } from '@better-auth/oauth-provider/resource-client'
 
-import { prisma } from '@spliit/db'
-
 import {
   getCachedAccount,
   isAnonymousSetupIncomplete,
@@ -71,7 +69,7 @@ export async function getOAuthAuthFromRequest(
   if (!accessToken) return null
 
   const issuer = `${getApiBaseUrl()}/auth`
-  const claims = await oauthResource.verifyAccessToken(accessToken, {
+  const claims = await oauthResource.verifyBearerToken(accessToken, {
     verifyOptions: {
       // A token is accepted when its `aud` matches any configured audience,
       // so tokens minted for the MCP resource stay valid alongside tokens
@@ -82,9 +80,14 @@ export async function getOAuthAuthFromRequest(
     jwksUrl: `${issuer}/jwks`,
   })
   if (typeof claims.sub !== 'string') return null
-  const account = await prisma.account.findUnique({
-    where: { id: claims.sub },
-  })
+  if (
+    typeof claims.exp !== 'number' ||
+    !Number.isFinite(claims.exp) ||
+    typeof claims.iat !== 'number' ||
+    !Number.isFinite(claims.iat)
+  )
+    return null
+  const account = await getCachedAccount(claims.sub)
   if (!account) return null
   const scopes = Array.isArray(claims.scopes)
     ? claims.scopes.filter(
@@ -98,17 +101,14 @@ export async function getOAuthAuthFromRequest(
     credentialKind: 'oauth',
     accessToken,
     scopes,
-    user: {
-      ...account,
-      anonymousOnboardingCompleted: true,
-    },
+    user: account,
     session: {
       id: typeof claims.sid === 'string' ? claims.sid : `oauth:${claims.sub}`,
       userId: account.id,
       token: '',
-      expiresAt: new Date(Number(claims.exp ?? 0) * 1000),
-      createdAt: new Date(Number(claims.iat ?? 0) * 1000),
-      updatedAt: new Date(Number(claims.iat ?? 0) * 1000),
+      expiresAt: new Date(claims.exp * 1000),
+      createdAt: new Date(claims.iat * 1000),
+      updatedAt: new Date(claims.iat * 1000),
       ipAddress: null,
       userAgent: null,
     },

@@ -1,7 +1,19 @@
 {
   "taxi": {
-    "aliases": ["cab", "rideshare", "ride share", "ride-hail", "lyft ride"],
-    "samples": ["uber to airport", "taxi from station", "cab downtown"]
+    "aliases": [
+      "cab",
+      "rideshare",
+      "ride share",
+      "ride-hail",
+      "lyft ride",
+      "e-scooter"
+    ],
+    "samples": [
+      "uber to airport",
+      "taxi from station",
+      "cab downtown",
+      "scooter ride"
+    ]
   },
   "dining-out": {
     "aliases": [
@@ -13,17 +25,59 @@
       "coffee",
       "takeout",
       "takeaway",
-      "delivery"
+      "delivery",
+      "bar mleczny",
+      "mleczny",
+      "mileczny",
+      "pizza",
+      "burger",
+      "sushi",
+      "ramen",
+      "taco",
+      "pasta",
+      "kebab",
+      "ice cream",
+      "gelato",
+      "ikea restaurant"
     ],
-    "samples": ["dinner out", "lunch with friends", "coffee shop"]
+    "samples": [
+      "dinner out",
+      "lunch with friends",
+      "coffee shop",
+      "ice cream shop",
+      "lunch at airport",
+      "lunch at ikea",
+      "bar mleczny",
+      "mleczny bar",
+      "tortilla en aeropuerto"
+    ]
   },
   "groceries": {
-    "aliases": ["supermarket", "grocery", "food shop"],
-    "samples": ["weekly shop", "grocery run", "supermarket run"]
+    "aliases": ["supermarket", "grocery", "food shop", "produce", "minimarket"],
+    "samples": [
+      "weekly shop",
+      "grocery run",
+      "supermarket run",
+      "fruits and vegetables",
+      "fresh fruit",
+      "fruit and veg",
+      "orange juice",
+      "protein powder",
+      "courses de la semaine",
+      "trader joes run",
+      "asia market run",
+      "boulangerie run"
+    ]
   },
   "liquor": {
-    "aliases": ["alcohol", "beer", "wine", "spirits", "bar"],
-    "samples": ["beer run", "wine shop"]
+    "aliases": ["alcohol", "beer", "wine", "spirits", "wine bar"],
+    "samples": [
+      "beer run",
+      "wine shop",
+      "drinks at bar",
+      "museo della grappa",
+      "soplica vodka"
+    ]
   },
   "rent": {
     "aliases": ["lease", "apartment"],
@@ -34,20 +88,58 @@
     "samples": []
   },
   "gas-fuel": {
-    "aliases": ["petrol", "gasoline", "fuel", "gas station"],
-    "samples": ["fill up", "gas station"]
+    "aliases": [
+      "petrol",
+      "gasoline",
+      "fuel",
+      "gas station",
+      "essence",
+      "benzin",
+      "tanken",
+      "gorivo"
+    ],
+    "samples": ["fill up", "gas station", "petrol for car"]
   },
   "hotel": {
-    "aliases": ["lodging", "accommodation", "airbnb stay"],
-    "samples": ["hotel night", "weekend stay"]
+    "aliases": [
+      "lodging",
+      "accommodation",
+      "airbnb stay",
+      "vacation rental",
+      "hostel",
+      "ferienwohnung"
+    ],
+    "samples": [
+      "hotel night",
+      "weekend stay",
+      "holiday apartment",
+      "guest house",
+      "apartment stay"
+    ]
   },
   "plane": {
     "aliases": ["flight", "airfare", "airline"],
     "samples": ["flight tickets"]
   },
   "bus-train": {
-    "aliases": ["transit", "metro", "subway", "rail", "commute"],
-    "samples": ["train tickets", "bus pass"]
+    "aliases": [
+      "transit",
+      "metro",
+      "subway",
+      "rail",
+      "commute",
+      "transit pass",
+      "commuter rail"
+    ],
+    "samples": [
+      "train tickets",
+      "bus pass",
+      "monthly transit pass",
+      "intercity train",
+      "bus to airport",
+      "bus to station",
+      "day ticket"
+    ]
   },
   "car": {
     "aliases": ["auto", "vehicle", "rental car"],
@@ -55,11 +147,15 @@
   },
   "parking": {
     "aliases": ["garage"],
-    "samples": ["parking at airport"]
+    "samples": ["parking garage", "airport parking"]
+  },
+  "tolls": {
+    "aliases": ["toll", "toll road", "highway toll"],
+    "samples": ["highway toll"]
   },
   "bicycle": {
     "aliases": ["bike", "cycling", "bikeshare"],
-    "samples": []
+    "samples": ["bike rental", "cycle rent"]
   },
   "digital-subscriptions": {
     "aliases": ["streaming", "saas", "software", "cloud"],
@@ -74,20 +170,43 @@
     "samples": ["movie tickets"]
   },
   "games": {
-    "aliases": ["gaming", "videogame", "video game"],
-    "samples": []
+    "aliases": [
+      "gaming",
+      "videogame",
+      "video game",
+      "bowling",
+      "minigolf",
+      "board game"
+    ],
+    "samples": ["bowling night", "mini golf"]
   },
   "music": {
-    "aliases": ["concert", "gig", "festival"],
-    "samples": ["concert tickets"]
+    "aliases": ["concert", "gig", "festival", "music festival", "garderobe"],
+    "samples": ["concert tickets", "festival ticket"]
   },
   "sports": {
-    "aliases": ["game tickets", "match", "stadium"],
-    "samples": []
+    "aliases": [
+      "game tickets",
+      "match",
+      "stadium",
+      "climbing",
+      "bouldering",
+      "badminton",
+      "squash",
+      "ski pass"
+    ],
+    "samples": ["climbing gym", "squash court"]
   },
   "medical-expenses": {
-    "aliases": ["doctor", "pharmacy", "hospital", "dentist", "health"],
-    "samples": ["doctor visit", "pharmacy run"]
+    "aliases": [
+      "doctor",
+      "pharmacy",
+      "hospital",
+      "dentist",
+      "health",
+      "vaccination"
+    ],
+    "samples": ["doctor visit", "pharmacy run", "travel vaccinations"]
   },
   "insurance": {
     "aliases": ["premium"],
@@ -110,16 +229,16 @@
     "samples": []
   },
   "gifts": {
-    "aliases": ["present", "birthday"],
-    "samples": []
+    "aliases": ["present", "birthday", "souvenir"],
+    "samples": ["souvenir shop"]
   },
   "donation": {
     "aliases": ["charity", "nonprofit"],
     "samples": []
   },
   "pets": {
-    "aliases": ["vet", "pet food", "dog", "cat"],
-    "samples": ["vet visit"]
+    "aliases": ["vet", "pet food", "dog food", "cat food"],
+    "samples": ["vet visit", "dog vet"]
   },
   "gardening": {
     "aliases": ["garden", "yard", "lawn"],
@@ -130,7 +249,7 @@
     "samples": []
   },
   "electronics": {
-    "aliases": ["gadget", "phone", "laptop", "computer"],
+    "aliases": ["gadget", "phone", "laptop", "computer", "esim", "flash drive"],
     "samples": []
   },
   "furniture": {
@@ -138,7 +257,13 @@
     "samples": []
   },
   "household-supplies": {
-    "aliases": ["cleaning supplies", "paper towels", "toiletries"],
+    "aliases": [
+      "cleaning supplies",
+      "paper towels",
+      "toiletries",
+      "toilet paper",
+      "detergent"
+    ],
     "samples": []
   },
   "maintenance": {
@@ -158,8 +283,15 @@
     "samples": ["electric bill"]
   },
   "heat-gas": {
-    "aliases": ["heating", "gas bill"],
-    "samples": []
+    "aliases": [
+      "heating",
+      "gas bill",
+      "home gas",
+      "utility gas",
+      "natural gas",
+      "heating gas"
+    ],
+    "samples": ["monthly gas", "heating bill"]
   },
   "trash": {
     "aliases": ["garbage", "waste", "recycling"],
@@ -174,11 +306,27 @@
     "samples": []
   },
   "events-and-activities": {
-    "aliases": ["outing", "activity", "party", "event", "museum"],
-    "samples": []
+    "aliases": [
+      "outing",
+      "activity",
+      "party",
+      "event",
+      "museum",
+      "sightseeing",
+      "admission"
+    ],
+    "samples": ["museum ticket", "sightseeing tour"]
   },
   "personal-care-and-wellness": {
-    "aliases": ["salon", "spa", "haircut", "barber", "massage", "wellness"],
+    "aliases": [
+      "salon",
+      "spa",
+      "haircut",
+      "barber",
+      "massage",
+      "wellness",
+      "sunscreen"
+    ],
     "samples": ["haircut"]
   },
   "income": {
@@ -190,11 +338,20 @@
     "samples": []
   },
   "payment": {
-    "aliases": ["bank transfer", "wire transfer"],
-    "samples": []
+    "aliases": ["bank transfer", "wire transfer", "money transfer"],
+    "samples": ["alipay topup"]
   },
   "general": {
     "aliases": ["other", "misc", "miscellaneous"],
     "samples": []
+  },
+  "entertainment": {
+    "aliases": [],
+    "samples": [
+      "blast furnace tour",
+      "dox gallery",
+      "egyptian museum",
+      "cairo tower"
+    ]
   }
 }

@@ -37,6 +37,11 @@ recurring series with a `THIS_AND_FUTURE` edit drops the occurrences that no
 longer fit and their stored documents, so that edit needs the delete scope even
 though it goes through `groups.expenses.update`.
 
+Two group-removal operations can create settlement expenses: force-archiving a
+group with open balances and removing a participant with `settleBalances=true`.
+OAuth callers need both `spliit:groups:delete` and
+`spliit:expenses:manage` for those combined operations.
+
 There is one older scope, `spliit:expenses:write`. It predates direct access and
 belongs to the assistant, where creating an expense means calling
 `assistant.prepareExpense` for a preview and then `assistant.createExpense` with
@@ -89,6 +94,11 @@ register for, with `The following scopes are invalid`. There is no endpoint to
 widen an existing client, so a client that needs to start deleting has to be
 registered again and reauthorized.
 
+An explicit `scope` value replaces the defaults; it does not add to them. Send
+the complete, space-separated set the client needs, including `openid` and
+`offline_access` when it needs identity claims and refresh tokens. The example
+below retains the normal expense permissions and adds deletion.
+
 ```bash
   -d '{
     "client_name": "My agent",
@@ -102,25 +112,46 @@ registered again and reauthorized.
 The authorization code flow with PKCE, which needs a browser once:
 
 1. Send the account holder to `/auth/oauth2/authorize` with `response_type=code`,
-   your `client_id`, `redirect_uri`, `scope`, `state`, `code_challenge`,
-   `code_challenge_method=S256` and `resource=https://api.spliit.cloud`.
+   your `client_id`, `redirect_uri`, `scope`, `state`, `code_challenge` and
+   `code_challenge_method=S256`.
 2. They sign in and approve the scopes.
-3. Exchange the returned `code` at `/auth/oauth2/token` with `grant_type=authorization_code`,
-   your `code_verifier` and the same `resource`.
+3. Exchange the returned `code` at `/auth/oauth2/token` as form data:
 
-`resource` names the server the token is minted for, and it is not optional
-here. Omit it and the authorization server issues an opaque token instead of a
-JWT, which the API rejects with a plain `401`. Pass it on the refresh call too.
+```bash
+curl -X POST https://api.spliit.cloud/auth/oauth2/token \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  --data-urlencode 'grant_type=authorization_code' \
+  --data-urlencode 'client_id=<client_id>' \
+  --data-urlencode 'code=<authorization_code>' \
+  --data-urlencode 'redirect_uri=http://127.0.0.1:52123/callback' \
+  --data-urlencode 'code_verifier=<pkce_code_verifier>'
+```
+
+When `resource` is omitted, Spliit binds the authorization to
+`https://api.spliit.cloud` by default and issues an API JWT. A client may pass
+`resource=https://api.spliit.cloud` explicitly on the authorization request;
+the token exchange and later refreshes inherit that resource.
 
 Tokens issued for the MCP resource (`${MCP_PUBLIC_URL}/mcp`) are also accepted
-while that variable is configured, so clients set up before the API became its
-own resource server keep working without reauthorizing.
+while that variable is configured. On the first refresh after upgrading from
+Better Auth 1.6, an existing token family is bound to the valid resource
+requested by the client (or to the API default when omitted); later refreshes
+can only retain or narrow that binding. Existing MCP clients therefore keep
+working without reauthorizing.
 
 Call the API with `Authorization: Bearer <access_token>`.
 
-Access tokens last one hour. Refresh with `grant_type=refresh_token` at the same
-endpoint; refresh tokens last 30 days and a fresh one is issued on every
-renewal, so a client calling at least once a month keeps working indefinitely.
+Access tokens last one hour. Refresh at the same form-encoded endpoint; refresh
+tokens last 30 days and a fresh one is issued on every renewal, so a client
+calling at least once a month keeps working indefinitely.
+
+```bash
+curl -X POST https://api.spliit.cloud/auth/oauth2/token \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  --data-urlencode 'grant_type=refresh_token' \
+  --data-urlencode 'client_id=<client_id>' \
+  --data-urlencode 'refresh_token=<refresh_token>'
+```
 
 Two things to know about refreshing. A refresh token can only be used once: if
 your client refreshes but fails to persist the new token, replaying the old one
@@ -157,6 +188,8 @@ rather than reaching the API.
 ## Reviewing and revoking
 
 Account settings list every app that has been authorized, with the scopes it
-holds. Disconnecting revokes the client's refresh tokens, so it cannot renew.
-An access token already issued keeps working until it expires, which is at most
-an hour.
+holds. Disconnecting invalidates pending authorization codes and revokes the
+client’s refresh tokens, so it cannot exchange or renew credentials. An access
+token already issued keeps working until it expires, which is at most an hour.
+An authorization request that was already in progress is blocked as well; the
+app must start again and receive a new explicit consent before it can reconnect.

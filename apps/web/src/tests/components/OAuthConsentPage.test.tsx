@@ -55,6 +55,8 @@ describe('OAuthConsentPage', () => {
     clientMock.mockResolvedValue({
       client_id: 'chatgpt',
       client_name: 'ChatGPT',
+      client_uri: 'https://chatgpt.example/connect',
+      policy_uri: 'https://chatgpt.example/privacy',
     })
     submitConsentMock.mockResolvedValue(undefined)
   })
@@ -65,6 +67,15 @@ describe('OAuthConsentPage', () => {
     expect(await screen.findByText('Connect Spliit to ChatGPT?')).toBeVisible()
     expect(screen.getByText('Antonio Example')).toBeVisible()
     expect(screen.getByText('antonio@example.com')).toBeVisible()
+    expect(screen.getByText('chatgpt')).toBeVisible()
+    expect(
+      screen.getByRole('link', {
+        name: 'Application website (chatgpt.example)',
+      }),
+    ).toHaveAttribute('href', 'https://chatgpt.example/connect')
+    expect(
+      screen.getByRole('link', { name: 'Privacy policy' }),
+    ).toHaveAttribute('href', 'https://chatgpt.example/privacy')
     expect(screen.getByText('What will be shared')).toBeVisible()
     expect(screen.getByText('A quick privacy note')).toBeVisible()
     expect(
@@ -76,6 +87,7 @@ describe('OAuthConsentPage', () => {
     render(<OAuthConsentPage />)
 
     expect(await screen.findByText('Group and spending context')).toBeVisible()
+    expect(screen.getByText('Read expenses')).toBeVisible()
     expect(screen.getByText('Create and edit expenses')).toBeVisible()
     // Not requested, so not shown.
     expect(screen.queryByText('Delete expenses')).toBeNull()
@@ -91,6 +103,7 @@ describe('OAuthConsentPage', () => {
     render(<OAuthConsentPage />)
 
     expect(await screen.findByText('Delete expenses')).toBeVisible()
+    expect(screen.getByText('Read expenses')).toBeVisible()
     expect(clientMock).toHaveBeenCalledWith('other-app')
   })
 
@@ -103,6 +116,50 @@ describe('OAuthConsentPage', () => {
     expect(
       screen.getByRole('button', { name: 'Allow and connect' }),
     ).toBeDisabled()
+  })
+
+  it('explains when the application identity cannot be verified', async () => {
+    clientMock.mockRejectedValueOnce(new Error('network failed'))
+
+    render(<OAuthConsentPage />)
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Spliit could not verify this application',
+    )
+    expect(
+      screen.getByRole('button', { name: 'Allow and connect' }),
+    ).toBeDisabled()
+  })
+
+  it('does not turn non-HTTP client metadata into links', async () => {
+    clientMock.mockResolvedValueOnce({
+      client_id: 'chatgpt',
+      client_name: 'ChatGPT',
+      client_uri: 'javascript:alert(1)',
+      policy_uri: 'data:text/html,not-a-policy',
+    })
+
+    render(<OAuthConsentPage />)
+
+    expect(await screen.findByText('ChatGPT')).toBeVisible()
+    expect(
+      screen.queryByRole('link', { name: /Application website/ }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('link', { name: 'Privacy policy' }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('reports a missing signed request without naming an assistant', () => {
+    searchState.oauth_query = ''
+
+    render(<OAuthConsentPage />)
+
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'Return to the application and start the connection again',
+    )
+    expect(screen.queryByText(/assistant/i)).not.toBeInTheDocument()
+    expect(clientMock).not.toHaveBeenCalled()
   })
 
   it('submits the exact signed OAuth request when allowed', async () => {

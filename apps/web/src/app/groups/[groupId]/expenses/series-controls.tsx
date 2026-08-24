@@ -83,6 +83,7 @@ export function SeriesControls({
         <Button
           variant="outline"
           size="sm"
+          nativeButton={false}
           render={
             <Link
               to="/groups/$groupId/expenses/$expenseId"
@@ -109,6 +110,7 @@ export function SeriesControls({
         <Button
           variant="outline"
           size="sm"
+          nativeButton={false}
           render={
             <Link
               to="/groups/$groupId/expenses/$expenseId"
@@ -139,6 +141,7 @@ export function SeriesControls({
         <Button
           variant="ghost"
           size="sm"
+          nativeButton={false}
           render={
             <Link
               to="/groups/$groupId/expenses"

@@ -11,6 +11,10 @@ Spliit is a Bun monorepo (web, api, domain, db). Explore `package.json`, workspa
 - Never hand-edit `apps/web/src/messages/*`. Use `bun i18n` and [`.agents/skills/translate-strings/SKILL.md`](.agents/skills/translate-strings/SKILL.md).
 - Prisma migrations: create with `bun --filter @spliit/db prisma-create-migration`. Never invent, backdate, or reuse a `YYYYMMDDHHmmss` folder prefix; the new directory must sort after every existing `packages/db/prisma/migrations/*` folder. See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
+## Release notes
+
+Rolling releases are created by `.github/workflows/deploy.yml` (`create-release`) via `gh api .../releases/generate-notes` + `.github/release.yml` (previous tag = last `1.*`). Categories map PR labels to sections (`feature`/`feat` → Features, `fix`/`bug` → Fixes, `security`, `chore`, `docs`, else Other Changes). Good hygiene helps: use `feat:`/`fix:`/`chore:`/`docs:` prefixes in commits and PR titles and add the matching label to the PR so the entry lands in the right section. Direct pushes to `main` (no PR) have no label, so they always fall into Other Changes — keep the `feat:`/`fix:` prefix so the line is still readable, or open a PR when you want it categorized. Tags are the full commit SHA (1:1 with `ghcr.io/...:SHA`) plus a moving `rolling` tag.
+
 ## Skills
 
 - Translations: `.agents/skills/translate-strings/SKILL.md`

@@ -1003,7 +1003,7 @@ describe('RecentGroupList', () => {
     })
   })
 
-  it('shows skeleton loading state for pending invitations', () => {
+  it('does not show pending invitations while loading', () => {
     mocks.mockUseInvitationsQuery.mockReturnValue({
       data: undefined,
       isLoading: true,
@@ -1011,12 +1011,11 @@ describe('RecentGroupList', () => {
 
     const { container } = render(<RecentGroupList />)
 
-    // PendingInvitations shows skeleton cards while loading
-    const skeletons = container.querySelectorAll('[class*="animate-pulse"]')
-    // The PendingInvitations skeleton renders two skeleton rows inside the card
-    expect(skeletons.length).toBeGreaterThan(0)
-    // The title should still be visible
-    expect(screen.getByText('Pending invitations')).toBeInTheDocument()
+    // PendingInvitations is hidden while loading — no shimmer, no card
+    expect(screen.queryByText('Pending invitations')).not.toBeInTheDocument()
+    expect(container.querySelectorAll('[class*="animate-pulse"]')).toHaveLength(
+      0,
+    )
   })
 
   it('does not fetch or skeleton pending invitations while offline', () => {

@@ -16,8 +16,8 @@ export const listGroupActivitiesProcedure = scopedGroupReadProcedure(
   .input(
     z.object({
       groupId: z.string(),
-      cursor: z.number().optional().default(0),
-      limit: z.number().optional().default(5),
+      cursor: z.number().int().min(0).optional().default(0),
+      limit: z.number().int().min(1).max(100).optional().default(5),
       ...groupAccessFields,
     }),
   )

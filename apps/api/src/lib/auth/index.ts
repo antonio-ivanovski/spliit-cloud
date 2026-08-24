@@ -7,6 +7,7 @@ import {
   APIError,
   createAuthMiddleware,
   getSessionFromCtx,
+  isAPIError,
 } from 'better-auth/api'
 import {
   jwt,
@@ -23,10 +24,14 @@ import { isStrongPassword } from '@spliit/domain/password'
 
 import { autoAcceptPendingFriendInvitationsForAccount } from '../api/friends'
 import { env, getConfiguredOidcProvider, webOrigins } from '../env'
-import { buildProviderPlaceholderEmail } from '../invitations'
+import {
+  buildProviderPlaceholderEmail,
+  isPlaceholderEmail,
+} from '../invitations'
 import { sendEmail } from '../mail/send'
 import {
   renderMagicLinkEmail,
+  renderPasswordChangedNoticeEmail,
   renderPasswordRecoveryEmail,
   renderVerificationEmail,
 } from '../mail/templates'
@@ -39,6 +44,15 @@ import { invalidateAccountCache } from './account-cache'
 import { anonymousRecovery } from './anonymous-recovery'
 import { emailChange } from './email-change'
 import { enforceAuthEmailRecipientLimit } from './email-rate-limit'
+import { bindLegacyRefreshTokenResource } from './oauth-refresh-compat'
+import { applyNativeApplicationTypeForLoopbackRegistration } from './oauth-registration'
+import {
+  finalizeOAuthTokenExchange,
+  prepareOAuthConsent,
+  prepareOAuthTokenExchange,
+  rearmOAuthClientAfterConsent,
+} from './oauth-revocation-barrier'
+import { passwordSet } from './password-set'
 import { ALL_SCOPES, DEFAULT_CLIENT_SCOPES } from './scopes'
 import {
   assertCanCreateAccount,
@@ -54,6 +68,11 @@ const anonymousSignupLimiter = new FixedWindowLimiter({
   windowMs: 60 * 60 * 1000,
 })
 
+const changePasswordLimiter = new FixedWindowLimiter({
+  limit: 10,
+  windowMs: 60 * 60 * 1000,
+})
+
 const authMethodLabels: Record<string, string> = {
   credential: 'email and password',
   google: 'Google',
@@ -61,6 +80,10 @@ const authMethodLabels: Record<string, string> = {
   twitter: 'X',
   'magic-link': 'email sign-in link',
   ...(oidcProvider ? { [oidcProvider.id]: oidcProvider.name } : {}),
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
 }
 
 async function getAuthMethodLabels(userId: string) {
@@ -88,6 +111,26 @@ function buildPasswordRecoveryEmail(opts: {
 }
 
 const beforeAuthMiddleware = createAuthMiddleware(async (ctx) => {
+  if (ctx.path === '/oauth2/token') {
+    await prepareOAuthTokenExchange(ctx.request, ctx.body)
+    await bindLegacyRefreshTokenResource(ctx.body)
+  }
+  if (ctx.path === '/oauth2/consent') {
+    prepareOAuthConsent(ctx.request)
+  }
+
+  if (ctx.path === '/oauth2/authorize') {
+    const authorizationParams =
+      ctx.method === 'POST' && isRecord(ctx.body) ? ctx.body : ctx.query
+    if (isRecord(authorizationParams) && authorizationParams.resource == null) {
+      authorizationParams.resource = getApiBaseUrl()
+    }
+  }
+
+  if (ctx.path === '/oauth2/register' && isRecord(ctx.body)) {
+    applyNativeApplicationTypeForLoopbackRegistration(ctx.body)
+  }
+
   if (ctx.path === '/sign-in/anonymous') {
     if (!env.ENABLE_ANONYMOUS_AUTH || env.SIGNUP_MODE !== 'open') {
       throw new APIError('FORBIDDEN', {
@@ -127,9 +170,46 @@ const beforeAuthMiddleware = createAuthMiddleware(async (ctx) => {
   const password =
     ctx.path === '/sign-up/email'
       ? ctx.body?.password
-      : ctx.path === '/reset-password' || ctx.path === '/change-password'
+      : ctx.path === '/reset-password' ||
+          ctx.path === '/change-password' ||
+          ctx.path === '/password/set'
         ? ctx.body?.newPassword
         : undefined
+
+  if (ctx.path === '/change-password') {
+    const session = await getSessionFromCtx(ctx, { disableRefresh: true })
+    const accountId =
+      session?.user && typeof session.user.id === 'string'
+        ? session.user.id
+        : null
+    if (accountId) {
+      const ip = resolveClientIp(ctx.headers ?? new Headers(), {
+        trustProxy: env.TRUST_PROXY,
+      })
+      const decision = changePasswordLimiter.hit(`${accountId}:${ip}`)
+      if (!decision.allowed) {
+        logRateLimitExceeded({
+          policy: 'password-change',
+          identity: accountId,
+          retryAfterSeconds: decision.retryAfterSeconds,
+          path: ctx.path,
+        })
+        throw new APIError(
+          'TOO_MANY_REQUESTS',
+          {
+            message: 'Too many attempts. Please try again later.',
+            code: 'PASSWORD_RATE_LIMITED',
+          },
+          { 'Retry-After': String(decision.retryAfterSeconds) },
+        )
+      }
+    }
+    // Force revocation so the “other sessions have been signed out” notice is accurate
+    // even for raw API callers that omit the field. The web client already sends true.
+    if (isRecord(ctx.body)) {
+      ctx.body.revokeOtherSessions = true
+    }
+  }
 
   if (typeof password === 'string' && !isStrongPassword(password)) {
     throw new APIError('BAD_REQUEST', {
@@ -142,6 +222,38 @@ const beforeAuthMiddleware = createAuthMiddleware(async (ctx) => {
   await persistSignupInviteCookie(ctx)
   await enforceSignupGate(ctx)
 })
+
+async function narrowDynamicClientRegistrationScopes(ctx: {
+  path: string
+  body: unknown
+  context: { returned?: unknown }
+}) {
+  if (ctx.path !== '/oauth2/register' || !isRecord(ctx.context.returned)) return
+  const clientId = ctx.context.returned.client_id
+  if (typeof clientId !== 'string') return
+
+  // Better Auth 1.7 persists the union of default and allowed registration
+  // scopes as every dynamic client's capability set. Spliit's delete scopes
+  // are deliberately opt-in per client, so retain the narrower registration
+  // request (or our non-destructive defaults) in both storage and response.
+  const requestedScope =
+    isRecord(ctx.body) && typeof ctx.body.scope === 'string'
+      ? ctx.body.scope.split(' ').filter(Boolean)
+      : DEFAULT_CLIENT_SCOPES
+  const scopes = [...new Set(requestedScope)]
+
+  try {
+    await prisma.oauthClient.update({
+      where: { clientId },
+      data: { scopes },
+    })
+  } catch (error) {
+    // Never leave behind a broader registration if narrowing failed.
+    await prisma.oauthClient.deleteMany({ where: { clientId } }).catch(() => {})
+    throw error
+  }
+  ctx.context.returned.scope = scopes.join(' ')
+}
 
 // Integration and unit tests share the local PostgreSQL database with the
 // already-running development API. Persisting test signing keys there would
@@ -228,7 +340,6 @@ export async function getVerifiedGitHubUserInfo(token: OAuthToken) {
   if (verifiedEmail) {
     return {
       user: {
-        id: profileId,
         name: displayName,
         email: verifiedEmail.email,
         image,
@@ -248,7 +359,6 @@ export async function getVerifiedGitHubUserInfo(token: OAuthToken) {
   // application-side marker to skip email-only features.
   return {
     user: {
-      id: profileId,
       name: displayName,
       email: buildProviderPlaceholderEmail('github', profileId),
       image,
@@ -315,30 +425,32 @@ export async function getVerifiedTwitterUserInfo(token: OAuthToken) {
   if (confirmedEmail) {
     return {
       user: {
-        id: profileId,
         name: displayName,
         email: confirmedEmail,
         image,
         emailVerified: true,
       },
       data: {
-        ...data,
-        email: confirmedEmail,
+        data: {
+          ...data,
+          email: confirmedEmail,
+        },
       },
     }
   }
 
   return {
     user: {
-      id: profileId,
       name: displayName,
       email: buildProviderPlaceholderEmail('twitter', profileId),
       image,
       emailVerified: false,
     },
     data: {
-      ...data,
-      email: null,
+      data: {
+        ...data,
+        email: null,
+      },
       isPlaceholderEmail: true,
     },
   }
@@ -371,7 +483,10 @@ export const auth = betterAuth({
   basePath: '/auth',
   // OAuth Provider mode exposes `/oauth2/token`; Better Auth's standalone JWT
   // token endpoint is redundant and must not be advertised or callable.
-  disabledPaths: ['/token'],
+  // The provider's native delete-consent route only removes the consent row
+  // and leaves refresh tokens alive. Account settings uses the transactional
+  // Spliit revocation path instead, so keep the unsafe shortcut unreachable.
+  disabledPaths: ['/token', '/oauth2/delete-consent'],
   secret: env.BETTER_AUTH_SECRET ?? 'spliit-dev-secret-change-me',
   // CORS already allows every configured WEB_ORIGINS entry; pass the full
   // list to better-auth so its trusted-origin check agrees. With only the
@@ -429,6 +544,48 @@ export const auth = betterAuth({
 
   hooks: {
     before: beforeAuthMiddleware,
+    after: createAuthMiddleware(async (ctx) => {
+      if (ctx.path === '/oauth2/token') {
+        const revoked = await finalizeOAuthTokenExchange(ctx.request)
+        if (revoked) return revoked
+      }
+      if (ctx.path === '/oauth2/consent') {
+        await rearmOAuthClientAfterConsent(ctx.request, ctx.context.returned)
+      }
+      await narrowDynamicClientRegistrationScopes(ctx)
+      if (ctx.path !== '/change-password') return
+      let data: unknown = ctx.context.returned
+      if (data instanceof Response) {
+        if (data.status !== 200) return
+        try {
+          data = await data.clone().json()
+        } catch {
+          return
+        }
+      }
+      if (isAPIError(data)) return
+      if (
+        !data ||
+        typeof data !== 'object' ||
+        !('user' in (data as Record<string, unknown>))
+      )
+        return
+      const returnedUser = (data as { user?: { email?: string } }).user
+      // Prefer returned user email (canonical after write); fall back to session
+      const sessionEmail =
+        returnedUser?.email ??
+        (ctx.context.session?.user as { email?: string } | undefined)?.email
+      if (!sessionEmail || isPlaceholderEmail(sessionEmail)) return
+      try {
+        const rendered = await renderPasswordChangedNoticeEmail()
+        await sendEmail({ to: sessionEmail, ...rendered })
+      } catch (err) {
+        console.warn(
+          `[password-change] failed to send notice to ${sessionEmail}:`,
+          err,
+        )
+      }
+    }),
   },
 
   // Reconcile pending friend-ledger invitations that target this
@@ -579,6 +736,7 @@ export const auth = betterAuth({
     }),
     anonymousRecovery(),
     emailChange(),
+    passwordSet(),
     ...(oidcProvider
       ? [
           genericOAuth({
@@ -589,8 +747,10 @@ export const auth = betterAuth({
                 clientSecret: oidcProvider.clientSecret,
                 discoveryUrl: oidcProvider.discoveryUrl,
                 scopes: ['openid', 'email', 'profile'],
-                pkce: true,
-                requireIssuerValidation: true,
+                // Keep the 1.6 synthetic issuer so existing AuthIdentity rows
+                // (`local:oauth:<providerId>`) continue to match after 1.7's
+                // discovery-based issuer default.
+                accountIssuer: `local:oauth:${encodeURIComponent(oidcProvider.id)}`,
               },
             ],
           }),
@@ -604,10 +764,16 @@ export const auth = betterAuth({
       loginPage: `${webOrigins[0]}/oauth/login`,
       consentPage: `${webOrigins[0]}/oauth/consent`,
       scopes: [...ALL_SCOPES],
-      // The API is its own resource server. The MCP audience is kept while
-      // MCP_PUBLIC_URL is configured so tokens already issued to assistant
-      // clients keep verifying against a running deployment.
-      validAudiences: oauthAudiences(),
+      // The API is the default protected resource. Keep the MCP resource
+      // registered while configured so existing assistant clients can still
+      // request tokens for it explicitly.
+      resources: oauthAudiences(),
+      clientRegistrationDefaultResources: [getApiBaseUrl()],
+      clientRegistrationAllowedResources: oauthAudiences(),
+      // Existing clients predate the 1.7 client-resource join table. Keep the
+      // global resource allowlist authoritative until those registrations can
+      // be backfilled without breaking their refresh flow.
+      enforcePerClientResources: false,
       allowDynamicClientRegistration: true,
       allowUnauthenticatedClientRegistration: true,
       allowPublicClientPrelogin: true,
