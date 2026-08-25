@@ -13,6 +13,11 @@ import { Hono, type MiddlewareHandler } from 'hono'
 import { cors } from 'hono/cors'
 
 import { auth } from './lib/auth'
+import {
+  getOAuthProtectedResourceChallenge,
+  getOAuthProtectedResourceMetadata,
+  OAUTH_PROTECTED_RESOURCE_PATH,
+} from './lib/auth/oauth-discovery'
 import { SIGNUP_INVITE_HEADER } from './lib/auth/signup-gate'
 import { env, webOrigins } from './lib/env'
 import { checkLiveness, checkReadiness } from './lib/health'
@@ -201,6 +206,11 @@ app.get('/.well-known/openid-configuration/auth', (c) =>
     headers: { 'Access-Control-Allow-Origin': '*' },
   })(c.req.raw),
 )
+app.get(OAUTH_PROTECTED_RESOURCE_PATH, (c) =>
+  c.json(getOAuthProtectedResourceMetadata(), 200, {
+    'Access-Control-Allow-Origin': '*',
+  }),
+)
 
 app.get('/groups/:groupId/export/bundle', exportRateLimit, (c) =>
   exportGroupBundle(c.req.raw, c.req.param('groupId')),
@@ -247,8 +257,34 @@ app.get(
   }),
 )
 
-app.all('/trpc/*', (c) =>
-  fetchRequestHandler({
+function trpcRequestSupportsOAuth(requestPath: string): boolean {
+  const encodedProcedurePaths = requestPath.slice('/trpc/'.length)
+  if (!encodedProcedurePaths) return false
+  const procedures = appRouter._def.procedures as Record<
+    string,
+    { _def?: { meta?: { scope?: unknown } } } | undefined
+  >
+  return encodedProcedurePaths.split(',').some((encodedPath) => {
+    const path = decodeURIComponent(encodedPath)
+    const procedure = procedures[path]
+    return typeof procedure?._def?.meta?.scope === 'string'
+  })
+}
+
+function appendExposedHeader(headers: Headers, name: string): void {
+  const exposed = headers.get('Access-Control-Expose-Headers')
+  const values = new Set(
+    exposed
+      ?.split(',')
+      .map((value) => value.trim())
+      .filter(Boolean) ?? [],
+  )
+  values.add(name)
+  headers.set('Access-Control-Expose-Headers', [...values].join(', '))
+}
+
+app.all('/trpc/*', async (c) => {
+  const response = await fetchRequestHandler({
     endpoint: '/trpc',
     req: c.req.raw,
     router: appRouter,
@@ -279,5 +315,18 @@ app.all('/trpc/*', (c) =>
         accountId ? { path, type, code, accountId } : { path, type, code },
       )
     },
-  }),
-)
+  })
+
+  if (response.status !== 401 || !trpcRequestSupportsOAuth(c.req.path)) {
+    return response
+  }
+
+  const headers = new Headers(response.headers)
+  headers.set('WWW-Authenticate', getOAuthProtectedResourceChallenge())
+  appendExposedHeader(headers, 'WWW-Authenticate')
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  })
+})

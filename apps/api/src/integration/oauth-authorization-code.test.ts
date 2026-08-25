@@ -94,6 +94,7 @@ async function authorizeToCode(opts: {
   cookie: string
   challenge: string
   state: string
+  authorizationEndpoint?: string
   scope?: string
   resource?: string
   accept?: boolean
@@ -108,8 +109,11 @@ async function authorizeToCode(opts: {
     code_challenge_method: 'S256',
   })
   if (opts.resource) params.set('resource', opts.resource)
+  const authorizationEndpoint = opts.authorizationEndpoint
+    ? new URL(opts.authorizationEndpoint).pathname
+    : '/auth/oauth2/authorize'
   const authorizeRes = await app.request(
-    `/auth/oauth2/authorize?${params.toString()}`,
+    `${authorizationEndpoint}?${params.toString()}`,
     { method: 'GET', headers: { cookie: opts.cookie } },
   )
   expect(authorizeRes.status).toBeGreaterThanOrEqual(300)
@@ -144,6 +148,7 @@ async function exchangeCode(opts: {
   clientId: string
   code: string
   verifier: string
+  tokenEndpoint?: string
   resource?: string
 }): Promise<Response> {
   const form = new URLSearchParams({
@@ -154,7 +159,10 @@ async function exchangeCode(opts: {
     redirect_uri: REDIRECT_URI,
   })
   if (opts.resource) form.set('resource', opts.resource)
-  return app.request('/auth/oauth2/token', {
+  const tokenEndpoint = opts.tokenEndpoint
+    ? new URL(opts.tokenEndpoint).pathname
+    : '/auth/oauth2/token'
+  return app.request(tokenEndpoint, {
     method: 'POST',
     headers: { 'content-type': 'application/x-www-form-urlencoded' },
     body: form.toString(),
@@ -255,6 +263,95 @@ describe('OAuth authorization code + PKCE + refresh', () => {
     fixtureAccountId = accountId
     // Same value format Better Auth sets on sign-in: raw.signature.
     fixtureCookie = `better-auth.session_token=${rawToken}.${signature}`
+  })
+
+  it('discovers OAuth from an unauthenticated API request', async () => {
+    const input = encodeURIComponent(JSON.stringify({ json: { groupIds: [] } }))
+    const unauthorized = await app.request(`/trpc/groups.list?input=${input}`)
+    expect(unauthorized.status).toBe(401)
+
+    const challenge = unauthorized.headers.get('www-authenticate')
+    const metadataUrl = challenge?.match(/resource_metadata="([^"]+)"/)?.[1]
+    expect(metadataUrl).toBe(
+      `${API_AUDIENCE}/.well-known/oauth-protected-resource`,
+    )
+
+    const metadataResponse = await app.request(metadataUrl!)
+    expect(metadataResponse.status).toBe(200)
+    const metadata = (await metadataResponse.json()) as {
+      resource: string
+      authorization_servers: string[]
+      scopes_supported: string[]
+      bearer_methods_supported: string[]
+    }
+    expect(metadata).toMatchObject({
+      resource: API_AUDIENCE,
+      authorization_servers: [ISSUER],
+      bearer_methods_supported: ['header'],
+    })
+    expect(metadata.scopes_supported).toContain('spliit:groups:read')
+
+    const issuerPath = new URL(metadata.authorization_servers[0]!).pathname
+    const discoveryResponse = await app.request(
+      `/.well-known/oauth-authorization-server${issuerPath}`,
+    )
+    expect(discoveryResponse.status).toBe(200)
+    const discovery = (await discoveryResponse.json()) as {
+      registration_endpoint: string
+      authorization_endpoint: string
+      token_endpoint: string
+      code_challenge_methods_supported: string[]
+    }
+    expect(discovery).toMatchObject({
+      authorization_endpoint: `${ISSUER}/oauth2/authorize`,
+      token_endpoint: `${ISSUER}/oauth2/token`,
+      code_challenge_methods_supported: ['S256'],
+    })
+
+    const registrationResponse = await app.request(
+      discovery.registration_endpoint,
+      {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          client_name: `Discovered agent ${runId}`,
+          redirect_uris: [REDIRECT_URI],
+          token_endpoint_auth_method: 'none',
+          grant_types: ['authorization_code', 'refresh_token'],
+          response_types: ['code'],
+        }),
+      },
+    )
+    expect(registrationResponse.status).toBe(201)
+    const registration = (await registrationResponse.json()) as {
+      client_id: string
+    }
+    expect(registration.client_id).toBeTruthy()
+    trackedClientIds.push(registration.client_id)
+
+    const { verifier, challenge: codeChallenge } = makePkce()
+    const { code } = await authorizeToCode({
+      clientId: registration.client_id,
+      cookie: fixtureCookie,
+      challenge: codeChallenge,
+      state: `state-discovered-${runId}`,
+      authorizationEndpoint: discovery.authorization_endpoint,
+      scope: 'openid profile email offline_access spliit:groups:read',
+    })
+    expect(code).toBeTruthy()
+
+    const tokenResponse = await exchangeCode({
+      clientId: registration.client_id,
+      code: code!,
+      verifier,
+      tokenEndpoint: discovery.token_endpoint,
+    })
+    expect(tokenResponse.status).toBe(200)
+    const tokens = (await tokenResponse.json()) as { access_token: string }
+    expect(tokens.access_token).toBeTruthy()
+
+    const apiResponse = await listGroupsOverHttp(tokens.access_token)
+    expect(apiResponse.status).toBe(200)
   })
 
   it('defaults an omitted resource to the API through exchange and refresh', async () => {

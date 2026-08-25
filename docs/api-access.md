@@ -70,6 +70,21 @@ to a token, whatever scopes it holds:
 This is a deliberate starting surface rather than an oversight. Say so if your
 integration needs one of them, so the list can grow with a reason attached.
 
+## Discovering OAuth
+
+An agent only needs the API URL. Calling an OAuth-enabled procedure without a
+token returns a `WWW-Authenticate` challenge whose `resource_metadata` value
+points to the standard RFC 9728 document:
+
+```text
+https://api.spliit.cloud/.well-known/oauth-protected-resource
+```
+
+That document identifies the API resource, its supported scopes and the OAuth
+authorization server. The agent can then follow RFC 8414 discovery to learn the
+dynamic-registration, authorization and token endpoints. No Spliit-specific
+skill or hard-coded OAuth route list is required.
+
 ## Registering a client
 
 Dynamic client registration is open, so a client can enrol itself:
