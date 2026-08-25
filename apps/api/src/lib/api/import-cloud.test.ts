@@ -297,6 +297,7 @@ describe('prepareCloudImport', () => {
 
   it('restores through a transaction client with fresh ids and archives after contents', async () => {
     const calls: string[] = []
+    const participantIds: string[] = []
     const tx = {
       ledger: {
         create: vi.fn(async ({ data }: { data: { id: string } }) => {
@@ -325,17 +326,23 @@ describe('prepareCloudImport', () => {
       ledgerParticipant: {
         create: vi.fn(async ({ data }: { data: { id?: string } }) => {
           calls.push('ledgerParticipant.create')
-          return { id: data.id ?? 'actor-participant' }
+          const id = data.id ?? 'actor-participant'
+          participantIds.push(id)
+          return { id }
         }),
+        findMany: vi.fn(async () => participantIds.map((id) => ({ id }))),
       },
       accountGroupPreference: {
         upsert: vi.fn(async () => ({ id: 'group-pref-1' })),
       },
-      accountGroupDefaultSplit: {
-        upsert: vi.fn(async () => ({ id: 'default-split-1' })),
+      splitPreset: {
+        create: vi.fn(async ({ data }: { data: { id: string } }) => ({
+          id: data.id,
+        })),
+        createMany: vi.fn(async () => ({ count: 1 })),
+        findMany: vi.fn(async () => [{ id: 'preset-1' }]),
       },
-      accountGroupDefaultSplitPaidFor: {
-        deleteMany: vi.fn(async () => ({ count: 0 })),
+      splitPresetParticipant: {
         createMany: vi.fn(async () => ({ count: 1 })),
       },
       activity: {
@@ -364,6 +371,7 @@ describe('prepareCloudImport', () => {
   })
 
   it('restores account group preferences with remapped participant ids', async () => {
+    const participantIds: string[] = []
     const tx = {
       ledger: {
         create: vi.fn(async ({ data }: { data: { id: string } }) => ({
@@ -381,18 +389,24 @@ describe('prepareCloudImport', () => {
       groupInvitation: { findFirst: vi.fn(async () => null) },
       groupMember: { create: vi.fn(async () => ({ id: 'member-1' })) },
       ledgerParticipant: {
-        create: vi.fn(async ({ data }: { data: { id?: string } }) => ({
-          id: data.id ?? 'actor-participant',
-        })),
+        create: vi.fn(async ({ data }: { data: { id?: string } }) => {
+          const id = data.id ?? 'actor-participant'
+          participantIds.push(id)
+          return { id }
+        }),
+        findMany: vi.fn(async () => participantIds.map((id) => ({ id }))),
       },
       accountGroupPreference: {
         upsert: vi.fn(async () => ({ id: 'group-pref-1' })),
       },
-      accountGroupDefaultSplit: {
-        upsert: vi.fn(async () => ({ id: 'default-split-1' })),
+      splitPreset: {
+        create: vi.fn(async ({ data }: { data: { id: string } }) => ({
+          id: data.id,
+        })),
+        createMany: vi.fn(async () => ({ count: 1 })),
+        findMany: vi.fn(async () => [{ id: 'preset-1' }]),
       },
-      accountGroupDefaultSplitPaidFor: {
-        deleteMany: vi.fn(async () => ({ count: 0 })),
+      splitPresetParticipant: {
         createMany: vi.fn(async () => ({ count: 1 })),
       },
       activity: { create: vi.fn(async () => ({ id: 'activity-1' })) },
@@ -421,13 +435,19 @@ describe('prepareCloudImport', () => {
         create: expect.objectContaining({ starred: true, hidden: false }),
       }),
     )
-    expect(tx.accountGroupDefaultSplitPaidFor.createMany).toHaveBeenCalledWith(
+    expect(tx.splitPreset.create).toHaveBeenCalledWith(
       expect.objectContaining({
-        data: [expect.objectContaining({ participantId: expect.any(String) })],
+        data: expect.objectContaining({
+          participants: {
+            create: [
+              expect.objectContaining({ participantId: expect.any(String) }),
+            ],
+          },
+        }),
       }),
     )
     expect(
-      tx.accountGroupDefaultSplitPaidFor.createMany.mock.calls[0]?.[0].data[0]
+      tx.splitPreset.create.mock.calls[0]?.[0].data.participants.create[0]
         .participantId,
     ).not.toBe('participant-1')
   })

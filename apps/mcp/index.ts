@@ -253,7 +253,7 @@ const expenseItem = z.object({
   split: beneficiarySplitSchema
     .optional()
     .describe(
-      'Who benefited from this item. Omit for the saved group split, falling back to even across current participants.',
+      'Who benefited from this item. Omit to split evenly across all current participants.',
     ),
 })
 
@@ -298,7 +298,7 @@ server.tool(
     name: 'get-group-summary',
     title: 'Get group summary',
     description:
-      "Get one authorized group's saved default split, balances, and recent expenses plus participant context. Use for group insights or deeper context; get-expense-context already provides the participant IDs needed for one-shot expense preparation.",
+      "Get one authorized group's balances and recent expenses plus participant context. Use for group insights or deeper context; get-expense-context already provides the participant IDs needed for one-shot expense preparation.",
     schema: z.object({
       groupId: z
         .string()

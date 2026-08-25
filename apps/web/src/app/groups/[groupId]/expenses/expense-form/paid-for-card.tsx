@@ -1,12 +1,10 @@
 import type { Dispatch, SetStateAction } from 'react'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import { useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { ParticipantDistributionFooter } from '@/components/participant-distribution-footer'
 import { ParticipantRowAmountPreview } from '@/components/participant-row-amount-preview'
-import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -16,7 +14,7 @@ import {
 } from '@/components/ui/card'
 import { FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { getCurrency } from '@/lib/currency'
-import { amountAsMinorUnits, cn } from '@/lib/utils'
+import { amountAsMinorUnits } from '@/lib/utils'
 import type { AppRouterOutput } from '@spliit/api/router'
 import type {
   Currency,
@@ -26,22 +24,28 @@ import type {
 import { computePaidForFromItems, type SplitMode } from '@spliit/domain'
 
 import { safeSharesToFixedUnits } from './currency-utils'
-import { DefaultSplitActions } from './default-split/default-split-actions'
-import type { SavedSplit } from './default-split/split-equal'
 import { expenseTabPriority } from './focus-navigation'
 import { getRowShareErrors } from './get-row-share-errors'
 import { LeaveItemizedDialog } from './leave-itemized-dialog'
 import { PaidForRow } from './paid-for-row'
 import { ParticipantPendingLabel } from './participant-pending-label'
 import { ParticipantShareRow } from './participant-share-row'
-import { RowErrorSummary } from './row-error-summary'
 import type { ShareInputRefs } from './share-row-input'
+import { SplitDistributionEditor } from './split-distribution-editor'
 import {
   buildEqualParticipantRows,
   convertParticipantShares,
   roundTo,
 } from './split-mode-conversions'
 import { PaidForSplitOptionCards } from './split-option-cards'
+import {
+  SavePresetButton,
+  SplitPresetPicker,
+  presetToFormSplit,
+  sameParticipantDistribution,
+  type LoadedPresetSource,
+  type SplitPreset,
+} from './split-presets'
 import { useShowRowErrors } from './use-show-row-errors'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
@@ -65,8 +69,13 @@ export function PaidForCard(props: {
   readOnly: boolean
   sExpense: 'Expense' | 'Income'
   setManuallyEditedParticipants: Dispatch<SetStateAction<Set<string>>>
-  /** Persisted default split for this user+group, if any. */
-  savedDefault: SavedSplit | null
+  presets: SplitPreset[]
+  presetsLoading?: boolean
+  canManage?: boolean
+  canManageShared?: boolean
+  canManagePersonal?: boolean
+  initialLoadedPreset?: SplitPreset | null
+  initialLoadedSource?: LoadedPresetSource | null
   /** True for fresh-create + copy flows; false for editing an existing expense. */
   isCreate: boolean
   /** Participant-keyed share input registry, owned by the expense form. */
@@ -79,7 +88,13 @@ export function PaidForCard(props: {
     payerCurrency: _payerCurrency,
     readOnly,
     sExpense,
-    savedDefault,
+    presets,
+    presetsLoading,
+    canManage,
+    canManageShared,
+    canManagePersonal,
+    initialLoadedPreset,
+    initialLoadedSource,
     isCreate: _isCreate,
   } = props
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
@@ -116,6 +131,25 @@ export function PaidForCard(props: {
     from: SplitMode
     to: SplitMode
   } | null>(null)
+  const [pendingPreset, setPendingPreset] = useState<SplitPreset | null>(null)
+  const [loadedPresetState, setLoadedPreset] = useState<
+    SplitPreset | null | undefined
+  >(undefined)
+  const [loadedSourceState, setLoadedSource] = useState<
+    LoadedPresetSource | null | undefined
+  >(undefined)
+  const saveChangesRef = useRef<() => void>(() => {})
+  const saveAsRef = useRef<() => void>(() => {})
+  const loadedPreset =
+    loadedPresetState === undefined
+      ? (initialLoadedPreset ?? null)
+      : loadedPresetState
+  const loadedSource =
+    loadedSourceState === undefined
+      ? loadedPreset
+        ? (initialLoadedSource ?? 'MANUAL')
+        : null
+      : loadedSourceState
 
   // The row summary recomputes errors from live values, so without a gate it
   // would announce itself on every keystroke. Show it only once the card has
@@ -374,6 +408,56 @@ export function PaidForCard(props: {
     applyPaidForSplitModeChange(currentMode, nextMode)
   }
 
+  const applyPreset = (preset: SplitPreset) => {
+    const next = presetToFormSplit(preset)
+    const currentMode = form.getValues('splitMode')
+    const hasItemParticipants = items.some((item) => item.paidFor.length > 0)
+    if (currentMode === 'ITEMIZED' && hasItemParticipants) {
+      setPendingPreset(preset)
+      return
+    }
+    form.setValue('splitMode', next.splitMode, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    })
+    form.setValue('paidFor', next.paidFor, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    })
+    setLoadedPreset(preset)
+    setLoadedSource('MANUAL')
+  }
+
+  const confirmPreset = () => {
+    if (!pendingPreset) return
+    const next = presetToFormSplit(pendingPreset)
+    form.setValue(
+      'items',
+      items.map((item) => ({ ...item, paidFor: [] })),
+      { shouldDirty: true, shouldTouch: true, shouldValidate: true },
+    )
+    applyPaidForSplitModeChange('ITEMIZED', next.splitMode)
+    form.setValue('paidFor', next.paidFor, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    })
+    setLoadedPreset(pendingPreset)
+    setLoadedSource('MANUAL')
+    setPendingPreset(null)
+  }
+
+  const loadedSplit = loadedPreset ? presetToFormSplit(loadedPreset) : null
+  const paidForModified =
+    !!loadedSplit &&
+    (splitMode !== loadedSplit.splitMode ||
+      !sameParticipantDistribution(paidFor, loadedSplit.paidFor))
+  const modified = paidForModified
+  const canCreatePreset =
+    !!canManageShared || !!canManagePersonal || !!canManage
+
   // Select all adds missing participants without overwriting edited values;
   // Select none clears every row.
   const handleSelectPaidForParticipants = () => {
@@ -421,95 +505,68 @@ export function PaidForCard(props: {
     props.setManuallyEditedParticipants(new Set())
   }
 
-  const renderPaidForContent = (mode: ItemSplitMode) => (
-    <>
-      <div className="mb-2 flex justify-end gap-1">
-        <Button
-          variant="link"
-          type="button"
-          className="-my-2 -me-2"
-          disabled={readOnly}
-          onClick={handleResetPaidForDistribution}
-        >
-          {t('resetDistribution')}
-        </Button>
-        <Button
-          variant="link"
-          type="button"
-          className="-my-2 -me-2"
-          disabled={readOnly}
-          onClick={handleSelectPaidForParticipants}
-        >
-          {paidFor.length === group.participants.length
-            ? t('selectNone')
-            : t('selectAll')}
-        </Button>
-      </div>
-      <RowErrorSummary
-        errors={
-          showRowErrors
-            ? getRowShareErrors({
-                rows: paidFor,
-                splitMode: mode,
-                amount: Number(amount) || 0,
-              })
-            : []
-        }
-        participantName={(id) =>
-          group.participants.find((p) => p.id === id)?.name ?? id
-        }
-      />
+  const renderPaidForContent = (mode: ItemSplitMode) => {
+    const inputCurrency = conversionRequired ? originalCurrency : groupCurrency
+    const targetAmount =
+      mode === 'BY_PERCENTAGE'
+        ? 100
+        : amountAsMinorUnits(Number(amount) || 0, inputCurrency)
+    const shares =
+      mode === 'BY_AMOUNT'
+        ? paidFor.map((row) =>
+            amountAsMinorUnits(row.shares || 0, inputCurrency),
+          )
+        : paidFor.map((row) => row.shares || 0)
+
+    return (
       <FormField
         control={form.control}
         name="paidFor"
         render={() => (
           <FormItem className="w-full min-w-0 space-y-0">
-            {group.participants.map((participant) => (
-              <PaidForRow
-                key={participant.id}
-                form={form}
-                participant={participant}
-                groupCurrency={groupCurrency}
-                originalCurrency={originalCurrency}
-                conversionRequired={conversionRequired}
-                exchangeRate={exchangeRate}
-                readOnly={readOnly}
-                inputRefs={props.inputRefs}
-                setManuallyEditedParticipants={
-                  props.setManuallyEditedParticipants
-                }
-              />
-            ))}
-            <FormMessage />
+            <SplitDistributionEditor
+              participants={group.participants}
+              selectedCount={paidFor.length}
+              mode={mode}
+              targetAmount={targetAmount}
+              shares={shares}
+              currency={inputCurrency}
+              readOnly={readOnly}
+              errors={
+                showRowErrors
+                  ? getRowShareErrors({
+                      rows: paidFor,
+                      splitMode: mode,
+                      amount: Number(amount) || 0,
+                    })
+                  : []
+              }
+              onReset={handleResetPaidForDistribution}
+              onToggleAll={handleSelectPaidForParticipants}
+              renderRow={(participant) => (
+                <PaidForRow
+                  key={participant.id}
+                  form={form}
+                  participant={participant}
+                  groupCurrency={groupCurrency}
+                  originalCurrency={originalCurrency}
+                  conversionRequired={conversionRequired}
+                  exchangeRate={exchangeRate}
+                  readOnly={readOnly}
+                  inputRefs={props.inputRefs}
+                  setManuallyEditedParticipants={
+                    props.setManuallyEditedParticipants
+                  }
+                />
+              )}
+              afterRows={<FormMessage />}
+              dataTestId="paid-for-distribution-footer"
+            />
           </FormItem>
         )}
       />
-      <ParticipantDistributionFooter
-        splitMode={mode}
-        targetAmount={
-          mode === 'BY_PERCENTAGE'
-            ? 100
-            : amountAsMinorUnits(
-                Number(amount) || 0,
-                conversionRequired ? originalCurrency : groupCurrency,
-              )
-        }
-        shares={
-          mode === 'BY_AMOUNT'
-            ? paidFor.map((p) =>
-                amountAsMinorUnits(
-                  p.shares || 0,
-                  conversionRequired ? originalCurrency : groupCurrency,
-                ),
-              )
-            : paidFor.map((p) => p.shares || 0)
-        }
-        currency={conversionRequired ? originalCurrency : groupCurrency}
-        paidByCount={paidFor.length}
-        dataTestId="paid-for-distribution-footer"
-      />
-    </>
-  )
+    )
+  }
 
   return (
     <Card className="mobile-surface mt-4">
@@ -517,26 +574,69 @@ export function PaidForCard(props: {
         <CardTitle className="flex justify-between gap-2">
           <span>{t(`${sExpense}.paidFor.title`)}</span>
         </CardTitle>
-        {/* Default-split actions live in their own row, visually
-            separated from the title by a top border. In non-ITEMIZED
-            modes there's a "Select all/None" toggle above, so the
-            border separates the two action rows; in ITEMIZED mode the
-            actions slot in flush with the title (no border needed).
-            Hidden entirely in read-only mode and when nothing is
-            actionable — see `DefaultSplitActions` for visibility. */}
-        <div
-          className={cn(
-            'mt-2 flex items-center justify-end gap-1 pt-3',
-            splitMode !== 'ITEMIZED' && 'border-t',
+        {/* Presets are input shortcuts; they are never retained on the expense. */}
+        <div className="mt-2 w-full">
+          {!readOnly && (
+            <>
+              <SplitPresetPicker
+                presets={presets}
+                loading={presetsLoading}
+                group={group}
+                amount={Number(amount) || 0}
+                currency={conversionRequired ? originalCurrency : groupCurrency}
+                loadedPreset={loadedPreset}
+                loadedSource={loadedSource}
+                modified={modified}
+                onSaveAsNew={
+                  canCreatePreset &&
+                  splitMode !== 'BY_AMOUNT' &&
+                  splitMode !== 'ITEMIZED'
+                    ? () => saveAsRef.current()
+                    : undefined
+                }
+                canSaveChanges={
+                  !!loadedPreset &&
+                  splitMode !== 'BY_AMOUNT' &&
+                  splitMode !== 'ITEMIZED' &&
+                  'scope' in loadedPreset &&
+                  ((loadedPreset.scope === 'SHARED' && canManageShared) ||
+                    (loadedPreset.scope === 'PERSONAL' && canManagePersonal))
+                }
+                onSaveChanges={() => {
+                  saveChangesRef.current()
+                }}
+                onSelect={applyPreset}
+              />
+              {canCreatePreset &&
+                splitMode !== 'BY_AMOUNT' &&
+                splitMode !== 'ITEMIZED' && (
+                  <SavePresetButton
+                    group={group}
+                    groupCurrency={groupCurrency}
+                    target="PAID_FOR"
+                    splitMode={splitMode}
+                    paidFor={paidFor}
+                    modified={modified}
+                    existingPreset={loadedPreset}
+                    onSaved={() => {
+                      setLoadedPreset(null)
+                      setLoadedSource(null)
+                    }}
+                    onSaveChangesReady={(save) => {
+                      saveChangesRef.current = save
+                    }}
+                    onSaveAsReady={(saveAs) => {
+                      saveAsRef.current = saveAs
+                    }}
+                    onUpdated={(preset) => setLoadedPreset(preset)}
+                    hideTrigger
+                    canManage={canManage}
+                    canManageShared={canManageShared}
+                    canManagePersonal={canManagePersonal}
+                  />
+                )}
+            </>
           )}
-        >
-          <DefaultSplitActions
-            form={form}
-            group={group}
-            groupCurrency={groupCurrency}
-            savedDefault={savedDefault}
-            readOnly={readOnly}
-          />
         </div>
         <CardDescription>
           {t(`${sExpense}.paidFor.description`)}
@@ -611,6 +711,16 @@ export function PaidForCard(props: {
           )
           setPendingModeChange(null)
         }}
+      />
+      <LeaveItemizedDialog
+        open={!!pendingPreset}
+        targetModeLabel={
+          pendingPreset
+            ? t(paidForOptionKeys[presetToFormSplit(pendingPreset).splitMode])
+            : ''
+        }
+        onCancel={() => setPendingPreset(null)}
+        onConfirm={confirmPreset}
       />
     </Card>
   )

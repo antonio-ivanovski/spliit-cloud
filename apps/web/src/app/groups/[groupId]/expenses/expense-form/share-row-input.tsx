@@ -33,6 +33,65 @@ import { expenseTabPriority } from './focus-navigation'
 type ItemSplitMode = Exclude<SplitMode, 'ITEMIZED'>
 type ShareRow = { participant: string; shares: number | string }
 
+type ShareRowInputControlsProps = {
+  splitMode: Extract<ItemSplitMode, 'BY_SHARES' | 'BY_PERCENTAGE'>
+  participantName: string
+  value: number | string | undefined
+  isSelected: boolean
+  readOnly: boolean
+  onStep: (direction: 1 | -1) => void
+  children: React.ReactNode
+}
+
+/**
+ * Shared visual shell for the mode-aware share input. Preset editors and RHF
+ * expense adapters both render through this boundary so the steppers, spacing,
+ * limits, and percentage treatment cannot drift apart.
+ */
+export function ShareRowInputControls({
+  splitMode,
+  participantName,
+  value,
+  isSelected,
+  readOnly,
+  onStep,
+  children,
+}: ShareRowInputControlsProps) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
+
+  return (
+    <div className="flex items-center justify-end gap-0.5">
+      {splitMode === 'BY_SHARES' && (
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="size-8 shrink-0"
+          disabled={readOnly || !isSelected}
+          aria-label={t('decreaseShares', { name: participantName })}
+          onClick={() => onStep(-1)}
+        >
+          <Minus className="size-4" aria-hidden="true" />
+        </Button>
+      )}
+      {children}
+      {splitMode === 'BY_SHARES' && (
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="size-8 shrink-0"
+          disabled={readOnly || Number(value ?? 0) >= MAX_DISPLAY_SHARES}
+          aria-label={t('increaseShares', { name: participantName })}
+          onClick={() => onStep(1)}
+        >
+          <Plus className="size-4" aria-hidden="true" />
+        </Button>
+      )}
+    </div>
+  )
+}
+
 export type ShareArrayName = 'paidFor' | 'paidByList'
 /**
  * The same participant has an input in each section, so registry keys are
@@ -348,78 +407,64 @@ export function ShareRowInput(props: {
     </span>
   )
 
+  const input = (
+    <>
+      {splitMode === 'BY_AMOUNT' && (
+        <span className="text-sm">{currency.symbol}</span>
+      )}
+      <FormItem className="space-y-0">
+        {isSelected ? (
+          <FormField
+            control={form.control}
+            name={fieldName}
+            render={({ field }) => (
+              <SelectedShareInput
+                fieldRef={field.ref}
+                name={field.name}
+                onBlur={field.onBlur}
+                attachRef={attachRef}
+                inputProps={inputProps}
+                value={localizeCurrencyInput(String(row?.shares ?? ''), locale)}
+                onChange={handleChange}
+                percentageSuffix={percentageSuffix}
+              />
+            )}
+          />
+        ) : (
+          // Unselected rows must not register any field (a fake path like
+          // `paidFor[-1].shares` would be shared by every unselected row).
+          // The plain input still feeds the whole-array write that adds the
+          // row on the first keystroke.
+          <div className="relative">
+            <Input
+              {...inputProps}
+              ref={attachRef}
+              value=""
+              onChange={(event) => handleChange(event.target.value)}
+            />
+            {percentageSuffix}
+          </div>
+        )}
+      </FormItem>
+    </>
+  )
+
   return (
     <div>
-      <div className="flex items-center justify-end gap-0.5">
-        {splitMode === 'BY_SHARES' && (
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="size-8 shrink-0"
-            disabled={readOnly || !isSelected}
-            aria-label={t('decreaseShares', { name: participantName })}
-            onClick={() => handleStep(-1)}
-          >
-            <Minus className="size-4" aria-hidden="true" />
-          </Button>
-        )}
-        {splitMode === 'BY_AMOUNT' && (
-          <span className="text-sm">{currency.symbol}</span>
-        )}
-        <FormItem className="space-y-0">
-          {isSelected ? (
-            <FormField
-              control={form.control}
-              name={fieldName}
-              render={({ field }) => (
-                <SelectedShareInput
-                  fieldRef={field.ref}
-                  name={field.name}
-                  onBlur={field.onBlur}
-                  attachRef={attachRef}
-                  inputProps={inputProps}
-                  value={localizeCurrencyInput(
-                    String(row?.shares ?? ''),
-                    locale,
-                  )}
-                  onChange={handleChange}
-                  percentageSuffix={percentageSuffix}
-                />
-              )}
-            />
-          ) : (
-            // Unselected rows must not register any field (a fake path like
-            // `paidFor[-1].shares` would be shared by every unselected row).
-            // The plain input still feeds the whole-array write that adds the
-            // row on the first keystroke.
-            <div className="relative">
-              <Input
-                {...inputProps}
-                ref={attachRef}
-                value=""
-                onChange={(event) => handleChange(event.target.value)}
-              />
-              {percentageSuffix}
-            </div>
-          )}
-        </FormItem>
-        {splitMode === 'BY_SHARES' && (
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="size-8 shrink-0"
-            disabled={
-              readOnly || Number(row?.shares ?? 0) >= MAX_DISPLAY_SHARES
-            }
-            aria-label={t('increaseShares', { name: participantName })}
-            onClick={() => handleStep(1)}
-          >
-            <Plus className="size-4" aria-hidden="true" />
-          </Button>
-        )}
-      </div>
+      {splitMode === 'BY_SHARES' || splitMode === 'BY_PERCENTAGE' ? (
+        <ShareRowInputControls
+          splitMode={splitMode}
+          participantName={participantName}
+          value={row?.shares}
+          isSelected={isSelected}
+          readOnly={readOnly}
+          onStep={handleStep}
+        >
+          {input}
+        </ShareRowInputControls>
+      ) : (
+        <div className="flex items-center justify-end gap-0.5">{input}</div>
+      )}
     </div>
   )
 }

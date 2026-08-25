@@ -138,6 +138,24 @@ describe('PaidBySplitOptionCards', () => {
       .forEach((r) => expect(r).toHaveAttribute('aria-disabled', 'true'))
   })
 
+  it('can hide only multi-payer by amount while keeping Single payer visible', () => {
+    render(
+      <PaidBySplitOptionCards
+        value={{ isMultiPayer: false, splitMode: 'BY_AMOUNT' }}
+        onChange={vi.fn()}
+        hiddenOptionIds={['multi-amount']}
+      />,
+    )
+
+    expect(
+      screen.getByRole('radio', { name: /single payer/i }),
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByRole('radio', { name: /by amount/i }),
+    ).not.toBeInTheDocument()
+    expect(screen.getAllByRole('radio')).toHaveLength(4)
+  })
+
   it('renders selected option content and moves it when the mode changes', async () => {
     const onChange = vi.fn()
     const { user, rerender } = render(
@@ -202,11 +220,11 @@ describe('PaidForSplitOptionCards', () => {
     const selected = screen.getByRole('radio', { name: /by shares/i })
     expect(selected).toHaveAttribute('aria-checked', 'true')
     expect(selected).toHaveAttribute('data-checked')
-    expect(selected).toHaveClass('data-[checked]:cursor-default')
+    expect(selected).toHaveClass('cursor-pointer')
     const notSelected = screen.getByRole('radio', { name: /evenly/i })
     expect(notSelected).toHaveAttribute('aria-checked', 'false')
     expect(notSelected).toHaveAttribute('data-unchecked')
-    expect(notSelected).toHaveClass('data-[unchecked]:cursor-pointer')
+    expect(notSelected).toHaveClass('cursor-pointer')
   })
 
   it('disabled when readOnly is true', () => {

@@ -151,19 +151,40 @@ export function PaidBySplitOptionCards(props: {
   value: { isMultiPayer: boolean; splitMode: SplitMode }
   onChange: (next: { isMultiPayer: boolean; splitMode: SplitMode }) => void
   readOnly?: boolean
+  /** Modes omitted from the option cards (used by reusable presets). */
+  hiddenModes?: SplitMode[]
+  /** Specific option ids omitted from the option cards. */
+  hiddenOptionIds?: PaidBySplitOption['id'][]
   renderContent?: (option: PaidBySplitOption) => ReactNode
+  contentClassName?: string
   focusPriority?: number
 }) {
-  const { value, onChange, readOnly, renderContent } = props
+  const {
+    value,
+    onChange,
+    readOnly,
+    renderContent,
+    contentClassName,
+    hiddenModes,
+    hiddenOptionIds,
+  } = props
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
+  const hidden = new Set(hiddenModes ?? [])
+  const hiddenIds = new Set(hiddenOptionIds ?? [])
 
   const isSelected = (opt: (typeof PAID_BY_OPTIONS)[number]) => {
     if (opt.id === 'single') return !value.isMultiPayer
     return value.isMultiPayer && value.splitMode === opt.splitMode
   }
 
-  const single = PAID_BY_OPTIONS.filter((o) => o.id === 'single')
-  const multi = PAID_BY_OPTIONS.filter((o) => o.id !== 'single')
+  const single = PAID_BY_OPTIONS.filter(
+    (o) =>
+      o.id === 'single' && !hidden.has(o.splitMode) && !hiddenIds.has(o.id),
+  )
+  const multi = PAID_BY_OPTIONS.filter(
+    (o) =>
+      o.id !== 'single' && !hidden.has(o.splitMode) && !hiddenIds.has(o.id),
+  )
   const multiSectionLabel = t('paidBySectionMultiple')
 
   const selectedOption = PAID_BY_OPTIONS.find(isSelected)
@@ -195,6 +216,7 @@ export function PaidBySplitOptionCards(props: {
                 disabled={readOnly}
                 data-expense-tab-priority={props.focusPriority}
                 content={selected ? renderContent?.(opt) : undefined}
+                contentClassName={contentClassName}
               >
                 <OptionHeader
                   icon={opt.icon}
@@ -221,6 +243,7 @@ export function PaidBySplitOptionCards(props: {
                 disabled={readOnly}
                 data-expense-tab-priority={props.focusPriority}
                 content={selected ? renderContent?.(opt) : undefined}
+                contentClassName={contentClassName}
                 aria-label={`${multiSectionLabel} \u2014 ${title}`}
               >
                 <OptionHeader
@@ -249,9 +272,17 @@ export function PaidForSplitOptionCards(props: {
    * card will appear as selected.
    */
   hiddenModes?: Exclude<SplitMode, 'ITEMIZED'>[]
+  contentClassName?: string
   focusPriority?: number
 }) {
-  const { value, onChange, readOnly, renderContent, hiddenModes } = props
+  const {
+    value,
+    onChange,
+    readOnly,
+    renderContent,
+    hiddenModes,
+    contentClassName,
+  } = props
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
 
   const hidden = new Set(hiddenModes ?? [])
@@ -283,6 +314,7 @@ export function PaidForSplitOptionCards(props: {
               disabled={disabled}
               data-expense-tab-priority={props.focusPriority}
               content={selected ? renderContent?.(opt.id) : undefined}
+              contentClassName={contentClassName}
               aria-label={t('splitOptionAria', { title })}
             >
               <OptionHeader

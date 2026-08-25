@@ -20,6 +20,7 @@ import {
   useIsReadOnlyGroupViewer,
 } from '../current-group-context'
 import { ExportOptionsCard } from '../export-options-card'
+import { SplitPresetsCard } from '../members/split-presets-card'
 import { useGroupAccessSearch } from '../use-group-access-search'
 import { DeleteGroupDialog } from './delete-group-dialog'
 import {
@@ -72,6 +73,15 @@ export const EditGroup = () => {
           updateMutation.mutateAsync({ groupId, groupFormValues })
         }
       />
+
+      {currentMember ? (
+        <SplitPresetsCard
+          groupId={groupId}
+          group={group}
+          canManage={currentMember.role === 'ADMIN'}
+          isArchived={isArchived}
+        />
+      ) : null}
 
       {currentMember && !isFriendLedger ? (
         <PublicViewOnlyLinkSection groupId={groupId} />

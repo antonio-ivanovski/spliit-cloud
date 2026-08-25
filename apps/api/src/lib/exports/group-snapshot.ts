@@ -61,6 +61,10 @@ const groupExportInclude = {
       members: { orderBy: { ledgerParticipantId: 'asc' } },
     },
   },
+  splitPresets: {
+    orderBy: [{ nameKey: 'asc' }, { createdAt: 'asc' }, { id: 'asc' }],
+    include: { participants: { orderBy: { participantId: 'asc' } } },
+  },
   budgets: { orderBy: [{ createdAt: 'asc' }, { id: 'asc' }] },
 } satisfies Prisma.GroupInclude
 
@@ -359,6 +363,22 @@ export function createGroupExportSnapshot(
         compareText(left.ledgerParticipantId, right.ledgerParticipantId),
       ).map((member) => member.ledgerParticipantId),
     })),
+    splitPresets: (group.splitPresets ?? [])
+      .filter((preset) => !preset.ownerAccountId)
+      .map((preset) => ({
+        sourceId: preset.id,
+        name: preset.name,
+        target: preset.target as 'PAID_BY' | 'PAID_FOR',
+        createdAt: preset.createdAt.toISOString(),
+        updatedAt: preset.updatedAt.toISOString(),
+        splitMode: preset.splitMode as 'EVENLY' | 'BY_SHARES' | 'BY_PERCENTAGE',
+        participants: preset.participants.map((row) => ({
+          participantId: row.participantId,
+          shares: row.shares,
+        })),
+      })),
+    defaultPaidByPresetSourceId: group.defaultPaidByPresetId,
+    defaultPaidForPresetSourceId: group.defaultPaidForPresetId,
     budgets: sorted(group.budgets, byCreatedAtThenId).map((budget) => ({
       sourceId: budget.id,
       name: budget.name,

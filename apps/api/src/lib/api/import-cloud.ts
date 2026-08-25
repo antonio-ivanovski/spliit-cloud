@@ -9,6 +9,7 @@ import {
   wallTimeToUtc,
   SETTLEMENT_CATEGORY_ID,
   isSettlementCategory,
+  splitPresetSchema,
   spliitGroupExportManifestSchema,
   toSecondPrecision,
   type SpliitGroupExportManifest,
@@ -29,6 +30,10 @@ import { buildImportSummaryActivityData, logActivity } from './activities'
 import { createFriendLedger, type CreateFriendLedgerPeer } from './friends'
 import { enqueueMaterialization } from './recurrence/series-ops'
 import { randomId } from './shared'
+import {
+  adjustSplitPresetRows,
+  normalizeSplitPresetName,
+} from './split-presets'
 
 export type CloudImportParticipantMapping = {
   sourceParticipantId: string
@@ -62,10 +67,29 @@ export type CloudImportInput = {
   groupPreference?: {
     starred: boolean
     hidden: boolean
-    defaultSplit: {
+    defaultSplit?: {
       splitMode: 'EVENLY' | 'BY_SHARES' | 'BY_PERCENTAGE' | 'BY_AMOUNT'
       paidFor: Array<{ participantId: string; shares: number }>
     } | null
+    personalSplitPresets?: Array<{
+      sourceId: string
+      name: string
+      target: 'PAID_BY' | 'PAID_FOR'
+      splitMode: 'EVENLY' | 'BY_SHARES' | 'BY_PERCENTAGE'
+      createdAt: string
+      updatedAt: string
+      participants: Array<{ participantId: string; shares: number }>
+    }>
+    personalDefaults?: {
+      paidBy: {
+        mode: 'INHERIT' | 'PRESET' | 'NEUTRAL'
+        presetSourceId: string | null
+      }
+      paidFor: {
+        mode: 'INHERIT' | 'PRESET' | 'NEUTRAL'
+        presetSourceId: string | null
+      }
+    }
   }
 }
 
@@ -356,6 +380,111 @@ function validateReferences(
       subgroupParticipants.add(id)
     }
   }
+  const presetNames = new Set<string>()
+  const sharedPresetIds = new Set<string>()
+  const validatePreset = (preset: {
+    target: 'PAID_BY' | 'PAID_FOR'
+    splitMode: 'EVENLY' | 'BY_SHARES' | 'BY_PERCENTAGE'
+    participants: Array<{ participantId: string; shares: number }>
+  }) => {
+    ensureUniqueShareRows(preset.participants, 'split preset share list')
+    for (const row of preset.participants) ensureParticipant(row.participantId)
+    splitPresetSchema.parse({
+      target: preset.target,
+      splitMode: preset.splitMode,
+      participants: preset.participants.map((row) => ({
+        participant: row.participantId,
+        shares: row.shares,
+      })),
+    })
+  }
+  for (const preset of manifest.splitPresets) {
+    if (sharedPresetIds.has(preset.sourceId)) {
+      throw new Error('Cloud bundle contains duplicate split preset IDs')
+    }
+    sharedPresetIds.add(preset.sourceId)
+    const name = normalizeSplitPresetName(preset.name)
+    if (!name.name || presetNames.has(name.nameKey)) {
+      throw new Error('Cloud bundle contains duplicate split preset names')
+    }
+    presetNames.add(name.nameKey)
+    validatePreset(preset)
+  }
+  for (const preset of inputGroupPreference?.personalSplitPresets ?? []) {
+    validatePreset(preset)
+  }
+  const personalPresetNames = new Set<string>()
+  for (const preset of inputGroupPreference?.personalSplitPresets ?? []) {
+    const name = normalizeSplitPresetName(preset.name)
+    if (!name.name || personalPresetNames.has(name.nameKey)) {
+      throw new Error(
+        'Cloud account preferences contain duplicate personal split preset names',
+      )
+    }
+    personalPresetNames.add(name.nameKey)
+  }
+  const personalPresetIds = new Set<string>()
+  for (const preset of inputGroupPreference?.personalSplitPresets ?? []) {
+    if (personalPresetIds.has(preset.sourceId)) {
+      throw new Error(
+        'Cloud account preferences contain duplicate personal split preset IDs',
+      )
+    }
+    personalPresetIds.add(preset.sourceId)
+  }
+  const assertDefaultReference = (
+    sourceId: string | null | undefined,
+    target: 'PAID_BY' | 'PAID_FOR',
+    allowPersonal: boolean,
+  ) => {
+    if (!sourceId) return
+    const shared = manifest.splitPresets.find(
+      (preset) => preset.sourceId === sourceId,
+    )
+    const personal = inputGroupPreference?.personalSplitPresets?.find(
+      (preset) => preset.sourceId === sourceId,
+    )
+    const candidate = shared ?? (allowPersonal ? personal : undefined)
+    if (!candidate || candidate.target !== target) {
+      throw new Error(
+        'Cloud split preset default references an incompatible preset',
+      )
+    }
+  }
+  assertDefaultReference(manifest.defaultPaidByPresetSourceId, 'PAID_BY', false)
+  assertDefaultReference(
+    manifest.defaultPaidForPresetSourceId,
+    'PAID_FOR',
+    false,
+  )
+  for (const choice of [
+    inputGroupPreference?.personalDefaults?.paidBy,
+    inputGroupPreference?.personalDefaults?.paidFor,
+  ]) {
+    if (choice?.mode === 'PRESET' && !choice.presetSourceId) {
+      throw new Error('Personal split preset default is missing its preset')
+    }
+    if (choice && choice.mode !== 'PRESET' && choice.presetSourceId) {
+      throw new Error(
+        'Only PRESET personal defaults may reference a split preset',
+      )
+    }
+  }
+  assertDefaultReference(
+    inputGroupPreference?.personalDefaults?.paidBy?.presetSourceId,
+    'PAID_BY',
+    true,
+  )
+  assertDefaultReference(
+    inputGroupPreference?.personalDefaults?.paidFor?.presetSourceId,
+    'PAID_FOR',
+    true,
+  )
+  // Keep these sets alive as explicit validation breadcrumbs for future
+  // import extensions; source IDs must never collide across libraries.
+  if ([...sharedPresetIds].some((id) => personalPresetIds.has(id))) {
+    throw new Error('Cloud split preset IDs must be unique across libraries')
+  }
   for (const budget of manifest.budgets) {
     for (const id of budget.participantIds) ensureParticipant(id)
   }
@@ -450,16 +579,13 @@ function validateReferences(
         ensureParticipant(comment.authorParticipantId)
     }
   }
-  const defaultSplit = inputGroupPreference?.defaultSplit
-  if (defaultSplit) {
-    const defaultParticipantIds = defaultSplit.paidFor.map(
-      (row) => row.participantId,
-    )
-    if (new Set(defaultParticipantIds).size !== defaultParticipantIds.length) {
-      throw new Error('Cloud group preference contains duplicate participants')
-    }
-    for (const row of defaultSplit.paidFor) ensureParticipant(row.participantId)
-  }
+  // A legacy account preference is only a fallback for snapshots produced
+  // before shared presets existed. Once the group snapshot contains presets,
+  // ignore the legacy field entirely (including stale participant IDs).
+  // Legacy private defaults are best-effort compatibility data. Their
+  // intrinsic shape is checked later with safeParse; malformed definitions
+  // are skipped, and participant IDs absent from the group snapshot are
+  // treated like historical participants and pruned during restoration.
 }
 
 type FriendImportLedger = {
@@ -1181,6 +1307,22 @@ export async function importCloudGroup(
         })
       }
     }
+    const currentDestinationParticipantIds = new Set(
+      (
+        await tx.ledgerParticipant.findMany({
+          where: {
+            ledgerId: ledger.id,
+            removedAt: null,
+            OR: [
+              { groupMember: { status: 'ACTIVE' } },
+              { invitations: { some: { status: 'PENDING' } } },
+              { kind: 'UNLINKED_PARTICIPANT' },
+            ],
+          },
+          select: { id: true },
+        })
+      ).map((participant) => participant.id),
+    )
     if (input.groupPreference) {
       await tx.accountGroupPreference.upsert({
         where: {
@@ -1201,36 +1343,169 @@ export async function importCloudGroup(
           hidden: input.groupPreference.hidden,
         },
       })
-      if (input.groupPreference.defaultSplit) {
-        const header = await tx.accountGroupDefaultSplit.upsert({
-          where: {
-            accountId_groupId: {
-              accountId: actor.accountId,
-              groupId: group.id,
-            },
-          },
-          create: {
-            id: randomId(),
-            accountId: actor.accountId,
-            groupId: group.id,
-            splitMode: input.groupPreference.defaultSplit.splitMode,
-          },
-          update: {
-            splitMode: input.groupPreference.defaultSplit.splitMode,
-            updatedAt: new Date(),
-          },
+    }
+    const importedSharedPresets = manifest.splitPresets.toSorted(
+      (left, right) =>
+        left.name.localeCompare(right.name) ||
+        left.createdAt.localeCompare(right.createdAt) ||
+        left.sourceId.localeCompare(right.sourceId),
+    )
+    const importedPersonalPresets = (
+      input.groupPreference?.personalSplitPresets ?? []
+    ).toSorted(
+      (left, right) =>
+        left.name.localeCompare(right.name) ||
+        left.createdAt.localeCompare(right.createdAt) ||
+        left.sourceId.localeCompare(right.sourceId),
+    )
+    const legacyDefinition = input.groupPreference?.defaultSplit
+      ? splitPresetSchema.safeParse({
+          target: 'PAID_FOR',
+          splitMode: input.groupPreference.defaultSplit.splitMode,
+          participants: input.groupPreference.defaultSplit.paidFor.map(
+            (row) => ({ participant: row.participantId, shares: row.shares }),
+          ),
         })
-        await tx.accountGroupDefaultSplitPaidFor.deleteMany({
-          where: { defaultSplitId: header.id },
-        })
-        await tx.accountGroupDefaultSplitPaidFor.createMany({
-          data: input.groupPreference.defaultSplit.paidFor.map((row) => ({
-            defaultSplitId: header.id,
-            participantId: destinationIds.get(row.participantId)!,
-            shares: row.shares,
-          })),
-        })
+      : null
+    const legacyDefault =
+      importedSharedPresets.length === 0 &&
+      importedPersonalPresets.length === 0 &&
+      legacyDefinition?.success
+        ? {
+            sourceId: randomId(),
+            name: 'Default',
+            target: 'PAID_FOR' as const,
+            splitMode: legacyDefinition.data.splitMode,
+            createdAt: new Date(0).toISOString(),
+            updatedAt: new Date(0).toISOString(),
+            participants: legacyDefinition.data.participants.map((row) => ({
+              participantId: row.participant,
+              shares: row.shares,
+            })),
+          }
+        : null
+
+    const createdSourceIds = new Map<string, string>()
+    const createImportedPreset = async (
+      preset: (typeof importedSharedPresets)[number],
+      scope: 'SHARED' | 'PERSONAL',
+    ) => {
+      const name = normalizeSplitPresetName(preset.name)
+      const ownerAccountId = scope === 'PERSONAL' ? actor.accountId : null
+      const id = randomId()
+      const remainingRows = preset.participants
+        .map((row) => ({
+          participantId: destinationIds.get(row.participantId)!,
+          shares: row.shares,
+        }))
+        .filter((row) =>
+          currentDestinationParticipantIds.has(row.participantId),
+        )
+      const rows = adjustSplitPresetRows(preset.splitMode, remainingRows)
+      if (rows.length === 0) return
+      const presetData = {
+        id,
+        groupId: group.id,
+        ownerAccountId,
+        scopeKey: scope === 'SHARED' ? 'GROUP' : `ACCOUNT:${actor.accountId}`,
+        name: name.name,
+        nameKey: name.nameKey,
+        target: preset.target,
+        splitMode: preset.splitMode,
+        createdAt: asDate(preset.createdAt),
+        updatedAt: asDate(preset.updatedAt),
       }
+      const create = (tx.splitPreset as { create?: Function }).create
+      if (typeof create === 'function') {
+        await create.call(tx.splitPreset, {
+          data: { ...presetData, participants: { create: rows } },
+          select: { id: true },
+        })
+      } else {
+        await tx.splitPreset.createMany({ data: [presetData] })
+        const participantRows = rows.map((row) => ({
+          presetId: id,
+          ...row,
+        }))
+        await tx.splitPresetParticipant.createMany({ data: participantRows })
+      }
+      createdSourceIds.set(preset.sourceId, id)
+    }
+
+    for (const preset of importedSharedPresets) {
+      await createImportedPreset(preset, 'SHARED')
+    }
+    for (const preset of importedPersonalPresets) {
+      await createImportedPreset(preset, 'PERSONAL')
+    }
+    if (legacyDefault) {
+      await createImportedPreset(legacyDefault, 'PERSONAL')
+    }
+
+    const importedGroupDefaults = {
+      paidByPresetId: manifest.defaultPaidByPresetSourceId
+        ? (createdSourceIds.get(manifest.defaultPaidByPresetSourceId) ?? null)
+        : null,
+      paidForPresetId: manifest.defaultPaidForPresetSourceId
+        ? (createdSourceIds.get(manifest.defaultPaidForPresetSourceId) ?? null)
+        : null,
+    }
+    if (
+      importedGroupDefaults.paidByPresetId ||
+      importedGroupDefaults.paidForPresetId
+    ) {
+      await tx.group.update({
+        where: { id: group.id },
+        data: importedGroupDefaults,
+      })
+    }
+
+    const personalDefaults = input.groupPreference?.personalDefaults
+    const legacyDefaultSourceId = legacyDefault?.sourceId ?? null
+    if (personalDefaults || legacyDefaultSourceId) {
+      const requestedPaidByMode = personalDefaults?.paidBy.mode ?? 'INHERIT'
+      const requestedPaidForMode = legacyDefaultSourceId
+        ? 'PRESET'
+        : (personalDefaults?.paidFor.mode ?? 'INHERIT')
+      const paidBySource = personalDefaults?.paidBy.presetSourceId ?? null
+      const paidForSource =
+        legacyDefaultSourceId ??
+        personalDefaults?.paidFor.presetSourceId ??
+        null
+      const paidByPresetId = paidBySource
+        ? (createdSourceIds.get(paidBySource) ?? null)
+        : null
+      const paidForPresetId = paidForSource
+        ? (createdSourceIds.get(paidForSource) ?? null)
+        : null
+      const paidByMode =
+        requestedPaidByMode === 'PRESET' && !paidByPresetId
+          ? 'INHERIT'
+          : requestedPaidByMode
+      const paidForMode =
+        requestedPaidForMode === 'PRESET' && !paidForPresetId
+          ? 'INHERIT'
+          : requestedPaidForMode
+      await tx.accountGroupPreference.upsert({
+        where: {
+          accountId_groupId: { accountId: actor.accountId, groupId: group.id },
+        },
+        create: {
+          id: randomId(),
+          accountId: actor.accountId,
+          groupId: group.id,
+          paidByDefaultMode: paidByMode,
+          paidByDefaultPresetId: paidByPresetId,
+          paidForDefaultMode: paidForMode,
+          paidForDefaultPresetId: paidForPresetId,
+        },
+        update: {
+          paidByDefaultMode: paidByMode,
+          paidByDefaultPresetId: paidByPresetId,
+          paidForDefaultMode: paidForMode,
+          paidForDefaultPresetId: paidForPresetId,
+        },
+      })
     }
     if (input.archived) {
       await tx.group.update({

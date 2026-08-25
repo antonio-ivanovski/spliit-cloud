@@ -15,6 +15,10 @@ import {
 import { getApiBoss } from './boss'
 import { memberWithLedgerParticipantSelect } from './selects/member-with-ledger-participant'
 import { randomId } from './shared'
+import {
+  adjustSplitPresetsForRemovedParticipant,
+  deletePersonalPresetsForAccount,
+} from './split-presets'
 import { removeParticipantFromSubgroup } from './subgroups'
 
 /** Update a member's role inside a group. */
@@ -200,8 +204,13 @@ export async function removeMember(opts: {
         where: { id: target.ledgerParticipant.id },
         data: { removedAt: new Date() },
       })
+      await adjustSplitPresetsForRemovedParticipant(
+        target.ledgerParticipant.id,
+        tx,
+      )
       await removeParticipantFromSubgroup(target.ledgerParticipant.id, tx)
     }
+    await deletePersonalPresetsForAccount(groupId, target.accountId, tx)
     await planNotificationForActivity(tx, activity, {}, { boss })
     for (const settlementActivity of settlementActivities ?? []) {
       await planNotificationForActivity(
@@ -387,8 +396,10 @@ export async function leaveGroup(opts: {
       },
     })
     if (participantId) {
+      await adjustSplitPresetsForRemovedParticipant(participantId, tx)
       await removeParticipantFromSubgroup(participantId, tx)
     }
+    await deletePersonalPresetsForAccount(groupId, member.accountId, tx)
 
     const activity = await logActivity(
       groupId,

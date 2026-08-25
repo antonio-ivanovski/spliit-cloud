@@ -1,12 +1,9 @@
 import type { SetStateAction } from 'react'
-import { useCallback, useEffect, type Dispatch } from 'react'
+import { useCallback, useEffect, useRef, useState, type Dispatch } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import { useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { ParticipantDistributionFooter } from '@/components/participant-distribution-footer'
-import { ParticipantSelector } from '@/components/participant-selector'
-import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -23,8 +20,11 @@ import { type SplitMode } from '@spliit/domain'
 import { expenseTabPriority } from './focus-navigation'
 import { getRowShareErrors } from './get-row-share-errors'
 import { PaidByRow } from './paid-by-row'
-import { RowErrorSummary } from './row-error-summary'
 import type { ShareInputRefs } from './share-row-input'
+import {
+  SinglePayerDistributionEditor,
+  SplitDistributionEditor,
+} from './split-distribution-editor'
 import {
   buildEqualParticipantRows,
   convertParticipantShares,
@@ -33,6 +33,14 @@ import {
   PaidBySplitOptionCards,
   type PaidBySplitOption,
 } from './split-option-cards'
+import {
+  SavePresetButton,
+  SplitPresetPicker,
+  presetToFormPaidBySplit,
+  sameParticipantDistribution,
+  type LoadedPresetSource,
+  type SplitPreset,
+} from './split-presets'
 import { useShowRowErrors } from './use-show-row-errors'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
@@ -45,11 +53,29 @@ export function PaidByCard(props: {
   readOnly: boolean
   sExpense: 'Expense' | 'Income'
   setManuallyEditedPayers: Dispatch<SetStateAction<Set<string>>>
+  presets: SplitPreset[]
+  presetsLoading?: boolean
+  canManageShared?: boolean
+  canManagePersonal?: boolean
+  initialLoadedPreset?: SplitPreset | null
+  initialLoadedSource?: LoadedPresetSource | null
   /** Participant-keyed share input registry, owned by the expense form. */
   inputRefs: ShareInputRefs
 }) {
-  const { form, group, groupCurrency, payerCurrency, readOnly, sExpense } =
-    props
+  const {
+    form,
+    group,
+    groupCurrency,
+    payerCurrency,
+    readOnly,
+    sExpense,
+    presets,
+    presetsLoading,
+    canManageShared,
+    canManagePersonal,
+    initialLoadedPreset,
+    initialLoadedSource,
+  } = props
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
 
   const isMultiPayer = useWatch({ control: form.control, name: 'isMultiPayer' })
@@ -59,6 +85,24 @@ export function PaidByCard(props: {
   })
   const paidByList = useWatch({ control: form.control, name: 'paidByList' })
   const amount = useWatch({ control: form.control, name: 'amount' })
+  const [loadedPresetState, setLoadedPreset] = useState<
+    SplitPreset | null | undefined
+  >(undefined)
+  const [loadedSourceState, setLoadedSource] = useState<
+    LoadedPresetSource | null | undefined
+  >(undefined)
+  const saveChangesRef = useRef<() => void>(() => {})
+  const saveAsRef = useRef<() => void>(() => {})
+  const loadedPreset =
+    loadedPresetState === undefined
+      ? (initialLoadedPreset ?? null)
+      : loadedPresetState
+  const loadedSource =
+    loadedSourceState === undefined
+      ? loadedPreset
+        ? (initialLoadedSource ?? 'MANUAL')
+        : null
+      : loadedSourceState
 
   const singlePayerTargetAmount = Number(amount) || 0
   const singlePayerPaidByList = useCallback(
@@ -103,6 +147,62 @@ export function PaidByCard(props: {
       shouldValidate: true,
     })
   }
+
+  const applyPaidByPreset = (preset: SplitPreset) => {
+    const next = presetToFormPaidBySplit(preset)
+    if (!next) return
+    form.setValue('isMultiPayer', next.isMultiPayer, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    })
+    form.setValue('paidBySplitMode', next.paidBySplitMode, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    })
+    form.setValue('paidByList', next.paidByList, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    })
+    setLoadedPreset(preset)
+    setLoadedSource('MANUAL')
+  }
+
+  const loadedPaidBy = loadedPreset
+    ? presetToFormPaidBySplit(loadedPreset)
+    : null
+  const comparableLoadedPaidBy =
+    loadedPaidBy && !loadedPaidBy.isMultiPayer && loadedPaidBy.paidByList[0]
+      ? {
+          ...loadedPaidBy,
+          paidByList: singlePayerPaidByList(
+            loadedPaidBy.paidByList[0].participant,
+          ),
+        }
+      : loadedPaidBy
+  const paidByModified =
+    !!comparableLoadedPaidBy &&
+    (isMultiPayer !== comparableLoadedPaidBy.isMultiPayer ||
+      paidBySplitMode !== comparableLoadedPaidBy.paidBySplitMode ||
+      !sameParticipantDistribution(
+        paidByList,
+        comparableLoadedPaidBy.paidByList,
+      ))
+
+  const canSaveCurrentPaidBy = isMultiPayer
+    ? paidBySplitMode !== 'BY_AMOUNT' && paidBySplitMode !== 'ITEMIZED'
+    : paidByList.length === 1 && !!paidByList[0]?.participant
+  const canCreatePreset = !!canManageShared || !!canManagePersonal
+  const savePaidBySplitMode = isMultiPayer
+    ? paidBySplitMode === 'BY_AMOUNT' || paidBySplitMode === 'ITEMIZED'
+      ? undefined
+      : paidBySplitMode
+    : 'EVENLY'
+  const savePaidBy = isMultiPayer
+    ? paidByList
+    : paidByList.map(({ participant }) => ({ participant, shares: 1 }))
 
   // Single-payer BY_AMOUNT shares are entered in payer currency.
   useEffect(() => {
@@ -172,10 +272,9 @@ export function PaidByCard(props: {
             const selectedPayer = paidByList[0]?.participant ?? ''
             return (
               <FormItem data-expense-tab-priority={expenseTabPriority.paidBy}>
-                <ParticipantSelector
+                <SinglePayerDistributionEditor
                   participants={group.participants}
-                  mode="single"
-                  defaultValue={selectedPayer}
+                  value={selectedPayer}
                   onValueChange={(value) => {
                     form.setValue('paidByList', singlePayerPaidByList(value), {
                       shouldDirty: true,
@@ -185,7 +284,7 @@ export function PaidByCard(props: {
                   }}
                   disabled={readOnly}
                   className="w-full"
-                  singlePlaceholder={t('Expense.paidByField.placeholder')}
+                  placeholder={t('Expense.paidByField.placeholder')}
                   mobileTitle={t(`${sExpense}.paidByField.label`)}
                 />
                 <FormMessage />
@@ -208,51 +307,33 @@ export function PaidByCard(props: {
         : amountAsMinorUnits(Number(amount) || 0, payerCurrency)
 
     return (
-      <>
-        <div className="mb-2 flex justify-end gap-1">
-          <Button
-            variant="link"
-            type="button"
-            className="-my-2 -me-2"
-            disabled={readOnly}
-            onClick={handleResetPaidByDistribution}
-          >
-            {t('resetDistribution')}
-          </Button>
-          <Button
-            variant="link"
-            type="button"
-            className="-my-2 -me-2"
-            disabled={readOnly}
-            onClick={handleSelectPaidByParticipants}
-          >
-            {paidByList.length === group.participants.length
-              ? t('selectNone')
-              : t('selectAll')}
-          </Button>
-        </div>
-        <RowErrorSummary
-          errors={
-            showRowErrors
-              ? getRowShareErrors({
-                  rows: paidByList,
-                  splitMode: option.splitMode,
-                  amount: Number(amount) || 0,
-                  // Paid-by shares may be signed (negative income expenses).
-                  allowNegative: true,
-                })
-              : []
-          }
-          participantName={(id) =>
-            group.participants.find((p) => p.id === id)?.name ?? id
-          }
-        />
-        <FormField
-          control={form.control}
-          name="paidByList"
-          render={() => (
-            <FormItem className="w-full min-w-0 space-y-0">
-              {group.participants.map((participant) => (
+      <FormField
+        control={form.control}
+        name="paidByList"
+        render={() => (
+          <FormItem className="w-full min-w-0 space-y-0">
+            <SplitDistributionEditor
+              participants={group.participants}
+              selectedCount={paidByList.length}
+              mode={option.splitMode}
+              targetAmount={targetForFooter}
+              shares={sharesForFooter}
+              currency={payerCurrency}
+              readOnly={readOnly}
+              errors={
+                showRowErrors
+                  ? getRowShareErrors({
+                      rows: paidByList,
+                      splitMode: option.splitMode,
+                      amount: Number(amount) || 0,
+                      // Paid-by shares may be signed (negative income expenses).
+                      allowNegative: true,
+                    })
+                  : []
+              }
+              onReset={handleResetPaidByDistribution}
+              onToggleAll={handleSelectPaidByParticipants}
+              renderRow={(participant) => (
                 <PaidByRow
                   key={participant.id}
                   form={form}
@@ -263,20 +344,13 @@ export function PaidByCard(props: {
                   inputRefs={props.inputRefs}
                   setManuallyEditedPayers={props.setManuallyEditedPayers}
                 />
-              ))}
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <ParticipantDistributionFooter
-          splitMode={option.splitMode}
-          targetAmount={targetForFooter}
-          shares={sharesForFooter}
-          currency={payerCurrency}
-          paidByCount={paidByList.length}
-          dataTestId="paid-by-distribution-footer"
-        />
-      </>
+              )}
+              afterRows={<FormMessage />}
+              dataTestId="paid-by-distribution-footer"
+            />
+          </FormItem>
+        )}
+      />
     )
   }
 
@@ -286,6 +360,59 @@ export function PaidByCard(props: {
         <CardTitle className="flex justify-between">
           <span>{t(`${sExpense}.paidByField.label`)}</span>
         </CardTitle>
+        {!readOnly && (
+          <div className="mt-2 w-full">
+            <SplitPresetPicker
+              presets={presets}
+              group={group}
+              target="paidBy"
+              amount={Number(amount) || 0}
+              currency={payerCurrency}
+              loading={presetsLoading}
+              loadedPreset={loadedPreset}
+              loadedSource={loadedSource}
+              modified={paidByModified}
+              onSaveAsNew={
+                canSaveCurrentPaidBy && canCreatePreset
+                  ? () => saveAsRef.current()
+                  : undefined
+              }
+              canSaveChanges={
+                !!loadedPreset &&
+                canSaveCurrentPaidBy &&
+                ((loadedPreset.scope === 'SHARED' && canManageShared) ||
+                  (loadedPreset.scope === 'PERSONAL' && canManagePersonal))
+              }
+              onSaveChanges={() => saveChangesRef.current()}
+              onSelect={applyPaidByPreset}
+            />
+            {canSaveCurrentPaidBy && canCreatePreset && (
+              <SavePresetButton
+                group={group}
+                groupCurrency={groupCurrency}
+                target="PAID_BY"
+                paidBy={savePaidBy}
+                splitMode={savePaidBySplitMode}
+                existingPreset={loadedPreset}
+                modified={paidByModified}
+                onSaved={() => {
+                  setLoadedPreset(null)
+                  setLoadedSource(null)
+                }}
+                onSaveChangesReady={(save) => {
+                  saveChangesRef.current = save
+                }}
+                onSaveAsReady={(saveAs) => {
+                  saveAsRef.current = saveAs
+                }}
+                onUpdated={(preset) => setLoadedPreset(preset)}
+                hideTrigger
+                canManageShared={canManageShared}
+                canManagePersonal={canManagePersonal}
+              />
+            )}
+          </div>
+        )}
         <CardDescription>
           {t(`${sExpense}.paidByField.description`)}
         </CardDescription>

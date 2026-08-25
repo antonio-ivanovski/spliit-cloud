@@ -218,20 +218,11 @@ export const assistantRouter = createTRPCRouter({
     )
     .query(async ({ input, ctx }) => {
       const member = await getAssistantGroup(input.groupId, ctx.auth.user.id)
-      const [balances, expenses, savedDefault] = await Promise.all([
+      const [balances, expenses] = await Promise.all([
         getGroupBalances(input.groupId, member.group.ledger.id),
         getGroupExpenses(input.groupId, {
           ledgerId: member.group.ledger.id,
           length: input.recentExpenseLimit,
-        }),
-        prisma.accountGroupDefaultSplit.findUnique({
-          where: {
-            accountId_groupId: {
-              accountId: ctx.auth.user.id,
-              groupId: input.groupId,
-            },
-          },
-          include: { paidFor: true },
         }),
       ])
       const participants = member.group.ledger.participants.map(
@@ -254,19 +245,6 @@ export const assistantRouter = createTRPCRouter({
         },
         callerParticipantId: member.ledgerParticipant?.id ?? null,
         participants,
-        defaultSplit:
-          savedDefault && savedDefault.splitMode !== 'ITEMIZED'
-            ? {
-                mode: savedDefault.splitMode,
-                participants: savedDefault.paidFor.map((row) => ({
-                  participantId: row.participantId,
-                  shares: assistantShareDisplay(
-                    savedDefault.splitMode,
-                    row.shares,
-                  ),
-                })),
-              }
-            : null,
         balances,
         recentExpenses: expenses.map((expense) => ({
           id: expense.id,

@@ -17,6 +17,7 @@ import {
 } from './activities'
 import { getApiBoss } from './boss'
 import { randomId } from './shared'
+import { mergeSplitPresetParticipantReferences } from './split-presets'
 
 /** One-way admin migration of an unlinked `LedgerParticipant` to an account. */
 export async function linkUnlinkedParticipantToAccount(opts: {
@@ -198,6 +199,7 @@ export async function mergeLedgerParticipantReferences(
     targetId,
   )
   await coalesceExpenseItemReferences(tx.expenseItemPaidFor, sourceId, targetId)
+  await mergeSplitPresetParticipantReferences(sourceId, targetId, tx)
 
   await tx.expensePaidBy.updateMany({
     where: { ledgerParticipantId: sourceId },

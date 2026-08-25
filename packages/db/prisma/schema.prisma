@@ -56,9 +56,9 @@ model Account {
   // Invitations this account has issued as an owner/admin.
   sentInvitations               GroupInvitation[]               @relation("InvitationInviter")
   groupPreferences              AccountGroupPreference[]
+  personalSplitPresets          SplitPreset[]                  @relation("PersonalSplitPresetOwner")
   savedViews                    AccountSavedView[]
   preference                    AccountPreference?
-  defaultSplits                 AccountGroupDefaultSplit[]
   pushSubscriptions             PushSubscription[]
   notificationPreferences       AccountNotificationPreference[]
   notificationDeliveries        NotificationDelivery[]
@@ -486,7 +486,7 @@ model LedgerParticipant {
   expensesPaidFor                 ExpensePaidFor[]
   expenseItemPaidFor              ExpenseItemPaidFor[]
   expenseItemizedRemainderPaidFor ExpenseItemizedRemainderPaidFor[]
-  defaultSplitShares              AccountGroupDefaultSplitPaidFor[]
+  splitPresetParticipants         SplitPresetParticipant[]
   // Pending invitations that materialized this ledger participant to allow
   // pre-accept expenses. The link is cleared when the invitation is revoked.
   invitations                     GroupInvitation[]
@@ -538,7 +538,11 @@ model Group {
   publicViewKey      String?                    @unique
   accountPreferences AccountGroupPreference[]
   savedViews         AccountSavedView[]
-  defaultSplits      AccountGroupDefaultSplit[]
+  splitPresets       SplitPreset[]
+  defaultPaidByPreset   SplitPreset? @relation("GroupDefaultPaidBy", fields: [defaultPaidByPresetId], references: [id], onDelete: SetNull)
+  defaultPaidByPresetId String?
+  defaultPaidForPreset   SplitPreset? @relation("GroupDefaultPaidFor", fields: [defaultPaidForPresetId], references: [id], onDelete: SetNull)
+  defaultPaidForPresetId String?
   budgets            GroupBudget[]
   subgroupsEnabled   Boolean                    @default(false)
   subgroups          Subgroup[]
@@ -731,6 +735,13 @@ model AccountGroupPreference {
   // group-level flag set by ADMIN/OWNER through the `groups.archive` mutation.
   hidden  Boolean @default(false)
 
+  paidByDefaultMode SplitPresetDefaultMode @default(INHERIT)
+  paidByDefaultPreset SplitPreset? @relation("AccountGroupDefaultPaidBy", fields: [paidByDefaultPresetId], references: [id], onDelete: SetNull)
+  paidByDefaultPresetId String?
+  paidForDefaultMode SplitPresetDefaultMode @default(INHERIT)
+  paidForDefaultPreset SplitPreset? @relation("AccountGroupDefaultPaidFor", fields: [paidForDefaultPresetId], references: [id], onDelete: SetNull)
+  paidForDefaultPresetId String?
+
   @@unique([accountId, groupId])
 }
 
@@ -755,30 +766,51 @@ model AccountSavedView {
   @@index([accountId, lastOpenedAt])
 }
 
-model AccountGroupDefaultSplit {
+enum SplitPresetDefaultMode {
+  INHERIT
+  PRESET
+  NEUTRAL
+}
+
+enum SplitPresetTarget {
+  PAID_BY
+  PAID_FOR
+}
+
+model SplitPreset {
   id        String   @id
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  account   Account                           @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  accountId String
-  group     Group                             @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  group     Group      @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId   String
+  ownerAccount   Account? @relation("PersonalSplitPresetOwner", fields: [ownerAccountId], references: [id], onDelete: Cascade)
+  ownerAccountId String?
+  // GROUP for shared presets, ACCOUNT:<accountId> for personal presets.
+  scopeKey  String
+  name      String
+  nameKey   String
+  target    SplitPresetTarget
   splitMode SplitMode
-  paidFor   AccountGroupDefaultSplitPaidFor[]
+  participants SplitPresetParticipant[]
 
-  @@unique([accountId, groupId])
-  @@index([groupId])
+  groupDefaultPaidBy  Group[] @relation("GroupDefaultPaidBy")
+  groupDefaultPaidFor Group[] @relation("GroupDefaultPaidFor")
+  accountDefaultPaidBy  AccountGroupPreference[] @relation("AccountGroupDefaultPaidBy")
+  accountDefaultPaidFor AccountGroupPreference[] @relation("AccountGroupDefaultPaidFor")
+
+  @@unique([groupId, scopeKey, nameKey])
+  @@index([ownerAccountId, groupId])
 }
 
-model AccountGroupDefaultSplitPaidFor {
-  defaultSplit   AccountGroupDefaultSplit @relation(fields: [defaultSplitId], references: [id], onDelete: Cascade)
-  defaultSplitId String
-  participant    LedgerParticipant        @relation(fields: [participantId], references: [id], onDelete: Restrict)
-  participantId  String
-  shares         Int
+model SplitPresetParticipant {
+  preset        SplitPreset       @relation(fields: [presetId], references: [id], onDelete: Cascade)
+  presetId      String
+  participant   LedgerParticipant @relation(fields: [participantId], references: [id], onDelete: Restrict)
+  participantId String
+  shares        Int
 
-  @@id([defaultSplitId, participantId])
+  @@id([presetId, participantId])
   @@index([participantId])
 }
 

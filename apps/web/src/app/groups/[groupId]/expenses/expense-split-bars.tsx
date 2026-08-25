@@ -9,6 +9,8 @@ type SplitRow = {
   name: string
   amount: number
   value?: string
+  amountLabel?: string
+  distributionWeight?: number
   participant?: {
     id: string
     name: string
@@ -31,41 +33,63 @@ export function ExpenseSplitBars({
   rows,
   currency,
   locale,
+  compact = false,
+  showAmounts = true,
 }: {
   label: string
   modeLabel?: string
   rows: SplitRow[]
   currency: Currency
   locale: string
+  compact?: boolean
+  showAmounts?: boolean
 }) {
   if (rows.length === 0) return null
-  const total = rows.reduce((sum, row) => sum + Math.abs(row.amount), 0)
+  const amountTotal = rows.reduce((sum, row) => sum + Math.abs(row.amount), 0)
+  const weightTotal = rows.reduce(
+    (sum, row) => sum + Math.abs(row.distributionWeight ?? 0),
+    0,
+  )
+  const useWeights = amountTotal === 0 && weightTotal > 0
+  const segmentTotal = useWeights ? weightTotal : amountTotal
+  const segmentValues = rows.map((row) =>
+    useWeights ? Math.abs(row.distributionWeight ?? 0) : Math.abs(row.amount),
+  )
   const isSingleParticipant = rows.length === 1
+  const showBar = compact
+    ? rows.length > 0
+    : !isSingleParticipant && amountTotal > 0
 
   return (
-    <section className="space-y-2" aria-label={label}>
+    <section className="w-full min-w-0 space-y-2" aria-label={label}>
       <h3 className="flex items-center gap-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">
         {label}
         {modeLabel && (
           <Badge
             variant="outline"
-            className="px-1.5 py-0 text-[10px] font-medium tracking-normal normal-case"
+            className="px-1.5 py-0 text-xs font-medium tracking-normal normal-case"
           >
             {modeLabel}
           </Badge>
         )}
       </h3>
-      {!isSingleParticipant && (
+      {showBar && (
         <div aria-hidden="true" className="relative h-4 w-full">
-          <div className="absolute inset-x-0 top-1/2 flex h-2.5 -translate-y-1/2 gap-px rounded-full bg-muted">
+          <div
+            className={`absolute inset-x-0 top-1/2 flex -translate-y-1/2 gap-px rounded-full bg-muted ${compact ? 'h-2' : 'h-2.5'}`}
+          >
             {rows.map((row, index) => (
               <span
                 key={row.id}
-                className={`@container relative h-2.5 min-w-0 ${COLORS[index % COLORS.length]} first:rounded-s-full last:rounded-e-full`}
+                className={`@container relative min-w-0 ${compact ? 'h-2' : 'h-2.5'} ${COLORS[index % COLORS.length]} first:rounded-s-full last:rounded-e-full`}
                 style={{
-                  width: `${total > 0 ? (Math.abs(row.amount) / total) * 100 : 0}%`,
+                  width: `${segmentTotal > 0 ? ((segmentValues[index] ?? 0) / segmentTotal) * 100 : 100 / rows.length}%`,
                 }}
-                title={`${row.name}: ${formatCurrency(currency, row.amount, locale)}`}
+                title={
+                  useWeights
+                    ? `${row.name}: ${row.value ?? row.distributionWeight ?? ''}`
+                    : `${row.name}: ${formatCurrency(currency, row.amount, locale)}`
+                }
               >
                 <span
                   aria-hidden="true"
@@ -100,9 +124,16 @@ export function ExpenseSplitBars({
                 {row.value}
               </span>
             )}
-            <span className="shrink-0 text-muted-foreground tabular-nums">
-              {formatCurrency(currency, row.amount, locale)}
-            </span>
+            {row.amountLabel && (
+              <span className="shrink-0 text-muted-foreground/70">
+                {row.amountLabel}
+              </span>
+            )}
+            {showAmounts && (
+              <span className="shrink-0 text-muted-foreground tabular-nums">
+                {formatCurrency(currency, row.amount, locale)}
+              </span>
+            )}
           </div>
         ))}
       </div>

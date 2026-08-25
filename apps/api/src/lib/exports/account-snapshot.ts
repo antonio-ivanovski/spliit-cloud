@@ -37,10 +37,21 @@ export class InvalidAccountExportSelectionError extends Error {
 type AccountExportGroupPreference = {
   starred: boolean
   hidden: boolean
-  defaultSplit: {
-    splitMode: 'EVENLY' | 'BY_SHARES' | 'BY_PERCENTAGE' | 'BY_AMOUNT'
-    paidFor: Array<{ participantId: string; shares: number }>
-  } | null
+  personalSplitPresets: Array<{
+    id: string
+    name: string
+    target: 'PAID_BY' | 'PAID_FOR'
+    splitMode: 'EVENLY' | 'BY_SHARES' | 'BY_PERCENTAGE'
+    createdAt: Date
+    updatedAt: Date
+    participants: Array<{ participantId: string; shares: number }>
+  }>
+  personalDefaults: {
+    paidByDefaultMode: 'INHERIT' | 'PRESET' | 'NEUTRAL'
+    paidByDefaultPresetId: string | null
+    paidForDefaultMode: 'INHERIT' | 'PRESET' | 'NEUTRAL'
+    paidForDefaultPresetId: string | null
+  }
 }
 
 export type AccountExportGroupSource = {
@@ -109,36 +120,41 @@ export async function loadAccountExportSource(
   })) as AccountExportMembership[]
   const groupIds = memberships.map((membership) => membership.groupId)
 
-  const [preferenceRows, defaultSplitRows] = await Promise.all([
-    groupIds.length === 0
-      ? Promise.resolve([])
-      : client.accountGroupPreference.findMany({
-          where: { accountId, groupId: { in: groupIds } },
-          select: { groupId: true, starred: true, hidden: true },
-        }),
-    !selection.includeGroupPreferences || groupIds.length === 0
-      ? Promise.resolve([])
-      : client.accountGroupDefaultSplit.findMany({
-          where: { accountId, groupId: { in: groupIds } },
-          select: {
-            groupId: true,
-            splitMode: true,
-            paidFor: {
-              orderBy: { participantId: 'asc' },
-              select: { participantId: true, shares: true },
-            },
-          },
-        }),
-  ])
+  const preferenceRows =
+    (await client.accountGroupPreference.findMany({
+      where: { accountId, groupId: { in: groupIds } },
+      select: {
+        groupId: true,
+        starred: true,
+        hidden: true,
+        paidByDefaultMode: true,
+        paidByDefaultPresetId: true,
+        paidForDefaultMode: true,
+        paidForDefaultPresetId: true,
+      },
+    })) ?? []
+
+  const personalPresetRows = client.splitPreset?.findMany
+    ? ((await client.splitPreset.findMany({
+        where: { ownerAccountId: accountId, groupId: { in: groupIds } },
+        orderBy: [
+          { groupId: 'asc' },
+          { nameKey: 'asc' },
+          { createdAt: 'asc' },
+          { id: 'asc' },
+        ],
+        include: { participants: { orderBy: { participantId: 'asc' } } },
+      })) ?? [])
+    : []
+  const personalPresetsByGroupId = new Map<string, typeof personalPresetRows>()
+  for (const preset of personalPresetRows) {
+    const current = personalPresetsByGroupId.get(preset.groupId) ?? []
+    current.push(preset)
+    personalPresetsByGroupId.set(preset.groupId, current)
+  }
 
   const preferenceByGroupId = new Map(
     preferenceRows.map((preference) => [preference.groupId, preference]),
-  )
-  const defaultSplitByGroupId = new Map(
-    defaultSplitRows.map((defaultSplit) => [
-      defaultSplit.groupId,
-      defaultSplit,
-    ]),
   )
   const activeGroupIds = new Set(groupIds)
   for (const override of selection.groupOverrides) {
@@ -182,22 +198,36 @@ export async function loadAccountExportSource(
       )
     }
     const preference = preferenceByGroupId.get(groupId)
-    const defaultSplit = defaultSplitByGroupId.get(groupId)
     groups.push({
       source,
       preference: {
         starred: preference?.starred ?? false,
         hidden: preference?.hidden ?? false,
-        defaultSplit:
-          defaultSplit && defaultSplit.splitMode !== 'ITEMIZED'
-            ? {
-                splitMode: defaultSplit.splitMode,
-                paidFor: defaultSplit.paidFor.map((row) => ({
-                  participantId: row.participantId,
-                  shares: row.shares,
-                })),
-              }
-            : null,
+        personalSplitPresets: (personalPresetsByGroupId.get(groupId) ?? []).map(
+          (preset) => ({
+            id: preset.id,
+            name: preset.name,
+            target: preset.target as 'PAID_BY' | 'PAID_FOR',
+            splitMode: preset.splitMode as
+              | 'EVENLY'
+              | 'BY_SHARES'
+              | 'BY_PERCENTAGE',
+            createdAt: preset.createdAt,
+            updatedAt: preset.updatedAt,
+            participants: preset.participants.map(
+              ({ participantId, shares }) => ({
+                participantId,
+                shares,
+              }),
+            ),
+          }),
+        ),
+        personalDefaults: {
+          paidByDefaultMode: preference?.paidByDefaultMode ?? 'INHERIT',
+          paidByDefaultPresetId: preference?.paidByDefaultPresetId ?? null,
+          paidForDefaultMode: preference?.paidForDefaultMode ?? 'INHERIT',
+          paidForDefaultPresetId: preference?.paidForDefaultPresetId ?? null,
+        },
       },
     })
   }

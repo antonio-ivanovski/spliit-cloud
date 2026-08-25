@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { accountPreferenceSchema, defaultSplitSchema } from '@spliit/domain'
+import { accountPreferenceSchema } from '@spliit/domain'
 
 import {
   accountContactSchema,
@@ -46,10 +46,6 @@ export const accountMemberSchema = z.object({
   leftAt: z.date().nullable(),
   account: accountContactSchema,
   ledgerParticipant: z.object({ id: z.string() }).nullable(),
-})
-
-export const accountDefaultSplitSchema = z.object({
-  defaultSplit: defaultSplitSchema.nullable(),
 })
 
 export const accountGroupPreferencesOutputSchema = z.object({

@@ -20,10 +20,8 @@ import {
   formatTimeMinutes,
 } from '@spliit/domain'
 
-// Storage-units shape returned by `trpc.account.defaultSplit`. Matches
-// `defaultSplitSchema` in packages/domain: shares in basis points for
-// BY_PERCENTAGE, minor units for BY_AMOUNT, fixed share units for
-// BY_SHARES (100 = 1 displayed share), inclusion markers for EVENLY.
+// Legacy storage-units shape retained for backward-compatible helper tests.
+// New reusable splits are group-owned split presets.
 const savedDefaultSplitSchema = z.object({
   splitMode: z.enum(['EVENLY', 'BY_SHARES', 'BY_PERCENTAGE', 'BY_AMOUNT']),
   paidFor: z.array(
@@ -187,11 +185,7 @@ function parsePrefilledSettlement(
   }
 }
 
-/**
- * Resolve the "neutral" default split for a group (no per-user override):
- * `EVENLY` over all participants. The form later applies the saved default when
- * present (see `buildExpenseFormDefaults`).
- */
+/** Resolve the neutral new-expense split: `EVENLY` over all participants. */
 export function getNeutralDefaultSplit(
   group: GroupShape,
 ): DefaultSplittingOptions {
@@ -204,13 +198,7 @@ export function getNeutralDefaultSplit(
   }
 }
 
-/**
- * Convert a persisted default split (storage units: basis points, minor units,
- * or fixed share units where 100 = 1 displayed share) into the form's display
- * units, filtering out any participant ids that are no longer in the group.
- * Returns null when nothing remains after filtering, so the caller can fall
- * back to the neutral default.
- */
+/** Legacy helper retained only for importing old account preference snapshots. */
 export function savedDefaultToFormValues(
   raw: unknown,
   group: GroupShape,
@@ -264,7 +252,6 @@ export function buildExpenseFormDefaults(args: {
     groupCurrency,
     currentLedgerParticipantId,
     settlementTitle,
-    savedDefault,
     today = new Date(),
     now = new Date(),
     timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone ?? 'UTC',
@@ -483,13 +470,9 @@ export function buildExpenseFormDefaults(args: {
     }
   }
 
-  // Create flow: apply the persisted default if present, else fall
-  // back to the neutral (EVENLY) split. The form's "Load default" button
-  // can later re-apply `savedDefaultToFormValues(savedDefault, ...)` if
-  // the user diverges and wants to come back to the saved shape.
-  const defaultSplittingOptions =
-    savedDefaultToFormValues(savedDefault, group, groupCurrency) ??
-    getNeutralDefaultSplit(group)
+  // Create flows always start from the neutral split. Reusable group presets
+  // are applied explicitly through the Split preset picker.
+  const defaultSplittingOptions = getNeutralDefaultSplit(group)
   const prefilledItems = parsePrefilledItems(searchParams.items, group)
   const hasPrefilledItemSplits = prefilledItems.some(
     (item) => item.paidFor.length > 0,

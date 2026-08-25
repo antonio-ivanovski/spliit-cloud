@@ -17,10 +17,11 @@ export type SplitRowDisplay = {
 }
 
 /**
- * Storage-unit row shape returned by `trpc.account.defaultSplit` and stored on
- * `AccountGroupPreference.defaultSplit`. Shares are integer minor units
- * (BY_AMOUNT), basis points (BY_PERCENTAGE), or fixed share units (BY_SHARES,
- * 100 = 1 displayed share). EVENLY rows are inclusion markers.
+ * Legacy storage-unit row shape used by compatibility tests for old account
+ * exports. Shared presets use the group-owned split-preset API instead. Shares
+ * are integer minor units (BY_AMOUNT), basis points (BY_PERCENTAGE), or fixed
+ * share units (BY_SHARES, 100 = 1 displayed share). EVENLY rows are inclusion
+ * markers.
  */
 export type SplitRowStored = {
   participant: string

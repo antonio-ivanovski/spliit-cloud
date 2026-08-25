@@ -38,9 +38,10 @@ const minimalManifest = {
 
 describe('spliitGroupExportManifestSchema', () => {
   it('accepts the versioned native group envelope', () => {
-    expect(spliitGroupExportManifestSchema.parse(minimalManifest)).toEqual(
-      minimalManifest,
-    )
+    expect(spliitGroupExportManifestSchema.parse(minimalManifest)).toEqual({
+      ...minimalManifest,
+      splitPresets: [],
+    })
   })
 
   it('exposes the group data as a reusable container-independent snapshot', () => {
@@ -52,7 +53,10 @@ describe('spliitGroupExportManifestSchema', () => {
       ...snapshot
     } = minimalManifest
 
-    expect(spliitGroupExportSnapshotSchema.parse(snapshot)).toEqual(snapshot)
+    expect(spliitGroupExportSnapshotSchema.parse(snapshot)).toEqual({
+      ...snapshot,
+      splitPresets: [],
+    })
   })
 
   it('rejects unsupported versions and invalid document checksums', () => {

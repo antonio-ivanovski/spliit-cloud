@@ -189,6 +189,21 @@ const subgroup = z.object({
   participantIds: z.array(sourceId),
 })
 
+const splitPreset = z.object({
+  sourceId,
+  name: z.string().trim().min(1).max(120),
+  target: z.enum(['PAID_BY', 'PAID_FOR']),
+  createdAt: isoDateTime,
+  updatedAt: isoDateTime,
+  splitMode: z.enum(['EVENLY', 'BY_SHARES', 'BY_PERCENTAGE']),
+  participants: z.array(shareRow).min(1),
+})
+
+const splitPresetDefaultChoice = z.object({
+  mode: z.enum(['INHERIT', 'PRESET', 'NEUTRAL']),
+  presetSourceId: sourceId.nullable(),
+})
+
 const budget = z.object({
   sourceId,
   name: z.string(),
@@ -240,6 +255,9 @@ export const spliitGroupExportSnapshotSchema = z.object({
   }),
   participants: z.array(participant),
   subgroups: z.array(subgroup),
+  splitPresets: z.array(splitPreset).default([]),
+  defaultPaidByPresetSourceId: sourceId.nullable().optional(),
+  defaultPaidForPresetSourceId: sourceId.nullable().optional(),
   budgets: z.array(budget),
   recurrenceSeries: z.array(recurrenceSeries),
   expenses: z.array(expense),
@@ -339,7 +357,16 @@ export const accountExportGroupPreferenceSchema = z.object({
   groupSourceId: sourceId,
   starred: z.boolean(),
   hidden: z.boolean(),
-  defaultSplit: accountExportDefaultSplitSchema.nullable(),
+  // Retained as an optional legacy field so older account bundles remain
+  // importable. New exports store shared presets in the group snapshot.
+  defaultSplit: accountExportDefaultSplitSchema.nullable().optional(),
+  personalSplitPresets: z.array(splitPreset).default([]),
+  personalDefaults: z
+    .object({
+      paidBy: splitPresetDefaultChoice,
+      paidFor: splitPresetDefaultChoice,
+    })
+    .optional(),
 })
 
 const accountExportGroupIndexSchema = z.object({

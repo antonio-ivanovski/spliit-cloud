@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   useForm,
   useFormState,
@@ -45,11 +45,7 @@ import type {
 } from '../create-from-receipt-button'
 import { BasicDetailsCard } from './basic-details-card'
 import { isValidExpenseDate } from './currency-utils'
-import { type SavedSplit } from './default-split/split-equal'
-import {
-  buildExpenseFormDefaults,
-  savedDefaultToFormValues,
-} from './default-values'
+import { buildExpenseFormDefaults } from './default-values'
 import { DocumentsCard } from './documents-card'
 import { ExpenseItemsCard } from './expense-items-card'
 import { useExpenseFormTabNavigation } from './focus-navigation'
@@ -58,6 +54,12 @@ import { ItemParticipantsModal } from './item-participants-modal'
 import { PaidByCard } from './paid-by-card'
 import { PaidForCard } from './paid-for-card'
 import type { ShareArrayName, ShareInputKey } from './share-row-input'
+import {
+  presetToFormPaidBySplit,
+  presetToFormSplit,
+  type LoadedPresetSource,
+  type SplitPreset,
+} from './split-presets'
 import { buildSubmitValues } from './submit-values'
 import { useExpenseCurrencyConversion } from './use-expense-currency-conversion'
 import { useExpenseFormBalancing } from './use-expense-form-balancing'
@@ -85,6 +87,10 @@ function focusableErrorPath(path: string): string {
   const itemMatch = path.match(/^items(?:\.(\d+))?/)
   if (itemMatch) return `items.${itemMatch[1] ?? 0}.title`
   return path
+}
+
+function searchParamsHasValue(value: string | undefined | null): boolean {
+  return typeof value === 'string' && value.trim().length > 0
 }
 
 /**
@@ -175,17 +181,21 @@ export function ExpenseForm(props: {
   // props.expense is set in copy mode (for field prefill).
   const isCreate = props.expense === undefined || props.isCopy === true
 
-  // The persisted per-user-per-group default split is the source of
-  // truth for the Load/Save buttons in the PaidFor header on every
-  // flow (create / copy / edit / read-only). Form defaults below
-  // consume it only in the create branch — `buildExpenseFormDefaults`
-  // keeps edit and copy aligned with the loaded expense — but the
-  // buttons need to know whether a saved default exists regardless
-  // of how the form was opened, so the query runs unconditionally.
-  const savedDefaultQuery = trpc.account.defaultSplit.useQuery({
-    groupId: props.group.id,
-  })
-  const savedDefault = savedDefaultQuery.data?.defaultSplit ?? null
+  const splitPresetsQuery = trpc.groups.splitPresets.list.useQuery(
+    { groupId: props.group.id },
+    { enabled: !props.readOnly },
+  )
+  const splitPresets: SplitPreset[] = useMemo(
+    () => splitPresetsQuery.data?.presets ?? [],
+    [splitPresetsQuery.data?.presets],
+  )
+  const canManageSharedSplitPresets =
+    splitPresetsQuery.data?.canManageShared ??
+    (splitPresetsQuery.data as { canManage?: boolean } | undefined)
+      ?.canManage ??
+    false
+  const canManagePersonalSplitPresets =
+    splitPresetsQuery.data?.canManagePersonal ?? false
   const suggestCategoryMutation =
     trpc.groups.expenses.suggestCategory.useMutation()
 
@@ -206,12 +216,130 @@ export function ExpenseForm(props: {
       groupCurrency: getCurrencyFromGroup(props.group),
       currentLedgerParticipantId: props.currentLedgerParticipantId,
       settlementTitle: t('settlementTitle'),
-      savedDefault,
       today: dateOnlyInAccountTimeZone(formNow, accountTimeZone),
       now: formNow,
       timeZone: accountTimeZone,
     }),
   })
+
+  // Defaults are resolved independently for payer and participants. They are
+  // applied once to a fresh form after the preset library arrives; edit, copy,
+  // settlement, and explicit URL values retain their existing distributions.
+  const automaticDefaultsApplied = useRef({ paidBy: false, paidFor: false })
+  const [appliedAutomaticDefaults, setAppliedAutomaticDefaults] = useState<{
+    paidBy: { preset: SplitPreset; source: LoadedPresetSource } | null
+    paidFor: { preset: SplitPreset; source: LoadedPresetSource } | null
+  }>({ paidBy: null, paidFor: null })
+  // oxlint-disable react/react-compiler -- record which async defaults were applied; this state must remain stable after the user edits the draft.
+  useEffect(() => {
+    if (!isCreate || props.expense || props.isCopy || !splitPresetsQuery.data) {
+      return
+    }
+    const allPresets = splitPresets
+    const defaults = splitPresetsQuery.data.effectiveDefaults ?? {
+      paidByPresetId: null,
+      paidForPresetId: null,
+    }
+    const defaultSource = (
+      target: 'paidBy' | 'paidFor',
+      presetId: string,
+    ): LoadedPresetSource => {
+      const personal = splitPresetsQuery.data.personalDefaults[target]
+      if (personal.mode === 'PRESET' && personal.presetId === presetId) {
+        return 'MY_DEFAULT'
+      }
+      return 'GROUP_DEFAULT'
+    }
+    const explicitPaidFor =
+      !!searchParamsHasValue(props.searchParams?.participants) ||
+      !!searchParamsHasValue(props.searchParams?.items) ||
+      props.searchParams?.settlement === 'yes' ||
+      props.searchParams?.reimbursement === 'yes'
+    const explicitPaidBy =
+      !!searchParamsHasValue(props.searchParams?.payer) ||
+      !!searchParamsHasValue(props.searchParams?.from) ||
+      props.searchParams?.settlement === 'yes' ||
+      props.searchParams?.reimbursement === 'yes'
+    const dirtyFields = form.formState.dirtyFields
+    const touchedFields = form.formState.touchedFields
+    const paidForEdited = !!dirtyFields.paidFor || !!touchedFields.paidFor
+    const paidByEdited =
+      !!dirtyFields.paidByList ||
+      !!dirtyFields.paidBySplitMode ||
+      !!dirtyFields.isMultiPayer ||
+      !!touchedFields.paidByList ||
+      !!touchedFields.paidBySplitMode ||
+      !!touchedFields.isMultiPayer
+    if (!automaticDefaultsApplied.current.paidFor) {
+      if (explicitPaidFor || paidForEdited) {
+        automaticDefaultsApplied.current.paidFor = true
+      } else {
+        automaticDefaultsApplied.current.paidFor = true
+        const preset = allPresets.find(
+          (candidate) => candidate.id === defaults.paidForPresetId,
+        )
+        setAppliedAutomaticDefaults((current) => ({
+          ...current,
+          paidFor: preset
+            ? { preset, source: defaultSource('paidFor', preset.id) }
+            : null,
+        }))
+        if (preset?.participants) {
+          const next = presetToFormSplit(preset)
+          form.setValue('splitMode', next.splitMode, { shouldValidate: true })
+          form.setValue('paidFor', next.paidFor, { shouldValidate: true })
+        }
+      }
+    }
+    if (!automaticDefaultsApplied.current.paidBy) {
+      if (explicitPaidBy || paidByEdited) {
+        automaticDefaultsApplied.current.paidBy = true
+      } else {
+        automaticDefaultsApplied.current.paidBy = true
+        const preset = allPresets.find(
+          (candidate) => candidate.id === defaults.paidByPresetId,
+        )
+        setAppliedAutomaticDefaults((current) => ({
+          ...current,
+          paidBy: preset
+            ? { preset, source: defaultSource('paidBy', preset.id) }
+            : null,
+        }))
+        const next = preset ? presetToFormPaidBySplit(preset) : null
+        if (next) {
+          form.setValue('isMultiPayer', next.isMultiPayer, {
+            shouldValidate: true,
+          })
+          form.setValue('paidBySplitMode', next.paidBySplitMode, {
+            shouldValidate: true,
+          })
+          form.setValue('paidByList', next.paidByList, {
+            shouldValidate: true,
+          })
+        }
+      }
+    }
+  }, [
+    form,
+    form.formState.dirtyFields,
+    form.formState.touchedFields,
+    isCreate,
+    props.expense,
+    props.isCopy,
+    props.searchParams,
+    splitPresets,
+    splitPresetsQuery.data,
+  ])
+  // oxlint-enable react/react-compiler
+
+  const automaticDefaultPaidForPreset =
+    appliedAutomaticDefaults.paidFor?.preset ?? null
+  const automaticDefaultPaidByPreset =
+    appliedAutomaticDefaults.paidBy?.preset ?? null
+  const automaticDefaultPaidForSource =
+    appliedAutomaticDefaults.paidFor?.source ?? null
+  const automaticDefaultPaidBySource =
+    appliedAutomaticDefaults.paidBy?.source ?? null
 
   // Section-qualified registry (`paidFor:lp-1` / `paidByList:lp-1`) of the
   // paid-for / paid-by share inputs. Focus for share errors goes through it —
@@ -221,47 +349,6 @@ export function ExpenseForm(props: {
   const tabNavigation = useExpenseFormTabNavigation(formElementRef)
 
   const groupCurrency = getCurrencyFromGroup(props.group)
-
-  // `buildExpenseFormDefaults` runs synchronously on first render, but
-  // `savedDefault` is `null` until the tRPC query resolves — so fresh
-  // create flows open with the neutral (EVENLY) split instead of the
-  // user's saved default. Once the query resolves, swap the form into
-  // the saved shape so the user doesn't have to click "Load default"
-  // manually. Guarded to fresh-create (no edit/copy overwrite) and to
-  // a pristine form (never yank values the user has already typed).
-  const autoAppliedRef = useRef(false)
-  useEffect(() => {
-    if (autoAppliedRef.current) return
-    if (!isCreate || props.isCopy) return
-    if (!savedDefaultQuery.isSuccess || !savedDefault) return
-    if (form.formState.isDirty) return
-    if (form.getValues('splitMode') === 'ITEMIZED') return
-    const restored = savedDefaultToFormValues(
-      savedDefault,
-      props.group,
-      groupCurrency,
-    )
-    if (!restored) return
-    form.setValue('splitMode', restored.splitMode, {
-      shouldDirty: true,
-      shouldTouch: true,
-      shouldValidate: true,
-    })
-    form.setValue('paidFor', restored.paidFor, {
-      shouldDirty: true,
-      shouldTouch: true,
-      shouldValidate: true,
-    })
-    autoAppliedRef.current = true
-  }, [
-    isCreate,
-    props.isCopy,
-    props.group,
-    groupCurrency,
-    savedDefaultQuery.isSuccess,
-    savedDefault,
-    form,
-  ])
 
   const conversion = useExpenseCurrencyConversion({
     form,
@@ -516,14 +603,19 @@ export function ExpenseForm(props: {
           heading={props.heading}
           {...conversion}
           groupCurrency={groupCurrency}
-          savedDefault={savedDefault}
         />
         <ExpenseItemsCard
           form={form}
           group={props.group}
           groupCurrency={payerCurrency}
           readOnly={!!props.readOnly}
-          savedDefault={savedDefault}
+          presets={splitPresets}
+          presetsLoading={splitPresetsQuery.isLoading}
+          canManage={
+            canManageSharedSplitPresets || canManagePersonalSplitPresets
+          }
+          canManageShared={canManageSharedSplitPresets}
+          canManagePersonal={canManagePersonalSplitPresets}
           renderItemParticipantsModal={({
             itemIndex,
             item,
@@ -533,7 +625,9 @@ export function ExpenseForm(props: {
             titleOverride,
             hideAmountDescription,
             hideAmountMode,
-            savedDefault,
+            presetsLoading,
+            canManageShared,
+            canManagePersonal,
           }) => (
             <ItemParticipantsModal
               open={open}
@@ -548,7 +642,15 @@ export function ExpenseForm(props: {
               titleOverride={titleOverride}
               hideAmountDescription={hideAmountDescription}
               hideAmountMode={hideAmountMode}
-              savedDefault={(savedDefault ?? null) as SavedSplit | null}
+              presets={splitPresets}
+              presetsLoading={presetsLoading}
+              canManage={
+                canManageSharedSplitPresets || canManagePersonalSplitPresets
+              }
+              canManageShared={canManageShared ?? canManageSharedSplitPresets}
+              canManagePersonal={
+                canManagePersonal ?? canManagePersonalSplitPresets
+              }
             />
           )}
         />
@@ -560,7 +662,12 @@ export function ExpenseForm(props: {
           readOnly={!!props.readOnly}
           sExpense={sExpense}
           setManuallyEditedParticipants={setManuallyEditedParticipants}
-          savedDefault={savedDefault}
+          presets={splitPresets}
+          presetsLoading={splitPresetsQuery.isLoading}
+          canManageShared={canManageSharedSplitPresets}
+          canManagePersonal={canManagePersonalSplitPresets}
+          initialLoadedPreset={automaticDefaultPaidForPreset}
+          initialLoadedSource={automaticDefaultPaidForSource}
           isCreate={isCreate}
           inputRefs={shareInputRefs}
         />
@@ -572,6 +679,12 @@ export function ExpenseForm(props: {
           readOnly={!!props.readOnly}
           sExpense={sExpense}
           setManuallyEditedPayers={setManuallyEditedPayers}
+          presets={splitPresets}
+          presetsLoading={splitPresetsQuery.isLoading}
+          canManageShared={canManageSharedSplitPresets}
+          canManagePersonal={canManagePersonalSplitPresets}
+          initialLoadedPreset={automaticDefaultPaidByPreset}
+          initialLoadedSource={automaticDefaultPaidBySource}
           inputRefs={shareInputRefs}
         />
         {props.runtimeFeatureFlags.enableExpenseDocuments && (

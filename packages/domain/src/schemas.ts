@@ -304,14 +304,74 @@ const validateDisplayItemShareTotal = (
   }
 }
 
-// `defaultSplitSchema` is the persisted shape of a user's per-group
-// default split. It captures the same data as an expense's `paidFor` +
-// `splitMode`, expressed in the same units (BY_PERCENTAGE basis points,
-// BY_AMOUNT minor units, BY_SHARES fixed share units where 100 = 1
-// displayed share, EVENLY inclusion markers). ITEMIZED is not allowed
-// — itemized splits involve an items array that is too shape-heavy to
-// be a useful "default". The API rejects ITEMIZED writes and the UI
-// hides the save action when the current split is itemized.
+const savedSplitRowSchema = z.object({
+  participant: z.string().min(1),
+  shares: z.number().int(),
+})
+
+const splitPresetModeSchema = z.enum(['EVENLY', 'BY_SHARES', 'BY_PERCENTAGE'])
+export const splitPresetTargetSchema = z.enum(['PAID_BY', 'PAID_FOR'])
+
+/** A reusable, amount-independent split for exactly one expense side. */
+export const splitPresetSchema = z
+  .object({
+    target: splitPresetTargetSchema,
+    splitMode: splitPresetModeSchema,
+    participants: z.array(savedSplitRowSchema).min(1),
+  })
+  .superRefine((split, ctx) => {
+    const seen = new Set<string>()
+    split.participants.forEach((row, i) => {
+      if (seen.has(row.participant)) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'duplicateParticipant',
+          path: ['participants', i, 'participant'],
+        })
+      }
+      seen.add(row.participant)
+
+      if (split.splitMode === 'BY_SHARES') {
+        if (row.shares < 1 || row.shares > MAX_STORED_SHARES) {
+          ctx.addIssue({
+            code: 'custom',
+            message: 'sharesInvalid',
+            path: ['participants', i, 'shares'],
+          })
+        }
+      } else if (split.splitMode === 'BY_PERCENTAGE' && row.shares < 1) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'percentageInvalid',
+          path: ['participants', i, 'shares'],
+        })
+      }
+    })
+
+    if (split.splitMode === 'BY_PERCENTAGE') {
+      const sum = split.participants.reduce(
+        (total, row) => total + row.shares,
+        0,
+      )
+      if (sum !== 10000) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'percentageSum',
+          path: ['participants'],
+        })
+      }
+    }
+  })
+
+export type SavedSplitPreset = z.infer<typeof splitPresetSchema>
+
+// Legacy account-bundle compatibility shape. New reusable splits use
+// `splitPresetSchema` above; this remains only so old account exports and
+// older clients can be parsed while their default is converted on import.
+// It captures the same data as an expense's `paidFor` + `splitMode`, expressed
+// in storage units (BY_PERCENTAGE basis points, BY_AMOUNT minor units,
+// BY_SHARES fixed share units where 100 = 1 displayed share, EVENLY inclusion
+// markers). ITEMIZED was never valid for the legacy default.
 export const defaultSplitSchema = z
   .object({
     splitMode: z
