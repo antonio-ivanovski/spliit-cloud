@@ -57,6 +57,7 @@ export function CreateExpenseFab({
   const isExpenseFormRoute =
     pathname.endsWith('/expenses/create') ||
     /\/expenses\/[^/]+\/edit$/.test(pathname)
+  const isExpenseListRoute = pathname.endsWith('/expenses')
   const isBudgetsRoute = pathname.includes('/budgets')
   const canEditCurrentGroup = Boolean(
     currentGroup?.group &&
@@ -112,7 +113,7 @@ export function CreateExpenseFab({
         id: 'add-expense',
         label: t('addExpenseAction'),
         icon: Plus,
-        primary: true,
+        primary: isExpenseListRoute,
         onSelect: goToManualExpense,
       },
     ],
@@ -120,6 +121,7 @@ export function CreateExpenseFab({
       enableReceiptExtract,
       enableVoiceExpense,
       goToManualExpense,
+      isExpenseListRoute,
       openReceipt,
       openVoice,
       t,

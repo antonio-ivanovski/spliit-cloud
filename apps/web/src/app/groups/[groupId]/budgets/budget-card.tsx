@@ -123,7 +123,7 @@ export function BudgetCard({ budget, groupId, group, compact = false }: Props) {
       params={{ groupId, budgetId: budget.id }}
       className="block rounded-lg outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
     >
-      <Card className="mobile-surface transition-shadow hover:shadow-md">
+      <Card className="transition-shadow hover:shadow-md">
         <CardContent className="space-y-3 p-4 sm:p-5">
           <div className="flex flex-col gap-3 sm:grid sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start sm:gap-6">
             <div className="min-w-0 space-y-1">
@@ -246,7 +246,7 @@ export function BudgetCard({ budget, groupId, group, compact = false }: Props) {
 
 export function BudgetCardSkeleton() {
   return (
-    <Card className="mobile-surface">
+    <Card>
       <CardContent className="space-y-4 p-4 sm:p-5">
         <div className="flex items-start justify-between gap-4">
           <div className="w-full max-w-xs space-y-2">

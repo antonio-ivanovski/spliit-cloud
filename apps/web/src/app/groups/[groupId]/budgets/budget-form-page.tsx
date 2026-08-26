@@ -86,11 +86,11 @@ export function BudgetFormPage({ groupId, budgetId }: Props) {
 
   if (!canEdit) {
     return (
-      <Card className="mobile-surface">
+      <Card>
         <CardHeader className="hidden sm:flex">
           <CardTitle>{isEdit ? t('edit') : t('create')}</CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col gap-3">
+        <CardContent spacing="standalone" className="flex flex-col gap-3">
           <p className="text-sm text-muted-foreground">
             {t('form.notAllowed')}
           </p>
@@ -112,8 +112,8 @@ export function BudgetFormPage({ groupId, budgetId }: Props) {
 
   if (isEdit && budgetQuery.isError) {
     return (
-      <Card className="mobile-surface">
-        <CardContent className="flex flex-col gap-3">
+      <Card>
+        <CardContent spacing="standalone" className="flex flex-col gap-3">
           <p role="alert" className="text-sm text-destructive">
             {budgetQuery.error.message}
           </p>
@@ -150,7 +150,7 @@ export function BudgetFormPage({ groupId, budgetId }: Props) {
     })
 
   return (
-    <Card className="mobile-surface">
+    <Card>
       <CardHeader className="hidden sm:flex">
         <div className="flex items-center gap-2">
           <Button
@@ -174,7 +174,7 @@ export function BudgetFormPage({ groupId, budgetId }: Props) {
         </div>
         <CardDescription>{t('form.description')}</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-4 sm:p-6 sm:pt-0">
         <BudgetForm
           groupId={groupId}
           group={group}

@@ -556,7 +556,7 @@ export function ExpenseForm(props: {
         onFocusCapture={tabNavigation.onFocusCapture}
         onKeyDownCapture={tabNavigation.onKeyDownCapture}
         noValidate
-        className="-mx-4 w-[calc(100%+2rem)] min-w-0 overflow-x-hidden pb-24 sm:mx-0 sm:w-auto sm:pb-20"
+        className="min-w-0 overflow-x-hidden pb-24 sm:pb-20"
       >
         {props.readOnly && <ReadOnlyNotice />}
         <BasicDetailsCard

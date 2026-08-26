@@ -58,8 +58,12 @@ type Props = {
   children: ReactNode
   /** Class names for the trigger header (margins, etc.). */
   triggerClassName?: string
+  /** Class names for spacing the entire collapsible section. */
+  rootClassName?: string
   /** Class names for the collapsible content wrapper. */
   contentClassName?: string
+  /** Align the trigger with the route's non-card mobile content column. */
+  insetHeader?: boolean
 }
 
 /**
@@ -78,17 +82,25 @@ export function CollapsibleSection({
   headerAction,
   children,
   triggerClassName,
+  rootClassName,
   contentClassName,
+  insetHeader = false,
 }: Props) {
   return (
     <Collapsible
       defaultOpen={readStoredOpen(storageKey, defaultOpen)}
       onOpenChange={(open) => writeStoredOpen(storageKey, open)}
-      className="border-t border-border/70 pt-5 first:border-t-0 first:pt-0"
+      className={cn(
+        'border-t border-border/70 pt-5 first:border-t-0 first:pt-0',
+        rootClassName,
+      )}
     >
       <CollapsibleTrigger
         className={cn(
-          'group -mx-2 flex w-full cursor-pointer items-center justify-between gap-2 rounded-md px-2 py-1 text-start transition-colors hover:bg-muted/40 hover:text-foreground/80',
+          'group flex cursor-pointer items-center justify-between gap-2 rounded-md py-1 text-start transition-colors hover:bg-muted/40 hover:text-foreground/80',
+          insetHeader
+            ? 'mx-3 w-[calc(100%-1.5rem)] px-0 sm:-mx-2 sm:w-full sm:px-2'
+            : '-mx-2 w-full px-2',
           triggerClassName,
         )}
       >

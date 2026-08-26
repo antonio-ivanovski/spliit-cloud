@@ -72,12 +72,12 @@ export function CreateExpenseForm({
 
   if (isReadOnlyGroupViewer) {
     return (
-      <Card className="mobile-surface">
+      <Card>
         <CardHeader className="hidden sm:flex">
           <CardTitle>{tGroups('pendingInviteeExpenseTitle')}</CardTitle>
           <CardDescription>{t('create')}</CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-col gap-3">
+        <CardContent spacing="standalone" className="flex flex-col gap-3">
           <p className="text-sm text-muted-foreground">
             {tGroups('pendingInviteeExpenseDescription')}
           </p>
@@ -99,12 +99,12 @@ export function CreateExpenseForm({
 
   if (group.archived) {
     return (
-      <Card className="mobile-surface">
+      <Card>
         <CardHeader className="hidden sm:flex">
           <CardTitle>{tGroups('bannerArchived')}</CardTitle>
           <CardDescription>{t('create')}</CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-col gap-3">
+        <CardContent spacing="standalone" className="flex flex-col gap-3">
           <p className="text-sm text-muted-foreground">
             {tGroups('archivedReadOnly')}
           </p>
@@ -128,11 +128,11 @@ export function CreateExpenseForm({
   // locks in `defaultValues` on first render.
   if (sourceExpenseId && (isFetchingSource || !sourceExpense)) {
     return (
-      <Card className="mobile-surface">
+      <Card>
         <CardHeader className="hidden sm:flex">
           <CardTitle>{t('create')}</CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col gap-3">
+        <CardContent spacing="standalone" className="flex flex-col gap-3">
           <Skeleton className="h-4 w-40" />
           <Skeleton className="h-20 w-full" />
         </CardContent>

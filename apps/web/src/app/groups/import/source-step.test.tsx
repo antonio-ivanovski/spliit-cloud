@@ -16,7 +16,12 @@ beforeAll(() => {
 // ── Module mocks ────────────────────────────────────────────────────────
 
 const routerMocks = vi.hoisted(() => ({
-  source: 'spliit' as 'spliit' | 'spliit-cloud',
+  source: 'spliit' as
+    | 'spliit'
+    | 'spliit-cloud'
+    | 'splitwise'
+    | 'tricount'
+    | 'settleup',
   navigate: vi.fn(),
 }))
 
@@ -78,6 +83,38 @@ describe('SourceStep — initialError (prefill) handling', () => {
       'Tricount (coming soon)',
       'Settle Up (coming soon)',
     ])
+  })
+
+  it('aligns non-card controls and gives every provider card responsive standalone padding', () => {
+    const providers = [
+      'spliit',
+      'spliit-cloud',
+      'splitwise',
+      'tricount',
+      'settleup',
+    ] as const
+
+    for (const provider of providers) {
+      routerMocks.source = provider
+      const view = renderSourceStep()
+
+      expect(screen.getByRole('tablist').parentElement).toHaveClass(
+        'px-[var(--page-inset,1rem)]',
+        'sm:px-0',
+      )
+
+      const cards = view.container.querySelectorAll('[data-import-source-card]')
+      expect(cards.length).toBeGreaterThan(0)
+      for (const card of cards) {
+        const content = Array.from(card.children).find((child) =>
+          child.classList.contains('px-4'),
+        )
+        expect(content).toHaveClass('px-4', 'pt-4', 'sm:px-6', 'sm:pt-6')
+        expect(content).not.toHaveClass('p-4')
+      }
+
+      view.unmount()
+    }
   })
 
   it('explains that Cloud accepts account backups and single-group exports', () => {

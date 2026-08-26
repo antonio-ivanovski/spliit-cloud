@@ -8,6 +8,7 @@ import {
 } from '@/app/groups/[groupId]/activity/activity-grouping'
 import { ActivityItem } from '@/app/groups/[groupId]/activity/activity-item'
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
+import { ScanStickyHeading } from '@/components/layout/scan-surface'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
@@ -37,11 +38,11 @@ const DATE_GROUP_I18N_KEYS = {
 const ActivitiesLoading = forwardRef<HTMLDivElement>((_, ref) => {
   return (
     <div ref={ref} className="flex flex-col gap-4">
-      <Skeleton className="mt-2 h-3 w-24" />
+      <Skeleton className="mx-4 mt-2 h-3 w-24 sm:mx-6" />
       {Array(5)
         .fill(undefined)
         .map((_, index) => (
-          <div key={index} className="flex gap-2 p-2">
+          <div key={index} className="flex gap-2 px-4 py-2 sm:px-6">
             <div className="flex-0">
               <Skeleton className="h-3 w-12" />
             </div>
@@ -84,7 +85,11 @@ export function ActivityList() {
   }, [fetchNextPage, hasMore, inView, isLoading])
 
   if (showOfflineEmpty) {
-    return <OfflineEmptyState onRetry={() => void refetch()} />
+    return (
+      <div className="px-4 sm:px-6">
+        <OfflineEmptyState variant="plain" onRetry={() => void refetch()} />
+      </div>
+    )
   }
 
   if (isLoading || !activities || !group) return <ActivitiesLoading />
@@ -107,13 +112,9 @@ export function ActivityList() {
 
         return (
           <div key={dateGroup} data-testid={`activity-date-group-${dateGroup}`}>
-            <div
-              className={
-                'sticky top-(--app-header-height) bg-white py-1 text-xs font-semibold text-muted-foreground dark:bg-[#1b1917]'
-              }
-            >
+            <ScanStickyHeading>
               {t(DATE_GROUP_I18N_KEYS[dateGroup])}
-            </div>
+            </ScanStickyHeading>
             {groupActivities.map((activity) => (
               <ActivityItem
                 key={activity.id}
@@ -128,7 +129,7 @@ export function ActivityList() {
       {hasMore && <ActivitiesLoading ref={loadingRef} />}
     </div>
   ) : (
-    <p className="py-6 text-sm" data-testid="activity-list-empty">
+    <p className="px-4 py-6 text-sm sm:px-6" data-testid="activity-list-empty">
       {t('noActivity')}
     </p>
   )

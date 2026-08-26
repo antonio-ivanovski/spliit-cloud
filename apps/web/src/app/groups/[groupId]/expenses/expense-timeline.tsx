@@ -2,6 +2,7 @@ import type { Dayjs } from 'dayjs'
 import { forwardRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { ScanStickyHeading } from '@/components/layout/scan-surface'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   calendarDay,
@@ -137,9 +138,9 @@ export function ExpenseTimeline<T extends TimelineExpense>({
 
         return (
           <div key={expenseGroup} className="motion-stagger">
-            <div className="sticky top-(--app-header-height) bg-white py-1 ps-4 text-xs font-semibold text-muted-foreground sm:ps-6 dark:bg-[#1b1917]">
+            <ScanStickyHeading>
               {t(EXPENSE_GROUP_I18N_KEYS[expenseGroup])}
-            </div>
+            </ScanStickyHeading>
             {groupExpenses.map((expense) => renderExpense(expense))}
           </div>
         )

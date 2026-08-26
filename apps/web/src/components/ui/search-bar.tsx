@@ -29,7 +29,7 @@ const SearchBar = React.forwardRef<HTMLInputElement, InputProps>(
         <Input
           type={type}
           className={cn(
-            'ps-10 h-9 text-sm focus:text-base bg-muted border-none text-muted-foreground',
+            'ps-10 h-11 text-sm focus:text-base bg-muted border-none text-muted-foreground sm:h-9',
             className,
           )}
           ref={ref}

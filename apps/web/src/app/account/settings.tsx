@@ -4,6 +4,7 @@ import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AccountAvatar } from '@/components/account-avatar'
+import { PageShell } from '@/components/layout/page-shell'
 import { RequireAuth } from '@/components/require-auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -94,9 +95,9 @@ function AccountSettingsContent() {
 
   if (isPending || !account) {
     return (
-      <main className="mx-auto flex w-full max-w-(--breakpoint-md) flex-1 items-center justify-center px-3 py-4 sm:px-4 sm:py-6">
+      <PageShell className="items-center justify-center py-4 sm:py-6">
         <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-      </main>
+      </PageShell>
     )
   }
 
@@ -174,7 +175,7 @@ function AccountSettingsContent() {
   const isDirty = name.trim() !== (account.name ?? '')
 
   return (
-    <main className="mx-auto flex w-full max-w-(--breakpoint-md) min-w-0 flex-1 flex-col gap-6 px-3 py-4 sm:px-4 sm:py-6">
+    <PageShell className="flex-col gap-6 py-4 sm:py-6">
       <h1 className="hidden items-center gap-2 text-2xl font-semibold sm:flex">
         <Button
           variant="ghost"
@@ -304,6 +305,6 @@ function AccountSettingsContent() {
       <AccountExportModal />
       <NotificationsPreferences />
       <AccountAiPreferences />
-    </main>
+    </PageShell>
   )
 }

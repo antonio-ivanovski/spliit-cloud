@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import {
   getFocusedRouteMeta,
   isFocusedMobilePath,
+  isMobileGroupTabPath,
   isMobileGroupNavPath,
   shouldHideMobileGroupTabs,
 } from '@/lib/mobile-nav'
@@ -25,6 +26,12 @@ describe('mobile shell route policy', () => {
     expect(isMobileGroupNavPath('/groups/demo/edit')).toBe(true)
     expect(isMobileGroupNavPath('/groups/demo/expenses')).toBe(true)
     expect(isMobileGroupNavPath('/groups/demo/expenses/123/edit')).toBe(false)
+  })
+
+  it('keeps focused group editing out of the group-context app bar', () => {
+    expect(isMobileGroupTabPath('/groups/demo/expenses')).toBe(true)
+    expect(isMobileGroupTabPath('/groups/demo/stats')).toBe(true)
+    expect(isMobileGroupTabPath('/groups/demo/edit')).toBe(false)
   })
 
   it('hides desktop group tabs for expense detail and edit routes', () => {

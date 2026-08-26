@@ -55,7 +55,7 @@ const RadioGroupItem = React.forwardRef<HTMLSpanElement, RadioGroupItemProps>(
           {content && (
             <div
               className={cn(
-                'w-full min-w-0 border-t px-6 pb-3 pt-3',
+                'w-full min-w-0 border-t px-4 pb-3 pt-3 sm:px-6',
                 contentClassName,
               )}
             >

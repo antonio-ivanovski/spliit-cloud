@@ -77,7 +77,7 @@ export function BalancesCard({
   const { t } = useTranslation(undefined, { keyPrefix: 'Balances' })
 
   return (
-    <Card className="mobile-surface mb-4">
+    <Card className="mb-4">
       <SettlementCardHeader
         title={t('title')}
         description={t('description')}
@@ -88,7 +88,7 @@ export function BalancesCard({
         }
         onSettlementModeChange={onSettlementModeChange}
       />
-      <CardContent className="px-0 pb-5 sm:px-6 sm:pb-6">
+      <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
         {isLoading ? (
           <BalancesLoading participantCount={participantCount} />
         ) : currencyDisplay === 'original' ? (
@@ -383,7 +383,7 @@ function SettlementDirection({
                     />
                   }
                 >
-                  <div className="space-y-3 p-3">
+                  <div className="p-3">
                     <ParticipantSegmentBar
                       rows={rows}
                       currency={currency}

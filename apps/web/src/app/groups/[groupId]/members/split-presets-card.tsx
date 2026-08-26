@@ -551,7 +551,7 @@ export function SplitPresetsCard(props: {
 
   return (
     <>
-      <Card className="mobile-surface mb-4">
+      <Card className="mb-4">
         <CardHeader>
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="min-w-0">

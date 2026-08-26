@@ -15,6 +15,7 @@ import {
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { PageInset } from '@/components/layout/page-shell'
 import { useMascotController } from '@/components/mascot/mascot-context'
 import { Money } from '@/components/money'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
@@ -240,6 +241,7 @@ export function RecentGroupList() {
             storageKey={STORAGE_KEYS.starred}
             defaultOpen
             title={t('starred')}
+            insetHeader
           >
             <ul className="motion-stagger grid items-stretch gap-3 sm:grid-cols-2">
               {renderGroupItems(starred, 'starred')}
@@ -251,6 +253,7 @@ export function RecentGroupList() {
           storageKey={STORAGE_KEYS.groups}
           defaultOpen
           title={t('groups')}
+          insetHeader
         >
           <ul className="motion-stagger grid items-stretch gap-3 sm:grid-cols-2">
             <CreateCard
@@ -274,6 +277,7 @@ export function RecentGroupList() {
           storageKey={STORAGE_KEYS.friends}
           defaultOpen
           title={t('friends')}
+          insetHeader
         >
           <ul className="motion-stagger grid items-stretch gap-3 sm:grid-cols-2">
             <CreateCard
@@ -294,6 +298,7 @@ export function RecentGroupList() {
             storageKey={STORAGE_KEYS.archived}
             defaultOpen={false}
             title={t('archived')}
+            insetHeader
           >
             <ul className="motion-stagger grid items-stretch gap-3 opacity-60 sm:grid-cols-2">
               {renderGroupItems(archived, 'archived')}
@@ -306,6 +311,7 @@ export function RecentGroupList() {
             storageKey={STORAGE_KEYS.hidden}
             defaultOpen={false}
             title={t('hidden')}
+            insetHeader
           >
             <ul className="motion-stagger grid items-stretch gap-3 opacity-60 sm:grid-cols-2">
               {renderGroupItems(hidden, 'hidden')}
@@ -344,11 +350,13 @@ export function RecentGroupList() {
 function WelcomeBar({ name }: { name?: string }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'Homepage' })
   return (
-    <div className="flex items-center justify-between gap-3">
-      <p className="text-lg font-semibold tracking-tight sm:text-xl">
-        {t('welcomeBack', { name: name ?? '' })}
-      </p>
-    </div>
+    <PageInset data-testid="dashboard-welcome">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-lg font-semibold tracking-tight sm:text-xl">
+          {t('welcomeBack', { name: name ?? '' })}
+        </p>
+      </div>
+    </PageInset>
   )
 }
 

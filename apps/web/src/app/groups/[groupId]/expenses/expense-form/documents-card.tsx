@@ -45,7 +45,7 @@ export function DocumentsCard(props: {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
 
   return (
-    <Card className="mobile-surface mt-4">
+    <Card className="mt-4">
       <CardHeader>
         <CardTitle>{t('attachDocuments')}</CardTitle>
         <CardDescription>{t(`${sExpense}.attachDescription`)}</CardDescription>

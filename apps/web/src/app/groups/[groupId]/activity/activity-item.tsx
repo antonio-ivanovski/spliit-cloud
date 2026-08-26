@@ -283,7 +283,7 @@ export function ActivityItem({ groupId, activity, dateStyle }: Props) {
   return (
     <div
       className={cn(
-        'relative flex min-w-0 items-stretch justify-between gap-1 px-2 py-2 text-sm hover:bg-accent sm:rounded-lg sm:ps-2 sm:pe-1',
+        'relative flex min-w-0 items-stretch justify-between gap-1 border-b px-4 py-2 text-sm hover:bg-accent sm:rounded-lg sm:border-b-0 sm:px-6',
         expenseExists && 'cursor-pointer',
       )}
       data-testid={`activity-item-${activity.id}`}

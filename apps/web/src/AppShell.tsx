@@ -11,7 +11,7 @@ import { InstallPromotionDialog } from '@/components/install-promotion-dialog'
 import { LocaleSwitcher } from '@/components/locale-switcher'
 import { MascotProvider } from '@/components/mascot/mascot-context'
 import { MascotHost } from '@/components/mascot/mascot-host'
-import { MobileAppBar } from '@/components/mobile-shell'
+import { MobileAppBar, MobileAppHeaderActions } from '@/components/mobile-shell'
 import { OfflineBanner } from '@/components/offline-banner'
 import { ProfileGate } from '@/components/profile-gate'
 import { ProgressBar } from '@/components/progress-bar'
@@ -22,7 +22,7 @@ import { ThemeToggle } from '@/components/theme-toggle'
 import { Button } from '@/components/ui/button'
 import { Toaster } from '@/components/ui/toaster'
 import { I18nProvider } from '@/i18n/react'
-import { isFocusedMobilePath } from '@/lib/mobile-nav'
+import { isFocusedMobilePath, isMobileGroupTabPath } from '@/lib/mobile-nav'
 import { TRPCProvider } from '@/trpc/client'
 
 import { MergeDeviceSavedViews } from './app/groups/merge-device-saved-views'
@@ -47,6 +47,13 @@ function Content() {
   const pathname = useLocation({ select: (location) => location.pathname })
   const isAuthRoute = pathname.startsWith('/auth/')
   const focusedMobileRoute = isFocusedMobilePath(pathname)
+  const groupTabMobileRoute = isMobileGroupTabPath(pathname)
+  const hideMobileFooter =
+    focusedMobileRoute ||
+    pathname.startsWith('/groups/') ||
+    pathname.startsWith('/expenses') ||
+    pathname.startsWith('/friends/') ||
+    pathname.startsWith('/account/')
   const showAmbientBackdrop =
     pathname === '/' ||
     pathname.startsWith('/expenses') ||
@@ -59,7 +66,7 @@ function Content() {
       <MergeDeviceSavedViews />
       <AccountPreferencesBoundary isAuthRoute={isAuthRoute}>
         <MascotProvider>
-          <div className="app-shell relative isolate flex min-h-screen flex-col overflow-x-clip">
+          <div className="app-shell relative isolate flex flex-col overflow-x-clip">
             {showAmbientBackdrop && (
               <div className="ambient-backdrop" aria-hidden="true">
                 <span className="ambient-backdrop__orb ambient-backdrop__orb--emerald" />
@@ -103,17 +110,13 @@ function Content() {
             </header>
 
             {focusedMobileRoute ? (
-              <div className="sm:hidden [&>header]:pe-12">
+              <div className="sm:hidden">
                 <MobileAppBar />
-                <div className="fixed end-2 top-0 z-50 flex h-(--app-header-height) items-center gap-1">
-                  <CurrencyConverterButton />
-                  <LocaleSwitcher />
-                </div>
               </div>
-            ) : (
+            ) : groupTabMobileRoute ? null : (
               <div
                 data-app-header
-                className="fixed inset-x-0 top-0 z-50 flex h-(--app-header-height) items-center justify-between border-b bg-white/90 px-3 backdrop-blur sm:hidden dark:bg-gray-950/90"
+                className="fixed inset-x-0 top-0 z-50 flex h-(--app-header-height) items-center justify-between border-b bg-white/90 px-3 app-header-inset backdrop-blur sm:hidden dark:bg-gray-950/90"
               >
                 <Link to="/" aria-label="Spliit" className="flex items-center">
                   <Image
@@ -124,12 +127,7 @@ function Content() {
                     alt="Spliit"
                   />
                 </Link>
-                <div className="flex items-center gap-1">
-                  <CurrencyConverterButton />
-                  <LocaleSwitcher />
-                  <ThemeToggle />
-                  <AccountMenu />
-                </div>
+                <MobileAppHeaderActions />
               </div>
             )}
 
@@ -145,7 +143,7 @@ function Content() {
             </div>
 
             <footer
-              className={`${focusedMobileRoute ? 'hidden sm:flex' : 'flex'} relative z-10 mt-8 flex-col gap-4 border-t bg-slate-50 p-6 text-xs sm:mt-16 sm:flex-row sm:justify-between sm:p-8 sm:text-sm md:mt-32 md:p-16 md:text-base dark:bg-card [&_a]:underline`}
+              className={`${hideMobileFooter ? 'hidden sm:flex' : 'flex'} relative z-10 mt-8 flex-col gap-4 border-t bg-slate-50 p-6 text-xs sm:mt-16 sm:flex-row sm:justify-between sm:p-8 sm:text-sm md:mt-32 md:p-16 md:text-base dark:bg-card [&_a]:underline`}
             >
               <div className="flex flex-col space-y-2">
                 <div className="flex items-center space-x-2 text-base font-semibold sm:text-lg">

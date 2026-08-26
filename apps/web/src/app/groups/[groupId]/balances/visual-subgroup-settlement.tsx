@@ -256,7 +256,7 @@ function VisualSubgroupDirection({
               currency={currency}
               locale={locale}
             >
-              <div className="space-y-3 p-3">
+              <div className="p-3">
                 <ParticipantSegmentBar
                   rows={segmentRows}
                   currency={currency}

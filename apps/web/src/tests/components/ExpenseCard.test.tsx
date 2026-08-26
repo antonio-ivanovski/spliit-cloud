@@ -117,6 +117,26 @@ describe('ExpenseCard', () => {
     ).not.toContainElement(date)
   })
 
+  it('uses one desktop content inset without an outer row margin', () => {
+    vi.mocked(useIsReadOnlyGroupViewer).mockReturnValue(false)
+    vi.mocked(useActiveUser).mockReturnValue(null)
+
+    render(
+      <ExpenseCard
+        expense={makeExpense()}
+        currency={EUR}
+        groupId="group-1"
+        participantCount={2}
+      />,
+    )
+
+    expect(screen.getByTestId('expense-item-exp-1')).toHaveClass(
+      'px-4',
+      'sm:px-6',
+    )
+    expect(screen.getByTestId('expense-item-exp-1')).not.toHaveClass('sm:mx-6')
+  })
+
   it('shows a city-only timezone hint under the title for a foreign zone', () => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date('2026-08-12T12:00:00.000Z'))

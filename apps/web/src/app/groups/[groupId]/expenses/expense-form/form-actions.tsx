@@ -54,12 +54,14 @@ export const FormActions = memo(function FormActions(props: {
       )}
       <Button
         variant="ghost"
+        className="hidden sm:inline-flex"
         nativeButton={false}
         render={<Link {...props.cancelLink} />}
       >
         {t('cancel')}
       </Button>
       <SubmitButton
+        className="min-w-0 flex-1 sm:flex-none"
         data-expense-tab-priority={expenseTabPriority.submit}
         disabled={props.submitDisabled}
         loadingContent={t(props.isCreate ? 'creating' : 'saving')}

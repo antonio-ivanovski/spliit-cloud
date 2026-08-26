@@ -245,7 +245,7 @@ export function BasicDetailsCard(props: {
   }
 
   return (
-    <Card className="mobile-surface">
+    <Card>
       <CardHeader className="hidden flex-row items-center gap-2 space-y-0 sm:flex">
         <Button
           variant="ghost"

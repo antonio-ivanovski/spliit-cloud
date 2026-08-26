@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AnonymousRecoveryOnboarding } from '@/components/auth/anonymous-recovery-onboarding'
+import { PageInset, PageShell } from '@/components/layout/page-shell'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -64,9 +65,11 @@ export function CompleteProfilePage() {
 
   if (isPending) {
     return (
-      <main className="flex flex-1 items-center justify-center px-4 py-10">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-      </main>
+      <PageShell width="full" className="items-center justify-center py-10">
+        <PageInset>
+          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        </PageInset>
+      </PageShell>
     )
   }
 
@@ -107,18 +110,18 @@ export function CompleteProfilePage() {
 
   if (needsRecovery) {
     return (
-      <main className="flex flex-1 items-center justify-center px-4 py-10">
+      <PageShell width="full" className="items-center justify-center py-10">
         <Card className="w-full max-w-xl">
           <CardContent className="pt-6">
             <AnonymousRecoveryOnboarding onComplete={handleRecoveryComplete} />
           </CardContent>
         </Card>
-      </main>
+      </PageShell>
     )
   }
 
   return (
-    <main className="flex flex-1 items-center justify-center px-4 py-10">
+    <PageShell width="full" className="items-center justify-center py-10">
       <Card className="w-full max-w-sm">
         <CardHeader className="space-y-2 text-center">
           <CardTitle className="text-2xl">{t('title')}</CardTitle>
@@ -159,6 +162,6 @@ export function CompleteProfilePage() {
           </form>
         </CardContent>
       </Card>
-    </main>
+    </PageShell>
   )
 }

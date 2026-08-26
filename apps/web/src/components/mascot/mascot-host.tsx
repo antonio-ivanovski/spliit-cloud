@@ -22,7 +22,7 @@ import {
   SpeedDialLabel,
   SpeedDialTrigger,
 } from '@/components/ui/speed-dial'
-import { isFocusedMobilePath, isMobileGroupNavPath } from '@/lib/mobile-nav'
+import { isMobileGroupNavPath } from '@/lib/mobile-nav'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { useOnlineStatus } from '@/lib/use-online-status'
 import { cn } from '@/lib/utils'
@@ -196,20 +196,25 @@ export function MascotHost() {
       : mascot.actions.length
         ? mascot.actions
         : homeActions
-  const focusedRoute = isFocusedMobilePath(pathname)
   const expressive = Boolean(
     mascot && isExpressiveMascotReaction(mascot.reaction),
   )
-  const docked = Boolean(
-    !offline && (mascot?.busy || focusedRoute) && !expressive,
-  )
   const blockedByOverlay = dialogOpen && !expressive
   const aboveMobileNav = isMobileGroupNavPath(pathname)
+  const hasPrimaryAction = actions.some((action) => action.primary)
+  const reactionExpansion = expressive && !offline
   const hiddenSurface = pathname.endsWith('/expenses/print')
   const interactionScope = `${pathname}:${blockedByOverlay ? 'blocked' : 'active'}`
   const hasActions = actions.length > 0
   const interactive = hasActions && !blockedByOverlay
   const open = interactive && openScope === interactionScope
+  const docked = Boolean(
+    !hasPrimaryAction &&
+    !open &&
+    !speechLine &&
+    !reactionExpansion &&
+    !mascot?.busy,
+  )
   const showSettings = interactive && !settingsDiscovered
   const showActionBadge = hasActions && !open && !blockedByOverlay
   const nudgeActions = showActionBadge && !actionsDiscovered
@@ -296,10 +301,13 @@ export function MascotHost() {
     }
     if (hiddenSurface || !definition) return
     if (offline) return
+    // Keep dense/non-primary routes compact on entry. Prominent routes still
+    // receive the welcome reaction and coaching cue.
+    if (!hasPrimaryAction) return
     if (welcomedAccountRef.current === account.id) return
     welcomedAccountRef.current = account.id
     react('welcome')
-  }, [account?.id, definition, hiddenSurface, offline, react])
+  }, [account?.id, definition, hasPrimaryAction, hiddenSurface, offline, react])
 
   useEffect(() => {
     if (!account?.id || hiddenSurface || !definition || !offline) return
@@ -416,6 +424,9 @@ export function MascotHost() {
       className={positionClassName}
       style={positionStyle}
       data-testid={docked ? 'bill-mascot-docked' : 'bill-mascot'}
+      data-mascot-size={
+        hasPrimaryAction ? 'primary' : docked ? 'compact' : 'expanded'
+      }
       data-reaction={mascot.reaction}
       data-mascot-docked={docked ? 'true' : 'false'}
       data-mascot-offline={offline ? 'true' : 'false'}
@@ -450,7 +461,11 @@ export function MascotHost() {
             </SpeedDialLabel>
             <SpeedDialAction
               aria-label={label}
-              onClick={onSelect}
+              onClick={() => {
+                setOpenScope(null)
+                setSpeech(null)
+                onSelect()
+              }}
               className={cn(
                 'flex size-12 items-center justify-center rounded-2xl border transition-[transform,background-color] duration-200 hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring',
                 mascotActionElevation,
@@ -580,7 +595,7 @@ export function MascotHost() {
               className={cn(
                 'pointer-events-none absolute z-10 flex items-center justify-center rounded-full bg-primary text-primary-foreground ring-2 ring-background',
                 'shadow-[0_4px_10px_rgba(15,23,42,0.28)] dark:shadow-[0_0_12px_hsl(var(--primary)/0.55)]',
-                docked ? 'start-0 top-0 size-5' : 'start-0.5 top-0.5 size-6',
+                docked ? 'start-2 top-4 size-5' : 'start-0.5 top-0.5 size-6',
               )}
             >
               <Plus

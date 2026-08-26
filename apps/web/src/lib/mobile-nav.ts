@@ -33,6 +33,16 @@ export function isMobileGroupNavPath(pathname: string) {
   )
 }
 
+/**
+ * Main group tabs own the mobile group-context app bar. Group editing remains a
+ * focused workflow and keeps the focused route title/back affordance.
+ */
+export function isMobileGroupTabPath(pathname: string) {
+  return /^\/groups\/[^/]+\/(expenses|balances|budgets|activity|stats|members)\/?$/.test(
+    pathname,
+  )
+}
+
 export function shouldHideMobileGroupTabs(pathname: string) {
   return (
     isMobileGroupNavPath(pathname) ||

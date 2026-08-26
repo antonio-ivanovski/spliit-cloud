@@ -12,7 +12,8 @@ import { useEffect, useState, useSyncExternalStore } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { CopyButton } from '@/components/copy-button'
-import { MobileGroupNav } from '@/components/mobile-shell'
+import { PageInset } from '@/components/layout/page-shell'
+import { GroupMobileAppBar, MobileGroupNav } from '@/components/mobile-shell'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -152,62 +153,70 @@ export function GroupLayoutClient({
   // surface the original "not a member" message.
   if (!isLoading && error?.data?.code === 'FORBIDDEN' && linkInviteToken) {
     return (
-      <main className="flex flex-1 items-center justify-center px-4 py-10">
-        <div className="flex max-w-md flex-col items-center gap-3 text-center">
-          <h1 className="text-2xl font-semibold">{tInvalidInvite('title')}</h1>
-          <p className="text-sm text-muted-foreground">
-            {tInvalidInvite('description')}
-          </p>
-          <Button
-            variant="outline"
-            nativeButton={false}
-            render={<Link to="/" />}
-          >
-            {tForbidden('backToHome')}
-          </Button>
-        </div>
+      <main className="flex flex-1 items-center justify-center py-10">
+        <PageInset>
+          <div className="flex max-w-md flex-col items-center gap-3 text-center">
+            <h1 className="text-2xl font-semibold">
+              {tInvalidInvite('title')}
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              {tInvalidInvite('description')}
+            </p>
+            <Button
+              variant="outline"
+              nativeButton={false}
+              render={<Link to="/" />}
+            >
+              {tForbidden('backToHome')}
+            </Button>
+          </div>
+        </PageInset>
       </main>
     )
   }
 
   if (!isLoading && error?.data?.code === 'FORBIDDEN' && viewKey) {
     return (
-      <main className="flex flex-1 items-center justify-center px-4 py-10">
-        <div className="flex max-w-md flex-col items-center gap-3 text-center">
-          <h1 className="text-2xl font-semibold">{tInvalidView('title')}</h1>
-          <p className="text-sm text-muted-foreground">
-            {tInvalidView('description')}
-          </p>
-          <Button
-            variant="outline"
-            nativeButton={false}
-            render={<Link to="/" />}
-          >
-            {tForbidden('backToHome')}
-          </Button>
-        </div>
+      <main className="flex flex-1 items-center justify-center py-10">
+        <PageInset>
+          <div className="flex max-w-md flex-col items-center gap-3 text-center">
+            <h1 className="text-2xl font-semibold">{tInvalidView('title')}</h1>
+            <p className="text-sm text-muted-foreground">
+              {tInvalidView('description')}
+            </p>
+            <Button
+              variant="outline"
+              nativeButton={false}
+              render={<Link to="/" />}
+            >
+              {tForbidden('backToHome')}
+            </Button>
+          </div>
+        </PageInset>
       </main>
     )
   }
 
   if (!isLoading && error?.data?.code === 'FORBIDDEN') {
     return (
-      <main className="flex flex-1 items-center justify-center px-4 py-10">
-        <div className="flex max-w-md flex-col items-center gap-3 text-center">
-          <h1 className="text-2xl font-semibold">
-            {tForbidden('Unauthorized.title')}
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            {tForbidden('Unauthorized.description')}
-          </p>
-          <Button
-            variant="outline"
-            nativeButton={false}
-            render={<Link to="/" />}
-          >
-            {tForbidden('backToHome')}
-          </Button>
-        </div>
+      <main className="flex flex-1 items-center justify-center py-10">
+        <PageInset>
+          <div className="flex max-w-md flex-col items-center gap-3 text-center">
+            <h1 className="text-2xl font-semibold">
+              {tForbidden('Unauthorized.title')}
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              {tForbidden('Unauthorized.description')}
+            </p>
+            <Button
+              variant="outline"
+              nativeButton={false}
+              render={<Link to="/" />}
+            >
+              {tForbidden('backToHome')}
+            </Button>
+          </div>
+        </PageInset>
       </main>
     )
   }
@@ -250,16 +259,19 @@ export function GroupLayoutClient({
 
   return (
     <CurrentGroupProvider {...props}>
+      <GroupMobileAppBar />
       {/* Keep this wrapper transform-free: expense forms contain a
           viewport-fixed action bar. */}
       <div
-        className={`flex min-w-0 flex-col gap-3 ${showMobileNav ? 'pb-[calc(5rem+env(safe-area-inset-bottom))] sm:pb-0' : ''}`}
+        className={`flex min-w-0 flex-col gap-0 sm:gap-3 ${showMobileNav ? 'pb-(--mobile-nav-height) sm:pb-0' : ''}`}
       >
         {!isPrintReportRoute && (
-          <GroupHeader
-            enableReceiptExtract={effectiveRuntimeFlags.enableReceiptExtract}
-            enableVoiceExpense={effectiveRuntimeFlags.enableVoiceExpense}
-          />
+          <PageInset>
+            <GroupHeader
+              enableReceiptExtract={effectiveRuntimeFlags.enableReceiptExtract}
+              enableVoiceExpense={effectiveRuntimeFlags.enableVoiceExpense}
+            />
+          </PageInset>
         )}
         {children ?? <Outlet />}
       </div>
@@ -337,53 +349,63 @@ function NotFoundGroup({ groupId }: { groupId: string }) {
   const lookup = trpc.groups.lookup.useQuery({ groupId }, { retry: false })
   if (lookup.isLoading) {
     return (
-      <main className="flex flex-1 items-center justify-center px-4 py-10">
-        <div className="flex flex-col items-center gap-2 text-muted-foreground">
-          <Loader2 className="h-5 w-5 animate-spin" />
-          <p className="text-sm">{tNotFound('lookingUp')}</p>
-        </div>
+      <main className="flex flex-1 items-center justify-center py-10">
+        <PageInset>
+          <div className="flex flex-col items-center gap-2 text-muted-foreground">
+            <Loader2 className="h-5 w-5 animate-spin" />
+            <p className="text-sm">{tNotFound('lookingUp')}</p>
+          </div>
+        </PageInset>
       </main>
     )
   }
   if (lookup.data?.status === 'IMPORTABLE') {
     const sourceUrl = lookup.data.sourceUrl
     return (
-      <main className="flex flex-1 items-center justify-center px-4 py-10">
-        <div className="flex max-w-md flex-col items-center gap-3 text-center">
-          <Cloud className="h-8 w-8 text-primary" />
-          <h1 className="text-2xl font-semibold">{tImportable('title')}</h1>
-          <p className="text-sm text-muted-foreground">
-            {tImportable('description', { name: lookup.data.source.name })}
-          </p>
-          <div className="flex gap-2">
-            <Button
-              nativeButton={false}
-              render={
-                <Link to="/groups/import" search={{ prefill: sourceUrl }} />
-              }
-            >
-              {tImportable('cta')}
-            </Button>
-            <Button
-              variant="outline"
-              nativeButton={false}
-              render={<Link to="/" />}
-            >
-              {tImportable('backToHome')}
-            </Button>
+      <main className="flex flex-1 items-center justify-center py-10">
+        <PageInset>
+          <div className="flex max-w-md flex-col items-center gap-3 text-center">
+            <Cloud className="h-8 w-8 text-primary" />
+            <h1 className="text-2xl font-semibold">{tImportable('title')}</h1>
+            <p className="text-sm text-muted-foreground">
+              {tImportable('description', { name: lookup.data.source.name })}
+            </p>
+            <div className="flex gap-2">
+              <Button
+                nativeButton={false}
+                render={
+                  <Link to="/groups/import" search={{ prefill: sourceUrl }} />
+                }
+              >
+                {tImportable('cta')}
+              </Button>
+              <Button
+                variant="outline"
+                nativeButton={false}
+                render={<Link to="/" />}
+              >
+                {tImportable('backToHome')}
+              </Button>
+            </div>
           </div>
-        </div>
+        </PageInset>
       </main>
     )
   }
   return (
-    <main className="flex flex-1 items-center justify-center px-4 py-10">
-      <div className="flex max-w-md flex-col items-center gap-3 text-center">
-        <h1 className="text-2xl font-semibold">{tNotFound('text')}</h1>
-        <Button variant="outline" nativeButton={false} render={<Link to="/" />}>
-          {tNotFound('link')}
-        </Button>
-      </div>
+    <main className="flex flex-1 items-center justify-center py-10">
+      <PageInset>
+        <div className="flex max-w-md flex-col items-center gap-3 text-center">
+          <h1 className="text-2xl font-semibold">{tNotFound('text')}</h1>
+          <Button
+            variant="outline"
+            nativeButton={false}
+            render={<Link to="/" />}
+          >
+            {tNotFound('link')}
+          </Button>
+        </div>
+      </PageInset>
     </main>
   )
 }

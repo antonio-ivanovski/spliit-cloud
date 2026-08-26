@@ -2,6 +2,7 @@ import { getRouteApi, useNavigate } from '@tanstack/react-router'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { PageInset } from '@/components/layout/page-shell'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
 import type { Balances, SuggestedSettlement } from '@/lib/balances'
 import { useOfflineWithoutData } from '@/lib/use-online-status'
@@ -233,21 +234,23 @@ export default function BalancesAndSettlements() {
 
   return (
     <>
-      <div className="mb-3 grid w-full min-w-0 gap-3 sm:mb-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+      <PageInset className="mb-3 grid w-full min-w-0 gap-3 sm:mb-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <BalanceViewSelector value={view} onChange={changeView} />
         <CurrencyDisplaySelector
           value={currencyDisplay}
           groupCurrency={groupCurrency}
           onChange={changeCurrency}
         />
-      </div>
+      </PageInset>
       {currencyDisplay === 'original' && (
-        <p
-          className="mb-3 border-s-2 border-primary/40 ps-3 text-sm text-muted-foreground sm:mb-4"
-          role="note"
-        >
-          {t('currencyDisplay.originalNote')}
-        </p>
+        <PageInset className="mb-3 sm:mb-4">
+          <p
+            className="border-s-2 border-primary/40 ps-3 text-sm text-muted-foreground"
+            role="note"
+          >
+            {t('currencyDisplay.originalNote')}
+          </p>
+        </PageInset>
       )}
       <SimpleBalancesCard
         isLoading={isLoading}

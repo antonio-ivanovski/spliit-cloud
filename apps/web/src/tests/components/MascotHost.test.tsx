@@ -52,8 +52,22 @@ const groupActions: MascotAction[] = [
   },
 ]
 
+const secondaryGroupActions: MascotAction[] = [
+  {
+    id: 'add-expense-secondary',
+    label: 'Add expense',
+    icon: Plus,
+    onSelect: state.groupAction,
+  },
+]
+
 function GroupActionRegistration() {
   useMascotActions('test-group', groupActions)
+  return null
+}
+
+function NonPrimaryRegistration() {
+  useMascotActions('test-group-secondary', secondaryGroupActions)
   return null
 }
 
@@ -141,10 +155,51 @@ describe('MascotHost', () => {
     await user.click(
       screen.getByRole('button', { name: 'Open actions with Bill' }),
     )
+    expect(screen.getByTestId('bill-mascot')).toHaveAttribute(
+      'data-mascot-size',
+      'primary',
+    )
     expect(screen.queryByRole('menuitem', { name: 'Create group' })).toBeNull()
 
     await user.click(screen.getByRole('menuitem', { name: 'Add expense' }))
     expect(state.groupAction).toHaveBeenCalledOnce()
+  })
+
+  it('keeps registered non-primary route actions compact until opened', async () => {
+    state.pathname = '/groups/group-1/activity'
+    const { user } = renderHost(<NonPrimaryRegistration />)
+
+    expect(screen.getByTestId('bill-mascot-docked')).toHaveAttribute(
+      'data-mascot-size',
+      'compact',
+    )
+    expect(screen.getByTestId('bill-mascot-action-badge')).toHaveClass(
+      'start-2',
+      'top-4',
+      'size-5',
+    )
+    await user.click(
+      screen.getByRole('button', { name: 'Open actions with Bill' }),
+    )
+    expect(screen.getByTestId('bill-mascot')).toHaveAttribute(
+      'data-mascot-size',
+      'expanded',
+    )
+    expect(screen.queryByTestId('bill-mascot-action-badge')).toBeNull()
+    expect(
+      screen.getByTestId('bill-mascot-trigger').querySelector('.lucide-x'),
+    ).toBeNull()
+  })
+
+  it('keeps the expanded primary badge anchored to the full artwork', () => {
+    state.pathname = '/groups/group-1/expenses'
+    renderHost(<GroupActionRegistration />)
+
+    expect(screen.getByTestId('bill-mascot-action-badge')).toHaveClass(
+      'start-0.5',
+      'top-0.5',
+      'size-6',
+    )
   })
 
   it('keeps the same trigger node when the route changes', () => {
@@ -163,11 +218,21 @@ describe('MascotHost', () => {
 
   it('becomes personality-only on routes without a contextual action', async () => {
     state.pathname = '/feedback'
+    vi.useFakeTimers()
     const { user } = renderHost()
+    await finishWelcome()
 
+    expect(screen.getByTestId('bill-mascot-docked')).toHaveAttribute(
+      'data-mascot-size',
+      'compact',
+    )
     const trigger = screen.getByRole('button', { name: 'Say hello to Bill' })
     await user.click(trigger)
 
+    expect(screen.getByTestId('bill-mascot')).toHaveAttribute(
+      'data-mascot-size',
+      'expanded',
+    )
     expect(trigger).toHaveAttribute('data-reaction', 'welcome')
     expect(screen.queryByRole('menu')).toBeNull()
     expect(screen.getByTestId('bill-mascot-speech')).toHaveTextContent(
@@ -267,6 +332,18 @@ describe('MascotHost', () => {
 
     await user.click(trigger)
     expect(screen.getByTestId('bill-mascot-speech')).toBeInTheDocument()
+  })
+
+  it('keeps dense mobile group pages present in the compact state', async () => {
+    state.pathname = '/groups/group-1/balances'
+    vi.useFakeTimers()
+    renderHost()
+    await finishWelcome()
+
+    expect(screen.getByTestId('bill-mascot-docked')).toHaveAttribute(
+      'data-mascot-size',
+      'compact',
+    )
   })
 
   it('explains the missing action on settings after a tap', async () => {
@@ -485,7 +562,7 @@ describe('MascotHost', () => {
     vi.useRealTimers()
   })
 
-  it('hides create actions, stays large, and loops failure while offline', async () => {
+  it('hides create actions and stays compact while offline', async () => {
     Object.defineProperty(navigator, 'onLine', {
       configurable: true,
       value: false,
@@ -493,13 +570,14 @@ describe('MascotHost', () => {
     vi.useFakeTimers()
     renderHost(<GroupActionRegistration />)
 
-    const host = screen.getByTestId('bill-mascot')
+    const host = screen.getByTestId('bill-mascot-docked')
     expect(host).toHaveAttribute('data-mascot-offline', 'true')
-    expect(host).toHaveAttribute('data-mascot-docked', 'false')
+    expect(host).toHaveAttribute('data-mascot-docked', 'true')
+    expect(host).toHaveAttribute('data-mascot-size', 'compact')
     expect(host).toHaveAttribute('data-reaction', 'failure')
     expect(screen.getByTestId('bill-mascot-trigger')).toHaveClass(
-      'h-[118px]',
-      'w-[108px]',
+      'h-16',
+      'w-16',
     )
     expect(
       screen.getByRole('button', { name: 'Say hello to Bill' }),
@@ -510,13 +588,13 @@ describe('MascotHost', () => {
     await act(async () => {
       await vi.advanceTimersByTimeAsync(2_600)
     })
-    expect(screen.getByTestId('bill-mascot')).toHaveAttribute(
+    expect(screen.getByTestId('bill-mascot-docked')).toHaveAttribute(
       'data-reaction',
       'failure',
     )
   })
 
-  it('stays large on focused routes while offline', () => {
+  it('stays compact on non-primary focused routes while offline', () => {
     Object.defineProperty(navigator, 'onLine', {
       configurable: true,
       value: false,
@@ -524,12 +602,14 @@ describe('MascotHost', () => {
     state.pathname = '/groups/create'
     renderHost()
 
-    expect(screen.getByTestId('bill-mascot')).toHaveAttribute(
-      'data-mascot-docked',
-      'false',
+    expect(screen.getByTestId('bill-mascot-docked')).toHaveAttribute(
+      'data-mascot-size',
+      'compact',
     )
-    expect(screen.queryByTestId('bill-mascot-docked')).toBeNull()
-    expect(screen.getByTestId('bill-mascot-trigger')).toHaveClass('h-[118px]')
+    expect(screen.getByTestId('bill-mascot-trigger')).toHaveClass(
+      'h-16',
+      'w-16',
+    )
   })
 
   it('explains that create actions are unavailable when tapped offline', async () => {

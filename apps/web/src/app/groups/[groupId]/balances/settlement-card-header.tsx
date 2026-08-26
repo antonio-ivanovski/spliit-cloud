@@ -22,7 +22,7 @@ export function SettlementCardHeader({
   const { t } = useTranslation(undefined, { keyPrefix: 'Balances' })
 
   return (
-    <CardHeader className="grid items-start gap-4 px-0 py-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:px-6 sm:py-6">
+    <CardHeader className="grid items-start gap-4 px-4 py-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:px-6 sm:py-6">
       <div className="min-w-0 sm:pt-0.5">
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>

@@ -235,6 +235,19 @@ describe('RecentGroupList', () => {
     mocks.mockInvalidateInvitationsList.mockResolvedValue(undefined)
   })
 
+  it('insets non-card dashboard headings while leaving cards on the rail', () => {
+    render(<RecentGroupList />)
+
+    expect(screen.getByTestId('dashboard-welcome')).toHaveClass(
+      'px-[var(--page-inset,1rem)]',
+    )
+    expect(
+      screen
+        .getAllByRole('button', { name: 'Groups' })
+        .find((button) => button.classList.contains('mx-3')),
+    ).toHaveClass('w-[calc(100%-1.5rem)]')
+  })
+
   it('groups cross-group balances by direction and currency', async () => {
     mocks.mockUseOverviewQuery.mockReturnValue({
       data: {

@@ -1,6 +1,7 @@
 import { Trans, useTranslation } from 'react-i18next'
 
 import { AuthPanel } from '@/components/auth/auth-panel'
+import { PageInset, PageShell } from '@/components/layout/page-shell'
 import {
   DEFAULT_MASCOT_ID,
   getMascotDefinition,
@@ -17,21 +18,23 @@ export default function HomePage() {
 
   if (!account) {
     return (
-      <main className="flex-1 px-4 py-8 sm:py-12 lg:py-16">
-        <div className="container grid min-h-[calc(100vh-12rem)] max-w-(--breakpoint-lg) items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(360px,420px)]">
-          <LandingIntro />
+      <PageShell width="lg" className="py-8 sm:py-12 lg:py-16">
+        <div className="grid min-h-[calc(100dvh-12rem)] w-full items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(360px,420px)]">
+          <PageInset>
+            <LandingIntro />
+          </PageInset>
           <div className="motion-enter">
             <AuthPanel />
           </div>
         </div>
-      </main>
+      </PageShell>
     )
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-(--breakpoint-md) flex-1 flex-col gap-6 px-4 py-6">
+    <PageShell className="flex-col gap-6 py-6">
       <RecentGroupList />
-    </main>
+    </PageShell>
   )
 }
 

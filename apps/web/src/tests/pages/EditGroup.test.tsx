@@ -223,6 +223,13 @@ describe('EditGroup', () => {
     expect(screen.getByTestId('group-form')).toBeInTheDocument()
   })
 
+  it('keeps group settings as independent visible cards', () => {
+    const { container } = render(<EditGroup />)
+
+    expect(container.querySelector('.mobile-settings-sheet')).toBeNull()
+    expect(screen.getByTestId('group-form')).toBeInTheDocument()
+  })
+
   // ── GROUP-type control tests (tasks 13.30, 13.31) ────────────────
 
   function setGroupGroup() {

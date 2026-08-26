@@ -241,12 +241,12 @@ export function CreateFriend() {
         {t('title')}
       </h1>
 
-      <Card className="mobile-surface">
+      <Card>
         <CardHeader className="hidden sm:flex">
           <CardTitle>{t('title')}</CardTitle>
           <CardDescription>{t('linkHelp')}</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-4 sm:p-6">
           <Form {...form}>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <Tabs
@@ -273,12 +273,25 @@ export function CreateFriend() {
                 }}
                 className="flex flex-col gap-4"
               >
-                <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="friends">
+                <TabsList className="flex w-full justify-start overflow-x-auto sm:grid sm:grid-cols-3 sm:overflow-visible">
+                  <TabsTrigger
+                    value="friends"
+                    className="min-w-[8rem] flex-1 sm:min-w-0"
+                  >
                     {t('peerFriendsTab')}
                   </TabsTrigger>
-                  <TabsTrigger value="email">{t('peerEmailTab')}</TabsTrigger>
-                  <TabsTrigger value="link">{t('peerLinkTab')}</TabsTrigger>
+                  <TabsTrigger
+                    value="email"
+                    className="min-w-[8rem] flex-1 sm:min-w-0"
+                  >
+                    {t('peerEmailTab')}
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="link"
+                    className="min-w-[8rem] flex-1 sm:min-w-0"
+                  >
+                    {t('peerLinkTab')}
+                  </TabsTrigger>
                 </TabsList>
 
                 <TabsContent

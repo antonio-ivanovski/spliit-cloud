@@ -55,7 +55,26 @@ vi.mock('@/components/locale-switcher', () => ({
   LocaleSwitcher: () => <button data-testid="locale-switcher">Locale</button>,
 }))
 vi.mock('@/components/mobile-shell', () => ({
-  MobileAppBar: () => <header data-testid="focused-mobile-app-bar" />,
+  MobileAppBar: () => (
+    <header data-testid="focused-mobile-app-bar">
+      <button type="button" data-testid="currency-converter">
+        Currency converter
+      </button>
+      <button type="button" data-testid="locale-switcher">
+        Locale
+      </button>
+    </header>
+  ),
+  MobileAppHeaderActions: () => (
+    <div>
+      <button type="button" data-testid="currency-converter">
+        Currency converter
+      </button>
+      <button type="button" data-testid="locale-switcher">
+        Locale
+      </button>
+    </div>
+  ),
 }))
 vi.mock('@/components/offline-banner', () => ({ OfflineBanner: () => null }))
 vi.mock('@/components/pwa-register', () => ({ PwaRegister: () => null }))

@@ -2547,7 +2547,7 @@ describe('ParticipantShareRow click behavior', () => {
       '[data-id="lp-1/BY_SHARES/USD"]',
     )
     expect(aliceRow).toBeTruthy()
-    expect(aliceRow).toHaveClass('w-[calc(100%+3rem)]')
+    expect(aliceRow).not.toHaveClass('w-[calc(100%+3rem)]')
     expect(aliceRow).toHaveTextContent('Alice')
     expect(aliceRow?.querySelector('input')).toBeTruthy()
     expect(aliceRow).not.toHaveTextContent('#')

@@ -134,12 +134,12 @@ export function EditExpenseForm({
 
   if (isReadOnlyGroupViewer) {
     return (
-      <Card className="mobile-surface">
+      <Card>
         <CardHeader className="hidden sm:flex">
           <CardTitle>{t('pendingInviteeExpenseTitle')}</CardTitle>
           <CardDescription>{expense.title}</CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-col gap-3">
+        <CardContent spacing="standalone" className="flex flex-col gap-3">
           <p className="text-sm text-muted-foreground">
             {t('pendingInviteeExpenseDescription')}
           </p>

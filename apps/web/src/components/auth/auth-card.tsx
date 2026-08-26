@@ -28,7 +28,7 @@ export function AuthCard({
           {mode === 'sign-in' ? t('subtitle') : t('signUpSubtitle')}
         </CardDescription>
       </CardHeader>
-      <CardContent>{children}</CardContent>
+      <CardContent className="pb-4 sm:pb-6">{children}</CardContent>
     </Card>
   )
 }

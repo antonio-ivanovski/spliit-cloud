@@ -55,6 +55,51 @@ function CreateBudgetCard({ groupId }: { groupId: string }) {
   )
 }
 
+export function BudgetEmptyState({
+  groupId,
+  canCreate,
+}: {
+  groupId: string
+  canCreate: boolean
+}) {
+  const t = useBudgetTranslation()
+
+  return (
+    <Card>
+      <CardContent spacing="standalone" className="py-10 sm:py-12">
+        <div
+          data-testid="budget-empty-state"
+          className="mx-auto flex max-w-md flex-col items-center gap-3 text-center"
+        >
+          <span className="flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <WalletCards className="size-6" aria-hidden="true" />
+          </span>
+          <div>
+            <h2 className="font-medium">{t('empty.title')}</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {t('empty.description')}
+            </p>
+          </div>
+          {canCreate && (
+            <Button
+              variant="outline"
+              nativeButton={false}
+              render={
+                <Link
+                  to="/groups/$groupId/budgets/create"
+                  params={{ groupId }}
+                />
+              }
+            >
+              {t('create')}
+            </Button>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
 export default function GroupBudgetsPageClient() {
   const t = useBudgetTranslation()
   const { groupId, group, currentMember } = useCurrentGroup()
@@ -86,7 +131,7 @@ export default function GroupBudgetsPageClient() {
   if (!group) return null
   if (budgetsQuery.isError) {
     return (
-      <Card className="mobile-surface">
+      <Card>
         <CardContent className="flex flex-col items-start gap-3 py-8">
           <p role="alert" className="text-sm text-destructive">
             {budgetsQuery.error.message}
@@ -119,38 +164,12 @@ export default function GroupBudgetsPageClient() {
   return (
     <div className="flex flex-col gap-4">
       {active.length === 0 ? (
-        <Card className="mobile-surface">
-          <CardContent className="flex flex-col items-center gap-3 px-6 py-12 text-center">
-            <span className="flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-              <WalletCards className="size-6" aria-hidden="true" />
-            </span>
-            <div>
-              <h2 className="font-medium">{t('empty.title')}</h2>
-              <p className="mt-1 max-w-sm text-sm text-muted-foreground">
-                {t('empty.description')}
-              </p>
-            </div>
-            {canCreate && (
-              <Button
-                variant="outline"
-                nativeButton={false}
-                render={
-                  <Link
-                    to="/groups/$groupId/budgets/create"
-                    params={{ groupId }}
-                  />
-                }
-              >
-                {t('create')}
-              </Button>
-            )}
-          </CardContent>
-        </Card>
+        <BudgetEmptyState groupId={groupId} canCreate={canCreate} />
       ) : (
         <div className="flex flex-col gap-4">
           {canCreate && <CreateBudgetCard groupId={groupId} />}
           {current.length > 0 && (
-            <div className="mobile-divide-y flex flex-col gap-0 sm:gap-4">
+            <div className="flex flex-col gap-3 sm:gap-4">
               {current.map((budget) => (
                 <BudgetCard
                   key={budget.id}
@@ -170,7 +189,7 @@ export default function GroupBudgetsPageClient() {
           defaultOpen={false}
           storageKey={`group-budgets-completed-${groupId}`}
         >
-          <div className="mobile-divide-y flex flex-col gap-0 opacity-80 sm:gap-4">
+          <div className="flex flex-col gap-3 opacity-80 sm:gap-4">
             {completed.map((budget) => (
               <BudgetCard
                 key={budget.id}
@@ -190,7 +209,7 @@ export default function GroupBudgetsPageClient() {
           defaultOpen={false}
           storageKey={`group-budgets-archived-${groupId}`}
         >
-          <div className="mobile-divide-y flex flex-col gap-0 opacity-75 sm:gap-4">
+          <div className="flex flex-col gap-3 opacity-75 sm:gap-4">
             {archived.map((budget) => (
               <BudgetCard
                 key={budget.id}
