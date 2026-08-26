@@ -3304,5 +3304,23 @@
     "title": "Jste offline",
     "description": "Tato obrazovka potřebuje připojení. Připojte se znovu pro načtení skupin a výdajů.",
     "retry": "Zkusit znovu"
+  },
+  "PwaUpdate": {
+    "title": "K dispozici je nová verze",
+    "description": "Důrazně doporučujeme aktualizaci, protože tato verze už nemusí fungovat správně.",
+    "unsavedWarning": "Restartováním se v tomto okně zahodí neuložené změny.",
+    "nextLaunchNote": "Pokud zvolíte možnost Později, aktualizace se automaticky použije při příštím spuštění Spliitu.",
+    "restartFailed": "Spliit se nepodařilo restartovat. Zavřete ostatní okna aplikace a zkuste to znovu.",
+    "later": "Později",
+    "restartNow": "Restartovat nyní",
+    "restarting": "Restartování…",
+    "otherClientsCountWarning": "Bylo zjištěno {count} dalších otevřených karet nebo oken Spliitu. Zavřete je, abyste ochránili neuložené změny, nebo přesto restartujte všechna.",
+    "clientCheckFailed": "Spliit se nepodařilo ověřit, zda jsou otevřené další karty nebo okna. Zkuste to znovu, nebo přesto restartujte všechna.",
+    "checkingOtherClients": "Kontrolují se ostatní karty…",
+    "restartAllAnyway": "Přesto restartovat vše",
+    "forceTitle": "Restartovat všechna okna Spliitu?",
+    "forceDescription": "Všechny otevřené karty a okna Spliitu se znovu načtou. Všechny neuložené změny v nich budou ztraceny.",
+    "cancel": "Zrušit",
+    "restartAll": "Restartovat vše"
   }
 }

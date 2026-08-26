@@ -3288,5 +3288,23 @@
     "title": "No tens connexió",
     "description": "Aquesta pantalla necessita connexió. Torna a connectar-te per carregar els teus grups i despeses.",
     "retry": "Torna-ho a provar"
+  },
+  "PwaUpdate": {
+    "title": "Nova versió disponible",
+    "description": "Es recomana encaridament actualitzar perquè és possible que aquesta versió ja no funcioni correctament.",
+    "unsavedWarning": "En reiniciar, es descartaran els canvis no desats d'aquesta finestra.",
+    "nextLaunchNote": "Si tries «Més tard», l'actualització s'aplicarà automàticament la propera vegada que iniciïs Spliit.",
+    "restartFailed": "No s'ha pogut reiniciar Spliit. Tanca les altres finestres de l'aplicació i torna-ho a provar.",
+    "later": "Més tard",
+    "restartNow": "Reinicia ara",
+    "restarting": "Reiniciant…",
+    "otherClientsCountWarning": "S'han detectat {count} pestanyes o finestres de Spliit obertes. Tanca-les per protegir els canvis no desats o reinicia-les totes igualment.",
+    "clientCheckFailed": "Spliit no ha pogut verificar si hi ha altres pestanyes o finestres obertes. Torna-ho a provar o reinicia-les totes igualment.",
+    "checkingOtherClients": "Comprovant altres pestanyes…",
+    "restartAllAnyway": "Reinicia-ho tot igualment",
+    "forceTitle": "Reiniciar-ho tot?",
+    "forceDescription": "Totes les pestanyes i finestres de Spliit obertes es tornaran a carregar. Es perdran els canvis no desats que hi hagi.",
+    "cancel": "Cancel·la",
+    "restartAll": "Reinicia-ho tot"
   }
 }

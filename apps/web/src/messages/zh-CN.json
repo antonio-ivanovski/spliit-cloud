@@ -3253,5 +3253,23 @@
     "title": "当前处于离线状态",
     "description": "此页面需要网络连接。重新连接后即可加载群组和消费。",
     "retry": "重试"
+  },
+  "PwaUpdate": {
+    "title": "有新版本可用",
+    "description": "强烈建议更新，因为此版本可能无法继续正常运行。",
+    "unsavedWarning": "重启将丢弃此窗口中未保存的更改。",
+    "nextLaunchNote": "如果选择“稍后”，下次启动 Spliit 时将自动应用更新。",
+    "restartFailed": "无法重启 Spliit。请关闭其他应用窗口后重试。",
+    "later": "稍后",
+    "restartNow": "立即重启",
+    "restarting": "正在重启…",
+    "otherClientsCountWarning": "检测到其他已打开的 Spliit 标签页或窗口：{count} 个。请关闭它们以保护未保存的内容，或仍然重启所有窗口。",
+    "clientCheckFailed": "无法验证是否打开了其他 Spliit 标签页或窗口。请重试，或仍然重启所有窗口。",
+    "checkingOtherClients": "正在检查其他标签页…",
+    "restartAllAnyway": "仍要全部重启",
+    "forceTitle": "要重启所有 Spliit 窗口吗？",
+    "forceDescription": "所有已打开的 Spliit 标签页和窗口都将重新加载，其中未保存的更改将会丢失。",
+    "cancel": "取消",
+    "restartAll": "重启全部"
   }
 }

@@ -3270,5 +3270,23 @@
     "title": "Et ole yhteydessä",
     "description": "Tämä näyttö tarvitsee yhteyden. Muodosta yhteys uudelleen ladataksesi ryhmäsi ja kulusi.",
     "retry": "Yritä uudelleen"
+  },
+  "PwaUpdate": {
+    "title": "Uusi versio saatavilla",
+    "description": "Päivittäminen on erittäin suositeltavaa, koska tämä versio ei ehkä enää toimi oikein.",
+    "unsavedWarning": "Uudelleenkäynnistys poistaa tämän ikkunan tallentamattomat muutokset.",
+    "nextLaunchNote": "Jos valitset Myöhemmin, päivitys otetaan automaattisesti käyttöön, kun käynnistät Spliitin seuraavan kerran.",
+    "restartFailed": "Spliitin uudelleenkäynnistys ei onnistunut. Sulje muut sovellusikkunat ja yritä uudelleen.",
+    "later": "Myöhemmin",
+    "restartNow": "Käynnistä nyt uudelleen",
+    "restarting": "Käynnistetään uudelleen…",
+    "otherClientsCountWarning": "Muita avoimia Spliit-välilehtiä tai -ikkunoita havaittu: {count}. Sulje ne suojataksesi tallentamattoman työn tai käynnistä kaikki silti uudelleen.",
+    "clientCheckFailed": "Spliit ei pystynyt tarkistamaan, onko muita välilehtiä tai ikkunoita avoinna. Yritä uudelleen tai käynnistä kaikki silti uudelleen.",
+    "checkingOtherClients": "Muita välilehtiä tarkistetaan…",
+    "restartAllAnyway": "Käynnistä kaikki silti uudelleen",
+    "forceTitle": "Käynnistetäänkö kaikki Spliit-ikkunat uudelleen?",
+    "forceDescription": "Kaikki avoimet Spliit-välilehdet ja -ikkunat ladataan uudelleen. Niihin tallentamattomat muutokset menetetään.",
+    "cancel": "Peruuta",
+    "restartAll": "Käynnistä kaikki uudelleen"
   }
 }

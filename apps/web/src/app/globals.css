@@ -372,6 +372,15 @@
     backwards;
 }
 
+/* An accepted PWA update restarts the document on the same route. Keep that
+   restart visually stable by completing only the initial entrance motion
+   immediately; interactive transitions and later component motion remain. */
+html[data-pwa-update-restart='true'] .motion-enter,
+html[data-pwa-update-restart='true'] .motion-stagger > * {
+  animation-duration: 0.01ms !important;
+  animation-delay: 0ms !important;
+}
+
 .motion-stagger > :nth-child(2) {
   animation-delay: 40ms;
 }

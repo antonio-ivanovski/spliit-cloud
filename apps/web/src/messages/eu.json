@@ -3288,5 +3288,23 @@
     "title": "Lineaz kanpo zaude",
     "description": "Pantaila honek konexioa behar du. Konektatu berriro zure taldeak eta gastuak kargatzeko.",
     "retry": "Saiatu berriro"
+  },
+  "PwaUpdate": {
+    "title": "Bertsio berria erabilgarri",
+    "description": "Eguneratzea egitea biziki gomendatzen da, bertsio honek aurrerantzean behar bezala ez funtzionatzea gerta baitaiteke.",
+    "unsavedWarning": "Berrabiaraztean, leiho honetako gorde gabeko aldaketak baztertuko dira.",
+    "nextLaunchNote": "«Geroago» aukeratzen baduzu, eguneratzea automatikoki aplikatuko da Spliit abiarazten duzun hurrengo aldian.",
+    "restartFailed": "Ezin izan da Spliit berrabiarazi. Itxi aplikazioko gainerako leihoak eta saiatu berriro.",
+    "later": "Geroago",
+    "restartNow": "Berrabiarazi orain",
+    "restarting": "Berrabiarazten…",
+    "otherClientsCountWarning": "Irekitako {count} Spliit-eko beste fitxa edo leiho detektatu dira. Itxi itzazu gorde gabeko lana babesteko, edo berrabiarazi denak hala ere.",
+    "clientCheckFailed": "Spliit-ek ezin izan du egiaztatu beste fitxa edo leiho batzuk irekita dauden. Saiatu berriro, edo berrabiarazi denak hala ere.",
+    "checkingOtherClients": "Beste fitxak egiaztatzen…",
+    "restartAllAnyway": "Berrabiarazi denak hala ere",
+    "forceTitle": "Denak berrabiarazi?",
+    "forceDescription": "Irekitako Spliit-eko fitxa eta leiho guztiak berriro kargatuko dira. Haietako gorde gabeko aldaketak galdu egingo dira.",
+    "cancel": "Utzi",
+    "restartAll": "Berrabiarazi denak"
   }
 }

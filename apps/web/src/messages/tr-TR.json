@@ -3270,5 +3270,23 @@
     "title": "Çevrimdışısınız",
     "description": "Bu ekran bağlantı gerektiriyor. Gruplarınızı ve harcamalarınızı yüklemek için yeniden bağlanın.",
     "retry": "Tekrar deneyin"
+  },
+  "PwaUpdate": {
+    "title": "Yeni sürüm mevcut",
+    "description": "Güncelleme yapılması önemle önerilir; bu sürüm artık düzgün çalışmayabilir.",
+    "unsavedWarning": "Yeniden başlatmak, bu penceredeki kaydedilmemiş değişiklikleri siler.",
+    "nextLaunchNote": "\"Daha sonra\"yı seçerseniz güncelleme, Spliit'i bir sonraki açışınızda otomatik olarak uygulanır.",
+    "restartFailed": "Spliit yeniden başlatılamadı. Diğer uygulama pencerelerini kapatıp tekrar deneyin.",
+    "later": "Daha sonra",
+    "restartNow": "Şimdi yeniden başlat",
+    "restarting": "Yeniden başlatılıyor…",
+    "otherClientsCountWarning": "Açık olan diğer Spliit sekmesi veya penceresi sayısı: {count}. Kaydedilmemiş çalışmaları korumak için bunları kapatın veya tümünü yine de yeniden başlatın.",
+    "clientCheckFailed": "Spliit diğer sekmelerin veya pencerelerin açık olup olmadığını doğrulayamadı. Yeniden deneyin veya tümünü yine de yeniden başlatın.",
+    "checkingOtherClients": "Diğer sekmeler kontrol ediliyor…",
+    "restartAllAnyway": "Tümünü yine de yeniden başlat",
+    "forceTitle": "Tüm Spliit pencereleri yeniden başlatılsın mı?",
+    "forceDescription": "Açık olan tüm Spliit sekmeleri ve pencereleri yeniden yüklenecek. Bunlardaki kaydedilmemiş değişiklikler kaybolacak.",
+    "cancel": "İptal",
+    "restartAll": "Tümünü yeniden başlat"
   }
 }

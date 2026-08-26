@@ -3253,5 +3253,23 @@
     "title": "目前處於離線狀態",
     "description": "此畫面需要網路連線。重新連線後即可載入群組與消費。",
     "retry": "再試一次"
+  },
+  "PwaUpdate": {
+    "title": "有新版本可用",
+    "description": "強烈建議更新，因為此版本可能無法繼續正常運作。",
+    "unsavedWarning": "重新啟動會捨棄此視窗中未儲存的變更。",
+    "nextLaunchNote": "如果選擇「稍後」，下次啟動 Spliit 時將自動套用更新。",
+    "restartFailed": "無法重新啟動 Spliit。請關閉其他應用程式視窗後再試一次。",
+    "later": "稍後",
+    "restartNow": "立即重新啟動",
+    "restarting": "正在重新啟動……",
+    "otherClientsCountWarning": "偵測到其他已開啟的 Spliit 分頁或視窗：{count} 個。請關閉它們以保護未儲存的內容，或仍然重新啟動所有視窗。",
+    "clientCheckFailed": "無法確認是否有其他 Spliit 分頁或視窗開啟。請重試，或仍然重新啟動所有視窗。",
+    "checkingOtherClients": "正在檢查其他分頁…",
+    "restartAllAnyway": "仍要全部重新啟動",
+    "forceTitle": "要重新啟動所有 Spliit 視窗嗎？",
+    "forceDescription": "所有已開啟的 Spliit 分頁和視窗都會重新載入，其中未儲存的變更將會遺失。",
+    "cancel": "取消",
+    "restartAll": "重新啟動全部"
   }
 }

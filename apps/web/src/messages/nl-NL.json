@@ -3342,5 +3342,23 @@
     "title": "Je bent offline",
     "description": "Dit scherm heeft een verbinding nodig. Maak opnieuw verbinding om je groepen en uitgaven te laden.",
     "retry": "Opnieuw proberen"
+  },
+  "PwaUpdate": {
+    "title": "Nieuwe versie beschikbaar",
+    "description": "Updaten wordt sterk aanbevolen, omdat deze versie mogelijk niet meer goed werkt.",
+    "unsavedWarning": "Door opnieuw te starten gaan niet-opgeslagen wijzigingen in dit venster verloren.",
+    "nextLaunchNote": "Als je voor Straks kiest, wordt de update automatisch toegepast wanneer je Spliit de volgende keer start.",
+    "restartFailed": "Spliit kon niet opnieuw starten. Sluit andere appvensters en probeer het opnieuw.",
+    "later": "Straks",
+    "restartNow": "Nu opnieuw starten",
+    "restarting": "Opnieuw starten…",
+    "otherClientsCountWarning": "Andere geopende Spliit-tabbladen of -vensters gevonden: {count}. Sluit ze om niet-opgeslagen werk te beschermen, of start ze toch allemaal opnieuw.",
+    "clientCheckFailed": "Spliit kon niet controleren of er andere tabbladen of vensters openstaan. Probeer het opnieuw of start ze toch allemaal opnieuw.",
+    "checkingOtherClients": "Andere tabbladen controleren…",
+    "restartAllAnyway": "Alles toch opnieuw starten",
+    "forceTitle": "Alle Spliit-vensters opnieuw starten?",
+    "forceDescription": "Alle geopende Spliit-tabbladen en -vensters worden opnieuw geladen. Niet-opgeslagen wijzigingen daarin gaan verloren.",
+    "cancel": "Annuleren",
+    "restartAll": "Alles opnieuw starten"
   }
 }

@@ -3288,5 +3288,23 @@
     "title": "Vous êtes hors ligne",
     "description": "Cet écran nécessite une connexion. Reconnectez-vous pour charger vos groupes et vos dépenses.",
     "retry": "Réessayer"
+  },
+  "PwaUpdate": {
+    "title": "Nouvelle version disponible",
+    "description": "La mise à jour est vivement recommandée, car cette version risque de ne plus fonctionner correctement.",
+    "unsavedWarning": "Le redémarrage supprimera les modifications non enregistrées dans cette fenêtre.",
+    "nextLaunchNote": "Si vous choisissez « Plus tard », la mise à jour sera appliquée automatiquement lors de votre prochaine ouverture de Spliit.",
+    "restartFailed": "Spliit n’a pas pu redémarrer. Fermez les autres fenêtres de l’application et réessayez.",
+    "later": "Plus tard",
+    "restartNow": "Redémarrer maintenant",
+    "restarting": "Redémarrage…",
+    "otherClientsCountWarning": "{count} autres onglets ou fenêtres Spliit ouverts détectés. Fermez-les pour protéger les modifications non enregistrées ou redémarrez-les tous quand même.",
+    "clientCheckFailed": "Spliit n’a pas pu vérifier si d’autres onglets ou fenêtres étaient ouverts. Réessayez ou redémarrez-les tous quand même.",
+    "checkingOtherClients": "Vérification des autres onglets…",
+    "restartAllAnyway": "Tout redémarrer quand même",
+    "forceTitle": "Tout redémarrer ?",
+    "forceDescription": "Tous les onglets et fenêtres Spliit ouverts seront rechargés. Les modifications non enregistrées qu’ils contiennent seront perdues.",
+    "cancel": "Annuler",
+    "restartAll": "Tout redémarrer"
   }
 }

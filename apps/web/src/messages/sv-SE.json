@@ -3266,5 +3266,23 @@
     "title": "Du är offline",
     "description": "Den här skärmen behöver en anslutning. Återanslut för att läsa in dina grupper och utgifter.",
     "retry": "Försök igen"
+  },
+  "PwaUpdate": {
+    "title": "Ny version tillgänglig",
+    "description": "Vi rekommenderar starkt att du uppdaterar eftersom den här versionen kanske inte längre fungerar som den ska.",
+    "unsavedWarning": "Om du startar om försvinner osparade ändringar i det här fönstret.",
+    "nextLaunchNote": "Om du väljer Senare installeras uppdateringen automatiskt nästa gång du startar Spliit.",
+    "restartFailed": "Spliit kunde inte startas om. Stäng andra appfönster och försök igen.",
+    "later": "Senare",
+    "restartNow": "Starta om nu",
+    "restarting": "Startar om…",
+    "otherClientsCountWarning": "Andra öppna Spliit-flikar eller -fönster har upptäckts: {count}. Stäng dem för att skydda osparat arbete, eller starta om alla ändå.",
+    "clientCheckFailed": "Spliit kunde inte kontrollera om andra flikar eller fönster är öppna. Försök igen eller starta om alla ändå.",
+    "checkingOtherClients": "Kontrollerar andra flikar…",
+    "restartAllAnyway": "Starta om alla ändå",
+    "forceTitle": "Starta om alla Spliit-fönster?",
+    "forceDescription": "Alla öppna Spliit-flikar och -fönster laddas om. Osparade ändringar i dem går förlorade.",
+    "cancel": "Avbryt",
+    "restartAll": "Starta om alla"
   }
 }

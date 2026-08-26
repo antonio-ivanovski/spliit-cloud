@@ -3342,5 +3342,23 @@
     "title": "Du bist offline",
     "description": "Dieser Bildschirm braucht eine Verbindung. Stelle die Verbindung wieder her, um deine Gruppen und Ausgaben zu laden.",
     "retry": "Erneut versuchen"
+  },
+  "PwaUpdate": {
+    "title": "Neue Version verfügbar",
+    "description": "Aktualisieren wird dringend empfohlen, da diese Version möglicherweise nicht mehr korrekt funktioniert.",
+    "unsavedWarning": "Beim Neustart gehen ungespeicherte Änderungen in diesem Fenster verloren.",
+    "nextLaunchNote": "Wenn du Später auswählst, wird das Update automatisch beim nächsten Start von Spliit angewendet.",
+    "restartFailed": "Spliit konnte nicht neu gestartet werden. Schließe andere App-Fenster und versuche es erneut.",
+    "later": "Später",
+    "restartNow": "Jetzt neu starten",
+    "restarting": "Wird neu gestartet…",
+    "otherClientsCountWarning": "Andere geöffnete Spliit-Tabs oder -Fenster erkannt: {count}. Schließe sie, um ungespeicherte Arbeit zu schützen, oder starte trotzdem alle neu.",
+    "clientCheckFailed": "Spliit konnte nicht prüfen, ob andere Tabs oder Fenster geöffnet sind. Versuche es erneut oder starte trotzdem alle neu.",
+    "checkingOtherClients": "Andere Tabs werden geprüft…",
+    "restartAllAnyway": "Trotzdem alle neu starten",
+    "forceTitle": "Alle Spliit-Fenster neu starten?",
+    "forceDescription": "Alle geöffneten Spliit-Tabs und -Fenster werden neu geladen. Ungespeicherte Änderungen darin gehen verloren.",
+    "cancel": "Abbrechen",
+    "restartAll": "Alle neu starten"
   }
 }

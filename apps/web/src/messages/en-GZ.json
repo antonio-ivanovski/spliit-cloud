@@ -3262,5 +3262,23 @@
     "title": "you are offline",
     "description": "this screen needs the internet. hop back online to load your groups and expenses.",
     "retry": "try it again"
+  },
+  "PwaUpdate": {
+    "title": "A new version is here",
+    "description": "Updating is highly recommended — this version might stop working right.",
+    "unsavedWarning": "Restarting will wipe unsaved changes in this window.",
+    "nextLaunchNote": "If you pick Maybe later, the update will auto-apply the next time you launch Spliit.",
+    "restartFailed": "Spliit couldn’t restart. Close other app windows and try again.",
+    "later": "Maybe later",
+    "restartNow": "Restart now pls",
+    "restarting": "Restarting now…",
+    "otherClientsCountWarning": "Other Spliit tabs or windows are open: {count}. Close them to keep unsaved work safe, or restart them all anyway.",
+    "clientCheckFailed": "Spliit couldn’t check if other tabs or windows are open. Retry, or restart them all anyway.",
+    "checkingOtherClients": "Checking other tabs rn…",
+    "restartAllAnyway": "Restart all anyway pls",
+    "forceTitle": "Restart all Spliit windows?",
+    "forceDescription": "Every open Spliit tab and window will reload. Any unsaved changes in them will be gone.",
+    "cancel": "Cancel pls",
+    "restartAll": "Restart all pls"
   }
 }

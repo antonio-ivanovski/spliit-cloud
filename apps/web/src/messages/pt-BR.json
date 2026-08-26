@@ -3288,5 +3288,23 @@
     "title": "Você está offline",
     "description": "Esta tela precisa de uma conexão. Reconecte-se para carregar seus grupos e despesas.",
     "retry": "Tentar novamente"
+  },
+  "PwaUpdate": {
+    "title": "Nova versão disponível",
+    "description": "Recomenda-se fortemente atualizar, pois esta versão pode não funcionar mais corretamente.",
+    "unsavedWarning": "Reiniciar descartará as alterações não salvas nesta janela.",
+    "nextLaunchNote": "Se você escolher \"Mais tarde\", a atualização será aplicada automaticamente na próxima vez que abrir o Spliit.",
+    "restartFailed": "Não foi possível reiniciar o Spliit. Feche as outras janelas do aplicativo e tente novamente.",
+    "later": "Mais tarde",
+    "restartNow": "Reiniciar agora",
+    "restarting": "Reiniciando…",
+    "otherClientsCountWarning": "{count} outras abas ou janelas abertas do Spliit foram detectadas. Feche-as para proteger o trabalho não salvo ou reinicie todas mesmo assim.",
+    "clientCheckFailed": "Não foi possível verificar se há outras abas ou janelas abertas no Spliit. Tente novamente ou reinicie todas mesmo assim.",
+    "checkingOtherClients": "Verificando outras abas…",
+    "restartAllAnyway": "Reiniciar tudo mesmo assim",
+    "forceTitle": "Reiniciar tudo?",
+    "forceDescription": "Todas as abas e janelas abertas do Spliit serão recarregadas. Todas as alterações não salvas nelas serão perdidas.",
+    "cancel": "Cancelar",
+    "restartAll": "Reiniciar tudo"
   }
 }

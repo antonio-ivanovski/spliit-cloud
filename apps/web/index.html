@@ -16,7 +16,98 @@
     <link rel="icon" type="image/svg+xml" href="/logo.svg" />
     <link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png" />
     <title>Spliit Cloud</title>
+    <style>
+      #pwa-bootstrap {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: grid;
+        place-items: center;
+        background: #fff;
+        color: #374151;
+      }
+      #pwa-bootstrap-content {
+        display: grid;
+        width: min(13rem, 58vw);
+        justify-items: center;
+        gap: 1.5rem;
+      }
+      #pwa-bootstrap img {
+        width: min(13rem, 58vw);
+        height: auto;
+      }
+      #pwa-bootstrap-progress {
+        position: relative;
+        width: 100%;
+        height: 0.25rem;
+        overflow: hidden;
+        border-radius: 9999px;
+        background: #d1fae5;
+      }
+      #pwa-bootstrap-progress[hidden],
+      #pwa-bootstrap-status[hidden] {
+        display: none;
+      }
+      #pwa-bootstrap-progress::after {
+        position: absolute;
+        inset: 0;
+        width: 45%;
+        border-radius: inherit;
+        background: #059669;
+        content: '';
+        animation: pwa-bootstrap-progress 1.2s linear infinite;
+      }
+      #pwa-bootstrap-status {
+        margin: -0.75rem 0 0;
+        font:
+          500 0.875rem/1.25rem ui-sans-serif,
+          system-ui,
+          sans-serif;
+        text-align: center;
+      }
+      @keyframes pwa-bootstrap-progress {
+        from {
+          transform: translateX(-110%);
+        }
+        to {
+          transform: translateX(225%);
+        }
+      }
+      @media (prefers-color-scheme: dark) {
+        #pwa-bootstrap {
+          background: #030712;
+          color: #d1d5db;
+        }
+        #pwa-bootstrap-progress {
+          background: #064e3b;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #pwa-bootstrap-progress::after {
+          width: 100%;
+          animation: pwa-bootstrap-pulse 1.2s ease-in-out infinite alternate;
+          transform: none;
+        }
+      }
+      @keyframes pwa-bootstrap-pulse {
+        from {
+          opacity: 0.45;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+    </style>
     <script>
+      try {
+        if (sessionStorage.getItem('spliit-pwa-update-restart') === '1') {
+          sessionStorage.removeItem('spliit-pwa-update-restart')
+          document.documentElement.dataset.pwaUpdateRestart = 'true'
+        }
+      } catch {
+        // Storage may be unavailable; continue with the normal launch style.
+      }
+
       // A deployment can invalidate a lazy chunk while an existing tab is
       // still running the previous entry point. Recover once per tab; the
       // revalidated HTML then points at the current module graph.
@@ -57,6 +148,13 @@
     </script>
   </head>
   <body>
+    <div id="pwa-bootstrap" role="status" aria-live="polite">
+      <div id="pwa-bootstrap-content">
+        <img src="/logo-with-text.svg" alt="Spliit" />
+        <div id="pwa-bootstrap-progress" aria-hidden="true" hidden></div>
+        <p id="pwa-bootstrap-status" hidden></p>
+      </div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

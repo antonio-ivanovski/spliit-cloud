@@ -3342,5 +3342,23 @@
     "title": "Bạn đang ngoại tuyến",
     "description": "Màn hình này cần kết nối. Kết nối lại để tải nhóm và chi phí.",
     "retry": "Thử lại"
+  },
+  "PwaUpdate": {
+    "title": "Đã có phiên bản mới",
+    "description": "Bạn nên cập nhật, vì phiên bản này có thể không còn hoạt động đúng cách.",
+    "unsavedWarning": "Việc khởi động lại sẽ làm mất các thay đổi chưa lưu trong cửa sổ này.",
+    "nextLaunchNote": "Nếu chọn Để sau, bản cập nhật sẽ tự động được áp dụng vào lần tiếp theo bạn mở Spliit.",
+    "restartFailed": "Không thể khởi động lại Spliit. Hãy đóng các cửa sổ ứng dụng khác rồi thử lại.",
+    "later": "Để sau",
+    "restartNow": "Khởi động lại ngay",
+    "restarting": "Đang khởi động lại…",
+    "otherClientsCountWarning": "Đã phát hiện {count} tab hoặc cửa sổ Spliit khác đang mở. Hãy đóng chúng để bảo vệ dữ liệu chưa lưu, hoặc vẫn khởi động lại tất cả.",
+    "clientCheckFailed": "Không thể xác minh có tab hoặc cửa sổ nào khác đang mở trong Spliit. Thử lại hoặc vẫn khởi động lại tất cả.",
+    "checkingOtherClients": "Đang kiểm tra các tab khác…",
+    "restartAllAnyway": "Vẫn khởi động lại tất cả",
+    "forceTitle": "Khởi động lại tất cả cửa sổ Spliit?",
+    "forceDescription": "Tất cả tab và cửa sổ Spliit đang mở sẽ được tải lại. Mọi thay đổi chưa lưu trong đó sẽ bị mất.",
+    "cancel": "Hủy",
+    "restartAll": "Khởi động lại tất cả"
   }
 }

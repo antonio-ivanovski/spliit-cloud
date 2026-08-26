@@ -1,6 +1,6 @@
 /* oxlint-disable jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- Trans injects the contributor link's accessible text at runtime. */
 import { Outlet, Link, useLocation } from '@tanstack/react-router'
-import { Suspense, type ReactNode } from 'react'
+import { Suspense, type ReactNode, useEffect } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { AccountMenu } from '@/components/account-menu'
@@ -206,6 +206,10 @@ function Content() {
 }
 
 export function AppShell() {
+  useEffect(() => {
+    document.documentElement.removeAttribute('data-pwa-update-restart')
+  }, [])
+
   return (
     <I18nProvider>
       <ThemeProvider>

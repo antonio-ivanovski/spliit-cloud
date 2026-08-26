@@ -3288,5 +3288,23 @@
     "title": "Sei offline",
     "description": "Questa schermata richiede una connessione. Riconnettiti per caricare i tuoi gruppi e le tue spese.",
     "retry": "Riprova"
+  },
+  "PwaUpdate": {
+    "title": "Nuova versione disponibile",
+    "description": "Si consiglia vivamente di aggiornare perché questa versione potrebbe non funzionare più correttamente.",
+    "unsavedWarning": "Il riavvio eliminerà le modifiche non salvate in questa finestra.",
+    "nextLaunchNote": "Se scegli «Più tardi», l’aggiornamento verrà applicato automaticamente al prossimo avvio di Spliit.",
+    "restartFailed": "Spliit non può essere riavviato. Chiudi le altre finestre dell’app e riprova.",
+    "later": "Più tardi",
+    "restartNow": "Riavvia ora",
+    "restarting": "Riavvio…",
+    "otherClientsCountWarning": "Sono state rilevate {count} altre schede o finestre di Spliit aperte. Chiudile per proteggere il lavoro non salvato oppure riavviale tutte comunque.",
+    "clientCheckFailed": "Spliit non è riuscito a verificare se ci sono altre schede o finestre aperte. Riprova o riavviale tutte comunque.",
+    "checkingOtherClients": "Controllo delle altre schede…",
+    "restartAllAnyway": "Riavvia tutto comunque",
+    "forceTitle": "Riavviare tutto?",
+    "forceDescription": "Tutte le schede e finestre di Spliit aperte verranno ricaricate. Le modifiche non salvate al loro interno andranno perse.",
+    "cancel": "Annulla",
+    "restartAll": "Riavvia tutto"
   }
 }

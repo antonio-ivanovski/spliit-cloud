@@ -3342,5 +3342,23 @@
     "title": "Estás sin conexión",
     "description": "Esta pantalla necesita conexión. Vuelve a conectarte para cargar tus grupos y gastos.",
     "retry": "Intentar de nuevo"
+  },
+  "PwaUpdate": {
+    "title": "Nueva versión disponible",
+    "description": "Se recomienda encarecidamente actualizar porque es posible que esta versión deje de funcionar correctamente.",
+    "unsavedWarning": "Al reiniciar, se perderán los cambios sin guardar de esta ventana.",
+    "nextLaunchNote": "Si eliges «Más tarde», la actualización se aplicará automáticamente la próxima vez que abras Spliit.",
+    "restartFailed": "No se ha podido reiniciar Spliit. Cierra las demás ventanas de la aplicación y vuelve a intentarlo.",
+    "later": "Más tarde",
+    "restartNow": "Reiniciar ahora",
+    "restarting": "Reiniciando…",
+    "otherClientsCountWarning": "Se han detectado {count} pestañas o ventanas de Spliit abiertas. Ciérralas para proteger los cambios sin guardar o reinícialas todas de todos modos.",
+    "clientCheckFailed": "Spliit no ha podido comprobar si hay otras pestañas o ventanas abiertas. Vuelve a intentarlo o reinícialas todas de todos modos.",
+    "checkingOtherClients": "Comprobando otras pestañas…",
+    "restartAllAnyway": "Reiniciar todo de todos modos",
+    "forceTitle": "¿Reiniciar todo?",
+    "forceDescription": "Se volverán a cargar todas las pestañas y ventanas de Spliit abiertas. Se perderán los cambios sin guardar que haya en ellas.",
+    "cancel": "Cancelar",
+    "restartAll": "Reiniciar todo"
   }
 }

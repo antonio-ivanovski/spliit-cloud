@@ -3253,5 +3253,23 @@
     "title": "現在オフラインです",
     "description": "この画面には接続が必要です。グループと支出を読み込むには、再接続してください。",
     "retry": "もう一度試す"
+  },
+  "PwaUpdate": {
+    "title": "新しいバージョンを利用できます",
+    "description": "このバージョンは正常に動作しなくなる可能性があるため、更新を強くおすすめします。",
+    "unsavedWarning": "再起動すると、このウィンドウの未保存の変更は破棄されます。",
+    "nextLaunchNote": "「後で」を選択した場合、Spliitを次回起動したときに更新が自動的に適用されます。",
+    "restartFailed": "Spliitを再起動できませんでした。他のアプリウィンドウを閉じて、もう一度お試しください。",
+    "later": "後で",
+    "restartNow": "今すぐ再起動",
+    "restarting": "再起動中…",
+    "otherClientsCountWarning": "開いている他のSpliitのタブまたはウィンドウを{count}件検出しました。未保存の作業を保護するために閉じるか、そのまますべて再起動してください。",
+    "clientCheckFailed": "Spliitは他のタブやウィンドウが開いているか確認できませんでした。再試行するか、すべて再起動してください。",
+    "checkingOtherClients": "他のタブを確認中…",
+    "restartAllAnyway": "そのまますべて再起動",
+    "forceTitle": "すべてのSpliitウィンドウを再起動しますか？",
+    "forceDescription": "開いているすべてのSpliitのタブとウィンドウが再読み込みされます。未保存の変更はすべて失われます。",
+    "cancel": "キャンセル",
+    "restartAll": "すべて再起動"
   }
 }

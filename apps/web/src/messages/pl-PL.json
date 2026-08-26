@@ -3304,5 +3304,23 @@
     "title": "Jesteś offline",
     "description": "Ten ekran wymaga połączenia. Połącz się ponownie, aby wczytać grupy i wydatki.",
     "retry": "Spróbuj ponownie"
+  },
+  "PwaUpdate": {
+    "title": "Dostępna jest nowa wersja",
+    "description": "Zdecydowanie zalecamy aktualizację, ponieważ ta wersja może już nie działać poprawnie.",
+    "unsavedWarning": "Ponowne uruchomienie spowoduje utratę niezapisanych zmian w tym oknie.",
+    "nextLaunchNote": "Jeśli wybierzesz „Później”, aktualizacja zostanie zastosowana automatycznie przy następnym uruchomieniu Spliit.",
+    "restartFailed": "Nie udało się ponownie uruchomić Spliit. Zamknij inne okna aplikacji i spróbuj ponownie.",
+    "later": "Później",
+    "restartNow": "Uruchom ponownie",
+    "restarting": "Ponowne uruchamianie…",
+    "otherClientsCountWarning": "Wykryto {count} innych otwartych kart lub okien Spliit. Zamknij je, aby chronić niezapisane zmiany, albo mimo to uruchom ponownie wszystkie.",
+    "clientCheckFailed": "Nie udało się sprawdzić, czy są otwarte inne karty lub okna Spliit. Spróbuj ponownie albo mimo to uruchom ponownie wszystkie.",
+    "checkingOtherClients": "Sprawdzanie innych kart…",
+    "restartAllAnyway": "Uruchom ponownie wszystkie mimo to",
+    "forceTitle": "Uruchomić ponownie wszystkie okna Spliit?",
+    "forceDescription": "Wszystkie otwarte karty i okna Spliit zostaną ponownie załadowane. Niezapisane zmiany w nich zostaną utracone.",
+    "cancel": "Anuluj",
+    "restartAll": "Uruchom ponownie wszystkie"
   }
 }

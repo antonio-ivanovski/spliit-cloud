@@ -3254,5 +3254,23 @@
     "title": "Anda sedang offline",
     "description": "Layar ini membutuhkan koneksi. Sambungkan kembali untuk memuat grup dan pengeluaran.",
     "retry": "Coba lagi"
+  },
+  "PwaUpdate": {
+    "title": "Versi baru tersedia",
+    "description": "Sangat disarankan untuk memperbarui karena versi ini mungkin tidak lagi berfungsi dengan baik.",
+    "unsavedWarning": "Memulai ulang akan menghapus perubahan yang belum disimpan di jendela ini.",
+    "nextLaunchNote": "Jika memilih Nanti, pembaruan akan diterapkan otomatis saat Spliit dibuka lagi.",
+    "restartFailed": "Spliit tidak dapat dimulai ulang. Tutup jendela aplikasi lain, lalu coba lagi.",
+    "later": "Nanti",
+    "restartNow": "Mulai ulang sekarang",
+    "restarting": "Memulai ulang…",
+    "otherClientsCountWarning": "Tab atau jendela Spliit lain yang terbuka terdeteksi: {count}. Tutup untuk melindungi pekerjaan yang belum disimpan, atau tetap mulai ulang semuanya.",
+    "clientCheckFailed": "Spliit tidak dapat memastikan apakah ada tab atau jendela lain yang terbuka. Coba lagi, atau tetap mulai ulang semuanya.",
+    "checkingOtherClients": "Memeriksa tab lain…",
+    "restartAllAnyway": "Tetap mulai ulang semuanya",
+    "forceTitle": "Mulai ulang semua jendela Spliit?",
+    "forceDescription": "Semua tab dan jendela Spliit yang terbuka akan dimuat ulang. Perubahan yang belum disimpan di dalamnya akan hilang.",
+    "cancel": "Batal",
+    "restartAll": "Mulai ulang semua"
   }
 }

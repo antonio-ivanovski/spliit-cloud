@@ -3288,5 +3288,23 @@
     "title": "Ești offline",
     "description": "Acest ecran are nevoie de o conexiune. Reconectează-te pentru a încărca grupurile și cheltuielile.",
     "retry": "Încearcă din nou"
+  },
+  "PwaUpdate": {
+    "title": "Este disponibilă o versiune nouă",
+    "description": "Se recomandă cu insistență actualizarea, deoarece este posibil ca această versiune să nu mai funcționeze corect.",
+    "unsavedWarning": "Repornirea va șterge modificările nesalvate din această fereastră.",
+    "nextLaunchNote": "Dacă alegi „Mai târziu”, actualizarea se va aplica automat data viitoare când pornești Spliit.",
+    "restartFailed": "Spliit nu a putut fi repornit. Închide celelalte ferestre ale aplicației și încearcă din nou.",
+    "later": "Mai târziu",
+    "restartNow": "Repornește acum",
+    "restarting": "Se repornește…",
+    "otherClientsCountWarning": "Au fost detectate {count} alte file sau ferestre Spliit deschise. Închide-le pentru a proteja modificările nesalvate sau repornește-le pe toate oricum.",
+    "clientCheckFailed": "Spliit nu a putut verifica dacă sunt deschise alte file sau ferestre. Încearcă din nou sau repornește-le pe toate oricum.",
+    "checkingOtherClients": "Se verifică celelalte file…",
+    "restartAllAnyway": "Repornește tot oricum",
+    "forceTitle": "Repornești tot?",
+    "forceDescription": "Toate filele și ferestrele Spliit deschise vor fi reîncărcate. Toate modificările nesalvate din ele se vor pierde.",
+    "cancel": "Anulează",
+    "restartAll": "Repornește tot"
   }
 }

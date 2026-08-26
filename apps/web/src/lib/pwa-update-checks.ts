@@ -29,9 +29,21 @@ export function subscribeServiceWorkerUpdateChecks(
   const doc = options.document ?? document
   const win = options.window ?? window
   const intervalMs = options.intervalMs ?? DEFAULT_UPDATE_CHECK_INTERVAL_MS
+  let updateInFlight = false
 
   const check = () => {
-    void registration.update()
+    if (updateInFlight) return
+    updateInFlight = true
+    void (async () => {
+      try {
+        await registration.update()
+      } catch {
+        // Update checks are opportunistic. Offline and transient registration
+        // failures must not surface as unhandled promise rejections.
+      } finally {
+        updateInFlight = false
+      }
+    })()
   }
 
   const onVisibilityChange = () => {
