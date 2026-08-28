@@ -1365,6 +1365,10 @@
     "UnsupportedToast": {
       "title": "지원되지 않는 파일",
       "description": "{fileName}은(는) 지원되지 않는 첨부 파일 형식이에요."
+    },
+    "NoFilesToast": {
+      "title": "받은 파일이 없습니다",
+      "description": "파일 선택기가 파일 없이 돌아왔습니다. 다시 시도하거나 «사진 촬영» 버튼을 사용해 주세요."
     }
   },
   "CreateFromReceipt": {

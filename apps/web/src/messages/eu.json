@@ -1072,6 +1072,10 @@
     "UnsupportedToast": {
       "title": "Onartu gabeko fitxategia",
       "description": "{fileName} ez da eranskin mota onartua."
+    },
+    "NoFilesToast": {
+      "title": "Ez da fitxategirik jaso",
+      "description": "Fitxategi-hautatzailea fitxategirik gabe itzuli da. Saiatu berriro edo erabili «Atera argazkia» botoia."
     }
   },
   "CreateFromReceipt": {

@@ -1338,6 +1338,10 @@
     "UnsupportedToast": {
       "title": "unsupported file",
       "description": "{fileName} isn’t a supported attachment type."
+    },
+    "NoFilesToast": {
+      "title": "no file came through",
+      "description": "the file picker came back empty. try again or hit the “snap a photo” button."
     }
   },
   "ExpenseForm": {

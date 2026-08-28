@@ -1093,6 +1093,10 @@
     "UnsupportedToast": {
       "title": "Niet-ondersteund bestand",
       "description": "{fileName} is geen ondersteund bijlagetype."
+    },
+    "NoFilesToast": {
+      "title": "Geen bestand ontvangen",
+      "description": "De bestandskiezer leverde geen bestand op. Probeer het opnieuw of gebruik de knop «Foto maken»."
     }
   },
   "CreateFromReceipt": {

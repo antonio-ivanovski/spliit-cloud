@@ -1072,6 +1072,10 @@
     "UnsupportedToast": {
       "title": "Arquivo incompatível",
       "description": "{fileName} não é um tipo de anexo compatível."
+    },
+    "NoFilesToast": {
+      "title": "Nenhum arquivo recebido",
+      "description": "O seletor de arquivos voltou sem nenhum arquivo. Por favor, tente novamente ou use o botão «Tirar foto»."
     }
   },
   "CreateFromReceipt": {

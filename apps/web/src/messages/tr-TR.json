@@ -1065,6 +1065,10 @@
     "UnsupportedToast": {
       "title": "Desteklenmeyen dosya",
       "description": "{fileName} desteklenen bir ek türü değil."
+    },
+    "NoFilesToast": {
+      "title": "Dosya alınamadı",
+      "description": "Dosya seçici dosya olmadan geri döndü. Lütfen tekrar deneyin veya «Fotoğraf çek» düğmesini kullanın."
     }
   },
   "CreateFromReceipt": {

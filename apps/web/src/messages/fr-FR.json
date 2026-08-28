@@ -1072,6 +1072,10 @@
     "UnsupportedToast": {
       "title": "Fichier non pris en charge",
       "description": "{fileName} n’est pas un type de pièce jointe pris en charge."
+    },
+    "NoFilesToast": {
+      "title": "Aucun fichier reçu",
+      "description": "Le sélecteur de fichiers est revenu sans fichier. Veuillez réessayer ou utiliser le bouton « Prendre une photo »."
     }
   },
   "CreateFromReceipt": {

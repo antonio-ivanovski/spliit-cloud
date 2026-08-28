@@ -1093,6 +1093,10 @@
     "UnsupportedToast": {
       "title": "Nicht unterstützte Datei",
       "description": "{fileName} ist kein unterstützter Anhangstyp."
+    },
+    "NoFilesToast": {
+      "title": "Keine Datei empfangen",
+      "description": "Die Dateiauswahl kam ohne Datei zurück. Versuche es erneut oder nutze die Schaltfläche „Foto aufnehmen“."
     }
   },
   "CreateFromReceipt": {

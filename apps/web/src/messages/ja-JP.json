@@ -1058,6 +1058,10 @@
     "UnsupportedToast": {
       "title": "対応していないファイル",
       "description": "{fileName} は対応している添付ファイル形式ではありません。"
+    },
+    "NoFilesToast": {
+      "title": "ファイルが取得できませんでした",
+      "description": "ファイル選択がファイルなしで戻りました。もう一度お試しいただくか、「写真を撮る」ボタンをご利用ください。"
     }
   },
   "CreateFromReceipt": {

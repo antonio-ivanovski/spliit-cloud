@@ -1155,6 +1155,10 @@
     "UnsupportedToast": {
       "title": "Filtypen stöds inte",
       "description": "{fileName} är en bilagetyp som inte stöds."
+    },
+    "NoFilesToast": {
+      "title": "Ingen fil mottogs",
+      "description": "Filväljaren kom tillbaka utan fil. Försök igen eller använd knappen «Ta foto»."
     }
   },
   "ExpenseForm": {

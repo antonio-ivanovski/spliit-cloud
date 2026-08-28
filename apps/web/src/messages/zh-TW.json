@@ -1058,6 +1058,10 @@
     "UnsupportedToast": {
       "title": "不支援的檔案",
       "description": "{fileName} 不是支援的附件類型。"
+    },
+    "NoFilesToast": {
+      "title": "未收到任何檔案",
+      "description": "檔案選擇器返回時沒有檔案。請重試或使用「拍照」按鈕。"
     }
   },
   "CreateFromReceipt": {

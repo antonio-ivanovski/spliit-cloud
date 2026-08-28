@@ -1079,6 +1079,10 @@
     "UnsupportedToast": {
       "title": "Nepodporovaný soubor",
       "description": "{fileName} není podporovaný typ přílohy."
+    },
+    "NoFilesToast": {
+      "title": "Nebyl přijat žádný soubor",
+      "description": "Výběr souborů se vrátil bez souboru. Zkuste to prosím znovu nebo použijte tlačítko „Pořídit fotografii“."
     }
   },
   "CreateFromReceipt": {

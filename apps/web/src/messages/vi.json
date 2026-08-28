@@ -1609,6 +1609,10 @@
     "UnsupportedToast": {
       "title": "Tệp không được hỗ trợ",
       "description": "{fileName} không phải là loại tệp đính kèm được hỗ trợ."
+    },
+    "NoFilesToast": {
+      "title": "Không nhận được tệp nào",
+      "description": "Trình chọn tệp trả về mà không có tệp. Vui lòng thử lại hoặc dùng nút «Chụp ảnh»."
     }
   },
   "CreateFromReceipt": {

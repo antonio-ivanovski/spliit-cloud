@@ -167,7 +167,19 @@ export function ExpenseDocumentsInput({
   // mutable values are read through refs updated by effects above.
   // oxlint-disable-next-line react/react-compiler
   const handleFiles = useCallback(async (files: File[]) => {
-    if (!files.length || pendingRef.current) return
+    if (pendingRef.current) return
+    if (!files.length) {
+      // Some mobile pickers (Android DocumentsUI in standalone PWA) can return
+      // with an empty file list and fire no further event. Surface it so the
+      // failure is visible instead of silently doing nothing.
+      console.warn('File picker returned without any file (input.files empty)')
+      toastRef.current({
+        title: tRef.current('NoFilesToast.title'),
+        description: tRef.current('NoFilesToast.description'),
+        variant: 'destructive',
+      })
+      return
+    }
     pendingRef.current = true
     setPending(true)
     const added: NonNullable<Awaited<ReturnType<typeof uploadFile>>>[] = []

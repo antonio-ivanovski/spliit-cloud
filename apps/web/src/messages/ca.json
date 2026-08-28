@@ -1072,6 +1072,10 @@
     "UnsupportedToast": {
       "title": "Fitxer no compatible",
       "description": "{fileName} no és un tipus de fitxer adjunt compatible."
+    },
+    "NoFilesToast": {
+      "title": "No s'ha rebut cap fitxer",
+      "description": "El selector de fitxers ha tornat sense cap fitxer. Torna a provar-ho o fes servir el botó «Fes una foto»."
     }
   },
   "CreateFromReceipt": {

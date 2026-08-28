@@ -1367,6 +1367,10 @@
     "UnsupportedToast": {
       "title": "File tidak didukung",
       "description": "{fileName} bukan jenis lampiran yang didukung."
+    },
+    "NoFilesToast": {
+      "title": "Tidak ada file yang diterima",
+      "description": "Pemilih file kembali tanpa file. Silakan coba lagi atau gunakan tombol «Ambil foto»."
     }
   },
   "CreateFromReceipt": {

@@ -137,6 +137,21 @@ describe('ExpenseDocumentsInput form drag and drop', () => {
     await waitFor(() => expect(updateDocuments).toHaveBeenCalledTimes(1))
   })
 
+  it('shows a toast when the picker returns without a file', () => {
+    renderInput()
+    fireEvent.change(screen.getByTestId('expense-file-input-file'), {
+      target: { files: [] },
+    })
+    expect(toast).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: 'No file received',
+        description:
+          'The file picker returned without a file. Please try again or use the “Take photo” button.',
+        variant: 'destructive',
+      }),
+    )
+  })
+
   it('uses a camera-oriented input for the mobile capture button', () => {
     renderInput()
     const camera = screen.getByTestId('expense-file-input-camera')

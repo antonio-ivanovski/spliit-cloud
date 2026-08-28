@@ -421,6 +421,10 @@
     "UnsupportedToast": {
       "title": "ملف غير مدعوم",
       "description": "{fileName} ليس نوعًا مدعومًا من المرفقات."
+    },
+    "NoFilesToast": {
+      "title": "لم يتم استلام أي ملف",
+      "description": "عاد مُنتقي الملفات دون أي ملف. يرجى إعادة المحاولة أو استخدام زر «التقاط صورة»."
     }
   },
   "CompleteProfile": {

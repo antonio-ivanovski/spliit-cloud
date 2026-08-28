@@ -1065,6 +1065,10 @@
     "UnsupportedToast": {
       "title": "Tiedostotyyppiä ei tueta",
       "description": "{fileName} ei ole tuettu liitetyyppi."
+    },
+    "NoFilesToast": {
+      "title": "Tiedostoa ei vastaanotettu",
+      "description": "Tiedostonvalitsin palasi ilman tiedostoa. Yritä uudelleen tai käytä «Ota kuva» -painiketta."
     }
   },
   "CreateFromReceipt": {

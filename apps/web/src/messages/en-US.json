@@ -1609,6 +1609,10 @@
     },
     "FileErrorToast": {
       "description": "{fileName}: something went wrong while uploading. Please retry later or choose a different file."
+    },
+    "NoFilesToast": {
+      "title": "No file received",
+      "description": "The file picker returned without a file. Please try again or use the “Take photo” button."
     }
   },
   "CreateFromReceipt": {

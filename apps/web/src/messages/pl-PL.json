@@ -1079,6 +1079,10 @@
     "UnsupportedToast": {
       "title": "Nieobsługiwany plik",
       "description": "{fileName} to nieobsługiwany typ załącznika."
+    },
+    "NoFilesToast": {
+      "title": "Nie otrzymano żadnego pliku",
+      "description": "Wybór plików nie zwrócił żadnego pliku. Proszę spróbuj ponownie lub użyj przycisku „Zrób zdjęcie”."
     }
   },
   "CreateFromReceipt": {

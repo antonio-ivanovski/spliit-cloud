@@ -1072,6 +1072,10 @@
     "UnsupportedToast": {
       "title": "File non supportato",
       "description": "{fileName} non è un tipo di allegato supportato."
+    },
+    "NoFilesToast": {
+      "title": "Nessun file ricevuto",
+      "description": "Il selettore file non ha restituito alcun file. Riprova o usa il pulsante «Scatta una foto»."
     }
   },
   "CreateFromReceipt": {

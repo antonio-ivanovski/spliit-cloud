@@ -1072,6 +1072,10 @@
     "UnsupportedToast": {
       "title": "Fișier neacceptat",
       "description": "{fileName} nu este un tip de atașament acceptat."
+    },
+    "NoFilesToast": {
+      "title": "Nu a fost primit niciun fișier",
+      "description": "Selectorul de fișiere a revenit fără niciun fișier. Încearcă din nou sau folosește butonul «Fă o fotografie»."
     }
   },
   "CreateFromReceipt": {

@@ -1072,6 +1072,10 @@
     "UnsupportedToast": {
       "title": "קובץ לא נתמך",
       "description": "{fileName} אינו סוג קובץ נתמך לצירוף."
+    },
+    "NoFilesToast": {
+      "title": "לא התקבל אף קובץ",
+      "description": "בורר הקבצים חזר ללא קובץ. נסה שוב או השתמש בלחצן «צילום תמונה»."
     }
   },
   "CreateFromReceipt": {
