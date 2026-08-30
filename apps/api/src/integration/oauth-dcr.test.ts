@@ -58,15 +58,46 @@ describe('OAuth dynamic client registration', () => {
     expect(registeredScopes).toEqual(
       expect.arrayContaining([
         SPLIIT_SCOPES.groupsRead,
-        SPLIIT_SCOPES.groupsManage,
         SPLIIT_SCOPES.expensesRead,
-        SPLIIT_SCOPES.expensesManage,
       ]),
     )
+    // An omitted `scope` must never grant write authority: no manage, no
+    // delete, no legacy assistant write. Clients name those explicitly and
+    // reach them through the insufficient_scope step-up flow.
+    expect(registeredScopes).not.toContain(SPLIIT_SCOPES.groupsManage)
+    expect(registeredScopes).not.toContain(SPLIIT_SCOPES.expensesManage)
     for (const scope of DESTRUCTIVE_SCOPES) {
       expect(registeredScopes).not.toContain(scope)
     }
     expect(registeredScopes).not.toContain(ASSISTANT_WRITE_SCOPE)
+  })
+
+  it('still registers manage scopes when a client asks for them by name', async () => {
+    const requestedScope = [
+      'openid',
+      'offline_access',
+      SPLIIT_SCOPES.groupsRead,
+      SPLIIT_SCOPES.groupsManage,
+      SPLIIT_SCOPES.expensesManage,
+    ].join(' ')
+    const response = await app.request('/auth/oauth2/register', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        client_name: 'Spliit OAuth explicit-scope test',
+        redirect_uris: ['http://localhost:3002/oauth/callback'],
+        token_endpoint_auth_method: 'none',
+        scope: requestedScope,
+      }),
+    })
+    expect(response.status).toBe(201)
+
+    const body = (await response.json()) as { client_id: string; scope: string }
+    if (body.client_id) clientIds.push(body.client_id)
+
+    expect(new Set(body.scope.split(' '))).toEqual(
+      new Set(requestedScope.split(' ')),
+    )
   })
 
   it('allows browser-based public clients to preflight registration', async () => {

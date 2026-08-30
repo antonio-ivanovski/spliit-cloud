@@ -10,6 +10,7 @@ import {
 } from '@spliit/db'
 
 import { autoAcceptPendingFriendInvitationsForAccount } from '../lib/api/friends'
+import { getApiBaseUrl } from '../lib/auth/urls'
 import { accountRouter } from '../trpc/routers/account'
 import { friendsRouter } from '../trpc/routers/friends'
 import { groupsRouter } from '../trpc/routers/groups'
@@ -548,6 +549,7 @@ describe('Friend ledger — real DB', () => {
             credentialKind: 'oauth',
             accessToken: 'oauth-link-read-test',
             scopes: ['spliit:groups:read'],
+            audiences: [getApiBaseUrl()],
             session: { id: 'oauth-link-read-session' },
             user: {
               id: linkRecipientId,

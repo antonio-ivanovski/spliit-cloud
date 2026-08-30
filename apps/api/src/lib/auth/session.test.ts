@@ -126,6 +126,33 @@ describe('getOAuthAuthFromRequest', () => {
     })
   })
 
+  it('exposes the verified aud claim for per-surface audience checks', async () => {
+    prismaMock.account.findUnique.mockResolvedValue(accountRow() as never)
+
+    // String, array (with non-string entries dropped), and absent forms all
+    // normalise to a plain list; surfaces fail closed on an empty one.
+    const audForms: Array<{ aud?: unknown; expected: string[] }> = [
+      { aud: AUDIENCE, expected: [AUDIENCE] },
+      { aud: [API_BASE, AUDIENCE, 42], expected: [API_BASE, AUDIENCE] },
+      { expected: [] },
+    ]
+    for (const { aud, expected } of audForms) {
+      verifyBearerTokenMock.mockResolvedValue({
+        sub: 'account-1',
+        scopes: ['spliit:groups:read'],
+        exp: 1000,
+        iat: 900,
+        ...(aud === undefined ? {} : { aud }),
+      })
+
+      const resolved = (await getOAuthAuthFromRequest(
+        bearerRequest('tok-aud'),
+      )) as OAuthResolvedAuth
+
+      expect(resolved.audiences).toEqual(expected)
+    }
+  })
+
   it('falls back to a space-separated scope claim and derived session id', async () => {
     prismaMock.account.findUnique.mockResolvedValue(accountRow() as never)
     verifyBearerTokenMock.mockResolvedValue({

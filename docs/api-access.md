@@ -22,10 +22,12 @@ Access is granted per resource and per verb.
 | `spliit:expenses:manage` | create and edit expenses, stop a recurrence    |
 | `spliit:expenses:delete` | delete an expense, and edits that drop data    |
 
-A client that registers without naming scopes receives the four read and write
-scopes. **The two delete scopes are never granted by default** and must be
-requested explicitly, so an agent cannot destroy anything unless you decided it
-should be able to.
+A client that registers without naming scopes receives the two read scopes
+only. **Write and delete scopes are never granted by default** and must be
+requested explicitly, so an agent cannot change or destroy anything unless you
+decided it should be able to. When a read-only token attempts a write, the API
+answers with an `insufficient_scope` challenge naming the exact scope to
+request (see [Calling the API](#calling-the-api)).
 
 Managing or deleting implies reading the same resource, so a token holding
 `spliit:expenses:manage` can read expenses without also holding
@@ -80,10 +82,14 @@ points to the standard RFC 9728 document:
 https://api.spliit.cloud/.well-known/oauth-protected-resource
 ```
 
-That document identifies the API resource, its supported scopes and the OAuth
-authorization server. The agent can then follow RFC 8414 discovery to learn the
-dynamic-registration, authorization and token endpoints. No Spliit-specific
-skill or hard-coded OAuth route list is required.
+That document identifies the API resource, its basic scope set — the two read
+scopes only — and the OAuth authorization server. The agent can then follow
+RFC 8414 discovery to learn the dynamic-registration, authorization and token
+endpoints. No Spliit-specific skill or hard-coded OAuth route list is required.
+Write and delete scopes are deliberately not advertised there: each challenge
+and the OpenAPI document name the scope an operation actually needs, so an
+agent that falls back to requesting everything in `scopes_supported` ends up
+with a safe read-only grant.
 
 ## Registering a client
 
@@ -103,16 +109,16 @@ curl -X POST https://api.spliit.cloud/auth/oauth2/register \
 
 The response returns the `client_id` to use below.
 
-Add a `scope` field to request a delete scope. This has to happen at
+Add a `scope` field to request a manage or delete scope. This has to happen at
 registration: the authorization endpoint refuses any scope the client did not
 register for, with `The following scopes are invalid`. There is no endpoint to
-widen an existing client, so a client that needs to start deleting has to be
-registered again and reauthorized.
+widen an existing client, so a client that needs to start writing or deleting
+has to be registered again and reauthorized.
 
-An explicit `scope` value replaces the defaults; it does not add to them. Send
-the complete, space-separated set the client needs, including `openid` and
-`offline_access` when it needs identity claims and refresh tokens. The example
-below retains the normal expense permissions and adds deletion.
+An explicit `scope` value replaces the read-only defaults; it does not add to
+them. Send the complete, space-separated set the client needs, including
+`openid` and `offline_access` when it needs identity claims and refresh
+tokens. The example below adds expense writes and deletion.
 
 ```bash
   -d '{
@@ -147,12 +153,15 @@ When `resource` is omitted, Spliit binds the authorization to
 `resource=https://api.spliit.cloud` explicitly on the authorization request;
 the token exchange and later refreshes inherit that resource.
 
-Tokens issued for the MCP resource (`${MCP_PUBLIC_URL}/mcp`) are also accepted
-while that variable is configured. On the first refresh after upgrading from
-Better Auth 1.6, an existing token family is bound to the valid resource
-requested by the client (or to the API default when omitted); later refreshes
-can only retain or narrow that binding. Existing MCP clients therefore keep
-working without reauthorizing.
+Tokens issued for the MCP resource (`${MCP_PUBLIC_URL}/mcp`) keep verifying
+while that variable is configured, but only for the assistant surface that
+backs the MCP server. The direct API requires a token whose audience is the
+API itself and answers anything else with `401` and `error="invalid_token"` —
+a token minted for one resource is not a credential for the other (RFC 8707).
+On the first refresh after upgrading from Better Auth 1.6, an existing token
+family is bound to the valid resource requested by the client (or to the API
+default when omitted); later refreshes can only retain or narrow that binding.
+Existing MCP clients therefore keep working without reauthorizing.
 
 Call the API with `Authorization: Bearer <access_token>`.
 
@@ -193,8 +202,19 @@ curl -X POST 'https://api.spliit.cloud/trpc/groups.expenses.create' \
   -d '{"json":{"groupId":"...","requestId":"<uuid>","expense":{ ... }}}'
 ```
 
-A call missing the right scope returns `403` with
-`Missing required scope: <scope>`.
+Authentication and authorization failures return machine-actionable
+`WWW-Authenticate` challenges (RFC 6750):
+
+- No token on an OAuth-enabled procedure: `401` with
+  `Bearer scope="<required scopes>", resource_metadata="…"` — start the
+  authorization flow with the advertised scope.
+- Expired, malformed or wrong-audience token: `401` with
+  `error="invalid_token"` — refresh, or reauthorize if refreshing fails.
+- Token valid but missing the operation's scope: `403` with
+  `error="insufficient_scope", scope="<missing scopes>"` and a body of
+  `Missing required scope: <scope>` — register and authorize with the wider
+  scope set (step-up). Batched calls advertise the union of the missing
+  scopes.
 
 Send a `User-Agent` identifying your client. Spliit Cloud sits behind
 Cloudflare, which answers default HTTP-library agents with a challenge page

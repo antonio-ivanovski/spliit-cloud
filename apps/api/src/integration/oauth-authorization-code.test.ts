@@ -198,30 +198,39 @@ async function refreshAccessToken(opts: {
  * Token verification fetches the configured JWKS URL, so route that one
  * process-local request back through the same Hono app.
  */
-async function listGroupsOverHttp(accessToken: string): Promise<Response> {
+async function trpcOverHttp(
+  pathWithQuery: string,
+  init: RequestInit,
+): Promise<Response> {
   const originalFetch = globalThis.fetch.bind(globalThis)
   const fetchSpy = vi
     .spyOn(globalThis, 'fetch')
-    .mockImplementation(async (input, init) => {
+    .mockImplementation(async (input, requestInit) => {
       const url =
         typeof input === 'string'
           ? input
           : input instanceof URL
             ? input.href
             : input.url
-      if (url === `${ISSUER}/jwks`) return app.request('/auth/jwks', init)
-      return originalFetch(input, init)
+      if (url === `${ISSUER}/jwks`) {
+        return app.request('/auth/jwks', requestInit)
+      }
+      return originalFetch(input, requestInit)
     })
 
   try {
-    const input = encodeURIComponent(JSON.stringify({ json: { groupIds: [] } }))
-    return await app.request(`/trpc/groups.list?input=${input}`, {
-      method: 'GET',
-      headers: { authorization: `Bearer ${accessToken}` },
-    })
+    return await app.request(pathWithQuery, init)
   } finally {
     fetchSpy.mockRestore()
   }
+}
+
+async function listGroupsOverHttp(accessToken: string): Promise<Response> {
+  const input = encodeURIComponent(JSON.stringify({ json: { groupIds: [] } }))
+  return trpcOverHttp(`/trpc/groups.list?input=${input}`, {
+    method: 'GET',
+    headers: { authorization: `Bearer ${accessToken}` },
+  })
 }
 
 describe('OAuth authorization code + PKCE + refresh', () => {
@@ -780,5 +789,98 @@ describe('OAuth authorization code + PKCE + refresh', () => {
         title: 'Lunch',
       }),
     ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+  })
+
+  it('rejects an MCP-audience token at the direct API with invalid_token', async () => {
+    // RFC 8707 / RFC 9700 audience separation: the MCP server forwards its
+    // callers' bearer tokens to the assistant surface, so a token minted for
+    // the MCP resource must never double as a direct API credential.
+    const clientId = await registerClient(`OAuth aud separation ${runId}`, {
+      scope: SCOPES,
+      resources: [AUDIENCE],
+    })
+    const { verifier, challenge } = makePkce()
+    const { code } = await authorizeToCode({
+      clientId,
+      cookie: fixtureCookie,
+      challenge,
+      state: `state-aud-separation-${runId}`,
+      resource: AUDIENCE,
+    })
+    const tokenRes = await exchangeCode({
+      clientId,
+      code: code!,
+      verifier,
+      resource: AUDIENCE,
+    })
+    expect(tokenRes.status).toBe(200)
+    const tokens = (await tokenRes.json()) as { access_token: string }
+
+    const apiRes = await listGroupsOverHttp(tokens.access_token)
+    expect(apiRes.status).toBe(401)
+    const wwwAuthenticate = apiRes.headers.get('www-authenticate')
+    expect(wwwAuthenticate).toContain('error="invalid_token"')
+    expect(wwwAuthenticate).toContain('resource_metadata=')
+  })
+
+  it('answers a missing bearer with the operation scope and no error code', async () => {
+    const input = encodeURIComponent(JSON.stringify({ json: { groupIds: [] } }))
+    const response = await app.request(`/trpc/groups.list?input=${input}`)
+
+    expect(response.status).toBe(401)
+    expect(response.headers.get('www-authenticate')).toBe(
+      `Bearer scope="spliit:groups:read", resource_metadata="${API_AUDIENCE}/.well-known/oauth-protected-resource"`,
+    )
+  })
+
+  it('answers a malformed bearer with invalid_token', async () => {
+    const response = await listGroupsOverHttp('not-a-jwt-at-all')
+
+    expect(response.status).toBe(401)
+    const wwwAuthenticate = response.headers.get('www-authenticate')
+    expect(wwwAuthenticate).toContain('error="invalid_token"')
+    expect(wwwAuthenticate).toContain('scope="spliit:groups:read"')
+  })
+
+  it('asks for step-up with insufficient_scope when a read token hits a write', async () => {
+    // Default registration is read-only, so the write below must fail with
+    // the exact scope the agent should request next.
+    const clientId = await registerClient(`OAuth step-up ${runId}`)
+    const { verifier, challenge } = makePkce()
+    const { code } = await authorizeToCode({
+      clientId,
+      cookie: fixtureCookie,
+      challenge,
+      state: `state-step-up-${runId}`,
+      scope: 'openid profile email offline_access spliit:groups:read',
+    })
+    const tokenRes = await exchangeCode({ clientId, code: code!, verifier })
+    expect(tokenRes.status).toBe(200)
+    const tokens = (await tokenRes.json()) as {
+      access_token: string
+      scope: string
+    }
+    expect(tokens.scope.split(' ')).not.toContain('spliit:groups:manage')
+
+    // The read surface stays reachable...
+    const readRes = await listGroupsOverHttp(tokens.access_token)
+    expect(readRes.status).toBe(200)
+
+    // ...while the manage surface returns an actionable step-up challenge.
+    const writeRes = await trpcOverHttp('/trpc/groups.update', {
+      method: 'POST',
+      headers: {
+        authorization: `Bearer ${tokens.access_token}`,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ json: {} }),
+    })
+    expect(writeRes.status).toBe(403)
+    expect(writeRes.headers.get('www-authenticate')).toBe(
+      `Bearer error="insufficient_scope", scope="spliit:groups:manage", resource_metadata="${API_AUDIENCE}/.well-known/oauth-protected-resource"`,
+    )
+    expect(writeRes.headers.get('access-control-expose-headers')).toContain(
+      'WWW-Authenticate',
+    )
   })
 })

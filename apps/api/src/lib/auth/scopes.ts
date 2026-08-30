@@ -68,16 +68,34 @@ export const ALL_SCOPES: readonly string[] = [
 ]
 
 /**
- * Granted to a client that registers without requesting specific scopes. Read
- * and write only — see `DESTRUCTIVE_SCOPES`. The assistant scope is excluded: a
- * client that wants the preview flow asks for it by name.
+ * Scopes the API's RFC 9728 protected-resource document advertises.
+ *
+ * Deliberately much narrower than `ALL_SCOPES`: agent clients that get no
+ * `scope` hint in a challenge fall back to requesting everything in
+ * `scopes_supported`, so advertising manage/delete there would push every
+ * default authorization toward destructive permissions. The document describes
+ * the API's basic resource scope set only — the read scopes. OIDC and refresh
+ * scopes belong to the authorization-server metadata, the assistant write scope
+ * to the MCP resource document, and manage/delete scopes are surfaced
+ * per-operation through `insufficient_scope` step-up challenges and OpenAPI.
+ */
+export const API_RESOURCE_DISCOVERY_SCOPES: readonly SpliitScope[] = [
+  SPLIIT_SCOPES.groupsRead,
+  SPLIIT_SCOPES.expensesRead,
+]
+
+/**
+ * Granted to a client that registers without requesting specific scopes.
+ * Read-only: an agent or generic OAuth client that omits `scope` must not gain
+ * write authority silently. Manage and delete scopes are always requested by
+ * name, shown on the consent screen, and reachable later through the
+ * `insufficient_scope` step-up flow. The assistant scope is excluded: a client
+ * that wants the preview flow asks for it by name.
  */
 export const DEFAULT_CLIENT_SCOPES: readonly string[] = [
   ...OIDC_SCOPES,
   SPLIIT_SCOPES.groupsRead,
-  SPLIIT_SCOPES.groupsManage,
   SPLIIT_SCOPES.expensesRead,
-  SPLIIT_SCOPES.expensesManage,
 ]
 
 /**

@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import '../test/mocks'
 import { clearAccountCache } from '../lib/auth/account-cache'
+import { getApiBaseUrl } from '../lib/auth/urls'
 import { generateGroupViewKey } from '../lib/group-view'
 import { authState, prismaMock } from '../test/state'
 import {
@@ -293,11 +294,12 @@ describe('apiProcedure', () => {
     } as never)
   }
 
-  function oauthAuth(scopes: string[]) {
+  function oauthAuth(scopes: string[], audiences = [getApiBaseUrl()]) {
     return {
       credentialKind: 'oauth',
       accessToken: 'redacted',
       scopes,
+      audiences,
       user: { id: 'acct-oauth' },
       session: { id: 'oauth-session' },
     }
@@ -307,6 +309,37 @@ describe('apiProcedure', () => {
     await expect(callProbe(null)).rejects.toMatchObject({
       code: 'UNAUTHORIZED',
     })
+  })
+
+  it('rejects a token minted for the MCP resource only', async () => {
+    // The MCP hop forwards its callers' bearer tokens to the assistant
+    // surface. RFC 8707 audience separation means that same token must never
+    // double as a credential for the direct API.
+    await expect(
+      callProbe(
+        oauthAuth(['spliit:expenses:read'], ['http://localhost:3002/mcp']),
+      ),
+    ).rejects.toMatchObject({ code: 'UNAUTHORIZED' })
+  })
+
+  it('rejects a forged OAuth auth carrying no audience list', async () => {
+    const { audiences: _dropped, ...withoutAudiences } = oauthAuth([
+      'spliit:expenses:read',
+    ])
+    await expect(callProbe(withoutAudiences)).rejects.toMatchObject({
+      code: 'UNAUTHORIZED',
+    })
+  })
+
+  it('accepts a token whose audience list includes the API among others', async () => {
+    await expect(
+      callProbe(
+        oauthAuth(
+          ['spliit:expenses:read'],
+          [getApiBaseUrl(), 'http://localhost:3002/mcp'],
+        ),
+      ),
+    ).resolves.toEqual({ accountId: 'acct-oauth' })
   })
 
   it('accepts a signed-in session without any scope', async () => {
@@ -393,6 +426,7 @@ describe('token rate limits', () => {
           credentialKind: 'oauth',
           accessToken: 'redacted',
           scopes: ['spliit:expenses:manage'],
+          audiences: [getApiBaseUrl()],
           user: { id: accountId },
           session: { id: 'oauth-session' },
         },
@@ -435,15 +469,24 @@ describe('scopedGroupReadProcedure', () => {
     } as never)
   }
 
-  function oauthAuth(scopes: string[]) {
+  function oauthAuth(scopes: string[], audiences = [getApiBaseUrl()]) {
     return {
       credentialKind: 'oauth',
       accessToken: 'redacted',
       scopes,
+      audiences,
       user: { id: 'acct-oauth' },
       session: { id: 'oauth-session' },
     }
   }
+
+  it('rejects a token minted for the MCP resource only', async () => {
+    await expect(
+      callProbe(
+        oauthAuth(['spliit:expenses:read'], ['http://localhost:3002/mcp']),
+      ),
+    ).rejects.toMatchObject({ code: 'UNAUTHORIZED' })
+  })
 
   it('still allows an unauthenticated view-key caller through', async () => {
     // `viewKey` and `linkInviteToken` holders carry no credential; the

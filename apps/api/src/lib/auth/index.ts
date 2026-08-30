@@ -779,8 +779,9 @@ export const auth = betterAuth({
       allowPublicClientPrelogin: true,
       silenceWarnings: { oauthAuthServerConfig: true },
       grantTypes: ['authorization_code', 'refresh_token'],
-      // Registering without asking for anything specific grants read and
-      // write, never a destructive scope. Those must be requested explicitly.
+      // Registering without asking for anything specific grants read-only
+      // access. Manage and delete must be requested explicitly, so an
+      // underspecified client fails safely into the step-up flow.
       clientRegistrationDefaultScopes: [...DEFAULT_CLIENT_SCOPES],
       clientRegistrationAllowedScopes: [...ALL_SCOPES],
       customAccessTokenClaims: ({ user }) => ({

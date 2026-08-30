@@ -22,6 +22,11 @@ export function getWebBaseUrl(): string {
  * tokens issued to assistant clients before the provider was ungated carry
  * `${MCP_PUBLIC_URL}/mcp` and must keep verifying. Both the provider and the
  * request-side resolver read this list, so they cannot drift apart.
+ *
+ * This list only says which audiences can be _authenticated_. It does not grant
+ * an MCP-audience token access to the direct API surface: `apiProcedure` and
+ * `scopedGroupReadProcedure` additionally require the API base URL in the
+ * token's own `aud` claim (see `OAuthResolvedAuth.audiences`).
  */
 export function oauthAudiences(): string[] {
   const audiences = [getApiBaseUrl()]

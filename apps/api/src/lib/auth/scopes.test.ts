@@ -2,9 +2,11 @@ import { describe, expect, it } from 'vitest'
 
 import {
   ALL_SCOPES,
+  API_RESOURCE_DISCOVERY_SCOPES,
   ASSISTANT_WRITE_SCOPE,
   DEFAULT_CLIENT_SCOPES,
   DESTRUCTIVE_SCOPES,
+  OIDC_SCOPES,
   SPLIIT_SCOPES,
   expandScopes,
   hasScope,
@@ -15,6 +17,28 @@ describe('scope catalogue', () => {
     for (const scope of DESTRUCTIVE_SCOPES) {
       expect(DEFAULT_CLIENT_SCOPES).not.toContain(scope)
     }
+  })
+
+  it('keeps the default grant read-only', () => {
+    // A client that omits `scope` must not gain write authority silently.
+    // Manage scopes are requested by name and reached later through the
+    // insufficient_scope step-up flow.
+    expect(DEFAULT_CLIENT_SCOPES).not.toContain(SPLIIT_SCOPES.groupsManage)
+    expect(DEFAULT_CLIENT_SCOPES).not.toContain(SPLIIT_SCOPES.expensesManage)
+    expect(DEFAULT_CLIENT_SCOPES).toEqual([
+      ...OIDC_SCOPES,
+      SPLIIT_SCOPES.groupsRead,
+      SPLIIT_SCOPES.expensesRead,
+    ])
+  })
+
+  it('advertises only the read scopes in resource discovery', () => {
+    // Agents fall back to requesting everything in `scopes_supported`, so
+    // the protected-resource document must stay minimal.
+    expect(API_RESOURCE_DISCOVERY_SCOPES).toEqual([
+      SPLIIT_SCOPES.groupsRead,
+      SPLIIT_SCOPES.expensesRead,
+    ])
   })
 
   it('still offers every destructive scope for explicit requests', () => {

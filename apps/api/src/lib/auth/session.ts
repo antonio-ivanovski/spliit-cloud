@@ -20,6 +20,14 @@ export type OAuthResolvedAuth = {
   user: ResolvedAuth['user']
   session: ResolvedAuth['session']
   scopes: string[]
+  /**
+   * The token's verified `aud` claim. Each surface checks its own resource
+   * against this list: `apiProcedure` and `scopedGroupReadProcedure` require
+   * the API base URL, so a token minted for the MCP resource can never reach
+   * the direct API (RFC 8707 audience separation). The assistant surface is the
+   * MCP resource's backend and keeps accepting MCP-audience tokens.
+   */
+  audiences: string[]
   accessToken: string
 }
 
@@ -71,9 +79,10 @@ export async function getOAuthAuthFromRequest(
   const issuer = `${getApiBaseUrl()}/auth`
   const claims = await oauthResource.verifyBearerToken(accessToken, {
     verifyOptions: {
-      // A token is accepted when its `aud` matches any configured audience,
-      // so tokens minted for the MCP resource stay valid alongside tokens
-      // minted for the API itself.
+      // Verification accepts any audience this deployment issues tokens for,
+      // because the assistant surface must keep authenticating MCP-audience
+      // tokens. Which resources a token may actually reach is decided per
+      // surface from the verified `aud` claim exposed below.
       audience: oauthAudiences(),
       issuer,
     },
@@ -96,11 +105,19 @@ export async function getOAuthAuthFromRequest(
     : typeof claims.scope === 'string'
       ? claims.scope.split(' ').filter(Boolean)
       : []
+  const audiences = Array.isArray(claims.aud)
+    ? claims.aud.filter(
+        (audience): audience is string => typeof audience === 'string',
+      )
+    : typeof claims.aud === 'string'
+      ? [claims.aud]
+      : []
 
   return {
     credentialKind: 'oauth',
     accessToken,
     scopes,
+    audiences,
     user: account,
     session: {
       id: typeof claims.sid === 'string' ? claims.sid : `oauth:${claims.sub}`,

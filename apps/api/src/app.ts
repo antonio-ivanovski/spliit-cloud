@@ -37,7 +37,7 @@ import { exportGroupBundle } from './routes/export-bundle'
 import { exportGroupCsv } from './routes/export-csv'
 import { proxyImportDocument } from './routes/import-document'
 import { reportGroupData } from './routes/report-data'
-import { createTRPCContext } from './trpc/init'
+import { createTRPCContext, MissingScopeError } from './trpc/init'
 import { appRouter } from './trpc/routers/_app'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -257,18 +257,28 @@ app.get(
   }),
 )
 
-function trpcRequestSupportsOAuth(requestPath: string): boolean {
+/**
+ * The OAuth scopes required by the procedures a `/trpc` request names.
+ *
+ * Empty means no requested procedure is OAuth-capable, so the response gets no
+ * Bearer challenge. For batched requests this is the union of each OAuth
+ * procedure's minimum scope, which is exactly what the challenge's `scope`
+ * attribute should advertise (RFC 6750 section 3).
+ */
+function requiredOAuthScopes(requestPath: string): string[] {
   const encodedProcedurePaths = requestPath.slice('/trpc/'.length)
-  if (!encodedProcedurePaths) return false
+  if (!encodedProcedurePaths) return []
   const procedures = appRouter._def.procedures as Record<
     string,
     { _def?: { meta?: { scope?: unknown } } } | undefined
   >
-  return encodedProcedurePaths.split(',').some((encodedPath) => {
+  const scopes = new Set<string>()
+  for (const encodedPath of encodedProcedurePaths.split(',')) {
     const path = decodeURIComponent(encodedPath)
-    const procedure = procedures[path]
-    return typeof procedure?._def?.meta?.scope === 'string'
-  })
+    const scope = procedures[path]?._def?.meta?.scope
+    if (typeof scope === 'string') scopes.add(scope)
+  }
+  return [...scopes]
 }
 
 function appendExposedHeader(headers: Headers, name: string): void {
@@ -284,6 +294,9 @@ function appendExposedHeader(headers: Headers, name: string): void {
 }
 
 app.all('/trpc/*', async (c) => {
+  // Scopes the procedures rejected as missing, collected across a batch so
+  // the challenge below can name the exact step-up permissions to request.
+  const missingScopes = new Set<string>()
   const response = await fetchRequestHandler({
     endpoint: '/trpc',
     req: c.req.raw,
@@ -291,6 +304,9 @@ app.all('/trpc/*', async (c) => {
     createContext: ({ resHeaders }) =>
       createTRPCContext({ req: c.req.raw, resHeaders }),
     onError({ error, path, type, ctx }) {
+      if (error instanceof MissingScopeError) {
+        missingScopes.add(error.requiredScope)
+      }
       // Expected client errors are normal product behavior — logging them
       // would flood the console. Only log infrastructure failures (uncaught
       // exceptions turned into INTERNAL_SERVER_ERROR) and upstream-provider
@@ -317,12 +333,33 @@ app.all('/trpc/*', async (c) => {
     },
   })
 
-  if (response.status !== 401 || !trpcRequestSupportsOAuth(c.req.path)) {
-    return response
+  const oauthScopes = requiredOAuthScopes(c.req.path)
+  if (oauthScopes.length === 0) return response
+
+  // RFC 6750: tell the agent which recovery applies. A 401 without
+  // credentials advertises the scopes the requested operations need; a 401
+  // that carried a bearer means that token failed verification (expired,
+  // malformed, revoked key, wrong audience); a 403 that rejected scopes asks
+  // for step-up authorization with the exact missing scopes.
+  let challenge: string | undefined
+  if (response.status === 401) {
+    const hadBearer = (c.req.header('authorization') ?? '').startsWith(
+      'Bearer ',
+    )
+    challenge = getOAuthProtectedResourceChallenge({
+      error: hadBearer ? 'invalid_token' : undefined,
+      scope: oauthScopes,
+    })
+  } else if (response.status === 403 && missingScopes.size > 0) {
+    challenge = getOAuthProtectedResourceChallenge({
+      error: 'insufficient_scope',
+      scope: [...missingScopes],
+    })
   }
+  if (!challenge) return response
 
   const headers = new Headers(response.headers)
-  headers.set('WWW-Authenticate', getOAuthProtectedResourceChallenge())
+  headers.set('WWW-Authenticate', challenge)
   appendExposedHeader(headers, 'WWW-Authenticate')
   return new Response(response.body, {
     status: response.status,

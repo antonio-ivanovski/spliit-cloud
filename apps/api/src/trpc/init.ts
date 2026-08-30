@@ -16,6 +16,7 @@ import {
   getAuthFromRequest,
   getOAuthAuthFromRequest,
 } from '../lib/auth/session'
+import { getApiBaseUrl } from '../lib/auth/urls'
 import { env } from '../lib/env'
 import { groupViewKeysMatch } from '../lib/group-view'
 import { hashLinkToken } from '../lib/invitations'
@@ -239,9 +240,26 @@ const scopedReadLimiter = new FixedWindowLimiter({
 })
 
 /**
- * Enforce the scope and the programmatic rate limit for an OAuth caller. Shared
- * by `apiProcedure` and `scopedGroupReadProcedure` so the two cannot drift
- * apart on what a token is allowed to do.
+ * `FORBIDDEN` that remembers which scope was missing. The `/trpc` fetch handler
+ * collects these to build the RFC 6750 `insufficient_scope` challenge with the
+ * exact minimum scopes for the requested operations.
+ */
+export class MissingScopeError extends TRPCError {
+  readonly requiredScope: SpliitScope
+
+  constructor(requiredScope: SpliitScope) {
+    super({
+      code: 'FORBIDDEN',
+      message: `Missing required scope: ${requiredScope}`,
+    })
+    this.requiredScope = requiredScope
+  }
+}
+
+/**
+ * Enforce the token audience, the scope and the programmatic rate limit for an
+ * OAuth caller. Shared by `apiProcedure` and `scopedGroupReadProcedure` so the
+ * two cannot drift apart on what a token is allowed to do.
  */
 function enforceScopedAccess(
   auth: OAuthResolvedAuth,
@@ -250,11 +268,19 @@ function enforceScopedAccess(
   resHeaders: Headers | undefined,
   type: 'query' | 'mutation' | 'subscription' = 'query',
 ): void {
-  if (!hasScope(auth.scopes, requiredScope)) {
+  // RFC 8707 audience separation: the direct API only accepts tokens minted
+  // for itself. A token whose `aud` names only the MCP resource authenticates
+  // fine (the assistant surface needs that) but cannot reach this surface —
+  // otherwise the MCP hop's forwarded token would double as an API credential.
+  // Optional chaining keeps a malformed auth object fail-closed.
+  if (!auth.audiences?.includes(getApiBaseUrl())) {
     throw new TRPCError({
-      code: 'FORBIDDEN',
-      message: `Missing required scope: ${requiredScope}`,
+      code: 'UNAUTHORIZED',
+      message: 'Access token was not issued for this API resource',
     })
+  }
+  if (!hasScope(auth.scopes, requiredScope)) {
+    throw new MissingScopeError(requiredScope)
   }
   // Mutations count against the same bucket as the account's browser
   // sessions, so a leaked token cannot write faster than its own account.
@@ -387,10 +413,7 @@ export function assertOAuthScope(
 ): void {
   if (!('credentialKind' in auth) || auth.credentialKind !== 'oauth') return
   if (hasScope(auth.scopes, requiredScope)) return
-  throw new TRPCError({
-    code: 'FORBIDDEN',
-    message: `Missing required scope: ${requiredScope}`,
-  })
+  throw new MissingScopeError(requiredScope)
 }
 
 export function assistantProcedure(requiredScope: string) {
