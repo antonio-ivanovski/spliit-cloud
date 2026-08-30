@@ -112,4 +112,17 @@ describe('OAuth protected resource discovery', () => {
     expect(response.status).toBe(401)
     expect(response.headers.get('www-authenticate')).toBeNull()
   })
+
+  it('passes the tRPC error through for a malformed procedure path', async () => {
+    // Hono forwards `/trpc/%` untouched and tRPC answers it with its own
+    // error envelope. The scope lookup must not replace that response with a
+    // URIError crash from this handler — the body must stay tRPC's JSON.
+    const response = await app.request('/trpc/%')
+    const body = (await response.json()) as {
+      error?: { json?: { message?: string } }
+    }
+
+    expect(body.error?.json?.message).toBe('URI malformed')
+    expect(response.headers.get('www-authenticate')).toBeNull()
+  })
 })

@@ -230,8 +230,8 @@ async function postProcess(
         `OAuth 2.1 with PKCE, for scripts and agents that cannot hold a ` +
         `browser session. Clients may register dynamically at ` +
         `\`POST /auth/oauth2/register\`. A client that registers without ` +
-        `naming scopes is registered for read and write, never a destructive one: ` +
-        `\`${SPLIIT_SCOPES.expensesDelete}\` and ` +
+        `naming scopes is registered read-only: manage and delete scopes ` +
+        `such as \`${SPLIIT_SCOPES.expensesManage}\` or ` +
         `\`${SPLIIT_SCOPES.groupsDelete}\` must be requested explicitly. ` +
         `Omitting \`resource\` binds the authorization to this API. Access ` +
         `tokens last one hour; refresh tokens rotate on every renewal. ` +

@@ -274,7 +274,15 @@ function requiredOAuthScopes(requestPath: string): string[] {
   >
   const scopes = new Set<string>()
   for (const encodedPath of encodedProcedurePaths.split(',')) {
-    const path = decodeURIComponent(encodedPath)
+    let path: string
+    try {
+      path = decodeURIComponent(encodedPath)
+    } catch {
+      // Hono forwards malformed paths like `/trpc/%` untouched; that names
+      // no procedure, so it contributes no scope. tRPC's own error response
+      // must pass through instead of dying on a URIError here.
+      continue
+    }
     const scope = procedures[path]?._def?.meta?.scope
     if (typeof scope === 'string') scopes.add(scope)
   }

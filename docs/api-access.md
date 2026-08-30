@@ -206,8 +206,8 @@ Authentication and authorization failures return machine-actionable
 `WWW-Authenticate` challenges (RFC 6750):
 
 - No token on an OAuth-enabled procedure: `401` with
-  `Bearer scope="<required scopes>", resource_metadata="…"` — start the
-  authorization flow with the advertised scope.
+  `Bearer scope="<required scopes>", resource_metadata="…"` — register and
+  authorize with the scope named in the challenge.
 - Expired, malformed or wrong-audience token: `401` with
   `error="invalid_token"` — refresh, or reauthorize if refreshing fails.
 - Token valid but missing the operation's scope: `403` with
