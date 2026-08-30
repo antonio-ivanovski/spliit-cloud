@@ -12,6 +12,7 @@ import {
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { PageInset, PageShell } from '@/components/layout/page-shell'
 import { Button } from '@/components/ui/button'
 import { getBrowserFeedbackDiagnostics } from '@/lib/feedback-diagnostics'
 
@@ -62,22 +63,24 @@ export default function FeedbackPage() {
   }
 
   return (
-    <main className="flex-1 px-4 py-8 sm:py-12 lg:py-16">
+    <PageShell width="full" className="block py-8 sm:py-12 lg:py-16">
       <div className="motion-stagger mx-auto flex w-full max-w-5xl flex-col gap-8">
-        <header className="mx-auto max-w-3xl text-center">
-          <div className="mx-auto mb-5 flex size-12 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary shadow-sm">
-            <MessageSquareText className="size-6" aria-hidden="true" />
-          </div>
-          <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">
-            Spliit Cloud
-          </p>
-          <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-            {t('title')}
-          </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base">
-            {t('description')}
-          </p>
-        </header>
+        <PageInset>
+          <header className="mx-auto max-w-3xl text-center">
+            <div className="mx-auto mb-5 flex size-12 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary shadow-sm">
+              <MessageSquareText className="size-6" aria-hidden="true" />
+            </div>
+            <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">
+              Spliit Cloud
+            </p>
+            <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+              {t('title')}
+            </h1>
+            <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base">
+              {t('description')}
+            </p>
+          </header>
+        </PageInset>
 
         <section
           aria-label={t('categoriesLabel')}
@@ -184,6 +187,6 @@ export default function FeedbackPage() {
           </div>
         </section>
       </div>
-    </main>
+    </PageShell>
   )
 }

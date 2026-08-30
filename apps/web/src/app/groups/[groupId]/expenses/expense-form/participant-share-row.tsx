@@ -38,7 +38,7 @@ export function ParticipantShareRow({
   return (
     <div
       className={cn(
-        '-mx-6 flex w-[calc(100%+3rem)] min-w-0 items-center gap-2 border-t px-4 py-2.5 last-of-type:mb-4! last-of-type:border-b',
+        'flex min-w-0 items-center gap-2 border-t py-2.5 last-of-type:mb-4! last-of-type:border-b',
         checked && 'bg-primary/[0.035]',
         disabled ? 'cursor-default' : 'cursor-pointer',
         className,

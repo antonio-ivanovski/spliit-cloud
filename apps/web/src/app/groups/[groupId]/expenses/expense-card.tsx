@@ -196,7 +196,7 @@ export function ExpenseCard({
       key={expense.id}
       data-testid={`expense-item-${expense.id}`}
       className={cn(
-        'motion-surface motion-surface-interactive relative flex items-stretch justify-between gap-1 px-4 py-4 text-sm hover:bg-accent sm:mx-6 sm:rounded-lg sm:ps-4 sm:pe-2',
+        'motion-surface motion-surface-interactive relative flex items-stretch justify-between gap-1 px-4 py-4 text-sm hover:bg-accent sm:rounded-lg sm:px-6',
         isSettlementCategory(expense.categoryId) && 'italic',
       )}
     >

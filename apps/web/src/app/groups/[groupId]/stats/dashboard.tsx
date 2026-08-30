@@ -47,8 +47,11 @@ function SummaryCard({
 }) {
   const locale = useLocale()
   return (
-    <Card className="relative overflow-hidden border-primary/10 bg-linear-to-br from-primary/7 via-card to-card shadow-none">
-      <CardContent className="p-5">
+    <Card
+      data-stats-surface="summary"
+      className="relative overflow-hidden border-primary/10 bg-linear-to-br from-primary/7 via-card to-card shadow-none"
+    >
+      <CardContent spacing="standalone">
         <Icon
           className="absolute end-4 top-4 size-8 text-primary/15"
           aria-hidden
@@ -73,13 +76,27 @@ function DashboardLoading() {
   return (
     <div className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
-        <Skeleton className="h-32" />
-        <Skeleton className="h-32" />
+        {[0, 1].map((index) => (
+          <Card key={index} className="shadow-none">
+            <CardContent spacing="standalone">
+              <Skeleton className="h-24" />
+            </CardContent>
+          </Card>
+        ))}
       </div>
-      <Skeleton className="h-80" />
+      <Card className="shadow-none">
+        <CardContent spacing="standalone">
+          <Skeleton className="h-72" />
+        </CardContent>
+      </Card>
       <div className="grid gap-4 lg:grid-cols-2">
-        <Skeleton className="h-72" />
-        <Skeleton className="h-72" />
+        {[0, 1].map((index) => (
+          <Card key={index} className="shadow-none">
+            <CardContent spacing="standalone">
+              <Skeleton className="h-64" />
+            </CardContent>
+          </Card>
+        ))}
       </div>
     </div>
   )
@@ -126,7 +143,10 @@ export function StatsDashboard() {
   if (error && !data) {
     return (
       <Card className="border-destructive/30 shadow-none">
-        <CardContent className="flex min-h-56 flex-col items-center justify-center gap-3 p-6 text-center">
+        <CardContent
+          spacing="standalone"
+          className="flex min-h-56 flex-col items-center justify-center gap-3 text-center"
+        >
           <p className="text-sm text-muted-foreground">{t('error')}</p>
           <button
             type="button"
@@ -147,7 +167,10 @@ export function StatsDashboard() {
   if (!dashboard.period) {
     return (
       <Card className="border-dashed shadow-none">
-        <CardContent className="flex min-h-72 flex-col items-center justify-center p-6 text-center">
+        <CardContent
+          spacing="standalone"
+          className="flex min-h-72 flex-col items-center justify-center text-center"
+        >
           <ReceiptText className="size-8 text-primary/60" aria-hidden />
           <h2 className="mt-4 font-semibold">{t('emptyTitle')}</h2>
           <p className="mt-1 max-w-sm text-sm text-muted-foreground">
@@ -171,22 +194,30 @@ export function StatsDashboard() {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col justify-between gap-4 rounded-xl border bg-linear-to-br from-primary/8 via-background to-background p-5 sm:flex-row sm:items-center">
-        <div>
-          <p className="text-sm font-medium">{t('title')}</p>
-          <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
-            <CalendarDays className="size-3.5" aria-hidden />
-            <span>{periodDates}</span>
+    <div className="space-y-4" data-testid="stats-dashboard">
+      <Card
+        data-stats-surface="period"
+        className="border-primary/10 bg-linear-to-br from-primary/8 via-background to-background shadow-none"
+      >
+        <CardContent
+          spacing="standalone"
+          className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center"
+        >
+          <div>
+            <p className="text-sm font-medium">{t('title')}</p>
+            <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
+              <CalendarDays className="size-3.5" aria-hidden />
+              <span>{periodDates}</span>
+            </div>
           </div>
-        </div>
-        <StatsPeriodPicker
-          value={period}
-          customRange={customRange}
-          onValueChange={handlePeriodChange}
-          onCustomRangeChange={setCustomRange}
-        />
-      </div>
+          <StatsPeriodPicker
+            value={period}
+            customRange={customRange}
+            onValueChange={handlePeriodChange}
+            onCustomRangeChange={setCustomRange}
+          />
+        </CardContent>
+      </Card>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <SummaryCard
@@ -206,38 +237,47 @@ export function StatsDashboard() {
         />
       </div>
 
-      <Card className="relative overflow-hidden shadow-none">
+      <Card
+        data-stats-surface="chart"
+        className="relative overflow-hidden shadow-none"
+      >
         {isFetching && (
           <span
             className="absolute inset-x-0 top-0 h-0.5 animate-pulse bg-primary/70"
             aria-hidden
           />
         )}
-        <CardContent className="p-5 sm:p-6" aria-busy={isFetching}>
+        <CardContent spacing="standalone" aria-busy={isFetching}>
           <SpendingChart data={dashboard} currency={currency} />
         </CardContent>
       </Card>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <Card className="relative overflow-hidden shadow-none">
+        <Card
+          data-stats-surface="categories"
+          className="relative overflow-hidden shadow-none"
+        >
           {isFetching && (
             <span
               className="absolute inset-x-0 top-0 h-0.5 animate-pulse bg-primary/70"
               aria-hidden
             />
           )}
-          <CardContent className="p-5 sm:p-6" aria-busy={isFetching}>
+          <CardContent spacing="standalone" aria-busy={isFetching}>
             <CategoryBreakdown data={dashboard} currency={currency} />
           </CardContent>
         </Card>
-        <Card className="relative overflow-hidden shadow-none">
+        <Card
+          data-stats-surface="participants"
+          className="relative overflow-hidden shadow-none"
+        >
           {isFetching && (
             <span
               className="absolute inset-x-0 top-0 h-0.5 animate-pulse bg-primary/70"
               aria-hidden
             />
           )}
-          <CardContent className="p-5 sm:p-6" aria-busy={isFetching}>
+          <CardContent spacing="standalone" aria-busy={isFetching}>
             <ParticipantBreakdown data={dashboard} currency={currency} />
           </CardContent>
         </Card>

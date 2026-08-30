@@ -73,7 +73,6 @@ function mockAssistantGroup() {
       ],
     },
   } as never)
-  prismaMock.accountGroupDefaultSplit.findUnique.mockResolvedValue(null)
 }
 
 describe('assistant expense normalization', () => {
@@ -477,15 +476,8 @@ describe('assistant expense normalization', () => {
     ).toBe(500)
   })
 
-  it('uses the saved group split for item defaults and rejects invalid items', async () => {
+  it('uses evenly-all item defaults and rejects invalid items', async () => {
     mockAssistantGroup()
-    prismaMock.accountGroupDefaultSplit.findUnique.mockResolvedValue({
-      splitMode: 'BY_PERCENTAGE',
-      paidFor: [
-        { participantId: 'alice', shares: 2500 },
-        { participantId: 'alex', shares: 7500 },
-      ],
-    } as never)
     const conversion = vi.fn().mockResolvedValue({
       conversionSource: null,
       conversionRate: null,
@@ -506,16 +498,17 @@ describe('assistant expense normalization', () => {
       { resolveConversion: conversion },
     )
     expect(prepared.expense.items?.[0]).toMatchObject({
-      splitMode: 'BY_PERCENTAGE',
+      splitMode: 'EVENLY',
       paidFor: [
-        { participant: 'alice', shares: 2500 },
-        { participant: 'alex', shares: 7500 },
+        { participant: 'alice', shares: 1 },
+        { participant: 'alex', shares: 1 },
+        { participant: 'joe', shares: 1 },
       ],
     })
     expect(prepared.preview.defaults).toContainEqual({
       field: 'item-splits',
       label: 'Item splits',
-      value: 'Your saved group split',
+      value: 'Evenly across current participants',
     })
 
     await expect(

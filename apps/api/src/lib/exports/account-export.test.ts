@@ -94,7 +94,6 @@ function makeSource(group: ReturnType<typeof makeGroup>): AccountExportSource {
         preference: {
           starred: true,
           hidden: false,
-          defaultSplit: null,
         },
       },
     ],

@@ -301,8 +301,8 @@ describe('getNeutralDefaultSplit', () => {
   })
 })
 
-describe('buildExpenseFormDefaults (saved default)', () => {
-  it('applies the saved default on the create flow when present', () => {
+describe('buildExpenseFormDefaults (neutral create split)', () => {
+  it('does not apply a saved default on the create flow', () => {
     const result = buildExpenseFormDefaults({
       isCreate: true,
       searchParams: {},
@@ -319,10 +319,10 @@ describe('buildExpenseFormDefaults (saved default)', () => {
       },
     })
 
-    expect(result.splitMode).toBe('BY_PERCENTAGE')
+    expect(result.splitMode).toBe('EVENLY')
     expect(result.paidFor).toEqual([
-      { participant: 'lp-1', shares: 80 },
-      { participant: 'lp-2', shares: 20 },
+      { participant: 'lp-1', shares: 1 },
+      { participant: 'lp-2', shares: 1 },
     ])
   })
 

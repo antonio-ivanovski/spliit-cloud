@@ -39,7 +39,52 @@ registerRoute(
 
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
-    void self.skipWaiting()
+    event.waitUntil(self.skipWaiting())
+    return
+  }
+
+  if (event.data && event.data.type === 'ACTIVATE_UPDATE_IF_SOLE_CLIENT') {
+    const responsePort = event.ports[0]
+    if (!responsePort) return
+    const sourceClientId =
+      event.source && 'id' in event.source ? event.source.id : undefined
+    const respond = (data: object) => {
+      try {
+        responsePort.postMessage(data)
+      } catch {
+        // The requesting document may have closed or timed out.
+      }
+    }
+    event.waitUntil(
+      (async () => {
+        try {
+          const windows = await self.clients.matchAll({
+            type: 'window',
+            includeUncontrolled: true,
+          })
+          // If the requesting window closed during the check, another window
+          // must not accidentally become the sole client and get restarted.
+          if (
+            !sourceClientId ||
+            !windows.some((client) => client.id === sourceClientId)
+          ) {
+            respond({ status: 'error' })
+            return
+          }
+          if (windows.length > 1) {
+            respond({
+              status: 'blocked',
+              clientCount: windows.length,
+            })
+            return
+          }
+          await self.skipWaiting()
+          respond({ status: 'accepted' })
+        } catch {
+          respond({ status: 'error' })
+        }
+      })(),
+    )
   }
 })
 

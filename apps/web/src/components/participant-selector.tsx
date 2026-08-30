@@ -100,10 +100,12 @@ export function ParticipantSelector({
         triggerClassName,
       )}
     >
-      {mode === 'single' && selected && (
-        <ParticipantAvatar participant={selected} size="xs" className="me-2" />
-      )}
-      <span className="truncate">{triggerLabel}</span>
+      <span className="flex min-w-0 items-center gap-2 text-start">
+        {mode === 'single' && selected && (
+          <ParticipantAvatar participant={selected} size="xs" />
+        )}
+        <span className="truncate">{triggerLabel}</span>
+      </span>
       <ChevronsUpDown className="ms-2 h-4 w-4 shrink-0 opacity-50" />
     </Button>
   )

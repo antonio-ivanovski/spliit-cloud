@@ -52,6 +52,10 @@ const {
   mockCurrencyGetRate,
   mockAccountDefaultSplit,
   mockInvalidateDefaultSplit,
+  mockSplitPresets,
+  mockSplitPresetCreate,
+  mockSplitPresetUpdate,
+  mockInvalidateSplitPresets,
   mockCommonCurrencies,
   mockCategoryMemory,
 } = vi.hoisted(() => {
@@ -139,6 +143,18 @@ const {
   )
 
   const mockInvalidateDefaultSplit = vi.fn()
+  const mockSplitPresets = vi.fn(
+    (_opts?: unknown): MockQueryResult => ({
+      data: { presets: [], canManage: false },
+      error: null,
+      isLoading: false,
+      isSuccess: true,
+      refetch: vi.fn(),
+    }),
+  )
+  const mockSplitPresetCreate = vi.fn().mockResolvedValue({ preset: null })
+  const mockSplitPresetUpdate = vi.fn().mockResolvedValue({ preset: null })
+  const mockInvalidateSplitPresets = vi.fn()
 
   return {
     mockUseMutation,
@@ -147,6 +163,10 @@ const {
     mockCurrencyGetRate,
     mockAccountDefaultSplit,
     mockInvalidateDefaultSplit,
+    mockSplitPresets,
+    mockSplitPresetCreate,
+    mockSplitPresetUpdate,
+    mockInvalidateSplitPresets,
     mockCommonCurrencies,
     mockCategoryMemory,
   }
@@ -160,6 +180,23 @@ vi.mock('@/trpc/client', () => ({
       },
     },
     groups: {
+      splitPresets: {
+        list: {
+          useQuery: (opts: unknown) => mockSplitPresets(opts),
+        },
+        create: {
+          useMutation: () => ({
+            mutateAsync: mockSplitPresetCreate,
+            isPending: false,
+          }),
+        },
+        update: {
+          useMutation: () => ({
+            mutateAsync: mockSplitPresetUpdate,
+            isPending: false,
+          }),
+        },
+      },
       expenses: {
         commonCurrencies: {
           useQuery: (opts: unknown) => mockCommonCurrencies(opts),
@@ -192,6 +229,13 @@ vi.mock('@/trpc/client', () => ({
       account: {
         defaultSplit: {
           invalidate: (input: unknown) => mockInvalidateDefaultSplit(input),
+        },
+      },
+      groups: {
+        splitPresets: {
+          list: {
+            invalidate: (input: unknown) => mockInvalidateSplitPresets(input),
+          },
         },
       },
     }),
@@ -387,6 +431,16 @@ beforeEach(() => {
     }),
   )
   mockInvalidateDefaultSplit.mockReset()
+  mockSplitPresets.mockReset()
+  mockSplitPresets.mockImplementation(
+    (_opts?: unknown): MockQueryResult => ({
+      data: { presets: [], canManage: false },
+      error: null,
+      isLoading: false,
+      isSuccess: true,
+      refetch: vi.fn(),
+    }),
+  )
 
   vi.mocked(useCurrencies).mockReturnValue(defaultCurrencies)
   vi.mocked(getCurrency).mockImplementation(
@@ -2493,7 +2547,7 @@ describe('ParticipantShareRow click behavior', () => {
       '[data-id="lp-1/BY_SHARES/USD"]',
     )
     expect(aliceRow).toBeTruthy()
-    expect(aliceRow).toHaveClass('w-[calc(100%+3rem)]')
+    expect(aliceRow).not.toHaveClass('w-[calc(100%+3rem)]')
     expect(aliceRow).toHaveTextContent('Alice')
     expect(aliceRow?.querySelector('input')).toBeTruthy()
     expect(aliceRow).not.toHaveTextContent('#')
@@ -2639,174 +2693,248 @@ describe('ParticipantShareRow click behavior', () => {
   })
 })
 
-// ── Default-split Load/Save button tests ──────────────────────────────────
-//
-// Bug history: the Load button used to be gated by `{ enabled: isCreate }`
-// on the `trpc.account.defaultSplit` query, which meant it was hidden on
-// edit (Bug 1) and stayed hidden after a Save mutation because the
-// invalidate() target was disabled (Bug 2). These tests pin both flows so
-// the regression cannot come back.
+// ── Shared split-preset actions ─────────────────────────────────────────
 
-describe('ExpenseForm default-split buttons', () => {
-  // Inputs:
-  // - group with two participants lp-1 (Alice) and lp-2 (Bob)
-  // - mockExpense defaults to `splitMode: 'EVENLY'`, paidFor weighted
-  //   equally — by changing paidFor to BY_PERCENTAGE 50/50 we can
-  //   exercise the "live matches saved" and "live diverges from saved"
-  //   states without touching real DB data.
-  const savedEvenly: NonNullable<
-    ReturnType<typeof mockAccountDefaultSplit>
-  >['data'] = {
-    defaultSplit: {
-      splitMode: 'EVENLY',
-      paidFor: [
-        { participant: 'lp-1', shares: 1 },
-        { participant: 'lp-2', shares: 1 },
-      ],
-    },
+describe('ExpenseForm split presets', () => {
+  const preset = {
+    id: 'preset-1',
+    name: 'Dinner pair',
+    scope: 'SHARED' as const,
+    ownerAccountId: null,
+    target: 'PAID_FOR' as const,
+    splitMode: 'BY_PERCENTAGE' as const,
+    createdAt: new Date('2026-01-01T00:00:00.000Z'),
+    updatedAt: new Date('2026-01-01T00:00:00.000Z'),
+    participants: [
+      { participant: 'lp-1', shares: 2500 },
+      { participant: 'lp-2', shares: 7500 },
+    ],
   }
 
-  it('edit mode with a saved default shows the Load button (Bug 1 regression)', () => {
-    mockAccountDefaultSplit.mockReturnValue({
-      data: savedEvenly,
+  it('shows the preset action when presets are available', () => {
+    mockSplitPresets.mockReturnValue({
+      data: { presets: [preset], canManage: false },
       error: null,
       isLoading: false,
+      isSuccess: true,
       refetch: vi.fn(),
     })
-
-    // Edit an expense whose live split is BY_PERCENTAGE 50/50 so it
-    // diverges from the EVENLY saved default. Pre-fix this rendered
-    // no Load button (query was gated on `isCreate`).
-    const divergentEdit = {
-      ...mockExpense,
-      splitMode: 'BY_PERCENTAGE' as const,
-      paidFor: [
-        { ledgerParticipantId: 'lp-1', shares: 5000 },
-        { ledgerParticipantId: 'lp-2', shares: 5000 },
-      ],
-    }
     render(
       <ExpenseForm
         group={mockGroup as unknown as GroupShape}
-        expense={divergentEdit as unknown as LoadedExpense}
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
     )
-
-    expect(screen.getByRole('button', { name: /^load$/i })).toBeInTheDocument()
-    expect(getDefaultSplitSaveButton()).toBeInTheDocument()
-  })
-
-  it('edit mode with no saved default still surfaces Save but hides Load', () => {
-    // Default mock behaviour — `data: undefined`.
-    mockAccountDefaultSplit.mockReturnValue({
-      data: { defaultSplit: null },
-      error: null,
-      isLoading: false,
-      refetch: vi.fn(),
-    })
-
-    render(
-      <ExpenseForm
-        group={mockGroup as unknown as GroupShape}
-        expense={
-          {
-            ...mockExpense,
-            splitMode: 'BY_PERCENTAGE' as const,
-            paidFor: [
-              { ledgerParticipantId: 'lp-1', shares: 8000 },
-              { ledgerParticipantId: 'lp-2', shares: 2000 },
-            ],
-          } as unknown as LoadedExpense
-        }
-        onSubmit={vi.fn()}
-        runtimeFeatureFlags={runtimeFeatureFlags}
-      />,
-    )
-
-    expect(getDefaultSplitSaveButton()).toBeInTheDocument()
     expect(
-      screen.queryByRole('button', { name: /^load$/i }),
-    ).not.toBeInTheDocument()
+      screen.getAllByRole('button', { name: 'Load split preset' }),
+    ).toHaveLength(2)
+    expect(
+      screen.getAllByRole('button', { name: 'Load split preset' })[0],
+    ).toBeEnabled()
   })
 
-  it('edit mode: Save → invalidate refetches → Load reappears (Bug 2 regression)', async () => {
-    // First query hit returns null (pre-save). Subsequent hits return a
-    // saved EVENLY default — the same shape the server would persist
-    // after Save succeeds, so the live BY_PERCENTAGE form diverges and
-    // the Load button becomes available. Pre-fix this sequence left
-    // Load hidden because the query was disabled on edit.
-    mockAccountDefaultSplit
-      .mockReturnValueOnce({
-        data: { defaultSplit: null },
-        error: null,
-        isLoading: false,
-        refetch: vi.fn(),
-      })
-      .mockReturnValue({
-        data: {
-          defaultSplit: {
-            splitMode: 'EVENLY',
-            paidFor: [
-              { participant: 'lp-1', shares: 1 },
-              { participant: 'lp-2', shares: 1 },
-            ],
-          },
-        },
-        error: null,
-        isLoading: false,
-        refetch: vi.fn(),
-      })
-
+  it('loads a preset and keeps its status visible on the expense card', async () => {
+    mockSplitPresets.mockReturnValue({
+      data: { presets: [preset], canManage: false },
+      error: null,
+      isLoading: false,
+      isSuccess: true,
+      refetch: vi.fn(),
+    })
     const { user } = render(
       <ExpenseForm
         group={mockGroup as unknown as GroupShape}
-        expense={
-          {
-            ...mockExpense,
-            splitMode: 'BY_PERCENTAGE' as const,
-            paidFor: [
-              { ledgerParticipantId: 'lp-1', shares: 7000 },
-              { ledgerParticipantId: 'lp-2', shares: 3000 },
-            ],
-          } as unknown as LoadedExpense
-        }
         onSubmit={vi.fn()}
         runtimeFeatureFlags={runtimeFeatureFlags}
       />,
     )
 
-    // Click the DefaultSplit "Save" link button (the form's submit
-    // button labelled "Save" is filtered out by `getDefaultSplitSaveButton`).
-    const saveLink = getDefaultSplitSaveButton()
-    expect(saveLink).toBeEnabled()
-    await user.click(saveLink)
-
-    // 1) The mutation's configured onSuccess fires the cache invalidation.
-    expect(mockInvalidateDefaultSplit).toHaveBeenCalledWith({
-      groupId: 'group-1',
-    })
-
-    // 2) The Save button swaps to a "Saved as default" confirmation.
-    expect(await screen.findByText(/saved as default/i)).toBeInTheDocument()
-
-    // 3) The refetched defaultSplit diverges from the live form, so Load
-    //    is now offered — proving that the gate which used to suppress
-    //    the query on edit would have prevented reaching this state.
+    await user.click(
+      screen.getAllByRole('button', { name: 'Load split preset' })[0]!,
+    )
+    const chooser = screen.getByRole('dialog')
+    const chooserScrollBody =
+      chooser.querySelector<HTMLElement>('.overflow-y-auto')
+    expect(chooser).toHaveClass('gap-0', 'overflow-hidden', 'p-0')
+    expect(chooserScrollBody).toHaveClass('w-full', 'px-0')
+    expect(chooserScrollBody).not.toContainElement(
+      screen.getByRole('textbox', {
+        name: 'Search presets or participants',
+      }),
+    )
     expect(
-      await screen.findByRole('button', { name: /^load$/i }),
+      screen.getByRole('button', { name: new RegExp(preset.name) }),
+    ).toBeInTheDocument()
+    expect(screen.getByText('Participant distribution')).toBeInTheDocument()
+
+    await user.click(
+      screen.getByRole('button', { name: new RegExp(preset.name) }),
+    )
+
+    expect(screen.getAllByText('Loaded preset')).toHaveLength(1)
+    expect(screen.getAllByText(preset.name)).toHaveLength(1)
+    expect(screen.queryByText('Shared with group')).not.toBeInTheDocument()
+    expect(screen.queryByText('My default')).not.toBeInTheDocument()
+    expect(screen.queryByText('Group default')).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: 'Preset actions' }),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('menuitem', { name: 'Load another' }),
+    ).not.toBeInTheDocument()
+
+    await user.click(
+      within(screen.getByRole('group', { name: 'Loaded preset' })).getByRole(
+        'button',
+        { name: 'Load split preset' },
+      ),
+    )
+    expect(
+      screen.getByRole('button', { name: new RegExp(preset.name) }),
     ).toBeInTheDocument()
   })
 
-  it('read-only mode hides both Load and Save regardless of saved default', () => {
-    mockAccountDefaultSplit.mockReturnValue({
-      data: savedEvenly,
+  it('keeps loading top-level while modified actions remain permission-aware', async () => {
+    mockSplitPresets.mockReturnValue({
+      data: {
+        presets: [preset],
+        canManageShared: true,
+        canManagePersonal: true,
+      },
       error: null,
       isLoading: false,
+      isSuccess: true,
       refetch: vi.fn(),
     })
+    const { user } = render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
 
+    await user.click(
+      screen.getAllByRole('button', { name: 'Load split preset' })[0]!,
+    )
+    await user.click(
+      screen.getByRole('button', { name: new RegExp(preset.name) }),
+    )
+    await user.clear(
+      screen.getByRole('textbox', { name: 'Percentage for Alice' }),
+    )
+    await user.type(
+      screen.getByRole('textbox', { name: 'Percentage for Alice' }),
+      '30',
+    )
+
+    const loadedControl = screen.getByRole('group', {
+      name: 'Loaded preset',
+    })
+    expect(
+      within(loadedControl).getByRole('button', {
+        name: 'Load split preset',
+      }),
+    ).toBeVisible()
+    expect(
+      within(loadedControl).getByRole('button', { name: 'Save changes' }),
+    ).toBeVisible()
+
+    await user.click(
+      within(loadedControl).getByRole('button', { name: 'Preset actions' }),
+    )
+    expect(
+      screen.getByRole('menuitem', { name: 'Save as new' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByRole('menuitem', { name: 'Load another' }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('marks an applied automatic default as loaded', async () => {
+    mockSplitPresets.mockReturnValue({
+      data: {
+        presets: [preset],
+        canManage: false,
+        effectiveDefaults: {
+          paidByPresetId: null,
+          paidForPresetId: preset.id,
+        },
+        groupDefaults: {
+          paidByPresetId: null,
+          paidForPresetId: preset.id,
+        },
+        personalDefaults: {
+          paidBy: { mode: 'INHERIT', presetId: null },
+          paidFor: { mode: 'INHERIT', presetId: null },
+        },
+      },
+      error: null,
+      isLoading: false,
+      isSuccess: true,
+      refetch: vi.fn(),
+    })
+    render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    await vi.waitFor(() => {
+      expect(screen.getAllByText('Loaded preset')).toHaveLength(1)
+    })
+    expect(screen.getByText(preset.name)).toBeInTheDocument()
+    expect(screen.getByText('Group default')).toBeInTheDocument()
+  })
+
+  it('labels an automatically applied personal preset as my default', async () => {
+    mockSplitPresets.mockReturnValue({
+      data: {
+        presets: [preset],
+        canManage: false,
+        effectiveDefaults: {
+          paidByPresetId: null,
+          paidForPresetId: preset.id,
+        },
+        groupDefaults: {
+          paidByPresetId: null,
+          paidForPresetId: null,
+        },
+        personalDefaults: {
+          paidBy: { mode: 'INHERIT', presetId: null },
+          paidFor: { mode: 'PRESET', presetId: preset.id },
+        },
+      },
+      error: null,
+      isLoading: false,
+      isSuccess: true,
+      refetch: vi.fn(),
+    })
+    render(
+      <ExpenseForm
+        group={mockGroup as unknown as GroupShape}
+        onSubmit={vi.fn()}
+        runtimeFeatureFlags={runtimeFeatureFlags}
+      />,
+    )
+
+    await vi.waitFor(() => {
+      expect(screen.getAllByText('Loaded preset')).toHaveLength(1)
+    })
+    expect(screen.getByText('My default')).toBeInTheDocument()
+  })
+
+  it('hides preset actions in read-only mode', () => {
+    mockSplitPresets.mockReturnValue({
+      data: { presets: [preset], canManage: true },
+      error: null,
+      isLoading: false,
+      isSuccess: true,
+      refetch: vi.fn(),
+    })
     render(
       <ExpenseForm
         group={mockGroup as unknown as GroupShape}
@@ -2816,31 +2944,14 @@ describe('ExpenseForm default-split buttons', () => {
         readOnly
       />,
     )
-
     expect(
-      screen.queryByRole('button', { name: /^load$/i }),
+      screen.queryByRole('button', { name: 'Load split preset' }),
     ).not.toBeInTheDocument()
     expect(
-      screen.queryByRole('button', { name: /^save$/i }),
+      screen.queryByRole('button', { name: 'Save as preset' }),
     ).not.toBeInTheDocument()
   })
 })
-
-// Resolve the "Save" link button inside DefaultSplitActions. The form's
-// submit button shares the same accessible name ("Save" / "Create");
-// disambiguate by `type !== 'submit'` since the DefaultSplit button
-// uses `type="button"` on a `variant="link"`.
-function getDefaultSplitSaveButton(): HTMLButtonElement {
-  const candidates = screen
-    .getAllByRole('button', { name: /^save$/i })
-    .filter((b) => (b as HTMLButtonElement).type !== 'submit')
-  if (candidates.length !== 1) {
-    throw new Error(
-      `Expected exactly 1 DefaultSplit "Save" button, got ${candidates.length}`,
-    )
-  }
-  return candidates[0] as HTMLButtonElement
-}
 
 // ── BY_SHARES decimal entry and edit/resubmit ────────────────────────────
 
@@ -3198,7 +3309,7 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
     )
     if (!bobToggle) throw new Error('Bob row toggle not found')
     await user.click(bobToggle)
-    await user.click(screen.getByRole('button', { name: /reset/i }))
+    await user.click(screen.getByRole('button', { name: /^reset$/i }))
 
     expect(aliceInput).toHaveValue('1')
     expect(screen.getByRole('textbox', { name: 'Shares for Bob' })).toHaveValue(
@@ -3269,7 +3380,7 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
     })
     await user.clear(aliceInput)
     await user.type(aliceInput, '10')
-    await user.click(screen.getByRole('button', { name: /reset/i }))
+    await user.click(screen.getByRole('button', { name: /^reset$/i }))
 
     // Two participants -> equal 50 / 50, exactly 100 in total.
     expect(aliceInput).toHaveValue('50')
@@ -3316,7 +3427,7 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
     if (!paidByCard) throw new Error('paid-by card not found')
     await user.click(
       within(paidByCard as HTMLElement).getByRole('button', {
-        name: /reset/i,
+        name: /^reset$/i,
       }),
     )
 
@@ -3389,7 +3500,7 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
     )
     await user.type(screen.getByRole('textbox', { name: 'Amount' }), '10')
     await user.click(screen.getByRole('radio', { name: /split.*by amount/i }))
-    await user.click(screen.getByRole('button', { name: /reset/i }))
+    await user.click(screen.getByRole('button', { name: /^reset$/i }))
 
     // Three participants -> 3.33 / 3.33 / 3.34 = exactly 10.00 after the
     // balancing effect settles (it must preserve the residual cent).
@@ -3502,7 +3613,7 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
     )
     await user.type(screen.getByRole('textbox', { name: 'Amount' }), '10')
     await user.click(screen.getByRole('radio', { name: /split.*by amount/i }))
-    await user.click(screen.getByRole('button', { name: /reset/i }))
+    await user.click(screen.getByRole('button', { name: /^reset$/i }))
 
     const aliceInput = screen.getByRole('textbox', {
       name: 'Amount for Alice',
@@ -3543,7 +3654,7 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
     if (!paidByCard) throw new Error('paid-by card not found')
     await user.click(
       within(paidByCard as HTMLElement).getByRole('button', {
-        name: /reset/i,
+        name: /^reset$/i,
       }),
     )
 
@@ -3574,7 +3685,7 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
     )
     await user.type(screen.getByRole('textbox', { name: 'Amount' }), '10')
     await user.click(screen.getByRole('radio', { name: /split.*by amount/i }))
-    await user.click(screen.getByRole('button', { name: /reset/i }))
+    await user.click(screen.getByRole('button', { name: /^reset$/i }))
 
     const aliceInput = screen.getByRole('textbox', {
       name: 'Amount for Alice',
@@ -3625,7 +3736,7 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
     if (!paidByCard) throw new Error('paid-by card not found')
     await user.click(
       within(paidByCard as HTMLElement).getByRole('button', {
-        name: /reset/i,
+        name: /^reset$/i,
       }),
     )
 
@@ -3665,7 +3776,7 @@ describe('ExpenseForm BY_SHARES decimal entry', () => {
     )
     await user.type(screen.getByRole('textbox', { name: 'Amount' }), '0.02')
     await user.click(screen.getByRole('radio', { name: /split.*by amount/i }))
-    await user.click(screen.getByRole('button', { name: /reset/i }))
+    await user.click(screen.getByRole('button', { name: /^reset$/i }))
 
     // 0.02 across two automatic participants -> 0.01 / 0.01.
     expect(

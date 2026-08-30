@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next'
 
 import { ActivityList } from '@/app/groups/[groupId]/activity/activity-list'
+import { ScanSurface } from '@/components/layout/scan-surface'
 import {
-  Card,
   CardContent,
   CardDescription,
   CardHeader,
@@ -14,15 +14,15 @@ export function ActivityPageClient() {
 
   return (
     <>
-      <Card className="mobile-surface mb-4">
+      <ScanSurface className="mb-4">
         <CardHeader>
           <CardTitle>{t('title')}</CardTitle>
           <CardDescription>{t('description')}</CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-col space-y-4">
+        <CardContent className="flex flex-col space-y-4 p-0 pb-4 sm:p-0 sm:pb-6">
           <ActivityList />
         </CardContent>
-      </Card>
+      </ScanSurface>
     </>
   )
 }

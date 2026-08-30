@@ -118,25 +118,42 @@
 }
 
 :root {
-  --app-header-height: 3.5rem;
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --app-header-bar-height: 3.5rem;
+  --app-header-height: calc(
+    var(--app-header-bar-height) + var(--safe-area-top)
+  );
+  --mobile-nav-bar-height: 4rem;
+  --mobile-nav-height: calc(
+    var(--mobile-nav-bar-height) + var(--safe-area-bottom)
+  );
+  --fixed-action-bar-height: calc(4.5rem + var(--safe-area-bottom));
   scroll-padding-top: var(--app-header-height);
 }
 
 @media (width >= 640px) {
   :root {
-    --app-header-height: 4rem;
+    --app-header-bar-height: 4rem;
+    --app-header-height: var(--app-header-bar-height);
+    --mobile-nav-height: 0px;
+    --fixed-action-bar-height: 4.5rem;
   }
 }
 
 @media (width < 640px) {
-  .mobile-surface {
-    border-width: 0;
-    border-radius: 0;
-    box-shadow: none;
+  /* Hidden desktop-only groups must not leave a flex gap on mobile. */
+  .mobile-contents {
+    display: contents !important;
   }
-  .mobile-divide-y > :not(:first-child) .mobile-surface {
-    border-top-width: 1px;
-  }
+}
+
+@utility app-header-inset {
+  padding-top: var(--safe-area-top);
+}
+
+@utility mobile-bottom-inset {
+  padding-bottom: var(--safe-area-bottom);
 }
 
 @layer base {
@@ -216,6 +233,11 @@
     position: relative;
     @apply bg-background text-foreground;
   }
+}
+
+.app-shell {
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 @keyframes ambient-drift-emerald {
@@ -348,6 +370,15 @@
 .motion-stagger > * {
   animation: motion-rise var(--motion-duration-slow) var(--motion-ease-out)
     backwards;
+}
+
+/* An accepted PWA update restarts the document on the same route. Keep that
+   restart visually stable by completing only the initial entrance motion
+   immediately; interactive transitions and later component motion remain. */
+html[data-pwa-update-restart='true'] .motion-enter,
+html[data-pwa-update-restart='true'] .motion-stagger > * {
+  animation-duration: 0.01ms !important;
+  animation-delay: 0ms !important;
 }
 
 .motion-stagger > :nth-child(2) {

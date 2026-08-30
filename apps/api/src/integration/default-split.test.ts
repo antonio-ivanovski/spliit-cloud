@@ -2,61 +2,65 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { prisma } from '@spliit/db'
 
-import { accountRouter } from '../trpc/routers/account'
+import { mergeLedgerParticipantReferences } from '../lib/api/ledger-participants'
 import { groupsRouter } from '../trpc/routers/groups'
 import { checkDbConnection, testRunId } from './setup'
 
 await checkDbConnection()
 
-/**
- * Integration tests for the per-user, per-group default split persistence. The
- * default lives in `AccountGroupPreference.defaultSplit` and is round-tripped
- * through `accountRouter.defaultSplit` (query) and
- * `accountRouter.setDefaultSplit` (mutation).
- *
- * These tests use a real PostgreSQL database via Prisma so they cover the
- * membership check, the JSON column shape, and the read-back path in addition
- * to zod validation.
- */
-describe('defaultSplit — real DB', () => {
+describe('split presets — real DB', () => {
   const runId = testRunId()
   const adminId = `acct-admin-${runId}`
   const adminEmail = `admin-${runId}@test.example`
-
   const ledgerIds: string[] = []
-  function trackLedger(id: string) {
-    ledgerIds.push(id)
-  }
 
-  function makeAccountCaller(overrides?: {
-    accountId?: string
-    email?: string
-  }) {
-    return accountRouter.createCaller({
-      auth: {
-        session: { id: 'sess-test' },
-        user: {
-          id: overrides?.accountId ?? adminId,
-          email: overrides?.email ?? adminEmail,
-          emailVerified: true,
-          name: 'Test Admin',
-        },
-      },
-    } as never)
-  }
-
-  function makeGroupsCaller() {
+  function caller(accountId = adminId, email = adminEmail) {
     return groupsRouter.createCaller({
       auth: {
         session: { id: 'sess-test' },
         user: {
-          id: adminId,
-          email: adminEmail,
+          id: accountId,
+          email,
           emailVerified: true,
-          name: 'Test Admin',
+          name: accountId === adminId ? 'Test Admin' : 'Test Member',
         },
       },
     } as never)
+  }
+
+  async function createGroup(name: string) {
+    const result = await caller().create({
+      requestId: crypto.randomUUID(),
+      groupFormValues: {
+        name,
+        currency: '$',
+        currencyCode: 'USD',
+        participants: [{ name: 'Alice' }, { name: 'Bob' }],
+      },
+    })
+    const group = await prisma.group.findUnique({
+      where: { id: result.groupId },
+      include: {
+        ledger: true,
+        members: { include: { ledgerParticipant: true } },
+      },
+    })
+    expect(group).not.toBeNull()
+    ledgerIds.push(group!.ledgerId)
+    const adminParticipant = group!.members[0]!.ledgerParticipant!
+    const secondParticipant = await prisma.ledgerParticipant.create({
+      data: {
+        id: crypto.randomUUID(),
+        ledgerId: group!.ledgerId,
+        kind: 'UNLINKED_PARTICIPANT',
+        displayName: 'Bob',
+      },
+    })
+    return {
+      id: result.groupId,
+      aliceId: adminParticipant.id,
+      bobId: secondParticipant.id,
+    }
   }
 
   beforeAll(async () => {
@@ -73,152 +77,337 @@ describe('defaultSplit — real DB', () => {
   })
 
   afterAll(async () => {
-    for (const lid of ledgerIds) {
-      await prisma.ledger.delete({ where: { id: lid } }).catch(() => {})
+    for (const ledgerId of ledgerIds) {
+      await prisma.ledger.delete({ where: { id: ledgerId } }).catch(() => {})
     }
     await prisma.account.delete({ where: { id: adminId } }).catch(() => {})
   })
 
-  it('rejects writes when the user is not an active member', async () => {
-    const outsiderEmail = `outsider-${runId}@test.example`
-    const outsiderId = `acct-outsider-${runId}`
-    await prisma.account.upsert({
-      where: { email: outsiderEmail },
-      update: {},
-      create: {
-        id: outsiderId,
-        email: outsiderEmail,
+  it('supports one-sided CRUD, idempotent creation, and case-insensitive names', async () => {
+    const group = await createGroup(`Preset CRUD ${runId}`)
+    const requestId = crypto.randomUUID()
+    const input = {
+      requestId,
+      groupId: group.id,
+      scope: 'SHARED' as const,
+      name: '  Dinner  ',
+      target: 'PAID_FOR' as const,
+      splitMode: 'BY_SHARES' as const,
+      participants: [
+        { participant: group.aliceId, shares: 200 },
+        { participant: group.bobId, shares: 100 },
+      ],
+    }
+    const first = await caller().splitPresets.create(input)
+    expect(await caller().splitPresets.create(input)).toEqual(first)
+    expect(first.preset.name).toBe('Dinner')
+    expect(first.preset.target).toBe('PAID_FOR')
+
+    await expect(
+      caller().splitPresets.create({
+        ...input,
+        requestId: crypto.randomUUID(),
+        name: 'dInNeR',
+      }),
+    ).rejects.toMatchObject({ code: 'CONFLICT' })
+
+    const second = await caller().splitPresets.create({
+      ...input,
+      requestId: crypto.randomUUID(),
+      name: 'Lunch',
+      target: 'PAID_BY',
+      splitMode: 'EVENLY',
+      participants: [{ participant: group.aliceId, shares: 99 }],
+    })
+    expect(second.preset.participants).toEqual([
+      { participant: group.aliceId, shares: 1 },
+    ])
+
+    const listed = await caller().splitPresets.list({ groupId: group.id })
+    expect(listed.canManageShared).toBe(true)
+    expect(listed.presets.map((preset) => preset.name)).toEqual([
+      'Dinner',
+      'Lunch',
+    ])
+
+    const updated = await caller().splitPresets.update({
+      groupId: group.id,
+      presetId: first.preset.id,
+      scope: 'SHARED',
+      name: 'Dinner Updated',
+      expectedUpdatedAt: first.preset.updatedAt,
+      target: 'PAID_FOR',
+      splitMode: 'BY_PERCENTAGE',
+      participants: [
+        { participant: group.aliceId, shares: 7500 },
+        { participant: group.bobId, shares: 2500 },
+      ],
+    })
+    expect(updated.preset.splitMode).toBe('BY_PERCENTAGE')
+
+    await caller().splitPresets.delete({
+      groupId: group.id,
+      presetId: first.preset.id,
+      scope: 'SHARED',
+    })
+    expect(
+      (await caller().splitPresets.list({ groupId: group.id })).presets.map(
+        (preset) => preset.name,
+      ),
+    ).toEqual(['Lunch'])
+  })
+
+  it('allows active members to read and own personal presets, but restricts shared writes', async () => {
+    const group = await createGroup(`Preset ACL ${runId}`)
+    const memberId = `acct-member-${runId}`
+    const memberEmail = `member-${runId}@test.example`
+    await prisma.account.create({
+      data: {
+        id: memberId,
+        email: memberEmail,
         emailVerified: true,
-        name: 'Outsider',
+        name: 'Test Member',
+      },
+    })
+    const member = await prisma.groupMember.create({
+      data: {
+        id: crypto.randomUUID(),
+        groupId: group.id,
+        accountId: memberId,
+        role: 'MEMBER',
+        status: 'ACTIVE',
+        joinedAt: new Date(),
+      },
+    })
+    const groupRow = await prisma.group.findUniqueOrThrow({
+      where: { id: group.id },
+      select: { ledgerId: true },
+    })
+    const memberParticipant = await prisma.ledgerParticipant.create({
+      data: {
+        id: crypto.randomUUID(),
+        ledgerId: groupRow.ledgerId,
+        groupMemberId: member.id,
       },
     })
     try {
-      const { groupId } = await makeGroupsCaller().create({
+      const shared = await caller().splitPresets.create({
         requestId: crypto.randomUUID(),
-        groupFormValues: {
-          name: `DS Authz ${runId}`,
-          currency: '$',
-          currencyCode: 'USD',
-          participants: [{ name: 'Alice' }],
-        },
+        groupId: group.id,
+        scope: 'SHARED',
+        name: 'Members',
+        target: 'PAID_FOR',
+        splitMode: 'EVENLY',
+        participants: [{ participant: group.aliceId, shares: 1 }],
       })
-      const group = await prisma.group.findUnique({ where: { id: groupId } })
-      trackLedger(group!.ledgerId)
+      const memberList = await caller(memberId, memberEmail).splitPresets.list({
+        groupId: group.id,
+      })
+      expect(memberList.canManageShared).toBe(false)
+      expect(
+        memberList.presets.some((preset) => preset.id === shared.preset.id),
+      ).toBe(true)
 
-      const caller = makeAccountCaller({
-        accountId: outsiderId,
-        email: outsiderEmail,
-      })
       await expect(
-        caller.setDefaultSplit({
-          groupId,
-          defaultSplit: {
-            splitMode: 'EVENLY',
-            paidFor: [{ participant: 'lp-not-in-group', shares: 1 }],
-          },
+        caller(memberId, memberEmail).splitPresets.create({
+          requestId: crypto.randomUUID(),
+          groupId: group.id,
+          scope: 'SHARED',
+          name: 'Forbidden',
+          target: 'PAID_FOR',
+          splitMode: 'EVENLY',
+          participants: [{ participant: group.aliceId, shares: 1 }],
         }),
       ).rejects.toMatchObject({ code: 'FORBIDDEN' })
 
-      const get = await caller.defaultSplit({ groupId })
-      expect(get.defaultSplit).toBeNull()
+      const personal = await caller(memberId, memberEmail).splitPresets.create({
+        requestId: crypto.randomUUID(),
+        groupId: group.id,
+        scope: 'PERSONAL',
+        name: 'Private members',
+        target: 'PAID_FOR',
+        splitMode: 'EVENLY',
+        participants: [{ participant: group.aliceId, shares: 1 }],
+      })
+      expect(
+        (
+          await caller(memberId, memberEmail).splitPresets.list({
+            groupId: group.id,
+          })
+        ).presets
+          .filter((preset) => preset.scope === 'PERSONAL')
+          .map((preset) => preset.id),
+      ).toEqual([personal.preset.id])
+      expect(
+        (
+          await caller().splitPresets.list({ groupId: group.id })
+        ).presets.filter((preset) => preset.scope === 'PERSONAL'),
+      ).toHaveLength(0)
+      await expect(
+        caller(memberId, memberEmail).splitPresets.delete({
+          groupId: group.id,
+          presetId: shared.preset.id,
+          scope: 'SHARED',
+        }),
+      ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+      await expect(
+        caller(
+          `acct-outsider-${runId}`,
+          `outsider-${runId}@test.example`,
+        ).splitPresets.list({
+          groupId: group.id,
+        }),
+      ).rejects.toMatchObject({ code: 'FORBIDDEN' })
     } finally {
-      await prisma.account.delete({ where: { id: outsiderId } }).catch(() => {})
+      await prisma.account.delete({ where: { id: memberId } }).catch(() => {})
+      await prisma.ledgerParticipant
+        .delete({ where: { id: memberParticipant.id } })
+        .catch(() => {})
     }
   })
 
-  it('overwrites an existing default on a second call', async () => {
-    const { groupId } = await makeGroupsCaller().create({
-      requestId: crypto.randomUUID(),
-      groupFormValues: {
-        name: `DS Upsert ${runId}`,
-        currency: '$',
-
-        currencyCode: 'USD',
-        participants: [{ name: 'Alice' }],
+  it('updates defaults independently and cleans references when a shared preset becomes personal', async () => {
+    const group = await createGroup(`Preset defaults ${runId}`)
+    const memberId = `acct-default-member-${runId}`
+    const memberEmail = `default-member-${runId}@test.example`
+    await prisma.account.create({
+      data: {
+        id: memberId,
+        email: memberEmail,
+        emailVerified: true,
+        name: 'Default member',
       },
     })
-    const group = await prisma.group.findUnique({
-      where: { id: groupId },
-      include: {
-        ledger: true,
-        members: { include: { ledgerParticipant: true } },
+    const member = await prisma.groupMember.create({
+      data: {
+        id: crypto.randomUUID(),
+        groupId: group.id,
+        accountId: memberId,
+        role: 'MEMBER',
+        status: 'ACTIVE',
+        joinedAt: new Date(),
       },
     })
-    trackLedger(group!.ledgerId)
-    const adminParticipantId = group!.members[0].ledgerParticipant!.id
-
-    const caller = makeAccountCaller()
-    await caller.setDefaultSplit({
-      groupId,
-      defaultSplit: {
-        splitMode: 'BY_SHARES',
-        // Fixed units: 300 = 3 displayed shares.
-        paidFor: [{ participant: adminParticipantId, shares: 300 }],
+    const ledger = await prisma.group.findUniqueOrThrow({
+      where: { id: group.id },
+      select: { ledgerId: true },
+    })
+    await prisma.ledgerParticipant.create({
+      data: {
+        id: crypto.randomUUID(),
+        ledgerId: ledger.ledgerId,
+        groupMemberId: member.id,
       },
     })
-
-    await caller.setDefaultSplit({
-      groupId,
-      defaultSplit: {
+    try {
+      const paidBy = await caller().splitPresets.create({
+        requestId: crypto.randomUUID(),
+        groupId: group.id,
+        scope: 'SHARED',
+        name: 'Payer',
+        target: 'PAID_BY',
         splitMode: 'EVENLY',
-        paidFor: [{ participant: adminParticipantId, shares: 1 }],
-      },
-    })
+        participants: [{ participant: group.aliceId, shares: 1 }],
+      })
+      const paidFor = await caller().splitPresets.create({
+        requestId: crypto.randomUUID(),
+        groupId: group.id,
+        scope: 'SHARED',
+        name: 'Participants',
+        target: 'PAID_FOR',
+        splitMode: 'EVENLY',
+        participants: [{ participant: group.aliceId, shares: 1 }],
+      })
 
-    const get = await caller.defaultSplit({ groupId })
-    expect(get.defaultSplit?.splitMode).toBe('EVENLY')
+      await caller().splitPresets.setGroupDefault({
+        groupId: group.id,
+        target: 'PAID_BY',
+        presetId: paidBy.preset.id,
+      })
+      await caller().splitPresets.setGroupDefault({
+        groupId: group.id,
+        target: 'PAID_FOR',
+        presetId: paidFor.preset.id,
+      })
+      await caller().splitPresets.setPersonalDefault({
+        groupId: group.id,
+        target: 'PAID_FOR',
+        choice: { mode: 'PRESET', presetId: paidFor.preset.id },
+      })
+      await caller(memberId, memberEmail).splitPresets.setPersonalDefault({
+        groupId: group.id,
+        target: 'PAID_FOR',
+        choice: { mode: 'PRESET', presetId: paidFor.preset.id },
+      })
+
+      expect(
+        (await caller().splitPresets.list({ groupId: group.id })).groupDefaults,
+      ).toEqual({
+        paidByPresetId: paidBy.preset.id,
+        paidForPresetId: paidFor.preset.id,
+      })
+
+      await caller().splitPresets.update({
+        groupId: group.id,
+        presetId: paidFor.preset.id,
+        scope: 'SHARED',
+        nextScope: 'PERSONAL',
+        name: paidFor.preset.name,
+        expectedUpdatedAt: paidFor.preset.updatedAt,
+        target: 'PAID_FOR',
+        splitMode: 'EVENLY',
+        participants: [{ participant: group.aliceId, shares: 1 }],
+      })
+
+      const adminList = await caller().splitPresets.list({ groupId: group.id })
+      expect(adminList.groupDefaults).toEqual({
+        paidByPresetId: paidBy.preset.id,
+        paidForPresetId: null,
+      })
+      expect(adminList.personalDefaults.paidFor).toEqual({
+        mode: 'PRESET',
+        presetId: paidFor.preset.id,
+      })
+      expect(
+        (
+          await caller(memberId, memberEmail).splitPresets.list({
+            groupId: group.id,
+          })
+        ).personalDefaults.paidFor,
+      ).toEqual({ mode: 'INHERIT', presetId: null })
+    } finally {
+      await prisma.account.delete({ where: { id: memberId } }).catch(() => {})
+    }
   })
 
-  it('replaces paidFor children on upsert (no orphan rows)', async () => {
-    const { groupId } = await makeGroupsCaller().create({
+  it('coalesces preset rows when participant identities merge', async () => {
+    const group = await createGroup(`Preset merge ${runId}`)
+    const preset = await caller().splitPresets.create({
       requestId: crypto.randomUUID(),
-      groupFormValues: {
-        name: `DS Children ${runId}`,
-        currency: '$',
-
-        currencyCode: 'USD',
-        participants: [{ name: 'Alice' }],
-      },
-    })
-    const group = await prisma.group.findUnique({
-      where: { id: groupId },
-      include: {
-        ledger: true,
-        members: { include: { ledgerParticipant: true } },
-      },
-    })
-    trackLedger(group!.ledgerId)
-    const adminParticipantId = group!.members[0].ledgerParticipant!.id
-
-    const caller = makeAccountCaller()
-    await caller.setDefaultSplit({
-      groupId,
-      defaultSplit: {
-        splitMode: 'BY_SHARES',
-        // Fixed units: 700 = 7 displayed shares.
-        paidFor: [{ participant: adminParticipantId, shares: 700 }],
-      },
-    })
-    // Second write with a different share count — should fully replace
-    // the previous children rather than append.
-    await caller.setDefaultSplit({
-      groupId,
-      defaultSplit: {
-        splitMode: 'BY_SHARES',
-        paidFor: [{ participant: adminParticipantId, shares: 100 }],
-      },
+      groupId: group.id,
+      scope: 'SHARED',
+      name: 'Merged percentage',
+      target: 'PAID_FOR',
+      splitMode: 'BY_PERCENTAGE',
+      participants: [
+        { participant: group.aliceId, shares: 4000 },
+        { participant: group.bobId, shares: 6000 },
+      ],
     })
 
-    const header = await prisma.accountGroupDefaultSplit.findUnique({
-      where: {
-        accountId_groupId: { accountId: adminId, groupId },
-      },
-      include: { paidFor: true },
+    await prisma.$transaction(async (tx) => {
+      await mergeLedgerParticipantReferences(tx, {
+        sourceId: group.bobId,
+        targetId: group.aliceId,
+      })
+      await tx.ledgerParticipant.delete({ where: { id: group.bobId } })
     })
-    expect(header).not.toBeNull()
-    // Exactly one child row, not two — the delete-then-create path
-    // collapses the previous write.
-    expect(header!.paidFor).toHaveLength(1)
-    expect(header!.paidFor[0].shares).toBe(100)
+
+    expect(
+      await prisma.splitPresetParticipant.findMany({
+        where: { presetId: preset.preset.id },
+        select: { participantId: true, shares: true },
+      }),
+    ).toEqual([{ participantId: group.aliceId, shares: 10_000 }])
   })
 })

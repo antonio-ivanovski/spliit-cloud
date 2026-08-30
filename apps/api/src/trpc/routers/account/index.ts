@@ -14,7 +14,6 @@ import {
   accountMascotSchema,
   accountPreferenceSchema,
   accountThemeSchema,
-  defaultSplitSchema,
   supportedCurrencyCodeSchema,
   timeZoneSchema,
 } from '@spliit/domain'
@@ -38,7 +37,6 @@ import {
 } from '../../../routes/upload'
 import { createTRPCRouter, protectedProcedure } from '../../init'
 import {
-  accountDefaultSplitSchema,
   accountFriendsOutputSchema,
   accountGroupPreferencesOutputSchema,
   accountGroupsOutputSchema,
@@ -672,126 +670,7 @@ export const accountRouter = createTRPCRouter({
       }
     }),
 
-  /**
-   * Get the caller's persisted default split for a group. Returns null when
-   * none is saved.
-   */
-  // Per-user, per-group saved default split. Null means "no default".
-  // ITEMIZED is not allowed: itemized expenses carry an `items` array
-  // whose shape is too heavy to be a useful "default", and the UI hides
-  // the save action when the current split is itemized.
-  defaultSplit: protectedProcedure
-    .input(z.object({ groupId: z.string().min(1) }))
-    .output(accountDefaultSplitSchema)
-    .query(async ({ input: { groupId }, ctx }) => {
-      const row = await prisma.accountGroupDefaultSplit.findUnique({
-        where: {
-          accountId_groupId: { accountId: ctx.auth.user.id, groupId },
-        },
-        include: { paidFor: true },
-      })
-      if (!row) return { defaultSplit: null }
-      if (row.splitMode === 'ITEMIZED') return { defaultSplit: null }
-      return {
-        defaultSplit: {
-          splitMode: row.splitMode,
-          paidFor: row.paidFor.map(({ participantId, shares }) => ({
-            participant: participantId,
-            shares,
-          })),
-        },
-      }
-    }),
-
-  /**
-   * Persist the caller's default split for a group. ITEMIZED is rejected by the
-   * schema.
-   */
-  setDefaultSplit: protectedProcedure
-    .input(
-      z.object({
-        groupId: z.string().min(1),
-        defaultSplit: defaultSplitSchema,
-      }),
-    )
-    .output(z.object({ defaultSplit: defaultSplitSchema }))
-    .mutation(async ({ input: { groupId, defaultSplit }, ctx }) => {
-      // ITEMIZED is excluded by `defaultSplitSchema` at the zod level so
-      // it cannot reach this resolver — the runtime check is intentionally
-      // omitted here. See the schema comment for the rationale.
-
-      // Membership check: the user must be an active member of the group
-      // before they can write to its per-group preferences.
-      const member = await prisma.groupMember.findUnique({
-        where: {
-          groupId_accountId: { groupId, accountId: ctx.auth.user.id },
-        },
-        select: { status: true },
-      })
-      if (!member || member.status !== GroupMemberStatus.ACTIVE) {
-        throw new TRPCError({
-          code: 'FORBIDDEN',
-          message: 'You are not an active member of this group',
-        })
-      }
-
-      // Validate that every participant in the default split belongs to
-      // the group's current ledger. Stale participant ids (e.g. someone
-      // removed from the group since the default was saved) are rejected
-      // so the UI never sees a default that no longer makes sense. The
-      // database FK on `AccountGroupDefaultSplitPaidFor.participantId`
-      // also enforces this at write time; the explicit check here gives
-      // a clearer `BAD_REQUEST` error than a Prisma constraint failure.
-      const ledgerParticipants = await prisma.ledgerParticipant.findMany({
-        where: { ledger: { group: { id: groupId } } },
-        select: { id: true },
-      })
-      const validIds = new Set(ledgerParticipants.map((p) => p.id))
-      for (const row of defaultSplit.paidFor) {
-        if (!validIds.has(row.participant)) {
-          throw new TRPCError({
-            code: 'BAD_REQUEST',
-            message: 'Default split references an unknown participant',
-          })
-        }
-      }
-
-      // Upsert the header row + replace its paidFor children in a single
-      // transaction. We delete-and-recreate the children rather than
-      // trying to diff them — the row count is small (≤ group size) and
-      // this keeps the upsert logic trivially correct.
-      await prisma.$transaction(async (tx) => {
-        const header = await tx.accountGroupDefaultSplit.upsert({
-          where: {
-            accountId_groupId: { accountId: ctx.auth.user.id, groupId },
-          },
-          create: {
-            id: randomId(),
-            accountId: ctx.auth.user.id,
-            groupId,
-            splitMode: defaultSplit.splitMode,
-          },
-          update: {
-            splitMode: defaultSplit.splitMode,
-            updatedAt: new Date(),
-          },
-        })
-        await tx.accountGroupDefaultSplitPaidFor.deleteMany({
-          where: { defaultSplitId: header.id },
-        })
-        await tx.accountGroupDefaultSplitPaidFor.createMany({
-          data: defaultSplit.paidFor.map(({ participant, shares }) => ({
-            defaultSplitId: header.id,
-            participantId: participant,
-            shares,
-          })),
-        })
-      })
-
-      return { defaultSplit }
-    }),
-
-  /** List active members of a group. Used by the default-split picker. */
+  /** List active members of a group. Used by split-preset management. */
   // Members list for a group (active members). Used to render member
   // management UI.
   members: protectedProcedure

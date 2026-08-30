@@ -174,4 +174,93 @@ describe('ExpenseSplitBars', () => {
     expect(section).toHaveTextContent('Ada')
     expect(section).toHaveTextContent('€10.00')
   })
+
+  it('shows weighted compact bars before an amount exists', () => {
+    render(
+      <ExpenseSplitBars
+        label="Preset preview"
+        modeLabel="Evenly"
+        compact
+        showAmounts={false}
+        rows={[
+          {
+            id: 'participant-1',
+            name: 'Ada',
+            amount: 0,
+            distributionWeight: 1,
+          },
+          {
+            id: 'participant-2',
+            name: 'Grace',
+            amount: 0,
+            distributionWeight: 1,
+          },
+        ]}
+        currency={EUR}
+        locale="en-US"
+      />,
+    )
+
+    const section = screen.getByRole('region', { name: 'Preset preview' })
+    const segments = section.querySelectorAll('[class~="@container"]')
+    expect(segments).toHaveLength(2)
+    expect(segments[0]).toHaveStyle({ width: '50%' })
+    expect(segments[1]).toHaveStyle({ width: '50%' })
+    expect(section).not.toHaveTextContent('€0.00')
+  })
+
+  it('uses percentage weights for a compact zero-amount preview', () => {
+    render(
+      <ExpenseSplitBars
+        label="Preset preview"
+        compact
+        showAmounts={false}
+        rows={[
+          {
+            id: 'participant-1',
+            name: 'Ada',
+            amount: 0,
+            distributionWeight: 3000,
+          },
+          {
+            id: 'participant-2',
+            name: 'Grace',
+            amount: 0,
+            distributionWeight: 7000,
+          },
+        ]}
+        currency={EUR}
+        locale="en-US"
+      />,
+    )
+
+    const section = screen.getByRole('region', { name: 'Preset preview' })
+    const segments = section.querySelectorAll('[class~="@container"]')
+    expect(segments[0]).toHaveStyle({ width: '30%' })
+    expect(segments[1]).toHaveStyle({ width: '70%' })
+  })
+
+  it('shows a full-width compact bar for a single participant', () => {
+    render(
+      <ExpenseSplitBars
+        label="Preset preview"
+        compact
+        showAmounts={false}
+        rows={[
+          {
+            id: 'participant-1',
+            name: 'Ada',
+            amount: 0,
+            distributionWeight: 1,
+          },
+        ]}
+        currency={EUR}
+        locale="en-US"
+      />,
+    )
+
+    const section = screen.getByRole('region', { name: 'Preset preview' })
+    const segment = section.querySelector('[class~="@container"]')
+    expect(segment).toHaveStyle({ width: '100%' })
+  })
 })

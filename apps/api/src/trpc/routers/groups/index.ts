@@ -24,6 +24,7 @@ import { groupMembersRouter } from './members'
 import { groupParticipantsRouter } from './participants'
 import { groupReportsRouter } from './reports'
 import { groupSavedViewsRouter } from './saved-views'
+import { groupSplitPresetsRouter } from './split-presets'
 import { groupStatsRouter } from './stats'
 import { groupSubgroupsRouter } from './subgroups'
 import { updateGroupProcedure } from './update.procedure'
@@ -42,6 +43,7 @@ export const groupsRouter = createTRPCRouter({
   reports: groupReportsRouter,
   view: groupViewRouter,
   savedViews: groupSavedViewsRouter,
+  splitPresets: groupSplitPresetsRouter,
 
   /**
    * Get a single group plus the caller's membership and link-invite state.

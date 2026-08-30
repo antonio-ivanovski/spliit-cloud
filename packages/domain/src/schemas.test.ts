@@ -4,6 +4,7 @@ import {
   expenseFormInputSchema,
   friendFormSchema,
   groupFormSchema,
+  splitPresetSchema,
 } from './schemas'
 
 const baseInput = {
@@ -938,6 +939,86 @@ describe('defaultSplitSchema', () => {
         paidFor: [{ participant: 'p0', shares: 100_000_000 }],
       }).success,
     ).toBe(true)
+  })
+})
+
+describe('splitPresetSchema', () => {
+  it('accepts evenly presets and supported fixed-point modes', () => {
+    expect(
+      splitPresetSchema.safeParse({
+        target: 'PAID_FOR',
+        splitMode: 'EVENLY',
+        participants: [{ participant: 'p0', shares: 1 }],
+      }).success,
+    ).toBe(true)
+    expect(
+      splitPresetSchema.safeParse({
+        target: 'PAID_BY',
+        splitMode: 'BY_SHARES',
+        participants: [
+          { participant: 'p0', shares: 50 },
+          { participant: 'p1', shares: 110 },
+        ],
+      }).success,
+    ).toBe(true)
+    expect(
+      splitPresetSchema.safeParse({
+        target: 'PAID_FOR',
+        splitMode: 'BY_PERCENTAGE',
+        participants: [
+          { participant: 'p0', shares: 2500 },
+          { participant: 'p1', shares: 7500 },
+        ],
+      }).success,
+    ).toBe(true)
+  })
+
+  it('rejects duplicate participants, empty rows, invalid shares, and unsupported modes', () => {
+    expect(
+      splitPresetSchema.safeParse({
+        target: 'PAID_FOR',
+        splitMode: 'EVENLY',
+        participants: [
+          { participant: 'p0', shares: 1 },
+          { participant: 'p0', shares: 1 },
+        ],
+      }).success,
+    ).toBe(false)
+    expect(
+      splitPresetSchema.safeParse({
+        target: 'PAID_FOR',
+        splitMode: 'BY_SHARES',
+        participants: [],
+      }).success,
+    ).toBe(false)
+    expect(
+      splitPresetSchema.safeParse({
+        target: 'PAID_FOR',
+        splitMode: 'BY_SHARES',
+        participants: [{ participant: 'p0', shares: 0 }],
+      }).success,
+    ).toBe(false)
+    expect(
+      splitPresetSchema.safeParse({
+        target: 'PAID_FOR',
+        splitMode: 'BY_PERCENTAGE',
+        participants: [{ participant: 'p0', shares: 9999 }],
+      }).success,
+    ).toBe(false)
+    expect(
+      splitPresetSchema.safeParse({
+        target: 'PAID_FOR',
+        splitMode: 'BY_AMOUNT',
+        participants: [{ participant: 'p0', shares: 100 }],
+      }).success,
+    ).toBe(false)
+    expect(
+      splitPresetSchema.safeParse({
+        target: 'PAID_FOR',
+        splitMode: 'ITEMIZED',
+        participants: [{ participant: 'p0', shares: 1 }],
+      }).success,
+    ).toBe(false)
   })
 })
 

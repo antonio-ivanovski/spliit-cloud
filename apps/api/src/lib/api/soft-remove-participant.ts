@@ -23,6 +23,7 @@ import {
 } from './balances'
 import { getApiBoss } from './boss'
 import { RemoveMemberPreconditionError, removeMember } from './members'
+import { adjustSplitPresetsForRemovedParticipant } from './split-presets'
 import { removeParticipantFromSubgroup } from './subgroups'
 
 export type SoftRemoveParticipantKind = 'member' | 'invitation' | 'unlinked'
@@ -49,7 +50,7 @@ const participantSelect = {
       id: true,
       role: true,
       status: true,
-      account: { select: { name: true } },
+      account: { select: { id: true, name: true } },
     },
   },
   invitations: {
@@ -294,6 +295,7 @@ export async function softRemoveParticipant(opts: {
       where: { id: participant.id },
       data: { removedAt: new Date() },
     })
+    await adjustSplitPresetsForRemovedParticipant(participant.id, tx)
     await removeParticipantFromSubgroup(participant.id, tx)
 
     const activity = await logActivity(groupId, activityArgs, tx)

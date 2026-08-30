@@ -70,11 +70,7 @@ import {
   parseCurrencyPaste,
 } from './currency-utils'
 import { applySplitToAll } from './default-item-split'
-import type { SavedSplit } from './default-split/split-equal'
-import {
-  getNeutralDefaultSplit,
-  savedDefaultToFormValues,
-} from './default-values'
+import { getNeutralDefaultSplit } from './default-values'
 import { ExpenseDateTimeField } from './expense-date-time-field'
 import { expenseTabPriority } from './focus-navigation'
 import { RecurrenceSection } from './recurrence-section'
@@ -134,22 +130,9 @@ export function BasicDetailsCard(props: {
     info: ReceiptExtractedInfo
     document: ReceiptDocument
   }) => void
-  /**
-   * Persisted per-user-per-group default split, used to seed new items created
-   * by the calculator flow when switching to itemized.
-   */
-  savedDefault?: SavedSplit | null
 }) {
-  const {
-    form,
-    group,
-    groupCurrency,
-    readOnly,
-    sExpense,
-    isCreate,
-    heading,
-    savedDefault,
-  } = props
+  const { form, group, groupCurrency, readOnly, sExpense, isCreate, heading } =
+    props
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const { t: tGroups } = useTranslation(undefined, { keyPrefix: 'Groups' })
   const { t: tCategories } = useTranslation(undefined, {
@@ -202,11 +185,7 @@ export function BasicDetailsCard(props: {
       : ''
 
   const applyCalculatorItems = (items: CalculatorItem[]) => {
-    const seed = (savedDefaultToFormValues(
-      savedDefault ?? null,
-      group,
-      groupCurrency,
-    ) ?? getNeutralDefaultSplit(group)) as {
+    const seed = getNeutralDefaultSplit(group) as {
       splitMode: ExpenseFormItemValues['splitMode']
       paidFor: ExpenseFormItemValues['paidFor']
     }
@@ -266,7 +245,7 @@ export function BasicDetailsCard(props: {
   }
 
   return (
-    <Card className="mobile-surface">
+    <Card>
       <CardHeader className="hidden flex-row items-center gap-2 space-y-0 sm:flex">
         <Button
           variant="ghost"

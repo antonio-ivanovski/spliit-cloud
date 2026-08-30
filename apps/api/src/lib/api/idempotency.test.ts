@@ -176,6 +176,7 @@ describe('create idempotency primitives', () => {
         'import',
         'linkInvitation',
         'participant',
+        'splitPreset',
         'subgroup',
       ].sort(),
     )

@@ -1,5 +1,6 @@
 import { type Prisma } from '@spliit/db'
 
+import { mergeLedgerParticipantReferences } from '../api/ledger-participants'
 import { randomId } from '../api/shared'
 
 export async function materializePendingInvitationParticipant(
@@ -68,17 +69,11 @@ export async function reconcileMemberLedgerParticipant(
       existingParticipant &&
       existingParticipant.id !== pendingParticipantId
     ) {
-      await tx.expensePaidBy.updateMany({
-        where: { ledgerParticipantId: pendingParticipantId },
-        data: { ledgerParticipantId: existingParticipant.id },
+      await mergeLedgerParticipantReferences(tx, {
+        sourceId: pendingParticipantId,
+        targetId: existingParticipant.id,
       })
-      await tx.expensePaidFor.updateMany({
-        where: { ledgerParticipantId: pendingParticipantId },
-        data: { ledgerParticipantId: existingParticipant.id },
-      })
-      await tx.ledgerParticipant
-        .delete({ where: { id: pendingParticipantId } })
-        .catch(() => undefined)
+      await tx.ledgerParticipant.delete({ where: { id: pendingParticipantId } })
       return
     }
     if (!existingParticipant) {

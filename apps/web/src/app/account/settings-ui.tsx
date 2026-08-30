@@ -33,7 +33,7 @@ export function SettingsSection({
     <Card
       id={id}
       aria-labelledby={headingId}
-      className={cn('mobile-surface min-w-0 overflow-hidden', className)}
+      className={cn('min-w-0 overflow-hidden', className)}
     >
       <header className="flex min-w-0 items-center justify-between gap-3 px-4 py-4 sm:px-6 sm:pt-5 sm:pb-4">
         <div className="min-w-0">

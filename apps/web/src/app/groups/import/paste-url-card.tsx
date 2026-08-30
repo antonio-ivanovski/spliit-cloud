@@ -31,8 +31,8 @@ export function PasteUrlCard({
   labels,
 }: PasteUrlCardProps) {
   return (
-    <Card>
-      <CardContent className="flex flex-col gap-3 p-4">
+    <Card data-import-source-card="paste-url">
+      <CardContent spacing="standalone" className="flex flex-col gap-3">
         <Label htmlFor="spliit-url" className="flex items-center gap-2">
           <Globe className="h-4 w-4 text-muted-foreground" />
           {labels.pasteUrl}

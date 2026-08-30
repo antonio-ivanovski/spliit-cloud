@@ -534,12 +534,17 @@ export function BudgetForm({
       <FixedActionBar>
         <Button
           variant="ghost"
+          className="hidden sm:inline-flex"
           nativeButton={false}
           render={<Link to="/groups/$groupId/budgets" params={{ groupId }} />}
         >
           {t('cancel')}
         </Button>
-        <Button type="submit" disabled={pending} className="min-w-28">
+        <Button
+          type="submit"
+          disabled={pending}
+          className="min-w-0 flex-1 sm:min-w-28 sm:flex-none"
+        >
           {pending ? (
             <>
               <Loader2 className="me-2 h-4 w-4 animate-spin" />

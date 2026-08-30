@@ -12,6 +12,7 @@ import {
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { PageShell } from '@/components/layout/page-shell'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -69,7 +70,10 @@ export default function UnsubscribePage() {
 
   if (!token || !metadata) {
     return (
-      <main className="flex flex-1 items-center justify-center px-4 py-12 sm:py-20">
+      <PageShell
+        width="full"
+        className="items-center justify-center py-12 sm:py-20"
+      >
         <Card className="w-full max-w-xl overflow-hidden">
           <CardHeader className="gap-3 p-6 sm:p-8">
             <div className="flex h-11 w-11 items-center justify-center rounded-full bg-destructive/10">
@@ -95,13 +99,16 @@ export default function UnsubscribePage() {
             </Button>
           </CardFooter>
         </Card>
-      </main>
+      </PageShell>
     )
   }
 
   if (unsubscribeMutation.isSuccess) {
     return (
-      <main className="flex flex-1 items-center justify-center px-4 py-12 sm:py-20">
+      <PageShell
+        width="full"
+        className="items-center justify-center py-12 sm:py-20"
+      >
         <Card
           className="w-full max-w-xl overflow-hidden"
           role="status"
@@ -139,12 +146,15 @@ export default function UnsubscribePage() {
             </Button>
           </CardFooter>
         </Card>
-      </main>
+      </PageShell>
     )
   }
 
   return (
-    <main className="flex flex-1 items-center justify-center px-4 py-12 sm:py-20">
+    <PageShell
+      width="full"
+      className="items-center justify-center py-12 sm:py-20"
+    >
       <Card className="w-full max-w-xl overflow-hidden">
         <CardHeader className="gap-3 p-6 pb-5 sm:p-8 sm:pb-6">
           <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary/10">
@@ -226,6 +236,6 @@ export default function UnsubscribePage() {
           </Button>
         </CardFooter>
       </Card>
-    </main>
+    </PageShell>
   )
 }

@@ -4,6 +4,7 @@ import { Check, Circle, Loader2 } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { PageShell } from '@/components/layout/page-shell'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -91,7 +92,7 @@ export function ResetPasswordPage() {
 
   if (hasInvalidToken) {
     return (
-      <main className="flex flex-1 items-center justify-center px-4 py-10">
+      <PageShell width="full" className="items-center justify-center py-10">
         <Card className="w-full max-w-sm">
           <CardHeader className="space-y-2 text-center">
             <CardTitle className="text-2xl">{t('invalidTokenTitle')}</CardTitle>
@@ -116,13 +117,13 @@ export function ResetPasswordPage() {
             </Button>
           </CardContent>
         </Card>
-      </main>
+      </PageShell>
     )
   }
 
   if (done) {
     return (
-      <main className="flex flex-1 items-center justify-center px-4 py-10">
+      <PageShell width="full" className="items-center justify-center py-10">
         <Card className="w-full max-w-sm">
           <CardHeader className="space-y-2 text-center">
             <CardTitle className="text-2xl">{t('success')}</CardTitle>
@@ -138,14 +139,14 @@ export function ResetPasswordPage() {
             </Button>
           </CardContent>
         </Card>
-      </main>
+      </PageShell>
     )
   }
 
   const canSubmit = isStrongPassword(password) && password === confirmPassword
 
   return (
-    <main className="flex flex-1 items-center justify-center px-4 py-10">
+    <PageShell width="full" className="items-center justify-center py-10">
       <Card className="w-full max-w-sm">
         <CardHeader className="space-y-2 text-center">
           <CardTitle className="text-2xl">{t('title')}</CardTitle>
@@ -207,7 +208,7 @@ export function ResetPasswordPage() {
           </Button>
         </div>
       </Card>
-    </main>
+    </PageShell>
   )
 }
 

@@ -22,16 +22,20 @@ import {
 } from '@/components/ui/dropdown-menu'
 import {
   ResponsiveDialog,
+  ResponsiveDialogBody,
+  ResponsiveDialogClose,
   ResponsiveDialogContent,
   ResponsiveDialogDescription,
   ResponsiveDialogFooter,
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
+  ResponsiveDialogTrigger,
 } from '@/components/ui/responsive-dialog'
 import { useToast } from '@/components/ui/use-toast'
 import { isPlaceholderEmail } from '@/lib/account'
 import { authClient } from '@/lib/auth'
 import { replaceBrowserLocation } from '@/lib/browser-navigation'
+import { useMediaQuery } from '@/lib/hooks'
 import { clearLastAccount } from '@/lib/last-account'
 import { disconnectPushSubscription } from '@/lib/push-notifications'
 import { useCurrentAccount } from '@/lib/use-current-account'
@@ -41,12 +45,16 @@ export function AccountMenu() {
   const queryClient = useQueryClient()
   const { toast } = useToast()
   const { data: account, isPending } = useCurrentAccount()
+  const isDesktop = useMediaQuery('(min-width: 640px)')
+  const [menuOpen, setMenuOpen] = useState(false)
   const [signOutOpen, setSignOutOpen] = useState(false)
   const [signingOut, setSigningOut] = useState(false)
   const [signOutError, setSignOutError] = useState(false)
 
   if (isPending) {
-    return <div className="h-8 w-8 animate-pulse rounded-full bg-muted" />
+    return (
+      <div className="size-11 animate-pulse rounded-full bg-muted sm:size-8" />
+    )
   }
 
   // Unauthenticated: render nothing. The homepage provides the sign-in CTA,
@@ -54,7 +62,18 @@ export function AccountMenu() {
   if (!account) {
     return null
   }
+  const currentAccount = account
   const accountId = account.id
+
+  const accountTrigger = (
+    <button
+      type="button"
+      className="rounded-full focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-hidden"
+      aria-label={t('account')}
+    >
+      <AccountAvatar account={account} size="lg" />
+    </button>
+  )
 
   async function signOut() {
     if (signingOut) return
@@ -76,57 +95,104 @@ export function AccountMenu() {
     }
   }
 
+  function requestSignOut() {
+    setMenuOpen(false)
+    if (currentAccount.isAnonymous) {
+      setSignOutError(false)
+      setSignOutOpen(true)
+      return
+    }
+    void signOut()
+  }
+
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger
-          render={
-            <button
-              type="button"
-              className="rounded-full focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-hidden"
-              aria-label={t('account')}
-            />
-          }
-        >
-          <AccountAvatar account={account} size="lg" />
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-56">
-          <DropdownMenuGroup>
-            <DropdownMenuLabel className="flex flex-col gap-0.5">
-              <span className="font-medium">{account.name}</span>
+      {isDesktop ? (
+        <DropdownMenu>
+          <DropdownMenuTrigger render={accountTrigger} />
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuGroup>
+              <DropdownMenuLabel className="flex flex-col gap-0.5">
+                <span className="font-medium">{account.name}</span>
+                {!isPlaceholderEmail(account.email) && (
+                  <span className="text-xs font-normal text-muted-foreground">
+                    {account.email}
+                  </span>
+                )}
+              </DropdownMenuLabel>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem render={<Link to="/account/settings" />}>
+              <SettingsIcon className="me-2 h-4 w-4" />
+              {t('accountSettings')}
+            </DropdownMenuItem>
+            <DropdownMenuItem render={<Link to="/feedback" />}>
+              <MessageSquareText className="me-2 h-4 w-4" />
+              {t('feedback')}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="text-destructive focus:text-destructive"
+              onClick={requestSignOut}
+            >
+              <LogOut className="me-2 h-4 w-4" />
+              {t('signOut')}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ) : (
+        <ResponsiveDialog open={menuOpen} onOpenChange={setMenuOpen}>
+          <ResponsiveDialogTrigger render={accountTrigger} />
+          <ResponsiveDialogContent className="sm:max-w-sm">
+            <ResponsiveDialogHeader>
+              <ResponsiveDialogTitle>{account.name}</ResponsiveDialogTitle>
               {!isPlaceholderEmail(account.email) && (
-                <span className="text-xs font-normal text-muted-foreground">
+                <ResponsiveDialogDescription>
                   {account.email}
-                </span>
+                </ResponsiveDialogDescription>
               )}
-            </DropdownMenuLabel>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem render={<Link to="/account/settings" />}>
-            <SettingsIcon className="me-2 h-4 w-4" />
-            {t('accountSettings')}
-          </DropdownMenuItem>
-          <DropdownMenuItem render={<Link to="/feedback" />}>
-            <MessageSquareText className="me-2 h-4 w-4" />
-            {t('feedback')}
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            className="text-destructive focus:text-destructive"
-            onClick={() => {
-              if (account.isAnonymous) {
-                setSignOutError(false)
-                setSignOutOpen(true)
-                return
-              }
-              void signOut()
-            }}
-          >
-            <LogOut className="me-2 h-4 w-4" />
-            {t('signOut')}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+            </ResponsiveDialogHeader>
+            <ResponsiveDialogBody className="flex flex-col gap-1 pb-[var(--safe-area-bottom)]">
+              <ResponsiveDialogClose
+                render={
+                  <Link
+                    to="/account/settings"
+                    className="flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm font-medium hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden"
+                  >
+                    <SettingsIcon
+                      className="size-5 text-muted-foreground"
+                      aria-hidden="true"
+                    />
+                    {t('accountSettings')}
+                  </Link>
+                }
+              />
+              <ResponsiveDialogClose
+                render={
+                  <Link
+                    to="/feedback"
+                    className="flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm font-medium hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden"
+                  >
+                    <MessageSquareText
+                      className="size-5 text-muted-foreground"
+                      aria-hidden="true"
+                    />
+                    {t('feedback')}
+                  </Link>
+                }
+              />
+              <button
+                type="button"
+                className="flex min-h-11 items-center gap-3 rounded-lg px-3 text-start text-sm font-medium text-destructive hover:bg-destructive/10 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden"
+                onClick={requestSignOut}
+              >
+                <LogOut className="size-5" aria-hidden="true" />
+                {t('signOut')}
+              </button>
+            </ResponsiveDialogBody>
+          </ResponsiveDialogContent>
+        </ResponsiveDialog>
+      )}
       <ResponsiveDialog
         open={signOutOpen}
         onOpenChange={(open) => {

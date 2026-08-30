@@ -59,6 +59,21 @@ const cloudGroupFormValuesSchema = z.object({
     .optional(),
 })
 
+const importedPresetSchema = z.object({
+  sourceId: z.string().min(1),
+  name: z.string().trim().min(1).max(120),
+  target: z.enum(['PAID_BY', 'PAID_FOR']),
+  splitMode: z.enum(['EVENLY', 'BY_SHARES', 'BY_PERCENTAGE']),
+  createdAt: z.iso.datetime(),
+  updatedAt: z.iso.datetime(),
+  participants: z.array(
+    z.object({
+      participantId: z.string().min(1),
+      shares: z.number().int(),
+    }),
+  ),
+})
+
 const cloudImportInputSchema = z.object({
   requestId: createRequestIdSchema,
   manifest: spliitGroupExportManifestSchema,
@@ -95,7 +110,21 @@ const cloudImportInputSchema = z.object({
             }),
           ),
         })
-        .nullable(),
+        .nullable()
+        .optional(),
+      personalSplitPresets: z.array(importedPresetSchema).optional(),
+      personalDefaults: z
+        .object({
+          paidBy: z.object({
+            mode: z.enum(['INHERIT', 'PRESET', 'NEUTRAL']),
+            presetSourceId: z.string().nullable(),
+          }),
+          paidFor: z.object({
+            mode: z.enum(['INHERIT', 'PRESET', 'NEUTRAL']),
+            presetSourceId: z.string().nullable(),
+          }),
+        })
+        .optional(),
     })
     .optional(),
 })

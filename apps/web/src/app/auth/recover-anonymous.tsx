@@ -9,6 +9,7 @@ import {
 } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { PageInset, PageShell } from '@/components/layout/page-shell'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -100,15 +101,17 @@ export function RecoverAnonymousAccountPage() {
 
   if (initialCode && !error && !conflictName) {
     return (
-      <main className="flex flex-1 flex-col items-center justify-center gap-3 px-4 py-10 text-muted-foreground">
-        <Loader2 className="h-6 w-6 animate-spin" />
-        <p className="text-sm">{t('recovering')}</p>
+      <main className="flex flex-1 flex-col items-center justify-center gap-3 py-10 text-muted-foreground">
+        <PageInset className="flex flex-col items-center gap-3">
+          <Loader2 className="h-6 w-6 animate-spin" />
+          <p className="text-sm">{t('recovering')}</p>
+        </PageInset>
       </main>
     )
   }
 
   return (
-    <main className="flex flex-1 items-center justify-center px-4 py-10">
+    <PageShell width="full" className="items-center justify-center py-10">
       <Card className="w-full max-w-lg overflow-hidden border-primary/15 shadow-lg">
         <div className="h-1.5 bg-linear-to-r from-emerald-500 via-primary to-teal-400" />
         <CardHeader className="space-y-3 text-center">
@@ -183,6 +186,6 @@ export function RecoverAnonymousAccountPage() {
           </Button>
         </CardFooter>
       </Card>
-    </main>
+    </PageShell>
   )
 }

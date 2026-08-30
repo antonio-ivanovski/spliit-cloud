@@ -65,8 +65,11 @@ export function SplitwiseAnonymizerCard() {
   )
 
   return (
-    <Card className="mt-2 border-amber-200 bg-amber-50/60 dark:border-amber-900/60 dark:bg-amber-950/30">
-      <CardContent className="flex flex-col gap-3 p-4">
+    <Card
+      data-import-source-card="splitwise-anonymizer"
+      className="mt-2 border-amber-200 bg-amber-50/60 dark:border-amber-900/60 dark:bg-amber-950/30"
+    >
+      <CardContent spacing="standalone" className="flex flex-col gap-3">
         <div className="flex items-start gap-2">
           <HatGlasses className="mt-0.5 h-4 w-4 shrink-0 text-amber-700 dark:text-amber-300" />
           <div className="flex flex-col gap-1">

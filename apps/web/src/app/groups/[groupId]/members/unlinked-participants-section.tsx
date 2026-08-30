@@ -50,6 +50,7 @@ export function UnlinkedParticipantsSection({
     <CollapsibleSection
       defaultOpen={false}
       storageKey={`group-members-unlinked-${groupId}`}
+      rootClassName="mt-4"
       title={
         <span className="flex min-w-0 items-center gap-2">
           <span className="truncate">{t('unlinked.title')}</span>

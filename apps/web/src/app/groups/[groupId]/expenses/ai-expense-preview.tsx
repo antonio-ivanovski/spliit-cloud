@@ -25,7 +25,6 @@ import {
   getCurrencyFromGroup,
 } from '@/lib/utils'
 import type { CreateExpenseSearch } from '@/router/schemas'
-import { trpc } from '@/trpc/client'
 import {
   amountAsDecimal,
   amountAsMinorUnits,
@@ -107,10 +106,6 @@ export function AiExpensePreview({
   const { toast } = useToast()
   const createMutation = useCreateExpenseMutation()
   const createAttempt = useIdempotentCreate()
-  const savedDefaultQuery = trpc.account.defaultSplit.useQuery(
-    { groupId: group.id },
-    { enabled: open },
-  )
   const groupCurrency = getCurrencyFromGroup(group)
   const normalizedCurrencyCode =
     draft.currencyCode?.trim().toUpperCase() || null
@@ -153,9 +148,7 @@ export function AiExpensePreview({
     return params
   }, [amountMinor, draft, normalizedCurrencyCode, selectedParticipantIds])
 
-  // oxlint-disable-next-line react/react-compiler -- form defaults are memoized to keep the preview mutation payload stable.
-  const formValues = useMemo<ExpenseFormInputValues | null>(() => {
-    if (!savedDefaultQuery.isSuccess) return null
+  const formValues = useMemo<ExpenseFormInputValues>(() => {
     const defaults = buildExpenseFormDefaults({
       isCreate: true,
       searchParams,
@@ -163,7 +156,6 @@ export function AiExpensePreview({
       groupCurrency,
       currentLedgerParticipantId,
       settlementTitle: tForm('settlementTitle'),
-      savedDefault: savedDefaultQuery.data.defaultSplit,
       today: new Date(),
     })
     const next = { ...defaults }
@@ -187,8 +179,6 @@ export function AiExpensePreview({
     draft.payerParticipantId,
     group,
     groupCurrency,
-    savedDefaultQuery.data?.defaultSplit,
-    savedDefaultQuery.isSuccess,
     searchParams,
     selectedParticipantIds,
     tForm,

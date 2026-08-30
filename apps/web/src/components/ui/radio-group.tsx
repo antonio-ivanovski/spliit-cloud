@@ -22,10 +22,14 @@ RadioGroup.displayName = 'RadioGroup'
 type RadioGroupItemProps = Omit<RadioPrimitive.Root.Props, 'content'> & {
   card?: boolean
   content?: React.ReactNode
+  contentClassName?: string
 }
 
 const RadioGroupItem = React.forwardRef<HTMLSpanElement, RadioGroupItemProps>(
-  ({ className, card, content, children, disabled, ...props }, ref) => {
+  (
+    { className, card, content, contentClassName, children, disabled, ...props },
+    ref,
+  ) => {
     if (card) {
       return (
         <div
@@ -33,8 +37,7 @@ const RadioGroupItem = React.forwardRef<HTMLSpanElement, RadioGroupItemProps>(
             'w-full rounded-lg border bg-card transition-colors',
             'has-data-[checked]:border-primary has-data-[checked]:bg-primary/4 has-data-[checked]:shadow-[inset_0_0_0_1px_var(--color-primary)]',
             'has-data-[unchecked]:border-border has-data-[unchecked]:hover:border-foreground/25 has-data-[unchecked]:hover:bg-muted/40',
-            !disabled &&
-              'has-data-[unchecked]:cursor-pointer has-data-[checked]:cursor-default',
+            !disabled && 'cursor-pointer',
             disabled && 'cursor-not-allowed opacity-50',
           )}
         >
@@ -42,7 +45,7 @@ const RadioGroupItem = React.forwardRef<HTMLSpanElement, RadioGroupItemProps>(
             ref={ref}
             disabled={disabled}
             className={cn(
-              'group flex w-full items-start gap-3 p-3 text-start data-[unchecked]:cursor-pointer data-[checked]:cursor-default focus:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card disabled:cursor-not-allowed',
+              'group flex w-full cursor-pointer items-start gap-3 p-3 text-start focus:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card disabled:cursor-not-allowed',
               className,
             )}
             {...props}
@@ -50,7 +53,12 @@ const RadioGroupItem = React.forwardRef<HTMLSpanElement, RadioGroupItemProps>(
             {children}
           </RadioPrimitive.Root>
           {content && (
-            <div className="w-full min-w-0 border-t px-6 pb-3 pt-3">
+            <div
+              className={cn(
+                'w-full min-w-0 border-t px-4 pb-3 pt-3 sm:px-6',
+                contentClassName,
+              )}
+            >
               {content}
             </div>
           )}

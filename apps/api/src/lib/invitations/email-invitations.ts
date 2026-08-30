@@ -22,6 +22,7 @@ import {
 } from '../api/balances'
 import { getApiBoss } from '../api/boss'
 import { randomId } from '../api/shared'
+import { adjustSplitPresetsForRemovedParticipant } from '../api/split-presets'
 import { removeParticipantFromSubgroup } from '../api/subgroups'
 import { sendEmail } from '../mail/send'
 import { renderInvitationEmail } from '../mail/templates/invitation'
@@ -356,6 +357,10 @@ export async function revokeInvitation(opts: {
       })
     }
     if (invitation.ledgerParticipantId) {
+      await adjustSplitPresetsForRemovedParticipant(
+        invitation.ledgerParticipantId,
+        tx,
+      )
       await removeParticipantFromSubgroup(invitation.ledgerParticipantId, tx)
     }
 
@@ -461,6 +466,10 @@ export async function declineInvitation(opts: {
       },
     })
     if (invitation.ledgerParticipantId) {
+      await adjustSplitPresetsForRemovedParticipant(
+        invitation.ledgerParticipantId,
+        tx,
+      )
       await removeParticipantFromSubgroup(invitation.ledgerParticipantId, tx)
     }
     const activity = await logActivity(

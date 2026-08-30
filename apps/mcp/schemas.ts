@@ -238,19 +238,6 @@ export const groupSummaryOutputSchema = z.object({
       status: z.enum(['ACTIVE', 'PENDING_OR_UNLINKED']),
     }),
   ),
-  defaultSplit: z
-    .object({
-      mode: z.enum(['EVENLY', 'BY_SHARES', 'BY_PERCENTAGE', 'BY_AMOUNT']),
-      participants: z.array(
-        z.object({
-          participantId: z.string(),
-          // BY_SHARES defaults are returned as display decimals (e.g. 0.5);
-          // other modes keep integers. Finite numbers accept both.
-          shares: z.number().finite(),
-        }),
-      ),
-    })
-    .nullable(),
   balances: z.record(
     z.string(),
     z.object({

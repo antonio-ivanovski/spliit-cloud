@@ -29,8 +29,8 @@ export function FileUploadCard({
   labels,
 }: FileUploadCardProps) {
   return (
-    <Card>
-      <CardContent className="flex flex-col gap-3 p-4">
+    <Card data-import-source-card="file-upload">
+      <CardContent spacing="standalone" className="flex flex-col gap-3">
         <label
           className={`flex flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed p-4 transition ${
             disabled

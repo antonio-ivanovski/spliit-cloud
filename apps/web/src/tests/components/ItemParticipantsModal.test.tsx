@@ -3,9 +3,9 @@ import { type ReactElement } from 'react'
 import { useForm } from 'react-hook-form'
 import { describe, expect, it } from 'vitest'
 
-import type { SavedSplit } from '@/app/groups/[groupId]/expenses/expense-form/default-split/split-equal'
 import type { GroupShape } from '@/app/groups/[groupId]/expenses/expense-form/default-values'
 import { ItemParticipantsModal } from '@/app/groups/[groupId]/expenses/expense-form/item-participants-modal'
+import type { SplitPreset } from '@/app/groups/[groupId]/expenses/expense-form/split-presets'
 import { expenseFormInputSchema } from '@/lib/schemas'
 import { render, screen, fireEvent } from '@/test/test-utils'
 import type {
@@ -72,13 +72,17 @@ const EMPTY_DEFAULTS: ExpenseFormInputValues = {
 
 function ModalHarness({
   item,
-  savedDefault,
+  presets,
+  canManage,
+  readOnly,
   hideAmountMode,
   onSaveItem,
   group: groupOverride,
 }: {
   item: ExpenseFormItemValues
-  savedDefault?: SavedSplit | null
+  presets?: SplitPreset[]
+  canManage?: boolean
+  readOnly?: boolean
   hideAmountMode?: boolean
   onSaveItem?: (next: ExpenseFormItemValues) => void
   group?: GroupShape
@@ -97,7 +101,9 @@ function ModalHarness({
       groupCurrency={EUR}
       item={item}
       onSaveItem={onSaveItem}
-      savedDefault={savedDefault ?? null}
+      presets={presets ?? []}
+      canManage={canManage ?? false}
+      readOnly={readOnly}
       hideAmountMode={hideAmountMode}
     />
   )
@@ -141,8 +147,23 @@ describe('ItemParticipantsModal — viewport behavior', () => {
   })
 })
 
-describe('ItemParticipantsModal — Load default action', () => {
-  it('shows Load default when savedDefault exists and draft diverges', () => {
+describe('ItemParticipantsModal — split preset action', () => {
+  const percentagePreset: SplitPreset = {
+    id: 'preset-1',
+    name: 'Dinner split',
+    scope: 'PERSONAL',
+    ownerAccountId: 'account-1',
+    target: 'PAID_FOR',
+    createdAt: new Date('2026-01-01'),
+    updatedAt: new Date('2026-01-01'),
+    splitMode: 'BY_PERCENTAGE',
+    participants: [
+      { participant: alice.id, shares: 6000 },
+      { participant: bob.id, shares: 4000 },
+    ],
+  }
+
+  it('shows the chooser when presets are available', () => {
     const item: ExpenseFormItemValues = {
       id: 'item-1',
       title: 'Item',
@@ -151,96 +172,38 @@ describe('ItemParticipantsModal — Load default action', () => {
       splitMode: 'EVENLY',
       paidFor: [{ participant: alice.id, shares: 1 }],
     }
+    render(<ModalHarness item={item} presets={[percentagePreset]} />)
 
-    render(
-      <ModalHarness
-        item={item}
-        savedDefault={{
-          splitMode: 'BY_PERCENTAGE',
-          paidFor: [
-            { participant: alice.id, shares: 5000 },
-            { participant: bob.id, shares: 5000 },
-          ],
-        }}
-      />,
-    )
-
-    expect(screen.getByRole('button', { name: /^load$/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /^load split preset$/i }),
+    ).toBeInTheDocument()
   })
 
-  it('hides Load when draft matches savedDefault', () => {
-    const item: ExpenseFormItemValues = {
-      id: 'item-1',
-      title: 'Item',
-      unitPrice: 10,
-      quantity: 1,
-      splitMode: 'BY_PERCENTAGE',
-      paidFor: [
-        { participant: alice.id, shares: 50 },
-        { participant: bob.id, shares: 50 },
-      ],
-    }
-
-    render(
-      <ModalHarness
-        item={item}
-        savedDefault={{
-          splitMode: 'BY_PERCENTAGE',
-          paidFor: [
-            { participant: alice.id, shares: 5000 },
-            { participant: bob.id, shares: 5000 },
-          ],
-        }}
-      />,
-    )
-
-    expect(screen.queryByRole('button', { name: /^load$/i })).toBeNull()
-  })
-
-  it('hides Load default when no savedDefault is provided', () => {
-    const item: ExpenseFormItemValues = {
-      id: 'item-1',
-      title: 'Item',
-      unitPrice: 10,
-      quantity: 1,
-      splitMode: 'EVENLY',
-      paidFor: [{ participant: alice.id, shares: 1 }],
-    }
-
-    render(<ModalHarness item={item} savedDefault={null} />)
-
-    expect(screen.queryByRole('button', { name: /^load$/i })).toBeNull()
-  })
-
-  it('replaces draft with savedDefault values when Load default is clicked', async () => {
-    const item: ExpenseFormItemValues = {
-      id: 'item-1',
-      title: 'Item',
-      unitPrice: 10,
-      quantity: 1,
-      splitMode: 'EVENLY',
-      paidFor: [{ participant: alice.id, shares: 1 }],
-    }
+  it('applies the selected preset to the item draft', async () => {
     let saved: ExpenseFormItemValues | null = null
-    const onSaveItem = (next: ExpenseFormItemValues) => {
-      saved = next
+    const item: ExpenseFormItemValues = {
+      id: 'item-1',
+      title: 'Item',
+      unitPrice: 10,
+      quantity: 1,
+      splitMode: 'EVENLY',
+      paidFor: [{ participant: alice.id, shares: 1 }],
     }
 
     const { user } = render(
       <ModalHarness
         item={item}
-        savedDefault={{
-          splitMode: 'BY_PERCENTAGE',
-          paidFor: [
-            { participant: alice.id, shares: 6000 },
-            { participant: bob.id, shares: 4000 },
-          ],
+        presets={[percentagePreset]}
+        onSaveItem={(next) => {
+          saved = next
         }}
-        onSaveItem={onSaveItem}
       />,
     )
 
-    await user.click(screen.getByRole('button', { name: /^load$/i }))
+    await user.click(
+      screen.getByRole('button', { name: /^load split preset$/i }),
+    )
+    await user.click(screen.getByRole('button', { name: /dinner split/i }))
     await user.click(screen.getByRole('button', { name: /save/i }))
 
     expect(saved).not.toBeNull()
@@ -249,6 +212,23 @@ describe('ItemParticipantsModal — Load default action', () => {
       { participant: alice.id, shares: 60 },
       { participant: bob.id, shares: 40 },
     ])
+  })
+
+  it('hides the action for read-only item editors', () => {
+    const item: ExpenseFormItemValues = {
+      id: 'item-1',
+      title: 'Item',
+      unitPrice: 10,
+      quantity: 1,
+      splitMode: 'EVENLY',
+      paidFor: [{ participant: alice.id, shares: 1 }],
+    }
+
+    render(<ModalHarness item={item} presets={[percentagePreset]} readOnly />)
+
+    expect(
+      screen.queryByRole('button', { name: /^load split preset$/i }),
+    ).toBeNull()
   })
 })
 
@@ -271,7 +251,7 @@ describe('ItemParticipantsModal — BY_SHARES decimal entry', () => {
     }
 
     const { user } = render(
-      <ModalHarness item={item} savedDefault={null} onSaveItem={onSaveItem} />,
+      <ModalHarness item={item} onSaveItem={onSaveItem} />,
     )
 
     const aliceInput = screen.getByRole('textbox', {
@@ -310,7 +290,6 @@ describe('ItemParticipantsModal — BY_SHARES decimal entry', () => {
     const { user } = render(
       <ModalHarness
         item={item}
-        savedDefault={null}
         onSaveItem={(next) => {
           saved.value = next
         }}
@@ -342,9 +321,7 @@ describe('ItemParticipantsModal — BY_SHARES decimal entry', () => {
       paidFor: [{ participant: alice.id, shares: 1 }],
     }
 
-    const { user } = render(
-      <ModalHarness item={item} savedDefault={null} onSaveItem={() => {}} />,
-    )
+    const { user } = render(<ModalHarness item={item} onSaveItem={() => {}} />)
 
     const aliceInput = screen.getByRole('textbox', {
       name: 'Split value for Alice',
@@ -367,9 +344,7 @@ describe('ItemParticipantsModal — BY_SHARES decimal entry', () => {
       paidFor: [{ participant: alice.id, shares: 1 }],
     }
 
-    const { user } = render(
-      <ModalHarness item={item} savedDefault={null} onSaveItem={() => {}} />,
-    )
+    const { user } = render(<ModalHarness item={item} onSaveItem={() => {}} />)
 
     const aliceInput = screen.getByRole('textbox', {
       name: 'Split value for Alice',
@@ -412,7 +387,6 @@ describe('ItemParticipantsModal — BY_SHARES decimal entry', () => {
     const { user } = render(
       <ModalHarness
         item={item}
-        savedDefault={null}
         onSaveItem={(next) => {
           saved.value = next
         }}
@@ -430,7 +404,7 @@ describe('ItemParticipantsModal — BY_SHARES decimal entry', () => {
     )
     if (!bobToggle) throw new Error('Bob row toggle not found')
     await user.click(bobToggle)
-    await user.click(screen.getByRole('button', { name: /reset/i }))
+    await user.click(screen.getByRole('button', { name: /^reset$/i }))
 
     expect(aliceInput).toHaveValue('1')
     expect(
@@ -465,7 +439,6 @@ describe('ItemParticipantsModal — BY_SHARES decimal entry', () => {
     const { user } = render(
       <ModalHarness
         item={item}
-        savedDefault={null}
         onSaveItem={(next) => {
           saved.value = next
         }}

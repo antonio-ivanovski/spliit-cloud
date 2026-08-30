@@ -385,7 +385,7 @@ export function BudgetDetailModal({
                       {t('noMatchingExpenses')}
                     </p>
                   ) : (
-                    <ul className="-mx-4 divide-y">
+                    <ul className="divide-y">
                       {budget.matchingExpenses.map((expense) => (
                         <li key={expense.id}>
                           <ExpenseCard
@@ -424,7 +424,7 @@ export function BudgetDetailModal({
                       {t('noUpcoming')}
                     </p>
                   ) : (
-                    <ul className="-mx-4 divide-y">
+                    <ul className="divide-y">
                       {budget.upcomingExpenses.map((expense) => (
                         <li key={expense.id}>
                           <ExpenseCard

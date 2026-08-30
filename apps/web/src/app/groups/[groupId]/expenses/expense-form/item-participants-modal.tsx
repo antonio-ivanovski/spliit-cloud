@@ -1,10 +1,9 @@
 import { Minus, Plus } from 'lucide-react'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { match } from 'ts-pattern'
 
-import { ParticipantDistributionFooter } from '@/components/participant-distribution-footer'
 import { ParticipantRowAmountPreview } from '@/components/participant-row-amount-preview'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -38,16 +37,21 @@ import {
   safeSharesToFixedUnits,
   stepDisplayShares,
 } from './currency-utils'
-import type { SavedSplit } from './default-split/split-equal'
-import { splitEqual } from './default-split/split-equal'
-import { savedDefaultToFormValues } from './default-values'
 import { ParticipantPendingLabel } from './participant-pending-label'
 import { ParticipantShareRow } from './participant-share-row'
+import { SplitDistributionEditor } from './split-distribution-editor'
 import {
   buildEqualParticipantRows,
   convertParticipantShares,
 } from './split-mode-conversions'
 import { PaidForSplitOptionCards } from './split-option-cards'
+import {
+  SavePresetButton,
+  SplitPresetPicker,
+  presetToFormSplit,
+  sameParticipantDistribution,
+  type SplitPreset,
+} from './split-presets'
 
 type GroupShape = NonNullable<AppRouterOutput['groups']['get']['group']>
 
@@ -75,12 +79,13 @@ export function ItemParticipantsModal(props: {
    * where amounts are relative to each item's total.
    */
   hideAmountMode?: boolean
-  /**
-   * Persisted per-user-per-group default split. When present, the modal renders
-   * a "Load default" link above the radio cards that resets the local `draft`
-   * to this default (visible regardless of whether the draft already matches).
-   */
-  savedDefault?: SavedSplit | null
+  presets?: SplitPreset[]
+  presetsLoading?: boolean
+  canManage?: boolean
+  canManageShared?: boolean
+  canManagePersonal?: boolean
+  /** @deprecated legacy prop accepted for old callers; presets replace it. */
+  savedDefault?: unknown
 }) {
   const {
     open,
@@ -95,10 +100,15 @@ export function ItemParticipantsModal(props: {
     titleOverride,
     hideAmountDescription,
     hideAmountMode,
-    savedDefault,
+    presets = [],
+    presetsLoading,
+    canManage = false,
+    canManageShared,
+    canManagePersonal,
   } = props
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
   const locale = useLocale()
+  const canCreatePreset = !!canManageShared || !!canManagePersonal || canManage
 
   const [draft, setDraft] = useState<ExpenseFormItemValues>(() => {
     const shouldPopulate =
@@ -113,6 +123,9 @@ export function ItemParticipantsModal(props: {
         : item.paidFor,
     }
   })
+  const [loadedPreset, setLoadedPreset] = useState<SplitPreset | null>(null)
+  const saveChangesRef = useRef<() => void>(() => {})
+  const saveAsRef = useRef<() => void>(() => {})
 
   const itemTotal = Number(draft.unitPrice) * Number(draft.quantity)
 
@@ -133,27 +146,21 @@ export function ItemParticipantsModal(props: {
     }))
   }
 
-  const handleLoadDefault = () => {
-    if (!savedDefault) return
-    const restored = savedDefaultToFormValues(
-      savedDefault,
-      group,
-      groupCurrency,
-    )
-    if (!restored) return
+  const handleApplyPreset = (preset: SplitPreset) => {
+    const restored = presetToFormSplit(preset)
     setDraft((prev) => ({
       ...prev,
       splitMode: restored.splitMode as ItemSplitMode,
       paidFor: restored.paidFor,
     }))
+    setLoadedPreset(preset)
   }
 
-  const isCurrentEqualSaved = splitEqual(
-    draft.splitMode,
-    draft.paidFor,
-    savedDefault ?? null,
-    groupCurrency,
-  )
+  const loadedSplit = loadedPreset ? presetToFormSplit(loadedPreset) : null
+  const modified =
+    !!loadedSplit &&
+    (draft.splitMode !== loadedSplit.splitMode ||
+      !sameParticipantDistribution(draft.paidFor, loadedSplit.paidFor))
 
   const handleSave = () => {
     if (onSaveItem) {
@@ -171,9 +178,6 @@ export function ItemParticipantsModal(props: {
   const handleCancel = () => {
     onOpenChange(false)
   }
-
-  const allSelected = draft.paidFor.length === group.participants.length
-  const selectLabel = allSelected ? t('selectNone') : t('selectAll')
 
   const handleSelectAll = () => {
     setDraft((prev) => {
@@ -272,32 +276,27 @@ export function ItemParticipantsModal(props: {
     const distributionShares = draft.paidFor.map((p) => p.shares || 0)
 
     return (
-      <>
-        <div className="mb-2 flex items-center justify-between">
-          <span className="text-sm font-medium">{t('items.modalTitle')}</span>
-          <div className="flex items-center gap-1">
-            <Button
-              variant="link"
-              type="button"
-              className="-my-2 -me-2"
-              disabled={readOnly}
-              onClick={handleResetDistribution}
-            >
-              {t('resetDistribution')}
-            </Button>
-            <Button
-              variant="link"
-              type="button"
-              className="-my-2 -me-2"
-              disabled={readOnly}
-              onClick={handleSelectAll}
-            >
-              {selectLabel}
-            </Button>
-          </div>
-        </div>
-
-        {group.participants.map((participant) => {
+      <SplitDistributionEditor
+        participants={group.participants}
+        selectedCount={draft.paidFor.length}
+        mode={mode}
+        targetAmount={
+          mode === 'BY_PERCENTAGE'
+            ? 100
+            : amountAsMinorUnits(itemTotal, groupCurrency)
+        }
+        shares={
+          mode === 'BY_AMOUNT'
+            ? distributionShares.map((shares) =>
+                amountAsMinorUnits(shares, groupCurrency),
+              )
+            : distributionShares
+        }
+        currency={groupCurrency}
+        readOnly={readOnly}
+        onReset={handleResetDistribution}
+        onToggleAll={handleSelectAll}
+        renderRow={(participant) => {
           const checked = draft.paidFor.some(
             (p) => p.participant === participant.id,
           )
@@ -462,27 +461,9 @@ export function ItemParticipantsModal(props: {
               }
             />
           )
-        })}
-
-        <ParticipantDistributionFooter
-          splitMode={mode}
-          targetAmount={
-            mode === 'BY_PERCENTAGE'
-              ? 100
-              : amountAsMinorUnits(itemTotal, groupCurrency)
-          }
-          shares={
-            mode === 'BY_AMOUNT'
-              ? distributionShares.map((s) =>
-                  amountAsMinorUnits(s, groupCurrency),
-                )
-              : distributionShares
-          }
-          currency={groupCurrency}
-          paidByCount={draft.paidFor.length}
-          dataTestId="item-participants-distribution-footer"
-        />
-      </>
+        }}
+        dataTestId="item-participants-distribution-footer"
+      />
     )
   }
 
@@ -506,26 +487,57 @@ export function ItemParticipantsModal(props: {
 
         <ResponsiveDialogBody className="sm:min-h-0 sm:overflow-y-auto sm:overscroll-contain">
           <div>
-            {savedDefault &&
-              !isCurrentEqualSaved &&
-              !readOnly && (
-                // Default-split action row, mirrors PaidForCard's header
-                // strip: heading label + Load link, separated from the
-                // radio cards by a top border.
-                <div className="mb-3 flex items-center justify-end gap-3 border-b pb-3 text-xs text-muted-foreground">
-                  <span className="tracking-wide uppercase">
-                    {t('DefaultSplit.heading')}
-                  </span>
-                  <Button
-                    variant="link"
-                    type="button"
-                    className="-mx-4 -my-2"
-                    onClick={handleLoadDefault}
-                  >
-                    {t('DefaultSplit.load')}
-                  </Button>
-                </div>
-              )}
+            {!readOnly && (
+              <div className="mb-3 w-full">
+                <SplitPresetPicker
+                  presets={presets}
+                  group={group}
+                  showBothSides={false}
+                  amount={itemTotal}
+                  currency={groupCurrency}
+                  loading={presetsLoading}
+                  loadedPreset={loadedPreset}
+                  modified={modified}
+                  onSaveAsNew={
+                    canCreatePreset && draft.splitMode !== 'BY_AMOUNT'
+                      ? () => saveAsRef.current()
+                      : undefined
+                  }
+                  canSaveChanges={
+                    !!loadedPreset &&
+                    draft.splitMode !== 'BY_AMOUNT' &&
+                    'scope' in loadedPreset &&
+                    ((loadedPreset.scope === 'SHARED' && canManageShared) ||
+                      (loadedPreset.scope === 'PERSONAL' && canManagePersonal))
+                  }
+                  onSaveChanges={() => saveChangesRef.current()}
+                  onSelect={handleApplyPreset}
+                />
+                {canCreatePreset && draft.splitMode !== 'BY_AMOUNT' && (
+                  <SavePresetButton
+                    group={group}
+                    groupCurrency={groupCurrency}
+                    target="PAID_FOR"
+                    splitMode={draft.splitMode}
+                    paidFor={draft.paidFor}
+                    existingPreset={loadedPreset}
+                    modified={modified}
+                    onSaved={() => setLoadedPreset(null)}
+                    onSaveChangesReady={(save) => {
+                      saveChangesRef.current = save
+                    }}
+                    onSaveAsReady={(saveAs) => {
+                      saveAsRef.current = saveAs
+                    }}
+                    onUpdated={(preset) => setLoadedPreset(preset)}
+                    hideTrigger
+                    canManage={canManage}
+                    canManageShared={canManageShared}
+                    canManagePersonal={canManagePersonal}
+                  />
+                )}
+              </div>
+            )}
             <div className="mb-4">
               <PaidForSplitOptionCards
                 value={draft.splitMode}

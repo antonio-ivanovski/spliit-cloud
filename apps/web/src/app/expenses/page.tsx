@@ -18,16 +18,13 @@ import {
 } from '@/app/groups/[groupId]/expenses/expense-timeline'
 import { categoryLabel } from '@/app/groups/[groupId]/stats/category-utils'
 import { useSyncedAccountPreferences } from '@/components/account-preferences-sync'
+import { PageShell } from '@/components/layout/page-shell'
+import { ScanSurface } from '@/components/layout/scan-surface'
 import { OfflineEmptyState } from '@/components/offline-empty-state'
 import { RequireAuth } from '@/components/require-auth'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardTitle,
-} from '@/components/ui/card'
+import { CardContent, CardDescription, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DateInput } from '@/components/ui/date-input'
 import { Input } from '@/components/ui/input'
@@ -568,7 +565,7 @@ function GlobalExpensePreview({
   )
 }
 
-function GlobalExpensesContent() {
+export function GlobalExpensesContent() {
   const { t } = useTranslation()
   const locale = useLocale()
   const navigate = useNavigate({ from: '/expenses' })
@@ -666,18 +663,18 @@ function GlobalExpensesContent() {
 
   return (
     <>
-      <main className="mx-auto flex w-full max-w-(--breakpoint-md) min-w-0 flex-1 flex-col gap-4 overflow-x-hidden px-4 py-4 sm:gap-6 sm:py-6">
-        <Card className="-mx-4 mb-4 rounded-none border-x-0 sm:mx-0 sm:rounded-lg sm:border-x">
-          <div className="p-4 sm:p-6">
+      <PageShell className="flex-col gap-4 overflow-x-hidden py-4 sm:gap-6 sm:py-6">
+        <ScanSurface className="mb-4">
+          <div className="hidden sm:block sm:p-6">
             <CardTitle>{t('Expenses.globalTitle')}</CardTitle>
             <CardDescription>{t('Expenses.globalDescription')}</CardDescription>
           </div>
-          <CardContent className="relative flex flex-col gap-4 p-0 pt-2 pb-4 sm:pb-6">
+          <CardContent className="relative flex flex-col gap-4 p-0 pb-4 sm:pt-2 sm:pb-6">
             <div className="mx-4 flex items-center gap-2 sm:mx-6">
               <div className="relative flex-1">
                 <Search className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
-                  className="h-9 border-none bg-muted ps-10 text-sm text-muted-foreground"
+                  className="h-11 border-none bg-muted ps-10 text-sm text-muted-foreground sm:h-9"
                   value={filters.q}
                   onChange={(e) => commit({ ...filters, q: e.target.value })}
                   placeholder={t('Expenses.searchPlaceholder')}
@@ -686,7 +683,7 @@ function GlobalExpensesContent() {
                   <button
                     type="button"
                     onClick={() => commit({ ...filters, q: '' })}
-                    className="absolute end-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                    className="absolute end-0 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center text-muted-foreground sm:size-9"
                     aria-label={t('Expenses.clearSearch')}
                   >
                     <X className="h-4 w-4" />
@@ -697,7 +694,7 @@ function GlobalExpensesContent() {
                 type="button"
                 variant={filtersOpen ? 'default' : 'outline'}
                 size="sm"
-                className="h-9 px-3 text-xs"
+                className="h-11 px-3 text-xs sm:h-9"
                 onClick={() => setFiltersOpen((open) => !open)}
                 aria-expanded={filtersOpen}
               >
@@ -770,6 +767,7 @@ function GlobalExpensesContent() {
               {showOfflineEmpty ? (
                 <div className="mx-4 sm:mx-6">
                   <OfflineEmptyState
+                    variant="plain"
                     onRetry={() => {
                       void optionsQuery.refetch()
                       void expensesQuery.refetch()
@@ -777,7 +775,7 @@ function GlobalExpensesContent() {
                   />
                 </div>
               ) : optionsQuery.error || expensesQuery.error ? (
-                <div className="mx-4 rounded-lg border bg-card px-4 py-10 text-center text-sm text-destructive sm:mx-6">
+                <div className="px-4 py-10 text-center text-sm text-destructive sm:px-6">
                   {(optionsQuery.error ?? expensesQuery.error)?.message}
                 </div>
               ) : expensesQuery.isLoading ||
@@ -812,8 +810,8 @@ function GlobalExpensesContent() {
               )}
             </section>
           </CardContent>
-        </Card>
-      </main>
+        </ScanSurface>
+      </PageShell>
       {selectedExpenseId && selectedExpenseGroupId && (
         <GlobalExpensePreview
           groupId={selectedExpenseGroupId}

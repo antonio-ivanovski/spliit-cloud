@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react'
 
+import { PageShell } from '@/components/layout/page-shell'
+
 type LegalPageProps = {
   title: string
   children: ReactNode
@@ -7,7 +9,7 @@ type LegalPageProps = {
 
 export function LegalPage({ title, children }: LegalPageProps) {
   return (
-    <main className="flex-1 px-4 py-10 sm:py-16">
+    <PageShell width="full" className="block py-10 sm:py-16">
       <article className="mx-auto max-w-3xl rounded-2xl border bg-card px-5 py-8 shadow-sm sm:px-10 sm:py-12">
         <header className="mb-10 border-b pb-7">
           <p className="mb-2 text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">
@@ -24,6 +26,6 @@ export function LegalPage({ title, children }: LegalPageProps) {
           {children}
         </div>
       </article>
-    </main>
+    </PageShell>
   )
 }

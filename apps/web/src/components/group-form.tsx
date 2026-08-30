@@ -215,11 +215,11 @@ export function GroupForm({
           </p>
         )}
 
-        <Card className="mobile-surface mb-2">
+        <Card className="mb-2">
           <CardHeader className="hidden sm:flex">
             <CardTitle>{t('title')}</CardTitle>
           </CardHeader>
-          <CardContent className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <CardContent className="grid grid-cols-1 gap-4 pt-4 sm:grid-cols-2 sm:p-6 sm:pt-0">
             {!hideNameField && (
               <FormField
                 control={form.control}
@@ -339,9 +339,10 @@ export function GroupForm({
           </CardContent>
 
           {!hideActions && !readOnly && !isArchived && (
-            <CardContent className="flex flex-col gap-3">
+            <CardContent className="flex flex-col gap-3 pt-4 sm:p-6 sm:pt-0">
               <div className="flex gap-2">
                 <SubmitButton
+                  className="flex-1 sm:flex-none"
                   loadingContent={t(
                     group ? 'Settings.saving' : 'Settings.creating',
                   )}
@@ -352,6 +353,7 @@ export function GroupForm({
                 {!group && (
                   <Button
                     variant="ghost"
+                    className="hidden sm:inline-flex"
                     nativeButton={false}
                     render={<Link to="/" />}
                   >

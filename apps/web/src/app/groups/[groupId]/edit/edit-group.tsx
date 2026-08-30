@@ -20,6 +20,7 @@ import {
   useIsReadOnlyGroupViewer,
 } from '../current-group-context'
 import { ExportOptionsCard } from '../export-options-card'
+import { SplitPresetsCard } from '../members/split-presets-card'
 import { useGroupAccessSearch } from '../use-group-access-search'
 import { DeleteGroupDialog } from './delete-group-dialog'
 import {
@@ -60,7 +61,7 @@ export const EditGroup = () => {
   const isArchived = !!group?.archived
 
   return (
-    <>
+    <div className="flex flex-col gap-3">
       <GroupForm
         group={data?.group}
         currentMemberRole={currentMember?.role}
@@ -73,12 +74,21 @@ export const EditGroup = () => {
         }
       />
 
+      {currentMember ? (
+        <SplitPresetsCard
+          groupId={groupId}
+          group={group}
+          canManage={currentMember.role === 'ADMIN'}
+          isArchived={isArchived}
+        />
+      ) : null}
+
       {currentMember && !isFriendLedger ? (
         <PublicViewOnlyLinkSection groupId={groupId} />
       ) : null}
 
       {!isReadOnlyViewer ? (
-        <Card className="mobile-surface mb-4">
+        <Card className="mb-4">
           <CardHeader>
             <CardTitle>{tExpenses('export')}</CardTitle>
             <CardDescription>{tGroups('exportDescription')}</CardDescription>
@@ -90,7 +100,7 @@ export const EditGroup = () => {
       ) : null}
 
       {canArchive && !isArchived && features?.enableBulkCategorize && (
-        <Card className="mobile-surface mb-2">
+        <Card className="mb-2">
           <CardHeader>
             <CardTitle>{t('bulkCategorizeSectionTitle')}</CardTitle>
             <CardDescription>
@@ -116,7 +126,7 @@ export const EditGroup = () => {
       )}
 
       {canArchive && (
-        <Card className="mobile-surface mb-2">
+        <Card className="mb-2">
           <CardHeader>
             <CardTitle>{tGroups('archiveSectionTitle')}</CardTitle>
             <CardDescription>
@@ -152,7 +162,7 @@ export const EditGroup = () => {
       )}
 
       {canDelete && (
-        <Card className="mobile-surface mb-2 border-destructive/40 bg-destructive/5">
+        <Card className="mb-2 border-destructive/40 bg-destructive/5">
           <CardHeader>
             <CardTitle className="text-destructive">
               {tGroups('delete.sectionTitle')}
@@ -186,6 +196,6 @@ export const EditGroup = () => {
         onOpenChange={setDeleteDialogOpen}
         onConfirm={() => deleteMutation.mutate({ groupId })}
       />
-    </>
+    </div>
   )
 }

@@ -17,6 +17,7 @@ export const CREATE_OPERATIONS = {
   cloudImport: 'groups.importCloudBundle',
   budget: 'groups.budgets.create',
   subgroup: 'groups.subgroups.create',
+  splitPreset: 'groups.splitPresets.create',
   participant: 'groups.participants.create',
   expenseComment: 'groups.expenses.comments.create',
   emailInvitation: 'invitations.create',
@@ -83,6 +84,12 @@ export const CREATE_MUTATION_CATALOG = [
     operation: CREATE_OPERATIONS.subgroup,
     source: 'groups/subgroups/index.ts',
     symbol: 'createSubgroupProcedure',
+  },
+  {
+    mechanism: 'shared',
+    operation: CREATE_OPERATIONS.splitPreset,
+    source: 'groups/split-presets/index.ts',
+    symbol: 'createSplitPresetProcedure',
   },
   {
     mechanism: 'shared',

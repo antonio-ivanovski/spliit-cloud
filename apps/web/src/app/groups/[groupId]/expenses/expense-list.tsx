@@ -118,14 +118,18 @@ const ExpenseListForSearch = ({
   }, [fetchNextPage, hasMore, inView, isLoading])
 
   if (showOfflineEmpty) {
-    return <OfflineEmptyState onRetry={() => void refetch()} />
+    return (
+      <div className="px-4 sm:px-6">
+        <OfflineEmptyState variant="plain" onRetry={() => void refetch()} />
+      </div>
+    )
   }
 
   if (isLoading) return <ExpensesLoading />
 
   if (expenses.length === 0)
     return (
-      <div className="px-6 py-6 text-sm">
+      <div className="px-4 py-6 text-sm sm:px-6">
         {hasActiveFiltersOrSort ? (
           <div className="flex flex-col gap-2">
             <p className="font-semibold">{tFilters('noMatchTitle')}</p>

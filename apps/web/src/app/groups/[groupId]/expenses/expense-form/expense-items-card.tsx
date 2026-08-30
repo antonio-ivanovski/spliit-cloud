@@ -47,12 +47,9 @@ import type {
 import { amountAsMinorUnits, itemsExceedExpenseAmount } from '@spliit/domain'
 
 import { applySplitToAll, getCommonItemSplit } from './default-item-split'
-import type { SavedSplit } from './default-split/split-equal'
-import {
-  getNeutralDefaultSplit,
-  savedDefaultToFormValues,
-} from './default-values'
+import { getNeutralDefaultSplit } from './default-values'
 import { ExpenseItemRow, expenseItemGridClass } from './expense-item-row'
+import type { SplitPreset } from './split-presets'
 import { isFillerItem, withAutoOtherFiller } from './use-auto-other-filler'
 
 type Group = NonNullable<AppRouterOutput['groups']['get']['group']>
@@ -86,17 +83,11 @@ function makeDefaultItem(
   }
 }
 
-function resolveSeedSplit(
-  savedDefault: SavedSplit | null | undefined,
-  group: Group,
-  groupCurrency: Currency,
-): { splitMode: ItemSplitMode; paidFor: ExpenseFormItemValues['paidFor'] } {
-  // savedDefaultToFormValues and getNeutralDefaultSplit both reject
-  // ITEMIZED at runtime (the persisted-default schema and the neutral
-  // default are hardcoded EVENLY); the wider static SplitMode union from
-  // DefaultSplittingOptions is safe to narrow here.
-  return (savedDefaultToFormValues(savedDefault, group, groupCurrency) ??
-    getNeutralDefaultSplit(group)) as {
+function resolveSeedSplit(group: Group): {
+  splitMode: ItemSplitMode
+  paidFor: ExpenseFormItemValues['paidFor']
+} {
+  return getNeutralDefaultSplit(group) as {
     splitMode: ItemSplitMode
     paidFor: ExpenseFormItemValues['paidFor']
   }
@@ -108,19 +99,22 @@ export function ExpenseItemsCard({
   group,
   groupCurrency,
   readOnly,
-  savedDefault,
+  presets,
+  presetsLoading,
+  canManage,
+  canManageShared,
+  canManagePersonal,
   renderItemParticipantsModal,
 }: {
   form: UseFormReturn<ExpenseFormInputValues>
   group: Group
   groupCurrency: Currency
   readOnly?: boolean
-  /**
-   * Persisted per-user-per-group default split, used to seed items when
-   * switching to itemized and surfaced in the per-item modal as a "Load
-   * default" action.
-   */
-  savedDefault?: SavedSplit | null
+  presets: SplitPreset[]
+  presetsLoading?: boolean
+  canManage: boolean
+  canManageShared?: boolean
+  canManagePersonal?: boolean
   renderItemParticipantsModal?: (props: {
     itemIndex: number
     item: ExpenseFormItemValues
@@ -130,7 +124,11 @@ export function ExpenseItemsCard({
     titleOverride?: string
     hideAmountDescription?: boolean
     hideAmountMode?: boolean
-    savedDefault?: unknown
+    presets: SplitPreset[]
+    presetsLoading?: boolean
+    canManage: boolean
+    canManageShared?: boolean
+    canManagePersonal?: boolean
   }) => ReactNode
 }) {
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
@@ -163,13 +161,10 @@ export function ExpenseItemsCard({
 
   const commonSplit = getCommonItemSplit(items)
   const displayedDefaultSplit =
-    commonSplit ??
-    (items.length === 0
-      ? resolveSeedSplit(savedDefault, group, groupCurrency)
-      : null)
+    commonSplit ?? (items.length === 0 ? resolveSeedSplit(group) : null)
 
   const seedItemsAndRemainder = () => {
-    const seed = resolveSeedSplit(savedDefault, group, groupCurrency)
+    const seed = resolveSeedSplit(group)
     const result = applySplitToAll({
       items: form.getValues('items') ?? [],
       split: seed,
@@ -303,11 +298,10 @@ export function ExpenseItemsCard({
   }
 
   const defaultSplitDraft = (): ExpenseFormItemValues => {
-    const base =
-      commonSplit ?? resolveSeedSplit(savedDefault, group, groupCurrency)
+    const base = commonSplit ?? resolveSeedSplit(group)
     return {
       id: 'default-items-split',
-      title: t('items.defaultSplitModalTitle'),
+      title: t('items.allItemsSplitModalTitle'),
       unitPrice: Number(form.getValues('amount')) || 0,
       quantity: 1,
       paidFor: base.paidFor.map((r) => ({ ...r })),
@@ -317,12 +311,7 @@ export function ExpenseItemsCard({
 
   return (
     <>
-      <Card
-        className={cn(
-          'mobile-surface mt-4',
-          exceedsAmount && 'border-destructive',
-        )}
-      >
+      <Card className={cn('mt-4', exceedsAmount && 'border-destructive')}>
         <Collapsible open={itemsOpen} onOpenChange={setItemsOpen}>
           <CardHeader className="flex flex-row items-start justify-between gap-4">
             <div className="min-w-0">
@@ -356,7 +345,7 @@ export function ExpenseItemsCard({
                   <FormItem className="space-y-0">
                     <DefaultSplitAction
                       splitMode={displayedDefaultSplit?.splitMode ?? 'EVENLY'}
-                      label={t('items.defaultSplitLabel')}
+                      label={t('items.allItemsSplitLabel')}
                       summary={
                         displayedDefaultSplit ? (
                           <SummarizeParticipants
@@ -367,10 +356,10 @@ export function ExpenseItemsCard({
                             group={group}
                           />
                         ) : (
-                          t('items.defaultSplitMixed')
+                          t('items.allItemsSplitMixed')
                         )
                       }
-                      editLabel={t('items.defaultSplitEdit')}
+                      editLabel={t('items.allItemsSplitEdit')}
                       readOnly={readOnly}
                       onClick={() => openEditDialog({ kind: 'default' })}
                     />
@@ -529,7 +518,11 @@ export function ExpenseItemsCard({
           item: (form.getValues('items') ?? [])[editingTarget.index],
           open: true,
           onClose: closeEditDialog,
-          savedDefault,
+          presets,
+          presetsLoading,
+          canManage,
+          canManageShared,
+          canManagePersonal,
         })}
       {editingTarget?.kind === 'filler' &&
         fillerItem &&
@@ -548,7 +541,11 @@ export function ExpenseItemsCard({
           open: true,
           onClose: closeEditDialog,
           onSaveItem: handleSaveFiller,
-          savedDefault,
+          presets,
+          presetsLoading,
+          canManage,
+          canManageShared,
+          canManagePersonal,
         })}
       {editingTarget?.kind === 'default' &&
         renderItemParticipantsModal?.({
@@ -557,10 +554,14 @@ export function ExpenseItemsCard({
           open: true,
           onClose: closeEditDialog,
           onSaveItem: handleSaveDefault,
-          titleOverride: t('items.defaultSplitModalTitle'),
+          titleOverride: t('items.allItemsSplitModalTitle'),
           hideAmountDescription: true,
           hideAmountMode: true,
-          savedDefault,
+          presets,
+          presetsLoading,
+          canManage,
+          canManageShared,
+          canManagePersonal,
         })}
       <ResponsiveDialog
         open={!!pendingItemizedEdit}

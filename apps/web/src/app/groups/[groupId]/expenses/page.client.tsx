@@ -1,18 +1,14 @@
 import { useTranslation } from 'react-i18next'
 
 import { ExpenseList } from '@/app/groups/[groupId]/expenses/expense-list'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardTitle,
-} from '@/components/ui/card'
+import { ScanSurface } from '@/components/layout/scan-surface'
+import { CardContent, CardDescription, CardTitle } from '@/components/ui/card'
 
 export default function GroupExpensesPageClient() {
   const { t } = useTranslation(undefined, { keyPrefix: 'Expenses' })
 
   return (
-    <Card className="-mx-4 mb-4 rounded-none border-x-0 sm:mx-0 sm:rounded-lg sm:border-x">
+    <ScanSurface className="mb-4">
       <div className="flex flex-row items-center gap-4 p-4 sm:justify-between sm:gap-x-6 sm:p-6">
         <div className="min-w-0 flex-1">
           <CardTitle>{t('title')}</CardTitle>
@@ -23,6 +19,6 @@ export default function GroupExpensesPageClient() {
       <CardContent className="relative flex flex-col gap-4 p-0 pt-2 pb-4 sm:pb-6">
         <ExpenseList />
       </CardContent>
-    </Card>
+    </ScanSurface>
   )
 }

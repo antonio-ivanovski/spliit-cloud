@@ -177,7 +177,7 @@ function SuggestedPaymentsCard({
   const [groupBy, setGroupBy] = useState<SettlementDirection>('pay')
 
   return (
-    <Card className="mobile-surface">
+    <Card>
       <SettlementCardHeader
         title={t('simple.suggestedPayments')}
         description={t('Settlements.description')}
@@ -188,7 +188,7 @@ function SuggestedPaymentsCard({
         }
         onSettlementModeChange={onSettlementModeChange}
       />
-      <CardContent className="px-0 pb-5 sm:px-6 sm:pb-6">
+      <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
         {isLoading ? (
           <SettlementsLoading participantCount={participantCount} />
         ) : currencyDisplay === 'original' ? (
@@ -248,7 +248,7 @@ function BalanceOverviewCard({
     subgroups.length > 0
 
   return (
-    <Card className="mobile-surface">
+    <Card>
       <SettlementCardHeader
         title={isSubgroupOverview ? t('subgroups.balanceTitle') : t('title')}
         description={
@@ -257,7 +257,7 @@ function BalanceOverviewCard({
             : t('description')
         }
       />
-      <CardContent className="px-0 pb-5 sm:px-6 sm:pb-6">
+      <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
         {isLoading ? (
           <BalancesLoading participantCount={participantCount} />
         ) : currencyDisplay === 'original' ? (

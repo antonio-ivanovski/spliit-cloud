@@ -109,7 +109,6 @@ describe('MCP tool output schemas', () => {
           { id: 'alice', name: 'Alice', status: 'ACTIVE' },
           { id: 'bob', name: 'Bob', status: 'ACTIVE' },
         ],
-        defaultSplit: null,
         balances: {
           alice: { paid: 5000, paidFor: 2500, total: 2500 },
           bob: { paid: 0, paidFor: 2500, total: -2500 },
@@ -168,15 +167,6 @@ describe('MCP tool output schemas', () => {
         { id: 'alice', name: 'Alice', status: 'ACTIVE' },
         { id: 'bob', name: 'Bob', status: 'ACTIVE' },
       ],
-      // BY_SHARES display decimals (stored 50 → 0.5) must parse, even though
-      // other modes still return integers.
-      defaultSplit: {
-        mode: 'BY_SHARES',
-        participants: [
-          { participantId: 'alice', shares: 0.5 },
-          { participantId: 'bob', shares: 1.1 },
-        ],
-      },
       balances: {
         alice: { paid: 5000, paidFor: 2500, total: 2500 },
         bob: { paid: 0, paidFor: 2500, total: -2500 },

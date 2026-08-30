@@ -61,6 +61,22 @@ function mockViewport(desktop: boolean) {
 }
 
 describe('UnlinkedParticipantsSection row actions', () => {
+  it('leaves breathing room above the section divider', () => {
+    render(
+      <UnlinkedParticipantsSection
+        groupId="grp-1"
+        canManage
+        onRemove={mocks.onRemove}
+      />,
+    )
+
+    expect(
+      screen
+        .getByRole('button', { name: /Participants without accounts/ })
+        .closest('.mt-4'),
+    ).toBeInTheDocument()
+  })
+
   it('shows right-aligned icon actions with accessible labels', async () => {
     mockViewport(true)
     const { user } = render(

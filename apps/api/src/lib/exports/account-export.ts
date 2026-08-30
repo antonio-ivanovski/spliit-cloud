@@ -136,7 +136,38 @@ export function createAccountExportArtifact(
         groupSourceId: selected.source.id,
         starred: selected.preference.starred,
         hidden: selected.preference.hidden,
-        defaultSplit: selected.preference.defaultSplit,
+        personalSplitPresets: (
+          selected.preference.personalSplitPresets ?? []
+        ).map((preset) => ({
+          sourceId: preset.id,
+          name: preset.name,
+          target: preset.target,
+          createdAt: preset.createdAt.toISOString(),
+          updatedAt: preset.updatedAt.toISOString(),
+          splitMode: preset.splitMode,
+          participants: preset.participants.map((row) => ({
+            participantId: row.participantId,
+            shares: row.shares,
+          })),
+        })),
+        personalDefaults: {
+          paidBy: {
+            mode:
+              selected.preference.personalDefaults?.paidByDefaultMode ??
+              'INHERIT',
+            presetSourceId:
+              selected.preference.personalDefaults?.paidByDefaultPresetId ??
+              null,
+          },
+          paidFor: {
+            mode:
+              selected.preference.personalDefaults?.paidForDefaultMode ??
+              'INHERIT',
+            presetSourceId:
+              selected.preference.personalDefaults?.paidForDefaultPresetId ??
+              null,
+          },
+        },
       }))
     : null
 

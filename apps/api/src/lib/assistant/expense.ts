@@ -304,10 +304,6 @@ type NormalizedSplit = {
   splitMode: FlatSplitMode
   paidFor: Expense['paidFor']
 }
-type SavedDefault = {
-  splitMode: FlatSplitMode | 'ITEMIZED'
-  paidFor: Array<{ participantId: string; shares: number }>
-} | null
 
 function normalizeSplit(
   split: AssistantSplitInput,
@@ -369,56 +365,6 @@ function normalizeSplit(
     inputError('Percentage split values must total 100')
   }
   return normalized
-}
-
-function normalizeSavedDefault(
-  saved: SavedDefault,
-  amount: number,
-  participantIds: string[],
-  scaleExactAmounts: boolean,
-): NormalizedSplit | null {
-  if (!saved || saved.splitMode === 'ITEMIZED' || !saved.paidFor.length) {
-    return null
-  }
-  const allowed = new Set(participantIds)
-  if (
-    saved.paidFor.some(
-      (row) => row.shares <= 0 || !allowed.has(row.participantId),
-    )
-  ) {
-    return null
-  }
-  const total = saved.paidFor.reduce((sum, row) => sum + row.shares, 0)
-  if (saved.splitMode === 'BY_PERCENTAGE' && total !== 10_000) return null
-  if (saved.splitMode === 'BY_AMOUNT') {
-    if (!scaleExactAmounts && total !== amount) return null
-    if (scaleExactAmounts) {
-      const exact = calculateExactShares({
-        amount,
-        splitMode: 'BY_SHARES',
-        participants: saved.paidFor.map((row) => ({
-          id: row.participantId,
-          shares: row.shares,
-        })),
-      })
-      const scaled = distributeRemainder(exact, amount, {
-        strategy: 'PARTICIPANT_ID_DESC',
-      })
-      return {
-        splitMode: 'BY_AMOUNT',
-        paidFor: Object.entries(scaled)
-          .filter(([, shares]) => shares !== 0)
-          .map(([participant, shares]) => ({ participant, shares })),
-      }
-    }
-  }
-  return {
-    splitMode: saved.splitMode,
-    paidFor: saved.paidFor.map((row) => ({
-      participant: row.participantId,
-      shares: row.shares,
-    })),
-  }
 }
 
 function proportionalRemainder(
@@ -538,24 +484,6 @@ export async function prepareAssistantExpense(
   ensureUniqueParticipantIds(paidByList)
   assertParticipants(paidByList.map((row) => row.participant))
 
-  const needsSavedDefault = input.items
-    ? input.items.some((item) => !item.split)
-    : !input.split
-  const saved = needsSavedDefault
-    ? await prisma.accountGroupDefaultSplit.findUnique({
-        where: {
-          accountId_groupId: { accountId, groupId: group.id },
-        },
-        include: { paidFor: true },
-      })
-    : null
-  const savedDefault: SavedDefault = saved
-    ? {
-        splitMode: saved.splitMode,
-        paidFor: saved.paidFor,
-      }
-    : null
-
   let splitMode: Expense['splitMode']
   let paidFor: Expense['paidFor']
   let items: Expense['items']
@@ -574,12 +502,9 @@ export async function prepareAssistantExpense(
       if (!Number.isSafeInteger(itemAmount)) {
         inputError(`Item amount is too large: ${item.title}`)
       }
-      const defaultSplit = item.split
-        ? null
-        : normalizeSavedDefault(savedDefault, itemAmount, participantIds, true)
       const normalized = (item.split
         ? normalizeSplit(item.split, itemAmount, decimalDigits, participantIds)
-        : defaultSplit) ?? {
+        : null) ?? {
         splitMode: 'EVENLY' as const,
         paidFor: participantIds.map((participant) => ({
           participant,
@@ -590,9 +515,7 @@ export async function prepareAssistantExpense(
         addDefault(
           'item-splits',
           'Item splits',
-          defaultSplit
-            ? 'Your saved group split'
-            : 'Evenly across current participants',
+          'Evenly across current participants',
         )
       }
       return {
@@ -654,24 +577,12 @@ export async function prepareAssistantExpense(
     splitMode = normalized.splitMode
     paidFor = normalized.paidFor
   } else {
-    const defaultSplit = normalizeSavedDefault(
-      savedDefault,
-      amount,
-      participantIds,
-      false,
-    )
-    if (defaultSplit) {
-      splitMode = defaultSplit.splitMode
-      paidFor = defaultSplit.paidFor
-      addDefault('split', 'Split', 'Your saved group default')
-    } else {
-      splitMode = 'EVENLY'
-      paidFor = participantIds.map((participant) => ({
-        participant,
-        shares: 1,
-      }))
-      addDefault('split', 'Split', 'Evenly across current participants')
-    }
+    splitMode = 'EVENLY'
+    paidFor = participantIds.map((participant) => ({
+      participant,
+      shares: 1,
+    }))
+    addDefault('split', 'Split', 'Evenly across current participants')
   }
   ensureUniqueParticipantIds(paidFor)
   assertParticipants(paidFor.map((row) => row.participant))

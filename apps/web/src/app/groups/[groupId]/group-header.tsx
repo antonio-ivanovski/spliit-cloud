@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '@/components/ui/use-toast'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
-import { isFocusedMobilePath } from '@/lib/mobile-nav'
+import { isFocusedMobilePath, isMobileGroupTabPath } from '@/lib/mobile-nav'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { trpc } from '@/trpc/client'
 
@@ -61,6 +61,7 @@ export const GroupHeader = ({
   const utils = trpc.useUtils()
   const pathname = useLocation({ select: (location) => location.pathname })
   const focusedMobileRoute = isFocusedMobilePath(pathname)
+  const mobileGroupTabRoute = isMobileGroupTabPath(pathname)
   const { invite: inviteToken } = useSearch({
     from: '/groups/$groupId',
   })
@@ -155,12 +156,21 @@ export const GroupHeader = ({
   // member" banner, where the viewer can stay on the group page.
 
   const isLinkBanner = currentInvitation?.type === 'LINK'
+  const hasMobileBanner = Boolean(
+    currentInvitation ||
+    showLinkAlreadyMember ||
+    showLinkExpiredOrInvalid ||
+    group?.archived ||
+    savedView.isPublicLink,
+  )
 
   return (
-    <div className="flex flex-col justify-between gap-3">
-      <div className="flex items-center justify-between gap-3">
+    <div
+      className={`flex flex-col justify-between gap-3 ${hasMobileBanner ? 'mb-3 sm:mb-0' : ''}`}
+    >
+      <div className="mobile-contents items-center justify-between gap-3 sm:flex">
         <h1
-          className={`flex min-w-0 items-center gap-2 text-2xl font-bold ${focusedMobileRoute ? 'hidden sm:flex' : ''}`}
+          className={`flex min-w-0 items-center gap-2 text-2xl font-bold ${focusedMobileRoute || mobileGroupTabRoute ? 'hidden sm:flex' : ''}`}
         >
           <Button
             variant="ghost"
@@ -355,7 +365,7 @@ export const GroupHeader = ({
       {/* Every valid access source gets the complete navigation. Mutation
           affordances are controlled independently by the access mode. */}
       {viewer && !isLoading && (
-        <div className="flex flex-col gap-3">
+        <div className="mobile-contents flex flex-col gap-3 sm:flex">
           <GroupTabs groupId={groupId} />
         </div>
       )}

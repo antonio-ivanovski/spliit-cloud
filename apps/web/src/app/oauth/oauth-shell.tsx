@@ -1,6 +1,7 @@
 import { Plug, ShieldCheck } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { PageShell } from '@/components/layout/page-shell'
 import {
   Card,
   CardContent,
@@ -21,7 +22,10 @@ export function OAuthShell({
   const { t } = useTranslation(undefined, { keyPrefix: 'OAuth.shell' })
 
   return (
-    <main className="relative flex min-h-[calc(100vh-5rem)] flex-1 items-center justify-center overflow-hidden px-4 py-4 md:py-6">
+    <PageShell
+      width="full"
+      className="relative min-h-[calc(100vh-5rem)] items-center justify-center overflow-hidden py-4 md:py-6"
+    >
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,hsl(var(--primary)/0.1),transparent_42%)]" />
       <div className="grid w-full max-w-4xl gap-3.5">
         <section className="flex min-w-0 items-center justify-between gap-4 rounded-2xl border border-primary/15 bg-primary/[0.045] px-3.5 py-3 sm:px-4">
@@ -61,6 +65,6 @@ export function OAuthShell({
           <CardContent className="px-4 pb-4 sm:px-5">{children}</CardContent>
         </Card>
       </div>
-    </main>
+    </PageShell>
   )
 }

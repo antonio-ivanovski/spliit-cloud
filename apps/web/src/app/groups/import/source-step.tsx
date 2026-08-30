@@ -3,6 +3,7 @@ import { AlertTriangle, Clock, ExternalLink } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { PageInset } from '@/components/layout/page-shell'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -323,54 +324,60 @@ export function SourceStep({
   return (
     <div className="flex flex-col gap-4">
       {retainedCloudBundle && (
-        <Alert>
-          <ExternalLink className="h-4 w-4" />
-          <AlertTitle>
-            {t('Groups.Import.Source.cloudBundleReadyTitle')}
-          </AlertTitle>
-          <AlertDescription className="flex flex-col gap-3">
-            <span>{t('Groups.Import.Source.cloudBundleReadyDescription')}</span>
-            <Button
-              className="w-fit"
-              type="button"
-              onClick={retainedCloudBundle.onResume}
-            >
-              {t('Groups.Import.Source.resumeCloudBundle')}
-            </Button>
-          </AlertDescription>
-        </Alert>
+        <PageInset>
+          <Alert>
+            <ExternalLink className="h-4 w-4" />
+            <AlertTitle>
+              {t('Groups.Import.Source.cloudBundleReadyTitle')}
+            </AlertTitle>
+            <AlertDescription className="flex flex-col gap-3">
+              <span>
+                {t('Groups.Import.Source.cloudBundleReadyDescription')}
+              </span>
+              <Button
+                className="w-fit"
+                type="button"
+                onClick={retainedCloudBundle.onResume}
+              >
+                {t('Groups.Import.Source.resumeCloudBundle')}
+              </Button>
+            </AlertDescription>
+          </Alert>
+        </PageInset>
       )}
       {wrongImporter && (
-        <Alert>
-          <ExternalLink className="h-4 w-4" />
-          <AlertTitle>
-            {wrongImporter.messageKey === 'cloud'
-              ? t('Groups.Import.Source.wrongImporterCloudTitle')
-              : t('Groups.Import.Source.wrongImporterSpliitTitle')}
-          </AlertTitle>
-          <AlertDescription className="flex flex-col gap-3">
-            <span>
+        <PageInset>
+          <Alert>
+            <ExternalLink className="h-4 w-4" />
+            <AlertTitle>
               {wrongImporter.messageKey === 'cloud'
-                ? t('Groups.Import.Source.wrongImporterCloudDescription')
-                : t('Groups.Import.Source.wrongImporterSpliitDescription')}
-            </span>
-            <Button
-              className="w-fit"
-              type="button"
-              onClick={() => {
-                setPendingHandoff(wrongImporter.file)
-                void navigate({
-                  to: '/groups/import',
-                  search: { source: wrongImporter.target },
-                })
-              }}
-            >
-              {wrongImporter.messageKey === 'cloud'
-                ? t('Groups.Import.Source.openCloudImporter')
-                : t('Groups.Import.Source.openSpliitImporter')}
-            </Button>
-          </AlertDescription>
-        </Alert>
+                ? t('Groups.Import.Source.wrongImporterCloudTitle')
+                : t('Groups.Import.Source.wrongImporterSpliitTitle')}
+            </AlertTitle>
+            <AlertDescription className="flex flex-col gap-3">
+              <span>
+                {wrongImporter.messageKey === 'cloud'
+                  ? t('Groups.Import.Source.wrongImporterCloudDescription')
+                  : t('Groups.Import.Source.wrongImporterSpliitDescription')}
+              </span>
+              <Button
+                className="w-fit"
+                type="button"
+                onClick={() => {
+                  setPendingHandoff(wrongImporter.file)
+                  void navigate({
+                    to: '/groups/import',
+                    search: { source: wrongImporter.target },
+                  })
+                }}
+              >
+                {wrongImporter.messageKey === 'cloud'
+                  ? t('Groups.Import.Source.openCloudImporter')
+                  : t('Groups.Import.Source.openSpliitImporter')}
+              </Button>
+            </AlertDescription>
+          </Alert>
+        </PageInset>
       )}
       <Tabs
         value={provider}
@@ -381,75 +388,92 @@ export function SourceStep({
           })
         }
       >
-        <TabsList
-          ref={tabsListRef}
-          className="w-full justify-start overflow-x-auto sm:w-auto"
-        >
-          <TabsTrigger
-            value="spliit"
-            nativeButton={false}
-            render={<Link to="/groups/import" search={{ source: 'spliit' }} />}
+        <PageInset>
+          <TabsList
+            ref={tabsListRef}
+            className="w-full justify-start overflow-x-auto sm:w-auto"
           >
-            {t('Groups.Import.Source.fromSpliit')}
-          </TabsTrigger>
-          <TabsTrigger
-            value="spliit-cloud"
-            nativeButton={false}
-            render={
-              <Link to="/groups/import" search={{ source: 'spliit-cloud' }} />
-            }
-          >
-            {t('Groups.Import.Source.fromSpliitCloud')}
-          </TabsTrigger>
-          <TabsTrigger
-            value="splitwise"
-            nativeButton={false}
-            render={
-              <Link to="/groups/import" search={{ source: 'splitwise' }} />
-            }
-          >
-            {t('Groups.Import.Source.splitwise')}
-          </TabsTrigger>
-          <TabsTrigger
-            value="tricount"
-            nativeButton={false}
-            render={
-              <Link to="/groups/import" search={{ source: 'tricount' }} />
-            }
-          >
-            {t('Groups.Import.Source.tricount')}
-          </TabsTrigger>
-          <TabsTrigger
-            value="settleup"
-            nativeButton={false}
-            render={
-              <Link to="/groups/import" search={{ source: 'settleup' }} />
-            }
-          >
-            {t('Groups.Import.Source.settleUp')}
-          </TabsTrigger>
-        </TabsList>
+            <TabsTrigger
+              value="spliit"
+              className="min-w-max"
+              nativeButton={false}
+              render={
+                <Link to="/groups/import" search={{ source: 'spliit' }} />
+              }
+            >
+              {t('Groups.Import.Source.fromSpliit')}
+            </TabsTrigger>
+            <TabsTrigger
+              value="spliit-cloud"
+              className="min-w-max"
+              nativeButton={false}
+              render={
+                <Link to="/groups/import" search={{ source: 'spliit-cloud' }} />
+              }
+            >
+              {t('Groups.Import.Source.fromSpliitCloud')}
+            </TabsTrigger>
+            <TabsTrigger
+              value="splitwise"
+              className="min-w-max"
+              nativeButton={false}
+              render={
+                <Link to="/groups/import" search={{ source: 'splitwise' }} />
+              }
+            >
+              {t('Groups.Import.Source.splitwise')}
+            </TabsTrigger>
+            <TabsTrigger
+              value="tricount"
+              className="min-w-max"
+              nativeButton={false}
+              render={
+                <Link to="/groups/import" search={{ source: 'tricount' }} />
+              }
+            >
+              {t('Groups.Import.Source.tricount')}
+            </TabsTrigger>
+            <TabsTrigger
+              value="settleup"
+              className="min-w-max"
+              nativeButton={false}
+              render={
+                <Link to="/groups/import" search={{ source: 'settleup' }} />
+              }
+            >
+              {t('Groups.Import.Source.settleUp')}
+            </TabsTrigger>
+          </TabsList>
+        </PageInset>
 
         <TabsContent value="spliit">
-          <ProviderDescription
-            description={t('Groups.Import.Source.spliitDescription')}
-          />
+          <PageInset>
+            <ProviderDescription
+              description={t('Groups.Import.Source.spliitDescription')}
+            />
+          </PageInset>
         </TabsContent>
         <TabsContent value="spliit-cloud">
-          <ProviderDescription
-            description={t('Groups.Import.Source.spliitCloudScopeDescription')}
-          />
+          <PageInset>
+            <ProviderDescription
+              description={t(
+                'Groups.Import.Source.spliitCloudScopeDescription',
+              )}
+            />
+          </PageInset>
         </TabsContent>
-        <TabsContent value="splitwise">
-          <ProviderDescription
-            description={t('Groups.Import.Source.splitwiseDescription')}
-            receiptTitle={t(
-              'Groups.Import.Source.receiptWarningTitleSplitwise',
-            )}
-            receiptDescription={t(
-              'Groups.Import.Source.receiptWarningDescriptionSplitwise',
-            )}
-          />
+        <TabsContent value="splitwise" className="flex flex-col gap-4">
+          <PageInset>
+            <ProviderDescription
+              description={t('Groups.Import.Source.splitwiseDescription')}
+              receiptTitle={t(
+                'Groups.Import.Source.receiptWarningTitleSplitwise',
+              )}
+              receiptDescription={t(
+                'Groups.Import.Source.receiptWarningDescriptionSplitwise',
+              )}
+            />
+          </PageInset>
           <SplitwiseAnonymizerCard />
         </TabsContent>
         <TabsContent value="tricount">
@@ -528,9 +552,11 @@ export function SourceStep({
       )}
 
       {provider === 'spliit' && showFileImport && (
-        <p className="text-xs text-muted-foreground">
-          {t('Groups.Import.Source.csvRecurrenceLimitation')}
-        </p>
+        <PageInset>
+          <p className="text-xs text-muted-foreground">
+            {t('Groups.Import.Source.csvRecurrenceLimitation')}
+          </p>
+        </PageInset>
       )}
     </div>
   )
@@ -568,8 +594,8 @@ function ComingSoonCard({
   description: string
 }) {
   return (
-    <Card>
-      <CardContent className="flex items-start gap-3 p-4">
+    <Card data-import-source-card="coming-soon">
+      <CardContent spacing="standalone" className="flex items-start gap-3">
         <Clock className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
         <div className="flex flex-col gap-1">
           <p className="font-medium">{title}</p>
@@ -582,10 +608,12 @@ function ComingSoonCard({
 
 function OrDivider({ label }: { label: string }) {
   return (
-    <div className="flex items-center gap-3 text-xs tracking-wide text-muted-foreground uppercase">
-      <div className="h-px flex-1 bg-border" />
-      <span>{label}</span>
-      <div className="h-px flex-1 bg-border" />
-    </div>
+    <PageInset>
+      <div className="flex items-center gap-3 text-xs tracking-wide text-muted-foreground uppercase">
+        <div className="h-px flex-1 bg-border" />
+        <span>{label}</span>
+        <div className="h-px flex-1 bg-border" />
+      </div>
+    </PageInset>
   )
 }

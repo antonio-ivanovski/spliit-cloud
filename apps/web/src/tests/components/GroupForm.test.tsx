@@ -192,6 +192,16 @@ describe('GroupForm', () => {
     expect(screen.getByRole('button', { name: /create/i })).toBeInTheDocument()
   })
 
+  it('uses a visible rounded card in every route mode', () => {
+    const onSubmit = vi.fn()
+    render(<GroupForm onSubmit={onSubmit} />)
+
+    expect(screen.getByText('Group name').closest('.rounded-lg')).toHaveClass(
+      'rounded-lg',
+      'bg-card',
+    )
+  })
+
   it('renders the Members tab hint when creating and hideInviteHint is false', () => {
     const onSubmit = vi.fn()
     render(<GroupForm onSubmit={onSubmit} />)

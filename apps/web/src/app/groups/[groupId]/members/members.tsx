@@ -67,7 +67,7 @@ function ReadOnlyMembers() {
   )
   return (
     <div className="flex flex-col gap-4">
-      <Card className="mobile-surface">
+      <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Users className="size-5" aria-hidden="true" />

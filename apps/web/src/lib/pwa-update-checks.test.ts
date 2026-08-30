@@ -19,7 +19,7 @@ function createHarness() {
 }
 
 describe('subscribeServiceWorkerUpdateChecks', () => {
-  it('checks on focus, reconnect, and the interval', () => {
+  it('checks on focus, reconnect, and the interval', async () => {
     const update = vi.fn().mockResolvedValue(undefined)
     const documentHarness = createHarness()
     const windowHarness = createHarness()
@@ -51,14 +51,87 @@ describe('subscribeServiceWorkerUpdateChecks', () => {
 
     visibilityState = 'visible'
     documentHarness.dispatch('visibilitychange')
+    await Promise.resolve()
     windowHarness.dispatch('online')
+    await Promise.resolve()
     intervals[0]?.()
+    await Promise.resolve()
 
     expect(update).toHaveBeenCalledTimes(3)
 
     unsubscribe()
     expect(documentHarness.listeners.get('visibilitychange')?.size ?? 0).toBe(0)
     expect(windowHarness.listeners.get('online')?.size ?? 0).toBe(0)
+  })
+
+  it('coalesces overlapping checks and contains update failures', async () => {
+    let rejectUpdate!: (reason?: unknown) => void
+    const update = vi.fn(
+      () =>
+        new Promise<void>((_resolve, reject) => {
+          rejectUpdate = reject
+        }),
+    )
+    const documentHarness = createHarness()
+    const windowHarness = createHarness()
+
+    subscribeServiceWorkerUpdateChecks(
+      { update },
+      {
+        document: {
+          addEventListener: documentHarness.addEventListener,
+          removeEventListener: documentHarness.removeEventListener,
+          visibilityState: 'visible',
+        },
+        window: {
+          addEventListener: windowHarness.addEventListener,
+          removeEventListener: windowHarness.removeEventListener,
+          setInterval: vi.fn(() => 1),
+          clearInterval: vi.fn(),
+        },
+      },
+    )
+
+    documentHarness.dispatch('visibilitychange')
+    windowHarness.dispatch('online')
+    expect(update).toHaveBeenCalledOnce()
+
+    rejectUpdate(new Error('offline'))
+    await Promise.resolve()
+    await Promise.resolve()
+
+    windowHarness.dispatch('online')
+    expect(update).toHaveBeenCalledTimes(2)
+  })
+
+  it('contains synchronous update failures', async () => {
+    const documentHarness = createHarness()
+    const update = vi.fn(() => {
+      throw new Error('registration removed')
+    })
+
+    subscribeServiceWorkerUpdateChecks(
+      { update },
+      {
+        document: {
+          addEventListener: documentHarness.addEventListener,
+          removeEventListener: documentHarness.removeEventListener,
+          visibilityState: 'visible',
+        },
+        window: {
+          addEventListener: vi.fn(),
+          removeEventListener: vi.fn(),
+          setInterval: vi.fn(() => 1),
+          clearInterval: vi.fn(),
+        },
+      },
+    )
+
+    documentHarness.dispatch('visibilitychange')
+    await Promise.resolve()
+    documentHarness.dispatch('visibilitychange')
+
+    expect(update).toHaveBeenCalledTimes(2)
   })
 
   it('does not check while the document stays hidden', () => {

@@ -222,7 +222,7 @@ export function SettlementGroupCard({
  */
 export function SettlementLegList({ children }: { children: ReactNode }) {
   return (
-    <div className="relative -mx-3 -mt-3 border-t border-border/50 pt-3">
+    <div className="relative border-t border-border/50 pt-3">
       <span
         aria-hidden="true"
         className="pointer-events-none absolute inset-y-0 start-5 -top-1 border-s border-border/70"
