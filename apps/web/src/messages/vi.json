@@ -2939,7 +2939,10 @@
       "unknownScopes": "Ứng dụng này yêu cầu một quyền mà Spliit Cloud không nhận ra ({scopes}), nên không thể phê duyệt tại đây. Hãy đề nghị tác giả ứng dụng kiểm tra lại các quyền được yêu cầu.",
       "clientUnavailable": "Spliit không thể xác minh ứng dụng này. Hãy quay lại ứng dụng và bắt đầu kết nối lại.",
       "clientWebsite": "Trang web của ứng dụng",
-      "privacyPolicy": "Chính sách quyền riêng tư"
+      "privacyPolicy": "Chính sách quyền riêng tư",
+      "redirectsTo": "Chuyển hướng đến",
+      "unverifiedClient": "Ứng dụng chưa được xác minh: danh tính này do chính ứng dụng tự cung cấp.",
+      "loopbackWarning": "Ủy quyền này sẽ được gửi đến một ứng dụng đang chạy trên thiết bị này ({destination}). Chỉ phê duyệt nếu chính bạn vừa mới bắt đầu kết nối này."
     },
     "login": {
       "missingTitle": "Thiếu yêu cầu cấp quyền",

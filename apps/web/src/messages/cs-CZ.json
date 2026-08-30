@@ -2895,7 +2895,10 @@
       "unknownScopes": "Tato aplikace žádá o oprávnění, které Spliit Cloud nezná ({scopes}), takže ji tu nelze schválit. Požádej autora, ať zkontroluje požadovaná oprávnění.",
       "clientUnavailable": "Spliit tuto aplikaci nemohl ověřit. Vraťte se do aplikace a zahajte připojení znovu.",
       "clientWebsite": "Web aplikace",
-      "privacyPolicy": "Zásady ochrany osobních údajů"
+      "privacyPolicy": "Zásady ochrany osobních údajů",
+      "redirectsTo": "Přesměrování na",
+      "unverifiedClient": "Neověřená aplikace: tuto identitu uvádí sama aplikace.",
+      "loopbackWarning": "Tato autorizace bude odeslána aplikaci běžící na tomto zařízení ({destination}). Schvalte ji pouze v případě, že toto připojení právě teď pochází přímo od vás."
     },
     "login": {
       "missingTitle": "Autorizační požadavek chybí",

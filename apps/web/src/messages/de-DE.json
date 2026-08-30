@@ -2931,7 +2931,10 @@
       "unknownScopes": "Diese App fragt eine Berechtigung an, die Spliit Cloud nicht kennt ({scopes}), deshalb kann sie hier nicht bestätigt werden. Bitte die Entwickler, die angefragten Berechtigungen zu prüfen.",
       "clientUnavailable": "Spliit konnte diese Anwendung nicht überprüfen. Kehre zur Anwendung zurück und starte die Verbindung erneut.",
       "clientWebsite": "Website der Anwendung",
-      "privacyPolicy": "Datenschutzerklärung"
+      "privacyPolicy": "Datenschutzerklärung",
+      "redirectsTo": "Weiterleitung zu",
+      "unverifiedClient": "Nicht überprüfte Anwendung: Diese Identität stammt von der Anwendung selbst.",
+      "loopbackWarning": "Diese Autorisierung wird an eine Anwendung gesendet, die auf diesem Gerät läuft ({destination}). Bestätige nur, wenn du diese Verbindung gerade eben selbst gestartet hast."
     },
     "login": {
       "missingTitle": "Autorisierungsanfrage fehlt",

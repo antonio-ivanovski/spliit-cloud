@@ -2851,7 +2851,10 @@
       "unknownScopes": "Aplikasi ini meminta izin yang tidak dikenali Spliit Cloud ({scopes}), jadi tidak dapat disetujui di sini. Minta pembuat aplikasi memeriksa izin yang diminta.",
       "clientUnavailable": "Spliit tidak dapat memverifikasi aplikasi ini. Kembali ke aplikasi tersebut dan mulai lagi proses penyambungan.",
       "clientWebsite": "Situs web aplikasi",
-      "privacyPolicy": "Kebijakan privasi"
+      "privacyPolicy": "Kebijakan privasi",
+      "redirectsTo": "Dialihkan ke",
+      "unverifiedClient": "Aplikasi belum terverifikasi: identitas ini berasal dari aplikasi itu sendiri.",
+      "loopbackWarning": "Otorisasi ini akan dikirim ke aplikasi yang berjalan di perangkat ini ({destination}). Setujui hanya jika Anda sendiri yang baru saja memulai koneksi ini."
     },
     "login": {
       "missingTitle": "Permintaan otorisasi tidak ditemukan",

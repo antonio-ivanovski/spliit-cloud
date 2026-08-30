@@ -2895,7 +2895,10 @@
       "unknownScopes": "Ta aplikacja prosi o uprawnienie, którego Spliit Cloud nie rozpoznaje ({scopes}), więc nie można jej tu zatwierdzić. Poproś autora o sprawdzenie żądanych uprawnień.",
       "clientUnavailable": "Spliit nie mógł zweryfikować tej aplikacji. Wróć do aplikacji i ponownie rozpocznij połączenie.",
       "clientWebsite": "Strona internetowa aplikacji",
-      "privacyPolicy": "Polityka prywatności"
+      "privacyPolicy": "Polityka prywatności",
+      "redirectsTo": "Przekierowanie do",
+      "unverifiedClient": "Niezweryfikowana aplikacja: tę tożsamość podaje sama aplikacja.",
+      "loopbackWarning": "Ta autoryzacja zostanie wysłana do aplikacji działającej na tym urządzeniu ({destination}). Zatwierdź ją tylko wtedy, gdy to połączenie zostało przed chwilą rozpoczęte przez Ciebie."
     },
     "login": {
       "missingTitle": "Brak żądania autoryzacji",

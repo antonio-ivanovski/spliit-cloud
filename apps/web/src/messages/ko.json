@@ -2939,7 +2939,10 @@
       "unknownScopes": "이 앱은 Spliit Cloud가 인식하지 못하는 권한({scopes})을 요청하고 있어 여기서 승인할 수 없습니다. 앱 제작자에게 요청 권한을 확인해 달라고 요청하세요.",
       "clientUnavailable": "Spliit에서 이 애플리케이션을 확인할 수 없습니다. 애플리케이션으로 돌아가 연결을 다시 시작하세요.",
       "clientWebsite": "애플리케이션 웹사이트",
-      "privacyPolicy": "개인정보 처리방침"
+      "privacyPolicy": "개인정보 처리방침",
+      "redirectsTo": "리디렉션 대상",
+      "unverifiedClient": "확인되지 않은 애플리케이션: 이 정보는 애플리케이션이 스스로 제공한 것입니다.",
+      "loopbackWarning": "이 권한 부여는 이 기기에서 실행 중인 애플리케이션({destination})으로 전송됩니다. 방금 직접 이 연결을 시작한 경우에만 허용하세요."
     },
     "login": {
       "missingTitle": "인증 요청 없음",

@@ -2877,7 +2877,10 @@
       "unknownScopes": "Cette application demande une autorisation que Spliit Cloud ne reconnaît pas ({scopes}) ; elle ne peut donc pas être approuvée ici. Demandez à son auteur de vérifier les autorisations demandées.",
       "clientUnavailable": "Spliit n’a pas pu vérifier cette application. Revenez à l’application et recommencez la connexion.",
       "clientWebsite": "Site web de l’application",
-      "privacyPolicy": "Politique de confidentialité"
+      "privacyPolicy": "Politique de confidentialité",
+      "redirectsTo": "Redirection vers",
+      "unverifiedClient": "Application non vérifiée : cette identité est fournie par l’application elle-même.",
+      "loopbackWarning": "Cette autorisation sera transmise à une application en cours d’exécution sur cet appareil ({destination}). N’approuvez que si vous venez de lancer cette connexion vous-même."
     },
     "login": {
       "missingTitle": "Demande d’autorisation manquante",

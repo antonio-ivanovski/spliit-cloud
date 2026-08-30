@@ -2843,7 +2843,10 @@
       "unknownScopes": "このアプリは Spliit Cloud が認識できない権限（{scopes}）を要求しているため、ここでは承認できません。アプリの作者に要求している権限を確認するようご依頼ください。",
       "clientUnavailable": "Spliitはこのアプリケーションを検証できませんでした。アプリケーションに戻り、接続をもう一度開始してください。",
       "clientWebsite": "アプリケーションのウェブサイト",
-      "privacyPolicy": "プライバシーポリシー"
+      "privacyPolicy": "プライバシーポリシー",
+      "redirectsTo": "リダイレクト先",
+      "unverifiedClient": "未検証のアプリケーション：この身元情報はアプリケーション自身が提供したものです。",
+      "loopbackWarning": "この認可は、このデバイス上で動作しているアプリケーション（{destination}）に送信されます。この接続をたった今自分で開始した場合にのみ許可してください。"
     },
     "login": {
       "missingTitle": "認証リクエストがありません",

@@ -2855,7 +2855,10 @@
       "unknownScopes": "Den här appen begär en behörighet som Spliit Cloud inte känner igen ({scopes}), så den kan inte godkännas här. Be utvecklaren se över vilka behörigheter appen begär.",
       "clientUnavailable": "Spliit kunde inte verifiera den här appen. Gå tillbaka till appen och starta anslutningen igen.",
       "clientWebsite": "Appens webbplats",
-      "privacyPolicy": "Integritetspolicy"
+      "privacyPolicy": "Integritetspolicy",
+      "redirectsTo": "Omdirigerar till",
+      "unverifiedClient": "Overifierad app: den här identiteten kommer från appen själv.",
+      "loopbackWarning": "Den här auktoriseringen skickas till en app som körs på den här enheten ({destination}). Godkänn bara om du själv nyss startade den här anslutningen."
     },
     "login": {
       "missingTitle": "Auktoriseringsbegäran saknas",

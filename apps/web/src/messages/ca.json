@@ -2885,7 +2885,10 @@
       "unknownScopes": "Aquesta aplicació demana un permís que Spliit Cloud no reconeix ({scopes}), així que no es pot aprovar aquí. Demana a l'autor que revisi els permisos sol·licitats.",
       "clientUnavailable": "Spliit no ha pogut verificar aquesta aplicació. Torna a l'aplicació i inicia de nou la connexió.",
       "clientWebsite": "Lloc web de l'aplicació",
-      "privacyPolicy": "Política de privacitat"
+      "privacyPolicy": "Política de privacitat",
+      "redirectsTo": "Redirigeix a",
+      "unverifiedClient": "Aplicació no verificada: aquesta identitat la proporciona la mateixa aplicació.",
+      "loopbackWarning": "Aquesta autorització s'enviarà a una aplicació que s'executa en aquest dispositiu ({destination}). Aprova-la només si ets tu qui acaba d'iniciar aquesta connexió."
     },
     "login": {
       "missingTitle": "Falta la sol·licitud d'autorització",

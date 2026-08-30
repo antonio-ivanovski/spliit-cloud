@@ -2851,7 +2851,10 @@
       "unknownScopes": "该应用请求了 Spliit Cloud 无法识别的权限（{scopes}），因此无法在此批准。请让应用作者检查所请求的权限。",
       "clientUnavailable": "Spliit 无法验证此应用。请返回应用并重新开始连接。",
       "clientWebsite": "应用网站",
-      "privacyPolicy": "隐私政策"
+      "privacyPolicy": "隐私政策",
+      "redirectsTo": "重定向至",
+      "unverifiedClient": "未经验证的应用：此身份信息由应用自行提供。",
+      "loopbackWarning": "此授权将发送给在此设备上运行的应用（{destination}）。仅当你刚刚亲自发起此连接时才批准。"
     },
     "login": {
       "missingTitle": "授权请求缺失",

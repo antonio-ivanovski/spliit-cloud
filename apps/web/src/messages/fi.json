@@ -2859,7 +2859,10 @@
       "unknownScopes": "Tämä sovellus pyytää käyttöoikeutta, jota Spliit Cloud ei tunnista ({scopes}), joten sitä ei voi hyväksyä tässä. Pyydä sovelluksen tekijää tarkistamaan pyydetyt käyttöoikeudet.",
       "clientUnavailable": "Spliit ei voinut vahvistaa tätä sovellusta. Palaa sovellukseen ja aloita yhteys uudelleen.",
       "clientWebsite": "Sovelluksen verkkosivusto",
-      "privacyPolicy": "Tietosuojakäytäntö"
+      "privacyPolicy": "Tietosuojakäytäntö",
+      "redirectsTo": "Uudelleenohjaus osoitteeseen",
+      "unverifiedClient": "Vahvistamaton sovellus: nämä tiedot ovat sovelluksen itsensä ilmoittamia.",
+      "loopbackWarning": "Tämä valtuutus lähetetään tällä laitteella toimivalle sovellukselle ({destination}). Hyväksy vain, jos aloitit tämän yhteyden itse juuri äsken."
     },
     "login": {
       "missingTitle": "Valtuutuspyyntö puuttuu",

@@ -2851,7 +2851,10 @@
       "unknownScopes": "這個應用程式要求了 Spliit Cloud 無法識別的權限（{scopes}），因此無法在此核准。請讓應用程式作者檢查所要求的權限。",
       "clientUnavailable": "Spliit 無法驗證此應用程式。請返回應用程式並重新開始連線。",
       "clientWebsite": "應用程式網站",
-      "privacyPolicy": "隱私權政策"
+      "privacyPolicy": "隱私權政策",
+      "redirectsTo": "重新導向至",
+      "unverifiedClient": "未經驗證的應用程式：此身分資訊由應用程式自行提供。",
+      "loopbackWarning": "此授權將傳送給在此裝置上執行的應用程式（{destination}）。僅當你剛剛親自發起此連線時才核准。"
     },
     "login": {
       "missingTitle": "缺少授權請求",

@@ -2931,7 +2931,10 @@
       "unknownScopes": "Deze app vraagt een toestemming die Spliit Cloud niet kent ({scopes}), dus hij kan hier niet worden goedgekeurd. Vraag de maker om de gevraagde toestemmingen na te kijken.",
       "clientUnavailable": "Spliit kon deze app niet verifiëren. Ga terug naar de app en start de verbinding opnieuw.",
       "clientWebsite": "Website van de app",
-      "privacyPolicy": "Privacybeleid"
+      "privacyPolicy": "Privacybeleid",
+      "redirectsTo": "Stuurt door naar",
+      "unverifiedClient": "Niet-geverifieerde app: deze identiteit is afkomstig van de app zelf.",
+      "loopbackWarning": "Deze autorisatie wordt verstuurd naar een app die op dit apparaat draait ({destination}). Keur dit alleen goed als je deze verbinding zojuist zelf hebt gestart."
     },
     "login": {
       "missingTitle": "Autorisatieverzoek ontbreekt",

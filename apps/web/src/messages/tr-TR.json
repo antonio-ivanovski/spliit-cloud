@@ -2867,7 +2867,10 @@
       "unknownScopes": "Bu uygulama Spliit Cloud'un tanımadığı bir izin istiyor ({scopes}), bu yüzden burada onaylanamaz. Uygulamanın geliştiricisinden istenen izinleri gözden geçirmesini isteyin.",
       "clientUnavailable": "Spliit bu uygulamayı doğrulayamadı. Uygulamaya dönüp bağlantıyı yeniden başlatın.",
       "clientWebsite": "Uygulamanın web sitesi",
-      "privacyPolicy": "Gizlilik politikası"
+      "privacyPolicy": "Gizlilik politikası",
+      "redirectsTo": "Şuraya yönlendirilir:",
+      "unverifiedClient": "Doğrulanmamış uygulama: Bu kimlik bilgilerini uygulamanın kendisi sağlıyor.",
+      "loopbackWarning": "Bu yetkilendirme, bu cihazda çalışan bir uygulamaya ({destination}) gönderilecek. Yalnızca bu bağlantıyı az önce kendiniz başlattıysanız onaylayın."
     },
     "login": {
       "missingTitle": "Yetkilendirme isteği eksik",

@@ -176,6 +176,49 @@ describe('OAuthConsentPage', () => {
     })
   })
 
+  it('shows the redirect destination host from the signed request', async () => {
+    searchState.oauth_query =
+      'client_id=chatgpt&scope=openid+spliit%3Agroups%3Aread&redirect_uri=' +
+      encodeURIComponent('https://chatgpt.example/oauth/callback')
+
+    render(<OAuthConsentPage />)
+
+    // The host is prominent; the full URI stays available on hover.
+    const destination = await screen.findByTitle(
+      'https://chatgpt.example/oauth/callback',
+    )
+    expect(destination).toBeVisible()
+    expect(destination).toHaveTextContent('Redirects to chatgpt.example')
+    // A regular HTTPS destination is not a local app.
+    expect(
+      screen.queryByTestId('oauth-loopback-warning'),
+    ).not.toBeInTheDocument()
+  })
+
+  it('warns specifically for a loopback redirect and keeps the port', async () => {
+    searchState.oauth_query =
+      'client_id=local-agent&scope=openid+spliit%3Agroups%3Aread&redirect_uri=' +
+      encodeURIComponent('http://127.0.0.1:33418/oauth/callback')
+
+    render(<OAuthConsentPage />)
+
+    const warning = await screen.findByTestId('oauth-loopback-warning')
+    expect(warning).toBeVisible()
+    expect(warning).toHaveTextContent('127.0.0.1:33418')
+  })
+
+  it('labels dynamically registered client identity as unverified', async () => {
+    render(<OAuthConsentPage />)
+
+    // Open unauthenticated DCR means client_name and client_uri are
+    // self-asserted; the page must say so next to that identity.
+    expect(
+      await screen.findByText(
+        'Unverified application: this identity is provided by the application itself.',
+      ),
+    ).toBeVisible()
+  })
+
   it('keeps long account and client identities inside the connection panel', async () => {
     clientMock.mockResolvedValue({
       client_id: 'chatgpt',

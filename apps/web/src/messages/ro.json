@@ -2885,7 +2885,10 @@
       "unknownScopes": "Această aplicație cere o permisiune pe care Spliit Cloud nu o recunoaște ({scopes}), așa că nu poate fi aprobată aici. Roagă autorul aplicației să verifice permisiunile cerute.",
       "clientUnavailable": "Spliit nu a putut verifica această aplicație. Revino la aplicație și începe din nou conectarea.",
       "clientWebsite": "Site-ul aplicației",
-      "privacyPolicy": "Politica de confidențialitate"
+      "privacyPolicy": "Politica de confidențialitate",
+      "redirectsTo": "Redirecționează către",
+      "unverifiedClient": "Aplicație neverificată: această identitate este furnizată chiar de aplicație.",
+      "loopbackWarning": "Această autorizare va fi trimisă unei aplicații care rulează pe acest dispozitiv ({destination}). Aprobă doar dacă tocmai ai inițiat chiar tu această conectare."
     },
     "login": {
       "missingTitle": "Cerere de autorizare lipsă",

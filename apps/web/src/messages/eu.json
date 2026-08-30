@@ -2885,7 +2885,10 @@
       "unknownScopes": "Aplikazio honek Spliit Cloud-ek ezagutzen ez duen baimen bat eskatzen du ({scopes}); beraz, ezin da hemen onartu. Eskatu egileari eskatutako baimenak berrikusteko.",
       "clientUnavailable": "Spliit-ek ezin izan du aplikazio hau egiaztatu. Itzuli aplikaziora eta hasi konexioa berriro.",
       "clientWebsite": "Aplikazioaren webgunea",
-      "privacyPolicy": "Pribatutasun-politika"
+      "privacyPolicy": "Pribatutasun-politika",
+      "redirectsTo": "Hona birbideratzen da",
+      "unverifiedClient": "Egiaztatu gabeko aplikazioa: identitate hau aplikazioak berak emandakoa da.",
+      "loopbackWarning": "Baimen hau gailu honetan exekutatzen ari den aplikazio bati bidaliko zaio ({destination}). Onartu soilik konexio hau oraintxe zuk zeuk hasi baduzu."
     },
     "login": {
       "missingTitle": "Baimen-eskaera falta da",

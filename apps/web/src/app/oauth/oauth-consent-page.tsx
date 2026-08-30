@@ -43,13 +43,39 @@ function readExternalHttpUrl(value: string | undefined) {
   }
 }
 
+const LOOPBACK_HOSTNAMES = new Set(['localhost', '127.0.0.1', '[::1]'])
+
+/**
+ * Where the authorization response will be sent. Parsed from the same signed
+ * `oauth_query` as the client identity and scopes — never from separate search
+ * params — so the destination shown is the one that receives the code.
+ */
+function describeRedirectDestination(value: string | undefined) {
+  if (!value) return null
+  try {
+    const url = new URL(value)
+    const isHttp = url.protocol === 'https:' || url.protocol === 'http:'
+    return {
+      href: url.toString(),
+      // `host` keeps the port, which matters for loopback redirects. Custom
+      // schemes (native apps) can have an empty host; show the full URI then.
+      display: isHttp && url.host ? url.host : url.toString(),
+      isLoopback: isHttp && LOOPBACK_HOSTNAMES.has(url.hostname),
+    }
+  } catch {
+    return null
+  }
+}
+
 export function OAuthConsentPage() {
   const { t } = useTranslation(undefined, { keyPrefix: 'OAuth.consent' })
   const { oauth_query: explicitOAuthQuery } = route.useSearch()
   const oauthQuery = resolveOAuthQuery(explicitOAuthQuery)
-  // Identity and scopes are read from the signed request itself, never from
-  // separate search params, so what is shown is what gets authorized.
-  const { clientId, scopes } = readOAuthRequest(oauthQuery)
+  // Identity, scopes and redirect target are read from the signed request
+  // itself, never from separate search params, so what is shown is what gets
+  // authorized.
+  const { clientId, redirectUri, scopes } = readOAuthRequest(oauthQuery)
+  const redirectDestination = describeRedirectDestination(redirectUri)
   const { data: session, isPending: sessionPending } = authClient.useSession()
   const client = useQuery({
     queryKey: ['oauth-public-client', clientId],
@@ -162,6 +188,22 @@ export function OAuthConsentPage() {
                     {clientId}
                   </p>
                 ) : null}
+                {redirectDestination ? (
+                  // The address that receives the authorization code. The
+                  // full URI stays one hover away via `title`.
+                  <p
+                    className="truncate text-[11px] text-muted-foreground"
+                    title={redirectDestination.href}
+                  >
+                    {t('redirectsTo')}{' '}
+                    <span className="font-mono" dir="ltr" translate="no">
+                      {redirectDestination.display}
+                    </span>
+                  </p>
+                ) : null}
+                <p className="mt-0.5 text-[11px] leading-4 text-amber-700 dark:text-amber-400">
+                  {t('unverifiedClient')}
+                </p>
                 {clientWebsite || privacyPolicy ? (
                   <div className="mt-0.5 flex min-w-0 flex-wrap gap-x-2 gap-y-0.5 text-[11px]">
                     {clientWebsite ? (
@@ -246,6 +288,26 @@ export function OAuthConsentPage() {
             </p>
           </div>
         </div>
+
+        {redirectDestination?.isLoopback && (
+          <section
+            role="note"
+            className="rounded-xl border border-amber-500/25 bg-amber-500/[0.06] p-2.5"
+            data-testid="oauth-loopback-warning"
+          >
+            <div className="flex gap-2">
+              <TriangleAlert
+                className="mt-0.5 size-4 shrink-0 text-amber-700 dark:text-amber-400"
+                aria-hidden="true"
+              />
+              <p className="text-xs leading-5 text-muted-foreground">
+                {t('loopbackWarning', {
+                  destination: redirectDestination.display,
+                })}
+              </p>
+            </div>
+          </section>
+        )}
 
         {unknownScopes.length > 0 && (
           <p className="text-sm text-destructive" role="alert">

@@ -2962,7 +2962,10 @@
       "unknownScopes": "This app is asking for a permission Spliit Cloud does not recognise ({scopes}), so it cannot be approved here. Ask the app author to check the permissions it requests.",
       "clientUnavailable": "Spliit could not verify this application. Return to the application and start the connection again.",
       "clientWebsite": "Application website",
-      "privacyPolicy": "Privacy policy"
+      "privacyPolicy": "Privacy policy",
+      "redirectsTo": "Redirects to",
+      "unverifiedClient": "Unverified application: this identity is provided by the application itself.",
+      "loopbackWarning": "This authorization will be sent to an application running on this device ({destination}). Approve only if you started this connection yourself just now."
     },
     "login": {
       "missingTitle": "Authorization request missing",
