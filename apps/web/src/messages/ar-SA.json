@@ -421,7 +421,10 @@
     "UnsupportedToast": {
       "title": "ملف غير مدعوم",
       "description": "{fileName} ليس نوعًا مدعومًا من المرفقات."
-    }
+    },
+    "addAttachments": "إضافة مرفقات",
+    "uploading": "جارٍ الرفع…",
+    "noAttachments": "لا توجد مرفقات بعد."
   },
   "CompleteProfile": {
     "errors": {
@@ -1187,7 +1190,6 @@
     "splittingOptions": "خيارات التقسيم",
     "scanReceipt": "مسح الإيصال بالذكاء الاصطناعي",
     "saving": "جارٍ الحفظ…",
-    "attachDocuments": "إرفاق مستند",
     "paidByOptionByPercentageHelper": "كل يدفف نسبة مئوية",
     "paidForOptionByShares": "بالحصص",
     "paidForOptionByAmount": "حسب المبلغ",
@@ -1320,9 +1322,9 @@
       "recurringEditScopeFuture": "تعديل هذا والأحداث المستقبلية",
       "splitModeDescription": "اختيار طريقة تقسيم المصروفات.",
       "recurringEditScopeOccurrence": "تعديل هذا الحدث فقط",
-      "attachDescription": "عرض وإرفاق الإيصالات للمصروفات.",
       "edit": "تغيير مصروفات",
       "create": "إنشاء مصروفات",
+      "attachDescription": "أضف الإيصالات والصور والمستندات الداعمة إلى هذا المصروف.",
       "createCopy": "إنشاء نسخة: {title}",
       "TitleField": {
         "label": "عنوان المصروف",
@@ -1356,13 +1358,13 @@
       },
       "categoryFieldDescription": "اختيار فئة دخل.",
       "splitModeDescription": "اختيار طريقة تقسيم الدخل.",
-      "attachDescription": "عرض وإرفاق الإيصالات للدخل.",
       "edit": "تغيير دخل",
       "create": "إنشاء دخل",
       "TitleField": {
         "label": "عنوان الدخل",
         "placeholder": "راتب أو استرداد"
       },
+      "attachDescription": "أضف الإيصالات والصور والمستندات الداعمة إلى هذا الدخل.",
       "recurrence": {
         "scheduleHint": "سيتم الإنشاء عند {time} ({timeZone}) وقد يؤدي ذلك إلى إرسال إشعار. اختر وقتًا لا يزعج النوم. لتغييره، عدّل الوقت أعلاه."
       }
@@ -1392,6 +1394,7 @@
     "paidForOptionEvenlyHelper": "مقسم بالتساوي بين جميع المشاركين",
     "paidForOptionByAmountHelper": "عيّن مبلغ التي دقيق لـ كل شخص",
     "paidByOptionByAmountHelper": "كل شخص يدفع مبلغاً ثابتاً",
+    "attachDocuments": "المرفقات",
     "create": "إنشاء",
     "paidByOptionByShares": "بالحصص",
     "categoryField": {

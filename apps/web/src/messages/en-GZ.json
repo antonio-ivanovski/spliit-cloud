@@ -1338,7 +1338,10 @@
     "UnsupportedToast": {
       "title": "unsupported file",
       "description": "{fileName} isn’t a supported attachment type."
-    }
+    },
+    "addAttachments": "add files",
+    "uploading": "uploading…",
+    "noAttachments": "no files yet"
   },
   "ExpenseForm": {
     "paidForItemizedEntryHint": "to split by item, edit participants from an item row.",
@@ -1371,7 +1374,7 @@
       },
       "categoryFieldDescription": "select the expense category.",
       "splitModeDescription": "choose how to split the bag, bestie.",
-      "attachDescription": "see and attach receipts to this expense.",
+      "attachDescription": "add receipts, pics, and supporting docs to this expense.",
       "createCopy": "create copy: {title}",
       "currencyField": {
         "label": "expense currency",
@@ -1460,7 +1463,6 @@
       },
       "categoryFieldDescription": "select the income category.",
       "splitModeDescription": "choose how to split the payout.",
-      "attachDescription": "see and attach receipts to the income.",
       "currencyField": {
         "label": "income currency",
         "description": "the currency in which the income arrived."
@@ -1473,6 +1475,7 @@
         "title": "split with",
         "description": "choose who shares this income."
       },
+      "attachDescription": "add receipts, pics, and supporting docs to this income.",
       "recurrence": {
         "scheduleHint": "Drops at {time} ({timeZone}) and might send a notification, so pick a sleep-friendly time. Change the time above to update it."
       }
@@ -1480,7 +1483,7 @@
     "PaidBySplitModeField": {
       "label": "how the payer split the bag"
     },
-    "attachDocuments": "attach the docs",
+    "attachDocuments": "attachments",
     "create": "create it",
     "creating": "creating…",
     "save": "save the expense",

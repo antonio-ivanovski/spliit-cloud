@@ -702,11 +702,11 @@
         "description": "Selectează pentru cine a fost primit venitul."
       },
       "splitModeDescription": "Selectează cum să fie împărțit venitul.",
-      "attachDescription": "Vizualizează și atașează bonul pentru venit.",
       "currencyField": {
         "label": "Moneda venitului",
         "description": "Moneda în care a fost primit venitul."
       },
+      "attachDescription": "Adaugă chitanțe, fotografii și documente justificative la acest venit.",
       "recurrence": {
         "scheduleHint": "Va fi creat la {time} ({timeZone}) și poate declanșa o notificare. Alege o oră care să nu deranjeze somnul. Editează ora de mai sus pentru a o schimba."
       }
@@ -733,7 +733,6 @@
         "description": "Selectează pentru cine a fost plătită cheltuiala."
       },
       "splitModeDescription": "Selectează cum să fie împărțită cheltuiala.",
-      "attachDescription": "Vizualizează și atașează bonul pentru cheltuială.",
       "currencyField": {
         "label": "Moneda cheltuielii",
         "description": "Moneda în care a fost plătită cheltuiala."
@@ -746,6 +745,7 @@
         "weekly": "Săptămânal",
         "monthly": "Lunar"
       },
+      "attachDescription": "Adaugă chitanțe, fotografii și documente justificative la această cheltuială.",
       "createCopy": "Creează o copie: {title}",
       "editTitle": "Editează: {title}",
       "recurrence": {
@@ -860,7 +860,7 @@
       "cancel": "Anulează",
       "delete": "Șterge"
     },
-    "attachDocuments": "Atașează documente",
+    "attachDocuments": "Atașamente",
     "create": "Adaugă",
     "creating": "Se adaugă…",
     "save": "Salvează",
@@ -1072,7 +1072,10 @@
     "UnsupportedToast": {
       "title": "Fișier neacceptat",
       "description": "{fileName} nu este un tip de atașament acceptat."
-    }
+    },
+    "addAttachments": "Adaugă atașamente",
+    "uploading": "Se încarcă…",
+    "noAttachments": "Nu există încă atașamente."
   },
   "CreateFromReceipt": {
     "Dialog": {

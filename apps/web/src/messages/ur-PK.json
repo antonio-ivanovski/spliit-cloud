@@ -1155,7 +1155,10 @@
     "UnsupportedToast": {
       "title": "غیر معاون فائل",
       "description": "{fileName} کو بطور منسلکہ استعمال نہیں کیا جا سکتا۔"
-    }
+    },
+    "addAttachments": "منسلکات شامل کریں",
+    "uploading": "اپ لوڈ ہو رہا ہے…",
+    "noAttachments": "ابھی کوئی منسلکات نہیں ہیں۔"
   },
   "ExpenseForm": {
     "paidForItemizedEntryHint": "آئٹم کے لحاظ سے تقسیم کرنے کے لیے، ایک آئٹم قطار سے شرکاء میں ترمیم کریں۔",
@@ -1188,7 +1191,7 @@
       },
       "categoryFieldDescription": "خرچے کا زمرہ منتخب کریں۔",
       "splitModeDescription": "منتخب کریں کہ خرچہ کیسے تقسیم کیا جائے۔",
-      "attachDescription": "خرچے کی رسیدیں دیکھیں اور منسلک کریں۔",
+      "attachDescription": "اس خرچ میں رسیدیں، تصاویر اور معاون دستاویزات شامل کریں۔",
       "createCopy": "کاپی بنائیں: {title}",
       "currencyField": {
         "label": "خرچے کی کرنسی",
@@ -1277,7 +1280,6 @@
       },
       "categoryFieldDescription": "آمدنی کا زمرہ منتخب کریں۔",
       "splitModeDescription": "منتخب کریں کہ آمدنی کیسے تقسیم کی جائے۔",
-      "attachDescription": "آمدنی کی رسیدیں دیکھیں اور منسلک کریں۔",
       "currencyField": {
         "label": "آمدنی کی کرنسی",
         "description": "وہ کرنسی جس میں آمدنی موصول ہوئی۔"
@@ -1290,6 +1292,7 @@
         "title": "کو مختص",
         "description": "وہ شرکاء منتخب کریں جو اس آمدنی میں حصہ لیتے ہیں۔"
       },
+      "attachDescription": "اس آمدن میں رسیدیں، تصاویر اور معاون دستاویزات شامل کریں۔",
       "recurrence": {
         "scheduleHint": "یہ {time} ({timeZone}) پر بنایا جائے گا اور اطلاع بھیج سکتا ہے۔ ایسا وقت منتخب کریں جو نیند میں خلل نہ ڈالے۔ اسے بدلنے کے لیے اوپر دیا گیا وقت ترمیم کریں۔"
       }
@@ -1297,7 +1300,7 @@
     "PaidBySplitModeField": {
       "label": "ادا کنندہ کی تقسیم کا طریقہ"
     },
-    "attachDocuments": "دستاویزات منسلک کریں",
+    "attachDocuments": "منسلکات",
     "create": "تخلیق کریں",
     "creating": "تخلیق ہو رہا ہے…",
     "save": "محفوظ کریں",

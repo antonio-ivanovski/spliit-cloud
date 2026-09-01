@@ -1,4 +1,13 @@
-import { Camera, FileText, Loader2, Plus, Trash, Upload, X } from 'lucide-react'
+import {
+  Camera,
+  FileText,
+  Loader2,
+  Paperclip,
+  Plus,
+  Trash,
+  Upload,
+  X,
+} from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -9,6 +18,7 @@ import {
   type ReceiptScanContext,
 } from '@/app/groups/[groupId]/expenses/create-from-receipt-button'
 import Image from '@/components/app-image'
+import { FilePickerInput } from '@/components/file-picker-input'
 import { Button } from '@/components/ui/button'
 import type { CarouselApi } from '@/components/ui/carousel'
 import {
@@ -29,12 +39,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer'
 import { ToastAction } from '@/components/ui/toast'
 import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
 import { randomId } from '@/lib/api'
+import { useMediaQuery } from '@/lib/hooks'
 import type { ExpenseFormInputValues } from '@/lib/schemas'
-import { resizeImage, usePresignedUpload } from '@/lib/upload'
+import { resizeImage, useExpenseDocumentUpload } from '@/lib/upload'
 import { cn, formatFileSize } from '@/lib/utils'
 import {
   EXPENSE_DOCUMENT_ACCEPT,
@@ -84,9 +102,15 @@ export function ExpenseDocumentsInput({
   })
   const [pending, setPending] = useState(false)
   const [dragActive, setDragActive] = useState(false)
+  const [pickerOpen, setPickerOpen] = useState(false)
   const dragDepth = useRef(0)
   const rootRef = useRef<HTMLDivElement>(null)
-  const { FileInput, openFileDialog, uploadToS3 } = usePresignedUpload(ledgerId) // use presigned uploads to additionally support providers other than AWS
+  const cameraInputRef = useRef<HTMLInputElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const addButtonRef = useRef<HTMLButtonElement>(null)
+  const pickerWasOpenRef = useRef(false)
+  const isDesktop = useMediaQuery('(min-width: 640px)')
+  const { uploadToS3 } = useExpenseDocumentUpload(ledgerId)
   const { toast } = useToast()
   const toastRef = useRef(toast)
   const tRef = useRef(t)
@@ -253,18 +277,47 @@ export function ExpenseDocumentsInput({
     }
   }, [readOnly])
 
+  const openFilePicker = useCallback(() => {
+    if (pending) return
+    if (isDesktop) {
+      fileInputRef.current?.click()
+      return
+    }
+    setPickerOpen(true)
+  }, [isDesktop, pending])
+
+  const selectFromDevice = useCallback(() => {
+    setPickerOpen(false)
+    fileInputRef.current?.click()
+  }, [])
+
+  const takePhoto = useCallback(() => {
+    setPickerOpen(false)
+    cameraInputRef.current?.click()
+  }, [])
+
+  useEffect(() => {
+    if (pickerWasOpenRef.current && !pickerOpen) {
+      addButtonRef.current?.focus()
+    }
+    pickerWasOpenRef.current = pickerOpen
+  }, [pickerOpen])
+
   return (
     <div ref={rootRef} className="relative">
-      <FileInput
-        onFilesChange={handleFiles}
-        accept={EXPENSE_DOCUMENT_ACCEPT}
-        multiple
-      />
-      <FileInput
-        inputId="camera"
-        onFilesChange={handleFiles}
+      <FilePickerInput
+        ref={cameraInputRef}
+        onFilesSelected={handleFiles}
         accept="image/*"
         capture="environment"
+        className="hidden"
+      />
+      <FilePickerInput
+        ref={fileInputRef}
+        onFilesSelected={handleFiles}
+        accept={EXPENSE_DOCUMENT_ACCEPT}
+        multiple
+        className="hidden"
       />
 
       {dragActive && !readOnly && (
@@ -279,53 +332,106 @@ export function ExpenseDocumentsInput({
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-        {documents.map((doc) => (
-          <DocumentThumbnail
-            key={doc.id}
-            document={doc}
-            documents={documents}
-            deleteDocument={(document) => {
-              updateDocuments(documents.filter((d) => d.id !== document.id))
-            }}
-            readOnly={readOnly}
-            enableReceiptExtract={enableReceiptExtract}
-            receiptContext={receiptContext}
-            onReceiptAccepted={onReceiptAccepted}
-          />
-        ))}
-
-        {!readOnly && (
-          <div className="aspect-square">
+      {documents.length > 0 ? (
+        <>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+            {documents.map((doc) => (
+              <DocumentThumbnail
+                key={doc.id}
+                document={doc}
+                documents={documents}
+                deleteDocument={(document) => {
+                  updateDocuments(documents.filter((d) => d.id !== document.id))
+                }}
+                readOnly={readOnly}
+                enableReceiptExtract={enableReceiptExtract}
+                receiptContext={receiptContext}
+                onReceiptAccepted={onReceiptAccepted}
+              />
+            ))}
+          </div>
+          {!readOnly && (
             <Button
-              variant="secondary"
+              ref={addButtonRef}
               type="button"
-              onClick={() => openFileDialog()}
-              className="h-full min-h-0 w-full"
+              variant="outline"
+              onClick={openFilePicker}
+              className="mt-4 w-full sm:w-auto"
               disabled={pending}
-              aria-label={t('chooseFiles')}
+              aria-haspopup={isDesktop ? undefined : 'dialog'}
             >
               {pending ? (
-                <Loader2 className="h-8 w-8 animate-spin" />
+                <Loader2 className="me-2 h-4 w-4 animate-spin" />
               ) : (
-                <Plus className="h-8 w-8" />
+                <Plus className="me-2 h-4 w-4" />
               )}
-              <span className="sr-only">{t('chooseFiles')}</span>
+              {pending ? t('uploading') : t('addAttachments')}
             </Button>
-          </div>
-        )}
-      </div>
-      {!readOnly && (
+          )}
+        </>
+      ) : readOnly ? (
+        <p className="rounded-md border border-dashed px-4 py-5 text-center text-sm text-muted-foreground">
+          {t('noAttachments')}
+        </p>
+      ) : (
         <Button
-          variant="outline"
+          ref={addButtonRef}
           type="button"
-          onClick={() => openFileDialog('camera')}
-          className="mt-2 w-full sm:hidden"
+          variant="outline"
+          onClick={openFilePicker}
+          className="h-auto min-h-32 w-full min-w-0 flex-col gap-2 overflow-hidden border-dashed px-4 py-6 text-center whitespace-normal"
           disabled={pending}
+          aria-haspopup={isDesktop ? undefined : 'dialog'}
         >
-          <Camera className="me-2 h-4 w-4" />
-          {t('takePhoto')}
+          {pending ? (
+            <Loader2 className="h-7 w-7 animate-spin" />
+          ) : (
+            <Paperclip className="h-7 w-7 text-muted-foreground" />
+          )}
+          <span className="max-w-full font-medium break-words">
+            {pending ? t('uploading') : t('addAttachments')}
+          </span>
+          <span className="max-w-full text-xs leading-relaxed font-normal text-pretty break-words text-muted-foreground">
+            {t('dropDescription')}
+          </span>
         </Button>
+      )}
+
+      {!isDesktop && !readOnly && (
+        <Drawer open={pickerOpen} onOpenChange={setPickerOpen}>
+          <DrawerContent>
+            <DrawerHeader className="text-start">
+              <DrawerTitle>{t('addAttachments')}</DrawerTitle>
+              <DrawerDescription>{t('dropDescription')}</DrawerDescription>
+            </DrawerHeader>
+            <div className="grid gap-1 px-4 pb-4">
+              <button
+                type="button"
+                className="flex min-h-14 items-center gap-3 rounded-lg px-3 text-start text-sm font-medium hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
+                onClick={takePhoto}
+                disabled={pending}
+              >
+                <Camera
+                  className="size-5 text-muted-foreground"
+                  aria-hidden="true"
+                />
+                <span>{t('takePhoto')}</span>
+              </button>
+              <button
+                type="button"
+                className="flex min-h-14 items-center gap-3 rounded-lg px-3 text-start text-sm font-medium hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
+                onClick={selectFromDevice}
+                disabled={pending}
+              >
+                <Paperclip
+                  className="size-5 text-muted-foreground"
+                  aria-hidden="true"
+                />
+                <span>{t('chooseFiles')}</span>
+              </button>
+            </div>
+          </DrawerContent>
+        </Drawer>
       )}
     </div>
   )

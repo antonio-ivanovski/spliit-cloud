@@ -702,11 +702,11 @@
         "description": "Seleziona per chi è stato ricevuto il reddito."
       },
       "splitModeDescription": "Seleziona come dividere l'entrata.",
-      "attachDescription": "Vedi ed allega la ricevuta per l'entrata.",
       "currencyField": {
         "label": "Valuta dell'entrata",
         "description": "La valuta in cui è stata ricevuta l'entrata."
       },
+      "attachDescription": "Aggiungi ricevute, foto e documenti di supporto a questa entrata.",
       "recurrence": {
         "scheduleHint": "Verrà creato alle {time} ({timeZone}) e potrebbe attivare una notifica. Scegli un orario che non disturbi il sonno. Modifica l’ora qui sopra per cambiarlo."
       }
@@ -741,11 +741,11 @@
         "description": "Seleziona per chi è stata pagata."
       },
       "splitModeDescription": "Seleziona come dividere la spesa.",
-      "attachDescription": "Vedi ed allega la ricevuta per la spesa.",
       "currencyField": {
         "label": "Valuta della spesa",
         "description": "La valuta in cui è stata pagata la spesa."
       },
+      "attachDescription": "Aggiungi ricevute, foto e documenti di supporto a questa spesa.",
       "createCopy": "Crea copia: {title}",
       "editTitle": "Modifica: {title}",
       "recurrence": {
@@ -860,7 +860,7 @@
       "cancel": "Annulla",
       "delete": "Elimina"
     },
-    "attachDocuments": "Documenti allegati",
+    "attachDocuments": "Allegati",
     "create": "Crea",
     "creating": "Sto creando…",
     "save": "Salva",
@@ -1072,7 +1072,10 @@
     "UnsupportedToast": {
       "title": "File non supportato",
       "description": "{fileName} non è un tipo di allegato supportato."
-    }
+    },
+    "addAttachments": "Aggiungi allegati",
+    "uploading": "Caricamento…",
+    "noAttachments": "Nessun allegato."
   },
   "CreateFromReceipt": {
     "Dialog": {

@@ -694,7 +694,7 @@
         "description": "Pilih peserta yang berbagi pendapatan ini."
       },
       "splitModeDescription": "Pilih cara membagi pemasukan.",
-      "attachDescription": "Lihat dan lampirkan tanda terima pada pemasukan.",
+      "attachDescription": "Tambahkan struk, foto, dan dokumen pendukung ke pemasukan ini.",
       "recurrence": {
         "scheduleHint": "Akan dibuat pada {time} ({timeZone}) dan dapat memicu notifikasi. Pilih waktu yang tidak mengganggu tidur. Edit waktu di atas untuk mengubahnya."
       }
@@ -733,7 +733,7 @@
         "description": "Pilih peserta yang berbagi pengeluaran ini."
       },
       "splitModeDescription": "Pilih cara membagi pengeluaran.",
-      "attachDescription": "Lihat dan lampirkan tanda terima pada pengeluaran.",
+      "attachDescription": "Tambahkan struk, foto, dan dokumen pendukung ke pengeluaran ini.",
       "createCopy": "Buat salinan: {title}",
       "editTitle": "Ubah: {title}",
       "recurrence": {
@@ -868,7 +868,7 @@
       "cancel": "Batalkan",
       "delete": "Hapus"
     },
-    "attachDocuments": "Lampirkan dokumen",
+    "attachDocuments": "Lampiran",
     "create": "Buat",
     "creating": "Membuat…",
     "save": "Simpan",
@@ -1367,7 +1367,10 @@
     "UnsupportedToast": {
       "title": "File tidak didukung",
       "description": "{fileName} bukan jenis lampiran yang didukung."
-    }
+    },
+    "addAttachments": "Tambahkan lampiran",
+    "uploading": "Mengupload…",
+    "noAttachments": "Belum ada lampiran."
   },
   "CreateFromReceipt": {
     "Dialog": {

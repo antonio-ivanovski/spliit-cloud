@@ -712,7 +712,7 @@
         "description": "Podaj dla kogo wpływ był przeznaczony."
       },
       "splitModeDescription": "Wybierz jak podzielić wpływ.",
-      "attachDescription": "Zobacz i załącz rachunki do wpływu.",
+      "attachDescription": "Dodaj paragony, zdjęcia i dokumenty pomocnicze do tego przychodu.",
       "recurrence": {
         "scheduleHint": "Zostanie utworzone o {time} ({timeZone}) i może wywołać powiadomienie. Wybierz godzinę, która nie zakłóci snu. Aby ją zmienić, edytuj godzinę powyżej."
       }
@@ -751,7 +751,7 @@
         "description": "Wybierz uczestników, między których zostanie podzielony ten wydatek."
       },
       "splitModeDescription": "Wybierz jak podzielić wydatek.",
-      "attachDescription": "Zobacz i załącz rachunki do wydatku.",
+      "attachDescription": "Dodaj paragony, zdjęcia i dokumenty pomocnicze do tego wydatku.",
       "createCopy": "Utwórz kopię: {title}",
       "editTitle": "Edytuj: {title}",
       "recurrence": {
@@ -889,7 +889,7 @@
       "cancel": "Anuluj",
       "delete": "Usuń"
     },
-    "attachDocuments": "Załącz dokumenty",
+    "attachDocuments": "Załączniki",
     "create": "Stwórz",
     "creating": "Tworzenie…",
     "save": "Zapisz",
@@ -1079,7 +1079,10 @@
     "UnsupportedToast": {
       "title": "Nieobsługiwany plik",
       "description": "{fileName} to nieobsługiwany typ załącznika."
-    }
+    },
+    "addAttachments": "Dodaj załączniki",
+    "uploading": "Przesyłanie…",
+    "noAttachments": "Brak załączników."
   },
   "CreateFromReceipt": {
     "Dialog": {

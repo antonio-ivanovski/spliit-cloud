@@ -1155,7 +1155,10 @@
     "UnsupportedToast": {
       "title": "Filtypen stöds inte",
       "description": "{fileName} är en bilagetyp som inte stöds."
-    }
+    },
+    "addAttachments": "Lägg till bilagor",
+    "uploading": "Laddar upp…",
+    "noAttachments": "Inga bilagor ännu."
   },
   "ExpenseForm": {
     "paidForItemizedEntryHint": "För att fördela per rad, redigera deltagare från en rad.",
@@ -1188,7 +1191,7 @@
       },
       "categoryFieldDescription": "Välj utgiftskategori.",
       "splitModeDescription": "Välj hur utgiften ska fördelas.",
-      "attachDescription": "Se och bifoga kvitton till utgiften.",
+      "attachDescription": "Lägg till kvitton, foton och stödjande dokument till utgiften.",
       "createCopy": "Skapa kopia: {title}",
       "currencyField": {
         "label": "Utgiftsvaluta",
@@ -1277,7 +1280,6 @@
       },
       "categoryFieldDescription": "Välj inkomstkategori.",
       "splitModeDescription": "Välj hur inkomsten ska fördelas.",
-      "attachDescription": "Se och bifoga kvitton till inkomsten.",
       "currencyField": {
         "label": "Inkomstvaluta",
         "description": "Valutan som inkomsten togs emot i."
@@ -1290,6 +1292,7 @@
         "title": "Tilldelad till",
         "description": "Välj vilka deltagare som delar på denna inkomst."
       },
+      "attachDescription": "Lägg till kvitton, foton och stödjande dokument till inkomsten.",
       "recurrence": {
         "scheduleHint": "Skapas kl. {time} ({timeZone}) och kan utlösa en avisering. Välj en tid som inte stör sömnen. Redigera tiden ovan för att ändra den."
       }
@@ -1297,7 +1300,7 @@
     "PaidBySplitModeField": {
       "label": "Betalarens fördelningssätt"
     },
-    "attachDocuments": "Bifoga dokument",
+    "attachDocuments": "Bilagor",
     "create": "Skapa",
     "creating": "Skapar…",
     "save": "Spara",

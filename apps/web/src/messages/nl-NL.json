@@ -724,7 +724,7 @@
         "description": "Selecteer de deelnemers over wie deze inkomsten worden verdeeld."
       },
       "splitModeDescription": "Selecteer hoe het inkomen verdeeld moet worden.",
-      "attachDescription": "Bekijk en voeg bijlagen toe aan het inkomen.",
+      "attachDescription": "Voeg bonnetjes, foto’s en ondersteunende documenten toe aan dit inkomen.",
       "recurrence": {
         "scheduleHint": "Wordt om {time} ({timeZone}) aangemaakt en kan een melding activeren. Kies een tijd die de nachtrust niet verstoort. Bewerk de tijd hierboven om deze te wijzigen."
       }
@@ -763,7 +763,7 @@
         "description": "Selecteer de deelnemers over wie deze uitgave wordt verdeeld."
       },
       "splitModeDescription": "Selecteer hoe de uitgave verdeeld moet worden.",
-      "attachDescription": "Bekijk en voeg bijlagen toe aan de uitgave.",
+      "attachDescription": "Voeg bonnetjes, foto’s en ondersteunende documenten toe aan deze uitgave.",
       "createCopy": "Kopie maken: {title}",
       "editTitle": "Bewerken: {title}",
       "recurrence": {
@@ -901,7 +901,7 @@
       "cancel": "Annuleer",
       "delete": "Verwijderen"
     },
-    "attachDocuments": "Voeg documenten toe",
+    "attachDocuments": "Bijlagen",
     "create": "Maken",
     "creating": "Aan het maken…",
     "save": "Opslaan",
@@ -1093,7 +1093,10 @@
     "UnsupportedToast": {
       "title": "Niet-ondersteund bestand",
       "description": "{fileName} is geen ondersteund bijlagetype."
-    }
+    },
+    "addAttachments": "Bijlagen toevoegen",
+    "uploading": "Uploaden…",
+    "noAttachments": "Nog geen bijlagen."
   },
   "CreateFromReceipt": {
     "Dialog": {

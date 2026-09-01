@@ -702,11 +702,11 @@
         "description": "Selecione para quem a receita foi recebida."
       },
       "splitModeDescription": "Selecione como dividir a receita.",
-      "attachDescription": "Veja e anexe recibos à receita.",
       "currencyField": {
         "label": "Moeda da receita",
         "description": "A moeda na qual a receita foi recebida."
       },
+      "attachDescription": "Adicione recibos, fotos e documentos de apoio a esta receita.",
       "recurrence": {
         "scheduleHint": "Será criado às {time} ({timeZone}) e poderá disparar uma notificação. Escolha um horário que não atrapalhe o sono. Edite o horário acima para alterá-lo."
       }
@@ -733,7 +733,6 @@
         "description": "Selecione para quem a despesa foi paga."
       },
       "splitModeDescription": "Selecione como dividir a despesa.",
-      "attachDescription": "Veja e anexe recibos à despesa.",
       "recurrenceRule": {
         "label": "Recorrência da Despesa",
         "description": "Selecione a frequência de recorrência da despesa.",
@@ -746,6 +745,7 @@
         "label": "Moeda da despesa",
         "description": "A moeda na qual a despesa foi paga."
       },
+      "attachDescription": "Adicione recibos, fotos e documentos de apoio a esta despesa.",
       "createCopy": "Criar cópia: {title}",
       "editTitle": "Editar: {title}",
       "recurrence": {
@@ -860,7 +860,7 @@
       "cancel": "Cancelar",
       "delete": "Excluir"
     },
-    "attachDocuments": "Anexar documentos",
+    "attachDocuments": "Anexos",
     "create": "Criar",
     "creating": "Criando…",
     "save": "Salvar",
@@ -1072,7 +1072,10 @@
     "UnsupportedToast": {
       "title": "Arquivo incompatível",
       "description": "{fileName} não é um tipo de anexo compatível."
-    }
+    },
+    "addAttachments": "Adicionar anexos",
+    "uploading": "Enviando…",
+    "noAttachments": "Ainda não há anexos."
   },
   "CreateFromReceipt": {
     "Dialog": {

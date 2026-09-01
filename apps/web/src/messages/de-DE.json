@@ -724,7 +724,7 @@
         "description": "Wähle die Teilnehmenden aus, denen diese Einnahme zugeordnet wird."
       },
       "splitModeDescription": "Wähle, wie die Einnahme aufgeteilt werden soll.",
-      "attachDescription": "Füge der Einnahme einen Beleg hinzu.",
+      "attachDescription": "Füge dieser Einnahme Belege, Fotos und unterstützende Dokumente hinzu.",
       "recurrence": {
         "scheduleHint": "Wird um {time} Uhr ({timeZone}) erstellt und kann eine Benachrichtigung auslösen. Wähle eine Uhrzeit, die niemanden beim Schlafen stört. Ändere dazu die Uhrzeit oben."
       }
@@ -763,7 +763,7 @@
         "description": "Wähle die Teilnehmenden aus, auf die diese Ausgabe aufgeteilt wird."
       },
       "splitModeDescription": "Wähle, wie die Ausgabe aufgeteilt werden soll.",
-      "attachDescription": "Füge der Ausgabe einen Beleg hinzu.",
+      "attachDescription": "Füge dieser Ausgabe Belege, Fotos und unterstützende Dokumente hinzu.",
       "createCopy": "Kopie erstellen: {title}",
       "editTitle": "Bearbeiten: {title}",
       "recurrence": {
@@ -901,7 +901,7 @@
       "cancel": "Abbrechen",
       "delete": "Löschen"
     },
-    "attachDocuments": "Dokument hinzufügen",
+    "attachDocuments": "Anhänge",
     "create": "Erstellen",
     "creating": "Erstellt…",
     "save": "Speichern",
@@ -1093,7 +1093,10 @@
     "UnsupportedToast": {
       "title": "Nicht unterstützte Datei",
       "description": "{fileName} ist kein unterstützter Anhangstyp."
-    }
+    },
+    "addAttachments": "Anhänge hinzufügen",
+    "uploading": "Wird hochgeladen…",
+    "noAttachments": "Noch keine Anhänge."
   },
   "CreateFromReceipt": {
     "Dialog": {

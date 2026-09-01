@@ -1,6 +1,4 @@
 import { useMutation } from '@tanstack/react-query'
-import type { ChangeEvent, InputHTMLAttributes } from 'react'
-import { useRef } from 'react'
 
 import { trpc } from '@/trpc/client'
 
@@ -129,8 +127,34 @@ export async function prepareProfileImage(file: File): Promise<File> {
   return new File([blob], 'profile.jpg', { type: 'image/jpeg' })
 }
 
-export function usePresignedUpload(ledgerId?: string | null) {
-  const inputRefs = useRef(new Map<string, HTMLInputElement>())
+export class PresignedUploadError extends Error {
+  constructor(readonly status: number) {
+    super(`Upload failed (${status})`)
+    this.name = 'PresignedUploadError'
+  }
+}
+
+export async function uploadToPresignedUrl({
+  uploadUrl,
+  body,
+  contentType,
+  signal,
+}: {
+  uploadUrl: string
+  body: Blob
+  contentType: string
+  signal?: AbortSignal
+}): Promise<void> {
+  const response = await fetch(uploadUrl, {
+    method: 'PUT',
+    headers: { 'Content-Type': contentType },
+    body,
+    signal,
+  })
+  if (!response.ok) throw new PresignedUploadError(response.status)
+}
+
+export function useExpenseDocumentUpload(ledgerId?: string | null) {
   const presignMutation = trpc.uploads.presign.useMutation()
 
   // react-doctor-disable-next-line react-doctor/query-mutation-missing-invalidation -- S3 upload, caller invalidates with returned URL
@@ -143,49 +167,16 @@ export function usePresignedUpload(ledgerId?: string | null) {
         contentType,
         fileSize: file.size,
       })
-      const uploadResponse = await fetch(uploadUrl, {
-        method: 'PUT',
-        headers: { 'Content-Type': contentType },
+      await uploadToPresignedUrl({
+        uploadUrl,
+        contentType,
         body: file,
       })
-      if (!uploadResponse.ok) throw new Error('Upload failed')
       return { url: fileUrl }
     },
   })
 
-  function FileInput({
-    onChange,
-    onFilesChange,
-    inputId = 'file',
-    ...props
-  }: Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'onChange'> & {
-    inputId?: string
-    onChange?: (file: File) => void
-    onFilesChange?: (files: File[]) => void
-  }) {
-    return (
-      <input
-        {...props}
-        ref={(node) => {
-          if (node) inputRefs.current.set(inputId, node)
-          else inputRefs.current.delete(inputId)
-        }}
-        type="file"
-        className="hidden"
-        onChange={(event: ChangeEvent<HTMLInputElement>) => {
-          const files = Array.from(event.target.files ?? [])
-          if (onFilesChange) onFilesChange(files)
-          else if (files[0]) onChange?.(files[0])
-          event.target.value = ''
-        }}
-      />
-    )
-  }
-
   return {
-    FileInput,
-    openFileDialog: (inputId = 'file') =>
-      inputRefs.current.get(inputId)?.click(),
     uploadToS3: uploadMutation.mutateAsync,
     isUploading: uploadMutation.isPending,
   }

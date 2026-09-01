@@ -21,6 +21,7 @@ import {
 } from '@/app/groups/[groupId]/expenses/ai-expense-preview'
 import { CategoryIcon } from '@/app/groups/[groupId]/expenses/category-icon'
 import Image from '@/components/app-image'
+import { FilePickerInput } from '@/components/file-picker-input'
 import { useMascotController } from '@/components/mascot/mascot-context'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -29,7 +30,7 @@ import { ToastAction } from '@/components/ui/toast'
 import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
 import { getCurrency } from '@/lib/currency'
-import { resizeImage, usePresignedUpload } from '@/lib/upload'
+import { resizeImage, useExpenseDocumentUpload } from '@/lib/upload'
 import {
   cn,
   formatCurrency,
@@ -339,9 +340,9 @@ function ReceiptDialogContent({
   useEffect(() => {
     translateRef.current = translateToLocale
   })
-  const { uploadToS3, FileInput, openFileDialog } = usePresignedUpload(
-    group?.ledgerId,
-  )
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const cameraInputRef = useRef<HTMLInputElement>(null)
+  const { uploadToS3 } = useExpenseDocumentUpload(group?.ledgerId)
   const { toast } = useToast()
   const mascot = useMascotController()
   const extractReceiptMutation =
@@ -592,15 +593,18 @@ function ReceiptDialogContent({
           {t('Dialog.translateToLocale', { language: languageLabel })}
         </Label>
       </div>
-      <FileInput
-        onFilesChange={handleFiles}
+      <FilePickerInput
+        ref={fileInputRef}
+        onFilesSelected={handleFiles}
         accept={EXPENSE_DOCUMENT_IMAGE_ACCEPT}
+        className="hidden"
       />
-      <FileInput
-        inputId="camera"
-        onFilesChange={handleFiles}
+      <FilePickerInput
+        ref={cameraInputRef}
+        onFilesSelected={handleFiles}
         accept="image/*"
         capture="environment"
+        className="hidden"
       />
       {!selectedDocument && imageDocuments.length > 0 && (
         <div className="not-prose mb-4 space-y-2">
@@ -633,7 +637,7 @@ function ReceiptDialogContent({
             type="button"
             variant="outline"
             className="min-w-0 flex-1 rounded-none border-0"
-            onClick={() => openFileDialog()}
+            onClick={() => fileInputRef.current?.click()}
             disabled={pending}
           >
             <ScanLine className="me-2 h-4 w-4" />
@@ -643,7 +647,7 @@ function ReceiptDialogContent({
             type="button"
             variant="outline"
             className="rounded-none border-0 border-s sm:hidden"
-            onClick={() => openFileDialog('camera')}
+            onClick={() => cameraInputRef.current?.click()}
             disabled={pending}
             aria-label={t('Dialog.takePhoto')}
           >

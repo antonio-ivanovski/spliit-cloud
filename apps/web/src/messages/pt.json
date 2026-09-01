@@ -816,7 +816,7 @@
         "description": "Seleciona para quem a receita foi recebida."
       },
       "splitModeDescription": "Seleciona como dividir a receita.",
-      "attachDescription": "Ver e anexar recibos à receita.",
+      "attachDescription": "Adiciona recibos, fotografias e documentos de apoio a esta receita.",
       "recurrence": {
         "scheduleHint": "Será criado às {time} ({timeZone}) e poderá acionar uma notificação. Escolhe uma hora que não perturbe o sono. Edita a hora acima para a alterar."
       }
@@ -855,7 +855,7 @@
         "description": "Seleciona para quem a despesa foi paga."
       },
       "splitModeDescription": "Seleciona como dividir a despesa.",
-      "attachDescription": "Ver e anexar recibos à despesa.",
+      "attachDescription": "Adiciona recibos, fotografias e documentos de apoio a esta despesa.",
       "createCopy": "Criar cópia: {title}",
       "editTitle": "Editar: {title}",
       "recurrence": {
@@ -993,7 +993,7 @@
       "cancel": "Cancelar",
       "delete": "Eliminar"
     },
-    "attachDocuments": "Anexar documentos",
+    "attachDocuments": "Anexos",
     "create": "Criar",
     "creating": "A criar…",
     "save": "Guardar",
@@ -1182,7 +1182,10 @@
     "UnsupportedToast": {
       "title": "Ficheiro não suportado",
       "description": "{fileName} não é um tipo de anexo suportado."
-    }
+    },
+    "addAttachments": "Adicionar anexos",
+    "uploading": "A carregar…",
+    "noAttachments": "Ainda não existem anexos."
   },
   "CreateFromReceipt": {
     "Dialog": {

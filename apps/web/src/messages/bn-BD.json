@@ -1191,7 +1191,10 @@
     "UnsupportedToast": {
       "title": "অসমর্থিত ফাইল",
       "description": "{fileName} সমর্থিত সংযুক্তি ফাইল নয়।"
-    }
+    },
+    "addAttachments": "অ্যাটাচমেন্ট যোগ করুন",
+    "uploading": "আপলোড হচ্ছে…",
+    "noAttachments": "এখনও কোনো অ্যাটাচমেন্ট নেই।"
   },
   "ExpenseForm": {
     "paidForItemizedEntryHint": "আইটেম অনুযায়ী ভাগ করতে, একটি আইটেম সারি থেকে অংশগ্রহণকারী সম্পাদনা করুন।",
@@ -1224,7 +1227,7 @@
       },
       "categoryFieldDescription": "খরচের বিভাগ নির্বাচন করুন।",
       "splitModeDescription": "কীভাবে খরচ ভাগ করবেন তা নির্বাচন করুন।",
-      "attachDescription": "খরচের সাথে রসিদ দেখুন এবং সংযুক্ত করুন।",
+      "attachDescription": "এই খরচে রসিদ, ছবি ও সহায়ক নথি যোগ করুন।",
       "createCopy": "কপি তৈরি করুন: {title}",
       "currencyField": {
         "label": "খরচের মুদ্রা",
@@ -1313,7 +1316,6 @@
       },
       "categoryFieldDescription": "আয়ের বিভাগ নির্বাচন করুন।",
       "splitModeDescription": "কীভাবে আয় ভাগ করবেন তা নির্বাচন করুন।",
-      "attachDescription": "আয়ের সাথে রসিদ দেখুন এবং সংযুক্ত করুন।",
       "currencyField": {
         "label": "আয়ের মুদ্রা",
         "description": "যে মুদ্রায় আয় গৃহীত হয়েছে।"
@@ -1326,6 +1328,7 @@
         "title": "বরাদ্দকৃত",
         "description": "এই আয় ভাগ করে নেয় এমন অংশগ্রহণকারীদের নির্বাচন করুন।"
       },
+      "attachDescription": "এই আয়ে রসিদ, ছবি ও সহায়ক নথি যোগ করুন।",
       "recurrence": {
         "scheduleHint": "{time} ({timeZone})-এ তৈরি হবে এবং একটি বিজ্ঞপ্তি চালু হতে পারে। ঘুমে ব্যাঘাত ঘটাবে না এমন সময় বেছে নিন। পরিবর্তন করতে ওপরের সময়টি সম্পাদনা করুন।"
       }
@@ -1333,7 +1336,7 @@
     "PaidBySplitModeField": {
       "label": "প্রদানকারীর ভাগ মোড"
     },
-    "attachDocuments": "ডকুমেন্ট সংযুক্ত করুন",
+    "attachDocuments": "অ্যাটাচমেন্ট",
     "create": "তৈরি করুন",
     "creating": "তৈরি করা হচ্ছে…",
     "save": "সংরক্ষণ করুন",

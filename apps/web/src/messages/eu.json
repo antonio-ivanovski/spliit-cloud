@@ -706,7 +706,7 @@
         "description": "Hautatu norentzat jaso den diru-sarrera."
       },
       "splitModeDescription": "Hautatu nola zatitu diru-sarrera.",
-      "attachDescription": "Ordainagiriak ikusi eta diru-sarrerei erantsi.",
+      "attachDescription": "Gehitu ordainagiriak, argazkiak eta euskarri-dokumentuak diru-sarrera honetara.",
       "recurrence": {
         "scheduleHint": "{time}etan ({timeZone}) sortuko da, eta baliteke jakinarazpen bat eragitea. Aukeratu loaldia eragozten ez duen ordu bat. Aldatzeko, editatu goiko ordua."
       }
@@ -745,7 +745,7 @@
         "description": "Hautatu gastua norentzat ordaindu den."
       },
       "splitModeDescription": "Hautatu nola zatitu gastua.",
-      "attachDescription": "Ikusi eta erantsi gastuaren ordainagiriak.",
+      "attachDescription": "Gehitu ordainagiriak, argazkiak eta euskarri-dokumentuak gastu honetara.",
       "createCopy": "Sortu kopia: {title}",
       "editTitle": "Editatu: {title}",
       "recurrence": {
@@ -880,7 +880,7 @@
       "cancel": "Utzi",
       "delete": "Ezabatu"
     },
-    "attachDocuments": "Erantsi dokumentuak",
+    "attachDocuments": "Eranskinak",
     "create": "Sortu",
     "creating": "Sortzen…",
     "save": "Gorde",
@@ -1072,7 +1072,10 @@
     "UnsupportedToast": {
       "title": "Onartu gabeko fitxategia",
       "description": "{fileName} ez da eranskin mota onartua."
-    }
+    },
+    "addAttachments": "Eranskinak gehitu",
+    "uploading": "Kargatzen…",
+    "noAttachments": "Oraindik ez dago eranskinik."
   },
   "CreateFromReceipt": {
     "Dialog": {

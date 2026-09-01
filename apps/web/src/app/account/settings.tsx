@@ -4,12 +4,13 @@ import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AccountAvatar } from '@/components/account-avatar'
+import { FilePickerInput } from '@/components/file-picker-input'
 import { PageShell } from '@/components/layout/page-shell'
 import { RequireAuth } from '@/components/require-auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
-import { prepareProfileImage } from '@/lib/upload'
+import { prepareProfileImage, uploadToPresignedUrl } from '@/lib/upload'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { useHashTargetFocus } from '@/lib/use-hash-target-focus'
 import { cn } from '@/lib/utils'
@@ -146,12 +147,11 @@ function AccountSettingsContent() {
       const { uploadUrl, fileUrl } = await presignProfileImage.mutateAsync({
         fileSize: prepared.size,
       })
-      const uploadResponse = await fetch(uploadUrl, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'image/jpeg' },
+      await uploadToPresignedUrl({
+        uploadUrl,
+        contentType: 'image/jpeg',
         body: prepared,
       })
-      if (!uploadResponse.ok) throw new Error('Upload failed')
       await setProfileImage.mutateAsync({ fileUrl })
       await refreshAccount()
       toast({ description: t('image.updated') })
@@ -229,16 +229,11 @@ function AccountSettingsContent() {
                     className="shrink-0"
                   />
                   <div className="flex flex-wrap gap-2 sm:flex-1">
-                    <input
+                    <FilePickerInput
                       ref={imageInputRef}
-                      type="file"
                       accept="image/*,.heic,.heif"
                       className="hidden"
-                      onChange={(event) => {
-                        const file = event.target.files?.[0]
-                        if (file) void handleImageChange(file)
-                        event.target.value = ''
-                      }}
+                      onFilesSelected={([file]) => void handleImageChange(file)}
                     />
                     <Button
                       type="button"

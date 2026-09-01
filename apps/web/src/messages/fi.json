@@ -700,7 +700,7 @@
         "description": "Valitse osallistujat, joille tulo kohdistetaan."
       },
       "splitModeDescription": "Valitse miten tulo jaetaan osallistujien kesken.",
-      "attachDescription": "Katso ja liitä tuloon liittyviä kuitteja.",
+      "attachDescription": "Lisää kuitit, kuvat ja tukiasiakirjat tähän tuloon.",
       "recurrence": {
         "scheduleHint": "Luodaan klo {time} ({timeZone}), mikä voi käynnistää ilmoituksen. Valitse aika, joka ei häiritse unta. Voit vaihtaa ajan muokkaamalla sitä yllä."
       }
@@ -739,7 +739,7 @@
         "description": "Valitse osallistujat, joiden kesken kulu jaetaan."
       },
       "splitModeDescription": "Valitse miten kulu jaetaan osallistujien kesken.",
-      "attachDescription": "Katso ja liitä kuluun liittyviä kuitteja.",
+      "attachDescription": "Lisää kuitit, kuvat ja tukiasiakirjat tähän kuluun.",
       "createCopy": "Luo kopio: {title}",
       "editTitle": "Muokkaa: {title}",
       "recurrence": {
@@ -877,7 +877,7 @@
       "cancel": "Peruuta",
       "delete": "Poista"
     },
-    "attachDocuments": "Liitä dokumenttejä",
+    "attachDocuments": "Liitteet",
     "create": "Lisää kulu",
     "creating": "Luodaan kulua…",
     "save": "Tallenna",
@@ -1065,7 +1065,10 @@
     "UnsupportedToast": {
       "title": "Tiedostotyyppiä ei tueta",
       "description": "{fileName} ei ole tuettu liitetyyppi."
-    }
+    },
+    "addAttachments": "Lisää liitteitä",
+    "uploading": "Ladataan…",
+    "noAttachments": "Ei liitteitä vielä."
   },
   "CreateFromReceipt": {
     "Dialog": {

@@ -690,11 +690,11 @@
         "description": "选择共同分配此收入的参与者。"
       },
       "splitModeDescription": "选择如何划分这笔收入。",
-      "attachDescription": "查看并为这笔收入附加收据。",
       "currencyField": {
         "label": "收入币种",
         "description": "接收该收入所用的货币。"
       },
+      "attachDescription": "向此收入添加收据、照片和辅助文档。",
       "recurrence": {
         "scheduleHint": "将在 {time}（{timeZone}）创建，并可能触发通知。请选择不会影响休息的时间。如需更改，请编辑上方的时间。"
       }
@@ -721,7 +721,6 @@
         "description": "选择共同分摊此支出的参与者。"
       },
       "splitModeDescription": "选择如何划分这笔消费。",
-      "attachDescription": "查看并为这笔消费附加收据。",
       "currencyField": {
         "label": "支出币种",
         "description": "支付该支出所用的货币。"
@@ -734,6 +733,7 @@
         "weekly": "每周",
         "monthly": "每月"
       },
+      "attachDescription": "向此支出添加收据、照片和辅助文档。",
       "createCopy": "创建副本：{title}",
       "editTitle": "编辑：{title}",
       "recurrence": {
@@ -848,7 +848,7 @@
       "cancel": "取消",
       "delete": "删除"
     },
-    "attachDocuments": "附加文档",
+    "attachDocuments": "附件",
     "create": "创建",
     "creating": "创建中……",
     "save": "保存",
@@ -1058,7 +1058,10 @@
     "UnsupportedToast": {
       "title": "不支持的文件",
       "description": "{fileName} 不是受支持的附件类型。"
-    }
+    },
+    "addAttachments": "添加附件",
+    "uploading": "正在上传…",
+    "noAttachments": "暂无附件。"
   },
   "CreateFromReceipt": {
     "Dialog": {

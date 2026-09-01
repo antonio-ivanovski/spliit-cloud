@@ -31,8 +31,8 @@ export function EditButton({
       data-testid={testId}
       className={cn('flex-1 sm:flex-none', className)}
     >
-      <Pencil className="me-2 h-4 w-4" aria-hidden="true" />
-      {label}
+      <Pencil className="me-1.5 h-4 w-4 shrink-0 sm:me-2" aria-hidden="true" />
+      <span className="truncate">{label}</span>
     </Button>
   )
 }

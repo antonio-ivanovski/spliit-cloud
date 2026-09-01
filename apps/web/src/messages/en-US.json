@@ -1240,7 +1240,7 @@
         "description": "Select the participants who share this income."
       },
       "splitModeDescription": "Select how to split the income.",
-      "attachDescription": "See and attach receipts to the income.",
+      "attachDescription": "Add receipts, photos, and supporting documents to this income.",
       "recurrence": {
         "scheduleHint": "Will be created at {time} {timeZone} and may trigger a notification — pick a sleep-safe time. Edit the time above to change this."
       }
@@ -1324,7 +1324,7 @@
         "description": "Select the participants who share this expense."
       },
       "splitModeDescription": "Select how to split the expense.",
-      "attachDescription": "See and attach receipts to the expense.",
+      "attachDescription": "Add receipts, photos, and supporting documents to this expense.",
       "createCopy": "Create copy: {title}",
       "editTitle": "Edit: {title}",
       "recurringEditScopeOccurrence": "Editing this occurrence only",
@@ -1420,7 +1420,7 @@
       "cancel": "Cancel",
       "delete": "Delete"
     },
-    "attachDocuments": "Attach documents",
+    "attachDocuments": "Attachments",
     "create": "Create",
     "creating": "Creating…",
     "save": "Save",
@@ -1609,7 +1609,10 @@
     },
     "FileErrorToast": {
       "description": "{fileName}: something went wrong while uploading. Please retry later or choose a different file."
-    }
+    },
+    "addAttachments": "Add attachments",
+    "uploading": "Uploading…",
+    "noAttachments": "No attachments yet."
   },
   "CreateFromReceipt": {
     "Dialog": {

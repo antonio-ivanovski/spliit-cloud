@@ -720,11 +720,11 @@
         "description": "Selecciona los participantes que comparten estos ingresos."
       },
       "splitModeDescription": "Selecciona cómo quieres dividir el ingreso.",
-      "attachDescription": "Ver y adjuntar tickets para el ingreso.",
       "currencyField": {
         "label": "Moneda del ingreso",
         "description": "La moneda en la que se recibieron los ingresos."
       },
+      "attachDescription": "Añade recibos, fotos y documentos de apoyo a este ingreso.",
       "recurrence": {
         "scheduleHint": "Se creará a las {time} ({timeZone}) y puede activar una notificación. Elige una hora que no interrumpa el descanso. Para cambiarla, edita la hora de arriba."
       }
@@ -759,11 +759,11 @@
         "description": "Selecciona los participantes que comparten este gasto."
       },
       "splitModeDescription": "Selecciona cómo quieres dividir el gasto.",
-      "attachDescription": "Ver y adjuntar tickets para el gasto.",
       "currencyField": {
         "label": "Moneda del gasto",
         "description": "La moneda en la que se pagó el gasto."
       },
+      "attachDescription": "Añade recibos, fotos y documentos de apoyo a este gasto.",
       "createCopy": "Crear copia: {title}",
       "editTitle": "Editar: {title}",
       "recurrence": {
@@ -878,7 +878,7 @@
       "cancel": "Cancelar",
       "delete": "Eliminar"
     },
-    "attachDocuments": "Adjuntar documentos",
+    "attachDocuments": "Archivos adjuntos",
     "create": "Crear",
     "creating": "Creando…",
     "save": "Guardar",
@@ -1093,7 +1093,10 @@
     "UnsupportedToast": {
       "title": "Archivo no compatible",
       "description": "{fileName} no es un tipo de archivo adjunto compatible."
-    }
+    },
+    "addAttachments": "Añadir archivos adjuntos",
+    "uploading": "Subiendo…",
+    "noAttachments": "Aún no hay archivos adjuntos."
   },
   "CreateFromReceipt": {
     "Dialog": {

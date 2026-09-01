@@ -16,7 +16,7 @@ import {
   ResponsiveDialogTitle,
 } from '@/components/ui/responsive-dialog'
 import { getApiBaseUrl } from '@/lib/api-url'
-import { resizeImage } from '@/lib/upload'
+import { resizeImage, uploadToPresignedUrl } from '@/lib/upload'
 import { trpc } from '@/trpc/client'
 import type { NormalizedSource } from '@spliit/domain/import'
 
@@ -296,20 +296,16 @@ export function DocumentsStep({
               documentController.signal,
               abortDocument,
             )
-            const upload = await withTimeout(
-              fetch(staged.uploadUrl, {
-                method: 'PUT',
-                headers: {
-                  'Content-Type':
-                    document.contentType ?? 'application/octet-stream',
-                },
+            await withTimeout(
+              uploadToPresignedUrl({
+                uploadUrl: staged.uploadUrl,
+                contentType: document.contentType ?? 'application/octet-stream',
                 body: new Blob([bytes as Uint8Array<ArrayBuffer>]),
                 signal: documentController.signal,
               }),
               documentController.signal,
               abortDocument,
             )
-            if (!upload.ok) throw new Error(`Upload failed (${upload.status})`)
             nextCloudDocuments.push({
               sourceDocumentId: document.sourceId,
               stagedToken: staged.stagedToken,
@@ -401,13 +397,16 @@ export function DocumentsStep({
             width: resized.width,
             height: resized.height,
           })
-          const upload = await fetch(staged.uploadUrl, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'image/jpeg' },
-            body: resized.file,
-          })
-          if (!upload.ok) {
-            throw new Error(t('Groups.Import.Documents.uploadFailed'))
+          try {
+            await uploadToPresignedUrl({
+              uploadUrl: staged.uploadUrl,
+              contentType: 'image/jpeg',
+              body: resized.file,
+            })
+          } catch (cause) {
+            throw new Error(t('Groups.Import.Documents.uploadFailed'), {
+              cause,
+            })
           }
 
           nextTokens.push(staged.stagedToken)

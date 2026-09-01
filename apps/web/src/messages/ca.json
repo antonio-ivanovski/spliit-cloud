@@ -702,11 +702,11 @@
         "description": "Selecciona els participants que comparteixen aquests ingressos."
       },
       "splitModeDescription": "Selecciona com vols dividir la despesa.",
-      "attachDescription": "Veure i adjuntar tiquets a la despesa.",
       "currencyField": {
         "label": "Moneda del ingrés",
         "description": "La moneda en la que l'ingrés va ser rebut."
       },
+      "attachDescription": "Afegeix rebuts, fotos i documents de suport a aquest ingrés.",
       "recurrence": {
         "scheduleHint": "Es crearà a les {time} ({timeZone}) i pot activar una notificació. Tria una hora que no interrompi el descans. Per canviar-la, edita l’hora de dalt."
       }
@@ -733,7 +733,6 @@
         "description": "Selecciona els participants que comparteixen aquesta despesa."
       },
       "splitModeDescription": "Selecciona com vols dividir la despesa.",
-      "attachDescription": "Veure i adjuntar tiquets a la despesa.",
       "currencyField": {
         "label": "Moneda de la despesa",
         "description": "La moneda en la que la despesa es va pagar."
@@ -746,6 +745,7 @@
         "weekly": "Setmanalment",
         "monthly": "Mensualment"
       },
+      "attachDescription": "Afegeix rebuts, fotos i documents de suport a aquesta despesa.",
       "createCopy": "Crea una còpia: {title}",
       "editTitle": "Edita: {title}",
       "recurrence": {
@@ -860,7 +860,7 @@
       "cancel": "Cancel·lar",
       "delete": "Suprimeix"
     },
-    "attachDocuments": "Adjuntar documents",
+    "attachDocuments": "Fitxers adjunts",
     "create": "Crear",
     "creating": "Creant…",
     "save": "Desar",
@@ -1072,7 +1072,10 @@
     "UnsupportedToast": {
       "title": "Fitxer no compatible",
       "description": "{fileName} no és un tipus de fitxer adjunt compatible."
-    }
+    },
+    "addAttachments": "Afegeix fitxers adjunts",
+    "uploading": "S'està pujant…",
+    "noAttachments": "Encara no hi ha fitxers adjunts."
   },
   "CreateFromReceipt": {
     "Dialog": {

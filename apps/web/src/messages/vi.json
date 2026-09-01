@@ -1240,7 +1240,7 @@
         "description": "Cách chia khoản thu."
       },
       "splitModeDescription": "Cách chia khoản thu.",
-      "attachDescription": "Đính kèm tài liệu.",
+      "attachDescription": "Thêm biên lai, ảnh và tài liệu hỗ trợ vào khoản thu này.",
       "recurrence": {
         "scheduleHint": "Sẽ được tạo lúc {time} ({timeZone}) và có thể kích hoạt thông báo. Hãy chọn thời gian không làm gián đoạn giấc ngủ. Chỉnh sửa thời gian ở trên để thay đổi."
       }
@@ -1324,7 +1324,7 @@
         "description": "Cách chia chi phí."
       },
       "splitModeDescription": "Cách chia chi phí.",
-      "attachDescription": "Đính kèm tài liệu.",
+      "attachDescription": "Thêm biên lai, ảnh và tài liệu hỗ trợ vào khoản chi này.",
       "createCopy": "Tạo bản sao {title}",
       "editTitle": "Chỉnh sửa chi phí {title}",
       "recurringEditScopeOccurrence": "Chỉ lần này",
@@ -1420,7 +1420,7 @@
       "cancel": "Hủy",
       "delete": "Xóa"
     },
-    "attachDocuments": "Đính kèm",
+    "attachDocuments": "Tệp đính kèm",
     "create": "Tạo",
     "creating": "Đang tạo…",
     "save": "Lưu",
@@ -1609,7 +1609,10 @@
     "UnsupportedToast": {
       "title": "Tệp không được hỗ trợ",
       "description": "{fileName} không phải là loại tệp đính kèm được hỗ trợ."
-    }
+    },
+    "addAttachments": "Thêm tệp đính kèm",
+    "uploading": "Đang tải lên…",
+    "noAttachments": "Chưa có tệp đính kèm."
   },
   "CreateFromReceipt": {
     "Dialog": {

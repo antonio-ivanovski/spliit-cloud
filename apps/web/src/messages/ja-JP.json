@@ -690,11 +690,11 @@
         "description": "この収入を分ける参加者を選択します。"
       },
       "splitModeDescription": "収入の分割方法を選択してください。",
-      "attachDescription": "領収書を確認し、収入に添付してください。",
       "currencyField": {
         "label": "収入の通貨",
         "description": "収入が受け取られた通貨。"
       },
+      "attachDescription": "この収入にレシート、写真、補足書類を追加します。",
       "recurrence": {
         "scheduleHint": "{time}（{timeZone}）に作成され、通知が届く場合があります。睡眠を妨げない時刻を選んでください。変更するには上の時刻を編集してください。"
       }
@@ -729,11 +729,11 @@
         "description": "この支出を分担する参加者を選択します。"
       },
       "splitModeDescription": "支出の分割方法を選択してください。",
-      "attachDescription": "領収書を確認し、支出に添付してください。",
       "currencyField": {
         "label": "支出の通貨",
         "description": "支出が支払われた通貨。"
       },
+      "attachDescription": "この支出にレシート、写真、補足書類を追加します。",
       "createCopy": "コピーを作成：{title}",
       "editTitle": "編集：{title}",
       "recurrence": {
@@ -848,7 +848,7 @@
       "cancel": "キャンセル",
       "delete": "削除"
     },
-    "attachDocuments": "書類を添付",
+    "attachDocuments": "添付ファイル",
     "create": "作成",
     "creating": "作成中…",
     "save": "保存",
@@ -1058,7 +1058,10 @@
     "UnsupportedToast": {
       "title": "対応していないファイル",
       "description": "{fileName} は対応している添付ファイル形式ではありません。"
-    }
+    },
+    "addAttachments": "添付ファイルを追加",
+    "uploading": "アップロード中…",
+    "noAttachments": "添付ファイルはまだありません。"
   },
   "CreateFromReceipt": {
     "Dialog": {

@@ -690,11 +690,11 @@
         "description": "選擇共同分配此收入的參與者。"
       },
       "splitModeDescription": "選擇如何分配此筆收入。",
-      "attachDescription": "查看／附上此筆收入的收據。",
       "currencyField": {
         "label": "收入貨幣",
         "description": "收入所使用的貨幣。"
       },
+      "attachDescription": "將收據、照片和支援文件新增至此收入。",
       "recurrence": {
         "scheduleHint": "將於 {time}（{timeZone}）建立，並可能觸發通知。請選擇不會打擾休息的時間。如需變更，請編輯上方的時間。"
       }
@@ -733,7 +733,7 @@
         "weekly": "每週",
         "monthly": "每月"
       },
-      "attachDescription": "查看／附上此筆消費的收據。",
+      "attachDescription": "將收據、照片和支援文件新增至此支出。",
       "createCopy": "建立副本：{title}",
       "editTitle": "編輯：{title}",
       "recurrence": {
@@ -1058,7 +1058,10 @@
     "UnsupportedToast": {
       "title": "不支援的檔案",
       "description": "{fileName} 不是支援的附件類型。"
-    }
+    },
+    "addAttachments": "新增附件",
+    "uploading": "上傳中…",
+    "noAttachments": "尚無附件。"
   },
   "CreateFromReceipt": {
     "Dialog": {

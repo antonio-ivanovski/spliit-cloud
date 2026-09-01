@@ -712,7 +712,7 @@
         "description": "Vyberte účastníky, kterým se tento příjem přidělí."
       },
       "splitModeDescription": "Vyberte, jak rozdělit příjem.",
-      "attachDescription": "Zobrazit a připojit účtenky k příjmu.",
+      "attachDescription": "Přidejte účtenky, fotky a podpůrné dokumenty k tomuto příjmu.",
       "recurrence": {
         "scheduleHint": "Vytvoří se v {time} ({timeZone}) a může spustit oznámení. Zvolte čas, který nebude rušit spánek. Změníte ho úpravou času výše."
       }
@@ -751,7 +751,7 @@
         "description": "Vyberte účastníky, mezi které se tento výdaj rozdělí."
       },
       "splitModeDescription": "Vyberte, jak rozdělit výdaj.",
-      "attachDescription": "Zobrazit a připojit účtenky k výdaji.",
+      "attachDescription": "Přidejte účtenky, fotky a podpůrné dokumenty k tomuto výdaji.",
       "createCopy": "Vytvořit kopii: {title}",
       "editTitle": "Upravit: {title}",
       "recurrence": {
@@ -889,7 +889,7 @@
       "cancel": "Zrušit",
       "delete": "Smazat"
     },
-    "attachDocuments": "Připojit dokumenty",
+    "attachDocuments": "Přílohy",
     "create": "Vytvořit",
     "creating": "Vytváření…",
     "save": "Uložit",
@@ -1079,7 +1079,10 @@
     "UnsupportedToast": {
       "title": "Nepodporovaný soubor",
       "description": "{fileName} není podporovaný typ přílohy."
-    }
+    },
+    "addAttachments": "Přidat přílohy",
+    "uploading": "Nahrávání…",
+    "noAttachments": "Zatím žádné přílohy."
   },
   "CreateFromReceipt": {
     "Dialog": {

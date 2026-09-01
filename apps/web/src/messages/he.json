@@ -706,7 +706,7 @@
         "description": "בחירת המשתתפים והמשתתפות שמתחלקים בהכנסה הזאת."
       },
       "splitModeDescription": "בחר כיצד לפצל את ההכנסה.",
-      "attachDescription": "ראה וצרף קבלות להכנסה.",
+      "attachDescription": "הוסיפו קבלות, תמונות ומסמכים תומכים להכנסה הזו.",
       "recurrence": {
         "scheduleHint": "הפריט ייווצר בשעה {time} ({timeZone}) ועשוי להפעיל התראה. כדאי לבחור שעה שלא תפריע לשינה. כדי לשנות אותה, יש לערוך את השעה למעלה."
       }
@@ -745,7 +745,7 @@
         "description": "בחירת המשתתפים והמשתתפות שמתחלקים בהוצאה הזאת."
       },
       "splitModeDescription": "בחר כיצד לפצל את ההוצאה.",
-      "attachDescription": "ראה וצרף קבלות להוצאה.",
+      "attachDescription": "הוסיפו קבלות, תמונות ומסמכים תומכים להוצאה הזו.",
       "createCopy": "יצירת עותק: {title}",
       "editTitle": "עריכה: {title}",
       "recurrence": {
@@ -880,7 +880,7 @@
       "cancel": "ביטול",
       "delete": "מחיקה"
     },
-    "attachDocuments": "צרף מסמכים",
+    "attachDocuments": "קבצים מצורפים",
     "create": "צור",
     "creating": "יוצר…",
     "save": "שמור",
@@ -1072,7 +1072,10 @@
     "UnsupportedToast": {
       "title": "קובץ לא נתמך",
       "description": "{fileName} אינו סוג קובץ נתמך לצירוף."
-    }
+    },
+    "addAttachments": "הוספת קבצים מצורפים",
+    "uploading": "מעלה…",
+    "noAttachments": "אין עדיין קבצים מצורפים."
   },
   "CreateFromReceipt": {
     "Dialog": {

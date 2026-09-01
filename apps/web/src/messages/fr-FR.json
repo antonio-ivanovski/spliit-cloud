@@ -702,11 +702,11 @@
         "description": "Sélectionnez pour qui le revenu a été reçu."
       },
       "splitModeDescription": "Sélectionnez comment diviser le revenu.",
-      "attachDescription": "Voir et joindre des reçus au revenu.",
       "currencyField": {
         "label": "Devise de la recette",
         "description": "La devise dans laquelle le revenu a été reçu."
       },
+      "attachDescription": "Ajoutez des reçus, des photos et des documents justificatifs à ce revenu.",
       "recurrence": {
         "scheduleHint": "La création aura lieu à {time} ({timeZone}) et pourra déclencher une notification. Choisissez une heure qui ne perturbe pas le sommeil. Modifiez l’heure ci-dessus pour la changer."
       }
@@ -741,11 +741,11 @@
         "description": "Sélectionnez les participants concernés."
       },
       "splitModeDescription": "Sélectionnez comment diviser la dépense.",
-      "attachDescription": "Voir et joindre des reçus à la dépense.",
       "currencyField": {
         "label": "Devise de la dépense",
         "description": "La devise dans laquelle la dépense a été payée."
       },
+      "attachDescription": "Ajoutez des reçus, des photos et des documents justificatifs à cette dépense.",
       "createCopy": "Créer une copie : {title}",
       "editTitle": "Modifier : {title}",
       "recurrence": {
@@ -860,7 +860,7 @@
       "cancel": "Annuler",
       "delete": "Supprimer"
     },
-    "attachDocuments": "Joindre des documents",
+    "attachDocuments": "Pièces jointes",
     "create": "Créer",
     "creating": "Création…",
     "save": "Enregistrer",
@@ -1072,7 +1072,10 @@
     "UnsupportedToast": {
       "title": "Fichier non pris en charge",
       "description": "{fileName} n’est pas un type de pièce jointe pris en charge."
-    }
+    },
+    "addAttachments": "Ajouter des pièces jointes",
+    "uploading": "Importation…",
+    "noAttachments": "Aucune pièce jointe pour l’instant."
   },
   "CreateFromReceipt": {
     "Dialog": {

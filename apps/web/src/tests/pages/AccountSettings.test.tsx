@@ -23,7 +23,8 @@ vi.mock('@/components/require-auth', () => ({
   RequireAuth: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }))
 
-vi.mock('@/lib/upload', () => ({
+vi.mock(import('@/lib/upload'), async (importOriginal) => ({
+  ...(await importOriginal()),
   prepareProfileImage: vi.fn(),
 }))
 

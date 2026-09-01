@@ -1155,7 +1155,10 @@
     "UnsupportedToast": {
       "title": "असमर्थित फ़ाइल",
       "description": "{fileName} समर्थित फ़ाइल प्रकार नहीं है।"
-    }
+    },
+    "addAttachments": "अटैचमेंट जोड़ें",
+    "uploading": "अपलोड हो रहा है…",
+    "noAttachments": "अभी कोई अटैचमेंट नहीं है।"
   },
   "ExpenseForm": {
     "paidForItemizedEntryHint": "आइटम से विभाजित करने के लिए, आइटम पंक्ति से सदस्यों को संपादित करें।",
@@ -1188,7 +1191,7 @@
       },
       "categoryFieldDescription": "खर्च श्रेणी चुनें।",
       "splitModeDescription": "खर्च को विभाजित करने का तरीका चुनें।",
-      "attachDescription": "खर्च से रसीदें देखें और संलग्न करें।",
+      "attachDescription": "इस खर्च में रसीदें, फ़ोटो और सहायक दस्तावेज़ जोड़ें।",
       "createCopy": "कॉपी बनाएं: {title}",
       "currencyField": {
         "label": "खर्च की मुद्रा",
@@ -1277,7 +1280,6 @@
       },
       "categoryFieldDescription": "आय श्रेणी चुनें।",
       "splitModeDescription": "आय को विभाजित करने का तरीका चुनें।",
-      "attachDescription": "आय से रसीदें देखें और संलग्न करें।",
       "currencyField": {
         "label": "आय की मुद्रा",
         "description": "वह मुद्रा जिसमें आय प्राप्त हुई थी।"
@@ -1290,6 +1292,7 @@
         "title": "आवंटित",
         "description": "वे सदस्य चुनें जो यह आय साझा करते हैं।"
       },
+      "attachDescription": "इस आय में रसीदें, फ़ोटो और सहायक दस्तावेज़ जोड़ें।",
       "recurrence": {
         "scheduleHint": "यह {time} ({timeZone}) पर बनाया जाएगा और सूचना भेजी जा सकती है। ऐसा समय चुनें जिससे नींद में बाधा न हो। इसे बदलने के लिए ऊपर दिया समय संपादित करें।"
       }
@@ -1297,7 +1300,7 @@
     "PaidBySplitModeField": {
       "label": "भुगतानकर्ता विभाजन मोड"
     },
-    "attachDocuments": "दस्तावेज़ संलग्न करें",
+    "attachDocuments": "अटैचमेंट",
     "create": "बनाएं",
     "creating": "बनाया जा रहा है…",
     "save": "सहेजें",

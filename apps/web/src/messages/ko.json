@@ -635,7 +635,7 @@
         "description": "이 지출을 나눌 참여자를 선택하세요."
       },
       "splitModeDescription": "지출을 어떻게 나눌지 선택해 주세요.",
-      "attachDescription": "영수증을 확인하고 지출에 첨부합니다.",
+      "attachDescription": "이 지출에 영수증, 사진 및 관련 문서를 추가하세요.",
       "createCopy": "사본 만들기: {title}",
       "editTitle": "편집: {title}",
       "recurrence": {
@@ -791,7 +791,7 @@
         "description": "이 수입을 나눌 참여자를 선택하세요."
       },
       "splitModeDescription": "수입 분할 방식을 선택하세요.",
-      "attachDescription": "영수증을 확인하고 수입에 첨부합니다.",
+      "attachDescription": "이 수입에 영수증, 사진 및 관련 문서를 추가하세요.",
       "recurrence": {
         "scheduleHint": "{time}({timeZone})에 생성되며 알림이 전송될 수 있습니다. 수면을 방해하지 않는 시간을 선택하세요. 변경하려면 위의 시간을 수정하세요."
       }
@@ -804,7 +804,7 @@
     "participant": {
       "pending": "(초대됨)"
     },
-    "attachDocuments": "문서 첨부",
+    "attachDocuments": "첨부 파일",
     "create": "만들기",
     "creating": "만드는 중…",
     "save": "저장",
@@ -1365,7 +1365,10 @@
     "UnsupportedToast": {
       "title": "지원되지 않는 파일",
       "description": "{fileName}은(는) 지원되지 않는 첨부 파일 형식이에요."
-    }
+    },
+    "addAttachments": "첨부 파일 추가",
+    "uploading": "업로드 중…",
+    "noAttachments": "아직 첨부 파일이 없습니다."
   },
   "CreateFromReceipt": {
     "Dialog": {

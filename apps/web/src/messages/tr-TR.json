@@ -696,11 +696,11 @@
         "description": "Bu geliri paylaşan katılımcıları seçin."
       },
       "splitModeDescription": "Gelirin nasıl paylaştırılacağını seçin.",
-      "attachDescription": "Gelire makbuz ekleyin ve görüntüleyin.",
       "currencyField": {
         "label": "Gelirin para birimi",
         "description": "Gelirin hangi para biriminde alındığı."
       },
+      "attachDescription": "Bu gelire makbuz, fotoğraf ve destekleyici belgeler ekleyin.",
       "recurrence": {
         "scheduleHint": "{time} ({timeZone}) saatinde oluşturulur ve bir bildirimi tetikleyebilir. Uykuyu bölmeyecek bir saat seçin. Değiştirmek için yukarıdaki saati düzenleyin."
       }
@@ -727,7 +727,6 @@
         "description": "Bu masrafı paylaşan katılımcıları seçin."
       },
       "splitModeDescription": "Masrafın nasıl paylaştırılacağını seçin.",
-      "attachDescription": "Masrafa makbuz ekleyin ve görüntüleyin.",
       "currencyField": {
         "label": "Masrafın para birimi",
         "description": "Masrafın hangi para biriminde ödendiği."
@@ -740,6 +739,7 @@
         "weekly": "Haftalık",
         "monthly": "Aylık"
       },
+      "attachDescription": "Bu masrafa makbuz, fotoğraf ve destekleyici belgeler ekleyin.",
       "createCopy": "Kopya oluştur: {title}",
       "editTitle": "Düzenle: {title}",
       "recurrence": {
@@ -854,7 +854,7 @@
       "cancel": "İptal",
       "delete": "Sil"
     },
-    "attachDocuments": "Belge ekle",
+    "attachDocuments": "Ekler",
     "create": "Oluştur",
     "creating": "Oluşturuluyor…",
     "save": "Kaydet",
@@ -1065,7 +1065,10 @@
     "UnsupportedToast": {
       "title": "Desteklenmeyen dosya",
       "description": "{fileName} desteklenen bir ek türü değil."
-    }
+    },
+    "addAttachments": "Ekleri ekle",
+    "uploading": "Yükleniyor…",
+    "noAttachments": "Henüz ek yok."
   },
   "CreateFromReceipt": {
     "Dialog": {
