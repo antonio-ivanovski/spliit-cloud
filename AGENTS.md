@@ -15,7 +15,7 @@ Spliit is a Bun monorepo (web, api, domain, db). Explore `package.json`, workspa
 
 Push a `v*.*.*` tag; `.github/workflows/release.yml` publishes images (`:vX.Y.Z` + `:latest`), creates the GitHub Release from `releases/vX.Y.Z.md`, and deploys prod. Write the notes file first — the workflow fails without it.
 
-Structure the file like Immich releases: welcome line, `## Highlights` (bullet list, then a `###` subsection with screenshot per headline), `## What's Changed` (`### 🚨 Breaking Changes`, `### 🚀 Features`, `### 🐛 Bug fixes`), `**Full Changelog**: vA...vB` compare link. In `What's Changed`, end each entry with a sparse commit ref and contributor: ``(`abc1234` by @user)``. Screenshots go in `releases/assets/vX.Y.Z/`, referenced as `./assets/vX.Y.Z/<file>`. See `releases/README.md`.
+`releases/next.md` is the evergreen draft: append an entry under the right section for every user-facing change, ending it with ``(`TBD` by @handle)`` — never invent a SHA or handle, the maintainer fills them at cut time with `bun release:prepare vX.Y.Z` (which renames the draft, substitutes `vNEXT`, and lists leftover `TBD`s). Structure the file like Immich releases: welcome line, `## Highlights` (bullet list, then a `###` subsection with screenshot per headline), `## What's Changed` (`### 🚨 Breaking Changes`, `### 🚀 Features`, `### 🐛 Bug fixes`), `**Full Changelog**` compare link. Screenshots go in `releases/assets/next/`, referenced as `./assets/next/<file>`. See `releases/README.md`.
 
 ## Skills
 

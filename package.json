@@ -26,6 +26,7 @@
     "lint:fix": "turbo --ui=tui run lint:fix",
     "prisma-generate": "bun run --filter @spliit/db prisma-generate",
     "prisma-migrate": "bun run --filter @spliit/db prisma-migrate",
+    "release:prepare": "bun scripts/release-prepare.ts",
     "start": "bun --filter @spliit/api start",
     "start-container": "docker compose --env-file container.env up",
     "test": "turbo --ui=tui run test --concurrency=2",

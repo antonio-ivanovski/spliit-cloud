@@ -1,4 +1,4 @@
-Welcome to `v2.0.0` — the first versioned release! From here on, Spliit Cloud ships version by version instead of rolling `main` builds. The `2.x` line also marks the break from the inherited upstream `1.x` tags.
+Welcome to `vNEXT` — the first versioned release! From here on, Spliit Cloud ships version by version instead of rolling `main` builds. The `2.x` line also marks the break from the inherited upstream `1.x` tags.
 
 ## Highlights
 
@@ -11,15 +11,15 @@ Welcome to `v2.0.0` — the first versioned release! From here on, Spliit Cloud 
 
 Bring your bank spending into Spliit without retyping it. Upload a bank statement CSV and a guided wizard walks you through column mapping with a live preview, category mapping, batch defaults, and a final review that flags duplicates and conflicts before anything is written. Large statements parse in a background worker so the UI stays responsive, and the import commits atomically with idempotency protection. (Moving over from another expense-tracking app? Use the group import feature instead.)
 
-![Start the import from the group's Tools tab](./assets/v2.0.0/csv-import-tools.webp)
+![Start the import from the group's Tools tab](./assets/next/csv-import-tools.webp)
 
-![Map CSV columns with a live preview](./assets/v2.0.0/csv-import-mapping.webp)
+![Map CSV columns with a live preview](./assets/next/csv-import-mapping.webp)
 
-![Review drafts with duplicates flagged before importing](./assets/v2.0.0/csv-import-review.webp)
+![Review drafts with duplicates flagged before importing](./assets/next/csv-import-review.webp)
 
 ### Versioned Docker images with a stable `:latest`
 
-Every release publishes immutable `:vX.Y.Z` images for all five services (api, migrate, worker, mcp, web). `:latest` now always equals the newest stable release — never a work-in-progress `main` build. Pin `SPLIIT_TAG=v2.0.0` for controlled upgrades, or follow stable with `SPLIIT_TAG=latest`.
+Every release publishes immutable `:vX.Y.Z` images for all five services (api, migrate, worker, mcp, web). `:latest` now always equals the newest stable release — never a work-in-progress `main` build. Pin `SPLIIT_TAG=vNEXT` for controlled upgrades, or follow stable with `SPLIIT_TAG=latest`.
 
 ### Hand-written changelog on every release
 
@@ -39,8 +39,10 @@ Each release ships notes written for humans: highlights with screenshots, a full
 ### 🚀 Features
 
 - Import group expenses from a bank statement CSV via a mapping wizard with duplicate detection and atomic, idempotent commits — suggested in [#91](https://github.com/antonio-ivanovski/spliit-cloud/issues/91) (`6ebd96c` by @antonio-ivanovski)
-- Tag-gated release workflow: push `vX.Y.Z`, get images, GitHub Release, and prod deploy in one go
-- Per-version notes files (`releases/vX.Y.Z.md`) with colocated screenshots (`releases/assets/vX.Y.Z/`)
-- Self-hosting docs rewritten around version pinning (`SPLIIT_TAG=vX.Y.Z`)
-- Test runner upgraded to Vitest 5 stable (dev tooling only)
+- Tag-gated release workflow: push `vX.Y.Z`, get images, GitHub Release, and prod deploy in one go (`TBD` by @TBD)
+- Per-version notes files (`releases/vX.Y.Z.md`) with colocated screenshots (`releases/assets/vX.Y.Z/`) (`TBD` by @TBD)
+- Self-hosting docs rewritten around version pinning (`SPLIIT_TAG=vX.Y.Z`) (`TBD` by @TBD)
+- Test runner upgraded to Vitest 5 stable (dev tooling only) (`TBD` by @TBD)
 - English (UK) locale ships only its differing strings (`behaviour`, `Normalise`, `authorisation`) and inherits the rest from US English — sparse overlays with fallback chains, also applied to pt-BR (`aa64456` by @antonio-ivanovski)
+
+**Full Changelog**: TBD

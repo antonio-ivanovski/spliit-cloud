@@ -68,13 +68,14 @@ bun test:integration
 
 ## Releases
 
-Releases are versioned (`v2.0.0`, first stable). To cut one:
-
-1. Write `releases/vX.Y.Z.md` with screenshots in `releases/assets/vX.Y.Z/`
-   (see `releases/README.md` for the template).
-2. Commit it to `main`, then `git tag vX.Y.Z && git push origin vX.Y.Z`.
-3. The Release workflow publishes `:vX.Y.Z` + `:latest`, creates the
-   GitHub Release from your file, and deploys prod immediately.
+Releases are versioned (`v2.0.0`, first stable). `releases/next.md` is the
+evergreen draft for the upcoming release — append an entry under the
+right section for every user-facing change in your PR, ending it with
+``(`TBD` by @your-handle)`` (hashes are filled at cut time, never
+invent a SHA). Screenshots go in `releases/assets/next/`. To cut a
+release, the maintainer runs `bun release:prepare vX.Y.Z` (see
+`releases/README.md`), fills the hashes, commits, and pushes the tag —
+which publishes `:vX.Y.Z` + `:latest` and deploys prod immediately.
 
 If your change breaks compatibility or needs manual migration steps, say
 so in the PR (`Migration:` field) so it lands in the release notes.

@@ -51,10 +51,20 @@ jobs:
         run: |
           TAG="${{ steps.resolve.outputs.tag }}"
           if [ ! -f "releases/${TAG}.md" ]; then
-            echo "::error::Missing releases/${TAG}.md. Write the hand-written release notes first — see releases/README.md."
+            echo "::error::Missing releases/${TAG}.md. Cut the release with 'bun release:prepare ${TAG}' first — see releases/README.md."
             exit 1
           fi
           echo "Found releases/${TAG}.md"
+
+      - name: Reject unfilled placeholders
+        run: |
+          TAG="${{ steps.resolve.outputs.tag }}"
+          if grep -q '`TBD`' "releases/${TAG}.md"; then
+            echo "::error::releases/${TAG}.md still contains unfilled \`TBD\` placeholders:"
+            grep -n '`TBD`' "releases/${TAG}.md"
+            exit 1
+          fi
+          echo "No placeholders left"
 
   build-and-push:
     name: Build ${{ matrix.app }} (${{ matrix.arch }})

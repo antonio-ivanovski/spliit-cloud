@@ -8,7 +8,7 @@
 
 ## Migration
 
-<!-- Does this break compatibility or need manual steps (env vars, volumes, DB)? If yes, describe them here so they land in `releases/vX.Y.Z.md`. If no, delete this section. -->
+<!-- Does this break compatibility or need manual steps (env vars, volumes, DB)? If yes, describe them here so they land in `releases/next.md`. If no, delete this section. -->
 
 ## Verification
 
