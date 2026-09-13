@@ -105,7 +105,7 @@ export function CreateSettlementModal({
       removed: 'removed' in participant ? Boolean(participant.removed) : false,
     }),
   )
-  console.log('test 2');
+  console.log('test 2')
   const legs = settlementGroup?.legs ?? (settlement ? [settlement] : [])
   const direction: SettlementDirection = settlementGroup?.direction ?? 'pay'
   const centralParticipantId =
