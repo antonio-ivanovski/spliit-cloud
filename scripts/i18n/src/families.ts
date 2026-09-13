@@ -1,4 +1,4 @@
-import { locales, type Locale } from '../../../packages/domain/src/i18n.ts'
+import { locales, type Locale } from '../../../packages/domain/src/i18n'
 
 export type LanguageFamily = {
   id: string
@@ -22,7 +22,7 @@ export const LANGUAGE_FAMILIES: LanguageFamily[] = [
   {
     id: 'germanic',
     label: 'Germanic + Nordic',
-    locales: ['de-DE', 'en-GZ', 'fi', 'nl-NL', 'sv-SE'],
+    locales: ['de-DE', 'en-GB', 'en-GZ', 'fi', 'nl-NL', 'sv-SE'],
     refsHint: 'de-DE,nl-NL',
   },
   {

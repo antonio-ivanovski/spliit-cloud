@@ -248,11 +248,10 @@ export function SourceStep({
     }
   }, [handleFile, pendingHandoff, provider, wrongImporter?.target])
 
-  const handleFileChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0]
+  const handleFilesSelected = useCallback(
+    (files: File[]) => {
+      const file = files[0]
       if (file) void handleFile(file)
-      e.target.value = ''
     },
     [handleFile],
   )
@@ -530,7 +529,7 @@ export function SourceStep({
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          onFileChange={handleFileChange}
+          onFilesSelected={handleFilesSelected}
           accept={cfg.accept}
           labels={{
             dropFile: t(

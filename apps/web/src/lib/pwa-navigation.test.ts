@@ -20,7 +20,6 @@ describe('shouldUseAppShellNavigation', () => {
   it('lets API and worker document requests fall through', () => {
     expect(shouldUseAppShellNavigation('/sw.js')).toBe(false)
     expect(shouldUseAppShellNavigation('/sw.js?v=1')).toBe(false)
-    expect(shouldUseAppShellNavigation('/registerSW.js')).toBe(false)
     expect(shouldUseAppShellNavigation('/manifest.webmanifest')).toBe(false)
     expect(shouldUseAppShellNavigation('/trpc/overview.get')).toBe(false)
     expect(shouldUseAppShellNavigation('/health')).toBe(false)

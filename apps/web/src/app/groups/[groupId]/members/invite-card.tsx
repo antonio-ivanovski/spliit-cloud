@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import { trpc } from '@/trpc/client'
 
 import { AddUnlinkedParticipantTab } from './add-unlinked-participant-tab'
@@ -104,6 +105,16 @@ export function InviteCard({
   })
 
   const email = form.watch('email')
+  const temporaryName = form.watch('temporaryName')
+  const linkTemporaryName = linkForm.watch('temporaryName')
+  // Typed but unsubmitted invites would be lost. The global mutation guard
+  // covers submitted invites.
+  usePwaUpdateBlocker(
+    Boolean(
+      email?.trim() || temporaryName?.trim() || linkTemporaryName?.trim(),
+    ) || selectedFriendAccountId !== '',
+    'invite-card-edits',
+  )
   const effectiveRoleValue = canInviteAdmin ? roleValue : 'MEMBER'
   const effectiveLinkRoleValue = canInviteAdmin ? linkRoleValue : 'MEMBER'
   const effectiveFriendRoleValue = canInviteAdmin ? friendRoleValue : 'MEMBER'

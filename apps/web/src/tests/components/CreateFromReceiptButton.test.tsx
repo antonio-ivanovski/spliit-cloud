@@ -5,11 +5,14 @@ import {
   useCurrentGroupOrNull,
 } from '@/app/groups/[groupId]/current-group-context'
 import { ReceiptScanTrigger } from '@/app/groups/[groupId]/expenses/create-from-receipt-button'
+import {
+  hasPwaUpdateBlockers,
+  resetPwaUpdateBlockersForTests,
+} from '@/lib/pwa-update-blockers'
 import { act, fireEvent, render, screen, waitFor } from '@/test/test-utils'
 
 const mockMutateAsync = vi.fn()
 const mockToast = vi.fn()
-const mockOpenFileDialog = vi.fn()
 
 vi.mock('@/app/groups/[groupId]/current-group-context', () => ({
   useCurrentGroup: vi.fn(),
@@ -29,26 +32,8 @@ vi.mock('@/trpc/client', () => ({
 
 vi.mock('@/lib/upload', () => ({
   resizeImage: vi.fn(),
-  usePresignedUpload: () => ({
+  useExpenseDocumentUpload: () => ({
     uploadToS3: vi.fn(),
-    FileInput: ({
-      inputId = 'file',
-      onFilesChange,
-      ...props
-    }: {
-      inputId?: string
-      onFilesChange?: (files: File[]) => void
-    } & Record<string, unknown>) => (
-      <input
-        {...props}
-        data-testid={`receipt-file-input-${inputId}`}
-        type="file"
-        onChange={(event) =>
-          onFilesChange?.(Array.from(event.currentTarget.files ?? []))
-        }
-      />
-    ),
-    openFileDialog: mockOpenFileDialog,
   }),
 }))
 
@@ -106,7 +91,6 @@ beforeEach(() => {
     isLoading: false,
   } as never)
   mockMutateAsync.mockReset()
-  mockOpenFileDialog.mockReset()
   mockMutateAsync.mockResolvedValue(scanResult)
   mockToast.mockReset()
   localStorage.clear()
@@ -142,12 +126,16 @@ describe('ReceiptScanTrigger translate checkbox', () => {
         .filter((button) => button.textContent?.includes('Scan receipt')),
     ).toHaveLength(1)
 
+    const [fileInput, cameraInput] = Array.from(
+      document.querySelectorAll<HTMLInputElement>('input[type="file"]'),
+    )
+    const fileClick = vi.spyOn(fileInput!, 'click')
+    const cameraClick = vi.spyOn(cameraInput!, 'click')
     await user.click(scanButton)
-    expect(mockOpenFileDialog).toHaveBeenLastCalledWith()
+    expect(fileClick).toHaveBeenCalledOnce()
     await user.click(cameraButton)
-    expect(mockOpenFileDialog).toHaveBeenLastCalledWith('camera')
+    expect(cameraClick).toHaveBeenCalledOnce()
 
-    const cameraInput = screen.getByTestId('receipt-file-input-camera')
     expect(cameraInput).toHaveAttribute('accept', 'image/*')
     expect(cameraInput).toHaveAttribute('capture', 'environment')
   })
@@ -156,7 +144,9 @@ describe('ReceiptScanTrigger translate checkbox', () => {
     const { user } = renderTrigger({ documents: [], autoScan: false })
     await user.click(screen.getByRole('button', { name: /ai receipt scan/i }))
 
-    const input = screen.getByTestId('receipt-file-input-file')
+    const input = document.querySelector<HTMLInputElement>(
+      'input[type="file"]:not([capture])',
+    )!
     fireEvent.change(input, {
       target: {
         files: [
@@ -358,5 +348,26 @@ describe('ReceiptScanTrigger translate checkbox', () => {
 
     expect(mockMutateAsync.mock.calls[1][0].translateToLocale).toBe(true)
     expect(mockMutateAsync.mock.calls[1][0].imageUrl).toBe(documents[0].url)
+  })
+})
+
+describe('ReceiptScanTrigger update protection', () => {
+  beforeEach(() => {
+    resetPwaUpdateBlockersForTests()
+  })
+
+  it('holds protection while the scanned result awaits acceptance', async () => {
+    await openDialog()
+
+    await waitFor(() => {
+      expect(mockMutateAsync).toHaveBeenCalledTimes(1)
+    })
+
+    // The scan finished (checkbox re-enabled) but the dialog still holds the
+    // selected document + AI result: an update must not reload under it.
+    await waitForSettledCheckbox()
+    expect(hasPwaUpdateBlockers()).toBe(true)
+
+    resetPwaUpdateBlockersForTests()
   })
 })

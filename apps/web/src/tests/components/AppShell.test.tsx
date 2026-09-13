@@ -9,6 +9,10 @@ vi.mock('@tanstack/react-router', () => ({
   Outlet: () => <div data-testid="outlet" />,
   useLocation: ({ select }: { select: (value: unknown) => unknown }) =>
     select({ pathname: route.pathname }),
+  useRouterState: (options?: { select?: (state: unknown) => unknown }) =>
+    options?.select
+      ? options.select({ isLoading: false })
+      : { isLoading: false },
   useNavigate: () => vi.fn(),
   Link: ({
     to,

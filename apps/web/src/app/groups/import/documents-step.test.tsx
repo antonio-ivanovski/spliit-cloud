@@ -30,7 +30,8 @@ vi.mock('@/trpc/client', () => ({
   },
 }))
 
-vi.mock('@/lib/upload', () => ({
+vi.mock(import('@/lib/upload'), async (importOriginal) => ({
+  ...(await importOriginal()),
   resizeImage: mocks.resizeImage,
 }))
 

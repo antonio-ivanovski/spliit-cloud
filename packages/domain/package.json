@@ -29,9 +29,10 @@
     "format": "oxfmt .",
     "lint": "oxlint -c ../../.oxlintrc.json --format=unix --report-unused-disable-directives .",
     "lint:fix": "oxlint -c ../../.oxlintrc.json --format=unix --report-unused-disable-directives --fix .",
-    "test": "vitest run --globals src"
+    "test": "vitest run src"
   },
   "dependencies": {
+    "@marcbachmann/cel-js": "^8.0.0",
     "clsx": "^2.1.1",
     "currency-list": "^1.0.8",
     "dayjs": "^1.11.21",
@@ -45,6 +46,6 @@
     "@types/node": "24.13.2",
     "@types/papaparse": "^5.3.14",
     "typescript": "7.0.2",
-    "vitest": "5.0.0-rc.2"
+    "vitest": "^5.0.0"
   }
 }

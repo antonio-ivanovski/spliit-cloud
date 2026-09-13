@@ -481,7 +481,7 @@ export function ExpensePreviewModal({
           )}
         </ResponsiveDialogBody>
 
-        <ResponsiveDialogFooter className="flex-row gap-2 sm:justify-end">
+        <ResponsiveDialogFooter className="flex-row flex-wrap gap-2 sm:flex-nowrap sm:justify-end">
           {series ? (
             canManageRecurrence ? (
               <RecurringActionsMenu
@@ -501,14 +501,14 @@ export function ExpensePreviewModal({
             <DeletePopup
               onDelete={() => handleDelete()}
               confirmationTarget={expense?.title ?? ''}
-              className="me-auto"
+              className="me-auto shrink-0 px-3 sm:px-4"
             />
           ) : null}
           {canCopy && (
             <>
               <Button
                 variant="outline"
-                className="flex-1 sm:flex-none"
+                className="min-w-0 flex-1 px-3 sm:flex-none sm:px-4"
                 nativeButton={!!onMakeCopy}
                 render={
                   onMakeCopy ? undefined : (
@@ -525,12 +525,13 @@ export function ExpensePreviewModal({
                 onClick={handleMakeCopy}
                 data-testid="expense-make-copy"
               >
-                <FileInput className="me-2 h-4 w-4" />
-                {t('makeCopy')}
+                <FileInput className="me-1.5 h-4 w-4 shrink-0 sm:me-2" />
+                <span className="truncate">{t('makeCopy')}</span>
               </Button>
               {canEdit && !series && (
                 <EditButton
                   label={t('edit')}
+                  className="min-w-0 px-3 sm:px-4"
                   nativeButton={!!onEdit}
                   render={
                     onEdit ? undefined : (

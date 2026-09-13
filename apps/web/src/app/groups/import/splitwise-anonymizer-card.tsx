@@ -2,6 +2,7 @@ import { HatGlasses } from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { FilePickerInput } from '@/components/file-picker-input'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { anonymizeSplitwiseCsv } from '@spliit/domain/import'
@@ -55,11 +56,10 @@ export function SplitwiseAnonymizerCard() {
     [t],
   )
 
-  const onFileChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0]
+  const onFilesSelected = useCallback(
+    (files: File[]) => {
+      const file = files[0]
       if (file) void handleFile(file)
-      e.target.value = ''
     },
     [handleFile],
   )
@@ -110,12 +110,11 @@ export function SplitwiseAnonymizerCard() {
           </p>
         ) : null}
 
-        <input
+        <FilePickerInput
           ref={inputRef}
-          type="file"
           accept=".csv,text/csv"
           className="hidden"
-          onChange={onFileChange}
+          onFilesSelected={onFilesSelected}
         />
       </CardContent>
     </Card>

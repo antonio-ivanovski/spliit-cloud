@@ -1,7 +1,8 @@
 /* oxlint-disable jsx-a11y/no-noninteractive-element-interactions -- label receives drag-and-drop events for its file input. */
 import { FileUp } from 'lucide-react'
-import type { ChangeEvent, DragEvent } from 'react'
+import type { DragEvent } from 'react'
 
+import { FilePickerInput } from '@/components/file-picker-input'
 import { Card, CardContent } from '@/components/ui/card'
 
 type FileUploadCardProps = {
@@ -10,7 +11,7 @@ type FileUploadCardProps = {
   onDragOver: (e: DragEvent) => void
   onDragLeave: () => void
   onDrop: (e: DragEvent) => void
-  onFileChange: (e: ChangeEvent<HTMLInputElement>) => void
+  onFilesSelected: (files: File[]) => void
   accept: string
   labels: {
     dropFile: string
@@ -24,7 +25,7 @@ export function FileUploadCard({
   onDragOver,
   onDragLeave,
   onDrop,
-  onFileChange,
+  onFilesSelected,
   accept,
   labels,
 }: FileUploadCardProps) {
@@ -46,12 +47,11 @@ export function FileUploadCard({
           <span className="max-w-md text-center text-xs text-muted-foreground">
             {labels.dropFileDescription}
           </span>
-          <input
-            type="file"
+          <FilePickerInput
             accept={accept}
             className="hidden"
             disabled={disabled}
-            onChange={onFileChange}
+            onFilesSelected={onFilesSelected}
           />
         </label>
       </CardContent>

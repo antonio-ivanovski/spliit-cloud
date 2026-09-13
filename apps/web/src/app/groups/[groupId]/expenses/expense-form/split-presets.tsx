@@ -33,6 +33,7 @@ import {
 } from '@/components/ui/responsive-dialog'
 import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 import { amountAsMinorUnits } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
@@ -707,6 +708,9 @@ function ManagedSavePresetButton(props: {
   )
   const create = trpc.groups.splitPresets.create.useMutation()
   const update = trpc.groups.splitPresets.update.useMutation()
+  // An open save dialog holds a typed name/scope; a reload discards it.
+  // The global mutation guard covers create/update calls.
+  usePwaUpdateBlocker(open && name.trim().length > 0, 'split-preset-edits')
   const presetsQuery = trpc.groups.splitPresets.list.useQuery({
     groupId: group.id,
   })

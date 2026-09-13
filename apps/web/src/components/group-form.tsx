@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Link } from '@tanstack/react-router'
 import { Save, UserPlus } from 'lucide-react'
 import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useFormState } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import type { z } from 'zod'
 
@@ -24,6 +24,7 @@ import type { AccountPreferences } from '@/lib/account-preferences'
 import type { getGroup } from '@/lib/api'
 import { getCurrency, useCurrencies } from '@/lib/currency'
 import { useDeploymentConfig } from '@/lib/deployment-config'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import type { GroupFormValues } from '@/lib/schemas'
 import { groupFormSchema } from '@/lib/schemas'
 
@@ -189,6 +190,13 @@ export function GroupForm({
       form.setValue('currency', getCurrency(code)?.symbol ?? '')
     }
   }, [accountPreferences, form, group, initialValues])
+
+  const { isDirty: isGroupFormDirty } = useFormState({ control: form.control })
+  // Read-only / archived forms render no editable state, so never block.
+  usePwaUpdateBlocker(
+    isGroupFormDirty && !readOnly && !isArchived,
+    'group-form-edits',
+  )
 
   const currencies = useCurrencies(
     t('CurrencyCodeField.customOption'),
