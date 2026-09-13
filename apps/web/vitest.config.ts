@@ -5,10 +5,6 @@ import { defineConfig } from 'vitest/config'
 
 const alias = {
   '@': path.resolve(import.meta.dirname, './src'),
-  'virtual:pwa-register': path.resolve(
-    import.meta.dirname,
-    './src/test/virtual-pwa-register.ts',
-  ),
 }
 
 const sharedTest = {

@@ -10,6 +10,7 @@ import { RequireAuth } from '@/components/require-auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import { prepareProfileImage, uploadToPresignedUrl } from '@/lib/upload'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { useHashTargetFocus } from '@/lib/use-hash-target-focus'
@@ -93,6 +94,18 @@ function AccountSettingsContent() {
   // `name` is derived from `dirtyName ?? account?.name` so the input
   // automatically reflects the server-side value when the account loads
   // and keeps local edits intact once the user starts typing.
+
+  // Registered before the loading early-return: hooks must stay
+  // unconditional, and an in-flight load must not read as clean-safe.
+  // `dirtyName !== null` means the user typed; the name comparison only
+  // applies once the account snapshot arrived.
+  // The global mutation guard covers profile saves; image preparation and the
+  // direct storage upload need an explicit guard.
+  usePwaUpdateBlocker(isUploadingImage || submitting, 'account-settings-upload')
+  usePwaUpdateBlocker(
+    dirtyName !== null && dirtyName.trim() !== (account?.name ?? ''),
+    'account-settings-edits',
+  )
 
   if (isPending || !account) {
     return (

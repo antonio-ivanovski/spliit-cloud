@@ -49,6 +49,7 @@ import {
   WizardStepHeader,
 } from '@/components/wizard'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 import { trpc } from '@/trpc/client'
 import {
@@ -526,6 +527,14 @@ export function ExpenseFileImportPage({
     enableBeforeUnload: () => Boolean(table && step !== 'done'),
     withResolver: true,
   })
+
+  // Mirror the navigation guard: an update reload discards the same in-memory
+  // wizard state. The global mutation guard covers submission; local parsing
+  // and every staged table remain protected here.
+  usePwaUpdateBlocker(
+    isParsing || Boolean(table && step !== 'done'),
+    'csv-import-work',
+  )
 
   const parseBytes = async (
     bytes: ArrayBuffer,

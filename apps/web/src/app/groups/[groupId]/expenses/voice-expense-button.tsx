@@ -6,6 +6,7 @@ import { useMascotController } from '@/components/mascot/mascot-context'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import { cn } from '@/lib/utils'
 import { trpc } from '@/trpc/client'
 import type { CategoryId } from '@spliit/domain'
@@ -118,6 +119,12 @@ export function VoiceExpenseButton({
   const extractMutation =
     trpc.ai.extractExpenseInformationFromAudio.useMutation()
   const open = openProp ?? internalOpen
+  // An open recording and its extraction hold in-memory audio a reload would
+  // destroy: the AI result is not persisted server-side, so losing the flight
+  // means re-recording. The held result is unsaved work until accepted or
+  // discarded. The review preview registers its own blocker once it opens.
+  usePwaUpdateBlocker(recording || processing, 'voice-expense-operation')
+  usePwaUpdateBlocker(result !== null, 'voice-expense-result')
   const setFlowActive = useCallback(
     (active: boolean) => {
       flowActiveRef.current = active
@@ -189,17 +196,30 @@ export function VoiceExpenseButton({
     if (!state) return
     const recordingRequestId = requestIdRef.current
     clearTimer()
+    // Hold protection across the async handoff: `normalizeAudio` reads and
+    // decodes the only recorded copy while `recording` is already false and
+    // `result` is still null. `processAudio` owns the flag from here (its
+    // finally releases it); the catch below and `close()` cover failure and
+    // cancellation.
+    setProcessing(true)
     setRecording(false)
     cleanupRecorder()
     const blob = new Blob(state.chunks, { type: state.recorder.mimeType })
+    let processOwnsFlag = false
     try {
       const dataUrl = await normalizeAudio(blob)
       if (recordingRequestId !== requestIdRef.current) return
+      if (!currentGroup) return
+      processOwnsFlag = true
       await processAudio(dataUrl)
     } catch (error) {
       console.error(error)
       mascot.react('failure')
       toast({ description: t('audioError'), variant: 'destructive' })
+    } finally {
+      if (!processOwnsFlag && recordingRequestId === requestIdRef.current) {
+        setProcessing(false)
+      }
     }
   }
 

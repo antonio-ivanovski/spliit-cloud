@@ -1,504 +1,420 @@
-import type { RegisterSWOptions } from 'vite-plugin-pwa/types'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { createPwaUpdateManager } from './pwa-update-manager'
+import type { PwaServiceWorkerContainer } from './pwa-service-worker'
+import {
+  createPwaUpdateManager,
+  PWA_UPDATE_RESTART_KEY,
+} from './pwa-update-manager'
 
-type ActivationBehavior = 'accepted' | 'blocked' | 'timeout' | 'throw'
-type Harness = ReturnType<typeof createHarness>
+type Activation = 'accepted' | 'blocked' | 'failed' | 'timeout' | 'manual'
 
 function createHarness(
   options: {
-    activation?: ActivationBehavior
-    forceFailure?: boolean
+    activation?: Activation
+    blocked?: boolean
+    ready?: boolean
     initialController?: boolean
     waiting?: boolean
-    online?: boolean
-    registerThrows?: boolean
-    updateFailure?: boolean
-    updatePending?: boolean
-    updateThrows?: boolean
-    createMessageChannel?: () => MessageChannel
+    visible?: boolean
   } = {},
 ) {
-  let callbacks: RegisterSWOptions = {}
-  let waiting = options.waiting ?? false
-  let controller = options.initialController === false ? null : {}
-  const controllerEvents = new EventTarget()
+  let activation = options.activation ?? 'accepted'
+  let blocked = options.blocked ?? false
+  let ready = options.ready ?? true
+  let visible = options.visible ?? true
+  let waiting = options.waiting ?? true
+  let controller: ServiceWorker | null =
+    options.initialController === false ? null : ({} as ServiceWorker)
+  let pendingFinal: MessagePort | undefined
+  const workerEvents = new EventTarget()
   const registrationEvents = new EventTarget()
-  let installing = false
-  const reload = vi.fn()
-  const storage = {
-    getItem: vi.fn(),
-    setItem: vi.fn(),
-    removeItem: vi.fn(),
-  }
+  const blockerListeners = new Set<() => void>()
+  const focusListeners = new Set<() => void>()
+  const visibilityListeners = new Set<() => void>()
+  const onlineListeners = new Set<() => void>()
+  const assetListeners = new Set<() => void>()
+  const workerReplies: unknown[] = []
+  const finalMessage = (value: Record<string, unknown>) => ({
+    type: 'COORDINATION_RESULT',
+    protocol: 1,
+    ...value,
+  })
   const waitingWorker = {
+    state: 'installed',
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
     postMessage: vi.fn(
-      (message: { type?: string }, transfer?: Transferable[]) => {
-        if (message.type === 'SKIP_WAITING') {
-          if (options.forceFailure) throw new Error('force message failed')
+      (message: Record<string, unknown>, transfer?: Transferable[]) => {
+        if (message.type !== 'REQUEST_COORDINATED_ACTIVATION') {
+          workerReplies.push(message)
           return
         }
-        if (message.type !== 'ACTIVATE_UPDATE_IF_SOLE_CLIENT') return
-        if (options.activation === 'throw') throw new Error('message failed')
-        if (options.activation === 'timeout') return
         const port = transfer?.[0] as MessagePort | undefined
-        port?.postMessage(
-          options.activation === 'blocked'
-            ? { status: 'blocked', clientCount: 2 }
-            : { status: 'accepted' },
-        )
+        if (activation === 'timeout') return
+        if (activation === 'manual') {
+          pendingFinal = port
+          return
+        }
+        if (activation === 'blocked') {
+          port?.postMessage(
+            finalMessage({
+              activated: false,
+              reason: 'peer-blocked',
+              clientCount: 2,
+            }),
+          )
+          return
+        }
+        if (activation === 'failed') {
+          port?.postMessage(
+            finalMessage({
+              activated: false,
+              reason: 'activation-failed',
+              clientCount: 1,
+            }),
+          )
+          return
+        }
+        port?.postMessage(finalMessage({ activated: true }))
       },
     ),
   } as unknown as ServiceWorker
   const registration = {
-    get installing() {
-      return installing ? ({} as ServiceWorker) : null
-    },
     get waiting() {
       return waiting ? waitingWorker : null
     },
-    active: {} as ServiceWorker,
-    update: options.updateThrows
-      ? vi.fn(() => {
-          throw new Error('registration removed')
-        })
-      : options.updateFailure
-        ? vi.fn().mockRejectedValue(new Error('offline'))
-        : options.updatePending
-          ? vi.fn(() => new Promise(() => {}))
-          : vi.fn().mockResolvedValue(undefined),
+    installing: null,
+    update: vi.fn().mockResolvedValue(undefined),
     addEventListener:
       registrationEvents.addEventListener.bind(registrationEvents),
     removeEventListener:
       registrationEvents.removeEventListener.bind(registrationEvents),
   } as unknown as ServiceWorkerRegistration
+  const registerServiceWorker = vi.fn().mockResolvedValue(registration)
+  const reload = vi.fn()
+  const storage = { setItem: vi.fn(), removeItem: vi.fn() }
   const subscribeUpdateChecks = vi.fn(() => vi.fn())
-  const registerSW = vi.fn((nextCallbacks: RegisterSWOptions = {}) => {
-    if (options.registerThrows) throw new Error('registration unavailable')
-    callbacks = nextCallbacks
-    return vi.fn().mockResolvedValue(undefined)
-  })
-  const serviceWorker = {
+  const container = {
     get controller() {
-      return controller as ServiceWorker | null
+      return controller
     },
-    addEventListener: controllerEvents.addEventListener.bind(controllerEvents),
-    removeEventListener:
-      controllerEvents.removeEventListener.bind(controllerEvents),
+    register: vi.fn(),
+    addEventListener: workerEvents.addEventListener.bind(workerEvents),
+    removeEventListener: workerEvents.removeEventListener.bind(workerEvents),
+  } as PwaServiceWorkerContainer
+  const subscribe = (set: Set<() => void>) => (listener: () => void) => {
+    set.add(listener)
+    return () => set.delete(listener)
   }
   const manager = createPwaUpdateManager({
-    registerSW,
-    serviceWorker,
-    storage,
+    enabled: true,
+    serviceWorker: container,
+    registerServiceWorker,
     reload,
-    online: options.online,
-    createMessageChannel: options.createMessageChannel,
+    storage,
     subscribeUpdateChecks,
+    hasBlockers: () => blocked,
+    isProtectionReady: () => ready,
+    subscribeBlockers: subscribe(blockerListeners),
+    subscribeWindowFocus: subscribe(focusListeners),
+    subscribeVisibility: subscribe(visibilityListeners),
+    subscribeOnline: subscribe(onlineListeners),
+    subscribeAssetErrors: subscribe(assetListeners),
+    isVisible: () => visible,
+    clientCheckTimeoutMs: 50,
+    retryIntervalMs: 100,
+    activationTimeoutMs: 200,
   })
+
+  const fireWorkerMessage = (
+    source: ServiceWorker,
+    data: Record<string, unknown>,
+  ) => {
+    const event = new Event('message') as MessageEvent
+    Object.assign(event, { source, data })
+    workerEvents.dispatchEvent(event)
+  }
 
   return {
-    callbacks: () => callbacks,
     manager,
     registration,
+    registerServiceWorker,
     reload,
     storage,
-    waitingWorker,
     subscribeUpdateChecks,
-    setWaiting(next: boolean) {
-      waiting = next
-      if (next) installing = false
+    waitingWorker,
+    workerReplies,
+    settleRegistration: async () => {
+      await vi.waitFor(() =>
+        expect(registerServiceWorker).toHaveBeenCalledOnce(),
+      )
+      await Promise.resolve()
     },
-    triggerUpdateFound() {
-      installing = true
-      registrationEvents.dispatchEvent(new Event('updatefound'))
+    setBlocked(value: boolean) {
+      blocked = value
+      blockerListeners.forEach((listener) => listener())
     },
-    changeController(next: object = {}) {
+    setReady(value: boolean) {
+      ready = value
+      blockerListeners.forEach((listener) => listener())
+    },
+    setActivation(value: Activation) {
+      activation = value
+    },
+    setWaiting(value: boolean) {
+      waiting = value
+    },
+    setVisible(value: boolean) {
+      visible = value
+    },
+    focus: () => focusListeners.forEach((listener) => listener()),
+    assetError: () => assetListeners.forEach((listener) => listener()),
+    changeController(next: ServiceWorker = waitingWorker) {
       controller = next
-      controllerEvents.dispatchEvent(new Event('controllerchange'))
+      workerEvents.dispatchEvent(new Event('controllerchange'))
+    },
+    prepare(source: ServiceWorker = waitingWorker) {
+      fireWorkerMessage(source, {
+        type: 'COORDINATION_PREPARE',
+        protocol: 1,
+        attemptId: 'attempt-1',
+        workerToken: 'worker-1',
+      })
+    },
+    confirm(source: ServiceWorker = waitingWorker) {
+      fireWorkerMessage(source, {
+        type: 'COORDINATION_CONFIRM',
+        protocol: 1,
+        attemptId: 'attempt-1',
+        workerToken: 'worker-1',
+      })
+    },
+    abort(source: ServiceWorker = waitingWorker) {
+      fireWorkerMessage(source, {
+        type: 'COORDINATION_ABORTED',
+        protocol: 1,
+        attemptId: 'attempt-1',
+      })
+    },
+    deliverFinal(value: Record<string, unknown>) {
+      pendingFinal?.postMessage(finalMessage(value))
     },
   }
-}
-
-async function register(harness: Harness) {
-  harness.callbacks().onRegisteredSW?.('/sw.js', harness.registration)
-  await Promise.resolve()
-}
-
-async function waitForSnapshot(
-  harness: Harness,
-  expected: ReturnType<Harness['manager']['getSnapshot']>,
-) {
-  await vi.waitFor(() => {
-    expect(harness.manager.getSnapshot()).toEqual(expected)
-  })
 }
 
 describe('createPwaUpdateManager', () => {
-  afterEach(() => {
-    vi.useRealTimers()
-  })
+  afterEach(() => vi.useRealTimers())
 
-  it('fails open immediately when service workers are unavailable', async () => {
+  it('does nothing outside production when not explicitly enabled', async () => {
+    const registerServiceWorker = vi.fn()
     const manager = createPwaUpdateManager({
-      serviceWorker: undefined,
-      online: false,
+      enabled: false,
+      serviceWorker: {} as PwaServiceWorkerContainer,
+      registerServiceWorker,
     })
-
-    await manager.waitForLaunch()
-    expect(manager.getSnapshot()).toEqual({ status: 'current' })
+    await Promise.resolve()
+    expect(registerServiceWorker).not.toHaveBeenCalled()
+    expect(manager.getSnapshot()).toEqual({ status: 'hidden' })
   })
 
-  it('renders offline immediately but still registers for later checks', async () => {
-    const harness = createHarness({ online: false })
-
-    await harness.manager.waitForLaunch()
-    expect(harness.manager.getSnapshot()).toEqual({ status: 'current' })
-    expect(harness.callbacks().immediate).toBe(true)
-
-    await register(harness)
+  it('registers natively, checks immediately, and subscribes for later checks', async () => {
+    const harness = createHarness({ waiting: false })
+    await harness.settleRegistration()
+    expect(harness.registration.update).toHaveBeenCalledOnce()
     expect(harness.subscribeUpdateChecks).toHaveBeenCalledWith(
       harness.registration,
     )
   })
 
-  it('fails open when registration throws synchronously', async () => {
-    const harness = createHarness({ registerThrows: true })
-
-    await harness.manager.waitForLaunch()
-    expect(harness.manager.getSnapshot()).toEqual({
-      status: 'current',
-      error: 'registration',
-    })
-  })
-
-  it('activates an already-waiting update and reloads on controllerchange', async () => {
-    const harness = createHarness({ waiting: true })
-    await register(harness)
-    await waitForSnapshot(harness, { status: 'restarting' })
-
-    expect(harness.manager.getStage()).toBe('applying')
-
-    expect(harness.waitingWorker.postMessage).toHaveBeenCalledWith(
-      { type: 'ACTIVATE_UPDATE_IF_SOLE_CLIENT' },
-      expect.any(Array),
+  it('coordinates an existing update and reloads after controller takeover', async () => {
+    const harness = createHarness()
+    await harness.settleRegistration()
+    await vi.waitFor(() =>
+      expect(harness.waitingWorker.postMessage).toHaveBeenCalledWith(
+        { type: 'REQUEST_COORDINATED_ACTIVATION', protocol: 1 },
+        expect.any(Array),
+      ),
     )
-
     harness.changeController()
-    harness.callbacks().onNeedReload?.()
-
-    expect(harness.manager.getStage()).toBe('restarting')
     expect(harness.reload).toHaveBeenCalledOnce()
     expect(harness.storage.setItem).toHaveBeenCalledWith(
-      'spliit-pwa-update-restart',
+      PWA_UPDATE_RESTART_KEY,
       '1',
     )
   })
 
-  it('does not reload when the first service worker takes control', async () => {
-    const harness = createHarness({ initialController: false })
-    await register(harness)
-
-    harness.changeController()
-
-    expect(harness.reload).not.toHaveBeenCalled()
-  })
-
-  it('reloads a non-initiating tab when its existing controller changes', async () => {
-    const harness = createHarness()
-    await register(harness)
-
-    harness.changeController()
-
-    expect(harness.reload).toHaveBeenCalledOnce()
-    expect(harness.storage.setItem).toHaveBeenCalledWith(
-      'spliit-pwa-update-restart',
-      '1',
-    )
-  })
-
-  it('still reloads when session storage is unavailable', async () => {
-    const harness = createHarness()
-    harness.storage.setItem.mockImplementation(() => {
-      throw new Error('storage unavailable')
-    })
-    await register(harness)
-
-    harness.changeController()
-
-    expect(harness.reload).toHaveBeenCalledOnce()
-  })
-
-  it('renders as soon as the update check reports the app is current', async () => {
-    const harness = createHarness()
-    await register(harness)
-
-    await harness.manager.waitForLaunch()
-    expect(harness.manager.getSnapshot()).toEqual({ status: 'current' })
-  })
-
-  it('fails open after a brief silent deadline when the check is slow', async () => {
+  it('waits silently for local work and resumes when it finishes', async () => {
     vi.useFakeTimers()
-    const harness = createHarness({ updatePending: true })
-    await register(harness)
-
-    await vi.advanceTimersByTimeAsync(250)
-    await harness.manager.waitForLaunch()
-    expect(harness.manager.getSnapshot()).toEqual({ status: 'current' })
-  })
-
-  it('shows download progress and grants a detected update five seconds', async () => {
-    vi.useFakeTimers()
-    const harness = createHarness({ updatePending: true })
-    await register(harness)
-
-    harness.triggerUpdateFound()
-    expect(harness.manager.getStage()).toBe('downloading')
-
-    await vi.advanceTimersByTimeAsync(4999)
-    expect(harness.manager.getSnapshot()).toEqual({ status: 'checking' })
-
-    await vi.advanceTimersByTimeAsync(1)
-    await harness.manager.waitForLaunch()
-    expect(harness.manager.getSnapshot()).toEqual({ status: 'current' })
-  })
-
-  it('does not extend the update deadline for repeated lifecycle signals', async () => {
-    vi.useFakeTimers()
-    const harness = createHarness({ updatePending: true })
-    await register(harness)
-
-    harness.triggerUpdateFound()
-    await vi.advanceTimersByTimeAsync(4000)
-    harness.callbacks().onNeedRefresh?.()
-    await vi.advanceTimersByTimeAsync(1000)
-
-    await harness.manager.waitForLaunch()
-    expect(harness.manager.getSnapshot()).toEqual({ status: 'current' })
-  })
-
-  it('offers an update that finishes after the silent launch deadline', async () => {
-    vi.useFakeTimers()
-    const harness = createHarness({ updatePending: true })
-    await register(harness)
-    await vi.advanceTimersByTimeAsync(250)
-
-    harness.setWaiting(true)
-    harness.callbacks().onNeedRefresh?.()
-
-    expect(harness.manager.getSnapshot()).toEqual({ status: 'available' })
+    const harness = createHarness({ blocked: true })
+    await harness.settleRegistration()
     expect(harness.waitingWorker.postMessage).not.toHaveBeenCalled()
+    expect(harness.manager.getSnapshot()).toEqual({ status: 'hidden' })
+
+    harness.setBlocked(false)
+    await vi.advanceTimersByTimeAsync(0)
+    expect(harness.waitingWorker.postMessage).toHaveBeenCalledOnce()
+    harness.changeController()
+    expect(harness.reload).toHaveBeenCalledOnce()
   })
 
-  it('blocks safe activation while another Spliit window is open', async () => {
-    const harness = createHarness({ waiting: true, activation: 'blocked' })
-    await register(harness)
-    await waitForSnapshot(harness, {
-      status: 'available',
-      otherClientsBlocked: true,
-      otherClientCount: 1,
+  it('resumes a controller replacement after blockers clear', async () => {
+    vi.useFakeTimers()
+    const harness = createHarness({ blocked: true, waiting: false })
+    await harness.settleRegistration()
+    harness.changeController({} as ServiceWorker)
+    expect(harness.reload).not.toHaveBeenCalled()
+
+    harness.setBlocked(false)
+    await vi.advanceTimersByTimeAsync(0)
+    expect(harness.reload).toHaveBeenCalledOnce()
+  })
+
+  it('retries an unverifiable peer on focus without showing UI', async () => {
+    const harness = createHarness({ activation: 'blocked' })
+    await harness.settleRegistration()
+    await vi.waitFor(() =>
+      expect(harness.waitingWorker.postMessage).toHaveBeenCalledOnce(),
+    )
+    expect(harness.manager.getSnapshot()).toEqual({ status: 'hidden' })
+
+    harness.setActivation('accepted')
+    harness.focus()
+    await vi.waitFor(() =>
+      expect(harness.waitingWorker.postMessage).toHaveBeenCalledTimes(2),
+    )
+  })
+
+  it('only reports activation failures and supports dismissal and retry', async () => {
+    const harness = createHarness({ activation: 'failed' })
+    await harness.settleRegistration()
+    await vi.waitFor(() =>
+      expect(harness.manager.getSnapshot()).toEqual({
+        status: 'failed',
+        dismissed: false,
+      }),
+    )
+    harness.manager.dismissFailure()
+    expect(harness.manager.getSnapshot()).toEqual({
+      status: 'failed',
+      dismissed: true,
     })
 
-    expect(harness.manager.getStage()).toBe('checking-clients')
+    harness.setActivation('accepted')
+    harness.manager.retry()
+    await vi.waitFor(() =>
+      expect(harness.waitingWorker.postMessage).toHaveBeenCalledTimes(2),
+    )
+    expect(harness.manager.getSnapshot()).toEqual({ status: 'hidden' })
+  })
+
+  it('fails when activation never changes the controller', async () => {
+    vi.useFakeTimers()
+    const harness = createHarness()
+    await harness.settleRegistration()
+    await vi.advanceTimersByTimeAsync(250)
+    expect(harness.manager.getSnapshot()).toEqual({
+      status: 'failed',
+      dismissed: false,
+    })
+  })
+
+  it('guards runtime asset-error reloads until local work finishes', async () => {
+    vi.useFakeTimers()
+    const harness = createHarness({ waiting: false, blocked: true })
+    await harness.settleRegistration()
+    harness.assetError()
+    expect(harness.reload).not.toHaveBeenCalled()
+
+    harness.setBlocked(false)
+    await vi.advanceTimersByTimeAsync(0)
+    expect(harness.reload).toHaveBeenCalledOnce()
+  })
+
+  it('answers coordination rounds from the expected waiting worker only', async () => {
+    const harness = createHarness({ blocked: true })
+    await harness.settleRegistration()
+    harness.prepare()
+    expect(harness.workerReplies).toContainEqual({
+      type: 'COORDINATION_PREPARE_RESPONSE',
+      protocol: 1,
+      attemptId: 'attempt-1',
+      status: 'blocked',
+    })
+
+    const foreign = {
+      postMessage: vi.fn(),
+    } as unknown as ServiceWorker
+    harness.prepare(foreign)
+    expect(foreign.postMessage).not.toHaveBeenCalled()
+  })
+
+  it('binds final authorization to the worker that takes control', async () => {
+    vi.useFakeTimers()
+    const harness = createHarness({ activation: 'manual' })
+    await harness.settleRegistration()
+    harness.confirm()
+    harness.setBlocked(true)
+
+    const foreign = {} as ServiceWorker
+    harness.changeController(foreign)
+    expect(harness.reload).not.toHaveBeenCalled()
+    harness.setBlocked(false)
+    await vi.advanceTimersByTimeAsync(0)
+    expect(harness.reload).toHaveBeenCalledOnce()
+  })
+
+  it('honors matching final authorization despite handoff-window input', async () => {
+    const harness = createHarness({ activation: 'manual' })
+    await harness.settleRegistration()
+    harness.confirm()
+    harness.setBlocked(true)
+    harness.changeController()
+    expect(harness.reload).toHaveBeenCalledOnce()
+  })
+
+  it('handles controller takeover before the final result without duplicate reloads', async () => {
+    const harness = createHarness({ activation: 'manual' })
+    await harness.settleRegistration()
+    harness.confirm()
+    harness.changeController()
+    harness.deliverFinal({ activated: true })
+    await Promise.resolve()
+    expect(harness.reload).toHaveBeenCalledOnce()
+  })
+
+  it('drops final authorization after a matching abort', async () => {
+    vi.useFakeTimers()
+    const harness = createHarness({ activation: 'manual' })
+    await harness.settleRegistration()
+    harness.confirm()
+    harness.abort()
+    harness.setBlocked(true)
+    harness.changeController()
     expect(harness.reload).not.toHaveBeenCalled()
   })
 
-  it('fails safely when the waiting worker cannot verify clients', async () => {
+  it('treats missing coordination replies as a silent wait', async () => {
     vi.useFakeTimers()
-    const harness = createHarness({ waiting: true, activation: 'timeout' })
-    await register(harness)
-    await vi.advanceTimersByTimeAsync(1000)
-
-    expect(harness.manager.getSnapshot()).toEqual({
-      status: 'available',
-      error: 'client-check',
-      otherClientsBlocked: true,
-    })
+    const harness = createHarness({ activation: 'timeout' })
+    await harness.settleRegistration()
+    await vi.advanceTimersByTimeAsync(60)
+    expect(harness.manager.getSnapshot()).toEqual({ status: 'hidden' })
+    expect(harness.reload).not.toHaveBeenCalled()
   })
 
-  it('fails safely when MessageChannel is unavailable', async () => {
-    const harness = createHarness({
-      waiting: true,
-      createMessageChannel: () => {
-        throw new Error('MessageChannel unavailable')
-      },
-    })
-    await register(harness)
-
-    await waitForSnapshot(harness, {
-      status: 'available',
-      error: 'client-check',
-      otherClientsBlocked: true,
-    })
+  it('does not reload when the first controller claims the page', async () => {
+    const harness = createHarness({ initialController: false, waiting: false })
+    await harness.settleRegistration()
+    harness.changeController({} as ServiceWorker)
+    expect(harness.reload).not.toHaveBeenCalled()
   })
 
-  it('deduplicates activation checks and cannot defer one in flight', async () => {
-    vi.useFakeTimers()
-    const harness = createHarness({ waiting: true, activation: 'timeout' })
-    await register(harness)
-    expect(harness.manager.getSnapshot()).toEqual({
-      status: 'available',
-      checkingClients: true,
-    })
-
-    void harness.manager.restartNow()
-    harness.manager.deferUntilNextLaunch()
-
-    expect(harness.waitingWorker.postMessage).toHaveBeenCalledTimes(1)
-    expect(harness.manager.getSnapshot()).toEqual({
-      status: 'available',
-      checkingClients: true,
-    })
-
+  it('disposes browser subscriptions and ignores later signals', async () => {
+    const harness = createHarness({ blocked: true })
+    await harness.settleRegistration()
     harness.manager.dispose()
-    expect(vi.getTimerCount()).toBe(0)
-  })
-
-  it('force restarts by messaging the waiting worker directly', async () => {
-    const harness = createHarness({ waiting: true, activation: 'blocked' })
-    await register(harness)
-    await waitForSnapshot(harness, {
-      status: 'available',
-      otherClientsBlocked: true,
-      otherClientCount: 1,
-    })
-
-    await harness.manager.forceRestartAll()
-
-    expect(harness.manager.getSnapshot()).toEqual({ status: 'restarting' })
-    expect(harness.waitingWorker.postMessage).toHaveBeenLastCalledWith({
-      type: 'SKIP_WAITING',
-    })
-    harness.changeController()
-    expect(harness.reload).toHaveBeenCalledOnce()
-  })
-
-  it('recovers when activation never changes the controller', async () => {
-    vi.useFakeTimers()
-    const harness = createHarness({ waiting: true })
-    let launchSettled = false
-    void harness.manager.waitForLaunch().then(() => {
-      launchSettled = true
-    })
-    await register(harness)
-    await vi.advanceTimersByTimeAsync(0)
-    expect(harness.manager.getSnapshot()).toEqual({ status: 'restarting' })
-
-    await vi.advanceTimersByTimeAsync(4999)
-    expect(launchSettled).toBe(false)
-
-    await vi.advanceTimersByTimeAsync(1)
-    expect(launchSettled).toBe(true)
-    expect(harness.manager.getSnapshot()).toEqual({ status: 'restarting' })
-
-    await vi.advanceTimersByTimeAsync(5000)
-
-    expect(harness.manager.getSnapshot()).toEqual({
-      status: 'available',
-      error: 'restart',
-      forceRestartAvailable: true,
-    })
-    expect(harness.storage.removeItem).toHaveBeenCalledWith(
-      'spliit-pwa-update-restart',
-    )
-  })
-
-  it('recovers when a requested reload does not unload the document', async () => {
-    vi.useFakeTimers()
-    const harness = createHarness()
-    await register(harness)
-
-    harness.changeController()
-    expect(harness.reload).toHaveBeenCalledOnce()
-    await vi.advanceTimersByTimeAsync(10_000)
-
-    expect(harness.manager.getSnapshot()).toEqual({
-      status: 'available',
-      error: 'restart',
-    })
-  })
-
-  it('retries a reload directly after the new controller is already active', async () => {
-    vi.useFakeTimers()
-    const harness = createHarness({ waiting: true })
-    await register(harness)
-    await vi.advanceTimersByTimeAsync(0)
-
-    harness.setWaiting(false)
-    harness.changeController()
-    expect(harness.reload).toHaveBeenCalledOnce()
-
-    await vi.advanceTimersByTimeAsync(10_000)
-    await harness.manager.restartNow()
-
-    expect(harness.reload).toHaveBeenCalledTimes(2)
-    expect(harness.manager.getSnapshot()).toEqual({ status: 'restarting' })
-  })
-
-  it('recovers when force-restart messaging throws', async () => {
-    const harness = createHarness({
-      waiting: true,
-      activation: 'blocked',
-      forceFailure: true,
-    })
-    await register(harness)
-    await waitForSnapshot(harness, {
-      status: 'available',
-      otherClientsBlocked: true,
-      otherClientCount: 1,
-    })
-
-    await harness.manager.forceRestartAll()
-
-    expect(harness.manager.getSnapshot()).toEqual({
-      status: 'available',
-      error: 'restart',
-      forceRestartAvailable: true,
-    })
-  })
-
-  it('does not prompt again after deferring the update', async () => {
-    vi.useFakeTimers()
-    const harness = createHarness()
-    await register(harness)
-    await vi.advanceTimersByTimeAsync(1000)
-    harness.setWaiting(true)
-    harness.callbacks().onNeedRefresh?.()
-
-    harness.manager.deferUntilNextLaunch()
-    harness.callbacks().onNeedRefresh?.()
-
-    expect(harness.manager.getSnapshot()).toEqual({ status: 'current' })
-  })
-
-  it('fails open when the launch update check rejects', async () => {
-    const harness = createHarness({ updateFailure: true })
-    await register(harness)
-
-    await harness.manager.waitForLaunch()
-    expect(harness.manager.getSnapshot()).toEqual({
-      status: 'current',
-      error: 'registration',
-    })
-  })
-
-  it('fails open when the launch update check throws synchronously', async () => {
-    const harness = createHarness({ updateThrows: true })
-    await register(harness)
-
-    await harness.manager.waitForLaunch()
-    expect(harness.manager.getSnapshot()).toEqual({
-      status: 'current',
-      error: 'registration',
-    })
-  })
-
-  it('subscribes the registered worker to periodic update checks', async () => {
-    const harness = createHarness()
-    await register(harness)
-
-    expect(harness.subscribeUpdateChecks).toHaveBeenCalledWith(
-      harness.registration,
-    )
+    harness.setBlocked(false)
+    harness.focus()
+    expect(harness.waitingWorker.postMessage).not.toHaveBeenCalled()
   })
 })

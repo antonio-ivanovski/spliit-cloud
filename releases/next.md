@@ -44,5 +44,6 @@ Each release ships notes written for humans: highlights with screenshots, a full
 - Self-hosting docs rewritten around version pinning (`SPLIIT_TAG=vX.Y.Z`) (`TBD` by @TBD)
 - Test runner upgraded to Vitest 5 stable (dev tooling only) (`TBD` by @TBD)
 - English (UK) locale ships only its differing strings (`behaviour`, `Normalise`, `authorisation`) and inherits the rest from US English — sparse overlays with fallback chains, also applied to pt-BR (`aa64456` by @antonio-ivanovski)
+- Automatic PWA updates: new versions apply on their own whenever it is safe — clean tabs refresh without asking, unfinished edits or in-progress work in any open window silently hold the update, and everything resumes automatically once the work finishes. Routine waits and restarts show no pill or dialog; only an update that fails to apply shows one, with Retry and Dismiss. The Restart/Later dialogs and the restart-all override are gone. One accepted trade-off: keystrokes landing in the split second between the final safety check and the refresh are not preserved — everything already on screen is (`TBD` by @TBD)
 
 **Full Changelog**: TBD

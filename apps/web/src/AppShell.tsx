@@ -16,13 +16,19 @@ import { OfflineBanner } from '@/components/offline-banner'
 import { ProfileGate } from '@/components/profile-gate'
 import { ProgressBar } from '@/components/progress-bar'
 import { PushNotificationOnboarding } from '@/components/push-notification-onboarding'
-import { PwaRegister } from '@/components/pwa-register'
+import {
+  PwaUpdateCompositionGuard,
+  PwaUpdateMutationGuard,
+  PwaUpdateNavigationGuard,
+} from '@/components/pwa-update-guards'
+import { PwaUpdatePill } from '@/components/pwa-update-pill'
 import { ThemeProvider } from '@/components/theme-provider'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Button } from '@/components/ui/button'
 import { Toaster } from '@/components/ui/toaster'
 import { I18nProvider } from '@/i18n/react'
 import { isFocusedMobilePath, isMobileGroupTabPath } from '@/lib/mobile-nav'
+import { markPwaUpdateProtectionInitialized } from '@/lib/pwa-update-blockers'
 import { TRPCProvider } from '@/trpc/client'
 
 import { MergeDeviceSavedViews } from './app/groups/merge-device-saved-views'
@@ -64,6 +70,9 @@ function Content() {
   return (
     <TRPCProvider>
       <MergeDeviceSavedViews />
+      <PwaUpdateMutationGuard />
+      <PwaUpdateCompositionGuard />
+      <PwaUpdateNavigationGuard />
       <AccountPreferencesBoundary isAuthRoute={isAuthRoute}>
         <MascotProvider>
           <div className="app-shell relative isolate flex flex-col overflow-x-clip">
@@ -131,7 +140,7 @@ function Content() {
               </div>
             )}
 
-            <PwaRegister />
+            <PwaUpdatePill />
             {isAuthRoute ? null : <PushNotificationOnboarding />}
             {isAuthRoute ? null : <InstallPromotionDialog />}
 
@@ -208,6 +217,9 @@ function Content() {
 export function AppShell() {
   useEffect(() => {
     document.documentElement.removeAttribute('data-pwa-update-restart')
+    // Producers register via effects on mount; only after this commit can an
+    // empty blocker registry be read as "clean".
+    markPwaUpdateProtectionInitialized()
   }, [])
 
   return (

@@ -21,6 +21,7 @@ import {
   type ExpenseCancelLink,
 } from '@/lib/expense-navigation'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import {
   expenseFormInputSchema,
   type Expense,
@@ -236,6 +237,16 @@ export function ExpenseForm(props: {
       timeZone: accountTimeZone,
     }),
   })
+
+  const { isDirty: isExpenseFormDirty } = useFormState({
+    control: form.control,
+  })
+  // The global mutation guard covers saves; keep protecting dirty values until
+  // the expense has been persisted.
+  usePwaUpdateBlocker(
+    isExpenseFormDirty && !props.readOnly && !persisted,
+    'expense-form-edits',
+  )
 
   // Defaults are resolved independently for payer and participants. They are
   // applied once to a fresh form after the preset library arrives; edit, copy,

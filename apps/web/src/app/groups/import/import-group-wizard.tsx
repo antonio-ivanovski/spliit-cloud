@@ -15,6 +15,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Card, CardContent } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
 import { invalidateAccountGroupLists } from '@/lib/invalidate-account-groups'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import { useCurrentAccount } from '@/lib/use-current-account'
 import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 import { trpc } from '@/trpc/client'
@@ -251,6 +252,19 @@ export function ImportGroupWizard() {
   const activeImportGroupId = activeImportResult?.groupId ?? null
   const activeImportInvites = activeImportResult?.invites ?? []
   const activeImportedDocumentCount = activeImportResult?.importedDocuments ?? 0
+
+  // A reload discards reducer + local wizard state. The pristine source step
+  // (no source loaded, still on entry) is safe; everything before `done`
+  // afterwards is not. Mutation pending is also covered by the global
+  // backstop, but the staged pre-submit state must block on its own.
+  usePwaUpdateBlocker(
+    activeImportPending || isSourcePreviewLoading,
+    'group-import-operation',
+  )
+  usePwaUpdateBlocker(
+    state.step !== 'done' && (state.source !== null || state.step !== 'source'),
+    'group-import-wizard',
+  )
 
   // Prefill error message for the source step's inline error display.
   // Derived (not stored) because the wizard's `useImportSource`
