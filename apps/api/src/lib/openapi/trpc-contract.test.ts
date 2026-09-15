@@ -141,6 +141,19 @@ describe('procedure authorization contracts', () => {
     ).not.toContainEqual({ session: [] })
   })
 
+  it('documents the superjson wire envelopes hand-callers need', async () => {
+    const doc = await generateTestDocument()
+    const description = doc.info.description ?? ''
+
+    // Agents calling tRPC over HTTP must wrap inputs in {"json":…} and
+    // unwrap the double response envelope — raw objects fail with 400.
+    expect(description).toContain('{"json"')
+    expect(description).toContain('"meta"')
+    expect(description).toContain('result')
+    expect(description).toContain('Bearer')
+    expect(description).toContain('Authentication required')
+  })
+
   it('keeps the OAuth protocol paths in the production fallback document', async () => {
     const previous = process.env.SKIP_AUTH_OPENAPI
     process.env.SKIP_AUTH_OPENAPI = '1'

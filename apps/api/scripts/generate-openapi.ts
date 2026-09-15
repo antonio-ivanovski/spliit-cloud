@@ -754,22 +754,46 @@ function buildTags(): OpenAPIV3_1.TagObject[] {
 }
 
 const ROOT_DESCRIPTION = `
-The Spliit API is a [tRPC](https://trpc.io) server mounted at \`/trpc\`. Every
-operation in this spec is a tRPC procedure that follows the tRPC wire
-convention:
+The Spliit API is a [tRPC](https://trpc.io) server mounted at \`/trpc\` with
+the [superjson](https://github.com/flightcontrolhq/superjson) transformer.
+Every operation in this spec is a tRPC procedure that follows the
+tRPC-over-HTTP wire convention:
 
 - **Paths are dotted procedure names.** A path like
   \`/groups.expenses.create\` corresponds to the tRPC procedure
   \`groups.expenses.create\` and resolves to
   \`POST /trpc/groups.expenses.create\` at runtime.
-- **GET procedures** take their input as a single JSON query parameter
-  named \`input\`: \`GET /trpc/<proc>?input=<urlencoded-json>\`.
-- **POST procedures** (mutations) take their input as a JSON request body.
-- **Responses are wrapped** in the tRPC envelope. Successful responses
-  look like \`{ "result": { "data": <T> } }\`. Errors look like
-  \`{ "error": { "message": "…", "code": "UNAUTHORIZED" } }\`. The
-  \`components.schemas\` describe the unwrapped \`T\`; apply the envelope
+- **Queries are GET, mutations are POST.** Anything else returns \`405\`
+  (\`Unsupported POST-request to query procedure …\`).
+- **Inputs must be superjson-wrapped in a \`json\` key.** This is the most
+  common mistake: sending the raw input object fails with
+  \`400 "Invalid input: expected object, received undefined"\`.
+  - Batch GET query:
+    \`GET /trpc/<proc>?batch=1&input={"0":{"json":{...}}}\`
+    (\`input\` is urlencoded; \`0\` is the batch index).
+  - Single (non-batch) GET: \`?input={"json":{...}}\`.
+  - Procedures that take no input still need an (empty) wrapper:
+    \`?batch=1&input={"0":{"json":{}}}\`.
+  - Mutations: \`POST /trpc/<proc>?batch=1\` with JSON body
+    \`{"0":{"json":{...}}}\` (single: \`{"json":{...}}\`).
+- **Responses are wrapped twice, and batched calls return arrays.**
+  A successful batch response looks like
+  \`[{ "result": { "data": { "json": <T> } } }]\` in call order (drop the
+  outer array and the \`0\` keys for single calls). A superjson \`"meta"\`
+  key may sit next to \`"json"\` when the payload contains
+  \`Date\`/\`Map\`/\`Set\` — otherwise dates arrive as ISO-8601 strings
+  inside \`json\`. Errors look like
+  \`{ "error": { "json": { "message": "…", "code": -32600, "data": {
+  "code": "UNAUTHORIZED", "httpStatus": 401 } } } }\`. The
+  \`components.schemas\` describe the unwrapped \`T\`; apply both envelopes
   on the wire.
+- **Authentication: Bearer token or session cookie.** Send
+  \`Authorization: Bearer <access-token>\` (OAuth — the scopes each
+  operation needs are listed in its \`security\` section) or a better-auth
+  session cookie. They are not equivalent: session-only procedures reject
+  OAuth tokens with \`401 "Authentication required"\` (e.g. the global
+  \`expenses.*\` procedures) — use the per-group equivalents
+  (\`groups.expenses.*\`), which accept OAuth scopes, instead.
 
 For TypeScript consumers, generate a typed client with
 [@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) using the
@@ -777,9 +801,9 @@ For TypeScript consumers, generate a typed client with
 runtime — that handles \`Date\` / \`Map\` / \`Set\` round-tripping correctly.
 
 For non-TS hand-callers (curl, Postman, other languages) the same
-conventions apply: send credentials, POST mutations as JSON bodies with
-the tRPC path as the URL, and unwrap the \`{result:{data}}\` envelope
-from the response.
+conventions apply: send credentials, wrap every input in the superjson
+\`{"json":…}\` envelope described above, and unwrap the double response
+envelope to reach \`T\`.
 
 Authentication is **cookie-based**, served by [better-auth](https://better-auth.com).
 Sign in via \`POST /auth/sign-in/email\` (email + password) or
