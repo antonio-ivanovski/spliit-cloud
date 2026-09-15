@@ -1,12 +1,24 @@
 import type { RankedCategory } from '../rank'
 
+/**
+ * Detector keywords are a small static set but `hasWord` runs per query, so
+ * compiling a unicode regex per call dominates calibration cost under bulk
+ * categorization. Cache by keyword; behavior is identical.
+ */
+const hasWordPatternCache = new Map<string, RegExp>()
+
 export function hasWord(needle: string, word: string): boolean {
   // Unicode-aware word boundary: \b only works for Latin. Use lookbehind/ahead for Cyrillic etc.
-  const escaped = word.replaceAll(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`)
-  return new RegExp(
-    String.raw`(?<![\p{L}\p{N}_])${escaped}(?![\p{L}\p{N}_])`,
-    'iu',
-  ).test(needle)
+  let pattern = hasWordPatternCache.get(word)
+  if (!pattern) {
+    const escaped = word.replaceAll(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`)
+    pattern = new RegExp(
+      String.raw`(?<![\p{L}\p{N}_])${escaped}(?![\p{L}\p{N}_])`,
+      'iu',
+    )
+    hasWordPatternCache.set(word, pattern)
+  }
+  return pattern.test(needle)
 }
 
 export function containsAny(needle: string, words: readonly string[]): boolean {
