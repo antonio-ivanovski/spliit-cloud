@@ -57,7 +57,10 @@ const realAuthModule = (await vi.importActual('./index')) as {
         expiresIn?: number
         updateAge?: number
       }
-      hooks?: { before?: unknown; after?: (ctx: unknown) => Promise<void> }
+      hooks?: {
+        before?: unknown
+        after?: (ctx: unknown) => Promise<void>
+      }
       databaseHooks?: {
         user?: {
           create?: {
@@ -178,6 +181,12 @@ describe('better-auth session config', () => {
     expect(realAuthModule.auth.options.disabledPaths).toContain('/token')
   })
 
+  it('disables the provider consent deletion that would leave refresh tokens alive', () => {
+    expect(realAuthModule.auth.options.disabledPaths).toContain(
+      '/oauth2/delete-consent',
+    )
+  })
+
   it('does not attach a JWT header to ordinary cookie-session responses', () => {
     const jwtPlugin = realAuthModule.auth.options.plugins?.find(
       (plugin) => plugin.id === 'jwt',
@@ -206,6 +215,45 @@ describe('better-auth session config', () => {
 
     expect(jwtPlugin?.options?.adapter).toBeDefined()
   })
+
+  it('leaves dynamic registrations broad so the same client can step up', async () => {
+    // Registration persists the provider's capability union; narrowing was
+    // removed so an explicit manage/delete scope reaches fresh consent
+    // instead of failing with `invalid_scope`. The after-hook must not
+    // touch the stored client row anymore.
+    const returned = {
+      client_id: 'default-scope-client',
+      scope: 'broader-provider-capabilities',
+    }
+
+    await realAuthModule.auth.options.hooks?.after?.({
+      path: '/oauth2/register',
+      body: {},
+      context: { returned },
+    } as never)
+
+    expect(prismaMock.oauthClient.update).not.toHaveBeenCalled()
+  })
+
+  it('stamps authorization codes with the start generation at creation', async () => {
+    const hook =
+      realAuthModule.auth.options.databaseHooks?.verification?.create?.before
+    expect(hook).toBeDefined()
+
+    const codeValue = JSON.stringify({
+      type: 'authorization_code',
+      userId: 'acct-1',
+      query: { client_id: 'client-1' },
+    })
+    // No start boundary for this request: the row passes through untouched.
+    await expect(
+      hook?.(
+        { identifier: 'code-1', value: codeValue } as never,
+        { request: new Request('https://api.example/') } as never,
+      ),
+    ).resolves.toBeUndefined()
+  })
+
   it('invalidates cached accounts after Better Auth user updates and deletes', async () => {
     clearAccountCache()
     const account = {

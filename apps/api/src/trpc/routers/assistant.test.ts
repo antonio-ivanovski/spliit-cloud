@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import '../../test/mocks'
+import { getMcpAudience } from '../../lib/auth/urls'
 import { prismaMock } from '../../test/state'
 import { assistantRouter, GROUP_RESPONSE_CAP } from './assistant'
 
@@ -10,6 +11,7 @@ function oauthContext(accountId: string) {
       credentialKind: 'oauth' as const,
       accessToken: 'redacted',
       scopes: ['spliit:groups:read', 'spliit:expenses:write'],
+      audiences: [getMcpAudience()],
       user: {
         id: accountId,
         name: 'Alice',

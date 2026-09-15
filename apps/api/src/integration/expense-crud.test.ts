@@ -1,7 +1,9 @@
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { prisma } from '@spliit/db'
 
+import { getApiBaseUrl } from '../lib/auth/urls'
+import * as upload from '../routes/upload'
 import { groupsRouter } from '../trpc/routers/groups'
 import { checkDbConnection, testRunId } from './setup'
 
@@ -482,5 +484,152 @@ describe('Expense CRUD — real DB', () => {
     })
     expect(expense).not.toBeNull()
     expect(expense!.title).toBe('No Documents')
+  })
+
+  // ------------------------------------------------------------------
+  // 8. OAuth destructive scope is driven by what the update destroys
+  // ------------------------------------------------------------------
+  describe('OAuth destructive scope on update', () => {
+    function makeOAuthCaller(scopes: string[]) {
+      return groupsRouter.createCaller({
+        auth: {
+          credentialKind: 'oauth',
+          audiences: [getApiBaseUrl()],
+          scopes,
+          accessToken: 'test-token',
+          user: {
+            id: adminId,
+            email: adminEmail,
+            emailVerified: true,
+            name: 'Test Admin',
+          },
+          session: { id: 'sess-oauth-test' },
+        },
+      } as never)
+    }
+
+    const manageCaller = () =>
+      makeOAuthCaller(['spliit:groups:read', 'spliit:expenses:manage'])
+    const deleteCaller = () =>
+      makeOAuthCaller([
+        'spliit:groups:read',
+        'spliit:expenses:manage',
+        'spliit:expenses:delete',
+      ])
+
+    const expenseInput = (title: string, participant: string) => ({
+      title,
+      amount: 1000,
+      paidByList: [{ participant, shares: 1000 }],
+      paidBySplitMode: 'BY_AMOUNT' as const,
+      isMultiPayer: false,
+      paidFor: [{ participant, shares: 1 }],
+      category: 'general' as const,
+      splitMode: 'EVENLY' as const,
+      expenseDate: new Date().toISOString(),
+      expenseTimeZone: 'UTC',
+      documents: [],
+      recurrenceRule: 'NONE' as const,
+    })
+
+    it('rejects a manage-scoped update that drops a stored document', async () => {
+      const deleteObject = vi
+        .spyOn(upload, 'deleteS3Object')
+        .mockResolvedValue(undefined)
+      const { groupId, participantId } = await createGroup(`Doc scope ${runId}`)
+      const group = await prisma.group.findUniqueOrThrow({
+        where: { id: groupId },
+        select: { ledgerId: true },
+      })
+      const created = await manageCaller().expenses.create({
+        requestId: crypto.randomUUID(),
+        groupId,
+        expense: expenseInput('Receipt', participantId),
+      })
+      const createdRow = await prisma.expense.findUniqueOrThrow({
+        where: { id: created.expenseId },
+      })
+      // A harmless rename stays on the manage scope...
+      await manageCaller().expenses.update({
+        groupId,
+        expenseId: createdRow.id,
+        expectedVersion: createdRow.version,
+        expense: expenseInput('Receipt renamed', participantId),
+      })
+      await prisma.expenseDocument.create({
+        data: {
+          id: `doc-scope-${runId}`,
+          ledgerId: group.ledgerId,
+          expenseId: created.expenseId,
+          url: 'https://example.invalid/receipt.png',
+          width: 100,
+          height: 100,
+        },
+      })
+      try {
+        const row = await prisma.expense.findUniqueOrThrow({
+          where: { id: created.expenseId },
+        })
+        // Silently omitting the stored document needs delete, and the
+        // check runs before any side effect touches storage.
+        await expect(
+          manageCaller().expenses.update({
+            groupId,
+            expenseId: row.id,
+            expectedVersion: row.version,
+            expense: expenseInput('Receipt renamed', participantId),
+          }),
+        ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+        expect(deleteObject).not.toHaveBeenCalled()
+        await expect(
+          prisma.expenseDocument.count({
+            where: { id: `doc-scope-${runId}` },
+          }),
+        ).resolves.toBe(1)
+
+        // The delete grant performs the same edit and removes the row.
+        await deleteCaller().expenses.update({
+          groupId,
+          expenseId: row.id,
+          expectedVersion: row.version,
+          expense: expenseInput('Receipt renamed', participantId),
+        })
+        await expect(
+          prisma.expenseDocument.count({
+            where: { id: `doc-scope-${runId}` },
+          }),
+        ).resolves.toBe(0)
+      } finally {
+        deleteObject.mockRestore()
+        await prisma.expenseDocument
+          .deleteMany({ where: { ledgerId: group.ledgerId } })
+          .catch(() => {})
+      }
+    })
+
+    it('allows a harmless THIS_AND_FUTURE edit with manage only', async () => {
+      const { groupId, participantId } = await createGroup(
+        `Series scope ${runId}`,
+      )
+      const created = await manageCaller().expenses.create({
+        requestId: crypto.randomUUID(),
+        groupId,
+        expense: expenseInput('Series', participantId),
+      })
+      const row = await prisma.expense.findUniqueOrThrow({
+        where: { id: created.expenseId },
+      })
+      // No recurrence and no document removal: nothing is destroyed, so no
+      // delete scope is required even with the series-wide verb.
+      await expect(
+        manageCaller().expenses.update({
+          groupId,
+          expenseId: row.id,
+          expectedVersion: row.version,
+          scope: 'THIS_AND_FUTURE',
+          expense: expenseInput('Series renamed', participantId),
+        }),
+      ).resolves.toMatchObject({ expenseId: row.id })
+    })
   })
 })

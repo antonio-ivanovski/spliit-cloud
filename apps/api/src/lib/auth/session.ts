@@ -2,14 +2,18 @@ import { oauthProviderResourceClient } from '@better-auth/oauth-provider/resourc
 
 import { prisma } from '@spliit/db'
 
-import { env } from '../env'
 import {
   getCachedAccount,
   isAnonymousSetupIncomplete,
   type CachedAccount,
 } from './account-cache'
 import { auth } from './index'
-import { getApiBaseUrl } from './urls'
+import {
+  getAccessTokenBinding,
+  getGrantGeneration,
+} from './oauth-grant-generation'
+import { oauthRevocationBarrierIdentifier } from './oauth-revocation-barrier'
+import { getApiBaseUrl, oauthAudiences } from './urls'
 
 export type ResolvedAuth = Omit<
   NonNullable<Awaited<ReturnType<typeof auth.api.getSession>>>,
@@ -23,6 +27,14 @@ export type OAuthResolvedAuth = {
   user: ResolvedAuth['user']
   session: ResolvedAuth['session']
   scopes: string[]
+  /**
+   * The token's verified `aud` claim. Each surface checks its own resource
+   * against this list: `apiProcedure` and `scopedGroupReadProcedure` require
+   * the API base URL, so a token minted for the MCP resource can never reach
+   * the direct API (RFC 8707 audience separation). The assistant surface is the
+   * MCP resource's backend and keeps accepting MCP-audience tokens.
+   */
+  audiences: string[]
   accessToken: string
 }
 
@@ -63,10 +75,68 @@ export async function getApplicationAuthFromRequest(
 
 const oauthResource = oauthProviderResourceClient().getActions()
 
+/**
+ * Whether the verified JWT belongs to the pair's current authorization
+ * generation. A standing revocation barrier rejects first: the barrier commits
+ * before the generation moves, so a crash between the two must still cut bearer
+ * access (the exchange path is already barrier-gated). Bound tokens (by `jti`)
+ * must then match the current generation exactly. Unbound tokens — minted
+ * before binding shipped, or whose binding write was lost — cannot prove their
+ * generation, so they are rejected once the pair has any revocation history and
+ * accepted only on a pair that was never revoked. Any database failure rejects
+ * the token.
+ */
+async function isAccessTokenGenerationCurrent(claims: {
+  sub?: unknown
+  client_id?: unknown
+  azp?: unknown
+  jti?: unknown
+  iat?: unknown
+}): Promise<boolean> {
+  try {
+    if (typeof claims.sub !== 'string') return false
+    // Better Auth's verifier already normalizes `azp` into `client_id`, but
+    // keep the legacy claim as a fallback so pre-1.7-shaped tokens stay
+    // resolvable even if that normalization ever changes.
+    const clientId =
+      typeof claims.client_id === 'string'
+        ? claims.client_id
+        : typeof claims.azp === 'string'
+          ? claims.azp
+          : null
+    if (!clientId) return false
+    const [binding, current, barrier] = await Promise.all([
+      typeof claims.jti === 'string'
+        ? getAccessTokenBinding(claims.sub, clientId, claims.jti)
+        : Promise.resolve(null),
+      getGrantGeneration(claims.sub, clientId),
+      prisma.verification.findFirst({
+        where: {
+          identifier: oauthRevocationBarrierIdentifier(claims.sub, clientId),
+          expiresAt: { gt: new Date() },
+        },
+        select: { id: true },
+      }),
+    ])
+    // A standing barrier means disconnect was requested and no explicit
+    // re-consent has re-armed the pair since: reject regardless of generation.
+    if (barrier) return false
+    if (binding) {
+      return (
+        binding.accountId === claims.sub &&
+        binding.clientId === clientId &&
+        binding.generation === current
+      )
+    }
+    return current === 0
+  } catch {
+    return false
+  }
+}
+
 export async function getOAuthAuthFromRequest(
   request: Request,
 ): Promise<OAuthResolvedAuth | null> {
-  if (!env.ENABLE_MCP || !env.MCP_PUBLIC_URL) return null
   const authorization = request.headers.get('authorization')
   if (!authorization?.startsWith('Bearer ')) return null
   const accessToken = authorization.slice('Bearer '.length)
@@ -75,7 +145,11 @@ export async function getOAuthAuthFromRequest(
   const issuer = `${getApiBaseUrl()}/auth`
   const claims = await oauthResource.verifyBearerToken(accessToken, {
     verifyOptions: {
-      audience: `${env.MCP_PUBLIC_URL}/mcp`,
+      // Verification accepts any audience this deployment issues tokens for,
+      // because the assistant surface must keep authenticating MCP-audience
+      // tokens. Which resources a token may actually reach is decided per
+      // surface from the verified `aud` claim exposed below.
+      audience: oauthAudiences(),
       issuer,
     },
     jwksUrl: `${issuer}/jwks`,
@@ -88,10 +162,13 @@ export async function getOAuthAuthFromRequest(
     !Number.isFinite(claims.iat)
   )
     return null
-  const account = await prisma.account.findUnique({
-    where: { id: claims.sub },
-  })
+  const account = await getCachedAccount(claims.sub)
   if (!account) return null
+  // Disconnect moves the (account, client) pair to the next authorization
+  // generation, which must reject already-issued access tokens on their
+  // next use rather than leaving them valid until expiry. The check reads
+  // the database so it holds across API replicas.
+  if (!(await isAccessTokenGenerationCurrent(claims))) return null
   const scopes = Array.isArray(claims.scopes)
     ? claims.scopes.filter(
         (scope): scope is string => typeof scope === 'string',
@@ -99,15 +176,20 @@ export async function getOAuthAuthFromRequest(
     : typeof claims.scope === 'string'
       ? claims.scope.split(' ').filter(Boolean)
       : []
+  const audiences = Array.isArray(claims.aud)
+    ? claims.aud.filter(
+        (audience): audience is string => typeof audience === 'string',
+      )
+    : typeof claims.aud === 'string'
+      ? [claims.aud]
+      : []
 
   return {
     credentialKind: 'oauth',
     accessToken,
     scopes,
-    user: {
-      ...account,
-      anonymousOnboardingCompleted: true,
-    },
+    audiences,
+    user: account,
     session: {
       id: typeof claims.sid === 'string' ? claims.sid : `oauth:${claims.sub}`,
       userId: account.id,

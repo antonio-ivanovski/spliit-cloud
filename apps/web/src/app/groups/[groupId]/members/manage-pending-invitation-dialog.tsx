@@ -34,6 +34,7 @@ import {
 } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useToast } from '@/components/ui/use-toast'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import { trpc } from '@/trpc/client'
 
 import { GeneratedInviteLinkPanel } from './generated-invite-link-panel'
@@ -133,6 +134,11 @@ export function ManagePendingInvitationDialog({
   const formState = form.formState
 
   const saving = updatePending.isPending
+
+  usePwaUpdateBlocker(
+    Boolean(open && invitation && formState.isDirty),
+    'manage-invitation-edits',
+  )
 
   useEffect(() => {
     if (!open || !invitation) {

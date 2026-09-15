@@ -3,6 +3,7 @@ import { afterAll, describe, expect, it } from 'vitest'
 import { prisma } from '@spliit/db'
 
 import { prepareAssistantExpense } from '../lib/assistant/expense'
+import { env } from '../lib/env'
 import { assistantRouter } from '../trpc/routers/assistant'
 import { groupsRouter } from '../trpc/routers/groups'
 import { checkDbConnection, testRunId } from './setup'
@@ -71,6 +72,7 @@ describe('assistant expense confirmation concurrency', () => {
         credentialKind: 'oauth',
         accessToken: 'test-token',
         scopes: ['spliit:groups:read', 'spliit:expenses:write'],
+        audiences: [`${env.MCP_PUBLIC_URL}/mcp`],
         user: await prisma.account.findUniqueOrThrow({
           where: { id: accountId },
         }),

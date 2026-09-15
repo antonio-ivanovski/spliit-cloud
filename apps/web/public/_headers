@@ -1,5 +1,9 @@
 /
   Cache-Control: no-cache, max-age=0, must-revalidate
+  Link: </.well-known/api-catalog>; rel="api-catalog", <https://api.spliit.cloud/openapi.json>; rel="service-desc", <https://api.spliit.cloud/docs>; rel="service-doc", </auth.md>; rel="describedby"
+
+/.well-known/api-catalog
+  Content-Type: application/linkset+json
 
 /index.html
   Cache-Control: no-cache, max-age=0, must-revalidate

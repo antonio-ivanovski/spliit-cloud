@@ -21,6 +21,7 @@ import {
   type ExpenseCancelLink,
 } from '@/lib/expense-navigation'
 import type { RuntimeFeatureFlags } from '@/lib/featureFlags'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import {
   expenseFormInputSchema,
   type Expense,
@@ -45,7 +46,10 @@ import type {
 } from '../create-from-receipt-button'
 import { BasicDetailsCard } from './basic-details-card'
 import { isValidExpenseDate } from './currency-utils'
-import { buildExpenseFormDefaults } from './default-values'
+import {
+  buildExpenseFormDefaults,
+  importDraftAsLoadedExpense,
+} from './default-values'
 import { DocumentsCard } from './documents-card'
 import { ExpenseItemsCard } from './expense-items-card'
 import { useExpenseFormTabNavigation } from './focus-navigation'
@@ -133,6 +137,8 @@ export type ExpenseSubmitOutcome = 'saved' | 'deferred'
 export function ExpenseForm(props: {
   group: NonNullable<AppRouterOutput['groups']['get']['group']>
   expense?: AppRouterOutput['groups']['expenses']['get']['expense']
+  /** Complete expense data held only by the file-import review flow. */
+  draftExpense?: Expense
   isCopy?: boolean
   searchParams?: CreateExpenseSearch
   heading?: string
@@ -179,7 +185,17 @@ export function ExpenseForm(props: {
   const [retryingNav, setRetryingNav] = useState(false)
   // Copy and fresh-create both surface as a Create flow even though
   // props.expense is set in copy mode (for field prefill).
-  const isCreate = props.expense === undefined || props.isCopy === true
+  const isCreate =
+    (props.expense === undefined && props.draftExpense === undefined) ||
+    props.isCopy === true
+  const initialExpense = useMemo(
+    () =>
+      props.expense ??
+      (props.draftExpense
+        ? importDraftAsLoadedExpense(props.draftExpense)
+        : undefined),
+    [props.draftExpense, props.expense],
+  )
 
   const splitPresetsQuery = trpc.groups.splitPresets.list.useQuery(
     { groupId: props.group.id },
@@ -209,7 +225,7 @@ export function ExpenseForm(props: {
     shouldFocusError: false,
     defaultValues: buildExpenseFormDefaults({
       isCreate,
-      expense: props.expense,
+      expense: initialExpense,
       isCopy: props.isCopy,
       searchParams: props.searchParams ?? {},
       group: props.group,
@@ -221,6 +237,16 @@ export function ExpenseForm(props: {
       timeZone: accountTimeZone,
     }),
   })
+
+  const { isDirty: isExpenseFormDirty } = useFormState({
+    control: form.control,
+  })
+  // The global mutation guard covers saves; keep protecting dirty values until
+  // the expense has been persisted.
+  usePwaUpdateBlocker(
+    isExpenseFormDirty && !props.readOnly && !persisted,
+    'expense-form-edits',
+  )
 
   // Defaults are resolved independently for payer and participants. They are
   // applied once to a fresh form after the preset library arrives; edit, copy,
@@ -569,13 +595,13 @@ export function ExpenseForm(props: {
           isCopy={props.isCopy}
           recurrenceSequence={
             !props.isCopy
-              ? (props.expense?.recurrenceSequence ?? undefined)
+              ? (initialExpense?.recurrenceSequence ?? undefined)
               : undefined
           }
           editScope={props.editScope}
           cancelLink={props.cancelLink}
           initialRecurrence={
-            !isCreate ? (props.expense?.recurrence ?? null) : undefined
+            !isCreate ? (initialExpense?.recurrence ?? null) : undefined
           }
           suggestCategoryMutation={suggestCategoryMutation}
           runtimeFeatureFlags={props.runtimeFeatureFlags}
@@ -722,7 +748,7 @@ export function ExpenseForm(props: {
           isCreate={isCreate}
           readOnly={!!props.readOnly}
           onDelete={props.onDelete}
-          expenseTitle={props.expense?.title}
+          expenseTitle={props.expense?.title ?? props.draftExpense?.title}
           cancelLink={props.cancelLink ?? expenseFormCancelLink(props.group.id)}
           submitDisabled={persisted}
         />

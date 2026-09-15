@@ -1,0 +1,140 @@
+{
+  "Homepage": {
+    "features": {
+      "settlement": {
+        "description": "See who paid what and optimise money transfers between participants."
+      }
+    }
+  },
+  "Expenses": {
+    "ActiveUserModal": {
+      "description": "Tell us which participant you are to let us customise how the information is displayed."
+    }
+  },
+  "Groups": {
+    "Import": {
+      "Source": {
+        "splitwiseAnonymizeTitle": "Having trouble importing your Splitwise CSV? Anonymise it before sharing.",
+        "splitwiseAnonymizeButton": "Anonymise a CSV",
+        "splitwiseAnonymizeError": "Could not anonymise this file. Make sure it's a Splitwise CSV export."
+      },
+      "Documents": {
+        "description": "Spliit Cloud can securely copy receipt images from the original spliit.app group and store normalised JPEG versions in your Cloud storage.",
+        "tooLarge": "The normalised image is still larger than 2 MiB.",
+        "uploadFailed": "Could not upload the normalised image."
+      }
+    }
+  },
+  "AccountSettings": {
+    "notifications": {
+      "inheritedDescription": "Following your all activity setting. Choose a channel to customise this category."
+    },
+    "aiPreferences": {
+      "description": "Configure AI features and customise how they behave.",
+      "categoryExtractLabel": "Expense categoriser",
+      "receiptPromptsDescription": "Tailor the AI behaviour when scanning receipts (currency hints, line-item grouping, etc.).",
+      "voicePromptsDescription": "Tailor the AI behaviour when creating expenses from your voice (splitting, payer defaults, etc.)."
+    }
+  },
+  "GroupForm": {
+    "CurrencyField": {
+      "placeholder": "£, €, $…"
+    },
+    "CurrencyCodeField": {
+      "editDescription": "All amounts and balances will be in this currency. Changing this will NOT convert expenses already entered, except when the currency has different \"minor units\" than the current one (e.g. changing from British Pound to Japanese Yen)"
+    },
+    "Settings": {
+      "description": "These settings are set per-device, and are used to customise your experience."
+    },
+    "bulkCategorizeSectionDescription": "Run the AI categoriser across many expenses at once. Useful after importing expenses or when many titles are still uncategorised.",
+    "bulkCategorizeButton": "Open bulk categoriser"
+  },
+  "ExpenseForm": {
+    "paidForOptionItemized": "Itemised",
+    "items": {
+      "requiredForItemized": "Add at least one item to use Itemised split.",
+      "switchToItemizedTitle": "Switch to itemised split?",
+      "switchToItemizedDescription": "Editing item participants changes Split between to Itemised and replaces the participant split you configured.",
+      "switchToItemizedConfirm": "Switch to itemised",
+      "calculationError": "Could not calculate the itemised split. Check the item values and participant shares."
+    },
+    "paidForItemizedActiveHint": "Itemised splitting is active. Edit item participants from the Items card to change this split."
+  },
+  "Categories": {
+    "Uncategorized": {
+      "heading": "Uncategorised"
+    },
+    "Utilities": {
+      "Trash": "Rubbish"
+    }
+  },
+  "BulkCategorize": {
+    "title": "Bulk categorise",
+    "saved_zero": "{count} expenses were recategorised.",
+    "saved_one": "{count} expense was recategorised.",
+    "saved_two": "{count} expenses were recategorised.",
+    "saved_few": "{count} expenses were recategorised.",
+    "saved_many": "{count} expenses were recategorised.",
+    "saved_other": "{count} expenses were recategorised.",
+    "noCandidates": "No expenses need categorising.",
+    "adminsOnly": "Only group admins can run the bulk categoriser.",
+    "description": "Use the AI to suggest categories for all uncategorised expenses at once.",
+    "archived": "This group is archived. The bulk categoriser is unavailable.",
+    "loadingCandidates": "Checking uncategorised expenses…",
+    "introDescription_zero": "There are {count} uncategorised expenses ready for review.",
+    "introDescription_one": "There is {count} uncategorised expense ready for review.",
+    "introDescription_two": "There are {count} uncategorised expenses ready for review.",
+    "introDescription_few": "There are {count} uncategorised expenses ready for review.",
+    "introDescription_many": "There are {count} uncategorised expenses ready for review.",
+    "introDescription_other": "There are {count} uncategorised expenses ready for review.",
+    "introStepPreview": "When the AI has enough examples, it prepares a full review and leaves uncertain expenses uncategorised.",
+    "categorizeSample": "Categorise a sample",
+    "noSuggestions": "The AI left every expense uncategorised. You can try again after more calibration.",
+    "leftUncategorized_zero": "{count} expenses were left uncategorised because the AI was not confident enough.",
+    "leftUncategorized_one": "{count} expense was left uncategorised because the AI was not confident enough.",
+    "leftUncategorized_two": "{count} expenses were left uncategorised because the AI was not confident enough.",
+    "leftUncategorized_few": "{count} expenses were left uncategorised because the AI was not confident enough.",
+    "leftUncategorized_many": "{count} expenses were left uncategorised because the AI was not confident enough.",
+    "leftUncategorized_other": "{count} expenses were left uncategorised because the AI was not confident enough."
+  },
+  "Mascot": {
+    "landingHintSplit": "Split a dinner, a trip, or the rent — I’ll do the maths."
+  },
+  "ExpenseImport": {
+    "mapping": {
+      "transformTrim": "Normalise whitespace"
+    },
+    "viewers": {
+      "normalizeWhitespace": "Normalise whitespace"
+    },
+    "defaults": {
+      "paidForDescription": "Choose the participants and a proportional split. Fixed amounts and itemisation are available when editing an individual expense."
+    }
+  },
+  "Feedback": {
+    "categories": {
+      "bug": {
+        "description": "Tell us about broken or unexpected behaviour and include clear reproduction steps."
+      }
+    }
+  },
+  "Members": {
+    "splitPresets": {
+      "personalFallbacks": "Personal fallback behaviour"
+    }
+  },
+  "OAuth": {
+    "consent": {
+      "missingRequest": "The authorisation request is missing. Return to your assistant."
+    },
+    "login": {
+      "missingTitle": "Authorisation request missing",
+      "missingError": "Spliit did not receive the OAuth authorisation details."
+    },
+    "manualCallback": {
+      "codeLabel": "Authorisation code",
+      "errorDescription": "The authorisation server returned an error instead of a code.",
+      "copyCode": "Copy authorisation code"
+    }
+  }
+}

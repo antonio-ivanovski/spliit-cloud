@@ -4,11 +4,7 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vitest/config'
 
 const alias = {
-  '@': path.resolve(__dirname, './src'),
-  'virtual:pwa-register': path.resolve(
-    __dirname,
-    './src/test/virtual-pwa-register.ts',
-  ),
+  '@': path.resolve(import.meta.dirname, './src'),
 }
 
 const sharedTest = {
@@ -28,7 +24,6 @@ export default defineConfig({
     // Root options (reporters/coverage) live here; environments are per-project.
     projects: [
       {
-        extends: true,
         resolve: { alias },
         test: {
           ...sharedTest,
@@ -45,7 +40,6 @@ export default defineConfig({
         },
       },
       {
-        extends: true,
         resolve: { alias },
         test: {
           ...sharedTest,

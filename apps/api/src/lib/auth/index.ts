@@ -44,14 +44,25 @@ import { invalidateAccountCache } from './account-cache'
 import { anonymousRecovery } from './anonymous-recovery'
 import { emailChange } from './email-change'
 import { enforceAuthEmailRecipientLimit } from './email-rate-limit'
+import { bindLegacyRefreshTokenResource } from './oauth-refresh-compat'
 import { applyNativeApplicationTypeForLoopbackRegistration } from './oauth-registration'
+import {
+  finalizeOAuthTokenExchange,
+  prepareOAuthAuthorization,
+  prepareOAuthConsent,
+  prepareOAuthTokenExchange,
+  rearmOAuthClientAfterConsent,
+  stampOAuthAuthorizationCodeValue,
+  tagOAuthCodeAfterAuthorization,
+} from './oauth-revocation-barrier'
 import { passwordSet } from './password-set'
+import { ALL_SCOPES, DEFAULT_CLIENT_SCOPES } from './scopes'
 import {
   assertCanCreateAccount,
   enforceSignupGate,
   persistSignupInviteCookie,
 } from './signup-gate'
-import { getApiBaseUrl } from './urls'
+import { getApiBaseUrl, oauthAudiences } from './urls'
 
 const oidcProvider = getConfiguredOidcProvider()
 
@@ -103,6 +114,27 @@ function buildPasswordRecoveryEmail(opts: {
 }
 
 const beforeAuthMiddleware = createAuthMiddleware(async (ctx) => {
+  if (ctx.path === '/oauth2/token') {
+    await prepareOAuthTokenExchange(ctx.request, ctx.body)
+    await bindLegacyRefreshTokenResource(ctx.body)
+  }
+  if (ctx.path === '/oauth2/consent') {
+    prepareOAuthConsent(ctx.request)
+    await captureOAuthConsentStart(ctx)
+  }
+
+  if (ctx.path === '/oauth2/authorize') {
+    const authorizationParams =
+      ctx.method === 'POST' && isRecord(ctx.body) ? ctx.body : ctx.query
+    if (isRecord(authorizationParams)) {
+      if (authorizationParams.resource == null) {
+        authorizationParams.resource = getApiBaseUrl()
+      }
+      await defaultOAuthAuthorizationScope(authorizationParams)
+    }
+    await captureOAuthAuthorizationStart(ctx, authorizationParams)
+  }
+
   if (ctx.path === '/oauth2/register' && isRecord(ctx.body)) {
     applyNativeApplicationTypeForLoopbackRegistration(ctx.body)
   }
@@ -198,6 +230,120 @@ const beforeAuthMiddleware = createAuthMiddleware(async (ctx) => {
   await persistSignupInviteCookie(ctx)
   await enforceSignupGate(ctx)
 })
+
+/**
+ * What a client may request is separate from what the user has authorized.
+ * Registrations stay broad (the provider persists the union of default and
+ * allowed scopes as the capability set), so an explicit `scope` naming a manage
+ * or delete scope reaches fresh consent instead of failing with `invalid_scope`
+ * before it. An omitted `scope` still defaults to the read-only set here, so an
+ * underspecified authorization can never widen silently into the step-up flow.
+ */
+async function defaultOAuthAuthorizationScope(
+  authorizationParams: Record<string, unknown>,
+): Promise<void> {
+  const rawScope = authorizationParams.scope
+  const requested =
+    typeof rawScope === 'string' ? rawScope.split(' ').filter(Boolean) : []
+  // An omitted `scope` still defaults to the read-only set here, so an
+  // underspecified authorization can never widen silently into the step-up
+  // flow. The default participates in capability widening below exactly like
+  // an explicit request: clients registered while narrowing was in force keep
+  // a narrow stored capability set that would otherwise reject even the
+  // default read scopes with `invalid_scope`.
+  const effective =
+    requested.length === 0 ? [...DEFAULT_CLIENT_SCOPES] : requested
+  if (requested.length === 0) {
+    authorizationParams.scope = effective.join(' ')
+  }
+  // Clients registered while narrowing was in force keep a narrow stored
+  // capability set that would still reject a step-up with `invalid_scope`.
+  // Widen the stored set towards the supported scopes so the same client
+  // can request more through fresh consent. Unknown scopes are left for
+  // the provider to reject.
+  const clientId = authorizationParams.client_id
+  if (typeof clientId !== 'string' || clientId.length === 0) return
+  const supportable = effective.filter((scope) =>
+    (ALL_SCOPES as readonly string[]).includes(scope),
+  )
+  if (supportable.length === 0) return
+  try {
+    const client = await prisma.oauthClient.findUnique({
+      where: { clientId },
+      select: { scopes: true },
+    })
+    if (!client) return
+    const missing = supportable.filter(
+      (scope) => !client.scopes.includes(scope),
+    )
+    if (missing.length === 0) return
+    await prisma.oauthClient.update({
+      where: { clientId },
+      data: { scopes: [...new Set([...client.scopes, ...missing])] },
+    })
+  } catch (error) {
+    // Widening is best-effort: if it fails, the provider validates against
+    // the stored set as before. A failed widening can only produce
+    // `invalid_scope`, never over-granting, so the authorization keeps its
+    // old shape instead of failing the whole request.
+    console.warn('[oauth] failed to widen client scopes for step-up:', error)
+  }
+}
+
+async function resolveOAuthSessionAccountId(ctx: {
+  context?: { session?: { user?: { id?: unknown } } | null }
+}): Promise<string | null> {
+  try {
+    const session = await getSessionFromCtx(
+      ctx as Parameters<typeof getSessionFromCtx>[0],
+      { disableRefresh: true },
+    )
+    const id = (session as { user?: { id?: unknown } } | null)?.user?.id
+    return typeof id === 'string' ? id : null
+  } catch {
+    return null
+  }
+}
+
+/** Remember the active generation when an authorization starts. */
+async function captureOAuthAuthorizationStart(
+  ctx: Parameters<typeof resolveOAuthSessionAccountId>[0],
+  authorizationParams: unknown,
+): Promise<void> {
+  const request = (ctx as { request?: Request }).request
+  if (!request || !isRecord(authorizationParams)) return
+  const clientId = authorizationParams.client_id
+  if (typeof clientId !== 'string' || clientId.length === 0) return
+  const accountId = await resolveOAuthSessionAccountId(ctx)
+  // Without a session the provider redirects to login and mints no code;
+  // the authorize request after sign-in captures its own boundary.
+  if (!accountId) return
+  await prepareOAuthAuthorization(request, accountId, clientId)
+}
+
+/** Remember the active generation when a consent approval starts. */
+async function captureOAuthConsentStart(
+  ctx: Parameters<typeof resolveOAuthSessionAccountId>[0] & {
+    body?: unknown
+  },
+): Promise<void> {
+  const request = (ctx as { request?: Request }).request
+  const body = (ctx as { body?: unknown }).body
+  if (!request || !isRecord(body)) return
+  const oauthQuery =
+    typeof body.oauth_query === 'string' ? body.oauth_query : null
+  if (!oauthQuery) return
+  let clientId: string | null = null
+  try {
+    clientId = new URLSearchParams(oauthQuery).get('client_id')
+  } catch {
+    return
+  }
+  if (!clientId) return
+  const accountId = await resolveOAuthSessionAccountId(ctx)
+  if (!accountId) return
+  await prepareOAuthAuthorization(request, accountId, clientId)
+}
 
 // Integration and unit tests share the local PostgreSQL database with the
 // already-running development API. Persisting test signing keys there would
@@ -427,7 +573,10 @@ export const auth = betterAuth({
   basePath: '/auth',
   // OAuth Provider mode exposes `/oauth2/token`; Better Auth's standalone JWT
   // token endpoint is redundant and must not be advertised or callable.
-  disabledPaths: ['/token'],
+  // The provider's native delete-consent route only removes the consent row
+  // and leaves refresh tokens alive. Account settings uses the transactional
+  // Spliit revocation path instead, so keep the unsafe shortcut unreachable.
+  disabledPaths: ['/token', '/oauth2/delete-consent'],
   secret: env.BETTER_AUTH_SECRET ?? 'spliit-dev-secret-change-me',
   // CORS already allows every configured WEB_ORIGINS entry; pass the full
   // list to better-auth so its trusted-origin check agrees. With only the
@@ -486,6 +635,24 @@ export const auth = betterAuth({
   hooks: {
     before: beforeAuthMiddleware,
     after: createAuthMiddleware(async (ctx) => {
+      if (ctx.path === '/oauth2/token') {
+        const revoked = await finalizeOAuthTokenExchange(
+          ctx.request,
+          ctx.context.returned,
+        )
+        if (revoked) return revoked
+      }
+      if (ctx.path === '/oauth2/authorize') {
+        await tagOAuthCodeAfterAuthorization(
+          ctx.request,
+          ctx.context.returned,
+        ).catch((error) => {
+          console.warn('[oauth] failed to tag authorization code:', error)
+        })
+      }
+      if (ctx.path === '/oauth2/consent') {
+        await rearmOAuthClientAfterConsent(ctx.request, ctx.context.returned)
+      }
       if (ctx.path !== '/change-password') return
       let data: unknown = ctx.context.returned
       if (data instanceof Response) {
@@ -557,6 +724,19 @@ export const auth = betterAuth({
         after: async (user) => {
           invalidateAccountCache(user.id)
         },
+      },
+    },
+    verification: {
+      create: {
+        // Stamp authorization codes with the generation active when their
+        // authorization started (see `stampOAuthAuthorizationCodeValue`).
+        // Runs inside the authorization itself, so it also covers direct
+        // authorizations whose thrown redirect never reaches the after-hook.
+        before: async (verification, context) =>
+          stampOAuthAuthorizationCodeValue(
+            verification as unknown as Record<string, unknown>,
+            (context as unknown as { request?: Request | null } | null) ?? null,
+          ),
       },
     },
   },
@@ -689,55 +869,45 @@ export const auth = betterAuth({
           }),
         ]
       : []),
-    ...(env.ENABLE_MCP
-      ? [
-          oauthProvider({
-            loginPage: `${webOrigins[0]}/oauth/login`,
-            consentPage: `${webOrigins[0]}/oauth/consent`,
-            scopes: [
-              'openid',
-              'profile',
-              'email',
-              'offline_access',
-              'spliit:groups:read',
-              'spliit:expenses:write',
-            ],
-            resources: [`${env.MCP_PUBLIC_URL!}/mcp`],
-            clientRegistrationDefaultResources: [`${env.MCP_PUBLIC_URL!}/mcp`],
-            clientRegistrationAllowedResources: [`${env.MCP_PUBLIC_URL!}/mcp`],
-            allowDynamicClientRegistration: true,
-            allowUnauthenticatedClientRegistration: true,
-            allowPublicClientPrelogin: true,
-            grantTypes: ['authorization_code', 'refresh_token'],
-            clientRegistrationDefaultScopes: [
-              'openid',
-              'profile',
-              'email',
-              'offline_access',
-              'spliit:groups:read',
-              'spliit:expenses:write',
-            ],
-            clientRegistrationAllowedScopes: [
-              'openid',
-              'profile',
-              'email',
-              'offline_access',
-              'spliit:groups:read',
-              'spliit:expenses:write',
-            ],
-            customAccessTokenClaims: ({ user }) => ({
-              account_id: user?.id,
-            }),
-          }),
-          jwt({
-            // OAuth access tokens are minted by the OAuth Provider flow. Adding a
-            // JWT header to every cookie-session response is unnecessary and makes
-            // ordinary `/get-session` reads depend on the OAuth signing key.
-            disableSettingJwtHeader: true,
-            adapter: testJwtAdapter,
-          }),
-        ]
-      : []),
+    // The OAuth provider is no longer gated behind ENABLE_MCP. The MCP app is
+    // one client among others: any programmatic client (scripts, agents) needs
+    // the same authorization server, and gating it made the API unreachable
+    // whenever the assistant was disabled.
+    oauthProvider({
+      loginPage: `${webOrigins[0]}/oauth/login`,
+      consentPage: `${webOrigins[0]}/oauth/consent`,
+      scopes: [...ALL_SCOPES],
+      // The API is the default protected resource. Keep the MCP resource
+      // registered while configured so existing assistant clients can still
+      // request tokens for it explicitly.
+      resources: oauthAudiences(),
+      clientRegistrationDefaultResources: [getApiBaseUrl()],
+      clientRegistrationAllowedResources: oauthAudiences(),
+      // Existing clients predate the 1.7 client-resource join table. Keep the
+      // global resource allowlist authoritative until those registrations can
+      // be backfilled without breaking their refresh flow.
+      enforcePerClientResources: false,
+      allowDynamicClientRegistration: true,
+      allowUnauthenticatedClientRegistration: true,
+      allowPublicClientPrelogin: true,
+      silenceWarnings: { oauthAuthServerConfig: true },
+      grantTypes: ['authorization_code', 'refresh_token'],
+      // Registering without asking for anything specific grants read-only
+      // access. Manage and delete must be requested explicitly, so an
+      // underspecified client fails safely into the step-up flow.
+      clientRegistrationDefaultScopes: [...DEFAULT_CLIENT_SCOPES],
+      clientRegistrationAllowedScopes: [...ALL_SCOPES],
+      customAccessTokenClaims: ({ user }) => ({
+        account_id: user?.id,
+      }),
+    }),
+    jwt({
+      // OAuth access tokens are minted by the OAuth Provider flow. Adding a
+      // JWT header to every cookie-session response is unnecessary and makes
+      // ordinary `/get-session` reads depend on the OAuth signing key.
+      disableSettingJwtHeader: true,
+      adapter: testJwtAdapter,
+    }),
     magicLink({
       disableSignUp: false,
       sendMagicLink: async ({ email, url }) => {

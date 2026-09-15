@@ -1,0 +1,45 @@
+{
+  "capabilities": {
+    "pushNotifications": false,
+    "stateTransitionHistory": false,
+    "streaming": false
+  },
+  "defaultInputModes": ["text"],
+  "defaultOutputModes": ["text"],
+  "description": "Spliit Cloud tracks shared expenses: groups, participants, balances, and expenses. Agents authenticate with OAuth 2.1 against the Spliit authorization server, discover scopes and endpoints from standard metadata, and call the API or the MCP assistant. Default grants are read-only; writes need explicit scopes.",
+  "name": "Spliit Cloud",
+  "preferredTransport": "HTTP+JSON",
+  "protocolVersion": "0.3.0",
+  "skills": [
+    {
+      "description": "List groups for the connected account and read participants, balances, statistics, and activity. Needs scope spliit:groups:read.",
+      "id": "groups-read",
+      "name": "Read groups and balances",
+      "tags": ["groups", "balances", "expenses", "read"]
+    },
+    {
+      "description": "Read expenses and recurring series for a group. Needs scope spliit:expenses:read.",
+      "id": "expenses-read",
+      "name": "Read expenses",
+      "tags": ["expenses", "read"]
+    },
+    {
+      "description": "Create and edit expenses directly through the API. Needs scope spliit:expenses:manage; edits that drop data need spliit:expenses:delete.",
+      "id": "expenses-manage",
+      "name": "Create and edit expenses",
+      "tags": ["expenses", "write"]
+    },
+    {
+      "description": "Conversational expense creation with a safe confirmation preview over the Model Context Protocol. Needs scope spliit:expenses:write on the MCP resource.",
+      "id": "mcp-assistant",
+      "name": "Assisted expense entry via MCP",
+      "tags": ["mcp", "assistant", "expenses"]
+    }
+  ],
+  "supportedInterfaces": [
+    { "transport": "HTTP+JSON", "url": "https://api.spliit.cloud" },
+    { "transport": "HTTP+JSON", "url": "https://spliit.cloud" }
+  ],
+  "url": "https://spliit.cloud",
+  "version": "1.0.0"
+}

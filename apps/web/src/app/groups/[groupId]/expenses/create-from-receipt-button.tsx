@@ -30,6 +30,7 @@ import { ToastAction } from '@/components/ui/toast'
 import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
 import { getCurrency } from '@/lib/currency'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import { resizeImage, useExpenseDocumentUpload } from '@/lib/upload'
 import {
   cn,
@@ -349,6 +350,16 @@ function ReceiptDialogContent({
     trpc.ai.extractExpenseInformationFromImage.useMutation()
   const requestIdRef = useRef(0)
 
+  // Resizing + upload hold in-memory file data a reload would destroy; the AI
+  // extraction itself is transient (also covered by the global mutation
+  // backstop) and the selected document + result stay unsaved work until
+  // accepted or the dialog closes. The handoff into the expense form or
+  // preview is covered by the manager's deferred retry plus the receiver's
+  // own blocker (the form marks receipt values dirty; the preview holds the
+  // draft open).
+  usePwaUpdateBlocker(pending, 'receipt-scan-operation')
+  usePwaUpdateBlocker(selectedDocument !== null, 'receipt-scan-result')
+
   useEffect(() => {
     if (open) return
     requestIdRef.current += 1
@@ -442,6 +453,9 @@ function ReceiptDialogContent({
       return
     }
     const requestId = ++requestIdRef.current
+    // Flip before `resizeImage`: the resize runs async and a reload in that
+    // window would lose the selected file.
+    setPending(true)
     try {
       mascot.react('thinking')
       const { file: resizedFile, width, height } = await resizeImage(file)
@@ -458,7 +472,6 @@ function ReceiptDialogContent({
         })
         return
       }
-      setPending(true)
       const { url } = await uploadToS3(resizedFile)
       const document = {
         id: crypto.randomUUID(),

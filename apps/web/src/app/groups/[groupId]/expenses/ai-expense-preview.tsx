@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/responsive-dialog'
 import { useToast } from '@/components/ui/use-toast'
 import { getCurrency } from '@/lib/currency'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 import {
   formatCurrency,
@@ -106,6 +107,11 @@ export function AiExpensePreview({
   const { toast } = useToast()
   const createMutation = useCreateExpenseMutation()
   const createAttempt = useIdempotentCreate()
+  // The draft holds an uploaded document + AI extraction that closing would
+  // discard, and the create call itself must not be interrupted. This is also
+  // the receipt/voice handoff target: the scan dialog unregisters as it
+  // closes while this registers on open.
+  usePwaUpdateBlocker(open, 'ai-expense-preview')
   const groupCurrency = getCurrencyFromGroup(group)
   const normalizedCurrencyCode =
     draft.currencyCode?.trim().toUpperCase() || null

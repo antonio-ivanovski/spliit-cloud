@@ -66,6 +66,20 @@ bun test:integration
    `20260813120000`; do not add another collision.
 5. Reference the issue with `Closes #123`.
 
+## Releases
+
+Releases are versioned (`v2.0.0`, first stable). `releases/next.md` is the
+evergreen draft for the upcoming release — append an entry under the
+right section for every user-facing change in your PR, ending it with
+``(`TBD` by @your-handle)`` (hashes are filled at cut time, never
+invent a SHA). Screenshots go in `releases/assets/next/`. To cut a
+release, the maintainer runs `bun release:prepare vX.Y.Z` (see
+`releases/README.md`), fills the hashes, commits, and pushes the tag —
+which publishes `:vX.Y.Z` + `:latest` and deploys prod immediately.
+
+If your change breaks compatibility or needs manual migration steps, say
+so in the PR (`Migration:` field) so it lands in the release notes.
+
 ### AI-assisted contributions
 
 AI agent contributions are welcome, but the PR must make the agent's context

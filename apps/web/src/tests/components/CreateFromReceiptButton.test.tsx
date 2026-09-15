@@ -5,6 +5,10 @@ import {
   useCurrentGroupOrNull,
 } from '@/app/groups/[groupId]/current-group-context'
 import { ReceiptScanTrigger } from '@/app/groups/[groupId]/expenses/create-from-receipt-button'
+import {
+  hasPwaUpdateBlockers,
+  resetPwaUpdateBlockersForTests,
+} from '@/lib/pwa-update-blockers'
 import { act, fireEvent, render, screen, waitFor } from '@/test/test-utils'
 
 const mockMutateAsync = vi.fn()
@@ -344,5 +348,26 @@ describe('ReceiptScanTrigger translate checkbox', () => {
 
     expect(mockMutateAsync.mock.calls[1][0].translateToLocale).toBe(true)
     expect(mockMutateAsync.mock.calls[1][0].imageUrl).toBe(documents[0].url)
+  })
+})
+
+describe('ReceiptScanTrigger update protection', () => {
+  beforeEach(() => {
+    resetPwaUpdateBlockersForTests()
+  })
+
+  it('holds protection while the scanned result awaits acceptance', async () => {
+    await openDialog()
+
+    await waitFor(() => {
+      expect(mockMutateAsync).toHaveBeenCalledTimes(1)
+    })
+
+    // The scan finished (checkbox re-enabled) but the dialog still holds the
+    // selected document + AI result: an update must not reload under it.
+    await waitForSettledCheckbox()
+    expect(hasPwaUpdateBlockers()).toBe(true)
+
+    resetPwaUpdateBlockersForTests()
   })
 })

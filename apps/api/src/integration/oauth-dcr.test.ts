@@ -3,6 +3,8 @@ import { afterAll, describe, expect, it } from 'vitest'
 import { prisma } from '@spliit/db'
 
 import { app } from '../app'
+import { ALL_SCOPES, SPLIIT_SCOPES } from '../lib/auth/scopes'
+import { getApiBaseUrl } from '../lib/auth/urls'
 import { checkDbConnection } from './setup'
 
 await checkDbConnection()
@@ -16,7 +18,7 @@ describe('OAuth dynamic client registration', () => {
     })
   })
 
-  it('registers a minimal public MCP client without optional array fields', async () => {
+  it('registers a minimal public client with the full requestable capability', async () => {
     const response = await app.request('/auth/oauth2/register', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
@@ -26,6 +28,7 @@ describe('OAuth dynamic client registration', () => {
         token_endpoint_auth_method: 'none',
       }),
     })
+    expect(response.status).toBe(201)
 
     const body = (await response.json()) as {
       client_id: string
@@ -34,26 +37,61 @@ describe('OAuth dynamic client registration', () => {
       grant_types: string[]
       response_types: string[]
       scope: string
+      resources: string[]
     }
     if (body.client_id) clientIds.push(body.client_id)
 
-    expect(response.status).toBe(201)
     expect(body).toMatchObject({
       contacts: [],
       post_logout_redirect_uris: [],
       grant_types: ['authorization_code'],
       response_types: ['code'],
+      resources: [getApiBaseUrl()],
     })
-    expect(body.scope.split(' ')).toEqual(
+    // Registration records what the client *may* request, not what the user
+    // authorized: the capability set stays broad so the same client can step
+    // up through fresh consent. Safety for omitted scopes lives at the
+    // authorization endpoint, which defaults to the read-only set.
+    const registeredScopes = body.scope.split(' ')
+    for (const scope of ALL_SCOPES) {
+      expect(registeredScopes).toContain(scope)
+    }
+    expect(registeredScopes).toEqual(
       expect.arrayContaining([
-        'openid',
-        'profile',
-        'email',
-        'offline_access',
-        'spliit:groups:read',
-        'spliit:expenses:write',
+        SPLIIT_SCOPES.groupsRead,
+        SPLIIT_SCOPES.expensesRead,
       ]),
     )
+  })
+
+  it('still registers manage scopes when a client asks for them by name', async () => {
+    const requestedScope = [
+      'openid',
+      'offline_access',
+      SPLIIT_SCOPES.groupsRead,
+      SPLIIT_SCOPES.groupsManage,
+      SPLIIT_SCOPES.expensesManage,
+    ].join(' ')
+    const response = await app.request('/auth/oauth2/register', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        client_name: 'Spliit OAuth explicit-scope test',
+        redirect_uris: ['http://localhost:3002/oauth/callback'],
+        token_endpoint_auth_method: 'none',
+        scope: requestedScope,
+      }),
+    })
+    expect(response.status).toBe(201)
+
+    const body = (await response.json()) as { client_id: string; scope: string }
+    if (body.client_id) clientIds.push(body.client_id)
+
+    // The stored capability covers every supported scope either way; the
+    // explicit request is what the consent screen will show.
+    for (const scope of requestedScope.split(' ')) {
+      expect(body.scope.split(' ')).toContain(scope)
+    }
   })
 
   it('allows browser-based public clients to preflight registration', async () => {

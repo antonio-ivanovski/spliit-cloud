@@ -24,6 +24,7 @@ import { useLocale } from '@/i18n/react'
 import { detectDeviceTimeZone } from '@/lib/account-preferences'
 import type { SuggestedSettlement } from '@/lib/balances'
 import type { Currency } from '@/lib/currency'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import { useIdempotentCreate } from '@/lib/use-idempotent-create'
 import {
   dateOnlyInAccountTimeZone,
@@ -104,6 +105,7 @@ export function CreateSettlementModal({
       removed: 'removed' in participant ? Boolean(participant.removed) : false,
     }),
   )
+  console.log('test 2')
   const legs = settlementGroup?.legs ?? (settlement ? [settlement] : [])
   const direction: SettlementDirection = settlementGroup?.direction ?? 'pay'
   const centralParticipantId =
@@ -136,6 +138,11 @@ export function CreateSettlementModal({
     useCreateExpenseMutation()
   const createAttempt = useIdempotentCreate()
 
+  console.log('test 4')
+
+  // An open modal holds an in-progress selection; a reload would discard it.
+  // The global mutation guard lets an initiated settlement finish.
+  usePwaUpdateBlocker(open && legs.length > 0 && canCreate, 'settlement-modal')
   useEffect(() => {
     if (open) {
       // oxlint-disable-next-line react/react-compiler -- initialize selection from the controlled default when opened.

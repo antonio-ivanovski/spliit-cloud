@@ -51,6 +51,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { useLocale } from '@/i18n/react'
 import { randomId } from '@/lib/api'
 import { useMediaQuery } from '@/lib/hooks'
+import { usePwaUpdateBlocker } from '@/lib/pwa-update-blockers'
 import type { ExpenseFormInputValues } from '@/lib/schemas'
 import { resizeImage, useExpenseDocumentUpload } from '@/lib/upload'
 import { cn, formatFileSize } from '@/lib/utils'
@@ -103,6 +104,7 @@ export function ExpenseDocumentsInput({
   const [pending, setPending] = useState(false)
   const [dragActive, setDragActive] = useState(false)
   const [pickerOpen, setPickerOpen] = useState(false)
+  usePwaUpdateBlocker(pending && !readOnly, 'expense-documents-upload')
   const dragDepth = useRef(0)
   const rootRef = useRef<HTMLDivElement>(null)
   const cameraInputRef = useRef<HTMLInputElement>(null)

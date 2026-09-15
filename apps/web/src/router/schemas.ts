@@ -160,6 +160,10 @@ export const expensePreviewSearchSchema = groupAccessSearchSchema.extend({
   returnTo: globalExpensesReturnTo,
 })
 
+export const expenseImportSearchSchema = groupAccessSearchSchema.extend({
+  editRow: optionalString,
+})
+
 export const forgotPasswordSearchSchema = z.object({
   email: optionalString,
 })
@@ -177,6 +181,14 @@ export const oauthFlowSearchSchema = z.object({
   oauth_query: optionalString,
   client_id: optionalString,
   scope: optionalString,
+})
+
+export const oauthManualCallbackSearchSchema = z.object({
+  code: optionalString,
+  state: optionalString,
+  iss: optionalString,
+  error: optionalString,
+  error_description: optionalString,
 })
 
 export const createExpenseSearchSchema = groupAccessSearchSchema.extend({
