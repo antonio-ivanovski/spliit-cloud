@@ -2,7 +2,7 @@ import { resolve } from 'node:path'
 
 import { generateOpenAPIDocument } from '@trpc/openapi'
 import type { OpenAPIV3_1 } from 'openapi-types'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, beforeAll } from 'vitest'
 
 import '../../test/mocks'
 import {
@@ -43,6 +43,14 @@ function operation(
 }
 
 describe('procedure authorization contracts', () => {
+  // Generating the document bundles the whole tRPC router (~2-3s even
+  // locally, more on CI), so build it once and share it. The fallback-env
+  // test below still generates its own with SKIP_AUTH_OPENAPI set.
+  let doc: OpenAPIV3_1.Document
+
+  beforeAll(async () => {
+    doc = await generateTestDocument()
+  }, 30_000)
   it('derives every scoped procedure from router metadata', async () => {
     const contracts = await buildProcedureContracts()
 
@@ -76,8 +84,6 @@ describe('procedure authorization contracts', () => {
   })
 
   it('never advertises session authentication for bearer-only procedures', async () => {
-    const doc = await generateTestDocument()
-
     for (const path of Object.keys(doc.paths ?? {})) {
       if (!path.startsWith('/assistant.')) continue
       for (const method of ['get', 'post'] as const) {
@@ -97,7 +103,6 @@ describe('procedure authorization contracts', () => {
   })
 
   it('documents the conditional delete scope on expense updates', async () => {
-    const doc = await generateTestDocument()
     const op = operation(doc, '/groups.expenses.update')
 
     expect(op.security).toContainEqual({
@@ -108,8 +113,6 @@ describe('procedure authorization contracts', () => {
   })
 
   it('documents conditional expense management on archive and participant removal', async () => {
-    const doc = await generateTestDocument()
-
     for (const path of ['/groups.archive', '/groups.participants.remove']) {
       const op = operation(doc, path)
       expect(op.security).toContainEqual({
@@ -142,7 +145,6 @@ describe('procedure authorization contracts', () => {
   })
 
   it('documents the superjson wire envelopes hand-callers need', async () => {
-    const doc = await generateTestDocument()
     const description = doc.info.description ?? ''
 
     // Agents calling tRPC over HTTP must wrap inputs in {"json":…} and
@@ -159,7 +161,6 @@ describe('procedure authorization contracts', () => {
     process.env.SKIP_AUTH_OPENAPI = '1'
     try {
       const doc = await generateTestDocument()
-
       // The database-free container build must still ship the protocol
       // surface agents need to register and authorize...
       for (const path of [
@@ -178,5 +179,5 @@ describe('procedure authorization contracts', () => {
       if (previous === undefined) delete process.env.SKIP_AUTH_OPENAPI
       else process.env.SKIP_AUTH_OPENAPI = previous
     }
-  })
+  }, 30_000)
 })
