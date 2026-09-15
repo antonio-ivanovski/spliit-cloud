@@ -3376,7 +3376,7 @@
     "cancel": "Abbrechen",
     "confirmTitle": "{name} trennen?",
     "confirmDescription": "Alle Refresh-Tokens dieser Anwendung werden sofort widerrufen. Um sich wieder zu verbinden, muss sie dich erneut um Erlaubnis bitten.",
-    "confirmGracePeriod": "Die Anwendung kann mit einem bereits ausgestellten Zugriffstoken bis zu dessen Ablauf weiterhin neue Anfragen stellen – bis zu einer Stunde lang.",
+    "confirmGracePeriod": "Das Trennen wird sofort wirksam. Die Anwendung verliert sofort den Zugriff auf die API, einschließlich bereits ausgestellter Zugriffstoken.",
     "loadFailed": "Verbundene Apps konnten nicht geladen werden.",
     "scopeGroupsRead": "Gruppen lesen",
     "scopeGroupsManage": "Gruppen verwalten",

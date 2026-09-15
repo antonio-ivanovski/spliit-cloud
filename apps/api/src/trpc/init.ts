@@ -16,7 +16,7 @@ import {
   getAuthFromRequest,
   getOAuthAuthFromRequest,
 } from '../lib/auth/session'
-import { getApiBaseUrl } from '../lib/auth/urls'
+import { getApiBaseUrl, getMcpAudience } from '../lib/auth/urls'
 import { env } from '../lib/env'
 import { groupViewKeysMatch } from '../lib/group-view'
 import { hashLinkToken } from '../lib/invitations'
@@ -61,44 +61,63 @@ export async function createTRPCContext(opts: {
  *
  * Typed as a plain string because `assistantProcedure` carries the legacy
  * assistant scope, which is deliberately outside `SpliitScope`.
+ *
+ * `oauthOnly` marks procedures that reject cookie sessions and require an OAuth
+ * bearer token (the assistant surface).
+ *
+ * `conditionalScopes` records scopes an OAuth caller additionally needs for
+ * specific inputs, with the condition in plain words. The generator renders
+ * them into the operation description and security alternatives, so the
+ * contract documents e.g. that an expense update needs the delete scope when it
+ * drops documents or occurrences.
  */
-export type ProcedureMeta = {
-  scope?: string
+export type ConditionalScope = {
+  scope: string
+  when: string
 }
 
-const t = initTRPC.context<AuthContext>().meta<ProcedureMeta>().create({
-  /** @see https://trpc.io/docs/server/data-transformers */
-  transformer: superjson,
-  /**
-   * Forward stable import message codes to HTTP clients. Procedures throw
-   * `TRPCError` with `cause: { code, params }` (English `message` unchanged);
-   * `cause` itself does not survive serialization, so the pair is copied into
-   * `data.importCode`/`data.importParams` where the web UI can translate it
-   * (`ExpenseImport.apiErrors.<code>`) with fallback to `message`.
-   */
-  errorFormatter({ shape, error }) {
-    const cause = error.cause as
-      | { code?: unknown; params?: unknown }
-      | null
-      | undefined
-    if (
-      cause &&
-      typeof cause === 'object' &&
-      typeof cause.code === 'string' &&
-      cause.code.length > 0
-    ) {
-      const params =
-        cause.params && typeof cause.params === 'object'
-          ? (cause.params as Record<string, string | number>)
-          : {}
-      return {
-        ...shape,
-        data: { ...shape.data, importCode: cause.code, importParams: params },
+export type ProcedureMeta = {
+  scope?: string
+  oauthOnly?: boolean
+  conditionalScopes?: ConditionalScope[]
+}
+
+const t = initTRPC
+  .context<AuthContext>()
+  .meta<ProcedureMeta>()
+  .create({
+    /** @see https://trpc.io/docs/server/data-transformers */
+    transformer: superjson,
+    /**
+     * Forward stable import message codes to HTTP clients. Procedures throw
+     * `TRPCError` with `cause: { code, params }` (English `message` unchanged);
+     * `cause` itself does not survive serialization, so the pair is copied into
+     * `data.importCode`/`data.importParams` where the web UI can translate it
+     * (`ExpenseImport.apiErrors.<code>`) with fallback to `message`.
+     */
+    errorFormatter({ shape, error }) {
+      const cause = error.cause as
+        | { code?: unknown; params?: unknown }
+        | null
+        | undefined
+      if (
+        cause &&
+        typeof cause === 'object' &&
+        typeof cause.code === 'string' &&
+        cause.code.length > 0
+      ) {
+        const params =
+          cause.params && typeof cause.params === 'object'
+            ? (cause.params as Record<string, string | number>)
+            : {}
+        return {
+          ...shape,
+          data: { ...shape.data, importCode: cause.code, importParams: params },
+        }
       }
-    }
-    return shape
-  },
-})
+      return shape
+    },
+  })
 
 // Base router and procedure helpers
 export const createTRPCRouter = t.router
@@ -371,9 +390,17 @@ export function scopedGroupReadProcedure(requiredScope: SpliitScope) {
  * callers must carry the scope, so widening a procedure to programmatic clients
  * never widens what a browser session could already do.
  */
-export function apiProcedure(requiredScope: SpliitScope) {
+export function apiProcedure(
+  requiredScope: SpliitScope,
+  opts?: { conditionalScopes?: ConditionalScope[] },
+) {
   return baseProcedure
-    .meta({ scope: requiredScope })
+    .meta({
+      scope: requiredScope,
+      ...(opts?.conditionalScopes
+        ? { conditionalScopes: opts.conditionalScopes }
+        : {}),
+    })
     .use(async ({ ctx, next, path, type }) => {
       if (!ctx.auth) {
         throw new TRPCError({
@@ -447,7 +474,7 @@ export function assertOAuthScope(
 
 export function assistantProcedure(requiredScope: string) {
   return baseProcedure
-    .meta({ scope: requiredScope })
+    .meta({ scope: requiredScope, oauthOnly: true })
     .use(async ({ ctx, next }) => {
       if (!env.ENABLE_MCP) {
         throw new TRPCError({
@@ -475,6 +502,20 @@ export function assistantProcedure(requiredScope: string) {
         throw new TRPCError({
           code: 'FORBIDDEN',
           message: `Missing required scope: ${requiredScope}`,
+        })
+      }
+      // The assistant surface is the MCP resource's backend: only tokens
+      // minted for the MCP resource may reach it. An API-audience token with
+      // the same scope is a credential for the direct API, not for the
+      // assistant (RFC 8707 audience separation, both directions).
+      const mcpAudience = getMcpAudience()
+      const audiences = Array.isArray(ctx.auth.audiences)
+        ? ctx.auth.audiences
+        : []
+      if (!mcpAudience || !audiences.includes(mcpAudience)) {
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'Access token was not issued for the assistant resource',
         })
       }
       const decision = assistantRequestLimiter.hit(ctx.auth.user.id)

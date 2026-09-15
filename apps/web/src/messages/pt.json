@@ -3322,7 +3322,7 @@
     "cancel": "Cancelar",
     "confirmTitle": "Desligar {name}?",
     "confirmDescription": "Os tokens de atualização da aplicação serão revogados imediatamente e esta terá de lhe pedir novamente autorização para voltar a ligar-se.",
-    "confirmGracePeriod": "A aplicação ainda pode fazer novos pedidos com um token de acesso já emitido até este expirar, por um período máximo de uma hora.",
+    "confirmGracePeriod": "A desativação produz efeitos imediatos. A aplicação perde de imediato o acesso à API, incluindo com tokens de acesso já emitidos.",
     "loadFailed": "Não foi possível carregar as aplicações ligadas.",
     "scopeGroupsRead": "Ler grupos",
     "scopeGroupsManage": "Gerir grupos",

@@ -3287,7 +3287,7 @@
     "cancel": "取消",
     "confirmTitle": "要中斷 {name} 嗎？",
     "confirmDescription": "此應用程式的更新權杖會立即撤銷，重新連線時必須再次要求你的授權。",
-    "confirmGracePeriod": "此應用程式仍可使用已核發的存取權杖提出新要求，直到權杖到期，最長不超過一小時。",
+    "confirmGracePeriod": "中斷連線立即生效。此應用程式會立即失去對 API 的存取權限，包括已核發的存取權杖。",
     "loadFailed": "無法載入已連線的應用程式。",
     "scopeGroupsRead": "讀取群組",
     "scopeGroupsManage": "管理群組",

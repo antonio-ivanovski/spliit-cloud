@@ -109,11 +109,11 @@ curl -X POST https://api.spliit.cloud/auth/oauth2/register \
 
 The response returns the `client_id` to use below.
 
-Add a `scope` field to request a manage or delete scope. This has to happen at
-registration: the authorization endpoint refuses any scope the client did not
-register for, with `The following scopes are invalid`. There is no endpoint to
-widen an existing client, so a client that needs to start writing or deleting
-has to be registered again and reauthorized.
+Add a `scope` field to request a manage or delete scope. Registration records
+what the client _may_ request, not what the user authorized: asking for more
+later just takes the same authorization flow a second time, and the account
+holder approves the wider set on a fresh consent screen. There is no need to
+register again.
 
 An explicit `scope` value replaces the read-only defaults; it does not add to
 them. Send the complete, space-separated set the client needs, including
@@ -156,16 +156,25 @@ the token exchange and later refreshes inherit that resource.
 Tokens issued for the MCP resource (`${MCP_PUBLIC_URL}/mcp`) keep verifying
 while that variable is configured, but only for the assistant surface that
 backs the MCP server. The direct API requires a token whose audience is the
-API itself and answers anything else with `401` and `error="invalid_token"` —
-a token minted for one resource is not a credential for the other (RFC 8707).
-On the first refresh after upgrading from Better Auth 1.6, an existing token
+API itself and answers anything else with `401` and `error="invalid_token"`.
+The reverse holds too: the assistant surface requires a token minted for the
+MCP resource, so a token minted for one resource is not a credential for the
+other in either direction (RFC 8707). On the first refresh after upgrading
+from Better Auth 1.6, an existing token
 family is bound to the valid resource requested by the client (or to the API
 default when omitted); later refreshes can only retain or narrow that binding.
 Existing MCP clients therefore keep working without reauthorizing.
 
-Call the API with `Authorization: Bearer <access_token>`.
+Call the API with `Authorization: Bearer <access_token>`. Browser apps on any
+origin may call the API this way; cookie sessions stay limited to the Spliit
+web origins.
 
-Access tokens last one hour. Refresh at the same form-encoded endpoint; refresh
+Access tokens last at most one hour and stop working on the API and the
+assistant surface as soon as the app is disconnected. Two protocol endpoints
+reflect JWT validity rather than the disconnect state: `userinfo` and token
+introspection keep answering for a disconnected token until it expires (at
+most an hour), because the OAuth provider validates those JWTs on its own.
+Refresh at the same form-encoded endpoint; refresh
 tokens last 30 days and a fresh one is issued on every renewal, so a client
 calling at least once a month keeps working indefinitely.
 
@@ -222,9 +231,16 @@ rather than reaching the API.
 
 ## Reviewing and revoking
 
-Account settings list every app that has been authorized, with the scopes it
-holds. Disconnecting invalidates pending authorization codes and revokes the
-client’s refresh tokens, so it cannot exchange or renew credentials. An access
-token already issued keeps working until it expires, which is at most an hour.
-An authorization request that was already in progress is blocked as well; the
+Account settings list every app that has been authorized, with the effective
+scopes it still holds — including older grants that remain valid after a
+narrower re-authorization. Disconnecting invalidates pending authorization
+codes, revokes the client’s refresh tokens, and rejects already-issued access
+tokens on their next use, so it cannot exchange or renew credentials. An
+authorization request that was already in progress is blocked as well; the
 app must start again and receive a new explicit consent before it can reconnect.
+
+Two tiers, deliberately: calling `/oauth2/revoke` yourself ends that token at
+the provider, while disconnecting in account settings (or via the API revoke
+endpoint) ends the whole grant immediately on every surface. If you only ever
+revoke single tokens, sibling access tokens from the same grant stay valid
+until they expire — at most an hour.

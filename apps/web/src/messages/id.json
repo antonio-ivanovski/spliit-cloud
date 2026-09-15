@@ -3288,7 +3288,7 @@
     "cancel": "Batal",
     "confirmTitle": "Putuskan {name}?",
     "confirmDescription": "Token penyegarannya akan segera dicabut dan aplikasi tersebut harus kembali meminta izin Anda untuk terhubung.",
-    "confirmGracePeriod": "Aplikasi masih dapat membuat permintaan baru dengan token akses yang sudah diterbitkan hingga token tersebut kedaluwarsa, paling lama satu jam.",
+    "confirmGracePeriod": "Pemutusan berlaku seketika. Aplikasi langsung kehilangan akses ke API, termasuk dengan token akses yang sudah diterbitkan.",
     "loadFailed": "Tidak dapat memuat aplikasi terhubung.",
     "scopeGroupsRead": "Membaca grup",
     "scopeGroupsManage": "Mengelola grup",

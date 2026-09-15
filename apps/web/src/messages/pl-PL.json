@@ -3338,7 +3338,7 @@
     "cancel": "Anuluj",
     "confirmTitle": "Odłączyć {name}?",
     "confirmDescription": "Jej tokeny odświeżania zostaną natychmiast unieważnione. Aby ponownie się połączyć, aplikacja będzie musiała jeszcze raz poprosić Cię o zgodę.",
-    "confirmGracePeriod": "Aplikacja może nadal wysyłać nowe żądania przy użyciu już wydanego tokena dostępu, dopóki ten nie wygaśnie — maksymalnie przez godzinę.",
+    "confirmGracePeriod": "Odłączenie zaczyna obowiązywać natychmiast. Aplikacja od razu traci dostęp do API, także w przypadku już wydanych tokenów dostępu.",
     "loadFailed": "Nie udało się wczytać połączonych aplikacji.",
     "scopeGroupsRead": "Odczyt grup",
     "scopeGroupsManage": "Zarządzanie grupami",

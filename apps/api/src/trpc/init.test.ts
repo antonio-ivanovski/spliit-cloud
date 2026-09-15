@@ -222,6 +222,7 @@ describe('assistantProcedure', () => {
   const probe = assistantProcedure('spliit:groups:read').query(({ ctx }) => ({
     accountId: ctx.auth.user.id,
   }))
+  const MCP_AUDIENCE = 'http://localhost:3002/mcp'
 
   function callProbe(auth: Record<string, unknown>) {
     return probe({
@@ -234,26 +235,28 @@ describe('assistantProcedure', () => {
     } as never)
   }
 
+  function oauthAuth(scopes: string[], audiences: unknown = [MCP_AUDIENCE]) {
+    return {
+      credentialKind: 'oauth',
+      accessToken: 'redacted',
+      scopes,
+      audiences,
+      user: { id: 'acct-1' },
+      session: { id: 'oauth-session' },
+    }
+  }
+
   it('requires an OAuth credential with the requested scope', async () => {
-    await expect(
-      callProbe({
-        credentialKind: 'oauth',
-        accessToken: 'redacted',
-        scopes: [],
-        user: { id: 'acct-1' },
-        session: { id: 'oauth-session' },
-      }),
-    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+    await expect(callProbe(oauthAuth([]))).rejects.toMatchObject({
+      code: 'FORBIDDEN',
+    })
   })
 
   it('accepts the verified OAuth account, not host identity metadata', async () => {
     await expect(
       callProbe({
-        credentialKind: 'oauth',
-        accessToken: 'redacted',
-        scopes: ['spliit:groups:read'],
+        ...oauthAuth(['spliit:groups:read']),
         user: { id: 'verified-spliit-account' },
-        session: { id: 'oauth-session' },
       }),
     ).resolves.toEqual({ accountId: 'verified-spliit-account' })
   })
@@ -261,20 +264,45 @@ describe('assistantProcedure', () => {
   it('blocks an OAuth account whose anonymous setup is incomplete', async () => {
     await expect(
       callProbe({
-        credentialKind: 'oauth',
-        accessToken: 'redacted',
-        scopes: ['spliit:groups:read'],
+        ...oauthAuth(['spliit:groups:read']),
         user: {
           id: 'anonymous-oauth-assistant',
           isAnonymous: true,
           anonymousOnboardingCompleted: false,
         },
-        session: { id: 'oauth-session' },
       }),
     ).rejects.toMatchObject({
       code: 'PRECONDITION_FAILED',
       message: 'ANONYMOUS_SETUP_REQUIRED',
     })
+  })
+
+  it('rejects a token minted for the direct API only', async () => {
+    // Audience separation runs both directions: an API-audience token with
+    // the right scope is a credential for the direct API, not the assistant.
+    await expect(
+      callProbe(oauthAuth(['spliit:groups:read'], [getApiBaseUrl()])),
+    ).rejects.toMatchObject({
+      code: 'UNAUTHORIZED',
+      message: 'Access token was not issued for the assistant resource',
+    })
+  })
+
+  it('rejects a token carrying no audience list', async () => {
+    const { audiences: _dropped, ...withoutAudiences } = oauthAuth([
+      'spliit:groups:read',
+    ])
+    await expect(callProbe(withoutAudiences)).rejects.toMatchObject({
+      code: 'UNAUTHORIZED',
+    })
+  })
+
+  it('accepts a token minted for both the API and the MCP resource', async () => {
+    await expect(
+      callProbe(
+        oauthAuth(['spliit:groups:read'], [getApiBaseUrl(), MCP_AUDIENCE]),
+      ),
+    ).resolves.toEqual({ accountId: 'acct-1' })
   })
 })
 

@@ -3,12 +3,7 @@ import { afterAll, describe, expect, it } from 'vitest'
 import { prisma } from '@spliit/db'
 
 import { app } from '../app'
-import {
-  ASSISTANT_WRITE_SCOPE,
-  DEFAULT_CLIENT_SCOPES,
-  DESTRUCTIVE_SCOPES,
-  SPLIIT_SCOPES,
-} from '../lib/auth/scopes'
+import { ALL_SCOPES, SPLIIT_SCOPES } from '../lib/auth/scopes'
 import { getApiBaseUrl } from '../lib/auth/urls'
 import { checkDbConnection } from './setup'
 
@@ -23,7 +18,7 @@ describe('OAuth dynamic client registration', () => {
     })
   })
 
-  it('registers a minimal public client with safe API defaults', async () => {
+  it('registers a minimal public client with the full requestable capability', async () => {
     const response = await app.request('/auth/oauth2/register', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
@@ -53,23 +48,20 @@ describe('OAuth dynamic client registration', () => {
       response_types: ['code'],
       resources: [getApiBaseUrl()],
     })
+    // Registration records what the client *may* request, not what the user
+    // authorized: the capability set stays broad so the same client can step
+    // up through fresh consent. Safety for omitted scopes lives at the
+    // authorization endpoint, which defaults to the read-only set.
     const registeredScopes = body.scope.split(' ')
-    expect(new Set(registeredScopes)).toEqual(new Set(DEFAULT_CLIENT_SCOPES))
+    for (const scope of ALL_SCOPES) {
+      expect(registeredScopes).toContain(scope)
+    }
     expect(registeredScopes).toEqual(
       expect.arrayContaining([
         SPLIIT_SCOPES.groupsRead,
         SPLIIT_SCOPES.expensesRead,
       ]),
     )
-    // An omitted `scope` must never grant write authority: no manage, no
-    // delete, no legacy assistant write. Clients name those explicitly and
-    // reach them through the insufficient_scope step-up flow.
-    expect(registeredScopes).not.toContain(SPLIIT_SCOPES.groupsManage)
-    expect(registeredScopes).not.toContain(SPLIIT_SCOPES.expensesManage)
-    for (const scope of DESTRUCTIVE_SCOPES) {
-      expect(registeredScopes).not.toContain(scope)
-    }
-    expect(registeredScopes).not.toContain(ASSISTANT_WRITE_SCOPE)
   })
 
   it('still registers manage scopes when a client asks for them by name', async () => {
@@ -95,9 +87,11 @@ describe('OAuth dynamic client registration', () => {
     const body = (await response.json()) as { client_id: string; scope: string }
     if (body.client_id) clientIds.push(body.client_id)
 
-    expect(new Set(body.scope.split(' '))).toEqual(
-      new Set(requestedScope.split(' ')),
-    )
+    // The stored capability covers every supported scope either way; the
+    // explicit request is what the consent screen will show.
+    for (const scope of requestedScope.split(' ')) {
+      expect(body.scope.split(' ')).toContain(scope)
+    }
   })
 
   it('allows browser-based public clients to preflight registration', async () => {

@@ -30,8 +30,8 @@ describe('listAuthorizedClients', () => {
       },
     ] as never)
     prismaMock.oauthRefreshToken.findMany.mockResolvedValue([
-      { clientId: 'client-1', expiresAt: soon },
-      { clientId: 'client-1', expiresAt: later },
+      { clientId: 'client-1', expiresAt: soon, scopes: [] },
+      { clientId: 'client-1', expiresAt: later, scopes: [] },
     ] as never)
 
     const [client] = await listAuthorizedClients('acct-1')
@@ -41,6 +41,32 @@ describe('listAuthorizedClients', () => {
       name: 'Agent',
       activeUntil: later,
     })
+  })
+
+  it('unions live refresh-grant scopes with the latest consent', async () => {
+    prismaMock.oauthConsent.findMany.mockResolvedValue([
+      {
+        id: 'consent-1',
+        clientId: 'client-1',
+        scopes: ['openid', 'spliit:groups:read'],
+        createdAt: new Date('2026-08-02T00:00:00Z'),
+        oauthClient: { name: 'Agent', icon: null },
+      },
+    ] as never)
+    prismaMock.oauthRefreshToken.findMany.mockResolvedValue([
+      {
+        clientId: 'client-1',
+        expiresAt: new Date(Date.now() + 60_000),
+        scopes: ['openid', 'spliit:groups:read', 'spliit:groups:manage'],
+      },
+    ] as never)
+
+    const [client] = await listAuthorizedClients('acct-1')
+
+    // The narrower re-consent must not hide what the older grant can do.
+    expect(new Set(client!.scopes)).toEqual(
+      new Set(['openid', 'spliit:groups:read', 'spliit:groups:manage']),
+    )
   })
 
   it('only counts refresh tokens that are not revoked', async () => {
@@ -79,7 +105,11 @@ describe('listAuthorizedClients', () => {
       },
     ] as never)
     prismaMock.oauthRefreshToken.findMany.mockResolvedValue([
-      { clientId: 'client-1', expiresAt: new Date(Date.now() - 60_000) },
+      {
+        clientId: 'client-1',
+        expiresAt: new Date(Date.now() - 60_000),
+        scopes: [],
+      },
     ] as never)
 
     const [client] = await listAuthorizedClients('acct-1')
@@ -98,8 +128,12 @@ describe('listAuthorizedClients', () => {
       },
     ] as never)
     prismaMock.oauthRefreshToken.findMany.mockResolvedValue([
-      { clientId: 'client-1', expiresAt: null },
-      { clientId: 'client-1', expiresAt: new Date(Date.now() + 60_000) },
+      { clientId: 'client-1', expiresAt: null, scopes: [] },
+      {
+        clientId: 'client-1',
+        expiresAt: new Date(Date.now() + 60_000),
+        scopes: [],
+      },
     ] as never)
 
     const [client] = await listAuthorizedClients('acct-1')
@@ -139,10 +173,11 @@ describe('revokeAuthorizedClient', () => {
       userId: 'acct-1',
       clientId: 'client-1',
     } as never)
+    const runInTransaction = async (input: unknown) =>
+      (input as (tx: unknown) => unknown)(prismaMock)
     prisma$Transaction
-      .mockImplementationOnce(async (input: unknown) =>
-        (input as (tx: unknown) => unknown)(prismaMock),
-      )
+      .mockImplementationOnce(runInTransaction)
+      .mockImplementationOnce(runInTransaction)
       .mockRejectedValueOnce(new Error('cleanup failed'))
 
     await expect(
@@ -152,7 +187,29 @@ describe('revokeAuthorizedClient', () => {
       }),
     ).rejects.toThrow('cleanup failed')
 
-    expect(prismaMock.verification.create).toHaveBeenCalledTimes(1)
+    expect(prismaMock.verification.create).toHaveBeenCalledTimes(2)
+    // Barrier first, then the generation step — both before any cleanup.
+    expect(prismaMock.verification.create).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({
+        data: expect.objectContaining({
+          identifier: expect.stringMatching(/^spliit:oauth-revocation:/),
+        }),
+      }),
+    )
+    expect(prismaMock.verification.create).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({
+        data: expect.objectContaining({
+          id: expect.stringMatching(/^spliit-oauth-generation-row-/),
+          identifier: expect.stringMatching(/^spliit:oauth-generation:/),
+          value: JSON.stringify({
+            type: 'spliit_oauth_generation',
+            generation: 1,
+          }),
+        }),
+      }),
+    )
     expect(prismaMock.oauthConsent.deleteMany).not.toHaveBeenCalled()
   })
 
@@ -233,7 +290,7 @@ describe('revokeAuthorizedClient', () => {
     expect(prismaMock.oauthConsent.deleteMany).toHaveBeenCalledWith({
       where: { userId: 'acct-1', clientId: 'client-1' },
     })
-    expect(prisma$Transaction).toHaveBeenCalledTimes(2)
+    expect(prisma$Transaction).toHaveBeenCalledTimes(3)
     expect(
       prismaMock.verification.create.mock.invocationCallOrder[0],
     ).toBeLessThan(

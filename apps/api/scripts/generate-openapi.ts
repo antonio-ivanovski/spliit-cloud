@@ -109,18 +109,51 @@ const SCOPE_DESCRIPTIONS: Record<string, string> = {
     'Create an expense through the assistant preview and confirmation flow. Does not grant direct writes.',
 }
 
-// OAuth scope per procedure, read off the router rather than restated here:
-// `apiProcedure` and `scopedGroupReadProcedure` record it in tRPC meta, so a
-// procedure that changes scope updates the spec on the next build. Keep the
-// router import lazy: loading it also initializes better-auth, and the handlers
-// above must be installed before Better Auth 1.7 starts its resource seed.
-async function buildProcedureScopes(): Promise<Map<string, string>> {
+// OAuth contract per procedure, read off the router rather than restated here:
+// `apiProcedure`, `scopedGroupReadProcedure` and `assistantProcedure` record
+// the required scope, the bearer-only flag and conditional scopes in tRPC
+// meta, so a procedure that changes requirement updates the spec on the next
+// build. Keep the router import lazy: loading it also initializes
+// better-auth, and the handlers above must be installed before Better Auth
+// 1.7 starts its resource seed.
+//
+// Exported for `src/lib/openapi/trpc-contract.test.ts`, which asserts the
+// generated authorization contract instead of duplicating it.
+export type ProcedureContract = {
+  scope: string
+  oauthOnly: boolean
+  conditionalScopes: Array<{ scope: string; when: string }>
+}
+
+export async function buildProcedureContracts(): Promise<
+  Map<string, ProcedureContract>
+> {
   const { appRouter } = await import('../src/trpc/routers/_app')
-  return new Map<string, string>(
+  return new Map<string, ProcedureContract>(
     Object.entries(appRouter._def.procedures).flatMap(([path, procedure]) => {
-      const scope = (procedure as { _def?: { meta?: { scope?: string } } })._def
-        ?.meta?.scope
-      return scope ? [[path, scope] as [string, string]] : []
+      const meta = (
+        procedure as {
+          _def?: {
+            meta?: {
+              scope?: string
+              oauthOnly?: boolean
+              conditionalScopes?: Array<{ scope: string; when: string }>
+            }
+          }
+        }
+      )._def?.meta
+      return meta?.scope
+        ? [
+            [
+              path,
+              {
+                scope: meta.scope,
+                oauthOnly: meta.oauthOnly ?? false,
+                conditionalScopes: meta.conditionalScopes ?? [],
+              },
+            ] as [string, ProcedureContract],
+          ]
+        : []
     }),
   )
 }
@@ -166,13 +199,13 @@ async function main() {
     version: '0.1.0',
     servers: [{ url: '/trpc', description: 'tRPC mount point' }],
   })
-  const procedureScopes = await buildProcedureScopes()
+  const procedureContracts = await buildProcedureContracts()
 
   // SAFETY: @trpc/openapi's generated document is structurally compatible with openapi-types' Document;
   // cast via unknown to compose with hand-written paths in a single strongly-typed object.
   const merged = await postProcess(
     doc as unknown as OpenAPIV3_1.Document,
-    procedureScopes,
+    procedureContracts,
   )
   await mkdir(dirname(outputPath), { recursive: true })
   await writeFile(outputPath, JSON.stringify(merged, null, 2) + '\n', 'utf8')
@@ -194,7 +227,18 @@ async function main() {
 
 async function postProcess(
   doc: OpenAPIV3_1.Document,
-  procedureScopes: ReadonlyMap<string, string>,
+  procedureContracts: ReadonlyMap<string, ProcedureContract>,
+): Promise<OpenAPIV3_1.Document> {
+  return postProcessOpenApiDocument(doc, procedureContracts)
+}
+
+/**
+ * Compose the final document from the tRPC-generated base. Exported for
+ * contract tests; `main` below is the only production caller.
+ */
+export async function postProcessOpenApiDocument(
+  doc: OpenAPIV3_1.Document,
+  procedureContracts: ReadonlyMap<string, ProcedureContract>,
 ): Promise<OpenAPIV3_1.Document> {
   const result: OpenAPIV3_1.Document = structuredClone(doc)
   result.paths = result.paths ?? {}
@@ -229,12 +273,15 @@ async function postProcess(
       description:
         `OAuth 2.1 with PKCE, for scripts and agents that cannot hold a ` +
         `browser session. Clients may register dynamically at ` +
-        `\`POST /auth/oauth2/register\`. A client that registers without ` +
-        `naming scopes is registered read-only: manage and delete scopes ` +
+        `\`POST /auth/oauth2/register\`. Omitting \`scope\` when authorizing ` +
+        `grants the read-only defaults; manage and delete scopes ` +
         `such as \`${SPLIIT_SCOPES.expensesManage}\` or ` +
-        `\`${SPLIIT_SCOPES.groupsDelete}\` must be requested explicitly. ` +
+        `\`${SPLIIT_SCOPES.groupsDelete}\` must be requested explicitly ` +
+        `and approved on the consent screen, including when widening an ` +
+        `existing client. ` +
         `Omitting \`resource\` binds the authorization to this API. Access ` +
-        `tokens last one hour; refresh tokens rotate on every renewal. ` +
+        `tokens last at most one hour and stop working as soon as the app ` +
+        `is disconnected; refresh tokens rotate on every renewal. ` +
         `Send the token as \`Authorization: Bearer <token>\`.`,
       flows: {
         authorizationCode: {
@@ -280,16 +327,21 @@ async function postProcess(
       if (PUBLIC_PROCEDURES.has(procPath)) {
         op.security = []
       } else {
-        // A scoped procedure takes a session or a token holding the scope;
-        // everything else stays session-only.
-        const scope = procedureScopes.get(procPath)
-        if (scope) {
-          op.security = [
-            { session: [] },
-            ...acceptedOAuthScopes(scope).map((acceptedScope) => ({
-              oauth2: [acceptedScope],
-            })),
-          ]
+        // A scoped procedure takes a session or a token holding the scope,
+        // unless it is bearer-only (the assistant surface rejects sessions).
+        // Conditional scopes add security alternatives covering the wider
+        // grant plus a description sentence naming the condition.
+        const contract = procedureContracts.get(procPath)
+        if (contract) {
+          op.security = buildProcedureSecurity(contract)
+          for (const conditional of contract.conditionalScopes) {
+            op.description =
+              `${op.description ?? ''}\n\nOAuth callers additionally require \`${conditional.scope}\` when ${conditional.when}.`.trim()
+          }
+          if (contract.oauthOnly) {
+            op.description =
+              `OAuth bearer authentication required; cookie sessions are not accepted.\n\n${op.description ?? ''}`.trim()
+          }
         }
       }
       if (DEPRECATED_PROCEDURES.has(procPath)) {
@@ -354,7 +406,7 @@ function isRestPath(path: string): boolean {
   )
 }
 
-function acceptedOAuthScopes(requiredScope: string): string[] {
+export function acceptedOAuthScopes(requiredScope: string): string[] {
   if (requiredScope === SPLIIT_SCOPES.groupsRead) {
     return [
       SPLIIT_SCOPES.groupsRead,
@@ -370,6 +422,28 @@ function acceptedOAuthScopes(requiredScope: string): string[] {
     ]
   }
   return [requiredScope]
+}
+
+/**
+ * Security alternatives for one procedure: the cookie session (unless the
+ * procedure is bearer-only), one OAuth entry per accepted scope for the base
+ * requirement, and one entry per conditional scope combining it with the base
+ * requirement it extends.
+ */
+export function buildProcedureSecurity(
+  contract: ProcedureContract,
+): Array<Record<string, string[]>> {
+  const base = acceptedOAuthScopes(contract.scope)
+  const oauth: Array<Record<string, string[]>> = base.map((acceptedScope) => ({
+    oauth2: [acceptedScope],
+  }))
+  for (const conditional of contract.conditionalScopes) {
+    for (const acceptedScope of base) {
+      if (acceptedScope === conditional.scope) continue
+      oauth.push({ oauth2: [acceptedScope, conditional.scope] })
+    }
+  }
+  return contract.oauthOnly ? oauth : [{ session: [] }, ...oauth]
 }
 
 // Root-path server (empty URL resolves to the spec's own origin) is
@@ -722,7 +796,11 @@ stays in sync with the actual routes. The group export endpoints are
 hand-maintained Hono routes (bundle/CSV downloads).
 `.trim()
 
-main().catch((err) => {
-  console.error('Failed to generate OpenAPI spec:', err)
-  process.exit(1)
-})
+// Only run on direct invocation (`bun run generate-openapi`). Importing this
+// module from contract tests must not write `openapi.json` as a side effect.
+if (process.argv[1]?.includes('generate-openapi')) {
+  main().catch((err) => {
+    console.error('Failed to generate OpenAPI spec:', err)
+    process.exit(1)
+  })
+}

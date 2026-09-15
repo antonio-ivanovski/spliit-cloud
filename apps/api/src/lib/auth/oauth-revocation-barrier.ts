@@ -4,6 +4,16 @@ import { APIError } from 'better-auth/api'
 
 import { prisma, type Prisma } from '@spliit/db'
 
+import {
+  codeGrantGeneration,
+  decodeJwtPayload,
+  getGrantGeneration,
+  getRefreshFamilyGeneration,
+  recordAccessTokenBinding,
+  recordRefreshFamilyGeneration,
+  tagAuthorizationCodesWithGeneration,
+} from './oauth-grant-generation'
+
 const REVOCATION_BARRIER_PREFIX = 'spliit:oauth-revocation:'
 const REVOCATION_BARRIER_EXPIRY = new Date('9999-12-31T23:59:59.999Z')
 
@@ -13,10 +23,75 @@ type GrantSnapshot = {
   clientId: string
   issuedAt: Date
   kind: 'authorization_code' | 'refresh_token'
+  /**
+   * Integer authorization generation the grant was born with. Null when the
+   * grant predates generation tagging; such grants are rejected once the pair
+   * has any revocation history, and otherwise fall back to the
+   * timestamp/barrier check below.
+   */
+  grantGeneration: number | null
 }
 
 const pendingTokenExchanges = new WeakMap<Request, GrantSnapshot>()
 const pendingConsentApprovals = new WeakMap<Request, Date>()
+
+type AuthorizationStart = {
+  accountId: string
+  clientId: string
+  /** Generation active when the authorization started, not when it lands. */
+  generation: number
+  startedAt: Date
+}
+
+const pendingAuthorizationStarts = new WeakMap<Request, AuthorizationStart>()
+
+/**
+ * Better Auth `databaseHooks.verification.create.before` entry: stamp an
+ * authorization code with its start generation as the row is written.
+ *
+ * This is the hook that closes the delayed-authorization race. Direct
+ * authorizations (existing consent, no consent page) answer with a thrown
+ * redirect that never reaches the auth after-hook, so post-hoc tagging cannot
+ * see them. Stamping at row creation runs inside the authorization itself —
+ * even one paused across a disconnect — and reads the generation captured when
+ * that authorization started, never the current one.
+ */
+export async function stampOAuthAuthorizationCodeValue(
+  verification: Record<string, unknown>,
+  context: { request?: Request | null } | null,
+): Promise<{ data: Record<string, unknown> } | void> {
+  const request = context?.request
+  if (!request) return
+  const start = pendingAuthorizationStarts.get(request)
+  if (!start) return
+  const rawValue = verification.value
+  if (typeof rawValue !== 'string') return
+  let parsed: {
+    type?: unknown
+    userId?: unknown
+    grantGeneration?: unknown
+    query?: { client_id?: unknown }
+  }
+  try {
+    parsed = JSON.parse(rawValue) as typeof parsed
+  } catch {
+    return
+  }
+  if (parsed.type !== 'authorization_code') return
+  if (
+    parsed.userId !== start.accountId ||
+    parsed.query?.client_id !== start.clientId
+  ) {
+    return
+  }
+  if (typeof parsed.grantGeneration === 'number') return
+  return {
+    data: {
+      ...verification,
+      value: JSON.stringify({ ...parsed, grantGeneration: start.generation }),
+    },
+  }
+}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -87,6 +162,7 @@ async function findAuthorizationCodeSnapshot(
     authorizationCodeId,
     issuedAt: code.createdAt,
     kind: 'authorization_code',
+    grantGeneration: codeGrantGeneration(code.value),
   }
 }
 
@@ -112,6 +188,9 @@ async function findRefreshTokenSnapshot(
     clientId: token.clientId,
     issuedAt: token.createdAt ?? new Date(0),
     kind: 'refresh_token',
+    grantGeneration: await getRefreshFamilyGeneration(
+      token.authorizationCodeId,
+    ),
   }
 }
 
@@ -150,6 +229,25 @@ async function grantWasRevoked(snapshot: GrantSnapshot): Promise<boolean> {
   // re-arms the pair. This also rejects a code created late by an authorize
   // request that read the old consent just before it was deleted.
   if (barrier) return true
+
+  // The monotonic generation check is the durable form of the same rule.
+  // Unlike timestamps — which the provider truncates to whole seconds when
+  // minting codes — generations stay ordered across disconnect and
+  // reconnect, so work born before a revocation can never be revived by a
+  // later consent.
+  const current = await getGrantGeneration(
+    snapshot.accountId,
+    snapshot.clientId,
+  )
+  if (snapshot.grantGeneration !== null) {
+    if (snapshot.grantGeneration < current) return true
+  } else if (current > 0) {
+    // Untagged grants on a pair with revocation history cannot prove which
+    // generation they belong to. Codes live ten minutes, so anything
+    // legitimately untagged (minted before tagging shipped) has long
+    // expired; reject rather than let second-precision timestamps decide.
+    return true
+  }
 
   // A newer consent denotes an explicit reauthorization. It must never revive
   // an authorization code or refresh-token family from the previous grant.
@@ -236,22 +334,231 @@ export async function prepareOAuthTokenExchange(
   })
 }
 
-/** Recheck a token exchange after Better Auth has created its token rows. */
+/**
+ * Recheck a token exchange after Better Auth has created its token rows.
+ *
+ * On a valid exchange, carry the grant's generation forward: codes seed their
+ * refresh-token family row, and every access token JWT is bound to the
+ * generation by its `jti` so bearer validation can reject it after a later
+ * disconnect without waiting for expiry.
+ */
 export async function finalizeOAuthTokenExchange(
   request: Request | undefined,
+  returned: unknown = null,
 ): Promise<Response | null> {
   if (!request) return null
   const snapshot = pendingTokenExchanges.get(request)
   pendingTokenExchanges.delete(request)
-  if (!snapshot || !(await grantWasRevoked(snapshot))) return null
+  if (!snapshot || !(await grantWasRevoked(snapshot))) {
+    if (snapshot) await recordGrantGeneration(snapshot, returned)
+    return null
+  }
 
   await quarantineGrant(snapshot)
   return invalidGrantResponse()
 }
 
+async function recordGrantGeneration(
+  snapshot: GrantSnapshot,
+  returned: unknown,
+): Promise<void> {
+  try {
+    const generation =
+      snapshot.grantGeneration ??
+      (await getGrantGeneration(snapshot.accountId, snapshot.clientId))
+    if (
+      snapshot.kind === 'authorization_code' &&
+      snapshot.authorizationCodeId
+    ) {
+      await recordRefreshFamilyGeneration(
+        snapshot.authorizationCodeId,
+        generation,
+      )
+    }
+    const body = await extractTokenResponseBody(returned)
+    const accessToken =
+      body && typeof body.access_token === 'string' ? body.access_token : null
+    if (!accessToken) return
+    const payload = decodeJwtPayload(accessToken)
+    const jti = payload && typeof payload.jti === 'string' ? payload.jti : null
+    const exp = payload && typeof payload.exp === 'number' ? payload.exp : null
+    if (!jti || !exp || !Number.isFinite(exp)) return
+    const tokenScopes =
+      payload && typeof payload.scope === 'string'
+        ? payload.scope.split(' ').filter(Boolean)
+        : []
+    await recordAccessTokenBinding(
+      snapshot.accountId,
+      snapshot.clientId,
+      jti,
+      {
+        accountId: snapshot.accountId,
+        clientId: snapshot.clientId,
+        generation,
+        scopes: tokenScopes,
+      },
+      new Date(exp * 1000),
+    )
+  } catch (error) {
+    // Binding rows are a validation hint, never the exchange itself: a
+    // failed write must not break an otherwise valid token response. An
+    // unbound token is still accepted on a pair with no revocation history,
+    // and rejected once the pair has any.
+    console.warn('[oauth] failed to record grant generation:', error)
+  }
+}
+
+async function extractTokenResponseBody(
+  returned: unknown,
+): Promise<Record<string, unknown> | null> {
+  let value = returned
+  if (value instanceof Response) {
+    // The token endpoint answers 200 on success; anything else carries no
+    // grant to bind.
+    if (!value.ok) return null
+    try {
+      value = await value.clone().json()
+    } catch {
+      return null
+    }
+  }
+  if (value && typeof value === 'object' && !Array.isArray(value)) {
+    return value as Record<string, unknown>
+  }
+  return null
+}
+
 /** Capture the start boundary so a later concurrent revocation always wins. */
 export function prepareOAuthConsent(request: Request | undefined): void {
   if (request) pendingConsentApprovals.set(request, new Date())
+}
+
+/**
+ * Remember which generation was active when an authorization started. A code
+ * minted by this request is stamped with that generation when it lands (see
+ * `tagOAuthCodeAfterAuthorization`); stamping the start rather than the landing
+ * generation is what rejects an authorization that read the old consent just
+ * before a disconnect and finished writing its code after the reconnect.
+ */
+export async function prepareOAuthAuthorization(
+  request: Request | undefined,
+  accountId: string,
+  clientId: string,
+): Promise<void> {
+  if (!request) return
+  const generation = await getGrantGeneration(accountId, clientId).catch(
+    () => 0,
+  )
+  pendingAuthorizationStarts.set(request, {
+    accountId,
+    clientId,
+    generation,
+    startedAt: new Date(),
+  })
+}
+
+async function extractAuthorizationCode(
+  returned: unknown,
+): Promise<string | null> {
+  const candidates: unknown[] = []
+  if (returned instanceof Response) {
+    candidates.push(returned.headers.get('location'))
+    // Consent approvals answer 200 with the callback URL in the JSON body;
+    // direct authorizations redirect with the code in the location header.
+    try {
+      const body = (await returned.clone().json()) as unknown
+      if (body && typeof body === 'object') {
+        const json = body as Record<string, unknown>
+        candidates.push(json.url, json.redirect_uri)
+      }
+    } catch {
+      // No JSON body; the location header above is the only candidate.
+    }
+  } else if (returned && typeof returned === 'object') {
+    const body = returned as Record<string, unknown>
+    candidates.push(body.url, body.redirect_uri)
+    if (body.body && typeof body.body === 'object') {
+      const inner = body.body as Record<string, unknown>
+      candidates.push(inner.url, inner.redirect_uri)
+    }
+  }
+  for (const candidate of candidates) {
+    if (typeof candidate !== 'string' || !candidate) continue
+    try {
+      const code = new URL(candidate, 'http://localhost').searchParams.get(
+        'code',
+      )
+      if (code) return code
+    } catch {
+      continue
+    }
+  }
+  return null
+}
+
+async function readAuthorizationCodeOwner(rawCode: string): Promise<{
+  identifier: string
+  accountId: string
+  clientId: string
+} | null> {
+  const identifier = storedToken(rawCode)
+  const code = await prisma.verification.findFirst({
+    where: { identifier, expiresAt: { gt: new Date() } },
+    select: { value: true },
+  })
+  if (!code) return null
+  const owner = parseAuthorizationCode(code.value)
+  if (!owner) return null
+  return { identifier, ...owner }
+}
+
+/**
+ * Stamp the code this authorization just minted with its start generation, so
+ * the exchange check can tell which side of a concurrent revocation the
+ * authorization belongs to. Returns the code owner when a code was minted, for
+ * the consent re-arm step. Safe to call when no code was minted (no-op).
+ *
+ * Better Auth answers direct authorizations (existing consent, no consent page)
+ * with a _thrown_ redirect, which never reaches the auth after-hook. The Hono
+ * auth mount calls this for those responses with the same request object the
+ * before-hook captured the start boundary on.
+ */
+export async function tagOAuthCodeFromAuthorizeResponse(
+  request: Request,
+  response: Response,
+): Promise<void> {
+  const location = response.headers.get('location')
+  if (!location || !location.includes('code=')) return
+  await tagOAuthCodeAfterAuthorization(request, response)
+}
+
+export async function tagOAuthCodeAfterAuthorization(
+  request: Request | undefined,
+  returned: unknown,
+): Promise<{ accountId: string; clientId: string } | null> {
+  const start = request ? pendingAuthorizationStarts.get(request) : undefined
+  if (request) pendingAuthorizationStarts.delete(request)
+  const rawCode = await extractAuthorizationCode(returned)
+  if (!rawCode) return null
+  const code = await readAuthorizationCodeOwner(rawCode)
+  if (!code) return null
+  // Only a matching start boundary may stamp the code. Anything else leaves
+  // the row untagged so the exchange falls back to the barrier check, which
+  // stays fail-closed while a revocation is outstanding. Stamping the
+  // current generation here would bless work born before a disconnect.
+  if (
+    start &&
+    start.accountId === code.accountId &&
+    start.clientId === code.clientId
+  ) {
+    await tagAuthorizationCodesWithGeneration(
+      code.identifier,
+      start.generation,
+    ).catch((error) => {
+      console.warn('[oauth] failed to tag authorization code:', error)
+    })
+  }
+  return { accountId: code.accountId, clientId: code.clientId }
 }
 
 /** Install the durable barrier at the linearization point of revocation. */
@@ -286,7 +593,9 @@ function returnedCallbackUrl(returned: unknown): string | null {
 /**
  * Rearm a client only after Better Auth persisted consent and issued its code.
  * Barriers newer than the start of that explicit approval are retained, so a
- * concurrent second revocation always wins.
+ * concurrent second revocation always wins. The code is stamped with the
+ * generation that was active when the approval started, so a later exchange can
+ * tell this fresh consent apart from work born before a disconnect.
  */
 export async function rearmOAuthClientAfterConsent(
   request: Request | undefined,
@@ -325,6 +634,10 @@ export async function rearmOAuthClientAfterConsent(
   if (!code) return
   const owner = parseAuthorizationCode(code.value)
   if (!owner) return
+
+  await tagOAuthCodeAfterAuthorization(request, returned).catch((error) => {
+    console.warn('[oauth] failed to tag authorization code:', error)
+  })
 
   await prisma.verification.deleteMany({
     where: {

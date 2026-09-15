@@ -3322,7 +3322,7 @@
     "cancel": "Utzi",
     "confirmTitle": "{name} deskonektatu?",
     "confirmDescription": "Aplikazioaren freskatze-tokenak berehala baliogabetuko dira, eta berriz konektatzeko baimena eskatu beharko dizu.",
-    "confirmGracePeriod": "Aplikazioak eskaera berriak egin ahal izango ditu jada jaulkitako sarbide-token batekin hura iraungi arte, ordubetez gehienez.",
+    "confirmGracePeriod": "Deskonektatzeak berehalako eragina du. Aplikazioak berehala galtzen du APIrako sarbidea, jada jaulkitako sarbide-tokenak barne.",
     "loadFailed": "Ezin izan dira konektatutako aplikazioak kargatu.",
     "scopeGroupsRead": "Irakurri taldeak",
     "scopeGroupsManage": "Kudeatu taldeak",

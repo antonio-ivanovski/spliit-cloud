@@ -3376,7 +3376,7 @@
     "cancel": "Cancelar",
     "confirmTitle": "¿Desconectar {name}?",
     "confirmDescription": "Los tokens de actualización de la aplicación se revocarán de inmediato y tendrá que volver a pedirte permiso para conectarse de nuevo.",
-    "confirmGracePeriod": "La aplicación aún puede hacer nuevas solicitudes con un token de acceso ya emitido hasta que caduque, durante un máximo de una hora.",
+    "confirmGracePeriod": "La desconexión surte efecto de inmediato. La aplicación pierde el acceso a la API al momento, incluidos los tokens de acceso ya emitidos.",
     "loadFailed": "No se pudieron cargar las aplicaciones conectadas.",
     "scopeGroupsRead": "Leer grupos",
     "scopeGroupsManage": "Gestionar grupos",

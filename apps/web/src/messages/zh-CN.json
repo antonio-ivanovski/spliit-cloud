@@ -3287,7 +3287,7 @@
     "cancel": "取消",
     "confirmTitle": "要断开 {name} 吗？",
     "confirmDescription": "该应用的刷新令牌将立即撤销，重新连接时必须再次请求你的授权。",
-    "confirmGracePeriod": "该应用仍可使用已签发的访问令牌发起新请求，直至令牌过期，最长不超过一小时。",
+    "confirmGracePeriod": "断开连接立即生效。该应用会立即失去对 API 的访问权限，包括已签发的访问令牌。",
     "loadFailed": "无法加载已连接的应用。",
     "scopeGroupsRead": "读取群组",
     "scopeGroupsManage": "管理群组",

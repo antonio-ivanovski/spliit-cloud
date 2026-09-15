@@ -3322,7 +3322,7 @@
     "cancel": "Anulează",
     "confirmTitle": "Deconectezi {name}?",
     "confirmDescription": "Tokenurile de reîmprospătare ale aplicației vor fi revocate imediat, iar aceasta va trebui să îți ceară din nou permisiunea pentru a se reconecta.",
-    "confirmGracePeriod": "Aplicația poate face în continuare cereri noi cu un token de acces deja emis până la expirarea acestuia, timp de cel mult o oră.",
+    "confirmGracePeriod": "Deconectarea intră în vigoare imediat. Aplicația pierde pe loc accesul la API, inclusiv cu tokenurile de acces deja emise.",
     "loadFailed": "Aplicațiile conectate nu au putut fi încărcate.",
     "scopeGroupsRead": "Citește grupurile",
     "scopeGroupsManage": "Gestionează grupurile",

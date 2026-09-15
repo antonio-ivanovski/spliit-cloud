@@ -3304,7 +3304,7 @@
     "cancel": "İptal",
     "confirmTitle": "{name} bağlantısı kesilsin mi?",
     "confirmDescription": "Yenileme belirteçleri hemen iptal edilecek ve yeniden bağlanabilmek için tekrar izninizi istemesi gerekecek.",
-    "confirmGracePeriod": "Uygulama, daha önce verilmiş bir erişim belirtecinin süresi dolana kadar, en fazla bir saat boyunca yeni isteklerde bulunmaya devam edebilir.",
+    "confirmGracePeriod": "Bağlantı kesme işlemi hemen yürürlüğe girer. Uygulama, daha önce verilmiş erişim belirteçleri dahil olmak üzere API erişimini derhal kaybeder.",
     "loadFailed": "Bağlı uygulamalar yüklenemedi.",
     "scopeGroupsRead": "Grupları okuma",
     "scopeGroupsManage": "Grupları yönetme",

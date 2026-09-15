@@ -3322,7 +3322,7 @@
     "cancel": "Annuler",
     "confirmTitle": "Déconnecter {name} ?",
     "confirmDescription": "Ses jetons d'actualisation seront immédiatement révoqués et l'application devra vous redemander votre autorisation pour se reconnecter.",
-    "confirmGracePeriod": "L'application peut encore envoyer de nouvelles requêtes avec un jeton d'accès déjà émis jusqu'à son expiration, pendant une heure au maximum.",
+    "confirmGracePeriod": "La déconnexion prend effet immédiatement. L’application perd aussitôt l’accès à l’API, y compris avec les jetons d’accès déjà émis.",
     "loadFailed": "Impossible de charger les applications connectées.",
     "scopeGroupsRead": "Lire les groupes",
     "scopeGroupsManage": "Gérer les groupes",

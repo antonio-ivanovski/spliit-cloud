@@ -33,3 +33,16 @@ export function oauthAudiences(): string[] {
   if (env.MCP_PUBLIC_URL) audiences.push(`${env.MCP_PUBLIC_URL}/mcp`)
   return audiences
 }
+
+/**
+ * The audience identifying the MCP resource (`<MCP_PUBLIC_URL>/mcp`).
+ *
+ * The assistant surface is the MCP resource's backend: it only serves tokens
+ * minted for the MCP resource, never tokens minted for the direct API — even
+ * when they carry the same scope. `MCP_PUBLIC_URL` is required whenever
+ * `ENABLE_MCP` is set (see env validation), so callers behind the MCP gate can
+ * rely on this being defined.
+ */
+export function getMcpAudience(): string | null {
+  return env.MCP_PUBLIC_URL ? `${env.MCP_PUBLIC_URL}/mcp` : null
+}

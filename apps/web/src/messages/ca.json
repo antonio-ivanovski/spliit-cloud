@@ -3322,7 +3322,7 @@
     "cancel": "Cancel·la",
     "confirmTitle": "Vols desconnectar {name}?",
     "confirmDescription": "Els tokens d'actualització de l'aplicació es revocaran immediatament i haurà de tornar-te a demanar permís per connectar-se de nou.",
-    "confirmGracePeriod": "L'aplicació encara pot fer sol·licituds noves amb un token d'accés ja emès fins que caduqui, durant un màxim d'una hora.",
+    "confirmGracePeriod": "La desconnexió té efecte immediatament. L’aplicació perd l’accés a l’API de seguida, inclosos els tokens d’accés ja emesos.",
     "loadFailed": "No s'han pogut carregar les aplicacions connectades.",
     "scopeGroupsRead": "Llegir els grups",
     "scopeGroupsManage": "Gestionar els grups",

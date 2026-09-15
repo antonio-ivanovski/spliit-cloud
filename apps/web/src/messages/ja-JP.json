@@ -3287,7 +3287,7 @@
     "cancel": "キャンセル",
     "confirmTitle": "{name} の連携を解除しますか？",
     "confirmDescription": "更新トークンは直ちに無効になり、再接続するにはこのアプリがもう一度許可を求める必要があります。",
-    "confirmGracePeriod": "このアプリは、すでに発行されたアクセストークンが期限切れになるまで、最長1時間は新しいリクエストを実行できます。",
+    "confirmGracePeriod": "切断は直ちに有効になります。すでに発行されたアクセストークンを含め、アプリは直ちに API へのアクセスを失います。",
     "loadFailed": "連携中のアプリを読み込めませんでした。",
     "scopeGroupsRead": "グループの閲覧",
     "scopeGroupsManage": "グループの管理",

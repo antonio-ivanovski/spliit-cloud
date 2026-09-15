@@ -3376,7 +3376,7 @@
     "cancel": "Annuleren",
     "confirmTitle": "{name} loskoppelen?",
     "confirmDescription": "De refresh-tokens van de app worden onmiddellijk ingetrokken. Om opnieuw verbinding te maken, moet de app weer om je toestemming vragen.",
-    "confirmGracePeriod": "De app kan met een al uitgegeven toegangstoken nieuwe verzoeken blijven doen totdat het verloopt, maximaal één uur.",
+    "confirmGracePeriod": "De verbinding wordt direct verbroken. De app verliest meteen de toegang tot de API, ook met al uitgegeven toegangstokens.",
     "loadFailed": "Verbonden apps konden niet worden geladen.",
     "scopeGroupsRead": "Groepen lezen",
     "scopeGroupsManage": "Groepen beheren",

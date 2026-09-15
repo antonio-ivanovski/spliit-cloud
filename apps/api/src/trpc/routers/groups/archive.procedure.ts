@@ -35,7 +35,14 @@ import { archiveGroupOutputSchema } from '../../outputs/groups'
  * state matches a zeroed-out ledger. OAuth callers using `force` therefore also
  * need `spliit:expenses:manage` when settlement expenses are required.
  */
-export const archiveGroupProcedure = apiProcedure('spliit:groups:delete')
+export const archiveGroupProcedure = apiProcedure('spliit:groups:delete', {
+  conditionalScopes: [
+    {
+      scope: SPLIIT_SCOPES.expensesManage,
+      when: 'force-archiving a group with unsettled balances creates settlement expenses',
+    },
+  ],
+})
   .input(
     z.object({
       groupId: z.string().min(1),

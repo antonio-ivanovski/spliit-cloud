@@ -1,5 +1,12 @@
 import { prisma } from '@spliit/db'
 
+import {
+  deleteAccessTokenBindings,
+  deleteRefreshFamilyGenerations,
+  getGrantGeneration,
+  incrementGrantGeneration,
+  listAccessTokenBindings,
+} from './oauth-grant-generation'
 import { createOAuthRevocationBarrier } from './oauth-revocation-barrier'
 
 export type AuthorizedClient = {
@@ -22,6 +29,17 @@ export type AuthorizedClient = {
  * Consent is the durable record of "this account let this client in", so it
  * drives the list. Refresh token expiry is surfaced alongside it because that
  * is what actually decides how long the client keeps working.
+ *
+ * Scopes report what the client can still do, not just the latest consent row:
+ * approving a narrower scope later does not shrink an older refresh grant that
+ * remains valid, so the display unions the consent scopes with every
+ * still-valid refresh grant. Otherwise settings would promise "read only" while
+ * the app can still manage. Access-only grants (no `offline_access`, hence no
+ * refresh-token row) are covered the same way through their live token
+ * bindings, filtered by the current generation so revoked grants never show.
+ * (Refresh rows are instead removed at disconnect; a settings read landing
+ * between the generation bump and that cleanup can briefly show the old grant.
+ * Exchange and bearer paths are unaffected — both already refuse it.)
  */
 export async function listAuthorizedClients(
   accountId: string,
@@ -41,32 +59,59 @@ export async function listAuthorizedClients(
       revoked: null,
       OR: [{ expiresAt: null }, { expiresAt: { gt: now } }],
     },
-    select: { clientId: true, expiresAt: true },
+    select: { clientId: true, expiresAt: true, scopes: true },
   })
 
   const activeUntil = new Map<string, Date | null>()
+  const liveGrantScopes = new Map<string, Set<string>>()
+  const trackGrant = (
+    clientId: string,
+    expiresAt: Date | null,
+    scopes: Iterable<string>,
+  ) => {
+    if (expiresAt && expiresAt <= now) return
+    if (!activeUntil.has(clientId)) {
+      activeUntil.set(clientId, expiresAt)
+    } else {
+      const current = activeUntil.get(clientId)
+      // A null expiry is unbounded and therefore wins over every dated token.
+      if (current !== null) {
+        if (expiresAt === null || expiresAt > current!) {
+          activeUntil.set(clientId, expiresAt)
+        }
+      }
+    }
+    let grantScopes = liveGrantScopes.get(clientId)
+    if (!grantScopes) {
+      grantScopes = new Set<string>()
+      liveGrantScopes.set(clientId, grantScopes)
+    }
+    for (const scope of scopes) grantScopes.add(scope)
+  }
   for (const token of refreshTokens) {
     // Keep this defensive check as well as the database filter so an expiry at
     // the query boundary can never be presented as active.
-    if (token.expiresAt && token.expiresAt <= now) continue
-    if (!activeUntil.has(token.clientId)) {
-      activeUntil.set(token.clientId, token.expiresAt)
-      continue
-    }
-    const current = activeUntil.get(token.clientId)
-    // A null expiry is unbounded and therefore wins over every dated token.
-    if (current === null) continue
-    if (token.expiresAt === null || token.expiresAt > current!) {
-      activeUntil.set(token.clientId, token.expiresAt)
+    trackGrant(token.clientId, token.expiresAt, token.scopes ?? [])
+  }
+  for (const consent of consents) {
+    const current = await getGrantGeneration(accountId, consent.clientId)
+    const bindings = await listAccessTokenBindings(accountId, consent.clientId)
+    for (const binding of bindings) {
+      if (binding.generation !== current) continue
+      trackGrant(consent.clientId, binding.expiresAt, binding.scopes)
     }
   }
-
   return consents.map((consent) => ({
     consentId: consent.id,
     clientId: consent.clientId,
     name: consent.oauthClient?.name ?? null,
     icon: consent.oauthClient?.icon ?? null,
-    scopes: consent.scopes,
+    scopes: Array.from(
+      new Set([
+        ...consent.scopes,
+        ...(liveGrantScopes.get(consent.clientId) ?? []),
+      ]),
+    ),
     authorizedAt: consent.createdAt,
     activeUntil: activeUntil.get(consent.clientId) ?? null,
   }))
@@ -112,9 +157,11 @@ function authorizationCodeBelongsTo(
  * started before cleanup but writes its result afterwards. Cleanup records go
  * together in a transaction after that barrier has committed.
  *
- * Access tokens are JWTs verified against the JWKS rather than looked up, so a
- * token already in flight stays valid until it expires. That window is one
- * hour, and callers should say so rather than promise instant cutoff.
+ * Access tokens are JWTs verified against the JWKS rather than looked up, so
+ * bearer validation additionally binds each issued token to the authorization
+ * generation (see `oauth-grant-generation`). Disconnect moves the pair to the
+ * next generation, which rejects already-issued access tokens on their next use
+ * across every API replica.
  */
 export async function revokeAuthorizedClient({
   accountId,
@@ -136,7 +183,10 @@ export async function revokeAuthorizedClient({
   // request could run after the sweep but before commit, observe neither the
   // barrier nor the cleanup, and leave a newly-issued family behind. A failed
   // second transaction intentionally leaves this fail-closed barrier standing
-  // so retrying the revocation is safe.
+  // so retrying the revocation is safe. The generation moves forward right
+  // after, in its own retried transaction, so already-issued access tokens
+  // and paused authorizations stay distinguishable from the next grant after
+  // reconnect.
   await prisma.$transaction(async (tx) => {
     await createOAuthRevocationBarrier(
       tx,
@@ -145,6 +195,7 @@ export async function revokeAuthorizedClient({
       revokedAt,
     )
   })
+  await incrementGrantGeneration(accountId, consent.clientId)
 
   return prisma.$transaction(async (tx) => {
     // Better Auth does not enforce uniqueness for (userId, clientId). Remove
@@ -182,6 +233,24 @@ export async function revokeAuthorizedClient({
       },
       data: { revoked: revokedAt },
     })
+    // Forget the revoked families' generation bindings: the refresh rows
+    // above are dead, so their family rows would otherwise linger forever
+    // (they never expire by design). Families are keyed by authorization code
+    // id, which the refresh rows carry.
+    const revokedFamilies =
+      (await tx.oauthRefreshToken.findMany({
+        where: { userId: accountId, clientId: consent.clientId },
+        select: { authorizationCodeId: true },
+      })) ?? []
+    await deleteRefreshFamilyGenerations(
+      tx,
+      revokedFamilies.flatMap((token) =>
+        token.authorizationCodeId ? [token.authorizationCodeId] : [],
+      ),
+    )
+    // Drop this grant's token bindings too: they expire with their tokens
+    // anyway, but leaving them would show revoked scopes until then.
+    await deleteAccessTokenBindings(tx, accountId, consent.clientId)
     await tx.oauthRefreshToken.updateMany({
       where: {
         userId: accountId,

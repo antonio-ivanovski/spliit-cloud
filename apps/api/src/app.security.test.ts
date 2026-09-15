@@ -7,6 +7,7 @@ import {
   clientRateLimitMiddleware,
   requestWithTrustedProxyHeaders,
 } from './app'
+import { webOrigins } from './lib/env'
 
 describe('proxy header trust', () => {
   it('removes client-supplied IP headers when proxy trust is disabled', () => {
@@ -123,5 +124,67 @@ describe('tRPC body limit', () => {
 
     // Unauthenticated, but must NOT be a body-limit rejection.
     expect(response.status).not.toBe(413)
+  })
+})
+
+describe('tRPC browser CORS', () => {
+  const externalOrigin = 'https://third-party.example'
+
+  it('answers bearer preflights from unknown origins without credentials', async () => {
+    const response = await app.request('/trpc/groups.list', {
+      method: 'OPTIONS',
+      headers: {
+        origin: externalOrigin,
+        'access-control-request-method': 'GET',
+        'access-control-request-headers': 'authorization',
+      },
+    })
+
+    expect(response.status).toBe(204)
+    expect(response.headers.get('access-control-allow-origin')).toBe(
+      externalOrigin,
+    )
+    // Cookies must never ride along to a third-party page.
+    expect(response.headers.get('access-control-allow-credentials')).toBeNull()
+  })
+
+  it('refuses preflights from unknown origins without bearer intent', async () => {
+    const response = await app.request('/trpc/groups.list', {
+      method: 'OPTIONS',
+      headers: {
+        origin: externalOrigin,
+        'access-control-request-method': 'GET',
+      },
+    })
+
+    expect(response.status).toBe(204)
+    expect(response.headers.get('access-control-allow-origin')).toBeNull()
+  })
+
+  it('keeps credentialed access for first-party web origins', async () => {
+    const origin = webOrigins[0]!
+    const preflight = await app.request('/trpc/groups.list', {
+      method: 'OPTIONS',
+      headers: {
+        origin,
+        'access-control-request-method': 'GET',
+        'access-control-request-headers': 'authorization',
+      },
+    })
+
+    expect(preflight.status).toBe(204)
+    expect(preflight.headers.get('access-control-allow-origin')).toBe(origin)
+    expect(preflight.headers.get('access-control-allow-credentials')).toBe(
+      'true',
+    )
+
+    const actual = await app.request(
+      '/trpc/groups.list?input=%7B%22json%22%3A%7B%7D%7D',
+      {
+        headers: { origin },
+      },
+    )
+    expect(actual.headers.get('access-control-allow-origin')).toBe(origin)
+    expect(actual.headers.get('access-control-allow-credentials')).toBe('true')
   })
 })

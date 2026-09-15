@@ -144,7 +144,14 @@ export const removeParticipantPreviewProcedure = apiProcedure(
  * Remove a participant. OAuth callers that ask to settle balances also need
  * `spliit:expenses:manage`, because settlement materializes expenses.
  */
-export const removeParticipantProcedure = apiProcedure('spliit:groups:delete')
+export const removeParticipantProcedure = apiProcedure('spliit:groups:delete', {
+  conditionalScopes: [
+    {
+      scope: SPLIIT_SCOPES.expensesManage,
+      when: 'settling balances creates settlement expenses (settleBalances)',
+    },
+  ],
+})
   .input(
     z.object({
       groupId: z.string().min(1),

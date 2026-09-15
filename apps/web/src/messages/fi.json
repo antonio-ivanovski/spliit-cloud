@@ -3304,7 +3304,7 @@
     "cancel": "Peruuta",
     "confirmTitle": "Katkaistaanko yhteys sovellukseen {name}?",
     "confirmDescription": "Sen päivitystunnukset mitätöidään heti, ja sovelluksen on pyydettävä lupaasi uudelleen, jotta se voi muodostaa yhteyden.",
-    "confirmGracePeriod": "Sovellus voi tehdä uusia pyyntöjä jo myönnetyllä käyttöoikeustunnuksella sen vanhenemiseen asti, kuitenkin enintään tunnin ajan.",
+    "confirmGracePeriod": "Yhteyden katkaiseminen astuu voimaan välittömästi. Sovellus menettää API:n käyttöoikeuden heti, myös jo myönnettyjen käyttöoikeustunnusten osalta.",
     "loadFailed": "Yhdistettyjä sovelluksia ei voitu ladata.",
     "scopeGroupsRead": "Lukea ryhmiä",
     "scopeGroupsManage": "Hallita ryhmiä",

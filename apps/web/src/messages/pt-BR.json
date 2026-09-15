@@ -1018,7 +1018,6 @@
       "empty": "Ainda não há predefinições de divisão.",
       "saveError": "Não foi possível salvar a predefinição de divisão.",
       "deleteError": "Não foi possível excluir a predefinição de divisão.",
-
       "delete": "Excluir predefinição",
       "deleteTitle": "Excluir predefinição de divisão",
       "deleteDescription": "Excluir “{name}”? Não é possível desfazer.",
@@ -1742,7 +1741,7 @@
     "cancel": "Cancelar",
     "confirmTitle": "Desconectar {name}?",
     "confirmDescription": "Os tokens de atualização do app serão revogados imediatamente, e ele terá que pedir sua permissão novamente para se reconectar.",
-    "confirmGracePeriod": "O app ainda pode fazer novas requisições com um token de acesso já emitido até que ele expire, por até uma hora.",
+    "confirmGracePeriod": "A desconexão passa a valer na hora. O app perde o acesso à API imediatamente, inclusive com tokens de acesso já emitidos.",
     "loadFailed": "Não foi possível carregar os apps conectados.",
     "scopeGroupsRead": "Ler grupos",
     "scopeGroupsManage": "Gerenciar grupos",

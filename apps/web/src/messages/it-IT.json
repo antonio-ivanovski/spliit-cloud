@@ -3322,7 +3322,7 @@
     "cancel": "Annulla",
     "confirmTitle": "Disconnettere {name}?",
     "confirmDescription": "I token di aggiornamento dell'app verranno revocati immediatamente e l'app dovrà chiederti di nuovo il permesso per riconnettersi.",
-    "confirmGracePeriod": "L'app può ancora effettuare nuove richieste con un token di accesso già emesso fino alla scadenza, per un massimo di un'ora.",
+    "confirmGracePeriod": "La disconnessione ha effetto immediato. L’app perde subito l’accesso all’API, compresi i token di accesso già emessi.",
     "loadFailed": "Impossibile caricare le app connesse.",
     "scopeGroupsRead": "Leggere i gruppi",
     "scopeGroupsManage": "Gestire i gruppi",

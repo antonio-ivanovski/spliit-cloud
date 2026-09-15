@@ -3376,7 +3376,7 @@
     "cancel": "Huỷ",
     "confirmTitle": "Ngắt kết nối {name}?",
     "confirmDescription": "Các mã làm mới của ứng dụng sẽ bị thu hồi ngay lập tức và ứng dụng sẽ phải xin lại quyền của bạn để kết nối lại.",
-    "confirmGracePeriod": "Ứng dụng vẫn có thể gửi yêu cầu mới bằng mã truy cập đã được cấp cho đến khi mã này hết hạn, tối đa một giờ.",
+    "confirmGracePeriod": "Việc ngắt kết nối có hiệu lực ngay lập tức. Ứng dụng mất quyền truy cập API ngay, kể cả với mã truy cập đã được cấp.",
     "loadFailed": "Không thể tải các ứng dụng đã kết nối.",
     "scopeGroupsRead": "Đọc nhóm",
     "scopeGroupsManage": "Quản lý nhóm",

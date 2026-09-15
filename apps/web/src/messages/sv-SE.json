@@ -3300,7 +3300,7 @@
     "cancel": "Avbryt",
     "confirmTitle": "Koppla från {name}?",
     "confirmDescription": "Appens uppdateringstoken återkallas omedelbart, och den måste be om ditt tillstånd igen för att återansluta.",
-    "confirmGracePeriod": "Appen kan fortsätta göra nya förfrågningar med en redan utfärdad åtkomsttoken tills den löper ut, i upp till en timme.",
+    "confirmGracePeriod": "Frånkopplingen träder i kraft omedelbart. Appen förlorar genast åtkomsten till API:et, även med redan utfärdade åtkomsttoken.",
     "loadFailed": "Det gick inte att läsa in anslutna appar.",
     "scopeGroupsRead": "Läsa grupper",
     "scopeGroupsManage": "Hantera grupper",

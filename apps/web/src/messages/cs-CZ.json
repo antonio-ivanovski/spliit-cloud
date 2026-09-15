@@ -3338,7 +3338,7 @@
     "cancel": "Zrušit",
     "confirmTitle": "Odpojit {name}?",
     "confirmDescription": "Její obnovovací tokeny budou okamžitě zneplatněny a aplikace tě bude muset znovu požádat o svolení k připojení.",
-    "confirmGracePeriod": "Aplikace může až do vypršení platnosti již vydaného přístupového tokenu nadále odesílat nové požadavky, nejdéle po dobu jedné hodiny.",
+    "confirmGracePeriod": "Odpojení se projeví okamžitě. Aplikace okamžitě ztratí přístup k API, včetně již vydaných přístupových tokenů.",
     "loadFailed": "Připojené aplikace se nepodařilo načíst.",
     "scopeGroupsRead": "Číst skupiny",
     "scopeGroupsManage": "Spravovat skupiny",

@@ -1,11 +1,18 @@
 import { oauthProviderResourceClient } from '@better-auth/oauth-provider/resource-client'
 
+import { prisma } from '@spliit/db'
+
 import {
   getCachedAccount,
   isAnonymousSetupIncomplete,
   type CachedAccount,
 } from './account-cache'
 import { auth } from './index'
+import {
+  getAccessTokenBinding,
+  getGrantGeneration,
+} from './oauth-grant-generation'
+import { oauthRevocationBarrierIdentifier } from './oauth-revocation-barrier'
 import { getApiBaseUrl, oauthAudiences } from './urls'
 
 export type ResolvedAuth = Omit<
@@ -68,6 +75,65 @@ export async function getApplicationAuthFromRequest(
 
 const oauthResource = oauthProviderResourceClient().getActions()
 
+/**
+ * Whether the verified JWT belongs to the pair's current authorization
+ * generation. A standing revocation barrier rejects first: the barrier commits
+ * before the generation moves, so a crash between the two must still cut bearer
+ * access (the exchange path is already barrier-gated). Bound tokens (by `jti`)
+ * must then match the current generation exactly. Unbound tokens — minted
+ * before binding shipped, or whose binding write was lost — cannot prove their
+ * generation, so they are rejected once the pair has any revocation history and
+ * accepted only on a pair that was never revoked. Any database failure rejects
+ * the token.
+ */
+async function isAccessTokenGenerationCurrent(claims: {
+  sub?: unknown
+  client_id?: unknown
+  azp?: unknown
+  jti?: unknown
+  iat?: unknown
+}): Promise<boolean> {
+  try {
+    if (typeof claims.sub !== 'string') return false
+    // Better Auth's verifier already normalizes `azp` into `client_id`, but
+    // keep the legacy claim as a fallback so pre-1.7-shaped tokens stay
+    // resolvable even if that normalization ever changes.
+    const clientId =
+      typeof claims.client_id === 'string'
+        ? claims.client_id
+        : typeof claims.azp === 'string'
+          ? claims.azp
+          : null
+    if (!clientId) return false
+    const [binding, current, barrier] = await Promise.all([
+      typeof claims.jti === 'string'
+        ? getAccessTokenBinding(claims.sub, clientId, claims.jti)
+        : Promise.resolve(null),
+      getGrantGeneration(claims.sub, clientId),
+      prisma.verification.findFirst({
+        where: {
+          identifier: oauthRevocationBarrierIdentifier(claims.sub, clientId),
+          expiresAt: { gt: new Date() },
+        },
+        select: { id: true },
+      }),
+    ])
+    // A standing barrier means disconnect was requested and no explicit
+    // re-consent has re-armed the pair since: reject regardless of generation.
+    if (barrier) return false
+    if (binding) {
+      return (
+        binding.accountId === claims.sub &&
+        binding.clientId === clientId &&
+        binding.generation === current
+      )
+    }
+    return current === 0
+  } catch {
+    return false
+  }
+}
+
 export async function getOAuthAuthFromRequest(
   request: Request,
 ): Promise<OAuthResolvedAuth | null> {
@@ -98,6 +164,11 @@ export async function getOAuthAuthFromRequest(
     return null
   const account = await getCachedAccount(claims.sub)
   if (!account) return null
+  // Disconnect moves the (account, client) pair to the next authorization
+  // generation, which must reject already-issued access tokens on their
+  // next use rather than leaving them valid until expiry. The check reads
+  // the database so it holds across API replicas.
+  if (!(await isAccessTokenGenerationCurrent(claims))) return null
   const scopes = Array.isArray(claims.scopes)
     ? claims.scopes.filter(
         (scope): scope is string => typeof scope === 'string',

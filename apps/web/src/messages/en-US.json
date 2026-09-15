@@ -1122,7 +1122,7 @@
     "cancel": "Cancel",
     "confirmTitle": "Disconnect {name}?",
     "confirmDescription": "Its refresh tokens will be revoked immediately, and it will have to ask for your permission again to reconnect.",
-    "confirmGracePeriod": "The application can still make new requests with an access token already issued until it expires, for up to one hour.",
+    "confirmGracePeriod": "Disconnecting takes effect immediately. The application loses access to the API at once, including with access tokens already issued.",
     "loadFailed": "Could not load connected apps.",
     "scopeGroupsRead": "Read groups",
     "scopeGroupsManage": "Manage groups",

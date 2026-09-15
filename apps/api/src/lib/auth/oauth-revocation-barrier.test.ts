@@ -21,13 +21,23 @@ const RAW_REFRESH_TOKEN = 'refresh-token'
 const issuedAt = new Date('2026-08-24T10:00:00.000Z')
 const revokedAt = new Date('2026-08-24T10:01:00.000Z')
 
-function authorizationCodeRow(createdAt = issuedAt) {
+function authorizationCodeRow(createdAt = issuedAt, grantGeneration = 0) {
   return {
     createdAt,
     value: JSON.stringify({
       type: 'authorization_code',
       userId: 'acct-1',
       query: { client_id: 'client-1' },
+      grantGeneration,
+    }),
+  }
+}
+
+function generationRow(generation: number) {
+  return {
+    value: JSON.stringify({
+      type: 'spliit_oauth_generation',
+      generation,
     }),
   }
 }
@@ -64,6 +74,7 @@ describe('OAuth revocation barrier', () => {
     prismaMock.verification.findFirst
       .mockResolvedValueOnce(authorizationCodeRow() as never)
       .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce(generationRow(0) as never)
       .mockResolvedValueOnce({ createdAt: revokedAt } as never)
     prismaMock.oauthConsent.findFirst
       .mockResolvedValueOnce({ createdAt: issuedAt } as never)
@@ -115,6 +126,8 @@ describe('OAuth revocation barrier', () => {
     } as never)
     prismaMock.verification.findFirst
       .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce(generationRow(0) as never)
       .mockResolvedValueOnce({ createdAt: revokedAt } as never)
     prismaMock.oauthConsent.findFirst
       .mockResolvedValueOnce({ createdAt: issuedAt } as never)
@@ -144,6 +157,54 @@ describe('OAuth revocation barrier', () => {
         }),
       }),
     )
+  })
+
+  it('rejects a code from a superseded generation without any barrier', async () => {
+    // A reconnect re-arms the pair (no barrier), but the old code's stamp
+    // still trails the current generation: second-precision timestamps
+    // cannot tell them apart, generations can.
+    prismaMock.verification.findFirst
+      .mockResolvedValueOnce(authorizationCodeRow(issuedAt, 0) as never)
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce(generationRow(1) as never)
+    prismaMock.oauthConsent.findFirst.mockResolvedValue({
+      createdAt: revokedAt,
+    } as never)
+    const request = new Request('http://localhost/auth/oauth2/token', {
+      method: 'POST',
+    })
+
+    await expect(
+      prepareOAuthTokenExchange(request, tokenBody()),
+    ).rejects.toMatchObject({
+      body: { error: 'invalid_grant' },
+    })
+  })
+
+  it('rejects an untagged code once the pair has revocation history', async () => {
+    prismaMock.verification.findFirst
+      .mockResolvedValueOnce({
+        createdAt: issuedAt,
+        value: JSON.stringify({
+          type: 'authorization_code',
+          userId: 'acct-1',
+          query: { client_id: 'client-1' },
+        }),
+      } as never)
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce(generationRow(1) as never)
+    prismaMock.oauthConsent.findFirst.mockResolvedValue({
+      createdAt: revokedAt,
+    } as never)
+    const request = new Request('http://localhost/auth/oauth2/token', {
+      method: 'POST',
+    })
+
+    await expect(
+      prepareOAuthTokenExchange(request, tokenBody()),
+    ).rejects.toMatchObject({
+      body: { error: 'invalid_grant' },
+    })
   })
 
   it('rearms only after a successful consent code, without clearing a newer barrier', async () => {

@@ -19,6 +19,7 @@ import {
   getOAuthProtectedResourceMetadata,
   OAUTH_PROTECTED_RESOURCE_PATH,
 } from './lib/auth/oauth-discovery'
+import { tagOAuthCodeFromAuthorizeResponse } from './lib/auth/oauth-revocation-barrier'
 import { SIGNUP_INVITE_HEADER } from './lib/auth/signup-gate'
 import { env, webOrigins } from './lib/env'
 import { checkLiveness, checkReadiness } from './lib/health'
@@ -82,30 +83,107 @@ app.onError((err, c) => {
   return c.json({ status: 'error' }, 500)
 })
 
+const defaultCors = cors({
+  origin: (origin, c) => {
+    if (!origin) return origin
+    // OAuth public clients such as MCP Inspector can run at origins that
+    // are unknown at deployment time. These protocol endpoints are
+    // independently protected by PKCE, client validation and bearer
+    // credentials; reflecting the requesting origin only enables the
+    // browser transport. Normal Spliit APIs remain restricted below.
+    if (isPublicOAuthProtocolPath(c.req.path)) return origin
+    return webOrigins.includes(origin) ? origin : ''
+  },
+  allowHeaders: [
+    'Content-Type',
+    'Authorization',
+    'trpc-accept',
+    'x-import-document-token',
+    SIGNUP_INVITE_HEADER,
+  ],
+  allowMethods: ['GET', 'POST', 'OPTIONS'],
+  credentials: true,
+})
+
 app.use(
   '*',
-  cors({
-    origin: (origin, c) => {
-      if (!origin) return origin
-      // OAuth public clients such as MCP Inspector can run at origins that
-      // are unknown at deployment time. These protocol endpoints are
-      // independently protected by PKCE, client validation and bearer
-      // credentials; reflecting the requesting origin only enables the
-      // browser transport. Normal Spliit APIs remain restricted below.
-      if (isPublicOAuthProtocolPath(c.req.path)) return origin
-      return webOrigins.includes(origin) ? origin : ''
-    },
-    allowHeaders: [
-      'Content-Type',
-      'Authorization',
-      'trpc-accept',
-      'x-import-document-token',
-      SIGNUP_INVITE_HEADER,
-    ],
-    allowMethods: ['GET', 'POST', 'OPTIONS'],
-    credentials: true,
-  }),
+  // `/trpc/*` serves bearer-authenticated browser apps running on origins
+  // unknown at deployment time, so it gets its own CORS handling below.
+  // Every other route keeps the locked-down web-origin policy with the
+  // OAuth protocol exception.
+  async (c, next) => {
+    if (c.req.path.startsWith('/trpc/')) return next()
+    return defaultCors(c, next)
+  },
 )
+
+const TRPC_ALLOW_HEADERS = [
+  'Content-Type',
+  'Authorization',
+  'trpc-accept',
+  'x-import-document-token',
+  SIGNUP_INVITE_HEADER,
+]
+
+/**
+ * CORS for `/trpc/*`.
+ *
+ * First-party web origins keep credentialed access exactly as before. Any other
+ * origin may call the API from a browser when it authenticates with a bearer
+ * token: preflights (which carry no `Authorization` header themselves) qualify
+ * by naming `authorization` in `Access-Control-Request-Headers`. Those grants
+ * never enable credentials, so the account's cookies stay out of reach of
+ * third-party pages; cookie sessions from unknown origins are still rejected.
+ */
+app.use('/trpc/*', async (c, next) => {
+  if (c.req.method === 'OPTIONS') {
+    const origin = c.req.header('origin') ?? ''
+    const headers: Record<string, string> = {
+      Vary: 'Origin',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': TRPC_ALLOW_HEADERS.join(', '),
+    }
+    if (origin && webOrigins.includes(origin)) {
+      headers['Access-Control-Allow-Origin'] = origin
+      headers['Access-Control-Allow-Credentials'] = 'true'
+    } else if (origin && isBearerCorsRequest(c.req.raw)) {
+      headers['Access-Control-Allow-Origin'] = origin
+      headers['Access-Control-Expose-Headers'] = 'WWW-Authenticate'
+    }
+    return c.body(null, 204, headers)
+  }
+  await next()
+  const origin = c.req.header('origin')
+  if (!origin) return
+  if (webOrigins.includes(origin)) {
+    c.header('Access-Control-Allow-Origin', origin)
+    c.header('Vary', 'Origin')
+    c.header('Access-Control-Allow-Credentials', 'true')
+    return
+  }
+  // The default CORS layer above skipped `/trpc/*`; reflect bearer origins
+  // here without credentials so browser apps can read the response and
+  // its `WWW-Authenticate` challenge.
+  if (isBearerCorsRequest(c.req.raw)) {
+    c.header('Access-Control-Allow-Origin', origin)
+    c.header('Vary', 'Origin')
+    const exposed = c.res.headers.get('Access-Control-Expose-Headers')
+    c.header(
+      'Access-Control-Expose-Headers',
+      exposed ? `${exposed}, WWW-Authenticate` : 'WWW-Authenticate',
+    )
+  }
+})
+
+function isBearerCorsRequest(request: Request): boolean {
+  const authorization = request.headers.get('authorization') ?? ''
+  if (authorization.toLowerCase().startsWith('bearer ')) return true
+  const requested = request.headers.get('access-control-request-headers')
+  if (!requested) return false
+  return requested
+    .split(',')
+    .some((header) => header.trim().toLowerCase() === 'authorization')
+}
 
 app.get('/health', () => checkLiveness())
 app.get('/health/liveness', () => checkLiveness())
@@ -169,7 +247,9 @@ const reportRateLimit = clientRateLimitMiddleware({
 })
 const oauthRegistrationRateLimit = clientRateLimitMiddleware({
   policy: 'oauth-registration',
-  limit: 20,
+  // Integration suites register dozens of throwaway clients through this
+  // shared bucket; keep the production bound tight but let tests through.
+  limit: env.NODE_ENV === 'test' ? 1000 : 20,
   windowMs: 60 * 60 * 1000,
   // Direct deployments cannot derive a trustworthy remote address from the
   // Fetch Request. A shared bucket is preferable to leaving anonymous dynamic
@@ -184,9 +264,19 @@ app.get('/email/unsubscribe', emailUnsubscribeGet)
 app.post('/email/unsubscribe', emailUnsubscribePost)
 
 // better-auth handler — exposes /auth/sign-in, /auth/sign-up, etc.
-app.on(['GET', 'POST'], '/auth/*', (c) =>
-  auth.handler(requestWithTrustedProxyHeaders(c.req.raw)),
-)
+app.on(['GET', 'POST'], '/auth/*', async (c) => {
+  const proxied = requestWithTrustedProxyHeaders(c.req.raw)
+  const response = await auth.handler(proxied)
+  // Direct authorizations answer with a thrown redirect that never reaches
+  // the auth after-hook; stamp the minted code here from the same request
+  // object the before-hook captured the start generation on.
+  if (c.req.path === '/auth/oauth2/authorize') {
+    await tagOAuthCodeFromAuthorizeResponse(proxied, response).catch((err) => {
+      logServerWarn('api.oauth', err, { path: c.req.path })
+    })
+  }
+  return response
+})
 app.get('/.well-known/oauth-authorization-server', (c) =>
   oauthProviderAuthServerMetadata(auth, {
     headers: { 'Access-Control-Allow-Origin': '*' },
@@ -266,14 +356,18 @@ app.get(
  * procedure's minimum scope, which is exactly what the challenge's `scope`
  * attribute should advertise (RFC 6750 section 3).
  */
-function requiredOAuthScopes(requestPath: string): string[] {
+function requiredOAuthScopes(requestPath: string): {
+  scopes: string[]
+  procedures: Set<string>
+} {
   const encodedProcedurePaths = requestPath.slice('/trpc/'.length)
-  if (!encodedProcedurePaths) return []
+  if (!encodedProcedurePaths) return { scopes: [], procedures: new Set() }
   const procedures = appRouter._def.procedures as Record<
     string,
     { _def?: { meta?: { scope?: unknown } } } | undefined
   >
   const scopes = new Set<string>()
+  const oauthProcedures = new Set<string>()
   for (const encodedPath of encodedProcedurePaths.split(',')) {
     let path: string
     try {
@@ -285,9 +379,12 @@ function requiredOAuthScopes(requestPath: string): string[] {
       continue
     }
     const scope = procedures[path]?._def?.meta?.scope
-    if (typeof scope === 'string') scopes.add(scope)
+    if (typeof scope === 'string') {
+      scopes.add(scope)
+      oauthProcedures.add(path)
+    }
   }
-  return [...scopes]
+  return { scopes: [...scopes], procedures: oauthProcedures }
 }
 
 function appendExposedHeader(headers: Headers, name: string): void {
@@ -322,7 +419,10 @@ app.use(
 app.all('/trpc/*', async (c) => {
   // Scopes the procedures rejected as missing, collected across a batch so
   // the challenge below can name the exact step-up permissions to request.
+  // Unauthorized OAuth-capable procedures are tracked the same way so a
+  // batch that partly succeeds still advertises how to recover.
   const missingScopes = new Set<string>()
+  const unauthorizedProcedures = new Set<string>()
   const response = await fetchRequestHandler({
     endpoint: '/trpc',
     req: c.req.raw,
@@ -332,6 +432,9 @@ app.all('/trpc/*', async (c) => {
     onError({ error, path, type, ctx }) {
       if (error instanceof MissingScopeError) {
         missingScopes.add(error.requiredScope)
+      }
+      if (error.code === 'UNAUTHORIZED' && typeof path === 'string') {
+        unauthorizedProcedures.add(path)
       }
       // Expected client errors are normal product behavior — logging them
       // would flood the console. Only log infrastructure failures (uncaught
@@ -359,16 +462,28 @@ app.all('/trpc/*', async (c) => {
     },
   })
 
-  const oauthScopes = requiredOAuthScopes(c.req.path)
+  const { scopes: oauthScopes, procedures: oauthProcedures } =
+    requiredOAuthScopes(c.req.path)
   if (oauthScopes.length === 0) return response
 
   // RFC 6750: tell the agent which recovery applies. A 401 without
   // credentials advertises the scopes the requested operations need; a 401
   // that carried a bearer means that token failed verification (expired,
-  // malformed, revoked key, wrong audience); a 403 that rejected scopes asks
-  // for step-up authorization with the exact missing scopes.
+  // revoked, malformed, wrong audience); a 403 that rejected scopes asks
+  // for step-up authorization with the exact missing scopes. Mixed-result
+  // batches (HTTP 207) carry the same challenge when any named procedure
+  // failed this way, so a partial success never swallows the recovery
+  // signal; successful results are preserved untouched.
+  const failedOAuthProcedures = [...unauthorizedProcedures].filter((path) =>
+    oauthProcedures.has(path),
+  )
   let challenge: string | undefined
-  if (response.status === 401) {
+  if (missingScopes.size > 0) {
+    challenge = getOAuthProtectedResourceChallenge({
+      error: 'insufficient_scope',
+      scope: [...missingScopes],
+    })
+  } else if (response.status === 401) {
     const hadBearer = (c.req.header('authorization') ?? '').startsWith(
       'Bearer ',
     )
@@ -376,10 +491,13 @@ app.all('/trpc/*', async (c) => {
       error: hadBearer ? 'invalid_token' : undefined,
       scope: oauthScopes,
     })
-  } else if (response.status === 403 && missingScopes.size > 0) {
+  } else if (failedOAuthProcedures.length > 0) {
+    const hadBearer = (c.req.header('authorization') ?? '').startsWith(
+      'Bearer ',
+    )
     challenge = getOAuthProtectedResourceChallenge({
-      error: 'insufficient_scope',
-      scope: [...missingScopes],
+      error: hadBearer ? 'invalid_token' : undefined,
+      scope: oauthScopes,
     })
   }
   if (!challenge) return response
