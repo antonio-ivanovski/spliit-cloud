@@ -160,10 +160,10 @@ export function enforceCurrencyPattern(
   )
   let integerPart = body
   let fractionPart = ''
+  let decimalSeparator: string | undefined
   if (separators.length > 0) {
     const separatorSet = new Set(separators)
     const lastSeparator = separators.at(-1)!
-    let decimalSeparator: string | undefined
 
     if (separatorSet.size > 1) {
       decimalSeparator = lastSeparator
@@ -192,7 +192,10 @@ export function enforceCurrencyPattern(
   integerPart = integerPart.replace(/[.,]/g, '')
   fractionPart = fractionPart.replace(/[.,]/g, '')
   let result = `${negative ? '-' : ''}${integerPart || ''}`
-  if (fractionPart.length > 0 || separators.at(-1) === localeDecimal) {
+  if (
+    fractionPart.length > 0 ||
+    (decimalSeparator !== undefined && body.endsWith(decimalSeparator))
+  ) {
     result += `.${fractionPart}`
   }
   if (decimalDigits !== undefined) {

@@ -30,4 +30,18 @@ describe('enforceCurrencyPattern (shared sanitizer)', () => {
     expect(localizeCurrencyInput('1234.50', 'ar-SA')).toBe('١٢٣٤٫٥٠')
     expect(enforceCurrencyPattern('١٢٣٤٫٥٠', 2, 'ar-SA')).toBe('1234.50')
   })
+
+  it('preserves a trailing decimal typed with the non-locale separator (issue #115)', () => {
+    // Brazil-region iOS keyboard emits "," while the app locale is en-US.
+    expect(enforceCurrencyPattern('12,', 2, 'en-US')).toBe('12.')
+    expect(enforceCurrencyPattern('12,5', 2, 'en-US')).toBe('12.5')
+    // Symmetric: "." typed while the app locale expects ",".
+    expect(enforceCurrencyPattern('12.', 2, 'pt-BR')).toBe('12.')
+    expect(enforceCurrencyPattern('12.5', 2, 'pt-BR')).toBe('12.5')
+  })
+
+  it('does not mistake grouping for a trailing decimal', () => {
+    expect(enforceCurrencyPattern('1,000', 2, 'en-US')).toBe('1000')
+    expect(enforceCurrencyPattern('12,', 0, 'en-US')).toBe('12')
+  })
 })
