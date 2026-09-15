@@ -2903,6 +2903,25 @@
       "previewBullet": "Vous pouvez la déconnecter depuis les paramètres du compte",
       "authorityBullet": "Vous choisissez ce à quoi cette application peut accéder",
       "validationBullet": "Les validations, soldes et notifications existants restent inchangés"
+    },
+    "manualCallback": {
+      "title": "Terminez de connecter votre agent",
+      "description": "Copiez les informations de connexion ci-dessous et collez-les dans votre agent ou application pour terminer la connexion.",
+      "step1": "Copiez l'URL de connexion avec le bouton ci-dessous.",
+      "step2": "Collez-la dans votre agent ou application.",
+      "step3": "Si le code expire avant que vous le colliez, recommencez la connexion depuis votre agent.",
+      "copyUrl": "Copier l'URL de connexion",
+      "copied": "Copié dans le presse-papiers",
+      "codeLabel": "Code d'autorisation",
+      "stateLabel": "État",
+      "warning": "Ne collez ces informations que dans l'agent ou l'application à qui vous faites confiance. Quiconque les détient peut se connecter à votre compte Spliit jusqu'à leur expiration.",
+      "expiryNote": "Ce code expire 10 minutes après son émission.",
+      "errorTitle": "La connexion n'a pas abouti",
+      "errorDescription": "Le serveur d'autorisation a renvoyé une erreur au lieu d'un code.",
+      "missingTitle": "Rien à copier pour le moment",
+      "missingDescription": "Cette page affiche les informations de connexion après que vous avez approuvé l'accès.",
+      "missingError": "Revenez à votre agent ou application et recommencez la connexion.",
+      "copyCode": "Copier le code d'autorisation"
     }
   },
   "TimeZoneSelector": {

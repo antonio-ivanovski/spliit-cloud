@@ -176,6 +176,14 @@ export const oauthFlowSearchSchema = z.object({
   scope: optionalString,
 })
 
+export const oauthManualCallbackSearchSchema = z.object({
+  code: optionalString,
+  state: optionalString,
+  iss: optionalString,
+  error: optionalString,
+  error_description: optionalString,
+})
+
 export const createExpenseSearchSchema = groupAccessSearchSchema.extend({
   settlement: optionalString,
   /** Legacy alias for `settlement=yes` bookmarks. */

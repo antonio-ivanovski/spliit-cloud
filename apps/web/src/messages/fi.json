@@ -2885,6 +2885,25 @@
       "previewBullet": "Yhteyden voi katkaista tilin asetuksista.",
       "authorityBullet": "Päätät, mihin tämä sovellus saa käyttöoikeuden.",
       "validationBullet": "Nykyinen validointi, saldot ja ilmoitukset säilyvät ennallaan"
+    },
+    "manualCallback": {
+      "title": "Viimeistele agenttisi yhdistäminen",
+      "description": "Kopioi alla olevat yhteystiedot ja liitä ne takaisin agentillesi tai sovellukseesi viimeistelläksesi yhteyden.",
+      "step1": "Kopioi yhteys-URL alla olevalla painikkeella.",
+      "step2": "Liitä se takaisin agentillesi tai sovellukseesi.",
+      "step3": "Jos koodi vanhenee ennen kuin liität sen, aloita yhteys uudelleen agentiltasi.",
+      "copyUrl": "Kopioi yhteys-URL",
+      "copied": "Kopioitu leikepöydälle",
+      "codeLabel": "Valtuutuskoodi",
+      "stateLabel": "State-parametri",
+      "warning": "Liitä tämä vain agenttiin tai sovellukseen, johon luotat. Sen haltija voi yhdistää Spliit-tiliisi, kunnes se vanhenee.",
+      "expiryNote": "Tämä koodi vanhenee 10 minuuttia myöntämisestään.",
+      "errorTitle": "Yhteyttä ei muodostettu",
+      "errorDescription": "Valtuutuspalvelin palautti koodin sijaan virheen.",
+      "missingTitle": "Ei vielä kopioitavaa",
+      "missingDescription": "Tämä sivu näyttää yhteystiedot, kun olet hyväksynyt käyttöoikeuden.",
+      "missingError": "Palaa agentillesi tai sovellukseesi ja aloita yhteys uudelleen.",
+      "copyCode": "Kopioi valtuutuskoodi"
     }
   },
   "TimeZoneSelector": {

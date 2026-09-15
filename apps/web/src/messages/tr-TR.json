@@ -2885,6 +2885,25 @@
       "continuing": "Güvenli şekilde devam ediliyor…",
       "signInTitle": "Bağlanmak için giriş yapın",
       "signInDescription": "Her zamanki Spliit Cloud oturum açma yönteminizi kullanın. Parolanız veya oturum açma bilgileriniz uygulamayla hiçbir zaman paylaşılmaz."
+    },
+    "manualCallback": {
+      "title": "Aracınızın bağlantısını tamamlayın",
+      "description": "Bağlantıyı tamamlamak için aşağıdaki bağlantı bilgilerini kopyalayıp aracınıza veya uygulamanıza yapıştırın.",
+      "step1": "Bağlantı URL'sini aşağıdaki düğmeyle kopyalayın.",
+      "step2": "Bunu aracınıza veya uygulamanıza yapıştırın.",
+      "step3": "Kodu yapıştırmadan önce süresi dolarsa bağlantıyı aracınızdan yeniden başlatın.",
+      "copyUrl": "Bağlantı URL'sini kopyala",
+      "copied": "Panoya kopyalandı",
+      "codeLabel": "Yetkilendirme kodu",
+      "stateLabel": "Durum",
+      "warning": "Bunu yalnızca güvendiğiniz araca veya uygulamaya yapıştırın. Süresi dolana kadar bunu elinde bulunduran herkes Spliit hesabınıza bağlanabilir.",
+      "expiryNote": "Bu kod, verildikten 10 dakika sonra sona erer.",
+      "errorTitle": "Bağlantı tamamlanamadı",
+      "errorDescription": "Yetkilendirme sunucusu kod yerine bir hata döndürdü.",
+      "missingTitle": "Henüz kopyalanacak bir şey yok",
+      "missingDescription": "Bu sayfa, erişimi onayladıktan sonra bağlantı bilgilerini gösterir.",
+      "missingError": "Aracınıza veya uygulamanıza dönüp bağlantıyı yeniden başlatın.",
+      "copyCode": "Yetkilendirme kodunu kopyala"
     }
   },
   "TimeZoneSelector": {

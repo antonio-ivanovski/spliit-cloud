@@ -2903,6 +2903,25 @@
       "continuing": "Modu seguruan jarraitzen…",
       "signInTitle": "Hasi saioa konektatzeko",
       "signInDescription": "Erabili Spliit Cloud-en saioa hasteko ohiko metodoa. Aplikazioak ez du inoiz zure pasahitzik edo saioa hasteko kredentzialik jasotzen."
+    },
+    "manualCallback": {
+      "title": "Osatu zure agentearen konexioa",
+      "description": "Kopiatu beheko konexio-xehetasunak eta itsatsi zure agente edo aplikazioan konexioa osatzeko.",
+      "step1": "Kopiatu konexioaren URLa beheko botoiarekin.",
+      "step2": "Itsatsi zure agente edo aplikazioan.",
+      "step3": "Kodea iraungitzen bada itsatsi aurretik, hasi konexioa berriro zure agentetik.",
+      "copyUrl": "Kopiatu konexioaren URLa",
+      "copied": "Arbelera kopiatuta",
+      "codeLabel": "Baimen-kodea",
+      "stateLabel": "Egoera",
+      "warning": "Itsatsi soilik konfiantzazko agente edo aplikazioan. Hori duen edonork konekta dezake zure Spliit kontura iraungi arte.",
+      "expiryNote": "Kode honek jaulki eta 10 minutura iraungitzen du.",
+      "errorTitle": "Konexioa ez da osatu",
+      "errorDescription": "Baimen-zerbitzariak errore bat itzuli du kode baten ordez.",
+      "missingTitle": "Oraindik ez dago ezer kopiatzeko",
+      "missingDescription": "Orri honek konexio-xehetasunak erakusten ditu sarbidea onartu ondoren.",
+      "missingError": "Itzuli zure agente edo aplikaziora eta hasi konexioa berriro.",
+      "copyCode": "Kopiatu baimen-kodea"
     }
   },
   "TimeZoneSelector": {

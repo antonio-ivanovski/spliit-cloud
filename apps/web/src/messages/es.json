@@ -2957,6 +2957,25 @@
       "previewBullet": "Puedes desconectarla desde los ajustes de la cuenta",
       "authorityBullet": "Tú decides a qué puede acceder esta aplicación",
       "validationBullet": "Las validaciones, los saldos y las notificaciones existentes se mantienen"
+    },
+    "manualCallback": {
+      "title": "Termina de conectar tu agente",
+      "description": "Copia los datos de conexión siguientes y pégalos en tu agente o aplicación para completar la conexión.",
+      "step1": "Copia la URL de conexión con el botón siguiente.",
+      "step2": "Pégalo en tu agente o aplicación.",
+      "step3": "Si el código caduca antes de que lo pegues, inicia de nuevo la conexión desde tu agente.",
+      "copyUrl": "Copiar la URL de conexión",
+      "copied": "Copiado al portapapeles",
+      "codeLabel": "Código de autorización",
+      "stateLabel": "Estado",
+      "warning": "Pégalo solo en el agente o aplicación en los que confíes. Cualquiera que lo tenga podrá conectarse a tu cuenta de Spliit hasta que caduque.",
+      "expiryNote": "Este código caduca 10 minutos después de su emisión.",
+      "errorTitle": "La conexión no se completó",
+      "errorDescription": "El servidor de autorización devolvió un error en lugar de un código.",
+      "missingTitle": "Aún no hay nada que copiar",
+      "missingDescription": "Esta página muestra los datos de conexión después de que apruebes el acceso.",
+      "missingError": "Vuelve a tu agente o aplicación e inicia de nuevo la conexión.",
+      "copyCode": "Copiar el código de autorización"
     }
   },
   "TimeZoneSelector": {

@@ -40,6 +40,7 @@ Each release ships notes written for humans: highlights with screenshots, a full
 
 - Import group expenses from a bank statement CSV via a mapping wizard with duplicate detection and atomic, idempotent commits — suggested in [#91](https://github.com/antonio-ivanovski/spliit-cloud/issues/91) (`6ebd96c` by @antonio-ivanovski)
 - Delegated API access for scripts and agents with per-scope OAuth consent, same-client permission step-up, connected-app controls in account settings that report effective permissions, and immediate cutoff on disconnect (`TBD` by @TBD)
+- Manual OAuth copy-back page (`/oauth/manual-callback`) for agents and CLIs that cannot receive a redirect: approve access and paste the connection URL back instead of landing on a dead localhost tab (`TBD` by @TBD)
 - Tag-gated release workflow: push `vX.Y.Z`, get images, GitHub Release, and prod deploy in one go (`TBD` by @TBD)
 - Per-version notes files (`releases/vX.Y.Z.md`) with colocated screenshots (`releases/assets/vX.Y.Z/`) (`TBD` by @TBD)
 - Self-hosting docs rewritten around version pinning (`SPLIIT_TAG=vX.Y.Z`) (`TBD` by @TBD)

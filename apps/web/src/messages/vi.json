@@ -2957,6 +2957,25 @@
       "continuing": "Đang tiếp tục an toàn…",
       "signInTitle": "Đăng nhập để kết nối",
       "signInDescription": "Dùng phương thức đăng nhập Spliit Cloud thường dùng. Ứng dụng không bao giờ nhận được mật khẩu hoặc thông tin đăng nhập."
+    },
+    "manualCallback": {
+      "title": "Hoàn tất kết nối tác nhân của bạn",
+      "description": "Sao chép chi tiết kết nối bên dưới và dán lại cho tác nhân hoặc ứng dụng của bạn để hoàn tất kết nối.",
+      "step1": "Sao chép URL kết nối bằng nút bên dưới.",
+      "step2": "Dán lại cho tác nhân hoặc ứng dụng của bạn.",
+      "step3": "Nếu mã hết hạn trước khi bạn dán, hãy bắt đầu kết nối lại từ tác nhân của bạn.",
+      "copyUrl": "Sao chép URL kết nối",
+      "copied": "Đã sao chép vào bảng tạm",
+      "codeLabel": "Mã ủy quyền",
+      "stateLabel": "Tham số state",
+      "warning": "Chỉ dán thông tin này vào tác nhân hoặc ứng dụng mà bạn tin tưởng. Bất cứ ai có nó đều có thể kết nối với tài khoản Spliit của bạn cho đến khi nó hết hạn.",
+      "expiryNote": "Mã này hết hạn 10 phút sau khi được cấp.",
+      "errorTitle": "Kết nối chưa hoàn tất",
+      "errorDescription": "Máy chủ ủy quyền đã trả về lỗi thay vì mã.",
+      "missingTitle": "Chưa có gì để sao chép",
+      "missingDescription": "Trang này hiển thị chi tiết kết nối sau khi bạn phê duyệt quyền truy cập.",
+      "missingError": "Hãy quay lại tác nhân hoặc ứng dụng của bạn và bắt đầu kết nối lại.",
+      "copyCode": "Sao chép mã ủy quyền"
     }
   },
   "TimeZoneSelector": {

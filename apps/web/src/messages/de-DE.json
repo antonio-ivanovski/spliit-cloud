@@ -2957,6 +2957,25 @@
       "previewBullet": "Du kannst die Verbindung in den Kontoeinstellungen trennen.",
       "authorityBullet": "Du bestimmst, worauf diese Anwendung zugreifen darf.",
       "validationBullet": "Bestehende Prüfungen, Salden und Benachrichtigungen bleiben erhalten"
+    },
+    "manualCallback": {
+      "title": "Schließe die Verbindung deines Agenten ab",
+      "description": "Kopiere die Verbindungsdetails unten und füge sie bei deinem Agenten oder deiner App ein, um die Verbindung abzuschließen.",
+      "step1": "Kopiere die Verbindungs-URL mit der Schaltfläche unten.",
+      "step2": "Füge sie bei deinem Agenten oder deiner App ein.",
+      "step3": "Wenn der Code abläuft, bevor du ihn einfügst, starte die Verbindung erneut von deinem Agenten aus.",
+      "copyUrl": "Verbindungs-URL kopieren",
+      "copied": "In die Zwischenablage kopiert",
+      "codeLabel": "Autorisierungscode",
+      "stateLabel": "State-Parameter",
+      "warning": "Füge dies nur bei dem Agenten oder der App ein, dem bzw. der du vertraust. Wer im Besitz davon ist, kann sich bis zum Ablauf mit deinem Spliit-Konto verbinden.",
+      "expiryNote": "Dieser Code läuft 10 Minuten nach seiner Ausstellung ab.",
+      "errorTitle": "Verbindung wurde nicht abgeschlossen",
+      "errorDescription": "Der Autorisierungsserver hat einen Fehler statt eines Codes zurückgegeben.",
+      "missingTitle": "Noch nichts zu kopieren",
+      "missingDescription": "Diese Seite zeigt die Verbindungsdetails an, nachdem du den Zugriff erlaubt hast.",
+      "missingError": "Kehre zu deinem Agenten oder deiner App zurück und starte die Verbindung erneut.",
+      "copyCode": "Autorisierungscode kopieren"
     }
   },
   "TimeZoneSelector": {

@@ -2903,6 +2903,25 @@
       "continuing": "A continuar de forma segura…",
       "signInTitle": "Inicie sessão para ligar",
       "signInDescription": "Utilize o seu método habitual de início de sessão no Spliit Cloud. A aplicação nunca recebe a sua palavra-passe nem as suas credenciais de início de sessão."
+    },
+    "manualCallback": {
+      "title": "Termine de ligar o seu agente",
+      "description": "Copie os detalhes de ligação abaixo e cole-os no seu agente ou aplicação para concluir a ligação.",
+      "step1": "Copie o URL de ligação com o botão abaixo.",
+      "step2": "Cole-o no seu agente ou aplicação.",
+      "step3": "Se o código expirar antes de o colar, inicie novamente a ligação a partir do seu agente.",
+      "copyUrl": "Copiar o URL de ligação",
+      "copied": "Copiado para a área de transferência",
+      "codeLabel": "Código de autorização",
+      "stateLabel": "Estado",
+      "warning": "Cole-o apenas no agente ou aplicação em que confia. Quem o tiver pode ligar-se à sua conta do Spliit até expirar.",
+      "expiryNote": "Este código expira 10 minutos após a sua emissão.",
+      "errorTitle": "A ligação não foi concluída",
+      "errorDescription": "O servidor de autorização devolveu um erro em vez de um código.",
+      "missingTitle": "Ainda não há nada para copiar",
+      "missingDescription": "Esta página mostra os detalhes de ligação depois de aprovar o acesso.",
+      "missingError": "Volte ao seu agente ou aplicação e inicie novamente a ligação.",
+      "copyCode": "Copiar o código de autorização"
     }
   },
   "TimeZoneSelector": {

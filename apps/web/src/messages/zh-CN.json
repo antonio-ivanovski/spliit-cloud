@@ -2869,6 +2869,25 @@
       "continuing": "正在安全地继续…",
       "signInTitle": "登录以连接",
       "signInDescription": "使用你常用的 Spliit Cloud 登录方式。此应用绝不会收到你的密码或登录凭据。"
+    },
+    "manualCallback": {
+      "title": "完成智能体连接",
+      "description": "复制下方的连接详情，并将其粘贴回你的智能体或应用以完成连接。",
+      "step1": "使用下方按钮复制连接 URL。",
+      "step2": "将其粘贴回你的智能体或应用。",
+      "step3": "如果代码在粘贴前过期，请从你的智能体重新开始连接。",
+      "copyUrl": "复制连接 URL",
+      "copied": "已复制到剪贴板",
+      "codeLabel": "授权码",
+      "stateLabel": "状态",
+      "warning": "仅将其粘贴到你信任的智能体或应用中。在过期之前，任何持有它的人都可以连接到你的 Spliit 账号。",
+      "expiryNote": "此代码自签发之时起 10 分钟后过期。",
+      "errorTitle": "连接未完成",
+      "errorDescription": "授权服务器返回了错误，而非授权码。",
+      "missingTitle": "暂无可复制的内容",
+      "missingDescription": "你批准访问后，此页面会显示连接详情。",
+      "missingError": "请返回你的智能体或应用并重新开始连接。",
+      "copyCode": "复制授权码"
     }
   },
   "TimeZoneSelector": {

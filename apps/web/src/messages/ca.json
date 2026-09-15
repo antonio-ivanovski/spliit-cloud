@@ -2903,6 +2903,25 @@
       "continuing": "Continuant de manera segura…",
       "signInTitle": "Inicia sessió per connectar",
       "signInDescription": "Fes servir el teu mètode habitual d'inici de sessió a Spliit Cloud. L'aplicació no rep mai la teva contrasenya ni les teves credencials d'inici de sessió."
+    },
+    "manualCallback": {
+      "title": "Acaba de connectar el teu agent",
+      "description": "Copia les dades de connexió següents i enganxa-les al teu agent o aplicació per completar la connexió.",
+      "step1": "Copia l'URL de connexió amb el botó següent.",
+      "step2": "Enganxa'l al teu agent o aplicació.",
+      "step3": "Si el codi caduca abans que l'enganxis, inicia de nou la connexió des del teu agent.",
+      "copyUrl": "Copia l'URL de connexió",
+      "copied": "Copiat al porta-retalls",
+      "codeLabel": "Codi d'autorització",
+      "stateLabel": "Estat",
+      "warning": "Enganxa-ho només a l'agent o aplicació en qui confies. Qualsevol persona que el tingui pot connectar-se al teu compte de Spliit fins que caduqui.",
+      "expiryNote": "Aquest codi caduca 10 minuts després d'haver-se emès.",
+      "errorTitle": "La connexió no s'ha completat",
+      "errorDescription": "El servidor d'autorització ha retornat un error en lloc d'un codi.",
+      "missingTitle": "Encara no hi ha res per copiar",
+      "missingDescription": "Aquesta pàgina mostra les dades de connexió després que aprovis l'accés.",
+      "missingError": "Torna al teu agent o aplicació i inicia de nou la connexió.",
+      "copyCode": "Copia el codi d'autorització"
     }
   },
   "TimeZoneSelector": {

@@ -2903,6 +2903,25 @@
       "continuing": "Se continuă în siguranță…",
       "signInTitle": "Autentifică-te pentru conectare",
       "signInDescription": "Folosește metoda obișnuită de autentificare în Spliit Cloud. Aplicația nu primește niciodată parola sau datele tale de autentificare."
+    },
+    "manualCallback": {
+      "title": "Finalizează conectarea agentului tău",
+      "description": "Copiază detaliile de conectare de mai jos și lipește-le în agentul sau aplicația ta pentru a finaliza conectarea.",
+      "step1": "Copiază URL-ul de conectare cu butonul de mai jos.",
+      "step2": "Lipește-l în agentul sau aplicația ta.",
+      "step3": "Dacă codul expiră înainte să-l lipești, începe din nou conectarea din agentul tău.",
+      "copyUrl": "Copiază URL-ul de conectare",
+      "copied": "Copiat în clipboard",
+      "codeLabel": "Cod de autorizare",
+      "stateLabel": "Stare",
+      "warning": "Lipește-l doar în agentul sau aplicația în care ai încredere. Oricine îl deține se poate conecta la contul tău Spliit până expiră.",
+      "expiryNote": "Acest cod expiră la 10 minute după emitere.",
+      "errorTitle": "Conectarea nu s-a finalizat",
+      "errorDescription": "Serverul de autorizare a returnat o eroare în loc de un cod.",
+      "missingTitle": "Nimic de copiat deocamdată",
+      "missingDescription": "Această pagină arată detaliile de conectare după ce aprobi accesul.",
+      "missingError": "Revino la agentul sau aplicația ta și începe din nou conectarea.",
+      "copyCode": "Copiază codul de autorizare"
     }
   },
   "TimeZoneSelector": {

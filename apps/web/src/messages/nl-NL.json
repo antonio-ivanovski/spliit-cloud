@@ -2957,6 +2957,25 @@
       "previewBullet": "Je kunt de app loskoppelen via de accountinstellingen.",
       "authorityBullet": "Je bepaalt waar deze app toegang toe krijgt.",
       "validationBullet": "Bestaande validatie, saldi en meldingen blijven intact"
+    },
+    "manualCallback": {
+      "title": "Voltooi het verbinden van je agent",
+      "description": "Kopieer de verbindingsgegevens hieronder en plak ze terug in je agent of app om de verbinding te voltooien.",
+      "step1": "Kopieer de verbindings-URL met de knop hieronder.",
+      "step2": "Plak deze terug in je agent of app.",
+      "step3": "Als de code verloopt voordat je deze plakt, start je de verbinding opnieuw vanuit je agent.",
+      "copyUrl": "Verbindings-URL kopiëren",
+      "copied": "Gekopieerd naar klembord",
+      "codeLabel": "Autorisatiecode",
+      "stateLabel": "Stateparameter",
+      "warning": "Plak dit alleen in de agent of app die je vertrouwt. Iedereen die dit in handen heeft, kan verbinding maken met je Spliit-account totdat het verloopt.",
+      "expiryNote": "Deze code verloopt 10 minuten nadat deze is uitgegeven.",
+      "errorTitle": "Verbinding is niet voltooid",
+      "errorDescription": "De autorisatieserver heeft een fout geretourneerd in plaats van een code.",
+      "missingTitle": "Nog niets te kopiëren",
+      "missingDescription": "Deze pagina toont de verbindingsgegevens nadat je toegang hebt goedgekeurd.",
+      "missingError": "Ga terug naar je agent of app en start de verbinding opnieuw.",
+      "copyCode": "Autorisatiecode kopiëren"
     }
   },
   "TimeZoneSelector": {

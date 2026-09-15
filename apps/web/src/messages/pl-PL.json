@@ -2921,6 +2921,25 @@
       "previewBullet": "Możesz ją odłączyć w ustawieniach konta",
       "authorityBullet": "Wybierasz, do czego ta aplikacja ma dostęp",
       "validationBullet": "Dotychczasowa walidacja, salda i powiadomienia pozostają bez zmian"
+    },
+    "manualCallback": {
+      "title": "Dokończ łączenie swojego agenta",
+      "description": "Skopiuj poniższe dane połączenia i wklej je z powrotem swojemu agentowi lub do aplikacji, aby dokończyć połączenie.",
+      "step1": "Skopiuj adres URL połączenia przyciskiem poniżej.",
+      "step2": "Wklej go z powrotem swojemu agentowi lub do aplikacji.",
+      "step3": "Jeśli kod wygaśnie, zanim go wkleisz, rozpocznij połączenie ponownie od strony swojego agenta.",
+      "copyUrl": "Kopiuj adres URL połączenia",
+      "copied": "Skopiowano do schowka",
+      "codeLabel": "Kod autoryzacji",
+      "stateLabel": "Stan",
+      "warning": "Wklejaj je tylko do agenta lub aplikacji, którym ufasz. Każdy, kto je posiada, może połączyć się z Twoim kontem Spliit, dopóki nie wygasną.",
+      "expiryNote": "Ten kod wygasa 10 minut po wydaniu.",
+      "errorTitle": "Nie udało się nawiązać połączenia",
+      "errorDescription": "Serwer autoryzacji zwrócił błąd zamiast kodu.",
+      "missingTitle": "Nie ma jeszcze nic do skopiowania",
+      "missingDescription": "Ta strona pokaże dane połączenia po zatwierdzeniu dostępu.",
+      "missingError": "Wróć do swojego agenta lub aplikacji i rozpocznij połączenie ponownie.",
+      "copyCode": "Kopiuj kod autoryzacji"
     }
   },
   "TimeZoneSelector": {

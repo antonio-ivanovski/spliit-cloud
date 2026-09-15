@@ -2921,6 +2921,25 @@
       "previewBullet": "Můžeš ji odpojit v nastavení účtu",
       "authorityBullet": "Určuješ, k čemu má tato aplikace přístup",
       "validationBullet": "Stávající ověřování, zůstatky a oznámení zůstávají zachována"
+    },
+    "manualCallback": {
+      "title": "Dokonči připojení svého agenta",
+      "description": "Zkopíruj níže uvedené podrobnosti připojení a vlož je zpět svému agentovi nebo do aplikace, aby se připojení dokončilo.",
+      "step1": "Tlačítkem níže zkopíruj URL připojení.",
+      "step2": "Vlož ji zpět svému agentovi nebo do aplikace.",
+      "step3": "Pokud platnost kódu vyprší dříve, než ho vložíš, zahaj připojení od svého agenta znovu.",
+      "copyUrl": "Kopírovat URL připojení",
+      "copied": "Zkopírováno do schránky",
+      "codeLabel": "Autorizační kód",
+      "stateLabel": "Stav",
+      "warning": "Vkládej tyto údaje pouze do agenta nebo aplikace, kterým důvěřuješ. Kdokoliv je získá, může se k tvému účtu Spliit připojit, dokud nevyprší jejich platnost.",
+      "expiryNote": "Platnost tohoto kódu vyprší 10 minut po vydání.",
+      "errorTitle": "Připojení se nedokončilo",
+      "errorDescription": "Autorizační server místo kódu vrátil chybu.",
+      "missingTitle": "Zatím není co kopírovat",
+      "missingDescription": "Tato stránka zobrazí podrobnosti připojení poté, co schválíš přístup.",
+      "missingError": "Vrať se ke svému agentovi nebo do aplikace a zahaj připojení znovu.",
+      "copyCode": "Kopírovat autorizační kód"
     }
   },
   "TimeZoneSelector": {

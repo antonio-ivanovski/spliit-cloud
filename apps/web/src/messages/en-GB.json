@@ -130,6 +130,11 @@
     "login": {
       "missingTitle": "Authorisation request missing",
       "missingError": "Spliit did not receive the OAuth authorisation details."
+    },
+    "manualCallback": {
+      "codeLabel": "Authorisation code",
+      "errorDescription": "The authorisation server returned an error instead of a code.",
+      "copyCode": "Copy authorisation code"
     }
   }
 }

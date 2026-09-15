@@ -2869,6 +2869,25 @@
       "continuing": "Melanjutkan dengan aman…",
       "signInTitle": "Masuk untuk menghubungkan",
       "signInDescription": "Gunakan metode masuk Spliit Cloud seperti biasa. Aplikasi tidak pernah menerima kata sandi atau kredensial masuk Anda."
+    },
+    "manualCallback": {
+      "title": "Selesaikan penyambungan agen Anda",
+      "description": "Salin detail koneksi di bawah dan tempel kembali ke agen atau aplikasi Anda untuk menyelesaikan koneksi.",
+      "step1": "Salin URL koneksi dengan tombol di bawah.",
+      "step2": "Tempel kembali ke agen atau aplikasi Anda.",
+      "step3": "Jika kode kedaluwarsa sebelum Anda menempelkannya, mulai lagi proses penyambungan dari agen Anda.",
+      "copyUrl": "Salin URL koneksi",
+      "copied": "Disalin ke papan klip",
+      "codeLabel": "Kode otorisasi",
+      "stateLabel": "Parameter state",
+      "warning": "Tempel ini hanya ke agen atau aplikasi yang Anda percayai. Siapa pun yang memilikinya dapat terhubung ke akun Spliit Anda sampai kode ini kedaluwarsa.",
+      "expiryNote": "Kode ini kedaluwarsa 10 menit setelah diterbitkan.",
+      "errorTitle": "Koneksi tidak selesai",
+      "errorDescription": "Server otorisasi mengembalikan kesalahan, bukan kode.",
+      "missingTitle": "Belum ada yang bisa disalin",
+      "missingDescription": "Halaman ini menampilkan detail koneksi setelah Anda menyetujui akses.",
+      "missingError": "Kembali ke agen atau aplikasi Anda dan mulai lagi proses penyambungan.",
+      "copyCode": "Salin kode otorisasi"
     }
   },
   "TimeZoneSelector": {

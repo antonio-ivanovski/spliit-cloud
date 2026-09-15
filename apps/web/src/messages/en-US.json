@@ -2980,6 +2980,25 @@
       "continuing": "Continuing securely…",
       "signInTitle": "Sign in to connect",
       "signInDescription": "Use your usual Spliit Cloud sign-in method. The application never receives your password or sign-in credentials."
+    },
+    "manualCallback": {
+      "title": "Finish connecting your agent",
+      "description": "Copy the connection details below and paste them back to your agent or app to complete the connection.",
+      "step1": "Copy the connection URL with the button below.",
+      "step2": "Paste it back to your agent or app.",
+      "step3": "If the code expires before you paste it, start the connection again from your agent.",
+      "copyUrl": "Copy connection URL",
+      "copied": "Copied to clipboard",
+      "codeLabel": "Authorization code",
+      "stateLabel": "State",
+      "warning": "Only paste this into the agent or app you trust. Anyone holding it can connect to your Spliit account until it expires.",
+      "expiryNote": "This code expires 10 minutes after it was issued.",
+      "errorTitle": "Connection did not complete",
+      "errorDescription": "The authorization server returned an error instead of a code.",
+      "missingTitle": "Nothing to copy yet",
+      "missingDescription": "This page shows the connection details after you approve access.",
+      "missingError": "Return to your agent or app and start the connection again.",
+      "copyCode": "Copy authorization code"
     }
   },
   "TimeZoneSelector": {

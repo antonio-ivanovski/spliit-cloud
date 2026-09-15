@@ -2957,6 +2957,25 @@
       "continuing": "안전하게 계속하는 중…",
       "signInTitle": "로그인하여 연결",
       "signInDescription": "평소 사용하는 Spliit Cloud 로그인 방식으로 로그인하세요. 이 애플리케이션에는 비밀번호나 로그인 인증 정보가 절대 전달되지 않습니다."
+    },
+    "manualCallback": {
+      "title": "에이전트 연결 완료하기",
+      "description": "아래의 연결 세부정보를 복사하여 에이전트 또는 앱에 붙여넣어 연결을 완료하세요.",
+      "step1": "아래 버튼으로 연결 URL을 복사하세요.",
+      "step2": "에이전트 또는 앱에 붙여넣으세요.",
+      "step3": "붙여넣기 전에 코드가 만료되면 에이전트에서 연결을 다시 시작하세요.",
+      "copyUrl": "연결 URL 복사",
+      "copied": "클립보드에 복사됨",
+      "codeLabel": "권한 부여 코드",
+      "stateLabel": "상태",
+      "warning": "신뢰할 수 있는 에이전트 또는 앱에만 붙여넣으세요. 만료되기 전에 이를 가진 사람은 누구나 Spliit 계정에 연결할 수 있습니다.",
+      "expiryNote": "이 코드는 발급된 지 10분 후에 만료됩니다.",
+      "errorTitle": "연결을 완료하지 못했습니다",
+      "errorDescription": "권한 부여 서버에서 코드 대신 오류를 반환했습니다.",
+      "missingTitle": "아직 복사할 내용이 없습니다",
+      "missingDescription": "액세스를 승인하면 이 페이지에 연결 세부정보가 표시됩니다.",
+      "missingError": "에이전트 또는 앱으로 돌아가 연결을 다시 시작하세요.",
+      "copyCode": "권한 부여 코드 복사"
     }
   },
   "TimeZoneSelector": {

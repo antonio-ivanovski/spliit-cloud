@@ -2881,6 +2881,25 @@
       "previewBullet": "Du kan koppla från appen i kontoinställningarna.",
       "authorityBullet": "Du bestämmer vad den här appen får komma åt.",
       "validationBullet": "Befintlig validering, saldon och aviseringar förblir intakta"
+    },
+    "manualCallback": {
+      "title": "Slutför anslutningen av din agent",
+      "description": "Kopiera anslutningsuppgifterna nedan och klistra in dem i din agent eller app för att slutföra anslutningen.",
+      "step1": "Kopiera anslutnings-URL:en med knappen nedan.",
+      "step2": "Klistra in den i din agent eller app.",
+      "step3": "Om koden upphör att gälla innan du klistrar in den startar du anslutningen igen från din agent.",
+      "copyUrl": "Kopiera anslutnings-URL",
+      "copied": "Kopierat till urklipp",
+      "codeLabel": "Auktoriseringskod",
+      "stateLabel": "Stateparameter",
+      "warning": "Klistra endast in detta i den agent eller app som du litar på. Den som har det kan ansluta till ditt Spliit-konto tills det upphör att gälla.",
+      "expiryNote": "Den här koden upphör att gälla 10 minuter efter att den utfärdades.",
+      "errorTitle": "Anslutningen slutfördes inte",
+      "errorDescription": "Auktoriseringsservern returnerade ett fel i stället för en kod.",
+      "missingTitle": "Inget att kopiera ännu",
+      "missingDescription": "Den här sidan visar anslutningsuppgifterna efter att du har godkänt åtkomsten.",
+      "missingError": "Gå tillbaka till din agent eller app och starta anslutningen igen.",
+      "copyCode": "Kopiera auktoriseringskod"
     }
   },
   "TimeZoneSelector": {

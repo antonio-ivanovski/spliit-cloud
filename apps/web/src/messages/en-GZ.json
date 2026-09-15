@@ -2929,6 +2929,25 @@
       "previewBullet": "you can disconnect it anytime in account settings.",
       "authorityBullet": "you pick what this app gets access to.",
       "validationBullet": "existing validation, balances, and notifications stay intact"
+    },
+    "manualCallback": {
+      "title": "finish connecting your agent",
+      "description": "copy the connection details below and paste them back to your agent or app to complete the connection.",
+      "step1": "copy the connection URL with the button below.",
+      "step2": "paste it back to your agent or app.",
+      "step3": "if the code expires before you paste it, start the connection again from your agent.",
+      "copyUrl": "copy connection URL",
+      "copied": "copied to clipboard",
+      "codeLabel": "authorization code",
+      "stateLabel": "state",
+      "warning": "only paste this into the agent or app you trust. anyone holding it can connect to your Spliit account until it expires.",
+      "expiryNote": "this code expires 10 minutes after it was issued.",
+      "errorTitle": "connection did not complete",
+      "errorDescription": "the authorization server returned an error instead of a code.",
+      "missingTitle": "nothing to copy yet",
+      "missingDescription": "this page shows the connection details after you approve access.",
+      "missingError": "return to your agent or app and start the connection again.",
+      "copyCode": "copy authorization code"
     }
   },
   "OfflineBanner": {

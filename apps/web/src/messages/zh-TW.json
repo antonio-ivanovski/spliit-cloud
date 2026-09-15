@@ -2869,6 +2869,25 @@
       "continuing": "正在安全地繼續…",
       "signInTitle": "登入以連線",
       "signInDescription": "使用你平常的 Spliit Cloud 登入方式。此應用程式絕不會收到你的密碼或登入憑證。"
+    },
+    "manualCallback": {
+      "title": "完成代理程式連線",
+      "description": "複製下方的連線詳細資料，並將其貼回你的代理程式或應用程式以完成連線。",
+      "step1": "使用下方按鈕複製連線 URL。",
+      "step2": "將其貼回你的代理程式或應用程式。",
+      "step3": "如果代碼在貼上前過期，請從你的代理程式重新開始連線。",
+      "copyUrl": "複製連線 URL",
+      "copied": "已複製到剪貼簿",
+      "codeLabel": "授權碼",
+      "stateLabel": "狀態",
+      "warning": "僅將其貼到你信任的代理程式或應用程式中。在過期之前，任何持有它的人都可以連線至你的 Spliit 帳號。",
+      "expiryNote": "此代碼自簽發之時起 10 分鐘後過期。",
+      "errorTitle": "連線未完成",
+      "errorDescription": "授權伺服器傳回了錯誤，而非授權碼。",
+      "missingTitle": "尚無可複製的內容",
+      "missingDescription": "你核准存取後，此頁面會顯示連線詳細資料。",
+      "missingError": "請返回你的代理程式或應用程式並重新開始連線。",
+      "copyCode": "複製授權碼"
     }
   },
   "TimeZoneSelector": {

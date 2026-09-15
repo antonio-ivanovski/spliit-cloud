@@ -1508,6 +1508,20 @@
       "continuing": "Continuando com segurança…",
       "signInTitle": "Entre para conectar",
       "signInDescription": "Use seu método habitual de login no Spliit Cloud. O app nunca recebe sua senha nem suas credenciais de login."
+    },
+    "manualCallback": {
+      "title": "Termine de conectar o seu agente",
+      "description": "Copie os detalhes de conexão abaixo e cole-os de volta no seu agente ou app para concluir a conexão.",
+      "step1": "Copie o URL de conexão com o botão abaixo.",
+      "step2": "Cole-o de volta no seu agente ou app.",
+      "step3": "Se o código expirar antes de você colá-lo, inicie a conexão novamente a partir do seu agente.",
+      "copyUrl": "Copiar o URL de conexão",
+      "warning": "Cole-o apenas no agente ou app em que você confia. Qualquer pessoa com acesso a ele pode se conectar à sua conta do Spliit até expirar.",
+      "expiryNote": "Este código expira 10 minutos após a emissão.",
+      "errorTitle": "A conexão não foi concluída",
+      "errorDescription": "O servidor de autorização retornou um erro em vez de um código.",
+      "missingDescription": "Esta página mostra os detalhes de conexão depois que você aprovar o acesso.",
+      "missingError": "Volte ao seu agente ou app e inicie a conexão novamente."
     }
   },
   "TimeZoneMismatch": {
