@@ -100,9 +100,16 @@ export function rankCategories(
   const needle = normalizeSearchText(query)
   if (!needle) return []
 
+  // Tokenize once per query: `scoreDocument` runs per category (50+ docs), so
+  // splitting the needle inside it repeats the same work for every document.
+  // Skip dates/amounts so "EVN 01-02.2024" still hits the EVN alias.
+  const tokens = needle
+    .split(' ')
+    .filter((token) => token.length >= 2 && !/^\d+$/.test(token))
+
   const results: RankedCategory[] = []
   for (const document of documents) {
-    const score = scoreDocument(needle, document)
+    const score = scoreDocument(needle, tokens, document)
     if (score < MIN_SCORE) continue
     results.push({ id: document.id, score, isParent: document.isParent })
   }
@@ -118,20 +125,22 @@ export function rankCategories(
 
 function scoreDocument(
   needle: string,
+  tokens: string[],
   document: CategorySearchDocument,
 ): number {
   const phrase = bestFieldScore(needle, document)
-  // Skip dates/amounts so "EVN 01-02.2024" still hits the EVN alias.
-  const tokens = needle
-    .split(' ')
-    .filter((token) => token.length >= 2 && !/^\d+$/.test(token))
   if (tokens.length === 0) return phrase
 
   let matchedTotal = 0
   let matchedCount = 0
   let bestToken = 0
   for (const token of tokens) {
-    const tokenScore = bestFieldScore(token, document)
+    // A single-token query scores the same string twice (phrase and token);
+    // reuse the phrase score instead of rescoring every field.
+    const tokenScore =
+      tokens.length === 1 && token === needle
+        ? phrase
+        : bestFieldScore(token, document)
     bestToken = Math.max(bestToken, tokenScore)
     if (tokenScore === 0) continue
     matchedCount += 1
@@ -194,12 +203,36 @@ function bestFieldScore(
   return best
 }
 
+/**
+ * Haystack word splits are static per dictionary (a few hundred distinct
+ * aliases/samples) but `scoreText` runs millions of times during bulk import
+ * categorization. Cache the split so repeated queries don't reallocate.
+ */
+const haystackWordsCache = new Map<string, string[]>()
+/**
+ * Bound the split cache: dictionaries are finite, but callers may rank ad-hoc
+ * documents.
+ */
+const MAX_HAYSTACK_WORDS_ENTRIES = 10_000
+
+function haystackWords(haystack: string): string[] {
+  const cached = haystackWordsCache.get(haystack)
+  if (cached) return cached
+  const words = haystack.split(' ')
+  if (haystackWordsCache.size >= MAX_HAYSTACK_WORDS_ENTRIES) {
+    const oldest = haystackWordsCache.keys().next()
+    if (!oldest.done) haystackWordsCache.delete(oldest.value)
+  }
+  haystackWordsCache.set(haystack, words)
+  return words
+}
+
 function scoreText(needle: string, haystack: string): number {
   if (!needle || !haystack) return 0
   if (haystack === needle) return 1
   if (haystack.startsWith(needle)) return 0.92
 
-  const words = haystack.split(' ')
+  const words = haystackWords(haystack)
   if (words.some((word) => word.startsWith(needle))) return 0.88
   if (haystack.includes(needle)) return 0.8
 
@@ -223,6 +256,9 @@ function scoreText(needle: string, haystack: string): number {
 }
 
 function isSubsequence(needle: string, haystack: string): boolean {
+  // A longer needle can never be a subsequence of a shorter haystack; skip
+  // the scan (common for "Merchant 5000"-style titles vs short aliases).
+  if (needle.length > haystack.length) return false
   let index = 0
   for (const character of haystack) {
     if (character === needle[index]) index += 1
@@ -245,35 +281,48 @@ export function damerauLevenshtein(
   const rightLength = right.length
   if (Math.abs(leftLength - rightLength) > max) return max + 1
 
-  const previous = Array.from({ length: rightLength + 1 }, (_, index) => index)
-  const current = Array.from({ length: rightLength + 1 }, () => 0)
-  const beforePrevious = Array.from({ length: rightLength + 1 }, () => 0)
+  // Index-filled rows (no per-element callbacks) plus row rotation instead
+  // of an O(n) copy per row: same distances, far less overhead. This runs
+  // millions of times during bulk import categorization.
+  const previous: number[] = []
+  const current: number[] = []
+  const beforePrevious: number[] = []
+  for (let j = 0; j <= rightLength; j += 1) {
+    previous[j] = j
+    current[j] = 0
+    beforePrevious[j] = 0
+  }
+  let previousRow = previous
+  let currentRow = current
+  let beforePreviousRow = beforePrevious
 
   for (let i = 1; i <= leftLength; i += 1) {
-    current[0] = i
-    let rowMin = current[0]!
+    currentRow[0] = i
+    let rowMin = currentRow[0]!
+    const leftChar = left[i - 1]
+    const leftPrevChar = i > 1 ? left[i - 2] : ''
     for (let j = 1; j <= rightLength; j += 1) {
-      const cost = left[i - 1] === right[j - 1] ? 0 : 1
-      const insertion = current[j - 1]! + 1
-      const deletion = previous[j]! + 1
-      const substitution = previous[j - 1]! + cost
+      const cost = leftChar === right[j - 1] ? 0 : 1
+      const insertion = currentRow[j - 1]! + 1
+      const deletion = previousRow[j]! + 1
+      const substitution = previousRow[j - 1]! + cost
       let value = Math.min(insertion, deletion, substitution)
       if (
         i > 1 &&
         j > 1 &&
-        left[i - 1] === right[j - 2] &&
-        left[i - 2] === right[j - 1]
+        leftChar === right[j - 2] &&
+        leftPrevChar === right[j - 1]
       ) {
-        value = Math.min(value, beforePrevious[j - 2]! + 1)
+        value = Math.min(value, beforePreviousRow[j - 2]! + 1)
       }
-      current[j] = value
-      rowMin = Math.min(rowMin, value)
+      currentRow[j] = value
+      if (value < rowMin) rowMin = value
     }
     if (rowMin > max) return max + 1
-    for (let j = 0; j <= rightLength; j += 1) {
-      beforePrevious[j] = previous[j]!
-      previous[j] = current[j]!
-    }
+    const temp = beforePreviousRow
+    beforePreviousRow = previousRow
+    previousRow = currentRow
+    currentRow = temp
   }
-  return previous[rightLength]!
+  return previousRow[rightLength]!
 }

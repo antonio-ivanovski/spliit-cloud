@@ -1416,10 +1416,42 @@ export function analyzeDelimitedDateOrder(
   const ambiguousRows: number[] = []
   let isoValueCount = 0
   let nonIsoValueCount = 0
+  // Strict/auto date parsing runs dayjs against hundreds of formats per value.
+  // Files repeat the same date strings across thousands of rows, so memoize by
+  // distinct value: O(distinct) parses instead of O(rows). Pure functions of
+  // their input, so caching is behavior-identical.
+  const isoCache = new Map<string, boolean>()
+  const autoCache = new Map<string, boolean>()
+  const isIso = (trimmed: string): boolean => {
+    const cached = isoCache.get(trimmed)
+    if (cached !== undefined) return cached
+    const result = isStrictIsoDateValue(trimmed)
+    isoCache.set(trimmed, result)
+    return result
+  }
+  const isAuto = (raw: string, order: 'DMY' | 'MDY'): boolean => {
+    const key = `${order}\n${raw.trim()}`
+    const cached = autoCache.get(key)
+    if (cached !== undefined) return cached
+    const result = isAutoDateValue(raw, order)
+    autoCache.set(key, result)
+    return result
+  }
+  // Building a full row context object per row dominates this loop; the common
+  // single-source date mapping reads one cell, so index it directly.
+  const singleDateColumn =
+    mapping.sourceValues.length === 1 &&
+    mapping.sourceValues[0]!.fallbacks.length === 0
+      ? (table.columns.find(
+          (column) => column.key === mapping.sourceValues[0]!.primary,
+        ) ?? null)
+      : null
   for (const row of table.rows) {
-    const raw = dateOrderRawValue(mapping, rowContext(table, row))
+    const raw = singleDateColumn
+      ? clean(row.cells[singleDateColumn.index] ?? '')
+      : dateOrderRawValue(mapping, rowContext(table, row))
     if (/^\s*\d{4}[-/.]\d{1,2}[-/.]\d{1,2}(?:[T ]|$)/.test(raw)) {
-      if (isStrictIsoDateValue(raw.trim())) isoValueCount += 1
+      if (isIso(raw.trim())) isoValueCount += 1
       continue
     }
     if (raw.trim()) nonIsoValueCount += 1
@@ -1427,16 +1459,16 @@ export function analyzeDelimitedDateOrder(
     if (!match) continue
     const first = Number(match[1])
     const second = Number(match[2])
-    if (first > 12 && second <= 12 && isAutoDateValue(raw, 'DMY'))
+    if (first > 12 && second <= 12 && isAuto(raw, 'DMY'))
       dmyRows.push(row.rowNumber)
-    else if (second > 12 && first <= 12 && isAutoDateValue(raw, 'MDY'))
+    else if (second > 12 && first <= 12 && isAuto(raw, 'MDY'))
       mdyRows.push(row.rowNumber)
     else if (
       first >= 1 &&
       first <= 12 &&
       second >= 1 &&
       second <= 12 &&
-      (isAutoDateValue(raw, 'DMY') || isAutoDateValue(raw, 'MDY'))
+      (isAuto(raw, 'DMY') || isAuto(raw, 'MDY'))
     )
       ambiguousRows.push(row.rowNumber)
   }

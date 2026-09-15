@@ -30,6 +30,7 @@ import { Route as GroupsCreateRouteImport } from './routes/groups/create'
 import { Route as GroupsImportRouteImport } from './routes/groups/import'
 import { Route as OauthConsentRouteImport } from './routes/oauth/consent'
 import { Route as OauthLoginRouteImport } from './routes/oauth/login'
+import { Route as OauthManualCallbackRouteImport } from './routes/oauth/manual-callback'
 import { Route as GroupsGroupIdIndexRouteImport } from './routes/groups/$groupId/index'
 import { Route as GroupsGroupIdActivityRouteImport } from './routes/groups/$groupId/activity'
 import { Route as GroupsGroupIdBalancesRouteImport } from './routes/groups/$groupId/balances'
@@ -168,6 +169,13 @@ const OauthLoginRoute = OauthLoginRouteImport.update({
   path: '/oauth/login',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/oauth/login.lazy').then((d) => d.Route))
+const OauthManualCallbackRoute = OauthManualCallbackRouteImport.update({
+  id: '/oauth/manual-callback',
+  path: '/oauth/manual-callback',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() =>
+  import('./routes/oauth/manual-callback.lazy').then((d) => d.Route),
+)
 const GroupsGroupIdIndexRoute = GroupsGroupIdIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -373,6 +381,7 @@ export interface FileRoutesByFullPath {
   '/groups/import': typeof GroupsImportRoute
   '/oauth/consent': typeof OauthConsentRoute
   '/oauth/login': typeof OauthLoginRoute
+  '/oauth/manual-callback': typeof OauthManualCallbackRoute
   '/groups/$groupId/activity': typeof GroupsGroupIdActivityRoute
   '/groups/$groupId/balances': typeof GroupsGroupIdBalancesRoute
   '/groups/$groupId/budgets': typeof GroupsGroupIdBudgetsRouteWithChildren
@@ -416,6 +425,7 @@ export interface FileRoutesByTo {
   '/groups/import': typeof GroupsImportRoute
   '/oauth/consent': typeof OauthConsentRoute
   '/oauth/login': typeof OauthLoginRoute
+  '/oauth/manual-callback': typeof OauthManualCallbackRoute
   '/groups/$groupId/activity': typeof GroupsGroupIdActivityRoute
   '/groups/$groupId/balances': typeof GroupsGroupIdBalancesRoute
   '/groups/$groupId/edit': typeof GroupsGroupIdEditRoute
@@ -458,6 +468,7 @@ export interface FileRoutesById {
   '/groups/import': typeof GroupsImportRoute
   '/oauth/consent': typeof OauthConsentRoute
   '/oauth/login': typeof OauthLoginRoute
+  '/oauth/manual-callback': typeof OauthManualCallbackRoute
   '/groups/$groupId/activity': typeof GroupsGroupIdActivityRoute
   '/groups/$groupId/balances': typeof GroupsGroupIdBalancesRoute
   '/groups/$groupId/budgets': typeof GroupsGroupIdBudgetsRouteWithChildren
@@ -504,6 +515,7 @@ export interface FileRouteTypes {
     | '/groups/import'
     | '/oauth/consent'
     | '/oauth/login'
+    | '/oauth/manual-callback'
     | '/groups/$groupId/activity'
     | '/groups/$groupId/balances'
     | '/groups/$groupId/budgets'
@@ -547,6 +559,7 @@ export interface FileRouteTypes {
     | '/groups/import'
     | '/oauth/consent'
     | '/oauth/login'
+    | '/oauth/manual-callback'
     | '/groups/$groupId/activity'
     | '/groups/$groupId/balances'
     | '/groups/$groupId/edit'
@@ -588,6 +601,7 @@ export interface FileRouteTypes {
     | '/groups/import'
     | '/oauth/consent'
     | '/oauth/login'
+    | '/oauth/manual-callback'
     | '/groups/$groupId/activity'
     | '/groups/$groupId/balances'
     | '/groups/$groupId/budgets'
@@ -630,6 +644,7 @@ export interface RootRouteChildren {
   FriendsCreateRoute: typeof FriendsCreateRoute
   OauthConsentRoute: typeof OauthConsentRoute
   OauthLoginRoute: typeof OauthLoginRoute
+  OauthManualCallbackRoute: typeof OauthManualCallbackRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -765,6 +780,13 @@ declare module '@tanstack/react-router' {
       path: '/oauth/login'
       fullPath: '/oauth/login'
       preLoaderRoute: typeof OauthLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/oauth/manual-callback': {
+      id: '/oauth/manual-callback'
+      path: '/oauth/manual-callback'
+      fullPath: '/oauth/manual-callback'
+      preLoaderRoute: typeof OauthManualCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/groups/$groupId/': {
@@ -1052,6 +1074,7 @@ const rootRouteChildren: RootRouteChildren = {
   FriendsCreateRoute: FriendsCreateRoute,
   OauthConsentRoute: OauthConsentRoute,
   OauthLoginRoute: OauthLoginRoute,
+  OauthManualCallbackRoute: OauthManualCallbackRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

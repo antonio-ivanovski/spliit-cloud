@@ -23,6 +23,7 @@ import { AccountPasswordSettings } from './account-password-settings'
 import { AccountPreferences } from './account-preferences'
 import { AccountAiPreferences } from './ai-preferences'
 import { AnonymousAccountSettings } from './anonymous-account-settings'
+import { AuthorizedClients } from './authorized-clients'
 import { NotificationsPreferences } from './notifications-preferences'
 import {
   SettingsFieldRow,
@@ -310,6 +311,7 @@ function AccountSettingsContent() {
         </SettingsSection>
       </form>
       <AccountPreferences />
+      <AuthorizedClients />
       <AccountExportModal />
       <NotificationsPreferences />
       <AccountAiPreferences />

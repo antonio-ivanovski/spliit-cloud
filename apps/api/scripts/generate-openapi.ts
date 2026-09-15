@@ -37,6 +37,11 @@ import { fileURLToPath } from 'node:url'
 import { generateOpenAPIDocument } from '@trpc/openapi'
 import type { OpenAPIV3_1 } from 'openapi-types'
 
+import { ASSISTANT_WRITE_SCOPE, SPLIIT_SCOPES } from '../src/lib/auth/scopes'
+import {
+  applyOAuthOperationContract,
+  buildOAuthProtocolFallbackPaths,
+} from '../src/lib/openapi/oauth-contract'
 // When Docker builds without a DB (SKIP_AUTH_OPENAPI=1) better-auth 1.7's
 // oauthProvider still fires a background OauthResource seed that surfaces as
 // an unhandled P1001/DatabaseNotReachable rejection *after* the file is
@@ -84,6 +89,75 @@ const apiRoot = resolve(__dirname, '..')
 const routerPath = resolve(apiRoot, 'src/trpc/routers/_app.ts')
 const outputPath = resolve(apiRoot, 'openapi.json')
 
+// Human-readable blurb per scope, shown in the Scalar security panel.
+const SCOPE_DESCRIPTIONS: Record<string, string> = {
+  openid: 'Identify the account (OpenID Connect).',
+  profile: 'Read the account name and avatar.',
+  email: 'Read the account email address.',
+  offline_access: 'Obtain a refresh token so the client can keep working.',
+  [SPLIIT_SCOPES.groupsRead]: 'Read groups, balances, statistics and activity.',
+  [SPLIIT_SCOPES.groupsManage]:
+    'Read, create and edit groups, and add participants.',
+  [SPLIIT_SCOPES.groupsDelete]:
+    'Read, delete or archive a group, and remove participants. Never granted by default.',
+  [SPLIIT_SCOPES.expensesRead]: 'Read expenses and recurring series.',
+  [SPLIIT_SCOPES.expensesManage]:
+    'Read, create and edit expenses directly, and stop a recurrence.',
+  [SPLIIT_SCOPES.expensesDelete]:
+    'Read and delete expenses, and make edits that drop data such as shortening a recurring series. Never granted by default.',
+  [ASSISTANT_WRITE_SCOPE]:
+    'Create an expense through the assistant preview and confirmation flow. Does not grant direct writes.',
+}
+
+// OAuth contract per procedure, read off the router rather than restated here:
+// `apiProcedure`, `scopedGroupReadProcedure` and `assistantProcedure` record
+// the required scope, the bearer-only flag and conditional scopes in tRPC
+// meta, so a procedure that changes requirement updates the spec on the next
+// build. Keep the router import lazy: loading it also initializes
+// better-auth, and the handlers above must be installed before Better Auth
+// 1.7 starts its resource seed.
+//
+// Exported for `src/lib/openapi/trpc-contract.test.ts`, which asserts the
+// generated authorization contract instead of duplicating it.
+export type ProcedureContract = {
+  scope: string
+  oauthOnly: boolean
+  conditionalScopes: Array<{ scope: string; when: string }>
+}
+
+export async function buildProcedureContracts(): Promise<
+  Map<string, ProcedureContract>
+> {
+  const { appRouter } = await import('../src/trpc/routers/_app')
+  return new Map<string, ProcedureContract>(
+    Object.entries(appRouter._def.procedures).flatMap(([path, procedure]) => {
+      const meta = (
+        procedure as {
+          _def?: {
+            meta?: {
+              scope?: string
+              oauthOnly?: boolean
+              conditionalScopes?: Array<{ scope: string; when: string }>
+            }
+          }
+        }
+      )._def?.meta
+      return meta?.scope
+        ? [
+            [
+              path,
+              {
+                scope: meta.scope,
+                oauthOnly: meta.oauthOnly ?? false,
+                conditionalScopes: meta.conditionalScopes ?? [],
+              },
+            ] as [string, ProcedureContract],
+          ]
+        : []
+    }),
+  )
+}
+
 // Procedures that don't require authentication. The generator emits no
 // auth metadata, so we apply `security` globally and override these to
 // `security: []` so the spec accurately reflects public access.
@@ -125,10 +199,14 @@ async function main() {
     version: '0.1.0',
     servers: [{ url: '/trpc', description: 'tRPC mount point' }],
   })
+  const procedureContracts = await buildProcedureContracts()
 
   // SAFETY: @trpc/openapi's generated document is structurally compatible with openapi-types' Document;
   // cast via unknown to compose with hand-written paths in a single strongly-typed object.
-  const merged = await postProcess(doc as unknown as OpenAPIV3_1.Document)
+  const merged = await postProcess(
+    doc as unknown as OpenAPIV3_1.Document,
+    procedureContracts,
+  )
   await mkdir(dirname(outputPath), { recursive: true })
   await writeFile(outputPath, JSON.stringify(merged, null, 2) + '\n', 'utf8')
 
@@ -149,6 +227,18 @@ async function main() {
 
 async function postProcess(
   doc: OpenAPIV3_1.Document,
+  procedureContracts: ReadonlyMap<string, ProcedureContract>,
+): Promise<OpenAPIV3_1.Document> {
+  return postProcessOpenApiDocument(doc, procedureContracts)
+}
+
+/**
+ * Compose the final document from the tRPC-generated base. Exported for
+ * contract tests; `main` below is the only production caller.
+ */
+export async function postProcessOpenApiDocument(
+  doc: OpenAPIV3_1.Document,
+  procedureContracts: ReadonlyMap<string, ProcedureContract>,
 ): Promise<OpenAPIV3_1.Document> {
   const result: OpenAPIV3_1.Document = structuredClone(doc)
   result.paths = result.paths ?? {}
@@ -177,6 +267,30 @@ async function postProcess(
         `i.e. \`${SESSION_COOKIE_NAME_SECURE}\`. Send credentials on every ` +
         `cross-origin request (\`credentials: 'include'\` in the browser; ` +
         `\`Cookie: <name>=<value>\` from other clients).`,
+    },
+    oauth2: {
+      type: 'oauth2',
+      description:
+        `OAuth 2.1 with PKCE, for scripts and agents that cannot hold a ` +
+        `browser session. Clients may register dynamically at ` +
+        `\`POST /auth/oauth2/register\`. Omitting \`scope\` when authorizing ` +
+        `grants the read-only defaults; manage and delete scopes ` +
+        `such as \`${SPLIIT_SCOPES.expensesManage}\` or ` +
+        `\`${SPLIIT_SCOPES.groupsDelete}\` must be requested explicitly ` +
+        `and approved on the consent screen, including when widening an ` +
+        `existing client. ` +
+        `Omitting \`resource\` binds the authorization to this API. Access ` +
+        `tokens last at most one hour and stop working as soon as the app ` +
+        `is disconnected; refresh tokens rotate on every renewal. ` +
+        `Send the token as \`Authorization: Bearer <token>\`.`,
+      flows: {
+        authorizationCode: {
+          authorizationUrl: '/auth/oauth2/authorize',
+          tokenUrl: '/auth/oauth2/token',
+          refreshUrl: '/auth/oauth2/token',
+          scopes: SCOPE_DESCRIPTIONS,
+        },
+      },
     },
   }
   result.security = [{ session: [] }]
@@ -212,6 +326,23 @@ async function postProcess(
       }
       if (PUBLIC_PROCEDURES.has(procPath)) {
         op.security = []
+      } else {
+        // A scoped procedure takes a session or a token holding the scope,
+        // unless it is bearer-only (the assistant surface rejects sessions).
+        // Conditional scopes add security alternatives covering the wider
+        // grant plus a description sentence naming the condition.
+        const contract = procedureContracts.get(procPath)
+        if (contract) {
+          op.security = buildProcedureSecurity(contract)
+          for (const conditional of contract.conditionalScopes) {
+            op.description =
+              `${op.description ?? ''}\n\nOAuth callers additionally require \`${conditional.scope}\` when ${conditional.when}.`.trim()
+          }
+          if (contract.oauthOnly) {
+            op.description =
+              `OAuth bearer authentication required; cookie sessions are not accepted.\n\n${op.description ?? ''}`.trim()
+          }
+        }
       }
       if (DEPRECATED_PROCEDURES.has(procPath)) {
         op.deprecated = true
@@ -275,6 +406,46 @@ function isRestPath(path: string): boolean {
   )
 }
 
+export function acceptedOAuthScopes(requiredScope: string): string[] {
+  if (requiredScope === SPLIIT_SCOPES.groupsRead) {
+    return [
+      SPLIIT_SCOPES.groupsRead,
+      SPLIIT_SCOPES.groupsManage,
+      SPLIIT_SCOPES.groupsDelete,
+    ]
+  }
+  if (requiredScope === SPLIIT_SCOPES.expensesRead) {
+    return [
+      SPLIIT_SCOPES.expensesRead,
+      SPLIIT_SCOPES.expensesManage,
+      SPLIIT_SCOPES.expensesDelete,
+    ]
+  }
+  return [requiredScope]
+}
+
+/**
+ * Security alternatives for one procedure: the cookie session (unless the
+ * procedure is bearer-only), one OAuth entry per accepted scope for the base
+ * requirement, and one entry per conditional scope combining it with the base
+ * requirement it extends.
+ */
+export function buildProcedureSecurity(
+  contract: ProcedureContract,
+): Array<Record<string, string[]>> {
+  const base = acceptedOAuthScopes(contract.scope)
+  const oauth: Array<Record<string, string[]>> = base.map((acceptedScope) => ({
+    oauth2: [acceptedScope],
+  }))
+  for (const conditional of contract.conditionalScopes) {
+    for (const acceptedScope of base) {
+      if (acceptedScope === conditional.scope) continue
+      oauth.push({ oauth2: [acceptedScope, conditional.scope] })
+    }
+  }
+  return contract.oauthOnly ? oauth : [{ session: [] }, ...oauth]
+}
+
 // Root-path server (empty URL resolves to the spec's own origin) is
 // applied per-operation to REST paths that aren't mounted under `/trpc`:
 // better-auth (`/auth/*`) and the group expense exports
@@ -284,30 +455,6 @@ function isRestPath(path: string): boolean {
 const ROOT_SERVER: OpenAPIV3_1.ServerObject[] = [
   { url: '/', description: 'API root (REST endpoints outside tRPC)' },
 ]
-
-// better-auth endpoints that don't require a session — they accept an
-// anonymous request. The OpenAPI plugin marks every endpoint as
-// `bearerAuth`-required (a plugin limitation — it doesn't know which
-// routes are anonymous). We override to `security: []` so the spec
-// accurately reflects that no session cookie is needed. Add to this set
-// when better-auth ships new anonymous endpoints.
-const PUBLIC_AUTH_PATHS = new Set<string>([
-  '/auth/sign-up/email',
-  '/auth/sign-in/email',
-  '/auth/sign-in/magic-link',
-  '/auth/magic-link/verify',
-  '/auth/sign-in/social',
-  '/auth/callback/{id}',
-  '/auth/request-password-reset',
-  // POST takes a token in the body; GET `{token}` is the link target.
-  '/auth/reset-password',
-  '/auth/reset-password/{token}',
-  '/auth/verify-email',
-  '/auth/ok',
-  '/auth/error',
-  '/auth/refresh-token',
-  '/auth/delete-user/callback',
-])
 
 /**
  * Auth paths auto-generated by better-auth's `openAPI` plugin.
@@ -329,7 +476,7 @@ const PUBLIC_AUTH_PATHS = new Set<string>([
  *   our `session` cookie scheme, which documents the real cookie name
  *   (`better-auth.session_token` / `__Secure-better-auth.session_token`).
  *   Anonymous endpoints (sign-in, sign-up, magic-link request, OAuth callbacks,
- *   token-based flows) get `security: []` instead — see `PUBLIC_AUTH_PATHS`.
+ *   token-based flows) get `security: []`; UserInfo uses the OAuth scheme.
  * - **Tag normalisation**: rename the plugin's `Default` tag (core endpoints) to
  *   `auth` for consistency with the rest of the Spliit API tags; lowercase
  *   `Magic-link` → `magic-link`.
@@ -338,15 +485,14 @@ async function buildAuthPaths(): Promise<{
   paths: Record<string, OpenAPIV3_1.PathItemObject>
   schemas: Record<string, OpenAPIV3_1.SchemaObject>
 }> {
-  // Skip auth schema entirely when explicitly building without DB (Docker build).
-  // Set SKIP_AUTH_OPENAPI=1 in Dockerfile to get a tRPC-only spec and avoid the
-  // better-auth 1.7 OauthResource DB race entirely. Local dev (with DB) still
-  // generates full auth paths.
+  // Better Auth 1.7 needs a database to introspect its complete schema. Docker
+  // deliberately builds without one, so retain the core OAuth protocol paths
+  // from a tested static fallback while local generation adds the full auth API.
   if (process.env.SKIP_AUTH_OPENAPI === '1') {
     console.warn(
-      '[openapi] SKIP_AUTH_OPENAPI=1 — skipping auth paths (build without DB)',
+      '[openapi] SKIP_AUTH_OPENAPI=1 — using static OAuth paths (build without DB)',
     )
-    return { paths: {}, schemas: {} }
+    return { paths: buildOAuthProtocolFallbackPaths(), schemas: {} }
   }
   type AuthModule = typeof import('../src/lib/auth')
   let authSchema: Awaited<
@@ -359,12 +505,12 @@ async function buildAuthPaths(): Promise<{
     // better-auth 1.7's oauth provider now queries OauthResource at schema
     // generation time. In Docker/CI builds there is no DB, so this throws
     // DatabaseNotReachable (P1001) and breaks `Build api`. Degrade gracefully
-    // — the tRPC + export paths are still emitted and the image builds.
+    // — the tRPC, OAuth protocol and export paths are still emitted.
     const msg = err instanceof Error ? err.message : String(err)
     console.warn(
-      `[openapi] auth.api.generateOpenAPISchema() failed (no DB at build?) — proceeding without auth paths: ${msg}`,
+      `[openapi] auth.api.generateOpenAPISchema() failed (no DB at build?) — using static OAuth paths: ${msg}`,
     )
-    return { paths: {}, schemas: {} }
+    return { paths: buildOAuthProtocolFallbackPaths(), schemas: {} }
   }
   const paths: Record<string, OpenAPIV3_1.PathItemObject> = {}
   for (const [path, item] of Object.entries(authSchema.paths ?? {})) {
@@ -378,10 +524,7 @@ async function buildAuthPaths(): Promise<{
         newItem as Record<string, OpenAPIV3_1.OperationObject | undefined>
       )[method]
       if (!op) continue
-      // Anonymous endpoints → no security required. Everything else
-      // → `session` cookie scheme (overrides the plugin's generic
-      // `bearerAuth` and documents the real cookie name).
-      op.security = PUBLIC_AUTH_PATHS.has(fullPath) ? [] : [{ session: [] }]
+      applyOAuthOperationContract(fullPath, method, op)
       // Normalise tags: `Default` (core) → `auth`; `Magic-link` → `magic-link`.
       op.tags = (op.tags ?? []).map((tag) =>
         tag === 'Default' ? 'auth' : tag === 'Magic-link' ? 'magic-link' : tag,
@@ -611,22 +754,46 @@ function buildTags(): OpenAPIV3_1.TagObject[] {
 }
 
 const ROOT_DESCRIPTION = `
-The Spliit API is a [tRPC](https://trpc.io) server mounted at \`/trpc\`. Every
-operation in this spec is a tRPC procedure that follows the tRPC wire
-convention:
+The Spliit API is a [tRPC](https://trpc.io) server mounted at \`/trpc\` with
+the [superjson](https://github.com/flightcontrolhq/superjson) transformer.
+Every operation in this spec is a tRPC procedure that follows the
+tRPC-over-HTTP wire convention:
 
 - **Paths are dotted procedure names.** A path like
   \`/groups.expenses.create\` corresponds to the tRPC procedure
   \`groups.expenses.create\` and resolves to
   \`POST /trpc/groups.expenses.create\` at runtime.
-- **GET procedures** take their input as a single JSON query parameter
-  named \`input\`: \`GET /trpc/<proc>?input=<urlencoded-json>\`.
-- **POST procedures** (mutations) take their input as a JSON request body.
-- **Responses are wrapped** in the tRPC envelope. Successful responses
-  look like \`{ "result": { "data": <T> } }\`. Errors look like
-  \`{ "error": { "message": "…", "code": "UNAUTHORIZED" } }\`. The
-  \`components.schemas\` describe the unwrapped \`T\`; apply the envelope
+- **Queries are GET, mutations are POST.** Anything else returns \`405\`
+  (\`Unsupported POST-request to query procedure …\`).
+- **Inputs must be superjson-wrapped in a \`json\` key.** This is the most
+  common mistake: sending the raw input object fails with
+  \`400 "Invalid input: expected object, received undefined"\`.
+  - Batch GET query:
+    \`GET /trpc/<proc>?batch=1&input={"0":{"json":{...}}}\`
+    (\`input\` is urlencoded; \`0\` is the batch index).
+  - Single (non-batch) GET: \`?input={"json":{...}}\`.
+  - Procedures that take no input still need an (empty) wrapper:
+    \`?batch=1&input={"0":{"json":{}}}\`.
+  - Mutations: \`POST /trpc/<proc>?batch=1\` with JSON body
+    \`{"0":{"json":{...}}}\` (single: \`{"json":{...}}\`).
+- **Responses are wrapped twice, and batched calls return arrays.**
+  A successful batch response looks like
+  \`[{ "result": { "data": { "json": <T> } } }]\` in call order (drop the
+  outer array and the \`0\` keys for single calls). A superjson \`"meta"\`
+  key may sit next to \`"json"\` when the payload contains
+  \`Date\`/\`Map\`/\`Set\` — otherwise dates arrive as ISO-8601 strings
+  inside \`json\`. Errors look like
+  \`{ "error": { "json": { "message": "…", "code": -32600, "data": {
+  "code": "UNAUTHORIZED", "httpStatus": 401 } } } }\`. The
+  \`components.schemas\` describe the unwrapped \`T\`; apply both envelopes
   on the wire.
+- **Authentication: Bearer token or session cookie.** Send
+  \`Authorization: Bearer <access-token>\` (OAuth — the scopes each
+  operation needs are listed in its \`security\` section) or a better-auth
+  session cookie. They are not equivalent: session-only procedures reject
+  OAuth tokens with \`401 "Authentication required"\` (e.g. the global
+  \`expenses.*\` procedures) — use the per-group equivalents
+  (\`groups.expenses.*\`), which accept OAuth scopes, instead.
 
 For TypeScript consumers, generate a typed client with
 [@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) using the
@@ -634,9 +801,9 @@ For TypeScript consumers, generate a typed client with
 runtime — that handles \`Date\` / \`Map\` / \`Set\` round-tripping correctly.
 
 For non-TS hand-callers (curl, Postman, other languages) the same
-conventions apply: send credentials, POST mutations as JSON bodies with
-the tRPC path as the URL, and unwrap the \`{result:{data}}\` envelope
-from the response.
+conventions apply: send credentials, wrap every input in the superjson
+\`{"json":…}\` envelope described above, and unwrap the double response
+envelope to reach \`T\`.
 
 Authentication is **cookie-based**, served by [better-auth](https://better-auth.com).
 Sign in via \`POST /auth/sign-in/email\` (email + password) or
@@ -653,7 +820,11 @@ stays in sync with the actual routes. The group export endpoints are
 hand-maintained Hono routes (bundle/CSV downloads).
 `.trim()
 
-main().catch((err) => {
-  console.error('Failed to generate OpenAPI spec:', err)
-  process.exit(1)
-})
+// Only run on direct invocation (`bun run generate-openapi`). Importing this
+// module from contract tests must not write `openapi.json` as a side effect.
+if (process.argv[1]?.includes('generate-openapi')) {
+  main().catch((err) => {
+    console.error('Failed to generate OpenAPI spec:', err)
+    process.exit(1)
+  })
+}

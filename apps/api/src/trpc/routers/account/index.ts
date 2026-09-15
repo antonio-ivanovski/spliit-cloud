@@ -21,6 +21,10 @@ import {
 import { randomId } from '../../../lib/api'
 import { accountSummarySelect } from '../../../lib/api/selects/account-summary'
 import { invalidateAccountCache } from '../../../lib/auth/account-cache'
+import {
+  listAuthorizedClients,
+  revokeAuthorizedClient,
+} from '../../../lib/auth/authorized-clients'
 import { env } from '../../../lib/env'
 import {
   getInvitationDisplayName,
@@ -39,6 +43,8 @@ import {
   accountMembersOutputSchema,
   accountPreferenceOutputSchema,
   accountProfileSchema,
+  authorizedClientsOutputSchema,
+  revokeAuthorizedClientOutputSchema,
 } from '../../outputs/account'
 
 const accountPreferenceSelect = {
@@ -166,6 +172,40 @@ export const accountRouter = createTRPCRouter({
           isAnonymous: ctx.auth.user.isAnonymous === true,
         },
       }
+    }),
+
+  /**
+   * OAuth clients this account has authorized, so they can be reviewed and
+   * withdrawn from the settings page.
+   */
+  authorizedClients: protectedProcedure
+    .output(authorizedClientsOutputSchema)
+    .query(async ({ ctx }) => {
+      return { clients: await listAuthorizedClients(ctx.auth.user.id) }
+    }),
+
+  /**
+   * Withdraw an authorization. Invalidates pending authorization codes, revokes
+   * the client's refresh tokens on top of deleting the consent, and moves the
+   * pair to a new authorization generation so already-issued access tokens are
+   * rejected on their next use instead of lasting until they would have
+   * expired.
+   */
+  revokeAuthorizedClient: protectedProcedure
+    .input(z.object({ consentId: z.string().min(1) }))
+    .output(revokeAuthorizedClientOutputSchema)
+    .mutation(async ({ ctx, input }) => {
+      const result = await revokeAuthorizedClient({
+        accountId: ctx.auth.user.id,
+        consentId: input.consentId,
+      })
+      if (!result) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Authorization not found',
+        })
+      }
+      return result
     }),
 
   /** Read the caller's server-synced account preferences. */
