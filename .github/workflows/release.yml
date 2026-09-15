@@ -258,7 +258,9 @@ jobs:
             echo "Release $TAG already exists, updating notes..."
             gh release edit "$TAG" --notes-file /tmp/notes.md --repo "${{ github.repository }}"
           else
-            gh release create "$TAG" --target "$TAG" --title "$TAG" --notes-file /tmp/notes.md --latest --repo "${{ github.repository }}"
+            # Target the checked-out commit SHA: the API rejects a tag name
+            # as target_commitish (422), and the tag already exists.
+            gh release create "$TAG" --target "$(git rev-parse HEAD)" --title "$TAG" --notes-file /tmp/notes.md --latest --repo "${{ github.repository }}"
           fi
 
           echo "Done: $TAG"
