@@ -14,10 +14,12 @@ function cospendCsv(
       what: string
       amount: number
       date: string
+      timestamp?: number
       payer: string
       owers: string
       repeat?: string
       repeatfreq?: number
+      repeatallactive?: number
       repeatuntil?: string
       categoryid?: string | number
       comment?: string
@@ -42,7 +44,7 @@ function cospendCsv(
   )
   for (const b of opts.bills ?? []) {
     lines.push(
-      `"${b.what}",${b.amount},${b.date},1785690155,"${b.payer}",1,1,"${b.owers}",${b.repeat ?? 'n'},${b.repeatfreq ?? 1},0,${b.repeatuntil ?? ''},${b.categoryid ?? 0},n,0,"${b.comment ?? ''}",${b.deleted ?? 0}`,
+      `"${b.what}",${b.amount},${b.date},${b.timestamp ?? 1785690155},"${b.payer}",1,1,"${b.owers}",${b.repeat ?? 'n'},${b.repeatfreq ?? 1},${b.repeatallactive ?? 0},${b.repeatuntil ?? ''},${b.categoryid ?? 0},n,0,"${b.comment ?? ''}",${b.deleted ?? 0}`,
     )
   }
   if (opts.categories) {
@@ -131,6 +133,306 @@ describe('tryParseCospendCsv', () => {
       { sourceId: 'cospend-member-1', shares: 300 },
     ])
     expect(expense.splitMode).toBe('BY_SHARES')
+  })
+
+  it('keeps equal-weight splits EVENLY even when indivisible', () => {
+    const result = tryParseCospendCsv(
+      cospendCsv({
+        members: [
+          ['A', 1],
+          ['B', 1],
+          ['C', 1],
+        ],
+        bills: [
+          {
+            what: 'Dinner',
+            amount: 10,
+            date: '2024-01-15',
+            payer: 'A',
+            owers: 'A,B,C',
+          },
+        ],
+      }),
+    )
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    const expense = result.source.expenses[0]!
+    expect(expense.splitMode).toBe('EVENLY')
+    expect(expense.paidFor).toEqual([
+      { sourceId: 'cospend-member-0', shares: 334 },
+      { sourceId: 'cospend-member-1', shares: 333 },
+      { sourceId: 'cospend-member-2', shares: 333 },
+    ])
+  })
+
+  it('maps unequal weights directly to a BY_SHARES ratio', () => {
+    const result = tryParseCospendCsv(
+      cospendCsv({
+        members: [
+          ['Alex', 1],
+          ['Sam', 2],
+        ],
+        bills: [
+          {
+            what: 'Dinner',
+            amount: 42.5,
+            date: '2024-01-15',
+            payer: 'Alex',
+            owers: 'Alex,Sam',
+          },
+        ],
+      }),
+    )
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    const expense = result.source.expenses[0]!
+    // The 1:2 weight ratio survives rounding (42.50 splits to 1417/2833c,
+    // whose GCD is 1 and would otherwise degrade to BY_AMOUNT).
+    expect(expense.splitMode).toBe('BY_SHARES')
+    expect(expense.paidFor).toEqual([
+      { sourceId: 'cospend-member-0', shares: 100 },
+      { sourceId: 'cospend-member-1', shares: 200 },
+    ])
+  })
+
+  it('treats weight 0 as 1 like upstream balances do', () => {
+    const result = tryParseCospendCsv(
+      cospendCsv({
+        members: [
+          ['Alex', 0],
+          ['Sam', 1],
+        ],
+        bills: [
+          {
+            what: 'Dinner',
+            amount: 10,
+            date: '2024-01-15',
+            payer: 'Alex',
+            owers: 'Alex,Sam',
+          },
+        ],
+      }),
+    )
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    const expense = result.source.expenses[0]!
+    expect(expense.splitMode).toBe('EVENLY')
+  })
+
+  it('merges duplicate ower names by summing weights', () => {
+    const result = tryParseCospendCsv(
+      cospendCsv({
+        members: [
+          ['Alex', 1],
+          ['Sam', 1],
+        ],
+        bills: [
+          {
+            what: 'Dinner',
+            amount: 30,
+            date: '2024-01-15',
+            payer: 'Alex',
+            owers: 'Alex,Alex,Sam',
+          },
+        ],
+      }),
+    )
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    const expense = result.source.expenses[0]!
+    // Alex 1+1 : Sam 1 → BY_SHARES 2:1.
+    expect(expense.splitMode).toBe('BY_SHARES')
+    expect(expense.paidFor).toEqual([
+      { sourceId: 'cospend-member-0', shares: 200 },
+      { sourceId: 'cospend-member-1', shares: 100 },
+    ])
+  })
+
+  it('skips bills with unknown owers instead of truncating the split', () => {
+    const result = tryParseCospendCsv(
+      cospendCsv({
+        bills: [
+          {
+            what: 'Kept',
+            amount: 10,
+            date: '2026-08-02',
+            payer: 'Alex',
+            owers: 'Alex,Sam',
+          },
+          {
+            what: 'Truncated',
+            amount: 20,
+            date: '2026-08-03',
+            payer: 'Alex',
+            owers: 'Alex,Sam,Ghost',
+          },
+        ],
+      }),
+    )
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    expect(result.source.expenses).toHaveLength(1)
+    expect(result.source.expenses[0]!.title).toBe('Kept')
+  })
+
+  it('skips bills whose owers cannot round-trip comma names', () => {
+    const csv = [
+      'name,weight,active,color',
+      '"Doe, John",1,1,"#112233"',
+      '"Alice",1,1,"#112233"',
+      '',
+      'what,amount,date,timestamp,payer_name,payer_weight,payer_active,owers,repeat,repeatfreq,repeatallactive,repeatuntil,categoryid,paymentmode,paymentmodeid,comment,deleted',
+      '"Bill",10,2024-01-15,1700000000,"Doe, John",1,1,"Doe, John,Alice",n,1,0,,0,n,0,"",0',
+    ].join('\n')
+    const result = tryParseCospendCsv(csv)
+    // "Doe, John,Alice" splits into Doe/John/Alice; Doe and John are unknown,
+    // so the bill is skipped rather than emitted as Doe,John → Alice.
+    expect(result.ok).toBe(false)
+    if (result.ok) return
+    expect(result.error).toMatch(/no parseable bills/i)
+  })
+
+  it('falls back to the timestamp when the date column is empty', () => {
+    const result = tryParseCospendCsv(
+      cospendCsv({
+        bills: [
+          {
+            what: 'Timestamped',
+            amount: 5,
+            date: '',
+            timestamp: 1705276800,
+            payer: 'Alex',
+            owers: 'Alex',
+          },
+        ],
+      }),
+    )
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    expect(result.source.expenses[0]!.expenseDate).toBe('2024-01-15')
+  })
+
+  it('ignores repeatfreq for biweekly (upstream always repeats 14 days)', () => {
+    const result = tryParseCospendCsv(
+      cospendCsv({
+        bills: [
+          {
+            what: 'Einkauf',
+            amount: 50,
+            date: '2026-08-01',
+            payer: 'Alex',
+            owers: 'Alex,Sam',
+            repeat: 'b',
+            repeatfreq: 2,
+          },
+        ],
+      }),
+    )
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    expect(result.source.expenses[0]!.recurrence).toEqual({
+      frequency: 'WEEKLY',
+      interval: 2,
+      end: { type: 'INDEFINITE' },
+    })
+  })
+
+  it('ignores repeatfreq for semi-monthly (approximated as monthly)', () => {
+    const result = tryParseCospendCsv(
+      cospendCsv({
+        bills: [
+          {
+            what: 'Taschengeld',
+            amount: 50,
+            date: '2026-08-01',
+            payer: 'Alex',
+            owers: 'Alex,Sam',
+            repeat: 's',
+            repeatfreq: 3,
+          },
+        ],
+      }),
+    )
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    expect(result.source.expenses[0]!.recurrence).toEqual({
+      frequency: 'MONTHLY',
+      interval: 1,
+      end: { type: 'INDEFINITE' },
+    })
+  })
+
+  it('keeps stored owers when repeatallactive is set (history is exact)', () => {
+    const result = tryParseCospendCsv(
+      cospendCsv({
+        members: [
+          ['A', 1],
+          ['B', 1],
+          ['C', 1],
+        ],
+        bills: [
+          {
+            what: 'Subscription',
+            amount: 9,
+            date: '2024-01-15',
+            payer: 'A',
+            owers: 'A,B',
+            repeat: 'm',
+            repeatallactive: 1,
+          },
+        ],
+      }),
+    )
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    const expense = result.source.expenses[0]!
+    // The flag only affects upstream's future repetitions; the historical
+    // bill owed A,B, so C must not be charged here.
+    expect(expense.paidFor).toEqual([
+      { sourceId: 'cospend-member-0', shares: 450 },
+      { sourceId: 'cospend-member-1', shares: 450 },
+    ])
+    expect(expense.recurrence).toEqual({
+      frequency: 'MONTHLY',
+      interval: 1,
+      end: { type: 'INDEFINITE' },
+    })
+  })
+
+  it('finds the main currency by rate even when reordered', () => {
+    const csv = [
+      'currencyname,exchange_rate',
+      '"CHF",0.92',
+      '"USD",1',
+      '',
+      'name,weight,active,color',
+      '"Alex",1,1,"#d6b461"',
+      '',
+      'what,amount,date,timestamp,payer_name,payer_weight,payer_active,owers,repeat,repeatfreq,repeatallactive,repeatuntil,categoryid,paymentmode,paymentmodeid,comment,deleted',
+      '"Bill",10,2026-08-02,1785690155,"Alex",1,1,"Alex",n,1,0,,0,n,0,"",0',
+    ].join('\n')
+    const result = tryParseCospendCsv(csv)
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    expect(result.source.currencyCode).toBe('USD')
+  })
+
+  it('parses bills regardless of section order', () => {
+    const csv = [
+      'currencyname,exchange_rate',
+      '"USD",1',
+      '',
+      'name,weight,active,color',
+      '"Alex",1,1,"#d6b461"',
+      '',
+      'what,amount,date,timestamp,payer_name,payer_weight,payer_active,owers,repeat,repeatfreq,repeatallactive,repeatuntil,categoryid,paymentmode,paymentmodeid,comment,deleted',
+      '"Bill",10,2026-08-02,1785690155,"Alex",1,1,"Alex",n,1,0,,0,n,0,"",0',
+    ].join('\n')
+    const result = tryParseCospendCsv(csv)
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    expect(result.source.currencyCode).toBe('USD')
+    expect(result.source.expenses).toHaveLength(1)
   })
 
   it('maps monthly recurrence to a MONTHLY config', () => {
@@ -450,6 +752,7 @@ describe('cospendCategoryToId', () => {
     expect(cospendCategoryToId('insurance')).toBe('insurance')
     expect(cospendCategoryToId('Unterkunft')).toBe('hotel')
     expect(cospendCategoryToId('Flug')).toBe('plane')
+    expect(cospendCategoryToId('Travel')).toBe('transportation')
     expect(cospendCategoryToId('SUV')).toBe('car')
     expect(cospendCategoryToId('Rückzahlung')).toBe('settlement')
   })

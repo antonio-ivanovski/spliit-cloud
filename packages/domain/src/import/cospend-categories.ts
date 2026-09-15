@@ -109,7 +109,15 @@ const KEYWORDS: Array<[readonly string[], CategoryId]> = [
     'car',
   ],
   [
-    ['verkehr', 'transport', 'transportation', 'anfahrt', 'reise', 'trip'],
+    [
+      'verkehr',
+      'transport',
+      'transportation',
+      'travel',
+      'anfahrt',
+      'reise',
+      'trip',
+    ],
     'transportation',
   ],
   // Life

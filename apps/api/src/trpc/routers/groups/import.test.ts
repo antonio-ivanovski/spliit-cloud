@@ -112,7 +112,7 @@ const baseParticipants = [
 ]
 
 describe('importGroup', () => {
-  it('keeps the Spliit importer boundary on the immutable legacy schema', () => {
+  it('strips Cloud series linkage but accepts a validated recurrence config', () => {
     const parsed = importExpenseSchema.parse({
       ...baseExpense,
       recurrenceSeriesId: 'cloud-series-id',
@@ -128,7 +128,14 @@ describe('importGroup', () => {
     expect(parsed.recurrenceRule).toBe('NONE')
     expect(parsed.expenseDate).toEqual(new Date('2025-11-15T12:00:00.000Z'))
     expect(parsed.expenseTimeZone).toBe('UTC')
-    expect('recurrence' in parsed).toBe(false)
+    // Sources with native recurrence (e.g. Cospend yearly / multi-interval /
+    // dated-end schedules) carry the authoritative config through; internal
+    // Cloud series linkage is never accepted on this transport.
+    expect(parsed.recurrence).toEqual({
+      frequency: 'YEARLY',
+      interval: 2,
+      end: { type: 'INDEFINITE' },
+    })
     expect('recurrenceSeriesId' in parsed).toBe(false)
     expect('recurrenceSequence' in parsed).toBe(false)
     expect('recurrenceSeries' in parsed).toBe(false)

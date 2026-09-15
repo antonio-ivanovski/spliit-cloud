@@ -206,9 +206,11 @@ export async function prepareImportGroup(
     })
     importedDocumentsByExpense.set(claims.expenseIndex, rows)
   }
-  // Legacy spliit.app export only carries recurrenceRule. Matching historical
-  // rows collapse into one destination series; Cloud series metadata is never
-  // accepted on this transport.
+  // Imports carry the legacy `recurrenceRule` plus, when the source supports
+  // it, an authoritative `recurrence` config (frequency + interval + end),
+  // validated by `expenseApiSchema` and preferred over the legacy rule when
+  // planning destination series (e.g. Cospend's yearly / multi-interval /
+  // dated-end schedules).
   const recurringPlan = planLegacyRecurringImport(
     input.expenses.map((expense) => collapseExpenseFromApi(expense)),
   )

@@ -226,7 +226,7 @@ export function ConfirmStep({
                 <ul className="ms-4 list-disc space-y-1 text-muted-foreground">
                   {recurringSchedules.map((schedule, index) => (
                     <li
-                      key={`${index}:${schedule.title}:${schedule.config.frequency}:${schedule.config.interval}`}
+                      key={`${index}:${schedule.title}:${schedule.config.frequency}:${schedule.config.interval}:${schedule.config.end.type === 'DATE' ? new Date(schedule.config.end.endDate).toISOString() : schedule.config.end.type}`}
                     >
                       {t('Groups.Import.Confirm.recurringScheduleItem', {
                         title: schedule.title,
