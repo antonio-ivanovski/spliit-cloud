@@ -560,9 +560,9 @@ export function MascotHost() {
             'group relative rounded-[2rem] outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
             compactSurface
               ? 'h-12 w-12 opacity-80 transition-opacity hover:opacity-100'
-              : docked
-                ? 'h-16 w-16'
-                : 'h-[118px] w-[108px]',
+            : docked
+              ? 'h-16 w-16'
+              : 'h-[94px] w-[86px] sm:h-[118px] sm:w-[108px]',
             blockedByOverlay && 'pointer-events-none',
           )}
           onPointerDown={onTriggerPointerDown}
