@@ -1,0 +1,148 @@
+/* Simple paper footer — a quiet theme-aware paper band with a subtle
+   printed grain and pill buttons. Light paper by day, deep green-black
+   paper by night. */
+
+.art-footer {
+  --paper: #f7f3e8;
+  --paper-edge: rgb(46 58 52 / 0.12);
+  --grain: rgb(46 58 52 / 0.05);
+  --ink: #2e3a34;
+  --pill: rgb(255 253 246 / 0.6);
+  --pill-edge: rgb(46 58 52 / 0.14);
+  background: transparent;
+  color: var(--ink);
+}
+
+.dark .art-footer {
+  --paper: #101713;
+  --paper-edge: rgb(255 253 246 / 0.1);
+  --grain: rgb(255 253 246 / 0.05);
+  --ink: #e9ebe2;
+  --pill: rgb(255 253 246 / 0.06);
+  --pill-edge: rgb(255 253 246 / 0.14);
+}
+
+.art-footer__body {
+  position: relative;
+  overflow: clip;
+  background: var(--paper);
+  border-top: 1px solid var(--paper-edge);
+}
+
+/* Printed-paper tooth, no image assets. */
+.art-footer__grain {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(var(--grain) 1px, transparent 1.4px);
+  background-size: 14px 14px;
+  pointer-events: none;
+}
+
+/* ── Row: buttons left, credit right ─────────────────────────── */
+.art-footer__row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  flex-wrap: wrap;
+  padding: 0.75rem 1rem;
+}
+
+/* ── Simple pill buttons, gravitating left ─────────────────────── */
+.art-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  opacity: 0.85;
+  transition: opacity 200ms ease;
+}
+
+.art-footer__links:hover,
+.art-footer__links:focus-within {
+  opacity: 1;
+}
+
+.art-footer__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 9999px;
+  border: 1px solid var(--pill-edge);
+  background: var(--pill);
+  backdrop-filter: blur(6px);
+  padding: 0.28rem 0.75rem;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--ink);
+  text-decoration: none;
+  transition:
+    transform 120ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 120ms ease,
+    color 120ms ease;
+}
+
+.art-footer__link:hover {
+  background: var(--ink);
+  color: var(--paper);
+  transform: translateY(-1px);
+}
+
+.art-footer__github-icon {
+  width: 12px;
+  height: 12px;
+}
+
+.dark .art-footer__github-icon {
+  filter: invert(1);
+}
+
+/* Keep the mark contrasting the pill in both themes, including hover. */
+.art-footer__link:hover .art-footer__github-icon {
+  filter: invert(1);
+}
+
+.dark .art-footer__link:hover .art-footer__github-icon {
+  filter: none;
+}
+
+/* ── Credit line fused with the sponsor action ─────────────────── */
+.art-footer__credit {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  margin-left: auto;
+  font-size: 11px;
+  line-height: 1.4;
+  opacity: 0.85;
+}
+
+.art-footer__link--warm {
+  border-color: rgb(237 81 103 / 0.4);
+}
+
+.art-footer__link--warm:hover {
+  background: #ed5167;
+  border-color: #ed5167;
+  color: #fffdf6;
+}
+
+/* Center the stacks on small screens so wrapped rows look intentional. */
+@media (width <= 639px) {
+  .art-footer__row {
+    justify-content: center;
+  }
+
+  .art-footer__links {
+    justify-content: center;
+  }
+
+  .art-footer__credit {
+    margin: 0 auto;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}

@@ -97,6 +97,28 @@ function hasFixedActionBar() {
   return Boolean(document.querySelector('[data-fixed-action-bar]'))
 }
 
+const FOOTER_PROTECTED_GAP_PX = 0
+
+/**
+ * Footer protected zone: measures how far the footer reaches into the viewport,
+ * so the host can ride above it instead of covering it.
+ */
+function measureFooterOverlap(): number {
+  if (typeof document === 'undefined' || typeof window === 'undefined') {
+    return 0
+  }
+  const footer = document.querySelector('[data-testid="art-footer"]')
+  if (!footer) return 0
+  const rect = footer.getBoundingClientRect()
+  if (rect.width === 0 && rect.height === 0) return 0
+  const overlap = window.innerHeight - rect.top
+  if (overlap <= 0) return 0
+  return Math.min(
+    Math.ceil(overlap) + FOOTER_PROTECTED_GAP_PX,
+    Math.max(0, window.innerHeight - 160),
+  )
+}
+
 export function MascotHost() {
   const preferences = useSyncedAccountPreferences()
   const mascot = useMascotState()
@@ -117,6 +139,7 @@ export function MascotHost() {
   const [welcomeFor, setWelcomeFor] = useState<string | null>(null)
   const [coachedAccountId, setCoachedAccountId] = useState<string | null>(null)
   const [dragPx, setDragPx] = useState<{ x: number; y: number } | null>(null)
+  const [footerLift, setFooterLift] = useState(0)
   const cycleRef = useRef({ path: '', index: 0 })
   const speechLine = speech?.path === pathname ? speech.line : null
   const hostRef = useRef<HTMLDivElement>(null)
@@ -267,6 +290,34 @@ export function MascotHost() {
     }, SPEECH_DISMISS_MS)
     return () => window.clearTimeout(timer)
   }, [speechLine])
+
+  // Keep the footer clear: while it scrolls into view, lift the host by the
+  // overlapped amount plus a small gap. Applied as margin-bottom so it
+  // composes with the mobile-nav/action-bar offsets; a no-op for pinned or
+  // dragged placements, which are top-anchored.
+  useEffect(() => {
+    const update = () => {
+      setFooterLift(measureFooterOverlap())
+    }
+    update()
+    let observer: IntersectionObserver | undefined
+    if (typeof IntersectionObserver !== 'undefined') {
+      const footer = document.querySelector('[data-testid="art-footer"]')
+      if (footer) {
+        observer = new IntersectionObserver(update, {
+          threshold: [0, 0.5, 1],
+        })
+        observer.observe(footer)
+      }
+    }
+    window.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', update)
+    return () => {
+      observer?.disconnect()
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
+    }
+  }, [pathname])
 
   const definition = getMascotDefinition(preferences?.mascot)
   const accountId = account?.id ?? null
@@ -423,7 +474,10 @@ export function MascotHost() {
         setOpenScope(nextOpen ? interactionScope : null)
       }}
       className={positionClassName}
-      style={positionStyle}
+      style={{
+        ...positionStyle,
+        ...(footerLift > 0 ? { marginBottom: footerLift } : null),
+      }}
       data-testid={docked ? 'bill-mascot-docked' : 'bill-mascot'}
       data-mascot-size={
         compactSurface
@@ -560,9 +614,9 @@ export function MascotHost() {
             'group relative rounded-[2rem] outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
             compactSurface
               ? 'h-12 w-12 opacity-80 transition-opacity hover:opacity-100'
-            : docked
-              ? 'h-16 w-16'
-              : 'h-[94px] w-[86px] sm:h-[118px] sm:w-[108px]',
+              : docked
+                ? 'h-16 w-16'
+                : 'h-[94px] w-[86px] sm:h-[118px] sm:w-[108px]',
             blockedByOverlay && 'pointer-events-none',
           )}
           onPointerDown={onTriggerPointerDown}

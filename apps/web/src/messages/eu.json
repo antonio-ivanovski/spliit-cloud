@@ -81,12 +81,12 @@
   },
   "Footer": {
     "madeIn": "Kode irekiko komunitateak maitasunez egina ❤️",
-    "builtBy": "Ikusi <source>iturburu-kodea eta kolaboratzaileak</source>",
     "legalNavigation": "Esteka legalak",
     "privacy": "Pribatutasuna",
     "terms": "Baldintzak",
     "imprint": "Lege-oharra",
-    "sponsor": "Babesle"
+    "sponsor": "Babesle",
+    "timeLabel": "Eguneko ordua"
   },
   "Expenses": {
     "title": "Gastuak",

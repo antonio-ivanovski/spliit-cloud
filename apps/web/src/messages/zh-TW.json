@@ -81,12 +81,12 @@
   },
   "Footer": {
     "madeIn": "由開源社群用愛打造 ❤️",
-    "builtBy": "查看<source>原始碼和貢獻者</source>",
     "legalNavigation": "法律連結",
     "privacy": "隱私",
     "terms": "條款",
     "imprint": "專案聲明",
-    "sponsor": "贊助"
+    "sponsor": "贊助",
+    "timeLabel": "一天中的時間"
   },
   "Expenses": {
     "title": "消費",

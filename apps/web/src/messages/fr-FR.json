@@ -81,12 +81,12 @@
   },
   "Footer": {
     "madeIn": "Créé par la communauté open-source avec amour ❤️",
-    "builtBy": "Voir le <source>code source et les contributeurs</source>",
     "legalNavigation": "Liens juridiques",
     "privacy": "Confidentialité",
     "terms": "Conditions",
     "imprint": "Mentions légales",
-    "sponsor": "Soutenir"
+    "sponsor": "Soutenir",
+    "timeLabel": "Moment de la journée"
   },
   "Expenses": {
     "title": "Dépenses",

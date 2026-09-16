@@ -81,12 +81,12 @@
   },
   "Footer": {
     "madeIn": "Создано сообществом open-source с любовью ❤️",
-    "builtBy": "См. <source>исходный код и участников</source>",
     "legalNavigation": "Правовая информация",
     "privacy": "Конфиденциальность",
     "terms": "Условия",
     "imprint": "Сведения о проекте",
-    "sponsor": "Спонсор"
+    "sponsor": "Спонсор",
+    "timeLabel": "Время суток"
   },
   "Expenses": {
     "title": "Расходы",

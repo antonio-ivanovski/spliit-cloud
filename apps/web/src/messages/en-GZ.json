@@ -1957,12 +1957,12 @@
   },
   "Footer": {
     "madeIn": "made by the open-source community with love and vibes",
-    "builtBy": "see <source>source and contributors</source>",
     "legalNavigation": "legal links",
     "privacy": "privacy stuff",
     "terms": "terms stuff",
     "imprint": "project notice",
-    "sponsor": "sponsor"
+    "sponsor": "sponsor",
+    "timeLabel": "time of day"
   },
   "ForgotPassword": {
     "title": "reset your password era",

@@ -81,12 +81,12 @@
   },
   "Footer": {
     "madeIn": "由开源社区用爱打造 ❤️",
-    "builtBy": "查看<source>源代码和贡献者</source>",
     "legalNavigation": "法律链接",
     "privacy": "隐私",
     "terms": "条款",
     "imprint": "项目声明",
-    "sponsor": "赞助"
+    "sponsor": "赞助",
+    "timeLabel": "一天中的时间"
   },
   "Expenses": {
     "title": "消费",

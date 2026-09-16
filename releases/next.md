@@ -59,5 +59,6 @@ Getting everyone into a group used to mean one single-use link per person. Now t
 - Search expenses in archived groups from All expenses with the new "Include archived groups" filter (`TBD` by @TBD)
 - Support the project from the new [sponsor page](https://spliit.cloud/sponsor) with GitHub Sponsors, Ethereum/Base, Bitcoin, or Lightning (`TBD` by @TBD)
 - Onboard a room of people at once with a scan-only 15-minute Nearby QR code on its own invite tab (one live session per group, joiner names included), plus a Scan to join camera action in the mobile home screen's Groups section (`TBD` by @TBD)
+- Close every page with a simple paper footer: a quiet theme-aware paper band with a subtle grain and the legal/GitHub pill buttons — light paper by day, deep green-black paper by night, no logo, no credit line, no clutter (`TBD` by @TBD)
 
 **Full Changelog**: TBD

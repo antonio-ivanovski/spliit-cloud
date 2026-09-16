@@ -81,12 +81,12 @@
   },
   "Footer": {
     "madeIn": "Hecho por la comunidad de código abierto con amor ❤️",
-    "builtBy": "Ver el <source>código fuente y los contribuidores</source>",
     "legalNavigation": "Enlaces legales",
     "privacy": "Privacidad",
     "terms": "Términos",
     "imprint": "Aviso legal",
-    "sponsor": "Patrocinar"
+    "sponsor": "Patrocinar",
+    "timeLabel": "Momento del día"
   },
   "Expenses": {
     "title": "Gastos",

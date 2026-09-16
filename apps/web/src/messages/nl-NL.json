@@ -81,12 +81,12 @@
   },
   "Footer": {
     "madeIn": "Gemaakt met liefde door de open-source community ❤️",
-    "builtBy": "Zie <source>bron en bijdragers</source>",
     "legalNavigation": "Juridische links",
     "privacy": "Privacy",
     "terms": "Voorwaarden",
     "imprint": "Colofon",
-    "sponsor": "Sponsoring"
+    "sponsor": "Sponsoring",
+    "timeLabel": "Tijd van de dag"
   },
   "Expenses": {
     "title": "Uitgaven",

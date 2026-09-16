@@ -81,12 +81,12 @@
   },
   "Footer": {
     "madeIn": "Vytvořeno open-source komunitou s láskou ❤️",
-    "builtBy": "Zobrazit <source>zdroj a přispěvatele</source>",
     "legalNavigation": "Právní odkazy",
     "privacy": "Ochrana soukromí",
     "terms": "Podmínky",
     "imprint": "Podrobnosti o projektu",
-    "sponsor": "Sponzor"
+    "sponsor": "Sponzor",
+    "timeLabel": "Denní doba"
   },
   "Expenses": {
     "title": "Výdaje",

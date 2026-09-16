@@ -1735,12 +1735,12 @@
   },
   "Footer": {
     "madeIn": "Gjord med kärlek av open source-communityn ❤️",
-    "builtBy": "Se <source>källkod och bidragsgivare</source>",
     "legalNavigation": "Juridiska länkar",
     "privacy": "Integritet",
     "terms": "Villkor",
     "imprint": "Projektinformation",
-    "sponsor": "Sponsra"
+    "sponsor": "Sponsra",
+    "timeLabel": "Tid på dygnet"
   },
   "ForgotPassword": {
     "title": "Återställ ditt lösenord",

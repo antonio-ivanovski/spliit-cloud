@@ -105,12 +105,12 @@
   },
   "Footer": {
     "madeIn": "Made by the open-source community with love ❤️",
-    "builtBy": "See <source>source and contributors</source>",
     "legalNavigation": "Legal links",
     "privacy": "Privacy",
     "terms": "Terms",
     "imprint": "Project notice",
-    "sponsor": "Sponsor"
+    "sponsor": "Sponsor",
+    "timeLabel": "Time of day"
   },
   "Expenses": {
     "title": "Expenses",

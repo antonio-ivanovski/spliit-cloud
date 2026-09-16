@@ -81,12 +81,12 @@
   },
   "Footer": {
     "madeIn": "Açık kaynak topluluğu tarafından sevgiyle yapıldı ❤️",
-    "builtBy": "Bkz. <source>kaynak ve katkıda bulunanlar</source>",
     "legalNavigation": "Yasal bağlantılar",
     "privacy": "Gizlilik",
     "terms": "Şartlar",
     "imprint": "Proje bildirimi",
-    "sponsor": "Sponsor Ol"
+    "sponsor": "Sponsor Ol",
+    "timeLabel": "Günün saati"
   },
   "Expenses": {
     "title": "Masraflar",

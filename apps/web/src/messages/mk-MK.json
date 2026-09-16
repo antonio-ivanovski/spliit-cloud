@@ -81,12 +81,12 @@
   },
   "Footer": {
     "madeIn": "Направено од open-source заедницата со љубов ❤️",
-    "builtBy": "Погледнете го <source>изворниот код и соработниците</source>",
     "legalNavigation": "Правни линкови",
     "privacy": "Приватност",
     "terms": "Услови",
     "imprint": "Забелешка за проектот",
-    "sponsor": "Спонзор"
+    "sponsor": "Спонзор",
+    "timeLabel": "Време од денот"
   },
   "Expenses": {
     "title": "Трошоци",

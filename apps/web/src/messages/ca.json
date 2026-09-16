@@ -81,12 +81,12 @@
   },
   "Footer": {
     "madeIn": "Fet per la comunitat de codi obert amb amor ❤️",
-    "builtBy": "Consulta el <source>codi font i col·laboradors</source>",
     "legalNavigation": "Enllaços legals",
     "privacy": "Privadesa",
     "terms": "Termes",
     "imprint": "Avís legal",
-    "sponsor": "Patrocini"
+    "sponsor": "Patrocini",
+    "timeLabel": "Moment del dia"
   },
   "Expenses": {
     "title": "Despeses",

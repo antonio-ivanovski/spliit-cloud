@@ -81,12 +81,12 @@
   },
   "Footer": {
     "madeIn": "オープンソースコミュニティによって愛を込めて作られました ❤️",
-    "builtBy": "ソースコードとコントリビューターは<source>こちら</source>",
     "legalNavigation": "法的リンク",
     "privacy": "プライバシー",
     "terms": "利用規約",
     "imprint": "運営者情報",
-    "sponsor": "スポンサー"
+    "sponsor": "スポンサー",
+    "timeLabel": "時刻"
   },
   "Expenses": {
     "title": "支出",

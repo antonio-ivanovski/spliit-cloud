@@ -81,12 +81,12 @@
   },
   "Footer": {
     "madeIn": "Avoimen lähdekoodin yhteisön rakkaudella tekemä ❤️",
-    "builtBy": "Katso <source>lähdekoodia ja tekijöitä</source>",
     "legalNavigation": "Oikeudelliset linkit",
     "privacy": "Tietosuoja",
     "terms": "Käyttöehdot",
     "imprint": "Julkaisutiedot",
-    "sponsor": "Sponsori"
+    "sponsor": "Sponsori",
+    "timeLabel": "Vuorokaudenaika"
   },
   "Expenses": {
     "title": "Kulut",

@@ -81,12 +81,12 @@
   },
   "Footer": {
     "madeIn": "Створено спільнотою open-source з любов'ю ❤️",
-    "builtBy": "Див. <source>джерело та учасників</source>",
     "legalNavigation": "Правові посилання",
     "privacy": "Конфіденційність",
     "terms": "Умови",
     "imprint": "Примітка про проєкт",
-    "sponsor": "Спонсор"
+    "sponsor": "Спонсор",
+    "timeLabel": "Час доби"
   },
   "Expenses": {
     "title": "Витрати",

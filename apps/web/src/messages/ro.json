@@ -81,12 +81,12 @@
   },
   "Footer": {
     "madeIn": "Realizat de comunitatea open-source cu dragoste ❤️",
-    "builtBy": "Vezi <source>codul sursă și contribuitorii</source>",
     "legalNavigation": "Linkuri legale",
     "privacy": "Confidențialitate",
     "terms": "Termeni",
     "imprint": "Mențiuni legale",
-    "sponsor": "Susține"
+    "sponsor": "Susține",
+    "timeLabel": "Momentul zilei"
   },
   "Expenses": {
     "title": "Cheltuieli",

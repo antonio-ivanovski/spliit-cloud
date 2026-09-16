@@ -127,6 +127,65 @@ describe('MascotHost', () => {
     expect(screen.queryByTestId('bill-mascot-trigger')).toBeNull()
   })
 
+  it('rides above the footer instead of covering it', () => {
+    const footer = document.createElement('footer')
+    footer.setAttribute('data-testid', 'art-footer')
+    document.body.appendChild(footer)
+    vi.spyOn(footer, 'getBoundingClientRect').mockReturnValue({
+      x: 0,
+      y: 700,
+      top: 700,
+      left: 0,
+      bottom: 800,
+      right: 390,
+      width: 390,
+      height: 100,
+      toJSON: () => ({}),
+    } as DOMRect)
+    const heightSpy = vi
+      .spyOn(window, 'innerHeight', 'get')
+      .mockReturnValue(800)
+    try {
+      renderHost()
+
+      // Home has a primary action, so the host is expanded, not docked.
+      expect(screen.getByTestId('bill-mascot').style.marginBottom).toBe(
+        '100px',
+      )
+    } finally {
+      heightSpy.mockRestore()
+      footer.remove()
+    }
+  })
+
+  it('stays put while the footer is off-screen', () => {
+    const footer = document.createElement('footer')
+    footer.setAttribute('data-testid', 'art-footer')
+    document.body.appendChild(footer)
+    vi.spyOn(footer, 'getBoundingClientRect').mockReturnValue({
+      x: 0,
+      y: 900,
+      top: 900,
+      left: 0,
+      bottom: 1_000,
+      right: 390,
+      width: 390,
+      height: 100,
+      toJSON: () => ({}),
+    } as DOMRect)
+    const heightSpy = vi
+      .spyOn(window, 'innerHeight', 'get')
+      .mockReturnValue(800)
+    try {
+      renderHost()
+
+      expect(screen.getByTestId('bill-mascot').style.marginBottom).toBe('')
+    } finally {
+      heightSpy.mockRestore()
+      footer.remove()
+    }
+  })
+
   it('still renders while the account session is pending', () => {
     state.isPending = true
     state.account = null

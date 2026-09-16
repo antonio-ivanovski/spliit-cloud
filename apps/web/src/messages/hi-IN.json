@@ -1735,12 +1735,12 @@
   },
   "Footer": {
     "madeIn": "ओपन-सोर्स समुदाय द्वारा प्यार से बनाया गया ❤️",
-    "builtBy": "<source>स्रोत और योगदानकर्ता</source> देखें",
     "legalNavigation": "कानूनी लिंक",
     "privacy": "गोपनीयता",
     "terms": "शर्तें",
     "imprint": "परियोजना सूचना",
-    "sponsor": "प्रायोजक"
+    "sponsor": "प्रायोजक",
+    "timeLabel": "दिन का समय"
   },
   "ForgotPassword": {
     "title": "अपना पासवर्ड रीसेट करें",

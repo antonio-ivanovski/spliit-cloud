@@ -1735,12 +1735,12 @@
   },
   "Footer": {
     "madeIn": "اوپن سورس کمیونٹی نے محبت سے بنایا ❤️",
-    "builtBy": "<source>سورس اور شراکت دار</source> دیکھیں",
     "legalNavigation": "قانونی لنکس",
     "privacy": "رازداری",
     "terms": "شرائط",
     "imprint": "پروجیکٹ نوٹس",
-    "sponsor": "اسپانسر"
+    "sponsor": "اسپانسر",
+    "timeLabel": "دن کا وقت"
   },
   "ForgotPassword": {
     "title": "اپنا پاس ورڈ ری سیٹ کریں",

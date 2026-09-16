@@ -81,12 +81,12 @@
   },
   "Footer": {
     "madeIn": "Dibuat oleh komunitas open-source dengan cinta ❤️",
-    "builtBy": "Lihat <source>sumber dan kontributor</source>",
     "legalNavigation": "Tautan hukum",
     "privacy": "Privasi",
     "terms": "Ketentuan",
     "imprint": "Pemberitahuan proyek",
-    "sponsor": "Dukung"
+    "sponsor": "Dukung",
+    "timeLabel": "Waktu dalam sehari"
   },
   "Expenses": {
     "title": "Pengeluaran",

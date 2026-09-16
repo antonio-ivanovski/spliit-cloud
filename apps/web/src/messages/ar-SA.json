@@ -2804,13 +2804,13 @@
     "signInAnonymously": "مجهول"
   },
   "Footer": {
-    "builtBy": "انظر <source>المصدر والمساهمين</source>",
     "privacy": "الخصوصية",
     "legalNavigation": "روابط قانونية",
     "madeIn": "صنع من قبل مجتمع المصادر المفتوحة بحب ❤️",
     "terms": "الشروط",
     "imprint": "إشعار المشروع",
-    "sponsor": "رعاية"
+    "sponsor": "رعاية",
+    "timeLabel": "الوقت من اليوم"
   },
   "CreateFromReceipt": {
     "Dialog": {

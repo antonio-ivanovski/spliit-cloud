@@ -81,12 +81,12 @@
   },
   "Footer": {
     "madeIn": "Von der Open-Source-Community mit Liebe gemacht ❤️",
-    "builtBy": "Siehe <source>Quellcode und Mitwirkende</source>",
     "legalNavigation": "Rechtliche Links",
     "privacy": "Datenschutz",
     "terms": "Nutzungsbedingungen",
     "imprint": "Impressum",
-    "sponsor": "Sponsoring"
+    "sponsor": "Sponsoring",
+    "timeLabel": "Tageszeit"
   },
   "Expenses": {
     "title": "Ausgaben",

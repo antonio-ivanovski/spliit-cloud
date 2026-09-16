@@ -1,7 +1,6 @@
-/* oxlint-disable jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- Trans injects the contributor link's accessible text at runtime. */
 import { Outlet, Link, useLocation } from '@tanstack/react-router'
 import { Suspense, type ReactNode, useEffect } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 import { AccountMenu } from '@/components/account-menu'
 import { AccountPreferencesSync } from '@/components/account-preferences-sync'
@@ -24,7 +23,6 @@ import {
 import { PwaUpdatePill } from '@/components/pwa-update-pill'
 import { ThemeProvider } from '@/components/theme-provider'
 import { ThemeToggle } from '@/components/theme-toggle'
-import { Button } from '@/components/ui/button'
 import { Toaster } from '@/components/ui/toaster'
 import { I18nProvider } from '@/i18n/react'
 import { isFocusedMobilePath, isMobileGroupTabPath } from '@/lib/mobile-nav'
@@ -32,7 +30,7 @@ import { markPwaUpdateProtectionInitialized } from '@/lib/pwa-update-blockers'
 import { TRPCProvider } from '@/trpc/client'
 
 import { MergeDeviceSavedViews } from './app/groups/merge-device-saved-views'
-import githubSvg from './components/auth/github.svg'
+import { ArtFooter } from './components/footer/ArtFooter'
 
 function AccountPreferencesBoundary({
   children,
@@ -151,61 +149,7 @@ function Content() {
               </ProfileGate>
             </div>
 
-            <footer
-              className={`${hideMobileFooter ? 'hidden sm:flex' : 'flex'} relative z-10 mt-8 flex-col gap-4 border-t bg-slate-50 p-6 text-xs sm:mt-16 sm:flex-row sm:justify-between sm:p-8 sm:text-sm md:mt-32 md:p-16 md:text-base dark:bg-card [&_a]:underline`}
-            >
-              <div className="flex flex-col space-y-2">
-                <div className="flex items-center space-x-2 text-base font-semibold sm:text-lg">
-                  <Link className="flex items-center gap-2" to="/">
-                    <Image
-                      src="/logo-with-text.svg"
-                      className="m-1 h-[45px] w-auto"
-                      width={(45 * 522) / 180}
-                      height={45}
-                      alt="Spliit Cloud"
-                    />
-                  </Link>
-                </div>
-                <div className="space-y a--no-underline-text-white flex flex-col">
-                  <span>{t('Footer.madeIn')}</span>
-                  <span>
-                    <Trans
-                      i18nKey="Footer.builtBy"
-                      components={{
-                        source: (
-                          <a
-                            href="https://github.com/antonio-ivanovski/spliit-cloud/graphs/contributors"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          />
-                        ),
-                      }}
-                    />
-                  </span>
-                  <nav
-                    aria-label={t('Footer.legalNavigation')}
-                    className="flex flex-wrap gap-x-3 gap-y-1"
-                  >
-                    <Link to="/privacy">{t('Footer.privacy')}</Link>
-                    <Link to="/terms">{t('Footer.terms')}</Link>
-                    <Link to="/imprint">{t('Footer.imprint')}</Link>
-                    <Link to="/sponsor">{t('Footer.sponsor')}</Link>
-                    <Link to="/feedback">{t('Feedback.navigationLabel')}</Link>
-                  </nav>
-                </div>
-              </div>
-              <Button
-                variant="secondary"
-                size="sm"
-                nativeButton={false}
-                render={
-                  <a href="https://github.com/antonio-ivanovski/spliit-cloud" />
-                }
-              >
-                <img src={githubSvg} alt="" className="me-2 h-4 w-4" />
-                GitHub
-              </Button>
-            </footer>
+            <ArtFooter hiddenOnMobile={hideMobileFooter} />
           </div>
           <MascotHost />
           <Toaster />
