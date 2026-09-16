@@ -976,7 +976,9 @@
       "allItemsSplitLabel": "すべての項目の分割",
       "allItemsSplitMixed": "項目ごとに異なる分割を使用しています",
       "allItemsSplitEdit": "すべての項目の分割を編集",
-      "allItemsSplitModalTitle": "すべての項目の分割"
+      "allItemsSplitModalTitle": "すべての項目の分割",
+      "remainderAllocationProportional": "品目に比例",
+      "remainderProportionalHint": "各メンバーの品目小計に基づいて、この金額を按分します。税金やチップの配分に便利です。"
     },
     "leaveItemized": {
       "title": "分割方法を変更しますか？",
@@ -1312,7 +1314,10 @@
     "itemTitleRequired": "項目名は必須です。",
     "itemQuantityMin1": "項目の数量は1以上である必要があります。",
     "rowErrorsHeading": "次のシェアを修正してください：",
-    "invalidWallTime": "選択した日付のこのタイムゾーンには、この時刻は存在しません。"
+    "invalidWallTime": "選択した日付のこのタイムゾーンには、この時刻は存在しません。",
+    "proportionalUnassignedItems": "残額を按分するには、すべての品目を1人以上のメンバーに割り当ててください。またはカスタム分割を使用してください。",
+    "proportionalZeroBasis": "品目小計が相殺されるため、残額を按分できません。品目を修正するか、カスタム分割を使用してください。",
+    "proportionalInvalidRatios": "一部のメンバーの品目小計の符号が異なるため、残額を按分できません。品目を修正するか、カスタム分割を使用してください。"
   },
   "Categories": {
     "search": "カテゴリーを検索...",

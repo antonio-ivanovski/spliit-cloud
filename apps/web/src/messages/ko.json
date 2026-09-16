@@ -913,7 +913,9 @@
       "allItemsSplitLabel": "모든 항목 분할",
       "allItemsSplitMixed": "항목마다 다른 분할을 사용합니다",
       "allItemsSplitEdit": "모든 항목 분할 편집",
-      "allItemsSplitModalTitle": "모든 항목 분할"
+      "allItemsSplitModalTitle": "모든 항목 분할",
+      "remainderAllocationProportional": "항목 비례 분할",
+      "remainderProportionalHint": "각 사람의 항목 소계에 따라 이 금액을 나눕니다. 세금이나 팁을 나눌 때 유용해요."
     },
     "leaveItemized": {
       "title": "분할 방식을 바꿀까요?",
@@ -1168,7 +1170,10 @@
     "itemTitleRequired": "항목 이름을 입력해 주세요.",
     "itemQuantityMin1": "항목 수량은 1개 이상이어야 합니다.",
     "rowErrorsHeading": "다음 몫을 수정해 주세요:",
-    "invalidWallTime": "선택한 날짜에는 이 시간대에 해당 시간이 존재하지 않습니다."
+    "invalidWallTime": "선택한 날짜에는 이 시간대에 해당 시간이 존재하지 않습니다.",
+    "proportionalUnassignedItems": "남은 금액을 비례대로 나누려면 모든 항목을 한 명 이상의 참가자에게 지정하세요. 또는 커스텀 분할을 사용하세요.",
+    "proportionalZeroBasis": "항목 소계가 서로 상쇄되어 남은 금액을 비례대로 나눌 수 없습니다. 항목을 수정하거나 커스텀 분할을 사용하세요.",
+    "proportionalInvalidRatios": "일부 참가자의 항목 소계 부호가 달라서 남은 금액을 비례대로 나눌 수 없습니다. 항목을 수정하거나 커스텀 분할을 사용하세요."
   },
   "Categories": {
     "search": "카테고리 선택...",

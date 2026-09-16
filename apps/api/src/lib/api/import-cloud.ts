@@ -1152,13 +1152,25 @@ export async function importCloudGroup(
             ? {
                 itemizedRemainder: {
                   create: {
-                    splitMode: expense.itemizedRemainder.splitMode,
+                    // Proportional weights derive from items at read time;
+                    // only the rule is restored, never stored rows.
+                    splitMode:
+                      expense.itemizedRemainder.allocationMode ===
+                      'PROPORTIONAL'
+                        ? 'EVENLY'
+                        : expense.itemizedRemainder.splitMode,
+                    allocationMode:
+                      expense.itemizedRemainder.allocationMode ?? 'CUSTOM',
                     paidFor: {
                       createMany: {
-                        data: mapRows(
-                          expense.itemizedRemainder.paidFor,
-                          destinationIds,
-                        ),
+                        data:
+                          expense.itemizedRemainder.allocationMode ===
+                          'PROPORTIONAL'
+                            ? []
+                            : mapRows(
+                                expense.itemizedRemainder.paidFor,
+                                destinationIds,
+                              ),
                       },
                     },
                   },

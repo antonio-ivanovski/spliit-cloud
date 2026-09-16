@@ -709,6 +709,130 @@ describe('expenseApiSchema', () => {
     )
     expect(issues.some((issue) => issue.message === 'sharesInvalid')).toBe(true)
   })
+
+  it('proportional remainder: canonical empty payload passes a nonzero remainder', () => {
+    const result = expenseApiSchema.safeParse({
+      ...baseApi,
+      amount: 10000,
+      splitMode: 'ITEMIZED',
+      paidFor: [{ participant: 'p0', shares: 10000 }],
+      items: [
+        {
+          title: 'A',
+          unitPrice: 8591,
+          quantity: 1,
+          amount: 8591,
+          splitMode: 'EVENLY',
+          paidFor: [{ participant: 'p0', shares: 1 }],
+        },
+        {
+          title: 'B',
+          unitPrice: 500,
+          quantity: 1,
+          amount: 500,
+          splitMode: 'EVENLY',
+          paidFor: [{ participant: 'p1', shares: 1 }],
+        },
+      ],
+      itemizedRemainder: {
+        allocationMode: 'PROPORTIONAL',
+        splitMode: 'EVENLY',
+        paidFor: [],
+      },
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('proportional remainder: mixed-sign ratios fail without falling back', () => {
+    const result = expenseApiSchema.safeParse({
+      ...baseApi,
+      amount: 1000,
+      splitMode: 'ITEMIZED',
+      paidFor: [{ participant: 'p0', shares: 1000 }],
+      items: [
+        {
+          title: 'A',
+          unitPrice: 1000,
+          quantity: 1,
+          amount: 1000,
+          splitMode: 'EVENLY',
+          paidFor: [{ participant: 'p0', shares: 1 }],
+        },
+        {
+          title: 'Refund',
+          unitPrice: -200,
+          quantity: 1,
+          amount: -200,
+          splitMode: 'EVENLY',
+          paidFor: [{ participant: 'p1', shares: 1 }],
+        },
+      ],
+      itemizedRemainder: {
+        allocationMode: 'PROPORTIONAL',
+        splitMode: 'EVENLY',
+        paidFor: [],
+      },
+    })
+    expect(result.success).toBe(false)
+    if (result.success) return
+    const issues = result.error.issues.filter(
+      (issue) => issue.path.join('.') === 'itemizedRemainder.paidFor',
+    )
+    expect(
+      issues.some((issue) => issue.message === 'proportionalInvalidRatios'),
+    ).toBe(true)
+  })
+
+  it('proportional remainder: zero remainder needs no basis', () => {
+    const result = expenseApiSchema.safeParse({
+      ...baseApi,
+      amount: 500,
+      splitMode: 'ITEMIZED',
+      paidFor: [{ participant: 'p0', shares: 500 }],
+      items: [
+        {
+          title: 'A',
+          unitPrice: 500,
+          quantity: 1,
+          amount: 500,
+          splitMode: 'EVENLY',
+          paidFor: [{ participant: 'p0', shares: 1 }],
+        },
+      ],
+      itemizedRemainder: {
+        allocationMode: 'PROPORTIONAL',
+        splitMode: 'EVENLY',
+        paidFor: [],
+      },
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('itemized remainder without allocationMode parses as custom allocation', () => {
+    const result = expenseApiSchema.safeParse({
+      ...baseApi,
+      amount: 2000,
+      splitMode: 'ITEMIZED',
+      paidFor: [{ participant: 'p0', shares: 2000 }],
+      items: [
+        {
+          title: 'Coffee',
+          unitPrice: 1000,
+          quantity: 1,
+          amount: 1000,
+          splitMode: 'EVENLY',
+          paidFor: [{ participant: 'p0', shares: 1 }],
+        },
+      ],
+      itemizedRemainder: {
+        splitMode: 'EVENLY',
+        paidFor: [{ participant: 'p0', shares: 1 }],
+      },
+    })
+    expect(result.success).toBe(true)
+    if (!result.success) return
+    expect(result.data.itemizedRemainder?.allocationMode).toBe('CUSTOM')
+  })
 })
 
 describe('expenseFormInputSchema nested BY_SHARES rows', () => {

@@ -990,7 +990,9 @@
       "allItemsSplitLabel": "Divisione di tutti gli elementi",
       "allItemsSplitMixed": "Gli elementi usano divisioni diverse",
       "allItemsSplitEdit": "Modifica la divisione di tutti gli elementi",
-      "allItemsSplitModalTitle": "Divisione di tutti gli elementi"
+      "allItemsSplitModalTitle": "Divisione di tutti gli elementi",
+      "remainderAllocationProportional": "Proporzionale alle voci",
+      "remainderProportionalHint": "Dividi questo importo in base al subtotale delle voci di ogni persona. Utile per tasse e mance."
     },
     "leaveItemized": {
       "title": "Cambiare modalità di divisione?",
@@ -1327,7 +1329,10 @@
     "itemTitleRequired": "Il nome della voce è obbligatorio.",
     "itemQuantityMin1": "La quantità della voce deve essere almeno 1.",
     "rowErrorsHeading": "Correggi queste quote:",
-    "invalidWallTime": "Questo orario non esiste nella data selezionata per questo fuso orario."
+    "invalidWallTime": "Questo orario non esiste nella data selezionata per questo fuso orario.",
+    "proportionalUnassignedItems": "Assegna ogni voce ad almeno un partecipante per dividere l’importo restante proporzionalmente, oppure usa una divisione personalizzata.",
+    "proportionalZeroBasis": "I subtotali delle voci si annullano a vicenda, quindi l’importo restante non può essere diviso proporzionalmente. Correggi le voci o usa una divisione personalizzata.",
+    "proportionalInvalidRatios": "I subtotali delle voci di alcuni partecipanti hanno segni opposti, quindi l’importo restante non può essere diviso proporzionalmente. Correggi le voci o usa una divisione personalizzata."
   },
   "Categories": {
     "search": "Cerca categoria...",

@@ -131,7 +131,11 @@ export function applySplitToAll({
   groupCurrency: Pick<Currency, 'decimal_digits'>
 }): {
   items: ExpenseFormItemValues[]
-  itemizedRemainder: { splitMode: ItemSplitMode; paidFor: ParticipantRow[] }
+  itemizedRemainder: {
+    splitMode: ItemSplitMode
+    allocationMode: 'CUSTOM'
+    paidFor: ParticipantRow[]
+  }
 } {
   const nextItems = items.map((item) => ({
     ...item,
@@ -152,6 +156,8 @@ export function applySplitToAll({
   return {
     items: nextItems,
     itemizedRemainder: {
+      // Applying an explicit split is inherently custom allocation.
+      allocationMode: 'CUSTOM' as const,
       splitMode: split.splitMode,
       paidFor: scaleRowsToAmount(
         split.paidFor,

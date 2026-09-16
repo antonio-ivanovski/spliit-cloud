@@ -67,7 +67,11 @@ const EMPTY_DEFAULTS: ExpenseFormInputValues = {
   notes: '',
   recurrenceRule: 'NONE',
   items: [],
-  itemizedRemainder: { splitMode: 'EVENLY', paidFor: [] },
+  itemizedRemainder: {
+    allocationMode: 'CUSTOM',
+    splitMode: 'EVENLY',
+    paidFor: [],
+  },
 }
 
 function ModalHarness({
@@ -77,6 +81,9 @@ function ModalHarness({
   readOnly,
   hideAmountMode,
   onSaveItem,
+  onSaveRemainder,
+  remainderAllocationMode,
+  proportionalPreview,
   group: groupOverride,
 }: {
   item: ExpenseFormItemValues
@@ -85,6 +92,13 @@ function ModalHarness({
   readOnly?: boolean
   hideAmountMode?: boolean
   onSaveItem?: (next: ExpenseFormItemValues) => void
+  onSaveRemainder?: (next: {
+    allocationMode: 'CUSTOM' | 'PROPORTIONAL'
+    splitMode: Exclude<ExpenseFormItemValues['splitMode'], 'ITEMIZED'>
+    paidFor: ExpenseFormItemValues['paidFor']
+  }) => void
+  remainderAllocationMode?: 'CUSTOM' | 'PROPORTIONAL'
+  proportionalPreview?: Array<{ participant: string; shares: number }>
   group?: GroupShape
 }): ReactElement {
   const form = useForm<ExpenseFormInputValues>({
@@ -105,6 +119,9 @@ function ModalHarness({
       canManage={canManage ?? false}
       readOnly={readOnly}
       hideAmountMode={hideAmountMode}
+      onSaveRemainder={onSaveRemainder}
+      remainderAllocationMode={remainderAllocationMode}
+      proportionalPreview={proportionalPreview}
     />
   )
 }
@@ -497,5 +514,149 @@ describe('ItemParticipantsModal — hideAmountMode', () => {
     expect(
       screen.getByRole('radio', { name: /by amount/i }),
     ).toBeInTheDocument()
+  })
+})
+
+describe('ItemParticipantsModal — remainder proportional option', () => {
+  const fillerItem: ExpenseFormItemValues = {
+    id: 'other-filler',
+    title: 'Other (unaccounted)',
+    unitPrice: 9.09,
+    quantity: 1,
+    splitMode: 'EVENLY',
+    paidFor: [
+      { participant: admin.id, shares: 1 },
+      { participant: alice.id, shares: 1 },
+    ],
+  }
+
+  it('renders Proportional to items directly below Equal, without toggle buttons', () => {
+    render(
+      <ModalHarness
+        item={fillerItem}
+        onSaveRemainder={() => {}}
+        remainderAllocationMode="CUSTOM"
+        proportionalPreview={[{ participant: alice.id, shares: 909 }]}
+      />,
+    )
+
+    const radios = screen.getAllByRole('radio')
+    expect(radios).toHaveLength(5)
+    expect(radios[0]).toHaveAccessibleName(/evenly/i)
+    expect(radios[1]).toHaveAccessibleName(/proportional to items/i)
+    // The old Custom/Proportional two-button toggle is gone (participant
+    // row toggles still use aria-pressed, so assert on the label instead).
+    expect(screen.queryByRole('button', { name: /^custom split$/i })).toBeNull()
+  })
+
+  it('renders preview rows with equal-row styling but not checkable', async () => {
+    const { user } = render(
+      <ModalHarness
+        item={fillerItem}
+        onSaveRemainder={() => {}}
+        remainderAllocationMode="CUSTOM"
+        proportionalPreview={[{ participant: alice.id, shares: 909 }]}
+      />,
+    )
+
+    await user.click(
+      screen.getByRole('radio', { name: /proportional to items/i }),
+    )
+
+    // Same row shell as the Equal editor rows …
+    const row = document.querySelector('[data-id="alice-id/PROPORTIONAL/EUR"]')
+    expect(row).not.toBeNull()
+    expect(row).toHaveClass('border-t')
+    // … but purely presentational: no button, no pressed state, no checkbox.
+    expect(screen.getByText('Alice').closest('button')).toBeNull()
+    expect(row?.querySelector('[aria-pressed]')).toBeNull()
+    expect(screen.queryByRole('checkbox')).toBeNull()
+  })
+
+  it('selecting it shows the preview and saves the canonical payload', async () => {
+    let saved: {
+      allocationMode: 'CUSTOM' | 'PROPORTIONAL'
+      splitMode: string
+      paidFor: unknown[]
+    } | null = null
+    const { user } = render(
+      <ModalHarness
+        item={fillerItem}
+        onSaveRemainder={(next) => {
+          saved = next
+        }}
+        remainderAllocationMode="CUSTOM"
+        proportionalPreview={[{ participant: alice.id, shares: 909 }]}
+      />,
+    )
+
+    await user.click(
+      screen.getByRole('radio', { name: /proportional to items/i }),
+    )
+    // Preview content appears inside the selected card.
+    expect(screen.getByText('Alice')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /save/i }))
+    expect(saved).toEqual({
+      allocationMode: 'PROPORTIONAL',
+      splitMode: 'EVENLY',
+      paidFor: [],
+    })
+  })
+
+  it('switching back to a split mode restores the stashed custom config', async () => {
+    let saved: {
+      allocationMode: 'CUSTOM' | 'PROPORTIONAL'
+      splitMode: string
+      paidFor: Array<{ participant: string; shares: number }>
+    } | null = null
+    const customItem: ExpenseFormItemValues = {
+      ...fillerItem,
+      splitMode: 'BY_SHARES',
+      paidFor: [{ participant: alice.id, shares: 3 }],
+    }
+    const { user } = render(
+      <ModalHarness
+        item={customItem}
+        onSaveRemainder={(next) => {
+          saved = next as typeof saved
+        }}
+        remainderAllocationMode="CUSTOM"
+        proportionalPreview={[{ participant: alice.id, shares: 909 }]}
+      />,
+    )
+
+    await user.click(
+      screen.getByRole('radio', { name: /proportional to items/i }),
+    )
+    expect(screen.getByText('Alice')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('radio', { name: /by shares/i }))
+    expect(
+      screen.getByRole('textbox', { name: 'Split value for Alice' }),
+    ).toHaveValue('3')
+
+    await user.click(screen.getByRole('button', { name: /save/i }))
+    expect(saved).toEqual({
+      allocationMode: 'CUSTOM',
+      splitMode: 'BY_SHARES',
+      paidFor: [{ participant: alice.id, shares: 3 }],
+    })
+  })
+
+  it('shows the preview for a saved proportional remainder on open', () => {
+    render(
+      <ModalHarness
+        item={{ ...fillerItem, paidFor: [] }}
+        onSaveRemainder={() => {}}
+        remainderAllocationMode="PROPORTIONAL"
+        proportionalPreview={[{ participant: alice.id, shares: 909 }]}
+      />,
+    )
+
+    expect(
+      screen.getByRole('radio', { name: /proportional to items/i }),
+    ).toHaveAttribute('aria-checked', 'true')
+    expect(screen.getByText('Alice')).toBeInTheDocument()
   })
 })

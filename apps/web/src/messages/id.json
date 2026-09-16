@@ -976,7 +976,9 @@
       "allItemsSplitLabel": "Pembagian semua item",
       "allItemsSplitMixed": "Item menggunakan pembagian berbeda",
       "allItemsSplitEdit": "Edit pembagian semua item",
-      "allItemsSplitModalTitle": "Pembagian semua item"
+      "allItemsSplitModalTitle": "Pembagian semua item",
+      "remainderAllocationProportional": "Proporsional terhadap item",
+      "remainderProportionalHint": "Bagi jumlah ini berdasarkan subtotal item setiap orang. Berguna untuk pajak dan tip."
     },
     "leaveItemized": {
       "title": "Ganti metode pembagian?",
@@ -1621,7 +1623,10 @@
     "itemTitleRequired": "Nama item wajib diisi.",
     "itemQuantityMin1": "Kuantitas item harus setidaknya 1.",
     "rowErrorsHeading": "Silakan perbaiki porsi berikut:",
-    "invalidWallTime": "Waktu ini tidak tersedia pada tanggal yang dipilih di zona waktu ini."
+    "invalidWallTime": "Waktu ini tidak tersedia pada tanggal yang dipilih di zona waktu ini.",
+    "proportionalUnassignedItems": "Tetapkan setiap item ke setidaknya satu peserta untuk membagi sisa jumlah secara proporsional, atau gunakan pembagian kustom.",
+    "proportionalZeroBasis": "Subtotal item saling meniadakan, sehingga sisa jumlah tidak dapat dibagi secara proporsional. Perbaiki item atau gunakan pembagian kustom.",
+    "proportionalInvalidRatios": "Subtotal item sebagian peserta bertanda berlawanan, sehingga sisa jumlah tidak dapat dibagi secara proporsional. Perbaiki item atau gunakan pembagian kustom."
   },
   "Categories": {
     "search": "Cari kategori...",

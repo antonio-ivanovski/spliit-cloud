@@ -990,7 +990,9 @@
       "allItemsSplitLabel": "Împărțirea tuturor articolelor",
       "allItemsSplitMixed": "Articolele folosesc împărțiri diferite",
       "allItemsSplitEdit": "Editează împărțirea tuturor articolelor",
-      "allItemsSplitModalTitle": "Împărțirea tuturor articolelor"
+      "allItemsSplitModalTitle": "Împărțirea tuturor articolelor",
+      "remainderAllocationProportional": "Proporțional cu articolele",
+      "remainderProportionalHint": "Împarte această sumă în funcție de subtotalul articolelor fiecărei persoane. Util pentru taxe și bacșișuri."
     },
     "leaveItemized": {
       "title": "Schimbi modul de împărțire?",
@@ -1327,7 +1329,10 @@
     "itemTitleRequired": "Numele elementului este obligatoriu.",
     "itemQuantityMin1": "Cantitatea elementului trebuie să fie cel puțin 1.",
     "rowErrorsHeading": "Corectați aceste părți:",
-    "invalidWallTime": "Această oră nu există la data selectată în acest fus orar."
+    "invalidWallTime": "Această oră nu există la data selectată în acest fus orar.",
+    "proportionalUnassignedItems": "Atribuie fiecare articol cel puțin unui participant pentru a împărți restul proporțional, sau folosește o împărțire personalizată.",
+    "proportionalZeroBasis": "Subtotalurile articolelor se anulează reciproc, deci restul nu poate fi împărțit proporțional. Corectează articolele sau folosește o împărțire personalizată.",
+    "proportionalInvalidRatios": "Subtotalurile articolelor unor participanți au semne opuse, deci restul nu poate fi împărțit proporțional. Corectează articolele sau folosește o împărțire personalizată."
   },
   "Categories": {
     "search": "Căutați categorie…",

@@ -222,6 +222,7 @@ export function PaidForCard(props: {
       form.setValue(
         'itemizedRemainder',
         {
+          allocationMode: 'CUSTOM' as const,
           splitMode: itemMode,
           paidFor: buildRows(remainderAmount),
         },
@@ -377,6 +378,7 @@ export function PaidForCard(props: {
           itemizedRemainder
             ? {
                 splitMode: itemizedRemainder.splitMode,
+                allocationMode: itemizedRemainder.allocationMode ?? 'CUSTOM',
                 paidFor: toApiRows(
                   itemizedRemainder.paidFor,
                   itemizedRemainder.splitMode,

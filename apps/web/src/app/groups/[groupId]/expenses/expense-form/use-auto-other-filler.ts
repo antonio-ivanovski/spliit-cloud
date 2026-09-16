@@ -7,6 +7,7 @@ import { amountAsMinorUnits, itemsExceedExpenseAmount } from '@spliit/domain'
 
 export type ExpenseFormDisplayItem = ExpenseFormItemValues & {
   isFiller?: boolean
+  allocationMode?: 'CUSTOM' | 'PROPORTIONAL'
 }
 
 export function isFillerItem(
@@ -47,6 +48,7 @@ export function withAutoOtherFiller(
       quantity: 1,
       paidFor: itemizedRemainder?.paidFor ?? [],
       splitMode: itemizedRemainder?.splitMode ?? 'EVENLY',
+      allocationMode: itemizedRemainder?.allocationMode ?? 'CUSTOM',
       isFiller: true,
     },
   ]

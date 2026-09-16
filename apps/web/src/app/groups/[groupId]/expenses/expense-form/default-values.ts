@@ -480,6 +480,8 @@ export function buildExpenseFormDefaults(args: {
       ? {
           splitMode: (rawRemainder.splitMode ??
             'EVENLY') as ExpenseFormItemValues['splitMode'],
+          allocationMode: ((rawRemainder as { allocationMode?: string })
+            .allocationMode ?? 'CUSTOM') as 'CUSTOM' | 'PROPORTIONAL',
           paidFor: rawRemainder.paidFor.map((pf) => ({
             participant: getPaidForParticipantId(pf),
             shares: itemShareAsDisplay(
@@ -491,6 +493,7 @@ export function buildExpenseFormDefaults(args: {
         }
       : {
           splitMode: 'EVENLY' as const,
+          allocationMode: 'CUSTOM' as const,
           paidFor: group.participants.map(({ id }) => ({
             participant: id,
             shares: 1,
@@ -644,6 +647,7 @@ export function buildExpenseFormDefaults(args: {
         recurrenceRule: 'NONE',
         itemizedRemainder: {
           splitMode: 'EVENLY' as const,
+          allocationMode: 'CUSTOM' as const,
           paidFor: group.participants.map(({ id }) => ({
             participant: id,
             shares: 1,
@@ -692,6 +696,7 @@ export function buildExpenseFormDefaults(args: {
       recurrenceRule: 'NONE',
       itemizedRemainder: {
         splitMode: 'EVENLY' as const,
+        allocationMode: 'CUSTOM' as const,
         paidFor: group.participants.map(({ id }) => ({
           participant: id,
           shares: 1,
@@ -758,6 +763,7 @@ export function buildExpenseFormDefaults(args: {
     items: prefilledItems,
     itemizedRemainder: {
       splitMode: 'EVENLY' as const,
+      allocationMode: 'CUSTOM' as const,
       paidFor: group.participants.map(({ id }) => ({
         participant: id,
         shares: 1,

@@ -40,7 +40,13 @@ const item = z.object({
   createdAt: isoDateTime.nullable().optional(),
 })
 
-const itemizedRemainder = z.object({ splitMode, paidFor: z.array(shareRow) })
+const allocationMode = z.enum(['CUSTOM', 'PROPORTIONAL'] as const).optional()
+
+const itemizedRemainder = z.object({
+  splitMode,
+  paidFor: z.array(shareRow),
+  allocationMode,
+})
 
 // Keep recurrence templates explicitly allow-listed. They are stored as JSON
 // in the database; passing unknown keys through could export future operational
@@ -71,7 +77,7 @@ const recurringTemplate = z.object({
     }),
   ),
   itemizedRemainder: z
-    .object({ splitMode, paidFor: z.array(recurringShareRow) })
+    .object({ splitMode, paidFor: z.array(recurringShareRow), allocationMode })
     .nullable(),
 })
 

@@ -270,3 +270,97 @@ describe('PaidForSplitOptionCards', () => {
       )
   })
 })
+
+describe('PaidForSplitOptionCards — proportional option', () => {
+  it('is absent by default', () => {
+    render(<PaidForSplitOptionCards value="EVENLY" onChange={vi.fn()} />)
+    expect(
+      screen.queryByRole('radio', { name: /proportional to items/i }),
+    ).toBeNull()
+    expect(screen.getAllByRole('radio')).toHaveLength(4)
+  })
+
+  it('renders directly below Equal when enabled', () => {
+    render(
+      <PaidForSplitOptionCards
+        value="EVENLY"
+        onChange={vi.fn()}
+        showProportionalOption
+      />,
+    )
+    const radios = screen.getAllByRole('radio')
+    expect(radios).toHaveLength(5)
+    expect(radios[0]).toHaveAccessibleName(/evenly/i)
+    expect(radios[1]).toHaveAccessibleName(/proportional to items/i)
+    expect(
+      screen.getByText(
+        /split this amount based on each person's item subtotal/i,
+      ),
+    ).toBeInTheDocument()
+  })
+
+  it('routes selection to onProportionalSelect instead of onChange', async () => {
+    const onChange = vi.fn()
+    const onProportionalSelect = vi.fn()
+    const { user } = render(
+      <PaidForSplitOptionCards
+        value="EVENLY"
+        onChange={onChange}
+        showProportionalOption
+        onProportionalSelect={onProportionalSelect}
+      />,
+    )
+    await user.click(
+      screen.getByRole('radio', { name: /proportional to items/i }),
+    )
+    expect(onProportionalSelect).toHaveBeenCalledTimes(1)
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
+  it('checks the proportional card and shows its content when selected', () => {
+    const { rerender } = render(
+      <PaidForSplitOptionCards
+        value="EVENLY"
+        onChange={vi.fn()}
+        showProportionalOption
+        proportionalContent={<div data-testid="prop-content">Preview</div>}
+      />,
+    )
+    expect(
+      screen.getByRole('radio', { name: /proportional to items/i }),
+    ).toHaveAttribute('aria-checked', 'false')
+    expect(screen.queryByTestId('prop-content')).toBeNull()
+
+    rerender(
+      <PaidForSplitOptionCards
+        value="EVENLY"
+        onChange={vi.fn()}
+        showProportionalOption
+        proportionalSelected
+        proportionalContent={<div data-testid="prop-content">Preview</div>}
+      />,
+    )
+    expect(
+      screen.getByRole('radio', { name: /proportional to items/i }),
+    ).toHaveAttribute('aria-checked', 'true')
+    expect(screen.getByRole('radio', { name: /evenly/i })).toHaveAttribute(
+      'aria-checked',
+      'false',
+    )
+    expect(screen.getByTestId('prop-content')).toHaveTextContent('Preview')
+  })
+
+  it('is hidden when Equal is hidden', () => {
+    render(
+      <PaidForSplitOptionCards
+        value="BY_SHARES"
+        onChange={vi.fn()}
+        hiddenModes={['EVENLY']}
+        showProportionalOption
+      />,
+    )
+    expect(
+      screen.queryByRole('radio', { name: /proportional to items/i }),
+    ).toBeNull()
+  })
+})

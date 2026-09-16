@@ -96,6 +96,7 @@ export function toExpenseDomainShape(
     itemizedRemainder: existing.itemizedRemainder
       ? {
           splitMode: existing.itemizedRemainder.splitMode,
+          allocationMode: existing.itemizedRemainder.allocationMode,
           paidFor: existing.itemizedRemainder.paidFor.map((pf) => ({
             participant: pf.ledgerParticipantId,
             shares: pf.shares,

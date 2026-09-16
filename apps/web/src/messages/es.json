@@ -1011,7 +1011,9 @@
       "allItemsSplitLabel": "División de todos los artículos",
       "allItemsSplitMixed": "Los artículos usan divisiones distintas",
       "allItemsSplitEdit": "Editar la división de todos los artículos",
-      "allItemsSplitModalTitle": "División de todos los artículos"
+      "allItemsSplitModalTitle": "División de todos los artículos",
+      "remainderAllocationProportional": "Proporcional a los artículos",
+      "remainderProportionalHint": "Divide este importe según el subtotal de artículos de cada persona. Útil para impuestos y propinas."
     },
     "leaveItemized": {
       "title": "¿Cambiar el modo de división?",
@@ -1351,7 +1353,10 @@
     "itemTitleRequired": "El nombre del elemento es obligatorio.",
     "itemQuantityMin1": "La cantidad del elemento debe ser al menos 1.",
     "rowErrorsHeading": "Corrija estas participaciones:",
-    "invalidWallTime": "Esta hora no existe en la fecha seleccionada en esta zona horaria."
+    "invalidWallTime": "Esta hora no existe en la fecha seleccionada en esta zona horaria.",
+    "proportionalUnassignedItems": "Asigna cada artículo al menos a un participante para dividir el resto proporcionalmente, o usa una división personalizada.",
+    "proportionalZeroBasis": "Los subtotales de los artículos se anulan entre sí, por lo que el resto no se puede dividir proporcionalmente. Corrige los artículos o usa una división personalizada.",
+    "proportionalInvalidRatios": "Los subtotales de artículos de algunos participantes tienen signos opuestos, por lo que el resto no se puede dividir proporcionalmente. Corrige los artículos o usa una división personalizada."
   },
   "Categories": {
     "search": "Buscar categoría...",

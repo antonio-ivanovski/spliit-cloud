@@ -1,6 +1,7 @@
 import type { Prisma } from '@spliit/db'
 import { prisma } from '@spliit/db'
 import {
+  canonicalizeItemizedRemainder,
   computePaidForFromItems,
   dateOnlyInTimeZone,
   getCurrency,
@@ -555,13 +556,19 @@ export async function updateExpense(
         where: { expenseId },
       })
       if (expense.itemizedRemainder) {
+        // Proportional remainders persist only the rule; weights derive
+        // from item subtotals at read time.
+        const remainder = canonicalizeItemizedRemainder(
+          expense.itemizedRemainder,
+        )
         await tx.expenseItemizedRemainder.create({
           data: {
             expenseId,
-            splitMode: expense.itemizedRemainder.splitMode,
+            splitMode: remainder.splitMode,
+            allocationMode: remainder.allocationMode ?? 'CUSTOM',
             paidFor: {
               createMany: {
-                data: expense.itemizedRemainder.paidFor.map((pf) => ({
+                data: remainder.paidFor.map((pf) => ({
                   ledgerParticipantId: pf.participant,
                   shares: pf.shares,
                 })),
@@ -1145,6 +1152,8 @@ async function updateMaterializedOccurrence(
       data: {
         expenseId: row.id,
         splitMode: template.itemizedRemainder.splitMode as never,
+        allocationMode: (template.itemizedRemainder.allocationMode ??
+          'CUSTOM') as never,
         paidFor: {
           createMany: { data: template.itemizedRemainder.paidFor },
         },

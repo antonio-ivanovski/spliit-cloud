@@ -62,6 +62,7 @@ export type RecurringExpenseTemplate = {
   itemizedRemainder: {
     splitMode: string
     paidFor: Array<{ ledgerParticipantId: string; shares: number }>
+    allocationMode?: 'CUSTOM' | 'PROPORTIONAL'
   } | null
 }
 

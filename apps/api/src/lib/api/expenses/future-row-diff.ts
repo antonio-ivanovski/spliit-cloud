@@ -119,6 +119,7 @@ export function futureRowBeforeShape(
     itemizedRemainder: row.itemizedRemainder
       ? {
           splitMode: row.itemizedRemainder.splitMode,
+          allocationMode: row.itemizedRemainder.allocationMode,
           paidFor: row.itemizedRemainder.paidFor.map((pf) => ({
             participant: pf.ledgerParticipantId,
             shares: pf.shares,
@@ -212,6 +213,7 @@ export function futureRowAfterShape(args: {
       ? {
           splitMode: template.itemizedRemainder
             .splitMode as Expense['splitMode'],
+          allocationMode: template.itemizedRemainder.allocationMode,
           paidFor: template.itemizedRemainder.paidFor.map((pf) => ({
             participant: pf.ledgerParticipantId,
             shares: pf.shares,

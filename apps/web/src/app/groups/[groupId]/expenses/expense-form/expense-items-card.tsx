@@ -44,8 +44,13 @@ import type {
   ExpenseFormInputValues,
   ExpenseFormItemValues,
 } from '@spliit/domain'
-import { amountAsMinorUnits, itemsExceedExpenseAmount } from '@spliit/domain'
+import {
+  amountAsMinorUnits,
+  computePaidForFromItems,
+  itemsExceedExpenseAmount,
+} from '@spliit/domain'
 
+import { safeSharesToFixedUnits } from './currency-utils'
 import { applySplitToAll, getCommonItemSplit } from './default-item-split'
 import { getNeutralDefaultSplit } from './default-values'
 import { ExpenseItemRow, expenseItemGridClass } from './expense-item-row'
@@ -121,6 +126,14 @@ export function ExpenseItemsCard({
     open: boolean
     onClose: () => void
     onSaveItem?: (item: ExpenseFormItemValues) => void
+    onSaveRemainder?: (remainder: {
+      allocationMode: 'CUSTOM' | 'PROPORTIONAL'
+      splitMode: ExpenseFormItemValues['splitMode']
+      paidFor: ExpenseFormItemValues['paidFor']
+    }) => void
+    remainderAllocationMode?: 'CUSTOM' | 'PROPORTIONAL'
+    proportionalPreview?: Array<{ participant: string; shares: number }>
+    proportionalErrorKey?: string | null
     titleOverride?: string
     hideAmountDescription?: boolean
     hideAmountMode?: boolean
@@ -263,20 +276,103 @@ export function ExpenseItemsCard({
     setEditingTarget(null)
   }
 
-  const handleSaveFiller = (item: ExpenseFormItemValues) => {
-    form.setValue(
-      'itemizedRemainder',
-      {
-        paidFor: item.paidFor,
-        splitMode: item.splitMode,
-      },
-      {
-        shouldDirty: true,
-        shouldTouch: true,
-        shouldValidate: true,
-      },
-    )
+  const handleSaveRemainder = (remainder: {
+    allocationMode: 'CUSTOM' | 'PROPORTIONAL'
+    splitMode: ExpenseFormItemValues['splitMode']
+    paidFor: ExpenseFormItemValues['paidFor']
+  }) => {
+    form.setValue('itemizedRemainder', remainder, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    })
   }
+
+  const isProportionalRemainder =
+    itemizedRemainder?.allocationMode === 'PROPORTIONAL'
+
+  // Live proportional preview for the filler modal (expense-currency minor
+  // units). Mirrors the PaidForCard conversion so the modal matches the
+  // persisted preview. Invalid bases surface as an error key instead.
+  const proportionalPreview = ((): {
+    preview: Array<{ participant: string; shares: number }>
+    errorKey: string | null
+  } => {
+    const empty = {
+      preview: [] as Array<{ participant: string; shares: number }>,
+      errorKey: null as string | null,
+    }
+    if (editingTarget?.kind !== 'filler' || !fillerItem) return empty
+    try {
+      const toApiRows = (
+        rows: ExpenseFormItemValues['paidFor'],
+        mode: ExpenseFormItemValues['splitMode'],
+      ) =>
+        rows.map(({ participant, shares }) => ({
+          participant,
+          shares:
+            mode === 'BY_AMOUNT'
+              ? amountAsMinorUnits(Number(shares) || 0, groupCurrency)
+              : mode === 'BY_PERCENTAGE'
+                ? Math.round((Number(shares) || 0) * 100)
+                : mode === 'BY_SHARES'
+                  ? safeSharesToFixedUnits(shares)
+                  : Math.round(Number(shares) || 0),
+        }))
+      const apiItems = items.map((item) => {
+        const unitPrice = amountAsMinorUnits(
+          Number(item.unitPrice) || 0,
+          groupCurrency,
+        )
+        const quantity = Math.max(1, Math.round(Number(item.quantity) || 1))
+        return {
+          id: item.id,
+          title: item.title,
+          unitPrice,
+          quantity,
+          amount: unitPrice * quantity,
+          splitMode: item.splitMode,
+          paidFor: toApiRows(item.paidFor, item.splitMode),
+        }
+      })
+      const { paidFor } = computePaidForFromItems(
+        apiItems,
+        group.participants.map((participant) => participant.id),
+        amountAsMinorUnits(amountMajor, groupCurrency),
+        { splitMode: 'EVENLY', paidFor: [], allocationMode: 'PROPORTIONAL' },
+      )
+      // Show only the remainder slice (grand total minus item subtotals) so
+      // the modal lists the tax/tip each participant owes. Both distributions
+      // use the same deterministic rounding, so the slice sums to the filler.
+      const itemsSum = apiItems.reduce((sum, item) => sum + item.amount, 0)
+      const { paidFor: itemsOnly } = computePaidForFromItems(
+        apiItems,
+        group.participants.map((participant) => participant.id),
+        itemsSum,
+      )
+      const itemsOnlyById = new Map(
+        itemsOnly.map((row) => [row.participant, row.shares]),
+      )
+      const remainderPreview = paidFor.map((row) => ({
+        participant: row.participant,
+        shares: row.shares - (itemsOnlyById.get(row.participant) ?? 0),
+      }))
+      return { preview: remainderPreview, errorKey: null }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : ''
+      return {
+        preview: [],
+        errorKey:
+          message === 'PROPORTIONAL_UNASSIGNED_ITEMS'
+            ? 'proportionalUnassignedItems'
+            : message === 'PROPORTIONAL_ZERO_BASIS'
+              ? 'proportionalZeroBasis'
+              : message === 'PROPORTIONAL_INVALID_RATIOS'
+                ? 'proportionalInvalidRatios'
+                : null,
+      }
+    }
+  })()
 
   const handleSaveDefault = (item: ExpenseFormItemValues) => {
     const result = applySplitToAll({
@@ -446,10 +542,14 @@ export function ExpenseItemsCard({
                             </span>
                           </div>
                           <p className="mt-0.5 truncate text-xs text-muted-foreground">
-                            <SummarizeParticipants
-                              item={fillerItem}
-                              group={group}
-                            />
+                            {isProportionalRemainder ? (
+                              t('items.remainderAllocationProportional')
+                            ) : (
+                              <SummarizeParticipants
+                                item={fillerItem}
+                                group={group}
+                              />
+                            )}
                           </p>
                         </div>
                         {!readOnly && (
@@ -484,6 +584,16 @@ export function ExpenseItemsCard({
                         )}
                       </div>
                     )}
+
+                    <FormField
+                      control={form.control}
+                      name="itemizedRemainder"
+                      render={() => (
+                        <FormItem className="space-y-0">
+                          <FormMessage className="mt-2" />
+                        </FormItem>
+                      )}
+                    />
 
                     <div className="mt-2 border-t pt-3">
                       <div className="flex justify-between text-sm font-medium">
@@ -540,7 +650,11 @@ export function ExpenseItemsCard({
           },
           open: true,
           onClose: closeEditDialog,
-          onSaveItem: handleSaveFiller,
+          onSaveRemainder: handleSaveRemainder,
+          remainderAllocationMode:
+            itemizedRemainder?.allocationMode ?? 'CUSTOM',
+          proportionalPreview: proportionalPreview.preview,
+          proportionalErrorKey: proportionalPreview.errorKey,
           presets,
           presetsLoading,
           canManage,

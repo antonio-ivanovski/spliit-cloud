@@ -1,5 +1,6 @@
 import { RecurrenceEndType, RecurrenceFrequency } from '@spliit/db'
 import {
+  canonicalizeItemizedRemainder,
   occurrenceDateToUtcRunAt,
   recurrenceConfigSchema,
   validateRecurrenceConfig,
@@ -69,6 +70,7 @@ export function buildRecurringTemplate(args: {
     }>
     itemizedRemainder?: {
       splitMode: string
+      allocationMode?: 'CUSTOM' | 'PROPORTIONAL'
       paidFor: Array<{ participant: string; shares: number }>
     }
   }
@@ -117,17 +119,24 @@ export function buildRecurringTemplate(args: {
       })),
     })),
     itemizedRemainder: expense.itemizedRemainder
-      ? {
-          splitMode: expense.itemizedRemainder.splitMode,
-          paidFor: expense.itemizedRemainder.paidFor.map((p) => ({
-            ledgerParticipantId: p.participant,
-            shares: p.shares,
-          })),
-        }
+      ? (() => {
+          // Proportional remainders persist only the rule; weights derive
+          // from item subtotals when occurrences materialize.
+          const remainder = canonicalizeItemizedRemainder(
+            expense.itemizedRemainder,
+          )
+          return {
+            splitMode: remainder.splitMode,
+            allocationMode: remainder.allocationMode ?? 'CUSTOM',
+            paidFor: remainder.paidFor.map((p) => ({
+              ledgerParticipantId: p.participant,
+              shares: p.shares,
+            })),
+          }
+        })()
       : null,
   }
 }
-
 export function endReached(
   series: {
     endType: RecurrenceEndType
@@ -227,6 +236,8 @@ export function occurrenceExpenseData(
           itemizedRemainder: {
             create: {
               splitMode: template.itemizedRemainder.splitMode as never,
+              allocationMode: (template.itemizedRemainder.allocationMode ??
+                'CUSTOM') as never,
               paidFor: {
                 createMany: { data: template.itemizedRemainder.paidFor },
               },

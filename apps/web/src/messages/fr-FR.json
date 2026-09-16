@@ -990,7 +990,9 @@
       "allItemsSplitLabel": "Partage de tous les articles",
       "allItemsSplitMixed": "Les articles utilisent des partages différents",
       "allItemsSplitEdit": "Modifier le partage de tous les articles",
-      "allItemsSplitModalTitle": "Partage de tous les articles"
+      "allItemsSplitModalTitle": "Partage de tous les articles",
+      "remainderAllocationProportional": "Proportionnel aux articles",
+      "remainderProportionalHint": "Répartissez ce montant en fonction du sous-total des articles de chaque personne. Utile pour les taxes et les pourboires."
     },
     "leaveItemized": {
       "title": "Changer de mode de répartition ?",
@@ -1327,7 +1329,10 @@
     "itemTitleRequired": "Le nom de l’élément est obligatoire.",
     "itemQuantityMin1": "La quantité de l’élément doit être d’au moins 1.",
     "rowErrorsHeading": "Corrigez ces parts :",
-    "invalidWallTime": "Cette heure n’existe pas à la date sélectionnée dans ce fuseau horaire."
+    "invalidWallTime": "Cette heure n’existe pas à la date sélectionnée dans ce fuseau horaire.",
+    "proportionalUnassignedItems": "Attribuez chaque article à au moins un participant pour répartir le reste proportionnellement, ou utilisez une répartition personnalisée.",
+    "proportionalZeroBasis": "Les sous-totaux des articles s’annulent, le reste ne peut donc pas être réparti proportionnellement. Corrigez les articles ou utilisez une répartition personnalisée.",
+    "proportionalInvalidRatios": "Les sous-totaux des articles de certains participants sont de signes opposés, le reste ne peut donc pas être réparti proportionnellement. Corrigez les articles ou utilisez une répartition personnalisée."
   },
   "Categories": {
     "search": "Rechercher une catégorie…",

@@ -1527,7 +1527,9 @@
       "allItemsSplitLabel": "Cách chia cho tất cả mục",
       "allItemsSplitMixed": "Các mục đang dùng cách chia khác nhau",
       "allItemsSplitEdit": "Chỉnh sửa cách chia tất cả mục",
-      "allItemsSplitModalTitle": "Cách chia cho tất cả mục"
+      "allItemsSplitModalTitle": "Cách chia cho tất cả mục",
+      "remainderAllocationProportional": "Theo tỷ lệ các mục",
+      "remainderProportionalHint": "Chia số tiền này dựa trên tổng phụ các mục của từng người. Hữu ích cho thuế và tiền boa."
     },
     "leaveItemized": {
       "title": "Rời chế độ mục?",
@@ -1867,7 +1869,10 @@
     "itemTitleRequired": "Tên mục là bắt buộc.",
     "itemQuantityMin1": "Số lượng của mục phải ít nhất là 1.",
     "rowErrorsHeading": "Vui lòng sửa các phần này:",
-    "invalidWallTime": "Thời gian này không tồn tại vào ngày đã chọn trong múi giờ này."
+    "invalidWallTime": "Thời gian này không tồn tại vào ngày đã chọn trong múi giờ này.",
+    "proportionalUnassignedItems": "Hãy gán mỗi mục cho ít nhất một người để chia phần còn lại theo tỷ lệ, hoặc dùng cách chia tùy chỉnh.",
+    "proportionalZeroBasis": "Các tổng phụ triệt tiêu lẫn nhau nên không thể chia phần còn lại theo tỷ lệ. Hãy sửa các mục hoặc dùng cách chia tùy chỉnh.",
+    "proportionalInvalidRatios": "Tổng phụ các mục của một số người có dấu trái nhau nên không thể chia phần còn lại theo tỷ lệ. Hãy sửa các mục hoặc dùng cách chia tùy chỉnh."
   },
   "Categories": {
     "search": "Tìm danh mục…",

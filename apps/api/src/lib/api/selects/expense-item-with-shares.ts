@@ -20,6 +20,7 @@ export type ExpenseItemWithShares = Prisma.ExpenseItemGetPayload<{
 /** Itemized remainder header + paidFor share rows. */
 export const expenseItemizedRemainderSelect = {
   splitMode: true,
+  allocationMode: true,
   paidFor: { select: expenseParticipantSharesSelect },
 } satisfies Prisma.ExpenseItemizedRemainderSelect
 

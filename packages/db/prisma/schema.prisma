@@ -1066,10 +1066,16 @@ model ExpenseItemPaidFor {
 }
 
 model ExpenseItemizedRemainder {
-  expense   Expense                           @relation(fields: [expenseId], references: [id], onDelete: Cascade)
-  expenseId String                            @id
-  splitMode SplitMode                         @default(EVENLY)
-  paidFor   ExpenseItemizedRemainderPaidFor[]
+  expense        Expense                           @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  expenseId      String                            @id
+  splitMode      SplitMode                         @default(EVENLY)
+  allocationMode RemainderAllocationMode           @default(CUSTOM)
+  paidFor        ExpenseItemizedRemainderPaidFor[]
+}
+
+enum RemainderAllocationMode {
+  CUSTOM
+  PROPORTIONAL
 }
 
 model ExpenseItemizedRemainderPaidFor {

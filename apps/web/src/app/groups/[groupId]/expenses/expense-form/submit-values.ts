@@ -144,15 +144,24 @@ export function buildSubmitValues(
 
   const itemizedRemainder: Expense['itemizedRemainder'] =
     values.splitMode === 'ITEMIZED' && values.itemizedRemainder
-      ? {
-          splitMode: values.itemizedRemainder.splitMode,
-          paidFor: serializePaidFor({
+      ? values.itemizedRemainder.allocationMode === 'PROPORTIONAL'
+        ? {
+            // Canonical proportional payload: derived weights are never
+            // persisted; the server recomputes them from item subtotals.
+            allocationMode: 'PROPORTIONAL',
+            splitMode: 'EVENLY',
+            paidFor: [],
+          }
+        : {
+            allocationMode: 'CUSTOM',
             splitMode: values.itemizedRemainder.splitMode,
-            amount: 0,
-            currency: inputCurrency,
-            paidFor: values.itemizedRemainder.paidFor,
-          }),
-        }
+            paidFor: serializePaidFor({
+              splitMode: values.itemizedRemainder.splitMode,
+              amount: 0,
+              currency: inputCurrency,
+              paidFor: values.itemizedRemainder.paidFor,
+            }),
+          }
       : undefined
 
   return {

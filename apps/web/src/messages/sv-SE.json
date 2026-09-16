@@ -1454,7 +1454,9 @@
       "allItemsSplitLabel": "Fördelning för alla artiklar",
       "allItemsSplitMixed": "Artiklarna använder olika fördelningar",
       "allItemsSplitEdit": "Redigera fördelningen för alla artiklar",
-      "allItemsSplitModalTitle": "Fördelning för alla artiklar"
+      "allItemsSplitModalTitle": "Fördelning för alla artiklar",
+      "remainderAllocationProportional": "Proportionell mot raderna",
+      "remainderProportionalHint": "Fördela beloppet utifrån varje persons radsubtotal. Praktiskt för skatter och dricks."
     },
     "leaveItemized": {
       "title": "Byta fördelningssätt?",
@@ -2730,7 +2732,10 @@
     "itemTitleRequired": "Postens namn krävs.",
     "itemQuantityMin1": "Postens antal måste vara minst 1.",
     "rowErrorsHeading": "Korrigera dessa andelar:",
-    "invalidWallTime": "Den här tiden finns inte på det valda datumet i den här tidszonen."
+    "invalidWallTime": "Den här tiden finns inte på det valda datumet i den här tidszonen.",
+    "proportionalUnassignedItems": "Tilldela varje rad till minst en deltagare för att fördela restbeloppet proportionellt, eller använd en anpassad fördelning.",
+    "proportionalZeroBasis": "Radernas subtotaler tar ut varandra, så restbeloppet kan inte fördelas proportionellt. Korrigera raderna eller använd en anpassad fördelning.",
+    "proportionalInvalidRatios": "Vissa deltagares radsubtotaler har motsatta tecken, så restbeloppet kan inte fördelas proportionellt. Korrigera raderna eller använd en anpassad fördelning."
   },
   "Settings": {
     "title": "Inställningar"

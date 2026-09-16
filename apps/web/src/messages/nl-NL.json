@@ -1011,7 +1011,9 @@
       "allItemsSplitLabel": "Verdeling voor alle artikelen",
       "allItemsSplitMixed": "Artikelen gebruiken verschillende verdelingen",
       "allItemsSplitEdit": "Verdeling van alle artikelen bewerken",
-      "allItemsSplitModalTitle": "Verdeling voor alle artikelen"
+      "allItemsSplitModalTitle": "Verdeling voor alle artikelen",
+      "remainderAllocationProportional": "Proportioneel aan artikelen",
+      "remainderProportionalHint": "Verdeel dit bedrag op basis van het itemsubtotaal van elke persoon. Handig voor belastingen en fooien."
     },
     "leaveItemized": {
       "title": "Verdeelmethode wijzigen?",
@@ -1351,7 +1353,10 @@
     "itemTitleRequired": "De naam van het item is verplicht.",
     "itemQuantityMin1": "Het aantal van het item moet minstens 1 zijn.",
     "rowErrorsHeading": "Herstel deze aandelen:",
-    "invalidWallTime": "Dit tijdstip bestaat niet op de geselecteerde datum in deze tijdzone."
+    "invalidWallTime": "Dit tijdstip bestaat niet op de geselecteerde datum in deze tijdzone.",
+    "proportionalUnassignedItems": "Wijs elk item toe aan ten minste één deelnemer om het restbedrag proportioneel te verdelen, of gebruik een eigen verdeling.",
+    "proportionalZeroBasis": "De itemsubtotalen heffen elkaar op, dus het restbedrag kan niet proportioneel worden verdeeld. Corrigeer de items of gebruik een eigen verdeling.",
+    "proportionalInvalidRatios": "De itemsubtotalen van sommige deelnemers hebben tegengestelde tekens, dus het restbedrag kan niet proportioneel worden verdeeld. Corrigeer de items of gebruik een eigen verdeling."
   },
   "Categories": {
     "search": "Categorie zoeken…",

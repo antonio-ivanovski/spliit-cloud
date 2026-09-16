@@ -6,7 +6,10 @@ import {
   optionalExpenseConversionSchema,
 } from './conversion'
 import type { RecurrenceRule, SplitMode } from './enums'
-import { itemsExceedExpenseAmount } from './itemized-expenses'
+import {
+  getProportionalRemainderError,
+  itemsExceedExpenseAmount,
+} from './itemized-expenses'
 import { recurrenceConfigSchema } from './recurring-expenses'
 import { MAX_STORED_SHARES, getDisplayShareErrorKey } from './shares'
 import {
@@ -535,6 +538,10 @@ export const expenseItemApiSchema = z
 export type ExpenseFormItemValues = z.infer<typeof expenseItemFormInputSchema>
 export type ExpenseApiItem = z.infer<typeof expenseItemApiSchema>
 
+const remainderAllocationModeSchema = z
+  .enum(['CUSTOM', 'PROPORTIONAL'] as const)
+  .default('CUSTOM')
+
 const itemizedRemainderFormSchema = z.object({
   paidFor: z
     .array(itemFormPaidForRowSchema)
@@ -543,6 +550,7 @@ const itemizedRemainderFormSchema = z.object({
       itemRowDuplicateGuard(paidFor, ctx)
     }),
   splitMode: itemSplitModeSchema,
+  allocationMode: remainderAllocationModeSchema,
 })
 
 // The remainder's own `splitMode` decides the unit of each row; errors point
@@ -570,6 +578,7 @@ const itemizedRemainderApiSchema = z.object({
       itemRowDuplicateGuard(paidFor, ctx)
     }),
   splitMode: itemSplitModeSchema,
+  allocationMode: remainderAllocationModeSchema,
 })
 
 /**
@@ -594,6 +603,43 @@ function validateItemizedRemainderShareRows(
       { allowNegative: remainder.splitMode === 'BY_AMOUNT' },
     )
   })
+}
+
+type ProportionalItemLike = {
+  amount: number
+  splitMode: SplitMode
+  paidFor: Array<{ participant: string; shares: number }>
+}
+
+/**
+ * Report a proportional-basis failure as an actionable form/API error. Zero
+ * remainder never reports (mode is retained for later edits).
+ */
+function reportProportionalBasisError(
+  items: ProportionalItemLike[],
+  expenseAmount: number,
+  ctx: z.RefinementCtx,
+): void {
+  const basisError = getProportionalRemainderError(items, expenseAmount)
+  if (!basisError) return
+  ctx.addIssue({
+    code: 'custom',
+    message:
+      basisError === 'UNASSIGNED_ITEMS'
+        ? 'proportionalUnassignedItems'
+        : basisError === 'ZERO_BASIS'
+          ? 'proportionalZeroBasis'
+          : 'proportionalInvalidRatios',
+    path: ['itemizedRemainder', 'paidFor'],
+  })
+}
+
+function isProportionalRemainder(remainder: unknown): boolean {
+  return (
+    typeof remainder === 'object' &&
+    remainder !== null &&
+    (remainder as { allocationMode?: string }).allocationMode === 'PROPORTIONAL'
+  )
 }
 
 /**
@@ -892,16 +938,28 @@ export const expenseFormInputSchema = z
 
     const remainderAmount = expense.amount - itemsSum
     if (remainderAmount !== 0 && expense.itemizedRemainder) {
-      itemizedRemainderFormRows(expense.itemizedRemainder, ctx)
-      validateDisplayItemShareTotal(
-        expense.itemizedRemainder.paidFor,
-        expense.itemizedRemainder.splitMode,
-        remainderAmount,
-        ctx,
-        ['itemizedRemainder', 'paidFor'],
-        'amountSum',
-        'percentageSum',
-      )
+      if (isProportionalRemainder(expense.itemizedRemainder)) {
+        reportProportionalBasisError(
+          items.map((item) => ({
+            amount: item.unitPrice * item.quantity,
+            splitMode: item.splitMode,
+            paidFor: item.paidFor,
+          })),
+          expense.amount,
+          ctx,
+        )
+      } else {
+        itemizedRemainderFormRows(expense.itemizedRemainder, ctx)
+        validateDisplayItemShareTotal(
+          expense.itemizedRemainder.paidFor,
+          expense.itemizedRemainder.splitMode,
+          remainderAmount,
+          ctx,
+          ['itemizedRemainder', 'paidFor'],
+          'amountSum',
+          'percentageSum',
+        )
+      }
     }
   })
 
@@ -947,18 +1005,26 @@ export function validateExpenseItems(
 
   const remainderAmount = amount - itemsSum
   if (splitMode === 'ITEMIZED' && itemizedRemainder && remainderAmount !== 0) {
-    validateItemShareTotal(
-      itemizedRemainder.paidFor,
-      itemizedRemainder.splitMode,
-      remainderAmount,
-      ctx,
-      ['itemizedRemainder', 'paidFor'],
-      'amountSum',
-      'percentageSum',
-    )
+    if (isProportionalRemainder(itemizedRemainder)) {
+      reportProportionalBasisError(items, amount, ctx)
+    } else {
+      validateItemShareTotal(
+        itemizedRemainder.paidFor,
+        itemizedRemainder.splitMode,
+        remainderAmount,
+        ctx,
+        ['itemizedRemainder', 'paidFor'],
+        'amountSum',
+        'percentageSum',
+      )
+    }
   }
 
-  if (splitMode === 'ITEMIZED' && itemizedRemainder) {
+  if (
+    splitMode === 'ITEMIZED' &&
+    itemizedRemainder &&
+    !isProportionalRemainder(itemizedRemainder)
+  ) {
     validateItemizedRemainderShareRows(itemizedRemainder, ctx)
   }
 }

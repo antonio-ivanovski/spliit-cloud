@@ -1011,7 +1011,9 @@
       "allItemsSplitLabel": "Teilung aller Artikel",
       "allItemsSplitMixed": "Artikel verwenden unterschiedliche Teilungen",
       "allItemsSplitEdit": "Teilung aller Artikel bearbeiten",
-      "allItemsSplitModalTitle": "Teilung aller Artikel"
+      "allItemsSplitModalTitle": "Teilung aller Artikel",
+      "remainderAllocationProportional": "Proportional zu Artikeln",
+      "remainderProportionalHint": "Teile diesen Betrag anhand der Artikelzwischensumme jeder Person auf. Nützlich für Steuern und Trinkgelder."
     },
     "leaveItemized": {
       "title": "Aufteilungsart wechseln?",
@@ -1351,7 +1353,10 @@
     "itemTitleRequired": "Der Name des Postens ist erforderlich.",
     "itemQuantityMin1": "Die Menge des Postens muss mindestens 1 sein.",
     "rowErrorsHeading": "Korrigiere diese Anteile:",
-    "invalidWallTime": "Diese Uhrzeit existiert am ausgewählten Datum in dieser Zeitzone nicht."
+    "invalidWallTime": "Diese Uhrzeit existiert am ausgewählten Datum in dieser Zeitzone nicht.",
+    "proportionalUnassignedItems": "Weise jeden Artikel mindestens einer teilnehmenden Person zu, um den Restbetrag proportional aufzuteilen, oder verwende eine eigene Aufteilung.",
+    "proportionalZeroBasis": "Die Artikelzwischensummen heben sich gegenseitig auf, daher kann der Restbetrag nicht proportional aufgeteilt werden. Korrigiere die Artikel oder verwende eine eigene Aufteilung.",
+    "proportionalInvalidRatios": "Die Artikelzwischensummen einiger Teilnehmenden haben unterschiedliche Vorzeichen, daher kann der Restbetrag nicht proportional aufgeteilt werden. Korrigiere die Artikel oder verwende eine eigene Aufteilung."
   },
   "Categories": {
     "search": "Nach Kategorie suchen...",

@@ -4,6 +4,7 @@ import {
   buildDefaultPaidForForSplitMode,
   computeExactSharesFromItems,
   computePaidForFromItems,
+  getProportionalRemainderError,
   itemsExceedExpenseAmount,
 } from './itemized-expenses'
 import type { ExpenseApiItem } from './schemas'
@@ -437,6 +438,298 @@ describe('computePaidForFromItems', () => {
       30000n,
     )
     expect(exact.p1.denominator).toBe(3n)
+  })
+})
+
+describe('proportional remainder (taxes and tips)', () => {
+  const proportional: {
+    splitMode: 'EVENLY'
+    paidFor: Array<{ participant: string; shares: number }>
+    allocationMode: 'PROPORTIONAL'
+  } = {
+    splitMode: 'EVENLY',
+    paidFor: [],
+    allocationMode: 'PROPORTIONAL',
+  }
+
+  it('splits the issue example 94.50 / 5.50', () => {
+    const items = [
+      makeItem({
+        amount: 8591,
+        paidFor: [{ participant: 'p1', shares: 1 }],
+      }),
+      makeItem({ amount: 500, paidFor: [{ participant: 'p2', shares: 1 }] }),
+    ]
+    const result = computePaidForFromItems(items, ['p1', 'p2'], 10000, {
+      ...proportional,
+    })
+    const byId = Object.fromEntries(
+      result.paidFor.map((p) => [p.participant, p.shares]),
+    )
+    expect(byId).toEqual({ p1: 9450, p2: 550 })
+  })
+
+  it('follows unequal shared items, not headcount', () => {
+    const items = [
+      makeItem({
+        amount: 9000,
+        paidFor: [
+          { participant: 'p1', shares: 1 },
+          { participant: 'p2', shares: 1 },
+        ],
+      }),
+      makeItem({
+        amount: 1000,
+        paidFor: [{ participant: 'p2', shares: 1 }],
+      }),
+    ]
+    // Subtotals p1=4500, p2=5500; remainder 1000 → p1 +450, p2 +550.
+    const result = computePaidForFromItems(items, ['p1', 'p2'], 11000, {
+      ...proportional,
+    })
+    const byId = Object.fromEntries(
+      result.paidFor.map((p) => [p.participant, p.shares]),
+    )
+    expect(byId).toEqual({ p1: 4950, p2: 6050 })
+  })
+
+  it('distributes fractional cents deterministically', () => {
+    const items = [
+      makeItem({
+        amount: 100,
+        paidFor: [{ participant: 'p1', shares: 1 }],
+      }),
+      makeItem({
+        amount: 100,
+        paidFor: [{ participant: 'p2', shares: 1 }],
+      }),
+      makeItem({
+        amount: 100,
+        paidFor: [{ participant: 'p3', shares: 1 }],
+      }),
+    ]
+    const first = computePaidForFromItems(items, ['p1', 'p2', 'p3'], 301, {
+      ...proportional,
+    })
+    const second = computePaidForFromItems(items, ['p1', 'p2', 'p3'], 301, {
+      ...proportional,
+    })
+    expect(first).toEqual(second)
+    const sum = first.paidFor.reduce((s, p) => s + p.shares, 0)
+    expect(sum).toBe(301)
+  })
+
+  it('gives zero-subtotal participants zero remainder', () => {
+    const items = [
+      makeItem({
+        amount: 1000,
+        paidFor: [{ participant: 'p1', shares: 1 }],
+      }),
+    ]
+    const result = computePaidForFromItems(items, ['p1', 'p2'], 1100, {
+      ...proportional,
+    })
+    const byId = Object.fromEntries(
+      result.paidFor.map((p) => [p.participant, p.shares]),
+    )
+    expect(byId.p1).toBe(1100)
+    expect(byId.p2 ?? 0).toBe(0)
+  })
+
+  it('needs no basis when the remainder is zero', () => {
+    const items = [
+      makeItem({
+        amount: 500,
+        paidFor: [{ participant: 'p1', shares: 1 }],
+      }),
+    ]
+    const result = computePaidForFromItems(items, ['p1', 'p2'], 500, {
+      ...proportional,
+    })
+    expect(result.paidFor).toEqual([{ participant: 'p1', shares: 500 }])
+    expect(
+      getProportionalRemainderError(
+        [
+          {
+            amount: 500,
+            splitMode: 'EVENLY',
+            paidFor: [{ participant: 'p1', shares: 1 }],
+          },
+        ],
+        500,
+      ),
+    ).toBeNull()
+  })
+
+  it('rejects unassigned items with a nonzero remainder', () => {
+    const items = [
+      makeItem({
+        amount: 600,
+        paidFor: [{ participant: 'p1', shares: 1 }],
+      }),
+      makeItem({ amount: 200, paidFor: [] }),
+    ]
+    expect(() =>
+      computePaidForFromItems(items, ['p1', 'p2'], 1000, {
+        ...proportional,
+      }),
+    ).toThrow('PROPORTIONAL_UNASSIGNED_ITEMS')
+  })
+
+  it('rejects a zero total subtotal', () => {
+    const items = [
+      makeItem({
+        amount: 500,
+        paidFor: [{ participant: 'p1', shares: 1 }],
+      }),
+      makeItem({
+        amount: -500,
+        paidFor: [{ participant: 'p2', shares: 1 }],
+      }),
+    ]
+    expect(() =>
+      computePaidForFromItems(items, ['p1', 'p2'], 100, {
+        ...proportional,
+      }),
+    ).toThrow('PROPORTIONAL_ZERO_BASIS')
+  })
+
+  it('rejects mixed-sign participant ratios', () => {
+    const items = [
+      makeItem({
+        amount: 1000,
+        paidFor: [{ participant: 'p1', shares: 1 }],
+      }),
+      makeItem({
+        amount: -200,
+        paidFor: [{ participant: 'p2', shares: 1 }],
+      }),
+    ]
+    expect(() =>
+      computePaidForFromItems(items, ['p1', 'p2'], 1000, {
+        ...proportional,
+      }),
+    ).toThrow('PROPORTIONAL_INVALID_RATIOS')
+  })
+
+  it('supports net-valid discounts on one participant', () => {
+    const items = [
+      makeItem({
+        amount: 1000,
+        paidFor: [{ participant: 'p1', shares: 1 }],
+      }),
+      makeItem({
+        amount: -100,
+        paidFor: [{ participant: 'p1', shares: 100 }],
+        splitMode: 'BY_AMOUNT',
+      }),
+    ]
+    // Net subtotal p1=900; remainder 100 → p1 pays 1000 total.
+    const result = computePaidForFromItems(items, ['p1'], 1000, {
+      ...proportional,
+    })
+    expect(result.paidFor).toEqual([{ participant: 'p1', shares: 1000 }])
+  })
+
+  it('supports negative refunds with matching signs', () => {
+    const items = [
+      makeItem({
+        amount: -800,
+        paidFor: [{ participant: 'p1', shares: 1 }],
+      }),
+    ]
+    const result = computePaidForFromItems(items, ['p1', 'p2'], -1000, {
+      ...proportional,
+    })
+    const byId = Object.fromEntries(
+      result.paidFor.map((p) => [p.participant, p.shares]),
+    )
+    expect(byId.p1).toBe(-1000)
+  })
+
+  it('leaves custom allocation untouched', () => {
+    const items = [
+      makeItem({
+        amount: 600,
+        paidFor: [{ participant: 'p1', shares: 1 }],
+      }),
+    ]
+    const result = computePaidForFromItems(items, ['p1', 'p2'], 1000, {
+      splitMode: 'EVENLY',
+      paidFor: [
+        { participant: 'p1', shares: 1 },
+        { participant: 'p2', shares: 1 },
+      ],
+    })
+    const byId = Object.fromEntries(
+      result.paidFor.map((p) => [p.participant, p.shares]),
+    )
+    expect(byId).toEqual({ p1: 800, p2: 200 })
+  })
+
+  it('tolerates fractional display units without throwing', () => {
+    // Form display units (fractional majors, decimal shares, percentages)
+    // must never crash basis validation with BigInt errors.
+    expect(
+      getProportionalRemainderError(
+        [
+          {
+            amount: 85.91,
+            splitMode: 'EVENLY',
+            paidFor: [{ participant: 'p1', shares: 1 }],
+          },
+          {
+            amount: 5,
+            splitMode: 'EVENLY',
+            paidFor: [{ participant: 'p2', shares: 1 }],
+          },
+        ],
+        100,
+      ),
+    ).toBeNull()
+    expect(
+      getProportionalRemainderError(
+        [
+          {
+            amount: 10.5,
+            splitMode: 'BY_SHARES',
+            paidFor: [
+              { participant: 'p1', shares: 1.5 },
+              { participant: 'p2', shares: 2 },
+            ],
+          },
+        ],
+        12,
+      ),
+    ).toBeNull()
+    expect(
+      getProportionalRemainderError(
+        [
+          {
+            amount: 10,
+            splitMode: 'BY_PERCENTAGE',
+            paidFor: [
+              { participant: 'p1', shares: 70 },
+              { participant: 'p2', shares: 30 },
+            ],
+          },
+        ],
+        12,
+      ),
+    ).toBeNull()
+    // Partial inputs (NaN shares) are another row's error, never a crash.
+    expect(
+      getProportionalRemainderError(
+        [
+          {
+            amount: 10,
+            splitMode: 'BY_AMOUNT',
+            paidFor: [{ participant: 'p1', shares: Number.NaN }],
+          },
+        ],
+        12,
+      ),
+    ).toBeNull()
   })
 })
 

@@ -62,6 +62,7 @@ const baseValues: ExpenseFormInputValues = {
     },
   ],
   itemizedRemainder: {
+    allocationMode: 'CUSTOM',
     splitMode: 'BY_SHARES',
     paidFor: [
       { participant: 'p1', shares: 1.5 },
@@ -208,6 +209,7 @@ describe('buildSubmitValues', () => {
       conversionRequired: false,
     })
     expect(result.itemizedRemainder).toEqual({
+      allocationMode: 'CUSTOM',
       splitMode: 'BY_SHARES',
       paidFor: [
         // Form-mode display values (`1.5`, `2`) are scaled to fixed units
@@ -215,6 +217,29 @@ describe('buildSubmitValues', () => {
         { participant: 'p1', shares: 150 },
         { participant: 'p2', shares: 200 },
       ],
+    })
+  })
+
+  it('sends a canonical payload for proportional remainders', () => {
+    const result = buildSubmitValues(
+      {
+        ...baseValues,
+        itemizedRemainder: {
+          allocationMode: 'PROPORTIONAL',
+          splitMode: 'BY_SHARES',
+          paidFor: [{ participant: 'p1', shares: 1 }],
+        },
+      },
+      {
+        groupCurrency: getCurrency('USD')!,
+        conversionRequired: false,
+      },
+    )
+    // Derived weights are never persisted; the server recomputes them.
+    expect(result.itemizedRemainder).toEqual({
+      allocationMode: 'PROPORTIONAL',
+      splitMode: 'EVENLY',
+      paidFor: [],
     })
   })
 })

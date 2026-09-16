@@ -976,7 +976,9 @@
       "allItemsSplitLabel": "所有項目分攤",
       "allItemsSplitMixed": "項目使用不同的分攤方式",
       "allItemsSplitEdit": "編輯所有項目的分攤",
-      "allItemsSplitModalTitle": "所有項目分攤"
+      "allItemsSplitModalTitle": "所有項目分攤",
+      "remainderAllocationProportional": "按項目比例分攤",
+      "remainderProportionalHint": "根據每人的項目小計分攤此金額。適用於稅費和小費。"
     },
     "leaveItemized": {
       "title": "切換分攤方式？",
@@ -1312,7 +1314,10 @@
     "itemTitleRequired": "項目名稱為必填。",
     "itemQuantityMin1": "項目數量必須至少為 1。",
     "rowErrorsHeading": "請修正以下份額：",
-    "invalidWallTime": "所選日期在此時區中不存在這個時間。"
+    "invalidWallTime": "所選日期在此時區中不存在這個時間。",
+    "proportionalUnassignedItems": "請將每個項目分配給至少一位參與者，以便按比例分攤餘款，或改用自訂分攤。",
+    "proportionalZeroBasis": "項目小計相互抵銷，因此無法按比例分攤餘款。請修正項目或改用自訂分攤。",
+    "proportionalInvalidRatios": "部分參與者的項目小計符號相反，因此無法按比例分攤餘款。請修正項目或改用自訂分攤。"
   },
   "Categories": {
     "search": "搜尋類別……",

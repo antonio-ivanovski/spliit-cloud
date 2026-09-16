@@ -1637,7 +1637,9 @@
       "allItemsSplitLabel": "all-items split",
       "allItemsSplitMixed": "items are using different splits",
       "allItemsSplitEdit": "edit the all-items split",
-      "allItemsSplitModalTitle": "all-items split"
+      "allItemsSplitModalTitle": "all-items split",
+      "remainderAllocationProportional": "proportional to items",
+      "remainderProportionalHint": "split the leftover based on everyone’s item subtotals. handy for taxes and tips."
     },
     "leaveItemized": {
       "title": "switch split mode?",
@@ -3043,7 +3045,10 @@
     "itemTitleRequired": "thingamajig needs a nameroo.",
     "itemQuantityMin1": "thingamajig count gotta be one-ish or more.",
     "rowErrorsHeading": "fix these shares, fr:",
-    "invalidWallTime": "That time doesn't exist on the selected date in this timezone."
+    "invalidWallTime": "That time doesn't exist on the selected date in this timezone.",
+    "proportionalUnassignedItems": "assign every item to at least one person to split the leftover proportionally, or use a custom split.",
+    "proportionalZeroBasis": "item subtotals cancel out, so the leftover can’t be split proportionally. fix the items or use a custom split.",
+    "proportionalInvalidRatios": "some people’s item subtotals have opposite signs, so the leftover can’t be split proportionally. fix the items or use a custom split."
   },
   "Settings": {
     "title": "settings hub"

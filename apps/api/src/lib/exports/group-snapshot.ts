@@ -294,6 +294,7 @@ export function createGroupExportSnapshot(
     itemizedRemainder: expense.itemizedRemainder
       ? {
           splitMode: expense.itemizedRemainder.splitMode,
+          allocationMode: expense.itemizedRemainder.allocationMode,
           paidFor: shareRows(expense.itemizedRemainder.paidFor),
         }
       : null,

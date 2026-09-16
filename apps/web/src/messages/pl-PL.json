@@ -997,7 +997,9 @@
       "allItemsSplitLabel": "Podział wszystkich pozycji",
       "allItemsSplitMixed": "Pozycje mają różne podziały",
       "allItemsSplitEdit": "Edytuj podział wszystkich pozycji",
-      "allItemsSplitModalTitle": "Podział wszystkich pozycji"
+      "allItemsSplitModalTitle": "Podział wszystkich pozycji",
+      "remainderAllocationProportional": "Proporcjonalnie do pozycji",
+      "remainderProportionalHint": "Podziel tę kwotę proporcjonalnie do sumy częściowej pozycji każdej osoby. Przydatne przy podatkach i napiwkach."
     },
     "leaveItemized": {
       "title": "Zmienić sposób podziału?",
@@ -1335,7 +1337,10 @@
     "itemTitleRequired": "Nazwa pozycji jest wymagana.",
     "itemQuantityMin1": "Liczba pozycji musi wynosić co najmniej 1.",
     "rowErrorsHeading": "Popraw te udziały:",
-    "invalidWallTime": "Ta godzina nie istnieje w wybranym dniu w tej strefie czasowej."
+    "invalidWallTime": "Ta godzina nie istnieje w wybranym dniu w tej strefie czasowej.",
+    "proportionalUnassignedItems": "Przypisz każdą pozycję do co najmniej jednego uczestnika, aby podzielić resztę proporcjonalnie, lub użyj własnego podziału.",
+    "proportionalZeroBasis": "Sumy częściowe pozycji znoszą się wzajemnie, więc reszty nie można podzielić proporcjonalnie. Popraw pozycje lub użyj własnego podziału.",
+    "proportionalInvalidRatios": "Sumy częściowe pozycji niektórych uczestników mają przeciwne znaki, więc reszty nie można podzielić proporcjonalnie. Popraw pozycje lub użyj własnego podziału."
   },
   "Categories": {
     "search": "Szukaj kategorii…",

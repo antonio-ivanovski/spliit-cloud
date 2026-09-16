@@ -86,6 +86,21 @@ export function ItemParticipantsModal(props: {
   canManagePersonal?: boolean
   /** @deprecated legacy prop accepted for old callers; presets replace it. */
   savedDefault?: unknown
+  /**
+   * Remainder-only allocation mode. When `onSaveRemainder` is provided the
+   * modal edits the synthetic "Other (unaccounted)" filler and offers
+   * "Proportional to items" as an extra split option below Equal.
+   */
+  remainderAllocationMode?: 'CUSTOM' | 'PROPORTIONAL'
+  onSaveRemainder?: (remainder: {
+    allocationMode: 'CUSTOM' | 'PROPORTIONAL'
+    splitMode: ItemSplitMode
+    paidFor: ExpenseFormItemValues['paidFor']
+  }) => void
+  /** Proportional preview in expense-currency minor units (read-only). */
+  proportionalPreview?: Array<{ participant: string; shares: number }>
+  /** Untranslated `SchemaErrors` key when proportional basis is invalid. */
+  proportionalErrorKey?: string | null
 }) {
   const {
     open,
@@ -105,10 +120,29 @@ export function ItemParticipantsModal(props: {
     canManage = false,
     canManageShared,
     canManagePersonal,
+    remainderAllocationMode,
+    onSaveRemainder,
+    proportionalPreview = [],
+    proportionalErrorKey = null,
   } = props
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
+  const { t: tSchemaErrors } = useTranslation(undefined, {
+    keyPrefix: 'SchemaErrors',
+  })
   const locale = useLocale()
   const canCreatePreset = !!canManageShared || !!canManagePersonal || canManage
+  const showRemainderAllocationToggle = !!onSaveRemainder
+
+  const [allocationMode, setAllocationMode] = useState<
+    'CUSTOM' | 'PROPORTIONAL'
+  >(remainderAllocationMode ?? 'CUSTOM')
+  // Stash the custom configuration when entering proportional mode so
+  // switching back restores it. A freshly loaded proportional expense has no
+  // stash and falls back to the equal rows populated into the draft.
+  const stashedCustomRef = useRef<{
+    splitMode: ItemSplitMode
+    paidFor: ExpenseFormItemValues['paidFor']
+  } | null>(null)
 
   const [draft, setDraft] = useState<ExpenseFormItemValues>(() => {
     const shouldPopulate =
@@ -129,8 +163,52 @@ export function ItemParticipantsModal(props: {
 
   const itemTotal = Number(draft.unitPrice) * Number(draft.quantity)
 
+  const isProportional =
+    showRemainderAllocationToggle && allocationMode === 'PROPORTIONAL'
+
   const handleSplitModeChange = (nextMode: SplitMode) => {
-    if (nextMode === 'ITEMIZED' || draft.splitMode === nextMode) return
+    if (nextMode === 'ITEMIZED') return
+    if (isProportional) {
+      // Leaving proportional mode: restore the stashed custom config,
+      // converting it to the newly picked mode when it differs.
+      const restored = stashedCustomRef.current
+      stashedCustomRef.current = null
+      setAllocationMode('CUSTOM')
+      const base = restored ?? {
+        splitMode: draft.splitMode,
+        paidFor: draft.paidFor,
+      }
+      if (nextMode === base.splitMode) {
+        setDraft((prev) => ({
+          ...prev,
+          splitMode: nextMode as ItemSplitMode,
+          paidFor: base.paidFor,
+        }))
+        return
+      }
+      if (hideAmountMode && nextMode === 'BY_AMOUNT') {
+        setDraft((prev) => ({
+          ...prev,
+          splitMode: base.splitMode,
+          paidFor: base.paidFor,
+        }))
+        return
+      }
+      const converted = convertParticipantShares({
+        rows: base.paidFor,
+        fromMode: base.splitMode,
+        toMode: nextMode,
+        targetAmount: itemTotal,
+        currency: groupCurrency,
+      })
+      setDraft((prev) => ({
+        ...prev,
+        splitMode: nextMode as ItemSplitMode,
+        paidFor: converted,
+      }))
+      return
+    }
+    if (draft.splitMode === nextMode) return
     if (hideAmountMode && nextMode === 'BY_AMOUNT') return
     const converted = convertParticipantShares({
       rows: draft.paidFor,
@@ -144,6 +222,15 @@ export function ItemParticipantsModal(props: {
       splitMode: nextMode as ItemSplitMode,
       paidFor: converted,
     }))
+  }
+
+  const handleProportionalSelect = () => {
+    if (isProportional) return
+    stashedCustomRef.current = {
+      splitMode: draft.splitMode,
+      paidFor: draft.paidFor.map((r) => ({ ...r })),
+    }
+    setAllocationMode('PROPORTIONAL')
   }
 
   const handleApplyPreset = (preset: SplitPreset) => {
@@ -163,7 +250,23 @@ export function ItemParticipantsModal(props: {
       !sameParticipantDistribution(draft.paidFor, loadedSplit.paidFor))
 
   const handleSave = () => {
-    if (onSaveItem) {
+    if (onSaveRemainder) {
+      if (allocationMode === 'PROPORTIONAL') {
+        // Canonical proportional payload: derived weights are never
+        // persisted; the server recomputes them from item subtotals.
+        onSaveRemainder({
+          allocationMode: 'PROPORTIONAL',
+          splitMode: 'EVENLY',
+          paidFor: [],
+        })
+      } else {
+        onSaveRemainder({
+          allocationMode: 'CUSTOM',
+          splitMode: draft.splitMode,
+          paidFor: draft.paidFor,
+        })
+      }
+    } else if (onSaveItem) {
       onSaveItem(draft)
     } else {
       form.setValue(`items.${itemIndex}`, draft, {
@@ -487,66 +590,95 @@ export function ItemParticipantsModal(props: {
 
         <ResponsiveDialogBody className="sm:min-h-0 sm:overflow-y-auto sm:overscroll-contain">
           <div>
-            {!readOnly && (
-              <div className="mb-3 w-full">
-                <SplitPresetPicker
-                  presets={presets}
-                  group={group}
-                  showBothSides={false}
-                  amount={itemTotal}
-                  currency={groupCurrency}
-                  loading={presetsLoading}
-                  loadedPreset={loadedPreset}
-                  modified={modified}
-                  onSaveAsNew={
-                    canCreatePreset && draft.splitMode !== 'BY_AMOUNT'
-                      ? () => saveAsRef.current()
-                      : undefined
-                  }
-                  canSaveChanges={
-                    !!loadedPreset &&
-                    draft.splitMode !== 'BY_AMOUNT' &&
-                    'scope' in loadedPreset &&
-                    ((loadedPreset.scope === 'SHARED' && canManageShared) ||
-                      (loadedPreset.scope === 'PERSONAL' && canManagePersonal))
-                  }
-                  onSaveChanges={() => saveChangesRef.current()}
-                  onSelect={handleApplyPreset}
-                />
-                {canCreatePreset && draft.splitMode !== 'BY_AMOUNT' && (
-                  <SavePresetButton
-                    group={group}
-                    groupCurrency={groupCurrency}
-                    target="PAID_FOR"
-                    splitMode={draft.splitMode}
-                    paidFor={draft.paidFor}
-                    existingPreset={loadedPreset}
-                    modified={modified}
-                    onSaved={() => setLoadedPreset(null)}
-                    onSaveChangesReady={(save) => {
-                      saveChangesRef.current = save
-                    }}
-                    onSaveAsReady={(saveAs) => {
-                      saveAsRef.current = saveAs
-                    }}
-                    onUpdated={(preset) => setLoadedPreset(preset)}
-                    hideTrigger
-                    canManage={canManage}
-                    canManageShared={canManageShared}
-                    canManagePersonal={canManagePersonal}
-                  />
-                )}
-              </div>
-            )}
-            <div className="mb-4">
-              <PaidForSplitOptionCards
-                value={draft.splitMode}
-                onChange={handleSplitModeChange}
-                renderContent={renderItemParticipants}
-                readOnly={readOnly}
-                hiddenModes={hideAmountMode ? ['BY_AMOUNT'] : undefined}
+            {isProportional && readOnly ? (
+              <ProportionalRemainderPreview
+                group={group}
+                groupCurrency={groupCurrency}
+                preview={proportionalPreview}
+                errorKey={proportionalErrorKey}
+                tSchemaErrors={tSchemaErrors as (key: string) => string}
+                pendingText={t('participant.pending')}
               />
-            </div>
+            ) : (
+              <>
+                {!readOnly && !isProportional && (
+                  <div className="mb-3 w-full">
+                    <SplitPresetPicker
+                      presets={presets}
+                      group={group}
+                      showBothSides={false}
+                      amount={itemTotal}
+                      currency={groupCurrency}
+                      loading={presetsLoading}
+                      loadedPreset={loadedPreset}
+                      modified={modified}
+                      onSaveAsNew={
+                        canCreatePreset && draft.splitMode !== 'BY_AMOUNT'
+                          ? () => saveAsRef.current()
+                          : undefined
+                      }
+                      canSaveChanges={
+                        !!loadedPreset &&
+                        draft.splitMode !== 'BY_AMOUNT' &&
+                        'scope' in loadedPreset &&
+                        ((loadedPreset.scope === 'SHARED' && canManageShared) ||
+                          (loadedPreset.scope === 'PERSONAL' &&
+                            canManagePersonal))
+                      }
+                      onSaveChanges={() => saveChangesRef.current()}
+                      onSelect={handleApplyPreset}
+                    />
+                    {canCreatePreset && draft.splitMode !== 'BY_AMOUNT' && (
+                      <SavePresetButton
+                        group={group}
+                        groupCurrency={groupCurrency}
+                        target="PAID_FOR"
+                        splitMode={draft.splitMode}
+                        paidFor={draft.paidFor}
+                        existingPreset={loadedPreset}
+                        modified={modified}
+                        onSaved={() => setLoadedPreset(null)}
+                        onSaveChangesReady={(save) => {
+                          saveChangesRef.current = save
+                        }}
+                        onSaveAsReady={(saveAs) => {
+                          saveAsRef.current = saveAs
+                        }}
+                        onUpdated={(preset) => setLoadedPreset(preset)}
+                        hideTrigger
+                        canManage={canManage}
+                        canManageShared={canManageShared}
+                        canManagePersonal={canManagePersonal}
+                      />
+                    )}
+                  </div>
+                )}
+                <div className="mb-4">
+                  <PaidForSplitOptionCards
+                    value={draft.splitMode}
+                    onChange={handleSplitModeChange}
+                    renderContent={renderItemParticipants}
+                    readOnly={readOnly}
+                    hiddenModes={hideAmountMode ? ['BY_AMOUNT'] : undefined}
+                    showProportionalOption={
+                      showRemainderAllocationToggle && !readOnly
+                    }
+                    proportionalSelected={isProportional}
+                    onProportionalSelect={handleProportionalSelect}
+                    proportionalContent={
+                      <ProportionalRemainderPreview
+                        group={group}
+                        groupCurrency={groupCurrency}
+                        preview={proportionalPreview}
+                        errorKey={proportionalErrorKey}
+                        tSchemaErrors={tSchemaErrors as (key: string) => string}
+                        pendingText={t('participant.pending')}
+                      />
+                    }
+                  />
+                </div>
+              </>
+            )}
           </div>
         </ResponsiveDialogBody>
 
@@ -564,5 +696,66 @@ export function ItemParticipantsModal(props: {
         </ResponsiveDialogFooter>
       </ResponsiveDialogContent>
     </ResponsiveDialog>
+  )
+}
+
+function ProportionalRemainderPreview({
+  group,
+  groupCurrency,
+  preview,
+  errorKey,
+  tSchemaErrors,
+  pendingText,
+}: {
+  group: GroupShape
+  groupCurrency: Currency
+  preview: Array<{ participant: string; shares: number }>
+  errorKey: string | null
+  tSchemaErrors: (key: string) => string
+  pendingText: string
+}) {
+  const participantMap = new Map(group.participants.map((p) => [p.id, p]))
+  if (errorKey) {
+    return (
+      <p role="alert" className="text-sm font-medium text-destructive">
+        {tSchemaErrors(errorKey)}
+      </p>
+    )
+  }
+  const rows = preview.filter((row) => participantMap.has(row.participant))
+  if (rows.length === 0) {
+    return (
+      <p role="alert" className="text-sm font-medium text-destructive">
+        {tSchemaErrors('proportionalZeroBasis')}
+      </p>
+    )
+  }
+  return (
+    <div className="w-full min-w-0 space-y-0">
+      {rows.map((row) => {
+        const participant = participantMap.get(row.participant)!
+        return (
+          <ParticipantShareRow
+            key={row.participant}
+            dataId={`${row.participant}/PROPORTIONAL/${groupCurrency.code}`}
+            participant={participant}
+            checked
+            selectable={false}
+            onCheckedChange={() => {}}
+            pendingLabel={
+              participant.pending ? (
+                <ParticipantPendingLabel text={pendingText} />
+              ) : undefined
+            }
+            preview={
+              <ParticipantRowAmountPreview
+                amount={row.shares}
+                currency={groupCurrency}
+              />
+            }
+          />
+        )
+      })}
+    </div>
   )
 }

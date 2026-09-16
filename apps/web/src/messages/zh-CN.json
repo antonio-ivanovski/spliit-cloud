@@ -976,7 +976,9 @@
       "allItemsSplitLabel": "所有项目分摊",
       "allItemsSplitMixed": "项目使用了不同的分摊方式",
       "allItemsSplitEdit": "编辑所有项目的分摊",
-      "allItemsSplitModalTitle": "所有项目分摊"
+      "allItemsSplitModalTitle": "所有项目分摊",
+      "remainderAllocationProportional": "按项目比例分摊",
+      "remainderProportionalHint": "根据每人的项目小计分摊此金额。适用于税费和小费。"
     },
     "leaveItemized": {
       "title": "切换分摊方式？",
@@ -1312,7 +1314,10 @@
     "itemTitleRequired": "项目名称为必填项。",
     "itemQuantityMin1": "项目数量必须至少为1。",
     "rowErrorsHeading": "请修正以下份额：",
-    "invalidWallTime": "所选日期在此时区中不存在这个时间。"
+    "invalidWallTime": "所选日期在此时区中不存在这个时间。",
+    "proportionalUnassignedItems": "请将每个项目分配给至少一位参与者，以便按比例分摊余款，或改用自定义分摊。",
+    "proportionalZeroBasis": "项目小计相互抵消，因此无法按比例分摊余款。请修正项目或改用自定义分摊。",
+    "proportionalInvalidRatios": "部分参与者的项目小计符号相反，因此无法按比例分摊余款。请修正项目或改用自定义分摊。"
   },
   "Categories": {
     "search": "搜寻类别……",

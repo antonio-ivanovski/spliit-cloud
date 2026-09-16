@@ -1,5 +1,6 @@
-import { Coins, Hash, Percent, User, Users } from 'lucide-react'
+import { Coins, Hash, Percent, Scale, User, Users } from 'lucide-react'
 import type { ComponentType, ReactNode, SVGProps } from 'react'
+import { Fragment } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
@@ -274,6 +275,17 @@ export function PaidForSplitOptionCards(props: {
   hiddenModes?: Exclude<SplitMode, 'ITEMIZED'>[]
   contentClassName?: string
   focusPriority?: number
+  /**
+   * Opt-in "Proportional to items" radio card rendered directly below the Equal
+   * option. Used only by the itemized-remainder ("Other") editor, where
+   * proportional allocation is an `allocationMode`, not a `SplitMode` — so it
+   * is tracked via `proportionalSelected` / `onProportionalSelect` instead of
+   * `value` / `onChange`, keeping existing callers untouched.
+   */
+  showProportionalOption?: boolean
+  proportionalSelected?: boolean
+  onProportionalSelect?: () => void
+  proportionalContent?: ReactNode
 }) {
   const {
     value,
@@ -282,31 +294,47 @@ export function PaidForSplitOptionCards(props: {
     renderContent,
     hiddenModes,
     contentClassName,
+    showProportionalOption,
+    proportionalSelected,
+    onProportionalSelect,
+    proportionalContent,
   } = props
   const { t } = useTranslation(undefined, { keyPrefix: 'ExpenseForm' })
 
+  const PROPORTIONAL_OPTION_ID = 'PROPORTIONAL'
+
   const hidden = new Set(hiddenModes ?? [])
   const visibleOptions = PAID_FOR_OPTIONS.filter((opt) => !hidden.has(opt.id))
+  const showProportional = !!showProportionalOption && !hidden.has('EVENLY')
 
   return (
     <RadioGroup
       value={
-        value === 'ITEMIZED' ||
-        hidden.has(value as Exclude<SplitMode, 'ITEMIZED'>)
-          ? undefined
-          : value
+        showProportional && proportionalSelected
+          ? PROPORTIONAL_OPTION_ID
+          : value === 'ITEMIZED' ||
+              hidden.has(value as Exclude<SplitMode, 'ITEMIZED'>)
+            ? undefined
+            : value
       }
-      onValueChange={(next) => onChange(next as SplitMode)}
+      onValueChange={(next) => {
+        if (next === PROPORTIONAL_OPTION_ID) {
+          onProportionalSelect?.()
+          return
+        }
+        onChange(next as SplitMode)
+      }}
       aria-label={t('paidForSection')}
       className="!flex flex-col gap-1.5"
     >
       <SectionLabel>{t('paidForSection')}</SectionLabel>
       <div className="grid w-full min-w-0 grid-cols-1 gap-2">
         {visibleOptions.map((opt) => {
-          const selected = value === opt.id
+          const selected =
+            !(showProportional && proportionalSelected) && value === opt.id
           const title = t(opt.labelKey)
           const disabled = readOnly
-          return (
+          const optionCard = (
             <RadioGroupItem
               key={opt.id}
               value={opt.id}
@@ -324,6 +352,35 @@ export function PaidForSplitOptionCards(props: {
                 selected={selected}
               />
             </RadioGroupItem>
+          )
+          // The proportional card belongs directly below Equal.
+          const proportionalCard =
+            showProportional && opt.id === 'EVENLY' ? (
+              <RadioGroupItem
+                key={PROPORTIONAL_OPTION_ID}
+                value={PROPORTIONAL_OPTION_ID}
+                card
+                disabled={readOnly}
+                data-expense-tab-priority={props.focusPriority}
+                content={proportionalSelected ? proportionalContent : undefined}
+                contentClassName={contentClassName}
+                aria-label={t('splitOptionAria', {
+                  title: t('items.remainderAllocationProportional'),
+                })}
+              >
+                <OptionHeader
+                  icon={Scale}
+                  title={t('items.remainderAllocationProportional')}
+                  helper={t('items.remainderProportionalHint')}
+                  selected={!!proportionalSelected}
+                />
+              </RadioGroupItem>
+            ) : null
+          return (
+            <Fragment key={opt.id}>
+              {optionCard}
+              {proportionalCard}
+            </Fragment>
           )
         })}
       </div>

@@ -106,6 +106,40 @@ describe('splitDiffer', () => {
     ).toBe(false)
   })
 
+  it('check returns true when only the remainder allocation mode changes', () => {
+    const old = makeExpense({
+      splitMode: 'ITEMIZED',
+      itemizedRemainder: {
+        allocationMode: 'CUSTOM',
+        splitMode: 'EVENLY',
+        paidFor: [{ participant: 'lp-alice', shares: 1 }],
+      },
+    })
+    const upd = makeExpense({
+      splitMode: 'ITEMIZED',
+      itemizedRemainder: {
+        allocationMode: 'PROPORTIONAL',
+        splitMode: 'EVENLY',
+        paidFor: [],
+      },
+    })
+    expect(splitDiffer.check(old, upd)).toBe(true)
+  })
+
+  it('check returns false for identical proportional remainders', () => {
+    const rem = {
+      allocationMode: 'PROPORTIONAL' as const,
+      splitMode: 'EVENLY' as const,
+      paidFor: [],
+    }
+    expect(
+      splitDiffer.check(
+        makeExpense({ splitMode: 'ITEMIZED', itemizedRemainder: rem }),
+        makeExpense({ splitMode: 'ITEMIZED', itemizedRemainder: rem }),
+      ),
+    ).toBe(false)
+  })
+
   // Regression: the form fabricates a default itemizedRemainder for every
   // expense, so on a no-op edit the new side has a value while the old
   // (DB) side has `undefined`. Without this guard it triggered a false

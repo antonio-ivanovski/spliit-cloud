@@ -8,6 +8,14 @@ export const SplitMode = {
 
 export type SplitMode = (typeof SplitMode)[keyof typeof SplitMode]
 
+export const RemainderAllocationMode = {
+  CUSTOM: 'CUSTOM',
+  PROPORTIONAL: 'PROPORTIONAL',
+} as const
+
+export type RemainderAllocationMode =
+  (typeof RemainderAllocationMode)[keyof typeof RemainderAllocationMode]
+
 export const RecurrenceRule = {
   NONE: 'NONE',
   DAILY: 'DAILY',

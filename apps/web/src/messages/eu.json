@@ -990,7 +990,9 @@
       "allItemsSplitLabel": "Elementu guztien banaketa",
       "allItemsSplitMixed": "Elementuek banaketa desberdinak erabiltzen dituzte",
       "allItemsSplitEdit": "Editatu elementu guztien banaketa",
-      "allItemsSplitModalTitle": "Elementu guztien banaketa"
+      "allItemsSplitModalTitle": "Elementu guztien banaketa",
+      "remainderAllocationProportional": "Proportzionala artikuluen arabera",
+      "remainderProportionalHint": "Banatu kopuru hau pertsona bakoitzaren artikulu-azpitotalaren arabera. Zerga eta eskupekoetarako erabilgarria."
     },
     "leaveItemized": {
       "title": "Banaketa-modua aldatu?",
@@ -1327,7 +1329,10 @@
     "itemTitleRequired": "Elementuaren izena beharrezkoa da.",
     "itemQuantityMin1": "Elementuaren kopuruak gutxienez 1 izan behar du.",
     "rowErrorsHeading": "Zuzendu parte hauek:",
-    "invalidWallTime": "Ordu hau ez dago hautatutako datan ordu-eremu honetan."
+    "invalidWallTime": "Ordu hau ez dago hautatutako datan ordu-eremu honetan.",
+    "proportionalUnassignedItems": "Esleitu artikulu bakoitza gutxienez parte-hartzaile bati gainerakoa proportzionalki banatzeko, edo erabili banaketa pertsonalizatua.",
+    "proportionalZeroBasis": "Artikuluen azpitotalek elkar ezeztatzen dute; beraz, gainerakoa ezin da proportzionalki banatu. Zuzendu artikuluak edo erabili banaketa pertsonalizatua.",
+    "proportionalInvalidRatios": "Parte-hartzaile batzuen artikulu-azpitotalek kontrako zeinuak dituzte; beraz, gainerakoa ezin da proportzionalki banatu. Zuzendu artikuluak edo erabili banaketa pertsonalizatua."
   },
   "Categories": {
     "search": "Bilatu kategoria...",

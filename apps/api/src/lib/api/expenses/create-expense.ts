@@ -2,6 +2,7 @@ import type { Expense as DbExpense, Prisma } from '@spliit/db'
 import { prisma } from '@spliit/db'
 import {
   calculateRecurrenceDate,
+  canonicalizeItemizedRemainder,
   computePaidForFromItems,
   dateOnlyInTimeZone,
   isSettlementCategory,
@@ -215,6 +216,11 @@ export async function createExpense(
   const documents =
     options?.prepared?.documents ??
     (await promoteExpenseDocuments(expense.documents))
+  // Proportional remainders persist only the rule (canonical EVENLY/empty);
+  // weights derive from item subtotals at read time.
+  const itemizedRemainder =
+    expense.itemizedRemainder &&
+    canonicalizeItemizedRemainder(expense.itemizedRemainder)
   const itemizedPaidFor =
     expense.splitMode === 'ITEMIZED'
       ? (options?.itemizedPaidForResolution ??
@@ -222,7 +228,7 @@ export async function createExpense(
           expense.items ?? [],
           [...participantIds],
           conversion.originalAmount ?? expenseAmount,
-          expense.itemizedRemainder,
+          itemizedRemainder ?? undefined,
           expenseId,
         ).paidFor)
       : null
@@ -419,14 +425,15 @@ export async function createExpense(
             },
           })),
         },
-        ...(expense.itemizedRemainder
+        ...(itemizedRemainder
           ? {
               itemizedRemainder: {
                 create: {
-                  splitMode: expense.itemizedRemainder.splitMode,
+                  splitMode: itemizedRemainder.splitMode,
+                  allocationMode: itemizedRemainder.allocationMode ?? 'CUSTOM',
                   paidFor: {
                     createMany: {
-                      data: expense.itemizedRemainder.paidFor.map((pf) => ({
+                      data: itemizedRemainder.paidFor.map((pf) => ({
                         ledgerParticipantId: pf.participant,
                         shares: pf.shares,
                       })),

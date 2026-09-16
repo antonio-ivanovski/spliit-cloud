@@ -33,6 +33,7 @@ export const balanceExpenseSelect = {
   itemizedRemainder: {
     select: {
       splitMode: true,
+      allocationMode: true,
       paidFor: {
         select: { ledgerParticipantId: true, shares: true },
       },
@@ -73,6 +74,7 @@ export function toBalanceExpense(row: BalanceExpenseRow): BalanceExpense {
     itemizedRemainder: row.itemizedRemainder
       ? {
           splitMode: row.itemizedRemainder.splitMode,
+          allocationMode: row.itemizedRemainder.allocationMode,
           paidFor: row.itemizedRemainder.paidFor.map((share) => ({
             participant: share.ledgerParticipantId,
             shares: share.shares,

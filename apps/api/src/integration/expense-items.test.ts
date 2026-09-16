@@ -823,6 +823,142 @@ describe('Expense items — real DB', () => {
   })
 
   // ------------------------------------------------------------------
+  // 10b. CREATE: proportional remainder splits tax/tip by item subtotal
+  // ------------------------------------------------------------------
+  it('persists proportional remainder and derives pro-rata paidFor', async () => {
+    const { groupId, participants } = await createGroupWithMembers(
+      `Item-Proportional-${runId}`,
+      ['Alice'],
+    )
+
+    const { expenseId } = await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
+      groupId,
+      expense: {
+        title: 'Groceries with tax',
+        amount: 10000,
+        paidByList: [{ participant: participants['Admin'], shares: 10000 }],
+        paidBySplitMode: 'BY_AMOUNT',
+        isMultiPayer: false,
+        paidFor: [{ participant: participants['Admin'], shares: 1 }],
+        category: 'general',
+        splitMode: 'ITEMIZED',
+        expenseDate: new Date().toISOString(),
+        expenseTimeZone: 'UTC',
+        documents: [],
+        recurrenceRule: 'NONE',
+        items: [
+          {
+            title: 'Big shop',
+            unitPrice: 8591,
+            quantity: 1,
+            amount: 8591,
+            splitMode: 'EVENLY',
+            paidFor: [{ participant: participants['Admin'], shares: 1 }],
+          },
+          {
+            title: 'Small item',
+            unitPrice: 500,
+            quantity: 1,
+            amount: 500,
+            splitMode: 'EVENLY',
+            paidFor: [{ participant: participants['Alice'], shares: 1 }],
+          },
+        ],
+        itemizedRemainder: {
+          allocationMode: 'PROPORTIONAL',
+          splitMode: 'EVENLY',
+          paidFor: [],
+        },
+      },
+    })
+
+    const remainder = await prisma.expenseItemizedRemainder.findUnique({
+      where: { expenseId },
+      include: { paidFor: true },
+    })
+    expect(remainder).not.toBeNull()
+    expect(remainder!.allocationMode).toBe('PROPORTIONAL')
+    // Derived weights are never persisted.
+    expect(remainder!.paidFor).toHaveLength(0)
+
+    const saved = await readExpenseItems(expenseId)
+    const byId = Object.fromEntries(
+      saved!.paidFor.map((p) => [p.ledgerParticipantId, p.shares]),
+    )
+    expect(byId[participants['Admin']]).toBe(9450)
+    expect(byId[participants['Alice']]).toBe(550)
+  })
+
+  // ------------------------------------------------------------------
+  // 10c. CREATE: non-canonical proportional payload is normalized
+  // ------------------------------------------------------------------
+  it('normalizes non-canonical proportional remainder rows on write', async () => {
+    const { groupId, participants } = await createGroupWithMembers(
+      `Item-Prop-Canonical-${runId}`,
+      ['Alice'],
+    )
+
+    const { expenseId } = await makeCaller().expenses.create({
+      requestId: crypto.randomUUID(),
+      groupId,
+      expense: {
+        title: 'Proportional with junk rows',
+        amount: 10000,
+        paidByList: [{ participant: participants['Admin'], shares: 10000 }],
+        paidBySplitMode: 'BY_AMOUNT',
+        isMultiPayer: false,
+        paidFor: [{ participant: participants['Admin'], shares: 1 }],
+        category: 'general',
+        splitMode: 'ITEMIZED',
+        expenseDate: new Date().toISOString(),
+        expenseTimeZone: 'UTC',
+        documents: [],
+        recurrenceRule: 'NONE',
+        items: [
+          {
+            title: 'Big shop',
+            unitPrice: 8591,
+            quantity: 1,
+            amount: 8591,
+            splitMode: 'EVENLY',
+            paidFor: [{ participant: participants['Admin'], shares: 1 }],
+          },
+          {
+            title: 'Small item',
+            unitPrice: 500,
+            quantity: 1,
+            amount: 500,
+            splitMode: 'EVENLY',
+            paidFor: [{ participant: participants['Alice'], shares: 1 }],
+          },
+        ],
+        itemizedRemainder: {
+          allocationMode: 'PROPORTIONAL',
+          splitMode: 'BY_AMOUNT',
+          paidFor: [{ participant: participants['Admin'], shares: 909 }],
+        },
+      },
+    })
+
+    const remainder = await prisma.expenseItemizedRemainder.findUnique({
+      where: { expenseId },
+      include: { paidFor: true },
+    })
+    expect(remainder).not.toBeNull()
+    expect(remainder!.allocationMode).toBe('PROPORTIONAL')
+    expect(remainder!.splitMode).toBe('EVENLY')
+    expect(remainder!.paidFor).toHaveLength(0)
+
+    const saved = await readExpenseItems(expenseId)
+    const byId = Object.fromEntries(
+      saved!.paidFor.map((p) => [p.ledgerParticipantId, p.shares]),
+    )
+    expect(byId[participants['Admin']]).toBe(9450)
+    expect(byId[participants['Alice']]).toBe(550)
+  })
+
+  // ------------------------------------------------------------------
   // 11. CREATE: item with BY_PERCENTAGE split mode
   // ------------------------------------------------------------------
   it('persists item with BY_PERCENTAGE split mode using basis points', async () => {

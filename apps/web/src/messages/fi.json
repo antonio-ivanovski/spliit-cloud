@@ -983,7 +983,9 @@
       "allItemsSplitLabel": "Kaikkien nimikkeiden jako",
       "allItemsSplitMixed": "Nimikkeissä käytetään eri jakoja",
       "allItemsSplitEdit": "Muokkaa kaikkien nimikkeiden jakoa",
-      "allItemsSplitModalTitle": "Kaikkien nimikkeiden jako"
+      "allItemsSplitModalTitle": "Kaikkien nimikkeiden jako",
+      "remainderAllocationProportional": "Kohteiden suhteessa",
+      "remainderProportionalHint": "Jaa tämä summa kunkin henkilön kohdekohtaisen välisumman mukaan. Kätevä veroja ja tippejä varten."
     },
     "leaveItemized": {
       "title": "Vaihdetaanko jakotapaa?",
@@ -1319,7 +1321,10 @@
     "itemTitleRequired": "Kohteen nimi on pakollinen.",
     "itemQuantityMin1": "Kohteen määrän on oltava vähintään 1.",
     "rowErrorsHeading": "Korjaa nämä osuudet:",
-    "invalidWallTime": "Tätä kellonaikaa ei ole valittuna päivänä tällä aikavyöhykkeellä."
+    "invalidWallTime": "Tätä kellonaikaa ei ole valittuna päivänä tällä aikavyöhykkeellä.",
+    "proportionalUnassignedItems": "Määritä jokainen kohde vähintään yhdelle osallistujalle, jotta loppusumma voidaan jakaa suhteessa, tai käytä mukautettua jakoa.",
+    "proportionalZeroBasis": "Kohdekohtaiset välisummat kumoavat toisensa, joten loppusummaa ei voi jakaa suhteessa. Korjaa kohteet tai käytä mukautettua jakoa.",
+    "proportionalInvalidRatios": "Joidenkin osallistujien kohdekohtaisilla välisummilla on eri etumerkit, joten loppusummaa ei voi jakaa suhteessa. Korjaa kohteet tai käytä mukautettua jakoa."
   },
   "Categories": {
     "search": "Etsi kategoriaa...",

@@ -662,6 +662,10 @@ export function ExpenseForm(props: {
             open,
             onClose,
             onSaveItem,
+            onSaveRemainder,
+            remainderAllocationMode,
+            proportionalPreview,
+            proportionalErrorKey,
             titleOverride,
             hideAmountDescription,
             hideAmountMode,
@@ -678,6 +682,10 @@ export function ExpenseForm(props: {
               groupCurrency={payerCurrency}
               item={item}
               onSaveItem={onSaveItem}
+              onSaveRemainder={onSaveRemainder}
+              remainderAllocationMode={remainderAllocationMode}
+              proportionalPreview={proportionalPreview}
+              proportionalErrorKey={proportionalErrorKey}
               readOnly={!!props.readOnly}
               titleOverride={titleOverride}
               hideAmountDescription={hideAmountDescription}

@@ -990,7 +990,9 @@
       "allItemsSplitLabel": "Divisió de tots els articles",
       "allItemsSplitMixed": "Els articles utilitzen divisions diferents",
       "allItemsSplitEdit": "Edita la divisió de tots els articles",
-      "allItemsSplitModalTitle": "Divisió de tots els articles"
+      "allItemsSplitModalTitle": "Divisió de tots els articles",
+      "remainderAllocationProportional": "Proporcional als articles",
+      "remainderProportionalHint": "Reparteix aquest import segons el subtotal d’articles de cada persona. Útil per a impostos i propines."
     },
     "leaveItemized": {
       "title": "Vols canviar el mode de repartiment?",
@@ -1327,7 +1329,10 @@
     "itemTitleRequired": "El nom de l’element és obligatori.",
     "itemQuantityMin1": "La quantitat de l’element ha de ser com a mínim 1.",
     "rowErrorsHeading": "Corregeix aquestes participacions:",
-    "invalidWallTime": "Aquesta hora no existeix a la data seleccionada en aquesta zona horària."
+    "invalidWallTime": "Aquesta hora no existeix a la data seleccionada en aquesta zona horària.",
+    "proportionalUnassignedItems": "Assigna cada article com a mínim a un participant per repartir la resta proporcionalment, o fes servir un repartiment personalitzat.",
+    "proportionalZeroBasis": "Els subtotals dels articles s’anul·len entre si, de manera que la resta no es pot repartir proporcionalment. Corregeix els articles o fes servir un repartiment personalitzat.",
+    "proportionalInvalidRatios": "Els subtotals d’articles d’alguns participants tenen signes oposats, de manera que la resta no es pot repartir proporcionalment. Corregeix els articles o fes servir un repartiment personalitzat."
   },
   "Categories": {
     "search": "Cercar categoria...",

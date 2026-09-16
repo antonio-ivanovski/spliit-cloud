@@ -88,6 +88,7 @@ const getItemResponseSchema = z.object({
 
 const itemizedRemainderGetResponseSchema = z.object({
   splitMode: splitModeSchema,
+  allocationMode: z.enum(['CUSTOM', 'PROPORTIONAL']),
   paidFor: z.array(participantShareResponseSchema),
 })
 

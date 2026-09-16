@@ -9,6 +9,7 @@ import {
   isSettlementCategory,
   toSecondPrecision,
   supportedCurrencyCodes,
+  canonicalizeItemizedRemainder,
   computePaidForFromItems,
   type Expense,
 } from '@spliit/domain'
@@ -1722,11 +1723,17 @@ export async function importExpenseFile(
           }
         }
         if (expense.itemizedRemainder) {
+          // Proportional remainders persist only the rule; weights derive
+          // from item subtotals at read time.
+          const remainder = canonicalizeItemizedRemainder(
+            expense.itemizedRemainder,
+          )
           remainderRows.push({
             expenseId,
-            splitMode: expense.itemizedRemainder.splitMode,
+            splitMode: remainder.splitMode,
+            allocationMode: remainder.allocationMode ?? 'CUSTOM',
           })
-          for (const paidFor of expense.itemizedRemainder.paidFor) {
+          for (const paidFor of remainder.paidFor) {
             remainderPaidForRows.push({
               expenseId,
               ledgerParticipantId: paidFor.participant,

@@ -1,5 +1,5 @@
 import type { ConversionSource } from './conversion'
-import type { SplitMode } from './enums'
+import type { RemainderAllocationMode, SplitMode } from './enums'
 import {
   addExactAmount,
   convertByRate,
@@ -26,6 +26,7 @@ type BalanceItem = {
 type BalanceItemizedRemainder = {
   splitMode: SplitMode
   paidFor: Array<{ participant: string; shares: number }>
+  allocationMode?: RemainderAllocationMode
 }
 
 export type BalanceExpense = {

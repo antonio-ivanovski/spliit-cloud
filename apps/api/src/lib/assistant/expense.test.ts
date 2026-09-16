@@ -412,6 +412,7 @@ describe('assistant expense normalization', () => {
     )
 
     expect(prepared.expense.itemizedRemainder).toEqual({
+      allocationMode: 'CUSTOM',
       splitMode: 'BY_AMOUNT',
       paidFor: [
         { participant: 'alex', shares: 100 },

@@ -1550,7 +1550,9 @@
       "allItemsSplitLabel": "All-items split",
       "allItemsSplitMixed": "Items use different splits",
       "allItemsSplitEdit": "Edit all-items split",
-      "allItemsSplitModalTitle": "All-items split"
+      "allItemsSplitModalTitle": "All-items split",
+      "remainderAllocationProportional": "Proportional to items",
+      "remainderProportionalHint": "Split this amount based on each person's item subtotal. Useful for taxes and tips."
     },
     "leaveItemized": {
       "title": "Switch split mode?",
@@ -1890,7 +1892,10 @@
     "itemTitleRequired": "Item name is required.",
     "itemQuantityMin1": "Item quantity must be at least 1.",
     "rowErrorsHeading": "Fix these shares:",
-    "invalidWallTime": "This time does not exist on the selected date in this timezone."
+    "invalidWallTime": "This time does not exist on the selected date in this timezone.",
+    "proportionalUnassignedItems": "Assign every item to at least one participant to split the remainder proportionally, or use a custom split.",
+    "proportionalZeroBasis": "Item subtotals cancel out, so the remainder cannot be split proportionally. Fix the items or use a custom split.",
+    "proportionalInvalidRatios": "Some participants' item subtotals have opposite signs, so the remainder cannot be split proportionally. Fix the items or use a custom split."
   },
   "Categories": {
     "search": "Search category...",

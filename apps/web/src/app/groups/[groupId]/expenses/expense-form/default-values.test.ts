@@ -200,6 +200,27 @@ describe('buildExpenseFormDefaults edit-mode item hydration', () => {
     ])
   })
 
+  it('loads a proportional remainder with its allocation mode', () => {
+    const values = buildExpenseFormDefaults({
+      isCreate: false,
+      expense: {
+        ...itemizedExpense,
+        itemizedRemainder: {
+          allocationMode: 'PROPORTIONAL',
+          splitMode: 'EVENLY',
+          paidFor: [],
+        },
+      } as never,
+      searchParams: {} as CreateExpenseSearch,
+      group,
+      groupCurrency: EUR,
+      currentLedgerParticipantId: 'alice',
+      settlementTitle: 'Settlement payment',
+    })
+
+    expect(values.itemizedRemainder?.allocationMode).toBe('PROPORTIONAL')
+  })
+
   it('restores both amounts for an exact conversion', () => {
     const values = buildExpenseFormDefaults({
       isCreate: false,

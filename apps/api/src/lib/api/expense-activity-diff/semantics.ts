@@ -52,7 +52,7 @@ export const splitSemantics = {
   /** Comparison key for the itemized remainder block. */
   remainderKey(r: ItemizedRemainderLike | undefined): string {
     if (!r) return ''
-    return `${r.splitMode}|${this.paidForKey(r.paidFor)}`
+    return `${r.allocationMode ?? 'CUSTOM'}|${r.splitMode}|${this.paidForKey(r.paidFor)}`
   },
 
   /** Format a split description (mode + participant names with shares). */

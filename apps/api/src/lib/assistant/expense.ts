@@ -387,6 +387,7 @@ function proportionalRemainder(
     })
     return {
       splitMode: 'BY_AMOUNT',
+      allocationMode: 'CUSTOM',
       paidFor: Object.entries(amounts)
         .filter(([, shares]) => shares !== 0)
         .map(([participant, shares]) => ({ participant, shares })),
@@ -410,6 +411,7 @@ function proportionalRemainder(
   })
   return {
     splitMode: 'BY_AMOUNT',
+    allocationMode: 'CUSTOM',
     paidFor: Object.entries(amounts)
       .filter(([, shares]) => shares !== 0)
       .map(([participant, shares]) => ({ participant, shares })),
@@ -545,6 +547,7 @@ export async function prepareAssistantExpense(
         )
         itemizedRemainder = {
           splitMode: normalized.splitMode,
+          allocationMode: 'CUSTOM',
           paidFor: normalized.paidFor,
         }
       } else {

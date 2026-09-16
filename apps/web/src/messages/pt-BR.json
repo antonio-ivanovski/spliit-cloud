@@ -496,7 +496,8 @@
       "switchToItemizedDescription": "Editar os participantes do item muda Pago para para Por itens e substitui a divisão de Pago para que você configurou.",
       "defaultSplitLabel": "Divisão padrão dos itens",
       "defaultSplitEdit": "Editar a divisão padrão dos itens",
-      "defaultSplitModalTitle": "Divisão padrão dos itens"
+      "defaultSplitModalTitle": "Divisão padrão dos itens",
+      "remainderProportionalHint": "Divida este valor com base no subtotal de itens de cada pessoa. Útil para impostos e gorjetas."
     },
     "leaveItemized": {
       "title": "Mudar o modo de divisão?",
@@ -701,7 +702,10 @@
     "paidByPercentageSum": "A soma das porcentagens dos pagadores deve ser 100.",
     "sharesInvalid": "As participações devem estar entre 0,01 e 1.000.000 com no máximo duas casas decimais.",
     "rowErrorsHeading": "Corrija estas participações:",
-    "invalidWallTime": "Este horário não existe na data selecionada neste fuso horário."
+    "invalidWallTime": "Este horário não existe na data selecionada neste fuso horário.",
+    "proportionalUnassignedItems": "Atribua cada item a pelo menos um participante para dividir o restante proporcionalmente, ou use uma divisão personalizada.",
+    "proportionalZeroBasis": "Os subtotais dos itens se anulam, por isso o restante não pode ser dividido proporcionalmente. Corrija os itens ou use uma divisão personalizada.",
+    "proportionalInvalidRatios": "Os subtotais de itens de alguns participantes têm sinais opostos, por isso o restante não pode ser dividido proporcionalmente. Corrija os itens ou use uma divisão personalizada."
   },
   "Categories": {
     "Entertainment": {

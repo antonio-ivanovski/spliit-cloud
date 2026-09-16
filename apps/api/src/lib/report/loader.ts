@@ -69,6 +69,7 @@ function mapReportRow(row: ReportExpenseRowRow): ReportExpenseRow {
     itemizedRemainder: row.itemizedRemainder
       ? {
           splitMode: row.itemizedRemainder.splitMode,
+          allocationMode: row.itemizedRemainder.allocationMode,
           paidFor: row.itemizedRemainder.paidFor.map((share) => ({
             ledgerParticipantId: share.ledgerParticipantId,
             shares: share.shares,

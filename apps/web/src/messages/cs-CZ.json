@@ -997,7 +997,9 @@
       "allItemsSplitLabel": "Rozdělení všech položek",
       "allItemsSplitMixed": "Položky používají různá rozdělení",
       "allItemsSplitEdit": "Upravit rozdělení všech položek",
-      "allItemsSplitModalTitle": "Rozdělení všech položek"
+      "allItemsSplitModalTitle": "Rozdělení všech položek",
+      "remainderAllocationProportional": "Poměrně k položkám",
+      "remainderProportionalHint": "Rozdělte tuto částku podle mezisoučtu položek každé osoby. Užitečné pro daně a spropitné."
     },
     "leaveItemized": {
       "title": "Změnit způsob rozdělení?",
@@ -1335,7 +1337,10 @@
     "itemTitleRequired": "Název položky je povinný.",
     "itemQuantityMin1": "Množství položky musí být alespoň 1.",
     "rowErrorsHeading": "Opravte tyto podíly:",
-    "invalidWallTime": "Tento čas ve vybraném datu v tomto časovém pásmu neexistuje."
+    "invalidWallTime": "Tento čas ve vybraném datu v tomto časovém pásmu neexistuje.",
+    "proportionalUnassignedItems": "Přiřaďte každou položku alespoň jednomu účastníkovi, aby bylo možné zbytek rozdělit poměrně, nebo použijte vlastní rozdělení.",
+    "proportionalZeroBasis": "Mezisoučty položek se navzájem ruší, takže zbytek nelze rozdělit poměrně. Opravte položky nebo použijte vlastní rozdělení.",
+    "proportionalInvalidRatios": "Mezisoučty položek některých účastníků mají opačná znaménka, takže zbytek nelze rozdělit poměrně. Opravte položky nebo použijte vlastní rozdělení."
   },
   "Categories": {
     "search": "Hledat kategorii...",
