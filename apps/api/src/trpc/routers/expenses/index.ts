@@ -44,6 +44,7 @@ const globalExpensesInputSchema = z.object({
   query: z.string().optional(),
   locale: z.string().optional(),
   groupIds: z.array(z.string().min(1)).optional(),
+  includeArchived: z.boolean().default(false),
   hideSettlements: z.boolean().default(false),
   categories: z.array(z.string()).optional(),
   paidBy: z.array(personRefSchema).optional(),
@@ -269,10 +270,13 @@ function selectGroups(
   contexts: GroupContext[],
   groupIds: string[] | undefined,
   currencies: string[] | undefined,
+  includeArchived = false,
 ) {
   let selected = groupIds?.length
     ? contexts.filter((group) => groupIds.includes(group.id))
-    : contexts.filter((group) => !group.archived && !group.hidden)
+    : contexts.filter(
+        (group) => !group.hidden && (!group.archived || includeArchived),
+      )
   if (currencies?.length) {
     selected = selected.filter((group) =>
       currencies.includes(currencyKey(group.currency, group.currencyCode)),
@@ -297,7 +301,12 @@ async function listGlobalExpenses(
     })
   }
   const contexts = await getGroupContexts(accountId)
-  const groups = selectGroups(contexts, input.groupIds, input.currencies)
+  const groups = selectGroups(
+    contexts,
+    input.groupIds,
+    input.currencies,
+    input.includeArchived,
+  )
   if (groups.length === 0)
     return { expenses: [], hasMore: false, nextCursor: null }
 

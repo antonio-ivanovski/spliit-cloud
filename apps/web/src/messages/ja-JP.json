@@ -153,7 +153,6 @@
     "globalTitle": "すべての支出",
     "globalDescription": "すべてのグループの支出を検索して確認できます。",
     "globalGroups": "グループ",
-    "globalInactive": "非アクティブ",
     "globalCurrency": "基準通貨",
     "globalAllCurrencies": "すべての通貨",
     "globalCurrencyRequired": "金額で絞り込んだり並べ替えたりするには、基準通貨を選択してください。",
@@ -180,7 +179,11 @@
     "exportPdfRetryBounds": "再試行",
     "exportBundleTitle": "Spliitバックアップバンドル",
     "exportBundlePurpose": "支出、設定、添付書類を含む移行可能なグループデータです。",
-    "exportBundleAction": "バンドルをダウンロード"
+    "exportBundleAction": "バンドルをダウンロード",
+    "globalArchived": "アーカイブ済み",
+    "globalHidden": "非表示",
+    "globalIncludeArchived": "アーカイブ済みのグループを含める",
+    "globalIncludeArchivedScopeNote": "グループが選択されていない場合にのみ適用されます。"
   },
   "ExpenseCard": {
     "receivedBy": "<strong>{paidBy}</strong>が受取 · <paidFor></paidFor>に配分",
@@ -1012,7 +1015,9 @@
       "back": "戻る",
       "chooseTimezone": "タイムゾーンを選択",
       "done": "完了",
-      "yourTime": "お使いの地域の時刻"
+      "yourTime": "お使いの地域の時刻",
+      "invalidDate": "有効な日付を入力してください。",
+      "invalidTime": "有効な時刻を入力してください（HH:mm）。"
     },
     "settlementTitle": "精算金",
     "settlementHint": "{category}：合計・統計・予算では支出として数えません。誰が誰に払うべきかは更新されます。",

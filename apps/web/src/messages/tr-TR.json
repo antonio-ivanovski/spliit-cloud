@@ -154,7 +154,6 @@
     "globalTitle": "Tüm harcamalar",
     "globalDescription": "Tüm gruplarınızdaki harcamaları arayın ve inceleyin.",
     "globalGroups": "Gruplar",
-    "globalInactive": "etkin değil",
     "globalCurrency": "Temel para birimi",
     "globalAllCurrencies": "Tüm para birimleri",
     "globalCurrencyRequired": "Tutarla filtrelemek veya sıralamak için bir temel para birimi seçin.",
@@ -181,7 +180,11 @@
     "exportPdfRetryBounds": "Yeniden dene",
     "exportBundleTitle": "Spliit yedekleme paketi",
     "exportBundlePurpose": "Harcamaları, ayarları ve ekli belgeleri içeren taşınabilir grup verileri.",
-    "exportBundleAction": "Paketi indir"
+    "exportBundleAction": "Paketi indir",
+    "globalArchived": "arşivlendi",
+    "globalHidden": "gizli",
+    "globalIncludeArchived": "Arşivlenmiş grupları dahil et",
+    "globalIncludeArchivedScopeNote": "Yalnızca grup seçilmediğinde geçerlidir."
   },
   "ExpenseCard": {
     "receivedBy": "<strong>{paidBy}</strong> aldı · <paidFor></paidFor> için paylaştırıldı",
@@ -1019,7 +1022,9 @@
       "back": "Geri",
       "chooseTimezone": "Saat dilimi seç",
       "done": "Bitti",
-      "yourTime": "yerel saatiniz"
+      "yourTime": "yerel saatiniz",
+      "invalidDate": "Geçerli bir tarih girin.",
+      "invalidTime": "Geçerli bir saat girin (HH:mm)."
     },
     "settlementTitle": "Borç kapatma ödemesi",
     "settlementHint": "{category}: Toplamlarda, istatistiklerde veya bütçelerde harcama sayılmaz. Yine de kimin kime borcu olduğunu günceller.",

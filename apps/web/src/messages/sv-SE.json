@@ -1485,7 +1485,9 @@
       "back": "Tillbaka",
       "chooseTimezone": "Välj tidszon",
       "done": "Klar",
-      "yourTime": "din tid"
+      "yourTime": "din tid",
+      "invalidDate": "Ange ett giltigt datum.",
+      "invalidTime": "Ange en giltig tid (HH:mm)."
     },
     "settlementTitle": "Regleringsbetalning",
     "settlementHint": "{category}: Räknas inte som utgift i totaler, statistik eller budgetar. Uppdaterar ändå vem som är skyldig vem.",
@@ -1691,7 +1693,6 @@
     "globalTitle": "Alla utgifter",
     "globalDescription": "Sök och bläddra bland utgifter från alla dina grupper.",
     "globalGroups": "Grupper",
-    "globalInactive": "inaktiv",
     "globalCurrency": "Basvaluta",
     "globalAllCurrencies": "Alla valutor",
     "globalCurrencyRequired": "Välj en basvaluta för att filtrera eller sortera efter belopp.",
@@ -1718,7 +1719,11 @@
     "exportPdfRetryBounds": "Försök igen",
     "exportBundleTitle": "Spliit-säkerhetspaket",
     "exportBundlePurpose": "Flyttbara gruppdata med utgifter, inställningar och bifogade dokument.",
-    "exportBundleAction": "Ladda ner paketet"
+    "exportBundleAction": "Ladda ner paketet",
+    "globalArchived": "arkiverad",
+    "globalHidden": "dold",
+    "globalIncludeArchived": "Inkludera arkiverade grupper",
+    "globalIncludeArchivedScopeNote": "Gäller endast när inga grupper är valda."
   },
   "Footer": {
     "madeIn": "Gjord med kärlek av open source-communityn ❤️",

@@ -155,7 +155,6 @@
     "globalTitle": "Toutes les dépenses",
     "globalDescription": "Recherchez et parcourez les dépenses de tous vos groupes.",
     "globalGroups": "Groupes",
-    "globalInactive": "inactif",
     "globalCurrency": "Devise de base",
     "globalAllCurrencies": "Toutes les devises",
     "globalCurrencyRequired": "Choisissez une devise de base pour filtrer ou trier par montant.",
@@ -182,7 +181,11 @@
     "exportPdfRetryBounds": "Réessayer",
     "exportBundleTitle": "Paquet de sauvegarde Spliit",
     "exportBundlePurpose": "Données de groupe portables avec dépenses, paramètres et documents joints.",
-    "exportBundleAction": "Télécharger le paquet"
+    "exportBundleAction": "Télécharger le paquet",
+    "globalArchived": "archivé",
+    "globalHidden": "masqué",
+    "globalIncludeArchived": "Inclure les groupes archivés",
+    "globalIncludeArchivedScopeNote": "S'applique uniquement lorsqu'aucun groupe n'est sélectionné."
   },
   "ExpenseCard": {
     "receivedBy": "Reçu par <strong>{paidBy}</strong> pour <paidFor></paidFor>",
@@ -1026,7 +1029,9 @@
       "back": "Retour",
       "chooseTimezone": "Choisir le fuseau horaire",
       "done": "Terminé",
-      "yourTime": "votre heure"
+      "yourTime": "votre heure",
+      "invalidDate": "Saisissez une date valide.",
+      "invalidTime": "Saisissez une heure valide (HH:mm)."
     },
     "settlementTitle": "Paiement de règlement",
     "settlementHint": "{category} : Non compté comme une dépense dans les totaux, statistiques et budgets. Met tout de même à jour qui doit quoi à qui.",

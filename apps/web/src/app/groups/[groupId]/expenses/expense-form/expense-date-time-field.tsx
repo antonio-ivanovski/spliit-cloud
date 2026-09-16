@@ -1,13 +1,19 @@
-/* oxlint-disable jsx-a11y/prefer-tag-over-role, jsx-a11y/role-has-required-aria-props -- the custom timeline needs grouped sticky boundaries, and popup IDs are managed by the responsive trigger primitives. */
+/* oxlint-disable jsx-a11y/prefer-tag-over-role -- the custom timeline needs grouped sticky boundaries, and popup IDs are managed by the responsive trigger primitives. */
 import {
   ArrowLeft,
   CalendarIcon,
   Check,
-  ChevronDown,
   ChevronRight,
   Globe2,
 } from 'lucide-react'
-import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react'
+import {
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type KeyboardEvent,
+} from 'react'
 import { useWatch, type UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
@@ -17,6 +23,8 @@ import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { getCalendarLocale } from '@/components/ui/calendar-locale'
 import {
+  formatDateInputDisplay,
+  parseDateInputDisplay,
   parseIsoCalendarDate,
   toIsoCalendarDate,
 } from '@/components/ui/date-input-utils'
@@ -36,6 +44,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import {
   Popover,
   PopoverContent,
@@ -130,6 +139,14 @@ function timelineOption(ms: number, selectedDateIso: string) {
   } satisfies ExpenseTimeTimelineOption
 }
 
+function tryParseTimeMinutes(value: string): number | null {
+  try {
+    return parseTimeMinutes(value)
+  } catch {
+    return null
+  }
+}
+
 export function buildExpenseTimeTimeline(
   anchor: TimelineAnchor,
 ): ExpenseTimeTimelineOption[] {
@@ -174,13 +191,29 @@ export function ExpenseDateTimeField({ form, readOnly, sExpense }: Props) {
   const timeStr = expenseTime
   const isoDate = expenseDay
 
+  // Last committed valid values, used to restore typed drafts on Escape.
+  // (Effects below keep them in sync; they are only read in event handlers.)
+  const lastValidDateRef = useRef(isoDate)
+  const lastValidTimeRef = useRef(timeStr)
+  const [timelineAnchor, setTimelineAnchor] = useState<TimelineAnchor>({
+    dateIso: isoDate,
+    time: timeStr,
+  })
+  // Invalid drafts never reach the form state used here: fall back to the
+  // timeline anchor so calendar/timezone math stays on valid values.
+  const validIso = parseIsoCalendarDate(isoDate)
+    ? isoDate
+    : timelineAnchor.dateIso
+  const validTime =
+    tryParseTimeMinutes(timeStr) != null ? timeStr : timelineAnchor.time
+
   const instantForDisplay = useMemo(() => {
     try {
-      return wallTimeToUtc(isoDate, parseTimeMinutes(timeStr), selectedTz)
+      return wallTimeToUtc(validIso, parseTimeMinutes(validTime), selectedTz)
     } catch {
-      return parseIsoCalendarDate(isoDate) ?? new Date()
+      return parseIsoCalendarDate(validIso) ?? new Date()
     }
-  }, [isoDate, selectedTz, timeStr])
+  }, [validIso, selectedTz, validTime])
   const display = useMemo(
     () =>
       formatExpenseClosed(
@@ -199,16 +232,32 @@ export function ExpenseDateTimeField({ form, readOnly, sExpense }: Props) {
   const [activeView, setActiveView] = useState<PickerView>('time')
   const [returnView, setReturnView] =
     useState<Exclude<PickerView, 'timezone'>>('time')
-  const [timelineAnchor, setTimelineAnchor] = useState<TimelineAnchor>({
-    dateIso: isoDate,
-    time: timeStr,
-  })
   const [calendarMonth, setCalendarMonth] = useState(
     () => parseIsoCalendarDate(isoDate) ?? new Date(),
   )
   const timeListRef = useRef<HTMLDivElement>(null)
   const [focusedTimeKey, setFocusedTimeKey] = useState(`${isoDate}T${timeStr}`)
   const isDesktop = useMediaQuery('(min-width: 768px)')
+  const fieldId = useId()
+
+  // Typed-input drafts. `null` means "not editing": the input shows the
+  // committed form value. A non-null draft is shown verbatim (even while
+  // incomplete or invalid) and only reaches the form on commit.
+  const [dateDraft, setDateDraft] = useState<string | null>(null)
+  const [timeDraft, setTimeDraft] = useState<string | null>(null)
+  const [dateError, setDateError] = useState(false)
+  const [timeError, setTimeError] = useState(false)
+  // Escape reverts the draft and blurs synchronously: the blur handler must
+  // not recommit the stale draft from its pre-revert closure.
+  const skipDateBlurCommitRef = useRef(false)
+  const skipTimeBlurCommitRef = useRef(false)
+
+  useEffect(() => {
+    if (parseIsoCalendarDate(isoDate)) lastValidDateRef.current = isoDate
+  }, [isoDate])
+  useEffect(() => {
+    if (tryParseTimeMinutes(timeStr) != null) lastValidTimeRef.current = timeStr
+  }, [timeStr])
 
   const selectedDate = parseIsoCalendarDate(isoDate)
   const formattingLocale = resolveFormattingLocale(locale)
@@ -253,6 +302,66 @@ export function ExpenseDateTimeField({ form, readOnly, sExpense }: Props) {
     })
   }
 
+  const commitDateDraft = (raw: string) => {
+    const parsed = raw.trim() ? parseDateInputDisplay(raw, locale) : undefined
+    if (parsed) {
+      const nextIso = toIsoCalendarDate(parsed)
+      setDateIso(nextIso)
+      setDateDraft(null)
+      setDateError(false)
+      form.clearErrors('expenseDay' as never)
+      setCalendarMonth(parsed)
+      // Keep the anchor on the last valid values so invalid drafts later
+      // fall back to this date instead of a stale picker position.
+      setTimelineAnchor({ dateIso: nextIso, time: validTime })
+    } else {
+      // Retain the invalid text and force the form value invalid so a save
+      // can never silently persist the previous valid date.
+      setDateDraft(raw)
+      setDateError(true)
+      form.setValue('expenseDay' as never, '' as never, {
+        shouldDirty: true,
+        shouldTouch: true,
+      })
+    }
+  }
+  const commitTimeDraft = (raw: string) => {
+    const minutes = tryParseTimeMinutes(raw)
+    if (minutes != null) {
+      const normalized = formatTimeMinutes(minutes)
+      setTime(normalized)
+      setTimeDraft(null)
+      setTimeError(false)
+      form.clearErrors('expenseTime' as never)
+      setTimelineAnchor({ dateIso: validIso, time: normalized })
+    } else {
+      setTimeDraft(raw)
+      setTimeError(true)
+      form.setValue('expenseTime' as never, '' as never, {
+        shouldDirty: true,
+        shouldTouch: true,
+      })
+    }
+  }
+  const revertDateDraft = () => {
+    skipDateBlurCommitRef.current = true
+    setDateDraft(null)
+    setDateError(false)
+    if (!parseIsoCalendarDate(isoDate)) {
+      setDateIso(lastValidDateRef.current)
+    }
+    form.clearErrors('expenseDay' as never)
+  }
+  const revertTimeDraft = () => {
+    skipTimeBlurCommitRef.current = true
+    setTimeDraft(null)
+    setTimeError(false)
+    if (tryParseTimeMinutes(timeStr) == null) {
+      setTime(lastValidTimeRef.current)
+    }
+    form.clearErrors('expenseTime' as never)
+  }
+
   useEffect(() => {
     if (!open || activeView !== 'time') return
     let cancelled = false
@@ -283,21 +392,30 @@ export function ExpenseDateTimeField({ form, readOnly, sExpense }: Props) {
     }
   }, [activeView, open, timelineAnchor])
 
-  const anchorTimeline = (dateIso = isoDate, time = timeStr) => {
+  const anchorTimeline = (dateIso = validIso, time = validTime) => {
     setTimelineAnchor({ dateIso, time })
   }
   const handleOpenChange = (nextOpen: boolean) => {
     if (nextOpen) {
       anchorTimeline()
-      setFocusedTimeKey(`${isoDate}T${timeStr}`)
-      setCalendarMonth(parseIsoCalendarDate(isoDate) ?? new Date())
+      setFocusedTimeKey(`${validIso}T${validTime}`)
+      setCalendarMonth(parseIsoCalendarDate(validIso) ?? new Date())
       setActiveView(isDesktop ? 'time' : 'date')
       setReturnView(isDesktop ? 'time' : 'date')
     }
     setOpen(nextOpen)
   }
+  const openTimezonePicker = () => {
+    handleOpenChange(true)
+    setReturnView(isDesktop ? 'time' : 'date')
+    setActiveView('timezone')
+  }
   const selectDate = (nextIso: string) => {
     setDateIso(nextIso)
+    // A picker selection replaces the typed date draft and clears its error.
+    setDateDraft(null)
+    setDateError(false)
+    form.clearErrors('expenseDay' as never)
     anchorTimeline(nextIso)
     const nextDate = parseIsoCalendarDate(nextIso)
     if (nextDate) setCalendarMonth(nextDate)
@@ -305,7 +423,14 @@ export function ExpenseDateTimeField({ form, readOnly, sExpense }: Props) {
   const selectTimelineOption = (option: ExpenseTimeTimelineOption) => {
     setFocusedTimeKey(option.key)
     setDateIso(option.dateIso)
+    // A timeline choice sets both date and time, replacing both drafts.
+    setDateDraft(null)
+    setDateError(false)
+    form.clearErrors('expenseDay' as never)
     setTime(option.time)
+    setTimeDraft(null)
+    setTimeError(false)
+    form.clearErrors('expenseTime' as never)
   }
   const moveTimeFocus = (
     event: KeyboardEvent<HTMLButtonElement>,
@@ -444,7 +569,7 @@ export function ExpenseDateTimeField({ form, readOnly, sExpense }: Props) {
         {Object.entries(timelineGroups).map(([dateIso, options]) => {
           if (!options) return null
           const date = new Date(`${dateIso}T12:00:00.000Z`)
-          const changesDate = dateIso !== isoDate
+          const changesDate = dateIso !== validIso
           return (
             <div key={dateIso} role="group">
               <div className="sticky top-0 z-10 -mx-2 flex items-center gap-2 border-y bg-background/95 px-3 py-2 backdrop-blur-sm">
@@ -622,32 +747,147 @@ export function ExpenseDateTimeField({ form, readOnly, sExpense }: Props) {
     </div>
   )
 
-  const closedTrigger = (
+  const dateInputId = `${fieldId}-date`
+  const timeInputId = `${fieldId}-time`
+  const groupLabelId = `${fieldId}-label`
+  const dateErrorId = `${fieldId}-date-error`
+  const timeErrorId = `${fieldId}-time-error`
+  const dateDisplay =
+    dateDraft ??
+    (parseIsoCalendarDate(isoDate)
+      ? formatDateInputDisplay(isoDate, locale)
+      : '')
+  const timeDisplay =
+    timeDraft ?? (tryParseTimeMinutes(timeStr) != null ? timeStr : '')
+  // Day 22 / month 11 keeps the locale's date order unambiguous in the hint.
+  const dateExample = formatDateInputDisplay('2026-11-22', locale)
+
+  const pickerButton = (
     <Button
       type="button"
       variant="outline"
-      role="combobox"
+      size="icon"
+      aria-label={t(`${sExpense}.DateField.label`)}
       aria-haspopup="dialog"
       aria-expanded={open}
-      aria-label={t(`${sExpense}.DateField.label`)}
       title={display.tooltip}
       data-expense-tab-priority={expenseTabPriority.date}
       disabled={readOnly}
-      className="h-10 w-full min-w-0 justify-start gap-3 px-3 font-normal tabular-nums"
+      className="h-10 w-10 shrink-0 self-end"
     >
-      <CalendarIcon
+      <CalendarIcon className="size-4" aria-hidden="true" />
+    </Button>
+  )
+
+  const typedInputs = (
+    <div className="flex min-w-0 flex-1 flex-wrap items-end gap-2">
+      <div className="min-w-32 flex-1">
+        <label
+          htmlFor={dateInputId}
+          className="mb-1 block text-xs font-medium text-muted-foreground"
+        >
+          {t('dateTimePicker.dateTab' as never, { defaultValue: 'Date' })}
+        </label>
+        <Input
+          id={dateInputId}
+          type="text"
+          autoComplete="off"
+          data-expense-date-input
+          data-expense-tab-priority={expenseTabPriority.date}
+          disabled={readOnly}
+          placeholder={dateExample}
+          aria-invalid={dateError}
+          aria-describedby={dateError ? dateErrorId : undefined}
+          className="h-10 tabular-nums"
+          value={dateDisplay}
+          onChange={(event) => {
+            setDateDraft(event.target.value)
+            if (dateError) setDateError(false)
+          }}
+          onBlur={(event) => {
+            if (skipDateBlurCommitRef.current) {
+              skipDateBlurCommitRef.current = false
+              return
+            }
+            if (dateDraft !== null) commitDateDraft(event.target.value)
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              event.preventDefault()
+              commitDateDraft(event.currentTarget.value)
+            } else if (event.key === 'Escape') {
+              event.preventDefault()
+              revertDateDraft()
+              event.currentTarget.blur()
+            }
+          }}
+        />
+      </div>
+      <div className="w-28">
+        <label
+          htmlFor={timeInputId}
+          className="mb-1 block text-xs font-medium text-muted-foreground"
+        >
+          {t('dateTimePicker.timeTab' as never, { defaultValue: 'Time' })}
+        </label>
+        <Input
+          id={timeInputId}
+          type="text"
+          autoComplete="off"
+          placeholder="14:30"
+          data-expense-time-input
+          data-expense-tab-priority={expenseTabPriority.date}
+          disabled={readOnly}
+          aria-invalid={timeError}
+          aria-describedby={timeError ? timeErrorId : undefined}
+          className="h-10 tabular-nums"
+          value={timeDisplay}
+          onChange={(event) => {
+            setTimeDraft(event.target.value)
+            if (timeError) setTimeError(false)
+          }}
+          onBlur={(event) => {
+            if (skipTimeBlurCommitRef.current) {
+              skipTimeBlurCommitRef.current = false
+              return
+            }
+            if (timeDraft !== null) commitTimeDraft(event.target.value)
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              event.preventDefault()
+              commitTimeDraft(event.currentTarget.value)
+            } else if (event.key === 'Escape') {
+              event.preventDefault()
+              revertTimeDraft()
+              event.currentTarget.blur()
+            }
+          }}
+        />
+      </div>
+    </div>
+  )
+
+  const timezoneShortcut = (
+    <button
+      type="button"
+      onClick={openTimezonePicker}
+      disabled={readOnly}
+      data-expense-tab-priority={expenseTabPriority.date}
+      className="mt-2 flex min-w-0 items-center gap-2 rounded-md px-1 py-1 text-start transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+    >
+      <Globe2
         className="size-4 shrink-0 text-muted-foreground"
         aria-hidden="true"
       />
-      <span className="min-w-0 flex-1 truncate text-start">{display.text}</span>
-      <ChevronDown
-        className={cn(
-          'size-4 shrink-0 text-muted-foreground transition-transform',
-          open && 'rotate-180',
-        )}
+      <span className="min-w-0 flex-1 truncate text-sm">
+        {timeZoneCityOffsetLabel(selectedTz, instantForDisplay)}
+      </span>
+      <ChevronRight
+        className="size-4 shrink-0 text-muted-foreground rtl:rotate-180"
         aria-hidden="true"
       />
-    </Button>
+    </button>
   )
 
   return (
@@ -656,91 +896,123 @@ export function ExpenseDateTimeField({ form, readOnly, sExpense }: Props) {
       name={'expenseDay' as never}
       render={() => (
         <FormItem className="col-span-full w-full min-w-0 md:col-span-2">
-          <FormLabel>{t(`${sExpense}.DateField.label`)}</FormLabel>
+          <FormLabel id={groupLabelId}>
+            {t(`${sExpense}.DateField.label`)}
+          </FormLabel>
           <div className="w-full min-w-0">
-            {isDesktop ? (
-              <Popover open={open} onOpenChange={handleOpenChange}>
-                <FormControl>
-                  <PopoverTrigger disabled={readOnly} render={closedTrigger} />
-                </FormControl>
-                <PopoverContent
-                  align="start"
-                  side="bottom"
-                  collisionPadding={12}
-                  collisionAvoidance={{ side: 'flip', align: 'shift' }}
-                  className="max-h-(--available-height) w-auto overflow-hidden p-0"
+            <div className="flex min-w-0 items-start gap-2">
+              <FormControl>
+                <div
+                  className="flex min-w-0 flex-1"
+                  role="group"
+                  aria-labelledby={groupLabelId}
                 >
-                  {desktopPanel}
-                </PopoverContent>
-              </Popover>
-            ) : (
-              <Drawer open={open} onOpenChange={handleOpenChange}>
-                <FormControl>
-                  <DrawerTrigger disabled={readOnly} render={closedTrigger} />
-                </FormControl>
-                <DrawerContent className="overflow-hidden p-0">
-                  <DrawerHeader className="shrink-0 gap-3 pb-3 text-start">
-                    <div className="flex min-h-7 items-center gap-2">
-                      {activeView === 'timezone' && (
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="size-8"
-                          aria-label={t('dateTimePicker.back' as never, {
-                            defaultValue: 'Back',
-                          })}
-                          onClick={() => setActiveView(returnView)}
-                        >
-                          <ArrowLeft
-                            className="size-4 rtl:rotate-180"
-                            aria-hidden="true"
-                          />
-                        </Button>
-                      )}
-                      <DrawerTitle>
-                        {activeView === 'timezone'
-                          ? t('dateTimePicker.chooseTimezone' as never, {
-                              defaultValue: 'Choose timezone',
-                            })
-                          : t(`${sExpense}.DateField.label`)}
-                      </DrawerTitle>
-                    </div>
-                    {mobileTabs}
-                  </DrawerHeader>
-                  <div
-                    className={cn(
-                      'flex min-h-0 overflow-hidden border-y',
-                      activeView === 'date'
-                        ? 'h-auto shrink-0'
-                        : 'h-[min(58dvh,29rem)]',
-                    )}
+                  {typedInputs}
+                </div>
+              </FormControl>
+              {isDesktop ? (
+                <Popover open={open} onOpenChange={handleOpenChange}>
+                  <PopoverTrigger disabled={readOnly} render={pickerButton} />
+                  <PopoverContent
+                    align="start"
+                    side="bottom"
+                    collisionPadding={12}
+                    collisionAvoidance={{ side: 'flip', align: 'shift' }}
+                    className="max-h-(--available-height) w-auto overflow-hidden p-0"
                   >
-                    {activeView === 'timezone'
-                      ? timezonePicker
-                      : activeView === 'date'
-                        ? calendarChrome
-                        : timeTimeline}
-                  </div>
-                  <DrawerFooter className="shrink-0 gap-2 bg-background pt-2">
-                    {activeView !== 'timezone' && timezoneFooter}
-                    <Button
-                      type="button"
-                      onClick={() => handleOpenChange(false)}
+                    {desktopPanel}
+                  </PopoverContent>
+                </Popover>
+              ) : (
+                <Drawer open={open} onOpenChange={handleOpenChange}>
+                  <DrawerTrigger disabled={readOnly} render={pickerButton} />
+                  <DrawerContent className="overflow-hidden p-0">
+                    <DrawerHeader className="shrink-0 gap-3 pb-3 text-start">
+                      <div className="flex min-h-7 items-center gap-2">
+                        {activeView === 'timezone' && (
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="size-8"
+                            aria-label={t('dateTimePicker.back' as never, {
+                              defaultValue: 'Back',
+                            })}
+                            onClick={() => setActiveView(returnView)}
+                          >
+                            <ArrowLeft
+                              className="size-4 rtl:rotate-180"
+                              aria-hidden="true"
+                            />
+                          </Button>
+                        )}
+                        <DrawerTitle>
+                          {activeView === 'timezone'
+                            ? t('dateTimePicker.chooseTimezone' as never, {
+                                defaultValue: 'Choose timezone',
+                              })
+                            : t(`${sExpense}.DateField.label`)}
+                        </DrawerTitle>
+                      </div>
+                      {mobileTabs}
+                    </DrawerHeader>
+                    <div
+                      className={cn(
+                        'flex min-h-0 overflow-hidden border-y',
+                        activeView === 'date'
+                          ? 'h-auto shrink-0'
+                          : 'h-[min(58dvh,29rem)]',
+                      )}
                     >
-                      {t('dateTimePicker.done' as never, {
-                        defaultValue: 'Done',
-                      })}
-                    </Button>
-                  </DrawerFooter>
-                </DrawerContent>
-              </Drawer>
-            )}
+                      {activeView === 'timezone'
+                        ? timezonePicker
+                        : activeView === 'date'
+                          ? calendarChrome
+                          : timeTimeline}
+                    </div>
+                    <DrawerFooter className="shrink-0 gap-2 bg-background pt-2">
+                      {activeView !== 'timezone' && timezoneFooter}
+                      <Button
+                        type="button"
+                        onClick={() => handleOpenChange(false)}
+                      >
+                        {t('dateTimePicker.done' as never, {
+                          defaultValue: 'Done',
+                        })}
+                      </Button>
+                    </DrawerFooter>
+                  </DrawerContent>
+                </Drawer>
+              )}
+            </div>
+            {timezoneShortcut}
           </div>
           <FormDescription className="hidden sm:block">
             {t(`${sExpense}.DateField.description`)}
           </FormDescription>
-          <FormMessage />
+          {dateError && (
+            <p
+              id={dateErrorId}
+              role="alert"
+              className="text-sm font-medium text-destructive"
+            >
+              {t('dateTimePicker.invalidDate' as never, {
+                defaultValue: 'Enter a valid date.',
+              })}
+            </p>
+          )}
+          {timeError && (
+            <p
+              id={timeErrorId}
+              role="alert"
+              className="text-sm font-medium text-destructive"
+            >
+              {t('dateTimePicker.invalidTime' as never, {
+                defaultValue: 'Enter a valid time (HH:mm).',
+              })}
+            </p>
+          )}
+          {!dateError && <FormMessage />}
         </FormItem>
       )}
     />

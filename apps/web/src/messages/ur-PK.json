@@ -1485,7 +1485,9 @@
       "back": "واپس",
       "chooseTimezone": "منطقۂ وقت منتخب کریں",
       "done": "مکمل",
-      "yourTime": "آپ کا وقت"
+      "yourTime": "آپ کا وقت",
+      "invalidDate": "درست تاریخ درج کریں۔",
+      "invalidTime": "درست وقت درج کریں (HH:mm)۔"
     },
     "settlementTitle": "تصفیہ کی ادائیگی",
     "settlementHint": "{category}: کل، اعداد و شمار یا بجٹ میں خرچ نہیں گنا جاتا۔ پھر بھی اپ ڈیٹ کرتا ہے کہ کون کس کا مقروض ہے۔",
@@ -1691,7 +1693,6 @@
     "globalTitle": "تمام اخراجات",
     "globalDescription": "اپنے تمام گروپس کے اخراجات تلاش کریں اور دیکھیں۔",
     "globalGroups": "گروپس",
-    "globalInactive": "غیر فعال",
     "globalCurrency": "بنیادی کرنسی",
     "globalAllCurrencies": "تمام کرنسیاں",
     "globalCurrencyRequired": "رقم کے لحاظ سے فلٹر یا ترتیب دینے کے لیے بنیادی کرنسی منتخب کریں۔",
@@ -1718,7 +1719,11 @@
     "exportPdfRetryBounds": "دوبارہ کوشش کریں",
     "exportBundleTitle": "Spliit بیک اپ بنڈل",
     "exportBundlePurpose": "اخراجات، ترتیبات اور منسلک دستاویزات سمیت قابلِ منتقلی گروپ ڈیٹا۔",
-    "exportBundleAction": "بنڈل ڈاؤن لوڈ کریں"
+    "exportBundleAction": "بنڈل ڈاؤن لوڈ کریں",
+    "globalArchived": "آرکائیو شدہ",
+    "globalHidden": "چھپا ہوا",
+    "globalIncludeArchived": "آرکائیو شدہ گروپ شامل کریں",
+    "globalIncludeArchivedScopeNote": "صرف اس وقت لاگو ہوتا ہے جب کوئی گروپ منتخب نہ ہو۔"
   },
   "Footer": {
     "madeIn": "اوپن سورس کمیونٹی نے محبت سے بنایا ❤️",

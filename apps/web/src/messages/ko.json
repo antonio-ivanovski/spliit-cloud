@@ -83,7 +83,6 @@
     "globalTitle": "모든 지출",
     "globalDescription": "모든 그룹의 지출을 검색하고 살펴보세요.",
     "globalGroups": "그룹",
-    "globalInactive": "비활성",
     "globalCurrency": "기본 통화",
     "globalAllCurrencies": "모든 통화",
     "globalCurrencyRequired": "금액으로 필터링하거나 정렬하려면 기본 통화를 선택하세요.",
@@ -110,7 +109,11 @@
     "exportPdfRetryBounds": "다시 시도",
     "exportBundleTitle": "Spliit 백업 번들",
     "exportBundlePurpose": "지출, 설정 및 첨부 문서가 포함된 휴대용 그룹 데이터입니다.",
-    "exportBundleAction": "번들 다운로드"
+    "exportBundleAction": "번들 다운로드",
+    "globalArchived": "보관됨",
+    "globalHidden": "숨김",
+    "globalIncludeArchived": "보관된 그룹 포함",
+    "globalIncludeArchivedScopeNote": "선택된 그룹이 없을 때만 적용됩니다."
   },
   "Groups": {
     "myGroups": "내 그룹",
@@ -949,7 +952,9 @@
       "back": "뒤로",
       "chooseTimezone": "시간대 선택",
       "done": "완료",
-      "yourTime": "현지 시간"
+      "yourTime": "현지 시간",
+      "invalidDate": "유효한 날짜를 입력하세요.",
+      "invalidTime": "유효한 시간을 입력하세요 (HH:mm)."
     },
     "settlementTitle": "정산금",
     "settlementHint": "{category}: 합계, 통계, 예산에서 지출로 집계되지 않습니다. 누가 누구에게 빚졌는지는 계속 반영됩니다.",

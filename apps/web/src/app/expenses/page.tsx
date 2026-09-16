@@ -57,7 +57,7 @@ type PersonRef =
   | { kind: 'account'; id: string }
   | { kind: 'participant'; id: string; groupId: string }
 
-type Filters = {
+export type Filters = {
   q: string
   groups: string[]
   categories: string[]
@@ -71,6 +71,7 @@ type Filters = {
   maxAmount: string
   currencies: string[]
   showSettlements: boolean
+  includeArchived: boolean
   sortBy: 'expenseDate' | 'createdAt' | 'amount'
   sortDir: 'asc' | 'desc'
 }
@@ -95,7 +96,7 @@ function decodePerson(value: string): PersonRef | null {
   return null
 }
 
-function readFilters(search: Record<string, unknown>): Filters {
+export function readFilters(search: Record<string, unknown>): Filters {
   const paidBy = splitCsv(search.paidBy as string | undefined)
     .map(decodePerson)
     .filter((person): person is PersonRef => person !== null)
@@ -116,12 +117,13 @@ function readFilters(search: Record<string, unknown>): Filters {
     maxAmount: (search.maxAmount as string | undefined) ?? '',
     currencies: splitCsv(search.currencies as string | undefined),
     showSettlements: search.showSettlements !== 'false',
+    includeArchived: search.includeArchived === 'true',
     sortBy: (search.sortBy as Filters['sortBy']) ?? 'expenseDate',
     sortDir: (search.sortDir as Filters['sortDir']) ?? 'desc',
   }
 }
 
-function filtersToSearch(filters: Filters) {
+export function filtersToSearch(filters: Filters) {
   const next: Record<string, string | undefined> = {
     q: filters.q.trim() || undefined,
     groups: filters.groups.join(',') || undefined,
@@ -138,6 +140,7 @@ function filtersToSearch(filters: Filters) {
     maxAmount: filters.maxAmount || undefined,
     currencies: filters.currencies.join(',') || undefined,
     showSettlements: filters.showSettlements ? undefined : 'false',
+    includeArchived: filters.includeArchived ? 'true' : undefined,
     sortBy: filters.sortBy === 'expenseDate' ? undefined : filters.sortBy,
     sortDir: filters.sortDir === 'desc' ? undefined : filters.sortDir,
   }
@@ -234,12 +237,33 @@ function GlobalExpenseFilters({
                   )}
                 >
                   {group.displayName}
-                  {(group.archived || group.hidden) &&
-                    ' · ' + t('Expenses.globalInactive')}
+                  {group.archived && ' · ' + t('Expenses.globalArchived')}
+                  {group.hidden && ' · ' + t('Expenses.globalHidden')}
                 </span>
               </label>
             ))}
           </div>
+          <label className="flex items-center gap-2 pt-1">
+            <Checkbox
+              checked={filters.includeArchived}
+              disabled={filters.groups.length > 0}
+              onCheckedChange={(checked) =>
+                onChange({ ...filters, includeArchived: checked === true })
+              }
+            />
+            <span
+              className={cn(
+                filters.groups.length > 0 && 'text-muted-foreground',
+              )}
+            >
+              {t('Expenses.globalIncludeArchived')}
+            </span>
+          </label>
+          {filters.groups.length > 0 && (
+            <p className="text-xs text-muted-foreground">
+              {t('Expenses.globalIncludeArchivedScopeNote')}
+            </p>
+          )}
         </FilterChoice>
         <FilterChoice label={t('Expenses.filters.category')}>
           <div className="flex max-h-40 flex-wrap content-start gap-2 overflow-auto">
@@ -616,6 +640,7 @@ export function GlobalExpensesContent() {
       query: debouncedSearch || undefined,
       locale,
       groupIds: filters.groups.length ? filters.groups : undefined,
+      includeArchived: filters.includeArchived,
       categories: filters.categories.length ? filters.categories : undefined,
       paidBy: filters.paidBy.length ? filters.paidBy : undefined,
       paidByMatch: filters.paidByMatch,
@@ -659,6 +684,7 @@ export function GlobalExpensesContent() {
     filters.minAmount || filters.maxAmount ? 1 : 0,
     filters.currencies.length,
     filters.showSettlements ? 0 : 1,
+    filters.includeArchived && filters.groups.length === 0 ? 1 : 0,
   ].reduce((sum, count) => sum + (typeof count === 'number' ? count : 0), 0)
 
   return (

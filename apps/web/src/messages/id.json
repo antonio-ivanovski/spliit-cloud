@@ -153,7 +153,6 @@
     "globalTitle": "Semua pengeluaran",
     "globalDescription": "Cari dan jelajahi pengeluaran dari semua grup Anda.",
     "globalGroups": "Grup",
-    "globalInactive": "tidak aktif",
     "globalCurrency": "Mata uang dasar",
     "globalAllCurrencies": "Semua mata uang",
     "globalCurrencyRequired": "Pilih mata uang dasar untuk memfilter atau mengurutkan berdasarkan jumlah.",
@@ -180,7 +179,11 @@
     "exportPdfRetryBounds": "Coba lagi",
     "exportBundleTitle": "Bundel cadangan Spliit",
     "exportBundlePurpose": "Data grup portabel dengan pengeluaran, pengaturan, dan dokumen terlampir.",
-    "exportBundleAction": "Unduh bundel"
+    "exportBundleAction": "Unduh bundel",
+    "globalArchived": "diarsipkan",
+    "globalHidden": "tersembunyi",
+    "globalIncludeArchived": "Sertakan grup yang diarsipkan",
+    "globalIncludeArchivedScopeNote": "Hanya berlaku jika tidak ada grup yang dipilih."
   },
   "ExpenseCard": {
     "paidBy": "Dibayar oleh <strong>{paidBy}</strong> · dibagi antara <paidFor></paidFor>",
@@ -1012,7 +1015,9 @@
       "back": "Kembali",
       "chooseTimezone": "Pilih zona waktu",
       "done": "Selesai",
-      "yourTime": "waktu Anda"
+      "yourTime": "waktu Anda",
+      "invalidDate": "Masukkan tanggal yang valid.",
+      "invalidTime": "Masukkan waktu yang valid (HH:mm)."
     },
     "settlementTitle": "Pembayaran pelunasan",
     "settlementHint": "{category}: Tidak dihitung sebagai pengeluaran di total, statistik, atau anggaran. Tetap memperbarui siapa berutang kepada siapa.",

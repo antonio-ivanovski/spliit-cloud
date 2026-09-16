@@ -140,7 +140,6 @@
     "globalTitle": "جميع النفقات",
     "globalDescription": "ابحث وتصفح النفقات من جميع مجموعاتك.",
     "globalGroups": "المجموعات",
-    "globalInactive": "غير نشطة",
     "globalCurrency": "العملة الأساسية",
     "globalAllCurrencies": "جميع العملات",
     "globalCurrencyRequired": "اختر عملة أساسية للتصفية أو الفرز حسب المبلغ.",
@@ -167,7 +166,11 @@
     "exportPdfRetryBounds": "إعادة المحاولة",
     "exportBundleTitle": "حزمة النسخ الاحتياطي من Spliit",
     "exportBundlePurpose": "بيانات المجموعة المحمولة مع المصروفات والإعدادات والمستندات المرفقة.",
-    "exportBundleAction": "تنزيل الحزمة"
+    "exportBundleAction": "تنزيل الحزمة",
+    "globalArchived": "مؤرشفة",
+    "globalHidden": "مخفية",
+    "globalIncludeArchived": "تضمين المجموعات المؤرشفة",
+    "globalIncludeArchivedScopeNote": "ينطبق فقط عند عدم تحديد أي مجموعة."
   },
   "GroupForm": {
     "CurrencyField": {
@@ -1498,7 +1501,9 @@
       "back": "رجوع",
       "chooseTimezone": "اختيار المنطقة الزمنية",
       "done": "تم",
-      "yourTime": "وقتك"
+      "yourTime": "وقتك",
+      "invalidDate": "أدخل تاريخًا صالحًا.",
+      "invalidTime": "أدخل وقتًا صالحًا (HH:mm)."
     },
     "settlementTitle": "دفعة التسوية",
     "settlementHint": "{category}: لا يُحتسب إنفاقًا في الإجماليات أو الإحصاءات أو الميزانيات. ما زال يحدّث من يدين لمن.",

@@ -1529,7 +1529,9 @@
       "back": "ফিরে যান",
       "chooseTimezone": "সময় অঞ্চল বেছে নিন",
       "done": "সম্পন্ন",
-      "yourTime": "আপনার সময়"
+      "yourTime": "আপনার সময়",
+      "invalidDate": "একটি বৈধ তারিখ লিখুন।",
+      "invalidTime": "একটি বৈধ সময় লিখুন (HH:mm)।"
     },
     "settlementTitle": "নিষ্পত্তি পেমেন্ট",
     "settlementHint": "{category}: মোট, পরিসংখ্যান বা বাজেটে খরচ হিসেবে গণনা হয় না। তবুও আপডেট করে কে কাকে দেয়।",
@@ -1743,7 +1745,6 @@
     "globalTitle": "সব খরচ",
     "globalDescription": "আপনার সব গ্রুপের খরচ খুঁজুন ও দেখুন।",
     "globalGroups": "গ্রুপ",
-    "globalInactive": "নিষ্ক্রিয়",
     "globalCurrency": "মূল মুদ্রা",
     "globalAllCurrencies": "সব মুদ্রা",
     "globalCurrencyRequired": "পরিমাণ অনুসারে ফিল্টার বা সাজাতে একটি মূল মুদ্রা বেছে নিন।",
@@ -1770,7 +1771,11 @@
     "exportPdfRetryBounds": "আবার চেষ্টা করুন",
     "exportBundleTitle": "Spliit ব্যাকআপ বান্ডেল",
     "exportBundlePurpose": "খরচ, সেটিংস ও সংযুক্ত নথিসহ বহনযোগ্য গ্রুপ ডেটা।",
-    "exportBundleAction": "বান্ডেল ডাউনলোড করুন"
+    "exportBundleAction": "বান্ডেল ডাউনলোড করুন",
+    "globalArchived": "আর্কাইভ করা",
+    "globalHidden": "লুকানো",
+    "globalIncludeArchived": "আর্কাইভ করা গ্রুপ অন্তর্ভুক্ত করুন",
+    "globalIncludeArchivedScopeNote": "শুধুমাত্র যখন কোনো গ্রুপ নির্বাচন করা হয়নি তখন প্রযোজ্য।"
   },
   "Footer": {
     "madeIn": "ওপেন-সোর্স সম্প্রদায় দ্বারা ভালোবাসা দিয়ে তৈরি ❤️",

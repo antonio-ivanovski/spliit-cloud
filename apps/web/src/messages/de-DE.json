@@ -158,7 +158,6 @@
     "globalTitle": "Alle Ausgaben",
     "globalDescription": "Durchsuche die Ausgaben aus allen deinen Gruppen.",
     "globalGroups": "Gruppen",
-    "globalInactive": "inaktiv",
     "globalCurrency": "Basiswährung",
     "globalAllCurrencies": "Alle Währungen",
     "globalCurrencyRequired": "Wähle eine Basiswährung, um nach Betrag zu filtern oder zu sortieren.",
@@ -185,7 +184,11 @@
     "exportPdfRetryBounds": "Erneut versuchen",
     "exportBundleTitle": "Spliit-Backup-Paket",
     "exportBundlePurpose": "Übertragbare Gruppendaten mit Ausgaben, Einstellungen und angehängten Dokumenten.",
-    "exportBundleAction": "Paket herunterladen"
+    "exportBundleAction": "Paket herunterladen",
+    "globalArchived": "archiviert",
+    "globalHidden": "ausgeblendet",
+    "globalIncludeArchived": "Archivierte Gruppen einbeziehen",
+    "globalIncludeArchivedScopeNote": "Gilt nur, wenn keine Gruppen ausgewählt sind."
   },
   "ExpenseCard": {
     "receivedBy": "Erhalten von <strong>{paidBy}</strong> · zugeordnet zu <paidFor></paidFor>",
@@ -1047,7 +1050,9 @@
       "back": "Zurück",
       "chooseTimezone": "Zeitzone auswählen",
       "done": "Fertig",
-      "yourTime": "deine Zeit"
+      "yourTime": "deine Zeit",
+      "invalidDate": "Gib ein gültiges Datum ein.",
+      "invalidTime": "Gib eine gültige Uhrzeit ein (HH:mm)."
     },
     "settlementTitle": "Ausgleichszahlung",
     "settlementHint": "{category}: Zählt in Totals, Statistiken und Budgets nicht als Ausgabe. Aktualisiert trotzdem, wer wem etwas schuldet.",

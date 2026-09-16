@@ -1668,7 +1668,9 @@
       "back": "go back",
       "chooseTimezone": "pick a timezone",
       "done": "all set",
-      "yourTime": "your local time"
+      "yourTime": "your local time",
+      "invalidDate": "enter a valid date.",
+      "invalidTime": "enter a valid time (HH:mm)."
     },
     "settlementTitle": "settlement payment",
     "settlementHint": "{category}: not counted as spending in totals, stats, or budgets. still updates who owes whom.",
@@ -1825,7 +1827,6 @@
     "globalTitle": "all the expenses",
     "globalDescription": "search and browse expenses across every group chat.",
     "globalGroups": "group chats",
-    "globalInactive": "inactive vibes",
     "globalCurrency": "base currency",
     "globalAllCurrencies": "all currencies",
     "globalCurrencyRequired": "choose a base currency to filter or sort by damage.",
@@ -1901,7 +1902,11 @@
     "exportPdfRetryBounds": "hit retry",
     "exportBundleTitle": "Spliit backup stash",
     "exportBundlePurpose": "Portable group data with expenses, settings, and attached docs.",
-    "exportBundleAction": "Grab the bundle"
+    "exportBundleAction": "Grab the bundle",
+    "globalArchived": "in the vault",
+    "globalHidden": "hidden away",
+    "globalIncludeArchived": "include archived groups",
+    "globalIncludeArchivedScopeNote": "only applies when no groups are selected."
   },
   "Feedback": {
     "navigationLabel": "feedback zone",

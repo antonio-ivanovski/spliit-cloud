@@ -158,7 +158,6 @@
     "globalTitle": "Alle uitgaven",
     "globalDescription": "Zoek en bekijk uitgaven uit al je groepen.",
     "globalGroups": "Groepen",
-    "globalInactive": "inactief",
     "globalCurrency": "Basisvaluta",
     "globalAllCurrencies": "Alle valuta's",
     "globalCurrencyRequired": "Kies een basisvaluta om op bedrag te filteren of sorteren.",
@@ -185,7 +184,11 @@
     "exportPdfRetryBounds": "Opnieuw proberen",
     "exportBundleTitle": "Spliit-back-uppakket",
     "exportBundlePurpose": "Draagbare groepsgegevens met uitgaven, instellingen en bijgevoegde documenten.",
-    "exportBundleAction": "Pakket downloaden"
+    "exportBundleAction": "Pakket downloaden",
+    "globalArchived": "gearchiveerd",
+    "globalHidden": "verborgen",
+    "globalIncludeArchived": "Gearchiveerde groepen opnemen",
+    "globalIncludeArchivedScopeNote": "Alleen van toepassing als er geen groepen zijn geselecteerd."
   },
   "ExpenseCard": {
     "paidBy": "Betaald door <strong>{paidBy}</strong> · verdeeld over <paidFor></paidFor>",
@@ -1047,7 +1050,9 @@
       "back": "Terug",
       "chooseTimezone": "Tijdzone kiezen",
       "done": "Klaar",
-      "yourTime": "jouw tijd"
+      "yourTime": "jouw tijd",
+      "invalidDate": "Voer een geldige datum in.",
+      "invalidTime": "Voer een geldige tijd in (HH:mm)."
     },
     "settlementTitle": "Verrekeningsbetaling",
     "settlementHint": "{category}: Telt niet mee als uitgave in totalen, statistieken of budgetten. Werkt nog steeds bij wie wie iets verschuldigd is.",

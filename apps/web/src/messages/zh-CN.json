@@ -153,7 +153,6 @@
     "globalTitle": "所有支出",
     "globalDescription": "搜索并浏览所有群组中的支出。",
     "globalGroups": "群组",
-    "globalInactive": "非活动",
     "globalCurrency": "基础货币",
     "globalAllCurrencies": "所有货币",
     "globalCurrencyRequired": "选择基础货币后才能按金额筛选或排序。",
@@ -180,7 +179,11 @@
     "exportPdfRetryBounds": "重试",
     "exportBundleTitle": "Spliit 备份包",
     "exportBundlePurpose": "包含支出、设置和附件的可移植群组数据。",
-    "exportBundleAction": "下载数据包"
+    "exportBundleAction": "下载数据包",
+    "globalArchived": "已归档",
+    "globalHidden": "已隐藏",
+    "globalIncludeArchived": "包含已归档的群组",
+    "globalIncludeArchivedScopeNote": "仅在未选择任何群组时适用。"
   },
   "ExpenseCard": {
     "receivedBy": "收款人：<strong>{paidBy}</strong> · 分配给 <paidFor></paidFor>",
@@ -1012,7 +1015,9 @@
       "back": "返回",
       "chooseTimezone": "选择时区",
       "done": "完成",
-      "yourTime": "你的本地时间"
+      "yourTime": "你的本地时间",
+      "invalidDate": "请输入有效日期。",
+      "invalidTime": "请输入有效时间（HH:mm）。"
     },
     "settlementTitle": "结算付款",
     "settlementHint": "{category}：不计入总额、统计和预算中的支出。仍会更新谁欠谁。",

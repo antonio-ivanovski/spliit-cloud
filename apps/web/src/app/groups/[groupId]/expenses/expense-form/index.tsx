@@ -583,6 +583,19 @@ export function ExpenseForm(props: {
     // Some valid form states (for example single-payer paid-by mode) have a
     // share error path but intentionally render no share input. Do not stop
     // after a missing registry entry; retain RHF's normal fallback behavior.
+    if (path === 'expenseDay' || path === 'expenseTime') {
+      // The date/time field renders plain typed inputs (not RHF-registered
+      // refs), so focus them directly instead of RHF's setFocus fallback.
+      const target = formElementRef.current?.querySelector<HTMLElement>(
+        path === 'expenseDay'
+          ? '[data-expense-date-input]'
+          : '[data-expense-time-input]',
+      )
+      if (target) {
+        target.focus()
+        return
+      }
+    }
     form.setFocus(focusableErrorPath(path) as FieldPath<ExpenseFormInputValues>)
   }
 

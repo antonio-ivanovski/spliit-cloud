@@ -156,7 +156,6 @@
     "globalTitle": "Усі витрати",
     "globalDescription": "Шукайте та переглядайте витрати з усіх ваших груп.",
     "globalGroups": "Групи",
-    "globalInactive": "неактивна",
     "globalCurrency": "Базова валюта",
     "globalAllCurrencies": "Усі валюти",
     "globalCurrencyRequired": "Виберіть базову валюту, щоб фільтрувати або сортувати за сумою.",
@@ -183,7 +182,11 @@
     "exportPdfRetryBounds": "Повторити",
     "exportBundleTitle": "Резервний пакет Spliit",
     "exportBundlePurpose": "Переносимі дані групи з витратами, налаштуваннями та прикріпленими документами.",
-    "exportBundleAction": "Завантажити пакет"
+    "exportBundleAction": "Завантажити пакет",
+    "globalArchived": "архівовано",
+    "globalHidden": "приховано",
+    "globalIncludeArchived": "Включати архівовані групи",
+    "globalIncludeArchivedScopeNote": "Застосовується, лише коли групи не вибрано."
   },
   "ExpenseCard": {
     "paidBy": "Сплачено <strong>{paidBy}</strong> за <paidFor></paidFor>",
@@ -1033,7 +1036,9 @@
       "back": "Назад",
       "chooseTimezone": "Вибрати часовий пояс",
       "done": "Готово",
-      "yourTime": "місцевий час"
+      "yourTime": "місцевий час",
+      "invalidDate": "Введіть коректну дату.",
+      "invalidTime": "Введіть коректний час (HH:mm)."
     },
     "settlementTitle": "Розрахунковий платіж",
     "settlementHint": "{category}: Не враховується як витрата в підсумках, статистиці чи бюджетах. Усе одно оновлює, хто кому винен.",

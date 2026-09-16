@@ -154,7 +154,6 @@
     "globalTitle": "Kaikki kulut",
     "globalDescription": "Hae ja selaa kaikkien ryhmiesi kuluja.",
     "globalGroups": "Ryhmät",
-    "globalInactive": "passiivinen",
     "globalCurrency": "Perusvaluutta",
     "globalAllCurrencies": "Kaikki valuutat",
     "globalCurrencyRequired": "Valitse perusvaluutta, jotta voit suodattaa tai lajitella summan mukaan.",
@@ -181,7 +180,11 @@
     "exportPdfRetryBounds": "Yritä uudelleen",
     "exportBundleTitle": "Spliitin varmuuskopio",
     "exportBundlePurpose": "Siirrettävät ryhmätiedot, kulut, asetukset ja liitetyt asiakirjat.",
-    "exportBundleAction": "Lataa paketti"
+    "exportBundleAction": "Lataa paketti",
+    "globalArchived": "arkistoitu",
+    "globalHidden": "piilotettu",
+    "globalIncludeArchived": "Sisällytä arkistoidut ryhmät",
+    "globalIncludeArchivedScopeNote": "Koskee vain tilannetta, jossa ryhmiä ei ole valittu."
   },
   "ExpenseCard": {
     "receivedBy": "Vastaanottaja <strong>{paidBy}</strong> · kohdistettu osallistujille <paidFor></paidFor>",
@@ -1019,7 +1022,9 @@
       "back": "Takaisin",
       "chooseTimezone": "Valitse aikavyöhyke",
       "done": "Valmis",
-      "yourTime": "paikallinen aikasi"
+      "yourTime": "paikallinen aikasi",
+      "invalidDate": "Anna kelvollinen päivämäärä.",
+      "invalidTime": "Anna kelvollinen kellonaika (HH:mm)."
     },
     "settlementTitle": "Tasausmaksu",
     "settlementHint": "{category}: Ei lasketa kuluksi kokonaissummiin, tilastoihin tai budjetteihin. Päivittää silti, kuka on velkaa kenelle.",

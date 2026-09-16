@@ -155,7 +155,6 @@
     "globalTitle": "Todas as despesas",
     "globalDescription": "Pesquise e navegue pelas despesas de todos os seus grupos.",
     "globalGroups": "Grupos",
-    "globalInactive": "inativo",
     "globalCurrency": "Moeda base",
     "globalAllCurrencies": "Todas as moedas",
     "globalCurrencyRequired": "Escolha uma moeda base para filtrar ou ordenar por valor.",
@@ -182,7 +181,11 @@
     "exportPdfRetryBounds": "Tentar novamente",
     "exportBundleTitle": "Pacote de cópia de segurança Spliit",
     "exportBundlePurpose": "Dados portáteis do grupo com despesas, definições e documentos anexados.",
-    "exportBundleAction": "Descarregar pacote"
+    "exportBundleAction": "Descarregar pacote",
+    "globalArchived": "arquivado",
+    "globalHidden": "oculto",
+    "globalIncludeArchived": "Incluir grupos arquivados",
+    "globalIncludeArchivedScopeNote": "Aplica-se apenas quando não há grupos selecionados."
   },
   "ExpenseCard": {
     "paidBy": "Pago por <strong>{paidBy}</strong> · dividido entre <paidFor></paidFor>",
@@ -1136,7 +1139,9 @@
       "back": "Voltar",
       "chooseTimezone": "Escolher fuso horário",
       "done": "Concluído",
-      "yourTime": "a tua hora"
+      "yourTime": "a tua hora",
+      "invalidDate": "Introduz uma data válida.",
+      "invalidTime": "Introduz uma hora válida (HH:mm)."
     },
     "settlementTitle": "Pagamento de liquidação",
     "settlementHint": "{category}: Não conta como despesa nos totais, estatísticas ou orçamentos. Continua a atualizar quem deve a quem.",

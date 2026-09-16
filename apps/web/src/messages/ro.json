@@ -155,7 +155,6 @@
     "globalTitle": "Toate cheltuielile",
     "globalDescription": "Caută și răsfoiește cheltuielile din toate grupurile tale.",
     "globalGroups": "Grupuri",
-    "globalInactive": "inactiv",
     "globalCurrency": "Monedă de bază",
     "globalAllCurrencies": "Toate monedele",
     "globalCurrencyRequired": "Alege o monedă de bază pentru a filtra sau sorta după sumă.",
@@ -182,7 +181,11 @@
     "exportPdfRetryBounds": "Reîncearcă",
     "exportBundleTitle": "Pachet de backup Spliit",
     "exportBundlePurpose": "Date portabile ale grupului cu cheltuieli, setări și documente atașate.",
-    "exportBundleAction": "Descarcă pachetul"
+    "exportBundleAction": "Descarcă pachetul",
+    "globalArchived": "arhivat",
+    "globalHidden": "ascuns",
+    "globalIncludeArchived": "Include grupurile arhivate",
+    "globalIncludeArchivedScopeNote": "Se aplică numai când nu este selectat niciun grup."
   },
   "ExpenseCard": {
     "receivedBy": "Primit de <strong>{paidBy}</strong> pentru <paidFor></paidFor>",
@@ -1026,7 +1029,9 @@
       "back": "Înapoi",
       "chooseTimezone": "Alege fusul orar",
       "done": "Gata",
-      "yourTime": "ora ta"
+      "yourTime": "ora ta",
+      "invalidDate": "Introdu o dată validă.",
+      "invalidTime": "Introdu o oră validă (HH:mm)."
     },
     "settlementTitle": "Plată de decontare",
     "settlementHint": "{category}: Nu se numără ca cheltuială în totaluri, statistici sau bugete. Actualizează totuși cine datorează cui.",

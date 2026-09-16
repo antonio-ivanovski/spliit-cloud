@@ -542,7 +542,10 @@ describe('ExpenseForm', () => {
 
     const title = screen.getByRole('textbox', { name: /expense title/i })
     const amount = screen.getByRole('textbox', { name: /^amount$/i })
-    const date = screen.getByRole('combobox', { name: /expense date/i })
+    const date = screen.getByRole('textbox', { name: 'Date' })
+    const time = screen.getByRole('textbox', { name: 'Time' })
+    const datePicker = screen.getByRole('button', { name: /expense date/i })
+    const timezone = screen.getByRole('button', { name: /GMT/ })
     const paidForMode = screen.getByRole('radio', {
       name: /split.*evenly/i,
     })
@@ -557,6 +560,12 @@ describe('ExpenseForm', () => {
     expect(amount).toHaveFocus()
     await user.tab()
     expect(date).toHaveFocus()
+    await user.tab()
+    expect(time).toHaveFocus()
+    await user.tab()
+    expect(datePicker).toHaveFocus()
+    await user.tab()
+    expect(timezone).toHaveFocus()
     await user.tab()
     expect(paidForMode).toHaveFocus()
     const participantButtons = Array.from(
@@ -591,7 +600,7 @@ describe('ExpenseForm', () => {
 
     const title = screen.getByRole('textbox', { name: /expense title/i })
     const amount = screen.getByRole('textbox', { name: /^amount$/i })
-    const date = screen.getByRole('combobox', { name: /expense date/i })
+    const date = screen.getByRole('textbox', { name: 'Date' })
     const submit = screen
       .getAllByRole('button', { name: /^save$/i })
       .find((button) => (button as HTMLButtonElement).type === 'submit')
@@ -623,12 +632,12 @@ describe('ExpenseForm', () => {
 
     await user.click(screen.getByRole('button', { name: /show items/i }))
     await user.click(screen.getByRole('button', { name: /add item/i }))
-    const date = screen.getByRole('combobox', { name: /expense date/i })
+    const dateTimezone = screen.getByRole('button', { name: /GMT/ })
     const itemTitle = screen.getByRole('textbox', { name: 'Item' })
     const itemCost = screen.getByRole('textbox', { name: 'Cost' })
     const itemQuantity = screen.getByRole('textbox', { name: 'Qty' })
 
-    act(() => date.focus())
+    act(() => dateTimezone.focus())
     await user.tab()
     expect(itemTitle).toHaveFocus()
     await user.tab()
@@ -1622,11 +1631,9 @@ describe('ExpenseForm', () => {
       ).toBeInTheDocument()
       // Copy action lives on the preview modal, not inside the form.
       expect(screen.queryByTestId('expense-make-copy')).not.toBeInTheDocument()
-      expect(
-        screen.getByRole<HTMLButtonElement>('combobox', {
-          name: /expense date/i,
-        }).textContent,
-      ).toContain('Jul 15, 2025')
+      expect(screen.getByRole('textbox', { name: 'Date' })).toHaveValue(
+        '07/15/2025',
+      )
     } finally {
       vi.useRealTimers()
     }

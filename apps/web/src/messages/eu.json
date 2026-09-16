@@ -155,7 +155,6 @@
     "globalTitle": "Gastu guztiak",
     "globalDescription": "Bilatu eta arakatu talde guztietako gastuak.",
     "globalGroups": "Taldeak",
-    "globalInactive": "inaktibo",
     "globalCurrency": "Oinarrizko moneta",
     "globalAllCurrencies": "Moneta guztiak",
     "globalCurrencyRequired": "Aukeratu oinarrizko moneta bat zenbatekoaren arabera iragazi edo ordenatzeko.",
@@ -182,7 +181,11 @@
     "exportPdfRetryBounds": "Saiatu berriro",
     "exportBundleTitle": "Spliit babes-paketea",
     "exportBundlePurpose": "Taldearen datu eramangarriak gastu, ezarpen eta erantsitako dokumentuekin.",
-    "exportBundleAction": "Sorta deskargatu"
+    "exportBundleAction": "Sorta deskargatu",
+    "globalArchived": "artxibatua",
+    "globalHidden": "ezkutukoa",
+    "globalIncludeArchived": "Sartu artxibatutako taldeak",
+    "globalIncludeArchivedScopeNote": "Talde bakar bat ere hautatuta ez dagoenean bakarrik aplikatzen da."
   },
   "ExpenseCard": {
     "paidBy": "<strong>{paidBy}</strong>(e)k ordaindua · <paidFor></paidFor> hauen artean banatuta",
@@ -1026,7 +1029,9 @@
       "back": "Atzera",
       "chooseTimezone": "Aukeratu ordu-zona",
       "done": "Eginda",
-      "yourTime": "zure ordua"
+      "yourTime": "zure ordua",
+      "invalidDate": "Sartu data baliozko bat.",
+      "invalidTime": "Sartu ordu baliozko bat (HH:mm)."
     },
     "settlementTitle": "Zor-kitapenaren ordainketa",
     "settlementHint": "{category}: Ez da gastutzat hartzen guztizkoetan, estatistiketan edo aurrekontuetan. Hala ere, nork nori zor dion eguneratzen du.",

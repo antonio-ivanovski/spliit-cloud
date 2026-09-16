@@ -1485,7 +1485,9 @@
       "back": "वापस",
       "chooseTimezone": "समय क्षेत्र चुनें",
       "done": "हो गया",
-      "yourTime": "आपका समय"
+      "yourTime": "आपका समय",
+      "invalidDate": "एक मान्य तिथि दर्ज करें।",
+      "invalidTime": "एक मान्य समय दर्ज करें (HH:mm)।"
     },
     "settlementTitle": "निपटान भुगतान",
     "settlementHint": "{category}: कुल, आँकड़ों या बजट में खर्च नहीं गिना जाता। फिर भी अपडेट करता है कि कौन किसे देता है।",
@@ -1691,7 +1693,6 @@
     "globalTitle": "सभी खर्च",
     "globalDescription": "अपने सभी समूहों के खर्च खोजें और देखें।",
     "globalGroups": "समूह",
-    "globalInactive": "निष्क्रिय",
     "globalCurrency": "आधार मुद्रा",
     "globalAllCurrencies": "सभी मुद्राएँ",
     "globalCurrencyRequired": "राशि के आधार पर फ़िल्टर या क्रमबद्ध करने के लिए आधार मुद्रा चुनें।",
@@ -1718,7 +1719,11 @@
     "exportPdfRetryBounds": "फिर से कोशिश करें",
     "exportBundleTitle": "Spliit बैकअप बंडल",
     "exportBundlePurpose": "खर्चों, सेटिंग और संलग्न दस्तावेज़ों वाला पोर्टेबल समूह डेटा।",
-    "exportBundleAction": "बंडल डाउनलोड करें"
+    "exportBundleAction": "बंडल डाउनलोड करें",
+    "globalArchived": "संग्रहीत",
+    "globalHidden": "छिपा हुआ",
+    "globalIncludeArchived": "संग्रहीत समूह शामिल करें",
+    "globalIncludeArchivedScopeNote": "केवल तब लागू होता है जब कोई समूह चयनित न हो।"
   },
   "Footer": {
     "madeIn": "ओपन-सोर्स समुदाय द्वारा प्यार से बनाया गया ❤️",

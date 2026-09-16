@@ -182,7 +182,6 @@
     "globalTitle": "All expenses",
     "globalDescription": "Search and browse expenses across your groups.",
     "globalGroups": "Groups",
-    "globalInactive": "inactive",
     "globalCurrency": "Base currency",
     "globalAllCurrencies": "All currencies",
     "globalCurrencyRequired": "Choose a base currency to filter or sort by amount.",
@@ -209,7 +208,11 @@
     "exportPdfRetryBounds": "Retry",
     "exportBundleTitle": "Spliit backup bundle",
     "exportBundlePurpose": "Portable group data with expenses, settings, and attached documents.",
-    "exportBundleAction": "Download bundle"
+    "exportBundleAction": "Download bundle",
+    "globalArchived": "archived",
+    "globalHidden": "hidden",
+    "globalIncludeArchived": "Include archived groups",
+    "globalIncludeArchivedScopeNote": "Only applies when no groups are selected."
   },
   "ExpenseCard": {
     "paidBy": "Paid by <strong>{paidBy}</strong> · split between <paidFor></paidFor>",
@@ -1586,7 +1589,9 @@
       "back": "Back",
       "chooseTimezone": "Choose timezone",
       "done": "Done",
-      "yourTime": "your time"
+      "yourTime": "your time",
+      "invalidDate": "Enter a valid date.",
+      "invalidTime": "Enter a valid time (HH:mm)."
     },
     "settlementTitle": "Settlement payment",
     "settlementHint": "{category}: Not counted as spending in totals, stats, or budgets. Still updates who owes whom.",

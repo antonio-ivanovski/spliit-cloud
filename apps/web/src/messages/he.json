@@ -155,7 +155,6 @@
     "globalTitle": "כל ההוצאות",
     "globalDescription": "חיפוש ועיון בהוצאות מכל הקבוצות שלך.",
     "globalGroups": "קבוצות",
-    "globalInactive": "לא פעילה",
     "globalCurrency": "מטבע בסיס",
     "globalAllCurrencies": "כל המטבעות",
     "globalCurrencyRequired": "בחר מטבע בסיס כדי לסנן או למיין לפי סכום.",
@@ -182,7 +181,11 @@
     "exportPdfRetryBounds": "נסה שוב",
     "exportBundleTitle": "חבילת גיבוי של Spliit",
     "exportBundlePurpose": "נתוני קבוצה ניידים עם הוצאות, הגדרות ומסמכים מצורפים.",
-    "exportBundleAction": "הורדת חבילה"
+    "exportBundleAction": "הורדת חבילה",
+    "globalArchived": "בארכיון",
+    "globalHidden": "מוסתרת",
+    "globalIncludeArchived": "כלול קבוצות בארכיון",
+    "globalIncludeArchivedScopeNote": "חל רק כאשר לא נבחרו קבוצות."
   },
   "ExpenseCard": {
     "paidBy": "שולם על ידי <strong>{paidBy}</strong> · פוצל בין <paidFor></paidFor>",
@@ -1026,7 +1029,9 @@
       "back": "חזרה",
       "chooseTimezone": "בחירת אזור זמן",
       "done": "סיום",
-      "yourTime": "השעה שלך"
+      "yourTime": "השעה שלך",
+      "invalidDate": "הזן תאריך תקף.",
+      "invalidTime": "הזן שעה תקפה (HH:mm)."
     },
     "settlementTitle": "תשלום להסדרת היתרה",
     "settlementHint": "{category}: לא נספר כהוצאה בסיכומים, בסטטיסטיקה או בתקציבים. עדיין מעדכן מי חייב למי.",

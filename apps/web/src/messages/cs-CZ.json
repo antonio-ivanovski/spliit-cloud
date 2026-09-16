@@ -156,7 +156,6 @@
     "globalTitle": "Všechny výdaje",
     "globalDescription": "Prohledávejte výdaje ze všech svých skupin.",
     "globalGroups": "Skupiny",
-    "globalInactive": "neaktivní",
     "globalCurrency": "Základní měna",
     "globalAllCurrencies": "Všechny měny",
     "globalCurrencyRequired": "Vyberte základní měnu pro filtrování nebo řazení podle částky.",
@@ -183,7 +182,11 @@
     "exportPdfRetryBounds": "Zkusit znovu",
     "exportBundleTitle": "Záložní balíček Spliit",
     "exportBundlePurpose": "Přenositelná data skupiny s výdaji, nastavením a přiloženými dokumenty.",
-    "exportBundleAction": "Stáhnout balíček"
+    "exportBundleAction": "Stáhnout balíček",
+    "globalArchived": "archivováno",
+    "globalHidden": "skryté",
+    "globalIncludeArchived": "Zahrnout archivované skupiny",
+    "globalIncludeArchivedScopeNote": "Platí pouze v případě, že nejsou vybrány žádné skupiny."
   },
   "ExpenseCard": {
     "receivedBy": "Přijal(a) <strong>{paidBy}</strong> · přiděleno účastníkům <paidFor></paidFor>",
@@ -1033,7 +1036,9 @@
       "back": "Zpět",
       "chooseTimezone": "Vybrat časové pásmo",
       "done": "Hotovo",
-      "yourTime": "váš čas"
+      "yourTime": "váš čas",
+      "invalidDate": "Zadejte platné datum.",
+      "invalidTime": "Zadejte platný čas (HH:mm)."
     },
     "settlementTitle": "Vyrovnávací platba",
     "settlementHint": "{category}: Nezapočítává se jako výdaj do součtů, statistik ani rozpočtů. Přesto aktualizuje, kdo komu dluží.",

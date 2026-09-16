@@ -156,7 +156,6 @@
     "globalTitle": "Wszystkie wydatki",
     "globalDescription": "Wyszukuj i przeglądaj wydatki ze wszystkich swoich grup.",
     "globalGroups": "Grupy",
-    "globalInactive": "nieaktywna",
     "globalCurrency": "Waluta bazowa",
     "globalAllCurrencies": "Wszystkie waluty",
     "globalCurrencyRequired": "Wybierz walutę bazową, aby filtrować lub sortować według kwoty.",
@@ -183,7 +182,11 @@
     "exportPdfRetryBounds": "Spróbuj ponownie",
     "exportBundleTitle": "Pakiet kopii zapasowej Spliit",
     "exportBundlePurpose": "Przenośne dane grupy z wydatkami, ustawieniami i załączonymi dokumentami.",
-    "exportBundleAction": "Pobierz pakiet"
+    "exportBundleAction": "Pobierz pakiet",
+    "globalArchived": "zarchiwizowana",
+    "globalHidden": "ukryta",
+    "globalIncludeArchived": "Uwzględnij zarchiwizowane grupy",
+    "globalIncludeArchivedScopeNote": "Dotyczy tylko sytuacji, gdy nie wybrano żadnych grup."
   },
   "ExpenseCard": {
     "paidBy": "Opłacone przez <strong>{paidBy}</strong> dla <paidFor></paidFor>",
@@ -1033,7 +1036,9 @@
       "back": "Wstecz",
       "chooseTimezone": "Wybierz strefę czasową",
       "done": "Gotowe",
-      "yourTime": "Twój czas"
+      "yourTime": "Twój czas",
+      "invalidDate": "Wprowadź prawidłową datę.",
+      "invalidTime": "Wprowadź prawidłowy czas (HH:mm)."
     },
     "settlementTitle": "Płatność rozliczeniowa",
     "settlementHint": "{category}: Nie wlicza się do wydatków w sumach, statystykach ani budżetach. Nadal aktualizuje, kto komu jest winien.",

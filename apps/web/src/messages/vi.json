@@ -182,7 +182,6 @@
     "globalTitle": "Tất cả chi phí",
     "globalDescription": "Tìm kiếm và xem chi phí từ tất cả các nhóm của bạn.",
     "globalGroups": "Nhóm",
-    "globalInactive": "không hoạt động",
     "globalCurrency": "Tiền tệ cơ sở",
     "globalAllCurrencies": "Tất cả tiền tệ",
     "globalCurrencyRequired": "Chọn tiền tệ cơ sở để lọc hoặc sắp xếp theo số tiền.",
@@ -209,7 +208,11 @@
     "exportPdfRetryBounds": "Thử lại",
     "exportBundleTitle": "Gói sao lưu Spliit",
     "exportBundlePurpose": "Dữ liệu nhóm có thể chuyển đổi, gồm chi phí, cài đặt và tài liệu đính kèm.",
-    "exportBundleAction": "Tải gói dữ liệu"
+    "exportBundleAction": "Tải gói dữ liệu",
+    "globalArchived": "đã lưu trữ",
+    "globalHidden": "đã ẩn",
+    "globalIncludeArchived": "Bao gồm các nhóm đã lưu trữ",
+    "globalIncludeArchivedScopeNote": "Chỉ áp dụng khi chưa chọn nhóm nào."
   },
   "ExpenseCard": {
     "paidBy": "Được trả bởi <strong>{paidBy}</strong> · chia cho <paidFor></paidFor>",
@@ -1563,7 +1566,9 @@
       "back": "Quay lại",
       "chooseTimezone": "Chọn múi giờ",
       "done": "Xong",
-      "yourTime": "giờ của bạn"
+      "yourTime": "giờ của bạn",
+      "invalidDate": "Nhập ngày hợp lệ.",
+      "invalidTime": "Nhập giờ hợp lệ (HH:mm)."
     },
     "settlementTitle": "Thanh toán tất toán",
     "settlementHint": "{category}: Không tính là chi tiêu trong tổng, thống kê hoặc ngân sách. Vẫn cập nhật ai nợ ai.",

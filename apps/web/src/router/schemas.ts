@@ -147,6 +147,7 @@ export const globalExpensesSearchSchema = z.object({
   maxAmount: numericString,
   currencies: optionalString,
   showSettlements: z.enum(['true', 'false']).optional().catch(undefined),
+  includeArchived: z.enum(['true', 'false']).optional().catch(undefined),
   sortBy: z
     .enum(['expenseDate', 'createdAt', 'amount'])
     .optional()

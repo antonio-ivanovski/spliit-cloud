@@ -156,7 +156,6 @@
     "globalTitle": "Все расходы",
     "globalDescription": "Ищите и просматривайте расходы из всех ваших групп.",
     "globalGroups": "Группы",
-    "globalInactive": "неактивна",
     "globalCurrency": "Базовая валюта",
     "globalAllCurrencies": "Все валюты",
     "globalCurrencyRequired": "Выберите базовую валюту для фильтрации или сортировки по сумме.",
@@ -183,7 +182,11 @@
     "exportPdfRetryBounds": "Повторить",
     "exportBundleTitle": "Резервный пакет Spliit",
     "exportBundlePurpose": "Переносимые данные группы с расходами, настройками и прикреплёнными документами.",
-    "exportBundleAction": "Скачать пакет"
+    "exportBundleAction": "Скачать пакет",
+    "globalArchived": "архивирована",
+    "globalHidden": "скрыта",
+    "globalIncludeArchived": "Включать архивированные группы",
+    "globalIncludeArchivedScopeNote": "Применяется, только когда группы не выбраны."
   },
   "ExpenseCard": {
     "paidBy": "Потратил <strong>{paidBy}</strong> за <paidFor></paidFor>",
@@ -1033,7 +1036,9 @@
       "back": "Назад",
       "chooseTimezone": "Выбрать часовой пояс",
       "done": "Готово",
-      "yourTime": "твоё время"
+      "yourTime": "твоё время",
+      "invalidDate": "Введите корректную дату.",
+      "invalidTime": "Введите корректное время (HH:mm)."
     },
     "settlementTitle": "Платёж для погашения долга",
     "settlementHint": "{category}: Не считается тратой в итогах, статистике и бюджетах. Всё равно обновляет, кто кому должен.",

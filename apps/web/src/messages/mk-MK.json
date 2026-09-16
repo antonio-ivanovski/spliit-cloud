@@ -154,7 +154,6 @@
     "globalTitle": "Сите трошоци",
     "globalDescription": "Пребарувајте и прегледувајте трошоци од сите ваши групи.",
     "globalGroups": "Групи",
-    "globalInactive": "неактивна",
     "globalCurrency": "Основна валута",
     "globalAllCurrencies": "Сите валути",
     "globalCurrencyRequired": "Изберете основна валута за филтрирање или подредување според износ.",
@@ -181,7 +180,11 @@
     "exportPdfRetryBounds": "Обиди се повторно",
     "exportBundleTitle": "Резервен пакет од Spliit",
     "exportBundlePurpose": "Преносливи податоци за групата со трошоци, поставки и прикачени документи.",
-    "exportBundleAction": "Преземи пакет"
+    "exportBundleAction": "Преземи пакет",
+    "globalArchived": "архивирана",
+    "globalHidden": "скриена",
+    "globalIncludeArchived": "Вклучи архивирани групи",
+    "globalIncludeArchivedScopeNote": "Важи само кога не е избрана ниту една група."
   },
   "ExpenseCard": {
     "paidBy": "Платено од <strong>{paidBy}</strong> · поделено меѓу <paidFor></paidFor>",
@@ -1458,7 +1461,9 @@
       "back": "Назад",
       "chooseTimezone": "Избери временска зона",
       "done": "Готово",
-      "yourTime": "вашето време"
+      "yourTime": "вашето време",
+      "invalidDate": "Внесете важечки датум.",
+      "invalidTime": "Внесете важечко време (HH:mm)."
     },
     "settlementTitle": "Порамнителна уплата",
     "settlementHint": "{category}: Не се брои како трошок во вкупните износи, статистиката или буџетите. Сепак ажурира кој кому должи.",

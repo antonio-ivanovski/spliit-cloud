@@ -155,7 +155,6 @@
     "globalTitle": "Totes les despeses",
     "globalDescription": "Cerca i consulta despeses de tots els teus grups.",
     "globalGroups": "Grups",
-    "globalInactive": "inactiu",
     "globalCurrency": "Moneda base",
     "globalAllCurrencies": "Totes les monedes",
     "globalCurrencyRequired": "Tria una moneda base per filtrar o ordenar per import.",
@@ -182,7 +181,11 @@
     "exportPdfRetryBounds": "Torna-ho a provar",
     "exportBundleTitle": "Paquet de còpia de seguretat de Spliit",
     "exportBundlePurpose": "Dades del grup portables amb despeses, configuració i documents adjunts.",
-    "exportBundleAction": "Baixa el paquet"
+    "exportBundleAction": "Baixa el paquet",
+    "globalArchived": "arxivat",
+    "globalHidden": "amagat",
+    "globalIncludeArchived": "Inclou els grups arxivats",
+    "globalIncludeArchivedScopeNote": "Només s'aplica quan no hi ha cap grup seleccionat."
   },
   "ExpenseCard": {
     "receivedBy": "Rebut per <strong>{paidBy}</strong> · assignat a <paidFor></paidFor>",
@@ -1026,7 +1029,9 @@
       "back": "Enrere",
       "chooseTimezone": "Tria la zona horària",
       "done": "Fet",
-      "yourTime": "la teva hora"
+      "yourTime": "la teva hora",
+      "invalidDate": "Introdueix una data vàlida.",
+      "invalidTime": "Introdueix una hora vàlida (HH:mm)."
     },
     "settlementTitle": "Pagament de liquidació",
     "settlementHint": "{category}: No es compta com a despesa als totals, estadístiques ni pressupostos. Tot i això actualitza qui deu a qui.",

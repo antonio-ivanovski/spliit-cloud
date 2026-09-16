@@ -89,7 +89,11 @@
     "exportPdfSuccess": "Relatório PDF baixado.",
     "exportBundleTitle": "Pacote de backup do Spliit",
     "exportBundlePurpose": "Dados portáteis do grupo com despesas, configurações e documentos anexados.",
-    "exportBundleAction": "Baixar pacote"
+    "exportBundleAction": "Baixar pacote",
+    "globalArchived": "arquivado",
+    "globalHidden": "oculto",
+    "globalIncludeArchived": "Incluir grupos arquivados",
+    "globalIncludeArchivedScopeNote": "Aplica-se apenas quando nenhum grupo estiver selecionado."
   },
   "ExpenseCard": {
     "yourBalance": "Seu saldo:",
@@ -517,7 +521,9 @@
     "resetDistribution": "Redefinir",
     "savedButNotNavigated": "A despesa foi salva, mas não conseguimos sair desta página. Você pode fechá-la com segurança.",
     "dateTimePicker": {
-      "yourTime": "seu horário"
+      "yourTime": "seu horário",
+      "invalidDate": "Insira uma data válida.",
+      "invalidTime": "Insira um horário válido (HH:mm)."
     },
     "settlementTitle": "Pagamento de acerto",
     "settlementHint": "{category}: Não conta como gasto em totais, estatísticas ou orçamentos. Ainda atualiza quem deve a quem.",
