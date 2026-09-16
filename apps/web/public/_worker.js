@@ -70,7 +70,12 @@ export default {
     // Machine-readable files must 404 honestly when missing. Never fall them
     // through to the SPA shell: some crawlers send Accept: text/html and
     // would otherwise receive index.html with a 200.
-    if (pathname === '/auth.md' || pathname.startsWith('/.well-known/')) {
+    if (
+      pathname === '/auth.md' ||
+      pathname === '/robots.txt' ||
+      pathname === '/sitemap.xml' ||
+      pathname.startsWith('/.well-known/')
+    ) {
       return env.ASSETS.fetch(request)
     }
 

@@ -19,6 +19,7 @@ who is affected, and the exact migration steps.
 
 ### 🚀 Features
 
+- Publish explicit crawler permissions and a sitemap for the public site (`TBD` by @TBD)
 - Short entry per user-facing change (`TBD` by @TBD)
 
 ### 🐛 Bug fixes
