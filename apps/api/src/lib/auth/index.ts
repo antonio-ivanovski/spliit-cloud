@@ -860,10 +860,6 @@ export const auth = betterAuth({
                 clientSecret: oidcProvider.clientSecret,
                 discoveryUrl: oidcProvider.discoveryUrl,
                 scopes: ['openid', 'email', 'profile'],
-                // Keep the 1.6 synthetic issuer so existing AuthIdentity rows
-                // (`local:oauth:<providerId>`) continue to match after 1.7's
-                // discovery-based issuer default.
-                accountIssuer: `local:oauth:${encodeURIComponent(oidcProvider.id)}`,
               },
             ],
           }),

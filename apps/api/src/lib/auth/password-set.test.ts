@@ -1,5 +1,4 @@
 import { hashPassword } from 'better-auth/crypto'
-import { createLocalAccountIssuer } from 'better-auth/db'
 
 import '../../test/mocks'
 
@@ -305,13 +304,10 @@ describe('password-set plugin', () => {
       expect(internalAdapter.linkAccount).toHaveBeenCalledWith(
         expect.objectContaining({
           providerId: 'credential',
-          issuer: createLocalAccountIssuer('credential'),
           userId: 'account-1',
           accountId: 'account-1',
         }),
       )
-      // Do not mock createLocalAccountIssuer — assert real value
-      expect(createLocalAccountIssuer('credential')).toBe('local:credential')
       expect(sendEmailMock).toHaveBeenCalledWith(
         expect.objectContaining({
           to: 'user@example.com',

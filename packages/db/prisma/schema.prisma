@@ -132,10 +132,10 @@ model AuthIdentity {
   id                    String    @id
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
-  // Trusted identity namespace. Credential accounts use `local:credential`;
-  // Google uses `https://accounts.google.com`; OAuth providers without an
-  // issuer use `local:oauth:<providerId>`.
-  issuer                String
+  // Legacy 1.7.0-1.7.2 identity namespace, retained as nullable for existing
+  // rows. better-auth 1.7.3+ identifies accounts by (providerId, accountId)
+  // again and no longer writes this column.
+  issuer                String?
   // Provider identity: "credential" (email/password), "magic-link", or a social
   // provider id such as "google".
   providerId            String
@@ -154,7 +154,7 @@ model AuthIdentity {
   // Hashed password, only populated for the "credential" provider.
   password              String?
 
-  @@unique([issuer, accountId])
+  @@unique([providerId, accountId])
   @@index([userId])
 }
 

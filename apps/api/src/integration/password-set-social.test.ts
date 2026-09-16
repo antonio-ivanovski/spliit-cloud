@@ -140,12 +140,12 @@ describe('password-set for Google OAuth users → credential sign-in', () => {
     expect(setRes.status).toBe(200)
     expect(await setRes.json()).toEqual({ success: true })
 
-    // 4. DB row is canonical (issuer, accountId, providerId)
+    // 4. DB row is canonical (providerId, accountId)
     const cred = await prisma.authIdentity.findFirst({
       where: { userId: account.id, providerId: 'credential' },
     })
     expect(cred).toBeTruthy()
-    expect(cred!.issuer).toBe('local:credential')
+    expect(cred!.providerId).toBe('credential')
     expect(cred!.accountId).toBe(account.id)
     expect(cred!.password).toBeTruthy()
 
@@ -206,7 +206,7 @@ describe('password-set for Google OAuth users → credential sign-in', () => {
     )
     trackedAccountIds.push(account.id)
 
-    // Simulate stray credential-shaped row with wrong issuer
+    // Simulate stray credential-shaped row with wrong accountId
     await prisma.authIdentity.deleteMany({ where: { userId: account.id } })
     await prisma.authIdentity.create({
       data: {
@@ -239,12 +239,11 @@ describe('password-set for Google OAuth users → credential sign-in', () => {
     })
     expect(setRes.status).toBe(200)
 
-    // Canonical row must exist (issuer local:credential, accountId userId)
+    // Canonical row must exist (providerId credential, accountId userId)
     const canonical = await prisma.authIdentity.findFirst({
       where: {
         userId: account.id,
         providerId: 'credential',
-        issuer: 'local:credential',
         accountId: account.id,
       },
     })

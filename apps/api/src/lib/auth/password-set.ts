@@ -4,7 +4,6 @@ import {
   sensitiveSessionMiddleware,
   sessionMiddleware,
 } from 'better-auth/api'
-import { createLocalAccountIssuer } from 'better-auth/db'
 import { z } from 'zod'
 
 import { Prisma, prisma } from '@spliit/db'
@@ -304,7 +303,6 @@ export function passwordSet() {
               await ctx.context.internalAdapter.linkAccount({
                 userId: account.id,
                 providerId: 'credential',
-                issuer: createLocalAccountIssuer('credential'),
                 accountId: account.id,
                 password: passwordHash,
               })
